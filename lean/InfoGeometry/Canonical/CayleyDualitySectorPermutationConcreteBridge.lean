@@ -52,28 +52,40 @@ theorem C_unit_map_paritySector (s : ParitySector) :
     Submodule.map (C_unit : CoordEnd) (paritySectorSubmodule s) =
       paritySectorSubmodule (sectorC s) := by
   cases s
-  · simpa [paritySectorSubmodule, sectorC, C_unit_val, sectorC_plusPlus] using C_unit_map_E_plus_plus
-  · simpa [paritySectorSubmodule, sectorC, C_unit_val, sectorC_plusMinus] using C_unit_map_E_plus_minus
-  · simpa [paritySectorSubmodule, sectorC, C_unit_val, sectorC_minusPlus] using C_unit_map_E_minus_plus
-  · simpa [paritySectorSubmodule, sectorC, C_unit_val, sectorC_minusMinus] using C_unit_map_E_minus_minus
+  · simpa [paritySectorSubmodule, sectorC, C_unit_val, sectorC_plusPlus,
+      Equiv.swap_apply_def] using C_unit_map_E_plus_plus
+  · simpa [paritySectorSubmodule, sectorC, C_unit_val, sectorC_plusMinus,
+      Equiv.swap_apply_def] using C_unit_map_E_plus_minus
+  · simpa [paritySectorSubmodule, sectorC, C_unit_val, sectorC_minusPlus,
+      Equiv.swap_apply_def] using C_unit_map_E_minus_plus
+  · simpa [paritySectorSubmodule, sectorC, C_unit_val, sectorC_minusMinus,
+      Equiv.swap_apply_def] using C_unit_map_E_minus_minus
 
 theorem Star_unit_map_paritySector (s : ParitySector) :
     Submodule.map (Star_unit : CoordEnd) (paritySectorSubmodule s) =
       paritySectorSubmodule (sectorStar s) := by
   cases s
-  · simpa [paritySectorSubmodule, sectorStar, Star_unit_val, sectorStar_plusPlus] using Star_unit_map_E_plus_plus
-  · simpa [paritySectorSubmodule, sectorStar, Star_unit_val, sectorStar_plusMinus] using Star_unit_map_E_plus_minus
-  · simpa [paritySectorSubmodule, sectorStar, Star_unit_val, sectorStar_minusPlus] using Star_unit_map_E_minus_plus
-  · simpa [paritySectorSubmodule, sectorStar, Star_unit_val, sectorStar_minusMinus] using Star_unit_map_E_minus_minus
+  · simpa [paritySectorSubmodule, sectorStar, Star_unit_val, sectorStar_plusPlus,
+      Equiv.swap_apply_def] using Star_unit_map_E_plus_plus
+  · simpa [paritySectorSubmodule, sectorStar, Star_unit_val, sectorStar_plusMinus,
+      Equiv.swap_apply_def] using Star_unit_map_E_plus_minus
+  · simpa [paritySectorSubmodule, sectorStar, Star_unit_val, sectorStar_minusPlus,
+      Equiv.swap_apply_def] using Star_unit_map_E_minus_plus
+  · simpa [paritySectorSubmodule, sectorStar, Star_unit_val, sectorStar_minusMinus,
+      Equiv.swap_apply_def] using Star_unit_map_E_minus_minus
 
 theorem Xi_unit_map_paritySector (s : ParitySector) :
     Submodule.map (Xi_unit : CoordEnd) (paritySectorSubmodule s) =
       paritySectorSubmodule (sectorXi s) := by
   cases s
-  · simpa [paritySectorSubmodule, sectorXi, Xi_unit_val, sectorXi_plusPlus] using Xi_unit_map_E_plus_plus
-  · simpa [paritySectorSubmodule, sectorXi, Xi_unit_val, sectorXi_plusMinus] using Xi_unit_map_E_plus_minus
-  · simpa [paritySectorSubmodule, sectorXi, Xi_unit_val, sectorXi_minusPlus] using Xi_unit_map_E_minus_plus
-  · simpa [paritySectorSubmodule, sectorXi, Xi_unit_val, sectorXi_minusMinus] using Xi_unit_map_E_minus_minus
+  · simpa [paritySectorSubmodule, sectorXi, Xi_unit_val, sectorXi_plusPlus,
+      Equiv.swap_apply_def] using Xi_unit_map_E_plus_plus
+  · simpa [paritySectorSubmodule, sectorXi, Xi_unit_val, sectorXi_plusMinus,
+      Equiv.swap_apply_def] using Xi_unit_map_E_plus_minus
+  · simpa [paritySectorSubmodule, sectorXi, Xi_unit_val, sectorXi_minusPlus,
+      Equiv.swap_apply_def] using Xi_unit_map_E_minus_plus
+  · simpa [paritySectorSubmodule, sectorXi, Xi_unit_val, sectorXi_minusMinus,
+      Equiv.swap_apply_def] using Xi_unit_map_E_minus_minus
 
 theorem unitForV4_map_paritySector (g : V4Group) (s : ParitySector) :
     Submodule.map (unitForV4 g : CoordEnd) (paritySectorSubmodule s) =

@@ -119,7 +119,9 @@ lemma adjoint_pi_eq_smul_id (a : ℂ) :
     ContinuousLinearMap.adjoint (pi a) = star a • Basic.id GNSHilbert := by
   rw [pi]
   rw [map_smulₛₗ]
-  simp [Basic.id]
+  change star a • ContinuousLinearMap.adjoint (ContinuousLinearMap.id ℂ GNSHilbert) =
+    star a • ContinuousLinearMap.id ℂ GNSHilbert
+  simp only [ContinuousLinearMap.adjoint_id]
 
 /-- Pointwise form of the adjoint of multiplication by `a`. -/
 lemma adjoint_pi_apply (a x : ℂ) :

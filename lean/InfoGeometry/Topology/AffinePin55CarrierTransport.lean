@@ -34,8 +34,7 @@ theorem pinMinus55Action_continuous :
       (pinMinus55ToPlus p.1, p.2)) :=
     pinMinus55HomeomorphPlus.continuous_toFun.comp continuous_fst |>.prodMk
       continuous_snd
-  simpa only [Function.comp_apply, pinMinus55Action_apply] using
-    realSplitPinAction_continuous.comp hpair
+  exact (realSplitPinAction_continuous.comp hpair).congr (fun _ => rfl)
 
 abbrev AffinePinMinus55Native :=
   Multiplicative V55 ⋊[pinMinus55Action] PinMinus55
@@ -75,9 +74,7 @@ theorem affinePinMinus55ToPlus_continuous :
       pinMinus55ToPlus x.right) :=
     pinMinus55HomeomorphPlus.continuous_toFun.comp
       (continuous_snd.comp affinePinMinus55_coordinate_continuous)
-  simpa only [Function.comp_apply,
-    affinePinMinus55ToPlus_left, affinePinMinus55ToPlus_right] using
-    hleft.prodMk hright
+  exact (hleft.prodMk hright).congr (fun _ => rfl)
 
 set_option maxHeartbeats 800000 in
 theorem affinePinMinus55_isTopologicalGroup_of_continuous_action :
@@ -103,20 +100,18 @@ theorem affinePinMinus55_isTopologicalGroup_of_continuous_action :
   have h_action' : Continuous (fun p :
       (Multiplicative V55 × PinMinus55) ×
         (Multiplicative V55 × PinMinus55) =>
-      (pinMinus55Action p.1.2) p.2.1) := by
-    simpa only [Function.comp_apply] using
-      pinMinus55Action_continuous.comp
-        (continuous_fst.snd.prodMk continuous_snd.fst)
+      (pinMinus55Action p.1.2) p.2.1) :=
+    (pinMinus55Action_continuous.comp
+      (continuous_fst.snd.prodMk continuous_snd.fst)).congr (fun _ => rfl)
   have h_coordMul : Continuous coordMul := by
     dsimp [coordMul]
     exact (continuous_fst.fst.mul h_action').prodMk
       (continuous_fst.snd.mul continuous_snd.snd)
   have h_action_inv : Continuous (fun p :
       Multiplicative V55 × PinMinus55 =>
-      (pinMinus55Action p.2⁻¹) (p.1⁻¹)) := by
-    simpa only [Function.comp_apply] using
-      pinMinus55Action_continuous.comp
-        (continuous_snd.inv.prodMk continuous_fst.inv)
+      (pinMinus55Action p.2⁻¹) (p.1⁻¹)) :=
+    (pinMinus55Action_continuous.comp
+      (continuous_snd.inv.prodMk continuous_fst.inv)).congr (fun _ => rfl)
   have h_coordInv : Continuous coordInv := by
     dsimp [coordInv]
     exact h_action_inv.prodMk continuous_snd.inv

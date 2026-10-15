@@ -52,7 +52,11 @@ theorem compactIndexedObservationQuotientRangeCompHausLimitHomeomorph_action
   let h := compactIndexedObservationQuotientRangeCompHausLimitIso_actionIso_naturality
     D α hα0 hαadd t
   have hx := congrArg (fun f => f x) h
-  simpa using hx
+  change compactIndexedObservationQuotientRangeCompHausLimitHomeomorph D
+      (compactIndexedObservationQuotientCompHausLimitAction D α t x) =
+    compactIndexedObservationRangeCompHausLimitAction D α t
+      (compactIndexedObservationQuotientRangeCompHausLimitHomeomorph D x) at hx
+  exact hx
 
 theorem compactIndexedObservationQuotientRangeCompHausLimitHomeomorph_image_orbit
     {J : Type} [Category J]

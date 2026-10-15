@@ -62,8 +62,8 @@ theorem pairBlockComplexRealEquiv_smul
   funext i
   rcases i with ⟨i₁, i₂⟩
   fin_cases i₁ <;>
-    simp [pairBlockComplexRealEquiv, Complex.mul_re, Complex.mul_im,
-      Complex.I_mul, smul_eq_mul] <;> ring
+    (simp [pairBlockComplexRealEquiv, Complex.mul_re, Complex.mul_im,
+      Complex.I_mul, smul_eq_mul]; try ring)
 
 def blockRealify (A : Mat2C) : Block4R := fun i j =>
   match i.1, j.1 with
@@ -107,7 +107,7 @@ theorem realify_add (A B : Mat2C) :
     ext i j
     rcases i with ⟨i₁, i₂⟩
     rcases j with ⟨j₁, j₂⟩
-    fin_cases i₁ <;> fin_cases j₁ <;> simp [blockRealify] <;> ring]
+    fin_cases i₁ <;> fin_cases j₁ <;> (simp [blockRealify]; try ring)]
   exact reindexBlock.map_add _ _
 
 theorem blockRealify_one :
@@ -117,7 +117,7 @@ theorem blockRealify_one :
   rcases j with ⟨j₁, j₂⟩
   fin_cases i₁ <;> fin_cases j₁ <;>
     fin_cases i₂ <;> fin_cases j₂ <;>
-    simp [blockRealify, Matrix.one_apply]
+    simp [blockRealify]
 
 theorem realify_one : realify (1 : Mat2C) = (1 : Mat4R) := by
   change reindexBlock (blockRealify (1 : Mat2C)) = 1
@@ -143,7 +143,7 @@ noncomputable def realifyRingHom : Mat2C →+* Mat4R where
     ext i j
     rcases i with ⟨i₁, i₂⟩
     rcases j with ⟨j₁, j₂⟩
-    fin_cases i₁ <;> fin_cases j₁ <;> simp [blockRealify] <;> ring]
+    fin_cases i₁ <;> fin_cases j₁ <;> (simp [blockRealify]; try ring)]
     exact reindexBlock.map_add _ _
 
 @[simp] theorem realifyRingHom_apply (A : Mat2C) :
@@ -233,7 +233,7 @@ theorem realify_commutes_complexStructure (A : Mat2C) :
     realify ((Complex.I : ℂ) • (1 : Mat2C)) * realify A
   rw [← realify_mul, ← realify_mul]
   congr 1
-  simp [Matrix.mul_apply, Fin.sum_univ_two]
+  simp
 
 def complexStructureCommutant : Set Mat4R :=
   {T | T * complexStructure = complexStructure * T}
@@ -252,7 +252,7 @@ noncomputable def complexVectorRealEquiv4 : (Fin 2 → ℂ) ≃ₗ[ℝ] RealVec4
 /- `realify` uses the block order `(re z₀, re z₁, im z₀, im z₁)`,
 whereas the existing vector equivalence uses `(re z₀, im z₀, re z₁, im z₁)`. -/
 noncomputable def swap12 : RealVec4 ≃ₗ[ℝ] RealVec4 :=
-  LinearEquiv.ofLinear
+  LinearEquiv.ofLinearMap
     { toFun := fun x => ![x 0, x 2, x 1, x 3]
       map_add' := by
         intro x y
@@ -340,33 +340,32 @@ noncomputable def alignedComplexVectorRealEquivComplex :
       map_add' := fun x y => alignedComplexVectorRealEquiv.map_add x y
       map_smul' := ?_ }
   intro z x
-  rcases z with ⟨a, b⟩
-  change alignedComplexVectorRealEquiv (({ re := a, im := b } : ℂ) • x) =
-    RealKVect.complexSMul complexStructureRealKVect { re := a, im := b }
-      (alignedComplexVectorRealEquiv x)
-  rw [show ({ re := a, im := b } : ℂ) = a + b * Complex.I by
-    apply Complex.ext <;> simp]
+  change alignedComplexVectorRealEquiv (z • x) =
+    RealKVect.complexSMul complexStructureRealKVect z (alignedComplexVectorRealEquiv x)
+  unfold RealKVect.complexSMul
+  dsimp [complexStructureRealKVect]
+  have hz : z = (z.re : ℂ) + (z.im : ℂ) * Complex.I := by
+    apply Complex.ext <;> simp
+  conv_lhs => rw [hz]
   rw [add_smul, mul_smul]
-  simp [RealKVect.complexSMul]
-  ext i
-  fin_cases i <;>
-    simp [alignedComplexVectorRealEquiv_apply, complexStructureRealKVect,
-      complexStructureLinear, complexStructure_matrix, Matrix.toLin'_apply,
-      Matrix.mulVec, dotProduct, Fin.sum_univ_four, Complex.mul_re,
-      Complex.mul_im]
+  change alignedComplexVectorRealEquiv (z.re • x + z.im • ((Complex.I : ℂ) • x)) = _
+  rw [alignedComplexVectorRealEquiv.map_add, alignedComplexVectorRealEquiv.map_smul,
+    alignedComplexVectorRealEquiv.map_smul]
+  rw [← alignedComplexVectorRealEquiv_complexI]
+  rfl
 
 theorem realMatrix_commuting_with_J_is_complexLinear
     (T : Mat4R) (hT : T * complexStructure = complexStructure * T) :
     ∃ f : complexStructureRealKVect ⟶ complexStructureRealKVect,
       f.hom = Matrix.toLin' T := by
+  have h : ∀ x : Fin 4 → ℝ,
+      (Matrix.toLin' T) ((Matrix.toLin' complexStructure) x) =
+        (Matrix.toLin' complexStructure) ((Matrix.toLin' T) x) := by
+    intro x
+    rw [← Matrix.toLin'_mul_apply, ← Matrix.toLin'_mul_apply, hT]
   let f : complexStructureRealKVect ⟶ complexStructureRealKVect :=
     { hom := Matrix.toLin' T
-      comm := by
-        have hcomp :
-            (Matrix.toLin' T).comp (Matrix.toLin' complexStructure) =
-              (Matrix.toLin' complexStructure).comp (Matrix.toLin' T) := by
-          rw [← Matrix.toLin'_mul, ← Matrix.toLin'_mul, hT]
-        simpa [complexStructureLinear] using hcomp }
+      comm := LinearMap.ext h }
   exact ⟨f, rfl⟩
 
 noncomputable def complexLinearMapOfCommuting
@@ -411,10 +410,9 @@ theorem realMapOfComplexMatrix_eq_realify (A : Mat2C) :
   fin_cases x <;> fin_cases i <;>
     simp [realMapOfComplexMatrix, alignedComplexVectorRealEquiv_apply,
       alignedComplexVectorRealEquiv_symm_apply, Matrix.toLin'_apply, Matrix.mulVec,
-      dotProduct, Fin.sum_univ_two, Fin.sum_univ_four, Fin.divNat,
+      dotProduct, Fin.sum_univ_four, Fin.divNat,
       Fin.modNat, realify_apply, blockRealify, finProdFinEquiv,
-      Matrix.reindex, Complex.mul_re, Complex.mul_im] <;>
-    ring
+      Complex.mul_re, Complex.mul_im]
 
 theorem standardComplexLinearMapOfCommuting_commuting_square
     (T : Mat4R) (hT : T * complexStructure = complexStructure * T) :
@@ -446,21 +444,19 @@ theorem standardComplexLinearMapOfCommuting_apply
   rw [hf] at hz
   exact hz
 
-set_option maxHeartbeats 1000000 in
 theorem realMapOfComplexMatrix_ofCommuting
     (T : Mat4R) (hT : T * complexStructure = complexStructure * T) :
     realMapOfComplexMatrix (complexMatrixOfCommuting T hT) =
       Matrix.toLin' T := by
   apply LinearMap.ext
   intro x
-  let z := alignedComplexVectorRealEquiv.symm x
-  have hz := standardComplexLinearMapOfCommuting_apply T hT z
   change alignedComplexVectorRealEquiv
       (Matrix.toLin' (complexMatrixOfCommuting T hT)
         (alignedComplexVectorRealEquiv.symm x)) =
     Matrix.toLin' T x
   rw [complexMatrixOfCommuting_toLin T hT]
-  simpa [standardComplexLinearMapOfCommuting, z] using hz
+  rw [standardComplexLinearMapOfCommuting_apply T hT]
+  rw [alignedComplexVectorRealEquiv.apply_symm_apply]
 
 set_option maxHeartbeats 1000000 in
 theorem complexMatrixOfCommuting_readback

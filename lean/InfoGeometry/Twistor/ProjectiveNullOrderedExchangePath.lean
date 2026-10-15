@@ -77,7 +77,8 @@ unordered loop. -/
     let _inst' : TopologicalSpace (Unordered Q n) :=
       unorderedConfigurationTopology Q n
     orderedExchangeLoop Q n p (Equiv.refl (Fin n))
-        (@Path.refl (Ordered Q n) (orderedConfigurationTopology Q n) p) =
+        ((@Path.refl (Ordered Q n) (orderedConfigurationTopology Q n) p).cast
+          rfl (permute_refl Q n p)) =
       @Path.refl (Unordered Q n) (unorderedConfigurationTopology Q n)
         (Quotient.mk' p) := by
   letI : TopologicalSpace (Ordered Q n) := orderedConfigurationTopology Q n
@@ -97,7 +98,8 @@ unordered fundamental group. -/
     let _inst' : TopologicalSpace (Unordered Q n) :=
       unorderedConfigurationTopology Q n
     orderedExchangeLoopClass Q n p (Equiv.refl (Fin n))
-        (@Path.refl (Ordered Q n) (orderedConfigurationTopology Q n) p) =
+        ((@Path.refl (Ordered Q n) (orderedConfigurationTopology Q n) p).cast
+          rfl (permute_refl Q n p)) =
       (1 : @FundamentalGroup (Unordered Q n)
         (unorderedConfigurationTopology Q n) (Quotient.mk' p)) := by
   letI : TopologicalSpace (Ordered Q n) := orderedConfigurationTopology Q n

@@ -192,7 +192,8 @@ theorem quadraticReflection_alignment
   by_cases hsub : Q55 (y - x) ≠ 0
   · refine ⟨quadraticIdentityIsometry,
       quadraticReflectionIsometry (y - x) hsub, ?_⟩
-    simpa using quadraticReflection_sub_apply_of_equal_Q x y hxy hsub
+    change quadraticReflection (y - x) hsub y = x
+    exact quadraticReflection_sub_apply_of_equal_Q x y hxy hsub
   · have hsub_zero : Q55 (y - x) = 0 := by
       exact not_ne_iff.mp hsub
     have hadd : Q55 (y + x) ≠ 0 :=
@@ -233,7 +234,8 @@ theorem quadraticReflection_alignment_fixing_orthogonal
       simp
     refine ⟨quadraticIdentityIsometry,
       quadraticReflectionIsometry (y - x) hsub, ?_, ?_, ?_⟩
-    · simpa using quadraticReflection_sub_apply_of_equal_Q x y hxy hsub
+    · change quadraticReflection (y - x) hsub y = x
+      exact quadraticReflection_sub_apply_of_equal_Q x y hxy hsub
     · rfl
     · exact quadraticReflection_apply_of_polar_eq_zero (y - x) z hsub hpolar_sub
   · have hsub_zero : Q55 (y - x) = 0 := by

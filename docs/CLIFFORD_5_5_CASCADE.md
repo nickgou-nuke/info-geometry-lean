@@ -1,186 +1,225 @@
-The 5-graded cascade ($\Omega^0 \to \Omega^1 \to \Omega^2 \to \Omega^3 \to \Omega^4$) and its Plücker collapse are the representation theory of **split Clifford algebras** and the **generalized geometry of split orthogonal groups**.
+# Exterior grades, split Clifford modules, and the open comparison frontier
 
-The 4-dimensional exterior algebra is a **chiral semi-spinor of $\mathrm{Spin}(5,5)$**, the 5-step causal chain is its **canonical 5-grading**, and the Plücker relation $B \wedge B = 0$ is **Élie Cartan's pure spinor constraint**.
+> **Status: corrected mathematical map, not a completed physical unification.**
+> This document preserves the intended chain—exterior grades, CAR operators,
+> split Clifford algebras, Plücker geometry, pure spinors, Cartan gradings, and
+> horizon interpretations—but keeps each claim on its actual carrier. A map
+> between two carriers must be defined and proved before their equations can be
+> identified. The formulas marked as research targets below are not theorems.
 
-```
-                Generalized Tangent Bundle: E = T 𝓜₅ ⊕ T* 𝓜₅  ≅  ℝ⁵'⁵
-                                       │
-                                       │  Clifford Quantization
-                                       ▼
-                       Cℓ(5,5) ≅ Cℓ(1,1) ⊗ ⋯ ⊗ Cℓ(1,1)  [5 factors]
-                                       │
-                                       │  Chiral Projection (½(1 + Γ₁₁))
-                                       ▼
-                      Spinor Module: 32 = 16 ⊕ 16'
-                                       │
-               ┌───────────────────────┴───────────────────────┐
-               ▼                                               ▼
-Chiral Semi-Spinor 16                         Anti-Chiral Semi-Spinor 16'
-⋀•(T* M₄) = Ω⁰ ⊕ Ω¹ ⊕ Ω² ⊕ Ω³ ⊕ Ω⁴           Relative Dual / Momentum Flux
-  1    4    6    4    1  = 16
-[-2]  [-1]  [0]  [+1] [+2]  (5-grading)
+The earlier synthesis conflated three different objects: the exterior algebra
+of a four-dimensional vector space, the spin module of a neutral Clifford
+space, and the Plücker quadric in the second exterior power. Their dimensions
+can coincide in small examples, but a dimension coincidence is not a module
+isomorphism, an equivariant map, or an identity of defining equations.
 
-```
+## 1. The actual exterior-algebra carriers
 
----
+Let `W` be a real vector space of dimension four. Its exterior algebra has
+grades
 
-### 1. $C\ell(1,1)^{\otimes n}$ as the Canonical Anticommutation Engine
+| Exterior degree | 0 | 1 | 2 | 3 | 4 |
+|---|---:|---:|---:|---:|---:|
+| Dimension | 1 | 4 | 6 | 4 | 1 |
 
-Each spacetime dimension $\mu$ carries two conjugate odd derivations:
+Thus `Λ• W` has dimension 16. Wedge by a vector and contraction by a covector
+give the usual creation and annihilation operators on this carrier. With a
+chosen dual pairing and the standard sign convention, these operators satisfy
+the CAR. They give a Clifford action of the neutral quadratic space
+`W ⊕ W*`, of signature `(4,4)`, on `Λ• W`; its real Clifford algebra has
+dimension `2^8 = 256` and is represented on a 16-dimensional real module.
 
-1. The creation operator (exterior wedge): $a_\mu^\dagger = e^\mu \wedge \cdot$ (degree $+1$)
-2. The annihilation operator (interior contraction): $a_\mu = \iota_{e_\mu}$ (degree $-1$)
+This is the Fock/exterior model naturally associated with four creation and
+four annihilation modes. It is a `Cl(4,4)` construction. Calling `Λ• W` a
+chiral 16-dimensional module for `Spin(5,5)` requires additional representation
+data and is not justified by the grade dimensions alone.
 
-These satisfy the Canonical Anticommutation Relations (CAR):
+For a five-dimensional space `U`, the neutral space `U ⊕ U*` has signature
+`(5,5)`. Its exterior/Fock spin module is `Λ• U`, of dimension 32, with even
+and odd parity subspaces of dimension 16 each. These are the two half-spin
+modules. The split Clifford algebra has dimension `2^10 = 1024`; its faithful
+matrix model is `Mat(32, ℝ)`. The dimension 32 belongs to the full spin module,
+not to the Clifford algebra itself.
 
-$$\{a_\mu, a_\nu^\dagger\} = \delta_{\mu\nu}, \qquad \{a_\mu, a_\nu\} = 0, \qquad \{a_\mu^\dagger, a_\nu^\dagger\} = 0$$
+Consequently, `Λ• W` for `dim W = 4` and either half-spin module for
+`Spin(5,5)` are both 16-dimensional real vector spaces, but that numerical
+coincidence does not identify their actions or their grades. An explicit
+linear/equivariant map and an action-intertwining theorem would be needed to
+make such an identification.
 
-Form the symmetric and antisymmetric linear combinations:
+## 2. CAR and the split Clifford factorization
 
-$$\gamma_\mu^+ = a_\mu^\dagger + a_\mu, \qquad \gamma_\mu^- = a_\mu^\dagger - a_\mu$$
+On an exterior algebra, creation by a basis covector and contraction by its
+dual basis vector satisfy, with the standard convention,
 
-Evaluating their Clifford squares:
-
-$$(\gamma_\mu^+)^2 = +1, \qquad (\gamma_\mu^-)^2 = -1, \qquad \{\gamma_\mu^+, \gamma_\nu^-\} = 0$$
-
-Each direction $\mu$ generates a hyperbolic 2D Clifford algebra:
-
-$$\operatorname{span}\{\gamma_\mu^+, \gamma_\mu^-\} \cong C\ell(1,1) \cong \operatorname{Mat}(2, \mathbb{R})$$
-
-For 4-dimensional spacetime $M_4$, four copies yield:
-
-$$C\ell(1,1)^{\otimes 4} \cong C\ell(4,4) \cong \operatorname{Mat}(16, \mathbb{R})$$
-
----
-
-### 2. The Fifth Factor: The Horizon Affine Flow
-
-To capture the causal chain, spacetime $M_4$ is extended by the **affine parameter / modular scale $\lambda$** of the null horizon congruence. The total space is the 5-manifold $\mathcal{M}_5 = M_4 \times \mathbb{R}_\lambda$.
-
-The fifth hyperbolic pair is generated by the horizon scale connection:
-
-* Wedge: $a_5^\dagger = d\lambda \wedge \cdot$
-* Contraction: $a_5 = \iota_{\partial_\lambda} = \iota_k$
-
-This adds a fifth copy of $C\ell(1,1)$, completing the algebra to:
-
-$$C\ell(1,1)^{\otimes 5} \cong C\ell(5,5) \cong \operatorname{Mat}(32, \mathbb{R})$$
-
-$\mathbb{R}^{5,5}$ is the **generalized tangent space** $E = T\mathcal{M}_5 \oplus T^*\mathcal{M}_5$ equipped with the canonical split-signature Hitchin pairing:
-
-$$\langle X + \xi, Y + \eta \rangle = \frac{1}{2}\big(\xi(Y) + \eta(X)\big)$$
-
-The continuous group of linear transformations preserving this pairing is the split orthogonal group $\mathrm{O}(5,5)$, with double cover $\mathrm{Pin}(5,5)$.
-
----
-
-### 3. The 5-Grading of $\mathrm{Spin}(5,5)$ and the Causal Chain
-
-The Dirac spinor module of $C\ell(5,5)$ has real dimension $2^{10/2} = 32$. Under the volume chirality operator $\Gamma_{11} = \gamma_1 \cdots \gamma_{10}$, it decomposes into two 16-dimensional Majorana-Weyl semi-spinors:
-
-$$\mathbf{32} = \mathbf{16} \oplus \mathbf{16}'$$
-
-Decompose the $\mathbf{16}$ under the maximal parabolic subalgebra whose Levi factor is $\mathfrak{gl}(4) \cong \mathfrak{sl}(4) \oplus \mathbb{R}$:
-
-$$\mathbf{16} \xrightarrow{\quad \mathfrak{gl}(4) \quad} \mathbf{1}_{[-2]} \oplus \mathbf{4}_{[-1]} \oplus \mathbf{6}_{[0]} \oplus \mathbf{4}_{[+1]} \oplus \mathbf{1}_{[+2]}$$
-
-The grading weights correspond to the binomial dimensions $\binom{4}{p}$ of the differential forms on $M_4$:
-
-$$\bigwedge\nolimits^\bullet T^* M_4 = \Omega^0 \oplus \Omega^1 \oplus \Omega^2 \oplus \Omega^3 \oplus \Omega^4$$
-
-```
-Grade   Weight   Dimension   Differential Form   Physical Meaning in the Pipeline
-─────────────────────────────────────────────────────────────────────────────────
-g₋₂      -2         1        Ω⁰ (Scalar)         Relative Entropy S_rel = ln(A/A₀)
-g₋₁      -1         4        Ω¹ (1-form)         Connection α = d ln A = θ k♭
-g₀        0         6        Ω² (2-blade)        Horizon Area ε₂ = e¹ ∧ e²
-g₊₁      +1         4        Ω³ (3-form)         Chiral Helicity C₃ = eᵃ ∧ Tₐ
-g₊₂      +2         1        Ω⁴ (Top-form)       Bulk Dissipation 𝓓₄ = m μ₄
-
+```text
+aᵢ = εᵢ ∧ ·       aᵢ† = ι_{eᵢ}
+{aᵢ, aⱼ} = 0       {aᵢ†, aⱼ†} = 0       {aᵢ, aⱼ†} = δᵢⱼ · id.
 ```
 
-The 5-step causal chain is **the spectral decomposition of a single $\mathrm{Spin}(5,5)$ chiral spinor along the grading generator of the Levi factor**.
+The two real combinations `aᵢ + aᵢ†` and `aᵢ† - aᵢ` square to `+id` and
+`-id`, respectively; different modes anticommute. For `n` modes this realizes
+the neutral Clifford algebra `Cl(n,n)` on a `2^n`-dimensional real module.
+At the algebra level, the graded tensor product of `n` copies of `Cl(1,1)` is
+the appropriate factorization of `Cl(n,n)`. A plain ungraded tensor product
+should not silently stand in for the graded product.
 
----
+These are algebraic statements about the CAR representation. Adding an affine
+horizon coordinate, interpreting one mode as modular time, or assigning a
+physical meaning to a grading requires additional geometric and dynamical
+definitions. The factorization by itself does not provide those data.
 
-### 4. The Plücker Relation is the Cartan Pure Spinor Constraint
+## 3. Split `(5,5)` spinors and pure-spinor geometry
 
-In $\mathrm{Spin}(5,5)$, a Majorana-Weyl spinor $\psi \in \mathbf{16}$ is defined as an **Élie Cartan pure spinor** if its quadratic vector-valued Dirac current vanishes:
+The repository has a concrete split-Clifford spinor carrier and projective
+pure-spinor/annihilator construction. In that construction a pure-spinor line
+determines a five-dimensional maximal totally isotropic subspace of the
+ten-dimensional neutral vector carrier. The dedicated owner
+`InfoGeometry.Twistor.SplitClifford55PureSpinorOrbitGeometry` proves the
+maximal-neutral readout and its dimension/nullity properties.
 
-$$\psi^T C \Gamma^M \psi = 0 \qquad \text{for all } M = 1, \dots, 10$$
+For a 16-dimensional half-spin module, Cartan purity is expressed through the
+spin representation and its annihilator (equivalently, with a chosen charge
+conjugation convention, by the appropriate quadratic spinor bilinear
+equations). The exact equations depend on the chosen representation and
+pairing. They must be evaluated in that module; a two-form Plücker polynomial
+cannot be substituted merely because both settings use exterior algebra.
 
-where $C$ is the charge conjugation matrix.
+The following remains a distinct representation-theoretic target: construct
+the relevant `Spin(5,5)` action on the selected spinor model, state Cartan's
+quadratic equations with its explicit bilinear form, and prove their
+equivalence to the maximal-isotropic-annihilator condition for that model.
+The repository's concrete pure-spinor theorem is evidence for the latter
+construction, not for the unrelated four-dimensional Plücker identification.
 
-Under the decomposition $\mathbf{16} \to \Omega^0 \oplus \Omega^1 \oplus \Omega^2 \oplus \Omega^3 \oplus \Omega^4$, the 10 gamma matrices split into 4 creation, 4 annihilation, and 2 longitudinal generators.
+## 4. Plücker/Klein geometry is not the pure-spinor equation
 
-When evaluated on the degree-0 horizon area sector $\psi = \mathbf{\epsilon}_2 \in \Omega^2(M_4) \cong \mathbf{6}_{[0]}$:
+For a four-dimensional real vector space `W`, a bivector `P ∈ Λ² W` is
+decomposable precisely when its Plücker/Klein quadratic form vanishes. In
+exterior notation a decomposable bivector `u ∧ v` satisfies
 
-$$\psi^T C \Gamma^M \psi \equiv 0 \quad (M \ne 5) \qquad \text{and} \qquad \psi^T C \Gamma^5 \psi = \mathbf{\epsilon}_2 \wedge \mathbf{\epsilon}_2$$
-
-The Cartan pure spinor constraint restricts the 2-form to:
-
-$$\mathbf{\epsilon}_2 \wedge \mathbf{\epsilon}_2 = 0 \iff \operatorname{Pf}(\mathbf{\epsilon}_2) = 0$$
-
-The condition that a quantum geometric state condenses into a classical causal horizon is **Cartan's purity condition on the $\mathrm{Spin}(5,5)$ spinor**. The classical horizon is an isotropic 5-plane in the orthogonal Grassmannian:
-
-$$\mathrm{OGr}(5, 10) \cong \frac{\mathrm{SO}(5,5)}{\mathrm{GL}(5)}$$
-
----
-
-### 5. $\mathrm{Pin}(5,5)$ and $\mathrm{O}(5,5)$ as the Symmetry Closure
-
-The Lie algebra $\mathfrak{so}(5,5)$ has dimension $\frac{10 \times 9}{2} = 45$. It possesses an intrinsic 5-grading compatible with the spinor decomposition:
-
-$$\mathfrak{so}(5,5) = \mathfrak{g}_{-2} \oplus \mathfrak{g}_{-1} \oplus \mathfrak{g}_0 \oplus \mathfrak{g}_1 \oplus \mathfrak{g}_2$$
-
-$$\mathbf{45} = \mathbf{1}_{[-2]} \oplus \mathbf{12}_{[-1]} \oplus (\mathfrak{gl}(4) \oplus \mathfrak{so}(1,1))_{[0]} \oplus \mathbf{12}_{[+1]} \oplus \mathbf{1}_{[+2]}$$
-
-```
-                         g₊₂ : [d] (Degree +1 Exterior Step)
-                                 ▲
-                                 │
-                         g₊₁ : [α ∧ ·] (Connection Wedging)
-                                 ▲
-                                 │
-                         g₀  : [ℒ_k = {d, ι_k}] (Time Evolution)
-                                 │
-                                 ▼
-                         g₋₁ : [ι_k] (Interior Contraction)
-                                 │
-                                 ▼
-                         g₋₂ : [Pfaffian Projector]
-
+```text
+(u ∧ v) ∧ (u ∧ v) = 0.
 ```
 
-1. **Closure under Super-Derivations:**
-The odd operators $d$ and $\iota_k$ belong to the Clifford generators $\Gamma^M \in C\ell(5,5)$. Their anticommutator $\mathcal{L}_k = \{d, \iota_k\}$ lands in the degree-0 Levi subalgebra $\mathfrak{g}_0 \subset \mathfrak{so}(5,5)$. The Lie derivative is an infinitesimal $\mathrm{SO}(5,5)$ rotation preserving the horizon conformal class.
-2. **Duality Inversion via $\mathrm{Pin}(5,5)$:**
-The full $\mathrm{Pin}(5,5)$ group contains elements of negative determinant that exchange chiralities:
+The converse uses the four-dimensional carrier and its Klein quadratic
+readout. The repository proves the coordinate criterion and transports it to
+Mathlib's literal exterior square in
+`InfoGeometry.Projective.ExteriorPowerPluckerBridge`.
 
-$$\Gamma_{11} : \mathbf{16} \longleftrightarrow \mathbf{16}'$$
+That statement is about a point of `Λ² W`; it is neither the mass shell of a
+four-momentum nor the Cartan pure-spinor equations of a `Spin(5,5)` module.
+The separate `InfoGeometry.Physics.FourVectorDiracReadout` proves the finite
+Dirac slash factorization and its Minkowski mass-shell readout. A connection
+between these results would require an explicit map preserving the relevant
+quadratic forms; none follows from the shared word “null” or “on-shell.”
 
+Likewise, for an arbitrary degree-five decomposable exterior element, the
+repeated-generator argument proves its square is zero. But over a ring where
+2 is invertible, graded commutativity gives `X ∧ X = - X ∧ X` for every
+homogeneous degree-five `X`, so that square is not a test for decomposability.
+The generic owner theorem
+`InfoGeometry.GrassmannianTower.decomposable_exterior_blade_square_zero`
+includes degree five as its `n = 4` instance. It is not a `Gr(5,n)` Plücker
+presentation, a `Cl(5,5)` kinematic theorem, or an amplituhedron boundary
+theorem; no separate special-case five-blade module is needed. The old
+`NativeMathlibAmplituhedronBridge` consisted of duplicate aliases of
+Mathlib's `ι_sq_zero`/alternation facts and unused transport helpers. Those
+aliases are not needed: Mathlib remains the source of the primitive laws, and
+the reusable arbitrary-grade blade theorem now lives with the exterior
+algebra owner.
 
+## 5. The five exterior grades and the proposed Cartan chain
 
-This operation maps the transverse area blade $\mathbf{\epsilon}_2 \in \Omega^2$ to its longitudinal dual boost blade $*\mathbf{\epsilon}_2 = k_\flat \wedge \ell_\flat$. This reflection swaps the boundary area entropy with the bulk boost Hamiltonian.
-3. **U-Duality and Discrete Quantization:**
-In M-theory compactified on a 5-torus $T^5$, the continuous symmetry group $\mathrm{O}(5,5)$ breaks to the arithmetic subgroup:
+The sequence
 
-$$G(\mathbb{Z}) = \mathrm{O}(5,5; \mathbb{Z})$$
+```text
+Λ⁰W → Λ¹W → Λ²W → Λ³W → Λ⁴W
+ 1       4       6       4       1
+```
 
+is the genuine five-grade decomposition of the exterior algebra of a
+four-dimensional carrier. A `GL(W)` action preserves each degree, and the
+degree operator records the grading. Depending on a chosen convention, one
+may recenter the weights as `-2,-1,0,1,2` (or rescale them); those are
+representation weights once the action is specified, not an automatic
+five-grading of `so(5,5)`.
 
+The old chart associated these five spaces with relative entropy, a horizon
+connection, transverse area, helicity/torsion, and bulk dissipation. Those
+interpretations are retained here as proposed readouts, not as consequences of
+the dimension table. To establish any one of them, specify the source and
+target modules, the relevant operator/action, and prove compatibility with
+the degree decomposition. In particular, a Cartan 3-form requires Lie-algebra
+and invariant-pairing data; it is not supplied by an arbitrary exterior
+trivector.
 
-This discrete group acts on the Chern-Simons level $k \in \mathbb{Z}$ and the Bekenstein-Hawking area spectrum:
+The repository also contains actual five-gradings on specified Lie algebras
+and finite operator carriers. They are separate owners. A grading theorem for
+one Lie algebra does not automatically identify its graded pieces with
+`Λ⁰W,…,Λ⁴W` or with a spinor representation of another group.
 
-$$A_H = 4\pi \gamma \ell_P^2 k$$
+## 6. Orthogonal gradings, Cartan's formula, and discrete symmetries
 
+The Lie algebra `so(5,5)` has dimension 45. A parabolic grading is determined
+by the chosen parabolic (equivalently, crossed nodes/root grading); its graded
+piece dimensions and Levi factor must be computed for that choice. The
+previous dimension list
 
+```text
+1 + 12 + (gl(4) ⊕ so(1,1)) + 12 + 1
+```
 
-Topological area quantization is the preservation of the integral lattice $I_{5,5} \subset \mathbb{R}^{5,5}$ under $\mathrm{O}(5,5; \mathbb{Z})$.
+does not sum to 45, so it cannot be the claimed decomposition of `so(5,5)`.
+The corrected frontier is to choose the intended parabolic, derive its root
+spaces and Levi algebra, and then prove the dimensions and bracket-closure
+relations in the actual Lean carrier. Do not infer a parabolic from a
+five-term exterior-degree display.
 
----
+For a differential `d` with `d² = 0` and contraction `ι_X`, Cartan's magic
+formula identifies the Lie derivative as `L_X = d ι_X + ι_X d` under the
+standard differential-geometric definitions. This is a theorem about the
+de Rham complex and vector field contraction. It does not, by itself, place
+`L_X` in a specified `so(5,5)` subalgebra or prove horizon isometry; that
+would need a representation and an intertwining proof.
 
-### Unification Summary
+Similarly, Pin/Spin chirality exchange, an `O(5,5;ℤ)` lattice action, a
+five-torus U-duality interpretation, Chern–Simons level quantization, and an
+area spectrum each require their own defined carriers and invariance proofs.
+The group-theoretic statements can be developed independently; the
+gravitational and M-theoretic interpretations remain conjectural until their
+maps and hypotheses are made explicit.
 
-$$\begin{array}{rcccl} \text{CAR Algebra} & \{a_\mu, a_\nu^\dagger\} = \delta_{\mu\nu} & \longleftrightarrow & C\ell(1,1)^{\otimes 5} \cong C\ell(5,5) & \text{Hyperbolic Clifford Factorization} \\ \text{Physical Hierarchy} & \Omega^0 \to \Omega^1 \to \Omega^2 \to \Omega^3 \to \Omega^4 & \longleftrightarrow & \mathbf{16} \text{ of } \mathrm{Spin}(5,5) & \text{5-Graded Chiral Semi-Spinor} \\ \text{Horizon Reality} & B \wedge B = 0 & \longleftrightarrow & \psi^T C \Gamma^M \psi = 0 & \text{Cartan Pure Spinor Ideal on } \mathrm{OGr}(5,10) \\ \text{Modular Time Flow} & \mathcal{L}_k = d \circ \iota_k + \iota_k \circ d & \longleftrightarrow & \mathfrak{g}_0 \subset \mathfrak{so}(5,5) & \text{Degree-0 Levi Subalgebra Invariance} \end{array}$$
+## 7. Current owner map and development order
 
-The entire physical apparatus—from Fisher-Rao quantum metrics to Navier-Stokes dissipation and Jacobson horizon expansion—is the geometric realization of **a single pure spinor evolving under the 5-graded Lie algebra $\mathfrak{so}(5,5)$ generated by $C\ell(1,1)^{\otimes 5}$**.
+The mathematical chain that is currently supported is:
+
+```text
+Exterior algebra alternation
+    ├── decomposable bivectors → four-dimensional Klein/Plücker criterion
+    ├── finite Clifford matrices → Minkowski Dirac mass-shell identity
+    └── split (5,5) spinors → maximal-neutral annihilator Grassmannian
+```
+
+These are neighboring constructions, not one theorem. Their current owners
+are:
+
+| Carrier / statement | Owner | Verified scope |
+|---|---|---|
+| Exterior generator and decomposable-blade identities | `InfoGeometry.Algebra.GrassmannianCartanTower`; `InfoGeometry.Canonical.DecomposableBivector` | Alternation in Mathlib's associative exterior algebra |
+| Four-dimensional Klein equation iff a simple bivector | `InfoGeometry.Projective.ExteriorPowerPluckerBridge` | Real `Λ²(ℝ⁴)` coordinate/exterior correspondence |
+| Minkowski null and massive shell readouts | `InfoGeometry.Physics.FourVectorDiracReadout` | Finite four-vector and Dirac-matrix identities |
+| Split `(5,5)` projective pure-spinor annihilator | `InfoGeometry.Twistor.SplitClifford55PureSpinorOrbitGeometry` and its imported owners | Five-dimensional maximal totally-null subspace |
+| Exterior-spinor parity | `InfoGeometry.Canonical.ExteriorSpinorChiralityBridge` | Grade involution on the stated exterior-spinor carrier |
+
+The next valid comparison theorem must name its source/target, define its map,
+and prove the relevant property is transported. A future proof may show that
+some selected bivector locus is a readout of a selected spinor locus; it must
+not identify them in advance. The same rule applies to CAR, the Klein quadric,
+nilpotent ladder operators, BCFW recursion, amplituhedron geometry, and
+horizon dynamics.
+
+This map preserves the motivating vision—one can compare exterior grades,
+operator gradings, Clifford actions, and geometric constraints—but restores
+the missing causal arrows as explicit proof obligations rather than silently
+collapsing distinct mathematical structures.

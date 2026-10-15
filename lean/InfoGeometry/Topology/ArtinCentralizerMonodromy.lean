@@ -160,7 +160,7 @@ theorem neg_one_mem_pin55 : (-1 : InfoGeometry.Clifford.Clifford55.Cl55) ∈ Inf
     have hgen :
         u ∈ ((↑) ⁻¹' Set.range InfoGeometry.Clifford.Clifford55.ι55 : Set InfoGeometry.Clifford.Clifford55.Cl55ˣ) := by
       refine ⟨InfoGeometry.Clifford.Clifford55.f_neg 0, ?_⟩
-      simpa using huval
+      exact huval.symm
     have hulip : u ∈ InfoGeometry.Clifford.Clifford55.LipschitzGroup55 :=
       Subgroup.subset_closure hgen
     have hu2lip : u * u ∈ InfoGeometry.Clifford.Clifford55.LipschitzGroup55 :=
@@ -172,11 +172,11 @@ theorem neg_one_mem_pin55 : (-1 : InfoGeometry.Clifford.Clifford55.Cl55) ∈ Inf
     simp
 
 /-- The nontrivial `{I,-I}` element as an actual `Pin(5,5)` element. -/
-def negOnePin55 : InfoGeometry.Clifford.Clifford55.Pin55 :=
+noncomputable def negOnePin55 : InfoGeometry.Clifford.Clifford55.Pin55 :=
   ⟨(-1 : InfoGeometry.Clifford.Clifford55.Cl55), neg_one_mem_pin55⟩
 
 /-- The centralizer elements map into the Pin(5,5) group over the identity. -/
-def centralizerElement (c : CentralSign) : InfoGeometry.Clifford.Clifford55.Pin55 :=
+noncomputable def centralizerElement (c : CentralSign) : InfoGeometry.Clifford.Clifford55.Pin55 :=
   match c with
   | I => 1
   | negI => negOnePin55

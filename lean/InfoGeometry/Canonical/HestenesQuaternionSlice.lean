@@ -68,36 +68,30 @@ theorem quaternionSliceConjugate_quaternionI :
     quaternionSliceConjugate quaternionI = -q1 := by
   apply Prod.ext
   · simp [quaternionSliceConjugate, quaternionSlice,
-      Quaternion.instStar, QuaternionAlgebra.instStarQuaternionAlgebra,
       quaternionI, q1, imaginary]
   · funext i
     fin_cases i <;>
       simp [quaternionSliceConjugate, quaternionSlice,
-        Quaternion.instStar, QuaternionAlgebra.instStarQuaternionAlgebra,
         quaternionI, q1, imaginary, e0]
 
 theorem quaternionSliceConjugate_quaternionJ :
     quaternionSliceConjugate quaternionJ = -q2 := by
   apply Prod.ext
   · simp [quaternionSliceConjugate, quaternionSlice,
-      Quaternion.instStar, QuaternionAlgebra.instStarQuaternionAlgebra,
       quaternionJ, q2, imaginary]
   · funext i
     fin_cases i <;>
       simp [quaternionSliceConjugate, quaternionSlice,
-        Quaternion.instStar, QuaternionAlgebra.instStarQuaternionAlgebra,
         quaternionJ, q2, imaginary, e1]
 
 theorem quaternionSliceConjugate_quaternionK :
     quaternionSliceConjugate quaternionK = -q3 := by
   apply Prod.ext
   · simp [quaternionSliceConjugate, quaternionSlice,
-      Quaternion.instStar, QuaternionAlgebra.instStarQuaternionAlgebra,
       quaternionK, q3, imaginary]
   · funext i
     fin_cases i <;>
       simp [quaternionSliceConjugate, quaternionSlice,
-        Quaternion.instStar, QuaternionAlgebra.instStarQuaternionAlgebra,
         quaternionK, q3, imaginary, e2]
 
 theorem quaternionSlice_injective :

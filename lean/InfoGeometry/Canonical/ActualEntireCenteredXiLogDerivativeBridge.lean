@@ -1,5 +1,4 @@
 import InfoGeometry.Canonical.ActualEntireCenteredXiBridge
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ActualEntireRiemannXiLogDerivativeBridge
 import Mathlib.Analysis.Normed.Operator.BoundedLinearMaps
 

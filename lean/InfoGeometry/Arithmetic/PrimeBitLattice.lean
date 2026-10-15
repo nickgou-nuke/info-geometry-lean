@@ -41,7 +41,7 @@ abbrev isPrime (L : PrimeBitLattice) : ∀ p ∈ L.primes, Nat.Prime p := L.2
 end PrimeBitLattice
 
 /-- A bit-state is a finite subset of the available prime labels. -/
-def PrimeBitState (L : PrimeBitLattice) :=
+abbrev PrimeBitState (L : PrimeBitLattice) :=
   {ε : Finset ℕ // ε ⊆ L.primes}
 
 /-- Energy map `E(ε) = Σ log p` on bit-states. -/

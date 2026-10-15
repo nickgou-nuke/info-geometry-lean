@@ -22,12 +22,13 @@ noncomputable section
 
 namespace CStarStateColimit.Native.FilteredGNSRepresentedCStarCompletion
 
-set_option synthInstance.maxHeartbeats 80000
-set_option maxHeartbeats 400000
+set_option synthInstance.maxHeartbeats 200000
+set_option maxHeartbeats 1200000
 set_option linter.unusedSectionVars false
 
 open CStarStateColimit.Native
 open CStarStateColimit.Native.FilteredGNSHilbertColimit
+open CStarStateColimit.Native.FilteredGNSAlgebraicColimitRepresentation
 open CStarStateColimit.Native.FilteredGNSRepresentedCStarClosure
 open CStarStateColimit.Native.FilteredGNSFaithfulRangeQuotient
 open CStarStateColimit.Native.FilteredGNSRepresentedRangeCompletion
@@ -47,18 +48,74 @@ variable
     ContinuousStarInductiveSystem.CompatibleStateFamily
       Stage sys)
 
+local instance gnsHilbertColimitCompleteSpace :
+    CompleteSpace (GNSHilbertColimit Stage sys ω) :=
+  gnsHilbertColimit_complete Stage sys ω
+
 local instance globalBoundedOperatorCStarAlgebra :
     CStarAlgebra
       (GNSHilbertColimit Stage sys ω →L[ℂ]
         GNSHilbertColimit Stage sys ω) where
 
-/-- The complete star-ring structure transported from the concrete represented
-operator closure.  The involution, involutivity, additivity, and reversed
-product law are all inherited structurally along the algebra equivalence. -/
+local instance representedAlgebraicRangeAddCommGroup :
+    AddCommGroup (representedAlgebraicRange Stage sys ω) := by
+  change AddCommGroup
+    {x : GNSHilbertColimit Stage sys ω →L[ℂ]
+        GNSHilbertColimit Stage sys ω //
+      x ∈ (algebraicColimitGNSRepresentation Stage sys ω).range}
+  infer_instance
+
+instance representedAlgebraicRangeCompletionCompleteSpace :
+    CompleteSpace (representedAlgebraicRangeCompletion Stage sys ω) :=
+  UniformSpace.Completion.completeSpace
+    (representedAlgebraicRange Stage sys ω)
+
+instance representedAlgebraicRangeCompletionNormedAlgebra :
+    NormedAlgebra ℂ (representedAlgebraicRangeCompletion Stage sys ω) where
+  norm_smul_le := norm_smul_le
+
+local instance representedAlgebraicRangeIsUniformAddGroup :
+    IsUniformAddGroup (representedAlgebraicRange Stage sys ω) := by
+  change IsUniformAddGroup
+    {x : GNSHilbertColimit Stage sys ω →L[ℂ]
+        GNSHilbertColimit Stage sys ω //
+      x ∈ (algebraicColimitGNSRepresentation Stage sys ω).range}
+  infer_instance
+
+local instance representedAlgebraicRangeModule :
+    Module ℂ (representedAlgebraicRange Stage sys ω) :=
+  Submodule.module
+    ((representedAlgebraicRange Stage sys ω).toSubalgebra.toSubmodule)
+
+local instance representedAlgebraicRangeNormedSpace :
+    NormedSpace ℂ (representedAlgebraicRange Stage sys ω) :=
+  (representedAlgebraicRange Stage sys ω).toSubalgebra.toSubmodule.normedSpace
+
+local instance representedAlgebraicRangeUniformContinuousConstSMul :
+    UniformContinuousConstSMul ℂ (representedAlgebraicRange Stage sys ω) := by
+  change UniformContinuousConstSMul ℂ
+    {x : GNSHilbertColimit Stage sys ω →L[ℂ]
+        GNSHilbertColimit Stage sys ω //
+      x ∈ (algebraicColimitGNSRepresentation Stage sys ω).range}
+  infer_instance
+
 instance representedAlgebraicRangeCompletionStarRing :
-    StarRing (representedAlgebraicRangeCompletion Stage sys ω) :=
-  StarAlgEquivPullback.starRing
-    (representedRangeCompletionAlgEquiv Stage sys ω)
+    StarRing (representedAlgebraicRangeCompletion Stage sys ω) := by
+  let e := representedRangeCompletionAlgEquiv Stage sys ω
+  exact
+    { star := fun x => e.symm (star (e x))
+      star_involutive := by
+        intro x
+        apply e.injective
+        simp
+      star_add := by
+        intro x y
+        apply e.injective
+        simp
+      star_mul := by
+        intro x y
+        apply e.injective
+        simp }
 
 @[simp] theorem representedRangeCompletionAlgEquiv_map_star
     (x : representedAlgebraicRangeCompletion Stage sys ω) :
@@ -149,13 +206,19 @@ instance representedAlgebraicRangeCompletionCStarRing :
   norm_mul_self_le :=
     StarAlgEquivPullback.norm_mul_self_le
       (representedRangeCompletionAlgEquiv Stage sys ω)
-      (representedRangeCompletionEquiv Stage sys ω).norm_map
+      (representedRangeCompletionToClosure_norm Stage sys ω)
 
 /-- The completed faithful range is a native C-star algebra. -/
 instance representedAlgebraicRangeCompletionCStarAlgebra :
     CStarAlgebra
       (representedAlgebraicRangeCompletion Stage sys ω) where
-  norm_smul_le := norm_smul_le
+  toNormedRing := inferInstance
+  toStarRing := representedAlgebraicRangeCompletionStarRing Stage sys ω
+  toCompleteSpace :=
+    representedAlgebraicRangeCompletionCompleteSpace Stage sys ω
+  toCStarRing := representedAlgebraicRangeCompletionCStarRing Stage sys ω
+  toNormedAlgebra := inferInstance
+  toStarModule := representedAlgebraicRangeCompletionStarModule Stage sys ω
 
 /-- Canonical star-algebra equivalence between the completed faithful
 represented range and the concrete represented C-star closure. -/

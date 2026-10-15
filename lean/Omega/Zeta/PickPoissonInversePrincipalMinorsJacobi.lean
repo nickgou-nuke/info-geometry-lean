@@ -17,7 +17,7 @@ lemma xiPickPoissonPrincipalMinorDet_eq_prod_indexWeight {kappa : Nat}
     xiPickPoissonPrincipalMinorDet P I = I.prod (xiPickPoissonIndexWeight P) := by
   unfold xiPickPoissonPrincipalMinorDet xiPickPoissonDiagonalBlockDet xiPickPoissonKernelBlockDet
   rw [← Finset.prod_mul_distrib]
-  simp [xiPickPoissonIndexWeight]
+  rfl
 
 /-- Complementary index block inside `[κ]`. -/
 def xiPickPoissonComplementIndices {kappa : Nat} (I : Finset (Fin kappa)) : Finset (Fin kappa) :=

@@ -91,11 +91,15 @@ theorem baScoreFrozenMeasure_toMeasure_eq_priorWithDensity
       =
     qT.toMeasure.withDensity (frozenWeight prob mY_givenT x) := by
   rw [baScoreFrozenMeasure, discreteScoreMeasure_toMeasure, pmf_toMeasure_eq_count_withDensity]
-  simpa [baScoreFrozen_eq_prior_mul_frozenWeight] using
-    (withDensity_mul Measure.count
-      (f := fun t => qT t)
-      (g := frozenWeight prob mY_givenT x)
-      (by fun_prop) (by fun_prop))
+  have hscore : baScoreFrozen prob qT mY_givenT x =
+      fun t => qT t * frozenWeight prob mY_givenT x t := by
+    funext t
+    exact baScoreFrozen_eq_prior_mul_frozenWeight prob qT mY_givenT x t
+  rw [hscore]
+  exact withDensity_mul Measure.count
+    (f := fun t => qT t)
+    (g := frozenWeight prob mY_givenT x)
+    (by fun_prop) (by fun_prop)
 
 /--
 The frozen exponential partition function is exactly the real total mass of the

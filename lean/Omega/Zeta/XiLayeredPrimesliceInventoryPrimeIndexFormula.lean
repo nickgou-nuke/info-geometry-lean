@@ -80,7 +80,7 @@ theorem paper_xi_layered_primeslice_inventory_prime_index_formula (j B : ℕ) :
     have hindex : 2 ^ j * (2 * (B - 1) + 1) = 2 ^ j * (2 * B - 1) := by
       rw [hodd]
     rw [Omega.Folding.layeredPrime, Omega.Folding.primeSliceIndex, hindex]
-  · simpa [Omega.Folding.layeredPrime, Omega.Folding.primeSliceIndex] using
+  · simpa [Omega.Folding.layeredPrime, Omega.Folding.primeSliceIndex, Omega.Folding.nthPrime] using
       Nat.add_two_le_nth_prime (2 ^ j * (2 * B + 1))
 
 end Omega.Zeta

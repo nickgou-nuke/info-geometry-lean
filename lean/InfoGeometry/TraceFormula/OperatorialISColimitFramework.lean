@@ -196,22 +196,19 @@ with the complex BKM functional; it is not a second stage algebra. -/
 def realMatrixOperator (n : ℕ) (A : MatrixStage n) :
     SouriauOnsagerBKM.FiniteOperatorAlgebra (2 ^ n) :=
   CblinfunMatrix.matrixOp
-    (fun i j =>
-      (InfoGeometry.Algebra.CliffordBitWordEquivalence.bitWordStageEquivFin n A i j : ℂ))
+    ((InfoGeometry.Algebra.CliffordBitWordEquivalence.bitWordStageEquivFin n A).map
+      Complex.ofRealHom)
 
 theorem finiteOperatorTrace_realMatrixOperator
     (n : ℕ) (A : MatrixStage n) :
     SouriauOnsagerBKM.finiteOperatorTrace (realMatrixOperator n A) =
       Complex.ofReal
         (Matrix.trace
-          (InfoGeometry.Algebra.CliffordBitWordEquivalence.bitWordStageEquivFin n A)) := by
+          ((InfoGeometry.Algebra.CliffordBitWordEquivalence.bitWordStageEquivFin n).toFun A)) := by
   unfold realMatrixOperator SouriauOnsagerBKM.finiteOperatorTrace
   rw [CblinfunMatrix.matrixOfOp_matrixOp]
-  change (∑ i : Fin (2 ^ n),
-      (InfoGeometry.Algebra.CliffordBitWordEquivalence.bitWordStageEquivFin n A i i : ℂ)) = _
-  simp only [Matrix.trace, Matrix.diag_apply]
-  push_cast
-  rfl
+  exact (AddMonoidHom.map_trace Complex.ofRealHom
+    (InfoGeometry.Algebra.CliffordBitWordEquivalence.bitWordStageEquivFin n A)).symm
 
 theorem bkm_realMatrixOperator_readout
     (n : ℕ) (s : ℝ) (A : MatrixStage n) :
@@ -221,7 +218,9 @@ theorem bkm_realMatrixOperator_readout
       Complex.ofReal (normalizedTrace n A) := by
   rw [maximallyMixed_bkm_kernel_eq_normalized_trace,
     finiteOperatorTrace_realMatrixOperator]
-  have htrace :=
+  have htrace : Matrix.trace
+      ((InfoGeometry.Algebra.CliffordBitWordEquivalence.bitWordStageEquivFin n).toFun A) =
+      Matrix.trace A :=
     InfoGeometry.Algebra.CliffordBitWordEquivalence.bitWordStageEquivFin_trace n A
   unfold normalizedTrace rawTrace
   rw [← htrace]
@@ -241,8 +240,23 @@ theorem realMatrixOperator_mul_comp
   have hmul := congrArg
     (fun M : Matrix (Fin (2 ^ n)) (Fin (2 ^ n)) ℝ => M i j)
     ((InfoGeometry.Algebra.CliffordBitWordEquivalence.bitWordStageEquivFin n).map_mul A B)
-  have hmulC := congrArg Complex.ofReal hmul
-  simp [Matrix.mul_apply]
+  have hmulC :
+      Complex.ofRealHom
+          (((InfoGeometry.Algebra.CliffordBitWordEquivalence.bitWordStageEquivFin n)
+            (A * B)) i j) =
+        Complex.ofRealHom
+          ((((InfoGeometry.Algebra.CliffordBitWordEquivalence.bitWordStageEquivFin n) A) *
+            ((InfoGeometry.Algebra.CliffordBitWordEquivalence.bitWordStageEquivFin n) B)) i j) := by
+    change Complex.ofRealHom
+          ((InfoGeometry.Algebra.CliffordBitWordEquivalence.bitWordStageEquivFin n).toMulEquiv
+            (A * B) i j) =
+        Complex.ofRealHom
+          (((InfoGeometry.Algebra.CliffordBitWordEquivalence.bitWordStageEquivFin n).toMulEquiv A *
+            (InfoGeometry.Algebra.CliffordBitWordEquivalence.bitWordStageEquivFin n).toMulEquiv B) i j)
+    exact congrArg Complex.ofRealHom hmul
+  simp only [Matrix.map_apply, Matrix.mul_apply]
+  rw [hmulC, Matrix.mul_apply]
+  simp only [map_sum, map_mul]
 
 /- The BKM functional therefore reads a finite Onsager product as the
    normalized real UHF trace of the corresponding matrix product. -/

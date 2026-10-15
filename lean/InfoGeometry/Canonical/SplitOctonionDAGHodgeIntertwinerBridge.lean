@@ -53,10 +53,13 @@ def exteriorLaplacianMat : Mat8 :=
 /-- 🏆 THEOREM: Exterior Hodge Laplacian evaluates to identity $I_8$. -/
 theorem exteriorLaplacianMat_eq_one : exteriorLaplacianMat = 1 := by
   dsimp [exteriorLaplacianMat, exteriorDiracMat]
-  ext i j
-  fin_cases i <;> fin_cases j <;> (
-    simp [Matrix.mul_apply, Matrix.add_apply, eps0Mat, iota0Mat, Fin.sum_univ_eight]
-  )
+  calc
+    (eps0Mat + iota0Mat) * (eps0Mat + iota0Mat) =
+        (eps0Mat * eps0Mat + eps0Mat * iota0Mat) +
+          (iota0Mat * eps0Mat + iota0Mat * iota0Mat) := by noncomm_ring
+    _ = 1 := by
+      rw [eps0Mat_sq, iota0Mat_sq]
+      simpa [add_assoc] using eps0_iota0_anticomm
 
 /-- An explicit DAG Hodge datum consisting of nilpotent $d$ and adjoint $\delta$. -/
 structure DAGHodgeDatum where

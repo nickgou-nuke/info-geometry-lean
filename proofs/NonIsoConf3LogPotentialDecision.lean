@@ -28,7 +28,13 @@ open NonIsoConf3LogCFTPotential
 inductive Branch where
   | productLeray
   | osAlpha
-  deriving DecidableEq, Fintype, Repr
+  deriving DecidableEq, Repr
+
+instance : Fintype Branch where
+  elems := {Branch.productLeray, Branch.osAlpha}
+  complete := by
+    intro b
+    cases b <;> simp
 
 /-- Finite rank/partition count of each branch. -/
 def branchRank : Branch → ℕ

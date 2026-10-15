@@ -35,16 +35,11 @@ This is exactly the existing owner theorem from
 -/
 theorem external_chargedFock_mode_one_commutator
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
-    let M :
-      InfoGeometry.Canonical.CurrentSugawaraBridge.CurrentSugawaraMorphism 𝕜
-        (VirasoroProject.ChargedFockSpace 𝕜 α) :=
+    let M :=
       InfoGeometry.Canonical.CurrentSugawaraBridge.CurrentSugawaraMorphism.ofHeisenberg
         (InfoGeometry.Canonical.CurrentSugawaraBridge.chargedFockSpaceCurrentHeisenbergRep 𝕜 α)
     (M.heisenberg.J 1).commutator (M.heisenberg.J (-1)) =
-      (1 : 𝕜) •
-        (1 :
-          VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
-            VirasoroProject.ChargedFockSpace 𝕜 α) := by
+      (1 : 𝕜) • 1 := by
   simpa using chargedFock_current_commutator_base_via_morphism (𝕜 := 𝕜) α (1 : Int)
 
 end InfoGeometry.Canonical.SplitCliffordSourceWickBaseExternalBridge

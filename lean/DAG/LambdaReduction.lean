@@ -40,15 +40,6 @@ def shiftDown (d c : Nat) : LambdaTerm → LambdaTerm
       simp only [shiftAbove, shiftDown]
       rw [ihf, iha]
 
-/-- Capture-avoiding substitution of the variable at index `j`. -/
-def subst (j : Nat) (s : LambdaTerm) : LambdaTerm → LambdaTerm
-  | .var k =>
-      if k = j then s
-      else if j < k then .var (k - 1)
-      else .var k
-  | .abs body => .abs (subst (j + 1) (shiftAbove 1 0 s) body)
-  | .app f a => .app (subst j s f) (subst j s a)
-
 @[simp] theorem shiftAbove_var_of_lt {d c k : Nat} (h : k < c) :
     shiftAbove d c (.var k) = .var k := by
   simp [shiftAbove, Nat.not_le.mpr h]
@@ -65,17 +56,29 @@ def subst (j : Nat) (s : LambdaTerm) : LambdaTerm → LambdaTerm
     shiftAbove d c (.abs body) =
       .abs (shiftAbove d (c + 1) body) := rfl
 
+/-- The reduction layer's binder shift is the canonical lambda-term lift. -/
+theorem liftAt_eq_shiftAbove (cutoff : Nat) (s : LambdaTerm) :
+    LambdaTerm.liftAt cutoff s = shiftAbove 1 cutoff s := by
+  induction s generalizing cutoff with
+  | var k => by_cases h : cutoff ≤ k <;> simp [LambdaTerm.liftAt, shiftAbove, h]
+  | abs body ih => simp only [LambdaTerm.liftAt, shiftAbove]; rw [ih]
+  | app f a ihf iha => simp only [LambdaTerm.liftAt, shiftAbove]; rw [ihf, iha]
+
+theorem lift_eq_shiftAbove (s : LambdaTerm) :
+    LambdaTerm.lift s = shiftAbove 1 0 s := by
+  exact liftAt_eq_shiftAbove 0 s
+
 @[simp] theorem subst_var_eq (j : Nat) (s : LambdaTerm) :
     subst j s (.var j) = s := by
-  simp [subst]
+  simp [LambdaTerm.subst]
 
 @[simp] theorem subst_var_of_lt {j k : Nat} (h : k < j) (s : LambdaTerm) :
     subst j s (.var k) = .var k := by
-  simp [subst, Nat.ne_of_lt h, Nat.not_lt_of_ge (Nat.le_of_lt h)]
+  simp [LambdaTerm.subst, h]
 
 @[simp] theorem subst_var_of_gt {j k : Nat} (h : j < k) (s : LambdaTerm) :
     subst j s (.var k) = .var (k - 1) := by
-  simp [subst, (Nat.ne_of_lt h).symm, h]
+  simp [LambdaTerm.subst, Nat.not_lt.mpr (Nat.le_of_lt h), Nat.ne_of_gt h]
 
 @[simp] theorem shiftAbove_zero (c : Nat) (t : LambdaTerm) :
     shiftAbove 0 c t = t := by
@@ -90,11 +93,14 @@ def subst (j : Nat) (s : LambdaTerm) : LambdaTerm → LambdaTerm
 
 @[simp] theorem subst_app (j : Nat) (s f a : LambdaTerm) :
     subst j s (.app f a) =
-      .app (subst j s f) (subst j s a) := rfl
+      .app (subst j s f) (subst j s a) := by
+  rfl
 
 @[simp] theorem subst_abs (j : Nat) (s body : LambdaTerm) :
     subst j s (.abs body) =
-      .abs (subst (j + 1) (shiftAbove 1 0 s) body) := rfl
+      .abs (subst (j + 1) (shiftAbove 1 0 s) body) := by
+  change LambdaTerm.abs (LambdaTerm.subst (j + 1) (LambdaTerm.lift s) body) = _
+  rw [lift_eq_shiftAbove]
 
 /-- One beta contraction, including its exact de Bruijn contractum. -/
 inductive BetaStep : LambdaTerm → LambdaTerm → Type where

@@ -1,6 +1,6 @@
 import Mathlib.Data.Matrix.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.Linarith
@@ -44,11 +44,11 @@ def positiveOrthant : Set (Fin n → ℝ) :=
 
 theorem isOpen_positiveOrthant :
     IsOpen (positiveOrthant (n := n)) := by
-  have hopen : IsOpen (⋂ i : Fin n, (fun P : Fin n → ℝ => P i) ⁻¹' Set.Ioi (0 : ℝ)) := by
-    simpa using
-      isOpen_biInter_finset (s := (Finset.univ : Finset (Fin n)))
-        (fun i hi => isOpen_Ioi.preimage (continuous_apply i))
-  simpa [positiveOrthant, Set.setOf_forall] using hopen
+  have h_eq : positiveOrthant (n := n) = ⋂ i : Fin n, (fun P : Fin n → ℝ => P i) ⁻¹' Set.Ioi (0 : ℝ) := by
+    ext P
+    simp [positiveOrthant, Set.mem_iInter, Set.mem_Ioi]
+  rw [h_eq]
+  exact isOpen_iInter_of_finite (fun i => isOpen_Ioi.preimage (continuous_apply i))
 
 theorem convex_positiveOrthant :
     Convex ℝ (positiveOrthant (n := n)) := by
@@ -114,14 +114,14 @@ theorem continuousOn_relativeEntropy :
 theorem continuous_relativeEntropy_on_subtype
     (K : Set ((Fin n → ℝ) × (Fin n → ℝ)))
     (hKpos : K ⊆ positiveOrthantPair (n := n)) :
-    Continuous (fun p : K => relativeEntropy p.1.1 p.1.2) := by
-  simpa using ((continuousOn_relativeEntropy (n := n)).mono hKpos).restrict
+    Continuous (fun p : K => relativeEntropy p.1.1 p.1.2) :=
+  ((continuousOn_relativeEntropy (n := n)).mono hKpos).domRestrict
 
 theorem isCompact_relativeEntropy_image_of_compact
     (K : Set ((Fin n → ℝ) × (Fin n → ℝ))) (hK : IsCompact K)
     (hKpos : K ⊆ positiveOrthantPair (n := n)) :
     IsCompact (Set.range (fun p : K => relativeEntropy p.1.1 p.1.2)) := by
-  letI : CompactSpace K := isCompact_iff_compactSpace.mp hK
+  haveI : CompactSpace K := isCompact_iff_compactSpace.mp hK
   exact isCompact_range (continuous_relativeEntropy_on_subtype K hKpos)
 
 theorem isPathConnected_relativeEntropy_image_of_pathConnected

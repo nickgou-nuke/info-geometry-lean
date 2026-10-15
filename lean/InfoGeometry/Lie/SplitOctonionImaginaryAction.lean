@@ -11,6 +11,7 @@ open InfoGeometry.Algebra.Zorn
 open InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 open InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge
 open InfoGeometry.Algebra.Zorn.G2TrifactorSU3
+open InfoGeometry.Canonical.ZornMatrix
 
 /-- The intrinsic trace as a real-linear map. -/
 noncomputable def traceLinear : CanonicalZorn →ₗ[ℝ] ℝ where
@@ -20,7 +21,7 @@ noncomputable def traceLinear : CanonicalZorn →ₗ[ℝ] ℝ where
     ring
   map_smul' r X := by
     change (r • X).a + (r • X).b = r * (X.a + X.b)
-    simp [Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv]
+    simp [smul_a, smul_b]
     ring
 
 /-- Imaginary split octonions are exactly the trace-zero hyperplane. -/
@@ -127,8 +128,7 @@ theorem mem_null_iff_square_zero (X : Imaginary) :
     have hq := realZorn_quadratic X.1
     rw [htrace, hsq] at hq
     have ha := congrArg (fun Z : CanonicalZorn => Z.a) hq
-    have h1a : (1 : CanonicalZorn).a = 1 := rfl
-    simpa [Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv, h1a] using ha
+    simpa [smul_a, one_a] using ha
 
 /-- Right multiplication by an imaginary split octonion, as a real-linear map. -/
 noncomputable def rightMulLinear (X : Imaginary) : Imaginary →ₗ[ℝ] CanonicalZorn where

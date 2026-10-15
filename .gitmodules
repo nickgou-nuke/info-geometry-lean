@@ -92,3 +92,9 @@
 	path = external_refs/NavierStokesAndEuler
 	url = https://github.com/openai/NavierStokesAndEuler.git
 	ignore = dirty
+
+[submodule "OpenGauss"]
+	path = OpenGauss
+	url = https://github.com/math-inc/OpenGauss.git
+	ignore = dirty
+

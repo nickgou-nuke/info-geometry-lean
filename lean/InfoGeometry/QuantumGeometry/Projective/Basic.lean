@@ -1,7 +1,7 @@
 import Mathlib.Analysis.InnerProductSpace.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.InnerProductSpace.Adjoint
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.Algebra.Lie.Basic
 import Mathlib.Tactic
@@ -11,7 +11,10 @@ noncomputable section
 namespace InfoGeometry.QuantumGeometry.Projective
 
 open scoped InnerProductSpace
+open scoped LieAlgebra
 open ContinuousLinearMap
+
+attribute [local instance 100] LieRing.ofAssociativeRing
 
 abbrev EndH (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H] : Type _ :=
   H →L[ℂ] H
@@ -94,7 +97,8 @@ noncomputable def toLieHom : SkewAdjoint H →ₗ⁅ℝ⁆ EndH H :=
       dsimp [Ring.lie_def, skewBracket]
       rfl }
 
-theorem toLieHom_injective : Function.Injective (toLieHom (H := H)) :=
+theorem toLieHom_injective :
+    Function.Injective (toLieHom : SkewAdjoint H →ₗ⁅ℝ⁆ EndH H) :=
   Subtype.val_injective
 
 end SkewAdjoint
@@ -115,30 +119,30 @@ variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteS
 noncomputable def ofState (ψ : H) (_hψ : ψ ≠ 0) : ProjectiveQGT H where
   metric := LinearMap.mk₂ ℝ
     (fun A B => (⟪A ψ, B ψ⟫_ℂ).re / (‖ψ‖ ^ 2))
-    (by intro A₁ A₂ B; simp [ContinuousLinearMap.add_apply, inner_add_left, add_div])
+    (by intro A₁ A₂ B; simp [add_apply, inner_add_left, add_div])
     (by
       intro c A B
-      simp only [ContinuousLinearMap.smul_apply, inner_smul_left_eq_smul, Complex.real_smul,
+      simp only [smul_apply, inner_smul_left_eq_smul, Complex.real_smul,
         Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, zero_mul, sub_zero, mul_div_assoc]
       rfl)
-    (by intro A B₁ B₂; simp [ContinuousLinearMap.add_apply, inner_add_right, add_div])
+    (by intro A B₁ B₂; simp [add_apply, inner_add_right, add_div])
     (by
       intro c A B
-      simp only [ContinuousLinearMap.smul_apply, inner_smul_right_eq_smul, Complex.real_smul,
+      simp only [smul_apply, inner_smul_right_eq_smul, Complex.real_smul,
         Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, zero_mul, sub_zero, mul_div_assoc]
       rfl)
   berry := LinearMap.mk₂ ℝ
     (fun A B => -(⟪A ψ, B ψ⟫_ℂ).im / (‖ψ‖ ^ 2))
-    (by intro A₁ A₂ B; simp [ContinuousLinearMap.add_apply, inner_add_left]; ring)
+    (by intro A₁ A₂ B; simp [add_apply, inner_add_left]; ring)
     (by
       intro c A B
-      simp only [ContinuousLinearMap.smul_apply, inner_smul_left_eq_smul, Complex.real_smul,
+      simp only [smul_apply, inner_smul_left_eq_smul, Complex.real_smul,
         Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im, zero_mul, add_zero, smul_eq_mul]
       ring)
-    (by intro A B₁ B₂; simp [ContinuousLinearMap.add_apply, inner_add_right]; ring)
+    (by intro A B₁ B₂; simp [add_apply, inner_add_right]; ring)
     (by
       intro c A B
-      simp only [ContinuousLinearMap.smul_apply, inner_smul_right_eq_smul, Complex.real_smul,
+      simp only [smul_apply, inner_smul_right_eq_smul, Complex.real_smul,
         Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im, zero_mul, add_zero, smul_eq_mul]
       ring)
   metric_symm := ⟨fun A B => by
@@ -151,7 +155,7 @@ noncomputable def ofState (ψ : H) (_hψ : ψ ≠ 0) : ProjectiveQGT H where
   compat := by
     intro A B
     dsimp [complexAction]
-    rw [inner_smul_right, Complex.I_mul_re]
+    rw [smul_apply, inner_smul_right, Complex.I_mul_re]
 
 theorem ofState_metric_apply (ψ : H) (hψ : ψ ≠ 0) (A B : EndH H) :
     (ofState ψ hψ).metric A B = (⟪A ψ, B ψ⟫_ℂ).re / (‖ψ‖ ^ 2) := rfl

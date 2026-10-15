@@ -21,6 +21,7 @@ theorem relativeEntropyPersistenceCutoffColimitMap_refl_hom
   intro t
   apply TopCat.hom_ext
   ext x
+  change RelativeEntropySublevelQuotient (n := n) ε 0 t at x
   change
     relativeEntropyPersistenceCutoffColimitMap (le_refl ε)
         (relativeEntropyPersistenceColimitStage ε t x) =
@@ -43,6 +44,7 @@ theorem relativeEntropyPersistenceCutoffColimitMap_trans_hom
   intro t
   apply TopCat.hom_ext
   ext x
+  change RelativeEntropySublevelQuotient (n := n) ε₃ 0 t at x
   change
     relativeEntropyPersistenceCutoffColimitMap h₁₂
         (relativeEntropyPersistenceCutoffColimitMap h₂₃

@@ -62,8 +62,15 @@ private lemma fib_succ_mul_phi_neg_tendsto :
       Filter.Tendsto
         (fun m : ℕ => (Nat.fib (m + 1) : ℝ) * (Real.goldenRatio ^ (m + 1))⁻¹)
         Filter.atTop (nhds ((Real.sqrt 5)⁻¹)) := by
-    simpa [Function.comp] using
-      Omega.Entropy.fib_mul_phi_neg_tendsto_inv_sqrt5.comp (Filter.tendsto_add_atTop_nat 1)
+    have h := Omega.Entropy.fib_mul_phi_neg_tendsto_inv_sqrt5.comp
+      (Filter.tendsto_add_atTop_nat 1)
+    have hEq :
+        (fun m : ℕ => (Nat.fib (m + 1) : ℝ) * Real.goldenRatio ^ (-((m + 1 : ℕ) : ℝ))) =ᶠ[Filter.atTop]
+          (fun m : ℕ => (Nat.fib (m + 1) : ℝ) * (Real.goldenRatio ^ (m + 1))⁻¹) := by
+      filter_upwards with m
+      congr 1
+      rw [Real.rpow_neg Real.goldenRatio_pos.le, Real.rpow_natCast]
+    exact h.congr' hEq
   have hEq :
       (fun m : ℕ => (Nat.fib (m + 1) : ℝ) * Real.goldenRatio ^ (-(m : ℝ))) =ᶠ[Filter.atTop]
         fun m : ℕ =>
@@ -82,7 +89,8 @@ private lemma fib_succ_mul_phi_neg_tendsto :
         _ = Real.goldenRatio * ((Nat.fib (m + 1) : ℝ) * (Real.goldenRatio ^ (m + 1))⁻¹) := by
             ring
   refine Filter.Tendsto.congr' hEq.symm ?_
-  simpa [one_div, mul_comm, mul_left_comm, mul_assoc] using hshift.const_mul Real.goldenRatio
+  simpa [div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc] using
+    hshift.const_mul Real.goldenRatio
 
 namespace FoldBinDegeneracyTailCapacityKinksData
 

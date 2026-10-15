@@ -15,8 +15,8 @@ theorem paper_fold_gauge_anomaly_bernoulli_p_density_unimodal :
       pStar ^ 2 * (3 - 2 * pStar) / (1 + pStar ^ 3) = pStar ^ 2 := by
   let f : ℝ → ℝ := fun p => p ^ 3 + 2 * p - 2
   have hf_cont : Continuous f := by
-    simpa [f] using
-      (((continuous_id.pow 3).add (continuous_const.mul continuous_id)).sub continuous_const)
+    dsimp [f]
+    fun_prop
   have hzero_mem : (0 : ℝ) ∈ Set.Ioo (f 0) (f 1) := by
     dsimp [f]
     norm_num

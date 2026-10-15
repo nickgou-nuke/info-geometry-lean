@@ -21,6 +21,8 @@ open InfoGeometry.Clifford.SpinorRep
 
 abbrev SpinBivector55 := Cl55SpinBivectorImage.SpinBivector55
 
+local instance : LieRing (SpinorMatrix 5) := LieRing.ofAssociativeRing
+
 theorem spinBivectorMatrixLinear_map_lie (X Y : SpinBivector55) :
     spinBivectorMatrixLinear ⁅X, Y⁆ =
       ⁅spinBivectorMatrixLinear X, spinBivectorMatrixLinear Y⁆ := by

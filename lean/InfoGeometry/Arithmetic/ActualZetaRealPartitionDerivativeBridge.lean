@@ -207,11 +207,6 @@ theorem realPartitionSeries_log_secondDeriv_eq_vonMangoldt_logMul_re
     exact (LSeries_hasDerivAt
       (f := (↗ArithmeticFunction.vonMangoldt : ℕ → ℂ))
       (s := (β : ℂ)) (by simpa using hlt)).differentiableAt
-  have hright : HasDerivAt
-      (fun x : ℝ =>
-        -(actualRiemannZetaLogDerivative (x : ℂ)).re)
-      (-(deriv actualRiemannZetaLogDerivative (β : ℂ)).re) β := by
-    simpa using hdiff.hasDerivAt.real_of_complex.neg
   have hfun :
       (fun x : ℝ =>
         deriv (fun y : ℝ => Real.log (realPartitionSeries y)) x) =ᶠ[
@@ -226,8 +221,9 @@ theorem realPartitionSeries_log_secondDeriv_eq_vonMangoldt_logMul_re
         deriv (fun x : ℝ =>
           -(actualRiemannZetaLogDerivative (x : ℂ)).re) β :=
       hfun.deriv_eq
-    _ = -(deriv actualRiemannZetaLogDerivative (β : ℂ)).re :=
-      hright.deriv
+    _ = -(deriv actualRiemannZetaLogDerivative (β : ℂ)).re := by
+      simpa only [Pi.neg_apply, Complex.neg_re] using
+        hdiff.hasDerivAt.neg.real_of_complex.deriv
     _ = (LSeries
         (LSeries.logMul (↗ArithmeticFunction.vonMangoldt))
         (β : ℂ)).re := by

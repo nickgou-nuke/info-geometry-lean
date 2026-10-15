@@ -6,6 +6,7 @@ import InfoGeometry.Categorical.HadjiivanovRMatrixBraid
 import InfoGeometry.Categorical.RindlerFilteredColimit
 import InfoGeometry.Categorical.PrimeThermodynamicLimitCapstone
 import InfoGeometry.Categorical.PrimonParafermionGrandCanonicalColimitCapstone
+import InfoGeometry.Categorical.PresentedPathModuleColimitBridge
 
 import InfoGeometry.Categorical.BraidGroup3S3QuotientBridge
 import InfoGeometry.Categorical.ArtinGarsideCenterBridge
@@ -13,3 +14,6 @@ import InfoGeometry.Categorical.UniversalArtinBraidRepresentation
 import InfoGeometry.Categorical.BraidPermutationQuotient
 import InfoGeometry.Categorical.MajoranaUniversalB3Bridge
 import InfoGeometry.Categorical.FibonacciUniversalB3Bridge
+import InfoGeometry.Categorical.TypedCategoryArchetype
+import InfoGeometry.Categorical.TypedCategoryArchetypeInstances
+import InfoGeometry.Categorical.TypedPeirceArchetype

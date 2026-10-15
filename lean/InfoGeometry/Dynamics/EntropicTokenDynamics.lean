@@ -308,7 +308,10 @@ theorem modeCouplerMatrix_real_trace
     (ωPlus ωMinus γPlus γMinus : ℝ) (κ : ℂ) :
     (Matrix.trace (modeCouplerMatrix ωPlus ωMinus γPlus γMinus κ)).re =
       -(γPlus + γMinus) := by
-  simp [Matrix.trace, modeCouplerMatrix]
+  rw [Matrix.trace, Fin.sum_univ_two]
+  change (modeCouplerMatrix ωPlus ωMinus γPlus γMinus κ 0 0).re +
+      (modeCouplerMatrix ωPlus ωMinus γPlus γMinus κ 1 1).re = _
+  rw [modeCouplerMatrix_real_diag_plus, modeCouplerMatrix_real_diag_minus]
   ring
 
 /-- The scalar four-wave mixing expression, including its conjugate term. -/

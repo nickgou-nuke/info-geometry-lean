@@ -12,7 +12,7 @@ open InfoGeometry.Canonical.CuntzStageModularFlow
 
 noncomputable section
 
-universe u
+universe u v
 
 /-!
 # Modular-spinor / Cuntz-stage exchange topological colimit bridge
@@ -30,19 +30,19 @@ Accordingly, this file only packages the two owner surfaces together and
 re-exports the native categorical laws already proved in each.
 -/
 
-variable {E Sections BoundarySections Gr Open : Type*}
+variable {E Sections BoundarySections : Type*} {Gr Open : Type v}
 variable [AddCommGroup Sections] [Module ℝ Sections]
 variable [AddCommGroup BoundarySections] [Module ℝ BoundarySections]
-variable [TopologicalSpace Gr] [Category Open]
+variable [TopologicalSpace Gr] [Category.{v, v} Open]
 variable {J : Type u} [Category.{u, u} J]
 variable {F : J ⥤ TopCat.{u}}
 
 /-- The sheaf cover condition remains available inside the exchange topological bridge. -/
 theorem modularSpinor_CuntzStageExchangeTopological_monogenicSheaf_isSheafFor
-  {E Sections BoundarySections Gr Open : Type*}
+  {E Sections BoundarySections : Type*} {Gr Open : Type v}
   [AddCommGroup Sections] [Module ℝ Sections]
   [AddCommGroup BoundarySections] [Module ℝ BoundarySections]
-  [TopologicalSpace Gr] [Category Open]
+  [TopologicalSpace Gr] [Category.{v, v} Open]
   {J : Type u} [Category.{u, u} J]
   (F : J ⥤ TopCat.{u})
   (B : ModularSpinorFilteredColimitBridge
@@ -56,10 +56,10 @@ theorem modularSpinor_CuntzStageExchangeTopological_monogenicSheaf_isSheafFor
 /-- The monogenic section membership theorem remains available inside the
 exchange topological bridge. -/
 theorem modularSpinor_CuntzStageExchangeTopological_monogenicSection_mem
-  {E Sections BoundarySections Gr Open : Type*}
+  {E Sections BoundarySections : Type*} {Gr Open : Type v}
   [AddCommGroup Sections] [Module ℝ Sections]
   [AddCommGroup BoundarySections] [Module ℝ BoundarySections]
-  [TopologicalSpace Gr] [Category Open]
+  [TopologicalSpace Gr] [Category.{v, v} Open]
   {J : Type u} [Category.{u, u} J]
   (F : J ⥤ TopCat.{u})
   (B : ModularSpinorFilteredColimitBridge
@@ -73,10 +73,10 @@ theorem modularSpinor_CuntzStageExchangeTopological_monogenicSection_mem
 /-- The boundary DN kernel theorem remains available inside the
 exchange topological bridge. -/
 theorem modularSpinor_CuntzStageExchangeTopological_boundary_kernel_eq_traceMonogenic
-  {E Sections BoundarySections Gr Open : Type*}
+  {E Sections BoundarySections : Type*} {Gr Open : Type v}
   [AddCommGroup Sections] [Module ℝ Sections]
   [AddCommGroup BoundarySections] [Module ℝ BoundarySections]
-  [TopologicalSpace Gr] [Category Open]
+  [TopologicalSpace Gr] [Category.{v, v} Open]
   {J : Type u} [Category.{u, u} J]
   (F : J ⥤ TopCat.{u})
   (B : ModularSpinorFilteredColimitBridge
@@ -90,10 +90,10 @@ theorem modularSpinor_CuntzStageExchangeTopological_boundary_kernel_eq_traceMono
 /-- The categorical spectrum descent map from the sheaf/spectrum bridge
 remains available inside the exchange topological bridge. -/
 noncomputable def modularSpinor_CuntzStageExchangeTopological_gelfandSpectrumDescend
-  {E Sections BoundarySections Gr Open : Type*}
+  {E Sections BoundarySections : Type*} {Gr Open : Type v}
   [AddCommGroup Sections] [Module ℝ Sections]
   [AddCommGroup BoundarySections] [Module ℝ BoundarySections]
-  [TopologicalSpace Gr] [Category Open]
+  [TopologicalSpace Gr] [Category.{v, v} Open]
   {J : Type u} [Category.{u, u} J]
   (F : J ⥤ TopCat.{u})
   (B : ModularSpinorFilteredColimitBridge
@@ -104,10 +104,10 @@ noncomputable def modularSpinor_CuntzStageExchangeTopological_gelfandSpectrumDes
 
 @[reassoc (attr := simp)]
 theorem modularSpinor_CuntzStageExchangeTopological_gelfandSpectrum_stage
-  {E Sections BoundarySections Gr Open : Type*}
+  {E Sections BoundarySections : Type*} {Gr Open : Type v}
   [AddCommGroup Sections] [Module ℝ Sections]
   [AddCommGroup BoundarySections] [Module ℝ BoundarySections]
-  [TopologicalSpace Gr] [Category Open]
+  [TopologicalSpace Gr] [Category.{v, v} Open]
   {J : Type u} [Category.{u, u} J]
   (F : J ⥤ TopCat.{u})
   (B : ModularSpinorFilteredColimitBridge
@@ -124,10 +124,10 @@ theorem modularSpinor_CuntzStageExchangeTopological_gelfandSpectrum_stage
 /-- The filtered topological direct colimit stage maps remain available
 inside the exchange topological bridge. -/
 noncomputable def modularSpinor_CuntzStageExchangeTopological_stageInjection
-  {E Sections BoundarySections Gr Open : Type*}
+  {E Sections BoundarySections : Type*} {Gr Open : Type v}
   [AddCommGroup Sections] [Module ℝ Sections]
   [AddCommGroup BoundarySections] [Module ℝ BoundarySections]
-  [TopologicalSpace Gr] [Category Open]
+  [TopologicalSpace Gr] [Category.{v, v} Open]
   {J : Type u} [Category.{u, u} J]
   (F : J ⥤ TopCat.{u})
   (B : ModularSpinorFilteredColimitBridge
@@ -139,10 +139,10 @@ noncomputable def modularSpinor_CuntzStageExchangeTopological_stageInjection
 /-- Naturality of the filtered colimit stage maps remains available
 inside the exchange topological bridge. -/
 theorem modularSpinor_CuntzStageExchangeTopological_stageInjection_naturality
-  {E Sections BoundarySections Gr Open : Type*}
+  {E Sections BoundarySections : Type*} {Gr Open : Type v}
   [AddCommGroup Sections] [Module ℝ Sections]
   [AddCommGroup BoundarySections] [Module ℝ BoundarySections]
-  [TopologicalSpace Gr] [Category Open]
+  [TopologicalSpace Gr] [Category.{v, v} Open]
   {J : Type u} [Category.{u, u} J]
   (F : J ⥤ TopCat.{u})
   (B : ModularSpinorFilteredColimitBridge
@@ -159,10 +159,10 @@ theorem modularSpinor_CuntzStageExchangeTopological_stageInjection_naturality
 /-- Modular-spinor transport still preserves the canonical three-form
 inside the full exchange topological bridge. -/
 theorem modularSpinor_CuntzStageExchangeTopological_transport_preserves_threeForm
-  {E Sections BoundarySections Gr Open : Type*}
+  {E Sections BoundarySections : Type*} {Gr Open : Type v}
   [AddCommGroup Sections] [Module ℝ Sections]
   [AddCommGroup BoundarySections] [Module ℝ BoundarySections]
-  [TopologicalSpace Gr] [Category Open]
+  [TopologicalSpace Gr] [Category.{v, v} Open]
   {J : Type u} [Category.{u, u} J]
   (F : J ⥤ TopCat.{u})
   (B : ModularSpinorFilteredColimitBridge

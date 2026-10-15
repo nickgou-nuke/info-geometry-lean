@@ -1,4 +1,5 @@
 import Mathlib
+import Mathlib.Algebra.Lie.OfAssociative
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.NuclearTwoModeFiveGradeSubmodules
 import InfoGeometry.Physics.NuclearFiveGradeCommonCarrierLieHom
@@ -27,6 +28,9 @@ open InfoGeometry.Physics.NuclearTwoModeFiveGradeSubmodules
 open InfoGeometry.Physics.NuclearFiveGradeCommonCarrierRepresentation
 open InfoGeometry.Physics.NuclearFiveGradeCommonCarrierLieHom
 local notation "M4R" => InfoGeometry.Physics.NuclearTwoModeFiveGradeLieModel.M4R
+
+local instance : LieRing M4R := LieRing.ofAssociativeRing
+local instance : LieRing Operator := LieRing.ofAssociativeRing
 
 /-- Number-preserving raising current from mode two to mode one. -/
 def degreeZeroRaise : InfoGeometry.Physics.NuclearTwoModeFiveGradeLieModel.M4R :=

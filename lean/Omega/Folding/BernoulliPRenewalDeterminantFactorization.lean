@@ -97,7 +97,8 @@ theorem paper_fold_bernoulli_p_renewal_determinant_factorization
     exact hclosed
   have hone :
       1 - D.Phi ≠ 0 := by
-    simpa [BernoulliPRenewalDeterminantFactorizationData.Phi] using D.hone
+    simpa [BernoulliPRenewalDeterminantFactorizationData.Phi,
+      BernoulliPRenewalDeterminantFactorizationData.denPhi] using D.hone
   have hclosed :
       D.denPhi ≠ 0 := by
     simpa [BernoulliPRenewalDeterminantFactorizationData.denPhi] using D.hzClosed

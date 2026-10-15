@@ -85,7 +85,7 @@ theorem glide_modular_j_synthesis (J Δ : G)
     J * Δ * J * Δ = 1 ∧
     (∀ n : ℤ, J * Δ^n * J = Δ^(-n)) := by
   constructor
-  · simpa using hJ
+  · exact hJ
   · constructor
     · exact modularJ_tomita_form hJ hInv
     · constructor

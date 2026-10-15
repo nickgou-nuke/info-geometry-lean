@@ -145,11 +145,19 @@ theorem plucker_coordinates_smul_both_satisfy_KleinRel
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
 [All theorems are over an arbitrary commutative ring `R`.]
 
-#### BUCKET 3: OPEN CLOSURE DEBT
-[Converse decomposability theorem, projective quotient of nonzero Plücker
- coordinates, Grassmannian `Gr(2,4)`, Plücker embedding as an equivalence onto
- the Klein quadric, Schubert calculus, and Gromov--Witten intersection
- readouts are not proved here.]
+#### SCOPE AND OWNER MAP
+This generic commutative-ring file proves the coordinate identities above.
+The real four-dimensional converse from Klein-nullity to decomposability is
+owned by `InfoGeometry.Projective.ExteriorPowerPluckerBridge`. Projective
+descent is owned by `InfoGeometry.Projective.ExteriorKleinProjective`, the
+surjective framed cover by
+`InfoGeometry.Projective.ExteriorKleinFrameSurjection`, and the set-level
+two-plane correspondence by
+`InfoGeometry.Projective.ExteriorKleinTwoPlaneEquiv`. These real, finite-
+dimensional results do not identify the carrier with Mathlib's
+scheme-oriented `Module.Grassmannian`; Schubert-calculus and
+Gromov--Witten/Chow-ring readouts are separate developments, not closure debt
+of the coordinate identities proved in this file.
 -/
 
 end InfoGeometry.Projective.Quadrics.PluckerKlein

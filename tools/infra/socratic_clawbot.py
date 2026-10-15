@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
-"""Socratic Lean proof repair prompt via browser-harness + ChatGPT.
+"""Socratic Lean proof-repair adapter with candidate-only output.
 
-This replaces the aiClaw adapter with a browser-harness driver that works with
-ChatGPT (and Google AI Search via the same harness). It preserves the Hermes
-lesson: send the complete owner file plus all relevant Lean errors in one prompt.
-No automatic overwrite of Lean source.
+ChatGPT browser access is serialized inside `chatgpt_browser_harness_driver`;
+Lean checks use the shared build lock. This adapter never overwrites owner code.
 """
 
 from __future__ import annotations
@@ -18,6 +16,7 @@ import subprocess
 import sys
 import tempfile
 import time
+import uuid
 from pathlib import Path
 from typing import Any
 
@@ -25,6 +24,7 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from tools.infra.lean_audit_prompt import extract_replacement_lean, lean_candidate_reject_reason
+from tools.build_lock import acquire_build_lock
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -33,7 +33,6 @@ logger = logging.getLogger("socratic_clawbot")
 
 # Browser-harness configuration
 CHATGPT_URL = os.environ.get("CHATGPT_URL", "https://chatgpt.com/?temporary-chat=true")
-CHATGPT_RESULT_JSON = Path(os.environ.get("CHATGPT_RESULT_JSON", "/tmp/socratic_browser_result.json"))
 CHATGPT_TIMEOUT_SECONDS = int(os.environ.get("CHATGPT_TIMEOUT_SECONDS", "600"))
 CHATGPT_POLL_SECONDS = float(os.environ.get("CHATGPT_POLL_SECONDS", "5"))
 
@@ -67,14 +66,15 @@ def read_theorem_block(filepath: Path, theorem_name: str) -> dict[str, Any]:
 
 def compile_check(lean_file: Path, timeout: int) -> dict[str, Any]:
     try:
-        proc = subprocess.run(
-            ["lake", "env", "lean", str(lean_file)],
-            cwd=ROOT,
-            capture_output=True,
-            text=True,
-            timeout=timeout,
-            check=False,
-        )
+        with acquire_build_lock(None, f"socratic-clawbot:{os.getpid()}:{lean_file.name}", block=True):
+            proc = subprocess.run(
+                ["lake", "env", "lean", str(lean_file)],
+                cwd=ROOT,
+                capture_output=True,
+                text=True,
+                timeout=timeout,
+                check=False,
+            )
         return {
             "cmd": ["lake", "env", "lean", str(lean_file)],
             "returncode": proc.returncode,
@@ -260,12 +260,14 @@ def run_browser_harness(prompt: str, timeout: int = CHATGPT_TIMEOUT_SECONDS) -> 
         f.write(prompt)
         prompt_file = f.name
 
+    result_path: Path | None = None
     try:
+        result_path = Path(tempfile.gettempdir()) / f"socratic_browser_result_{uuid.uuid4().hex}.json"
         env = os.environ.copy()
         env["CHATGPT_PROMPT_FILE"] = prompt_file
         env["BU_CDP_WS"] = os.environ.get("BU_CDP_WS", "")
         env["CHATGPT_URL"] = CHATGPT_URL
-        env["CHATGPT_RESULT_JSON"] = str(CHATGPT_RESULT_JSON)
+        env["CHATGPT_RESULT_JSON"] = str(result_path)
         env["CHATGPT_TIMEOUT_SECONDS"] = str(timeout)
         env["CHATGPT_POLL_SECONDS"] = str(CHATGPT_POLL_SECONDS)
 
@@ -284,26 +286,31 @@ _main()
             text=True,
             timeout=timeout,
         )
-
-        if CHATGPT_RESULT_JSON.exists():
-            content = CHATGPT_RESULT_JSON.read_text()
+        if result_path.exists():
+            content = result_path.read_text(encoding="utf-8")
             try:
-                return json.loads(content)
+                payload = json.loads(content)
             except json.JSONDecodeError:
-                return {"content": content, "success": True, "dry_run": False}
-
-        return {
-            "content": result.stdout,
-            "success": result.returncode == 0,
-            "dry_run": False,
-            "stderr": result.stderr,
-        }
-
+                payload = {"content": content, "success": True, "dry_run": False}
+        else:
+            payload = {
+                "content": result.stdout,
+                "success": result.returncode == 0,
+                "dry_run": False,
+                "stderr": result.stderr,
+            }
+        if not str(payload.get("content") or "").strip() or payload.get("suspect_intermediate"):
+            payload["needs_readback"] = True
+        return payload
     except subprocess.TimeoutExpired:
-        return {"content": "", "success": False, "dry_run": False, "error": "timeout"}
+        return {"content": "", "success": False, "dry_run": False,
+                "needs_readback": True, "error": "timeout"}
     except Exception as e:
-        return {"content": "", "success": False, "dry_run": False, "error": str(e)}
+        return {"content": "", "success": False, "dry_run": False,
+                "needs_readback": True, "error": str(e)}
     finally:
+        if result_path is not None:
+            result_path.unlink(missing_ok=True)
         try:
             os.unlink(prompt_file)
         except OSError:
@@ -338,7 +345,11 @@ def run_oracle(args: argparse.Namespace) -> dict[str, Any]:
     readback_reason = response_readback_reason(content, candidate)
     if readback_reason:
         candidate = ""
-    needs_readback = bool(result.get("suspect_intermediate")) or bool(readback_reason)
+    needs_readback = (
+        bool(result.get("needs_readback"))
+        or bool(result.get("suspect_intermediate"))
+        or bool(readback_reason)
+    )
 
     report = {
         "file": str(filepath),
@@ -400,7 +411,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--no-new", action="store_true", help="Ignored.")
     parser.add_argument("--dry-run", action="store_true", help="Show send metadata without contacting ChatGPT.")
     parser.add_argument("--allow-sensitive", action="store_true", help="Ignored.")
-    parser.add_argument("--no-queue", action="store_true", help="Ignored (no local queue with browser-harness).")
+    parser.add_argument("--no-queue", action="store_true", help="Deprecated; the shared single-flight lane is always enforced.")
     parser.add_argument("--queue-root", default="", help="Ignored.")
     parser.add_argument("--queue-timeout", type=float, default=900, help="Ignored.")
     parser.add_argument("--no-hold-on-suspect", action="store_true", help="Ignored.")

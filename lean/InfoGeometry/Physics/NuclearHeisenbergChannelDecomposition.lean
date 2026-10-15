@@ -68,11 +68,16 @@ theorem heisenberg_evolution_eq_channels
       heisenbergGradeZeroChannel M q +
         heisenbergGradeOneChannel M q +
           heisenbergGradeTwoChannel M q := by
-  dsimp [ThermalQuasiparticleModel.totalHamiltonian,
-    ThermalQuasiparticleModel.interactionHamiltonian,
-    heisenbergGradeZeroChannel, heisenbergGradeOneChannel,
-    heisenbergGradeTwoChannel]
-  rw [add_lie, add_lie, smul_lie, add_lie, smul_add]
+  have hsplit : ⁅M.interactionHamiltonian, q.op⁆ =
+      ⁅M.H_int_minus, q.op⁆ + ⁅M.H_int_plus, q.op⁆ := by
+    change (M.H_int_minus + M.H_int_plus) * q.op -
+        q.op * (M.H_int_minus + M.H_int_plus) =
+      (M.H_int_minus * q.op - q.op * M.H_int_minus) +
+        (M.H_int_plus * q.op - q.op * M.H_int_plus)
+    simp only [add_mul, mul_add]
+    abel_nf
+  rw [quasiparticle_eom M q, heisenbergGradeOneChannel_eq_qp M q,
+    hsplit, smul_add]
   abel
 
 theorem heisenberg_evolution_eq_shielded_channels

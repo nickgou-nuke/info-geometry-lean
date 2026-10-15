@@ -117,7 +117,8 @@ theorem zornIntegralLatticePolarTopCat_is_integer
     (X : ZornIntegralLatticePoint) :
     ∃ n : ℤ, zornIntegralLatticePolarTopCat Y X = (n : ℚ) := by
   have h_integral := integralLattice_is_integral X.property Y hY
-  simpa using h_integral
+  change ∃ n : ℤ, polar X.1 Y = (n : ℚ)
+  exact h_integral
 
 def zornIntegralLatticeTraceTopCat :
     TopCat.of ZornIntegralLatticePoint ⟶ TopCat.of ℚ :=
@@ -147,7 +148,9 @@ theorem zornIntegralLatticeTraceTopCat_is_integer
     (X : ZornIntegralLatticePoint) :
     ∃ n : ℤ, zornIntegralLatticeTraceTopCat X = (n : ℚ) := by
   rcases X.property with ⟨_, ⟨n, hn⟩, _, _⟩
-  exact ⟨n, by simpa using hn⟩
+  refine ⟨n, ?_⟩
+  change X.1.a + X.1.b = (n : ℚ)
+  exact hn
 
 theorem zornIntegralLatticeNormTopCat_is_integer
     (X : ZornIntegralLatticePoint) :
@@ -484,7 +487,9 @@ theorem zornIntegralLatticeCartanCharge_halfInteger
     ∃ n : ℤ,
       zornIntegralLatticeCartanChargeTopCat X = (n : ℚ) / 2 := by
   rcases X.property with ⟨⟨za, zb, zv, zw, ha, hb, hv, hw⟩, _, _, _⟩
-  exact ⟨za, by simpa using ha⟩
+  refine ⟨za, ?_⟩
+  change X.1.a = (za : ℚ) / 2
+  exact ha
 
 def zornIntegralLatticeIntegerChargeLocus :
     Set ZornIntegralLatticePoint :=

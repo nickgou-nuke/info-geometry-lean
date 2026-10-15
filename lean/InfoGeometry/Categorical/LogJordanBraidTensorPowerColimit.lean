@@ -67,9 +67,11 @@ theorem stageInclusion_bonding
     InfoGeometry.Spectral.Colimit.SequentialModule.inclusion_naturality ℂ
       (F := standardTensorPowerModuleDiagram) (Nat.le_succ n)
   rw [standardTensorPowerModuleDiagram_map_succ] at hnat
-  have happ := congrArg (fun f => f.hom v) hnat
-  simpa [stageInclusion, InfoGeometry.Spectral.Colimit.SequentialModule.inclusion,
-    ModuleCat.comp_apply] using happ
+  have hlinear := congrArg ModuleCat.Hom.hom hnat
+  change (stageInclusion (n + 1)).hom.comp
+      (appendPrimaryBonding (n + 1)).hom =
+    (stageInclusion n).hom at hlinear
+  exact LinearMap.congr_fun hlinear v
 
 /-- A finite braid action and the corresponding stabilized braid action have the
 same colimit image.  This is the exact representation-level compatibility
@@ -106,7 +108,8 @@ theorem stabilized_generator_same_colimit_image
           ((appendPrimaryBonding (n + 1)).hom v)) =
       (stageInclusion n).hom
         (standardTensorPowerGenerator n i v) := by
-  simpa using stabilized_braid_same_colimit_image n (σ' (n + 1) i) v
+  rw [← standardHadjiivanovBraidProject_sigma n i]
+  exact stabilized_braid_same_colimit_image n (σ' (n + 1) i) v
 
 
 /-- A compatible family of stage endomorphisms for the stabilized tensor-power
@@ -163,10 +166,8 @@ theorem colimitEndomorphism_stage
     (A : CompatibleStageEndomorphism) (n : ℕ) :
     stageInclusion n ≫ colimitEndomorphism A =
       A.map n ≫ stageInclusion n := by
-  unfold colimitEndomorphism stageInclusion
-  rw [InfoGeometry.Spectral.Colimit.SequentialModule.descend_fac ℂ
-    (compatibleStageEndomorphismCocone A) n]
-  rfl
+  exact InfoGeometry.Spectral.Colimit.SequentialModule.descend_fac ℂ
+    (compatibleStageEndomorphismCocone A) n
 
 /-- The colimit endomorphism is uniquely determined by all of its stage
 readbacks. -/

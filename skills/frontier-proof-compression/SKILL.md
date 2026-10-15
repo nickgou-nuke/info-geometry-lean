@@ -3,6 +3,17 @@ name: frontier-proof-compression
 description: Use when working inside the InfoGeometry repository on Skynet/OpenClaw-guided proof compression: selecting native structural hotspots, running skynet_v2 and the optimization cycle, replacing vacuous or surrogate theorem surfaces with constructive lemmas, canonicalizing consumer endpoints, and regenerating structural reports to verify real burn-down.
 ---
 
+<!-- repository-context-rule -->
+## Repository context rule
+
+For repository work, the current checked-out codebase is the context. Search
+existing implementation and trace actual carriers, definitions, imports,
+instances, theorem statements, and uses before claiming a structure is missing
+or incorrect. A local absence is not a repository-wide absence. Names,
+heuristics, summaries, and documentation guide discovery but do not override
+source. Follow `docs/REPO_DEEP_SEARCH_PROTOCOL.md` before repo-wide gap claims.
+
+
 ## Constructive Closure Mandate
 
 Replacing witness-gated and external-certificate leftovers with native Lean 4 proofs is the highest mandate. Treat witness packets, certificate fields, external certificates, assumption interfaces, literature owners, graph edges, and physics analogies as closure debt until discharged by kernel-checked Lean or imported mathlib theorems. Follow docs/CONSTRUCTIVE_CLOSURE_MANDATE.md; never promote anonymous or unformalized sockets as complete.

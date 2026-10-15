@@ -1,10 +1,9 @@
 import Mathlib.Algebra.Algebra.Basic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Algebra.Hom
 import Mathlib.Algebra.Star.Basic
 import Mathlib.Algebra.Star.StarAlgHom
-import Mathlib.Data.Complex.Basic
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Complex.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Tactic
 
@@ -58,8 +57,8 @@ theorem psi_comp_iota_seq (psi_comm : ∀ n, (psi (n + 1)).comp (iota n) = psi n
   · rfl
   · dsimp [iota_seq]
     rw [← StarAlgHom.comp_assoc]
-    have hcomm : (psi (n + (m + 1))).comp (iota (n + m)) = psi (n + m) := by
-      simpa [Nat.add_assoc] using psi_comm (n + m)
+    have hcomm : (psi (n + (m + 1))).comp (iota (n + m)) = psi (n + m) :=
+      psi_comm (n + m)
     rw [hcomm]
     exact ih
 
@@ -87,8 +86,8 @@ theorem flow_comp_iota_seq (n m : ℕ) (t : ℝ) :
   · dsimp [iota_seq]
     rw [← StarAlgHom.comp_assoc]
     have hcomm : (tFlow.flow (n + (m + 1)) t).comp (iota (n + m)) =
-        (iota (n + m)).comp (tFlow.flow (n + m) t) := by
-      simpa [Nat.add_assoc] using tFlow.flow_comm (n + m) t
+        (iota (n + m)).comp (tFlow.flow (n + m) t) :=
+      tFlow.flow_comm (n + m) t
     rw [hcomm, StarAlgHom.comp_assoc, ih, ← StarAlgHom.comp_assoc]
 
 /-! =========================================================================

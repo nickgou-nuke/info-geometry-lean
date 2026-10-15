@@ -136,8 +136,7 @@ theorem buresMetric_diverges_at_boundary (x y z dx dy dz : ℝ)
     refine ⟨Set.univ, Filter.univ_mem, Set.Ioi (0:ℝ), by simp, by ext ε; simp⟩
   have hden_nhds : Filter.Tendsto (fun ε : ℝ => 1 - (1 - ε)^2) (𝓝[>] (0:ℝ)) (𝓝 (0:ℝ)) := by
     have h1 : ContinuousAt (fun ε : ℝ => (1 - ε)^2) (0:ℝ) := (continuousAt_const.sub continuousAt_id).pow 2
-    have hcont : ContinuousAt (fun ε : ℝ => 1 - (1 - ε)^2) (0:ℝ) := by
-      simpa using (continuousAt_const.sub h1)
+    have hcont : ContinuousAt (fun ε : ℝ => 1 - (1 - ε)^2) (0:ℝ) := continuousAt_const.sub h1
     simpa using hcont.tendsto.mono_left nhdsWithin_le_nhds
   have hden_pos : ∀ᶠ ε in (𝓝[>] (0:ℝ)), 0 < (1 - (1 - ε)^2) := by
     filter_upwards [hεlt1, hεpos] with ε h1 h0

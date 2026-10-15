@@ -87,7 +87,11 @@ theorem colourR12_artin_relation {K : Type*} [Semiring K] :
       colourR23 (K := K) * colourR12 (K := K) * colourR23 (K := K) := by
   have h := congrArg (fun σ : Equiv.Perm ColourTriple => Equiv.Perm.permMatrix K σ)
     tripleSwap_artin_relation
-  simpa [colourR12, colourR23, Matrix.permMatrix_mul, mul_assoc] using h
+  have h12 : tripleSwap12.symm = tripleSwap12 := by
+    ext p <;> simp [tripleSwap12]
+  have h23 : tripleSwap23.symm = tripleSwap23 := by
+    ext p <;> simp [tripleSwap23]
+  simpa [colourR12, colourR23, h12, h23, Matrix.permMatrix_mul, mul_assoc] using h
 
 theorem colourSwapR_polynomial_property {K : Type*} [CommRing K] :
     matrixPolynomialEval (colourSwapPolynomial K) (colourSwapR (K := K)) = 0 := by

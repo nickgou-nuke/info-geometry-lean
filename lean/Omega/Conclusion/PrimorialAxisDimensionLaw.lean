@@ -18,8 +18,8 @@ def conclusion_primorial_axis_dimension_law_k_min (P : ℝ) : ℕ :=
 def conclusion_primorial_axis_dimension_law_threshold (P : ℝ) (k : ℕ) : Prop :=
   conclusion_primorial_axis_dimension_law_scale P ≤ k
 
-  private lemma conclusion_primorial_axis_dimension_law_scale_nonneg {P : ℝ} (hP : 0 ≤ P) :
-    0 ≤ conclusion_primorial_axis_dimension_law_scale P := by
+private lemma conclusion_primorial_axis_dimension_law_scale_nonneg {P : ℝ} (hP : 0 ≤ P) :
+  0 ≤ conclusion_primorial_axis_dimension_law_scale P := by
   have hexp_one_gt_one : 1 < Real.exp 1 := by
     simp [Real.one_lt_exp_iff] 
   have hbase_ge_one : 1 ≤ P + Real.exp 1 := by
@@ -57,8 +57,7 @@ theorem paper_conclusion_primorial_axis_dimension_law (P : ℝ) (hP : 0 ≤ P) :
       Nat.lt_ceil.1 hk
     exact not_lt_of_ge hthreshold hk'
   · exact sub_nonneg.mpr (Nat.le_ceil _)
-  · simpa [sub_eq_add_neg] using
-      (sub_lt_iff_lt_add'.2 (Nat.ceil_lt_add_one hscale_nonneg))
+  · exact sub_lt_iff_lt_add'.2 (Nat.ceil_lt_add_one hscale_nonneg)
 
 end
 

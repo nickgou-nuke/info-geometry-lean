@@ -33,10 +33,9 @@ theorem continuous_coordinateEvaluation_time
     Continuous (fun t : ℝ =>
       coordinateEvaluationTopCatHom n X
         (scalarDilationTopCatAction t ρ)) := by
-  simpa only [coordinateEvaluationTopCatHom_apply,
-    scalarDilationTopCatAction_apply,
-    pullback_apply] using
-    (continuous_scalarDilation_time_coordinate ρ n X)
+  change Continuous (fun t : ℝ =>
+    (pullback scalarDilationStageFlow t ρ).1 n X)
+  exact continuous_scalarDilation_time_coordinate ρ n X
 
 theorem stageReadoutActionTopCatHom_zero (n : ℕ) :
     stageReadoutActionTopCatHom n 0 =
@@ -100,6 +99,8 @@ theorem scalarDilationReadoutInverseLimitAction_add
       stageReadoutActionTopCatHom n s ≫
         stageReadoutActionTopCatHom n t
   rw [stageReadoutActionTopCatHom_add]
+  apply TopCat.hom_ext
+  rfl
 
 theorem scalarDilationReadoutInverseLimitAction_isIso
     (t : ℝ) :
@@ -125,12 +126,13 @@ theorem continuous_scalarDilationReadoutInverseLimitAction_time_slice
     compatibleReadoutInverseLimitIso.inv ρ
   have hf : Continuous (fun ρ : (limit readoutDiagram).carrier =>
       scalarDilationTopCatAction t (f ρ)) := by
-    simpa [f, scalarDilationTopCatAction_apply] using
-      continuous_scalarDilation_pullback.comp
-        ((continuous_const : Continuous (fun _ :
-          (limit readoutDiagram).carrier => t)).prodMk
-          (compatibleReadoutInverseLimitIso.inv.hom.continuous.comp
-            continuous_id))
+    change Continuous (fun ρ : (limit readoutDiagram).carrier =>
+      pullback scalarDilationStageFlow t (f ρ))
+    exact continuous_scalarDilation_pullback.comp
+      ((continuous_const : Continuous (fun _ :
+        (limit readoutDiagram).carrier => t)).prodMk
+        (compatibleReadoutInverseLimitIso.inv.hom.continuous.comp
+          continuous_id))
   have heq : ∀ ρ : (limit readoutDiagram).carrier,
       scalarDilationReadoutInverseLimitAction t ρ =
         compatibleReadoutInverseLimitIso.hom (scalarDilationTopCatAction t
@@ -215,10 +217,11 @@ theorem continuous_scalarDilationReadoutInverseLimitAction_orbit
     compatibleReadoutInverseLimitIso.inv ρ
   have hfamily : Continuous (fun t : ℝ =>
       scalarDilationTopCatAction t ρ') := by
-    simpa [scalarDilationTopCatAction_apply] using
-      continuous_scalarDilation_pullback.comp
-        ((continuous_id : Continuous (fun t : ℝ => t)).prodMk
-          (continuous_const : Continuous (fun _ : ℝ => ρ')))
+    change Continuous (fun t : ℝ =>
+      pullback scalarDilationStageFlow t ρ')
+    exact continuous_scalarDilation_pullback.comp
+      ((continuous_id : Continuous (fun t : ℝ => t)).prodMk
+        (continuous_const : Continuous (fun _ : ℝ => ρ')))
   have htransport : ∀ t : ℝ,
       scalarDilationReadoutInverseLimitAction t ρ =
         compatibleReadoutInverseLimitIso.hom
@@ -251,8 +254,10 @@ theorem continuous_scalarDilationReadoutInverseLimitAction_joint :
   have hbase : Continuous (fun p : ℝ × (limit readoutDiagram).carrier =>
       scalarDilationTopCatAction p.1
         (compatibleReadoutInverseLimitIso.inv p.2)) := by
-    simpa [f, scalarDilationTopCatAction_apply] using
-      continuous_scalarDilation_pullback.comp hf
+    change Continuous (fun p : ℝ × (limit readoutDiagram).carrier =>
+      pullback scalarDilationStageFlow p.1
+        (compatibleReadoutInverseLimitIso.inv p.2))
+    exact continuous_scalarDilation_pullback.comp hf
   have htransport : ∀ p : ℝ × (limit readoutDiagram).carrier,
       scalarDilationReadoutInverseLimitAction p.1 p.2 =
         compatibleReadoutInverseLimitIso.hom

@@ -1,5 +1,4 @@
 import InfoGeometry.Canonical.SplitCliffordHeadLift
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.SplitQ11PhaseFlip
 import Mathlib.LinearAlgebra.QuadraticForm.IsometryEquiv
 import Mathlib.LinearAlgebra.QuadraticForm.Prod
@@ -168,7 +167,9 @@ noncomputable def headKFlipTensor (n : ℕ) :
       (headKFlipAlg n ((splitCliffordTensorStepEquiv n).symm (headNullMinusTensor n)))
     = headNullPlusTensor n
   rw [headNullMinusTensor]
-  simp [headKFlipAlg_headNullMinus, headNullPlusTensor]
+  rw [(splitCliffordTensorStepEquiv n).symm_apply_apply]
+  rw [headKFlipAlg_headNullMinus]
+  rfl
 
 @[rep_depth krein, simp] theorem headKFlipTensor_apply_headNullPlusTensor
     (n : ℕ) :
@@ -177,6 +178,8 @@ noncomputable def headKFlipTensor (n : ℕ) :
       (headKFlipAlg n ((splitCliffordTensorStepEquiv n).symm (headNullPlusTensor n)))
     = headNullMinusTensor n
   rw [headNullPlusTensor]
-  simp [headKFlipAlg_headNullPlus, headNullMinusTensor]
+  rw [(splitCliffordTensorStepEquiv n).symm_apply_apply]
+  rw [headKFlipAlg_headNullPlus]
+  rfl
 
 end InfoGeometry.Canonical.SplitCliffordHeadPhaseFlip

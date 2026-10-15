@@ -1,23 +1,76 @@
 # Vacuity Index
 
-Generated: `2026-09-07 14:01:10`
+Updated: `2026-10-13`
 
-This report tracks alias-driven and identity-transport surfaces, prioritized by whether they are actually graph-active in the exported declaration graph.
+This inventory combines source screening, semantic review, current lexical reference graphs,
+WL/clique analysis, expression normalization, compiler nontriviality biopsy, and graph
+dependency screening. Findings are candidates until the owner mathematics is reviewed.
 
 ## Status
-- vacuity gate: **PASS**
-- interpretation: `FAIL` means at least one alias/identity-transport surface is active in the graph-backed theory path
+- Status: **OPEN — comprehensive audit and repairs in progress**.
+- The previous zero-findings PASS concerned four Krein files only; it did not certify the full repository.
+- Latest locked full build: 33,960 jobs, exit code 0 (after audit, affine Jacobi and propositional certificate repairs). Compilation alone does not establish nonvacuity.
 
 ## Counts
-- total tracked findings: **0**
-- high-priority active alias/identity findings: **0**
-- medium-priority inactive or documentary findings: **0**
-- low-priority findings: **0**
+- Current source corpus: 24,971 Lean files (23,880 `lean`, 1,073 `proofs`, 2 `lib`, 16 `tests`), zero read errors.
+- Expanded semantic pattern screening: 23,859 signals (66 error-labelled, 23,793 warning-labelled). These labels are heuristic, not confirmed mathematical gaps.
+- Lexical linter: 5,553 file-pattern signals across 4,795 files. Critic: 221 signals across 216 files.
+- Semantic-content review: 2,739 signals across 1,635 modules; its selected corpus is 23,866 files and is not the full source corpus.
+- Fresh lexical reference graphs: `lean` 217,510 nodes / 2,064,399 edges; `proofs` 15,776 nodes / 99,998 edges.
+- WL/clique contamination screening: one `lean` candidate, zero `proofs` candidates. This scans explicit holes, not semantic nonvacuity.
+- Arango conductive-wire screening: 202 candidates, with graph freshness not yet certified.
+- Historical expression alpha-dedup: 3 declaration groups and 6,345 repeated subgraphs. Input is from June; no current-state closure claim follows.
+- Structural dictionary: 37,071 indexed nodes, 260,318 edges, 33,146 classes; input freshness remains to be reconciled.
 
-## Aggressive Replacement Queue
-- none
+## Substantive repair queue
+
+1. Affine Jacobi defect repaired in `Clifford/WeylMoyalSuperGrassmannian` and sandbox counterpart: closed constant-plus-linear observable carrier, actual nested bracket, antisymmetry, bilinearity, centrality, evaluation and nonzero Darboux bracket. Certificate now asserts genuine nested Jacobi. Independent source review accepted the repair; both audit modules built under the shared lock (1,235 jobs, exit 0), with Jacobi axioms `[propext, Quot.sound]`. This establishes the affine bracket; an associative Moyal product and a Grassmannian identification remain unconstructed and are no longer claimed by the module header.
+2. CKM quartet defect repaired in `External/Auto/CKMAeonColimit` and `proofs/CKMAeonColimit`: complex conjugated quartet, independent row/column rephasing invariance, and an exact unitary witness with value `5184/78125`. Targeted build: 8,926 jobs, exit 0; standalone proof file and axiom checks: exit 0. Axioms: `[propext, Classical.choice, Quot.sound]`. Independent source review accepted this specific repair. The same files still contain configured counts, a zero differential, and Boolean narrative edges; their categorical/representation claims remain open.
+3. `External/Auto/Pin55AnomalyInflow` and `proofs/Pin55AnomalyInflow`: inspect the Unit/zero model and supplied cancellation fields; construct a nontrivial finite algebraic instance.
+4. `Canonical/SplitCliffordHeisenbergAdapter` and current lift: zero modes and existence concluded from an assumed inhabitant do not establish a nontrivial Heisenberg realization. Reuse existing current owners and respect the finite trace obstruction.
+5. Two audit placeholder findings repaired: `Algebra/Clifford55GaugeSubalgebraBridgeAudit.off_diagonal_peirce_square_zero` proves nilpotency in arbitrary noncommutative rings; `Algebra/ZornGaugeEmergenceAudit.tripotentGrading_eq_zero_iff` characterizes the actual grading kernel. Locked targeted build: 8,950 jobs, exit 0; independent source review accepted their contracts. Axiom reports: `[propext]` and `[propext, Quot.sound]`. These replace `True := trivial` without claiming theorem-level compiler purity. Surrounding physical gauge-identification claims still require separate review.
+
+6. Metadata-only proof verification repaired in both `Epistemology/DistributedProofStateNetwork` owners. Shared `PropositionalDerivation` constructs an explicit natural-deduction calculus and proves semantic soundness by inference-rule induction. Targets now contain formula syntax, certificates contain closed derivations, acceptance compares syntax and metadata, and soundness concludes validity under every valuation. Countervaluation/bottom rejection and a derivable positive identity instance prevent arbitrary metadata certification. Independent source review accepted the repair; locked audit build: 841 jobs, exit 0. This is propositional certificate transport, not an implementation of the Lean kernel or cryptographic/distributed consensus. The scalar quarantine and function-transition models retain limited scope.
+
+7. Holographic saturation remains **OPEN**: `HappyGreedyData.exact_sat` still supplies the desired equality. New `Epistemology/IsometricCutState.lean` proves rectangular real isometry prerequisites: positive normalized density, quadratic identity, encoding eigen-relation, injectivity, support rank, and entropy of actual uniform cut weights through the existing finite Gibbs entropy owner. Targeted build: 3,108 jobs, exit 0; independent source review accepted the prerequisite scope. Boundary spectral entropy, perfect-tensor contraction and actual graph minimum still must be constructed before this finding can close.
+
+8. The broad “75-section physical unification” wording is **NOT ESTABLISHED by the current owners**. `Epistemology/WheelerDeWittModularZeroMode.ThermalTimeWDWBridge` stores `H_scalar = K_mod` as input, so `thermal_time_wdw_equivalence` is transport along an assumed equality; the same owner models the modular commutator as `ρX-Xρ`, not the Tomita–Takesaki modular generator `-log Δ`. `Epistemology/SixPhysicalTheoriesSynthesis` contains scalar/2×2 algebraic identities and definitions such as `horizonProjector P := P`, rather than a common carrier or maps proving equivalence among the physical theories. `Albert/Generations` explicitly defines three copies of a finite label list without a geometric realization; `Albert/F4Action` explicitly says its 52-dimensional coordinate carrier is not identified with the derivation algebra. The DIII owner records an abstract symmetry datum, while no model map identifies it with the proposed Krein/CPT operator. The Fisher–Rao/Madelung owner proves a finite-dimensional square-root metric identity, not the functional-derivative formula for the Bohm potential. The amplituhedron/zeta owner defines the equivalence as a predicate and provides it only from a supplied volume equality. These are useful finite algebraic or conditional surfaces, but they do not prove the quoted Standard Model, quantum-gravity, condensed-matter, scattering, or Bohmian unification claims. Close this finding only after substantive maps and bridge theorems are constructed and independently reviewed.
+
+9. New finite consequences of the unification narrative were formalized in sandbox owners after deep reuse search and Gate 2 review: `Experimental/Sandbox/Modular/FiniteModularFixedPoints` characterizes the fixed matrices of the existing finite diagonal modular flow under an explicit nonresonance hypothesis; `Experimental/Sandbox/MadelungDiscreteGraphFisherBridge` proves the finite matrix-gradient energy variation, its `BᵀB` pairing, positivity, and `energy = 0 ↔ Bf = 0`, reusing `MadelungZornFisherReadout.fisherEnergyAlong_variation` and `EckmannDiscreteHodge`; `Experimental/Sandbox/Physics/BdGParticleHoleSpectralPairing` derives the conditional eigenvalue pairing `z ↦ -conj(z)` from anti-linear particle-hole covariance, reusing the canonical Nambu map. Locked builds of both owner/audit pairs exited 0. Axiom checks report `[propext, Classical.choice, Quot.sound]` for the Fisher/BdG theorems and `[propext, Classical.choice, Quot.sound]` for the finite modular fixed-point theorem. These finite results do not prove WDW/Tomita equivalence, a continuum Bohm functional derivative, particle-hole covariance for a concrete Hamiltonian, or a relativistic/CPT identification. The two new candidates remain sandbox-scoped pending any later promotion review.
+
+10. Reuse search for the finite spectral/Casimir prerequisite found no gap: `Canonical/SpinorialCore/Bipartite.conjugation_pow`, `trace_conjugation`, and `polynomialTrace_conjugation` already prove finite power-trace invariance under similarity; `Optics/OperatorQGTGaugeInvariants.trace_pow_innerConjugation` covers endomorphisms, and `QuantumContext/GraphHodgeDiracColimit` has all-power trace stabilization for the node/edge Laplacians. No duplicate module was added. These do not prove a global (SO(n,n)) Iwasawa decomposition, the Harish–Chandra isomorphism, or completeness of Casimirs for coadjoint orbits.
+
+11. Added `Experimental/Sandbox/QuantumContext/DrazinGroupKernelLeftAnnihilation`: over an arbitrary ring, the existing index-one `IsDrazinInverse` witness gives `kernelProj A D * A = 0`, complementing the already-owned `A * kernelProj A D = 0`. The proof derives commutation of the complementary projector and operator, then reuses `group_inverse_nilpotent_zero`; no second Drazin structure is introduced. Gate 2 found no exact generic duplicate. Its locked owner/audit build passed (605 jobs); `#print axioms` reports no axioms for the theorem. The predicate supplies index-one laws but does not assert minimal index, and no `lim P^m` convergence theorem is claimed.
+
+12. Added finite graph/dynamics consequences after repo-wide source search and independent Gate 2 review. `Experimental/Sandbox/MadelungGraphIncidenceKernel` defines the oriented coboundary on all ordered adjacent pairs and proves its kernel is exactly the functions constant on each connected component (equivalently on reachable pairs), for arbitrary simple graphs. `Experimental/Sandbox/MadelungGraphIncidenceMatrix` realizes that same coboundary by an explicit `Matrix.mulVec` incidence matrix and derives the componentwise kernel characterization. `MadelungGraphIncidenceEnergy` adds the concrete Gram-energy identity and its normalization against `SimpleGraph.lapMatrix`; the double-orientation convention doubles the usual quadratic form while preserving the kernel. These graph owner/audit modules pass locked builds; the graph energy axioms are `[propext, Classical.choice, Quot.sound]`. `Experimental/Sandbox/QuantumContext/DrazinMarkovFixedSubmodule` specializes the existing `complementaryProjection_range_eq_moduleEndDrazinNullCycles` theorem to finite real endomorphisms `I - T` at Drazin index one, proving `T x = x` iff `x` lies in the complementary projector range. Here `T x = x` is explicitly named a fixed-observable/harmonic-vector condition, not a stationary-distribution theorem; its owner/audit build passes with `[propext, Classical.choice, Quot.sound]`. `Experimental/Sandbox/Probability/FiniteMarkovSupNormContraction` proves a coordinatewise l∞ bound for the action of Mathlib's row-stochastic matrices, and `FiniteMarkovPowerBound` propagates that bound to every natural power; both owner/audit builds pass with `[propext, Classical.choice, Quot.sound]`. `FiniteMarkovCesaroPrerequisites` proves a finite telescoping identity and a stochastic endpoint bound, reusing the repo's `MoE.sum_range_sub_telescope`; its owner/audit build passes with `[propext, Classical.choice, Quot.sound]`. `FiniteMarkovCoboundaryCesaro` now proves coordinatewise Cesàro decay to zero for vectors of the form `(1 - P)u`, using the endpoint bound divided by `N + 1`; its locked owner/audit build passes with `[propext, Classical.choice, Quot.sound]`. No ordinary-power convergence or full Cesàro convergence to a Drazin projector is claimed; the latter remains under formalization.
+
+Vacuous constructs are to be repaired in legitimate mathematics, not removed merely to reduce inventory counts.
+
+## Tool coverage and outstanding inputs
+
+- Executed: semantic-vacuity gate, semantic-content audit, lexical vacuity linter, vacuity critic, fresh AST-style extraction, WL/clique analysis, frontier and closure queries, conductive-wire audit, structural dictionary, expression fingerprints, alpha-dedup, translation dedup, Krein index, staged proof-proxy gate, vacuity policy gate, LeanTrail snapshot/dedup inspection.
+- Compiler biopsy: attempted under `/tmp/info-geometry-build.lock`; terminal exit 137, no completed report. A timeout/child-process scheduling defect was observed and further scheduling was contained. This run contributes no successful coverage claim. Snapshot is June/v4.28 and also omits newer declarations.
+- Legacy structural audit/find-vacuous: default `ig_nodes`/`ig_edges` collections are absent. Corrected collection invocation is under examination.
+- Structural fibers/dedup: missing `source-sink-bipartite.json`; failure is recorded rather than treated as an empty result.
+- Vacuity planner: missing representation-depth owner index. Its empty/failed output cannot certify closure.
+- Full compiler AST/expression freshness, biopsy ingestion, surgery/critic packets, and shadow planning remain outstanding.
+- Corrected Arango structural screening returned zero candidates, but namespace-label coverage is unverified; this is not a clean semantic verdict.
+- Python AST equivalence and AST query lanes were attempted; missing `python_modules` and `ast_child` collections block them.
+- Compiler biopsy repaired: strict no-sorry screening, inherited build lock, descendant draining, strict parser/schema checks, and separate execution/semantic statuses. One live declaration completed with zero execution failures and `review_required` for opaque boundaries. Proof-shape screening and bounded unfolding still cannot certify complete semantic nonvacuity.
+- Independent semantic review distinguishes 64 proof-carrier findings from the two additional error-labelled test signals. Reviewing a certificate name is insufficient: the definition-level audit remains partial and found identifier-only proof verification (now repaired as propositional certificate transport), assumed HaPPY saturation, under-specified Zorn automorphisms, and numeral-only F4 dimension claims.
+- Mutating ingesters, source surgery, provider senders, and generated-axiom bridges are inspected as tooling but are not nonvacuity validators. They are not executed as automatic source repairs.
+
+## Reproducible evidence
+
+Source audit, repairs, regression results and the supervised live probe are recorded in [docs/VACUITY_TOOL_AUDIT.md](docs/VACUITY_TOOL_AUDIT.md).
+
+The complete raw source findings and lane reports are in `reports/vacuity/2026-10-13/`.
+`evidence-manifest.json` records paths and hashes; source and AST command manifests record corpus and limitations.
+`script-coverage.json` inventories every discovered relevant entrypoint, including attempted failures and pending prerequisites. It does not claim that every pipeline stage has finished.
+Compiler biopsy logs and intermediate graph outputs are under `/tmp/` until their runs finish.
 
 ## Policy
-- alias/identity surfaces matter most when they are graph-active
-- inactive alias surfaces remain documentary debt, but do not outrank active graph-facing debt
-- truth still lives in Lean; this report only prioritizes replacement pressure
+- Lean owner statements and their proofs decide mathematical truth.
+- `rfl`, proof fields, zero objects, and identity maps can be mathematically appropriate; source review must distinguish these from vacuous surrogates.
+- Hashes, WL classes, lexical edges, metadata fingerprints, and graph reachability identify candidates; none proves nonvacuity.
+- Closure requires current full build evidence, complete corpus accounting, substantive repairs, and independent owner audits.

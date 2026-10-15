@@ -110,32 +110,32 @@ theorem arityThree_cooperad_partition_counts (b : BlockDecomp3) :
   · constructor
     · have h : arityThreeInternalEdges BlockDecomp3.pair12_3 = {Edge3.e12} := by
         ext e
-        cases e <;> simp [arityThreeInternalEdges, cooperadEdge]
+        cases e <;> decide
       simp [h]
     · have h :
           arityThreeOuterEdges BlockDecomp3.pair12_3 = {Edge3.e13, Edge3.e23} := by
         ext e
-        cases e <;> simp [arityThreeOuterEdges, cooperadEdge]
+        cases e <;> decide
       simp [h]
   · constructor
     · have h : arityThreeInternalEdges BlockDecomp3.pair13_2 = {Edge3.e13} := by
         ext e
-        cases e <;> simp [arityThreeInternalEdges, cooperadEdge]
+        cases e <;> decide
       simp [h]
     · have h :
           arityThreeOuterEdges BlockDecomp3.pair13_2 = {Edge3.e12, Edge3.e23} := by
         ext e
-        cases e <;> simp [arityThreeOuterEdges, cooperadEdge]
+        cases e <;> decide
       simp [h]
   · constructor
     · have h : arityThreeInternalEdges BlockDecomp3.pair23_1 = {Edge3.e23} := by
         ext e
-        cases e <;> simp [arityThreeInternalEdges, cooperadEdge]
+        cases e <;> decide
       simp [h]
     · have h :
           arityThreeOuterEdges BlockDecomp3.pair23_1 = {Edge3.e12, Edge3.e13} := by
         ext e
-        cases e <;> simp [arityThreeOuterEdges, cooperadEdge]
+        cases e <;> decide
       simp [h]
 
 /-- Combined finite conclusion for the pairwise non-isotropic three-point space under

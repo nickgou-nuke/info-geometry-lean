@@ -143,7 +143,14 @@ def representation :
       change vLeft.comp (normalizedPrependBitLpAdjoint false) +
           vRight.comp (normalizedPrependBitLpAdjoint true) = _
       rw [add_comm]
-      simpa [vLeft, vRight, add_comm] using normalizedPrependBitLp_partition }
+      have hpartition :
+          vRight.comp (normalizedPrependBitLpAdjoint true) +
+            vLeft.comp (normalizedPrependBitLpAdjoint false) =
+              ContinuousLinearMap.id ℂ L2Boundary := by
+        simpa [vLeft, vRight, add_comm] using normalizedPrependBitLp_partition
+      rw [hpartition]
+      ext f
+      rfl }
   stageMap := stageMap
   stage_compat := stageMap_compat
   seed := 1

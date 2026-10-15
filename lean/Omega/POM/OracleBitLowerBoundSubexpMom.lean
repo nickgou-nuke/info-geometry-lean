@@ -16,7 +16,10 @@ def blindspotOracleBits (m : ℕ) : ℕ := Nat.log 2 (blindspotOracleCount m)
 
 @[simp] theorem blindspotOracleCount_eq (m : ℕ) :
     blindspotOracleCount m = 2 ^ blindspotBlockSize m := by
-  simp [blindspotOracleCount, BlindspotSupport, blindspotBlockSize]
+  classical
+  change Fintype.card (Fin (2 ^ m) → Bool) = 2 ^ (2 ^ m)
+  rw [Fintype.card_fun]
+  simp
 
 /-- Paper-facing subexponential-moment oracle lower bound: once the heavy block is fixed, the
 remaining freedom is the choice of a light support inside a block of size `2^m`, hence the

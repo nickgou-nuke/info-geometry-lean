@@ -173,11 +173,13 @@ theorem no11_alternatingOdd (m : Nat) : No11 (alternatingOdd m) := by
     thm:pom-fibcube-eccentricity-closed-form -/
 theorem hammingDist_alternating (m : Nat) :
     hammingDist (alternatingEven m) (alternatingOdd m) = m := by
-  simp only [hammingDist, alternatingEven, alternatingOdd]
-  have : Finset.univ.filter (fun i : Fin m =>
-      decide (i.val % 2 = 0) ≠ decide (i.val % 2 = 1)) = Finset.univ := by
-    ext i; simp; omega
-  rw [this, Finset.card_univ, Fintype.card_fin]
+  unfold hammingDist
+  have h_univ : (Finset.univ : Finset (Fin m)).filter (fun i => alternatingEven m i ≠ alternatingOdd m i) = Finset.univ := by
+    ext i
+    simp only [Finset.mem_filter, Finset.mem_univ, true_and]
+    simp [alternatingEven, alternatingOdd]
+    omega
+  rw [h_univ, Finset.card_univ, Fintype.card_fin]
 
 /-- The Fibonacci cube Γ_m has diameter m (achieved by alternating words).
     thm:pom-fibcube-eccentricity-closed-form -/

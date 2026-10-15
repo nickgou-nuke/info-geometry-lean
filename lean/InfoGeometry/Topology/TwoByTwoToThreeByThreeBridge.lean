@@ -50,8 +50,8 @@ theorem embeddedJordanNilpotent_square_zero :
     embeddedJordanNilpotent * embeddedJordanNilpotent = 0 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [embeddedJordanNilpotent, linearEmbed2to3, jordanNilpotent,
-      Matrix.mul_apply, Fin.sum_univ_three]
+    rw [Matrix.mul_apply] <;>
+    norm_num [embeddedJordanNilpotent, linearEmbed2to3, jordanNilpotent, Fin.sum_univ_three]
 
 /-- The embedded Jordan nilpotent remains nonzero. -/
 theorem embeddedJordanNilpotent_ne_zero :
@@ -72,7 +72,8 @@ theorem projectiveEmbed_jordanBlock_deviation (lam : ℂ) :
       embeddedJordanNilpotent := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [projectiveEmbed2to3, jordanBlock, scalarExtendedBlock,
+    rw [Matrix.sub_apply] <;>
+    norm_num [projectiveEmbed2to3, jordanBlock, scalarExtendedBlock,
       embeddedJordanNilpotent, linearEmbed2to3, jordanNilpotent]
 
 /-- The embedded exceptional-point deviation is a finite `3 × 3` square-zero witness. -/
@@ -95,7 +96,8 @@ theorem embeddedJordanNilpotent_commutes_vortexOperator (v : AharonovBohmVortex)
     embeddedJordanNilpotent * vortexOperator v = vortexOperator v * embeddedJordanNilpotent := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [embeddedJordanNilpotent, linearEmbed2to3, jordanNilpotent,
-      vortexOperator, diagonalVortexOperator, Matrix.mul_apply, Fin.sum_univ_three]
+    rw [Matrix.mul_apply, Matrix.mul_apply] <;>
+    norm_num [embeddedJordanNilpotent, linearEmbed2to3, jordanNilpotent,
+      vortexOperator, diagonalVortexOperator, Fin.sum_univ_three]
 
 end InfoGeometry.Topology.TwoByTwoToThreeByThreeBridge

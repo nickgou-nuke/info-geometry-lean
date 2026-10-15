@@ -36,8 +36,14 @@ def bivector4Coordinates : Bivector4 ≃ (Fin 6 → ℝ) where
 noncomputable instance : AddCommGroup Bivector4 :=
   bivector4Coordinates.addCommGroup
 
+def bivector4CoordinatesAddEquiv : Bivector4 ≃+ (Fin 6 → ℝ) where
+  toEquiv := bivector4Coordinates
+  map_add' P Q := by
+    ext i
+    fin_cases i <;> rfl
+
 noncomputable instance : Module ℝ Bivector4 :=
-  bivector4Coordinates.module ℝ
+  bivector4CoordinatesAddEquiv.module ℝ
 
 /-- The coordinate transport as an actual real-linear equivalence. -/
 def bivector4CoordinateLinearEquiv : Bivector4 ≃ₗ[ℝ] (Fin 6 → ℝ) where
@@ -51,9 +57,8 @@ def bivector4CoordinateLinearEquiv : Bivector4 ≃ₗ[ℝ] (Fin 6 → ℝ) where
         (bivector4Coordinates P + bivector4Coordinates Q)) = _
     exact bivector4Coordinates.apply_symm_apply _
   map_smul' r P := by
-    change bivector4Coordinates
-      (bivector4Coordinates.symm (r • bivector4Coordinates P)) = _
-    exact bivector4Coordinates.apply_symm_apply _
+    rw [bivector4CoordinatesAddEquiv.smul_def]
+    simp [bivector4CoordinatesAddEquiv, RingHom.id_apply]
 
 @[simp] theorem bivector4CoordinateLinearEquiv_apply (P : Bivector4) :
     bivector4CoordinateLinearEquiv P =

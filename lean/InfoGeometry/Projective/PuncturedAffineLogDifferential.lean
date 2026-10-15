@@ -11,17 +11,26 @@ open scoped LaurentPolynomial
 
 abbrev LaurentRing := LaurentPolynomial ℂ
 
+private noncomputable def coefficientEquiv : LaurentRing ≃ₗ[ℂ] ℤ →₀ ℂ :=
+  AddMonoidAlgebra.coeffLinearEquiv ℂ
+
+@[simp] private theorem coefficientEquiv_single (n : ℤ) (c : ℂ) :
+    coefficientEquiv (AddMonoidAlgebra.single n c : LaurentRing) =
+      Finsupp.single n c := rfl
+
 noncomputable def logarithmicDifferential : LaurentRing →ₗ[ℂ] LaurentRing :=
-  Finsupp.lsum ℂ (fun n : ℤ =>
-    (n : ℂ) • (Finsupp.lsingle n : ℂ →ₗ[ℂ] LaurentRing))
+  coefficientEquiv.symm.toLinearMap.comp <|
+    (Finsupp.lsum ℂ (fun n : ℤ =>
+      (n : ℂ) • (Finsupp.lsingle n : ℂ →ₗ[ℂ] ℤ →₀ ℂ))).comp
+      coefficientEquiv.toLinearMap
 
 @[simp] theorem logarithmicDifferential_single (n : ℤ) (c : ℂ) :
-    logarithmicDifferential (Finsupp.single n c) =
-      (n : ℂ) • Finsupp.single n c := by
-  change
-    ((Finsupp.lsum ℂ) (fun k : ℤ =>
-      (k : ℂ) • (Finsupp.lsingle k : ℂ →ₗ[ℂ] LaurentRing))
-      (Finsupp.single n c)) = _
+    logarithmicDifferential (AddMonoidAlgebra.single n c : LaurentRing) =
+      (n : ℂ) • (AddMonoidAlgebra.single n c : LaurentRing) := by
+  apply coefficientEquiv.injective
+  change Finsupp.lsum ℂ (fun k : ℤ =>
+    (k : ℂ) • (Finsupp.lsingle k : ℂ →ₗ[ℂ] ℤ →₀ ℂ))
+      (Finsupp.single n c) = (n : ℂ) • Finsupp.single n c
   rw [Finsupp.lsum_single]
   rfl
 
@@ -37,7 +46,10 @@ noncomputable def logarithmicDifferential : LaurentRing →ₗ[ℂ] LaurentRing 
 
 @[simp] theorem logarithmicDifferential_C (c : ℂ) :
     logarithmicDifferential (LaurentPolynomial.C c) = 0 := by
-  change logarithmicDifferential (Finsupp.single (0 : ℤ) c) = 0
+  have hC : LaurentPolynomial.C c = (AddMonoidAlgebra.single 0 c : LaurentRing) := by
+    simpa only [LaurentPolynomial.T_zero, mul_one] using
+      (LaurentPolynomial.single_eq_C_mul_T c (0 : ℤ)).symm
+  rw [hC]
   rw [logarithmicDifferential_single]
   simp
 
@@ -47,6 +59,29 @@ theorem logarithmicDifferential_C_mul_T (c : ℂ) (n : ℤ) :
       (n : ℂ) • (LaurentPolynomial.C c * LaurentPolynomial.T n) := by
   rw [← LaurentPolynomial.single_eq_C_mul_T,
     logarithmicDifferential_single]
+
+theorem logarithmicDifferential_coeff (f : LaurentRing) (n : ℤ) :
+    (logarithmicDifferential f).coeff n = (n : ℂ) * f.coeff n := by
+  change
+    (Finsupp.lsum ℂ (fun k : ℤ =>
+      (k : ℂ) • (Finsupp.lsingle k : ℂ →ₗ[ℂ] ℤ →₀ ℂ))
+      (coefficientEquiv f)) n = (n : ℂ) * (coefficientEquiv f) n
+  rw [Finsupp.lsum_apply, Finsupp.sum_apply]
+  have hs := Finsupp.sum_eq_single (f := coefficientEquiv f)
+    (g := fun b c => ((b : ℂ) •
+      (Finsupp.lsingle b : ℂ →ₗ[ℂ] ℤ →₀ ℂ) c) n) n
+    (fun b hb hbn => by
+      simp [Finsupp.smul_apply, Finsupp.lsingle_apply,
+        Finsupp.single_eq_of_ne (Ne.symm hbn)])
+    (by intro hn; simp [Finsupp.lsingle_apply, hn])
+  calc
+    (Finsupp.sum (coefficientEquiv f) fun a b =>
+        ((a : ℂ) • (Finsupp.lsingle a : ℂ →ₗ[ℂ] ℤ →₀ ℂ) b) n) =
+        ((n : ℂ) • (Finsupp.lsingle n : ℂ →ₗ[ℂ] ℤ →₀ ℂ)
+          ((coefficientEquiv f) n)) n := hs
+    _ = (n : ℂ) * (coefficientEquiv f) n := by
+      rw [Finsupp.smul_apply, Finsupp.lsingle_apply,
+        Finsupp.single_eq_same, smul_eq_mul]
 
 theorem logarithmicDifferential_mul (f g : LaurentRing) :
     logarithmicDifferential (f * g) =
@@ -82,7 +117,10 @@ noncomputable def logarithmicDerivation :
   Derivation.mk' logarithmicDifferential logarithmicDifferential_derivation_leibniz
 
 noncomputable def constantCoefficient : LaurentRing →ₗ[ℂ] ℂ :=
-  Finsupp.lapply (R := ℂ) (M := ℂ) (0 : ℤ)
+  (Finsupp.lapply (R := ℂ) (M := ℂ) (0 : ℤ)).comp coefficientEquiv.toLinearMap
+
+@[simp] theorem constantCoefficient_coeff (f : LaurentRing) :
+    constantCoefficient f = f.coeff 0 := rfl
 
 noncomputable def constantInclusion : ℂ →ₗ[ℂ] LaurentRing :=
   { toFun := LaurentPolynomial.C
@@ -90,40 +128,45 @@ noncomputable def constantInclusion : ℂ →ₗ[ℂ] LaurentRing :=
     map_smul' := by intro c d; simp [Algebra.smul_def] }
 
 noncomputable def logarithmicPrimitive : LaurentRing →ₗ[ℂ] LaurentRing :=
-  Finsupp.lsum ℂ (fun n : ℤ =>
-    if n = 0 then 0
-    else (n : ℂ)⁻¹ • (Finsupp.lsingle n : ℂ →ₗ[ℂ] LaurentRing))
+  coefficientEquiv.symm.toLinearMap.comp <|
+    (Finsupp.lsum ℂ (fun n : ℤ =>
+      if n = 0 then 0
+      else (n : ℂ)⁻¹ • (Finsupp.lsingle n : ℂ →ₗ[ℂ] ℤ →₀ ℂ))).comp
+      coefficientEquiv.toLinearMap
 
 @[simp] theorem constantCoefficient_single (n : ℤ) (c : ℂ) :
-    constantCoefficient (Finsupp.single n c) = if n = 0 then c else 0 := by
-  change (Finsupp.single n c : LaurentRing) 0 = _
-  simp only [Finsupp.single_apply]
+    constantCoefficient (AddMonoidAlgebra.single n c : LaurentRing) =
+      if n = 0 then c else 0 := by
+  change Finsupp.lapply (R := ℂ) (M := ℂ) (0 : ℤ)
+    (Finsupp.single n c) = _
+  by_cases h : n = 0 <;> simp [h, Finsupp.single_apply]
 
 theorem constantCoefficient_C_mul_T (c : ℂ) (n : ℤ) :
     constantCoefficient (LaurentPolynomial.C c * LaurentPolynomial.T n) =
       if n = 0 then c else 0 := by
-  simpa only [← LaurentPolynomial.single_eq_C_mul_T] using
-    constantCoefficient_single n c
+  rw [← LaurentPolynomial.single_eq_C_mul_T c n]
+  exact constantCoefficient_single n c
 
 @[simp] theorem logarithmicPrimitive_single (n : ℤ) (c : ℂ) :
-    logarithmicPrimitive (Finsupp.single n c) =
-      if n = 0 then 0 else (n : ℂ)⁻¹ • Finsupp.single n c := by
-  change
-    Finsupp.lsum ℂ (fun n : ℤ =>
-      if n = 0 then 0
-      else (n : ℂ)⁻¹ • (Finsupp.lsingle n : ℂ →ₗ[ℂ] LaurentRing))
+    logarithmicPrimitive (AddMonoidAlgebra.single n c : LaurentRing) =
+      if n = 0 then 0 else (n : ℂ)⁻¹ • (AddMonoidAlgebra.single n c : LaurentRing) := by
+  apply coefficientEquiv.injective
+  change Finsupp.lsum ℂ (fun k : ℤ =>
+    if k = 0 then 0 else (k : ℂ)⁻¹ •
+      (Finsupp.lsingle k : ℂ →ₗ[ℂ] ℤ →₀ ℂ))
       (Finsupp.single n c) = _
   rw [Finsupp.lsum_single]
   by_cases h : n = 0
   · simp [h]
-  · simp [h]
+  · simp only [h, if_false, LinearEquiv.map_smul, coefficientEquiv_single,
+      LinearMap.smul_apply, Finsupp.lsingle_apply]
 
 theorem logarithmicPrimitive_C_mul_T (c : ℂ) (n : ℤ) :
     logarithmicPrimitive (LaurentPolynomial.C c * LaurentPolynomial.T n) =
       if n = 0 then 0
       else (n : ℂ)⁻¹ • (LaurentPolynomial.C c * LaurentPolynomial.T n) := by
-  simpa only [← LaurentPolynomial.single_eq_C_mul_T] using
-    logarithmicPrimitive_single n c
+  simpa only [← LaurentPolynomial.single_eq_C_mul_T c n,
+    logarithmicPrimitive_single]
 
 theorem logarithmicDifferential_primitive (f : LaurentRing) :
     logarithmicDifferential (logarithmicPrimitive f) =
@@ -157,36 +200,16 @@ theorem logarithmicDifferential_eq_zero_iff (f : LaurentRing) :
     · subst n
       rw [LaurentPolynomial.C_apply]
       simp only [if_pos]
-      exact (Finsupp.lapply_apply (R := ℂ) (M := ℂ) (0 : ℤ) f).symm
-    · have hdn := congrArg (fun p : LaurentRing => p n) hf
+      exact (constantCoefficient_coeff f).symm
+    · have hdn := congrArg (fun p : LaurentRing => p.coeff n) hf
       have hcoeff :
-          logarithmicDifferential f n = (n : ℂ) * f n := by
-        change
-          (Finsupp.lsum ℂ (fun n : ℤ =>
-            (n : ℂ) • (Finsupp.lsingle n : ℂ →ₗ[ℂ] LaurentRing)) f) n =
-            (n : ℂ) * f n
-        rw [Finsupp.lsum_apply, Finsupp.sum_apply]
-        have hs := Finsupp.sum_eq_single (f := f)
-          (g := fun b c =>
-            ((b : ℂ) • (Finsupp.lsingle b : ℂ →ₗ[ℂ] LaurentRing)) c n) n
-          (fun b hb hbn => by
-            change (b : ℂ) • (Finsupp.single b (f b)) n = 0
-            rw [Finsupp.single_eq_of_ne (Ne.symm hbn), smul_zero])
-          (by
-            intro hfn
-            change (n : ℂ) • (Finsupp.single n (0 : ℂ)) n = 0
-            simp)
-        calc
-          (Finsupp.sum f fun a b =>
-              ((a : ℂ) • (Finsupp.single a b)) n) =
-              ((n : ℂ) • (Finsupp.single n (f n))) n := hs
-          _ = (n : ℂ) * f n := by
-            rw [Finsupp.smul_apply, Finsupp.single_eq_same, smul_eq_mul]
-      change logarithmicDifferential f n = 0 at hdn
+          (logarithmicDifferential f).coeff n = (n : ℂ) * f.coeff n :=
+        logarithmicDifferential_coeff f n
+      change (logarithmicDifferential f).coeff n = 0 at hdn
       rw [hcoeff] at hdn
       have hnC : (n : ℂ) ≠ 0 := by
         exact_mod_cast hn
-      have hfn : f n = 0 := by
+      have hfn : f.coeff n = 0 := by
         apply (mul_eq_zero.mp hdn).resolve_left hnC
       rw [LaurentPolynomial.C_apply]
       simp [hn, hfn]
@@ -342,20 +365,26 @@ theorem algebraicDeRhamH1WindingClass_eq_zero_iff (n : ℤ) :
     simp [algebraicDeRhamH1WindingClass]
 
 noncomputable def inversion : LaurentRing ≃ₗ[ℂ] LaurentRing :=
-  Finsupp.mapDomain.linearEquiv ℂ ℂ (Equiv.neg ℤ)
+  coefficientEquiv.trans
+    ((Finsupp.mapDomain.linearEquiv ℂ ℂ (Equiv.neg ℤ)).trans coefficientEquiv.symm)
 
 @[simp] theorem inversion_single (n : ℤ) (c : ℂ) :
-    inversion (Finsupp.single n c) = Finsupp.single (-n) c := by
-  change Finsupp.mapDomain (fun k : ℤ => -k) (Finsupp.single n c) = _
+    inversion (AddMonoidAlgebra.single n c : LaurentRing) =
+      AddMonoidAlgebra.single (-n) c := by
+  apply coefficientEquiv.injective
+  change Finsupp.mapDomain (fun k : ℤ => -k) (Finsupp.single n c) =
+    Finsupp.single (-n) c
   rw [Finsupp.mapDomain_single]
 
 @[simp] theorem inversion_T (n : ℤ) :
     inversion (LaurentPolynomial.T n) = LaurentPolynomial.T (-n) := by
-  change inversion (Finsupp.single n (1 : ℂ)) = Finsupp.single (-n) 1
+  change inversion (AddMonoidAlgebra.single n (1 : ℂ)) =
+    AddMonoidAlgebra.single (-n) 1
   exact inversion_single n 1
 
 @[simp] theorem inversion_one : inversion (1 : LaurentRing) = 1 := by
-  change inversion (Finsupp.single (0 : ℤ) (1 : ℂ)) = Finsupp.single 0 1
+  change inversion (AddMonoidAlgebra.single (0 : ℤ) (1 : ℂ)) =
+    AddMonoidAlgebra.single 0 1
   exact inversion_single 0 1
 
 theorem inversion_mul (f g : LaurentRing) :
@@ -507,16 +536,15 @@ theorem algebraicDeRhamH0Equiv_inversion (x : algebraicDeRhamH0) :
     algebraicDeRhamH0Equiv (algebraicDeRhamH0Inversion x) =
       algebraicDeRhamH0Equiv x := by
   obtain ⟨f, hf⟩ := x
-  rw [algebraicDeRhamH0Inversion_apply]
-  rw [algebraicDeRhamH0Equiv_apply]
-  rw [algebraicDeRhamH0Equiv_apply]
+  change constantCoefficient (inversion f) = constantCoefficient f
   exact constantCoefficient_inversion f
 
 theorem algebraicDeRhamH1Pullback_readout (f : LaurentRing) :
     algebraicDeRhamH1Equiv
         (algebraicDeRhamH1Pullback (Submodule.Quotient.mk f)) =
       -constantCoefficient f := by
-  simp [algebraicDeRhamH1Pullback, constantCoefficient_inversion]
+  rw [algebraicDeRhamH1Pullback_mk, map_neg,
+    algebraicDeRhamH1Equiv_mk, constantCoefficient_inversion]
 
 theorem algebraicDeRhamH1_logarithmicClass_readout :
     algebraicDeRhamH1Equiv (Submodule.Quotient.mk (1 : LaurentRing)) = 1 := by

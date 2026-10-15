@@ -110,6 +110,9 @@ theorem dual_flow_capstone (D : RingDerivation A) (K : A) :
 -/
 variable {R : Type*} [CommRing R] [Algebra R A]
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+attribute [local instance 100] LieAlgebra.ofAssociativeAlgebra
+
 /-- The native Mathlib Lie ideal of inner modular derivations. -/
 abbrev InnLieIdeal (R : Type*) (A : Type*) [CommRing R] [Ring A] [Algebra R A] :
     LieIdeal R (Der R A) :=

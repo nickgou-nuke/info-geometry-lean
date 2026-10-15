@@ -106,10 +106,17 @@ theorem paper_xi_foldbin_even_window_parity_section_center_intersection :
       (card_filter_multiplicity_ge_two 12 (by norm_num [auditedEvenFirstKink, Nat.fib]))
   have hB6 :
       xi_foldbin_even_window_parity_section_center_intersection_B 6 = 8 := by
-    simpa [xi_foldbin_even_window_parity_section_center_intersection_B,
-      xi_foldbin_even_window_parity_section_center_intersection_multiplicity,
-      auditedEvenFirstKink, Nat.fib] using
-      (card_fin_filter_val_lt 8 21 (by norm_num))
+    change (Finset.univ.filter fun w : Fin (Nat.fib 8) =>
+      xi_foldbin_even_window_parity_section_center_intersection_multiplicity 6 w = 2).card = 8
+    have hset :
+        (Finset.univ.filter fun w : Fin (Nat.fib 8) =>
+          xi_foldbin_even_window_parity_section_center_intersection_multiplicity 6 w = 2) =
+        (Finset.univ.filter fun w : Fin (Nat.fib 8) => w.val < 8) := by
+      ext w
+      simp [xi_foldbin_even_window_parity_section_center_intersection_multiplicity,
+        auditedEvenFirstKink, Nat.fib]
+    rw [hset]
+    exact card_fin_filter_val_lt 8 (Nat.fib 8) (by norm_num [Nat.fib])
   have hB8 :
       xi_foldbin_even_window_parity_section_center_intersection_B 8 = 0 := by
     apply Finset.card_eq_zero.mpr

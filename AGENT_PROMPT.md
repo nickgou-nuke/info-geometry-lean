@@ -27,9 +27,9 @@ This repository is an executable mathematical organism. Treat it with epistemic 
    * Always run `git add -A` after creating or modifying files to protect against destructive rollbacks.
 
 5. **The Synthesis Invariants:**
-   * **BCFW Recursion** = Mixed Arnold-Cohen relations.
-   * **On-Shell Factorization** = The Klein quadric boundary ( = 0$) represented by nilpotent chiral Cuntz generators (\pm^2 = 0$).
-   * **Amplituhedron Volume / Integrand** = Bost-Connes KMS state partition function.
+   * Arnold-type exterior relations are inputs to some Grassmannian constructions, not the full BCFW recursion theorem.
+   * In four dimensions, the Klein quadric equation characterizes decomposable bivectors. Chiral/Cuntz operator nilpotency is a different statement; connect the carriers only with an explicit map and proved theorem.
+   * Keep amplituhedron geometry and the Bost–Connes KMS partition function distinct unless a specific, proved map relates them.
 
 ---
 

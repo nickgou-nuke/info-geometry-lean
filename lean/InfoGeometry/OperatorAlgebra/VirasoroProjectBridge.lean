@@ -23,6 +23,8 @@ open AffineVirasoroBridge
 open VirasoroProject
 open InfoGeometry.Canonical.CurrentSugawaraBridge
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 /--
 Predicate recording that a given `VirasoroDatum` is realized by the
 `VirasoroProject` implementation on `ℝ`.
@@ -118,9 +120,9 @@ theorem currentHeisenbergVirasoroDatum_central_commutes
     (H : CurrentHeisenbergRep ℝ V) :
     ∀ X : V →ₗ[ℝ] V, ⁅(currentHeisenbergVirasoroDatum H).central, X⁆ = 0 := by
   intro X
-  simpa [currentHeisenbergVirasoroDatum] using
-    (heisenberg_central_term_commutator_eq_zero
-      (𝕜 := ℝ) (V := V) 1 X)
+  change (1 : V →ₗ[ℝ] V).commutator X = 0
+  simpa using heisenberg_central_term_commutator_eq_zero
+    (𝕜 := ℝ) (V := V) 1 X
 
 /--
 The genuine Virasoro bracket on the datum produced from a Heisenberg current.

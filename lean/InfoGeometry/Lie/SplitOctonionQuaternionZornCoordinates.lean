@@ -74,7 +74,7 @@ def cartesianZornLinearEquiv : CartesianCoordinates ≃ₗ[ℝ] CZ where
   map_add' X Y := by
     ext i <;> simp <;> ring
   map_smul' c X := by
-    ext i <;> simp [Equiv.smul_def, coordEquiv, smul_eq_mul] <;> ring
+    ext i <;> simp [smul_a, smul_b, smul_x, smul_y] <;> ring
 
 theorem canonicalZorn_finrank : Module.finrank ℝ CZ = 8 := by
   rw [← cartesianZornLinearEquiv.finrank_eq]

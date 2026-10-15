@@ -72,7 +72,9 @@ lemma unique_map_to_terminalDomain (D : TerminalAdmissibleDomainData) (A : Admis
   refine Quotient.inductionOn q ?_
   intro p
   rcases p with ⟨i, x⟩
-  simpa [AdmissibleAtlas.point] using hf i x
+  change f (A.point i x) = A.canonicalMap (A.point i x)
+  rw [A.canonicalMap_point]
+  exact hf i x
 
 end TerminalAdmissibleDomainData
 

@@ -102,9 +102,10 @@ theorem symbolicLatentBasedLoopHomotopyQuotientReversalTopCatHom_endpoint
           exact
             (symbolicLatentBasedLoopHomotopyQuotient_reversal_mem x ⟨q, hq⟩).trans
               hq.symm
-        simpa [CategoryTheory.comp_apply,
-          symbolicLatentBasedLoopHomotopyQuotientEndpointTopCatHom_apply] using
-          congrArg Prod.fst h
+        change (symbolicLatentPathHomotopyEndpointMap
+          (reversePathHomotopyQuotientHomeomorph q)).1 =
+            (symbolicLatentPathHomotopyEndpointMap q).1
+        exact congrArg Prod.fst h
   · cases q with
     | mk q hq =>
         have h :
@@ -114,9 +115,10 @@ theorem symbolicLatentBasedLoopHomotopyQuotientReversalTopCatHom_endpoint
           exact
             (symbolicLatentBasedLoopHomotopyQuotient_reversal_mem x ⟨q, hq⟩).trans
               hq.symm
-        simpa [CategoryTheory.comp_apply,
-          symbolicLatentBasedLoopHomotopyQuotientEndpointTopCatHom_apply] using
-          congrArg Prod.snd h
+        change (symbolicLatentPathHomotopyEndpointMap
+          (reversePathHomotopyQuotientHomeomorph q)).2 =
+            (symbolicLatentPathHomotopyEndpointMap q).2
+        exact congrArg Prod.snd h
 
 theorem symbolicLatentBasedLoopHomotopyQuotientReversalTopCatHom_involutive
     {X : Type} [TopologicalSpace X] (x : X) :

@@ -14,7 +14,14 @@ inductive Archetype
   | additiveFreeEnergy
   | freeEnergyDerivative
   | retainedSupport
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype Archetype where
+  elems := {.clrProjection, .twoStatePartition, .logisticWeight,
+    .additiveFreeEnergy, .freeEnergyDerivative, .retainedSupport}
+  complete := by
+    intro x
+    cases x <;> simp
 
 open Archetype
 
@@ -223,9 +230,16 @@ theorem tendsto_line_weight_atTop
   have energy_limit : Tendsto (fun energy : ℝ => energy / temperature) atTop atTop :=
     tendsto_id.atTop_div_const temperature_pos
   have boltzmann_limit := Real.tendsto_exp_neg_atTop_nhds_zero.comp energy_limit
-  simpa [lineWeight, linePartition, Function.comp_def, Pi.div_apply, neg_div] using
-    boltzmann_limit.div (boltzmann_limit.add tendsto_const_nhds)
-      (ne_of_gt (by simpa [neg_div] using Real.exp_pos (-cutoff / temperature)))
+  have hquot : Tendsto
+      (fun energy : ℝ => Real.exp (-energy / temperature) /
+        (Real.exp (-energy / temperature) + Real.exp (-cutoff / temperature)))
+      atTop (𝓝 0) := by
+    convert boltzmann_limit.div (boltzmann_limit.add tendsto_const_nhds)
+      (ne_of_gt (by simpa using Real.exp_pos (-cutoff / temperature))) using 1
+    · funext energy
+      simp only [Pi.div_apply, Function.comp_apply, neg_div]
+    · simp
+  simpa [lineWeight, linePartition] using hquot
 
 end TwoStateWeights
 
@@ -251,16 +265,22 @@ theorem hasFDerivAt_lineFreeEnergy
   have boltzmann_derivative :
       HasFDerivAt (fun parameter => Real.exp (-energy parameter / temperature))
         (Real.exp (-energy point / temperature) • ((-1 / temperature) • derivative)) point := by
-    convert (energy_derivative.const_mul (-1 / temperature)).exp using 1 <;>
-      simp [div_eq_mul_inv, mul_comm]
+    convert (energy_derivative.const_mul (-1 / temperature)).exp using 1
+    · funext parameter
+      congr 1
+      ring
+    · congr 1
+      exact congrArg Real.exp (by ring)
   have free_derivative :=
     ((boltzmann_derivative.add_const (Real.exp (-cutoff / temperature))).log
       partition_ne).const_mul (-temperature)
   convert free_derivative using 1
-  simp only [smul_smul]
-  congr 1
-  dsimp [lineWeight, linePartition] at *
-  field_simp
+  · funext parameter
+    simp [lineFreeEnergy, linePartition]
+  · dsimp [lineWeight, linePartition]
+    simp only [smul_smul]
+    congr 1
+    field_simp [temperature_ne]
 
 theorem hasFDerivAt_totalFreeEnergy
     {Line : Type*} [Fintype Line]
@@ -302,7 +322,9 @@ theorem hasDerivAt_quadratic_freeEnergy
   have energy_derivative :
       HasDerivAt (fun value : ℝ => value ^ 2 / 2) residual residual := by
     convert ((hasDerivAt_id residual).pow 2).div_const 2 using 1
-    simp
+    · rfl
+    · change residual = 2 * residual ^ (2 - 1) * 1 / 2
+      norm_num
   have free_derivative := hasFDerivAt_lineFreeEnergy _ _ residual cutoff temperature
     temperature_pos energy_derivative.hasFDerivAt
   simpa [quadraticScore, smul_eq_mul, mul_comm] using free_derivative.hasDerivAt

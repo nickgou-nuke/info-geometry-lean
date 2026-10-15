@@ -52,9 +52,8 @@ private lemma xi_cdim_localization_solenoid_torus_observation_single_phase_facto
                 i) := by
           refine Finset.sum_congr rfl ?_
           intro i hi
-          simpa using ψ.map_zsmul
+          simpa using ψ.map_zsmul (x i)
             (xi_cdim_localization_solenoid_torus_observation_single_phase_factorization_stdBasis i)
-            (x i)
 
 /-- The denominator of the `i`-th dual basis image. -/
 def xi_cdim_localization_solenoid_torus_observation_single_phase_factorization_basisValue

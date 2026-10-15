@@ -15,6 +15,8 @@ the remaining coefficient-identification proposition explicitly.
 
 noncomputable section
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace InfoGeometry.Canonical.F4ActionSolderingBridge
 
 open InfoGeometry.Algebra
@@ -97,9 +99,11 @@ theorem f4Basis_linearIndependent_of_soldering
 
 theorem finrank_f4BasisSpan_eq_52_of_soldering
     (hS : CertificateIsSoldered) :
-    Module.finrank ℝ f4BasisSpan = 52 := by
+  Module.finrank ℝ f4BasisSpan = 52 := by
   have hLI := f4Basis_linearIndependent_of_soldering hS
-  simpa [f4BasisSpan] using finrank_span_eq_card hLI
+  change Module.finrank ℝ
+    (Submodule.span ℝ (Set.range fun i : Fin 52 => ((f4Basis i).1 : EndH3))) = 52
+  simpa using finrank_span_eq_card hLI
 
 /-! The remaining carrier dimension is a conditional transfer theorem: it
 requires the explicit certificate and the generation equality, which are kept

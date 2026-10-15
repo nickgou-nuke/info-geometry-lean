@@ -108,7 +108,7 @@ omit [CompleteSpace E] in
   apply ContinuousLinearMap.ext
   intro u
   apply DoubledSpace.ext <;>
-    simp [dualSheetLift, plusPointL, minusPointL, ContinuousLinearMap.comp_apply]
+    simp [dualSheetLift, plusPointL, minusPointL, ContinuousLinearMap.comp_apply] <;> abel
 
 omit [CompleteSpace E] in
 /-- Diagonal lift is faithful: it vanishes exactly when the base operator vanishes. -/
@@ -116,11 +116,15 @@ theorem dualSheetLift_eq_zero_iff (A : E →L[ℝ] E) :
     dualSheetLift (E := E) A = 0 ↔ A = 0 := by
   constructor
   · intro hLift
+    have hZero : plusBlockMap (E := E) (0 : EndH) = 0 := by
+      ext x
+      simp [plusBlockMap]
     have hPlus :
         plusBlockMap (E := E) (dualSheetLift (E := E) A)
           = plusBlockMap (E := E) (0 : EndH) := by
       simp [hLift]
-    simpa using hPlus
+    rw [plusBlockMap_dualSheetLift, hZero] at hPlus
+    exact hPlus
   · intro hA
     subst hA
     apply ContinuousLinearMap.ext
@@ -206,7 +210,10 @@ theorem liftedEinsteinAnomalyOperator_eq_neg_liftedRightChiralAnomalyOperator :
       dualSheetLift (E := E) (-CCI.toConformalInference.rightChiralAnomalyOperator) := by
     exact congrArg (fun T : E →L[ℝ] E => dualSheetLift (E := E) T)
       CCI.toConformalInference.singularEinsteinAnomaly_eq_neg_rightChiralAnomaly
-  simpa [liftedEinsteinAnomalyOperator, liftedRightChiralAnomalyOperator] using hLift
+  change dualSheetLift (E := E) (InfoGeometry.Canonical.EinsteinAnomaly CCI.A CCI.A_MP CCI.A_D)
+    = -dualSheetLift (E := E) CCI.toConformalInference.rightChiralAnomalyOperator
+  rw [← dualSheetLift_neg]
+  exact hLift
 
 /--
 If the Moore-Penrose left and right projectors agree, the lifted singular
@@ -580,7 +587,8 @@ theorem deriv_bogoliubovConjugate_liftedEinsteinAnomalyOperator_at_zero_eq_relat
       0
       =
     relativeModularDeriv (E := E) hMod CCI.liftedEinsteinAnomalyOperator := by
-  simpa [bogoliubovConjugate_liftedEinsteinAnomalyOperator, relativeModularDeriv] using
+  simpa [bogoliubovConjugate_liftedEinsteinAnomalyOperator, relativeModularDeriv,
+    relativeModularKGenerator, modularDeriv, modularTransportGenerator] using
     deriv_modularTransport_conjugation_at_zero
       (E := E) hMod CCI.liftedEinsteinAnomalyOperator
 

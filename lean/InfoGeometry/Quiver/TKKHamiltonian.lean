@@ -27,7 +27,11 @@ inductive TKKGrade : Type where
   | zero
   | plus1
   | plus2
-  deriving DecidableEq, Repr, Fintype
+  deriving DecidableEq, Repr
+
+instance : Fintype TKKGrade where
+  elems := {TKKGrade.minus2, TKKGrade.minus1, TKKGrade.zero, TKKGrade.plus1, TKKGrade.plus2}
+  complete := by rintro (_ | _ | _ | _ | _) <;> simp
 
 namespace TKKGrade
 
@@ -84,7 +88,7 @@ def TKKGrade.toPhysicalSector : TKKGrade → PhysicalSector
 
 /-! ## 2. TKK grading and fermion-pairing closure -/
 
-structure TKKGrading (L : Type*) [LieRing L] [AddCommGroup L] [Module ℂ L] [LieAlgebra ℂ L] where
+structure TKKGrading (L : Type*) [LieRing L] [LieAlgebra ℂ L] where
   gradedSubspace : TKKGrade → Submodule ℂ L
   grade_decomposition :
     ∀ x : L, ∃ components : TKKGrade → L,
@@ -94,7 +98,7 @@ structure TKKGrading (L : Type*) [LieRing L] [AddCommGroup L] [Module ℂ L] [Li
       x ∈ gradedSubspace i → y ∈ gradedSubspace j →
         ⁅x, y⁆ ∈ gradedSubspace (i + j)
 
-theorem fermiPairing {L : Type*} [LieRing L] [AddCommGroup L] [Module ℂ L] [LieAlgebra ℂ L]
+theorem fermiPairing {L : Type*} [LieRing L] [LieAlgebra ℂ L]
     (tkk : TKKGrading L) :
     ∀ ψ φ : L, ψ ∈ tkk.gradedSubspace .plus1 →
       φ ∈ tkk.gradedSubspace .plus1 →

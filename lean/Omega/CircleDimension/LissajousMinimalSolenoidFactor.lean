@@ -62,8 +62,10 @@ theorem paper_cdim_lissajous_minimal_solenoid_factor (a b : ℕ) (ha : 0 < a) (h
     exact
       (paper_cdim_localized_gs_embedding_order (lissajousMinimalEmbeddingData a b ha T hT)).2
   · intro T hT
-    simpa [compatibleDualSurjection] using
-      (paper_cdim_localized_gs_dual_complete_classification
-        (lissajousMinimalEmbeddingData a b ha T hT))
+    change (localizedEmbedding (lissajousMinimalPrimeSet a b) T ∧
+            localizedEmbedding T (lissajousMinimalPrimeSet a b)) ↔
+           lissajousMinimalPrimeSet a b = T
+    exact paper_cdim_localized_gs_dual_complete_classification
+      (lissajousMinimalEmbeddingData a b ha T hT)
 
 end Omega.CircleDimension

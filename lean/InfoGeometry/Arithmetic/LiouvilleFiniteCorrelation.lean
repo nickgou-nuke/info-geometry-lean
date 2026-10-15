@@ -6,6 +6,9 @@ namespace InfoGeometry.Arithmetic.LiouvilleFiniteCorrelation
 open scoped BigOperators
 open BostConnesSystem
 
+noncomputable def shiftedLiouville (index : ℕ+) (shift : ℕ) : ℤ :=
+  liouville (index.val + shift)
+
 inductive Archetype
   | factorization
   | multiplicativity
@@ -13,7 +16,29 @@ inductive Archetype
   | finiteCounting
   | finiteCorrelation
   | asymptoticCancellation
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+def archetypeFinEquiv : Archetype ≃ Fin 6 where
+  toFun
+    | .factorization => 0
+    | .multiplicativity => 1
+    | .signValues => 2
+    | .finiteCounting => 3
+    | .finiteCorrelation => 4
+    | .asymptoticCancellation => 5
+  invFun i := match i.val with
+    | 0 => .factorization
+    | 1 => .multiplicativity
+    | 2 => .signValues
+    | 3 => .finiteCounting
+    | 4 => .finiteCorrelation
+    | _ => .asymptoticCancellation
+  left_inv x := by cases x <;> rfl
+  right_inv i := by
+    apply Fin.ext
+    fin_cases i <;> rfl
+
+instance : Fintype Archetype := Fintype.ofEquiv (Fin 6) archetypeFinEquiv.symm
 
 def prerequisites : Archetype → Finset ℕ
   | .factorization => {0}
@@ -31,6 +56,13 @@ instance : PartialOrder Archetype :=
 instance : DecidableRel (α := Archetype) (· ≤ ·) :=
   fun first second =>
     inferInstanceAs (Decidable (prerequisites first ⊆ prerequisites second))
+
+instance : DecidableRel (fun first second : Archetype => first < second) := by
+  intro first second
+  change Decidable
+    (prerequisites first ⊆ prerequisites second ∧
+      ¬ prerequisites second ⊆ prerequisites first)
+  infer_instance
 
 theorem finite_correlation_dependencies :
     Archetype.signValues < Archetype.finiteCorrelation ∧
@@ -65,14 +97,25 @@ theorem finite_sign_correlation {Index : Type*} (samples : Finset Index)
       intro index member
       exact sign_product_eq_counting_term _ _
         (first_sq index member) (second_sq index member)
-    _ = _ := by simp [Finset.sum_sub_distrib, ← Finset.mul_sum]
+    _ = _ := by
+      rw [Finset.sum_sub_distrib]
+      have hcount :
+          (∑ index ∈ samples, 2 * (if first index = second index then (1 : ℤ) else 0)) =
+            2 * ((samples.filter (fun index => first index = second index)).card : ℤ) := by
+        calc
+          (∑ index ∈ samples, 2 * (if first index = second index then (1 : ℤ) else 0)) =
+              2 * ∑ index ∈ samples, if first index = second index then (1 : ℤ) else 0 := by
+            rw [← Finset.mul_sum]
+          _ = _ := by rw [Finset.sum_boole]
+      rw [hcount]
+      simp
 
 theorem liouville_correlation_count (samples : Finset ℕ+) (shift : ℕ) :
-    (∑ index ∈ samples, liouville index * liouville (index.val + shift)) =
-      2 * ((samples.filter (fun index =>
-        liouville index = liouville (index.val + shift))).card : ℤ) -
+    (∑ index ∈ samples, liouville index * shiftedLiouville index shift) =
+      2 * ((samples.filter (fun (index : ℕ+) =>
+        liouville index = shiftedLiouville index shift)).card : ℤ) -
           (samples.card : ℤ) := by
-  apply finite_sign_correlation
+  apply finite_sign_correlation (Index := ℕ+)
   · intro index member
     exact liouville_sq index index.pos
   · intro index member
@@ -91,23 +134,23 @@ theorem liouville_self_correlation (samples : Finset ℕ+) :
     _ = _ := by simp
 
 theorem liouville_correlation_zero_iff (samples : Finset ℕ+) (shift : ℕ) :
-    (∑ index ∈ samples, liouville index * liouville (index.val + shift)) = 0 ↔
-      2 * ((samples.filter (fun index =>
-        liouville index = liouville (index.val + shift))).card : ℤ) =
+    (∑ index ∈ samples, liouville index * shiftedLiouville index shift) = 0 ↔
+      2 * ((samples.filter (fun (index : ℕ+) =>
+        liouville index = shiftedLiouville index shift)).card : ℤ) =
           (samples.card : ℤ) := by
   rw [liouville_correlation_count, sub_eq_zero]
 
 theorem liouville_correlation_abs_le (samples : Finset ℕ+) (shift : ℕ) :
-    |∑ index ∈ samples, liouville index * liouville (index.val + shift)| ≤
+    |∑ index ∈ samples, liouville index * shiftedLiouville index shift| ≤
       (samples.card : ℤ) := by
-  have count_le := Finset.card_filter_le samples (fun index =>
-    liouville index = liouville (index.val + shift))
+  have count_le := Finset.card_filter_le samples (fun (index : ℕ+) =>
+    liouville index = shiftedLiouville index shift)
   rw [liouville_correlation_count]
   exact abs_le.mpr ⟨by omega, by omega⟩
 
 theorem liouville_correlation_ne_zero_of_odd_card
     (samples : Finset ℕ+) (shift : ℕ) (odd_card : Odd samples.card) :
-    (∑ index ∈ samples, liouville index * liouville (index.val + shift)) ≠ 0 := by
+    (∑ index ∈ samples, liouville index * shiftedLiouville index shift) ≠ 0 := by
   intro zero_correlation
   have balance := (liouville_correlation_zero_iff samples shift).mp zero_correlation
   obtain ⟨half, cardinality⟩ := odd_card

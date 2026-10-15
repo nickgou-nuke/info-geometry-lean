@@ -1,4 +1,7 @@
 import Mathlib.Tactic
+import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Analysis.Calculus.Deriv.Mul
+import Mathlib.Analysis.Calculus.Deriv.Pow
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
@@ -73,13 +76,20 @@ theorem fenchel_biconjugate_quadratic (x : ℝ) :
 
 theorem quadratic_gradient (x : ℝ) :
     deriv Phi x = x := by
-  unfold Phi
   have hsq : HasDerivAt (fun x : ℝ => x ^ 2) (2 * x) x := by
     simpa using hasDerivAt_pow 2 x
   have hhalf : HasDerivAt (fun x : ℝ => (1 / 2 : ℝ) * x ^ 2)
       ((1 / 2 : ℝ) * (2 * x)) x :=
     hsq.const_mul (1 / 2 : ℝ)
-  simpa [mul_comm, mul_left_comm] using hhalf.deriv
+  have hfun : Phi = fun x : ℝ => (1 / 2 : ℝ) * x ^ 2 := by
+    funext y
+    unfold Phi
+    ring
+  rw [hfun]
+  calc
+    deriv (fun x : ℝ => (1 / 2 : ℝ) * x ^ 2) x =
+        (1 / 2 : ℝ) * (2 * x) := hhalf.deriv
+    _ = x := by ring
 
 theorem quadratic_gradient_inverse (x : ℝ) :
     deriv Phi (deriv Phi x) = x := by

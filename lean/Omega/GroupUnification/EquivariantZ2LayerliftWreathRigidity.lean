@@ -93,8 +93,9 @@ theorem paper_equivariant_z2_layerlift_wreath_rigidity {Δ Δtilde : Type} [Fint
       (if hx : x = s (π x) then (π x, 0) else (π x, 1)).1 = π x
     split_ifs <;> rfl
   · intro a
-    simpa [equivariant_z2_layerlift_wreath_rigidity_g] using
-      equivariant_z2_layerlift_wreath_rigidity_gf (a, 1)
+    change equivariant_z2_layerlift_wreath_rigidity_f
+      (ζ (equivariant_z2_layerlift_wreath_rigidity_g (a, 0))) = (a, 1)
+    exact equivariant_z2_layerlift_wreath_rigidity_gf (a, 1)
 
 set_option maxHeartbeats 400000 in
 /-- Publication-facing wrapper for the rigidity of equivariant free binary lifts.

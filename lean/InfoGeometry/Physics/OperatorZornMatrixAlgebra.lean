@@ -29,6 +29,16 @@ def ofMatrix (M : Mat2 A) : OperatorZornMatrix A where
   sigma_plus_op := M 0 1
   sigma_minus_op := M 1 0
 
+@[ext]
+theorem ext {M N : OperatorZornMatrix A}
+    (h₁ : M.n_plus_op = N.n_plus_op)
+    (h₂ : M.n_minus_op = N.n_minus_op)
+    (h₃ : M.sigma_plus_op = N.sigma_plus_op)
+    (h₄ : M.sigma_minus_op = N.sigma_minus_op) : M = N := by
+  cases M
+  cases N
+  simp_all
+
 def equivMatrix : OperatorZornMatrix A ≃ Mat2 A where
   toFun := toMatrix
   invFun := ofMatrix
@@ -51,9 +61,32 @@ noncomputable def ringEquivMatrix :
     OperatorZornMatrix A ≃+* Mat2 A :=
   Equiv.ringEquiv (equivMatrix (A := A))
 
+@[simp] theorem ringEquivMatrix_apply (M : OperatorZornMatrix A) :
+    ringEquivMatrix M = toMatrix M := rfl
+
 @[simp] theorem toMatrix_zero :
     toMatrix (0 : OperatorZornMatrix A) = 0 := by
   exact (ringEquivMatrix (A := A)).map_zero
+
+@[simp] theorem zero_n_plus_op :
+    (0 : OperatorZornMatrix A).n_plus_op = 0 := by
+  simpa [toMatrix] using
+    congrArg (fun X : Mat2 A => X 0 0) (toMatrix_zero (A := A))
+
+@[simp] theorem zero_n_minus_op :
+    (0 : OperatorZornMatrix A).n_minus_op = 0 := by
+  simpa [toMatrix] using
+    congrArg (fun X : Mat2 A => X 1 1) (toMatrix_zero (A := A))
+
+@[simp] theorem zero_sigma_plus_op :
+    (0 : OperatorZornMatrix A).sigma_plus_op = 0 := by
+  simpa [toMatrix] using
+    congrArg (fun X : Mat2 A => X 0 1) (toMatrix_zero (A := A))
+
+@[simp] theorem zero_sigma_minus_op :
+    (0 : OperatorZornMatrix A).sigma_minus_op = 0 := by
+  simpa [toMatrix] using
+    congrArg (fun X : Mat2 A => X 1 0) (toMatrix_zero (A := A))
 
 @[simp] theorem toMatrix_one :
     toMatrix (1 : OperatorZornMatrix A) = 1 := by
@@ -62,6 +95,26 @@ noncomputable def ringEquivMatrix :
 @[simp] theorem toMatrix_add (M N : OperatorZornMatrix A) :
     toMatrix (M + N) = toMatrix M + toMatrix N := by
   exact (ringEquivMatrix (A := A)).map_add M N
+
+@[simp] theorem add_n_plus_op (M N : OperatorZornMatrix A) :
+    (M + N).n_plus_op = M.n_plus_op + N.n_plus_op := by
+  simpa [toMatrix] using
+    congrArg (fun X : Mat2 A => X 0 0) (toMatrix_add M N)
+
+@[simp] theorem add_n_minus_op (M N : OperatorZornMatrix A) :
+    (M + N).n_minus_op = M.n_minus_op + N.n_minus_op := by
+  simpa [toMatrix] using
+    congrArg (fun X : Mat2 A => X 1 1) (toMatrix_add M N)
+
+@[simp] theorem add_sigma_plus_op (M N : OperatorZornMatrix A) :
+    (M + N).sigma_plus_op = M.sigma_plus_op + N.sigma_plus_op := by
+  simpa [toMatrix] using
+    congrArg (fun X : Mat2 A => X 0 1) (toMatrix_add M N)
+
+@[simp] theorem add_sigma_minus_op (M N : OperatorZornMatrix A) :
+    (M + N).sigma_minus_op = M.sigma_minus_op + N.sigma_minus_op := by
+  simpa [toMatrix] using
+    congrArg (fun X : Mat2 A => X 1 0) (toMatrix_add M N)
 
 @[simp] theorem toMatrix_neg (M : OperatorZornMatrix A) :
     toMatrix (-M) = -toMatrix M := by
@@ -119,15 +172,12 @@ carrier.
         InfoGeometry.Physics.NCG.diracOperator Delta =
       (⟨Delta * star Delta, star Delta * Delta, 0, 0⟩ :
         OperatorZornMatrix A) := by
-  apply (equivMatrix (A := A)).injective
-  change toMatrix (_ * _) = toMatrix
-    (⟨Delta * star Delta, star Delta * Delta, 0, 0⟩ :
-      OperatorZornMatrix A)
-  rw [Equiv.mul_def]
+  apply (ringEquivMatrix (A := A)).injective
+  simp only [map_mul, ringEquivMatrix_apply]
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [InfoGeometry.Physics.NCG.diracOperator, toMatrix,
-      Matrix.mul_apply, Fin.sum_univ_two, equivMatrix, ofMatrix]
+    simp [InfoGeometry.Physics.NCG.diracOperator,
+      toMatrix, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp] theorem dirac_square_n_plus (Delta : A) :
     (InfoGeometry.Physics.NCG.diracOperator Delta *
@@ -216,7 +266,7 @@ instance : StarRing (OperatorZornMatrix A) where
       toMatrix (starOp N * starOp M)
     simpa only [star_eq_starOp, equivMatrix_apply, toMatrix_starOp, Equiv.mul_def,
       equivMatrix_symm_apply, toMatrix_ofMatrix] using
-      (Matrix.star_mul (toMatrix M) (toMatrix N))
+      (StarMul.star_mul (toMatrix M) (toMatrix N))
   star_add := by
     intro M N
     apply (equivMatrix (A := A)).injective
@@ -259,7 +309,7 @@ operator; this is the finite algebraic input for spectral/Gram readouts. -/
   rw [toMatrix_starOp]
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [InfoGeometry.Physics.NCG.diracOperator, toMatrix, starOp,
+    simp [InfoGeometry.Physics.NCG.diracOperator, toMatrix,
       Matrix.star_apply, star_mul]
 
 @[simp] theorem dirac_anticommutes_with_chirality_native (Delta : A) :
@@ -267,26 +317,24 @@ operator; this is the finite algebraic input for spectral/Gram readouts. -/
         InfoGeometry.Physics.NCG.chiralGradingOperator +
       InfoGeometry.Physics.NCG.chiralGradingOperator *
         InfoGeometry.Physics.NCG.diracOperator Delta = 0 := by
-  apply (equivMatrix (A := A)).injective
-  change toMatrix (_ + _) = toMatrix (0 : OperatorZornMatrix A)
-  rw [Equiv.add_def, Equiv.mul_def, Equiv.mul_def, Equiv.zero_def]
+  apply (ringEquivMatrix (A := A)).injective
+  simp only [map_add, map_mul, map_zero, ringEquivMatrix_apply]
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [InfoGeometry.Physics.NCG.diracOperator,
-      InfoGeometry.Physics.NCG.chiralGradingOperator, toMatrix,
-      Matrix.mul_apply, Fin.sum_univ_two, equivMatrix, ofMatrix]
+      InfoGeometry.Physics.NCG.chiralGradingOperator,
+      toMatrix]
 
 @[simp] theorem chiral_grading_sq_native :
     InfoGeometry.Physics.NCG.chiralGradingOperator *
         InfoGeometry.Physics.NCG.chiralGradingOperator =
       (⟨1, 1, 0, 0⟩ : OperatorZornMatrix A) := by
-  apply (equivMatrix (A := A)).injective
-  change toMatrix (_ * _) = toMatrix (⟨1, 1, 0, 0⟩ : OperatorZornMatrix A)
-  rw [Equiv.mul_def]
+  apply (ringEquivMatrix (A := A)).injective
+  simp only [map_mul, ringEquivMatrix_apply]
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [InfoGeometry.Physics.NCG.chiralGradingOperator, toMatrix,
-      Matrix.mul_apply, Fin.sum_univ_two, equivMatrix, ofMatrix]
+    simp [InfoGeometry.Physics.NCG.chiralGradingOperator,
+      toMatrix, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- The square of an odd Dirac block is even for the chiral grading. -/
 theorem dirac_square_commutes_with_chirality_native (Delta : A) :
@@ -300,8 +348,8 @@ theorem dirac_square_commutes_with_chirality_native (Delta : A) :
     InfoGeometry.Physics.NCG.diracOperator Delta
   let Gamma : OperatorZornMatrix A :=
     InfoGeometry.Physics.NCG.chiralGradingOperator
-  have hodd : D * Gamma + Gamma * D = 0 := by
-    simpa [D, Gamma] using dirac_anticommutes_with_chirality_native Delta
+  have hodd : D * Gamma + Gamma * D = 0 :=
+    dirac_anticommutes_with_chirality_native Delta
   have hswap : D * Gamma = -(Gamma * D) := by
     exact eq_neg_of_add_eq_zero_left hodd
   have hsq : D * D * Gamma = Gamma * (D * D) := by
@@ -311,7 +359,7 @@ theorem dirac_square_commutes_with_chirality_native (Delta : A) :
       _ = -(D * Gamma) * D := by noncomm_ring
       _ = -(-(Gamma * D)) * D := by rw [hswap]
       _ = Gamma * (D * D) := by noncomm_ring
-  simpa [D, Gamma] using hsq
+  exact hsq
 
 /-! ## Hestenes--Krein product of phase and grading -/
 
@@ -331,6 +379,7 @@ theorem kreinSymmetry_star_eq
     Gamma * -K = -(Gamma * K) := by rw [mul_neg]
     _ = K * Gamma := by rw [hanti]
 
+omit [StarRing A] in
 /-- The square of the Krein fundamental symmetry is the identity. -/
 theorem kreinSymmetry_sq
     (K Gamma : A)

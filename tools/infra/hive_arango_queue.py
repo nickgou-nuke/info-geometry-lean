@@ -89,6 +89,7 @@ COLLECTIONS: tuple[CollectionSpec, ...] = (
     CollectionSpec("hive_build_packets"),
     CollectionSpec("hive_audit_packets"),
     CollectionSpec("hive_candidate_packets"),
+    CollectionSpec("hive_pantograph_session_evidence"),
     CollectionSpec("hive_promotions"),
     CollectionSpec("hive_resources"),
     CollectionSpec("hive_resource_leases"),
@@ -269,6 +270,7 @@ ALLOWED_PROVIDER_CONTACT_POLICIES = {
 }
 
 PACKET_COLLECTION_BY_SCHEMA = {
+    "info_geometry.hive.pantograph_session_evidence.v1": "hive_pantograph_session_evidence",
     "hive.packet.retrieval.v1": "hive_retrieval_packets",
     "hive.packet.proof_state.v1": "hive_proof_state_packets",
     "hive.packet.proposal.v1": "hive_proposals",
@@ -665,6 +667,7 @@ def normalize_packet_origin_metadata(packet: dict[str, Any]) -> None:
         "hive.packet.promotion_decision.v1",
         "hive.packet.majorana_identity.v1",
         "info_geometry.hive_replay_packet.v1",
+        "info_geometry.hive.pantograph_session_evidence.v1",
     }:
         packet.setdefault("source_regime", "theorem_lane")
     elif schema == "hive.packet.theorem_candidate.v1":
@@ -756,7 +759,11 @@ def validate_packet_invariants(packet: dict[str, Any]) -> dict[str, Any]:
         raise ValueError(f"packet {schema} has invalid representation_class: {rep_class!r}")
 
     rep_depth = packet.get("representation_depth")
-    if rep_depth is not None and str(rep_depth) not in ALLOWED_REPRESENTATION_DEPTHS:
+    if isinstance(rep_depth, list):
+        valid_rep_depth = bool(rep_depth) and all(str(item) in ALLOWED_REPRESENTATION_DEPTHS for item in rep_depth)
+    else:
+        valid_rep_depth = rep_depth is None or str(rep_depth) in ALLOWED_REPRESENTATION_DEPTHS
+    if not valid_rep_depth:
         raise ValueError(f"packet {schema} has invalid representation_depth: {rep_depth!r}")
 
     if schema == "hive.packet.retrieval.v1":
@@ -848,6 +855,100 @@ def validate_packet_invariants(packet: dict[str, Any]) -> dict[str, Any]:
     elif schema == "info_geometry.hive_replay_packet.v1":
         if authority_rank(authority) < authority_rank("lean_checked"):
             raise ValueError("Replay packets must have authority at least 'lean_checked'")
+    elif schema == "info_geometry.hive.pantograph_session_evidence.v1":
+        status_by_outcome = {
+            "matched": "replay_matched",
+            "mismatch": "replay_diverged",
+            "process_failed": "replay_process_failed",
+            "refused_or_failed": "replay_refused",
+        }
+        outcome = packet.get("replay_outcome")
+        if status_by_outcome.get(outcome) != packet.get("status"):
+            raise ValueError("Pantograph evidence status disagrees with replay outcome")
+        if authority != "navigation":
+            raise ValueError("Pantograph session evidence must have navigation authority")
+        if packet.get("promotion_allowed") is not False:
+            raise ValueError("Pantograph session evidence cannot authorize promotion")
+        if packet.get("kernel_proof") is not False or packet.get("owner_build") is not False:
+            raise ValueError("Pantograph session evidence is not kernel or owner-build evidence")
+        if packet.get("independent_audit") is not False:
+            raise ValueError("Pantograph session evidence is not independent audit evidence")
+        if packet.get("candidate_link_basis") != "caller_asserted_candidate_binding":
+            raise ValueError("Pantograph evidence must state its caller-asserted candidate-link basis")
+        for field in ("pantograph_session_key", "root_event_key", "source_snapshot_sha256", "environment_fingerprint"):
+            if not packet.get(field):
+                raise ValueError(f"Pantograph session evidence requires {field}")
+        candidate_ref = packet.get("origin_candidate_ref")
+        if not isinstance(candidate_ref, dict) or not candidate_ref.get("ref"):
+            raise ValueError("Pantograph session evidence requires an originating candidate reference")
+        request_count = packet.get("request_count")
+        response_count = packet.get("response_count")
+        request_keys = packet.get("request_keys")
+        response_keys = packet.get("response_keys")
+        completed = packet.get("replay_completed_request_count")
+        if type(request_count) is not int or request_count < 1 or response_count != request_count:
+            raise ValueError("Pantograph evidence requires equal positive request and response counts")
+        if not isinstance(request_keys, list) or len(request_keys) != request_count:
+            raise ValueError("Pantograph evidence request keys do not match request count")
+        if not isinstance(response_keys, list) or len(response_keys) != response_count:
+            raise ValueError("Pantograph evidence response keys do not match response count")
+        request_hashes = packet.get("request_sha256s")
+        response_hashes = packet.get("response_sha256s")
+        if not isinstance(request_hashes, list) or len(request_hashes) != request_count:
+            raise ValueError("Pantograph evidence request hashes do not match request count")
+        if not isinstance(response_hashes, list) or len(response_hashes) != response_count:
+            raise ValueError("Pantograph evidence response hashes do not match response count")
+        if any(
+            not isinstance(value, str) or len(value) != 64
+            or any(char not in "0123456789abcdef" for char in value)
+            for value in request_hashes + response_hashes
+        ):
+            raise ValueError("Pantograph evidence contains an invalid request or response hash")
+        if type(completed) is not int or not 0 <= completed <= request_count:
+            raise ValueError("Pantograph evidence replay count is outside archived request bounds")
+        if outcome == "matched" and completed != request_count:
+            raise ValueError("matched Pantograph replay must cover every archived request")
+        if outcome == "mismatch" and completed < 1:
+            raise ValueError("diverged Pantograph replay must identify a completed request")
+        replay_result = packet.get("replay_result")
+        if not isinstance(replay_result, dict):
+            raise ValueError("Pantograph evidence must retain the bound replay result")
+        if replay_result.get("status") != outcome:
+            raise ValueError("nested Pantograph replay status disagrees with packet outcome")
+        if outcome == "mismatch" and replay_result.get("sequence") != completed:
+            raise ValueError("diverged Pantograph replay sequence disagrees with completed count")
+        if outcome == "process_failed" and completed != request_count:
+            raise ValueError("process-failed Pantograph replay must cover the archived exchanges")
+        if outcome == "refused_or_failed" and completed != 0:
+            raise ValueError("refused Pantograph replay cannot claim completed exchanges")
+        replay_binding = replay_result.get("session_binding")
+        expected_binding = {
+            "sessionId": packet.get("pantograph_session_id"),
+            "rootEventKey": packet.get("root_event_key"),
+            "sourceSnapshotSha256": packet.get("source_snapshot_sha256"),
+            "environmentFingerprint": packet.get("environment_fingerprint"),
+            "buildFingerprint": packet.get("build_fingerprint"),
+            "requestCount": request_count,
+            "requestSha256s": request_hashes,
+            "responseSha256s": response_hashes,
+        }
+        if not isinstance(replay_binding, dict) or any(
+            replay_binding.get(key) != value for key, value in expected_binding.items()
+        ):
+            raise ValueError("nested Pantograph replay binding disagrees with packet provenance")
+        replay_digest = hashlib.sha256(json.dumps(
+            replay_result, sort_keys=True, separators=(",", ":"), ensure_ascii=False,
+        ).encode("utf-8")).hexdigest()
+        if packet.get("replay_result_sha256") != replay_digest:
+            raise ValueError("Pantograph replay result digest does not match its content")
+        packet_hash = packet.get("packet_hash")
+        unsigned_packet = dict(packet)
+        unsigned_packet.pop("packet_hash", None)
+        expected_packet_hash = "sha256:" + hashlib.sha256(json.dumps(
+            unsigned_packet, sort_keys=True, separators=(",", ":"), ensure_ascii=False,
+        ).encode("utf-8")).hexdigest()
+        if packet_hash != expected_packet_hash:
+            raise ValueError("Pantograph evidence packet hash does not match its content")
 
     if packet.get("asserts_theorem_closure"):
         if authority_rank(authority) < authority_rank("lean_checked"):
@@ -866,6 +967,12 @@ def validate_packet_invariants(packet: dict[str, Any]) -> dict[str, Any]:
     validate_backend_metadata(packet_copy)
     packet_copy.setdefault("packet_key", packet_key(packet_copy))
     packet_copy.setdefault("created_at", iso_now())
+    if schema == "info_geometry.hive.pantograph_session_evidence.v1":
+        unsigned_packet = dict(packet_copy)
+        unsigned_packet.pop("packet_hash", None)
+        packet_copy["packet_hash"] = "sha256:" + hashlib.sha256(json.dumps(
+            unsigned_packet, sort_keys=True, separators=(",", ":"), ensure_ascii=False,
+        ).encode("utf-8")).hexdigest()
     return packet_copy
 
 
@@ -1795,6 +1902,115 @@ FOR task IN @@tasks
     return rows[0] if rows else None
 
 
+def renew_task_lease(
+    endpoint: str,
+    database: str,
+    username: str,
+    password: str,
+    *,
+    task_key_value: str,
+    worker_id: str,
+    lease_seconds: int = DEFAULT_LEASE_SECONDS,
+) -> dict[str, Any] | None:
+    """Atomically extend the lease TTL of an in-progress leased task."""
+    query = """
+LET now = DATE_ISO8601(DATE_NOW())
+FOR task IN @@tasks
+  FILTER task._key == @task_key
+  FILTER task.worker_id == @worker_id
+  FILTER task.status == "leased"
+  LIMIT 1
+  UPDATE task WITH {
+    lease_expires_at: DATE_ISO8601(DATE_ADD(DATE_NOW(), @lease_seconds, "second")),
+    lease_renewed_at: now,
+    updated_at: now
+  } IN @@tasks
+  OPTIONS { mergeObjects: true }
+  RETURN NEW
+""".strip()
+    rows = aql(
+        endpoint,
+        database,
+        username,
+        password,
+        query,
+        {
+            "@tasks": "hive_tasks",
+            "task_key": task_key_value,
+            "worker_id": worker_id,
+            "lease_seconds": int(lease_seconds),
+        },
+    )
+    return rows[0] if rows else None
+
+
+def check_expired_tasks(
+    endpoint: str,
+    database: str,
+    username: str,
+    password: str,
+    *,
+    queue_name: str | None = None,
+) -> list[dict[str, Any]]:
+    """Return leased tasks whose lease expiration timestamp is in the past."""
+    query = """
+LET now = DATE_ISO8601(DATE_NOW())
+FOR task IN @@tasks
+  FILTER task.status == "leased"
+  FILTER task.lease_expires_at != null && task.lease_expires_at <= now
+  FILTER @queue_name == null || task.queue_name == @queue_name
+  RETURN task
+""".strip()
+    return aql(
+        endpoint,
+        database,
+        username,
+        password,
+        query,
+        {
+            "@tasks": "hive_tasks",
+            "queue_name": queue_name,
+        },
+    )
+
+
+def reap_expired_tasks(
+    endpoint: str,
+    database: str,
+    username: str,
+    password: str,
+    *,
+    queue_name: str | None = None,
+) -> list[dict[str, Any]]:
+    """Reset expired leased tasks back to 'pending' with cleared lease_expires_at."""
+    query = """
+LET now = DATE_ISO8601(DATE_NOW())
+FOR task IN @@tasks
+  FILTER task.status == "leased"
+  FILTER task.lease_expires_at != null && task.lease_expires_at <= now
+  FILTER @queue_name == null || task.queue_name == @queue_name
+  UPDATE task WITH {
+    status: "pending",
+    worker_id: null,
+    lease_expires_at: null,
+    reaped_at: now,
+    updated_at: now
+  } IN @@tasks
+  OPTIONS { mergeObjects: true }
+  RETURN NEW
+""".strip()
+    return aql(
+        endpoint,
+        database,
+        username,
+        password,
+        query,
+        {
+            "@tasks": "hive_tasks",
+            "queue_name": queue_name,
+        },
+    )
+
 
 def queue_stats(endpoint: str, database: str, username: str, password: str, *, queue_name: str) -> dict[str, Any]:
     query = """
@@ -2210,6 +2426,14 @@ def parse_args() -> argparse.Namespace:
     fail.add_argument("--worker-id", required=True)
     fail.add_argument("--error", required=True)
 
+    renew_lease = sub.add_parser("renew-task-lease", help="Renew lease TTL on an active leased task")
+    renew_lease.add_argument("--task-key", required=True)
+    renew_lease.add_argument("--worker-id", required=True)
+    renew_lease.add_argument("--lease-seconds", type=int, default=DEFAULT_LEASE_SECONDS)
+
+    reap_tasks = sub.add_parser("reap-expired-tasks", help="Reap expired leased tasks back to pending")
+    reap_tasks.add_argument("--queue-name", default=None)
+
     stats = sub.add_parser("queue-stats", help="Summarize queue status counts")
     stats.add_argument("--queue-name", default=DEFAULT_QUEUE)
     sector_neg = sub.add_parser("sector-negative-stats", help="Rank negative constraints by sector/fingerprint over a recent window")
@@ -2391,6 +2615,24 @@ def main() -> int:
             task_key_value=str(args.task_key),
             worker_id=str(args.worker_id),
             error_message=str(args.error),
+        )
+    elif args.command == "renew-task-lease":
+        result = renew_task_lease(
+            endpoint,
+            database,
+            username,
+            password,
+            task_key_value=str(args.task_key),
+            worker_id=str(args.worker_id),
+            lease_seconds=int(args.lease_seconds),
+        )
+    elif args.command == "reap-expired-tasks":
+        result = reap_expired_tasks(
+            endpoint,
+            database,
+            username,
+            password,
+            queue_name=str(args.queue_name) if args.queue_name else None,
         )
     elif args.command == "queue-stats":
         result = queue_stats(endpoint, database, username, password, queue_name=str(args.queue_name))

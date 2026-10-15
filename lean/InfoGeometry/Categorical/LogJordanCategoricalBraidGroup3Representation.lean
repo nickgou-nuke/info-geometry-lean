@@ -172,7 +172,8 @@ theorem standardCategoricalBraidGroup3Hom_artin :
       standardCategoricalBraidGroup3Hom sigmaTwo *
         standardCategoricalBraidGroup3Hom sigmaOne *
         standardCategoricalBraidGroup3Hom sigmaTwo := by
-  simpa using standardCategoricalBraidGenerators.artin
+  simpa [standardCategoricalBraidGenerators] using
+    standardCategoricalBraidGenerators.artin
 
 end InfoGeometry.Categorical.LogJordanCategoricalBraidGroup3Representation
 

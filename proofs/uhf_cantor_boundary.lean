@@ -3,6 +3,7 @@ import Mathlib.CategoryTheory.Functor.OfSequence
 
 open CategoryTheory
 open CategoryTheory.Limits
+open TypeCat
 
 /-!
   UHF bulk (finite diagonal stages) → Cantor boundary, with MASA correction.
@@ -25,7 +26,8 @@ lemma diagonalEmbed_eq (n : ℕ) (b : DiagonalLevel n) :
   simp [diagonalEmbed]
 
 /-- The finite diagonal diagram as a functor `ℕ ⥤ Type`: `D_n → D_{n+1}`. -/
-def diagonalDiagram : ℕ ⥤ Type := Functor.ofSequence diagonalEmbed
+def diagonalDiagram : ℕ ⥤ Type _ :=
+  Functor.ofSequence (X := DiagonalLevel) (fun n => ↾(diagonalEmbed n))
 
 /-- The `2`-adic/UHF-bulk colimit over diagonal finite levels (as a type-level colimit). -/
 def uHFColimit : Type := colimit diagonalDiagram
@@ -40,21 +42,24 @@ def finiteToBoundary (n : ℕ) : DiagonalLevel n → CantorBoundary :=
 /-- Cocone from finite levels into `CantorBoundary`. -/
 def boundaryCocone : Cocone diagonalDiagram where
   pt := CantorBoundary
-  ι := NatTrans.ofSequence
-    (app := finiteToBoundary)
+  ι := NatTrans.ofSequence (F := diagonalDiagram)
+    (G := (Functor.const ℕ).obj CantorBoundary)
+    (app := fun n => ↾(finiteToBoundary n))
     (naturality := by
       intro n
-      funext b k
-      have hmap : diagonalDiagram.map (homOfLE (Nat.le_add_right n 1)) = diagonalEmbed n := by
-        simp [diagonalDiagram, Functor.ofSequence_map_homOfLE_succ]
-      rw [hmap]
+      ext b
+      dsimp [diagonalDiagram]
+      rw [Functor.ofSequence_map_homOfLE_succ]
+      funext k
+      change finiteToBoundary (n + 1) (diagonalEmbed n b) k = finiteToBoundary n b k
       by_cases hkn : k < n
       · have hk1 : k < n + 1 := Nat.lt_succ_of_lt hkn
-        simp [finiteToBoundary, hkn, hk1, diagonalEmbed_lt n b hkn]
+        simp only [finiteToBoundary, dif_pos hk1, dif_pos hkn]
+        exact diagonalEmbed_lt n b hkn
       · by_cases hk : k < n + 1
         · have hk' : k = n := Nat.eq_of_lt_succ_of_not_lt hk hkn
-          subst hk'
-          simp [finiteToBoundary, diagonalEmbed_eq]
+          subst k
+          simpa [finiteToBoundary] using (diagonalEmbed_eq n b)
         · simp [finiteToBoundary, hkn, hk])
 
 /-- Map from the colimit to the Cantor boundary (projective readout). -/

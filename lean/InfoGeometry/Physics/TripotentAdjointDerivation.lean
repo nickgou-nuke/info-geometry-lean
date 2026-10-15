@@ -74,13 +74,11 @@ theorem commutatorAction_bracket_component
     (hx : IsCommutatorComponent e x r)
     (hy : IsCommutatorComponent e y s) :
     IsCommutatorComponent e (x * y - y * x) (r + s) := by
-  have hxy :
-      commutatorAction e (x * y) = (r + s) • (x * y) :=
+  have hxy : IsCommutatorComponent e (x * y) (r + s) :=
     commutatorAction_product_component hx hy
-  have hyx :
-      commutatorAction e (y * x) = (r + s) • (y * x) := by
+  have hyx : IsCommutatorComponent e (y * x) (r + s) := by
     simpa [add_comm] using commutatorAction_product_component hy hx
-  unfold IsCommutatorComponent
+  unfold IsCommutatorComponent at hxy hyx ⊢
   rw [commutatorAction_sub, hxy, hyx, smul_sub]
 
 /-- Left multiplication by `e`, as an `ℝ`-linear map. -/

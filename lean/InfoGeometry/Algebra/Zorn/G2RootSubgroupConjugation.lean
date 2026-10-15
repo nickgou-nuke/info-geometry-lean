@@ -86,6 +86,6 @@ noncomputable def rootSubgroupConjEquiv (α : G2Root) :
       right; exact c_inv_conj_rootGenerator α⟩
   left_inv g := by ext; simp; group
   right_inv h := by ext; simp; group
-  map_mul' x y := by ext; simp [mul_assoc]; group
+  map_mul' x y := by ext; simp only [Subgroup.coe_mul]; group
 
 end InfoGeometry.Algebra.Zorn.G2RootSubgroupConjugation

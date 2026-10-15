@@ -65,10 +65,10 @@ theorem IdempotentProjection.rank_eq_finrank_range
 abbrev RealStageProjection (n : ℕ) :=
   IdempotentProjection ℝ (MatStage n)
 
-def realStageIdentityProjection (n : ℕ) : RealStageProjection n :=
+noncomputable def realStageIdentityProjection (n : ℕ) : RealStageProjection n :=
   ⟨LinearMap.id, by simp⟩
 
-def realStageZeroProjection (n : ℕ) : RealStageProjection n :=
+noncomputable def realStageZeroProjection (n : ℕ) : RealStageProjection n :=
   ⟨0, by simp⟩
 
 theorem realStageIdentityProjection_rank (n : ℕ) :

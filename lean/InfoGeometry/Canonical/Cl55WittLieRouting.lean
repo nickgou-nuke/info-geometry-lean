@@ -412,7 +412,7 @@ theorem E_bracket (i j k l : Fin 5) :
         (creation k * annihilation l) =
       (if j = k then (creation i * annihilation l) else 0) -
         (if l = i then (creation k * annihilation j) else 0) := by
-    simpa using rank_one_bracket _ _ _ _ _ _ hδ hε hjk hli hci haj
+    simpa [bracket] using rank_one_bracket _ _ _ _ _ _ hδ hε hjk hli hci haj
   unfold E
   rw [show bracket
       (creation i * annihilation j -
@@ -1531,7 +1531,7 @@ theorem wittZero_bracket_mem_wittPosOne
       rcases hy with ⟨k, rfl⟩
       rw [E_creation]
       by_cases h : j = k
-      · simpa [h] using
+      · simpa [wittPosOne, h] using
         (Submodule.subset_span (Set.mem_range_self i))
       · simp [h]
     · simp [bracket]
@@ -1827,7 +1827,6 @@ theorem creation_quadratic_linearIndependent :
   rw [Fintype.linearIndependent_iff]
   intro g h p
   have hb := congrArg (fun X => bracket X (annihilation p.1.2)) h
-  dsimp at hb
   rw [bracket_sum_left] at hb
   simp_rw [creation_quadratic_bracket_annihilation] at hb
   simp [bracket] at hb
@@ -1868,7 +1867,6 @@ theorem creation_quadratic_linearIndependent :
       · simp [h2, h1]
   have hba := congrArg
     (fun X => annihilation p.1.1 * X + X * annihilation p.1.1) hb
-  dsimp at hba
   rw [Finset.sum_mul, Finset.mul_sum] at hba
   simp_rw [Matrix.smul_mul, Matrix.mul_smul] at hba
   rw [← Finset.sum_add_distrib] at hba
@@ -1951,7 +1949,6 @@ theorem annihilation_quadratic_linearIndependent :
   rw [Fintype.linearIndependent_iff]
   intro g h p
   have hb := congrArg (fun X => bracket X (creation p.1.2)) h
-  dsimp at hb
   rw [bracket_sum_left] at hb
   simp_rw [annihilation_quadratic_bracket_creation] at hb
   simp [bracket] at hb
@@ -1992,7 +1989,6 @@ theorem annihilation_quadratic_linearIndependent :
       · simp [h2, h1]
   have hba := congrArg
     (fun X => creation p.1.1 * X + X * creation p.1.1) hb
-  dsimp at hba
   rw [Finset.sum_mul, Finset.mul_sum] at hba
   simp_rw [Matrix.smul_mul, Matrix.mul_smul] at hba
   rw [← Finset.sum_add_distrib] at hba
@@ -2074,7 +2070,6 @@ theorem zero_packet_linearIndependent :
   rw [Fintype.linearIndependent_iff]
   intro g h p
   have hb := congrArg (fun X => bracket X (creation p.2)) h
-  dsimp at hb
   rw [bracket_sum_left] at hb
   simp_rw [E_creation] at hb
   have hb' :
@@ -2105,7 +2100,6 @@ theorem zero_packet_linearIndependent :
       simp [h2, hx]
   have hba := congrArg
     (fun X => annihilation p.1 * X + X * annihilation p.1) hb'
-  dsimp at hba
   rw [Finset.sum_mul, Finset.mul_sum] at hba
   simp_rw [Matrix.smul_mul, Matrix.mul_smul] at hba
   rw [← Finset.sum_add_distrib] at hba

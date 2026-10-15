@@ -11,9 +11,8 @@ lemma mobiusEvalEquiv_translation_zero_apply
 
 lemma mobiusEvalEquiv_translation_zero :
     mobiusEvalEquiv (InfoGeometry.translation_transform 0) =
-      Equiv.refl InfoGeometry.RiemannSphere := by
-  ext z
-  exact mobiusEvalEquiv_translation_zero_apply z
+      Equiv.refl InfoGeometry.RiemannSphere :=
+  Equiv.ext mobiusEvalEquiv_translation_zero_apply
 
 lemma mobiusEvalEquiv_dilation_one_apply
     (z : InfoGeometry.RiemannSphere) :
@@ -24,9 +23,8 @@ lemma mobiusEvalEquiv_dilation_one_apply
 
 lemma mobiusEvalEquiv_dilation_one :
     mobiusEvalEquiv (InfoGeometry.dilation_transform 1 one_ne_zero) =
-      Equiv.refl InfoGeometry.RiemannSphere := by
-  ext z
-  exact mobiusEvalEquiv_dilation_one_apply z
+      Equiv.refl InfoGeometry.RiemannSphere :=
+  Equiv.ext mobiusEvalEquiv_dilation_one_apply
 
 lemma mobiusEvalEquiv_translation_zero_symm :
     (mobiusEvalEquiv (InfoGeometry.translation_transform 0)).symm =

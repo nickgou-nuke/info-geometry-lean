@@ -1,5 +1,4 @@
-import Mathlib.Data.Finset.Order
-import Mathlib.Tactic
+import Mathlib
 
 namespace InfoGeometry.Arithmetic.RiemannLectureDependencies
 
@@ -12,7 +11,14 @@ inductive Archetype
   | zeroReflection
   | uniqueZeroInInvariantRegion
   | localCriticalLineCertificate
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype Archetype where
+  elems := {.eulerProduct, .dirichletSeries, .sumProductIdentification,
+    .functionalEquation, .schwarzSymmetry, .zeroReflection,
+    .uniqueZeroInInvariantRegion, .localCriticalLineCertificate}
+  complete x := by
+    cases x <;> decide
 
 def prerequisites : Archetype → Finset ℕ
   | .eulerProduct => {0}

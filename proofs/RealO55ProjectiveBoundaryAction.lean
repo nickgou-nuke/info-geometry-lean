@@ -58,7 +58,7 @@ noncomputable def fullPinBoundaryAction (g : FullPin55) : Cl55NullBoundaryBridge
 theorem fullPinBoundaryAction_one (Z : Cl55NullBoundaryBridge.NullRep) :
     fullPinBoundaryAction (1 : FullPin55) (Cl55NullBoundaryBridge.mk Z) =
       Cl55NullBoundaryBridge.mk Z := by
-  rw [ProjectiveNullBoundaryDatum.BoundaryHom.mapBoundary_nullMk]
+  dsimp [fullPinBoundaryAction, Cl55NullBoundaryBridge.mk]
   apply congrArg (nullMk Cl55NullBoundaryBridge.datum)
   apply ProjectiveNullBoundaryDatum.NullRep.ext_Z
   change fullPinVectorRepresentation (1 : FullPin55) Z.Z = Z.Z
@@ -69,7 +69,7 @@ theorem fullPinBoundaryAction_mul (g h : FullPin55) (Z : Cl55NullBoundaryBridge.
     fullPinBoundaryAction (g * h) (Cl55NullBoundaryBridge.mk Z) =
       fullPinBoundaryAction g
         (fullPinBoundaryAction h (Cl55NullBoundaryBridge.mk Z)) := by
-  rw [ProjectiveNullBoundaryDatum.BoundaryHom.mapBoundary_nullMk, ProjectiveNullBoundaryDatum.BoundaryHom.mapBoundary_nullMk]
+  dsimp [fullPinBoundaryAction, Cl55NullBoundaryBridge.mk]
   apply congrArg (nullMk Cl55NullBoundaryBridge.datum)
   apply ProjectiveNullBoundaryDatum.NullRep.ext_Z
   change fullPinVectorRepresentation (g * h) Z.Z =
@@ -109,7 +109,7 @@ noncomputable def oqBoundaryAction (f : OQ55) : Cl55NullBoundaryBridge.Boundary 
 theorem oqBoundaryAction_one (Z : Cl55NullBoundaryBridge.NullRep) :
     oqBoundaryAction (1 : OQ55) (Cl55NullBoundaryBridge.mk Z) =
       Cl55NullBoundaryBridge.mk Z := by
-  rw [ProjectiveNullBoundaryDatum.BoundaryHom.mapBoundary_nullMk]
+  dsimp [oqBoundaryAction, Cl55NullBoundaryBridge.mk]
   apply congrArg (nullMk Cl55NullBoundaryBridge.datum)
   apply ProjectiveNullBoundaryDatum.NullRep.ext_Z
   change (1 : OQ55).1 Z.Z = Z.Z
@@ -118,7 +118,7 @@ theorem oqBoundaryAction_one (Z : Cl55NullBoundaryBridge.NullRep) :
 theorem oqBoundaryAction_mul (f h : OQ55) (Z : Cl55NullBoundaryBridge.NullRep) :
     oqBoundaryAction (f * h) (Cl55NullBoundaryBridge.mk Z) =
       oqBoundaryAction f (oqBoundaryAction h (Cl55NullBoundaryBridge.mk Z)) := by
-  rw [ProjectiveNullBoundaryDatum.BoundaryHom.mapBoundary_nullMk, ProjectiveNullBoundaryDatum.BoundaryHom.mapBoundary_nullMk]
+  dsimp [oqBoundaryAction, Cl55NullBoundaryBridge.mk]
   apply congrArg (nullMk Cl55NullBoundaryBridge.datum)
   apply ProjectiveNullBoundaryDatum.NullRep.ext_Z
   change (f * h).1 Z.Z = f.1 (h.1 Z.Z)
@@ -228,7 +228,7 @@ theorem fullPinBoundaryRepresentation_factorization :
   intro Z
   change fullPinBoundaryAction g (Cl55NullBoundaryBridge.mk Z) =
     oqBoundaryAction (fullPinToOQ55 g) (Cl55NullBoundaryBridge.mk Z)
-  rw [ProjectiveNullBoundaryDatum.BoundaryHom.mapBoundary_nullMk, ProjectiveNullBoundaryDatum.BoundaryHom.mapBoundary_nullMk]
+  dsimp [fullPinBoundaryAction, oqBoundaryAction, Cl55NullBoundaryBridge.mk]
   apply congrArg (nullMk Cl55NullBoundaryBridge.datum)
   apply ProjectiveNullBoundaryDatum.NullRep.ext_Z
   rfl

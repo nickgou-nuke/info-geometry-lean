@@ -20,7 +20,7 @@ def derivedChainArithmeticBooleanCubeStructure : Prop :=
 noncomputable def derivedChainArithmeticBooleanCubeEquiv :
     {n : ℕ // n ∈ derivedChainArithmeticInterval} ≃ (Fin derivedChainArithmeticRank → Bool) :=
   Classical.choice <| Fintype.card_eq.mp (by
-    simp [derivedChainArithmeticInterval, derivedChainArithmeticRank])
+    dsimp [derivedChainArithmeticInterval, derivedChainArithmeticRank]; rfl)
 
 /-- Prime orders generating monotone geodesics from `1` to `30`. -/
 def derivedChainArithmeticSupportOrderings : List (List ℕ) := [2, 3, 5].permutations

@@ -91,4 +91,60 @@ theorem derivedE_mk_surjective
 
 end ExactCouple
 
+namespace ExactCoupleMap
+
+variable {R : Type u} [Ring R]
+variable {D E D' E' : Z2 → Type u}
+variable [∀ pq, AddCommGroup (D pq)] [∀ pq, AddCommGroup (E pq)]
+variable [∀ pq, AddCommGroup (D' pq)] [∀ pq, AddCommGroup (E' pq)]
+variable [∀ pq, Module R (D pq)] [∀ pq, Module R (E pq)]
+variable [∀ pq, Module R (D' pq)] [∀ pq, Module R (E' pq)]
+variable {C : ExactCouple R D E} {C' : ExactCouple R D' E'}
+
+/-- The component map on cycles of the derived page. -/
+def targetCyclesMap (f : ExactCoupleMap R C C') (pq : Z2) :
+    C.targetCycles pq →ₗ[R] C'.targetCycles pq where
+  toFun x := by
+    refine ⟨f.eMap (shiftK pq) x.1, ?_⟩
+    have hx : C.differential (shiftK pq) x.1 = 0 := x.2
+    have h := f.map_differential (shiftK pq) x.1
+    rw [hx, map_zero] at h
+    exact h.symm
+  map_add' x y := by
+    apply Subtype.ext
+    exact map_add (f.eMap (shiftK pq)) x.1 y.1
+  map_smul' r x := by
+    apply Subtype.ext
+    exact map_smul (f.eMap (shiftK pq)) r x.1
+
+/-- The derived-page map induced by an exact-couple diagram map. -/
+noncomputable def derivedEMap (f : ExactCoupleMap R C C') (pq : Z2) :
+    C.DerivedE pq →ₗ[R] C'.DerivedE pq :=
+  (Submodule.mapQ
+    (C.targetBoundariesInCycles pq)
+    (C'.targetBoundariesInCycles pq)
+    (f.targetCyclesMap pq)
+    (by
+      intro x hx
+      change (C.targetCycles pq).subtype x ∈ C.targetBoundaries pq at hx
+      rcases hx with ⟨y, hy⟩
+      change f.eMap (shiftK pq) x.1 ∈ C'.targetBoundaries pq
+      refine ⟨f.eMap pq y, ?_⟩
+      rw [← f.map_differential pq y, hy]
+      rfl))
+
+@[simp]
+theorem derivedEMap_targetCycleClass
+    (f : ExactCoupleMap R C C') (pq : Z2)
+    (x : E (shiftK pq)) (hx : C.differential (shiftK pq) x = 0) :
+    f.derivedEMap pq (C.targetCycleClass pq x hx) =
+      C'.targetCycleClass pq (f.eMap (shiftK pq) x)
+        (by
+          have h := f.map_differential (shiftK pq) x
+          rw [hx, map_zero] at h
+          exact h.symm) := by
+  simp [derivedEMap, targetCyclesMap, ExactCouple.targetCycleClass]
+
+end ExactCoupleMap
+
 end InfoGeometry.Spectral.Algebra

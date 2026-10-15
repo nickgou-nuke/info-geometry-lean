@@ -122,7 +122,7 @@ theorem velocity_laplacian (T t : ℝ) (x : Space) (i : Fin 3) :
 theorem velocity_advection (T t : ℝ) (x : Space) (i : Fin 3) :
     (∑ k, velocity T t x k * coordPartial (fun y => velocity T t y i) x k) = 0 := by
   simp_rw [velocity_partial]
-  fin_cases i <;> simp [velocity, Fin.sum_univ_succ]
+  fin_cases i <;> simp [velocity]
 
 theorem hasDerivAt_velocity (T t : ℝ) (x : Space) (i : Fin 3) (ht : t < T) :
     HasDerivAt (fun s => velocity T s x i) (forcing T t x i) t := by
@@ -131,7 +131,7 @@ theorem hasDerivAt_velocity (T t : ℝ) (x : Space) (i : Fin 3) (ht : t < T) :
     ((hasDerivAt_const t T).sub (hasDerivAt_id t)) hd
   fin_cases i
   · simpa [velocity, forcing] using hasDerivAt_const t (0 : ℝ)
-  · simpa [velocity, forcing] using h
+  · simpa [velocity, forcing, Pi.div_def, Pi.sub_def] using h
   · simpa [velocity, forcing] using hasDerivAt_const t (0 : ℝ)
 
 theorem velocity_time_derivative (T t : ℝ) (x : Space) (i : Fin 3) (ht : t < T) :

@@ -134,8 +134,10 @@ theorem qCcrParameterTopologicalInjection_transition
     (CategoryTheory.Limits.colimit.cocone
       (qCcrParameterTopologicalDiagram Stage sys)).w
       (CategoryTheory.homOfLE hij)
-  simpa [qCcrParameterTopologicalInjection,
-    qCcrParameterTopologicalDiagram] using congrArg (fun f => f p) h
+  change ((colimit.cocone (qCcrParameterTopologicalDiagram Stage sys)).ι.app j)
+      ((qCcrParameterTopologicalDiagram Stage sys).map (CategoryTheory.homOfLE hij) p) =
+    ((colimit.cocone (qCcrParameterTopologicalDiagram Stage sys)).ι.app i) p
+  exact congrArg (fun f => f p) h
 
 /-- The q-CCR residual is natural for every star-algebra transition. -/
 theorem qCcrParameterResidual_natural
@@ -162,10 +164,12 @@ def qCcrZeroLocusTransitionMap
       change qCcrParameterResidualContinuousMap (A := Stage j)
         (qCcrParameterTransitionMap Stage sys hij
           (qCcrSpecializationMap (A := Stage i) q p.1)) = 0
-      simpa [qCcrParameterResidualContinuousMap, qCcrSpecializationMap,
-        qCcrParameterTransitionMap, qCcrRelation] using
-        congrArg (sys.map hij)
-          (show qCcrRelation p.1.1 p.1.2 q = 0 from p.2)⟩
+      rw [qCcrParameterResidual_natural Stage sys hij]
+      change sys.map hij (qCcrResidualContinuousMap q p.1) = 0
+      calc
+        sys.map hij (qCcrResidualContinuousMap q p.1) = sys.map hij 0 :=
+          congrArg (sys.map hij) p.2
+        _ = 0 := map_zero (sys.map hij)⟩
 
 theorem continuous_qCcrZeroLocusTransitionMap
     {i j : I} (hij : i ≤ j) (q : Stage i) :
@@ -322,8 +326,10 @@ theorem qCcrParameterZeroFiberToParameterNatTrans_app_isClosedEmbedding
     (i : I) :
     Topology.IsClosedEmbedding
       ((qCcrParameterZeroFiberToParameterNatTrans Stage sys).app i) := by
-  simpa [qCcrParameterZeroFiberToParameterNatTrans] using
-    (qCcrParameterZeroLocus_closed (A := Stage i)).isClosedEmbedding_subtypeVal
+  change Topology.IsClosedEmbedding
+    (Subtype.val : {p : QCCRParameterSpace (Stage i) //
+      p ∈ qCcrParameterZeroLocus (A := Stage i)} → QCCRParameterSpace (Stage i))
+  exact (qCcrParameterZeroLocus_closed (A := Stage i)).isClosedEmbedding_subtypeVal
 
 theorem qCcrParameterZeroFiberToParameterNatTrans_app_closed_range
     (i : I) :
@@ -369,8 +375,11 @@ theorem qCcrParameterZeroFiberTopologicalInjection_transition
     (CategoryTheory.Limits.colimit.cocone
       (qCcrParameterZeroFiberTopologicalDiagram Stage sys)).w
       (CategoryTheory.homOfLE hij)
-  simpa [qCcrParameterZeroFiberTopologicalInjection,
-    qCcrParameterZeroFiberTopologicalDiagram] using congrArg (fun f => f p) h
+  change ((colimit.cocone (qCcrParameterZeroFiberTopologicalDiagram Stage sys)).ι.app j)
+      ((qCcrParameterZeroFiberTopologicalDiagram Stage sys).map
+        (CategoryTheory.homOfLE hij) p) =
+    ((colimit.cocone (qCcrParameterZeroFiberTopologicalDiagram Stage sys)).ι.app i) p
+  exact congrArg (fun f => f p) h
 
 /-- The ambient residual point associated with a fixed-q zero-locus point. -/
 def qCcrSpecializationZeroLocusAmbientPoint
@@ -394,6 +403,11 @@ theorem qCcrSpecialization_colimit_inclusion_stage
   have h := qCcrParameterZeroFiberToParameterColimit_stage Stage sys i
   have hp := congrArg
     (fun f => f (qCcrSpecializationZeroLocusAmbientPoint (Stage := Stage) q p)) h
-  simpa [qCcrParameterZeroFiberToParameterNatTrans] using hp
+  change (qCcrParameterZeroFiberToParameterColimit Stage sys)
+      (qCcrParameterZeroFiberTopologicalInjection Stage sys i
+        (qCcrSpecializationZeroLocusAmbientPoint (Stage := Stage) q p)) =
+    qCcrParameterTopologicalInjection Stage sys i
+      (qCcrSpecializationZeroLocusAmbientPoint (Stage := Stage) q p).1
+  exact hp
 
 end InfoGeometry.Canonical.FilteredQCCRParameterTopologicalColimit

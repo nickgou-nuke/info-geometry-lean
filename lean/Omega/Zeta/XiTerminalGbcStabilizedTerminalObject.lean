@@ -64,14 +64,6 @@ theorem paper_xi_terminal_gbc_stabilized_terminal_object
     calc
       N m = N mπ := hmπ _ hmπ_le
       _ = N (max mπ m0) := hMπ.symm
-  · simpa [Omega.POM.BCQuotientUniversalData.factorsThroughBCQuotient,
-      xi_terminal_gbc_stabilized_terminal_object_bc_quotient,
-      xi_terminal_gbc_stabilized_terminal_object_projection,
-      xi_terminal_gbc_stabilized_terminal_object_setoid,
-      xi_terminal_gbc_stabilized_terminal_object_generator,
-      Omega.POM.BCQuotientUniversalData.BCQuotient,
-      Omega.POM.BCQuotientUniversalData.bcProjection,
-      Omega.POM.BCQuotientUniversalData.bcSetoid,
-      Omega.POM.BCQuotientUniversalData.bcGenerator, D] using hfactor
+  · exact hfactor
 
 end Omega.Zeta

@@ -1,3 +1,4 @@
+import Mathlib.GroupTheory.SemidirectProduct
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Cl55V4SpinorFragmentation
@@ -17,7 +18,11 @@ open InfoGeometry.Canonical.TrialitySpin8Permutations
 /-- Four-element Klein four model used in the Cl(5,5) boundary layers. -/
 inductive V4Element
   | I | J | S | JS
-  deriving DecidableEq, Repr, Fintype
+  deriving DecidableEq, Repr
+
+instance : Fintype V4Element :=
+  Fintype.ofList [.I, .J, .S, .JS]
+    (by intro x; cases x <;> simp)
 
 open V4Element
 
@@ -118,21 +123,24 @@ instance : MulAction (Equiv.Perm (Fin 3)) V4Element where
           (σ * τ) • (J : V4Element) = ofV4Label ((σ * τ) 0) := by rfl
           _ = ofV4Label (σ (τ 0)) := by rfl
           _ = σ • ofV4Label (τ 0) := by
-            simpa using (trialityAction_ofV4Label (σ := σ) (i := τ 0)).symm
+            change ofV4Label (σ (τ 0)) = trialityAction σ (ofV4Label (τ 0))
+            exact (trialityAction_ofV4Label (σ := σ) (i := τ 0)).symm
           _ = σ • (τ • (J : V4Element)) := by rfl
     | S =>
         calc
           (σ * τ) • (S : V4Element) = ofV4Label ((σ * τ) 1) := by rfl
           _ = ofV4Label (σ (τ 1)) := by rfl
           _ = σ • ofV4Label (τ 1) := by
-            simpa using (trialityAction_ofV4Label (σ := σ) (i := τ 1)).symm
+            change ofV4Label (σ (τ 1)) = trialityAction σ (ofV4Label (τ 1))
+            exact (trialityAction_ofV4Label (σ := σ) (i := τ 1)).symm
           _ = σ • (τ • (S : V4Element)) := by rfl
     | JS =>
         calc
           (σ * τ) • (JS : V4Element) = ofV4Label ((σ * τ) 2) := by rfl
           _ = ofV4Label (σ (τ 2)) := by rfl
           _ = σ • ofV4Label (τ 2) := by
-            simpa using (trialityAction_ofV4Label (σ := σ) (i := τ 2)).symm
+            change ofV4Label (σ (τ 2)) = trialityAction σ (ofV4Label (τ 2))
+            exact (trialityAction_ofV4Label (σ := σ) (i := τ 2)).symm
           _ = σ • (τ • (JS : V4Element)) := by rfl
 
 @[simp] theorem trialityAction_I (σ : Equiv.Perm (Fin 3)) :
@@ -177,87 +185,70 @@ theorem trialityAction_smul_inv (σ : Equiv.Perm (Fin 3)) (x : V4Element) :
     σ⁻¹ • (σ • x) = x := by
   simpa using (inv_smul_smul σ x)
 
+/-- The triality action as a multiplicative automorphism of the Klein group. -/
+def trialityActionMulEquiv (σ : Equiv.Perm (Fin 3)) : V4Element ≃* V4Element where
+  toFun := trialityAction σ
+  invFun := trialityAction σ⁻¹
+  left_inv := trialityAction_smul_inv σ
+  right_inv := trialityAction_inv_smul σ
+  map_mul' := trialityAction_mul σ
+
+/-- The permutation action packaged as the hom required by Mathlib's
+semidirect-product construction. -/
+def trialityActionHom : Equiv.Perm (Fin 3) →* MulAut V4Element where
+  toFun := trialityActionMulEquiv
+  map_one' := by
+    ext x
+    exact one_smul (Equiv.Perm (Fin 3)) x
+  map_mul' σ τ := by
+    ext x
+    exact mul_smul σ τ x
+
 @[simp] theorem v4_sq (x : V4Element) : x * x = 1 := by
   cases x <;> decide
 
 @[simp] theorem trialityAction_one (σ : Equiv.Perm (Fin 3)) : σ • (1 : V4Element) = 1 := by
   rfl
 
-/-- Semidirect-product-style carrier set of the finite spine `V₄ ⋊ S₃`. -/
-def V4SemidirectS3 := V4Element × Equiv.Perm (Fin 3)
+/-- The native Mathlib semidirect product for the triality action `V₄ ⋊ S₃`. -/
+abbrev V4SemidirectS3 := V4Element ⋊[trialityActionHom] Equiv.Perm (Fin 3)
 
-/-- Multiplication `⟨v₁,σ₁⟩ * ⟨v₂,σ₂⟩ = ⟨v₁ * (σ₁ • v₂), σ₁σ₂⟩`. -/
+/-- Multiplication readback for the native semidirect-product structure. -/
 def v4SemidirectMul (x y : V4SemidirectS3) : V4SemidirectS3 :=
-  (x.1 * (x.2 • y.1), x.2 * y.2)
-
-instance : One V4SemidirectS3 := ⟨(I, 1)⟩
-
-instance : Inv V4SemidirectS3 :=
-  ⟨fun x => (x.2⁻¹ • x.1⁻¹, x.2⁻¹)⟩
-
-instance : Mul V4SemidirectS3 where
-  mul := v4SemidirectMul
+  ⟨x.left * (x.right • y.left), x.right * y.right⟩
 
 @[simp] theorem v4SemidirectMul_def (x y : V4SemidirectS3) :
-    x * y = (x.1 * (x.2 • y.1), x.2 * y.2) := rfl
+    x * y = ⟨x.left * (x.right • y.left), x.right * y.right⟩ :=
+  rfl
 
 @[simp] theorem v4Semidirect_inv_def (x : V4SemidirectS3) :
-    x⁻¹ = (x.2⁻¹ • x.1⁻¹, x.2⁻¹) := rfl
-
-instance : Group V4SemidirectS3 where
-  mul_assoc := by
-    intro a b c
-    apply Prod.ext <;> simp [v4SemidirectMul, trialityAction_mul, mul_assoc, smul_smul]
-  one_mul := by
-    intro a
-    apply Prod.ext <;> simp [v4SemidirectMul]
-  mul_one := by
-    intro a
-    apply Prod.ext <;> simp [v4SemidirectMul]
-  inv_mul_cancel := by
-    intro a
-    apply Prod.ext
-    · have hmul :
-        (a.2⁻¹ • a.1⁻¹) * (a.2⁻¹ • a.1) = a.2⁻¹ • (a.1⁻¹ * a.1) := by
-        simpa using (trialityAction_mul a.2⁻¹ a.1⁻¹ a.1).symm
-      calc
-        ((a.2⁻¹ • a.1⁻¹) * (a.2⁻¹ • a.1)) = a.2⁻¹ • (a.1⁻¹ * a.1) := hmul
-        _ = a.2⁻¹ • (1 : V4Element) := by simp [v4_inv, v4_sq]
-        _ = 1 := by simp
-    · simp [v4Semidirect_inv_def, v4SemidirectMul]
+    x⁻¹ = ⟨x.right⁻¹ • x.left⁻¹, x.right⁻¹⟩ :=
+  rfl
 
 instance : Inhabited V4SemidirectS3 := ⟨1⟩
 
-/-- Left embedding `V₄ ↪ V₄ ⋊ S₃`. -/
-def inl (x : V4Element) : V4SemidirectS3 := (x, 1)
+/-- Left embedding `V₄ ↪ V₄ ⋊ S₃`, retained as the named bridge API. -/
+def inl : V4Element →* V4SemidirectS3 := SemidirectProduct.inl
 
-/-- Right embedding `S₃ ↪ V₄ ⋊ S₃`. -/
-def inr (σ : Equiv.Perm (Fin 3)) : V4SemidirectS3 := (I, σ)
+/-- Right embedding `S₃ ↪ V₄ ⋊ S₃`, retained as the named bridge API. -/
+def inr : Equiv.Perm (Fin 3) →* V4SemidirectS3 := SemidirectProduct.inr
 
 @[simp] theorem inl_mul (x y : V4Element) :
     inl x * inl y = inl (x * y) := by
-  simp [inl, v4SemidirectMul]
+  exact (inl : V4Element →* V4SemidirectS3).map_mul x y |>.symm
 
 @[simp] theorem inr_mul (σ τ : Equiv.Perm (Fin 3)) :
     inr σ * inr τ = inr (σ * τ) := by
-  rfl
+  exact (inr : Equiv.Perm (Fin 3) →* V4SemidirectS3).map_mul σ τ |>.symm
 
 /-- Conjugation formula in the semidirect model. -/
 theorem inr_conjugates_inl (σ : Equiv.Perm (Fin 3)) (x : V4Element) :
     inr σ * inl x * (inr σ⁻¹) = inl (σ • x) := by
-  apply Prod.ext <;> simp [inl, inr, v4SemidirectMul, mul_assoc, trialityAction_smul_inv]
+  exact (SemidirectProduct.inl_aut σ x).symm
 
 /-- Embedding-powers identity into the `S₃`-only subgroup. -/
 theorem inr_pow_eq (σ : Equiv.Perm (Fin 3)) : ∀ n : ℕ, (inr σ : V4SemidirectS3) ^ n = inr (σ ^ n)
-  | 0 => by rfl
-  | n + 1 => by
-      calc
-        (inr σ : V4SemidirectS3) ^ (n + 1) = (inr σ : V4SemidirectS3) ^ n * inr σ := by
-          simp [pow_succ]
-        _ = inr (σ ^ n) * inr σ := by
-          rw [inr_pow_eq σ n]
-        _ = inr ((σ ^ n) * σ) := by rfl
-        _ = inr (σ ^ (n + 1)) := by simp [pow_succ]
+  | n => ((inr : Equiv.Perm (Fin 3) →* V4SemidirectS3).map_pow σ n).symm
 
 /-- The 3-cycle sector automorphism has order three. -/
 theorem cycle_order_three : (inr trialityCycle : V4SemidirectS3) ^ 3 = 1 := by
@@ -271,24 +262,31 @@ theorem cycle_order_three : (inr trialityCycle : V4SemidirectS3) ^ 3 = 1 := by
 /-- Non-triviality: order is not two on the `S₃` component. -/
 theorem cycle_not_two : (inr trialityCycle : V4SemidirectS3) ^ 2 ≠ 1 := by
   intro h
-  have h' : (trialityCycle ^ 2 : Equiv.Perm (Fin 3)) = 1 := by
-    simpa using congrArg Prod.snd h
+  have h' : inr (trialityCycle ^ 2) = inr (1 : Equiv.Perm (Fin 3)) := by
+    calc
+      inr (trialityCycle ^ 2) = (inr trialityCycle : V4SemidirectS3) ^ 2 :=
+        (inr_pow_eq trialityCycle 2).symm
+      _ = 1 := h
+      _ = inr (1 : Equiv.Perm (Fin 3)) :=
+        ((inr : Equiv.Perm (Fin 3) →* V4SemidirectS3).map_one).symm
+  have h'' : (trialityCycle ^ 2 : Equiv.Perm (Fin 3)) = 1 :=
+    SemidirectProduct.inr_injective h'
   have hcycle : (trialityCycle ^ 2 : Equiv.Perm (Fin 3)) ≠ (1 : Equiv.Perm (Fin 3)) := by
     decide
-  exact hcycle h'
+  exact hcycle h''
 
 /-- Explicit conjugation on labels for the 3-cycle. -/
 theorem cycle_conjugation_J :
     inr trialityCycle * inl J * (inr trialityCycle⁻¹) = inl S := by
-  simpa [inr, inl] using (inr_conjugates_inl trialityCycle J)
+  rw [inr_conjugates_inl, trialityAction_cycle_J]
 
 theorem cycle_conjugation_S :
     inr trialityCycle * inl S * (inr trialityCycle⁻¹) = inl JS := by
-  simpa [inr, inl] using (inr_conjugates_inl trialityCycle S)
+  rw [inr_conjugates_inl, trialityAction_cycle_S]
 
 theorem cycle_conjugation_JS :
     inr trialityCycle * inl JS * (inr trialityCycle⁻¹) = inl J := by
-  simpa [inr, inl] using (inr_conjugates_inl trialityCycle JS)
+  rw [inr_conjugates_inl, trialityAction_cycle_JS]
 
 /-- Triality triplet under one application of the 3-cycle. -/
 theorem semidirect_nontrivial_triplet :

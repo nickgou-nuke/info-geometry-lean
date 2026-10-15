@@ -1,5 +1,4 @@
 import InfoGeometry.Algebra.Zorn.G2NativeLineFiber
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2NativePointTransitivity
 
 namespace InfoGeometry.Algebra.Zorn.G2NativeLineFiberTransport
@@ -127,8 +126,6 @@ theorem nativeLineFiber_card_eq_three
     Fintype.card (NativeLinesThroughPoint p.1) = 3 := by
   apply nativeLineFiber_card_eq_base p
   obtain ⟨g, hg⟩ := octImPointPerm_base_surjective p
-  refine ⟨g, ?_⟩
-  have hg' := congrArg Subtype.val hg
-  simpa [octImPointPerm_apply, octImAction] using hg'
+  exact ⟨g, congrArg Subtype.val hg⟩
 
 end InfoGeometry.Algebra.Zorn.G2NativeLineFiberTransport

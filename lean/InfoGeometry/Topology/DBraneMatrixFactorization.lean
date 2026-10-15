@@ -52,8 +52,9 @@ theorem pauli_is_dbrane_factorization (E px py pz : M) :
   have I_sq_M : (algebraMap ℂ M Complex.I) ^ 2 = -1 := by
     rw [← map_pow, Complex.I_sq, map_neg, map_one]
   ext i j
+  rw [Matrix.mul_apply]
   fin_cases i <;> fin_cases j <;>
-  simp [pauli_momentum, pauli_adjugate, mul_apply, Fin.sum_univ_two, Algebra.smul_def]
+  simp [pauli_momentum, pauli_adjugate, Fin.sum_univ_two, Algebra.smul_def]
   · calc
       _ = E^2 - px^2 - pz^2 + (algebraMap ℂ M Complex.I)^2 * py^2 := by ring
       _ = E^2 - px^2 - pz^2 + (-1 : M) * py^2 := by rw [I_sq_M]

@@ -6,12 +6,15 @@ fourteen-dimensional derivation Lie algebra and does not claim a global
 automorphism-group identification with `G₂(2)`.
 -/
 
+import Mathlib.Algebra.Lie.OfAssociative
 import InfoGeometry.Lie.CanonicalZornDerivation
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.SplitQuaternionCore
 import InfoGeometry.Algebra.Zorn.SplitOctonionRindlerBoost
 
 noncomputable section
+
+attribute [local instance 100] LieRing.ofAssociativeRing
 
 namespace InfoGeometry.Lie.SplitOctonionEllStabilizer
 

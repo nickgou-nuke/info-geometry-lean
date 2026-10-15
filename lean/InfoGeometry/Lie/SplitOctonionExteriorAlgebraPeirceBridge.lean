@@ -112,37 +112,42 @@ def peirceProjectorMinusMat : Mat8 :=
 /-- 🏆 THEOREM 1A: Creation Nilpotency: $\varepsilon_0^2 = 0$. -/
 theorem eps0Mat_sq : eps0Mat * eps0Mat = 0 := by
   ext i j
+  rw [Matrix.mul_apply, Matrix.zero_apply]
   fin_cases i <;> fin_cases j <;> (
-    simp [Matrix.mul_apply, eps0Mat, Fin.sum_univ_eight]
+    simp [eps0Mat, Fin.sum_univ_eight]
   )
 
 /-- 🏆 THEOREM 1B: Contraction Nilpotency: $\iota_0^2 = 0$. -/
 theorem iota0Mat_sq : iota0Mat * iota0Mat = 0 := by
   ext i j
+  rw [Matrix.mul_apply, Matrix.zero_apply]
   fin_cases i <;> fin_cases j <;> (
-    simp [Matrix.mul_apply, iota0Mat, Fin.sum_univ_eight]
+    simp [iota0Mat, Fin.sum_univ_eight]
   )
 
 /-- 🏆 THEOREM 1C: CAR Anticommutation Relation for mode 0:
     $\varepsilon_0 \iota_0 + \iota_0 \varepsilon_0 = I$. -/
 theorem eps0_iota0_anticomm : eps0Mat * iota0Mat + iota0Mat * eps0Mat = 1 := by
   ext i j
+  simp only [Matrix.add_apply, Matrix.mul_apply, Matrix.one_apply]
   fin_cases i <;> fin_cases j <;> (
-    simp [Matrix.mul_apply, Matrix.add_apply, eps0Mat, iota0Mat, Fin.sum_univ_eight]
+    simp [eps0Mat, iota0Mat, Fin.sum_univ_eight]
   )
 
 /-- 🏆 THEOREM 2A: Peirce Grading Involutivity: $\Gamma_P^2 = I$. -/
 theorem peirceGradingMat_sq : peirceGradingMat * peirceGradingMat = 1 := by
   ext i j
+  rw [Matrix.mul_apply, Matrix.one_apply]
   fin_cases i <;> fin_cases j <;> (
-    simp [Matrix.mul_apply, peirceGradingMat, Fin.sum_univ_eight]
+    simp [peirceGradingMat, Fin.sum_univ_eight]
   )
 
 /-- 🏆 THEOREM 2B: Exchange Involution Involutivity: $\kappa_{\rm exch}^2 = I$. -/
 theorem exchangeInvolutionMat_sq : exchangeInvolutionMat * exchangeInvolutionMat = 1 := by
   ext i j
+  rw [Matrix.mul_apply, Matrix.one_apply]
   fin_cases i <;> fin_cases j <;> (
-    simp [Matrix.mul_apply, exchangeInvolutionMat, Fin.sum_univ_eight]
+    simp [exchangeInvolutionMat, Fin.sum_univ_eight]
   )
 
 /-- 🏆 THEOREM 2C (The Nambu–Gorkov Chirality Conjugation Law):
@@ -150,8 +155,9 @@ theorem exchangeInvolutionMat_sq : exchangeInvolutionMat * exchangeInvolutionMat
 theorem exchange_peirceGrading_anticomm :
     exchangeInvolutionMat * peirceGradingMat * exchangeInvolutionMat = -peirceGradingMat := by
   ext i j
+  simp only [Matrix.mul_apply, Matrix.neg_apply]
   fin_cases i <;> fin_cases j <;> (
-    simp [Matrix.mul_apply, Matrix.neg_apply, exchangeInvolutionMat, peirceGradingMat, Fin.sum_univ_eight]
+    simp [exchangeInvolutionMat, peirceGradingMat, Fin.sum_univ_eight]
   )
 
 /-- 🏆 THEOREM 2D: Peirce Idempotent Projector $P_+$ formula recovery:
@@ -159,10 +165,9 @@ theorem exchange_peirceGrading_anticomm :
 theorem peirceProjectorPlusMat_eq_half_add :
     peirceProjectorPlusMat = (1 / 2 : ℝ) • (1 + peirceGradingMat) := by
   ext i j
+  rw [Matrix.smul_apply, Matrix.add_apply, Matrix.one_apply]
   fin_cases i <;> fin_cases j <;> (
-    first
-    | (simp [peirceProjectorPlusMat, Matrix.smul_apply, Matrix.add_apply, peirceGradingMat]; norm_num)
-    | simp [peirceProjectorPlusMat, Matrix.smul_apply, Matrix.add_apply, peirceGradingMat]
+    simp [peirceProjectorPlusMat, peirceGradingMat] <;> norm_num
   )
 
 /-- 🏆 THEOREM 2E: Peirce Idempotent Projector $P_-$ formula recovery:
@@ -170,10 +175,9 @@ theorem peirceProjectorPlusMat_eq_half_add :
 theorem peirceProjectorMinusMat_eq_half_sub :
     peirceProjectorMinusMat = (1 / 2 : ℝ) • (1 - peirceGradingMat) := by
   ext i j
+  rw [Matrix.smul_apply, Matrix.sub_apply, Matrix.one_apply]
   fin_cases i <;> fin_cases j <;> (
-    first
-    | (simp [peirceProjectorMinusMat, Matrix.smul_apply, Matrix.sub_apply, peirceGradingMat]; norm_num)
-    | simp [peirceProjectorMinusMat, Matrix.smul_apply, Matrix.sub_apply, peirceGradingMat]
+    simp [peirceProjectorMinusMat, peirceGradingMat] <;> norm_num
   )
 
 /-- 🏆 THEOREM 2F: Peirce Projector Idempotency:
@@ -181,15 +185,17 @@ theorem peirceProjectorMinusMat_eq_half_sub :
 theorem peirceProjectorPlusMat_idempotent :
     peirceProjectorPlusMat * peirceProjectorPlusMat = peirceProjectorPlusMat := by
   ext i j
+  rw [Matrix.mul_apply]
   fin_cases i <;> fin_cases j <;> (
-    simp [Matrix.mul_apply, peirceProjectorPlusMat, Fin.sum_univ_eight]
+    simp [peirceProjectorPlusMat, Fin.sum_univ_eight]
   )
 
 theorem peirceProjectorMinusMat_idempotent :
     peirceProjectorMinusMat * peirceProjectorMinusMat = peirceProjectorMinusMat := by
   ext i j
+  rw [Matrix.mul_apply]
   fin_cases i <;> fin_cases j <;> (
-    simp [Matrix.mul_apply, peirceProjectorMinusMat, Fin.sum_univ_eight]
+    simp [peirceProjectorMinusMat, Fin.sum_univ_eight]
   )
 
 /-- 🏆 THEOREM 2G: Peirce Projector Orthogonality and Completeness:
@@ -197,15 +203,17 @@ theorem peirceProjectorMinusMat_idempotent :
 theorem peirceProjectors_orthogonal :
     peirceProjectorPlusMat * peirceProjectorMinusMat = 0 := by
   ext i j
+  rw [Matrix.mul_apply, Matrix.zero_apply]
   fin_cases i <;> fin_cases j <;> (
-    simp [peirceProjectorPlusMat, peirceProjectorMinusMat, Matrix.mul_apply, Fin.sum_univ_eight]
+    simp [peirceProjectorPlusMat, peirceProjectorMinusMat, Fin.sum_univ_eight]
   )
 
 theorem peirceProjectors_complete :
     peirceProjectorPlusMat + peirceProjectorMinusMat = 1 := by
   ext i j
+  change peirceProjectorPlusMat i j + peirceProjectorMinusMat i j = (1 : Matrix (Fin 8) (Fin 8) ℝ) i j
   fin_cases i <;> fin_cases j <;> (
-    simp [peirceProjectorPlusMat, peirceProjectorMinusMat, Matrix.add_apply]
+    simp [peirceProjectorPlusMat, peirceProjectorMinusMat]
   )
 
 end InfoGeometry.Lie.SplitOctonionExteriorAlgebraPeirceBridge

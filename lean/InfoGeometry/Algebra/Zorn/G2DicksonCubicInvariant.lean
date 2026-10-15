@@ -180,7 +180,7 @@ theorem comp_preserves_dicksonTrilinear
   rw [h₁, h₂]
 
 theorem zmod2_neg (x : ZMod 2) : -x = x := by
-  fin_cases x <;> decide
+  fin_cases x <;> rfl
 
 /--
 COROLLARY (Characteristic 2 Symmetry Collapse):

@@ -74,7 +74,7 @@ theorem chiral_curvature_traceless (M₁ M₂ : Mat2R) :
     Matrix.trace (commutator (chiral_bipolar M₁) (chiral_bipolar M₂)) = 0 := by
   rw [chiral_commutator_eq_symplectic_grading]
   dsimp [Matrix.trace, G_grading]
-  simp only [Fin.sum_univ_two, cons_val_zero, cons_val_one, head_cons, smul_apply]
+  simp only [Fin.sum_univ_two, cons_val_zero, cons_val_one, head_cons, Matrix.smul_apply]
   ring
 
 /-!
@@ -117,7 +117,7 @@ theorem latent_space_flat_iff_zero_area (M₁ M₂ : Mat2R) :
   constructor
   · intro h
     have h00 : ((symplectic_area M₁ M₂) • G_grading) 0 0 = 0 := by rw [h]; rfl
-    dsimp [G_grading, smul_apply] at h00
+    dsimp [G_grading, Matrix.smul_apply] at h00
     linarith
   · intro h
     rw [h, zero_smul]

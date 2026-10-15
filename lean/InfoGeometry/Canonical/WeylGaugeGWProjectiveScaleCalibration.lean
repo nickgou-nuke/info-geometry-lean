@@ -36,11 +36,13 @@ def commonVolumeScale (g : LiftedSheetAut (E := E)) : ℝ :=
     (volumeScale g.plus.toLinearEquiv * volumeScale g.minus.toLinearEquiv)
 
 /-- Primitive two-sheet calibration data. -/
-structure WeylGWTwoSheetCalibration where
+structure WeylGWTwoSheetCalibration.{uE, uG, uT, uTarget, uCoeff, uAtomPlus, uAtomMinus}
+    (E : Type uE) (G : Type uG) (T : Type uT) (Target : Type uTarget) (Coeff : Type uCoeff)
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [FiniteDimensional ℝ E] where
   g : LiftedSheetAut (E := E)
   beta : ℝ
-  plusCounts : GWProjectiveCountCalibration G T Target Coeff
-  minusCounts : GWProjectiveCountCalibration G T Target Coeff
+  plusCounts : GWProjectiveCountCalibration.{uG, uT, uTarget, uCoeff, uAtomPlus} G T Target Coeff
+  minusCounts : GWProjectiveCountCalibration.{uG, uT, uTarget, uCoeff, uAtomMinus} G T Target Coeff
   plusPartition_pos : 0 < plusCounts.finitePartition beta
   minusPartition_pos : 0 < minusCounts.finitePartition beta
   plusVolume_eq :
@@ -50,8 +52,7 @@ structure WeylGWTwoSheetCalibration where
 
 namespace WeylGWTwoSheetCalibration
 
-variable (B : WeylGWTwoSheetCalibration
-  (E := E) (G := G) (T := T) (Target := Target) (Coeff := Coeff))
+variable (B : WeylGWTwoSheetCalibration E G T Target Coeff)
 
 theorem commonVolumeScale_pos :
     0 < commonVolumeScale B.g := by

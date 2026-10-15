@@ -30,7 +30,6 @@ theorem paper_dephys_ptypical_primitive_tower (p k : ℕ) (hp : Nat.Prime p) (_h
   · intro j
     refine ⟨q.coeff j, ?_⟩
     have hcoeff := congrArg (fun f : Polynomial ℤ => f.coeff j) hqC
-    dsimp at hcoeff
     rw [Polynomial.coeff_C_mul] at hcoeff
     exact hcoeff.symm
   · intro q' hq'
@@ -42,7 +41,6 @@ theorem paper_dephys_ptypical_primitive_tower (p k : ℕ) (hp : Nat.Prime p) (_h
     intro j
     have hcoeff :=
       congrArg (fun f : Polynomial ℤ => f.coeff j) (hq'C.trans hqC.symm)
-    dsimp at hcoeff
     rw [Polynomial.coeff_C_mul, Polynomial.coeff_C_mul] at hcoeff
     have hmul :
         (p ^ k : ℤ) * q'.coeff j = (p ^ k : ℤ) * q.coeff j := by

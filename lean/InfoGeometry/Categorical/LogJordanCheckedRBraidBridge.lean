@@ -74,8 +74,7 @@ theorem standard_logCheckedR_monodromy_eq_id
       LinearMap.id := by
   apply LinearMap.ext
   intro t
-  refine TensorProduct.induction_on t ?_ ?_ ?_
-  · simp
+  refine TensorProduct.inductionOn t ?_ ?_
   · intro x y
     simp [LinearEquiv.trans_apply, logCheckedR_tmul]
   · intro a b ha hb

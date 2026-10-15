@@ -76,10 +76,12 @@ theorem operatorMobiusAction_map
     (fun i => φ (operatorMobiusAction g v i)) =
       operatorMobiusAction (fun i j => φ (g i j)) (fun i => φ (v i)) := by
   funext i
-  rw [operatorMobiusAction_apply, operatorMobiusAction_apply, map_sum]
-  congr 1
-  funext j
-  rw [map_mul]
+  change φ (∑ j, g i j * v j) =
+    ∑ j, φ (g i j) * φ (v j)
+  rw [map_sum]
+  apply Finset.sum_congr rfl
+  intro j hj
+  exact map_mul φ (g i j) (v j)
 
 section ThermalBogoliubovTransport
 

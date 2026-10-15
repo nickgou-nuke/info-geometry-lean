@@ -84,9 +84,21 @@ theorem stageMirrorAction_embed (n : ℕ) (A : MatStage n) :
       matStageEmbed n (stageMirrorAction n A) := by
   simp only [stageMirrorAction, matStageEmbed,
     stageSheetExchange_succ_eq_kron]
-  rw [← Matrix.mul_kronecker_mul]
-  rw [← Matrix.mul_kronecker_mul]
-  simp [Matrix.mul_assoc, localSheetExchange_sq]
+  calc
+    (stageSheetExchange n ⊗ₖ localSheetExchange) *
+        (A ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℝ)) *
+        (stageSheetExchange n ⊗ₖ localSheetExchange) =
+      ((stageSheetExchange n * A) ⊗ₖ
+        (localSheetExchange * (1 : Matrix (Fin 2) (Fin 2) ℝ))) *
+        (stageSheetExchange n ⊗ₖ localSheetExchange) := by
+          rw [Matrix.mul_kronecker_mul]
+    _ = ((stageSheetExchange n * A) * stageSheetExchange n) ⊗ₖ
+        ((localSheetExchange * (1 : Matrix (Fin 2) (Fin 2) ℝ)) *
+          localSheetExchange) := by
+          rw [← Matrix.mul_kronecker_mul]
+    _ = (stageSheetExchange n * A * stageSheetExchange n) ⊗ₖ
+        (1 : Matrix (Fin 2) (Fin 2) ℝ) := by
+          simp [Matrix.mul_assoc, localSheetExchange_sq]
 
 theorem prefixReadout_boundaryMirror
     (n : ℕ) (ξ : ChiralBoundary) :

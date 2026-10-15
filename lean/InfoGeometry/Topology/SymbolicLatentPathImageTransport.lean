@@ -43,11 +43,12 @@ theorem observedSymbolicLatentPathImage_eq_observation_image
     (γ : SymbolicLatentPath X) :
     observedSymbolicLatentPathImage S γ =
       symbolicObservationMap S '' symbolicLatentPathImage γ := by
-  simpa [observedSymbolicLatentPathImage, symbolicLatentPathImage,
-    symbolicObservationPath_apply] using
-    (symbolicLatentPathImage_map_eq_image
-      (symbolicObservationMap S)
-      (continuous_symbolicObservationMap S) γ)
+  ext y
+  constructor
+  · rintro ⟨t, rfl⟩
+    exact ⟨γ t, ⟨t, rfl⟩, rfl⟩
+  · rintro ⟨x, ⟨t, rfl⟩, rfl⟩
+    exact ⟨t, rfl⟩
 
 theorem isCompact_observedSymbolicLatentPathImage_as_observation_image
     {X : Type*} [TopologicalSpace X]

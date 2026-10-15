@@ -20,6 +20,19 @@ theorem paper_pom_phase_residual_linearization_sqrt15 {x : Real} (hx : abs x <= 
     rw [abs_of_nonneg hnonneg]
     linarith [Real.one_sub_sq_div_two_le_cos (x := x)]
   have hsin_taylor := Real.sin_bound hx1
+  have hsin_taylor' :
+      abs (Real.sin x - (x - x ^ 3 / 6)) ≤ abs x ^ 4 * (5 / 96 : ℝ) := by
+    calc
+      abs (Real.sin x - (x - x ^ 3 / 6)) ≤ abs x ^ 5 / 100 := hsin_taylor
+      _ = abs x ^ 5 * (1 / 100 : ℝ) := by ring
+      _ ≤ abs x ^ 4 * (5 / 96 : ℝ) := by
+        have hpow : abs x ^ 5 ≤ abs x ^ 4 := by
+          calc
+            abs x ^ 5 = abs x ^ 4 * abs x := by rw [pow_succ]
+            _ ≤ abs x ^ 4 * 1 := mul_le_mul_of_nonneg_left hx1 (by positivity)
+            _ = abs x ^ 4 := by ring
+        have hcoef : (1 / 100 : ℝ) ≤ 5 / 96 := by norm_num
+        exact mul_le_mul hpow hcoef (by positivity) (by positivity)
   have hsin_abs_aux :
       abs (Real.sin x - x) ≤ abs x ^ 4 * (5 / 96 : ℝ) + abs x ^ 3 / 6 := by
     calc
@@ -36,7 +49,7 @@ theorem paper_pom_phase_residual_linearization_sqrt15 {x : Real} (hx : abs x <= 
                   congr 1
                   ring
                 _ = abs (x ^ 3 / 6) := by rw [abs_neg]
-            refine add_le_add hsin_taylor ?_
+            refine add_le_add hsin_taylor' ?_
             exact hsecond.le
       _ = abs x ^ 4 * (5 / 96 : ℝ) + abs x ^ 3 / 6 := by
             rw [abs_div, abs_pow, abs_of_pos (by norm_num : (0 : ℝ) < 6)]

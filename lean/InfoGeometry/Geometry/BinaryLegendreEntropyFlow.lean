@@ -63,10 +63,12 @@ theorem hasDerivAt_entropyRelaxation (θ₀ t : ℝ) :
   have he := ((hasDerivAt_id t).neg.exp).const_mul θ₀
   have h := (hasDerivAt_logistic (θ₀ * Real.exp (-t))).comp t he
   convert h using 1
-  unfold entropyGradientField entropyRelaxation
-  rw [logit_logistic]
-  dsimp
-  ring
+  · funext s
+    rfl
+  · unfold entropyGradientField entropyRelaxation
+    rw [logit_logistic]
+    dsimp
+    ring
 
 /-- The second law for this explicit trajectory, expressed as a native derivative. -/
 theorem entropyRelaxation_entropy_derivative (θ₀ t : ℝ) :
@@ -76,8 +78,9 @@ theorem entropyRelaxation_entropy_derivative (θ₀ t : ℝ) :
   have hd := ((hasDerivAt_negativeEntropy (entropyRelaxation_mem_Ioo θ₀ t)).neg).comp t
     (hasDerivAt_entropyRelaxation θ₀ t)
   convert hd.deriv using 1
-  unfold entropyGradientField
-  ring
+  · rfl
+  · unfold entropyGradientField
+    ring
 
 theorem entropyRelaxation_entropy_nondecreasing (θ₀ : ℝ) :
     Monotone (fun t => -negativeEntropy (entropyRelaxation θ₀ t)) := by

@@ -41,9 +41,11 @@ theorem redLineOmegaPotential_derivAt (detJ : ℝ → ℝ) (x : ℝ)
       (-(detJ' / detJ x)) x := by
   have hlog : HasDerivAt (fun y : ℝ => -Real.log y) (-(detJ x)⁻¹) (detJ x) :=
     (Real.hasDerivAt_log hpos.ne').neg
-  have hcomp := hlog.comp x hdet
-  simpa [redLineOmegaPotential, Function.comp, div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc]
-    using hcomp
+  have hcomp : HasDerivAt (redLineOmegaPotential detJ) (-(detJ x)⁻¹ * detJ') x :=
+    hlog.comp x hdet
+  refine hcomp.congr_deriv ?_
+  rw [div_eq_mul_inv]
+  ring
 
 /-- Unnormalized spinorial flow Jacobian data. -/
 structure SpinorialFlowJacobianData (Map : Type*) where

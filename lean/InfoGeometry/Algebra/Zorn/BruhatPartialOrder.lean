@@ -51,7 +51,7 @@ theorem sublist_eq_of_length_eq {α : Type*} {l₁ l₂ : List α}
     dsimp at hlen
     have := h.length_le
     omega
-  | cons₂ a h ih =>
+  | cons_cons a h ih =>
     dsimp at hlen
     congr
     exact ih (by omega)
@@ -100,7 +100,7 @@ theorem sublist_cons_cases {α : Type*} (x : α) (xs : List α) (l : List α)
   cases h with
   | cons _ h =>
     left; exact h
-  | cons₂ _ h =>
+  | cons_cons _ h =>
     right; exact ⟨_, rfl, h⟩
 
 /--

@@ -255,11 +255,11 @@ lemma kernelOp_eq_transpose (Φ : X → X → α)
 noncomputable def KernelClosure (Φ : X → X → α) (f : X → α) : X → α :=
   KernelOp Φ (KernelOp Φ f)
 
-lemma kernelClosure_monotone (Φ : X → X → α)
-    (hgc : GaloisConnection (KernelOp Φ) (KernelOp Φ)) :
+lemma kernelClosure_monotone (Φ : X → X → α) :
     Monotone (KernelClosure Φ) := by
-  simpa [KernelClosure, Function.comp] using
-    (GaloisConnection.monotone_u hgc).comp (GaloisConnection.monotone_l hgc)
+  change Monotone (KernelOp Φ ∘ KernelOp Φ)
+  intro f g hfg
+  exact kernelOp_monotone Φ (kernelOp_monotone Φ hfg)
 
 lemma kernel_le_closure (Φ : X → X → α)
     (hgc : GaloisConnection (KernelOp Φ) (KernelOp Φ)) (f : X → α) :
@@ -278,7 +278,7 @@ noncomputable def KernelClosureOperator (Φ : X → X → α)
     ClosureOperator (X → α) where
   toOrderHom :=
     { toFun := KernelClosure Φ
-      monotone' := kernelClosure_monotone Φ hgc }
+      monotone' := kernelClosure_monotone Φ }
   le_closure' := kernel_le_closure Φ hgc
   idempotent' := kernel_idempotent Φ hgc
 
@@ -291,11 +291,10 @@ abbrev KernelClosedFunctions (Φ : X → X → α) :=
   {f : X → α // IsKernelClosed Φ f}
 
 /-- Closed elements inherit a complete lattice structure. -/
-noncomputable instance kernelClosedFunctionsCompleteLattice (Φ : X → X → α)
+noncomputable def kernelClosedFunctionsCompleteLattice (Φ : X → X → α)
     (hgc : GaloisConnection (KernelOp Φ) (KernelOp Φ)) :
     CompleteLattice (KernelClosedFunctions Φ) := by
-  simpa [KernelClosedFunctions, IsKernelClosed, KernelClosureOperator, KernelClosure]
-    using (KernelClosureOperator Φ hgc).gi.liftCompleteLattice
+  exact (KernelClosureOperator Φ hgc).gi.liftCompleteLattice
 
 end OrderKernel
 

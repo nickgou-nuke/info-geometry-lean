@@ -91,6 +91,7 @@ theorem stageDeviance_bondIterate
     stageDeviance β Kstage (n + m)
         (C.toFilteredPhaseCone.bondIterate n m x) =
       stageDeviance β Kstage n x := by
+  dsimp [HestenesKreinCone.toFilteredPhaseCone]
   rw [stageDeviance_eq_limitDeviance β Kstage Klimit hK (n + m),
     stageDeviance_eq_limitDeviance β Kstage Klimit hK n]
   exact congrArg (limitDeviance β Klimit)

@@ -1,6 +1,7 @@
 import InfoGeometry.Clifford.Cl11Matrix
 import InfoGeometry.Canonical.KreinDoubledCartanPeirceBridge
 import Mathlib.Analysis.Calculus.Deriv.Mul
+import Mathlib.Analysis.Calculus.Deriv.Add
 
 /-!
 # A finite polarized shear and spin frame
@@ -116,7 +117,7 @@ theorem energy_pos {s w : ℝ} (h : |s| < w) {x : Vec2} (hx : x ≠ 0) :
     0 < energy s w x := by
   have hcoords : x 0 ≠ 0 ∨ x 1 ≠ 0 := by
     by_contra hzero
-    push_neg at hzero
+    push Not at hzero
     apply hx
     ext i
     fin_cases i <;> simp_all
@@ -165,15 +166,22 @@ theorem hasDerivAt_energy {s w nu t : ℝ} {x : ℝ → Vec2}
       (velocity s w nu (x t) i) t) :
     HasDerivAt (fun tau => energy s w (x tau))
       (-2 * nu * energy s w (x t)) t := by
-  have hbase := (((hx 0).mul (hx 0)).const_mul (w - s)).add
+  have hbase := HasDerivAt.add
+    (((hx 0).mul (hx 0)).const_mul (w - s))
     (((hx 1).mul (hx 1)).const_mul (w + s))
   have hrate : HasDerivAt (fun tau => energy s w (x tau))
       (energyRate s w (x t) (velocity s w nu (x t))) t := by
-    convert hbase using 1
-    · funext tau
+    have h_eq : (fun tau => energy s w (x tau)) =
+        (fun tau => (w - s) * (x tau 0 * x tau 0) + (w + s) * (x tau 1 * x tau 1)) := by
+      funext tau
       simp [energy, pow_two]
-    · dsimp [energyRate]
+    have h_deriv : energyRate s w (x t) (velocity s w nu (x t)) =
+        (w - s) * (velocity s w nu (x t) 0 * x t 0 + x t 0 * velocity s w nu (x t) 0) +
+        (w + s) * (velocity s w nu (x t) 1 * x t 1 + x t 1 * velocity s w nu (x t) 1) := by
+      dsimp [energyRate]
       ring
+    rw [h_eq, h_deriv]
+    exact hbase
   rwa [energyRate_velocity] at hrate
 
 end InfoGeometry.Canonical.PolarizedShearSpinFrame

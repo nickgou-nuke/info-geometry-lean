@@ -20,6 +20,17 @@ open scoped Matrix.Norms.Elementwise
 
 abbrev Family (n : ℕ) := Fin n → Mat2
 
+local instance : NormedAddCommGroup Mat2 := Matrix.normedAddCommGroup
+local instance : TopologicalSpace Mat2 :=
+  (inferInstance : NormedAddCommGroup Mat2).toPseudoMetricSpace.toUniformSpace.toTopologicalSpace
+local instance : NormedSpace ℝ Mat2 := Matrix.normedSpace
+local instance (n : ℕ) : NormedAddCommGroup (Family n) :=
+  Pi.normedAddCommGroup
+local instance (n : ℕ) : TopologicalSpace (Family n) :=
+  (inferInstance : NormedAddCommGroup (Family n)).toPseudoMetricSpace.toUniformSpace.toTopologicalSpace
+local instance (n : ℕ) : NormedSpace ℝ (Family n) :=
+  Pi.normedSpace
+
 def familyMetric (n : ℕ) : Family n →L[ℝ] Family n →L[ℝ] ℝ :=
   ∑ i : Fin n,
     ((metricCLM.precompR (Family n)).flip (ContinuousLinearMap.proj i)).comp
@@ -27,7 +38,11 @@ def familyMetric (n : ℕ) : Family n →L[ℝ] Family n →L[ℝ] ℝ :=
 
 @[simp] theorem familyMetric_apply {n : ℕ} (u v : Family n) :
     familyMetric n u v = ∑ i, metric (u i) (v i) := by
-  simp [familyMetric, ContinuousLinearMap.precompR]
+  simp only [familyMetric, ContinuousLinearMap.sum_apply]
+  apply Finset.sum_congr rfl
+  intro i hi
+  change metricCLM (u i) (ContinuousLinearMap.proj i v) = _
+  simp [metricCLM_apply]
 
 theorem familyMetric_symm {n : ℕ} (u v : Family n) :
     familyMetric n u v = familyMetric n v u := by
@@ -46,8 +61,10 @@ def familyPotential (n : ℕ) : Family n → ℝ := potential (familyMetric n)
 
 theorem familyPotential_eq_sum {n : ℕ} (x : Family n) :
     familyPotential n x = ∑ i, determinantPotential (x i) := by
-  simp only [familyPotential, potential, familyMetric_apply, determinantPotential_eq,
-    metric_self, Finset.sum_div]
+  rw [familyPotential, potential, familyMetric_apply, Finset.sum_div]
+  apply Finset.sum_congr rfl
+  intro i hi
+  rw [determinantPotential_eq, metric_self]
 
 theorem familyPotential_hessian {n : ℕ} (x u v : Family n) :
     fderiv ℝ (fderiv ℝ (familyPotential n)) x u v = familyMetric n u v := by

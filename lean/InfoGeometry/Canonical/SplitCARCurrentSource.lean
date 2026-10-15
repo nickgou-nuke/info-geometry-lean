@@ -1,5 +1,4 @@
 import InfoGeometry.Canonical.BosonizationConstructiveCurrent
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CurrentSugawaraBridge
 
 /-!
@@ -196,10 +195,7 @@ theorem chargedFockSpace_current_commutator_one_negOne
     ((chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J 1).commutator
         ((chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J (-1))
       =
-    (1 : 𝕜) •
-      (1 :
-        VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
-          VirasoroProject.ChargedFockSpace 𝕜 α) := by
+    (1 : 𝕜) • 1 := by
   simpa using (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm 1 (-1)
 
 /--
@@ -213,9 +209,7 @@ theorem chargedFockSpace_current_commutator_zero_of_add_ne_zero
     ((chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J m).commutator
         ((chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J n)
       =
-      (0 :
-        VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
-          VirasoroProject.ChargedFockSpace 𝕜 α) := by
+      0 := by
   simpa [h] using (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm m n
 
 /--
@@ -229,10 +223,7 @@ theorem chargedFockSpace_current_commutator_central_of_add_eq_zero
     ((chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J m).commutator
         ((chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J n)
       =
-      (m : 𝕜) •
-        (1 :
-          VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
-            VirasoroProject.ChargedFockSpace 𝕜 α) := by
+      (m : 𝕜) • 1 := by
   simpa [h] using (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm m n
 
 end InfoGeometry.Canonical.SplitCARCurrentSource

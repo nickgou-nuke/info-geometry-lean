@@ -394,28 +394,8 @@ noncomputable def toH3Linear : RealAlbertMatrix →ₗ[ℝ] H3Zorn ℝ where
   map_smul' := toH3_smul
 
 noncomputable def traceBilinLinear :
-    RealAlbertMatrix →ₗ[ℝ] RealAlbertMatrix →ₗ[ℝ] ℝ where
-  toFun X :=
-    { toFun := fun Y =>
-        h3zornTraceBilin (toH3 X) (toH3 Y)
-      map_add' := by
-        intro Y Z
-        simpa only [toH3_add] using H3Zorn.traceBilin_add_right
-          (toH3 X) (toH3 Y) (toH3 Z)
-      map_smul' := by
-        intro r Y
-        simpa only [toH3_smul] using H3Zorn.traceBilin_smul_right
-          r (toH3 X) (toH3 Y) }
-  map_add' := by
-    intro X Y
-    ext Z
-    simpa only [toH3_add] using H3Zorn.traceBilin_add_left
-      (toH3 X) (toH3 Y) (toH3 Z)
-  map_smul' := by
-    intro r X
-    ext Y
-    simpa only [toH3_smul] using H3Zorn.traceBilin_smul_left
-      r (toH3 X) (toH3 Y)
+    RealAlbertMatrix →ₗ[ℝ] RealAlbertMatrix →ₗ[ℝ] ℝ :=
+  h3zornTraceBilin.compl₁₂ toH3Linear toH3Linear
 
 theorem freudenthal_identity_full (X : RealAlbertMatrix) :
     adjointQuad (adjointQuad X) = normCubic X • X := by

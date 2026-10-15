@@ -45,7 +45,9 @@ theorem paper_pom_replica_softcore_gap_ratio_log_separation
       Tendsto (fun q : ℕ => Real.log ((nu q / rho q) / ((phi / 2) ^ q))) atTop
         (nhds 0) := by
     have hlog := (Real.continuousAt_log one_ne_zero).tendsto.comp hratio
-    simpa using hlog
+    change Tendsto
+      (Real.log ∘ fun q : ℕ => (nu q / rho q) / ((phi / 2) ^ q)) atTop (nhds 0)
+    simpa only [Real.log_one] using hlog
   have hlog_ratio_over_q :
       Tendsto
         (fun q : ℕ => Real.log ((nu q / rho q) / ((phi / 2) ^ q)) / (q : ℝ))

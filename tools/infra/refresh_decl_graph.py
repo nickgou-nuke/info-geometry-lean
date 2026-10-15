@@ -65,7 +65,10 @@ else:
     )
 
 
-def stream_to_arango(root: Path, import_root: str, namespace: str, database: str, run_mode: str) -> int:
+def stream_to_arango(
+    root: Path, import_root: str, namespace: str, database: str, run_mode: str,
+    generation_id: str | None = None, build_fingerprint: str | None = None,
+) -> int:
     """Stream JSONL from dagIndexer directly to ArangoDB."""
     load_repo_arango_env(root)
 
@@ -94,18 +97,22 @@ def stream_to_arango(root: Path, import_root: str, namespace: str, database: str
     client = ArangoClient(hosts=arango_endpoint(), request_timeout=3600)
     db = client.db(database, username=arango_username(), password=arango_password())
 
-    # Ensure collections exist
-    collections = {
-        "decls": False,
-        "edges": True,
-    }
+    # Legacy mode preserves its historical replace-in-place behavior. The
+    # generation mode writes to fresh collections and never truncates prior data.
+    suffix = f"_g_{generation_id}" if generation_id else ""
+    decl_collection = "decls" + suffix
+    edge_collection = "edges" + suffix
+    collections = {decl_collection: False, edge_collection: True}
     for coll_name, is_edge in collections.items():
-        if not db.has_collection(coll_name):
-            db.create_collection(coll_name, edge=is_edge)
-            print(f"[refresh-decl-graph] Created collection: {coll_name}")
-        else:
+        if db.has_collection(coll_name):
+            if generation_id:
+                print(f"[refresh-decl-graph] immutable generation already exists: {coll_name}", file=sys.stderr)
+                return 2
             db.collection(coll_name).truncate()
             print(f"[refresh-decl-graph] Truncated collection: {coll_name}")
+        else:
+            db.create_collection(coll_name, edge=is_edge)
+            print(f"[refresh-decl-graph] Created collection: {coll_name}")
 
     # Stream JSONL to ArangoDB
     proc = subprocess.Popen(cmd, cwd=root, stdout=subprocess.PIPE, stderr=None, text=True)
@@ -135,15 +142,15 @@ def stream_to_arango(root: Path, import_root: str, namespace: str, database: str
                 if "src" in doc and "dst" in doc:
                     src_key = "d_" + hashlib.sha256(doc["src"].encode()).hexdigest()[:40]
                     dst_key = "d_" + hashlib.sha256(doc["dst"].encode()).hexdigest()[:40]
-                    doc["_from"] = f"decls/{src_key}"
-                    doc["_to"] = f"decls/{dst_key}"
+                    doc["_from"] = f"{decl_collection}/{src_key}"
+                    doc["_to"] = f"{decl_collection}/{dst_key}"
                     doc["kind"] = doc.get("kind", "type")
                 edge_batch.append(doc)
                 if len(edge_batch) >= batch_size:
                     # Endpoint declarations may occur later in the alphabetical
                     # declaration stream.  Preserve every emitted edge now and
                     # validate endpoints only after the declaration stream ends.
-                    import_batch("edges", edge_batch)
+                    import_batch(edge_collection, edge_batch)
                     edge_count += len(edge_batch)
                     edge_batch = []
             else:
@@ -152,16 +159,16 @@ def stream_to_arango(root: Path, import_root: str, namespace: str, database: str
                     doc["_key"] = "d_" + hashlib.sha256(doc["name"].encode()).hexdigest()[:40]
                 decl_batch.append(doc)
                 if len(decl_batch) >= batch_size:
-                    import_batch("decls", decl_batch)
+                    import_batch(decl_collection, decl_batch)
                     decl_count += len(decl_batch)
                     decl_batch = []
 
         # Flush remaining batches
         if decl_batch:
-            import_batch("decls", decl_batch)
+            import_batch(decl_collection, decl_batch)
             decl_count += len(decl_batch)
         if edge_batch:
-            import_batch("edges", edge_batch)
+            import_batch(edge_collection, edge_batch)
             edge_count += len(edge_batch)
             edge_batch = []
 
@@ -176,18 +183,51 @@ def stream_to_arango(root: Path, import_root: str, namespace: str, database: str
 
     # Now every declaration is present, so endpoint validation cannot discard a
     # forward reference merely because its target appeared later in the stream.
-    remove_orphans = """
-    FOR e IN edges
+    orphan_query = """
+    FOR e IN @@edgeCollection
       LET from_doc = DOCUMENT(e._from)
       LET to_doc = DOCUMENT(e._to)
       FILTER from_doc == null OR to_doc == null
-      REMOVE e IN edges
       COLLECT WITH COUNT INTO removed
       RETURN removed
     """
-    removed_rows = list(db.aql.execute(remove_orphans))
-    removed_edges = removed_rows[0] if removed_rows else 0
-    valid_edge_count = db.collection("edges").count()
+    orphan_rows = list(db.aql.execute(orphan_query, bind_vars={"@edgeCollection": edge_collection}))
+    orphan_edges = orphan_rows[0] if orphan_rows else 0
+    if generation_id and orphan_edges:
+        print(
+            f"[refresh-decl-graph] immutable generation has {orphan_edges} dangling edges; "
+            "not publishing it",
+            file=sys.stderr,
+        )
+        return 1
+    removed_edges = 0
+    if not generation_id and orphan_edges:
+        remove_orphans = orphan_query.replace(
+            "      COLLECT WITH COUNT INTO removed\n      RETURN removed",
+            "      REMOVE e IN @@edgeCollection\n      COLLECT WITH COUNT INTO removed\n      RETURN removed",
+        )
+        removed_rows = list(db.aql.execute(remove_orphans, bind_vars={"@edgeCollection": edge_collection}))
+        removed_edges = removed_rows[0] if removed_rows else 0
+    valid_edge_count = db.collection(edge_collection).count()
+
+    if generation_id:
+        generations = "decl_graph_generations"
+        if not db.has_collection(generations):
+            db.create_collection(generations)
+        db.collection(generations).insert({
+            "_key": generation_id,
+            "schema": "info_geometry.decl_graph_generation.v1",
+            "status": "complete",
+            "buildFingerprint": build_fingerprint,
+            "importRoot": import_root,
+            "namespace": namespace,
+            "declCollection": decl_collection,
+            "edgeCollection": edge_collection,
+            "declarationCount": decl_count,
+            "emittedEdgeCount": edge_count,
+            "removedOrphanCount": removed_edges,
+            "validEdgeCount": valid_edge_count,
+        }, overwrite=False, sync=True)
 
     print(
         f"[refresh-decl-graph] Imported {decl_count} declarations and "
@@ -276,6 +316,8 @@ def parse_args() -> argparse.Namespace:
         default="infogeometry",
         help="ArangoDB database name for streaming import.",
     )
+    parser.add_argument("--generation-id", help="Write a fresh immutable generation; never truncate existing graph collections.")
+    parser.add_argument("--build-fingerprint", help="Required environment fingerprint for --generation-id.")
     return parser.parse_args()
 
 
@@ -285,7 +327,17 @@ def main() -> int:
 
     # Streaming mode: pipe directly to ArangoDB
     if args.stream:
-        return stream_to_arango(root, args.import_root, args.namespace, args.arango_db, args.run_mode)
+        if args.generation_id and not args.build_fingerprint:
+            raise SystemExit("--build-fingerprint is required with --generation-id")
+        if args.generation_id and (
+            len(args.generation_id) > 32
+            or not all(ch.isalnum() or ch in "_-" for ch in args.generation_id)
+        ):
+            raise SystemExit("--generation-id must be at most 32 letters, digits, '_' or '-'")
+        return stream_to_arango(
+            root, args.import_root, args.namespace, args.arango_db, args.run_mode,
+            args.generation_id, args.build_fingerprint,
+        )
 
     # File-based mode (original behavior)
     index_dir = normalize_repo_output(root, args.index_dir)

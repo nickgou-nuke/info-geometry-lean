@@ -23,8 +23,9 @@ from typing import Any
 
 DEFAULT_PATTERNS = Path(__file__).with_name("semantic_vacuity_patterns.json")
 
-DECL_RE = re.compile(r"^\s*(theorem|lemma)\s+([\w][\w'.]*)\b")
-CARRIER_RE = re.compile(r"^\s*(structure|class)\s+([\w][\w'.]*)\b")
+DECL_RE = re.compile(r"^\s*(?:@\[[^\n]*?\]\s*)*(?:(?:private|protected)\s+)?(theorem|lemma)\s+([\w][\w'.]*)\b")
+EXAMPLE_RE = re.compile(r"^\s*(?:@\[[^\n]*?\]\s*)*example\b")
+CARRIER_RE = re.compile(r"^\s*(?:@\[[^\n]*?\]\s*)*(structure|class)\s+([\w][\w'.]*)\b")
 TYPE_SURFACE_RE = re.compile(
     r"^\s*(?:noncomputable\s+)?(?:def|abbrev)\s+"
     r"([\w][\w'.]*)[^\n]*:\s*Type(?:\s+\d+|\s+_)\s*:?="
@@ -42,12 +43,12 @@ DYNAMIC_LITERAL_DEF_RE = re.compile(
     r"[\s\S]{0,500}?:=\s*(0|1)\s*(?:--[^\n]*)?$"
 )
 CONSTANT_FUNCTION_RE = re.compile(
-    r"^([\w][\w']*)\s*:=\s*fun\s+"
+    r"^\s*([\w][\w']*)\s*:=\s*fun\s+"
     r"(?:_[^=]*|[\w'.]+(?:\s+[\w'.]+)*)\s*=>\s*(0|1|True|False)\b",
     re.MULTILINE,
 )
 IDENTITY_FUNCTION_RE = re.compile(
-    r"^([\w][\w']*)\s*:=\s*fun\s+([\w][\w']*)\s*=>\s*\2\b",
+    r"^\s*([\w][\w']*)\s*:=\s*fun\s+([\w][\w']*)\s*=>\s*\2\b",
     re.MULTILINE,
 )
 IDENTITY_MAP_RE = re.compile(
@@ -83,38 +84,53 @@ def lean_files(roots: list[Path]) -> list[Path]:
             files.append(root)
         elif root.is_dir():
             for p in root.rglob("*.lean"):
-                if any(part in {".lake", ".changes"} for part in p.parts):
+                if any(part.startswith(".") for part in p.parts):
                     continue
                 files.append(p)
     return sorted(set(files))
 
 
-def tracked_lean_files() -> list[Path]:
+def tracked_lean_files(roots: list[Path] | None = None) -> list[Path]:
     """Return tracked/nonignored Lean sources for release audits."""
     import subprocess
 
     result = subprocess.run(
-        ["git", "ls-files", "--cached", "--others", "--exclude-standard", "--", "lean/*.lean"],
+        ["git", "ls-files", "--cached", "--others", "--exclude-standard", "--",
+         *[str(root) for root in (roots or [Path("lean")])]],
         check=True,
         capture_output=True,
         text=True,
     )
-    return sorted(
+    return sorted(set(
         Path(line)
         for line in result.stdout.splitlines()
-        if line.startswith("lean/") and line.endswith(".lean")
-    )
+        if line.endswith(".lean")
+        and not any(part in {".lake", ".changes", ".kilo", ".worktrees"}
+                    for part in Path(line).parts)
+    ))
 
 
 def theorem_window(lines: list[str], start: int) -> str:
     chunk: list[str] = []
-    for line in lines[start : min(start + 18, len(lines))]:
-        if chunk and re.match(r"^\s*(theorem|lemma|def|structure|class|inductive)\s+", line):
+    for line in lines[start:]:
+        if chunk and (END_TOP_RE.match(line) or DECL_RE.match(line) or EXAMPLE_RE.match(line) or CARRIER_RE.match(line)):
             break
         chunk.append(line)
     text = "\n".join(chunk)
-    if ":=" in text:
-        return text.split(":=", 1)[1].strip()
+    # Binder defaults can themselves contain `:=`; only the declaration's
+    # assignment after the binder telescope starts the proof body.  Track
+    # Lean's balanced delimiters so e.g. `(x : Nat := 1)` is not mistaken for
+    # the theorem body boundary.
+    depth = {"(": 0, "{": 0, "[": 0}
+    pairs = {")": "(", "}": "{", "]": "["}
+    for i, ch in enumerate(text):
+        if ch in depth:
+            depth[ch] += 1
+        elif ch in pairs:
+            opener = pairs[ch]
+            depth[opener] = max(0, depth[opener] - 1)
+        elif text.startswith(":=", i) and not any(depth.values()):
+            return text[i + 2 :].strip()
     return ""
 
 
@@ -125,7 +141,7 @@ def is_trivial_surface(proof: str, trivial_re: re.Pattern[str]) -> bool:
     return bool(trivial_re.search(proof))
 
 
-def strip_comments(text: str) -> str:
+def strip_comments(text: str, *, mask_literals: bool = False) -> str:
     out: list[str] = []
     i = 0
     depth = 0
@@ -148,9 +164,9 @@ def strip_comments(text: str) -> str:
                 i += 1
             continue
         if in_string:
-            out.append(ch)
+            out.append("\n" if ch == "\n" else " " if mask_literals else ch)
             if ch == "\\" and i + 1 < len(text):
-                out.append(text[i + 1])
+                out.append("\n" if text[i + 1] == "\n" else " " if mask_literals else text[i + 1])
                 i += 2
             else:
                 if ch == "\"":
@@ -158,9 +174,9 @@ def strip_comments(text: str) -> str:
                 i += 1
             continue
         if in_char:
-            out.append(ch)
+            out.append("\n" if ch == "\n" else " " if mask_literals else ch)
             if ch == "\\" and i + 1 < len(text):
-                out.append(text[i + 1])
+                out.append("\n" if text[i + 1] == "\n" else " " if mask_literals else text[i + 1])
                 i += 2
             else:
                 if ch == "'":
@@ -188,23 +204,26 @@ def strip_comments(text: str) -> str:
         # `foo'` can hide the remainder of the file from this scanner.
         elif ch == "'" and i + 2 < len(text) and text[i + 2] == "'":
             in_char = True
-        out.append(ch)
+        out.append(" " if mask_literals and (in_string or in_char) else ch)
         i += 1
     return "".join(out)
 
 
 def audit_text(path_label: str, raw_text: str, categories: dict[str, Any]) -> list[Finding]:
     findings: list[Finding] = []
-    text = strip_comments(raw_text)
+    text = strip_comments(raw_text, mask_literals=True)
     rel = path_label
     lines = text.splitlines()
 
     placeholder = categories.get("placeholder_token", {})
-    token_re = re.compile(r"^\s*(axiom|postulate)\b|\b(admit|sorry)\b")
+    # Qualified declaration/trace names such as `DAG.Morphism.admit` are not
+    # proof-hole tokens.  A real tactic/term token remains a standalone name.
+    token_re = re.compile(
+        r"^\s*(?:(?:@\[[^\n]*?\]\s*)|(?:(?:private|protected|local|unsafe|noncomputable)\s+))*"
+        r"(?:axiom|postulate)\b|(?<![\w.«])(?:admit|sorry)(?![\w'»])"
+    )
     for i, line in enumerate(lines, 1):
         stripped = line.strip()
-        if stripped.startswith(("--", "/-", "*")) or '"' in stripped or "`" in stripped:
-            continue
         if token_re.search(stripped):
             findings.append(Finding(rel, i, "placeholder_token", placeholder.get("severity", "error"), "token", stripped))
 
@@ -219,24 +238,32 @@ def audit_text(path_label: str, raw_text: str, categories: dict[str, Any]) -> li
     current_carrier_line = 0
     current_carrier_name_hit = False
     current_carrier_has_data = False
+    current_carrier_has_proof_field = False
     pure_cfg = categories.get("pure_proof_carrier", {})
 
     def finish_carrier(line_no: int) -> None:
         nonlocal current_carrier, current_carrier_name_hit, current_carrier_has_data
+        nonlocal current_carrier_has_proof_field
         if current_carrier and current_carrier_name_hit and not current_carrier_has_data:
+            proof_bundle = current_carrier_has_proof_field
             findings.append(
                 Finding(
                     rel,
                     current_carrier_line,
                     "pure_proof_carrier",
-                    pure_cfg.get("severity", "error"),
+                    "warning" if proof_bundle else pure_cfg.get("severity", "error"),
                     current_carrier,
-                    "carrier has no data-bearing field; inspect as proof/proxy packaging",
+                    (
+                        "all fields appear proof-like; review as a theorem bundle and verify its owner-side inhabitant"
+                        if proof_bundle
+                        else "carrier has no data-bearing or proof-bearing fields; inspect for an empty witness/model"
+                    ),
                 )
             )
         current_carrier = None
         current_carrier_name_hit = False
         current_carrier_has_data = False
+        current_carrier_has_proof_field = False
 
     for i, line in enumerate(lines, 1):
         cm = CARRIER_RE.match(line)
@@ -269,6 +296,8 @@ def audit_text(path_label: str, raw_text: str, categories: dict[str, Any]) -> li
                 current_carrier_has_data = True
             name_hit = bool(field_name_re.search(name))
             type_hit = bool(field_type_re.search(type_core))
+            if type_hit:
+                current_carrier_has_proof_field = True
             if type_hit and proof_type_cfg:
                 findings.append(
                     Finding(
@@ -375,14 +404,20 @@ def audit_text(path_label: str, raw_text: str, categories: dict[str, Any]) -> li
     projection_re = re.compile(projection_cfg.get("proof_regex", r"a^"))
     trivial_cfg = categories.get("trivial_surface", {})
     trivial_re = re.compile(trivial_cfg.get("proof_regex", r"a^"), re.DOTALL)
+    anonymous_example = 0
     for i, line in enumerate(lines, 1):
         dm = DECL_RE.match(line)
-        if not dm:
+        is_example = EXAMPLE_RE.match(line) is not None
+        if not dm and not is_example:
             continue
         proof = theorem_window(lines, i - 1)
         if not proof:
             continue
-        name = dm.group(2)
+        if is_example:
+            anonymous_example += 1
+            name = f"<anonymous-example-{anonymous_example}>"
+        else:
+            name = dm.group(2)
         if not proof.startswith("by") and projection_re.search(proof):
             findings.append(
                 Finding(rel, i, "projection_reexport", projection_cfg.get("severity", "error"), name, proof.splitlines()[0][:180])
@@ -396,10 +431,7 @@ def audit_text(path_label: str, raw_text: str, categories: dict[str, Any]) -> li
 
 
 def audit_file(path: Path, categories: dict[str, Any]) -> list[Finding]:
-    try:
-        text = path.read_text(encoding="utf-8")
-    except (UnicodeDecodeError, FileNotFoundError):
-        return []
+    text = path.read_text(encoding="utf-8")
     return audit_text(str(path), text, categories)
 
 
@@ -410,21 +442,47 @@ def main() -> int:
     ap.add_argument("--json-out", type=Path)
     ap.add_argument("--tracked", action="store_true", help="use tracked/nonignored Lean sources")
     ap.add_argument("--fail-on", choices=["none", "error", "warning"], default="error")
+    ap.add_argument(
+        "--fail-prefix",
+        action="append",
+        default=[],
+        help="restrict severity-based blocking to findings below this repository-relative path prefix; repeatable",
+    )
     ap.add_argument("--top", type=int, default=80)
     args = ap.parse_args()
 
     policy = load_patterns(args.patterns)
     categories = policy["categories"]
     findings: list[Finding] = []
-    paths = tracked_lean_files() if args.tracked else lean_files([Path(r) for r in args.roots])
+    paths = tracked_lean_files([Path(r) for r in args.roots]) if args.tracked else lean_files([Path(r) for r in args.roots])
+    failures: list[dict[str, str]] = []
+    scanned: list[str] = []
+    for root in map(Path, args.roots):
+        if not root.exists():
+            failures.append({"file": str(root), "error": "missing scope root"})
     for path in paths:
-        findings.extend(audit_file(path, categories))
+        try:
+            findings.extend(audit_file(path, categories))
+            scanned.append(str(path))
+        except (OSError, UnicodeError) as exc:
+            failures.append({"file": str(path), "error": str(exc)})
+    if not paths:
+        failures.append({"file": "", "error": "no Lean sources selected"})
 
     counts: dict[str, int] = {}
     severity_counts: dict[str, int] = {}
     for f in findings:
         counts[f.category] = counts.get(f.category, 0) + 1
         severity_counts[f.severity] = severity_counts.get(f.severity, 0) + 1
+    blocking_findings = [
+        finding
+        for finding in findings
+        if not args.fail_prefix
+        or any(finding.file.startswith(prefix) for prefix in args.fail_prefix)
+    ]
+    blocking_severity_counts: dict[str, int] = {}
+    for finding in blocking_findings:
+        blocking_severity_counts[finding.severity] = blocking_severity_counts.get(finding.severity, 0) + 1
 
     if args.json_out:
         args.json_out.parent.mkdir(parents=True, exist_ok=True)
@@ -432,8 +490,20 @@ def main() -> int:
             json.dumps(
                 {
                     "pattern_version": policy.get("version"),
+                    "files_scanned": len(scanned),
+                    "files_selected": len(paths),
+                    "successfully_read_paths": scanned,
+                    "read_failures": failures,
+                    "coverage_complete": not failures,
+                    "authority": "lexical heuristics; not a semantic or kernel proof",
+                    "source_paths": [str(path) for path in paths],
+                    "scope_roots": args.roots,
+                    "tracked": args.tracked,
                     "counts": counts,
                     "severity_counts": severity_counts,
+                    "blocking_severity_counts": blocking_severity_counts,
+                    "fail_on": args.fail_on,
+                    "fail_prefixes": args.fail_prefix,
                     "findings": [f.__dict__ for f in findings],
                 },
                 indent=2,
@@ -447,6 +517,9 @@ def main() -> int:
     print(f"roots: {', '.join(args.roots)}")
     print(f"patterns: {args.patterns}")
     print(f"semantic_vacuity: {len(findings)}")
+    if args.fail_prefix:
+        print(f"blocking prefixes: {', '.join(args.fail_prefix)}")
+        print(f"blocking findings: {len(blocking_findings)}")
     for sev in sorted(severity_counts):
         print(f"{sev}: {severity_counts[sev]}")
     for cat in sorted(counts):
@@ -454,11 +527,15 @@ def main() -> int:
     for f in findings[: args.top]:
         print(f"  - {f.file}:{f.line} [{f.severity}/{f.category}] {f.subject}: {f.detail}")
 
+    for failure in failures:
+        print(f"input failure: {failure}", file=sys.stderr)
+    if failures:
+        return 2
     if args.fail_on == "none":
         return 0
-    if args.fail_on == "warning" and findings:
+    if args.fail_on == "warning" and blocking_findings:
         return 1
-    if args.fail_on == "error" and severity_counts.get("error", 0):
+    if args.fail_on == "error" and blocking_severity_counts.get("error", 0):
         return 1
     return 0
 

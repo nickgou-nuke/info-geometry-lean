@@ -35,10 +35,10 @@ theorem descend_unique (f : α → A) (g : Carrier α →+ A)
   apply AddMonoidHom.ext
   intro x
   induction x using FreeAbelianGroup.induction_on with
-  | C0 => simp
-  | C1 x => exact (h x).trans (descend_inclusion f x).symm
-  | Cn x hx => simp [hx, h]
-  | Cp x y hx hy => simp [map_add, hx, hy]
+  | zero => simp
+  | of x => exact (h x).trans (descend_inclusion f x).symm
+  | neg x hx => simp [map_neg, hx]
+  | add x y hx hy => simp [map_add, hx, hy]
 
 end FreeAbelian
 end InfoGeometry.Spectral.Algebra

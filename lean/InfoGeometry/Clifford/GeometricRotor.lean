@@ -57,8 +57,8 @@ theorem exp_reverse (R : Rotor E) :
         ContinuousLinearMap.add_comp, ContinuousLinearMap.comp_add, ContinuousLinearMap.smul_comp]
       have hcancel :
           (Real.sin (R.θ / 2) * Real.cos (R.θ / 2)) • R.B.op u +
-            -((Real.sin (R.θ / 2) * Real.cos (R.θ / 2)) • R.B.op u) = (0 : InfoGeometry.Krein.DoubledSpace E) := by
-        simp
+            -((Real.sin (R.θ / 2) * Real.cos (R.θ / 2)) • R.B.op u) =
+              (0 : InfoGeometry.Krein.DoubledSpace E) := by simp
       simp [add_assoc, add_left_comm, add_comm, hcancel]
     _ = ((Real.cos (R.θ / 2)) ^ 2 + (Real.sin (R.θ / 2)) ^ 2) • u := by
       ring_nf
@@ -82,11 +82,6 @@ theorem reverse_comp_exp (R : Rotor E) :
       have hmul : Real.cos (R.θ / 2) * Real.sin (R.θ / 2) = Real.sin (R.θ / 2) * Real.cos (R.θ / 2) := by ring
       simp [exp, reverse, sub_eq_add_neg, add_smul, smul_add, smul_smul, hBBu, hmul,
         ContinuousLinearMap.add_comp, ContinuousLinearMap.comp_add, ContinuousLinearMap.smul_comp]
-      have hcancel :
-          (Real.sin (R.θ / 2) * Real.cos (R.θ / 2)) • R.B.op u +
-            -((Real.sin (R.θ / 2) * Real.cos (R.θ / 2)) • R.B.op u) = (0 : InfoGeometry.Krein.DoubledSpace E) := by
-        simp
-      simp [add_assoc, add_left_comm, add_comm, hcancel]
     _ = ((Real.cos (R.θ / 2)) ^ 2 + (Real.sin (R.θ / 2)) ^ 2) • u := by
       ring_nf
     _ = (1 : ℝ) • u := by

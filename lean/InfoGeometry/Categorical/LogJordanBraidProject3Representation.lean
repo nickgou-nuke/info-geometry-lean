@@ -46,6 +46,7 @@ theorem standardHadjiivanov_braidProject_sigmaZero :
       logCheckedR12 standardJordanObject standardJordanObject_sq_zero
         logShearBase := by
   simp [standardHadjiivanovBraidProject3Hom]
+  rfl
 
 /-- Second `BraidProject` generator acts by the checked logarithmic `R₂₃`. -/
 @[simp]
@@ -54,6 +55,7 @@ theorem standardHadjiivanov_braidProject_sigmaOne :
       logCheckedR23 standardJordanObject standardJordanObject_sq_zero
         logShearBase := by
   simp [standardHadjiivanovBraidProject3Hom]
+  rfl
 
 /-- The same two abstract generators embed into the infinite braid boundary as
 `σ₀` and `σ₁`.  This is the group-theoretic entry point from the concrete

@@ -40,10 +40,10 @@ def statement (node : Fin 2) : Prop :=
 theorem rules : ProofRules statement := by
   intro node _
   fin_cases node
-  · simpa only [statement, if_pos rfl] using
+  · simpa [statement] using
       (fun (environment : Finset Nat) (schedule : List Nat)
         (valid : ValidSchedule environment schedule) => validSchedule_fresh valid)
-  · simpa only [statement, show (1 : Fin 2) ≠ 0 by decide, if_false] using
+  · simpa [statement] using
       (fun (environment : Finset Nat) (schedule : List Nat)
         (valid : ValidSchedule environment schedule) => validSchedule_nodup valid)
 

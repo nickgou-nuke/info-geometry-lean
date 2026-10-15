@@ -15,6 +15,18 @@ noncomputable section
 
 variable {V : Type*} [Fintype V]
 
+local instance realTokenOperatorSubForCoordinates : Sub (RealTokenOperator (V := V)) where
+  sub T U :=
+    { toFun := fun ψ => T ψ - U ψ
+      map_add' := by
+        intro x y
+        simp only [map_add]
+        abel
+      map_smul' := by
+        intro c ψ
+        rw [map_smul, map_smul, smul_sub]
+        rfl }
+
 abbrev RealCoordinateOperator :=
   RealTokenCoordinates (V := V) →ₗ[ℝ] RealTokenCoordinates (V := V)
 

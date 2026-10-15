@@ -445,8 +445,8 @@ noncomputable def clrHomeomorph {n : ℕ} (hn : 0 < n) :
       exact Continuous.subtype_mk (continuous_clr hn)
         (fun p => sum_clr p hn)
     continuous_invFun := by
-      simpa only [clrInverse] using
-        (continuous_softmax hn).comp continuous_subtype_val }
+      change Continuous (fun z : CenteredLogits n => softmax n z.1 hn)
+      exact (continuous_softmax hn).comp continuous_subtype_val }
 
 theorem clrHomeomorph_apply {n : ℕ} (hn : 0 < n)
     (p : PositiveSimplex n) :

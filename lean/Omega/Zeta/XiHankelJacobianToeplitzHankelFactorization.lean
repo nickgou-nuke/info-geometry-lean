@@ -47,9 +47,10 @@ theorem paper_xi_hankel_jacobian_toeplitz_hankel_factorization :
   let L := xi_hankel_jacobian_toeplitz_hankel_factorization_toeplitz d q
   let T := xi_hankel_jacobian_toeplitz_hankel_factorization_toeplitz d s
   have hleft : T * L = (1 : Matrix (Fin d) (Fin d) k) := by
-    simpa [T, L] using hinv
+    simpa [xi_hankel_jacobian_toeplitz_hankel_factorization_truncatedInverse, T, L] using hinv
   have hrec : L * jacobian = -hankel := by
-    simpa [L] using hjac
+    simpa [xi_hankel_jacobian_toeplitz_hankel_factorization_recurrenceJacobianIdentity, L]
+      using hjac
   calc
     jacobian = (1 : Matrix (Fin d) (Fin d) k) * jacobian := by simp
     _ = (T * L) * jacobian := by rw [hleft]

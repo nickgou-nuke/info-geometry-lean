@@ -48,7 +48,7 @@ def test_emerging_spacetime_soldering_cascade() -> None:
 
     det_theta_psi = sp.simplify(theta_psi.det())
     assert_zero(det_theta_psi, "det(θ(v_ψ)) = 0 (Singular lightcone matrix)")
-    print("  [OK] Soldering Determinant: det(θ(v_ψ)) = 0 (Klein Quadric on-shell boundary)")
+    print("  [OK] Pauli soldering determinant: det(θ(v_ψ)) = 0 (null-vector/singular-matrix condition; not the Klein quadric)")
 
     # 3. Generic 4D Vector Soldering Determinant
     t, x, y, z = sp.symbols("t x y z", real=True)

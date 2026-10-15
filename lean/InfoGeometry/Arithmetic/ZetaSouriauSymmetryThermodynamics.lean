@@ -79,9 +79,8 @@ theorem centeredChartSymmetryAct_compose
 /-- Every exact finite zeta chart symmetry is an involution in centered coordinates. -/
 theorem centeredChartSymmetryAct_involutive (g : ChartSymmetry) :
     Function.Involutive (centeredChartSymmetryAct g) := by
-  intro x
-  simpa [chartSymmetryCompose_self] using
-    (centeredChartSymmetryAct_compose g g x).symm
+  cases g <;> intro x <;> cases x <;>
+    simp [centeredChartSymmetryAct, conjugation, functionalDual, criticalMirror]
 
 /--
 Finite zeta symmetries conjugate the vertical flow by the height-sign

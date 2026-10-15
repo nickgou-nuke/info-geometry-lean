@@ -31,7 +31,8 @@ theorem realStructure_two_cycle_apply
     (J : RealStructure H K signs) (x : H) :
     J.J.val (J.J.val x) = signs.epsJ • x := by
   have h := congrArg (fun T : EndR H => T x) J.J_square
-  simpa only [ContinuousLinearMap.comp_apply, smul_eq_mul] using h
+  simpa only [ContinuousLinearMap.comp_apply, smul_apply,
+    ContinuousLinearMap.id_apply] using h
 
 theorem realStructure_two_cycle_apply_of_epsJ_one
     {H : Type*} [NormedAddCommGroup H] [NormedSpace ℝ H]

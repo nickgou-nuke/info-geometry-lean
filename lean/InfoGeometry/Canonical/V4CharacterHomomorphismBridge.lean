@@ -42,21 +42,19 @@ def characterUnit : V4Char → ZetaKlein4 → ℝˣ
     fin_cases g₁ <;> fin_cases g₂ <;> rfl
 
 def spatialCharacter (g : ZetaKlein4) : ℝ :=
-  if g.2 = 0 then 1 else -1
+  (-1 : ℝ) ^ g.2.val
 
 theorem spatialCharacter_mul (g h : ZetaKlein4) :
     spatialCharacter (g + h) = spatialCharacter g * spatialCharacter h := by
-  have h_scalar : ∀ a b : ZMod 2,
-      (if (a + b) = 0 then (1 : ℝ) else -1) =
-      (if a = 0 then 1 else -1) * (if b = 0 then 1 else -1) := by
-    intro a b
-    fin_cases a <;> fin_cases b
-    · simp
-    · simp
-    · simp
-    · have h : (1 : ZMod 2) + 1 = 0 := rfl
-      simp [h]
-  exact h_scalar g.2 h.2
+  change (-1 : ℝ) ^ (g.2 + h.2).val =
+    (-1 : ℝ) ^ g.2.val * (-1 : ℝ) ^ h.2.val
+  rw [ZMod.val_add]
+  calc
+    (-1 : ℝ) ^ ((g.2.val + h.2.val) % 2) =
+        (-1 : ℝ) ^ (g.2.val + h.2.val) := by
+          symm
+          exact pow_eq_pow_mod _ (by norm_num : (-1 : ℝ) ^ 2 = 1)
+    _ = (-1 : ℝ) ^ g.2.val * (-1 : ℝ) ^ h.2.val := by rw [pow_add]
 
 theorem characterEval_chih (g : ZetaKlein4) :
     V4Char.eval V4Char.chih g =
@@ -67,14 +65,15 @@ theorem characterEval_chih (g : ZetaKlein4) :
 theorem characterEval_chis (g : ZetaKlein4) :
     V4Char.eval V4Char.chis g = spatialCharacter g := by
   rcases g with ⟨g₁, g₂⟩
-  fin_cases g₁ <;> fin_cases g₂ <;> rfl
+  fin_cases g₁ <;> fin_cases g₂ <;>
+    norm_num [V4Char.eval, spatialCharacter, ZMod.val]
 
 theorem characterEval_chiu (g : ZetaKlein4) :
     V4Char.eval V4Char.chiu g =
       ZetaKlein4.heightCharacter g * spatialCharacter g := by
   rcases g with ⟨g₁, g₂⟩
   fin_cases g₁ <;> fin_cases g₂ <;>
-    simp [V4Char.eval, ZetaKlein4.heightCharacter, spatialCharacter]
+    norm_num [V4Char.eval, ZetaKlein4.heightCharacter, spatialCharacter, ZMod.val]
 
 theorem characterEval_product (χ : V4Char) (g h : ZetaKlein4) :
     V4Char.eval χ (g + h) =

@@ -23,8 +23,9 @@ example : (NPart 3 - 1) ^ 2 = 0 := shear_unipotent 3
 example : NPart 0 = (1 : Mat2) := (NPart_eq_one_iff 0).mpr rfl
 
 example : NPart 3 ≠ 1 := by
-  rw [NPart_eq_one_iff]
-  norm_num
+  intro h
+  have hzero : (3 : ℝ) = 0 := (NPart_eq_one_iff 3).mp h
+  norm_num at hzero
 
 example (changeOfBasis : Mat2ˣ) :
     Polynomial.aeval

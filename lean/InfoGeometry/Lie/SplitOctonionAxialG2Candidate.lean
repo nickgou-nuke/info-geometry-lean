@@ -127,8 +127,9 @@ theorem axialCartanG2TwoCandidate_preserves_product
 theorem axialCartanG2TwoCandidate_injective
     (k : Fin 3 → ℝ) (hk : ∑ i, k i = 0) (t : ℝ) :
     Function.Injective (axialCartanG2TwoCandidate k hk t).map := by
-  simpa only [axialCartanG2TwoCandidate_apply] using
-    (axialCartanFlow k t).injective
+  intro X Y h
+  rw [axialCartanG2TwoCandidate_apply, axialCartanG2TwoCandidate_apply] at h
+  exact (axialCartanFlow k t).injective h
 
 theorem axialCartanG2TwoCandidate_preserves_null_cone
     (k : Fin 3 → ℝ) (hk : ∑ i, k i = 0) (t : ℝ) (X : CZ)
@@ -193,9 +194,7 @@ theorem axialCartanG2TwoCandidate_boundary_packet
         (axialCartanG2TwoCandidate k hk t).map (anticolorPart X) =
           anticolorPart ((axialCartanG2TwoCandidate k hk t).map X)) := by
   refine ⟨?_, ?_, ?_, ?_⟩
-  · intro X Y
-    simpa only [axialCartanG2TwoCandidate_apply] using
-      axialCartanFlow_map_mul k hk t X Y
+  · exact axialCartanG2TwoCandidate_preserves_product k hk t
   · intro X
     exact axialCartanCompositionAut_preserves_det k hk t X
   · intro X

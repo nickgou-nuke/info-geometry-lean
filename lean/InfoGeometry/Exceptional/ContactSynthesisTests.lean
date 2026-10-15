@@ -34,7 +34,7 @@ example (mass : ℝ) : fredholm_index mass = 0 := fredholm_index_eq_zero mass
 #print axioms gradeSpaces_span
 #print axioms polarized_triple_closed
 #print axioms TrialityContactCantor.range_reynolds_eq_fixedLieSubalgebra
-#print axioms InfoGeometry.Algebra.KantorTripleFiveGrading.KantorTripleSystem.triple_cubic_phase_invariant
+#print axioms InfoGeometry.Algebra.KantorTripleFiveGrading.KantorTripleSystem.K_K_eq_DK_add_KD
 #print axioms fredholm_index_eq_chiral_kernel_difference
 
 end InfoGeometry.Exceptional.ContactSynthesisTests

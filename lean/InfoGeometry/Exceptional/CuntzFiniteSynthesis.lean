@@ -15,7 +15,7 @@ inductive Archetype
   | determinantFormula
   | nullFamily
   | intervalProjection
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
 
 abbrev DependencyContext := Finset Archetype
 
@@ -52,6 +52,8 @@ variable (first second : Algebra)
 variable (firstIsometry : star first * first = 1)
 variable (secondIsometry : star second * second = 1)
 variable (partition : first * star first + second * star second = 1)
+
+include firstIsometry secondIsometry partition
 
 theorem orthogonality_survives_left_multiplication (operator : Algebra) :
     operator * (star first * second) = 0 := by

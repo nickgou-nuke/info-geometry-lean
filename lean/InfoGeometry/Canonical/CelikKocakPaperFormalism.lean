@@ -138,7 +138,7 @@ theorem pairTerm_commute_of_ne {i j : ℕ} (hij : i ≠ j) :
             (FunctionSpace.tilt (n := n) ⟨j, hj⟩) := by
           have h := FunctionSpace.tilt_switch_comm_of_ne (n := n) (i := ⟨j, hj⟩) (j := ⟨i, hi⟩) (by
             intro h; exact hij (congrArg Fin.val h.symm))
-          simpa [Commute, mul_assoc] using h.symm
+          exact h.symm
         have hsi_sj : Commute (FunctionSpace.switch (n := n) ⟨i, hi⟩)
             (FunctionSpace.switch (n := n) ⟨j, hj⟩) := by
           exact FunctionSpace.switch_comm (n := n) (i := ⟨i, hi⟩) (j := ⟨j, hj⟩) (by
@@ -263,7 +263,7 @@ theorem switch_comm_pairPrefix {m j : ℕ} (hmj : m ≤ j) (hj : j < n) :
             (FunctionSpace.tilt (n := n) ⟨m, hlt⟩) := by
           have h := FunctionSpace.tilt_switch_comm_of_ne (n := n) (i := ⟨m, hlt⟩) (j := ⟨j, hj⟩) (by
             intro h; exact hmneNat (congrArg Fin.val h.symm))
-          simpa [Commute, mul_assoc] using h.symm
+          exact h.symm
         have hss : Commute (FunctionSpace.switch (n := n) ⟨j, hj⟩)
             (FunctionSpace.switch (n := n) ⟨m, hlt⟩) := by
           exact FunctionSpace.switch_comm (n := n) (i := ⟨j, hj⟩) (j := ⟨m, hlt⟩) (by
@@ -531,15 +531,13 @@ theorem cl11ToMat_map_e2 :
 
 /-- The `Cl(1,1)` generator `e₁` maps to the first real Pauli matrix. -/
 theorem cl11PauliMatrixEquiv_map_e1 :
-    cl11PauliMatrixEquiv (CliffordAlgebra.ι InfoGeometry.Clifford.Cl11Matrix.q11 (1, 0)) = Eplus :=
-  by
-    simpa [cl11PauliMatrixEquiv] using cl11ToMat_map_e1
+    cl11PauliMatrixEquiv (CliffordAlgebra.ι InfoGeometry.Clifford.Cl11Matrix.q11 (1, 0)) = Eplus := by
+  simp [cl11PauliMatrixEquiv]
 
 /-- The `Cl(1,1)` generator `e₂` maps to the second real Pauli matrix. -/
 theorem cl11PauliMatrixEquiv_map_e2 :
-    cl11PauliMatrixEquiv (CliffordAlgebra.ι InfoGeometry.Clifford.Cl11Matrix.q11 (0, 1)) = Eminus :=
-  by
-    simpa [cl11PauliMatrixEquiv] using cl11ToMat_map_e2
+    cl11PauliMatrixEquiv (CliffordAlgebra.ι InfoGeometry.Clifford.Cl11Matrix.q11 (0, 1)) = Eminus := by
+  simp [cl11PauliMatrixEquiv]
 
 /-- The `Cl(1,1)` matrix representation decomposes in the Pauli basis. -/
 theorem cl11PauliMatrixEquiv_decompose (M : Mat2) :

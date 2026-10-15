@@ -120,9 +120,18 @@ theorem commutatorKernel_iff (e : PCExponent) :
   dsimp [isCommutatorKernel, abelianQuotient]
   constructor
   · intro h
-    have h0 : boolToF2 (e 0) = 0 := by simpa using congr_fun h 0
-    have h1 : boolToF2 (e 1) = 0 := by simpa using congr_fun h 1
-    have h2 : boolToF2 (e 4) = 0 := by simpa using congr_fun h 2
+    have h0 : boolToF2 (e 0) = 0 := by
+      have hi := congr_fun h (0 : Fin 3)
+      change boolToF2 (e 0) = 0 at hi
+      exact hi
+    have h1 : boolToF2 (e 1) = 0 := by
+      have hi := congr_fun h (1 : Fin 3)
+      change boolToF2 (e 1) = 0 at hi
+      exact hi
+    have h2 : boolToF2 (e 4) = 0 := by
+      have hi := congr_fun h (2 : Fin 3)
+      change boolToF2 (e 4) = 0 at hi
+      exact hi
     revert h0 h1 h2
     cases e 0 <;> cases e 1 <;> cases e 4 <;> simp
   · rintro ⟨h0, h1, h4⟩
@@ -256,24 +265,34 @@ theorem split24_fiber_card (b : Fin 6) :
 -/
 theorem embed6to24_hammingWeight (v : Word6) :
     hammingWeight24 (embed6to24 v) = 4 * hammingWeight6 v := by
-  dsimp [hammingWeight24, hammingWeight6, embed6to24]
-  have h_decomp : (Finset.univ.filter (fun i : Fin 24 => v (split24 i).2 ≠ 0)) =
+  change (Finset.univ.filter (fun i : Fin 24 => embed6to24 v i ≠ 0)).card =
+      4 * (Finset.univ.filter (fun i : Fin 6 => v i ≠ 0)).card
+  have h_decomp : (Finset.univ.filter (fun i : Fin 24 => embed6to24 v i ≠ 0)) =
       (Finset.univ.filter (fun b : Fin 6 => v b ≠ 0)).biUnion
         (fun b => Finset.univ.filter (fun i : Fin 24 => (split24 i).2 = b)) := by
     ext i
-    simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_biUnion]
     constructor
-    · intro h
-      exact ⟨(split24 i).2, h, rfl⟩
-    · rintro ⟨b, hb, rfl⟩
-      exact hb
-  rw [h_decomp, Finset.card_biUnion]
-  · have h_const : ∀ b ∈ Finset.univ.filter (fun b : Fin 6 => v b ≠ 0),
+    · intro hi
+      have hvi : embed6to24 v i ≠ 0 := (Finset.mem_filter.mp hi).2
+      refine Finset.mem_biUnion.mpr ⟨(split24 i).2, ?_, ?_⟩
+      · apply Finset.mem_filter.mpr
+        exact ⟨Finset.mem_univ _, by simpa [embed6to24] using hvi⟩
+      · apply Finset.mem_filter.mpr
+        exact ⟨Finset.mem_univ _, rfl⟩
+    · intro hi
+      obtain ⟨b, hb, hi⟩ := Finset.mem_biUnion.mp hi
+      have hb' : v b ≠ 0 := (Finset.mem_filter.mp hb).2
+      have hib : (split24 i).2 = b := (Finset.mem_filter.mp hi).2
+      apply Finset.mem_filter.mpr
+      refine ⟨Finset.mem_univ _, ?_⟩
+      simpa [embed6to24, hib] using hb'
+  have h_decomp_card := congrArg Finset.card h_decomp
+  rw [h_decomp_card, Finset.card_biUnion]
+  · have h_const : ∀ b ∈ Finset.univ.filter (fun b : Fin 6 => ¬ v b = 0),
         (Finset.univ.filter (fun i : Fin 24 => (split24 i).2 = b)).card = 4 := by
       intro b _
       exact split24_fiber_card b
     rw [Finset.sum_congr rfl h_const, Finset.sum_const, nsmul_eq_mul, mul_comm]
-    simp only [ne_eq]
     rfl
   · intro b1 hb1 b2 hb2 hne
     dsimp [Function.onFun]

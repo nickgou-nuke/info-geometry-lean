@@ -98,8 +98,7 @@ theorem hasDerivAt_crossRatio01 {s : ℂ} (hs1 : s ≠ 1) :
   unfold crossRatio01 cayleyToFugacity
   have hden : 1 - s ≠ 0 := sub_ne_zero.mpr hs1.symm
   have hnum : HasDerivAt (fun z : ℂ => z) 1 s := hasDerivAt_id s
-  have hdenDeriv : HasDerivAt (fun z : ℂ => 1 - z) (-1) s := by
-    simpa using (hasDerivAt_const s (1 : ℂ)).sub (hasDerivAt_id s)
+  have hdenDeriv : HasDerivAt (fun z : ℂ => 1 - z) (-1) s := (hasDerivAt_id s).const_sub 1
   have hq := hnum.div hdenDeriv hden
   convert hq using 1
   field_simp [hden]
@@ -129,7 +128,10 @@ theorem hasDerivAt_bipolarLog {s : ℂ}
     HasDerivAt bipolarLog (dlog01 s) s := by
   have hq := hasDerivAt_crossRatio01 hs.2
   have hlog := HasDerivAt.clog hq hslit
-  convert hlog using 1
+  change HasDerivAt bipolarLog (1 / (1 - s) ^ 2 / crossRatio01 s) s at hlog
+  suffices 1 / (1 - s) ^ 2 / crossRatio01 s = dlog01 s by
+    rw [← this]
+    exact hlog
   rw [dlog01_eq_one_div_mul hs]
   rcases hs with ⟨hs0, hs1⟩
   have h1s : 1 - s ≠ 0 := sub_ne_zero.mpr hs1.symm

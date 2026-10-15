@@ -60,12 +60,11 @@ theorem transpose_o55_preserves_spin_factor_determinant
   have hconj :
       (Phi emb X).transpose * (G * splitMetric10D K * G.transpose) * Phi emb X =
         (fun _ _ => JordanMatrix2.determinant X) := by
-    calc
-      (Phi emb X).transpose * (G * splitMetric10D K * G.transpose) * Phi emb X
-          = (Phi emb X).transpose * (splitMetric10D K) * Phi emb X := by
-              simpa [Matrix.mul_assoc] using
-                congrArg (fun M => (Phi emb X).transpose * M * Phi emb X) hG
-      _ = (fun _ _ => JordanMatrix2.determinant X) := isometry emb X
+    have hG_subst : (Phi emb X).transpose * (G * splitMetric10D K * G.transpose) * Phi emb X =
+        (Phi emb X).transpose * (splitMetric10D K) * Phi emb X := by
+      simpa [Matrix.mul_assoc] using
+        congrArg (fun M => (Phi emb X).transpose * M * Phi emb X) hG
+    rw [hG_subst, isometry emb X]
   exact hleft.trans hconj
 
 end InfoGeometry.Canonical

@@ -97,21 +97,42 @@ theorem c12Action_generator_packet (v : State) :
 def parityUnit (g : Deck2) : StateUnits :=
   if g = 0 then 1 else masterUnit ^ 6
 
+theorem parityUnit_zero : parityUnit 0 = 1 := by
+  unfold parityUnit
+  simp
+
+theorem parityUnit_one : parityUnit 1 = masterUnit ^ 6 := by
+  unfold parityUnit
+  have : (1 : Deck2) ≠ 0 := by decide
+  simp [this]
+
 theorem masterUnit_twelve : masterUnit ^ 12 = 1 := by
   apply Units.ext
   exact masterTwelve_twelve
 
+theorem deck2_cases (x : Deck2) : x = 0 ∨ x = 1 := by
+  have h := ZMod.val_lt x
+  have h1_val : (1 : Deck2).val = 1 := rfl
+  rcases eq_or_ne x.val 0 with h0 | hne
+  · left; exact (ZMod.val_eq_zero x).1 h0
+  · right
+    apply ZMod.val_injective 2
+    rw [h1_val]
+    omega
+
+
 theorem parityUnit_add (g h : Deck2) :
     parityUnit (g + h) = parityUnit g * parityUnit h := by
-  have h11 : (1 + 1 : Deck2) = 0 := rfl
+  have h11 : (1 + 1 : Deck2) = 0 := by decide
   have h6 : (masterUnit ^ 6) * (masterUnit ^ 6) = 1 := by
     rw [← pow_two, ← pow_mul, show 6 * 2 = 12 by norm_num,
       masterUnit_twelve]
-  fin_cases g <;> fin_cases h
-  · simp [parityUnit]
-  · simp [parityUnit]
-  · simp [parityUnit]
-  · simp [parityUnit, h6, h11]
+  rcases deck2_cases g with rfl | rfl <;>
+  rcases deck2_cases h with rfl | rfl
+  · rw [show (0 + 0 : Deck2) = 0 from rfl, parityUnit_zero, mul_one]
+  · rw [show (0 + 1 : Deck2) = 1 from rfl, parityUnit_zero, parityUnit_one, one_mul]
+  · rw [show (1 + 0 : Deck2) = 1 from rfl, parityUnit_zero, parityUnit_one, mul_one]
+  · rw [h11, parityUnit_zero, parityUnit_one, h6]
 
 def parityAction (g : Deck2) : State →ₗ[ℂ] State :=
   (parityUnit g).val.mulVecLin

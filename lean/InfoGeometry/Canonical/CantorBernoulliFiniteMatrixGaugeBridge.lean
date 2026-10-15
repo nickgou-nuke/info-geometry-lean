@@ -52,12 +52,12 @@ theorem matrixTraceState_single (n : ℕ) (i j : Fin (2 ^ n)) :
 theorem matrixTraceState_single_diag (n : ℕ) (i : Fin (2 ^ n)) :
     matrixTraceState n (Matrix.single i i 1) =
       (1 / (2 ^ n : ℂ)) := by
-  simpa only [if_pos rfl] using matrixTraceState_single n i i
+  simpa using matrixTraceState_single n i i
 
 theorem matrixTraceState_single_cross {n : ℕ}
     {i j : Fin (2 ^ n)} (hij : i ≠ j) :
     matrixTraceState n (Matrix.single i j 1) = 0 := by
-  simpa only [if_neg hij] using matrixTraceState_single n i j
+  simpa [hij] using matrixTraceState_single n i j
 
 theorem matrixTraceState_single_diag_eq_binary_weight
     (n : ℕ) (i : Fin (2 ^ n)) :

@@ -61,8 +61,7 @@ theorem continuous_stageMap : ∀ {i j} (f : TwoStage.Hom i j),
     Continuous (stageMap f)
   | _, _, .idInitial => continuous_id
   | _, _, .step => by
-      unfold stageMap amplituhedronInclusion
-      fun_prop
+      exact (amplituhedronInclusion 3).continuous_of_finiteDimensional
   | _, _, .idExtended => continuous_id
 
 def amplituhedronTopCatStageDiagram : TwoStage ⥤ TopCat where

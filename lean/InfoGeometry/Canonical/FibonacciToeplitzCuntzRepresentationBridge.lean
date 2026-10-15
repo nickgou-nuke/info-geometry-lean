@@ -158,7 +158,7 @@ theorem matrixToCuntz_conjTranspose {K A : Type*} [CommRing K] [StarRing K] [Rin
 theorem matrixToCuntz_mul {K A : Type*} [CommRing K] [Ring A] [Algebra K A] [StarRing A]
     (ck : CuntzTwoIsometry K A) (M N : Matrix (Fin 2) (Fin 2) K) :
     matrixToCuntz ck (M * N) = matrixToCuntz ck M * matrixToCuntz ck N := by
-  dsimp [matrixToCuntz, mul_apply]
+  simp only [matrixToCuntz, mul_apply]
   rw [Fin.sum_univ_two, Fin.sum_univ_two, Fin.sum_univ_two, Fin.sum_univ_two]
   simp only [mul_add, add_mul, Algebra.mul_smul_comm, Algebra.smul_mul_assoc]
   have h11 : (ck.S1 * star ck.S1) * (ck.S1 * star ck.S1) = ck.S1 * star ck.S1 := by
@@ -331,19 +331,15 @@ theorem matrixToCuntz_injective {K A : Type*} [CommRing K] [Ring A] [Algebra K A
   ext i j
   fin_cases i <;> fin_cases j
   · have h00 := congr_arg (fun x => star ck.S1 * x * ck.S1) h_eq
-    dsimp at h00
     rw [S1_star_matrixToCuntz_S1 ck M, S1_star_matrixToCuntz_S1 ck N] at h00
     exact hScalar h00
   · have h01 := congr_arg (fun x => star ck.S1 * x * ck.S2) h_eq
-    dsimp at h01
     rw [S1_star_matrixToCuntz_S2 ck M, S1_star_matrixToCuntz_S2 ck N] at h01
     exact hScalar h01
   · have h10 := congr_arg (fun x => star ck.S2 * x * ck.S1) h_eq
-    dsimp at h10
     rw [S2_star_matrixToCuntz_S1 ck M, S2_star_matrixToCuntz_S1 ck N] at h10
     exact hScalar h10
   · have h11 := congr_arg (fun x => star ck.S2 * x * ck.S2) h_eq
-    dsimp at h11
     rw [S2_star_matrixToCuntz_S2 ck M, S2_star_matrixToCuntz_S2 ck N] at h11
     exact hScalar h11
 

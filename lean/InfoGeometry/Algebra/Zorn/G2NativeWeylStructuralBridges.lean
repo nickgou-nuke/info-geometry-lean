@@ -142,8 +142,8 @@ noncomputable def parameterCanonicalCartanPlaneEquiv :
   constructor
   · intro p q h
     apply Subtype.ext
-    simpa [f] using congrArg
-      (fun z : G2NativeWeylRootSpaceTransport.canonicalCartanParameterPlane => (z : _)) h
+    apply parameterCanonicalLieEquiv.injective
+    exact congrArg Subtype.val h
   · intro q
     rcases q.property with ⟨p, hp, hq⟩
     refine ⟨⟨p, hp⟩, ?_⟩
@@ -155,8 +155,9 @@ noncomputable def parameterCanonicalCartanPlaneEquiv :
     parameterCanonicalCartanPlaneEquiv.symm
         ⟨parameterCanonicalLieEquiv p,
           mem_canonicalParameterSubmodule p.property⟩ = p := by
-  apply parameterCanonicalCartanPlaneEquiv.injective
-  simp [parameterCanonicalCartanPlaneEquiv]
+  change parameterCanonicalCartanPlaneEquiv.symm
+    (parameterCanonicalCartanPlaneEquiv p) = p
+  exact parameterCanonicalCartanPlaneEquiv.symm_apply_apply p
 
 noncomputable def realWeylCycle_canonicalCartanParameterPlaneEquiv :
     G2NativeWeylRootSpaceTransport.canonicalCartanParameterPlane ≃ₗ[ℝ]

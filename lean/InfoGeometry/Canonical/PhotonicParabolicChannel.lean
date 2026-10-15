@@ -64,8 +64,7 @@ theorem chiral_collapse_iff_nilpotent (Ω : ParOp) :
 theorem pure_directional_nilpotent (χ : ℝ) :
   mul ({ scalar := (0 : ℝ), directional := χ } : ParOp)
       ({ scalar := (0 : ℝ), directional := χ } : ParOp) = zero := by
-  simpa using (
-    ParabolicContractionBridge.metricParabolic_kernel_nilpotent χ)
+  exact GeneralizedOperator.parabolic_pure_square_zero χ
 
 /-- Concrete pure-directional channel collapse. -/
 theorem pure_directional_collapse (χ : ℝ) :

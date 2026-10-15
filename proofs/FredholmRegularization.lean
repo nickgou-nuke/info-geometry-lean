@@ -63,8 +63,7 @@ theorem den_mul_inv (c s : ℂ) (h : c^2 - s^2 = 1) (hc : c + 1 ≠ 0) :
     simp [DeltaForm, denInv, σ1, Matrix.mul_apply, Matrix.smul_apply,
       Matrix.add_apply, Matrix.sub_apply, Fin.sum_univ_two] <;>
     field_simp [hc, two_ne_zero] <;>
-    ring_nf at h ⊢ <;>
-    rw [h] <;> ring
+    first | linear_combination h | ring
 
 /-- Fredholm/Cayley regularization of `cI+sσ₁` gives `(s/(c+1))σ₁`. -/
 theorem fredholm_pauli_regularization (c s : ℂ) (h : c^2 - s^2 = 1) (hc : c + 1 ≠ 0) :
@@ -73,8 +72,7 @@ theorem fredholm_pauli_regularization (c s : ℂ) (h : c^2 - s^2 = 1) (hc : c + 
     simp [DeltaForm, denInv, σ1, Matrix.mul_apply, Matrix.smul_apply,
       Matrix.add_apply, Matrix.sub_apply, Fin.sum_univ_two] <;>
     field_simp [hc, two_ne_zero] <;>
-    ring_nf at h ⊢ <;>
-    rw [h] <;> ring
+    first | linear_combination h | ring
 
 #check fredholm_at_defect
 #check fredholm_zero_iff

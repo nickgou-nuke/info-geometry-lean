@@ -50,7 +50,7 @@ theorem rankOneGenerator_sq (x : RankOneCarrier) :
       Matrix.mul_apply, Fin.sum_univ_two, Matrix.smul_apply] <;>
     ring
 
-  theorem rankOneGenerator_square_preserving (x : RankOneCarrier) :
+theorem rankOneGenerator_square_preserving (x : RankOneCarrier) :
     rankOneGenerator x * rankOneGenerator x =
       (algebraMap ℂ RankOneMatrix) (rankOneQuadratic x) := by
   simpa [Algebra.algebraMap_eq_smul_one] using rankOneGenerator_sq x

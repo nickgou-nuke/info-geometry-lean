@@ -10,7 +10,13 @@ namespace FibAnyonTrueHexagon
 inductive FibLabel where
 | I
 | tau
-deriving DecidableEq, Fintype
+deriving DecidableEq
+
+instance : Fintype FibLabel where
+  elems := {FibLabel.I, FibLabel.tau}
+  complete := by
+    intro x
+    cases x <;> simp
 
 open FibLabel
 

@@ -104,7 +104,7 @@ theorem charpoly_of_upperTriangular_fin
     (hA : UpperTriangular A) :
     A.charpoly = ∏ i : Fin n, (X - C (A i i)) := by
   classical
-  exact Matrix.charpoly_of_upperTriangular A (by
+  exact Matrix.charpoly_of_isUpperTriangular A (by
     intro i j hij
     exact hA hij)
 
@@ -196,8 +196,11 @@ theorem schurStep_first_col
     simp
   have hW : Matrix.mulVec W (Finsupp.single 0 (1 : K)) = eigenvector := by
     have htmp : Matrix.mulVec W (basis.repr (basis 0)) = basis 0 := by
-      convert Module.Basis.toMatrix_mulVec_repr (b' := std) (b := basis)
-        (m := basis 0) using 1
+      have h := Module.Basis.toMatrix_mulVec_repr (b' := std) (b := basis) (m := basis 0)
+      have hstd : (std.repr (basis 0) : Fin (n + 1) → K) = basis 0 := by
+        ext j
+        simp [std]
+      rw [h, hstd]
     calc
       Matrix.mulVec W (Finsupp.single 0 (1 : K))
           = Matrix.mulVec W (basis.repr (basis 0)) := by
@@ -208,8 +211,12 @@ theorem schurStep_first_col
     rw [← hhead]
     exact hrepr0
   have hWinv0 : Matrix.mulVec WInv eigenvector = basis.repr eigenvector := by
-    convert Module.Basis.toMatrix_mulVec_repr (b := std) (b' := basis)
-      (m := eigenvector) using 1
+    have h := Module.Basis.toMatrix_mulVec_repr (b := std) (b' := basis) (m := eigenvector)
+    have hstd : (std.repr eigenvector : Fin (n + 1) → K) = eigenvector := by
+      ext j
+      simp [std]
+    rw [← hstd]
+    exact h
   have hWinv : Matrix.mulVec WInv eigenvector = Finsupp.single 0 (1 : K) := by
     rw [hrepr] at hWinv0
     exact hWinv0
@@ -513,8 +520,7 @@ theorem of_basis
         simpa [WInv, W, std] using
           (schurStep_first_col (K := K) (n := n) basis A eigenvector hhead eigval heig) }
   refine ⟨S, ?_, ?_⟩
-  · change S.A' 0 0 = eigval
-    rw [S.first_col_eq]
+  · rw [S.first_col_eq]
     dsimp [S]
   · intro i hi
     rw [S.first_col_eq]
@@ -571,7 +577,7 @@ theorem schurStep_block_form (S : SchurStepPacket K n) :
         S.tailMatrix := by
   classical
   ext x y
-  cases x <;> cases y <;> simp [schurStepEquiv, tailMatrix, S.first_col_eq]
+  cases x <;> cases y <;> { simp [schurStepEquiv, S.first_col_eq]; rfl }
 
 /--
 Recursive Schur tail assembly in block form.

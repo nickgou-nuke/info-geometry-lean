@@ -52,7 +52,10 @@ theorem quadraticReflectionElement_conjugate
   have h := quadraticReflection_conjugate
     (orthogonalGroup55ToIsometry g) v hv
   have hx := congrArg (fun f : Q55.IsometryEquiv Q55 => f x) h
-  simpa [orthogonalGroup55ToIsometry] using hx
+  change (orthogonalGroup55ToIsometry g)
+      (quadraticReflection v hv ((orthogonalGroup55ToIsometry g).symm x)) =
+    quadraticReflection ((orthogonalGroup55ToIsometry g) v) _ x
+  exact hx
 
 instance quadraticReflectionSubgroup_normal :
     quadraticReflectionSubgroup.Normal := by

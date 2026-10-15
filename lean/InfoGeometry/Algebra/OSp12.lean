@@ -77,7 +77,7 @@ theorem projVac_add_projUp_add_projDown (O : Op V) :
     _ = projVac O + InfoGeometry.Canonical.FibonacciParafermionAtoms.drazin_projector O := by
             rw [hdrazin]
     _ = 1 := by
-            simpa [projVac] using
+            simpa [projVac, InfoGeometry.Canonical.FibonacciParafermionAtoms.proj_vacancy] using
               (InfoGeometry.Canonical.FibonacciParafermionAtoms.bulk_boundary_completeness
                 (O := O))
 

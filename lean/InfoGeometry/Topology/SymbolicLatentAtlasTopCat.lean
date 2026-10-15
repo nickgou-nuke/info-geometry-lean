@@ -114,7 +114,8 @@ theorem SymbolicLatentAtlasCompatibility.featureTransitionTopCatHom_isIso
     IsIso H.featureTransitionTopCatHom := by
   refine IsIso.mk ⟨H.symm.featureTransitionTopCatHom, ?_, ?_⟩
   · exact H.featureTransitionTopCatHom_symm
-  · simpa using H.symm.featureTransitionTopCatHom_symm
+  · ext z x
+    exact congrFun (H.featureEquiv.apply_symm_apply z) x
 
 theorem SymbolicLatentAtlasCompatibility.featureTransitionTopCatHom_intertwines
     {X : Type} [TopologicalSpace X]

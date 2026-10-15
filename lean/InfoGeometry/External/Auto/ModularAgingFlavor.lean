@@ -119,7 +119,6 @@ lemma jarlskog_trace_identity :
   unfold jarlskogCommutatorDeterminant
   rw [massMatrix_commutator_eq_zero]
   simp
-  exact Matrix.det_zero ⟨0⟩
 
 def determinantIdentityValue : Q := 1
 
@@ -239,7 +238,7 @@ theorem determinantIdentityValue_eq_one : determinantIdentityValue = 1 := rfl
 theorem jarlskogCommutatorDeterminant_eq_zero : jarlskogCommutatorDeterminant = 0 := by
   unfold jarlskogCommutatorDeterminant
   rw [massMatrix_commutator_eq_zero]
-  exact Matrix.det_zero ⟨0⟩
+  exact Matrix.det_zero
 
 theorem colorAnomaly_eq_zero : colorAnomaly = 0 := by
   norm_num [colorAnomaly, hypercharge_Q_L, hypercharge_u_R, hypercharge_d_R]

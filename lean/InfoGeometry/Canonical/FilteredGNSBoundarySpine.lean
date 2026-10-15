@@ -44,11 +44,6 @@ variable
     ContinuousStarInductiveSystem.CompatibleStateFamily
       Stage sys)
 
-local instance globalBoundedOperatorCStarAlgebra :
-    CStarAlgebra
-      (GNSHilbertColimit Stage sys ω →L[ℂ]
-        GNSHilbertColimit Stage sys ω) where
-
 /-- Finite stage into the algebraic star-colimit. -/
 abbrev finiteToAlgebraic (i : I) :
     Stage i →⋆ₐ[ℂ] AlgebraicStarDirectLimit Stage sys :=

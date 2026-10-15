@@ -206,9 +206,14 @@ theorem chiralOperatorObservationRangeTensorR12CompHausIso_yang_baxter :
   apply ContinuousMap.ext
   intro p
   change ChiralOperatorObservationRangeTensor3 A at p
-  simpa only [Functor.map_comp, TopCat.comp_app] using
-    congrArg (fun e => e p)
-      (chiralOperatorObservationRangeTensorR12Homeomorph_yang_baxter (A := A))
+  change ((chiralOperatorObservationRangeTensorR12Homeomorph (A := A)).trans
+      ((chiralOperatorObservationRangeTensorR23Homeomorph (A := A)).trans
+        (chiralOperatorObservationRangeTensorR12Homeomorph (A := A))) p) =
+    ((chiralOperatorObservationRangeTensorR23Homeomorph (A := A)).trans
+      ((chiralOperatorObservationRangeTensorR12Homeomorph (A := A)).trans
+        (chiralOperatorObservationRangeTensorR23Homeomorph (A := A))) p)
+  exact congrArg (fun e => e p)
+    (chiralOperatorObservationRangeTensorR12Homeomorph_yang_baxter (A := A))
 
 theorem chiralOperatorObservationRangeTensorR12CompHausIso_quadratic :
     (chiralOperatorObservationRangeTensorR12CompHausIso (A := A)).hom ≫

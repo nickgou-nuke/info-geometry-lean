@@ -117,7 +117,9 @@ theorem toNC_neg (X : ChiralZornMatrix A) :
 theorem toNC_sub (X Y : ChiralZornMatrix A) :
     toNC (X - Y) = toNC X + -toNC Y := by
   calc
-    toNC (X - Y) = toNC (X + -Y) := by rw [sub_eq_add_neg]
+    toNC (X - Y) = toNC (X + -Y) := by
+      rw [sub_eq_add_neg]
+      rfl
     _ = toNC X + toNC (-Y) := toNC_add X (-Y)
     _ = toNC X + -toNC Y := by rw [toNC_neg]
 

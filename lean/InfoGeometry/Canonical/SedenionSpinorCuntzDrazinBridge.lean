@@ -53,7 +53,10 @@ inductive SteeringSector where
   | u
   | v
   | w
-  deriving DecidableEq, Fintype, Repr
+  deriving DecidableEq, Repr
+
+instance : Fintype SteeringSector :=
+  ⟨⟨{.gamma, .theta, .u, .v, .w}, by decide⟩, by intro s; cases s <;> decide⟩
 
 namespace SteeringSector
 

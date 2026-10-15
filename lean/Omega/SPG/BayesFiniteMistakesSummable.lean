@@ -19,8 +19,9 @@ private theorem bayesMismatchEvent_measure_eq_scanError
     (μ : PMF α) (obs : α → β) (P : Set α) :
     μ.toMeasure (bayesMismatchEvent μ obs P) = scanError μ obs P := by
   rw [PMF.toMeasure_apply_fintype]
-  simpa [bayesMismatchEvent, observableApproxError] using
-    (observableApproxError_optimal_eq_scanError μ obs P)
+  change observableApproxError μ obs P
+    (optimalObservableSet μ obs P) = scanError μ obs P
+  exact observableApproxError_optimal_eq_scanError μ obs P
 
 private theorem not_mem_bayesMismatchEvent_iff
     {α β : Type*} [Fintype α] (μ : PMF α) (obs : α → β) (P : Set α) (x : α) :

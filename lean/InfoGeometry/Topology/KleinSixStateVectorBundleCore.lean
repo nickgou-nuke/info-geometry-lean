@@ -23,19 +23,32 @@ abbrev State := Fin 2 × Fin 3 → ℂ
 
 /-- An injective self-map of the two-element deck group is translation by its
 value at zero. -/
+private theorem deck2_eq_zero_or_one (x : Deck2) : x = 0 ∨ x = 1 := by
+  by_cases hx : x.val = 0
+  · exact Or.inl ((ZMod.val_eq_zero x).1 hx)
+  · have hxval : x.val = 1 := by
+      have hlt := ZMod.val_lt x
+      omega
+    exact Or.inr (ZMod.val_injective 2 hxval)
+
 theorem injective_deck2_eq_add_apply_zero (f : Deck2 → Deck2)
     (hf : Function.Injective f) (g : Deck2) :
     f g = g + f 0 := by
-  have h11 : (1 + 1 : Deck2) = 0 := by decide
-  fin_cases g
+  rcases deck2_eq_zero_or_one g with rfl | rfl
   · simp
-  · generalize h0 : f 0 = a
-    generalize h1 : f 1 = b
-    fin_cases a <;> fin_cases b
-    · exact False.elim (zero_ne_one (hf (h0.trans h1.symm)))
-    · simp_all
-    · simp_all
-    · exact False.elim (zero_ne_one (hf (h0.trans h1.symm)))
+  · rcases deck2_eq_zero_or_one (f 0) with h0 | h0
+    · have h1 : f 1 = 1 := by
+        rcases deck2_eq_zero_or_one (f 1) with h1 | h1
+        · exact False.elim (zero_ne_one (hf (h0.trans h1.symm)))
+        · exact h1
+      rw [h0, h1]
+      decide
+    · have h1 : f 1 = 0 := by
+        rcases deck2_eq_zero_or_one (f 1) with h1 | h1
+        · exact h1
+        · exact False.elim (zero_ne_one (hf (h0.trans h1.symm)))
+      rw [h0, h1]
+      decide
 
 /-- Deck coordinate of the transition from chart `i` to chart `j`. -/
 def deckTransition (i j : Base) (x : Base) : Deck2 :=
@@ -69,7 +82,7 @@ theorem deckTransition_comp (i j k x : Base)
 theorem continuousOn_deckTransition (i j : Base) :
     ContinuousOn (deckTransition i j)
       ((coverTriv i).baseSet ∩ (coverTriv j).baseSet) := by
-  unfold deckTransition Trivialization.coordChange
+  unfold deckTransition Bundle.Trivialization.coordChange
   exact continuous_snd.continuousOn.comp
     ((coverTriv j).toOpenPartialHomeomorph.continuousOn.comp
       ((coverTriv i).toOpenPartialHomeomorph.continuousOn_symm.comp
@@ -97,7 +110,8 @@ theorem deckFiberMap_add (omega : ℂ)
     (g h : Deck2) (v : State) :
     deckFiberMap (g + h) v = deckFiberMap h (deckFiberMap g v) := by
   have h11 : (1 + 1 : Deck2) = 0 := by decide
-  fin_cases g <;> fin_cases h
+  rcases deck2_eq_zero_or_one g with rfl | rfl <;>
+    rcases deck2_eq_zero_or_one h with rfl | rfl
   · simp [deckFiberMap]
   · simp [deckFiberMap]
   · simp [deckFiberMap]

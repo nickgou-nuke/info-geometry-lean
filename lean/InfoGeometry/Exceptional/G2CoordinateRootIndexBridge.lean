@@ -81,7 +81,7 @@ noncomputable def dihedralCoordinatePermutationRep :
   map_one' := by
     apply Equiv.ext
     intro x
-    simp
+    simp only [Equiv.trans_apply, map_one, Equiv.Perm.one_apply, Equiv.symm_apply_apply]
   map_mul' := by
     intro g h
     apply Equiv.ext
@@ -240,7 +240,9 @@ theorem coordinateRootActionOnNative_reflection_readback
         (finiteRootCoordinateEquiv
           (InfoGeometry.Algebra.Zorn.G2TwoRootSystem.sAction
             (finiteRootCoordinateEquiv.symm x))) := by
-  simpa [InfoGeometry.Algebra.Zorn.G2RootSystemWeylBridge.weylRootAction]
+  simpa [InfoGeometry.Algebra.Zorn.G2RootSystemWeylBridge.weylRootAction,
+      InfoGeometry.Algebra.Zorn.G2RootSystemWeylBridge.cActionPow,
+      InfoGeometry.Algebra.Zorn.G2RootSystemWeylBridge.cActionPowNat]
     using coordinateRootActionOnNative_apply (0, true) x
 
 /- theorem coordinateRootActionOnNative_reflection_apply (x : CoordinateRoot) :

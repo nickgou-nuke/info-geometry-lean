@@ -34,7 +34,7 @@ theorem creation_cross_site_anticommute :
                 ((jwStringWithBase wittCreationBase n i') ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℝ)) = 0
           rw [← Matrix.mul_kronecker_mul, ← Matrix.mul_kronecker_mul]
           rw [← Matrix.add_kronecker]
-          simpa using congrArg (fun A : MatStage n => A ⊗ₖ
+          simpa [jwCreation] using congrArg (fun A : MatStage n => A ⊗ₖ
             (1 : Matrix (Fin 2) (Fin 2) ℝ)) ih
         · have hj_last : j = Fin.last n := Fin.eq_last_of_not_lt hj
           subst j
@@ -65,7 +65,7 @@ theorem creation_cross_site_anticommute :
           simp only [one_mul, mul_one]
           rw [← Matrix.add_kronecker]
           have hp := globalChirality_anticomm_jwCreation n ⟨j, hj⟩
-          simpa using congrArg (fun A : MatStage n => A ⊗ₖ wittCreationBase) hp
+          simpa [globalChirality, jwCreation] using congrArg (fun A : MatStage n => A ⊗ₖ wittCreationBase) hp
         · have hj_last : j = Fin.last n := Fin.eq_last_of_not_lt hj
           subst j
           exact (hij rfl).elim
@@ -93,7 +93,7 @@ theorem annihilation_cross_site_anticommute :
                 ((jwStringWithBase wittAnnihilationBase n i') ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℝ)) = 0
           rw [← Matrix.mul_kronecker_mul, ← Matrix.mul_kronecker_mul,
             ← Matrix.add_kronecker]
-          simpa using congrArg (fun A : MatStage n => A ⊗ₖ
+          simpa [jwAnnihilation] using congrArg (fun A : MatStage n => A ⊗ₖ
             (1 : Matrix (Fin 2) (Fin 2) ℝ)) ih
         · have hj_last : j = Fin.last n := Fin.eq_last_of_not_lt hj
           subst j
@@ -152,7 +152,7 @@ theorem creation_annihilation_cross_site_anticommute :
                 ((jwStringWithBase wittCreationBase n i') ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℝ)) = 0
           rw [← Matrix.mul_kronecker_mul, ← Matrix.mul_kronecker_mul,
             ← Matrix.add_kronecker]
-          simpa using congrArg (fun A : MatStage n => A ⊗ₖ
+          simpa [jwCreation, jwAnnihilation] using congrArg (fun A : MatStage n => A ⊗ₖ
             (1 : Matrix (Fin 2) (Fin 2) ℝ)) ih
         · have hj_last : j = Fin.last n := Fin.eq_last_of_not_lt hj
           subst j

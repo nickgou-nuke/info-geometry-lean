@@ -128,6 +128,7 @@ theorem paper_abel_damping_semigroup_dissipation {m : ℕ} (b : ℝ) (hb : 1 ≤
     convert (HasDerivAt.sum (u := Finset.univ) hterm) using 1
     · funext ε
       simp [abel_damping_semigroup_dissipation_energy]
+    · rfl
 
 end
 

@@ -1,6 +1,7 @@
 import InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
+import Mathlib.Tactic.NoncommRing
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.FinCases
 
@@ -37,24 +38,79 @@ def CombinedDirac_Matrix : Matrix (Fin 2) (Fin 2) ℝ :=
 
 /-- Genuine Proof: BK squares to Identity. -/
 theorem bk_sq_is_id : BK_Matrix * BK_Matrix = 1 := by
+  have h := Matrix.two_mul_expl BK_Matrix BK_Matrix
+  rcases h with ⟨h00, h01, h10, h11⟩
+  have e00 : (BK_Matrix * BK_Matrix) 0 0 = 1 := by
+    calc
+      _ = BK_Matrix 0 0 * BK_Matrix 0 0 + BK_Matrix 0 1 * BK_Matrix 1 0 := h00
+      _ = 1 := by norm_num [BK_Matrix]
+  have e01 : (BK_Matrix * BK_Matrix) 0 1 = 0 := by
+    calc
+      _ = BK_Matrix 0 0 * BK_Matrix 0 1 + BK_Matrix 0 1 * BK_Matrix 1 1 := h01
+      _ = 0 := by norm_num [BK_Matrix]
+  have e10 : (BK_Matrix * BK_Matrix) 1 0 = 0 := by
+    calc
+      _ = BK_Matrix 1 0 * BK_Matrix 0 0 + BK_Matrix 1 1 * BK_Matrix 1 0 := h10
+      _ = 0 := by norm_num [BK_Matrix]
+  have e11 : (BK_Matrix * BK_Matrix) 1 1 = 1 := by
+    calc
+      _ = BK_Matrix 1 0 * BK_Matrix 0 1 + BK_Matrix 1 1 * BK_Matrix 1 1 := h11
+      _ = 1 := by norm_num [BK_Matrix]
   ext i j
-  fin_cases i <;> fin_cases j <;> 
-    simp [BK_Matrix, Matrix.mul_apply, Fin.sum_univ_two]
+  fin_cases i <;> fin_cases j
+  · simpa using e00
+  · simpa using e01
+  · simpa using e10
+  · simpa using e11
 
 /-- Genuine Proof: ρ squares to Identity. -/
 theorem rho_sq_is_id : Rho_Matrix * Rho_Matrix = 1 := by
+  have h := Matrix.two_mul_expl Rho_Matrix Rho_Matrix
+  rcases h with ⟨h00, h01, h10, h11⟩
   ext i j
-  fin_cases i <;> fin_cases j <;> 
-    simp [Rho_Matrix, Matrix.mul_apply, Fin.sum_univ_two]
+  fin_cases i <;> fin_cases j
+  · simpa [Rho_Matrix] using h00
+  · simpa [Rho_Matrix] using h01
+  · simpa [Rho_Matrix] using h10
+  · simpa [Rho_Matrix] using h11
 
 /-- 
 Genuine Proof: The Chirality operator exactly anticommutes with the BK block.
 This formally establishes the Split Clifford Algebra Cl(1,1) compatibility.
 -/
 theorem rho_anticommutes_bk : Rho_Matrix * BK_Matrix = - (BK_Matrix * Rho_Matrix) := by
+  have h₁ := Matrix.two_mul_expl Rho_Matrix BK_Matrix
+  have h₂ := Matrix.two_mul_expl BK_Matrix Rho_Matrix
+  have e00 : (Rho_Matrix * BK_Matrix) 0 0 = - (BK_Matrix * Rho_Matrix) 0 0 := by
+    calc
+      _ = Rho_Matrix 0 0 * BK_Matrix 0 0 + Rho_Matrix 0 1 * BK_Matrix 1 0 := h₁.1
+      _ = - (BK_Matrix 0 0 * Rho_Matrix 0 0 + BK_Matrix 0 1 * Rho_Matrix 1 0) := by
+        norm_num [Rho_Matrix, BK_Matrix]
+      _ = _ := by rw [← h₂.1]
+  have e01 : (Rho_Matrix * BK_Matrix) 0 1 = - (BK_Matrix * Rho_Matrix) 0 1 := by
+    calc
+      _ = Rho_Matrix 0 0 * BK_Matrix 0 1 + Rho_Matrix 0 1 * BK_Matrix 1 1 := h₁.2.1
+      _ = - (BK_Matrix 0 0 * Rho_Matrix 0 1 + BK_Matrix 0 1 * Rho_Matrix 1 1) := by
+        norm_num [Rho_Matrix, BK_Matrix]
+      _ = _ := by rw [← h₂.2.1]
+  have e10 : (Rho_Matrix * BK_Matrix) 1 0 = - (BK_Matrix * Rho_Matrix) 1 0 := by
+    calc
+      _ = Rho_Matrix 1 0 * BK_Matrix 0 0 + Rho_Matrix 1 1 * BK_Matrix 1 0 := h₁.2.2.1
+      _ = - (BK_Matrix 1 0 * Rho_Matrix 0 0 + BK_Matrix 1 1 * Rho_Matrix 1 0) := by
+        norm_num [Rho_Matrix, BK_Matrix]
+      _ = _ := by rw [← h₂.2.2.1]
+  have e11 : (Rho_Matrix * BK_Matrix) 1 1 = - (BK_Matrix * Rho_Matrix) 1 1 := by
+    calc
+      _ = Rho_Matrix 1 0 * BK_Matrix 0 1 + Rho_Matrix 1 1 * BK_Matrix 1 1 := h₁.2.2.2
+      _ = - (BK_Matrix 1 0 * Rho_Matrix 0 1 + BK_Matrix 1 1 * Rho_Matrix 1 1) := by
+        norm_num [Rho_Matrix, BK_Matrix]
+      _ = _ := by rw [← h₂.2.2.2]
   ext i j
-  fin_cases i <;> fin_cases j <;> 
-    simp [Rho_Matrix, BK_Matrix, Matrix.mul_apply, Fin.sum_univ_two, Matrix.neg_apply]
+  fin_cases i <;> fin_cases j
+  · simpa using e00
+  · simpa using e01
+  · simpa using e10
+  · simpa using e11
 
 /-- 
 Genuine Proof: The Combined Majorana-Dirac operator squares to 2 * I.
@@ -63,9 +119,17 @@ This replaces the abstract `combinedDirac_square_law` interface with a
 -/
 theorem combined_dirac_sq :
   CombinedDirac_Matrix * CombinedDirac_Matrix = 2 • (1 : Matrix (Fin 2) (Fin 2) ℝ) := by
-  ext i j
-  fin_cases i <;> fin_cases j <;> 
-    simp [CombinedDirac_Matrix, BK_Matrix, Rho_Matrix, Matrix.mul_apply, Fin.sum_univ_two, Matrix.add_apply, Matrix.smul_apply] <;> norm_num
+  have hcross : BK_Matrix * Rho_Matrix + Rho_Matrix * BK_Matrix = 0 := by
+    rw [rho_anticommutes_bk]
+    exact add_neg_cancel _
+  rw [CombinedDirac_Matrix]
+  calc
+    (BK_Matrix + Rho_Matrix) * (BK_Matrix + Rho_Matrix) =
+        BK_Matrix * BK_Matrix +
+          (BK_Matrix * Rho_Matrix + Rho_Matrix * BK_Matrix) +
+          Rho_Matrix * Rho_Matrix := by noncomm_ring
+    _ = 1 + 0 + 1 := by rw [bk_sq_is_id, hcross, rho_sq_is_id]
+    _ = 2 • (1 : Matrix (Fin 2) (Fin 2) ℝ) := by norm_num
 
 /-- Concrete formula for the combined Majorana--Berry--Keating matrix. -/
 theorem combined_dirac_formula : CombinedDirac_Matrix = BK_Matrix + Rho_Matrix := rfl

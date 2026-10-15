@@ -156,12 +156,18 @@ theorem modularTransportGenerator_commutes_drazin :
         =
       (CertifiedInverseKernel.spectralProjector (E := H₂_loc) CIK).comp
           (InfoGeometry.Krein.clockAxis (E := E)) := by
-    simpa using L.phaseAxis_commutes_with_drazin.eq
+    change InfoGeometry.Krein.clockAxis (E := E) *
+      CertifiedInverseKernel.spectralProjector (E := H₂_loc) CIK =
+      CertifiedInverseKernel.spectralProjector (E := H₂_loc) CIK *
+        InfoGeometry.Krein.clockAxis (E := E)
+    exact L.phaseAxis_commutes_with_drazin.eq
   have hK0 :
       L.K0.comp (CertifiedInverseKernel.spectralProjector (E := H₂_loc) CIK)
         =
-      (CertifiedInverseKernel.spectralProjector (E := H₂_loc) CIK).comp L.K0 := by
-    simpa using L.commutes_with_drazin.eq
+        (CertifiedInverseKernel.spectralProjector (E := H₂_loc) CIK).comp L.K0 := by
+    change L.K0 * CertifiedInverseKernel.spectralProjector (E := H₂_loc) CIK =
+      CertifiedInverseKernel.spectralProjector (E := H₂_loc) CIK * L.K0
+    exact L.commutes_with_drazin.eq
   unfold modularTransportGenerator
   rw [Commute, SemiconjBy]
   calc

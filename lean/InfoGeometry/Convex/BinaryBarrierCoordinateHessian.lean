@@ -47,9 +47,10 @@ theorem barrier_chart_hasDerivAt (ξ : ℝ) :
   have h := (hasDerivAt_intervalBarrier hp.1 hp.2).comp ξ
     (hasDerivAt_trajectory 1 0 ξ)
   convert h using 1
-  unfold intervalBarrierGradient
-  field_simp [hp.1.ne', (sub_pos.mpr hp.2).ne']
-  ring
+  · rfl
+  · unfold intervalBarrierGradient
+    field_simp [hp.1.ne', (sub_pos.mpr hp.2).ne']
+    ring
 
 /-- Second derivative computed from the actual first derivative. -/
 theorem barrier_chart_second_derivative (ξ : ℝ) :

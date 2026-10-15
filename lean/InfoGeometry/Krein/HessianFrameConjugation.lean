@@ -1,5 +1,4 @@
 import InfoGeometry.Krein.CartanDecomposition
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Hessian Frame Conjugation
@@ -89,8 +88,8 @@ theorem hessianFrameConjugation_modularJ_involutive
         (modular_jHessianOrthogonal (E := E)) A)
       =
     A := by
-  simpa [hessianFrameConjugation, cartanInvolution]
-    using cartanInvolution_involutive (E := E) A
+  change cartanInvolution (E := E) (cartanInvolution (E := E) A) = A
+  exact cartanInvolution_involutive (E := E) A
 
 /--
 Frame conjugation by the modular-J Hessian frame preserves composition.
@@ -106,8 +105,9 @@ theorem hessianFrameConjugation_modularJ_comp
       (modular_jHessianOrthogonal (E := E)) A).comp
     (hessianFrameConjugation (E := E)
       (modular_jHessianOrthogonal (E := E)) B) := by
-  simpa [hessianFrameConjugation, cartanInvolution]
-    using cartanInvolution_comp (E := E) A B
+  change cartanInvolution (E := E) (A.comp B) =
+    (cartanInvolution (E := E) A).comp (cartanInvolution (E := E) B)
+  exact cartanInvolution_comp (E := E) A B
 
 /--
 Frame conjugation by the modular-J Hessian frame preserves the Lie bracket.
@@ -121,7 +121,8 @@ theorem hessianFrameConjugation_modularJ_lie
         (modular_jHessianOrthogonal (E := E)) A,
       hessianFrameConjugation (E := E)
         (modular_jHessianOrthogonal (E := E)) B⁆ := by
-  simpa [hessianFrameConjugation, cartanInvolution]
-    using cartanInvolution_lie (E := E) A B
+  change cartanInvolution (E := E) ⁅A, B⁆ =
+    ⁅cartanInvolution (E := E) A, cartanInvolution (E := E) B⁆
+  exact cartanInvolution_lie (E := E) A B
 
 end InfoGeometry.Krein

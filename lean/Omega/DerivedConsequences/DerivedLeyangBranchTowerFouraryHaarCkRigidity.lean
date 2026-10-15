@@ -15,8 +15,9 @@ theorem paper_derived_leyang_branch_tower_fourary_haar_ck_rigidity (n r : ℕ) (
   have hsnf : Omega.Zeta.derived_leyang_bf_ck_rigidity_single_block_snf = ![1, 1, 1, 3] := by
     rfl
   have hcard : Fintype.card Omega.Zeta.derived_leyang_bf_ck_rigidity_bowen_franks_group = 3 ^ 5 := by
-    simp [Omega.Zeta.derived_leyang_bf_ck_rigidity_bowen_franks_group,
-      Omega.Zeta.derivedLeyangBranchCount]
+    change Fintype.card (Fin 5 → ZMod 3) = 3 ^ 5
+    rw [Fintype.card_fun]
+    norm_num
   exact ⟨paper_derived_leyang_branchset_haar_limit n r h, hzeta, hsnf, hcard⟩
 
 end Omega.DerivedConsequences

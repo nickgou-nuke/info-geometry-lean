@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Categorical.FibonacciBraidedTowerCone
 
 open CategoryTheory
 open CategoryTheory.Limits
@@ -55,15 +56,9 @@ forward hexagon identity.
 theorem filtered_fibonacci_anyon_forward_hexagon
 (F : J ⥤ C) [HasColimit F]
 (_anyon : BraidedFilteredFibonacciAnyon F) :
-ForwardHexagonIdentity
-(colimit F)
-(colimit F)
-(colimit F) := by
-simpa only [ForwardHexagonIdentity] using
-(BraidedCategory.hexagon_forward
-(colimit F)
-(colimit F)
-(colimit F))
+  ForwardHexagonIdentity (colimit F) (colimit F) (colimit F) := by
+  simpa only [ForwardHexagonIdentity] using
+    BraidedCategory.hexagon_forward (colimit F) (colimit F) (colimit F)
 
 /--
 The canonical braiding on the filtered-colimit Fibonacci object satisfies the
@@ -72,18 +67,12 @@ reverse hexagon identity.
 theorem filtered_fibonacci_anyon_reverse_hexagon
 (F : J ⥤ C) [HasColimit F]
 (_anyon : BraidedFilteredFibonacciAnyon F) :
-ReverseHexagonIdentity
-(colimit F)
-(colimit F)
-(colimit F) := by
-simpa only [ReverseHexagonIdentity] using
-(BraidedCategory.hexagon_reverse
-(colimit F)
-(colimit F)
-(colimit F))
+  ReverseHexagonIdentity (colimit F) (colimit F) (colimit F) := by
+  simpa only [ReverseHexagonIdentity] using
+    BraidedCategory.hexagon_reverse (colimit F) (colimit F) (colimit F)
 
 /-- The right-associated three-anyon fusion object. -/
-def fibonacciTripleTensor
+abbrev fibonacciTripleTensor
 (F : J ⥤ C) [HasColimit F] : C :=
 colimit F ⊗ (colimit F ⊗ colimit F)
 
@@ -118,8 +107,8 @@ structure BraidGroupThreeRepresentation (X : C) where
 generatorOne : X ≅ X
 generatorTwo : X ≅ X
 artin_relation :
-generatorOne ≪≫ generatorTwo ≪≫ generatorOne =
-generatorTwo ≪≫ generatorOne ≪≫ generatorTwo
+  (generatorOne ≪≫ generatorTwo) ≪≫ generatorOne =
+    (generatorTwo ≪≫ generatorOne) ≪≫ generatorTwo
 
 /--
 The braiding on the filtered-colimit Fibonacci object satisfies the
@@ -128,22 +117,14 @@ three-strand Artin braid relation.
 theorem filtered_fibonacci_anyon_braid_relation
 {F : J ⥤ C} [HasColimit F]
 (anyon : BraidedFilteredFibonacciAnyon F) :
-braidGeneratorOne anyon ≪≫
-braidGeneratorTwo anyon ≪≫
-braidGeneratorOne anyon =
-braidGeneratorTwo anyon ≪≫
-braidGeneratorOne anyon ≪≫
-braidGeneratorTwo anyon := by
-simpa only [
-braidGeneratorOne,
-braidGeneratorTwo,
-anyon.braid_eq,
-Iso.trans_assoc
-] using
-(BraidedCategory.yang_baxter_iso
-(colimit F)
-(colimit F)
-(colimit F))
+  (braidGeneratorOne anyon ≪≫ braidGeneratorTwo anyon) ≪≫ braidGeneratorOne anyon =
+    (braidGeneratorTwo anyon ≪≫ braidGeneratorOne anyon) ≪≫ braidGeneratorTwo anyon
+    := by
+  dsimp [braidGeneratorOne, braidGeneratorTwo]
+  rw [anyon.braid_eq]
+  have h := InfoGeometry.Categorical.FibonacciBraidedTowerCone.fibonacci_yang_baxter_iso (colimit F)
+  simp only [Iso.trans_assoc]
+  exact h
 
 /--
 The canonical three-strand braid-group representation carried by the

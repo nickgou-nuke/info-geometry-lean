@@ -1,4 +1,4 @@
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Block
 import Mathlib.Tactic
@@ -24,6 +24,8 @@ equivalence.
 -/
 
 noncomputable section
+
+attribute [local instance 100] LieRing.ofAssociativeRing
 
 namespace InfoGeometry.Lie.SplitOctonionDerivationWittOrthogonalBridge
 
@@ -94,12 +96,15 @@ theorem derivation_native_polar_skew_of_imaginary_trace
   rw [hconj Y]
   have hmap : D.1 (InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.canonicalConj Y) = -D.1 Y := by
     apply InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.canonicalVectorEquiv.injective
+    change InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.canonicalVectorEquiv
+        (D.1 (InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.canonicalConj Y)) =
+      InfoGeometry.Algebra.ZornVectorMatrix.neg
+        (InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.canonicalVectorEquiv (D.1 Y))
     have h := InfoGeometry.Algebra.ZornVectorMatrix.Derivation.map_conj_eq_neg
       (canonicalToVectorDerivation D)
       (InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.canonicalVectorEquiv Y)
     rw [← InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.canonicalVectorEquiv_canonicalConj] at h
-    simpa [canonicalToVectorDerivation_apply,
-      InfoGeometry.Algebra.ZornVectorMatrix.neg] using h
+    exact h
   have hprod := D.property
     (InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.canonicalConj Y) X
   have ht := congrArg realZornTrace hprod

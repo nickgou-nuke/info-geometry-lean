@@ -31,8 +31,8 @@ def logGeneratingPotential (X : FQ3) (i j : Fin 3) : ℂ :=
   Complex.log (X.separation i j)
 
 /- A real scalarization obtained by fixing an ordered projective edge. -/
-def projectiveScalarParameter (i j : Fin 3) : FQ3 → ℝ :=
-  fun X => logPotential X i j
+abbrev projectiveScalarParameter (i j : Fin 3) (X : FQ3) : ℝ :=
+  logPotential X i j
 
 theorem projectiveScalarParameter_permute
     (σ : Equiv.Perm (Fin 3)) (X : FQ3) (i j : Fin 3) :
@@ -49,15 +49,13 @@ theorem projectiveScalarParameter_exponentialScaling
 theorem projectiveScalarParameter_exponentialScaling_deriv
     (t : ℝ) (i j : Fin 3) (hij : i ≠ j) :
     deriv (fun s => projectiveScalarParameter i j (exponentialScalingChart s)) t = 2 := by
-  simpa [projectiveScalarParameter] using
-    deriv_exponentialScalingChart_chartLogPotential t i j hij
+  exact deriv_exponentialScalingChart_chartLogPotential t i j hij
 
 theorem projectiveScalarParameter_exponentialScaling_secondDeriv
     (t : ℝ) (i j : Fin 3) (hij : i ≠ j) :
     deriv (fun s => deriv (fun r =>
       projectiveScalarParameter i j (exponentialScalingChart r)) s) t = 0 := by
-  simpa [projectiveScalarParameter] using
-    secondDeriv_exponentialScalingChart_chartLogPotential t i j hij
+  exact secondDeriv_exponentialScalingChart_chartLogPotential t i j hij
 
 /- The nonlinear scalar model evaluated on the explicit projective scalarization. -/
 def quadraticProjectivePotential (i j : Fin 3) (X : FQ3) : ℝ :=
@@ -74,9 +72,8 @@ theorem quadraticProjectivePotential_exponentialScaling
     (t : ℝ) (i j : Fin 3) (hij : i ≠ j) :
     quadraticProjectivePotential i j (exponentialScalingChart t) =
       (2 * t + projectiveScalarParameter i j standardConfiguration) ^ 2 := by
-  unfold quadraticProjectivePotential
+  dsimp [quadraticProjectivePotential, quadraticPotential]
   rw [projectiveScalarParameter_exponentialScaling t i j hij]
-  rfl
 
 theorem hasDerivAt_quadraticProjectivePotential_exponentialScaling
     (t : ℝ) (i j : Fin 3) (hij : i ≠ j) :
@@ -87,9 +84,13 @@ theorem hasDerivAt_quadraticProjectivePotential_exponentialScaling
       (fun s => projectiveScalarParameter i j (exponentialScalingChart s)) 2 t :=
     hasDerivAt_exponentialScalingChart_chartLogPotential t i j hij
   have hsq := hθ.pow 2
-  rw [projectiveScalarParameter_exponentialScaling t i j hij] at hsq
-  convert hsq using 1 <;> simp [quadraticProjectivePotential,
-    projectiveScalarParameter, pow_two] <;> ring
+  have hval := projectiveScalarParameter_exponentialScaling t i j hij
+  rw [hval] at hsq
+  dsimp [quadraticProjectivePotential, quadraticPotential]
+  have heq : (↑2 * (2 * t + projectiveScalarParameter i j standardConfiguration) ^ (2 - 1) * 2 : ℝ) =
+      (4 * (2 * t + projectiveScalarParameter i j standardConfiguration)) := by ring
+  rw [← heq]
+  exact hsq
 
 theorem secondDeriv_quadraticProjectivePotential_exponentialScaling
     (t : ℝ) (i j : Fin 3) (hij : i ≠ j) :
@@ -198,8 +199,8 @@ theorem logGeneratingPotential_deriv
     (X : FQ3) (i j : Fin 3) (hbranch : X.separation i j ∈ Complex.slitPlane) :
     HasDerivAt (fun z : ℂ => Complex.log z)
       (dlogCoefficient X i j) (X.separation i j) := by
-  simpa [dlogCoefficient, grothendieckLog, grothendieck_dlog] using
-    grothendieckLog_deriv_log (X.separation i j) hbranch
+  simpa [dlogCoefficient, grothendieck_dlog] using
+    Complex.hasDerivAt_log hbranch
 
 /-- A dual-flat family may use the real readout of the logarithmic potential as
 its scalar generating potential.  The equality is an explicit compatibility

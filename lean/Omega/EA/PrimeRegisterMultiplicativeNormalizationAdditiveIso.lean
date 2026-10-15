@@ -40,7 +40,7 @@ private theorem valPr_registerOfIndices :
     ∀ {l : List Nat}, l.IsZeckendorfRep →
       valPr (registerOfIndices l) = (l.map Nat.fib).sum
   | [], _ => by
-      simpa using (valPr_zero)
+      simp [registerOfIndices, valPr_zero]
   | k :: ks, hRep => by
       have hk : 2 ≤ k := two_le_of_mem_isZeckendorfRep hRep (by simp)
       have hTail : ks.IsZeckendorfRep := isZeckendorfRep_tail hRep

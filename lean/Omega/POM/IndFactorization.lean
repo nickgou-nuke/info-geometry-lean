@@ -13,19 +13,18 @@ private lemma dropConflictsRadius2_eq_self_of_separated (t : Nat) :
         intro k hk
         exact hsep k (by simp [hk])
       have hnot : ¬ j ≤ t + 2 := Nat.not_le_of_gt hj
-      simpa [dropConflictsRadius2, hnot] using
-        congrArg (List.cons j) (dropConflictsRadius2_eq_self_of_separated t js hjs)
+      simp [dropConflictsRadius2, hnot]
 
 private lemma dropConflictsRadius2_append_right (t : Nat) :
     ∀ xs ys : List Nat, (∀ j, j ∈ ys → t + 2 < j) →
       dropConflictsRadius2 t (xs ++ ys) = dropConflictsRadius2 t xs ++ ys
   | [], ys, hsep => by
-      simpa using dropConflictsRadius2_eq_self_of_separated t ys hsep
+      exact dropConflictsRadius2_eq_self_of_separated t ys hsep
   | i :: is, ys, hsep => by
       by_cases hi : i ≤ t + 2
-      · simpa [dropConflictsRadius2, hi] using dropConflictsRadius2_append_right t is ys hsep
-      · simpa [dropConflictsRadius2, hi] using
-          congrArg (List.cons i) (dropConflictsRadius2_append_right t is ys hsep)
+      · simp [dropConflictsRadius2, hi]
+        exact dropConflictsRadius2_append_right t is ys hsep
+      · simp [dropConflictsRadius2, hi]
 
 private lemma mem_of_mem_dropConflictsRadius2 {t i : Nat} {xs : List Nat} :
     i ∈ dropConflictsRadius2 t xs → i ∈ xs := by

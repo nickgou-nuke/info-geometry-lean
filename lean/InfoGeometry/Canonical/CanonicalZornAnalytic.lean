@@ -52,8 +52,9 @@ noncomputable def zMulAnalyticOperator :
 
 theorem isBoundedBilinearMap_zMul :
     IsBoundedBilinearMap ℝ (fun p : CZ × CZ => zMul p.1 p.2) := by
-  simpa only [zMulAnalyticOperator_apply] using
-    zMulAnalyticOperator.isBoundedBilinearMap
+  have h := zMulAnalyticOperator.isBoundedBilinearMap
+  convert h using 2
+  exact (zMulAnalyticOperator_apply _ _).symm
 
 theorem norm_zMul_le :
     ∃ C : ℝ, 0 < C ∧ ∀ X Y : CZ,

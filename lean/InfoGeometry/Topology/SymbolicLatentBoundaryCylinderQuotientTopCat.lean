@@ -28,7 +28,7 @@ theorem boundaryReadout_isQuotientMap_of_compactSpace
     [CompactSpace ((colimit (carrierDiagram D) : TopCat) : Type)]
     (h_surj : Function.Surjective (boundaryReadout D S).hom) :
     Topology.IsQuotientMap (boundaryReadout D S).hom := by
-  exact IsQuotientMap.of_surjective_continuous h_surj
+  exact Topology.IsQuotientMap.of_surjective_continuous h_surj
     (boundaryReadout D S).hom.continuous
 
 noncomputable def boundaryReadout_homeomorph_of_bijective

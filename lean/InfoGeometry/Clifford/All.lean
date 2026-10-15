@@ -14,7 +14,11 @@ import InfoGeometry.Clifford.CartanInstance
 import InfoGeometry.Clifford.KoszulFoundation
 import InfoGeometry.Clifford.OpSignatureBridge
 import InfoGeometry.Clifford.ClNN
+import InfoGeometry.Clifford.ClNNSuperGrassmannianBridge
 import InfoGeometry.Clifford.ClNNBilinear
+import InfoGeometry.Clifford.ClNNNeutralChevalleyBridge
+import InfoGeometry.Clifford.ClNNFockRepresentation
+import InfoGeometry.Clifford.ClNNFockColimitPrimalSheetBridge
 import InfoGeometry.Clifford.CliffordInjectivity
 import InfoGeometry.Clifford.CliffordTower
 import InfoGeometry.Clifford.CliffordTowerFunctor
@@ -80,6 +84,9 @@ import InfoGeometry.Clifford.NeutralPhaseSpaceCore
 import InfoGeometry.Clifford.NeutralPhaseSpaceRankOne
 import InfoGeometry.Clifford.Relations
 import InfoGeometry.Clifford.Soldering
+import InfoGeometry.Clifford.SolderingGNSCARBridge
+import InfoGeometry.Clifford.SolderingCl11MatrixBridge
+import InfoGeometry.Cosmology.Cl11ParabolicVacuumQuotientBridge
 import InfoGeometry.Clifford.Spacetime
 import InfoGeometry.Clifford.STAOperators
 import InfoGeometry.Clifford.SplitQ11
@@ -130,6 +137,12 @@ import InfoGeometry.Clifford.Cl55RoPEAttentionPairing
 import InfoGeometry.Clifford.Cl55DyadicMoritaBridge
 import InfoGeometry.Clifford.EmergentSpacetimeBilinear
 import InfoGeometry.Clifford.FoundationalInvolutionsBridge
+import InfoGeometry.Clifford.Cl55FockSupergradedRepresentation
+import InfoGeometry.Clifford.Cl55PositiveGrassmannianFockBridge
+import InfoGeometry.Clifford.Cl55SuperTKK
+import InfoGeometry.Clifford.Cl55ContactTKKVacuumIdeal
+import InfoGeometry.Clifford.Cl55ContactTKKKreinBridge
+import InfoGeometry.Clifford.Cl55RightIdealSupertrace
 
 namespace InfoGeometry
 

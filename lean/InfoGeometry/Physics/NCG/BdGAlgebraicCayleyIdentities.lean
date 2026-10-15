@@ -48,17 +48,34 @@ def gradingShift : BdGBlock A :=
       (2 : A) • (gradingShift (A := A)) := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-      simp [gradingShift, chiralGrading, Matrix.mul_apply, Matrix.vecMul,
-      Fin.sum_univ_two, Matrix.vecHead, Matrix.vecCons] <;> noncomm_ring
+    simp [gradingShift, chiralGrading, Matrix.mul_apply, Fin.sum_univ_two] <;>
+      noncomm_ring
 
 theorem gradingShift_dirac_identity (Delta : A) :
     gradingShift * diracOperator Delta +
-        diracOperator Delta * gradingShift =
+      diracOperator Delta * gradingShift =
       (2 : A) • diracOperator Delta := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [gradingShift, diracOperator, chiralGrading,
-      Matrix.mul_apply, Matrix.vecMul, Fin.sum_univ_two,
-      Matrix.vecHead, Matrix.vecCons] <;> noncomm_ring
+  change ((1 : BdGBlock A) + chiralGrading) * diracOperator Delta +
+      diracOperator Delta * ((1 : BdGBlock A) + chiralGrading) =
+    (2 : A) • diracOperator Delta
+  have hanti := dirac_anticommutes_with_chirality Delta
+  have hanti' : chiralGrading * diracOperator Delta +
+      diracOperator Delta * chiralGrading = 0 := by
+    rw [add_comm]
+    exact hanti
+  calc
+    ((1 : BdGBlock A) + chiralGrading) * diracOperator Delta +
+        diracOperator Delta * ((1 : BdGBlock A) + chiralGrading) =
+      diracOperator Delta + chiralGrading * diracOperator Delta +
+        diracOperator Delta + diracOperator Delta * chiralGrading := by
+          simp only [add_mul, mul_add, one_mul, mul_one]
+          abel
+    _ = diracOperator Delta + diracOperator Delta +
+        (chiralGrading * diracOperator Delta +
+          diracOperator Delta * chiralGrading) := by abel
+    _ = (2 : A) • diracOperator Delta := by
+      rw [hanti']
+      ext i j
+      simp [Matrix.smul_apply, two_mul]
 
 end InfoGeometry.Physics.NCG

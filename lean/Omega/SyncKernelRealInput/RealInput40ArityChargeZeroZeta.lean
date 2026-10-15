@@ -29,8 +29,8 @@ private lemma real_input_40_arity_charge_zero_zeta_det_q0
 
 private lemma real_input_40_arity_charge_zero_zeta_quartic_continuous :
     Continuous real_input_40_arity_charge_zero_zeta_quartic := by
-  simpa [real_input_40_arity_charge_zero_zeta_quartic] using
-    ((continuous_id.pow 4).sub (continuous_id.pow 3)).sub continuous_const
+  change Continuous (fun κ : ℝ => κ ^ 4 - κ ^ 3 - 1)
+  exact ((continuous_id.pow 4).sub (continuous_id.pow 3)).sub continuous_const
 
 private lemma real_input_40_arity_charge_zero_zeta_quartic_strictMonoOn :
     StrictMonoOn real_input_40_arity_charge_zero_zeta_quartic (Set.Ici 1) := by

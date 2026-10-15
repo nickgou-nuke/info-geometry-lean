@@ -14,6 +14,7 @@ files remain explicit in the manifest instead of poisoning the merged graph.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import shutil
 import subprocess
@@ -25,6 +26,11 @@ from typing import Any, Iterable
 
 
 ROOT = Path(__file__).resolve().parents[2]
+if __package__ in (None, ""):
+    sys.path.insert(0, str(ROOT))
+
+from tools.infra.pantograph_environment import build_lean_context_manifest  # noqa: E402
+
 EXPORTER = ROOT / "lean" / "DAG" / "RawInfoTreeExport.lean"
 VALIDATOR = ROOT / "tools" / "infra" / "validate_raw_infotree_export.py"
 
@@ -59,6 +65,7 @@ class FileResult:
     validation: dict[str, Any] | None
     stdout_tail: str
     stderr_tail: str
+    source_provenance: dict[str, Any] | None = None
 
 
 def tail_text(text: str, limit: int = 8000) -> str:
@@ -146,6 +153,23 @@ def export_one(
     require_olean: bool,
 ) -> FileResult:
     start = time.monotonic()
+    source_sha256 = hashlib.sha256(path.read_bytes()).hexdigest()
+    source_context = None
+    if require_olean:
+        try:
+            source_context = build_lean_context_manifest(ROOT, path)
+        except Exception as exc:
+            return FileResult(
+                file=str(path), out_dir=str(per_file_dir), status="provenance_failed",
+                returncode=None, duration_sec=time.monotonic() - start, validation=None,
+                stdout_tail="", stderr_tail=f"could not fingerprint Lean context: {exc}",
+            )
+        if source_context["sourceSha256"] != source_sha256:
+            return FileResult(
+                file=str(path), out_dir=str(per_file_dir), status="source_changed",
+                returncode=None, duration_sec=time.monotonic() - start, validation=None,
+                stdout_tail="", stderr_tail="source changed while its context fingerprint was computed",
+            )
     olean_path = olean_path_for(path)
     if require_olean and (olean_path is None or not olean_path.exists()):
         return FileResult(
@@ -202,6 +226,20 @@ def export_one(
         )
     validation_rc, validation, validation_stdout, validation_stderr = validate_export(per_file_dir)
     status = "ok" if validation_rc == 0 and validation.get("ok") is True else "validation_failed"
+    provenance = ({
+        "sourcePath": source_context["sourcePath"],
+        "sourceSha256": source_sha256,
+        "leanContextFingerprint": source_context["fingerprint"],
+        "leanContext": source_context,
+    } if source_context else None)
+    if hashlib.sha256(path.read_bytes()).hexdigest() != source_sha256:
+        status = "source_changed"
+        provenance = None
+    elif provenance is not None:
+        metadata_path = per_file_dir / "metadata.json"
+        metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+        metadata["sourceProvenance"] = provenance
+        metadata_path.write_text(json.dumps(metadata, indent=2, ensure_ascii=True) + "\n", encoding="utf-8")
     return FileResult(
         file=str(path),
         out_dir=str(per_file_dir),
@@ -211,6 +249,7 @@ def export_one(
         validation=validation,
         stdout_tail=tail_text(proc.stdout + validation_stdout),
         stderr_tail=tail_text(proc.stderr + validation_stderr),
+        source_provenance=provenance,
     )
 
 

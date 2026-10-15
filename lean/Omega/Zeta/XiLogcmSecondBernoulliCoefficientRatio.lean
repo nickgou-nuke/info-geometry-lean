@@ -134,8 +134,13 @@ theorem paper_xi_logcm_second_bernoulli_coefficient_ratio :
     simpa [c₂] using tendsto_const_nhds
   · have hquot :
         Tendsto (fun m : ℕ => (1 + r ^ (2 * (m + 1))) / (1 + r ^ (2 * m))) atTop (𝓝 (1 : ℝ)) :=
-      by simpa using hnum.div hden one_ne_zero
-    simpa [xi_logcm_second_bernoulli_coefficient_ratio_ratio_model, r, mul_assoc] using
+      by
+        convert hnum.div hden one_ne_zero using 1
+        all_goals norm_num
+    change Tendsto
+      (fun m : ℕ => r * ((1 + r ^ (2 * (m + 1))) / (1 + r ^ (2 * m)))) atTop
+      (𝓝 r)
+    simpa [div_eq_mul_inv] using
       (show Tendsto (fun _ : ℕ => r) atTop (𝓝 r) from tendsto_const_nhds).mul hquot
 
 end

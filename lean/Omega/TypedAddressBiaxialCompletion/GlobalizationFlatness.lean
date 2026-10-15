@@ -44,8 +44,10 @@ private theorem globalSection_implies_loopFlat {ι G : Type*} [CommGroup G]
   unfold loopResidual
   simp_rw [hs]
   rw [section_product_telescope]
+  have hPerm' : (ℓ.map fun e => s e.1).Perm (ℓ.map fun e => s e.2) := by
+    simpa only [List.map_map, Function.comp_def] using hPerm.map s
   have hProd : (ℓ.map fun e => s e.1).prod = (ℓ.map fun e => s e.2).prod := by
-    simpa using (hPerm.map s).prod_eq
+    exact hPerm'.prod_eq
   rw [hProd]
   simp
 

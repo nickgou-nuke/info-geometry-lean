@@ -56,8 +56,9 @@ theorem coordinateEvaluationTopCatHom_action
         (scalarDilationTopCatAction t ρ) =
       coordinateEvaluationTopCatHom n
         ((scalarDilationStageFlow.flow n t) X) ρ := by
-  simpa only [coordinateEvaluationTopCatHom_apply] using
-    coordinateTopCatHom_scalarDilation_naturality t n ρ X
+  change (coordinateTopCatHom n (scalarDilationTopCatAction t ρ)) X =
+    (coordinateTopCatHom n ρ) ((scalarDilationStageFlow.flow n t) X)
+  exact coordinateTopCatHom_scalarDilation_naturality t n ρ X
 
 theorem coordinateEvaluationTopCatHom_restriction
     (n : ℕ) (X : MatStage (n + 1))

@@ -25,7 +25,7 @@ abbrev RealSL2 := Matrix.SpecialLinearGroup (Fin 2) ℝ
 abbrev RealSpinorRepresentation :=
   RealSL2 →* ((Fin 2 → ℝ) ≃ₗ[ℝ] (Fin 2 → ℝ))
 
-def representedSL2ProjectiveAction (ρ : RealSpinorRepresentation) :
+noncomputable def representedSL2ProjectiveAction (ρ : RealSpinorRepresentation) :
     RealSL2 →* Function.End RealProjectiveLine :=
   { toFun := fun g =>
       Projectivization.map (ρ g).toLinearMap (ρ g).injective
@@ -34,10 +34,8 @@ def representedSL2ProjectiveAction (ρ : RealSpinorRepresentation) :
       have h_id : (ρ 1).toLinearMap = LinearMap.id := by
         ext x
         simp
-      simpa only [h_id] using
-        (congrFun
-          (Projectivization.map_id
-            (K := ℝ) (V := Fin 2 → ℝ)) p)
+      simp [h_id, Projectivization.map_id]
+      rfl
     map_mul' := by
       intro g h
       change Projectivization.map (ρ (g * h)).toLinearMap _ =
@@ -104,7 +102,11 @@ theorem representedSL2ProjectiveAction_iterate
       rw [pow_zero, representedSL2ProjectiveAction_one]
       rfl
   | succ n ih =>
-      rw [Function.iterate_succ_apply, ih]
+      let f : RealProjectiveLine → RealProjectiveLine :=
+        representedSL2ProjectiveAction ρ g
+      change f^[n + 1] p = representedSL2ProjectiveAction ρ (g ^ (n + 1)) p
+      rw [Function.iterate_succ_apply]
+      rw [ih (f p)]
       change
         (representedSL2ProjectiveAction ρ (g ^ n) ∘
             representedSL2ProjectiveAction ρ g) p =

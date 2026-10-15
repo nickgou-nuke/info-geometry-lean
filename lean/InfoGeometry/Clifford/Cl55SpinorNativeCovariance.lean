@@ -51,7 +51,7 @@ theorem spin55SpinorUnitRepresentation_commutes_chirality55 (g : Spin55) :
           InfoGeometry.Clifford.SpinorRep.SpinorMatrix 5 =>
         F (spinGroup.toUnits g : Cl55))
       cl55SpinorAlgEquiv_toAlgHom_eq_representation
-    simpa using h
+    simpa using h.symm
   rw [hrep]
   exact Cl55SpinGroupChiralityBridge.spinGroup_matrix_commutes_chirality55 g
 
@@ -203,7 +203,7 @@ theorem spin55TwistedSpinorUnitRepresentation_apply_ι
     have hu : pinToUnits (spinToPin g) = spinGroup.toUnits g := by
       apply Units.ext
       rfl
-    simpa only [pinTwistedAdj, hu, hinv] using h
+    simpa only [spinAction, pinTwistedAdj, hu, hinv] using h
   have hUinv :
       (↑((spin55SpinorUnitRepresentation g)⁻¹) :
         InfoGeometry.Clifford.SpinorRep.SpinorMatrix 5) =

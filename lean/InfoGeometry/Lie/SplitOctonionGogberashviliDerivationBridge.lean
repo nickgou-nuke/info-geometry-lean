@@ -6,6 +6,8 @@ import InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition
 
 noncomputable section
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace InfoGeometry.Lie.SplitOctonionGogberashviliDerivationBridge
 
 abbrev PaperZorn :=
@@ -69,9 +71,10 @@ noncomputable def paperDerivationLinear :
   change InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.canonicalVectorEquiv
       (D.1 (1 : CanonicalZorn)) =
     InfoGeometry.Algebra.ZornVectorMatrix.zero
-  simpa [InfoGeometry.Lie.CanonicalZornDerivation.canonicalToVectorDerivation_apply] using
-    (InfoGeometry.Algebra.ZornVectorMatrix.Derivation.map_one
-      (InfoGeometry.Lie.CanonicalZornDerivation.canonicalToVectorDerivation D))
+  change InfoGeometry.Lie.CanonicalZornDerivation.canonicalToVectorDerivation D
+      InfoGeometry.Algebra.ZornVectorMatrix.one = 0
+  exact InfoGeometry.Algebra.ZornVectorMatrix.Derivation.map_one
+    (InfoGeometry.Lie.CanonicalZornDerivation.canonicalToVectorDerivation D)
 
 theorem canonicalDerivation_conj_norm_identity_left
     (D : Der) (X : CanonicalZorn) :
@@ -89,7 +92,7 @@ theorem canonicalDerivation_conj_norm_identity_left
     InfoGeometry.Algebra.ZornVectorMatrix.Derivation.derivation_conj_norm_identity_left
       (InfoGeometry.Lie.CanonicalZornDerivation.canonicalToVectorDerivation D)
       (InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.canonicalVectorEquiv X)
-  simpa [InfoGeometry.Lie.CanonicalZornDerivation.canonicalToVectorDerivation_apply] using h
+  exact h
 
 theorem canonicalDerivation_conj_norm_identity_right
     (D : Der) (X : CanonicalZorn) :
@@ -106,7 +109,7 @@ theorem canonicalDerivation_conj_norm_identity_right
     InfoGeometry.Algebra.ZornVectorMatrix.Derivation.derivation_conj_norm_identity_right
       (InfoGeometry.Lie.CanonicalZornDerivation.canonicalToVectorDerivation D)
       (InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.canonicalVectorEquiv X)
-  simpa [InfoGeometry.Lie.CanonicalZornDerivation.canonicalToVectorDerivation_apply] using h
+  exact h
 
 def paperConj (X : PaperZorn) : PaperZorn where
   a := X.b

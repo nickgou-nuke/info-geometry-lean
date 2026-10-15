@@ -41,24 +41,24 @@ theorem peirce_complementary : peircePlus + peirceMinus = one := by
 
 @[simp] theorem peirceUpper_sq (u : Vec3Real) :
     mul (peirceUpper u) (peirceUpper u) = zero := by
-  simpa [peirceUpper, offDiagonal, diagonal, add, zero] using
+  simpa [peirceUpper, offDiagonal, diagonal, add, zero, Pi.zero_def] using
     (offDiagonal_mul_offDiagonal u (fun _ => 0) u (fun _ => 0))
 
 @[simp] theorem peirceLower_sq (v : Vec3Real) :
     mul (peirceLower v) (peirceLower v) = zero := by
-  simpa [peirceLower, offDiagonal, diagonal, add, zero] using
+  simpa [peirceLower, offDiagonal, diagonal, add, zero, Pi.zero_def] using
     (offDiagonal_mul_offDiagonal (fun _ => 0) v (fun _ => 0) v)
 
 theorem peirceUpper_mul_lower (u v : Vec3Real) :
     mul (peirceUpper u) (peirceLower v) =
       diagonal (ZornVec3.dot u v) 0 := by
-  simpa [peirceUpper, peirceLower, diagonal, add, offDiagonal] using
+  simpa [peirceUpper, peirceLower, diagonal, add, offDiagonal, Pi.zero_def] using
     (offDiagonal_mul_offDiagonal u (fun _ => 0) (fun _ => 0) v)
 
 theorem peirceLower_mul_upper (v u : Vec3Real) :
     mul (peirceLower v) (peirceUpper u) =
       diagonal 0 (ZornVec3.dot v u) := by
-  simpa [peirceLower, peirceUpper, diagonal, add, offDiagonal] using
+  simpa [peirceLower, peirceUpper, diagonal, add, offDiagonal, Pi.zero_def] using
     (offDiagonal_mul_offDiagonal (fun _ => 0) v u (fun _ => 0))
 
 theorem peirce_CAR_contraction (u v : Vec3Real) :

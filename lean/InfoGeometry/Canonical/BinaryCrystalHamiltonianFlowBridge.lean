@@ -20,7 +20,9 @@ namespace InfoGeometry.Canonical.BinaryCrystalHamiltonianFlow
 open InfoGeometry.Canonical.BinaryCrystalWeylBlochBridge
 open InfoGeometry.Canonical.WeylCharacterEquivalence
 
-variable {𝔤 : Type*}
+universe u v
+
+variable {𝔤 : Type u}
 
 /--
 Binary crystal / thermodynamic flow packet.
@@ -31,9 +33,9 @@ used by the Hamiltonian-flow layer.
 -/
 @[rep_depth transport]
 structure BinaryCrystalHamiltonianFlowBridge
-    (𝔤 : Type*) where
+    (𝔤 : Type u) where
   /-- Binary-crystal owner target. -/
-  crystalOwner : BinaryCrystalWeylBlochOwnerTarget
+  crystalOwner : BinaryCrystalWeylBlochOwnerTarget.{v}
 
   /-- Souriau/Weyl finite character packet. -/
   souriauPacket : SouriauWeylPartitionPacket 𝔤

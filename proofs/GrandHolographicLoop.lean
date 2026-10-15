@@ -10,7 +10,7 @@ A finite readout packet collecting independently verified algebraic facts:
 * `Cl(5,5)` dimension/index arithmetic;
 * `osp(1|2)` atom `G²=T`, `{G,G}=2T`;
 * Brillouin Klein fixed-line glide extinction;
-* fixed-line paravector mass shell and nilpotent collapse;
+* fixed-line paravector split-norm identity and nilpotent collapse;
 * an algebraic Itakura--Saito cancellation;
 * Möbius/Witten index thermodynamic stability.
 -/
@@ -76,7 +76,7 @@ theorem pg_fixed_line_extinction {k : ℕ} {c : ℂ}
       _ = 0 := hsub
   exact (mul_eq_zero.mp h2).resolve_left (by norm_num)
 
-/-! ## Zorn mass shell / nilpotent collapse -/
+/-! ## Zorn split-norm identity / nilpotent collapse -/
 
 def fixedLineMomentum (px : ℂ) : Fin 3 → ℂ
   | 0 => px
@@ -89,6 +89,9 @@ def fixedParavector (E px : ℂ) : Zorn where
   v := fixedLineMomentum px
   b := E
 
+/-- The chosen paravector's reduced norm is the displayed quadratic.  This
+does not assert a mass-shell equation without an additional mass parameter
+and physical interpretation of the coordinates. -/
 theorem fixed_mass_shell (E px : ℂ) : zornNorm (fixedParavector E px) = E^2 - px^2 := by
   simp [zornNorm, fixedParavector, fixedLineMomentum, dot3]
   ring
@@ -108,7 +111,8 @@ theorem nilItakuraSaito_cancellation (K : Zorn) :
 2. Split-signature index arithmetic: anomalyIndex(5,5) = 0
 3. osp(1|2) atom: G² = T, {G,G} = 2T
 4. Brillouin Klein extinction: c = 0 for odd k with c = phase·c
-5. Zorn mass shell: E² - p² = m²
+5. Zorn split-norm readout: `N(P)=E²-p²`; a mass-shell conclusion would need
+   an additional equation identifying this value with `m²`.
 6. Algebraic cancellation: exp(K) - 1 - K = 0
 
 This packet does not assert a common representation, anomaly theorem, or
@@ -126,7 +130,7 @@ theorem finite_holographic_loop_readout
     S.G1 * S.G1 + S.G1 * S.G1 = (2 : ℝ) • S.Ep ∧
     -- 4. Fixed-line extinction (implicit in pg_fixed_line_extinction)
     (∀ k c, Odd k → c = pgPhase k * c → c = 0) ∧
-    -- 5. Mass shell
+    -- 5. Split-norm identity (no mass parameter is asserted here)
     (∀ E px, zornNorm (fixedParavector E px) = E^2 - px^2) ∧
     -- 6. Algebraic cancellation
     (∀ K : Zorn, nilItakuraSaito K = zornZero) := by

@@ -66,6 +66,7 @@ theorem paper_conclusion_metric_defines_arithmetic :
   · intro a b
     exact Nat.gcd_eq_left_iff_dvd
   · intro p
-    simpa using (Nat.prime_def (p := p))
+    rw [Nat.prime_def]
+    constructor <;> rintro ⟨hp, hdiv⟩ <;> exact ⟨by omega, hdiv⟩
 
 end Omega.Conclusion

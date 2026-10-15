@@ -32,14 +32,11 @@ theorem paper_derived_leyang_bf_ck_rigidity :
       Fintype.card derived_leyang_bf_ck_rigidity_kernel = 1 ∧
       Nonempty (derived_leyang_bf_ck_rigidity_ck_model ≃ (Fin 5 → Fin 4)) := by
   refine ⟨(paper_derived_leyang_artin_mazur_zeta).2.1, rfl, ?_, ?_, ?_, ?_, ?_⟩
-  · simpa [derived_leyang_bf_ck_rigidity_bowen_franks_group, derivedLeyangBranchCount,
-      derivedLeyangAlphabetSize] using
-      (show Nonempty ((Fin 5 → ZMod 3) ≃+ (Fin 5 → ZMod 3)) from ⟨AddEquiv.refl _⟩)
+  · exact ⟨AddEquiv.refl _⟩
   · infer_instance
-  · simp [derivedLeyangBranchCount]
-  · simp [derived_leyang_bf_ck_rigidity_kernel, derivedLeyangBranchCount]
-  · simpa [derived_leyang_bf_ck_rigidity_ck_model, derivedLeyangBranchCount,
-      derivedLeyangAlphabetSize] using
-      (show Nonempty ((Fin 5 → Fin 4) ≃ (Fin 5 → Fin 4)) from ⟨Equiv.refl _⟩)
+  · norm_num [derived_leyang_bf_ck_rigidity_bowen_franks_group, derivedLeyangBranchCount]
+  · norm_num [derived_leyang_bf_ck_rigidity_kernel, derivedLeyangBranchCount,
+      Fintype.card_fun]
+  · exact ⟨Equiv.refl _⟩
 
 end Omega.Zeta

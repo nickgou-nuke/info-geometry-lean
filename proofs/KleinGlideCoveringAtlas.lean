@@ -13,7 +13,7 @@ the associated six-state `VectorBundleCore`.
 noncomputable section
 namespace KleinGlideCoveringAtlas
 
-open Topology
+open Bundle Topology
 open KleinBrillouinBase KleinBottleOrbitQuotient KleinGlideCovering
 
 abbrev Base := KleinBrillouinQuotient

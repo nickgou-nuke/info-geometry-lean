@@ -21,6 +21,7 @@ open InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 open InfoGeometry.Algebra.Zorn.SplitQuaternionCore
 open InfoGeometry.Algebra.Zorn.SplitOctonionWittPlanes
 open InfoGeometry.Lie.SplitOctonionImaginaryAction
+open InfoGeometry.Canonical.ZornMatrix
 
 abbrev CZ := CanonicalZorn
 abbrev EndCZ := Module.End ℝ CZ
@@ -52,7 +53,7 @@ theorem ellLeftMul_sq : ellLeftMul * ellLeftMul = 1 := by
   change InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul
     (InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul lUnit lUnit) X = X
   rw [l_sq]
-  exact one_zMul X
+  exact InfoGeometry.Algebra.Zorn.SplitQuaternionCore.one_zMul X
 
 /-- The four existing positive chiral-null vectors belong to the `+1`
 eigenspace of the involution. -/
@@ -106,15 +107,13 @@ private theorem chiralNull_right_ell_eigenvector
       -ε • chiralNull a.succ ε := by
   have hsmul (r : ℝ) (Z : CZ) :
       r • Z = { a := r * Z.a, b := r * Z.b, x := r • Z.x, y := r • Z.y } := by
-    rw [Equiv.smul_def InfoGeometry.Canonical.ZornMatrix.coordEquiv]
-    rfl
+    ext <;> simp [smul_a, smul_b, smul_x, smul_y]
   have hmem : chiralNull a.succ ε ∈ Imaginary := by
     rw [mem_imaginary_iff]
     fin_cases a <;>
       simp [chiralNull, realZornTrace, ellBasis, quaternionBasis,
         iUnit, jUnit, kQuaternionUnit, lUnit,
         InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul, hsmul,
-        realCrossProduct3,
         InfoGeometry.Canonical.ZornMatrix.dot,
         InfoGeometry.Canonical.ZornMatrix.cross, smul_eq_mul]
   let X : Imaginary := ⟨chiralNull a.succ ε, hmem⟩
@@ -203,8 +202,7 @@ theorem rootMinus_sq (a : Fin 3) : rootMinus a * rootMinus a = 0 := by
 
 private theorem canonicalZorn_smul_coordinates (r : ℝ) (Z : CZ) :
     r • Z = { a := r * Z.a, b := r * Z.b, x := r • Z.x, y := r • Z.y } := by
-  rw [Equiv.smul_def InfoGeometry.Canonical.ZornMatrix.coordEquiv]
-  rfl
+  ext <;> simp [smul_a, smul_b, smul_x, smul_y]
 
 set_option maxHeartbeats 1000000 in
 theorem ellWeightBasis_linearIndependent :
@@ -212,9 +210,10 @@ theorem ellWeightBasis_linearIndependent :
   rw [Fintype.linearIndependent_iff]
   intro g h i
   let e : CZ ≃ₗ[ℝ] (ℝ × ℝ × (Fin 3 → ℝ) × (Fin 3 → ℝ)) :=
-    InfoGeometry.Canonical.ZornMatrix.coordEquiv.linearEquiv ℝ
-  have he : ∑ j, g j • e (ellWeightBasis j) = 0 := by
-    simpa [e] using congrArg e h
+    InfoGeometry.Canonical.ZornMatrix.coordLinearEquiv
+  have he : (∑ j, g j • e (ellWeightBasis j)) = 0 := by
+    simp_rw [← map_smul]
+    rw [← map_sum, h, map_zero]
   have ha := congrArg (fun C => C.1) he
   have hb := congrArg (fun C => C.2.1) he
   have hx0 := congrArg (fun C => C.2.2.1 0) he
@@ -223,15 +222,14 @@ theorem ellWeightBasis_linearIndependent :
   have hy1 := congrArg (fun C => C.2.2.2 1) he
   have hx2 := congrArg (fun C => C.2.2.1 2) he
   have hy2 := congrArg (fun C => C.2.2.2 2) he
-  all_goals try
-    simp [e, Equiv.linearEquiv, ellWeightBasis, rootPlus, rootMinus,
-      chiralNull, ellBasis, quaternionBasis, iUnit, jUnit, kQuaternionUnit,
-      lUnit, InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul,
-      InfoGeometry.Canonical.ZornMatrix.dot,
-      InfoGeometry.Canonical.ZornMatrix.cross,
-      canonicalZorn_smul_coordinates,
-      InfoGeometry.Canonical.ZornMatrix.coordEquiv, Fin.sum_univ_succ]
-      at ha hb hx0 hy0 hx1 hy1 hx2 hy2
+  dsimp [e] at ha hb hx0 hy0 hx1 hy1 hx2 hy2
+  simp [rootPlus, rootMinus,
+    chiralNull, ellBasis, quaternionBasis, iUnit, jUnit, kQuaternionUnit,
+    lUnit, InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul,
+    InfoGeometry.Canonical.ZornMatrix.dot,
+    InfoGeometry.Canonical.ZornMatrix.cross,
+    canonicalZorn_smul_coordinates, Fin.sum_univ_succ]
+    at ha hb hx0 hy0 hx1 hy1 hx2 hy2
   fin_cases i
   · have hg : g 0 = 0 := by linarith [ha, hb, hx0, hy0]
     exact hg

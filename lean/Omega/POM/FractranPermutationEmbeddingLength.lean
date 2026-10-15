@@ -72,11 +72,12 @@ theorem paper_pom_fractran_permutation_embedding_length (n : ℕ) :
     inj' := by
       intro i j hij
       apply e.injective
-      exact Fin.ext <| (Nat.nth_strictMono Nat.infinite_setOf_prime).injective hij
+      exact Fin.ext <| (Nat.nth_strictMono Nat.infinite_setOfPred_prime).injective hij
   }
   have hPrime : ∀ i, Nat.Prime (encode i) := by
     intro i
-    simpa [encode] using Nat.prime_nth_prime (e i)
+    change Nat.Prime (Nat.nth Nat.Prime (e i))
+    exact Nat.prime_nth_prime (e i)
   let compile : Equiv.Perm (Fin n) → List (Nat × Nat) :=
     fun σ => (List.finRange n).map fun i => (encode (σ i), encode i)
   refine ⟨encode, compile, hPrime, ?_, ?_, ?_, ?_, ?_⟩

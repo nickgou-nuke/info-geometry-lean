@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Lie.Basic
+import Mathlib.Algebra.Lie.OfAssociative
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Dimension.Finrank
 import Mathlib.Algebra.Module.Basic
@@ -24,6 +25,8 @@ namespace InfoGeometry.Algebra
 
 open H3Zorn
 open ZornVectorMatrix
+
+attribute [local instance 100] LieRing.ofAssociativeRing
 
 noncomputable section
 
@@ -101,7 +104,7 @@ instance : Group S3Perm where
     rfl
 
 /-- Peirce-2 space type (each ≃ 𝕆_s). We use the off-diagonal components from H3Zorn ℝ. -/
-def Peirce2Space := ZornVectorMatrix ℝ
+abbrev Peirce2Space := ZornVectorMatrix ℝ
 
 /-- Action of S₃ on a triple of Peirce-2 spaces. -/
 def S3_actOnPeirce2 (σ : S3Perm) :
@@ -208,19 +211,19 @@ def S3OnH3ZornPeirce (σ : S3Perm) (P : H3ZornPeirce) : H3ZornPeirce :=
     S3OnH3ZornPeirce S3Perm.s12
       (S3OnH3ZornPeirce S3Perm.s12 P) = P := by
   cases P
-  simp [S3OnH3ZornPeirce, ZornVectorMatrix.conj_conj]
+  simp [S3OnH3ZornPeirce]
 
 @[simp] theorem S3OnH3ZornPeirce_s23_involutive (P : H3ZornPeirce) :
     S3OnH3ZornPeirce S3Perm.s23
       (S3OnH3ZornPeirce S3Perm.s23 P) = P := by
   cases P
-  simp [S3OnH3ZornPeirce, ZornVectorMatrix.conj_conj]
+  simp [S3OnH3ZornPeirce]
 
 @[simp] theorem S3OnH3ZornPeirce_s31_involutive (P : H3ZornPeirce) :
     S3OnH3ZornPeirce S3Perm.s31
       (S3OnH3ZornPeirce S3Perm.s31 P) = P := by
   cases P
-  simp [S3OnH3ZornPeirce, ZornVectorMatrix.conj_conj]
+  simp [S3OnH3ZornPeirce]
 
 theorem S3OnH3ZornPeirce_group_closure (σ τ : S3Perm) :
     ∃ (ρ : S3Perm),
@@ -230,8 +233,7 @@ theorem S3OnH3ZornPeirce_group_closure (σ τ : S3Perm) :
   funext P
   rcases σ <;> rcases τ <;> cases P <;>
     apply H3ZornPeirce.ext <;>
-      simp [S3Perm.comp, S3OnH3ZornPeirce, Function.comp_def,
-        ZornVectorMatrix.conj_conj]
+      simp [S3Perm.comp, S3OnH3ZornPeirce]
 
 def S3OnH3Zorn (σ : S3Perm) (X : H3Zorn ℝ) : H3Zorn ℝ :=
   h3zornFromPeirce (S3OnH3ZornPeirce σ (h3zornPeirce X))
@@ -241,21 +243,21 @@ theorem S3OnH3Zorn_add (σ : S3Perm) (X Y : H3Zorn ℝ) :
   rcases σ with (_ | _ | _ | _ | _ | _)
   <;> cases X
   <;> cases Y
-  <;> simp [S3Perm.inverse, HMul.hMul, Mul.mul, S3Perm.inverse, S3Perm.comp, S3OnH3Zorn, S3OnH3ZornPeirce, h3zornPeirce,
+  <;> simp [S3OnH3Zorn, S3OnH3ZornPeirce, h3zornPeirce,
       h3zornFromPeirce, H3Zorn.add_readback, ZornVectorMatrix.conj_add]
 
 theorem S3OnH3Zorn_smul (σ : S3Perm) (r : ℝ) (X : H3Zorn ℝ) :
     S3OnH3Zorn σ (r • X) = r • S3OnH3Zorn σ X := by
   rcases σ with (_ | _ | _ | _ | _ | _)
   <;> cases X
-  <;> simp [S3Perm.inverse, HMul.hMul, Mul.mul, S3Perm.inverse, S3Perm.comp, S3OnH3Zorn, S3OnH3ZornPeirce, h3zornPeirce,
+  <;> simp [S3OnH3Zorn, S3OnH3ZornPeirce, h3zornPeirce,
       h3zornFromPeirce, H3Zorn.smul_readback, ZornVectorMatrix.conj_smul]
 
 @[simp] theorem S3OnH3Zorn_one (σ : S3Perm) :
     S3OnH3Zorn σ (1 : H3Zorn ℝ) = 1 := by
   change S3OnH3Zorn σ H3Zorn.one = H3Zorn.one
   rcases σ with (_ | _ | _ | _ | _ | _)
-  <;> simp [S3Perm.inverse, HMul.hMul, Mul.mul, S3Perm.inverse, S3Perm.comp, S3OnH3Zorn, S3OnH3ZornPeirce, h3zornPeirce,
+  <;> simp [S3OnH3Zorn, S3OnH3ZornPeirce, h3zornPeirce,
       h3zornFromPeirce, H3Zorn.one, ZornVectorMatrix.conj,
       ZornVectorMatrix.zero]
 
@@ -263,7 +265,7 @@ theorem S3OnH3Zorn_linearTrace (σ : S3Perm) (X : H3Zorn ℝ) :
     H3Zorn.linearTrace (S3OnH3Zorn σ X) = H3Zorn.linearTrace X := by
   rcases σ with (_ | _ | _ | _ | _ | _)
   <;> cases X
-  <;> simp [S3Perm.inverse, HMul.hMul, Mul.mul, S3Perm.inverse, S3Perm.comp, S3OnH3Zorn, S3OnH3ZornPeirce, h3zornPeirce,
+  <;> simp [S3OnH3Zorn, S3OnH3ZornPeirce, h3zornPeirce,
       h3zornFromPeirce, H3Zorn.linearTrace]
   <;> ring
 
@@ -296,9 +298,7 @@ theorem S3OnH3Zorn_comp (σ τ : S3Perm) :
       h3zornPeirce, h3zornFromPeirce]
   all_goals
     apply H3Zorn.ext_h3 <;>
-      simp [Function.comp_def, ZornVectorMatrix.conj,
-        ZornVectorMatrix.add, ZornVectorMatrix.neg, neg_neg] <;>
-      ring
+      simp [ZornVectorMatrix.conj, neg_neg]
 
 theorem S3OnH3ZornLinearMap_comp_closure (σ τ : S3Perm) :
     ∃ (ρ : S3Perm),
@@ -317,13 +317,13 @@ theorem S3OnH3ZornLinearMap_comp_closure (σ τ : S3Perm) :
     S3OnH3Zorn (S3Perm.inverse σ) (S3OnH3Zorn σ X) = X := by
   rcases σ with (_ | _ | _ | _ | _ | _)
   <;> cases X
-  <;> simp [Inv.inv, S3Perm.inverse, S3Perm.comp, S3OnH3Zorn, S3OnH3ZornPeirce, h3zornPeirce, h3zornFromPeirce, ZornVectorMatrix.conj_conj, ZornVectorMatrix.conj_add, ZornVectorMatrix.conj_smul]
+  <;> simp [S3Perm.inverse, S3OnH3Zorn, S3OnH3ZornPeirce, h3zornPeirce, h3zornFromPeirce, ZornVectorMatrix.conj_conj]
 
 @[simp] theorem S3OnH3Zorn_inverse_right (σ : S3Perm) (X : H3Zorn ℝ) :
     S3OnH3Zorn σ (S3OnH3Zorn (S3Perm.inverse σ) X) = X := by
   rcases σ with (_ | _ | _ | _ | _ | _)
   <;> cases X
-  <;> simp [Inv.inv, S3Perm.inverse, S3Perm.comp, S3OnH3Zorn, S3OnH3ZornPeirce, h3zornPeirce, h3zornFromPeirce, ZornVectorMatrix.conj_conj, ZornVectorMatrix.conj_add, ZornVectorMatrix.conj_smul]
+  <;> simp [S3Perm.inverse, S3OnH3Zorn, S3OnH3ZornPeirce, h3zornPeirce, h3zornFromPeirce, ZornVectorMatrix.conj_conj]
 
 def S3OnH3ZornLinearEquiv (σ : S3Perm) :
     H3Zorn ℝ ≃ₗ[ℝ] H3Zorn ℝ where
@@ -359,12 +359,12 @@ theorem S3OnH3ZornLinearEquiv_comp (σ τ : S3Perm) :
 @[simp] theorem S3OnH3Zorn_s12_involutive (X : H3Zorn ℝ) :
     S3OnH3Zorn S3Perm.s12 (S3OnH3Zorn S3Perm.s12 X) = X := by
   unfold S3OnH3Zorn
-  simp [Inv.inv, S3Perm.inverse, S3Perm.comp, S3OnH3Zorn, S3OnH3ZornPeirce, h3zornPeirce, h3zornFromPeirce, ZornVectorMatrix.conj_conj, ZornVectorMatrix.conj_add, ZornVectorMatrix.conj_smul]
+  simp [S3OnH3ZornPeirce, h3zornPeirce, h3zornFromPeirce, ZornVectorMatrix.conj_conj]
 
 @[simp] theorem S3OnH3Zorn_s23_involutive (X : H3Zorn ℝ) :
     S3OnH3Zorn S3Perm.s23 (S3OnH3Zorn S3Perm.s23 X) = X := by
   unfold S3OnH3Zorn
-  simp [Inv.inv, S3Perm.inverse, S3Perm.comp, S3OnH3Zorn, S3OnH3ZornPeirce, h3zornPeirce, h3zornFromPeirce, ZornVectorMatrix.conj_conj, ZornVectorMatrix.conj_add, ZornVectorMatrix.conj_smul]
+  simp [S3OnH3ZornPeirce, h3zornPeirce, h3zornFromPeirce, ZornVectorMatrix.conj_conj]
 
 @[simp] theorem S3OnH3Zorn_s31_involutive (X : H3Zorn ℝ) :
     S3OnH3Zorn S3Perm.s31 (S3OnH3Zorn S3Perm.s31 X) = X := by

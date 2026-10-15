@@ -35,40 +35,25 @@ theorem SymbolicLatentChartMorphism.mapObservedPathFamilyTopCatColimitImageReado
           (continuous_symbolicObservationMap D.system) := by
   apply colimit.hom_ext
   intro i
-  calc
-    colimit.ι (symbolicLatentPathFamilyTopCatDiagram (P := P)) i ≫
-        observedSymbolicLatentPathFamilyTopCatColimitImageReadout
+  rw [← Category.assoc,
+    observedSymbolicLatentPathFamilyTopCatColimitImageReadout_stage,
+    observedSymbolicLatentPathFamilyTopCatColimitImageReadout_stage]
+  cases i with
+  | initial =>
+      change observedSymbolicLatentPathFamilyStartImageTopCatHom
           C.system H (continuous_symbolicObservationMap C.system) ≫
-        F.mapObservedPathFamilyImageTopCatHom H =
-      (observedSymbolicLatentPathFamilyImageCocone C.system H
-          (continuous_symbolicObservationMap C.system)).ι.app i ≫
-        F.mapObservedPathFamilyImageTopCatHom H := by
-      rw [← Category.assoc,
-        observedSymbolicLatentPathFamilyTopCatColimitImageReadout_stage]
-    _ = (observedSymbolicLatentPathFamilyImageCocone D.system
-          (F.mapPathFamily H) (continuous_symbolicObservationMap D.system)).ι.app i := by
-      cases i with
-      | initial =>
-          change observedSymbolicLatentPathFamilyStartImageTopCatHom
-              C.system H (continuous_symbolicObservationMap C.system) ≫
-              F.mapObservedPathFamilyImageTopCatHom H =
-            observedSymbolicLatentPathFamilyStartImageTopCatHom
-              D.system (F.mapPathFamily H)
-                (continuous_symbolicObservationMap D.system)
-          rw [observedSymbolicLatentPathFamilyStartImageTopCatHom,
-            Category.assoc,
-            F.mapObservedPathFamilyImage_evaluation_factorization]
-          rfl
-      | extended =>
-          exact F.mapObservedPathFamilyImage_evaluation_factorization H
-    _ = colimit.ι (symbolicLatentPathFamilyTopCatDiagram (P := P)) i ≫
-        observedSymbolicLatentPathFamilyTopCatColimitImageReadout
+          F.mapObservedPathFamilyImageTopCatHom H =
+        observedSymbolicLatentPathFamilyStartImageTopCatHom
           D.system (F.mapPathFamily H)
-            (continuous_symbolicObservationMap D.system) := by
-      symm
-      exact observedSymbolicLatentPathFamilyTopCatColimitImageReadout_stage
-        D.system (F.mapPathFamily H)
-          (continuous_symbolicObservationMap D.system) i
+            (continuous_symbolicObservationMap D.system)
+      rw [observedSymbolicLatentPathFamilyStartImageTopCatHom,
+        observedSymbolicLatentPathFamilyStartImageTopCatHom,
+        Category.assoc]
+      exact congrArg
+        (fun f => symbolicLatentPathFamilyStartParameterTopCatHom P ≫ f)
+        (F.mapObservedPathFamilyImage_evaluation_factorization H)
+  | extended =>
+      exact F.mapObservedPathFamilyImage_evaluation_factorization H
 
 theorem SymbolicLatentChartMorphism.mapObservedPathFamilyCompHausColimitImageReadout_natural
     {P X Y : Type} [TopologicalSpace P] [TopologicalSpace X]

@@ -19,9 +19,9 @@ theorem paper_pom_fixedq_frozen_universal_reversible_threshold
     Filter.Tendsto succ Filter.atTop (𝓝 (min (1 : Real) lam)) := by
   have hmin : Filter.Tendsto (fun m => min (1 : Real) (ratio m)) Filter.atTop
       (𝓝 (min (1 : Real) lam)) := by
-    let f : Real → Real := fun x => min (1 : Real) x
-    have hf : Continuous f := continuous_const.min continuous_id
-    simpa [f] using (hf.continuousAt.tendsto.comp hRatio)
+    change Filter.Tendsto ((fun x : Real => min (1 : Real) x) ∘ ratio)
+      Filter.atTop (𝓝 (min (1 : Real) lam))
+    exact (continuous_const.min continuous_id).continuousAt.tendsto.comp hRatio
   have hmain : Filter.Tendsto (fun m => massOnMax m * min (1 : Real) (ratio m)) Filter.atTop
       (𝓝 (min (1 : Real) lam)) := by
     simpa using (hMass.mul hmin)

@@ -190,7 +190,12 @@ inductive FierzChannel where
   | vector
   | axial
   | area
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype FierzChannel where
+  elems := {FierzChannel.scalar, FierzChannel.rotor, FierzChannel.vector, FierzChannel.axial, FierzChannel.area}
+  complete := by
+    rintro (_ | _ | _ | _ | _) <;> simp
 
 /-- Fierz coordinates are projective functions of Weyl/KMS orbit counts. -/
 abbrev FierzFromProjectiveCounts (Γ : Type*) [Fintype Γ] :=

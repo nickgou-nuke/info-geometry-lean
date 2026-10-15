@@ -1,5 +1,4 @@
 import InfoGeometry.Canonical.CategoricalRecursiveClosureBridge
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
 
 /-!
@@ -40,7 +39,8 @@ theorem readback_idempotent
     directLimitLift P.bond P.toLimit P.hcone (directLimitOf P.bond n p) *
         directLimitLift P.bond P.toLimit P.hcone (directLimitOf P.bond n p) =
       directLimitLift P.bond P.toLimit P.hcone (directLimitOf P.bond n p) := by
-  simpa [map_mul] using congrArg (P.toLimit n) hp
+  rw [directLimit_readback]
+  rw [← map_mul, hp]
 
 /-- Square-zero data is preserved by the canonical cone map. -/
 theorem readback_squareZero
@@ -48,7 +48,8 @@ theorem readback_squareZero
     (hq : q * q = 0) :
     directLimitLift P.bond P.toLimit P.hcone (directLimitOf P.bond n q) *
         directLimitLift P.bond P.toLimit P.hcone (directLimitOf P.bond n q) = 0 := by
-  simpa [map_mul] using congrArg (P.toLimit n) hq
+  rw [directLimit_readback]
+  rw [← map_mul, hq, map_zero]
 
 end AFRecursiveLimitPacket
 

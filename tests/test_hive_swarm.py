@@ -73,12 +73,15 @@ def test_parse_critic_decision_and_auditor_report() -> None:
     assert nonschema.reason == "non-schema critic output"
     assert auditor.verdict == "conditional_pass"
     assert auditor.promotion_allowed == "no"
+    assert hive_swarm.parse_auditor_report("unstructured response").verdict == "fail"
+    assert hive_swarm.parse_auditor_report("VERDICT: pass").promotion_allowed == "no"
 
 
 def test_run_one_success_with_all_roles(monkeypatch, tmp_path: Path) -> None:
     config = sample_swarm_config()
     task = sample_task()
     goal = sample_goal()
+    goal_updates = []
 
     monkeypatch.setattr(hive_swarm, "ARTIFACT_DIR", tmp_path)
     monkeypatch.setattr(hive_swarm.hive_bee, "fetch_claimed_task_and_goal", lambda cfg: (task, goal))
@@ -90,7 +93,11 @@ def test_run_one_success_with_all_roles(monkeypatch, tmp_path: Path) -> None:
     monkeypatch.setattr(hive_swarm.hive_bee, "get_proof_state", lambda *args, **kwargs: {"status": "ok", "proof_state": "⊢ 1 = 1"})
     monkeypatch.setattr(hive_swarm.hive_bee, "apply_tactic", lambda *args, **kwargs: {"status": "success", "lean": {"ok": True}})
     monkeypatch.setattr(hive_swarm.hive_bee, "fossilize_success", lambda cfg, attempt: {"task": {"status": "completed"}, "goal": {"status": "closed"}, "fossil": {"_key": "f1"}})
-    monkeypatch.setattr(hive_swarm.queue_tool, "update_goal_status", lambda *args, **kwargs: {"ok": True})
+    monkeypatch.setattr(
+        hive_swarm.queue_tool,
+        "update_goal_status",
+        lambda *args, **kwargs: goal_updates.append(kwargs) or {"ok": True},
+    )
 
     result = hive_swarm.run_one(config)
 
@@ -98,6 +105,8 @@ def test_run_one_success_with_all_roles(monkeypatch, tmp_path: Path) -> None:
     assert result["generator_tactic"] == "rfl"
     assert result["critic"]["verdict"] == "approve"
     assert result["auditor"]["verdict"] == "pass"
+    assert goal_updates[-1]["status"] == "audited"
+    assert goal_updates[-1]["extra_fields"]["bee_state"] == "audited"
 
 
 def test_run_one_critic_rejection_requeues(monkeypatch, tmp_path: Path) -> None:

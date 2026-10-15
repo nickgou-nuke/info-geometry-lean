@@ -45,6 +45,7 @@ theorem paper_xi_time_part70da_window6_abstract_orbittype_minimal_c12 :
   intro n h2 h3 h4
   have h6 : Nat.lcm 2 3 ∣ n := Nat.lcm_dvd h2 h3
   have h12 : Nat.lcm (Nat.lcm 2 3) 4 ∣ n := Nat.lcm_dvd h6 h4
-  simpa using h12
+  have hlcm : Nat.lcm (Nat.lcm 2 3) 4 = 12 := by decide
+  rwa [hlcm] at h12
 
 end Omega.Zeta

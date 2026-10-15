@@ -33,7 +33,7 @@ def CircuitIndexGeKNPComplete (k : ℕ) : Prop :=
 
 /-- A concrete family of pairwise distinct padding strings: the one-hot codes. -/
 def circuitIndexPadCode {k : ℕ} (i : Fin k) : BitVec (circuitIndexPaddingBits k) :=
-  fun j => decide (j = i)
+  fun j => decide (j.val = i.val)
 
 /-- Attach the `i`-th padding code to the base assignment `u`. -/
 def circuitIndexPaddedAssignment {n k : ℕ} (u : BitVec n) (i : Fin k) :
@@ -55,6 +55,7 @@ lemma self_le_two_pow (n : ℕ) : n ≤ 2 ^ n := by
 lemma circuitIndexPadCode_injective {k : ℕ} :
     Function.Injective (@circuitIndexPadCode k) := by
   intro i j hij
+  apply Fin.ext
   have hEval := congrArg (fun v => v i) hij
   simpa [circuitIndexPadCode] using hEval
 
@@ -71,7 +72,7 @@ lemma liftedSatFormulaGeK_padded {n k : ℕ} (φ : BitVec n → Bool) (u : BitVe
   unfold liftedSatFormulaGeK circuitIndexPaddedAssignment circuitIndexPaddingBits
   congr 1
   funext j
-  simp
+  exact Fin.append_left' u (circuitIndexPadCode i) j
 
 theorem satReductionCircuitGeK_spec {n : ℕ} (k : ℕ) (hk : 2 ≤ k) (φ : BitVec n → Bool) :
     satisfiable φ ↔ circuitIndexAtLeastK k (satReductionCircuitGeK k φ) := by

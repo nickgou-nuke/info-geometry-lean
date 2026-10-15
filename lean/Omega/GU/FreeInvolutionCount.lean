@@ -18,7 +18,8 @@ theorem no_free_involution_on_odd (k : Nat) :
   let σ : Equiv.Perm (Fin (2 * k + 1)) := Function.Involutive.toPerm f hinv
   have hσ2 : σ ^ 2 = 1 := by
     ext x
-    simpa [pow_two, σ] using congrArg Fin.val (hinv x)
+    change (f (f x)).val = x.val
+    exact congrArg Fin.val (hinv x)
   have hσ : σ ^ (2 ^ 1) = 1 := by
     simpa using hσ2
   have hnotEven : ¬ Even (Fintype.card (Fin (2 * k + 1))) := by

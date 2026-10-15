@@ -11,7 +11,11 @@ open scoped BigOperators
 inductive State
   | zero
   | one
-deriving Repr, DecidableEq, Fintype, Nonempty
+deriving Repr, DecidableEq, Nonempty
+
+instance : Fintype State where
+  elems := {State.zero, State.one}
+  complete := by rintro (_ | _) <;> simp
 
 abbrev X_test := State
 abbrev Θ_test := State

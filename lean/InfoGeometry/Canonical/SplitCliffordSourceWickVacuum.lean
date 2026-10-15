@@ -145,10 +145,7 @@ theorem chargedFock_sugawaraStressMode_virasoroBracket
     (H.sugawaraStressMode m).commutator (H.sugawaraStressMode n) =
       (m - n) • H.sugawaraStressMode (m + n)
         + if m + n = 0 then
-            (((m ^ 3 - m : 𝕜) / (12 : 𝕜)) •
-              (1 :
-                VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
-                  VirasoroProject.ChargedFockSpace 𝕜 α))
+            (((m ^ 3 - m : 𝕜) / (12 : 𝕜)) • 1)
           else 0 := by
   let H := chargedFockSpaceCurrentHeisenbergRep 𝕜 α
   simpa [H] using
@@ -161,18 +158,15 @@ field of the canonical `CurrentSugawaraMorphism`.
 -/
 theorem chargedFock_current_commutator_base_via_morphism
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) (m : Int) :
-    let M :
-      CurrentSugawaraMorphism 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α) :=
+    let M :=
       CurrentSugawaraMorphism.ofHeisenberg
         (chargedFockSpaceCurrentHeisenbergRep 𝕜 α)
     (M.heisenberg.J m).commutator (M.heisenberg.J (-m)) =
-      (m : 𝕜) •
-        (1 :
-          VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
-            VirasoroProject.ChargedFockSpace 𝕜 α) := by
-  let H := chargedFockSpaceCurrentHeisenbergRep 𝕜 α
-  have h := H.comm m (-m)
-  simpa [H] using h
+      (m : 𝕜) • 1 := by
+  intro M
+  have h := (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm m (-m)
+  rw [if_pos (add_neg_cancel m)] at h
+  exact h
 
 /--
 External packaged-lane positive-mode spelling of the same base readout.
@@ -180,15 +174,11 @@ External packaged-lane positive-mode spelling of the same base readout.
 theorem chargedFock_current_commutator_base_pos_via_morphism
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜)
     (m : Int) (_hpos : 0 < m) :
-    let M :
-      CurrentSugawaraMorphism 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α) :=
+    let M :=
       CurrentSugawaraMorphism.ofHeisenberg
         (chargedFockSpaceCurrentHeisenbergRep 𝕜 α)
     (M.heisenberg.J m).commutator (M.heisenberg.J (-m)) =
-      (m : 𝕜) •
-        (1 :
-          VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
-            VirasoroProject.ChargedFockSpace 𝕜 α) := by
+      (m : 𝕜) • 1 := by
   exact chargedFock_current_commutator_base_via_morphism 𝕜 α m
 
 /--
@@ -266,8 +256,7 @@ theorem chargedFock_sugawara_vacuum_highest_weight_packet
         (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n)
         (VirasoroProject.ChargedFockSpace.vacuum 𝕜 α) = 0) := by
   constructor
-  · simpa using
-      (VirasoroProject.ChargedFockSpace.sugawaraVacuum_highestWeight (𝕜 := 𝕜) α).1
+  · exact (VirasoroProject.ChargedFockSpace.sugawaraVacuum_highestWeight (𝕜 := 𝕜) α).1
   constructor
   · exact chargedFock_sugawara_zero_mode_on_vacuum (𝕜 := 𝕜) α
   · intro n hn

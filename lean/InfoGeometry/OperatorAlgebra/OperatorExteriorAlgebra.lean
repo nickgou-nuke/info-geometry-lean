@@ -278,10 +278,10 @@ def map2 (f : A →ₐ[R] B) (ω : Op2Form R V A) : Op2Form R V B where
   theorem map2_wedge (f : A →ₐ[R] B)
     (α β : Op1Form R V A) :
     map2 f (wedge α β) = wedge (map1 f α) (map1 f β) := by
-  ext u v
-  change f (α u * β v - α v * β u) =
-    f (α u) * f (β v) - f (α v) * f (β u)
-  simp
+    ext u v
+    change f (α u * β v - α v * β u) =
+      f (α u) * f (β v) - f (α v) * f (β u)
+    simp
 
   /-- Value transport of one-forms is functorial under composition. -/
   theorem map1_comp

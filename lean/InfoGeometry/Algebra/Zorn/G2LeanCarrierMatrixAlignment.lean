@@ -143,11 +143,13 @@ def correctedTMatrix : Matrix (Fin 8) (Fin 8) F2 :=
     ![0, 0, 0, 1, 0, 0, 0, 0],
     ![0, 0, 1, 0, 0, 0, 0, 0]]
 
+@[simp] theorem swapCartanAut_apply (X : SplitOctF2) : swapCartanAut.1 X = swapCartanFun X := rfl
+
 theorem autMatrix_correctedT_eq : autMatrix correctedT = correctedTMatrix := by
+  rw [correctedT_eq_word_public]
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [autMatrix, correctedT, concreteWeylElement,
-      swap01Aut_apply, swap01Fun, swapCartanAut, swapCartanEquiv,
+    simp [autMatrix, swap01Aut_apply, swap01Fun, swapCartanAut_apply,
       swapCartanFun, cycle012Aut_apply, cycle012Fun, basis8,
       carrierToVec, splitOctF2EquivBits, splitOctF2ToBits, bitToF2,
       ePlus, eMinus, up0, up1, up2, down0, down1, down2,

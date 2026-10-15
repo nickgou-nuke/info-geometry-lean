@@ -194,7 +194,7 @@ theorem hestenes_mobius_convolution_stableRange
     have hx0 := Nat.left_ne_zero_of_mem_divisorsAntidiagonal hx
     simp [hx0]
   rw [hzero] at hk'
-  simpa [hk0.ne'] using hk'
+  simpa only [one_mul, ArithmeticFunction.one_apply] using hk'
 
 theorem hestenes_zeta_mangoldt_eq_log
     (N k : ℕ) (hk : k ≤ N) (hk0 : 0 < k) :

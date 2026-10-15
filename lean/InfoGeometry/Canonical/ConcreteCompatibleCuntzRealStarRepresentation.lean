@@ -60,13 +60,13 @@ def pulledRingNorm : RingNorm A where
     exact (R.pulledNorm_eq_zero_iff a).mp h
   mul_le' := R.pulledNorm_mul_le
 
-noncomputable def pulledNormedRing : NormedRing A :=
+@[instance_reducible] noncomputable def pulledNormedRing : NormedRing A :=
   RingNorm.toNormedRing R.pulledRingNorm
 
 theorem rep_isometry :
     letI := R.pulledNormedRing
     Isometry R.rep := by
-  letI := R.pulledNormedRing
+  let _ := R.pulledNormedRing
   intro a b
   rw [edist_dist, edist_dist, dist_eq_norm, dist_eq_norm]
   rw [← map_sub R.rep]
@@ -102,11 +102,11 @@ theorem stageMap_algebraMap_real (n : ℕ) (r : ℝ) :
       simp [complexify]
     · ext i j
       by_cases h : i = j <;> simp [complexify, h]
-  rw [hc, map_smul]
+  rw [hc, map_smul, map_one]
   rw [show algebraMap ℝ BoundedL2Operator r =
       algebraMap ℂ BoundedL2Operator (algebraMap ℝ ℂ r) by
         rfl]
-  simp [Algebra.smul_def]
+  exact (Algebra.algebraMap_eq_smul_one _).symm
 
 def colimitStarAlgHom :
     InfoGeometry.Clifford.Cl11InfiniteCarrier.CompatibleCarrier →⋆ₐ[ℝ]
@@ -170,7 +170,7 @@ theorem colimitCompletion_dense :
       InfoGeometry.Clifford.Cl11InfiniteCarrier.CompatibleCarrier →
         UniformSpace.Completion
           InfoGeometry.Clifford.Cl11InfiniteCarrier.CompatibleCarrier) := by
-  letI := CStarStateColimit.Native.FaithfulRealStarRepresentation.pulledNormedRing
+  let _ := CStarStateColimit.Native.FaithfulRealStarRepresentation.pulledNormedRing
     concreteFaithfulRealStarRepresentation
   exact UniformSpace.Completion.denseRange_coe
 

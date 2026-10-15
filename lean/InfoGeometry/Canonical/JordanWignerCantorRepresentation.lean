@@ -3,6 +3,7 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.JordanWignerCelikKocakBridgeNDepth
 import InfoGeometry.Clifford.Cl11TensorTowerLimit
 import InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
+import InfoGeometry.Algebra.SupergradedBracket
 import InfoGeometry.Clifford.MatToCantorOperator
 import InfoGeometry.Canonical.GeometricMonodromy
 
@@ -41,6 +42,8 @@ open InfoGeometry.Clifford.TowerMatrix
 open InfoGeometry.Canonical.CelikKocakCantorOperators
 open InfoGeometry.Canonical.CelikKocakCantorOperators.FunctionSpace
 open InfoGeometry.Canonical.JordanWignerCelikKocakBridgeNDepth
+open scoped Matrix
+open scoped Kronecker
 
 /-- Real finite Cantor operator algebra at depth `n`, using the tower's native indices. -/
 abbrev RealCantorOp (n : ℕ) := InfoGeometry.Clifford.MatToCantorOperator.RealCantorOp n
@@ -158,14 +161,17 @@ def idxEquivCantorAddress : (n : ℕ) → Idx n ≃ CantorAddress n
 
 @[simp] theorem idxEquivCantorAddress_castSucc (n : ℕ) (p : Idx n) (b : Fin 2) (k : Fin n) :
     idxEquivCantorAddress (n + 1) (p, b) k.castSucc = idxEquivCantorAddress n p k := by
-  have hk : ((k.castSucc : Fin (n + 1)) : ℕ) < n := k.isLt
-  simp [idxEquivCantorAddress]
+  change (if hk : ((k.castSucc : Fin (n + 1)) : ℕ) < n then idxEquivCantorAddress n p ⟨(k.castSucc : ℕ), hk⟩ else fin2EquivBool b) = idxEquivCantorAddress n p k
+  split_ifs with hk
+  · rfl
+  · exact (hk k.isLt).elim
 
 @[simp] theorem idxEquivCantorAddress_last (n : ℕ) (p : Idx n) (b : Fin 2) :
     idxEquivCantorAddress (n + 1) (p, b) (Fin.last n) = fin2EquivBool b := by
-  have hlast : ¬ ((Fin.last n : Fin (n + 1)) : ℕ) < n := by
-    simp
-  simp [idxEquivCantorAddress]
+  change (if hk : ((Fin.last n : Fin (n + 1)) : ℕ) < n then idxEquivCantorAddress n p ⟨(Fin.last n : ℕ), hk⟩ else fin2EquivBool b) = fin2EquivBool b
+  split_ifs with hk
+  · exact (Nat.lt_irrefl n hk).elim
+  · rfl
 
 /-- Entrywise complexification as an `ℝ`-algebra homomorphism. -/
 noncomputable def complexifyMatrixAlgHom (n : ℕ) :
@@ -294,7 +300,9 @@ noncomputable instance : Algebra ℝ RealCantorOpInf :=
     induction x using DirectLimit.induction with
     | _ n x =>
         rw [realCantorAlgebraMap_stage]
-        simpa using congrArg (realCantorOfStage n) (Algebra.commutes r x))
+        change (realCantorOfStage n (algebraMap ℝ (RealCantorOp n) r)) * (realCantorOfStage n x) =
+          (realCantorOfStage n x) * (realCantorOfStage n (algebraMap ℝ (RealCantorOp n) r))
+        rw [← map_mul, ← map_mul, Algebra.commutes])
 
 /-- The inverse finite maps commute with the one-step bonds. -/
 theorem realMatToCantor_symm_compat (n : ℕ) (X : RealCantorOp n) :
@@ -411,6 +419,37 @@ noncomputable def globalRealCantorAlgEquiv : Limit ≃ₐ[ℝ] RealCantorOpInf :
 noncomputable def globalCantorInverseEquiv : RealCantorOpInf ≃ₐ[ℝ] Limit :=
   globalRealCantorAlgEquiv.symm
 
+/-- The matrix-to-Cantor algebra equivalence preserves the parity-controlled
+commutator and anticommutator on the direct-limit operator algebras. -/
+theorem globalRealCantorAlgEquiv_superBracket (px py : Bool) (x y : Limit) :
+    globalRealCantorAlgEquiv
+        (InfoGeometry.Algebra.SupergradedBracket.superBracket px py x y) =
+      InfoGeometry.Algebra.SupergradedBracket.superBracket px py
+        (globalRealCantorAlgEquiv x) (globalRealCantorAlgEquiv y) := by
+  exact InfoGeometry.Algebra.SupergradedBracket.map_superBracket
+    globalRealCantorAlgEquiv.toRingHom px py x y
+
+/-- Nested graded triple products commute with the Cantor representation. -/
+theorem globalRealCantorAlgEquiv_superTriple
+    (px py pz : Bool) (x y z : Limit) :
+    globalRealCantorAlgEquiv
+        (InfoGeometry.Algebra.SupergradedBracket.superBracket px py x
+          (InfoGeometry.Algebra.SupergradedBracket.superBracket py pz y z)) =
+      InfoGeometry.Algebra.SupergradedBracket.superBracket px py
+        (globalRealCantorAlgEquiv x)
+        (InfoGeometry.Algebra.SupergradedBracket.superBracket py pz
+          (globalRealCantorAlgEquiv y) (globalRealCantorAlgEquiv z)) := by
+  rw [globalRealCantorAlgEquiv_superBracket, globalRealCantorAlgEquiv_superBracket]
+
+/-- Associators vanish after transport to the Cantor operator limit because
+the existing algebra equivalence has an associative ring as codomain. -/
+theorem globalRealCantor_associator_zero (x y z : Limit) :
+    (globalRealCantorAlgEquiv x * globalRealCantorAlgEquiv y) *
+        globalRealCantorAlgEquiv z -
+      globalRealCantorAlgEquiv x *
+        (globalRealCantorAlgEquiv y * globalRealCantorAlgEquiv z) = 0 := by
+  simp [mul_assoc]
+
 @[simp] theorem globalRealCantorAlgEquiv_ofStage (n : ℕ) (A : Stage n) :
     globalRealCantorAlgEquiv (ofStage n A) = realCantorOfStage n (realMatToCantor n A) := by
   rfl
@@ -429,22 +468,26 @@ noncomputable def hestenesBivectorStage : Stage 1 :=
 /-- The first-stage Hestenes bivector squares to `-1`. -/
 theorem hestenesBivectorStage_sq :
     hestenesBivectorStage * hestenesBivectorStage = -(1 : Stage 1) := by
-  change hestenesPhaseHead 0 * hestenesPhaseHead 0 = -(1 : Stage 1)
-  change (InfoGeometry.Clifford.TowerMatrix.kronPow hestenesPhaseBase 1) *
-      (InfoGeometry.Clifford.TowerMatrix.kronPow hestenesPhaseBase 1) =
-        -(1 : Stage 1)
-  dsimp [InfoGeometry.Clifford.TowerMatrix.kronPow]
+  show (kronPow hestenesPhaseBase 0 ⊗ₖ hestenesPhaseBase) *
+      (kronPow hestenesPhaseBase 0 ⊗ₖ hestenesPhaseBase) = -1
   rw [← Matrix.mul_kronecker_mul]
   rw [hestenesPhaseBase_sq]
-  ext i j
-  cases i with
-  | mk i0 i1 =>
-      cases j with
-      | mk j0 j1 =>
-          have h0 : i0 = j0 := Subsingleton.elim _ _
-          subst h0
-          fin_cases i0
-          fin_cases i1 <;> fin_cases j1 <;> simp
+  ext ⟨i0, i1⟩ ⟨j0, j1⟩
+  have h0 : i0 = j0 := Subsingleton.elim _ _
+  subst h0
+  simp only [kronPow, Matrix.mul_one, Matrix.kroneckerMap_apply, Matrix.neg_apply, Matrix.one_apply]
+  fin_cases i1 <;> fin_cases j1 <;> norm_num
+
+
+
+
+
+
+
+
+
+
+
 
 /-- The global real Hestenes--Krein bivector phase in the matrix-tower colimit. -/
 noncomputable def hestenesBivectorInf : Limit :=

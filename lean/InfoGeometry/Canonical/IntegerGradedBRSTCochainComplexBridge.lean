@@ -44,10 +44,12 @@ def integerGradedBRSTMap
     exact (h_map x).2
   · intro x y
     apply Subtype.ext
-    simpa using congrArg Subtype.val (h_map.map_add x y)
+    change (h_map (x + y)).1 = (h_map x).1 + (h_map y).1
+    exact congrArg Subtype.val (h_map.map_add x y)
   · intro c x
     apply Subtype.ext
-    simpa using congrArg Subtype.val (h_map.map_smul c x)
+    change (h_map (c • x)).1 = c • (h_map x).1
+    exact congrArg Subtype.val (h_map.map_smul c x)
 
 attribute [irreducible] integerGradedBRSTMap
 

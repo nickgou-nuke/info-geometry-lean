@@ -55,19 +55,19 @@ noncomputable def targetCycleMap
     C.targetCycles p →ₗ[R] C'.targetCycles p where
   toFun x :=
     ⟨fE (C.differentialDegree p) x.1, by
-      change C'.differential (jDeg (kDeg p))
-          (fE (jDeg (kDeg p)) x.1) = 0
-      have h :
-          fE (jDeg (kDeg (jDeg (kDeg p))))
-              (C.differential (jDeg (kDeg p)) x.1) =
-            C'.differential (jDeg (kDeg p))
-              (fE (jDeg (kDeg p)) x.1) := by
-        simpa only [differentialDegree, LinearMap.comp_apply] using
-          LinearMap.congr_fun
-            (differential_natural C C' fD fE hj hk (C.differentialDegree p)) x.1
+      change C'.differential (C.differentialDegree p)
+        (fE (C.differentialDegree p) x.1) = 0
+      have hcomp := LinearMap.congr_fun
+        (differential_natural C C' fD fE hj hk
+          (C.differentialDegree p)) x.1
+      change fE (C.differentialDegree (C.differentialDegree p))
+          (C.differential (C.differentialDegree p) x.1) =
+        C'.differential (C.differentialDegree p)
+          (fE (C.differentialDegree p) x.1) at hcomp
       have hx := x.2
-      change C.differential (jDeg (kDeg p)) x.1 = 0 at hx
-      rw [← h, hx, map_zero]⟩
+      change C.differential (C.differentialDegree p) x.1 = 0 at hx
+      rw [← hcomp, hx]
+      exact map_zero (fE (C.differentialDegree (C.differentialDegree p)))⟩
   map_add' x y := by
     ext
     exact map_add _ _ _
@@ -90,14 +90,16 @@ theorem targetCycleMap_maps_boundaries
   rcases hx with ⟨y, hy⟩
   refine ⟨fE p y, ?_⟩
   change C'.differential p (fE p y) =
-    fE (jDeg (kDeg p)) x.1
+    fE (C.differentialDegree p) x.1
   calc
     C'.differential p (fE p y) =
-        fE (jDeg (kDeg p)) (C.differential p y) := by
-      symm
-      simpa only [differentialDegree, LinearMap.comp_apply] using
-        LinearMap.congr_fun (differential_natural C C' fD fE hj hk p) y
-    _ = fE (jDeg (kDeg p)) x.1 := by rw [hy]
+        fE (C.differentialDegree p) (C.differential p y) := by
+      have hcomp := LinearMap.congr_fun
+        (differential_natural C C' fD fE hj hk p) y
+      change fE (C.differentialDegree p) (C.differential p y) =
+        C'.differential p (fE p y) at hcomp
+      exact hcomp.symm
+    _ = fE (C.differentialDegree p) x.1 := by rw [hy]
 
 /-- A map commuting with the exact-couple legs induces the native quotient
 map from cycles modulo boundaries to cycles modulo boundaries. -/
@@ -238,7 +240,6 @@ theorem jToTargetCycles_natural
   have hjx := LinearMap.congr_fun (hj (iDeg.symm p)) x
   simp only [LinearMap.comp_apply] at hjx
   rw [hjx]
-  rfl
 
 /-- The class induced by `j` is natural in homology. -/
 theorem jToDerivedE_natural

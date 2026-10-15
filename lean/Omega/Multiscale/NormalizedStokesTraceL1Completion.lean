@@ -96,6 +96,7 @@ theorem paper_app_normalized_stokes_trace_l1_completion
     D.eventuallyCompatibleAgrees ∧ D.boundaryStokesLimit ∧ D.uniqueContinuousExtension := by
   rcases paper_app_normalized_integration_l1_defect_inverse_tower D.toNormalizedIntegrationData with
     ⟨_, _, hBoundary, hLimitStokes⟩
+  change Tendsto D.normalizedBoundary atTop (𝓝 D.boundaryLimit) at hBoundary
   have hStable :
       Tendsto D.normalizedBoundary atTop (𝓝 D.stableValue) :=
     tendsto_atTop_of_eventually_const D.boundary_eventually_stable

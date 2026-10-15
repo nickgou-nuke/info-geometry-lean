@@ -1,0 +1,13 @@
+import InfoGeometry.Projective.SplitQuaternionGrothendieckRealization
+
+open InfoGeometry.Projective.SplitQuaternionGrothendieckRealization
+
+#check projectorTraceAddHom
+#check projectorTraceOnGrothendieck
+#check projectorTraceOnGrothendieck_projectorN
+#check projectorTraceOnGrothendieck_action
+#check projectorTraceOnGrothendieck_gauge_invariant
+
+#print axioms projectorTraceOnGrothendieck_projectorN
+#print axioms projectorTraceOnGrothendieck_action
+#print axioms projectorTraceOnGrothendieck_gauge_invariant

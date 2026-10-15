@@ -61,7 +61,7 @@ theorem paper_xi_time_part9gb_canonical_fixedpoint_count_prefix_stratification
       exact Fin.elim0 i
   · intro n hn r s
     constructor <;> intro h
-    · simpa [xi_time_part9g_holographic_prefix_isometry_on_line_coset] using h
-    · simpa [xi_time_part9g_holographic_prefix_isometry_on_line_coset] using h
+    · simpa [xi_time_part9g_holographic_prefix_isometry_on_line_coset, canonicalDigitEncoder] using h
+    · simpa [xi_time_part9g_holographic_prefix_isometry_on_line_coset, canonicalDigitEncoder] using h
 
 end Omega.Zeta

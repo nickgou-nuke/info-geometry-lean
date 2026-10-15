@@ -39,7 +39,7 @@ atlas packet. -/
 noncomputable def atlasSection : parameterTopCat (𝕜 := 𝕜) ⟶ topCat (𝕜 := 𝕜) := by
   refine TopCat.ofHom ?_
   refine ⟨fun α => topologicalHeisenbergBoundaryAtlas (𝕜 := 𝕜) α, ?_⟩
-  simpa using continuous_topologicalHeisenbergBoundaryAtlas (𝕜 := 𝕜)
+  exact continuous_of_discreteTopology
 
 @[simp] theorem atlasSection_projection :
     atlasSection (𝕜 := 𝕜) ≫ projection (𝕜 := 𝕜) = 𝟙 _ := by

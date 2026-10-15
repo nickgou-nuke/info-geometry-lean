@@ -23,7 +23,7 @@ def invariantFields : Submodule ℝ (BrillouinTorus → V) where
     intro scalar field fixed point
     exact congrArg (scalar • ·) (fixed point)
 
-def fieldEquiv : (KleinBrillouinQuotient → V) ≃ₗ[ℝ] invariantFields where
+def fieldEquiv : (KleinBrillouinQuotient → V) ≃ₗ[ℝ] invariantFields (V := V) where
   toFun field := ⟨fun point => field (quotientMap point), fun point =>
     congrArg field (quotientMap_glide point)⟩
   invFun field := Quotient.lift (field : BrillouinTorus → V) (by
@@ -45,11 +45,11 @@ def fieldEquiv : (KleinBrillouinQuotient → V) ≃ₗ[ℝ] invariantFields wher
 
 @[simp] theorem fieldEquiv_apply (field : KleinBrillouinQuotient → V)
     (point : BrillouinTorus) :
-    fieldEquiv field point = field (quotientMap point) := rfl
+    (fieldEquiv (V := V) field).1 point = field (quotientMap point) := rfl
 
 @[simp] theorem fieldEquiv_symm_apply (field : invariantFields (V := V))
     (point : BrillouinTorus) :
-    fieldEquiv.symm field (quotientMap point) = field point := rfl
+    ((fieldEquiv (V := V)).symm field) (quotientMap point) = field.1 point := rfl
 
 def glidePullback : Module.End ℝ (BrillouinTorus → V) where
   toFun field point := field (torusGlide point)
@@ -79,7 +79,7 @@ def restrictOperator (operator : Module.End ℝ (BrillouinTorus → V))
 def quotientOperator (operator : Module.End ℝ (BrillouinTorus → V))
     (preserves : ∀ field : invariantFields (V := V),
       operator field ∈ invariantFields) : Module.End ℝ (KleinBrillouinQuotient → V) :=
-  fieldEquiv.symm.conjAlgEquiv ℝ (restrictOperator operator preserves)
+  (fieldEquiv (V := V)).symm.conjAlgEquiv ℝ (restrictOperator operator preserves)
 
 @[simp] theorem quotientOperator_apply
     (operator : Module.End ℝ (BrillouinTorus → V))

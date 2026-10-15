@@ -62,13 +62,15 @@ theorem symbolicLatentBasedLoopHomotopyQuotientCompHausHom_id
     symbolicLatentBasedLoopHomotopyQuotientCompHausHom
         (ContinuousMap.id X) (x := x) (y := x) rfl =
       𝟙 (CompHaus.of (SymbolicLatentBasedLoopHomotopyQuotient x)) := by
-  have hFF : (compHausToTop).FullyFaithful := by
-    simpa using (CompHausLike.fullyFaithfulCompHausLikeToTop (fun _ => True))
-  apply hFF.map_injective
-  simpa [Functor.map_comp,
-    symbolicLatentBasedLoopHomotopyQuotientCompHausHom] using
+  apply ConcreteCategory.hom_ext
+  intro q
+  have h := congrArg (fun f => f q)
     (symbolicLatentBasedLoopHomotopyQuotientTopCatHom_id
       (X := X) (x := x))
+  change (TopCat.Hom.hom
+    (symbolicLatentBasedLoopHomotopyQuotientTopCatHom
+      (ContinuousMap.id X) rfl)) q = q
+  exact h
 
 theorem symbolicLatentBasedLoopHomotopyQuotientCompHausHom_comp
     {X Y Z : Type} [TopologicalSpace X] [TopologicalSpace Y]
@@ -86,12 +88,18 @@ theorem symbolicLatentBasedLoopHomotopyQuotientCompHausHom_comp
         symbolicLatentBasedLoopHomotopyQuotientCompHausHom g hyz =
       symbolicLatentBasedLoopHomotopyQuotientCompHausHom (g.comp f)
         ((congrArg g hxy).trans hyz) := by
-  have hFF : (compHausToTop).FullyFaithful := by
-    simpa using (CompHausLike.fullyFaithfulCompHausLikeToTop (fun _ => True))
-  apply hFF.map_injective
-  simpa [Functor.map_comp,
-    symbolicLatentBasedLoopHomotopyQuotientCompHausHom] using
+  apply ConcreteCategory.hom_ext
+  intro q
+  have h := congrArg (fun k => k q)
     (symbolicLatentBasedLoopHomotopyQuotientTopCatHom_comp
       f g hxy hyz)
+  change (TopCat.Hom.hom
+      (symbolicLatentBasedLoopHomotopyQuotientTopCatHom g hyz))
+      ((TopCat.Hom.hom
+        (symbolicLatentBasedLoopHomotopyQuotientTopCatHom f hxy)) q) =
+    (TopCat.Hom.hom
+      (symbolicLatentBasedLoopHomotopyQuotientTopCatHom (g.comp f)
+        ((congrArg g hxy).trans hyz))) q
+  exact h
 
 end InfoGeometry.Topology

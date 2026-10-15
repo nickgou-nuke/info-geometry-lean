@@ -22,6 +22,7 @@ open InfoGeometry.Algebra.Zorn.SplitQuaternionCore
 open InfoGeometry.Algebra.Zorn.SplitOctonionWittPlanes
 open InfoGeometry.Algebra.Zorn.ParityTwistedLeviCivita
 open InfoGeometry.Lie.SplitOctonionEllPolarization
+open InfoGeometry.Canonical.ZornMatrix
 
 abbrev CZ := CanonicalZorn
 
@@ -79,7 +80,7 @@ theorem rootPlus_mul_rootMinus (a : Fin 3) :
       iUnit, jUnit, kQuaternionUnit, lUnit,
       InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul,
       InfoGeometry.Canonical.ZornMatrix.mul,
-      Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv,
+      smul_a, smul_b, smul_x, smul_y,
       InfoGeometry.Canonical.ZornMatrix.dot,
       InfoGeometry.Canonical.ZornMatrix.cross]
   all_goals (try fin_cases i) <;> norm_num
@@ -93,7 +94,7 @@ theorem rootMinus_mul_rootPlus (a : Fin 3) :
       iUnit, jUnit, kQuaternionUnit, lUnit,
       InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul,
       InfoGeometry.Canonical.ZornMatrix.mul,
-      Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv,
+      smul_a, smul_b, smul_x, smul_y,
       InfoGeometry.Canonical.ZornMatrix.dot,
       InfoGeometry.Canonical.ZornMatrix.cross]
   all_goals (try fin_cases i) <;> norm_num
@@ -106,7 +107,7 @@ theorem uPlus_mul_rootPlus (a : Fin 3) :
       iUnit, jUnit, kQuaternionUnit, lUnit,
       InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul,
       InfoGeometry.Canonical.ZornMatrix.mul,
-      Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv,
+      smul_a, smul_b, smul_x, smul_y,
       InfoGeometry.Canonical.ZornMatrix.dot,
       InfoGeometry.Canonical.ZornMatrix.cross]
   all_goals (try fin_cases i) <;> norm_num
@@ -119,7 +120,7 @@ theorem rootPlus_mul_uMinus (a : Fin 3) :
       iUnit, jUnit, kQuaternionUnit, lUnit,
       InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul,
       InfoGeometry.Canonical.ZornMatrix.mul,
-      Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv,
+      smul_a, smul_b, smul_x, smul_y,
       InfoGeometry.Canonical.ZornMatrix.dot,
       InfoGeometry.Canonical.ZornMatrix.cross]
   all_goals (try fin_cases i) <;> norm_num
@@ -132,7 +133,7 @@ theorem uMinus_mul_rootMinus (a : Fin 3) :
       iUnit, jUnit, kQuaternionUnit, lUnit,
       InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul,
       InfoGeometry.Canonical.ZornMatrix.mul,
-      Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv,
+      smul_a, smul_b, smul_x, smul_y,
       InfoGeometry.Canonical.ZornMatrix.dot,
       InfoGeometry.Canonical.ZornMatrix.cross]
   all_goals (try fin_cases i) <;> norm_num
@@ -145,7 +146,7 @@ theorem rootMinus_mul_uPlus (a : Fin 3) :
       iUnit, jUnit, kQuaternionUnit, lUnit,
       InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul,
       InfoGeometry.Canonical.ZornMatrix.mul,
-      Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv,
+      smul_a, smul_b, smul_x, smul_y,
       InfoGeometry.Canonical.ZornMatrix.dot,
       InfoGeometry.Canonical.ZornMatrix.cross]
   all_goals (try fin_cases i) <;> norm_num
@@ -158,7 +159,7 @@ theorem uMinus_mul_rootPlus (a : Fin 3) :
       iUnit, jUnit, kQuaternionUnit, lUnit,
       InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul,
       InfoGeometry.Canonical.ZornMatrix.mul,
-      Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv,
+      smul_a, smul_b, smul_x, smul_y,
       InfoGeometry.Canonical.ZornMatrix.dot,
       InfoGeometry.Canonical.ZornMatrix.cross]
   all_goals (try fin_cases i) <;> norm_num
@@ -171,7 +172,7 @@ theorem rootPlus_mul_uPlus (a : Fin 3) :
       iUnit, jUnit, kQuaternionUnit, lUnit,
       InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul,
       InfoGeometry.Canonical.ZornMatrix.mul,
-      Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv,
+      smul_a, smul_b, smul_x, smul_y,
       InfoGeometry.Canonical.ZornMatrix.dot,
       InfoGeometry.Canonical.ZornMatrix.cross]
   all_goals (try fin_cases i) <;> norm_num
@@ -184,7 +185,7 @@ theorem uPlus_mul_rootMinus (a : Fin 3) :
       iUnit, jUnit, kQuaternionUnit, lUnit,
       InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul,
       InfoGeometry.Canonical.ZornMatrix.mul,
-      Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv,
+      smul_a, smul_b, smul_x, smul_y,
       InfoGeometry.Canonical.ZornMatrix.dot,
       InfoGeometry.Canonical.ZornMatrix.cross]
   all_goals (try fin_cases i) <;> norm_num
@@ -197,7 +198,7 @@ theorem rootMinus_mul_uMinus (a : Fin 3) :
       iUnit, jUnit, kQuaternionUnit, lUnit,
       InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul,
       InfoGeometry.Canonical.ZornMatrix.mul,
-      Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv,
+      smul_a, smul_b, smul_x, smul_y,
       InfoGeometry.Canonical.ZornMatrix.dot,
       InfoGeometry.Canonical.ZornMatrix.cross]
   all_goals (try fin_cases i) <;> norm_num

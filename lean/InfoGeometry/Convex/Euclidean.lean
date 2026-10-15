@@ -29,24 +29,23 @@ noncomputable def scaledGrad (c : ℝ) (x : E) : E :=
 lemma hasFDerivAt_potential (x : E) :
     HasFDerivAt potential (InnerProductSpace.toDual ℝ E (grad x)) x := by
   unfold potential grad
-  have h_id : HasFDerivAt (fun y : E => y) (1 : E →L[ℝ] E) x := by
-    simpa using (hasFDerivAt_id x)
+  have h_id : HasFDerivAt id (ContinuousLinearMap.id ℝ E) x := hasFDerivAt_id x
   have h_inner :
       HasFDerivAt (fun y : E => inner ℝ y y)
-        ((fderivInnerCLM ℝ (x, x)).comp ((1 : E →L[ℝ] E).prod (1 : E →L[ℝ] E))) x :=
+        ((fderivInnerCLM ℝ (x, x)).comp ((ContinuousLinearMap.id ℝ E).prod (ContinuousLinearMap.id ℝ E))) x :=
     h_id.inner ℝ h_id
   convert h_inner.const_smul (1 / 2 : ℝ) using 1
   ext v
-  rw [ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply,
+  rw [smul_apply, ContinuousLinearMap.comp_apply,
     ContinuousLinearMap.prod_apply, fderivInnerCLM_apply]
   simp [InnerProductSpace.toDual_apply_apply, real_inner_comm]
   ring
 
 lemma hasFDerivAt_scaledPotential (c : ℝ) (x : E) :
     HasFDerivAt (scaledPotential c) (InnerProductSpace.toDual ℝ E (scaledGrad c x)) x := by
-  simpa [scaledPotential, scaledGrad, potential, grad, InnerProductSpace.toDual_apply_apply,
-    real_inner_smul_left, mul_comm, mul_left_comm, mul_assoc]
-    using (hasFDerivAt_potential (E := E) x).const_smul c
+  have h := (hasFDerivAt_potential (E := E) x).const_smul c
+  rw [← map_smul (InnerProductSpace.toDual ℝ E)] at h
+  exact h
 
 omit [CompleteSpace E] in
 lemma divergence_form_eq_half_sqdist (x y : E) :
@@ -117,12 +116,13 @@ noncomputable def scaledHessianGeometry (c : ℝ) (hc : 0 ≤ c) : HessianGeomet
     (scaledHessianGeometry (E := E) c hc).metricOp x =
       c • ContinuousLinearMap.id ℝ E := by
   ext v
+  change (fderiv ℝ (fun y : E => c • y) x) v = (c • ContinuousLinearMap.id ℝ E) v
   have hfd :
       fderiv ℝ (fun y : E => c • y) x = c • fderiv ℝ (fun y : E => y) x := by
     exact congrArg (fun F => F x)
       (fderiv_const_smul_field (𝕜 := ℝ) (R := ℝ) (F := E) (f := fun y : E => y) (c := c))
   have hv := congrArg (fun A : E →L[ℝ] E => A v) hfd
-  simpa [ContinuousLinearMap.smul_apply] using hv
+  simpa [smul_apply] using hv
 
 /-- The Euclidean Bregman divergence is half the squared Euclidean distance. -/
 theorem divergence_eq_half_sqdist (x y : E) :

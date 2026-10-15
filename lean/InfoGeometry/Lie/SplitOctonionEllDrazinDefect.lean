@@ -29,10 +29,11 @@ def ellDrazinNullProjector : EndCZ := 1 - ellDrazinProjector
 theorem ell_is_own_drazin_inverse :
     IsDrazinInverse diagEllGrading ellDrazinInverse 1 := by
   refine IsDrazinInverse.mk ?_ ?_ ?_
-  · simpa [ellDrazinInverse, pow_three] using diagEllGrading_tripotent
+  · rw [ellDrazinInverse, mul_assoc]
+    exact diagEllGrading_tripotent
   · rfl
-  · simpa [ellDrazinInverse, pow_two, pow_three] using
-      diagEllGrading_tripotent.symm
+  · rw [ellDrazinInverse, pow_one, pow_two, mul_assoc]
+    exact diagEllGrading_tripotent.symm
 
 theorem ell_drazin_projector_eq_square :
     ellDrazinProjector = diagEllGrading ^ 2 := by

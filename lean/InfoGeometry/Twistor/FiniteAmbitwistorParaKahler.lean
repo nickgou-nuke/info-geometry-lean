@@ -1,4 +1,5 @@
 import InfoGeometry.Twistor.PenroseIncidence
+import InfoGeometry.Projective.Twistor.Incidence
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ParaKahlerMaurerCartanQGT
 import InfoGeometry.Canonical.FiniteTwistorCCRGeneratingFunction
@@ -66,6 +67,45 @@ theorem isAmbitwistor_rescaling {W : DualTwistor4} {Z : Twistor4}
   unfold IsAmbitwistor at h ⊢
   rw [ambitwistorPairing_smul_left, ambitwistorPairing_smul_right, h]
   simp
+
+/-- Concrete incidence datum for the finite ambitwistor pairing. Its incidence
+relation is the actual zero-pairing predicate, with the two projective scaling
+laws proved from the pairing's sesquilinear readbacks. -/
+def ambitwistorPairIncidenceDatum :
+    InfoGeometry.Projective.Twistor.TwistorIncidenceDatum ℂ Twistor4 DualTwistor4 where
+  incidence := IsAmbitwistor
+  twScale := fun u Z => scaleTwistor (u : ℂ) Z
+  dualScale := fun u W => scaleTwistor (u : ℂ) W
+  incidence_scale_left := by
+    intro u W Z
+    change ambitwistorPairing (scaleTwistor (u : ℂ) W) Z = 0 ↔
+      ambitwistorPairing W Z = 0
+    rw [ambitwistorPairing_smul_left]
+    constructor
+    · intro h
+      exact (mul_eq_zero.mp h).resolve_left
+        (star_ne_zero.mpr (Units.ne_zero u))
+    · intro h
+      simp [h]
+  incidence_scale_right := by
+    intro u W Z
+    change ambitwistorPairing W (scaleTwistor (u : ℂ) Z) = 0 ↔
+      ambitwistorPairing W Z = 0
+    rw [ambitwistorPairing_smul_right]
+    constructor
+    · intro h
+      exact (mul_eq_zero.mp h).resolve_left (Units.ne_zero u)
+    · intro h
+      simp [h]
+
+/-- A finite ambitwistor graph edge is the actual incident pair, not a
+separately assumed label. -/
+def ambitwistorPairEdge (Z : Twistor4) (W : DualTwistor4)
+    (h : ambitwistorPairIncidenceDatum.Incidence W Z) :
+    InfoGeometry.Projective.Twistor.TwistorIncidenceDatum.TwistorPairEdge
+      ambitwistorPairIncidenceDatum :=
+  InfoGeometry.Projective.Twistor.TwistorIncidenceDatum.twistorPairEdgeOfIncidence
+    ambitwistorPairIncidenceDatum Z W h
 
 abbrev FiniteCorrespondence :=
   ComplexSpacetime × ProjectiveSpinorLine × ProjectiveSpinorLine

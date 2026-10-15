@@ -94,8 +94,14 @@ def sl2ToLocalZornNormOne (m : ColorSector)
      u := g 0 1
      v := g 1 0 }, by
     rw [LocalZornSlice.norm_eq_det]
-    simpa only [LocalZornSlice.toMatrix, localZornMatrix,
-      Matrix.det_fin_two] using g.property⟩
+    let M : Matrix (Fin 2) (Fin 2) ℝ :=
+      ![![g 0 0, g 0 1], ![g 1 0, g 1 1]]
+    have hM : M = (g : Matrix (Fin 2) (Fin 2) ℝ) := by
+      ext i j
+      fin_cases i <;> fin_cases j <;> rfl
+    change Matrix.det M = 1
+    rw [hM]
+    exact g.property⟩
 
 noncomputable def localZornNormOneEquivSL2 (m : ColorSector) :
     LocalZornNormOne m ≃ Matrix.SpecialLinearGroup (Fin 2) ℝ where

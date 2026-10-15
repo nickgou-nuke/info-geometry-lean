@@ -72,12 +72,10 @@ theorem paper_xi_time_part51aa_derived_cross_fib_gcd_formula
   refine ⟨?_, ?_, ?_⟩
   · intro N hN
     exact foldr_gcd_dvd_of_mem hN
-  · simpa [XiDerivedCrossFibGcdFormulaData.fibGcdCollapse,
-      XiDerivedCrossFibGcdFormulaData.modulusGcd,
-      XiDerivedCrossFibGcdFormulaData.indexGcd,
-      XiDerivedCrossFibGcdFormulaData.moduli,
-      XiDerivedCrossFibGcdFormulaData.shiftedWindows,
-      fibWindowModulus] using fib_foldr_gcd D.shiftedWindows
+  · change (D.windows.map (Nat.fib ∘ fun m => m + 2)).foldr Nat.gcd 0 =
+      Nat.fib ((D.windows.map (fun m => m + 2)).foldr Nat.gcd 0)
+    simpa only [List.map_map] using
+      fib_foldr_gcd (D.windows.map (fun m => m + 2))
   · intro q
     rfl
 

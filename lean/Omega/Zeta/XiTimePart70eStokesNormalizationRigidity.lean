@@ -85,8 +85,11 @@ theorem paper_xi_time_part70e_stokes_normalization_rigidity
   have hexp :
       Tendsto (fun m => Real.exp (Real.log (G m) - Real.log (C m))) atTop
         (nhds (xi_time_part70e_stokes_normalization_rigidity_constant c)) := by
+    change Tendsto
+      (Real.exp ∘ fun m => Real.log (G m) - Real.log (C m)) atTop
+      (nhds (xi_time_part70e_stokes_normalization_rigidity_constant c))
     simpa [xi_time_part70e_stokes_normalization_rigidity_constant] using
-      Real.continuous_exp.tendsto (c - Real.log (2 * Real.pi) ) |>.comp hlog
+      Real.continuous_exp.tendsto (c - Real.log (2 * Real.pi)) |>.comp hlog
   refine hexp.congr' ?_
   filter_upwards [hG_pos, hC_pos] with m hmG_pos hmC_pos
   rw [Real.exp_sub, Real.exp_log hmG_pos, Real.exp_log hmC_pos]

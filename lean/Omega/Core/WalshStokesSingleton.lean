@@ -89,6 +89,10 @@ theorem walshStokes_singleton (i : Fin n) (f : Word n → ℤ) :
 
 theorem walshStokes_singleton_const (i : Fin n) (c : ℤ) :
     Finset.sum (Finset.univ.filter fun w : Word n => w i = false) (deltaBit i (fun _ => c)) = 0 := by
-  simp [deltaBit]
+  have hzero : deltaBit i (fun _ => c) = 0 := by
+    funext w
+    simp [deltaBit]
+  rw [hzero]
+  simp
 
 end Omega.Core

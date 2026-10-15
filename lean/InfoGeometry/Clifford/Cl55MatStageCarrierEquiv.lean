@@ -3,6 +3,7 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ChiralRetainedWordFiveGradeClosure
 import InfoGeometry.OperatorAlgebra.FiveGradeActionPreservation
 import InfoGeometry.Canonical.Cl55WittLieRouting
+import InfoGeometry.Canonical.JordanWignerCantorRepresentation
 
 /-!
 # The matrix-stage carrier of the five-mode Clifford representation
@@ -256,5 +257,81 @@ theorem transportedCreation55_annihilation55_car (i : Fin 5) :
   simpa only [← matStageToCl55_map_mul, ← matStageToCl55_map_add, map_one] using
     congrArg matStageToCl55
       (InfoGeometry.Canonical.Cl55WittCAR.same_site_car 5 i)
+
+/-! ## Representation in the Cantor operator limit
+
+The preceding equivalence identifies the abstract `Cl(5,5)` carrier with the
+finite five-mode matrix stage.  Compose it with the existing stage inclusion
+and the existing matrix-tower/Cantor-limit equivalence; this gives one actual
+representation map, with no newly defined limit carrier.
+-/
+
+open InfoGeometry.Clifford.Cl11TensorTowerLimit
+open InfoGeometry.Canonical.JordanWignerCantorRepresentation
+open InfoGeometry.Clifford.Cl55FockMatrixIntertwiner
+open InfoGeometry.Clifford.Cl55NeutralHyperbolicIsometry
+
+/-- The stage-five Clifford representation followed by the canonical Cantor
+operator limit representation. -/
+noncomputable def cl55CantorRepresentation :
+    Clifford55.Cl55 →+* RealCantorOpInf :=
+  globalRealCantorAlgEquiv.toRingEquiv.toRingHom.comp
+    ((ofStage 5).comp matStageToCl55.symm.toRingEquiv.toRingHom)
+
+/-- Pulling a neutral Clifford element back through the stage equivalence gives
+the same finite matrix as its exterior-Fock representation, reindexed into the
+native tensor-stage carrier. -/
+theorem matStageToCl55_symm_neutralFock (a : A) :
+    matStageToCl55.symm (neutralCliffordAlgEquiv a) =
+      matStageToFin32.symm (neutralCliffordFockMatrixAlgEquiv a) := by
+  apply matStageToCl55.injective
+  simp [matStageToCl55, matStageToRecursiveMatrix,
+    fockToRecursiveMatrixAlgEquiv_fock,
+    Cl55NeutralHyperbolicIsometry.neutralCliffordMatrixAlgEquiv]
+
+/-- The exterior-algebra Clifford representation and the tensor-stage
+Jordan--Wigner representation give the same Cantor-limit element for every
+neutral Clifford element. -/
+theorem cl55CantorRepresentation_neutralFock (a : A) :
+    cl55CantorRepresentation (neutralCliffordAlgEquiv a) =
+      realCantorOfStage 5 (realMatToCantor 5
+        (matStageToFin32.symm (neutralCliffordFockMatrixAlgEquiv a))) := by
+  rw [cl55CantorRepresentation]
+  change globalRealCantorAlgEquiv
+      (ofStage 5 (matStageToCl55.symm (neutralCliffordAlgEquiv a))) = _
+  rw [globalRealCantorAlgEquiv_ofStage,
+    matStageToCl55_symm_neutralFock]
+
+/-- A transported Clifford creation generator is represented by the image of
+the corresponding Jordan--Wigner creation operator at stage five. -/
+@[simp] theorem cl55CantorRepresentation_creation (i : Fin 5) :
+    cl55CantorRepresentation (transportedCreation55 i) =
+      realCantorOfStage 5
+        (realMatToCantor 5 (InfoGeometry.Canonical.Cl55WittCAR.creation i)) := by
+  simp [cl55CantorRepresentation, transportedCreation55,
+    globalRealCantorAlgEquiv_ofStage]
+
+/-- A transported Clifford annihilation generator is represented by the image
+of the corresponding Jordan--Wigner annihilation operator at stage five. -/
+@[simp] theorem cl55CantorRepresentation_annihilation (i : Fin 5) :
+    cl55CantorRepresentation (transportedAnnihilation55 i) =
+      realCantorOfStage 5
+        (realMatToCantor 5 (InfoGeometry.Canonical.Cl55WittCAR.annihilation i)) := by
+  simp [cl55CantorRepresentation, transportedAnnihilation55,
+    globalRealCantorAlgEquiv_ofStage]
+
+/-- The canonical anticommutator survives the finite-stage and Cantor-limit
+representation maps. -/
+theorem cl55CantorRepresentation_same_site_car (i : Fin 5) :
+    cl55CantorRepresentation (transportedCreation55 i) *
+        cl55CantorRepresentation (transportedAnnihilation55 i) +
+      cl55CantorRepresentation (transportedAnnihilation55 i) *
+        cl55CantorRepresentation (transportedCreation55 i) = 1 := by
+  rw [cl55CantorRepresentation_creation, cl55CantorRepresentation_annihilation]
+  have h := congrArg
+    (fun X : Mat32 =>
+      realCantorOfStage 5 (realMatToCantor 5 X))
+    (InfoGeometry.Canonical.Cl55WittCAR.same_site_car 5 i)
+  simpa only [map_mul, map_add, map_one] using h
 
 end InfoGeometry.Clifford.Cl55MatStageCarrierEquiv

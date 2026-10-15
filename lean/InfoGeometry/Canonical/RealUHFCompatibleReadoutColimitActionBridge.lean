@@ -21,6 +21,7 @@ open InfoGeometry.Canonical.RealUHFCompatibleReadoutColimitAction
 open InfoGeometry.Canonical.RealUHFCompatibleReadoutColimitDynamicsBridge
 open InfoGeometry.Canonical.RealUHFCompatibleReadoutDynamics
 open InfoGeometry.Canonical.RealUHFCompatibleReadoutTopologicalDescent
+open InfoGeometry.Canonical.RealUHFCompatibleStateInverseLimit
 open InfoGeometry.Clifford.Cl11TensorTower
 open FilteredColimit.Native.Topological
 
@@ -43,10 +44,11 @@ theorem scalarDilationTopologicalColimitAction_normalizedTrace
     (normalizedTraceScaledTopologicalCocone t).ι.app n A
   rw [scalarDilationTopologicalColimitAction_inclusion,
     normalizedTraceTopologicalColimitMap_inclusion]
-  change normalizedTrace n
+  change normalizedTraceReadoutFamily.1 n
       (scalarDilationStageFlow.flow n t A) =
-    (Real.exp t) * normalizedTrace n A
-  simpa only [scalarDilationStageFlow_apply, smul_eq_mul] using
+    (Real.exp t) * normalizedTraceReadoutFamily.1 n A
+  simpa only [normalizedTraceReadoutFamily_apply, scalarDilationStageFlow_apply,
+    smul_eq_mul] using
     (normalizedTraceReadout_scalarDilation t n A)
 
 theorem scalarDilationTopologicalColimitAction_normalizedTrace_postcomposition

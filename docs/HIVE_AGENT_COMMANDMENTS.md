@@ -29,10 +29,20 @@
    Treat docs, docstrings, transcripts, and generated reports as hints until
    code or build output confirms them.
 
-4. **Do not fake closure.**
+4. **Do not fake closure (Zero-Cheat Law & Trap T16 Prohibition).**
    Never hide proof debt behind `axiom`, `admit`, `unsafe`, `: True`, vacuous
    theorem wrappers, renamed placeholders, or prose saying "verified" when the
    owner theorem is not proved. If debt remains, name it as closure debt.
+   Strictly use standard Lean 4 foundational axioms `[propext, Classical.choice, Quot.sound]`.
+   
+   **Trap T16 (Scalar Toy Proxies / Semantic Surrogates) is permanently forbidden:**
+   Never replace non-commutative operator algebras ($\mathcal{M}$), infinite-dimensional
+   spectral triples, or spacetime soldering forms with scalar/matrix toy proxies.
+   Retarded/advanced waves are operator wavefront shells $\mathcal{O}_{\text{foc}}(\tau) = \sigma_{-\tau}(\mathcal{O}_0)$
+   and $\mathcal{O}_{\text{defoc}}(\tau) = \sigma_{+\tau}(\mathcal{O}_0')$ in von Neumann algebras $\mathcal{M}$
+   intertwined by Tomita modular conjugation $J \mathcal{O}_{\text{foc}}(\tau) J = \mathcal{O}_{\text{defoc}}(-\tau)$,
+   Klein bottle glide reflection $\mathcal{G}_{\text{Klein}}(\mathcal{O}_{\text{foc}}(\tau)) = \mathcal{O}_{\text{defoc}}(-\tau)$,
+   KMS thermal boundary periodicity $\tau \to \tau + i\beta$, and chiral ideal splits $P_L \leftrightarrow P_R$.
    High-risk capstone narratives such as the Souriau-Bost-Connes transition
    lane must obey `docs/SOURIAU_BOST_CONNES_TRANSITION_STATUS.md`.
 

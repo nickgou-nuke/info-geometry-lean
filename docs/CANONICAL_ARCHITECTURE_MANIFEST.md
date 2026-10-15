@@ -2,11 +2,10 @@
 
 This manifest records the current stabilization layer of the `info-geometry-lean` repository. It separates the closed finite owner lemmas from later extensions and physical interpretations that remain explicit and conditional.
 
-## The 3-Way Dictionary (The Core Finite Surface)
+## Adjacent Finite Surfaces (No Cross-Domain Equivalence Claimed)
 
-At the heart of the stabilized core is the **3-way operational dictionary**. This triad links combinatorial triangulation data, thermodynamic current algebra, and finite BCFW-style readouts. It should not be read as a global analytic equivalence theorem.
-
-The equivalence rigorously binds:
+The repository contains finite results in each of the following lanes. Their
+coexistence does not identify their carriers or imply a causal equivalence:
 
 1. **Klein-Null Triangulation** 
    * Represented by the $(2,2)$ split-twistor algebra over the projective boundary.
@@ -18,10 +17,10 @@ The equivalence rigorously binds:
    * Transforms the static boundary into a thermodynamic gauge network driven by entropy production.
    * *Status:* Finite ring-level flow algebra is formalized without local proof stubs (`Topology/ThermodynamicGauge.lean`).
 
-3. **BCFW Residue Readout**
-   * Records finite readouts inspired by on-shell residue bookkeeping.
-   * Maps the thermodynamic potential to finite algebraic observables under explicit premises.
-   * *Status:* Conditional finite boundary surface; analytic scattering-amplitude claims remain outside the closed core (`Projective/OnShellResidueBCFWBridge.lean`).
+3. **Residue and BCFW Comparison Obligations**
+   * The projective module proves a local `dlog` circle integral and finite Arnold-relation consequences.
+   * A BCFW-style readout is conditional on a separate explicit comparison; it is not obtained from DAG-edge commutation.
+   * *Status:* No BCFW residue theorem or physical scattering amplitude is proved by the closed core.
 
 4. **Finite q-Dilation / Pachner Readout**
    * Records the conservative super-Cuntz boundary packet, modular edge dilation, q-deficit readout, and Delaunay/Pachner transfer lemmas.
@@ -53,7 +52,7 @@ The equivalence rigorously binds:
    * *Status:* Closed finite owner layer. The repo still does **not** claim analytic Fourier holography, Reeh-Schlieder density, or a full GNS completion from this packet alone.
 
 ## Operational Law
-This triad records a finite algebraic workflow: null-boundary data, thermodynamic-flow commutators, and BCFW-style readouts can be composed through explicit theorem premises. It does not prove a continuum spacetime-emergence theorem or an exact physical scattering-amplitude theorem.
+These adjacent lanes do not by themselves form a finite algebraic workflow from null-boundary data through thermodynamic flow to BCFW readouts. Any such composition requires explicit maps and comparison theorems. No continuum spacetime-emergence theorem or exact physical scattering-amplitude theorem is proved here.
 
 Any future formalization extending this foundation—such as the non-abelian Wilson loop holonomy or the Bost-Connes partition function—must keep analytic and physical claims behind explicit premises and avoid proof-carrying certificate or witness packets.
 

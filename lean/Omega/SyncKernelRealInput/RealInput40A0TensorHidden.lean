@@ -72,7 +72,8 @@ def real_input_40_a0_tensor_hidden_statement : Prop :=
 theorem paper_real_input_40_a0_tensor_hidden : real_input_40_a0_tensor_hidden_statement := by
   have hChar :
       real_input_40_a0_tensor_hidden_A0.charpoly = X ^ 2 - X - 1 := by
-    simpa [real_input_40_a0_tensor_hidden_A0] using Omega.Graph.goldenMeanAdjacency_charpoly
+    change Omega.Graph.goldenMeanAdjacency.charpoly = X ^ 2 - X - 1
+    exact Omega.Graph.goldenMeanAdjacency_charpoly
   have hMinus :
       Matrix.det real_input_40_a0_tensor_hidden_IminusXA0 = 1 - X - X ^ 2 := by
     rw [Matrix.det_fin_two]

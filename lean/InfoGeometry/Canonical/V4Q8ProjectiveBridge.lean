@@ -33,7 +33,11 @@ inductive Q8Elt where
   | mj
   | k
   | mk
-  deriving DecidableEq, Repr, Fintype
+  deriving DecidableEq, Repr
+
+instance : Fintype Q8Elt where
+  elems := {Q8Elt.p1, .m1, .i, .mi, .j, .mj, .k, .mk}
+  complete x := by cases x <;> simp
 
 namespace Q8Elt
 

@@ -53,6 +53,7 @@ theorem bivariant_hilbert_polya_extraction
       AnomalousKMSFlow.anomalousIndex H C =
         (inferInstance : CuntzKTheoryPairing.ConnesChernPairing
           CuntzKTheoryPairing.O2_K0 K1).pair k x := by
+    rw [CuntzKTheoryPairing.connesChernPairing_zero_on_O2]
     simpa [InfoGeometry.Canonical.KasparovKreinCategory.kkBoundaryPairing] using hPair
   exact InfoGeometry.Canonical.UnifiedAnomalyArchitecture.unified_architecture_of_anomaly_proof
     (f := f) hConvex hSymm σ hσ hσ_ne

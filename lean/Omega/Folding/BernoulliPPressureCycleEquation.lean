@@ -88,6 +88,7 @@ theorem paper_fold_bernoulli_p_pressure_cycle_equation
   have hSecond' :
       cycleTiltPressureSecondDerivative D =
         bernoulliPPressureCycleSecondDerivative qM xSlope lSlope := by
+    change D.pressureSecondDerivativeClosed
     simpa [D, bernoulliPCycleMomentWitness, bernoulliPPressureCycleSecondDerivative] using hSecond
   exact ⟨hPGF', hRoot, hBlock, hFirst, hSecond'⟩
 

@@ -1,5 +1,6 @@
 import InfoGeometry.Convex.HessianGeometry
 import Mathlib.Analysis.Calculus.MeanValue
+import Mathlib.Analysis.Calculus.Deriv.MeanValue
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 
 open scoped Topology
@@ -26,7 +27,8 @@ theorem hasDerivAt_divergence (geometry : HessianGeometry1D) (point target : ℝ
       (divergenceGradient geometry point target) point := by
   convert (differentiable.hasDerivAt.sub_const (geometry.potential target)).sub
     (((hasDerivAt_id point).sub_const target).const_mul (geometry.dualMap target)) using 1
-  simp [divergenceGradient, dualMap]
+  · ext; rfl
+  · simp [divergenceGradient, dualMap]
 
 theorem hasDerivAt_divergence_along_flow (geometry : HessianGeometry1D)
     (trajectory : ℝ → ℝ) (target time : ℝ)
@@ -34,10 +36,14 @@ theorem hasDerivAt_divergence_along_flow (geometry : HessianGeometry1D)
     (flow : HasDerivAt trajectory (naturalVelocity geometry (trajectory time) target) time) :
     HasDerivAt (fun instant => geometry.divergence (trajectory instant) target)
       (-dissipation geometry (trajectory time) target) time := by
-  convert (hasDerivAt_divergence geometry (trajectory time) target differentiable).comp time flow
-    using 1
-  unfold naturalVelocity dissipation
-  ring
+  have hcomp := (hasDerivAt_divergence geometry (trajectory time) target differentiable).comp time flow
+  have hvel : divergenceGradient geometry (trajectory time) target *
+      naturalVelocity geometry (trajectory time) target =
+      -dissipation geometry (trajectory time) target := by
+    simp [naturalVelocity, dissipation]
+    ring
+  rw [hvel] at hcomp
+  exact hcomp
 
 theorem dissipation_nonneg (geometry : HessianGeometry1D) (point target : ℝ)
     (metric_positive : 0 < geometry.metric point) :
@@ -72,11 +78,17 @@ theorem divergence_exponential_bound (geometry : HessianGeometry1D)
         geometry.divergence (trajectory parameter) target)
         (Real.exp (rate * instant) * (rate * geometry.divergence (trajectory instant) target -
           dissipation geometry (trajectory instant) target)) instant := by
-    convert (((hasDerivAt_id instant).const_mul rate).exp).mul
-      (hasDerivAt_divergence_along_flow geometry trajectory target instant
-        (differentiable instant) (flow instant)) using 1
-    simp only [id_eq]
-    ring
+    have h1 := (((hasDerivAt_id instant).const_mul rate).exp)
+    have h2 := hasDerivAt_divergence_along_flow geometry trajectory target instant
+        (differentiable instant) (flow instant)
+    have hmul := h1.mul h2
+    simp only [id_eq] at hmul
+    have hcalc : Real.exp (rate * instant) * (rate * 1) * geometry.divergence (trajectory instant) target +
+        Real.exp (rate * instant) * -dissipation geometry (trajectory instant) target =
+        Real.exp (rate * instant) * (rate * geometry.divergence (trajectory instant) target -
+          dissipation geometry (trajectory instant) target) := by ring
+    rw [hcalc] at hmul
+    convert hmul using 1
   have decreasing := antitone_of_hasDerivAt_nonpos weighted_derivative (fun instant =>
     mul_nonpos_of_nonneg_of_nonpos (Real.exp_pos _).le (sub_nonpos.mpr (domination instant)))
   have bound : Real.exp (rate * time) * geometry.divergence (trajectory time) target ≤

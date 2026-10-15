@@ -220,7 +220,7 @@ theorem majorana_car_of_splitClifford :
 end SplitCliffordDatum
 
 /-- Canonical `RealMajoranaCore` on doubled space with `(J, ε, Π) = (modular_j, spectral_epsilon, spectral_epsilon)`. -/
-noncomputable def cl11DoubledCore (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+noncomputable def cl11DoubledCore (E : Type u) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
     [CompleteSpace E] : RealMajoranaCore where
   V := InfoGeometry.Krein.DoubledSpace E
   J := (InfoGeometry.Krein.modular_j (E := E)).toLinearMap

@@ -38,10 +38,19 @@ theorem bitWordPrefix_list_eq (n : ℕ) (x : CantorBoundary) :
         FractalCantorCliffordFockBridge.boundaryPrefix]
       rw [List.map_cons]
       congr 1
-      simpa [List.ofFn_eq_map,
-        UHFInductiveColimitBoundary.boundaryPrefix,
-        FractalCantorCliffordFockBridge.boundaryTail] using ih
-        (FractalCantorCliffordFockBridge.boundaryTail x)
+      have htail :
+          (fun i : Fin n =>
+            UHFInductiveColimitBoundary.boundaryPrefix (n + 1) x i.succ) =
+          UHFInductiveColimitBoundary.boundaryPrefix n
+            (FractalCantorCliffordFockBridge.boundaryTail x) := by
+        funext i
+        rfl
+      rw [List.map_map]
+      change List.map (fun i : Fin n =>
+        UHFInductiveColimitBoundary.boundaryPrefix (n + 1) x i.succ)
+          (List.finRange n) = _
+      rw [htail, ← List.ofFn_eq_map]
+      exact ih (FractalCantorCliffordFockBridge.boundaryTail x)
 
 theorem projective_readout_prefix_tail
     (p : InfoGeometry.Canonical.CantorProjectiveLimit.PrefixProjectiveLimit) (N : ℕ) :

@@ -120,7 +120,6 @@ theorem z3GradingOperator_ne_one_of_sector_scale (h_ne : (w * w) • g.P2 ≠ g.
     z3GradingOperator g w ≠ 1 := by
   intro h_eq
   have h_mul := congr_arg (fun (x : A) => x * g.P2) h_eq
-  dsimp at h_mul
   rw [z3GradingOperator_apply_p2 g w, one_mul] at h_mul
   exact h_ne h_mul
 

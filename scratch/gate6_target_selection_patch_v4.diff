@@ -1,0 +1,1258 @@
+--- a/tools/quality/statement_fidelity_gate.py
++++ b/tools/quality/statement_fidelity_gate.py
+@@ -523,7 +523,9 @@
+         chunk = clean_text[start:end].strip()
+ 
+         # Calculate 1-based line number
+-        line_no = clean_text[:start].count("\n") + 1
++        # `m.start()` points at the newline consumed by (?:^|\n), so it is
++        # one line early for ordinary declarations. Use the declaration keyword.
++        line_no = clean_text[:m.start(1)].count("\n") + 1
+ 
+         # Keep only variable declarations still in scope (closed sections and
+         # namespaces must not leak assumptions into later declarations).
+@@ -536,9 +538,44 @@
+             structures=structures,
+         )
+         if parsed:
++            parsed.name = _qualified_declaration_name(
++                clean_text, line_no, parsed.name
++            )
+             declarations.append(parsed)
+ 
+     return declarations, structures
++
++
++def _qualified_declaration_name(source: str, line_number: int, local_name: str) -> str:
++    """Qualify a parsed declaration using the namespace stack at its source line.
++
++    This mirrors the source-scope convention used by Gate 5's theorem inventory.
++    It remains a source parser, not Lean elaborator AST evidence.
++    """
++    stack: list[tuple[str, str]] = []
++    lines = source.splitlines()
++    for line in lines[: max(0, line_number - 1)]:
++        clean = strip_lean_comments(line).split("--")[0].strip()
++        namespace = re.match(r"^namespace\s+([A-Za-z0-9_.]+)", clean)
++        if namespace:
++            stack.append(("namespace", namespace.group(1)))
++            continue
++        section = re.match(r"^section(?:\s+([A-Za-z0-9_.]+))?$", clean)
++        if section:
++            stack.append(("section", section.group(1) or ""))
++            continue
++        end = re.match(r"^end(?:\s+([A-Za-z0-9_.]+))?$", clean)
++        if end and stack:
++            named_end = end.group(1)
++            if named_end:
++                while stack:
++                    _, popped = stack.pop()
++                    if popped == named_end:
++                        break
++            else:
++                stack.pop()
++    namespaces = [name for kind, name in stack if kind == "namespace"]
++    return ".".join([*namespaces, local_name]) if namespaces else local_name
+ 
+ 
+ def parse_from_ast_json(ast_data: dict[str, Any] | str) -> list[ParsedDeclaration]:
+@@ -1022,6 +1059,77 @@
+ # Core Evaluation API
+ # -----------------------------------------------------------------------------
+ 
++TARGET_NAME_FIELDS = ("theorem_name", "target_symbol", "target_declaration", "decl")
++
++
++def _target_names(spec: dict[str, Any]) -> tuple[list[tuple[str, str]], list[str]]:
++    """Collect declared target aliases, rejecting malformed selectors."""
++    supplied: list[tuple[str, str]] = []
++    errors: list[str] = []
++    for field_name in TARGET_NAME_FIELDS:
++        if field_name not in spec:
++            continue
++        value = spec[field_name]
++        if not isinstance(value, str) or not value.strip():
++            errors.append(f"{field_name} must be a non-empty declaration-name string")
++            continue
++        supplied.append((field_name, value.strip()))
++    return supplied, errors
++
++
++def _resolve_declaration_selector(
++    declarations: list[ParsedDeclaration], selector: str
++) -> tuple[ParsedDeclaration | None, str | None]:
++    """Resolve exact or unique short names to one parsed declaration identity."""
++    exact = [d for d in declarations if d.name == selector]
++    if len(exact) == 1:
++        return exact[0], None
++    if len(exact) > 1:
++        return None, f"selector {selector!r} matches duplicate exact declarations"
++    if "." not in selector:
++        short = [d for d in declarations if d.name.rsplit(".", 1)[-1] == selector]
++        if len(short) == 1:
++            return short[0], None
++        if len(short) > 1:
++            return None, f"unqualified selector {selector!r} is ambiguous across {[d.name for d in short]}"
++    return None, f"selector {selector!r} does not resolve to a parsed declaration"
++
++
++def _select_target_declaration(
++    declarations: list[ParsedDeclaration], spec: dict[str, Any], target_decl: str | None = None
++) -> tuple[ParsedDeclaration | None, str | None, str | None]:
++    """Resolve every provided alias and require one canonical declaration identity."""
++    supplied, errors = _target_names(spec)
++    if errors:
++        return None, "TARGET_DECLARATION_AMBIGUOUS", "; ".join(errors)
++    if target_decl is not None:
++        if not isinstance(target_decl, str) or not target_decl.strip():
++            return None, "TARGET_DECLARATION_REQUIRED", "Explicit target selector must be a non-empty declaration name."
++        supplied.append(("target_decl", target_decl.strip()))
++    if not supplied:
++        if spec.get("allow_first_declaration") is True:
++            return declarations[0], None, None
++        return (
++            None,
++            "TARGET_DECLARATION_REQUIRED",
++            "No target identifier supplied. Set one of theorem_name, target_symbol, "
++            "target_declaration, or decl; first-declaration selection requires "
++            "allow_first_declaration=true.",
++        )
++
++    resolved: list[tuple[str, ParsedDeclaration]] = []
++    for field, selector in supplied:
++        declaration, error = _resolve_declaration_selector(declarations, selector)
++        if error or declaration is None:
++            code = "TARGET_DECLARATION_AMBIGUOUS" if "ambiguous" in (error or "") or "duplicate" in (error or "") else "TARGET_DECLARATION_NOT_FOUND"
++            return None, code, f"{field}: {error}"
++        resolved.append((field, declaration))
++    identities = {declaration.name for _, declaration in resolved}
++    if len(identities) != 1:
++        detail = ", ".join(f"{field}={declaration.name!r}" for field, declaration in resolved)
++        return None, "TARGET_DECLARATION_AMBIGUOUS", f"Conflicting target selectors resolve to different declarations: {detail}."
++    return resolved[0][1], None, None
++
+ def evaluate_statement_fidelity(
+     decl_ast_or_text: str | dict[str, Any],
+     spec: dict[str, Any],
+@@ -1040,11 +1148,11 @@
+     structures: dict[str, dict[str, str]] = {}
+     declarations: list[ParsedDeclaration] = []
+ 
++    target_names, target_field_errors = _target_names(spec)
+     target_name = (
+-        spec.get("theorem_name")
+-        or spec.get("target_symbol")
+-        or spec.get("target_declaration")
+-        or spec.get("decl")
++        target_names[0][1]
++        if len(target_names) == 1
++        else "<invalid-target>" if target_names or target_field_errors else "<unknown>"
+     )
+ 
+     if isinstance(decl_ast_or_text, dict):
+@@ -1073,50 +1181,27 @@
+         )
+ 
+     # Select target declaration
+-    selected_decl: ParsedDeclaration | None = None
+-    if target_name:
+-        for d in declarations:
+-            if d.name == target_name or d.name.endswith(f".{target_name}") or target_name.endswith(f".{d.name}"):
+-                selected_decl = d
+-                break
+-        if selected_decl is None:
+-            return FidelityReport(
+-                theorem_name=target_name,
+-                fidelity_score=0.0,
+-                passed=False,
+-                defects=[
+-                    FidelityDefect(
+-                        defect_type="TARGET_DECLARATION_NOT_FOUND",
+-                        severity="FATAL",
+-                        message=f"Target declaration '{target_name}' was not found among parsed declarations: {[d.name for d in declarations]}.",
+-                        penalty=1.0,
+-                        context=target_name,
+-                    )
+-                ],
+-                carrier_detected=[],
+-                hypotheses_detected=[],
+-                conclusion_detected="",
+-            )
+-    else:
+-        if len(declarations) == 1:
+-            selected_decl = declarations[0]
+-        else:
+-            return FidelityReport(
+-                theorem_name="<unspecified>",
+-                fidelity_score=0.0,
+-                passed=False,
+-                defects=[
+-                    FidelityDefect(
+-                        defect_type="AMBIGUOUS_TARGET_DECLARATION",
+-                        severity="FATAL",
+-                        message=f"No target theorem specified and file contains {len(declarations)} declarations. Specify target_symbol or theorem_name.",
+-                        penalty=1.0,
+-                    )
+-                ],
+-                carrier_detected=[],
+-                hypotheses_detected=[],
+-                conclusion_detected="",
+-            )
++    selected_decl, selection_error, selection_message = _select_target_declaration(
++        declarations, spec
++    )
++    if selected_decl is None:
++        return FidelityReport(
++            theorem_name=target_name,
++            fidelity_score=0.0,
++            passed=False,
++            defects=[
++                FidelityDefect(
++                    defect_type=selection_error or "TARGET_DECLARATION_NOT_FOUND",
++                    severity="FATAL",
++                    message=selection_message or "Target declaration selection failed.",
++                    penalty=1.0,
++                    context=target_name,
++                )
++            ],
++            carrier_detected=[],
++            hypotheses_detected=[],
++            conclusion_detected="",
++        )
+ 
+     # If spec has structure definitions, merge them
+     if "structures" in spec and isinstance(spec["structures"], dict):
+@@ -1144,11 +1229,11 @@
+     # Carrier fidelity check
+     carrier_spec = spec.get("carrier_requirements")
+     if not carrier_spec and "carrier" in spec:
+-        c_val = spec["carrier"]
+-        if isinstance(c_val, str):
+-            carrier_spec = {"expected_carrier": c_val}
+-        elif isinstance(c_val, dict):
+-            carrier_spec = c_val
++        carrier_value = spec["carrier"]
++        if isinstance(carrier_value, str):
++            carrier_spec = {"expected_carrier": carrier_value}
++        elif isinstance(carrier_value, dict):
++            carrier_spec = carrier_value
+     carrier_defects = check_carrier_fidelity(carrier_info, carrier_spec)
+     all_defects.extend(carrier_defects)
+ 
+@@ -1209,37 +1294,117 @@
+         spec_data = spec_path_or_dict
+ 
+     lean_content = Path(lean_path).read_text(encoding="utf-8")
++    return evaluate_source_fidelity(lean_content, spec_data, target_decl)
++
++
++def evaluate_source_fidelity(
++    lean_content: str,
++    spec_data: dict[str, Any],
++    target_decl: str | None = None,
++) -> dict[str, FidelityReport]:
++    """Screen a caller-supplied immutable source snapshot against a spec.
++
++    This remains source-syntax screening. The caller can bind the exact text to
++    external kernel evidence by hashing it once before passing it here.
++    """
+     declarations, structures = parse_lean_declarations(lean_content)
++
++    if target_decl is not None and (not isinstance(target_decl, str) or not target_decl.strip()):
++        return {"<invalid-target>": FidelityReport(
++            theorem_name="<invalid-target>", fidelity_score=0.0, passed=False,
++            defects=[FidelityDefect(
++                defect_type="TARGET_DECLARATION_REQUIRED", severity="FATAL",
++                message="Explicit target selector must be a non-empty declaration name.",
++                penalty=1.0, context=str(target_decl),
++            )], carrier_detected=[], hypotheses_detected=[], conclusion_detected="",
++        )}
++
++    requested_declaration: ParsedDeclaration | None = None
++    if target_decl is not None:
++        requested_declaration, selector_error = _resolve_declaration_selector(
++            declarations, target_decl.strip()
++        )
++        if selector_error or requested_declaration is None:
++            defect_type = (
++                "TARGET_DECLARATION_AMBIGUOUS"
++                if "ambiguous" in (selector_error or "") or "duplicate" in (selector_error or "")
++                else "TARGET_DECLARATION_NOT_FOUND"
++            )
++            return {target_decl: FidelityReport(
++                theorem_name=target_decl, fidelity_score=0.0, passed=False,
++                defects=[FidelityDefect(
++                    defect_type=defect_type, severity="FATAL",
++                    message=selector_error or "Explicit target selector did not resolve.",
++                    penalty=1.0, context=target_decl,
++                )], carrier_detected=[], hypotheses_detected=[], conclusion_detected="",
++            )}
+ 
+     results: dict[str, FidelityReport] = {}
+ 
+     # Multi-theorem spec
+     if "theorems" in spec_data and isinstance(spec_data["theorems"], dict):
+         suite = spec_data["theorems"]
++        selected_members: list[tuple[str, dict[str, Any]]] = []
+         for th_name, th_spec in suite.items():
+-            if target_decl and th_name != target_decl:
++            th_spec_copy = dict(th_spec)
++            # A suite key is an asserted target too; preserve aliases to expose conflicts.
++            aliases = [th_spec_copy.get(k) for k in TARGET_NAME_FIELDS if th_spec_copy.get(k)]
++            if not aliases:
++                th_spec_copy["theorem_name"] = th_name
++            elif th_name not in aliases:
++                th_spec_copy["target_declaration"] = th_name
++            th_spec_copy["structures"] = structures
++            if requested_declaration is not None:
++                member, member_error, _ = _select_target_declaration(declarations, th_spec_copy)
++                if member is not None and member_error is None and member.name == requested_declaration.name:
++                    selected_members.append((th_name, th_spec_copy))
+                 continue
+-            th_spec_copy = dict(th_spec)
+-            th_spec_copy["theorem_name"] = th_name
+-            th_spec_copy["structures"] = structures
++            selected_members.append((th_name, th_spec_copy))
++
++        if requested_declaration is not None and len(selected_members) > 1:
++            return {target_decl: FidelityReport(
++                theorem_name=requested_declaration.name, fidelity_score=0.0, passed=False,
++                defects=[FidelityDefect(
++                    defect_type="TARGET_DECLARATION_AMBIGUOUS", severity="FATAL",
++                    message=f"Multiple suite entries select {requested_declaration.name!r}.",
++                    penalty=1.0, context=requested_declaration.name,
++                )], carrier_detected=[], hypotheses_detected=[], conclusion_detected="",
++            )}
++        for th_name, th_spec_copy in selected_members:
+             report = evaluate_statement_fidelity(lean_content, th_spec_copy)
+             results[th_name] = report
+     else:
+         # Single theorem spec
+-        th_name = (
+-            target_decl
+-            or spec_data.get("theorem_name")
+-            or spec_data.get("target_symbol")
+-            or spec_data.get("target_declaration")
+-            or spec_data.get("decl")
++        spec_copy = dict(spec_data)
++        if target_decl is not None:
++            # Add the CLI selector as another alias; canonical resolution below
++            # accepts short/qualified equivalence and rejects actual conflicts.
++            spec_copy["target_declaration"] = target_decl
++        spec_copy["structures"] = structures
++        # Pass CLI selectors directly so an explicit empty string cannot vanish
++        # through truthiness checks in this API path.
++        report = evaluate_statement_fidelity(lean_content, spec_copy)
++        key = target_decl or report.theorem_name
++        results[key] = report
++
++    # A requested suite member that does not exist must not become an empty,
++    # successful result set in the CLI/API.
++    if target_decl and not results:
++        results[target_decl] = FidelityReport(
++            theorem_name=target_decl,
++            fidelity_score=0.0,
++            passed=False,
++            defects=[FidelityDefect(
++                defect_type="TARGET_DECLARATION_NOT_FOUND",
++                severity="FATAL",
++                message=f"Requested target {target_decl!r} is not a member of the specification suite.",
++                penalty=1.0,
++                context=target_decl,
++            )],
++            carrier_detected=[],
++            hypotheses_detected=[],
++            conclusion_detected="",
+         )
+-        spec_copy = dict(spec_data)
+-        if th_name:
+-            spec_copy["theorem_name"] = th_name
+-        spec_copy["structures"] = structures
+-        report = evaluate_statement_fidelity(lean_content, spec_copy)
+-        key = th_name or report.theorem_name
+-        results[key] = report
+ 
+     return results
+ 
+@@ -1276,7 +1441,7 @@
+ 
+         reports = evaluate_file_fidelity(lean_path, spec_path, target_decl=args.decl)
+ 
+-        all_passed = True
++        all_passed = bool(reports)
+         for th_name, rep in reports.items():
+             if rep.fidelity_score < args.min_score or not rep.passed:
+                 all_passed = False
+--- a/tools/infra/qms_evidence_pipeline.py
++++ b/tools/infra/qms_evidence_pipeline.py
+@@ -723,9 +723,20 @@
+             )
+         source_sha256 = hashlib.sha256(source_bytes).hexdigest()
+ 
+-        # 1. Concurrency-Locked Lean Kernel Check
+-        cmd = ["flock", "-x", self.lock_file, "lake", "env", "lean", str(packet.lean_file)]
++        # Compile an immutable source snapshot, not the mutable owner path. The
++        # temporary file lives beside the owner to preserve relative source
++        # context; Lean still runs from the repository root for Lake imports.
++        snapshot_path: Path | None = None
++        audit_path: Path | None = None
+         try:
++            source = source_bytes.decode("utf-8")
++            with tempfile.NamedTemporaryFile(
++                prefix=f".{packet.lean_file.stem}.opengauss-", suffix=".lean",
++                dir=packet.lean_file.parent, delete=False,
++            ) as snapshot_file:
++                snapshot_path = Path(snapshot_file.name)
++                snapshot_file.write(source_bytes)
++            cmd = ["flock", "-x", self.lock_file, "lake", "env", "lean", str(snapshot_path)]
+             proc = subprocess.run(
+                 cmd,
+                 cwd=REPO_ROOT,
+@@ -734,102 +745,82 @@
+                 timeout=180,
+                 check=False,
+             )
+-        except subprocess.TimeoutExpired:
+-            return GateResult(
+-                gate_number=5,
+-                gate_name="KERNEL_SOURCE_CHECK",
+-                passed=False,
+-                diagnostics=["Kernel verification timed out after 180 seconds."],
+-                socratic_critique="Gate 5 Kernel Failure: Lake compilation timed out under exclusive build lock.",
+-                duration_seconds=time.time() - t0,
+-            )
+-        except Exception as exc:
+-            return GateResult(
+-                gate_number=5,
+-                gate_name="KERNEL_SOURCE_CHECK",
+-                passed=False,
+-                diagnostics=[f"Process execution error: {exc}"],
+-                socratic_critique=f"Gate 5 Kernel Failure: Could not spawn build process: {exc}",
+-                duration_seconds=time.time() - t0,
+-            )
+-
+-        if proc.returncode != 0:
+-            err_msg = proc.stderr.strip() or proc.stdout.strip()
+-            diagnostics.append(f"Lean kernel compilation failed with returncode {proc.returncode}.")
+-            return GateResult(
+-                gate_number=5,
+-                gate_name="KERNEL_SOURCE_CHECK",
+-                passed=False,
+-                diagnostics=diagnostics,
+-                socratic_critique=(
+-                    f"Gate 5 Kernel Failure: Lean kernel rejected candidate with return code {proc.returncode}:\n"
+-                    f"{err_msg[:500]}"
+-                ),
+-                details={"returncode": proc.returncode, "stderr": proc.stderr, "stdout": proc.stdout},
+-                duration_seconds=time.time() - t0,
+-            )
+-
+-        # Detect changes between the source snapshot and compilation before auditing.
+-        current_bytes = packet.lean_file.read_bytes()
+-        if hashlib.sha256(current_bytes).hexdigest() != source_sha256:
+-            return GateResult(
+-                gate_number=5,
+-                gate_name="KERNEL_SOURCE_CHECK",
+-                passed=False,
+-                diagnostics=["Candidate source changed during kernel compilation."],
+-                socratic_critique="Gate 5 rejected a time-of-check/time-of-use source mismatch.",
+-                details={"candidate_sha256_before": source_sha256,
+-                         "candidate_sha256_after_compile": hashlib.sha256(current_bytes).hexdigest()},
+-                duration_seconds=time.time() - t0,
+-            )
+-
+-        # 2. Strict Axiom Auditing
+-        source = source_bytes.decode("utf-8")
+-        declarations = extract_lean_declarations(source)
+-        if not declarations:
+-            return GateResult(
+-                gate_number=5,
+-                gate_name="KERNEL_SOURCE_CHECK",
+-                passed=False,
+-                diagnostics=["No theorem/lemma declarations were found; axiom audit cannot be certified."],
+-                socratic_critique="Gate 5 fails closed when there are no declarations to audit.",
+-                details={"candidate_sha256": source_sha256},
+-                duration_seconds=time.time() - t0,
+-            )
+-
+-        audit_source = (
+-            "import Lean\n"
+-            + source.rstrip()
+-            + "\n\n"
+-            + "\n".join(f"#print axioms {d}" for d in declarations)
+-            + "\n"
+-        )
+-
+-        with tempfile.NamedTemporaryFile(suffix=".lean", mode="w", encoding="utf-8") as temp_audit:
+-            temp_audit.write(audit_source)
+-            temp_audit.flush()
+-            audit_cmd = ["flock", "-x", self.lock_file, "lake", "env", "lean", temp_audit.name]
+-            try:
+-                audit_proc = subprocess.run(
+-                    audit_cmd,
+-                    cwd=REPO_ROOT,
+-                    capture_output=True,
+-                    text=True,
+-                    timeout=180,
+-                    check=False,
+-                )
+-                axiom_returncode = audit_proc.returncode
+-                axiom_output = audit_proc.stdout
+-                audit_declarations = declarations
+-            except Exception as exc:
++            if proc.returncode != 0:
++                err_msg = proc.stderr.strip() or proc.stdout.strip()
++                diagnostics.append(f"Lean kernel compilation failed with returncode {proc.returncode}.")
+                 return GateResult(
+                     gate_number=5,
+                     gate_name="KERNEL_SOURCE_CHECK",
+                     passed=False,
+-                    diagnostics=[f"Axiom audit execution failed: {exc}"],
+-                    socratic_critique=f"Gate 5 Kernel Failure: Axiom audit subprocess crashed: {exc}",
++                    diagnostics=diagnostics,
++                    socratic_critique=(
++                        f"Gate 5 Kernel Failure: Lean kernel rejected immutable source snapshot "
++                        f"with return code {proc.returncode}:\n{err_msg[:500]}"
++                    ),
++                    details={"returncode": proc.returncode, "stderr": proc.stderr,
++                             "stdout": proc.stdout, "candidate_sha256": source_sha256},
+                     duration_seconds=time.time() - t0,
+                 )
++            # The axiom audit adds commands to this same exact source snapshot.
++            audit_commands = "\n".join(
++                f"#print axioms {d}" for d in extract_lean_declarations(source)
++            )
++            audit_source_bytes = (
++                b"import Lean\n" + source_bytes + b"\n\n"
++                + audit_commands.encode("utf-8") + b"\n"
++            )
++            with tempfile.NamedTemporaryFile(
++                prefix=f".{packet.lean_file.stem}.opengauss-audit-", suffix=".lean",
++                dir=packet.lean_file.parent, mode="wb", delete=False,
++            ) as audit_file:
++                audit_path = Path(audit_file.name)
++                audit_file.write(audit_source_bytes)
++            audit_cmd = ["flock", "-x", self.lock_file, "lake", "env", "lean", str(audit_path)]
++            audit_proc = subprocess.run(
++                audit_cmd,
++                cwd=REPO_ROOT,
++                capture_output=True,
++                text=True,
++                timeout=180,
++                check=False,
++            )
++            axiom_returncode = audit_proc.returncode
++            axiom_output = audit_proc.stdout
++            audit_declarations = extract_lean_declarations(source)
++        except subprocess.TimeoutExpired:
++            return GateResult(
++                gate_number=5,
++                gate_name="KERNEL_SOURCE_CHECK",
++                passed=False,
++                diagnostics=["Kernel verification or axiom audit timed out after 180 seconds."],
++                socratic_critique="Gate 5 Kernel Failure: immutable snapshot check timed out under exclusive build lock.",
++                duration_seconds=time.time() - t0,
++            )
++        except Exception as exc:
++            return GateResult(
++                gate_number=5,
++                gate_name="KERNEL_SOURCE_CHECK",
++                passed=False,
++                diagnostics=[f"Immutable snapshot verification failed: {exc}"],
++                socratic_critique=f"Gate 5 failed closed before it could bind compile and audit to one source snapshot: {exc}",
++                duration_seconds=time.time() - t0,
++            )
++        finally:
++            for temporary_path in (snapshot_path, audit_path):
++                if temporary_path is not None:
++                    temporary_path.unlink(missing_ok=True)
++
++        declarations = extract_lean_declarations(source)
++        if not declarations:
++            return GateResult(
++                gate_number=5,
++                gate_name="KERNEL_SOURCE_CHECK",
++                passed=False,
++                diagnostics=["No theorem/lemma declarations were found; axiom audit cannot be certified."],
++                socratic_critique="Gate 5 fails closed when there are no declarations to audit.",
++                details={"candidate_sha256": source_sha256},
++                duration_seconds=time.time() - t0,
++            )
+ 
+         if axiom_returncode != 0:
+             return GateResult(
+@@ -873,18 +864,6 @@
+                 diagnostics=diagnostics,
+                 socratic_critique="\n".join(critique_lines),
+                 details={"forbidden_axioms": dict(forbidden_axioms_found)},
+-                duration_seconds=time.time() - t0,
+-            )
+-
+-        final_sha256 = hashlib.sha256(packet.lean_file.read_bytes()).hexdigest()
+-        if final_sha256 != source_sha256:
+-            return GateResult(
+-                gate_number=5,
+-                gate_name="KERNEL_SOURCE_CHECK",
+-                passed=False,
+-                diagnostics=["Candidate source changed before axiom audit completed."],
+-                socratic_critique="Gate 5 rejected a source snapshot mismatch after axiom auditing.",
+-                details={"candidate_sha256_before": source_sha256, "candidate_sha256_after_audit": final_sha256},
+                 duration_seconds=time.time() - t0,
+             )
+ 
+@@ -907,6 +886,7 @@
+                 "axiom_audit_output": axiom_output,
+                 "axiom_audit_returncode": axiom_returncode,
+                 "candidate_sha256": source_sha256,
++                "source_snapshot_text": source,
+             },
+             duration_seconds=time.time() - t0,
+         )
+@@ -914,14 +894,73 @@
+     # -------------------------------------------------------------------------
+     # Gate 6: SPECIFICATION CONTRACT SCREEN
+     # -------------------------------------------------------------------------
+-    def gate_6_statement_fidelity_review(self, packet: EvidencePacket) -> GateResult:
++    def gate_6_statement_fidelity_review(
++        self, packet: EvidencePacket, kernel_result: GateResult | None = None
++    ) -> GateResult:
+         """Run syntax-based contract checks; this score is not a semantic correctness proof."""
+         t0 = time.time()
+         diagnostics: list[str] = []
+ 
+-        from tools.quality.statement_fidelity_gate import evaluate_file_fidelity
+-
+-        reports = evaluate_file_fidelity(packet.lean_file, packet.raw_spec)
++        from tools.quality.statement_fidelity_gate import evaluate_source_fidelity
++
++        if not isinstance(kernel_result, GateResult):
++            return GateResult(
++                gate_number=6,
++                gate_name="STATEMENT_FIDELITY_REVIEW",
++                passed=False,
++                diagnostics=["Gate 6 requires the passing Gate 5 result; standalone review is not promotable evidence."],
++                socratic_critique="Gate 6 rejects calls without an explicit Gate 5 evidence object.",
++                duration_seconds=time.time() - t0,
++            )
++        if not kernel_result.passed:
++            return GateResult(
++                gate_number=6,
++                gate_name="STATEMENT_FIDELITY_REVIEW",
++                passed=False,
++                diagnostics=["Gate 5 did not pass; Gate 6 cannot consume failed kernel evidence."],
++                socratic_critique="Gate 6 fails closed unless Gate 5 supplied a passing kernel result.",
++                duration_seconds=time.time() - t0,
++            )
++        kernel_source_sha = kernel_result.details.get("candidate_sha256")
++        source_text = kernel_result.details.get("source_snapshot_text")
++        if not isinstance(kernel_source_sha, str) or not re.fullmatch(r"[0-9a-f]{64}", kernel_source_sha):
++            diagnostics.append("Gate 5 kernel evidence is missing a valid candidate_sha256 source binding.")
++        elif not isinstance(source_text, str):
++            diagnostics.append("Gate 5 kernel evidence is missing its immutable source snapshot text.")
++        elif hashlib.sha256(source_text.encode("utf-8")).hexdigest() != kernel_source_sha:
++            diagnostics.append("Gate 5 source snapshot text does not match its candidate_sha256.")
++        if diagnostics:
++            return GateResult(
++                gate_number=6,
++                gate_name="STATEMENT_FIDELITY_REVIEW",
++                passed=False,
++                diagnostics=diagnostics,
++                socratic_critique="Gate 6 fails closed unless Gate 5 supplies a hash-bound immutable compiled source snapshot.",
++                duration_seconds=time.time() - t0,
++            )
++
++        # The exact decoded text whose bytes were fingerprinted above is passed
++        # directly to the source checker; it is not reopened from disk.
++        reports = evaluate_source_fidelity(source_text, packet.raw_spec)
++        audited = set(kernel_result.details.get("axiom_audit_declarations", []))
++        selected = {report.theorem_name for report in reports.values()}
++        missing_from_kernel_audit = selected - audited
++        if not audited or missing_from_kernel_audit:
++            return GateResult(
++                gate_number=6,
++                gate_name="STATEMENT_FIDELITY_REVIEW",
++                passed=False,
++                diagnostics=[
++                    "Gate 6 selected declaration identity is not covered by Gate 5's kernel audit.",
++                    f"Selected names missing from Gate 5: {sorted(missing_from_kernel_audit)}",
++                ],
++                socratic_critique="Gate 6 fails closed when its selected declarations are not exactly among the kernel-audited names.",
++                details={
++                    "selected_declarations": sorted(selected),
++                    "axiom_audit_declarations": sorted(audited),
++                },
++                duration_seconds=time.time() - t0,
++            )
+         if not reports:
+             diagnostics.append("No theorems could be matched between Lean file and specification.")
+             return GateResult(
+@@ -985,6 +1024,7 @@
+         packet: EvidencePacket,
+         kernel_result: GateResult,
+         out_receipt: Path | None = None,
++        fidelity_result: GateResult | None = None,
+     ) -> tuple[GateResult, dict[str, Any] | None, Path | None]:
+         """Record a self-checksummed candidate observation; this does not promote a theorem."""
+         t0 = time.time()
+@@ -994,6 +1034,18 @@
+             build_candidate_receipt,
+             verify_candidate_receipt,
+         )
++
++        if not isinstance(fidelity_result, GateResult) or fidelity_result.gate_number != 6 or not fidelity_result.passed:
++            return (
++                GateResult(
++                    gate_number=7,
++                    gate_name="CANDIDATE_RECEIPT",
++                    passed=False,
++                    diagnostics=["Gate 7 requires a passing Gate 6 statement-fidelity result."],
++                    socratic_critique="Receipt creation fails closed unless the candidate passed Gate 6.",
++                    duration_seconds=time.time() - t0,
++                ), None, None,
++            )
+ 
+         # Collect Git & Environment fingerprints
+         git_head = ""
+@@ -1018,6 +1070,22 @@
+             manifest_hash = hashlib.sha256(manifest_path.read_bytes()).hexdigest()
+ 
+         candidate_sha = kernel_result.details.get("candidate_sha256")
++        source_snapshot_text = kernel_result.details.get("source_snapshot_text")
++        if (
++            not isinstance(candidate_sha, str)
++            or not isinstance(source_snapshot_text, str)
++            or hashlib.sha256(source_snapshot_text.encode("utf-8")).hexdigest() != candidate_sha
++        ):
++            return (
++                GateResult(
++                    gate_number=7,
++                    gate_name="CANDIDATE_RECEIPT",
++                    passed=False,
++                    diagnostics=["Gate 5 evidence does not contain a valid hash-bound source snapshot."],
++                    socratic_critique="Receipt creation fails closed unless Gate 5's immutable source snapshot is verifiable.",
++                    duration_seconds=time.time() - t0,
++                ), None, None,
++            )
+         current_sha = hashlib.sha256(packet.lean_file.read_bytes()).hexdigest()
+         if not candidate_sha or current_sha != candidate_sha:
+             return (
+@@ -1323,7 +1391,7 @@
+             return report
+ 
+         # Gate 6: STATEMENT-FIDELITY REVIEW
+-        g6_res = self.gate_6_statement_fidelity_review(packet)
++        g6_res = self.gate_6_statement_fidelity_review(packet, kernel_result=g5_res)
+         report.gates.append(g6_res)
+         if not g6_res.passed:
+             report.status = "REJECTED_AT_GATE_6_STATEMENT_FIDELITY_REVIEW"
+@@ -1336,6 +1404,7 @@
+         g7_res, receipt, receipt_path = self.gate_7_candidate_receipt(
+             packet=packet,
+             kernel_result=g5_res,
++            fidelity_result=g6_res,
+             out_receipt=out_receipt,
+         )
+         report.gates.append(g7_res)
+--- a/tests/test_statement_fidelity_gate.py
++++ b/tests/test_statement_fidelity_gate.py
+@@ -8,6 +8,7 @@
+     FidelityDefect,
+     FidelityReport,
+     evaluate_file_fidelity,
++    evaluate_source_fidelity,
+     evaluate_statement_fidelity,
+     parse_lean_declarations,
+ )
+@@ -81,6 +82,137 @@
+     assert not rep.passed
+     assert rep.fidelity_score == 0.0
+     assert rep.defects[0].defect_type == "TARGET_DECLARATION_NOT_FOUND"
++
++
++def test_target_symbol_alias_selects_requested_declaration_not_first():
++    code = """
++theorem unrelated (x : Nat) : x = x := by rfl
++theorem requested (x : Nat) : x + 0 = x := by simp
++"""
++    report = evaluate_statement_fidelity(
++        code,
++        {"target_symbol": "requested", "target_relation": {"pattern": r"x \+ 0 = x"}},
++    )
++    assert report.theorem_name == "requested"
++    assert report.conclusion_detected == "x + 0 = x"
++    assert report.passed
++
++
++def test_short_and_qualified_aliases_resolve_to_same_canonical_declaration():
++    code = "namespace A\ntheorem requested : True := by trivial\nend A"
++    report = evaluate_statement_fidelity(
++        code,
++        {"theorem_name": "requested", "target_symbol": "A.requested"},
++    )
++    assert report.theorem_name == "A.requested"
++    assert report.passed
++
++
++def test_explicit_empty_decl_selector_is_rejected_not_ignored():
++    reports = evaluate_source_fidelity(
++        "theorem requested : True := by trivial",
++        {"theorem_name": "requested"},
++        target_decl="",
++    )
++    report = reports["<invalid-target>"]
++    assert not report.passed
++    assert report.defects[0].defect_type == "TARGET_DECLARATION_REQUIRED"
++
++
++def test_multispec_decl_selector_matches_namespace_qualified_identity():
++    code = "namespace A\ntheorem requested : True := by trivial\nend A"
++    reports = evaluate_source_fidelity(
++        code,
++        {"theorems": {"requested": {"theorem_name": "A.requested"}}},
++        target_decl="A.requested",
++    )
++    assert list(reports) == ["requested"]
++    assert reports["requested"].theorem_name == "A.requested"
++
++
++def test_conflicting_target_aliases_fail_closed():
++    code = "theorem first : True := by trivial\ntheorem second : True := by trivial"
++    report = evaluate_statement_fidelity(
++        code, {"theorem_name": "first", "target_symbol": "second"}
++    )
++    assert not report.passed
++    assert report.fidelity_score == 0.0
++    assert report.defects[0].defect_type == "TARGET_DECLARATION_AMBIGUOUS"
++
++
++def test_unqualified_target_collision_is_ambiguous_not_source_ordered():
++    code = "namespace A\ntheorem target : True := by trivial\nend A\nnamespace B\ntheorem target : True := by trivial\nend B"
++    report = evaluate_statement_fidelity(code, {"decl": "target"})
++    assert not report.passed
++    assert report.defects[0].defect_type == "TARGET_DECLARATION_AMBIGUOUS"
++
++
++def test_namespace_and_section_scope_matches_gate5_declaration_inventory():
++    from tools.infra.qms_evidence_pipeline import extract_lean_declarations
++
++    code = """
++namespace A
++theorem outer : 2 + 2 = 4 := by norm_num
++section S
++theorem inside : 3 + 3 = 6 := by norm_num
++end S
++theorem after_section : 4 + 4 = 8 := by norm_num
++end A
++"""
++    parsed, _ = parse_lean_declarations(code)
++    gate6_names = [decl.name for decl in parsed]
++    gate5_names = extract_lean_declarations(code)
++    assert gate6_names == ["A.outer", "A.inside", "A.after_section"]
++    assert gate6_names == gate5_names
++
++
++def test_declaration_line_number_points_to_keyword_after_namespace():
++    code = "namespace A\ntheorem target : 2 + 2 = 4 := by norm_num\nend A"
++    declarations, _ = parse_lean_declarations(code)
++    assert declarations[0].line_number == 2
++    assert declarations[0].name == "A.target"
++
++
++def test_missing_target_requires_explicit_first_declaration_opt_in():
++    code = "theorem only_decl : True := by trivial"
++    rejected = evaluate_statement_fidelity(code, {})
++    accepted = evaluate_statement_fidelity(code, {"allow_first_declaration": True})
++    assert not rejected.passed
++    assert rejected.defects[0].defect_type == "TARGET_DECLARATION_REQUIRED"
++    assert accepted.theorem_name == "only_decl"
++
++
++def test_cli_unknown_suite_target_fails_instead_of_returning_empty_success(tmp_path: Path):
++    lean_path = tmp_path / "Candidate.lean"
++    spec_path = tmp_path / "spec.json"
++    lean_path.write_text("theorem existing : 2 + 2 = 4 := by norm_num", encoding="utf-8")
++    spec_path.write_text(json.dumps({"theorems": {"existing": {"target_relation": {"pattern": "2 \\+ 2 = 4"}}}}), encoding="utf-8")
++    cmd = [
++        sys.executable,
++        str(REPO_ROOT / "tools" / "quality" / "statement_fidelity_gate.py"),
++        "evaluate", "--lean", str(lean_path), "--spec", str(spec_path),
++        "--decl", "missing", "--json",
++    ]
++    result = subprocess.run(cmd, capture_output=True, text=True)
++    assert result.returncode != 0
++    data = json.loads(result.stdout)
++    assert data["all_passed"] is False
++    assert data["reports"]["missing"]["defects"][0]["defect_type"] == "TARGET_DECLARATION_NOT_FOUND"
++
++
++def test_single_spec_cli_target_conflict_is_not_silently_overridden(tmp_path: Path):
++    lean_path = tmp_path / "Candidate.lean"
++    spec_path = tmp_path / "spec.json"
++    lean_path.write_text(
++        "theorem intended (n : Nat) : n + 0 = n := by simp\n"
++        "theorem other (n : Nat) : n + 1 = n + 1 := by simp",
++        encoding="utf-8",
++    )
++    spec_path.write_text(json.dumps({"theorem_name": "intended", "target_relation": {"pattern": "n \\+ 0 = n"}}), encoding="utf-8")
++    reports = evaluate_file_fidelity(lean_path, spec_path, target_decl="other")
++    report = next(iter(reports.values()))
++    assert not report.passed
++    assert report.defects[0].defect_type == "TARGET_DECLARATION_AMBIGUOUS"
+ 
+ 
+ def test_unrelated_structure_fields_are_not_counted_as_hypotheses():
+--- a/tests/quality/test_qms_production_defects_regression.py
++++ b/tests/quality/test_qms_production_defects_regression.py
+@@ -9,6 +9,7 @@
+ from __future__ import annotations
+ 
+ import json
++import hashlib
+ from pathlib import Path
+ import tempfile
+ import pytest
+@@ -17,6 +18,7 @@
+     EvidencePacket,
+     GateResult,
+     QMSEvidencePipeline,
++    extract_lean_declarations,
+     parse_axiom_audit_output,
+ )
+ from tools.quality.statement_fidelity_gate import (
+@@ -120,6 +122,285 @@
+     assert "requested_target_theorem_that_does_not_exist" in target_defect.message
+ 
+ 
++def test_gate6_rejects_selected_name_missing_from_gate5_kernel_audit(tmp_path: Path):
++    lean_file = tmp_path / "Candidate.lean"
++    lean_file.write_text("theorem intended : True := by trivial", encoding="utf-8")
++    packet = EvidencePacket(
++        spec_path=tmp_path / "spec.json",
++        lean_file=lean_file,
++        claim="declaration identity",
++        carrier="Prop",
++        hypotheses=[],
++        target_conclusion="True",
++        raw_spec={"theorem_name": "intended"},
++    )
++    kernel_result = GateResult(
++        gate_number=5,
++        gate_name="KERNEL_SOURCE_CHECK",
++        passed=True,
++        details={
++            "axiom_audit_declarations": ["other_name"],
++            "candidate_sha256": hashlib.sha256(lean_file.read_bytes()).hexdigest(),
++            "source_snapshot_text": lean_file.read_text(encoding="utf-8"),
++        },
++    )
++    result = QMSEvidencePipeline().gate_6_statement_fidelity_review(packet, kernel_result)
++    assert not result.passed
++    assert "identity" in result.diagnostics[0]
++
++
++def test_gate6_accepts_exact_selected_name_from_gate5_kernel_audit(tmp_path: Path):
++    lean_file = tmp_path / "Candidate.lean"
++    lean_file.write_text("theorem intended (n : Nat) : n + 0 = n := by simp", encoding="utf-8")
++    packet = EvidencePacket(
++        spec_path=tmp_path / "spec.json",
++        lean_file=lean_file,
++        claim="declaration identity",
++        carrier="Prop",
++        hypotheses=[],
++        target_conclusion="n + 0 = n",
++        raw_spec={"theorem_name": "intended"},
++    )
++    kernel_result = GateResult(
++        gate_number=5,
++        gate_name="KERNEL_SOURCE_CHECK",
++        passed=True,
++        details={
++            "axiom_audit_declarations": ["intended"],
++            "candidate_sha256": hashlib.sha256(lean_file.read_bytes()).hexdigest(),
++            "source_snapshot_text": lean_file.read_text(encoding="utf-8"),
++        },
++    )
++    result = QMSEvidencePipeline().gate_6_statement_fidelity_review(packet, kernel_result)
++    assert result.passed
++
++
++def test_gate6_rejects_source_changed_since_gate5(tmp_path: Path):
++    lean_file = tmp_path / "Candidate.lean"
++    original = "theorem intended (n : Nat) : n + 0 = n := by simp"
++    lean_file.write_text(original, encoding="utf-8")
++    packet = EvidencePacket(
++        spec_path=tmp_path / "spec.json",
++        lean_file=lean_file,
++        claim="source snapshot identity",
++        carrier="Nat",
++        hypotheses=[],
++        target_conclusion="n + 0 = n",
++        raw_spec={"theorem_name": "intended"},
++    )
++    kernel_result = GateResult(
++        gate_number=5,
++        gate_name="KERNEL_SOURCE_CHECK",
++        passed=True,
++        details={
++            "axiom_audit_declarations": ["intended"],
++            "candidate_sha256": "0" * 64,
++            "source_snapshot_text": original,
++        },
++    )
++    result = QMSEvidencePipeline().gate_6_statement_fidelity_review(packet, kernel_result)
++    assert not result.passed
++    assert "does not match" in result.diagnostics[0]
++
++
++def test_gate6_rejects_missing_gate5_source_fingerprint(tmp_path: Path):
++    lean_file = tmp_path / "Candidate.lean"
++    lean_file.write_text("theorem intended (n : Nat) : n + 0 = n := by simp", encoding="utf-8")
++    packet = EvidencePacket(
++        spec_path=tmp_path / "spec.json",
++        lean_file=lean_file,
++        claim="required source binding",
++        carrier="Nat",
++        hypotheses=[],
++        target_conclusion="n + 0 = n",
++        raw_spec={"theorem_name": "intended"},
++    )
++    kernel_result = GateResult(
++        gate_number=5,
++        gate_name="KERNEL_SOURCE_CHECK",
++        passed=True,
++        details={"axiom_audit_declarations": ["intended"]},
++    )
++    result = QMSEvidencePipeline().gate_6_statement_fidelity_review(packet, kernel_result)
++    assert not result.passed
++    assert "missing a valid candidate_sha256" in result.diagnostics[0]
++
++
++def test_gate6_rejects_nonpassing_gate5_result(tmp_path: Path):
++    lean_file = tmp_path / "Candidate.lean"
++    lean_file.write_text("theorem intended (n : Nat) : n + 0 = n := by simp", encoding="utf-8")
++    packet = EvidencePacket(
++        spec_path=tmp_path / "spec.json",
++        lean_file=lean_file,
++        claim="passing kernel evidence required",
++        carrier="Nat",
++        hypotheses=[],
++        target_conclusion="n + 0 = n",
++        raw_spec={"theorem_name": "intended"},
++    )
++    kernel_result = GateResult(
++        gate_number=5,
++        gate_name="KERNEL_SOURCE_CHECK",
++        passed=False,
++        details={"candidate_sha256": hashlib.sha256(lean_file.read_bytes()).hexdigest()},
++    )
++    result = QMSEvidencePipeline().gate_6_statement_fidelity_review(packet, kernel_result)
++    assert not result.passed
++    assert "did not pass" in result.diagnostics[0]
++
++
++def test_gate6_rejects_missing_gate5_result(tmp_path: Path):
++    lean_file = tmp_path / "Candidate.lean"
++    lean_file.write_text("theorem intended : True := by trivial", encoding="utf-8")
++    packet = EvidencePacket(
++        spec_path=tmp_path / "spec.json", lean_file=lean_file, claim="required evidence",
++        carrier="Prop", hypotheses=[], target_conclusion="True",
++        raw_spec={"theorem_name": "intended"},
++    )
++    result = QMSEvidencePipeline().gate_6_statement_fidelity_review(packet)
++    assert not result.passed
++    assert "requires the passing Gate 5 result" in result.diagnostics[0]
++
++
++def test_gate6_uses_hash_bound_gate5_snapshot_after_owner_file_changes(tmp_path: Path):
++    lean_file = tmp_path / "Candidate.lean"
++    snapshot = "theorem intended : True := by trivial\n"
++    lean_file.write_text(snapshot, encoding="utf-8")
++    packet = EvidencePacket(
++        spec_path=tmp_path / "spec.json", lean_file=lean_file, claim="immutable snapshot",
++        carrier="Prop", hypotheses=[], target_conclusion="True",
++        raw_spec={"theorem_name": "intended"},
++    )
++    kernel_result = GateResult(
++        gate_number=5, gate_name="KERNEL_SOURCE_CHECK", passed=True,
++        details={
++            "axiom_audit_declarations": ["intended"],
++            "candidate_sha256": hashlib.sha256(snapshot.encode()).hexdigest(),
++            "source_snapshot_text": snapshot,
++        },
++    )
++    lean_file.write_text("theorem decoy : False := by trivial\n", encoding="utf-8")
++    result = QMSEvidencePipeline().gate_6_statement_fidelity_review(packet, kernel_result)
++    assert "intended" in result.details["reports"]
++    assert result.details["reports"]["intended"]["theorem_name"] == "intended"
++
++
++def test_actual_cl11_json_target_symbol_is_resolved_through_gate6():
++    source_path = REPO_ROOT / "lean/InfoGeometry/Clifford/Cl11SplitQuaternions.lean"
++    spec_path = REPO_ROOT / "specs/cl11_split_quaternions.json"
++    source_bytes = source_path.read_bytes()
++    source_text = source_bytes.decode("utf-8")
++    spec = json.loads(spec_path.read_text(encoding="utf-8"))
++    packet = EvidencePacket(
++        spec_path=spec_path,
++        lean_file=source_path,
++        claim=spec["claim"],
++        carrier=spec["carrier"],
++        hypotheses=spec["hypotheses"],
++        target_conclusion=spec["target_conclusion"],
++        raw_spec=spec,
++    )
++    gate5 = GateResult(
++        gate_number=5,
++        gate_name="KERNEL_SOURCE_CHECK",
++        passed=True,
++        details={
++            "axiom_audit_declarations": extract_lean_declarations(source_text),
++            "candidate_sha256": hashlib.sha256(source_bytes).hexdigest(),
++            "source_snapshot_text": source_text,
++        },
++    )
++    result = QMSEvidencePipeline().gate_6_statement_fidelity_review(packet, gate5)
++    report = next(iter(result.details["reports"].values()))
++    assert report["theorem_name"] == "InfoGeometry.Clifford.Cl11.cl12_biquaternion_generator_relations"
++    assert not any(
++        defect["defect_type"] == "TARGET_DECLARATION_NOT_FOUND"
++        for defect in report["defects"]
++    )
++
++
++def test_gate5_control_flow_rejects_custom_axiom_audit_output(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++):
++    """Exercise Gate 5's compiler/audit/parser path using controlled subprocess results."""
++    import subprocess
++    import tools.infra.qms_evidence_pipeline as qms_module
++
++    lean_file = tmp_path / "Trojan.lean"
++    lean_file.write_text(
++        "axiom TrojanAxiom : False\ntheorem uses_trojan : False := TrojanAxiom\n",
++        encoding="utf-8",
++    )
++    packet = EvidencePacket(
++        spec_path=tmp_path / "spec.json",
++        lean_file=lean_file,
++        claim="custom axiom rejection",
++        carrier="Prop",
++        hypotheses=[],
++        target_conclusion="False",
++        raw_spec={"theorem_name": "uses_trojan"},
++    )
++    calls = 0
++
++    def fake_run(cmd, **kwargs):
++        nonlocal calls
++        calls += 1
++        if calls == 1:
++            return subprocess.CompletedProcess(cmd, 0, stdout="compiled", stderr="")
++        return subprocess.CompletedProcess(
++            cmd, 0,
++            stdout="'uses_trojan' depends on axioms: [TrojanAxiom]\n",
++            stderr="",
++        )
++
++    monkeypatch.setattr(qms_module.subprocess, "run", fake_run)
++    result = QMSEvidencePipeline().gate_5_kernel_and_integration(packet)
++    assert not result.passed
++    assert result.details["forbidden_axioms"] == {"uses_trojan": ["TrojanAxiom"]}
++
++
++def test_gate5_compiles_and_audits_same_immutable_source_snapshot(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++):
++    import subprocess
++    import tools.infra.qms_evidence_pipeline as qms_module
++
++    source = "theorem stable : True := by trivial\n"
++    lean_file = tmp_path / "Stable.lean"
++    lean_file.write_text(source, encoding="utf-8")
++    packet = EvidencePacket(
++        spec_path=tmp_path / "spec.json", lean_file=lean_file, claim="snapshot identity",
++        carrier="Prop", hypotheses=[], target_conclusion="True",
++        raw_spec={"theorem_name": "stable"},
++    )
++    calls = 0
++    observed: list[bytes] = []
++
++    def fake_run(cmd, **kwargs):
++        nonlocal calls
++        calls += 1
++        candidate_path = Path(cmd[-1])
++        if calls == 1:
++            observed.append(candidate_path.read_bytes())
++            # Mutating the mutable source after the snapshot must not affect the audit.
++            lean_file.write_text("theorem mutated : False := by trivial\n", encoding="utf-8")
++            return subprocess.CompletedProcess(cmd, 0, stdout="compile pass", stderr="")
++        audit_text = candidate_path.read_text(encoding="utf-8")
++        observed.append(audit_text.split("#print axioms stable", 1)[0].removeprefix("import Lean\n").rstrip().encode() + b"\n")
++        return subprocess.CompletedProcess(
++            cmd, 0, stdout="'stable' depends on axioms: [propext]\n", stderr=""
++        )
++
++    monkeypatch.setattr(qms_module.subprocess, "run", fake_run)
++    result = QMSEvidencePipeline().gate_5_kernel_and_integration(packet)
++    assert result.passed
++    assert observed[0] == source.encode("utf-8")
++    assert observed[1] == source.encode("utf-8")
++    assert result.details["source_snapshot_text"] == source
++    assert result.details["candidate_sha256"] == hashlib.sha256(source.encode()).hexdigest()
++    assert calls == 2
++
++
+ def test_regression_statement_fidelity_unrelated_structure_isolated():
+     """Direct probe: an unrelated structure in the same file must NOT satisfy hypotheses of the target theorem."""
+     code = """
+--- a/tests/test_qms_evidence_pipeline.py
++++ b/tests/test_qms_evidence_pipeline.py
+@@ -135,6 +135,7 @@
+         passed=True,
+         details={
+             "candidate_sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
++            "source_snapshot_text": source.read_text(encoding="utf-8"),
+             "lean_returncode": 0,
+             "lean_output": "",
+             "axiom_audit_declarations": [],
+@@ -142,13 +143,39 @@
+             "axiom_audit_returncode": 0,
+         },
+     )
++    fidelity_result = GateResult(
++        gate_number=6,
++        gate_name="STATEMENT_FIDELITY_REVIEW",
++        passed=True,
++    )
+     result, receipt, receipt_path = pipeline.gate_7_candidate_receipt(
+-        packet, kernel_result, out_receipt=tmp_path / "candidate.receipt.json"
++        packet, kernel_result, out_receipt=tmp_path / "candidate.receipt.json",
++        fidelity_result=fidelity_result,
+     )
+     assert result.passed
+     assert receipt is not None and receipt["review"]["promotionAllowed"] is False
+     assert receipt["review"]["status"] == "source_context_changed_pending_review"
+     assert receipt_path is not None and receipt_path.is_file()
++
++
++def test_gate7_rejects_missing_gate6_evidence(tmp_path: Path):
++    source = tmp_path / "Candidate.lean"
++    source.write_text("theorem candidate : True := by trivial\n", encoding="utf-8")
++    packet = EvidencePacket(
++        spec_path=tmp_path / "spec.json", lean_file=source, claim="requires Gate 6",
++        carrier="Prop", hypotheses=[], target_conclusion="True", raw_spec={},
++    )
++    kernel_result = GateResult(
++        gate_number=5, gate_name="KERNEL_SOURCE_CHECK", passed=True,
++        details={
++            "candidate_sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
++            "source_snapshot_text": source.read_text(encoding="utf-8"),
++        },
++    )
++    result, receipt, _ = QMSEvidencePipeline().gate_7_candidate_receipt(packet, kernel_result)
++    assert not result.passed
++    assert receipt is None
++    assert "passing Gate 6" in result.diagnostics[0]
+ 
+ 
+ # -----------------------------------------------------------------------------

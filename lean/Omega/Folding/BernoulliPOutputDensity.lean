@@ -26,7 +26,10 @@ private lemma bernoulliPOutputDensity_hasDerivAt (x : ℝ) (hden : 1 + x ^ 3 ≠
     HasDerivAt bernoulliPOutputDensity
       ((x ^ 6 + x ^ 4 + 2 * x ^ 3 - 2 * x + 1) / (1 + x ^ 3) ^ 2) x := by
   have hnum : HasDerivAt (fun p : ℝ => p ^ 4 - p ^ 2 + p) (4 * x ^ 3 - 2 * x + 1) x := by
-    simpa using (((hasDerivAt_pow 4 x).sub (hasDerivAt_pow 2 x)).add (hasDerivAt_id x))
+    convert (((hasDerivAt_pow 4 x).sub (hasDerivAt_pow 2 x)).add (hasDerivAt_id x)) using 1
+    · ext p
+      simp [Function.id_def]
+    · norm_num
   have hden' : HasDerivAt (fun p : ℝ => 1 + p ^ 3) (3 * x ^ 2) x := by
     simpa [pow_two, mul_comm, mul_left_comm, mul_assoc] using ((hasDerivAt_pow 3 x).const_add 1)
   have h := hnum.div hden' hden
@@ -36,9 +39,11 @@ private lemma bernoulliPOutputDensity_hasDerivAt (x : ℝ) (hden : 1 + x ^ 3 ≠
 private lemma bernoulliPOutputDensity_continuousOn :
     ContinuousOn bernoulliPOutputDensity (Set.Icc (0 : ℝ) 1) := by
   have hnum : Continuous fun p : ℝ => p ^ 4 - p ^ 2 + p := by
-    simpa using (((continuous_id.pow 4).sub (continuous_id.pow 2)).add continuous_id)
+    exact (((continuous_id.pow 4).sub (continuous_id.pow 2)).add continuous_id).congr
+      (by intro p; simp)
   have hden : Continuous fun p : ℝ => 1 + p ^ 3 := by
-    simpa using (continuous_const.add (continuous_id.pow 3) : Continuous fun p : ℝ => (1 : ℝ) + p ^ 3)
+    exact (continuous_const.add (continuous_id.pow 3)).congr
+      (by intro p; change 1 + p ^ 3 = 1 + p ^ 3; rfl)
   refine hnum.continuousOn.div hden.continuousOn ?_
   intro x hx
   have hx3_nonneg : 0 ≤ x ^ 3 := by exact pow_nonneg hx.1 3
@@ -154,7 +159,7 @@ theorem paper_fold_bernoulli_p_output_density_concavity_switch :
       nlinarith
     let f : ℝ → ℝ := fun x => x ^ 3
     have hf_cont : Continuous f := by
-      simpa [f] using (continuous_id.pow 3)
+      exact (continuous_id.pow 3).congr (by intro x; rfl)
     have hc_mem : c ∈ Set.Ioo (f 0) (f 1) := by
       simpa [f] using ⟨hc_pos, hc_lt_one⟩
     rcases intermediate_value_Ioo (show (0 : ℝ) ≤ 1 by norm_num) hf_cont.continuousOn hc_mem with

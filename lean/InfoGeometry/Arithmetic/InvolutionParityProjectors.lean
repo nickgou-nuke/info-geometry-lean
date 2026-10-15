@@ -158,6 +158,7 @@ theorem centeredPrimitive_reflection
         (a := β) (b := (1 : ℝ)) (2 : ℝ)).symm
       convert h using 1
       norm_num [reflection]
+      simp [reflection]
     _ = ∫ b in β..(1 : ℝ), X b := by
       apply intervalIntegral.integral_congr
       intro b hb
@@ -194,11 +195,10 @@ theorem centeredPrimitive_hasDerivAt
     {X : ℝ → ℝ}
     (hX : Continuous X) (β : ℝ) :
     HasDerivAt (centeredPrimitive X) (X β) β := by
-  simpa [centeredPrimitive] using
-    (intervalIntegral.integral_hasDerivAt_right
+  convert (intervalIntegral.integral_hasDerivAt_right
       (hX.intervalIntegrable (1 : ℝ) β)
       hX.aestronglyMeasurable.stronglyMeasurableAtFilter
-      hX.continuousAt)
+      hX.continuousAt) using 1 <;> rfl
 
 end
 

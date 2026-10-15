@@ -144,7 +144,9 @@ theorem nativeLineToIntrinsicLineEquiv_val_image (L : NativeLine) :
   rw [show quotientOfNativeLine L =
       Quotient.mk' (nativeCandidateOfLine L) from rfl]
   rw [nativeLineQuotientToIntrinsicLine_mk]
-  rw [intrinsicLineOfNativeCandidate_val_image_eq_lineSet]
+  rw [intrinsicLineOfNativeCandidate_val_image_eq_lineSet
+    (nativeCandidateOfLine L).1
+    ((Finset.mem_filter.mp (nativeCandidateOfLine L).2).2)]
   exact nativeCandidateOfLine_spec L
 
 theorem nativeLineToIntrinsicLineEquiv_lineZero :
@@ -162,7 +164,9 @@ theorem nativeLineToIntrinsicLineEquiv_lineZero :
     rw [show lineSetQuotientToNativeLines.symm lineZero =
         Quotient.mk' (nativeCandidateOfLine lineZero) from rfl]
     rw [nativeLineQuotientToIntrinsicLine_mk]
-    rw [intrinsicLineOfNativeCandidate_val_image_eq_lineSet]
+    rw [intrinsicLineOfNativeCandidate_val_image_eq_lineSet
+      (nativeCandidateOfLine lineZero).1
+      ((Finset.mem_filter.mp (nativeCandidateOfLine lineZero).2).2)]
     exact nativeCandidateOfLine_spec lineZero
   constructor
   · intro hv

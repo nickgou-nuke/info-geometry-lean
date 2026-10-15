@@ -4,6 +4,8 @@ namespace Omega.GU.FibTailS3Closure
 
 open ZMod
 
+instance : Fact (Nat.Prime 23) := ⟨by norm_num⟩
+
 /-- The g₆ action on ZMod 23: x ↦ 3x + 1.
     cor:fib-tail-s3-closure -/
 def g6Action (x : ZMod 23) : ZMod 23 := 3 * x + 1
@@ -24,11 +26,9 @@ noncomputable def rAction (x : ZMod 23) : ZMod 23 := -(x⁻¹)
 /-- R is an involution on all nonzero elements: R(R(x)) = x for x ≠ 0.
     Proved by exhaustive check on the 22 nonzero elements.
     cor:fib-tail-s3-closure -/
-theorem r_involution (x : ZMod 23) (hx : x ≠ 0) :
+theorem r_involution (x : ZMod 23) (_hx : x ≠ 0) :
     rAction (rAction x) = x := by
-  revert hx
-  revert x
-  decide
+  simp [rAction, inv_neg, inv_inv]
 
 /-- Seed: g₆(0) = 1.
     cor:fib-tail-s3-closure -/

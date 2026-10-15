@@ -11,49 +11,69 @@ open KleinBrillouinBase KleinBottleOrbitQuotient
 abbrev Deck2 := ZMod 2
 
 def deckVAdd (g : Deck2) (k : BrillouinTorus) : BrillouinTorus :=
-  if g = 0 then k else torusGlide k
+  if g.val = 0 then k else torusGlide k
 
 instance : VAdd Deck2 BrillouinTorus := ⟨deckVAdd⟩
 
 instance : AddAction Deck2 BrillouinTorus where
-  zero_vadd k := by change deckVAdd 0 k = k; simp [deckVAdd]
+  zero_vadd k := by
+    change deckVAdd 0 k = k
+    simp [deckVAdd]
   add_vadd g h k := by
-    change deckVAdd (g + h) k = deckVAdd g (deckVAdd h k)
-    have h11 : (1 + 1 : Deck2) = 0 := by decide
-    fin_cases g <;> fin_cases h <;>
-      simp [deckVAdd, h11, torusGlide_involutive]
-    exact (torusGlide_involutive k).symm
+    change (if (g + h).val = 0 then k else torusGlide k) =
+      if g.val = 0 then (if h.val = 0 then k else torusGlide k)
+      else torusGlide (if h.val = 0 then k else torusGlide k)
+    rw [ZMod.val_add]
+    have hg : g.val = 0 ∨ g.val = 1 := by have := ZMod.val_lt g; omega
+    have hh : h.val = 0 ∨ h.val = 1 := by have := ZMod.val_lt h; omega
+    rcases hg with hg | hg <;> rcases hh with hh | hh <;>
+      simp [hg, hh]
+    all_goals exact (torusGlide_involutive k).symm
 
 instance : ContinuousConstVAdd Deck2 BrillouinTorus where
   continuous_const_vadd g := by
-    change Continuous (deckVAdd g)
-    fin_cases g
-    · simpa [deckVAdd] using
-        (continuous_id : Continuous (id : BrillouinTorus → BrillouinTorus))
-    · simpa [deckVAdd] using torusGlide_continuous
+    change Continuous (fun k => if g.val = 0 then k else torusGlide k)
+    by_cases hg : g.val = 0
+    · exact continuous_id.congr (fun k => by simp [hg])
+    · exact torusGlide_continuous.congr (fun k => by simp [hg])
 
 theorem deck_orbit_relation (x y : BrillouinTorus) :
     x ∈ AddAction.orbit Deck2 y ↔ x = y ∨ x = torusGlide y := by
   constructor
   · rintro ⟨g, rfl⟩
-    fin_cases g
-    · exact Or.inl (by simp [deckVAdd])
-    · right; change deckVAdd 1 y = torusGlide y; simp [deckVAdd]
-  · rintro (rfl | rfl)
-    · exact ⟨0, by simp [deckVAdd]⟩
-    · refine ⟨1, ?_⟩
-      change deckVAdd 1 y = torusGlide y
+    change deckVAdd g y = y ∨ deckVAdd g y = torusGlide y
+    by_cases hg : g.val = 0
+    · exact Or.inl (by simp [deckVAdd, hg])
+    · exact Or.inr (by simp [deckVAdd, hg])
+  · rintro (hxy | hxy)
+    · subst x
+      refine ⟨0, ?_⟩
+      change deckVAdd 0 y = y
       simp [deckVAdd]
+    · subst x
+      refine ⟨1, ?_⟩
+      have hv : (1 : Deck2).val = 1 := by norm_num [ZMod.val_one_eq_one_mod]
+      change deckVAdd 1 y = torusGlide y
+      simp [deckVAdd, hv]
 
 instance : IsCancelVAdd Deck2 BrillouinTorus where
   right_cancel' g h k eq := by
-    fin_cases g <;> fin_cases h
-    · rfl
-    · exfalso
-      exact torusGlide_ne_self k (by simpa [deckVAdd] using eq.symm)
-    · exfalso
-      exact torusGlide_ne_self k (by simpa [deckVAdd] using eq)
-    · rfl
+    change deckVAdd g k = deckVAdd h k at eq
+    by_cases hg : g.val = 0 <;> by_cases hh : h.val = 0
+    · apply ZMod.val_injective 2
+      exact hg.trans hh.symm
+    · have hh1 : h.val = 1 := by have := ZMod.val_lt h; omega
+      have heq : k = torusGlide k := by simpa [deckVAdd, hg, hh] using eq
+      exfalso
+      exact (torusGlide_ne_self k) heq.symm
+    · have hg1 : g.val = 1 := by have := ZMod.val_lt g; omega
+      have heq : torusGlide k = k := by simpa [deckVAdd, hg, hh] using eq
+      exfalso
+      exact (torusGlide_ne_self k) heq
+    · apply ZMod.val_injective 2
+      have hg1 : g.val = 1 := by have := ZMod.val_lt g; omega
+      have hh1 : h.val = 1 := by have := ZMod.val_lt h; omega
+      exact hg1.trans hh1.symm
 
 /-- The existing orbit quotient agrees exactly with the group orbit relation. -/
 theorem quotientMap_eq_iff_orbit (x y : BrillouinTorus) :

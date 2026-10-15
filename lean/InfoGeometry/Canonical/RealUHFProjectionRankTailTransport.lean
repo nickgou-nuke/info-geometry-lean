@@ -61,8 +61,13 @@ theorem transportedTailSystem_readout_add
     (n : RealUHFProjectionRankTailIndex anchor) :
     (transportedTailSystem anchor p).normalizedReadout n =
       normalizedProjectionRankDyadic p := by
-  simpa [RealUHFProjectionRankTailIndex.add] using
-    (RealUHFProjectionRankTailSystem.normalizedReadout_add
-      (transportedTailSystem anchor p) 0 n)
+  calc
+    (transportedTailSystem anchor p).normalizedReadout n =
+        (transportedTailSystem anchor p).normalizedReadout 0 := by
+      simpa [RealUHFProjectionRankTailIndex.add] using
+        (RealUHFProjectionRankTailSystem.normalizedReadout_add
+          (transportedTailSystem anchor p) 0 n)
+    _ = normalizedProjectionRankDyadic p :=
+      transportedTailSystem_readout_anchor anchor p
 
 end InfoGeometry.Canonical

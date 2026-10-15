@@ -28,7 +28,7 @@ This capstone module formalizes the grand arithmetic-geometric dictionary:
      - $\sigma_7 \longleftrightarrow \Xi$ (Particle-Hole Symmetry)
      - $\sigma_5 \longleftrightarrow \chi = \Theta \Xi$ (Chiral Grading)
 
-3. **Nambu-Gorkov Quasiparticle Dispersion and Mass-Shell in Zorn Algebra**:
+3. **Nambu-Gorkov Quasiparticle Energy-Norm Identity in Zorn Algebra**:
    $$\operatorname{zornNorm}(X_{\text{NG}}) = - (\xi^2 + \|\vec{\Delta}\|^2) = - E_{\text{quasiparticle}}^2$$
 
 4. **Bregman Surprise & Relativistic Causality**:
@@ -126,7 +126,7 @@ Synthesizes:
 1. **12th Cyclotomic Mexican Hat Potential**: $\Phi_{12}(x) = (x^2 - 1/2)^2 + 3/4$.
 2. **Spontaneous Symmetry Breaking (SSB)**: $\Phi_{12}(x_0) = 3/4 < 1 = \Phi_{12}(0)$ at $x_0^2 = 1/2$.
 3. **Galois Group Involutions**: $\sigma^2 = 1$ on $\operatorname{Gal}(\mathbb{Q}(\zeta_{12})/\mathbb{Q})$.
-4. **Nambu-Gorkov Bogoliubov Mass-Shell**: $\operatorname{zornNorm}(X_{\text{NG}}) = - E_{\text{quasiparticle}}^2$.
+4. **Nambu-Gorkov Bogoliubov Energy-Norm Identity**: $\operatorname{zornNorm}(X_{\text{NG}}) = - E_{\text{quasiparticle}}^2$, where the energy is defined from the Nambu-Gorkov parameters; this is not a Minkowski four-momentum mass shell.
 5. **Witt Ladder Nilpotency (Pauli Exclusion)**: $(u_a^\pm)^2 = 0$.
 6. **Bregman Relative Entropy Non-negativity**: $e^{-x} - 1 + x \ge 0$.
 7. **Relativistic Speed Bounds**: $c_s < c$ and $v_F < c$.

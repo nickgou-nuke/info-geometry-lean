@@ -1,4 +1,5 @@
 import Mathlib.Data.Matrix.Basic
+import Mathlib.Data.Matrix.Mul
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
@@ -21,4 +22,5 @@ def eps0 : Mat8 :=
 
 theorem eps0_sq : eps0 * eps0 = 0 := by
   ext i j
-  fin_cases i <;> fin_cases j <;> change (Matrix.mul eps0 eps0) _ _ = 0 <;> simp [Matrix.mul_apply, eps0, Fin.sum_univ_eight] <;> norm_num
+  rw [Matrix.mul_apply]
+  fin_cases i <;> fin_cases j <;> simp [eps0, Fin.sum_univ_eight] <;> norm_num

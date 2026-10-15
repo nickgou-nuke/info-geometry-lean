@@ -1,17 +1,11 @@
 import InfoGeometry.Clifford.Cl55QuadraticSpinAction
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Clifford55
 import InfoGeometry.OperatorAlgebra.FiveGradeActionPreservation
+import Mathlib.Algebra.Lie.OfAssociative
 
-/-!
-# The `Cl(5,5)` modular derivation readout
+attribute [local instance 100] LieRing.ofAssociativeRing LieAlgebra.ofAssociativeAlgebra
 
-The generic inner-derivation laws are owned by
-`InfoGeometry.Clifford.Cl55QuadraticSpinAction`.  This file supplies the
-concrete `Cl55` names used by the modular/Hestenes layer and proves their
-readout identities by reuse of that owner.  The carrier is the native
-noncommutative Clifford algebra; no scalar or diagonal model is introduced.
--/
+noncomputable section
 
 namespace InfoGeometry.Clifford.Clifford55
 

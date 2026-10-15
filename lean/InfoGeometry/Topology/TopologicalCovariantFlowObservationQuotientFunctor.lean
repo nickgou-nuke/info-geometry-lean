@@ -54,8 +54,11 @@ noncomputable def operatorObservationQuotientCompHausFunctor :
         (operatorObservationRangeCompHausFunctor (S := S)).map (𝟙 F) ≫
         (operatorObservationQuotientCompHausIso S).inv = 𝟙 _
     rw [(operatorObservationRangeCompHausFunctor (S := S)).map_id F]
-    simpa only [Category.assoc, Category.id_comp, Category.comp_id] using
-      (operatorObservationQuotientCompHausIso S).hom_inv_id
+    change (operatorObservationQuotientCompHausIso S).hom ≫
+      𝟙 (operatorObservationRangeCompHaus S) ≫
+      (operatorObservationQuotientCompHausIso S).inv = 𝟙 _
+    rw [Category.id_comp]
+    exact (operatorObservationQuotientCompHausIso S).hom_inv_id
   map_comp f g := by
     change (operatorObservationQuotientCompHausIso S).hom ≫
         (operatorObservationRangeCompHausFunctor (S := S)).map (f ≫ g) ≫
@@ -67,7 +70,17 @@ noncomputable def operatorObservationQuotientCompHausFunctor :
         (operatorObservationRangeCompHausFunctor (S := S)).map g ≫
         (operatorObservationQuotientCompHausIso S).inv)
     rw [(operatorObservationRangeCompHausFunctor (S := S)).map_comp f g]
-    simp [Category.assoc]
+    change (operatorObservationQuotientCompHausIso S).hom ≫
+        (operatorObservationRangeCompHausHomOfMorphism f ≫
+          operatorObservationRangeCompHausHomOfMorphism g) ≫
+        (operatorObservationQuotientCompHausIso S).inv =
+      ((operatorObservationQuotientCompHausIso S).hom ≫
+        operatorObservationRangeCompHausHomOfMorphism f ≫
+        (operatorObservationQuotientCompHausIso S).inv) ≫
+      ((operatorObservationQuotientCompHausIso S).hom ≫
+        operatorObservationRangeCompHausHomOfMorphism g ≫
+        (operatorObservationQuotientCompHausIso S).inv)
+    simp only [Category.assoc, Iso.inv_hom_id_assoc]
 
 noncomputable def operatorObservationQuotientRangeCompHausIso :
     operatorObservationQuotientCompHausFunctor (S := S) ≅
@@ -76,12 +89,34 @@ noncomputable def operatorObservationQuotientRangeCompHausIso :
     (fun _ => operatorObservationQuotientCompHausIso S) ?_
   intro F G f
   change ((operatorObservationQuotientCompHausIso S).hom ≫
-      (operatorObservationRangeCompHausFunctor (S := S)).map f ≫
+      operatorObservationRangeCompHausHomOfMorphism f ≫
       (operatorObservationQuotientCompHausIso S).inv) ≫
       (operatorObservationQuotientCompHausIso S).hom =
     (operatorObservationQuotientCompHausIso S).hom ≫
-      (operatorObservationRangeCompHausFunctor (S := S)).map f
-  simp [Category.assoc]
+      operatorObservationRangeCompHausHomOfMorphism f
+  calc
+    ((operatorObservationQuotientCompHausIso S).hom ≫
+        operatorObservationRangeCompHausHomOfMorphism f ≫
+        (operatorObservationQuotientCompHausIso S).inv) ≫
+        (operatorObservationQuotientCompHausIso S).hom =
+      ((operatorObservationQuotientCompHausIso S).hom ≫
+        operatorObservationRangeCompHausHomOfMorphism f) ≫
+        ((operatorObservationQuotientCompHausIso S).inv ≫
+          (operatorObservationQuotientCompHausIso S).hom) := by
+        rw [← Category.assoc (operatorObservationQuotientCompHausIso S).hom
+          (operatorObservationRangeCompHausHomOfMorphism f)
+          (operatorObservationQuotientCompHausIso S).inv,
+          Category.assoc
+            ((operatorObservationQuotientCompHausIso S).hom ≫
+              operatorObservationRangeCompHausHomOfMorphism f)
+            (operatorObservationQuotientCompHausIso S).inv
+            (operatorObservationQuotientCompHausIso S).hom]
+    _ = ((operatorObservationQuotientCompHausIso S).hom ≫
+        operatorObservationRangeCompHausHomOfMorphism f) ≫ 𝟙 _ := by
+        rw [Iso.inv_hom_id]
+    _ = (operatorObservationQuotientCompHausIso S).hom ≫
+        operatorObservationRangeCompHausHomOfMorphism f := by
+        rw [Category.comp_id]
 
 theorem operatorObservationQuotientRangeCompHausIso_naturality_apply
     {F G : NoncommutativeObservableTopologicalCovariantFlow S}

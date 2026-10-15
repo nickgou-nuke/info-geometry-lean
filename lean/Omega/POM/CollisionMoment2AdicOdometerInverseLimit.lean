@@ -160,7 +160,8 @@ theorem paper_pom_s4_2adic_odometer_inverse_limit :
       ∃ e : PomS4InverseLimit ≃ TwoAdicInverseLimit, ∀ z, e (pomS4Shift z) = twoAdicShift (e z) := by
   refine ⟨?_, ?_, ?_, ?_⟩
   · intro n
-    simp [PomS4OrbitStage, pomS4Modulus]
+    change Fintype.card (Fin (2 ^ (n + 2))) = 2 ^ (n + 2)
+    exact Fintype.card_fin _
   · intro n x
     exact pomS4Projection_two_point_fiber n x
   · intro n x

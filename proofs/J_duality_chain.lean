@@ -116,11 +116,9 @@ theorem legendreDual (p : ℝ) : sSup (Set.range (fun (x : ℝ) => p*x - x^2/2))
 /-- The Legendre transform exchanges derivative and argument:
     p = ∇Φ(x) = x,  x = ∇Φ*(p) = p  (self-duality of quadratic) -/
 theorem legendre_self_dual (x : ℝ) : deriv Φ x = x := by
-  have h : HasDerivAt (fun (x : ℝ) => x^2/2) x x := by
-    have hsq : HasDerivAt (fun (x : ℝ) => x^2) (2*x) x := by
-      simpa using hasDerivAt_pow 2 x
-    have hhalf : HasDerivAt (fun (x : ℝ) => (1/2 : ℝ)*x^2) ((1/2 : ℝ)*(2*x)) x := hsq.const_mul (1/2 : ℝ)
-    simpa [mul_comm, mul_left_comm, mul_assoc] using hhalf
+  have h : HasDerivAt Φ x x := by
+    change HasDerivAt (fun y : ℝ => y ^ 2 / 2) x x
+    simpa using (hasDerivAt_pow 2 x).div_const (2 : ℝ)
   exact h.deriv
 
 /-- Fenchel-Young inequality for the quadratic potential:

@@ -41,13 +41,12 @@ theorem paper_conclusion_watatani_screen_completion_functor_independence :
   · exact paper_conclusion_fixedresolution_axial_screen_corank_area_law m n
   · intro h
     rcases h with ⟨F, hfull, haxial⟩
-    have hEq : watataniFullScreenCompletionCost = watataniAxialScreenCompletionCost m n := by
-      rw [← hfull, haxial]
-    have hEq' : watataniFullScreenCompletionCost = 2 ^ (m * (n - 1)) := by
-      simpa [watataniAxialScreenCompletionCost] using hEq
-    have hpow : 0 < 2 ^ (m * (n - 1)) := by
-      exact pow_pos (by norm_num) _
-    have hpowne : (2 ^ (m * (n - 1)) : ℕ) ≠ 0 := Nat.ne_of_gt hpow
-    exact hpowne (by simpa [watataniFullScreenCompletionCost] using hEq'.symm)
+    have hEq : 0 = 2 ^ (m * (n - 1)) := by
+      calc
+        0 = F _ := hfull.symm
+        _ = watataniAxialScreenCompletionCost m n := haxial
+        _ = 2 ^ (m * (n - 1)) := paper_conclusion_fixedresolution_axial_screen_corank_area_law m n
+    have hpos : 0 < 2 ^ (m * (n - 1)) := by positivity
+    omega
 
 end Omega.Conclusion

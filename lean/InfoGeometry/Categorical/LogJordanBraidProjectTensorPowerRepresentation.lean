@@ -111,7 +111,9 @@ theorem standardTensorPower_stage4_relation_packet :
       standardHadjiivanovBraidProjectHom 2 (σ' 3 (2 : Fin 3)) *
         standardHadjiivanovBraidProjectHom 2 (σ' 3 (0 : Fin 3)) := by
   constructor
-  · simpa using standardTensorPower_artin 1 (0 : Fin 2)
-  · simpa using standardTensorPower_far 0 (0 : Fin 1) (0 : Fin 1) (by simp)
+  · rw [standardHadjiivanovBraidProject_sigma]
+    exact standardTensorPower_artin 1 (0 : Fin 2)
+  · rw [standardHadjiivanovBraidProject_sigma]
+    exact standardTensorPower_far 0 (0 : Fin 1) (0 : Fin 1) (by simp)
 
 end InfoGeometry.Categorical.LogJordanBraidProjectTensorPowerRepresentation

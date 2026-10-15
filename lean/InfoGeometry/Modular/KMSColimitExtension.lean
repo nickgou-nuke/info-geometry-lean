@@ -1,11 +1,10 @@
 import Mathlib.Algebra.Algebra.Basic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Module.LinearMap.Basic
 import Mathlib.Algebra.Category.AlgCat.Basic
 import Mathlib.Algebra.Category.AlgCat.Limits
 import Mathlib.CategoryTheory.Functor.OfSequence
 import Mathlib.CategoryTheory.Limits.Filtered
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import Mathlib.Tactic
 
 /-!
@@ -91,8 +90,8 @@ theorem psi_comp_iota_seq
   · rfl
   · dsimp [iota_seq]
     rw [← AlgHom.comp_assoc]
-    have hcomm : (psi (n + (m + 1))).comp (iota (n + m)) = psi (n + m) := by
-      simpa [Nat.add_assoc] using psi_comm (n + m)
+    have hcomm : (psi (n + (m + 1))).comp (iota (n + m)) = psi (n + m) :=
+      psi_comm (n + m)
     rw [hcomm]
     exact ih
 
@@ -109,8 +108,8 @@ theorem staged_state_m_step_compatibility
   · rfl
   · dsimp [iota_seq]
     rw [← LinearMap.comp_assoc]
-    have h_one_step : (omega (n + (m + 1))).comp (iota (n + m)).toLinearMap = omega (n + m) := by
-      simpa [Nat.add_assoc] using h_kms.compatible (n + m)
+    have h_one_step : (omega (n + (m + 1))).comp (iota (n + m)).toLinearMap = omega (n + m) :=
+      h_kms.compatible (n + m)
     rw [h_one_step]
     exact ih
 

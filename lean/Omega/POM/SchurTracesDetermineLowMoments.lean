@@ -30,6 +30,7 @@ theorem paper_pom_schur_traces_determine_low_moments (q m : ℕ) (S T : ℕ → 
   have hpow_ne : (((2 : ℚ) ^ m) ^ (q - r)) ≠ 0 := by
     exact pow_ne_zero _ (pow_ne_zero _ (by norm_num))
   apply (eq_div_iff hpow_ne).2
-  simpa [mul_comm, mul_left_comm, mul_assoc] using hTrace_r.symm
+  change S r * ((2 : ℚ) ^ m) ^ (q - r) = T r
+  exact hTrace_r.symm
 
 end Omega.POM

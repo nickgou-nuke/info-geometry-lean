@@ -64,10 +64,12 @@ def logarithmicJet₃ (s : ℂ) : ℂ :=
 theorem hasDerivAt_oneMinusInv
     {s : ℂ} (hs : 1 - s ≠ 0) :
     HasDerivAt oneMinusInv (oneMinusInv s ^ 2) s := by
-  have hsub : HasDerivAt (fun z : ℂ => 1 - z) (-1) s := by
-    simpa using (hasDerivAt_const s (1 : ℂ)).sub (hasDerivAt_id s)
-  convert hsub.inv hs using 1
-  simp [oneMinusInv, div_eq_mul_inv]
+  have hsub : HasDerivAt (fun z : ℂ => 1 - z) (-1) s := (hasDerivAt_id s).const_sub 1
+  have h := hsub.inv hs
+  have h_val : -(-1 : ℂ) / (1 - s) ^ 2 = oneMinusInv s ^ 2 := by
+    simp [oneMinusInv, div_eq_mul_inv]
+  rw [h_val] at h
+  exact h
 
 /-- The installed first derivative of `q` agrees with the canonical jet. -/
 theorem hasDerivAt_crossRatio01_jet
@@ -81,8 +83,10 @@ theorem hasDerivAt_crossRatioJet₁
     {s : ℂ} (hs : s ∈ punctured01) :
     HasDerivAt crossRatioJet₁ (crossRatioJet₂ s) s := by
   have h := (hasDerivAt_oneMinusInv (one_sub_ne_zero_of_mem hs)).pow 2
-  convert h using 1 <;>
-    simp [crossRatioJet₁, crossRatioJet₂] <;> ring
+  refine h.congr_deriv ?_
+  have : (2 : ℕ) - 1 = 1 := rfl
+  simp only [crossRatioJet₂, this, pow_succ, pow_zero]
+  ring
 
 /-- The second derivative coefficient of `q` differentiates to its third jet. -/
 theorem hasDerivAt_crossRatioJet₂
@@ -91,8 +95,10 @@ theorem hasDerivAt_crossRatioJet₂
   have h :=
     ((hasDerivAt_oneMinusInv (one_sub_ne_zero_of_mem hs)).pow 3).const_mul
       (2 : ℂ)
-  convert h using 1 <;>
-    simp [crossRatioJet₂, crossRatioJet₃] <;> ring
+  refine h.congr_deriv ?_
+  have : (3 : ℕ) - 1 = 2 := rfl
+  simp only [crossRatioJet₃, this, pow_succ, pow_zero]
+  ring
 
 /-- The global logarithmic one-form differentiates to the second logarithmic
 jet away from both punctures. -/
@@ -115,9 +121,11 @@ theorem hasDerivAt_logarithmicJet₂
   have hInv₀ := (hasDerivAt_id s).inv hs.1
   have hOrigin := (hInv₀.pow 2).neg
   have hOne := hasDerivAt_crossRatioJet₁ hs
-  convert hOrigin.add hOne using 1 <;>
-    simp [logarithmicJet₂, logarithmicJet₃, crossRatioJet₁,
-      crossRatioJet₂, div_eq_mul_inv] <;> ring
+  have h := hOrigin.add hOne
+  refine h.congr_deriv ?_
+  have : (2 : ℕ) - 1 = 1 := rfl
+  simp only [logarithmicJet₃, this, pow_succ, pow_zero, id, Pi.inv_apply, div_eq_mul_inv]
+  ring
 
 /-- Certified local third-order derivative tower for the principal logarithmic
 branch wherever the branch derivative theorem applies. -/

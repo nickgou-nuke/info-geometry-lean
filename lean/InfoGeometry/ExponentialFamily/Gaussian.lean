@@ -35,12 +35,11 @@ noncomputable def logPartition (η : E) : ℝ :=
 lemma hasFDerivAt_logPartition (η : E) :
     HasFDerivAt G.logPartition (InnerProductSpace.toDual ℝ E (G.sigma η)) η := by
   unfold logPartition
-  have h_id : HasFDerivAt (fun x : E => x) (1 : E →L[ℝ] E) η := by
-    simpa using (hasFDerivAt_id η)
+  have h_id : HasFDerivAt id (ContinuousLinearMap.id ℝ E) η := hasFDerivAt_id η
   have h_sigma : HasFDerivAt (fun x : E => G.sigma x) G.sigma η := G.sigma.hasFDerivAt
   have h_inner :
       HasFDerivAt (fun x : E => inner ℝ x (G.sigma x))
-        ((fderivInnerCLM ℝ (η, G.sigma η)).comp ((1 : E →L[ℝ] E).prod G.sigma)) η :=
+        ((fderivInnerCLM ℝ (η, G.sigma η)).comp ((ContinuousLinearMap.id ℝ E).prod G.sigma)) η :=
     h_id.inner ℝ h_sigma
   convert h_inner.const_smul (1/2 : ℝ) using 1
   · ext v

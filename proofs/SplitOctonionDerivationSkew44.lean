@@ -14,16 +14,12 @@ lemma splitOct_sq_rel (x : SplitOct) :
   x * x = (2 * splitBilinear x 1) • x - (splitBilinear x x) • 1 := by
   ext1 <;> ext1 <;>
   dsimp [splitBilinear, splitNorm, mul_def, add_def, sub_def, neg_def, smul_def, one_def] <;>
-  simp only [re_mul, imI_mul, imJ_mul, imK_mul,
-             re_star, imI_star, imJ_star, imK_star] <;>
   ring
 
 lemma splitOct_comm_rel (x y : SplitOct) :
   x * y + y * x = (2 * splitBilinear x 1) • y + (2 * splitBilinear y 1) • x - (2 * splitBilinear x y) • 1 := by
   ext1 <;> ext1 <;>
   dsimp [splitBilinear, splitNorm, mul_def, add_def, sub_def, neg_def, smul_def, one_def] <;>
-  simp only [re_mul, imI_mul, imJ_mul, imK_mul,
-             re_star, imI_star, imJ_star, imK_star] <;>
   ring
 
 lemma splitBilinear_smul_left (c : ℝ) (x y : SplitOct) : splitBilinear (c • x) y = c * splitBilinear x y := by

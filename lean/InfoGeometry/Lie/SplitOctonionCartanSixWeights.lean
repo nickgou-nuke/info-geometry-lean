@@ -21,6 +21,8 @@ open InfoGeometry.Lie.SplitOctonionAxialCartanErlangen
 open InfoGeometry.Lie.SplitOctonionQuaternionCircularBasis
 open InfoGeometry.Lie.SplitOctonionQuaternionZornCoordinates
 
+open InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge (CanonicalZorn)
+
 /-- The `i`th weight is coordinate evaluation on the native traceless Cartan
 plane. -/
 def weightFunctional (i : Fin 3) : TracelessWeight →ₗ[ℝ] ℝ where
@@ -80,20 +82,32 @@ theorem axialCartanEnd_rootPlus (k : Fin 3 → ℝ) (i : Fin 3) :
     axialCartanEnd k (cartesianZornLinearEquiv (rootPlus i)) =
       k i • cartesianZornLinearEquiv (rootPlus i) := by
   rw [cartesianZorn_rootPlus]
-  ext j <;>
-    simp [axialCartanEnd, chiralUpperBasis, Equiv.smul_def, coordEquiv,
-      Pi.single_apply]
-  by_cases h : j = i <;> simp [h]
+  apply InfoGeometry.Canonical.ZornMatrix.ext
+  · simp [chiralUpperBasis, axialCartanEnd]
+  · simp [chiralUpperBasis, axialCartanEnd]
+  · funext j
+    simp only [axialCartanEnd, chiralUpperBasis, smul_x', Pi.smul_apply, smul_eq_mul]
+    by_cases h : j = i
+    · subst h; simp [Pi.single_eq_same]
+    · simp [Pi.single_eq_of_ne h]
+  · funext j
+    simp [chiralUpperBasis, axialCartanEnd]
 
 /-- The lower circular channel carries the opposite weight. -/
 theorem axialCartanEnd_rootMinus (k : Fin 3 → ℝ) (i : Fin 3) :
     axialCartanEnd k (cartesianZornLinearEquiv (rootMinus i)) =
       (-k i) • cartesianZornLinearEquiv (rootMinus i) := by
   rw [cartesianZorn_rootMinus]
-  ext j <;>
-    simp [axialCartanEnd, chiralLowerBasis, Equiv.smul_def, coordEquiv,
-      Pi.single_apply]
-  by_cases h : j = i <;> simp [h]
+  apply InfoGeometry.Canonical.ZornMatrix.ext
+  · simp [chiralLowerBasis, axialCartanEnd]
+  · simp [chiralLowerBasis, axialCartanEnd]
+  · funext j
+    simp [chiralLowerBasis, axialCartanEnd]
+  · funext j
+    simp only [axialCartanEnd, chiralLowerBasis, smul_y', Pi.smul_apply, smul_eq_mul]
+    by_cases h : j = i
+    · subst h; simp [Pi.single_eq_same]
+    · simp [Pi.single_eq_of_ne h]
 
 /-- Bundled six-channel eigenvalue readout for a point of the native
 traceless Cartan plane. -/

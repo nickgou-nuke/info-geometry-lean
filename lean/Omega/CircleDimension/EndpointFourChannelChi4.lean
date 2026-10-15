@@ -31,25 +31,25 @@ theorem paper_endpoint_four_channel_chi4 (d : Nat) (hd : 1 ≤ d) :
       omega
     have heven : d % 2 = 0 := by
       omega
-    rw [hd']
-    simpa [endpointChi4, heven, h0] using chebyAdams_at_zero_add_four_mul 3 ((d / 4) - 1)
+    rw [hd', chebyAdams_at_zero_add_four_mul 3 ((d / 4) - 1)]
+    simp [endpointChi4, heven, chebyAdams_three]
   · have hd' : d - 1 = 0 + 4 * (d / 4) := by
       omega
     have hodd : d % 2 = 1 := by
       omega
-    rw [hd']
-    simpa [endpointChi4, hodd, h1] using chebyAdams_at_zero_add_four_mul 0 (d / 4)
+    rw [hd', chebyAdams_at_zero_add_four_mul 0 (d / 4)]
+    simp [endpointChi4, hodd, h1, chebyAdams_zero]
   · have hd' : d - 1 = 1 + 4 * (d / 4) := by
       omega
     have heven : d % 2 = 0 := by
       omega
-    rw [hd']
-    simpa [endpointChi4, heven, h2] using chebyAdams_at_zero_add_four_mul 1 (d / 4)
+    rw [hd', chebyAdams_at_zero_add_four_mul 1 (d / 4)]
+    simp [endpointChi4, heven, chebyAdams_one]
   · have hd' : d - 1 = 2 + 4 * (d / 4) := by
       omega
     have hodd : d % 2 = 1 := by
       omega
-    rw [hd']
-    simpa [endpointChi4, hodd, h3] using chebyAdams_at_zero_add_four_mul 2 (d / 4)
+    rw [hd', chebyAdams_at_zero_add_four_mul 2 (d / 4)]
+    simp [endpointChi4, hodd, h3, chebyAdams_two]
 
 end Omega.CircleDimension

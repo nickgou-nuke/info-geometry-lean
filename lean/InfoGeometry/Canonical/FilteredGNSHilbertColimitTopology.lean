@@ -117,6 +117,7 @@ def gnsTopologicalCocone :
       naturality := by
         intro i j f
         ext x
+        dsimp [gnsTopologicalDiagram] at x ⊢
         change gnsStageToHilbertColimitContinuousLinearMap Stage sys ω j
               (filteredGNSMapCLM Stage sys ω (leOfHom f) x) =
           gnsStageToHilbertColimitContinuousLinearMap Stage sys ω i x

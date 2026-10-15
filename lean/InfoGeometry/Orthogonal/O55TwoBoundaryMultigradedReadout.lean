@@ -298,7 +298,7 @@ theorem pairing_sheetExchange (post pre : O55State) :
       pairing post pre := by
   classical
   unfold pairing
-  simpa [sheetExchange] using
+  simpa [sheetExchange, flipIndexEquiv] using
     (Equiv.sum_comp flipIndexEquiv
       (fun p => star (post p) * pre p))
 

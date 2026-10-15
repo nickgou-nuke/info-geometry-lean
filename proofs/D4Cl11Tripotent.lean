@@ -53,7 +53,11 @@ inductive V4 where
   | J_e  -- electron involution
   | J_p  -- positron involution  
   | J_ep -- combined PCT involution
-  deriving DecidableEq, Repr, Fintype
+  deriving DecidableEq, Repr
+
+instance : Fintype V4 where
+  elems := {V4.I, V4.J_e, V4.J_p, V4.J_ep}
+  complete x := by cases x <;> simp
 
 namespace V4
 
@@ -240,7 +244,12 @@ inductive ModulatorGrade where
   | z0 : ModulatorGrade  -- eigenvalue 0:  vacuum/gauge bosons
   | p1 : ModulatorGrade  -- eigenvalue +1: particles
   | p2 : ModulatorGrade  -- eigenvalue +2: deep particles
-  deriving DecidableEq, Repr, Fintype
+  deriving DecidableEq, Repr
+
+instance : Fintype ModulatorGrade where
+  elems := {ModulatorGrade.m2, ModulatorGrade.m1, ModulatorGrade.z0,
+    ModulatorGrade.p1, ModulatorGrade.p2}
+  complete x := by cases x <;> simp
 
 namespace ModulatorGrade
 

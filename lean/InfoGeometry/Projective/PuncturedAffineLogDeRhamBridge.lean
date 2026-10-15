@@ -20,16 +20,13 @@ open InfoGeometry.Projective.KleinQuadric.DeRhamComplex
 
 abbrev LaurentRing := LaurentPolynomial ℂ
 
-noncomputable def constantCoeff : LaurentRing →ₗ[ℂ] ℂ where
-  toFun f := f 0
-  map_add' f g := by simp
-  map_smul' c f := by simp
+noncomputable abbrev constantCoeff : LaurentRing →ₗ[ℂ] ℂ :=
+  InfoGeometry.Projective.PuncturedAffineLogDifferential.constantCoefficient
 
 @[simp] theorem constantCoeff_single (n : ℤ) (c : ℂ) :
     constantCoeff (AddMonoidAlgebra.single n c : LaurentRing) =
-      if n = 0 then c else 0 := by
-  change (AddMonoidAlgebra.single n c : LaurentRing) 0 = _
-  exact AddMonoidAlgebra.single_apply
+      if n = 0 then c else 0 :=
+  InfoGeometry.Projective.PuncturedAffineLogDifferential.constantCoefficient_single n c
 
 theorem C_eq_single (c : ℂ) :
     LaurentPolynomial.C c = (AddMonoidAlgebra.single 0 c : LaurentRing) := by
@@ -43,26 +40,17 @@ theorem C_eq_single (c : ℂ) :
 
 theorem constantCoeff_C_mul_T (c : ℂ) (n : ℤ) :
     constantCoeff (LaurentPolynomial.C c * LaurentPolynomial.T n) =
-      if n = 0 then c else 0 := by
-  rw [← LaurentPolynomial.single_eq_C_mul_T]
-  exact constantCoeff_single n c
+      if n = 0 then c else 0 :=
+  InfoGeometry.Projective.PuncturedAffineLogDifferential.constantCoefficient_C_mul_T c n
 
-noncomputable def logarithmicPrimitive : LaurentRing →ₗ[ℂ] LaurentRing :=
-  Finsupp.lsum ℂ (fun n : ℤ =>
-    (if n = 0 then 0 else ((n : ℂ)⁻¹)) •
-      (Finsupp.lsingle n : ℂ →ₗ[ℂ] LaurentRing))
+noncomputable abbrev logarithmicPrimitive : LaurentRing →ₗ[ℂ] LaurentRing :=
+  InfoGeometry.Projective.PuncturedAffineLogDifferential.logarithmicPrimitive
 
 @[simp] theorem logarithmicPrimitive_single (n : ℤ) (c : ℂ) :
     logarithmicPrimitive (AddMonoidAlgebra.single n c : LaurentRing) =
-      (if n = 0 then 0 else ((n : ℂ)⁻¹)) •
-        (AddMonoidAlgebra.single n c : LaurentRing) := by
-  change
-    ((Finsupp.lsum ℂ) (fun k : ℤ =>
-      (if k = 0 then 0 else ((k : ℂ)⁻¹)) •
-        (Finsupp.lsingle k : ℂ →ₗ[ℂ] LaurentRing))
-      (Finsupp.single n c)) = _
-  rw [Finsupp.lsum_single]
-  rfl
+      if n = 0 then 0 else ((n : ℂ)⁻¹) •
+        (AddMonoidAlgebra.single n c : LaurentRing) :=
+  InfoGeometry.Projective.PuncturedAffineLogDifferential.logarithmicPrimitive_single n c
 
 theorem logarithmicDifferential_primitive_single (n : ℤ) (c : ℂ) :
     logarithmicDifferential
@@ -83,14 +71,7 @@ theorem logarithmicDifferential_primitive_single (n : ℤ) (c : ℂ) :
 theorem logarithmicDifferential_primitive (f : LaurentRing) :
     logarithmicDifferential (logarithmicPrimitive f) =
       f - LaurentPolynomial.C (constantCoeff f) := by
-  induction f using LaurentPolynomial.induction_on' with
-  | add f g hf hg =>
-      simp only [map_add, hf, hg]
-      ring
-  | C_mul_T n c =>
-      rw [← LaurentPolynomial.single_eq_C_mul_T]
-      rw [C_eq_single]
-      exact logarithmicDifferential_primitive_single n c
+  exact InfoGeometry.Projective.PuncturedAffineLogDifferential.logarithmicDifferential_primitive f
 
 theorem laurent_decomposition (f : LaurentRing) :
     f = LaurentPolynomial.C (constantCoeff f) +
@@ -99,47 +80,16 @@ theorem laurent_decomposition (f : LaurentRing) :
   abel
 
 theorem constantCoeff_logarithmicDifferential (f : LaurentRing) :
-    constantCoeff (logarithmicDifferential f) = 0 := by
-  induction f using LaurentPolynomial.induction_on' with
-  | add f g hf hg => simp [hf, hg]
-  | C_mul_T n c =>
-      rw [← LaurentPolynomial.single_eq_C_mul_T,
-        logarithmicDifferential_single, map_smul, constantCoeff_single]
-      by_cases hn : n = 0
-      · subst n
-        simp
-      · simp [hn]
+    constantCoeff (logarithmicDifferential f) = 0 :=
+  InfoGeometry.Projective.PuncturedAffineLogDifferential.constantCoefficient_logarithmicDifferential f
 
 theorem range_logarithmicDifferential_eq_ker_constantCoeff :
-    LinearMap.range logarithmicDifferential = LinearMap.ker constantCoeff := by
-  ext f
-  constructor
-  · rintro ⟨g, rfl⟩
-    exact constantCoeff_logarithmicDifferential g
-  · intro hf
-    rw [LinearMap.mem_ker] at hf
-    refine ⟨logarithmicPrimitive f, ?_⟩
-    rw [logarithmicDifferential_primitive, hf, map_zero, sub_zero]
+    LinearMap.range logarithmicDifferential = LinearMap.ker constantCoeff :=
+  InfoGeometry.Projective.PuncturedAffineLogDifferential.logarithmicDifferential_range_eq_constantCoefficient_ker
 
 theorem logarithmicDifferential_apply (f : LaurentRing) (n : ℤ) :
-    logarithmicDifferential f n = (n : ℂ) * f n := by
-  induction f using LaurentPolynomial.induction_on' with
-  | add f g hf hg =>
-      rw [map_add]
-      change logarithmicDifferential f n + logarithmicDifferential g n =
-        (n : ℂ) * (f n + g n)
-      rw [hf, hg]
-      ring
-  | C_mul_T m c =>
-      simp only [← LaurentPolynomial.single_eq_C_mul_T]
-      rw [logarithmicDifferential_single]
-      by_cases hmn : m = n
-      · subst n
-        simp
-      · have hnm : n ≠ m := Ne.symm hmn
-        have hs : (Finsupp.single m c) n = 0 :=
-          Finsupp.single_eq_of_ne hnm
-        rw [Finsupp.smul_apply, hs, smul_zero, mul_zero]
+    (logarithmicDifferential f).coeff n = (n : ℂ) * f.coeff n :=
+  InfoGeometry.Projective.PuncturedAffineLogDifferential.logarithmicDifferential_coeff f n
 
 theorem ker_logarithmicDifferential_eq_range_constantEmbedding :
     LinearMap.ker logarithmicDifferential =
@@ -155,10 +105,10 @@ theorem ker_logarithmicDifferential_eq_range_constantEmbedding :
     · subst n
       simp [constantInclusion, constantCoeff]
     · have hnC : (n : ℂ) ≠ 0 := by exact_mod_cast hn
-      have hcoeff := congrArg (fun g : LaurentRing => g n) hf
-      change logarithmicDifferential f n = 0 at hcoeff
+      have hcoeff := congrArg (fun g : LaurentRing => g.coeff n) hf
+      change (logarithmicDifferential f).coeff n = 0 at hcoeff
       rw [logarithmicDifferential_apply] at hcoeff
-      have hfn : f n = 0 := (mul_eq_zero.mp hcoeff).resolve_left hnC
+      have hfn : f.coeff n = 0 := (mul_eq_zero.mp hcoeff).resolve_left hnC
       simp [constantInclusion, LaurentPolynomial.C_apply, hn, hfn]
   · rintro ⟨c, rfl⟩
     exact logarithmicDifferential_C c
@@ -204,14 +154,15 @@ theorem puncturedAffineH0ConstantFactor_surjective :
 noncomputable def puncturedAffineH0EquivComplex :
     puncturedAffineH0 ≃ₗ[ℂ] ℂ :=
   LinearEquiv.ofBijective puncturedAffineH0ConstantFactor
-    ⟨puncturedAffineH0ConstantFactor_injective,
-      puncturedAffineH0ConstantFactor_surjective⟩
+    (show Function.Bijective puncturedAffineH0ConstantFactor from
+      ⟨puncturedAffineH0ConstantFactor_injective,
+        puncturedAffineH0ConstantFactor_surjective⟩)
 
 @[simp] theorem puncturedAffineH0EquivComplex_constant (c : ℂ) :
     puncturedAffineH0EquivComplex
         ⟨LaurentPolynomial.C c, logarithmicDifferential_C c⟩ = c := by
-  rw [puncturedAffineH0EquivComplex, LinearEquiv.ofBijective_apply,
-    puncturedAffineH0ConstantFactor]
+  change puncturedAffineH0ConstantFactor
+    ⟨LaurentPolynomial.C c, logarithmicDifferential_C c⟩ = c
   exact constantCoeff_C c
 
 noncomputable def puncturedAffineD₁ : LaurentRing →ₗ[ℂ] ℂ := 0
@@ -232,9 +183,16 @@ theorem puncturedAffineH1ConstantFactor_surjective :
     Function.Surjective puncturedAffineH1ConstantFactor := by
   intro c
   refine ⟨closedClass logarithmicDifferential puncturedAffineD₁
-    puncturedAffine_complex (LaurentPolynomial.C c) (by rfl), ?_⟩
-  rw [puncturedAffineH1ConstantFactor, periodClassFactor_apply]
-  exact constantCoeff_C c
+    puncturedAffine_complex (LaurentPolynomial.C c) (by simp [puncturedAffineD₁]), ?_⟩
+  calc
+    puncturedAffineH1ConstantFactor
+        (closedClass logarithmicDifferential puncturedAffineD₁
+          puncturedAffine_complex (LaurentPolynomial.C c)
+          (by simp [puncturedAffineD₁])) = constantCoeff (LaurentPolynomial.C c) :=
+      periodClassFactor_apply logarithmicDifferential puncturedAffineD₁
+        puncturedAffine_complex constantCoeff constantCoeff_logarithmicDifferential
+        (LaurentPolynomial.C c) (by simp [puncturedAffineD₁])
+    _ = c := constantCoeff_C c
 
 theorem puncturedAffineH1ConstantFactor_injective :
     Function.Injective puncturedAffineH1ConstantFactor := by
@@ -246,7 +204,23 @@ theorem puncturedAffineH1ConstantFactor_injective :
     logarithmicDifferential puncturedAffineD₁ puncturedAffine_complex (x - y)
   rw [← hz] at hfactor ⊢
   have hct : constantCoeff z.1 = 0 := by
-    simpa [puncturedAffineH1ConstantFactor, periodClassFactor_apply] using hfactor
+    have hreadout :
+        puncturedAffineH1ConstantFactor
+            (cycleQuotientMap logarithmicDifferential puncturedAffineD₁
+              puncturedAffine_complex z) = constantCoeff z.1 := by
+      change (periodClassFactor logarithmicDifferential puncturedAffineD₁
+        puncturedAffine_complex constantCoeff constantCoeff_logarithmicDifferential)
+          (cycleQuotientMap logarithmicDifferential puncturedAffineD₁
+            puncturedAffine_complex z) = constantCoeff z.1
+      calc
+        _ = ((periodClassFactor logarithmicDifferential puncturedAffineD₁
+            puncturedAffine_complex constantCoeff constantCoeff_logarithmicDifferential).comp
+              (cycleQuotientMap logarithmicDifferential puncturedAffineD₁
+                puncturedAffine_complex)) z := rfl
+        _ = (constantCoeff.comp (LinearMap.ker puncturedAffineD₁).subtype) z := by
+          rw [periodClassFactor_comp_cycleQuotientMap]
+        _ = constantCoeff z.1 := rfl
+    exact hreadout.symm.trans hfactor
   have hrange : z.1 ∈ LinearMap.range logarithmicDifferential := by
     rw [range_logarithmicDifferential_eq_ker_constantCoeff, LinearMap.mem_ker]
     exact hct
@@ -256,20 +230,28 @@ theorem puncturedAffineH1ConstantFactor_injective :
 
 noncomputable def puncturedAffineH1EquivComplex : puncturedAffineH1 ≃ₗ[ℂ] ℂ :=
   LinearEquiv.ofBijective puncturedAffineH1ConstantFactor
-    ⟨puncturedAffineH1ConstantFactor_injective,
-      puncturedAffineH1ConstantFactor_surjective⟩
+    (show Function.Bijective puncturedAffineH1ConstantFactor from
+      ⟨puncturedAffineH1ConstantFactor_injective,
+        puncturedAffineH1ConstantFactor_surjective⟩)
 
 noncomputable def dlogClass : puncturedAffineH1 :=
   closedClass logarithmicDifferential puncturedAffineD₁ puncturedAffine_complex
-    1 (by rfl)
+    1 (by simp [puncturedAffineD₁])
 
 @[simp] theorem puncturedAffineH1EquivComplex_dlogClass :
-    puncturedAffineH1EquivComplex dlogClass = 1 := by
-  rw [puncturedAffineH1EquivComplex, LinearEquiv.ofBijective_apply,
-    puncturedAffineH1ConstantFactor]
+puncturedAffineH1EquivComplex dlogClass = 1 := by
+  change puncturedAffineH1ConstantFactor dlogClass = 1
   unfold dlogClass
-  rw [periodClassFactor_apply]
-  exact constantCoeff_C 1
+  unfold puncturedAffineH1ConstantFactor
+  calc
+    (periodClassFactor logarithmicDifferential puncturedAffineD₁
+      puncturedAffine_complex constantCoeff constantCoeff_logarithmicDifferential)
+        (closedClass logarithmicDifferential puncturedAffineD₁
+          puncturedAffine_complex 1 (by simp [puncturedAffineD₁])) = constantCoeff 1 :=
+      periodClassFactor_apply logarithmicDifferential puncturedAffineD₁
+        puncturedAffine_complex constantCoeff constantCoeff_logarithmicDifferential
+        1 (by simp [puncturedAffineD₁])
+    _ = 1 := constantCoeff_C 1
 
 noncomputable def puncturedAffineWindingClass (n : ℤ) : puncturedAffineH1 :=
   (n : ℂ) • dlogClass
@@ -350,7 +332,7 @@ theorem puncturedAffineH1_eq_readout_smul_dlogClass
 
 theorem closedClass_eq_constantCoeff_smul_dlog (f : LaurentRing) :
     closedClass logarithmicDifferential puncturedAffineD₁ puncturedAffine_complex
-        f (by rfl) =
+        f (by simp [puncturedAffineD₁]) =
       constantCoeff f • dlogClass := by
   apply puncturedAffineH1EquivComplex.injective
   change constantCoeff f = constantCoeff f * constantCoeff 1
@@ -360,7 +342,7 @@ theorem closedClass_eq_constantCoeff_smul_dlog (f : LaurentRing) :
 
 theorem closedClass_eq_zero_iff_constantCoeff_eq_zero (f : LaurentRing) :
     closedClass logarithmicDifferential puncturedAffineD₁ puncturedAffine_complex
-        f (by rfl) = 0 ↔
+        f (by simp [puncturedAffineD₁]) = 0 ↔
       constantCoeff f = 0 := by
   rw [closedClass_eq_constantCoeff_smul_dlog]
   constructor
@@ -373,7 +355,7 @@ theorem closedClass_eq_zero_iff_constantCoeff_eq_zero (f : LaurentRing) :
 theorem puncturedAffineH1EquivComplex_closedClass (f : LaurentRing) :
     puncturedAffineH1EquivComplex
         (closedClass logarithmicDifferential puncturedAffineD₁
-          puncturedAffine_complex f (by rfl)) =
+          puncturedAffine_complex f (by simp [puncturedAffineD₁])) =
       constantCoeff f := by
   rw [closedClass_eq_constantCoeff_smul_dlog, map_smul,
     puncturedAffineH1EquivComplex_dlogClass]
@@ -386,13 +368,12 @@ noncomputable def puncturedAffineH1ToAlgebraicDeRhamH1 :
 theorem puncturedAffineH1ToAlgebraicDeRhamH1_closedClass (f : LaurentRing) :
     puncturedAffineH1ToAlgebraicDeRhamH1
         (closedClass logarithmicDifferential puncturedAffineD₁
-          puncturedAffine_complex f (by rfl)) =
+          puncturedAffine_complex f (by simp [puncturedAffineD₁])) =
       Submodule.Quotient.mk f := by
   apply algebraicDeRhamH1Equiv.injective
   simp [puncturedAffineH1ToAlgebraicDeRhamH1,
     puncturedAffineH1EquivComplex_closedClass,
     algebraicDeRhamH1Equiv_mk]
-  rfl
 
 theorem puncturedAffineH1ToAlgebraicDeRhamH1_windingClass (n : ℤ) :
     puncturedAffineH1ToAlgebraicDeRhamH1 (puncturedAffineWindingClass n) =
@@ -453,9 +434,9 @@ noncomputable def algebraicDeRhamH1Inversion : puncturedAffineH1 ≃ₗ[ℂ] pun
 theorem algebraicDeRhamH1Inversion_closedClass (f : LaurentRing) :
     algebraicDeRhamH1Inversion
         (closedClass logarithmicDifferential puncturedAffineD₁ puncturedAffine_complex
-          f (by rfl)) =
+          f (by simp [puncturedAffineD₁])) =
       closedClass logarithmicDifferential puncturedAffineD₁ puncturedAffine_complex
-        (PuncturedAffineKleinInversionBridge.inversion f) (by rfl) := by
+        (PuncturedAffineKleinInversionBridge.inversion f) (by simp [puncturedAffineD₁]) := by
   rw [closedClass_eq_constantCoeff_smul_dlog,
     closedClass_eq_constantCoeff_smul_dlog, constantCoeff_inversion]
   rfl
@@ -487,16 +468,15 @@ theorem puncturedAffineH1ToAlgebraicDeRhamH1_pullback_closedClass
     puncturedAffineH1ToAlgebraicDeRhamH1
         (algebraicDeRhamH1Pullback
           (closedClass logarithmicDifferential puncturedAffineD₁
-            puncturedAffine_complex f (by rfl))) =
+            puncturedAffine_complex f (by simp [puncturedAffineD₁]))) =
       InfoGeometry.Projective.PuncturedAffineLogDifferential.algebraicDeRhamH1Pullback
         (puncturedAffineH1ToAlgebraicDeRhamH1
           (closedClass logarithmicDifferential puncturedAffineD₁
-            puncturedAffine_complex f (by rfl))) := by
+            puncturedAffine_complex f (by simp [puncturedAffineD₁]))) := by
   apply algebraicDeRhamH1Equiv.injective
   rw [puncturedAffineH1ToAlgebraicDeRhamH1_closedClass]
   rw [InfoGeometry.Projective.PuncturedAffineLogDifferential.algebraicDeRhamH1Pullback_readout]
   simp [puncturedAffineH1ToAlgebraicDeRhamH1,
     puncturedAffineH1EquivComplex_closedClass]
-  rfl
 
 end InfoGeometry.Projective.PuncturedAffineLogDeRhamBridge

@@ -7,7 +7,6 @@ Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
 import Mathlib.Analysis.Calculus.Deriv.Basic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Calculus.Deriv.Add
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
@@ -44,7 +43,7 @@ theorem hasDerivAt_partitionFunction
   have harg : HasDerivAt (fun t => -M.energy i t / ε) (-(g i) / ε) θ := by
     simpa [div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc] using
       ((hg i).neg.const_mul ε⁻¹)
-  simpa using (Real.hasDerivAt_exp _).comp θ harg
+  exact harg.exp
 
 theorem hasDerivAt_freeEnergy
     (M : FiniteGibbs.Model (Data := Data) (Theta := ℝ))
@@ -83,6 +82,7 @@ theorem hasDerivAt_freeEnergy
         congr 1
         simp_rw [div_eq_mul_inv]
         rw [Finset.sum_mul]
-  convert hfree using 1
+  rw [hweighted]
+  exact hfree
 
 end InfoGeometry.Inference

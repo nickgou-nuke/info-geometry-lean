@@ -136,7 +136,6 @@ lemma rawT0_P_rawS0 :
 theorem P_ne_one : P ≠ (1 : Op) := by
   intro hP
   have hdet := congrArg (fun X : Op => cuntzT 0 * X * cuntzS 0) hP
-  dsimp at hdet
   rw [rawT0_P_rawS0] at hdet
   have hfull : cuntzT 0 * (1 : Op) * cuntzS 0 = 1 := by
     simp [cuntz_ortho]

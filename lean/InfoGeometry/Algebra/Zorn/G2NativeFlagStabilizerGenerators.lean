@@ -40,15 +40,8 @@ def stabilizerPCGenerators :
 theorem stabilizerPCGenerators_subset_unipotentSubgroup :
     stabilizerPCGenerators ⊆ unipotentSubgroup.carrier := by
   intro g hg
-  have hg' :
-      g = pcWord (pcBits false false false false false true) ∨
-      g = pcWord (pcBits false false false true false true) ∨
-      g = pcWord (pcBits false false true false true false) ∨
-      g = pcWord (pcBits false true true false false true) ∨
-      g = pcWord (pcBits true false false false false false) ∨
-      g = pcWord (pcBits true false true true false true) := by
-    simpa [stabilizerPCGenerators] using hg
-  rcases hg' with (rfl | rfl | rfl | rfl | rfl | rfl) <;>
+  simp only [stabilizerPCGenerators, Set.mem_insert_iff, Set.mem_singleton_iff] at hg
+  rcases hg with (rfl | rfl | rfl | rfl | rfl | rfl) <;>
       exact ⟨_, rfl⟩
 
 theorem stabilizerPCGenerators_closure_le_unipotentSubgroup :
@@ -68,13 +61,8 @@ def directFlagPCGenerators :
 theorem directFlagPCGenerators_subset_unipotentSubgroup :
     directFlagPCGenerators ⊆ unipotentSubgroup.carrier := by
   intro g hg
-  have hg' :
-      g = pcWord (pcBits true false false false false false) ∨
-      g = pcWord (pcBits false true false false false false) ∨
-      g = pcWord (pcBits false false true false false false) ∨
-      g = pcWord (pcBits false false false false true false) := by
-    simpa [directFlagPCGenerators] using hg
-  rcases hg' with (rfl | rfl | rfl | rfl) <;> exact ⟨_, rfl⟩
+  simp only [directFlagPCGenerators, Set.mem_insert_iff, Set.mem_singleton_iff] at hg
+  rcases hg with (rfl | rfl | rfl | rfl) <;> exact ⟨_, rfl⟩
 
 theorem directFlagPCGenerators_closure_le_unipotentSubgroup :
     Subgroup.closure directFlagPCGenerators ≤ unipotentSubgroup := by

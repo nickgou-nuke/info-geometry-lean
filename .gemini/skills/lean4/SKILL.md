@@ -3,6 +3,17 @@ name: lean4
 description: "Use when editing .lean files, debugging Lean 4 builds (type mismatch, sorry, failed to synthesize instance, axiom warnings, lake build errors), searching mathlib for lemmas, formalizing mathematics in Lean, or learning Lean 4 concepts. Also trigger when the user asks for help with Lean 4, mathlib, or lakefile. Do NOT trigger for Coq/Rocq, Agda, Isabelle, HOL4, Mizar, Idris, Megalodon, or other non-Lean theorem provers."
 ---
 
+<!-- repository-context-rule -->
+## Repository context rule
+
+For repository work, the current checked-out codebase is the context. Search
+existing implementation and trace actual carriers, definitions, imports,
+instances, theorem statements, and uses before claiming a structure is missing
+or incorrect. A local absence is not a repository-wide absence. Names,
+heuristics, summaries, and documentation guide discovery but do not override
+source. Follow `docs/REPO_DEEP_SEARCH_PROTOCOL.md` before repo-wide gap claims.
+
+
 ## Constructive Closure Mandate
 
 Replacing witness-gated and external-certificate leftovers with native Lean 4 proofs is the highest mandate. **Vacuous scaffolding is strictly prohibited.** Never use `law : Prop`, `certificate : law`, witness fields, packet fields, or projection-only theorems to obscure missing proofs. Structures must carry explicit mathematical identities (e.g., `det P = minkowskiNormSq`) or explicitly named theorem obligations whose proof is supplied in the owner lane. Treat literature owners, graph edges, physics analogies, and AI proof sketches as closure debt until discharged by kernel-checked Lean or imported Mathlib theorems. Follow docs/CONSTRUCTIVE_CLOSURE_MANDATE.md; never promote anonymous or unformalized sockets as complete.

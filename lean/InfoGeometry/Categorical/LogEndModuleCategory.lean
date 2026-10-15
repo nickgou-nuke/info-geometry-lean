@@ -65,7 +65,7 @@ noncomputable instance : Category (LogEndModule 𝕜) where
   Hom X Y := Hom X Y
   id X :=
     { hom := LinearMap.id
-      comm := by ext x <;> rfl }
+      comm := by ext x; rfl }
   comp {X Y Z} f g :=
     { hom := g.hom.comp f.hom
       comm := by
@@ -106,8 +106,7 @@ def tensorObj (X Y : LogEndModule 𝕜) : LogEndModule 𝕜 where
 @[simp]
 theorem tensorObj_N_tmul (X Y : LogEndModule 𝕜) (x : X) (y : Y) :
     (tensorObj X Y).N (x ⊗ₜ[𝕜] y) =
-      X.N x ⊗ₜ[𝕜] y + x ⊗ₜ[𝕜] Y.N y := by
-  simp [tensorObj, TensorProduct.map_tmul]
+      X.N x ⊗ₜ[𝕜] y + x ⊗ₜ[𝕜] Y.N y := rfl
 
 /-- Tensor product of intertwining morphisms. -/
 def tensorHom {X X' Y Y' : LogEndModule 𝕜}
@@ -116,7 +115,13 @@ def tensorHom {X X' Y Y' : LogEndModule 𝕜}
   comm := by
     apply TensorProduct.ext'
     intro x y
-    simp [tensorObj, LinearMap.comp_apply, f.map_N, g.map_N]
+    change (TensorProduct.map f.hom g.hom) ((tensorObj X Y).N (x ⊗ₜ y)) =
+      (tensorObj X' Y').N ((TensorProduct.map f.hom g.hom) (x ⊗ₜ y))
+    rw [tensorObj_N_tmul]
+    rw [map_add]
+    rw [TensorProduct.map_tmul, TensorProduct.map_tmul, TensorProduct.map_tmul]
+    rw [tensorObj_N_tmul]
+    rw [f.map_N, g.map_N]
 
 @[simp]
 theorem tensorHom_tmul {X X' Y Y' : LogEndModule 𝕜}
@@ -129,8 +134,9 @@ theorem tensorHom_tmul {X X' Y Y' : LogEndModule 𝕜}
 theorem tensorHom_id (X Y : LogEndModule 𝕜) :
     tensorHom (𝟙 X) (𝟙 Y) = 𝟙 (tensorObj X Y) := by
   apply Hom.ext
-  ext x y
-  simp [tensorHom]
+  apply TensorProduct.ext'
+  intro x y
+  rfl
 
 /-- Tensor product respects composition. -/
 @[simp]
@@ -156,11 +162,12 @@ def associatorHom (X Y Z : LogEndModule 𝕜) :
   comm := by
     apply TensorProduct.ext_threefold
     intro x y z
-    simp only [tensorObj, LinearMap.comp_apply, LinearMap.add_apply, LinearMap.id_apply, map_add,
-      TensorProduct.map_tmul]
-    rw [TensorProduct.add_tmul]
-    simp [TensorProduct.map_map_assoc]
-    rw [TensorProduct.tmul_add]
+    change (TensorProduct.assoc 𝕜 X.V Y.V Z.V)
+        (((X.N x ⊗ₜ y + x ⊗ₜ Y.N y) ⊗ₜ z) + (x ⊗ₜ y) ⊗ₜ Z.N z) =
+      X.N x ⊗ₜ (y ⊗ₜ z) + x ⊗ₜ (Y.N y ⊗ₜ z + y ⊗ₜ Z.N z)
+    rw [TensorProduct.add_tmul, TensorProduct.tmul_add]
+    rw [map_add, map_add]
+    rw [TensorProduct.assoc_tmul, TensorProduct.assoc_tmul, TensorProduct.assoc_tmul]
     abel
 
 /-- Inverse associator as a logarithmic intertwiner. -/
@@ -170,11 +177,13 @@ def associatorInv (X Y Z : LogEndModule 𝕜) :
   comm := by
     apply TensorProduct.ext_threefold'
     intro x y z
-    simp only [tensorObj, LinearMap.comp_apply, LinearMap.add_apply, LinearMap.id_apply, map_add,
-      TensorProduct.map_tmul]
-    rw [TensorProduct.tmul_add]
-    simp [TensorProduct.map_map_assoc_symm]
-    rw [TensorProduct.add_tmul]
+    change (TensorProduct.assoc 𝕜 X.V Y.V Z.V).symm
+        (X.N x ⊗ₜ (y ⊗ₜ z) + x ⊗ₜ (Y.N y ⊗ₜ z + y ⊗ₜ Z.N z)) =
+      ((X.N x ⊗ₜ y + x ⊗ₜ Y.N y) ⊗ₜ z) + (x ⊗ₜ y) ⊗ₜ Z.N z
+    rw [TensorProduct.tmul_add, TensorProduct.add_tmul]
+    rw [map_add, map_add]
+    rw [TensorProduct.assoc_symm_tmul, TensorProduct.assoc_symm_tmul,
+      TensorProduct.assoc_symm_tmul]
     abel
 
 /-- The logarithmic associator is an isomorphism. -/
@@ -184,14 +193,18 @@ def associatorIso (X Y Z : LogEndModule 𝕜) :
   inv := associatorInv X Y Z
   hom_inv_id := by
     apply Hom.ext
-    apply TensorProduct.ext_threefold
-    intro x y z
-    simp [associatorHom, associatorInv]
+    apply LinearMap.ext
+    intro w
+    change (TensorProduct.assoc 𝕜 X.V Y.V Z.V).symm
+        ((TensorProduct.assoc 𝕜 X.V Y.V Z.V) w) = w
+    exact (TensorProduct.assoc 𝕜 X.V Y.V Z.V).left_inv w
   inv_hom_id := by
     apply Hom.ext
-    apply TensorProduct.ext_threefold'
-    intro x y z
-    simp [associatorHom, associatorInv]
+    apply LinearMap.ext
+    intro w
+    change (TensorProduct.assoc 𝕜 X.V Y.V Z.V)
+        ((TensorProduct.assoc 𝕜 X.V Y.V Z.V).symm w) = w
+    exact (TensorProduct.assoc 𝕜 X.V Y.V Z.V).right_inv w
 
 @[simp]
 theorem associatorHom_tmul (X Y Z : LogEndModule 𝕜)
@@ -217,7 +230,15 @@ def braidingHom (X Y : LogEndModule 𝕜) : tensorObj X Y ⟶ tensorObj Y X wher
   comm := by
     apply TensorProduct.ext'
     intro x y
-    simp [tensorObj, LinearMap.comp_apply, add_comm]
+    change (TensorProduct.comm 𝕜 X.V Y.V)
+        ((tensorObj X Y).N (x ⊗ₜ y)) =
+      (tensorObj Y X).N
+        ((TensorProduct.comm 𝕜 X.V Y.V) (x ⊗ₜ y))
+    rw [tensorObj_N_tmul]
+    rw [map_add]
+    rw [TensorProduct.comm_tmul, TensorProduct.comm_tmul, TensorProduct.comm_tmul]
+    rw [tensorObj_N_tmul]
+    rw [add_comm]
 
 /-- The canonical swap is an involutive logarithmic braiding isomorphism. -/
 def braidingIso (X Y : LogEndModule 𝕜) : tensorObj X Y ≅ tensorObj Y X where
@@ -225,18 +246,18 @@ def braidingIso (X Y : LogEndModule 𝕜) : tensorObj X Y ≅ tensorObj Y X wher
   inv := braidingHom Y X
   hom_inv_id := by
     apply Hom.ext
-    apply TensorProduct.ext'
-    intro x y
+    apply LinearMap.ext
+    intro w
     change (TensorProduct.comm 𝕜 Y.V X.V)
-        ((TensorProduct.comm 𝕜 X.V Y.V) (x ⊗ₜ[𝕜] y)) = x ⊗ₜ[𝕜] y
-    rw [TensorProduct.comm_tmul, TensorProduct.comm_tmul]
+        ((TensorProduct.comm 𝕜 X.V Y.V) w) = w
+    exact (TensorProduct.comm 𝕜 X.V Y.V).left_inv w
   inv_hom_id := by
     apply Hom.ext
-    apply TensorProduct.ext'
-    intro x y
+    apply LinearMap.ext
+    intro w
     change (TensorProduct.comm 𝕜 X.V Y.V)
-        ((TensorProduct.comm 𝕜 Y.V X.V) (x ⊗ₜ[𝕜] y)) = x ⊗ₜ[𝕜] y
-    rw [TensorProduct.comm_tmul, TensorProduct.comm_tmul]
+        ((TensorProduct.comm 𝕜 Y.V X.V) w) = w
+    exact (TensorProduct.comm 𝕜 Y.V X.V).left_inv w
 
 end LogEndModule
 

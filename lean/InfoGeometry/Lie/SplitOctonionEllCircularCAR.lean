@@ -27,61 +27,21 @@ abbrev CZ := CanonicalZorn
 
 theorem rootPlus_mul_rootMinus_delta (a b : Fin 3) :
     rootPlus a * rootMinus b =
-      (if a = b then uPlus else 0) := by
-  fin_cases a <;> fin_cases b <;>
-    ext i <;>
-    simp [rootPlus, rootMinus, uPlus, chiralNull, ellBasis,
-      quaternionBasis, iUnit, jUnit, kQuaternionUnit, lUnit,
-      InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul,
-      InfoGeometry.Canonical.ZornMatrix.mul,
-      Equiv.smul_def,
-      InfoGeometry.Canonical.ZornMatrix.coordEquiv,
-      InfoGeometry.Canonical.ZornMatrix.dot,
-      InfoGeometry.Canonical.ZornMatrix.cross]
-  all_goals (try fin_cases i) <;> norm_num
+      (if a = b then uPlus else 0) :=
+  InfoGeometry.Lie.SplitOctonionCircularZ3Grading.rootPlus_mul_rootMinus_eq_ite a b
 
 theorem rootMinus_mul_rootPlus_delta (a b : Fin 3) :
     rootMinus a * rootPlus b =
-      (if a = b then uMinus else 0) := by
-  fin_cases a <;> fin_cases b <;>
-    ext i <;>
-    simp [rootPlus, rootMinus, uMinus, chiralNull, ellBasis,
-      quaternionBasis, iUnit, jUnit, kQuaternionUnit, lUnit,
-      InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul,
-      InfoGeometry.Canonical.ZornMatrix.mul,
-      Equiv.smul_def,
-      InfoGeometry.Canonical.ZornMatrix.coordEquiv,
-      InfoGeometry.Canonical.ZornMatrix.dot,
-      InfoGeometry.Canonical.ZornMatrix.cross]
-  all_goals (try fin_cases i) <;> norm_num
+      (if a = b then uMinus else 0) :=
+  InfoGeometry.Lie.SplitOctonionCircularZ3Grading.rootMinus_mul_rootPlus_eq_ite a b
 
 theorem rootPlus_sq_zero (a : Fin 3) :
-    rootPlus a * rootPlus a = 0 := by
-  fin_cases a <;>
-    ext i <;>
-    simp [rootPlus, chiralNull, ellBasis, quaternionBasis, iUnit,
-      jUnit, kQuaternionUnit, lUnit,
-      InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul,
-      InfoGeometry.Canonical.ZornMatrix.mul,
-      Equiv.smul_def,
-      InfoGeometry.Canonical.ZornMatrix.coordEquiv,
-      InfoGeometry.Canonical.ZornMatrix.dot,
-      InfoGeometry.Canonical.ZornMatrix.cross]
-  all_goals (try fin_cases i) <;> norm_num
+    rootPlus a * rootPlus a = 0 :=
+  rootPlus_sq a
 
 theorem rootMinus_sq_zero (a : Fin 3) :
-    rootMinus a * rootMinus a = 0 := by
-  fin_cases a <;>
-    ext i <;>
-    simp [rootMinus, chiralNull, ellBasis, quaternionBasis, iUnit,
-      jUnit, kQuaternionUnit, lUnit,
-      InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul,
-      InfoGeometry.Canonical.ZornMatrix.mul,
-      Equiv.smul_def,
-      InfoGeometry.Canonical.ZornMatrix.coordEquiv,
-      InfoGeometry.Canonical.ZornMatrix.dot,
-      InfoGeometry.Canonical.ZornMatrix.cross]
-  all_goals (try fin_cases i) <;> norm_num
+    rootMinus a * rootMinus a = 0 :=
+  rootMinus_sq a
 
 theorem rootPlus_mul_rootMinus_anticommutator (a b : Fin 3) :
     rootPlus a * rootMinus b + rootMinus b * rootPlus a =
@@ -104,7 +64,7 @@ theorem rootPlus_mul_rootMinus_commutator (a b : Fin 3) :
 theorem rootPlus_mul_rootPlus_anticommutator (a b : Fin 3) :
     rootPlus a * rootPlus b + rootPlus b * rootPlus a = 0 := by
   fin_cases a <;> fin_cases b
-  · simpa only [rootPlus_sq_zero, zero_add]
+  · simp only [rootPlus_sq_zero, zero_add]
   · simpa [Fin.ext_iff] using congrArg₂ (fun x y : CZ => x + y)
       InfoGeometry.Lie.SplitOctonionCircularZ3Grading.rootPlus_zero_mul_rootPlus_one
       InfoGeometry.Lie.SplitOctonionCircularZ3Grading.rootPlus_one_mul_rootPlus_zero
@@ -114,7 +74,7 @@ theorem rootPlus_mul_rootPlus_anticommutator (a b : Fin 3) :
   · simpa [Fin.ext_iff] using congrArg₂ (fun x y : CZ => x + y)
       InfoGeometry.Lie.SplitOctonionCircularZ3Grading.rootPlus_one_mul_rootPlus_zero
       InfoGeometry.Lie.SplitOctonionCircularZ3Grading.rootPlus_zero_mul_rootPlus_one
-  · simpa only [rootPlus_sq_zero, zero_add]
+  · simp only [rootPlus_sq_zero, zero_add]
   · simpa [Fin.ext_iff] using congrArg₂ (fun x y : CZ => x + y)
       InfoGeometry.Lie.SplitOctonionCircularZ3Grading.rootPlus_one_mul_rootPlus_two
       InfoGeometry.Lie.SplitOctonionCircularZ3Grading.rootPlus_two_mul_rootPlus_one
@@ -124,61 +84,19 @@ theorem rootPlus_mul_rootPlus_anticommutator (a b : Fin 3) :
   · simpa [Fin.ext_iff] using congrArg₂ (fun x y : CZ => x + y)
       InfoGeometry.Lie.SplitOctonionCircularZ3Grading.rootPlus_two_mul_rootPlus_one
       InfoGeometry.Lie.SplitOctonionCircularZ3Grading.rootPlus_one_mul_rootPlus_two
-  · simpa only [rootPlus_sq_zero, zero_add]
+  · simp only [rootPlus_sq_zero, zero_add]
 
 theorem rootMinus_mul_rootMinus_anticommutator (a b : Fin 3) :
     rootMinus a * rootMinus b + rootMinus b * rootMinus a = 0 := by
-  fin_cases a <;> fin_cases b
-  · simp only [rootMinus_sq_zero, zero_add]
-  · apply InfoGeometry.Canonical.ZornMatrix.ext <;>
-      simp [rootMinus, chiralNull, ellBasis, quaternionBasis, iUnit,
-        jUnit, kQuaternionUnit, lUnit,
-        InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul,
-        InfoGeometry.Canonical.ZornMatrix.mul,
-        InfoGeometry.Canonical.ZornMatrix.dot,
-        InfoGeometry.Canonical.ZornMatrix.cross,
-        Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv] <;> ring <;> simp
-  · apply InfoGeometry.Canonical.ZornMatrix.ext <;>
-      simp [rootMinus, chiralNull, ellBasis, quaternionBasis, iUnit,
-        jUnit, kQuaternionUnit, lUnit,
-        InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul,
-        InfoGeometry.Canonical.ZornMatrix.mul,
-        InfoGeometry.Canonical.ZornMatrix.dot,
-        InfoGeometry.Canonical.ZornMatrix.cross,
-        Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv] <;> ring <;> simp
-  · apply InfoGeometry.Canonical.ZornMatrix.ext <;>
-      simp [rootMinus, chiralNull, ellBasis, quaternionBasis, iUnit,
-        jUnit, kQuaternionUnit, lUnit,
-        InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul,
-        InfoGeometry.Canonical.ZornMatrix.mul,
-        InfoGeometry.Canonical.ZornMatrix.dot,
-        InfoGeometry.Canonical.ZornMatrix.cross,
-        Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv] <;> ring <;> simp
-  · simp only [rootMinus_sq_zero, zero_add]
-  · apply InfoGeometry.Canonical.ZornMatrix.ext <;>
-      simp [rootMinus, chiralNull, ellBasis, quaternionBasis, iUnit,
-        jUnit, kQuaternionUnit, lUnit,
-        InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul,
-        InfoGeometry.Canonical.ZornMatrix.mul,
-        InfoGeometry.Canonical.ZornMatrix.dot,
-        InfoGeometry.Canonical.ZornMatrix.cross,
-        Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv] <;> ring <;> simp
-  · apply InfoGeometry.Canonical.ZornMatrix.ext <;>
-      simp [rootMinus, chiralNull, ellBasis, quaternionBasis, iUnit,
-        jUnit, kQuaternionUnit, lUnit,
-        InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul,
-        InfoGeometry.Canonical.ZornMatrix.mul,
-        InfoGeometry.Canonical.ZornMatrix.dot,
-        InfoGeometry.Canonical.ZornMatrix.cross,
-        Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv] <;> ring <;> simp
-  · apply InfoGeometry.Canonical.ZornMatrix.ext <;>
-      simp [rootMinus, chiralNull, ellBasis, quaternionBasis, iUnit,
-        jUnit, kQuaternionUnit, lUnit,
-        InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul,
-        InfoGeometry.Canonical.ZornMatrix.mul,
-        InfoGeometry.Canonical.ZornMatrix.dot,
-        InfoGeometry.Canonical.ZornMatrix.cross,
-        Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv] <;> ring
-  · simp only [rootMinus_sq_zero, zero_add]
+  fin_cases a <;> fin_cases b <;>
+    ext i <;>
+    simp [rootMinus, chiralNull, ellBasis, quaternionBasis, iUnit, jUnit, kQuaternionUnit, lUnit,
+      InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul,
+      InfoGeometry.Canonical.ZornMatrix.mul,
+      InfoGeometry.Canonical.ZornMatrix.dot,
+      InfoGeometry.Canonical.ZornMatrix.cross,
+      Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordAddEquiv,
+      InfoGeometry.Canonical.ZornMatrix.coordEquiv]
+  all_goals (try fin_cases i) <;> norm_num
 
 end InfoGeometry.Lie.SplitOctonionEllCircularCAR

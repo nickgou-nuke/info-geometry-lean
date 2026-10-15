@@ -1,5 +1,4 @@
 import InfoGeometry.Canonical.Cl11MarkovJonesTopologicalBridge
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FilteredTopologicalDirectInverseColimit
 
 /-!
@@ -79,7 +78,7 @@ def continuousStageEmbedMap {m n : ℕ} (h : m ≤ n) :
     continuous_toFun :=
       (stageEmbedMap h).toLinearMap.continuous_of_finiteDimensional }
 
-def topologicalDiagram : ℕ ⥤ TopCat where
+abbrev topologicalDiagram : ℕ ⥤ TopCat where
   obj n := TopCat.of (MatStage n)
   map f := TopCat.ofHom (continuousStageEmbedMap (leOfHom f))
   map_id n := by
@@ -92,11 +91,8 @@ def topologicalDiagram : ℕ ⥤ TopCat where
     apply TopCat.hom_ext
     apply ContinuousMap.ext
     intro A
-    rw [TopCat.comp_app]
-    dsimp [continuousStageEmbedMap]
-    have h := congrArg (fun F => F A)
+    exact congrArg (fun F => F A)
       (stageEmbedMap_comp (leOfHom f) (leOfHom g)).symm
-    simpa using h
 
 abbrev topologicalColimitObject : TopCat :=
   topologicalDirectColimit topologicalDiagram

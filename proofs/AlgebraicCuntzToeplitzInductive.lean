@@ -42,9 +42,8 @@ inductive Rel : TAlg R ι → TAlg R ι → Prop
   | ortho (i j : ι) : Rel (T₀ (R := R) i * S₀ (R := R) j) (if i = j then 1 else 0)
 
 /-- Algebraic Cuntz--Toeplitz quotient. -/
-def CTAlg (R : Type*) [CommSemiring R] (ι : Type*) [Fintype ι] [DecidableEq ι] :=
+abbrev CTAlg (R : Type*) [CommSemiring R] (ι : Type*) [Fintype ι] [DecidableEq ι] :=
   RingQuot (@Rel R ι _ _)
-deriving Inhabited, Semiring, Algebra R
 
 def mk : TAlg R ι →ₐ[R] CTAlg R ι := RingQuot.mkAlgHom R (@Rel R ι _ _)
 
@@ -54,7 +53,8 @@ def T (i : ι) : CTAlg R ι := mk (R := R) (T₀ (R := R) i)
 theorem T_mul_S (i j : ι) : T (R := R) i * S (R := R) j = if i = j then 1 else 0 := by
   change mk (R := R) (T₀ (R := R) i) * mk (R := R) (S₀ (R := R) j) = _
   rw [← map_mul]
-  simpa using RingQuot.mkAlgHom_rel R (Rel.ortho (R := R) i j)
+  simpa only [mk, MonoidWithZeroHom.map_ite_one_zero] using
+    RingQuot.mkAlgHom_rel R (Rel.ortho (R := R) i j)
 
 section Lift
 

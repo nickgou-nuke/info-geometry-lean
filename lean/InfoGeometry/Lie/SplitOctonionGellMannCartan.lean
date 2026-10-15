@@ -26,6 +26,8 @@ open InfoGeometry.Lie.SplitOctonionQuaternionCircularBasis
 
 open scoped BigOperators
 
+noncomputable section
+
 /-- The `Λ₃` Gell-Mann Cartan generator weights `(1, -1, 0)`. -/
 def lambda3Weights : Fin 3 → ℝ :=
   fun i => if i.val = 0 then 1 else if i.val = 1 then -1 else 0
@@ -139,5 +141,7 @@ theorem gellMannCartan_surjective (k : TracelessWeight) : ∃ K1 K2 : ℝ, gellM
     linarith
   · change ((k.val 0 - k.val 1) / 2) * 0 + (-k.val 2 / 2) * -2 = k.val 2
     linarith
+
+end
 
 end InfoGeometry.Lie.SplitOctonionGellMannCartan

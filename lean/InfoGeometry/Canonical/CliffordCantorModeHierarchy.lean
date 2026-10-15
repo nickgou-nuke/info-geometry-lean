@@ -174,13 +174,13 @@ noncomputable def splitQuaternionK : Alg :=
     epsMinusProjector * epsPlusProjector = 0 := by
   rw [epsMinusProjector_eq_half_one_sub_eps, epsPlusProjector_eq_half_one_add_eps]
   simp [sub_eq_add_neg, add_mul, mul_add, smul_add, epsGen_sq]
-  module
+  try module
 
 @[simp] theorem epsPlusProjector_mul_epsMinusProjector :
     epsPlusProjector * epsMinusProjector = 0 := by
   rw [epsPlusProjector_eq_half_one_add_eps, epsMinusProjector_eq_half_one_sub_eps]
   simp [sub_eq_add_neg, add_mul, mul_add, smul_add, epsGen_sq]
-  module
+  try module
 
 @[simp] theorem epsMinusProjector_idempotent :
     epsMinusProjector * epsMinusProjector = epsMinusProjector := by

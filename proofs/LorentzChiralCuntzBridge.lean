@@ -56,8 +56,11 @@ def expDiagSL2 (η : ℂ) : SL2C := diagSL2 (Complex.exp η) (Complex.exp_ne_zer
 theorem expDiagSL2_mul (η ξ : ℂ) :
     expDiagSL2 η * expDiagSL2 ξ = expDiagSL2 (η + ξ) := by
   ext i j
+  change (spinMatrix (expDiagSL2 η) * spinMatrix (expDiagSL2 ξ)) i j =
+    spinMatrix (expDiagSL2 (η + ξ)) i j
+  rw [expDiagSL2_matrix, expDiagSL2_matrix, expDiagSL2_matrix]
   fin_cases i <;> fin_cases j <;>
-    simp [expDiagSL2, diagSL2, Complex.exp_add, mul_comm]
+    simp [Matrix.mul_apply, Fin.sum_univ_two, Complex.exp_add, mul_comm]
 
 /-- The identity member of the explicit diagonal subgroup. -/
 theorem expDiagSL2_zero : expDiagSL2 0 = (1 : SL2C) := by

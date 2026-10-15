@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.CanonicalZornFiveGradedClosure
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Core.SymmetricLie
+import Mathlib.Algebra.Lie.OfAssociative
 
 /-!
 # Concrete reversal of the canonical five-grade matrix carrier
@@ -12,6 +13,8 @@ bracket.
 -/
 
 noncomputable section
+
+attribute [local instance 100] LieRing.ofAssociativeRing
 
 namespace CanonicalZornFiveGradedClosure
 
@@ -183,7 +186,9 @@ theorem conformalGradeReversal_bracket_eq_zero_of_gradeAdd_none
     (hA : A ∈ conformalGrade i)
     (hB : B ∈ conformalGrade j) :
     conformalGradeReversal ⁅A, B⁆ = 0 := by
-  rw [bracket_grade_outside_zero canonicalFiveGradedLieAlgebra hij hA hB]
+  have hbr : ⁅A, B⁆ = 0 :=
+    bracket_grade_outside_zero canonicalFiveGradedLieAlgebra hij hA hB
+  rw [hbr]
   exact conformalGradeReversal.map_zero
 
 theorem conformalGradeReversal_bracket_of_images_eq_zero_of_gradeAdd_none

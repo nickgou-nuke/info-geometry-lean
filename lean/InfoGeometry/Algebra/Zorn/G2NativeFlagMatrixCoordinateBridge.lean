@@ -25,6 +25,16 @@ private theorem eqRec_intrinsicLine_val
   cases h
   rfl
 
+theorem octImPointPerm_symm (g : SplitOctF2Aut) :
+    (octImPointPerm g).symm = octImPointPerm g⁻¹ := by
+  apply Equiv.ext
+  intro v
+  apply (octImPointPerm g).injective
+  simp only [Equiv.apply_symm_apply]
+  change v = (octImPointPerm g * octImPointPerm g⁻¹) v
+  rw [← octImPointPerm_mul, mul_inv_cancel, octImPointPerm_one]
+  rfl
+
 theorem autMatrix_action_octImToImaginary
     (g : SplitOctF2Aut)
     (v : G2ParabolicLineFiber.OctImF2) :
@@ -56,9 +66,7 @@ theorem nativeFlagStabilizer_matrix_fixed_nativeBasePoint
       (octImToImaginary nativeBaseIsotropicPoint.1).1 := by
   apply autMatrix_inv_action_fixed_of_octImAction_fixed
   have hp := nativeFlagStabilizer_fixes_base_point hg
-  have hp' := congrArg Subtype.val hp
-  simpa [octImPointPerm_apply, octImAction,
-    nativeBaseIsotropicPoint] using hp'
+  exact congrArg Subtype.val hp
 
 theorem nativeFlagStabilizer_matrix_fixed_nativeBasePoint_vec
     {g : SplitOctF2Aut}
@@ -144,8 +152,7 @@ theorem nativeFlagStabilizer_nativeBaseLine_map
       rw [hline] at hmem
       exact hmem
     have hvPoint' := (mem_baseIntrinsicLine_iff _).mp hvPoint
-    have hmem : octImAction g u ∈ nativeBaseLineWitness := by
-      simpa [octImPointPerm_apply, octImAction] using hvPoint'
+    have hmem : octImAction g u ∈ nativeBaseLineWitness := hvPoint'
     simpa [← huv] using hmem
   · intro hv
     let vPoint : OctImIsotropicPoint :=
@@ -153,11 +160,11 @@ theorem nativeFlagStabilizer_nativeBaseLine_map
         (nativeBaseLineWitness_points_valid v hv).2⟩
     have hvPoint : vPoint ∈ baseIntrinsicLine.1 :=
       (mem_baseIntrinsicLine_iff vPoint).mpr hv
-    have hpre : (octImPointPerm g).symm vPoint ∈ baseIntrinsicLine.1 :=
-      (nativeFlagStabilizer_baseLine_mem_iff hg vPoint).mp hvPoint
-    have hpre' := (mem_baseIntrinsicLine_iff _).mp hpre
-    have hmem : (octImAction g⁻¹ v) ∈ nativeBaseLineWitness := by
-      simpa [vPoint, octImPointPerm_apply, octImAction] using hpre'
+    have hpre : octImPointPerm g⁻¹ vPoint ∈ baseIntrinsicLine.1 := by
+      rw [← octImPointPerm_symm]
+      exact (nativeFlagStabilizer_baseLine_mem_iff hg vPoint).mp hvPoint
+    have hmem : (octImAction g⁻¹ v) ∈ nativeBaseLineWitness :=
+      (mem_baseIntrinsicLine_iff _).mp hpre
     refine Finset.mem_image.mpr ⟨octImAction g⁻¹ v, hmem, ?_⟩
     simp [← octImAction_mul, mul_inv_cancel, octImAction_one]
 
@@ -185,9 +192,8 @@ theorem nativeFlagStabilizer_baseLineVector_cases
   rcases hcases with hzero | hone | hsum
   · exfalso
     have hfix := nativeFlagStabilizer_fixes_base_point hg
-    have hfix' : octImAction g nativeBasePoint = nativeBasePoint := by
-      rw [octImPointPerm_apply] at hfix
-      simpa [octImAction] using congrArg Subtype.val hfix
+    have hfix' : octImAction g nativeBasePoint = nativeBasePoint :=
+      congrArg Subtype.val hfix
     have hinj := octImAction_injective g
     have hneq : baseLineVector ≠ nativeBasePoint := by
       intro h

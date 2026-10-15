@@ -33,6 +33,7 @@ open InfoGeometry.Canonical.H3ZornAlgebraicSolderingTransport
 open InfoGeometry.Lie.CanonicalZornDerivation
 open InfoGeometry.Lie.CanonicalZornDerivationDimension
 open InfoGeometry.Lie.SplitOctonionDerivationWittOrthogonalBridge
+open RealAlbertH3ZornCarrierAlignment
 
 abbrev Dv (D : G2Derivation) := canonicalToVectorDerivation D
 
@@ -94,6 +95,7 @@ noncomputable def splitOctEntryEnd (D : G2Derivation) :
     rw [(Dv D).map_add']
     change fromZorn ((Dv D) (toZorn X) + (Dv D) (toZorn Y)) = _
     rw [fromZorn_add_apply]
+    rfl
   map_smul' r X := by
     change fromZorn ((Dv D) (toZorn (r • X))) = _
     rw [toZorn_smul_apply]
@@ -187,7 +189,20 @@ noncomputable def coordinateG2End (D : G2Derivation) :
 
 @[simp] lemma smul_eq_smul (r : ℝ) (X : RealSplitOct) : RealSplitOct.smul r X = r • X := rfl
 
+lemma splitOct_smul_add (r : ℝ) (X Y : RealSplitOct) :
+    r • (X + Y) = r • X + r • Y := by
+  apply RealSplitOct.ext <;> (dsimp [RealSplitOct.smul, RealSplitOct.add]; ring)
+
+@[simp] lemma splitOctEntryEnd_add (D : G2Derivation) (X Y : RealSplitOct) :
+    splitOctEntryEnd D (X + Y) = splitOctEntryEnd D X + splitOctEntryEnd D Y :=
+  (splitOctEntryEnd D).map_add' X Y
+
+@[simp] lemma splitOctEntryEnd_smul (D : G2Derivation) (r : ℝ) (X : RealSplitOct) :
+    splitOctEntryEnd D (r • X) = r • splitOctEntryEnd D X :=
+  (splitOctEntryEnd D).map_smul' r X
+
 @[simp] lemma add_z1 (M₁ M₂ : RealAlbertMatrix) : (M₁ + M₂).z₁ = M₁.z₁ + M₂.z₁ := rfl
+
 @[simp] lemma add_z2 (M₁ M₂ : RealAlbertMatrix) : (M₁ + M₂).z₂ = M₁.z₂ + M₂.z₂ := rfl
 @[simp] lemma add_z3 (M₁ M₂ : RealAlbertMatrix) : (M₁ + M₂).z₃ = M₁.z₃ + M₂.z₃ := rfl
 
@@ -239,31 +254,36 @@ theorem coordinateG2End_is_derivation (D : G2Derivation) :
     linarith
   · change splitOctEntryEnd D (RealAlbertMatrix.mul X Y).z₁ = _
     rw [_root_.rsm_mul_z1]
-    simp only [smul_eq_smul, map_add, map_smul, splitOctEntryEnd_mul,
-      splitOctEntryEnd_conj]
     simp [RealAlbertMatrix.mul, coordinateG2End, add_z1]
-    module
+    rw [← splitOct_smul_add]
+    congr 1
+    simp only [splitOctEntryEnd_mul, splitOctEntryEnd_conj]
+    abel
   · change splitOctEntryEnd D (RealAlbertMatrix.mul X Y).z₂ = _
     rw [_root_.rsm_mul_z2]
-    simp only [smul_eq_smul, map_add, map_smul, splitOctEntryEnd_mul,
-      splitOctEntryEnd_conj]
     simp [RealAlbertMatrix.mul, coordinateG2End, add_z2]
-    module
+    rw [← splitOct_smul_add]
+    congr 1
+    simp only [splitOctEntryEnd_mul, splitOctEntryEnd_conj]
+    abel
   · change splitOctEntryEnd D (RealAlbertMatrix.mul X Y).z₃ = _
     rw [_root_.rsm_mul_z3]
-    simp only [smul_eq_smul, map_add, map_smul, splitOctEntryEnd_mul,
-      splitOctEntryEnd_conj]
     simp [RealAlbertMatrix.mul, coordinateG2End, add_z3]
-    module
+    rw [← splitOct_smul_add]
+    congr 1
+    simp only [splitOctEntryEnd_mul, splitOctEntryEnd_conj]
+    abel
+
+
 
 /-- The inverse of the algebraic soldering is the maintained `fromH3`
 coordinate readback. -/
 @[simp] theorem h3Soldering_symm_apply (X : H3Zorn ℝ) :
     h3Soldering.symm X =
-      RealAlbertH3ZornCarrierAlignment.fromH3 X := by
+      fromH3 X := by
   apply h3Soldering.injective
   rw [h3Soldering.apply_symm_apply, h3Soldering_apply]
-  exact (RealAlbertH3ZornCarrierAlignment.equiv.apply_symm_apply X).symm
+  exact (equiv.apply_symm_apply X).symm
 
 /-- The explicit coordinate action is exactly the existing raw `liftG2End`
 after algebraic soldering. -/
@@ -271,24 +291,20 @@ theorem coordinateG2End_solders (D : G2Derivation) :
     transportCoordinateEnd (coordinateG2End D) = liftG2End D := by
   apply LinearMap.ext
   intro X
+  have htrans : transportCoordinateEnd (coordinateG2End D) X =
+      toH3 (coordinateG2End D (fromH3 X)) := by
+    change h3Soldering (coordinateG2End D (h3Soldering.symm X)) = _
+    rw [h3Soldering_symm_apply, h3Soldering_apply]
+  rw [htrans]
   apply H3Zorn.ext_h3
   · rfl
   · rfl
   · rfl
-  · simp [transportCoordinateEnd, coordinateG2End, h3Soldering_apply,
-      h3Soldering_symm_apply, liftG2End, splitOctEntryEnd,
-      RealAlbertH3ZornCarrierAlignment.fromH3]
-    dsimp [RealAlbertH3ZornCarrierAlignment.toH3]
+  · change toZorn (fromZorn (Dv D (toZorn (fromZorn X.a)))) = Dv D X.a
     rw [toZorn_fromZorn, toZorn_fromZorn]
-  · simp [transportCoordinateEnd, coordinateG2End, h3Soldering_apply,
-      h3Soldering_symm_apply, liftG2End, splitOctEntryEnd,
-      RealAlbertH3ZornCarrierAlignment.fromH3]
-    dsimp [RealAlbertH3ZornCarrierAlignment.toH3]
+  · change toZorn (fromZorn (Dv D (toZorn (fromZorn X.b)))) = Dv D X.b
     rw [toZorn_fromZorn, toZorn_fromZorn]
-  · simp [transportCoordinateEnd, coordinateG2End, h3Soldering_apply,
-      h3Soldering_symm_apply, liftG2End, splitOctEntryEnd,
-      RealAlbertH3ZornCarrierAlignment.fromH3]
-    dsimp [RealAlbertH3ZornCarrierAlignment.toH3]
+  · change toZorn (fromZorn (Dv D (toZorn (fromZorn X.c)))) = Dv D X.c
     rw [toZorn_fromZorn, toZorn_fromZorn]
 
 /-- The formerly conditional compatible G2 subalgebra is the entire native

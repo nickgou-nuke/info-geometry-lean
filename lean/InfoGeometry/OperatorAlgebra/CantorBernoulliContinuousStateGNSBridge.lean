@@ -35,6 +35,8 @@ firewall between the canonical gauge state and the spatial vacuum state:
 -/
 
 noncomputable section
+set_option maxHeartbeats 1600000
+set_option synthInstance.maxHeartbeats 1000000
 
 open scoped ComplexOrder InnerProductSpace
 open Complex ContinuousLinearMap UniformSpace Completion
@@ -52,6 +54,49 @@ open CStarStateColimit.Native
 
 abbrev B := InfoGeometry.OperatorAlgebra.CantorBernoulliCuntzCStarRealization.BoundedL2Operator
 
+local instance ambientPartialOrder : PartialOrder B :=
+  CStarAlgebra.spectralOrder B
+
+local instance ambientStarOrderedRing : StarOrderedRing B :=
+  CStarAlgebra.spectralOrderedRing B
+
+private theorem real_smul_eq_complex (r : ℝ) (A : B) :
+    r • A = (algebraMap ℝ ℂ r) • A := by
+  simpa [Algebra.smul_def] using
+    (IsScalarTower.smul_assoc r (1 : ℂ) A).symm
+
+local instance : SMulCommClass ℝ B B where
+  smul_comm r A C := by
+    rw [real_smul_eq_complex r (A • C), real_smul_eq_complex r C]
+    exact smul_comm (algebraMap ℝ ℂ r) A C
+
+local instance : IsScalarTower ℝ B B where
+  smul_assoc r A C := by
+    rw [real_smul_eq_complex r A, real_smul_eq_complex r (A • C)]
+    exact IsScalarTower.smul_assoc (algebraMap ℝ ℂ r) A C
+
+local instance : NormedSpace ℝ B :=
+  NormedSpace.restrictScalars ℝ ℂ B
+
+local instance : StarModule ℝ B where
+  star_smul r A := by
+    change star ((r : ℂ) • A) = r • star A
+    rw [star_smul]
+    simpa [Complex.star_def] using
+      (real_smul_eq_complex r (star A)).symm
+
+local instance ambientSelfAdjointDecompose : NonUnitalContinuousFunctionalCalculus
+    ℝ B IsSelfAdjoint :=
+  QuasispectrumRestricts.cfc (q := IsStarNormal) (p := IsSelfAdjoint)
+    Complex.reCLM Complex.isometry_ofReal.isClosedEmbedding (.zero _)
+    (fun {a} =>
+      @isSelfAdjoint_iff_isStarNormal_and_quasispectrumRestricts B
+        (inferInstance : TopologicalSpace B) (inferInstance : NonUnitalRing B)
+        (inferInstance : StarRing B) (inferInstance : Module ℂ B)
+        (inferInstance : IsScalarTower ℂ B B)
+        (inferInstance : SMulCommClass ℂ B B)
+        (inferInstance : NonUnitalContinuousFunctionalCalculus ℂ B IsStarNormal) a)
+
 /-!
 ### 1. Annihilator Norm in the Gauge State
 -/
@@ -66,8 +111,14 @@ theorem annihilatorOp_star_mul_self :
     star annihilatorOp * annihilatorOp =
       vLeft * star vLeft - vLeft * star vRight - vRight * star vLeft + vRight * star vRight := by
   dsimp [annihilatorOp]
-  rw [star_sub, star_star, star_star]
-  noncomm_ring
+  rw [star_sub (star vLeft) (star vRight), star_star, star_star]
+  calc
+    (vLeft - vRight) * (star vLeft - star vRight) =
+        vLeft * star vLeft - vRight * star vLeft -
+          (vLeft * star vRight - vRight * star vRight) := by
+      simp only [sub_mul, mul_sub]
+    _ = vLeft * star vLeft - vLeft * star vRight -
+          vRight * star vLeft + vRight * star vRight := by abel
 
 /-- The canonical gauge state value on $A_{\mathrm{ann}}^\dagger A_{\mathrm{ann}}$ on the word level:
     $\varphi(V_0 V_0^\dagger) - \varphi(V_0 V_1^\dagger) - \varphi(V_1 V_0^\dagger) + \varphi(V_1 V_1^\dagger) = 1/2 - 0 - 0 + 1/2 = 1$. -/

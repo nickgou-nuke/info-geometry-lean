@@ -10,7 +10,16 @@ inductive Archetype
   | cocyclicTransport
   | dressedInterference
   | phaseInvariantCommutator
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype Archetype where
+  elems := {Archetype.circularCoefficients, Archetype.phononCAR,
+    Archetype.operatorSplit, Archetype.complexStrength,
+    Archetype.cocyclicTransport, Archetype.dressedInterference,
+    Archetype.phaseInvariantCommutator}
+  complete := by
+    intro x
+    cases x <;> simp
 
 open Archetype
 

@@ -98,7 +98,7 @@ structure SquarefreeMobiusKreinSector where
   SFState : Type*
   Gamma : Type*
   kreinForm : Type*
-  fullCarrierPartialParity : FullMobiusPartialParity
+  fullCarrierPartialParity : FullMobiusPartialParity.{0, 0, 0}
 
 namespace SquarefreeMobiusKreinSector
 
@@ -139,11 +139,11 @@ realification witness records when the realified Tomita operator is identified
 with this Krein polarization.
 -/
 structure DoubledKreinTFDSector where
-  squarefree : SquarefreeMobiusKreinSector
+  squarefree : SquarefreeMobiusKreinSector.{0, 0, 0}
   DirectDoubledCarrier : Type*
   KreinJ : Type*
   Liouvillian : Type*
-  tomitaKreinRealification : TomitaKreinRealificationWitness
+  tomitaKreinRealification : TomitaKreinRealificationWitness.{0, 0, 0, 0, 0, 0}
 
 namespace DoubledKreinTFDSector
 
@@ -260,14 +260,14 @@ Full bridge packet keeping the Hilbert/TFD, Type III modular, and Krein/Möbius
 layers separate but compatible.
 -/
 structure PrimonTFDKreinMobiusBridge (A : Type*) [Monoid A] where
-  bosonicTFD : BosonicPrimonTFDModel
-  squarefreeKrein : SquarefreeMobiusKreinSector
-  doubledKrein : DoubledKreinTFDSector
-  typeIIIModular : TypeIIIModularPrimonSocket A
-  supertraceReadout : MobiusSupertraceReadout
-  duality : TFDKreinSupertraceDuality
-  orbit : HestenesKreinOrbitChannel
-  zetaZeroSocket : WitnessGatedZetaZeroSocket
+  bosonicTFD : BosonicPrimonTFDModel.{0, 0, 0, 0, 0, 0, 0}
+  squarefreeKrein : SquarefreeMobiusKreinSector.{0, 0, 0}
+  doubledKrein : DoubledKreinTFDSector.{0, 0, 0}
+  typeIIIModular : TypeIIIModularPrimonSocket.{_, 0, 0, 0, 0, 0} A
+  supertraceReadout : MobiusSupertraceReadout.{0}
+  duality : TFDKreinSupertraceDuality.{0, 0}
+  orbit : HestenesKreinOrbitChannel.{0, 0, 0, 0}
+  zetaZeroSocket : WitnessGatedZetaZeroSocket.{0, 0}
 
 
 end InfoGeometry.Canonical.PrimonTFDKreinMobiusBridge

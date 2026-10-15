@@ -97,7 +97,11 @@ theorem souriauMassieu_strictlyConvex_along_lines
         (contDiffAt_const (x := t) (n := (1 : WithTop ℕ∞)) (c := (1 : ℝ)))
       have hfrd := hfrapp.differentiableAt
         (by norm_num : (1 : WithTop ℕ∞) ≠ 0)
-      convert hfrd using 1
+      have hfun : (fun x => (fderiv ℝ f x) 1) = deriv f := by
+        funext x
+        exact fderiv_apply_one_eq_deriv
+      rw [← hfun]
+      exact hfrd
     have hg : HasDerivAt (deriv f) (deriv (deriv f) t) t := hfd.hasDerivAt
     have hg0 : HasDerivAt (deriv f) (deriv (deriv f) t) (t + 0) := by
       simpa using hg

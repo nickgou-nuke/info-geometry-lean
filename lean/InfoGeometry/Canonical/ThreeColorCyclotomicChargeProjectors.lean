@@ -17,24 +17,20 @@ open ZornMatrix
 variable {K : Type*} [CommRing K]
 
 private lemma smul_a_coord (c : K) (Z : ZornMatrix K) :
-    (c • Z).a = c * Z.a := by
-  rw [Equiv.smul_def coordEquiv]
-  rfl
+    (c • Z).a = c * Z.a := ZornMatrix.smul_a c Z
 
 private lemma smul_b_coord (c : K) (Z : ZornMatrix K) :
-    (c • Z).b = c * Z.b := by
-  rw [Equiv.smul_def coordEquiv]
-  rfl
+    (c • Z).b = c * Z.b := ZornMatrix.smul_b c Z
 
 private lemma smul_x_coord (c : K) (Z : ZornMatrix K) (i : Fin 3) :
     (c • Z).x i = c * Z.x i := by
-  rw [Equiv.smul_def coordEquiv]
-  rfl
+  rw [ZornMatrix.smul_x]
+  simp
 
 private lemma smul_y_coord (c : K) (Z : ZornMatrix K) (i : Fin 3) :
     (c • Z).y i = c * Z.y i := by
-  rw [Equiv.smul_def coordEquiv]
-  rfl
+  rw [ZornMatrix.smul_y]
+  simp
 
 def cubicCharge (ω : K) : ZornMatrix K →ₗ[K] ZornMatrix K where
   toFun Z :=
@@ -225,13 +221,15 @@ theorem cubicCharge_zero_eigen (ω : K) (Z : ZornMatrix K) :
 
 theorem cubicCharge_plus_eigen (ω : K) (Z : ZornMatrix K) :
     cubicCharge ω (cubicProjectorPlus Z) = ω • cubicProjectorPlus Z := by
-  simpa [cubicCharge, Equiv.smul_def, coordEquiv] using
-    (rfl : cubicCharge ω (cubicProjectorPlus Z) = ω • cubicProjectorPlus Z)
+  ext <;> simp [cubicCharge, cubicProjectorPlus, ZornMatrix.smul_a,
+    ZornMatrix.smul_b, ZornMatrix.smul_x, ZornMatrix.smul_y,
+    Pi.smul_apply, smul_eq_mul]
 
 theorem cubicCharge_minus_eigen (ω : K) (Z : ZornMatrix K) :
     cubicCharge ω (cubicProjectorMinus Z) = (ω ^ 2) • cubicProjectorMinus Z := by
-  simpa [cubicCharge, Equiv.smul_def, coordEquiv] using
-    (rfl : cubicCharge ω (cubicProjectorMinus Z) = (ω ^ 2) • cubicProjectorMinus Z)
+  ext <;> simp [cubicCharge, cubicProjectorMinus, ZornMatrix.smul_a,
+    ZornMatrix.smul_b, ZornMatrix.smul_x, ZornMatrix.smul_y,
+    Pi.smul_apply, smul_eq_mul]
 
 theorem cubicProjectors_sum_eq_id (Z : ZornMatrix K) :
     cubicProjectorZero Z + cubicProjectorPlus Z + cubicProjectorMinus Z = Z := by

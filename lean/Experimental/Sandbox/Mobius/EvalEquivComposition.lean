@@ -12,8 +12,8 @@ lemma mobiusEvalEquiv_comp
     (M1 M2 : InfoGeometry.MobiusTransform) :
     mobiusEvalEquiv (InfoGeometry.comp M1 M2) =
       (mobiusEvalEquiv M2).trans (mobiusEvalEquiv M1) := by
-  ext z
-  exact mobiusEvalEquiv_comp_apply M1 M2 z
+  ext z a
+  simp [mobiusEvalEquiv_comp_apply]
 
 lemma mobiusEvalEquiv_comp_symm_apply
     (M1 M2 : InfoGeometry.MobiusTransform) (z : InfoGeometry.RiemannSphere) :

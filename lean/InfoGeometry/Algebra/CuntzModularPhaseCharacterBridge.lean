@@ -71,7 +71,8 @@ theorem modularPhaseUnit_add (p : ℕ) (s t : ℝ) :
     modularPhaseUnit p (s + t) =
       modularPhaseUnit p s * modularPhaseUnit p t := by
   apply Units.ext
-  simp [modularPhaseUnit, modularPhase_add]
+  change modularPhase p (s + t) = modularPhase p s * modularPhase p t
+  exact modularPhase_add p s t
 
 noncomputable def modularPhaseCharacter (p : ℕ) :
     Multiplicative ℝ →* ℂˣ where

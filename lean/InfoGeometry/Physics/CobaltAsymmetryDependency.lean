@@ -10,7 +10,15 @@ inductive Archetype
   | gammaAnisotropy
   | gammaReflectionInvariance
   | anisotropyCounterexample
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype Archetype where
+  elems := {Archetype.betaModel, Archetype.betaReflectionViolation,
+    Archetype.evenAngularModel, Archetype.gammaAnisotropy,
+    Archetype.gammaReflectionInvariance, Archetype.anisotropyCounterexample}
+  complete := by
+    intro archetype
+    cases archetype <;> simp
 
 open Archetype
 

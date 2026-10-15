@@ -48,24 +48,25 @@ end xi_time_part63b_integer_axis_ellipse_prime_axis_rigidity_data
 theorem paper_xi_time_part63b_integer_axis_ellipse_prime_axis_rigidity
     (D : xi_time_part63b_integer_axis_ellipse_prime_axis_rigidity_data) :
     D.freeProductDecomposition ∧ D.homDeterminedByPrimeAxes ∧ D.realValuedValuationFormula := by
+  have hProduct : D.freeProductDecomposition := by
+    change Omega.Conclusion.primeRegisterNorm
+        (Omega.Conclusion.primeRegisterMul
+          (Omega.Conclusion.primeRegisterOfPNat D.integerAxis)
+          (Omega.Conclusion.primeRegisterOfPNat D.ellipsePrimeAxis)) = _
+    have hmul :=
+      Omega.Conclusion.paper_conclusion_prime_register_ellipse_complete_equivalence.1
+        (Omega.Conclusion.primeRegisterOfPNat D.integerAxis)
+        (Omega.Conclusion.primeRegisterOfPNat D.ellipsePrimeAxis)
+    have hnorm (n : ℕ+) :
+        Omega.Conclusion.primeRegisterNorm (Omega.Conclusion.primeRegisterOfPNat n) = n :=
+      Nat.factorizationEquiv.symm_apply_apply n
+    rw [hmul, hnorm, hnorm]
   refine ⟨?_, ?_, ?_⟩
-  · simp [
-      xi_time_part63b_integer_axis_ellipse_prime_axis_rigidity_data.freeProductDecomposition,
-      xi_time_part63b_integer_axis_ellipse_prime_axis_rigidity_data.primeAxisProductRegister,
-      Omega.Conclusion.primeRegisterMul,
-      Omega.Conclusion.primeRegisterNorm,
-      Omega.Conclusion.primeRegisterOfPNat]
+  · exact hProduct
   · intro r s h
     exact Subtype.ext (Finsupp.ext h)
-  · have hProduct : D.freeProductDecomposition := by
-      simp [
-        xi_time_part63b_integer_axis_ellipse_prime_axis_rigidity_data.freeProductDecomposition,
-        xi_time_part63b_integer_axis_ellipse_prime_axis_rigidity_data.primeAxisProductRegister,
-        Omega.Conclusion.primeRegisterMul,
-        Omega.Conclusion.primeRegisterNorm,
-        Omega.Conclusion.primeRegisterOfPNat]
-    simpa [
+  · rw [
       xi_time_part63b_integer_axis_ellipse_prime_axis_rigidity_data.realValuedValuationFormula]
-      using congrArg (fun n : ℕ+ => ((n : ℕ) : ℝ)) hProduct
+    exact_mod_cast hProduct
 
 end Omega.Zeta

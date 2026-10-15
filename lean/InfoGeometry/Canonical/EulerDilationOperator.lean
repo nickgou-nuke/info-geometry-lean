@@ -47,7 +47,7 @@ def eulerDilationLinear : Polynomial ℂ →ₗ[ℂ] Polynomial ℂ where
   map_add' p q := by
     simp [eulerDilation, Polynomial.derivative_add, mul_add]
   map_smul' c p := by
-    simp [eulerDilation, Polynomial.derivative_smul, mul_smul]
+    simp [eulerDilation]
 
 theorem eulerDilationLinear_eq_position_comp_momentum :
     eulerDilationLinear = positionLinear.comp momentumLinear := by
@@ -81,7 +81,7 @@ theorem symmetricXPDilation_eq_eulerDilation_add_half (p : Polynomial ℂ) :
 theorem eulerDilation_mul (p q : Polynomial ℂ) :
     eulerDilation (p * q) =
       eulerDilation p * q + p * eulerDilation q := by
-  simp [eulerDilation, Polynomial.derivative_mul, mul_add, mul_assoc,
+  simp [eulerDilation, Polynomial.derivative_mul, mul_add,
     mul_left_comm, mul_comm]
 
 @[simp] theorem eulerDilation_add (p q : Polynomial ℂ) :
@@ -90,7 +90,7 @@ theorem eulerDilation_mul (p q : Polynomial ℂ) :
 
 @[simp] theorem eulerDilation_smul (c : ℂ) (p : Polynomial ℂ) :
     eulerDilation (c • p) = c • eulerDilation p := by
-  simp [eulerDilation, Polynomial.derivative_smul, mul_smul]
+  simp [eulerDilation]
 
 /-! ## 3. Critical line shift from symmetric quantization -/
 

@@ -113,6 +113,12 @@ class BuildLock:
         finally:
             handle.close()
 
+    def fileno(self) -> int:
+        """Descriptor to inherit into a child that must retain this lock."""
+        if self._handle is None:
+            raise RuntimeError("build lock is not acquired")
+        return self._handle.fileno()
+
     def __enter__(self) -> "BuildLock":
         return self.acquire()
 

@@ -14,4 +14,4 @@ jobs:
       - uses: actions/checkout@v4
       - uses: leanprover/lean-action@v1
       - name: Build focused owner
-        run: lake build InfoGeometry.Algebra.Zorn.G2NativeRootIndexAlignment
+        run: python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock InfoGeometry.Algebra.Zorn.G2NativeRootIndexAlignment

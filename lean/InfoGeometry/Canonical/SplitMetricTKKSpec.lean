@@ -92,9 +92,11 @@ theorem splitOctonionMetric_finrank :
     Module.finrank ℝ splitOctonionTKKMetric.V = 10 := by
   exact carrier_finrank
 
-structure SplitMetricLieAlgebra (R : Type*) [CommRing R] where
-  metric : SplitMetricSpace R
-  L : Type*
+universe uR uV uL
+
+structure SplitMetricLieAlgebra (R : Type uR) [CommRing R] where
+  metric : SplitMetricSpace.{uR, uV} R
+  L : Type uL
   [lieRing : LieRing L]
   [addGroup : AddCommGroup L]
   [module : Module R L]
@@ -137,7 +139,14 @@ structure SplitMetricTKK (R : Type*) [CommRing R]
   bracket_eq_zero_none : ∀ {i j : TKKGrade}, gradeAdd i j = none →
     ∀ {x y : L}, x ∈ grade i → y ∈ grade j → ⁅x, y⁆ = 0
 
-attribute [instance] SplitMetricTKK.toLie
+instance {R : Type uR} [CommRing R] (S : SplitMetricTKK R) :
+    LieRing S.L := S.toLie.lieRing
+instance {R : Type uR} [CommRing R] (S : SplitMetricTKK R) :
+    AddCommGroup S.L := S.toLie.addGroup
+instance {R : Type uR} [CommRing R] (S : SplitMetricTKK R) :
+    Module R S.L := S.toLie.module
+instance {R : Type uR} [CommRing R] (S : SplitMetricTKK R) :
+    LieAlgebra R S.L := S.toLie.lieAlgebra
 
 structure TKKRealization {R : Type*} [CommRing R]
     (S M : SplitMetricTKK R) where

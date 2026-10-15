@@ -1,5 +1,4 @@
 import InfoGeometry.Canonical.HestenesPauliSheetBridgeFinite
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.CliffordAlgebra.Contraction
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Grading
 import Mathlib.LinearAlgebra.ExteriorPower.Basis
@@ -55,7 +54,10 @@ def evenOddLinearEquiv :
   toFun x := ⟨x.1 * gamma 0, by
     simpa using SetLike.mul_mem_graded x.2 gamma_zero_mem_odd⟩
   invFun x := ⟨x.1 * gamma 0, by
-    simpa using SetLike.mul_mem_graded x.2 gamma_zero_mem_odd⟩
+    have h := SetLike.mul_mem_graded x.2 gamma_zero_mem_odd
+    have h1 : (1 : ZMod 2) + 1 = 0 := by decide
+    rw [h1] at h
+    exact h⟩
   left_inv x := by
     apply Subtype.ext
     simp [mul_assoc]

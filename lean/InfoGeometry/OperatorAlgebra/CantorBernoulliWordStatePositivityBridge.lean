@@ -1,6 +1,6 @@
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import InfoGeometry.OperatorAlgebra.CantorBernoulliGaugeStateBridge
 import InfoGeometry.OperatorAlgebra.CuntzCanonicalGaugeGNSState
 
@@ -67,15 +67,8 @@ theorem wordSumGaugeExpectation_eq_diagonal_sum (n : ℕ) (c : BitWord n → ℂ
   rfl
 
 theorem star_mul_self_eq_normSq (z : ℂ) : z† * z = ((normSq z : ℝ) : ℂ) := by
-  have hre : (z† * z).re = normSq z := by
-    dsimp [star, normSq]
-    ring
-  have him : (z† * z).im = 0 := by
-    dsimp [star]
-    ring
-  apply Complex.ext
-  · rw [hre, Complex.ofReal_re]
-  · rw [him, Complex.ofReal_im]
+  rw [mul_comm]
+  exact Complex.mul_conj z
 
 /-- 🏆 THEOREM 2 (Real Cast Identity):
     The gauge expectation evaluates exactly to the real non-negative quantity. -/

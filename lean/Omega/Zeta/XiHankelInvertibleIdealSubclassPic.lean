@@ -1,4 +1,4 @@
-import Mathlib.RingTheory.ClassGroup
+import Mathlib.RingTheory.ClassGroup.Basic
 import Mathlib.Tactic
 
 namespace Omega.Zeta
@@ -36,7 +36,7 @@ fractional-ideal representatives maps to that class. -/
 def xi_hankel_invertible_ideal_subclass_pic_picard_nonnegativeCriterion
     {R K : Type*} [CommRing R] [IsDomain R] [Field K] [Algebra R K] [IsFractionRing R K]
     (criterion : (FractionalIdeal R⁰ K)ˣ → Prop) (C : ClassGroup R) : Prop :=
-  ∃ I : (FractionalIdeal R⁰ K)ˣ, ClassGroup.mk I = C ∧ criterion I
+  ∃ I : (FractionalIdeal R⁰ K)ˣ, ClassGroup.mk K I = C ∧ criterion I
 
 /-- Paper label: `cor:xi-hankel-invertible-ideal-subclass-pic`.
 The invertible full-lattice subclass, modeled by invertible fractional ideals modulo scalar
@@ -60,12 +60,35 @@ theorem paper_xi_hankel_invertible_ideal_subclass_pic
     constructor
     · rintro ⟨I, hI, hcriterion⟩
       refine ⟨I, ?_, hcriterion⟩
-      simpa [xi_hankel_invertible_ideal_subclass_pic_principal_scalings] using
-        congrArg (ClassGroup.equiv K) hI
+      have hmk : ClassGroup.equiv K (ClassGroup.mk K I) =
+          QuotientGroup.mk'
+            (xi_hankel_invertible_ideal_subclass_pic_principal_scalings R K) I := by
+        simp only [ClassGroup.equiv_mk, FractionalIdeal.canonicalEquiv_self,
+          RingEquiv.coe_mulEquiv_refl,
+          xi_hankel_invertible_ideal_subclass_pic_principal_scalings]
+        have hmap : Units.mapEquiv (MulEquiv.refl (FractionalIdeal R⁰ K)) I = I := by
+          apply Units.ext
+          rfl
+        rw [hmap]
+        rfl
+      rw [← hmk]
+      exact congrArg (ClassGroup.equiv K) hI
     · rintro ⟨I, hI, hcriterion⟩
       refine ⟨I, ?_, hcriterion⟩
       apply (ClassGroup.equiv K).injective
-      simpa [xi_hankel_invertible_ideal_subclass_pic_principal_scalings] using hI
+      have hmk : ClassGroup.equiv K (ClassGroup.mk K I) =
+          QuotientGroup.mk'
+            (xi_hankel_invertible_ideal_subclass_pic_principal_scalings R K) I := by
+        simp only [ClassGroup.equiv_mk, FractionalIdeal.canonicalEquiv_self,
+          RingEquiv.coe_mulEquiv_refl,
+          xi_hankel_invertible_ideal_subclass_pic_principal_scalings]
+        have hmap : Units.mapEquiv (MulEquiv.refl (FractionalIdeal R⁰ K)) I = I := by
+          apply Units.ext
+          rfl
+        rw [hmap]
+        rfl
+      rw [hmk]
+      exact hI
 
 end
 

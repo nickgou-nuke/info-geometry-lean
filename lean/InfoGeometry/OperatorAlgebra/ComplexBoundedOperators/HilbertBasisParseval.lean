@@ -12,11 +12,12 @@ noncomputable section
 
 open scoped InnerProductSpace
 open scoped BigOperators
+open scoped lp
 
 namespace InfoGeometry.OperatorAlgebra.ComplexBoundedOperators
 namespace HilbertBasisParseval
 
-variable {ι E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
+variable {ι E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
 
 theorem hilbertBasis_hasSum_repr (b : HilbertBasis ι ℂ E) (x : E) :
     HasSum (fun i => b.repr x i • b i) x :=

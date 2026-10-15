@@ -35,11 +35,15 @@ Gromov-Witten fixed-sector Drazin localization packet.  The only exported
 facts are direct Drazin residue annihilation and the Frobenius associativity
 already carried by the localized Frobenius packet.
 -/
-structure LocalizedDrazinFrobeniusBridge
-    (G T Target Coeff Algebra ModuliOperator : Type*) [Ring Algebra] [StarRing Algebra] where
+structure LocalizedDrazinFrobeniusBridge.{uG, uT, uTarget, uCoeff, uAlgebra,
+    uModuliOperator, uDivisor, uBlock, uDivision, uProjection}
+    (G : Type uG) (T : Type uT) (Target : Type uTarget) (Coeff : Type uCoeff)
+    (Algebra : Type uAlgebra) (ModuliOperator : Type uModuliOperator)
+    [Ring Algebra] [StarRing Algebra] where
   /-- Existing GW fixed-sector Drazin localization data. -/
   gwDrazin :
-    @DrazinGromovWittenLocalizationBridge G T Target Coeff Algebra _ _
+    DrazinGromovWittenLocalizationBridge.{uG, uT, uTarget, uCoeff, uAlgebra,
+      uDivisor, uBlock, uDivision, uProjection} G T Target Coeff Algebra
 
   /-- The model-specific Fredholm/localization operator. -/
   fredholmOperator : ModuliOperator

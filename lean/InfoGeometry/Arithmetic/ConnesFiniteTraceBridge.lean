@@ -38,7 +38,7 @@ theorem permutationTrace_eq_fixedPointCount (σ : Equiv.Perm X) :
   simp [permutationTrace, fixedPointCount]
 
 theorem permutationTrace_one :
-    permutationTrace (Equiv.refl X) = (Fintype.card X : ℂ) := by
+    permutationTrace (1 : Equiv.Perm X) = (Fintype.card X : ℂ) := by
   simp [permutationTrace]
 
 section Action

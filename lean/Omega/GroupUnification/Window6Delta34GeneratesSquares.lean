@@ -133,25 +133,40 @@ private theorem nat34_pow_154 : 34 ^ 154 ≡ 144 [MOD 571] := by
       exact ((nat34_pow_128.mul nat34_pow_16).mul nat34_pow_8).mul nat34_pow_2
     _ ≡ 144 [MOD 571] := by norm_num [Nat.ModEq]
 
+private theorem natCast34_eq_zmod34 : ((34 : ℕ) : ZMod 571) = (34 : ZMod 571) := by
+  norm_num
+
 private theorem zmod34_pow_285 : (34 : ZMod 571) ^ 285 = 1 := by
   have hcast : ((34 ^ 285 : ℕ) : ZMod 571) = 1 :=
     (ZMod.natCast_eq_natCast_iff _ _ _).2 nat34_pow_285
-  simpa only [Nat.cast_pow] using hcast
+  have hpow : ((34 : ℕ) : ZMod 571) ^ 285 = 1 := by
+    simpa only [Nat.cast_pow] using hcast
+  rw [natCast34_eq_zmod34] at hpow
+  exact hpow
 
 private theorem zmod34_pow_95 : (34 : ZMod 571) ^ 95 = 461 := by
   have hcast : ((34 ^ 95 : ℕ) : ZMod 571) = 461 :=
     (ZMod.natCast_eq_natCast_iff _ _ _).2 nat34_pow_95
-  simpa only [Nat.cast_pow] using hcast
+  have hpow : ((34 : ℕ) : ZMod 571) ^ 95 = 461 := by
+    simpa only [Nat.cast_pow] using hcast
+  rw [natCast34_eq_zmod34] at hpow
+  exact hpow
 
 private theorem zmod34_pow_57 : (34 : ZMod 571) ^ 57 = 387 := by
   have hcast : ((34 ^ 57 : ℕ) : ZMod 571) = 387 :=
     (ZMod.natCast_eq_natCast_iff _ _ _).2 nat34_pow_57
-  simpa only [Nat.cast_pow] using hcast
+  have hpow : ((34 : ℕ) : ZMod 571) ^ 57 = 387 := by
+    simpa only [Nat.cast_pow] using hcast
+  rw [natCast34_eq_zmod34] at hpow
+  exact hpow
 
 private theorem zmod34_pow_15 : (34 : ZMod 571) ^ 15 = 55 := by
   have hcast : ((34 ^ 15 : ℕ) : ZMod 571) = 55 :=
     (ZMod.natCast_eq_natCast_iff _ _ _).2 nat34_pow_15
-  simpa only [Nat.cast_pow] using hcast
+  have hpow : ((34 : ℕ) : ZMod 571) ^ 15 = 55 := by
+    simpa only [Nat.cast_pow] using hcast
+  rw [natCast34_eq_zmod34] at hpow
+  exact hpow
 
 /-- The residue `55` is the fifteenth power of the certified order-285 unit `34`. -/
 theorem delta34_pow15_eq_55 : (34 : ZMod 571) ^ 15 = 55 := zmod34_pow_15
@@ -160,7 +175,10 @@ theorem delta34_pow15_eq_55 : (34 : ZMod 571) ^ 15 = 55 := zmod34_pow_15
 theorem delta34_pow154_eq_144 : (34 : ZMod 571) ^ 154 = 144 := by
   have hcast : ((34 ^ 154 : ℕ) : ZMod 571) = 144 :=
     (ZMod.natCast_eq_natCast_iff _ _ _).2 nat34_pow_154
-  simpa only [Nat.cast_pow] using hcast
+  have hpow : ((34 : ℕ) : ZMod 571) ^ 154 = 144 := by
+    simpa only [Nat.cast_pow] using hcast
+  rw [natCast34_eq_zmod34] at hpow
+  exact hpow
 
 private theorem order_delta34Unit571 :
     orderOf delta34Unit571 = 285 := by

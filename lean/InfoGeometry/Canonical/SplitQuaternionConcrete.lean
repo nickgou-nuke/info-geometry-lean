@@ -1,5 +1,4 @@
 import Mathlib.Tactic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 set_option autoImplicit false
 
@@ -133,7 +132,7 @@ theorem norm_eq_det (q : SplitQuaternion) :
   ring
 
 theorem fromMatrix_toMatrix (q : SplitQuaternion) : fromMatrix (toMatrix q) = q := by
-  ext <;> simp [fromMatrix, toMatrix] <;> ring
+  ext <;> dsimp [fromMatrix, toMatrix] <;> ring
 
 theorem toMatrix_fromMatrix (A : Matrix (Fin 2) (Fin 2) ℝ) : toMatrix (fromMatrix A) = A := by
   ext i j
@@ -260,7 +259,8 @@ noncomputable def splitQuaternionGL2Equiv :
   map_mul' := by
     intro a b
     apply Units.ext
-    simpa [IsUnit.unit_spec] using toMatrix_mul_matrix a.1 b.1
+    simp only [IsUnit.unit_spec]
+    exact toMatrix_mul_matrix a.1 b.1
 
 /- #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES -/
 

@@ -1,4 +1,8 @@
 import Mathlib.Analysis.CStarAlgebra.GelfandNaimarkSegal
+import Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.PosPart.Basic
+import Mathlib.Analysis.InnerProductSpace.Positive
+import Mathlib.Analysis.InnerProductSpace.StarOrder
+import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Instances
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.CantorBernoulliKMSStateBridge
 import InfoGeometry.Canonical.CStarAlgebraStateColimit
@@ -26,6 +30,42 @@ open InfoGeometry.OperatorAlgebra.CantorBernoulliKMSStateBridge
 open CStarStateColimit.Native
 
 abbrev B := BoundedL2Operator
+
+private theorem real_smul_eq_complex (r : ℝ) (A : B) :
+    r • A = (algebraMap ℝ ℂ r) • A := by
+  simpa [Algebra.smul_def] using
+    (IsScalarTower.smul_assoc r (1 : ℂ) A).symm
+
+local instance : SMulCommClass ℝ B B where
+  smul_comm r A C := by
+    rw [real_smul_eq_complex r (A • C), real_smul_eq_complex r C]
+    exact smul_comm (algebraMap ℝ ℂ r) A C
+
+local instance : IsScalarTower ℝ B B where
+  smul_assoc r A C := by
+    rw [real_smul_eq_complex r A, real_smul_eq_complex r (A • C)]
+    exact IsScalarTower.smul_assoc (algebraMap ℝ ℂ r) A C
+
+local instance : NormedSpace ℝ B :=
+  NormedSpace.restrictScalars ℝ ℂ B
+
+local instance : StarModule ℝ B where
+  star_smul r A := by
+    change star ((r : ℂ) • A) = r • star A
+    rw [star_smul]
+    simpa [Complex.star_def] using
+      (real_smul_eq_complex r (star A)).symm
+
+local instance : NonUnitalContinuousFunctionalCalculus ℝ B IsSelfAdjoint :=
+  QuasispectrumRestricts.cfc (q := IsStarNormal) (p := IsSelfAdjoint)
+    Complex.reCLM Complex.isometry_ofReal.isClosedEmbedding (.zero _)
+    (fun {a} =>
+      @isSelfAdjoint_iff_isStarNormal_and_quasispectrumRestricts B
+        (inferInstance : TopologicalSpace B) (inferInstance : NonUnitalRing B)
+        (inferInstance : StarRing B) (inferInstance : Module ℂ B)
+        (inferInstance : IsScalarTower ℂ B B)
+        (inferInstance : SMulCommClass ℂ B B)
+        (inferInstance : NonUnitalContinuousFunctionalCalculus ℂ B IsStarNormal) a)
 
 def spatialFunctional : B →ₗ[ℂ] ℂ where
   toFun := cantorVacuumState

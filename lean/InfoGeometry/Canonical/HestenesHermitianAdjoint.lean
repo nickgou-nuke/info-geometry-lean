@@ -22,12 +22,22 @@ abbrev EvenAlgebra := ClPlus14
 def hestenesAdjoint (x : EvenAlgebra) : EvenAlgebra :=
   ⟨gamma 0 * (reverseEven x : Algebra) * gamma 0, by
     have hodd : gamma 0 ∈ CliffordAlgebra.evenOdd Q14 1 := gamma_zero_mem_odd
-    have heven : (reverseEven x : Algebra) ∈ CliffordAlgebra.evenOdd Q14 0 :=
-      (CliffordAlgebra.reverse_mem_evenOdd_iff (Q := Q14)).2 x.2
-    have hleft : gamma 0 * (reverseEven x : Algebra) ∈
-        CliffordAlgebra.evenOdd Q14 (1 + 0) :=
-      SetLike.mul_mem_graded hodd heven
-    simpa using SetLike.mul_mem_graded hleft hodd⟩
+    have heven : (reverseEven x : Algebra) ∈ CliffordAlgebra.evenOdd Q14 0 := by
+      rw [← CliffordAlgebra.even_toSubmodule]
+      exact (reverseEven x).2
+    have hleft : gamma 0 * (reverseEven x : Algebra) ∈ CliffordAlgebra.evenOdd Q14 1 := by
+      have h := SetLike.mul_mem_graded hodd heven
+      have h1 : (1 : ZMod 2) + 0 = 1 := by decide
+      simpa only [h1] using h
+    have hprod : gamma 0 * (reverseEven x : Algebra) * gamma 0 ∈ CliffordAlgebra.evenOdd Q14 0 := by
+      have h := SetLike.mul_mem_graded hleft hodd
+      have h2 : (1 : ZMod 2) + 1 = 0 := by decide
+      rw [h2] at h
+      exact h
+    change gamma 0 * (reverseEven x : Algebra) * gamma 0 ∈
+        Subalgebra.toSubmodule (CliffordAlgebra.even Q14)
+    rw [CliffordAlgebra.even_toSubmodule]
+    exact hprod⟩
 
 def hestenesKreinAdjoint (x : EvenAlgebra) : EvenAlgebra :=
   sigmaEven 0 * hestenesAdjoint x * sigmaEven 0

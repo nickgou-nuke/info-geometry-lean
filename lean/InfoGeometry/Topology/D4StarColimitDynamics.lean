@@ -5,10 +5,12 @@ import InfoGeometry.Topology.ContinuousModularFlowQuotientDescent
 
 namespace InfoGeometry.Topology.ColimitDynamics
 
+universe uJ vJ uX
+
 open CategoryTheory Limits
 open InfoGeometry.Topology.ContinuousQuotientDescent
 
-variable {J : Type*} [Category J]
+variable {J : Type uJ} [Category.{vJ, uJ} J]
 
 /-!
 # Colimit dynamics and stationary observational readouts
@@ -22,7 +24,7 @@ structure is asserted here.
 -/
 
 structure TopologicalDiscreteFlowSystem where
-  carrier : J ⥤ TopCat
+  carrier : J ⥤ TopCat.{uX}
   flow : ∀ j, ℤ → (carrier.obj j ⟶ carrier.obj j)
   flow_zero : ∀ j, flow j 0 = 𝟙 (carrier.obj j)
   flow_add : ∀ (j : J) (s t : ℤ),

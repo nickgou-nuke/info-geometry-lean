@@ -260,7 +260,9 @@ theorem RealSplitCl11Action.eps_is_cartan (X : RealSplitCl11Action H) :
   let Pp := plusProjector X
   let Pm := minusProjector X
   have hsum : Pp + Pm = IdH := plusProjector_add_minusProjector X
-  have hsum1 : Pp + Pm = (1 : EndH) := by simpa using hsum
+  have hsum1 : Pp + Pm = (1 : EndH) := by
+    change Pp + Pm = IdH
+    exact hsum
   calc
     A = (1 : EndH) * A * (1 : EndH) := by simp
     _ = (Pp + Pm) * A * (1 : EndH) := by rw [hsum1]

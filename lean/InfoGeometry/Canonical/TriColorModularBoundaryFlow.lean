@@ -24,23 +24,30 @@ theorem modularBoostSlice_norm (e : ZornVec3 ℝ) (he : ZornVec3.dot e e = 1) (s
     ZornVectorMatrix.norm (modularBoostSlice e s) = 1 := by
   unfold modularBoostSlice
   rw [localZornSlice_norm_eq_det e he]
-  simp [modularBoostSlice, localZornMatrix, Matrix.det_fin_two, Real.exp_neg]
+  rw [Matrix.det_fin_two]
+  simp [localZornMatrix, Real.exp_neg]
+
+theorem modularBoostLocalSlice_norm
+    (e : ZornVec3 ℝ) (he : ZornVec3.dot e e = 1) (s : ℝ) :
+    ZornVectorMatrix.norm (localZornSlice e (Real.exp s) (Real.exp (-s)) 0 0) = 1 := by
+  change ZornVectorMatrix.norm (modularBoostSlice e s) = 1
+  exact modularBoostSlice_norm e he s
 
 /-- The projective boundary flows for each color sector. -/
 noncomputable def redBoundaryFlow (s : ℝ) : RealProjectiveBoundary → RealProjectiveBoundary :=
   localZornSliceProjectiveAction redDir redDir_norm
     (Real.exp s) (Real.exp (-s)) 0 0
-    (modularBoostSlice_norm redDir redDir_norm s)
+    (modularBoostLocalSlice_norm redDir redDir_norm s)
 
 noncomputable def greenBoundaryFlow (s : ℝ) : RealProjectiveBoundary → RealProjectiveBoundary :=
   localZornSliceProjectiveAction greenDir greenDir_norm
     (Real.exp s) (Real.exp (-s)) 0 0
-    (modularBoostSlice_norm greenDir greenDir_norm s)
+    (modularBoostLocalSlice_norm greenDir greenDir_norm s)
 
 noncomputable def blueBoundaryFlow (s : ℝ) : RealProjectiveBoundary → RealProjectiveBoundary :=
   localZornSliceProjectiveAction blueDir blueDir_norm
     (Real.exp s) (Real.exp (-s)) 0 0
-    (modularBoostSlice_norm blueDir blueDir_norm s)
+    (modularBoostLocalSlice_norm blueDir blueDir_norm s)
 
 theorem red_modularBoundaryFlow_eq_common (s : ℝ) :
     redBoundaryFlow s = modularBoostProjectiveAction s := by

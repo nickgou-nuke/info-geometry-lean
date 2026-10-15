@@ -52,7 +52,8 @@ noncomputable def constantThermodynamicPotential (c : ℝ) : ThermodynamicPotent
 /-- A constant thermodynamic potential has zero gauge connection. -/
 theorem thermodynamicGaugeConnection_constant (c : ℝ) (x : M) :
     thermodynamicGaugeConnection (constantThermodynamicPotential (M := M) c) x = 0 := by
-  simp [thermodynamicGaugeConnection, constantThermodynamicPotential]
+  change mfderiv 𝓘(ℝ, ℝ × ℝ) 𝓘(ℝ, ℝ) (fun _ : M => c) x = 0
+  rw [mfderiv_const]
 
 /-- Constant log-partition potentials satisfy the concrete closed-connection predicate. -/
 theorem isClosedGaugeConnection_constant (c : ℝ) :

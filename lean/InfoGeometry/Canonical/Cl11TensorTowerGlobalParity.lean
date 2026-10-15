@@ -22,7 +22,9 @@ theorem globalChirality_anticomm_jwCreation :
       by_cases h : (k : ℕ) < n
       · let k' : Fin n := ⟨k, h⟩
         have ih := globalChirality_anticomm_jwCreation n k'
-        simp only [globalChirality, jwCreation, jwStringWithBase, h]
+        have hk : k = k'.castSucc := Fin.ext rfl
+        rw [hk]
+        simp [globalChirality, jwCreation, jwStringWithBase]
         change (kronPow gamma_chiral_base n ⊗ₖ gamma_chiral_base) *
             ((jwStringWithBase wittCreationBase n k') ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℝ)) +
           ((jwStringWithBase wittCreationBase n k') ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℝ)) *
@@ -30,7 +32,7 @@ theorem globalChirality_anticomm_jwCreation :
         rw [← Matrix.mul_kronecker_mul, ← Matrix.mul_kronecker_mul]
         simp only [mul_one, one_mul]
         rw [← Matrix.add_kronecker]
-        simpa [globalChirality] using
+        simpa [globalChirality, jwCreation] using
           congrArg (fun A : MatStage n => A ⊗ₖ gamma_chiral_base) ih
       · have hk_eq : k = Fin.last n := Fin.eq_last_of_not_lt h
         subst k
@@ -58,7 +60,9 @@ theorem globalChirality_anticomm_jwAnnihilation :
       by_cases h : (k : ℕ) < n
       · let k' : Fin n := ⟨k, h⟩
         have ih := globalChirality_anticomm_jwAnnihilation n k'
-        simp only [globalChirality, jwAnnihilation, jwStringWithBase, h]
+        have hk : k = k'.castSucc := Fin.ext rfl
+        rw [hk]
+        simp [globalChirality, jwAnnihilation, jwStringWithBase]
         change (kronPow gamma_chiral_base n ⊗ₖ gamma_chiral_base) *
             ((jwStringWithBase wittAnnihilationBase n k') ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℝ)) +
           ((jwStringWithBase wittAnnihilationBase n k') ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℝ)) *
@@ -66,7 +70,7 @@ theorem globalChirality_anticomm_jwAnnihilation :
         rw [← Matrix.mul_kronecker_mul, ← Matrix.mul_kronecker_mul]
         simp only [mul_one, one_mul]
         rw [← Matrix.add_kronecker]
-        simpa [globalChirality] using
+        simpa [globalChirality, jwAnnihilation] using
           congrArg (fun A : MatStage n => A ⊗ₖ gamma_chiral_base) ih
       · have hk_eq : k = Fin.last n := Fin.eq_last_of_not_lt h
         subst k

@@ -95,7 +95,7 @@ theorem phaseConjugate_eq_inv_of_norm_one {z : ℂ} (hz : ‖z‖ = 1) :
     norm_num at hz
   apply mul_left_cancel₀ hz0
   rw [mul_inv_cancel₀ hz0]
-  simpa [Complex.star_def, Complex.normSq_eq_norm_sq, hz] using
+  simpa [phaseConjugate, Complex.star_def, Complex.normSq_eq_norm_sq, hz] using
     (Complex.mul_conj z)
 
 /-- Complex Nambu-style amplitudes indexed by the repository-owned Andreev channels. -/

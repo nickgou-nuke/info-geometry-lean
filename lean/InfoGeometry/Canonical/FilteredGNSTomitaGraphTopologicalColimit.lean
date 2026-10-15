@@ -174,8 +174,8 @@ def graphToDomainCocone :
 
 noncomputable def graphToDomainTopologicalColimitMap :
     graphTopologicalColimit Stage sys ω ⟶
-      TopCat.of (CStarStateColimit.Native.FilteredGNSTomitaDomainTopologicalColimit.topologicalColimit
-        Stage sys ω) :=
+      CStarStateColimit.Native.FilteredGNSTomitaDomainTopologicalColimit.topologicalColimit
+        Stage sys ω :=
   topologicalDirectDescend (graphTopologicalDiagram Stage sys ω)
     (graphToDomainCocone Stage sys ω)
 
@@ -232,15 +232,7 @@ def domainToGlobalHilbertCocone :
       TopCat.ofHom (domainStageToGlobalHilbertContinuousMap Stage sys ω i)
     naturality := by
       intro i j f
-      apply TopCat.hom_ext
-      apply ContinuousMap.ext
-      intro x
-      rw [TopCat.comp_app]
-      change
-        gnsStageToHilbertColimit Stage sys ω j
-            (filteredClosedTomitaDomainMap Stage sys ω (leOfHom f) x).1 =
-          gnsStageToHilbertColimit Stage sys ω i x.1
-      rw [filteredClosedTomitaDomainMap_apply]
+      ext x
       exact gnsStageToHilbertColimit_transition Stage sys ω
         (leOfHom f) x.1 }
 
@@ -321,10 +313,7 @@ def graphSecondToGlobalHilbertCocone :
       TopCat.ofHom (graphSecondToGlobalHilbertContinuousMap Stage sys ω i)
     naturality := by
       intro i j f
-      apply TopCat.hom_ext
-      apply ContinuousMap.ext
-      intro p
-      rw [TopCat.comp_app]
+      ext p
       change
         gnsStageToHilbertColimit Stage sys ω j
             (filteredGNSPairMap Stage sys ω (leOfHom f) p.1).2 =
@@ -382,10 +371,7 @@ def graphFirstToGlobalHilbertCocone :
       TopCat.ofHom (graphFirstToGlobalHilbertContinuousMap Stage sys ω i)
     naturality := by
       intro i j f
-      apply TopCat.hom_ext
-      apply ContinuousMap.ext
-      intro p
-      rw [TopCat.comp_app]
+      ext p
       change
         gnsStageToHilbertColimit Stage sys ω j
             (filteredGNSPairMap Stage sys ω (leOfHom f) p.1).1 =
@@ -544,7 +530,7 @@ def graphTopologicalColimitToGlobalGraphCarrier :
   rfl
 
 def graphTopologicalColimitToGlobalGraphCarrierTopCatHom :
-    TopCat.of (graphTopologicalColimit Stage sys ω) ⟶
+    graphTopologicalColimit Stage sys ω ⟶
       TopCat.of (globalTomitaGraphCarrier Stage sys ω) :=
   TopCat.ofHom
     (graphTopologicalColimitToGlobalGraphCarrier Stage sys ω)
@@ -583,18 +569,11 @@ theorem graphTopologicalColimitToGlobalGraphCarrier_val_eq_pair :
     graphTopologicalColimitToGlobalGraphCarrierTopCatHom Stage sys ω ≫
         globalTomitaGraphCarrierValTopCatHom Stage sys ω =
       graphTopologicalColimitToGlobalPair Stage sys ω := by
-  apply colimit.hom_ext
-  intro i
-  apply TopCat.hom_ext
-  apply ContinuousMap.ext
-  intro p
-  change
-    (graphTopologicalColimitToGlobalGraphCarrier Stage sys ω
-      (graphTopologicalInjection Stage sys ω i p)).1 =
-      graphTopologicalColimitToGlobalPair Stage sys ω
-        (graphTopologicalInjection Stage sys ω i p)
+  apply graphTopologicalColimitToGlobalPair_unique
+  intro i p
+  change (graphTopologicalColimitToGlobalGraphCarrier Stage sys ω
+    (graphTopologicalInjection Stage sys ω i p)).1 = _
   rw [graphTopologicalColimitToGlobalGraphCarrier_stage]
-  rw [graphTopologicalColimitToGlobalPair_stage]
 
 def globalTomitaGraphCarrierToDomainTopCatHom :
     TopCat.of (globalTomitaGraphCarrier Stage sys ω) ⟶
@@ -602,7 +581,7 @@ def globalTomitaGraphCarrierToDomainTopCatHom :
   TopCat.ofHom (globalTomitaGraphCarrierToDomain Stage sys ω)
 
 def graphTopologicalColimitToGlobalDomainCarrierTopCatHom :
-    TopCat.of (graphTopologicalColimit Stage sys ω) ⟶
+    graphTopologicalColimit Stage sys ω ⟶
       TopCat.of (globalTomitaDomainCarrier Stage sys ω) :=
   graphTopologicalColimitToGlobalGraphCarrierTopCatHom Stage sys ω ≫
     globalTomitaGraphCarrierToDomainTopCatHom Stage sys ω
@@ -640,25 +619,46 @@ def globalGraphPairFirstProjection :
     { toFun := Prod.fst
       continuous_toFun := continuous_fst }
 
+@[simp] theorem graphTopologicalColimitToGlobalPair_first_stage
+    (i : I) (p : graphCarrier Stage sys ω i) :
+    (graphTopologicalColimitToGlobalPair Stage sys ω ≫
+      globalGraphPairFirstProjection Stage sys ω)
+        (graphTopologicalInjection Stage sys ω i p) =
+      gnsStageToHilbertColimit Stage sys ω i p.1.1 := by
+  rw [TopCat.comp_app, graphTopologicalColimitToGlobalPair_stage]
+  rfl
+
 theorem graphToGlobalDomainCarrier_val_eq_firstPairProjection :
     graphTopologicalColimitToGlobalDomainCarrierTopCatHom Stage sys ω ≫
         globalTomitaDomainCarrierValTopCatHom Stage sys ω =
       graphTopologicalColimitToGlobalPair Stage sys ω ≫
         globalGraphPairFirstProjection Stage sys ω := by
-  apply colimit.hom_ext
-  intro i
-  apply TopCat.hom_ext
-  apply ContinuousMap.ext
-  intro p
-  rw [TopCat.comp_app, TopCat.comp_app]
-  change
-    (graphTopologicalColimitToGlobalDomainCarrierTopCatHom Stage sys ω
-      (graphTopologicalInjection Stage sys ω i p)).1 =
-      globalGraphPairFirstProjection Stage sys ω
-        (graphTopologicalColimitToGlobalPair Stage sys ω
-          (graphTopologicalInjection Stage sys ω i p))
-  rw [graphTopologicalColimitToGlobalDomainCarrier_stage,
-    graphTopologicalColimitToGlobalPair_stage]
+  have h1 : graphTopologicalColimitToGlobalDomainCarrierTopCatHom Stage sys ω ≫
+      globalTomitaDomainCarrierValTopCatHom Stage sys ω =
+        graphTopologicalColimitToGlobalHilbertFirst Stage sys ω := by
+    apply graphTopologicalColimitToGlobalHilbertFirst_unique
+    intro i p
+    rw [TopCat.comp_app,
+      graphTopologicalColimitToGlobalDomainCarrier_stage]
+    rfl
+  have h2 : graphTopologicalColimitToGlobalPair Stage sys ω ≫
+      globalGraphPairFirstProjection Stage sys ω =
+        graphTopologicalColimitToGlobalHilbertFirst Stage sys ω := by
+    apply graphTopologicalColimitToGlobalHilbertFirst_unique
+    intro i p
+    exact graphTopologicalColimitToGlobalPair_first_stage Stage sys ω i p
+  rw [h1, h2]
+
+theorem graphTopologicalColimitToGlobalHilbertFirst_eq_domain_route :
+    graphTopologicalColimitToGlobalHilbertFirst Stage sys ω =
+      graphToDomainTopologicalColimitMap Stage sys ω ≫
+        domainTopologicalColimitToGlobalHilbert Stage sys ω := by
+  symm
+  apply graphTopologicalColimitToGlobalHilbertFirst_unique
+  intro i p
+  rw [TopCat.comp_app,
+    graphToDomainTopologicalColimitMap_stage,
+    domainTopologicalColimitToGlobalHilbert_stage]
   rfl
 
 theorem graphToDomain_globalHilbert_eq_firstPairProjection :
@@ -666,44 +666,11 @@ theorem graphToDomain_globalHilbert_eq_firstPairProjection :
         domainTopologicalColimitToGlobalHilbert Stage sys ω =
       graphTopologicalColimitToGlobalPair Stage sys ω ≫
         globalGraphPairFirstProjection Stage sys ω := by
-  apply colimit.hom_ext
-  intro i
-  apply TopCat.hom_ext
-  apply ContinuousMap.ext
-  intro p
-  rw [TopCat.comp_app, TopCat.comp_app]
-  change
-    domainTopologicalColimitToGlobalHilbert Stage sys ω
-        (graphToDomainTopologicalColimitMap Stage sys ω
-          (graphTopologicalInjection Stage sys ω i p)) =
-      globalGraphPairFirstProjection Stage sys ω
-        (graphTopologicalColimitToGlobalPair Stage sys ω
-          (graphTopologicalInjection Stage sys ω i p))
-  rw [graphToDomainTopologicalColimitMap_stage,
-    domainTopologicalColimitToGlobalHilbert_stage,
-    graphTopologicalColimitToGlobalPair_stage]
-  rfl
-
-theorem graphTopologicalColimitToGlobalHilbertFirst_eq_domain_route :
-    graphTopologicalColimitToGlobalHilbertFirst Stage sys ω =
-      graphToDomainTopologicalColimitMap Stage sys ω ≫
-        domainTopologicalColimitToGlobalHilbert Stage sys ω := by
-  apply colimit.hom_ext
-  intro i
-  apply TopCat.hom_ext
-  apply ContinuousMap.ext
-  intro p
-  change
-    graphTopologicalColimitToGlobalHilbertFirst Stage sys ω
-        (graphTopologicalInjection Stage sys ω i p) =
-      (graphToDomainTopologicalColimitMap Stage sys ω ≫
-        domainTopologicalColimitToGlobalHilbert Stage sys ω)
-        (graphTopologicalInjection Stage sys ω i p)
-  rw [TopCat.comp_app,
-    graphTopologicalColimitToGlobalHilbertFirst_stage,
-    graphToDomainTopologicalColimitMap_stage,
-    domainTopologicalColimitToGlobalHilbert_stage]
-  rfl
+  rw [← graphTopologicalColimitToGlobalHilbertFirst_eq_domain_route]
+  symm
+  apply graphTopologicalColimitToGlobalHilbertFirst_unique
+  intro i p
+  exact graphTopologicalColimitToGlobalPair_first_stage Stage sys ω i p
 
 def globalGraphPairSecondProjection :
     TopCat.of (globalGraphPair Stage sys ω) ⟶
@@ -725,20 +692,9 @@ theorem graphTopologicalColimitToGlobalHilbertSecond_eq_pairSecondProjection :
     graphTopologicalColimitToGlobalHilbertSecond Stage sys ω =
       graphTopologicalColimitToGlobalPair Stage sys ω ≫
         globalGraphPairSecondProjection Stage sys ω := by
-  apply colimit.hom_ext
-  intro i
-  apply TopCat.hom_ext
-  apply ContinuousMap.ext
-  intro p
-  change
-    graphTopologicalColimitToGlobalHilbertSecond Stage sys ω
-        (graphTopologicalInjection Stage sys ω i p) =
-      (graphTopologicalColimitToGlobalPair Stage sys ω ≫
-        globalGraphPairSecondProjection Stage sys ω)
-        (graphTopologicalInjection Stage sys ω i p)
-  rw [TopCat.comp_app,
-    graphTopologicalColimitToGlobalHilbertSecond_stage,
-    graphTopologicalColimitToGlobalPair_stage]
-  rfl
+  symm
+  apply graphTopologicalColimitToGlobalHilbertSecond_unique
+  intro i p
+  exact graphTopologicalColimitToGlobalPair_second_stage Stage sys ω i p
 
 end CStarStateColimit.Native.FilteredGNSTomitaGraphTopologicalColimit

@@ -92,7 +92,8 @@ theorem paper_pom_resonance_deficit
   refine ⟨fun j i => T (Fin.natAdd d j) i, ?_, ?_⟩
   · have hUnit : IsUnit T := (Matrix.isUnit_iff_isUnit_det (A := T)).2 hInv
     have hRows : LinearIndependent ℝ T.row := Matrix.linearIndependent_rows_of_isUnit hUnit
-    simpa [Matrix.row] using hRows.comp (Fin.natAdd d) (Fin.natAddEmb d).injective
+    have hTailRows := hRows.comp (Fin.natAdd d) (Fin.natAddEmb d).injective
+    convert hTailRows using 1 <;> ext j i <;> rfl
   · intro m hm j
     simpa [Matrix.mulVec, dotProduct] using hTail m hm j
 

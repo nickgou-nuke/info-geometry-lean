@@ -90,6 +90,7 @@ theorem jkoFunctor_transport_apply
   simp only [jkoBondingMap]
   rw [jko_operator_collapse (R := R) (M := M) N_n h_nil (j - i)]
   simp
+  rfl
 
 theorem jkoFunctor_zero_to_apply
     (N_n : Module.End R M) (h_nil : JKO_Endomorphism R M N_n) (n : ℕ) (x : M) :
@@ -236,7 +237,7 @@ def TrivSqZeroExtDuhamel (n : ℕ) :
 Physical Test Instantiation: Exact Non-Commutative Expansion for the SE(3) Dual Quaternion Twist.
 Here the base algebra is Quaternion ℝ, and the kinematic twist evaluates identically.
 -/
-def DualQuaternionTest (A B : Quaternion ℝ) (n : ℕ) :
+theorem DualQuaternionTest (A B : Quaternion ℝ) (n : ℕ) :
     (inl A + inr B : TrivSqZeroExt (Quaternion ℝ) (Quaternion ℝ)) ^ n =
     inl (A ^ n) + discreteDuhamelSum A B n := by
   exact discrete_duhamel_expansion A B n

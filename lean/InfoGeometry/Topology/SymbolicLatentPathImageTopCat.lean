@@ -124,6 +124,7 @@ theorem observedSymbolicLatentPathImage_evaluation_factorization_unique
   have ht := congrArg (fun m => m t x) hu
   simpa [observedSymbolicLatentPathImageEvaluationTopCatHom,
     observedSymbolicLatentPathImageInclusionTopCatHom,
+    observedSymbolicLatentPathImageAmbientEvaluationTopCatHom,
     TopCat.comp_app, TopCat.ofHom] using ht
 
 end InfoGeometry.Topology

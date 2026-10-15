@@ -1,6 +1,10 @@
 import InfoGeometry.Canonical.Cl55WittFullLieClosure
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.Classical
+import Mathlib.Algebra.Lie.Subalgebra
+import Mathlib.Algebra.Lie.OfAssociative
+
+attribute [local instance 100] LieRing.ofAssociativeRing LieAlgebra.ofAssociativeAlgebra
 
 /-!
 # The orthogonal hierarchy inside the five-mode Witt--CAR representation
@@ -40,7 +44,7 @@ inductive QuadraticLane
   | negTwo
   | zero
   | posTwo
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
 
 /-- Existing concrete submodule for a quadratic lane. -/
 def quadraticLaneSpace : QuadraticLane → Submodule ℝ (MatStage 5)

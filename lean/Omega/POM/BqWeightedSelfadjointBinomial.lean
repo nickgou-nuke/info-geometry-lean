@@ -24,7 +24,7 @@ theorem paper_pom_bq_weighted_selfadjoint_binomial (q : ℕ) :
   simpa [B, hW] using
     (show Matrix.diagonal d * B = B.transpose * Matrix.diagonal d from by
       ext i j
-      rw [Matrix.diagonal_mul, Matrix.mul_diagonal]
+      rw [Matrix.diagonal_mul, Matrix.mul_diagonal, transpose_apply]
       simp [B, d]
       by_cases hij : i.1 + j.1 ≤ q
       · have hi_le : i.1 ≤ q - j.1 := Nat.le_sub_of_add_le hij

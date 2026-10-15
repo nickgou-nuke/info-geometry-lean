@@ -81,7 +81,7 @@ theorem preservesSectors_pow {D : SectorDecomposition V} {A : V →ₗ[ℂ] V}
     (hA : D.PreservesSectors A) (N : ℕ) :
     D.PreservesSectors (A ^ N) := by
   induction N with
-  | zero => simpa using D.preservesSectors_id
+  | zero => simpa only [pow_zero, Module.End.one_eq_id] using D.preservesSectors_id
   | succ N ih =>
       rw [pow_succ]
       exact D.preservesSectors_comp ih hA

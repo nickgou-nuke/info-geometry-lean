@@ -65,7 +65,10 @@ theorem axialCartanEnd_smul (r : ℝ) (k : Fin 3 → ℝ) :
     axialCartanEnd (r • k) = r • axialCartanEnd k := by
   apply LinearMap.ext
   intro X
-  ext i <;> simp [axialCartanEnd, Equiv.smul_def, ZornMatrix.coordEquiv] <;> ring
+  ext i <;>
+    simp [axialCartanEnd, ZornMatrix.smul_a, ZornMatrix.smul_b,
+      ZornMatrix.smul_x, ZornMatrix.smul_y, smul_eq_mul, Pi.smul_apply] <;>
+    ring
 
 noncomputable def weightSum : (Fin 3 → ℝ) →ₗ[ℝ] ℝ where
   toFun k := ∑ i, k i
@@ -80,8 +83,7 @@ noncomputable def tracelessWeightEquiv :
   toFun u :=
     ⟨![u 0, u 1, -(u 0 + u 1)], by
       change ∑ i, (![u 0, u 1, -(u 0 + u 1)] : Fin 3 → ℝ) i = 0
-      simp [Fin.sum_univ_three]
-      ring⟩
+      simp [Fin.sum_univ_three]⟩
   invFun k := ![k.1 0, k.1 1]
   left_inv u := by
     funext i

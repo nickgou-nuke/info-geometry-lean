@@ -55,8 +55,7 @@ theorem circularPeirceQuadratic_formula (x : Fin 8 → ℝ) :
     rw [circularPeirceBasis_apply]]
   have hsmul (r : ℝ) (Z : CanonicalZorn) :
       r • Z = { a := r * Z.a, b := r * Z.b, x := r • Z.x, y := r • Z.y } := by
-    rw [Equiv.smul_def InfoGeometry.Canonical.ZornMatrix.coordEquiv]
-    rfl
+    ext <;> rfl
   rw [Fin.sum_univ_eight]
   simp only [frame, uPlus, uMinus, rootPlus, rootMinus,
     chiralNull, ellBasis, quaternionBasis, iUnit, jUnit, kQuaternionUnit,

@@ -50,7 +50,8 @@ def twoSidedBilayer (D : Z →ₗ[ℝ] Z) (upper lower : Z) :
     · dsimp
       rw [map_smul, map_smul, smul_add]
     · dsimp
-      rw [map_smul, map_smul, smul_sub]
+      rw [map_smul, map_smul]
+      exact (smul_sub c (leftCoupling lower XY.1) (D XY.2)).symm
 
 def bilayer (D : Z →ₗ[ℝ] Z) (gap : Z) :
     (Z × Z) →ₗ[ℝ] (Z × Z) := twoSidedBilayer D gap gap
@@ -63,11 +64,18 @@ theorem twoSidedBilayer_square (D : Z →ₗ[ℝ] Z) (upper lower X Y : Z) :
           gapCommutator D lower X) := by
   apply Prod.ext
   · dsimp [twoSidedBilayer, gapCommutator]
-    rw [map_add, map_sub, leftCoupling_comp_apply]
+    rw [D.map_add]
+    rw [show leftCoupling upper (leftCoupling lower X - D Y) =
+      leftCoupling upper (leftCoupling lower X) - leftCoupling upper (D Y) from
+        (leftCoupling upper).map_sub _ _]
+    rw [leftCoupling_comp_apply]
     abel
   · dsimp [twoSidedBilayer, gapCommutator]
-    rw [map_add, map_sub, leftCoupling_comp_apply]
-    abel
+    rw [(leftCoupling lower).map_add]
+    rw [show D (leftCoupling lower X - D Y) =
+      D (leftCoupling lower X) - D (D Y) from D.map_sub _ _]
+    rw [leftCoupling_comp_apply]
+    abel_nf
 
 theorem bilayer_square (D : Z →ₗ[ℝ] Z) (gap X Y : Z) :
     bilayer D gap (bilayer D gap (X,Y)) =
@@ -87,6 +95,10 @@ def internalDerivative (p : A) : Z →ₗ[ℝ] Z where
       operatorZornCoordinates]
     all_goals simp only [mul_smul_comm, smul_mul_assoc, smul_sub]
 
+@[simp]
+theorem internalDerivative_apply (p : A) (X : Z) :
+    internalDerivative p X = coefficientDeriv p X := rfl
+
 theorem gapCommutator_internalDerivative (p : A) (gap X : Z) :
     gapCommutator (internalDerivative p) gap X = coefficientDeriv p gap * X := by
   dsimp [gapCommutator, internalDerivative, leftCoupling]
@@ -101,8 +113,8 @@ theorem bilayer_internalDerivative_square (p : A) (gap X Y : Z) :
        coefficientDeriv p (coefficientDeriv p Y) + (gap*gap)*Y -
           OperatorZornFourPotentialGauge.associator gap gap Y -
           coefficientDeriv p gap * X) := by
-  simpa only [gapCommutator_internalDerivative] using
-    bilayer_square (internalDerivative p) gap X Y
+  rw [bilayer_square]
+  simp only [internalDerivative_apply, gapCommutator_internalDerivative]
 
 theorem sheetSwap_anticommutator (D : Z →ₗ[ℝ] Z) (gap X Y : Z) :
     bilayer D gap ((LinearEquiv.prodComm ℝ Z Z) (X,Y)) +
@@ -121,7 +133,7 @@ theorem pole_zeroMode :
   all_goals first | (funext i; fin_cases i) | skip
   all_goals simp [bilayer, twoSidedBilayer, leftCoupling, nPlus, nMinus,
     NCZornElement.mul, NCZornElement.zornDot, NCZornElement.zornCross]
-  all_goals rfl
+  all_goals first | (change (0 : A) = 0; rfl) | (change (- (0 : A)) = 0; simp)
 
 theorem nonzero_coupling_has_nonzero_zeroMode [Nontrivial A] :
     (nPlus (1 : A) : Z) ≠ 0 ∧ (nMinus (1 : A), (0 : Z)) ≠ (0,0) ∧
@@ -129,10 +141,12 @@ theorem nonzero_coupling_has_nonzero_zeroMode [Nontrivial A] :
   refine ⟨?_, ?_, pole_zeroMode⟩
   · intro h
     have hc := congrArg NCZornElement.n_plus h
-    exact one_ne_zero (by simpa [nPlus] using hc)
+    change (1 : A) = 0 at hc
+    exact one_ne_zero hc
   · intro h
     have hc := congrArg (fun XY : Z × Z => XY.1.n_minus) h
-    exact one_ne_zero (by simpa [nMinus] using hc)
+    change (1 : A) = 0 at hc
+    exact one_ne_zero hc
 
 end InfoGeometry.Canonical.OperatorZornBilayerDefect
 

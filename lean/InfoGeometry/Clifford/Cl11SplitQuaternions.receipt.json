@@ -1,0 +1,90 @@
+{
+  "schema": "info_geometry.proof_artifact_receipt.v1",
+  "authority": "candidate_observation_not_proof_authority",
+  "artifact": {
+    "path": "lean/InfoGeometry/Clifford/Cl11SplitQuaternions.lean",
+    "sha256": "2f5a464565904256fe3270243b428f35717fcbf986fcdd85eada1eb45778d7f6"
+  },
+  "source": {
+    "path": "lean/InfoGeometry/Clifford/Cl11SplitQuaternions.lean",
+    "snapshotSha256": "2f5a464565904256fe3270243b428f35717fcbf986fcdd85eada1eb45778d7f6",
+    "currentSnapshotSha256": "2f5a464565904256fe3270243b428f35717fcbf986fcdd85eada1eb45778d7f6",
+    "changedSincePrompt": false
+  },
+  "environment": {
+    "toolchain": "leanprover/lean4:v4.34.1",
+    "lakefileSha256": "5372c9a95ed8f6488bc0ce257c906c83658449668db4627259d72d542c77d9f7",
+    "lakeManifestSha256": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "gitHead": "17d436b864feeb5876f2392e550aa7fa6ef0d55c"
+  },
+  "checks": {
+    "leanProcess": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "lean/InfoGeometry/Clifford/Cl11SplitQuaternions.lean"
+      ],
+      "returncode": 0,
+      "outputSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": "passed"
+    },
+    "semanticVacuityGate": {
+      "returncode": 0,
+      "outputSha256": "6a0d6e7ec7d939bc3310ee04c8e4850c667c89bd8eb5148f6bab3f7942ca799f",
+      "status": "passed"
+    },
+    "axiomAudit": {
+      "status": "collected",
+      "declarations": [
+        "InfoGeometry.Clifford.Cl11.e₁_sq",
+        "InfoGeometry.Clifford.Cl11.e₂_sq",
+        "InfoGeometry.Clifford.Cl11.e₁_anticomm_e₂",
+        "InfoGeometry.Clifford.Cl11.i_sq",
+        "InfoGeometry.Clifford.Cl11.j_sq",
+        "InfoGeometry.Clifford.Cl11.k_sq",
+        "InfoGeometry.Clifford.Cl11.i_mul_j",
+        "InfoGeometry.Clifford.Cl11.j_mul_i",
+        "InfoGeometry.Clifford.Cl11.i_j_k_prod",
+        "InfoGeometry.Clifford.Cl11.omega_sq",
+        "InfoGeometry.Clifford.Cl11.omega_anticomm_e₁",
+        "InfoGeometry.Clifford.Cl11.omega_anticomm_e₂",
+        "InfoGeometry.Clifford.Cl11.P_plus_sq",
+        "InfoGeometry.Clifford.Cl11.P_minus_sq",
+        "InfoGeometry.Clifford.Cl11.P_plus_mul_P_minus",
+        "InfoGeometry.Clifford.Cl11.P_minus_mul_P_plus",
+        "InfoGeometry.Clifford.Cl11.P_plus_add_P_minus",
+        "InfoGeometry.Clifford.Cl11.n_plus_sq",
+        "InfoGeometry.Clifford.Cl11.n_minus_sq",
+        "InfoGeometry.Clifford.Cl11.e₁_mul_P_plus",
+        "InfoGeometry.Clifford.Cl11.e₁_mul_P_minus",
+        "InfoGeometry.Clifford.Cl11.n_plus_mul_n_minus",
+        "InfoGeometry.Clifford.Cl11.n_minus_mul_n_plus",
+        "InfoGeometry.Clifford.Cl11.n_anticomm",
+        "InfoGeometry.Clifford.Cl11.e₁C_sq",
+        "InfoGeometry.Clifford.Cl11.e₂C_sq",
+        "InfoGeometry.Clifford.Cl11.fC_sq",
+        "InfoGeometry.Clifford.Cl11.e₁C_anticomm_e₂C",
+        "InfoGeometry.Clifford.Cl11.e₁C_anticomm_fC",
+        "InfoGeometry.Clifford.Cl11.e₂C_anticomm_fC",
+        "InfoGeometry.Clifford.Cl11.I_3D_eq_imaginary",
+        "InfoGeometry.Clifford.Cl11.I_3D_sq",
+        "InfoGeometry.Clifford.Cl11.I_3D_comm",
+        "InfoGeometry.Clifford.Cl11.cl12_biquaternion_generator_relations"
+      ],
+      "returncode": 0,
+      "outputSha256": "787398fc9a8db82648a92572936dd5b7b827993fb877ab94e77378ec3487430e",
+      "output": "'InfoGeometry.Clifford.Cl11.e₁_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11.e₂_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11.e₁_anticomm_e₂' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11.i_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11.j_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11.k_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11.i_mul_j' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11.j_mul_i' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11.i_j_k_prod' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11.omega_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11.omega_anticomm_e₁' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11.omega_anticomm_e₂' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11.P_plus_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11.P_minus_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11.P_plus_mul_P_minus' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11.P_minus_mul_P_plus' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11.P_plus_add_P_minus' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11.n_plus_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11.n_minus_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11.e₁_mul_P_plus' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11.e₁_mul_P_minus' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11.n_plus_mul_n_minus' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11.n_minus_mul_n_plus' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11.n_anticomm' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11.e₁C_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11.e₂C_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11.fC_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11.e₁C_anticomm_e₂C' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11.e₁C_anticomm_fC' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11.e₂C_anticomm_fC' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11.I_3D_eq_imaginary' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11.I_3D_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11.I_3D_comm' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11.cl12_biquaternion_generator_relations' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n"
+    }
+  },
+  "review": {
+    "status": "kernel_checked_pending_owner_review",
+    "promotionAllowed": false
+  },
+  "score": {
+    "status": "unconfigured",
+    "value": null,
+    "meaning": null
+  },
+  "receiptSha256": "3c8e2121cf6a7ac8f1334eb1fb18654e39871f87e17f52bf2d60a5b2273da90e"
+}

@@ -7,6 +7,9 @@ open InfoGeometry.Canonical
 open InfoGeometry.Canonical.Rosetta
 open InfoGeometry.Quantum.ModularAnomaly
 
+attribute [-instance] InfoGeometry.Quantum.RealMajoranaCategory.RealMajoranaCore.instAddCommGroup
+attribute [-instance] InfoGeometry.Quantum.RealMajoranaCategory.RealMajoranaCore.instModule
+
 variable {E : Type}
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
@@ -45,7 +48,8 @@ theorem rosetta_source_tension_synthesis
     (hAnom : CBA.CI.chiralAnomalyOperator ≠ 0)
     (M : TopologicalMajoranaShadow Xc)
     (epsCLM : Xc →L[ℝ] Xc)
-    (hSigmaMap : ∀ t : ℝ, (M.sigma t : Xc →L[ℝ] Xc) = Cl11Shadow.sigmaMap epsCLM t)
+    (hSigmaMap : ∀ t : ℝ,
+      (M.sigma t).toContinuousLinearMap = Cl11Shadow.sigmaMap epsCLM t)
     (U : Xc ≃L[ℝ] Xc) :
     CBA.CI.chiralScale =
         InfoGeometry.Canonical.RicciMongeAmpere.transportedEinsteinResidual

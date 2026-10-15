@@ -16,7 +16,7 @@ theorem paper_terminal_6d_reachable_mean_convex_body :
     IsCompact terminal6DReachableMeanSet ∧ Convex ℝ terminal6DReachableMeanSet := by
   refine ⟨?_, ?_⟩
   · simpa [terminal6DReachableMeanSet] using
-      (Set.finite_range terminal6DNormalizedCountVector).isCompact_convexHull
+      (Set.finite_range terminal6DNormalizedCountVector).isCompact_convexHull ℝ
   · simpa [terminal6DReachableMeanSet] using
       (convex_convexHull ℝ (Set.range terminal6DNormalizedCountVector))
 

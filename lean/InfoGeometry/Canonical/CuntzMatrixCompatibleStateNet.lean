@@ -36,7 +36,7 @@ instance linearDirectedSystem :
     exact congrArg (fun f => f x) (concreteMap_id i)
   map_map := by
     intro i j k hij hjk x
-    simpa using congrArg (fun f => f x) (concreteMap_comp hij hjk)
+    simpa [rawMap] using congrArg (fun f => f x) (concreteMap_comp hij hjk)
 
 def Compatible (φ : StageFunctional) : Prop :=
   ∀ {i j : ℕ} (hij : i ≤ j) (x : MatrixStage i),
@@ -54,11 +54,14 @@ def colimitFunctional (φ : StageFunctional) (hφ : Compatible φ) : Carrier →
 theorem colimitFunctional_stage (φ : StageFunctional) (hφ : Compatible φ)
     (n : ℕ) (x : MatrixStage n) :
     colimitFunctional φ hφ (stageInjection n x) = φ n x := by
-  simpa [stageInjection] using
-    (DirectLimit.Module.lift_of
-      (R := ℂ) (ι := ℕ) (G := MatrixStage)
-      (f := fun _ _ hij => (rawMap hij).toAlgHom.toLinearMap)
-      φ (by intro i j hij x; exact hφ hij x) x)
+  change DirectLimit.Module.lift ℂ ℕ MatrixStage
+      (fun _ _ hij => (rawMap hij).toAlgHom.toLinearMap) φ
+      (by intro i j hij x; exact hφ hij x)
+      (⟦⟨n, x⟩⟧ : Carrier) = φ n x
+  exact DirectLimit.Module.lift_of
+    (R := ℂ) (ι := ℕ) (G := MatrixStage)
+    (f := fun _ _ hij => (rawMap hij).toAlgHom.toLinearMap)
+    φ (by intro i j hij x; exact hφ hij x) x
 
 theorem colimitFunctional_eq_of_stage_eq
     (φ ψ : StageFunctional) (hφ : Compatible φ) (hψ : Compatible ψ)
@@ -141,7 +144,7 @@ theorem propagatedDensity_trace (D₀ : MatrixStage 0) (z : ℂ)
       rw [propagatedDensity]
       have htrace := concreteData.trace_compatible n
         (propagatedDensity D₀ n)
-      simpa [matrixTraceState, matrixTraceFunctional] using
+      simpa [matrixTraceState, matrixTraceFunctional, concreteData] using
         htrace.trans (propagatedDensity_trace D₀ z h₀ n)
 
 theorem weightedStageFunctional_compatible_of_density_compatible
@@ -155,7 +158,7 @@ theorem weightedStageFunctional_compatible_of_density_compatible
       rw [weightedStageFunctional_apply, weightedStageFunctional_apply]
       rw [show rawMap (Nat.le.step hij) x =
         concreteStep j (rawMap hij x) by
-          simpa [rawMap, CuntzMatrixTraceTower.concreteMap,
+          simpa [rawMap, concreteData, CuntzMatrixTraceTower.concreteMap,
             CuntzMatrixTraceTower.map_succ] using
             congrArg (fun f => f x)
               (CuntzMatrixTraceTower.map_succ concreteData hij)]
@@ -164,7 +167,7 @@ theorem weightedStageFunctional_compatible_of_density_compatible
       change matrixTraceFunctional (j + 1)
           (concreteStep j (rawMap hij x * D j)) =
         matrixTraceFunctional i (x * D i)
-      simpa [matrixTraceState, matrixTraceFunctional] using
+      simpa [matrixTraceState, matrixTraceFunctional, concreteData] using
         htrace.trans (by
           simpa [weightedStageFunctional_apply] using ih)
 
@@ -195,7 +198,9 @@ theorem weightedColimitFunctional_one
     simpa [weightedStageFunctional_apply] using hOne n
   have h := colimitFunctional_stage (weightedStageFunctional D) hD 0
     (1 : MatrixStage 0)
-  simpa [stageInjection, DirectLimit.one_def, hstage] using h
+  change colimitFunctional (weightedStageFunctional D) hD (1 : Carrier) = 1
+  rw [DirectLimit.one_def 0]
+  simpa [stageInjection, hstage] using h
 
 theorem weightedColimitFunctional_positive
     (D : ∀ n : ℕ, MatrixStage n) (hD : WeightedCompatible D)
@@ -237,7 +242,7 @@ def normalizedWeightedStageFunctional (D : ∀ n : ℕ, MatrixStage n)
     (z : ℝ) : StageFunctional :=
   fun n => (z : ℂ)⁻¹ • weightedStageFunctional D n
 
-def normalizedWeightedCompatible (D : ∀ n : ℕ, MatrixStage n)
+theorem normalizedWeightedCompatible (D : ∀ n : ℕ, MatrixStage n)
     (z : ℝ) (hD : WeightedCompatible D) :
     Compatible (normalizedWeightedStageFunctional D z) := by
   intro i j hij x
@@ -273,8 +278,10 @@ theorem normalizedWeightedColimitFunctional_one
   have h := colimitFunctional_stage
     (normalizedWeightedStageFunctional D z)
     (normalizedWeightedCompatible D z hD) 0 (1 : MatrixStage 0)
-  simpa [normalizedWeightedColimitFunctional, stageInjection,
-    DirectLimit.one_def, hstage] using h
+  change colimitFunctional (normalizedWeightedStageFunctional D z)
+    (normalizedWeightedCompatible D z hD) (1 : Carrier) = 1
+  rw [DirectLimit.one_def 0]
+  simpa [stageInjection, hstage] using h
 
 theorem normalizedWeightedColimitFunctional_positive
     (D : ∀ n : ℕ, MatrixStage n) (z : ℝ) (hD : WeightedCompatible D)
@@ -422,7 +429,10 @@ theorem gibbsColimitFunctional_one
     exact gibbsFunctional_one (H n) (hH n) β
   have h := colimitFunctional_stage (gibbsStageFunctional H hH β)
     hCompat 0 (1 : MatrixStage 0)
-  simpa [gibbsColimitFunctional, stageInjection, DirectLimit.one_def, hstage] using h
+  change colimitFunctional (gibbsStageFunctional H hH β) hCompat
+    (1 : Carrier) = 1
+  rw [DirectLimit.one_def 0]
+  simpa [stageInjection, hstage] using h
 
 theorem gibbsColimitFunctional_positive
     (H : ∀ n, MatrixStage n)

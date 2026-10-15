@@ -441,7 +441,7 @@ theorem globalMajoranaChirality_eq_prod_localParity
 theorem globalMajoranaChirality_eq_neg_one_pow_card
     {P : PrimeCutoff} (S : Vertex P) :
     globalMajoranaChirality S = (-1 : ℤ) ^ S.card := by
-  simpa [globalMajoranaChirality] using
+  simpa [globalMajoranaChirality, SquareFreePrimeState.fermionNumber] using
     (SquareFreePrimeState.Gamma_eq_negOne_pow_fermionNumber (S := S))
 
 /-- Global chirality agrees with the Möbius value of the represented prime product. -/
@@ -463,11 +463,10 @@ theorem globalMajoranaChirality_eq_mobius_primeProduct
       (PrimeBitWittenIndex.mobius_prime_product_eq_parity (S.map e) hprime)
   have hprod :
       (∏ p ∈ S.map e, p) = ∏ p ∈ S, (p : ℕ) := by
-    have hmap := Finset.prod_map S e (fun p : ℕ => p)
-    simpa [e, primeModeEmbedding] using hmap
+    exact Finset.prod_map S e (fun p : ℕ => p)
   calc
     globalMajoranaChirality S = (-1 : ℤ) ^ S.card := by
-      simpa [globalMajoranaChirality] using
+      simpa [globalMajoranaChirality, SquareFreePrimeState.fermionNumber] using
         (SquareFreePrimeState.Gamma_eq_negOne_pow_fermionNumber (S := S))
     _ = ArithmeticFunction.moebius (∏ p ∈ S.map e, p) := by
       symm
@@ -509,13 +508,20 @@ theorem cantorDiracWittenCharacter_eq_mobius_sum
   have hμ :
       ArithmeticFunction.moebius (∏ p ∈ S, (p : ℕ)) =
         (-1 : ℤ) ^ S.card := by
-    simpa using
-      (PrimeBitWittenIndex.mobius_prime_product_eq_parity
-        (S.map (primeModeEmbedding P))
-        (by
-          intro p hp
-          rcases Finset.mem_map.mp hp with ⟨q, hq, rfl⟩
-          exact P.prime_mem q.1 q.property))
+    let e : PrimeMode P ↪ ℕ := primeModeEmbedding P
+    have hprod :
+        (∏ p ∈ S.map e, p) = ∏ p ∈ S, (p : ℕ) := by
+      rw [Finset.prod_map]
+      rfl
+    have hcard : (S.map e).card = S.card := Finset.card_map e
+    rw [← hprod, ← hcard]
+    exact PrimeBitWittenIndex.mobius_prime_product_eq_parity (S.map e)
+      (by
+        intro p hp
+        rcases Finset.mem_map.mp hp with ⟨q, hq, rfl⟩
+        have he : e q = (q : ℕ) := rfl
+        rw [he]
+        exact P.prime_mem q.1 q.property)
   simpa [hμ]
 
 /-- Unit-weight Witten cancellation on every nonempty finite prime-exterior lattice. -/

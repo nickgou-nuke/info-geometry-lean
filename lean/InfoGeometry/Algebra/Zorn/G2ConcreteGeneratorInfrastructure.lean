@@ -20,6 +20,10 @@ open InfoGeometry.Algebra.Zorn.G2CASGeneratorSubgroup
 open InfoGeometry.Algebra.Zorn.G2TwoSylowSubgroup
 open InfoGeometry.Algebra.Zorn.G2ConcreteBN2CorrectSecondConjugation
 
+private theorem weylNF_one_true_eq_t : weylNF 1 true = t := by
+  have hval : (1 : ZMod 6).val = 1 := by decide
+  simp [weylNF, t, s, hval]
+
 theorem concreteBruhatCovering_left_mul_borel
     (b : SplitOctF2Aut) (hb : b ∈ unipotentSubgroup)
     {g : SplitOctF2Aut} (hg : g ∈ concreteBruhatCovering) :
@@ -190,7 +194,8 @@ theorem concreteBN2Transition_t_identity
   have ht : t * g ∈ concreteBruhatCell t := by
     exact simple_reflection_t_mul_borel g hg'
   exact Set.mem_iUnion.mpr ⟨(1, true), by
-    simpa [weylNF, t] using ht⟩
+    rw [← weylNF_one_true_eq_t]
+    exact ht⟩
 
 /-- The canonical peeling obligation is provable on the identity cell.
     This records the genuine base case without claiming the missing Weyl-word
@@ -211,7 +216,9 @@ theorem concreteCanonicalPeelingStep_identity
       simpa [weylNF_zero_false, concreteBruhatCell_one_eq_sylow] using hg
     have ht : t * g ∈ concreteBruhatCell t :=
       simple_reflection_t_mul_borel g hg'
-    exact ⟨(1, true), by simpa [weylNF, t] using ht⟩
+    exact ⟨(1, true), by
+      rw [← weylNF_one_true_eq_t]
+      exact ht⟩
 
 theorem concreteBN2Transition_identity_cell
     {r g : SplitOctF2Aut}

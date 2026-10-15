@@ -21,10 +21,8 @@ theorem stokesKreinAdjointHomeomorph_modularActionHomeomorph
         (stokesModularActionHomeomorph rho rhoInv hleft hright q) =
       stokesModularActionHomeomorph rho rhoInv hleft hright
         (stokesKreinAdjointHomeomorph q) := by
-  simpa [stokesKreinAdjointHomeomorph, stokesModularActionHomeomorph,
-    Homeomorph.trans_apply, kreinAdjoint_stokes] using
-    congrArg operatorStokesLinearEquiv
-      (kreinAdjoint_modularAction rho rhoInv
-        (operatorStokesLinearEquiv.symm q) hρ hρInv)
+  dsimp [stokesKreinAdjointHomeomorph, stokesModularActionHomeomorph]
+  simp only [Homeomorph.symm_apply_apply]
+  exact congrArg _ (kreinAdjoint_modularAction rho rhoInv _ hρ hρInv)
 
 end InfoGeometry.Canonical.TwoSheetModularTopological

@@ -99,7 +99,6 @@ lemma conclusion_local_exactification_macroscopic_resonance_separation_collision
   rw [conclusion_local_exactification_macroscopic_resonance_separation_collision_scale_eq]
   have hmain : 0 ≤ foldbinMainResonanceContribution := by
     simp [foldbinMainResonanceContribution, singlepairResonanceConstant]
-  norm_num at hmain ⊢
   linarith
 
 /-- Paper label: `thm:conclusion-local-exactification-macroscopic-resonance-separation`. -/
@@ -180,10 +179,12 @@ theorem paper_conclusion_local_exactification_macroscopic_resonance_separation :
       NatDivergesToInfinity
         (binfoldCollisionScaleTerm
           conclusion_local_exactification_macroscopic_resonance_separation_N_m
-          conclusion_local_exactification_macroscopic_resonance_separation_exactified_Col_m) :=
-    by
-      simpa [conclusion_local_exactification_macroscopic_resonance_separation_exactified_Col_m] using
-        conclusion_local_exactification_macroscopic_resonance_separation_collision_diverges
+          conclusion_local_exactification_macroscopic_resonance_separation_exactified_Col_m) := by
+    change NatDivergesToInfinity
+      (binfoldCollisionScaleTerm
+        conclusion_local_exactification_macroscopic_resonance_separation_N_m
+        conclusion_local_exactification_macroscopic_resonance_separation_Col_m)
+    exact conclusion_local_exactification_macroscopic_resonance_separation_collision_diverges
   have hDivergence :=
     paper_conclusion_binfold_collision_scale_forces_maxfiber_divergence
       conclusion_local_exactification_macroscopic_resonance_separation_N_m
@@ -216,12 +217,15 @@ theorem paper_conclusion_local_exactification_macroscopic_resonance_separation :
           foldbinScaledCollisionExcess
               conclusion_fold_golden_resonance_collision_gap_hard_floor_toyCol m +
             ((m : ℝ) + 1) := by
-      rw [show
+      have h_eq :
           foldbinScaledCollisionExcess
               conclusion_local_exactification_macroscopic_resonance_separation_exactified_Col_m m =
-            (m : ℝ) + 1 + foldbinMainResonanceContribution by
-          simpa [conclusion_local_exactification_macroscopic_resonance_separation_exactified_Col_m]
-            using conclusion_local_exactification_macroscopic_resonance_separation_scaled_l2_eq m]
+            (m : ℝ) + 1 + foldbinMainResonanceContribution := by
+        change binfoldScaledL2Term
+            conclusion_local_exactification_macroscopic_resonance_separation_N_m
+            conclusion_local_exactification_macroscopic_resonance_separation_Col_m m = _
+        exact conclusion_local_exactification_macroscopic_resonance_separation_scaled_l2_eq m
+      rw [h_eq]
       rw [conclusion_fold_golden_resonance_collision_gap_hard_floor_scaled_gap]
       ring
     have hnonneg : 0 ≤ (m : ℝ) + 1 := by positivity

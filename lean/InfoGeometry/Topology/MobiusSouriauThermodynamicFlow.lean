@@ -36,7 +36,7 @@ theorem souriauPartition_pullEnergy
     (σ : Equiv.Perm ι) (beta : ℝ) (energy : ι → ℝ) :
     souriauPartition beta (pullEnergy σ energy) =
       souriauPartition beta energy := by
-  unfold souriauPartition pullEnergy
+  unfold souriauPartition pullEnergy InfoGeometry.Physics.SouriauEntropyFoliation.permuteWeight
   simpa using
     (Fintype.sum_equiv σ.symm
       (fun i => Real.exp (-beta * energy (σ.symm i)))
@@ -57,7 +57,7 @@ theorem meanEnergy_pullEnergy
     (σ : Equiv.Perm ι) (beta : ℝ) (energy : ι → ℝ) :
     meanEnergy beta (pullEnergy σ energy) = meanEnergy beta energy := by
   unfold meanEnergy
-  simp_rw [gibbsWeight_pullEnergy, pullEnergy]
+  simp_rw [gibbsWeight_pullEnergy, pullEnergy, InfoGeometry.Physics.SouriauEntropyFoliation.permuteWeight]
   simpa using
     (Fintype.sum_equiv σ.symm
       (fun i => gibbsWeight beta energy (σ.symm i) * energy (σ.symm i))
@@ -94,6 +94,7 @@ theorem freeEnergy_pullEnergy [Nonempty ι]
       InfoGeometry.Thermo.freeEnergy energy epsilon := by
   unfold InfoGeometry.Thermo.freeEnergy InfoGeometry.Thermo.logZ
     InfoGeometry.Thermo.Z InfoGeometry.Thermo.weight pullEnergy
+    InfoGeometry.Physics.SouriauEntropyFoliation.permuteWeight
   congr 2
   simpa using
     (Fintype.sum_equiv σ.symm
@@ -149,11 +150,12 @@ theorem inducedEnergy_pullEnergy_eq
     (hpotential : ∀ z, potential (M.eval z) = potential z) :
     pullEnergy σ (inducedEnergy potential chart) = inducedEnergy potential chart := by
   funext i
-  unfold pullEnergy inducedEnergy
+  dsimp [pullEnergy, inducedEnergy, InfoGeometry.Physics.SouriauEntropyFoliation.permuteWeight]
   have horbit' := horbit (σ.symm i)
+  rw [Equiv.apply_symm_apply] at horbit'
   have hpot := hpotential (chart (σ.symm i))
   rw [horbit'] at hpot
-  simpa using hpot.symm
+  exact hpot.symm
 
 omit [Fintype ι] in
 /-- Public alias: a chart-realized Möbius symmetry leaves the induced finite energy unchanged. -/

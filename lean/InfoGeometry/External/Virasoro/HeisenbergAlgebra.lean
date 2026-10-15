@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 -/
 import Mathlib.LinearAlgebra.Basis.Bilinear
+import Mathlib.Algebra.Lie.OfAssociative
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Virasoro.IsCentralExtension
 import InfoGeometry.External.Virasoro.ToMathlib.Algebra.Lie.Abelian
@@ -134,7 +135,8 @@ noncomputable def heisenbergCocycle :
   toBilin := heisenbergCocycleBilin 𝕜
   self' X := by
     apply self_eq_neg.mp
-    simpa only [LinearMap.neg_apply, LinearMap.coe_mk, AddHom.coe_mk]
+    simpa only [LinearMap.neg_apply, LinearMap.flip_apply,
+      LinearMap.coe_mk, AddHom.coe_mk]
       using LinearMap.congr_fun₂ (heisenbergCocycleBilin_eq_neg_flip 𝕜) X X
   leibniz' X Y Z := by
     simp only [lie_def, map_zero, LinearMap.zero_apply, (lie_skew X Z).symm, neg_zero, add_zero]
@@ -177,6 +179,10 @@ section HeisenbergAlgebra
 
 variable (𝕜 : Type*) [Field 𝕜]
 variable [CharZero 𝕜]
+
+-- The coefficient field acts as a Lie algebra by its associative-ring
+-- commutator, which is zero because the field is commutative.
+attribute [local instance 100] LieRing.ofAssociativeRing
 
 /-- The Heisenberg algebra. -/
 def HeisenbergAlgebra := LieTwoCocycle.CentralExtension (AbelianLieAlgebraOn.heisenbergCocycle 𝕜)
@@ -240,8 +246,14 @@ lemma smul_def' (c : 𝕜) (X : HeisenbergAlgebra 𝕜) :
 @[simp] lemma smul_snd (c : 𝕜) (X : HeisenbergAlgebra 𝕜) :
     (c • X).snd = c * X.snd := rfl
 
+@[simp] lemma neg_fst (X : HeisenbergAlgebra 𝕜) :
+    (-X).fst = -X.fst := rfl
+
+@[simp] lemma neg_snd (X : HeisenbergAlgebra 𝕜) :
+    (-X).snd = -X.snd := rfl
+
 /-- The Heisenberg algebra is a central extension of the Witt algebra. -/
-instance isCentralExtension : LieAlgebra.IsCentralExtension (ofCentral 𝕜) toAbelianLieAlgebraOn :=
+theorem isCentralExtension : LieAlgebra.IsCentralExtension (ofCentral 𝕜) toAbelianLieAlgebraOn :=
   LieTwoCocycle.CentralExtension.isCentralExtension _
 
 /-- The (commonly used) `Jₖ` elements of the Heisenberg algebra, for `k ∈ ℤ`. -/
@@ -256,6 +268,14 @@ lemma kgen_eq_ofCentral_one : kgen 𝕜 = ofCentral 𝕜 1 := rfl
 lemma kgen_eq' : kgen 𝕜 = ⟨0, 1⟩ := rfl
 
 lemma jgen_eq' (k : ℤ) : jgen 𝕜 k = ⟨.jgen 𝕜 k, 0⟩ := rfl
+
+@[simp] lemma kgen_fst : (kgen 𝕜).fst = 0 := rfl
+
+@[simp] lemma kgen_snd : (kgen 𝕜).snd = 1 := rfl
+
+@[simp] lemma jgen_fst (k : ℤ) : (jgen 𝕜 k).fst = .jgen 𝕜 k := rfl
+
+@[simp] lemma jgen_snd (k : ℤ) : (jgen 𝕜 k).snd = 0 := rfl
 
 @[simp] lemma ofCentral_apply (a : 𝕜) : ofCentral 𝕜 a = a • (kgen 𝕜) := by
   change (⟨0, a⟩ : HeisenbergAlgebra 𝕜) = a • ⟨0, 1⟩
@@ -304,10 +324,15 @@ lemma central_ofCentral (a : 𝕜) (Z : HeisenbergAlgebra 𝕜) :
   by_cases h : k + l = 0
   · simp [h]
     apply ext'
-    · simp [kgen_eq']
-    · simp [AbelianLieAlgebraOn.heisenbergCocycle_apply_jgen_jgen, kgen_eq', h]
+    · change 0 = (k : 𝕜) • (0 : AbelianLieAlgebraOn ℤ 𝕜)
+      simp
+    · rw [AbelianLieAlgebraOn.heisenbergCocycle_apply_jgen_jgen, if_pos h]
+      change (k : 𝕜) = ((k : 𝕜) • kgen 𝕜).snd
+      rw [smul_snd]
+      simp [kgen_eq']
   · simp [h]
-    apply ext' <;> simp [AbelianLieAlgebraOn.heisenbergCocycle_apply_jgen_jgen, h]
+    apply ext' <;> simp [AbelianLieAlgebraOn.heisenbergCocycle_apply_jgen_jgen, h,
+      LieTwoCocycle.CentralExtension.zero_fst, LieTwoCocycle.CentralExtension.zero_snd] <;> rfl
 
 /-- A section of the standard projection from the Heisenberg algebra to the underlying
 abelian Lie algebra. -/
@@ -317,9 +342,8 @@ noncomputable def jsection : AbelianLieAlgebraOn ℤ 𝕜 →ₗ[𝕜] Heisenber
 /-- The Heisenberg section is a right inverse to the projection. -/
 lemma toAbelianLieAlgebraOn_jsection :
     (HeisenbergAlgebra.toAbelianLieAlgebraOn (𝕜 := 𝕜)).toLinearMap ∘ₗ jsection 𝕜 = 1 := by
-  simpa [jsection, HeisenbergAlgebra.toAbelianLieAlgebraOn] using
-    LieTwoCocycle.CentralExtension.stdSection_prop
-      (AbelianLieAlgebraOn.heisenbergCocycle 𝕜)
+  exact LieTwoCocycle.CentralExtension.stdSection_prop
+    (AbelianLieAlgebraOn.heisenbergCocycle 𝕜)
 
 @[simp] lemma jsection_jgen (l : ℤ) :
     jsection 𝕜 (AbelianLieAlgebraOn.jgen 𝕜 l) = jgen 𝕜 l :=
@@ -328,7 +352,7 @@ lemma toAbelianLieAlgebraOn_jsection :
 /-- The most commonly used basis of the Heisenberg algebra, consisting of `Jₖ` (`k ∈ ℤ`)
 and the central element `K`. (Lean notation: `jgen _ k` and `kgen _`, respectively.) -/
 noncomputable def basisJK : Basis (Option ℤ) 𝕜 (HeisenbergAlgebra 𝕜) :=
-  ((isCentralExtension 𝕜).basis (jsection 𝕜) rfl
+  ((isCentralExtension 𝕜).basis (jsection 𝕜) (toAbelianLieAlgebraOn_jsection 𝕜)
         (Basis.singleton Unit 𝕜) (AbelianLieAlgebraOn.jgen 𝕜)).reindex
     { toFun uz := match uz with
         | Sum.inl _ => none
@@ -345,11 +369,19 @@ noncomputable def basisJK : Basis (Option ℤ) 𝕜 (HeisenbergAlgebra 𝕜) :=
 
 @[simp] lemma basisJK_some (l : ℤ) :
     basisJK 𝕜 (some l) = jgen 𝕜 l := by
-  simp [basisJK]
+  rw [basisJK, Module.Basis.reindex_apply]
+  change (isCentralExtension 𝕜).basis (jsection 𝕜) (toAbelianLieAlgebraOn_jsection 𝕜)
+      (Basis.singleton Unit 𝕜) (AbelianLieAlgebraOn.jgen 𝕜) (Sum.inr l) = _
+  rw [LieAlgebra.IsExtension.basis_eq_of_right, jsection_jgen]
 
 @[simp] lemma basisJK_none :
     basisJK 𝕜 none = kgen 𝕜 := by
-  simp [basisJK]
+  rw [basisJK, Module.Basis.reindex_apply]
+  change (isCentralExtension 𝕜).basis (jsection 𝕜) (toAbelianLieAlgebraOn_jsection 𝕜)
+      (Basis.singleton Unit 𝕜) (AbelianLieAlgebraOn.jgen 𝕜) (Sum.inl ⟨⟩) = _
+  rw [LieAlgebra.IsExtension.basis_eq_of_left]
+  rw [Basis.singleton_apply]
+  rw [kgen_eq_ofCentral_one]
 
 /-- The Heisenberg basis projects to the expected abelian generators. -/
 @[simp] lemma toAbelianLieAlgebraOn_basisJK (o : Option ℤ) :

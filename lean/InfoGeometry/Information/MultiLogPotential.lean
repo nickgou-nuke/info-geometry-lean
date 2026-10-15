@@ -224,8 +224,8 @@ lemma centeredLinearStat_eq_sum_centeredStat
   unfold centeredLinearStat linearStat centeredStat
   have hExp :
       expectation F θ (fun x => ∑ i, v i * F.stat x i) =
-        ∑ i, v i * statMean F θ i := by
-    simpa [linearStat] using expectation_linearStat (F := F) (θ := θ) (v := v)
+        ∑ i, v i * statMean F θ i :=
+    expectation_linearStat (F := F) (θ := θ) (v := v)
   rw [hExp]
   calc
     ∑ i, v i * F.stat x i - ∑ i, v i * statMean F θ i

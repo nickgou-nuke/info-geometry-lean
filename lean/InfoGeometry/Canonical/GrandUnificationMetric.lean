@@ -69,9 +69,13 @@ theorem bregman_local_second_order_of_logDet
         (nhdsWithin 0 (Set.Ioi 0))
         (nhds ((1 / 2 : ℝ) * J.g x u u)) := by
   intro x u
-  let f' : E → E →L[ℝ] ℝ := fun y => InnerProductSpace.toDual ℝ E (J.gradK y)
-  let f'' : E →L[ℝ] E →L[ℝ] ℝ :=
-    (InnerProductSpace.toDualMap ℝ E).toContinuousLinearMap.comp (J.metric x)
+  let dualMap : E →L[ℝ] StrongDual ℝ E :=
+    (InnerProductSpace.toDualMap ℝ E).toContinuousLinearMap
+  let f' : E → StrongDual ℝ E := fun y => dualMap (J.gradK y)
+  let f'' : E →L[ℝ] StrongDual ℝ E := dualMap.comp (J.metric x)
+  have dualMap_apply (v w : E) : dualMap v w = inner ℝ v w := by
+    change InnerProductSpace.toDualMap ℝ E v w = inner ℝ v w
+    exact InnerProductSpace.toDualMap_apply_apply ℝ
 
   have hKdiff : DifferentiableAt ℝ J.K x :=
     (hTwiceDiff.contDiffAt).differentiableAt (by simp)
@@ -84,14 +88,16 @@ theorem bregman_local_second_order_of_logDet
 
   have hf : ∀ z ∈ interior (Set.univ : Set E), HasFDerivAt J.K (f' z) z := by
     intro z hz
-    simpa [f'] using J.hasFDerivAt_K z
+    convert J.hasFDerivAt_K z using 1
+    ext v
+    rfl
 
   have hxGrad : HasFDerivAt J.gradK (J.metric x) x := by
     simpa [metric] using (J.has_hessian x).hasFDerivAt
   have hx : HasFDerivWithinAt f' f'' (interior (Set.univ : Set E)) x := by
     have hx0 : HasFDerivAt f' f'' x := by
-      simpa [f', f''] using
-        ((InnerProductSpace.toDualMap ℝ E).toContinuousLinearMap.hasFDerivAt.comp x hxGrad)
+      change HasFDerivAt (dualMap ∘ J.gradK) f'' x
+      exact dualMap.hasFDerivAt.comp x hxGrad
     exact hx0.hasFDerivWithinAt
 
   have hlin_eval' : (fderiv ℝ J.K x) u = inner ℝ (J.gradK x) u := by
@@ -99,7 +105,7 @@ theorem bregman_local_second_order_of_logDet
       (fderiv ℝ J.K x) u = (f' x) u := by
         simpa [hgrad_match]
       _ = inner ℝ (J.gradK x) u := by
-        simp [f', InnerProductSpace.toDual_apply_apply]
+        exact dualMap_apply (J.gradK x) u
 
   have hTail :
       (fun h : ℝ =>
@@ -120,9 +126,9 @@ theorem bregman_local_second_order_of_logDet
       (fun h : ℝ =>
         J.DBregman (x + h • u) x - (h ^ 2 / 2) * J.g x u u)
         =o[nhdsWithin (0 : ℝ) (Set.Ioi 0)] fun h => h ^ 2 := by
-    simpa [f', f'', hlin_eval, JordanKKTData.DBregman, g, metric,
+    simpa [dualMap, f', f'', dualMap_apply, hlin_eval, JordanKKTData.DBregman, g, metric,
       sub_eq_add_neg, add_assoc, add_left_comm, add_comm, inner_smul_right, mul_comm, mul_left_comm,
-      mul_assoc, hlin_eval'] using hTail
+      mul_assoc, hlin_eval', innerSL_apply_apply ℝ] using hTail
 
   have hDiv :
       Filter.Tendsto

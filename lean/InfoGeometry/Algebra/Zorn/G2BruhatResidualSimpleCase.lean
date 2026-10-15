@@ -69,7 +69,9 @@ theorem canonicalResidualPCWord_simple_mem_residualSubgroup
   have : rootPCAlignment α.1 = 0 := hα
   have hroot : α.1 = G2PositiveRoot.alpha := by
     apply (rootPCAlignment.injective)
-    simpa using this
+    calc
+      rootPCAlignment α.1 = 0 := this
+      _ = rootPCAlignment G2PositiveRoot.alpha := rfl
   have hnot : G2PositiveRoot.alpha ∉
       canonicalSignedInversionRoots (weylElementOfNF (2, true)) := by
     decide

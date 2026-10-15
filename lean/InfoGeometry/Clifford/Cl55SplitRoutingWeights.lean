@@ -63,9 +63,8 @@ theorem normalizedPlus_tendsto_atTop :
 theorem normalizedMinus_tendsto_atTop :
     Tendsto normalizedMinus atTop (𝓝 (0 : ℝ)) := by
   have harg : Tendsto (fun t : ℝ => -(2 * t)) atTop atBot := by
-    simpa only [neg_mul] using
-      (tendsto_neg_atTop_atBot.comp
-        ((tendsto_const_mul_atTop_of_pos (show (0 : ℝ) < 2 by norm_num)).mpr tendsto_id))
+    exact tendsto_neg_atTop_atBot.comp
+      ((tendsto_const_mul_atTop_of_pos (show (0 : ℝ) < 2 by norm_num)).mpr tendsto_id)
   exact sigmoid_tendsto_atBot.comp harg
 
 theorem normalizedPlus_tendsto_atBot :
@@ -77,9 +76,8 @@ theorem normalizedPlus_tendsto_atBot :
 theorem normalizedMinus_tendsto_atBot :
     Tendsto normalizedMinus atBot (𝓝 (1 : ℝ)) := by
   have harg : Tendsto (fun t : ℝ => -(2 * t)) atBot atTop := by
-    simpa only [neg_mul] using
-      (tendsto_neg_atBot_atTop.comp
-        ((tendsto_const_mul_atBot_of_pos (show (0 : ℝ) < 2 by norm_num)).mpr tendsto_id))
+    exact tendsto_neg_atBot_atTop.comp
+      ((tendsto_const_mul_atBot_of_pos (show (0 : ℝ) < 2 by norm_num)).mpr tendsto_id)
   exact sigmoid_tendsto_atTop.comp harg
 
 end InfoGeometry.Clifford.Cl55SplitRoutingWeights

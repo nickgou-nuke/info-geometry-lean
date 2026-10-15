@@ -1254,7 +1254,7 @@ private theorem lucasNum_eq_sum_primitiveOrbitNumerator (n : Nat) (hn : 0 < n) :
     rw [primitiveOrbitNumerator]
     -- Rewrite antidiagonal sum as divisor sum via the bijection d ↦ (m/d, d)
     rw [← Nat.map_div_left_divisors, Finset.sum_map]
-    simp only [Function.Embedding.coeFn_mk]
+    rfl
   exact (ArithmeticFunction.sum_eq_iff_sum_mul_moebius_eq.mpr key) n hn
 
 /-- A proper divisor of n (divisor d with d ≠ n) satisfies d ≤ n/2 for n ≥ 1. -/

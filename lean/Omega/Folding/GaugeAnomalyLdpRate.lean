@@ -42,11 +42,13 @@ def GaugeAnomalyLdpData.endpointRateOneClosed (D : GaugeAnomalyLdpData) : Prop :
 private theorem gaugeAnomaly_endpoint_rate_zero_closed (D : GaugeAnomalyLdpData) :
     D.endpointRateZeroClosed := by
   rw [GaugeAnomalyLdpData.endpointRateZeroClosed, GaugeAnomalyLdpData.endpointRateZero]
+  change Real.log 13 = Real.log (Nat.fib 7)
   simpa using congrArg (fun n : ℕ => Real.log (n : ℝ)) fib_seven.symm
 
 private theorem gaugeAnomaly_endpoint_rate_one_closed (D : GaugeAnomalyLdpData) :
     D.endpointRateOneClosed := by
   rw [GaugeAnomalyLdpData.endpointRateOneClosed, GaugeAnomalyLdpData.endpointRateOne]
+  change Real.log 21 = Real.log (Nat.fib 8)
   simpa using congrArg (fun n : ℕ => Real.log (n : ℝ)) fib_eight_fold.symm
 
 /-- Pressure-based LDP wrapper together with the explicit endpoint closed forms.

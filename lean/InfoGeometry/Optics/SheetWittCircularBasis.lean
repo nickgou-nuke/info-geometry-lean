@@ -18,14 +18,13 @@ namespace InfoGeometry.Optics.SheetWittCircularBasis
 
 open InfoGeometry.OperatorAlgebra
 
-variable {Op : Type*} [Ring Op] [Module ℝ Op] [Algebra ℝ Op]
+variable {Op : Type*} [Ring Op] [Algebra ℝ Op]
 
 def choose (ε : Bool) (p q : Op) : Op :=
   if ε = true then p else q
 
 /-- Two commuting involutions in one operator algebra. -/
-structure CommutingInvolutions (Op : Type*) [Ring Op] [Module ℝ Op]
-    [Algebra ℝ Op] where
+structure CommutingInvolutions (Op : Type*) [Ring Op] [Algebra ℝ Op] where
   hyperbolic : Op
   circular : Op
   hyperbolic_sq : hyperbolic * hyperbolic = 1
@@ -66,7 +65,7 @@ def jointProjector (ε σ : Bool) : Op :=
   choose ε (hyperbolicInvolution S).Pleft (hyperbolicInvolution S).Pright *
     choose σ (circularInvolution S).Pleft (circularInvolution S).Pright
 
-private theorem hyperbolic_projector_commutes_circular_projector
+theorem hyperbolic_projector_commutes_circular_projector
     (ε σ : Bool) :
     choose ε (hyperbolicInvolution S).Pleft (hyperbolicInvolution S).Pright *
         choose σ (circularInvolution S).Pleft (circularInvolution S).Pright =
@@ -174,12 +173,8 @@ theorem jointProjectors_pairwise_disjoint
     S.jointProjector ε σ * S.jointProjector ε σ = S.jointProjector ε σ := by
   unfold jointProjector
   apply product_idem_of_commute
-  · cases ε
-    · simpa only [choose] using (hyperbolicInvolution S).Pright_idem
-    · simpa only [choose] using (hyperbolicInvolution S).Pleft_idem
-  · cases σ
-    · simpa only [choose] using (circularInvolution S).Pright_idem
-    · simpa only [choose] using (circularInvolution S).Pleft_idem
+  · cases ε <;> simp [choose, ChiralInvolution.Pleft_idem, ChiralInvolution.Pright_idem]
+  · cases σ <;> simp [choose, ChiralInvolution.Pleft_idem, ChiralInvolution.Pright_idem]
   · exact hyperbolic_projector_commutes_circular_projector S ε σ
 
 @[simp] theorem jointProjector_sum :

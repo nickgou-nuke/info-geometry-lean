@@ -20,8 +20,12 @@ theorem paper_conclusion_additive_scalar_procircle_weighted_model :
       convert (Real.summable_nat_rpow_inv.mpr (by norm_num : (1 : ℝ) < 2)) using 1
       funext p
       simp
-    simpa [conclusion_additive_scalar_procircle_weighted_model_weights] using
+    have hshift : Summable (fun n : ℕ => (((n + 1 : ℕ) : ℝ) ^ 2)⁻¹) :=
       (summable_nat_add_iff 1).2 hbase
+    have hfun : (fun n : ℕ => (↑(n + 1) ^ 2 : ℝ)⁻¹) = conclusion_additive_scalar_procircle_weighted_model_weights := by
+      ext n
+      simp [conclusion_additive_scalar_procircle_weighted_model_weights]
+    rwa [hfun] at hshift
   refine ⟨hsummable_w, ?_, ?_, ?_⟩
   · intro p
     have hpos : 0 < ((p : ℝ) + 1) ^ 2 := by positivity

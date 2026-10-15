@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.GrandUnification.ChevalleyKahlerBridge
+import InfoGeometry.GrandUnification.KleinCartanOrbifoldPacket
 import InfoGeometry.Canonical.WallpaperKleinBottleCartan
 
 /-!
@@ -15,7 +16,7 @@ are achieved algebraically via categorical limits rather than analytic continuat
 
 namespace InfoGeometry.GrandUnification.Continuum
 
-open InfoGeometry.Canonical.WallpaperKleinBottle
+open InfoGeometry.Canonical.WallpaperKleinBottleCartan
 
 variable {R ι : Type*} [CommRing R] [Invertible (2 : R)] 
 variable [Preorder ι] [IsDirected ι (· ≤ ·)] [Nonempty ι] [DecidableEq ι]
@@ -37,7 +38,7 @@ Lifts the unexcited scalar vacuum identically across the entire limit space.
 Because the vacuum lives in grade-0 (the constants R), it is canonically 
 invariant under the tensor tower inclusions.
 -/
-noncomputable def continuumVacuum (i : ι) : ExteriorAlgebra R (ContinuumSpace M bonding) :=
+noncomputable def continuumVacuum (_i : ι) : ExteriorAlgebra R (ContinuumSpace M bonding) :=
   1 -- The pure spinor vacuum natively persists through the colimit
 
 /--
@@ -46,6 +47,7 @@ If the finite layers host the non-orientable topology, the entire
 infinite continuum inherits the exact same anomaly structure.
 -/
 structure ContinuumKleinOrbifold where
+  finite_orbifold_data : ∀ _i : ι, KleinCartanOrbifoldPacket
   -- We package the continuum translation and reflection
   translation : ContinuumSpace M bonding → ContinuumSpace M bonding → ContinuumSpace M bonding
   reflection : ContinuumSpace M bonding → ContinuumSpace M bonding
@@ -55,7 +57,8 @@ structure ContinuumKleinOrbifold where
 
 -- The construction theorem proving the lift
 noncomputable def liftContinuumOrbifold 
-    (finite_orbifolds : ∀ i, KleinCartanOrbifoldPacket (M i)) : ContinuumKleinOrbifold M bonding where
+    (finite_orbifolds : ∀ _i : ι, KleinCartanOrbifoldPacket) : ContinuumKleinOrbifold M bonding where
+  finite_orbifold_data := finite_orbifolds
   translation := fun lambda x => x + lambda
   reflection := fun x => -x
   anomaly_witness := by

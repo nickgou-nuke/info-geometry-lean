@@ -66,9 +66,9 @@ theorem deriv_quasilatticeDirac
           V.connectionGenerator
           (InfoGeometry.Canonical.BogoliubovTransport.transportCommutator
             (E := E) V.connectionGenerator D) t := by
-            simpa using
-              (InfoGeometry.Canonical.hasDerivAt_expTransport
-                (A := EndH) (X := V.connectionGenerator) (A₀ := D) t).deriv
+            rw [← InfoGeometry.Canonical.BogoliubovTransport.lieBracket_eq_transportCommutator]
+            exact (InfoGeometry.Canonical.hasDerivAt_expTransport
+              (A := EndH) (X := V.connectionGenerator) (A₀ := D) t).deriv
     _ =
         InfoGeometry.Canonical.BogoliubovTransport.transportCommutator
           (E := E) V.connectionGenerator
@@ -100,9 +100,10 @@ theorem deriv_quasilatticeDirac_eq_phaseLinear_add_phaseAntilinear
           (E := E) V.connectionGenerator)
         (quasilatticeDirac V D t) := by
   rw [deriv_quasilatticeDirac]
-  simpa using
-    (InfoGeometry.Canonical.BogoliubovTransport.transportCommutator_split_generator
-      (E := E) V.connectionGenerator (quasilatticeDirac V D t))
+  change InfoGeometry.Canonical.BogoliubovTransport.transportCommutator
+    (E := E) V.connectionGenerator (quasilatticeDirac V D t) = _
+  exact InfoGeometry.Canonical.BogoliubovTransport.transportCommutator_split_generator
+    (E := E) V.connectionGenerator (quasilatticeDirac V D t)
 
 /--
 If the transported Dirac operator commutes with the phase-linear part of the
@@ -178,19 +179,19 @@ theorem deriv2_quasilatticeDirac_at_zero
         =
       fun t => InfoGeometry.Canonical.expTransport (A := EndH) X δD t := by
     funext t
-    simpa [X, δD, quasilatticeDirac] using
+    simpa [X, δD, quasilatticeDirac,
+      InfoGeometry.Canonical.BogoliubovTransport.lieBracket_eq_transportCommutator] using
       (InfoGeometry.Canonical.hasDerivAt_expTransport
         (A := EndH) (X := X) (A₀ := D) t).deriv
   have hSecond :
       deriv (fun t => InfoGeometry.Canonical.expTransport (A := EndH) X δD t) 0
         =
       X * δD - δD * X := by
-    simpa [Ring.lie_def, sub_eq_add_neg] using
-      (InfoGeometry.Canonical.deriv_expTransport_at_zero
-        (A := EndH) (X := X) (A₀ := δD))
+    rw [InfoGeometry.Canonical.deriv_expTransport_at_zero]
+    exact InfoGeometry.Canonical.BogoliubovTransport.lieBracket_eq_transportCommutator X δD
   dsimp
   rw [hDeriv]
-  simpa [X, δD, InfoGeometry.Canonical.BogoliubovTransport.transportCommutator]
-    using hSecond
+  rw [hSecond]
+  rfl
 
 end InfoGeometry.Canonical.QuasilatticeDirac

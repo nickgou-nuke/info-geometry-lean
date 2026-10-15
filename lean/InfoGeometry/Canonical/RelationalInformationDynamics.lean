@@ -69,8 +69,8 @@ theorem operatorExponentialChart_zero
 theorem hasDerivAt_operatorExponentialChart_zero
     (K : EndH) :
     HasDerivAt (operatorExponentialChart (E := E) K) K 0 := by
-  simpa [operatorExponentialChart] using
-    (hasDerivAt_exp_smul_const (x := K) (t := (0 : ℝ)))
+  change HasDerivAt (fun τ : ℝ => NormedSpace.exp (τ • K)) K 0
+  simpa using hasDerivAt_exp_smul_const (x := K) (t := (0 : ℝ))
 
 /-- Analytic log-partition potential attached to an operatorial observable seed. -/
 @[rep_depth operator]
@@ -136,9 +136,10 @@ theorem operatorMassieuPotential_normalizedInfinitesimalLaw
     (hω1 : ω (1 : EndH) = 1) :
     HasDerivAt (operatorMassieuPotential (E := E) ω A)
       (operatorMassieuExpectation ω A) 0 := by
-  simpa [operatorMassieuPotential, operatorMassieuExpectation] using
-    (hasDerivAt_logInformationPartitionFunction_zero_of_normalized
-      (E := E) (ω := ω) (K := A) hω1)
+  change HasDerivAt (fun τ => logInformationPartitionFunction (E := E) ω A τ)
+    (ω A) 0
+  exact hasDerivAt_logInformationPartitionFunction_zero_of_normalized
+    (E := E) (ω := ω) (K := A) hω1
 
 /--
 Infinitesimal law for the operatorial log-generating potential.
@@ -640,8 +641,9 @@ noncomputable def channelKreinMetricAtState
     channelKreinMetricAtState (E := E) ψ X Y
       =
     hessian_indefinite_form (E := E) (X ψ) (Y ψ) := by
-  simp [channelKreinMetricAtState, hessian_indefinite_form,
-    LinearMap.BilinForm.comp_apply, channelEvalAtState, KreinSpace.kreinBilin]
+  change KreinSpace.kreinInner (X ψ) (Y ψ) =
+    hessian_indefinite_form (E := E) (X ψ) (Y ψ)
+  rfl
 
 /-- Concrete constructive realization of the abstract relational-information datum. -/
 @[rep_depth krein]

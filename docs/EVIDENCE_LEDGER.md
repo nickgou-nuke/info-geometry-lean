@@ -22,9 +22,9 @@ The following components are either closed finite owner lemmas or explicit evide
   - `discharge_rank_decision`: a conditional boundary binding external Betti configuration data to the Lean target geometry.
 * **MZM Braiding Unitary Limits** (`HorizonInformationScrambling.lean`):
   - `black_hole_fast_scrambling`: Proves the modular time flow acts as a unitary scrambler without loss of quadratic information form.
-* **Thermodynamic Gauge & BCFW Closure** (`GrandUnificationLinker.lean`, `ThermodynamicGauge.lean`, `OnShellResidueBCFWBridge.lean`):
+* **Thermodynamic Gauge & Finite Algebraic Linker** (`GrandUnificationLinker.lean`, `ThermodynamicGauge.lean`):
   - The causal non-equilibrium flow and finite topology linker corridor are locally free of `sorry`.
-  - BCFW-style readouts remain finite algebraic statements under explicit premises, not analytic BCFW recursion theorems.
+  - No BCFW residue or recursion theorem is claimed; the linker proves only its explicitly stated finite ring identities.
 * **q-Supergrading / Delaunay Deficit Corridor** (`SuperCuntzDilationCurvature.lean`):
   - Records finite q-boundary readouts for the bosonic/fermionic split.
   - Adds explicit modular edge dilation and q-deficit lemmas.

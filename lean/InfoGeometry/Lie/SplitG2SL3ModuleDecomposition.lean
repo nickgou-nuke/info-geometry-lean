@@ -76,7 +76,7 @@ theorem sl3_bracket_closed (A B : Matrix (Fin 3) (Fin 3) R)
     let C := lieBracket A B
     C 0 0 + C 1 1 + C 2 2 = 0 := by
   intro C
-  simp [C, lieBracket, mul_apply, sub_apply, Fin.sum_univ_three]
+  simp [C, lieBracket, mul_apply, Matrix.sub_apply, Fin.sum_univ_three]
   ring
 
 /-- Action of 𝔰𝔩₃ on the fundamental module 3: M · v -/

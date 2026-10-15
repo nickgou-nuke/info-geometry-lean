@@ -1,6 +1,6 @@
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.LinearAlgebra.Dimension.Finrank
 import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.Tactic
@@ -360,7 +360,7 @@ theorem splitOctonionicMul_unitE_self :
     vectorCrossProduct_zero_left _
   rw [hdot, hcross]
   ext i
-  · dsimp; apply Complex.ext <;> { dsimp; ring }
-  · dsimp; apply Complex.ext <;> { dsimp; ring }
+  · simp
+  · simp
 
 end InfoGeometry.Physics.PenroseTwistor

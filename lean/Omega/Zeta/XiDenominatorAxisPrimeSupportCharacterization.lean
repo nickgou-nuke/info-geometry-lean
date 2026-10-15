@@ -62,7 +62,9 @@ private theorem xi_mem_of_mulByPrimeSurjective {S : FinitePrimeLocalization} {p 
       _ = (p : ℚ)⁻¹ := by simp
   have hrec : xiPrimeReciprocalInLocalizedGroup S p := by
     unfold xiPrimeReciprocalInLocalizedGroup
-    simpa [hbInv] using b.2
+    have hbSupported : denominatorSupportedBy S b.1 := b.2
+    rw [← hbInv]
+    exact hbSupported
   exact (xi_primeReciprocalInLocalizedGroup_iff hp).2 hrec
 
 private theorem xi_mulByPrimeSurjective_iff_modPrimeQuotientVanishes

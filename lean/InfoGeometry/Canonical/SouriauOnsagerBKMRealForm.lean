@@ -77,17 +77,13 @@ noncomputable def FaithfulDensityOperator.bkmRealBilinForm
     LinearMap.BilinForm ℝ (FiniteOperatorAlgebra n) :=
   LinearMap.mk₂ ℝ (fun A B => (D.kuboMoriPairing A B).re)
     (fun A C B => by
-      dsimp
       rw [D.kuboMoriPairing_add_left A C B h, Complex.add_re])
     (fun r A B => by
-      dsimp
       rw [D.kuboMoriPairing_real_smul_left r A B h]
       simp)
     (fun A B C => by
-      dsimp
       rw [D.kuboMoriPairing_add_right A B C h, Complex.add_re])
     (fun r A B => by
-      dsimp
       rw [D.kuboMoriPairing_real_smul_right r A B h]
       simp)
 

@@ -188,8 +188,12 @@ theorem primonLogGenerator_phase_exp_eq_bkPrimePhase
           (primonLogGenerator 0 t
             ⟨p.1, P.prime_mem p.1 p.property⟩ 0)) =
       bkPrimePhase logPrime t p := by
+  let prime : Nat.Primes := ⟨p.1, P.prime_mem p.1 p.property⟩
+  change Complex.exp
+      (InfoGeometry.Compatibility.chiralToComplex
+        (primonLogGenerator 0 t prime 0)) = bkPrimePhase logPrime t p
   rw [primonLogGenerator_phase_exp_sheet_invariant]
-  simp [bkPrimePhase, hlog p]
+  simp [bkPrimePhase, hlog p, prime]
 
 def bkStateRotor {P : PrimeCantorZetaDiracOperator.PrimeCutoff}
     (logPrime : PrimeCantorBerryKeatingOperator.PrimeMode P → ℝ)

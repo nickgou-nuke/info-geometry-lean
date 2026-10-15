@@ -28,13 +28,16 @@ theorem paper_xi_toeplitz_rank_stabilizes_to_distinct_unitcircle_roots (s N : �
     exact_mod_cast (ne_of_gt (Real.sqrt_pos.2 (hw k)))
   have hT : T = Bᴴ * B := by
     ext i j
+    dsimp [T]
     rw [Matrix.mul_apply]
     refine Finset.sum_congr rfl ?_
-    intro k hk
+    intro k _
     have hsq : ((Real.sqrt (w k) : ℂ) ^ 2) = (w k : ℂ) := by
       exact_mod_cast (Real.sq_sqrt (le_of_lt (hw k)))
-    rw [← hsq]
-    simp [B, pow_two, mul_assoc, mul_left_comm, mul_comm]
+    rw [Matrix.conjTranspose_apply]
+    dsimp [B]
+    rw [map_mul, map_pow, Complex.conj_ofReal, ← hsq]
+    ring
   have hTB : T.rank = B.rank := by
     rw [hT, Matrix.rank_conjTranspose_mul_self]
   by_cases hs : s ≤ N + 1
@@ -42,14 +45,17 @@ theorem paper_xi_toeplitz_rank_stabilizes_to_distinct_unitcircle_roots (s N : �
     let M : Matrix (Fin s) (Fin s) ℂ := C.submatrix (Fin.castLE hs) (Equiv.refl (Fin s))
     have hsub : M.rank ≤ C.rank := by
       simpa [M, C] using
-        (Matrix.rank_submatrix_le (f := Fin.castLE hs) (e := Equiv.refl (Fin s)) C)
+        (Matrix.rank_submatrix_le C (Fin.castLE hs) (Equiv.refl (Fin s)))
     have hM :
         M =
           (Matrix.vandermonde ξ)ᴴ *
             Matrix.diagonal (fun k : Fin s => (Real.sqrt (w k) : ℂ)) := by
       ext i j
-      rw [Matrix.mul_apply]
-      simp [M, C, B, Matrix.vandermonde_apply, Matrix.diagonal_apply, mul_comm]
+      dsimp [M, C]
+      rw [Matrix.mul_diagonal, Matrix.conjTranspose_apply]
+      dsimp [B, Matrix.vandermonde]
+      rw [map_mul, map_pow, Complex.conj_ofReal]
+      ring
     have hdiag_unit :
         IsUnit (Matrix.diagonal (fun k : Fin s => (Real.sqrt (w k) : ℂ))).det := by
       apply isUnit_iff_ne_zero.mpr
@@ -79,7 +85,7 @@ theorem paper_xi_toeplitz_rank_stabilizes_to_distinct_unitcircle_roots (s N : �
       B.submatrix (Fin.castLE hN) (Equiv.refl (Fin (N + 1)))
     have hsub : M.rank ≤ B.rank := by
       simpa [M] using
-        (Matrix.rank_submatrix_le (f := Fin.castLE hN) (e := Equiv.refl (Fin (N + 1))) B)
+        (Matrix.rank_submatrix_le B (Fin.castLE hN) (Equiv.refl (Fin (N + 1))))
     have hz : Function.Injective z := by
       intro a b hab
       have hcast : Fin.castLE hN a = Fin.castLE hN b := hξ (by simpa [z] using hab)
@@ -89,8 +95,9 @@ theorem paper_xi_toeplitz_rank_stabilizes_to_distinct_unitcircle_roots (s N : �
           Matrix.diagonal (fun k : Fin (N + 1) => (Real.sqrt (w (Fin.castLE hN k)) : ℂ)) *
             Matrix.vandermonde z := by
       ext i j
-      rw [Matrix.mul_apply]
-      simp [M, z, B, Matrix.vandermonde_apply, Matrix.diagonal_apply, mul_comm]
+      dsimp [M]
+      rw [Matrix.diagonal_mul]
+      dsimp [B, Matrix.vandermonde, z]
     have hdiag_unit :
         IsUnit
           (Matrix.diagonal

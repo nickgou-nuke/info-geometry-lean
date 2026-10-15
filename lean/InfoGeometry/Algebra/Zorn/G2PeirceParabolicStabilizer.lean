@@ -125,7 +125,10 @@ theorem peirceStabilizer_card
   have h_eq : peirceStabilizer (G := G) baseFrame = parabolicSubgroup B₀ s₂ :=
     peirceStabilizer_eq_parabolicSubgroup baseFrame B₀ s₂ hB₀_fix hs₂_fix h_peirce_rigidity
   have h_equiv : ↥(peirceStabilizer (G := G) baseFrame) ≃ ↥(parabolicSubgroup B₀ s₂) :=
-    Equiv.setCongr (by rw [h_eq])
+    { toFun := fun g => ⟨g.1, h_eq ▸ g.2⟩
+      invFun := fun g => ⟨g.1, h_eq.symm ▸ g.2⟩
+      left_inv := fun g => by cases g; rfl
+      right_inv := fun g => by cases g; rfl }
   rw [Nat.card_congr h_equiv, h_parabolic_card]
 
 end InfoGeometry.Algebra.Zorn.G2PeirceParabolic
@@ -164,13 +167,13 @@ theorem p1_f2_cases (p : ProjectiveLineF2) :
   · contradiction
   · right; left
     apply Subtype.ext
-    dsimp [pt_infinity]
+    rfl
   · left
     apply Subtype.ext
-    dsimp [pt_zero]
+    rfl
   · right; right
     apply Subtype.ext
-    dsimp [pt_one]
+    rfl
 
 variable {G : Type*} [Group G]
 

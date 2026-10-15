@@ -13,13 +13,16 @@ complete algebraic decomposition of `2×2` complex matrices that simultaneously 
 
 * **Lie closure** (commutators): `[σ⁺, σ⁻] = σ³` — chirality/helicity grading.
 * **Jordan closure** (anticommutators): `{σ⁺, σ⁻} = I` — transverse completeness.
-* **Nilpotent square** (causal cone): `(σ⁺)² = (σ⁻)² = 0` — null vector factorization.
+* **Nilpotent square**: `(σ⁺)² = (σ⁻)² = 0` — the ladder operators are
+  nilpotent. This matrix-algebra fact is distinct from nullness of a soldered
+  spacetime vector.
 * **CAR identification**: σ⁺ is the fermionic annihilation, σ⁻ the creation operator.
 
-When soldered onto spacetime vectors via the Pauli map `v^μ σ_μ`, the chiral algebra
-provides the spinor-helicity decomposition: null vectors (on the causal cone) factorize
-as `λ ⊗ λ̃†`, and the circular polarization basis `{ε⁺, ε⁻}` is the soldered image of
-`{σ⁺, σ⁻}` acting on the little group.
+Under the Pauli soldering map `v^μ σ_μ`, the causal-cone condition is determinant
+zero. For real four-vectors this gives a Hermitian singular matrix of rank at most
+one; a spinor factorization requires the corresponding positivity and factorization
+argument. Singularity alone does not imply matrix nilpotency. The circular
+polarization basis `{ε⁺, ε⁻}` is a separate representation-theoretic construction.
 
 -/
 
@@ -161,9 +164,9 @@ theorem σ3c_eq_sigma3 : σ3c = SolderingSpinConnectionBogoliubov.σ3 := by
 
 /-! ## Nilpotency and the causal cone
 
-The fundamental algebraic fact: σ⁺ and σ⁻ are nilpotent of order 2. This nilpotency
-is the algebraic expression of the causal cone — null vectors, when soldered, produce
-rank-1 matrices that decompose cleanly in the chiral basis.
+The chiral ladder matrices are nilpotent, while the causal cone for a soldered
+four-vector is characterized by determinant zero. These are distinct conditions:
+a nonzero null vector can have a nonzero, non-nilpotent soldered matrix.
 -/
 
 /-- σ⁺ is nilpotent: `(σ⁺)² = 0`. -/

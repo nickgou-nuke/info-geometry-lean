@@ -143,7 +143,8 @@ lemma kinematicQuadraticForm_single_isOrtho (i j : Fin n) (hij : i ≠ j) :
   have hQ : B.toQuadraticMap.IsOrtho (Pi.single i (1 : ℝ)) (Pi.single j (1 : ℝ)) :=
     (LinearMap.BilinForm.toQuadraticMap_isOrtho (R := ℝ) (M := Fin n → ℝ) (B := B)
       h_symm).2 hB
-  simpa [B, kinematicQuadraticForm] using hQ
+  change B.toQuadraticMap.IsOrtho (Pi.single i (1 : ℝ)) (Pi.single j (1 : ℝ))
+  exact hQ
 
 /--
 The structural Lie bracket identity between two bivectors.

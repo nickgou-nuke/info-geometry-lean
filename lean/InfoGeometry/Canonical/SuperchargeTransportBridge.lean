@@ -90,8 +90,8 @@ theorem deriv_transportedParitySupercharge
     transportCommutator (E := E)
       V.connectionGenerator
       (transportedParitySupercharge (E := E) V t) := by
-  simpa [transportedParitySupercharge] using
-    (deriv_quasilatticeDirac (E := E) V (modular_j (E := E)) t)
+  rw [deriv_quasilatticeDirac]
+  rfl
 
 /-- The transported modular supercharge obeys the same infinitesimal commutator law as the Dirac lane. -/
 @[rep_depth transport]
@@ -103,8 +103,8 @@ theorem deriv_transportedModularSupercharge
     transportCommutator (E := E)
       V.connectionGenerator
       (transportedModularSupercharge (E := E) V t) := by
-  simpa [transportedModularSupercharge] using
-    (deriv_quasilatticeDirac (E := E) V (spectral_epsilon (E := E)) t)
+  rw [deriv_quasilatticeDirac]
+  rfl
 
 /--
 If the phase-linear part of the connection generator commutes with `J`, the
@@ -211,10 +211,13 @@ theorem deriv_anticommutator_transportedParity_staticModular_at_zero
         (fun t => transportedParitySupercharge (E := E) V t)
         (transportCommutator (E := E) V.connectionGenerator (modular_j (E := E)))
         0 := by
-    simpa [transportedParitySupercharge, quasilatticeDirac,
-      transportCommutator] using
-      (InfoGeometry.Canonical.hasDerivAt_expTransport_at_zero
-        (A := EndH) (X := V.connectionGenerator) (A₀ := modular_j (E := E)))
+    change HasDerivAt
+      (fun t => expTransport (A := EndH) V.connectionGenerator
+        (modular_j (E := E)) t)
+      (transportCommutator (E := E) V.connectionGenerator (modular_j (E := E))) 0
+    rw [← InfoGeometry.Canonical.BogoliubovTransport.lieBracket_eq_transportCommutator]
+    exact InfoGeometry.Canonical.hasDerivAt_expTransport_at_zero
+      (A := EndH) (X := V.connectionGenerator) (A₀ := modular_j (E := E))
   have hLeft :
       HasDerivAt
         (fun t => transportedParitySupercharge (E := E) V t * spectral_epsilon (E := E))
@@ -229,7 +232,15 @@ theorem deriv_anticommutator_transportedParity_staticModular_at_zero
           * transportCommutator (E := E) V.connectionGenerator (modular_j (E := E)))
         0 := by
     simpa [transportedParitySupercharge] using hA.const_mul (spectral_epsilon (E := E))
-  simpa [fockAnticommutator, superBracket_odd_odd] using (hLeft.add hRight).deriv
+  simp only [fockAnticommutator, anticommutator, superBracket_odd_odd]
+  change deriv (fun t =>
+    (transportedParitySupercharge (E := E) V t).comp (spectral_epsilon (E := E)) +
+      (spectral_epsilon (E := E)).comp (transportedParitySupercharge (E := E) V t)) 0 =
+    (transportCommutator (E := E) V.connectionGenerator (modular_j (E := E))).comp
+      (spectral_epsilon (E := E)) +
+      (spectral_epsilon (E := E)).comp
+        (transportCommutator (E := E) V.connectionGenerator (modular_j (E := E)))
+  exact (hLeft.add hRight).deriv
 
 /--
 The transported anomaly seed splits functorially along the phase-linear /
@@ -300,7 +311,9 @@ theorem deriv_anticommutator_transportedParity_staticModular_at_zero_eq_phaseAnt
       (phaseLinearPart (E := E) V.connectionGenerator).comp (modular_j (E := E))
         =
       (modular_j (E := E)).comp (phaseLinearPart (E := E) V.connectionGenerator) by
-        simpa using hComm.eq.symm]
+        change phaseLinearPart (E := E) V.connectionGenerator * modular_j (E := E) =
+          modular_j (E := E) * phaseLinearPart (E := E) V.connectionGenerator
+        exact hComm.eq.symm]
     simp
   simp [hZero]
 
@@ -327,7 +340,9 @@ theorem deriv_anticommutator_transportedParity_staticModular_at_zero_eq_zero_of_
     unfold transportCommutator
     rw [show V.connectionGenerator.comp (modular_j (E := E))
         = (modular_j (E := E)).comp V.connectionGenerator by
-          simpa using hComm.eq.symm]
+          change V.connectionGenerator * modular_j (E := E) =
+            modular_j (E := E) * V.connectionGenerator
+          exact hComm.eq.symm]
     simp
   simp [hZero]
 

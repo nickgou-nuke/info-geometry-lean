@@ -6,7 +6,11 @@ namespace InfoGeometry.Canonical.OctonionCl8
 /-- The 8 basis elements of the Octonion algebra (1 real, 7 imaginary) -/
 inductive OctBasis
 | e0 | e1 | e2 | e3 | e4 | e5 | e6 | e7
-deriving DecidableEq, Repr, Fintype
+deriving DecidableEq, Repr
+
+instance : Fintype OctBasis where
+  elems := {.e0, .e1, .e2, .e3, .e4, .e5, .e6, .e7}
+  complete basis := by cases basis <;> decide
 
 open OctBasis
 

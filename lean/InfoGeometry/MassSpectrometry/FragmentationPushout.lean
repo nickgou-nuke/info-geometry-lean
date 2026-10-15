@@ -36,72 +36,71 @@ variable {k nLeft nRight : ℕ}
 /-- Categorical vertex pushout of the two fragment embeddings. -/
 abbrev VertexPushout (S : MolecularFragmentSpan k nLeft nRight) : Type :=
   CategoryTheory.Limits.Types.Pushout
-    (CategoryTheory.ConcreteCategory.ofHom S.toLeft.toFun)
-    (CategoryTheory.ConcreteCategory.ofHom S.toRight.toFun)
+    (TypeCat.ofHom S.toLeft.toFun)
+    (TypeCat.ofHom S.toRight.toFun)
 
 /-- Left fragment injection into the reconstructed carrier. -/
 noncomputable def inLeft (S : MolecularFragmentSpan k nLeft nRight) :
     Fin nLeft ⟶ S.VertexPushout :=
   CategoryTheory.Limits.Types.Pushout.inl
-    (CategoryTheory.ConcreteCategory.ofHom S.toLeft.toFun)
-    (CategoryTheory.ConcreteCategory.ofHom S.toRight.toFun)
+    (TypeCat.ofHom S.toLeft.toFun)
+    (TypeCat.ofHom S.toRight.toFun)
 
 /-- Right fragment injection into the reconstructed carrier. -/
 noncomputable def inRight (S : MolecularFragmentSpan k nLeft nRight) :
     Fin nRight ⟶ S.VertexPushout :=
   CategoryTheory.Limits.Types.Pushout.inr
-    (CategoryTheory.ConcreteCategory.ofHom S.toLeft.toFun)
-    (CategoryTheory.ConcreteCategory.ofHom S.toRight.toFun)
+    (TypeCat.ofHom S.toLeft.toFun)
+    (TypeCat.ofHom S.toRight.toFun)
 
 /-- Shared atoms are identified by the pushout. -/
 @[simp] theorem shared_glue (S : MolecularFragmentSpan k nLeft nRight)
     (i : Fin k) :
     S.inLeft (S.toLeft.toFun i) = S.inRight (S.toRight.toFun i) := by
   have h := CategoryTheory.Limits.Types.Pushout.condition
-    (CategoryTheory.ConcreteCategory.ofHom S.toLeft.toFun)
-    (CategoryTheory.ConcreteCategory.ofHom S.toRight.toFun)
+    (TypeCat.ofHom S.toLeft.toFun)
+    (TypeCat.ofHom S.toRight.toFun)
   exact CategoryTheory.ConcreteCategory.congr_hom h i
 
 /-- Atom labels descend to the pushout carrier. -/
 noncomputable def atomLabel (S : MolecularFragmentSpan k nLeft nRight) :
     S.VertexPushout → AtomLabel :=
-  let f : Fin k ⟶ Fin nLeft := S.toLeft.toFun
-  let g : Fin k ⟶ Fin nRight := S.toRight.toFun
+  let f : Fin k ⟶ Fin nLeft := TypeCat.ofHom S.toLeft.toFun
+  let g : Fin k ⟶ Fin nRight := TypeCat.ofHom S.toRight.toFun
   let c : PushoutCocone f g := PushoutCocone.mk
-    (CategoryTheory.ConcreteCategory.ofHom (C := Type) S.left.atom)
-    (CategoryTheory.ConcreteCategory.ofHom (C := Type) S.right.atom) (by
+    (TypeCat.ofHom S.left.atom)
+    (TypeCat.ofHom S.right.atom) (by
       apply CategoryTheory.ConcreteCategory.ext_apply
       intro i
-      simpa only [CategoryTheory.types_comp_apply] using (S.toLeft.atom_preserving i).trans
-        (S.toRight.atom_preserving i).symm)
-  CategoryTheory.ConcreteCategory.hom
-    ((CategoryTheory.Limits.Types.Pushout.isColimitCocone f g).desc c)
+      change S.left.atom (S.toLeft.toFun i) = S.right.atom (S.toRight.toFun i)
+      exact (S.toLeft.atom_preserving i).trans (S.toRight.atom_preserving i).symm)
+  (CategoryTheory.Limits.Types.Pushout.isColimitCocone f g).desc c
 
 @[simp] theorem atomLabel_inLeft
     (S : MolecularFragmentSpan k nLeft nRight) (i : Fin nLeft) :
     S.atomLabel (S.inLeft i) = S.left.atom i := by
-  let f : Fin k ⟶ Fin nLeft := S.toLeft.toFun
-  let g : Fin k ⟶ Fin nRight := S.toRight.toFun
+  let f : Fin k ⟶ Fin nLeft := TypeCat.ofHom S.toLeft.toFun
+  let g : Fin k ⟶ Fin nRight := TypeCat.ofHom S.toRight.toFun
   let c : PushoutCocone f g := PushoutCocone.mk
-    (CategoryTheory.ConcreteCategory.ofHom (C := Type) S.left.atom)
-    (CategoryTheory.ConcreteCategory.ofHom (C := Type) S.right.atom)
+    (TypeCat.ofHom S.left.atom)
+    (TypeCat.ofHom S.right.atom)
     (by apply CategoryTheory.ConcreteCategory.ext_apply; intro j
-        simpa only [CategoryTheory.types_comp_apply] using (S.toLeft.atom_preserving j).trans
-          (S.toRight.atom_preserving j).symm)
+        change S.left.atom (S.toLeft.toFun j) = S.right.atom (S.toRight.toFun j)
+        exact (S.toLeft.atom_preserving j).trans (S.toRight.atom_preserving j).symm)
   exact CategoryTheory.ConcreteCategory.congr_hom
     ((CategoryTheory.Limits.Types.Pushout.isColimitCocone f g).fac c WalkingCospan.left) i
 
 @[simp] theorem atomLabel_inRight
     (S : MolecularFragmentSpan k nLeft nRight) (i : Fin nRight) :
     S.atomLabel (S.inRight i) = S.right.atom i := by
-  let f : Fin k ⟶ Fin nLeft := S.toLeft.toFun
-  let g : Fin k ⟶ Fin nRight := S.toRight.toFun
+  let f : Fin k ⟶ Fin nLeft := TypeCat.ofHom S.toLeft.toFun
+  let g : Fin k ⟶ Fin nRight := TypeCat.ofHom S.toRight.toFun
   let c : PushoutCocone f g := PushoutCocone.mk
-    (CategoryTheory.ConcreteCategory.ofHom (C := Type) S.left.atom)
-    (CategoryTheory.ConcreteCategory.ofHom (C := Type) S.right.atom)
+    (TypeCat.ofHom S.left.atom)
+    (TypeCat.ofHom S.right.atom)
     (by apply CategoryTheory.ConcreteCategory.ext_apply; intro j
-        simpa only [CategoryTheory.types_comp_apply] using (S.toLeft.atom_preserving j).trans
-          (S.toRight.atom_preserving j).symm)
+        change S.left.atom (S.toLeft.toFun j) = S.right.atom (S.toRight.toFun j)
+        exact (S.toLeft.atom_preserving j).trans (S.toRight.atom_preserving j).symm)
   exact CategoryTheory.ConcreteCategory.congr_hom
     ((CategoryTheory.Limits.Types.Pushout.isColimitCocone f g).fac c WalkingCospan.right) i
 
@@ -110,16 +109,15 @@ noncomputable def lift (S : MolecularFragmentSpan k nLeft nRight)
   {X : Type} (u : Fin nLeft → X) (v : Fin nRight → X)
     (h : ∀ i : Fin k, u (S.toLeft.toFun i) = v (S.toRight.toFun i)) :
   S.VertexPushout → X :=
-  let f : Fin k ⟶ Fin nLeft := S.toLeft.toFun
-  let g : Fin k ⟶ Fin nRight := S.toRight.toFun
+  let f : Fin k ⟶ Fin nLeft := TypeCat.ofHom S.toLeft.toFun
+  let g : Fin k ⟶ Fin nRight := TypeCat.ofHom S.toRight.toFun
   let c : PushoutCocone f g := PushoutCocone.mk
-    (CategoryTheory.ConcreteCategory.ofHom (C := Type) u)
-    (CategoryTheory.ConcreteCategory.ofHom (C := Type) v) (by
+    (TypeCat.ofHom u)
+    (TypeCat.ofHom v) (by
     apply CategoryTheory.ConcreteCategory.ext_apply
     intro i
     exact h i)
-  CategoryTheory.ConcreteCategory.hom
-    ((CategoryTheory.Limits.Types.Pushout.isColimitCocone f g).desc c)
+  (CategoryTheory.Limits.Types.Pushout.isColimitCocone f g).desc c
 
 @[simp] theorem lift_inLeft
     (S : MolecularFragmentSpan k nLeft nRight)

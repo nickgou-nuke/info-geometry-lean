@@ -2,6 +2,7 @@ import Mathlib.Data.Nat.Prime.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Nat.Squarefree
 import Mathlib.Tactic.FinCases
+import Mathlib.NumberTheory.Cyclotomic.Basic
 import Mathlib.NumberTheory.NumberField.Cyclotomic.Galois
 
 /-!
@@ -42,6 +43,32 @@ All theorems are proved natively in the Lean 4 kernel with 0 sorries and 0 axiom
 noncomputable section
 
 namespace InfoGeometry.Arithmetic.PrimeCyclotomicGaloisTower
+
+local instance : NeZero 2 := ⟨by decide⟩
+local instance : NeZero 6 := ⟨by decide⟩
+local instance : NeZero 30 := ⟨by decide⟩
+local instance : NeZero 210 := ⟨by decide⟩
+local instance : NeZero 2310 := ⟨by decide⟩
+local instance : NeZero 30030 := ⟨by decide⟩
+local instance : NeZero (2 : ℚ) := ⟨by norm_num⟩
+local instance : NeZero (6 : ℚ) := ⟨by norm_num⟩
+local instance : NeZero (30 : ℚ) := ⟨by norm_num⟩
+local instance : NeZero (210 : ℚ) := ⟨by norm_num⟩
+local instance : NeZero (2310 : ℚ) := ⟨by norm_num⟩
+local instance : NeZero (30030 : ℚ) := ⟨by norm_num⟩
+
+local instance : IsCyclotomicExtension {2} ℚ (CyclotomicField 2 ℚ) := by
+  exact CyclotomicField.isCyclotomicExtension 2 ℚ
+local instance : IsCyclotomicExtension {6} ℚ (CyclotomicField 6 ℚ) := by
+  exact CyclotomicField.isCyclotomicExtension 6 ℚ
+local instance : IsCyclotomicExtension {30} ℚ (CyclotomicField 30 ℚ) := by
+  exact CyclotomicField.isCyclotomicExtension 30 ℚ
+local instance : IsCyclotomicExtension {210} ℚ (CyclotomicField 210 ℚ) := by
+  exact CyclotomicField.isCyclotomicExtension 210 ℚ
+local instance : IsCyclotomicExtension {2310} ℚ (CyclotomicField 2310 ℚ) := by
+  exact CyclotomicField.isCyclotomicExtension 2310 ℚ
+local instance : IsCyclotomicExtension {30030} ℚ (CyclotomicField 30030 ℚ) := by
+  exact CyclotomicField.isCyclotomicExtension 30030 ℚ
 
 /-- The ordered sequence of prime generators. -/
 def primeStages : Fin 6 → ℕ

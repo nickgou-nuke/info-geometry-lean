@@ -80,7 +80,7 @@ noncomputable def projectiveClassToTwistor
               (positiveMeasureToEuclidean_ne_zero (α := α) (PositiveMeasure.scale c.1 c.2 μ₁)) := by
         exact hmkRay.symm.trans hmkScaled.symm
       apply Subtype.ext
-      simpa [twistorMk, v] using hmkGoal
+      exact hmkGoal
     )
 
 @[simp] lemma projectiveClassToTwistor_mk

@@ -55,7 +55,10 @@ lemma associator_add_right (X Y Z W : ZornVectorMatrix R) :
 
 lemma associator_sub_right (X Y Z W : ZornVectorMatrix R) :
     associator X Y (Z - W) = associator X Y Z - associator X Y W := by
-  simp only [associator_eq_sub_mul, _root_.mul_sub]
+  have h := associator_add_right X Y (Z - W) W
+  have hv : Z - W + W = Z := by abel
+  rw [hv] at h
+  rw [h]
   abel
 
 lemma associator_left_alt (X Y : ZornVectorMatrix R) :
@@ -106,8 +109,15 @@ lemma teichmuller_ident (A B C D : ZornVectorMatrix R) :
     associator (A * B) C D - associator A (B * C) D +
       associator A B (C * D) - A * associator B C D -
       associator A B C * D = 0 := by
-  simp only [associator_eq_sub_mul]
-  noncomm_ring
+  have h := associator_cocycle A B C D
+  change _root_.associator (A * B) C D -
+    _root_.associator A (B * C) D +
+    _root_.associator A B (C * D) - A * _root_.associator B C D -
+    _root_.associator A B C * D = 0
+  have hn := congrArg Neg.neg h
+  simp only [neg_zero] at hn
+  abel_nf at hn ⊢
+  exact hn
 
 lemma associator_right_product (X Y Z : ZornVectorMatrix R) :
     associator X Y (Z * X) = X * associator X Y Z := by
@@ -120,7 +130,14 @@ lemma associator_right_product (X Y Z : ZornVectorMatrix R) :
     rw [associator_left_alt X (Y * Z),
       associator_left_alt X Y] at h1
     rw [show (0 : ZornVectorMatrix R) * Z = 0 from zero_mul Z] at h1
-    simpa only [_root_.add_zero, _root_.sub_zero] using h1
+    change _root_.associator (X * X) Y Z -
+      _root_.associator X (X * Y) Z + 0 -
+      X * _root_.associator X Y Z - 0 = 0 at h1
+    change _root_.associator (X * X) Y Z -
+      _root_.associator X (X * Y) Z -
+      X * _root_.associator X Y Z = 0
+    abel_nf at h1 ⊢
+    exact h1
   rw [associator_swap23 (X * X) Z Y,
     associator_swap23 X (X * Z) Y, associator_left_alt,
     associator_swap23 X Z Y, associator_left_alt] at h2
@@ -128,8 +145,12 @@ lemma associator_right_product (X Y Z : ZornVectorMatrix R) :
       -associator (X * X) Y Z + associator X Y (X * Z) +
         X * associator X Y Z = 0 := by
     rw [show (0 : ZornVectorMatrix R) * Y = 0 from zero_mul Y] at h2
-    simpa only [neg_neg, _root_.add_zero, _root_.sub_zero,
-      _root_.mul_neg, sub_neg_eq_add] using h2
+    change -associator (X * X) Y Z -
+      -associator X Y (X * Z) + 0 -
+      X * (-associator X Y Z) - 0 = 0 at h2
+    simp only [_root_.mul_neg] at h2
+    abel_nf at h2 ⊢
+    exact h2
   have hfirst :
       associator (X * Z) X Y = associator X Y (X * Z) := by
     rw [associator_swap12, associator_swap23]
@@ -143,8 +164,8 @@ lemma associator_right_product (X Y Z : ZornVectorMatrix R) :
       associator X Y (X * Z) + associator X Y (Z * X) -
         associator X (X * Y) Z - X * associator X Y Z = 0 := by
     rw [show (0 : ZornVectorMatrix R) * Y = 0 from zero_mul Y] at h3
-    simpa only [neg_neg, _root_.add_zero, _root_.sub_zero,
-      _root_.mul_neg, sub_neg_eq_add] using h3
+    abel_nf at h3 ⊢
+    exact h3
   have hs :
       (associator (X * X) Y Z - associator X (X * Y) Z -
           X * associator X Y Z) +
@@ -168,7 +189,6 @@ lemma associator_mul_right (X Y Z : ZornVectorMatrix R) :
   have h := teichmuller_ident X Y Z X
   rw [associator_flex X (Y * Z),
     associator_right_product X Y Z, associator_cycle X Y Z] at h
-  simp only [_root_.sub_zero] at h
   have hz : associator (X * Y) Z X - associator X Y Z * X = 0 := by
     abel_nf at h ⊢
     exact h
@@ -181,12 +201,24 @@ lemma associator_left_product (X Y Z : ZornVectorMatrix R) :
   rw [associator_left_alt X (Y * Z), associator_left_alt X Y] at h1
   rw [show (0 : ZornVectorMatrix R) * Z = 0 from zero_mul Z] at h1
   have e1 : associator (X * X) Y Z - associator X (X * Y) Z - X * associator X Y Z = 0 := by
-    simpa only [_root_.add_zero, _root_.sub_zero] using h1
+    change _root_.associator (X * X) Y Z -
+      _root_.associator X (X * Y) Z + 0 -
+      X * _root_.associator X Y Z - 0 = 0 at h1
+    change _root_.associator (X * X) Y Z -
+      _root_.associator X (X * Y) Z -
+      X * _root_.associator X Y Z = 0
+    abel_nf at h1 ⊢
+    exact h1
   rw [associator_swap23 (X * X) Z Y, associator_swap23 X (X * Z) Y,
     associator_left_alt, associator_swap23 X Z Y, associator_left_alt] at h2
   have e2 : -associator (X * X) Y Z + associator X Y (X * Z) + X * associator X Y Z = 0 := by
     rw [show (0 : ZornVectorMatrix R) * Y = 0 from zero_mul Y] at h2
-    simpa only [neg_neg, _root_.add_zero, _root_.sub_zero, _root_.mul_neg, sub_neg_eq_add] using h2
+    change -associator (X * X) Y Z -
+      -associator X Y (X * Z) + 0 -
+      X * (-associator X Y Z) - 0 = 0 at h2
+    simp only [_root_.mul_neg] at h2
+    abel_nf at h2 ⊢
+    exact h2
   have hs : (associator (X * X) Y Z - associator X (X * Y) Z - X * associator X Y Z) +
     (-associator (X * X) Y Z + associator X Y (X * Z) + X * associator X Y Z) = 0 := by
     rw [e1, e2, _root_.zero_add]
@@ -210,15 +242,17 @@ lemma commutator_add_left' (A B C : ZornVectorMatrix R) :
   simp only [commutator_def', _root_.add_mul, _root_.mul_add]
   abel
 
-lemma commutator_sub_left' (A B C : ZornVectorMatrix R) :
-    commutator (A - B) C = commutator A C - commutator B C := by
-  simp only [commutator_def', _root_.sub_mul, _root_.mul_sub]
-  abel
-
 lemma commutator_neg_left' (A B : ZornVectorMatrix R) :
     commutator (-A) B = -commutator A B := by
   simp only [commutator_def', _root_.neg_mul, _root_.mul_neg]
   abel
+
+lemma commutator_sub_left' (A B C : ZornVectorMatrix R) :
+    commutator (A - B) C = commutator A C - commutator B C := by
+  have h := commutator_add_left' A (-B) C
+  change commutator (A + -B) C = commutator A C + commutator (-B) C at h
+  change commutator (A + -B) C = commutator A C + -commutator B C
+  simpa only [commutator_neg_left'] using h
 
 lemma associator_commutator_right (X Y Z : ZornVectorMatrix R) :
     associator X Y (commutator X Z) = commutator (associator X Y Z) X := by

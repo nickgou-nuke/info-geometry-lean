@@ -1,6 +1,7 @@
 import InfoGeometry.Algebra.Zorn.G2TwoBruhatClassification
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.GroupTheory.DoubleCosetOrbit
+import Mathlib.Logic.Equiv.Set
 
 namespace InfoGeometry.Algebra.Zorn.G2BruhatCellIntersectionCard
 
@@ -30,8 +31,8 @@ theorem concreteBruhatCell_card_mul_intersection_card
     Fintype.card {x : SplitOctF2Aut // x ∈ concreteBruhatCell w} *
     Fintype.card (intersectionSubgroup unipotentSubgroup
           (conjugateSubgroup w unipotentSubgroup)) = 4096 := by
-  letI : Fintype unipotentSubgroup := Fintype.ofFinite _
-  letI : Fintype SplitOctF2Aut := Fintype.ofFinite _
+  let : Fintype unipotentSubgroup := Fintype.ofFinite _
+  let : Fintype SplitOctF2Aut := Fintype.ofFinite _
   have hdouble := doubleCoset_card_mul_intersection_card
     unipotentSubgroup unipotentSubgroup w
   have hcell : concreteBruhatCell w =
@@ -41,7 +42,7 @@ theorem concreteBruhatCell_card_mul_intersection_card
       x ∈ concreteBruhatCell w} =
       Fintype.card {x : SplitOctF2Aut //
         x ∈ doubleCoset unipotentSubgroup w unipotentSubgroup} := by
-    exact Fintype.card_congr (Equiv.setCongr hcell)
+    exact Fintype.card_congr (Set.equivOfEq hcell)
   rw [hcard]
   rw [hdouble]
   have hU : Fintype.card unipotentSubgroup = 64 := by
@@ -77,9 +78,9 @@ theorem identity_bruhatCell_card
         unipotentSubgroup}] :
     Fintype.card {x : SplitOctF2Aut //
       x ∈ concreteBruhatCell (1 : SplitOctF2Aut)} = 64 := by
-  letI : Fintype unipotentSubgroup := Fintype.ofFinite _
-  letI : Fintype SplitOctF2Aut := Fintype.ofFinite _
-  letI : Fintype (intersectionSubgroup unipotentSubgroup
+  let : Fintype unipotentSubgroup := Fintype.ofFinite _
+  let : Fintype SplitOctF2Aut := Fintype.ofFinite _
+  let : Fintype (intersectionSubgroup unipotentSubgroup
       (conjugateSubgroup (1 : SplitOctF2Aut) unipotentSubgroup)) :=
     Fintype.ofFinite _
   have hprod := concreteBruhatCell_card_mul_intersection_card

@@ -1,10 +1,10 @@
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.Topology.Order.Basic
 import Mathlib.Tactic
 
@@ -60,26 +60,26 @@ theorem berry_connection_is_hermitian
 /-- 🏆 ТЕОРЕМА 2: Аполониевата връзка $A(\theta)$ е ермитова за всяко $\theta \in \mathbb{R}$ и $\omega \in \mathbb{R}$. -/
 theorem apollonius_connection_hermitian (θ : ℝ) (ω : ℝ) :
     star (apolloniusLoopConnection θ ω) = apolloniusLoopConnection θ ω := by
-  unfold apolloniusLoopConnection
   ext i j
+  rw [Matrix.star_apply]
   fin_cases i <;> fin_cases j
-  · dsimp [Matrix.star_apply]
+  · dsimp [apolloniusLoopConnection]
     simp
-  · dsimp [Matrix.star_apply]
-    have h_conj_exp : conj (Complex.exp (Complex.I * (θ : ℂ))) = Complex.exp (- (Complex.I * (θ : ℂ))) := by
-      have : conj (Complex.I * (θ : ℂ)) = - (Complex.I * (θ : ℂ)) := by
-        simp only [map_mul, Complex.conj_I, conj_ofReal]
-        ring
-      rw [← Complex.exp_conj, this]
-    simp only [star_def, map_mul, conj_ofReal, h_conj_exp]
-  · dsimp [Matrix.star_apply]
-    have h_conj_exp : conj (Complex.exp (- (Complex.I * (θ : ℂ)))) = Complex.exp (Complex.I * (θ : ℂ)) := by
-      have : conj (- (Complex.I * (θ : ℂ))) = Complex.I * (θ : ℂ) := by
-        simp only [map_neg, map_mul, Complex.conj_I, conj_ofReal]
-        ring
-      rw [← Complex.exp_conj, this]
-    simp only [star_def, map_mul, conj_ofReal, h_conj_exp]
-  · dsimp [Matrix.star_apply]
+  · dsimp [apolloniusLoopConnection]
+    simp only [map_mul, conj_ofReal]
+    have h : conj (Complex.exp (Complex.I * (θ : ℂ))) = Complex.exp (- (Complex.I * (θ : ℂ))) := by
+      rw [← Complex.exp_conj]
+      simp only [map_mul, Complex.conj_I, conj_ofReal]
+      ring_nf
+    rw [h]
+  · dsimp [apolloniusLoopConnection]
+    simp only [map_mul, conj_ofReal]
+    have h : conj (Complex.exp (- (Complex.I * (θ : ℂ)))) = Complex.exp (Complex.I * (θ : ℂ)) := by
+      rw [← Complex.exp_conj]
+      simp only [map_neg, map_mul, Complex.conj_I, conj_ofReal]
+      ring_nf
+    rw [h]
+  · dsimp [apolloniusLoopConnection]
     simp
 
 /-!
@@ -99,34 +99,26 @@ theorem apollonius_holonomy_is_unitary (α : ℝ) :
     star (apolloniusHolonomyMatrix α) * (apolloniusHolonomyMatrix α) = 1 := by
   have h_trig : (Complex.cos (α : ℂ)) ^ 2 + (Complex.sin (α : ℂ)) ^ 2 = 1 := by
     exact Complex.cos_sq_add_sin_sq (α : ℂ)
-  have h_cos : conj (Complex.cos (α : ℂ)) = Complex.cos (α : ℂ) := by
-    rw [← Complex.ofReal_cos, conj_ofReal, Complex.ofReal_cos]
-  have h_sin : conj (Complex.sin (α : ℂ)) = Complex.sin (α : ℂ) := by
-    rw [← Complex.ofReal_sin, conj_ofReal, Complex.ofReal_sin]
+  have hI : Complex.I * Complex.I = -1 := Complex.I_mul_I
+  rw [← Complex.ofReal_cos, ← Complex.ofReal_sin] at h_trig
   ext i j
   fin_cases i <;> fin_cases j
-  · unfold apolloniusHolonomyMatrix
-    simp [Matrix.mul_apply, Fin.sum_univ_two, Matrix.star_apply, Matrix.one_apply,
-          star_def, Complex.conj_I, h_cos, h_sin]
-    calc Complex.cos ↑α * Complex.cos ↑α + -(I * Complex.sin ↑α * (I * Complex.sin ↑α))
-      _ = Complex.cos ↑α ^ 2 - Complex.I ^ 2 * Complex.sin ↑α ^ 2 := by ring
-      _ = Complex.cos ↑α ^ 2 + Complex.sin ↑α ^ 2 := by rw [Complex.I_sq]; ring
-      _ = 1 := h_trig
-  · unfold apolloniusHolonomyMatrix
-    simp [Matrix.mul_apply, Fin.sum_univ_two, Matrix.star_apply, Matrix.one_apply,
-          star_def, Complex.conj_I, h_cos, h_sin]
+  · simp [Matrix.mul_apply, Fin.sum_univ_two, Matrix.star_apply]
+    dsimp [apolloniusHolonomyMatrix]
+    simp only [map_mul, map_neg, Complex.conj_I, conj_ofReal]
+    linear_combination h_trig - (↑(Real.sin α) ^ 2) * hI
+  · simp [Matrix.mul_apply, Fin.sum_univ_two, Matrix.star_apply]
+    dsimp [apolloniusHolonomyMatrix]
+    simp only [map_mul, map_neg, Complex.conj_I, conj_ofReal]
     ring
-  · unfold apolloniusHolonomyMatrix
-    simp [Matrix.mul_apply, Fin.sum_univ_two, Matrix.star_apply, Matrix.one_apply,
-          star_def, Complex.conj_I, h_cos, h_sin]
+  · simp [Matrix.mul_apply, Fin.sum_univ_two, Matrix.star_apply]
+    dsimp [apolloniusHolonomyMatrix]
+    simp only [map_mul, map_neg, Complex.conj_I, conj_ofReal]
     ring
-  · unfold apolloniusHolonomyMatrix
-    simp [Matrix.mul_apply, Fin.sum_univ_two, Matrix.star_apply, Matrix.one_apply,
-          star_def, Complex.conj_I, h_cos, h_sin]
-    calc -(I * Complex.sin ↑α * (I * Complex.sin ↑α)) + Complex.cos ↑α * Complex.cos ↑α
-      _ = Complex.cos ↑α ^ 2 - Complex.I ^ 2 * Complex.sin ↑α ^ 2 := by ring
-      _ = Complex.cos ↑α ^ 2 + Complex.sin ↑α ^ 2 := by rw [Complex.I_sq]; ring
-      _ = 1 := h_trig
+  · simp [Matrix.mul_apply, Fin.sum_univ_two, Matrix.star_apply]
+    dsimp [apolloniusHolonomyMatrix]
+    simp only [map_mul, map_neg, Complex.conj_I, conj_ofReal]
+    linear_combination h_trig - (↑(Real.sin α) ^ 2) * hI
 
 /-!
 ### 3. Гранд Капстоун: Синтез на Неабелевата Аполониева Холономия

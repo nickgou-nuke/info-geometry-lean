@@ -186,8 +186,8 @@ theorem compactSymbolicLatentObservationRangeCompHausFunctor_map_isIso_of_surjec
       hF
   haveI : IsIso (compHausToTop.map
       ((compactSymbolicLatentObservationRangeCompHausFunctor (ι := ι)).map F)) := by
-    simpa [compactSymbolicLatentObservationRangeCompHausFunctor_map_forget]
-      using hIso
+    rw [compactSymbolicLatentObservationRangeCompHausFunctor_map_forget]
+    exact hIso
   have hFF : (compHausToTop).FullyFaithful := by
     simpa using (CompHausLike.fullyFaithfulCompHausLikeToTop (fun _ => True))
   exact hFF.isIso_of_isIso_map

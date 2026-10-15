@@ -77,11 +77,10 @@ def concat (γ δ : AdmissibleLoop) (hbase : γ.base = δ.base) : AdmissibleLoop
 
 @[simp] theorem concat_integral (γ δ : AdmissibleLoop) (hbase : γ.base = δ.base) :
     integral (concat γ δ hbase) = integral γ + integral δ := by
-  rw [integral, concat]
-  simpa [dlog01Form] using
-    (curveIntegral_trans γ.integrable
-      (CurveIntegrable.cast hbase hbase δ.integrable :
-        CurveIntegrable dlog01Form (δ.path.cast hbase hbase)))
+  change curveIntegral dlog01Form (γ.path.trans (δ.path.cast hbase hbase)) =
+    curveIntegral dlog01Form γ.path + curveIntegral dlog01Form δ.path
+  rw [curveIntegral_trans γ.integrable (CurveIntegrable.cast hbase hbase δ.integrable)]
+  rw [curveIntegral_cast dlog01Form δ.path hbase hbase]
 
 /-- Reversal preserves admissibility and reverses the curve integral. -/
 def reverse (γ : AdmissibleLoop) : AdmissibleLoop where
@@ -98,7 +97,7 @@ def reverse (γ : AdmissibleLoop) : AdmissibleLoop where
 
 @[simp] theorem concat_reverse_integral (γ : AdmissibleLoop) :
     integral (concat γ (reverse γ) rfl) = 0 := by
-  rw [concat_integral, reverse_integral, add_neg_cancel]
+  rw [concat_integral γ (reverse γ) rfl, reverse_integral, add_neg_cancel]
 
 /-- Branch-free scalar holonomy of an admissible loop. -/
 def holonomy (γ : AdmissibleLoop) : ℂ := Complex.exp (integral γ)
@@ -116,7 +115,7 @@ def holonomy (γ : AdmissibleLoop) : ℂ := Complex.exp (integral γ)
 
 @[simp] theorem concat_reverse_holonomy (γ : AdmissibleLoop) :
     holonomy (concat γ (reverse γ) rfl) = 1 := by
-  rw [concat_holonomy, reverse_holonomy, mul_inv_cancel₀]
+  rw [concat_holonomy γ (reverse γ) rfl, reverse_holonomy, mul_inv_cancel₀]
   exact Complex.exp_ne_zero _
 
 end InfoGeometry.Analysis.BipolarAdmissibleLoops

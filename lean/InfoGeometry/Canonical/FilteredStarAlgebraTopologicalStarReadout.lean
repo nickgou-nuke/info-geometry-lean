@@ -1,5 +1,4 @@
 import InfoGeometry.Canonical.FilteredStarAlgebraTopologicalColimit
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Generic continuous involution readout for a filtered star colimit
@@ -54,9 +53,8 @@ def topologicalStarCocone :
             (stageStar Stage i (x : Stage i))
         have hmap :
             stageStar Stage j (sys.map (leOfHom f) (x : Stage i)) =
-              sys.map (leOfHom f) (stageStar Stage i (x : Stage i)) := by
-          simpa [stageStar] using
-            (map_star (sys.map (leOfHom f)) (x : Stage i)).symm
+              sys.map (leOfHom f) (stageStar Stage i (x : Stage i)) :=
+          (map_star (sys.map (leOfHom f)) (x : Stage i)).symm
         rw [hmap]
         exact topologicalInjection_transition Stage sys
           (leOfHom f) (stageStar Stage i (x : Stage i)) }
@@ -91,6 +89,7 @@ theorem topologicalStarReadout_involutive :
     topologicalInjection Stage sys i x'
   rw [topologicalStarReadout_stage,
     topologicalStarReadout_stage]
-  simp [stageStar, x']
+  have hstar : stageStar Stage i (stageStar Stage i x') = x' := star_star x'
+  rw [hstar]
 
 end CStarStateColimit.Native.FilteredStarAlgebraTopologicalStarReadout

@@ -94,7 +94,13 @@ theorem carCompatiblePointAmbientLimitMap_projection
     (by
       intro i j f
       exact carCompatiblePointTopCatFamily_natural sys family (leOfHom f)) i u
-  simpa [carCompatiblePointAmbientLimitMap, carCompatiblePointLimitMap] using h
+  change topologicalInverseProjection (qCcrParameterTopologicalDiagram Stage sys) i
+      (qCcrParameterZeroFiberToParameterLimit Stage sys
+        (qCcrParameterZeroFiberPointLimitMap Stage sys
+          (carCompatiblePointTopCatFamily sys family) _ u)) =
+    (qCcrParameterZeroFiberToParameterNatTrans Stage sys).app i
+      (carCompatiblePointTopCatFamily sys family i u) at h
+  exact h
 
 def ccrCompatiblePointTopCatFamily
     (family : CompatibleCCRPointFamily sys) (i : I) :
@@ -155,6 +161,12 @@ theorem ccrCompatiblePointAmbientLimitMap_projection
     (by
       intro i j f
       exact ccrCompatiblePointTopCatFamily_natural sys family (leOfHom f)) i u
-  simpa [ccrCompatiblePointAmbientLimitMap, ccrCompatiblePointLimitMap] using h
+  change topologicalInverseProjection (qCcrParameterTopologicalDiagram Stage sys) i
+      (qCcrParameterZeroFiberToParameterLimit Stage sys
+        (qCcrParameterZeroFiberPointLimitMap Stage sys
+          (ccrCompatiblePointTopCatFamily sys family) _ u)) =
+    (qCcrParameterZeroFiberToParameterNatTrans Stage sys).app i
+      (ccrCompatiblePointTopCatFamily sys family i u) at h
+  exact h
 
 end InfoGeometry.Canonical.CARCCRCompatiblePointLimit

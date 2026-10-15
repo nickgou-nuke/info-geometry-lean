@@ -21,7 +21,17 @@ theorem paper_derived_fold_multiplicity_fibonacci_zerofiber_specialization {m : 
   cases m with
   | zero =>
       exfalso
-      simp at hsum
+      have hindex : Nat.fib (0 + 2) - Nat.fib ((0 + 2) / 2) = 0 := by decide
+      have hEmpty : IsEmpty (Fin (Nat.fib (0 + 2) - Nat.fib ((0 + 2) / 2))) :=
+        ⟨fun i => by
+          have hi : i.val < 0 := by simpa [hindex] using i.isLt
+          omega⟩
+      have hsum0 : (∑ i, d i) = 0 := by
+        apply Finset.sum_eq_zero
+        intro i hi
+        exact (hEmpty.false i).elim
+      rw [hsum0] at hsum
+      omega
   | succ m =>
       have hF : 0 < Nat.fib (Nat.succ m + 2) := Nat.fib_pos.mpr (by omega)
       have hz : Nat.fib ((Nat.succ m + 2) / 2) < Nat.fib (Nat.succ m + 2) := by

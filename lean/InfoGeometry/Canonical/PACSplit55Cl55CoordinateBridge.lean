@@ -486,7 +486,7 @@ theorem nativeAffineChartLift_retract_rep
   let X : PACSplit55 := v55ToPacSplit55 w
   have hXQ : Q55 X = 0 := by
     rw [← nativeQ55_pacSplit55ToV55 X]
-    simpa [X] using hQ
+    simpa only [X, pacSplit55ToV55_right_inverse] using hQ
   have hFactor :
       Q44 (pacSplit55Base44 X) +
           affineDifference55 X * affineGauge55 X = 0 := by

@@ -86,7 +86,7 @@ def IsSignedVolume (RN : ℝ) : Prop :=
   ∃ ρ : Cl11 →ₗ[ℝ] ℝ, ρ Pseudoscalar = RN
 
 /-- The commutator bracket on `Cl(1,1)` as an inner derivation. -/
-def cl11_commutator (K X : Cl11) : Cl11 :=
+noncomputable def cl11_commutator (K X : Cl11) : Cl11 :=
   K * X - X * K
 
 /-- Associativity of the concrete `Cl(1,1)` algebra. -/

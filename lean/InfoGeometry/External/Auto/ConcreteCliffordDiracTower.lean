@@ -1,3 +1,4 @@
+import Mathlib.Analysis.InnerProductSpace.Symmetric
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -123,7 +124,7 @@ def cuntzDiracFinite [Fintype ι] (G : CliffordCuntzGenerators H ι) (E : ι →
 theorem majoranaMode_self_adjoint
     (G : CliffordCuntzGenerators H ι) (i : ι) (x y : H) :
     inner ℂ x (majoranaMode G i y) = inner ℂ (majoranaMode G i x) y := by
-  simp only [majoranaMode, ContinuousLinearMap.add_apply, inner_add_right, inner_add_left]
+  simp only [majoranaMode, add_apply, inner_add_right, inner_add_left]
   rw [G.creation_adjoint i x y, G.annihilation_adjoint i x y]
   exact add_comm _ _
 

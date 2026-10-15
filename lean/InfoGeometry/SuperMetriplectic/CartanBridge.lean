@@ -4,8 +4,10 @@ import InfoGeometry.Canonical.InverseKernelCartanCore
 import InfoGeometry.Core.SymmetricLie
 import InfoGeometry.Core.UnifiedGeometry
 import InfoGeometry.Meta.Architecture
+import Mathlib.Algebra.Lie.OfAssociative
 
 open scoped InnerProductSpace
+
 
 /-!
 # SuperMetriplectic Cartan Bridge
@@ -28,6 +30,8 @@ section Core
 
 variable {E : Type 0}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+
+attribute [local instance 100] LieRing.ofAssociativeRing LieAlgebra.ofAssociativeAlgebra
 
 local notation "EndH" => E →L[ℝ] E
 

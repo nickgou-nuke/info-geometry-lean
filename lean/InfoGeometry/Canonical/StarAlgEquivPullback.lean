@@ -27,13 +27,13 @@ def starRing [StarRing B] (e : A ≃ₐ[R] B) : StarRing A where
   star x := e.symm (star (e x))
   star_involutive x := by
     apply e.injective
-    simp
+    rw [e.apply_symm_apply, e.apply_symm_apply, star_star]
   star_add x y := by
     apply e.injective
-    simp
+    rw [e.apply_symm_apply, map_add, star_add, map_add, e.apply_symm_apply, e.apply_symm_apply]
   star_mul x y := by
     apply e.injective
-    simp
+    rw [e.apply_symm_apply, map_mul, star_mul, map_mul, e.apply_symm_apply, e.apply_symm_apply]
 
 /-- The defining intertwining identity for the pulled-back involution. -/
 theorem starRing_map_star [StarRing B] (e : A ≃ₐ[R] B) (x : A) :

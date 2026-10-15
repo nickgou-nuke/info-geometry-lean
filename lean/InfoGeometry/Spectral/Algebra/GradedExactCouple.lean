@@ -42,16 +42,16 @@ structure GradedExactCouple
 namespace GradedExactCouple
 
 /-- Derivation preserves the degree of `i`. -/
-def derivedIDegree {I : Type v} (iDeg : I ≃ I) : I ≃ I :=
+abbrev derivedIDegree {I : Type v} (iDeg : I ≃ I) : I ≃ I :=
   iDeg
 
 /-- Derivation changes `deg j` to `deg j ∘ (deg i)⁻¹`. -/
-def derivedJDegree {I : Type v}
+abbrev derivedJDegree {I : Type v}
     (iDeg jDeg : I ≃ I) : I ≃ I :=
   iDeg.symm.trans jDeg
 
 /-- Derivation preserves the degree of `k`. -/
-def derivedKDegree {I : Type v} (kDeg : I ≃ I) : I ≃ I :=
+abbrev derivedKDegree {I : Type v} (kDeg : I ≃ I) : I ≃ I :=
   kDeg
 
 @[simp]
@@ -454,7 +454,8 @@ theorem directDerived_exact_ij
     have hzero :=
       LinearMap.congr_fun
         (C.derivedJ_comp_incomingDerivedI q) (eSrc y)
-    simpa [LinearMap.comp_apply] using hzero
+    change C.derivedJ q (C.incomingDerivedI q (eSrc y)) = 0 at hzero
+    exact hzero
 
 /-- Exactness transported to the natural target of `directDerivedK`. -/
 theorem incomingDerivedI_exact_directDerivedK
@@ -499,13 +500,15 @@ theorem incomingDerivedI_exact_directDerivedK
         (eSrc (C.derivedK q x)) = 0
     rw [← C.incomingDerivedI_cast h
       (C.derivedK q x)]
-    have hzero :=
-      LinearMap.congr_fun
+    have hzero :
+        C.incomingDerivedI (shiftK q) (C.derivedK q x) = 0 := by
+      change ((C.incomingDerivedI (shiftK q)).comp (C.derivedK q)) x = 0
+      exact LinearMap.congr_fun
         (C.incomingDerivedI_comp_derivedK q) x
     rw [show
       C.incomingDerivedI (shiftK q)
           (C.derivedK q x) = 0 by
-        simpa [LinearMap.comp_apply] using hzero]
+        exact hzero]
     exact map_zero eTgt
 
 /-- The direct and source-arrow versions of derived `i` have the same kernel. -/

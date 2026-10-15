@@ -33,7 +33,19 @@ inductive TruncatedQSpin where
   | spin0
   /-- Fibonacci/q-spin one sector. -/
   | spin1
-  deriving DecidableEq, Repr, Fintype
+  deriving DecidableEq, Repr
+
+private def truncatedQSpinEquiv : Fin 2 ≃ TruncatedQSpin where
+  toFun i := if i.val = 0 then TruncatedQSpin.spin0 else TruncatedQSpin.spin1
+  invFun
+    | TruncatedQSpin.spin0 => 0
+    | TruncatedQSpin.spin1 => 1
+  left_inv i := by
+    fin_cases i <;> rfl
+  right_inv x := by
+    cases x <;> rfl
+
+instance : Fintype TruncatedQSpin := Fintype.ofEquiv (Fin 2) truncatedQSpinEquiv
 
 /-- Symbolic dimensions `[1]q = 1`, `[3]q = τ⁻¹`, and truncated `[5]q = 0`. -/
 noncomputable def truncatedQDimension (τ : ℂ) : TruncatedQSpin → ℂ
@@ -59,7 +71,22 @@ inductive OneQubitBraidGenerator where
   | b2
   /-- Last neighboring exchange, diagonal `R`. -/
   | b3
-  deriving DecidableEq, Repr, Fintype
+  deriving DecidableEq, Repr
+
+private def oneQubitBraidGeneratorEquiv : Fin 3 ≃ OneQubitBraidGenerator where
+  toFun i := if i.val = 0 then OneQubitBraidGenerator.b1
+    else if i.val = 1 then OneQubitBraidGenerator.b2 else OneQubitBraidGenerator.b3
+  invFun
+    | OneQubitBraidGenerator.b1 => 0
+    | OneQubitBraidGenerator.b2 => 1
+    | OneQubitBraidGenerator.b3 => 2
+  left_inv i := by
+    fin_cases i <;> rfl
+  right_inv x := by
+    cases x <;> rfl
+
+instance : Fintype OneQubitBraidGenerator :=
+  Fintype.ofEquiv (Fin 3) oneQubitBraidGeneratorEquiv
 
 /-- Matrix readout for the one-qubit `B₄` action on the two-channel basis. -/
 noncomputable def oneQubitGeneratorMatrix

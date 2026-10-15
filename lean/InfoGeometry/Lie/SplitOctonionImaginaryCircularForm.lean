@@ -106,7 +106,8 @@ theorem imaginaryThreeForm_upper_upper_upper (i j k : Fin 3) :
     simp [imaginaryCross, upperAxis, rootPlus, quaternionAxis, ellAxis, axis,
       mul_def, mul, dot, cross,
       InfoGeometry.Algebra.Zorn.ZornMatrix.detZ,
-      leviCivita3, Equiv.smul_def, coordEquiv] <;> norm_num
+      leviCivita3, Equiv.smul_def, coordEquiv,
+      InfoGeometry.Canonical.ZornMatrix.coordAddEquiv] <;> norm_num
 
 theorem imaginaryThreeForm_lower_lower_lower (i j k : Fin 3) :
     imaginaryThreeForm (lowerAxis i) (lowerAxis j) (lowerAxis k) =
@@ -118,7 +119,8 @@ theorem imaginaryThreeForm_lower_lower_lower (i j k : Fin 3) :
     simp [imaginaryCross, lowerAxis, rootMinus, quaternionAxis, ellAxis, axis,
       mul_def, mul, dot, cross,
       InfoGeometry.Algebra.Zorn.ZornMatrix.detZ,
-      leviCivita3, Equiv.smul_def, coordEquiv] <;> norm_num
+      leviCivita3, Equiv.smul_def, coordEquiv,
+      InfoGeometry.Canonical.ZornMatrix.coordAddEquiv] <;> norm_num
 
 theorem imaginaryThreeForm_diagonal_upper_upper (i j : Fin 3) :
     imaginaryThreeForm diagonalAxis (upperAxis i) (upperAxis j) = 0 := by
@@ -146,7 +148,8 @@ theorem imaginaryThreeForm_upper_upper_lower (i j k : Fin 3) :
   fin_cases i <;> fin_cases j <;> fin_cases k <;>
     simp [imaginaryCross, upperAxis, lowerAxis, rootPlus, rootMinus, quaternionAxis, ellAxis,
       axis, mul_def, mul, dot, cross,
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ, Equiv.smul_def, coordEquiv]
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ, Equiv.smul_def, coordEquiv,
+      InfoGeometry.Canonical.ZornMatrix.coordAddEquiv]
 
 theorem imaginaryThreeForm_lower_lower_upper (i j k : Fin 3) :
     imaginaryThreeForm (lowerAxis i) (lowerAxis j) (upperAxis k) = 0 := by
@@ -156,8 +159,8 @@ theorem imaginaryThreeForm_lower_lower_upper (i j k : Fin 3) :
   fin_cases i <;> fin_cases j <;> fin_cases k <;>
     simp [imaginaryCross, upperAxis, lowerAxis, rootPlus, rootMinus, quaternionAxis, ellAxis,
       axis, mul_def, mul, dot, cross,
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ, Equiv.smul_def, coordEquiv]
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ, Equiv.smul_def, coordEquiv,
+      InfoGeometry.Canonical.ZornMatrix.coordAddEquiv]
 
 end InfoGeometry.Lie.SplitOctonionImaginaryCircularForm
-
 

@@ -56,8 +56,9 @@ theorem continuous_relativeEntropySublevelQuotientMap
       (n := n) ε e f).comp
         (continuous_relativeEntropyCoreSublevelInclusion
           (n := n) ε hdf)
-  simpa only [Function.comp_apply,
-    relativeEntropySublevelQuotientMap_projection] using hcontinuous
+  convert hcontinuous using 1
+  funext p
+  exact relativeEntropySublevelQuotientMap_projection ε hce hdf p
 
 @[simp] theorem relativeEntropySublevelQuotientMap_refl
     (ε c d : ℝ)

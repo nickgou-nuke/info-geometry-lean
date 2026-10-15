@@ -26,6 +26,14 @@ theorem operatorGlide_continuous : Continuous operatorGlide := by
 def operatorDeckMap (g : Deck2) (A : Op) : Op :=
   if g = 0 then A else operatorGlide A
 
+private theorem deck2_eq_zero_or_one (x : Deck2) : x = 0 ∨ x = 1 := by
+  by_cases hx : x.val = 0
+  · exact Or.inl ((ZMod.val_eq_zero x).1 hx)
+  · have hxval : x.val = 1 := by
+      have hlt := ZMod.val_lt x
+      omega
+    exact Or.inr (ZMod.val_injective 2 hxval)
+
 @[simp] theorem operatorDeckMap_zero (A : Op) : operatorDeckMap 0 A = A := by
   simp [operatorDeckMap]
 
@@ -33,20 +41,30 @@ theorem operatorDeckMap_add_group (omega : ℂ)
     (homega : omega ^ 2 + omega + 1 = 0)
     (g h : Deck2) (A : Op) :
     operatorDeckMap (g + h) A = operatorDeckMap h (operatorDeckMap g A) := by
-  fin_cases g <;> fin_cases h
+  rcases deck2_eq_zero_or_one g with rfl | rfl <;>
+    rcases deck2_eq_zero_or_one h with rfl | rfl
   · simp [operatorDeckMap]
   · simp [operatorDeckMap]
   · simp [operatorDeckMap]
-  · exact (operatorGlide_involutive omega homega A).symm
+  · have h11 : (1 + 1 : Deck2) = 0 := by decide
+    rw [h11]
+    simp only [operatorDeckMap, if_neg (by decide : (1 : Deck2) ≠ 0)]
+    exact (operatorGlide_involutive omega homega A).symm
 
 theorem continuous_operatorDeckAction :
     Continuous (fun p : Deck2 × Op ↦ operatorDeckMap p.1 p.2) := by
   rw [continuous_prod_of_discrete_left]
   intro g
-  fin_cases g
-  · simpa [operatorDeckMap] using
-      (continuous_id : Continuous (id : Op → Op))
-  · simpa [operatorDeckMap] using operatorGlide_continuous
+  change Continuous (fun A : Op => operatorDeckMap g A)
+  rcases deck2_eq_zero_or_one g with rfl | rfl
+  · change Continuous (fun A : Op => A)
+    exact continuous_id
+  · have hone : (fun A : Op => operatorDeckMap 1 A) = operatorGlide := by
+      funext A
+      have h10 : (1 : Deck2) ≠ 0 := by decide
+      simp [operatorDeckMap, h10]
+    rw [hone]
+    exact operatorGlide_continuous
 
 def operatorCoordChange (i j x : Base) (A : Op) : Op :=
   operatorDeckMap (deckTransition i j x) A

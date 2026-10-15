@@ -1,5 +1,6 @@
 import InfoGeometry.Volume.ModularSurprisalDerivationBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Algebra.Lie.OfAssociative
 
 /-!
 # Modular surprisal generator readback
@@ -20,6 +21,11 @@ open InfoGeometry.Canonical
 variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
   [CompleteSpace H]
 
+noncomputable local instance : NormedRing (AlgebraEnd H) := inferInstance
+noncomputable local instance : NormedAlgebra ℝ (AlgebraEnd H) := inferInstance
+local instance : CompleteSpace (AlgebraEnd H) := inferInstance
+attribute [local instance] LieRing.ofAssociativeRing
+
 /-! ## Generator self-invariance and infinitesimal readback -/
 
 theorem modular_generator_preserved
@@ -29,8 +35,8 @@ theorem modular_generator_preserved
 
 theorem modular_generator_commutator_zero
     (K : AlgebraEnd H) :
-    ⁅K, K⁆ = 0 := by
-  simp
+    ⁅K, K⁆ = 0 :=
+  lie_self K
 
 theorem modular_generator_has_zero_derivation_on_self
     (K : AlgebraEnd H) :

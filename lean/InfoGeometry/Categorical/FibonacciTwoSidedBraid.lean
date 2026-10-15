@@ -67,9 +67,10 @@ theorem evalGenerator_inv
   cases g
   · exact (rLinearEquiv_inverse q).symm
   · exact (bLinearEquiv_inverse q τ s hs hτ).symm
-  · simpa [SignedGenerator.inv, evalGenerator] using rLinearEquiv_inverse q⁻¹
-  · simpa [SignedGenerator.inv, evalGenerator] using
-      bLinearEquiv_inverse q⁻¹ τ s hs hτ
+  · simp only [SignedGenerator.inv, evalGenerator]
+    exact (rLinearEquiv_inverse q⁻¹).symm
+  · simp only [SignedGenerator.inv, evalGenerator]
+    exact (bLinearEquiv_inverse q⁻¹ τ s hs hτ).symm
 
 /-- Positive and negative orientations of `σ₁` cancel exactly. -/
 theorem sigma1_forward_backward

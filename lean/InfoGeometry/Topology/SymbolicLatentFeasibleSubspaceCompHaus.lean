@@ -50,7 +50,8 @@ theorem symbolicLatentFeasibleSubspaceCompHausTopCatHom_isIso
     (targets : ι → Set ℝ)
     (hclosed : ∀ i, IsClosed (targets i)) :
     IsIso (symbolicLatentFeasibleSubspaceCompHausTopCatHom S targets hclosed) := by
-  simpa [symbolicLatentFeasibleSubspaceCompHausTopCatHom] using
-    (inferInstance : IsIso (𝟙 (TopCat.of (feasibleLatentSubspace S targets))))
+  apply TopCat.isIso_of_bijective_of_isOpenMap
+  · exact Function.bijective_id
+  · exact IsOpenMap.id
 
 end InfoGeometry.Topology

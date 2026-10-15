@@ -34,7 +34,11 @@ inductive KleinV4AsanoSymmetry where
   | mobius
   | cpt
   | mobiusCpt
-deriving DecidableEq, Repr, Fintype
+deriving DecidableEq, Repr
+
+instance : Fintype KleinV4AsanoSymmetry :=
+  Fintype.ofList [.id, .mobius, .cpt, .mobiusCpt]
+    (by intro x; cases x <;> simp)
 
 /--
 The two endpoint alternatives already consumed by
@@ -50,7 +54,11 @@ Right endpoint:
 inductive AsanoEndpointAlternative where
   | poleInK₁
   | infinityValueInK₂
-deriving DecidableEq, Repr, Fintype
+deriving DecidableEq, Repr
+
+instance : Fintype AsanoEndpointAlternative :=
+  Fintype.ofList [.poleInK₁, .infinityValueInK₂]
+    (by intro x; cases x <;> simp)
 
 /-- Interprets an endpoint label as the actual endpoint proposition. -/
 @[rep_depth operator]

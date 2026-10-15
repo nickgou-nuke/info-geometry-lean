@@ -152,9 +152,11 @@ noncomputable def scalarGL2Hom [Field F] : Fˣ →* GL2 F where
     ext v
     simp [scalarGL2]
   map_mul' a b := by
-    ext v
-    simp [scalarGL2]
-    ring
+    apply Units.ext
+    apply LinearMap.ext
+    intro v
+    change ((a : F) * (b : F)) • v = (a : F) • ((b : F) • v)
+    simp [smul_smul]
 
 /- The permutation representation of `GL₂(F)` on the projective line. -/
 noncomputable def gl2ActionHom [Field F] : GL2 F →* Equiv.Perm (Line F) :=
@@ -291,12 +293,23 @@ noncomputable def pgl2ActionHom [Field F] :
       gl2ActionHom (F := F) g := by
   rfl
 
+theorem gl2ActionHom_apply [Field F] (g : GL2 F) (x : Line F) :
+    gl2ActionHom (F := F) g x = g • x := by
+  change (MulAction.toPermHom (GL2 F) (Line F) g) x = g • x
+  rw [MulAction.toPermHom_apply, MulAction.toPerm_apply]
+
 theorem pgl2ActionHom_injective [Field F] :
     Function.Injective (pgl2ActionHom (F := F)) := by
   exact QuotientGroup.kerLift_injective (gl2ActionHom (F := F))
 
 noncomputable instance pgl2MulAction [Field F] : MulAction (PGL2 F) (Line F) :=
   MulAction.compHom (Line F) (pgl2ActionHom (F := F))
+
+@[simp] theorem pgl2_mk_smul [Field F] (g : GL2 F) (x : Line F) :
+    (QuotientGroup.mk' (gl2ActionHom (F := F)).ker g : PGL2 F) • x = g • x := by
+  change (pgl2ActionHom (F := F)
+    (QuotientGroup.mk' (gl2ActionHom (F := F)).ker g)) x = g • x
+  rw [pgl2ActionHom_mk, gl2ActionHom_apply]
 
 noncomputable def affinePoint [Field F] (x : F) : Line F :=
   Projectivization.mk F ![x, 1] (by
@@ -671,10 +684,10 @@ theorem pgl2_normalize_affine_triple [Field F] (x y z : F)
     ⟨g, hg0, hg1, hginf⟩
   refine ⟨QuotientGroup.mk' (gl2ActionHom (F := F)).ker g, ?_⟩
   constructor
-  · simpa [pgl2MulAction, pgl2ActionHom_mk] using hg0
+  · simpa only [pgl2_mk_smul] using hg0
   constructor
-  · simpa [pgl2MulAction, pgl2ActionHom_mk] using hg1
-  · simpa [pgl2MulAction, pgl2ActionHom_mk] using hginf
+  · simpa only [pgl2_mk_smul] using hg1
+  · simpa only [pgl2_mk_smul] using hginf
 
 theorem gl2_fix_frame_eq_scalar [Field F] (g : GL2 F)
     (hzero : g • zeroPoint (F := F) = zeroPoint (F := F))
@@ -784,13 +797,16 @@ theorem pgl2_fix_frame_eq_one [Field F] (q : PGL2 F)
   intro g hzero hone hinfinity
   have hzero' : gl2ActionHom (F := F) g • zeroPoint (F := F) =
       zeroPoint (F := F) := by
-    simpa [pgl2MulAction, pgl2ActionHom_mk] using hzero
+    change (gl2ActionHom (F := F) g) (zeroPoint (F := F)) = _ at hzero
+    exact hzero
   have hone' : gl2ActionHom (F := F) g • onePoint (F := F) =
       onePoint (F := F) := by
-    simpa [pgl2MulAction, pgl2ActionHom_mk] using hone
+    change (gl2ActionHom (F := F) g) (onePoint (F := F)) = _ at hone
+    exact hone
   have hinfinity' : gl2ActionHom (F := F) g • infinityPoint (F := F) =
       infinityPoint (F := F) := by
-    simpa [pgl2MulAction, pgl2ActionHom_mk] using hinfinity
+    change (gl2ActionHom (F := F) g) (infinityPoint (F := F)) = _ at hinfinity
+    exact hinfinity
   rcases gl2_fix_frame_eq_scalar g hzero' hone' hinfinity' with ⟨a, ha⟩
   rw [ha]
   exact (QuotientGroup.eq_one_iff _).2
@@ -950,13 +966,13 @@ theorem pgl2_normalize_infinity_affine_pair [Field F] (x y : F)
   let c : PGL2 F :=
     QuotientGroup.mk' (gl2ActionHom (F := F)).ker (frameCycleGL2 (F := F))
   have hc0 : c • zeroPoint (F := F) = onePoint (F := F) := by
-    simpa [c, pgl2MulAction, pgl2ActionHom_mk] using
+    simpa only [c, pgl2_mk_smul] using
       (frameCycleGL2_smul_zeroPoint (F := F))
   have hc1 : c • onePoint (F := F) = infinityPoint (F := F) := by
-    simpa [c, pgl2MulAction, pgl2ActionHom_mk] using
+    simpa only [c, pgl2_mk_smul] using
       (frameCycleGL2_smul_onePoint (F := F))
   have hcinf : c • infinityPoint (F := F) = zeroPoint (F := F) := by
-    simpa [c, pgl2MulAction, pgl2ActionHom_mk] using
+    simpa only [c, pgl2_mk_smul] using
       (frameCycleGL2_smul_infinityPoint (F := F))
   refine ⟨c * h, ?_, ?_, ?_⟩
   · rw [mul_smul, hinf, hcinf]
@@ -976,22 +992,22 @@ theorem pgl2_normalize_affine_infinity_affine [Field F] (x y : F)
   let c : PGL2 F :=
     QuotientGroup.mk' (gl2ActionHom (F := F)).ker (frameCycleGL2 (F := F))
   have hs0 : s • zeroPoint (F := F) = infinityPoint (F := F) := by
-    simpa [s, pgl2MulAction, pgl2ActionHom_mk] using
+    simpa only [s, pgl2_mk_smul, zeroPoint] using
       (swapGL2_smul_affinePoint_zero (F := F))
   have hs1 : s • onePoint (F := F) = onePoint (F := F) := by
-    simpa [s, pgl2MulAction, pgl2ActionHom_mk] using
+    simpa only [s, pgl2_mk_smul] using
       (swapGL2_smul_onePoint (F := F))
   have hsi : s • infinityPoint (F := F) = zeroPoint (F := F) := by
-    simpa [s, pgl2MulAction, pgl2ActionHom_mk] using
+    simpa only [s, pgl2_mk_smul] using
       (swapGL2_smul_infinityPoint (F := F))
   have hc0 : c • zeroPoint (F := F) = onePoint (F := F) := by
-    simpa [c, pgl2MulAction, pgl2ActionHom_mk] using
+    simpa only [c, pgl2_mk_smul] using
       (frameCycleGL2_smul_zeroPoint (F := F))
   have hc1 : c • onePoint (F := F) = infinityPoint (F := F) := by
-    simpa [c, pgl2MulAction, pgl2ActionHom_mk] using
+    simpa only [c, pgl2_mk_smul] using
       (frameCycleGL2_smul_onePoint (F := F))
   have hci : c • infinityPoint (F := F) = zeroPoint (F := F) := by
-    simpa [c, pgl2MulAction, pgl2ActionHom_mk] using
+    simpa only [c, pgl2_mk_smul] using
       (frameCycleGL2_smul_infinityPoint (F := F))
   refine ⟨c * s * h, ?_, ?_, ?_⟩
   · rw [mul_smul, mul_smul, hx, hs0, hci]
@@ -1218,6 +1234,6 @@ theorem pgl2Action_transitive [Field F] (p q : Line F) :
     ∃ g : PGL2 F, g • p = q := by
   rcases gl2Action_transitive p q with ⟨g, hg⟩
   refine ⟨QuotientGroup.mk' (gl2ActionHom (F := F)).ker g, ?_⟩
-  simpa [pgl2MulAction, pgl2ActionHom_mk] using hg
+  simpa only [pgl2_mk_smul] using hg
 
 end InfoGeometry.Arithmetic.FiniteProjectiveLine

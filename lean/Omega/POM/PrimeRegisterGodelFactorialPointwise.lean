@@ -33,6 +33,6 @@ theorem paper_pom_prime_register_godel_factorial_pointwise
     Nat.factorial (T + 1) = ∏ i : Fin T, (i.1 + 2) :=
       pom_prime_register_godel_factorial_pointwise_prod_indices T |>.symm
     _ ≤ ∏ i : Fin T, a i :=
-      Finset.prod_le_prod (fun i _ => Nat.zero_le _) (fun i _ => hlb i)
+      Finset.prod_le_prod (fun i _ => hlb i)
 
 end Omega.POM

@@ -36,11 +36,10 @@ theorem paper_cdim_phase_diophantine_resolution_lower_bound
   have hε : ε < δ2N / 2 := by
     simpa [phaseResolutionInjective] using hinj
   have hhalf : δ2N / 2 ≤ (1 : ℝ) / (2 * qj1) := by
-    have htmp : δ2N / 2 ≤ ((1 : ℝ) / qj1) / 2 := by
-      exact div_le_div_of_nonneg_right hδupper (by positivity)
-    have hrewrite : ((1 : ℝ) / qj1) / 2 = (1 : ℝ) / (2 * qj1) := by
-      field_simp [hqj1_pos.ne']
-    simpa [hrewrite] using htmp
+    calc
+      δ2N / 2 ≤ ((1 : ℝ) / qj1) / 2 := div_le_div_of_nonneg_right hδupper (by positivity)
+      _ = (1 : ℝ) / (2 * qj1) := by
+        field_simp [hqj1_pos.ne']
   have hregisterBound : (1 : ℝ) / (2 * qj1) ≤ (1 : ℝ) / (2 * N) := by
     have hle_nat : 2 * N ≤ 2 * qj1 := by
       omega

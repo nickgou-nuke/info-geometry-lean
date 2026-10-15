@@ -579,12 +579,12 @@ theorem pauliBraidConjugationQuotient_normalized_image_eq_singleton :
       {(-pauliMajorana 1, pauliMajorana 0)}
     rcases hr with (rfl | rfl)
     · rw [Set.mem_singleton_iff]
-      exact Prod.ext (by simpa using pauli_braid_conjugates_left_01)
-        (by simpa using pauli_braid_conjugates_right_01)
+      exact Prod.ext (by simpa [pauliBraidConjugationPair] using pauli_braid_conjugates_left_01)
+        (by simpa [pauliBraidConjugationPair] using pauli_braid_conjugates_right_01)
     · rw [pauliBraidConjugationPair_neg]
       rw [Set.mem_singleton_iff]
-      exact Prod.ext (by simpa using pauli_braid_conjugates_left_01)
-        (by simpa using pauli_braid_conjugates_right_01)
+      exact Prod.ext (by simpa [pauliBraidConjugationPair] using pauli_braid_conjugates_left_01)
+        (by simpa [pauliBraidConjugationPair] using pauli_braid_conjugates_right_01)
   · intro hy
     have hy' : y = (-pauliMajorana 1, pauliMajorana 0) := by
       simpa using hy
@@ -609,8 +609,8 @@ theorem pauliBraidConjugationPair_image_eq_singleton :
   · rintro ⟨r, hr, rfl⟩
     rcases hr with (rfl | rfl)
     · rw [Set.mem_singleton_iff]
-      exact Prod.ext (by simpa using pauli_braid_conjugates_left_01)
-        (by simpa using pauli_braid_conjugates_right_01)
+      exact Prod.ext (by simpa [pauliBraidConjugationPair] using pauli_braid_conjugates_left_01)
+        (by simpa [pauliBraidConjugationPair] using pauli_braid_conjugates_right_01)
     · have hleft :
           braidOperator (-pauliBraidScalar) pauliMajoranaOperators 0 1 =
             -braidOperator pauliBraidScalar pauliMajoranaOperators 0 1 := by

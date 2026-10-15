@@ -339,7 +339,9 @@ theorem two_signedHalfCoordinate_mem_integralSubgroup :
       integralSubgroup := by
   apply AddSubgroup.mem_map.mpr
   let y : Lattice :=
-    ⟨![1, 1, 1, -1], by decide⟩
+    ⟨![1, 1, 1, -1], by
+      change IsD4 (![1, 1, 1, -1] : Ambient)
+      decide⟩
   refine ⟨y, Set.mem_univ _, ?_⟩
   apply Subtype.ext
   funext i
@@ -392,7 +394,7 @@ theorem dual_strictly_contains_integral_carrier :
   have hcoord : y.1 = (fun i => if i = 0 then 1 else 0) := by
     funext i
     have hy' : integerEmbedding y.1 = firstCoordinate := by
-      simpa [dualEmbedding, firstCoordinate] using hy
+      simpa [dualEmbedding, firstCoordinateDual, firstCoordinate] using hy
     fin_cases i
     · have h := congrFun hy' 0
       have h' : (y.1 0 : ℚ) = 1 := by
@@ -410,7 +412,11 @@ theorem dual_strictly_contains_integral_carrier :
       have h' : (y.1 3 : ℚ) = 0 := by
         simpa [integerEmbedding, firstCoordinate, Matrix.cons_val_three] using h
       exact_mod_cast h'
-  exact firstCoordinate_not_in_D4 (by simpa [hcoord] using y.2)
+  have hyD : IsD4 y.1 := by
+    have hyMem : y.1 ∈ latticeSubgroup := y.property
+    change IsD4 y.1 at hyMem
+    simpa [hcoord] using hyMem
+  exact firstCoordinate_not_in_D4 (by simpa [hcoord] using hyD)
 
 def firstCoordinateSubgroup : dualSubgroup :=
   ⟨firstCoordinate, firstCoordinate_mem_dual⟩
@@ -466,6 +472,7 @@ theorem two_firstCoordinate_mem_integralSubgroup :
   apply AddSubgroup.mem_map.mpr
   let y : Lattice :=
     ⟨fun i => if i = 0 then 2 else 0, by
+      change IsD4 (fun i => if i = 0 then 2 else 0)
       norm_num [IsD4, coordinateSum, Fin.sum_univ_four]⟩
   refine ⟨y, Set.mem_univ _, ?_⟩
   apply Subtype.ext
@@ -508,7 +515,10 @@ theorem firstCoordinate_not_mem_integralSubgroup :
       have h' : (y.1 3 : ℚ) = 0 := by
         simpa [integerEmbedding, firstCoordinate, Matrix.cons_val_three] using h
       exact_mod_cast h'
-  exact firstCoordinate_not_in_D4 (by simpa [hcoord] using y.2)
+  have hyD : IsD4 y.1 := by
+    change y.1 ∈ latticeSubgroup
+    exact y.2
+  exact firstCoordinate_not_in_D4 (by simpa [hcoord] using hyD)
 
 theorem discriminantMap_firstCoordinate_ne_zero :
     discriminantMap firstCoordinateSubgroup ≠ 0 := by
@@ -644,8 +654,12 @@ theorem discriminantCarrier_nontrivial :
 theorem dual_two_coordinate_integral (x : DualLattice) (i : Fin 4) :
     ∃ n : ℤ, 2 * x.1 i = n := by
   fin_cases i
-  · let ym : Lattice := ⟨![1, -1, 0, 0], by decide⟩
-    let yp : Lattice := ⟨![1, 1, 0, 0], by decide⟩
+  · let ym : Lattice := ⟨![1, -1, 0, 0], by
+      change IsD4 (![1, -1, 0, 0] : Ambient)
+      decide⟩
+    let yp : Lattice := ⟨![1, 1, 0, 0], by
+      change IsD4 (![1, 1, 0, 0] : Ambient)
+      decide⟩
     obtain ⟨m, hm⟩ := x.2 ym
     obtain ⟨p, hp⟩ := x.2 yp
     refine ⟨m + p, ?_⟩
@@ -656,8 +670,12 @@ theorem dual_two_coordinate_integral (x : DualLattice) (i : Fin 4) :
       simpa [rationalDot, integerEmbedding, yp, Fin.sum_univ_four] using hp
     change 2 * x.1 0 = (m + p : ℤ)
     exact_mod_cast (by linarith : 2 * x.1 0 = (m : ℚ) + p)
-  · let ym : Lattice := ⟨![1, -1, 0, 0], by decide⟩
-    let yp : Lattice := ⟨![1, 1, 0, 0], by decide⟩
+  · let ym : Lattice := ⟨![1, -1, 0, 0], by
+      change IsD4 (![1, -1, 0, 0] : Ambient)
+      decide⟩
+    let yp : Lattice := ⟨![1, 1, 0, 0], by
+      change IsD4 (![1, 1, 0, 0] : Ambient)
+      decide⟩
     obtain ⟨m, hm⟩ := x.2 ym
     obtain ⟨p, hp⟩ := x.2 yp
     refine ⟨p - m, ?_⟩
@@ -668,8 +686,12 @@ theorem dual_two_coordinate_integral (x : DualLattice) (i : Fin 4) :
       simpa [rationalDot, integerEmbedding, yp, Fin.sum_univ_four] using hp
     change 2 * x.1 1 = (p - m : ℤ)
     exact_mod_cast (by linarith : 2 * x.1 1 = (p : ℚ) - m)
-  · let ym : Lattice := ⟨![0, 0, 1, -1], by decide⟩
-    let yp : Lattice := ⟨![0, 0, 1, 1], by decide⟩
+  · let ym : Lattice := ⟨![0, 0, 1, -1], by
+      change IsD4 (![0, 0, 1, -1] : Ambient)
+      decide⟩
+    let yp : Lattice := ⟨![0, 0, 1, 1], by
+      change IsD4 (![0, 0, 1, 1] : Ambient)
+      decide⟩
     obtain ⟨m, hm⟩ := x.2 ym
     obtain ⟨p, hp⟩ := x.2 yp
     refine ⟨m + p, ?_⟩
@@ -680,8 +702,12 @@ theorem dual_two_coordinate_integral (x : DualLattice) (i : Fin 4) :
     have hp' : x.1 2 + x.1 3 = (p : ℚ) := by
       simpa [rationalDot, integerEmbedding, yp, Fin.sum_univ_four] using hp
     exact_mod_cast (by linarith : 2 * x.1 2 = (m : ℚ) + p)
-  · let ym : Lattice := ⟨![0, 0, 1, -1], by decide⟩
-    let yp : Lattice := ⟨![0, 0, 1, 1], by decide⟩
+  · let ym : Lattice := ⟨![0, 0, 1, -1], by
+      change IsD4 (![0, 0, 1, -1] : Ambient)
+      decide⟩
+    let yp : Lattice := ⟨![0, 0, 1, 1], by
+      change IsD4 (![0, 0, 1, 1] : Ambient)
+      decide⟩
     obtain ⟨m, hm⟩ := x.2 ym
     obtain ⟨p, hp⟩ := x.2 yp
     refine ⟨p - m, ?_⟩
@@ -704,10 +730,18 @@ theorem dual_simpleRoot_pairings_integral (x : DualLattice) :
     (∃ b : ℤ, x.1 1 - x.1 2 = b) ∧
     (∃ c : ℤ, x.1 2 - x.1 3 = c) ∧
     (∃ d : ℤ, x.1 2 + x.1 3 = d) := by
-  let r01 : Lattice := ⟨![1, -1, 0, 0], by decide⟩
-  let r12 : Lattice := ⟨![0, 1, -1, 0], by decide⟩
-  let r23 : Lattice := ⟨![0, 0, 1, -1], by decide⟩
-  let r2p3 : Lattice := ⟨![0, 0, 1, 1], by decide⟩
+  let r01 : Lattice := ⟨![1, -1, 0, 0], by
+    change IsD4 (![1, -1, 0, 0] : Ambient)
+    decide⟩
+  let r12 : Lattice := ⟨![0, 1, -1, 0], by
+    change IsD4 (![0, 1, -1, 0] : Ambient)
+    decide⟩
+  let r23 : Lattice := ⟨![0, 0, 1, -1], by
+    change IsD4 (![0, 0, 1, -1] : Ambient)
+    decide⟩
+  let r2p3 : Lattice := ⟨![0, 0, 1, 1], by
+    change IsD4 (![0, 0, 1, 1] : Ambient)
+    decide⟩
   obtain ⟨a, ha⟩ := x.2 r01
   obtain ⟨b, hb⟩ := x.2 r12
   obtain ⟨c, hc⟩ := x.2 r23

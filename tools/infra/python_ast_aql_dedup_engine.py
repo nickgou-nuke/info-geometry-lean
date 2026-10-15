@@ -30,7 +30,14 @@ def main() -> int:
         print("❌ [cpg-dedup] Failed to connect to ArangoDB.")
         return 1
 
-    manifest = dedup.generate_deduplication_manifest(out_json=Path(args.out))
+    if args.min_count < 2 or args.limit < 1:
+        parser.error("--min-count must be >= 2 and --limit must be positive")
+    try:
+        manifest = dedup.generate_deduplication_manifest(out_json=Path(args.out),
+            min_count=args.min_count, limit=args.limit)
+    except Exception as exc:
+        print(f"[cpg-dedup] Query/report failed ({type(exc).__name__}); audit incomplete", file=sys.stderr)
+        return 1
     print(f"✅ [cpg-dedup] Discovered {manifest['summary']['exact_function_clone_clusters']} exact function clone clusters and {manifest['summary']['structural_function_shape_clusters']} structural shape clusters.")
     return 0
 

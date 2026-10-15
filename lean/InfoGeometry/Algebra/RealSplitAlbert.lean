@@ -58,8 +58,17 @@ def coordEquiv : RealSplitOct ≃ ℝ × ℝ × ℝ × ℝ × ℝ × ℝ × ℝ 
 instance : AddCommGroup RealSplitOct :=
   Equiv.addCommGroup coordEquiv
 
+noncomputable def coordAddEquiv :
+    RealSplitOct ≃+ ℝ × ℝ × ℝ × ℝ × ℝ × ℝ × ℝ × ℝ :=
+  { coordEquiv with
+    map_add' := by
+      intro X Y
+      cases X
+      cases Y
+      rfl }
+
 instance : Module ℝ RealSplitOct :=
-  Equiv.module ℝ coordEquiv
+  AddEquiv.module ℝ coordAddEquiv
 
 /-- Conjugation of real split octonions. -/
 def conj (X : RealSplitOct) : RealSplitOct :=
@@ -121,8 +130,17 @@ def coordEquiv : RealAlbertMatrix ≃ ℝ × ℝ × ℝ × RealSplitOct × RealS
 instance : AddCommGroup RealAlbertMatrix :=
   Equiv.addCommGroup coordEquiv
 
+noncomputable def coordAddEquiv :
+    RealAlbertMatrix ≃+ ℝ × ℝ × ℝ × RealSplitOct × RealSplitOct × RealSplitOct :=
+  { coordEquiv with
+    map_add' := by
+      intro X Y
+      cases X
+      cases Y
+      rfl }
+
 instance : Module ℝ RealAlbertMatrix :=
-  Equiv.module ℝ coordEquiv
+  AddEquiv.module ℝ coordAddEquiv
 
 /-- The split-Albert Jordan product `X ∘ Y = (XY + YX) / 2` in Hermitian
 coordinates

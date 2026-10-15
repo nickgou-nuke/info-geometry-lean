@@ -425,7 +425,8 @@ theorem windingCharacterUnit_of_winding_period
 
 theorem windingCharacterUnit_norm (α : ℝ) (n : ℤ) :
     ‖(windingCharacterUnit α (Multiplicative.ofAdd n) : ℂ)‖ = 1 := by
-  simpa using windingCharacter_norm α n
+  change ‖windingCharacter α n‖ = 1
+  exact windingCharacter_norm α n
 
 theorem windingCharacterUnit_ofAdd_add (α : ℝ) (m n : ℤ) :
     windingCharacterUnit α (Multiplicative.ofAdd (m + n)) =
@@ -505,10 +506,13 @@ theorem windingCharacterUnit_half_sq (n : ℤ) :
   exact windingCharacter_half_sq n
 
 theorem windingCharacterUnit_third_cube (n : ℤ) :
-    windingCharacterUnit (1 / 3 : ℝ) (Multiplicative.ofAdd n) ^ 3 =
+  windingCharacterUnit (1 / 3 : ℝ) (Multiplicative.ofAdd n) ^ 3 =
       (1 : ℂˣ) := by
   apply Units.ext
-  simpa [pow_succ, windingCharacterUnit] using windingCharacter_third_cube n
+  change ((windingCharacterUnit (1 / 3 : ℝ) (Multiplicative.ofAdd n) : ℂ) ^ 3) = 1
+  rw [windingCharacterUnit_apply_val]
+  change windingCharacter (1 / 3 : ℝ) n ^ 3 = 1
+  simpa [pow_succ] using windingCharacter_third_cube n
 
 theorem windingCharacter_half_periodic (n : ℤ) :
     windingCharacter (1 / 2 : ℝ) (n + 2) =
@@ -542,15 +546,17 @@ theorem windingCharacterUnit_half_periodic (n : ℤ) :
     windingCharacterUnit (1 / 2 : ℝ) (Multiplicative.ofAdd (n + 2)) =
       windingCharacterUnit (1 / 2 : ℝ) (Multiplicative.ofAdd n) := by
   apply Units.ext
-  simpa only [windingCharacterUnit_apply_val] using
-    windingCharacter_half_periodic n
+  change windingCharacter (1 / 2 : ℝ) (n + 2) =
+    windingCharacter (1 / 2 : ℝ) n
+  exact windingCharacter_half_periodic n
 
 theorem windingCharacterUnit_third_periodic (n : ℤ) :
     windingCharacterUnit (1 / 3 : ℝ) (Multiplicative.ofAdd (n + 3)) =
       windingCharacterUnit (1 / 3 : ℝ) (Multiplicative.ofAdd n) := by
   apply Units.ext
-  simpa only [windingCharacterUnit_apply_val] using
-    windingCharacter_third_periodic n
+  change windingCharacter (1 / 3 : ℝ) (n + 3) =
+    windingCharacter (1 / 3 : ℝ) n
+  exact windingCharacter_third_periodic n
 
 theorem windingCharacterCircle_half_sq (n : ℤ) :
     windingCharacterCircle (1 / 2 : ℝ) (Multiplicative.ofAdd n) *

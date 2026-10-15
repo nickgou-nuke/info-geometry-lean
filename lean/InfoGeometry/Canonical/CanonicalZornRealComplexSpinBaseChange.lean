@@ -179,6 +179,7 @@ theorem realToComplexClifford_mem_even
       have hp := SetLike.mul_mem_graded
         (CliffordAlgebra.ι_mul_ι_mem_evenOdd_zero vectorQuadratic
           (realSplit44ToVector8 x) (realSplit44ToVector8 y)) ha
+      change _ ∈ CliffordAlgebra.evenOdd vectorQuadratic 0
       simpa only [zero_add] using hp
 
 /-! ## Mapping the real spin group -/

@@ -42,11 +42,17 @@ theorem paper_xi_phase_adjacent_prefix_sharing :
   unfold xi_phase_adjacent_prefix_sharing_statement
   refine ⟨by decide, by decide, ?_, by decide, ?_⟩
   · intro i hi
-    fin_cases i <;> decide
-  · intro i hi
     fin_cases i <;>
-      simp [xi_phase_adjacent_prefix_sharing_prefixGaps,
+      norm_num [xi_phase_adjacent_prefix_sharing_smallGaps,
         xi_phase_adjacent_prefix_sharing_scaledGap,
-        xi_phase_adjacent_prefix_sharing_prefixLowerBound] at hi ⊢
+        xi_phase_adjacent_prefix_sharing_scaledWindow] at hi ⊢
+  · intro i hi
+    simp only [xi_phase_adjacent_prefix_sharing_prefixGaps, Finset.mem_filter,
+      Finset.mem_univ, true_and] at hi
+    change xi_phase_adjacent_prefix_sharing_scaledGap i ≤ 16 at hi
+    fin_cases i <;>
+      norm_num [xi_phase_adjacent_prefix_sharing_scaledGap] at hi <;>
+      norm_num [xi_phase_adjacent_prefix_sharing_scaledGap,
+        xi_phase_adjacent_prefix_sharing_prefixLowerBound]
 
 end Omega.Zeta

@@ -38,7 +38,13 @@ variable {K : Type*} [CommRing K]
 inductive G2RootKind
   | short
   | long
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype G2RootKind where
+  elems := {.short, .long}
+  complete := by
+    intro kind
+    cases kind <;> simp
 
 /-- Typed $G_2$ root label with explicit short/long kind and 6-fold cyclic index. -/
 structure G2RootLabel where

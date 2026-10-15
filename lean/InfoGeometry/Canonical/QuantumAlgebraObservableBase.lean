@@ -117,7 +117,7 @@ theorem transitionPotential_eq_potentialField_difference
     (base : PositiveRay (Fin n)) (ψ : State) (X₀ X₁ : Observable) :
     E.transitionPotential ψ X₀ X₁ =
       E.potentialField base ψ X₁ - E.potentialField base ψ X₀ := by
-  simpa [transitionPotential, potentialField] using
+  simpa [transitionPotential, potentialField, anchoredPotential] using
     (transition_eq_anchoredPotential_sub
       (n := n) base (E.basePoint ψ X₀) (E.basePoint ψ X₁))
 
@@ -188,7 +188,7 @@ theorem transitionPotential_eq_potentialField_difference
     (base : PositiveRay (Fin n)) (o₀ o₁ : Observable) :
     B.transitionPotential o₀ o₁ =
       B.potentialField base o₁ - B.potentialField base o₀ := by
-  simpa [transitionPotential, potentialField, basePoint] using
+  simpa [transitionPotential, potentialField, basePoint, anchoredPotential] using
     (transition_eq_anchoredPotential_sub
       (n := n) base (B.basePoint o₀) (B.basePoint o₁))
 

@@ -124,7 +124,7 @@ theorem assembleStokes_eq_pauli_expansion (q : StokesQuad) :
   fin_cases s <;> fin_cases t <;>
     simp [assembleStokes, pauliExpansion, sheetTensor, sheetIdentity,
       sheetParity, sheetFlip, sheetPhase, stokesToBlocks,
-      blockLinearMapInv, Matrix.add_apply] <;>
+      blockLinearMapInv_apply, Matrix.add_apply] <;>
     ring
 
 theorem pauliExpansion_eq_even_add_odd (q : StokesQuad) :

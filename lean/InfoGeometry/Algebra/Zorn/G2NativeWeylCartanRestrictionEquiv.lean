@@ -11,7 +11,7 @@ open InfoGeometry.Lie.CanonicalZornDerivation
 
 open InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition
 
-def canonicalCartanPlane : Submodule ℝ canonicalZornDerivations :=
+noncomputable def canonicalCartanPlane : Submodule ℝ canonicalZornDerivations :=
   Submodule.span ℝ ({vectorCanonicalLieEquiv (cartanDerivation 0),
     vectorCanonicalLieEquiv (cartanDerivation 1)} : Set canonicalZornDerivations)
 
@@ -196,6 +196,10 @@ noncomputable def nativeCartanSpanCanonicalEquiv :
     change vectorCanonicalLieEquiv D = E.1
     exact hDE
 
+@[simp] theorem nativeCartanSpanCanonicalEquiv_coe (D : nativeCartanSpan) :
+    (nativeCartanSpanCanonicalEquiv D : canonicalZornDerivations) =
+      vectorCanonicalLieEquiv D := rfl
+
 noncomputable def realWeylCycle_canonicalCartanPlaneEquiv :
     canonicalCartanPlane ≃ₗ[ℝ] canonicalCartanPlane :=
   nativeCartanSpanCanonicalEquiv.symm.trans
@@ -213,14 +217,18 @@ theorem nativeCartanSpanCanonicalEquiv_cycle_covariant (D : nativeCartanSpan) :
           (nativeCartanSpanCanonicalEquiv D), by
         have hD : vectorCanonicalLieEquiv.symm
             (nativeCartanSpanCanonicalEquiv D) = D := by
-          simpa [nativeCartanSpanCanonicalEquiv] using congrArg Subtype.val
-            (nativeCartanSpanCanonicalEquiv.symm_apply_apply D)
+          change vectorCanonicalLieEquiv.symm
+            (vectorCanonicalLieEquiv (D : ZornVectorMatrix.Derivation)) =
+              (D : ZornVectorMatrix.Derivation)
+          exact vectorCanonicalLieEquiv.symm_apply_apply D
         rw [conjugateCanonicalDerivation_apply, hD]
         exact (nativeCartanSpanCanonicalEquiv
           (realWeylCycle_nativeCartanSpanEquiv D)).property⟩ := by
   apply Subtype.ext
-  simp [nativeCartanSpanCanonicalEquiv, realWeylCycle_nativeCartanSpanEquiv,
+  simp only [nativeCartanSpanCanonicalEquiv_coe,
+    realWeylCycle_nativeCartanSpanEquiv_apply,
     conjugateCanonicalDerivation_apply]
+  rw [vectorCanonicalLieEquiv.symm_apply_apply]
 
 theorem nativeCartanSpanCanonicalEquiv_reflection_covariant (D : nativeCartanSpan) :
     nativeCartanSpanCanonicalEquiv
@@ -229,14 +237,18 @@ theorem nativeCartanSpanCanonicalEquiv_reflection_covariant (D : nativeCartanSpa
           (nativeCartanSpanCanonicalEquiv D), by
         have hD : vectorCanonicalLieEquiv.symm
             (nativeCartanSpanCanonicalEquiv D) = D := by
-          simpa [nativeCartanSpanCanonicalEquiv] using congrArg Subtype.val
-            (nativeCartanSpanCanonicalEquiv.symm_apply_apply D)
+          change vectorCanonicalLieEquiv.symm
+            (vectorCanonicalLieEquiv (D : ZornVectorMatrix.Derivation)) =
+              (D : ZornVectorMatrix.Derivation)
+          exact vectorCanonicalLieEquiv.symm_apply_apply D
         rw [conjugateCanonicalDerivation_apply, hD]
         exact (nativeCartanSpanCanonicalEquiv
           (realWeylReflection_nativeCartanSpanEquiv D)).property⟩ := by
   apply Subtype.ext
-  simp [nativeCartanSpanCanonicalEquiv, realWeylReflection_nativeCartanSpanEquiv,
+  simp only [nativeCartanSpanCanonicalEquiv_coe,
+    realWeylReflection_nativeCartanSpanEquiv_apply,
     conjugateCanonicalDerivation_apply]
+  rw [vectorCanonicalLieEquiv.symm_apply_apply]
 
 theorem nativeRootWeight_cycle_compat
     (i : InfoGeometry.Algebra.Zorn.G2NativeRootWeightFunctional.NativeIndex)

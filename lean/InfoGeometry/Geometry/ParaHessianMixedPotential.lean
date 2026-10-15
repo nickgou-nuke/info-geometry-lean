@@ -220,11 +220,11 @@ theorem hasFDerivAt_potential (X : Doubled E) :
   have hsnd : HasFDerivAt (fun Y : Doubled E => Y.2)
       (ContinuousLinearMap.snd ℝ E E) X :=
     (ContinuousLinearMap.snd ℝ E E).hasFDerivAt
-  simpa [potential, potentialDerivative] using hfst.inner ℝ hsnd
+  exact hfst.inner ℝ hsnd
 
 theorem hasFDerivAt_gradient (X : Doubled E) :
-    HasFDerivAt gradient hessian X := by
-  simpa [gradient, hessian] using (exchange (E := E)).hasFDerivAt
+    HasFDerivAt gradient hessian X :=
+  (exchange (E := E)).hasFDerivAt
 
 theorem fderiv_potential (X : Doubled E) :
     fderiv ℝ potential X = potentialDerivative X :=
@@ -286,7 +286,7 @@ def rieszDuality : E →ₗ[ℝ] Module.Dual ℝ E where
   toFun u := (InnerProductSpace.toDual ℝ E u).toLinearMap
   map_add' u v := by
     ext w
-    simp [InnerProductSpace.toDual_apply_apply, inner_add_left]
+    simp [InnerProductSpace.toDual_apply_apply]
   map_smul' r u := by
     ext w
     simp [InnerProductSpace.toDual_apply_apply]

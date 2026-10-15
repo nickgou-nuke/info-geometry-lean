@@ -73,12 +73,12 @@ theorem c_pow_five_eq_swapCartan_mul_cycle_sq :
   fin_cases i <;> rfl
 
 theorem c_sq_up0 : (c ^ 2).1 up0 = up1 := by
-  simp [c, pow_two, cycle012Aut_apply, cycle012Fun, swapCartanAut,
-    swapCartanEquiv, swapCartanFun, up0, up1]
+  rw [c_pow_two_eq_cycle012_sq]
+  rfl
 
 theorem c_cube_up0 : (c ^ 3).1 up0 = down0 := by
-  simp [c, pow_succ, cycle012Aut_apply, cycle012Fun, swapCartanAut,
-    swapCartanEquiv, swapCartanFun, up0, down0]
+  rw [c_pow_three_eq_swapCartan]
+  rfl
 
 theorem c_pow_two_ne_one : c ^ 2 ≠ 1 := by
   intro h
@@ -156,15 +156,11 @@ theorem one_apply (X : SplitOctF2) :
   rfl
 
 theorem s_ne_c_pow (k : Fin 6) : s ≠ c ^ (k : ℕ) := by
-  fin_cases k <;> intro h
-  all_goals
-    have h' := congrArg
-      (fun f : SplitOctF2Aut =>
-        (f.1 ePlus, f.1 up0, f.1 up1, f.1 up2, f.1 down0, f.1 down1, f.1 down2)) h
-    norm_num [s, c, pow_succ, swap01Aut_apply, cycle012Aut_apply,
-      cycle012Fun, swap01Fun, swapCartanAut, swapCartanEquiv, swapCartanFun,
-      ePlus, up0, up1, up2, down0, down1, down2,
-      InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.one, one_apply] at h'
+  intro h
+  have hext := congrArg
+    (fun f : SplitOctF2Aut =>
+      (f.1 ePlus, f.1 up0, f.1 up1, f.1 up2, f.1 down0, f.1 down1, f.1 down2)) h
+  fin_cases k <;> revert hext <;> decide
 
 theorem s_c_s : s * c * s = c⁻¹ := by
   apply eq_inv_of_mul_eq_one_right

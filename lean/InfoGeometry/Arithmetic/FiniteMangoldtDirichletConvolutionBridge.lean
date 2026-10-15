@@ -96,7 +96,10 @@ theorem rectangular_zeta_mangoldt_eq_log
         ArithmeticFunction.vonMangoldt = ArithmeticFunction.log :=
     ArithmeticFunction.zeta_mul_vonMangoldt
   have h := congrArg (fun F : ArithmeticFunction ℝ => F k) hfun
-  dsimp at h
+  rw [ArithmeticFunction.mul_apply] at h
+  change (∑ x ∈ k.divisorsAntidiagonal,
+    ((if x.1 = 0 then (0 : ℕ) else 1 : ℕ) : ℝ) * vonMangoldt x.2) =
+      Real.log k at h
   have hzero :
       (∑ x ∈ k.divisorsAntidiagonal,
         ((if x.1 = 0 then 0 else 1 : ℕ) : ℝ) * vonMangoldt x.2) =
@@ -107,7 +110,6 @@ theorem rectangular_zeta_mangoldt_eq_log
     simp [hx0]
   rw [hzero] at h
   have hcast := congrArg (fun r : ℝ => (r : ℂ)) h
-  dsimp at hcast
   simpa [zetaCoefficients, mangoldtCoefficientsComplex, logCoefficientsComplex] using hcast
 
 theorem rectangular_mobius_log_eq_mangoldt
@@ -123,9 +125,10 @@ theorem rectangular_mobius_log_eq_mangoldt
         ArithmeticFunction.log = ArithmeticFunction.vonMangoldt :=
     ArithmeticFunction.moebius_mul_log_eq_vonMangoldt
   have h := congrArg (fun F : ArithmeticFunction ℝ => F k) hfun
-  dsimp at h
+  rw [ArithmeticFunction.mul_apply] at h
+  change (∑ x ∈ k.divisorsAntidiagonal,
+    (moebius x.1 : ℝ) * Real.log x.2) = vonMangoldt k at h
   have hcast := congrArg (fun r : ℝ => (r : ℂ)) h
-  dsimp at hcast
   simpa [mobiusCoefficients, logCoefficientsComplex, mangoldtCoefficientsComplex] using hcast
 
 /-- Möbius inversion for the zeta coefficient function over `ℤ`. -/

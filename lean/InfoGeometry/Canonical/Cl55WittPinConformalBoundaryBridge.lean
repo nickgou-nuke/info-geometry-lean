@@ -143,9 +143,7 @@ noncomputable instance pinInfinityStabilizerProjectiveMulAction :
       pinInfinityStabilizerProjectivizationAction (g * h) p =
         pinInfinityStabilizerProjectivizationAction g
           (pinInfinityStabilizerProjectivizationAction h p)
-    have hmul := congrFun
-      (pinInfinityStabilizerProjectivizationAction.map_mul g h) p
-    simpa [Function.comp_def] using hmul
+    exact congrFun (pinInfinityStabilizerProjectivizationAction.map_mul g h) p
 
 @[simp]
 theorem pinInfinityStabilizerProjective_smul_eq
@@ -188,12 +186,11 @@ noncomputable def pinInfinityStabilizerNativeNullAffineChartActionHom :
     intro g h
     funext p
     apply Subtype.ext
-    have hmul :=
-      congrFun
-        (pinProjectiveRepresentation.projectivizationMap_mul
-          (g.1) (h.1)) p.1
-    simpa [pinInfinityStabilizerNativeNullAffineChartAction,
-      Function.comp_def] using hmul
+    change pinProjectiveRepresentation.projectivizationMap (g.1 * h.1) p.1 =
+      pinProjectiveRepresentation.projectivizationMap (g.1)
+        (pinProjectiveRepresentation.projectivizationMap (h.1) p.1)
+    exact congrFun
+      (pinProjectiveRepresentation.projectivizationMap_mul (g.1) (h.1)) p.1
 
 @[simp] theorem pinInfinityStabilizerNativeNullAffineChartActionHom_apply
     (g : pinInfinityStabilizer)
@@ -214,9 +211,11 @@ noncomputable instance pinInfinityStabilizerNativeNullAffineChartMulAction :
       pinInfinityStabilizerNativeNullAffineChartActionHom.map_one p
   mul_smul := by
     intro g h p
-    have hmul := congrFun
+    change pinInfinityStabilizerNativeNullAffineChartActionHom (g * h) p =
+      pinInfinityStabilizerNativeNullAffineChartActionHom g
+        (pinInfinityStabilizerNativeNullAffineChartActionHom h p)
+    exact congrFun
       (pinInfinityStabilizerNativeNullAffineChartActionHom.map_mul g h) p
-    simpa [Function.comp_def] using hmul
 
 @[simp]
 theorem pinInfinityStabilizerNativeNullAffineChart_smul_eq
@@ -292,9 +291,10 @@ noncomputable instance pinInfinityStabilizerAffinePACMulAction :
     exact congrFun pinInfinityStabilizerAffinePACActionHom.map_one x
   mul_smul := by
     intro g h x
-    have hmul := congrFun
-      (pinInfinityStabilizerAffinePACActionHom.map_mul g h) x
-    simpa [Function.comp_def] using hmul
+    change pinInfinityStabilizerAffinePACActionHom (g * h) x =
+      pinInfinityStabilizerAffinePACActionHom g
+        (pinInfinityStabilizerAffinePACActionHom h x)
+    exact congrFun (pinInfinityStabilizerAffinePACActionHom.map_mul g h) x
 
 @[simp]
 theorem pinInfinityStabilizerAffinePAC_smul_eq

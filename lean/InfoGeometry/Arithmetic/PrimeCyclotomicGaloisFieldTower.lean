@@ -23,6 +23,10 @@ namespace InfoGeometry.Arithmetic.PrimeCyclotomicGaloisFieldTower
 
 open InfoGeometry.Arithmetic.PrimeCyclotomicGaloisDirectedClosure
 
+instance ratCyclotomicExtension (n : ℕ) [NeZero n] :
+    IsCyclotomicExtension {n} ℚ (CyclotomicField n ℚ) := by
+  exact CyclotomicField.isCyclotomicExtension n ℚ
+
 abbrev K2 : Type := CyclotomicField 2 ℚ
 abbrev K6 : Type := CyclotomicField 6 ℚ
 abbrev K30 : Type := CyclotomicField 30 ℚ
@@ -135,16 +139,28 @@ theorem stage_finrank_exact :
     Module.finrank ℚ K30030 = 5760 := by
   rcases stage_finrank_eq_totient with ⟨h2, h6, h30, h210, h2310, h30030⟩
   constructor
-  · simpa using h2.trans (totient_conductorAt 0)
+  · simpa [degreeAt, primeStageAt,
+      InfoGeometry.Canonical.PrimeCyclotomicGaloisTowerCertificates.galoisDegree] using
+      h2.trans (totient_conductorAt 0)
   constructor
-  · simpa using h6.trans (totient_conductorAt 1)
+  · simpa [degreeAt, primeStageAt,
+      InfoGeometry.Canonical.PrimeCyclotomicGaloisTowerCertificates.galoisDegree] using
+      h6.trans (totient_conductorAt 1)
   constructor
-  · simpa using h30.trans (totient_conductorAt 2)
+  · simpa [degreeAt, primeStageAt,
+      InfoGeometry.Canonical.PrimeCyclotomicGaloisTowerCertificates.galoisDegree] using
+      h30.trans (totient_conductorAt 2)
   constructor
-  · simpa using h210.trans (totient_conductorAt 3)
+  · simpa [degreeAt, primeStageAt,
+      InfoGeometry.Canonical.PrimeCyclotomicGaloisTowerCertificates.galoisDegree] using
+      h210.trans (totient_conductorAt 3)
   constructor
-  · simpa using h2310.trans (totient_conductorAt 4)
-  · simpa using h30030.trans (totient_conductorAt 5)
+  · simpa [degreeAt, primeStageAt,
+      InfoGeometry.Canonical.PrimeCyclotomicGaloisTowerCertificates.galoisDegree] using
+      h2310.trans (totient_conductorAt 4)
+  · simpa [degreeAt, primeStageAt,
+      InfoGeometry.Canonical.PrimeCyclotomicGaloisTowerCertificates.galoisDegree] using
+      h30030.trans (totient_conductorAt 5)
 
 /-- Every stage is a Galois extension of `ℚ` by the native cyclotomic theorem. -/
 theorem stage_isGalois :

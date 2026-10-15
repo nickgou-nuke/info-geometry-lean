@@ -101,9 +101,7 @@ lemma xi_time_part9ze_negative_zero_temperature_freezing_normalized_tendsto
           Filter.Tendsto
             (fun q : ℝ => q * (Real.log (d i) - Real.log dmin))
             Filter.atBot Filter.atBot :=
-        (Filter.tendsto_mul_const_atBot_of_pos hgap).2 (by
-          simpa using (Filter.tendsto_id :
-            Filter.Tendsto (fun q : ℝ => q) Filter.atBot Filter.atBot))
+        (Filter.tendsto_mul_const_atBot_of_pos hgap).2 Filter.tendsto_id
       have hexp :
           Filter.Tendsto
             (fun q : ℝ => Real.exp (q * (Real.log (d i) - Real.log dmin)))
@@ -116,7 +114,7 @@ lemma xi_time_part9ze_negative_zero_temperature_freezing_normalized_tendsto
           Finset.sum S fun i => Real.exp (q * (Real.log (d i) - Real.log dmin)))
         Filter.atBot
         (nhds (Finset.sum S fun i => if d i = dmin then 1 else 0 : ℝ)) :=
-    tendsto_finset_sum S hterm
+    tendsto_finsetSum S hterm
   have hcount :
       (Finset.sum S fun i => if d i = dmin then 1 else 0 : ℝ) =
         xi_time_part9ze_negative_zero_temperature_freezing_minimizerCard S d dmin := by

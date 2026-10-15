@@ -1,5 +1,4 @@
 import Mathlib.Tactic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorCuntzBasis
 import InfoGeometry.Meta.Architecture
 
@@ -726,7 +725,7 @@ theorem cylinderKMSFinsuppQuadraticForm_prefixWord
         Complex.normSq ((Finsupp.mapDomain (fun u => w ++ u) f) (w ++ v)) =
       cylinderKMSWeight w *
         (cylinderKMSWeight v * Complex.normSq (f v))
-    rw [Finsupp.mapDomain_apply hinj f v, cylinderKMSWeight_append]
+    rw [Finsupp.mapDomain_apply_of_injective hinj f v, cylinderKMSWeight_append]
     ring
   · intro u hu v hv huv
     exact List.append_right_injective w huv
@@ -765,11 +764,11 @@ theorem cylinderKMSPrefix_false_eq_true_iff
         intro v w hvw
         cases hvw
         rfl
-      rw [Finsupp.mapDomain_apply hfalse f u] at hu
+      rw [Finsupp.mapDomain_apply_of_injective hfalse f u] at hu
       have hnot : false :: u ∉ Set.range (fun w : List Bool => true :: w) := by
         rintro ⟨v, hv⟩
         cases hv
-      rw [Finsupp.mapDomain_notin_range g (false :: u) hnot] at hu
+      rw [Finsupp.mapDomain_of_notMem_range g (false :: u) hnot] at hu
       exact hu
     · apply Finsupp.ext
       intro u
@@ -783,8 +782,8 @@ theorem cylinderKMSPrefix_false_eq_true_iff
       have hnot : true :: u ∉ Set.range (fun w : List Bool => false :: w) := by
         rintro ⟨v, hv⟩
         cases hv
-      rw [Finsupp.mapDomain_notin_range f (true :: u) hnot] at hu
-      rw [Finsupp.mapDomain_apply htrue g u] at hu
+      rw [Finsupp.mapDomain_of_notMem_range f (true :: u) hnot] at hu
+      rw [Finsupp.mapDomain_apply_of_injective htrue g u] at hu
       exact hu.symm
   · rintro ⟨rfl, rfl⟩
     simp [cylinderKMSPrefix]
@@ -820,7 +819,7 @@ theorem cylinderKMSFinsuppQuadraticForm_prefix
     change cylinderKMSWeight (b :: u) *
         Complex.normSq ((Finsupp.mapDomain (fun w => b :: w) f) (b :: u)) =
       (1 / 2 : ℝ) * (cylinderKMSWeight u * Complex.normSq (f u))
-    rw [Finsupp.mapDomain_apply hinj f u, cylinderKMSWeight_cons]
+    rw [Finsupp.mapDomain_apply_of_injective hinj f u, cylinderKMSWeight_cons]
     ring
   · intro u hu v hv huv
     cases huv
@@ -849,8 +848,8 @@ theorem cylinderKMSHermitianPairing_prefix
         (Finsupp.mapDomain (fun w => b :: w) g) (b :: u) =
       (1 / 2 : ℂ) *
         ((cylinderKMSWeight u : ℂ) * star (f u) * g u)
-    rw [Finsupp.mapDomain_apply hinj f u,
-      Finsupp.mapDomain_apply hinj g u,
+    rw [Finsupp.mapDomain_apply_of_injective hinj f u,
+      Finsupp.mapDomain_apply_of_injective hinj g u,
       cylinderKMSWeight_cons]
     norm_num
     ring
@@ -875,8 +874,8 @@ theorem cylinderKMSHermitianPairing_prefix_false_true
         cases hv
       rw [cylinderKMSPrefix_apply false f,
         cylinderKMSPrefix_apply true g,
-        Finsupp.mapDomain_notin_range f [] hfalse,
-        Finsupp.mapDomain_notin_range g [] htrue]
+        Finsupp.mapDomain_of_notMem_range f [] hfalse,
+        Finsupp.mapDomain_of_notMem_range g [] htrue]
       simp
   | cons b u =>
       cases b with
@@ -885,14 +884,14 @@ theorem cylinderKMSHermitianPairing_prefix_false_true
             rintro ⟨v, hv⟩
             cases hv
           rw [cylinderKMSPrefix_apply true g,
-            Finsupp.mapDomain_notin_range g (false :: u) hnot]
+            Finsupp.mapDomain_of_notMem_range g (false :: u) hnot]
           simp
       | true =>
           have hnot : true :: u ∉ Set.range (fun w : List Bool => false :: w) := by
             rintro ⟨v, hv⟩
             cases hv
           rw [cylinderKMSPrefix_apply false f,
-            Finsupp.mapDomain_notin_range f (true :: u) hnot]
+            Finsupp.mapDomain_of_notMem_range f (true :: u) hnot]
           simp
 
 theorem cylinderKMSFinsuppQuadraticForm_nonneg
@@ -1044,7 +1043,15 @@ def cylinderKMSGNSModuleCon : ModuleCon ℂ (List Bool →₀ ℂ) where
       congrArg (c • ·) (cylinderKMSGNSRelation_iff_eq _ _ |>.1 hxy)
 
 abbrev cylinderKMSGNSQuotient :=
-  cylinderKMSGNSModuleCon.Quotient
+  Quotient cylinderKMSGNSSetoid
+
+instance : Add cylinderKMSGNSQuotient := inferInstanceAs (Add cylinderKMSGNSModuleCon.Quotient)
+instance : Zero cylinderKMSGNSQuotient := inferInstanceAs (Zero cylinderKMSGNSModuleCon.Quotient)
+instance : Neg cylinderKMSGNSQuotient := inferInstanceAs (Neg cylinderKMSGNSModuleCon.Quotient)
+instance : Sub cylinderKMSGNSQuotient := inferInstanceAs (Sub cylinderKMSGNSModuleCon.Quotient)
+instance : SMul ℂ cylinderKMSGNSQuotient := inferInstanceAs (SMul ℂ cylinderKMSGNSModuleCon.Quotient)
+instance : AddCommGroup cylinderKMSGNSQuotient := inferInstanceAs (AddCommGroup cylinderKMSGNSModuleCon.Quotient)
+instance : Module ℂ cylinderKMSGNSQuotient := inferInstanceAs (Module ℂ cylinderKMSGNSModuleCon.Quotient)
 
 noncomputable def cylinderKMSGNSQuotient_mkLinearMap :
     (List Bool →₀ ℂ) →ₗ[ℂ] cylinderKMSGNSQuotient where
@@ -1262,6 +1269,11 @@ noncomputable def cylinderKMSPrefixQuotientLinearMap (b : Bool) :
     cylinderKMSPrefixQuotientLinearMap b (Quotient.mk' f) =
       Quotient.mk' (cylinderKMSPrefix b f) := rfl
 
+@[simp] theorem cylinderKMSPrefixQuotientLinearMap_mk' (b : Bool)
+    (f : List Bool →₀ ℂ) :
+    cylinderKMSPrefixQuotientLinearMap b ⟦f⟧ =
+      ⟦cylinderKMSPrefix b f⟧ := rfl
+
 theorem cylinderKMSPrefixQuotientLinearMap_injective (b : Bool) :
     Function.Injective (cylinderKMSPrefixQuotientLinearMap b) := by
   intro x y hxy
@@ -1306,6 +1318,10 @@ theorem cylinderKMSPrefixQuotientLinearMap_hermitianPairing
 noncomputable def cylinderKMSIsometricPrefixQuotientLinearMap (b : Bool) :
     cylinderKMSGNSQuotient →ₗ[ℂ] cylinderKMSGNSQuotient :=
   (Real.sqrt 2 : ℂ) • cylinderKMSPrefixQuotientLinearMap b
+
+@[simp] theorem cylinderKMSIsometricPrefixQuotientLinearMap_apply (b : Bool) (x : cylinderKMSGNSQuotient) :
+    cylinderKMSIsometricPrefixQuotientLinearMap b x =
+      (Real.sqrt 2 : ℂ) • cylinderKMSPrefixQuotientLinearMap b x := rfl
 
 theorem cylinderKMSIsometricPrefixQuotientLinearMap_injective (b : Bool) :
     Function.Injective (cylinderKMSIsometricPrefixQuotientLinearMap b) := by
@@ -1981,16 +1997,19 @@ theorem cylinderKMSKernel_posDef :
   have hnonneg :
       0 ≤ f.sum (fun u fu => f.sum (fun v fv =>
         fu * cylinderKMSKernel u v * fv)) := by
-    simpa [cylinderKMSKernel] using
-      cylinderKMSCoeff_quadratic_nonneg f.support (fun u => f u)
+    dsimp [cylinderKMSKernel, Finsupp.sum]
+    exact cylinderKMSCoeff_quadratic_nonneg f.support (fun u => f u)
   have hne :
       f.sum (fun u fu => f.sum (fun v fv =>
         fu * cylinderKMSKernel u v * fv)) ≠ 0 := by
     intro hzero
     have hzero' :
-        f.support.sum (fun u => f.support.sum (fun v =>
-          f u * cylinderKMSCoeff u v * f v)) = 0 := by
-      simpa [cylinderKMSKernel] using hzero
+        ∑ u ∈ f.support, ∑ v ∈ f.support,
+          f u * cylinderKMSCoeff u v * f v = 0 := by
+      change (f.sum (fun u fu => f.sum (fun v fv =>
+        fu * cylinderKMSKernel u v * fv))) = 0 at hzero
+      dsimp [cylinderKMSKernel, Finsupp.sum] at hzero
+      exact hzero
     have hvanishes :=
       (cylinderKMSCoeff_quadratic_eq_zero_iff f.support (fun u => f u)).mp hzero'
     apply hf
@@ -2161,6 +2180,18 @@ noncomputable def cylinderKMSVacuumCoefficient :
   (Finsupp.lapply ([] : List Bool)).comp
     cylinderKMSGNSQuotientLinearEquiv.symm.toLinearMap
 
+theorem cylinderKMSVacuumCoefficient_apply (x : cylinderKMSGNSQuotient) :
+    cylinderKMSVacuumCoefficient x = (cylinderKMSGNSQuotientLinearEquiv.symm x) [] := rfl
+
+@[simp] theorem cylinderKMSVacuumCoefficient_mk (f : List Bool →₀ ℂ) :
+    cylinderKMSVacuumCoefficient (Quotient.mk' f) = f [] := by
+  change (cylinderKMSGNSQuotientLinearEquiv.symm (cylinderKMSGNSQuotientLinearEquiv f)) [] = f []
+  rw [cylinderKMSGNSQuotientLinearEquiv.symm_apply_apply]
+
+@[simp] theorem cylinderKMSVacuumCoefficient_mk' (f : List Bool →₀ ℂ) :
+    cylinderKMSVacuumCoefficient ⟦f⟧ = f [] :=
+  cylinderKMSVacuumCoefficient_mk f
+
 theorem cylinderKMSVacuumCoefficient_prefix
     (b : Bool) (x : cylinderKMSGNSQuotient) :
     cylinderKMSVacuumCoefficient
@@ -2170,36 +2201,20 @@ theorem cylinderKMSVacuumCoefficient_prefix
   have hnot : [] ∉ Set.range (fun w : List Bool => b :: w) := by
     rintro ⟨w, hw⟩
     cases hw
-  simp only [cylinderKMSVacuumCoefficient, LinearMap.comp_apply,
-    cylinderKMSIsometricPrefixQuotientLinearMap,
-    LinearMap.smul_apply, map_smul, Finsupp.lapply_apply]
-  have hprefix :
-      cylinderKMSGNSQuotientLinearEquiv.symm
-          (cylinderKMSPrefixQuotientLinearMap b (Quotient.mk' f)) =
-        cylinderKMSPrefix b f := by
-    rw [cylinderKMSPrefixQuotientLinearMap_mk,
-      ← cylinderKMSGNSQuotientLinearEquiv_apply,
-      cylinderKMSGNSQuotientLinearEquiv.symm_apply_apply]
-  change (↑(Real.sqrt 2) : ℂ) •
-      (cylinderKMSGNSQuotientLinearEquiv.symm
-        (cylinderKMSPrefixQuotientLinearMap b (Quotient.mk' f))) [] = 0
-  rw [hprefix,
-    cylinderKMSPrefix_apply,
-    Finsupp.mapDomain_notin_range f [] hnot]
+  rw [cylinderKMSIsometricPrefixQuotientLinearMap_apply,
+    LinearMap.map_smul, cylinderKMSPrefixQuotientLinearMap_mk',
+    cylinderKMSVacuumCoefficient_mk', cylinderKMSPrefix_apply,
+    Finsupp.mapDomain_of_notMem_range f [] hnot]
   simp
 
 theorem cylinderKMSVacuumCoefficient_vacuum :
-      cylinderKMSVacuumCoefficient
-        (Quotient.mk' (Finsupp.single ([] : List Bool) (1 : ℂ))) = 1 := by
-  change
-    (cylinderKMSGNSQuotientLinearEquiv.symm
-      (Quotient.mk' (Finsupp.single ([] : List Bool) (1 : ℂ)))) [] = 1
-  rw [← cylinderKMSGNSQuotientLinearEquiv_apply,
-    cylinderKMSGNSQuotientLinearEquiv.symm_apply_apply]
+    cylinderKMSVacuumCoefficient
+      (Quotient.mk' (Finsupp.single ([] : List Bool) (1 : ℂ)) : cylinderKMSGNSQuotient) = 1 := by
+  rw [cylinderKMSVacuumCoefficient_mk]
   simp
 
 theorem cylinderKMSVacuumCoefficient_vacuumClass_ne_zero :
-    Quotient.mk' (Finsupp.single ([] : List Bool) (1 : ℂ)) ≠
+    (Quotient.mk' (Finsupp.single ([] : List Bool) (1 : ℂ)) : cylinderKMSGNSQuotient) ≠
       (0 : cylinderKMSGNSQuotient) := by
   intro hzero
   have hcoeff := congrArg cylinderKMSVacuumCoefficient hzero
@@ -2260,18 +2275,18 @@ theorem cylinderKMSPrefix_false_add_true_comap_of_empty_eq_zero
   intro u
   cases u with
   | nil =>
-      simp [Finsupp.mapDomain_notin_range, hf]
+      simp [Finsupp.mapDomain_of_notMem_range, hf]
   | cons b u =>
       simp only [Finsupp.add_apply]
       cases b
-      · rw [Finsupp.mapDomain_apply cylinderKMSPrefix_false_injective,
-          Finsupp.mapDomain_notin_range _ _ (by
+      · rw [Finsupp.mapDomain_apply_of_injective cylinderKMSPrefix_false_injective,
+          Finsupp.mapDomain_of_notMem_range _ _ (by
             rintro ⟨v, hv⟩
             cases hv)]
         simp [Finsupp.comapDomain_apply]
-      · rw [Finsupp.mapDomain_notin_range _ _ (by
+      · rw [Finsupp.mapDomain_of_notMem_range _ _ (by
             rintro ⟨v, hv⟩
-            cases hv), Finsupp.mapDomain_apply cylinderKMSPrefix_true_injective]
+            cases hv), Finsupp.mapDomain_apply_of_injective cylinderKMSPrefix_true_injective]
         simp [Finsupp.comapDomain_apply]
 
 theorem cylinderKMSPrefixQuotient_reconstruct_of_empty_eq_zero
@@ -2312,12 +2327,7 @@ theorem cylinderKMSIsometricPrefixQuotient_range_sup_eq_vacuumCoefficient_ker :
     intro f hf
     have hf' : cylinderKMSVacuumCoefficient (Quotient.mk' f) = 0 :=
       LinearMap.mem_ker.mp hf
-    change
-      (Finsupp.lapply (R := ℂ) (M := ℂ) ([] : List Bool))
-          (cylinderKMSGNSQuotientLinearEquiv.symm (Quotient.mk' f)) = 0 at hf'
-    rw [← cylinderKMSGNSQuotientLinearEquiv_apply,
-      cylinderKMSGNSQuotientLinearEquiv.symm_apply_apply,
-      Finsupp.lapply_apply] at hf'
+    rw [cylinderKMSVacuumCoefficient_mk] at hf'
     have hf0 : f [] = 0 := hf'
     let fFalse := Finsupp.comapDomain
       (fun w : List Bool => false :: w) f
@@ -2476,16 +2486,16 @@ theorem cylinderKMSIsometricPrefixQuotient_range_sup_ne_top :
       (⊤ : Submodule ℂ cylinderKMSGNSQuotient) := by
   intro htop
   have hvac_mem :
-      Quotient.mk' (Finsupp.single ([] : List Bool) (1 : ℂ)) ∈
+      (Quotient.mk' (Finsupp.single ([] : List Bool) (1 : ℂ)) : cylinderKMSGNSQuotient) ∈
         LinearMap.range (cylinderKMSIsometricPrefixQuotientLinearMap false) ⊔
           LinearMap.range (cylinderKMSIsometricPrefixQuotientLinearMap true) := by
     have hmem :
-        Quotient.mk' (Finsupp.single ([] : List Bool) (1 : ℂ)) ∈
+        (Quotient.mk' (Finsupp.single ([] : List Bool) (1 : ℂ)) : cylinderKMSGNSQuotient) ∈
           (⊤ : Submodule ℂ cylinderKMSGNSQuotient) :=
-      by simp
+      Submodule.mem_top
     exact htop.symm ▸ hmem
   have hkernel :
-      Quotient.mk' (Finsupp.single ([] : List Bool) (1 : ℂ)) ∈
+      (Quotient.mk' (Finsupp.single ([] : List Bool) (1 : ℂ)) : cylinderKMSGNSQuotient) ∈
         LinearMap.ker cylinderKMSVacuumCoefficient :=
     cylinderKMSIsometricPrefixQuotient_range_sup_le_vacuumCoefficient_ker
       hvac_mem

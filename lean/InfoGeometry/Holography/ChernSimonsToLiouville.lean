@@ -46,7 +46,7 @@ theorem hasDerivAt_liouville_potential (b μ ϕ : ℝ) :
     HasDerivAt (fun x : ℝ => μ * Real.exp (2 * b * x))
                (2 * b * (μ * Real.exp (2 * b * ϕ))) ϕ := by
   have h_inner : HasDerivAt (fun x : ℝ => 2 * b * x) (2 * b) ϕ := by
-    simpa only [mul_one] using (hasDerivAt_id ϕ).const_mul (2 * b)
+    exact hasDerivAt_const_mul (x := ϕ) (c := 2 * b)
   have h_exp := HasDerivAt.exp h_inner
   have h_mul := HasDerivAt.const_mul μ h_exp
   have h_eval : μ * (Real.exp (2 * b * ϕ) * (2 * b)) = 2 * b * (μ * Real.exp (2 * b * ϕ)) := by ring

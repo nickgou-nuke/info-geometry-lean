@@ -1,5 +1,4 @@
 import InfoGeometry.Canonical.KreinCarrierInstances.Datum
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HestenesKreinModularGeometry
 import Mathlib.Tactic
 
@@ -46,7 +45,9 @@ theorem concreteCoreProjectorKlein_core_krein_selfadjoint
     (D : KreinHestenesModularDatum KleinBottleCarrier) :
     D.fundamentalSymmetry * concreteCoreProjectorKlein_coreProjector * D.fundamentalSymmetry =
       concreteCoreProjectorKlein_coreProjector := by
-  simpa [concreteCoreProjectorKlein_coreProjector] using D.fundamentalSymmetry_involution
+  change D.fundamentalSymmetry * 1 * D.fundamentalSymmetry = 1
+  rw [mul_one]
+  exact D.fundamentalSymmetry_involution
 
 /-- Identity-core, zero-nil modular core projector. -/
 def concreteCoreProjectorKlein

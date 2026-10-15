@@ -372,7 +372,8 @@ theorem splitCoordinateChiralDirac_decomposition
     splitCoordinateChiralDiracMinus]
   have h := chiralDirac_decomposition exteriorGrade3_toLinearMap_sq
     (exteriorGrade3_toLinearMap_odd v φ)
-  simpa only [transportEnd_add] using congrArg (transportEnd e) h
+  simpa only [transportEnd_add, exteriorChiralDiracPlus3,
+    exteriorChiralDiracMinus3] using congrArg (transportEnd e) h
 
 theorem splitCoordinateHodgeLaplacian3_chiral_block_decomposition
     (e : Exterior3 ≃ₗ[ℝ] SplitCarrier) (v : V3) (φ : Module.Dual ℝ V3) :

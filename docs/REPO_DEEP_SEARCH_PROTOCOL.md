@@ -19,6 +19,20 @@ proof. A file under `external_refs/` can be valuable context without being
 repo-owned proof authority. A generated artifact can be useful evidence without
 being a source of truth.
 
+## Repository Context Rule
+
+The current checked-out codebase is the context for repository work. Do not
+infer that a construction is absent, false, or unfinished because it is
+unexpected, has another name, lives under another owner, or is not present in
+the first file inspected. Before making an absence or novelty claim, search
+related repo-owned code and follow the actual carrier types, definitions,
+instances, theorem statements, imports, and uses. Before calling an existing
+construction incorrect, identify its precise Lean statement and verify the
+relevant owner. Prose, agent memory, graph results, and filenames can guide
+search but cannot override source. Always distinguish a local observation
+("not in this file") from a repo-wide conclusion ("not found after the
+documented search"). See also the mandatory search contract below.
+
 ## Search Surfaces
 
 Use these labels consistently when searching and reporting:
@@ -437,3 +451,8 @@ build check when making proof claims
 
 This is the only safe way to operate in a repository where code moves faster
 than prose.
+
+Never let a coding heuristic stand in for that search. The source may already
+contain a structure in a different incarnation or under a different name; the
+agent must discover and align with it before proposing a replacement or
+reporting a gap.

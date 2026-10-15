@@ -20,7 +20,7 @@ open InfoGeometry.Topology.CantorBoundaryCuntzFamily
 open InfoGeometry.Algebra.CuntzChiralSuperchargeRepresentation
 open InfoGeometry.Physics.SuperPoincareOperatorCharges
 
-abbrev CantorOperator := ((ℕ → Fin 4) → ℂ) →ₗ[ℂ] ((ℕ → Fin 4) → ℂ)
+abbrev CantorOperator := C4Functions →ₗ[ℂ] C4Functions
 
 /-! ## The grouped two-branch projected sector inside the four-branch carrier -/
 
@@ -138,38 +138,24 @@ theorem groupedComplement_idempotent :
 theorem groupedS1_apply_branch_two (g : (ℕ → Fin 4) → ℂ) :
     groupedS1 g (fun _ : ℕ => (2 : Fin 4)) = 0 := by
   change (cuntzS 0 g (fun _ => 2)) + (cuntzS 1 g (fun _ => 2)) = 0
-  dsimp [cuntzS, headN]
-  ring
+  simp [cuntzS, headN]
 
 theorem groupedS2_groupedS2star_apply_branch_two :
     (groupedS2 * groupedS2star)
         (fun w : ℕ → Fin 4 => if headN w = (2 : Fin 4) then (1 : ℂ) else 0)
         (fun _ : ℕ => (2 : Fin 4)) = (1 / 2 : ℂ) := by
-  change (cuntzS 2 (groupedS2star (fun w => if headN w = 2 then (1 : ℂ) else 0)) (fun _ => 2)) +
-         (cuntzS 3 (groupedS2star (fun w => if headN w = 2 then (1 : ℂ) else 0)) (fun _ => 2)) = 1 / 2
-  dsimp [cuntzS, headN]
-  have htail : tailN (fun _ : ℕ => (2 : Fin 4)) = (fun _ : ℕ => (2 : Fin 4)) := rfl
-  rw [htail, add_zero]
-  change (1 / 2 : ℂ) * (cuntzT 2 (fun w => if headN w = 2 then (1 : ℂ) else 0) (fun _ => 2) +
-                       cuntzT 3 (fun w => if headN w = 2 then (1 : ℂ) else 0) (fun _ => 2)) = 1 / 2
-  dsimp [cuntzT, prependN, headN]
-  ring
+  change (cuntzS 2 + cuntzS 3)
+      (groupedS2star (fun w => if headN w = 2 then (1 : ℂ) else 0)) (fun _ => 2) = 1 / 2
+  simp [cuntzS, headN, groupedS2star, cuntzT, prependN]
 
 theorem groupedProjection_apply_branch_two :
     groupedProjection
         (fun w : ℕ → Fin 4 =>
           if headN w = (2 : Fin 4) then (1 : ℂ) else 0)
         (fun _ : ℕ => (2 : Fin 4)) = (1 / 2 : ℂ) := by
-  change (groupedS1 * groupedS1star)
-           (fun w => if headN w = 2 then (1 : ℂ) else 0) (fun _ => 2) +
-         (groupedS2 * groupedS2star)
-           (fun w => if headN w = 2 then (1 : ℂ) else 0) (fun _ => 2) = 1 / 2
-  have h1_eval : (groupedS1 * groupedS1star)
-      (fun w => if headN w = 2 then (1 : ℂ) else 0) (fun _ => 2) = 0 := by
-    change groupedS1 (groupedS1star (fun w => if headN w = 2 then (1 : ℂ) else 0)) (fun _ => 2) = 0
-    exact groupedS1_apply_branch_two (groupedS1star (fun w => if headN w = 2 then (1 : ℂ) else 0))
-  rw [h1_eval, groupedS2_groupedS2star_apply_branch_two]
-  ring
+  dsimp [groupedProjection]
+  rw [groupedS1_apply_branch_two, zero_add]
+  exact groupedS2_groupedS2star_apply_branch_two
 
 theorem groupedComplement_ne_zero : groupedComplement ≠ 0 := by
   intro h
@@ -188,7 +174,8 @@ theorem groupedComplement_ne_zero : groupedComplement ≠ 0 := by
           if headN w = (2 : Fin 4) then (1 : ℂ) else 0)
         (fun _ : ℕ => (2 : Fin 4))) = 0 at h_eval
   rw [groupedProjection_apply_branch_two] at h_eval
-  norm_num [headN] at h_eval
+  simp only [Module.End.one_apply, headN] at h_eval
+  norm_num at h_eval
 
 /-- A chiral projected-sector datum on the concrete O₄ Cantor carrier. -/
 structure Datum where

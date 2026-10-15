@@ -119,12 +119,15 @@ theorem closedTomitaDomainColimitInclusion_transition
     closedTomitaDomainModuleDiagram
       Stage sys ω
   have hw := colimit.w F (homOfLE hij)
-  have hx := congrArg
-    (fun k : F.obj i ⟶ colimit F => k x)
-    hw.symm
-  simpa [F, closedTomitaDomainColimitInclusion,
-    closedTomitaDomainModuleDiagram,
-    closedTomitaDomainDirectInductiveSystem] using hx
+  have hw' := congrArg ModuleCat.Hom.hom hw.symm
+  have hx := LinearMap.congr_fun hw' x
+  change (colimit.ι F i).hom x =
+    (colimit.ι F j).hom
+      (filteredClosedTomitaDomainMap Stage sys ω hij x) at hx
+  change (colimit.ι F i).hom x =
+    (colimit.ι F j).hom
+      (filteredClosedTomitaDomainMap Stage sys ω hij x)
+  exact hx
 
 /-- A compatible cocone of linear maps out of all closed Tomita domains. -/
 structure ClosedTomitaDomainCocone

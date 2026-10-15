@@ -50,7 +50,10 @@ theorem paper_dephys_defect_repulsion_radius
     have hrepulsion :
         app_jensen_zero_repulsion_subdisk_rStar ρ (appSingleZeroJensenDefect ρ roots) ≤ ‖a‖ :=
       (hsubdisk.2 roots ha_mem ha_pos ha_unit hlt hρ).1
-    simpa [dephys_defect_repulsion_radius, hdefect hρ_pos hρ] using hrepulsion
+    simpa [dephys_defect_repulsion_radius,
+      Omega.UnitCirclePhaseArithmetic.app_jensen_zero_repulsion_subdisk_rStar,
+      repulsionRadius,
+      hdefect hρ_pos hρ] using hrepulsion
   · intro ρ ε hρ0 hρ1 hdefect_le
     let _ := hρ1
     unfold dephys_defect_repulsion_radius repulsionRadius
@@ -63,7 +66,7 @@ theorem paper_dephys_defect_repulsion_radius
     exact
       paper_app_jensen_repulsion_radius_to_one D roots hdefect hdiskZero
         ⟨ρseq, hmono, hρtend, hρmem, by
-          simpa [dephys_defect_repulsion_radius] using hrstar_tend⟩
+          simpa [dephys_defect_repulsion_radius, repulsionRadius] using hrstar_tend⟩
 
 end
 

@@ -10,9 +10,13 @@ inductive Archetype
   | optimalityCertificate
   | normalizationEquality
   | relaxationContraction
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
 
 open Archetype
+
+instance : Fintype Archetype where
+  elems := {positiveCoupling, quadraticResponse, squareCompletion, optimalityCertificate, normalizationEquality, relaxationContraction}
+  complete := by rintro (_ | _ | _ | _ | _ | _) <;> simp
 
 def prerequisites : Archetype → Finset Archetype
   | positiveCoupling => {positiveCoupling}

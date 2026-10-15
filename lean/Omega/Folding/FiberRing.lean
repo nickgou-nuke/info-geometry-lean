@@ -455,10 +455,11 @@ theorem stableValue_double (x : X m) :
     thm:mul-definitional -/
 theorem X5_generator_two :
     (7 : X 5) * (2 : X 5) = 1 := by
-  have e := stableValueRingEquiv 5
-  rw [← e.injective.eq_iff, map_mul, map_one]
-  rw [show (7 : X 5) = ((7 : ℕ) : X 5) from rfl, show (2 : X 5) = ((2 : ℕ) : X 5) from rfl,
-    map_natCast, map_natCast]
+  apply @toZMod_injective 5
+  rw [toZMod_mul, toZMod_one]
+  have h7 : toZMod (7 : X 5) = (7 : ZMod (Nat.fib (5 + 2))) := map_natCast (stableValueRingHom 5) 7
+  have h2 : toZMod (2 : X 5) = (2 : ZMod (Nat.fib (5 + 2))) := map_natCast (stableValueRingHom 5) 2
+  rw [h7, h2]
   decide
 
 /-- Paper: thm:mul-definitional (doubling) -/

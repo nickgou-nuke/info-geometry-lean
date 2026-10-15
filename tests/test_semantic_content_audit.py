@@ -98,19 +98,25 @@ def test_manifested_clean_quarantine_still_has_forbidden_importers() -> None:
     assert "InfoGeometry.Unstable.Quarantine" not in forbidden
 
 
-def test_manifest_only_rows_preserve_forbidden_importer_metadata(monkeypatch) -> None:
+def test_manifest_only_rows_preserve_forbidden_importer_metadata(monkeypatch, tmp_path) -> None:
     from tools.quality import semantic_content_audit as audit
 
-    manifest_path = audit.ROOT / "lean" / "InfoGeometry" / "Quarantine" / "Clean.lean"
+    monkeypatch.setattr(audit, "ROOT", tmp_path)
+    manifest_path = tmp_path / "lean" / "InfoGeometry" / "Quarantine" / "Clean.lean"
+    manifest_path.parent.mkdir(parents=True)
+    manifest_path.write_text("namespace InfoGeometry.Quarantine\ndef clean : Nat := 1\n")
     monkeypatch.setattr(audit, "read_manifest", lambda: ({"InfoGeometry.Quarantine.Clean": "review"}, True, None))
     monkeypatch.setattr(audit, "module_to_path", lambda module: manifest_path)
     monkeypatch.setattr(audit, "all_infogeometry_files", lambda **kwargs: [manifest_path] if kwargs.get("scope") == "all" else [])
     monkeypatch.setattr(
         audit,
         "importers_by_module",
-        lambda files=None: {"InfoGeometry.Quarantine.Clean": ["InfoGeometry.Canonical.All"]},
+        lambda files=None, **kwargs: {"InfoGeometry.Quarantine.Clean": ["InfoGeometry.Canonical.All"]},
     )
-    monkeypatch.setattr(audit, "collect_findings", lambda *args, **kwargs: [])
+    def no_findings(*args, **kwargs):
+        kwargs["successful"].append(audit.rel(manifest_path))
+        return []
+    monkeypatch.setattr(audit, "collect_findings", no_findings)
 
     report = audit.build_report(include_review=False, excerpt_radius=1)
 

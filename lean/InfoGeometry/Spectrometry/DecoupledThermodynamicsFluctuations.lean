@@ -17,9 +17,16 @@ inductive Archetype
   | varianceBound
   | weightLimits
   | varianceLimits
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
 
 open Archetype
+
+instance : Fintype Archetype where
+  elems := {productMeasure, countVariance, freeEnergyDerivative, weightDerivative,
+    susceptibility, varianceBound, weightLimits, varianceLimits}
+  complete := by
+    intro x
+    cases x <;> simp
 
 def prerequisites : Archetype → Finset Archetype
   | productMeasure => {productMeasure}
@@ -195,10 +202,17 @@ theorem hasDerivAt_activeSupport_common_shift
       HasDerivAt (fun shift => lineWeight (energies line + shift) cutoff temperature)
         (-lineWeight (energies line) cutoff temperature *
           (1 - lineWeight (energies line) cutoff temperature) / temperature) 0 := by
-    simpa using (hasDerivAt_lineWeight (energies line + 0) cutoff temperature).comp 0
-      ((hasDerivAt_id (0 : ℝ)).const_add (energies line))
-  convert HasDerivAt.fun_sum (fun line _ => line_derivative line) using 1
-  simp only [accepted_count_variance_eq_sum, ← Finset.sum_div, ← Finset.sum_neg_distrib, neg_mul]
+    simpa only [add_zero] using
+      (hasDerivAt_lineWeight (energies line + 0) cutoff temperature).comp_const_add
+        (energies line) 0
+  change HasDerivAt (fun shift =>
+    ∑ line, lineWeight (energies line + shift) cutoff temperature) _ 0
+  convert HasDerivAt.fun_sum (u := Finset.univ)
+    (fun line _ => line_derivative line) using 1
+  rw [accepted_count_variance_eq_sum, ← Finset.sum_neg_distrib, Finset.sum_div]
+  apply Finset.sum_congr rfl
+  intro line _
+  ring
 
 theorem accepted_count_variance_eq_shift_susceptibility
     (energies : Line → ℝ) (cutoff temperature : ℝ) (temperature_ne : temperature ≠ 0) :

@@ -17,7 +17,7 @@ theorem paper_conclusion_selfdual_scale_mellin_finite_codim_interpolation {V : T
     (hlin : LinearIndependent ℝ L) : SelfdualScaleMellinFiniteCodimInterpolation m L := by
   let W : Submodule ℝ (Module.Dual ℝ V) := Submodule.span ℝ (Set.range L)
   letI : FiniteDimensional ℝ W :=
-    FiniteDimensional.of_injective hlin.repr (LinearMap.ker_eq_bot.mp hlin.repr_ker)
+    FiniteDimensional.span_of_finite ℝ (Set.finite_range L)
   let ψ : Module.Dual ℝ W :=
     { toFun := fun φ => hlin.repr φ (Fin.last m)
       map_add' := by
@@ -37,7 +37,11 @@ theorem paper_conclusion_selfdual_scale_mellin_finite_codim_interpolation {V : T
     have hEval : L (Fin.castSucc j) w = ψ xj := by
       simpa [xj, Submodule.quotDualCoannihilatorToDual_apply] using
         congrArg (fun F : Module.Dual ℝ W => F xj) hq
-    rw [show ψ xj = 0 by simp [ψ, hrepr, Fin.castSucc_ne_last]] at hEval
+    have hzero : ψ xj = 0 := by
+      change hlin.repr xj (Fin.last m) = 0
+      rw [hrepr]
+      exact Finsupp.single_eq_of_ne (Fin.castSucc_lt_last j).ne'
+    rw [hzero] at hEval
     exact hEval
   · have hEval :=
       let xLast : W := ⟨L (Fin.last m), Submodule.subset_span ⟨Fin.last m, rfl⟩⟩
@@ -48,6 +52,10 @@ theorem paper_conclusion_selfdual_scale_mellin_finite_codim_interpolation {V : T
       rfl
     have hEval' : L (Fin.last m) w = ψ xLast := by
       simpa [xLast, Submodule.quotDualCoannihilatorToDual_apply] using hEval
-    simpa [ψ, hrepr] using hEval'
+    have hone : ψ xLast = 1 := by
+      change hlin.repr xLast (Fin.last m) = 1
+      rw [hrepr]
+      exact Finsupp.single_eq_same
+    rw [hEval', hone]
 
 end Omega.Conclusion

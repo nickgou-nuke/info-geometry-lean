@@ -101,9 +101,11 @@ theorem deriv_halfDensityLog (f : ℝ → ℂ) (u : ℝ) (f' : ℂ)
         (f' * (Real.exp u : ℂ) + (1 / 2 : ℂ) * f (Real.exp u)) := by
   have hweightR : HasDerivAt (fun v : ℝ => Real.exp (v / 2))
       (Real.exp (u / 2) / 2) u := by
-    convert (Real.hasDerivAt_exp (u / 2)).comp u
-      ((hasDerivAt_id u).div_const 2) using 1
-    ring
+    have h1 : HasDerivAt (fun v : ℝ => v / 2) (1 / 2 : ℝ) u := by
+      simpa using (hasDerivAt_id u).div_const 2
+    have h2 := (Real.hasDerivAt_exp (u / 2)).comp u h1
+    have heq : Real.exp (u / 2) * (1 / 2) = Real.exp (u / 2) / 2 := by ring
+    exact h2.congr_deriv heq
   have hweight : HasDerivAt (fun v : ℝ => (Real.exp (v / 2) : ℂ))
       ((Real.exp (u / 2) / 2 : ℝ) : ℂ) u := hweightR.ofReal_comp
   have harg : HasDerivAt (fun v : ℝ => Real.exp v) (Real.exp u) u :=

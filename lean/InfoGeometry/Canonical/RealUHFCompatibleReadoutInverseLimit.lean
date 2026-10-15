@@ -31,6 +31,12 @@ def readoutPullbackCLM (n : ℕ) :
     readoutPullbackCLM n ρ X = ρ (stageRestrictCLM n X) := by
   rfl
 
+theorem readoutPullbackCLM_eq_comp (n : ℕ)
+    (ρ : MatStage n →L[ℝ] ℝ) :
+    readoutPullbackCLM n ρ = ρ.comp (stageRestrictCLM n) := by
+  ext X
+  rfl
+
 def readoutPullbackTopCatHom (n : ℕ) :
     TopCat.of (MatStage n →L[ℝ] ℝ) ⟶
       TopCat.of (MatStage (n + 1) →L[ℝ] ℝ) :=
@@ -66,7 +72,6 @@ def readoutInverseLimitLift (s : Cone readoutDiagram) :
     s.pt ⟶ readoutInverseCone.pt := by
   let f : s.pt → CompatibleContinuousReadoutFamily := fun x =>
     ⟨fun n => by
-      change MatStage n →L[ℝ] ℝ
       exact (s.π.app n) x, by
       intro n
       ext X
@@ -80,18 +85,23 @@ def readoutInverseLimitLift (s : Cone readoutDiagram) :
         (homOfLE (Nat.le_succ n)))
       rw [hmap] at h
       have h' :
-          ((s.π.app (n + 1)) x : MatStage (n + 1) →L[ℝ] ℝ) =
-            readoutPullbackCLM n
-              ((s.π.app n) x : MatStage n →L[ℝ] ℝ) := by
-        exact h
+          readoutPullbackCLM n
+              ((s.π.app n) x : MatStage n →L[ℝ] ℝ) =
+            ((s.π.app (n + 1)) x : MatStage (n + 1) →L[ℝ] ℝ) := by
+        exact h.symm
       have h'' := congrArg
         (fun q : MatStage (n + 1) →L[ℝ] ℝ => q X) h'
-      simpa [readoutPullbackCLM_apply] using h''.symm⟩
+      have hcomp := congrArg
+        (fun q : MatStage (n + 1) →L[ℝ] ℝ => q X)
+        (readoutPullbackCLM_eq_comp n
+          ((s.π.app n) x : MatStage n →L[ℝ] ℝ))
+      exact hcomp.symm.trans h''⟩
   have hf : Continuous f := by
     apply continuous_induced_rng.mpr
     apply continuous_pi
     intro n
-    simpa [f] using (s.π.app n).hom.continuous
+    change Continuous fun a : ↑s.pt => (s.π.app n).hom a
+    simpa [readoutDiagram] using (s.π.app n).hom.continuous
   exact TopCat.ofHom
     { toFun := f
       continuous_toFun := hf }

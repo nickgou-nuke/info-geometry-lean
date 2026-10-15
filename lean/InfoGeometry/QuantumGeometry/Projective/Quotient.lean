@@ -167,21 +167,26 @@ theorem QGT_cauchy_schwarz_projective (p : ProjectiveSpace H) (X Y : EndH) :
     Complex.normSq (QGT_projective p X Y) ≤
       fubiniStudyMetric_projective p X X * fubiniStudyMetric_projective p Y Y := by
   induction p using Quotient.ind
-  simpa using QGT_cauchy_schwarz _ X Y
+  simpa [QGT_projective, fubiniStudyMetric_projective, fubiniStudyMetric] using
+    QGT_cauchy_schwarz _ X Y
 
 /-- Full Geometric Robertson–Schrödinger Inequality on ℙ(H). -/
 theorem robertson_schrodinger_qgt_bound_projective (p : ProjectiveSpace H) (X Y : EndH) :
     fubiniStudyMetric_projective p X X * fubiniStudyMetric_projective p Y Y ≥
       (fubiniStudyMetric_projective p X Y) ^ 2 + (1 / 4 : ℝ) * (berryCurvature_projective p X Y) ^ 2 := by
   induction p using Quotient.ind
-  simpa using robertson_schrodinger_qgt_bound _ X Y
+  simpa [QGT_projective, fubiniStudyMetric_projective, berryCurvature_projective,
+    fubiniStudyMetric, berryCurvature] using
+    robertson_schrodinger_qgt_bound _ X Y
 
 /-- Projective Berry Curvature Uncertainty Bound on ℙ(H). -/
 theorem berry_curvature_uncertainty_bound_projective (p : ProjectiveSpace H) (X Y : EndH) :
     fubiniStudyMetric_projective p X X * fubiniStudyMetric_projective p Y Y ≥
       (1 / 4 : ℝ) * (berryCurvature_projective p X Y) ^ 2 := by
   induction p using Quotient.ind
-  simpa using berry_curvature_uncertainty_bound _ X Y
+  simpa [QGT_projective, fubiniStudyMetric_projective, berryCurvature_projective,
+    fubiniStudyMetric, berryCurvature] using
+    berry_curvature_uncertainty_bound _ X Y
 
 /-- Projective Master Lie Representation Uncertainty Bound on ℙ(H). -/
 theorem lie_rep_uncertainty_bound_projective
@@ -192,7 +197,9 @@ theorem lie_rep_uncertainty_bound_projective
         fubiniStudyMetric_projective p (ρ.toLieHom Y) (ρ.toLieHom Y) ≥
       (1 / 4 : ℝ) * (berryCurvature_projective p (ρ.toLieHom X) (ρ.toLieHom Y)) ^ 2 := by
   induction p using Quotient.ind
-  simpa using berry_curvature_uncertainty_bound _ (ρ.toLieHom X) (ρ.toLieHom Y)
+  simpa [QGT_projective, fubiniStudyMetric_projective, berryCurvature_projective,
+    fubiniStudyMetric, berryCurvature] using
+    berry_curvature_uncertainty_bound _ (ρ.toLieHom X) (ρ.toLieHom Y)
 
 /-- Berry curvature commutator evaluation at any projective point representative. -/
 theorem berryCurvature_projective_eq_commutator

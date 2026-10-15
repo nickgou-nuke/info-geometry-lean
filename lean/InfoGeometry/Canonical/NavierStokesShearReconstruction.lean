@@ -55,7 +55,7 @@ theorem coordDeriv_eq_fderiv {f : Space → ℝ} {x : Space}
   have hf' : HasFDerivAt f (fderiv ℝ f x) (Function.update x i (x i)) := by
     simpa using hf.hasFDerivAt
   have h := hf'.comp_hasDerivAt (x i) (hasDerivAt_update x i (x i))
-  simpa [coordDeriv] using h.deriv
+  exact h.deriv
 
 @[simp] theorem partial_const (i : Fin 3) (c : ℝ) (x : Space) :
     coordDeriv i (fun _ => c) x = 0 := by simp [coordDeriv]

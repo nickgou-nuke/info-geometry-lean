@@ -2,6 +2,7 @@ import Mathlib.Analysis.InnerProductSpace.PiL2
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.InnerProductSpace.Calculus
 import Mathlib.Analysis.ODE.PicardLindelof
+import Mathlib.Analysis.ODE.ExistUnique
 import Mathlib.Topology.Algebra.Module.FiniteDimension
 import InfoGeometry.Dynamics.EntropicTokenDynamics
 
@@ -102,7 +103,7 @@ theorem exists_tokenPiLp_trajectory_on_Icc
     ∃ ψ : ℝ → TokenPiLpSpace V, ψ t₀ = ψ₀ ∧
       ∀ t ∈ Set.Icc tmin tmax,
         HasDerivWithinAt ψ (G (ψ t)) (Set.Icc tmin tmax) t := by
-  exact IsPicardLindelof.exists_eq_forall_mem_Icc_hasDerivWithinAt hG hψ
+  exact hG.exists_eq_forall_mem_Icc_hasDerivWithinAt hψ
 
 theorem tokenPiLp_trajectory_hasDerivAt_interior
     {G : TokenPiLpSpace V →ₗ[ℝ] TokenPiLpSpace V}
@@ -136,10 +137,11 @@ theorem exists_linearTokenPiLp_trajectory_near_zero
           HasDerivWithinAt ψ (G (ψ t)) (Set.Icc (-ε) ε) t := by
   obtain ⟨ε, hε, a, r, L, K, hr, hpl⟩ :=
     IsPicardLindelof.of_contDiffAt_one
-      (x₀ := ψ₀) G.toContinuousLinearMap.contDiff.contDiffAt 0
+      (x₀ := ψ₀) G.toContinuousLinearMap.contDiff.contDiffAt
+  have hpl0 := hpl 0
   obtain ⟨ψ, hψ, hderiv⟩ :=
     exists_tokenPiLp_trajectory_on_Icc
-      G ⟨0, by simp [le_of_lt hε]⟩ ψ₀ hpl (by simp)
+      G ⟨0, by simp [le_of_lt hε]⟩ ψ₀ hpl0 (by simp)
   exact ⟨ε, hε, ψ, hψ, by simpa using hderiv⟩
 
 theorem exists_transportTokenGeneratorReal_trajectory_on_Icc

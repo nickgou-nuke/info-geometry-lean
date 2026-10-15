@@ -118,8 +118,11 @@ class VacuityCritic:
         self,
         schema_path: Optional[Path] = None,
         critic_model: str = "deepseek-v4-flash",
+        *,
+        dry_run: bool = False,
     ):
         self._schema_path = schema_path or _REPO / "tools" / "schema" / "vacuity" / "certificate_patterns.json"
+        self._dry_run = dry_run
         self._critic_model = critic_model
         self._patterns = list(self.BASE_PATTERNS)
         self._load_schema()
@@ -133,6 +136,7 @@ class VacuityCritic:
         failures: list[FailCase],
         *,
         verbose: bool = False,
+        dry_run: bool = False,
     ) -> list[ObfuscationPattern]:
         """Analyze failed tasks and return newly discovered patterns.
 
@@ -169,13 +173,16 @@ class VacuityCritic:
             seen.add(suffix)
 
             # Call the LLM to classify this new pattern
-            pattern = self._classify_pattern(f, suffix, field_name, verbose=verbose)
+            pattern = (self._heuristic_classify(suffix, field_name)
+                       if self._dry_run or dry_run else
+                       self._classify_pattern(f, suffix, field_name, verbose=verbose))
             if pattern:
                 new_patterns.append(pattern)
-                self._patterns.append(pattern)
+                if not (self._dry_run or dry_run):
+                    self._patterns.append(pattern)
                 logger.info("  Discovered new pattern: %s (%s)", pattern.name, pattern.category)
 
-        if new_patterns:
+        if new_patterns and not (self._dry_run or dry_run):
             self._save_schema()
 
         return new_patterns
@@ -220,19 +227,21 @@ class VacuityCritic:
             )
             skill_text = skill_text.rstrip() + new_block
 
-        if not dry_run:
+        if not (dry_run or self._dry_run):
             skill_path.write_text(skill_text, encoding="utf-8")
             logger.info("Extended skill with %d new anti-patterns", len(new_patterns))
 
-        return self._diff(original, skill_text) if dry_run else "Updated"
+        return self._diff(original, skill_text) if dry_run or self._dry_run else "Updated"
 
-    def synthesize_candidates(self) -> list[str]:
+    def synthesize_candidates(self, *, dry_run: bool = False) -> list[str]:
         """Use the LLM to generate CANDIDATE patterns for the list.
 
         The principle is used INTERNALLY by the critic as a heuristic to surface
         candidates — it is NEVER written into the skill. The candidates are
         added to the explicit list (the conscious ego).
         """
+        if self._dry_run or dry_run:
+            return []
         self._load_hermes_env()
         api_key = os.environ.get("DEEPSEEK_API_KEY") or os.environ.get("OPENROUTER_API_KEY") or ""
         if not api_key:
@@ -280,6 +289,8 @@ class VacuityCritic:
         to the skill's anti-pattern list. Each candidate is explicitly named.
         Returns a summary of what was added.
         """
+        if self._dry_run or dry_run:
+            return "Dry run: provider synthesis and dictionary mutation skipped"
         candidates = self.synthesize_candidates()
         if not candidates:
             return "No candidates generated"
@@ -336,7 +347,7 @@ class VacuityCritic:
         return self.expand_dictionary(skill_path, dry_run=dry_run)
 
     def evaluate_coverage(self, file_path: Path) -> dict[str, Any]:
-        """Evaluate how many obfuscation patterns exist in a file."""
+        """Return advisory regex coverage, never a semantic vacuity verdict."""
         text = file_path.read_text(encoding="utf-8")
         matches = []
         for p in self._patterns:
@@ -346,6 +357,8 @@ class VacuityCritic:
                     break  # one match per pattern per file
 
         return {
+            "advisory": True,
+            "classification": "pattern_coverage_only",
             "file": str(file_path),
             "total_patterns": len(self._patterns),
             "matched": len(matches),
@@ -391,6 +404,8 @@ class VacuityCritic:
         verbose: bool = False,
     ) -> Optional[ObfuscationPattern]:
         """Use the LLM to classify a new obfuscation synonym via Hermes CLI."""
+        if self._dry_run:
+            return self._heuristic_classify(suffix, field_name)
         prompt = (
             f"You are an obfuscation pattern detector for Lean 4 code. "
             f"A proof-filling agent failed to fill a `sorry` in a file because "
@@ -472,7 +487,7 @@ class VacuityCritic:
                 logger.warning("Failed to load schema: %s", exc)
 
     def _save_schema(self) -> None:
-        if not self._schema_path:
+        if self._dry_run or not self._schema_path:
             return
         self._schema_path.parent.mkdir(parents=True, exist_ok=True)
         data = {
@@ -505,10 +520,10 @@ class VacuityCritic:
     @staticmethod
     def _diff(original: str, updated: str) -> str:
         import difflib
-        return "\n".join(difflib.unified_diff(
+        return "\n".join(list(difflib.unified_diff(
             original.splitlines(), updated.splitlines(),
             fromfile="original", tofile="updated", n=3,
-        )[:30])
+        ))[:30])
 
 
 # ---------------------------------------------------------------------------
@@ -534,7 +549,7 @@ def main() -> None:
 
     logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(name)s] %(message)s")
 
-    critic = VacuityCritic(schema_path=args.schema)
+    critic = VacuityCritic(schema_path=args.schema, dry_run=args.dry_run)
 
     if args._deprecated_refactor or args.expand_dictionary:
         result = critic.expand_dictionary(args.skill, dry_run=args.dry_run)
@@ -542,7 +557,7 @@ def main() -> None:
         return
 
     if args._deprecated_synthesize:
-        candidates = critic.synthesize_candidates()
+        candidates = critic.synthesize_candidates(dry_run=args.dry_run)
         if candidates:
             print(f"Synthesized {len(candidates)} candidate suffixes:")
             for c in candidates[:20]:
@@ -566,7 +581,7 @@ def main() -> None:
                 data = json.loads(line)
                 failures.append(FailCase(**data))
 
-        new_patterns = critic.review_failures(failures, verbose=not args.dry_run)
+        new_patterns = critic.review_failures(failures, verbose=not args.dry_run, dry_run=args.dry_run)
 
         if new_patterns:
             print(f"\nDiscovered {len(new_patterns)} new pattern(s):")

@@ -1,4 +1,7 @@
 import Mathlib.Analysis.ODE.PicardLindelof
+import Mathlib.Analysis.ODE.ExistUnique
+import Mathlib.Analysis.Normed.Operator.Basic
+import Mathlib.Analysis.Normed.Operator.NormedSpace
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Algebra.Module.FiniteDimension
 import InfoGeometry.Dynamics.RealifiedTokenOperatorBridge
@@ -19,8 +22,51 @@ open scoped NNReal
 
 variable {V : Type*} [Fintype V]
 
+instance realTokenHilbertNormedSpace :
+    NormedSpace ℝ (RealTokenHilbertSpace (V := V)) :=
+  RestrictScalars.normedSpace ℝ ℂ (TokenHilbertSpace V)
+
+instance (priority := 1100) realTokenHilbertModule :
+    Module ℝ (RealTokenHilbertSpace (V := V)) :=
+  (realTokenHilbertNormedSpace (V := V)).toModule
+
+instance realTokenHilbertIsTopologicalAddGroup :
+    IsTopologicalAddGroup (RealTokenHilbertSpace (V := V)) := by
+  change IsTopologicalAddGroup (TokenHilbertSpace V)
+  infer_instance
+
+instance realTokenHilbertSMulCommClass :
+    SMulCommClass ℝ ℝ (RealTokenHilbertSpace (V := V)) where
+  smul_comm a b x := by
+    simp only [smul_smul]
+    rw [mul_comm]
+
 abbrev RealContextOperator :=
-  RealTokenHilbertSpace (V := V) →L[ℝ] RealTokenHilbertSpace (V := V)
+  RealTokenHilbertSpace (V := V) →L[ℝ]
+    RealTokenHilbertSpace (V := V)
+
+instance realContextOperatorNormedAddCommGroup :
+    NormedAddCommGroup (RealContextOperator (V := V)) := by
+  change NormedAddCommGroup
+    (RealTokenHilbertSpace (V := V) →SL[RingHom.id ℝ]
+      RealTokenHilbertSpace (V := V))
+  exact @ContinuousLinearMap.toNormedAddCommGroup ℝ ℝ
+    (RealTokenHilbertSpace (V := V)) (RealTokenHilbertSpace (V := V))
+    inferInstance inferInstance inferInstance inferInstance
+    (realTokenHilbertNormedSpace (V := V))
+    (realTokenHilbertNormedSpace (V := V))
+    (RingHom.id ℝ) RingHomIsometric.ids
+
+instance realContextOperatorNormedSpace :
+    NormedSpace ℝ (RealContextOperator (V := V)) := by
+  change NormedSpace ℝ
+    (RealTokenHilbertSpace (V := V) →SL[RingHom.id ℝ]
+      RealTokenHilbertSpace (V := V))
+  exact ContinuousLinearMap.toNormedSpace
+
+instance (priority := 1100) realContextOperatorModule :
+    Module ℝ (RealContextOperator (V := V)) :=
+  (realContextOperatorNormedSpace (V := V)).toModule
 
 structure RealContextField where
   K : RealContextOperator (V := V)
@@ -83,8 +129,7 @@ theorem realContext_state_hasDerivAt_interior
       (realContextRhs ctx response D (X t) (ψ t)) t := by
   apply hX.hasDerivAt
   rw [mem_nhds_iff]
-  exact ⟨interior (Set.Icc a b), interior_subset,
-    isOpen_interior, ht⟩
+  exact ⟨interior (Set.Icc a b), interior_subset, isOpen_interior, ht⟩
 
 theorem realContextRhs_of_commute
     (ctx : RealContextField (V := V))
@@ -93,7 +138,9 @@ theorem realContextRhs_of_commute
     (ψ : RealTokenHilbertSpace (V := V))
     (hcomm : D.comp X = X.comp D) :
     realContextRhs ctx response D X ψ = response ψ - ctx.decayRate • X := by
-  rw [realContextRhs, hcomm, sub_self, add_zero]
+  change response ψ - ctx.decayRate • X + (D.comp X - X.comp D) = _
+  rw [hcomm, sub_self]
+  exact add_zero (response ψ - ctx.decayRate • X)
 
 theorem realContextRhs_eq_zero_of_balanced_commute
     (ctx : RealContextField (V := V))
@@ -103,7 +150,8 @@ theorem realContextRhs_eq_zero_of_balanced_commute
     (hcomm : D.comp X = X.comp D)
     (hbalance : response ψ = ctx.decayRate • X) :
     realContextRhs ctx response D X ψ = 0 := by
-  rw [realContextRhs_of_commute ctx response D X ψ hcomm, hbalance, sub_self]
+  rw [realContextRhs_of_commute ctx response D X ψ hcomm, hbalance]
+  exact sub_self (ctx.decayRate • X)
 
 structure RealContextTrajectory
     (ctx : RealContextField (V := V))
@@ -124,7 +172,8 @@ def constant_realContextTrajectory
     RealContextTrajectory ctx response D ψ := by
   refine ⟨fun _ => X, ?_⟩
   intro t
-  simpa [heq t] using (hasDerivAt_const (x := t) (c := X))
+  rw [heq t]
+  exact hasDerivAt_const (x := t) (c := X)
 
 def balanced_commuting_realContextTrajectory
     (ctx : RealContextField (V := V))

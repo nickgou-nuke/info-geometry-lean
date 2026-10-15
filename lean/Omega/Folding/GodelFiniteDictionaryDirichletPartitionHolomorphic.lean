@@ -65,7 +65,10 @@ theorem paper_fold_godel_finite_dictionary_dirichlet_partition_holomorphic (B : 
       simpa using (Filter.tendsto_add_atTop_iff_nat 2).2 Filter.tendsto_id
     have hshift : Filter.Tendsto (fun T : ℕ => ((T + 2 : ℕ) : ℝ)) Filter.atTop Filter.atTop :=
       tendsto_natCast_atTop_atTop.comp hshift_nat
-    simpa [Nat.cast_add] using (tendsto_rpow_atTop hσ).comp hshift
+    have h := (tendsto_rpow_atTop hσ).comp hshift
+    change Filter.Tendsto (fun T : ℕ => ((T + 2 : ℕ) : ℝ) ^ σ)
+      Filter.atTop Filter.atTop at h
+    exact h
   have hratio :
       Filter.Tendsto
         (fun T ↦ ‖foldGodelDirichletLayerMajorant B σ (T + 1)‖ /

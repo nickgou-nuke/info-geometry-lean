@@ -84,7 +84,10 @@ theorem endomorphism_preserves_zeroModeCarrier
   change T (A x) = 0
   have hzero : T * endProjZero T = 0 := by
     change T * projZero T = 0
-    simpa using (mul_projZero (T := T) (by simpa [pow_three] using hT))
+    have hT' : T * T * T = T := by
+      rw [mul_assoc]
+      exact hT
+    exact mul_projZero (T := T) hT'
   calc
     T (A x) = T (endProjZero T (A x)) := by rw [hcomm, hxP]
     _ = (T * endProjZero T) (A x) := rfl
@@ -104,7 +107,9 @@ theorem composition_preserves_zeroModeCarrier
 theorem endT_commutes_endProjZero
     (T : Module.End ℝ V) (hT : T ^ 3 = T) :
     T * endProjZero T = endProjZero T * T := by
-  have hT' : T * T * T = T := by simpa [pow_three] using hT
+  have hT' : T * T * T = T := by
+    rw [mul_assoc]
+    exact hT
   calc
     T * endProjZero T = 0 := by
       simpa [endProjZero] using (mul_projZero (T := T) hT')
@@ -116,8 +121,11 @@ theorem endT_commutes_endProjZero
 theorem endProjZero_idempotent
     (T : Module.End ℝ V) (hT : T ^ 3 = T) :
     endProjZero T * endProjZero T = endProjZero T := by
+  have hT' : T * T * T = T := by
+    rw [mul_assoc]
+    exact hT
   simpa [endProjZero] using (projZero_idempotent (T := T)
-    (by simpa [pow_three] using hT))
+    hT')
 
 /-- The positive and zero Peirce projectors commute (both products vanish). -/
 theorem endProjPos_commutes_endProjZero

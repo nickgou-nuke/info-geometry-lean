@@ -31,7 +31,7 @@ theorem associator_eq_one_iff (F : G → G → Rˣ) (x y z : G) :
     simpa [associatorCochain, mul_assoc] using hm
   · intro h
     rw [associatorCochain, h]
-    simp [mul_assoc, mul_comm, mul_left_comm]
+    simp [mul_assoc, mul_comm]
 
 /-- Trivial associator really gives equality of the two homogeneous products. -/
 theorem homogeneous_associative_of_cocycle
@@ -61,6 +61,7 @@ theorem associator_inv (F : G → G → Rˣ) (x y z : G) :
 def relativeTwist (F H : G → G → Rˣ) (x y : G) : Rˣ :=
   H x y * (F x y)⁻¹
 
+omit [AddCommGroup G] in
 /-- Multiplication by the relative two-cochain recovers the target table. -/
 theorem relativeTwist_mul (F H : G → G → Rˣ) (x y : G) :
     relativeTwist F H x y * F x y = H x y := by
@@ -113,13 +114,21 @@ theorem associator_zero_right (F : G → G → Rˣ)
 /-- The existing real sign unit converts parity addition into multiplication. -/
 theorem signUnit_add (a b : ZMod 2) :
     signUnit (a + b) = signUnit a * signUnit b := by
-  fin_cases a <;> fin_cases b
-  · simp [signUnit]
-  · simp [signUnit]
-  · simp [signUnit]
-  · simp [signUnit]
-    change (1 + 1 : ZMod 2) = 0
-    exact ZMod.natCast_self 2
+  have ha : a = 0 ∨ a = 1 := by fin_cases a <;> [left; right] <;> rfl
+  have hb : b = 0 ∨ b = 1 := by fin_cases b <;> [left; right] <;> rfl
+  have h0 : signUnit (0 : ZMod 2) = 1 := by simp [signUnit]
+  have h1 : signUnit (1 : ZMod 2) = -1 := by
+    change (if (1 : ZMod 2) = 0 then (1 : ℝˣ) else -1) = -1
+    have hne : ¬((1 : ZMod 2) = 0) := by decide
+    simp [hne]
+  rcases ha with rfl | rfl <;> rcases hb with rfl | rfl
+  · rw [add_zero, h0, mul_one]
+  · rw [zero_add, h0, one_mul]
+  · rw [add_zero, h0, mul_one]
+  · have h_add : (1 + 1 : ZMod 2) = 0 := rfl
+    rw [h_add, h0, h1]
+    apply Units.ext
+    simp
 
 /-- A bilinear parity exponent is always an associative coefficient table. -/
 theorem bilinear_sign_cocycle

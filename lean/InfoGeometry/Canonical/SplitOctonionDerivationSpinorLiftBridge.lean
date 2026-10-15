@@ -5,6 +5,7 @@ import InfoGeometry.Canonical.G2Cl55ChiralHodgeEquivarianceBridge
 import InfoGeometry.Clifford.Cl55SpinBivectorLieBridge
 import InfoGeometry.Canonical.RealUHFFiniteMatrixNormedCarrier
 import Mathlib.Analysis.Normed.Algebra.Exponential
+import Mathlib.Algebra.Lie.OfAssociative
 
 /-!
 # Split-octonion derivations through a supplied `Cl(5,5)` spinor lift
@@ -34,6 +35,13 @@ abbrev Mat10 := InfoGeometry.Lie.SplitOctonionDerivationSO55Bridge.Mat10
 abbrev Mat32 := InfoGeometry.Canonical.G2Cl55ChiralHodgeEquivarianceBridge.Mat32
 abbrev Derivation := InfoGeometry.Lie.SplitOctonionDerivationSO55Bridge.Derivation
 abbrev SpinBivector55 := InfoGeometry.Clifford.Cl55SpinBivectorImage.SpinBivector55
+
+-- The owner keeps these instances local, so reintroduce the matrix Lie structure
+-- in this module where the bundled Lie homomorphism is declared.
+local instance : LieRing Mat10 := LieRing.ofAssociativeRing
+local instance : LieAlgebra ℝ Mat10 := LieAlgebra.ofAssociativeAlgebra
+local instance : LieRing Mat32 := LieRing.ofAssociativeRing
+local instance : LieAlgebra ℝ Mat32 := LieAlgebra.ofAssociativeAlgebra
 
 noncomputable def spinorMatrixToMat32 :
     InfoGeometry.Clifford.SpinorRep.SpinorMatrix 5 ≃ₐ[ℝ] Mat32 :=

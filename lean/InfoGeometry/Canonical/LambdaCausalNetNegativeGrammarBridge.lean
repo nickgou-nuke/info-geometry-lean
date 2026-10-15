@@ -9,29 +9,15 @@ set_option linter.unusedSectionVars false
 set_option linter.unusedVariables false
 
 /-!
-# The Functorial Rosetta Stone: Lambda Calculus Causal Nets ↔ Negative Grammar ↔ Causal Split ↔ Modular Flow
+# Lambda Syntax and Causal-Net Interfaces
 
-This module formalizes in native Lean 4 / Mathlib the fundamental categorical insight:
-
-The **Lambda Calculus Causal Net IS the Negative Grammar Basis** because:
-1. **$\beta$-Reduction = Causal Edge**: Demand creates a dependency edge.
-2. **Variable Binding = Causal Horizon**: Scope defines the boundary of the causal cone.
-3. **Substitution = Causal Propagation**: Value flows along causal wires.
-4. **Normal Form = Causal Past**: Fully reduced terms have all dependencies resolved.
-5. **Negative Types = Async / Lazy Evaluation**: Polarity models async demand-driven evaluation.
-
-## The 5 Functorial Bridges:
-$$\begin{array}{|l|l|l|}
-\hline
-\text{\bf Bridge} & \text{\bf Functor} & \text{\bf What It Preserves} \\
-\hline
-\text{Lambda } \to \text{ Causal Net} & \text{Term } \to \text{ CausalNet} & \text{Causal dependencies} \\
-\text{Causal Net } \to \text{ Negative Grammar} & \text{CausalNet } \to \text{ Polarity} & \text{Async evaluation order} \\
-\text{Negative Grammar } \to \text{ Causal Split} & \text{Polarity } \to \text{ CausalSplit} & \text{Bulk / Boundary / Null} \\
-\text{Causal Split } \to \text{ Modular Flow} & \text{CausalSplit } \to \text{ ModularFlow} & \text{Tomita-Takesaki } J \\
-\text{Modular Flow } \to \text{ Surprisal} & \text{ModularFlow } \to \text{ Surprisal} & K = -\ln \hat\rho \\
-\hline
-\end{array}$$
+This module owns untyped de Bruijn lambda syntax, capture-avoiding lifting and
+substitution, and contextual beta reduction. Its `CausalNet` map records
+structural counts; those counts alone do not identify beta steps with causal
+dependencies, prove normalization, or imply modular-flow statements. The
+separate owners for causal scheduling, negative grammar, modular flow, and
+surprisal must be connected by explicit structure-preserving maps before such
+claims can be made.
 -/
 
 namespace InfoGeometry.Canonical.LambdaCausalNetNegativeGrammarBridge
@@ -52,6 +38,62 @@ inductive LambdaTerm
   | var : ℕ → LambdaTerm
   | abs : LambdaTerm → LambdaTerm
   | app : LambdaTerm → LambdaTerm → LambdaTerm
+
+namespace LambdaTerm
+
+/-- Raise the free de Bruijn indices at or above `cutoff`. -/
+def liftAt (cutoff : ℕ) : LambdaTerm → LambdaTerm
+  | .var n => .var (if cutoff ≤ n then n + 1 else n)
+  | .abs body => .abs (liftAt (cutoff + 1) body)
+  | .app f a => .app (liftAt cutoff f) (liftAt cutoff a)
+
+/-- Raise every free de Bruijn index by one. -/
+def lift (t : LambdaTerm) : LambdaTerm := liftAt 0 t
+
+/-- Capture-avoiding substitution of the variable at index `index`.
+Indices above the removed binder are lowered, while the replacement is
+lifted when substitution crosses an abstraction. -/
+def subst (index : ℕ) (replacement : LambdaTerm) : LambdaTerm → LambdaTerm
+  | .var n =>
+      if n < index then .var n else
+        if n = index then replacement else .var (n - 1)
+  | .abs body => .abs (subst (index + 1) replacement.lift body)
+  | .app f a => .app (subst index replacement f) (subst index replacement a)
+
+@[simp] theorem lift_var_zero (n : ℕ) : lift (.var n) = .var (n + 1) := by
+  simp [lift, liftAt]
+
+@[simp] theorem subst_var_same (replacement : LambdaTerm) :
+    subst 0 replacement (.var 0) = replacement := by
+  simp [subst]
+
+@[simp] theorem subst_var_under_binder (replacement : LambdaTerm) :
+    subst 1 replacement.lift (.var 0) = .var 0 := by
+  simp [subst]
+
+end LambdaTerm
+
+/-- One-step (full contextual) beta reduction on de Bruijn lambda terms. -/
+inductive LambdaBetaStep : LambdaTerm → LambdaTerm → Prop
+  | beta (body argument : LambdaTerm) :
+      LambdaBetaStep (.app (.abs body) argument) (LambdaTerm.subst 0 argument body)
+  | abs {body body' : LambdaTerm} :
+      LambdaBetaStep body body' → LambdaBetaStep (.abs body) (.abs body')
+  | appFunction {function function' argument : LambdaTerm} :
+      LambdaBetaStep function function' →
+      LambdaBetaStep (.app function argument) (.app function' argument)
+  | appArgument {function argument argument' : LambdaTerm} :
+      LambdaBetaStep argument argument' →
+      LambdaBetaStep (.app function argument) (.app function argument')
+
+namespace LambdaBetaStep
+
+/-- The identity redex contracts to its argument. -/
+theorem identity (argument : LambdaTerm) :
+    LambdaBetaStep (.app (.abs (.var 0)) argument) argument := by
+  simpa using (LambdaBetaStep.beta (.var 0) argument)
+
+end LambdaBetaStep
 
 /-- Causal Net structure representing dependency graph of terms. -/
 structure CausalNet where
@@ -176,10 +218,10 @@ noncomputable def causalNetToPolarity (net : CausalNet) : Polarity :=
 def polarityToCausalSplit {V : Type*} [AddCommGroup V] [Module ℝ V] (pol : Polarity) (V_bulk V_boundary V_null : Submodule ℝ V) : CausalSplit V :=
   ⟨V_bulk, V_boundary, V_null⟩
 
-/--
-**Main Theorem 1: Lambda Beta Reduction Preserves Causal Net DAG Structure**
-Beta reduction step preserves the DAG property of the underlying causal net.
--/
+/-- The count-based dependency graph constructed from the syntax tree is acyclic.
+This statement concerns `lambdaToCausalNet`'s ranked count graph only; it makes
+no claim that beta reduction preserves a graph or that the count graph records
+the operational beta dynamics. -/
 theorem lambda_causal_net_preserves_dag (t : LambdaTerm) :
     (lambdaToCausalNet t).IsDAG :=
   CausalNet.isDAG _

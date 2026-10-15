@@ -124,8 +124,14 @@ theorem closedClass_add
   change Submodule.Quotient.mk (⟨ω + η, hsum⟩ : LinearMap.ker d₁) =
     Submodule.Quotient.mk (⟨ω, hω⟩ : LinearMap.ker d₁) +
       Submodule.Quotient.mk (⟨η, hη⟩ : LinearMap.ker d₁)
-  rw [← Submodule.Quotient.mk_add]
-  rfl
+  calc
+    Submodule.Quotient.mk (⟨ω + η, hsum⟩ : LinearMap.ker d₁) =
+        Submodule.Quotient.mk
+          ((⟨ω, hω⟩ : LinearMap.ker d₁) + ⟨η, hη⟩) :=
+      congrArg Submodule.Quotient.mk (Subtype.ext rfl)
+    _ = Submodule.Quotient.mk (⟨ω, hω⟩ : LinearMap.ker d₁) +
+        Submodule.Quotient.mk (⟨η, hη⟩ : LinearMap.ker d₁) :=
+      rfl
 
 theorem closedClass_smul
     (d₀ : Ω₀ →ₗ[R] Ω₁) (d₁ : Ω₁ →ₗ[R] Ω₂)
@@ -134,10 +140,16 @@ theorem closedClass_smul
     (hsmul : d₁ (r • ω) = 0) :
     closedClass d₀ d₁ hdd (r • ω) hsmul =
       r • closedClass d₀ d₁ hdd ω hω := by
-  change Submodule.Quotient.mk (⟨r • ω, hsmul⟩ : LinearMap.ker d₁) =
-    r • Submodule.Quotient.mk (⟨ω, hω⟩ : LinearMap.ker d₁)
-  rw [← Submodule.Quotient.mk_smul]
-  rfl
+  change cycleQuotientMap d₀ d₁ hdd
+      ⟨r • ω, LinearMap.mem_ker.mpr hsmul⟩ =
+    r • cycleQuotientMap d₀ d₁ hdd
+      ⟨ω, LinearMap.mem_ker.mpr hω⟩
+  rw [show (⟨r • ω, LinearMap.mem_ker.mpr hsmul⟩ : LinearMap.ker d₁) =
+      r • (⟨ω, LinearMap.mem_ker.mpr hω⟩ : LinearMap.ker d₁) by
+        apply Subtype.ext
+        rfl]
+  exact map_smul (cycleQuotientMap d₀ d₁ hdd) r
+    ⟨ω, LinearMap.mem_ker.mpr hω⟩
 
 theorem closedClass_neg
     (d₀ : Ω₀ →ₗ[R] Ω₁) (d₁ : Ω₁ →ₗ[R] Ω₂)
@@ -319,7 +331,9 @@ theorem kleinLogPeriodReadoutWindingClass_eq_int_smul
         ((n : ℂ) • LogDeRhamClass.logarithmicPeriod R) _ =
       (n : ℂ) • closedClass kleinZeroD₀ kleinZeroD₁ kleinZeroD_complex
         (LogDeRhamClass.logarithmicPeriod R) _
-  rw [closedClass_smul]
+  exact closedClass_smul kleinZeroD₀ kleinZeroD₁ kleinZeroD_complex
+    (n : ℂ) (LogDeRhamClass.logarithmicPeriod R)
+    (by simp [kleinZeroD₁]) (by simp [kleinZeroD₁])
 
 theorem kleinLogPeriodReadoutWindingClass_eq_zero_iff
     (R : ℝ) (n : ℤ) :
@@ -428,8 +442,9 @@ theorem kleinLogPeriodReadoutWindingClass_injective
 theorem kleinLogPeriodReadoutWindingAddHom_injective
     (R : ℝ) (hR : 0 < R) :
     Function.Injective (kleinLogPeriodReadoutWindingAddHom R) := by
-  simpa only [kleinLogPeriodReadoutWindingAddHom_apply] using
-    kleinLogPeriodReadoutWindingClass_injective R hR
+  intro m n hmn
+  apply kleinLogPeriodReadoutWindingClass_injective R hR
+  simpa only [kleinLogPeriodReadoutWindingAddHom_apply] using hmn
 
 theorem kleinLogPeriodReadoutClass_ne_zero
     (R : ℝ) (hR : 0 < R) :
@@ -475,10 +490,15 @@ theorem kleinZeroPeriodClassFactor_injective :
           (by intro η; simp [kleinZeroD₀])
           (closedClass kleinZeroD₀ kleinZeroD₁ kleinZeroD_complex
             (y : ℂ) (by simp [kleinZeroD₁])) at hxy
-    simpa only [periodClassFactor_apply] using hxy
+    rw [periodClassFactor_apply kleinZeroD₀ kleinZeroD₁ kleinZeroD_complex
+      (LinearMap.id : ℂ →ₗ[ℂ] ℂ)
+      (by intro η; simp [kleinZeroD₀]) (x : ℂ) (by simp [kleinZeroD₁]),
+      periodClassFactor_apply kleinZeroD₀ kleinZeroD₁ kleinZeroD_complex
+      (LinearMap.id : ℂ →ₗ[ℂ] ℂ)
+      (by intro η; simp [kleinZeroD₀]) (y : ℂ) (by simp [kleinZeroD₁])] at hxy
+    exact hxy
   apply Quotient.sound
   rw [Subtype.ext hxy']
-  simp
 
 theorem kleinZeroPeriodClassFactor_bijective :
     Function.Bijective

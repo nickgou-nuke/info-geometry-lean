@@ -10,21 +10,19 @@ import Mathlib.Tactic.FinCases
 -/
 
 def P_id : Matrix (Fin 2) (Fin 2) ℝ :=
-  ![![1, 0],
-    ![0, 1]]
+  fun i j => if i = j then 1 else 0
 
 def P_swap : Matrix (Fin 2) (Fin 2) ℝ :=
-  ![![0, 1],
-    ![1, 0]]
+  fun i j => if i = j then 0 else 1
 
 def AttentionMatrix (x : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
-  ![![x, 1 - x],
-    ![1 - x, x]]
+  fun i j => if i = j then x else 1 - x
 
 theorem attention_is_birkhoff_convex_combination (x : ℝ) :
     AttentionMatrix x = x • P_id + (1 - x) • P_swap := by
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [AttentionMatrix, P_id, P_swap]
+  simp [AttentionMatrix, P_id, P_swap]
+  split_ifs <;> ring
 
 theorem attention_weights_sum_to_one (x : ℝ) :
     x + (1 - x) = 1 := by

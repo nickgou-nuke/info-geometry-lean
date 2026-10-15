@@ -385,11 +385,13 @@ theorem realBinaryReadout_boundaryCons
     dsimp [realBinaryTerm, boundaryCons]
     simp only [Nat.add_assoc, Nat.add_comm n 1]
     rw [pow_add]
-    split <;> simp
+    by_cases h : w n
+    · simp [h]
+    · simp [h]
   change (∑' n : ℕ, realBinaryTerm (boundaryCons a w) n) = _
   rw [← hsum]
   rw [htail]
-  norm_num [realBinaryTerm, boundaryCons]
+  cases a <;> norm_num [realBinaryTerm, boundaryCons]
 
 theorem realBinaryReadout_boundaryTail
     (w : InfiniteBinaryWordSpace) :

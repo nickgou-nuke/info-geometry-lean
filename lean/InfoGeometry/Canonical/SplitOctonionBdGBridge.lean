@@ -49,28 +49,28 @@ def bdgHadamard : BdGBlock ℚ := !![1, 1; 1, -1]
   rw [colorCoreToBdGLinear, threeColorCausalMatrixEquiv_generator_apply]
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [bdgNPlus, Matrix.stdBasis, threeColorMatrixIndexEquiv]
+    simp [bdgNPlus, Matrix.stdBasis]
 
 @[simp] theorem colorCoreToBdGLinear_nMinus :
     colorCoreToBdGLinear c (colorPolarizedGenerator c 1) = bdgNMinus := by
   rw [colorCoreToBdGLinear, threeColorCausalMatrixEquiv_generator_apply]
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [bdgNMinus, Matrix.stdBasis, threeColorMatrixIndexEquiv]
+    simp [bdgNMinus, Matrix.stdBasis]
 
 @[simp] theorem colorCoreToBdGLinear_sigmaPlus :
     colorCoreToBdGLinear c (colorPolarizedGenerator c 2) = bdgSigmaPlus := by
   rw [colorCoreToBdGLinear, threeColorCausalMatrixEquiv_generator_apply]
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [bdgSigmaPlus, Matrix.stdBasis, threeColorMatrixIndexEquiv]
+    simp [bdgSigmaPlus, Matrix.stdBasis]
 
 @[simp] theorem colorCoreToBdGLinear_sigmaMinus :
     colorCoreToBdGLinear c (colorPolarizedGenerator c 3) = bdgSigmaMinus := by
   rw [colorCoreToBdGLinear, threeColorCausalMatrixEquiv_generator_apply]
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [bdgSigmaMinus, Matrix.stdBasis, threeColorMatrixIndexEquiv]
+    simp [bdgSigmaMinus, Matrix.stdBasis]
 
 @[simp] theorem colorCoreToBdGLinear_colorDirac
     (a b : ℚ) :
@@ -105,7 +105,7 @@ def bdgHadamard : BdGBlock ℚ := !![1, 1; 1, -1]
     bdgTau1 * bdgTau3 + bdgTau3 * bdgTau1 = (0 : BdGBlock ℚ) := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [bdgTau1, bdgTau3, Matrix.mul_apply, Fin.sum_univ_two]
+    simp [bdgTau1, bdgTau3]
 
 @[simp] theorem bdgTauPlus_sq : bdgTauPlus * bdgTauPlus = (0 : BdGBlock ℚ) := by
   ext i j

@@ -3,6 +3,17 @@ name: vibe-validation
 description: Iterative AI-driven formalization for Lean 4. Use when porting algorithms (Rust/Python) to Lean, filling proof skeletons, or performing a clinical audit of AI-generated proofs to eliminate 'sorry' while maintaining symbolic rigor.
 ---
 
+<!-- repository-context-rule -->
+## Repository context rule
+
+For repository work, the current checked-out codebase is the context. Search
+existing implementation and trace actual carriers, definitions, imports,
+instances, theorem statements, and uses before claiming a structure is missing
+or incorrect. A local absence is not a repository-wide absence. Names,
+heuristics, summaries, and documentation guide discovery but do not override
+source. Follow `docs/REPO_DEEP_SEARCH_PROTOCOL.md` before repo-wide gap claims.
+
+
 ## Constructive Closure Mandate
 
 Replacing witness-gated and external-certificate leftovers with native Lean 4 proofs is the highest mandate. **Zero Tolerance for Vacuous Scaffolding.** Never promote a vibe, physics analogy, semantic embedding, graph edge, or AI-generated proof sketch as a completed proof. Every promoted proposition must be discharged by a native Lean derivation chain rooted in Mathlib or current owner modules. Do not use opaque `Prop` fields, certificates, witnesses, or projection-only wrappers to resolve debt; real progress must be structural and verified by the kernel.

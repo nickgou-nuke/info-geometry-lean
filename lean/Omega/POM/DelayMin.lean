@@ -43,9 +43,11 @@ theorem paper_pom_delay_min : POMDelayMinStatement := by
   refine ⟨rfl, rfl, rfl, ?_⟩
   intro h
   rcases h with ⟨T, hT⟩
-  have h00 : T (.d0, .d0, .d2) .d0 = false := by simpa using hT .d0 .d0
-  have h01 : T (.d0, .d0, .d2) .d0 = true := by simpa using hT .d0 .d1
-  have : (false : Bool) = true := by simpa [h00] using h01
-  cases this
+  have h00 : T (.d0, .d0, .d2) .d0 = false := by
+    simpa [pomExplicitOnlineBit] using hT .d0 .d0
+  have h01 : T (.d0, .d0, .d2) .d0 = true := by
+    simpa [pomExplicitOnlineBit] using hT .d0 .d1
+  rw [h00] at h01
+  cases h01
 
 end Omega.POM

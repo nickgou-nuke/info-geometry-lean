@@ -63,6 +63,62 @@ theorem appendAtom_mul {n : ℕ}
     Matrix.kronecker (A * C) (B * D)
   exact (Matrix.mul_kronecker_mul A C B D).symm
 
+theorem appendAtom_add_right {n : ℕ}
+    (A : SplitGammaMatrix n) (B D : Matrix (Fin 2) (Fin 2) ℝ) :
+    appendAtom A (B + D) = appendAtom A B + appendAtom A D := by
+  ext i j
+  rcases i with ⟨i, a⟩
+  rcases j with ⟨j, b⟩
+  change A i j * (B a b + D a b) = A i j * B a b + A i j * D a b
+  ring
+
+theorem appendAtom_add_left {n : ℕ}
+    (A C : SplitGammaMatrix n) (B : Matrix (Fin 2) (Fin 2) ℝ) :
+    appendAtom (A + C) B = appendAtom A B + appendAtom C B := by
+  ext i j
+  rcases i with ⟨i, a⟩
+  rcases j with ⟨j, b⟩
+  change (A i j + C i j) * B a b = A i j * B a b + C i j * B a b
+  ring
+
+theorem appendAtom_smul_right {n : ℕ}
+    (r : ℝ) (A : SplitGammaMatrix n) (B : Matrix (Fin 2) (Fin 2) ℝ) :
+    appendAtom A (r • B) = r • appendAtom A B := by
+  ext i j
+  rcases i with ⟨i, a⟩
+  rcases j with ⟨j, b⟩
+  change A i j * (r * B a b) = r * (A i j * B a b)
+  ring
+
+theorem appendAtom_smul_left {n : ℕ}
+    (r : ℝ) (A : SplitGammaMatrix n) (B : Matrix (Fin 2) (Fin 2) ℝ) :
+    appendAtom (r • A) B = r • appendAtom A B := by
+  ext i j
+  rcases i with ⟨i, a⟩
+  rcases j with ⟨j, b⟩
+  change (r * A i j) * B a b = r * (A i j * B a b)
+  ring
+
+theorem appendAtom_smul_one_left {n : ℕ} (r : ℝ) :
+    appendAtom (r • (1 : SplitGammaMatrix n)) (1 : Matrix (Fin 2) (Fin 2) ℝ) =
+      r • (1 : SplitGammaMatrix (n + 1)) := by
+  ext i j
+  rcases i with ⟨i, a⟩
+  rcases j with ⟨j, b⟩
+  change (r * (if i = j then (1 : ℝ) else 0)) * (if a = b then (1 : ℝ) else 0) =
+    r * (if (i, a) = (j, b) then (1 : ℝ) else 0)
+  by_cases hij : i = j <;> by_cases hab : a = b <;> simp [hij, hab]
+
+theorem appendAtom_smul_one_right {n : ℕ} (r : ℝ) :
+    appendAtom (1 : SplitGammaMatrix n) (r • (1 : Matrix (Fin 2) (Fin 2) ℝ)) =
+      r • (1 : SplitGammaMatrix (n + 1)) := by
+  ext i j
+  rcases i with ⟨i, a⟩
+  rcases j with ⟨j, b⟩
+  change (if i = j then (1 : ℝ) else 0) * (r * (if a = b then (1 : ℝ) else 0)) =
+    r * (if (i, a) = (j, b) then (1 : ℝ) else 0)
+  by_cases hij : i = j <;> by_cases hab : a = b <;> simp [hij, hab]
+
 theorem appendAtom_mul_assoc {n : ℕ}
     (A C E : SplitGammaMatrix n)
     (B D F : Matrix (Fin 2) (Fin 2) ℝ) :
@@ -84,7 +140,9 @@ theorem appendAtom_mul_assoc_left {n : ℕ}
   ext i j
   rcases i with ⟨i, a⟩
   rcases j with ⟨j, b⟩
-  simp [appendAtom_apply]
+  simp only [appendAtom_apply, Matrix.zero_apply, zero_mul, mul_zero]
+  change (0 : ℝ) = 0
+  rfl
 
 @[simp] theorem appendAtom_zero_right {n : ℕ}
     (A : SplitGammaMatrix n) :
@@ -92,7 +150,9 @@ theorem appendAtom_mul_assoc_left {n : ℕ}
   ext i j
   rcases i with ⟨i, a⟩
   rcases j with ⟨j, b⟩
-  simp [appendAtom_apply]
+  simp only [appendAtom_apply, Matrix.zero_apply, zero_mul, mul_zero]
+  change (0 : ℝ) = 0
+  rfl
 
 theorem splitHeadAtom_sq (x : ℝ × ℝ) :
     (x.1 • gammaPlusAtom + x.2 • gammaMinusAtom) *
@@ -125,11 +185,7 @@ theorem appendAtom_grading_square {n : ℕ} {s : ℝ}
     appendAtom A gradingAtom * appendAtom A gradingAtom =
       s • (1 : SplitGammaMatrix (n + 1)) := by
   rw [appendAtom_square, hA, gradingAtom_sq]
-  ext i j
-  rcases i with ⟨i, a⟩
-  rcases j with ⟨j, b⟩
-  by_cases hij : i = j <;> by_cases hab : a = b <;>
-    simp [appendAtom_apply, Matrix.one_apply, hij, hab]
+  exact appendAtom_smul_one_left s
 
 theorem appendAtom_cross_splitHead_anticommutator {n : ℕ}
     (A : SplitGammaMatrix n) (x : ℝ × ℝ) :
@@ -141,18 +197,9 @@ theorem appendAtom_cross_splitHead_anticommutator {n : ℕ}
       appendAtom A gradingAtom =
       (0 : SplitGammaMatrix (n + 1)) := by
   rw [appendAtom_mul, appendAtom_mul]
-  ext i j
-  rcases i with ⟨i, a⟩
-  rcases j with ⟨j, b⟩
-  simp [Matrix.one_apply]
-  rw [← mul_add]
-  have hentry :
-      (gradingAtom * (x.1 • gammaPlusAtom + x.2 • gammaMinusAtom)) a b +
-        ((x.1 • gammaPlusAtom + x.2 • gammaMinusAtom) * gradingAtom) a b = 0 := by
-    simpa [Matrix.add_apply] using
-      congrArg (fun M : Matrix (Fin 2) (Fin 2) ℝ => M a b)
-        (gradingAtom_splitHeadAtom_anticomm x)
-  rw [hentry, mul_zero]
+  rw [one_mul, mul_one, ← appendAtom_add_right,
+    gradingAtom_splitHeadAtom_anticomm]
+  simp
 
 abbrev SpinorSpace₁₁ := SpinorSpace 1
 abbrev Mat2 := Cl11Matrix.Mat2
@@ -229,26 +276,32 @@ noncomputable def recursiveGammaTensor : (n : ℕ) →
           have hadd :
               (((vp, vm), vs) + ((wp, wm), ws) : SplitSpace (n + 1)) =
                 ((vp + wp, vm + wm), vs + ws) := by
-            ext <;> simp
-          ext i j
-          rcases i with ⟨i, a⟩
-          rcases j with ⟨j, b⟩
+              ext <;> simp
           rw [hadd]
-          simp [appendAtom_apply, add_assoc, add_left_comm, add_comm]
-          ring_nf
+          rw [map_add, appendAtom_add_left]
+          simp only [add_smul, appendAtom_add_right]
+          abel
         map_smul' := by
           intro r v
           rcases v with ⟨⟨vp, vm⟩, vs⟩
           have hsmul :
               (r • ((vp, vm), vs) : SplitSpace (n + 1)) =
                 ((r * vp, r * vm), r • vs) := by
-            ext <;> simp [smul_eq_mul]
-          ext i j
-          rcases i with ⟨i, a⟩
-          rcases j with ⟨j, b⟩
+              ext <;> simp [smul_eq_mul]
           rw [hsmul]
-          simp [appendAtom_apply, smul_eq_mul]
-          ring_nf
+          change appendAtom (tail (r • vs)) gradingAtom +
+              appendAtom (1 : SplitGammaMatrix n)
+                ((r * vp) • gammaPlusAtom + (r * vm) • gammaMinusAtom) =
+            r • (appendAtom (tail vs) gradingAtom +
+              appendAtom (1 : SplitGammaMatrix n)
+                (vp • gammaPlusAtom + vm • gammaMinusAtom))
+          rw [map_smul, appendAtom_smul_left]
+          have hhead :
+              (r * vp) • gammaPlusAtom + (r * vm) • gammaMinusAtom =
+                r • (vp • gammaPlusAtom + vm • gammaMinusAtom) := by
+            rw [smul_add, smul_smul, smul_smul]
+          rw [hhead, appendAtom_smul_right]
+          rw [← smul_add]
       }
 
 theorem recursiveGammaTensor_sq (n : ℕ) (v : SplitSpace n) :
@@ -276,12 +329,7 @@ theorem recursiveGammaTensor_sq (n : ℕ) (v : SplitSpace n) :
               (x.1 • gammaPlusAtom + x.2 • gammaMinusAtom) =
             (InfoGeometry.CliffordTower.Q11 x) • (1 : SplitGammaMatrix (n + 1))
         rw [appendAtom_square, one_mul, splitHeadAtom_sq]
-        ext i j
-        rcases i with ⟨i, a⟩
-        rcases j with ⟨j, b⟩
-        simp [appendAtom_apply, smul_eq_mul, Matrix.one_apply]
-        by_cases hij : i = j <;> by_cases hab : a = b <;>
-          simp [hij, hab]
+        exact appendAtom_smul_one_right (InfoGeometry.CliffordTower.Q11 x)
       have hcross : A * B + B * A = (0 : SplitGammaMatrix (n + 1)) := by
         simpa [A, B, anticommutator] using
           appendAtom_cross_splitHead_anticommutator
@@ -297,15 +345,20 @@ theorem recursiveGammaTensor_sq (n : ℕ) (v : SplitSpace n) :
               (InfoGeometry.CliffordTower.Q11 x) • (1 : SplitGammaMatrix (n + 1)) := by
           rw [hA, hB, hcross]
         _ = (SplitQuad (n + 1) (x, xs)) • (1 : SplitGammaMatrix (n + 1)) := by
-          simp [SplitQuad, Qsplit_succ_apply, add_smul, add_comm]
+          simp only [add_zero]
+          rw [add_comm ((SplitQuad n xs) • (1 : SplitGammaMatrix (n + 1)))]
+          rw [← add_smul]
+          rfl
 
 theorem tensorIndex_card_pow_two (n : ℕ) :
     Fintype.card (TensorIndex n) = 2 ^ n := by
   induction n with
   | zero =>
-      simp [TensorIndex]
+      change Fintype.card PUnit = 1
+      decide
   | succ n ih =>
-      simp [TensorIndex, Fintype.card_prod, ih, pow_succ, Nat.mul_comm]
+      change Fintype.card (TensorIndex n × Fin 2) = 2 ^ (n + 1)
+      rw [Fintype.card_prod, Fintype.card_fin, ih, pow_succ]
 
 def tensorIndexEquivFinPowTwo : (n : ℕ) → TensorIndex n ≃ Fin (2 ^ n)
   | 0 =>
@@ -430,7 +483,7 @@ theorem incl_Cl_split_ι (n : ℕ) (xs : SplitSpace n) :
     InfoGeometry.Canonical.SplitCliffordDirectLimit.splitCliffordStep,
     InfoGeometry.Canonical.SplitCliffordTensorBridge.splitCliffordTensorStepEquiv,
     tailLift]
-  rfl
+  exact InfoGeometry.Canonical.BottPeriodicity.bottStepEquiv_symm_right_generator n xs
 
 /-- Generator-level compatibility of the canonical tower inclusion with the
 recursive spinor representation. The successor action is the old gamma

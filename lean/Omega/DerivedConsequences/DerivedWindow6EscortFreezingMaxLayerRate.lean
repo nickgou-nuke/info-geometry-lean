@@ -149,7 +149,7 @@ theorem paper_derived_window6_escort_freezing_max_layer_rate :
     derived_window6_escort_freezing_max_layer_rate_M4_formula,
     derived_window6_escort_freezing_max_layer_rate_M3_formula,
     derived_window6_escort_freezing_max_layer_rate_M2_formula, ?_, ?_⟩
-  · simpa [derived_window6_escort_freezing_max_layer_rate_M4_eq_window6MaxLayerEscortMass] using hescort
+  · exact hescort
   · exact derived_window6_escort_freezing_max_layer_rate_conditional_uniformity
 
 end Omega.DerivedConsequences

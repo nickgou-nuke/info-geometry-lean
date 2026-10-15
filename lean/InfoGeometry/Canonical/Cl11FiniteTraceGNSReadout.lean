@@ -27,8 +27,10 @@ noncomputable def cl11AbstractGNSState (n : ℕ) :
   atStage
     cl11CompatibleRealAlgebraicStateNet n (by
       intro X Y
-      simpa [state_eq_normalizedTrace] using
-        (normalizedTraceState n).symmetric X Y)
+      rw [state_eq_markovTrace, state_eq_markovTrace,
+        InfoGeometry.Clifford.Cl11MarkovJonesEngine.cl11MarkovTraceNet_apply,
+        InfoGeometry.Clifford.Cl11MarkovJonesEngine.cl11MarkovTraceNet_apply]
+      exact (normalizedTraceState n).symmetric X Y)
 
 abbrev cl11GNSQuotient (n : ℕ) : Type _ :=
   AbstractGNSState.gnsQuotient (cl11AbstractGNSState n)

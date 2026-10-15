@@ -2,6 +2,8 @@ import Omega.Conclusion.ValuationIsometryClassification
 
 namespace Omega.Conclusion
 
+set_option linter.unusedSimpArgs false
+
 /-- Coordinatewise median on valuation points. -/
 def conclusion_valuation_median_group_medianInt (a b c : Int) : Int :=
   max (min a b) (min (max a b) c)

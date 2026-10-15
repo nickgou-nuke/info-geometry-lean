@@ -51,11 +51,16 @@ theorem poissonTransportAssignment_unique_entropy_minimizer
     (hq_sum : ∑ j : Component, q j = 1) :
     FiniteGibbs.entropyRegularizedObjective
         (poissonTransportRowModel C i) () ε q =
-        FiniteGibbs.freeEnergy (poissonTransportRowModel C i) () ε ↔
+    FiniteGibbs.freeEnergy (poissonTransportRowModel C i) () ε ↔
       q = poissonTransportAssignment C ε i := by
-  simpa [poissonTransportRowModel, poissonTransportAssignment] using
-    (FiniteGibbs.entropyRegularizedObjective_eq_freeEnergy_iff
-      (poissonTransportRowModel C i) () hε q hq_pos hq_sum)
+  have h := FiniteGibbs.entropyRegularizedObjective_eq_freeEnergy_iff
+    (poissonTransportRowModel C i) () hε q hq_pos hq_sum
+  have hw : FiniteGibbs.weight (poissonTransportRowModel C i) () ε =
+      poissonTransportAssignment C ε i := by
+    funext j
+    exact poissonTransportRowModel_weight_eq_assignment C ε i j
+  rw [hw] at h
+  exact h
 
 theorem poissonTransportRow_primalDual_gap_nonneg
     (C : PoissonTransportCost (Observation := Observation)

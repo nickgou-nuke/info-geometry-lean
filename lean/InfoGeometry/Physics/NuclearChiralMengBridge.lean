@@ -99,7 +99,13 @@ inductive Archetype
   | solovievCompression
   | twinWaveKMS
   | operatorZornReadout
-  deriving DecidableEq, Fintype, Repr
+  deriving DecidableEq, Repr
+
+instance : Fintype Archetype :=
+  Fintype.ofList
+    [.chpInvolutions, .fiveGradeCarrier, .quasiparticlePhonon,
+      .solovievCompression, .twinWaveKMS, .operatorZornReadout]
+    (by intro x; cases x <;> simp)
 
 def causalRank : Archetype → ℕ
   | .chpInvolutions => 0

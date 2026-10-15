@@ -1,5 +1,4 @@
 import Mathlib.Tactic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorModularScoreFunctional
 
 /-!
@@ -334,7 +333,7 @@ theorem cantorPathStateCompatibleLinear (x : ℕ → Bool) (n : ℕ)
     (a : BinaryWord (n + 1) → ℝ) :
     cantorPointState (x := x) (n + 1) a =
       cantorPointState (x := x) n ((cantorPathRestrictLinear (x := x) n) a) := by
-  simp [cantorPathRestrictLinear, cantorPathRestrict, cantorPointState, cantorPrefixWord_succ]
+  exact cantorPathStateCompatible x n a
 
 /-- Centered functional identity on each level: `η_n(f)=f(x_n)-μ_n(f)`. -/
 theorem cantorPathCentered_eq_eval_sub_uniform
@@ -396,14 +395,10 @@ def cantorPathCenteredNet (x : ℕ → Bool) :
   centered := fun n => centeredFunctional (A := BinaryWord n → ℝ) (cantorPathLocalDensityState (x := x) n)
   centered_eq := by
     intro n a
-    let S := cantorPathLocalDensityState (x := x) n
-    simpa [S, centeredDensity] using
-      (centeredFunctional_eq_delta_minus_one (A := BinaryWord n → ℝ) S a)
+    exact centeredFunctional_eq_delta_minus_one (cantorPathLocalDensityState (x := x) n) a
   centered_one := by
     intro n
-    let S := cantorPathLocalDensityState (x := x) n
-    simpa [S, centeredDensity] using
-      (centeredFunctional_one_eq_zero (A := BinaryWord n → ℝ) S)
+    exact centeredFunctional_one_eq_zero (cantorPathLocalDensityState (x := x) n)
 
 /-- Signed local displacement at level `n` is exactly `state - reference`. -/
 theorem cantorPathCentered_eq_state_sub_ref
@@ -419,7 +414,7 @@ theorem cantorPathCentered_eq_state_sub_ref
 theorem cantorPathCentered_one
     (x : ℕ → Bool) (n : ℕ) :
     ((cantorPathCenteredNet (x := x)).centered n) (1 : BinaryWord n → ℝ) = 0 := by
-  simpa [cantorPathCenteredNet] using ((cantorPathCenteredNet (x := x)).centered_one n)
+  exact (cantorPathCenteredNet (x := x)).centered_one n
 
 /-- Core displacement form: centered score equals the reference functional of `(Δ - 1) * a`. -/
 theorem cantorPathCentered_eq_ref_delta_sub_one
@@ -518,8 +513,8 @@ def cantorSpectralZeta (s : ℂ) : ℂ :=
 /-- Geometric closed form on the unit-disc region for the kernel. -/
 theorem cantorSpectralZeta_eq (s : ℂ) (h : ‖cantorMellinKernel s‖ < 1) :
     cantorSpectralZeta s = (1 : ℂ) / (1 - cantorMellinKernel s) := by
-  simpa [one_div] using
-    (tsum_geometric_of_norm_lt_one h : (∑' n : ℕ, (cantorMellinKernel s) ^ n) = (1 - cantorMellinKernel s)⁻¹)
+  rw [cantorSpectralZeta, one_div]
+  exact tsum_geometric_of_norm_lt_one h
 
 /-- Pole-locus of the Cantor Mellin kernel.
 
@@ -540,7 +535,8 @@ theorem cantorMellinKernel_eq_one_iff
           exact_mod_cast Real.log_ne_zero_of_pos_of_ne_one (by positivity) (by norm_num))
     have hs : 1 - s = (n : ℂ) * (2 * (Real.pi : ℂ) * cantorPhaseAxis) / Complex.log (2 : ℂ) := by
       refine (eq_div_iff hlog2_ne).2 ?_
-      simpa [mul_assoc, mul_left_comm, mul_comm] using hn
+      rw [cantorPhaseAxis]
+      linear_combination hn
     refine ⟨n, ?_⟩
     calc
       s = 1 - (1 - s) := by ring

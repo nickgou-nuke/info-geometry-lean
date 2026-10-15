@@ -74,7 +74,7 @@ theorem paper_real_input_40_directional_coupling_eigs :
       real_input_40_directional_coupling_eigs_g_quadratic
     unfold real_input_40_directional_coupling_eigs_g_unit_sphere at hv
     have hv' : v 0 ^ 2 + v 1 ^ 2 = 1 := by
-      simpa using hv
+      simpa [real_input_40_directional_coupling_eigs_g_quadratic] using hv
     rw [hv']
     ring
 

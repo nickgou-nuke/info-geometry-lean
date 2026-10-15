@@ -35,9 +35,14 @@ This module establishes the canonical mathematical bridge formalizing:
    - $\operatorname{tr}(\hat{Z}) = 0$ (traceless Weyl dilaton mode)
    - $\hat{Z}^2 = (a^2 + \Delta^2) \mathbb{I}$
    - $\det(\hat{Z}) = -(a^2 + \Delta^2)$
-   - Massless limit ($\Delta = 0$): decoupled null rays traveling at $\pm c$
-   - Massive locking ($\Delta = m$): off-diagonal bridge locks the holomorphic and
-     antiholomorphic modes into the relativistic mass-shell $E^2 = p^2 + m^2$.
+   - Parameter slice ($\Delta = 0$): the matrix square is $a^2\mathbb I$;
+     interpreting this slice as null rays requires a separate identification
+     with physical momentum and energy.
+   - Quadratic level set ($\Delta = m$): the displayed matrix equation is
+     equivalent to $a^2 + m^2 = E^2$. This matches the usual dispersion
+     polynomial after identifying $a$ with momentum and $E$ with energy, but
+     this finite matrix theorem does not itself construct particle dynamics
+     or a Minkowski four-momentum.
 -/
 
 namespace InfoGeometry.Canonical.ParaComplexHolomorphicReal
@@ -260,14 +265,17 @@ theorem zorn2_det_eq_zero_iff (a delta : ℝ) :
   · rintro ⟨rfl, rfl⟩
     norm_num
 
-/-- Massless limit: when $\Delta = 0$, $\hat{Z}^2 = a^2 \mathbb{I}$ (pure chiral null rays). -/
+/-- On the parameter slice `delta = 0`, the matrix square is `a^2` times the
+identity. A null-ray interpretation requires an additional physical readout. -/
 theorem zorn2_massless_sq (a : ℝ) :
     zorn2 a 0 * zorn2 a 0 = (a^2) • (1 : Matrix (Fin 2) (Fin 2) ℝ) := by
   have h := zorn2_sq a 0
   simpa using h
 
-/-- Relativistic mass-shell condition:
-    $\hat{Z}^2 = E^2 \mathbb{I} \iff a^2 + \Delta^2 = E^2$. -/
+/-- Exact matrix/scalar quadratic equivalence for this family. It can model a
+    relativistic mass-shell polynomial after an explicit physical identification
+    of `a`, `delta`, and `E`; the theorem alone asserts only the displayed
+    finite-dimensional algebraic identity. -/
 theorem zorn2_mass_shell (a delta E : ℝ) :
     zorn2 a delta * zorn2 a delta = (E^2) • (1 : Matrix (Fin 2) (Fin 2) ℝ) ↔ a^2 + delta^2 = E^2 := by
   rw [zorn2_sq]

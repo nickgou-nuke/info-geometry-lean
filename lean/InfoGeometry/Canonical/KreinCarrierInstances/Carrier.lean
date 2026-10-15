@@ -1,5 +1,4 @@
 import InfoGeometry.Topology.WallpaperSymmetry
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HestenesKreinModularGeometry
 import Mathlib.Analysis.InnerProductSpace.ProdL2
 import Mathlib.Analysis.Normed.Lp.ProdLp

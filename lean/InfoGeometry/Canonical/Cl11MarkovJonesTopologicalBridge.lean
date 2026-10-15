@@ -2,6 +2,8 @@ import InfoGeometry.Clifford.Cl11MarkovJonesEngine
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Category.TopCat.Basic
 import Mathlib.Topology.Algebra.Module.FiniteDimension
+import Mathlib.Topology.Instances.Matrix
+import Mathlib.Topology.Instances.Real.Lemmas
 
 /-!
 # Topological readout for the finite `Cl(1,1)` Markov trace net

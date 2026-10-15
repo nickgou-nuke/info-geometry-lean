@@ -689,10 +689,7 @@ theorem H_BdG_on_schurGraph
       holeBlock h (I.inverse (adjoint Δ u)) = adjoint Δ u :=
     I.holeBlock_inverse_apply (adjoint Δ u)
   have hAdj : adjoint h (I.inverse (adjoint Δ u)) = -adjoint Δ u := by
-    have hneg : -holeBlock h (I.inverse (adjoint Δ u)) = -adjoint Δ u := by rw [hInv]
-    dsimp [holeBlock] at hneg
-    rw [neg_neg] at hneg
-    exact hneg
+    simpa only [holeBlock, neg_apply, neg_neg] using congrArg Neg.neg hInv
   apply nambu_ext
   · simp [BdG_Schur_Complement_apply, schurGraphEmbedding, eliminatedHoleMap, sub_eq_add_neg]
   · simp [schurGraphEmbedding, eliminatedHoleMap, H_BdG_snd, map_neg, hAdj]

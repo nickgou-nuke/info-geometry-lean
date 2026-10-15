@@ -134,6 +134,7 @@ def centralDefectLoop_realization (A : Type*) [Ring A] (k : Int) :
     CentralDefectRealization A ℤ (centralDefectLoop A k) where
   scalar := k
   defect_eq := by
-    simp [centralDefectLoop_defect, unitDiamond]
+    rw [centralDefectLoop_defect]
+    simp [unitDiamond]
 
 end InfoGeometry.Tessellation

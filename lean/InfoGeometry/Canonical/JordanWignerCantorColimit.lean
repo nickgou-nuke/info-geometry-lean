@@ -73,11 +73,8 @@ def matToRealLimit : MatLimit →+* RealLimit :=
     matToRealCone matToRealCone_compat
 
 @[simp] theorem matToRealLimit_ofStage (n : ℕ) (A : MatStage n) :
-    matToRealLimit (MatOfStage n A) = realOfStage n (matToCantor n A) := by
-  simpa [matToRealLimit, matToRealCone, MatOfStage] using
-    (directLimitLift_of (Stage := MatStage)
-      (bond := InfoGeometry.Clifford.Cl11TensorTowerLimit.stageBond)
-      matToRealCone matToRealCone_compat n A)
+    matToRealLimit (MatOfStage n A) = realOfStage n (matToCantor n A) :=
+  rfl
 
 /-- Stagewise inverse map from the real Cantor tower back to the matrix limit. -/
 def realToMatCone (n : ℕ) : RealCantorOp n →+* MatLimit :=
@@ -89,12 +86,12 @@ theorem realToMatCone_compat (n : ℕ) (B : RealCantorOp n) :
       (matToCantor (n + 1)).symm (realBond n B) =
         matStageEmbed n ((matToCantor n).symm B) := by
     apply (matToCantor (n + 1)).injective
+    have h_embed := cantorOpEmbed_matToCantor (n := n) ((matToCantor n).symm B)
+    rw [(matToCantor n).apply_symm_apply B] at h_embed
     calc
       matToCantor (n + 1) ((matToCantor (n + 1)).symm (realBond n B)) = realBond n B := by
         simp
-      _ = matToCantor (n + 1) (matStageEmbed n ((matToCantor n).symm B)) := by
-        simpa [realBond] using
-          (cantorOpEmbed_matToCantor (n := n) ((matToCantor n).symm B)).symm
+      _ = matToCantor (n + 1) (matStageEmbed n ((matToCantor n).symm B)) := h_embed
   calc
     realToMatCone (n + 1) (realBond n B)
         = MatOfStage (n + 1) ((matToCantor (n + 1)).symm (realBond n B)) := by
@@ -112,18 +109,17 @@ theorem inverse_coherence (n : ℕ) (B : RealCantorOp n) :
       (matToCantor (n + 1)).symm (realBond n B) := by
   apply (matToCantor (n + 1)).injective
   rw [AlgEquiv.apply_symm_apply]
-  simpa [realBond] using
-    (cantorOpEmbed_matToCantor (n := n) ((matToCantor n).symm B)).symm
+  have h_embed := cantorOpEmbed_matToCantor (n := n) ((matToCantor n).symm B)
+  rw [(matToCantor n).apply_symm_apply B] at h_embed
+  exact h_embed.symm
 
 /-- The real Cantor tower lifts canonically back to the matrix direct limit. -/
 def realToMatLimit : RealLimit →+* MatLimit :=
   directLimitLift (Stage := RealCantorOp) (bond := realBond) realToMatCone realToMatCone_compat
 
 @[simp] theorem realToMatLimit_ofStage (n : ℕ) (B : RealCantorOp n) :
-    realToMatLimit (realOfStage n B) = MatOfStage n ((matToCantor n).symm B) := by
-  simpa [realToMatLimit, realToMatCone, MatOfStage] using
-    (directLimitLift_of (Stage := RealCantorOp) (bond := realBond)
-      realToMatCone realToMatCone_compat n B)
+    realToMatLimit (realOfStage n B) = MatOfStage n ((matToCantor n).symm B) :=
+  rfl
 
 /-- The two colimit lifts are inverse on the real Cantor direct limit. -/
 theorem matToRealLimit_comp_realToMatLimit :

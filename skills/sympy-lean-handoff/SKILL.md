@@ -3,6 +3,17 @@ name: sympy-lean-handoff
 description: Use when algebra, matrix, or group identities should be checked in SymPy first and then translated into Lean 4 in this repo. Use for exact symbolic verification, structure-constant tables, sign conventions, basis computations, and Lean-ready theorem statements.
 ---
 
+<!-- repository-context-rule -->
+## Repository context rule
+
+For repository work, the current checked-out codebase is the context. Search
+existing implementation and trace actual carriers, definitions, imports,
+instances, theorem statements, and uses before claiming a structure is missing
+or incorrect. A local absence is not a repository-wide absence. Names,
+heuristics, summaries, and documentation guide discovery but do not override
+source. Follow `docs/REPO_DEEP_SEARCH_PROTOCOL.md` before repo-wide gap claims.
+
+
 # SymPy to Lean Handoff
 
 Use this skill when the right workflow is:

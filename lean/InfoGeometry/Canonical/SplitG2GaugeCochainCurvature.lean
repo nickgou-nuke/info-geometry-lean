@@ -3,6 +3,8 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.Canonical
 
+noncomputable section
+
 /-!
 # Covariant cellular cochains and curvature
 
@@ -32,7 +34,7 @@ structure SplitG2CovariantCochainData
 
 namespace SplitG2CovariantCochainData
 
-def faceHolonomy
+noncomputable def faceHolonomy
     {K : FiniteOrientedCellComplex}
     (D : SplitG2CovariantCochainData K)
     (σ : K.Cell 2) : SplitG2Automorphism :=
@@ -83,5 +85,7 @@ theorem faceHolonomy_preserves_threeForm_on_flat_data
   D.faceHolonomy_preserves_threeForm σ x y z
 
 end SplitG2CovariantCochainData
+
+end
 
 end InfoGeometry.Canonical

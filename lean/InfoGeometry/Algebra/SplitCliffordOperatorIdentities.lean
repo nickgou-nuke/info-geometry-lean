@@ -11,6 +11,7 @@ variable (helliptic : elliptic * elliptic = -1) (hsplit : split * split = 1)
 
 include hanti helliptic hsplit
 
+omit helliptic hsplit in
 theorem reverse_anticommutation : split * elliptic = -(elliptic * split) := by
   simpa using (congrArg Neg.neg hanti).symm
 
@@ -32,7 +33,8 @@ theorem mixed_product_conjugates_elliptic :
       rw [reverse_anticommutation elliptic split hanti]
       simp only [mul_neg, neg_mul, mul_assoc]
     _ = -elliptic := by
-      rw [mixed_product_square elliptic split hanti helliptic hsplit, mul_one]
+      rw [mixed_product_square elliptic split hanti helliptic hsplit]
+      simp
 
 theorem null_sum_square : (elliptic + split) ^ 2 = 0 := by
   calc

@@ -149,9 +149,9 @@ theorem not_rootAut_short_one_eq_pcWord :
 theorem rootAut_short_two_eq_c_conjugate :
     rootAut (RootLength.Short, (2 : ZMod 6)) =
       c * rootAut (RootLength.Short, (1 : ZMod 6)) * c⁻¹ := by
-  simpa [G2TwoRootSystem.cAction] using
-    (G2TwoRootSystem.c_rootAut_c
-      (RootLength.Short, (1 : ZMod 6))).symm
+  convert (G2TwoRootSystem.c_rootAut_c
+    (RootLength.Short, (1 : ZMod 6))).symm using 1 <;>
+    norm_num [G2TwoRootSystem.cAction]
 
 def shortTwoCorrectedPCExp : Fin 6 → Bool := oneAt 5
 
@@ -180,9 +180,9 @@ theorem rootAut_short_two_eq_correctedPCWord :
 theorem rootAut_short_three_eq_c_conjugate :
     rootAut (RootLength.Short, (3 : ZMod 6)) =
       c * rootAut (RootLength.Short, (2 : ZMod 6)) * c⁻¹ := by
-  simpa [G2TwoRootSystem.cAction] using
-    (G2TwoRootSystem.c_rootAut_c
-      (RootLength.Short, (2 : ZMod 6))).symm
+  convert (G2TwoRootSystem.c_rootAut_c
+    (RootLength.Short, (2 : ZMod 6))).symm using 1 <;>
+    norm_num [G2TwoRootSystem.cAction]
 
 set_option maxHeartbeats 1000000 in
 theorem autMatrix_c_conjugate_pc6_eq_pc2_pc5_pc6 :

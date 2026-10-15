@@ -48,7 +48,7 @@ theorem cycle_map_surjective_iff_dual_detection (cycleClass : Index → Betti) :
     intro functional annihilates
     have vanishes : ∀ index, functional (cycleClass index) = 0 := by
       intro index
-      exact (Submodule.mem_dualAnnihilator.mp annihilates) (cycleClass index)
+      exact (Submodule.mem_dualAnnihilator functional).mp annihilates (cycleClass index)
         (Submodule.subset_span (Set.mem_range_self index))
     rw [detects functional vanishes]
     rfl

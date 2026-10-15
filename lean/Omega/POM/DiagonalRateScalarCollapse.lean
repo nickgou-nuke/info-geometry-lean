@@ -178,7 +178,7 @@ lemma distortion_mapsTo (D : DiagonalRateScalarCollapseData) :
   have hκ1_pos : 0 < κ + 1 := by nlinarith
   have hδ0_pos : 0 < D.collisionThreshold := by
     simpa [collisionThreshold] using D.hdelta0_pos
-  refine ⟨by simpa [distortionMap] using div_pos D.hdelta0_pos hκ1_pos, ?_⟩
+  refine ⟨div_pos hδ0_pos hκ1_pos, ?_⟩
   have hlt : D.collisionThreshold / (κ + 1) < D.collisionThreshold := by
     simpa using div_lt_div_of_pos_left hδ0_pos zero_lt_one (by linarith : (1 : ℝ) < κ + 1)
   simpa [distortionMap] using hlt

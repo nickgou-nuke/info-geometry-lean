@@ -33,7 +33,8 @@ def fenceDisjointUnionPoset (lengths : List ℕ) : PomFinitePoset where
 
 @[simp] theorem fenceDisjointUnionPoset_card (lengths : List ℕ) :
     Fintype.card (fenceDisjointUnionPoset lengths) = fenceMaxchainsEulerCount lengths := by
-  simp [fenceDisjointUnionPoset, fenceMaxchainsEulerCount]
+  change Fintype.card (Fin (fenceMaxchainsEulerCount lengths)) = _
+  exact Fintype.card_fin _
 
 /-- For the chapter-local fence wrapper, the maximal-chain count of the ideal lattice agrees with
 the linear-extension count, and both are exactly the multinomial shuffle count times the component

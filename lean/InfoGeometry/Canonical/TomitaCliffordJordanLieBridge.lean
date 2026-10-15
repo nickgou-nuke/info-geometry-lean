@@ -153,7 +153,7 @@ two calibration proof fields.
 def TomitaCliffordJordanLieBridgeOwnerTarget
     (α : Type uα) (Op : Type uOp) (H : Type) [Ring Op]
     [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] : Prop :=
-  ∀ (B : Bridge.{uα, uOp, 0} (α := α) (Op := Op) (H := H))
+  ∀ (B : Bridge (α := α) (Op := Op) (H := H))
     (x y : Op),
     B.mirror.mirror (B.mirror.compactLift x) = B.mirror.compactLift x
       ∧ B.mirror.mirror (B.mirror.noncompactLift y) = -B.mirror.noncompactLift y

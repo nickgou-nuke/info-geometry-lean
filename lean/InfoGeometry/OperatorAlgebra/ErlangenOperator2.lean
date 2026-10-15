@@ -30,7 +30,7 @@ import InfoGeometry.OperatorAlgebra.CasimirInvariance
 import InfoGeometry.OperatorAlgebra.SymmetryInvariants
 import InfoGeometry.Canonical.SouriauFenchelOnsagerBridge
 import InfoGeometry.Meta.Architecture
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.Algebra.Ring.Defs
 import Mathlib.Algebra.Group.Defs
 import Mathlib.Tactic.Basic
@@ -63,7 +63,7 @@ structure ErlangenInvariantPacket
     (Obs : Type*) (Sym : Type*) (G : Type*) (Gdual : Type*) (StateSpace : Type*)
     [Ring Obs] [Group Sym] where
   /-- Underlying operator Erlangen-Legendre socket. -/
-  legendrePacket : OperatorErlangenLegendrePacket Obs Sym StateSpace
+  legendrePacket : OperatorErlangenLegendrePacket.{_, _, _, 0} Obs Sym StateSpace
 
   /-- Verified Casimir element (invariant + central). -/
   casimir : IndividuatedCasimir.VerifiedCasimir legendrePacket.symmetryAction

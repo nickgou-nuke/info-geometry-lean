@@ -42,7 +42,11 @@ open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 inductive IsingSpin where
   | up
   | down
-deriving DecidableEq, Fintype, Repr
+deriving DecidableEq, Repr
+
+instance : Fintype IsingSpin where
+  elems := {.up, .down}
+  complete spin := by cases spin <;> decide
 
 namespace IsingSpin
 

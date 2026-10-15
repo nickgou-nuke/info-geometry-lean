@@ -91,8 +91,8 @@ theorem creationWord_mem_grade (is : List (Fin 5)) :
   | nil => change HasOperatorGrade numberOperator55 (1 : Cl55) 0; simp [HasOperatorGrade]
   | cons i is ih =>
       have h := grade_mul (creation55_mem_grade_one i) ih
-      simpa only [creationWord_cons, List.length_cons, Nat.cast_add,
-        Nat.cast_one, add_comm] using h
+      simpa only [cl55GradeSubmodule, mem_gradeSubmodule_iff, creationWord_cons,
+        List.length_cons, Nat.cast_add, Nat.cast_one, add_comm] using h
 
 theorem grade_unique_of_ne_zero {X : Cl55} {r s : ℤ} (hX : X ≠ 0)
     (hr : X ∈ cl55GradeSubmodule r) (hs : X ∈ cl55GradeSubmodule s) : r = s := by

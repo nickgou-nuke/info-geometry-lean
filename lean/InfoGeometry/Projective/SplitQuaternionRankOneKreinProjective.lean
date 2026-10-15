@@ -277,7 +277,7 @@ theorem jPlaneFamily_linearIndependent {v : Vec4R} (hv : v ≠ 0) :
     simpa [jPlaneFamily, Fin.sum_univ_two, smul_eq_mul] using hsum
   have h1 : g 0 * (JAction v) j - g 1 * v j = 0 := by
     simpa [jPlaneFamily, Fin.sum_univ_two, smul_eq_mul, map_add,
-      map_smul, JAction_sq] using hsumJ
+      map_smul, JAction_sq, sub_eq_add_neg] using hsumJ
   have hdet : 0 < (v j) ^ 2 + (JAction v j) ^ 2 := by
     exact add_pos_of_pos_of_nonneg (sq_pos_of_ne_zero hj)
       (sq_nonneg _)
@@ -355,13 +355,14 @@ theorem ellAction_mem_jPlane_ell (v x : Vec4R) (hx : x ∈ jPlane v) :
   · intro x hx
     rcases hx with hx | hx
     · subst x
-      simpa using Submodule.subset_span
-        (show ellAction v ∈ ({ellAction v, JAction (ellAction v)} : Set Vec4R) by simp)
+      change ellAction v ∈ Submodule.span ℝ
+        ({ellAction v, JAction (ellAction v)} : Set Vec4R)
+      exact Submodule.subset_span (by simp)
     · subst x
       rw [← JAction_ellAction_commute]
-      simpa using Submodule.subset_span
-        (show JAction (ellAction v) ∈
-          ({ellAction v, JAction (ellAction v)} : Set Vec4R) by simp)
+      change JAction (ellAction v) ∈ Submodule.span ℝ
+        ({ellAction v, JAction (ellAction v)} : Set Vec4R)
+      exact Submodule.subset_span (by simp)
   · simpa using (jPlane (ellAction v)).zero_mem
   · intro x y hx hy hx' hy'
     simpa [map_add] using (jPlane (ellAction v)).add_mem hx' hy'

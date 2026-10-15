@@ -85,8 +85,9 @@ theorem braidGroup3_artin :
     PresentedGroup.one_of_mem
       (show braidThreeArtinRelator ∈ braidThreeRelations by
         simp [braidThreeRelations])
-  simpa [sigmaOne, sigmaTwo, braidThreeArtinRelator,
-    freeSigmaOne, freeSigmaTwo] using hrel
+  change sigmaOne * sigmaTwo * sigmaOne *
+    (sigmaTwo * sigmaOne * sigmaTwo)⁻¹ = 1 at hrel
+  exact hrel
 
 /-! ## Universal group-valued Artin data -/
 

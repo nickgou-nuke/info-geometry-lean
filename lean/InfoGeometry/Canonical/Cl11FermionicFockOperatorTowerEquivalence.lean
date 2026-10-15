@@ -98,8 +98,11 @@ theorem fock_mixed_car (n : ℕ) (i j : Fin n) :
     fockAnnihilation n i * fockCreation n j +
       fockCreation n j * fockAnnihilation n i = if i = j then 1 else 0 := by
   unfold fockCreation fockAnnihilation
-  simpa using congrArg (clToFockOp n)
-    (jwAnnihilation_creation_anticommutator n i j)
+  rw [← map_mul, ← map_mul, ← map_add]
+  rw [jwAnnihilation_creation_anticommutator n i j]
+  split_ifs with h
+  · exact map_one (clToFockOp n)
+  · exact map_zero (clToFockOp n)
 
 abbrev FockOpLimit : Type := RealCantorOpInf
 abbrev ClLimit : Type := InfoGeometry.Clifford.Cl11TensorTowerLimit.Limit

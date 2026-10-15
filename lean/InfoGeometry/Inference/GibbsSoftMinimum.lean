@@ -7,7 +7,6 @@ Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
 import InfoGeometry.Inference.FiniteGibbsInference
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.GrandCanonical.Core
 import Mathlib.Topology.MetricSpace.Pseudo.Lemmas
 import Mathlib.Topology.Order
@@ -25,6 +24,8 @@ open Filter
 open scoped Topology
 
 namespace InfoGeometry.Inference.FiniteGibbs
+
+set_option linter.unusedSectionVars false
 
 variable {Data : Type*} [Fintype Data] [Nonempty Data]
 
@@ -103,10 +104,8 @@ theorem tendsto_softMinimum_nhdsWithin_zero_of_min
     Tendsto (fun ε : ℝ => softMinimum E ε)
       (𝓝[>] (0 : ℝ)) (𝓝 (E i)) := by
   have hid : Tendsto (fun ε : ℝ => ε)
-      (𝓝[>] (0 : ℝ)) (𝓝 0) := by
-    simpa only [id_eq] using
-      (tendsto_nhdsWithin_of_tendsto_nhds
-        (Filter.tendsto_id (x := 𝓝 (0 : ℝ))))
+      (𝓝[>] (0 : ℝ)) (𝓝 0) :=
+    tendsto_nhdsWithin_of_tendsto_nhds (Filter.tendsto_id (x := 𝓝 (0 : ℝ)))
   have hcard : Tendsto
       (fun ε : ℝ => ε * Real.log (Fintype.card Data))
       (𝓝[>] (0 : ℝ)) (𝓝 0) := by
@@ -136,10 +135,9 @@ theorem tendsto_freeEnergy_nhdsWithin_zero_of_min
     {Theta : Type*} (M : Model (Data := Data) (Theta := Theta)) (θ : Theta)
     (i : Data) (hmin : ∀ j : Data, M.energy i θ ≤ M.energy j θ) :
     Tendsto (fun ε : ℝ => freeEnergy M θ ε)
-      (𝓝[>] (0 : ℝ)) (𝓝 (M.energy i θ)) := by
-  simpa [freeEnergy, softMinimum] using
-    (tendsto_softMinimum_nhdsWithin_zero_of_min
-      (fun j : Data => M.energy j θ) i hmin)
+      (𝓝[>] (0 : ℝ)) (𝓝 (M.energy i θ)) :=
+  tendsto_softMinimum_nhdsWithin_zero_of_min
+    (fun j : Data => M.energy j θ) i hmin
 
 /-- The finite Massieu potential is the logarithm of the partition function. -/
 noncomputable def massieuPotential

@@ -53,11 +53,11 @@ def polarize (X : TwinFourOperatorVector (A := EndE E)) :
 
 theorem plus_fundamental_sq :
     K.plusDatum.fundamentalSymmetry * K.plusDatum.fundamentalSymmetry = 1 := by
-  simpa using K.plusDatum.fundamentalSymmetry_involution
+  simpa [ContinuousLinearMap.one_def] using K.plusDatum.fundamentalSymmetry_involution
 
 theorem minus_fundamental_sq :
     K.minusDatum.fundamentalSymmetry * K.minusDatum.fundamentalSymmetry = 1 := by
-  simpa using K.minusDatum.fundamentalSymmetry_involution
+  simpa [ContinuousLinearMap.one_def] using K.minusDatum.fundamentalSymmetry_involution
 
 theorem polarize_fourVectorCarrier_scalars (uPlus uMinus : Fin 3 → EndE E) :
     (K.polarize (K.fourVectorCarrier uPlus uMinus)).plus.scalar =

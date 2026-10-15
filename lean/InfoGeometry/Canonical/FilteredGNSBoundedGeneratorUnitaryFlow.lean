@@ -1,6 +1,8 @@
 import InfoGeometry.Canonical.FilteredGNSRepresentedCStarModularAutomorphism
+import InfoGeometry.Canonical.FilteredGNSRepresentedCStarCompletion
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.CStarAlgebra.Exponential
+import Mathlib.LinearAlgebra.Complex.Module
 
 /-!
 # Bounded self-adjoint generator flow on the represented GNS closure
@@ -19,12 +21,14 @@ noncomputable section
 
 namespace CStarStateColimit.Native.FilteredGNSBoundedGeneratorUnitaryFlow
 
-set_option synthInstance.maxHeartbeats 80000
-set_option maxHeartbeats 400000
+set_option synthInstance.maxHeartbeats 160000
+set_option maxHeartbeats 800000
 set_option linter.unusedSectionVars false
 
 open CStarStateColimit.Native
 open CStarStateColimit.Native.FilteredGNSRepresentedCStarClosure
+open CStarStateColimit.Native.FilteredGNSRepresentedRangeCompletion
+open CStarStateColimit.Native.FilteredGNSRepresentedCStarCompletion
 open CStarStateColimit.Native.FilteredGNSRepresentedCStarModularAutomorphism
 
 universe u
@@ -39,6 +43,32 @@ variable (sys : ContinuousStarInductiveSystem Stage)
 variable
   (ω : ContinuousStarInductiveSystem.CompatibleStateFamily Stage sys)
 
+local instance representedAlgebraicRangeCompletionCStarAlgebraInst :
+    CStarAlgebra (representedAlgebraicRangeCompletion Stage sys ω) :=
+  representedAlgebraicRangeCompletionCStarAlgebra Stage sys ω
+
+local instance representedAlgebraicRangeCompletionRingInst :
+    Ring (representedAlgebraicRangeCompletion Stage sys ω) :=
+  (representedAlgebraicRangeCompletionCStarAlgebra Stage sys ω).toNormedRing.toRing
+
+local instance representedAlgebraicRangeCompletionMetricSpaceInst :
+    MetricSpace (representedAlgebraicRangeCompletion Stage sys ω) :=
+  (representedAlgebraicRangeCompletionCStarAlgebra Stage sys ω).toNormedRing.toMetricSpace
+
+local instance representedCStarClosureCStarAlgebraInst :
+    CStarAlgebra (representedCStarClosure Stage sys ω) :=
+  representedCStarClosureCStarAlgebra Stage sys ω
+
+local instance representedAlgebraicRangeCompletionNonUnitalCStarAlgebraInst :
+    NonUnitalCStarAlgebra (representedAlgebraicRangeCompletion Stage sys ω) :=
+  CStarAlgebra.toNonUnitalCStarAlgebra
+    (representedAlgebraicRangeCompletion Stage sys ω)
+
+local instance representedCStarClosureNonUnitalCStarAlgebraInst :
+    NonUnitalCStarAlgebra (representedCStarClosure Stage sys ω) :=
+  CStarAlgebra.toNonUnitalCStarAlgebra
+    (representedCStarClosure Stage sys ω)
+
 abbrev ClosureCarrier : Type _ :=
   representedCStarClosure Stage sys ω
 
@@ -51,7 +81,21 @@ def boundedGeneratorUnitary
 @[simp] theorem boundedGeneratorUnitary_zero
     (G : selfAdjoint (ClosureCarrier Stage sys ω)) :
     boundedGeneratorUnitary Stage sys ω G 0 = 1 := by
-  simp [boundedGeneratorUnitary]
+  dsimp [boundedGeneratorUnitary]
+  rw [zero_smul]
+  exact selfAdjoint.expUnitary_zero
+
+theorem cstar_selfAdjoint_expUnitary_add {A : Type*}
+    [NormedRing A] [NormedAlgebra ℂ A] [StarRing A] [ContinuousStar A]
+    [CompleteSpace A] [StarModule ℂ A]
+    (G : selfAdjoint A) (t s : ℝ) :
+    selfAdjoint.expUnitary ((t + s) • G) =
+      selfAdjoint.expUnitary (t • G) * selfAdjoint.expUnitary (s • G) := by
+  have hcomm : Commute (↑(t • G) : A) (↑(s • G) : A) := by
+    rw [selfAdjoint.val_smul, selfAdjoint.val_smul]
+    exact ((Commute.refl (G : A)).smul_left t).smul_right s
+  rw [add_smul]
+  exact Commute.expUnitary_add (a := t • G) (b := s • G) hcomm
 
 /-- The exponential unitary satisfies the standard additive one-parameter
 law. -/
@@ -60,14 +104,8 @@ theorem boundedGeneratorUnitary_add
     (t s : ℝ) :
     boundedGeneratorUnitary Stage sys ω G (t + s) =
       boundedGeneratorUnitary Stage sys ω G t *
-        boundedGeneratorUnitary Stage sys ω G s := by
-  have hcomm : Commute
-      ((t • G : selfAdjoint (ClosureCarrier Stage sys ω)) :
-        ClosureCarrier Stage sys ω)
-      ((s • G : selfAdjoint (ClosureCarrier Stage sys ω)) :
-        ClosureCarrier Stage sys ω) := by
-    exact ((Commute.refl (G : ClosureCarrier Stage sys ω)).smul_left t).smul_right s
-  simpa [boundedGeneratorUnitary, add_smul] using hcomm.expUnitary_add
+        boundedGeneratorUnitary Stage sys ω G s :=
+  cstar_selfAdjoint_expUnitary_add G t s
 
 /-- The bounded generator yields the existing standard-orientation concrete
 unitary-flow packet. -/
@@ -100,7 +138,6 @@ theorem boundedGeneratorCompletionFlow_isometry
     (t : ℝ)
     (x : CompletedCarrier Stage sys ω) :
     ‖(boundedGeneratorCompletionFlow Stage sys ω G).toAut t x‖ = ‖x‖ :=
-  StarAlgEquiv.norm_map
-    ((boundedGeneratorCompletionFlow Stage sys ω G).toAut t) x
+  (boundedGeneratorCompletionFlow_isometry Stage sys ω G t).norm_map_of_map_zero (map_zero _) x
 
 end CStarStateColimit.Native.FilteredGNSBoundedGeneratorUnitaryFlow

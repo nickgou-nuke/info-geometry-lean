@@ -185,8 +185,8 @@ def canonicalCarrierWitness : CanonicalCarrierWitness := by
       associatorDefect_ne_zero := ?_ }
   · exact ZornOPParavector.Eplus_sq
   · exact ZornOPParavector.Eminus_sq
-  · simpa using ZornOPParavector.Nup_sq (fun | 0 => 1 | _ => 0)
-  · simpa using ZornOPParavector.Ndown_sq (fun | 0 => 1 | _ => 0)
+  · exact ZornOPParavector.Nup_sq _
+  · exact ZornOPParavector.Ndown_sq _
   · simpa using ZornCore.mixed_nonassociative
 
 /-- The canonical carrier lands in the expected Zorn / TKK lanes. -/
@@ -377,7 +377,7 @@ structure CanonicalSplitOctonionTKKCore where
     (∃ p : TripotentCliffordColimit.LiftSector, p.value = 0)
 
 /-- The canonical bundle instantiated by the proved lemmas. -/
-def canonical_split_octonion_tkk_core : CanonicalSplitOctonionTKKCore := by
+theorem canonical_split_octonion_tkk_core : CanonicalSplitOctonionTKKCore := by
   refine
     { splitClifford := splitClifford_core
       tripotentPeirce := by

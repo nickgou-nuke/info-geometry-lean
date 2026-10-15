@@ -47,7 +47,7 @@ theorem finite_obstruction_at_positive_stage {n : ℕ} (hn : 0 < n) :
     | zero => exact finite_obstruction_at_one
     | succ n ih =>
       exact InfoGeometry.QuantumGravity.TwistorMassGenesis.colimit_injection_preserves_obstruction
-        (n + 1) ih
+        (n + 1) (ih (by omega))
 
 /-- For the current rectangular-matrix predicate, nontriviality is exactly
 the assertion that the column index is positive. -/
@@ -92,7 +92,7 @@ theorem finite_heisenberg_obstruction_at_positive_stage {n : ℕ} (ħ : ℝ)
     | zero => exact finite_obstruction_at_one
     | succ n ih =>
       exact InfoGeometry.QuantumGravity.ColimitTwistorMass.obstruction_persists_in_tower
-        (n + 1) ħ ih
+        (n + 1) ħ (ih (by omega))
 
 /-- In the current definition, the finite “Heisenberg obstruction” is
 independent of `ħ` and is equivalent to positivity of the stage index. -/

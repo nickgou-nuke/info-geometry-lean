@@ -40,7 +40,7 @@ lemma circuit_maxfiber_polyfactor_inapprox_lifted_append {n t : ℕ}
   unfold liftedSatFormulaGeK
   congr 1
   funext j
-  simp
+  exact Fin.append_left u z j
 
 lemma circuit_maxfiber_polyfactor_inapprox_unsat_eq_self {n : ℕ} (φ : BitVec n → Bool)
     (hunsat : ¬ satisfiable φ) (a : BitVec (n + circuitIndexPaddingBits (n + 1))) :
@@ -59,10 +59,15 @@ lemma circuit_maxfiber_polyfactor_inapprox_identity_maxfiber {m : ℕ} :
   refine le_antisymm ?_ ?_
   · refine Finset.sup_le ?_
     intro y hy
-    simp [foldFiber]
-  · have hmem : (fun _ : Fin m => false) ∈ (Finset.univ : Finset (BitVec m)) := by
-      simp
-    simpa [foldFiber] using Finset.le_sup hmem
+    have hsub : Subsingleton (foldFiber (fun a : BitVec m => a) y) := by
+      refine ⟨fun a b => Subtype.ext ?_⟩
+      exact a.property.trans b.property.symm
+    exact (Fintype.card_le_one_iff_subsingleton).2 hsub
+  · rw [Finset.le_sup_iff (by norm_num : (⊥ : ℕ) < 1)]
+    let z : BitVec m := fun _ => false
+    refine ⟨z, by simp, ?_⟩
+    have hne : Nonempty (foldFiber (fun a : BitVec m => a) z) := ⟨⟨z, rfl⟩⟩
+    exact Nat.succ_le_iff.mpr ((Fintype.card_pos_iff).2 hne)
 
 /-- Paper label: `thm:circuit-maxfiber-polyfactor-inapprox`. On the `2n + 1`-bit SAT reduction,
 unsatisfiable formulas give the identity circuit and therefore maxfiber `1`, while a satisfying

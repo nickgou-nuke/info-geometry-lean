@@ -47,8 +47,9 @@ theorem continuous_kleinQuadric :
   have hp23 := continuous_pluckerCoordinatesEquiv.snd.snd.snd.fst
   have hp24 := continuous_pluckerCoordinatesEquiv.snd.snd.snd.snd.fst
   have hp34 := continuous_pluckerCoordinatesEquiv.snd.snd.snd.snd.snd
-  simpa [kleinQuadric] using
-    ((hp12.mul hp34).sub (hp13.mul hp24)).add (hp14.mul hp23)
+  exact ((hp12.mul hp34).sub (hp13.mul hp24)).add (hp14.mul hp23) |>.congr
+    (by intro p; simp [Pi.add_apply, Pi.sub_apply, Pi.mul_apply,
+      pluckerCoordinatesEquiv, kleinQuadric])
 
 theorem isClosed_kleinNullLocus :
     IsClosed {p : PluckerCoordinates ℝ | IsKleinNull p} := by

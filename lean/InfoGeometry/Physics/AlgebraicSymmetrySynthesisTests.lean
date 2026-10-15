@@ -56,7 +56,14 @@ inductive Archetype
   | periodicProfile
   | rotatingCoordinates
   | commutingParity
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype Archetype where
+  elems := {Archetype.realAlgebra, .anticommutation, .equalSquares,
+    .periodicProfile, .rotatingCoordinates, .commutingParity}
+  complete := by
+    intro x
+    cases x <;> simp
 
 def balanceContext : Finset Archetype :=
   {.realAlgebra, .anticommutation, .equalSquares}

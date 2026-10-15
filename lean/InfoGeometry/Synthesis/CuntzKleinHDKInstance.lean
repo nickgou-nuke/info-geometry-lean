@@ -39,13 +39,19 @@ theorem fibreTwist_difference : fibreTwist doubledDifference = doubledDifference
 theorem fibreTwist_clock : fibreTwist clock = -clock := by
   have reversed : shift * clock = -(clock * shift) := by
     rw [clock_shift_weyl, neg_neg]
-  rw [fibreTwist_apply, reversed, neg_mul, mul_assoc, shift_sq, mul_one]
+  rw [fibreTwist_apply, reversed]
+  have hcomp : (-(clock * shift)) * shift = -((clock * shift) * shift) :=
+    LinearMap.neg_comp shift (clock * shift)
+  rw [hcomp]
+  congr 1
+  rw [mul_assoc, shift_sq, mul_one]
 
 theorem fibreTwist_shift : fibreTwist shift = shift := by
   rw [fibreTwist_apply, shift_sq, one_mul]
 
 theorem fibreTwist_phase : fibreTwist phase = -phase := by
-  simp only [phase, map_mul, fibreTwist_clock, fibreTwist_shift, neg_mul]
+  simp only [phase, map_mul, fibreTwist_clock, fibreTwist_shift]
+  exact LinearMap.neg_comp shift clock
 
 def liftedGlide : Fields ≃ₐ[ℝ] Fields :=
   (AlgEquiv.piCongrLeft' ℝ (fun _ : BrillouinTorus => BoundaryOperator ℝ)
@@ -58,7 +64,8 @@ def liftedGlide : Fields ≃ₐ[ℝ] Fields :=
 theorem liftedGlide_involutive : Function.Involutive liftedGlide := by
   intro field
   funext point
-  simp only [liftedGlide_apply, torusGlide_involutive, fibreTwist_involutive]
+  simp only [liftedGlide_apply]
+  rw [torusGlide_involutive point, fibreTwist_involutive]
 
 def kleinInvolution :
     InfoGeometry.Canonical.KleinBottleTwistedCommutant.KleinInvolution Fields where

@@ -99,9 +99,9 @@ theorem fisher_metric_pos_def (p : UpperHalfPlanePoint) (v : Fin 2 → ℝ) (hv 
 /-- Determinant of the Fisher-Rao metric: det(g) = 1 / y⁴. -/
 theorem fisher_metric_det (p : UpperHalfPlanePoint) :
     (fisherMetricMatrix p).det = 1 / p.y ^ 4 := by
-  unfold fisherMetricMatrix
   rw [Matrix.det_fin_two]
-  simp only [Matrix.cons_val_zero, Matrix.cons_val_one]
+  obtain ⟨h00, h11, h01, h10⟩ := fisher_metric_components p
+  rw [h00, h11, h01, h10]
   have : (p.y ^ 2) * (p.y ^ 2) = p.y ^ 4 := by ring
   rw [mul_zero, sub_zero, one_div_mul_one_div, this]
 

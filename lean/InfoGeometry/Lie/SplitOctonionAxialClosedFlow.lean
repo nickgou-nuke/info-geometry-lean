@@ -41,19 +41,11 @@ have weight `exp (-t)`. -/
         b := X.b
         x := (Real.exp t) • X.x
         y := (Real.exp (-t)) • X.y } := by
-  ext i
-  · simp [axialClosedFlow, axialPZero_apply, axialPPlus_apply,
+  ext i <;>
+    simp [axialClosedFlow, axialPZero_apply, axialPPlus_apply,
       axialPMinus_apply, colorProject_apply, anticolorProject_apply,
-      Equiv.smul_def, coordEquiv]
-  · simp [axialClosedFlow, axialPZero_apply, axialPPlus_apply,
-      axialPMinus_apply, colorProject_apply, anticolorProject_apply,
-      Equiv.smul_def, coordEquiv]
-  · simp [axialClosedFlow, axialPZero_apply, axialPPlus_apply,
-      axialPMinus_apply, colorProject_apply, anticolorProject_apply,
-      Equiv.smul_def, coordEquiv]
-  · simp [axialClosedFlow, axialPZero_apply, axialPPlus_apply,
-      axialPMinus_apply, colorProject_apply, anticolorProject_apply,
-      Equiv.smul_def, coordEquiv]
+      ZornMatrix.smul_a, ZornMatrix.smul_b, ZornMatrix.smul_x,
+      ZornMatrix.smul_y]
 
 /-- At parameter zero the closed flow is the identity. -/
 @[simp] theorem axialClosedFlow_zero : axialClosedFlow 0 = 1 := by
@@ -112,14 +104,14 @@ theorem axialClosedFlow_on_PPlus (t : ℝ) (X : CZ) :
     axialClosedFlow t (axialPPlus X) =
       (Real.exp t) • axialPPlus X := by
   rw [axialPPlus_apply, colorProject_apply, axialClosedFlow_apply]
-  ext i <;> simp [Equiv.smul_def, coordEquiv]
+  ext i <;> simp [ZornMatrix.smul_a, ZornMatrix.smul_b, ZornMatrix.smul_x, ZornMatrix.smul_y]
 
 /-- The negative Peirce sector has weight `exp (-t)`. -/
 theorem axialClosedFlow_on_PMinus (t : ℝ) (X : CZ) :
     axialClosedFlow t (axialPMinus X) =
       (Real.exp (-t)) • axialPMinus X := by
   rw [axialPMinus_apply, anticolorProject_apply, axialClosedFlow_apply]
-  ext i <;> simp [Equiv.smul_def, coordEquiv]
+  ext i <;> simp [ZornMatrix.smul_a, ZornMatrix.smul_b, ZornMatrix.smul_x, ZornMatrix.smul_y]
 
 /-- Polynomial hyperbolic normal form of the full axial flow.
 
@@ -137,12 +129,12 @@ theorem axialClosedFlow_eq_hyperbolicPolynomial (t : ℝ) :
   apply LinearMap.ext
   intro X
   ext i
-  · simp [axialGrading, Module.End.mul_apply, Equiv.smul_def, coordEquiv]
-  · simp [axialGrading, Module.End.mul_apply, Equiv.smul_def, coordEquiv]
-  · simp [axialGrading, Module.End.mul_apply, Equiv.smul_def, coordEquiv]
+  · simp [axialGrading, Module.End.mul_apply, ZornMatrix.smul_a, ZornMatrix.smul_b, ZornMatrix.smul_x, ZornMatrix.smul_y]
+  · simp [axialGrading, Module.End.mul_apply, ZornMatrix.smul_a, ZornMatrix.smul_b, ZornMatrix.smul_x, ZornMatrix.smul_y]
+  · simp [axialGrading, Module.End.mul_apply, ZornMatrix.smul_a, ZornMatrix.smul_b, ZornMatrix.smul_x, ZornMatrix.smul_y]
     rw [← Real.cosh_add_sinh]
     ring
-  · simp [axialGrading, Module.End.mul_apply, Equiv.smul_def, coordEquiv]
+  · simp [axialGrading, Module.End.mul_apply, ZornMatrix.smul_a, ZornMatrix.smul_b, ZornMatrix.smul_x, ZornMatrix.smul_y]
     rw [← Real.cosh_sub_sinh]
     ring
 

@@ -1,6 +1,8 @@
 import InfoGeometry.Clifford.CliffordBott
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Mul
 
 /-!
 # Algebraic State Space over the Split Clifford Direct Limit
@@ -220,7 +222,7 @@ theorem affineStatePath_hasDerivAt_zero
   rw [hpath]
   have hlin :
       HasDerivAt (fun t : ℝ => t * epsilonReadout a) (epsilonReadout a) 0 := by
-    simpa using (hasDerivAt_id 0).mul_const (epsilonReadout a)
+    simpa using (hasDerivAt_id (0 : ℝ)).mul_const (epsilonReadout a)
   simpa using hlin.const_add (τ.toLinearMap a)
 
 /--

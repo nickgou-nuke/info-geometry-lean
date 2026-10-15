@@ -13,7 +13,14 @@ import argparse
 import hashlib
 import json
 import re
+import sys
 from pathlib import Path
+
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+for _path in (_REPO_ROOT, _REPO_ROOT / "src"):
+    if str(_path) not in sys.path:
+        sys.path.insert(0, str(_path))
+from igf.common.json_io import load_strict_jsonl
 from typing import Dict, Iterable, List
 
 TOKEN_RE = re.compile(r"[A-Za-z_][A-Za-z0-9_']*|[0-9]+|\S")
@@ -51,7 +58,7 @@ def kind_one_hot(kind: str) -> Dict[str, int]:
     return {f"kind_{k}": int(kind == k) for k in kinds}
 
 
-def process_decl(decl: Dict) -> Dict:
+def process_decl(decl: Dict, *, source: str = "unspecified-input", source_sha256: str | None = None) -> Dict:
     name = decl.get("name", "")
     module = decl.get("module", "")
     kind = decl.get("kind", "")
@@ -115,15 +122,13 @@ def process_decl(decl: Dict) -> Dict:
             "unresolved_metavar_proxy": False,
         },
         "provenance": {
-            "source": "artifacts/dag/index/decls.jsonl",
+            "source": source,
+            "source_sha256": source_sha256,
+            "semantic_verification_performed": False,
             "method": "metadata_proxy_v1",
         },
     }
     return out
-
-
-# [lossless-compact] iter_jsonl folded into igf.common.json_io.iter_jsonl
-from igf.common.json_io import iter_jsonl
 
 
 def main() -> int:
@@ -135,17 +140,37 @@ def main() -> int:
 
     decls_path = Path(args.decls)
     out_path = Path(args.out)
+    try:
+        if args.limit < 0:
+            raise ValueError("--limit must be nonnegative")
+        rows, input_evidence = load_strict_jsonl(decls_path, ("name",))
+        if not rows:
+            raise ValueError("declaration input is empty; coverage is unknown")
+        for row in rows:
+            if not isinstance(row["name"], str) or not row["name"].strip():
+                raise ValueError("invalid declaration name")
+            for key in ("module", "kind", "file", "doc"):
+                if key in row and row[key] is not None and not isinstance(row[key], str):
+                    raise ValueError(f"invalid declaration {key}")
+            if "attrs" in row and row["attrs"] is not None and not isinstance(row["attrs"], list):
+                raise ValueError("invalid declaration attrs")
+    except (OSError, EOFError, UnicodeError, ValueError) as exc:
+        print(f"ERROR: invalid input evidence: {exc}", file=sys.stderr)
+        return 2
+    if out_path.resolve() == decls_path.resolve():
+        print("ERROR: output must not overwrite input", file=sys.stderr)
+        return 2
     out_path.parent.mkdir(parents=True, exist_ok=True)
 
     n = 0
     with out_path.open("w", encoding="utf-8") as w:
-        for d in iter_jsonl(decls_path):
-            w.write(json.dumps(process_decl(d), ensure_ascii=False) + "\n")
+        for d in rows:
+            w.write(json.dumps(process_decl(d, source=input_evidence["path"], source_sha256=input_evidence["sha256"]), ensure_ascii=False) + "\n")
             n += 1
             if args.limit and n >= args.limit:
                 break
 
-    print(json.dumps({"ok": True, "written": n, "out": str(out_path)}, ensure_ascii=False))
+    print(json.dumps({"ok": True, "written": n, "out": str(out_path), "input": input_evidence, "scope": "declaration_metadata_proxy", "truncated": n < len(rows)}, ensure_ascii=False))
     return 0
 
 

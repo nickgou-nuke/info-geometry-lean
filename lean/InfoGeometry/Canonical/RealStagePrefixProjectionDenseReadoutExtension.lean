@@ -39,7 +39,8 @@ theorem prefixRankReadoutTopCatHom_right_cancel
       g.hom h.hom g.hom.continuous h.hom.continuous (by
         funext p
         have hp := congrArg (fun q => q p) H
-        simpa only [TopCat.comp_app] using hp)
+        change g.hom (prefixRankReadout p) = h.hom (prefixRankReadout p) at hp
+        exact hp)
   exact congrFun hgh x
 
 end InfoGeometry.Canonical

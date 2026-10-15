@@ -88,7 +88,6 @@ theorem chiralProjectors_mul_zero' :
     chiralProjectorMinus * chiralProjectorPlus = 0 := by
   unfold chiralProjectorPlus chiralProjectorMinus
   simp [sub_eq_add_neg, add_mul, mul_add, volumeElement_sq]
-  module
 
 @[simp] theorem chiralProjectorPlus_idempotent :
     chiralProjectorPlus * chiralProjectorPlus = chiralProjectorPlus := by

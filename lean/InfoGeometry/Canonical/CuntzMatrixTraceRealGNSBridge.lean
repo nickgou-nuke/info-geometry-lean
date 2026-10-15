@@ -1,5 +1,4 @@
 import InfoGeometry.Canonical.CuntzMatrixTraceTower
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Prequantum.AlgebraicGNSState
 import InfoGeometry.Meta.MarkovJonesInduction
 
@@ -39,8 +38,9 @@ def matrixTraceRealAlgebraicState (n : ℕ) :
   toLinearMap := matrixTraceRealLinearMap n
   normalized := by
     rw [matrixTraceRealLinearMap_apply]
-    have h := congrArg Complex.re (matrixTraceState_one n)
-    simpa only [matrixTraceState] using h
+    change (matrixTraceState n 1).re = 1
+    rw [matrixTraceState_one n]
+    exact Complex.one_re
   positive := by
     intro A
     rw [matrixTraceRealLinearMap_apply]

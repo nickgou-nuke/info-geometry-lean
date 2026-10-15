@@ -16,7 +16,26 @@ inductive PolarizedBasisIdx where
   | nMinus : PolarizedBasisIdx
   | sigmaPlus : PolarizedBasisIdx
   | sigmaMinus : PolarizedBasisIdx
-deriving DecidableEq, Fintype
+deriving DecidableEq
+
+/-- The explicit four-element enumeration avoids relying on generated
+`enumList_nodup` proofs for this finite basis. -/
+def polarizedBasisIdxEquivFin : PolarizedBasisIdx ≃ Fin 4 where
+  toFun
+    | .nPlus => 0
+    | .nMinus => 1
+    | .sigmaPlus => 2
+    | .sigmaMinus => 3
+  invFun
+    | 0 => .nPlus
+    | 1 => .nMinus
+    | 2 => .sigmaPlus
+    | 3 => .sigmaMinus
+  left_inv x := by cases x <;> rfl
+  right_inv i := by fin_cases i <;> rfl
+
+instance : Fintype PolarizedBasisIdx :=
+  Fintype.ofEquiv (Fin 4) polarizedBasisIdxEquivFin.symm
 
 /-- Convert Fin 4 to PolarizedBasisIdx -/
 def finToPolarized (i : Fin 4) : PolarizedBasisIdx :=

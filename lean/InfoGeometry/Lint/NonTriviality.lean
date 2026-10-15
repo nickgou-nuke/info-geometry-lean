@@ -41,7 +41,9 @@ abbrev AuditConfig :=
 namespace AuditConfig
 
 def default : AuditConfig :=
-  ([`InfoGeometry], 32, true, [``propext, ``Quot.sound, ``Classical.choice], true)
+  ([`InfoGeometry, `DAG, `Omega, `Experimental, `VirasoroProject, `proofs,
+    `Agent, `Socratic, `Docs, `OAI, `SelfReference, `PrimitiveSetsAboveX, `scripts],
+    32, true, [``propext, ``Quot.sound, ``Classical.choice], false)
 
 def projectRoots : AuditConfig → List Name
   | (roots, _, _, _, _) => roots
@@ -199,14 +201,21 @@ private def isOpaqueConst : ConstantInfo → Bool
   | ConstantInfo.opaqueInfo _ => true
   | _ => false
 
-private def isProjectLocal (cfg : AuditConfig) (declName : Name) : Bool :=
-  (AuditConfig.projectRoots cfg).any (fun root => root.isPrefixOf declName)
+private def declarationModule (env : Environment) (declName : Name) : Name :=
+  match env.getModuleIdxFor? declName with
+  | some midx => env.header.moduleNames[midx.toNat]?.getD env.mainModule
+  | none => env.mainModule
+
+private def isProjectLocal (cfg : AuditConfig) (env : Environment) (declName : Name) : Bool :=
+  (AuditConfig.projectRoots cfg).any (fun root =>
+    root.isPrefixOf declName || root.isPrefixOf (declarationModule env declName))
 
 private def isNontrivialExternalConst
     (cfg : AuditConfig) (env : Environment) (declName : Name) : Bool :=
   if isBuiltinTrivialConst declName ||
      isTrivialProjectionOrAccessor declName ||
-     isProjectLocal cfg declName then
+     isProjectLocal cfg env declName ||
+     !(`Mathlib).isPrefixOf (declarationModule env declName) then
     false
   else
     match env.find? declName with
@@ -261,7 +270,7 @@ partial def auditExprTrivialityDetailed
         match env.find? declName with
         | none => return AuditResult.mk (termNodeCount := 1)
         | some info =>
-            if isProjectLocal cfg declName then
+            if isProjectLocal cfg env declName then
               if seen.contains declName then
                 return AuditResult.mk
                   (termNodeCount := 1)
@@ -469,12 +478,7 @@ private def declKindString : ConstantInfo → String
   | .quotInfo _ => "quot"
 
 private def moduleNameString (env : Environment) (name : Name) : String :=
-  match env.getModuleIdxFor? name with
-  | some midx =>
-      match env.header.moduleNames[midx.toNat]? with
-      | some n => n.toString
-      | none => "unknown"
-  | none => env.mainModule.toString
+  (declarationModule env name).toString
 
 private def classifyVacuityRole
     (isProp : Bool) (metric : MathfulnessMetric) (audit : AuditResult) (contamState : String) : String :=
@@ -563,13 +567,20 @@ private def runNonTrivialityGate (cfg : AuditConfig) (hardFail : Bool) (id : Syn
       match decl.value? (allowOpaque := true) with
       | none => throwErrorAt id m!"[Pauli/AST-Vacuity] Declaration `{declName}` has no auditable value."
       | some val =>
+          let contamination ← liftCoreM <|
+            auditTransitiveDependencies declName
+              (nameSetOfList (AuditConfig.allowedAxioms cfg)) false
+          if ContaminationResult.state contamination != "clean" then
+            let msg := m!"[Pauli/AST-Vacuity] Transitive dependency audit requires review for `{declName}`: {ContaminationResult.state contamination}."
+            if hardFail then throwErrorAt id msg else logWarning msg
+            return
           let audit ←
             liftTermElabM do
               auditExprTrivialityDetailed cfg env [declName]
                 (AuditConfig.maxLocalUnfoldDepth cfg) val
           let metric := AuditResult.toMetric audit
           if MathfulnessMetric.isGenuine metric then
-            logInfo m!"Audit complete: `{declName}` passed non-triviality scan. Metric: {repr metric}"
+            logInfo m!"Expression/dependency screening completed for `{declName}`; semantic nonvacuity still requires owner review. Metric: {repr metric}"
           else
             let msg := m!"[Pauli/AST-Vacuity] Declaration `{declName}` failed non-triviality scan. Metric: {repr metric}. Suspicious constants: {repr (AuditResult.suspiciousConsts audit)}. Unfolded local constants: {repr (AuditResult.unfoldedLocalConsts audit)}"
             if hardFail then throwErrorAt id msg else logWarning msg

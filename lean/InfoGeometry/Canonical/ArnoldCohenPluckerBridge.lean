@@ -54,19 +54,12 @@ theorem kleinQuadric_factorization (p : PluckerCoordinates R) (h : IsKleinNull p
   unfold IsKleinNull kleinQuadric at h
   linear_combination h
 
-/-- Abstract 3-mode Arnold-Cohen generator triple $(\omega_{12}, \omega_{23}, \omega_{31})$ in an exterior algebra over `R`. -/
-structure ArnoldFormTriple (R : Type*) [CommRing R] (V : Type*) [AddCommGroup V] [Module R V] where
-  w12 : ExteriorAlgebra R V
-  w23 : ExteriorAlgebra R V
-  w31 : ExteriorAlgebra R V
-  -- Anti-commutation / degree-1 wedge properties
-  w12_sq : w12 * w12 = 0
-  w23_sq : w23 * w23 = 0
-  w31_sq : w31 * w31 = 0
-
-/-- The Arnold-Cohen 3-term Jacobi-like relation: $\omega_{12} \wedge \omega_{23} + \omega_{23} \wedge \omega_{31} + \omega_{31} \wedge \omega_{12} = 0$. -/
-def ArnoldMixedRelation {V : Type*} [AddCommGroup V] [Module R V] (T : ArnoldFormTriple R V) : Prop :=
-  T.w12 * T.w23 + T.w23 * T.w31 + T.w31 * T.w12 = 0
+/-- The three-term relation on three explicitly supplied elements of the
+exterior algebra. No generator record, square-zero side conditions, or
+configuration-space interpretation is implicit in this predicate. -/
+def ArnoldMixedRelation {V : Type*} [AddCommGroup V] [Module R V]
+    (w12 w23 w31 : ExteriorAlgebra R V) : Prop :=
+  w12 * w23 + w23 * w31 + w31 * w12 = 0
 
 /-! The square-zero equations of two arbitrary exterior-algebra elements do
 not by themselves imply that their sum is square-zero. The exact additional
@@ -85,39 +78,28 @@ theorem sum_sq_zero_iff_cross_terms_cancel
 The Arnold mixed relation is invariant under cyclic permutation of terms.
 -/
 theorem arnold_relation_cyclic_invariant
-    {V : Type*} [AddCommGroup V] [Module R V] (T : ArnoldFormTriple R V)
-    (h_arnold : ArnoldMixedRelation T) :
-    T.w23 * T.w31 + T.w31 * T.w12 + T.w12 * T.w23 = 0 := by
+    {V : Type*} [AddCommGroup V] [Module R V]
+    (w12 w23 w31 : ExteriorAlgebra R V)
+    (h_arnold : ArnoldMixedRelation w12 w23 w31) :
+    w23 * w31 + w31 * w12 + w12 * w23 = 0 := by
   unfold ArnoldMixedRelation at h_arnold
-  rw [add_comm (T.w23 * T.w31 + T.w31 * T.w12) (T.w12 * T.w23)]
+  rw [add_comm (w23 * w31 + w31 * w12) (w12 * w23)]
   rw [← add_assoc]
   exact h_arnold
 
 /--
-**Main Theorem 3: BCFW Pole Factorization**
-Under the Arnold-Cohen relation, the product of any two consecutive logarithmic forms
-can be expressed as a linear combination of the remaining boundary channels,
-mirroring the BCFW on-shell pole factorization $A_L \frac{1}{P^2} A_R$.
+Rearranging the assumed Arnold three-term relation expresses the first product
+as the negative sum of the other two. This is an algebraic consequence of the
+relation only; it does not state BCFW recursion, a pole residue, or on-shell
+factorization.
 -/
-theorem bcfw_pole_factorization
-    {V : Type*} [AddCommGroup V] [Module R V] (T : ArnoldFormTriple R V)
-    (h_arnold : ArnoldMixedRelation T) :
-    T.w12 * T.w23 = - (T.w23 * T.w31 + T.w31 * T.w12) := by
+theorem arnold_relation_rearrange_w12_w23
+    {V : Type*} [AddCommGroup V] [Module R V]
+    (w12 w23 w31 : ExteriorAlgebra R V)
+    (h_arnold : ArnoldMixedRelation w12 w23 w31) :
+    w12 * w23 = - (w23 * w31 + w31 * w12) := by
   rw [← add_eq_zero_iff_eq_neg]
   rw [← add_assoc]
   exact h_arnold
-
-/--
-The abstract three-term relation and the Klein-null coordinate equation are
-returned together from their respective hypotheses. This is not a duality theorem
-between the carriers and makes no scattering-physics claim.
--/
-theorem arnold_relation_and_klein_nullity
-    {V : Type*} [AddCommGroup V] [Module R V] (T : ArnoldFormTriple R V)
-    (p : PluckerCoordinates R)
-    (h_arnold : ArnoldMixedRelation T)
-    (h_quadric : IsKleinNull p) :
-    (T.w12 * T.w23 + T.w23 * T.w31 + T.w31 * T.w12 = 0) ∧
-    (p.p12 * p.p34 - p.p13 * p.p24 + p.p14 * p.p23 = 0) := ⟨h_arnold, h_quadric⟩
 
 end InfoGeometry.Canonical.ArnoldCohenPluckerBridge

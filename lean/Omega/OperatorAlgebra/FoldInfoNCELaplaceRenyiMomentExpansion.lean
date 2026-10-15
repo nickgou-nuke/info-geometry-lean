@@ -1,5 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.Tactic
 import Omega.OperatorAlgebra.FoldInfoNCEFiniteKMomentFormula
 
@@ -63,13 +63,12 @@ theorem paper_fold_infonce_laplace_renyi_moment_expansion (m K : Nat) :
         intro a b h
         exact Nat.succ.inj h⟩ := by
     ext q
-    simp only [Finset.mem_Icc, Finset.mem_map, Function.Embedding.coeFn_mk]
+    simp only [Finset.mem_Icc, Finset.mem_map]
+    change 2 ≤ q ∧ q ≤ K ↔ ∃ a, (1 ≤ a ∧ a ≤ K - 1) ∧ a + 1 = q
     constructor
-    · intro hq
-      refine ⟨q - 1, ?_, by omega⟩
-      omega
-    · intro hq
-      rcases hq with ⟨a, ha, rfl⟩
+    · intro ⟨h2, hqK⟩
+      exact ⟨q - 1, by omega, by omega⟩
+    · rintro ⟨a, ⟨h1a, haK⟩, rfl⟩
       omega
   rw [hIcc, Finset.sum_map]
   refine Finset.sum_congr rfl ?_

@@ -18,17 +18,30 @@ inductive WallpaperGroup
   | p4 | p4m | p4g
   | p3 | p3m1 | p31m
   | p6 | p6m
-  deriving Repr, DecidableEq, Fintype
+  deriving Repr, DecidableEq
+
+instance : Fintype WallpaperGroup where
+  elems := {.p1, .p2, .pm, .pg, .cm, .pmm, .pmg, .pgg, .cmm,
+    .p4, .p4m, .p4g, .p3, .p3m1, .p31m, .p6, .p6m}
+  complete group := by cases group <;> decide
 
 /-- The crystallographic point groups that occur as wallpaper holonomies. -/
 inductive WallpaperPointGroup
   | C1 | C2 | D1 | V4 | C4 | D4 | C3 | D3 | C6 | D6
-  deriving Repr, DecidableEq, Fintype
+  deriving Repr, DecidableEq
+
+instance : Fintype WallpaperPointGroup where
+  elems := {.C1, .C2, .D1, .V4, .C4, .D4, .C3, .D3, .C6, .D6}
+  complete group := by cases group <;> decide
 
 /-- The Bravais lattice family underlying a wallpaper group. -/
 inductive WallpaperLattice
   | oblique | rectangular | rhombic | square | hexagonal
-  deriving Repr, DecidableEq, Fintype
+  deriving Repr, DecidableEq
+
+instance : Fintype WallpaperLattice where
+  elems := {.oblique, .rectangular, .rhombic, .square, .hexagonal}
+  complete lattice := by cases lattice <;> decide
 
 /-- Exactly seventeen wallpaper-group symbols are represented. -/
 theorem wallpaperGroup_card : Fintype.card WallpaperGroup = 17 := by

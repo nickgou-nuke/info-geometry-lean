@@ -14,6 +14,10 @@ open D5ComplexMatrixRootSpaces D5IsotropicDiagonalLieEquiv
 
 abbrev CM10Fin := Matrix (Fin 10) (Fin 10) ℂ
 
+-- Matrix multiplication is associative, so its commutator supplies the Lie bracket.
+-- Keep this local to avoid competing with Mathlib's other matrix bracket instances.
+local instance : LieRing CM10Fin := LieRing.ofAssociativeRing
+
 def complexEta55 : CM10Fin := fun i j => (eta55 i j : ℂ)
 
 def complexDiagonalSO55Submodule : Submodule ℂ CM10Fin where
@@ -136,6 +140,8 @@ theorem imagPart_zero : imagPartMatrix 0 = 0 := by
 
 def realPartDiagonal (A : complexDiagonalSO55) : diagonalSO55 := by
   refine ⟨realPartMatrix A, ?_⟩
+  change (realPartMatrix A.1).transpose * eta55 +
+    eta55 * realPartMatrix A.1 = 0
   have h := congrArg realPartMatrix A.property
   simpa [complexEta55, ← embedRealMatrix_eta, realPart_add,
     realPart_transpose, realPart_mul_real_right, realPart_mul_real_left,
@@ -143,6 +149,8 @@ def realPartDiagonal (A : complexDiagonalSO55) : diagonalSO55 := by
 
 def imagPartDiagonal (A : complexDiagonalSO55) : diagonalSO55 := by
   refine ⟨imagPartMatrix A, ?_⟩
+  change (imagPartMatrix A.1).transpose * eta55 +
+    eta55 * imagPartMatrix A.1 = 0
   have h := congrArg imagPartMatrix A.property
   simpa [complexEta55, ← embedRealMatrix_eta, imagPart_add,
     imagPart_transpose, imagPart_mul_real_right, imagPart_mul_real_left,
@@ -215,8 +223,7 @@ theorem complexification_rightInverse (A : complexDiagonalSO55) :
 
 theorem complexification_leftInverse (x : ComplexDiagonalSO55) :
     diagonalToComplexification (complexificationToDiagonal x) = x := by
-  refine x.induction_on ?_ ?_ ?_
-  · simp [diagonalToComplexification]
+  refine TensorProduct.inductionOn x ?_ ?_
   · intro z A
     change diagonalToComplexification (z • embedRealDiagonal A) = z ⊗ₜ[ℝ] A
     simp only [diagonalToComplexification, realPart_smul_embed,
@@ -249,22 +256,9 @@ theorem complexificationToDiagonal_lie
     (x y : ComplexDiagonalSO55) :
     complexificationToDiagonal ⁅x, y⁆ =
       ⁅complexificationToDiagonal x, complexificationToDiagonal y⁆ := by
-  refine x.induction_on ?_ ?_ ?_
-  · simp
+  refine TensorProduct.inductionOn x ?_ ?_
   · intro z A
-    refine y.induction_on ?_ ?_ ?_
-    · have hz : ⁅z ⊗ₜ[ℝ] A, (0 : ComplexDiagonalSO55)⁆ = 0 :=
-        @lie_zero ComplexDiagonalSO55 ComplexDiagonalSO55
-          (LieAlgebra.ExtendScalars.instLieRing ℝ ℂ diagonalSO55)
-          inferInstance
-          (LieAlgebra.ExtendScalars.instLieRingModule ℝ ℂ diagonalSO55 diagonalSO55)
-          (z ⊗ₜ[ℝ] A)
-      calc
-        complexificationToDiagonal ⁅z ⊗ₜ[ℝ] A, 0⁆ =
-            complexificationToDiagonal 0 := by rw [hz]
-        _ = 0 := map_zero _
-        _ = ⁅complexificationToDiagonal (z ⊗ₜ[ℝ] A),
-            complexificationToDiagonal 0⁆ := by rw [map_zero, lie_zero]
+    refine TensorProduct.inductionOn y ?_ ?_
     · intro w B
       apply Subtype.ext
       change (z * w) • embedRealMatrix (A.1 * B.1 - B.1 * A.1) =

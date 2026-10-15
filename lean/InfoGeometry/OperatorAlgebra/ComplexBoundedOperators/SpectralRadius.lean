@@ -1,6 +1,7 @@
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Matrix.Spectrum
+import Mathlib.Analysis.Complex.Polynomial.Basic
 
 /-!
 # InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.SpectralRadius
@@ -91,7 +92,7 @@ theorem matrixSpectrum_nonempty_of_pos {n : Nat}
     simpa using hdegNat
   have hdeg' : (Matrix.charpoly A).degree ≠ 0 := ne_of_gt hdeg
   rcases IsAlgClosed.exists_root (Matrix.charpoly A) hdeg' with ⟨x, hx⟩
-  exact ⟨x, by simpa [matrixSpectrum, Polynomial.IsRoot] using hx⟩
+  exact ⟨x, by simpa [matrixSpectrum, Eigenvalue, Polynomial.IsRoot] using hx⟩
 
 /-- Native cardinality bound for the matrix spectrum. -/
 theorem matrixSpectrum_ncard_le {n : Nat}

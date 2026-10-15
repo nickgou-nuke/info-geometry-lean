@@ -56,9 +56,9 @@ theorem continuous_splitZornDotProductCoordinates :
     (continuous_apply 2).comp continuous_fst
   have h21 : Continuous (fun uv : SplitZornAffineCoordinates => uv.2 2) :=
     (continuous_apply 2).comp continuous_snd
-  simpa [InfoGeometry.Physics.ZornMatrixSU3.dotProduct,
-    InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3] using
-    ((h00.mul h01).add (h10.mul h11) |>.add (h20.mul h21))
+  change Continuous (fun uv : SplitZornAffineCoordinates =>
+    uv.1 0 * uv.2 0 + uv.1 1 * uv.2 1 + uv.1 2 * uv.2 2)
+  convert ((h00.mul h01).add (h10.mul h11) |>.add (h20.mul h21)) using 1
 
 @[simp] theorem splitZornNormalizedCoordinates_point
     (uv : SplitZornAffineCoordinates) :

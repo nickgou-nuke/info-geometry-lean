@@ -472,7 +472,22 @@ inductive TripleNode where
   | alice
   | bob
   | charlie
-deriving DecidableEq, Fintype, Repr
+deriving DecidableEq, Repr
+
+private def tripleNodeEquivFinThree : Fin 3 ≃ TripleNode where
+  toFun i := if i = 0 then .alice else if i = 1 then .bob else .charlie
+  invFun
+    | .alice => 0
+    | .bob => 1
+    | .charlie => 2
+  left_inv := by
+    intro i
+    fin_cases i <;> rfl
+  right_inv := by
+    intro x
+    cases x <;> rfl
+
+instance : Fintype TripleNode := Fintype.ofEquiv (Fin 3) tripleNodeEquivFinThree
 
 /--
 Finite incidence states:

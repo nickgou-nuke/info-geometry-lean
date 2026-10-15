@@ -265,7 +265,7 @@ theorem rootActionOnFiniteRoot_long_on_short :
           (finiteRootToRootIndex.symm (nativeRootIndex nativeShortSimpleIndex))) =
       nativeRootIndex ⟨9, by decide, by decide⟩ := by
   rw [rootActionOnFiniteRoot_apply]
-  simpa [longWeylReflection, rootActionTransport] using
+  simpa [longWeylReflection, rootActionTransport, longRoot] using
     native_long_reflection_short
 
 theorem rootActionOnFiniteRoot_short_on_long :
@@ -274,7 +274,7 @@ theorem rootActionOnFiniteRoot_short_on_long :
           (finiteRootToRootIndex.symm (nativeRootIndex nativeLongSimpleIndex))) =
       nativeRootIndex ⟨11, by decide, by decide⟩ := by
   rw [rootActionOnFiniteRoot_apply]
-  simpa [shortWeylReflection, rootActionTransport] using
+  simpa [shortWeylReflection, rootActionTransport, shortRoot] using
     native_short_reflection_long
 
 theorem native_sAction_preserves_rootLength (r : FiniteRoot) :

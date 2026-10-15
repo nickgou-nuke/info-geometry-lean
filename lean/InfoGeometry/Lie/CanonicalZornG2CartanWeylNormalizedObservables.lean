@@ -38,7 +38,9 @@ theorem gibbsExpectation_parameterLeftAction
   intro m _
   have hp : realGibbsWeight D.base (parameterLeftAction (D := D) w beta)
       (D.stateAction w m) = realGibbsWeight D.base beta m := by
-    simpa using probability_diagonal_invariant (D := D) w beta m
+    change realGibbsWeight D.base (parameterLeftAction (D := D) w beta)
+      (w • m) = realGibbsWeight D.base beta m
+    exact probability_diagonal_invariant (D := D) w beta m
   rw [hp]
   rfl
 

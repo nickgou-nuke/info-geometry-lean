@@ -68,8 +68,8 @@ noncomputable def compatibleIntervalReadoutHomeomorph :
     apply continuous_induced_rng.mpr
     apply continuous_pi
     intro n
-    simpa using
-      (continuous_id : Continuous (fun q : DyadicUnitInterval => q))
+    change Continuous (fun q : DyadicUnitInterval => q)
+    exact (continuous_id : Continuous (id : DyadicUnitInterval → DyadicUnitInterval))
 
 def coordinateTopCatHom (n : ℕ) :
     TopCat.of CompatibleIntervalReadout ⟶ TopCat.of DyadicUnitInterval :=

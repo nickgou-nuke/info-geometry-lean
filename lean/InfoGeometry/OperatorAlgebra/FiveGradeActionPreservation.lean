@@ -20,6 +20,7 @@ theorem grade_zero_commutator_preserves
     (hK : HasOperatorGrade N K 0)
     (hX : HasOperatorGrade N X k) :
     HasOperatorGrade N (K * X - X * K) k := by
+  change HasOperatorGrade N (operatorCommutator K X) k
   simpa using grade_commutator hK hX
 
 theorem grade_zero_commutator_mapsToGrade

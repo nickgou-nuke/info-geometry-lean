@@ -57,15 +57,15 @@ theorem signedCrossRatio01_ne_zero
     signedCrossRatio01 s ≠ 0 := by
   exact neg_ne_zero.mpr (crossRatio01_ne_zero hs)
 
-/-- Derivative of the sign-shifted coordinate `s/(s-1)`. -/
 theorem hasDerivAt_signedCrossRatio01
     {s : ℂ} (hs : s ∈ punctured01) :
     HasDerivAt signedCrossRatio01 (-1 / (s - 1) ^ 2) s := by
-  have h₁ : s - 1 ≠ 0 := sub_ne_zero.mpr hs.2
-  have h₂ : 1 - s ≠ 0 := one_sub_ne_zero_of_mem hs
-  convert (hasDerivAt_crossRatio01 hs.2).neg using 1
-  field_simp [h₁, h₂]
-  ring
+  have h := (hasDerivAt_crossRatio01 hs.2).neg
+  have h_val : -(1 / (1 - s) ^ 2) = -1 / (s - 1) ^ 2 := by
+    have : (1 - s) ^ 2 = (s - 1) ^ 2 := by ring
+    rw [this, neg_div]
+  rw [h_val] at h
+  exact h
 
 /-- Both sign conventions have the same logarithmic derivative. -/
 theorem signedCrossRatio01_logarithmicDerivative
@@ -172,7 +172,6 @@ theorem circulationPeriod_neg (w : WindingPair) :
     circulationPeriod (-w) = -circulationPeriod w := by
   rcases w with ⟨m, n⟩
   simp [circulationPeriod, residueWinding]
-  push_cast
   ring
 
 /-- Two logarithmic potential values are period-equivalent when their
@@ -211,8 +210,7 @@ def PeriodEquivalent (W₁ W₂ : ℂ) : Prop :=
 /-- The exponential kills every period in the residue-difference image. -/
 theorem exp_circulationPeriod (w : WindingPair) :
     Complex.exp (circulationPeriod w) = 1 := by
-  simpa [circulationPeriod] using
-    Complex.exp_int_mul_two_pi_mul_I (residueWinding w)
+  simp [circulationPeriod, Complex.exp_int_mul_two_pi_mul_I]
 
 /-- Exponentiation is invariant under bipolar period equivalence. -/
 theorem exp_eq_of_PeriodEquivalent

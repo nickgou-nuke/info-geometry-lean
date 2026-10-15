@@ -112,7 +112,9 @@ abbrev stateTransport
     (x : S.stateDiagram.obj a) :
     stateTransport S (le_trans hab hbc) x =
       stateTransport S hbc (stateTransport S hab x) := by
-  simpa [stateTransport] using congrFun (S.stateDiagram.map_comp (homOfLE hab) (homOfLE hbc)) x
+  simpa [stateTransport] using
+    congrArg (fun f => f x)
+      (S.stateDiagram.map_comp (homOfLE hab) (homOfLE hbc))
 
 /-- Dual-twistor rescaling preserves the discrete Penrose spin-net axioms. -/
 def dualScale

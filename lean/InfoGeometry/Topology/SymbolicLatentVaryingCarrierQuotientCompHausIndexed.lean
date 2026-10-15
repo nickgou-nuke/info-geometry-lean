@@ -20,11 +20,11 @@ open CategoryTheory
 variable {ι : Type} [Fintype ι]
 variable {J : Type} [Category J]
 
-noncomputable def compactIndexedObservationQuotientDiagram
+noncomputable abbrev compactIndexedObservationQuotientDiagram
     (D : J ⥤ CompactSymbolicLatentSystemObject ι) : J ⥤ CompHaus :=
   D ⋙ compactSymbolicLatentObservationQuotientCompHausFunctor
 
-noncomputable def compactIndexedObservationRangeDiagram
+noncomputable abbrev compactIndexedObservationRangeDiagram
     (D : J ⥤ CompactSymbolicLatentSystemObject ι) : J ⥤ CompHaus :=
   D ⋙ compactSymbolicLatentObservationRangeCompHausFunctor
 

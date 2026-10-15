@@ -45,14 +45,19 @@ theorem SymbolicLatentObservableModularFlow.observationQuotientFlowCompHausHom_i
       descendedSymbolicLatentObservationFlow Φ p.1 p.2))
     (t : ℝ) :
     IsIso (Φ.observationQuotientFlowCompHausHom h_flow t) := by
-  have hTopIso : IsIso (Φ.observationQuotientFlowTopCatHom h_flow t) :=
-    Φ.observationQuotientFlowTopCatHom_isIso h_flow t
-  haveI : IsIso (compHausToTop.map (Φ.observationQuotientFlowCompHausHom h_flow t)) := by
-    simpa [SymbolicLatentObservableModularFlow.observationQuotientFlowCompHausHom_forget]
-      using hTopIso
-  have hFF : (compHausToTop).FullyFaithful := by
-    simpa using (CompHausLike.fullyFaithfulCompHausLikeToTop (fun _ => True))
-  exact hFF.isIso_of_isIso_map (Φ.observationQuotientFlowCompHausHom h_flow t)
+  refine IsIso.mk ⟨Φ.observationQuotientFlowCompHausHom h_flow (-t), ?_, ?_⟩
+  · apply ConcreteCategory.hom_ext
+    intro q
+    change descendedSymbolicLatentObservationFlow Φ (-t)
+        (descendedSymbolicLatentObservationFlow Φ t q) = q
+    simpa [symbolicLatentObservationQuotientFlow] using
+      (symbolicLatentObservationQuotientFlow Φ h_flow).act_neg_left t q
+  · apply ConcreteCategory.hom_ext
+    intro q
+    change descendedSymbolicLatentObservationFlow Φ t
+        (descendedSymbolicLatentObservationFlow Φ (-t) q) = q
+    simpa [symbolicLatentObservationQuotientFlow] using
+      (symbolicLatentObservationQuotientFlow Φ h_flow).act_neg_right t q
 
 theorem SymbolicLatentObservableModularFlow.observationQuotientFlowCompHausHom_zero
     {S : FiniteSymbolicLatentSystem X ι}
@@ -80,7 +85,7 @@ theorem SymbolicLatentObservableModularFlow.observationQuotientFlowCompHausHom_c
   change descendedSymbolicLatentObservationFlow Φ s
       (descendedSymbolicLatentObservationFlow Φ t q) =
     descendedSymbolicLatentObservationFlow Φ (t + s) q
-  simpa [add_comm] using
+  simpa [symbolicLatentObservationQuotientFlow, add_comm] using
     ((symbolicLatentObservationQuotientFlow Φ h_flow).act_add s t q).symm
 
 theorem SymbolicLatentObservableModularFlow.observationQuotientFlowCompHausHom_comp_neg

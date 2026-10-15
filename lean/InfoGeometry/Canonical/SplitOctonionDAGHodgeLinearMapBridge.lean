@@ -48,7 +48,8 @@ theorem intertwiner_d_native {H : DAGHodgeDatum}
     intertwinerEnd I * dEnd H = exteriorDEnd * intertwinerEnd I := by
   have h := congrArg
     (Matrix.toLin' : DAGMat8 → End8) I.intertwine_d
-  simpa [intertwinerEnd, dEnd, exteriorDEnd, Matrix.toLin'_mul] using h
+  simpa [intertwinerEnd, dEnd, exteriorDEnd, Matrix.toLin'_mul,
+    Module.End.mul_eq_comp, LinearMap.comp_assoc] using h
 
 theorem intertwiner_delta_native {H : DAGHodgeDatum}
     (I : DAGSplitOctonionIntertwiner H) :
@@ -56,7 +57,8 @@ theorem intertwiner_delta_native {H : DAGHodgeDatum}
       exteriorDeltaEnd * intertwinerEnd I := by
   have h := congrArg
     (Matrix.toLin' : DAGMat8 → End8) I.intertwine_delta
-  simpa [intertwinerEnd, deltaEnd, exteriorDeltaEnd, Matrix.toLin'_mul] using h
+  simpa [intertwinerEnd, deltaEnd, exteriorDeltaEnd, Matrix.toLin'_mul,
+    Module.End.mul_eq_comp, LinearMap.comp_assoc] using h
 
 theorem intertwiner_dirac_native {H : DAGHodgeDatum}
     (I : DAGSplitOctonionIntertwiner H) :
@@ -65,7 +67,8 @@ theorem intertwiner_dirac_native {H : DAGHodgeDatum}
   have h := congrArg
     (Matrix.toLin' : DAGMat8 → End8) (intertwiner_dirac I)
   simpa [intertwinerEnd, diracEnd, exteriorDiracEnd,
-    DAGHodgeDatum.dirac, exteriorDiracMat, Matrix.toLin'_mul] using h
+    DAGHodgeDatum.dirac, exteriorDiracMat, Matrix.toLin'_mul,
+    Module.End.mul_eq_comp, LinearMap.comp_assoc] using h
 
 theorem intertwiner_laplacian_native {H : DAGHodgeDatum}
     (I : DAGSplitOctonionIntertwiner H) :
@@ -74,7 +77,8 @@ theorem intertwiner_laplacian_native {H : DAGHodgeDatum}
   have h := congrArg
     (Matrix.toLin' : DAGMat8 → End8) (intertwiner_laplacian I)
   simpa [intertwinerEnd, laplacianEnd, exteriorLaplacianEnd,
-    DAGHodgeDatum.laplacian, Matrix.toLin'_mul] using h
+    DAGHodgeDatum.laplacian, Matrix.toLin'_mul, Module.End.mul_eq_comp,
+    LinearMap.comp_assoc] using h
 
 theorem canonical_identity_dirac_native :
     intertwinerEnd canonicalIdentityIntertwiner *

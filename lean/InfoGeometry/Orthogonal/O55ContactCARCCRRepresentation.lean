@@ -1,3 +1,4 @@
+import Mathlib.Algebra.Lie.OfAssociative
 import InfoGeometry.Orthogonal.O55PinContactBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Orthogonal.O55ContactGrading
@@ -12,6 +13,8 @@ action commutes with both ladder systems and preserves contact degree.
 -/
 
 noncomputable section
+
+attribute [local instance 100] LieRing.ofAssociativeRing
 
 namespace InfoGeometry.Orthogonal.O55Contact
 

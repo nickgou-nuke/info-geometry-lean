@@ -67,7 +67,21 @@ theorem canonical_stage_observation_agreement
     stageObservationTopCatHom n X (canonicalData.map ρ) = ρ.1 n X := by
   have h := congrArg (fun f => f ρ)
     (compatibleReadoutInverseLimitIso_coordinateEvaluation n X)
-  simpa [canonicalData, stageObservationTopCatHom, TopCat.comp_app] using h.symm
+  rw [TopCat.comp_app] at h
+  change InfoGeometry.Canonical.RealUHFCompatibleStateObservableTopCat.coordinateEvaluationTopCatHom
+      n X ρ =
+    inverseLimitStageEvaluationTopCatHom n X
+      (compatibleReadoutInverseLimitIso.hom ρ) at h
+  change inverseLimitStageEvaluationTopCatHom n X
+    (compatibleReadoutInverseLimitIso.hom ρ) = ρ.1 n X
+  calc
+    inverseLimitStageEvaluationTopCatHom n X
+        (compatibleReadoutInverseLimitIso.hom ρ) =
+        InfoGeometry.Canonical.RealUHFCompatibleStateObservableTopCat.coordinateEvaluationTopCatHom
+          n X ρ := h.symm
+    _ = ρ.1 n X :=
+      InfoGeometry.Canonical.RealUHFCompatibleStateObservableTopCat.coordinateEvaluationTopCatHom_apply
+        n X ρ
 
 noncomputable def canonicalStageObservationData : StageObservationData where
   base := canonicalData
@@ -240,7 +254,10 @@ theorem flow_intertwining_square (D : Data) (t : ℝ) :
   apply TopCat.hom_ext
   apply ContinuousMap.ext
   intro ρ
-  simpa [toTopCatHom] using (D.flow_intertwines t ρ).symm
+  rw [TopCat.comp_app, TopCat.comp_app]
+  change inverseLimitFlow.act t (D.map ρ) =
+    D.map (compatibleFlow.act t ρ)
+  exact (D.flow_intertwines t ρ).symm
 
 end InfoGeometry.Canonical.RealUHFCompatibleInverseLimitFlowComparison
 end

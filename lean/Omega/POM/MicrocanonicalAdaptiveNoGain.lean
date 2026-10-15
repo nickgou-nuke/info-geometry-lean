@@ -38,7 +38,8 @@ lemma microcanonicalCountWeight_increment (d c : α → ℕ) (x : α) :
       exfalso
       exact (Finset.mem_sdiff.mp hy).2 (by simp)
     · simp [Function.update, h]
-  rw [Finset.prod_eq_mul_prod_diff_singleton hx, Finset.prod_eq_mul_prod_diff_singleton hx]
+  rw [Finset.prod_eq_mul_prod_sdiff_singleton x _ (fun h => (h hx).elim)]
+  rw [Finset.prod_eq_mul_prod_sdiff_singleton x _ (fun h => (h hx).elim)]
   rw [hprod]
   simp [Nat.descFactorial_succ, mul_assoc]
 

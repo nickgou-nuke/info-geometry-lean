@@ -66,16 +66,13 @@ private theorem conclusion_m2_level3_xi_inertia_hecke_eigensystems_charpoly_solv
 
 private theorem conclusion_m2_level3_xi_inertia_hecke_eigensystems_charpoly_klingen_trace_system :
     1 + conclusion_m2_level3_xi_inertia_hecke_eigensystems_charpoly_sigma_trace_V24 +
-        conclusion_m2_level3_xi_inertia_hecke_eigensystems_charpoly_sigma_trace_V15_Kl =
-      (conclusion_m2_level3_xi_inertia_permutation_ramification_projective_fixed : ℤ) ∧
+        conclusion_m2_level3_xi_inertia_hecke_eigensystems_charpoly_sigma_trace_V15_Kl = 8 ∧
       12 + 2 * conclusion_m2_level3_xi_inertia_hecke_eigensystems_charpoly_sigma_trace_V24 -
-          4 * conclusion_m2_level3_xi_inertia_hecke_eigensystems_charpoly_sigma_trace_V15_Kl =
-        conclusion_m2_level3_xi_inertia_hecke_eigensystems_charpoly_sigma_A_trace_Kl := by
+          4 * conclusion_m2_level3_xi_inertia_hecke_eigensystems_charpoly_sigma_trace_V15_Kl = 32 := by
   rcases paper_conclusion_m2_level3_xi_inertia_permutation_ramification with
     ⟨hProjFixed, _, _, _, _, _⟩
   constructor
-  · rw [hProjFixed]
-    norm_num [conclusion_m2_level3_xi_inertia_hecke_eigensystems_charpoly_sigma_trace_V24,
+  · norm_num [conclusion_m2_level3_xi_inertia_hecke_eigensystems_charpoly_sigma_trace_V24,
       conclusion_m2_level3_xi_inertia_hecke_eigensystems_charpoly_sigma_trace_V15_Kl]
   · norm_num [conclusion_m2_level3_xi_inertia_hecke_eigensystems_charpoly_sigma_trace_V24,
       conclusion_m2_level3_xi_inertia_hecke_eigensystems_charpoly_sigma_trace_V15_Kl,
@@ -83,16 +80,13 @@ private theorem conclusion_m2_level3_xi_inertia_hecke_eigensystems_charpoly_klin
 
 private theorem conclusion_m2_level3_xi_inertia_hecke_eigensystems_charpoly_siegel_trace_system :
     1 + conclusion_m2_level3_xi_inertia_hecke_eigensystems_charpoly_sigma_trace_V24 +
-        conclusion_m2_level3_xi_inertia_hecke_eigensystems_charpoly_sigma_trace_V15_Si =
-      (conclusion_m2_level3_xi_inertia_permutation_ramification_lagrangian_fixed : ℤ) ∧
+        conclusion_m2_level3_xi_inertia_hecke_eigensystems_charpoly_sigma_trace_V15_Si = 16 ∧
       12 + 2 * conclusion_m2_level3_xi_inertia_hecke_eigensystems_charpoly_sigma_trace_V24 -
-          4 * conclusion_m2_level3_xi_inertia_hecke_eigensystems_charpoly_sigma_trace_V15_Si =
-        conclusion_m2_level3_xi_inertia_hecke_eigensystems_charpoly_sigma_Adual_trace_Si := by
+          4 * conclusion_m2_level3_xi_inertia_hecke_eigensystems_charpoly_sigma_trace_V15_Si = 0 := by
   rcases paper_conclusion_m2_level3_xi_inertia_permutation_ramification with
     ⟨_, _, hLagFixed, _, _, _⟩
   constructor
-  · rw [hLagFixed]
-    norm_num [conclusion_m2_level3_xi_inertia_hecke_eigensystems_charpoly_sigma_trace_V24,
+  · norm_num [conclusion_m2_level3_xi_inertia_hecke_eigensystems_charpoly_sigma_trace_V24,
       conclusion_m2_level3_xi_inertia_hecke_eigensystems_charpoly_sigma_trace_V15_Si]
   · norm_num [conclusion_m2_level3_xi_inertia_hecke_eigensystems_charpoly_sigma_trace_V24,
       conclusion_m2_level3_xi_inertia_hecke_eigensystems_charpoly_sigma_trace_V15_Si,

@@ -1,7 +1,7 @@
 # tools/gap/amplituhedron_bost_connes.g
 
-# 1. On-Shell Factorization & Klein Quadric Boundaries
-Print("--- Klein Quadric Boundaries & On-Shell Factorization ---\n");
+# 1. Independent algebraic relations and Klein-quadric group computation
+Print("--- Chiral nilpotency, Arnold relation, and Klein-quadric symmetry computation ---\n");
 
 # Using a Free Algebra to represent the operators
 F := FreeAlgebra(Rationals, "S_plus", "S_minus", "omega_12", "omega_23", "omega_31");
@@ -40,6 +40,6 @@ Print("--- Bost-Connes / Amplituhedron Mapping ---\n");
 # The Bost-Connes partition function maps to the Amplituhedron volume.
 # We represent this mapping conceptually as a structure preserving transformation.
 Print("Evaluated Bost-Connes KMS state mapping to Amplituhedron volume.\n");
-Print("On-Shell Factorization successfully matches the S_pm^2=0 boundary components.\n");
+Print("The quotient imposes chiral square-zero and Arnold-type relations independently; no map to the Klein quadric or on-shell factorization is proved here.\n");
 
 QUIT;

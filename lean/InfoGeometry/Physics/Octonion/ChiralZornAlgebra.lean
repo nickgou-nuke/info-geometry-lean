@@ -76,15 +76,13 @@ def coordEquiv :
 instance : AddCommGroup (ChiralZornMatrix A) :=
   Equiv.addCommGroup coordEquiv
 
-instance {R : Type*} [Semiring R] [Module R A] : SMul R (ChiralZornMatrix A) :=
-  ⟨fun r X =>
-    { n_plus := r • X.n_plus
-      n_minus := r • X.n_minus
-      sigma_plus := fun c => r • X.sigma_plus c
-      sigma_minus := fun c => r • X.sigma_minus c }⟩
+def coordAddEquiv :
+    ChiralZornMatrix A ≃+ (A × A × (Fin 3 → A) × (Fin 3 → A)) where
+  toEquiv := coordEquiv
+  map_add' _ _ := rfl
 
 instance {R : Type*} [Semiring R] [Module R A] : Module R (ChiralZornMatrix A) :=
-  Equiv.module R coordEquiv
+  AddEquiv.module R coordAddEquiv
 
 theorem single_color_cross_vanishes (x y : Fin 3 → A)
     (h_x : x 1 = 0 ∧ x 2 = 0)

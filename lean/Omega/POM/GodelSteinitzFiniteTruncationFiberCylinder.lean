@@ -45,7 +45,7 @@ def pom_godel_steinitz_finite_truncation_fiber_cylinder_finiteTruncation
 def pom_godel_steinitz_finite_truncation_fiber_cylinder_appendTail
     (m : ℕ) (ω tail : pom_godel_steinitz_finite_truncation_fiber_cylinder_stream) :
     pom_godel_steinitz_finite_truncation_fiber_cylinder_stream :=
-  fun n => if h : n < m then ω n else tail (n - m)
+  fun n => if n < m then ω n else tail (n - m)
 
 /-- The prefix cylinder around `ω` at depth `m`. -/
 def pom_godel_steinitz_finite_truncation_fiber_cylinder_cylinder
@@ -123,7 +123,8 @@ noncomputable def pom_godel_steinitz_finite_truncation_fiber_cylinder_cylinderEq
     ext n
     by_cases h : n < m
     · have hprefix := congrFun η.2 ⟨n, h⟩
-      simpa [pom_godel_steinitz_finite_truncation_fiber_cylinder_appendTail, h] using hprefix
+      simpa [pom_godel_steinitz_finite_truncation_fiber_cylinder_appendTail,
+        pom_godel_steinitz_finite_truncation_fiber_cylinder_prefixMap, h] using hprefix
     · have hmn : m ≤ n := Nat.le_of_not_lt h
       simp [pom_godel_steinitz_finite_truncation_fiber_cylinder_appendTail, h,
         Nat.add_sub_of_le hmn]
@@ -207,7 +208,11 @@ theorem paper_pom_godel_steinitz_finite_truncation_fiber_cylinder :
       pom_godel_steinitz_finite_truncation_fiber_cylinder_steinitzValuation
       pom_godel_steinitz_finite_truncation_fiber_cylinder_recoverPrefix
       (by intro k η; rfl)
-      (by intro k η ξ h; simpa using h)
+      (by
+        intro k η ξ h
+        change pom_godel_steinitz_finite_truncation_fiber_cylinder_stableCoordinate k η =
+          pom_godel_steinitz_finite_truncation_fiber_cylinder_stableCoordinate k ξ at h
+        exact h)
       (by intro k η ξ h; simp [pom_godel_steinitz_finite_truncation_fiber_cylinder_steinitzValuation])
       pom_godel_steinitz_finite_truncation_fiber_cylinder_prefix_extensionality
   have hfiber :
@@ -231,7 +236,12 @@ theorem paper_pom_godel_steinitz_finite_truncation_fiber_cylinder :
     · rintro ⟨η, hη, rfl⟩
       refine ⟨?_, ⟨η, rfl⟩⟩
       have hval := (hrigid.1 m ω η).1 hη
-      simpa using
+      change
+        pom_godel_steinitz_finite_truncation_fiber_cylinder_finiteTruncation m
+          (pom_godel_steinitz_finite_truncation_fiber_cylinder_Psi η) =
+        pom_godel_steinitz_finite_truncation_fiber_cylinder_finiteTruncation m
+          (pom_godel_steinitz_finite_truncation_fiber_cylinder_Psi ω)
+      exact
         (pom_godel_steinitz_finite_truncation_fiber_cylinder_finiteTruncation_eq_iff m ω η).2 hval
   have hball :
       pom_godel_steinitz_finite_truncation_fiber_cylinder_Psi ''
@@ -256,7 +266,6 @@ theorem paper_pom_godel_steinitz_finite_truncation_fiber_cylinder :
       _ = Cardinal.continuum := by
         rw [show Cardinal.mk pom_godel_steinitz_finite_truncation_fiber_cylinder_stream =
             Cardinal.mk (ℕ → Bool) by rfl]
-        change Cardinal.mk (ℕ → Bool) = Cardinal.continuum
         rw [Cardinal.mk_arrow, Cardinal.mk_bool, Cardinal.mk_nat, Cardinal.lift_id,
           Cardinal.lift_aleph0, Cardinal.two_power_aleph0]
   have himage_card :

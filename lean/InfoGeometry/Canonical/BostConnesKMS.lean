@@ -93,8 +93,8 @@ theorem S_mul (C : BostConnesCuntzSystem Op) (n m : ℕ+) :
 
 /-- Each multiplicatively indexed generator is an isometry. -/
 theorem S_isometry (C : BostConnesCuntzSystem Op) (n : ℕ+) :
-    star (S C n) * S C n = 1 := by
-  simpa [S] using C.generator_isometry n
+    star (S C n) * S C n = 1 :=
+  C.generator_isometry n
 
 /-- Prime generators are isometries. -/
 theorem S_prime_isometry (C : BostConnesCuntzSystem Op)
@@ -110,9 +110,8 @@ If a positive integer index has been decomposed as a list of factors, its
 generator is the ordered product of the corresponding generators.
 -/
 theorem S_list_prod (C : BostConnesCuntzSystem Op) (l : List ℕ+) :
-    S C l.prod = (l.map (S C)).prod := by
-  simpa [S, S_hom, CuntzMultiplicativeIndexing.generator] using
-    C.toMultiplicativeIndexing.generator_list_prod l
+    S C l.prod = (l.map (S C)).prod :=
+  (S_hom C).map_list_prod l
 
 /--
 Prime-power readback for a factorization component.

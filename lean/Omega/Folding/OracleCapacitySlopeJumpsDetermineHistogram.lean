@@ -15,7 +15,8 @@ theorem paper_fold_oracle_capacity_slope_jumps_determine_histogram
         (∑ x : X, if d x = t then 1 else 0) =
           (∑ x : X, if t ≤ d x then 1 else 0) -
             (∑ x : X, if t + 1 ≤ d x then 1 else 0)) := by
-  simpa [Omega.POM.oracleFiberMultiplicity] using
+  simpa [Omega.POM.oracleFiberMultiplicity, Fintype.card_subtype,
+    Finset.sum_boole, Nat.succ_le_iff] using
     (Omega.POM.paper_pom_tary_oracle_capacity_and_inversion (f := f))
 
 end Omega.Folding

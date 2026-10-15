@@ -1,3 +1,4 @@
+import InfoGeometry.Canonical.DecomposableBivector
 import InfoGeometry.Projective.ExteriorKleinTwoPlaneQuotient
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -57,7 +58,7 @@ theorem mem_frameSpan_iff_leftWedge_eq_zero
     have hli : LinearIndependent ℝ (Matrix.vecCons x uv.1) :=
       (linearIndependent_fin_cons).2
         ⟨nondegenerateExteriorFrame_linearIndependent uv, hx⟩
-    exact (exterior_ιMulti_ne_zero_of_linearIndependent _ hli) hzero
+    exact (InfoGeometry.Canonical.exteriorPower_ιMulti_ne_zero_of_linearIndependent _ hli) hzero
 
 /-- Equal projective Plücker rays have the same wedge kernel and therefore
 the same underlying two-plane. -/
@@ -156,9 +157,13 @@ theorem frameToKleinLocus_eq_of_frameSpan_eq
         have : uv₂.1 i ∈ (frameSpan uv₂).1 :=
           Submodule.subset_span (Set.mem_range_self i)
         simpa [h] using this⟩
-    change uv₂.1 i = _
-    simpa [coords, b, Module.Basis.span_apply] using
-      congrArg Subtype.val hb.symm
+    have h_val := congrArg Subtype.val hb.symm
+    rw [Submodule.coe_sum] at h_val
+    simp_rw [Submodule.coe_smul] at h_val
+    have hbj (j : Fin 2) : (b j : Vec4) = uv₁.1 j :=
+      congrArg Subtype.val (Module.Basis.span_apply (nondegenerateExteriorFrame_linearIndependent uv₁) j)
+    simp_rw [hbj] at h_val
+    exact h_val
   have hwedge :
       exteriorPower.ιMulti ℝ 2 uv₂.1 =
         (coords 0 0 * coords 1 1 - coords 0 1 * coords 1 0) •
@@ -171,9 +176,12 @@ theorem frameToKleinLocus_eq_of_frameSpan_eq
           coords 1 0 • uv₁.1 0 + coords 1 1 • uv₁.1 1] := by
       funext i
       fin_cases i
-      · simpa only [Matrix.cons_val_zero, Fin.sum_univ_two] using hcoords 0
-      · simpa only [Matrix.cons_val_one, Matrix.head_cons, Fin.sum_univ_two] using
-          hcoords 1
+      · show uv₂.1 0 = _
+        rw [hcoords 0, Fin.sum_univ_two]
+        rfl
+      · show uv₂.1 1 = _
+        rw [hcoords 1, Fin.sum_univ_two]
+        rfl
     rw [huv₂, huv₁]
     exact exterior_ιMulti_fin_two_change _ _ _ _ _ _
   let d : ℝ := coords 0 0 * coords 1 1 - coords 0 1 * coords 1 0

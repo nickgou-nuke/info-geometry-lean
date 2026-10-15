@@ -50,8 +50,14 @@ theorem continuous_symbolicObservationQuotientRangeMap
     (S : FiniteSymbolicLatentSystem X ι) :
     Continuous (symbolicObservationQuotientRangeMap S) := by
   apply continuous_induced_rng.mpr
-  simpa [symbolicObservationQuotientRangeMap] using
-    continuous_symbolicObservationQuotientMap S
+  change Continuous (Subtype.val ∘ symbolicObservationQuotientRangeMap S)
+  have hmap :
+      Subtype.val ∘ symbolicObservationQuotientRangeMap S =
+        symbolicObservationQuotientMap S := by
+    funext q
+    rfl
+  rw [hmap]
+  exact continuous_symbolicObservationQuotientMap S
 
 noncomputable def symbolicObservationQuotientRangeTopCatHom
     {X ι : Type} [TopologicalSpace X] [Fintype ι]
@@ -159,7 +165,8 @@ theorem symbolicObservationQuotientTopCatHom_factorization_unique
   have hqx := congrArg (fun y => y x) hq
   simpa [symbolicObservationQuotientRangeInclusionTopCatHom,
     symbolicObservationQuotientTopCatHom,
-    symbolicObservationQuotientRangeTopCatHom] using hqx
+    symbolicObservationQuotientRangeTopCatHom,
+    symbolicObservationQuotientRangeMap, TopCat.hom_ofHom] using hqx
 
 theorem isCompact_symbolicObservationQuotient_range
     {X ι : Type} [TopologicalSpace X] [CompactSpace X]

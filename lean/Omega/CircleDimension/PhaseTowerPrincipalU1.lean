@@ -1,5 +1,5 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import Mathlib.Tactic
 
 namespace Omega.CircleDimension
@@ -43,15 +43,16 @@ def phase_tower_principal_u1_phase_equivalent {n : ℕ}
     (z w : phase_tower_principal_u1_unit_sphere n) : Prop :=
   ∃ u : ℂ, Complex.normSq u = 1 ∧ ∀ i, w.1 i = u * z.1 i
 
-lemma phase_tower_principal_u1_phase_equivalent_refl {n : ℕ} :
-    Reflexive (phase_tower_principal_u1_phase_equivalent (n := n)) := by
+lemma phase_tower_principal_u1_phase_equivalent_refl (n : ℕ) :
+    ∀ z, phase_tower_principal_u1_phase_equivalent (n := n) z z := by
   intro z
   refine ⟨1, by simp, ?_⟩
   intro i
   simp
 
-lemma phase_tower_principal_u1_phase_equivalent_symm {n : ℕ} :
-    Symmetric (phase_tower_principal_u1_phase_equivalent (n := n)) := by
+lemma phase_tower_principal_u1_phase_equivalent_symm (n : ℕ) :
+    ∀ {z w}, phase_tower_principal_u1_phase_equivalent (n := n) z w →
+      phase_tower_principal_u1_phase_equivalent (n := n) w z := by
   intro z w h
   rcases h with ⟨u, hu, huw⟩
   have phase_tower_principal_u1_unit_ne_zero : u ≠ 0 := by
@@ -59,7 +60,7 @@ lemma phase_tower_principal_u1_phase_equivalent_symm {n : ℕ} :
     have : Complex.normSq u = 0 := by simp [hu0]
     rw [this] at hu
     norm_num at hu
-  refine ⟨u⁻¹, by simpa [Complex.normSq_inv, hu], ?_⟩
+  refine ⟨u⁻¹, by simp [hu], ?_⟩
   intro i
   have hcoord : w.1 i = u * z.1 i := huw i
   have hcalc : u⁻¹ * w.1 i = z.1 i := by
@@ -67,12 +68,14 @@ lemma phase_tower_principal_u1_phase_equivalent_symm {n : ℕ} :
     field_simp [phase_tower_principal_u1_unit_ne_zero, mul_assoc]
   simpa [mul_comm] using hcalc.symm
 
-lemma phase_tower_principal_u1_phase_equivalent_trans {n : ℕ} :
-    Transitive (phase_tower_principal_u1_phase_equivalent (n := n)) := by
+lemma phase_tower_principal_u1_phase_equivalent_trans (n : ℕ) :
+    ∀ {z w x}, phase_tower_principal_u1_phase_equivalent (n := n) z w →
+      phase_tower_principal_u1_phase_equivalent (n := n) w x →
+      phase_tower_principal_u1_phase_equivalent (n := n) z x := by
   intro z w x hzw hwx
   rcases hzw with ⟨u, hu, hzw⟩
   rcases hwx with ⟨v, hv, hvx⟩
-  refine ⟨v * u, by simpa [Complex.normSq_mul, hu, hv], ?_⟩
+  refine ⟨v * u, by simp [Complex.normSq_mul, hu, hv], ?_⟩
   intro i
   calc
     x.1 i = v * w.1 i := hvx i
@@ -83,9 +86,11 @@ lemma phase_tower_principal_u1_phase_equivalent_trans {n : ℕ} :
 def phase_tower_principal_u1_projective_setoid (n : ℕ) :
     Setoid (phase_tower_principal_u1_unit_sphere n) where
   r := phase_tower_principal_u1_phase_equivalent
-  iseqv := ⟨@phase_tower_principal_u1_phase_equivalent_refl n,
-    @phase_tower_principal_u1_phase_equivalent_symm n,
-    @phase_tower_principal_u1_phase_equivalent_trans n⟩
+  iseqv := {
+    refl := phase_tower_principal_u1_phase_equivalent_refl n
+    symm := phase_tower_principal_u1_phase_equivalent_symm n
+    trans := phase_tower_principal_u1_phase_equivalent_trans n
+  }
 
 /-- The quotient map from the unit sphere to projective space. -/
 def phase_tower_principal_u1_projectivization (n : ℕ) :

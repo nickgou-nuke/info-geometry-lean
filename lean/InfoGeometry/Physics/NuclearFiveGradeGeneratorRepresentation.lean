@@ -26,7 +26,14 @@ inductive Generator : Type
   | creationOne
   | creationTwo
   | pairCreation
-  deriving DecidableEq, Fintype, Repr
+  deriving DecidableEq, Repr
+
+instance : Fintype Generator where
+  elems := { .pairAnnihilation, .annihilationOne, .annihilationTwo, .cartan,
+             .creationOne, .creationTwo, .pairCreation }
+  complete := by
+    intro x
+    cases x <;> simp
 
 /-- Integer grade of each named generator. -/
 def degree : Generator → ℤ

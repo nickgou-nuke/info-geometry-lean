@@ -4,12 +4,12 @@ This ledger records the current end-state in a theorem-honest form.  It is a
 manifest for stabilization and review, not a claim that the physical
 interpretation has been proved in Lean.
 
-## Three-Way Dictionary
+## Separate Finite Readouts
 
-The working architecture uses the following dictionary:
+These are adjacent finite constructions, not an equivalence or causal chain:
 
 ```text
-Klein-null triangulation <-> Thermodynamic flow <-> BCFW residue readout
+Klein/Plücker incidence   |   thermodynamic commutator   |   DAG-edge commutation
 ```
 
 In the compiled Lean surface this means only:
@@ -20,8 +20,8 @@ In the compiled Lean surface this means only:
 - entropy production is the commutator
   `P_forward * P_backward - P_backward * P_forward`;
 - equality with `d_ln_Q` is conditional on an explicit commutator premise;
-- BCFW-style readout modules may reuse the finite linker theorem, but this is
-  not yet an analytic residue theorem.
+- there is no Lean theorem identifying these ring-level facts with BCFW
+  residue balance or a physical scattering amplitude.
 
 ## Kernel-Native Core
 
@@ -34,10 +34,11 @@ The following surfaces are kernel-native finite algebraic content:
   - `gauge_field_covariance`
   - finite Wilson-word helpers and explicit trace readbacks
 - `InfoGeometry.Topology.GrandUnificationLinker`
-  - `global_isometry_preservation`
-  - `on_shell_boundary_collapse`
-  - `on_shell_boundary_collapse_minus`
-  - Delaunay/Rohozhkin readbacks from explicit flip equivalences
+  - `dag_edge_commutes_with_symmetric_mixed` follows from the two explicit
+    intertwining equations for the DAG edge and the split generators.
+  - `nilpotent_sandwich_zero` proves the symmetric mixed-product sandwich
+    identity from one square-zero hypothesis in an associative ring.
+  Neither statement is a mass-shell or BCFW theorem.
 - `InfoGeometry.Projective.MacaulayTrackBIngestion`
   - the ingested integer `1296` agrees with the Lean candidate polynomial
     evaluation `tateMotivePolynomial 3`;
@@ -54,7 +55,7 @@ comparisons:
 - a Wilson-loop trace equals a Bost-Connes or zeta scalar;
 - a finite point count is the actual external Macaulay2 D-module result;
 - a Delaunay/Pachner flip is a physical scattering transition;
-- a BCFW-style finite readout is an analytic BCFW residue theorem.
+- a finite DAG-edge commutation identity is a BCFW residue theorem.
 
 ## Open Closure Debt
 

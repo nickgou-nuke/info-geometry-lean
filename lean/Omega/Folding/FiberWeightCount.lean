@@ -124,8 +124,8 @@ theorem exactWeightCount_zero_zero : exactWeightCount 0 0 = 1 := by decide
 /-- thm:pom-ewc-zero-succ -/
 theorem exactWeightCount_zero_succ (n : Nat) : exactWeightCount 0 (n + 1) = 0 := by
   unfold exactWeightCount
-  simp only [Finset.card_eq_zero, Finset.filter_eq_empty_iff, Finset.mem_univ, true_implies,
-    weight]; omega
+  have h : ∀ w : Word 0, weight w = 0 := fun _ => rfl
+  simp [h]
 
 /-- Last-bit split: ewc(m+1, n) = ewc(m, n) + ewc(m, n - F_{m+2}).
     thm:pom-ewc-succ -/

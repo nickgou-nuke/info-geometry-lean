@@ -52,10 +52,8 @@ theorem zornZeroRelated_aut_iff
       have hmap : octImPointPerm g u = octImPointPerm g v :=
         congrArg (octImPointPerm g) (Subtype.ext huv)
       exact congrArg Subtype.val hmap
-    · simpa [octImPointPerm_apply] using
-        (native_multiplication_zero_iff g u.1 v.1).mp h.2.1
-    · simpa [octImPointPerm_apply] using
-        (native_multiplication_zero_iff g v.1 u.1).mp h.2.2
+    · exact (native_multiplication_zero_iff g u.1 v.1).mp h.2.1
+    · exact (native_multiplication_zero_iff g v.1 u.1).mp h.2.2
   · intro h
     refine ⟨?_, ?_, ?_⟩
     · intro huv
@@ -63,10 +61,8 @@ theorem zornZeroRelated_aut_iff
       have hmap : octImPointPerm g u = octImPointPerm g v :=
         Subtype.ext huv
       exact congrArg Subtype.val ((octImPointPerm g).injective hmap)
-    · simpa [octImPointPerm_apply] using
-        (native_multiplication_zero_iff g u.1 v.1).mpr h.2.1
-    · simpa [octImPointPerm_apply] using
-        (native_multiplication_zero_iff g v.1 u.1).mpr h.2.2
+    · exact (native_multiplication_zero_iff g u.1 v.1).mpr h.2.1
+    · exact (native_multiplication_zero_iff g v.1 u.1).mpr h.2.2
 
 def zornZeroNeighborSet (u : OctImIsotropicPoint) :
   Finset OctImIsotropicPoint :=

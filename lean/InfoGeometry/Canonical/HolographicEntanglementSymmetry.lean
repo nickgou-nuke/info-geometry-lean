@@ -200,7 +200,8 @@ theorem forward_time_equals_positive_winding_readout
     P.1.1,
     P.1.2.1,
     P.1.2.2.1,
-    by simpa [PhysicalForwardTimeBridge, identityDepthPositiveBranchBridge] using
+    by simpa only [physicalForwardTimeBridge_entropy,
+      physicalForwardTimeBridge_area] using
       P.1.2.2.2
   ⟩
 

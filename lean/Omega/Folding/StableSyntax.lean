@@ -8,7 +8,7 @@ import Omega.Core.No11
 namespace Omega
 
 /-- The stable syntax space of length `m`. -/
-def X (m : Nat) := { w : Word m // No11 w }
+abbrev X (m : Nat) := { w : Word m // No11 w }
 
 namespace X
 
@@ -16,7 +16,6 @@ noncomputable instance instFintype (m : Nat) : Fintype (X m) :=
   by
     classical
     letI : DecidablePred (fun w : Word m => No11 w) := Classical.decPred _
-    delta X
     infer_instance
 
 instance instFinite (m : Nat) : Finite (X m) :=
@@ -48,7 +47,7 @@ def appendFalse (x : X m) : X (m + 1) :=
   ⟨Omega.snoc x.1 false, no11_snoc_false x.2⟩
 
 /-- Append `1` to the right of a stable word when the current last bit is `0`. -/
-def appendTrue (x : X m) (hLast : get x.1 (m - 1) = false) : X (m + 1) :=
+def appendTrue (x : X m) (hLast : EndsInZero x) : X (m + 1) :=
   ⟨Omega.snoc x.1 true, no11_snoc_true x.2 hLast⟩
 
 @[simp] theorem restrict_val (x : X (m + 1)) :
@@ -64,10 +63,10 @@ def appendTrue (x : X m) (hLast : get x.1 (m - 1) = false) : X (m + 1) :=
   apply Subtype.ext
   simp [appendFalse, restrict]
 
-@[simp] theorem appendTrue_val (x : X m) (hLast : get x.1 (m - 1) = false) :
+@[simp] theorem appendTrue_val (x : X m) (hLast : EndsInZero x) :
     (appendTrue x hLast).1 = Omega.snoc x.1 true := rfl
 
-@[simp] theorem restrict_appendTrue (x : X m) (hLast : get x.1 (m - 1) = false) :
+@[simp] theorem restrict_appendTrue (x : X m) (hLast : EndsInZero x) :
     restrict (appendTrue x hLast) = x := by
   apply Subtype.ext
   simp [appendTrue, restrict]
@@ -85,7 +84,7 @@ theorem appendFalse_reconstruct (x : X (m + 1)) (hLast : Omega.last x.1 = false)
 
 theorem appendTrue_reconstruct (x : X (m + 1))
     (hLast : Omega.last x.1 = true)
-    (hRestrict : get (restrict x).1 (m - 1) = false) :
+    (hRestrict : EndsInZero (restrict x)) :
     appendTrue (restrict x) hRestrict = x := by
   apply Subtype.ext
   funext i
@@ -209,27 +208,45 @@ noncomputable def appendFalseEquivLastFalse (m : Nat) :
 
 noncomputable def appendTrueEquivLastTrue (m : Nat) :
     {x : X m // EndsInZero x} ≃ {x : X (m + 1) // Omega.last x.1 = true} where
-  toFun x := ⟨appendTrue x.1 x.2, by simp [Omega.last]⟩
+  toFun x := ⟨appendTrue x.1 x.2, by rw [appendTrue_val, last_snoc]⟩
   invFun x := ⟨restrict x.1, restrict_endsInZero_of_last_true x.1 x.2⟩
   left_inv x := by
     apply Subtype.ext
-    simp
+    exact restrict_appendTrue x.1 x.2
   right_inv x := by
     apply Subtype.ext
     simpa using appendTrue_reconstruct x.1 x.2 (restrict_endsInZero_of_last_true x.1 x.2)
 
+lemma endsInZero_succ_iff (x : X (m + 1)) :
+    EndsInZero x ↔ Omega.last x.1 = false := by
+  change get x.1 (m + 1 - 1) = false ↔ x.1 ⟨m, Nat.lt_succ_self m⟩ = false
+  rw [Nat.add_sub_cancel]
+  rw [get_of_lt x.1 (Nat.lt_succ_self m)]
+
+lemma endsInOne_succ_iff (x : X (m + 1)) :
+    EndsInOne x ↔ Omega.last x.1 = true := by
+  change get x.1 (m + 1 - 1) = true ↔ x.1 ⟨m, Nat.lt_succ_self m⟩ = true
+  rw [Nat.add_sub_cancel]
+  rw [get_of_lt x.1 (Nat.lt_succ_self m)]
+
+noncomputable def endsInZeroSuccEquiv (m : Nat) :
+    {x : X (m + 1) // EndsInZero x} ≃ X m :=
+  (Equiv.subtypeEquivRight (fun x => endsInZero_succ_iff x)).trans
+    (appendFalseEquivLastFalse m).symm
+
 @[simp] theorem card_endsInZero_succ (m : Nat) :
-    Fintype.card {x : X (m + 1) // EndsInZero x} = Fintype.card (X m) := by
-  classical
-  simpa [EndsInZero, Omega.last, Omega.get] using
-    (Fintype.card_congr (appendFalseEquivLastFalse m)).symm
+    Fintype.card {x : X (m + 1) // EndsInZero x} = Fintype.card (X m) :=
+  Fintype.card_congr (endsInZeroSuccEquiv m)
+
+noncomputable def endsInOneSuccEquiv (m : Nat) :
+    {x : X (m + 1) // EndsInOne x} ≃ {x : X m // EndsInZero x} :=
+  (Equiv.subtypeEquivRight (fun x => endsInOne_succ_iff x)).trans
+    (appendTrueEquivLastTrue m).symm
 
 @[simp] theorem card_endsInOne_succ (m : Nat) :
     Fintype.card {x : X (m + 1) // EndsInOne x} =
-      Fintype.card {x : X m // EndsInZero x} := by
-  classical
-  simpa [EndsInOne, EndsInZero, Omega.last, Omega.get] using
-    (Fintype.card_congr (appendTrueEquivLastTrue m)).symm
+      Fintype.card {x : X m // EndsInZero x} :=
+  Fintype.card_congr (endsInOneSuccEquiv m)
 
 theorem card_eq_endsInZero_add_endsInOne (m : Nat) :
     Fintype.card (X m) =
@@ -296,13 +313,14 @@ theorem card_X_endingTrue (m : Nat) (hm : 1 ≤ m) :
     (Finset.univ.filter (fun w : X m => w.1 ⟨m - 1, by omega⟩ = true)).card
     = Nat.fib m := by
   classical
-  rw [← card_endsInOne_eq_fib m hm]
-  rw [Fintype.card_subtype]
-  congr 1
-  ext w
-  simp only [EndsInOne, Omega.get, Finset.mem_filter, Finset.mem_univ, true_and]
-  have hlt : m - 1 < m := by omega
-  rw [dif_pos hlt]
+  have h_filter : (Finset.univ.filter (fun w : X m => w.1 ⟨m - 1, by omega⟩ = true))
+      = (Finset.univ.filter EndsInOne) := by
+    apply Finset.filter_congr
+    intro w _
+    have hlt : m - 1 < m := by omega
+    dsimp [EndsInOne]
+    rw [get_of_lt w.1 hlt]
+  rw [h_filter, ← Fintype.card_subtype, card_endsInOne_eq_fib m hm]
 
 /-- Reversal on X m: an involution swapping first/last bits.
     aux:x-reverse-local -/
@@ -320,7 +338,7 @@ theorem rev_first_eq_last (x : X m) (hm : 1 ≤ m) :
 
 theorem rev_last_eq_first (x : X m) (hm : 1 ≤ m) :
     get (rev x).1 (m - 1) = x.1 ⟨0, by omega⟩ := by
-  rw [Omega.get, dif_pos (show m - 1 < m by omega)]
+  rw [get_of_lt (rev x).1 (by omega)]
   show x.1 ⟨m - 1 - (m - 1), by omega⟩ = x.1 ⟨0, by omega⟩
   simp only [Nat.sub_self]
 
@@ -335,7 +353,7 @@ noncomputable def revStartsZeroEquivEndsZero (m : Nat) (hm : 1 ≤ m) :
     rw [rev_first_eq_last x.1 hm]
     have := x.2; show x.1.1 ⟨m - 1, by omega⟩ = false
     change get x.1.1 (m - 1) = false at this
-    rwa [Omega.get, dif_pos (show m - 1 < m by omega)] at this⟩
+    rwa [get_of_lt x.1.1 (by omega)] at this⟩
   left_inv x := Subtype.ext (rev_involutive x.1)
   right_inv x := Subtype.ext (rev_involutive x.1)
 
@@ -350,7 +368,7 @@ noncomputable def revStartsOneEquivEndsOne (m : Nat) (hm : 1 ≤ m) :
     rw [rev_first_eq_last x.1 hm]
     have := x.2; show x.1.1 ⟨m - 1, by omega⟩ = true
     change get x.1.1 (m - 1) = true at this
-    rwa [Omega.get, dif_pos (show m - 1 < m by omega)] at this⟩
+    rwa [get_of_lt x.1.1 (by omega)] at this⟩
   left_inv x := Subtype.ext (rev_involutive x.1)
   right_inv x := Subtype.ext (rev_involutive x.1)
 

@@ -36,7 +36,7 @@ theorem psi_comp_iota_seq (n m : ℕ) :
   · dsimp [iota_seq]
     rw [← LinearMap.comp_assoc]
     have hcomm : (psi (n + (m + 1))).comp (iota (n + m)) = psi (n + m) := by
-      simpa [Nat.add_assoc] using psi_comm (n + m)
+      simpa only [Nat.add_succ] using psi_comm (n + m)
     rw [hcomm]
     exact ih
 

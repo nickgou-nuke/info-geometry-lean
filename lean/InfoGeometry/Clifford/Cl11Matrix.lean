@@ -1,5 +1,6 @@
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Clifford.SplitQ11
 import Mathlib.LinearAlgebra.CliffordAlgebra.Contraction
 import Mathlib.LinearAlgebra.CliffordAlgebra.Equivs
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
@@ -35,6 +36,43 @@ noncomputable def q11 : QuadraticForm ℝ Vec11 :=
 @[simp] lemma q11_apply (v : Vec11) : q11 v = v.1 ^ 2 - v.2 ^ 2 := by
   rw [q11, CliffordAlgebraQuaternion.Q_apply]
   ring
+
+/-- The quaternion-defined matrix-side form is exactly the canonical split
+quadratic form used by the doubled-real Krein representation. -/
+theorem q11_eq_splitQ11 : q11 = InfoGeometry.Clifford.splitQ11 := by
+  apply QuadraticMap.ext
+  intro v
+  rw [q11_apply, InfoGeometry.Clifford.splitQ11_apply]
+  ring
+
+/-- The equality of quadratic forms identifies the two native `Cl(1,1)`
+carrier types. -/
+theorem cliffordAlgebra_q11_eq_splitQ11 :
+    CliffordAlgebra q11 = CliffordAlgebra InfoGeometry.Clifford.splitQ11 :=
+  congrArg CliffordAlgebra q11_eq_splitQ11
+
+/-- The identity on `ℝ × ℝ` is an isometry from the quaternion-defined form
+to the canonical split form. -/
+def q11ToSplitIsometry : q11.IsometryEquiv InfoGeometry.Clifford.splitQ11 where
+  toLinearEquiv := LinearEquiv.refl ℝ Vec11
+  map_app' v := by
+    rw [q11_eq_splitQ11]
+    rfl
+
+/-- Mathlib's universal Clifford-algebra map identifies the matrix-side
+`Cl(1,1)` carrier with the canonical split carrier used by the Krein action. -/
+noncomputable def q11ToSplitClifford :
+    CliffordAlgebra q11 ≃ₐ[ℝ]
+      CliffordAlgebra InfoGeometry.Clifford.splitQ11 :=
+  CliffordAlgebra.equivOfIsometry q11ToSplitIsometry
+
+/-- The quadratic-form isometry transports each Clifford generator without
+changing its vector coordinate. -/
+@[simp] theorem q11ToSplitClifford_ι (v : Vec11) :
+    q11ToSplitClifford (CliffordAlgebra.ι q11 v) =
+      CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 v := by
+  simp [q11ToSplitClifford, q11ToSplitIsometry]
+  rfl
 
 -- Real Pauli matrices
 def Eplus  : Mat2 := !![(1 : ℝ), 0; 0, (-1 : ℝ)]  -- σ₃

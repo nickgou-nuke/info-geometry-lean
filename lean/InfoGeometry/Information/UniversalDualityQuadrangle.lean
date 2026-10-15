@@ -1,5 +1,6 @@
 import Mathlib.Analysis.Calculus.Deriv.Basic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Inv
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv
@@ -167,15 +168,18 @@ theorem hasDerivAt_barrier (x : ℝ) (hx : 0 < x) :
     HasDerivAt barrier (- (1 / x)) x := by
   have h := (hasDerivAt_id x).log (ne_of_gt hx)
   have h_neg := h.neg
-  simpa [barrier] using h_neg
+  exact (h_neg : HasDerivAt barrier (- (1 / x)) x)
 
 /-- Second derivative (Hessian metric) of the barrier: F''(x) = 1/x². -/
 theorem hasDerivAt_barrier_deriv (x : ℝ) (hx : 0 < x) :
     HasDerivAt (fun y => - (1 / y)) (1 / x ^ 2) x := by
   have h_inv := (hasDerivAt_inv (ne_of_gt hx)).neg
-  have h_val : -(-(x ^ 2)⁻¹) = 1 / x ^ 2 := by
-    simp [one_div]
-  simpa [one_div, h_val] using h_inv
+  have h_val : -(-(x ^ 2)⁻¹) = 1 / x ^ 2 := by simp [one_div]
+  rw [← h_val]
+  have h_eq : (fun (y : ℝ) => - (1 / y)) = (-fun (y : ℝ) => y⁻¹) := by
+    funext y; simp [one_div]
+  rw [h_eq]
+  exact h_inv
 
 /-- 🏆 THEOREM: The Universal Self-Concordance Identity:
     |F'''(x)| = 2 * (F''(x))^(3/2)

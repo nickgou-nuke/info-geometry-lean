@@ -20,7 +20,9 @@ inductive Archetype
   | ellipticRotation
   | rotationQuartic
   | rotationHalfPeriod
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype Archetype := derive_fintype% Archetype
 
 open Archetype
 

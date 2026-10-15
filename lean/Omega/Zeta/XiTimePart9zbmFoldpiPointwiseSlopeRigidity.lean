@@ -1,4 +1,5 @@
-import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
 
@@ -49,6 +50,11 @@ lemma xi_time_part9zbm_foldpi_pointwise_slope_rigidity_left_deriv (n : ℕ) :
   let z := xi_time_part9zbm_foldpi_pointwise_slope_rigidity_left_zero n
   change deriv (fun t : ℝ => Real.goldenRatio ^ (4 : ℕ) * (t - z)) z =
     Real.goldenRatio ^ (4 : ℕ)
+  have hfun : (fun t : ℝ => Real.goldenRatio ^ (4 : ℕ) * (t - z)) =
+      (fun t => Real.goldenRatio ^ (4 : ℕ) * t - Real.goldenRatio ^ (4 : ℕ) * z) := by
+    funext t
+    ring
+  rw [hfun, deriv_sub_const, deriv_const_mul_field, deriv_id'']
   simp
 
 lemma xi_time_part9zbm_foldpi_pointwise_slope_rigidity_right_deriv (n : ℕ) :
@@ -56,7 +62,10 @@ lemma xi_time_part9zbm_foldpi_pointwise_slope_rigidity_right_deriv (n : ℕ) :
         (xi_time_part9zbm_foldpi_pointwise_slope_rigidity_right_zero n) = 1 := by
   let z := xi_time_part9zbm_foldpi_pointwise_slope_rigidity_right_zero n
   change deriv (fun t : ℝ => 1 * (t - z)) z = 1
-  simp
+  have hfun : (fun t : ℝ => 1 * (t - z)) = fun t => t - z := by
+    funext t
+    ring
+  rw [hfun, deriv_sub_const, deriv_id'']
 
 /-- Paper label: `thm:xi-time-part9zbm-foldpi-pointwise-slope-rigidity`. The two ladder factors
 are linear Fredholm factors; differentiating at their simple zeros gives slopes `φ^4` and `1`,

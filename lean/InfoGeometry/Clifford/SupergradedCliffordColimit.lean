@@ -36,39 +36,14 @@ abbrev ChiralStage (n : ℕ) := ChiralBlock (Stage n)
 
 /-! ## Entrywise stage maps -/
 
-def chiralBond (n : ℕ) : ChiralStage n →+* ChiralStage (n + 1) where
-  toFun := fun X i j => stageBond n (X i j)
-  map_one' := by
-    ext i j
-    simp [Matrix.one_apply]
-  map_mul' := by
-    intro X Y
-    ext i j
-    simp [Matrix.mul_apply]
-  map_zero' := by
-    ext i j
-    simp
-  map_add' := by
-    intro X Y
-    ext i j
-    simp
+def chiralBond (n : ℕ) : ChiralStage n →+* ChiralStage (n + 1) :=
+  (stageBond n).mapMatrix
 
-def chiralStageMap (n : ℕ) : ChiralStage n →+* ChiralCarrier where
-  toFun := fun X i j => ofStage n (X i j)
-  map_one' := by
-    ext i j
-    simp [Matrix.one_apply]
-  map_mul' := by
-    intro X Y
-    ext i j
-    simp [Matrix.mul_apply]
-  map_zero' := by
-    ext i j
-    simp
-  map_add' := by
-    intro X Y
-    ext i j
-    simp
+@[simp] theorem chiralBond_apply (n : ℕ) (X : ChiralStage n) (i j : Fin 2) :
+    chiralBond n X i j = stageBond n (X i j) := rfl
+
+def chiralStageMap (n : ℕ) : ChiralStage n →+* ChiralCarrier :=
+  (ofStage n).mapMatrix
 
 @[simp] theorem chiralStageMap_apply (n : ℕ) (X : ChiralStage n)
     (i j : Fin 2) :
@@ -76,30 +51,29 @@ def chiralStageMap (n : ℕ) : ChiralStage n →+* ChiralCarrier where
 
 theorem chiralStageMap_bond (n : ℕ) (X : ChiralStage n) :
     chiralStageMap (n + 1) (chiralBond n X) = chiralStageMap n X := by
-  ext i j
-  change ofStage (n + 1) (stageBond n (X i j)) = ofStage n (X i j)
+  refine Matrix.ext fun i j => ?_
   exact ofStage_apply_bond n (X i j)
 
 /-! ## Finite chiral charges and their colimit readouts -/
 
 @[simp] theorem chiralStageMap_qPlus (n : ℕ) (a : Stage n) :
     chiralStageMap n (chiralQPlus a) = chiralQPlus (ofStage n a) := by
-  ext i j
+  refine Matrix.ext fun i j => ?_
   fin_cases i <;> fin_cases j <;>
-    simp [chiralStageMap, chiralQPlus]
+    simp [chiralQPlus]
 
 @[simp] theorem chiralStageMap_qMinus (n : ℕ) (b : Stage n) :
     chiralStageMap n (chiralQMinus b) = chiralQMinus (ofStage n b) := by
-  ext i j
+  refine Matrix.ext fun i j => ?_
   fin_cases i <;> fin_cases j <;>
-    simp [chiralStageMap, chiralQMinus]
+    simp [chiralQMinus]
 
 @[simp] theorem chiralStageMap_parity (n : ℕ) :
     chiralStageMap n (chiralParity : ChiralStage n) =
       (chiralParity : ChiralCarrier) := by
-  ext i j
+  refine Matrix.ext fun i j => ?_
   fin_cases i <;> fin_cases j <;>
-    simp [chiralStageMap, chiralParity]
+    simp [chiralParity]
 
 @[simp] theorem chiralStageMap_dirac (n : ℕ) (a b : Stage n) :
     chiralStageMap n (chiralDirac a b) =
@@ -139,53 +113,38 @@ theorem carrier_dirac_square (a b : Carrier) :
 /-! ## The same chiral extension in the BitWord dialect -/
 
 noncomputable def chiralCarrierEquiv :
-    ChiralCarrier ≃+* ChiralBlock PrimonColimitAlgebra.PrimonUHFAlgebra where
-  toFun := fun X i j => cliffordBitWordColimitEquiv (X i j)
-  invFun := fun X i j => cliffordBitWordColimitEquiv.symm (X i j)
-  left_inv := by
-    intro X
-    ext i j
-    simp
-  right_inv := by
-    intro X
-    ext i j
-    simp
-  map_mul' := by
-    intro X Y
-    ext i j
-    simp [Matrix.mul_apply]
-  map_add' := by
-    intro X Y
-    ext i j
-    simp
+    ChiralCarrier ≃+* ChiralBlock PrimonColimitAlgebra.PrimonUHFAlgebra :=
+  cliffordBitWordColimitEquiv.mapMatrix
+@[simp] theorem chiralCarrierEquiv_apply (X : ChiralCarrier) (i j : Fin 2) :
+    chiralCarrierEquiv X i j = cliffordBitWordColimitEquiv (X i j) := rfl
 
 @[simp] theorem chiralCarrierEquiv_stage (n : ℕ) (X : ChiralStage n) :
     chiralCarrierEquiv (chiralStageMap n X) =
       (fun i j => PrimonColimitAlgebra.toColimit n
         (clStageEquiv n (X i j))) := by
   ext i j
-  simp [chiralCarrierEquiv, chiralStageMap, clStageEquiv]
+  simp [clStageEquiv]
 
 @[simp] theorem chiralCarrierEquiv_qPlus (a : Carrier) :
     chiralCarrierEquiv (chiralQPlus a) =
       chiralQPlus (cliffordBitWordColimitEquiv a) := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [chiralCarrierEquiv, chiralQPlus]
+    simp [chiralQPlus]
 
 @[simp] theorem chiralCarrierEquiv_qMinus (b : Carrier) :
     chiralCarrierEquiv (chiralQMinus b) =
       chiralQMinus (cliffordBitWordColimitEquiv b) := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [chiralCarrierEquiv, chiralQMinus]
+    simp [chiralQMinus]
 
 @[simp] theorem chiralCarrierEquiv_parity :
     chiralCarrierEquiv (chiralParity : ChiralCarrier) =
       (chiralParity : ChiralBlock PrimonColimitAlgebra.PrimonUHFAlgebra) := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [chiralCarrierEquiv, chiralParity]
+    simp [chiralParity]
 
 @[simp] theorem chiralCarrierEquiv_dirac (a b : Carrier) :
     chiralCarrierEquiv (chiralDirac a b) =
@@ -193,7 +152,7 @@ noncomputable def chiralCarrierEquiv :
         (cliffordBitWordColimitEquiv b) := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [chiralDirac, chiralCarrierEquiv, chiralQPlus, chiralQMinus]
+    simp [chiralDirac, chiralQPlus, chiralQMinus]
 
 @[simp] theorem chiralCarrierEquiv_hamiltonian (a b : Carrier) :
     chiralCarrierEquiv (chiralSUSYHamiltonian a b) =
@@ -212,7 +171,7 @@ from the scalar UHF carrier while making its trace transport explicit. -/
 theorem chiralCarrierEquiv_trace (X : ChiralCarrier) :
     cliffordBitWordColimitEquiv (Matrix.trace X) =
       Matrix.trace (chiralCarrierEquiv X) := by
-  simp [Matrix.trace, chiralCarrierEquiv]
+  simp [Matrix.trace, Fin.sum_univ_two]
 
 /-- The normalized colimit readout sees the same scalar matrix trace before
 and after the chiral carrier equivalence.  This is the scalar-state bridge for

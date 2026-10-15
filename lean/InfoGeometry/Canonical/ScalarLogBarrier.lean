@@ -1,5 +1,9 @@
-import Mathlib
-import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Basic.Real.Basic
+import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Mul
+import Mathlib.Tactic
 
 /-!
 # Scalar logarithmic barrier
@@ -40,7 +44,7 @@ theorem barrier_mul {x y : ℝ} (hx : x ≠ 0) (hy : y ≠ 0) :
 theorem hasDerivAt_barrier {x : ℝ} (hx : x ≠ 0) :
     HasDerivAt barrier (gradient x) x := by
   unfold barrier gradient
-  simpa using (Real.hasDerivAt_log hx).neg
+  exact (Real.hasDerivAt_log hx).neg
 
 /-- Derivative of the barrier gradient. -/
 theorem hasDerivAt_gradient {x : ℝ} (hx : x ≠ 0) :

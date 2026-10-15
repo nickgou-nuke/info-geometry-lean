@@ -1,3 +1,4 @@
+import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic
 
 namespace Omega.Conclusion
@@ -24,6 +25,7 @@ theorem paper_conclusion_index_torsion_time_lower_bound
   intro h
   rcases h with ⟨encode, hencode⟩
   have hcard := Fintype.card_le_of_injective encode hencode
-  simpa [jointLiftOutcomeCount, transcriptOutcomeCount, Fintype.card_fin] using hcard
+  rw [Fintype.card_fin, Fintype.card_fin] at hcard
+  exact hcard
 
 end Omega.Conclusion

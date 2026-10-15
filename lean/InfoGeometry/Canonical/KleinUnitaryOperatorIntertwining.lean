@@ -33,12 +33,16 @@ theorem operatorDeckMap_mulVec (omega : ℂ)
     (g : Deck2) (A : Op) (v : State) :
     (operatorDeckMap g A).mulVec (deckFiberMap g v) =
       deckFiberMap g (A.mulVec v) := by
-  unfold operatorDeckMap deckFiberMap
-  split_ifs with hg
-  · simp
-  · have hg' : g = 1 := by
-      fin_cases g <;> simp_all
-    subst g
+  have hcases (z : Deck2) : z = 0 ∨ z = 1 := by
+    have hz : z.val < 2 := z.isLt
+    have hval : z.val = 0 ∨ z.val = 1 := by omega
+    rcases hval with hzero | hone
+    · exact Or.inl ((ZMod.val_eq_zero z).mp hzero)
+    · exact Or.inr ((ZMod.val_eq_one (by decide) z).mp hone)
+  rcases hcases g with rfl | rfl
+  · simp [operatorDeckMap, deckFiberMap]
+  · have h10 : (1 : Deck2) ≠ 0 := by decide
+    simp only [operatorDeckMap, deckFiberMap, if_neg h10]
     change (theta * A * theta).mulVec (theta.mulVec v) =
       theta.mulVec (A.mulVec v)
     have htheta : theta.mulVec (theta.mulVec v) = v := by

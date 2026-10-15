@@ -100,7 +100,9 @@ theorem paper_xi_single_integer_coordinate_no_exact_additive_ledger (r : Nat) (h
         simp [u, v, Pi.single, hi01, toNat_ne_zero_of_pos hbPos] at h0
       exact huv (hinj hEq)
     · have hbNeg : b < 0 := lt_of_le_of_ne (le_of_not_gt hbPos) hb0
-      let u : Fin r → Nat := Pi.single i0 ((-b).toNat) + Pi.single i1 a.toNat
+      let f : Fin r → Nat := Pi.single i0 ((-b).toNat)
+      let g : Fin r → Nat := Pi.single i1 a.toNat
+      let u : Fin r → Nat := f + g
       have hu0 :
           e (Pi.single i0 ((-b).toNat)) = (((-b).toNat : Nat) : Int) * e (Pi.single i0 1) := by
         simpa using additive_single_mul hadd i0 ((-b).toNat)
@@ -109,7 +111,12 @@ theorem paper_xi_single_integer_coordinate_no_exact_additive_ledger (r : Nat) (h
         simpa using additive_single_mul hadd i1 a.toNat
       have hs :
           e u = e (Pi.single i0 ((-b).toNat)) + e (Pi.single i1 a.toNat) := by
-        simpa [u] using hadd (Pi.single i0 ((-b).toNat)) (Pi.single i1 a.toNat)
+        change e (f + g) = _
+        have hfun : (fun i => f i + g i) = f + g := by
+          funext i
+          rfl
+        rw [← hfun]
+        exact hadd f g
       have hEq : e u = e 0 := by
         rw [additive_zero hadd, hs, hu0, hu1,
           Int.toNat_of_nonneg (neg_nonneg.mpr (le_of_lt hbNeg)),
@@ -118,11 +125,13 @@ theorem paper_xi_single_integer_coordinate_no_exact_additive_ledger (r : Nat) (h
       have hu_ne : u ≠ 0 := by
         intro hu
         have h0 := congrArg (fun f => f i0) hu
-        simp [u, Pi.single, hi01, toNat_ne_zero_of_neg hbNeg] at h0
+        simp [u, f, g, Pi.single, hi01, toNat_ne_zero_of_neg hbNeg] at h0
       exact hu_ne (hinj hEq)
   · have haNeg : a < 0 := lt_of_le_of_ne (le_of_not_gt haPos) ha0
     by_cases hbPos : 0 < b
-    · let u : Fin r → Nat := Pi.single i0 b.toNat + Pi.single i1 ((-a).toNat)
+    · let f : Fin r → Nat := Pi.single i0 b.toNat
+      let g : Fin r → Nat := Pi.single i1 ((-a).toNat)
+      let u : Fin r → Nat := f + g
       have hu0 :
           e (Pi.single i0 b.toNat) = ((b.toNat : Nat) : Int) * e (Pi.single i0 1) := by
         simpa using additive_single_mul hadd i0 b.toNat
@@ -131,7 +140,12 @@ theorem paper_xi_single_integer_coordinate_no_exact_additive_ledger (r : Nat) (h
         simpa using additive_single_mul hadd i1 ((-a).toNat)
       have hs :
           e u = e (Pi.single i0 b.toNat) + e (Pi.single i1 ((-a).toNat)) := by
-        simpa [u] using hadd (Pi.single i0 b.toNat) (Pi.single i1 ((-a).toNat))
+        change e (f + g) = _
+        have hfun : (fun i => f i + g i) = f + g := by
+          funext i
+          rfl
+        rw [← hfun]
+        exact hadd f g
       have hEq : e u = e 0 := by
         rw [additive_zero hadd, hs, hu0, hu1, Int.toNat_of_nonneg (le_of_lt hbPos),
           Int.toNat_of_nonneg (neg_nonneg.mpr (le_of_lt haNeg))]
@@ -139,7 +153,7 @@ theorem paper_xi_single_integer_coordinate_no_exact_additive_ledger (r : Nat) (h
       have hu_ne : u ≠ 0 := by
         intro hu
         have h0 := congrArg (fun f => f i1) hu
-        simp [u, Pi.single, toNat_ne_zero_of_neg haNeg] at h0
+        simp [u, f, g, Pi.single, hi01, toNat_ne_zero_of_neg haNeg] at h0
       exact hu_ne (hinj hEq)
     · have hbNeg : b < 0 := lt_of_le_of_ne (le_of_not_gt hbPos) hb0
       let u : Fin r → Nat := Pi.single i0 ((-b).toNat)

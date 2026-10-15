@@ -26,7 +26,7 @@
 
 \begin{document}
 
-\title{Non-Abelian Spin Connections, Topological Axial Fields, \\and the Resolution of Nuclear Chiral Degeneracy}
+\title{A Candidate Scalar-Readout Model for Nuclear Chirality}
 
 \author{Author Name}
 \affiliation{Institution Name, City, Country}
@@ -34,7 +34,7 @@
 \date{\today}
 
 \begin{abstract}
-Nuclear chirality has historically been formulated through semiclassical, aplanar orientations of valence quasiparticle angular momentum vectors relative to a triaxial core, predicting degenerate $\Delta I = 1$ partner bands. Experimentally, exact degeneracy is never observed, and interband magnetic dipole transitions are systematically quenched. Here, we present an observable-first gauge theory of nuclear chirality replacing fictitious left- and right-handed states with the algebra of time-reversed twin spinors in a $\mathrm{Cl}(5,5)$ Krein space. Collective rotation acts as an $SU(2)$ spin connection, while particle-hole imbalances generate a topological axial field $\vec{B}_5$. By lifting the quasiparticle vacuum to an emergent Einstein-Cartan spacetime, we show the chiral triple product is exactly the Nieh-Yan topological invariant sourced by localized spin-torsion. This anomaly yields an inherently asymmetric double-well potential. We prove analytically via QRPA and Euclidean instantons that the energy splitting obeys a massive dispersion relation $\hbar\Omega = \sqrt{(\hbar\Omega_0)^2 + \epsilon_{\text{axial}}^2}$, precluding Goldstone softening. Inverting this against spectra for $^{134}$Pr, $^{106}$Rh, and $^{135}$Nd reveals the dynamical neutralization of $\vec{B}_5$ at peak alignment, quantitatively resolving the ``chiral conundrum.'' The core non-degeneracy theorem is mechanically verified in Lean 4.
+This document records a proposed phenomenological chain relating nuclear-chirality observables to a scalar triple-product readout. The carrier equations, the proposed $\mathrm{Cl}(5,5)$ and gauge-field interpretations, the Einstein--Cartan/Nieh--Yan identification, the QRPA and instanton relations, and the isotope-specific parameter values are hypotheses in this draft, not results established by the Lean calculations. The formalized code proves finite scalar identities under explicit assumptions; it does not derive a nuclear Hamiltonian, a topological anomaly, a spectral gap, or a fit to experimental data. Each proposed implication is retained below as a research target with its required missing input stated explicitly.
 \end{abstract}
 
 \maketitle
@@ -42,85 +42,75 @@ Nuclear chirality has historically been formulated through semiclassical, aplana
 \section{I. Introduction}
 Spontaneous symmetry breaking in finite quantum systems requires careful delineation between mean-field artifacts and true laboratory observables. In nuclear structure, the Frauendorf-Meng tilted axis cranking (TAC) model \cite{Frauendorf1997} posited that a triaxial core coupled to high-$j$ valence particles and holes stabilizes a 3D aplanar vector tripod: $\vec{J} = \vec{R} + \vec{j}_\pi + \vec{j}_\nu$.
 
-Because the scalar triple product $\vec{R} \cdot (\vec{j}_\pi \times \vec{j}_\nu)$ is odd under time-reversal-rotation $\hat{\chi} = \hat{\mathcal{T}}\hat{\mathcal{R}}_y(\pi)$, this implies spontaneous chiral symmetry breaking. Quantum tunneling should restore the discrete $\mathbb{Z}_2$ symmetry, producing degenerate partner bands with equal in-band and out-of-band $M1$ transition rates ($\mathcal{R}_{M1} = 1.0$). Yet, across all chiral candidates \cite{Petrache1996,Tonev2006,Vaman2004,Zhu2003}, exact degeneracy is never reached, and the ratio is consistently quenched ($\mathcal{R}_{M1} \sim 0.3 - 0.9$). In this Letter, we demonstrate that this non-degeneracy is a fundamental topological consequence of an emergent Einstein-Cartan spacetime torsion and the resulting Nieh-Yan anomaly.
+The scalar triple product $\vec{R} \cdot (\vec{j}_\pi \times \vec{j}_\nu)$ is a candidate order parameter for a chosen time-reversal-rotation operation. The physical interpretation of this quantity, the expected transition-rate relation, and the proposed explanation of non-degeneracy require a specified nuclear model and evidence. The cited experimental papers are background references; this draft does not establish an Einstein--Cartan or Nieh--Yan origin of the observed behavior.
 
 \section{II. Twin Algebra and $\mathrm{Cl}(5,5)$ Krein Geometry}
-We define the Hilbert space via the Aharonov twin-vector algebra of time-conjugate orbits $\vert k\rangle$ and $\vert \bar{k}\rangle$. In the Nambu-Gorkov representation, the system is spanned by the $\mathfrak{su}(2)$ pseudospin generators $\tau_1, \tau_2, \tau_3$. 
-
-The physical condition $X^2 - Y^2 = 1$ in RPA arises because the phase space is a $\mathrm{Cl}(5,5)$ Krein space. Soloviev's Quasiparticle-Phonon Nuclear Model (QPNM) maps exactly to the Cartan 5-grading of the $\mathfrak{so}(5,5)$ Lie algebra. Transforming to the body-fixed frame promotes collective rotation to a temporal $SU(2)$ spin connection: $D_0 = \partial_0 - i \vec{\omega}_{\text{coll}} \cdot \hat{\vec{j}}$. The interaction acts as an axial chemical potential $\mu_5$ which breaks the Cooper pairs.
+The twin-vector labels and Nambu--Gorkov pseudospin are candidate modeling choices. A derivation of the RPA normalization from a Krein structure requires an explicit state space and inner product. Likewise, identifying QPNM with a Cartan grading, or the rotating-frame term with an $SU(2)$ connection and axial chemical potential, requires defined representations and interaction terms; none is established by the scalar calculations recorded here.
 
 \section{III. Anomalous Axial Back-Reaction}
-Because protons are particle-like and neutrons are hole-like, their currents do not cancel. The mismatch generates an effective axial current $\vec{J}_5 \approx \kappa(\vec{j}_\pi - \vec{j}_\nu)$. Integrating out the fermions induces a 1D Wess-Zumino-Witten topological term $\mathcal{S}_{\text{top}}$. The contraction of the axial current with the core gauge field produces a non-vanishing background field $\vec{B}_5 = \kappa ( \vec{J}_\pi^{(0)} - \vec{J}_\nu^{(0)} )$, coupling to the collective tilt coordinate $\theta$:
+The following axial-current and Wess--Zumino--Witten terms are proposed ansätze. Deriving them would require a fermionic action, a regulator, and an explicit integration over the stated degrees of freedom. In the candidate model, one may define $\vec{J}_5 \approx \kappa(\vec{j}_\pi - \vec{j}_\nu)$ and a background parameter $\vec{B}_5 = \kappa ( \vec{J}_\pi^{(0)} - \vec{J}_\nu^{(0)} )$, coupled to a tilt variable $\theta$ by:
 \begin{equation}
 \mathcal{H}_{\text{axial}} = \epsilon_{\text{axial}} \, \hat{\tau}_3^{\text{chiral}}, \quad \epsilon_{\text{axial}} = \vec{\omega}_{\text{coll}} \cdot \vec{B}_5
 \end{equation}
-The effective potential governing the aplanar tilt $\theta$ is thus strictly asymmetric: $V_{\text{eff}}(\theta) = -\frac{a}{2} \theta^2 + \frac{b}{4} \theta^4 + \epsilon_{\text{axial}} \theta$.
+The proposed effective potential is
+\begin{equation}
+V_{\text{eff}}(\theta) = -\frac{a}{2} \theta^2 + \frac{b}{4} \theta^4 + \epsilon_{\text{axial}} \theta.
+\end{equation}
+This polynomial is a candidate ansatz, not a derived consequence of the preceding definitions. Its coefficients and stability properties need to be obtained from a specified action.
 
 \section{IV. Emergent Spacetime and the Nieh-Yan Anomaly}
-To understand why the scalar triple product $\mathcal{V}_{\text{chiral}} = \vec{\omega}_{\text{coll}} \cdot (\vec{j}_\pi \times \vec{j}_\nu)$ acts as an irreducible macroscopic source, we lift the comoving quasiparticle Hamiltonian to an effective curved spacetime manifold equipped with an Einstein-Cartan connection. The collective rotation of the core generates an effective Lense-Thirring frame-dragging metric $g_{0i}^{\text{eff}}$. 
+The scalar $\mathcal{V}_{\text{trial}} = \vec{\omega}_{\text{coll}} \cdot (\vec{j}_\pi \times \vec{j}_\nu)$ is a coordinate scalar readout. Interpreting it as a source in curved spacetime would require constructing a metric, tetrad, connection, and matter coupling; this draft supplies none of those constructions.
 
-In Einstein-Cartan theory, Cartan torsion is coupled to the antisymmetric spin density. The high-$j$ valence nucleons generate a localized spin tensor $\Sigma^{0ij} \propto \epsilon^{ijk} (\vec{j}_\pi \times \vec{j}_\nu)_k$. Thus, the spatial cross product of currents acts as a localized source of spacetime torsion. Contracting the resulting energy-momentum flux with the collective frame-dragging 4-vector yields the anomalous energy density:
+The proposed torsion ansatz $\Sigma^{0ij} \propto \epsilon^{ijk} (\vec{j}_\pi \times \vec{j}_\nu)_k$ is not derived from a specified spin current. The coordinate contraction below is retained as a candidate scalar-energy readout, not as a consequence of Einstein--Cartan field equations:
 \begin{equation}
 \mathcal{E}_{\text{anom}} = \omega_\mu T^{0\mu}_{\text{chiral}} = \vec{\omega}_{\text{coll}} \cdot (\vec{j}_\pi \times \vec{j}_\nu)
 \end{equation}
-In a manifold with curvature and torsion, the divergence of the axial fermion current $J_5^\mu$ is governed by the Nieh-Yan topological invariant $N_{\text{NY}}$. The integral of this topological divergence over the nuclear droplet yields $\epsilon_{\text{axial}} \neq 0$, proving the axial bias is the macroscopic remnant of the Nieh-Yan gravitational anomaly.
+The scalar triple product is not itself the Nieh--Yan invariant. Relating it to an integrated axial-current divergence would require the differential-form fields, normalization, regulator, integration domain, and boundary conditions. No nonzero $\epsilon_{\text{axial}}$ or anomaly follows from the algebraic contraction alone.
+The proposed source relation $\epsilon_{\text{axial}}\propto\int_{\text{droplet}}\nabla_\mu J_5^\mu$ is retained as a hypothesis; its measure, boundary term, and coupling to the effective Hamiltonian must be supplied before it defines an energy bias.
 
 \section{V. Microscopic QRPA and the Massive Gauge Gap}
-To evaluate the collective excitations across this asymmetric barrier, we formulate the QRPA. Calculating the secular determinant $\det(\mathcal{M} - \hbar\Omega\mathbb{I}) = 0$ with the residual topological interaction yields the massive collective dispersion relation:
+As a proposed phenomenological relation, consider the following dispersion formula. A derivation requires a specified QRPA matrix and a calculation of its secular determinant; neither is supplied in this draft:
 \begin{equation}
 \hbar\Omega = \sqrt{(\hbar\Omega_0)^2 + \epsilon_{\text{axial}}^2}
 \end{equation}
-where $\hbar\Omega_0 = \sqrt{\mathcal{A}^2 - \mathcal{B}^2}$. The transition ratio evaluates directly to:
+If this relation is assumed, the right-hand side is positive only when $\hbar\Omega_0$ and $\epsilon_{\text{axial}}$ are not both zero. The following transition ratio is a second model hypothesis, not a consequence established here:
+The proposed unperturbed scale is $\hbar\Omega_0=\sqrt{\mathcal A^2-\mathcal B^2}$, conditional on a specified QRPA matrix and its stability conditions.
 \begin{equation}
 \mathcal{R}_{M1} = \left( \frac{\hbar\Omega - \epsilon_{\text{axial}}}{\hbar\Omega + \epsilon_{\text{axial}}} \right)^2
 \end{equation}
 
 \section{VI. Non-Perturbative Euclidean Instanton Action}
-Tunneling across the asymmetric barrier is governed by the Euclidean action $S_E = S_{\text{sym}} + \frac{\pi \epsilon_{\text{axial}}}{\hbar\omega_0} - i \Phi_{\text{top}}$. The tunneling matrix element acquires an exponential suppression factor, and the total observable gap $\Delta E = 2\sqrt{V_{\text{tunnel}}^2 + \epsilon_{\text{axial}}^2}$ saturates asymptotically to $2\epsilon_{\text{axial}}$, proving quantum tunneling can never overcome the axial energy bias.
+The candidate Euclidean action and gap relation are
+\begin{equation}
+S_E = S_{\text{sym}} + \frac{\pi \epsilon_{\text{axial}}}{\hbar\omega_0} - i \Phi_{\text{top}}, \qquad
+\Delta E = 2\sqrt{V_{\text{tunnel}}^2 + \epsilon_{\text{axial}}^2}.
+\end{equation}
+Their use requires a defined potential, boundary data, and instanton calculation. The suppression and asymptotic claims from the originating proposal remain unproved here.
+In particular, the proposed exponential tunneling suppression and the claim that $\Phi_{\text{top}}$ generates odd-even spin staggering are retained as predictions to test, not conclusions of the displayed action alone.
 
-\section{VII. Machine-Checked Proof of Non-Degeneracy}
-The biased dispersion relation and the torsional anomaly were formalized and verified in Lean 4:
+\section{VII. Scope of the Lean calculation}
+The repository verifies finite real-algebra identities for the scalar triple-product model. The result does not establish a torsional anomaly, non-degeneracy of physical bands, or a QRPA dispersion law. The owner theorem has the following scope:
 
 \begin{lstlisting}
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import InfoGeometry.Nuclear.EmergentEinsteinCartan
 
-namespace NuclearGeometry.EinsteinCartan
-structure TorsionTensor where
-  j_pi : Fin 3 → ℝ
-  j_nu : Fin 3 → ℝ
-  omega_coll : Fin 3 → ℝ
-  G_eff : ℝ
-  h_G_pos : G_eff > 0
-
-def spin_cross_product (T : TorsionTensor) : Fin 3 → ℝ :=
-  fun i => match i with
-  | ⟨0, _⟩ => T.j_pi ⟨1, by decide⟩ * T.j_nu ⟨2, by decide⟩ - T.j_pi ⟨2, by decide⟩ * T.j_nu ⟨1, by decide⟩
-  | ⟨1, _⟩ => T.j_pi ⟨2, by decide⟩ * T.j_nu ⟨0, by decide⟩ - T.j_pi ⟨0, by decide⟩ * T.j_nu ⟨2, by decide⟩
-  | ⟨2, _⟩ => T.j_pi ⟨0, by decide⟩ * T.j_nu ⟨1, by decide⟩ - T.j_pi ⟨1, by decide⟩ * T.j_nu ⟨0, by decide⟩
-
-def nieh_yan_volume (T : TorsionTensor) : ℝ :=
-  (T.omega_coll ⟨0, by decide⟩ * (spin_cross_product T ⟨0, by decide⟩)) +
-  (T.omega_coll ⟨1, by decide⟩ * (spin_cross_product T ⟨1, by decide⟩)) +
-  (T.omega_coll ⟨2, by decide⟩ * (spin_cross_product T ⟨2, by decide⟩))
-
-def anomalous_energy_density (T : TorsionTensor) : ℝ :=
-  T.G_eff * nieh_yan_volume T
-
-theorem torsional_energy_nonvanishing (T : TorsionTensor)
-    (h_aplanar : nieh_yan_volume T ≠ 0) :
-    anomalous_energy_density T ≠ 0 := by
-  unfold anomalous_energy_density
-  exact mul_ne_zero (ne_of_gt T.h_G_pos) h_aplanar
-end NuclearGeometry.EinsteinCartan
+namespace InfoGeometry.Nuclear.EmergentEinsteinCartan
+theorem weighted_scalar_readout_ne_zero (S : EmergentSpacetime)
+    (h_readout : scalar_triple_readout S ≠ 0) :
+    weighted_scalar_readout S ≠ 0 := by
+  unfold weighted_scalar_readout
+  exact mul_ne_zero (ne_of_gt S.h_G_pos) h_readout
+end InfoGeometry.Nuclear.EmergentEinsteinCartan
 \end{lstlisting}
 
-\section{VIII. Phenomenological Validation}
-By inverting the derived relations, we extract the anomalous axial field $\vec{B}_5$ from gamma-ray spectroscopy. 
+\section{VIII. Candidate parameters (unvalidated here)}
+The values in Table~\ref{tab:candidate} are carried over as candidate inputs from the originating brainstorm. This repository does not provide source-data references, uncertainties, a fitting procedure, or a derivation linking them to $\vec{B}_5$ or $\epsilon_{\text{axial}}$. They must not be read as parameters extracted or validated by the Lean results.
 
 \begin{table}[h!]
 \centering
-\caption{Extracted parameters for chiral benchmark nuclei.}
+\caption{Unverified candidate parameter values; not an extraction performed in this work.}\label{tab:candidate}
 \begin{ruledtabular}
 \begin{tabular}{lcccc}
 Isotope & $I_c [\hbar]$ & $\hbar\Omega$ [keV] & $\mathcal{R}_{M1}$ & $\epsilon_{\text{axial}}$ [keV] \\
@@ -133,10 +123,10 @@ $^{135}$Nd & 14.5 & 310 & 0.35 & 79.8 \\
 \end{ruledtabular}
 \end{table}
 
-In $^{134}$Pr, as the nucleus spins up to $I = 16\hbar$, optimal Coriolis alignment cancels the particle-hole mismatch: $\epsilon_{\text{axial}}$ collapses to $0.77$ keV. The residual $60$ keV splitting is the pristine symmetric barrier tunneling frequency $\hbar\Omega_0$. In the odd-$A$ nucleus $^{135}$Nd, the uncompensated neutron hole current locks the axial anomaly at $\epsilon_{\text{axial}} = 79.8$ keV, permanently quenching $\mathcal{R}_{M1}$ and the energy gap.
+The proposed interpretation of the listed values as alignment effects, tunneling frequencies, or anomaly-induced quenching remains unverified. Testing it requires traceable experimental data and a justified model fit.
 
 \section{IX. Conclusion}
-Nuclear chirality is fundamentally governed by an anomalous axial vector field $\vec{B}_5$ induced by the non-Abelian spin connection of collective rotation. Treating the triaxial mean-field as an emergent Einstein-Cartan spacetime reveals the scalar triple product to be a Nieh-Yan topological invariant. The observational gauge framework replaces geometric semiclassical conjectures with exact many-body relations, resolving two decades of experimental anomalies across the nuclear landscape.
+This draft proposes a chain from a scalar triple-product readout to effective nuclear dynamics and observables. The Lean results establish only the finite algebraic identities stated above. Deriving the proposed gauge, torsion, anomaly, QRPA, instanton, and isotope-specific consequences from one physical model remains open; no resolution of the nuclear-chirality phenomenology is claimed here.
 
 \begin{thebibliography}{9}
 \bibitem{Frauendorf1997} S. Frauendorf and J. Meng, Nucl. Phys. A \textbf{617}, 131 (1997).

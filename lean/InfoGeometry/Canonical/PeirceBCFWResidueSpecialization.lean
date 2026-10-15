@@ -13,43 +13,31 @@ partial-fraction residue model.  The latter remains explicitly algebraic: no
 analytic continuation or contour theorem is asserted here. -/
 
 def peirceChannelPole
-    (data : PeirceBCFWShiftParameters)
-    (PI : PeirceKinematicMomentum) : ℂ :=
-  -peirceKinematicInner PI PI /
-    (2 * peirceKinematicInner PI data.q)
-
-theorem peirceChannelPole_isOnShell
-    (data : PeirceBCFWShiftParameters)
-    (PI : PeirceKinematicMomentum)
-    (hslope : 2 * peirceKinematicInner PI data.q ≠ 0) :
-    peirceKinematicInner
-        (shiftedChannel data.toBCFWShiftData PI
-          (peirceChannelPole data PI))
-        (shiftedChannel data.toBCFWShiftData PI
-          (peirceChannelPole data PI)) = 0 := by
-  unfold peirceChannelPole
-  exact peirce_bcfw_channel_goes_onShell data PI hslope
+    (q PI : InfoGeometry.Algebra.FiniteSpin.Vec4C) : ℂ :=
+  -peirceKinematicForm PI PI /
+    (2 * peirceKinematicForm PI q)
 
 theorem peirce_bcfw_algebraic_residue_identity
     {I : Type*} [Fintype I]
     (c : I → ℂ)
-    (data : I → PeirceBCFWShiftParameters)
-    (PI : I → PeirceKinematicMomentum)
-    (hslopes : ∀ i, 2 * peirceKinematicInner (PI i) (data i).q ≠ 0) :
+    (q : I → InfoGeometry.Algebra.FiniteSpin.Vec4C)
+    (PI : I → InfoGeometry.Algebra.FiniteSpin.Vec4C)
+    (hq : ∀ i, peirceKinematicForm (q i) (q i) = 0)
+    (hslopes : ∀ i, 2 * peirceKinematicForm (PI i) (q i) ≠ 0) :
     (algebraicAmplitude c
-        (fun i => peirceChannelPole (data i) (PI i)) 0 =
+        (fun i => peirceChannelPole (q i) (PI i)) 0 =
       - ∑ i, algebraicResidueOverZ c
-        (fun i => peirceChannelPole (data i) (PI i)) i) ∧
-    (∀ i, peirceKinematicInner
-        (shiftedChannel (data i).toBCFWShiftData (PI i)
-          (peirceChannelPole (data i) (PI i)))
-        (shiftedChannel (data i).toBCFWShiftData (PI i)
-          (peirceChannelPole (data i) (PI i))) = 0) := by
+        (fun i => peirceChannelPole (q i) (PI i)) i) ∧
+    (∀ i, peirceKinematicForm
+        (shiftedChannel (PI i) (q i) (peirceChannelPole (q i) (PI i)))
+        (shiftedChannel (PI i) (q i) (peirceChannelPole (q i) (PI i))) = 0) := by
   constructor
   · exact algebraic_residue_identity c
-      (fun i => peirceChannelPole (data i) (PI i))
+      (fun i => peirceChannelPole (q i) (PI i))
   · intro i
-    exact peirceChannelPole_isOnShell (data i) (PI i) (hslopes i)
+    unfold peirceChannelPole
+    exact bcfw_channel_goes_onShell peirceKinematicForm
+      peirceKinematicForm_isSymm (PI i) (q i) (hq i) (hslopes i)
 
 end
 

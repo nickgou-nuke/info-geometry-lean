@@ -13,10 +13,11 @@ open InfoGeometry.Lie.SplitOctonionEllPolarization
 open InfoGeometry.Lie.SplitOctonionEllCrossChannel
 open InfoGeometry.Canonical.ArtinBraidFilteredColimit
 open InfoGeometry.Algebra.Zorn.SplitQuaternionCore
+open InfoGeometry.Canonical.SplitOctonionCARBdGRegularLift (modeVector modeCovector)
 open InfoGeometry.Canonical.SplitOctonionRightRegularBraid
   (braidUnit braidRepresentation braidConjugation braidRepresentation_artin)
 open InfoGeometry.Canonical.SplitOctonionExterior3HodgeDiracBridge
-  (Exterior3 exteriorWedge3 exteriorContract3 modeVector modeCovector)
+  (Exterior3 exteriorWedge3 exteriorContract3)
 open InfoGeometry.Canonical.SplitOctonionExteriorRightRegularBdGIntertwiner
   (fockBdGEquiv fockBdG_conjugates_creation fockBdG_conjugates_annihilation)
 
@@ -68,7 +69,8 @@ theorem represented_artin_on_sandwich
       braidConjugation (PresentedGroup.of (1 : Fin 2) * PresentedGroup.of (0 : Fin 2) *
         PresentedGroup.of (1 : Fin 2)) (sandwich metric left right) := by
   exact congrArg (fun gate : EndCZˣ =>
-    gate.toLinearEquiv.conjAlgEquiv ℝ (sandwich metric left right)) braidRepresentation_artin
+    (LinearMap.GeneralLinearGroup.toLinearEquiv gate).conjAlgEquiv ℝ
+      (sandwich metric left right)) braidRepresentation_artin
 
 theorem braid_sandwich_covariant (braid : ArtinBraid 2) (metric left right : EndCZ) :
     braidConjugation braid (sandwich metric left right) =
@@ -103,7 +105,8 @@ theorem fock_braid_transport (index : Fin 2) :
   rw [map_add, map_one, map_mul, fock_majorana_transport, fock_majorana_transport]
   rfl
 
-theorem fock_braid_intertwines (index : Fin 2) (state : Exterior3) :
+theorem fock_braid_intertwines (index : Fin 2)
+    (state : InfoGeometry.Canonical.SplitOctonionExteriorRightRegularBdGIntertwiner.Exterior3) :
     fockBdGEquiv (fockBraid index state) = (braidUnit index : EndCZ) (fockBdGEquiv state) := by
   have transported := congrArg (fun operator : EndCZ => operator (fockBdGEquiv state))
     (fock_braid_transport index)

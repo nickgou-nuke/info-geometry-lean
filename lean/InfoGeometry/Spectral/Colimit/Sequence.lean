@@ -49,7 +49,7 @@ theorem Map.iterate_naturality {D E : Diagram} (f : Map D E)
   induction k with
   | zero => simp [iterate]
   | succ k ih =>
-      simpa only [Nat.add_succ, iterate] using
+      simpa only [Nat.add_succ, iterate_succ] using
         (f.comm (n + k) (iterate D n k x)).trans
           (congrArg (E.step (n + k)) ih)
 

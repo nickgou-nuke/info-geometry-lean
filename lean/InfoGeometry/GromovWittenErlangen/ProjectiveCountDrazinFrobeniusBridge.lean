@@ -33,16 +33,19 @@ The operator/Fredholm/Drazin layer is read as a representation/readout of the
 projective count geometry, not as a replacement for it.
 -/
 @[rep_depth projective]
-structure ProjectiveCountDrazinFrobeniusBridge
-    (G T Target Coeff Algebra ModuliOperator : Type*)
+structure ProjectiveCountDrazinFrobeniusBridge.{uG, uT, uTarget, uCoeff, uAlgebra,
+    uModuliOperator, uDivisor, uBlock, uDivision, uProjection, uAtom}
+    (G : Type uG) (T : Type uT) (Target : Type uTarget) (Coeff : Type uCoeff)
+    (Algebra : Type uAlgebra) (ModuliOperator : Type uModuliOperator)
     [Ring Algebra] [StarRing Algebra] where
   /-- Existing L0/L1 GW projective-count calibration. -/
   projectiveCounts :
-    GWProjectiveCountCalibration G T Target Coeff
+    GWProjectiveCountCalibration.{uG, uT, uTarget, uCoeff, uAtom} G T Target Coeff
 
   /-- Existing GW/Drazin/Frobenius bridge. -/
   localizedBridge :
-    LocalizedDrazinFrobeniusBridge
+    LocalizedDrazinFrobeniusBridge.{uG, uT, uTarget, uCoeff, uAlgebra,
+      uModuliOperator, uDivisor, uBlock, uDivision, uProjection}
       G T Target Coeff Algebra ModuliOperator
 
 namespace ProjectiveCountDrazinFrobeniusBridge

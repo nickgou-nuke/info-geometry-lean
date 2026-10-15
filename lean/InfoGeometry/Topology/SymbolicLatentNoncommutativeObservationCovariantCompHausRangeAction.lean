@@ -84,8 +84,9 @@ theorem operatorObservationQuotientCompHausReadout_covariant_square
         (descendedCovariantOperatorObservationFlow Φ t q)).1 =
       fun i => Φ.operatorAction t
         ((operatorObservationQuotientRangeMap S q).1 i)
-  rw [operatorObservationQuotientRangeMap_val,
-    operatorObservationQuotientRangeMap_val]
-  exact operatorObservationQuotientReadout_covariant Φ t q
+  rw [operatorObservationQuotientRangeMap_val]
+  have hcov := operatorObservationQuotientReadout_covariant Φ t q
+  rw [← operatorObservationQuotientRangeMap_val S q] at hcov
+  exact hcov
 
 end InfoGeometry.Topology

@@ -101,8 +101,8 @@ lemma skew_adjoint_quad_form_zero
   have hEq : ⟪v, A v⟫_ℝ = -⟪v, A v⟫_ℝ := by
     calc
       ⟪v, A v⟫_ℝ = ⟪(star A) v, v⟫_ℝ := by
-        simpa using
-          (ContinuousLinearMap.adjoint_inner_left (A := A) (x := v) (y := v)).symm
+        rw [ContinuousLinearMap.star_eq_adjoint]
+        exact (ContinuousLinearMap.adjoint_inner_left A v v).symm
       _ = ⟪(-A) v, v⟫_ℝ := by
         simp [hA]
       _ = -⟪A v, v⟫_ℝ := by

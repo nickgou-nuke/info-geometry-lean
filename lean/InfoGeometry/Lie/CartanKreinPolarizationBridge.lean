@@ -37,7 +37,6 @@ theorem cartanInvolution_of_isKreinSkew
     cartanInvolution J T = - adjoint T := by
   dsimp [IsKreinSkew, kreinAdjoint] at hT
   have h_wrap := congrArg (fun S : EndH => J.op.comp (S.comp J.op)) hT
-  dsimp at h_wrap
   have hJJ : J.op.comp ((J.op.comp ((adjoint T).comp J.op)).comp J.op) = adjoint T := by
     calc
       J.op.comp ((J.op.comp ((adjoint T).comp J.op)).comp J.op)

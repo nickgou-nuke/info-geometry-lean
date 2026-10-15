@@ -35,7 +35,10 @@ lemma christoffel_tendsto_inverseSqNorm (D : XiHorizonEndpointAtomChristoffelDat
     Tendsto D.christoffel atTop (𝓝 D.inverseSqNorm) := by
   have hlim :
       Tendsto D.partialSqNorm atTop (𝓝 (D.inverseSqNorm⁻¹)) := by
-    simpa [partialSqNorm] using D.partialSqNorm_tendsto
+    change Tendsto
+      (fun N : ℕ => Finset.sum (Finset.range (N + 1)) fun n => D.sqNorm n)
+      atTop (𝓝 (D.inverseSqNorm⁻¹))
+    exact D.partialSqNorm_tendsto
   have hnonzero : D.inverseSqNorm⁻¹ ≠ 0 := inv_ne_zero (ne_of_gt D.inverseSqNorm_pos)
   have hinv :
       Tendsto (fun x : ℝ => x⁻¹) (𝓝 (D.inverseSqNorm⁻¹)) (𝓝 ((D.inverseSqNorm⁻¹)⁻¹)) := by
@@ -43,7 +46,9 @@ lemma christoffel_tendsto_inverseSqNorm (D : XiHorizonEndpointAtomChristoffelDat
   have hcomp :
       Tendsto (fun N : ℕ => (D.partialSqNorm N)⁻¹) atTop (𝓝 ((D.inverseSqNorm⁻¹)⁻¹)) := by
     exact hinv.comp hlim
-  simpa [christoffel] using hcomp
+  change Tendsto (fun N : ℕ => (D.partialSqNorm N)⁻¹)
+    atTop (𝓝 D.inverseSqNorm)
+  simpa only [inv_inv] using hcomp
 
 end XiHorizonEndpointAtomChristoffelData
 

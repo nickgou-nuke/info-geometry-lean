@@ -40,12 +40,15 @@ lemma foldFiberSingletonZeroSet_eq_coset (M i : ℕ) (k0 : Fin M)
     foldFiberSingletonZeroSet M i = foldFiberSingletonZeroCoset M i k0 := by
   classical
   ext k
-  simp [foldFiberSingletonZeroSet, foldFiberSingletonZeroCoset, foldFiberHalfResidue] at hk0 ⊢
+  simp only [foldFiberSingletonZeroSet, foldFiberSingletonZeroCoset,
+    Finset.mem_filter, Finset.mem_univ, true_and]
+  have hk0' : (k0.1 * Nat.fib (i + 1)) % M = foldFiberHalfResidue M :=
+    (Finset.mem_filter.mp hk0).2
   constructor
   · intro hk
-    simpa [hk0] using hk
+    exact hk.trans hk0'.symm
   · intro hk
-    simpa [hk0] using hk
+    exact hk.trans hk0'
 
 /-- Paper label: `prop:fold-fiber-convolution-kernel-zero-spectrum`.
 The zero set of the subset-convolution kernel is the union of the singleton zero sets; each

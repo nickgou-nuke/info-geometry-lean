@@ -99,7 +99,7 @@ theorem logDerivative_at (z : ℂ) (hz : z ∈ Complex.slitPlane) :
 /-- Negative branch: derivative of the local logarithmic potential for inverse scale. -/
 theorem negLogDerivative_at (z : ℂ) (hz : z ∈ Complex.slitPlane) :
     HasDerivAt (fun w : ℂ => -Complex.log w) (-z⁻¹) z := by
-  simpa using (Complex.hasDerivAt_log hz).neg
+  convert (Complex.hasDerivAt_log hz).neg using 1
 
 /-- Determinant/quadric classification: null (zero) determinant is equivalent to
     self-orthogonality for the Klein polar form over `ℂ`.

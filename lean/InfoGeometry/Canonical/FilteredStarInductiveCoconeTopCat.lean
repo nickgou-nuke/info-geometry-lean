@@ -1,5 +1,4 @@
 import InfoGeometry.Canonical.FilteredStarAlgebraTopologicalColimit
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Topological cocones from star-algebraic filtered cocones
@@ -136,11 +135,12 @@ theorem stateTopologicalColimitMap_factorization
   apply TopCat.hom_ext
   apply ContinuousMap.ext
   intro a
+  let a' : Stage i := a
   change stateTopologicalColimitMap sys cocone ω
-      (topologicalInjection Stage sys i a) =
+      (topologicalInjection Stage sys i a') =
     ULift.up (ω.functional
       (toTopologicalColimitMap sys cocone
-        (topologicalInjection Stage sys i a)))
+        (topologicalInjection Stage sys i a')))
   rw [stateTopologicalColimitMap_inclusion,
     toTopologicalColimitMap_inclusion]
 

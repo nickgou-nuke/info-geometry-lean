@@ -130,12 +130,8 @@ noncomputable instance rightOperatorModule : Module EndHᵐᵒᵖ EndH where
   smul B X := rightOperatorAction B X
   one_smul X := rightOperatorAction_one X
   mul_smul B D X := (rightOperatorAction_mul B D X).symm
-  smul_add B X Y := by
-    ext u
-    simp [rightOperatorAction]
-  smul_zero B := by
-    ext u
-    simp [rightOperatorAction]
+  smul_add B X Y := (rightOperatorAction B).map_add X Y
+  smul_zero B := (rightOperatorAction B).map_zero
   add_smul B D X := by exact rightOperatorAction_add B D X
   zero_smul X := rightOperatorAction_zero X
 
@@ -319,7 +315,7 @@ theorem operatorBimoduleTensorAction_sum_adjoint_inner_nonneg
     0 ≤ ⟪operatorBimoduleTensorAction
       (∑ i ∈ I, A i ⊗ₜ[ℝ] MulOpposite.op (ContinuousLinearMap.adjoint (A i))) X u,
       u⟫_ℝ := by
-  simp only [map_sum, LinearMap.sum_apply, ContinuousLinearMap.sum_apply, sum_inner]
+  simp only [map_sum, LinearMap.sum_apply, sum_apply, sum_inner]
   exact Finset.sum_nonneg fun i _ =>
     operatorBimoduleTensorAction_tmul_adjoint_inner_nonneg (A i) X hX u
 

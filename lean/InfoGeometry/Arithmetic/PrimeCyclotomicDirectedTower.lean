@@ -116,6 +116,15 @@ theorem casPrime_dvd_terminal (i : Fin 6) : casPrime i ∣ conductor 6 := by
 /-- The cyclotomic field attached to a stage of the directed conductor spine. -/
 abbrev StageField (i : Fin 7) := CyclotomicField (conductor i) ℚ
 
+/-- The stage field is a cyclotomic extension.  The named Mathlib instance
+requires both the natural conductor and its image in `ℚ` to be nonzero. -/
+noncomputable instance stage_isCyclotomicExtension (i : Fin 7) :
+    IsCyclotomicExtension {conductor i} ℚ (StageField i) := by
+  letI : NeZero (conductor i) := ⟨conductor_ne_zero i⟩
+  letI : NeZero ((conductor i : ℕ) : ℚ) :=
+    ⟨by exact_mod_cast conductor_ne_zero i⟩
+  exact CyclotomicField.isCyclotomicExtension (conductor i) ℚ
+
 /-- Every stage is natively Galois over `ℚ`; no CAS theorem enters this proof. -/
 noncomputable instance stage_isGalois (i : Fin 7) : IsGalois ℚ (StageField i) :=
   IsCyclotomicExtension.isGalois {conductor i} ℚ (StageField i)

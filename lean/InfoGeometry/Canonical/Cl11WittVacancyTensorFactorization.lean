@@ -53,23 +53,23 @@ theorem vacancyAt_eq_tensor :
       by_cases h : (k : ℕ) < n
       · let k' : Fin n := ⟨k, h⟩
         have ih := vacancyAt_eq_tensor n k'
-        simp only [vacancyAt, jwAnnihilation, jwCreation,
-          jwStringWithBase, dif_pos h, vacancyTensorAt]
-        rw [← Matrix.mul_kronecker_mul]
-        simpa [vacancyAt] using congrArg
-          (fun A : MatStage n =>
-            A ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℝ)) ih
+        simp [vacancyAt, jwAnnihilation, jwCreation,
+          jwStringWithBase, vacancyTensorAt, h]
+        change
+          ((jwStringWithBase wittAnnihilationBase n k' ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℝ)) *
+            (jwStringWithBase wittCreationBase n k' ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℝ))) =
+          vacancyTensorAt n k' ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℝ)
+        rw [← Matrix.mul_kronecker_mul, Matrix.mul_one]
+        exact congrArg (fun A : MatStage n => A ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℝ)) ih
       · have hk : k = Fin.last n := Fin.eq_last_of_not_lt h
         subst k
-        have hlast : ¬ ((Fin.last n : Fin (n + 1)).val < n) := by simp
-        simp only [vacancyAt, jwAnnihilation, jwCreation,
-          jwStringWithBase, vacancyTensorAt, dif_neg hlast]
+        simp [vacancyAt, jwAnnihilation, jwCreation,
+          jwStringWithBase, vacancyTensorAt]
         change
           (globalChirality n ⊗ₖ wittAnnihilationBase) *
               (globalChirality n ⊗ₖ wittCreationBase) =
             (1 : MatStage n) ⊗ₖ localVacancyProjector
-        rw [← Matrix.mul_kronecker_mul]
-        rw [globalChirality_sq]
+        rw [← Matrix.mul_kronecker_mul, globalChirality_sq]
         rfl
 
 /-- The last-site vacancy projector is exactly `1 ⊗ p_vac`. -/
@@ -78,5 +78,6 @@ theorem vacancyAt_last (n : ℕ) :
       (1 : MatStage n) ⊗ₖ localVacancyProjector := by
   rw [vacancyAt_eq_tensor]
   simp [vacancyTensorAt]
+  rfl
 
 end InfoGeometry.Canonical.Cl11WittVacancyTensorFactorization

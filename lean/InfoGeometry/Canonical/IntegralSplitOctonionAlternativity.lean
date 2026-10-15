@@ -37,8 +37,7 @@ theorem integralToRational_mul
       splitOctonionOfQuaternionPair,
       splitQuaternionOfQ, splitQuaternionLPartQ, splitQuaternionConjQ,
       splitQuaternionMulQ, splitQuaternionAddQ,
-      splitOctonionOfQuaternionPairQ] <;>
-    ring
+      splitOctonionOfQuaternionPairQ]
 
 private theorem native_sub_eq_zero
     {A B : InfoGeometry.Algebra.ZornVectorMatrix ℚ}
@@ -106,7 +105,8 @@ theorem splitOctonion_left_alternative
       (InfoGeometry.Algebra.ZornVectorMatrix.mul
         (InfoGeometry.Algebra.ZornVectorMatrix.mul X X) Y)
       (InfoGeometry.Algebra.ZornVectorMatrix.mul X
-        (InfoGeometry.Algebra.ZornVectorMatrix.mul X Y)) = 0 := by
+        (InfoGeometry.Algebra.ZornVectorMatrix.mul X Y)) =
+      InfoGeometry.Algebra.ZornVectorMatrix.zero := by
     simpa [InfoGeometry.Algebra.ZornVectorMatrix.associator] using h
   exact (native_sub_eq_zero hz0).symm
 
@@ -129,7 +129,8 @@ theorem splitOctonion_right_alternative
       (InfoGeometry.Algebra.ZornVectorMatrix.mul
         (InfoGeometry.Algebra.ZornVectorMatrix.mul Y X) X)
       (InfoGeometry.Algebra.ZornVectorMatrix.mul Y
-        (InfoGeometry.Algebra.ZornVectorMatrix.mul X X)) = 0 := by
+        (InfoGeometry.Algebra.ZornVectorMatrix.mul X X)) =
+      InfoGeometry.Algebra.ZornVectorMatrix.zero := by
     simpa [InfoGeometry.Algebra.ZornVectorMatrix.associator] using h
   exact native_sub_eq_zero hz0
 
@@ -152,7 +153,8 @@ theorem splitOctonion_flexible
       (InfoGeometry.Algebra.ZornVectorMatrix.mul
         (InfoGeometry.Algebra.ZornVectorMatrix.mul X Y) X)
       (InfoGeometry.Algebra.ZornVectorMatrix.mul X
-        (InfoGeometry.Algebra.ZornVectorMatrix.mul Y X)) = 0 := by
+        (InfoGeometry.Algebra.ZornVectorMatrix.mul Y X)) =
+      InfoGeometry.Algebra.ZornVectorMatrix.zero := by
     simpa [InfoGeometry.Algebra.ZornVectorMatrix.associator] using h
   exact native_sub_eq_zero hz0
 

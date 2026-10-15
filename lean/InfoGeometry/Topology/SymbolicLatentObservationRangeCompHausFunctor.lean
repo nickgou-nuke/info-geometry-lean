@@ -71,7 +71,8 @@ theorem symbolicObservationRangeCompHausHomOfMorphism_isIso_of_surjective
       IsIso (symbolicObservationQuotientRangeMapOfMorphismTopCatHom F) :=
     symbolicObservationQuotientRangeMapOfMorphismTopCatHom_isIso_of_surjective F hF
   haveI : IsIso (compHausToTop.map (symbolicObservationRangeCompHausHomOfMorphism F)) := by
-    simpa [symbolicObservationRangeCompHausHomOfMorphism_forget] using hIso
+    rw [symbolicObservationRangeCompHausHomOfMorphism_forget]
+    exact hIso
   have hFF : (compHausToTop).FullyFaithful := by
     simpa using (CompHausLike.fullyFaithfulCompHausLikeToTop (fun _ => True))
   exact hFF.isIso_of_isIso_map (symbolicObservationRangeCompHausHomOfMorphism F)
@@ -96,7 +97,8 @@ theorem symbolicLatentObservationRangeCompHausFunctor_map_id
     symbolicLatentObservationRangeCompHausFunctor.map
         (SymbolicLatentMorphism.id S) =
       𝟙 (symbolicObservationRangeCompHaus S) := by
-  simpa using symbolicObservationRangeCompHausHomOfMorphism_id
+  change symbolicObservationRangeCompHausHomOfMorphism (SymbolicLatentMorphism.id S) = _
+  exact symbolicObservationRangeCompHausHomOfMorphism_id
     (X := X) (ι := ι) S
 
 theorem symbolicLatentObservationRangeCompHausFunctor_map_comp
@@ -107,7 +109,9 @@ theorem symbolicLatentObservationRangeCompHausFunctor_map_comp
         (SymbolicLatentMorphism.comp g f) =
       symbolicLatentObservationRangeCompHausFunctor.map f ≫
         symbolicLatentObservationRangeCompHausFunctor.map g := by
-  simpa using symbolicObservationRangeCompHausHomOfMorphism_comp g f
+  change symbolicObservationRangeCompHausHomOfMorphism
+      (SymbolicLatentMorphism.comp g f) = _
+  exact symbolicObservationRangeCompHausHomOfMorphism_comp g f
 
 theorem symbolicLatentObservationRangeCompHausFunctor_map_comp_apply
     {S T U : FiniteSymbolicLatentSystem X ι}
@@ -127,7 +131,8 @@ theorem symbolicLatentObservationRangeCompHausFunctor_map_isIso_of_surjective
     (F : SymbolicLatentMorphism S T)
     (hF : Function.Surjective F.toFun) :
     IsIso (symbolicLatentObservationRangeCompHausFunctor.map F) := by
-  simpa using symbolicObservationRangeCompHausHomOfMorphism_isIso_of_surjective
+  change IsIso (symbolicObservationRangeCompHausHomOfMorphism F)
+  exact symbolicObservationRangeCompHausHomOfMorphism_isIso_of_surjective
     (X := X) (ι := ι) F hF
 
 /-- A surjective morphism induces a canonical isomorphism of compact

@@ -229,7 +229,7 @@ theorem concreteHestenesPhaseFlow_commutes_phase (t : ℝ) :
   rw [concreteHestenesPhaseFlow_eq_linear_combination]
   apply LinearMap.ext
   rintro ⟨a, b⟩
-  simp [hestenesPhase3, concreteHestenesPhaseFlow]
+  simp [hestenesPhase3]
   module
 
 abbrev constantDoubledExterior3Functor : ℕ ⥤ ModuleCat ℝ :=
@@ -385,7 +385,7 @@ theorem concreteHestenesPhaseColimit_chirality_commutes :
   rw [← colim.map_comp, ← colim.map_comp]
   congr 1
   ext j x
-  simpa [constantEndNatTrans, ModuleCat.comp_apply] using
+  simpa [D₀, concreteHestenesDatum, constantEndNatTrans, ModuleCat.comp_apply] using
     (congrArg (fun T => T x) concreteHestenesPhase_chirality_commutes).symm
 
 /-! The preceding theorem is the canonical zero-parameter readout.  The
@@ -405,7 +405,7 @@ theorem concreteHestenesPhaseColimit_chirality_commutes_of
   rw [← colim.map_comp, ← colim.map_comp]
   congr 1
   ext j x
-  simpa [constantEndNatTrans, ModuleCat.comp_apply] using
+  simpa [D, concreteHestenesDatum, constantEndNatTrans, ModuleCat.comp_apply] using
     (congrArg (fun T => T x) concreteHestenesPhase_chirality_commutes).symm
 
 theorem concreteHestenesPhaseColimit_on_stage

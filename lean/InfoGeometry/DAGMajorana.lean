@@ -1,6 +1,6 @@
 import Mathlib.Data.Matrix.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import DAG.Basic
 
 /-!
@@ -24,8 +24,8 @@ open DAG
 A Majorana net: a family of operators γ_i on a real vector space V
 satisfying {γ_i, γ_j} = 2·δ_{ij}·id.
 -/
-structure MajoranaNet (α : Type*) where
-  V : Type*
+structure MajoranaNet.{u, v} (α : Type u) where
+  V : Type v
   [add : AddCommGroup V]
   [module : Module ℝ V]
   gamma : α → (V → V)
@@ -35,10 +35,10 @@ structure MajoranaNet (α : Type*) where
 The DAG-Majorana homomorphism. Maps DAG paths to Majorana operators and records
 central residue readouts in `{±1}`.
 -/
-structure DAGMajoranaHomomorphism
-    (α : Type*) [BEq α] [Hashable α] where
+structure DAGMajoranaHomomorphism.{u, v}
+    (α : Type u) [BEq α] [Hashable α] where
   dag : HydratedGraph α
-  net : MajoranaNet α
+  net : MajoranaNet.{u, v} α
   /-- The central residue readout: values in {±1}. -/
   centralResidue : α → α → ℤ
   residue_binary : ∀ u v, centralResidue u v = 1 ∨ centralResidue u v = -1

@@ -9,12 +9,15 @@ open InfoGeometry.CliffordWeyl.SpinorBilinearSoldering
 
 example : Module.finrank ℝ (Clsplit 0) = 1 := by
   rw [clifford_finrank]
+  rfl
 
 example : Module.finrank ℝ (Clsplit 2) = 16 := by
   rw [clifford_finrank]
+  rfl
 
 example : Module.finrank ℝ (⋀[ℝ]^2 (InfoGeometry.CliffordTower.SplitSpace 2)) = 6 := by
   rw [degree_finrank]
+  rfl
 
 example : Module.finrank ℝ (⋀[ℝ]^5 (InfoGeometry.CliffordTower.SplitSpace 2)) = 0 :=
   degree_finrank_above_dimension 2 5 (by decide)

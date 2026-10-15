@@ -340,7 +340,7 @@ theorem invariant_along_chain
   intro n
   induction n with
   | zero =>
-      simpa using h0
+      exact h0
   | succ n ih =>
       exact hPres n (C.iterEmbed n x0) ih
 
@@ -455,7 +455,7 @@ theorem odd_preserved_along_chain
   intro n
   induction n with
   | zero =>
-      simpa using hx0
+      exact hx0
   | succ n ih =>
       exact (C.Bonding n).preserves_odd _ ih
 

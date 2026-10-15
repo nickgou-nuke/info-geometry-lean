@@ -149,24 +149,24 @@ private theorem matching_two_cases (M : PerfectMatching 2) :
 private theorem matching0123_leftEndpoints :
     matching0123.leftEndpoints = ({0, 2} : Finset (Fin 4)) := by
   ext i
-  fin_cases i <;> simp [matching0123, PerfectMatching.leftEndpoints]
+  fin_cases i <;> decide
 
 private theorem matching0213_leftEndpoints :
     matching0213.leftEndpoints = ({0, 1} : Finset (Fin 4)) := by
   ext i
-  fin_cases i <;> simp [matching0213, PerfectMatching.leftEndpoints]
+  fin_cases i <;> decide
 
 private theorem matching0312_leftEndpoints :
     matching0312.leftEndpoints = ({0, 1} : Finset (Fin 4)) := by
   ext i
-  fin_cases i <;> simp [matching0312, PerfectMatching.leftEndpoints]
+  fin_cases i <;> decide
 
 private theorem matching0123_crossingPairs :
     matching0123.crossingPairs = ∅ := by
   ext p
   rcases p with ⟨i, j⟩
   fin_cases i <;> fin_cases j <;>
-    simp [matching0123, PerfectMatching.crossingPairs]
+    decide
 
 private theorem matching0213_crossingPairs :
     matching0213.crossingPairs = ({(0, 1)} : Finset (Fin 4 × Fin 4)) := by
@@ -175,15 +175,14 @@ private theorem matching0213_crossingPairs :
   ext p
   rcases p with ⟨i, j⟩
   fin_cases i <;> fin_cases j <;>
-    simp [matching0213, PerfectMatching.crossingPairs,
-      matching0213_leftEndpoints]
+    decide
 
 private theorem matching0312_crossingPairs :
     matching0312.crossingPairs = ∅ := by
   ext p
   rcases p with ⟨i, j⟩
   fin_cases i <;> fin_cases j <;>
-    simp [matching0312, PerfectMatching.crossingPairs]
+    decide
 
 theorem orientedPfaffian_two_eq_majoranaPfaffianFour
     (a₀₁ a₀₂ a₀₃ a₁₂ a₁₃ a₂₃ : ℝ) :

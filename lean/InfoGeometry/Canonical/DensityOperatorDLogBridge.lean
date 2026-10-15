@@ -32,7 +32,7 @@ noncomputable def scalarDensityOperator (u : ℝˣ) : EndH E :=
       = scalarDensityOperator (E := E) u * scalarDensityOperator (E := E) v := by
   apply ContinuousLinearMap.ext
   intro x
-  apply DoubledSpace.ext <;> simp [scalarDensityOperator, idEndH, smul_smul]
+  apply DoubledSpace.ext <;> simp [scalarDensityOperator, idEndH, smul_smul, mul_comm]
 
 @[simp] theorem scalarDensityOperator_inv_mul (u : ℝˣ) :
     scalarDensityOperator (E := E) (u⁻¹) * scalarDensityOperator (E := E) u =

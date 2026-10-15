@@ -23,9 +23,9 @@ open InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure
 /-! The finite ambient carrier and its spinor-size readouts. -/
 theorem cl55_ambient_dimension_packet :
     splitSpinorDim 5 = 32 ∧
-      chiralSheetDim = 16 ∧
+      cl55ChiralHalfDim = 16 ∧
       doubledChiralDim = 32 := by
-  norm_num [splitSpinorDim, chiralSheetDim, doubledChiralDim]
+  norm_num [splitSpinorDim, cl55ChiralHalfDim, doubledChiralDim]
 
 /-! Exact split-signature generator relations in the native rational Clifford
 model used by the Pin55 owner. -/

@@ -29,10 +29,9 @@ theorem rootPlus_zero_mul_rootPlus_one_ne_zero :
   intro h
   have hy := congrArg (fun Z : CanonicalZorn => Z.y 2) h
   simp [rootPlus, chiralNull, ellBasis, quaternionBasis, iUnit,
-    jUnit, kQuaternionUnit, lUnit, zMul,
+    jUnit, lUnit, zMul,
     InfoGeometry.Canonical.ZornMatrix.mul,
     InfoGeometry.Canonical.ZornMatrix.dot,
-    InfoGeometry.Canonical.ZornMatrix.cross, Equiv.smul_def,
-    smul_eq_mul, InfoGeometry.Canonical.ZornMatrix.coordEquiv] at hy
+    InfoGeometry.Canonical.ZornMatrix.cross] at hy
 
 end InfoGeometry.Lie.SplitOctonionEllCircularSamePolarity

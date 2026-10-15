@@ -22,6 +22,9 @@ abbrev G2Derivation := canonicalZornDerivations
 abbrev VectorZorn := InfoGeometry.Algebra.ZornVectorMatrix ℝ
 abbrev H3 := H3Zorn ℝ
 
+local instance : LieRing (Module.End ℝ H3) := LieRing.ofAssociativeRing
+local instance : LieAlgebra ℝ (Module.End ℝ H3) := LieAlgebra.ofAssociativeAlgebra
+
 /-- Apply a canonical split-octonion derivation entrywise to the three
 off-diagonal Peirce slots of `H3Zorn`, while killing the real diagonal. -/
 noncomputable def liftG2End (D : G2Derivation) : Module.End ℝ H3 where
@@ -179,31 +182,31 @@ theorem liftG2End_lie (D E : G2Derivation) :
   have ha := congrArg (fun d : InfoGeometry.Algebra.ZornVectorMatrix.Derivation (R := ℝ) => d X.a) hDE
   have hb := congrArg (fun d : InfoGeometry.Algebra.ZornVectorMatrix.Derivation (R := ℝ) => d X.b) hDE
   have hc := congrArg (fun d : InfoGeometry.Algebra.ZornVectorMatrix.Derivation (R := ℝ) => d X.c) hDE
-  have hD1 : ∀ Y : H3, (liftG2End D Y).α₁ = 0 := fun Y => rfl
-  have hD2 : ∀ Y : H3, (liftG2End D Y).α₂ = 0 := fun Y => rfl
-  have hD3 : ∀ Y : H3, (liftG2End D Y).α₃ = 0 := fun Y => rfl
-  have hE1 : ∀ Y : H3, (liftG2End E Y).α₁ = 0 := fun Y => rfl
-  have hE2 : ∀ Y : H3, (liftG2End E Y).α₂ = 0 := fun Y => rfl
-  have hE3 : ∀ Y : H3, (liftG2End E Y).α₃ = 0 := fun Y => rfl
   refine H3Zorn.ext_h3 _ _ ?_ ?_ ?_ ?_ ?_ ?_
   · rw [LieRing.of_associative_ring_bracket]
-    change (liftG2End ⁅D, E⁆ X).α₁ =
-      (liftG2End D (liftG2End E X) - liftG2End E (liftG2End D X)).α₁
-    simp [liftG2End, H3Zorn.sub_readback]
+    simp only [LinearMap.sub_apply, Module.End.mul_apply,
+      liftG2End_alpha1, H3Zorn.sub_readback]
+    exact (sub_self 0).symm
   · rw [LieRing.of_associative_ring_bracket]
-    change (liftG2End ⁅D, E⁆ X).α₂ =
-      (liftG2End D (liftG2End E X) - liftG2End E (liftG2End D X)).α₂
-    simp [liftG2End, H3Zorn.sub_readback]
+    simp only [LinearMap.sub_apply, Module.End.mul_apply,
+      liftG2End_alpha2, H3Zorn.sub_readback]
+    exact (sub_self 0).symm
   · rw [LieRing.of_associative_ring_bracket]
-    change (liftG2End ⁅D, E⁆ X).α₃ =
-      (liftG2End D (liftG2End E X) - liftG2End E (liftG2End D X)).α₃
-    simp [liftG2End, H3Zorn.sub_readback]
-  · simpa [liftG2End, canonicalToVectorDerivation_apply,
-      LieRing.of_associative_ring_bracket] using ha
-  · simpa [liftG2End, canonicalToVectorDerivation_apply,
-      LieRing.of_associative_ring_bracket] using hb
-  · simpa [liftG2End, canonicalToVectorDerivation_apply,
-      LieRing.of_associative_ring_bracket] using hc
+    simp only [LinearMap.sub_apply, Module.End.mul_apply,
+      liftG2End_alpha3, H3Zorn.sub_readback]
+    exact (sub_self 0).symm
+  · change canonicalToVectorDerivation ⁅D, E⁆ X.a =
+      canonicalToVectorDerivation D (canonicalToVectorDerivation E X.a) -
+        canonicalToVectorDerivation E (canonicalToVectorDerivation D X.a)
+    exact ha
+  · change canonicalToVectorDerivation ⁅D, E⁆ X.b =
+      canonicalToVectorDerivation D (canonicalToVectorDerivation E X.b) -
+        canonicalToVectorDerivation E (canonicalToVectorDerivation D X.b)
+    exact hb
+  · change canonicalToVectorDerivation ⁅D, E⁆ X.c =
+      canonicalToVectorDerivation D (canonicalToVectorDerivation E X.c) -
+        canonicalToVectorDerivation E (canonicalToVectorDerivation D X.c)
+    exact hc
 
 /-- The unconditional entrywise representation into ambient `H3Zorn`
 endomorphisms.  No Jordan-product compatibility is assumed here. -/

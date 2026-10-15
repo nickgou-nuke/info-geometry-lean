@@ -75,10 +75,10 @@ structure CliffordFractalWaveletSocket
   -- ========================================================================
 
   /-- Binary addresses of Cantor cells. -/
-  BinaryWord : Type*
+  BinaryWord : Type
 
   /-- Fractal wavelet modes indexed by binary words. -/
-  WaveletMode : Type*
+  WaveletMode : Type
 
   /-- Address-to-wavelet realization. -/
   waveletOfWord : BinaryWord → WaveletMode

@@ -44,27 +44,67 @@ theorem paper_delta_branchpoints_discriminant_lock :
     ⟨ht1_pos, ht12, ht23, ht3_le, hbranch1, hbranch2, hbranch3, hclassify⟩
   have hobs1 :
       delta_branchpoints_discriminant_lock_unit_circle_obstruction D (2 * D.t1) := by
-    simpa [delta_branchpoints_discriminant_lock_unit_circle_obstruction,
-      show (2 * D.t1) / 2 = D.t1 by ring] using hbranch1
+    simp only [delta_branchpoints_discriminant_lock_unit_circle_obstruction, PressureUnitCircleBranchAnglesData.isBranchAngle] at hbranch1 ⊢
+    have h₁ : (2 * D.t1) / 2 = D.t1 := by ring
+    rw [h₁] at *
+    exact hbranch1
   have hobs2 :
       delta_branchpoints_discriminant_lock_unit_circle_obstruction D (2 * D.t2) := by
-    simpa [delta_branchpoints_discriminant_lock_unit_circle_obstruction,
-      show (2 * D.t2) / 2 = D.t2 by ring] using hbranch2
+    simp only [delta_branchpoints_discriminant_lock_unit_circle_obstruction, PressureUnitCircleBranchAnglesData.isBranchAngle] at hbranch2 ⊢
+    have h₁ : (2 * D.t2) / 2 = D.t2 := by ring
+    rw [h₁] at *
+    exact hbranch2
   have hobs3 :
       delta_branchpoints_discriminant_lock_unit_circle_obstruction D (2 * D.t3) := by
-    simpa [delta_branchpoints_discriminant_lock_unit_circle_obstruction,
-      show (2 * D.t3) / 2 = D.t3 by ring] using hbranch3
+    simp only [delta_branchpoints_discriminant_lock_unit_circle_obstruction, PressureUnitCircleBranchAnglesData.isBranchAngle] at hbranch3 ⊢
+    have h₁ : (2 * D.t3) / 2 = D.t3 := by ring
+    rw [h₁] at *
+    exact hbranch3
   refine ⟨?_, ht1_pos, ht12, ht23, ht3_le, hobs1, hobs2, hobs3, ?_⟩
   · intro θ
-    constructor <;> intro h
-    · simpa [delta_branchpoints_discriminant_lock_unit_circle_obstruction,
-        show (-θ) / 2 = -(θ / 2) by ring, Real.cos_neg] using h
-    · simpa [delta_branchpoints_discriminant_lock_unit_circle_obstruction,
-        show (-θ) / 2 = -(θ / 2) by ring, Real.cos_neg] using h
+    constructor
+    · intro h
+      simp only [delta_branchpoints_discriminant_lock_unit_circle_obstruction] at h ⊢
+      have h₁ : Real.cos (-(θ / 2)) = Real.cos (θ / 2) := by rw [Real.cos_neg]
+      have h₂ : (-(θ : ℝ)) / 2 = -(θ / 2) := by ring
+      have h₃ : D.branchPolynomial (2 * Real.cos ((-θ) / 2)) = 0 := by
+        calc
+          D.branchPolynomial (2 * Real.cos ((-θ) / 2)) = D.branchPolynomial (2 * Real.cos (-(θ / 2))) := by
+            congr 1 <;> ring_nf
+          _ = D.branchPolynomial (2 * Real.cos (θ / 2)) := by
+            have h₄ : Real.cos (-(θ / 2)) = Real.cos (θ / 2) := by rw [Real.cos_neg]
+            rw [show (2 : ℝ) * Real.cos (-(θ / 2)) = (2 : ℝ) * Real.cos (θ / 2) by rw [h₄]]
+          _ = 0 := by simpa using h
+      simpa using h₃
+    · intro h
+      simp only [delta_branchpoints_discriminant_lock_unit_circle_obstruction] at h ⊢
+      have h₁ : Real.cos (-(θ / 2)) = Real.cos (θ / 2) := by rw [Real.cos_neg]
+      have h₂ : (-(θ : ℝ)) / 2 = -(θ / 2) := by ring
+      have h₃ : D.branchPolynomial (2 * Real.cos (θ / 2)) = 0 := by
+        have h₄ : D.branchPolynomial (2 * Real.cos (-(θ / 2))) = 0 := by
+          simpa [h₂] using h
+        have h₅ : D.branchPolynomial (2 * Real.cos (θ / 2)) = D.branchPolynomial (2 * Real.cos (-(θ / 2))) := by
+          have h₆ : Real.cos (-(θ / 2)) = Real.cos (θ / 2) := by rw [Real.cos_neg]
+          congr 1
+          <;> simp [h₆]
+          <;> ring_nf
+        rw [h₅] at *
+        simpa using h₄
+      simpa using h₃
   · intro t ht0 htpi ht
-    exact hclassify t ht0 htpi (by
-      simpa [delta_branchpoints_discriminant_lock_unit_circle_obstruction,
-        show (2 * t) / 2 = t by ring] using ht)
+    have h₁ : D.isBranchAngle t := by
+      simp only [delta_branchpoints_discriminant_lock_unit_circle_obstruction, PressureUnitCircleBranchAnglesData.isBranchAngle] at ht ⊢
+      have h₂ : (2 * t : ℝ) / 2 = t := by ring
+      have h₃ : Real.cos ((2 * t : ℝ) / 2) = Real.cos t := by
+        rw [show (2 * t : ℝ) / 2 = t by ring]
+      have h₄ : D.branchPolynomial (2 * Real.cos t) = 0 := by
+        calc
+          D.branchPolynomial (2 * Real.cos t) = D.branchPolynomial (2 * Real.cos ((2 * t : ℝ) / 2)) := by
+            rw [show Real.cos ((2 * t : ℝ) / 2) = Real.cos t by
+              rw [show (2 * t : ℝ) / 2 = t by ring]]
+          _ = 0 := by simpa using ht
+      simpa [PressureUnitCircleBranchAnglesData.isBranchAngle] using h₄
+    exact hclassify t ht0 htpi h₁
 
 end
 

@@ -106,7 +106,7 @@ def MatrixDikinUpperBound (n : ℕ)
 Matrix Dikin lower/upper bounds induce the matrix envelope consumed by
 `Analysis/BregmanAnalyticBound.lean`.
 -/
-def toMatrixDikinEnvelope {n : ℕ}
+theorem toMatrixDikinEnvelope {n : ℕ}
     (ψ : NoncommutativeSelfConcordantBarrier n 1)
     (hLower :
       ∀ x h, omegaLow (Real.sqrt (ψ.localRadiusSq x h)) ≤ ψ.bregmanDiv (x + h) x)
@@ -121,19 +121,21 @@ def toMatrixDikinEnvelope {n : ℕ}
   · intro x y
     exact Real.sqrt_nonneg _
   · intro x y
-    have hxy : y + (x - y) = x := by
-      abel
-    simpa [hxy] using hLower y (x - y)
+    have h1 := hLower y (x - y)
+    have hxy : y + (x - y) = x := by abel
+    rw [hxy] at h1
+    exact h1
   · intro x y hsmall
-    have hxy : y + (x - y) = x := by
-      abel
-    simpa [hxy] using hUpper y (x - y) hsmall
+    have h1 := hUpper y (x - y) hsmall
+    have hxy : y + (x - y) = x := by abel
+    rw [hxy] at h1
+    exact h1
 
 /--
 The matrix self-concordance law carried by a barrier produces the repository's
 native matrix Dikin envelope without an additional evidence argument.
 -/
-def NoncommutativeSelfConcordantBarrier.toMatrixDikinEnvelope
+theorem NoncommutativeSelfConcordantBarrier.toMatrixDikinEnvelope
     {n : ℕ}
     (ψ : NoncommutativeSelfConcordantBarrier n 1) :
     InfoGeometry.Analysis.BregmanAnalyticBound.HasMatrixSelfConcordantDikinEnvelope

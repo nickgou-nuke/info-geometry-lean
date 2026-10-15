@@ -78,15 +78,19 @@ theorem paper_xi_local_jet_determines_finite_cmv_and_toeplitz_certificate
     constructor
     · intro hm
       rcases hm with ⟨j, hj, rfl, hjbad⟩
-      have hj' : j < N := by simpa [D, xiToeplitzDetDataFromJet] using hj
+      have hj' : j < N := hj
+      have ha : D.alphaAt j = xiVerblunskyFromJet ell j := by
+        dsimp [D, xiToeplitzDetDataFromJet, XiToeplitzDetVerblunskyData.alphaAt, xiFiniteCMVPrefix]
+        simp [hj']
       refine ⟨j, hj', rfl, ?_⟩
-      simpa [D, xiToeplitzDetDataFromJet, XiToeplitzDetVerblunskyData.alphaAt, xiFiniteCMVPrefix,
-        if_pos hj'] using hjbad
+      rwa [ha] at hjbad
     · intro hm
       rcases hm with ⟨j, hj, rfl, hjbad⟩
+      have ha : D.alphaAt j = xiVerblunskyFromJet ell j := by
+        dsimp [D, xiToeplitzDetDataFromJet, XiToeplitzDetVerblunskyData.alphaAt, xiFiniteCMVPrefix]
+        simp [hj]
       refine ⟨j, hj, rfl, ?_⟩
-      simpa [D, xiToeplitzDetDataFromJet, XiToeplitzDetVerblunskyData.alphaAt, xiFiniteCMVPrefix,
-        if_pos hj] using hjbad
+      rwa [ha]
 
 end
 

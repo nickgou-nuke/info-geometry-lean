@@ -18,7 +18,10 @@ theorem paper_information_state_theory_monotonicity_seeds
     (href : q.realizations ⊆ p.realizations) :
     stateTheory satisfies p ⊆ stateTheory satisfies q := by
   intro φ hφ
-  simpa [stateTheory] using fun ρ hρ => (show Forces satisfies p φ from hφ) ρ (href hρ)
+  change Forces satisfies p φ at hφ
+  change Forces satisfies q φ
+  intro ρ hρ
+  exact hφ ρ (href hρ)
 
 set_option maxHeartbeats 400000 in
 /-- Paper-facing wrapper over state-theory monotonicity for the logic-expansion

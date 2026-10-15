@@ -20,7 +20,7 @@ lemma killo_localization_fixed_cardinality_nonclassification_left_endpoint_mem
   unfold killo_localization_fixed_cardinality_nonclassification_block
   refine Finset.mem_image.mpr ?_
   refine ⟨0, ?_, by simp⟩
-  simpa using hr
+  simpa only [Finset.mem_range] using lt_of_lt_of_le (by decide : 0 < 1) hr
 
 lemma killo_localization_fixed_cardinality_nonclassification_left_endpoint_not_mem
     (r i j : ℕ) (hij : i ≠ j) :

@@ -1,8 +1,11 @@
 import Mathlib.Tactic
+import Mathlib.Algebra.Lie.OfAssociative
+import Mathlib.Analysis.InnerProductSpace.Adjoint
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BosonizationConstructiveCurrent
 import InfoGeometry.Canonical.HeisenbergColimitVirasoroGradedBridge
 import InfoGeometry.Canonical.SplitCliffordSourceCurrentWick
+import InfoGeometry.Krein.DoubledKreinMobiusTwist
 
 /-! The constructive exterior-current bracket is read into the genuine
 Heisenberg central line and compared with the canonical singleton-stage
@@ -11,7 +14,10 @@ declared to be a Lie algebra. -/
 noncomputable section
 namespace InfoGeometry.Canonical.ConstructiveCurrentHeisenbergColimitBridge
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 open VirasoroProject
+open ContinuousLinearMap
 open InfoGeometry.Canonical.BosonizationConstructiveCurrent
 open InfoGeometry.Canonical.HeisenbergColimitVirasoroGradedBridge
 open InfoGeometry.Canonical.CurrentSugawaraBridge
@@ -74,6 +80,14 @@ theorem exteriorFock_to_heisenbergColimit_packet (m n : ℤ) :
 noncomputable def completedModeRepresentation (α : 𝕜) (n : ℤ) :=
   (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J n
 
+abbrev FockEnd (α : 𝕜) :=
+  ModuleOfModuleAlgebra 𝕜
+    (UniversalEnvelopingAlgebra 𝕜 (VirasoroProject.HeisenbergAlgebra 𝕜))
+    (VirasoroProject.ChargedFockSpace 𝕜 α) →ₗ[𝕜]
+  ModuleOfModuleAlgebra 𝕜
+    (UniversalEnvelopingAlgebra 𝕜 (VirasoroProject.HeisenbergAlgebra 𝕜))
+    (VirasoroProject.ChargedFockSpace 𝕜 α)
+
 @[simp] theorem completedModeRepresentation_eq_current (α : 𝕜) (n : ℤ) :
     completedModeRepresentation (𝕜 := 𝕜) α n =
       (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J n :=
@@ -90,12 +104,8 @@ theorem completedModeRepresentation_sugawara_shift
     ((chargedFockSpaceCurrentHeisenbergRep 𝕜 α).currentSugawaraRepresentation
         (VirasoroProject.VirasoroAlgebra.lgen 𝕜 r)).commutator
       (completedModeRepresentation (𝕜 := 𝕜) α m) =
-        -m • completedModeRepresentation (𝕜 := 𝕜) α (r + m) := by
-  rw [CurrentHeisenbergRep.currentSugawaraRepresentation_lgen_apply]
-  exact VirasoroProject.commutator_sugawaraGen_heiOper
-    (heiOper := (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J)
-    (heiTrunc := (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).trunc)
-    (heiComm := (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm) r m
+        (-m : 𝕜) • completedModeRepresentation (𝕜 := 𝕜) α (r + m) := by
+  exact chargedFock_vira_mode_shift α r m
 
 theorem completedModeRepresentation_packet (α : 𝕜) (m n : ℤ) :
     completedModeRepresentation (𝕜 := 𝕜) α m =
@@ -108,9 +118,7 @@ theorem completedModeRepresentation_packet (α : 𝕜) (m n : ℤ) :
 
 noncomputable def colimitHeisenbergToChargedFock
     (α : 𝕜) :
-    (heisenbergFiniteModeColimit (𝕜 := 𝕜) : Type _) →ₗ[𝕜]
-      (VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
-        VirasoroProject.ChargedFockSpace 𝕜 α) :=
+    (heisenbergFiniteModeColimit (𝕜 := 𝕜) : Type _) →ₗ[𝕜] FockEnd α :=
   (UniversalEnvelopingAlgebra.representation
       (𝕜 := 𝕜) (𝓰 := VirasoroProject.HeisenbergAlgebra 𝕜)
       (V := VirasoroProject.ChargedFockSpace 𝕜 α)).toLinearMap.comp
@@ -132,45 +140,14 @@ theorem colimitHeisenbergToChargedFock_mode (α : 𝕜) (m : ℤ) :
         (HeisenbergAlgebra.jgen 𝕜 m)
   rw [heisenbergFiniteModeColimitEquiv_mode]
 
-/-! The source-Wick and canonical charged-Fock current packets have the same
-current family and therefore are one representation, not two parallel lanes. -/
-theorem externalInfiniteJ_eq_chargedFockSpaceHeisenbergMode
-    (α : 𝕜) :
-    externalInfiniteJ (𝕜 := 𝕜) α =
-      chargedFockSpaceHeisenbergMode 𝕜 α := by
-  rfl
-
-theorem externalInfiniteJ_currentHeisenbergRep_eq_chargedFock
-    (α : 𝕜) :
-    externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α =
-      chargedFockSpaceCurrentHeisenbergRep 𝕜 α := by
-  simp [externalInfiniteJ_currentHeisenbergRep, externalInfiniteJ,
-    representedChargedFockJ, chargedFockSpaceCurrentHeisenbergRep]
-
-theorem externalInfiniteJ_sugawara_shift_as_chargedFock
+theorem externalInfiniteJ_sugawara_shift
     (α : 𝕜) (r m : ℤ) :
     ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
         (VirasoroProject.VirasoroAlgebra.lgen 𝕜 r)).commutator
       ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).J m) =
-        -m • (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).J (r + m) := by
-  rw [externalInfiniteJ_currentHeisenbergRep_eq_chargedFock]
+        (-m : 𝕜) • (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).J (r + m) := by
   rw [CurrentHeisenbergRep.currentSugawaraRepresentation_lgen_apply]
-  exact sugawara_current_mode_shift
-    (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J
-    (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).trunc
-    (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm r m
-
-theorem externalInfiniteJ_currentSugawaraRepresentation_eq_chargedFock
-    (α : 𝕜) :
-    (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation =
-      (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).currentSugawaraRepresentation := by
-  rw [externalInfiniteJ_currentHeisenbergRep_eq_chargedFock]
-
-theorem externalInfiniteJ_sugawaraStressMode_eq_chargedFock
-    (α : 𝕜) (n : ℤ) :
-    (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).sugawaraStressMode n =
-      (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).sugawaraStressMode n := by
-  rw [externalInfiniteJ_currentHeisenbergRep_eq_chargedFock]
+  exact sugawara_LJ_comm (𝕜 := 𝕜) α r m
 
 theorem externalInfiniteJ_hasModeShift
     (α : 𝕜) :
@@ -181,7 +158,71 @@ theorem externalInfiniteJ_hasModeShift
       (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).J
       (fun n m => n + m)
       (fun _ m => (-m : 𝕜)) := by
-  simpa [externalInfiniteJ_currentHeisenbergRep_eq_chargedFock]
-    using chargedFock_hasModeShift (𝕜 := 𝕜) α
+  intro n m
+  exact externalInfiniteJ_sugawara_shift α n m
+
+/-! ### Bogoliubov forward/backward cross terms -/
+
+section BogoliubovCrossTerms
+
+open InfoGeometry.Krein
+
+variable {𝕜 E : Type*} [RCLike 𝕜] [NormedAddCommGroup E]
+  [InnerProductSpace 𝕜 E] [CompleteSpace E]
+variable (kp : KreinProjections (𝕜 := 𝕜) E)
+
+/-- The transmission block of the Bogoliubov transformation. -/
+def currentForward (T : E →L[𝕜] E) : E →L[𝕜] E := kp.Phi T
+
+/-- The leakage block of the Bogoliubov transformation. -/
+def currentBackward (T : E →L[𝕜] E) : E →L[𝕜] E := kp.Psi T
+
+/-- The forward-backward cross term vanishes because the adjacent projectors
+    are orthogonal: `Phi T` and `Psi T` have no mixed contribution. -/
+theorem forward_backward_orthogonal (T : E →L[𝕜] E) :
+    ContinuousLinearMap.adjoint (currentForward kp T) ∘L currentBackward kp T = 0 := by
+  dsimp [currentForward, currentBackward, KreinProjections.Phi, KreinProjections.Psi]
+  rw [ContinuousLinearMap.adjoint_comp, ContinuousLinearMap.adjoint_comp,
+    kp.p_plus_selfadj]
+  calc
+    (kp.P_plus.comp (ContinuousLinearMap.adjoint T)).comp kp.P_plus ∘L
+        (kp.P_minus.comp (T.comp kp.P_plus)) =
+      (kp.P_plus.comp (ContinuousLinearMap.adjoint T)).comp
+        (kp.P_plus.comp (kp.P_minus.comp (T.comp kp.P_plus))) := by
+          rw [ContinuousLinearMap.comp_assoc]
+    _ = (kp.P_plus.comp (ContinuousLinearMap.adjoint T)).comp
+        ((kp.P_plus.comp kp.P_minus).comp (T.comp kp.P_plus)) := by
+          simp only [ContinuousLinearMap.comp_assoc]
+    _ = 0 := by rw [kp.orthog_symm]; simp
+
+/-- The backward-forward cross term vanishes by `P₋ P₊ = 0`. -/
+theorem backward_forward_orthogonal (T : E →L[𝕜] E) :
+    ContinuousLinearMap.adjoint (currentBackward kp T) ∘L currentForward kp T = 0 := by
+  dsimp [currentForward, currentBackward, KreinProjections.Phi, KreinProjections.Psi]
+  rw [ContinuousLinearMap.adjoint_comp, ContinuousLinearMap.adjoint_comp,
+    kp.p_plus_selfadj, kp.p_minus_selfadj]
+  calc
+    (kp.P_plus.comp (ContinuousLinearMap.adjoint T)).comp kp.P_minus ∘L
+        (kp.P_plus.comp (T.comp kp.P_plus)) =
+      (kp.P_plus.comp (ContinuousLinearMap.adjoint T)).comp
+        (kp.P_minus.comp (kp.P_plus.comp (T.comp kp.P_plus))) := by
+          rw [ContinuousLinearMap.comp_assoc]
+    _ = (kp.P_plus.comp (ContinuousLinearMap.adjoint T)).comp
+        ((kp.P_minus.comp kp.P_plus).comp (T.comp kp.P_plus)) := by
+          simp only [ContinuousLinearMap.comp_assoc]
+    _ = 0 := by rw [kp.orthog]; simp
+
+/-- The Heisenberg current commutator reduces to the positive projector `P+`
+    whenever `T` is a Krein isometry on the positive cone.
+
+    This is a direct restatement of `KreinProjections.bogoliubov_subspace_split`,
+    interpreted as the canonical commutation relation for the current field. -/
+theorem heisenberg_current_commutator (T : E →L[𝕜] E)
+    (hT : kp.P_plus.comp ((kp.kreinAdjoint T).comp (T.comp kp.P_plus)) = kp.P_plus) :
+    ContinuousLinearMap.adjoint (kp.Phi T) ∘L kp.Phi T -
+       ContinuousLinearMap.adjoint (kp.Psi T) ∘L kp.Psi T = kp.P_plus :=
+  kp.bogoliubov_subspace_split T hT
+
+end BogoliubovCrossTerms
 
 end InfoGeometry.Canonical.ConstructiveCurrentHeisenbergColimitBridge

@@ -145,7 +145,7 @@ open Complex
 abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
 
 /-- A finite braid word at stage `n`, represented by a list of Artin generator indices. -/
-def BraidWord (n : ℕ) := List (Fin n)
+abbrev BraidWord (n : ℕ) := List (Fin n)
 
 /-- Elementary finite-stage Artin moves, plus transitive closure. -/
 inductive ArtinMove {n : ℕ} : BraidWord n → BraidWord n → Prop
@@ -248,7 +248,8 @@ theorem finiteToInfinite_length {n : ℕ} (w : BraidWord n) :
     (finiteToInfinite w).length = w.length := by
   induction w with
   | nil => rfl
-  | cons i ws ih => simp [finiteToInfinite, ih]
+  | cons i ws ih =>
+      simp [finiteToInfinite, ih]
 
 /-- Singleton embedding is the expected `Fin.castSucc`-style inclusion. -/
 theorem finiteToInfinite_castSucc {n : ℕ} (i : Fin n) :

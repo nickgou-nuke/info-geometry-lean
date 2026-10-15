@@ -31,8 +31,16 @@ noncomputable def fourMomentumCoordEquiv : FourMomentum ≃ (Fin 4 → ℂ) wher
 noncomputable instance : AddCommGroup FourMomentum :=
   Equiv.addCommGroup fourMomentumCoordEquiv
 
+noncomputable def fourMomentumCoordAddEquiv : FourMomentum ≃+ (Fin 4 → ℂ) where
+  toEquiv := fourMomentumCoordEquiv
+  map_add' P Q := by
+    change fourMomentumCoordEquiv
+      (fourMomentumCoordEquiv.symm
+        (fourMomentumCoordEquiv P + fourMomentumCoordEquiv Q)) = _
+    simp
+
 noncomputable instance : Module ℂ FourMomentum :=
-  Equiv.module ℂ fourMomentumCoordEquiv
+  AddEquiv.module ℂ fourMomentumCoordAddEquiv
 
 theorem addFourMomentum_eq_add (P Q : FourMomentum) :
     addFourMomentum P Q = P + Q := by
@@ -44,7 +52,8 @@ theorem smul_fourMomentum (c : ℂ) (P : FourMomentum) :
     c • P = ⟨c * P.E, c * P.px, c * P.py, c * P.pz⟩ := by
   apply fourMomentumCoordEquiv.injective
   funext i
-  fin_cases i <;> rfl
+  fin_cases i <;> simp [fourMomentumCoordEquiv, fourMomentumCoordAddEquiv,
+    Equiv.smul_def]
 
 @[simp] theorem add_fourMomentum (P Q : FourMomentum) :
     P + Q = ⟨P.E + Q.E, P.px + Q.px, P.py + Q.py, P.pz + Q.pz⟩ := by

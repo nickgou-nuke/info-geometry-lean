@@ -105,16 +105,15 @@ theorem exists_nonzero_commutator_of_not_scalar
       · apply False.elim
         apply hx
         refine ⟨a, ?_⟩
-        have h1a : (1 : InfoGeometry.Canonical.ZornMatrix R).a = 1 := by rfl
-        have h1b : (1 : InfoGeometry.Canonical.ZornMatrix R).b = 1 := by rfl
-        have h1x : (1 : InfoGeometry.Canonical.ZornMatrix R).x = 0 := by rfl
-        have h1y : (1 : InfoGeometry.Canonical.ZornMatrix R).y = 0 := by rfl
-        ext <;> simp [hAB, hu0, hv0, Equiv.smul_def, ZornMatrix.coordEquiv,
-          h1a, h1b, h1x, h1y]
+        ext
+        · rw [InfoGeometry.Canonical.ZornMatrix.smul_a, InfoGeometry.Canonical.ZornMatrix.one_a, mul_one]
+        · rw [hAB, InfoGeometry.Canonical.ZornMatrix.smul_b, InfoGeometry.Canonical.ZornMatrix.one_b, mul_one]
+        · rw [hu0, InfoGeometry.Canonical.ZornMatrix.smul_x, InfoGeometry.Canonical.ZornMatrix.one_x, smul_zero]
+        · rw [hv0, InfoGeometry.Canonical.ZornMatrix.smul_y, InfoGeometry.Canonical.ZornMatrix.one_y, smul_zero]
       · have hvnz : v ≠ 0 := hv0
         have hcoord : v 0 ≠ 0 ∨ v 1 ≠ 0 ∨ v 2 ≠ 0 := by
           by_contra h
-          push_neg at h
+          push Not at h
           rcases h with ⟨h0, h1, h2⟩
           exact hvnz (by ext i <;> fin_cases i <;> simp [h0, h1, h2])
         rcases hcoord with hv0' | hv1' | hv2'
@@ -157,7 +156,7 @@ theorem exists_nonzero_commutator_of_not_scalar
     · have hunz : u ≠ 0 := hu0
       have hcoord : u 0 ≠ 0 ∨ u 1 ≠ 0 ∨ u 2 ≠ 0 := by
         by_contra h
-        push_neg at h
+        push Not at h
         rcases h with ⟨h0, h1, h2⟩
         exact hunz (by ext i <;> fin_cases i <;> simp [h0, h1, h2])
       rcases hcoord with hu0' | hu1' | hu2'

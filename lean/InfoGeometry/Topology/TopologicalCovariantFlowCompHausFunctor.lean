@@ -607,7 +607,8 @@ theorem topologicalCovariantQuotientCompHausContinuousAction_zero
   have hcancel :
       (operatorObservationQuotientCompHausIso S).inv
           ((operatorObservationQuotientCompHausIso S).hom q) = q := by
-    simpa only [ConcreteCategory.comp_apply] using congrArg (fun h => h q)
+    simpa only [ConcreteCategory.comp_apply, ConcreteCategory.id_apply] using
+      congrArg (fun h => h q)
       (operatorObservationQuotientCompHausIso S).hom_inv_id
   simpa using hcancel
 
@@ -636,7 +637,7 @@ theorem topologicalCovariantQuotientCompHausContinuousAction_add
               ((operatorObservationQuotientCompHausIso S).hom q))) =
         (topologicalCovariantRangeCompHausIso F t).hom
           ((operatorObservationQuotientCompHausIso S).hom q) := by
-    simpa only [ConcreteCategory.comp_apply] using congrArg
+    simpa only [ConcreteCategory.comp_apply, ConcreteCategory.id_apply] using congrArg
       (fun h => h ((topologicalCovariantRangeCompHausIso F t).hom
         ((operatorObservationQuotientCompHausIso S).hom q)))
       (operatorObservationQuotientCompHausIso S).inv_hom_id

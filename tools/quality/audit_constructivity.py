@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import subprocess
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -32,7 +33,11 @@ PROJECT_PATTERNS_STABLE = (
 )
 
 PROOF_HOLE_RE = re.compile(r"\b(?:sorry|admit)\b")
-AXIOM_RE = re.compile(r"^\s*axiom\b", re.M)
+AXIOM_RE = re.compile(
+    r"^[ \t]*(?:(?:@\[[^\n]*?\][ \t]*)|(?:(?:private|protected|local|unsafe|noncomputable)[ \t]+))*"
+    r"(?:axiom|postulate)\b",
+    re.M,
+)
 TRUE_PROP_RE = re.compile(
     r"(?ms)^\s*(?:def|abbrev|theorem|lemma)\s+[A-Za-z0-9_']+\b"
     r"[\s\S]{0,400}?:\s*Prop\s*:=\s*(?:--[^\n]*\n\s*)*True\b"
@@ -109,28 +114,34 @@ def quarantined_paths() -> set[str]:
     return mods
 
 
-def iter_files(mode: str) -> list[Path]:
-    patterns = PROJECT_PATTERNS_STABLE if mode == "stable" else PROJECT_PATTERNS_FULL
-    files = sorted(
-        {
-            path
-            for pattern in patterns
-            for path in ROOT.glob(pattern)
-            if path.is_file() and ".lake/" not in path.as_posix()
-        }
+def maintained_lean_files() -> list[Path]:
+    """Git-selected maintained sources; absent tracked sources remain selected."""
+    result = subprocess.run(
+        ["git", "ls-files", "-z", "--cached", "--others", "--exclude-standard", "--",
+         "lean", "proofs", "lib", "tests", "scripts", "*.lean"],
+        cwd=ROOT, check=True, capture_output=True, text=True,
     )
+    excluded = {".lake", ".git", ".runtime", ".worktrees", "node_modules",
+                "external_refs", "artifacts", "reports", "quarantine", "scratch", "tmp"}
+    out = set()
+    for raw in result.stdout.split("\0"):
+        path = Path(raw)
+        if not raw or path.suffix != ".lean" or any(part in excluded or part.startswith(".") for part in path.parts):
+            continue
+        if len(path.parts) == 1 or path.parts[0] in {"lean", "proofs", "lib", "tests", "scripts"}:
+            out.add(ROOT / path)
+    return sorted(out)
+
+
+def iter_files(mode: str) -> list[Path]:
+    files = maintained_lean_files()
     if mode != "stable":
         return files
     quarantined = quarantined_paths()
-    stable_files: list[Path] = []
-    for path in files:
-        rpath = rel(path)
-        if rpath in quarantined:
-            continue
-        if rpath.startswith("lean/InfoGeometry/Unstable/"):
-            continue
-        stable_files.append(path)
-    return stable_files
+    return [path for path in files
+            if ((rpath := rel(path)) == "lean/InfoGeometry.lean" or rpath.startswith("lean/InfoGeometry/"))
+            and rpath not in quarantined
+            and not rpath.startswith("lean/InfoGeometry/Unstable/")]
 
 
 def strip_comments(
@@ -164,14 +175,12 @@ def strip_comments(
         if block_depth > 0:
             if ch == "/" and nxt == "-":
                 block_depth += 1
-                if is_doc:
-                    out.extend(["/", "-"])
+                out.extend(["/", "-"] if is_doc else "  ")
                 i += 2
                 continue
             if ch == "-" and nxt == "/":
                 block_depth -= 1
-                if is_doc:
-                    out.extend(["-", "/"])
+                out.extend(["-", "/"] if is_doc else "  ")
                 if block_depth == 0:
                     is_doc = False
                 i += 2
@@ -202,7 +211,11 @@ def strip_comments(
                 out.append(" ")
             else:
                 out.append(ch)
-            if ch == '"' and (i == 0 or text[i - 1] != "\\"):
+            if ch == "\\" and i + 1 < n:
+                out.append("\n" if text[i + 1] == "\n" else " " if strip_strings else text[i + 1])
+                i += 2
+                continue
+            if ch == '"':
                 in_string = False
             i += 1
             continue
@@ -246,7 +259,7 @@ def scan_manifest_consistency() -> list[Finding]:
     for line in quarantine.read_text().splitlines():
         line = line.strip()
         if line.startswith("import "):
-            imported.add(line.split()[1])
+            imported.update(line.split()[1:])
 
     findings: list[Finding] = []
     for module, reason in sorted(manifest.items()):
@@ -264,26 +277,21 @@ def scan_manifest_consistency() -> list[Finding]:
 
 
 def scan_file(path: Path, *, include_review: bool = False) -> list[Finding]:
-    if not path.is_file():
-        return []
-    try:
-        text = path.read_text()
-    except (OSError, UnicodeDecodeError):
-        return []
-    scan_text = strip_comments(text)
+    text = path.read_text(encoding="utf-8")
+    scan_text = strip_comments(text, strip_strings=True, strip_quoted_identifiers=True)
     proof_hole_text = strip_comments(text, strip_strings=True, strip_quoted_identifiers=True)
     # Trace-class names may legitimately contain the token `admit` (for
     # example `DAG.Morphism.admit`).  They are diagnostics, not proof terms;
     # do not report the registration declaration as closure debt.
     proof_hole_text = re.sub(
         r"^\s*(?:initialize\s+)?registerTraceClass\b[^\n]*$",
-        "",
+        lambda match: "".join("\n" if ch == "\n" else " " for ch in match.group(0)),
         proof_hole_text,
         flags=re.MULTILINE,
     )
     proof_hole_text = re.sub(
         r"^\s*trace\[[^\]]*\.admit\][^\n]*$",
-        "",
+        lambda match: "".join("\n" if ch == "\n" else " " for ch in match.group(0)),
         proof_hole_text,
         flags=re.MULTILINE,
     )
@@ -375,20 +383,44 @@ def main() -> int:
     parser.add_argument("--json", action="store_true", dest="as_json")
     args = parser.parse_args()
 
-    findings: list[Finding] = scan_manifest_consistency()
+    failures = []
+    successful = []
+    try:
+        findings: list[Finding] = scan_manifest_consistency()
+    except (OSError, UnicodeError) as exc:
+        findings = []
+        failures.append({"file": str(MANIFEST), "phase": "manifest", "error": str(exc)})
     include_review = args.mode == "review"
-    for path in iter_files(args.mode):
-        findings.extend(scan_file(path, include_review=include_review))
+    try:
+        selected = iter_files(args.mode)
+    except (OSError, subprocess.CalledProcessError) as exc:
+        selected = []
+        failures.append({"file": "", "phase": "selection", "error": str(exc)})
+    for path in selected:
+        try:
+            findings.extend(scan_file(path, include_review=include_review))
+            successful.append(str(path))
+        except (OSError, UnicodeError) as exc:
+            failures.append({"file": str(path), "phase": "source", "error": str(exc)})
+    coverage = {"files_selected": len(selected), "files_read": len(successful),
+                "selected_paths": [str(path) for path in selected],
+                "successfully_read_paths": successful, "read_failures": failures,
+                "coverage_complete": bool(selected) and not failures,
+                "authority": "lexical pattern candidates; no nonvacuity or kernel claim"}
 
     findings.sort(key=lambda item: (item.path, item.line, item.category))
     if args.as_json:
         print(json.dumps({
             "mode": args.mode,
+            "coverage": coverage,
             "findings": [finding.__dict__ for finding in findings],
         }, indent=2))
     else:
         print_findings(args.mode, findings)
+        print(json.dumps(coverage, indent=2))
 
+    if not coverage["coverage_complete"]:
+        return 2
     if args.mode == "stable" and findings:
         return 1
     return 0

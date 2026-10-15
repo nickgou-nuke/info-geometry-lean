@@ -35,7 +35,9 @@ theorem deriv_even_is_odd {f f' : ℝ → ℝ}
   intro t
   have h1 : HasDerivAt (fun s => f (-s)) (-f' (-t)) t := by
     have hcomp := (hderiv (-t)).comp t (hasDerivAt_neg t)
-    simpa using hcomp
+    convert hcomp using 1
+    · rfl
+    · ring
   have h2 : HasDerivAt f (-f' (-t)) t := by
     have heq : (fun s => f (-s)) = f := funext (fun s => heven s)
     rwa [heq] at h1
@@ -50,7 +52,9 @@ theorem deriv_odd_is_even {f f' : ℝ → ℝ}
   intro t
   have h1 : HasDerivAt (fun s => f (-s)) (-f' (-t)) t := by
     have hcomp := (hderiv (-t)).comp t (hasDerivAt_neg t)
-    simpa using hcomp
+    convert hcomp using 1
+    · rfl
+    · ring
   have h2 : HasDerivAt (fun s => -f s) (-f' (-t)) t := by
     have heq : (fun s => f (-s)) = (fun s => -f s) := funext (fun s => hodd s)
     rwa [heq] at h1

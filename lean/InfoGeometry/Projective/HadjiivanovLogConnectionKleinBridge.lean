@@ -60,8 +60,7 @@ def sectionInversion : LogSection V →ₗ[ℂ] LogSection V :=
 /-- The lifted inversion is an involution on every finite algebraic section. -/
 theorem sectionInversion_involutive (x : LogSection V) :
     sectionInversion (sectionInversion x) = x := by
-  refine TensorProduct.induction_on x ?_ ?_ ?_
-  · simp
+  refine TensorProduct.inductionOn x ?_ ?_
   · intro f v
     rw [sectionInversion_tmul, sectionInversion_tmul, inversion_involutive]
   · intro x y hx hy
@@ -85,8 +84,7 @@ theorem logarithmicConnection_reverse_tmul
 theorem logarithmicConnection_reverse (R : LogResidue V) (x : LogSection V) :
     logarithmicConnection (reverseResidue R) (sectionInversion x) =
       -sectionInversion (logarithmicConnection R x) := by
-  refine TensorProduct.induction_on x ?_ ?_ ?_
-  · simp
+  refine TensorProduct.inductionOn x ?_ ?_
   · exact logarithmicConnection_reverse_tmul R
   · intro x y hx hy
     simp only [map_add, hx, hy, neg_add_rev]

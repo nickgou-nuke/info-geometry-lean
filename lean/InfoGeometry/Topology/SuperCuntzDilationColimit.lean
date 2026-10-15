@@ -35,7 +35,7 @@ The packet itself stays finite-stage and is supplied externally.  The wrapper
 exists so that the `n`-indexed readouts can be routed through the inductive
 colimit owner without inventing a parallel infrastructure.
 -/
-def qDilationColimitResolution
+noncomputable def qDilationColimitResolution
     (Invariants : ∀ n : ℕ, SupergradedClosureAt (Chain n))
     (Bonding : ∀ n : ℕ, BondingIntertwiner (Invariants n) (Invariants (n + 1)))
     (A_infty : Type*) [Ring A_infty]

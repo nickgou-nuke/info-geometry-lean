@@ -1,5 +1,4 @@
 import InfoGeometry.Canonical.RelativeModularOperator
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RestrictedVolumeCharacter
 import InfoGeometry.Geometry.KreinAsHessian
 import InfoGeometry.Algebraic.SplitSuperGeometry
@@ -175,14 +174,12 @@ theorem hasFDerivAt_relativeModularSupervolumeKreinQuadraticPotential
         (relativeModularSupervolumeKreinGradient
           (n := n) (E := E) qPlus q0Plus qMinus q0Minus u))
       u := by
-  let c : ℝ :=
-    relativeModularSupervolumePotential (n := n) qPlus q0Plus qMinus q0Minus
-  have hConst : HasFDerivAt (fun _ : H₂ => c) (0 : H₂ →L[ℝ] ℝ) u :=
-    hasFDerivAt_const c u
+  have hConst : HasFDerivAt (fun _ : H₂ => relativeModularSupervolumePotential (n := n) qPlus q0Plus qMinus q0Minus) (0 : H₂ →L[ℝ] ℝ) u :=
+    hasFDerivAt_const _ u
   have hKrein := hasFDerivAt_krein_potential (E := E) u
   have hSum := hConst.add hKrein
-  simpa [relativeModularSupervolumeKreinQuadraticPotential,
-    relativeModularSupervolumeKreinGradient, c] using hSum
+  rw [zero_add] at hSum
+  exact hSum
 
 /--
 The gradient of the concrete quadratic supervolume lift has constant derivative
@@ -196,10 +193,8 @@ theorem hasFDerivAt_relativeModularSupervolumeKreinGradient
         (n := n) (E := E) qPlus q0Plus qMinus q0Minus)
       (relativeModularSupervolumeKreinHessian
         (n := n) (E := E) qPlus q0Plus qMinus q0Minus)
-      u := by
-  simpa [relativeModularSupervolumeKreinGradient,
-    relativeModularSupervolumeKreinHessian] using
-    hasFDerivAt_krein_grad (E := E) u
+      u :=
+  hasFDerivAt_krein_grad (E := E) u
 
 /--
 The Hessian bilinear readout of the concrete quadratic supervolume lift is the

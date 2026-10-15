@@ -33,10 +33,9 @@ def twistedVec (p : Equiv.Perm (Fin 3)) (x : Vec3) : Vec3 :=
 
 theorem twistedVec_comp (p q : Equiv.Perm (Fin 3)) (x : Vec3) :
     twistedVec (p * q) x = twistedVec p (twistedVec q x) := by
-  classical
-  fin_cases p <;> fin_cases q <;> funext i <;> fin_cases i <;>
-    simp [twistedVec, permutationSign, permuteVec,
-      Equiv.Perm.sign_mul, Equiv.swap_apply_def]
+  ext i
+  simp only [twistedVec, permuteVec, permutationSign, mul_inv_rev, Equiv.Perm.coe_mul, Function.comp_apply,
+    Equiv.Perm.sign_mul, Units.val_mul, Int.cast_mul, mul_smul, Pi.smul_apply]
 
 @[simp] theorem twistedVec_one (x : Vec3) :
     twistedVec 1 x = x := by
@@ -75,20 +74,6 @@ theorem zornCell_ext {X Y : ZornCell ℂ}
 @[simp] theorem zornAction_s (p : Equiv.Perm (Fin 3)) (X : ZornCell ℂ) :
     (zornAction p X).s = X.s := rfl
 
-theorem zornAction_mulZ (p : Equiv.Perm (Fin 3)) (X Y : ZornCell ℂ) :
-    zornAction p (ZornCell.mulZ X Y) =
-      ZornCell.mulZ (zornAction p X) (zornAction p Y) := by
-  classical
-  fin_cases p <;>
-    apply zornCell_ext <;>
-    simp [zornAction, twistedVec, permuteVec, permutationSign,
-      xVec, yVec, ZornCell.mulZ, Equiv.swap_apply_def] <;>
-    ring
-
-theorem zornAction_mul (p : Equiv.Perm (Fin 3)) (X Y : ZornCell ℂ) :
-    zornAction p (X * Y) = zornAction p X * zornAction p Y := by
-  exact zornAction_mulZ p X Y
-
 theorem zornAction_one (X : ZornCell ℂ) : zornAction 1 X = X := by
   apply zornCell_ext <;>
     simp [zornAction, twistedVec, permuteVec, permutationSign, xVec, yVec]
@@ -122,5 +107,27 @@ theorem zornAction_comp (p q : Equiv.Perm (Fin 3)) (X : ZornCell ℂ) :
   · change twistedVec (p * q) (yVec X) 2 =
       twistedVec p (yVec (zornAction q X)) 2
     rw [hy, twistedVec_comp]
+
+theorem zornAction_swap_mulZ (x y : Fin 3) (X Y : ZornCell ℂ) :
+    zornAction (Equiv.swap x y) (ZornCell.mulZ X Y) =
+      ZornCell.mulZ (zornAction (Equiv.swap x y) X) (zornAction (Equiv.swap x y) Y) := by
+  fin_cases x <;> fin_cases y <;>
+    apply zornCell_ext <;>
+    (simp [zornAction, twistedVec, permuteVec, permutationSign,
+      xVec, yVec, ZornCell.mulZ, Equiv.swap_apply_def] <;>
+    ring)
+
+theorem zornAction_mulZ (p : Equiv.Perm (Fin 3)) (X Y : ZornCell ℂ) :
+    zornAction p (ZornCell.mulZ X Y) =
+      ZornCell.mulZ (zornAction p X) (zornAction p Y) := by
+  induction p using Equiv.Perm.swap_induction_on with
+  | one =>
+    simp [zornAction_one]
+  | swap_mul f x y _ ih =>
+    rw [zornAction_comp, ih, zornAction_swap_mulZ, ← zornAction_comp, ← zornAction_comp]
+
+theorem zornAction_mul (p : Equiv.Perm (Fin 3)) (X Y : ZornCell ℂ) :
+    zornAction p (X * Y) = zornAction p X * zornAction p Y := by
+  exact zornAction_mulZ p X Y
 
 end InfoGeometry.Canonical.ZornOrientationTwistedS3

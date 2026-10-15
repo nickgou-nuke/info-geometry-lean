@@ -101,81 +101,16 @@ def q8Matrix : QuaternionGroup 2 → SpinMatrix
 attribute [local simp] Matrix.neg_mul Matrix.mul_neg Matrix.one_mul Matrix.mul_one neg_neg
 
 private theorem q8A_add (i j : ZMod 4) : q8A (i + j) = q8A i * q8A j := by
-  match i, j with
-  | 0, 0 => change q8A 0 = q8A 0 * q8A 0; norm_num [q8A, ZMod.val]
-  | 0, 1 => change q8A 1 = q8A 0 * q8A 1; norm_num [q8A, ZMod.val]
-  | 0, 2 => change q8A 2 = q8A 0 * q8A 2; norm_num [q8A, ZMod.val]
-  | 0, 3 => change q8A 3 = q8A 0 * q8A 3; norm_num [q8A, ZMod.val]
-  | 1, 0 => change q8A 1 = q8A 1 * q8A 0; norm_num [q8A, ZMod.val]
-  | 1, 1 => change q8A 2 = q8A 1 * q8A 1; norm_num [q8A, ZMod.val]
-  | 1, 2 => change q8A 3 = q8A 1 * q8A 2; norm_num [q8A, ZMod.val]
-  | 1, 3 => change q8A 0 = q8A 1 * q8A 3; norm_num [q8A, ZMod.val]
-  | 2, 0 => change q8A 2 = q8A 2 * q8A 0; norm_num [q8A, ZMod.val]
-  | 2, 1 => change q8A 3 = q8A 2 * q8A 1; norm_num [q8A, ZMod.val]
-  | 2, 2 => change q8A 0 = q8A 2 * q8A 2; norm_num [q8A, ZMod.val]
-  | 2, 3 => change q8A 1 = q8A 2 * q8A 3; norm_num [q8A, ZMod.val]
-  | 3, 0 => change q8A 3 = q8A 3 * q8A 0; norm_num [q8A, ZMod.val]
-  | 3, 1 => change q8A 0 = q8A 3 * q8A 1; norm_num [q8A, ZMod.val]
-  | 3, 2 => change q8A 1 = q8A 3 * q8A 2; norm_num [q8A, ZMod.val]
-  | 3, 3 => change q8A 2 = q8A 3 * q8A 3; norm_num [q8A, ZMod.val]
+  fin_cases i <;> fin_cases j <;> simp [q8A, ZMod.val] <;> rfl
 
 private theorem q8A_xa (i j : ZMod 4) : q8XA (j - i) = q8A i * q8XA j := by
-  match i, j with
-  | 0, 0 => change q8XA 0 = q8A 0 * q8XA 0; norm_num [q8A, q8XA, ZMod.val]
-  | 0, 1 => change q8XA 1 = q8A 0 * q8XA 1; norm_num [q8A, q8XA, ZMod.val]
-  | 0, 2 => change q8XA 2 = q8A 0 * q8XA 2; norm_num [q8A, q8XA, ZMod.val]
-  | 0, 3 => change q8XA 3 = q8A 0 * q8XA 3; norm_num [q8A, q8XA, ZMod.val]
-  | 1, 0 => change q8XA 3 = q8A 1 * q8XA 0; norm_num [q8A, q8XA, ZMod.val]
-  | 1, 1 => change q8XA 0 = q8A 1 * q8XA 1; norm_num [q8A, q8XA, ZMod.val]
-  | 1, 2 => change q8XA 1 = q8A 1 * q8XA 2; norm_num [q8A, q8XA, ZMod.val]
-  | 1, 3 => change q8XA 2 = q8A 1 * q8XA 3; norm_num [q8A, q8XA, ZMod.val]
-  | 2, 0 => change q8XA 2 = q8A 2 * q8XA 0; norm_num [q8A, q8XA, ZMod.val]
-  | 2, 1 => change q8XA 3 = q8A 2 * q8XA 1; norm_num [q8A, q8XA, ZMod.val]
-  | 2, 2 => change q8XA 0 = q8A 2 * q8XA 2; norm_num [q8A, q8XA, ZMod.val]
-  | 2, 3 => change q8XA 1 = q8A 2 * q8XA 3; norm_num [q8A, q8XA, ZMod.val]
-  | 3, 0 => change q8XA 1 = q8A 3 * q8XA 0; norm_num [q8A, q8XA, ZMod.val]
-  | 3, 1 => change q8XA 2 = q8A 3 * q8XA 1; norm_num [q8A, q8XA, ZMod.val]
-  | 3, 2 => change q8XA 3 = q8A 3 * q8XA 2; norm_num [q8A, q8XA, ZMod.val]
-  | 3, 3 => change q8XA 0 = q8A 3 * q8XA 3; norm_num [q8A, q8XA, ZMod.val]
+  fin_cases i <;> fin_cases j <;> simp [q8A, q8XA, ZMod.val] <;> rfl
 
 private theorem q8XA_a (i j : ZMod 4) : q8XA (i + j) = q8XA i * q8A j := by
-  match i, j with
-  | 0, 0 => change q8XA 0 = q8XA 0 * q8A 0; norm_num [q8A, q8XA, ZMod.val]
-  | 0, 1 => change q8XA 1 = q8XA 0 * q8A 1; norm_num [q8A, q8XA, ZMod.val]
-  | 0, 2 => change q8XA 2 = q8XA 0 * q8A 2; norm_num [q8A, q8XA, ZMod.val]
-  | 0, 3 => change q8XA 3 = q8XA 0 * q8A 3; norm_num [q8A, q8XA, ZMod.val]
-  | 1, 0 => change q8XA 1 = q8XA 1 * q8A 0; norm_num [q8A, q8XA, ZMod.val]
-  | 1, 1 => change q8XA 2 = q8XA 1 * q8A 1; norm_num [q8A, q8XA, ZMod.val]
-  | 1, 2 => change q8XA 3 = q8XA 1 * q8A 2; norm_num [q8A, q8XA, ZMod.val]
-  | 1, 3 => change q8XA 0 = q8XA 1 * q8A 3; norm_num [q8A, q8XA, ZMod.val]
-  | 2, 0 => change q8XA 2 = q8XA 2 * q8A 0; norm_num [q8A, q8XA, ZMod.val]
-  | 2, 1 => change q8XA 3 = q8XA 2 * q8A 1; norm_num [q8A, q8XA, ZMod.val]
-  | 2, 2 => change q8XA 0 = q8XA 2 * q8A 2; norm_num [q8A, q8XA, ZMod.val]
-  | 2, 3 => change q8XA 1 = q8XA 2 * q8A 3; norm_num [q8A, q8XA, ZMod.val]
-  | 3, 0 => change q8XA 3 = q8XA 3 * q8A 0; norm_num [q8A, q8XA, ZMod.val]
-  | 3, 1 => change q8XA 0 = q8XA 3 * q8A 1; norm_num [q8A, q8XA, ZMod.val]
-  | 3, 2 => change q8XA 1 = q8XA 3 * q8A 2; norm_num [q8A, q8XA, ZMod.val]
-  | 3, 3 => change q8XA 2 = q8XA 3 * q8A 3; norm_num [q8A, q8XA, ZMod.val]
+  fin_cases i <;> fin_cases j <;> simp [q8A, q8XA, ZMod.val] <;> rfl
 
 private theorem q8XA_xa (i j : ZMod 4) : q8A (2 + j - i) = q8XA i * q8XA j := by
-  match i, j with
-  | 0, 0 => change q8A 2 = q8XA 0 * q8XA 0; norm_num [q8A, q8XA, ZMod.val]
-  | 0, 1 => change q8A 3 = q8XA 0 * q8XA 1; norm_num [q8A, q8XA, ZMod.val]
-  | 0, 2 => change q8A 0 = q8XA 0 * q8XA 2; norm_num [q8A, q8XA, ZMod.val]
-  | 0, 3 => change q8A 1 = q8XA 0 * q8XA 3; norm_num [q8A, q8XA, ZMod.val]
-  | 1, 0 => change q8A 1 = q8XA 1 * q8XA 0; norm_num [q8A, q8XA, ZMod.val]
-  | 1, 1 => change q8A 2 = q8XA 1 * q8XA 1; norm_num [q8A, q8XA, ZMod.val]
-  | 1, 2 => change q8A 3 = q8XA 1 * q8XA 2; norm_num [q8A, q8XA, ZMod.val]
-  | 1, 3 => change q8A 0 = q8XA 1 * q8XA 3; norm_num [q8A, q8XA, ZMod.val]
-  | 2, 0 => change q8A 0 = q8XA 2 * q8XA 0; norm_num [q8A, q8XA, ZMod.val]
-  | 2, 1 => change q8A 1 = q8XA 2 * q8XA 1; norm_num [q8A, q8XA, ZMod.val]
-  | 2, 2 => change q8A 2 = q8XA 2 * q8XA 2; norm_num [q8A, q8XA, ZMod.val]
-  | 2, 3 => change q8A 3 = q8XA 2 * q8XA 3; norm_num [q8A, q8XA, ZMod.val]
-  | 3, 0 => change q8A 3 = q8XA 3 * q8XA 0; norm_num [q8A, q8XA, ZMod.val]
-  | 3, 1 => change q8A 0 = q8XA 3 * q8XA 1; norm_num [q8A, q8XA, ZMod.val]
-  | 3, 2 => change q8A 1 = q8XA 3 * q8XA 2; norm_num [q8A, q8XA, ZMod.val]
-  | 3, 3 => change q8A 2 = q8XA 3 * q8XA 3; norm_num [q8A, q8XA, ZMod.val]
-
+  fin_cases i <;> fin_cases j <;> simp [q8A, q8XA, ZMod.val] <;> rfl
 
 
 /-- The finite table is checked natively against the operator algebra base rules. -/

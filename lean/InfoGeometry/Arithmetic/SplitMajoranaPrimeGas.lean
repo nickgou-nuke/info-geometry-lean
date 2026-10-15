@@ -72,6 +72,8 @@ theorem Pi_eq_one_sub_two_N (p : PrimeLabel) :
     C.Pi p = 1 - (2 : A) * C.N p := by
   have h := (SplitPrimeCAR.toExteriorCARPair C p).parityOp_eq_one_sub_two_numberOp
   simpa [Pi, N, c, d,
+    InfoGeometry.Arithmetic.PrimeMajoranaCAR.ExteriorCARPair.cMajorana,
+    InfoGeometry.Arithmetic.PrimeMajoranaCAR.ExteriorCARPair.dMajorana,
     InfoGeometry.Arithmetic.PrimeMajoranaCAR.ExteriorCARPair.parityOp,
     InfoGeometry.Arithmetic.PrimeMajoranaCAR.ExteriorCARPair.numberOp,
     toExteriorCARPair] using h

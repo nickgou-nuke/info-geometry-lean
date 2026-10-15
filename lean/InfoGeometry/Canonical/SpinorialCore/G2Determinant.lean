@@ -41,12 +41,18 @@ def triangularRelation : Matrix (Fin 12) (Fin 12) ℤ :=
      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 146, -38;
      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 364]
 
+set_option maxRecDepth 10000 in
+set_option maxHeartbeats 1000000 in
 theorem elimination_lower : elimination.BlockTriangular OrderDual.toDual := by
-  unfold Matrix.BlockTriangular
+  letI : DecidableLT (Fin 12)ᵒᵈ := fun a b =>
+    (inferInstance : Decidable (b.val < a.val))
   decide
 
+set_option maxRecDepth 10000 in
+set_option maxHeartbeats 1000000 in
 theorem triangularRelation_upper : triangularRelation.BlockTriangular id := by
-  unfold Matrix.BlockTriangular
+  letI : DecidableLT (Fin 12) := fun a b =>
+    (inferInstance : Decidable (a.val < b.val))
   decide
 
 /-- Basis/orientation round trip for the CAS witness. -/

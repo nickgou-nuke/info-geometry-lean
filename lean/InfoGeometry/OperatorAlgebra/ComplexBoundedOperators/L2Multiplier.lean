@@ -67,8 +67,10 @@ theorem mulOp_apply (a : Linftyc α μ) (f : L2c α μ) :
 /-- The operator is pointwise multiplication, modulo a.e. equality. -/
 theorem mulOp_apply_ae (a : Linftyc α μ) (f : L2c α μ) :
     ⇑(mulOp (α := α) (μ := μ) a f) =ᵐ[μ] fun x => a x * f x := by
-  simpa [mulOp_apply, smul_eq_mul] using
-    (MeasureTheory.Lp.coeFn_lpSMul a f)
+  rw [mulOp_apply]
+  filter_upwards
+    [MeasureTheory.Lp.coeFn_lpSMul (r := (2 : ℝ≥0∞)) a f] with x hx
+  simpa only [Pi.smul_apply, smul_eq_mul, Pi.mul_apply] using hx
 
 /-- Pointwise operator norm estimate. -/
 theorem norm_mulOp_apply_le (a : Linftyc α μ) (f : L2c α μ) :

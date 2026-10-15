@@ -278,7 +278,8 @@ theorem groupUnitary_mul_observableEmbedding_coeff
   rw [Finset.sum_eq_single σ]
   · by_cases hr : r = σ
     · subst r
-      simp
+      have hσ : σ.symm * σ = 1 := inv_mul_cancel σ
+      simp [hσ]
     · have hne : σ.symm * r ≠ 1 := by
         intro h
         apply hr
@@ -305,8 +306,14 @@ theorem groupUnitary_mul_observableEmbedding_coeff
   rw [Finset.sum_eq_single 1]
   · by_cases hr : r = σ
     · subst r
-      simp
-    · simp [hr]
+      have hone : (1 : Equiv.Perm ColorChannel).symm = 1 := by
+        ext c
+        rfl
+      simp [hone]
+    · have hone : (1 : Equiv.Perm ColorChannel).symm = 1 := by
+        ext c
+        rfl
+      simp [hr, hone]
   · intro b hb hbs
     simp [hbs]
   · simp

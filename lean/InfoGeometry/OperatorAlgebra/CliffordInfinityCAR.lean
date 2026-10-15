@@ -103,7 +103,7 @@ def Cl_functor : ℕ ⥤ RingCat where
     rw [Cl_bonding_map_of_le_comp]
     rfl
 
-def CliffordInfinity : RingCat := 
+abbrev CliffordInfinity : RingCat :=
   Limits.colimit Cl_functor
 
 end InfoGeometry.OperatorAlgebra

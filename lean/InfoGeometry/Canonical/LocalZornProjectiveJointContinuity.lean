@@ -26,6 +26,8 @@ noncomputable instance realSL2LocallyCompact : LocallyCompactSpace SL2R := by
 
 theorem continuous_localSL2ProjectiveAction_joint :
     Continuous localSL2ProjectiveActionJoint := by
+  letI : TopologicalSpace RealProjectiveBoundary :=
+    realProjectiveBoundaryTopology
   exact Topology.IsQuotientMap.continuous_lift_prod_right
     (isQuotientMap_quotient_mk' :
       Topology.IsQuotientMap
@@ -45,10 +47,18 @@ theorem continuous_localSL2ProjectiveAction_joint :
           Matrix.toLin' (p.1 : Matrix (Fin 2) (Fin 2) ℝ) p.2)
         simp only [Matrix.toLin'_apply', Matrix.mulVecLin_apply]
         fun_prop
-      have hquot : Continuous (fun p => Quotient.mk' (lift p)) :=
-        continuous_quotient_mk'.comp hlift
-      simpa [localSL2ProjectiveActionJoint, localSL2ProjectiveAction,
-        Projectivization.map, lift] using hquot)
+      have hquot : @Continuous
+          (SL2R × {v : Fin 2 → ℝ // v ≠ 0}) RealProjectiveBoundary
+          instTopologicalSpaceProd realProjectiveBoundaryTopology
+          (fun p => Quotient.mk' (lift p)) := by
+        exact continuous_coinduced_rng.comp hlift
+      have hfun :
+          (fun p : SL2R × {v : Fin 2 → ℝ // v ≠ 0} =>
+            localSL2ProjectiveActionJoint (p.1, Quotient.mk' p.2)) =
+          (fun p => Quotient.mk' (lift p)) := by
+        funext p
+        rfl
+      exact hfun ▸ hquot)
 
 theorem continuous_modularBoostProjectiveAction_joint :
     Continuous (fun p : ℝ × RealProjectiveBoundary =>
@@ -58,7 +68,7 @@ theorem continuous_modularBoostProjectiveAction_joint :
     apply continuous_matrix
     intro i j
     fin_cases i <;> fin_cases j <;>
-      simp [modularBoostSL2] <;> fun_prop
+      simp [modularBoostSL2, modularBoostMatrix] <;> fun_prop
   exact continuous_localSL2ProjectiveAction_joint.comp
     ((hboost.comp continuous_fst).prodMk continuous_snd)
 

@@ -1,5 +1,5 @@
-import Mathlib.Data.Complex.Basic
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Complex.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Tactic
@@ -105,15 +105,14 @@ def weylDyad (π : WeylSpinor) : Matrix (Fin 2) (Fin 2) ℂ :=
 theorem det_weylDyad_zero (π : WeylSpinor) :
     (weylDyad π).det = 0 := by
   rw [Matrix.det_fin_two]
-  dsimp [weylDyad]
   apply Complex.ext
-  · simp only [Complex.sub_re, Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im,
-               Complex.conj_re, Complex.conj_im]
-    dsimp [Complex.normSq]
+  · simp [weylDyad, Complex.normSq,
+      Complex.conj_re, Complex.conj_im, Complex.add_re, Complex.add_im,
+      Complex.mul_re, Complex.mul_im]
     ring
-  · simp only [Complex.sub_im, Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im,
-               Complex.conj_re, Complex.conj_im]
-    dsimp [Complex.normSq]
+  · simp [weylDyad, Complex.normSq,
+      Complex.conj_re, Complex.conj_im, Complex.add_re, Complex.add_im,
+      Complex.mul_re, Complex.mul_im]
     ring
 
 /-- The Minkowski 4-momentum associated with a Weyl spinor π. -/
@@ -183,6 +182,10 @@ def incidentTwistor (X : SpacetimePoint) (π : WeylSpinor) : PenroseTwistor wher
 theorem incident_twistor_is_null (X : SpacetimePoint) (π : WeylSpinor) :
     IsNullPenroseTwistor (incidentTwistor X π) := by
   dsimp [IsNullPenroseTwistor, twistorNorm, incidentTwistor]
+  rw [starRingEnd_apply]
+  rw [Complex.star_def]
+  simp only [Complex.I_re, Complex.I_im, Complex.conj_re, Complex.conj_im,
+    Complex.add_re, Complex.add_im, Complex.mul_re, Complex.mul_im]
   ring
 
 /-! ### 4. Sachs Optical Equations & Eikonal Ray Focusing -/
@@ -206,8 +209,8 @@ def sachsMatrix (S : SachsScreenMatrix) : Matrix (Fin 2) (Fin 2) ℝ :=
     The trace of the Sachs screen matrix is exactly twice the expansion scalar θ. -/
 theorem sachs_trace_expansion (S : SachsScreenMatrix) :
     Matrix.trace (sachsMatrix S) = 2 * S.theta := by
-  rw [Matrix.trace, Fin.sum_univ_two]
-  dsimp [sachsMatrix]
+  rw [Matrix.trace_fin_two]
+  simp [sachsMatrix]
   ring
 
 /-- 🏆 THEOREM 8 (Eikonal Vorticity Annihilation):

@@ -100,7 +100,7 @@ theorem symbolicObservationQuotientRangeColimitIso_injection
         (X := X) (ι := ι)).app S ≫
         colimit.ι (symbolicObservationQuotientRangeFunctor
           (X := X) (ι := ι)) S :=
-  HasColimit.isoOfNatIso_ι_hom
+  HasColimit.ι_isoOfNatIso_hom
     (symbolicObservationQuotientRangeNaturalIso hquot) S
 
 theorem symbolicObservationQuotientRangeColimitIso_injection_inv
@@ -113,7 +113,7 @@ theorem symbolicObservationQuotientRangeColimitIso_injection_inv
         (symbolicObservationQuotientRangeColimitIso hquot).inv =
       (symbolicObservationQuotientRangeNaturalIso hquot).inv.app S ≫
         colimit.ι (symbolicObservationQuotientFunctor (X := X) (ι := ι)) S :=
-  HasColimit.isoOfNatIso_ι_inv
+  HasColimit.ι_isoOfNatIso_inv
     (symbolicObservationQuotientRangeNaturalIso hquot) S
 
 noncomputable def symbolicObservationQuotientRangeAmbientCocone
@@ -232,8 +232,10 @@ theorem symbolicObservationQuotientColimitAmbientReadout_eq_viaRange
   intro S
   rw [symbolicObservationQuotientColimitAmbientReadout_stage,
     symbolicObservationQuotientColimitAmbientReadout_viaRange_stage hquot S]
-  simpa [symbolicObservationQuotientRangeNaturalTransformation] using
-    (symbolicObservationQuotientTopCatHom_factorization S).symm
+  change symbolicObservationQuotientTopCatHom S =
+    symbolicObservationQuotientRangeTopCatHom S ≫
+      symbolicObservationQuotientRangeInclusionTopCatHom S
+  exact (symbolicObservationQuotientTopCatHom_factorization S).symm
 
 theorem symbolicObservationQuotientColimitAmbientReadout_viaRange_unique
     {X ι : Type} [TopologicalSpace X] [Fintype ι]

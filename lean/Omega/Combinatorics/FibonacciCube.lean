@@ -65,8 +65,7 @@ theorem indSetToWord_no11 {S : Finset (Fin m)} (hS : IsPathIndependent m S) :
 theorem wordSupport_indSetToWord (S : Finset (Fin m)) :
     wordSupport (indSetToWord S) = S := by
   ext i
-  simp only [wordSupport, indSetToWord, Finset.mem_filter, Finset.mem_univ, true_and]
-  split <;> simp_all
+  simp [wordSupport, indSetToWord]
 
 /-- indSetToWord ∘ wordSupport = id.
     thm:pom-indSetToWord-wordSupport -/
@@ -1634,7 +1633,9 @@ private theorem twoPointCount_succ_succ (n : Nat) (i j : Fin n) :
               hx₁.2, hx₂.2]
     · intro y hy
       simp only [S0, Finset.mem_filter, Finset.mem_univ, true_and] at hy
-      refine ⟨X.appendTrue (X.appendFalse y) (by simp [X.appendFalse, snoc, get]), ?_, ?_⟩
+      have hzero : X.EndsInZero (X.appendFalse y) := by
+        rw [X.endsInZero_succ_iff, X.appendFalse_val, Omega.last_snoc]
+      refine ⟨X.appendTrue (X.appendFalse y) hzero, ?_, ?_⟩
       · simp only [S2t, S2, Finset.mem_filter, Finset.mem_univ, true_and]
         exact ⟨⟨by simp [X.appendTrue, X.appendFalse, snoc,
                     show i.val < n + 1 from by omega, show i.val < n from i.isLt, hy.1],
@@ -1772,7 +1773,9 @@ theorem twoPointCount_eq_fib_prod (n : Nat) (i j : Fin n)
           · intro y hy
             simp only [ Finset.mem_filter, Finset.mem_univ, true_and] at hy
             simp only [ Finset.mem_filter, Finset.mem_univ, true_and]
-            refine ⟨X.appendTrue (X.appendFalse y) (by simp [X.appendFalse, snoc, get]),
+            have hzero : X.EndsInZero (X.appendFalse y) := by
+              rw [X.endsInZero_succ_iff, X.appendFalse_val, Omega.last_snoc]
+            refine ⟨X.appendTrue (X.appendFalse y) hzero,
                     ⟨?_, ?_⟩, ?_⟩
             · show (X.appendTrue (X.appendFalse y) _).1 i = true
               simp [X.appendTrue, X.appendFalse, snoc,

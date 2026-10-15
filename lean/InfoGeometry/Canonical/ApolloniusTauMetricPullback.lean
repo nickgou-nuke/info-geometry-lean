@@ -55,8 +55,9 @@ theorem apolloniusTauFDeriv_paraMetric_pullback
       Complex.normSq (apolloniusTauOfParameter u) * evalMetric v w := by
   rw [apolloniusTauFDeriv_apply, apolloniusTauFDeriv_apply,
     paraComplexStructure_mulVec_apply, evalMetric_eq_coordinates]
-  simpa using inner_scaled_coordinates (v 0) (v 1) (w 0) (-w 1)
-    (apolloniusTauOfParameter u)
+  simp only [Matrix.cons_val_zero, Matrix.cons_val_one, Fin.isValue]
+  convert inner_scaled_coordinates (v 0) (v 1) (w 0) (-w 1)
+    (apolloniusTauOfParameter u) using 1 <;> ring
 
 theorem apolloniusTauFDeriv_symplectic_pullback
     (u v w : ApolloniusParameterSpace) :

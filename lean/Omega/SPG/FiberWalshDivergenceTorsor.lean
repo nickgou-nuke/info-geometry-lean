@@ -87,8 +87,8 @@ theorem paper_fold_hypercube_fiber_walsh_divergence_torsor {n : ℕ}
   let torsorData : Omega.Folding.FoldBoundaryStokesTorsorData n := hypercubeFiberWalshTorsorData D
   have hnonempty : torsorData.solutionSet.Nonempty := by
     refine ⟨hypercubeFiberWalshBoundaryFlow D, ?_⟩
-    simpa [torsorData, hypercubeFiberWalshTorsorData, hypercubeFiberWalshBoundaryFlow,
-      boundaryMultigraphFeasible, Omega.Folding.FoldBoundaryStokesTorsorData.solutionSet] using hflow
+    change ∀ i, (D i).Feasible (boundaryMultigraphMinimizer D i)
+    exact hflow
   have htorsor : torsorData.solutionSetIsTorsorByH1 := by
     exact (Omega.Folding.paper_fold_boundary_stokes_torsor_h1_h1 n torsorData hnonempty).1
   have hcdim : boundaryMultigraphH1Cdim (n : Int) (n : Int) 0 = 0 := by

@@ -64,9 +64,16 @@ theorem cylinderStageEmbed_injective (n : ℕ) :
     Function.Injective (cylinderStageEmbed n) := by
   intro f g h
   funext w
+  let wExt : CausalWord (n + 1) := fun i =>
+    if hi : i.1 < n then w ⟨i.1, hi⟩ else ChiralArrow.plus
   have hvalue := congrArg
-    (fun F : CylinderFunction (n + 1) => F (Fin.snoc w ChiralArrow.plus)) h
-  simpa [cylinderStageEmbed] using hvalue
+    (fun F : CylinderFunction (n + 1) => F wExt) h
+  change f (fun i => wExt i.castSucc) = g (fun i => wExt i.castSucc) at hvalue
+  have hrestrict : (fun i : Fin n => wExt i.castSucc) = w := by
+    funext i
+    simp [wExt]
+  rw [hrestrict] at hvalue
+  exact hvalue
 
 def cylinderStageEmbedOfLe {n m : ℕ} (h : n ≤ m) :
     CylinderFunction n →ₐ[ℝ] CylinderFunction m where
@@ -106,11 +113,14 @@ theorem cylinderStageEmbedOfLe_injective
     if hi : i.1 < n then w ⟨i.1, hi⟩ else ChiralArrow.plus
   have hvalue := congrArg
     (fun F : CylinderFunction m => F w') hfg
+  change f (fun i => w' ⟨i.1, lt_of_lt_of_le i.2 h⟩) =
+    g (fun i => w' ⟨i.1, lt_of_lt_of_le i.2 h⟩) at hvalue
   have hrestrict :
       (fun i => w' ⟨i.1, lt_of_lt_of_le i.2 h⟩) = w := by
     funext i
     simp [w']
-  simpa [cylinderStageEmbedOfLe, hrestrict] using hvalue
+  rw [hrestrict] at hvalue
+  exact hvalue
 
 theorem liftCylinder_stageEmbedOfLe
     {n m : ℕ} (h : n ≤ m) (f : CylinderFunction n) :

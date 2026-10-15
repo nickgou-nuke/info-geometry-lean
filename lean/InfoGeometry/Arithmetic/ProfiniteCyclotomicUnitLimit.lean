@@ -20,6 +20,11 @@ open scoped BigOperators
 open Finset
 open CategoryTheory Limits
 
+local instance (n : ℕ+) : NeZero (n : ℕ) := ⟨n.pos.ne'⟩
+
+local instance (n : ℕ+) : NeZero ((n : ℕ) : ℚ) :=
+  ⟨by exact_mod_cast n.pos.ne'⟩
+
 /-! ### The divisibility index category -/
 
 structure DivisibilityIndex where
@@ -48,14 +53,14 @@ theorem divisibilityIndex_nonempty : Nonempty DivisibilityIndex :=
 
 noncomputable def cyclotomicUnitDiagram : DivisibilityIndexᵒᵖ ⥤ Type where
   obj i := (ZMod (i.unop.value : ℕ))ˣ
-  map f := ZMod.unitsMap (CategoryTheory.leOfHom f.unop)
+  map f := TypeCat.ofHom (ZMod.unitsMap (CategoryTheory.leOfHom f.unop)).toFun
   map_id i := by
-    funext x
+    ext x
     rw [ZMod.unitsMap_self]
     rfl
   map_comp f g := by
-    funext x
-    simpa [Function.comp_def] using congrArg (fun h => h x)
+    ext x
+    simpa [Function.comp_def] using congrArg (fun h => (h x).val)
       (ZMod.unitsMap_comp (CategoryTheory.leOfHom g.unop)
         (CategoryTheory.leOfHom f.unop)).symm
 
@@ -80,14 +85,32 @@ noncomputable def cyclotomicUnitLimitCone_isLimit :
 
 abbrev CyclotomicFieldStage (n : ℕ+) := CyclotomicField (n : ℕ) ℚ
 
+/-- The canonical root at a positive conductor, with the nonzero witnesses
+required by Mathlib's cyclotomic-field instance made explicit. -/
+noncomputable def stageZeta (n : ℕ+) : CyclotomicFieldStage n := by
+  letI : NeZero (n : ℕ) := ⟨n.pos.ne'⟩
+  letI : NeZero ((n : ℕ) : ℚ) := ⟨by exact_mod_cast n.pos.ne'⟩
+  haveI : IsCyclotomicExtension {(n : ℕ)} ℚ (CyclotomicFieldStage n) :=
+    CyclotomicField.isCyclotomicExtension (n : ℕ) ℚ
+  exact IsCyclotomicExtension.zeta (n : ℕ) ℚ (CyclotomicFieldStage n)
+
 noncomputable def fieldTransition {n m : ℕ+} (h : (n : ℕ) ∣ (m : ℕ)) :
     CyclotomicFieldStage n →ₐ[ℚ] CyclotomicFieldStage m :=
   cyclotomicFieldEmbedding n.pos m.pos h
 
 theorem fieldTransition_zeta {n m : ℕ+} (h : (n : ℕ) ∣ (m : ℕ)) :
-    fieldTransition h
-        (IsCyclotomicExtension.zeta (n : ℕ) ℚ (CyclotomicFieldStage n)) =
-      IsCyclotomicExtension.zeta (m : ℕ) ℚ (CyclotomicFieldStage m) ^ ((m : ℕ) / (n : ℕ)) := by
+    fieldTransition h (stageZeta n) = stageZeta m ^ ((m : ℕ) / (n : ℕ)) := by
+  letI : NeZero (n : ℕ) := ⟨n.pos.ne'⟩
+  letI : NeZero (m : ℕ) := ⟨m.pos.ne'⟩
+  letI : NeZero ((n : ℕ) : ℚ) := ⟨by exact_mod_cast n.pos.ne'⟩
+  letI : NeZero ((m : ℕ) : ℚ) := ⟨by exact_mod_cast m.pos.ne'⟩
+  haveI : IsCyclotomicExtension {(n : ℕ)} ℚ (CyclotomicFieldStage n) :=
+    CyclotomicField.isCyclotomicExtension (n : ℕ) ℚ
+  haveI : IsCyclotomicExtension {(m : ℕ)} ℚ (CyclotomicFieldStage m) :=
+    CyclotomicField.isCyclotomicExtension (m : ℕ) ℚ
+  change cyclotomicFieldEmbedding n.pos m.pos h
+      (IsCyclotomicExtension.zeta (n : ℕ) ℚ (CyclotomicFieldStage n)) =
+    IsCyclotomicExtension.zeta (m : ℕ) ℚ (CyclotomicFieldStage m) ^ ((m : ℕ) / (n : ℕ))
   exact cyclotomicFieldEmbedding_zeta n.pos m.pos h
 
 theorem fieldTransition_self (n : ℕ+) :
@@ -661,9 +684,14 @@ theorem finiteAdelicBasis_mul_inv {P : Finset ℕ+}
 
 def finiteAdelicCoefficientAtOne {P : Finset ℕ+} :
     FiniteAdelicCrossedProduct P →+ ℝ :=
-  { toFun := fun F => F 1
-    map_zero' := by rfl
-    map_add' := by intro F G; rfl }
+  { toFun := fun F => F.coeff 1
+    map_zero' := by
+      change (0 : FiniteAdelicCrossedProduct P).coeff 1 = 0
+      simp
+    map_add' := by
+      intro F G
+      change (F + G).coeff 1 = F.coeff 1 + G.coeff 1
+      simp }
 
 theorem finiteAdelicCoefficientAtOne_basis {P : Finset ℕ+}
     (a : FiniteAdelicUnitWindow P) :

@@ -23,7 +23,8 @@ structure PositroidOrder (k n : ℕ) where
   dim_mono : ∀ c₁ c₂, le c₁ c₂ → c₁.dimension ≤ c₂.dimension
 
 /-- We instantiate the PartialOrder on PositroidCell using the PositroidOrder proof. -/
-instance (k n : ℕ) (o : PositroidOrder k n) : PartialOrder (PositroidCell k n) where
+@[instance_reducible]
+def partialOrderOf (k n : ℕ) (o : PositroidOrder k n) : PartialOrder (PositroidCell k n) where
   le := o.le
   le_refl := o.le_refl
   le_trans := o.le_trans

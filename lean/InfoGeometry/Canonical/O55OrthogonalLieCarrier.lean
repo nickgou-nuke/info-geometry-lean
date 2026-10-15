@@ -18,6 +18,9 @@ open Matrix
 
 abbrev O55Matrix := Matrix (Fin 10) (Fin 10) ℝ
 
+local instance : LieRing O55Matrix := LieRing.ofAssociativeRing
+local instance : LieAlgebra ℝ O55Matrix := LieAlgebra.ofAssociativeAlgebra
+
 def orthogonal55Predicate (A : O55Matrix) : Prop :=
   Aᵀ * O55Form + O55Form * A = 0
 

@@ -36,7 +36,7 @@ private theorem gaugeAnomalyP10AuditedImagAbs_pos (i : Fin 4) :
 
 private theorem gaugeAnomalyP10AuditedDominantPair_repeated :
     gaugeAnomalyP10AuditedBranchMultiplicity gaugeAnomalyP10DominantPair = 2 := by
-  norm_num [gaugeAnomalyP10AuditedBranchMultiplicity, gaugeAnomalyP10DominantPair]
+  rfl
 
 private theorem gaugeAnomalyP10AuditedSubdominant
     (i : Fin 4) (hi : i ≠ gaugeAnomalyP10DominantPair) :

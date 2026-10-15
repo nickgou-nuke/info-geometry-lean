@@ -22,9 +22,11 @@ variable (H : SymbolicLatentPathFamily P X)
 variable (h_obs : Continuous (symbolicObservationMap S))
 
 /-- The `TopCat` diagram for the symbolic-latent corridor. -/
-def symbolicLatentPathFamilyTopCatDiagram : SpinorStage ⥤ TopCat :=
-  SpinorSpectrumTopCatColimit.spinorSpectrumTopCatDiagram
-    P (P × SymbolicPathDomain)
+@[reducible] def symbolicLatentPathFamilyTopCatDiagram : SpinorStage ⥤ TopCat :=
+  @SpinorSpectrumTopCatColimit.spinorSpectrumTopCatDiagram
+    P (P × SymbolicPathDomain) ‹TopologicalSpace P›
+    (@instTopologicalSpaceProd P SymbolicPathDomain
+      ‹TopologicalSpace P› inferInstance)
     (fun p => (p, 0))
     (continuous_id.prodMk continuous_const)
 
@@ -34,7 +36,7 @@ def symbolicLatentPathFamilyTopCatTarget
   (Functor.const SpinorStage).obj (TopCat.of (SymbolicFeatureSpace ι))
 
 /-- The categorical colimit of the corridor diagram. -/
-noncomputable def symbolicLatentPathFamilyTopCatColimit : TopCat :=
+noncomputable abbrev symbolicLatentPathFamilyTopCatColimit : TopCat :=
   colimit (symbolicLatentPathFamilyTopCatDiagram (P := P))
 
 /-- The observed path-family readout as a cocone over the corridor diagram. -/
@@ -47,8 +49,10 @@ def symbolicLatentPathFamilyTopCatReadout
   app
     | .initial => observedSymbolicLatentPathFamilyStartTopCatHom
         (S := S) (H := H) h_obs
-    | .extended => observedSymbolicLatentPathFamilyTopCatHom
-        (S := S) (H := H) h_obs
+    | .extended =>
+        { hom' :=
+            { toFun := fun q => symbolicObservationMap S (H q)
+              continuous_toFun := h_obs.comp H.continuous_toFun } }
   naturality := by
     intro i j g
     change SpinorStage.Hom i j at g
@@ -58,10 +62,10 @@ def symbolicLatentPathFamilyTopCatReadout
     | idExtended =>
         rfl
     | step =>
-        simpa [symbolicLatentPathFamilyTopCatDiagram,
-          symbolicLatentPathFamilyTopCatTarget] using
-          observedSymbolicLatentPathFamily_start_natural
-          (S := S) (H := H) h_obs
+        apply TopCat.hom_ext
+        apply ContinuousMap.ext
+        intro p
+        rfl
 
 /-- The induced colimit readout into the feature space. -/
 noncomputable def symbolicLatentPathFamilyTopCatColimitReadout

@@ -29,6 +29,7 @@ theorem paper_fold_oracle_watatani_index_trace_formula {Î© X : Type*} [Fintype Î
   simpa [fold_oracle_watatani_index_trace_formula_statement,
     fold_oracle_watatani_index_trace_formula_truncated_trace,
     fold_oracle_watatani_index_trace_formula_truncated_index,
+    Omega.OperatorAlgebra.FoldJonesBasicConstructionDirectsum.foldFiber,
     Omega.OperatorAlgebra.foldWatataniIndexElement,
     Omega.OperatorAlgebra.foldWatataniIndexCoefficient] using
     paper_fold_oracle_capacity_closed_form fold B

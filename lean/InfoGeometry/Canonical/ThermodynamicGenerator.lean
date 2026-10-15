@@ -242,8 +242,10 @@ theorem stateQGTReadout_pair_eq_zero_of_isPotentialKillingOperator
     , ((StateDependentTransport.stateQGTReadout (E := E) P.modularData ψ A).phase) )
       =
     (0, 0) := by
-  exact stateQGTReadout_pair_eq_zero_of_stateInducedDynamics_eq_zero
-    (E := E) (M := P.modularData) (ψ := ψ) (A := A) hKill
+  simpa only [StateDependentTransport.stateQGTReadout,
+    StateDependentTransport.stateQGTPhaseReadout_eq_metric_comp_complex_i] using
+    stateQGTReadout_pair_eq_zero_of_stateInducedDynamics_eq_zero
+      (E := E) (M := P.modularData) (ψ := ψ) (A := A) hKill
 
 /--
 At the same state, an operatorial Killing channel has vanishing thermodynamic
@@ -253,14 +255,16 @@ metric and phase readouts.
 theorem comparisonReadout_pair_eq_zero_of_isPotentialKillingOperator
     (P : PotentialDatum (E := E)) (ψ : H₂) (A : EndH)
     (hKill : IsPotentialKillingOperator (E := E) P ψ A) :
-    (comparisonMetricReadout (E := E) P ψ A,
+      (comparisonMetricReadout (E := E) P ψ A,
       comparisonPhaseReadout (E := E) P ψ A)
       =
     (0, 0) := by
-  simpa [RelativeModularPotential.comparisonMetricReadout,
-    RelativeModularPotential.comparisonPhaseReadout] using
-    stateQGTReadout_pair_eq_zero_of_isPotentialKillingOperator
-      (E := E) (P := P) (ψ := ψ) (A := A) hKill
+  change stateInducedDynamics (E := E) P.modularData ψ A = 0 at hKill
+  apply Prod.ext
+  · ext u v
+    simp [RelativeModularPotential.comparisonMetricReadout_apply, hKill]
+  · ext u v
+    simp [RelativeModularPotential.comparisonPhaseReadout_apply, hKill]
 
 /--
 Faithful thermodynamic probing upgrades vanishing first variation directly into
@@ -607,9 +611,9 @@ theorem stateRelativeGrandCanonicalMassieuPotential_normalizedInfinitesimalLaw_o
     operatorialGrandCanonicalMassieuPotential_normalizedInfinitesimalLaw
       (E := E) (ω := P.probe) (hω1 := hProbe1)
       (B := B) (H := generator (E := E) P ψ) (μ := 0)
-  convert h using 1
-  · exact (stateRelativeGrandCanonicalMassieuExpectation_eq_value_of_zeroChemicalPotential
-      (E := E) (P := P) (ψ := ψ) (B := B)).symm
+  rw [← stateRelativeGrandCanonicalMassieuExpectation_eq_value_of_zeroChemicalPotential
+    (E := E) (P := P) (ψ := ψ) (B := B)]
+  exact h
 
 @[rep_depth transport]
 theorem stateRelativeGrandCanonicalGenerator_eq_generator_of_vacuumTransported
@@ -678,10 +682,10 @@ theorem stateRelativeGrandCanonicalMassieuPotential_normalizedInfinitesimalLaw_o
       (E := E) (ω := P.probe) (hω1 := hProbe1)
       (B := B) (H := generator (E := E) P ψ)
       (μ := einsteinInducedChemicalPotential R K x scalar Λ V Γ)
-  convert h using 1
-  · exact (stateRelativeGrandCanonicalMassieuExpectation_eq_value_of_vacuumTransported
-      (E := E) (P := P) (ψ := ψ) (B := B) (R := R) (K := K) (x := x)
-      (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ) hVacSplit).symm
+  rw [← stateRelativeGrandCanonicalMassieuExpectation_eq_value_of_vacuumTransported
+    (E := E) (P := P) (ψ := ψ) (B := B) (R := R) (K := K) (x := x)
+    (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ) hVacSplit]
+  exact h
 
 end GrandCanonical
 

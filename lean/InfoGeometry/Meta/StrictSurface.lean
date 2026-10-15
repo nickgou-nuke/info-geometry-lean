@@ -212,6 +212,40 @@ def processStrictDecl
   | .admitted =>
       logInfo m!"[ADMITTED] {declName}\n[strict-admission-json] {telemetryJson}"
 
+/-- Apply the strict admission policy to an already elaborated declaration.
+This is the shared policy path used by the kernel contract audit. -/
+def auditExistingDeclaration (declName : Name) (role : DeclRole) : MetaM TelemetryRow := do
+  let env ← getEnv
+  let some info := env.find? declName
+    | throwError "strict audit cannot find declaration `{declName}`"
+  let some valueExpr := info.value? (allowOpaque := true)
+    | throwError "strict audit cannot inspect the value of `{declName}`"
+  let policy := defaultPolicySnapshot
+  let region := regionOfDecl policy declName
+  let hard ← collectHardEvidence policy declName
+  let shape := analyzeProofShape info.type valueExpr
+  let soft := lowerShapeToSoftEvidence role shape
+  let (baseDecision, baseReasons) := evaluateAdmission policy hard soft
+  let adjustedDecision := adjustDecisionForRegion region baseDecision
+  let extraReasons := extraBlockingReasons env declName role region shape
+  let decision := if extraReasons.isEmpty then adjustedDecision else .blocked
+  let reasons := baseReasons ++ extraReasons
+  return {
+    name := declName
+    declKind := declKindLabel role
+    role := role
+    region := region.asString
+    decision := decision
+    blockers := blockerCodes reasons
+    hard := hard
+    soft := soft
+    reasons := reasons
+    proofHead := shape.proofHead
+    statementShape := shape.statementShape
+    thinSurface? := shape.thinSurface?
+    policyVersion := admissionPolicyVersion
+  }
+
 elab "strict_theorem " id:ident " : " type:term " := " val:term : command => do
   processStrictDecl id type.raw val.raw DeclRole.owner
 

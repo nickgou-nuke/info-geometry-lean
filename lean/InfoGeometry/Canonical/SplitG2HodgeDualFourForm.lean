@@ -46,7 +46,7 @@ def star34 (H : SplitG2HodgeDualData) :
   H.star.toLinearMap
 
 /-- The inverse degree `4 → 3` component of the native linear equivalence. -/
-def star43 (H : SplitG2HodgeDualData) :
+noncomputable def star43 (H : SplitG2HodgeDualData) :
     SplitG2FourForms →ₗ[ℚ] SplitG2ThreeForms :=
   H.star.symm.toLinearMap
 

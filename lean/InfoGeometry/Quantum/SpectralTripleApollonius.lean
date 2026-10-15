@@ -5,7 +5,7 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Algebra.Algebra.Basic
 import Mathlib.Algebra.Module.LinearMap.Basic
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 
 namespace InfoGeometry.Quantum.SpectralTripleApollonius
 
@@ -63,7 +63,8 @@ theorem diracOp_is_self_adjoint {A : Type*} [Ring A] [Algebra ℂ A]
     (st : ApolloniusSpectralTriple A H) (u v : H) :
     inner (𝕜 := ℂ) (diracOp st u) v = inner (𝕜 := ℂ) u (diracOp st v) := by
   unfold diracOp
-  simp only [add_apply, comp_apply, smul_apply, id_apply, inner_add_left, inner_add_right]
+  simp only [LinearMap.add_apply, LinearMap.comp_apply, LinearMap.smul_apply,
+    LinearMap.id_apply, inner_add_left, inner_add_right]
   -- Първа компонента: γ₁ ∘ H_HP
   have h1 : inner (𝕜 := ℂ) (st.spinor.γ₁ (st.H_HP u)) v = inner (𝕜 := ℂ) u (st.spinor.γ₁ (st.H_HP v)) := by
     rw [st.spinor.γ₁_symm (st.H_HP u) v]
@@ -94,7 +95,8 @@ theorem dirac_commutator_eq_spinor_diff {A : Type*} [Ring A] [Algebra ℂ A]
     diracCommutator st a = (st.spinor.γ₁).comp (st.H_HP.comp (st.π a) - (st.π a).comp st.H_HP) := by
   unfold diracCommutator diracOp
   ext v
-  simp only [comp_apply, add_apply, sub_apply, smul_apply, id_apply]
+  simp only [LinearMap.comp_apply, LinearMap.add_apply, LinearMap.sub_apply,
+    LinearMap.smul_apply, LinearMap.id_apply]
   have h_comm_γ₁ := LinearMap.congr_fun (st.comm_π_γ₁ a)
   have h_comm_γ₂ := LinearMap.congr_fun (st.comm_π_γ₂ a)
   have h_γ₂_term : st.spinor.γ₂ (Complex.I • (st.π a v)) - st.π a (st.spinor.γ₂ (Complex.I • v)) = 0 := by

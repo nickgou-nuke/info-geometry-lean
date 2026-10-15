@@ -68,7 +68,7 @@ structure DelaunayCompensationBoundary where
     FiveGradedConformalInversion OrbitClassification55.JordanMatrix10D
   /-- Genuine recursive grade-two compensation ledger. -/
   gradeTwoLedger :
-    GradeTwoInformationLedger OrbitClassification55.JordanMatrix10D PUnit
+    GradeTwoInformationLedger OrbitClassification55.JordanMatrix10D Unit
 
 /-- A morphism is a witnessed Delaunay word equivalence with local compensation. -/
 structure DelaunayFlipMorphism (n : ℕ) where

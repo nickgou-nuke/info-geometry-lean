@@ -53,15 +53,21 @@ def B10 (u v : V10) : ℝ :=
 @[simp] theorem B10_zero_right (u : V10) : B10 u 0 = 0 := by
   rw [B10_symm, B10_zero_left]
 
+private theorem zornPolar_sub_left (x y z : Zorn) :
+    zornPolar (x - y) z = zornPolar x z - zornPolar y z := by
+  change ZornVectorMatrix.trace
+      (ZornVectorMatrix.mul (ZornVectorMatrix.add x (ZornVectorMatrix.neg y))
+        (ZornVectorMatrix.conj z)) = _
+  rw [ZornVectorMatrix.add_mul, ZornVectorMatrix.neg_mul,
+    ZornVectorMatrix.trace_add, ZornVectorMatrix.trace_neg]
+  rfl
+
 theorem B10_sub_left (u v w : V10) :
     B10 (u - v) w = B10 u w - B10 v w := by
   rcases u with ⟨⟨u1, u2⟩, ux⟩
   rcases v with ⟨⟨v1, v2⟩, vx⟩
   rcases w with ⟨⟨w1, w2⟩, wx⟩
-  simp [B10, zornPolar, ZornVectorMatrix.trace, ZornVectorMatrix.mul,
-    ZornVectorMatrix.conj, ZornVectorMatrix.smul, ZornVectorMatrix.sub,
-    ZornVectorMatrix.add, ZornVectorMatrix.neg, sub_eq_add_neg,
-    ZornVec3.dot, Fin.sum_univ_three]
+  simp only [B10, Prod.fst_sub, Prod.snd_sub, zornPolar_sub_left]
   ring
 
 theorem B10_sub_right (u v w : V10) :
@@ -133,15 +139,39 @@ theorem rotGen_in_so66 (M : V10 → V10)
 def bracket (A B : V12 → V12) (x : V12) : V12 :=
   A (B x) - B (A x)
 
+private theorem zorn_sub_a (X Y : Zorn) : (X - Y).a = X.a - Y.a := by
+  change (ZornVectorMatrix.add X (ZornVectorMatrix.neg Y)).a = X.a - Y.a
+  simp [ZornVectorMatrix.add, ZornVectorMatrix.neg]
+  ring_nf
+
+private theorem zorn_sub_v (X Y : Zorn) (i : Fin 3) :
+    (X - Y).v i = X.v i - Y.v i := by
+  change (ZornVectorMatrix.add X (ZornVectorMatrix.neg Y)).v i = X.v i - Y.v i
+  simp [ZornVectorMatrix.add, ZornVectorMatrix.neg]
+  ring_nf
+
+private theorem zorn_sub_w (X Y : Zorn) (i : Fin 3) :
+    (X - Y).w i = X.w i - Y.w i := by
+  change (ZornVectorMatrix.add X (ZornVectorMatrix.neg Y)).w i = X.w i - Y.w i
+  simp [ZornVectorMatrix.add, ZornVectorMatrix.neg]
+  ring_nf
+
+private theorem zorn_sub_b (X Y : Zorn) : (X - Y).b = X.b - Y.b := by
+  change (ZornVectorMatrix.add X (ZornVectorMatrix.neg Y)).b = X.b - Y.b
+  simp [ZornVectorMatrix.add, ZornVectorMatrix.neg]
+  ring_nf
+
 /-- The negative grade is abelian. -/
 theorem bracket_p_p (u v : V10) (x : V12) :
     bracket (pGen u) (pGen v) x = 0 := by
-  simp [bracket, pGen, B10_smul_right, B10_symm]
+  ext <;> simp [bracket, pGen, B10_smul_right, B10_symm,
+    zorn_sub_a, zorn_sub_v, zorn_sub_w, zorn_sub_b] <;> ring_nf
 
 /-- The positive grade is abelian. -/
 theorem bracket_k_k (u v : V10) (x : V12) :
     bracket (kGen u) (kGen v) x = 0 := by
-  simp [bracket, kGen, B10_smul_right, B10_symm]
+  ext <;> simp [bracket, kGen, B10_smul_right, B10_symm,
+    zorn_sub_a, zorn_sub_v, zorn_sub_w, zorn_sub_b] <;> ring_nf
 
 /-- Dilatation grades translations with weight `+1` in these conventions. -/
 theorem bracket_d_p (a : ℝ) (u : V10) (x : V12) :
@@ -167,9 +197,10 @@ theorem bracket_p_k (u v : V10) (x : V12) :
   ext <;>
     simp [bracket, pGen, kGen, dGen, rotGen, metricBivector,
       B10_smul_left, B10_smul_right, B10_symm,
-      ZornVectorMatrix.smul, ZornVectorMatrix.sub,
-    ZornVectorMatrix.add, ZornVectorMatrix.neg, sub_eq_add_neg] <;>
-    ring
+      ZornVectorMatrix.smul, ZornVectorMatrix.add, ZornVectorMatrix.neg,
+      zorn_sub_a, zorn_sub_v, zorn_sub_w, zorn_sub_b,
+      sub_eq_add_neg] <;>
+    ring_nf
 
 /-- The metric bivector is infinitesimally skew for `B10`. -/
 theorem metricBivector_skew (u v : V10) :

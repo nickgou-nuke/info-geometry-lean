@@ -115,12 +115,7 @@ theorem nativeFlagStabilizer_matrix_baseLineVector_cases
         (octImToImaginary baseLineVector).1 ∨
       matrixAction (autMatrix g⁻¹) (octImToImaginary baseLineVector).1 =
         (octImToImaginary (nativeBasePoint + baseLineVector)).1 := by
-  have hcases := nativeFlagStabilizer_baseLineVector_image_two_cases hg
-  have hcases' :
-      octImAction g baseLineVector = baseLineVector ∨
-        octImAction g baseLineVector =
-          nativeBasePoint + baseLineVector := by
-    simpa [octImPointPerm_apply, baseLineVectorPoint] using hcases
+  have hcases' := nativeFlagStabilizer_baseLineVector_image_two_cases hg
   rw [autMatrix_action_octImToImaginary]
   have htransport :
       (g • octImToImaginary baseLineVector).1 =
@@ -281,7 +276,8 @@ theorem nativeFlagStabilizer_basis8_six_a
     (g.1 (basis8 6)).a = false := by
   have h := nativeFlagStabilizer_basis8_six_mul_four hg
   have hx2 := congrArg (fun X : SplitOctF2 => X.x2) h
-  simpa [mul_apply_basis8_four_x2] using hx2
+  rw [mul_apply_basis8_four_x2] at hx2
+  exact hx2
 
 theorem nativeFlagStabilizer_basis8_two_y2
     {g : SplitOctF2Aut}
@@ -405,12 +401,12 @@ theorem nativeFlagStabilizer_basis8_zero_a
   have hsplit : g.1 one = add (g.1 (basis8 0)) (g.1 (basis8 1)) := by
     rw [← g.2.2.1, basis8_zero_add_one_eq_one]
   have ha : (g.1 one).a = (one : SplitOctF2).a := by rw [hone]
-  have hone_a : (one : SplitOctF2).a = true := rfl
   rw [hsplit] at ha
-  have ha' : add2 (g.1 (basis8 0)).a (g.1 (basis8 1)).a = true := by
-    simpa [add, basis8, add2, hone_a] using ha
-  rw [nativeFlagStabilizer_basis8_one_a hg] at ha'
-  simpa [add2] using ha'
+  have h1 : (g.1 (basis8 1)).a = false := nativeFlagStabilizer_basis8_one_a hg
+  dsimp [add, add2, one] at ha
+  rw [h1] at ha
+  revert ha
+  cases (g.1 (basis8 0)).a <;> decide
 
 theorem nativeFlagStabilizer_basis8_two_x0
     {g : SplitOctF2Aut}
@@ -501,7 +497,8 @@ theorem nativeFlagStabilizer_basis8_two_peirce_dot3_formula
   subst x0
   subst y2
   dsimp [dot3, add2, mul2] at hdot
-  simpa [add2, mul2] using hdot
+  revert hdot
+  cases a <;> cases b <;> cases x1 <;> cases x2 <;> cases y0 <;> cases y1 <;> decide
 
 theorem nativeFlagStabilizer_basis8_two_cartan_sector_zero
     {g : SplitOctF2Aut}

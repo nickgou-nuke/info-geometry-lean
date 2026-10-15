@@ -367,7 +367,6 @@ def leftMul {n : ℕ} (a : Stage n) :
     simp [mul_add]
   map_smul' r x := by
     change Stage n at x
-    simp only [id_eq]
     change a * (r • x) = r • (a * x)
     simp only [Algebra.smul_def]
     calc
@@ -376,6 +375,9 @@ def leftMul {n : ℕ} (a : Stage n) :
       _ = (algebraMap ℝ (Stage n) r * a) * x := by
         rw [Algebra.commutes]
       _ = (algebraMap ℝ (Stage n) r) * (a * x) := by rw [mul_assoc]
+
+@[simp] theorem leftMul_apply {n : ℕ} (a x : Stage n) :
+    leftMul a x = a * x := rfl
 
 /-- Stagewise sheet-exchange natural transformation. -/
 def etaNat : moduleDiagram ⟶ moduleDiagram where
@@ -497,7 +499,7 @@ theorem colimitEta_on_stage (n : ℕ) (x : Stage n) :
 
 /-- The colimit sheet exchange remains an involution. -/
 theorem colimitEta_sq :
-    colimitEta * colimitEta = (1 : Module.End ℝ ColimitCarrier) := by
+    colimitEta * colimitEta = (LinearMap.id : Module.End ℝ ColimitCarrier) := by
   have hη : etaNat ≫ etaNat = 𝟙 moduleDiagram := by
     ext n x
     change Stage n at x
@@ -511,12 +513,14 @@ theorem colimitEta_sq :
 transformations, hence descends through the existing categorical colimit. -/
 theorem etaNat_fPlusNat_etaNat_eq_fMinusNat :
     etaNat ≫ fPlusNat ≫ etaNat = fMinusNat := by
-  ext n x
-  have h := congrArg
-    (fun T : Module.End ℝ (Stage n) => T (x : Stage n))
-    (finiteStageDatum.eta_fPlus_eta n)
-  simpa [ModuleCat.comp_apply, etaNat, fPlusNat, fMinusNat, leftMul,
-    Module.End.mul_apply] using h
+  apply NatTrans.ext
+  funext n
+  apply ModuleCat.hom_ext
+  ext x
+  change Stage n at x
+  change etaElem n * (fPlusElem n * (etaElem n * (x : Stage n))) =
+    fMinusElem n * x
+  rw [← mul_assoc, ← mul_assoc, etaElem_fPlusElem_etaElem]
 
 /-- The descended Krein involution exchanges the positive sheet with the
 negative sheet. -/
@@ -524,19 +528,24 @@ theorem colimitEta_fPlus_colimitEta_eq_fMinus :
     colimitEta * leftColimit bilingualDatum * colimitEta =
       rightColimit bilingualDatum := by
   simpa [colimitEta, leftColimit, rightColimit,
-    InfoGeometry.Categorical.TwoSheetKreinFilteredColimit.colimitEnd] using
+    bilingualDatum, finiteStageDatum,
+    HestenesKreinFiniteStageCompatibility.Datum.toBilingualDatum,
+    InfoGeometry.Categorical.TwoSheetKreinFilteredColimit.colimitEnd,
+    Module.End.mul_eq_comp] using
     InfoGeometry.Categorical.TwoSheetKreinFilteredColimit.colimitEnd_exchange
       etaNat fPlusNat fMinusNat etaNat_fPlusNat_etaNat_eq_fMinusNat
 
 /-- The reverse stagewise exchange also descends through the filtered colimit. -/
 theorem etaNat_fMinusNat_etaNat_eq_fPlusNat :
     etaNat ≫ fMinusNat ≫ etaNat = fPlusNat := by
-  ext n x
-  have h := congrArg
-    (fun T : Module.End ℝ (Stage n) => T (x : Stage n))
-    (finiteStageDatum.eta_fMinus_eta n)
-  simpa [ModuleCat.comp_apply, etaNat, fPlusNat, fMinusNat, leftMul,
-    Module.End.mul_apply] using h
+  apply NatTrans.ext
+  funext n
+  apply ModuleCat.hom_ext
+  ext x
+  change Stage n at x
+  change etaElem n * (fMinusElem n * (etaElem n * (x : Stage n))) =
+    fPlusElem n * x
+  rw [← mul_assoc, ← mul_assoc, etaElem_fMinusElem_etaElem]
 
 /-- The descended Krein involution exchanges the negative sheet back with the
 positive sheet. -/
@@ -544,7 +553,10 @@ theorem colimitEta_fMinus_colimitEta_eq_fPlus :
     colimitEta * rightColimit bilingualDatum * colimitEta =
       leftColimit bilingualDatum := by
   simpa [colimitEta, leftColimit, rightColimit,
-    InfoGeometry.Categorical.TwoSheetKreinFilteredColimit.colimitEnd] using
+    bilingualDatum, finiteStageDatum,
+    HestenesKreinFiniteStageCompatibility.Datum.toBilingualDatum,
+    InfoGeometry.Categorical.TwoSheetKreinFilteredColimit.colimitEnd,
+    Module.End.mul_eq_comp] using
     InfoGeometry.Categorical.TwoSheetKreinFilteredColimit.colimitEnd_exchange
       etaNat fMinusNat fPlusNat etaNat_fMinusNat_etaNat_eq_fPlusNat
 
@@ -579,9 +591,21 @@ theorem colimit_sheet_stage_readback (n : ℕ) (x : Stage n) :
       (rightColimit bilingualDatum) ((colimit.ι moduleDiagram n).hom x)) =
       ((colimit.ι moduleDiagram n).hom (fPlusElem n * x),
         (colimit.ι moduleDiagram n).hom (fMinusElem n * x)) := by
-  simpa [finiteStageDatum, fPlusNat, fMinusNat, leftMul] using
-    HestenesKreinFiniteStageCompatibility.Datum.colimit_sheet_stage_readback
-      finiteStageDatum n x
+  have h := HestenesKreinFiniteStageCompatibility.Datum.colimit_sheet_stage_readback
+    finiteStageDatum n x
+  apply Prod.ext
+  · have hplus := congrArg Prod.fst h
+    change (leftColimit bilingualDatum) ((colimit.ι moduleDiagram n).hom x) =
+      (colimit.ι moduleDiagram n).hom
+        ((ModuleCat.Hom.hom (ModuleCat.ofHom (leftMul (fPlusElem n)))) x) at hplus
+    rw [ModuleCat.hom_ofHom, leftMul_apply] at hplus
+    exact hplus
+  · have hminus := congrArg Prod.snd h
+    change (rightColimit bilingualDatum) ((colimit.ι moduleDiagram n).hom x) =
+      (colimit.ι moduleDiagram n).hom
+        ((ModuleCat.Hom.hom (ModuleCat.ofHom (leftMul (fMinusElem n)))) x) at hminus
+    rw [ModuleCat.hom_ofHom, leftMul_apply] at hminus
+    exact hminus
 
 private theorem leftColimit_on_stage (n : ℕ) (x : Stage n) :
     (leftColimit bilingualDatum) ((colimit.ι moduleDiagram n).hom x) =
@@ -592,67 +616,83 @@ theorem colimit_left_idempotent :
     leftColimit bilingualDatum * leftColimit bilingualDatum =
       leftColimit bilingualDatum := by
   have hnat : fPlusNat ≫ fPlusNat = fPlusNat := by
-    ext n x
-    have h := congrArg
-      (fun T : Module.End ℝ (Stage n) => T (x : Stage n))
-      (finiteStageDatum.fPlus_idempotent n)
-    simpa [ModuleCat.comp_apply, fPlusNat, leftMul, Module.End.mul_apply]
-      using h
+    apply NatTrans.ext
+    funext n
+    apply ModuleCat.hom_ext
+    ext x
+    change Stage n at x
+    change fPlusElem n * (fPlusElem n * (x : Stage n)) = fPlusElem n * x
+    rw [← mul_assoc, fPlusElem_idempotent]
   have hcat :
       colim.map fPlusNat ≫ colim.map fPlusNat = colim.map fPlusNat := by
     rw [← colim.map_comp, hnat]
-  simpa [leftColimit, Module.End.mul_apply] using
+  change (colim.map fPlusNat).hom * (colim.map fPlusNat).hom =
+    (colim.map fPlusNat).hom
+  simpa [leftColimit, bilingualDatum, finiteStageDatum,
+    HestenesKreinFiniteStageCompatibility.Datum.toBilingualDatum,
+    Module.End.mul_eq_comp] using
     congrArg ModuleCat.Hom.hom hcat
 
 theorem colimit_right_idempotent :
     rightColimit bilingualDatum * rightColimit bilingualDatum =
       rightColimit bilingualDatum := by
   have hnat : fMinusNat ≫ fMinusNat = fMinusNat := by
-    ext n x
-    have h := congrArg
-      (fun T : Module.End ℝ (Stage n) => T (x : Stage n))
-      (finiteStageDatum.fMinus_idempotent n)
-    simpa [ModuleCat.comp_apply, fMinusNat, leftMul, Module.End.mul_apply]
-      using h
+    apply NatTrans.ext
+    funext n
+    apply ModuleCat.hom_ext
+    ext x
+    change Stage n at x
+    change fMinusElem n * (fMinusElem n * (x : Stage n)) = fMinusElem n * x
+    rw [← mul_assoc, fMinusElem_idempotent]
   have hcat :
       colim.map fMinusNat ≫ colim.map fMinusNat = colim.map fMinusNat := by
     rw [← colim.map_comp, hnat]
-  simpa [rightColimit, Module.End.mul_apply] using
+  change (colim.map fMinusNat).hom * (colim.map fMinusNat).hom =
+    (colim.map fMinusNat).hom
+  simpa [rightColimit, bilingualDatum, finiteStageDatum,
+    HestenesKreinFiniteStageCompatibility.Datum.toBilingualDatum,
+    Module.End.mul_eq_comp] using
     congrArg ModuleCat.Hom.hom hcat
 
 theorem colimit_left_right_zero :
     leftColimit bilingualDatum * rightColimit bilingualDatum = 0 := by
   have hnat : fMinusNat ≫ fPlusNat = 0 := by
-    ext n x
-    have h := congrArg
-      (fun T : Module.End ℝ (Stage n) => T (x : Stage n))
-      (finiteStageDatum.fPlus_fMinus_zero n)
-    simpa [ModuleCat.comp_apply, fMinusNat, fPlusNat, leftMul,
-      Module.End.mul_apply] using h
+    apply NatTrans.ext
+    funext n
+    apply ModuleCat.hom_ext
+    ext x
+    change Stage n at x
+    change fPlusElem n * (fMinusElem n * (x : Stage n)) = 0
+    rw [← mul_assoc, fPlusElem_fMinusElem_zero, zero_mul]
   have hcat :
       colim.map fMinusNat ≫ colim.map fPlusNat = 0 := by
     rw [← colim.map_comp, hnat, colim.map_zero]
-  simpa [leftColimit, rightColimit, Module.End.mul_apply] using
+  simpa [leftColimit, rightColimit, bilingualDatum, finiteStageDatum,
+    HestenesKreinFiniteStageCompatibility.Datum.toBilingualDatum,
+    Module.End.mul_eq_comp] using
     congrArg ModuleCat.Hom.hom hcat
 
 theorem colimit_right_left_zero :
     rightColimit bilingualDatum * leftColimit bilingualDatum = 0 := by
   have hnat : fPlusNat ≫ fMinusNat = 0 := by
-    ext n x
-    have h := congrArg
-      (fun T : Module.End ℝ (Stage n) => T (x : Stage n))
-      (finiteStageDatum.fMinus_fPlus_zero n)
-    simpa [ModuleCat.comp_apply, fPlusNat, fMinusNat, leftMul,
-      Module.End.mul_apply] using h
+    apply NatTrans.ext
+    funext n
+    apply ModuleCat.hom_ext
+    ext x
+    change Stage n at x
+    change fMinusElem n * (fPlusElem n * (x : Stage n)) = 0
+    rw [← mul_assoc, fMinusElem_fPlusElem_zero, zero_mul]
   have hcat :
       colim.map fPlusNat ≫ colim.map fMinusNat = 0 := by
     rw [← colim.map_comp, hnat, colim.map_zero]
-  simpa [rightColimit, leftColimit, Module.End.mul_apply] using
+  simpa [rightColimit, leftColimit, bilingualDatum, finiteStageDatum,
+    HestenesKreinFiniteStageCompatibility.Datum.toBilingualDatum,
+    Module.End.mul_eq_comp] using
     congrArg ModuleCat.Hom.hom hcat
 
 theorem colimit_sheet_projectors_sum :
     leftColimit bilingualDatum + rightColimit bilingualDatum =
-      (1 : Module.End ℝ ColimitCarrier) := by
+      (LinearMap.id : Module.End ℝ ColimitCarrier) := by
   have hnat : fPlusNat + fMinusNat = 𝟙 moduleDiagram := by
     ext n x
     change Stage n at x
@@ -661,7 +701,8 @@ theorem colimit_sheet_projectors_sum :
   have hcat :
       colim.map fPlusNat + colim.map fMinusNat = 𝟙 _ := by
     rw [← colim.map_add, hnat, colim.map_id]
-  simpa [leftColimit, rightColimit] using
+  simpa [leftColimit, rightColimit, bilingualDatum, finiteStageDatum,
+    HestenesKreinFiniteStageCompatibility.Datum.toBilingualDatum] using
     congrArg ModuleCat.Hom.hom hcat
 
 end InfoGeometry.Canonical.Cl11HestenesKreinTwoSheetBridge

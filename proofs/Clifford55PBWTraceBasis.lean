@@ -135,7 +135,7 @@ theorem regular_trace_zero_of_gamma_anticommutes (j : Fin 10) (x : Cl55)
       _ = LinearMap.trace ℝ Cl55 ((G * X) * G) := hcyc
       _ = LinearMap.trace ℝ Cl55 ((-(X * G)) * G) := by rw [hGX]
       _ = LinearMap.trace ℝ Cl55 (-(X * (G * G))) := by
-        rw [neg_mul, mul_assoc]
+        congr 1
       _ = LinearMap.trace ℝ Cl55 (-(X * (s • 1))) := by rw [hGG]
       _ = -(s * LinearMap.trace ℝ Cl55 X) := by simp
   have hs : s ≠ 0 := gammaSign55_ne_zero j

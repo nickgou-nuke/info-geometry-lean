@@ -43,7 +43,9 @@ lemma affine_gl1_gl2_commutator
       GellMannSU3.gl1 GellMannSU3.gl2 =
         (2 * Complex.I) • GellMannSU3.gl3 := by
   rw [BogoliubovSU3ParafermionWeld.frame_affine_even_even_lie]
-  simpa [SupergradedCuntzBdG.lieBracket] using GellMannSU3.gl1_comm_gl2
+  dsimp [SupergradedCuntzBdG.lieBracket]
+  rw [neg_one_smul, ← sub_eq_add_neg]
+  exact GellMannSU3.gl1_comm_gl2
 
 /-- The zeroth Cuntz quotient generator is a left inverse of its partner. -/
 lemma cuntz_left_inverse_zero :

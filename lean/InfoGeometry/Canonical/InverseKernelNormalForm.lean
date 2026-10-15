@@ -128,6 +128,24 @@ theorem rightChiralAnomaly_eq_zero_of_spectralRangeCommute
     CIK.rightChiralAnomaly = 0 :=
   (CIK.rightChiralAnomaly_eq_zero_iff_spectralRangeCommute).2 hComm
 
+/-- Equality form of certified spectral/metric commutation. -/
+theorem spectralMetricCommute_eq
+    (hComm : CIK.SpectralMetricCommute) :
+    CIK.spectralProjector * CIK.metricProjector =
+      CIK.metricProjector * CIK.spectralProjector := by
+  change CIK.spectralProjector * CIK.metricProjector =
+    CIK.metricProjector * CIK.spectralProjector at hComm
+  exact hComm
+
+/-- Equality form of certified spectral/range commutation. -/
+theorem spectralRangeCommute_eq
+    (hComm : CIK.SpectralRangeCommute) :
+    CIK.spectralProjector * CIK.mpRangeProjector =
+      CIK.mpRangeProjector * CIK.spectralProjector := by
+  change CIK.spectralProjector * CIK.mpRangeProjector =
+    CIK.mpRangeProjector * CIK.spectralProjector at hComm
+  exact hComm
+
 /-- Spectral/metric commutation places the metric projector in the spectral compact sector. -/
 theorem metricProjector_isSpectralCompact_of_spectralMetricCommute
     (hComm : CIK.SpectralMetricCommute) :
@@ -135,7 +153,7 @@ theorem metricProjector_isSpectralCompact_of_spectralMetricCommute
   have hComm' :
       CIK.spectralProjector * CIK.metricProjector =
         CIK.metricProjector * CIK.spectralProjector := by
-    simpa [CertifiedInverseKernel.SpectralMetricCommute, CertifiedInverseKernel.toInverseKernel'] using hComm
+    exact CIK.spectralMetricCommute_eq hComm
   rw [CIK.isSpectralCompact_iff_commute_GammaS]
   change CIK.metricProjector * (2 * CIK.spectralProjector - 1) =
     (2 * CIK.spectralProjector - 1) * CIK.metricProjector
@@ -148,7 +166,7 @@ theorem mpRangeProjector_isSpectralCompact_of_spectralRangeCommute
   have hComm' :
       CIK.spectralProjector * CIK.mpRangeProjector =
         CIK.mpRangeProjector * CIK.spectralProjector := by
-    simpa [CertifiedInverseKernel.SpectralRangeCommute, CertifiedInverseKernel.toInverseKernel'] using hComm
+    exact CIK.spectralRangeCommute_eq hComm
   rw [CIK.isSpectralCompact_iff_commute_GammaS]
   change CIK.mpRangeProjector * (2 * CIK.spectralProjector - 1) =
     (2 * CIK.spectralProjector - 1) * CIK.mpRangeProjector
@@ -161,7 +179,7 @@ theorem projectorMismatch_isSpectralCompact_of_spectralMetricCommute
   have hComm' :
       CIK.spectralProjector * CIK.metricProjector =
         CIK.metricProjector * CIK.spectralProjector := by
-    simpa [CertifiedInverseKernel.SpectralMetricCommute, CertifiedInverseKernel.toInverseKernel'] using hComm
+    exact CIK.spectralMetricCommute_eq hComm
   have hSpectralΓ :
       CIK.spectralProjector * CIK.GammaS = CIK.GammaS * CIK.spectralProjector := by
     change CIK.spectralProjector * (2 * CIK.spectralProjector - 1) =
@@ -185,11 +203,13 @@ theorem dilationGap_isSpectralCompact_of_spectralMoorePenroseCommute
   have hLeft' :
       CIK.spectralProjector * CIK.metricProjector =
         CIK.metricProjector * CIK.spectralProjector := by
-    simpa [CertifiedInverseKernel.SpectralMetricCommute, CertifiedInverseKernel.toInverseKernel'] using hLeft
+    simpa [CertifiedInverseKernel.SpectralMetricCommute,
+      CertifiedInverseKernel.toInverseKernel',
+      InverseKernel.SpectralMetricCommute] using hLeft
   have hRight' :
       CIK.spectralProjector * CIK.mpRangeProjector =
         CIK.mpRangeProjector * CIK.spectralProjector := by
-    simpa [CertifiedInverseKernel.SpectralRangeCommute, CertifiedInverseKernel.toInverseKernel'] using hRight
+    exact CIK.spectralRangeCommute_eq hRight
   have hMetricΓ :
       CIK.metricProjector * CIK.GammaS = CIK.GammaS * CIK.metricProjector := by
     change CIK.metricProjector * (2 * CIK.spectralProjector - 1) =
@@ -213,7 +233,7 @@ theorem metricProjector_fixed_under_spectralGradingFlow_of_spectralMetricCommute
   have hComm' :
       CIK.spectralProjector * CIK.metricProjector =
         CIK.metricProjector * CIK.spectralProjector := by
-    simpa [CertifiedInverseKernel.SpectralMetricCommute, CertifiedInverseKernel.toInverseKernel'] using hComm
+    exact CIK.spectralMetricCommute_eq hComm
   simpa [CertifiedInverseKernel.spectralAdjointFlow, CertifiedInverseKernel.GammaS,
     CertifiedInverseKernel.cartanTriple, CertifiedInverseKernel.toInformationCartanTriple] using
     CIK.metricProjector_fixed_under_spectralGradingFlow_of_projector_commute hComm' t
@@ -226,7 +246,7 @@ theorem mpRangeProjector_fixed_under_spectralGradingFlow_of_spectralRangeCommute
   have hComm' :
       CIK.spectralProjector * CIK.mpRangeProjector =
         CIK.mpRangeProjector * CIK.spectralProjector := by
-    simpa [CertifiedInverseKernel.SpectralRangeCommute, CertifiedInverseKernel.toInverseKernel'] using hComm
+    exact CIK.spectralRangeCommute_eq hComm
   simpa [CertifiedInverseKernel.spectralAdjointFlow, CertifiedInverseKernel.GammaS,
     CertifiedInverseKernel.cartanTriple, CertifiedInverseKernel.toInformationCartanTriple] using
     CIK.mpRangeProjector_fixed_under_spectralGradingFlow_of_rightProjector_commute hComm' t
@@ -239,7 +259,9 @@ theorem projectorMismatch_fixed_under_spectralGradingFlow_of_spectralMetricCommu
   have hComm' :
       CIK.spectralProjector * CIK.metricProjector =
         CIK.metricProjector * CIK.spectralProjector := by
-    simpa [CertifiedInverseKernel.SpectralMetricCommute, CertifiedInverseKernel.toInverseKernel'] using hComm
+    simpa [CertifiedInverseKernel.SpectralMetricCommute,
+      CertifiedInverseKernel.toInverseKernel',
+      InverseKernel.SpectralMetricCommute] using hComm
   simpa [CertifiedInverseKernel.spectralAdjointFlow, CertifiedInverseKernel.GammaS,
     CertifiedInverseKernel.cartanTriple, CertifiedInverseKernel.toInformationCartanTriple] using
     CIK.projectorMismatch_fixed_under_spectralGradingFlow_of_projector_commute hComm' t
@@ -253,11 +275,11 @@ theorem dilationGap_fixed_under_spectralGradingFlow_of_spectralMoorePenroseCommu
   have hLeft' :
       CIK.spectralProjector * CIK.metricProjector =
         CIK.metricProjector * CIK.spectralProjector := by
-    simpa [CertifiedInverseKernel.SpectralMetricCommute, CertifiedInverseKernel.toInverseKernel'] using hLeft
+    exact CIK.spectralMetricCommute_eq hLeft
   have hRight' :
       CIK.spectralProjector * CIK.mpRangeProjector =
         CIK.mpRangeProjector * CIK.spectralProjector := by
-    simpa [CertifiedInverseKernel.SpectralRangeCommute, CertifiedInverseKernel.toInverseKernel'] using hRight
+    exact CIK.spectralRangeCommute_eq hRight
   simpa [CertifiedInverseKernel.spectralAdjointFlow, CertifiedInverseKernel.GammaS,
     CertifiedInverseKernel.cartanTriple, CertifiedInverseKernel.toInformationCartanTriple] using
     CIK.dilationGap_fixed_under_spectralGradingFlow_of_projector_commute hLeft' hRight' t

@@ -229,7 +229,7 @@ types separate.
 theorem splitCliffordInfinity_fock_completion
     (_z : SplitCliffordInfinity)
     (_D : CelikKocakInfiniteFockCarrierData E)
-    {F : Type*} [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F] :
+    {F : Type} [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F] :
     CARWitness (cl11CanonicalPolarizedMajorana (E := F)).core
         (ladderOfRealization (cl11CanonicalPolarizedMajorana (E := F))
           (cl11SplitCliffordDatum F) (cl11_concrete_ladder_realization (E := F))).annihil
@@ -282,7 +282,7 @@ theorem splitCliffordInfinity_root_branch_completion
     (C : InfoGeometry.Topology.CuntzO2Carrier Op)
     (seed : Op)
     (ξ : CantorBoundary)
-    {F : Type*} [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F] :
+    {F : Type} [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F] :
     ((C.S_left * star C.S_left) * seed + (C.S_right * star C.S_right) * seed = seed) ∧
       ((C.S_left * star C.S_left) * (C.S_right * star C.S_right) = 0) ∧
       (ξ = boundaryCons (boundaryHead ξ) (boundaryTail ξ)) ∧
@@ -325,7 +325,7 @@ theorem celikKocak_cuntzCAR_splitFock_fixedReadout_packet
     (ξ : CantorBoundary)
     (hleft : φ (C.S_left * X * star C.S_left) = (1 / 2 : ℝ) * φ X)
     (hright : φ (C.S_right * X * star C.S_right) = (1 / 2 : ℝ) * φ X)
-    {F : Type*} [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F] :
+    {F : Type} [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F] :
     (∃ n x,
       DirectLimit.Module.of ℝ ℕ SplitClNNAlg
         (fun m n h => splitCliffordMap m n h) n x = z ∧

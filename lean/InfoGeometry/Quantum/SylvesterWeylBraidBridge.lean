@@ -1,5 +1,6 @@
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.ZMod.Basic
+import Mathlib.Algebra.Algebra.Basic
 import Mathlib.Algebra.BigOperators.Intervals
 import Mathlib.Tactic
 
@@ -81,3 +82,91 @@ theorem sylvester_weyl_braid_relation (ω : R) (hn : ω ^ n = 1) :
   · rw [mul_zero]
 
 end SylvesterWeylBraid
+
+namespace InfoGeometry.Weyl
+
+variable {R A : Type*} [CommSemiring R] [Semiring A] [Algebra R A]
+
+/-- Moving one clock factor across a power of the shift. -/
+theorem clock_mul_shift_pow (X Z : A) (ω : R)
+    (hZX : Z * X = ω • (X * Z)) (c : ℕ) :
+    Z * X ^ c = (ω ^ c) • (X ^ c * Z) := by
+  induction c with
+  | zero => simp
+  | succ c ih =>
+      nth_rewrite 1 [pow_succ]
+      calc
+        Z * (X ^ c * X) = (Z * X ^ c) * X := by rw [mul_assoc]
+        _ = ((ω ^ c) • (X ^ c * Z)) * X := by rw [ih]
+        _ = (ω ^ c) • ((X ^ c * Z) * X) := by rw [smul_mul_assoc]
+        _ = (ω ^ c) • (X ^ c * (Z * X)) := by rw [mul_assoc]
+        _ = (ω ^ c) • (X ^ c * (ω • (X * Z))) := by rw [hZX]
+        _ = (ω ^ (c + 1)) • (X ^ (c + 1) * Z) := by
+          rw [Algebra.mul_smul_comm, smul_smul]
+          calc
+            (ω ^ c * ω) • (X ^ c * (X * Z)) =
+                ω ^ (c + 1) • (X ^ c * (X * Z)) := by rw [pow_succ]
+            _ = ω ^ (c + 1) • ((X ^ c * X) * Z) := by
+                exact congrArg (fun y : A => ω ^ (c + 1) • y)
+                  (mul_assoc (X ^ c) X Z).symm
+            _ = ω ^ (c + 1) • (X ^ (c + 1) * Z) := by
+                exact congrArg (fun y : A => ω ^ (c + 1) • (y * Z))
+                  (pow_succ X c).symm
+
+/-- Moving a power of the clock across a power of the shift. -/
+theorem clock_pow_mul_shift_pow (X Z : A) (ω : R)
+    (hZX : Z * X = ω • (X * Z)) (b c : ℕ) :
+    Z ^ b * X ^ c = (ω ^ (b * c)) • (X ^ c * Z ^ b) := by
+  induction b with
+  | zero => simp
+  | succ b ih =>
+      nth_rewrite 1 [pow_succ]
+      calc
+        (Z ^ b * Z) * X ^ c = Z ^ b * (Z * X ^ c) := by rw [mul_assoc]
+        _ = Z ^ b * ((ω ^ c) • (X ^ c * Z)) := by
+          rw [clock_mul_shift_pow X Z ω hZX c]
+        _ = (ω ^ c) • (Z ^ b * (X ^ c * Z)) := by rw [mul_smul_comm]
+        _ = (ω ^ c) • ((Z ^ b * X ^ c) * Z) := by rw [mul_assoc]
+        _ = (ω ^ c) • (((ω ^ (b * c)) • (X ^ c * Z ^ b)) * Z) := by rw [ih]
+        _ = (ω ^ ((b + 1) * c)) • (X ^ c * Z ^ (b + 1)) := by
+          rw [smul_mul_assoc, smul_smul]
+          have hexp : c + b * c = (b + 1) * c := by
+            simp [Nat.succ_mul, Nat.add_comm]
+          calc
+            (ω ^ c * ω ^ (b * c)) • ((X ^ c * Z ^ b) * Z) =
+                ω ^ (c + b * c) • ((X ^ c * Z ^ b) * Z) := by rw [← pow_add]
+            _ = ω ^ ((b + 1) * c) • ((X ^ c * Z ^ b) * Z) := by rw [hexp]
+            _ = ω ^ ((b + 1) * c) • (X ^ c * (Z ^ b * Z)) := by rw [← mul_assoc]
+            _ = ω ^ ((b + 1) * c) • (X ^ c * Z ^ (b + 1)) := by
+                exact congrArg (fun y : A => ω ^ ((b + 1) * c) • (X ^ c * y))
+                  (pow_succ Z b).symm
+
+/-- The discrete Weyl displacement `D(a,b) = X^a Z^b`. -/
+def weylD (X Z : A) (a b : ℕ) : A := X ^ a * Z ^ b
+
+/-- The projective composition law for clock-shift displacement operators. -/
+theorem weylD_mul (X Z : A) (ω : R)
+    (hZX : Z * X = ω • (X * Z)) (a b c d : ℕ) :
+    weylD X Z a b * weylD X Z c d =
+      (ω ^ (b * c)) • weylD X Z (a + c) (b + d) := by
+  dsimp [weylD]
+  calc
+    (X ^ a * Z ^ b) * (X ^ c * Z ^ d) =
+        X ^ a * (Z ^ b * X ^ c) * Z ^ d := by simp only [mul_assoc]
+    _ = X ^ a * ((ω ^ (b * c)) • (X ^ c * Z ^ b)) * Z ^ d := by
+        rw [clock_pow_mul_shift_pow X Z ω hZX b c]
+    _ = (ω ^ (b * c)) • (X ^ a * (X ^ c * Z ^ b) * Z ^ d) := by
+        rw [mul_smul_comm, smul_mul_assoc]
+    _ = (ω ^ (b * c)) • (X ^ (a + c) * Z ^ (b + d)) := by
+        congr 1
+        simp [pow_add, mul_assoc]
+
+/-- Matrix specialization of the displacement composition law. -/
+theorem sylvesterD_mul {n : ℕ} [NeZero n] {R : Type*} [CommRing R]
+    (X Z : Matrix (ZMod n) (ZMod n) R) (ω : R)
+    (hZX : Z * X = ω • (X * Z)) (a b c d : ℕ) :
+    weylD X Z a b * weylD X Z c d =
+      (ω ^ (b * c)) • weylD X Z (a + c) (b + d) :=
+  weylD_mul X Z ω hZX a b c d
+
+end InfoGeometry.Weyl

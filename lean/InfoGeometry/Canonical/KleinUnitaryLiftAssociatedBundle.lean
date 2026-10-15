@@ -16,7 +16,7 @@ noncomputable section
 namespace InfoGeometry.Canonical.KleinUnitaryLiftAssociatedBundle
 
 open KleinSixStateVectorBundleCore
-open KleinSixStateBundle
+open _root_.KleinSixStateBundle
 open KleinBrillouinBase KleinBottleOrbitQuotient KleinGlideCovering
 open KleinGlideCoveringAtlas
 open KleinPresentedGroup
@@ -47,12 +47,15 @@ theorem deckLiftUnit_add (omega : ℂ)
     (homega : omega ^ 2 + omega + 1 = 0) (g h : Deck2) :
     deckLiftUnit omega homega (g + h) =
       deckLiftUnit omega homega h * deckLiftUnit omega homega g := by
+  have hcases (z : Deck2) : z = 0 ∨ z = 1 := by
+    have hz : z.val < 2 := z.isLt
+    have hval : z.val = 0 ∨ z.val = 1 := by omega
+    rcases hval with hzero | hone
+    · exact Or.inl ((ZMod.val_eq_zero z).mp hzero)
+    · exact Or.inr ((ZMod.val_eq_one (by decide) z).mp hone)
   have h11 : (1 + 1 : Deck2) = 0 := by decide
-  fin_cases g <;> fin_cases h
-  · simp [deckLiftUnit]
-  · simp [deckLiftUnit]
-  · simp [deckLiftUnit]
-  · simp [deckLiftUnit, thetaU6_sq omega homega, h11]
+  rcases hcases g with rfl | rfl <;> rcases hcases h with rfl | rfl <;>
+    simp [deckLiftUnit, h11, thetaU6_sq omega homega]
 
 def deckLiftCoordChange (omega : ℂ)
     (homega : omega ^ 2 + omega + 1 = 0)

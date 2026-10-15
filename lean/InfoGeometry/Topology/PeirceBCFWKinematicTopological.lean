@@ -23,34 +23,24 @@ theorem continuous_complexifiedChannel :
   exact continuous_complexifyChannelCoordinates.comp
     continuous_channelCoordinates
 
-theorem continuous_peirceKinematicInner_self :
-    Continuous (fun p : PeirceKinematicMomentum =>
-      peirceKinematicInner p p) := by
-  unfold peirceKinematicInner
+theorem continuous_peirceKinematicForm_self :
+    Continuous (fun p : InfoGeometry.Algebra.FiniteSpin.Vec4C =>
+      peirceKinematicForm p p) := by
+  unfold peirceKinematicForm
   fun_prop
 
 theorem continuous_complexifiedChannel_quadratic :
     Continuous (fun M : Matrix (Fin 2) (Fin 2) ℝ =>
-      peirceKinematicInner (complexifiedChannel M)
+      peirceKinematicForm (complexifiedChannel M)
         (complexifiedChannel M)) := by
-  exact continuous_peirceKinematicInner_self.comp
+  exact continuous_peirceKinematicForm_self.comp
     continuous_complexifiedChannel
 
 theorem isClosed_complexifiedChannel_onShellLocus :
     IsClosed {M : Matrix (Fin 2) (Fin 2) ℝ |
-      peirceKinematicInner (complexifiedChannel M)
+      peirceKinematicForm (complexifiedChannel M)
         (complexifiedChannel M) = 0} := by
   exact isClosed_singleton.preimage
     continuous_complexifiedChannel_quadratic
-
-theorem isClosed_peirce_shiftedChannel_onShell_locus
-    (data : PeirceBCFWShiftParameters)
-    (PI : PeirceKinematicMomentum) :
-    IsClosed {z : ℂ |
-      peirceKinematicInner
-          (shiftedChannel data.toBCFWShiftData PI z)
-          (shiftedChannel data.toBCFWShiftData PI z) = 0} := by
-  exact InfoGeometry.Topology.BCFWOnShellShift.isClosed_shiftedChannel_onShell_locus
-    data.toBCFWShiftData PI continuous_peirceKinematicInner_self
 
 end InfoGeometry.Topology

@@ -77,10 +77,9 @@ theorem paper_sync_kernel_abel_mertens_analytic_family
   have hMertens :
       D.abelMertensAsymptotic := paper_ihara_mertens_constant D.toIharaMertensConstantData
   refine ⟨D.hWittMain, hMertens, ?_⟩
-  simpa [SyncKernelAbelMertensAnalyticFamilyData.finitePartAnalytic,
-    SyncKernelAbelMertensAnalyticFamilyData.analyticFinitePart] using
-    (analyticAt_id.add analyticAt_const :
-      AnalyticAt ℝ (fun t : ℝ => t + (D.finitePart - D.branchCenter)) D.branchCenter)
+  change AnalyticAt ℝ
+    (fun t : ℝ => t + (D.finitePart - D.branchCenter)) D.branchCenter
+  exact analyticAt_id.add analyticAt_const
 
 end
 

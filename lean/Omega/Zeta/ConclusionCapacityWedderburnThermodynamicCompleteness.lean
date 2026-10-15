@@ -24,15 +24,15 @@ theorem paper_conclusion_capacity_wedderburn_thermodynamic_completeness
       (X := Fin D.outputSize) d
   have hwedderburn := Omega.Zeta.paper_conclusion_wedderburn_threshold_holography D
   refine ⟨?_, hwedderburn.2.2⟩
-  simpa [d, conclusion_wedderburn_threshold_holography_data.histogram,
-    conclusion_wedderburn_threshold_holography_data.tailCounts,
-    conclusion_wedderburn_threshold_holography_data.capacityCurve,
-    conclusion_wedderburn_threshold_holography_data.fiberMultiplicity,
-    conclusion_wedderburn_threshold_holography_data.toCapacityData,
-    Omega.Conclusion.conclusion_capacity_deficit_mellin_bernstein_completion_histogram,
-    Omega.Conclusion.conclusion_capacity_deficit_mellin_bernstein_completion_tailCount,
-    Omega.Conclusion.conclusion_capacity_deficit_mellin_bernstein_completion_continuousCapacity,
-    Omega.Conclusion.conclusion_capacity_deficit_mellin_bernstein_completion_fiberMultiplicity]
-    using hfinite
+  change Omega.Conclusion.FiniteMultiplicityDataEquivalent
+    (fun k => Fintype.card
+      {x : Fin D.outputSize // Omega.POM.oracleFiberMultiplicity D.map x = k})
+    (fun t => Fintype.card
+      {x : Fin D.outputSize // t ≤ Omega.POM.oracleFiberMultiplicity D.map x})
+    (Omega.Conclusion.CapacityRamanujanPlateauLaw.capacityCurve
+      (Omega.POM.oracleFiberMultiplicity D.map))
+    (fun q => ∑ x : Fin D.outputSize,
+      Omega.POM.oracleFiberMultiplicity D.map x ^ q)
+  exact hfinite
 
 end Omega.Zeta

@@ -32,7 +32,9 @@ def dyadicDirectLimitStageCocone : Cocone dyadicStageDiagram where
       rw [hmap]
       apply TopCat.hom_ext
       ext z
-      simpa [dyadicBond] using dyadicStage_bond n z)
+      change ℤ at z
+      change dyadicStage (n + 1) (2 * z) = dyadicStage n z
+      exact dyadicStage_bond n z)
 
 noncomputable def dyadicStageColimitToDirectLimit :
     dyadicStageTopCatColimit ⟶ dyadicDirectLimitTopCat :=
@@ -53,10 +55,27 @@ theorem dyadicStageColimitReadout_factors_through_directLimit :
       dyadicStageColimitReadout := by
   apply colimit.hom_ext
   intro n
-  rw [← Category.assoc, dyadicStageColimitToDirectLimit_stage]
-  rw [dyadicStageColimitReadout_stage]
   apply TopCat.hom_ext
   ext z
+  have hleft := congrArg (fun f => f z)
+    (dyadicStageColimitToDirectLimit_stage n)
+  change dyadicStageColimitToDirectLimit
+      (colimit.ι dyadicStageDiagram n z) =
+    (dyadicDirectLimitStageCocone.ι.app n) z at hleft
+  change dyadicStageColimitToDirectLimit
+      (colimit.ι dyadicStageDiagram n z) = dyadicStage n z at hleft
+  have hright := congrArg (fun f => f z)
+    (dyadicStageColimitReadout_stage n)
+  change dyadicStageColimitReadout
+      (colimit.ι dyadicStageDiagram n z) =
+    (dyadicStageReadoutCocone.ι.app n) z at hright
+  change dyadicStageColimitReadout
+      (colimit.ι dyadicStageDiagram n z) = dyadicStageMap n z at hright
+  change dyadicDirectLimitReadoutTopCatHom
+      (dyadicStageColimitToDirectLimit
+        (colimit.ι dyadicStageDiagram n z)) =
+    dyadicStageColimitReadout (colimit.ι dyadicStageDiagram n z)
+  rw [hleft, hright]
   rfl
 
 theorem dyadicStageColimitToDirectLimit_surjective :
@@ -70,7 +89,14 @@ theorem dyadicStageColimitToDirectLimit_surjective :
       refine ⟨colimit.ι dyadicStageDiagram n z, ?_⟩
       have hstage := congrArg (fun f => f z)
         (dyadicStageColimitToDirectLimit_stage n)
-      exact hstage
+      change dyadicStageColimitToDirectLimit
+          (colimit.ι dyadicStageDiagram n z) =
+        (dyadicDirectLimitStageCocone.ι.app n) z at hstage
+      rw [dyadicDirectLimitStageCocone_apply] at hstage
+      change dyadicStageColimitToDirectLimit
+          (colimit.ι dyadicStageDiagram n z) = Quotient.mk' ⟨z, n⟩
+      rw [hstage]
+      rfl
 
 end
 end InfoGeometry.Canonical.DyadicStageDirectLimitTopCatCocone

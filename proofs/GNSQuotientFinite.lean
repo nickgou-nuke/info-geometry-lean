@@ -113,11 +113,11 @@ theorem representation_mul (A B : M2C) (u : GNSSpace) :
   exact Quotient.sound (by
     constructor <;> simp [Matrix.mul_assoc])
 
-/-- The GNS expectation identity: `ω(A)=<[1],π(A)[1]>`. -/
 theorem gns_expectation_value (A : M2C) :
     inner cyclic (representation A cyclic) = omega A := by
-  simp [inner, cyclic, gnsClass, representation, innerRaw, omega,
-    FiniteGNSConstruction.omegaState_apply]
+  change innerRaw (1 : M2C) (A * 1) = omega A
+  rw [innerRaw_eq_first_column]
+  simp [omega, FiniteGNSConstruction.omegaState_apply]
 
 /-- The cyclic vector is cyclic: every quotient class has a representative `A[1]`. -/
 theorem cyclic_is_cyclic (u : GNSSpace) : ∃ A : M2C, representation A cyclic = u := by

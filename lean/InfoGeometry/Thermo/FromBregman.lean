@@ -111,7 +111,8 @@ omit [Nonempty Ω] in
 lemma partitionDivergence_pos
     (L : LegendrePotential) (θ0 : ℝ) (θ : Ω → ℝ) (ε : ℝ) :
     0 < partitionDivergence (L := L) θ0 θ ε := by
-  simpa [partitionDivergence, gibbsWeightDivergence, energyFromBregman] using
+  simpa [partitionDivergence, gibbsWeightDivergence, energyFromBregman,
+    Z, weight] using
     (Z_pos (E := energyFromBregman (L := L) θ0 θ) ε)
 
 lemma partitionDivergence_ne_zero

@@ -71,8 +71,8 @@ private theorem hankelVal_eq_two_gapVal (D : XiNonarchimedeanPronyUnitJacobianCr
             ring
     _ = padicValRat D.p (D.ω₁ : ℚ) + padicValRat D.p (D.ω₂ : ℚ) +
           (2 : ℤ) * padicValRat D.p ((D.a₂ - D.a₁ : ℤ) : ℚ) := by
-            rw [padicValRat.pow hgapQ]
-            norm_num
+            rw [padicValRat.pow]
+            rfl
     _ = (2 : ℤ) * padicValRat D.p ((D.a₂ - D.a₁ : ℤ) : ℚ) := by
           rw [D.hω₁Unit, D.hω₂Unit]
           ring

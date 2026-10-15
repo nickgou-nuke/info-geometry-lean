@@ -89,7 +89,7 @@ theorem boundaryReadoutCompHausHom_preimage_prefixCylinder_stage
         ((compHausToTop.map (boundaryReadoutCompHausHom S)).hom ⁻¹'
           prefixCylinder (A := A) length w) =
       stageBoundaryCylinder S stage length w := by
-  rw [boundaryReadoutCompHausHom_preimage_prefixCylinder S length w]
+  rw [boundaryReadoutCompHausHom_forget S]
   exact SymbolicLatentBoundaryCylinderNeighborhood.colimitBoundaryCylinder_preimage_stage
     S stage length w
 

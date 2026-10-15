@@ -63,10 +63,21 @@ lemma fibonacci_generators_noncommute : R * B ≠ B * R := by
   have h01 := congr_fun (congr_fun h (0 : Fin 2)) (1 : Fin 2)
   simp [R, B, F, Matrix.mul_apply, Fin.sum_univ_two] at h01
   ring_nf at h01
+  have hqinv4 : q⁻¹ ^ 4 = -q := by
+    calc
+      q⁻¹ ^ 4 = (q ^ 4)⁻¹ := inv_pow q 4
+      _ = -q := q_inv_four_eq_neg_q
+  have hqinv8 : q⁻¹ ^ 8 = q ^ 2 := by
+    calc
+      q⁻¹ ^ 8 = (q⁻¹ ^ 4) ^ 2 := by norm_num [← pow_mul]
+      _ = (-q) ^ 2 := by rw [hqinv4]
+      _ = q ^ 2 := by ring
+  rw [hqinv4, hqinv8] at h01
   have hmove :
       -((q ^ 4)⁻¹ * τ * s * q ^ 3) + (q ^ 4)⁻¹ ^ 2 * τ * s -
           ((q ^ 4)⁻¹ * τ * s * q ^ 3 - τ * s * q ^ 6) = 0 := by
-    exact sub_eq_zero.mpr h01
+    rw [q_inv_four_eq_neg_q]
+    convert sub_eq_zero.mpr h01 using 1 <;> ring
   have hzero : τ * s * (q + q ^ 3) ^ 2 = 0 := by
     calc
       τ * s * (q + q ^ 3) ^ 2 =

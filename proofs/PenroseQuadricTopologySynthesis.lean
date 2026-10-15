@@ -33,7 +33,11 @@ open NonIsoConf3LightConeQuadricSummary
 inductive PenroseTile
 | kite
 | dart
-deriving Repr, DecidableEq, Fintype
+deriving Repr, DecidableEq
+
+instance : Fintype PenroseTile where
+  elems := {PenroseTile.kite, PenroseTile.dart}
+  complete x := by cases x <;> simp
 
 /-- Inflation rule for Penrose tiles. -/
 def inflate : PenroseTile → List PenroseTile

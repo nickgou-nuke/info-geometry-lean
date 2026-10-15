@@ -1,7 +1,7 @@
 import InfoGeometry.Quantum.RealMajoranaCategory
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Volume.Pfaffian
-import Mathlib.Data.Sign.Basic
+import Mathlib.Basic.Sign.Basic
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Topology.Order.IntermediateValue
 set_option linter.unnecessarySimpa false
@@ -47,6 +47,8 @@ def trivialKitaevCocycle (C : KitaevCell) : KitaevCocycle C where
 
 /-- Pfaffian attached to a Kitaev cell. -/
 noncomputable def KitaevCell.pfaffian (c : KitaevCell) : ℝ := by
+  letI : AddCommGroup c.core.V := c.core.instAddCommGroup
+  letI : Module ℝ c.core.V := c.core.instModule
   let _ : NormedAddCommGroup c.core.V := c.instV
   let _ : InnerProductSpace ℝ c.core.V := c.instInner
   let _ : CompleteSpace c.core.V := c.instComp

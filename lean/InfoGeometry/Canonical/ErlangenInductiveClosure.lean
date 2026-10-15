@@ -232,7 +232,8 @@ def fromStages
         InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.directLimitOf bond n a
     rw [← InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.directLimitOf_bondMap bond n k hnk a]
     rw [← InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.directLimitOf_bondMap bond m k hmk b]
-    simpa only [map_mul] using congrArg (stageImage Chain Invariants Bonding k)
+    simpa only [map_mul, ColimitStage, stageImage, image, a', b'] using
+      congrArg (stageImage Chain Invariants Bonding k)
       ((Invariants k).central_lane a' b'
         (stageImage_preserves Chain Invariants Bonding _ central_preserves hnk ha))
   · obtain ⟨p, hp, hpp⟩ := (Invariants 0).projector_identity

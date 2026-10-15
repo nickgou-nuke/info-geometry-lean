@@ -1,5 +1,5 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import Mathlib.RingTheory.Polynomial.Basic
 import Mathlib.Tactic
 
@@ -41,7 +41,7 @@ private lemma finite_rh_spectral_annihilation_filter_action_geometric
           rw [← Finset.sum_mul]
     _ = Q.eval μ * μ ^ n := by
           congr 1
-          simpa using (Polynomial.eval₂_eq_sum (f := RingHom.id ℂ) (x := μ) (p := Q)).symm
+          rw [Polynomial.eval_eq_sum, Polynomial.sum_def]
 
 private lemma finite_rh_spectral_annihilation_filter_action_add
     (Q : Polynomial ℂ) (a b : ℕ → ℂ) (n : ℕ) :

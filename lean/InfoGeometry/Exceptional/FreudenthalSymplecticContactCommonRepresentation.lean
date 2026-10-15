@@ -8,6 +8,8 @@ namespace InfoGeometry.Exceptional.Freudenthal
 variable {J : Type*} [AddCommGroup J] [Module ℝ J]
 variable (D : CubicJordanDatum J)
 
+attribute [local instance 100] LieRing.ofAssociativeRing LieAlgebra.ofAssociativeAlgebra
+
 /-- The faithful symplectic-contact action transported coefficientwise to the
 common CAR--CCR carrier.  The two transports are separate native Lie maps;
 their composition is the actual common-carrier representation. -/

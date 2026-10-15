@@ -5,9 +5,9 @@ import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Analysis.Calculus.Deriv.Add
 import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.Calculus.Deriv.Comp
-import Mathlib.Analysis.Calculus.FDeriv.Prod
+import Mathlib.Analysis.Calculus.Deriv.Prod
 import Mathlib.Order.Filter.Basic
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.Topology.Basic
 
 /-!
@@ -152,10 +152,10 @@ theorem hasDerivAt_flowMap_zero (γ ω u θ : ℝ) :
     convert hexp.const_mul u using 1 <;>
       simp [mul_comm]
   have h₂ : HasDerivAt (fun t : ℝ => θ + ω * t) ω 0 := by
-    convert (hasDerivAt_const (x := (0 : ℝ)) θ).add
-      ((hasDerivAt_id (x := (0 : ℝ))).const_mul ω) using 1
-    simp
-  simpa [flowMap, totalFlow] using h₁.hasFDerivAt.prodMk h₂.hasFDerivAt
+    have h : HasDerivAt (fun t : ℝ => θ + ω * t) (0 + ω * 1) 0 :=
+      (hasDerivAt_const _ θ).add ((hasDerivAt_id 0).const_mul ω)
+    simpa using h
+  simpa [flowMap, totalFlow] using HasDerivAt.prodMk h₁ h₂
 
 /- The same generator identity holds at every time along the flow. -/
 theorem hasDerivAt_flowMap (γ ω t u θ : ℝ) :
@@ -170,11 +170,11 @@ theorem hasDerivAt_flowMap (γ ω t u θ : ℝ) :
       (Real.exp (-γ * t) * (-γ) * u) t := by
     simpa [mul_comm, mul_left_comm, mul_assoc] using hexp.const_mul u
   have h₂ : HasDerivAt (fun s : ℝ => θ + ω * s) ω t := by
-    convert (hasDerivAt_const (x := t) θ).add
-      ((hasDerivAt_id' t).const_mul ω) using 1
-    simp
+    have h : HasDerivAt (fun s : ℝ => θ + ω * s) (0 + ω * 1) t :=
+      (hasDerivAt_const t θ).add ((hasDerivAt_id' t).const_mul ω)
+    simpa using h
   simpa [flowMap, totalFlow, mul_assoc, mul_comm, mul_left_comm] using
-    h₁.hasFDerivAt.prodMk h₂.hasFDerivAt
+    HasDerivAt.prodMk h₁ h₂
 
 end
 

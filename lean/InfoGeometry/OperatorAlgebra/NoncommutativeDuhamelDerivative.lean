@@ -168,9 +168,10 @@ theorem exponentialDerivative_apply_of_commute
   letI : NormedAlgebra ℚ A := NormedAlgebra.restrictScalars ℚ ℝ A
   have hLine :
       HasDerivAt (fun t : ℝ => a + t • h) h 0 := by
-    convert
-      (hasDerivAt_const (x := (0 : ℝ)) a).add
-        ((hasDerivAt_id (x := (0 : ℝ))).smul_const h) using 1 <;> simp
+    have h1 := (hasDerivAt_const (x := (0 : ℝ)) a).add
+      ((hasDerivAt_id (x := (0 : ℝ))).smul_const h)
+    rw [zero_add, one_smul] at h1
+    exact h1
   have hFromFrechet :
       HasDerivAt
         (fun t : ℝ => NormedSpace.exp (a + t • h))

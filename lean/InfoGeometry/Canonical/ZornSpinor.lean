@@ -50,14 +50,57 @@ def coordEquiv : ZornMatrix R ≃ Coord R where
 instance : AddCommGroup (ZornMatrix R) :=
   Equiv.addCommGroup coordEquiv
 
+/-- The coordinate equivalence as an additive equivalence. -/
+def coordAddEquiv : ZornMatrix R ≃+ Coord R where
+  toEquiv := coordEquiv
+  map_add' z w := by
+    rfl
+
 /-- Zorn matrices inherit their module structure from coordinates. -/
 instance : Module R (ZornMatrix R) :=
-  Equiv.module R coordEquiv
+  AddEquiv.module R coordAddEquiv
 
-theorem smul_a (c : R) (Z : ZornMatrix R) : (c • Z).a = c * Z.a := rfl
-theorem smul_b (c : R) (Z : ZornMatrix R) : (c • Z).b = c * Z.b := rfl
-theorem smul_x (c : R) (Z : ZornMatrix R) : (c • Z).x = c • Z.x := rfl
-theorem smul_y (c : R) (Z : ZornMatrix R) : (c • Z).y = c • Z.y := rfl
+/-- The coordinate equivalence as a linear equivalence. -/
+def coordLinearEquiv : ZornMatrix R ≃ₗ[R] Coord R where
+  toFun z := (z.a, z.b, z.x, z.y)
+  invFun c := { a := c.1, b := c.2.1, x := c.2.2.1, y := c.2.2.2 }
+  left_inv z := by ext <;> rfl
+  right_inv c := by rcases c with ⟨a, b, x, y⟩; rfl
+  map_add' z w := by rfl
+  map_smul' c z := by rfl
+
+@[simp] theorem coordLinearEquiv_apply (z : ZornMatrix R) :
+    coordLinearEquiv z = (z.a, z.b, z.x, z.y) := rfl
+
+@[simp] theorem smul_a (c : R) (Z : ZornMatrix R) : (c • Z).a = c * Z.a := by
+  change (coordAddEquiv.symm (c • coordAddEquiv Z)).a = c * Z.a
+  rfl
+@[simp] theorem smul_b (c : R) (Z : ZornMatrix R) : (c • Z).b = c * Z.b := by
+  change (coordAddEquiv.symm (c • coordAddEquiv Z)).b = c * Z.b
+  rfl
+@[simp] theorem smul_x (c : R) (Z : ZornMatrix R) : (c • Z).x = c • Z.x := by
+  change (coordAddEquiv.symm (c • coordAddEquiv Z)).x = c • Z.x
+  rfl
+@[simp] theorem smul_y (c : R) (Z : ZornMatrix R) : (c • Z).y = c • Z.y := by
+  change (coordAddEquiv.symm (c • coordAddEquiv Z)).y = c • Z.y
+  rfl
+
+@[simp] theorem add_a (z1 z2 : ZornMatrix R) : (z1 + z2).a = z1.a + z2.a :=
+  congrArg (fun c : Coord R => c.1) (coordAddEquiv.map_add z1 z2)
+
+@[simp] theorem add_b (z1 z2 : ZornMatrix R) : (z1 + z2).b = z1.b + z2.b :=
+  congrArg (fun c : Coord R => c.2.1) (coordAddEquiv.map_add z1 z2)
+
+@[simp] theorem add_x (z1 z2 : ZornMatrix R) : (z1 + z2).x = z1.x + z2.x :=
+  congrArg (fun c : Coord R => c.2.2.1) (coordAddEquiv.map_add z1 z2)
+
+@[simp] theorem add_y (z1 z2 : ZornMatrix R) : (z1 + z2).y = z1.y + z2.y :=
+  congrArg (fun c : Coord R => c.2.2.2) (coordAddEquiv.map_add z1 z2)
+
+@[simp] theorem zero_a : (0 : ZornMatrix R).a = 0 := rfl
+@[simp] theorem zero_b : (0 : ZornMatrix R).b = 0 := rfl
+@[simp] theorem zero_x : (0 : ZornMatrix R).x = 0 := rfl
+@[simp] theorem zero_y : (0 : ZornMatrix R).y = 0 := rfl
 
 /-- Standard dot product for 3-vectors. -/
 def dot (v1 v2 : Fin 3 → R) : R :=
@@ -97,6 +140,11 @@ instance : Mul (ZornMatrix R) where
 /-- Zorn matrix identity. -/
 instance : One (ZornMatrix R) where
   one := { a := 1, b := 1, x := 0, y := 0 }
+
+@[simp] theorem one_a : (1 : ZornMatrix R).a = 1 := rfl
+@[simp] theorem one_b : (1 : ZornMatrix R).b = 1 := rfl
+@[simp] theorem one_x : (1 : ZornMatrix R).x = 0 := rfl
+@[simp] theorem one_y : (1 : ZornMatrix R).y = 0 := rfl
 
 /-! ## Diagonal Peirce projectors -/
 

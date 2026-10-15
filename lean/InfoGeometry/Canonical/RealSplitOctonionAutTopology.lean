@@ -2,6 +2,8 @@ import InfoGeometry.Canonical.RealSplitOctonionAutAmbient
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2TrifactorSU3
 import Mathlib.Topology.Algebra.Group.ClosedSubgroup
+import Mathlib.Analysis.Normed.Operator.NormedSpace
+import Mathlib.Analysis.Normed.Operator.Basic
 
 /-!
 # Induced topology for the canonical real split-octonion automorphism carrier
@@ -25,8 +27,18 @@ abbrev CZ := InfoGeometry.Canonical.ZornMatrix ℝ
 
 /- The analytic carrier is induced from the existing Cartesian equivalence;
    the native algebraic operations on CZ are left unchanged. -/
+noncomputable instance : NormedAddCommGroup CZ :=
+  { NormedAddCommGroup.induced CZ CartesianCoordinates
+      cartesianZornLinearEquiv.symm.toAddMonoidHom
+      cartesianZornLinearEquiv.symm.injective with
+    toAddCommGroup := inferInstance }
+
+noncomputable instance : NormedSpace ℝ CZ :=
+  NormedSpace.induced ℝ CZ CartesianCoordinates
+    cartesianZornLinearEquiv.symm.toLinearMap
+
 noncomputable instance instTopologicalSpaceCanonicalZorn : TopologicalSpace CZ :=
-  TopologicalSpace.induced cartesianZornLinearEquiv.symm.toFun inferInstance
+  inferInstance
 
 theorem continuous_canonicalZorn_coordinates :
     Continuous (cartesianZornLinearEquiv.symm : CZ → CartesianCoordinates) :=
@@ -99,10 +111,11 @@ private theorem continuous_canonicalZorn_dot :
     continuous_canonicalZorn_y.comp continuous_snd
   change Continuous (fun p : CZ × CZ =>
     p.1.x 0 * p.2.y 0 + p.1.x 1 * p.2.y 1 + p.1.x 2 * p.2.y 2)
-  simpa [Function.comp_apply, Pi.add_apply, Pi.mul_apply] using
+  exact
     ((((continuous_apply 0).comp hx).mul ((continuous_apply 0).comp hy)).add
       (((continuous_apply 1).comp hx).mul ((continuous_apply 1).comp hy))).add
-      (((continuous_apply 2).comp hx).mul ((continuous_apply 2).comp hy))
+      (((continuous_apply 2).comp hx).mul ((continuous_apply 2).comp hy)) |>.congr
+        (by intro p; rfl)
 
 private theorem continuous_canonicalZorn_dot' :
     Continuous (fun p : CZ × CZ =>
@@ -113,10 +126,11 @@ private theorem continuous_canonicalZorn_dot' :
     continuous_canonicalZorn_x.comp continuous_snd
   change Continuous (fun p : CZ × CZ =>
     p.1.y 0 * p.2.x 0 + p.1.y 1 * p.2.x 1 + p.1.y 2 * p.2.x 2)
-  simpa [Function.comp_apply, Pi.add_apply, Pi.mul_apply] using
+  exact
     ((((continuous_apply 0).comp hy).mul ((continuous_apply 0).comp hx)).add
       (((continuous_apply 1).comp hy).mul ((continuous_apply 1).comp hx))).add
-      (((continuous_apply 2).comp hy).mul ((continuous_apply 2).comp hx))
+      (((continuous_apply 2).comp hy).mul ((continuous_apply 2).comp hx)) |>.congr
+        (by intro p; rfl)
 
 private theorem continuous_canonicalZorn_cross :
     Continuous (fun p : CZ × CZ =>

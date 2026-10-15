@@ -3,6 +3,7 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitOctonionSkew28
 import InfoGeometry.Canonical.SplitOctonionSpinJordanTriple
 import InfoGeometry.OperatorAlgebra.TKKClosure
+import Mathlib.Algebra.Lie.OfAssociative
 
 /-!
 # Hyperbolic TKK55 carrier and grade maps
@@ -18,6 +19,10 @@ open SplitOctonionJordanForm
 
 abbrev Middle := MiddleCarrier
 abbrev Carrier := ℝ × (Middle × ℝ)
+
+attribute [local instance 100] LieRing.ofAssociativeRing
+local instance : LieAlgebra ℝ (Module.End ℝ Carrier) :=
+  LieAlgebra.ofAssociativeAlgebra
 
 theorem carrier_finrank :
     Module.finrank ℝ Carrier = 10 := by
@@ -461,7 +466,8 @@ theorem blockOperatorLinearSubmodule_injective :
     Function.Injective blockOperatorLinearSubmodule := by
   intro d e h
   apply blockOperatorLinear_injective
-  simpa [blockOperatorLinearSubmodule] using congrArg Subtype.val h
+  change blockOperator d = blockOperator e
+  exact congrArg Subtype.val h
 
 /-! ## Exhaustive block decomposition -/
 

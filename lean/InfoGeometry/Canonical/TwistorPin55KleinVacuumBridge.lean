@@ -82,7 +82,7 @@ theorem pinorVacuumRepresentative_pinMinus :
 /-! ## The actual pure-pinor vacuum carrier -/
 
 /-- The existing projective pure-spinor vacuum, now read on the pinor lane. -/
-def purePinorVacuum : ProjectivePureSpinorPoint :=
+noncomputable def purePinorVacuum : ProjectivePureSpinorPoint :=
   vacuumProjectivePureSpinorPoint
 
 theorem purePinorVacuum_isPureSpinor :
@@ -98,7 +98,7 @@ The present finite carrier has one pure-pinor vacuum representative; the
 Pin⁺/Pin⁻ distinction is carried by the sheet label and Klein representative,
 not by an invented second projective-spinor point.
 -/
-def pinorVacuumPoint (_ : PinorVacuumSheet) : ProjectivePureSpinorPoint :=
+noncomputable def pinorVacuumPoint (_ : PinorVacuumSheet) : ProjectivePureSpinorPoint :=
   purePinorVacuum
 
 @[simp] theorem pinorVacuumPoint_is_pure (s : PinorVacuumSheet) :

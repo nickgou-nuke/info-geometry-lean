@@ -25,6 +25,12 @@ def endProjZero : Module.End ℝ V := projZero T
 def endProjPos : Module.End ℝ V := projPos T
 def endProjNeg : Module.End ℝ V := projNeg T
 
+lemma tripotent_mul_assoc {T : Module.End ℝ V} (hT : T ^ 3 = T) : T * T * T = T := by
+  have h := hT
+  rw [pow_three] at h
+  rw [mul_assoc]
+  exact h
+
 include hT
 
 theorem endT_eq_projPos_sub_projNeg :
@@ -48,37 +54,37 @@ theorem endProj_sum_eq_id :
 
 theorem endProjPos_mul_endProjNeg_eq_zero :
     endProjPos T * endProjNeg T = 0 := by
-  have hT' : T * T * T = T := by simpa [pow_three] using hT
+  have hT' : T * T * T = T := tripotent_mul_assoc hT
   simpa [endProjPos, endProjNeg] using (projPos_mul_projNeg_eq_zero (T := T) hT')
 
 theorem endProjNeg_mul_endProjPos_eq_zero :
     endProjNeg T * endProjPos T = 0 := by
-  have hT' : T * T * T = T := by simpa [pow_three] using hT
+  have hT' : T * T * T = T := tripotent_mul_assoc hT
   simpa [endProjPos, endProjNeg] using (projNeg_mul_projPos_eq_zero (T := T) hT')
 
 theorem endProjPos_mul_endProjZero_eq_zero :
     endProjPos T * endProjZero T = 0 := by
-  have hT' : T * T * T = T := by simpa [pow_three] using hT
+  have hT' : T * T * T = T := tripotent_mul_assoc hT
   simpa [endProjPos, endProjZero] using (projPos_mul_projZero_eq_zero (T := T) hT')
 
 theorem endProjZero_mul_endProjPos_eq_zero :
     endProjZero T * endProjPos T = 0 := by
-  have hT' : T * T * T = T := by simpa [pow_three] using hT
+  have hT' : T * T * T = T := tripotent_mul_assoc hT
   simpa [endProjPos, endProjZero] using (projZero_mul_projPos_eq_zero (T := T) hT')
 
 theorem endProjNeg_mul_endProjZero_eq_zero :
     endProjNeg T * endProjZero T = 0 := by
-  have hT' : T * T * T = T := by simpa [pow_three] using hT
+  have hT' : T * T * T = T := tripotent_mul_assoc hT
   simpa [endProjNeg, endProjZero] using (projNeg_mul_projZero_eq_zero (T := T) hT')
 
 theorem endProjZero_mul_endProjNeg_eq_zero :
     endProjZero T * endProjNeg T = 0 := by
-  have hT' : T * T * T = T := by simpa [pow_three] using hT
+  have hT' : T * T * T = T := tripotent_mul_assoc hT
   simpa [endProjNeg, endProjZero] using (projZero_mul_projNeg_eq_zero (T := T) hT')
 
 theorem endProjPos_range_eq_ker_sub_one :
     LinearMap.range (endProjPos T) = LinearMap.ker (T - 1) := by
-  have hT' : T * T * T = T := by simpa [pow_three] using hT
+  have hT' : T * T * T = T := tripotent_mul_assoc hT
   apply le_antisymm
   · rw [LinearMap.range_le_ker_iff]
     change (T - 1) * endProjPos T = 0
@@ -102,7 +108,7 @@ theorem endProjPos_range_eq_ker_sub_one :
 
 theorem endProjNeg_range_eq_ker_add_one :
     LinearMap.range (endProjNeg T) = LinearMap.ker (T + 1) := by
-  have hT' : T * T * T = T := by simpa [pow_three] using hT
+  have hT' : T * T * T = T := tripotent_mul_assoc hT
   apply le_antisymm
   · rw [LinearMap.range_le_ker_iff]
     change (T + 1) * endProjNeg T = 0
@@ -131,7 +137,7 @@ theorem endProjNeg_range_eq_ker_add_one :
 
 theorem endProjPos_range_eq_eigenspace :
     LinearMap.range (endProjPos T) = Module.End.eigenspace T 1 := by
-  have hT' : T * T * T = T := by simpa [pow_three] using hT
+  have hT' : T * T * T = T := tripotent_mul_assoc hT
   apply le_antisymm
   · rintro X ⟨Y, rfl⟩
     rw [Module.End.mem_eigenspace_iff]
@@ -152,7 +158,7 @@ theorem endProjPos_range_eq_eigenspace :
 
 theorem endProjNeg_range_eq_eigenspace :
     LinearMap.range (endProjNeg T) = Module.End.eigenspace T (-1) := by
-  have hT' : T * T * T = T := by simpa [pow_three] using hT
+  have hT' : T * T * T = T := tripotent_mul_assoc hT
   apply le_antisymm
   · rintro X ⟨Y, rfl⟩
     rw [Module.End.mem_eigenspace_iff]
@@ -175,7 +181,7 @@ theorem endProjNeg_range_eq_eigenspace :
 
 theorem endProjZero_range_eq_ker :
     LinearMap.range (endProjZero T) = LinearMap.ker T := by
-  have hT' : T * T * T = T := by simpa [pow_three] using hT
+  have hT' : T * T * T = T := tripotent_mul_assoc hT
   apply le_antisymm
   · rw [LinearMap.range_le_ker_iff]
     change T * endProjZero T = 0

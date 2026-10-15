@@ -305,7 +305,9 @@ theorem projectorObstruction_eq_zero_iff_commute :
       ↔ Commute CI.spectralChiralProjector CI.metricChiralProjector := by
   constructor
   · intro hObs
-    simpa [Commute] using CI.projectors_commute_of_chiralAnomaly_eq_zero hObs
+    change CI.spectralChiralProjector * CI.metricChiralProjector =
+      CI.metricChiralProjector * CI.spectralChiralProjector
+    exact CI.projectors_commute_of_chiralAnomaly_eq_zero hObs
   · intro hComm
     exact CI.projectorObstruction_eq_zero_of_commute hComm
 
@@ -1336,11 +1338,12 @@ theorem einsteinEquation_of_projectorObstruction_source
     (hEin : IsEinsteinKaehlerAtWith c R Kgeo x) :
     EinsteinEquationAt R Kgeo x (2 * (c + Λ - κ * CIK.chiralScale)) Λ κ
       (anomalyStressEnergyAt Kgeo x CIK.chiralScale) := by
-  simpa [InfoGeometry.Canonical.ConformalUnification.CertifiedInverseKernel.toConformalInference]
-    using
-      (ConformalInference.einsteinEquation_of_projectorObstruction_source
-        (CI := InfoGeometry.Canonical.ConformalUnification.CertifiedInverseKernel.toConformalInference CIK)
-        (c := c) (R := R) (Kgeo := Kgeo) (x := x) (Λ := Λ) (κ := κ) hEin)
+  change EinsteinEquationAt R Kgeo x
+    (2 * (c + Λ - κ * CIK.toInverseKernel.chiralScale)) Λ κ
+    (anomalyStressEnergyAt Kgeo x CIK.toInverseKernel.chiralScale)
+  exact ConformalInference.einsteinEquation_of_projectorObstruction_source
+    (CI := InfoGeometry.Canonical.ConformalUnification.CertifiedInverseKernel.toConformalInference CIK)
+    (c := c) (R := R) (Kgeo := Kgeo) (x := x) (Λ := Λ) (κ := κ) hEin
 
 end CertifiedInverseKernel
 
@@ -1358,12 +1361,12 @@ theorem einsteinEquation_of_projectorObstruction_source
     EinsteinEquationAt R Kgeo x
         (2 * (c + Λ - κ * CCI.toConformalInference.chiralScale)) Λ κ
         (anomalyStressEnergyAt Kgeo x CCI.toConformalInference.chiralScale) := by
-  simpa [InfoGeometry.Canonical.ConformalUnification.CertifiedConformalInference.toCertifiedInverseKernel,
-      InfoGeometry.Canonical.ConformalUnification.CertifiedInverseKernel.toConformalInference]
-    using
-      (CertifiedInverseKernel.einsteinEquation_of_projectorObstruction_source
-        (CIK := CCI.toCertifiedInverseKernel)
-        (c := c) (R := R) (Kgeo := Kgeo) (x := x) (Λ := Λ) (κ := κ) hEin)
+  change EinsteinEquationAt R Kgeo x
+    (2 * (c + Λ - κ * CCI.toConformalInference.toInverseKernel.chiralScale)) Λ κ
+    (anomalyStressEnergyAt Kgeo x CCI.toConformalInference.toInverseKernel.chiralScale)
+  exact CertifiedInverseKernel.einsteinEquation_of_projectorObstruction_source
+    (CIK := CCI.toCertifiedInverseKernel)
+    (c := c) (R := R) (Kgeo := Kgeo) (x := x) (Λ := Λ) (κ := κ) hEin
 
 end CertifiedConformalInference
 

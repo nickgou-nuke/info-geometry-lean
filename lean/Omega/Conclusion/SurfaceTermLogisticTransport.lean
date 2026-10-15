@@ -37,9 +37,14 @@ private lemma conclusion_surface_term_logistic_transport_sigma_hasDerivAt (t : �
     HasDerivAt conclusion_surface_term_logistic_transport_sigma
       (-conclusion_surface_term_logistic_transport_sigma t *
         (1 - conclusion_surface_term_logistic_transport_sigma t)) t := by
-  simpa [conclusion_surface_term_logistic_transport_sigma,
-    conclusion_surface_term_logistic_transport_f]
-    using ((Real.hasDerivAt_sigmoid (-t)).comp t (hasDerivAt_neg t))
+  have h := (Real.hasDerivAt_sigmoid (-t)).comp t (hasDerivAt_neg t)
+  have heq : conclusion_surface_term_logistic_transport_sigma = (Real.sigmoid ∘ Neg.neg) := by
+    ext x
+    rfl
+  rw [heq]
+  refine h.congr_deriv ?_
+  dsimp
+  ring
 
 private lemma conclusion_surface_term_logistic_transport_sigma_closed_form (t : ℝ) :
     conclusion_surface_term_logistic_transport_sigma t =

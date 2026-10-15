@@ -56,7 +56,8 @@ private lemma derivedChainSquarefreePgf_eq (n : ℕ) (z t : ℝ) :
     intro S hS
     rw [← mul_pow]
   have h₂ : (∑ S : Finset (Fin n), (z * t) ^ S.card) = (1 + z * t) ^ n := by
-    simpa using derivedChainSquarefreePartition_eq n (z * t)
+    simpa [derivedChainSquarefreePartition, derivedChainSquarefreeWeight] using
+      derivedChainSquarefreePartition_eq n (z * t)
   unfold derivedChainSquarefreePgf derivedChainSquarefreeWeight
   rw [h₁, h₂]
 

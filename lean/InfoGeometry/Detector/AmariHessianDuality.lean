@@ -104,8 +104,11 @@ theorem hasDerivAt_naturalParameter (coefficient efficiency : ℝ)
     (interior : coefficient * efficiency ∈ Set.Ioo (0 : ℝ) 1) :
     HasDerivAt (naturalParameter coefficient)
       (fisherMix (coefficient * efficiency) * coefficient) efficiency := by
-  simpa only [mul_one] using
-    (hasDerivAt_logit interior).comp efficiency ((hasDerivAt_id efficiency).const_mul coefficient)
+  have h1 : HasDerivAt (fun x => coefficient * x) coefficient efficiency := by
+    simpa using (hasDerivAt_id efficiency).const_mul coefficient
+  have h2 : HasDerivAt logit (fisherMix (coefficient * efficiency)) (coefficient * efficiency) :=
+    hasDerivAt_logit interior
+  exact h2.comp efficiency h1
 
 theorem fisher_efficiency_pullback (coefficient efficiency : ℝ)
     (interior : coefficient * efficiency ∈ Set.Ioo (0 : ℝ) 1) :

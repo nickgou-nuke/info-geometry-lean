@@ -1,4 +1,4 @@
-import Mathlib.Computability.TMComputable
+import Mathlib.Computability.TuringMachine.Computable
 import Mathlib.Tactic
 
 namespace Omega.SPG
@@ -6,8 +6,9 @@ namespace Omega.SPG
 /-- A genuine finite-encoding Turing-machine witness for polynomial-time computation.
 The encodings and the machine are explicit Mathlib data; no proposition-only marker is used. -/
 def PolynomialTimeMap {α β : Type} (f : α → β) : Prop :=
-  ∃ ea : Computability.FinEncoding α, ∃ eb : Computability.FinEncoding β,
-    Nonempty (Turing.TM2ComputableInPolyTime ea eb f)
+  ∃ (Γα Γβ : Type), ∃ ea : Computability.Encoding α Γα,
+    ∃ eb : Computability.Encoding β Γβ,
+    Nonempty (Turing.TM2ComputableInPolyTime ea.encode eb.encode f)
 
 /-- A language is in deterministic polynomial time when it admits a Boolean classifier together
 with a chapter-local polynomial-time witness. -/

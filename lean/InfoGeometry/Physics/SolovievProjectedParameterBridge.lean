@@ -38,7 +38,7 @@ theorem projected_parameter_reconstruction
   fin_cases i <;> fin_cases j
   · rfl
   · rfl
-  · simpa [isSymmetric] using hSymm.symm
+  · exact hSymm.symm
   · rfl
 
 /-- The three projected parameters are uniquely determined by the block matrix. -/
@@ -109,7 +109,7 @@ theorem coupling_is_basis_transition_amplitude
     (H : Hamiltonian) (hSymm : isSymmetric H) :
     amplitude H ![1, 0] ![0, 1] = coupling H := by
   rw [basis_transition_amplitude]
-  simpa [coupling] using hSymm
+  exact hSymm
 
 theorem coupling_squared_is_basis_transition_strength
     (H : Hamiltonian) (hSymm : isSymmetric H) :

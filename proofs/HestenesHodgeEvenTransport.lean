@@ -58,12 +58,14 @@ def evenHodge (y : EvenPart) : EvenPart :=
     evenHodge (x + y) = evenHodge x + evenHodge y := by
   unfold evenHodge
   rw [asEvenAlgebra_add, hestenesAdjoint_add, neg_add, add_mul]
+  rfl
 
 @[simp] theorem evenHodge_smul (r : ℝ) (x : EvenPart) :
     evenHodge (r • x) = r • evenHodge x := by
   unfold evenHodge
   rw [asEvenAlgebra_smul, hestenesAdjoint_smul]
   rw [← smul_neg, smul_mul_assoc]
+  rfl
 
 /-- The even-side formula is exactly Hodge conjugated by the odd--even equivalence. -/
 theorem evenHodge_eq_transport (x : OddPart) :

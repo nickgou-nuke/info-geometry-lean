@@ -167,11 +167,18 @@ theorem arrowCompose_right_identity (a : TrialityArrow) :
 theorem arrowCompose_inverse_left (a : TrialityArrow) :
     arrowCompose (arrowInverse a) a = arrowIdentity (arrowSource a) := by
   change (a.1.symm * a.1, a.2) = (1, a.2)
-  simp
+  apply Prod.ext
+  · ext n
+    exact a.1.left_inv n
+  · rfl
 
 theorem arrowCompose_inverse_right (a : TrialityArrow) :
     arrowCompose a (arrowInverse a) = arrowIdentity (arrowTarget a) := by
-  simp [arrowCompose, arrowInverse, arrowIdentity, arrowTarget]
+  simp only [arrowCompose, arrowInverse, arrowIdentity, arrowTarget]
+  apply Prod.ext
+  · ext n
+    exact a.1.right_inv n
+  · rfl
 
 
 end InfoGeometry.Topology.ToeplitzCuntzThreeTriality

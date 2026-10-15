@@ -211,7 +211,7 @@ theorem presentedDeckRep_invariant (g : KleinGroup) (k : Cover) :
   intro w
   change universalQuotientMap (presentedDeckRep (toKlein w) k) = universalQuotientMap k
   induction w using FreeGroup.induction_on generalizing k with
-  | C1 =>
+  | one =>
       change universalQuotientMap k = universalQuotientMap k
       rfl
   | of x =>
@@ -338,7 +338,8 @@ theorem coverToTorus_isOpenQuotientMap :
     { surjective := QuotientAddGroup.mk_surjective
       continuous := (AddCircle.isCoveringMap_coe (2 * Real.pi)).continuous
       isOpenMap := (AddCircle.isCoveringMap_coe (2 * Real.pi)).isOpenMap }
-  simpa only [coverToTorus] using hc.prodMap hc
+  change IsOpenQuotientMap (Prod.map ((↑) : ℝ → MomentumCircle) ((↑) : ℝ → MomentumCircle))
+  exact hc.prodMap hc
 
 theorem universalQuotientMap_isOpenQuotientMap :
     IsOpenQuotientMap universalQuotientMap := by

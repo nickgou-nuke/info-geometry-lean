@@ -90,20 +90,21 @@ theorem latentStageColimitReadout_surjective
   intro z
   rcases z.2 with ⟨i, hi⟩
   let s : Finset (Option ℤ) := {i}
-  let x : heisenbergFiniteModeStageLatentSet q s :=
+  let x : (latentStageDiagram q).obj s :=
     ⟨heisenbergFiniteModeLatentReadout (q, i), by
       change heisenbergFiniteModeLatentReadout (q, i) ∈
         heisenbergFiniteModeStageLatentImage q s
       exact Finset.mem_image.mpr ⟨i, by simp [s], rfl⟩⟩
   refine ⟨(colimit.ι (latentStageDiagram q) s) x, ?_⟩
   have hstage := latentStageColimitReadout_stage q s
-  have hstage' := congrArg (fun f => f x) hstage
-  calc
-    (latentStageColimitReadout q) ((colimit.ι (latentStageDiagram q) s) x) =
-        ((latentStageRangeCocone q).ι.app s) x := hstage'
-    _ = z := by
-      apply Subtype.ext
-      exact hi
+  have hstage' :
+      latentStageColimitReadout q ((colimit.ι (latentStageDiagram q) s) x) =
+        ((latentStageRangeCocone q).ι.app s) x := by
+    rw [← CategoryTheory.comp_apply]
+    exact congrArg (fun f => f x) hstage
+  rw [hstage']
+  apply Subtype.ext
+  exact hi
 
 theorem latentStageColimitReadout_unique
     (q : SixthRootParameter)

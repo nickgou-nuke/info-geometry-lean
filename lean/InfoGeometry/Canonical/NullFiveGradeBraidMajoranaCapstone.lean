@@ -217,7 +217,8 @@ def majoranaZeroMode : MajoranaZeroMode majoranaBdGLedger where
     change (0 : MajoranaCarrier) = 0
     rfl
   fixed := by
-    simpa using majoranaPair.evenMajorana_fixed
+    change majoranaPair.evenMajorana ∈ majoranaLedger.Fixed
+    exact majoranaPair.evenMajorana_fixed
 
 @[simp] theorem majoranaZeroMode_fixed :
     majoranaBdGLedger.theta majoranaZeroMode.mode = majoranaZeroMode.mode :=

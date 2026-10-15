@@ -28,11 +28,9 @@ theorem logAuditablePhaseCircleObstruction_not_witness {freeRank torsion d : Nat
     (h : LogAuditablePhaseCircleObstruction freeRank torsion d) :
     ¬ LogAuditablePhaseCircleWitness freeRank torsion d := by
   intro hw
-  have hEq : circleDim freeRank torsion = d := by
-    simpa [auditExponent] using hw
-  have : d < d := by
-    simpa [LogAuditablePhaseCircleObstruction, hEq] using h
-  exact (Nat.lt_irrefl d) this
+  dsimp [LogAuditablePhaseCircleWitness, auditExponent] at hw
+  dsimp [LogAuditablePhaseCircleObstruction] at h
+  omega
 
 /-- Paper-facing minimality theorem for log-auditable phase circles: the circle dimension is
     attained, and every smaller candidate is obstructed.

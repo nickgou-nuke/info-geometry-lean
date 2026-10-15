@@ -301,7 +301,9 @@ theorem modular_j_conjugates_doubledBoostHamiltonian (a : ℝ) :
       ContinuousLinearMap.id ℝ H₂
     simpa using modular_j_involution E
   have hJS : (J : EndH) * ε = -(ε * J) := by
-    simpa using modular_j_spectral_epsilon_anticommute E
+    change (modular_j (E := E)).comp (spectral_epsilon (E := E)) =
+      -((spectral_epsilon (E := E)).comp (modular_j (E := E)))
+    exact modular_j_spectral_epsilon_anticommute (E := E)
   exact conjugate_boostHamiltonian (A := EndH) a hJ hJS
 
 /-- `J Δ_a J = Δ_{-a}` in the concrete doubled boost sector. -/
@@ -332,8 +334,10 @@ theorem doubledBoostSignum_cl11_relations_of_pos {a : ℝ} (ha : 0 < a) :
     doubledBoostSignum_sq_of_ne_zero (E := E) (ne_of_gt ha)
   have hJS : (J : EndH) * doubledBoostSignum (E := E) a =
       -(doubledBoostSignum (E := E) a * J) := by
-    simpa [doubledBoostSignum_of_pos (E := E) ha] using
-      (modular_j_spectral_epsilon_anticommute E)
+    rw [doubledBoostSignum_of_pos (E := E) ha]
+    change (modular_j (E := E)).comp (spectral_epsilon (E := E)) =
+      -((spectral_epsilon (E := E)).comp (modular_j (E := E)))
+    exact modular_j_spectral_epsilon_anticommute (E := E)
   exact ⟨hJ, hS, hJS⟩
 
 end Doubled

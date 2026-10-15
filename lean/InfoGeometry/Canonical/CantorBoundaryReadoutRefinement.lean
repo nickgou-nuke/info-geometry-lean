@@ -27,6 +27,9 @@ theorem realBinaryPartialReadout_boundaryCons
   | zero =>
       simp [realBinaryPartialReadout_succ, realBinaryPartialReadout_zero,
         realBinaryTerm, boundaryCons]
+      by_cases hb : b
+      · simp [hb]
+      · simp [hb]
   | succ N ih =>
       rw [realBinaryPartialReadout_succ, ih]
       rw [realBinaryPartialReadout_succ]

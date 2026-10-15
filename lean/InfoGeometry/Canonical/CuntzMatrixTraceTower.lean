@@ -114,6 +114,7 @@ def concreteData : Data where
   trace_compatible := by
     intro n A
     dsimp [matrixTraceState, matrixTraceFunctional]
+    rw [Matrix.traceLinearMap_apply, Matrix.traceLinearMap_apply]
     rw [concreteStep_trace]
     rw [pow_succ]
     field_simp [show (2 : ℂ) ^ n ≠ 0 by norm_num]
@@ -196,14 +197,8 @@ def moduleDiagram (T : Data) : ℕ ⥤ ModuleCat ℂ where
     rfl
   map_comp f g := by
     apply ModuleCat.hom_ext
-    change
-      (map T (le_trans (leOfHom f) (leOfHom g))).toAlgHom.toLinearMap =
-        ((map T (leOfHom g)).toAlgHom.toLinearMap).comp
-          ((map T (leOfHom f)).toAlgHom.toLinearMap)
-    have h := congrArg
-      (fun e : MatrixStage _ →⋆ₐ[ℂ] MatrixStage _ => e.toAlgHom.toLinearMap)
-      (map_comp T (leOfHom f) (leOfHom g)).symm
-    simpa [StarAlgHom.comp_apply, AlgHom.comp_apply, LinearMap.comp_apply] using h
+    rw [← map_comp T (leOfHom f) (leOfHom g)]
+    rfl
 
 abbrev traceColimit (T : Data) : Type :=
   (colimit (moduleDiagram T) : ModuleCat ℂ)

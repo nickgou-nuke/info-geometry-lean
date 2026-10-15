@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import argparse
 import base64
+import hashlib
 import json
 import os
 import subprocess
@@ -220,11 +221,12 @@ def ensure_index(target: ArangoTarget, collection: str, fields: list[str], *, un
     return result if isinstance(result, dict) else {"result": result}
 
 
-def ensure_indexes(target: ArangoTarget, collections: Iterable[str]) -> dict[str, Any]:
+def ensure_indexes(target: ArangoTarget, collections: Iterable[str], base_names: dict[str, str] | None = None) -> dict[str, Any]:
     report: dict[str, Any] = {}
     for collection in collections:
         collection_report = []
-        for fields in INDEX_SPECS.get(collection, []):
+        base_name = (base_names or {}).get(collection, collection)
+        for fields in INDEX_SPECS.get(base_name, []):
             try:
                 result = ensure_index(target, collection, fields)
                 collection_report.append(
@@ -347,6 +349,31 @@ def stable_row_hash(row: dict[str, Any]) -> str:
     for ch in text:
         h = (h ^ ord(ch)) * 16777619 % 2**64
     return f"{h:016x}"
+
+
+def generation_fingerprint(input_dir: Path, build_fingerprint: str) -> str:
+    """Content identity for one validated export in one declared environment."""
+    digest = hashlib.sha256()
+    digest.update(build_fingerprint.encode("utf-8"))
+    for path in sorted(input_dir.iterdir(), key=lambda item: item.name):
+        if not path.is_file() or (not path.name.endswith(".jsonl") and path.name != "metadata.json"):
+            continue
+        digest.update(path.name.encode("utf-8"))
+        with path.open("rb") as stream:
+            for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+                digest.update(chunk)
+    return digest.hexdigest()[:24]
+
+
+def remap_edge_collections(row: dict[str, Any], collection_map: dict[str, str]) -> dict[str, Any]:
+    """Move edge endpoints into the same immutable generation namespace."""
+    out = dict(row)
+    for field in ("_from", "_to"):
+        collection, separator, key = str(out[field]).partition("/")
+        if not separator or collection not in collection_map:
+            raise ValueError(f"unexpected InfoTree edge endpoint {field}={out[field]!r}")
+        out[field] = f"{collection_map[collection]}/{key}"
+    return out
 
 
 def import_batch(target: ArangoTarget, collection: str, rows: list[dict[str, Any]]) -> dict[str, int]:
@@ -899,12 +926,21 @@ def preflight_input(input_dir: Path) -> dict[str, Any]:
     if metadata_path.exists():
         loaded = json.loads(metadata_path.read_text(encoding="utf-8"))
         metadata = loaded if isinstance(loaded, dict) else {"raw": loaded}
+    source_metadata = metadata.get("source_metadata", []) if metadata else []
+    if metadata and metadata.get("schema") == "info_geometry.raw_infotree_export.v1":
+        source_metadata = [metadata]
+    provenance = [
+        row.get("sourceProvenance") for row in source_metadata
+        if isinstance(row, dict) and isinstance(row.get("sourceProvenance"), dict)
+    ] if isinstance(source_metadata, list) else []
     return {
         "ok": not missing,
         "missing_files": missing,
         "metadata_schema": metadata.get("schema") if metadata else None,
         "metadata_stage": metadata.get("stage") if metadata else None,
         "metadata_file_count": metadata.get("file_count") if metadata else None,
+        "source_provenance_count": len(provenance),
+        "source_provenance": provenance,
     }
 
 
@@ -918,6 +954,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--input-dir", type=Path, required=True)
     parser.add_argument("--repo-root", type=Path, default=Path.cwd())
     parser.add_argument("--drop-existing", action="store_true")
+    parser.add_argument("--build-fingerprint", help="Enable immutable generation ingest bound to this Lean/Lake environment.")
     parser.add_argument("--batch-size", type=int, default=5000)
     parser.add_argument("--skip-validation", action="store_true")
     parser.add_argument("--skip-indexes", action="store_true", help="Do not create Arango persistent indexes after collection setup.")
@@ -942,15 +979,20 @@ def main() -> int:
     if not args.skip_validation:
         validation = validate_export(input_dir, repo_root, bool(args.require_lossless))
 
-    row_specs = [CollectionSpec(name, False) for name in ROW_FILES]
-    edge_specs = [CollectionSpec(name, True) for name in EDGE_COLLECTIONS]
-    all_specs = row_specs + edge_specs
-
     row_counts = {
         collection: count_jsonl(input_dir / filename)
         for collection, filename in ROW_FILES.items()
     }
     edge_counts = raw_edge_counts(input_dir)
+    generation_id = generation_fingerprint(input_dir, args.build_fingerprint) if args.build_fingerprint else None
+    if generation_id and args.drop_existing:
+        raise SystemExit("--drop-existing cannot be combined with immutable --build-fingerprint ingest")
+    collection_map = {
+        name: f"{name}_g_{generation_id}" if generation_id else name
+        for name in list(ROW_FILES) + EDGE_COLLECTIONS
+    }
+    all_specs = [CollectionSpec(collection_map[name], False) for name in ROW_FILES]
+    all_specs += [CollectionSpec(collection_map[name], True) for name in EDGE_COLLECTIONS]
 
     report: dict[str, Any] = {
         "schema": "info_geometry.arango_raw_infotree_ingest.v1",
@@ -960,6 +1002,8 @@ def main() -> int:
         "validation": validation,
         "row_counts": row_counts,
         "edge_counts": edge_counts,
+        "generation_id": generation_id,
+        "build_fingerprint": args.build_fingerprint,
         "collections": [spec.name for spec in all_specs],
         "dry_run": bool(args.dry_run),
     }
@@ -973,6 +1017,11 @@ def main() -> int:
         )
         ensure_database(target)
         existing = list_collections(target)
+        if generation_id and any(spec.name in existing for spec in all_specs):
+            raise RuntimeError(
+                f"immutable InfoTree generation {generation_id} already exists; "
+                "do not overwrite it—use a distinct environment or export"
+            )
         for spec in all_specs:
             if spec.name in existing and args.drop_existing:
                 drop_collection(target, spec.name)
@@ -984,26 +1033,55 @@ def main() -> int:
         for collection, filename in ROW_FILES.items():
             path = input_dir / filename
             rows = (normalize_row(collection, row) for row in iter_jsonl(path))
-            imports[collection] = import_rows(
+            target_collection = collection_map[collection]
+            imports[target_collection] = import_rows(
                 target,
-                collection,
+                target_collection,
                 rows,
                 batch_size=batch_size,
                 progress_every=max(0, int(args.progress_every)),
             )
         for collection in EDGE_COLLECTIONS:
-            imports[collection] = import_rows(
+            rows = iter_edge_rows(input_dir, collection)
+            if generation_id:
+                rows = (remap_edge_collections(row, collection_map) for row in rows)
+            target_collection = collection_map[collection]
+            imports[target_collection] = import_rows(
                 target,
-                collection,
-                iter_edge_rows(input_dir, collection),
+                target_collection,
+                rows,
                 batch_size=batch_size,
                 progress_every=max(0, int(args.progress_every)),
             )
 
         report["imports"] = imports
         if not args.skip_indexes:
-            report["indexes"] = ensure_indexes(target, (spec.name for spec in all_specs))
+            report["indexes"] = ensure_indexes(
+                target, (spec.name for spec in all_specs),
+                {collection_map[name]: name for name in collection_map},
+            )
         report["live_counts"] = {spec.name: collection_count(target, spec.name) for spec in all_specs}
+        if generation_id:
+            metadata_collection = "raw_infotree_generations"
+            if metadata_collection not in existing:
+                create_collection(target, CollectionSpec(metadata_collection, False))
+            generation_doc = {
+                "_key": generation_id,
+                "schema": "info_geometry.raw_infotree_generation.v1",
+                "status": "complete",
+                "buildFingerprint": args.build_fingerprint,
+                "exportMetadata": preflight,
+                "sourceProvenance": preflight["source_provenance"],
+                "validation": validation,
+                "collections": collection_map,
+                "rowCounts": row_counts,
+                "edgeCounts": edge_counts,
+                "liveCounts": report["live_counts"],
+            }
+            request_json(
+                "POST", db_url(target, f"/_api/document/{metadata_collection}?waitForSync=true"),
+                username=target.username, password=target.password, payload=generation_doc,
+            )
 
     out_path = args.json_out.resolve()
     out_path.parent.mkdir(parents=True, exist_ok=True)

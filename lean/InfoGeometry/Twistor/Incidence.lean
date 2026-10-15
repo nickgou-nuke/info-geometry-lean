@@ -88,6 +88,66 @@ lemma det_zero_of_annihilates_nonzero (M : Matrix (Fin 2) (Fin 2) ℝ) (π : ℝ
       apply h_nonzero
       ext <;> assumption
 
+/-- A singular real `2 × 2` matrix has a nonzero vector in its kernel.
+
+The proof chooses a perpendicular vector to a nonzero row. If the first row
+vanishes, it uses the second row; if both vanish, the first basis vector is a
+kernel witness. -/
+lemma exists_nonzero_annihilator_of_det_zero (M : Matrix (Fin 2) (Fin 2) ℝ)
+    (hdet : M.det = 0) :
+    ∃ π : ℝ × ℝ, π ≠ 0 ∧
+      M 0 0 * π.1 + M 0 1 * π.2 = 0 ∧
+      M 1 0 * π.1 + M 1 1 * π.2 = 0 := by
+  by_cases hrow : M 0 0 = 0 ∧ M 0 1 = 0
+  · by_cases hrow' : M 1 0 = 0 ∧ M 1 1 = 0
+    · refine ⟨(1, 0), ?_, ?_, ?_⟩
+      · simp
+      · simp [hrow.1, hrow.2]
+      · simp [hrow'.1, hrow'.2]
+    · refine ⟨(-M 1 1, M 1 0), ?_, ?_, ?_⟩
+      · intro h
+        have h1 := congrArg Prod.fst h
+        have h2 := congrArg Prod.snd h
+        simp at h1 h2
+        exact hrow' ⟨h2, h1⟩
+      · simp [hrow.1, hrow.2]
+      · ring
+  · refine ⟨(-M 0 1, M 0 0), ?_, ?_, ?_⟩
+    · intro h
+      have h1 := congrArg Prod.fst h
+      have h2 := congrArg Prod.snd h
+      simp at h1 h2
+      exact hrow ⟨h2, h1⟩
+    · ring
+    · have hdet' : M.det = M 0 0 * M 1 1 - M 0 1 * M 1 0 :=
+        Matrix.det_fin_two M
+      rw [hdet'] at hdet
+      nlinarith
+
+/-- In the finite soldering model, a point displacement is null exactly when
+its soldering operator annihilates some nonzero spinor. -/
+theorem null_iff_exists_nonzero_soldering_annihilator (X : Vec22) :
+    q22 X = 0 ↔ ∃ π : ℝ × ℝ, π ≠ 0 ∧ pointAction X π = 0 := by
+  constructor
+  · intro hnull
+    have hdet : (soldering X).det = 0 := by
+      rw [det_soldering_eq_q22]
+      exact hnull
+    obtain ⟨π, hπ, h₀, h₁⟩ := exists_nonzero_annihilator_of_det_zero _ hdet
+    refine ⟨π, hπ, ?_⟩
+    apply Prod.ext
+    · simpa [pointAction, InfoGeometry.Clifford.Soldering.pointAction] using h₀
+    · simpa [pointAction, InfoGeometry.Clifford.Soldering.pointAction] using h₁
+  · rintro ⟨π, hπ, hker⟩
+    have h₀ : (soldering X) 0 0 * π.1 + (soldering X) 0 1 * π.2 = 0 := by
+      exact congrArg Prod.fst hker
+    have h₁ : (soldering X) 1 0 * π.1 + (soldering X) 1 1 * π.2 = 0 := by
+      exact congrArg Prod.snd hker
+    have hdet : (soldering X).det = 0 :=
+      det_zero_of_annihilates_nonzero (soldering X) π hπ ⟨h₀, h₁⟩
+    rw [det_soldering_eq_q22] at hdet
+    exact hdet
+
 /-- 
 If two spacetime points `X` and `Y` are incident with the same twistor
 `Z = (ω, π)`, and the primary spinor `π` is non-zero, then the vector
@@ -125,5 +185,25 @@ theorem incident_points_null_separated (Z : Twistor) (X Y : Vec22)
   -- 5. By Metric-Determinant Duality, the quadratic form evaluated on (X - Y) is zero.
   rw [← det_soldering_eq_q22 (X - Y)]
   exact h_det_zero
+
+/-- Two points share a twistor with nonzero primary spinor exactly when their
+difference is null in the finite soldering model. -/
+theorem incident_points_null_separated_iff (X Y : Vec22) :
+    q22 (X - Y) = 0 ↔
+      ∃ Z : Twistor, Z.2 ≠ 0 ∧ Incident Z X ∧ Incident Z Y := by
+  constructor
+  · intro hnull
+    obtain ⟨π, hπ, hker⟩ :=
+      (null_iff_exists_nonzero_soldering_annihilator (X - Y)).mp hnull
+    refine ⟨(pointAction X π, π), hπ, rfl, ?_⟩
+    change pointAction X π = pointAction Y π
+    have hlin : pointAction (X - Y) π = pointAction X π - pointAction Y π := by
+      change (twistorMap (X - Y)) π = (twistorMap X) π - (twistorMap Y) π
+      rw [map_sub twistorMap X Y]
+      simp
+    rw [hlin] at hker
+    exact sub_eq_zero.mp hker
+  · rintro ⟨Z, hZ, hX, hY⟩
+    exact incident_points_null_separated Z X Y hX hY hZ
 
 end InfoGeometry.Twistor.Incidence

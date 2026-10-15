@@ -55,7 +55,9 @@ private theorem cl11ToTensor_injective : Function.Injective cl11ToTensor := by
       (B := CliffordAlgebra (SplitBottQuad 3))
       (algebraMap ℝ (CliffordAlgebra (SplitBottQuad 3))).injective
   apply hinj
-  simpa [GradedTensorProduct.includeLeft_apply] using hh
+  dsimp [cl11ToTensor] at hh
+  rw [GradedTensorProduct.includeLeft_apply, GradedTensorProduct.includeLeft_apply] at hh
+  exact hh
 
 theorem cl11PacketAlgHom_injective : Function.Injective cl11PacketAlgHom := by
   intro a b h

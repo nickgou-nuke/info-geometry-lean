@@ -60,7 +60,8 @@ theorem pole_log_first_derivative {β : ℝ} (hβ : β ≠ 1) :
   unfold laurentPoleLogPotential
   have hlog :
       HasDerivAt (fun x : ℝ => Real.log (x - 1)) ((β - 1)⁻¹) β := by
-    simpa using (Real.hasDerivAt_log (sub_ne_zero.mpr hβ)).comp β
+    simpa only [Function.comp_def, id_eq, mul_one] using
+      (Real.hasDerivAt_log (sub_ne_zero.mpr hβ)).comp β
       ((hasDerivAt_id β).sub_const 1)
   simpa using hlog.neg.deriv
 
@@ -69,12 +70,13 @@ theorem pole_log_second_derivative {β : ℝ} (hβ : β ≠ 1) :
   unfold heatCapacityKernel laurentPoleGradient
   have hinv :
       HasDerivAt (fun x : ℝ => (x - 1)⁻¹) (-((β - 1) ^ 2)⁻¹) β := by
-    simpa [pow_two] using
+    simpa only [Function.comp_def, id_eq, mul_one, pow_two] using
       (hasDerivAt_inv (sub_ne_zero.mpr hβ)).comp β
         ((hasDerivAt_id β).sub_const 1)
   have hneg :
       HasDerivAt (fun x : ℝ => -((x - 1)⁻¹)) (((β - 1) ^ 2)⁻¹) β := by
-    simpa [neg_neg] using hinv.neg
+    convert hinv.neg using 1
+    all_goals simp [Pi.neg_apply, neg_neg]
   simpa using hneg.deriv
 
 /-- Consolidated finite phase-transition package. -/

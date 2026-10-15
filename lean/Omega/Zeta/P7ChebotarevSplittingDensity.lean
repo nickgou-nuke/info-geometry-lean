@@ -20,7 +20,14 @@ inductive P7S5CycleType where
   | three_two
   | four_one
   | five
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype P7S5CycleType where
+  elems := {.one_one_one_one_one, .two_one_one_one, .two_two_one,
+    .three_one_one, .three_two, .four_one, .five}
+  complete := by
+    intro τ
+    cases τ <;> simp
 
 /-- The class size of a given cycle type in `S₅`. -/
 def p7ClassSize : P7S5CycleType → ℕ

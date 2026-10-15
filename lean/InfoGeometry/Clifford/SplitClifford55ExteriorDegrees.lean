@@ -56,8 +56,10 @@ theorem gradedDirectSum_support_subset_range_six
     {k | x k ≠ 0} ⊆ (Finset.range 6 : Set ℕ) := by
   intro k hk
   by_contra h
+  have hk6 : 6 ≤ k := by
+    simpa [Finset.mem_range] using h
   have hk5 : 5 < k := by
-    exact Nat.lt_of_not_ge (by simpa [Finset.mem_range] using h)
+    omega
   have hx : x k = 0 := exteriorDegree_eq_zero_of_five_lt hk5 (x k)
   exact hk (by simp [hx])
 

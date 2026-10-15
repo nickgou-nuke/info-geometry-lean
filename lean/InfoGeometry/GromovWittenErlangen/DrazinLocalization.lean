@@ -143,9 +143,10 @@ In a commutative semisimple quantum cohomology model over an algebraically
 closed field, the residue blocks specialize to field factors.  This packet keeps
 that as supplied finite data, together with a Frobenius self-duality pairing.
 -/
-structure LocalizedFrobeniusSemisimplePacket (Algebra : Type*) [Ring Algebra] [StarRing Algebra] where
+structure LocalizedFrobeniusSemisimplePacket.{uAlgebra, uBlock, uDivision, uProjection}
+    (Algebra : Type uAlgebra) [Ring Algebra] [StarRing Algebra] where
   frobenius : FrobeniusSelfDualPacket Algebra
-  residueBlocks : DivisionResidueBlockPacket
+  residueBlocks : DivisionResidueBlockPacket.{uBlock, uDivision, uProjection}
   semisimple : IsSemisimpleRing Algebra
 
 namespace LocalizedFrobeniusSemisimplePacket
@@ -162,11 +163,15 @@ theorem pairing_mul_left_eq_pairing_mul_right
 end LocalizedFrobeniusSemisimplePacket
 
 /-- Integrated Drazin/GW localization doctrine packet. -/
-structure DrazinGromovWittenLocalizationBridge
-    (G T Target Coeff Algebra : Type*) [Ring Algebra] [StarRing Algebra] where
+structure DrazinGromovWittenLocalizationBridge.{uG, uT, uTarget, uCoeff, uAlgebra,
+    uDivisor, uBlock, uDivision, uProjection}
+    (G : Type uG) (T : Type uT) (Target : Type uTarget) (Coeff : Type uCoeff)
+    (Algebra : Type uAlgebra) [Ring Algebra] [StarRing Algebra] where
   drazinLocalization : GWDrazinLocalizationPacket G T Target Coeff Algebra
-  divisorWeights : LocalizationDivisorWeightData G T Target Coeff
-  frobeniusSemisimple : LocalizedFrobeniusSemisimplePacket Algebra
+  divisorWeights : LocalizationDivisorWeightData.{uG, uT, uTarget, uCoeff, uDivisor}
+    G T Target Coeff
+  frobeniusSemisimple :
+    LocalizedFrobeniusSemisimplePacket.{uAlgebra, uBlock, uDivision, uProjection} Algebra
 
 namespace DrazinGromovWittenLocalizationBridge
 

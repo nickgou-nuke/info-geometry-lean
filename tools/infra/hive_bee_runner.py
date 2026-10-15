@@ -16,12 +16,12 @@ from pathlib import Path
 from typing import Any
 
 try:
-    from tools.infra.hive_local_packet_store import StoreError, append_packet, load_json, packet_hash, read_store, records_by_id, validate_or_raise
+    from tools.infra.hive_local_packet_store import StoreError, append_packets, load_json, packet_hash, read_store, records_by_id, validate_or_raise
     from tools.infra.hive_packet_validate import SCHEMA_BY_KIND, build_store, validate_packet
 except ModuleNotFoundError:  # pragma: no cover - direct script execution fallback
     ROOT_FALLBACK = Path(__file__).resolve().parents[2]
     sys.path.insert(0, str(ROOT_FALLBACK))
-    from tools.infra.hive_local_packet_store import StoreError, append_packet, load_json, packet_hash, read_store, records_by_id, validate_or_raise
+    from tools.infra.hive_local_packet_store import StoreError, append_packets, load_json, packet_hash, read_store, records_by_id, validate_or_raise
     from tools.infra.hive_packet_validate import SCHEMA_BY_KIND, build_store, validate_packet
 
 AUTHORITY_ORDER = {
@@ -40,29 +40,22 @@ PIPELINE_ORDER = {state: rank for rank, state in enumerate(PIPELINE_STATES)}
 
 
 def infer_output_pipeline_state(packet: dict[str, Any]) -> str:
-    provided = packet.get("pipeline_state")
-    if provided is not None:
-        pipeline_state = str(provided)
-        if pipeline_state not in PIPELINE_ORDER:
-            raise RunnerError(f"invalid pipeline_state on output packet {packet.get('id', '<unknown>')}: {pipeline_state}")
-        return pipeline_state
-
     kind = str(packet.get("kind", ""))
     authority = str(packet.get("authority", ""))
 
     if kind == "ResiduePacket":
-        return "blocked"
-    if authority in {"navigation"}:
-        return "idle"
-    if authority in {"semantic", "proposal", "execution_intent"}:
-        return "proposed"
-    if authority == "lean_checked":
-        return "checked"
-    if authority in {"build_checked", "audit_checked"}:
-        return "audited"
-    if authority == "promoted":
-        return "promoted"
-    if kind in {
+        inferred = "blocked"
+    elif authority == "navigation":
+        inferred = "idle"
+    elif authority in {"semantic", "proposal", "execution_intent"}:
+        inferred = "proposed"
+    elif authority == "lean_checked":
+        inferred = "checked"
+    elif authority in {"build_checked", "audit_checked"}:
+        inferred = "audited"
+    elif authority == "promoted":
+        inferred = "promoted"
+    elif kind in {
         "SourceObservationPacket",
         "SocraticQuestionPacket",
         "SymbolicMotifPacket",
@@ -78,8 +71,23 @@ def infer_output_pipeline_state(packet: dict[str, Any]) -> str:
         "ExecutionIntentPacket",
         "FormulationVariant",
     }:
-        return "proposed"
-    return "proposed"
+        inferred = "proposed"
+    else:
+        inferred = "proposed"
+
+    # Pipeline state is derived evidence, never caller-controlled authority.
+    # Reject a forged annotation instead of allowing it to advance the DAG.
+    provided = packet.get("pipeline_state")
+    if provided is not None:
+        pipeline_state = str(provided)
+        if pipeline_state not in PIPELINE_ORDER:
+            raise RunnerError(f"invalid pipeline_state on output packet {packet.get('id', '<unknown>')}: {pipeline_state}")
+        if pipeline_state != inferred:
+            raise RunnerError(
+                f"pipeline_state {pipeline_state} conflicts with packet-derived state {inferred} "
+                f"for {packet.get('id', '<unknown>')}"
+            )
+    return inferred
 
 
 def infer_packet_input_state(packet: dict[str, Any]) -> str:
@@ -127,6 +135,7 @@ def assert_pipeline_transition(source_state: str, output_packet: dict[str, Any])
 
 KIND_AUTHORITY_FLOOR = {
     "SourceObservationPacket": "navigation",
+    "PantographSessionEvidencePacket": "navigation",
     "SymbolicMotifPacket": "semantic",
     "SocraticQuestionPacket": "semantic",
     "SymbolicSeed": "semantic",
@@ -216,6 +225,11 @@ ROLE_POLICY = {
         "max_authority": "promoted",
         "allowed_output_kinds": {"PromotionDecisionPacket"},
         "requires_input_kinds": {"AuditPacket"},
+    },
+    "PantographSwarmBee": {
+        "task_kinds": {"pantograph.tactic_search", "pantograph.replay"},
+        "max_authority": "navigation",
+        "allowed_output_kinds": {"PantographSessionEvidencePacket", "SocraticQuestionPacket", "ResiduePacket"},
     },
 }
 
@@ -417,10 +431,7 @@ def run_task(
         output_hashes.append(packet_hash(packet))
 
     if not dry_run:
-        output_hashes = []
-        for packet in output_packets:
-            digest, _status = append_packet(store_path, packet)
-            output_hashes.append(digest)
+        output_hashes = [digest for digest, _status in append_packets(store_path, output_packets)]
 
     result = build_result(
         task,

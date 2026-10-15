@@ -40,11 +40,11 @@ private theorem xi_time_center_semantic_rigidity_centerRestriction_mul
       k * xi_time_center_semantic_rigidity_centerRestriction φ 1 := by
   calc
     xi_time_center_semantic_rigidity_centerRestriction φ k =
-        xi_time_center_semantic_rigidity_centerRestriction φ (k • (1 : ℤ)) := by
+    xi_time_center_semantic_rigidity_centerRestriction φ (k • (1 : ℤ)) := by
           simp
     _ = k • xi_time_center_semantic_rigidity_centerRestriction φ 1 := by
-          simpa using
-            (xi_time_center_semantic_rigidity_centerRestriction φ).map_zsmul (1 : ℤ) k
+          exact (xi_time_center_semantic_rigidity_centerRestriction φ).map_zsmul
+            k (1 : ℤ)
     _ = k * xi_time_center_semantic_rigidity_centerRestriction φ 1 := by
           simp
 
@@ -70,7 +70,11 @@ theorem paper_xi_time_center_semantic_rigidity
     have hab : (a, b) = xi_time_center_semantic_rigidity_centerEmbedding b := by
       simp [xi_time_center_semantic_rigidity_centerEmbedding, ha0]
     rw [hab] at hx
-    simpa [xi_time_center_semantic_rigidity_centerRestriction] using congrArg Prod.snd hx
+    change (φ (xi_time_center_semantic_rigidity_centerEmbedding b)).2 = z
+    calc
+      (φ (xi_time_center_semantic_rigidity_centerEmbedding b)).2 =
+          (xi_time_center_semantic_rigidity_centerEmbedding z).2 := congrArg Prod.snd hx
+      _ = z := rfl
   have hclass :
       (∀ k : ℤ, xi_time_center_semantic_rigidity_centerRestriction φ k = k) ∨
         ∀ k : ℤ, xi_time_center_semantic_rigidity_centerRestriction φ k = -k := by

@@ -19,8 +19,7 @@ def densityMatrix (S1 S2 S3 : ℝ) : Matrix (Fin 2) (Fin 2) ℂ :=
 
 theorem densityMatrix_trace (S1 S2 S3 : ℝ) :
     Matrix.trace (densityMatrix S1 S2 S3) = 1 := by
-  unfold densityMatrix Matrix.trace
-  simp [Fin.sum_univ_two]
+  simp [Matrix.trace, Matrix.diag, Fin.sum_univ_two, densityMatrix]
   ring
 
 def purity (S1 S2 S3 : ℝ) : ℝ :=
@@ -28,9 +27,12 @@ def purity (S1 S2 S3 : ℝ) : ℝ :=
 
 theorem densityMatrix_purity_eq (S1 S2 S3 : ℝ) :
     (Matrix.trace (densityMatrix S1 S2 S3 * densityMatrix S1 S2 S3)).re = purity S1 S2 S3 := by
-  unfold densityMatrix purity Matrix.trace
-  simp [Matrix.mul_apply, Fin.sum_univ_two, Complex.I_mul_I]
-  ring
+  simp only [Matrix.trace, Fin.sum_univ_two, Matrix.diag]
+  rw [Matrix.mul_apply, Matrix.mul_apply]
+  simp [purity, Matrix.mul_apply, Fin.sum_univ_two,
+    densityMatrix, Complex.I_mul_I, Complex.mul_re, Complex.add_re, Complex.sub_re,
+    Complex.I_re, Complex.I_im, Complex.ofReal_re, Complex.ofReal_im]
+  ring_nf
 
 theorem purity_le_one (S1 S2 S3 : ℝ) (h_bloch : S1 ^ 2 + S2 ^ 2 + S3 ^ 2 ≤ 1) :
     purity S1 S2 S3 ≤ 1 := by

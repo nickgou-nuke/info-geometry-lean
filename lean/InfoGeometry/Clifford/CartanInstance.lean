@@ -33,7 +33,7 @@ lemma θₗ_involutive (hJ1_sq : J1 * J1 = 1) (hJ1t : J1ᵀ = J1) :
 /-- Cartan involution as a linear equivalence on matrix towers. -/
 noncomputable def C (hJ1_sq : J1 * J1 = 1) (hJ1t : J1ᵀ = J1) :
     Matn (n := n) ≃ₗ[ℝ] Matn (n := n) :=
-  LinearEquiv.ofLinear (θL) (θL)
+  LinearEquiv.ofLinearMap (θL) (θL)
     (θₗ_involutive (J1 := J1) (n := n) hJ1_sq hJ1t)
     (θₗ_involutive (J1 := J1) (n := n) hJ1_sq hJ1t)
 
@@ -42,7 +42,8 @@ noncomputable def C (hJ1_sq : J1 * J1 = 1) (hJ1t : J1ᵀ = J1) :
 
 lemma C_isCartanInvolution :
     Cartan.IsCartanInvolution ((C (J1 := J1) (n := n) hJ1_sq hJ1t).toLinearMap) := by
-  simpa [C] using (θₗ_involutive (J1 := J1) (n := n) hJ1_sq hJ1t)
+  dsimp [Cartan.IsCartanInvolution, C]
+  exact θₗ_involutive J1 hJ1_sq hJ1t
 
 lemma mem_Ck_iff (X : Matn (n := n)) :
     X ∈ Decomposition.kSub (J1 := J1) (n := n) ↔ θf X = X := by

@@ -79,14 +79,16 @@ private lemma foldInfoNCE_Icc_two_succ_eq_map (n : ℕ) :
       intro a b h
       exact Nat.succ.inj h⟩ := by
   ext q
-  simp only [Finset.mem_Icc, Finset.mem_map, Function.Embedding.coeFn_mk]
+  simp only [Finset.mem_Icc, Finset.mem_map]
   constructor
   · intro hq
-    refine ⟨q - 1, ?_, by omega⟩
-    omega
+    obtain ⟨a, rfl⟩ := Nat.exists_eq_succ_of_ne_zero (by omega : q ≠ 0)
+    refine ⟨a, ?_, rfl⟩
+    exact ⟨by omega, by omega⟩
   · intro hq
     rcases hq with ⟨a, ha, rfl⟩
-    omega
+    change 2 ≤ Nat.succ a ∧ Nat.succ a ≤ n + 1
+    exact ⟨by omega, by omega⟩
 
 /-- Paper label: `cor:fold-infonce-triangular-inversion-collision-spectrum`. -/
 theorem paper_fold_infonce_triangular_inversion_collision_spectrum (m Q : Nat) :

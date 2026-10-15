@@ -165,6 +165,7 @@ def algebraicCarrierRingEquiv : AlgebraicCarrier ≃+* RingColimit where
           intro n
           apply RingCat.hom_ext
           ext A
+          change MatrixStage n at A
           change ringColimitInclusion n A =
             algebraicCarrierToRingColimit
               (ringColimitToAlgebraicCarrier (ringColimitInclusion n A))

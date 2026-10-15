@@ -312,12 +312,13 @@ theorem metricOfOperator_modularTransportFlow_eq_of_commute_generator
       (modularTransportFlow (E := E) hMod t).comp A := by
     have hCommScaled :
         Commute A (t • modularTransportGenerator (E := E) hMod) := by
-      change
-        A.comp (t • modularTransportGenerator (E := E) hMod)
-          =
-        (t • modularTransportGenerator (E := E) hMod).comp A
+      let G := modularTransportGenerator (E := E) hMod
+      have hComm : A.comp G = G.comp A := by
+        change A * G = G * A
+        exact hCommGen.eq
+      change A.comp (t • G) = (t • G).comp A
       simpa [ContinuousLinearMap.comp_smul, ContinuousLinearMap.smul_comp] using
-        congrArg (fun T : EndH => t • T) hCommGen.eq
+        congrArg (fun T : EndH => t • T) hComm
     exact (show Commute A (modularTransportFlow (E := E) hMod t) from
       by simpa [modularTransportFlow] using hCommScaled.exp_right).eq
   have hEval :

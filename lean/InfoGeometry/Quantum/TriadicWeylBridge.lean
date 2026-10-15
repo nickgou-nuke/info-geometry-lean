@@ -35,9 +35,9 @@ private theorem apply_plusPoint_eq_of_isWeylCompatible
     {H : EndH} (hH : IsWeylCompatible (E := E) H) (x : E) :
     H (plusPoint (E := E) x) = plusPoint (E := E) (plusBlockMap (E := E) H x) := by
   apply DoubledSpace.ext
-  · simp [plusBlockMap, plusPointL, ContinuousLinearMap.comp_apply]
+  · simp [plusBlockMap, ContinuousLinearMap.comp_apply]
   · have hsnd := congrArg (fun A : E →L[ℝ] E => A x) hH.1
-    simpa [plusToMinusBlockMap, plusPointL, plusPoint, ContinuousLinearMap.comp_apply] using hsnd
+    simpa [plusToMinusBlockMap, plusPoint, ContinuousLinearMap.comp_apply] using hsnd
 
 omit [CompleteSpace E] in
 private theorem apply_minusPoint_eq_of_isWeylCompatible
@@ -45,8 +45,8 @@ private theorem apply_minusPoint_eq_of_isWeylCompatible
     H (minusPoint (E := E) ξ) = minusPoint (E := E) (minusBlockMap (E := E) H ξ) := by
   apply DoubledSpace.ext
   · have hfst := congrArg (fun A : E →L[ℝ] E => A ξ) hH.2
-    simpa [minusToPlusBlockMap, minusPointL, minusPoint, ContinuousLinearMap.comp_apply] using hfst
-  · simp [minusBlockMap, minusPointL, ContinuousLinearMap.comp_apply]
+    simpa [minusToPlusBlockMap, minusPoint, ContinuousLinearMap.comp_apply] using hfst
+  · simp [minusBlockMap, ContinuousLinearMap.comp_apply]
 
 omit [CompleteSpace E] in
 private theorem apply_to_doubled_eq_of_isWeylCompatible
@@ -101,7 +101,7 @@ theorem isWeylCompatible_iff_comp_spectralEpsilon
         simpa [two_smul] using hsnd
       have hzero : WithLp.snd (H (plusPoint (E := E) x)) = 0 :=
         (smul_eq_zero.mp htwo).resolve_left (by norm_num)
-      simpa [plusToMinusBlockMap, plusPointL, ContinuousLinearMap.comp_apply] using hzero
+      simpa [plusToMinusBlockMap, ContinuousLinearMap.comp_apply] using hzero
     · ext ξ
       have hξ := congrArg (fun F : EndH => F (minusPoint (E := E) ξ)) hcomm
       have hminus : spectral_epsilon (E := E) (minusPoint (E := E) ξ) = -(minusPoint (E := E) ξ) := by
@@ -120,7 +120,7 @@ theorem isWeylCompatible_iff_comp_spectralEpsilon
         simpa [two_smul] using hfst'
       have hzero : WithLp.fst (H (minusPoint (E := E) ξ)) = 0 :=
         (smul_eq_zero.mp htwo).resolve_left (by norm_num)
-      simpa [minusToPlusBlockMap, minusPointL, ContinuousLinearMap.comp_apply] using hzero
+      simpa [minusToPlusBlockMap, ContinuousLinearMap.comp_apply] using hzero
 
 omit [CompleteSpace E] in
 @[simp] theorem plusProjectorFlux_eq_zero_of_isWeylCompatible
@@ -158,7 +158,7 @@ theorem isWeylCompatible_of_plusProjectorFlux_eq_zero
         spectralPlusProj_apply_eq_plusPoint, plusPoint] using congrArg WithLp.snd hx
     have hzero : WithLp.snd (H (plusPoint (E := E) x)) = 0 := by
       simpa using neg_eq_iff_add_eq_zero.mp hsnd
-    simpa [plusToMinusBlockMap, plusPointL, ContinuousLinearMap.comp_apply] using hzero
+    simpa [plusToMinusBlockMap, ContinuousLinearMap.comp_apply] using hzero
   · ext ξ
     have hξ := congrArg (fun F : EndH => F (minusPoint (E := E) ξ)) hflux
     have hfst' : WithLp.fst (H (minusPoint (E := E) ξ)) - WithLp.fst (H (to_doubled 0 0 : H₂)) = 0 := by
@@ -173,7 +173,7 @@ theorem isWeylCompatible_of_plusProjectorFlux_eq_zero
     have hfst : WithLp.fst (H (minusPoint (E := E) ξ)) = 0 := by
       rw [hzero0, sub_zero] at hfst'
       exact hfst'
-    simpa [minusToPlusBlockMap, minusPointL, ContinuousLinearMap.comp_apply] using hfst
+    simpa [minusToPlusBlockMap, ContinuousLinearMap.comp_apply] using hfst
 
 omit [CompleteSpace E] in
 theorem isWeylCompatible_of_minusProjectorFlux_eq_zero
@@ -194,7 +194,7 @@ theorem isWeylCompatible_of_minusProjectorFlux_eq_zero
     have hsnd : WithLp.snd (H (plusPoint (E := E) x)) = 0 := by
       rw [hzero0, sub_zero] at hsnd'
       exact hsnd'
-    simpa [plusToMinusBlockMap, plusPointL, ContinuousLinearMap.comp_apply] using hsnd
+    simpa [plusToMinusBlockMap, ContinuousLinearMap.comp_apply] using hsnd
   · ext ξ
     have hξ := congrArg (fun F : EndH => F (minusPoint (E := E) ξ)) hflux
     have hfst : -WithLp.fst (H (minusPoint (E := E) ξ)) = 0 := by
@@ -202,7 +202,7 @@ theorem isWeylCompatible_of_minusProjectorFlux_eq_zero
         spectralMinusProj_apply_eq_minusPoint, minusPoint] using congrArg WithLp.fst hξ
     have hzero : WithLp.fst (H (minusPoint (E := E) ξ)) = 0 := by
       simpa using neg_eq_iff_add_eq_zero.mp hfst
-    simpa [minusToPlusBlockMap, minusPointL, ContinuousLinearMap.comp_apply] using hzero
+    simpa [minusToPlusBlockMap, ContinuousLinearMap.comp_apply] using hzero
 
 omit [CompleteSpace E] in
 theorem isWeylCompatible_iff_plusProjectorFlux_eq_zero

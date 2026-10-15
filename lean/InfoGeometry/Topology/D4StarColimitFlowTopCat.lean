@@ -18,11 +18,8 @@ morphism and records its invertibility.
 -/
 
 noncomputable def colimitEndomorphismTopCatHom
-    (t : ℤ) : TopCat.of C.pt ⟶ TopCat.of C.pt :=
-  TopCat.ofHom
-    { toFun := colimitEndomorphismHomeomorph D C hC t
-      continuous_toFun :=
-        (colimitEndomorphismHomeomorph D C hC t).continuous_toFun }
+    (t : ℤ) : C.pt ⟶ C.pt :=
+  colimitEndomorphism D C hC t
 
 @[simp] theorem colimitEndomorphismTopCatHom_apply
     (t : ℤ) (x : C.pt) :
@@ -31,32 +28,21 @@ noncomputable def colimitEndomorphismTopCatHom
   rfl
 
 theorem colimitEndomorphismTopCatHom_zero :
-    colimitEndomorphismTopCatHom D C hC 0 = 𝟙 (TopCat.of C.pt) := by
-  ext x
-  simp [colimitEndomorphismTopCatHom]
+    colimitEndomorphismTopCatHom D C hC 0 = 𝟙 C.pt :=
+  colimitEndomorphism_zero D C hC
 
 theorem colimitEndomorphismTopCatHom_add
     (s t : ℤ) :
     colimitEndomorphismTopCatHom D C hC (s + t) =
       colimitEndomorphismTopCatHom D C hC t ≫
-        colimitEndomorphismTopCatHom D C hC s := by
-  ext x
-  simpa [TopCat.comp_app, colimitEndomorphismTopCatHom,
-    colimitEndomorphismHomeomorph_add_apply] using
-    (colimitEndomorphismHomeomorph_add_apply (D := D) (C := C) (hC := hC) s t x)
+        colimitEndomorphismTopCatHom D C hC s :=
+  colimitEndomorphism_add D C hC s t
 
 theorem colimitEndomorphismTopCatHom_isIso
     (t : ℤ) :
-    IsIso (colimitEndomorphismTopCatHom D C hC t) := by
-  refine IsIso.mk ⟨TopCat.ofHom
-    { toFun := (colimitEndomorphismHomeomorph D C hC t).symm
-      continuous_toFun :=
-        (colimitEndomorphismHomeomorph D C hC t).symm.continuous_toFun }, ?_, ?_⟩
-  · ext x
-    simpa [colimitEndomorphismTopCatHom, TopCat.comp_app, TopCat.id_app, TopCat.ofHom]
-      using (colimitEndomorphismHomeomorph D C hC t).symm_apply_apply x
-  · ext x
-    simpa [colimitEndomorphismTopCatHom, TopCat.comp_app, TopCat.id_app, TopCat.ofHom]
-      using (colimitEndomorphismHomeomorph D C hC t).apply_symm_apply x
+    IsIso (colimitEndomorphismTopCatHom D C hC t) :=
+  IsIso.mk ⟨colimitEndomorphism D C hC (-t),
+    colimitEndomorphism_comp_neg D C hC t,
+    colimitEndomorphism_neg_comp D C hC t⟩
 
 end InfoGeometry.Topology.ColimitDynamics

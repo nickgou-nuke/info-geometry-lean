@@ -31,15 +31,39 @@ def liftMatrix (T : V →ₗ[R] V) : V →ₗ[R] Matrix (Fin 2) (Fin 2) (Exterio
     else if i = 0 ∧ j = 1 then ι R (T v)
     else if i = 1 ∧ j = 1 then ι R v
     else 0
-  map_add' x y := by ext i j; dsimp; split_ifs <;> simp
-  map_smul' c x := by ext i j; dsimp; split_ifs <;> simp
+  map_add' x y := by
+    ext i j
+    change (if i = 0 ∧ j = 0 then ι R (x + y)
+      else if i = 0 ∧ j = 1 then ι R (T (x + y))
+      else if i = 1 ∧ j = 1 then ι R (x + y) else 0) =
+      (if i = 0 ∧ j = 0 then ι R x
+        else if i = 0 ∧ j = 1 then ι R (T x)
+        else if i = 1 ∧ j = 1 then ι R x else 0) +
+      (if i = 0 ∧ j = 0 then ι R y
+        else if i = 0 ∧ j = 1 then ι R (T y)
+        else if i = 1 ∧ j = 1 then ι R y else 0)
+    fin_cases i <;> fin_cases j <;> simp
+  map_smul' c x := by
+    ext i j
+    change (if i = 0 ∧ j = 0 then ι R (c • x)
+      else if i = 0 ∧ j = 1 then ι R (T (c • x))
+      else if i = 1 ∧ j = 1 then ι R (c • x) else 0) =
+      c • (if i = 0 ∧ j = 0 then ι R x
+        else if i = 0 ∧ j = 1 then ι R (T x)
+        else if i = 1 ∧ j = 1 then ι R x else 0)
+    fin_cases i <;> fin_cases j <;> simp
+
+@[simp] lemma liftMatrix_apply (T : V →ₗ[R] V) (v : V) (i j : Fin 2) :
+    liftMatrix T v i j =
+      if i = 0 ∧ j = 0 then ι R v
+      else if i = 0 ∧ j = 1 then ι R (T v)
+      else if i = 1 ∧ j = 1 then ι R v else 0 := rfl
 
 lemma liftMatrix_sq_zero (T : V →ₗ[R] V) (v : V) : liftMatrix T v * liftMatrix T v = 0 := by
   ext i j
-  rw [Matrix.mul_apply]
+  simp only [Matrix.mul_apply, Fin.sum_univ_two, liftMatrix_apply]
   fin_cases i <;> fin_cases j <;>
-    simp [liftMatrix, Fin.sum_univ_two, ExteriorAlgebra.ι_sq_zero,
-      ι_mul_ι_add_swap]
+    simp [ι_mul_ι_add_swap]
 
 def exteriorLiftAux (T : V →ₗ[R] V) : ExteriorAlgebra R V →ₐ[R] Matrix (Fin 2) (Fin 2) (ExteriorAlgebra R V) :=
   ExteriorAlgebra.lift R ⟨liftMatrix T, liftMatrix_sq_zero T⟩
@@ -54,7 +78,7 @@ lemma exteriorLiftAux_diag (T : V →ₗ[R] V) (x : ExteriorAlgebra R V) :
     dsimp [exteriorLiftAux]
     simp [Matrix.algebraMap_matrix_apply]
   · intro m
-    dsimp [exteriorLiftAux, liftMatrix]
+    simp only [exteriorLiftAux, ExteriorAlgebra.lift_ι_apply]
     simp
   · intro p q hp hq
     dsimp [exteriorLiftAux] at hp hq ⊢
@@ -81,16 +105,15 @@ def exteriorLift (T : V →ₗ[R] V) : ExteriorAlgebra R V →ₗ[R] ExteriorAlg
 /-- The lifted derivation restricts to the given linear map on generators. -/
 @[simp] theorem exteriorLift_ι (T : V →ₗ[R] V) (v : V) :
     exteriorLift T (ι R v) = ι R (T v) := by
-  simp [exteriorLift, exteriorLiftAux, liftMatrix,
-    ExteriorAlgebra.lift_ι_apply]
+  change (exteriorLiftAux T (ι R v)) 0 1 = ι R (T v)
+  rw [exteriorLiftAux, ExteriorAlgebra.lift_ι_apply]
+  simp
 
 theorem exteriorLift_even_derivation (T : V →ₗ[R] V) (x y : ExteriorAlgebra R V) :
     exteriorLift T (x * y) = exteriorLift T x * y + x * exteriorLift T y := by
-  dsimp [exteriorLift]
-  have h := map_mul (exteriorLiftAux T) x y
-  have h_eval : (exteriorLiftAux T (x * y)) 0 1 = (exteriorLiftAux T x * exteriorLiftAux T y) 0 1 := by rw [h]
-  rw [h_eval]
-  rw [Matrix.mul_apply, Fin.sum_univ_two]
+  change (exteriorLiftAux T (x * y)) 0 1 =
+    (exteriorLiftAux T x) 0 1 * y + x * (exteriorLiftAux T y) 0 1
+  rw [map_mul, Matrix.mul_apply, Fin.sum_univ_two]
   have hx := exteriorLiftAux_diag T x
   have hy := exteriorLiftAux_diag T y
   rcases hx with ⟨hx00, hx11, hx10⟩

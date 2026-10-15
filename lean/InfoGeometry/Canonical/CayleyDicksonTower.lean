@@ -8,32 +8,20 @@ open AlbertStep
 
 variable {F A : Type*} [CommRing F] [Ring A] [Algebra F A] [StarRing A] {γ : F}
 
-instance : AddCommGroup (AlbertStep F A γ) where
-  add := (· + ·)
-  add_assoc := by intros a b c; ext <;> simp [add_assoc]
-  zero := 0
-  zero_add := by intros a; ext <;> simp
-  add_zero := by intros a; ext <;> simp
-  add_comm := by intros a b; ext <;> simp [add_comm]
-  neg := (-·)
-  neg_add_cancel := by intros a; ext <;> simp
-  sub x y := x + -y
-  sub_eq_add_neg := by intros a b; rfl
-  zsmul n x := ⟨n • x.p, n • x.q⟩
-  zsmul_zero' := by intros a; ext <;> simp
-  zsmul_succ' := by intros n a; ext <;> simp [add_smul, add_comm]
-  zsmul_neg' := by intros n a; ext <;> simp [add_smul, add_mul]
-  nsmul n x := ⟨n • x.p, n • x.q⟩
-  nsmul_zero := by intros a; ext <;> simp
-  nsmul_succ := by intros n a; ext <;> simp [add_smul, add_comm]
+noncomputable def coordEquiv (γ : F) : AlbertStep F A γ ≃ A × A where
+  toFun x := (x.p, x.q)
+  invFun x := ⟨x.1, x.2⟩
+  left_inv x := by cases x; rfl
+  right_inv x := by cases x; rfl
 
-instance : Module F (AlbertStep F A γ) where
-  smul := (· • ·)
-  one_smul := by intros a; ext <;> simp
-  mul_smul := by intros x y a; ext <;> simp [mul_smul]
-  smul_zero := by intros x; ext <;> simp
-  smul_add := by intros x a b; ext <;> simp [smul_add]
-  add_smul := by intros x y a; ext <;> simp [add_smul]
-  zero_smul := by intros a; ext <;> simp
+noncomputable def coordAddEquiv (γ : F) : AlbertStep F A γ ≃+ A × A where
+  toEquiv := coordEquiv (F := F) (A := A) γ
+  map_add' x y := rfl
+
+noncomputable instance : AddCommGroup (AlbertStep F A γ) :=
+  Equiv.addCommGroup (coordEquiv (F := F) (A := A) γ)
+
+noncomputable instance : Module F (AlbertStep F A γ) :=
+  AddEquiv.module F (coordAddEquiv (F := F) (A := A) γ)
 
 end InfoGeometry.Canonical

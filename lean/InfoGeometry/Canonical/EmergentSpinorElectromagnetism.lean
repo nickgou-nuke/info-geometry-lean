@@ -1,4 +1,4 @@
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Trace
 import InfoGeometry.Clifford.DiracPauliGamma
@@ -56,7 +56,7 @@ theorem gamma5_gamma0_spinorBilinear_eq (Psi : DiracSpinor) :
     spinorBilinear Psi (gamma5 * gamma0) Psi = 
       -(star Psi 0) * Psi 2 - (star Psi 1) * Psi 3 
       -(star Psi 2) * Psi 0 - (star Psi 3) * Psi 1 := by
-  simp [spinorBilinear, diracAdjoint, gamma0, gamma1, gamma2, gamma3, gamma5, Matrix.mul_apply, Fin.sum_univ_succ, smul_apply, add_apply, sub_apply, one_apply]
+  simp [spinorBilinear, diracAdjoint, gamma0, gamma5]
   try ring
 
 /--
@@ -66,7 +66,7 @@ theorem gamma5_gamma1_spinorBilinear_eq (Psi : DiracSpinor) :
     spinorBilinear Psi (gamma5 * gamma1) Psi = 
       -(star Psi 0) * Psi 1 - (star Psi 1) * Psi 0 
       -(star Psi 2) * Psi 3 - (star Psi 3) * Psi 2 := by
-  simp [spinorBilinear, diracAdjoint, gamma0, gamma1, gamma2, gamma3, gamma5, Matrix.mul_apply, Fin.sum_univ_succ, smul_apply, add_apply, sub_apply, one_apply]
+  simp [spinorBilinear, diracAdjoint, gamma0, gamma1, gamma5]
   try ring
 
 end InfoGeometry.Canonical.EmergentSpinorElectromagnetism

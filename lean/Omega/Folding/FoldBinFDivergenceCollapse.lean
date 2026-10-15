@@ -74,6 +74,10 @@ theorem paper_fold_bin_f_divergence_collapse
         (fun m : ℕ => foldBinFDivergenceLimitOneMass * f (foldBinFDivergenceRatioOne m)) atTop
         (𝓝 0) := by
     simpa using hOneTerm.const_mul foldBinFDivergenceLimitOneMass
-  simpa [foldBinFDivergence] using hLeft.add hRight
+  change Tendsto
+    (fun m : ℕ =>
+      foldBinFDivergenceLimitZeroMass * f (foldBinFDivergenceRatioZero m) +
+        foldBinFDivergenceLimitOneMass * f (foldBinFDivergenceRatioOne m)) atTop (𝓝 0)
+  simpa using hLeft.add hRight
 
 end Omega.Folding

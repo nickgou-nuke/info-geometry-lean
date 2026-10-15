@@ -49,7 +49,7 @@ def hestenesDirichletAppendZero (n : ℕ) :
   have hi : ¬ n + 1 ≤ n := by omega
   simp [hestenesDirichletAppendZero, hi]
 
-def hestenesDirichletStageFunctor : ℕ ⥤ ModuleCat ℝ :=
+abbrev hestenesDirichletStageFunctor : ℕ ⥤ ModuleCat ℝ :=
   Functor.ofSequence (fun n =>
     ModuleCat.ofHom (hestenesDirichletAppendZero n))
 
@@ -90,11 +90,15 @@ def hestenesDirichletReadoutNatTrans
     (fun n => ModuleCat.ofHom (hestenesDirichletStageReadout D n))
     (by
       intro n
+      rw [Functor.ofSequence_map_homOfLE_succ]
+      change ModuleCat.ofHom (hestenesDirichletAppendZero n) ≫
+          ModuleCat.ofHom (hestenesDirichletStageReadout D (n + 1)) =
+        ModuleCat.ofHom (hestenesDirichletStageReadout D n) ≫ 𝟙 _
+      rw [Category.comp_id, ← ModuleCat.ofHom_comp]
       apply ModuleCat.hom_ext
-      ext a
-      simpa [hestenesDirichletStageFunctor, hestenesDirichletTargetFunctor,
-        Functor.ofSequence_map_homOfLE_succ, ModuleCat.comp_apply] using
-        hestenesDirichletStageReadout_compatible D n a)
+      apply LinearMap.ext
+      intro a
+      exact hestenesDirichletStageReadout_compatible D n a)
 
 abbrev HestenesDirichletCoefficientColimit :=
   colimit hestenesDirichletStageFunctor

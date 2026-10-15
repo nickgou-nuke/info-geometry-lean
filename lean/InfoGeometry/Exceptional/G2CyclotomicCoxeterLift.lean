@@ -18,7 +18,8 @@ open InfoGeometry.Algebra.Zorn.G2CyclotomicWeyl
 
 abbrev Root := InfoGeometry.Algebra.Zorn.G2CyclotomicWeyl.Root
 
-def g2CoxeterMatrix : CoxeterMatrix (Fin 2) := CoxeterMatrix.G₂
+abbrev g2CoxeterMatrix : CoxeterMatrix (Fin 2) :=
+  InfoGeometry.Lie.CanonicalZornG2CoxeterRelations.g2CoxeterMatrix
 
 theorem cyclotomicCoxeter_normal_form (w : g2CoxeterMatrix.Group) :
     ∃ k : ZMod 6,
@@ -27,9 +28,9 @@ theorem cyclotomicCoxeter_normal_form (w : g2CoxeterMatrix.Group) :
           (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ k.val := by
   rcases InfoGeometry.Lie.CanonicalZornG2CoxeterRelations.g2Coxeter_normal_form w with h | h
   · rcases h with ⟨k, hk⟩
-    exact ⟨k, Or.inl (by simpa [g2CoxeterMatrix] using hk)⟩
+    exact ⟨k, Or.inl hk⟩
   · rcases h with ⟨k, hk⟩
-    exact ⟨k, Or.inr (by simpa [g2CoxeterMatrix] using hk)⟩
+    exact ⟨k, Or.inr hk⟩
 
 noncomputable def cyclotomicReflectionGenerators : Fin 2 → Equiv.Perm Root
   | 0 => cyclotomicS1Perm
@@ -39,12 +40,14 @@ theorem cyclotomicReflectionGenerators_isLiftable :
     g2CoxeterMatrix.IsLiftable cyclotomicReflectionGenerators := by
   intro i j
   fin_cases i <;> fin_cases j
-  · simpa [cyclotomicReflectionGenerators] using cyclotomicS1Perm_sq
-  · simpa [cyclotomicReflectionGenerators, g2CoxeterMatrix] using
-      cyclotomicS1Perm_mul_S2Perm_pow_six
-  · simpa [cyclotomicReflectionGenerators, g2CoxeterMatrix] using
-      cyclotomicS2Perm_mul_S1Perm_pow_six
-  · simpa [cyclotomicReflectionGenerators] using cyclotomicS2Perm_sq
+  · change cyclotomicS1Perm ^ 2 = 1
+    exact cyclotomicS1Perm_sq
+  · change (cyclotomicS1Perm * cyclotomicS2Perm) ^ 6 = 1
+    exact cyclotomicS1Perm_mul_S2Perm_pow_six
+  · change (cyclotomicS2Perm * cyclotomicS1Perm) ^ 6 = 1
+    exact cyclotomicS2Perm_mul_S1Perm_pow_six
+  · change cyclotomicS2Perm ^ 2 = 1
+    exact cyclotomicS2Perm_sq
 
 noncomputable def cyclotomicCoxeterLift :
     g2CoxeterMatrix.Group →* Equiv.Perm Root :=

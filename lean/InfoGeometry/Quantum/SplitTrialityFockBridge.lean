@@ -69,8 +69,9 @@ theorem triality_anticommutator_eq_cliffordConcrete_anticommutator :
         (cliffordConcreteAnnihilation (E := E))
         (cliffordConcreteCreation (E := E))).toLinearMap)
   rw [fockSuperBracket, superBracket_odd_odd]
-  simp [vectorToLeftSpinor_eq_cliffordConcreteAnnihilation_toLinearMap,
-    vectorToRightSpinor_eq_cliffordConcreteCreation_toLinearMap, add_comm]
+  rw [vectorToLeftSpinor_eq_cliffordConcreteAnnihilation_toLinearMap,
+    vectorToRightSpinor_eq_cliffordConcreteCreation_toLinearMap]
+  rfl
 
 /--
 The canonical triality supercharge square lands on the already-owned concrete
@@ -83,19 +84,10 @@ theorem trialitySupercharge_square_eq_cliffordConcrete_anticommutator :
     (fockAnticommutator (E := E)
       (cliffordConcreteAnnihilation (E := E))
       (cliffordConcreteCreation (E := E))).toLinearMap := by
-  calc
-    (canonicalSplitTrialityKernel (E := E)).trialitySupercharge.comp
-        (canonicalSplitTrialityKernel (E := E)).trialitySupercharge
-        =
-      InfoGeometry.Quantum.RealMajoranaCategory.anticommutator
-        (InfoGeometry.Quantum.vectorToLeftSpinor (E := E))
-        (InfoGeometry.Quantum.vectorToRightSpinor (E := E)) := by
-          exact SplitTrialityKernel.trialitySupercharge_sq_eq_anticommutator
-            (canonicalSplitTrialityKernel (E := E))
-    _ = (fockAnticommutator (E := E)
-        (cliffordConcreteAnnihilation (E := E))
-        (cliffordConcreteCreation (E := E))).toLinearMap := by
-          exact triality_anticommutator_eq_cliffordConcrete_anticommutator (E := E)
+  have h1 := SplitTrialityKernel.trialitySupercharge_sq_eq_anticommutator
+    (canonicalSplitTrialityKernel (E := E))
+  have h2 := triality_anticommutator_eq_cliffordConcrete_anticommutator (E := E)
+  exact h1.trans h2
 
 /--
 Reusing the concrete CAR witness already proved in `BogoliubovFockSuper`, the
@@ -107,16 +99,11 @@ canonical triality supercharge square closes onto the identity even seed.
       =
     LinearMap.id := by
   rcases cliffordConcreteIsCARPair (E := E) with ⟨_, _, hMixed⟩
-  calc
-    (canonicalSplitTrialityKernel (E := E)).trialitySupercharge.comp
-        (canonicalSplitTrialityKernel (E := E)).trialitySupercharge
-        =
-      (fockAnticommutator (E := E)
-        (cliffordConcreteAnnihilation (E := E))
-        (cliffordConcreteCreation (E := E))).toLinearMap := by
-          exact trialitySupercharge_square_eq_cliffordConcrete_anticommutator (E := E)
-    _ = LinearMap.id := by
-          exact congrArg ContinuousLinearMap.toLinearMap hMixed
+  have h1 := trialitySupercharge_square_eq_cliffordConcrete_anticommutator (E := E)
+  have h2 : (fockAnticommutator (E := E) (cliffordConcreteAnnihilation (E := E))
+      (cliffordConcreteCreation (E := E))).toLinearMap = LinearMap.id :=
+    congrArg ContinuousLinearMap.toLinearMap hMixed
+  exact h1.trans h2
 
 /--
 The triality left/right spinor channels themselves satisfy the concrete CAR
@@ -127,9 +114,9 @@ theorem triality_channels_CARWitness :
       (InfoGeometry.Quantum.RealMajoranaCategory.cl11DoubledCore E)
       (InfoGeometry.Quantum.vectorToLeftSpinor (E := E))
       (InfoGeometry.Quantum.vectorToRightSpinor (E := E)) := by
+  have h := InfoGeometry.Quantum.RealMajoranaCategory.car_realization_of_clifford_concrete (E := E)
   simpa [vectorToLeftSpinor_eq_cliffordConcreteAnnihilation_toLinearMap,
-    vectorToRightSpinor_eq_cliffordConcreteCreation_toLinearMap] using
-    (InfoGeometry.Quantum.RealMajoranaCategory.car_realization_of_clifford_concrete
-      (E := E))
+    vectorToRightSpinor_eq_cliffordConcreteCreation_toLinearMap,
+    cl11CanonicalPolarizedMajorana] using h
 
 end InfoGeometry.Quantum.SplitTrialityFockBridge

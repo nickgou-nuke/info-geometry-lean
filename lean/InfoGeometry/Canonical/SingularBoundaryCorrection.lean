@@ -1,5 +1,4 @@
 import InfoGeometry.Canonical.AnomalyGauge
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CertifiedInverseKernel
 import InfoGeometry.Canonical.ConformalUnification
 import InfoGeometry.Projective.Bridge
@@ -43,7 +42,9 @@ namespace InfoGeometry.Canonical
 
 open InfoGeometry.Canonical.AnomalyGauge
 
-variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+universe u
+
+variable {E : Type u} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /--
 Quotient-first Weyl/projective data.
@@ -51,8 +52,8 @@ Quotient-first Weyl/projective data.
 The radial scale mode is treated as quotient data rather than as a linear
 projector on the ambient carrier.
 -/
-structure RayGaugeData (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] where
-  QuotientState : Type*
+structure RayGaugeData (E : Type u) [NormedAddCommGroup E] [InnerProductSpace ℝ E] where
+  QuotientState : Type u
   quotientMap : E → QuotientState
   weylAction : ℝ → E → E
   radialPotential : E → ℝ
@@ -73,7 +74,7 @@ The boundary generator is not stored as independent data: it is canonically
 derived from the certified inverse kernel as the left-projector anomaly
 commutator.
 -/
-structure SingularBoundaryCorrection (E : Type*)
+structure SingularBoundaryCorrection (E : Type u)
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where
   ray : RayGaugeData E
   kernel : CertifiedInverseKernel E

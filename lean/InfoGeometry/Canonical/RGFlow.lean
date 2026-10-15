@@ -259,9 +259,8 @@ Contraction-driven convergence of RG iterates to the unique fixed geometry.
 theorem tendsto_generatedDiscreteFlow_fixedPoint_of_contracting
     (F : RGStepMap E) {K : NNReal} (hF : ContractingWith K F) (H0 : HessianGeometry E) :
     Filter.Tendsto (generatedDiscreteFlow (E := E) F H0) Filter.atTop
-      (nhds (ContractingWith.fixedPoint F hF)) := by
-  simpa [generatedDiscreteFlow] using
-    (ContractingWith.tendsto_iterate_fixedPoint (f := F) (hf := hF) H0)
+      (nhds (ContractingWith.fixedPoint F hF)) :=
+  ContractingWith.tendsto_iterate_fixedPoint (f := F) (hf := hF) H0
 
 end Contraction
 

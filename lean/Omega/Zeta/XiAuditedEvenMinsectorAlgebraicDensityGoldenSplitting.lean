@@ -27,7 +27,7 @@ theorem paper_xi_audited_even_minsector_algebraic_density_golden_splitting
           (𝓝 (Real.goldenRatio⁻¹ : ℝ)) := by
       have h := tendsto_fib_div_fib_succ_atTop.comp (tendsto_add_atTop_nat (1 : ℕ))
       rw [Real.inv_goldenRatio]
-      simpa [Nat.add_assoc] using h
+      exact h
     have hprod :
         Tendsto
           (fun m : ℕ =>

@@ -36,17 +36,13 @@ theorem paper_app_jensen_single_zero_lower_bound
         exact max_eq_left hlog_nonneg
       _ ≤ appSingleZeroJensenDefect ρ roots := by
         unfold appSingleZeroJensenDefect
-        rw [Finset.sum_eq_add_sum_diff_singleton ha_mem]
+        rw [← Finset.add_sum_erase roots _ ha_mem]
         have hrest_nonneg :
-            0 ≤ Finset.sum (roots \ {a}) (fun z => max (Real.log (ρ / ‖z‖)) 0) := by
+            0 ≤ Finset.sum (roots.erase a) (fun z => max (Real.log (ρ / ‖z‖)) 0) := by
           refine Finset.sum_nonneg ?_
           intro z hz
           exact le_max_right _ _
-        simpa using
-          (le_add_of_nonneg_right hrest_nonneg :
-            max (Real.log (ρ / ‖a‖)) 0 ≤
-              max (Real.log (ρ / ‖a‖)) 0 +
-                Finset.sum (roots \ {a}) (fun z => max (Real.log (ρ / ‖z‖)) 0))
+        exact le_add_of_nonneg_right hrest_nonneg
   have hlog_pos : 0 < Real.log (1 / ‖a‖) := by
     have hone_lt : 1 < 1 / ‖a‖ := (one_lt_div ha_pos).2 ha_unit
     exact Real.log_pos hone_lt

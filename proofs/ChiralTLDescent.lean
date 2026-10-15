@@ -116,14 +116,10 @@ Lifted from the pure tensor lemma via `TensorProduct.induction_on`. -/
 lemma tauL_qCrossMap_on_any (eta : M2C) (v : SpinPair) :
     tauL (qCrossMap (K := ℂ) (H := M2C) (H_dual := M2C) Complex.I) (eta ⊗ₜ[ℂ] v) =
     Complex.I • (v ⊗ₜ[ℂ] eta) := by
-  refine TensorProduct.induction_on v ?_ ?_ ?_
-  · -- zero: v = 0
-    simp
-  · -- tmul: v = a ⊗ₜ b
-    intro a b
+  induction v using TensorProduct.inductionOn with
+  | tmul a b =>
     exact tauL_qCrossMap_on_pure_tmul eta a b
-  · -- add: v = v₁ + v₂
-    intro v₁ v₂ hv₁ hv₂
+  | add v₁ v₂ hv₁ hv₂ =>
     rw [TensorProduct.tmul_add, map_add, hv₁, hv₂, TensorProduct.add_tmul, smul_add]
 
 /-- The kernel of the TL generator `e` acting by left multiplication on `SpinPair`.
@@ -194,11 +190,10 @@ lemma tauR_qCrossMap_on_pure_tmul (eta a b : M2C) :
 lemma tauR_qCrossMap_on_any (eta : M2C) (s : SpinPair) :
     tauR (qCrossMap (K := ℂ) (H := M2C) (H_dual := M2C) Complex.I) (s ⊗ₜ[ℂ] eta) =
     Complex.I • (eta ⊗ₜ[ℂ] s) := by
-  refine TensorProduct.induction_on s ?_ ?_ ?_
-  · simp
-  · intro a b
+  induction s using TensorProduct.inductionOn with
+  | tmul a b =>
     exact tauR_qCrossMap_on_pure_tmul eta a b
-  · intro s₁ s₂ hs₁ hs₂
+  | add s₁ s₂ hs₁ hs₂ =>
     rw [TensorProduct.add_tmul, map_add, hs₁, hs₂, TensorProduct.tmul_add, smul_add]
 
 /-- For `s ∈ S` (where S is a submodule of SpinPair), `η ⊗ s ∈ rightTarget S`. -/
@@ -217,13 +212,14 @@ theorem chiral_right_tau_ideal :
   intro s eta
   have h_span : s.val ∈ Submodule.span ℂ {e} := s.property
   rcases Submodule.mem_span_singleton.mp h_span with ⟨c, hc⟩
+  have he : e ∈ R_chiral_tensor := Submodule.subset_span (by simp)
   -- hc : c • e = s.val
   -- Compute: tauR C ((s : SpinPair) ⊗ₜ eta) = (c*i) • (eta ⊗ₜ e) ∈ rightTarget S
   -- Use simpa to apply all the algebraic identities in one shot
   simpa [show (s : SpinPair) = s.1 from rfl, hc.symm,
     TensorProduct.smul_tmul, map_smul, tauR_qCrossMap_on_any, smul_smul]
     using (Submodule.smul_mem _ (c * Complex.I)
-      (eta_tmul_s_mem_rightTarget eta (Submodule.subset_span (by simp : e ∈ ({e} : Set SpinPair)))))
+      (eta_tmul_s_mem_rightTarget eta he))
 
 /-- **Right τ-ideal — kernel version.** `R_kernel = ker(e·)` is a right τ-ideal
 for `qCrossMap i`. The symmetric dual of `chiral_kernel_is_left_tau_ideal`. -/

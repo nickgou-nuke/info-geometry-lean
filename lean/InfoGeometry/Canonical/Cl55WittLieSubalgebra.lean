@@ -1,6 +1,10 @@
 import InfoGeometry.Canonical.Cl55WittFiveGradeDecomposition
+import InfoGeometry.Canonical.Cl55WittLieRouting
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.Subalgebra
+import Mathlib.Algebra.Lie.OfAssociative
+
+attribute [local instance 100] LieRing.ofAssociativeRing LieAlgebra.ofAssociativeAlgebra
 
 /-!
 # The Lie span of the finite Witt generators

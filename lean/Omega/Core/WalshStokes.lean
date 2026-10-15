@@ -230,7 +230,8 @@ theorem walshBias_le_boundaryVariation (A : Finset (Fin n)) (f : Word n → ℤ)
     Int.natAbs (walshFlux A f) ≤
       ∑ w : BoundaryWords A, Int.natAbs (deltaSet A f w.1) := by
   unfold walshFlux
-  simpa using nat_abs_sum_le (s := Finset.univ) (f := fun w : BoundaryWords A => deltaSet A f w.1)
+  simpa using Int.natAbs_sum_le (s := Finset.univ)
+    (f := fun w : BoundaryWords A => deltaSet A f w.1)
 
 /-- One-dimensional test case.
     thm:discussion-walsh-stokes-higher-flux -/

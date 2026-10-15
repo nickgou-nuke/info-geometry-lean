@@ -101,6 +101,7 @@ theorem paper_xi_time_part75a_persistent_ambiguity_forces_infinite_tail {X : Typ
   have hsub : n + 1 - (n + 1) = 0 := by omega
   have hy_eq : y = y' := by
     simpa [stream, xi_time_part75a_persistent_ambiguity_forces_infinite_tail_splitStream,
+      xi_time_part75a_persistent_ambiguity_forces_infinite_tail_backward,
       hnext, hsub] using hvalue
   exact hy_ne hy_eq
 

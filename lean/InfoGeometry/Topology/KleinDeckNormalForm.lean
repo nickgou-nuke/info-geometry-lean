@@ -50,8 +50,12 @@ theorem abelianReadout_mul (g h : Deck) :
 theorem abelianReadout_surjective : Function.Surjective abelianReadout := by
   rintro ⟨n, p⟩
   fin_cases p
-  · exact ⟨⟨0, n⟩, by simp [abelianReadout]⟩
-  · exact ⟨⟨1, n⟩, by simp [abelianReadout]⟩
+  · refine ⟨⟨0, n⟩, ?_⟩
+    change (n, ((0 : ℤ) : ZMod 2)) = (n, 0)
+    rfl
+  · refine ⟨⟨1, n⟩, ?_⟩
+    change (n, ((1 : ℤ) : ZMod 2)) = (n, 1)
+    rfl
 
 theorem horizontal_class_order_two : (2 : ℕ) • abelianReadout a = 0 := by
   rw [abelianReadout_a]

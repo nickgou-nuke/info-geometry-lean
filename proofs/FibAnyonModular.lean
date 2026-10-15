@@ -10,7 +10,13 @@ namespace FibAnyonModular
 inductive FibLabel where
 | I
 | tau
-deriving DecidableEq, Fintype
+deriving DecidableEq
+
+instance : Fintype FibLabel where
+  elems := {FibLabel.I, FibLabel.tau}
+  complete := by
+    intro x
+    cases x <;> simp
 
 open FibLabel
 open Matrix
@@ -150,8 +156,8 @@ fibTotalDimSq D := by
 theorem fib_S_square
 (D : FibonacciCyclotomicData K) :
 FibSUnnormalized D * FibSUnnormalized D =
-Matrix.diagonal
-(fun _ : FibLabel => fibTotalDimSq D) := by
+  Matrix.diagonal
+    (fun _ : FibLabel => fibTotalDimSq D) := by
   ext i j
   cases i <;> cases j <;>
   simp [FibSUnnormalized, Matrix.mul_apply, sum_fib_label]
@@ -199,9 +205,9 @@ FibTInv D * FibT D = 1 := by
 theorem fib_ST_cube_diagonal
 (D : FibonacciCyclotomicData K) :
 (FibSUnnormalized D * FibT D) ^ 3 =
-Matrix.diagonal
-(fun _ : FibLabel =>
-fibGaussSumPlus D * fibTotalDimSq D) := by
+  Matrix.diagonal
+    (fun _ : FibLabel =>
+      fibGaussSumPlus D * fibTotalDimSq D) := by
   ext i j
   cases i <;> cases j
   · simp [FibSUnnormalized, FibT, Matrix.mul_apply, sum_fib_label, pow_succ, pow_zero]

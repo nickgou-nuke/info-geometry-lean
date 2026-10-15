@@ -1,4 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Exponential
+import Mathlib.Analysis.Normed.Operator.NormedSpace
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Calculus.MeanValue
 import Mathlib.Analysis.Normed.Operator.Bilinear
@@ -53,11 +54,7 @@ variable
 
 local notation "EndA" => A →L[ℝ] A
 
-noncomputable local instance : NormedRing EndA := inferInstance
-noncomputable local instance : NormedAlgebra ℝ EndA := inferInstance
 noncomputable local instance : NormedAlgebra ℚ EndA := NormedAlgebra.restrictScalars ℚ ℝ EndA
-local instance : IsTopologicalRing EndA := inferInstance
-local instance : CompleteSpace EndA := inferInstance
 
 /-!
 ## Derivations
@@ -192,9 +189,8 @@ theorem hasStrictDerivAt_flow_left
     HasStrictDerivAt
       (flow D)
       (D * flow D t)
-      t := by
-  simpa [flow] using
-    (hasStrictDerivAt_exp_smul_const' D t)
+      t :=
+  hasStrictDerivAt_exp_smul_const' D t
 
 /--
 Right-generator derivative formula:
@@ -207,9 +203,8 @@ theorem hasStrictDerivAt_flow_right
     HasStrictDerivAt
       (flow D)
       (flow D t * D)
-      t := by
-  simpa [flow] using
-    (hasStrictDerivAt_exp_smul_const D t)
+      t :=
+  hasStrictDerivAt_exp_smul_const D t
 
 /--
 Evaluation of a bounded endomorphism on a vector as a continuous bilinear map.
@@ -278,7 +273,7 @@ theorem flow_integral_generator
     have horbit : Continuous (fun s : ℝ => flow D s x) := by
       apply continuous_iff_continuousAt.mpr
       intro s
-      exact (hasStrictDerivAt_orbit D x s).continuousAt
+      exact (hasStrictDerivAt_orbit D x s).hasDerivAt.continuousAt
     exact D.continuous.comp horbit
   have hint :
       IntervalIntegrable (fun s : ℝ => D (flow D s x))

@@ -128,20 +128,14 @@ def PinKleinTotalOrbitQuotient {data : KleinMonodromyData} : Type :=
         rcases h with ⟨g, h | h⟩
         · exact ⟨g, Or.inr h⟩
         · exact ⟨g, Or.inl h⟩
-      have hrel : Function.swap (pinKleinStepRelation (data := data)) =
-          pinKleinStepRelation (data := data) := by
-        funext a b
-        apply propext
-        constructor
-        · intro h
-          exact hbase b a h
-        · intro h
-          exact hbase a b h
       constructor
       · intro x
         exact Relation.ReflTransGen.refl
       · intro a b h
-        simpa [hrel] using Relation.ReflTransGen.swap h
+        induction h with
+        | refl => exact Relation.ReflTransGen.refl
+        | @tail y z hxy hyz ih =>
+            exact (Relation.ReflTransGen.single (hbase y z hyz)).trans ih
       · intro a b c hab hbc
         exact Relation.ReflTransGen.trans hab hbc))
 

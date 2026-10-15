@@ -1,0 +1,474 @@
+--- a/tools/quality/statement_fidelity_gate.py
++++ b/tools/quality/statement_fidelity_gate.py
+@@ -536,9 +536,39 @@
+             structures=structures,
+         )
+         if parsed:
++            parsed.name = _qualified_declaration_name(
++                clean_text, line_no, parsed.name
++            )
+             declarations.append(parsed)
+ 
+     return declarations, structures
++
++
++def _qualified_declaration_name(source: str, line_number: int, local_name: str) -> str:
++    """Qualify a parsed declaration using the namespace stack at its source line.
++
++    This mirrors the source-scope convention used by Gate 5's theorem inventory.
++    It remains a source parser, not Lean elaborator AST evidence.
++    """
++    stack: list[str] = []
++    lines = source.splitlines()
++    for line in lines[: max(0, line_number - 1)]:
++        clean = strip_lean_comments(line).split("--")[0].strip()
++        namespace = re.match(r"^namespace\s+([A-Za-z0-9_.]+)", clean)
++        if namespace:
++            stack.append(namespace.group(1))
++            continue
++        end = re.match(r"^end(?:\s+([A-Za-z0-9_.]+))?$", clean)
++        if end and stack:
++            named_end = end.group(1)
++            if named_end:
++                while stack:
++                    popped = stack.pop()
++                    if popped == named_end:
++                        break
++            else:
++                stack.pop()
++    return ".".join([*stack, local_name]) if stack else local_name
+ 
+ 
+ def parse_from_ast_json(ast_data: dict[str, Any] | str) -> list[ParsedDeclaration]:
+@@ -1021,6 +1051,74 @@
+ # Core Evaluation API
+ # -----------------------------------------------------------------------------
+ 
++TARGET_NAME_FIELDS = ("theorem_name", "target_symbol", "target_declaration", "decl")
++
++
++def _target_names(spec: dict[str, Any]) -> tuple[list[str], list[str]]:
++    """Collect target aliases and reject malformed or conflicting identifiers."""
++    supplied: list[tuple[str, str]] = []
++    errors: list[str] = []
++    for field_name in TARGET_NAME_FIELDS:
++        if field_name not in spec or spec[field_name] is None:
++            continue
++        value = spec[field_name]
++        if not isinstance(value, str) or not value.strip():
++            errors.append(f"{field_name} must be a non-empty declaration-name string")
++            continue
++        supplied.append((field_name, value.strip()))
++
++    distinct = list(dict.fromkeys(value for _, value in supplied))
++    if len(distinct) > 1:
++        errors.append(
++            "conflicting target identifiers: "
++            + ", ".join(f"{field}={value!r}" for field, value in supplied)
++        )
++    return distinct, errors
++
++
++def _select_target_declaration(
++    declarations: list[ParsedDeclaration], spec: dict[str, Any]
++) -> tuple[ParsedDeclaration | None, str | None, str | None]:
++    """Resolve an explicit declaration name; never rely on source order by default."""
++    names, errors = _target_names(spec)
++    if errors:
++        return None, "TARGET_DECLARATION_AMBIGUOUS", "; ".join(errors)
++    if not names:
++        if spec.get("allow_first_declaration") is True:
++            return declarations[0], None, None
++        return (
++            None,
++            "TARGET_DECLARATION_REQUIRED",
++            "No target identifier supplied. Set one of theorem_name, target_symbol, "
++            "target_declaration, or decl; first-declaration selection requires "
++            "allow_first_declaration=true.",
++        )
++
++    target = names[0]
++    exact = [d for d in declarations if d.name == target]
++    if len(exact) == 1:
++        return exact[0], None, None
++    if len(exact) > 1:
++        return None, "TARGET_DECLARATION_AMBIGUOUS", f"Multiple declarations named {target!r}."
++
++    # A short name is allowed only if unique across namespace-qualified names.
++    if "." not in target:
++        short = [d for d in declarations if d.name.rsplit(".", 1)[-1] == target]
++        if len(short) == 1:
++            return short[0], None, None
++        if len(short) > 1:
++            return (
++                None,
++                "TARGET_DECLARATION_AMBIGUOUS",
++                f"Unqualified target {target!r} matches multiple declarations: {[d.name for d in short]}.",
++            )
++
++    return (
++        None,
++        "TARGET_DECLARATION_NOT_FOUND",
++        f"Target declaration {target!r} was not found among parsed declarations: {[d.name for d in declarations]}.",
++    )
++
+ def evaluate_statement_fidelity(
+     decl_ast_or_text: str | dict[str, Any],
+     spec: dict[str, Any],
+@@ -1039,7 +1137,12 @@
+     structures: dict[str, dict[str, str]] = {}
+     declarations: list[ParsedDeclaration] = []
+ 
+-    target_name = spec.get("theorem_name")
++    target_names, target_field_errors = _target_names(spec)
++    target_name = (
++        target_names[0]
++        if len(target_names) == 1
++        else "<invalid-target>" if target_names or target_field_errors else "<unknown>"
++    )
+ 
+     if isinstance(decl_ast_or_text, dict):
+         declarations = parse_from_ast_json(decl_ast_or_text)
+@@ -1067,32 +1170,27 @@
+         )
+ 
+     # Select target declaration
+-    selected_decl: ParsedDeclaration | None = None
+-    if target_name:
+-        for d in declarations:
+-            if d.name == target_name or d.name.endswith(f".{target_name}") or target_name.endswith(f".{d.name}"):
+-                selected_decl = d
+-                break
+-        if selected_decl is None:
+-            return FidelityReport(
+-                theorem_name=target_name,
+-                fidelity_score=0.0,
+-                passed=False,
+-                defects=[
+-                    FidelityDefect(
+-                        defect_type="TARGET_DECLARATION_NOT_FOUND",
+-                        severity="FATAL",
+-                        message=f"Target declaration '{target_name}' was not found among parsed declarations: {[d.name for d in declarations]}.",
+-                        penalty=1.0,
+-                        context=target_name,
+-                    )
+-                ],
+-                carrier_detected=[],
+-                hypotheses_detected=[],
+-                conclusion_detected="",
+-            )
+-    else:
+-        selected_decl = declarations[0]
++    selected_decl, selection_error, selection_message = _select_target_declaration(
++        declarations, spec
++    )
++    if selected_decl is None:
++        return FidelityReport(
++            theorem_name=target_name,
++            fidelity_score=0.0,
++            passed=False,
++            defects=[
++                FidelityDefect(
++                    defect_type=selection_error or "TARGET_DECLARATION_NOT_FOUND",
++                    severity="FATAL",
++                    message=selection_message or "Target declaration selection failed.",
++                    penalty=1.0,
++                    context=target_name,
++                )
++            ],
++            carrier_detected=[],
++            hypotheses_detected=[],
++            conclusion_detected="",
++        )
+ 
+     # If spec has structure definitions, merge them
+     if "structures" in spec and isinstance(spec["structures"], dict):
+@@ -1186,20 +1284,47 @@
+             if target_decl and th_name != target_decl:
+                 continue
+             th_spec_copy = dict(th_spec)
+-            th_spec_copy["theorem_name"] = th_name
++            # A suite key is an asserted target too; preserve aliases to expose conflicts.
++            aliases = [th_spec_copy.get(k) for k in TARGET_NAME_FIELDS if th_spec_copy.get(k)]
++            if not aliases:
++                th_spec_copy["theorem_name"] = th_name
++            elif th_name not in aliases:
++                th_spec_copy["target_declaration"] = th_name
+             th_spec_copy["structures"] = structures
+             report = evaluate_statement_fidelity(lean_content, th_spec_copy)
+             results[th_name] = report
+     else:
+         # Single theorem spec
+-        th_name = target_decl or spec_data.get("theorem_name")
+         spec_copy = dict(spec_data)
+-        if th_name:
+-            spec_copy["theorem_name"] = th_name
++        if target_decl:
++            aliases = [spec_copy.get(k) for k in TARGET_NAME_FIELDS if spec_copy.get(k)]
++            if not aliases:
++                spec_copy["theorem_name"] = target_decl
++            elif target_decl not in aliases:
++                spec_copy["target_declaration"] = target_decl
+         spec_copy["structures"] = structures
+         report = evaluate_statement_fidelity(lean_content, spec_copy)
+-        key = th_name or report.theorem_name
++        key = target_decl or report.theorem_name
+         results[key] = report
++
++    # A requested suite member that does not exist must not become an empty,
++    # successful result set in the CLI/API.
++    if target_decl and not results:
++        results[target_decl] = FidelityReport(
++            theorem_name=target_decl,
++            fidelity_score=0.0,
++            passed=False,
++            defects=[FidelityDefect(
++                defect_type="TARGET_DECLARATION_NOT_FOUND",
++                severity="FATAL",
++                message=f"Requested target {target_decl!r} is not a member of the specification suite.",
++                penalty=1.0,
++                context=target_decl,
++            )],
++            carrier_detected=[],
++            hypotheses_detected=[],
++            conclusion_detected="",
++        )
+ 
+     return results
+ 
+@@ -1236,7 +1361,7 @@
+ 
+         reports = evaluate_file_fidelity(lean_path, spec_path, target_decl=args.decl)
+ 
+-        all_passed = True
++        all_passed = bool(reports)
+         for th_name, rep in reports.items():
+             if rep.fidelity_score < args.min_score or not rep.passed:
+                 all_passed = False
+--- a/tools/infra/qms_evidence_pipeline.py
++++ b/tools/infra/qms_evidence_pipeline.py
+@@ -914,7 +914,9 @@
+     # -------------------------------------------------------------------------
+     # Gate 6: SPECIFICATION CONTRACT SCREEN
+     # -------------------------------------------------------------------------
+-    def gate_6_statement_fidelity_review(self, packet: EvidencePacket) -> GateResult:
++    def gate_6_statement_fidelity_review(
++        self, packet: EvidencePacket, kernel_result: GateResult | None = None
++    ) -> GateResult:
+         """Run syntax-based contract checks; this score is not a semantic correctness proof."""
+         t0 = time.time()
+         diagnostics: list[str] = []
+@@ -922,6 +924,41 @@
+         from tools.quality.statement_fidelity_gate import evaluate_file_fidelity
+ 
+         reports = evaluate_file_fidelity(packet.lean_file, packet.raw_spec)
++        if kernel_result is not None:
++            kernel_source_sha = kernel_result.details.get("candidate_sha256")
++            current_source_sha = hashlib.sha256(packet.lean_file.read_bytes()).hexdigest()
++            if kernel_source_sha and current_source_sha != kernel_source_sha:
++                return GateResult(
++                    gate_number=6,
++                    gate_name="STATEMENT_FIDELITY_REVIEW",
++                    passed=False,
++                    diagnostics=[
++                        "Candidate source changed after Gate 5 kernel checking and before Gate 6 review.",
++                        f"Gate 5 SHA256: {kernel_source_sha}",
++                        f"Gate 6 SHA256: {current_source_sha}",
++                    ],
++                    socratic_critique="Gate 6 fails closed because it is not screening the source snapshot compiled by Gate 5.",
++                    duration_seconds=time.time() - t0,
++                )
++            audited = set(kernel_result.details.get("axiom_audit_declarations", []))
++            selected = {report.theorem_name for report in reports.values()}
++            missing_from_kernel_audit = selected - audited
++            if not audited or missing_from_kernel_audit:
++                return GateResult(
++                    gate_number=6,
++                    gate_name="STATEMENT_FIDELITY_REVIEW",
++                    passed=False,
++                    diagnostics=[
++                        "Gate 6 selected declaration identity is not covered by Gate 5's kernel audit.",
++                        f"Selected names missing from Gate 5: {sorted(missing_from_kernel_audit)}",
++                    ],
++                    socratic_critique="Gate 6 fails closed when its selected declarations are not exactly among the kernel-audited names.",
++                    details={
++                        "selected_declarations": sorted(selected),
++                        "axiom_audit_declarations": sorted(audited),
++                    },
++                    duration_seconds=time.time() - t0,
++                )
+         if not reports:
+             diagnostics.append("No theorems could be matched between Lean file and specification.")
+             return GateResult(
+@@ -1323,7 +1360,7 @@
+             return report
+ 
+         # Gate 6: STATEMENT-FIDELITY REVIEW
+-        g6_res = self.gate_6_statement_fidelity_review(packet)
++        g6_res = self.gate_6_statement_fidelity_review(packet, kernel_result=g5_res)
+         report.gates.append(g6_res)
+         if not g6_res.passed:
+             report.status = "REJECTED_AT_GATE_6_STATEMENT_FIDELITY_REVIEW"
+--- a/tests/test_statement_fidelity_gate.py
++++ b/tests/test_statement_fidelity_gate.py
+@@ -81,6 +81,79 @@
+     assert not rep.passed
+     assert rep.fidelity_score == 0.0
+     assert rep.defects[0].defect_type == "TARGET_DECLARATION_NOT_FOUND"
++
++
++def test_target_symbol_alias_selects_requested_declaration_not_first():
++    code = """
++theorem unrelated (x : Nat) : x = x := by rfl
++theorem requested (x : Nat) : x + 0 = x := by simp
++"""
++    report = evaluate_statement_fidelity(
++        code,
++        {"target_symbol": "requested", "target_relation": {"pattern": r"x \+ 0 = x"}},
++    )
++    assert report.theorem_name == "requested"
++    assert report.conclusion_detected == "x + 0 = x"
++    assert report.passed
++
++
++def test_conflicting_target_aliases_fail_closed():
++    code = "theorem first : True := by trivial\ntheorem second : True := by trivial"
++    report = evaluate_statement_fidelity(
++        code, {"theorem_name": "first", "target_symbol": "second"}
++    )
++    assert not report.passed
++    assert report.fidelity_score == 0.0
++    assert report.defects[0].defect_type == "TARGET_DECLARATION_AMBIGUOUS"
++
++
++def test_unqualified_target_collision_is_ambiguous_not_source_ordered():
++    code = "namespace A\ntheorem target : True := by trivial\nend A\nnamespace B\ntheorem target : True := by trivial\nend B"
++    report = evaluate_statement_fidelity(code, {"decl": "target"})
++    assert not report.passed
++    assert report.defects[0].defect_type == "TARGET_DECLARATION_AMBIGUOUS"
++
++
++def test_missing_target_requires_explicit_first_declaration_opt_in():
++    code = "theorem only_decl : True := by trivial"
++    rejected = evaluate_statement_fidelity(code, {})
++    accepted = evaluate_statement_fidelity(code, {"allow_first_declaration": True})
++    assert not rejected.passed
++    assert rejected.defects[0].defect_type == "TARGET_DECLARATION_REQUIRED"
++    assert accepted.theorem_name == "only_decl"
++
++
++def test_cli_unknown_suite_target_fails_instead_of_returning_empty_success(tmp_path: Path):
++    lean_path = tmp_path / "Candidate.lean"
++    spec_path = tmp_path / "spec.json"
++    lean_path.write_text("theorem existing : 2 + 2 = 4 := by norm_num", encoding="utf-8")
++    spec_path.write_text(json.dumps({"theorems": {"existing": {"target_relation": {"pattern": "2 \\+ 2 = 4"}}}}), encoding="utf-8")
++    cmd = [
++        sys.executable,
++        str(REPO_ROOT / "tools" / "quality" / "statement_fidelity_gate.py"),
++        "evaluate", "--lean", str(lean_path), "--spec", str(spec_path),
++        "--decl", "missing", "--json",
++    ]
++    result = subprocess.run(cmd, capture_output=True, text=True)
++    assert result.returncode != 0
++    data = json.loads(result.stdout)
++    assert data["all_passed"] is False
++    assert data["reports"]["missing"]["defects"][0]["defect_type"] == "TARGET_DECLARATION_NOT_FOUND"
++
++
++def test_single_spec_cli_target_conflict_is_not_silently_overridden(tmp_path: Path):
++    lean_path = tmp_path / "Candidate.lean"
++    spec_path = tmp_path / "spec.json"
++    lean_path.write_text(
++        "theorem intended (n : Nat) : n + 0 = n := by simp\n"
++        "theorem other (n : Nat) : n + 1 = n + 1 := by simp",
++        encoding="utf-8",
++    )
++    spec_path.write_text(json.dumps({"theorem_name": "intended", "target_relation": {"pattern": "n \\+ 0 = n"}}), encoding="utf-8")
++    reports = evaluate_file_fidelity(lean_path, spec_path, target_decl="other")
++    report = next(iter(reports.values()))
++    assert not report.passed
++    assert report.defects[0].defect_type == "TARGET_DECLARATION_AMBIGUOUS"
+ 
+ 
+ def test_unrelated_structure_fields_are_not_counted_as_hypotheses():
+--- a/tests/quality/test_qms_production_defects_regression.py
++++ b/tests/quality/test_qms_production_defects_regression.py
+@@ -120,6 +120,78 @@
+     assert "requested_target_theorem_that_does_not_exist" in target_defect.message
+ 
+ 
++def test_gate6_rejects_selected_name_missing_from_gate5_kernel_audit(tmp_path: Path):
++    lean_file = tmp_path / "Candidate.lean"
++    lean_file.write_text("theorem intended : True := by trivial", encoding="utf-8")
++    packet = EvidencePacket(
++        spec_path=tmp_path / "spec.json",
++        lean_file=lean_file,
++        claim="declaration identity",
++        carrier="Prop",
++        hypotheses=[],
++        target_conclusion="True",
++        raw_spec={"theorem_name": "intended"},
++    )
++    kernel_result = GateResult(
++        gate_number=5,
++        gate_name="KERNEL_SOURCE_CHECK",
++        passed=True,
++        details={"axiom_audit_declarations": ["other_name"]},
++    )
++    result = QMSEvidencePipeline().gate_6_statement_fidelity_review(packet, kernel_result)
++    assert not result.passed
++    assert "identity" in result.diagnostics[0]
++
++
++def test_gate6_accepts_exact_selected_name_from_gate5_kernel_audit(tmp_path: Path):
++    lean_file = tmp_path / "Candidate.lean"
++    lean_file.write_text("theorem intended : True := by trivial", encoding="utf-8")
++    packet = EvidencePacket(
++        spec_path=tmp_path / "spec.json",
++        lean_file=lean_file,
++        claim="declaration identity",
++        carrier="Prop",
++        hypotheses=[],
++        target_conclusion="True",
++        raw_spec={"theorem_name": "intended"},
++    )
++    kernel_result = GateResult(
++        gate_number=5,
++        gate_name="KERNEL_SOURCE_CHECK",
++        passed=True,
++        details={"axiom_audit_declarations": ["intended"]},
++    )
++    result = QMSEvidencePipeline().gate_6_statement_fidelity_review(packet, kernel_result)
++    assert result.passed
++
++
++def test_gate6_rejects_source_changed_since_gate5(tmp_path: Path):
++    lean_file = tmp_path / "Candidate.lean"
++    original = "theorem intended (n : Nat) : n + 0 = n := by simp"
++    lean_file.write_text(original, encoding="utf-8")
++    packet = EvidencePacket(
++        spec_path=tmp_path / "spec.json",
++        lean_file=lean_file,
++        claim="source snapshot identity",
++        carrier="Nat",
++        hypotheses=[],
++        target_conclusion="n + 0 = n",
++        raw_spec={"theorem_name": "intended"},
++    )
++    kernel_result = GateResult(
++        gate_number=5,
++        gate_name="KERNEL_SOURCE_CHECK",
++        passed=True,
++        details={
++            "axiom_audit_declarations": ["intended"],
++            "candidate_sha256": "0" * 64,
++        },
++    )
++    result = QMSEvidencePipeline().gate_6_statement_fidelity_review(packet, kernel_result)
++    assert not result.passed
++    assert "source changed" in result.diagnostics[0]
++
++
+ def test_regression_statement_fidelity_unrelated_structure_isolated():
+     """Direct probe: an unrelated structure in the same file must NOT satisfy hypotheses of the target theorem."""
+     code = """

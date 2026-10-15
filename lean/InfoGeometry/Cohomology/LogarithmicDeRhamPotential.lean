@@ -40,7 +40,8 @@ theorem logCoord_dilation (c y : ℝ) (hc : 0 < c) (hy : 0 < y) :
 
 theorem hasDerivAt_logCoord {y : ℝ} (hy : y ≠ 0) :
     HasDerivAt logCoord (1 / y) y := by
-  simpa [logCoord, one_div] using Real.hasDerivAt_log hy
+  change HasDerivAt (fun z : ℝ => Real.log z) (1 / y) y
+  simpa [one_div] using Real.hasDerivAt_log hy
 
 theorem coordinate_log_reuses_owner {α : Type*} [Fintype α]
     (i : α) {x : Chart α} (hx : x i ≠ 0) :
@@ -77,7 +78,7 @@ theorem logPotential_derivative (x0 x1 : ℝ) :
   have h := (Real.hasDerivAt_exp x0).add
     (hasDerivAt_const x0 (Real.exp x1))
   have hlog := h.log (ne_of_gt (softmax_two_channel_partition_pos x0 x1))
-  convert hlog using 1 <;> ring
+  simpa using hlog
 
 theorem softmaxP0_derivative (x0 x1 : ℝ) :
     HasDerivAt (fun s => softmaxP0 s x1)
@@ -87,7 +88,7 @@ theorem softmaxP0_derivative (x0 x1 : ℝ) :
     ne_of_gt (softmax_two_channel_partition_pos x0 x1)
   have h := (Real.hasDerivAt_exp x0).div
     ((Real.hasDerivAt_exp x0).add (hasDerivAt_const x0 (Real.exp x1))) hden
-  convert h using 1 <;> field_simp <;> ring
+  convert h using 1 <;> simp only [Pi.add_apply] <;> field_simp [hden] <;> ring_nf
 
 theorem softmax_two_channel_derivative (x0 x1 : ℝ) :
     HasDerivAt
@@ -98,7 +99,7 @@ theorem softmax_two_channel_derivative (x0 x1 : ℝ) :
     ne_of_gt (softmax_two_channel_partition_pos x0 x1)
   have h := (Real.hasDerivAt_exp x0).div
     ((Real.hasDerivAt_exp x0).add (hasDerivAt_const x0 (Real.exp x1))) hden
-  convert h using 1 <;> field_simp <;> ring
+  convert h using 1 <;> simp only [Pi.add_apply] <;> field_simp [hden] <;> ring_nf
 
 theorem logsumexp_derivative_reuses_owner
     {ι : Type*} [Fintype ι] [Nonempty ι]

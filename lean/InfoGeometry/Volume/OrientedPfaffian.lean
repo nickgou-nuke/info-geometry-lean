@@ -319,7 +319,12 @@ noncomputable def matchingOfPerm (m : ℕ)
   unfold matchingOfPerm
   apply matching_ext
   funext i
-  simp
+  have hone : (1 : Equiv.Perm (Fin (2 * m))).symm = 1 := by
+    ext j
+    rfl
+  rw [PerfectMatching.map_partner]
+  rw [hone]
+  rfl
 
 @[simp] theorem matchingOfPerm_partner (m : ℕ)
     (σ : Equiv.Perm (Fin (2 * m))) (i : Fin (2 * m)) :
@@ -399,7 +404,10 @@ theorem matchingOfPerm_eq_standard_iff_stabilizes
     matchingOfPerm m σ = standardMatching m ↔
       σ * (standardMatching m).partnerEquiv * σ.symm =
         (standardMatching m).partnerEquiv := by
-  simpa only [matchingOfPerm_one] using
+  have hone : (1 : Equiv.Perm (Fin (2 * m))).symm = 1 := by
+    ext i
+    rfl
+  simpa [matchingOfPerm_one, hone] using
     (matchingOfPerm_eq_iff_partnerEquiv_eq m σ (1 : Equiv.Perm (Fin (2 * m))))
 
 theorem stabilizingPerm_maps_partner
@@ -622,13 +630,11 @@ theorem orientedPfaffian_fin_two (a : ℝ) :
       twoPointMatching.matchingWeight (!![(0 : ℝ), a; -a, 0]) = a
   have hleft : twoPointMatching.leftEndpoints = ({0} : Finset (Fin 2)) := by
     ext i
-    fin_cases i <;> simp [twoPointMatching, PerfectMatching.leftEndpoints]
+    fin_cases i <;> decide
   have hcross : twoPointMatching.crossingPairs = ∅ := by
     ext p
     rcases p with ⟨i, j⟩
-    fin_cases i <;> fin_cases j <;>
-      simp [twoPointMatching, PerfectMatching.crossingPairs,
-        PerfectMatching.leftEndpoints]
+    fin_cases i <;> fin_cases j <;> decide
   have hsign : twoPointMatching.matchingSign = 1 := by
     simp [PerfectMatching.matchingSign, PerfectMatching.crossingNumber, hcross]
   have hweight : twoPointMatching.matchingWeight

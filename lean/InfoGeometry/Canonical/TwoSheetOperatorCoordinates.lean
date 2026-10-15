@@ -20,9 +20,9 @@ def blockLinearMap : M6C →ₗ[ℂ] OperatorBlocks where
       (fun i j => A (1, i) (0, j)),
       (fun i j => A (1, i) (1, j)) )
   map_add' A B := by
-    ext s <;> simp [Matrix.add_apply]
+    ext i j <;> rfl
   map_smul' c A := by
-    ext s <;> simp [Matrix.smul_apply]
+    ext i j <;> rfl
 
 def blockLinearMapInv : OperatorBlocks →ₗ[ℂ] M6C where
   toFun b := fun s t =>
@@ -35,12 +35,12 @@ def blockLinearMapInv : OperatorBlocks →ₗ[ℂ] M6C where
     ext s t
     rcases s with ⟨s, i⟩
     rcases t with ⟨t, j⟩
-    fin_cases s <;> fin_cases t <;> simp [Matrix.add_apply]
+    fin_cases s <;> fin_cases t <;> rfl
   map_smul' c A := by
     ext s t
     rcases s with ⟨s, i⟩
     rcases t with ⟨t, j⟩
-    fin_cases s <;> fin_cases t <;> simp [Matrix.smul_apply]
+    fin_cases s <;> fin_cases t <;> rfl
 
 @[simp] theorem blockLinearMapInv_apply (b : OperatorBlocks) (s t : Fin 2 × Fin 3) :
     blockLinearMapInv b s t =

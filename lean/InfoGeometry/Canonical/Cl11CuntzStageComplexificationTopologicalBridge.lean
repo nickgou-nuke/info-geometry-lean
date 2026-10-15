@@ -50,6 +50,10 @@ noncomputable def complexifyClTensorStage (n : ℕ) :
     ClStage n →ₐ[ℝ] TensorComplexStage n :=
   complexifyMatrixAlgHom n
 
+@[simp] theorem complexifyClTensorStage_apply (n : ℕ) (A : ClStage n) (i j : Idx n) :
+    complexifyClTensorStage n A i j = algebraMap ℝ ℂ (A i j) :=
+  rfl
+
 def complexifyClTensorStageTopCatHom (n : ℕ) :
     TopCat.of (ClStage n) ⟶ TopCat.of (TensorComplexStage n) :=
   TopCat.ofHom
@@ -60,11 +64,8 @@ def complexifyClTensorStageTopCatHom (n : ℕ) :
 noncomputable def complexTensorStepLinear (n : ℕ) :
     TensorComplexStage n →ₗ[ℂ] TensorComplexStage (Nat.succ n) where
   toFun A := A ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℂ)
-  map_add' A B := by
-    simpa using Matrix.add_kronecker A B
-      (1 : Matrix (Fin 2) (Fin 2) ℂ)
-  map_smul' c A := by
-    simp [Matrix.smul_kronecker]
+  map_add' A B := Matrix.add_kronecker A B (1 : Matrix (Fin 2) (Fin 2) ℂ)
+  map_smul' c A := Matrix.smul_kronecker c A (1 : Matrix (Fin 2) (Fin 2) ℂ)
 
 def complexTensorStepTopCatHom (n : ℕ) :
     TopCat.of (TensorComplexStage n) ⟶
@@ -83,20 +84,26 @@ theorem complexifyClTensorStage_transition (n : ℕ) (A : ClStage n) :
       (complexifyClTensorStage n A) ⊗ₖ
         (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
   ext i j
-  cases hi : i with
-  | mk i₁ i₂ =>
-      cases hj : j with
-      | mk j₁ j₂ =>
-          fin_cases i₂ <;> fin_cases j₂ <;>
-            simp [complexifyClTensorStage, complexifyMatrixAlgHom,
-              matStageEmbed]
+  rw [complexifyClTensorStage_apply]
+  rcases i with ⟨i₁, i₂⟩
+  rcases j with ⟨j₁, j₂⟩
+  rw [Matrix.kroneckerMap_apply]
+  rw [complexifyClTensorStage_apply]
+  dsimp only [matStageEmbed]
+  rw [Matrix.kroneckerMap_apply]
+  rw [map_mul]
+  by_cases h : i₂ = j₂
+  · rw [h]
+    simp [Matrix.one_apply_eq]
+  · simp [Matrix.one_apply_ne h]
 
 theorem complexifyClTensorStageTopCatHom_naturality (n : ℕ) (A : ClStage n) :
     complexifyClTensorStageTopCatHom (Nat.succ n) (stageEmbed n A) =
       complexTensorStepTopCatHom n (complexifyClTensorStageTopCatHom n A) := by
   change complexifyClTensorStage (Nat.succ n) (stageEmbed n A) =
     complexTensorStepLinear n (complexifyClTensorStage n A)
-  simpa [stageEmbed_apply] using complexifyClTensorStage_transition n A
+  rw [stageEmbed_apply]
+  exact complexifyClTensorStage_transition n A
 
 /-- Complexify a real Cl(1,1) stage and reindex it to `Fin (2^n)`. -/
 noncomputable def complexifyClStage (n : ℕ) :
@@ -156,6 +163,18 @@ theorem complexifyClStage_concreteStep_of_indexCoherence
       ((idxEquivFinPowTwo (n + 1)).symm j).2 =
         ((stageIndexEquiv n).symm j).2 := by
     simpa [q, Nat.succ_eq_add_one] using hqi₂
+  have hp : (idxEquivFinPowTwo (n + 1)).symm i =
+      ((idxEquivFinPowTwo n).symm ((stageIndexEquiv n).symm i).1,
+       ((stageIndexEquiv n).symm i).2) := by
+    apply Prod.ext
+    · exact hp₁
+    · exact hp₂
+  have hq : (idxEquivFinPowTwo (n + 1)).symm j =
+      ((idxEquivFinPowTwo n).symm ((stageIndexEquiv n).symm j).1,
+       ((stageIndexEquiv n).symm j).2) := by
+    apply Prod.ext
+    · exact hq₁
+    · exact hq₂
   simp only [complexifyClStage, concreteStep, Matrix.reindexAlgEquiv,
     complexifyMatrixAlgHom]
   change Complex.ofReal
@@ -167,12 +186,13 @@ theorem complexifyClStage_concreteStep_of_indexCoherence
           ((idxEquivFinPowTwo n).symm ((stageIndexEquiv n).symm j).1)) *
       (1 : Matrix (Fin 2) (Fin 2) ℂ)
         ((stageIndexEquiv n).symm i).2 ((stageIndexEquiv n).symm j).2
-  rw [Matrix.kroneckerMap_apply, hp₂, hq₂]
-  rw [hp₁, hq₁]
+  rw [hp, hq]
+  rw [Matrix.kroneckerMap_apply]
   by_cases h : ((stageIndexEquiv n).symm i).2 =
       ((stageIndexEquiv n).symm j).2
-  · norm_num [Matrix.one_apply, h]
-  · norm_num [Matrix.one_apply, h]
+  · rw [h]
+    simp [Matrix.one_apply_eq]
+  · simp [Matrix.one_apply_ne h]
 
 theorem complexifyClStage_trace (n : ℕ) (A : ClStage n) :
     Matrix.trace (complexifyClStage n A) =

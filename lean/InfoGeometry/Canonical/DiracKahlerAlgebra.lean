@@ -60,12 +60,19 @@ theorem dkGen_chiral (R : Type*) [CommRing R] : dkGen R D * dkGen R J + dkGen R 
   have H2 : dkGen R J * dkGen R D = RingQuot.mkAlgHom R (DKRel R) (FreeAlgebra.ι R J * FreeAlgebra.ι R D) :=
     (map_mul (RingQuot.mkAlgHom R (DKRel R)) _ _).symm
   rw [H1, H2]
-  have H3 : RingQuot.mkAlgHom R (DKRel R) (FreeAlgebra.ι R D * FreeAlgebra.ι R J) + RingQuot.mkAlgHom R (DKRel R) (FreeAlgebra.ι R J * FreeAlgebra.ι R D) = RingQuot.mkAlgHom R (DKRel R) (FreeAlgebra.ι R D * FreeAlgebra.ι R J + FreeAlgebra.ι R J * FreeAlgebra.ι R D) :=
-    (map_add (RingQuot.mkAlgHom R (DKRel R)) _ _).symm
-  rw [H3]
-  have H0 : (0 : DiracKahlerAlgebra R) = RingQuot.mkAlgHom R (DKRel R) 0 := (map_zero (RingQuot.mkAlgHom R (DKRel R))).symm
-  rw [H0]
-  exact RingQuot.mkAlgHom_rel R (DKRel.chiral)
+  change RingQuot.mkAlgHom R (DKRel R)
+      (FreeAlgebra.ι R D * FreeAlgebra.ι R J) +
+    RingQuot.mkAlgHom R (DKRel R)
+      (FreeAlgebra.ι R J * FreeAlgebra.ι R D) =
+    (0 : RingQuot (DKRel R))
+  calc
+    _ = RingQuot.mkAlgHom R (DKRel R)
+        (FreeAlgebra.ι R D * FreeAlgebra.ι R J +
+          FreeAlgebra.ι R J * FreeAlgebra.ι R D) :=
+      (map_add (RingQuot.mkAlgHom R (DKRel R)) _ _).symm
+    _ = RingQuot.mkAlgHom R (DKRel R) 0 :=
+      RingQuot.mkAlgHom_rel R DKRel.chiral
+    _ = 0 := map_zero _
 
 /-- Conjugation by the involutive generator reverses the anticommuting
 operator. This is the algebraic parity action on the universal generator; it

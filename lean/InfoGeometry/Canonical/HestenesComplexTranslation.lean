@@ -48,6 +48,13 @@ noncomputable local instance : NormedRing EndH := inferInstance
 noncomputable local instance : NormedAlgebra ℝ EndH := inferInstance
 local instance : CompleteSpace EndH := inferInstance
 
+/-- Operator multiplication on endomorphisms is composition. -/
+theorem end_mul_eq_comp (A B : EndH) : A * B = A.comp B := by
+  apply ContinuousLinearMap.ext
+  intro x
+  rw [mul_apply_eq_comp]
+  rfl
+
 /-- Hestenes scalar embedding `a+bi ↦ a·1 + b·K`. -/
 @[rep_depth krein]
 noncomputable def hestenesScalar (z : ℂ) : EndH :=
@@ -73,7 +80,8 @@ theorem hestenesScalar_I :
 theorem hestenesScalar_I_sq :
     hestenesScalar (E := E) Complex.I * hestenesScalar (E := E) Complex.I =
       -(1 : EndH) := by
-  simpa [hestenesScalar_I] using complex_i_sq (E := E)
+  rw [hestenesScalar_I, end_mul_eq_comp, ContinuousLinearMap.one_def]
+  exact complex_i_sq (E := E)
 
 /-! ## Operator-coefficient Hestenes algebra -/
 
@@ -109,7 +117,9 @@ The operator-coefficient imaginary unit squares to `-1`.
 theorem hestenesCoeff_I_sq :
     hestenesCoeff (E := E) 0 (1 : EndH) *
       hestenesCoeff (E := E) 0 (1 : EndH) = -(1 : EndH) := by
-  simpa [hestenesCoeff_zero_one] using complex_i_sq (E := E)
+  simp only [hestenesCoeff, zero_add, one_mul]
+  rw [end_mul_eq_comp, ContinuousLinearMap.one_def]
+  exact complex_i_sq (E := E)
 
 /--
 Scalar Hestenes embedding is the operator-coefficient construction with
@@ -215,7 +225,8 @@ theorem modular_j_conjugates_hestenesCoeff_of_fixed
       J * Iₕ * J = J * (Iₕ * J) := by rw [mul_assoc]
       _ = J * (-spectral_epsilon (E := E)) := by
             rw [show Iₕ * J = -spectral_epsilon (E := E) by
-              simpa using complex_i_comp_modular_j (E := E)]
+              rw [end_mul_eq_comp]
+              exact complex_i_comp_modular_j (E := E)]
       _ = -(J * spectral_epsilon (E := E)) := by simp
       _ = -Iₕ := by rfl
   have hConjMul : J * (B * Iₕ) * J = (J * B * J) * (J * Iₕ * J) := by
@@ -256,7 +267,10 @@ theorem isPhaseLinear_of_commutes_hestenesScalar
       hestenesScalar (E := E) z * A) :
     IsPhaseLinear (E := E) A := by
   have hI := h Complex.I
-  simpa [IsPhaseLinear, hestenesScalar_I, InfoGeometry.Krein.clockAxis] using hI
+  have hI' : A.comp (complex_i (E := E)) =
+      (complex_i (E := E)).comp A := by
+    simpa only [end_mul_eq_comp, hestenesScalar_I] using hI
+  simpa [IsPhaseLinear, InfoGeometry.Krein.clockAxis] using hI'
 
 /-- Phase-linear operators commute with every Hestenes scalar. -/
 @[rep_depth krein]
@@ -267,7 +281,10 @@ theorem commutes_hestenesScalar_of_isPhaseLinear
       hestenesScalar (E := E) z * A := by
   intro z
   have hK : A * Iₕ = Iₕ * A := by
-    simpa [IsPhaseLinear, InfoGeometry.Krein.clockAxis] using hA
+    have hK' : A.comp (complex_i (E := E)) =
+        (complex_i (E := E)).comp A := by
+      simpa [IsPhaseLinear, InfoGeometry.Krein.clockAxis] using hA
+    simpa only [← end_mul_eq_comp] using hK'
   apply ContinuousLinearMap.ext
   intro x
   have hKx : A (Iₕ x) = Iₕ (A x) := by
@@ -298,7 +315,8 @@ theorem modular_j_conjugates_complex_i :
     J * Iₕ * J = J * (Iₕ * J) := by rw [mul_assoc]
     _ = J * (-spectral_epsilon (E := E)) := by
           rw [show Iₕ * J = -spectral_epsilon (E := E) by
-            simpa using complex_i_comp_modular_j (E := E)]
+            rw [end_mul_eq_comp]
+            exact complex_i_comp_modular_j (E := E)]
     _ = -(J * spectral_epsilon (E := E)) := by simp
     _ = -Iₕ := by rfl
 

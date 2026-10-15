@@ -38,12 +38,18 @@ def jUnit : CZ :=
 def kQuaternionUnit : CZ :=
   { a := 0, b := 0, x := ![0, 0, 1], y := ![0, 0, -1] }
 
-def quaternionBasis : Fin 4 → CZ
-  | ⟨0, _⟩ => 1
-  | ⟨1, _⟩ => iUnit
-  | ⟨2, _⟩ => jUnit
-  | ⟨3, _⟩ => kQuaternionUnit
+def quaternionBasis (a : Fin 4) : CZ :=
+  match a.val with
+  | 0 => 1
+  | 1 => iUnit
+  | 2 => jUnit
+  | 3 => kQuaternionUnit
   | _ => 1
+
+@[simp] theorem quaternionBasis_zero : quaternionBasis ⟨0, by decide⟩ = 1 := rfl
+@[simp] theorem quaternionBasis_one : quaternionBasis 1 = iUnit := rfl
+@[simp] theorem quaternionBasis_two : quaternionBasis 2 = jUnit := rfl
+@[simp] theorem quaternionBasis_three : quaternionBasis 3 = kQuaternionUnit := rfl
 
 def ellBasis (a : Fin 4) : CZ :=
   zMul lUnit (quaternionBasis a)
@@ -330,7 +336,7 @@ theorem ellBasis_i_square :
     simp [ellBasis, quaternionBasis, iUnit, lUnit, zMul,
       InfoGeometry.Canonical.ZornMatrix.dot,
       InfoGeometry.Canonical.ZornMatrix.cross]
-  all_goals fin_cases i <;> norm_num
+  all_goals (try fin_cases i) <;> norm_num
 
 theorem ellBasis_i_left_mul :
     zMul lUnit (ellBasis 1) = iUnit :=
@@ -345,7 +351,7 @@ theorem ellBasis_i_right_lUnit :
     simp [ellBasis, quaternionBasis, iUnit, lUnit, zMul,
       InfoGeometry.Canonical.ZornMatrix.dot,
       InfoGeometry.Canonical.ZornMatrix.cross]
-  all_goals fin_cases i <;> norm_num
+  all_goals (try fin_cases i) <;> norm_num
 
 theorem i_right_lUnit :
     zMul iUnit lUnit = -ellBasis 1 :=
@@ -502,7 +508,7 @@ theorem realZornCompositionAut_maps_scalarChiralNull
         ((1 : CZ) + ε • (φ : CanonicalLinearAut) lUnit) := by
   rw [realZornCompositionAut_maps_chiralNull]
   simp only [quaternionBasis, realZornCompositionAut_fix_one]
-  rw [zMul_one]
+  rw [KingdonCanonicalBridge.zMul_one]
 
 theorem realZornCompositionAut_maps_chiralNull_sum
     (φ : realZornCompositionAut) (a : Fin 4) :
@@ -519,38 +525,48 @@ theorem realZornCompositionAut_maps_chiralNull_difference
 @[simp] theorem ellBasis_zero :
     ellBasis ⟨0, by decide⟩ = lUnit := by
   change zMul lUnit 1 = lUnit
-  exact zMul_one lUnit
+  exact KingdonCanonicalBridge.zMul_one lUnit
 
 @[simp] theorem scalar_chiralNull_plus_idempotent :
     chiralNull ⟨0, by decide⟩ 1 = (1 / 2 : ℝ) • (1 + lUnit) := by
   rw [chiralNull]
-  simp only [quaternionBasis, one_smul]
+  simp only [quaternionBasis_zero, one_smul]
   rw [ellBasis_zero]
 
 @[simp] theorem scalar_chiralNull_minus_idempotent :
     chiralNull ⟨0, by decide⟩ (-1) = (1 / 2 : ℝ) • (1 - lUnit) := by
   rw [chiralNull]
-  simp only [quaternionBasis, neg_one_smul]
+  simp only [quaternionBasis_zero, neg_one_smul]
   rw [ellBasis_zero]
   rfl
 
 theorem one_add_ell_sq :
     zMul (1 + lUnit) (1 + lUnit) = (2 : ℝ) • (1 + lUnit) := by
-  ext i <;>
-    simp [zMul, lUnit, smul_eq_mul, Equiv.smul_def,
-      InfoGeometry.Canonical.ZornMatrix.coordEquiv,
-      InfoGeometry.Canonical.ZornMatrix.dot,
-      InfoGeometry.Canonical.ZornMatrix.cross]
-  all_goals (try fin_cases i) <;> norm_num
+  apply InfoGeometry.Canonical.ZornMatrix.ext
+  · simp [zMul, lUnit, InfoGeometry.Canonical.ZornMatrix.dot]; norm_num
+  · simp [zMul, lUnit, InfoGeometry.Canonical.ZornMatrix.dot]; norm_num
+  · ext i; fin_cases i
+    · simp [zMul, lUnit, InfoGeometry.Canonical.ZornMatrix.cross]; norm_num
+    · simp [zMul, lUnit, InfoGeometry.Canonical.ZornMatrix.cross]
+    · simp [zMul, lUnit, InfoGeometry.Canonical.ZornMatrix.cross]
+  · ext i; fin_cases i
+    · simp [zMul, lUnit, InfoGeometry.Canonical.ZornMatrix.cross]; norm_num
+    · simp [zMul, lUnit, InfoGeometry.Canonical.ZornMatrix.cross]
+    · simp [zMul, lUnit, InfoGeometry.Canonical.ZornMatrix.cross]
 
 theorem one_sub_ell_sq :
     zMul (1 - lUnit) (1 - lUnit) = (2 : ℝ) • (1 - lUnit) := by
-  ext i <;>
-    simp [zMul, lUnit, smul_eq_mul, Equiv.smul_def,
-      InfoGeometry.Canonical.ZornMatrix.coordEquiv,
-      InfoGeometry.Canonical.ZornMatrix.dot,
-      InfoGeometry.Canonical.ZornMatrix.cross]
-  all_goals (try fin_cases i) <;> norm_num
+  apply InfoGeometry.Canonical.ZornMatrix.ext
+  · simp [zMul, lUnit, InfoGeometry.Canonical.ZornMatrix.dot]; norm_num
+  · simp [zMul, lUnit, InfoGeometry.Canonical.ZornMatrix.dot]; norm_num
+  · ext i; fin_cases i
+    · simp [zMul, lUnit, InfoGeometry.Canonical.ZornMatrix.cross]; norm_num
+    · simp [zMul, lUnit, InfoGeometry.Canonical.ZornMatrix.cross]
+    · simp [zMul, lUnit, InfoGeometry.Canonical.ZornMatrix.cross]
+  · ext i; fin_cases i
+    · simp [zMul, lUnit, InfoGeometry.Canonical.ZornMatrix.cross]; norm_num
+    · simp [zMul, lUnit, InfoGeometry.Canonical.ZornMatrix.cross]
+    · simp [zMul, lUnit, InfoGeometry.Canonical.ZornMatrix.cross]
 
 theorem ell_idempotent_plus :
     zMul ((1 / 2 : ℝ) • (1 + lUnit)) ((1 / 2 : ℝ) • (1 + lUnit)) =
@@ -566,20 +582,18 @@ theorem ell_idempotent_minus :
 
 theorem ell_idempotent_plus_mul_minus :
     zMul ((1 / 2 : ℝ) • (1 + lUnit)) ((1 / 2 : ℝ) • (1 - lUnit)) = 0 := by
-  ext i <;>
-    simp [zMul, lUnit, smul_eq_mul, Equiv.smul_def,
-      InfoGeometry.Canonical.ZornMatrix.coordEquiv,
-      InfoGeometry.Canonical.ZornMatrix.dot,
-      InfoGeometry.Canonical.ZornMatrix.cross]
-  all_goals (try fin_cases i) <;> norm_num
+  apply InfoGeometry.Canonical.ZornMatrix.ext
+  · simp [zMul, lUnit, InfoGeometry.Canonical.ZornMatrix.dot]
+  · simp [zMul, lUnit, InfoGeometry.Canonical.ZornMatrix.dot]
+  · funext i; fin_cases i <;> simp [zMul, lUnit, InfoGeometry.Canonical.ZornMatrix.cross]
+  · funext i; fin_cases i <;> simp [zMul, lUnit, InfoGeometry.Canonical.ZornMatrix.cross]
 
 theorem ell_idempotent_minus_mul_plus :
     zMul ((1 / 2 : ℝ) • (1 - lUnit)) ((1 / 2 : ℝ) • (1 + lUnit)) = 0 := by
-  ext i <;>
-    simp [zMul, lUnit, smul_eq_mul, Equiv.smul_def,
-      InfoGeometry.Canonical.ZornMatrix.coordEquiv,
-      InfoGeometry.Canonical.ZornMatrix.dot,
-      InfoGeometry.Canonical.ZornMatrix.cross]
-  all_goals (try fin_cases i) <;> norm_num
+  apply InfoGeometry.Canonical.ZornMatrix.ext
+  · simp [zMul, lUnit, InfoGeometry.Canonical.ZornMatrix.dot]
+  · simp [zMul, lUnit, InfoGeometry.Canonical.ZornMatrix.dot]
+  · funext i; fin_cases i <;> simp [zMul, lUnit, InfoGeometry.Canonical.ZornMatrix.cross]
+  · funext i; fin_cases i <;> simp [zMul, lUnit, InfoGeometry.Canonical.ZornMatrix.cross]
 
 end InfoGeometry.Algebra.Zorn.SplitOctonionWittPlanes

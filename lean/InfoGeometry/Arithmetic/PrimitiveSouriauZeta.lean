@@ -64,7 +64,10 @@ theorem primitiveFiniteZetaPartition_eq_arithmeticPartition_unit
     (A : Finset ℕ) (β : ℝ) :
     primitiveFiniteZetaPartition A β =
       arithmeticPartition A (fun _ => (1 : ℝ)) β := by
-  simp [primitiveFiniteZetaPartition, arithmeticPartition, arithmeticCountWeight]
+  dsimp [primitiveFiniteZetaPartition, arithmeticPartition]
+  apply Finset.sum_congr rfl
+  intro n _
+  simp [arithmeticCountWeight]
 
 /-- The finite restricted partition is nonnegative. -/
 theorem primitiveFiniteZetaPartition_nonneg

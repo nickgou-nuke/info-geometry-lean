@@ -36,11 +36,11 @@ theorem chiralReadoutBasis_sPlus_native_readout (i : Fin 3) :
       InfoGeometry.Algebra.ZornVectorMatrix.U i := by
   fin_cases i
   · simpa [chiralReadoutBasis, chiralOperatorNativeReadout,
-      chiralGeneratorIndex, circularBasis_apply] using circular_rootPlus_nativeU 0
+      chiralGeneratorIndex, circularBasis_apply, circularFrame] using circular_rootPlus_nativeU 0
   · simpa [chiralReadoutBasis, chiralOperatorNativeReadout,
-      chiralGeneratorIndex, circularBasis_apply] using circular_rootPlus_nativeU 1
+      chiralGeneratorIndex, circularBasis_apply, circularFrame] using circular_rootPlus_nativeU 1
   · simpa [chiralReadoutBasis, chiralOperatorNativeReadout,
-      chiralGeneratorIndex, circularBasis_apply] using circular_rootPlus_nativeU 2
+      chiralGeneratorIndex, circularBasis_apply, circularFrame] using circular_rootPlus_nativeU 2
 
 theorem chiralReadoutBasis_pPlus_native_readout :
     chiralReadoutBasis (.pPlus) =
@@ -72,11 +72,11 @@ theorem chiralReadoutBasis_sMinus_native_readout (i : Fin 3) :
       InfoGeometry.Algebra.ZornVectorMatrix.V i := by
   fin_cases i
   · simpa [chiralReadoutBasis, chiralOperatorNativeReadout,
-      chiralGeneratorIndex, circularBasis_apply] using circular_rootMinus_nativeV 0
+      chiralGeneratorIndex, circularBasis_apply, circularFrame] using circular_rootMinus_nativeV 0
   · simpa [chiralReadoutBasis, chiralOperatorNativeReadout,
-      chiralGeneratorIndex, circularBasis_apply] using circular_rootMinus_nativeV 1
+      chiralGeneratorIndex, circularBasis_apply, circularFrame] using circular_rootMinus_nativeV 1
   · simpa [chiralReadoutBasis, chiralOperatorNativeReadout,
-      chiralGeneratorIndex, circularBasis_apply] using circular_rootMinus_nativeV 2
+      chiralGeneratorIndex, circularBasis_apply, circularFrame] using circular_rootMinus_nativeV 2
 
 theorem chiralReadoutBasis_pMinus_native_readout :
     chiralReadoutBasis (.pMinus) =

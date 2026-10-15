@@ -150,7 +150,7 @@ theorem paper_xi_fiber_uniformization_markov_semigroup_explicit {Omega X : Type}
             (fun ω => Real.exp (-t) * μ ω + (1 - Real.exp (-t)) * fiberReflectorReal P μ ω)
             ω =
           fiberReflectorReal P μ ω := by
-      simpa [fiberUniformizationSemigroup] using hfix
+      exact hfix
     have hexp : Real.exp (-(s + t)) = Real.exp (-s) * Real.exp (-t) := by
       rw [neg_add, Real.exp_add]
     unfold fiberUniformizationSemigroup

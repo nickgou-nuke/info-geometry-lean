@@ -32,7 +32,8 @@ theorem coeff_formalGeometric (n : ℕ) :
 /-- The geometric series is the inverse of `1 - X`, coefficientwise. -/
 theorem formalGeometric_mul_one_sub_X :
     formalGeometric A * (1 - PowerSeries.X) = 1 := by
-  simpa [formalGeometric] using PowerSeries.mk_one_mul_one_sub_eq_one (S := A)
+  change PowerSeries.mk 1 * (1 - PowerSeries.X) = 1
+  exact PowerSeries.mk_one_mul_one_sub_eq_one (S := A)
 
 variable [Algebra ℚ A]
 

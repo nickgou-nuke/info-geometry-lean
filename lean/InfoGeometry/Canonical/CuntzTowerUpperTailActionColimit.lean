@@ -195,6 +195,14 @@ theorem upperGeneratorProjectionColimitMap_idempotent
   have hstage :=
     leftAdjointGeneratorActionTopCatHom_comp_leftGeneratorActionTopCatHom_idempotent
       (T.family j.1) (Fin.castLE j.2 i)
+  have hP_idem :
+      ((upperLeftAdjointGeneratorActionNatTrans Stage T m i).app j ≫
+        (upperLeftGeneratorActionNatTrans Stage T m i).app j) ≫
+      ((upperLeftAdjointGeneratorActionNatTrans Stage T m i).app j ≫
+        (upperLeftGeneratorActionNatTrans Stage T m i).app j) =
+      (upperLeftAdjointGeneratorActionNatTrans Stage T m i).app j ≫
+        (upperLeftGeneratorActionNatTrans Stage T m i).app j :=
+    hstage
   calc
     upperStageTopologicalInjection Stage T m j ≫
         (upperGeneratorProjectionColimitMap Stage T m i ≫
@@ -222,16 +230,7 @@ theorem upperGeneratorProjectionColimitMap_idempotent
     _ = ((upperLeftAdjointGeneratorActionNatTrans Stage T m i).app j ≫
           (upperLeftGeneratorActionNatTrans Stage T m i).app j) ≫
         upperStageTopologicalInjection Stage T m j := by
-      rw [show
-        (upperLeftAdjointGeneratorActionNatTrans Stage T m i).app j ≫
-            (upperLeftGeneratorActionNatTrans Stage T m i).app j =
-          (T.family j.1).leftAdjointGeneratorActionTopCatHom
-              (Fin.castLE j.2 i) ≫
-            (T.family j.1).leftGeneratorActionTopCatHom
-              (Fin.castLE j.2 i) by rfl]
-      have h := congrArg
-        (fun q => q ≫ upperStageTopologicalInjection Stage T m j) hstage
-      simpa only [Category.assoc] using h
+      rw [← Category.assoc, hP_idem]
     _ = upperStageTopologicalInjection Stage T m j ≫
         upperGeneratorProjectionColimitMap Stage T m i := by
       exact (upperGeneratorProjectionColimitMap_stage Stage T m i j).symm
@@ -266,12 +265,9 @@ theorem upperGeneratorActionColimitMap_comm_of
       (upperLeftGeneratorActionNatTrans Stage T m i).app j ≫
           (upperRightAdjointGeneratorActionNatTrans Stage T m j').app j =
         (upperRightAdjointGeneratorActionNatTrans Stage T m j').app j ≫
-          (upperLeftGeneratorActionNatTrans Stage T m i).app j := by
-    apply TopCat.hom_ext
-    simpa [upperLeftGeneratorActionNatTrans,
-      upperRightAdjointGeneratorActionNatTrans, TopCat.ofHom] using
-      (leftGeneratorAction_comp_rightAdjointGeneratorAction
-        (T.family j.1) (Fin.castLE j.2 i) (Fin.castLE j.2 j')).symm
+          (upperLeftGeneratorActionNatTrans Stage T m i).app j :=
+    leftGeneratorActionTopCatHom_comp_rightAdjointGeneratorActionTopCatHom
+      (T.family j.1) (Fin.castLE j.2 i) (Fin.castLE j.2 j')
   calc
     (upperStageTopologicalInjection Stage T m j ≫
         upperLeftGeneratorActionColimitMap Stage T m i) ≫

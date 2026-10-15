@@ -78,11 +78,7 @@ theorem paper_conclusion_capacity_deficit_mellin_bernstein_completion
     (h : ConclusionCapacityDeficitMellinBernsteinData) : h.completePackage := by
   have hpkg := Omega.POM.paper_pom_oracle_capacity_stieltjes_inversion_mellin h.map
   refine ⟨hpkg.1, ?_, ?_⟩
-  · simpa [conclusion_capacity_deficit_mellin_bernstein_completion_fiberMultiplicity,
-      conclusion_capacity_deficit_mellin_bernstein_completion_histogram,
-      conclusion_capacity_deficit_mellin_bernstein_completion_tailCount,
-      conclusion_capacity_deficit_mellin_bernstein_completion_continuousCapacity,
-      conclusion_capacity_deficit_mellin_bernstein_completion_momentSpectrum] using hpkg.2
+  · exact hpkg.2
   · intro T
     rfl
 

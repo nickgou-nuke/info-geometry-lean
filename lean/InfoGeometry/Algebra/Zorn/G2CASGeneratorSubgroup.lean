@@ -34,28 +34,28 @@ theorem cas0_mem_flagGeneratedSubgroup : cas0 ∈ flagGeneratedSubgroup := by
     (evaluateWord_mem_flagGeneratedSubgroup [(7, 1)])
 
 theorem cas1_mem_flagGeneratedSubgroup : cas1 ∈ flagGeneratedSubgroup := by
-  simpa [cas1, evaluateWord, evaluateToken, flagGeneratorValue] using
+  simpa [cas1, evaluateWord, evaluateToken, flagGeneratorValue, mul_assoc] using
     (evaluateWord_mem_flagGeneratedSubgroup
       [(3, 1), (7, 1), (6, 1), (7, 1), (1, -1), (6, 1), (1, 1), (7, 1)])
 
 theorem cas2_mem_flagGeneratedSubgroup : cas2 ∈ flagGeneratedSubgroup := by
-  simpa [cas2, evaluateWord, evaluateToken, flagGeneratorValue] using
+  simpa [cas2, evaluateWord, evaluateToken, flagGeneratorValue, mul_assoc] using
     (evaluateWord_mem_flagGeneratedSubgroup
       [(0, 1), (7, 1), (6, 1), (2, 1), (7, 1), (6, 1),
        (7, 1), (6, 1), (1, -1)])
 
 theorem cas3_mem_flagGeneratedSubgroup : cas3 ∈ flagGeneratedSubgroup := by
-  simpa [cas3, evaluateWord, evaluateToken, flagGeneratorValue] using
+  simpa [cas3, evaluateWord, evaluateToken, flagGeneratorValue, mul_assoc] using
     (evaluateWord_mem_flagGeneratedSubgroup
       [(3, 1), (7, 1), (6, 1), (7, 1), (3, 1)])
 
 theorem cas4_mem_flagGeneratedSubgroup : cas4 ∈ flagGeneratedSubgroup := by
-  simpa [cas4, evaluateWord, evaluateToken, flagGeneratorValue] using
+  simpa [cas4, evaluateWord, evaluateToken, flagGeneratorValue, mul_assoc] using
     (evaluateWord_mem_flagGeneratedSubgroup
       [(7, 1), (2, 1), (6, 1), (7, 1), (2, 1), (6, 1), (2, 1), (7, 1)])
 
 theorem cas5_mem_flagGeneratedSubgroup : cas5 ∈ flagGeneratedSubgroup := by
-  simpa [cas5, evaluateWord, evaluateToken, flagGeneratorValue] using
+  simpa [cas5, evaluateWord, evaluateToken, flagGeneratorValue, mul_assoc] using
     (evaluateWord_mem_flagGeneratedSubgroup
       [(7, 1), (6, 1), (7, 1), (6, 1), (7, 1)])
 

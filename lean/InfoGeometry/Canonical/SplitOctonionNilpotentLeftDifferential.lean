@@ -55,11 +55,12 @@ theorem leftMulDifferential_comp_eq_zero
   rw [leftMulDifferential_comp_eq_leftMul_sq theta hleft, hsq]
   apply LinearMap.ext
   intro omega
+  rw [leftMulDifferential_apply, LinearMap.zero_apply]
   ext r
   fin_cases r <;>
-    dsimp [leftMulDifferential, splitOctonionMul, splitQuaternionOf,
-      splitQuaternionLPart, splitQuaternionAdd, splitQuaternionMul,
-      splitQuaternionConj, splitOctonionOfQuaternionPair] <;>
+    dsimp [splitOctonionMul, splitQuaternionOf, splitQuaternionLPart,
+      splitQuaternionAdd, splitQuaternionMul, splitQuaternionConj,
+      splitOctonionOfQuaternionPair] <;>
     ring
 
 end InfoGeometry.Canonical

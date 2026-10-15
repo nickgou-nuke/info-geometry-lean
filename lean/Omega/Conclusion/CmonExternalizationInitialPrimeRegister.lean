@@ -48,7 +48,7 @@ def conclusion_cmon_externalization_initial_prime_register_lift
     (g : D.conclusion_cmon_externalization_initial_prime_register_nonsection → M) :
     D.conclusion_cmon_externalization_initial_prime_register_free_register →+ M where
   toFun s := (s.map g).sum
-  map_zero' := by simp
+  map_zero' := by rw [Multiset.map_zero, Multiset.sum_zero]
   map_add' s t := by simp [Multiset.map_add, Multiset.sum_add]
 
 @[simp]
@@ -59,8 +59,10 @@ lemma conclusion_cmon_externalization_initial_prime_register_lift_generator
     (x : D.conclusion_cmon_externalization_initial_prime_register_nonsection) :
     conclusion_cmon_externalization_initial_prime_register_lift g
         (D.conclusion_cmon_externalization_initial_prime_register_generator x) = g x := by
-  simp [conclusion_cmon_externalization_initial_prime_register_lift,
+  dsimp [conclusion_cmon_externalization_initial_prime_register_lift,
     conclusion_cmon_externalization_initial_prime_register_generator]
+  change (Multiset.map g ({x} : Multiset _)).sum = g x
+  simp
 
 lemma conclusion_cmon_externalization_initial_prime_register_lift_unique
     {D : conclusion_cmon_externalization_initial_prime_register_data.{u, v}} {M : Type u}
@@ -87,8 +89,8 @@ lemma conclusion_cmon_externalization_initial_prime_register_lift_unique
         _ = g x + (conclusion_cmon_externalization_initial_prime_register_lift g) s := by
           rw [hx, ih]
         _ = (conclusion_cmon_externalization_initial_prime_register_lift g) ({x} + s) := by
-          rw [map_add]
-          simp [conclusion_cmon_externalization_initial_prime_register_lift]
+          have hgen : ({x} : Multiset _) = D.conclusion_cmon_externalization_initial_prime_register_generator x := rfl
+          rw [map_add, hgen, conclusion_cmon_externalization_initial_prime_register_lift_generator]
         _ = (conclusion_cmon_externalization_initial_prime_register_lift g) (x ::ₘ s) := by
           rw [Multiset.singleton_add]
 

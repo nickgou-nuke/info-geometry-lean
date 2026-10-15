@@ -1,6 +1,7 @@
 import Mathlib.Data.Matrix.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
+import Mathlib.Analysis.SpecialFunctions.Exponential
 import Mathlib.Analysis.Normed.Algebra.MatrixExponential
 import Mathlib.Tactic
 import InfoGeometry.Clifford.NilpotentBinomial

@@ -38,7 +38,12 @@ open InfoGeometry.Canonical.Cl11BipartiteSpectralCurvature
 
 abbrev Atom := Mat2
 abbrev StageOne := MatStage 1
-abbrev StageTwo := MatStage 2
+-- Use the product index produced by `⊗ₖ` directly. `Idx 2` has this
+-- underlying type, but its recursively installed `Fintype` instance is
+-- opaque, whereas matrix Kronecker operations use the product instance.
+abbrev StageTwo :=
+  Matrix (InfoGeometry.Clifford.TowerMatrix.Idx 1 × Fin 2)
+    (InfoGeometry.Clifford.TowerMatrix.Idx 1 × Fin 2) ℝ
 
 /-- Quadratic polynomial cutoff model
     P(X) = c₀ I + c₁ X + c₂ X². -/
@@ -118,9 +123,12 @@ theorem tensorSum_sq (DeltaL : StageOne) (DeltaR : Atom) :
       (2 : ℝ) • (DeltaL ⊗ₖ DeltaR) +
       (1 : StageOne) ⊗ₖ (DeltaR * DeltaR) := by
   unfold tensorSum
-  rw [add_mul, mul_add, mul_add]
-  repeat rw [← Matrix.mul_kronecker_mul]
-  simp only [Matrix.mul_one, Matrix.one_mul]
+  rw [Matrix.add_mul, Matrix.mul_add, Matrix.mul_add]
+  rw [← Matrix.mul_kronecker_mul DeltaL DeltaL (1 : Atom) (1 : Atom),
+    ← Matrix.mul_kronecker_mul DeltaL (1 : StageOne) (1 : Atom) DeltaR,
+    ← Matrix.mul_kronecker_mul (1 : StageOne) DeltaL DeltaR (1 : Atom),
+    ← Matrix.mul_kronecker_mul (1 : StageOne) (1 : StageOne) DeltaR DeltaR]
+  simp only [Matrix.one_mul, Matrix.mul_one]
   module
 
 /-- Trace of the stage-one identity is 2. -/
@@ -139,7 +147,7 @@ theorem trace_atom_one :
 theorem trace_stageTwo_one :
     Matrix.trace (1 : StageTwo) = 4 := by
   rw [Matrix.trace_one]
-  norm_num [InfoGeometry.Clifford.TowerMatrix.idx_card_pow_two]
+  norm_num [Fintype.card_prod, InfoGeometry.Clifford.TowerMatrix.idx_card_pow_two]
 
 /-- Exact trace of the tensor-sum operator. -/
 theorem trace_tensorSum (DeltaL : StageOne) (DeltaR : Atom) :

@@ -205,8 +205,8 @@ Zorn Composition Theorem:
 `detZ (X * Y) = detZ X * detZ Y`.
 -/
 theorem detZ_mul (X Y : ZornCell R) :
-    detZ (X * Y) = detZ X * detZ Y := by
-  simpa [instMulZornCell] using detZ_mulZ X Y
+    detZ (X * Y) = detZ X * detZ Y :=
+  detZ_mulZ X Y
 
 /-- Left multiplication by a norm-one Zorn cell preserves `detZ`. -/
 theorem detZ_left_mul_normOne

@@ -9,7 +9,26 @@ inductive SyncHatdeltaMarkedPoint
   | Pinfty
   | PauxZero
   | PauxPole
-  deriving DecidableEq, Fintype, Repr
+  deriving DecidableEq, Repr
+
+/-- The marked-point enumeration as an explicit equivalence, avoiding the
+`List.Nodup` coercion change in the derived `Fintype` instance. -/
+def syncHatdeltaMarkedPointEquivFin : SyncHatdeltaMarkedPoint ≃ Fin 4 where
+  toFun
+    | .P0 => 0
+    | .Pinfty => 1
+    | .PauxZero => 2
+    | .PauxPole => 3
+  invFun
+    | 0 => .P0
+    | 1 => .Pinfty
+    | 2 => .PauxZero
+    | 3 => .PauxPole
+  left_inv p := by cases p <;> rfl
+  right_inv i := by fin_cases i <;> rfl
+
+instance : Fintype SyncHatdeltaMarkedPoint :=
+  Fintype.ofEquiv (Fin 4) syncHatdeltaMarkedPointEquivFin.symm
 
 /-- Compact divisor-order data for the quotient curve. -/
 structure SyncHatdeltaQuotientCurve where

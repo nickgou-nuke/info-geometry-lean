@@ -14,7 +14,7 @@ the discriminant group or `E₈` gluing is made here.
 
 namespace InfoGeometry.RootSystem.D4
 
-def Ambient := Fin 4 → ℤ
+abbrev Ambient := Fin 4 → ℤ
 
 instance : DecidableEq Ambient := inferInstanceAs (DecidableEq (Fin 4 → ℤ))
 
@@ -37,20 +37,18 @@ theorem add_mem_D4 {x y : Ambient} (hx : IsD4 x) (hy : IsD4 y) :
     IsD4 (x + y) := by
   change coordinateSum (x + y) % 2 = 0
   rw [show coordinateSum (x + y) = coordinateSum x + coordinateSum y by
-    simp only [coordinateSum, Fin.sum_univ_four]
-    change (x 0 + y 0) + (x 1 + y 1) + (x 2 + y 2) + (x 3 + y 3) =
-      (x 0 + x 1 + x 2 + x 3) + (y 0 + y 1 + y 2 + y 3)
-    abel]
+    unfold coordinateSum
+    change Finset.univ.sum (fun i : Fin 4 => x i + y i) = _
+    rw [Finset.sum_add_distrib]]
   rw [Int.add_emod, hx, hy]
   norm_num
 
 theorem neg_mem_D4 {x : Ambient} (hx : IsD4 x) : IsD4 (-x) := by
   change coordinateSum (-x) % 2 = 0
   rw [show coordinateSum (-x) = -coordinateSum x by
-    simp only [coordinateSum, Fin.sum_univ_four]
-    change (-x 0) + (-x 1) + (-x 2) + (-x 3) =
-      -(x 0 + x 1 + x 2 + x 3)
-    abel]
+    unfold coordinateSum
+    change Finset.univ.sum (fun i : Fin 4 => -x i) = _
+    rw [Finset.sum_neg_distrib]]
   apply Int.emod_eq_zero_of_dvd
   exact (dvd_neg).2 (Int.dvd_of_emod_eq_zero hx)
 
@@ -60,7 +58,7 @@ def latticeSubgroup : AddSubgroup Ambient where
   add_mem' := add_mem_D4
   neg_mem' := neg_mem_D4
 
-abbrev Lattice := {x : Ambient // IsD4 x}
+abbrev Lattice := ↥latticeSubgroup
 
 def basisVector (i : Fin 4) : Ambient := fun j => if i = j then 1 else 0
 
@@ -181,7 +179,8 @@ theorem coordinateSum_reflect_mod (i : Fin 4) (x : Ambient) :
   have hsum : coordinateSum (reflect i x) =
       coordinateSum x - dot x (simpleRoot i) * coordinateSum (simpleRoot i) := by
     unfold coordinateSum reflect
-    change (∑ k, (x k - dot x (simpleRoot i) * simpleRoot i k)) = _
+    change Finset.univ.sum
+      (fun k : Fin 4 => x k - dot x (simpleRoot i) * simpleRoot i k) = _
     rw [Finset.sum_sub_distrib, ← Finset.mul_sum]
   rw [hsum, Int.sub_emod]
   have hroot : coordinateSum (simpleRoot i) % 2 = 0 := simpleRoot_mem i

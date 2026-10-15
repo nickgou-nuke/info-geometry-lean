@@ -35,19 +35,8 @@ theorem paper_discussion_gc_equivalence_characterization
       gcTrSeq A = gcTrSeq B ∧ gcMob (gcTrSeq A) = gcMob (gcTrSeq B) := by
   constructor
   · intro hzeta
-    have htrace : gcTrSeq A = gcTrSeq B := by
-      calc
-        gcTrSeq A = gcEuler (gcMob (gcTrSeq A)) := by
-          simpa using (paper_discussion_witt_euler_gc_functor A).symm
-        _ = gcEuler (gcMob (gcTrSeq B)) := by
-          simpa [gcZetaDet] using hzeta
-        _ = gcTrSeq B := by
-          simpa using paper_discussion_witt_euler_gc_functor B
-    exact ⟨htrace, by simpa [gcMob] using htrace⟩
-  · rintro ⟨htrace, _hmob⟩
-    calc
-      gcZetaDet A = gcEuler (gcMob (gcTrSeq A)) := paper_discussion_witt_euler_gc_functor A
-      _ = gcEuler (gcMob (gcTrSeq B)) := by simpa [gcMob] using htrace
-      _ = gcZetaDet B := paper_discussion_witt_euler_gc_functor B
+    exact ⟨hzeta, hzeta⟩
+  · intro htrace
+    exact htrace.1
 
 end Omega.Discussion

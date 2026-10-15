@@ -60,11 +60,8 @@ lemma globalSolvableIffLocalSolvable_holds (D : XiHankelNormalformCRTData) :
   · intro _
     exact D.globalSolutionCount_pos
 
-lemma solutionCountFactors_holds (D : XiHankelNormalformCRTData) : D.solutionCountFactors := by
-  refine ⟨?_, ?_⟩
-  · simpa [localSolutionCount] using D.global_count_eq_prod
-  · intro q hq
-    rfl
+lemma solutionCountFactors_holds (D : XiHankelNormalformCRTData) : D.solutionCountFactors :=
+  ⟨D.global_count_eq_prod, fun _ _ => rfl⟩
 
 lemma localSolutionCount_eq_one_of_coprime (D : XiHankelNormalformCRTData)
     {q : ℕ} (hq : q ∈ D.localModuli) (hcop : Nat.Coprime q D.determinant) :

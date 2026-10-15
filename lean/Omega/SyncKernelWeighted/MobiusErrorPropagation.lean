@@ -89,7 +89,7 @@ theorem paper_mobius_exp_bound (a ahat : ℕ → ℝ) (ε ρ : ℝ) {n : ℕ} (h
       exact pow_le_pow_right₀ hρ hk_le_n
     calc
       |a (n / d) - ahat (n / d)| ≤ ε * ρ ^ (n / d) := by
-        exact hbound (n / d) (by simpa [hquot] using hkpos) hdiv_le_n
+        exact hbound (n / d) (by omega) hdiv_le_n
       _ ≤ ε * ρ ^ n := by
         exact mul_le_mul_of_nonneg_left hpow hε_nonneg
   calc

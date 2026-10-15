@@ -28,8 +28,8 @@ theorem colorReflectionCochain_order_two
     linearEquivCochain colorReflection p
         (linearEquivCochain colorReflection p ω) = ω := by
   funext sigma
-  have h := congrArg (fun e => e (ω sigma)) colorReflection_sq
-  simpa using h
+  change colorReflection (colorReflection (ω sigma)) = ω sigma
+  exact congrArg (fun e => e (ω sigma)) colorReflection_sq
 
 theorem trialityColorCycleCochain_preserves_coboundary
     {K : FiniteOrientedCellComplex} (p : ℕ)

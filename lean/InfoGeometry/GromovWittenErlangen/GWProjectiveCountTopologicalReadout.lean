@@ -55,7 +55,8 @@ theorem finitePartitionZeroLocus_isClosed
     (support : Finset ℕ) (β : ℝ) :
     IsClosed (finitePartitionZeroLocus (G := G) (T := T) (Target := Target)
       (Coeff := Coeff) support β) := by
-  simpa only [finitePartitionZeroLocus, Set.preimage, Set.mem_setOf_eq] using
+  simpa only [finitePartitionZeroLocus, Set.preimage, Set.mem_setOf_eq,
+    Set.mem_singleton_iff] using
     (isClosed_singleton : IsClosed ({0} : Set ℝ)).preimage
       (continuous_finitePartitionReadout (G := G) (T := T) (Target := Target)
         (Coeff := Coeff) support β)
@@ -124,9 +125,8 @@ theorem continuous_finiteNormalizedShapeVectorOnNonzero
       (G := G) (T := T) (Target := Target) (Coeff := Coeff) support β) := by
   apply continuous_pi
   intro n
-  simpa [finiteNormalizedShapeVectorOnNonzero] using
-    (continuousOn_finiteNormalizedRayReadout (G := G) (T := T)
-      (Target := Target) (Coeff := Coeff) support β n.1).restrict
+  exact continuous_finiteNormalizedRayReadout_on_subtype
+    (G := G) (T := T) (Target := Target) (Coeff := Coeff) support β n.1
 
 theorem finiteNormalizedShapeVectorOnNonzero_sum_eq_one
     {G T Target Coeff : Type*}

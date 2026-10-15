@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.Analysis.Calculus.ContDiff.Operations
 import Omega.Conclusion.DiscreteKinkMassHatKernelCurvature
 
 namespace Omega.Conclusion
@@ -50,8 +51,8 @@ theorem paper_conclusion_strictly_convex_pressure_full_kink :
       norm_num⟩
   · intro q _hq
     exact conclusion_strictly_convex_pressure_full_kink_secondDifference_eq_two q
-  · have hτ : ContDiff ℝ 2 (fun s : ℝ => s ^ 2) := by
-      fun_prop
+  · have hτ : ContDiff ℝ 2 (fun s : ℝ => s ^ 2) :=
+      contDiff_id.pow 2
     simpa using paper_conclusion_discrete_kink_mass_hat_kernel_curvature (τ := fun s : ℝ => s ^ 2)
       hτ 0
 

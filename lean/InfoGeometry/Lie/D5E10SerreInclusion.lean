@@ -38,8 +38,7 @@ def d5CartanMatrix : Matrix (Fin 5) (Fin 5) ℤ := fun i j =>
     is a canonical sub-algebra of the E₁₀ Serre presentation. -/
 theorem e10_cartan_restricts_to_d5 (i j : Fin 5) :
     cartanMatrix (d5ToE10 i) (d5ToE10 j) = d5CartanMatrix i j := by
-  revert i j
-  decide
+  fin_cases i <;> fin_cases j <;> rfl
 
 /-- The Serre Algebra of the restricted D₅ core. -/
 noncomputable abbrev D5SerreAlgebra := Matrix.ToLieAlgebra ℚ d5CartanMatrix

@@ -39,7 +39,7 @@ namespace Datum
 
 variable (datum : Datum (Stage := Stage) (sys := sys) (Ainf := Ainf))
 
-def compatibleStates :
+noncomputable def compatibleStates :
     ContinuousStarInductiveSystem.CompatibleStateFamily Stage sys :=
   ContinuousStarInductiveSystem.StarInductiveCocone.restrictStateFamily
     (Stage := Stage) (sys := sys) datum.cocone datum.state

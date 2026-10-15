@@ -123,19 +123,19 @@ theorem zornBiAction_sq (Z : CanonicalZorn) (pq : BiSplitOctonions) :
   dsimp [zornBiAction, zornConj, ZornMatrix.detZ, realCrossProduct3, mul, dot, cross]
   refine Prod.ext ?_ ?_
   · ext1
-    · simp [Equiv.smul_def, coordEquiv]; ring
-    · simp [Equiv.smul_def, coordEquiv]; ring
+    · simp [smul_a]; ring
+    · simp [smul_b]; ring
     · ext i
-      fin_cases i <;> { simp [Equiv.smul_def, coordEquiv]; ring }
+      fin_cases i <;> { simp [smul_x, Pi.smul_apply, smul_eq_mul]; ring }
     · ext i
-      fin_cases i <;> { simp [Equiv.smul_def, coordEquiv]; ring }
+      fin_cases i <;> { simp [smul_y, Pi.smul_apply, smul_eq_mul]; ring }
   · ext1
-    · simp [Equiv.smul_def, coordEquiv]; ring
-    · simp [Equiv.smul_def, coordEquiv]; ring
+    · simp [smul_a]; ring
+    · simp [smul_b]; ring
     · ext i
-      fin_cases i <;> { simp [Equiv.smul_def, coordEquiv]; ring }
+      fin_cases i <;> { simp [smul_x, Pi.smul_apply, smul_eq_mul]; ring }
     · ext i
-      fin_cases i <;> { simp [Equiv.smul_def, coordEquiv]; ring }
+      fin_cases i <;> { simp [smul_y, Pi.smul_apply, smul_eq_mul]; ring }
 
 end BiActionSection
 

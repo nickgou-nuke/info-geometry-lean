@@ -9,7 +9,20 @@ inductive RealInput40Digit
   | zero
   | one
   | two
-  deriving DecidableEq, Fintype, Repr
+  deriving DecidableEq, Repr
+
+instance : Fintype RealInput40Digit :=
+  Fintype.ofEquiv (Fin 3)
+    { toFun := fun i => match i.val with
+        | 0 => .zero
+        | 1 => .one
+        | _ => .two
+      invFun := fun d => match d with
+        | .zero => 0
+        | .one => 1
+        | .two => 2
+      left_inv := by intro i; fin_cases i <;> rfl
+      right_inv := by intro d; cases d <;> rfl }
 
 /-- A 10-state synchronizing kernel with a distinguished five-step reset branch. -/
 inductive RealInput40Kernel
@@ -23,7 +36,34 @@ inductive RealInput40Kernel
   | q020
   | q030
   | q040
-  deriving DecidableEq, Fintype, Repr
+  deriving DecidableEq, Repr
+
+instance : Fintype RealInput40Kernel :=
+  Fintype.ofEquiv (Fin 10)
+    { toFun := fun i => match i.val with
+        | 0 => .q000
+        | 1 => .q100
+        | 2 => .q200
+        | 3 => .q300
+        | 4 => .q400
+        | 5 => .q500
+        | 6 => .q010
+        | 7 => .q020
+        | 8 => .q030
+        | _ => .q040
+      invFun := fun q => match q with
+        | .q000 => 0
+        | .q100 => 1
+        | .q200 => 2
+        | .q300 => 3
+        | .q400 => 4
+        | .q500 => 5
+        | .q010 => 6
+        | .q020 => 7
+        | .q030 => 8
+        | .q040 => 9
+      left_inv := by intro i; fin_cases i <;> rfl
+      right_inv := by intro q; cases q <;> rfl }
 
 /-- The four memory states `00, 01, 10, 11`. -/
 inductive RealInput40Memory
@@ -31,7 +71,22 @@ inductive RealInput40Memory
   | m01
   | m10
   | m11
-  deriving DecidableEq, Fintype, Repr
+  deriving DecidableEq, Repr
+
+instance : Fintype RealInput40Memory :=
+  Fintype.ofEquiv (Fin 4)
+    { toFun := fun i => match i.val with
+        | 0 => .m00
+        | 1 => .m01
+        | 2 => .m10
+        | _ => .m11
+      invFun := fun m => match m with
+        | .m00 => 0
+        | .m01 => 1
+        | .m10 => 2
+        | .m11 => 3
+      left_inv := by intro i; fin_cases i <;> rfl
+      right_inv := by intro m; cases m <;> rfl }
 
 /-- The 40 concrete states are the synchronizing kernel together with the 4 memory states. -/
 abbrev RealInput40State := RealInput40Kernel × RealInput40Memory

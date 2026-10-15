@@ -53,14 +53,47 @@ def check_policy(
     Exit codes:
       0: pass
       1: error-level violations found
+      2: invalid, incomplete, or advisory-only report
       3: report levels inconsistent with shared policy config
     """
-    with open(report_path) as f:
-        entries = json.load(f)
-
-    if not isinstance(entries, list):
-        print("ERROR: report root must be a JSON array.", file=sys.stderr)
+    try:
+        with open(report_path, encoding="utf-8") as f:
+            entries = json.load(f)
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        print(f"ERROR: unreadable or invalid report: {exc}", file=sys.stderr)
         return 2
+
+    if not isinstance(entries, list) or not entries:
+        print("ERROR: report must be a nonempty JSON array of declarations.", file=sys.stderr)
+        return 2
+
+    # Validate the entire producer contract before making any policy decision.
+    # Missing violations is missing evidence, never evidence of zero violations.
+    for index, entry in enumerate(entries):
+        if (not isinstance(entry, dict)
+                or not isinstance(entry.get("name"), str) or not entry["name"].strip()
+                or not isinstance(entry.get("file"), str) or not entry["file"].strip()
+                or not isinstance(entry.get("violations"), list)):
+            print(f"ERROR: incomplete declaration report at index {index}.", file=sys.stderr)
+            return 2
+        for flag in ("hard_verdict_allowed", "semantic_audit_performed", "coverage_complete"):
+            if flag in entry and not isinstance(entry[flag], bool):
+                print(f"ERROR: invalid {flag} at declaration index {index}.", file=sys.stderr)
+                return 2
+        if (entry.get("hard_verdict_allowed") is False
+                or entry.get("semantic_audit_performed") is False
+                or entry.get("coverage_complete") is False
+                or entry.get("classification_basis") == "graph-topology"):
+            print(f"ERROR: advisory_report_not_clearance at declaration index {index}.",
+                  file=sys.stderr)
+            return 2
+        for violation in entry["violations"]:
+            if (not isinstance(violation, dict)
+                    or violation.get("level") not in ("error", "warning")
+                    or not isinstance(violation.get("code"), str)
+                    or not violation["code"].strip()):
+                print(f"ERROR: invalid violation at declaration index {index}.", file=sys.stderr)
+                return 2
 
     errors: list[dict] = []
     warnings: list[dict] = []

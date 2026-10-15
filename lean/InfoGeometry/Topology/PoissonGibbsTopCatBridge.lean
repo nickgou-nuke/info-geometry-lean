@@ -46,9 +46,8 @@ theorem poissonWeightTopCatHom_sum_one
     (M : PoissonModel (Data := Data) (Theta := Theta))
     (hmean : ∀ i, Continuous (fun θ => M.mean i θ))
     (p : Theta × NonzeroTemperature) :
-    ∑ i : Data, poissonWeightTopCatHom M hmean i p = 1 := by
-  simpa only [poissonWeightTopCatHom_apply] using
-    (poissonWeights_sum_one M p.1 p.2.1)
+    ∑ i : Data, poissonWeightTopCatHom M hmean i p = 1 :=
+  poissonWeights_sum_one M p.1 p.2.1
 
 def poissonPartitionFunctionTopCatHom
     (M : PoissonModel (Data := Data) (Theta := Theta))

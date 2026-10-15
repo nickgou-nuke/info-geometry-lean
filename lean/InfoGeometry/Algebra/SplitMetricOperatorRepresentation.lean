@@ -1,6 +1,10 @@
 import InfoGeometry.Algebra.EquivariantProjectorRepresentation
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.SplitMetricSpace
+import Mathlib.Algebra.Lie.OfAssociative
+
+attribute [local instance 100] LieRing.ofAssociativeRing
+attribute [local instance 100] LieAlgebra.ofAssociativeAlgebra
 
 /-!
 # Metric operator representations

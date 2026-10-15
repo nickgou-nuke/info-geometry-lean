@@ -1,0 +1,302 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import Mathlib.Tactic
+import Mathlib.Data.Fintype.Basic
+import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+import InfoGeometry.Epistemology.VariationalRG
+
+set_option linter.unusedVariables false
+set_option linter.unusedSectionVars false
+
+/-!
+# Chentsov Metric Invariance: Congruent Markov Embeddings and Fisher Information
+
+This module formalizes the core differential-geometric invariance theorem of Chentsov:
+1. `ProbInterior`: Probability distributions on finite types strictly residing in the
+   simplex interior ($P(a) > 0$ and $\sum_a P(a) = 1$).
+2. `TangentVector`: Tangent vectors to the probability simplex ($\sum_a v(a) = 0$).
+3. `fisherMetric`: The Riemannian metric tensor $g_P(u, v) = \sum_a \frac{u(a) v(a)}{P(a)}$
+   on the simplex interior.
+4. `pushforwardTangent`: Action of a Markov transition kernel on simplex tangent vectors,
+   preserving the zero-sum tangent condition $\sum_b (T_* v)(b) = 0$.
+5. `CongruentMarkovKernel`: A Markov kernel $T : \alpha \to \beta$ with disjoint fiber supports
+   (each output state $b \in \beta$ is reachable from at most one input state $a \in \alpha$).
+6. `chentsov_congruent_metric_invariance`: Exact invariance of the Fisher information metric
+   under congruent Markov embeddings:
+   $$g_{T_* P}(T_* u, T_* v) = g_P(u, v)$$
+7. `injective_congruent_kernel`: Injective sample-space embeddings $f : \alpha \hookrightarrow \beta$
+   induce canonical congruent Markov kernels.
+8. The module exposes direct theorem owners; it does not bundle them into an
+   aggregate evidence certificate.
+-/
+
+namespace InfoGeometry.Epistemology.ChentsovMetricInvariance
+
+open Finset
+open scoped BigOperators
+open InfoGeometry.Epistemology.VariationalRG
+
+/-! ### 1. Simplex Interior and Tangent Vectors -/
+
+/-- A probability distribution strictly in the interior of the simplex. -/
+structure ProbInterior (α : Type*) [Fintype α] where
+  p : α → ℝ
+  pos : ∀ a, 0 < p a
+  sum_one : ∑ a, p a = 1
+
+/-- Coercion from an interior distribution to a general probability distribution. -/
+noncomputable def toProbDist {α : Type*} [Fintype α] (P : ProbInterior α) : ProbDist α where
+  p := P.p
+  nonneg a := le_of_lt (P.pos a)
+  sum_one := P.sum_one
+
+/-- A tangent vector to the probability simplex (infinitesimal probability perturbation). -/
+structure TangentVector (α : Type*) [Fintype α] where
+  v : α → ℝ
+  sum_zero : ∑ a, v a = 0
+
+/-! ### 2. The Fisher Information Metric -/
+
+/-- The Fisher information metric tensor on the simplex interior:
+    `g_P(u, v) = ∑_a (u(a) * v(a)) / P(a)`. -/
+noncomputable def fisherMetric {α : Type*} [Fintype α]
+    (P : ProbInterior α) (u v : α → ℝ) : ℝ :=
+  ∑ a, (u a * v a) / P.p a
+
+/-- Symmetry of the Fisher metric tensor: `g_P(u, v) = g_P(v, u)`. -/
+theorem fisherMetric_symm {α : Type*} [Fintype α]
+    (P : ProbInterior α) (u v : α → ℝ) :
+    fisherMetric P u v = fisherMetric P v u := by
+  unfold fisherMetric
+  apply Finset.sum_congr rfl
+  intro a _
+  rw [mul_comm]
+
+/-- Non-negativity of the Fisher metric quadratic form: `0 ≤ g_P(u, u)`. -/
+theorem fisherMetric_nonneg {α : Type*} [Fintype α]
+    (P : ProbInterior α) (u : α → ℝ) :
+    0 ≤ fisherMetric P u u := by
+  unfold fisherMetric
+  apply Finset.sum_nonneg
+  intro a _
+  have h_num : 0 ≤ u a * u a := mul_self_nonneg (u a)
+  have h_den : 0 ≤ P.p a := le_of_lt (P.pos a)
+  exact div_nonneg h_num h_den
+
+/-- Score representation of the Fisher metric:
+    `g_P(u, v) = ∑_a P(a) * (u(a)/P(a)) * (v(a)/P(a))`. -/
+theorem fisherMetric_eq_score_expectation {α : Type*} [Fintype α]
+    (P : ProbInterior α) (u v : α → ℝ) :
+    fisherMetric P u v = ∑ a, P.p a * ((u a / P.p a) * (v a / P.p a)) := by
+  unfold fisherMetric
+  apply Finset.sum_congr rfl
+  intro a _
+  have hpos : P.p a ≠ 0 := ne_of_gt (P.pos a)
+  field_simp [hpos]
+
+/-! ### 3. Markov Pushforward of Tangent Vectors -/
+
+/-- Pushforward of a tangent vector under a Markov transition kernel:
+    `(T_* u)(b) = ∑_a u(a) * T(a, b)`. -/
+def pushforwardTangentVec {α β : Type*} [Fintype α] [Fintype β]
+    (T : MarkovKernel α β) (u : α → ℝ) : β → ℝ :=
+  fun b => ∑ a, u a * T.T a b
+
+/-- Theorem: Markov pushforward preserves the zero-sum tangent condition:
+    `∑_b (T_* u)(b) = 0` whenever `∑_a u(a) = 0`. -/
+theorem pushforwardTangent_sum_zero {α β : Type*} [Fintype α] [Fintype β]
+    (T : MarkovKernel α β) (u : TangentVector α) :
+    ∑ b, pushforwardTangentVec T u.v b = 0 := by
+  calc
+    ∑ b, pushforwardTangentVec T u.v b
+      = ∑ b, ∑ a, u.v a * T.T a b := rfl
+    _ = ∑ a, ∑ b, u.v a * T.T a b := Finset.sum_comm
+    _ = ∑ a, u.v a * ∑ b, T.T a b := by
+      apply Finset.sum_congr rfl
+      intro a _
+      rw [← Finset.mul_sum]
+    _ = ∑ a, u.v a * 1 := by
+      apply Finset.sum_congr rfl
+      intro a _
+      rw [T.sum_one a]
+    _ = ∑ a, u.v a := by simp only [mul_one]
+    _ = 0 := u.sum_zero
+
+/-- The packaged pushforward of a tangent vector as a `TangentVector β`. -/
+def pushforwardTangent {α β : Type*} [Fintype α] [Fintype β]
+    (T : MarkovKernel α β) (u : TangentVector α) : TangentVector β where
+  v := pushforwardTangentVec T u.v
+  sum_zero := pushforwardTangent_sum_zero T u
+
+/-! ### 4. Congruent Markov Embeddings -/
+
+/-- 
+  A congruent Markov kernel is a Markov transition kernel with partitioned/disjoint fibers:
+  each output state `b : β` receives probability mass from at most one input state `fiber b`.
+  That is, if `T.T a b ≠ 0`, then `a = fiber b`.
+-/
+structure CongruentMarkovKernel (α β : Type*) [Fintype α] [Fintype β] where
+  kernel : MarkovKernel α β
+  fiber : β → α
+  fiber_prop : ∀ a b, kernel.T a b ≠ 0 → fiber b = a
+
+/-- For a congruent kernel, `T(a, b) = 0` whenever `a ≠ fiber b`. -/
+theorem congruent_kernel_zero_of_ne {α β : Type*} [Fintype α] [Fintype β]
+    (CK : CongruentMarkovKernel α β) (a : α) (b : β) (h : a ≠ CK.fiber b) :
+    CK.kernel.T a b = 0 := by
+  by_contra hne
+  have heq := CK.fiber_prop a b hne
+  exact h (heq.symm)
+
+/-- 
+  Pushforward of an interior distribution under a congruent kernel collapses to a single fiber term:
+  `(T_* P)(b) = P(fiber b) * T(fiber b, b)`.
+-/
+theorem congruent_pushforward_at {α β : Type*} [Fintype α] [Fintype β]
+    (CK : CongruentMarkovKernel α β) (P : ProbInterior α) (b : β) :
+    (pushforward CK.kernel (toProbDist P)).p b = P.p (CK.fiber b) * CK.kernel.T (CK.fiber b) b := by
+  dsimp [pushforward, toProbDist]
+  rw [← Finset.sum_subset (Finset.subset_univ {CK.fiber b})]
+  · simp only [Finset.sum_singleton]
+  · intro a _ hnot_in
+    have h_ne : a ≠ CK.fiber b := by
+      intro h_eq
+      apply hnot_in
+      simp only [Finset.mem_singleton, h_eq]
+    rw [congruent_kernel_zero_of_ne CK a b h_ne, mul_zero]
+
+/-- 
+  Pushforward of a tangent vector under a congruent kernel collapses to a single fiber term:
+  `(T_* u)(b) = u(fiber b) * T(fiber b, b)`.
+-/
+theorem congruent_pushforward_tangent_at {α β : Type*} [Fintype α] [Fintype β]
+    (CK : CongruentMarkovKernel α β) (u : α → ℝ) (b : β) :
+    pushforwardTangentVec CK.kernel u b = u (CK.fiber b) * CK.kernel.T (CK.fiber b) b := by
+  dsimp [pushforwardTangentVec]
+  rw [← Finset.sum_subset (Finset.subset_univ {CK.fiber b})]
+  · simp only [Finset.sum_singleton]
+  · intro a _ hnot_in
+    have h_ne : a ≠ CK.fiber b := by
+      intro h_eq
+      apply hnot_in
+      simp only [Finset.mem_singleton, h_eq]
+    rw [congruent_kernel_zero_of_ne CK a b h_ne, mul_zero]
+
+/-! ### 5. Chentsov's Invariance Theorem -/
+
+/--
+  **Chentsov's Congruent Metric Invariance Theorem**:
+  Under any congruent Markov embedding `T : α → β`, the pull-back of the Fisher
+  information metric tensor on the image equals the Fisher information metric
+  on the base simplex identically:
+  $$\sum_{b \in \beta, T(fiber b, b) > 0} \frac{(T_* u)(b) (T_* v)(b)}{(T_* P)(b)} = g_P(u, v)$$
+-/
+theorem chentsov_congruent_metric_invariance {α β : Type*} [Fintype α] [Fintype β] [DecidableEq α]
+    (CK : CongruentMarkovKernel α β) (P : ProbInterior α) (u v : α → ℝ) :
+    ∑ b, (if CK.kernel.T (CK.fiber b) b = 0 then 0 else
+      (pushforwardTangentVec CK.kernel u b * pushforwardTangentVec CK.kernel v b) /
+      (pushforward CK.kernel (toProbDist P)).p b) =
+    fisherMetric P u v := by
+  have h_fiber_term : ∀ b,
+      (if CK.kernel.T (CK.fiber b) b = 0 then 0 else
+        (pushforwardTangentVec CK.kernel u b * pushforwardTangentVec CK.kernel v b) /
+        (pushforward CK.kernel (toProbDist P)).p b) =
+      ((u (CK.fiber b) * v (CK.fiber b)) / P.p (CK.fiber b)) * CK.kernel.T (CK.fiber b) b := by
+    intro b
+    rw [congruent_pushforward_at CK P b, congruent_pushforward_tangent_at CK u b,
+        congruent_pushforward_tangent_at CK v b]
+    split_ifs with h_zero
+    · rw [h_zero]; ring
+    · have hT_pos : CK.kernel.T (CK.fiber b) b ≠ 0 := h_zero
+      have hP_pos : P.p (CK.fiber b) ≠ 0 := ne_of_gt (P.pos (CK.fiber b))
+      have : (u (CK.fiber b) * CK.kernel.T (CK.fiber b) b * (v (CK.fiber b) * CK.kernel.T (CK.fiber b) b)) /
+             (P.p (CK.fiber b) * CK.kernel.T (CK.fiber b) b) =
+             ((u (CK.fiber b) * v (CK.fiber b)) / P.p (CK.fiber b)) * CK.kernel.T (CK.fiber b) b := by
+        calc
+          (u (CK.fiber b) * CK.kernel.T (CK.fiber b) b * (v (CK.fiber b) * CK.kernel.T (CK.fiber b) b)) /
+          (P.p (CK.fiber b) * CK.kernel.T (CK.fiber b) b)
+            = ((u (CK.fiber b) * v (CK.fiber b)) * (CK.kernel.T (CK.fiber b) b * CK.kernel.T (CK.fiber b) b)) /
+              (P.p (CK.fiber b) * CK.kernel.T (CK.fiber b) b) := by ring
+          _ = ((u (CK.fiber b) * v (CK.fiber b)) / P.p (CK.fiber b)) *
+              ((CK.kernel.T (CK.fiber b) b * CK.kernel.T (CK.fiber b) b) / CK.kernel.T (CK.fiber b) b) := by
+            rw [mul_div_mul_comm]
+          _ = ((u (CK.fiber b) * v (CK.fiber b)) / P.p (CK.fiber b)) * CK.kernel.T (CK.fiber b) b := by
+            rw [mul_self_div_self]
+      exact this
+
+  calc
+    ∑ b, (if CK.kernel.T (CK.fiber b) b = 0 then 0 else
+      (pushforwardTangentVec CK.kernel u b * pushforwardTangentVec CK.kernel v b) /
+      (pushforward CK.kernel (toProbDist P)).p b)
+      = ∑ b, (((u (CK.fiber b) * v (CK.fiber b)) / P.p (CK.fiber b)) * CK.kernel.T (CK.fiber b) b) := by
+        apply Finset.sum_congr rfl
+        intro b _
+        exact h_fiber_term b
+    _ = ∑ a, ∑ b ∈ Finset.filter (fun b => CK.fiber b = a) Finset.univ,
+          (((u (CK.fiber b) * v (CK.fiber b)) / P.p (CK.fiber b)) * CK.kernel.T (CK.fiber b) b) := by
+        rw [← Finset.sum_fiberwise_of_maps_to (fun b _ => Finset.mem_univ (CK.fiber b))]
+    _ = ∑ a, ∑ b ∈ Finset.filter (fun b => CK.fiber b = a) Finset.univ,
+          (((u a * v a) / P.p a) * CK.kernel.T a b) := by
+        apply Finset.sum_congr rfl
+        intro a _
+        apply Finset.sum_congr rfl
+        intro b hb
+        simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hb
+        rw [hb]
+    _ = ∑ a, ((u a * v a) / P.p a) * ∑ b ∈ Finset.filter (fun b => CK.fiber b = a) Finset.univ, CK.kernel.T a b := by
+        apply Finset.sum_congr rfl
+        intro a _
+        rw [← Finset.mul_sum]
+    _ = ∑ a, ((u a * v a) / P.p a) * ∑ b, CK.kernel.T a b := by
+        apply Finset.sum_congr rfl
+        intro a _
+        congr 1
+        rw [← Finset.sum_filter_add_sum_filter_not Finset.univ (fun b => CK.fiber b = a)]
+        have h_rest_zero : ∑ b ∈ Finset.filter (fun b => ¬CK.fiber b = a) Finset.univ, CK.kernel.T a b = 0 := by
+          apply Finset.sum_eq_zero
+          intro b hb
+          simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hb
+          exact congruent_kernel_zero_of_ne CK a b (Ne.symm hb)
+        rw [h_rest_zero, add_zero]
+    _ = ∑ a, ((u a * v a) / P.p a) * 1 := by
+        apply Finset.sum_congr rfl
+        intro a _
+        rw [CK.kernel.sum_one a]
+    _ = ∑ a, (u a * v a) / P.p a := by
+        apply Finset.sum_congr rfl
+        intro a _
+        rw [mul_one]
+    _ = fisherMetric P u v := rfl
+
+/-! ### 6. Canonical Injective Embeddings -/
+
+/-- 
+  Any injection `f : α ↪ β` with a retraction `retract : β → α` satisfying
+  `retract (f a) = a` gives rise to a canonical congruent Markov kernel.
+-/
+def injectiveCongruentKernel {α β : Type*} [Fintype α] [Fintype β] [DecidableEq β]
+    (f : α ↪ β) (retract : β → α) (h_retract : ∀ a, retract (f a) = a) :
+    CongruentMarkovKernel α β where
+  kernel := {
+    T a b := if b = f a then 1 else 0
+    nonneg a b := by split_ifs <;> linarith
+    sum_one a := by
+      have : ∑ b, (if b = f a then (1 : ℝ) else 0) = 1 := by
+        rw [Finset.sum_ite_eq']
+        simp
+      exact this
+  }
+  fiber := retract
+  fiber_prop a b := by
+    dsimp
+    split_ifs with h_eq
+    · rw [h_eq, h_retract]
+      intro _
+      rfl
+    · intro h_abs
+      contradiction
+
+end InfoGeometry.Epistemology.ChentsovMetricInvariance

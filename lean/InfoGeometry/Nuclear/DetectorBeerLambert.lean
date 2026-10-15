@@ -29,8 +29,13 @@ theorem continuous_collisionDensity (μ : ℝ) : Continuous (collisionDensity μ
 
 theorem hasDerivAt_collisionPrimitive (μ t : ℝ) :
     HasDerivAt (fun u : ℝ => -Real.exp (-μ * u)) (collisionDensity μ t) t := by
-  convert (((hasDerivAt_id t).const_mul (-μ)).exp).neg using 1 <;>
-    simp [collisionDensity] <;> ring
+  have h1 : HasDerivAt (fun u : ℝ => -μ * u) (-μ) t := by
+    simpa using (hasDerivAt_id t).const_mul (-μ)
+  have h2 := h1.exp.neg
+  have hd : -(Real.exp (-μ * t) * -μ) = collisionDensity μ t := by
+    unfold collisionDensity
+    ring
+  exact hd ▸ h2
 
 /-- Exact Beer--Lambert first-collision probability, valid algebraically even
 at μ = 0; physical bounds use μ ≥ 0 and ℓ ≥ 0. -/
@@ -43,7 +48,7 @@ theorem collisionIntegral_eq (μ ℓ : ℝ) :
       intervalIntegral.integral_eq_sub_of_hasDerivAt
         (fun t _ => hasDerivAt_collisionPrimitive μ t)
         ((continuous_collisionDensity μ).intervalIntegrable 0 ℓ)
-    _ = 1 - Real.exp (-μ * ℓ) := by simp <;> ring
+    _ = 1 - Real.exp (-μ * ℓ) := by simp; ring
 
 theorem collisionDensity_nonneg {μ : ℝ} (hμ : 0 ≤ μ) (t : ℝ) :
     0 ≤ collisionDensity μ t :=
@@ -105,7 +110,7 @@ theorem partialCollisionIntegral_eq (μ ν ℓ : ℝ) (hμ : μ ≠ 0) :
       (fun t : ℝ => (ν / μ) * collisionDensity μ t) := by
     funext t
     unfold collisionDensity
-    field_simp [hμ] <;> ring
+    field_simp [hμ]
   rw [hfun, intervalIntegral.integral_const_mul]
   exact congrArg (fun x : ℝ => (ν / μ) * x) (collisionIntegral_eq μ ℓ)
 

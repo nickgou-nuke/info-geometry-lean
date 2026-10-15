@@ -13,9 +13,37 @@ inductive Archetype
   | singlesMetricIdentity
   | efficiencyPullback
   | varianceBound
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
 
 open Archetype
+
+def archetypeFinEquiv : Archetype ≃ Fin 9 where
+  toFun
+    | oddsCoordinate => 0
+    | logPartition => 1
+    | expectationDerivative => 2
+    | fisherHessian => 3
+    | legendreConjugate => 4
+    | singlesResponse => 5
+    | singlesMetricIdentity => 6
+    | efficiencyPullback => 7
+    | varianceBound => 8
+  invFun i := match i.val with
+    | 0 => oddsCoordinate
+    | 1 => logPartition
+    | 2 => expectationDerivative
+    | 3 => fisherHessian
+    | 4 => legendreConjugate
+    | 5 => singlesResponse
+    | 6 => singlesMetricIdentity
+    | 7 => efficiencyPullback
+    | _ => varianceBound
+  left_inv x := by cases x <;> rfl
+  right_inv i := by
+    apply Fin.ext
+    fin_cases i <;> rfl
+
+instance : Fintype Archetype := Fintype.ofEquiv (Fin 9) archetypeFinEquiv.symm
 
 def prerequisites : Archetype → Finset Archetype
   | oddsCoordinate => {oddsCoordinate}

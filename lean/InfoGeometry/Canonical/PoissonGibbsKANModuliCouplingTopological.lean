@@ -24,8 +24,11 @@ theorem averagePoissonWeightOnModuli_sum_one {K : ℕ} [NeZero K]
     ∑ i : Data, averagePoissonWeightOnModuli M ε i q = 1 := by
   refine Quotient.inductionOn q ?_
   intro v
-  simpa only [averagePoissonWeightOnModuli_quotientMap] using
-    averagePoissonWeight_sum_one M ε v
+  change ∑ i : Data,
+      averagePoissonWeightOnModuli M ε i
+        (quotientMap (V := Theta) (K := K) v) = 1
+  simp_rw [averagePoissonWeightOnModuli_quotientMap]
+  exact averagePoissonWeight_sum_one M ε v
 
 theorem averagePoissonWeightOnModuli_pos {K : ℕ} [NeZero K]
     (M : PoissonModel (Data := Data) (Theta := Theta))
@@ -41,7 +44,10 @@ theorem averagePoissonWeightOnModuli_pos {K : ℕ} [NeZero K]
     exact div_pos
       (Finset.sum_pos (fun k _ => poissonWeight_pos M (v k) ε.1 i)
         Finset.univ_nonempty) hK
-  simpa only [averagePoissonWeightOnModuli_quotientMap] using hp
+  change 0 < averagePoissonWeightOnModuli M ε i
+    (quotientMap (V := Theta) (K := K) v)
+  rw [averagePoissonWeightOnModuli_quotientMap]
+  exact hp
 
 noncomputable def independentPoissonCouplingOnModuli {K : ℕ} [NeZero K]
     (M : PoissonModel (Data := Data) (Theta := Theta))

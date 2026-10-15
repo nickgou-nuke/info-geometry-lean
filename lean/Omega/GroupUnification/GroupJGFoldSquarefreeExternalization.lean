@@ -21,7 +21,7 @@ theorem foldPrime_prime {m : ℕ} (v : Fin m) : Nat.Prime (foldPrime v) := by
 theorem foldPrime_injective {m : ℕ} : Function.Injective (@foldPrime m) := by
   intro v w h
   apply Fin.ext
-  exact (Nat.nth_strictMono Nat.infinite_setOf_prime).injective h
+  exact (Nat.nth_strictMono Nat.infinite_setOfPred_prime).injective h
 
 /-- Squarefree product code for a finite fiber choice. -/
 noncomputable def foldSquarefreeCode {m : ℕ} (S : Finset (Fin m)) : ℕ :=
@@ -44,7 +44,7 @@ theorem foldPrime_dvd_squarefreeCode_iff {m : ℕ} (S : Finset (Fin m)) (v : Fin
           subst hEq'
           exact dvd_rfl
       rw [foldSquarefreeCode, Finset.prod_insert ha, Nat.Prime.dvd_mul (foldPrime_prime v), hEq]
-      simpa [Finset.mem_insert] using (or_congr Iff.rfl ih)
+      simpa [foldSquarefreeCode, Finset.mem_insert] using (or_congr Iff.rfl ih)
 
 theorem foldSquarefreeCode_injective {m : ℕ} :
     Function.Injective (@foldSquarefreeCode m) := by

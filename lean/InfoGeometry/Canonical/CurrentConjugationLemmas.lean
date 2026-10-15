@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Algebra.Lie.OfAssociative
 import InfoGeometry.Canonical.CurrentSugawaraBridge
 
 /-!
@@ -9,6 +9,9 @@ Concrete conjugation transport lemmas for current operators.
 -/
 
 namespace InfoGeometry.Canonical.CurrentConjugationLemmas
+
+attribute [local instance] LieRing.ofAssociativeRing
+attribute [local instance] LieAlgebra.ofAssociativeAlgebra
 
 open Filter
 open InfoGeometry.Canonical.CurrentSugawaraBridge
@@ -35,7 +38,7 @@ theorem conjugateEnd_commutator
     (A B : V →ₗ[𝕜] V) :
     (conjugateEnd U A).commutator (conjugateEnd U B) =
       conjugateEnd U (A.commutator B) := by
-  simp [LinearMap.commutator, conjugateEnd_mul, conjugateEnd_sub]
+  simp [LinearMap.commutator, conjugateEnd_mul]
 
 theorem current_commutator_conjugated
     {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
@@ -52,7 +55,7 @@ theorem current_commutator_conjugated
   rw [conjugateEnd_commutator, H.comm]
   split_ifs with hmn
   · simp [conjugateEnd_smul, conjugateEnd_one]
-  · simp [conjugateEnd_zero]
+  · simp
 
 theorem current_trunc_conjugated
     {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
@@ -80,7 +83,7 @@ theorem currentSugawara_lgen_conjugated
       (H.currentSugawaraRepresentation (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n))
     =
     conjugateEnd U (H.sugawaraStressMode n) := by
-  simpa [H.currentSugawaraRepresentation_lgen_apply n]
+  simp [H.currentSugawaraRepresentation_lgen_apply n]
 
 /--
 Conjugation preserves the Virasoro central generator action (`cgen ↦ 1`).
@@ -94,7 +97,7 @@ theorem currentSugawara_cgen_conjugated
       (H.currentSugawaraRepresentation (VirasoroProject.VirasoroAlgebra.cgen 𝕜))
     =
     (1 : V →ₗ[𝕜] V) := by
-  simpa [H.currentSugawaraRepresentation_central, conjugateEnd_one]
+  simp [H.currentSugawaraRepresentation_central, conjugateEnd_one]
 
 /--
 Conjugation transports the full Virasoro bracket law for the Sugawara
@@ -217,7 +220,7 @@ theorem currentSugawara_lgen_commutator_conjugated_skew
       (H.currentSugawaraRepresentation (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n))).commutator
       (conjugateEnd U
         (H.currentSugawaraRepresentation (VirasoroProject.VirasoroAlgebra.lgen 𝕜 m)))) := by
-  simp [LinearMap.commutator, sub_eq_add_neg, add_comm, add_left_comm, add_assoc]
+  simp [LinearMap.commutator, sub_eq_add_neg]
 
 /--
 Conjugating every current mode by a linear equivalence yields a new

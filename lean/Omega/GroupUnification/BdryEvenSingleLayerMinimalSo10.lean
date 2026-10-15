@@ -59,6 +59,6 @@ theorem paper_bdry_even_single_layer_minimal_so10 :
   · decide
   · intro G hG
     apply compactSimple_dim45_unique G
-    simpa [bdryEvenSingleLayerDimension] using hG
+    exact hG.trans (by decide)
 
 end Omega.GroupUnification

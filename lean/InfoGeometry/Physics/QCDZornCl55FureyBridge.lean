@@ -63,6 +63,36 @@ theorem canonicalZornToCl55_colorGenerator (i : Fin 3) :
   simp [canonicalZornToCl55, canonicalColorGenerator]
   exact exterior3ToCl55Carrier_basis_generator i
 
+/-- The three positive-chiral Clifford color generators are pairwise
+distinguishable; the mixed CAR relation detects their indices. -/
+theorem chiralPlus55_injective : Function.Injective chiralPlus55 := by
+  intro i j hij
+  by_contra hne
+  have hdiag :
+      chiralMinus55 i * chiralPlus55 i +
+        chiralPlus55 i * chiralMinus55 i = 1 := by
+    simpa using chiralMinus55_plus55_anticommutator i i
+  have hoff :
+      chiralMinus55 i * chiralPlus55 j +
+        chiralPlus55 j * chiralMinus55 i = 0 := by
+    simpa [hne] using chiralMinus55_plus55_anticommutator i j
+  rw [hij] at hdiag
+  rw [hoff] at hdiag
+  exact one_ne_zero hdiag.symm
+
+/-- The canonical Zorn color generators have distinct indices.  Their
+injective Clifford images and the mixed CAR relation prevent two color lanes
+from collapsing to the same carrier element. -/
+theorem canonicalColorGenerator_injective :
+    Function.Injective canonicalColorGenerator := by
+  intro i j hij
+  have himage := congrArg canonicalZornToCl55 hij
+  rw [canonicalZornToCl55_colorGenerator,
+    canonicalZornToCl55_colorGenerator] at himage
+  have hplus : chiralPlus55 i = chiralPlus55 j :=
+    (smul_right_injective (M := Cl55) (by norm_num : (2 : ℝ) ≠ 0)) himage
+  exact chiralPlus55_injective hplus
+
 /-- Each canonical Zorn color generator lands in the conjugate Furey span. -/
 theorem canonicalColorGenerator_mem_fureyConjugateGeneration (i : Fin 3) :
     canonicalZornToCl55 (canonicalColorGenerator i) ∈

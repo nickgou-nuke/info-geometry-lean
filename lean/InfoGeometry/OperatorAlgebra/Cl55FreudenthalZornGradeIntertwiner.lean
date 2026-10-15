@@ -8,6 +8,8 @@ import InfoGeometry.Exceptional.FreudenthalSymplecticContactCommonCARCCR
 import InfoGeometry.Exceptional.FreudenthalSymplecticContactCommonRepresentation
 import Mathlib.Tactic
 
+attribute [local instance 100] LieRing.ofAssociativeRing LieAlgebra.ofAssociativeAlgebra
+
 /-!
 # Grade-preserving Cl(5,5) and Freudenthal maps into one Zorn envelope
 

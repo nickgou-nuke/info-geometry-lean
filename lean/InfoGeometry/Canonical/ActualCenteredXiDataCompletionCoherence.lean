@@ -1,5 +1,4 @@
 import InfoGeometry.Canonical.ActualCenteredXiDataBridge
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ActualCompletedXiDatumBridge
 
 /-!

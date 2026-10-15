@@ -44,8 +44,7 @@ noncomputable def ibProjectiveState
     (β : ℝ) (D : X → T → ℝ) (x : X)
     [IsFiniteMeasure (IBUnnormalized qT β D x)]
     (h_nz : IBUnnormalized qT β D x ≠ 0) :
-    ProjectiveState.normalize (ibProjectiveState qT β D x h_nz) = IBGibbs qT β D x := by
-  simp [ibProjectiveState, ibNonzeroUState, IBGibbs, IBNormalize]
+    ProjectiveState.normalize (ibProjectiveState qT β D x h_nz) = IBGibbs qT β D x := rfl
 
 /-- Additive distortion shifts rescale the raw unnormalized Gibbs slice by a positive constant. -/
 theorem IBUnnormalized_shift_eq_smul
@@ -98,7 +97,7 @@ theorem IBPartitionFunction_shift_eq_smul
     exact congrArg
       (fun μ : Measure T => μ Set.univ)
       (IBUnnormalized_shift_eq_smul (qT := qT) (β := β) (c := c) (D := D) (x := x) hβD)
-  simpa [IBPartitionFunction, partitionFunction, Measure.smul_apply, smul_eq_mul] using hUniv
+  simpa [IBPartitionFunction, partitionFunction, IBUnnormalized, Measure.smul_apply, smul_eq_mul] using hUniv
 
 /-- Nonzero raw slices stay nonzero under additive gauge shifts. -/
 theorem IBUnnormalized_shift_ne_zero
@@ -117,7 +116,7 @@ theorem IBUnnormalized_shift_ne_zero
   · have hc0 : ENNReal.ofReal (Real.exp (-β * c)) ≠ 0 := by
         positivity
     exact False.elim (hc0 hconst)
-  · simpa [IBPartitionFunction, partitionFunction] using hmass
+  · simpa [IBPartitionFunction, partitionFunction, IBUnnormalized] using hmass
 
 /-- The normalized Gibbs slice is invariant under additive gauge shifts of the distortion. -/
 theorem IBGibbs_shift_eq
@@ -138,7 +137,7 @@ theorem IBGibbs_shift_eq
   have hpart0 : IBPartitionFunction qT β D x ≠ 0 := by
     intro hpart
     apply h_nz
-    exact Measure.measure_univ_eq_zero.mp <| by simpa [IBPartitionFunction, partitionFunction] using hpart
+    exact Measure.measure_univ_eq_zero.mp <| by simpa [IBPartitionFunction, partitionFunction, IBUnnormalized] using hpart
   ext s hs
   rw [IBGibbs_eq_unnormalized_smul_partition (qT := qT) (β := β)
       (D := distortionShift D c) (x := x) h_shift_nz]
@@ -180,12 +179,12 @@ theorem IBGibbsMeasure_shift_eq
   calc
     qT.tilted (fun t => β * distortionRV D x t + -β * c)
       = (qT.tilted (fun t => β * distortionRV D x t)).tilted (fun _ => -β * c) := by
-          simpa using
-            (MeasureTheory.tilted_tilted
-              (μ := qT)
-              (f := fun t => β * distortionRV D x t)
-              (hf := hInt)
-              (g := fun _ => -β * c)).symm
+          have ht := (MeasureTheory.tilted_tilted
+            (μ := qT)
+            (f := fun t => β * distortionRV D x t)
+            (hf := hInt)
+            (g := fun _ => -β * c)).symm
+          exact ht
     _ = qT.tilted (fun t => β * distortionRV D x t) := by
           let _ : IsProbabilityMeasure (qT.tilted (fun t => β * distortionRV D x t)) :=
             MeasureTheory.isProbabilityMeasure_tilted

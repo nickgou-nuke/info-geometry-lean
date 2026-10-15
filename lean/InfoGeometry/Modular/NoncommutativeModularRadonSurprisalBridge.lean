@@ -1,5 +1,4 @@
 import Mathlib.Algebra.Ring.Basic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Module.LinearMap.Basic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Tactic
@@ -29,8 +28,8 @@ def adK (K : A) : A →ₗ[ℤ] A where
     abel
   map_smul' r X := by
     change K * (r • X) - (r • X) * K = r • (K * X - X * K)
-    have hL : K * (r • X) = r • (K * X) := (AddMonoidHom.mulLeft K).map_zsmul X r
-    have hR : (r • X) * K = r • (X * K) := (AddMonoidHom.mulRight K).map_zsmul X r
+    have hL : K * (r • X) = r • (K * X) := (AddMonoidHom.mulLeft K).map_zsmul r X
+    have hR : (r • X) * K = r • (X * K) := (AddMonoidHom.mulRight K).map_zsmul r X
     rw [hL, hR, smul_sub]
 
 @[simp]
@@ -261,21 +260,25 @@ theorem supertrace_smul (c : R) (M : Matrix (Fin 2) (Fin 2) R) :
 /-- THEOREM 10: Trace of Common Weyl is 2. -/
 @[simp]
 theorem trace_commonWeyl : trace (commonWeyl : Matrix (Fin 2) (Fin 2) R) = (2 : R) := by
-  dsimp [commonWeyl, trace]
-  simp
+  rw [commonWeyl, Matrix.trace_one]
+  rfl
 
 /-- THEOREM 11: Trace of Chiral Weyl vanishes. -/
 @[simp]
 theorem trace_chiralWeyl : trace (chiralWeyl : Matrix (Fin 2) (Fin 2) R) = 0 := by
-  dsimp [chiralWeyl, trace]
-  simp
+  dsimp [chiralWeyl, trace, diag]
+  rw [Fin.sum_univ_two]
+  dsimp
+  ring
 
 /-- THEOREM 12: Trace of Shape Derivation vanishes (Traceless). -/
 @[simp]
 theorem trace_shapeDerivation (u : R) (v : R) :
     trace (shapeDerivation u v : Matrix (Fin 2) (Fin 2) R) = 0 := by
-  dsimp [shapeDerivation, trace]
-  simp
+  dsimp [shapeDerivation, trace, diag]
+  rw [Fin.sum_univ_two]
+  dsimp
+  ring
 
 /-- THEOREM 13: Supertrace of Common Weyl vanishes. -/
 @[simp]

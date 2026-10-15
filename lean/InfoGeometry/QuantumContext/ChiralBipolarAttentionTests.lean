@@ -23,7 +23,8 @@ open InfoGeometry.QuantumContext.ChiralBipolarAttention
 open InfoGeometry.QuantumContext.CanonicalArchetypeCausalPoset
 
 /-- Concrete test matrix with non-zero diagonal entries (simulating softmax attention). -/
-def testAttentionMatrix : Mat2 := !![1, 2; 3, 4]
+def testAttentionMatrix : InfoGeometry.QuantumContext.ChiralBipolarAttention.Mat2 :=
+  !![1, 2; 3, 4]
 
 /-- Test that chiralBipolar eliminates the diagonal entries exactly. -/
 example : chiralBipolar testAttentionMatrix = !![0, 2; 3, 0] := by
@@ -41,7 +42,8 @@ example : grading leftProjection * chiralBipolar testAttentionMatrix +
   chiralBipolar_anticommutes testAttentionMatrix
 
 /-- Symmetric balanced test coupling with mass m = 2. -/
-def balancedTestMatrix : Mat2 := !![5, 2; 2, 5]
+def balancedTestMatrix : InfoGeometry.QuantumContext.ChiralBipolarAttention.Mat2 :=
+  !![5, 2; 2, 5]
 
 theorem balancedTestMatrix_is_balanced : IsBalancedCoupling balancedTestMatrix 2 := by
   dsimp [IsBalancedCoupling, balancedTestMatrix]
@@ -49,13 +51,14 @@ theorem balancedTestMatrix_is_balanced : IsBalancedCoupling balancedTestMatrix 2
 
 /-- Test that the balanced chiral bipolar operator squares to 2^2 = 4. -/
 example : chiralBipolar balancedTestMatrix * chiralBipolar balancedTestMatrix =
-    algebraMap ℝ Mat2 (2 ^ 2) :=
+    algebraMap ℝ InfoGeometry.QuantumContext.ChiralBipolarAttention.Mat2 (2 ^ 2) :=
   chiralBipolar_square_of_balanced balancedTestMatrix 2 balancedTestMatrix_is_balanced
 
 /-- Test that for momentum p = 3 and mass m = 2, the Hamiltonian squares to 3^2 + 2^2 = 13. -/
-example : (3 • grading leftProjection + chiralBipolar balancedTestMatrix) *
-    (3 • grading leftProjection + chiralBipolar balancedTestMatrix) =
-    algebraMap ℝ Mat2 (3 ^ 2 + 2 ^ 2) :=
+example : ((3 : ℝ) • grading leftProjection + chiralBipolar balancedTestMatrix) *
+    ((3 : ℝ) • grading leftProjection + chiralBipolar balancedTestMatrix) =
+    algebraMap ℝ InfoGeometry.QuantumContext.ChiralBipolarAttention.Mat2
+      (3 ^ 2 + 2 ^ 2) :=
   chiralBipolar_hamiltonian_square balancedTestMatrix 3 2 balancedTestMatrix_is_balanced
 
 /-- Concrete 4-vector potential test: A = (5, 1, 2, 4). -/

@@ -88,21 +88,27 @@ def S (i : ι) : CuntzAlg R ι := mk (R := R) (S₀ (R := R) i)
 def T (i : ι) : CuntzAlg R ι := mk (R := R) (T₀ (R := R) i)
 
 /-- In the quotient, `Tᵢ Sⱼ = δᵢⱼ`. -/
-theorem T_mul_S (i j : ι) : T (R := R) i * S (R := R) j = if i = j then 1 else 0 := by
-  change mk (R := R) (T₀ (R := R) i) * mk (R := R) (S₀ (R := R) j) = _
-  rw [← map_mul]
-  simpa using RingQuot.mkAlgHom_rel R (Rel.ortho (R := R) i j)
+theorem T_mul_S (i j : ι) : (T i : CuntzAlg R ι) * (S j : CuntzAlg R ι) = if i = j then 1 else 0 := by
+  calc
+    (T i : CuntzAlg R ι) * (S j : CuntzAlg R ι) = mk (R := R) (T₀ (R := R) i * S₀ (R := R) j) := by
+      exact (map_mul (mk (R := R)) (T₀ (R := R) i) (S₀ (R := R) j)).symm
+    _ = mk (R := R) (if i = j then 1 else 0) := by
+      exact RingQuot.mkAlgHom_rel R (Rel.ortho (R := R) i j)
+    _ = if i = j then 1 else 0 := by
+      split_ifs <;> simp
 
 /-- In the quotient, the range projections sum to one. -/
-theorem partition_one : (∑ i : ι, S (R := R) i * T (R := R) i) = 1 := by
+theorem partition_one : (∑ i : ι, (S i : CuntzAlg R ι) * (T i : CuntzAlg R ι)) = 1 := by
   calc
-    (∑ i : ι, S (R := R) i * T (R := R) i) =
+    (∑ i : ι, (S i : CuntzAlg R ι) * (T i : CuntzAlg R ι)) =
         ∑ i : ι, mk (R := R) (S₀ (R := R) i * T₀ (R := R) i) := by
-      simp [S, T]
+      simp [S, T, ← map_mul]
     _ = mk (R := R) (∑ i : ι, S₀ (R := R) i * T₀ (R := R) i) := by
       exact (map_sum (mk (R := R)) (fun i : ι => S₀ (R := R) i * T₀ (R := R) i) Finset.univ).symm
+    _ = mk (R := R) 1 := by
+      exact RingQuot.mkAlgHom_rel R (Rel.partition (R := R) (ι := ι))
     _ = 1 := by
-      simpa using RingQuot.mkAlgHom_rel R (Rel.partition (R := R) (ι := ι))
+      simp
 
 variable [Semiring A] [Algebra R A]
 
@@ -124,7 +130,7 @@ omit [Fintype ι] [DecidableEq ι] in
   simp [evalGen, letter]
 
 /-- The tensor-algebra lift respects the Cuntz relation constructors. -/
-def liftCondition (s t : ι → A)
+theorem liftCondition (s t : ι → A)
     (h_ortho : ∀ i j, t i * s j = if i = j then 1 else 0)
     (h_partition : (∑ i : ι, s i * t i) = 1) :
     ∀ ⦃x y : TAlg R ι⦄, Rel x y →
@@ -299,9 +305,11 @@ omit [Fintype ι] [DecidableEq ι] in
   change Finsupp.mapDomain (letterSwap (ι := ι))
       (Finsupp.mapDomain (letterSwap (ι := ι)) x) = x
   rw [← Finsupp.mapDomain_comp]
-  convert Finsupp.mapDomain_id (v := x) using 2
-  ext a
-  cases a <;> rfl
+  have h_id : (⇑(letterSwap (ι := ι)) ∘ ⇑(letterSwap (ι := ι))) = id := by
+    funext a
+    cases a <;> rfl
+  rw [h_id]
+  exact Finsupp.mapDomain_id (v := x)
 
 /-- The algebraic Cuntz quotient carries the formal adjoint operation
 `Sᵢ ↦ Tᵢ`, `Tᵢ ↦ Sᵢ`. -/

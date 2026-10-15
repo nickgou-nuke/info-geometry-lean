@@ -10,6 +10,12 @@ open InfoGeometry.Quantum.PauliSoldering
 open InfoGeometry.Topology.AmplituhedronColimit
 open InfoGeometry.Clifford.Soldering
 
+private def vec22Coord (X : Vec22) : Fin 4 → ℝ
+  | 0 => X.1
+  | 1 => X.2.1
+  | 2 => X.2.2.1
+  | 3 => X.2.2.2
+
 /-- 
 Chiral Anomaly volume parameter.
 -/
@@ -30,7 +36,7 @@ theorem anomaly_breaks_incidence (ω : ChiralAnomalyVolume) (hω : ω ≠ 0)
   rcases h with ⟨hX, hY, hZ2⟩
   have h_null := incident_points_null_separated Z X Y hX hY hZ2
   rw [h_mass] at h_null
-  exact hω h_null.symm
+  exact hω h_null
 
 /--
 Bridge to the Amplituhedron Tensor Tower Colimit.
@@ -40,37 +46,23 @@ difference are mapped to the first column.
 -/
 def anomalyAmplituhedronBridge (n : ℕ) : 
     Vec22 →ₗ[ℝ] AmplituhedronAlgebra (n + 1) where
-  toFun X i j := 
-    if hj : j.val = 0 then
-      if i.val = 0 then X 0 0
-      else if i.val = 1 then X 0 1
-      else if i.val = 2 then X 1 0
-      else X 1 1
-    else 0
+  toFun X := Matrix.of fun i j => if j.val = 0 then vec22Coord X i else 0
   map_add' X Y := by
     ext i j
     by_cases hj : j.val = 0
-    · simp only [hj, dif_pos]
-      by_cases h0 : i.val = 0
-      · simp [h0]
-      by_cases h1 : i.val = 1
-      · simp [h0, h1]
-      by_cases h2 : i.val = 2
-      · simp [h0, h1, h2]
-      · simp [h0, h1, h2]
-    · simp [hj]
+    · have hj' : j = 0 := Fin.ext hj
+      simp [hj', vec22Coord]
+      fin_cases i <;> ring
+    · have hj' : j ≠ 0 := fun h => hj (congrArg Fin.val h)
+      simp [hj']
   map_smul' c X := by
     ext i j
     by_cases hj : j.val = 0
-    · simp only [hj, dif_pos]
-      by_cases h0 : i.val = 0
-      · simp [h0]
-      by_cases h1 : i.val = 1
-      · simp [h0, h1]
-      by_cases h2 : i.val = 2
-      · simp [h0, h1, h2]
-      · simp [h0, h1, h2]
-    · simp [hj]
+    · have hj' : j = 0 := Fin.ext hj
+      simp [hj', vec22Coord, smul_eq_mul]
+      fin_cases i <;> ring
+    · have hj' : j ≠ 0 := fun h => hj (congrArg Fin.val h)
+      simp [hj']
 
 /--
 The anomaly bridge commutes with the amplituhedron tensor tower inclusion.
@@ -81,18 +73,9 @@ theorem anomalyAmplituhedronBridge_comm (n : ℕ) (X : Vec22) :
   ext i j
   dsimp [anomalyAmplituhedronBridge, amplituhedronInclusion]
   by_cases h_j_n1 : (j : Fin (n + 2)).val ≤ n
-  · rw [dif_pos h_j_n1]
-    by_cases h_j0 : j.val = 0
-    · have h_j0_cast : (⟨j.val, by linarith⟩ : Fin (n+1)).val = 0 := h_j0
-      rw [dif_pos h_j0, dif_pos h_j0_cast]
-    · have h_j0_cast : (⟨j.val, by linarith⟩ : Fin (n+1)).val ≠ 0 := h_j0
-      rw [dif_neg h_j0, dif_neg h_j0_cast]
-  · rw [dif_neg h_j_n1]
-    have h_j0 : j.val ≠ 0 := by
-      intro h_eq
-      rw [h_eq] at h_j_n1
-      have : 0 ≤ n := Nat.zero_le n
-      contradiction
-    rw [dif_neg h_j0]
+  · have h_lt : (j : Fin (n + 2)).val < n + 1 := by omega
+    simp [h_lt]
+  · have h_ne : (j : Fin (n + 2)).val ≠ 0 := by omega
+    simp [h_ne]
 
 end InfoGeometry.Sandbox.UncertaintyAnomalySwarm.TwistorNonIncidence

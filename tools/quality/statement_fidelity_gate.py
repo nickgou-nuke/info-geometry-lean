@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Statement Fidelity Gate: Semantic evaluation of autoformalization beyond compilation.
+"""Statement Fidelity Gate: syntactic contract screening beyond compilation.
 
 Inspired by EMNLP 2025 and Beyond Compilation research in formal reasoning.
 A Lean 4 theorem can compile with exit code 0 by omitting essential hypotheses,
@@ -7,13 +7,14 @@ weakening assumptions, packaging the conclusion into a hypothesis (Trap T6),
 or substituting non-commutative matrix/operator algebras with trivial scalar
 surrogates (Trap T16).
 
-This gate evaluates Lean 4 theorems against target specifications to ensure:
+This lightweight source parser screens Lean declarations against target specifications. It
+is not a Lean AST or semantic-equivalence checker. It checks:
 1. Exact presence of all required mathematical premises (preventing dropped hypotheses).
 2. Grounded, uncollapsed carrier types (e.g. Matrix (Fin 2) (Fin 2) ℝ vs scalar ℝ).
 3. Absence of triviality / T6 packaging (conclusion assumed in hypotheses).
 4. Absence of vacuous conclusions (True, 0 = 0, reflexivity tautologies).
-5. Quantitative fidelity scoring ∈ [0.0, 1.0] where 1.0 denotes faithful formalization
-   and < 0.95 flags defects.
+5. A heuristic contract-match score ∈ [0.0, 1.0]; it does not establish
+   semantic equivalence, which requires independent mathematical review.
 """
 
 from __future__ import annotations
@@ -293,6 +294,35 @@ def parse_binder_tokens(binders_str: str) -> list[ParsedBinder]:
     return binders
 
 
+def _scoped_variables_at(source_prefix: str) -> list[ParsedBinder]:
+    """Collect only variable binders still in scope at the end of a source prefix."""
+    scopes: list[tuple[str, str, list[ParsedBinder]]] = [("root", "", [])]
+    for line in source_prefix.splitlines():
+        clean = line.strip()
+        namespace = re.match(r"^namespace\s+([A-Za-z0-9_.]+)", clean)
+        section = re.match(r"^section(?:\s+([A-Za-z0-9_]+))?$", clean)
+        ending = re.match(r"^end(?:\s+([A-Za-z0-9_.]+))?$", clean)
+        variable = re.match(r"^variable\s+(.+)$", clean)
+
+        if namespace:
+            scopes.append(("namespace", namespace.group(1), []))
+        elif section:
+            scopes.append(("section", section.group(1) or "", []))
+        elif ending and len(scopes) > 1:
+            target = ending.group(1)
+            if target:
+                while len(scopes) > 1:
+                    _, scope_name, _ = scopes.pop()
+                    if scope_name == target:
+                        break
+            else:
+                scopes.pop()
+        elif variable:
+            scopes[-1][2].extend(parse_binder_tokens(variable.group(1)))
+
+    return [binder for _, _, binders in scopes for binder in binders]
+
+
 def split_arrow_premises(expr: str) -> tuple[list[str], str]:
     """Split depth-0 arrow implications into premise strings and target conclusion."""
     premises: list[str] = []
@@ -333,7 +363,7 @@ def parse_declaration_from_text(
 ) -> ParsedDeclaration | None:
     """Parse a single Lean 4 declaration chunk into a ParsedDeclaration."""
     m = re.match(
-        r"^\s*(?:@\[[^\]]*\]\s*)*(?:noncomputable\s+)?(?:protected\s+|private\s+)?(theorem|lemma|def)\s+([A-Za-z0-9_.\x27]+)",
+        r"^\s*(?:@\[[^\]]*\]\s*)*(?:noncomputable\s+)?(?:protected\s+|private\s+)?(theorem|lemma|def)\s+([^\s:{(]+)",
         chunk,
     )
     if not m:
@@ -483,7 +513,7 @@ def parse_lean_declarations(
 
     # Find declaration headers
     decl_re = re.compile(
-        r"(?:^|\n)\s*(?:@\[[^\]]*\]\s*)*(?:noncomputable\s+)?(?:protected\s+|private\s+)?(theorem|lemma|def)\s+([A-Za-z0-9_.\x27]+)"
+        r"(?:^|\n)\s*(?:@\[[^\]]*\]\s*)*(?:noncomputable\s+)?(?:protected\s+|private\s+)?(theorem|lemma|def)\s+([^\s:{(]+)"
     )
 
     matches = list(decl_re.finditer(clean_text))
@@ -495,13 +525,9 @@ def parse_lean_declarations(
         # Calculate 1-based line number
         line_no = clean_text[:start].count("\n") + 1
 
-        # Look back for variables before this declaration in the source
-        # Scan for 'variable' declarations
-        prefix = clean_text[:start]
-        var_matches = re.findall(r"\bvariable\b\s+([^\n]+)", prefix)
-        current_vars: list[ParsedBinder] = []
-        for vm in var_matches:
-            current_vars.extend(parse_binder_tokens(vm))
+        # Keep only variable declarations still in scope (closed sections and
+        # namespaces must not leak assumptions into later declarations).
+        current_vars = _scoped_variables_at(clean_text[:start])
 
         parsed = parse_declaration_from_text(
             chunk,
@@ -581,6 +607,34 @@ def is_prop_type(t: str) -> bool:
     return any(c in t for c in prop_chars)
 
 
+def get_related_structures(
+    decl: ParsedDeclaration,
+    structures: dict[str, dict[str, str]] | None,
+) -> dict[str, dict[str, str]]:
+    """Filter structures to only those bundled or referenced by the declaration."""
+    related: dict[str, dict[str, str]] = {}
+    if decl.bundled_structures:
+        related.update(decl.bundled_structures)
+
+    if not structures:
+        return related
+
+    # Only binder types provide hypotheses. A name in the theorem conclusion,
+    # declaration name, or an unrelated structure elsewhere in the file does
+    # not make that structure a premise of this theorem.
+    pending_types = [b.type_expr for b in [*decl.binders, *decl.in_scope_variables]]
+    while pending_types:
+        type_expr = pending_types.pop()
+        for sname, fields in structures.items():
+            if sname in related:
+                continue
+            if re.search(rf"(?<![\w'.]){re.escape(sname)}(?![\w'])", type_expr):
+                related[sname] = fields
+                pending_types.extend(fields.values())
+
+    return related
+
+
 def detect_carrier_types(
     decl: ParsedDeclaration,
     structures: dict[str, dict[str, str]] | None = None,
@@ -604,7 +658,7 @@ def detect_carrier_types(
             proxy_name = t
 
     # Check bundled structure fields (only non-prop fields are carriers)
-    structs = structures or decl.bundled_structures
+    structs = get_related_structures(decl, structures)
     for sname, fields in structs.items():
         all_carriers.add(sname)
         if PROXY_NAME_PATTERNS.search(sname):
@@ -614,21 +668,31 @@ def detect_carrier_types(
             if not is_prop_type(ftype):
                 all_carriers.add(ftype)
 
-    # Check referenced definitions (e.g. nullPlus, matJ, matPerm12)
+    # Check referenced definitions (e.g. nullPlus, matJ, matPerm12, blockEmbed)
     if definitions:
+        global_inst = re.search(r"\(\s*R\s*:=\s*([^\s)]+)\s*\)", decl.conclusion) or re.search(r"\(\s*R\s*:=\s*([^\s)]+)\s*\)", decl.raw_signature)
+        global_arg = global_inst.group(1) if global_inst else None
+
         for dname, dtype in definitions.items():
             if re.search(rf"\b{re.escape(dname)}\b", decl.conclusion) or re.search(rf"\b{re.escape(dname)}\b", decl.raw_signature):
                 if not is_prop_type(dtype):
-                    # Check for type parameter instantiations like (R := ℝ)
+                    all_carriers.add(dtype)
+                    # Check for definition-specific instantiation or global instantiation
                     inst_match = re.search(rf"\b{re.escape(dname)}\s*\(\s*R\s*:=\s*([^\s)]+)\s*\)", decl.conclusion)
-                    inst_type = dtype
-                    if inst_match:
-                        inst_arg = inst_match.group(1)
+                    inst_arg = inst_match.group(1) if inst_match else global_arg
+                    if inst_arg and "R" in dtype:
                         inst_type = re.sub(r"\bR\b", inst_arg, dtype)
-                    all_carriers.add(inst_type)
+                        all_carriers.add(inst_type)
 
     # Check conclusion annotations and terms
     conc = decl.conclusion
+    conc_clean = conc.strip()
+    if structures and conc_clean in structures:
+        all_carriers.add(conc_clean)
+        if PROXY_NAME_PATTERNS.search(conc_clean):
+            is_scalar_proxy = True
+            proxy_name = conc_clean
+
     # Find Matrix (Fin n) (Fin n) R
     mat_matches = re.findall(r"Matrix\s*\(\s*Fin\s+(\d+)\s*\)\s*\(\s*Fin\s+(\d+)\s*\)\s*([^\s),]+)", conc)
     for m in mat_matches:
@@ -675,7 +739,7 @@ def detect_carrier_types(
 
 
 def normalize_lean_expr(expr: str) -> str:
-    """Normalize Lean expressions for syntactic and semantic equality checks."""
+    """Normalize Lean expressions for simple textual contract comparisons."""
     s = re.sub(r"\s+", " ", expr).strip()
     s = re.sub(r"^\((.*)\)$", r"\1", s).strip()
     return s
@@ -704,7 +768,7 @@ def detect_t6_packaging(
             )
 
     # Check bundled structure fields
-    structs = structures or decl.bundled_structures
+    structs = get_related_structures(decl, structures)
     for sname, fields in structs.items():
         for fname, ftype in fields.items():
             norm_field = normalize_lean_expr(ftype)
@@ -853,7 +917,7 @@ def check_hypotheses_fidelity(
         searchable_pool.append(f"{' '.join(b.names)} : {b.type_expr}")
     for v in decl.in_scope_variables:
         searchable_pool.append(f"{' '.join(v.names)} : {v.type_expr}")
-    structs = structures or decl.bundled_structures
+    structs = get_related_structures(decl, structures)
     for sname, fields in structs.items():
         for fname, ftype in fields.items():
             searchable_pool.append(f"{sname}.{fname} : {ftype}")
@@ -905,16 +969,22 @@ def check_target_relation(
         return defects
 
     conc = decl.conclusion
+    norm_conc = normalize_lean_expr(conc)
+
     if isinstance(target_rel_spec, str):
         target_pattern = target_rel_spec
         rel_symbol = None
     else:
-        target_pattern = target_rel_spec.get("pattern", "")
+        target_pattern = (
+            target_rel_spec.get("pattern", "")
+            or target_rel_spec.get("target_conclusion", "")
+            or target_rel_spec.get("conclusion", "")
+        )
         rel_symbol = target_rel_spec.get("relation_symbol")
 
     # Check relation symbol if specified
     if rel_symbol:
-        if rel_symbol not in conc:
+        if rel_symbol not in conc and rel_symbol not in norm_conc:
             defects.append(
                 FidelityDefect(
                     defect_type="RELATION_MISMATCH",
@@ -927,28 +997,23 @@ def check_target_relation(
 
     # Check pattern matching
     if target_pattern:
-        try:
-            if not re.search(target_pattern, conc):
-                defects.append(
-                    FidelityDefect(
-                        defect_type="RELATION_MISMATCH",
-                        severity="ERROR",
-                        message=f"Conclusion does not match target relation pattern '{target_pattern}'.",
-                        penalty=0.40,
-                        context=conc,
-                    )
+        norm_pattern = normalize_lean_expr(target_pattern)
+        matched = (target_pattern in conc) or (norm_pattern in norm_conc)
+        if not matched:
+            try:
+                matched = bool(re.search(target_pattern, conc) or re.search(target_pattern, norm_conc))
+            except re.error:
+                pass
+        if not matched:
+            defects.append(
+                FidelityDefect(
+                    defect_type="RELATION_MISMATCH",
+                    severity="ERROR",
+                    message=f"Conclusion does not match target relation pattern '{target_pattern}'.",
+                    penalty=0.40,
+                    context=conc,
                 )
-        except re.error:
-            if target_pattern not in conc:
-                defects.append(
-                    FidelityDefect(
-                        defect_type="RELATION_MISMATCH",
-                        severity="ERROR",
-                        message=f"Conclusion does not contain target relation substring '{target_pattern}'.",
-                        penalty=0.40,
-                        context=conc,
-                    )
-                )
+            )
 
     return defects
 
@@ -961,21 +1026,26 @@ def evaluate_statement_fidelity(
     decl_ast_or_text: str | dict[str, Any],
     spec: dict[str, Any],
 ) -> FidelityReport:
-    """Evaluate semantic statement fidelity beyond compilation against a target specification.
+    """Evaluate syntactic contract fidelity beyond compilation against a specification.
 
     Args:
         decl_ast_or_text: Lean 4 theorem code string, AST JSON string, or AST dict.
         spec: Target specification dict containing required_hypotheses,
               carrier_requirements, and target_relation.
 
-    Returns:
-        FidelityReport with normalized score in [0.0, 1.0], defect list, and diagnostics.
+    Returns a heuristic syntactic FidelityReport. The score is not a probability,
+    proof of semantic equivalence, or substitute for independent review.
     """
     # 1. Parse declaration
     structures: dict[str, dict[str, str]] = {}
     declarations: list[ParsedDeclaration] = []
 
-    target_name = spec.get("theorem_name")
+    target_name = (
+        spec.get("theorem_name")
+        or spec.get("target_symbol")
+        or spec.get("target_declaration")
+        or spec.get("decl")
+    )
 
     if isinstance(decl_ast_or_text, dict):
         declarations = parse_from_ast_json(decl_ast_or_text)
@@ -1003,12 +1073,50 @@ def evaluate_statement_fidelity(
         )
 
     # Select target declaration
-    selected_decl = declarations[0]
+    selected_decl: ParsedDeclaration | None = None
     if target_name:
         for d in declarations:
-            if d.name == target_name or d.name.endswith(f".{target_name}"):
+            if d.name == target_name or d.name.endswith(f".{target_name}") or target_name.endswith(f".{d.name}"):
                 selected_decl = d
                 break
+        if selected_decl is None:
+            return FidelityReport(
+                theorem_name=target_name,
+                fidelity_score=0.0,
+                passed=False,
+                defects=[
+                    FidelityDefect(
+                        defect_type="TARGET_DECLARATION_NOT_FOUND",
+                        severity="FATAL",
+                        message=f"Target declaration '{target_name}' was not found among parsed declarations: {[d.name for d in declarations]}.",
+                        penalty=1.0,
+                        context=target_name,
+                    )
+                ],
+                carrier_detected=[],
+                hypotheses_detected=[],
+                conclusion_detected="",
+            )
+    else:
+        if len(declarations) == 1:
+            selected_decl = declarations[0]
+        else:
+            return FidelityReport(
+                theorem_name="<unspecified>",
+                fidelity_score=0.0,
+                passed=False,
+                defects=[
+                    FidelityDefect(
+                        defect_type="AMBIGUOUS_TARGET_DECLARATION",
+                        severity="FATAL",
+                        message=f"No target theorem specified and file contains {len(declarations)} declarations. Specify target_symbol or theorem_name.",
+                        penalty=1.0,
+                    )
+                ],
+                carrier_detected=[],
+                hypotheses_detected=[],
+                conclusion_detected="",
+            )
 
     # If spec has structure definitions, merge them
     if "structures" in spec and isinstance(spec["structures"], dict):
@@ -1035,11 +1143,19 @@ def evaluate_statement_fidelity(
 
     # Carrier fidelity check
     carrier_spec = spec.get("carrier_requirements")
+    if not carrier_spec and "carrier" in spec:
+        c_val = spec["carrier"]
+        if isinstance(c_val, str):
+            carrier_spec = {"expected_carrier": c_val}
+        elif isinstance(c_val, dict):
+            carrier_spec = c_val
     carrier_defects = check_carrier_fidelity(carrier_info, carrier_spec)
     all_defects.extend(carrier_defects)
 
     # Hypotheses check
-    req_hyps = spec.get("required_hypotheses", [])
+    req_hyps = spec.get("required_hypotheses")
+    if req_hyps is None:
+        req_hyps = spec.get("hypotheses", [])
     hyp_defects, detected_hyps = check_hypotheses_fidelity(
         selected_decl, structures, req_hyps
     )
@@ -1047,6 +1163,8 @@ def evaluate_statement_fidelity(
 
     # Target relation check
     rel_spec = spec.get("target_relation")
+    if rel_spec is None:
+        rel_spec = spec.get("target_conclusion")
     rel_defects = check_target_relation(selected_decl, rel_spec)
     all_defects.extend(rel_defects)
 
@@ -1108,7 +1226,13 @@ def evaluate_file_fidelity(
             results[th_name] = report
     else:
         # Single theorem spec
-        th_name = target_decl or spec_data.get("theorem_name")
+        th_name = (
+            target_decl
+            or spec_data.get("theorem_name")
+            or spec_data.get("target_symbol")
+            or spec_data.get("target_declaration")
+            or spec_data.get("decl")
+        )
         spec_copy = dict(spec_data)
         if th_name:
             spec_copy["theorem_name"] = th_name
@@ -1126,7 +1250,7 @@ def evaluate_file_fidelity(
 
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        description="Evaluate semantic statement fidelity of Lean 4 theorems beyond compilation."
+        description="Run syntactic contract checks on Lean declarations beyond compilation."
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
@@ -1167,7 +1291,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             print(json.dumps(out_data, indent=2))
         else:
             print("=" * 72)
-            print("OpenGauss Statement Fidelity Gate - Semantic Beyond-Compilation Report")
+            print("OpenGauss Statement Fidelity Gate - Syntactic Contract Screening Report")
             print("=" * 72)
             print(f"Target File: {lean_path}")
             print(f"Spec File:   {spec_path}")

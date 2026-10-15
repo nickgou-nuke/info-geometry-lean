@@ -112,7 +112,7 @@ theorem cIterRoot_six_eq_baseLongRoot :
 
 theorem cIterRoot_fin_eq_longRoot (i : Fin 6) :
     cIterRoot i.val = (RootLength.Long, (i : ZMod 6)) := by
-  fin_cases i <;> decide
+  fin_cases i <;> norm_num [cIterRoot, cAction, baseLongRoot] <;> rfl
 
 noncomputable def cIterRootSubgroupEquiv :
     (n : Nat) → Bool ≃ rootSubgroup (cIterRoot n)
@@ -127,8 +127,8 @@ theorem cIterRootSubgroup_card (n : Nat) :
 
 noncomputable def longRootSubgroupEquiv (i : Fin 6) :
     Bool ≃ rootSubgroup (RootLength.Long, (i : ZMod 6)) := by
-  rw [← cIterRoot_fin_eq_longRoot i]
-  exact cIterRootSubgroupEquiv i.val
+  exact cast (congrArg (fun r : G2Root => Bool ≃ rootSubgroup r)
+    (cIterRoot_fin_eq_longRoot i)) (cIterRootSubgroupEquiv i.val)
 
 theorem longRootSubgroup_card (i : Fin 6) :
     Nat.card (rootSubgroup (RootLength.Long, (i : ZMod 6))) = 2 := by
@@ -224,15 +224,18 @@ theorem cIterRootSubgroupEquiv_coe_eq_xRoot (n : Nat) (t : Bool) :
   | zero =>
       rfl
   | succ n ih =>
-      simp only [cIterRootSubgroupEquiv, Equiv.trans_apply, cIterRoot]
+      change ((rootSubgroupEquiv_c (cIterRoot n)).toEquiv
+        (cIterRootSubgroupEquiv n t) : SplitOctF2Aut) = _
       have hsub : cIterRootSubgroupEquiv n t =
           rootSubgroupEquivBool (cIterRoot n) t := by
         apply Subtype.ext
         exact ih
-      rw [hsub]
-      have h := congrArg (fun z : rootSubgroup (cAction (cIterRoot n)) =>
-          (z : SplitOctF2Aut)) (rootSubgroupEquiv_c_apply (cIterRoot n) t)
-      simpa only [rootSubgroupEquivBool_apply] using h
+      calc
+        _ = ((rootSubgroupEquiv_c (cIterRoot n)).toEquiv
+            (rootSubgroupEquivBool (cIterRoot n) t) : SplitOctF2Aut) := by
+              rw [hsub]
+        _ = xRoot (cAction (cIterRoot n)) t :=
+          congrArg Subtype.val (rootSubgroupEquiv_c_apply (cIterRoot n) t)
 
 theorem rootSubgroupEquiv_s_apply (α : G2Root) (t : Bool) :
     (rootSubgroupEquiv_s α).toEquiv (rootSubgroupEquivBool α t) =
@@ -320,7 +323,7 @@ theorem cIterShortRoot_six_eq_baseShortRoot :
 
 theorem cIterShortRoot_fin_eq_shortRoot (i : Fin 6) :
     cIterShortRoot i.val = (RootLength.Short, (i : ZMod 6)) := by
-  fin_cases i <;> decide
+  fin_cases i <;> norm_num [cIterShortRoot, cAction, baseShortRoot] <;> rfl
 
 noncomputable def cIterShortRootSubgroupEquiv :
     (n : Nat) → Bool ≃ rootSubgroup (cIterShortRoot n)
@@ -335,8 +338,8 @@ theorem cIterShortRootSubgroup_card (n : Nat) :
 
 noncomputable def shortRootSubgroupEquiv (i : Fin 6) :
     Bool ≃ rootSubgroup (RootLength.Short, (i : ZMod 6)) := by
-  rw [← cIterShortRoot_fin_eq_shortRoot i]
-  exact cIterShortRootSubgroupEquiv i.val
+  exact cast (congrArg (fun r : G2Root => Bool ≃ rootSubgroup r)
+    (cIterShortRoot_fin_eq_shortRoot i)) (cIterShortRootSubgroupEquiv i.val)
 
 theorem shortRootSubgroup_card (i : Fin 6) :
     Nat.card (rootSubgroup (RootLength.Short, (i : ZMod 6))) = 2 := by

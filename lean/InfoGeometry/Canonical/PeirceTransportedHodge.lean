@@ -33,12 +33,14 @@ noncomputable def gradedChirality : Carrier →ₗ[ℝ] Carrier :=
 theorem hodgeStar_involutive :
     hodgeStar.comp hodgeStar = LinearMap.id := by
   apply transport_involutive peirceExterior3Equiv
-  simpa [hodgeStarLinearEquiv] using hodgeStar_sq
+  apply LinearMap.ext
+  intro x
+  exact hodgeStarLinearEquiv_apply_apply x
 
 theorem gradedChirality_involutive :
     gradedChirality.comp gradedChirality = LinearMap.id := by
   apply transport_involutive peirceExterior3Equiv
-  simpa using
+  simpa only [Module.End.mul_eq_comp, Module.End.one_eq_id] using
     InfoGeometry.Canonical.SplitOctonionCayleyHodgeDualityBridge.gradedChirality_sq
 
 end InfoGeometry.Canonical.PeirceTransportedHodge

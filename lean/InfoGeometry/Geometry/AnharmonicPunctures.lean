@@ -64,7 +64,7 @@ theorem exchange_inversion_exchange (z : Punctured) :
   have h1 : 1 - z.1 ≠ 0 := (exchange z).2.1
   have h2 : 1 - z.1⁻¹ ≠ 0 := (exchange (inversion z)).2.1
   have hz : z.1 - 1 ≠ 0 := sub_ne_zero.mpr z.2.2
-  field_simp [z.2.1, h1, h2, hz] <;> ring
+  field_simp [z.2.1, h1, h2, hz]; ring
 
 theorem puncture_cycle_cubed (z : Punctured) :
     exchange (inversion (exchange (inversion (exchange (inversion z))))) = z := by
@@ -124,18 +124,20 @@ def logCoefficient (z : ℂ) : ℂ := 1 / z - 1 / (z - 1)
 theorem logCoefficient_normal_form (z : Punctured) :
     logCoefficient z.1 = -1 / (z.1 * (z.1 - 1)) := by
   dsimp [logCoefficient]
-  field_simp [z.2.1, sub_ne_zero.mpr z.2.2] <;> ring
+  field_simp [z.2.1, sub_ne_zero.mpr z.2.2]; ring
 
 theorem ratio_hasDerivAt (z : Punctured) :
     HasDerivAt ratio (-1 / (z.1 - 1) ^ 2) z.1 := by
-  simpa [ratio] using
-    (hasDerivAt_id z.1).div ((hasDerivAt_id z.1).sub_const 1)
-      (sub_ne_zero.mpr z.2.2)
+  have hz : z.1 - 1 ≠ 0 := sub_ne_zero.mpr z.2.2
+  have h := (hasDerivAt_id' z.1).div ((hasDerivAt_id' z.1).sub_const 1) hz
+  have h_eq : (1 * (z.1 - 1) - z.1 * 1) / (z.1 - 1) ^ 2 = -1 / (z.1 - 1) ^ 2 := by ring
+  rw [← h_eq]
+  exact h
 
 theorem ratio_logarithmic_derivative (z : Punctured) :
     (-1 / (z.1 - 1) ^ 2) / ratio z.1 = logCoefficient z.1 := by
   dsimp [ratio, logCoefficient]
-  field_simp [z.2.1, sub_ne_zero.mpr z.2.2] <;> ring
+  field_simp [z.2.1, sub_ne_zero.mpr z.2.2]; ring
 
 /-- The pullback includes the derivative -1. -/
 theorem exchange_log_form (z : Punctured) :
@@ -143,7 +145,7 @@ theorem exchange_log_form (z : Punctured) :
   change logCoefficient (1 - z.1) * (-1) = -logCoefficient z.1
   dsimp [logCoefficient]
   field_simp [z.2.1, sub_ne_zero.mpr z.2.2,
-    sub_ne_zero.mpr (Ne.symm z.2.2)] <;> ring
+    sub_ne_zero.mpr (Ne.symm z.2.2)]; ring
 
 /-- Inversion permutes the residues; it does not preserve this coefficient. -/
 theorem inversion_log_form (z : Punctured) :
@@ -152,7 +154,7 @@ theorem inversion_log_form (z : Punctured) :
   have hi : z.1⁻¹ - 1 ≠ 0 := sub_ne_zero.mpr (inversion z).2.2
   dsimp [logCoefficient]
   have h1 : 1 - z.1 ≠ 0 := sub_ne_zero.mpr (Ne.symm z.2.2)
-  field_simp [z.2.1, sub_ne_zero.mpr z.2.2, hi, h1] <;> ring
+  field_simp [z.2.1, sub_ne_zero.mpr z.2.2, hi, h1]; ring
 
 abbrev CMat2 := InfoGeometry.Algebra.FiniteSpin.Mat2C
 

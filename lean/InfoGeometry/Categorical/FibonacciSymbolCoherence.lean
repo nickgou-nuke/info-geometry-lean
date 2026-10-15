@@ -170,7 +170,6 @@ theorem nativeRMatrix_eq_fibonacciRMatrix (q : Units ℂ) :
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [nativeRMatrix, nativeRSymbol, fibonacciRMatrix]
-  · rfl
 
 theorem native_symbol_hexagon_forward
     (q : Units ℂ) (τ s : ℂ)
@@ -204,7 +203,6 @@ theorem nativeRSymbol_inverse (q : Units ℂ) (a b c : FibSimple) :
     nativeRSymbol q a b c * nativeRSymbol q⁻¹ a b c = 1 := by
   cases a <;> cases b <;> cases c <;>
     simp [nativeRSymbol, zpow_neg, Units.ne_zero q]
-  · exact inv_mul_cancel₀ (pow_ne_zero 4 (Units.ne_zero q))
 
 def nativePentagonLHS
     (a b c d e f g k l : FibSimple) : ℂ :=

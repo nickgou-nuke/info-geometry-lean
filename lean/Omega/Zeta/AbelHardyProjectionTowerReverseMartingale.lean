@@ -50,7 +50,8 @@ theorem paper_abel_hardy_projection_tower_reverse_martingale
     (D : AbelHardyProjectionTowerReverseMartingaleData) :
     D.boundaryProjectionFormula ∧ D.reverseMartingaleFormula := by
   refine ⟨?_, ?_⟩
-  · simpa [AbelHardyProjectionTowerReverseMartingaleData.boundaryProjectionFormula] using
+  · simpa [AbelHardyProjectionTowerReverseMartingaleData.boundaryProjectionFormula,
+      abel_hardy_projection_tower_reverse_martingale_towerModel] using
       D.tower_closed_form 1
   · intro m
     calc

@@ -138,8 +138,7 @@ theorem paper_killo_curvature_probability_observable_limit_consistency
   have hZ :
       Tendsto ZSeq Filter.atTop
         (nhds D.killo_curvature_probability_observable_limit_consistency_observable_limit) := by
-    simpa [ZSeq, killo_curvature_probability_observable_limit_consistency_observable_sequence]
-      using D.killo_curvature_probability_observable_limit_consistency_observable_tendsto
+    exact D.killo_curvature_probability_observable_limit_consistency_observable_tendsto
   have hDifferenceToZero :
       Tendsto
         (fun n =>

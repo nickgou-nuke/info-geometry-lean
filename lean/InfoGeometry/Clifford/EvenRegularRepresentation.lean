@@ -60,13 +60,17 @@
 
  theorem coe_mem_evenOdd_zero (a : EvenQ) :
      (a : CliffordAlgebra Q) ∈ CliffordAlgebra.evenOdd Q 0 := by
-   simpa [CliffordAlgebra.even_toSubmodule] using a.2
+   change (a : CliffordAlgebra Q) ∈ (CliffordAlgebra.even Q).toSubmodule
+   rw [CliffordAlgebra.even_toSubmodule]
+   exact a.2
 
  noncomputable def evenEquivEvenOddZero :
      CliffordAlgebra.even Q ≃ₗ[R] CliffordAlgebra.evenOdd Q 0 where
    toFun a := ⟨a.1, coe_mem_evenOdd_zero Q a⟩
    invFun x := ⟨x.1, by
-     simpa only [CliffordAlgebra.even_toSubmodule] using x.2⟩
+     change x.1 ∈ (CliffordAlgebra.even Q).toSubmodule
+     rw [CliffordAlgebra.even_toSubmodule]
+     exact x.2⟩
    left_inv a := by rfl
    right_inv x := by rfl
    map_add' a b := by rfl

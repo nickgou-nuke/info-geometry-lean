@@ -144,7 +144,9 @@ theorem paper_xi_hankel_minimal_recurrence_good_prime_preservation
     have h := congrFun hpad_zero ⟨r, hr⟩
     simpa using h
   have hlast_one : hankelPadCoeffs hr q ⟨r, hr⟩ = 1 := by
-    simpa [hankelPadCoeffs] using hqmonic
+    dsimp [hankelPadCoeffs]
+    rw [dif_pos (Nat.lt_succ_self r)]
+    exact hqmonic
   have hcontr : (0 : ZMod p) = 1 := hlast_zero.symm.trans hlast_one
   exact zero_ne_one hcontr
 

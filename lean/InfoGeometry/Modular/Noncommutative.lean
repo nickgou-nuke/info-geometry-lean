@@ -46,8 +46,8 @@ def adK (K : A) : A →ₗ[ℤ] A where
     abel
   map_smul' r X := by
     change K * (r • X) - (r • X) * K = r • (K * X - X * K)
-    have hL : K * (r • X) = r • (K * X) := (AddMonoidHom.mulLeft K).map_zsmul X r
-    have hR : (r • X) * K = r • (X * K) := (AddMonoidHom.mulRight K).map_zsmul X r
+    have hL : K * (r • X) = r • (K * X) := (AddMonoidHom.mulLeft K).map_zsmul r X
+    have hR : (r • X) * K = r • (X * K) := (AddMonoidHom.mulRight K).map_zsmul r X
     rw [hL, hR, smul_sub]
 
 @[simp]

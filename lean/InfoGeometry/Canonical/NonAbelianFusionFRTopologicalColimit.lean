@@ -26,7 +26,7 @@ variable [TopologicalSpace K] [ContinuousAdd K] [ContinuousMul K]
 
 abbrev FusionCarrier (K : Type) := Matrix (Fin 2) (Fin 2) K
 
-def fusionTopologicalDiagram : ℕ ⥤ TopCat :=
+abbrev fusionTopologicalDiagram : ℕ ⥤ TopCat :=
   (Functor.const ℕ).obj (TopCat.of (FusionCarrier K))
 
 def fusionActionCocone
@@ -47,6 +47,7 @@ noncomputable def fusionActionColimitMap
   topologicalDirectDescend (fusionTopologicalDiagram (K := K))
     (fusionActionCocone (K := K) action)
 
+omit [CommRing K] [ContinuousAdd K] [ContinuousMul K] in
 theorem fusionActionColimitMap_stage
     (action : TopCat.of (FusionCarrier K) ⟶ TopCat.of (FusionCarrier K))
     (n : ℕ) (X : FusionCarrier K) :
@@ -67,11 +68,13 @@ def fusionActionColimitCocone
         topologicalDirectInjection (fusionTopologicalDiagram (K := K)) n
       naturality := by
         intro i j f
+        dsimp [fusionTopologicalDiagram]
+        simp only [Category.id_comp, Category.comp_id]
         have h := topologicalDirectInjection_naturality
           (fusionTopologicalDiagram (K := K)) f
-        simpa only [fusionTopologicalDiagram, Category.id_comp,
-          Category.comp_id, Category.assoc] using
-          congrArg (fun q => action ≫ q) h }
+        dsimp [fusionTopologicalDiagram] at h
+        simp only [Category.id_comp] at h
+        rw [← h] }
 
 noncomputable def fusionActionColimitEndomorphism
     (action : TopCat.of (FusionCarrier K) ⟶ TopCat.of (FusionCarrier K)) :
@@ -80,6 +83,7 @@ noncomputable def fusionActionColimitEndomorphism
   topologicalDirectDescend (fusionTopologicalDiagram (K := K))
     (fusionActionColimitCocone (K := K) action)
 
+omit [CommRing K] [ContinuousAdd K] [ContinuousMul K] in
 theorem fusionActionColimitEndomorphism_stage
     (action : TopCat.of (FusionCarrier K) ⟶ TopCat.of (FusionCarrier K))
     (n : ℕ) :
@@ -244,6 +248,7 @@ theorem fusionFColimitEndomorphism_stage
   exact fusionActionColimitEndomorphism_stage (K := K)
     (fusionFLeftTopCatHom a b) n
 
+omit [CommRing K] [ContinuousAdd K] [ContinuousMul K] in
 theorem fusionActionColimitEndomorphism_comp_stage
     (action₁ action₂ : TopCat.of (FusionCarrier K) ⟶ TopCat.of (FusionCarrier K))
     (n : ℕ) :
@@ -252,25 +257,9 @@ theorem fusionActionColimitEndomorphism_comp_stage
           fusionActionColimitEndomorphism (K := K) action₂) =
       (action₁ ≫ action₂) ≫
         topologicalDirectInjection (fusionTopologicalDiagram (K := K)) n := by
-  calc
-    _ = (topologicalDirectInjection (fusionTopologicalDiagram (K := K)) n ≫
-        fusionActionColimitEndomorphism (K := K) action₁) ≫
-        fusionActionColimitEndomorphism (K := K) action₂ := by
-          simp only [Category.assoc]
-    _ = (action₁ ≫ topologicalDirectInjection
-        (fusionTopologicalDiagram (K := K)) n) ≫
-        fusionActionColimitEndomorphism (K := K) action₂ := by
-          rw [fusionActionColimitEndomorphism_stage (K := K) action₁ n]
-    _ = action₁ ≫ (topologicalDirectInjection
-        (fusionTopologicalDiagram (K := K)) n ≫
-        fusionActionColimitEndomorphism (K := K) action₂) := by
-          simp only [Category.assoc]
-    _ = action₁ ≫ (action₂ ≫ topologicalDirectInjection
-        (fusionTopologicalDiagram (K := K)) n) := by
-          rw [fusionActionColimitEndomorphism_stage (K := K) action₂ n]
-    _ = (action₁ ≫ action₂) ≫
-        topologicalDirectInjection (fusionTopologicalDiagram (K := K)) n := by
-          simp only [Category.assoc]
+  rw [← Category.assoc, fusionActionColimitEndomorphism_stage,
+    Category.assoc, fusionActionColimitEndomorphism_stage,
+    ← Category.assoc]
 
 theorem fusionFullTwistColimitEndomorphism_stage
     (a b q1 q2 : K) (n : ℕ) :
@@ -361,88 +350,36 @@ theorem fusionBraidColimitAction_artin
   intro n
   dsimp [fusionBraid1ColimitEndomorphism,
     fusionBraid2ColimitEndomorphism]
-  change ((topologicalDirectInjection (fusionTopologicalDiagram (K := K)) n ≫
-      fusionActionColimitEndomorphism (fusionBraid1LeftTopCatHom q1 q2)) ≫
+  change topologicalDirectInjection (fusionTopologicalDiagram (K := K)) n ≫
+      (fusionActionColimitEndomorphism (fusionBraid1LeftTopCatHom q1 q2) ≫
         fusionActionColimitEndomorphism (fusionBraid2LeftTopCatHom a b q1 q2) ≫
-      fusionActionColimitEndomorphism (fusionBraid1LeftTopCatHom q1 q2)) =
-    ((topologicalDirectInjection (fusionTopologicalDiagram (K := K)) n ≫
-      fusionActionColimitEndomorphism (fusionBraid2LeftTopCatHom a b q1 q2)) ≫
+        fusionActionColimitEndomorphism (fusionBraid1LeftTopCatHom q1 q2)) =
+    topologicalDirectInjection (fusionTopologicalDiagram (K := K)) n ≫
+      (fusionActionColimitEndomorphism (fusionBraid2LeftTopCatHom a b q1 q2) ≫
         fusionActionColimitEndomorphism (fusionBraid1LeftTopCatHom q1 q2) ≫
-      fusionActionColimitEndomorphism (fusionBraid2LeftTopCatHom a b q1 q2))
-  have hs1 := fusionActionColimitEndomorphism_stage (K := K)
-    (fusionBraid1LeftTopCatHom q1 q2) n
-  have hs2 := fusionActionColimitEndomorphism_stage (K := K)
-    (fusionBraid2LeftTopCatHom a b q1 q2) n
-  calc
-    ((topologicalDirectInjection (fusionTopologicalDiagram (K := K)) n ≫
-      fusionActionColimitEndomorphism (fusionBraid1LeftTopCatHom q1 q2)) ≫
-        fusionActionColimitEndomorphism (fusionBraid2LeftTopCatHom a b q1 q2)) ≫
-      fusionActionColimitEndomorphism (fusionBraid1LeftTopCatHom q1 q2) =
-      ((fusionBraid1LeftTopCatHom q1 q2 ≫
-        topologicalDirectInjection (fusionTopologicalDiagram (K := K)) n) ≫
-        fusionActionColimitEndomorphism (fusionBraid2LeftTopCatHom a b q1 q2)) ≫
-      fusionActionColimitEndomorphism (fusionBraid1LeftTopCatHom q1 q2) := by rw [hs1]
-    _ = (fusionBraid1LeftTopCatHom q1 q2 ≫
-        (topologicalDirectInjection (fusionTopologicalDiagram (K := K)) n ≫
-          fusionActionColimitEndomorphism (fusionBraid2LeftTopCatHom a b q1 q2))) ≫
-        fusionActionColimitEndomorphism (fusionBraid1LeftTopCatHom q1 q2) := by
-          simp only [Category.assoc]
-    _ = (fusionBraid1LeftTopCatHom q1 q2 ≫
-        (fusionBraid2LeftTopCatHom a b q1 q2 ≫
-          topologicalDirectInjection (fusionTopologicalDiagram (K := K)) n)) ≫
-        fusionActionColimitEndomorphism (fusionBraid1LeftTopCatHom q1 q2) := by rw [hs2]
-    _ = (fusionBraid1LeftTopCatHom q1 q2 ≫
+        fusionActionColimitEndomorphism (fusionBraid2LeftTopCatHom a b q1 q2))
+  have hL : topologicalDirectInjection (fusionTopologicalDiagram (K := K)) n ≫
+      (fusionActionColimitEndomorphism (fusionBraid1LeftTopCatHom q1 q2) ≫
+        fusionActionColimitEndomorphism (fusionBraid2LeftTopCatHom a b q1 q2) ≫
+        fusionActionColimitEndomorphism (fusionBraid1LeftTopCatHom q1 q2)) =
+      (fusionBraid1LeftTopCatHom q1 q2 ≫
         fusionBraid2LeftTopCatHom a b q1 q2 ≫
         fusionBraid1LeftTopCatHom q1 q2) ≫
         topologicalDirectInjection (fusionTopologicalDiagram (K := K)) n := by
-          simp only [Category.assoc]
-          rw [hs1]
-    _ = (fusionBraid2LeftTopCatHom a b q1 q2 ≫
+    rw [← Category.assoc, fusionActionColimitEndomorphism_stage,
+      Category.assoc, fusionActionColimitEndomorphism_comp_stage,
+      ← Category.assoc]
+  have hR : topologicalDirectInjection (fusionTopologicalDiagram (K := K)) n ≫
+      (fusionActionColimitEndomorphism (fusionBraid2LeftTopCatHom a b q1 q2) ≫
+        fusionActionColimitEndomorphism (fusionBraid1LeftTopCatHom q1 q2) ≫
+        fusionActionColimitEndomorphism (fusionBraid2LeftTopCatHom a b q1 q2)) =
+      (fusionBraid2LeftTopCatHom a b q1 q2 ≫
         fusionBraid1LeftTopCatHom q1 q2 ≫
         fusionBraid2LeftTopCatHom a b q1 q2) ≫
         topologicalDirectInjection (fusionTopologicalDiagram (K := K)) n := by
-          rw [fusionBraidLeftTopCatHom_artin (K := K) a b q1 q2 h_norm h_braid]
-    _ = ((topologicalDirectInjection (fusionTopologicalDiagram (K := K)) n ≫
-      fusionActionColimitEndomorphism (fusionBraid2LeftTopCatHom a b q1 q2)) ≫
-      fusionActionColimitEndomorphism (fusionBraid1LeftTopCatHom q1 q2)) ≫
-      fusionActionColimitEndomorphism (fusionBraid2LeftTopCatHom a b q1 q2) := by
-        symm
-        calc
-          ((topologicalDirectInjection (fusionTopologicalDiagram (K := K)) n ≫
-            fusionActionColimitEndomorphism (fusionBraid2LeftTopCatHom a b q1 q2)) ≫
-              fusionActionColimitEndomorphism (fusionBraid1LeftTopCatHom q1 q2)) ≫
-            fusionActionColimitEndomorphism (fusionBraid2LeftTopCatHom a b q1 q2) =
-            fusionBraid2LeftTopCatHom a b q1 q2 ≫
-              (fusionBraid1LeftTopCatHom q1 q2 ≫
-                (fusionBraid2LeftTopCatHom a b q1 q2 ≫
-                  topologicalDirectInjection (fusionTopologicalDiagram (K := K)) n)) := by
-                    calc
-                      ((topologicalDirectInjection (fusionTopologicalDiagram (K := K)) n ≫
-                        fusionActionColimitEndomorphism (fusionBraid2LeftTopCatHom a b q1 q2)) ≫
-                          fusionActionColimitEndomorphism (fusionBraid1LeftTopCatHom q1 q2)) ≫
-                        fusionActionColimitEndomorphism (fusionBraid2LeftTopCatHom a b q1 q2) =
-                        fusionBraid2LeftTopCatHom a b q1 q2 ≫
-                          ((topologicalDirectInjection (fusionTopologicalDiagram (K := K)) n ≫
-                            fusionActionColimitEndomorphism (fusionBraid1LeftTopCatHom q1 q2)) ≫
-                            fusionActionColimitEndomorphism (fusionBraid2LeftTopCatHom a b q1 q2)) := by
-                              rw [← Category.assoc]
-                              rw [hs2]
-                              simp only [Category.assoc]
-                      _ = fusionBraid2LeftTopCatHom a b q1 q2 ≫
-                          ((fusionBraid1LeftTopCatHom q1 q2 ≫
-                            topologicalDirectInjection (fusionTopologicalDiagram (K := K)) n) ≫
-                            fusionActionColimitEndomorphism (fusionBraid2LeftTopCatHom a b q1 q2)) := by
-                              rw [hs1]
-                      _ = fusionBraid2LeftTopCatHom a b q1 q2 ≫
-                          (fusionBraid1LeftTopCatHom q1 q2 ≫
-                            (fusionBraid2LeftTopCatHom a b q1 q2 ≫
-                              topologicalDirectInjection (fusionTopologicalDiagram (K := K)) n)) := by
-                              simp only [Category.assoc]
-                              rw [hs2]
-          _ = ((fusionBraid2LeftTopCatHom a b q1 q2 ≫
-                fusionBraid1LeftTopCatHom q1 q2 ≫
-                fusionBraid2LeftTopCatHom a b q1 q2) ≫
-              topologicalDirectInjection (fusionTopologicalDiagram (K := K)) n) := by
-                simp only [Category.assoc]
+    rw [← Category.assoc, fusionActionColimitEndomorphism_stage,
+      Category.assoc, fusionActionColimitEndomorphism_comp_stage,
+      ← Category.assoc]
+  rw [hL, hR, fusionBraidLeftTopCatHom_artin (K := K) a b q1 q2 h_norm h_braid]
 
 end InfoGeometry.Canonical.NonAbelianFusionFRTopologicalColimit

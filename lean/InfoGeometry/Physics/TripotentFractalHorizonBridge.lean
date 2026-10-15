@@ -36,6 +36,16 @@ def horizonTripotent : Op := Matrix.mulVecLin horizonTripotentMatrix
 def braid01 : Op := Matrix.mulVecLin braidSigma01
 def braid12 : Op := Matrix.mulVecLin braidSigma12
 
+private theorem braid01_apply_coordinate (x : Carrier) (i : Fin 4) :
+    braid01 x i = ∑ j : Fin 4, braidSigma01 i j * x j := by
+  change Matrix.mulVecLin braidSigma01 x i = _
+  rw [Matrix.mulVecLin_apply, Matrix.mulVec_apply_eq_sum]
+
+private theorem braid12_apply_coordinate (x : Carrier) (i : Fin 4) :
+    braid12 x i = ∑ j : Fin 4, braidSigma12 i j * x j := by
+  change Matrix.mulVecLin braidSigma12 x i = _
+  rw [Matrix.mulVecLin_apply, Matrix.mulVec_apply_eq_sum]
+
 theorem horizonTripotent_matrix_cube :
     horizonTripotentMatrix * horizonTripotentMatrix * horizonTripotentMatrix =
       horizonTripotentMatrix := by
@@ -85,9 +95,9 @@ theorem braid01_preserves_horizon :
       Matrix.mulVec, dotProduct, Fin.sum_univ_succ] using h
   funext i
   fin_cases i <;>
-    simp [braid01, braidSigma01, horizonTripotent, horizonTripotentMatrix,
-      Matrix.mulVecLin, Matrix.mulVec, dotProduct, Fin.sum_univ_succ,
-      hx0, hx1, hx2]
+    simp [horizonTripotent, horizonTripotentMatrix, Matrix.mulVec_apply_eq_sum,
+      braid01_apply_coordinate, braidSigma01,
+      Fin.sum_univ_succ, hx0, hx1, hx2]
 
 theorem braid12_preserves_horizon :
     ∀ x, x ∈ zeroModeCarrier horizonTripotent →
@@ -108,9 +118,9 @@ theorem braid12_preserves_horizon :
       Matrix.mulVec, dotProduct, Fin.sum_univ_succ] using h
   funext i
   fin_cases i <;>
-    simp [braid12, braidSigma12, horizonTripotent, horizonTripotentMatrix,
-      Matrix.mulVecLin, Matrix.mulVec, dotProduct, Fin.sum_univ_succ,
-      hx0, hx1, hx2]
+    simp [horizonTripotent, horizonTripotentMatrix, Matrix.mulVec_apply_eq_sum,
+      braid12_apply_coordinate, braidSigma12,
+      Fin.sum_univ_succ, hx0, hx1, hx2]
 
 theorem braid01_is_identity_on_horizon
     (x : Carrier) (hx : x ∈ zeroModeCarrier horizonTripotent) :
@@ -129,8 +139,8 @@ theorem braid01_is_identity_on_horizon
       Matrix.mulVec, dotProduct, Fin.sum_univ_succ] using h
   funext i
   fin_cases i <;>
-    simp [braid01, braidSigma01, Matrix.mulVecLin, Matrix.mulVec,
-      dotProduct, Fin.sum_univ_succ, hx0, hx1, hx2]
+    rw [braid01_apply_coordinate] <;>
+    simp [braidSigma01, Fin.sum_univ_succ, hx0, hx1, hx2]
 
 theorem braid12_is_identity_on_horizon
     (x : Carrier) (hx : x ∈ zeroModeCarrier horizonTripotent) :
@@ -149,8 +159,8 @@ theorem braid12_is_identity_on_horizon
       Matrix.mulVec, dotProduct, Fin.sum_univ_succ] using h
   funext i
   fin_cases i <;>
-    simp [braid12, braidSigma12, Matrix.mulVecLin, Matrix.mulVec,
-      dotProduct, Fin.sum_univ_succ, hx0, hx1, hx2]
+    rw [braid12_apply_coordinate] <;>
+    simp [braidSigma12, Fin.sum_univ_succ, hx0, hx1, hx2]
 
 /-- The concrete one-dimensional zero-mode carrier has no noncommutative
 restricted braid action: both generators act as the identity there. -/

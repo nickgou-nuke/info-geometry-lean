@@ -81,7 +81,7 @@ lemma high_delta_card_add_support_card_le_totalDelta
     · intro hP
       by_cases hdelta : 2 ≤ D.delta P
       · exact Or.inl ⟨hP, hdelta⟩
-      · exact Or.inr ⟨hP, Nat.lt_of_not_ge hdelta⟩
+      · exact Or.inr ⟨hP, by omega⟩
     · intro hP
       exact hP.elim (fun h => h.1) (fun h => h.1)
   have hdisjoint : Disjoint high low := by
@@ -89,7 +89,7 @@ lemma high_delta_card_add_support_card_le_totalDelta
     intro P hPhigh hPlow
     simp [high] at hPhigh
     simp [low] at hPlow
-    exact (not_lt_of_ge hPhigh.2) hPlow.2
+    omega
   have hcard :
       D.singularSupport.card + high.card = 2 * high.card + low.card := by
     calc

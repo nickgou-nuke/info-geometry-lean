@@ -21,7 +21,9 @@ theorem paper_pom_bc_visible_quotient_eventual_stability {G : Type*} [Group G] [
   intro m hm
   have hle : N m ≤ N m0 := hanti hm
   have hcard_ge : Nat.card (N m0) ≤ Nat.card (N m) := by
-    simpa [c] using (Eq.ge (hm0 m hm))
+    have hstable := hm0 m hm
+    change c m0 = c m at hstable
+    exact hstable.le
   exact Subgroup.eq_of_le_of_card_ge hle hcard_ge
 
 end Omega.POM

@@ -308,7 +308,7 @@ theorem chiralPlusRepresentation_action_injective (g : Spin55) :
   have h' := congrArg (chiralPlusRepresentation g⁻¹) h
   change (chiralPlusRepresentation g⁻¹ * chiralPlusRepresentation g) v =
     (chiralPlusRepresentation g⁻¹ * chiralPlusRepresentation g) w at h'
-  simpa only [← map_mul, inv_mul_cancel, map_one] using h'
+  simpa only [← map_mul, inv_mul_cancel, map_one, Module.End.one_apply] using h'
 
 theorem chiralMinusRepresentation_action_injective (g : Spin55) :
     Function.Injective (chiralMinusRepresentation g) := by
@@ -316,7 +316,7 @@ theorem chiralMinusRepresentation_action_injective (g : Spin55) :
   have h' := congrArg (chiralMinusRepresentation g⁻¹) h
   change (chiralMinusRepresentation g⁻¹ * chiralMinusRepresentation g) v =
     (chiralMinusRepresentation g⁻¹ * chiralMinusRepresentation g) w at h'
-  simpa only [← map_mul, inv_mul_cancel, map_one] using h'
+  simpa only [← map_mul, inv_mul_cancel, map_one, Module.End.one_apply] using h'
 
 
 

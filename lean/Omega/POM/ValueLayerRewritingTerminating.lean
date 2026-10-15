@@ -147,7 +147,7 @@ lemma RewritesToStar.cons_projNorm {u v : ValProjectionWord} :
   | nil =>
       rfl
   | cons _ xs ih =>
-      simpa [atomsWord] using ih
+      simpa [atomsWord, normProjCount] using ih
 
 @[simp] lemma normProjCount_append (u v : ValProjectionWord) :
     normProjCount (u ++ v) = normProjCount u + normProjCount v := by
@@ -186,7 +186,8 @@ lemma rewritesToNormalize (w : ValProjectionWord) :
   | cons t w ih =>
       cases t with
       | atom a =>
-          simpa [normalize, atomsWord] using RewritesToStar.cons_atom a ih
+          change RewritesToStar (atom a :: w) (atom a :: normalize w)
+          exact RewritesToStar.cons_atom a ih
       | projNorm =>
           cases h : hasNormProj w with
           | false =>
@@ -194,14 +195,15 @@ lemma rewritesToNormalize (w : ValProjectionWord) :
                 RewritesToStar.cons_projNorm ih
               have h₂ :
                   RewritesToStar (projNorm :: normalize w) (normalize (projNorm :: w)) := by
-                simpa [normalize, h, atomsWord, List.append_assoc] using pushProjToEnd (atoms w)
+                simpa [normalize, h, atomsWord, atoms, hasNormProj, List.append_assoc] using
+                  pushProjToEnd (atoms w)
               exact RewritesToStar.trans h₁ h₂
           | true =>
               have h₁ : RewritesToStar (projNorm :: w) (projNorm :: normalize w) :=
                 RewritesToStar.cons_projNorm ih
               have h₂ :
                   RewritesToStar (projNorm :: normalize w) (normalize (projNorm :: w)) := by
-                simpa [normalize, h, atomsWord, List.append_assoc] using
+                simpa [normalize, h, atomsWord, atoms, hasNormProj, List.append_assoc] using
                   pushProjToEndAndCollapse (atoms w)
               exact RewritesToStar.trans h₁ h₂
 

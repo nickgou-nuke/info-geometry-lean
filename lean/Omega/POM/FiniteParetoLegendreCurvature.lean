@@ -91,17 +91,15 @@ theorem paper_pom_finite_pareto_legendre_curvature (D : PomFiniteParetoLegendreD
         HasDerivAt D.pom_finite_pareto_legendre_curvature_partition
           (D.rightWeight * Real.exp q) q := by
     intro q
-    simpa [PomFiniteParetoLegendreData.pom_finite_pareto_legendre_curvature_partition,
-      mul_comm, mul_left_comm, mul_assoc, add_comm, add_left_comm, add_assoc] using
-      (hasDerivAt_const q D.leftWeight).add (hnum q)
+    have h := (hasDerivAt_const q D.leftWeight).add (hnum q)
+    rw [zero_add] at h
+    exact h
   have hfree :
       ∀ q,
         HasDerivAt D.pom_finite_pareto_legendre_curvature_freeEnergy
           (D.pom_finite_pareto_legendre_curvature_slope q) q := by
     intro q
-    simpa [PomFiniteParetoLegendreData.pom_finite_pareto_legendre_curvature_freeEnergy,
-      PomFiniteParetoLegendreData.pom_finite_pareto_legendre_curvature_slope] using
-      (hpartition_deriv q).log (ne_of_gt (hpartition_pos q))
+    exact (hpartition_deriv q).log (ne_of_gt (hpartition_pos q))
   have hslope :
       ∀ q,
         HasDerivAt D.pom_finite_pareto_legendre_curvature_slope
@@ -113,8 +111,7 @@ theorem paper_pom_finite_pareto_legendre_curvature (D : PomFiniteParetoLegendreD
               D.pom_finite_pareto_legendre_curvature_partition q -
               (D.rightWeight * Real.exp q) * (D.rightWeight * Real.exp q)) /
             (D.pom_finite_pareto_legendre_curvature_partition q) ^ 2) q := by
-      simpa [PomFiniteParetoLegendreData.pom_finite_pareto_legendre_curvature_slope] using
-        (hnum q).div (hpartition_deriv q) (ne_of_gt (hpartition_pos q))
+      exact (hnum q).div (hpartition_deriv q) (ne_of_gt (hpartition_pos q))
     convert hquot using 1
     unfold PomFiniteParetoLegendreData.pom_finite_pareto_legendre_curvature_variance
       PomFiniteParetoLegendreData.pom_finite_pareto_legendre_curvature_partition

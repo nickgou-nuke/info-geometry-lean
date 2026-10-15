@@ -98,9 +98,12 @@ noncomputable def rawCountHamiltonianProfile
     (counts ref : RelativeCounts n) :
     relativeCountModularProfile n (c • counts) (c • ref)
       = relativeCountModularProfile n counts ref := by
-  simpa [relativeCountModularProfile] using
-    congrArg (fun f => fun i => -f i)
-      (relativeCountLogDensity_common_pos_smul (n := n) c hc counts ref)
+  have h := congrArg (fun f => fun i => -f i)
+    (relativeCountLogDensity_common_pos_smul (n := n) c hc counts ref)
+  funext i
+  change -relativeCountLogDensity n (c • counts) (c • ref) i =
+    -relativeCountLogDensity n counts ref i
+  exact congrFun h i
 
 
 /--
@@ -432,7 +435,7 @@ omit [Nonempty (Fin n)] in
     (href : ∀ i : Fin n, 0 < ref i)
     (i : Fin n) :
     relativeCountDensity n counts ref i = Real.exp (relativeCountLogDensity n counts ref i) := by
-  simpa [relativeCountLogDensity] using
+  simpa [relativeCountDensity, relativeCountLogDensity] using
     (Real.exp_log (div_pos (hcounts i) (href i))).symm
 
 omit [Nonempty (Fin n)] in
@@ -482,13 +485,19 @@ theorem gaugeSectionFinProb_countRay_apply_toReal
     relativeDensity (α := Fin n) (countRay counts hcounts) (countRay ref href) i
       = (countMass ref href / countMass counts hcounts)
           * relativeCountDensity n counts ref i := by
-  simpa only [countRay, countMass, positiveMeasureOfCounts, relativeCountDensity]
-    using
-      (relativeDensity_mk_eq_massRatio_mul_representativeRelativeDensity
-        (α := Fin n)
-        (μ := positiveMeasureOfCounts counts hcounts)
-        (ν := positiveMeasureOfCounts ref href)
-        (a := i))
+  calc
+    relativeDensity (α := Fin n) (countRay counts hcounts) (countRay ref href) i =
+        (InfoGeometry.PositiveMeasure.Z (positiveMeasureOfCounts ref href) /
+          InfoGeometry.PositiveMeasure.Z (positiveMeasureOfCounts counts hcounts)) *
+          representativeRelativeDensity (positiveMeasureOfCounts counts hcounts)
+            (positiveMeasureOfCounts ref href) i := by
+      exact relativeDensity_mk_eq_massRatio_mul_representativeRelativeDensity
+        (α := Fin n) (μ := positiveMeasureOfCounts counts hcounts)
+        (ν := positiveMeasureOfCounts ref href) (a := i)
+    _ = (countMass ref href / countMass counts hcounts) *
+          relativeCountDensity n counts ref i := by
+      rw [representativeRelativeDensity_positiveMeasureOfCounts_eq_relativeCountDensity]
+      rfl
 
 @[simp] theorem relativeLogDensity_countRay_eq_relativeCountLogDensity_add_massShift
     (counts ref : RelativeCounts n)
@@ -498,15 +507,18 @@ theorem gaugeSectionFinProb_countRay_apply_toReal
     relativeLogDensity (α := Fin n) (countRay counts hcounts) (countRay ref href) i
       = relativeCountLogDensity n counts ref i
         + countMassShift counts ref hcounts href := by
-  unfold countMassShift representativeMassShift
-  simpa only [countRay, positiveMeasureOfCounts,
-    relativeCountLogDensity, relativeCountDensity]
-    using
-      (relativeLogDensity_mk_eq_representativeRelativeLogDensity_add_massShift
-        (α := Fin n)
-        (μ := positiveMeasureOfCounts counts hcounts)
-        (ν := positiveMeasureOfCounts ref href)
-        (a := i))
+  calc
+    relativeLogDensity (α := Fin n) (countRay counts hcounts) (countRay ref href) i =
+        representativeRelativeLogDensity (positiveMeasureOfCounts counts hcounts)
+          (positiveMeasureOfCounts ref href) i +
+          representativeMassShift (positiveMeasureOfCounts counts hcounts)
+            (positiveMeasureOfCounts ref href) := by
+      exact relativeLogDensity_mk_eq_representativeRelativeLogDensity_add_massShift
+        (α := Fin n) (μ := positiveMeasureOfCounts counts hcounts)
+        (ν := positiveMeasureOfCounts ref href) (a := i)
+    _ = relativeCountLogDensity n counts ref i + countMassShift counts ref hcounts href := by
+      rw [representativeRelativeLogDensity_positiveMeasureOfCounts_eq_relativeCountLogDensity]
+      rfl
 
 @[simp] theorem relativeModularPotential_countRay_eq_neg_relativeCountLogDensity_sub_massShift
     (counts ref : RelativeCounts n)
@@ -516,15 +528,20 @@ theorem gaugeSectionFinProb_countRay_apply_toReal
     relativeModularPotential (α := Fin n) (countRay counts hcounts) (countRay ref href) i
       = -relativeCountLogDensity n counts ref i
         - countMassShift counts ref hcounts href := by
-  unfold countMassShift representativeMassShift
-  simpa only [countRay, positiveMeasureOfCounts,
-    relativeCountLogDensity, relativeCountDensity]
-    using
-      (relativeModularPotential_mk_eq_representativeModularPotential_sub_massShift
-        (α := Fin n)
-        (μ := positiveMeasureOfCounts counts hcounts)
-        (ν := positiveMeasureOfCounts ref href)
-        (a := i))
+  calc
+    relativeModularPotential (α := Fin n) (countRay counts hcounts)
+        (countRay ref href) i =
+        representativeModularPotential (positiveMeasureOfCounts counts hcounts)
+          (positiveMeasureOfCounts ref href) i -
+          representativeMassShift (positiveMeasureOfCounts counts hcounts)
+            (positiveMeasureOfCounts ref href) := by
+      exact relativeModularPotential_mk_eq_representativeModularPotential_sub_massShift
+        (α := Fin n) (μ := positiveMeasureOfCounts counts hcounts)
+        (ν := positiveMeasureOfCounts ref href) (a := i)
+    _ = -relativeCountLogDensity n counts ref i -
+          countMassShift counts ref hcounts href := by
+      rw [representativeModularPotential_positiveMeasureOfCounts_eq_relativeCountModularProfile]
+      rfl
 
 /-- Multiplicative relative volume change induced by count normalization. -/
 noncomputable def countRelativeVolumeChange

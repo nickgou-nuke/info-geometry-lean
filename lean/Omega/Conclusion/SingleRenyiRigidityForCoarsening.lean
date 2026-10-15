@@ -186,7 +186,6 @@ theorem paper_conclusion_single_renyi_rigidity_for_coarsening
           simp [hzero_rest z hz]
         have hsplit_card :
             (∑ z : {x : X // g x = y}, A z) = A x0 := by
-          dsimp [s]
           calc
             (∑ z : {x : X // g x = y}, A z) =
                 ((Finset.univ : Finset {x : X // g x = y}).erase x0).sum (fun z => A z) + A x0 := by
@@ -196,7 +195,6 @@ theorem paper_conclusion_single_renyi_rigidity_for_coarsening
             _ = A x0 := by rw [hsum_rest_zero, zero_add]
         have hsplit_min :
             (∑ z : {x : X // g x = y}, Nat.min (A z) T) = Nat.min (A x0) T := by
-          dsimp [s]
           calc
             (∑ z : {x : X // g x = y}, Nat.min (A z) T) =
                 ((Finset.univ : Finset {x : X // g x = y}).erase x0).sum

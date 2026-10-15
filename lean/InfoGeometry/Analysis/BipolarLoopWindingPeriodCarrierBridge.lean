@@ -1,5 +1,4 @@
 import InfoGeometry.Analysis.BipolarLoopWindingCarrier
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Analysis.BipolarLoopWindingPeriod
 import InfoGeometry.Analysis.BipolarLogLiftDerivativeBridge
 
@@ -101,8 +100,8 @@ theorem integral_eq_circulationPeriod_of_native_lifts
   have hendpoint₀ : W₀ 1 = W₀ 0 +
       (bipolarLiftEndpointPair γ).1 * Period := by
     calc
-      W₀ 1 = nativeCrossRatioLift γ 1 := by
-        simpa using hW₀ 1 (by norm_num)
+      W₀ 1 = nativeCrossRatioLift γ 1 :=
+        hW₀ 1 ⟨by norm_num, by norm_num⟩
       _ = bipolarLog γ.base +
           (bipolarLiftEndpointPair γ).1 * Period := by
         simpa [nativeCrossRatioLift] using
@@ -110,15 +109,15 @@ theorem integral_eq_circulationPeriod_of_native_lifts
       _ = W₀ 0 + (bipolarLiftEndpointPair γ).1 * Period := by
         have hzero : W₀ 0 = bipolarLog γ.base := by
           calc
-            W₀ 0 = nativeCrossRatioLift γ 0 := by
-              simpa using hW₀ 0 (by norm_num)
+            W₀ 0 = nativeCrossRatioLift γ 0 :=
+              hW₀ 0 ⟨by norm_num, by norm_num⟩
             _ = bipolarLog γ.base := nativeCrossRatioLift_zero γ
         rw [hzero]
   have hendpoint₁ : W₁ 1 = W₁ 0 +
       (bipolarLiftEndpointPair γ).2 * Period := by
     calc
-      W₁ 1 = nativeShiftedLift γ 1 := by
-        simpa using hW₁ 1 (by norm_num)
+      W₁ 1 = nativeShiftedLift γ 1 :=
+        hW₁ 1 ⟨by norm_num, by norm_num⟩
       _ = Complex.log (γ.base - 1) +
           (bipolarLiftEndpointPair γ).2 * Period := by
         simpa [nativeShiftedLift] using
@@ -126,8 +125,8 @@ theorem integral_eq_circulationPeriod_of_native_lifts
       _ = W₁ 0 + (bipolarLiftEndpointPair γ).2 * Period := by
         have hzero : W₁ 0 = Complex.log (γ.base - 1) := by
           calc
-            W₁ 0 = nativeShiftedLift γ 0 := by
-              simpa using hW₁ 0 (by norm_num)
+            W₁ 0 = nativeShiftedLift γ 0 :=
+              hW₁ 0 ⟨by norm_num, by norm_num⟩
             _ = Complex.log (γ.base - 1) := nativeShiftedLift_zero γ
         rw [hzero]
   exact integral_eq_circulationPeriod_of_log_lifts γ W₀ W₁
@@ -163,8 +162,8 @@ theorem integral_eq_circulationPeriod_of_differentiable_native_lifts
   have hendpoint₀ : W₀ 1 = W₀ 0 +
       (bipolarLiftEndpointPair γ).1 * Period := by
     calc
-      W₀ 1 = nativeCrossRatioLift γ 1 := by
-        simpa using hW₀ 1 (by norm_num)
+      W₀ 1 = nativeCrossRatioLift γ 1 :=
+        hW₀ 1 ⟨by norm_num, by norm_num⟩
       _ = bipolarLog γ.base +
           (bipolarLiftEndpointPair γ).1 * Period := by
         simpa [nativeCrossRatioLift] using
@@ -172,15 +171,15 @@ theorem integral_eq_circulationPeriod_of_differentiable_native_lifts
       _ = W₀ 0 + (bipolarLiftEndpointPair γ).1 * Period := by
         have hzero : W₀ 0 = bipolarLog γ.base := by
           calc
-            W₀ 0 = nativeCrossRatioLift γ 0 := by
-              simpa using hW₀ 0 (by norm_num)
+            W₀ 0 = nativeCrossRatioLift γ 0 :=
+              hW₀ 0 ⟨by norm_num, by norm_num⟩
             _ = bipolarLog γ.base := nativeCrossRatioLift_zero γ
         rw [hzero]
   have hendpoint₁ : W₁ 1 = W₁ 0 +
       (bipolarLiftEndpointPair γ).2 * Period := by
     calc
-      W₁ 1 = nativeShiftedLift γ 1 := by
-        simpa using hW₁ 1 (by norm_num)
+      W₁ 1 = nativeShiftedLift γ 1 :=
+        hW₁ 1 ⟨by norm_num, by norm_num⟩
       _ = Complex.log (γ.base - 1) +
           (bipolarLiftEndpointPair γ).2 * Period := by
         simpa [nativeShiftedLift] using
@@ -188,8 +187,8 @@ theorem integral_eq_circulationPeriod_of_differentiable_native_lifts
       _ = W₁ 0 + (bipolarLiftEndpointPair γ).2 * Period := by
         have hzero : W₁ 0 = Complex.log (γ.base - 1) := by
           calc
-            W₁ 0 = nativeShiftedLift γ 0 := by
-              simpa using hW₁ 0 (by norm_num)
+            W₁ 0 = nativeShiftedLift γ 0 :=
+              hW₁ 0 ⟨by norm_num, by norm_num⟩
             _ = Complex.log (γ.base - 1) := nativeShiftedLift_zero γ
         rw [hzero]
   have hperiod := integral_eq_period_difference_of_differentiable_exp_lifts γ W₀ W₁

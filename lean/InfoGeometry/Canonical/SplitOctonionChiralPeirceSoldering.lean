@@ -127,7 +127,7 @@ theorem chiralCliffordSolder_sq (X : ChiralZorn)
     (Ψ : ZornClifford.DiracSpinor16 (R := ℚ)) :
     chiralCliffordSolder X (chiralCliffordSolder X Ψ) =
       ZornClifford.zornNormFun (chiralVectorProject X) • Ψ := by
-  simpa [chiralCliffordSolder] using
+  simpa [chiralCliffordSolder, ZornClifford.zornNorm_apply] using
     (ZornClifford.diracGamma_sq_apply (R := ℚ) (chiralVectorProject X) Ψ)
 
 /-- The mixed Peirce sector is solders linearly into endomorphisms. -/

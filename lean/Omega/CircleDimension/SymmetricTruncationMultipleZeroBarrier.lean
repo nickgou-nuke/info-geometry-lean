@@ -1,5 +1,7 @@
 import Mathlib.Analysis.Calculus.Deriv.Basic
-import Mathlib.Data.Complex.Basic
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Mul
+import Mathlib.Basic.Complex.Basic
 import Mathlib.Tactic
 
 namespace Omega.CircleDimension
@@ -77,10 +79,13 @@ lemma symmetricTruncationBarrierCriticalLineMultipleZero (lambdaCrit : ℝ) :
   · simp [symmetricTruncationBarrierFamily, symmetricTruncationBarrierMirrorBranch,
       symmetricTruncationBarrierZeroBranch]
   · have hlin : HasDerivAt (fun s : ℂ => s - (1 / 2 : ℂ)) 1 (1 / 2 : ℂ) := by
-      simpa using (hasDerivAt_id (1 / 2 : ℂ)).sub_const (1 / 2 : ℂ)
+      simpa using HasDerivAt.sub_const (1 / 2 : ℂ) (hasDerivAt_id (1 / 2 : ℂ))
     have hsq :
         HasDerivAt (fun s : ℂ => (s - (1 / 2 : ℂ)) * (s - (1 / 2 : ℂ))) 0 (1 / 2 : ℂ) := by
-      simpa using hlin.mul hlin
+      have hmul := HasDerivAt.mul hlin hlin
+      have hzero_deriv : (1 : ℂ) * (1 / 2 - 1 / 2) + (1 / 2 - 1 / 2) * 1 = (0 : ℂ) := by ring
+      rw [hzero_deriv] at hmul
+      exact hmul
     have hzero : symmetricTruncationBarrierZeroBranch lambdaCrit lambdaCrit = (1 / 2 : ℂ) := by
       simp [symmetricTruncationBarrierZeroBranch]
     have hmirror : symmetricTruncationBarrierMirrorBranch lambdaCrit lambdaCrit = (1 / 2 : ℂ) := by
@@ -92,7 +97,8 @@ lemma symmetricTruncationBarrierCriticalLineMultipleZero (lambdaCrit : ℝ) :
       funext s
       simp [symmetricTruncationBarrierFamily, hzero, hmirror]
     rw [hfun]
-    norm_num
+    simp only [Complex.ofReal_zero, MulZeroClass.zero_mul, add_zero]
+    exact hsq.deriv
 
 /-- Paper label: `prop:cdim-symmetric-truncation-multiple-zero-barrier`. For the concrete
 symmetrically truncated family, an off-critical zero at `λoff` comes with a distinct mirror zero,

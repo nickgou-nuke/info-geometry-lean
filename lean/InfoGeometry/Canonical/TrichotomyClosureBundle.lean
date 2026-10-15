@@ -53,9 +53,10 @@ theorem hyperbolic_transport_preserves_projected_bulk
 
 section StandardSector
 
-variable {H : Type*} [NormedAddCommGroup H] [NormedSpace ℂ H]
+variable {H : Type*} [NormedAddCommGroup H]
   [InnerProductSpace ℂ H] [CompleteSpace H]
 
+omit [CompleteSpace H] in
 /-- Reduced Tomita transport is involutive on the standard physical sector. -/
 theorem tomita_causal_reduction_involutive
     (K : Submodule ℝ H) (hK : IsStandardSubspace (H := H) K)

@@ -1,5 +1,4 @@
 import Mathlib
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.Linarith
 
@@ -48,11 +47,16 @@ theorem continuous_probabilityMass :
 theorem isClosed_probabilitySimplex :
     IsClosed (probabilitySimplex (n := n)) := by
   have hnonneg : IsClosed {P : Fin n → ℝ | ∀ i, 0 ≤ P i} := by
-    simpa only [Set.setOf_forall] using
-      isClosed_iInter (fun i => isClosed_Ici.preimage (continuous_apply i))
+    have h : {P : Fin n → ℝ | ∀ i, 0 ≤ P i} = ⋂ i, (fun p => p i) ⁻¹' Set.Ici 0 := by
+      ext P
+      simp [Set.mem_Ici]
+    rw [h]
+    exact isClosed_iInter (fun i => isClosed_Ici.preimage (continuous_apply i))
   have hmass : IsClosed {P : Fin n → ℝ | (∑ i, P i) = 1} := by
     exact isClosed_singleton.preimage continuous_probabilityMass
-  simpa [probabilitySimplex, Set.setOf_and] using hnonneg.inter hmass
+  have h_eq : (probabilitySimplex (n := n)) = {P | ∀ i, 0 ≤ P i} ∩ {P | (∑ i, P i) = 1} := rfl
+  rw [h_eq]
+  exact hnonneg.inter hmass
 
 theorem isCompact_probabilitySimplex :
     IsCompact (probabilitySimplex (n := n)) := by
@@ -187,8 +191,10 @@ theorem isClosed_kineticActionAmbientSublevel (v : Fin n → ℝ) (A : ℝ) :
   have haction : IsClosed {P : Fin n → ℝ |
       benamouBrenierKineticAction P v ≤ A} := by
     exact isClosed_Iic.preimage (continuous_kineticAction_left v)
-  simpa [kineticActionAmbientSublevel, Set.setOf_and] using
-    isClosed_probabilitySimplex.inter haction
+  have h_eq : kineticActionAmbientSublevel v A =
+      probabilitySimplex (n := n) ∩ {P | benamouBrenierKineticAction P v ≤ A} := rfl
+  rw [h_eq]
+  exact isClosed_probabilitySimplex.inter haction
 
 theorem isCompact_kineticActionAmbientSublevel (v : Fin n → ℝ) (A : ℝ) :
     IsCompact (kineticActionAmbientSublevel v A) := by

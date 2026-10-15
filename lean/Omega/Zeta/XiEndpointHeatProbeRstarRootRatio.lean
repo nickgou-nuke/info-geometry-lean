@@ -1,4 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+import Mathlib.Analysis.SpecialFunctions.Pow.Continuity
 import Mathlib.Tactic
 
 open Filter

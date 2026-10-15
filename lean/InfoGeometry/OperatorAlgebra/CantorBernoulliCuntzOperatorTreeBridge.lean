@@ -79,7 +79,9 @@ theorem operatorCylinderProjection_append (u v : List Bool) :
 @[simp] theorem star_operatorWord (w : List Bool) :
     star (operatorWord w) = operatorWordDag w := by
   induction w with
-  | nil => simp [operatorWord, operatorWordDag, ContinuousLinearMap.star_eq_adjoint]
+  | nil =>
+      simp [operatorWord, operatorWordDag,
+        ContinuousLinearMap.star_eq_adjoint, ContinuousLinearMap.adjoint_id]
   | cons b w ih =>
       change
         star ((branchOperator b).comp (operatorWord w)) =

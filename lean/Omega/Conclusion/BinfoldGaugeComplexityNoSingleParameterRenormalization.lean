@@ -54,10 +54,20 @@ lemma conclusion_binfold_gauge_complexity_no_single_parameter_renormalization_ra
   have hshift : Tendsto (fun m : ℕ => (m : ℝ) + 1) atTop atTop := by
     simpa using
       tendsto_atTop_add_const_right atTop (1 : ℝ) tendsto_natCast_atTop_atTop
-  simpa
-    [conclusion_binfold_gauge_complexity_no_single_parameter_renormalization_Xi,
-      conclusion_binfold_gauge_complexity_no_single_parameter_renormalization_Gamma, one_div] using
-    (tendsto_inv_atTop_zero.comp hshift)
+  have hinv : Tendsto (fun m : ℕ => ((m : ℝ) + 1)⁻¹) atTop (𝓝 0) := by
+    convert tendsto_inv_atTop_zero.comp hshift using 1
+    ext m
+    rfl
+  have hfun : (fun m =>
+        conclusion_binfold_gauge_complexity_no_single_parameter_renormalization_Xi m /
+          conclusion_binfold_gauge_complexity_no_single_parameter_renormalization_Gamma m) =
+      (fun (m : ℕ) => ((m : ℝ) + 1)⁻¹) := by
+    ext m
+    simp [conclusion_binfold_gauge_complexity_no_single_parameter_renormalization_Xi,
+      conclusion_binfold_gauge_complexity_no_single_parameter_renormalization_Gamma, one_div]
+  rw [hfun]
+  exact hinv
+
 
 lemma conclusion_binfold_gauge_complexity_no_single_parameter_renormalization_proof :
     ¬ conclusion_binfold_gauge_complexity_no_single_parameter_renormalization_commonRenormalization :=

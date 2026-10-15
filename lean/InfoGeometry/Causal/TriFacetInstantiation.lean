@@ -150,7 +150,7 @@ theorem exact_projector_eq_dℝ (x : V) :
     Audit.exact_projector (V := V) x = dℝ.mulVec x := by
   unfold Audit.exact_projector
   have h_sq : Node1_TriFacetOperator.O (Node1_TriFacetOperator.O x) = x := by
-    simpa using O_sq_eq_id x
+    simpa [Node1_TriFacetOperator.O] using O_sq_eq_id x
   rw [h_sq]
   have h_O : Node1_TriFacetOperator.O x = Oℝ.mulVec x := by
     simp [Node1_TriFacetOperator.O, O_op, Matrix.toLin'_apply]
@@ -172,7 +172,7 @@ theorem coexact_projector_eq_δℝ (x : V) :
     Audit.coexact_projector (V := V) x = δℝ.mulVec x := by
   unfold Audit.coexact_projector
   have h_sq : Node1_TriFacetOperator.O (Node1_TriFacetOperator.O x) = x := by
-    simpa using O_sq_eq_id x
+    simpa [Node1_TriFacetOperator.O] using O_sq_eq_id x
   rw [h_sq]
   have h_O : Node1_TriFacetOperator.O x = Oℝ.mulVec x := by
     simp [Node1_TriFacetOperator.O, O_op, Matrix.toLin'_apply]
@@ -194,7 +194,7 @@ theorem harmonic_projector_zero (x : V) :
     Audit.harmonic_projector (V := V) x = 0 := by
   unfold Audit.harmonic_projector
   have h_sq : Node1_TriFacetOperator.O (Node1_TriFacetOperator.O x) = x := by
-    simpa using O_sq_eq_id x
+    simpa [Node1_TriFacetOperator.O] using O_sq_eq_id x
   rw [h_sq, sub_self]
 
 /--

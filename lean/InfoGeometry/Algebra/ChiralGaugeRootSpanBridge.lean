@@ -22,10 +22,10 @@ open InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition
 open InfoGeometry.Lie.SplitOctonionStandardDerivation
 open InfoGeometry.Lie.SplitOctonionStandardDerivationRootBridge
 
-private abbrev RootSpan : Submodule ℝ Der :=
+private noncomputable abbrev RootSpan : Submodule ℝ Der :=
   Submodule.span ℝ (Set.range rootDerivation)
 
-private abbrev WitnessSpan : Submodule ℝ Der :=
+private noncomputable abbrev WitnessSpan : Submodule ℝ Der :=
   Submodule.span ℝ (Set.range (fun g : GaugeGenerator =>
     vectorCanonicalLinearEquiv (gaugeWitnessNativeDerivation g)))
 
@@ -40,7 +40,7 @@ private theorem root_mem_of_smul_mem {c : ℝ} {i : Fin 14}
 
 theorem chiral_witness_mem_root_span (g : GaugeGenerator) :
     vectorCanonicalLinearEquiv (gaugeWitnessNativeDerivation g) ∈ RootSpan := by
-  fin_cases g
+  cases g
   · rw [gaugeWitnessNativeDerivation_cartan0_canonical_readout,
       standardColumn_U0_V0_root]
     exact RootSpan.add_mem (root_mem 6) (root_mem 13)

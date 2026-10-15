@@ -132,28 +132,52 @@ theorem cosetIncident_leftAction (H K : Subgroup G) (g : G)
       induction d using Quotient.inductionOn with | h d =>
         rcases h with ⟨x, hxc, hxd⟩
         refine ⟨g⁻¹ * x, ?_, ?_⟩
-        · have h' := congrArg (leftAction H g⁻¹) hxc
-          rw [← leftAction_mul, inv_mul_cancel, leftAction_one] at h'
-          simpa [leftAction_toCoset] using h'
-        · have h' := congrArg (leftAction K g⁻¹) hxd
-          rw [← leftAction_mul, inv_mul_cancel, leftAction_one] at h'
-          simpa [leftAction_toCoset] using h'
+        · change toCoset H (g⁻¹ * x) = toCoset H c
+          calc
+            toCoset H (g⁻¹ * x) = leftAction H g⁻¹ (toCoset H x) := by
+              rw [leftAction_toCoset]
+            _ = toCoset H c := by
+              have hcancel :
+                  leftAction H g⁻¹ (leftAction H g (toCoset H c)) =
+                    toCoset H c := by
+                calc
+                  leftAction H g⁻¹ (leftAction H g (toCoset H c)) =
+                      leftAction H (g⁻¹ * g) (toCoset H c) :=
+                    (leftAction_mul H g⁻¹ g (toCoset H c)).symm
+                  _ = toCoset H c := by
+                    rw [inv_mul_cancel]
+                    exact leftAction_one H (toCoset H c)
+              exact (congrArg (leftAction H g⁻¹) hxc).trans hcancel
+        · change toCoset K (g⁻¹ * x) = toCoset K d
+          calc
+            toCoset K (g⁻¹ * x) = leftAction K g⁻¹ (toCoset K x) := by
+              rw [leftAction_toCoset]
+            _ = toCoset K d := by
+              have hcancel :
+                  leftAction K g⁻¹ (leftAction K g (toCoset K d)) =
+                    toCoset K d := by
+                calc
+                  leftAction K g⁻¹ (leftAction K g (toCoset K d)) =
+                      leftAction K (g⁻¹ * g) (toCoset K d) :=
+                    (leftAction_mul K g⁻¹ g (toCoset K d)).symm
+                  _ = toCoset K d := by
+                    rw [inv_mul_cancel]
+                    exact leftAction_one K (toCoset K d)
+              exact (congrArg (leftAction K g⁻¹) hxd).trans hcancel
 
 /-- THEOREM: The stabilizer of the origin o = eK is precisely the subgroup K. -/
-theorem stabilizer_origin_eq (K : Subgroup G) (g : G) :
+  theorem stabilizer_origin_eq (K : Subgroup G) (g : G) :
     leftAction K g (origin K) = origin K ↔ g ∈ K := by
-  dsimp [origin, toCoset]
   constructor
   · intro h
     have hrel : (cosetSetoid K).r (g * 1) 1 := Quotient.exact h
-    dsimp [cosetSetoid] at hrel
     have hg : (g * 1)⁻¹ * 1 ∈ K := hrel
     rw [mul_one, mul_one] at hg
     have hg_inv := K.inv_mem hg
     simpa using hg_inv
   · intro hg
     apply Quotient.sound
-    dsimp [cosetSetoid]
+    change (g * 1)⁻¹ * 1 ∈ K
     have hg_inv : (g * 1)⁻¹ * 1 ∈ K := by
       rw [mul_one, mul_one]
       exact K.inv_mem hg

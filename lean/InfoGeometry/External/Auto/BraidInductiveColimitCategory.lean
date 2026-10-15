@@ -1,5 +1,7 @@
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.CategoryTheory.Types.Basic
+import Mathlib.CategoryTheory.Limits.Types.Colimits
 import Mathlib.CategoryTheory.Functor.OfSequence
 import Mathlib.CategoryTheory.Limits.HasLimits
 import Mathlib.CategoryTheory.Limits.Filtered
@@ -20,10 +22,11 @@ namespace BraidInductiveColimitComplement
 
 open CategoryTheory
 open CategoryTheory.Limits
+open TypeCat
 
 /-- The index-`n` generator diagram `Fin n` with successor maps `castSucc`. -/
 def braidGeneratorDiagram : ℕ ⥤ Type _ :=
-  Functor.ofSequence finiteSuccEmbed
+  Functor.ofSequence (fun n => ↾(finiteSuccEmbed n))
 
 /-- The categorical colimit of the finite generator stages. -/
 def braidGeneratorColimit : Type _ :=
@@ -34,14 +37,13 @@ def braidGeneratorBoundaryCocone : Cocone braidGeneratorDiagram where
   pt := InfiniteBraidGenerators
   ι :=
     NatTrans.ofSequence
-      (app := fun n => finiteToInfinite)
+      (app := fun _ => ↾finiteToInfinite)
       (naturality := by
         intro n
-        funext i
-        have hmap : braidGeneratorDiagram.map (homOfLE (Nat.le_succ n)) = finiteSuccEmbed n := by
-          simpa [braidGeneratorDiagram] using
-            (Functor.ofSequence_map_homOfLE_succ (f := finiteSuccEmbed) n)
-        simp [hmap, finiteToInfinite_succ_compatible])
+        ext i
+        dsimp [braidGeneratorDiagram]
+        rw [Functor.ofSequence_map_homOfLE_succ]
+        exact finiteToInfinite_succ_compatible n i)
 
 /-- The induced boundary map out of the colimit of generator stages. -/
 def generatorFromColimit : braidGeneratorColimit → InfiniteBraidGenerators :=
@@ -49,12 +51,12 @@ def generatorFromColimit : braidGeneratorColimit → InfiniteBraidGenerators :=
 
 /-- On each stage this agrees with the finite inclusion. -/
 theorem generatorFromColimit_ι (n : ℕ) (i : FiniteBraidGenerators n) :
-    generatorFromColimit (colimit.ι braidGeneratorDiagram n i) = finiteToInfinite i := by
-  simp [generatorFromColimit, braidGeneratorBoundaryCocone]
+    generatorFromColimit (colimit.ι braidGeneratorDiagram n i) = finiteToInfinite i :=
+  colimit.ι_desc_apply braidGeneratorBoundaryCocone n i
 
 /-- Words over finite generators at stage `n`. -/
 def braidWordDiagram : ℕ ⥤ Type _ :=
-  Functor.ofSequence (fun n => wordSuccEmbed (n := n))
+  Functor.ofSequence (fun n => ↾(wordSuccEmbed (n := n)))
 
 /-- The categorical colimit of finite generator words (at increasing stage). -/
 def braidWordColimit : Type _ :=
@@ -65,14 +67,13 @@ def braidWordBoundaryCocone : Cocone braidWordDiagram where
   pt := List InfiniteBraidGenerators
   ι :=
     NatTrans.ofSequence
-      (app := fun n => wordToInfinite (n := n))
+      (app := fun _ => ↾(wordToInfinite (n := _)))
       (naturality := by
         intro n
-        funext w
-        have hmap : braidWordDiagram.map (homOfLE (Nat.le_succ n)) = wordSuccEmbed (n := n) := by
-          simpa [braidWordDiagram] using
-            (Functor.ofSequence_map_homOfLE_succ (f := fun n => wordSuccEmbed (n := n)) n)
-        simp [hmap, wordToInfinite_succ_compatible])
+        ext w
+        dsimp [braidWordDiagram]
+        rw [Functor.ofSequence_map_homOfLE_succ]
+        exact wordToInfinite_succ_compatible w)
 
 /-- The induced boundary word map out of the colimit of words. -/
 def wordFromColimit : braidWordColimit → List InfiniteBraidGenerators :=
@@ -80,8 +81,8 @@ def wordFromColimit : braidWordColimit → List InfiniteBraidGenerators :=
 
 /-- On words, colimit inclusion agrees with `wordToInfinite`. -/
 theorem wordFromColimit_ι (n : ℕ) (w : FiniteBraidWord n) :
-    wordFromColimit (colimit.ι braidWordDiagram n w) = wordToInfinite w := by
-  simp [wordFromColimit, braidWordBoundaryCocone]
+    wordFromColimit (colimit.ι braidWordDiagram n w) = wordToInfinite w :=
+  colimit.ι_desc_apply braidWordBoundaryCocone n w
 
 /-- Finite-stage boundary words preserve length. -/
 theorem wordBoundary_length (n : ℕ) (w : FiniteBraidWord n) :

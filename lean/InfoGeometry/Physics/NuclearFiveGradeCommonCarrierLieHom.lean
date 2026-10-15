@@ -1,3 +1,4 @@
+import Mathlib.Algebra.Lie.OfAssociative
 import InfoGeometry.Physics.NuclearFiveGradeCommonCarrierRepresentation
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -15,6 +16,9 @@ namespace InfoGeometry.Physics.NuclearFiveGradeCommonCarrierLieHom
 
 open InfoGeometry.Physics.NuclearTwoModeFiveGradeLieModel
 open InfoGeometry.Physics.NuclearFiveGradeCommonCarrierRepresentation
+
+local instance : LieRing M4R := LieRing.ofAssociativeRing
+local instance : LieRing Operator := LieRing.ofAssociativeRing
 
 /-- The concrete five-grade matrix algebra acts on the common carrier by a
 native real Lie-algebra homomorphism. -/

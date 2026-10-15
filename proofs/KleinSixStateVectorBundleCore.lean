@@ -27,14 +27,14 @@ theorem injective_deck2_eq_add_apply_zero (f : Deck2 → Deck2)
     (hf : Function.Injective f) (g : Deck2) :
     f g = g + f 0 := by
   have h11 : (1 + 1 : Deck2) = 0 := by decide
-  fin_cases g
-  · simp
-  · generalize h0 : f 0 = a
-    generalize h1 : f 1 = b
-    fin_cases a <;> fin_cases b
+  rcases deck2_zero_or_one g with hg | hg
+  · rw [hg, zero_add]
+  · rw [hg]
+    rcases deck2_zero_or_one (f 0) with h0 | h0
+    all_goals rcases deck2_zero_or_one (f 1) with h1 | h1
     · exact False.elim (zero_ne_one (hf (h0.trans h1.symm)))
-    · simp_all
-    · simp_all
+    · rw [h0, h1, add_zero]
+    · rw [h0, h1, h11]
     · exact False.elim (zero_ne_one (hf (h0.trans h1.symm)))
 
 /-- Deck coordinate of the transition from chart `i` to chart `j`. -/
@@ -69,7 +69,7 @@ theorem deckTransition_comp (i j k x : Base)
 theorem continuousOn_deckTransition (i j : Base) :
     ContinuousOn (deckTransition i j)
       ((coverTriv i).baseSet ∩ (coverTriv j).baseSet) := by
-  unfold deckTransition Trivialization.coordChange
+  unfold deckTransition Bundle.Trivialization.coordChange
   exact continuous_snd.continuousOn.comp
     ((coverTriv j).toOpenPartialHomeomorph.continuousOn.comp
       ((coverTriv i).toOpenPartialHomeomorph.continuousOn_symm.comp
@@ -97,11 +97,19 @@ theorem deckFiberMap_add (omega : ℂ)
     (g h : Deck2) (v : State) :
     deckFiberMap (g + h) v = deckFiberMap h (deckFiberMap g v) := by
   have h11 : (1 + 1 : Deck2) = 0 := by decide
-  fin_cases g <;> fin_cases h
-  · simp [deckFiberMap]
-  · simp [deckFiberMap]
-  · simp [deckFiberMap]
-  · change v = theta.mulVec (theta.mulVec v)
+  rcases deck2_zero_or_one g with rfl | rfl <;>
+    rcases deck2_zero_or_one h with rfl | rfl
+  · have h00 : (0 : Deck2) + 0 = 0 := by decide
+    rw [h00]
+    simp [deckFiberMap]
+  · have h01 : (0 : Deck2) + 1 = 1 := by decide
+    rw [h01]
+    simp [deckFiberMap]
+  · have h10 : (1 : Deck2) + 0 = 1 := by decide
+    rw [h10]
+    simp [deckFiberMap]
+  · rw [h11]
+    change v = theta.mulVec (theta.mulVec v)
     rw [Matrix.mulVec_mulVec, theta_sq omega homega]
     exact (Matrix.one_mulVec v).symm
 

@@ -23,7 +23,10 @@ lemma groupJGPrimeNorm_foldSquarefreeToPrimeRegister {m : ℕ} (S : Finset (Fin 
   | @insert a S ha ih =>
       rw [foldSquarefreeToPrimeRegister, Finset.sum_insert ha, groupJGPrimeNorm_add,
         foldSquarefreeCode, Finset.prod_insert ha, groupJGPrimeNorm_primeBasis]
-      simpa [foldPrime, groupJGPrime] using congrArg (fun t => groupJGPrime (a : ℕ) * t) ih
+      change groupJGPrimeNorm (∑ x ∈ S, primeBasis (x : ℕ)) =
+        ∏ x ∈ S, foldPrime x at ih
+      rw [ih]
+      rfl
 
 lemma groupJGEllipseAxis_foldSquarefreeToPrimeRegister {m : ℕ} (S : Finset (Fin m)) :
     groupJGEllipseAxis (foldSquarefreeToPrimeRegister S) = foldSquarefreeCode S := by

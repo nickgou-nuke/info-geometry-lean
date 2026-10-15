@@ -274,7 +274,8 @@ theorem positiveRootSubgroup_card_lower_bound_six :
       Fintype.card positiveRootSubgroup :=
     Fintype.card_le_of_injective positiveRootRangeToSubgroup
       positiveRootRangeToSubgroup_injective
-  simpa [positiveRootPacket_range_card] using hcard
+  rw [positiveRootPacket_range_card] at hcard
+  exact hcard
 
 noncomputable def positiveRootAction (i : Fin 6) (t : Bool) : SplitOctF2Aut :=
   if t then positiveRootPacket i else 1

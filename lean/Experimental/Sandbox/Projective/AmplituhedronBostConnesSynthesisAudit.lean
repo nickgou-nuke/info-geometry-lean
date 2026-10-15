@@ -1,0 +1,17 @@
+import Experimental.Sandbox.Projective.AmplituhedronBostConnesSynthesis
+
+open Experimental.Sandbox.Projective.AmplituhedronBostConnesSynthesis
+
+#print axioms twistor_incidence_displacement
+#print axioms twistor_incidence_det_smul_zero
+#print axioms twistor_incidence_det_zero
+#print axioms omegaGen_sq_zero
+#print axioms arnold_rational_field_syzygy
+#print axioms plucker_antisymm
+#print axioms plucker_self_zero
+#print axioms plucker_syzygy
+#print axioms differencePlucker_klein_identity
+#print axioms gibbs_weights_normalized
+#print axioms socket_boundary_readout
+#print axioms socket_plucker_exact
+#print axioms compile_amplituhedron_bost_connes_synthesis

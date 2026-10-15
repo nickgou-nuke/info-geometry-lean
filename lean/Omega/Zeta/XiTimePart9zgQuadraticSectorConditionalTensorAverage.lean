@@ -425,18 +425,16 @@ theorem paper_xi_time_part9zg_quadratic_sector_conditional_splitting_density
               D.base.leftSign x *
                 xi_time_part9zg_quadratic_sector_conditional_splitting_density_left_indicator D x) =
           D.leftBlockSign *
-            xi_time_part9zg_quadratic_sector_conditional_splitting_density_left_density D := by
-      simpa [T, xi_time_part9zg_quadratic_sector_conditional_splitting_density_tensor_data] using
-        xi_time_part9zg_quadratic_sector_conditional_splitting_density_left_signed_density D
+            xi_time_part9zg_quadratic_sector_conditional_splitting_density_left_density D :=
+      xi_time_part9zg_quadratic_sector_conditional_splitting_density_left_signed_density D
     have hright_signed :
         T.rightAverage
             (fun y =>
               D.base.rightSign y *
                 xi_time_part9zg_quadratic_sector_conditional_splitting_density_right_indicator D y) =
           D.rightBlockSign *
-            xi_time_part9zg_quadratic_sector_conditional_splitting_density_right_density D := by
-      simpa [T, xi_time_part9zg_quadratic_sector_conditional_splitting_density_tensor_data] using
-        xi_time_part9zg_quadratic_sector_conditional_splitting_density_right_signed_density D
+            xi_time_part9zg_quadratic_sector_conditional_splitting_density_right_density D :=
+      xi_time_part9zg_quadratic_sector_conditional_splitting_density_right_signed_density D
     calc
       xi_time_part9zg_quadratic_sector_conditional_splitting_density_conditional_density D =
           (T.leftAverage

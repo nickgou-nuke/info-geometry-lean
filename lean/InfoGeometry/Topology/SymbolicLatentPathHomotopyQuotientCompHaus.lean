@@ -111,11 +111,12 @@ theorem symbolicLatentPathHomotopyEndpointCompHausHom_natural
   have hFF : (compHausToTop).FullyFaithful := by
     simpa using (CompHausLike.fullyFaithfulCompHausLikeToTop (fun _ => True))
   apply hFF.map_injective
-  simpa [Functor.map_comp,
-    symbolicLatentPathHomotopyQuotientCompHausHom,
-    symbolicLatentPathHomotopyEndpointCompHausHom,
-    symbolicLatentPathHomotopyEndpointMapCompHausHom] using
-    (symbolicLatentPathHomotopyEndpointTopCatHom_natural f)
+  rw [Functor.map_comp]
+  change symbolicLatentPathHomotopyQuotientTopCatHom f ≫
+      symbolicLatentPathHomotopyEndpointTopCatHom (X := Y) =
+    symbolicLatentPathHomotopyEndpointTopCatHom (X := X) ≫
+      symbolicLatentPathHomotopyEndpointMapTopCatHom f
+  exact symbolicLatentPathHomotopyEndpointTopCatHom_natural f
 
 @[simp] theorem symbolicLatentPathHomotopyEndpointCompHausHom_forget
     {X : Type} [TopologicalSpace X]

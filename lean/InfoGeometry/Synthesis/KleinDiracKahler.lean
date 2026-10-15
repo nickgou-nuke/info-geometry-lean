@@ -62,6 +62,8 @@ theorem seam_equation_product_odd
     twist.toRingAut (coefficient * state) = -(coefficient * state) := by
   apply (fixed_product_iff_coefficient_odd twist.toRingAut.toRingHom
     (coefficient * state) phase phase_square phase_odd).mp
+  change (twist.toRingAut.toRingHom) derivative = derivative
+    at derivative_fixed
   simpa only [← equation] using derivative_fixed
 
 theorem seam_equation_coefficient_odd

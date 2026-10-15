@@ -186,9 +186,16 @@ theorem candidateLine_baseNativeCandidateAction
           by simpa [candidates, kernelCandidate] using
             (nativeBaseCandidateAction g hg baseNativeCandidate).2⟩ =
       nativeLineAction g hg lineZero := by
-  simpa [baseNativeCandidateAsCandidate,
-    candidateLine_baseNativeCandidateAsCandidate] using
-    (candidateLine_nativeBaseCandidateAction g hg baseNativeCandidate)
+  rw [candidateLine_nativeBaseCandidateAction g hg baseNativeCandidate]
+  have hbase :
+      candidateLine
+        ⟨baseNativeCandidate.1, by
+          simpa [candidates, kernelCandidate] using baseNativeCandidate.2⟩ =
+        lineZero := by
+    apply Subtype.ext
+    change lineSet baseLineVector = lineZero.1
+    exact baseLineVector_lineSet_eq_lineZero
+  rw [hbase]
 
 theorem exists_nativeCandidate_mapping_to_line
     (L : NativeLine) :
@@ -221,23 +228,23 @@ theorem nativeLineFiberMap_preimage_of_point_eq
 theorem nativeFlagMap_baseLine_eq_of_transport
     (g : SplitOctF2Aut)
     (p : OctImIsotropicPoint)
-    (hp : octImAction g nativeBasePoint = p.1)
+    (hp : octImAction g nativeBaseIsotropicPoint.1 = p.1)
     (L₀ : NativeLine)
     (L : NativeLinesThroughPoint p.1)
     (hL : cast (congrArg NativeLinesThroughPoint hp)
-        (nativeLineFiberMap g nativeBasePoint L₀) = L) :
+        (nativeLineFiberMap g nativeBaseIsotropicPoint.1 L₀) = L) :
     nativeFlagMap g ⟨nativeBaseIsotropicPoint, L₀⟩ = ⟨p, L⟩ := by
   apply Sigma.ext_iff.mpr
   constructor
   · apply Subtype.ext
     exact hp
   · have hrec := nativeLineFamily_cast_eq_rec hp
-      (nativeLineFiberMap g nativeBasePoint L₀)
-    have hL' : Eq.rec (nativeLineFiberMap g nativeBasePoint L₀) hp = L := by
+      (nativeLineFiberMap g nativeBaseIsotropicPoint.1 L₀)
+    have hL' : Eq.rec (nativeLineFiberMap g nativeBaseIsotropicPoint.1 L₀) hp = L := by
       rw [← hrec]
       exact hL
     simpa [nativeFlagMap] using
-      (eqRec_heq hp (nativeLineFiberMap g nativeBasePoint L₀)).symm.trans
+      (eqRec_heq hp (nativeLineFiberMap g nativeBaseIsotropicPoint.1 L₀)).symm.trans
         (heq_of_eq hL')
 
 noncomputable def nativeBaseFlag : NativeFlag :=
@@ -261,15 +268,18 @@ theorem nativeFlagMap_stabilizer_baseFlag
       ⟨nativeBaseIsotropicPoint,
         nativeLineAction g.1 (nativePointStabilizer_fixes_base_point g.2)
           lineZero⟩ := by
+  have hp : octImAction g.1 nativeBaseIsotropicPoint.1 = nativeBaseIsotropicPoint.1 := by
+    simpa [nativeBaseIsotropicPoint] using
+      (nativePointStabilizer_fixes_base_point g.2)
   apply nativeFlagMap_baseLine_eq_of_transport g.1 nativeBaseIsotropicPoint
-    (nativePointStabilizer_fixes_base_point g.2) lineZero
+    hp lineZero
       (nativeLineAction g.1 (nativePointStabilizer_fixes_base_point g.2)
       lineZero)
+  have hbasePoint : nativeBaseIsotropicPoint.1 = nativeBasePoint := rfl
+  cases hbasePoint
   apply Subtype.ext
-  simpa [nativeLineAction] using
-    (nativeRawLine_transport_val
-      (nativePointStabilizer_fixes_base_point g.2)
-      (nativeLineFiberMap g.1 nativeBasePoint lineZero))
+  exact nativeRawLine_transport_val hp
+    (nativeLineFiberMap g.1 nativeBasePoint lineZero)
 
 theorem nativeFlag_orbit_surjective :
     Function.Surjective (fun g : SplitOctF2Aut => nativeFlagMap g nativeBaseFlag) := by
@@ -278,6 +288,15 @@ theorem nativeFlag_orbit_surjective :
   have hp : octImAction g nativeBasePoint = p.1 := by
     exact congrArg Subtype.val hg
   obtain ⟨L₀, hL₀⟩ := nativeLineFiberMap_preimage_of_point_eq g p.1 hp L
+  have hbasePoint : nativeBaseIsotropicPoint.1 = nativeBasePoint := rfl
+  have hp' : octImAction g nativeBaseIsotropicPoint.1 = p.1 := by
+    rw [hbasePoint]
+    exact hp
+  have hL₀' :
+      cast (congrArg NativeLinesThroughPoint hp')
+        (nativeLineFiberMap g nativeBaseIsotropicPoint.1 L₀) = L := by
+    cases hbasePoint
+    exact hL₀
   obtain ⟨h, hh⟩ := baseIntrinsicLine_orbit_surjective L₀
   refine ⟨g * h.1, ?_⟩
   change nativeFlagMap (g * h.1) nativeBaseFlag = ⟨p, L⟩
@@ -290,24 +309,17 @@ theorem nativeFlag_orbit_surjective :
     constructor
     · rfl
     · exact heq_of_eq hh
-  have hpair :
-      ⟨nativeBaseIsotropicPoint,
-        nativeLineAction h.1 (nativePointStabilizer_fixes_base_point h.2)
-          lineZero⟩ = nativeFlagMap h.1 nativeBaseFlag := by
-    simpa [hh] using hbase.symm
   have hpair' :
       ⟨nativeBaseIsotropicPoint,
         nativeLineAction h.1 (nativePointStabilizer_fixes_base_point h.2)
           lineZero⟩ = (⟨nativeBaseIsotropicPoint, L₀⟩ : NativeFlag) :=
-    hpair.trans hbase
-  calc
-    nativeFlagMap g
-        ⟨nativeBaseIsotropicPoint,
-          nativeLineAction h.1 (nativePointStabilizer_fixes_base_point h.2)
-            lineZero⟩ = nativeFlagMap g
-        ⟨nativeBaseIsotropicPoint, L₀⟩ := by
-          simpa using congrArg (fun F : NativeFlag => nativeFlagMap g F) hpair'
-    _ = ⟨p, L⟩ := nativeFlagMap_baseLine_eq_of_transport g p hp L₀ L hL₀
+    by
+      apply Sigma.ext_iff.mpr
+      constructor
+      · rfl
+      · exact heq_of_eq hh
+  exact (congrArg (fun F : NativeFlag => nativeFlagMap g F) hpair').trans
+    (nativeFlagMap_baseLine_eq_of_transport g p hp' L₀ L hL₀')
 
 theorem nativeCandidateAction_preserves_base_fibre
     (g : SplitOctF2Aut)

@@ -1,5 +1,4 @@
 import InfoGeometry.Arithmetic.RiemannZetaEquivalences
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.ActualRiemannXiSchwarzBridge
 import InfoGeometry.Canonical.CompletedZetaV4CharacterBridge
 
@@ -122,11 +121,10 @@ def actualXiSymmetryDatum
     exact congrArg Complex.re (centeredRiemannXi_neg u tau)
   parity_B u tau := by
     exact congrArg Complex.im (centeredRiemannXi_neg u tau)
-  schwarz_A u tau := by
-    simpa using congrArg Complex.re (centeredRiemannXi_schwarz hSchwarz u tau)
-  schwarz_B u tau := by
-    have h := congrArg Complex.im (centeredRiemannXi_schwarz hSchwarz u tau)
-    simpa using h
+  schwarz_A u tau :=
+    centeredRiemannXiReal_neg_tau hSchwarz u tau
+  schwarz_B u tau :=
+    centeredRiemannXiImag_neg_tau hSchwarz u tau
 
 /--
 Direct concrete constructor from the completed-zeta Schwarz boundary.  This

@@ -142,6 +142,15 @@ theorem primeCutoff_signed_gibbs_trace_zero_at_zero
   letI : Nonempty (PrimeCutoff M) :=
     ⟨⟨⟨2, Nat.prime_two⟩, hM⟩⟩
   have h := trace_parityLinear_eq_zero (ι := PrimeCutoff M)
-  simpa [signedGibbsLinear, gibbsLinear] using h
+  have hg : gibbsLinear (primeEnergyProfile M) 0 = LinearMap.id := by
+    apply LinearMap.ext
+    intro ψ
+    funext occ
+    simp [gibbsLinear]
+  change LinearMap.trace ℂ (Vec (PrimeCutoff M))
+    ((parityLinear : Vec (PrimeCutoff M) →ₗ[ℂ] Vec (PrimeCutoff M)).comp
+      (gibbsLinear (primeEnergyProfile M) 0)) = 0
+  rw [hg, LinearMap.comp_id]
+  exact h
 
 end InfoGeometry.Arithmetic.PrimeCutoffFiniteFock

@@ -34,24 +34,24 @@ theorem native_defect_is_self_adjoint_direct :
     star vacuumDefect = vacuumDefect :=
   NativeToeplitzCuntzThree.vacuumDefect_selfAdjoint
 
-private abbrev i0 : Fin 3 := ⟨0, by decide⟩
-private abbrev i1 : Fin 3 := ⟨1, by decide⟩
-private abbrev i2 : Fin 3 := ⟨2, by decide⟩
+abbrev i0 : Fin 3 := ⟨0, by decide⟩
+abbrev i1 : Fin 3 := ⟨1, by decide⟩
+abbrev i2 : Fin 3 := ⟨2, by decide⟩
 
 def nativeToeplitzThreeGenerators :
     ToeplitzCuntzThreeGenerators NativeToeplitzThree where
   V1 := toeplitzS 3 i0
   V2 := toeplitzS 3 i1
   V3 := toeplitzS 3 i2
-  V1_isometry := by simpa only [star_toeplitzS] using toeplitz_orthogonality 3 i0 i0
-  V2_isometry := by simpa only [star_toeplitzS] using toeplitz_orthogonality 3 i1 i1
-  V3_isometry := by simpa only [star_toeplitzS] using toeplitz_orthogonality 3 i2 i2
-  V1_V2_ortho := by simpa only [star_toeplitzS] using toeplitz_orthogonality 3 i0 i1
-  V2_V1_ortho := by simpa only [star_toeplitzS] using toeplitz_orthogonality 3 i1 i0
-  V2_V3_ortho := by simpa only [star_toeplitzS] using toeplitz_orthogonality 3 i1 i2
-  V3_V2_ortho := by simpa only [star_toeplitzS] using toeplitz_orthogonality 3 i2 i1
-  V1_V3_ortho := by simpa only [star_toeplitzS] using toeplitz_orthogonality 3 i0 i2
-  V3_V1_ortho := by simpa only [star_toeplitzS] using toeplitz_orthogonality 3 i2 i0
+  V1_isometry := by simpa [star_toeplitzS] using toeplitz_orthogonality 3 i0 i0
+  V2_isometry := by simpa [star_toeplitzS] using toeplitz_orthogonality 3 i1 i1
+  V3_isometry := by simpa [star_toeplitzS] using toeplitz_orthogonality 3 i2 i2
+  V1_V2_ortho := by simpa [star_toeplitzS] using toeplitz_orthogonality 3 i0 i1
+  V2_V1_ortho := by simpa [star_toeplitzS] using toeplitz_orthogonality 3 i1 i0
+  V2_V3_ortho := by simpa [star_toeplitzS] using toeplitz_orthogonality 3 i1 i2
+  V3_V2_ortho := by simpa [star_toeplitzS] using toeplitz_orthogonality 3 i2 i1
+  V1_V3_ortho := by simpa [star_toeplitzS] using toeplitz_orthogonality 3 i0 i2
+  V3_V1_ortho := by simpa [star_toeplitzS] using toeplitz_orthogonality 3 i2 i0
 
 @[simp] theorem native_V1 :
     nativeToeplitzThreeGenerators.V1 = toeplitzS 3 i0 := rfl
@@ -61,6 +61,11 @@ def nativeToeplitzThreeGenerators :
 
 @[simp] theorem native_V3 :
     nativeToeplitzThreeGenerators.V3 = toeplitzS 3 i2 := rfl
+
+@[simp] theorem native_V3_eq_two :
+    nativeToeplitzThreeGenerators.V3 = toeplitzS 3 (2 : Fin 3) := by
+  rw [native_V3]
+  congr 1
 
 theorem native_three_resolution :
     nativeToeplitzThreeGenerators.P1 +

@@ -49,6 +49,48 @@ def ellNativeFlowLinearEquiv (t : ℝ) : CZ ≃ₗ[ℝ] CZ where
     ellNativeFlowLinearEquiv t X = ellNativeFlow t X :=
   rfl
 
+@[simp] theorem coordAddEquiv_apply (z : CZ) :
+    InfoGeometry.Canonical.ZornMatrix.coordAddEquiv z = (z.a, z.b, z.x, z.y) := rfl
+
+@[simp] theorem coordAddEquiv_symm_apply (c : InfoGeometry.Canonical.ZornMatrix.Coord ℝ) :
+    InfoGeometry.Canonical.ZornMatrix.coordAddEquiv.symm c = { a := c.1, b := c.2.1, x := c.2.2.1, y := c.2.2.2 } := rfl
+
+@[simp] theorem coordAddEquiv_symm_a (c : InfoGeometry.Canonical.ZornMatrix.Coord ℝ) :
+    (InfoGeometry.Canonical.ZornMatrix.coordAddEquiv.symm c).a = c.1 := rfl
+
+@[simp] theorem coordAddEquiv_symm_b (c : InfoGeometry.Canonical.ZornMatrix.Coord ℝ) :
+    (InfoGeometry.Canonical.ZornMatrix.coordAddEquiv.symm c).b = c.2.1 := rfl
+
+@[simp] theorem coordAddEquiv_symm_x (c : InfoGeometry.Canonical.ZornMatrix.Coord ℝ) :
+    (InfoGeometry.Canonical.ZornMatrix.coordAddEquiv.symm c).x = c.2.2.1 := rfl
+
+@[simp] theorem coordAddEquiv_symm_y (c : InfoGeometry.Canonical.ZornMatrix.Coord ℝ) :
+    (InfoGeometry.Canonical.ZornMatrix.coordAddEquiv.symm c).y = c.2.2.2 := rfl
+
+@[simp] theorem coordEquiv_symm_a (c : InfoGeometry.Canonical.ZornMatrix.Coord ℝ) :
+    (InfoGeometry.Canonical.ZornMatrix.coordEquiv.symm c).a = c.1 := rfl
+
+@[simp] theorem coordEquiv_symm_b (c : InfoGeometry.Canonical.ZornMatrix.Coord ℝ) :
+    (InfoGeometry.Canonical.ZornMatrix.coordEquiv.symm c).b = c.2.1 := rfl
+
+@[simp] theorem coordEquiv_symm_x (c : InfoGeometry.Canonical.ZornMatrix.Coord ℝ) :
+    (InfoGeometry.Canonical.ZornMatrix.coordEquiv.symm c).x = c.2.2.1 := rfl
+
+@[simp] theorem coordEquiv_symm_y (c : InfoGeometry.Canonical.ZornMatrix.Coord ℝ) :
+    (InfoGeometry.Canonical.ZornMatrix.coordEquiv.symm c).y = c.2.2.2 := rfl
+
+@[simp] theorem sub_a (z1 z2 : CZ) : (z1 - z2).a = z1.a - z2.a := rfl
+@[simp] theorem sub_b (z1 z2 : CZ) : (z1 - z2).b = z1.b - z2.b := rfl
+@[simp] theorem sub_x (z1 z2 : CZ) : (z1 - z2).x = z1.x - z2.x := rfl
+@[simp] theorem sub_y (z1 z2 : CZ) : (z1 - z2).y = z1.y - z2.y := rfl
+
+@[simp] theorem neg_a (z : CZ) : (-z).a = -z.a := rfl
+@[simp] theorem neg_b (z : CZ) : (-z).b = -z.b := rfl
+@[simp] theorem neg_x (z : CZ) : (-z).x = -z.x := rfl
+@[simp] theorem neg_y (z : CZ) : (-z).y = -z.y := rfl
+
+set_option maxHeartbeats 1600000
+
 /-- The native closed ell flow preserves the full `(4,4)` Zorn quadratic
 form.  The proof expands the actual mixed-coordinate `lUnit` action rather
 than replacing it by the distinct diagonal axial flow. -/
@@ -60,11 +102,12 @@ theorem detZ_ellNativeFlow (t : ℝ) (Z : CZ) :
     ellCommutator, lUnit, zMul, ZornMatrix.detZ,
     InfoGeometry.Canonical.ZornMatrix.dot,
     InfoGeometry.Canonical.ZornMatrix.cross,
-    Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv,
-    Fin.sum_univ_three]
+    Equiv.smul_def,
+    InfoGeometry.Canonical.ZornMatrix.coordAddEquiv,
+    InfoGeometry.Canonical.ZornMatrix.coordEquiv]
   rw [Real.exp_neg]
   field_simp [Real.exp_ne_zero]
-  ring_nf
+  ring
 
 @[simp] theorem detZ_ellNativeFlowLinearEquiv (t : ℝ) (Z : CZ) :
     ZornMatrix.detZ realCrossProduct3 (ellNativeFlowLinearEquiv t Z) =

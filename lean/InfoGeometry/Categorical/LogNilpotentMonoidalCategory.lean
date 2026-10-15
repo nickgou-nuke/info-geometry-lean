@@ -85,6 +85,7 @@ theorem leftUnitor_naturality
   apply LogEndModule.Hom.ext
   apply TensorProduct.ext'
   intro c x
+  change 𝕜 at c
   change TensorProduct.lid 𝕜 Y.toLogEndModule.V
       (TensorProduct.map LinearMap.id f.hom (c ⊗ₜ[𝕜] x)) =
     f.hom (TensorProduct.lid 𝕜 X.toLogEndModule.V (c ⊗ₜ[𝕜] x))
@@ -101,6 +102,7 @@ theorem rightUnitor_naturality
   apply LogEndModule.Hom.ext
   apply TensorProduct.ext'
   intro x c
+  change 𝕜 at c
   change TensorProduct.rid 𝕜 Y.toLogEndModule.V
       (TensorProduct.map f.hom LinearMap.id (x ⊗ₜ[𝕜] c)) =
     f.hom (TensorProduct.rid 𝕜 X.toLogEndModule.V (x ⊗ₜ[𝕜] c))

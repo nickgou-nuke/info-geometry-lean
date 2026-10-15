@@ -116,6 +116,8 @@ theorem preimage_cylinder_cons_same {d : ℕ} (i : Fin d) (ws : List (Fin d)) :
   ext x
   rw [Set.mem_preimage, mem_cylinderSet_cons]
   simp [branchShift_zero, branchShift_succ]
+  change x ∈ cylinderSet ws ↔ x ∈ cylinderSet ws
+  exact Iff.rfl
 
 /-- Pullback of cylinder set under a different branch shift is empty. -/
 theorem preimage_cylinder_cons_ne {d : ℕ} {i j : Fin d} (hij : i ≠ j) (ws : List (Fin d)) :

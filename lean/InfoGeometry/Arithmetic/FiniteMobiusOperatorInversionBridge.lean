@@ -142,7 +142,7 @@ theorem mobius_convolution_stableRange (N k : ℕ) (hk : k ≤ N) (hk0 : 0 < k) 
     have hx0 := Nat.left_ne_zero_of_mem_divisorsAntidiagonal hx
     simp [hx0]
   rw [hzero] at hk'
-  simpa [zetaCoefficients, mobiusCoefficients, hk0.ne'] using hk'
+  simpa [zetaCoefficients, mobiusCoefficients, hk0.ne', ArithmeticFunction.one_apply] using hk'
 
 theorem finiteZetaMobius_boundary_support (N k : ℕ) (hk : k ≤ N) :
     k ∈ Finset.Ioc N (N ^ 2) ↔ False := by

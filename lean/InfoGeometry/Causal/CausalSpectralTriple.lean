@@ -69,10 +69,10 @@ theorem J_sq_eq_one : J * J = I :=
 
 theorem J_chi_anticommutes : J * γ = -(γ * J) := by
   ext i j; fin_cases i <;> fin_cases j
-  · simp [J, γ, Oℝ, Matrix.mul_apply, one_apply, Fin.sum_univ_two]; try ring
-  · simp [J, γ, Oℝ, Matrix.mul_apply, one_apply, Fin.sum_univ_two]; try ring
-  · simp [J, γ, Oℝ, Matrix.mul_apply, one_apply, Fin.sum_univ_two]; try ring
-  · simp [J, γ, Oℝ, Matrix.mul_apply, one_apply, Fin.sum_univ_two]; try ring
+  · simp [J, γ, Oℝ, Matrix.mul_apply, Fin.sum_univ_two]; try ring
+  · simp [J, γ, Oℝ, Matrix.mul_apply, Fin.sum_univ_two]; try ring
+  · simp [J, γ, Oℝ, Matrix.mul_apply, Fin.sum_univ_two]; try ring
+  · simp [J, γ, Oℝ, Matrix.mul_apply, Fin.sum_univ_two]; try ring
 
 /-- With D = 0, the oddness condition is trivial. -/
 theorem D_odd : D * γ + γ * D = 0 := by
@@ -92,10 +92,10 @@ theorem Oℝ_symmetric : (Oℝ : Matrix (Fin 2) (Fin 2) ℝ)ᵀ = Oℝ := by
 theorem order_zero_holds (x₀ x₁ y₀ y₁ : ℝ) :
     ρ x₀ x₁ * ρ_op y₀ y₁ = ρ_op y₀ y₁ * ρ x₀ x₁ := by
   ext i j; fin_cases i <;> fin_cases j
-  · simp [ρ, ρ_op, J, Oℝ, diag, Matrix.mul_apply, one_apply, Fin.sum_univ_two]; try ring
-  · simp [ρ, ρ_op, J, Oℝ, diag, Matrix.mul_apply, one_apply, Fin.sum_univ_two]; try ring
-  · simp [ρ, ρ_op, J, Oℝ, diag, Matrix.mul_apply, one_apply, Fin.sum_univ_two]; try ring
-  · simp [ρ, ρ_op, J, Oℝ, diag, Matrix.mul_apply, one_apply, Fin.sum_univ_two]; try ring
+  · simp [ρ, ρ_op, J, Oℝ, diag, Matrix.mul_apply, Fin.sum_univ_two]; try ring
+  · simp [ρ, ρ_op, J, Oℝ, diag, Matrix.mul_apply, Fin.sum_univ_two]; try ring
+  · simp [ρ, ρ_op, J, Oℝ, diag, Matrix.mul_apply, Fin.sum_univ_two]; try ring
+  · simp [ρ, ρ_op, J, Oℝ, diag, Matrix.mul_apply, Fin.sum_univ_two]; try ring
 
 /-- Order one: [D, ρ(a)] · ρ_op(b) = ρ_op(b) · [D, ρ(a)], trivially true since D = 0. -/
 theorem order_one_holds (x₀ x₁ y₀ y₁ : ℝ) :
@@ -122,7 +122,7 @@ theorem projectors_sum_to_one : dℝ + δℝ = I := by
 
 /-- Characteristic polynomial: det(γ - s·I) = s² - 1. -/
 theorem det_spectrum (s : ℝ) : det (γ - s • I) = s ^ 2 - 1 := by
-  simp [γ, I, Matrix.det_fin_two, sub_apply, smul_apply]
+  simp [γ, I, Matrix.det_fin_two, Matrix.sub_apply, Matrix.smul_apply]
   ring_nf
 
 end InfoGeometry.Causal.SpectralTriple

@@ -99,6 +99,18 @@ def canonicalColorReflection : ZornMatrix R ≃* ZornMatrix R :=
   canonicalChiralMulEquiv.trans
     (reflectMulEquiv.trans canonicalChiralMulEquiv.symm)
 
+@[simp] theorem canonicalColorCycle_apply (X : ZornMatrix R) :
+    canonicalColorCycle X =
+      { a := X.a, b := X.b,
+        x := fun c => X.x (prevColor c),
+        y := fun c => X.y (prevColor c) } := rfl
+
+@[simp] theorem canonicalColorReflection_apply (X : ZornMatrix R) :
+    canonicalColorReflection X =
+      { a := X.b, b := X.a,
+        x := fun c => X.y (reflectColor c),
+        y := fun c => X.x (reflectColor c) } := rfl
+
 theorem canonicalColorCycle_map_mul (X Y : ZornMatrix R) :
     canonicalColorCycle (X * Y) =
       canonicalColorCycle X * canonicalColorCycle Y := by
@@ -121,20 +133,9 @@ noncomputable def canonicalColorCycleLinearAut :
   left_inv X := canonicalColorCycle.symm_apply_apply X
   right_inv X := canonicalColorCycle.apply_symm_apply X
   map_add' X Y := by
-    ext <;>
-      simp [canonicalColorCycle, canonicalChiralMulEquiv,
-        ChiralZornMatrix.rotateMulEquiv_apply,
-        ChiralZornMatrix.rotateColor, InfoGeometry.Physics.Octonion.prevColor]
+    ext <;> simp [canonicalColorCycle_apply, rotateColor]
   map_smul' r X := by
-    change canonicalColorCycle (r • X) = r • canonicalColorCycle X
-    change canonicalChiralMulEquiv.symm
-      (rotateMulEquiv (canonicalChiralMulEquiv (r • X))) =
-      r • canonicalChiralMulEquiv.symm
-        (rotateMulEquiv (canonicalChiralMulEquiv X))
-    ext <;>
-      simp [canonicalChiralMulEquiv, ChiralZornMatrix.rotateMulEquiv_apply,
-      ChiralZornMatrix.rotateColor, InfoGeometry.Physics.Octonion.prevColor,
-      Equiv.smul_def, ZornMatrix.coordEquiv, Pi.smul_apply]
+    ext <;> simp [canonicalColorCycle_apply, rotateColor]
 
 @[simp] theorem canonicalColorCycleLinearAut_apply (X : CanonicalZorn) :
     canonicalColorCycleLinearAut X = canonicalColorCycle X := rfl
@@ -147,23 +148,16 @@ noncomputable def canonicalColorReflectionLinearAut :
   left_inv X := canonicalColorReflection.symm_apply_apply X
   right_inv X := canonicalColorReflection.apply_symm_apply X
   map_add' X Y := by
-    ext <;>
-      simp [canonicalColorReflection, canonicalChiralMulEquiv,
-        ChiralZornMatrix.reflectMulEquiv_apply,
-        ChiralZornMatrix.reflect, ChiralZornMatrix.reflectColor]
+    ext <;> simp [canonicalColorReflection_apply]
   map_smul' r X := by
-    change canonicalColorReflection (r • X) = r • canonicalColorReflection X
-    change canonicalChiralMulEquiv.symm
-      (reflectMulEquiv (canonicalChiralMulEquiv (r • X))) =
-      r • canonicalChiralMulEquiv.symm
-        (reflectMulEquiv (canonicalChiralMulEquiv X))
-    ext <;>
-      simp [canonicalChiralMulEquiv, ChiralZornMatrix.reflectMulEquiv_apply,
-      ChiralZornMatrix.reflect, ChiralZornMatrix.reflectColor,
-      Equiv.smul_def, ZornMatrix.coordEquiv, Pi.smul_apply]
+    ext <;> simp [canonicalColorReflection_apply]
 
 @[simp] theorem canonicalColorReflectionLinearAut_apply (X : CanonicalZorn) :
     canonicalColorReflectionLinearAut X = canonicalColorReflection X := rfl
+
+theorem zMul_eq_mul (X Y : CanonicalZorn) :
+    InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul X Y = X * Y := by
+  ext <;> rfl
 
 /-- The transported cycle is a member of the native canonical composition
 automorphism subgroup. -/
@@ -171,8 +165,9 @@ noncomputable def canonicalColorCycleCompositionAut :
     realZornCompositionAut where
   val := canonicalColorCycleLinearAut
   property X Y := by
-    simpa only [canonicalColorCycleLinearAut_apply] using
-      canonicalColorCycle_map_mul X Y
+    rw [canonicalColorCycleLinearAut_apply, canonicalColorCycleLinearAut_apply,
+      canonicalColorCycleLinearAut_apply, zMul_eq_mul, zMul_eq_mul]
+    exact canonicalColorCycle_map_mul X Y
 
 @[simp] theorem canonicalColorCycleCompositionAut_apply (X : CanonicalZorn) :
     (canonicalColorCycleCompositionAut : CanonicalLinearAut) X =
@@ -184,8 +179,9 @@ noncomputable def canonicalColorReflectionCompositionAut :
     realZornCompositionAut where
   val := canonicalColorReflectionLinearAut
   property X Y := by
-    simpa only [canonicalColorReflectionLinearAut_apply] using
-      canonicalColorReflection_map_mul X Y
+    rw [canonicalColorReflectionLinearAut_apply, canonicalColorReflectionLinearAut_apply,
+      canonicalColorReflectionLinearAut_apply, zMul_eq_mul, zMul_eq_mul]
+    exact canonicalColorReflection_map_mul X Y
 
 @[simp] theorem canonicalColorReflectionCompositionAut_apply (X : CanonicalZorn) :
     (canonicalColorReflectionCompositionAut : CanonicalLinearAut) X =

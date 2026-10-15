@@ -96,16 +96,14 @@ theorem scalarDilationReadoutInverseLimitAction_transport
         limit.π readoutDiagram n
   rw [show compatibleReadoutInverseLimitIso.hom ≫
         limit.π readoutDiagram n = readoutInverseCone.π.app n by
-      simpa [compatibleReadoutInverseLimitIso] using
-        (IsLimit.conePointUniqueUpToIso_hom_comp
-          readoutInverseConeIsLimit (limit.isLimit readoutDiagram) n)]
+      exact IsLimit.conePointUniqueUpToIso_hom_comp
+        readoutInverseConeIsLimit (limit.isLimit readoutDiagram) n]
   rw [scalarDilationReadoutInverseLimitAction_projection t n]
   rw [← Category.assoc]
   rw [show compatibleReadoutInverseLimitIso.hom ≫
         limit.π readoutDiagram n = readoutInverseCone.π.app n by
-      simpa [compatibleReadoutInverseLimitIso] using
-        (IsLimit.conePointUniqueUpToIso_hom_comp
-          readoutInverseConeIsLimit (limit.isLimit readoutDiagram) n)]
+      exact IsLimit.conePointUniqueUpToIso_hom_comp
+        readoutInverseConeIsLimit (limit.isLimit readoutDiagram) n]
   exact coordinateTopCatHom_action_square n t
 
 end InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitDynamics

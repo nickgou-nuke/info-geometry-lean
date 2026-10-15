@@ -3,6 +3,8 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Finset.Lattice.Fold
 import InfoGeometry.Canonical.PositiveRayCore
 
+set_option linter.unusedSectionVars false
+
 /-!
 # Scale-invariant finite positive readouts
 
@@ -19,7 +21,7 @@ section
 variable {n : ℕ} [NeZero n]
 
 /-- A strictly positive finite readout representative. -/
-def PositiveReadout := {h : Fin n → ℝ // ∀ i, 0 < h i}
+abbrev PositiveReadout := {h : Fin n → ℝ // ∀ i, 0 < h i}
 
 namespace PositiveReadout
 
@@ -153,7 +155,7 @@ private theorem sup_add_const {β : Type*} (s : Finset β) (hs : s.Nonempty)
   apply le_antisymm
   · apply Finset.sup'_le hs
     intro x hx
-    simpa [add_comm] using add_le_add_left (Finset.le_sup' f hx) c
+    linarith [Finset.le_sup' f hx]
   · have hle : ∀ x ∈ s, f x ≤ s.sup' hs (fun x => c + f x) - c := by
       intro x hx
       have h := Finset.le_sup' (fun x => c + f x) hx
@@ -173,7 +175,7 @@ private theorem inf_add_const {β : Type*} (s : Finset β) (hs : s.Nonempty)
     linarith
   · apply Finset.le_inf' hs
     intro x hx
-    simpa [add_comm] using add_le_add_left (Finset.inf'_le f hx) c
+    linarith [Finset.inf'_le f hx]
 
 private theorem oscillation_add_le {β : Type*} (s : Finset β) (hs : s.Nonempty)
     (f g : β → ℝ) :
@@ -183,12 +185,12 @@ private theorem oscillation_add_le {β : Type*} (s : Finset β) (hs : s.Nonempty
       s.sup' hs f + s.sup' hs g := by
     apply Finset.sup'_le hs
     intro x hx
-    exact add_le_add (Finset.le_sup' f hx) (Finset.le_sup' g hx)
+    linarith [Finset.le_sup' f hx, Finset.le_sup' g hx]
   have hlower : s.inf' hs f + s.inf' hs g ≤
       s.inf' hs (fun x => f x + g x) := by
     apply Finset.le_inf' hs
     intro x hx
-    exact add_le_add (Finset.inf'_le f hx) (Finset.inf'_le g hx)
+    linarith [Finset.inf'_le f hx, Finset.inf'_le g hx]
   linarith
 
 private theorem oscillation_neg {β : Type*} (s : Finset β) (hs : s.Nonempty)
@@ -199,7 +201,7 @@ private theorem oscillation_neg {β : Type*} (s : Finset β) (hs : s.Nonempty)
     apply le_antisymm
     · apply Finset.sup'_le hs
       intro x hx
-      exact neg_le_neg (Finset.inf'_le f hx)
+      linarith [Finset.inf'_le f hx]
     · obtain ⟨x, hx, hxf⟩ := Finset.exists_mem_eq_inf' hs f
       rw [hxf]
       exact Finset.le_sup' (fun x => -f x) hx
@@ -210,7 +212,7 @@ private theorem oscillation_neg {β : Type*} (s : Finset β) (hs : s.Nonempty)
       exact Finset.inf'_le (fun x => -f x) hx
     · apply Finset.le_inf' hs
       intro x hx
-      exact neg_le_neg (Finset.le_sup' f hx)
+      linarith [Finset.le_sup' f hx]
   rw [hsup, hinf]
   ring
 

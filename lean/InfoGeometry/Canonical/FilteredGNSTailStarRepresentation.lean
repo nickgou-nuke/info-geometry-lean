@@ -20,6 +20,7 @@ noncomputable section
 namespace CStarStateColimit.Native.FilteredGNSTailStarRepresentation
 
 set_option synthInstance.maxHeartbeats 80000
+set_option maxHeartbeats 500000
 set_option linter.unusedSectionVars false
 
 open CStarStateColimit.Native
@@ -81,7 +82,7 @@ theorem tailCompletedRepresentation_add
         tailCompletedRepresentation Stage sys ω b := by
   apply continuousLinearMap_eq_of_stage_eq Stage sys ω
   intro j x
-  simp only [ContinuousLinearMap.add_apply,
+  simp only [add_apply,
     tailCompletedRepresentation_stage]
   simp [tailGNSOperator, tailObservable]
   exact UniformSpace.Completion.coe_add _ _
@@ -95,7 +96,7 @@ theorem tailCompletedRepresentation_mul
         tailCompletedRepresentation Stage sys ω b := by
   apply continuousLinearMap_eq_of_stage_eq Stage sys ω
   intro j x
-  simp only [ContinuousLinearMap.mul_apply,
+  simp only [mul_apply_eq_comp,
     tailCompletedRepresentation_stage]
   simp [tailGNSOperator, tailObservable]
 
@@ -106,7 +107,7 @@ theorem tailCompletedRepresentation_one
     tailCompletedRepresentation Stage sys ω (1 : Stage i₀) = 1 := by
   apply continuousLinearMap_eq_of_stage_eq Stage sys ω
   intro j x
-  simp only [ContinuousLinearMap.one_apply,
+  simp only [one_apply_eq_self,
     tailCompletedRepresentation_stage]
   simp [tailGNSOperator, tailObservable]
 
@@ -121,9 +122,14 @@ def tailCompletedRepresentationAlgHom
   map_one' := tailCompletedRepresentation_one Stage sys ω i₀
   map_mul' := tailCompletedRepresentation_mul Stage sys ω
   map_zero' := by
-    simpa using
-      tailCompletedRepresentation_add Stage sys ω
-        (0 : Stage i₀) 0
+    have h := tailCompletedRepresentation_add Stage sys ω
+      (0 : Stage i₀) 0
+    have h' :
+        tailCompletedRepresentation Stage sys ω (0 : Stage i₀) +
+            tailCompletedRepresentation Stage sys ω (0 : Stage i₀) =
+          tailCompletedRepresentation Stage sys ω (0 : Stage i₀) + 0 := by
+      simpa using h.symm
+    exact add_left_cancel h'
   map_add' := tailCompletedRepresentation_add Stage sys ω
   commutes' := by
     intro c
@@ -201,7 +207,10 @@ theorem tailCompletedRepresentation_star_inner_stage
         (stageToHilbertDirectLimit (E i₀) (S i₀) k y)
         (tailCompletedRepresentation Stage sys ω a
           (stageToHilbertDirectLimit (E i₀) (S i₀) j x)) := by
-  obtain ⟨m, hjm, hkm⟩ := exists_ge_ge j k
+  obtain ⟨m, hjm, hkm⟩ := exists_ge_ge (α := I) j.1 k.1
+  let m' : UpperIndex i₀ := ⟨m, le_trans j.2 hjm⟩
+  have hjm' : j ≤ m' := hjm
+  have hkm' : k ≤ m' := hkm
   rw [tailCompletedRepresentation_stage,
     tailCompletedRepresentation_stage]
   calc
@@ -210,47 +219,55 @@ theorem tailCompletedRepresentation_star_inner_stage
           (tailGNSOperator Stage sys ω (star a) k y))
         (stageToHilbertDirectLimit (E i₀) (S i₀) j x) =
       inner ℂ
-        (stageToHilbertDirectLimit (E i₀) (S i₀) m
-          ((S i₀).map hkm
+        (stageToHilbertDirectLimit (E i₀) (S i₀) m'
+          ((S i₀).map hkm'
             (tailGNSOperator Stage sys ω (star a) k y)))
-        (stageToHilbertDirectLimit (E i₀) (S i₀) m
-          ((S i₀).map hjm x)) := by
-        rw [stageToHilbertDirectLimit_transition,
-          stageToHilbertDirectLimit_transition]
+        (stageToHilbertDirectLimit (E i₀) (S i₀) m'
+          ((S i₀).map hjm' x)) := by
+        have hleft := stageToHilbertDirectLimit_transition
+          (E i₀) (S i₀) hkm'
+          (tailGNSOperator Stage sys ω (star a) k y)
+        have hright := stageToHilbertDirectLimit_transition
+          (E i₀) (S i₀) hjm' x
+        exact congrArg₂ (inner ℂ) hleft.symm hright.symm
     _ = inner ℂ
-        ((S i₀).map hkm
+        ((S i₀).map hkm'
           (tailGNSOperator Stage sys ω (star a) k y))
-        ((S i₀).map hjm x) :=
-      (stageToHilbertDirectLimit (E i₀) (S i₀) m).inner_map_map _ _
+        ((S i₀).map hjm' x) :=
+      (stageToHilbertDirectLimit (E i₀) (S i₀) m').inner_map_map _ _
     _ = inner ℂ
-        (tailGNSOperator Stage sys ω (star a) m
-          ((S i₀).map hkm y))
-        ((S i₀).map hjm x) := by
-      rw [tailGNSOperator_intertwines Stage sys ω (star a) hkm y]
+        (tailGNSOperator Stage sys ω (star a) m'
+          ((S i₀).map hkm' y))
+        ((S i₀).map hjm' x) := by
+      rw [tailGNSOperator_intertwines Stage sys ω (star a) hkm' y]
     _ = inner ℂ
-        ((S i₀).map hkm y)
-        (tailGNSOperator Stage sys ω a m
-          ((S i₀).map hjm x)) :=
-      tailGNSOperator_star_inner Stage sys ω a m _ _
+        ((S i₀).map hkm' y)
+        (tailGNSOperator Stage sys ω a m'
+          ((S i₀).map hjm' x)) :=
+      tailGNSOperator_star_inner Stage sys ω a m' _ _
     _ = inner ℂ
-        ((S i₀).map hkm y)
-        ((S i₀).map hjm
+        ((S i₀).map hkm' y)
+        ((S i₀).map hjm'
           (tailGNSOperator Stage sys ω a j x)) := by
-      rw [tailGNSOperator_intertwines Stage sys ω a hjm x]
+      rw [tailGNSOperator_intertwines Stage sys ω a hjm' x]
     _ = inner ℂ
-        (stageToHilbertDirectLimit (E i₀) (S i₀) m
-          ((S i₀).map hkm y))
-        (stageToHilbertDirectLimit (E i₀) (S i₀) m
-          ((S i₀).map hjm
+        (stageToHilbertDirectLimit (E i₀) (S i₀) m'
+          ((S i₀).map hkm' y))
+        (stageToHilbertDirectLimit (E i₀) (S i₀) m'
+          ((S i₀).map hjm'
             (tailGNSOperator Stage sys ω a j x))) := by
       rw [(stageToHilbertDirectLimit
-        (E i₀) (S i₀) m).inner_map_map]
+        (E i₀) (S i₀) m').inner_map_map]
     _ = inner ℂ
         (stageToHilbertDirectLimit (E i₀) (S i₀) k y)
         (stageToHilbertDirectLimit (E i₀) (S i₀) j
           (tailGNSOperator Stage sys ω a j x)) := by
-      rw [stageToHilbertDirectLimit_transition,
-        stageToHilbertDirectLimit_transition]
+      have hleft := stageToHilbertDirectLimit_transition
+        (E i₀) (S i₀) hkm' y
+      have hright := stageToHilbertDirectLimit_transition
+        (E i₀) (S i₀) hjm'
+        (tailGNSOperator Stage sys ω a j x)
+      exact congrArg₂ (inner ℂ) hleft hright
 
 /-- The completed tail representation preserves the adjoint pairing on the
 whole Hilbert colimit.  The extension uses the dense union of stage images in

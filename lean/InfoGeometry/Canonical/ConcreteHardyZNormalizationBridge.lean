@@ -1,5 +1,4 @@
 import InfoGeometry.Canonical.ActualXiSymmetryDatumBridge
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.XiHardyZNormalizationBridge
 import InfoGeometry.Topology.XiHardyZNormalizationBridge
 
@@ -50,8 +49,10 @@ theorem hardyNormalizationFactor_neg_eq (t : ℝ) :
 theorem candidateHardyZ_neg (t : ℝ) :
     candidateHardyZ (-t) = candidateHardyZ t := by
   have hxi : actualXiCriticalReadout (-t) = actualXiCriticalReadout t := by
-    unfold actualXiCriticalReadout
-    simpa using congrArg Complex.re (centeredRiemannXi_neg 0 t)
+    change (centeredRiemannXi 0 (-t)).re = (centeredRiemannXi 0 t).re
+    have h := congrArg Complex.re (centeredRiemannXi_neg 0 t)
+    rw [neg_zero] at h
+    exact h
   rw [candidateHardyZ, candidateHardyZ, hxi,
     hardyNormalizationFactor_neg_eq]
 

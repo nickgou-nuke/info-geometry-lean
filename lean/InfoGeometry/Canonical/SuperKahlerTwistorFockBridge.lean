@@ -37,8 +37,8 @@ def particleNumberOp
 theorem particleNumberOp_isProjection
     (sys : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) R) :
     IsSelfAdjoint (particleNumberOp sys) ∧
-      particleNumberOp sys * particleNumberOp sys = particleNumberOp sys := by
-  simpa [particleNumberOp] using P_plus_isProjection sys
+      particleNumberOp sys * particleNumberOp sys = particleNumberOp sys :=
+  P_plus_isProjection sys
 
 /-- The exterior-algebra vacuum is annihilated by contraction. -/
 theorem exteriorVacuum_annihilated

@@ -162,7 +162,8 @@ theorem deriv_representedFlow_at_zero
     (ρ : EndV →A[ℝ] EndW)
     (D : EndV) :
     deriv (representedFlow ρ D) 0 = ρ D := by
-  simpa [representedFlow] using InfoGeometry.Lie.ContinuousDerivationExponential.deriv_flow_at_zero (ρ D)
+  change deriv (InfoGeometry.Lie.ContinuousDerivationExponential.flow (ρ D)) 0 = ρ D
+  exact InfoGeometry.Lie.ContinuousDerivationExponential.deriv_flow_at_zero (ρ D)
 
 /-- Continuous algebra representations preserve operator commutators. -/
 theorem map_commutator

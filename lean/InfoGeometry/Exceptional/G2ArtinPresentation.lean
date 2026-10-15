@@ -89,7 +89,7 @@ theorem simpleReflections_relation :
           simpleReflections 1 * simpleReflections 0 * simpleReflections 1 =
         simpleReflections 1 * simpleReflections 0 * simpleReflections 1 *
           simpleReflections 0 * simpleReflections 1 * simpleReflections 0 := by
-    simpa [Equiv.Perm.mul_def, simpleReflections, coordinateWordAction] using hEq.symm
+    simpa [Equiv.Perm.mul_def, Equiv.Perm.one_def, simpleReflections, coordinateWordAction, Equiv.trans_refl] using hEq.symm
   rw [hEq']
   simp
 

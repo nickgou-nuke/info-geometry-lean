@@ -239,7 +239,9 @@ theorem projectorObstruction_eq_zero_and_dilationCommutator_eq_zero_of_incompres
     CramerRaoNegLogVolumeAnomalyReadout.chiralScale_eq_zero_of_incompressible
       R hIncomp x
   have hComm : Commute CI.spectralChiralProjector CI.metricChiralProjector := by
-    simpa [Commute] using CI.projectors_commute_of_chiralScale_eq_zero hScaleZero
+    change CI.spectralChiralProjector * CI.metricChiralProjector =
+      CI.metricChiralProjector * CI.spectralChiralProjector
+    exact CI.projectors_commute_of_chiralScale_eq_zero hScaleZero
   have hObsZero : CI.projectorObstruction = 0 :=
     CI.projectorObstruction_eq_zero_of_commute hComm
   have hRight : CI.P_D * CI.P_MP_right = CI.P_MP_right * CI.P_D := by

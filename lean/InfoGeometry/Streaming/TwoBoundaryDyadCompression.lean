@@ -22,7 +22,8 @@ def postCovector (p : RegularBoundaryPair ι) : Module.Dual ℂ (State ι) where
   toFun x := pairing p.post x
   map_add' x y := pairing_add_right p.post x y
   map_smul' c x := by
-    simpa only [smul_eq_mul] using pairing_smul_right c p.post x
+    change pairing p.post (c • x) = c * pairing p.post x
+    exact pairing_smul_right c p.post x
 
 @[simp] theorem postCovector_apply (p : RegularBoundaryPair ι) (x : State ι) :
     postCovector p x = pairing p.post x := rfl

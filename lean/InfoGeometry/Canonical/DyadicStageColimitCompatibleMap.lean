@@ -60,28 +60,16 @@ theorem dyadicStageReadoutColimitMap_comp_constantReadout :
       dyadicStageColimitReadout := by
   apply colimit.hom_ext
   intro n
-  calc
-    colimit.ι dyadicStageDiagram n ≫
-        dyadicStageReadoutColimitMap ≫
-          dyadicRationalConstantColimitReadout =
-      (colimit.ι dyadicStageDiagram n ≫
-        dyadicStageReadoutColimitMap) ≫
-          dyadicRationalConstantColimitReadout :=
-      (Category.assoc _ _ _).symm
-    _ = (dyadicStageReadoutCocone.ι.app n ≫
-        colimit.ι dyadicRationalConstantDiagram n) ≫
-          dyadicRationalConstantColimitReadout := by
-      rw [dyadicStageReadoutColimitMap_on_stage]
-    _ = dyadicStageReadoutCocone.ι.app n ≫
-        (colimit.ι dyadicRationalConstantDiagram n ≫
-          dyadicRationalConstantColimitReadout) :=
-      Category.assoc _ _ _
-    _ = dyadicStageReadoutCocone.ι.app n := by
-      rw [dyadicRationalConstantColimitReadout_on_stage]
-      exact Category.comp_id _
-    _ = colimit.ι dyadicStageDiagram n ≫
-        dyadicStageColimitReadout := by
-      rw [dyadicStageColimitReadout_stage]
+  change (colimit.ι dyadicStageDiagram n ≫
+      dyadicStageReadoutColimitMap) ≫
+        dyadicRationalConstantColimitReadout =
+    colimit.ι dyadicStageDiagram n ≫ dyadicStageColimitReadout
+  rw [dyadicStageReadoutColimitMap_on_stage n]
+  dsimp [dyadicStageReadoutCocone, dyadicRationalConstantDiagram]
+  rw [Category.assoc]
+  rw [dyadicRationalConstantColimitReadout_on_stage n, Category.comp_id,
+    dyadicStageColimitReadout_stage n]
+  rfl
 
 end
 end InfoGeometry.Canonical.DyadicStageColimitCompatibleMap

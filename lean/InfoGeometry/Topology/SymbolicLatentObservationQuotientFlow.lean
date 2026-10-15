@@ -12,16 +12,11 @@ quotient action is intentionally supplied as a property: it is a genuine
 quotient-topology theorem, not a consequence of pointwise descent alone.
 -/
 
-def symbolicLatentObservationSetoid
+abbrev symbolicLatentObservationSetoid
     {X : Type*} [TopologicalSpace X]
     {ι : Type*} [Fintype ι]
-    (S : FiniteSymbolicLatentSystem X ι) : Setoid X where
-  r x y := S.obs x = S.obs y
-  iseqv := {
-    refl := by intro x; rfl
-    symm := by intro x y h; exact h.symm
-    trans := by intro x y z hxy hyz; exact hxy.trans hyz
-  }
+    (S : FiniteSymbolicLatentSystem X ι) : Setoid X :=
+  symbolicObservationalSetoid S
 
 abbrev SymbolicLatentObservationQuotient
     {X : Type*} [TopologicalSpace X]
@@ -84,8 +79,9 @@ theorem descendedSymbolicLatentObservationFlow_continuous
       descendedSymbolicLatentObservationFlow Φ p.1 p.2)
     (isQuotientMap_quot_mk :
       Topology.IsQuotientMap (symbolicLatentObservationQuotientMap S))
-  simpa only [Function.comp_apply, descendedSymbolicLatentObservationFlow_mk] using
-    (continuous_quotient_mk'.comp Φ.continuous_act)
+  convert (continuous_quotient_mk'.comp Φ.continuous_act) using 1
+  ext p
+  rfl
 
 def symbolicLatentObservationQuotientFlow
     {X : Type*} [TopologicalSpace X]

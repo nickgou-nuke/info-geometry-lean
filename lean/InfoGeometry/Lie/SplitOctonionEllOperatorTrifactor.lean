@@ -20,6 +20,7 @@ namespace InfoGeometry.Lie.SplitOctonionEllOperatorTrifactor
 
 open InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 open InfoGeometry.Algebra.Zorn.SplitQuaternionCore
+open InfoGeometry.Canonical.ZornMatrix
 open InfoGeometry.Lie.SplitOctonionEllPolarization
 open InfoGeometry.Physics.Algebra
 
@@ -42,10 +43,12 @@ theorem ellCommutator_cube_apply (X : CZ) :
   ext i <;>
     simp [ellCommutator, lUnit,
       InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul,
-      Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv,
-      InfoGeometry.Canonical.ZornMatrix.dot,
-      InfoGeometry.Canonical.ZornMatrix.cross]
-  all_goals (try fin_cases i) <;> ring_nf
+      smul_a, smul_b, smul_x, smul_y,
+      dot, cross]
+  · ring
+  · ring
+  · fin_cases i <;> simp <;> ring
+  · fin_cases i <;> simp <;> ring
 
 /-- Basis-independent operator identity `(ad_ell)^3 = 4 ad_ell`. -/
 theorem ellCommutator_cube :
@@ -65,6 +68,10 @@ theorem ellGrading_tripotent : ellGrading ^ 3 = ellGrading := by
   rw [ellCommutator_cube_apply]
   module
 
+theorem ellGrading_tripotent_mul : ellGrading * ellGrading * ellGrading = ellGrading := by
+  have h := ellGrading_tripotent
+  rwa [pow_succ, pow_succ, pow_one] at h
+
 /-- Positive projector of the normalized axial flow. -/
 noncomputable def flowPPlus : EndCZ :=
   projPos ellGrading
@@ -78,16 +85,13 @@ noncomputable def flowPMinus : EndCZ :=
   projNeg ellGrading
 
 theorem flowPPlus_idempotent : flowPPlus * flowPPlus = flowPPlus := by
-  exact projPos_idempotent (T := ellGrading) (by
-    simpa [pow_three] using ellGrading_tripotent)
+  exact projPos_idempotent (T := ellGrading) ellGrading_tripotent_mul
 
 theorem flowPZero_idempotent : flowPZero * flowPZero = flowPZero := by
-  exact projZero_idempotent (T := ellGrading) (by
-    simpa [pow_three] using ellGrading_tripotent)
+  exact projZero_idempotent (T := ellGrading) ellGrading_tripotent_mul
 
 theorem flowPMinus_idempotent : flowPMinus * flowPMinus = flowPMinus := by
-  exact projNeg_idempotent (T := ellGrading) (by
-    simpa [pow_three] using ellGrading_tripotent)
+  exact projNeg_idempotent (T := ellGrading) ellGrading_tripotent_mul
 
 /-- The three native operator projectors resolve the identity. -/
 theorem flow_projectors_sum :
@@ -101,9 +105,7 @@ theorem ellGrading_mul_flowPZero : ellGrading * flowPZero = 0 := by
     ellGrading * (1 - ellGrading * ellGrading) =
         ellGrading - ellGrading * ellGrading * ellGrading := by noncomm_ring
     _ = 0 := by
-      have h : ellGrading * ellGrading * ellGrading = ellGrading := by
-        simpa [pow_three] using ellGrading_tripotent
-      rw [h]
+      rw [ellGrading_tripotent_mul]
       simp
 
 /-- The normalized generator is reconstructed from its active projectors. -/

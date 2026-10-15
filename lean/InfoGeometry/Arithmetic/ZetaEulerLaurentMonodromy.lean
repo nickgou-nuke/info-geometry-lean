@@ -38,8 +38,8 @@ open InfoGeometry.Projective.KleinQuadric.DeRhamMonodromy
 /-! ## 1. Logarithmic coordinate and Euler derivative -/
 
 /-- Pull a function on `ℂˣ` back to its logarithmic universal-cover coordinate. -/
-def expPullback (f : ℂ → ℂ) (y : ℂ) : ℂ :=
-  f (Complex.exp y)
+def expPullback (f : ℂ → ℂ) : ℂ → ℂ :=
+  f ∘ Complex.exp
 
 /-- Euler/logarithmic derivative in the argument: `x f'(x)`. -/
 def eulerDerivative (f : ℂ → ℂ) (x : ℂ) : ℂ :=
@@ -51,8 +51,9 @@ theorem hasDerivAt_expPullback
     {f : ℂ → ℂ} {y a : ℂ}
     (hf : HasDerivAt f a (Complex.exp y)) :
     HasDerivAt (expPullback f) (Complex.exp y * a) y := by
-  simpa [expPullback, mul_comm] using
-    hf.comp y (Complex.hasDerivAt_exp y)
+  have h := hf.comp y (Complex.hasDerivAt_exp y)
+  rw [mul_comm] at h
+  exact h
 
 /-- Derivative readback of `d/d(log x) = x d/dx`. -/
 theorem deriv_expPullback_eq_eulerDerivative
@@ -60,9 +61,7 @@ theorem deriv_expPullback_eq_eulerDerivative
     (hf : DifferentiableAt ℂ f (Complex.exp y)) :
     deriv (expPullback f) y =
       eulerDerivative f (Complex.exp y) := by
-  have h :=
-    hf.hasDerivAt.comp y (Complex.hasDerivAt_exp y)
-  simpa [expPullback, eulerDerivative, mul_comm] using h.deriv
+  exact (hasDerivAt_expPullback hf.hasDerivAt).deriv
 
 /-! ## 2. Exact algebraic Euler operator on polynomials -/
 

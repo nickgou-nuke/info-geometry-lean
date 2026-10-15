@@ -87,6 +87,7 @@ theorem spatialAnnihilator_vacuum_eq_zero :
     rw [h0x, h1x]
     dsimp [prependBitFunction]
     rw [hFx, hTx]
+  change (star vLeft) vacuumL2 - (star vRight) vacuumL2 = 0
   rw [hLeft, hRight, h_const_left, sub_self]
 
 /-- 🏆 THEOREM 2: $A_{\mathrm{ann}} (V_0 \Omega) = \Omega$. -/
@@ -99,6 +100,8 @@ theorem spatialAnnihilator_apply_vLeft_vacuum :
     have h0 := ContinuousLinearMap.ext_iff.mp
       (normalizedPrependBitLpAdjoint_comp_cross_eq_zero (show (true : Bool) ≠ false by decide)) vacuumL2
     exact h0
+  change (star vLeft) (vLeft vacuumL2) -
+    (star vRight) (vLeft vacuumL2) = vacuumL2
   rw [h_self, h_cross, sub_zero]
 
 /-- 🏆 THEOREM 3: The annihilator $A_{\mathrm{ann}}$ is strictly nonzero. -/

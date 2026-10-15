@@ -10,7 +10,22 @@ inductive ChiSector
   | pm
   | mp
   | mm
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype ChiSector :=
+  Fintype.ofEquiv (Fin 4)
+    { toFun := fun i => match i.val with
+        | 0 => .pp
+        | 1 => .pm
+        | 2 => .mp
+        | _ => .mm
+      invFun := fun σ => match σ with
+        | .pp => 0
+        | .pm => 1
+        | .mp => 2
+        | .mm => 3
+      left_inv := by intro i; fin_cases i <;> rfl
+      right_inv := by intro σ; cases σ <;> rfl }
 
 /-- The central idempotent cutting out a single `χ`-sector in the commutative four-sector model. -/
 def chiSectorIdempotent (σ : ChiSector) : ChiSector → ℝ :=

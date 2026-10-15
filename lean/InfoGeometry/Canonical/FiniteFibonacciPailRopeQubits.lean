@@ -38,7 +38,13 @@ inductive PailRope where
   | pail
   /-- The `(ε 1 ε)` double rope, representing computational bit `1`. -/
   | rope
-  deriving DecidableEq, Repr, Fintype
+  deriving DecidableEq, Repr
+
+instance : Fintype PailRope where
+  elems := {PailRope.pail, PailRope.rope}
+  complete := by
+    intro x
+    cases x <;> simp
 
 namespace PailRope
 

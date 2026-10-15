@@ -33,7 +33,11 @@ open PrimeBitWittenIndex
 inductive Occupancy where
   | empty
   | occupied
-  deriving DecidableEq, Repr, Fintype
+  deriving DecidableEq, Repr
+
+instance : Fintype Occupancy where
+  elems := {.empty, .occupied}
+  complete occupancy := by cases occupancy <;> decide
 
 namespace Occupancy
 

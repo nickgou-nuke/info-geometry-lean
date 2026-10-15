@@ -10,14 +10,12 @@ open Quaternion
 lemma left_alternative (x y : SplitOct) : x * (x * y) = (x * x) * y := by
   ext1 <;> ext1 <;> {
     dsimp [mul_def, add_def, sub_def, neg_def, star]
-    simp only [re_mul, imI_mul, imJ_mul, imK_mul, re_add, imI_add, imJ_add, imK_add, re_sub, imI_sub, imJ_sub, imK_sub, re_neg, imI_neg, imJ_neg, imK_neg]
     ring
   }
 
 lemma right_alternative (x y : SplitOct) : (x * y) * y = x * (y * y) := by
   ext1 <;> ext1 <;> {
     dsimp [mul_def, add_def, sub_def, neg_def, star]
-    simp only [re_mul, imI_mul, imJ_mul, imK_mul, re_add, imI_add, imJ_add, imK_add, re_sub, imI_sub, imJ_sub, imK_sub, re_neg, imI_neg, imJ_neg, imK_neg]
     ring
   }
 

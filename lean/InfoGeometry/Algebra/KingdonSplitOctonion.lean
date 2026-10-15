@@ -243,6 +243,53 @@ theorem scalar_eq_smul_one (r : ℝ) : scalar r = r • (1 : AbstractKingdon) :=
 @[simp] theorem scalar_zero : scalar 0 = 0 := by
   simp [scalar]
 
+@[simp] theorem scalar_add (r s : ℝ) : scalar (r + s) = scalar r + scalar s := by
+  simp [scalar, Unitization.inl_add, InfoGeometry.Algebra.Kingdon.Algebra.mk_add]
+
+noncomputable def scale (r : ℝ) (x : AbstractKingdon) : AbstractKingdon := scalar r * x
+
+theorem scale_eq_smul (r : ℝ) (x : AbstractKingdon) : scale r x = r • x := by
+  exact InfoGeometry.Algebra.Kingdon.Algebra.scalar_mul formedBilin r x
+
+theorem scale_coeff_add (r s : ℝ) (x : AbstractKingdon) :
+    scale (r + s) x = scale r x + scale s x := by
+  simp only [scale, scalar_add, add_mul]
+
+theorem add_smul_abstract (r s : ℝ) (x : AbstractKingdon) :
+    (r + s) • x = r • x + s • x := by
+  simpa only [scale_eq_smul] using scale_coeff_add r s x
+
+theorem neg_smul_abstract (r : ℝ) (x : AbstractKingdon) :
+    (-r) • x = -(r • x) := neg_smul r x
+
+theorem sub_smul_abstract (r s : ℝ) (x : AbstractKingdon) :
+    (r - s) • x = r • x - s • x := sub_smul r s x
+
+theorem scale_add (r : ℝ) (x y : AbstractKingdon) :
+    scale r x + scale r y = scale r (x + y) := by
+  simp only [scale]
+  exact (mul_add (scalar r) x y).symm
+
+theorem mul_neg_abstract (a b : AbstractKingdon) : a * (-b) = -(a * b) := by
+  apply eq_neg_of_add_eq_zero_left
+  rw [← mul_add, neg_add_cancel, mul_zero]
+
+theorem neg_mul_abstract (a b : AbstractKingdon) : (-a) * b = -(a * b) := by
+  apply eq_neg_of_add_eq_zero_left
+  rw [← add_mul, neg_add_cancel, zero_mul]
+
+theorem smul_add_abstract (r : ℝ) (x y : AbstractKingdon) :
+    r • (x + y) = r • x + r • y := by
+  rw [← scale_eq_smul, ← scale_add, scale_eq_smul, scale_eq_smul]
+
+theorem smul_neg_abstract (r : ℝ) (x : AbstractKingdon) :
+    r • (-x) = -(r • x) := by
+  rw [← scale_eq_smul, scale, mul_neg_abstract, ← scale, scale_eq_smul]
+
+theorem smul_sub_abstract (r : ℝ) (x y : AbstractKingdon) :
+    r • (x - y) = r • x - r • y := by
+  rw [sub_eq_add_neg, smul_add_abstract, smul_neg_abstract, sub_eq_add_neg]
+
 theorem formedBilin_basisVec (i j : Fin 3) :
     formedBilin (basisVec i) (basisVec j) = if i = j then 2 else 0 := by
   fin_cases i <;> fin_cases j <;>
@@ -255,10 +302,12 @@ theorem basisGenerator_sq (i : Fin 3) :
   change basisGenerator i * basisGenerator i + basisGenerator i * basisGenerator i = scalar 2 at h
   rw [scalar_eq_smul_one] at h
   have hs := congrArg (fun x : AbstractKingdon => ((2 : ℝ)⁻¹) • x) h
-  norm_num [smul_add, ← add_smul] at hs
-  calc
-    basisGenerator i * basisGenerator i = (1 / 2 : ℝ) • (2 : ℝ) • (1 : AbstractKingdon) := hs
-    _ = 1 := by rw [← mul_smul]; norm_num
+  rw [smul_add_abstract, ← add_smul_abstract] at hs
+  have hhalf : ((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) = (1 : ℝ) := by norm_num
+  rw [hhalf, one_smul, smul_smul] at hs
+  have htwo : ((2 : ℝ)⁻¹ * (2 : ℝ)) = (1 : ℝ) := by norm_num
+  rw [htwo, one_smul] at hs
+  exact hs
 
 theorem basisGenerator_anticomm {i j : Fin 3} (hij : i ≠ j) :
     basisGenerator i * basisGenerator j = -(basisGenerator j * basisGenerator i) := by
@@ -267,14 +316,6 @@ theorem basisGenerator_anticomm {i j : Fin 3} (hij : i ≠ j) :
   change basisGenerator i * basisGenerator j + basisGenerator j * basisGenerator i = scalar 0 at h
   rw [scalar_zero] at h
   exact eq_neg_of_add_eq_zero_left h
-
-theorem mul_neg_abstract (a b : AbstractKingdon) : a * (-b) = -(a * b) := by
-  apply eq_neg_of_add_eq_zero_left
-  rw [← mul_add, neg_add_cancel, mul_zero]
-
-theorem neg_mul_abstract (a b : AbstractKingdon) : (-a) * b = -(a * b) := by
-  apply eq_neg_of_add_eq_zero_left
-  rw [← add_mul, neg_add_cancel, zero_mul]
 
 theorem basisBivector_sq {i j : Fin 3} (hij : i ≠ j) :
     (basisGenerator i * basisGenerator j) * (basisGenerator i * basisGenerator j) = -1 := by
@@ -327,8 +368,6 @@ theorem realization_smul (r : ℝ) (x : AbstractKingdon) :
   rw [map_mul, realization_scalar, InfoGeometry.Physics.ZornMatrixSU3.smul_mul_zorn,
     one_mul]
 
-noncomputable def scale (r : ℝ) (x : AbstractKingdon) : AbstractKingdon := scalar r * x
-
 /-- Products of symmetric generators span the antisymmetric off-diagonal space. -/
 noncomputable def anti (v : ThreeSpace) : AbstractKingdon :=
   scale (v 0) (InfoGeometry.Algebra.Kingdon.Algebra.ι formedBilin (basisVec 1) *
@@ -344,9 +383,6 @@ noncomputable def upper (v : ThreeSpace) : AbstractKingdon :=
 noncomputable def lower (v : ThreeSpace) : AbstractKingdon :=
   scale ((2 : ℝ)⁻¹) (InfoGeometry.Algebra.Kingdon.Algebra.ι formedBilin v + anti v)
 
-theorem scale_eq_smul (r : ℝ) (x : AbstractKingdon) : scale r x = r • x := by
-  exact InfoGeometry.Algebra.Kingdon.Algebra.scalar_mul formedBilin r x
-
 @[simp] theorem smul_zero_abstract (r : ℝ) : r • (0 : AbstractKingdon) = 0 := by
   rw [← InfoGeometry.Algebra.Kingdon.Algebra.scalar_mul, mul_zero]
 
@@ -354,10 +390,6 @@ theorem scale_mul_scale (r s : ℝ) (x y : AbstractKingdon) :
     scale r x * scale s y = scale (r * s) (x * y) := by
   rw [scale_eq_smul, scale_eq_smul, scale_eq_smul]
   rw [smul_mul_assoc, mul_smul_comm, mul_smul]
-
-theorem scale_add (r : ℝ) (x y : AbstractKingdon) :
-    scale r x + scale r y = scale r (x + y) := by
-  simp [scale_eq_smul, smul_add]
 
 @[simp] theorem anti_basisVec_zero :
     anti (basisVec 0) = basisGenerator 1 * basisGenerator 2 := by
@@ -370,23 +402,6 @@ theorem scale_add (r : ℝ) (x y : AbstractKingdon) :
 @[simp] theorem anti_basisVec_two :
     anti (basisVec 2) = basisGenerator 0 * basisGenerator 1 := by
   simp [anti, basisVec, scale, scalar, basisGenerator]
-
-@[simp] theorem scalar_add (r s : ℝ) : scalar (r + s) = scalar r + scalar s := by
-  simp [scalar, Unitization.inl_add, InfoGeometry.Algebra.Kingdon.Algebra.mk_add]
-
-theorem scale_coeff_add (r s : ℝ) (x : AbstractKingdon) :
-    scale (r + s) x = scale r x + scale s x := by
-  simp only [scale, scalar_add, add_mul]
-
-theorem add_smul_abstract (r s : ℝ) (x : AbstractKingdon) :
-    (r + s) • x = r • x + s • x := by
-  simpa only [scale_eq_smul] using scale_coeff_add r s x
-
-theorem neg_smul_abstract (r : ℝ) (x : AbstractKingdon) :
-    (-r) • x = -(r • x) := neg_smul r x
-
-theorem sub_smul_abstract (r s : ℝ) (x : AbstractKingdon) :
-    (r - s) • x = r • x - s • x := sub_smul r s x
 
 @[simp] theorem anti_add (u v : ThreeSpace) : anti (u + v) = anti u + anti v := by
   simp only [anti, Pi.add_apply, scale_coeff_add]
@@ -416,20 +431,19 @@ theorem sub_smul_abstract (r s : ℝ) (x : AbstractKingdon) :
 
 @[simp] theorem anti_smul (r : ℝ) (v : ThreeSpace) :
     anti (r • v) = r • anti v := by
-  simp [anti, Pi.smul_apply, scale_eq_smul, smul_add, smul_eq_mul,
-    mul_smul, mul_assoc]
+  simp only [anti, Pi.smul_apply, smul_eq_mul, scale_eq_smul, smul_add_abstract, smul_smul]
 
 @[simp] theorem upper_smul (r : ℝ) (v : ThreeSpace) :
     upper (r • v) = r • upper v := by
   simp only [upper, InfoGeometry.Algebra.Kingdon.Algebra.ι_smul, anti_smul, scale_eq_smul]
   rw [InfoGeometry.Algebra.Kingdon.Algebra.scalar_mul]
-  simp [smul_sub, smul_smul, mul_comm]
+  rw [← smul_sub_abstract, smul_smul, smul_smul, mul_comm]
 
 @[simp] theorem lower_smul (r : ℝ) (v : ThreeSpace) :
     lower (r • v) = r • lower v := by
   simp only [lower, InfoGeometry.Algebra.Kingdon.Algebra.ι_smul, anti_smul, scale_eq_smul]
   rw [InfoGeometry.Algebra.Kingdon.Algebra.scalar_mul]
-  simp [smul_add, smul_smul, mul_comm]
+  rw [← smul_add_abstract, smul_smul, smul_smul, mul_comm]
 
 theorem smul_scalar (r s : ℝ) :
     r • scalar s = scalar (r * s) := by
@@ -496,7 +510,8 @@ theorem lower_eq_basis_sum (v : ThreeSpace) :
 theorem upper_add_lower (v : ThreeSpace) :
     upper v + lower v = InfoGeometry.Algebra.Kingdon.Algebra.ι formedBilin v := by
   simp only [upper, lower, scale, scalar]
-  rw [InfoGeometry.Algebra.Kingdon.Algebra.scalar_mul, InfoGeometry.Algebra.Kingdon.Algebra.scalar_mul, smul_sub, smul_add]
+  rw [InfoGeometry.Algebra.Kingdon.Algebra.scalar_mul, InfoGeometry.Algebra.Kingdon.Algebra.scalar_mul,
+    smul_sub_abstract, smul_add_abstract]
   calc
     (2 : ℝ)⁻¹ • InfoGeometry.Algebra.Kingdon.Algebra.ι formedBilin v - (2 : ℝ)⁻¹ • anti v +
         ((2 : ℝ)⁻¹ • InfoGeometry.Algebra.Kingdon.Algebra.ι formedBilin v + (2 : ℝ)⁻¹ • anti v) =
@@ -707,14 +722,12 @@ theorem distinguished_bivector_anticomm :
 @[simp] theorem diagonalUpper_sq : diagonalUpper * diagonalUpper = diagonalUpper := by
   have h := congrArg (fun a : AbstractKingdon => diagonalUpper * a)
     diagonalUpper_add_diagonalLower
-  dsimp only at h
   rw [mul_add, diagonalUpper_mul_diagonalLower, add_zero, mul_one] at h
   exact h
 
 @[simp] theorem diagonalLower_sq : diagonalLower * diagonalLower = diagonalLower := by
   have h := congrArg (fun a : AbstractKingdon => diagonalLower * a)
     diagonalUpper_add_diagonalLower
-  dsimp only at h
   rw [mul_add, diagonalLower_mul_diagonalUpper, zero_add, mul_one] at h
   exact h
 
@@ -759,7 +772,7 @@ theorem upperBasisProductForward {i j k : Fin 3}
     scale 2⁻¹ (basisGenerator k + basisGenerator i * basisGenerator j)
   rw [upperRawProductForward hij hjk hik]
   rw [scale_eq_smul, scale_eq_smul]
-  rw [smul_add, ← add_smul]
+  rw [smul_add_abstract, ← add_smul_abstract]
   norm_num
   abel
 
@@ -778,9 +791,9 @@ theorem upperBasisProductReverse {i j k : Fin 3}
   rw [upperRawProductReverse hij hjk hik]
   rw [scale_eq_smul, scale_eq_smul]
   conv_rhs => rw [← neg_one_smul ℝ, smul_smul]
-  rw [smul_add, ← add_smul]
+  rw [smul_add_abstract, ← add_smul_abstract]
   norm_num
-  rw [smul_sub, smul_neg]
+  rw [sub_eq_add_neg, smul_add_abstract, smul_neg_abstract, smul_neg_abstract]
   abel
 
 theorem upperRawSquare {i j k : Fin 3} (hjk : j ≠ k) :
@@ -854,7 +867,7 @@ theorem lowerRawProductForward {i j k : Fin 3}
   abel
 
 theorem lowerRawProductReverse {i j k : Fin 3}
-    (hij : i ≠ j) (hjk : j ≠ k) (hik : i ≠ k) :
+    (hij : i ≠ j) (_hjk : j ≠ k) (_hik : i ≠ k) :
     (basisGenerator j + basisGenerator k * basisGenerator i) *
       (basisGenerator i + basisGenerator j * basisGenerator k) =
       (basisGenerator k - basisGenerator i * basisGenerator j) +
@@ -880,9 +893,9 @@ theorem lowerBasisProductForward {i j k : Fin 3}
     -scale 2⁻¹ (basisGenerator k - basisGenerator i * basisGenerator j)
   rw [lowerRawProductForward hij hjk hik]
   rw [scale_eq_smul, scale_eq_smul]
-  rw [smul_add, ← add_smul]
+  rw [smul_add_abstract, ← add_smul_abstract]
   norm_num
-  simp only [smul_sub]
+  rw [smul_sub_abstract, smul_sub_abstract]
   abel
 
 theorem lowerBasisProductReverse {i j k : Fin 3}
@@ -899,7 +912,7 @@ theorem lowerBasisProductReverse {i j k : Fin 3}
     scale 2⁻¹ (basisGenerator k - basisGenerator i * basisGenerator j)
   rw [lowerRawProductReverse hij hjk hik]
   rw [scale_eq_smul, scale_eq_smul]
-  rw [smul_add, ← add_smul]
+  rw [smul_add_abstract, ← add_smul_abstract]
   norm_num
 
 theorem lowerRawSquare {i j k : Fin 3} (hjk : j ≠ k) :
@@ -1005,9 +1018,8 @@ theorem lowerBasisSquareOfAnti {i j k : Fin 3} (hjk : j ≠ k)
   have hrb : r * b = -t := by
     calc
       r * b = b * (a * c) := by
-        simpa [a, b, c, r] using
-          (InfoGeometry.Algebra.Kingdon.Algebra.antiassociate formedBilin
-            (basisVec 2) (basisVec 0) (basisVec 1))
+        exact (InfoGeometry.Algebra.Kingdon.Algebra.antiassociate formedBilin
+          (basisVec 2) (basisVec 0) (basisVec 1))
       _ = -t := by
         rw [show a * c = -r by
           rw [basisGenerator_anticomm (by decide : (0 : Fin 3) ≠ 2)],
@@ -1117,7 +1129,7 @@ theorem lowerBasisSquareOfAnti {i j k : Fin 3} (hjk : j ≠ k)
     simpa [a, b, c, r, t, q] using
       (basisTrivector_mul_bivector (i := (0 : Fin 3)) (j := 1) (k := 2) (by decide))
   have hleft : (a + q) * (a - q) = (1 - t) + (1 - t) := by
-    simp only [add_mul, mul_sub, sub_eq_add_neg, mul_add]
+    simp only [add_mul, sub_eq_add_neg, mul_add]
     rw [mul_neg_abstract, mul_neg_abstract, ha, hq, hqa, neg_neg]
     abel
   have hinner : (1 - t) * (b - r) = 0 := by
@@ -1164,7 +1176,7 @@ theorem lowerBasisSquareOfAnti {i j k : Fin 3} (hjk : j ≠ k)
       neg_mul_abstract, mul_neg_abstract, neg_neg] at h
     simpa [a, b, c, q, r, t] using h
   have hleft : (a + q) * (a - q) = (1 - t) + (1 - t) := by
-    simp only [add_mul, mul_sub, sub_eq_add_neg, mul_add]
+    simp only [add_mul, sub_eq_add_neg, mul_add]
     rw [mul_neg_abstract, mul_neg_abstract, ha, hq, hqa, neg_neg]
     abel
   have hinner : (1 - t) * (c - r) = 0 := by
@@ -1185,7 +1197,6 @@ theorem lowerBasisSquareOfAnti {i j k : Fin 3} (hjk : j ≠ k)
     diagonalUpper * upper (basisVec 0) = upper (basisVec 0) := by
   have h := congrArg (fun a : AbstractKingdon => a * upper (basisVec 0))
     diagonalUpper_add_diagonalLower
-  dsimp only at h
   rw [add_mul, diagonalLower_mul_upper_basisVec_zero, add_zero, one_mul] at h
   exact h
 
@@ -1193,7 +1204,6 @@ theorem lowerBasisSquareOfAnti {i j k : Fin 3} (hjk : j ≠ k)
     diagonalUpper * upper (basisVec 1) = upper (basisVec 1) := by
   have h := congrArg (fun a : AbstractKingdon => a * upper (basisVec 1))
     diagonalUpper_add_diagonalLower
-  dsimp only at h
   rw [add_mul, diagonalLower_mul_upper_basisVec_one, add_zero, one_mul] at h
   exact h
 
@@ -1201,7 +1211,6 @@ theorem lowerBasisSquareOfAnti {i j k : Fin 3} (hjk : j ≠ k)
     diagonalUpper * upper (basisVec 2) = upper (basisVec 2) := by
   have h := congrArg (fun a : AbstractKingdon => a * upper (basisVec 2))
     diagonalUpper_add_diagonalLower
-  dsimp only at h
   rw [add_mul, diagonalLower_mul_upper_basisVec_two, add_zero, one_mul] at h
   exact h
 
@@ -1209,7 +1218,6 @@ theorem lowerBasisSquareOfAnti {i j k : Fin 3} (hjk : j ≠ k)
     upper (basisVec 0) * diagonalLower = upper (basisVec 0) := by
   have h := congrArg (fun a : AbstractKingdon => upper (basisVec 0) * a)
     diagonalUpper_add_diagonalLower
-  dsimp only at h
   rw [mul_add, upper_basisVec_zero_mul_diagonalUpper, zero_add, mul_one] at h
   exact h
 
@@ -1217,7 +1225,6 @@ theorem lowerBasisSquareOfAnti {i j k : Fin 3} (hjk : j ≠ k)
     upper (basisVec 1) * diagonalLower = upper (basisVec 1) := by
   have h := congrArg (fun a : AbstractKingdon => upper (basisVec 1) * a)
     diagonalUpper_add_diagonalLower
-  dsimp only at h
   rw [mul_add, upper_basisVec_one_mul_diagonalUpper, zero_add, mul_one] at h
   exact h
 
@@ -1225,7 +1232,6 @@ theorem lowerBasisSquareOfAnti {i j k : Fin 3} (hjk : j ≠ k)
     upper (basisVec 2) * diagonalLower = upper (basisVec 2) := by
   have h := congrArg (fun a : AbstractKingdon => upper (basisVec 2) * a)
     diagonalUpper_add_diagonalLower
-  dsimp only at h
   rw [mul_add, upper_basisVec_two_mul_diagonalUpper, zero_add, mul_one] at h
   exact h
 
@@ -1247,8 +1253,8 @@ theorem lowerBasisSquareOfAnti {i j k : Fin 3} (hjk : j ≠ k)
   have hP : (e - q) * (e + q) = (2 : ℝ) • (1 + e * q) := by
     simp only [mul_add, sub_mul]
     rw [he, hq, hqe]
-    norm_num
-    simp only [smul_add, two_smul]
+    rw [show (2 : ℝ) • (1 + e * q) = (1 + 1 : ℝ) • (1 + e * q) by norm_num]
+    rw [add_smul_abstract, one_smul]
     abel
   have htriv_a : (e * q) * a = -(b * e) := by
     exact basisTrivector_mul_middle (i := 0) (j := 1) (k := 2) (by decide)
@@ -1361,9 +1367,8 @@ theorem lowerBasisSquareOfAnti {i j k : Fin 3} (hjk : j ≠ k)
   have hrb : r * b = -t := by
     calc
       r * b = b * (a * c) := by
-        simpa [a, b, c, r] using
-          (InfoGeometry.Algebra.Kingdon.Algebra.antiassociate formedBilin
-            (basisVec 2) (basisVec 0) (basisVec 1))
+        exact (InfoGeometry.Algebra.Kingdon.Algebra.antiassociate formedBilin
+          (basisVec 2) (basisVec 0) (basisVec 1))
       _ = -t := by
         rw [show a * c = -r by
           rw [basisGenerator_anticomm (by decide : (0 : Fin 3) ≠ 2)],
@@ -1451,7 +1456,6 @@ theorem lowerBasisSquareOfAnti {i j k : Fin 3} (hjk : j ≠ k)
     diagonalLower * lower (basisVec 0) = lower (basisVec 0) := by
   have h := congrArg (fun a : AbstractKingdon => a * lower (basisVec 0))
     diagonalUpper_add_diagonalLower
-  dsimp only at h
   rw [add_mul, diagonalUpper_mul_lower_basisVec_zero, zero_add, one_mul] at h
   exact h
 
@@ -1459,7 +1463,6 @@ theorem lowerBasisSquareOfAnti {i j k : Fin 3} (hjk : j ≠ k)
     diagonalLower * lower (basisVec 1) = lower (basisVec 1) := by
   have h := congrArg (fun a : AbstractKingdon => a * lower (basisVec 1))
     diagonalUpper_add_diagonalLower
-  dsimp only at h
   rw [add_mul, diagonalUpper_mul_lower_basisVec_one, zero_add, one_mul] at h
   exact h
 
@@ -1467,7 +1470,6 @@ theorem lowerBasisSquareOfAnti {i j k : Fin 3} (hjk : j ≠ k)
     diagonalLower * lower (basisVec 2) = lower (basisVec 2) := by
   have h := congrArg (fun a : AbstractKingdon => a * lower (basisVec 2))
     diagonalUpper_add_diagonalLower
-  dsimp only at h
   rw [add_mul, diagonalUpper_mul_lower_basisVec_two, zero_add, one_mul] at h
   exact h
 
@@ -1475,7 +1477,6 @@ theorem lowerBasisSquareOfAnti {i j k : Fin 3} (hjk : j ≠ k)
     lower (basisVec 0) * diagonalUpper = lower (basisVec 0) := by
   have h := congrArg (fun a : AbstractKingdon => lower (basisVec 0) * a)
     diagonalUpper_add_diagonalLower
-  dsimp only at h
   rw [mul_add, lower_basisVec_zero_mul_diagonalLower, add_zero, mul_one] at h
   exact h
 
@@ -1483,7 +1484,6 @@ theorem lowerBasisSquareOfAnti {i j k : Fin 3} (hjk : j ≠ k)
     lower (basisVec 1) * diagonalUpper = lower (basisVec 1) := by
   have h := congrArg (fun a : AbstractKingdon => lower (basisVec 1) * a)
     diagonalUpper_add_diagonalLower
-  dsimp only at h
   rw [mul_add, lower_basisVec_one_mul_diagonalLower, add_zero, mul_one] at h
   exact h
 
@@ -1491,7 +1491,6 @@ theorem lowerBasisSquareOfAnti {i j k : Fin 3} (hjk : j ≠ k)
     lower (basisVec 2) * diagonalUpper = lower (basisVec 2) := by
   have h := congrArg (fun a : AbstractKingdon => lower (basisVec 2) * a)
     diagonalUpper_add_diagonalLower
-  dsimp only at h
   rw [mul_add, lower_basisVec_two_mul_diagonalLower, add_zero, mul_one] at h
   exact h
 
@@ -1796,11 +1795,7 @@ theorem lowerBasisUpperProductReverse {i j k : Fin 3}
     upper_basisVec_two_mul_zero, upper_basisVec_two_mul_one,
     smul_zero_abstract, InfoGeometry.Physics.ZornMatrixSU3.crossProduct,
     ZornVectorMatrixExplicit.cross3]
-  simp only [smul_smul]
-  ring_nf
-  simp only [sub_smul_abstract, add_smul_abstract]
-  simp only [neg_smul_abstract, smul_smul]
-  ring_nf
+  simp only [smul_add_abstract, smul_neg_abstract, smul_smul, sub_smul_abstract, mul_comm]
   abel_nf
 
 @[simp] theorem lower_mul_lower (u v : ThreeSpace) :
@@ -1813,11 +1808,7 @@ theorem lowerBasisUpperProductReverse {i j k : Fin 3}
     lower_basisVec_two_mul_zero, lower_basisVec_two_mul_one,
     smul_zero_abstract, InfoGeometry.Physics.ZornMatrixSU3.crossProduct,
     ZornVectorMatrixExplicit.cross3]
-  simp only [smul_smul]
-  ring_nf
-  simp only [sub_smul_abstract, add_smul_abstract]
-  simp only [neg_smul_abstract, smul_smul]
-  ring_nf
+  simp only [smul_add_abstract, smul_neg_abstract, smul_smul, sub_smul_abstract, mul_comm]
   abel_nf
 
 @[simp] theorem upper_mul_lower (u v : ThreeSpace) :
@@ -1870,9 +1861,7 @@ theorem preimage_coord (X : ZornMatrix) :
     preimage X =
       X.a • diagonalUpper + X.b • diagonalLower + upper X.x + lower X.y := by
   rw [preimage, scalar_eq_smul_one, scale_eq_smul,
-    ← diagonalUpper_add_diagonalLower]
-  simp only [smul_add, add_assoc]
-  rw [sub_smul_abstract]
+    ← diagonalUpper_add_diagonalLower, smul_add_abstract, sub_smul_abstract]
   abel
 
 @[simp] theorem preimage_zero : preimage 0 = 0 := by
@@ -1929,9 +1918,9 @@ noncomputable def preimageAddHom : ZornMatrix →+ AbstractKingdon where
     simp [upper, anti, scale, scalar]
   rw [sub_eq_add_neg, upper_add, upper_add, upper_smul, upper_smul,
     upper_neg_local]
-  simp only [add_smul_abstract, smul_smul]
+  simp only [smul_add_abstract, add_smul_abstract, smul_smul]
   ring_nf
-  abel
+  abel_nf
 
 noncomputable def preimageHom : ZornMatrix →+* AbstractKingdon where
   toFun := preimage

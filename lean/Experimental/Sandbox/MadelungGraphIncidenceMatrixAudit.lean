@@ -1,0 +1,12 @@
+import Experimental.Sandbox.MadelungGraphIncidenceMatrix
+
+namespace InfoGeometry.Experimental.Sandbox.MadelungGraphIncidenceMatrix.Audit
+
+open InfoGeometry.Experimental.Sandbox.MadelungGraphIncidenceMatrix
+
+#check graphIncidenceMatrix_mulVec_apply
+#check graphIncidenceMatrix_mulVec
+#check graphIncidenceMatrix_mulVec_eq_zero_iff_componentwise_constant
+#print axioms graphIncidenceMatrix_mulVec_eq_zero_iff_componentwise_constant
+
+end InfoGeometry.Experimental.Sandbox.MadelungGraphIncidenceMatrix.Audit

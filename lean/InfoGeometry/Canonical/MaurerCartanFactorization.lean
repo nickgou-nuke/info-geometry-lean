@@ -1,7 +1,7 @@
 import Mathlib.Algebra.Ring.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Module.LinearMap.Basic
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import Mathlib.Tactic
 import InfoGeometry.KMSGNS
 
@@ -98,7 +98,6 @@ def outZero : ModularFlowHomogeneousSpace A :=
 theorem modularFlowProjection_inner_zero (K : A) :
     modularFlowProjection (modularDerivation K) = outZero := by
   apply Quotient.sound
-  dsimp [outSetoid, innerDerivationEquiv]
   use K
   intro x
   dsimp [modularDerivation, adK]
@@ -124,7 +123,6 @@ theorem exact_sequence_inner_iff_kernel (D : Derivation A) :
     exact hx
   · intro ⟨K, hK⟩
     apply Quotient.sound
-    dsimp [outSetoid, innerDerivationEquiv]
     use K
     intro x
     have hx := hK x

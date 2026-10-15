@@ -62,7 +62,7 @@ theorem paper_conclusion_pareto_coldend_two_parameter_tomography :
           conclusion_fixed_resolution_pareto_coldend_log_cusp_delta :=
     mul_pos ha_pos hdelta_pos
   refine ⟨rfl, rfl, ?_, ?_, hdelta_pos, ha_pos, ?_⟩
-  · simpa using hdelta_eq
+  · rw [hdelta_eq]; rfl
   · rw [ha_eq]
     norm_num [conclusion_fixed_resolution_pareto_coldend_log_cusp_second_count,
       conclusion_fixed_resolution_pareto_coldend_log_cusp_top_count]

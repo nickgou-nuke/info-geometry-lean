@@ -92,8 +92,21 @@ theorem observedSymbolicLatentPathFamilyTopCatColimitImageCompHausReadout_repara
                     (observedSymbolicLatentPathFamilyReparametrizationImageCompHausHom
                       S R H h_obs)) ≫
                   observedSymbolicLatentPathFamilyImageInclusionTopCatHom S H h_obs
-            rw [Category.assoc]
-            rw [observedSymbolicLatentPathFamilyReparametrizationImageCompHausHom_inclusion]
+            calc
+              _ = observedSymbolicLatentPathFamilyTopCatColimitImageCompHausReadout
+                    S (reparametrizeSymbolicLatentPathFamily R H) h_obs ≫
+                    (compHausToTop.map
+                      (observedSymbolicLatentPathFamilyReparametrizationImageCompHausHom
+                        S R H h_obs) ≫
+                      observedSymbolicLatentPathFamilyImageInclusionTopCatHom
+                        S H h_obs) := by
+                exact congrArg
+                  (fun f =>
+                    observedSymbolicLatentPathFamilyTopCatColimitImageCompHausReadout
+                      S (reparametrizeSymbolicLatentPathFamily R H) h_obs ≫ f)
+                  (observedSymbolicLatentPathFamilyReparametrizationImageCompHausHom_inclusion
+                    S R H h_obs).symm
+              _ = _ := (Category.assoc _ _ _).symm
   have hz := congrArg (fun m => m z) hcomp
   change
     ((symbolicLatentPathFamilyReparametrizationColimitHom R ≫

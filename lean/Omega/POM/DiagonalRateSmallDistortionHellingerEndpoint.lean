@@ -41,9 +41,8 @@ private lemma pom_diagonal_rate_small_distortion_hellinger_endpoint_rate_hasDeri
   have hrate :
       HasDerivAt
         (pom_diagonal_rate_small_distortion_hellinger_endpoint_rate A)
-        ((1 - A ^ (2 : ℕ)) * (1 / δ)) δ := by
-    simpa [pom_diagonal_rate_small_distortion_hellinger_endpoint_rate] using
-      hlog.const_mul (1 - A ^ (2 : ℕ))
+        ((1 - A ^ (2 : ℕ)) * (1 / δ)) δ :=
+    hlog.const_mul (1 - A ^ (2 : ℕ))
   have hvalue :
       (1 - A ^ (2 : ℕ)) * (1 / δ) =
         -pom_diagonal_rate_small_distortion_hellinger_endpoint_lambda A δ := by

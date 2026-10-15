@@ -51,7 +51,9 @@ noncomputable def celestialOrderedFiberEquivPerm
     apply Subtype.ext
     funext j
     have hpoint := congrFun (congrArg Subtype.val hσ) (σ.symm j)
-    simpa [celestialPermute] using hpoint
+    simpa only [celestialOrderedConfigurationMap_apply,
+      ProjectiveNullUnorderedConfiguration.permute_apply,
+      Equiv.apply_symm_apply, celestialPermute_apply] using hpoint
 
 @[simp] theorem celestialOrderedFiberEquivPerm_apply
     (n : ℕ) (p : CelestialOrderedConfiguration n)

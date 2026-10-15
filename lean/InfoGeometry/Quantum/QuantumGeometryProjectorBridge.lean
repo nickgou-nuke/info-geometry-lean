@@ -167,7 +167,9 @@ theorem deriv_fst_quantumGeometryEinsteinTransportedOperatorPair_at_zero_eq_rela
     relativeModularDeriv (E := E) hMod
       (dualSheetLift (E := E) (quantumGeometryOp H x)) := by
   simpa [quantumGeometryEinsteinTransportedOperatorPair,
-    relativeModularKGenerator, relativeModularDeriv] using
+    relativeModularKGenerator, relativeModularDeriv, modularDeriv,
+    transportCommutator,
+    InfoGeometry.Canonical.BogoliubovTransport.lieBracket_eq_transportCommutator] using
     (InfoGeometry.Canonical.deriv_expTransport_at_zero
       (A := EndH)
       (X := relativeModularKGenerator (E := E) hMod)
@@ -254,10 +256,12 @@ theorem deriv_metricOfOperator_quantumGeometryEinsteinTransportedOperatorPair_at
         (relativeModularSourceDeriv (E := E) hMod CCI.liftedEinsteinAnomalyOperator)
         u v ) := by
   apply Prod.ext
-  · simpa [quantumGeometryEinsteinTransportedOperatorPair] using
+  · simpa [quantumGeometryEinsteinTransportedOperatorPair,
+    InfoGeometry.Canonical.ConformalUnification.CertifiedConformalInference.bogoliubovConjugate_liftedEinsteinAnomalyOperator] using
       deriv_metricOfOperator_modularTransport_conjugation_at_zero_eq_metricOf_relativeModularSourceDeriv_of_commute_gaugePart
         (E := E) hMod (dualSheetLift (E := E) (quantumGeometryOp H x)) hCommGaugeMetric u v
-  · simpa [quantumGeometryEinsteinTransportedOperatorPair] using
+  · simpa [quantumGeometryEinsteinTransportedOperatorPair,
+    InfoGeometry.Canonical.ConformalUnification.CertifiedConformalInference.bogoliubovConjugate_liftedEinsteinAnomalyOperator] using
       deriv_metricOfOperator_liftedEinsteinAnomalyOperator_relativeModularTransport_at_zero_eq_metricOf_relativeModularSourceDeriv_of_commute_gaugePart
         (E := E) CCI hMod hCommGaugePhase u v
 
@@ -303,10 +307,12 @@ theorem deriv_berryOfOperator_quantumGeometryEinsteinTransportedOperatorPair_at_
         (relativeModularSourceDeriv (E := E) hMod CCI.liftedEinsteinAnomalyOperator)
         u v ) := by
   apply Prod.ext
-  · simpa [quantumGeometryEinsteinTransportedOperatorPair] using
+  · simpa [quantumGeometryEinsteinTransportedOperatorPair,
+    InfoGeometry.Canonical.ConformalUnification.CertifiedConformalInference.bogoliubovConjugate_liftedEinsteinAnomalyOperator] using
       deriv_berryOfOperator_modularTransport_conjugation_at_zero_eq_berryOf_relativeModularSourceDeriv_of_commute_gaugePart
         (E := E) hMod (dualSheetLift (E := E) (quantumGeometryOp H x)) hCommGaugeMetric u v
-  · simpa [quantumGeometryEinsteinTransportedOperatorPair] using
+  · simpa [quantumGeometryEinsteinTransportedOperatorPair,
+    InfoGeometry.Canonical.ConformalUnification.CertifiedConformalInference.bogoliubovConjugate_liftedEinsteinAnomalyOperator] using
       deriv_berryOfOperator_liftedEinsteinAnomalyOperator_relativeModularTransport_at_zero_eq_berryOf_relativeModularSourceDeriv_of_commute_gaugePart
         (E := E) CCI hMod hCommGaugePhase u v
 
@@ -352,10 +358,12 @@ theorem deriv_berryTwoFormJEpsOfOperator_quantumGeometryEinsteinTransportedOpera
         (relativeModularSourceDeriv (E := E) hMod CCI.liftedEinsteinAnomalyOperator)
         u v ) := by
   apply Prod.ext
-  · simpa [quantumGeometryEinsteinTransportedOperatorPair] using
+  · simpa [quantumGeometryEinsteinTransportedOperatorPair,
+    InfoGeometry.Canonical.ConformalUnification.CertifiedConformalInference.bogoliubovConjugate_liftedEinsteinAnomalyOperator] using
       deriv_berryTwoFormJEpsOfOperator_modularTransport_conjugation_at_zero_eq_berryTwoFormJEpsOf_relativeModularSourceDeriv_of_commute_gaugePart
         (E := E) hMod (dualSheetLift (E := E) (quantumGeometryOp H x)) hCommGaugeMetric u v
-  · simpa [quantumGeometryEinsteinTransportedOperatorPair] using
+  · simpa [quantumGeometryEinsteinTransportedOperatorPair,
+    InfoGeometry.Canonical.ConformalUnification.CertifiedConformalInference.bogoliubovConjugate_liftedEinsteinAnomalyOperator] using
       deriv_berryTwoFormJEpsOfOperator_liftedEinsteinAnomalyOperator_relativeModularTransport_at_zero_eq_berryTwoFormJEpsOf_relativeModularSourceDeriv_of_commute_gaugePart
         (E := E) CCI hMod hCommGaugePhase u v
 
@@ -518,7 +526,8 @@ theorem deriv_quantumGeometryEinsteinTransportedOperatorPair_at_zero_eq_stateQGT
         (E := E)
         (relativeModularDeriv (E := E) hMod CCI.liftedEinsteinAnomalyOperator)
         u v := by
-          simpa [quantumGeometryEinsteinTransportedOperatorPair, berryOfOperator] using
+          simpa [quantumGeometryEinsteinTransportedOperatorPair, berryOfOperator,
+            InfoGeometry.Canonical.ConformalUnification.CertifiedConformalInference.bogoliubovConjugate_liftedEinsteinAnomalyOperator] using
             deriv_berryOfOperator_modularTransport_conjugation_at_zero_eq_berryOf_relativeModularDeriv
               (E := E) hMod CCI.liftedEinsteinAnomalyOperator u v
       _ =

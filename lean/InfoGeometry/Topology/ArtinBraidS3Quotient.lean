@@ -66,6 +66,7 @@ theorem s3ArtinGenerator_braid_relation :
         s3ArtinGenerator ⟨0, by decide⟩ =
       s3ArtinGenerator ⟨1, by decide⟩ * s3ArtinGenerator ⟨0, by decide⟩ *
         s3ArtinGenerator ⟨1, by decide⟩ := by
-  simpa [s3ArtinGenerator_zero, s3ArtinGenerator_one] using s3_adjacent_artin_relation
+  rw [s3ArtinGenerator_zero, s3ArtinGenerator_one]
+  exact s3_adjacent_artin_relation
 
 end InfoGeometry.Topology.ArtinBraidS3Quotient

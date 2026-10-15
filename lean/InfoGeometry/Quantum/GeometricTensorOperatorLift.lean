@@ -1374,7 +1374,8 @@ theorem isSelfAdjoint_modularComplexI_comp_of_star_eq_neg_of_commutesWithK
   let K : EndH := InfoGeometry.Canonical.TomitaTakesaki.clockAxis (E := E)
   have hCommMul :
       A * K = K * A := by
-    simpa [K] using hComm
+    change A.comp K = K.comp A
+    exact hComm
   change star (K * A) = K * A
   calc
     star (K * A)
@@ -1813,8 +1814,9 @@ theorem isPhaseLinear_modularSignEpsilon_comp_of_IsPhaseAntilinear
       A.comp (InfoGeometry.Canonical.TomitaTakesaki.clockAxis)
         =
       -((InfoGeometry.Canonical.TomitaTakesaki.clockAxis).comp A) := by
-    simpa [InfoGeometry.Canonical.TomitaTakesaki.clockAxis_eq_complex_i,
-      InfoGeometry.Krein.clockAxis_eq_complex_i] using hAnti
+    change A.comp (InfoGeometry.Krein.clockAxis (E := E)) =
+      -((InfoGeometry.Krein.clockAxis (E := E)).comp A)
+    exact hAnti
   have hEpsK :
       (modularSignEpsilon (E := E)).comp (InfoGeometry.Canonical.TomitaTakesaki.clockAxis)
         =

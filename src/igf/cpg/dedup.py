@@ -5,23 +5,19 @@ Discovers exact and structural AST equivalence classes via ArangoDB graph querie
 
 from __future__ import annotations
 
-import argparse
-import json
-import os
 import sys
 import time
-from collections import defaultdict
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Set, Tuple
+from typing import Any, Optional
 
 if __package__ in (None, ""):
     _REPO_ROOT = Path(__file__).resolve().parents[3]
     sys.path.insert(0, str(_REPO_ROOT / "src"))
     sys.path.insert(0, str(_REPO_ROOT))
 
-from igf.common.hashing import stable_hash
-from igf.common.json_io import dump_json, write_jsonl
+from igf.graph.arango_http import ArangoHttpTarget, execute_aql
+from igf.common.json_io import dump_json
 from igf.common.time_utils import utc_now_iso
 from igf.config import arango_database, arango_endpoint, arango_password, arango_username, load_repo_arango_env
 
@@ -50,25 +46,26 @@ class ArangoCPGDeduplicator:
         self._connect()
 
     def _connect(self) -> None:
-        try:
-            from arango import ArangoClient
-            client = ArangoClient(hosts=self.endpoint)
-            self.db = client.db(self.db_name, username=self.username, password=self.password)
-        except Exception as e:
-            print(f"[cpg-dedup] ArangoDB connection error: {e}")
-            self.db = None
+        # Connection/query failures propagate when the common HTTP helper executes.
+        self.db = ArangoHttpTarget(self.endpoint, self.db_name, self.username, self.password)
 
-    def find_exact_file_duplicates(self) -> list[EquivalenceCluster]:
+    def _query(self, query: str, bind_vars: dict[str, Any] | None = None) -> list[Any]:
+        if self.db is None:
+            raise RuntimeError("Arango target unavailable")
+        return execute_aql(self.db, query, bind_vars)
+
+    def find_exact_file_duplicates(self, min_count: int = 2, limit: int = 100) -> list[EquivalenceCluster]:
         """Finds identical files with matching full module hashes."""
-        if not self.db:
-            return []
+        if min_count < 2 or limit < 1:
+            raise ValueError("min_count must be >= 2 and limit must be positive")
         q = """
         FOR m IN python_modules
-          FILTER m.file != null
+          FILTER m.file != null AND IS_STRING(m.module_hash) AND m.module_hash != ""
           COLLECT hash = m.module_hash INTO group = {file: m.file, lines: m.num_lines}
           LET count = LENGTH(group)
-          FILTER count > 1
-          SORT count DESC
+          FILTER count >= @min_count
+          SORT count DESC, hash ASC
+          LIMIT @limit
           RETURN {
             hash: hash,
             count: count,
@@ -76,7 +73,7 @@ class ArangoCPGDeduplicator:
           }
         """
         clusters = []
-        for r in self.db.aql.execute(q):
+        for r in self._query(q, {"min_count": min_count, "limit": limit}):
             clusters.append(EquivalenceCluster(
                 cluster_id=f"file_exact_{r['hash']}",
                 cluster_type="file_exact",
@@ -89,11 +86,11 @@ class ArangoCPGDeduplicator:
 
     def find_function_shape_clusters(self, min_count: int = 3, limit: int = 100) -> list[EquivalenceCluster]:
         """Finds FunctionDef clusters with identical AST structural shape hash (pi_shape)."""
-        if not self.db:
-            return []
+        if min_count < 2 or limit < 1:
+            raise ValueError("min_count must be >= 2 and limit must be positive")
         q = f"""
         FOR n IN python_ast_nodes
-          FILTER n.node_type == 'FunctionDef' AND n.shape_hash != null
+          FILTER n.node_type == 'FunctionDef' AND IS_STRING(n.shape_hash) AND n.shape_hash != ''
           COLLECT shape = n.shape_hash INTO group = {{
             file: n.file,
             name: n.name,
@@ -101,9 +98,9 @@ class ArangoCPGDeduplicator:
             exact_hash: n.exact_hash
           }}
           LET count = LENGTH(group)
-          FILTER count >= {min_count}
-          SORT count DESC
-          LIMIT {limit}
+          FILTER count >= @min_count
+          SORT count DESC, shape ASC
+          LIMIT @limit
           RETURN {{
             shape_hash: shape,
             count: count,
@@ -113,7 +110,7 @@ class ArangoCPGDeduplicator:
           }}
         """
         clusters = []
-        for r in self.db.aql.execute(q):
+        for r in self._query(q, {"min_count": min_count, "limit": limit}):
             primary_name = r["names"][0] if r["names"] else "<anonymous>"
             clusters.append(EquivalenceCluster(
                 cluster_id=f"fn_shape_{r['shape_hash']}",
@@ -127,11 +124,11 @@ class ArangoCPGDeduplicator:
 
     def find_function_exact_clones(self, min_count: int = 2, limit: int = 100) -> list[EquivalenceCluster]:
         """Finds FunctionDef instances with identical exact code body hash."""
-        if not self.db:
-            return []
+        if min_count < 2 or limit < 1:
+            raise ValueError("min_count must be >= 2 and limit must be positive")
         q = f"""
         FOR n IN python_ast_nodes
-          FILTER n.node_type == 'FunctionDef' AND n.exact_hash != null
+          FILTER n.node_type == 'FunctionDef' AND IS_STRING(n.exact_hash) AND n.exact_hash != ''
           COLLECT exact = n.exact_hash INTO group = {{
             file: n.file,
             name: n.name,
@@ -139,9 +136,9 @@ class ArangoCPGDeduplicator:
             shape_hash: n.shape_hash
           }}
           LET count = LENGTH(group)
-          FILTER count >= {min_count}
-          SORT count DESC
-          LIMIT {limit}
+          FILTER count >= @min_count
+          SORT count DESC, exact ASC
+          LIMIT @limit
           RETURN {{
             exact_hash: exact,
             count: count,
@@ -150,7 +147,7 @@ class ArangoCPGDeduplicator:
           }}
         """
         clusters = []
-        for r in self.db.aql.execute(q):
+        for r in self._query(q, {"min_count": min_count, "limit": limit}):
             primary_name = r["names"][0] if r["names"] else "<fn>"
             clusters.append(EquivalenceCluster(
                 cluster_id=f"fn_exact_{r['exact_hash']}",
@@ -162,16 +159,18 @@ class ArangoCPGDeduplicator:
             ))
         return clusters
 
-    def generate_deduplication_manifest(self, out_json: Path = Path("reports/cpg_dedup_report.json")) -> dict[str, Any]:
+    def generate_deduplication_manifest(self, out_json: Path = Path("reports/cpg_dedup_report.json"), *, min_count: int = 2, limit: int = 100) -> dict[str, Any]:
         """Runs the complete AQL AST deduplication analysis and emits the telemetry manifest."""
         t0 = time.time()
-        file_exact = self.find_exact_file_duplicates()
-        fn_exact = self.find_function_exact_clones(min_count=2, limit=150)
-        fn_shape = self.find_function_shape_clusters(min_count=3, limit=150)
+        file_exact = self.find_exact_file_duplicates(min_count=min_count, limit=limit)
+        fn_exact = self.find_function_exact_clones(min_count=min_count, limit=limit)
+        fn_shape = self.find_function_shape_clusters(min_count=min_count, limit=limit)
         elapsed = time.time() - t0
 
         manifest = {
-            "schema": "ig.cpg-dedup-report.v1",
+            "schema": "ig.cpg-dedup-report.v2",
+            "evidence_class": "heuristic_hash_candidates_not_semantic_verdict",
+            "parameters": {"min_count": min_count, "limit": limit},
             "timestamp_utc": utc_now_iso(),
             "elapsed_seconds": round(elapsed, 4),
             "summary": {

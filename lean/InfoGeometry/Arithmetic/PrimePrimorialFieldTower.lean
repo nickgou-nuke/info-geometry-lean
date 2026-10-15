@@ -27,6 +27,10 @@ namespace InfoGeometry.Arithmetic.PrimePrimorialFieldTower
 open InfoGeometry.Arithmetic
 open InfoGeometry.Arithmetic.PrimeCyclotomicGaloisTower
 
+local instance ratCyclotomicExtension (n : ℕ) [NeZero n] :
+    IsCyclotomicExtension {n} ℚ (CyclotomicField n ℚ) := by
+  exact CyclotomicField.isCyclotomicExtension n ℚ
+
 /-! ## 1. Primorial Positive Bounds and NeZero Instances -/
 
 theorem cond_pos (i : Fin 6) : 0 < primorialConductor i := by

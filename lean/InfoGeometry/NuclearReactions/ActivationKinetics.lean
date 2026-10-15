@@ -49,10 +49,10 @@ theorem hasDerivAt_inventory (productionRate decayConstant elapsed : ℝ)
       (productionRate - decayConstant * inventory productionRate decayConstant elapsed) elapsed := by
   have exponential := (((hasDerivAt_id elapsed).const_mul (-decayConstant)).exp).const_sub 1
   convert exponential.const_mul (productionRate / decayConstant) using 1
-  unfold inventory saturation
-  simp only [id_eq]
-  field_simp [decay_ne]
-  ring
+  all_goals
+    try funext y
+    simp only [inventory, saturation, id_eq] <;>
+      field_simp [decay_ne] <;> ring_nf
 
 theorem cooled_inventory_activity
     (flux atomCount crossSection decayConstant irradiationTime coolingTime : ℝ)

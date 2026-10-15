@@ -89,11 +89,21 @@ def PrimeGaloisDigraph : ChiralDigraph where
 
 /-! ## 1. Canonical Elementary Step Edges -/
 
-theorem step_2_3 : PrimeGaloisDigraph.edge PrimeLevel.p2 PrimeLevel.p3 := by decide
-theorem step_3_5 : PrimeGaloisDigraph.edge PrimeLevel.p3 PrimeLevel.p5 := by decide
-theorem step_5_7 : PrimeGaloisDigraph.edge PrimeLevel.p5 PrimeLevel.p7 := by decide
-theorem step_7_11 : PrimeGaloisDigraph.edge PrimeLevel.p7 PrimeLevel.p11 := by decide
-theorem step_11_13 : PrimeGaloisDigraph.edge PrimeLevel.p11 PrimeLevel.p13 := by decide
+theorem step_2_3 : PrimeGaloisDigraph.edge PrimeLevel.p2 PrimeLevel.p3 := by
+  change primeEdge _ _
+  decide
+theorem step_3_5 : PrimeGaloisDigraph.edge PrimeLevel.p3 PrimeLevel.p5 := by
+  change primeEdge _ _
+  decide
+theorem step_5_7 : PrimeGaloisDigraph.edge PrimeLevel.p5 PrimeLevel.p7 := by
+  change primeEdge _ _
+  decide
+theorem step_7_11 : PrimeGaloisDigraph.edge PrimeLevel.p7 PrimeLevel.p11 := by
+  change primeEdge _ _
+  decide
+theorem step_11_13 : PrimeGaloisDigraph.edge PrimeLevel.p11 PrimeLevel.p13 := by
+  change primeEdge _ _
+  decide
 
 /-- The canonical directed path spanning the entire prime Galois tower from 2 to 13. -/
 def canonicalTowerPath : DirectedPath PrimeGaloisDigraph PrimeLevel.p2 PrimeLevel.p13 :=
@@ -109,7 +119,9 @@ theorem canonicalTowerPath_length : canonicalTowerPath.length = 5 := by
 /-! ## 2. Directed Two-Cells and Homotopy Equivalence -/
 
 /-- Direct step edge from 2 to 5 jumping over 3. -/
-theorem step_2_5 : PrimeGaloisDigraph.edge PrimeLevel.p2 PrimeLevel.p5 := by decide
+theorem step_2_5 : PrimeGaloisDigraph.edge PrimeLevel.p2 PrimeLevel.p5 := by
+  change primeEdge _ _
+  decide
 
 /-- Elementary two-cell contractibility: the direct edge 2 -> 5 and composite 2 -> 3 -> 5
     span a commutative triangular Galois 2-cell. -/

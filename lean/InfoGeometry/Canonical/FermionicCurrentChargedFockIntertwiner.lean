@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.Algebra.Lie.OfAssociative
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ConstructiveCurrentHeisenbergColimitBridge
 import InfoGeometry.Canonical.CompletedCurrentRepresentationBridge
@@ -10,6 +11,8 @@ import InfoGeometry.Canonical.SplitCliffordCurrentCommutator
 
 noncomputable section
 namespace InfoGeometry.Canonical.FermionicCurrentChargedFockIntertwiner
+
+attribute [local instance 100] LieRing.ofAssociativeRing
 
 open VirasoroProject
 open InfoGeometry.Canonical.CanonicalNormalOrdering
@@ -716,8 +719,9 @@ theorem normalMatrixUnit_apply_eq_zero_of_negative_index_positive_shift
       by_cases hb0 : 0 ≤ a + l
       · exact hcases.1 hb0
       · exact hcases.2 (lt_of_not_ge hb0)
+-/
 
- -/ theorem normalMatrixUnit_apply_eq_zero_of_large_positive_shift_on_support
+theorem normalMatrixUnit_apply_eq_zero_of_large_positive_shift_on_support
     (S : Finset ℤ) (x : FermionicFock (𝕜 := 𝕜))
     (hx : x ∈ Algebra.adjoin 𝕜
       (⇑(ExteriorAlgebra.ι 𝕜) '' {v | v.support ⊆ S}))
@@ -1067,8 +1071,8 @@ theorem fermionicBulkBoundaryDiagonalSum_apply_eventually_zero_on_window
       (∑ a ∈ integerWindow K,
         (RawCARModeCompletion.cutoffBulkBoundaryDiagonalTerm
           (fermionicRawCAR (𝕜 := 𝕜)) N m n a)) x = 0 := by
-  rcases RawCARModeCompletion.cutoffBulkBoundaryDiagonalSum_eventually_zero_on_window
-      (fermionicRawCAR (𝕜 := 𝕜)) m n K with ⟨N0, hN0⟩
+  rcases RawCARModeCompletion.cutoffBulkBoundaryDiagonalSum_eventually_zero_on_finset
+      (fermionicRawCAR (𝕜 := 𝕜)) m n (integerWindow K) with ⟨N0, hN0⟩
   exact ⟨N0, fun N hN => by
     simpa using congrArg (fun T : FermionicEnd (𝕜 := 𝕜) => T x) (hN0 N hN)⟩
 
@@ -1462,11 +1466,11 @@ noncomputable def fermionicStabilizedCurrentSource :
   trunc := fermionicCurrentMode_apply_eventually_zero
   cutoff_eventually_constant := by
     intro m x
-    simpa [endomorphismCutoffCurrent] using
+    simpa [endomorphismCutoffCurrent, fermionicCutoffCurrent] using
       (fermionicCutoffCurrent_eventually_eq_fermionicCurrentMode m x)
   boundary_eventually_zero := by
     intro m n x
-    simpa [endomorphismCutoffCurrent] using
+    simpa [endomorphismCutoffCurrent, fermionicCutoffCurrent] using
       (fermionicEndomorphismBoundaryTerm_apply_eventually_zero m n x)
 
 theorem fermionicCurrentMode_commutator (m n : ℤ) :

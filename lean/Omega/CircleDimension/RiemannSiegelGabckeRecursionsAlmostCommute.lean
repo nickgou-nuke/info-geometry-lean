@@ -41,7 +41,8 @@ lemma refinementStep_bound_raw (D : RiemannSiegelGabckeLocalRefinement) :
       D.hρ D.hm D.heK D.heK1
   dsimp [refinementStep, approxZeroK, approxZeroK1] at h
   rcases h with ⟨_, _, _, _, _, _, _, _, _, _, _, _, hstep⟩
-  simpa using hstep
+  simpa [refinementStep, approxZeroK, approxZeroK1,
+    rsGabckeApproxZero, rsGabckeDelta] using hstep
 
 lemma refinementStep_bound (D : RiemannSiegelGabckeLocalRefinement) :
     |D.refinementStep| ≤ (2 * D.deltaSup) / D.m := by

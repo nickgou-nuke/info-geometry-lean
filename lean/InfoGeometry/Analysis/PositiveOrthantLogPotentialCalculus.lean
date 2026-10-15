@@ -49,8 +49,9 @@ theorem hasFDerivAt_coordinateLogPotential
     (coordinateCLM i).hasFDerivAt
   have hlog : HasDerivAt Real.log (1 / (x i)) (x i) :=
     by simpa [one_div] using Real.hasDerivAt_log hx
-  simpa [coordinateLogPotential, coordinateCLM_apply, smul_eq_mul,
-    mul_comm] using hlog.comp_hasFDerivAt x hcoord
+  convert hlog.comp_hasFDerivAt x hcoord using 1
+  · ext y
+    simp [coordinateLogPotential, coordinateCLM_apply]
 
 theorem differentiableOn_coordinateLogPotential
     (i : α) :
@@ -80,11 +81,11 @@ theorem integral_coordinateLogRate_eq_potential_sub
       (logVolumeDifferential (fun t => γ t i)) volume a b) :
     ∫ t in a..b, logVolumeDifferential (fun t => γ t i) t =
       coordinateLogPotential i (γ b) - coordinateLogPotential i (γ a) := by
-  simpa [coordinateLogPotential] using
-    (InfoGeometry.Analysis.LogVolumePathIntegral.integral_logVolumeDifferential_eq_sub
-      (Q := fun t => γ t i) (a := a) (b := b)
-      (fun t ht => (coordinateCLM i).differentiableAt.comp t (hγ t ht))
-      (fun t ht => ne_of_gt (hpos t ht)) hint)
+  rw [InfoGeometry.Analysis.LogVolumePathIntegral.integral_logVolumeDifferential_eq_sub
+    (Q := fun t => γ t i) (a := a) (b := b)
+    (fun t ht => (coordinateCLM i).differentiableAt.comp t (hγ t ht))
+    (fun t ht => ne_of_gt (hpos t ht)) hint]
+  rfl
 
 end InfoGeometry.Analysis.PositiveOrthantLogPotentialCalculus
 

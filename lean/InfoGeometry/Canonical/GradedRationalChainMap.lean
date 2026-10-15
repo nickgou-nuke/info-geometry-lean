@@ -126,14 +126,10 @@ def chainMapOnCohomology
     (F : GradedRationalChainMap D E)
     (p : ℕ) :
     gradedCohomologyShadow D p →ₗ[ℚ] gradedCohomologyShadow E p :=
-  by
-    simpa [gradedCohomologyShadow] using
-      (Submodule.mapQ (gradedBoundaryInCycles D p)
-        (gradedBoundaryInCycles E p)
-        (chainMapOnCycles D E F (p + 1))
-        (chainMap_maps_boundaryInCycles D E F p) :
-        (gradedCycleSubmodule D (p + 1) ⧸ gradedBoundaryInCycles D p) →ₗ[ℚ]
-          (gradedCycleSubmodule E (p + 1) ⧸ gradedBoundaryInCycles E p))
+  Submodule.mapQ (gradedBoundaryInCycles D p)
+    (gradedBoundaryInCycles E p)
+    (chainMapOnCycles D E F (p + 1))
+    (chainMap_maps_boundaryInCycles D E F p)
 
 @[simp]
 theorem chainMapOnCohomology_mk
@@ -142,16 +138,8 @@ theorem chainMapOnCohomology_mk
     (F : GradedRationalChainMap D E)
     (p : ℕ) (x : gradedCycleSubmodule D (p + 1)) :
     chainMapOnCohomology D E F p (Submodule.Quotient.mk x) =
-      Submodule.Quotient.mk (chainMapOnCycles D E F (p + 1) x) := by
-  change
-    (Submodule.mapQ
-      (gradedBoundaryInCycles D p)
-      (gradedBoundaryInCycles E p)
-      (chainMapOnCycles D E F (p + 1))
-      (chainMap_maps_boundaryInCycles D E F p))
-      (Submodule.Quotient.mk x) =
-    Submodule.Quotient.mk (chainMapOnCycles D E F (p + 1) x)
-  exact Submodule.mapQ_apply _ _ _ _
+      Submodule.Quotient.mk (chainMapOnCycles D E F (p + 1) x) :=
+  Submodule.mapQ_apply _ _ _ _
 
 @[simp]
 theorem chainMapOnCohomology_id
@@ -161,6 +149,13 @@ theorem chainMapOnCohomology_id
   apply LinearMap.ext
   intro q
   obtain ⟨x, rfl⟩ := (gradedBoundaryInCycles D p).mkQ_surjective q
+  change chainMapOnCohomology D D (gradedChainMapId D) p (Submodule.Quotient.mk x) =
+    LinearMap.id (Submodule.Quotient.mk x)
+  rw [chainMapOnCohomology_mk]
+  have hx : chainMapOnCycles D D (gradedChainMapId D) (p + 1) x = x := by
+    apply Subtype.ext
+    rfl
+  rw [hx]
   rfl
 
 theorem chainMapOnCohomology_comp
@@ -179,7 +174,15 @@ theorem chainMapOnCohomology_comp
   apply LinearMap.ext
   intro q
   obtain ⟨x, rfl⟩ := (gradedBoundaryInCycles D p).mkQ_surjective q
-  rfl
+  change chainMapOnCohomology D F (gradedChainMapComp f g) p (Submodule.Quotient.mk x) =
+    (chainMapOnCohomology E F g p).comp (chainMapOnCohomology D E f p) (Submodule.Quotient.mk x)
+  rw [LinearMap.comp_apply, chainMapOnCohomology_mk, chainMapOnCohomology_mk,
+    chainMapOnCohomology_mk]
+  have hx : chainMapOnCycles D F (gradedChainMapComp f g) (p + 1) x =
+      chainMapOnCycles E F g (p + 1) (chainMapOnCycles D E f (p + 1) x) := by
+    apply Subtype.ext
+    rfl
+  rw [hx]
 
 theorem chainMapOnCycles_coe
     (D : GradedRationalDifferential V)

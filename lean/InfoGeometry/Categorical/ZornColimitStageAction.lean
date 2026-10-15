@@ -1,5 +1,6 @@
 import InfoGeometry.Categorical.ZornUHFColimit
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Canonical.CanonicalZornBraidTransport
 
 /-! Concrete transport of stagewise endomorphisms to the Zorn colimit.
 
@@ -14,6 +15,7 @@ namespace InfoGeometry.Categorical.ZornUHFColimit
 open CategoryTheory CategoryTheory.Limits
 open InfoGeometry.Canonical.UHFInductiveColimitBoundary
 open InfoGeometry.Physics.YangBaxterZornBridge
+open InfoGeometry.Physics.B3PresentedGroup (B3)
 
 /-- The endomorphism of the concrete Zorn colimit induced by a compatible
 stagewise linear transformation. -/
@@ -127,8 +129,9 @@ theorem zornColimitEnd_comp
     zornColimitEnd t * zornColimitEnd s = zornColimitEnd (s ≫ t) := by
   have hmap : colim.map s ≫ colim.map t = colim.map (s ≫ t) := by
     rw [← colim.map_comp]
-  simpa [zornColimitEnd, Module.End.mul_apply] using
-    congrArg ModuleCat.Hom.hom hmap
+  change (colim.map t).hom * (colim.map s).hom = _
+  rw [Module.End.mul_eq_comp]
+  exact congrArg ModuleCat.Hom.hom hmap
 
 theorem zornBraidColimit_braid_relation :
     zornBraidGeneratorColimit1 * zornBraidGeneratorColimit2 *
@@ -150,5 +153,49 @@ theorem zornBraidColimit_braid_relation :
   have hmap : colim.map (𝟙 zornStageFunctor) = 𝟙 (colimit zornStageFunctor) :=
     colim.map_id zornStageFunctor
   simpa [zornColimitEnd] using congrArg ModuleCat.Hom.hom hmap
+
+/-- The matrix action on each finite stage induces a multiplicative action on
+the existing Zorn colimit endomorphism ring. -/
+def zornColimitMatrixAction : Matrix (Fin 8) (Fin 8) ℂ →* Module.End ℂ ZornColimit where
+  toFun M := zornColimitEnd (zornStagePointwiseNatTrans M)
+  map_one' := by
+    have htrans : zornStagePointwiseNatTrans (1 : Matrix (Fin 8) (Fin 8) ℂ) =
+        𝟙 zornStageFunctor := by
+      ext n x
+      change zornStagePointwise (1 : Matrix (Fin 8) (Fin 8) ℂ) n x = x
+      funext w
+      ext i
+      simp [zornStagePointwise]
+    change zornColimitEnd
+      (zornStagePointwiseNatTrans (1 : Matrix (Fin 8) (Fin 8) ℂ)) = 1
+    rw [htrans]
+    exact zornColimitEnd_id
+  map_mul' M N := by
+    change zornColimitEnd (zornStagePointwiseNatTrans (M * N)) =
+      zornColimitEnd (zornStagePointwiseNatTrans M) *
+        zornColimitEnd (zornStagePointwiseNatTrans N)
+    rw [← zornStagePointwiseNatTrans_comp M N]
+    exact (zornColimitEnd_comp _ _).symm
+
+/-- The finite-dimensional braid representation descends to the colimit by
+applying its matrices stagewise. -/
+def zornColimitBraidRepresentation :
+    B3 →* (Module.End ℂ ZornColimit)ˣ :=
+  (Units.map zornColimitMatrixAction).comp zornPhi
+
+/-- On every canonical stage inclusion, the colimit braid action is the
+original pointwise matrix action. -/
+@[simp] theorem zornColimitBraidRepresentation_on_stage
+    (braid : B3) (stage : ℕ) (state : ZornStage stage) :
+    (zornColimitBraidRepresentation braid : Module.End ℂ ZornColimit)
+        ((colimit.ι zornStageFunctor stage).hom state) =
+      (colimit.ι zornStageFunctor stage).hom
+        (zornStagePointwise (zornPhi braid : Matrix (Fin 8) (Fin 8) ℂ)
+          stage state) := by
+  change zornColimitMatrixAction (zornPhi braid : Matrix (Fin 8) (Fin 8) ℂ)
+      ((colimit.ι zornStageFunctor stage).hom state) = _
+  exact zornColimitEnd_on_stage
+    (zornStagePointwiseNatTrans (zornPhi braid : Matrix (Fin 8) (Fin 8) ℂ))
+    stage state
 
 end InfoGeometry.Categorical.ZornUHFColimit

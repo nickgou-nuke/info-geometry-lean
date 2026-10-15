@@ -7,7 +7,7 @@ namespace Omega.POM
 /-- Concrete annihilator of a BC subgroup inside the ambient character group. -/
 abbrev pom_bc_anomaly_character_support_eventual_freezing_annihilator
     {G A : Type*} [CommGroup G] [CommGroup A] (N : Subgroup G) : Subgroup (G →* A) :=
-  (MonoidHom.restrictHom N A).ker
+  (MonoidHom.domRestrictHom N A).ker
 
 /-- The anomaly support is the complement of the annihilator. -/
 def pom_bc_anomaly_character_support_eventual_freezing_support
@@ -35,10 +35,21 @@ theorem paper_pom_bc_anomaly_character_support_eventual_freezing
   have hstable : N m = N m0 := hm0 m hm
   refine ⟨?_, ?_, ?_⟩
   · simp [pom_bc_anomaly_character_support_eventual_freezing_support, hstable]
-  · exact ⟨MonoidHom.restrictHomKerEquiv A (N m0)⟩
+  · exact ⟨MonoidHom.domRestrictHomKerEquiv A (N m0)⟩
   · intro hbot
-    ext χ
-    simp [pom_bc_anomaly_character_support_eventual_freezing_support, hbot,
-      MonoidHom.mem_ker, MonoidHom.restrict_eq_one_iff]
+    have hrestrict (χ : G →* A) :
+        MonoidHom.domRestrictHom (⊥ : Subgroup G) A χ = 1 := by
+      ext x
+      have hx : x = 1 := Subsingleton.elim x 1
+      subst x
+      simp
+    have hann :
+        pom_bc_anomaly_character_support_eventual_freezing_annihilator (A := A)
+            (⊥ : Subgroup G) = ⊤ := by
+      ext χ
+      simp [pom_bc_anomaly_character_support_eventual_freezing_annihilator,
+        MonoidHom.mem_ker, hrestrict]
+    rw [hbot, pom_bc_anomaly_character_support_eventual_freezing_support, hann]
+    simp
 
 end Omega.POM

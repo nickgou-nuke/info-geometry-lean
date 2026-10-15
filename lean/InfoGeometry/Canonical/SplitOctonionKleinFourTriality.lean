@@ -126,34 +126,34 @@ lemma gradeOfBasis_eq_of_generator_mem
     rcases hp with hp | hp
     · have hp' : p = .one := splitBasisVector_injective (by simpa [oneOct] using hp)
       subst p
-      norm_num [gradeOfBasis]
+      rfl
     · have hp' : p = .l := splitBasisVector_injective (by simpa [lOct] using hp)
       subst p
-      norm_num [gradeOfBasis]
+      rfl
   · simp [gradeGenerators] at hp
     rcases hp with hp | hp
     · have hp' : p = .j := splitBasisVector_injective (by simpa [jOct] using hp)
       subst p
-      norm_num [gradeOfBasis]
+      rfl
     · have hp' : p = .jl := splitBasisVector_injective (by simpa [jlOct] using hp)
       subst p
-      norm_num [gradeOfBasis]
+      rfl
   · simp [gradeGenerators] at hp
     rcases hp with hp | hp
     · have hp' : p = .i := splitBasisVector_injective (by simpa [iOct] using hp)
       subst p
-      norm_num [gradeOfBasis]
+      rfl
     · have hp' : p = .il := splitBasisVector_injective (by simpa [ilOct] using hp)
       subst p
-      norm_num [gradeOfBasis]
+      rfl
   · simp [gradeGenerators] at hp
     rcases hp with hp | hp
     · have hp' : p = .k := splitBasisVector_injective (by simpa [kOct] using hp)
       subst p
-      norm_num [gradeOfBasis]
+      rfl
     · have hp' : p = .kl := splitBasisVector_injective (by simpa [klOct] using hp)
       subst p
-      norm_num [gradeOfBasis]
+      rfl
 
 lemma basisMulExtend_add_left (x₁ x₂ y : StandardIntegralSplitOctonion) :
     basisMulExtend (x₁ + x₂) y =

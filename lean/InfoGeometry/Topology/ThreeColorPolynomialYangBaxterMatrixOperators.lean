@@ -127,7 +127,7 @@ theorem colourR12MatrixContinuousLinear_yang_baxter :
           colourR23MatrixContinuousLinear)) := by
   apply ContinuousLinearMap.ext
   intro v
-  simpa only [ContinuousLinearMap.comp_apply,
+  simpa only [ContinuousLinearMap.comp_apply, LinearMap.comp_apply,
     colourR12MatrixContinuousLinear_apply,
     colourR23MatrixContinuousLinear_apply] using
     congrArg (fun f : ColourTripleVector →ₗ[ℚ] ColourTripleVector => f v)

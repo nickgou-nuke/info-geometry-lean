@@ -5,6 +5,7 @@ namespace Omega.Folding
 open Omega.Conclusion
 
 /-- A diagonal integer-axis ellipse is recorded by its two positive axis parameters. -/
+@[ext]
 structure KilloDiagonalEllipse where
   majorAxis : ℕ+
   minorAxis : ℕ+
@@ -58,19 +59,12 @@ theorem paper_killo_ellipse_diagonal_prime_register_equivalence :
             (Nat.factorizationEquiv.symm.injective h₂)
     · intro E
       refine ⟨killoEllipseToPrimeRegister E, ?_⟩
-      cases E
-      simp [killoEllipseToPrimeRegister, killoPrimeRegisterToEllipse, primeRegisterNorm,
-        primeRegisterOfPNat]
+      ext <;> exact Nat.factorizationEquiv.symm_apply_apply _
   · intro r
     cases r
     exact Prod.ext (Nat.factorizationEquiv.apply_symm_apply _)
       (Nat.factorizationEquiv.apply_symm_apply _)
   · intro E
-    cases E
-    simp [killoEllipseToPrimeRegister, killoPrimeRegisterToEllipse, primeRegisterNorm,
-      primeRegisterOfPNat]
+    ext <;> exact Nat.factorizationEquiv.symm_apply_apply _
   · intro r s
-    cases r
-    cases s
-    simp [killoPrimeRegisterPairMul, killoPrimeRegisterToEllipse, killoEllipseMul,
-      primeRegisterMul, primeRegisterNorm, primeRegisterOfPNat]
+    ext <;> exact Nat.factorizationEquiv.symm_apply_apply _

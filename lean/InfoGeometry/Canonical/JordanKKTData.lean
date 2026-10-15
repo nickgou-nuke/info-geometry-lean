@@ -60,7 +60,9 @@ noncomputable def DBregman (J : JordanKKTData E) (x y : E) : ℝ :=
 /-- Gradient specification theorem for the barrier potential. -/
 @[simp] theorem hasFDerivAt_K (J : JordanKKTData E) (x : E) :
     HasFDerivAt J.K (InnerProductSpace.toDual ℝ E (J.gradK x)) x := by
-  simpa [K] using J.has_gradient x
+  change HasFDerivAt (fun y => - Real.log (J.detJ y))
+    (InnerProductSpace.toDual ℝ E (J.gradK x)) x
+  exact J.has_gradient x
 
 /-- The Bregman divergence is always non-negative. -/
 theorem DBregman_nonneg (J : JordanKKTData E) (x y : E) : 0 ≤ J.DBregman x y := by

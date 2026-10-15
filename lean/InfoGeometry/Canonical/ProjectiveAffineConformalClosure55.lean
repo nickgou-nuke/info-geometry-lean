@@ -123,6 +123,16 @@ def reflectV (X : PACSplit55) : PACSplit55 where
   y0 := X.y0; y1 := X.y1; y2 := X.y2; y3 := X.y3
   u := X.u; v := -X.v
 
+theorem reflectU_smul (a : ℝ) (X : PACSplit55) :
+    reflectU (smul55 a X) = smul55 a (reflectU X) := by
+  cases X
+  simp [reflectU, smul55]
+
+theorem reflectV_smul (a : ℝ) (X : PACSplit55) :
+    reflectV (smul55 a X) = smul55 a (reflectV X) := by
+  cases X
+  simp [reflectV, smul55]
+
 /-- The `u` reflection preserves the split `(5,5)` quadratic form. -/
 theorem reflectU_preserves_Q55 (X : PACSplit55) :
     Q55 (reflectU X) = Q55 X := by

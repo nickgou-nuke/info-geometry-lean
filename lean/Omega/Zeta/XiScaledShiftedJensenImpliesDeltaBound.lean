@@ -57,8 +57,7 @@ theorem paper_xi_scaled_shifted_jensen_implies_delta_bound :
     dsimp [t]
     rw [sq_abs]
   refine ⟨?_, ?_, ?_⟩
-  · dsimp [t]
-    nlinarith [hquad_raw]
+  · nlinarith [hquad_raw]
   · intro htbound
     have htbound' : |γ - x₀| ≤ 2 * a * r / (1 - r ^ 2) := by
       simpa [t] using htbound

@@ -161,20 +161,13 @@ noncomputable def operatorObservationCompHausReadoutNatTrans :
   app F := operatorObservationCompHausReadoutHom S
   naturality := by
     intro F G f
-    apply (compHausToTop).map_injective
-    rw [Functor.map_comp, Functor.map_comp,
-      latentSpaceForgetfulCompHausFunctor_forget,
-      operatorObservationCompHausReadoutHom_forget]
-    change latentSpaceForgetfulFunctor.map f ≫ _ =
-      _ ≫ compHausToTop.map (operatorObservationRangeCompHausHomOfMorphism f)
-    rw [operatorObservationRangeCompHausHomOfMorphism_forget]
-    apply TopCat.hom_ext
-    ext x
-    simp only [TopCat.comp_app, TopCat.ofHom]
+    apply ConcreteCategory.hom_ext
+    intro x
     apply Subtype.ext
-    change S.operatorObservationMap (f.latentMap x) =
-      operatorObservationActionOfMorphism f (S.operatorObservationMap x)
-    exact funext (fun i => f.observation_natural x i)
+    funext i
+    change S.operatorObservationMap (f.latentMap x) i =
+      operatorObservationActionOfMorphism f (S.operatorObservationMap x) i
+    exact f.observation_natural x i
 
 theorem operatorObservationCompHausReadoutNatTrans_naturality_apply
     {F G : NoncommutativeObservableTopologicalCovariantFlow S}

@@ -1,10 +1,11 @@
 import Mathlib.Data.Matrix.Block
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
+import Mathlib.Algebra.Lie.OfAssociative
 import InfoGeometry.Lie.SplitOctonionWittPairingTransportBridge
 
 noncomputable section
-set_option maxHeartbeats 800000
+set_option maxHeartbeats 3000000
 
 namespace InfoGeometry.Lie.SplitOctonionDerivationWittBlockRealization
 
@@ -67,6 +68,9 @@ theorem transportedDerivation_map_lie (D E : Derivation) :
       (D.1 (E.1 (neutralCanonicalToCoord.symm x)) -
         E.1 (D.1 (neutralCanonicalToCoord.symm x))) = _
   exact neutralCanonicalToCoord.map_sub _ _
+
+local instance : LieRing (Module.End ℝ Coord8) := LieRing.ofAssociativeRing
+local instance : LieAlgebra ℝ (Module.End ℝ Coord8) := LieAlgebra.ofAssociativeAlgebra
 
 noncomputable def transportedDerivationLieHom :
     Derivation →ₗ⁅ℝ⁆ Module.End ℝ Coord8 where
@@ -190,19 +194,13 @@ theorem wittBlock_ext {M N : WittBlockMatrix}
 
 theorem canonicalDerivationBlock_smul (r : ℝ) (D : Derivation) :
     canonicalDerivationBlock (r • D) = smulWittBlock r (canonicalDerivationBlock D) := by
-  apply wittBlock_ext
-  · ext i j
+  have hsmul : transportedDerivation (r • D) = r • transportedDerivation D :=
+    LinearMap.map_smul transportedDerivationLinear r D
+  apply wittBlock_ext <;> ext i j
+  all_goals
     simp [canonicalDerivationBlock, smulWittBlock, canonicalDerivationMatrix,
-      transportedDerivation, wittIndex]
-  · ext i j
-    simp [canonicalDerivationBlock, smulWittBlock, canonicalDerivationMatrix,
-      transportedDerivation, wittIndex]
-  · ext i j
-    simp [canonicalDerivationBlock, smulWittBlock, canonicalDerivationMatrix,
-      transportedDerivation, wittIndex]
-  · ext i j
-    simp [canonicalDerivationBlock, smulWittBlock, canonicalDerivationMatrix,
-      transportedDerivation, wittIndex]
+      hsmul, LinearMap.smul_apply, Pi.smul_apply, smul_eq_mul]
+    rfl
 
 theorem neutral_canonical_derivation_eta_skew (D : Derivation) (X Y : CanonicalZorn) :
     neutralEtaPairing (neutralCanonicalToCoord (D.1 X))
@@ -337,12 +335,7 @@ theorem transportedDerivation_trace_zero (D : Derivation) :
 theorem canonicalDerivation_trace_zero (D : Derivation) :
     LinearMap.trace ℝ CanonicalZorn D.1 = 0 := by
   have h := transportedDerivation_trace_zero D
-  calc
-    LinearMap.trace ℝ CanonicalZorn D.1 =
-        LinearMap.trace ℝ Coord8
-          (neutralCanonicalToCoord.conj D.1) :=
-      (LinearMap.trace_conj' D.1 neutralCanonicalToCoord).symm
-    _ = 0 := by
-      simpa [transportedDerivation, LinearEquiv.conj] using h
+  rw [← LinearMap.trace_conj' D.1 neutralCanonicalToCoord]
+  exact h
 
 end InfoGeometry.Lie.SplitOctonionDerivationWittBlockRealization

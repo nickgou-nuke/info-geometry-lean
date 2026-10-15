@@ -66,7 +66,7 @@ theorem circleIntegral_sub_inv_eq_zero_of_not_mem_closedBall
       have heq : z = w := sub_eq_zero.mp hzero
       have hzclosed : z ∈ closedBall c r := ball_subset_closedBall hz.1
       simpa [heq] using hzclosed
-    simpa using (((hasDerivAt_id z).sub_const w).inv hzw).differentiableAt
+    exact (((hasDerivAt_id z).sub_const w).inv hzw).differentiableAt
 
 /-- A centered Cauchy pole is circle-integrable whenever the radius is positive. -/
 theorem circleIntegrable_centerPole

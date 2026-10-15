@@ -25,10 +25,15 @@ theorem equivPermutationMatrix_mul_transpose
       (1 : Matrix α α R) := by
   classical
   ext i k
-  by_cases h : i = k
-  · subst k
-    simp [equivPermutationMatrix, Matrix.mul_apply]
-  · simp [equivPermutationMatrix, Matrix.mul_apply, h]
+  rw [Matrix.mul_apply]
+  rw [Finset.sum_eq_single (e i)]
+  · simp [equivPermutationMatrix, Matrix.transpose_apply,
+      e.injective.eq_iff, Matrix.one_apply, eq_comm]
+  · intro j _ hji
+    by_cases h : e i = j
+    · exact (hji h.symm).elim
+    · simp [equivPermutationMatrix, Matrix.transpose_apply, h]
+  · simp
 
 theorem equivPermutationMatrix_transpose_mul
     {α β R : Type*} [Fintype α] [Fintype β]

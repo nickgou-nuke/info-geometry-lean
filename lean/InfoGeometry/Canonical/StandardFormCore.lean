@@ -207,7 +207,7 @@ outer at the algebra level.
     S.seed.modularFlow t A = InfoGeometry.Krein.modular_shift (E := H) S.Delta t A := by
   have h :=
     congrArg (fun σ : AdditiveModularFlow (H := H) => σ t A) S.modularFlow_eq_generator
-  simpa [additiveModularFlowOfGenerator_apply] using h
+  exact h
 
 end OperatorCarrier
 

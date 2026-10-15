@@ -24,6 +24,8 @@ theorem cl55_center_image_scalar
     · intro y
       obtain ⟨x, rfl⟩ := cl55SpinorRepresentation_surjective y
       have hzx := (Subalgebra.mem_center_iff.mp hz) x
+      change cl55SpinorRepresentation z * cl55SpinorRepresentation x =
+        cl55SpinorRepresentation x * cl55SpinorRepresentation z
       simpa only [map_mul] using (congrArg cl55SpinorRepresentation hzx).symm
     · intro b c
       simp only [mul_assoc]

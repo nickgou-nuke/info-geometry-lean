@@ -26,9 +26,10 @@ def pauli_solder (t x y z : ℝ) : Matrix (Fin 2) (Fin 2) ℂ :=
     Minkowski spacetime interval (t² - x² - y² - z²). -/
 theorem det_pauli_solder_eq_minkowski (t x y z : ℝ) :
     Matrix.det (pauli_solder t x y z) = ((t ^ 2 - x ^ 2 - y ^ 2 - z ^ 2 : ℝ) : ℂ) := by
-  dsimp [pauli_solder, Matrix.det_fin_two]
+  rw [Matrix.det_fin_two]
+  dsimp [pauli_solder]
   push_cast
-  have hI : I * I = -1 := I_sq
+  have hI : I * I = -1 := by simpa [pow_two] using Complex.I_sq
   calc
     ((t : ℂ) + z) * ((t : ℂ) - z) - ((x : ℂ) - I * y) * ((x : ℂ) + I * y)
       = t ^ 2 - z ^ 2 - (x ^ 2 - (I * I) * y ^ 2) := by ring

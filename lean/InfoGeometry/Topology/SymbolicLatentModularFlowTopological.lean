@@ -29,7 +29,7 @@ def topologicalModularFlowAction
 theorem continuous_topologicalModularFlowAction
     (Φ : SymbolicLatentModularFlow X) :
     Continuous (topologicalModularFlowAction Φ) := by
-  simpa [topologicalModularFlowAction] using Φ.continuous_act
+  exact Φ.continuous_act
 
 /-- The time-`t` slice of the modular flow as a topological map. -/
 def topologicalModularTimeSlice
@@ -44,8 +44,7 @@ def topologicalModularTimeSlice
 theorem continuous_topologicalModularTimeSlice
     (Φ : SymbolicLatentModularFlow X) (t : ℝ) :
     Continuous (topologicalModularTimeSlice Φ t) := by
-  simpa [topologicalModularTimeSlice] using
-    (Φ.continuous_act.comp (continuous_const.prodMk continuous_id))
+  exact (SymbolicLatentModularFlow.actHomeomorph Φ t).continuous_toFun
 
 /-- The orbit map of a fixed point under the modular flow. -/
 def topologicalModularOrbitMap
@@ -60,8 +59,7 @@ def topologicalModularOrbitMap
 theorem continuous_topologicalModularOrbitMap
     (Φ : SymbolicLatentModularFlow X) (x : X) :
     Continuous (topologicalModularOrbitMap Φ x) := by
-  simpa [topologicalModularOrbitMap] using
-    Φ.continuous_orbit x
+  exact Φ.continuous_orbit x
 
 /-- The modular time slice as a homeomorphism, re-exposed in the topology lane. -/
 def topologicalModularHomeomorph

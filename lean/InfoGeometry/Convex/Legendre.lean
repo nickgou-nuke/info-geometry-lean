@@ -81,35 +81,25 @@ theorem supporting_ineq_of_convex_differentiable
     (Φ : ConvexFunctional V)
     (x z : V) :
     Φ.F z ≥ Φ.F x + inner ℝ (Φ.grad x) (z - x) := by
-  let g : ℝ → ℝ := fun t => Φ.F (AffineMap.lineMap x z t)
-  have hconv : ConvexOn ℝ Set.univ g := by
-    simpa [g] using (Φ.convex.comp_affineMap (AffineMap.lineMap x z))
-  have hcomp :
-      HasDerivAt g ((fderiv ℝ Φ.F x) (z - x)) 0 := by
-    simpa [g] using
-      (Φ.diff x).hasFDerivAt.comp_hasDerivAt_of_eq
-        (0 : ℝ)
-        (AffineMap.hasDerivAt_lineMap (a := x) (b := z))
-        (by simp)
+  have hconv := Φ.convex.comp_affineMap (AffineMap.lineMap x z)
+  have hcomp :=
+    (Φ.diff x).hasFDerivAt.comp_hasDerivAt_of_eq
+      (0 : ℝ)
+      (AffineMap.hasDerivAt_lineMap (a := x) (b := z))
+      (by simp)
   have hgrad :
       inner ℝ (Φ.grad x) (z - x) = (fderiv ℝ Φ.F x) (z - x) := by
-    simpa [grad] using
-      (inner_gradient_left (𝕜 := ℝ) (f := Φ.F) (x := x) (y := z - x) (h := Φ.diff x))
-  have hderiv :
-      deriv g 0 = inner ℝ (Φ.grad x) (z - x) := by
-    calc
-      deriv g 0 = (fderiv ℝ Φ.F x) (z - x) := hcomp.deriv
-      _ = inner ℝ (Φ.grad x) (z - x) := hgrad.symm
-  have hslope :
-      deriv g 0 ≤ slope g 0 1 := by
-    exact hconv.deriv_le_slope (by simp) (by simp) (by norm_num) hcomp.differentiableAt
-  have hslopeEval : slope g 0 1 = Φ.F z - Φ.F x := by
-    simp [g, slope_def_field]
-  have hmain : inner ℝ (Φ.grad x) (z - x) ≤ Φ.F z - Φ.F x := by
-    calc
-      inner ℝ (Φ.grad x) (z - x) = deriv g 0 := by simpa using hderiv.symm
-      _ ≤ slope g 0 1 := hslope
-      _ = Φ.F z - Φ.F x := hslopeEval
+    simp [grad, inner_gradient_left]
+  have hslope :=
+    hconv.le_slope_of_hasDerivAt
+      (by simp)
+      (by simp)
+      (zero_lt_one : (0 : ℝ) < 1)
+      hcomp
+  have hslopeEval : slope (Φ.F ∘ ⇑(AffineMap.lineMap x z)) (0 : ℝ) (1 : ℝ) = Φ.F z - Φ.F x := by
+    simp [slope_def_field]
+  rw [hslopeEval] at hslope
+  rw [hgrad]
   linarith
 
 /-- Equality case in Fenchel-Young under a supporting-hyperplane hypothesis. -/

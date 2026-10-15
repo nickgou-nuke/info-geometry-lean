@@ -175,10 +175,10 @@ theorem realToComplexClifford_mem_even
   | ι_mul_ι_mul x y a _ ha =>
       rw [map_mul, map_mul, realToComplexClifford_ι,
         realToComplexClifford_ι]
-      have hp := SetLike.mul_mem_graded
-        (CliffordAlgebra.ι_mul_ι_mem_evenOdd_zero vectorQuadratic
-          (realSplit44ToVector8 x) (realSplit44ToVector8 y)) ha
-      simpa only [zero_add] using hp
+      have h1 : (CliffordAlgebra.ι vectorQuadratic) (realSplit44ToVector8 x) *
+          (CliffordAlgebra.ι vectorQuadratic) (realSplit44ToVector8 y) ∈ CliffordAlgebra.even vectorQuadratic :=
+        Submodule.mem_toSubalgebra.mpr (CliffordAlgebra.ι_mul_ι_mem_evenOdd_zero vectorQuadratic _ _)
+      exact Subalgebra.mul_mem (CliffordAlgebra.even vectorQuadratic) h1 ha
 
 /-! ## Mapping the real spin group -/
 

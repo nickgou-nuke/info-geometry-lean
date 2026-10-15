@@ -1,5 +1,4 @@
 import InfoGeometry.Topology.CompletedZetaPotentialAndRealGibbsFisherBridge
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ActualXiSymmetryDatumBridge
 
 /-!

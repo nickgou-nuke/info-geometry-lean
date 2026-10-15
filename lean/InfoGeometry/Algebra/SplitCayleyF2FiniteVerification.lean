@@ -118,9 +118,7 @@ theorem shearAction_square (x : Cayley) :
   · simp [delta1, dot]
 
 @[simp] theorem delta2_one_finite (r : Vec3) : delta2 r (1 : Cayley) = 1 := by
-  have htwo : (2 : Scalar) = 0 := CharP.cast_eq_zero Scalar 2
-  have hone : (1 : Scalar) + 1 = 0 := by
-    simpa using htwo
+  have hone : (1 : Scalar) + 1 = 0 := rfl
   change delta2 r {α := 1, u := ![0, 0, 0], v := ![0, 0, 0], β := 1} =
     {α := 1, u := ![0, 0, 0], v := ![0, 0, 0], β := 1}
   apply Cayley.ext

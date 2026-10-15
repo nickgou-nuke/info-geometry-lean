@@ -40,7 +40,7 @@ def NativeLinesThroughPoint (x₀ : OctImF2) : Type :=
   {L : Finset OctImF2 // L ∈ nativeLinesAt x₀}
 
 instance (x₀ : OctImF2) : Fintype (NativeLinesThroughPoint x₀) :=
-  Subtype.fintype _
+  Finset.Subtype.fintype (nativeLinesAt x₀)
 
 instance (x₀ : OctImF2) : DecidableEq (NativeLinesThroughPoint x₀) := by
   dsimp [NativeLinesThroughPoint]

@@ -2,7 +2,7 @@ import Omega.CircleDimension.HilbertCarrier
 
 namespace Omega.CircleDimension
 
-universe u v
+universe u v uL uR uC
 
 /-- Concrete data for the Hilbert carrier of a composite mechanism. The kernel factorization is
 recorded on an index product, while `tensorEquiv` identifies the composite quotient carrier with
@@ -10,9 +10,9 @@ the product carrier used here as the tensor-product presentation seed. -/
 structure CompositeHilbertCarrierData where
   leftIndex : Type u
   rightIndex : Type v
-  leftCarrier : ReadableTimeWordHilbertCarrierData
-  rightCarrier : ReadableTimeWordHilbertCarrierData
-  compositeCarrier : ReadableTimeWordHilbertCarrierData
+  leftCarrier : ReadableTimeWordHilbertCarrierData.{uL}
+  rightCarrier : ReadableTimeWordHilbertCarrierData.{uR}
+  compositeCarrier : ReadableTimeWordHilbertCarrierData.{uC}
   leftKernel : leftIndex → leftIndex → ℂ
   rightKernel : rightIndex → rightIndex → ℂ
   compositeKernel : (leftIndex × rightIndex) → (leftIndex × rightIndex) → ℂ

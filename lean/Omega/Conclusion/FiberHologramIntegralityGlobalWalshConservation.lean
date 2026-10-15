@@ -26,35 +26,53 @@ private lemma conclusion_fiber_hologram_integrality_global_walsh_conservation_po
             true).card) =
       -((-1 : ℤ) ^ ((I.filter fun j => ω j = true).card)) := by
   classical
-  rw [← Finset.insert_erase hi]
-  have hfilter :
-      (I.erase i).filter (fun j =>
-          conclusion_fiber_hologram_integrality_global_walsh_conservation_flip i ω j =
-            true) =
-        (I.erase i).filter fun j => ω j = true := by
-    ext j
-    by_cases hji : j = i
-    · simp [hji]
-    · simp [conclusion_fiber_hologram_integrality_global_walsh_conservation_flip, hji]
+  have hI : I = insert i (I.erase i) := (Finset.insert_erase hi).symm
+  have hni : i ∉ I.erase i := fun h => (Finset.mem_erase.mp h).1 rfl
+  have hfilter : (I.erase i).filter (fun j => conclusion_fiber_hologram_integrality_global_walsh_conservation_flip i ω j = true) =
+      (I.erase i).filter (fun j => ω j = true) := by
+    apply Finset.filter_congr
+    intro j hj
+    have hji : j ≠ i := Finset.ne_of_mem_erase hj
+    simp [conclusion_fiber_hologram_integrality_global_walsh_conservation_flip, hji]
   by_cases hω : ω i = true
-  · have hfilter_false :
-        (I.erase i).filter (fun j => Function.update ω i false j = true) =
-          (I.erase i).filter fun j => ω j = true := by
-      simpa [conclusion_fiber_hologram_integrality_global_walsh_conservation_flip, hω]
-        using hfilter
-    simp [Finset.filter_insert,
-      conclusion_fiber_hologram_integrality_global_walsh_conservation_flip, hω, hfilter_false,
-      pow_succ]
-  · have hnot : !(ω i) = true := by
-      cases h : ω i <;> simp_all
-    have hfilter_true :
-        (I.erase i).filter (fun j => Function.update ω i true j = true) =
-          (I.erase i).filter fun j => ω j = true := by
-      simpa [conclusion_fiber_hologram_integrality_global_walsh_conservation_flip, hω, hnot]
-        using hfilter
-    simp [Finset.filter_insert,
-      conclusion_fiber_hologram_integrality_global_walsh_conservation_flip, hω, hfilter_true,
-      pow_succ]
+  · have hflip_i : conclusion_fiber_hologram_integrality_global_walsh_conservation_flip i ω i = false := by
+      simp [conclusion_fiber_hologram_integrality_global_walsh_conservation_flip, hω]
+    have h1 : (I.filter fun j => conclusion_fiber_hologram_integrality_global_walsh_conservation_flip i ω j = true) =
+        (I.erase i).filter (fun j => ω j = true) := by
+      nth_rw 1 [hI]
+      rw [Finset.filter_insert]
+      simp [hflip_i, hfilter]
+    have h2 : (I.filter fun j => ω j = true) =
+        insert i ((I.erase i).filter (fun j => ω j = true)) := by
+      nth_rw 1 [hI]
+      rw [Finset.filter_insert]
+      simp [hω]
+    have hnotmem : i ∉ (I.erase i).filter (fun j => ω j = true) := by
+      intro hmem
+      exact hni (Finset.mem_of_mem_filter i hmem)
+    rw [h1, h2, Finset.card_insert_of_notMem hnotmem, pow_succ]
+    ring
+  · have hnot : ω i = false := by
+      cases h : ω i
+      · rfl
+      · contradiction
+    have hflip_i : conclusion_fiber_hologram_integrality_global_walsh_conservation_flip i ω i = true := by
+      simp [conclusion_fiber_hologram_integrality_global_walsh_conservation_flip, hnot]
+    have h1 : (I.filter fun j => conclusion_fiber_hologram_integrality_global_walsh_conservation_flip i ω j = true) =
+        insert i ((I.erase i).filter (fun j => ω j = true)) := by
+      nth_rw 1 [hI]
+      rw [Finset.filter_insert]
+      simp [hflip_i, hfilter]
+    have h2 : (I.filter fun j => ω j = true) =
+        (I.erase i).filter (fun j => ω j = true) := by
+      nth_rw 1 [hI]
+      rw [Finset.filter_insert]
+      simp [hnot]
+    have hnotmem : i ∉ (I.erase i).filter (fun j => ω j = true) := by
+      intro hmem
+      exact hni (Finset.mem_of_mem_filter i hmem)
+    rw [h1, h2, Finset.card_insert_of_notMem hnotmem, pow_succ]
+    ring
 
 private lemma conclusion_fiber_hologram_integrality_global_walsh_conservation_sum_eq_zero
     {m : ℕ} (I : Finset (Fin m)) (hI : I ≠ ∅) :

@@ -94,8 +94,8 @@ theorem paper_pom_fiber_walsh_stokes_boundary_tomography_reconstruction
       hWalshFull := hWalshFull
       hEulerFromWitten := hEulerFromWitten }
   have hBoundary :
-      ((-1 : ℤ) ^ parity) * reducedEulerCharacteristic = -fiberWalshBoundaryReadout S := by
-    simpa [D] using paper_pom_fiber_stokes_euler_characteristic_boundary_observable D
+      ((-1 : ℤ) ^ parity) * reducedEulerCharacteristic = -fiberWalshBoundaryReadout S :=
+    paper_pom_fiber_stokes_euler_characteristic_boundary_observable D
   exact ⟨fiberWalshReconstruction_eq_indicator S, fiberWalshSupportMass_eq_card S, hBoundary⟩
 
 end Omega.POM

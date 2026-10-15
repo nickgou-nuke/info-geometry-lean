@@ -583,12 +583,14 @@ theorem spinAction_preserves_Q55 (g : Spin55) (v : V55) :
       CliffordAlgebra.involute (spinGroup.toUnits g : Cl55) =
         (spinGroup.toUnits g : Cl55) := by
     simpa using (spinGroup.involute_eq g.property)
+  have hinv' : CliffordAlgebra.involute (g : Cl55) = (g : Cl55) := by
+    simpa using hinv
   have hι' :
       ι55 (spinAction g v) =
         (spinGroup.toUnits g : Cl55) * ι55 v *
           (↑((spinGroup.toUnits g)⁻¹) : Cl55) := by
     change ι55 (pinTwistedAction (spinToPin g) v) = (spinGroup.toUnits g : Cl55) * ι55 v * (↑((spinGroup.toUnits g)⁻¹) : Cl55)
-    exact hι
+    simpa [pinTwistedAdj, hu, hinv'] using hι
   have hunit :
       (↑((spinGroup.toUnits g)⁻¹) : Cl55) *
           (spinGroup.toUnits g : Cl55) = 1 := by

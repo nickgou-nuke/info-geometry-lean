@@ -176,7 +176,6 @@ theorem mapSymbolicLatentComposablePathPairQuotient_concatenation_natural
       _ = f.comp (canonicalSymbolicConcatenation p.composable) := by
         rfl
   rw [hconcat_eq]
-  exact SymbolicLatentPathHomotopic.refl _
 
 
 end InfoGeometry.Topology

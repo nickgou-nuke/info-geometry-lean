@@ -51,7 +51,7 @@ def toTopCatCocone
         apply TopCat.hom_ext
         apply ContinuousMap.ext
         intro x
-        rw [TopCat.comp_app]
+        change C.ι j (S.map f x) = C.ι i x
         exact C.ι_comm f x }
 
 noncomputable def coconeDescend

@@ -1,4 +1,4 @@
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import Mathlib.Tactic
 import Omega.Conclusion.VisibleNegativeSpectrumVandermondeEnergy
 
@@ -87,7 +87,7 @@ private lemma conclusion_visible_negative_spectrum_degeneration_dichotomy_pair_p
           ‖D.z n p.2 - D.z n p.1‖ ^ (4 : ℕ)) ≤
         Finset.prod (conclusion_visible_negative_spectrum_vandermonde_energy_pair_finset D.κ) (fun _ =>
           (2 : ℝ) ^ (4 : ℕ)) := by
-    refine Finset.prod_le_prod ?_ ?_
+    refine Finset.prod_le_prod₀ ?_ ?_
     · intro p hp
       positivity
     · intro p hp

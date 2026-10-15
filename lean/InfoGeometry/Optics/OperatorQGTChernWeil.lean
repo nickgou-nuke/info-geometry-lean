@@ -57,7 +57,9 @@ theorem trace_curvatureDerivative_zero_of_bianchi
     LinearMap.trace ℂ V (dF p X U W) = 0 := by
   have h := congrArg (LinearMap.trace ℂ V) (hBianchi p X U W)
   rw [trace_adjointCovariantDerivative] at h
-  simpa using h
+  rw [map_zero] at h
+  change LinearMap.trace ℂ V (dF p X U W) = 0 at h
+  exact h
 
 /-- Differential field of the quadratic curvature `F(U,W)^2`, with the
 ordinary derivative supplied by the noncommutative Leibniz rule. -/
@@ -286,10 +288,13 @@ theorem trace_gaugeCurvatureDerivative
         (gaugeCurvatureDerivative G C dF p X U Z) =
       LinearMap.trace ℂ (Fin 2 → W) (dF p X U Z) := by
   change LinearMap.trace ℂ (Fin 2 → W)
-      ((localGaugeField G (curvatureDifferentialField C dF U Z)).derivative p X) = _
-  rw [localGaugeField_derivative, map_add,
+      ((G • curvatureDifferentialField C dF U Z).derivative p X) = _
+  rw [show (G • curvatureDifferentialField C dF U Z).derivative p X =
+      innerConjugation (G.frame p) (dF p X U Z) +
+        associativeCommutator (G.theta p X)
+          (innerConjugation (G.frame p) (curvature C p U Z)) by rfl,
+    map_add,
     trace_innerConjugation, trace_associativeCommutator_zero, add_zero]
-  rfl
 
 /-- Bianchi closedness of the traced QGT curvature derivative is therefore
 stable under the complete point-dependent local gauge action. -/

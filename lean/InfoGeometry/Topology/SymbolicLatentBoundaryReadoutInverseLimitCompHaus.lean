@@ -79,9 +79,9 @@ theorem boundaryReadoutToPrefixLimitCompHausHom_isIso_of_bijective
     IsIso (boundaryReadoutToPrefixLimitCompHausHom D S) := by
   have hIso :
       IsIso (compHausToTop.map (boundaryReadoutToPrefixLimitCompHausHom D S)) := by
-    simpa [boundaryReadoutToPrefixLimitCompHausHom_forget] using
-      (boundaryReadoutToPrefixLimit_isIso_of_bijective (D := D) (S := S)
-        h_inj h_surj)
+    rw [boundaryReadoutToPrefixLimitCompHausHom_forget]
+    exact boundaryReadoutToPrefixLimit_isIso_of_bijective (D := D) (S := S)
+      h_inj h_surj
   have hFF : (compHausToTop).FullyFaithful := by
     simpa using (CompHausLike.fullyFaithfulCompHausLikeToTop (fun _ => True))
   exact hFF.isIso_of_isIso_map (boundaryReadoutToPrefixLimitCompHausHom D S)

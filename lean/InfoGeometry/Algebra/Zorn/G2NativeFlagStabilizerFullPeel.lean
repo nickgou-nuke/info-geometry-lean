@@ -71,7 +71,7 @@ noncomputable def quotientIntrinsicFlagEquiv_of_fullPeel_mem
   apply G2StructuralFlagQuotient.quotientFlagEquivOfStabilizerEq
     baseIntrinsicFlag unipotentSubgroup
   · exact nativeFlagStabilizer_eq_unipotent_of_fullPeel_mem hpeel
-  · simpa only [smul_eq_mul] using
+  · simpa only [smul_intrinsicFlag] using
       InfoGeometry.Algebra.Zorn.G2NativeFlagIntrinsicEquiv.intrinsicFlag_orbit_surjective
 
 /-! The basis-readback contract is the direct input expected by the native

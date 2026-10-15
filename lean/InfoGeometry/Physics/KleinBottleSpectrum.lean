@@ -52,14 +52,15 @@ theorem cosineFactor_second_deriv (k y : ℝ) :
       convert ((hasDerivAt_id (u : ℂ)).comp_ofReal.const_mul (k : ℂ)) using 1 <;>
         simp
     have hcos := (Complex.hasDerivAt_cos (k * u : ℂ)).comp u hlin
-    simpa [cosineFactor] using hcos.deriv
+    simpa [Function.comp_def, cosineFactor] using hcos.deriv
   rw [hfirst]
   have hlin : HasDerivAt (fun u : ℝ => (k * u : ℂ)) (k : ℂ) y := by
     convert ((hasDerivAt_id (y : ℂ)).comp_ofReal.const_mul (k : ℂ)) using 1 <;>
       simp
   have hsin := (Complex.hasDerivAt_sin (k * y : ℂ)).comp y hlin
   have hprod := hsin.neg.mul_const (k : ℂ)
-  convert hprod.deriv using 1 <;> simp [cosineFactor, pow_two] <;> ring
+  convert hprod.deriv using 1 <;>
+    simp [Function.comp_def, cosineFactor, pow_two] <;> ring
 
 theorem sineFactor_second_deriv (k y : ℝ) :
     deriv (fun u : ℝ => deriv (fun v : ℝ => sineFactor k v) u) y =
@@ -72,14 +73,15 @@ theorem sineFactor_second_deriv (k y : ℝ) :
       convert ((hasDerivAt_id (u : ℂ)).comp_ofReal.const_mul (k : ℂ)) using 1 <;>
         simp
     have hsin := (Complex.hasDerivAt_sin (k * u : ℂ)).comp u hlin
-    simpa [sineFactor] using hsin.deriv
+    simpa [Function.comp_def, sineFactor] using hsin.deriv
   rw [hfirst]
   have hlin : HasDerivAt (fun u : ℝ => (k * u : ℂ)) (k : ℂ) y := by
     convert ((hasDerivAt_id (y : ℂ)).comp_ofReal.const_mul (k : ℂ)) using 1 <;>
       simp
   have hcos := (Complex.hasDerivAt_cos (k * y : ℂ)).comp y hlin
   have hprod := hcos.mul_const (k : ℂ)
-  convert hprod.deriv using 1 <;> simp [sineFactor, pow_two] <;> ring
+  convert hprod.deriv using 1 <;>
+    simp [sineFactor, pow_two] <;> ring
 
 theorem planeWaveFactor_second_deriv (k x : ℝ) :
     deriv (fun u : ℝ => deriv (fun v : ℝ => planeWaveFactor k v) u) x =
@@ -87,8 +89,8 @@ theorem planeWaveFactor_second_deriv (k x : ℝ) :
   have hinner :
       HasDerivAt (fun u : ℝ => Complex.I * (k * u : ℂ))
         (Complex.I * (k : ℂ)) x := by
-    convert ((hasDerivAt_id (x : ℂ)).comp_ofReal.const_mul (k : ℂ)).const_mul
-      Complex.I using 1 <;> simp [mul_assoc]
+      convert ((hasDerivAt_id (x : ℂ)).comp_ofReal.const_mul (k : ℂ)).const_mul
+        Complex.I using 1 <;> simp
   have hfirst :
       (fun u : ℝ => deriv (fun v : ℝ => planeWaveFactor k v) u) =
         (fun u : ℝ => Complex.exp (Complex.I * (k * u : ℂ)) *
@@ -98,9 +100,9 @@ theorem planeWaveFactor_second_deriv (k x : ℝ) :
         HasDerivAt (fun z : ℝ => Complex.I * (k * z : ℂ))
           (Complex.I * (k : ℂ)) u := by
       convert ((hasDerivAt_id (u : ℂ)).comp_ofReal.const_mul (k : ℂ)).const_mul
-        Complex.I using 1 <;> simp [mul_assoc]
+        Complex.I using 1 <;> simp
     have hexp := (Complex.hasDerivAt_exp (Complex.I * (k * u : ℂ))).comp u hinner'
-    simpa [planeWaveFactor] using hexp.deriv
+    simpa [Function.comp_def, planeWaveFactor] using hexp.deriv
   rw [hfirst]
   have hexp := (Complex.hasDerivAt_exp (Complex.I * (k * x : ℂ))).comp x hinner
   have hprod := hexp.mul_const (Complex.I * (k : ℂ))
@@ -749,6 +751,12 @@ def InfiniteHeatTraceSummable (t a b : ℝ) : Prop :=
     Summable (oddHeatTerm t a b) ∧
       Summable (torusHeatTerm t a b)
 
+-- Keep the real additive monoid used by the normed additive group visible
+-- across the summability lemmas and their subtype restrictions.  Mathlib
+-- 4.34.1 exposes both this and the semiring-induced instance on `ℝ`.
+local instance realSummableAddCommMonoid : AddCommMonoid ℝ :=
+  Real.instAddCommGroup.toAddCommMonoid
+
 theorem summable_exp_neg_mul_sq_nat {r : ℝ} (hr : 0 < r) :
     Summable (fun n : ℕ => Real.exp (-r * (n : ℝ) ^ 2)) := by
   apply Real.summable_exp_nat_mul_of_ge (neg_lt_zero.mpr hr) ?_
@@ -850,9 +858,12 @@ theorem summable_exp_neg_shifted_sq_int_posNat {r s : ℝ}
   constructor
   · intro n
     have hm : Summable (fun m : PositiveTransverseIndex =>
-        Real.exp (-s * (m.1 : ℝ) ^ 2)) := by
-      simpa [Function.comp_def] using
+      Real.exp (-s * (m.1 : ℝ) ^ 2)) := by
+      have hmSource :=
         (summable_exp_neg_mul_sq_nat hs).subtype {m : ℕ | 0 < m}
+      change @Summable ℝ PositiveTransverseIndex
+        Real.instAddCommGroup.toAddCommMonoid _ _ _
+      exact hmSource
     have hmul := hm.mul_left
       (Real.exp (-r * (2 * (n : ℝ) + 1) ^ 2))
     convert hmul using 1

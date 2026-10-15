@@ -20,8 +20,8 @@ namespace InfoGeometry.Canonical.MassieuFisherClassical
 
 variable {State : Type*} [Fintype State] [Nonempty State]
 
-def βSlice (beta : Fin 2 → ℝ) (i : Fin 2) (t : ℝ) : Fin 2 → ℝ :=
-  fun j => if j = i then t else beta j
+abbrev βSlice (beta : Fin 2 → ℝ) (i : Fin 2) (t : ℝ) : Fin 2 → ℝ :=
+  InfoGeometry.Lie.betaSlice beta i t
 
 noncomputable def chargeCovariance
     (D : CartanSouriauDatum State) (beta : Fin 2 → ℝ) (i j : Fin 2) : ℝ :=

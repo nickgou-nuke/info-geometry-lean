@@ -1,4 +1,4 @@
-import Mathlib.Logic.ExistsUnique
+import Mathlib.Basic.ExistsUnique
 
 namespace Omega.Conclusion
 

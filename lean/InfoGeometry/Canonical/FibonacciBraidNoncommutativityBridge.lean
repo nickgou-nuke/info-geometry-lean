@@ -76,7 +76,6 @@ theorem braid_generators_noncommute : R * B ≠ B * R := by
         R 0 0 = q ^ (-4 : ℤ) := rfl
         _ = (q ^ 4)⁻¹ := by
           simp [zpow_neg (q : ℂ) (4 : ℤ)]
-          simpa using (zpow_natCast q 4)
         _ = -q := q_inv_four_eq_neg_q
     · simp [R, diagonalBraidMatrixC]
     · simp [R, diagonalBraidMatrixC]

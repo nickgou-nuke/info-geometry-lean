@@ -14,7 +14,7 @@ theorem normalized_outer_idempotent
     (hn : dotProduct n n ≠ 0) :
     projector n * projector n = projector n := by
   ext i j
-  dsimp [projector, vecMulVec, Matrix.mul_apply, smul_apply]
+  dsimp [projector, vecMulVec, Matrix.mul_apply, Matrix.smul_apply]
   have h_sum : ∑ k : Fin 2, n k * n k = dotProduct n n := rfl
   calc
     ∑ k : Fin 2, ((dotProduct n n)⁻¹ * (n i * n k)) * ((dotProduct n n)⁻¹ * (n k * n j))
@@ -104,7 +104,7 @@ theorem zornLineEmbed_injective (e : Vec3) (he : dot e e = 1) :
   have h11 : A 1 1 = B 1 1 := congr_arg ZornCore.Zorn.b h
   have h01 : A 0 1 = B 0 1 := by
     have hd : ZornCore.dot (A 0 1 • e) e = ZornCore.dot (B 0 1 • e) e := by rw [h01_eq]
-    dsimp [ZornCore.dot, smul_apply] at hd
+    dsimp [ZornCore.dot, _root_.smul_apply] at hd
     have hd2 : A 0 1 * ∑ i, e i * e i = B 0 1 * ∑ i, e i * e i := by
       calc A 0 1 * ∑ i, e i * e i = ∑ i, (A 0 1 * e i) * e i := by
             rw [Finset.mul_sum]
@@ -124,7 +124,7 @@ theorem zornLineEmbed_injective (e : Vec3) (he : dot e e = 1) :
     exact hd2
   have h10 : A 1 0 = B 1 0 := by
     have hd : ZornCore.dot (A 1 0 • e) e = ZornCore.dot (B 1 0 • e) e := by rw [h10_eq]
-    dsimp [ZornCore.dot, smul_apply] at hd
+    dsimp [ZornCore.dot, _root_.smul_apply] at hd
     have hd2 : A 1 0 * ∑ i, e i * e i = B 1 0 * ∑ i, e i * e i := by
       calc A 1 0 * ∑ i, e i * e i = ∑ i, (A 1 0 * e i) * e i := by
             rw [Finset.mul_sum]
@@ -154,7 +154,7 @@ theorem zornLineEmbed_norm_eq_det (e : Vec3) (he : dot e e = 1)
     ZornCore.det (zornLineEmbed e he A) = Matrix.det A := by
   dsimp [ZornCore.det, zornLineEmbed]
   have h_dot : ZornCore.dot (A 0 1 • e) (A 1 0 • e) = A 0 1 * A 1 0 * ZornCore.dot e e := by
-    dsimp [ZornCore.dot, smul_apply]
+    dsimp [ZornCore.dot, _root_.smul_apply]
     calc
       ∑ i, (A 0 1 * e i) * (A 1 0 * e i)
         = ∑ i, (A 0 1 * A 1 0) * (e i * e i) := by
@@ -172,7 +172,7 @@ theorem zornLineEmbed_null_iff (e : Vec3) (he : dot e e = 1)
 
 theorem cross_smul_smul (c d : ℝ) (u v : Vec3) : cross (c • u) (d • v) = (c * d) • cross u v := by
   ext i
-  fin_cases i <;> simp [cross, smul_apply] <;> ring
+  fin_cases i <;> simp [cross, _root_.smul_apply] <;> ring
 
 theorem zornLineEmbed_mul
     (e : Vec3)
@@ -183,7 +183,7 @@ theorem zornLineEmbed_mul
   apply ZornCore.Zorn.ext'
   · dsimp [zornLineEmbed, Matrix.mul_apply]
     have h_dot : ZornCore.dot (A 0 1 • e) (B 1 0 • e) = A 0 1 * B 1 0 := by
-      dsimp [ZornCore.dot, smul_apply]
+      dsimp [ZornCore.dot, _root_.smul_apply]
       calc
         ∑ i, (A 0 1 * e i) * (B 1 0 * e i) = ∑ i, (A 0 1 * B 1 0) * (e i * e i) := by
           apply Finset.sum_congr rfl
@@ -200,18 +200,18 @@ theorem zornLineEmbed_mul
     rw [hc, hx, smul_zero, sub_zero]
     ext i
     rw [Fin.sum_univ_two]
-    simp [smul_apply]
+    simp [_root_.smul_apply]
     ring
   · dsimp [zornLineEmbed, Matrix.mul_apply, ZornCore.mul_v]
     have hc : cross (A 0 1 • e) (B 0 1 • e) = (A 0 1 * B 0 1) • cross e e := cross_smul_smul _ _ _ _
     rw [hc, hx, smul_zero, add_zero]
     ext i
     rw [Fin.sum_univ_two]
-    simp [smul_apply]
+    simp [_root_.smul_apply]
     ring
   · dsimp [zornLineEmbed, Matrix.mul_apply]
     have h_dot : ZornCore.dot (A 1 0 • e) (B 0 1 • e) = A 1 0 * B 0 1 := by
-      dsimp [ZornCore.dot, smul_apply]
+      dsimp [ZornCore.dot, _root_.smul_apply]
       calc
         ∑ i, (A 1 0 * e i) * (B 0 1 * e i) = ∑ i, (A 1 0 * B 0 1) * (e i * e i) := by
           apply Finset.sum_congr rfl

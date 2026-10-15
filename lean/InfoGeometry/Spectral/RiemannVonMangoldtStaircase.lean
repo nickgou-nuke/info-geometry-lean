@@ -2,7 +2,7 @@ import Mathlib.Analysis.Calculus.Deriv.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import Mathlib.Topology.Instances.Complex
 import Mathlib.Tactic
 
@@ -24,13 +24,15 @@ theorem smooth_staircase_deriv (E : ℝ) (hE : 0 < E) :
   have h_pi_pos : 0 < Real.pi := Real.pi_pos
   have h_den_pos : 0 < 2 * Real.pi * Real.exp 1 := by positivity
   have h_c : HasDerivAt (fun x : ℝ => x / (2 * Real.pi * Real.exp 1)) (1 / (2 * Real.pi * Real.exp 1)) E := by
-    simpa only [one_mul] using (hasDerivAt_id E).div_const (2 * Real.pi * Real.exp 1)
+    simpa only [one_mul, id_eq] using
+      (hasDerivAt_id' E).div_const (2 * Real.pi * Real.exp 1)
   have h_log_inner := HasDerivAt.log h_c (ne_of_gt (div_pos hE h_den_pos))
   have h_frac : (1 / (2 * Real.pi * Real.exp 1)) / (E / (2 * Real.pi * Real.exp 1)) = 1 / E := by
     field_simp [ne_of_gt h_den_pos, ne_of_gt hE]
   rw [h_frac] at h_log_inner
   have h_linear : HasDerivAt (fun x : ℝ => x / (2 * Real.pi)) (1 / (2 * Real.pi)) E := by
-    simpa only [one_mul] using (hasDerivAt_id E).div_const (2 * Real.pi)
+    simpa only [one_mul, id_eq] using
+      (hasDerivAt_id' E).div_const (2 * Real.pi)
   have h_full_prod := HasDerivAt.mul h_linear h_log_inner
   have h_full_add := HasDerivAt.add_const (7 / 8) h_full_prod
   have h_prod_div : (E / (2 * Real.pi)) * (1 / E) = 1 / (2 * Real.pi) := by

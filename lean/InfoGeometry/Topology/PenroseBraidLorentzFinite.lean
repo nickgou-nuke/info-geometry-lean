@@ -20,6 +20,8 @@ theorems, particle physics, spacetime emergence, or infinite braid colimits.
 
 namespace InfoGeometry.Topology.PenroseBraidLorentzFinite
 
+open Matrix
+
 /-- Five pentagrid directions as labels. -/
 abbrev FiveLabel := ZMod 5
 
@@ -73,7 +75,9 @@ def heckeDiagPlus (q : ℤ) : Mat2Z :=
 /-- Finite Hecke characteristic equation `(H-qI)(H+I)=0` for `diag(q,-1)`. -/
 theorem heckeDiag_quadratic (q : ℤ) : heckeDiagMinus q * heckeDiagPlus q = 0 := by
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [heckeDiagMinus, heckeDiagPlus, Matrix.mul_apply]
+  fin_cases i <;> fin_cases j <;>
+    rw [Matrix.mul_apply] <;>
+    norm_num [heckeDiagMinus, heckeDiagPlus, Fin.sum_univ_two]
 
 /-- Split `Cl(1,1)` positive generator, represented as a concrete integer matrix. -/
 def cl11Plus : Mat2Z :=
@@ -86,16 +90,20 @@ def cl11Minus : Mat2Z :=
 @[simp]
 theorem cl11Plus_sq : cl11Plus * cl11Plus = (1 : Mat2Z) := by
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [cl11Plus, Matrix.mul_apply]
+  fin_cases i <;> fin_cases j <;>
+    rw [Matrix.mul_apply] <;> norm_num [cl11Plus, Fin.sum_univ_two]
 
 @[simp]
 theorem cl11Minus_sq : cl11Minus * cl11Minus = -(1 : Mat2Z) := by
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [cl11Minus, Matrix.mul_apply]
+  fin_cases i <;> fin_cases j <;>
+    rw [Matrix.mul_apply] <;> norm_num [cl11Minus, Fin.sum_univ_two]
 
 @[simp]
 theorem cl11_anticomm : cl11Plus * cl11Minus + cl11Minus * cl11Plus = (0 : Mat2Z) := by
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [cl11Plus, cl11Minus, Matrix.mul_apply]
+  fin_cases i <;> fin_cases j <;>
+    rw [Matrix.add_apply, Matrix.mul_apply, Matrix.mul_apply] <;>
+    norm_num [cl11Plus, cl11Minus, Fin.sum_univ_two]
 
 end InfoGeometry.Topology.PenroseBraidLorentzFinite

@@ -28,12 +28,13 @@ This module establishes the canonical mathematical formalization of the fundamen
    - Spacetime interval emergence: $g(v, v) = 2 g(P_+ v, \sigma(P_+ v))$.
      Observable spacetime distance is born from cross-chiral interference.
 
-3. **Zorn 4-Vector Operator & Relativistic Mass Condensation**:
+3. **Zorn 2×2 Matrix Family & Conditional Quadratic Readout**:
    - Traceless matrix: $\operatorname{tr}(\hat{Z}) = 0$ (Weyl dilaton condition).
    - Determinant: $\det(\hat{Z}) = -(p^2 + \Delta^2)$.
-   - Relativistic mass shell: $\hat{Z}^2 = (p^2 + \Delta^2) \mathbb{I}_2 = E^2 \mathbb{I}_2$.
-   - Massless limit ($\Delta = 0$): decoupled null rays traveling at $c$.
-   - Massive condensation ($\Delta = m > 0$): avoided crossing spectral gap $p^2 + m^2 > 0$.
+   - Matrix square: $\hat{Z}^2 = (p^2 + \Delta^2) \mathbb{I}_2$; under the explicit premise $p^2+\Delta^2=E^2$, this equals $E^2\mathbb{I}_2$.
+   - The slice $\Delta=0$ gives $\hat{Z}^2=p^2\mathbb{I}_2$; it does not assert a null momentum or propagation speed.
+   - For $\Delta=m>0$, $p^2+m^2>0$ is scalar positivity, not by itself a dynamical avoided-crossing theorem.
+   - A relativistic interpretation requires an explicit identification of the matrix parameters with momentum, mass, and energy; these matrix identities alone establish no such identification.
 
 4. **Tomita-Takesaki Modular Reflection on the Seam**:
    - Reflection $J^2 = \operatorname{id}$ fixes the self-polar cone $\mathcal{P}^\natural$ ($J \xi = \xi$).
@@ -240,7 +241,7 @@ theorem para_complex_triad_real_emergence_synthesis (v : V) (hv : I.IsRealState 
 end AntiChiralInvolution
 
 /-!
-### 3. Zorn Operator and Mass Shell Condensation
+### 3. Zorn Matrix Family and Conditional Quadratic Identity
 -/
 
 /-- Real $2 \times 2$ Zorn matrix encoding chiral connection $p$ and mass bridge $\Delta$. -/
@@ -263,7 +264,9 @@ theorem zorn_det (p Δ : ℝ) :
   simp
   ring
 
-/-- Relativistic mass shell condensation: $\hat{Z}^2 = E^2 \mathbb{I}_2$. -/
+/-- Given the scalar premise `p^2 + Δ^2 = E^2`, the square of the displayed
+    real matrix family is `E^2` times the identity. This is not by itself a
+    relativistic mass-shell theorem. -/
 theorem zorn_mass_shell_resonance (p Δ E : ℝ) (h : p ^ 2 + Δ ^ 2 = E ^ 2) :
     (zornOperator p Δ) * (zornOperator p Δ) = (E ^ 2) • (1 : Matrix (Fin 2) (Fin 2) ℝ) := by
   dsimp [zornOperator]
@@ -278,7 +281,8 @@ theorem zorn_mass_shell_resonance (p Δ E : ℝ) (h : p ^ 2 + Δ ^ 2 = E ^ 2) :
   · simp [Matrix.mul_apply, Fin.sum_univ_two]
     linear_combination h
 
-/-- Massless decoupling limit: when $\Delta = 0$, $\hat{Z}^2 = p^2 \mathbb{I}_2$. -/
+/-- On the parameter slice `Δ = 0`, the matrix square is `p^2` times the
+    identity. This algebraic fact alone does not assert null propagation. -/
 theorem zorn_massless_limit (p : ℝ) :
     (zornOperator p 0) * (zornOperator p 0) = (p ^ 2) • (1 : Matrix (Fin 2) (Fin 2) ℝ) := by
   exact zorn_mass_shell_resonance p 0 p (by ring)

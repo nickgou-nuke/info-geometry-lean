@@ -41,7 +41,7 @@ theorem e_sum_one : e₁ + e₂ + e₃ = eOne := by
       albertMatrixEquiv (X + Y) = albertMatrixEquiv X + albertMatrixEquiv Y := rfl
   rw [h_add, h_add]
   have hz : (zeroZ : SplitOct) = 0 := rfl
-  simp [albertMatrixEquiv, e₁, e₂, e₃, eOne, hz]
+  simp [albertMatrixEquiv, e₁, e₂, e₃, eOne, hz] <;> abel_nf
 
 /-- Peirce diagonal projection $J_{11}$. -/
 def peirceProj11 (X : AlbertMatrix) : AlbertMatrix :=
@@ -163,5 +163,10 @@ theorem peirce_full_decomposition (X : AlbertMatrix) :
   have hz : (zeroZ : SplitOct) = 0 := rfl
   simp [albertMatrixEquiv, peirceProj11, peirceProj22, peirceProj33,
     peirceProj23, peirceProj31, peirceProj12, hz]
+  constructor
+  · ext <;> simp [← hz, zeroZ]
+  · constructor
+    · ext <;> simp [← hz, zeroZ]
+    · ext <;> simp [← hz, zeroZ]
 
 end InfoGeometry.Algebra.CubicJordanOs

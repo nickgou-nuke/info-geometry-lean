@@ -277,7 +277,7 @@ theorem primeRegularizedDetStage_inv_tendsto_riemannZeta
     InfoGeometry.Canonical.PrimeEulerProductConvergenceBridge.primeBosonicCutoff_tendsto_riemannZeta hs
   have hcofinal := primeAt_val_tendsto_atTop
   have hsub := hcut.comp hcofinal
-  simpa only [primeRegularizedDetStage_inv_eq_primeBosonicCutoff] using hsub
+  simpa only [Function.comp_def, primeRegularizedDetStage_inv_eq_primeBosonicCutoff] using hsub
 
 theorem primeRegularizedDetStage_tendsto_inv_riemannZeta
     {s : ℂ} (hs : 1 < s.re) :

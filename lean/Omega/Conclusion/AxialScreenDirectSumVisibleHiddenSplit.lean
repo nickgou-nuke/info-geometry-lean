@@ -1,3 +1,5 @@
+import Mathlib.Data.Fintype.Card
+import Mathlib.Data.ZMod.Basic
 import Omega.Conclusion.FixedResolutionAxialScreenCorankAreaLaw
 import Omega.Conclusion.FullInternalScreenGlobalComplementLaw
 import Omega.Conclusion.ScreenKolmogorovDeficitExactSplitting
@@ -74,10 +76,9 @@ theorem paper_conclusion_axial_screen_direct_sum_visible_hidden_split :
     rcases paper_conclusion_screen_kolmogorov_deficit_exact_splitting f with ⟨r, h, hsplit⟩
     refine ⟨r, h, ?_, ?_⟩
     · simpa [f]
-    · simp [conclusion_axial_screen_direct_sum_visible_hidden_split_total_space,
+    · dsimp [conclusion_axial_screen_direct_sum_visible_hidden_split_total_space,
         conclusion_axial_screen_direct_sum_visible_hidden_split_hidden_space,
-        conclusion_axial_screen_direct_sum_visible_hidden_split_visible_space,
-        conclusion_axial_screen_direct_sum_visible_hidden_split_hidden_rank,
-        conclusion_axial_screen_direct_sum_visible_hidden_split_visible_dimension]
+        conclusion_axial_screen_direct_sum_visible_hidden_split_visible_space]
+      rw [Fintype.card_prod, Fintype.card_fun, Fintype.card_fun, Fintype.card_fin, Fintype.card_fin, ZMod.card]
 
 end Omega.Conclusion

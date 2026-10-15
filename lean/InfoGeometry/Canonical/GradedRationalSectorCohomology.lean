@@ -56,18 +56,16 @@ instance sectorCohomologyShadow.instAddCommGroup
     (S : GradedSector V)
     (hS : DifferentialPreservesSector D S)
     (p : ℕ) :
-    AddCommGroup (sectorCohomologyShadow D S hS p) := by
-  dsimp [sectorCohomologyShadow]
-  infer_instance
+    AddCommGroup (sectorCohomologyShadow D S hS p) :=
+  Submodule.Quotient.addCommGroup _
 
 instance sectorCohomologyShadow.instModule
     (D : GradedRationalDifferential V)
     (S : GradedSector V)
     (hS : DifferentialPreservesSector D S)
     (p : ℕ) :
-    Module ℚ (sectorCohomologyShadow D S hS p) := by
-  dsimp [sectorCohomologyShadow]
-  infer_instance
+    Module ℚ (sectorCohomologyShadow D S hS p) :=
+  Submodule.Quotient.module _
 
 def sectorCohomologyMap
     {D : GradedRationalDifferential V}
@@ -102,7 +100,10 @@ theorem sectorCohomologyMap_mk
               (sectorMapOnDegree f (p + 1) x) = 0
           rw [← sectorMapOnDegree_intertwines_restrictedDifferential
             hS hT f (p + 1) x.1]
-          simp [x.2]⟩) := by
+          have hx : restrictedDifferential D S hS (p + 1) x.1 = 0 :=
+            LinearMap.mem_ker.mp x.2
+          rw [hx]
+          simp⟩) := by
   exact chainMapOnCohomology_mk
     (sectorDifferential D S hS)
     (sectorDifferential E T hT)

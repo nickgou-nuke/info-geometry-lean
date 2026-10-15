@@ -464,8 +464,11 @@ theorem paper_pom_toggle_scan_orbit_length_spectrum (n : Nat) (hn : 4 <= n) :
       exact pom_toggle_scan_orbit_length_spectrum_primitive_block_length n k d hdpos hdN1 hdk
     · have hLdiv :
           pom_toggle_scan_orbit_length_spectrum_L n k ∣ toggleScanOrderClosedFormLcm n := by
-        simpa [pom_toggle_scan_orbit_length_spectrum_L] using
-          (paper_pom_toggle_scan_order_closed_form_true n hn).2.1 k hk
+        have hclosed := paper_pom_toggle_scan_order_closed_form_true n hn
+        have hlength : togglePrimitiveWordOrbitLength n k =
+            pom_toggle_scan_orbit_length_spectrum_L n k := by
+          simpa [pom_toggle_scan_orbit_length_spectrum_L] using (hclosed.1 k hk).1
+        simpa [hlength] using hclosed.2.1 k hk
       have hdg : d ∣ pom_toggle_scan_orbit_length_spectrum_g n k := Nat.dvd_of_mem_divisors hd
       have hdL : d ∣ pom_toggle_scan_orbit_length_spectrum_L n k := by
         exact hdg.trans (pom_toggle_scan_orbit_length_spectrum_g_dvd_L n k hk)

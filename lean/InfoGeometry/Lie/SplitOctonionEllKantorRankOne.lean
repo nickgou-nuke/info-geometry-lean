@@ -26,6 +26,38 @@ open InfoGeometry.Lie.SplitOctonionEllPolarization
 
 abbrev CZ := InfoGeometry.Canonical.ZornMatrix ℝ
 
+@[simp] theorem coordAddEquiv_apply (z : CZ) :
+    InfoGeometry.Canonical.ZornMatrix.coordAddEquiv z = (z.a, z.b, z.x, z.y) := rfl
+
+@[simp] theorem coordAddEquiv_symm_apply (c : InfoGeometry.Canonical.ZornMatrix.Coord ℝ) :
+    InfoGeometry.Canonical.ZornMatrix.coordAddEquiv.symm c = { a := c.1, b := c.2.1, x := c.2.2.1, y := c.2.2.2 } := rfl
+
+@[simp] theorem coordEquiv_apply (z : CZ) :
+    InfoGeometry.Canonical.ZornMatrix.coordEquiv z = (z.a, z.b, z.x, z.y) := rfl
+
+@[simp] theorem coordEquiv_symm_apply (c : InfoGeometry.Canonical.ZornMatrix.Coord ℝ) :
+    InfoGeometry.Canonical.ZornMatrix.coordEquiv.symm c = { a := c.1, b := c.2.1, x := c.2.2.1, y := c.2.2.2 } := rfl
+
+@[simp] theorem canonicalConj_a (X : CZ) : (canonicalConj X).a = X.b := rfl
+@[simp] theorem canonicalConj_b (X : CZ) : (canonicalConj X).b = X.a := rfl
+@[simp] theorem canonicalConj_x (X : CZ) : (canonicalConj X).x = -X.x := rfl
+@[simp] theorem canonicalConj_y (X : CZ) : (canonicalConj X).y = -X.y := rfl
+
+@[simp] theorem neg_a (z : CZ) : (-z).a = -z.a := rfl
+@[simp] theorem neg_b (z : CZ) : (-z).b = -z.b := rfl
+@[simp] theorem neg_x (z : CZ) : (-z).x = -z.x := rfl
+@[simp] theorem neg_y (z : CZ) : (-z).y = -z.y := rfl
+
+@[simp] theorem sub_a (z1 z2 : CZ) : (z1 - z2).a = z1.a - z2.a := rfl
+@[simp] theorem sub_b (z1 z2 : CZ) : (z1 - z2).b = z1.b - z2.b := rfl
+@[simp] theorem sub_x (z1 z2 : CZ) : (z1 - z2).x = z1.x - z2.x := rfl
+@[simp] theorem sub_y (z1 z2 : CZ) : (z1 - z2).y = z1.y - z2.y := rfl
+
+@[simp] theorem smul_a_real (c : ℝ) (z : CZ) : (c • z).a = c * z.a := rfl
+@[simp] theorem smul_b_real (c : ℝ) (z : CZ) : (c • z).b = c * z.b := rfl
+@[simp] theorem smul_x_real (c : ℝ) (z : CZ) : (c • z).x = c • z.x := rfl
+@[simp] theorem smul_y_real (c : ℝ) (z : CZ) : (c • z).y = c • z.y := rfl
+
 @[simp] theorem canonicalConj_rootPlus (a : Fin 3) :
     canonicalConj (rootPlus a) = -rootPlus a := by
   fin_cases a <;>

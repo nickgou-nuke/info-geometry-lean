@@ -109,9 +109,12 @@ theorem paper_conclusion_screen_exactization_independent_kernel
     have hupper :
         screenExactizationMinCost ρ r I0 S0 (fun _ => 1) ≤ ρ - r I0 := by
       unfold screenExactizationMinCost
-      simp [F, hFne]
-      simpa [screenCompletionCost, hT0card] using
-        (Finset.inf'_le (s := F) (f := screenCompletionCost fun _ : V => 1) hT0mem)
+      rw [dif_pos hFne]
+      have H := Finset.inf'_le (s := F) (f := screenCompletionCost fun _ : V => 1) hT0mem
+      have H2 : screenCompletionCost (fun _ : V => 1) T0 = ρ - r I0 := by
+        dsimp [screenCompletionCost]
+        simp [hT0card]
+      rwa [H2] at H
     have hlower' :
         ρ - r I0 ≤ screenExactizationMinCost ρ r I0 S0 (fun _ => 1) := by
       have hFbound :

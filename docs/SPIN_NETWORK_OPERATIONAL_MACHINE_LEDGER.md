@@ -28,8 +28,8 @@ In the repository, the safe compiled core is narrower:
 | Layer | File | Kernel-checked content |
 |---|---|---|
 | Thermodynamic finite flow | `lean/InfoGeometry/Topology/ThermodynamicGauge.lean` | `entropy_production` is the transition commutator; a supplied commutator equality identifies it with `d_ln_Q`; reciprocal scalar rescaling preserves the finite gauge word. |
-| DAG/chiral linker | `lean/InfoGeometry/Topology/GrandUnificationLinker.lean` | `global_isometry_preservation`; plus/minus nilpotent boundary collapse; explicit-premise entropy alignment. |
-| Residue/BCFW boundary | `lean/InfoGeometry/Projective/OnShellResidueBCFWBridge.lean` | `residue_bcfw` restates the closed linker theorem; no stored `ResidueBCFWInterface` witness packet. |
+| DAG/chiral linker | `lean/InfoGeometry/Topology/GrandUnificationLinker.lean` | `dag_edge_commutes_with_symmetric_mixed` under two explicit intertwining equations; `nilpotent_sandwich_zero` from square-zero; explicit-premise entropy alignment. |
+| DAG-edge commutation | `lean/InfoGeometry/Topology/GrandUnificationLinker.lean` | The symmetric mixed element commutes with the supplied DAG edge under explicit flow-compatibility equations; this is not a residue or BCFW theorem. |
 | Local dlog residue | `lean/InfoGeometry/Projective/KleinQuadricGrothendieckDeRham.lean` | Existing circle-integral readout for the local `dlog` pole model. |
 
 ## Interpretation Boundary
@@ -63,9 +63,10 @@ types, comparison maps, hypotheses, and analytic/convergence assumptions.
    theorem claiming `entropy_production = d_ln_Q`.
 
 4. `BCFWResidueTheorem`
-   Replace the current finite BCFW-style readout with an actual residue theorem
-   only after compactification, divisors, residues, and factorization maps are
-   formalized.
+   Build an actual residue theorem after compactification, divisors, residues,
+   and factorization maps are formalized. The former `residue_bcfw` forwarding
+   theorem was removed because it only restated DAG-edge commutation and did not
+   establish residue balance or BCFW recursion.
 
 ## Guardrails
 

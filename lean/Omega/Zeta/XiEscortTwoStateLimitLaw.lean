@@ -29,14 +29,6 @@ two-state Bernoulli limit package obtained by reusing the already verified first
 local-information-density law. -/
 theorem paper_xi_time_part54ab_escort_two_state_limit_law
     (D : XiEscortTwoStateDatum) : D.HasTwoStateLimitLaw := by
-  let D' : XiFoldLocalInformationDensityData :=
-    { limitLaw := D.limitLaw
-      scaledMean := D.scaledMean
-      scaledVariance := D.scaledVariance
-      limitLaw_eq := D.limitLaw_eq
-      scaledMean_eq := D.scaledMean_eq
-      scaledVariance_eq := D.scaledVariance_eq }
-  simpa [XiEscortTwoStateDatum.HasTwoStateLimitLaw] using
-    paper_xi_fold_local_information_density_first_order_discrete_law D'
+  exact ⟨D.limitLaw_eq, D.scaledMean_eq, D.scaledVariance_eq⟩
 
 end Omega.Zeta

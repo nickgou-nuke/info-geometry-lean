@@ -22,9 +22,6 @@ theorem paper_conclusion_window6_boundary_f8_f9_channel_orthogonality :
     ¬ window6BoundaryMeasurableFromF8 window6CanonicalBoundaryParity := by
   rcases paper_conclusion_window6_boundary_parity_not_measurable_from_f8 with
     ⟨hConst, hAnti, hNotMeas, _⟩
-  refine ⟨hConst, hAnti, ?_, ?_, hNotMeas⟩
-  · simpa using (paper_terminal_foldbin6_boundary_pure_f9_alias 0).2.1
-  · intro baseValue
-    simpa using (paper_terminal_foldbin6_boundary_pure_f9_alias baseValue).2.2
+  refine ⟨hConst, hAnti, rfl, fun _ => rfl, hNotMeas⟩
 
 end Omega.Conclusion

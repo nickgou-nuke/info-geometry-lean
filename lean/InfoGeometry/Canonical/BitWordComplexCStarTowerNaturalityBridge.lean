@@ -54,20 +54,37 @@ theorem stageStarAlgEquiv_bond
   | mk i₁ i₂ =>
       cases hj : (stageIndexEquiv n).symm j with
       | mk j₁ j₂ =>
-          dsimp [stageStarAlgEquiv, BitWordComplexStageReindex.equiv,
-            concreteStep, Matrix.reindexAlgEquiv, Matrix.reindex]
-          rw [hi, hj]
+          have hi' : i = stageIndexEquiv n (i₁, i₂) := by
+            calc
+              i = stageIndexEquiv n ((stageIndexEquiv n).symm i) :=
+                ((stageIndexEquiv n).apply_symm_apply i).symm
+              _ = stageIndexEquiv n (i₁, i₂) := congrArg (stageIndexEquiv n) hi
+          have hj' : j = stageIndexEquiv n (j₁, j₂) := by
+            calc
+              j = stageIndexEquiv n ((stageIndexEquiv n).symm j) :=
+                ((stageIndexEquiv n).apply_symm_apply j).symm
+              _ = stageIndexEquiv n (j₁, j₂) := congrArg (stageIndexEquiv n) hj
+          rw [hi', hj']
+          simp only [stageStarAlgEquiv_apply,
+            BitWordComplexStageReindex.equiv_apply, Matrix.reindex_apply]
           change
             ComplexMatrixStage.bondFun n A
-                ((bitWordFinPowTwoEquiv (n + 1)).symm i)
-                ((bitWordFinPowTwoEquiv (n + 1)).symm j) =
-              A ((bitWordFinPowTwoEquiv n).symm i₁)
-                  ((bitWordFinPowTwoEquiv n).symm j₁) *
-                (1 : Matrix (Fin 2) (Fin 2) ℂ) i₂ j₂
+                ((bitWordFinPowTwoEquiv (n + 1)).symm
+                  (stageIndexEquiv n (i₁, i₂)))
+                ((bitWordFinPowTwoEquiv (n + 1)).symm
+                  (stageIndexEquiv n (j₁, j₂))) =
+              (Matrix.reindex (stageIndexEquiv n) (stageIndexEquiv n)
+                (stageStarAlgEquiv n A ⊗ₖ
+                  (1 : Matrix (Fin 2) (Fin 2) ℂ)))
+                (stageIndexEquiv n (i₁, i₂))
+                (stageIndexEquiv n (j₁, j₂))
+          simp only [Matrix.reindex_apply]
+          simp only [stageStarAlgEquiv_apply,
+            BitWordComplexStageReindex.equiv_apply, Matrix.reindex_apply]
           simp [ComplexMatrixStage.bondFun, bitWordFinPowTwoEquiv,
             InfoGeometry.Algebra.CliffordBitWordEquivalence.bitWordSuccEquiv,
             finTwoEquivBool, Matrix.kronecker_apply,
-            hi, hj, extendSucc, prefixSucc, prefixSucc_extendSucc]
+            extendSucc, prefixSucc, prefixSucc_extendSucc]
           fin_cases i₂ <;> fin_cases j₂ <;>
             simp [extendSucc, prefixSucc, prefixSucc_extendSucc,
               finTwoEquivBool]

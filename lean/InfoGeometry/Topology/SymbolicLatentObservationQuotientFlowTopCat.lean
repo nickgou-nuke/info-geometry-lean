@@ -124,9 +124,10 @@ theorem SymbolicLatentObservableModularFlow.observationQuotientFlowTopCatHom_add
       Φ.observationQuotientFlowTopCatHom h_cont s ≫
         Φ.observationQuotientFlowTopCatHom h_cont t := by
   ext q
-  simpa [SymbolicLatentObservableModularFlow.observationQuotientFlowTopCatHom,
-    CategoryTheory.comp_apply, add_comm] using
-    (symbolicLatentObservationQuotientFlow Φ h_cont).act_add t s q
+  change descendedSymbolicLatentObservationFlow Φ (s + t) q =
+    descendedSymbolicLatentObservationFlow Φ t (descendedSymbolicLatentObservationFlow Φ s q)
+  rw [add_comm s t]
+  exact (symbolicLatentObservationQuotientFlow Φ h_cont).act_add t s q
 
 @[simp] theorem SymbolicLatentObservableModularFlow.observationQuotientFlowTopCatHom_add_apply
     {X : Type*} [TopologicalSpace X]

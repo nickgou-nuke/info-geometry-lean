@@ -35,8 +35,8 @@ def applyTwistorLinearMap (g : TwistorLinearMap R) (Z : PlabicTwistorMatrix R) :
 
 /-- The minors of the two mapped rows satisfy the Klein quadric equation. -/
 theorem linear_map_preserves_plucker_relation (g : TwistorLinearMap R) (Z : PlabicTwistorMatrix R) :
-    IsKleinNull (extractOnShellTwistorBlade (applyTwistorLinearMap g Z)) := by
-  dsimp [IsKleinNull, kleinQuadricEval, extractOnShellTwistorBlade, applyTwistorLinearMap]
+    IsKleinNull (extractTwistorPluckerCoordinates (applyTwistorLinearMap g Z)) := by
+  dsimp [IsKleinNull, kleinQuadricEval, extractTwistorPluckerCoordinates, applyTwistorLinearMap]
   ring
 
 end InfoGeometry.GrandUnification

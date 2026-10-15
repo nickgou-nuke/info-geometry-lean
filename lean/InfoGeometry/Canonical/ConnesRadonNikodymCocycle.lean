@@ -65,7 +65,7 @@ The `hamiltonianMellinDecomposition` field states that H₂ - H₁ equals the
 Mellin-weighted sum over root directions.
 -/
 structure CocycleOverCoadjointOrbit (Orbit LieAlg LieCoalg : Type*)
-    [AddCommGroup LieAlg] [Ring LieAlg] [CommSemiring LieAlg]
+    [CommRing LieAlg]
     extends InfiniteCoadjointOrbitMetriplecticContext Orbit LieAlg LieCoalg where
   /-- First modular Hamiltonian (state ω₁). -/
   H₁ : LieAlg
@@ -81,7 +81,7 @@ structure CocycleOverCoadjointOrbit (Orbit LieAlg LieCoalg : Type*)
 
 namespace CocycleOverCoadjointOrbit
 
-variable {Orbit LieAlg LieCoalg : Type*} [AddCommGroup LieAlg] [Ring LieAlg] [CommSemiring LieAlg]
+variable {Orbit LieAlg LieCoalg : Type*} [CommRing LieAlg]
   (ctx : CocycleOverCoadjointOrbit Orbit LieAlg LieCoalg)
 
 /--
@@ -104,7 +104,7 @@ If the two modular Hamiltonians coincide, the cocycle derivative vanishes.
 -/
 theorem cocycleDerivative_zero_of_hamiltonians_equal (X : LieAlg)
     (h : ctx.H₁ = ctx.H₂) : cocycleDerivative ctx X = 0 := by
-  rw [cocycleDerivative_eq_hamiltonian_diff, h, sub_self]
+  simp [cocycleDerivative, h] <;> rfl
 
 /-- The fiber readout is the actual zero cocycle-derivative equation. -/
 theorem offDiagonalMetricZero (X : LieAlg)
@@ -144,7 +144,7 @@ theorem from ZetaTraceSpecialization identifies the supertrace with the
 Weyl denominator.
 -/
 structure PrimeCocycleState (Orbit LieAlg LieCoalg : Type*)
-    [AddCommGroup LieAlg] [Ring LieAlg] [CommSemiring LieAlg]
+    [CommRing LieAlg]
     extends CocycleOverCoadjointOrbit Orbit LieAlg LieCoalg where
   /-- The prime register indexing the A₁ roots. -/
   register : PrimeRegister

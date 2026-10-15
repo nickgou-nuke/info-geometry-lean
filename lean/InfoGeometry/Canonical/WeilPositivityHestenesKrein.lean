@@ -122,9 +122,10 @@ theorem colimit_square_bondIterate
     stage (n + m)
         (C.toFilteredPhaseCone.bondIterate n m x) ^ 2 =
       stage n x ^ 2 := by
-  rw [hreadout (n + m), hreadout n]
-  exact congrArg (fun y => limit y ^ 2)
-    (C.toFilteredPhaseCone.ι_bondIterate_apply n m x)
+  have h1 := congrArg (· ^ 2) (hreadout (n + m) (C.toFilteredPhaseCone.bondIterate n m x))
+  have h2 := congrArg (fun y => limit y ^ 2) (C.toFilteredPhaseCone.ι_bondIterate_apply n m x)
+  have h3 := congrArg (· ^ 2) (hreadout n x).symm
+  exact h1.trans (h2.trans h3)
 
 /-! ## Weighted finite energies on the colimit carrier -/
 

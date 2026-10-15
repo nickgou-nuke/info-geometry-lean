@@ -163,7 +163,9 @@ theorem realSolderedCoefficientSystem_solutionSet_singleton
     funext i
     have hfun : realChiralToSoldered x = d := by
       funext j
-      simpa [realSolderedCoefficientSystem_observationMap] using hx j
+      have hxj := hx j
+      change realChiralToSoldered x j = d j at hxj
+      exact hxj
     calc
       x i = realChiralToSoldered.symm (realChiralToSoldered x) i :=
         (congrFun (realChiralToSoldered.left_inv x) i).symm

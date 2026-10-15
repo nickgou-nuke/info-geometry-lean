@@ -1,4 +1,4 @@
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import Mathlib.Tactic
 import Omega.UnitCirclePhaseArithmetic.LeyangChebyshevSemiconjugacy
 
@@ -39,8 +39,7 @@ def faithful (D : SingularRingFaithfulSemigroupData) : Prop :=
 
 lemma semigroupLaw_true (D : SingularRingFaithfulSemigroupData) : D.semigroupLaw := by
   intro m n hm hn
-  simpa [rationalMap, normalizedNumerator, leyangFn] using
-    (paper_leyang_chebyshev_semiconjugacy m n hm hn).2
+  exact (paper_leyang_chebyshev_semiconjugacy m n hm hn).2
 
 lemma index_eq_of_rationalMap_eq (D : SingularRingFaithfulSemigroupData) {m n : ℕ}
     (hMaps : D.rationalMap m = D.rationalMap n) : m = n := by

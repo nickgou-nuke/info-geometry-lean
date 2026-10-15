@@ -27,7 +27,7 @@ theorem clock_sq : clock * clock = 1 := by
 theorem shift_sq : shift * shift = 1 := by
   calc
     shift * shift = matrixUnit (R := ℝ) 0 0 + matrixUnit (R := ℝ) 1 1 := by
-      simp [shift, add_mul, mul_add, matrixUnit_mul]
+      simp [shift, add_mul, mul_add, matrixUnit_mul] <;> abel
     _ = 1 := diagonal_sum
 
 theorem clock_shift_weyl : clock * shift = -(shift * clock) := by
@@ -35,20 +35,26 @@ theorem clock_shift_weyl : clock * shift = -(shift * clock) := by
 
 theorem phase_eq_circular_difference :
     phase = matrixUnit (R := ℝ) 0 1 - matrixUnit (R := ℝ) 1 0 := by
-  simp [phase, clock, shift, sub_mul, mul_add, matrixUnit_mul]
+  simp [phase, clock, shift, sub_mul, mul_add, matrixUnit_mul] <;> abel
 
 theorem phase_sq : phase * phase = -1 := by
   calc
     phase * phase = (clock * shift) * clock * shift := by
       simp only [phase, mul_assoc]
     _ = (-(shift * clock)) * clock * shift := by rw [clock_shift_weyl]
-    _ = -(shift * (clock * clock) * shift) := by noncomm_ring
-    _ = -1 := by rw [clock_sq, mul_one, shift_sq]
+    _ = -(shift * (clock * (clock * shift))) := by
+      congr 1
+    _ = -1 := by
+      calc
+        -(shift * (clock * (clock * shift))) =
+            -(shift * ((clock * clock) * shift)) := by
+              congr 2
+        _ = -1 := by rw [clock_sq, one_mul, shift_sq]
 
 theorem phase_fourth_power : phase ^ 4 = 1 := by
   calc
     phase ^ 4 = (phase * phase) * (phase * phase) := by noncomm_ring
-    _ = 1 := by rw [phase_sq]; simp
+    _ = 1 := by rw [phase_sq]; norm_num
 
 theorem transported_weyl
     (transport : BoundaryOperator ℝ ≃ₐ[ℝ] BoundaryOperator ℝ) :

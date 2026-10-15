@@ -191,14 +191,16 @@ theorem actMatrixOnAlbertFixedTopCat_inverse_apply
   exact actMatrixOnAlbert_inverse_apply M N hMN X
 
 theorem continuous_CKMMatrix : Continuous CKMMatrix := by
-  simpa [CKMMatrix] using
-    continuous_actMatrixOnAlbert_left
-      (mixingMatrix 0.227 0.042 0.0036 1.20)
+  change Continuous (fun X : AlbertMatrix =>
+    actMatrixOnAlbert (mixingMatrix 0.227 0.042 0.0036 1.20) X)
+  exact continuous_actMatrixOnAlbert_left
+    (mixingMatrix 0.227 0.042 0.0036 1.20)
 
 theorem continuous_PMNSMatrix : Continuous PMNSMatrix := by
-  simpa [PMNSMatrix] using
-    continuous_actMatrixOnAlbert_left
-      (mixingMatrix 0.58 0.86 0.15 3.77)
+  change Continuous (fun X : AlbertMatrix =>
+    actMatrixOnAlbert (mixingMatrix 0.58 0.86 0.15 3.77) X)
+  exact continuous_actMatrixOnAlbert_left
+    (mixingMatrix 0.58 0.86 0.15 3.77)
 
 def CKMMatrixTopCat :
     TopCat.of AlbertMatrix ⟶ TopCat.of AlbertMatrix :=

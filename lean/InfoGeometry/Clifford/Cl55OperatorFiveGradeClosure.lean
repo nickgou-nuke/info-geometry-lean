@@ -53,7 +53,8 @@ theorem spinTransported_maps_grade_family (g : Spin55) :
         (spinGroup.toUnits g) X
     exact InfoGeometry.Clifford.ChiralLorentzCARLift.unitConjugation_smul
       (spinGroup.toUnits g) r X
-  simpa [spinTransportedNumberOperator55, spinTransportedCl55GradeSubmodule] using
+  simpa [spinTransportedNumberOperator55, spinTransportedCl55GradeSubmodule,
+    cl55GradeSubmodule] using
     (InfoGeometry.OperatorAlgebra.ringEquiv_mapsToGradeSubmoduleBetween
       (spinCliffordRingEquiv g) numberOperator55 hsmul)
 
@@ -212,7 +213,7 @@ theorem spinTransported_annihilation55_mul_annihilation55_mem_grade_neg_two
     annihilation55_mem_grade_neg_one j
   have h := spinTransported_grade_mul_mem_of_mem
     g (-1 : ℤ) (-1 : ℤ) hi hj
-  convert h using 1 <;> norm_num
+  convert h using 1; norm_num
 
 theorem spinTransported_creation55_mul_annihilation55_mem_grade_zero
     (g : Spin55) (i j : Fin 5) :
@@ -223,7 +224,7 @@ theorem spinTransported_creation55_mul_annihilation55_mem_grade_zero
     annihilation55_mem_grade_neg_one j
   have h := spinTransported_grade_mul_mem_of_mem
     g (1 : ℤ) (-1 : ℤ) hi hj
-  convert h using 1 <;> norm_num
+  convert h using 1; norm_num
 
 theorem creation55_mul_creation55_mem_grade_two (i j : Fin 5) :
     creation55 i * creation55 j ∈ cl55GradeSubmodule 2 := by

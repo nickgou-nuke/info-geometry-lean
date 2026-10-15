@@ -87,7 +87,10 @@ theorem id_commutes (A : Spin32Matrix) : (1 : Spin32Matrix) * A = A * 1 := by
 
 /-- The packaged center element is involutive. -/
 theorem projective_center_involution (sys : PinCenter) : sys.I_neg * sys.I_neg = 1 := by
-  fin_cases sys <;> simp [PinCenter.I_neg, negId]
+  by_cases h : sys = 1
+  · subst sys
+    simp [PinCenter.I_neg, negId]
+  · simp [PinCenter.I_neg, h]
 
 /-- The packaged center element commutes with every finite spinor matrix. -/
 theorem projective_center_commutes (sys : PinCenter) (A : Spin32Matrix) :

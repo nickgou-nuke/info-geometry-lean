@@ -86,8 +86,9 @@ structure ZornMatrix (R : Type*) where
 
 namespace ZornMatrix
 
+omit [CommRing R] in
 @[ext]
-def ext {X Y : ZornMatrix R}
+theorem ext {X Y : ZornMatrix R}
     (ha : X.a = Y.a) (hb : X.b = Y.b)
     (hu : X.u = Y.u) (hv : X.v = Y.v) : X = Y := by
   cases X; cases Y; dsimp at ha hb hu hv; rw [ha, hb, hu, hv]

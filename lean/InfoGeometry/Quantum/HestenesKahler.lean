@@ -444,7 +444,7 @@ noncomputable def weldedProjectorObstructionAxis
   phaseParity := .odd
   superParity := .even
   hasPhaseParity := by
-    simpa [phaseAxisResponse] using
+    simpa [HasPhaseParity, phaseAxisResponse] using
       phaseAxisForce_phase_odd (E := E) CCI.liftedProjectorObstructionOperator
 
 @[simp] theorem weldedProjectorObstructionAxis_bidegree

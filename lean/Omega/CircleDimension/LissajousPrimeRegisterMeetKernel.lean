@@ -18,11 +18,11 @@ theorem paper_cdim_lissajous_prime_register_meet_kernel
   rcases paper_cdim_lissajous_phase_circle_prime_ledger_kernel a b ha hb δ with
     ⟨hcop, -, -, -, -, hcard⟩
   refine ⟨rfl, ?_, ?_, ?_⟩
-  · exact (Nat.factorization_prod_pow_eq_self hgcd_ne_zero).symm
-  · simpa using hcop
+  · exact (Nat.prod_factorization_pow_eq_self hgcd_ne_zero).symm
+  · exact hcop
   · calc
       Fintype.card (Fin (Nat.gcd a b)) = Nat.gcd a b := by simp
       _ = (Nat.gcd a b).factorization.prod (· ^ ·) := by
-        rw [Nat.factorization_prod_pow_eq_self hgcd_ne_zero]
+        rw [Nat.prod_factorization_pow_eq_self hgcd_ne_zero]
 
 end Omega.CircleDimension

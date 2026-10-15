@@ -20,8 +20,8 @@ def closedSplitOctonionAutSubgroup :
     ClosedSubgroup (SplitOctonionAutCandidate ℝ) where
   toSubgroup := splitOctonionAutSubgroup (R := ℝ)
   isClosed' := by
-    simpa only [SplitOctonionAutSet] using
-      isClosed_splitOctonionAutSet
+    change IsClosed (SplitOctonionAutSet (R := ℝ))
+    exact isClosed_splitOctonionAutSet
 
 @[simp] theorem closedSplitOctonionAutSubgroup_coe :
     (closedSplitOctonionAutSubgroup : Set (SplitOctonionAutCandidate ℝ)) =

@@ -115,12 +115,13 @@ theorem fisherRao_sectional_curvature_nonpositive (X Y : Matrix n n ℂ)
     dsimp [trace]
     rw [sum_re]
     have h_diag (i : n) : 0 ≤ (((commutator X Y)ᴴ * (commutator X Y)) i i).re := by
-      dsimp [mul_apply]
-      rw [sum_re]
+      rw [Matrix.mul_apply, sum_re]
       have h_term (j : n) : 0 ≤ (((commutator X Y)ᴴ i j * (commutator X Y) j i)).re := by
-        dsimp [conjTranspose_apply]
-        have h_ring : (commutator X Y j i).re * (commutator X Y j i).re - -(commutator X Y j i).im * (commutator X Y j i).im =
-            (commutator X Y j i).re ^ 2 + (commutator X Y j i).im ^ 2 := by ring
+        rw [Matrix.conjTranspose_apply]
+        have h_ring : ((star (commutator X Y j i)) * (commutator X Y j i)).re =
+            (commutator X Y j i).re ^ 2 + (commutator X Y j i).im ^ 2 := by
+          simp only [Complex.mul_re, Complex.star_def, Complex.conj_re, Complex.conj_im]
+          ring
         rw [h_ring]
         positivity
       exact Finset.sum_nonneg (fun j _ => h_term j)

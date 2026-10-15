@@ -86,7 +86,7 @@ theorem vacancyProjector_idempotent (i : Fin 3) :
 
 theorem occupationProjector_add_vacancyProjector (i : Fin 3) :
     occupationProjector i + vacancyProjector i = 1 := by
-  simpa [occupationProjector, vacancyProjector] using
+  simpa [occupationProjector, vacancyProjector, ExteriorCARPair.numberOp] using
     (ExteriorCARPair.eps_iota_add_iota_eps (circularExteriorCARPair i))
 
 theorem majoranaPlus_sq (i : Fin 3) :

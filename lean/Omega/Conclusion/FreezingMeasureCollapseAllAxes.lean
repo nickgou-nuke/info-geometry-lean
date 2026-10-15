@@ -68,7 +68,7 @@ theorem paper_conclusion_freezing_measure_collapse_all_axes
       denominatorLeDmSq := by
         norm_num [conclusion_freezing_measure_collapse_all_axes_Dm]
     }
-    simpa using Omega.POM.paper_pom_escort_maxfiber_tv_bound hEscort
+    exact Omega.POM.paper_pom_escort_maxfiber_tv_bound hEscort
   have hrenyi := Omega.Zeta.paper_derived_fixed_freezing_renyi_surface
   refine ⟨D.conclusion_freezing_measure_collapse_all_axes_registeredOrders_eq, htv_identity.1,
     htv_identity.2.1, hescort_bound, htv_identity.2.2, ?_⟩

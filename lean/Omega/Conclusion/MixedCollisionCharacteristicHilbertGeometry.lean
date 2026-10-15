@@ -1,7 +1,7 @@
 import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.Analysis.InnerProductSpace.PiL2
 import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
-import Mathlib.Data.NNReal.Basic
+import Mathlib.Basic.NNReal.Basic
 import Mathlib.Tactic
 
 namespace Omega.Conclusion
@@ -227,16 +227,15 @@ theorem paper_conclusion_mixed_collision_characteristic_hilbert_geometry
         exact hk_eq
       have hinner : inner (𝕜 := ℝ) φv φu = ‖φv‖ * ‖φu‖ := by
         simpa [real_inner_comm, mul_comm] using hinner_uv
-      have hscale : (‖φu‖ / ‖φv‖) • φv = φu := by
-        exact (inner_eq_norm_mul_iff_div hφv_ne).1 hinner
       let c : NNReal := ⟨‖φu‖ / ‖φv‖, by positivity⟩
+      have hscale : (c : ℝ) • φv = φu := by
+        exact (inner_eq_norm_mul_iff_div hφv_ne).1 hinner
       have hc : ∀ x, (D.u x) ^ D.q = c * (D.v x) ^ D.q := by
         intro x
         have hx :
             (((D.u x) ^ D.q : NNReal) : ℝ) =
               (c : ℝ) * ((((D.v x) ^ D.q : NNReal) : ℝ)) := by
-          simpa [φu, φv, c, conclusion_mixed_collision_characteristic_hilbert_geometry_feature]
-            using (congrArg (fun z => z x) hscale).symm
+          exact (congrArg (fun z => z x) hscale).symm
         exact_mod_cast hx
       exact conclusion_mixed_collision_characteristic_hilbert_geometry_eq_of_proportional D hc
     · intro huv

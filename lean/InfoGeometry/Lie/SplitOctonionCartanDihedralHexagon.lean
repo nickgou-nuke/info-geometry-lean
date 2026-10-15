@@ -74,25 +74,23 @@ theorem circularChannel_injective :
   have hindex : circularChannelFrameIndex m = circularChannelFrameIndex n := by
     by_contra hne
     have he := congrFun hcoordinates (circularChannelFrameIndex m)
-    simp [circularCoordinate_frame, hne, Ne.symm hne] at he
+    simp [circularCoordinate_frame, Ne.symm hne] at he
   exact circularChannelFrameIndex_injective hindex
 
 theorem circularChannel_sheetReflection (n : HexIndex) :
     circularChannel (sheetReflection n) =
       if (sheetColorEquiv n).1 = .positive then
-        circularChannel (negativeVertex ⟨(3 - (sheetColorEquiv n).2).val % 3, by omega⟩)
+        circularChannel (negativeVertex ⟨(3 - (sheetColorEquiv n).2.val) % 3, by omega⟩)
       else
-        circularChannel (positiveVertex ⟨(3 - (sheetColorEquiv n).2).val % 3, by omega⟩) := by
-  fin_cases n <;> simp [sheetReflection, sheetColorEquiv, sheetOf, colorOf,
-    hexSheetFin2, circularChannel, positiveVertex, negativeVertex]
+        circularChannel (positiveVertex ⟨(3 - (sheetColorEquiv n).2.val) % 3, by omega⟩) := by
+  fin_cases n <;> rfl
 
 theorem circularChannel_colorRotation (n : HexIndex) :
     circularChannel (colorRotation n) =
       circularChannel (match (sheetColorEquiv n).1 with
         | .positive => positiveVertex ⟨((sheetColorEquiv n).2.val + 1) % 3, by omega⟩
         | .negative => negativeVertex ⟨((sheetColorEquiv n).2.val + 1) % 3, by omega⟩) := by
-  fin_cases n <;> simp [colorRotation, sheetColorEquiv, sheetOf, colorOf,
-    hexSheetFin2, circularChannel, positiveVertex, negativeVertex]
+  fin_cases n <;> rfl
 
 /-! The rotation of the hexagon is already a concrete cyclic reindexing of the
 actual upper and lower Zorn channels.  These readouts deliberately stop at

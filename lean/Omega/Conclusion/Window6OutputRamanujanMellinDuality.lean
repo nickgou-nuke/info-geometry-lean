@@ -13,9 +13,13 @@ inductive conclusion_window6_output_ramanujan_mellin_duality_conductor
   | three
   | seven
   | twentyOne
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
 
 open conclusion_window6_output_ramanujan_mellin_duality_conductor
+
+instance : Fintype conclusion_window6_output_ramanujan_mellin_duality_conductor where
+  elems := {one, three, seven, twentyOne}
+  complete := by rintro (_ | _ | _ | _) <;> simp
 
 /-- The three visible multiplicity layers of the `window-6` output. -/
 def conclusion_window6_output_ramanujan_mellin_duality_layerSize : Fin 3 → ℝ

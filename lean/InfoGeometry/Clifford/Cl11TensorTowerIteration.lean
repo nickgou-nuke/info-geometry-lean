@@ -69,14 +69,17 @@ theorem iteratedStageEmbed_add (m k : ℕ) (A B : Stage m) :
     iteratedStageEmbed m k (A + B) = iteratedStageEmbed m k A + iteratedStageEmbed m k B := by
   exact map_add (iteratedStageEmbed m k) A B
 
-/-- Normalized trace is stable under any finite number of tower steps. -/
 theorem iteratedStageEmbed_normalizedTrace (m k : ℕ) (A : Stage m) :
     InfoGeometry.Clifford.Cl11TensorTower.normalizedTrace (m + k) (iteratedStageEmbed m k A) =
       InfoGeometry.Clifford.Cl11TensorTower.normalizedTrace m A := by
-  simpa [iteratedStageEmbed, InfoGeometry.Clifford.Cl11MarkovJonesEngine.cl11MarkovTraceNet_apply]
-    using
-      (InfoGeometry.Clifford.Cl11MarkovJonesEngine.cl11_normalizedTrace_stable_embedMap
-        m (m + k) (Nat.le_add_right m k) A)
+  have h_eq : iteratedStageEmbed m k A =
+      InfoGeometry.Clifford.Cl11MarkovJonesEngine.cl11InductiveAlgebraNet.embedMap
+        m (m + k) (Nat.le_add_right m k) A := rfl
+  rw [h_eq]
+  rw [← InfoGeometry.Clifford.Cl11MarkovJonesEngine.cl11MarkovTraceNet_apply,
+      ← InfoGeometry.Clifford.Cl11MarkovJonesEngine.cl11MarkovTraceNet_apply]
+  exact InfoGeometry.Clifford.Cl11MarkovJonesEngine.cl11_normalizedTrace_stable_embedMap
+    m (m + k) (Nat.le_add_right m k) A
 
 /-- Iterated stage embedding preserves superbrackets. -/
 theorem iteratedStageEmbed_superBracket

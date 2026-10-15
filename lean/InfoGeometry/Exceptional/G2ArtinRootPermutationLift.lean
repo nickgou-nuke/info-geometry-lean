@@ -40,12 +40,10 @@ def permMatrix (π : Equiv.Perm G2CoordinateRoot) :
 @[simp] theorem permMatrix_one :
     permMatrix (1 : Equiv.Perm G2CoordinateRoot) = 1 := by
   ext i j
-  simp only [permMatrix_apply, Matrix.one_apply, Equiv.Perm.one_apply]
-  split_ifs with h1 h2 h3
-  · rfl
-  · exact (h2 h1.symm).elim
-  · exact (h1 h3.symm).elim
-  · rfl
+  by_cases h : i = j
+  · subst h
+    simp [permMatrix]
+  · simp [permMatrix, Ne.symm h, Matrix.one_apply_ne h]
 
 @[simp] theorem permMatrix_mul (σ τ : Equiv.Perm G2CoordinateRoot) :
     permMatrix (σ * τ) = permMatrix σ * permMatrix τ := by
@@ -55,6 +53,7 @@ def permMatrix (π : Equiv.Perm G2CoordinateRoot) :
       if (σ * τ) j = i then 1 else 0 := by
     rw [Finset.sum_eq_single (τ j)]
     · simp [Equiv.Perm.mul_apply]
+      rfl
     · intro k _ hk
       have h_zero : (if τ j = k then (1 : ℂ) else 0) = 0 := if_neg (Ne.symm hk)
       simp [h_zero]

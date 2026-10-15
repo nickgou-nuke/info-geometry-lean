@@ -29,7 +29,7 @@ theorem quaternion_basis_square (a : Fin 4) :
     zMul (quaternionBasisUnit a) (quaternionBasisUnit a) =
       if a = 0 then 1 else -1 := by
   fin_cases a
-  · exact one_zMul 1
+  · exact SplitQuaternionCore.one_zMul 1
   · exact i_sq
   · exact j_sq
   · exact kQuaternion_sq
@@ -38,7 +38,7 @@ theorem ell_lift_square (a : Fin 4) :
     zMul (ellBasisUnit a) (ellBasisUnit a) = 1 := by
   fin_cases a
   · change zMul (zMul lUnit 1) (zMul lUnit 1) = 1
-    rw [zMul_one]
+    rw [SplitQuaternionCore.zMul_one]
     exact l_sq
   · ext i <;>
       simp [ellBasis, quaternionBasis, iUnit, lUnit, zMul,
@@ -64,7 +64,7 @@ theorem split_octonion_basis_square_packet :
     (∀ a : Fin 4,
       zMul (ellBasisUnit a) (ellBasisUnit a) = 1) := by
   refine ⟨?_, ?_, ?_, ?_, ell_lift_square⟩
-  · exact one_zMul 1
+  · exact SplitQuaternionCore.one_zMul 1
   · exact i_sq
   · exact j_sq
   · exact kQuaternion_sq

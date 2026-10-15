@@ -17,7 +17,10 @@ private theorem xi_time_part70_binfold_uniform_empirical_two_point_law_ratio_ten
       (nhds (Real.goldenRatio⁻¹)) := by
   have h := tendsto_fib_div_fib_succ_atTop.comp (tendsto_add_atTop_nat (1 : ℕ))
   rw [Real.inv_goldenRatio]
-  simpa [Nat.add_assoc] using h
+  change Tendsto
+    (fun n : ℕ => (Nat.fib (n + 1) : ℝ) / Nat.fib ((n + 1) + 1))
+    atTop (nhds (-Real.goldenConj)) at h
+  simpa only [Nat.add_assoc] using h
 
 private theorem xi_time_part70_binfold_uniform_empirical_two_point_law_ratio_tendsto_inv_golden_sq :
     Tendsto (fun n : ℕ => (Nat.fib n : ℝ) / Nat.fib (n + 2)) atTop

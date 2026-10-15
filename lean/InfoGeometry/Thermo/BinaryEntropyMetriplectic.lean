@@ -80,7 +80,7 @@ theorem system_flow (q r : ℝ) (p : Set.Ioo (0 : ℝ) 1) :
   ext i
   fin_cases i <;>
     simp [System.flow, system, poisson, mobility, energyDifferential,
-      entropyDifferential, e, entropyGradientField]
+      entropyDifferential, e, entropyGradientField] <;> ring
 
 /-- The reversible field is tangent to the constant-energy circle. -/
 theorem oscillator_tangent_energy (q r : ℝ) :

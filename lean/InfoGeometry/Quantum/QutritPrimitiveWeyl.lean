@@ -67,9 +67,18 @@ theorem qutritPrimitiveClock_exact_order_three :
 
 @[simp] theorem qutritGeneralizedPauliX_sq_ne_one : qutritGeneralizedPauliX ^ 2 ≠ 1 := by
   intro h
-  have hentry := congrArg (fun A : QutritMatrix => A 2 0) h
-  simp [qutritGeneralizedPauliX, qutritShiftMatrix, pow_two,
-    Matrix.mul_apply, Fin.sum_univ_three] at hentry
+  have hmul : qutritGeneralizedPauliX * qutritGeneralizedPauliX *
+      qutritGeneralizedPauliX = qutritGeneralizedPauliX := by
+    rw [← pow_two qutritGeneralizedPauliX, h]
+    simp
+  have hcube := qutritGeneralizedPauliX_cube_identity
+  have hX : qutritGeneralizedPauliX = 1 := by
+    calc
+      qutritGeneralizedPauliX =
+          qutritGeneralizedPauliX * qutritGeneralizedPauliX *
+            qutritGeneralizedPauliX := hmul.symm
+      _ = 1 := hcube
+  exact qutritGeneralizedPauliX_ne_one hX
 
 /-- The generalized qutrit shift has exact multiplicative order three. -/
 theorem qutritGeneralizedPauliX_exact_order_three :

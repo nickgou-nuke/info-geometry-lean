@@ -87,7 +87,8 @@ theorem entropy_production_eq_dlogQ
         B.gauge.flow.P_backward * B.gauge.flow.P_forward =
         B.gauge.flow.d_ln_Q) :
     entropy_production B.gauge.flow = B.thermodynamicForce := by
-  simpa [thermodynamicForce] using
+  simpa [thermodynamicForce,
+    InfoGeometry.Canonical.AmariSouriauThermodynamicGauge.SouriauAmariGauge.thermodynamicForce] using
     B.gauge.entropy_production_eq_dlogQ hcomm
 
 /-- At detailed balance, the generated `d log Q` vector is Killing. -/

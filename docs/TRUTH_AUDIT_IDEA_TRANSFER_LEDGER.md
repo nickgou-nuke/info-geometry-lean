@@ -622,7 +622,7 @@ theorem majorana_resistance_from_coupling (R_M G_M alpha Z_0 : ℝ)
 ## The Complete Physical Chain
     Drazin Anomaly Index = 1 (Topological Boundary)
           │   γμ_p + μ_pΓ = 0 (chiral supersymmetry)
-          │   Op² = 0 (nilpotent causal cone)
+          │   Op² = 0 (operator nilpotency; causal interpretation requires a specified Clifford/soldering carrier)
           ▼
     G_M = 2e²/h (Majorana Conductance Peak)
           │   Landauer-Büttiker + Andreev reflection

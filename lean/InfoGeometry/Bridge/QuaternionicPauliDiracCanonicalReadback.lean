@@ -27,7 +27,9 @@ theorem chiralWeylOperator_sq_from_symbol_core
       ((A * B) *ᵥ ψ.1, (B * A) *ᵥ ψ.2) := by
   rw [chiralWeylOperator_eq_offDiagonalEnd, offDiagonalEnd_sq_apply]
   rcases ψ with ⟨ψL, ψR⟩
-  simp [Matrix.mulVecLin, Matrix.mulVec_mulVec]
+  change (A *ᵥ (B *ᵥ ψL), B *ᵥ (A *ᵥ ψR)) =
+    ((A * B) *ᵥ ψL, (B * A) *ᵥ ψR)
+  rw [← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec]
 
 theorem soldered_symbol_square_from_core
     (P : InfoGeometry.Canonical.PauliHestenesSpinMomentum.PauliParavector)

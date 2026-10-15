@@ -12,7 +12,6 @@ theorem paper_pom_cross_anom_support_constraint {Index Character Theta : Type}
     (S : Index → Prop) (chi : Index → Character) (theta : Theta)
     (h : hasTrivialCoordinate S chi) :
     Delta S chi theta = 0 := by
-  let _trivialCoordinate := trivial
   exact pairCancellation S chi theta h
 
 end Omega.POM

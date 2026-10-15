@@ -24,8 +24,8 @@ lemma mobiusEvalEquiv_eq_of_mobiusTransform_equiv
     {M N : InfoGeometry.MobiusTransform}
     (h : InfoGeometry.MobiusTransform.equiv M N) :
     mobiusEvalEquiv M = mobiusEvalEquiv N := by
-  ext z
-  exact h z
+  ext z a
+  simp [mobiusEvalEquiv, h z]
 
 lemma mobiusTransform_equiv_of_mobiusEvalEquiv_eq
     {M N : InfoGeometry.MobiusTransform}

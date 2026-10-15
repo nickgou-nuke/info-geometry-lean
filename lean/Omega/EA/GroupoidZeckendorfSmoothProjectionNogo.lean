@@ -13,7 +13,8 @@ theorem paper_groupoid_zeckendorf_smooth_projection_nogo_spec :
     ∀ (γ : ℝ → ℝ × ℝ) (O : ℝ × ℝ → ℝ),
       ContDiff ℝ 1 γ → ContDiff ℝ 1 O → ContDiff ℝ 1 (fun t => O (γ t)) := by
   intro γ O hγ hO
-  simpa using hO.comp hγ
+  change ContDiff ℝ 1 (O ∘ γ)
+  exact hO.comp hγ
 
 theorem paper_groupoid_zeckendorf_smooth_projection_nogo_verified :
     ∀ (γ : ℝ → ℝ × ℝ) (O : ℝ × ℝ → ℝ),

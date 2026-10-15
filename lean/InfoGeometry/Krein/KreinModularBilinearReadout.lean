@@ -29,10 +29,13 @@ noncomputable def KreinBilinearKernel (u v : H) : ℝ :=
 
 theorem continuous_KreinBilinearKernel :
     Continuous (fun p : H × H => KreinBilinearKernel p.1 p.2) := by
-  simpa [KreinBilinearKernel, kreinInner_def] using
-    continuous_inner.comp
-      (((KreinSpace.J (H := H)).continuous.comp continuous_fst).prodMk
-        continuous_snd)
+  change Continuous (fun p : H × H =>
+    inner ℝ ((KreinSpace.J (H := H)) p.1) p.2)
+  convert continuous_inner.comp
+    (((KreinSpace.J (H := H)).continuous.comp continuous_fst).prodMk
+      continuous_snd) using 1
+  ext p
+  rfl
 
 /-- The modular orbit readout of the Krein bilinear kernel. -/
 noncomputable def modularKreinBilinearKernel

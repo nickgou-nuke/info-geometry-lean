@@ -119,8 +119,8 @@ theorem paper_xi_foldbin_pure_parity_solvable_residual_kernel :
       simp [xi_foldbin_pure_parity_solvable_residual_kernel_inProjectionKernel,
         xi_foldbin_pure_parity_solvable_residual_kernel_projection,
         xi_foldbin_pure_parity_solvable_residual_kernel_inclusion]
-  · simp [xi_foldbin_pure_parity_solvable_residual_kernel_product_of_nonabelian_simple_groups,
-      xi_foldbin_pure_parity_solvable_residual_kernel_alternatingFiveOrder]
+  · norm_num [xi_foldbin_pure_parity_solvable_residual_kernel_product_of_nonabelian_simple_groups,
+      xi_foldbin_pure_parity_solvable_residual_kernel_alternatingFiveOrder, Fintype.card_fin]
   · intro β φ hφ
     refine ⟨fun q => φ (xi_foldbin_pure_parity_solvable_residual_kernel_baseKernel, q), ?_⟩
     intro g

@@ -33,6 +33,69 @@ def lowerCombination (u : Fin 3 → ℝ) :
     SplitOctonionImaginaryCircularForm.Imaginary :=
   ∑ i : Fin 3, u i • lowerAxis i
 
+theorem diagonalAxis_val :
+    diagonalAxis.1 = InfoGeometry.Lie.SplitOctonionEllFlowOperator.diagEll := rfl
+
+@[simp] theorem diagonalAxis_a :
+    diagonalAxis.1.a = 1 := by
+  change (zornPlus - zornMinus : CanonicalZorn).a = 1
+  simp [zornPlus, zornMinus]
+
+@[simp] theorem diagonalAxis_b :
+    diagonalAxis.1.b = -1 := by
+  change (zornPlus - zornMinus : CanonicalZorn).b = -1
+  simp [zornPlus, zornMinus]
+
+@[simp] theorem diagonalAxis_x :
+    diagonalAxis.1.x = 0 := by
+  change (zornPlus - zornMinus : CanonicalZorn).x = 0
+  simp [zornPlus, zornMinus]
+
+@[simp] theorem diagonalAxis_y :
+    diagonalAxis.1.y = 0 := by
+  change (zornPlus - zornMinus : CanonicalZorn).y = 0
+  simp [zornPlus, zornMinus]
+
+@[simp] theorem upperAxis_val (i : Fin 3) :
+    (upperAxis i).1 = chiralUpperBasis i := by
+  change cartesianZornLinearEquiv (rootPlus i) = chiralUpperBasis i
+  exact cartesianZorn_rootPlus i
+
+@[simp] theorem lowerAxis_val (i : Fin 3) :
+    (lowerAxis i).1 = chiralLowerBasis i := by
+  change cartesianZornLinearEquiv (rootMinus i) = chiralLowerBasis i
+  exact cartesianZorn_rootMinus i
+
+@[simp] theorem upperCombination_val (u : Fin 3 → ℝ) :
+    (upperCombination u).1 = { a := 0, b := 0, x := u, y := 0 } := by
+  change (∑ i : Fin 3, u i • upperAxis i).1 = _
+  rw [Submodule.coe_sum]
+  simp_rw [Submodule.coe_smul, upperAxis_val]
+  apply InfoGeometry.Canonical.ZornMatrix.ext
+  · simp [smul_a, Fin.sum_univ_three, chiralUpperBasis]
+  · simp [smul_b, Fin.sum_univ_three, chiralUpperBasis]
+  · funext j
+    fin_cases j <;>
+      simp [smul_x, Fin.sum_univ_three, chiralUpperBasis]
+  · funext j
+    fin_cases j <;>
+      simp [smul_y, Fin.sum_univ_three, chiralUpperBasis]
+
+@[simp] theorem lowerCombination_val (u : Fin 3 → ℝ) :
+    (lowerCombination u).1 = { a := 0, b := 0, x := 0, y := u } := by
+  change (∑ i : Fin 3, u i • lowerAxis i).1 = _
+  rw [Submodule.coe_sum]
+  simp_rw [Submodule.coe_smul, lowerAxis_val]
+  apply InfoGeometry.Canonical.ZornMatrix.ext
+  · simp [smul_a, Fin.sum_univ_three, chiralLowerBasis]
+  · simp [smul_b, Fin.sum_univ_three, chiralLowerBasis]
+  · funext j
+    fin_cases j <;>
+      simp [smul_x, Fin.sum_univ_three, chiralLowerBasis]
+  · funext j
+    fin_cases j <;>
+      simp [smul_y, Fin.sum_univ_three, chiralLowerBasis]
+
 /-! ## Intrinsic seven-dimensional circular decomposition -/
 
 /- Every trace-zero Zorn element splits into its diagonal axis and the two
@@ -41,34 +104,25 @@ def lowerCombination (u : Fin 3 → ℝ) :
 theorem imaginary_circular_decomposition
     (X : SplitOctonionImaginaryCircularForm.Imaginary) :
     X = X.1.a • diagonalAxis + upperCombination X.1.x + lowerCombination X.1.y := by
-  apply imaginaryCoordLinearEquiv.injective
-  apply Prod.ext
-  · simp [imaginaryCoordLinearEquiv, diagonalAxis, upperCombination,
-      lowerCombination, upperAxis, lowerAxis, rootPlus, rootMinus,
-      quaternionAxis, ellAxis, axis, cartesianZornLinearEquiv,
-      InfoGeometry.Canonical.ZornMatrix.coordEquiv,
-      Fin.sum_univ_three, Pi.single_apply, Equiv.smul_def,
-      InfoGeometry.Lie.SplitOctonionEllFlowOperator.diagEll,
-      zornPlus, zornMinus]
-  · apply Prod.ext
-    · funext j
-      fin_cases j <;>
-        simp [imaginaryCoordLinearEquiv, diagonalAxis, upperCombination,
-          lowerCombination, upperAxis, lowerAxis, rootPlus, rootMinus,
-          quaternionAxis, ellAxis, axis, cartesianZornLinearEquiv,
-          InfoGeometry.Canonical.ZornMatrix.coordEquiv,
-          Fin.sum_univ_three, Pi.single_apply, Equiv.smul_def,
-          InfoGeometry.Lie.SplitOctonionEllFlowOperator.diagEll,
-          zornPlus, zornMinus] <;> ring
-    · funext j
-      fin_cases j <;>
-        simp [imaginaryCoordLinearEquiv, diagonalAxis, upperCombination,
-          lowerCombination, upperAxis, lowerAxis, rootPlus, rootMinus,
-          quaternionAxis, ellAxis, axis, cartesianZornLinearEquiv,
-          InfoGeometry.Canonical.ZornMatrix.coordEquiv,
-          Fin.sum_univ_three, Pi.single_apply, Equiv.smul_def,
-          InfoGeometry.Lie.SplitOctonionEllFlowOperator.diagEll,
-          zornPlus, zornMinus] <;> ring
+  apply Subtype.ext
+  apply InfoGeometry.Canonical.ZornMatrix.ext
+  · have : (X.1.a • diagonalAxis + upperCombination X.1.x + lowerCombination X.1.y).1.a =
+        X.1.a := by
+      simp [Submodule.coe_add, smul_a]
+    exact this.symm
+  · have : (X.1.a • diagonalAxis + upperCombination X.1.x + lowerCombination X.1.y).1.b =
+        -X.1.a := by
+      simp [Submodule.coe_add, smul_b]
+    have htrace : X.1.a + X.1.b = 0 := X.2
+    linarith
+  · have : (X.1.a • diagonalAxis + upperCombination X.1.x + lowerCombination X.1.y).1.x =
+        X.1.x := by
+      simp [Submodule.coe_add, smul_x, smul_zero]
+    exact this.symm
+  · have : (X.1.a • diagonalAxis + upperCombination X.1.x + lowerCombination X.1.y).1.y =
+        X.1.y := by
+      simp [Submodule.coe_add, smul_y, smul_zero]
+    exact this.symm
 
 theorem exteriorMap_upper_upper_upper (i j k : Fin 3) :
     imaginaryCommutatorExteriorMap

@@ -77,23 +77,23 @@ theorem occupationAt_eq_tensor :
       by_cases h : (k : ℕ) < n
       · let k' : Fin n := ⟨k, h⟩
         have ih := occupationAt_eq_tensor n k'
-        simp only [occupationAt, jwCreation, jwAnnihilation,
-          jwStringWithBase, dif_pos h, occupationTensorAt]
-        rw [← Matrix.mul_kronecker_mul]
-        simpa [occupationAt] using congrArg
-          (fun A : MatStage n =>
-            A ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℝ)) ih
+        simp [occupationAt, jwCreation, jwAnnihilation,
+          jwStringWithBase, occupationTensorAt, h]
+        change
+          ((jwStringWithBase wittCreationBase n k' ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℝ)) *
+            (jwStringWithBase wittAnnihilationBase n k' ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℝ))) =
+          occupationTensorAt n k' ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℝ)
+        rw [← Matrix.mul_kronecker_mul, Matrix.mul_one]
+        exact congrArg (fun A : MatStage n => A ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℝ)) ih
       · have hk : k = Fin.last n := Fin.eq_last_of_not_lt h
         subst k
-        have hlast : ¬ ((Fin.last n : Fin (n + 1)).val < n) := by simp
-        simp only [occupationAt, jwCreation, jwAnnihilation,
-          jwStringWithBase, occupationTensorAt, dif_neg hlast]
+        simp [occupationAt, jwCreation, jwAnnihilation,
+          jwStringWithBase, occupationTensorAt]
         change
           (globalChirality n ⊗ₖ wittCreationBase) *
               (globalChirality n ⊗ₖ wittAnnihilationBase) =
             (1 : MatStage n) ⊗ₖ localOccupationProjector
-        rw [← Matrix.mul_kronecker_mul]
-        rw [globalChirality_sq]
+        rw [← Matrix.mul_kronecker_mul, globalChirality_sq]
         rfl
 
 /-- The last-site occupation projector is `1 ⊗ (e f)`. -/
@@ -102,6 +102,7 @@ theorem occupationAt_last (n : ℕ) :
       (1 : MatStage n) ⊗ₖ localOccupationProjector := by
   rw [occupationAt_eq_tensor]
   simp [occupationTensorAt]
+  rfl
 
 /-- The local chirality factor `1 - 2 e f`. -/
 def localChiralityFactor : Matrix (Fin 2) (Fin 2) ℝ :=
@@ -128,17 +129,16 @@ def modeChiralityFactor (n : ℕ) (k : Fin n) : MatStage n :=
 theorem modeChiralityFactor_last (n : ℕ) :
     modeChiralityFactor (n + 1) (Fin.last n) =
       (1 : MatStage n) ⊗ₖ gamma_chiral_base := by
-  rw [modeChiralityFactor, occupationAt_last]
-  rw [← Matrix.one_kronecker_one]
-  calc
-    ((1 : MatStage n) ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℝ)) -
-          (2 : ℝ) • ((1 : MatStage n) ⊗ₖ localOccupationProjector) =
-        (1 : MatStage n) ⊗ₖ localChiralityFactor := by
-          ext ⟨i, a⟩ ⟨j, b⟩
-          by_cases hij : i = j <;> by_cases hab : a = b <;>
-            simp [localChiralityFactor, hij, hab]
-    _ = (1 : MatStage n) ⊗ₖ gamma_chiral_base := by
-      rw [localChiralityFactor_eq_gamma_chiral_base]
+  unfold modeChiralityFactor
+  rw [occupationAt_last]
+  ext ⟨i, a⟩ ⟨j, b⟩
+  rw [← localChiralityFactor_eq_gamma_chiral_base]
+  change (1 : Matrix (Idx n × Fin 2) (Idx n × Fin 2) ℝ) (i, a) (j, b) -
+    (2 : ℝ) * ((1 : MatStage n) ⊗ₖ localOccupationProjector) (i, a) (j, b) =
+    ((1 : MatStage n) ⊗ₖ localChiralityFactor) (i, a) (j, b)
+  simp only [kroneckerMap_apply, localChiralityFactor, Matrix.one_apply, Prod.mk.injEq,
+    Matrix.sub_apply, Matrix.smul_apply, smul_eq_mul]
+  by_cases hij : i = j <;> by_cases hab : a = b <;> simp [hij, hab]
 
 /-- Canonical ordered product of the site chirality factors.
 

@@ -1,7 +1,7 @@
 import Mathlib.Algebra.Order.Ring.Units
 import Mathlib.Algebra.Group.Units.Hom
-import Mathlib.Data.Sign.Basic
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Sign.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.Tactic.FinCases
 import Mathlib.Algebra.Group.TypeTags.Finite
 import Mathlib.Data.ZMod.Basic
@@ -137,7 +137,27 @@ noncomputable def signTypeUnitEquivZModTwo :
         apply Units.ext
         rfl
   right_inv z := by
-    fin_cases z <;> simp [negativeSignUnit]
+    have hneg : negativeSignUnit ≠ (1 : SignTypeˣ) := by
+      intro h
+      have hval := congrArg Units.val h
+      norm_num [negativeSignUnit] at hval
+    have hcases : z.toAdd = 0 ∨ z.toAdd = 1 := by
+      have hv := ZMod.val_lt z.toAdd
+      by_cases h0 : z.toAdd.val = 0
+      · left
+        apply ZMod.val_injective
+        rw [h0, ZMod.val_zero]
+      · right
+        have h1 : z.toAdd.val = 1 := by omega
+        apply ZMod.val_injective
+        rw [h1, ZMod.val_one]
+    rcases hcases with hz | hz
+    · have hzeq : z = 1 := by
+        simpa using congrArg Multiplicative.ofAdd hz
+      simpa [negativeSignUnit, hneg, hz] using hzeq.symm
+    · have hzeq : z = Multiplicative.ofAdd (1 : ZMod 2) := by
+        simpa using congrArg Multiplicative.ofAdd hz
+      simpa [negativeSignUnit, hneg, hz] using hzeq.symm
   map_mul' s t := by
     rcases s with ⟨s, sinv, hs₁, hs₂⟩
     rcases t with ⟨t, tinv, ht₁, ht₂⟩

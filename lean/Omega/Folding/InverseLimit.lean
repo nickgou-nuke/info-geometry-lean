@@ -86,11 +86,8 @@ theorem eq_of_restrict_eq_last_eq {x y : X (m + 1)}
   apply Subtype.ext
   funext i
   by_cases hi : i.1 < m
-  · let j : Fin m := ⟨i.1, hi⟩
-    have hWords : (restrict x).1 = (restrict y).1 := congrArg Subtype.val hRestrict
-    have hEval : (restrict x).1 j = (restrict y).1 j := by
-      simpa using congrArg (fun w => w j) hWords
-    simpa [restrict] using hEval
+  · have hWords : (restrict x).1 = (restrict y).1 := congrArg Subtype.val hRestrict
+    exact congrFun hWords ⟨i.1, hi⟩
   · have hEq : i = ⟨m, Nat.lt_succ_self m⟩ := Fin.ext (Nat.eq_of_lt_succ_of_not_lt i.isLt hi)
     cases hEq
     simpa [Omega.last] using hLast

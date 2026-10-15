@@ -20,6 +20,8 @@ open scoped TensorProduct
 noncomputable section
 public section
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace InfoGeometry.Lie.MathlibBackport
 
 open LieModule LieAlgebra
@@ -84,8 +86,7 @@ theorem traceForm_baseChange
     LieModule.traceForm A (A ⊗[R] L) (A ⊗[R] M) =
       (LieModule.traceForm R L M).baseChange A := by
   ext x y
-  simp [LieModule.traceForm_apply_apply, ← LinearMap.baseChange_comp,
-    LieModule.toEnd_baseChange, Algebra.algebraMap_eq_smul_one]
+  simp [LieModule.traceForm_apply_apply]
 
 theorem bilinForm_baseChange_zero
     {R A M : Type*} [CommRing R] [CommRing A] [Algebra R A]
@@ -93,14 +94,12 @@ theorem bilinForm_baseChange_zero
     LinearMap.BilinForm.baseChange A (0 : LinearMap.BilinForm R M) = 0 := by
   apply LinearMap.BilinForm.ext
   intro x y
-  induction x using TensorProduct.induction_on with
-  | zero => simp
+  induction x using TensorProduct.inductionOn with
   | tmul a m =>
-    induction y using TensorProduct.induction_on with
-    | zero => simp
-    | tmul a' m' => simp [LinearMap.BilinForm.baseChange_tmul]
-    | add y z hy hz => simp [hy, hz]
-  | add x y hx hy => simp [hx, hy]
+    induction y using TensorProduct.inductionOn with
+    | tmul a' m' => simp
+    | add y z hy hz => simp
+  | add x y hx hy => simp
 
 end MathlibBackport
 

@@ -44,6 +44,8 @@ theorem compactIndexedObservationQuotientRangeFixedPointGraphOn_fiberCompHausIso
           D α hα0 hαadd a b hquotient hrange).hom := by
   apply ConcreteCategory.hom_ext
   intro p
+  change compactIndexedObservationQuotientCompHausLimitFixedPointGraphOn_fiber
+    D α a b t at p
   change
     (compactIndexedObservationRangeCompHausLimitFixedPointGraphOn_fiberHomeomorph
         D α a b t).symm
@@ -85,11 +87,10 @@ theorem compactIndexedObservationQuotientRangeFixedPointGraphOn_transport_fiber_
         D α a b t =>
       compactIndexedObservationQuotientRangeFixedPointGraphOnHomeomorph
         D α hα0 hαadd a b hquotient hrange p.1) := by
-  simpa only [Function.comp_apply] using
-    (compactIndexedObservationQuotientRangeFixedPointGraphOnHomeomorph
+  convert (compactIndexedObservationQuotientRangeFixedPointGraphOnHomeomorph
       D α hα0 hαadd a b hquotient hrange).isClosedEmbedding.comp
       (compactIndexedObservationQuotientCompHausLimitFixedPointGraphOn_fiberInclusion_isClosedEmbedding
-        D α a b t)
+        D α a b t) using 1 <;> rfl
 
 theorem compactIndexedObservationQuotientRangeFixedPointGraphOn_transport_fiber_isClosedEmbedding_symm
     {J : Type} [Category J]
@@ -109,11 +110,10 @@ theorem compactIndexedObservationQuotientRangeFixedPointGraphOn_transport_fiber_
         D α a b t =>
       (compactIndexedObservationQuotientRangeFixedPointGraphOnHomeomorph
         D α hα0 hαadd a b hquotient hrange).symm p.1) := by
-  simpa only [Function.comp_apply] using
-    (compactIndexedObservationQuotientRangeFixedPointGraphOnHomeomorph
+  convert (compactIndexedObservationQuotientRangeFixedPointGraphOnHomeomorph
       D α hα0 hαadd a b hquotient hrange).symm.isClosedEmbedding.comp
       (compactIndexedObservationRangeCompHausLimitFixedPointGraphOn_fiberInclusion_isClosedEmbedding
-        D α a b t)
+        D α a b t) using 1 <;> rfl
 
 theorem compactIndexedObservationQuotientRangeFixedPointGraphOn_transport_fiber_range_eq
     {J : Type} [Category J]

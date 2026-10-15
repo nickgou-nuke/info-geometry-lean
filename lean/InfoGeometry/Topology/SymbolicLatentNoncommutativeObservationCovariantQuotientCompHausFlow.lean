@@ -83,25 +83,15 @@ theorem operatorObservationQuotientCompHausCovariantFlowHom_isIso
     intro q
     change descendedCovariantOperatorObservationFlow Φ (-t)
         (descendedCovariantOperatorObservationFlow Φ t q) = q
-    calc
-      descendedCovariantOperatorObservationFlow Φ (-t)
-          (descendedCovariantOperatorObservationFlow Φ t q) =
-          descendedCovariantOperatorObservationFlow Φ (-t + t) q := by
-        exact (descendedCovariantOperatorObservationFlow_add Φ (-t) t q).symm
-      _ = q := by
-        rw [neg_add_cancel]
-        exact descendedCovariantOperatorObservationFlow_zero Φ q
+    rw [← descendedCovariantOperatorObservationFlow_add Φ (-t) t q,
+      neg_add_cancel]
+    exact descendedCovariantOperatorObservationFlow_zero Φ q
   · apply ConcreteCategory.hom_ext
     intro q
     change descendedCovariantOperatorObservationFlow Φ t
         (descendedCovariantOperatorObservationFlow Φ (-t) q) = q
-    calc
-      descendedCovariantOperatorObservationFlow Φ t
-          (descendedCovariantOperatorObservationFlow Φ (-t) q) =
-          descendedCovariantOperatorObservationFlow Φ (t + -t) q := by
-        exact (descendedCovariantOperatorObservationFlow_add Φ t (-t) q).symm
-      _ = q := by
-        rw [add_neg_cancel]
-        exact descendedCovariantOperatorObservationFlow_zero Φ q
+    rw [← descendedCovariantOperatorObservationFlow_add Φ t (-t) q,
+      add_neg_cancel]
+    exact descendedCovariantOperatorObservationFlow_zero Φ q
 
 end InfoGeometry.Topology

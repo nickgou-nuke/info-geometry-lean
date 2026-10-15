@@ -75,7 +75,7 @@ instance : Category MolecularGraphObj where
 /-- Forget a labelled molecular graph to its finite vertex carrier. -/
 def forgetVertices : MolecularGraphObj ⥤ Type where
   obj X := Fin X.vertexCount
-  map f := f.toEmbedding.toFun
+  map f := TypeCat.ofHom f.toEmbedding.toFun
   map_id := by
     intro X
     rfl
@@ -87,7 +87,7 @@ def forgetVertices : MolecularGraphObj ⥤ Type where
     forgetVertices.obj X = Fin X.vertexCount := rfl
 
 @[simp] theorem forgetVertices_map {X Y : MolecularGraphObj} (f : X ⟶ Y) :
-    forgetVertices.map f = f.toEmbedding.toFun := rfl
+    forgetVertices.map f = TypeCat.ofHom f.toEmbedding.toFun := rfl
 
 end MolecularGraphObj
 
@@ -124,7 +124,7 @@ theorem forgetGraphFunctor_obj (M : MolecularFragmentDiagram D) (u : Fin n) :
     letI : Preorder (Fin n) := D.reachPreorder
     (M.toGraphFunctor ⋙ MolecularGraphObj.forgetVertices).obj u =
       M.vertexDiagram.toFunctor.obj u := by
-  letI : Preorder (Fin n) := D.reachPreorder
+  let : Preorder (Fin n) := D.reachPreorder
   rfl
 
 /-- After forgetting atom/bond structure, every categorical molecular
@@ -134,7 +134,7 @@ theorem forgetGraphFunctor_map (M : MolecularFragmentDiagram D)
     letI : Preorder (Fin n) := D.reachPreorder
     (M.toGraphFunctor ⋙ MolecularGraphObj.forgetVertices).map (homOfLE h) =
       M.vertexDiagram.toFunctor.map (homOfLE h) := by
-  letI : Preorder (Fin n) := D.reachPreorder
+  let : Preorder (Fin n) := D.reachPreorder
   rfl
 
 end MolecularFragmentDiagram

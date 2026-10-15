@@ -1,5 +1,4 @@
-import Mathlib.Data.Real.Basic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Basic.Real.Basic
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.LinearCombination
@@ -286,12 +285,11 @@ theorem continuous_affineKKSFiberCoordinates_after_rotation
     Continuous (fun q : CasimirFiberCarrier r ×
         (ℝ × ℝ × ℝ) × (ℝ × ℝ × ℝ) =>
       affineKKSFiberCoordinates m r
-        (momentumRotationFiber c s r hrot q.1) q.2.1 q.2.2) := by
-  simpa only [Function.comp_apply] using
-    (continuous_affineKKSFiberCoordinates m r).comp
-      ((continuous_momentumRotationFiber c s r hrot |>.comp continuous_fst).prodMk
-        ((continuous_fst.comp continuous_snd).prodMk
-          (continuous_snd.comp continuous_snd)))
+        (momentumRotationFiber c s r hrot q.1) q.2.1 q.2.2) :=
+  (continuous_affineKKSFiberCoordinates m r).comp
+    ((continuous_momentumRotationFiber c s r hrot |>.comp continuous_fst).prodMk
+      ((continuous_fst.comp continuous_snd).prodMk
+        (continuous_snd.comp continuous_snd)))
 
 theorem affineKKSFiberCoordinates_equivariant
     (m r c s : ℝ) (hrot : c ^ 2 + s ^ 2 = 1)
@@ -365,8 +363,10 @@ theorem continuous_se2CarrierMomentumAction
   have hmap : Continuous (fun x : MatrixSE2Carrier × CasimirFiberCarrier r =>
       (x.1.1.1, x.1.1.2.1, x.2.1)) := by
     fun_prop
-  simpa only [Function.comp_apply] using
-    continuous_momentumRotationCoordinates.comp hmap
+  exact continuous_momentumRotationCoordinates.comp hmap
+
+instance {r : ℝ} : ContinuousSMul MatrixSE2Carrier (CasimirFiberCarrier r) where
+  continuous_smul := continuous_se2CarrierMomentumAction
 
 def se2CarrierOrbitMap
     {r : ℝ} (q : CasimirFiberCarrier r) :
@@ -374,11 +374,8 @@ def se2CarrierOrbitMap
 
 theorem continuous_se2CarrierOrbitMap
     {r : ℝ} (q : CasimirFiberCarrier r) :
-    Continuous (se2CarrierOrbitMap q) := by
-  unfold se2CarrierOrbitMap
-  simpa only [Function.comp_apply] using
-    continuous_se2CarrierMomentumAction.comp
-      (continuous_id.prodMk continuous_const)
+    Continuous (se2CarrierOrbitMap q) :=
+  continuous_id.smul continuous_const
 
 def se2CarrierOrbit
     {r : ℝ} (q : CasimirFiberCarrier r) :

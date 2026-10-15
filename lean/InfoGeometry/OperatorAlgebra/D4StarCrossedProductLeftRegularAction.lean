@@ -49,13 +49,15 @@ def leftRegularActionTopCatHom (F : D4StarCrossedProduct) :
     (F K : D4StarCrossedProduct) :
     leftRegularActionTopCatHom W F K = crossedProductMul F K := rfl
 
-  theorem leftRegularActionTopCatHom_comp
+theorem leftRegularActionTopCatHom_comp
     (F K : D4StarCrossedProduct) :
-    leftRegularActionTopCatHom W (crossedProductMul F K) =
+  leftRegularActionTopCatHom W (crossedProductMul F K) =
       leftRegularActionTopCatHom W K ≫ leftRegularActionTopCatHom W F := by
   apply TopCat.hom_ext
   apply ContinuousMap.ext
   intro L
+  change crossedProductMul (crossedProductMul F K) L =
+    crossedProductMul F (crossedProductMul K L)
   exact crossedProductMul_assoc F K L
 
 end

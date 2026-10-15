@@ -63,7 +63,7 @@ lemma conclusion_realinput40_oddprime_quadratic_near_perron_kappa_pos :
       conclusion_realinput40_oddprime_quadratic_near_perron_sqrt5_lt
     nlinarith
   have hphi_sq_gt : 1 < Real.goldenRatio ^ (2 : ℕ) := by
-    rw [show Real.goldenRatio ^ (2 : ℕ) = Real.goldenRatio + 1 by simpa using Real.goldenRatio_sq]
+    rw [show Real.goldenRatio ^ (2 : ℕ) = Real.goldenRatio + 1 by simp [Real.goldenRatio_sq]]
     linarith [Real.one_lt_goldenRatio]
   have hlog_pos :
       0 < conclusion_realinput40_oddprime_quadratic_near_perron_log_lambda := by
@@ -115,13 +115,12 @@ lemma conclusion_realinput40_oddprime_quadratic_near_perron_beta_tendsto :
             conclusion_realinput40_oddprime_quadratic_near_perron_quartic / (p : ℝ) ^ 4)
         atTop (𝓝 (1 + 0)) :=
     hsub.add hterm4
-  simpa [conclusion_realinput40_oddprime_quadratic_near_perron_beta] using hadd
+  rw [add_zero] at hadd
+  exact hadd
 
 /-- Paper label: `thm:conclusion-realinput40-oddprime-quadratic-near-perron`. -/
 theorem paper_conclusion_realinput40_oddprime_quadratic_near_perron :
     conclusion_realinput40_oddprime_quadratic_near_perron_statement := by
-  rcases Omega.Zeta.paper_xi_time_part9w_basic_root_unity_error_exponent_to_one with
-    ⟨hAout, hBout, _⟩
   have hbeta_tendsto :
       Tendsto conclusion_realinput40_oddprime_quadratic_near_perron_beta atTop (𝓝 1) :=
     conclusion_realinput40_oddprime_quadratic_near_perron_beta_tendsto
@@ -131,10 +130,8 @@ theorem paper_conclusion_realinput40_oddprime_quadratic_near_perron :
     have hnhds : Set.Ioi (1 / 2 : ℝ) ∈ 𝓝 (1 : ℝ) := Ioi_mem_nhds (by norm_num)
     exact hbeta_tendsto.eventually hnhds
   rcases Filter.eventually_atTop.1 hgt_eventually with ⟨N, hN⟩
-  refine ⟨?_, conclusion_realinput40_oddprime_quadratic_near_perron_kappa_pos, ?_,
+  refine ⟨rfl, conclusion_realinput40_oddprime_quadratic_near_perron_kappa_pos, ?_,
     hbeta_tendsto, ⟨N, ?_⟩⟩
-  · simpa [conclusion_realinput40_oddprime_quadratic_near_perron_kappa,
-      conclusion_realinput40_oddprime_quadratic_near_perron_log_lambda] using hAout
   · intro p _hp _hodd
     rfl
   · intro p _hp hNp

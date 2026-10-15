@@ -185,7 +185,8 @@ theorem certifiedConformal_spectralProjector_isHestenesLinear_of_IsPhaseLinear_f
     IsHestenesLinear (E := E) CCI.spectralProjector := by
   have hP_phase : IsPhaseLinear (E := E) (CCI.A.comp CCI.A_D) :=
     isPhaseLinear_comp (E := E) CCI.A CCI.A_D hA_phase hAD_phase
-  simpa [InfoGeometry.Canonical.ConformalUnification.CertifiedConformalInference.spectralProjector,
+  simpa [ContinuousLinearMap.mul_def,
+    InfoGeometry.Canonical.ConformalUnification.CertifiedConformalInference.spectralProjector,
     InfoGeometry.Canonical.ConformalUnification.CertifiedConformalInference.toCertifiedInverseKernel,
     InfoGeometry.Canonical.CertifiedInverseKernel.spectralProjector,
     InfoGeometry.Canonical.CertifiedInverseKernel.toInverseKernel',

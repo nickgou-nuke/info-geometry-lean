@@ -12,7 +12,7 @@ abbrev sync_kernel_weighted_newman_q_not_solvable_by_radicals_distinguished_root
 /-- Root-level nonsolvability predicate induced by the `S₃₇` Galois certificate. -/
 def sync_kernel_weighted_newman_q_not_solvable_by_radicals_root_obstruction
     (_ : sync_kernel_weighted_newman_q_not_solvable_by_radicals_distinguished_root) : Prop :=
-  ¬ IsSolvable (Equiv.Perm (Fin 37))
+  ¬ Group.IsSolvable (Equiv.Perm (Fin 37))
 
 /-- Concrete `S₃₇` certificate reused by the radical-obstruction wrapper. -/
 def sync_kernel_weighted_newman_q_not_solvable_by_radicals_galois_certificate :
@@ -47,9 +47,9 @@ theorem paper_sync_kernel_weighted_newman_q_not_solvable_by_radicals :
           sync_kernel_weighted_newman_q_not_solvable_by_radicals_galois_certificate :=
     (paper_sync_kernel_weighted_newman_q_galois_s37
       sync_kernel_weighted_newman_q_not_solvable_by_radicals_galois_certificate).2.2.2.2
-  have hnotSolvable : ¬ IsSolvable (Equiv.Perm (Fin 37)) := by
+  have hnotSolvable : ¬ Group.IsSolvable (Equiv.Perm (Fin 37)) := by
     simpa using
-      (Equiv.Perm.not_solvable (Fin 37) (by
+      (Equiv.Perm.not_isSolvable (Fin 37) (by
         rw [Cardinal.mk_fin]
         norm_num))
   refine ⟨hgalois, ?_⟩

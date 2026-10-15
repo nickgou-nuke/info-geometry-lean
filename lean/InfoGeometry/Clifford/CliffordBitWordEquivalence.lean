@@ -189,7 +189,7 @@ theorem bitWordStageEquivFin_coherent (n : ℕ) (A : UHFStage n) :
       cases hj : (stageIndexEquiv n).symm j with
       | mk j₁ j₂ =>
           dsimp [bitWordStageEquivFin, realFinBondFun, matrixBond,
-            Matrix.reindexAlgEquiv, Matrix.reindex]
+            Matrix.reindex]
           rw [hi, hj]
           change
             (matrixBondFun n A

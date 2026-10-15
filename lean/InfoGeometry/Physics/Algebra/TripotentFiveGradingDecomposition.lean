@@ -46,7 +46,30 @@ inductive FiveGrade where
   | zero
   | posOne
   | posTwo
-  deriving DecidableEq, Fintype, Repr
+  deriving DecidableEq, Repr
+
+instance : Fintype FiveGrade :=
+  Fintype.ofEquiv (Fin 5)
+    { toFun := fun i =>
+        match i.val with
+        | 0 => .negTwo
+        | 1 => .negOne
+        | 2 => .zero
+        | 3 => .posOne
+        | _ => .posTwo
+      invFun := fun g =>
+        match g with
+        | .negTwo => 0
+        | .negOne => 1
+        | .zero => 2
+        | .posOne => 3
+        | .posTwo => 4
+      left_inv := by
+        intro i
+        fin_cases i <;> rfl
+      right_inv := by
+        intro g
+        cases g <;> rfl }
 
 /-- Numerical value of a five-grade label. -/
 def fiveGradeValue : FiveGrade → ℤ

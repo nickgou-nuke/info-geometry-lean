@@ -35,8 +35,8 @@ theorem paper_cdim_rs_gabcke_compactified_quadratic_gain
     refine (convex_Icc (γ - ρ) (γ + ρ)).norm_image_sub_le_of_norm_hasDerivWithin_le
       (f := rsGabckeCompactify) (f' := fun x => (1 / (1 + x ^ 2)) / Real.pi) ?_ ?_ hγK_mem hγK1_mem
     · intro x hx
-      simpa [I, rsGabckeCompactify] using
-        ((Real.hasDerivAt_arctan x).div_const Real.pi).hasDerivWithinAt
+      change HasDerivWithinAt (fun t => Real.arctan t / Real.pi) _ _ _
+      exact ((Real.hasDerivAt_arctan x).div_const Real.pi).hasDerivWithinAt
     · intro x hx
       have hx_nonneg : 0 ≤ x := le_trans hleft hx.1
       have hsq : (γ - ρ) ^ 2 ≤ x ^ 2 := by

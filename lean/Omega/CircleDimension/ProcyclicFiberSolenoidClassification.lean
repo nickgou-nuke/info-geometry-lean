@@ -44,8 +44,7 @@ theorem paper_cdim_procyclic_fiber_solenoid_classification
       (paper_cdim_localized_division_prime_fiber_no_growth procyclicFiberRankOneWitness).1
     simpa [LocalizedDivisionPrimeFiberNoGrowthData.dualIsSolenoid, procyclicFiberRankOneWitness]
       using hDual
-  · simpa using
-      (paper_cdim_localized_gs_dual_complete_classification
+  · exact (paper_cdim_localized_gs_dual_complete_classification
         (procyclicFiberEmbeddingData S T hS hT))
 
 end Omega.CircleDimension

@@ -109,11 +109,15 @@ theorem canonicalParameterDualEquiv_order_six :
       1 := by
   apply LinearEquiv.ext
   intro s
+  have hshort (x : Parameter) :
+      canonicalShortParameterDualEquiv x =
+        canonicalShortParameterDualLinear x := rfl
+  have hlong (x : Parameter) :
+      canonicalLongParameterDualEquiv x =
+        canonicalLongParameterDualLinear x := rfl
   have h := congrArg (fun f : (Parameter →ₗ[ℝ] Parameter) => f s)
     canonicalParameterDual_order_six
-  simpa [canonicalShortParameterDualEquiv,
-    canonicalLongParameterDualEquiv, LinearEquiv.mul_apply,
-    pow_succ] using h
+  simpa [hshort, hlong, LinearEquiv.mul_apply, pow_succ] using h
 
 @[simp] theorem canonicalShortParameterDualEquiv_apply (s : Parameter) :
     canonicalShortParameterDualEquiv s = canonicalShortReflectionDualReal s := rfl

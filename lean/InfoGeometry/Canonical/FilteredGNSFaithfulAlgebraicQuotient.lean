@@ -16,7 +16,8 @@ noncomputable section
 
 namespace CStarStateColimit.Native.FilteredGNSFaithfulAlgebraicQuotient
 
-set_option maxHeartbeats 80000
+set_option maxHeartbeats 400000
+set_option synthInstance.maxHeartbeats 80000
 set_option linter.unusedSectionVars false
 
 open CStarStateColimit.Native

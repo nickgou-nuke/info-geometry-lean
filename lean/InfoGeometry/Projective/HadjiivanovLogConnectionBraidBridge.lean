@@ -76,10 +76,9 @@ def sectionBraidTransport (F : LogResidueBraidFrame V) (g : BraidGroup) :
 theorem sectionBraidTransport_one
     (F : LogResidueBraidFrame V) (x : LogSection V) :
     sectionBraidTransport F 1 x = x := by
-  refine TensorProduct.induction_on x ?_ ?_ ?_
-  · simp
+  refine TensorProduct.inductionOn x ?_ ?_
   · intro f v
-    simp
+    simp [sectionBraidTransport]
   · intro x y hx hy
     simp [map_add, hx, hy]
 
@@ -87,10 +86,9 @@ theorem sectionBraidTransport_mul
     (F : LogResidueBraidFrame V) (g k : BraidGroup) (x : LogSection V) :
     sectionBraidTransport F (g * k) x =
       sectionBraidTransport F g (sectionBraidTransport F k x) := by
-  refine TensorProduct.induction_on x ?_ ?_ ?_
-  · simp
+  refine TensorProduct.inductionOn x ?_ ?_
   · intro f v
-    simp
+    simp [sectionBraidTransport]
   · intro x y hx hy
     simp [map_add, hx, hy]
 
@@ -114,8 +112,7 @@ theorem logarithmicConnection_braid
     logarithmicConnection (frameResidue F (braidPermutation g a))
         (sectionBraidTransport F g x) =
       sectionBraidTransport F g (logarithmicConnection (frameResidue F a) x) := by
-  refine TensorProduct.induction_on x ?_ ?_ ?_
-  · simp
+  refine TensorProduct.inductionOn x ?_ ?_
   · exact logarithmicConnection_braid_tmul F g a
   · intro x y hx hy
     simp [map_add, hx, hy]

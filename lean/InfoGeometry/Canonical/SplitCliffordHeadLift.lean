@@ -55,22 +55,32 @@ noncomputable def headNullPlusTensor (n : ℕ) : SplitClNNTensorStep n :=
 @[rep_depth krein, simp] theorem headJTensor_preimage (n : ℕ) :
     (splitCliffordTensorStepEquiv n).symm (headJTensor n)
       = CliffordAlgebra.ι (SplitClNNQuad (n + 1)) (headPair n (1, 0)) := by
-  simp [headJTensor, SplitClNNQuad, headPair]
+  apply (splitCliffordTensorStepEquiv n).injective
+  rw [(splitCliffordTensorStepEquiv n).apply_symm_apply]
+  exact (splitCliffordTensorStep_headFactor n (1, 0)).symm
 
 @[rep_depth krein, simp] theorem headKTensor_preimage (n : ℕ) :
     (splitCliffordTensorStepEquiv n).symm (headKTensor n)
       = CliffordAlgebra.ι (SplitClNNQuad (n + 1)) (headPair n (0, 1)) := by
-  simp [headKTensor, SplitClNNQuad, headPair]
+  apply (splitCliffordTensorStepEquiv n).injective
+  rw [(splitCliffordTensorStepEquiv n).apply_symm_apply]
+  exact (splitCliffordTensorStep_headFactor n (0, 1)).symm
 
 @[rep_depth krein, simp] theorem headJTensor_sq (n : ℕ) :
     headJTensor n * headJTensor n = 1 := by
   apply (splitCliffordTensorStepEquiv n).symm.injective
-  simp [headJTensor_preimage, SplitClNNQuad, quad_headPair]
+  rw [map_mul, map_one, headJTensor_preimage, CliffordAlgebra.ι_sq_scalar,
+    quad_headPair, CliffordTower.Q11_apply]
+  have : (1 : ℝ) * 1 - 0 * 0 = 1 := by norm_num
+  rw [this, map_one]
 
 @[rep_depth krein, simp] theorem headKTensor_sq (n : ℕ) :
     headKTensor n * headKTensor n = -(1 : SplitClNNTensorStep n) := by
   apply (splitCliffordTensorStepEquiv n).symm.injective
-  simp [headKTensor_preimage, SplitClNNQuad, quad_headPair]
+  rw [map_mul, map_neg, map_one, headKTensor_preimage, CliffordAlgebra.ι_sq_scalar,
+    quad_headPair, CliffordTower.Q11_apply]
+  have : (0 : ℝ) * 0 - 1 * 1 = -1 := by norm_num
+  rw [this, map_neg, map_one]
 
 @[rep_depth krein, simp] theorem headJTensor_mul_headKTensor_add_swap (n : ℕ) :
     headJTensor n * headKTensor n + headKTensor n * headJTensor n = 0 := by
@@ -79,14 +89,13 @@ noncomputable def headNullPlusTensor (n : ℕ) : SplitClNNTensorStep n :=
         (headPair n (1, 0)) (headPair n (0, 1)) = 0 := by
     have hsum :
         headPair n (1, 0) + headPair n (0, 1) = headPair n (1, 1) := by
-      change (((1, 0), 0) + ((0, 1), 0)) = (((1, 1), 0))
-      simp
-    rw [QuadraticMap.polar, hsum]
-    simp [SplitClNNQuad, headPair]
+      ext <;> simp [headPair]
+    rw [QuadraticMap.polar, hsum, quad_headPair, quad_headPair, quad_headPair,
+      CliffordTower.Q11_apply, CliffordTower.Q11_apply, CliffordTower.Q11_apply]
+    ring
   apply (splitCliffordTensorStepEquiv n).symm.injective
-  simpa [headJTensor_preimage, headKTensor_preimage, hpolar] using
-    (CliffordAlgebra.ι_mul_ι_add_swap
-      (Q := SplitClNNQuad (n + 1)) (headPair n (1, 0)) (headPair n (0, 1)))
+  rw [map_add, map_mul, map_mul, map_zero, headJTensor_preimage, headKTensor_preimage,
+    CliffordAlgebra.ι_mul_ι_add_swap, hpolar, map_zero]
 
 @[rep_depth krein, simp] theorem headKTensor_mul_headJTensor (n : ℕ) :
     headKTensor n * headJTensor n = -(headEpsTensor n) := by
@@ -240,19 +249,17 @@ private theorem headLeftFactor_tmul_smul (n : ℕ) (a : ℝ)
 
 @[rep_depth krein, simp] theorem headNullMinusTensor_sq (n : ℕ) :
     headNullMinusTensor n * headNullMinusTensor n = 0 := by
-  apply (splitCliffordTensorStepEquiv n).symm.injective
-  simp [headNullMinusTensor]
+  rw [headNullMinusTensor, ← map_mul, gammaHeadNullMinus_sq, map_zero]
 
 @[rep_depth krein, simp] theorem headNullPlusTensor_sq (n : ℕ) :
     headNullPlusTensor n * headNullPlusTensor n = 0 := by
-  apply (splitCliffordTensorStepEquiv n).symm.injective
-  simp [headNullPlusTensor]
+  rw [headNullPlusTensor, ← map_mul, gammaHeadNullPlus_sq, map_zero]
 
 @[rep_depth krein, simp] theorem headNullMinusTensor_mul_headNullPlusTensor_add_swap
     (n : ℕ) :
     headNullMinusTensor n * headNullPlusTensor n
       + headNullPlusTensor n * headNullMinusTensor n = 1 := by
-  apply (splitCliffordTensorStepEquiv n).symm.injective
-  simp [headNullMinusTensor, headNullPlusTensor]
+  rw [headNullMinusTensor, headNullPlusTensor, ← map_mul, ← map_mul, ← map_add,
+    gammaHeadNullMinus_mul_gammaHeadNullPlus_add_swap, map_one]
 
 end InfoGeometry.Canonical.SplitCliffordHeadLift

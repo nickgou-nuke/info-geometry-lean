@@ -44,7 +44,7 @@ theorem one_sub_ellActiveSupport_eq_flowZero :
 theorem ellActiveSupport_idempotent :
     ellActiveSupport * ellActiveSupport = ellActiveSupport := by
   have hT : ellGrading * ellGrading * ellGrading = ellGrading := by
-    simpa [pow_three] using ellGrading_tripotent
+    exact ellGrading_tripotent_mul
   unfold ellActiveSupport
   calc
     (ellGrading * ellGrading) * (ellGrading * ellGrading) =

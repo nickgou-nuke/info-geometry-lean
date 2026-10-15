@@ -4,7 +4,7 @@ namespace InfoGeometry.Arithmetic.SarnakLocalCertificationTests
 
 open SarnakLocalCertification ActualRiemannXiEntireBridge
 
-def linearWitness (point : ℂ) : ℂ := point - 1 / 2
+noncomputable def linearWitness (point : ℂ) : ℂ := point - 1 / 2
 
 instance : RiemannSymmetric linearWitness where
   zero_reflection point := by
@@ -12,6 +12,9 @@ instance : RiemannSymmetric linearWitness where
         -star (linearWitness point) := by
       simp only [linearWitness, critical_reflection, map_sub, map_div,
         star_one, star_ofNat]
+      rw [star_sub]
+      have hhalf : star (1 / 2 : ℂ) = (1 / 2 : ℂ) := by simp
+      rw [hhalf]
       ring
     rw [reflected]
     constructor

@@ -103,6 +103,36 @@ def PreservesPairing
   ∀ u v, dot3 (colourFundamentalAction g u)
       (colourDualAction g v) = dot3 u v
 
+/-- The coordinate `dot3` agrees with Mathlib's finite dot product. -/
+theorem dot3_eq_dotProduct (u v : ColourVector) :
+    dot3 u v = dotProduct u v := by
+  simp [dot3, dotProduct, Fin.sum_univ_succ] <;> ring
+
+/-- The fundamental and contragredient color actions preserve the canonical
+bilinear pairing. This follows from the matrix inverse identity, so the pairing
+certificate needed by the Zorn action is derived rather than assumed. -/
+theorem colourActions_preserve_pairing
+    (g : Matrix.SpecialLinearGroup (Fin 3) ℂ) (u v : ColourVector) :
+    dot3 (colourFundamentalAction g u) (colourDualAction g v) = dot3 u v := by
+  rw [dot3_eq_dotProduct, dot3_eq_dotProduct]
+  change dotProduct (Matrix.mulVec (g : Matrix (Fin 3) (Fin 3) ℂ) u)
+      (Matrix.mulVec (Matrix.transpose
+        ((g⁻¹ : Matrix.SpecialLinearGroup (Fin 3) ℂ) :
+          Matrix (Fin 3) (Fin 3) ℂ)) v) = dotProduct u v
+  rw [Matrix.dotProduct_mulVec, Matrix.vecMul_transpose,
+    Matrix.mulVec_mulVec]
+  have hInvGroup : g⁻¹ * g = (1 : Matrix.SpecialLinearGroup (Fin 3) ℂ) :=
+    inv_mul_cancel g
+  have hInv :
+      ((g⁻¹ : Matrix.SpecialLinearGroup (Fin 3) ℂ) :
+          Matrix (Fin 3) (Fin 3) ℂ) *
+        (g : Matrix (Fin 3) (Fin 3) ℂ) = 1 := by
+    simpa only [Matrix.SpecialLinearGroup.coe_mul,
+      Matrix.SpecialLinearGroup.coe_one] using
+        congrArg (fun h : Matrix.SpecialLinearGroup (Fin 3) ℂ =>
+          (h : Matrix (Fin 3) (Fin 3) ℂ)) hInvGroup
+  rw [hInv, Matrix.one_mulVec]
+
 def PreservesCrossFundamental
     (g : Matrix.SpecialLinearGroup (Fin 3) ℂ) : Prop :=
   ∀ u v, cross3 (colourFundamentalAction g u)
@@ -121,12 +151,12 @@ private theorem dot3_comm (u v : ColourVector) :
 
 theorem zornSL3Action_mul_of_covariant
     (g : Matrix.SpecialLinearGroup (Fin 3) ℂ)
-    (hpair : PreservesPairing g)
     (hcross : PreservesCrossFundamental g)
     (hdualCross : PreservesDualCross g)
     (X Y : Zorn) :
     zornSL3Action g (zornMul X Y) =
       zornMul (zornSL3Action g X) (zornSL3Action g Y) := by
+  have hpair : PreservesPairing g := colourActions_preserve_pairing g
   apply SplitOctonionBraidSU3.zorn_ext
   · simpa [zornSL3Action, zornMul] using (hpair X.u Y.v).symm
   · funext i
@@ -166,8 +196,9 @@ theorem zornSL3Action_mul_of_covariant
 
 theorem zornSL3Action_preserves_norm_of_pairing
     (g : Matrix.SpecialLinearGroup (Fin 3) ℂ)
-    (hpair : PreservesPairing g) (X : Zorn) :
+    (X : Zorn) :
     zornNorm (zornSL3Action g X) = zornNorm X := by
+  have hpair : PreservesPairing g := colourActions_preserve_pairing g
   change X.a * X.b - dot3
       (colourFundamentalAction g X.u) (colourDualAction g X.v) =
     X.a * X.b - dot3 X.u X.v

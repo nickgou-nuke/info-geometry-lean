@@ -375,16 +375,7 @@ theorem nonzero_associator_of_not_scalar
             apply hx
             have hscalar : ({ a := a, b := a, x := 0, y := 0 } : InfoGeometry.Canonical.ZornMatrix R) =
                 a • (1 : InfoGeometry.Canonical.ZornMatrix R) := by
-              have h1a : InfoGeometry.Canonical.ZornMatrix.a (1 : InfoGeometry.Canonical.ZornMatrix R) = 1 := by
-                rfl
-              have h1b : InfoGeometry.Canonical.ZornMatrix.b (1 : InfoGeometry.Canonical.ZornMatrix R) = 1 := by
-                rfl
-              have hx0 : InfoGeometry.Canonical.ZornMatrix.x (1 : InfoGeometry.Canonical.ZornMatrix R) = 0 := by
-                rfl
-              have hy0 : InfoGeometry.Canonical.ZornMatrix.y (1 : InfoGeometry.Canonical.ZornMatrix R) = 0 := by
-                rfl
-              ext <;> simp [Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv,
-                h1a, h1b, hx0, hy0]
+              ext <;> simp
             refine ⟨a, ?_⟩
             simpa [hu, hv, hAB] using hscalar
           · refine ⟨upper e0, upper e1, ?_⟩

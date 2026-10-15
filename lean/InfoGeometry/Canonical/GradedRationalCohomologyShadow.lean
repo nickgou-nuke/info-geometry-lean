@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.GradedRationalSectorIntersections
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.LinearAlgebra.Quotient.Defs
 
 namespace InfoGeometry.Canonical
 
@@ -51,20 +52,8 @@ def gradedBoundaryInCycles
 This is only the native quotient type; no choice of representatives or
 finite-dimensional dimension statement is asserted here.
 -/
-def gradedCohomologyShadow
+abbrev gradedCohomologyShadow
     (D : GradedRationalDifferential V) (p : ℕ) :=
   (gradedCycleSubmodule D (p + 1)) ⧸ gradedBoundaryInCycles D p
-
-instance gradedCohomologyShadow.instAddCommGroup
-    (D : GradedRationalDifferential V) (p : ℕ) :
-    AddCommGroup (gradedCohomologyShadow D p) := by
-  dsimp [gradedCohomologyShadow]
-  infer_instance
-
-instance gradedCohomologyShadow.instModule
-    (D : GradedRationalDifferential V) (p : ℕ) :
-    Module ℚ (gradedCohomologyShadow D p) := by
-  dsimp [gradedCohomologyShadow]
-  infer_instance
 
 end InfoGeometry.Canonical

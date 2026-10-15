@@ -291,17 +291,16 @@ theorem boson_CCR :
       bosonCreation (bosonAnnihilation f) n = f n
   cases n with
   | zero =>
-      simp [bosonCreation, bosonAnnihilation,
-        ZornVectorMatrix.one_smul, ZornVectorMatrix.zero_add,
-        ZornVectorMatrix.add_zero]
+      dsimp only [bosonCreation_zero, bosonAnnihilation_apply, bosonCreation_succ]
+      have h1 : ((0 + 1 : ℕ) : ℝ) = (1 : ℝ) := by norm_num
+      rw [h1, one_smul]
+      abel
   | succ n =>
+      have hstep : ((n + 2 : ℕ) : ℝ) = ((n + 1 : ℕ) : ℝ) + 1 := by push_cast; ring
       change (((n + 2 : ℕ) : ℝ) • f (n + 1)) -
           (((n + 1 : ℕ) : ℝ) • f (n + 1)) = f (n + 1)
-      rw [← sub_smul]
-      have hscalar :
-          (((n + 2 : ℕ) : ℝ) - ((n + 1 : ℕ) : ℝ)) = 1 := by
-        norm_num
-      rw [hscalar, one_smul]
+      rw [hstep, add_smul, one_smul]
+      abel
 
 /-- Pointwise lift of a Zorn endomorphism to the bosonic occupation module. -/
 def pointwiseSequenceLift (D : NativeZornEnd) : BosonSequenceEnd where

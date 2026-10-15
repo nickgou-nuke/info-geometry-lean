@@ -46,7 +46,8 @@ theorem paper_fold_godel_density_estimator_clt_efficient :
     (tendsto_const_nhds.mul hrem)
   have hexpRem : Tendsto (fun n : ℕ => Real.exp (t * remainder n)) atTop (𝓝 1) := by
     have hExp := Real.continuous_exp.continuousAt.tendsto.comp hscaled
-    simpa using hExp
+    change Tendsto (Real.exp ∘ fun n : ℕ => t * remainder n) atTop (𝓝 1)
+    simpa only [mul_zero, Real.exp_zero] using hExp
   have hrewrite :
       (fun n : ℕ => Real.exp (t * estimator n)) =ᶠ[atTop]
         fun n : ℕ => Real.exp (t * empirical n) * Real.exp (t * remainder n) := by

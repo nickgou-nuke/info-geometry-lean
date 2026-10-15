@@ -59,10 +59,13 @@ theorem paper_conclusion_boolean_orderideal_onebit_parity_defect
       have hcard_ne_one : I.card ≠ 1 := by
         intro hcard
         rcases Finset.card_eq_one.mp hcard with ⟨S, hS⟩
-        have hSe : ∅ = S := by
-          simpa [hS] using hempty
+        have hSe : (Finset.empty : Finset (Fin q)) = S := by
+          rw [hS] at hempty
+          exact Finset.mem_singleton.mp hempty
         apply hsingle
-        simp [hS, hSe]
+        rw [hS, ← hSe]
+        rfl
+
       omega
   refine ⟨hdet, ?_, ?_, ?_, ?_⟩
   · rcases hsingleton_or_large with hsingle | hlarge

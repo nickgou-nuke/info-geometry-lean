@@ -374,7 +374,8 @@ theorem exists_moorePenroseInverse_global
 
   have hAcompSubtype : A.comp K.subtypeL = R.subtypeL.comp eCLM := by
     ext k
-    simp [eCLM, e, Ares]
+    change A (k : E) = (Ares k : E)
+    rfl
 
   have hAB : A.comp B = R.starProjection := by
     ext x
@@ -399,7 +400,8 @@ theorem exists_moorePenroseInverse_global
     have hright0 :
         ((eCLM.comp K.orthogonalProjection) x : E) =
           A ((K.orthogonalProjection x : K) : E) := by
-      simp [ContinuousLinearMap.comp_apply, eCLM, e, Ares]
+      simpa [ContinuousLinearMap.comp_apply] using
+        (DFunLike.congr_fun hAcompSubtype (K.orthogonalProjection x)).symm
     have hright : ((eCLM.comp K.orthogonalProjection) x : E) = A x := by
       exact hright0.trans (hA_on_Kproj x)
     exact hleft.trans hright.symm

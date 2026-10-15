@@ -1,5 +1,4 @@
 import Mathlib.Data.Matrix.Basic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 set_option maxHeartbeats 2000000
@@ -20,4 +19,7 @@ def eps0 : Mat8 :=
     ![0, 0, 1, 0, 0, 0, 0, 0]]
 
 theorem eps0_sq : eps0 * eps0 = 0 := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [HMul.hMul, Mul.mul, Matrix.mul_apply, eps0, Fin.sum_univ_eight]; norm_num
+  ext i j
+  rw [Matrix.mul_apply]
+  fin_cases i <;> fin_cases j <;>
+    norm_num [eps0, Fin.sum_univ_eight]

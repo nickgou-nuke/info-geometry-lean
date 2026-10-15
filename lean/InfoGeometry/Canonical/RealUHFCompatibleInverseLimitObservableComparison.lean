@@ -59,6 +59,17 @@ theorem canonical_orbitClosure_stageObservation_square
   rw [canonicalOrbitClosureMap_inclusion]
   exact canonical_stage_observation_agreement y.1 n X
 
+theorem canonical_orbitClosure_stageObservation_apply
+    (ρ : compatibleCarrier) (n : ℕ) (X : MatStage n)
+    (y : compatibleOrbitClosure ρ) :
+    stageObservationTopCatHom n X (canonicalOrbitClosureMap ρ y) =
+      coordinateEvaluationTopCatHom n X y.1 := by
+  have h := congrArg (fun f => f y)
+    (canonical_orbitClosure_stageObservation_square ρ n X)
+  rw [TopCat.comp_app, canonicalOrbitClosureTopCatHom_apply,
+    compatibleOrbitClosureStageObservationTopCatHom_apply] at h
+  exact h
+
 noncomputable def compatibleOrbitClosureToInverseStageObservationRangeTopCatHom
     (ρ : compatibleCarrier) (n : ℕ) (X : MatStage n) :
     TopCat.of (compatibleOrbitClosure ρ) ⟶
@@ -66,18 +77,14 @@ noncomputable def compatibleOrbitClosureToInverseStageObservationRangeTopCatHom
   TopCat.ofHom
     { toFun := fun y =>
         ⟨coordinateEvaluationTopCatHom n X y.1, by
-          refine ⟨canonicalOrbitClosureMap ρ y, ?_⟩
-          have h := congrArg (fun f => f y)
-            (canonical_orbitClosure_stageObservation_square ρ n X)
-          simpa [TopCat.comp_app] using h⟩
+          exact ⟨canonicalOrbitClosureMap ρ y,
+            canonical_orbitClosure_stageObservation_apply ρ n X y⟩⟩
       continuous_toFun :=
         (coordinateEvaluationTopCatHom n X).hom.continuous.comp
           continuous_subtype_val |>.subtype_mk (by
             intro y
-            refine ⟨canonicalOrbitClosureMap ρ y, ?_⟩
-            have h := congrArg (fun f => f y)
-              (canonical_orbitClosure_stageObservation_square ρ n X)
-            simpa [TopCat.comp_app] using h) }
+            exact ⟨canonicalOrbitClosureMap ρ y,
+              canonical_orbitClosure_stageObservation_apply ρ n X y⟩) }
 
 @[simp] theorem compatibleOrbitClosureToInverseStageObservationRangeTopCatHom_apply
     (ρ : compatibleCarrier) (n : ℕ) (X : MatStage n)
@@ -85,10 +92,8 @@ noncomputable def compatibleOrbitClosureToInverseStageObservationRangeTopCatHom
     compatibleOrbitClosureToInverseStageObservationRangeTopCatHom
         ρ n X y =
       ⟨coordinateEvaluationTopCatHom n X y.1, by
-        refine ⟨canonicalOrbitClosureMap ρ y, ?_⟩
-        have h := congrArg (fun f => f y)
-          (canonical_orbitClosure_stageObservation_square ρ n X)
-        simpa [TopCat.comp_app] using h⟩ := rfl
+        exact ⟨canonicalOrbitClosureMap ρ y,
+          canonical_orbitClosure_stageObservation_apply ρ n X y⟩⟩ := rfl
 
 theorem compatibleOrbitClosureToInverseStageObservationRange_factorization
     (ρ : compatibleCarrier) (n : ℕ) (X : MatStage n) :

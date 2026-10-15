@@ -108,11 +108,12 @@ theorem unorderedCoveringPermutationLinearMonodromy_eq_one_iff_pure
   constructor
   · intro h
     apply deckPermutationLinearRepresentation_injective R n
-    simpa using h
+    change ((deckPermutationLinearRepresentation R n).comp
+      (unorderedCoveringPermutationMonodromy Q n hLC hT2 p)) γ = 1 at h
+    simpa only [MonoidHom.comp_apply, map_one] using h
   · intro h
-    change deckPermutationLinearRepresentation R n
-      (unorderedCoveringPermutationMonodromy Q n hLC hT2 p γ) = 1
-    rw [h, map_one]
+    have hlinear := congrArg (deckPermutationLinearRepresentation R n) h
+    simpa [unorderedCoveringPermutationLinearMonodromy] using hlinear
 
 /-- Subgroup form of the equality between the GL-monodromy kernel and the
 permutation-monodromy kernel. -/

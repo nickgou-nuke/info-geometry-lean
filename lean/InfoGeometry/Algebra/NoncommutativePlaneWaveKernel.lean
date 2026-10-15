@@ -44,7 +44,8 @@ theorem planeWave_injective [Nontrivial R] :
     Function.Injective (planeWave (R := R) : G → MonoidAlgebra R G) := by
   intro g h e
   apply Finsupp.single_left_injective (one_ne_zero : (1 : R) ≠ 0)
-  simpa [planeWave] using e
+  have hc := congrArg (fun p : MonoidAlgebra R G => p.coeff) e
+  simpa [planeWave, MonoidAlgebra.coeff_single] using hc
 
 theorem planeWaveRepresentation_injective [Nontrivial R] :
     Function.Injective (planeWaveRepresentation (R := R) (G := G)) := by
@@ -89,22 +90,10 @@ theorem finitePlaneWaveTransform_pointMass (g : G) (c : R) :
     simp [Pi.single_apply, hb]
 
 theorem finitePlaneWaveTransform_coeff (f : G → R) (k : G) :
-    finitePlaneWaveTransform (R := R) f k = f k := by
-  classical
+    (finitePlaneWaveTransform (R := R) f).coeff k = f k := by
   rw [finitePlaneWaveTransform_apply]
-  have hterm (g : G) :
-      f g • planeWave (R := R) g = Finsupp.single g (f g) := by
-    rw [planeWave, MonoidAlgebra.single, Finsupp.smul_single]
-    simp
-  calc
-    (∑ g : G, f g • planeWave (R := R) g) k =
-        (∑ g : G, Finsupp.single g (f g)) k := by
-      exact congrArg (fun x : MonoidAlgebra R G => x k)
-        (Finset.sum_congr rfl (fun g hg => hterm g))
-    _ = f k := by
-      have h := congrArg (fun x : MonoidAlgebra R G => x k)
-        (Finsupp.equivFunOnFinite_symm_eq_sum f)
-      simpa using h.symm
+  simp [planeWave, MonoidAlgebra.coeff_sum, MonoidAlgebra.coeff_smul,
+    MonoidAlgebra.coeff_single, Finsupp.single_apply, eq_comm]
 
 def finiteConvolution (f h : G → R) (k : G) : R :=
   ∑ g : G, f g * h (g⁻¹ * k)
@@ -114,9 +103,11 @@ theorem finitePlaneWaveTransform_mul_convolution (f h : G → R) :
       finitePlaneWaveTransform (R := R) f *
         finitePlaneWaveTransform (R := R) h := by
   ext k
-  rw [MonoidAlgebra.mul_apply_left]
+  rw [finitePlaneWaveTransform_coeff]
+  rw [MonoidAlgebra.coeff_mul_apply_left]
   rw [Finsupp.sum_fintype]
-  · simp [finiteConvolution, finitePlaneWaveTransform_coeff]
+  · simp_rw [finitePlaneWaveTransform_coeff]
+    simp [finiteConvolution]
   · intro g
     simp
 

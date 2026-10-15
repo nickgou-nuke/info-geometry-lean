@@ -1,5 +1,4 @@
 import Mathlib.NumberTheory.LSeries.RiemannZeta
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 import InfoGeometry.Arithmetic.RiemannZetaEquivalences
 import InfoGeometry.Arithmetic.ActualRiemannXiSchwarzBridge
@@ -90,12 +89,14 @@ theorem deriv_entireRiemannXi_one_sub (s : ℂ) :
     deriv entireRiemannXi (1 - s) = -deriv entireRiemannXi s := by
   have h_outer := (differentiable_entireRiemannXi (1 - s)).hasDerivAt
   have h_inner : HasDerivAt (fun x : ℂ => 1 - x) (-1 : ℂ) s := by
-    convert (hasDerivAt_const (x := s) (1 : ℂ)).sub (hasDerivAt_id s) using 1 <;>
-      simp
+    have h := (hasDerivAt_const s (1 : ℂ)).sub (hasDerivAt_id s)
+    rw [zero_sub] at h
+    exact h
   have h_comp := h_outer.comp s h_inner
   have h_reflected : HasDerivAt (fun x : ℂ => entireRiemannXi (1 - x))
       (-deriv entireRiemannXi (1 - s)) s := by
-    convert h_comp using 1 <;> ring
+    rw [← mul_neg_one]
+    exact h_comp
   have h_reflected' : HasDerivAt entireRiemannXi
       (-deriv entireRiemannXi (1 - s)) s :=
     h_reflected.congr_of_eventuallyEq

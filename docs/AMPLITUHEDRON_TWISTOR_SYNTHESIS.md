@@ -10,7 +10,6 @@ Lean authority lives in:
 - `lean/InfoGeometry/Projective/NonIsoConf3RankIngestion.lean`
 - `lean/InfoGeometry/Projective/RohozhkinDelaunayScramblingBridge.lean`
 - `lean/InfoGeometry/Projective/QDeformedTwistorAmplituhedronBridge.lean`
-- `lean/InfoGeometry/Projective/OnShellResidueBCFWBridge.lean`
 - `lean/InfoGeometry/Projective/PenroseDelaunayKleinAmplituhedronBridge.lean`
 - `lean/InfoGeometry/Projective/PenroseDAGAmplituhedronRosetta.lean`
 - `lean/InfoGeometry/Topology/AmplituhedronBoundary.lean`
@@ -20,6 +19,14 @@ Lean authority lives in:
 - `lean/InfoGeometry/Projective/Twistor/Basic.lean`
 
 ## Arango / LeanTrail Owner Map
+
+The former `OnShellResidueBCFWBridge` was a bundle of forwarding theorems,
+fixed-value bookkeeping, and premise-carrying packets. It has been retired;
+the mathematical functionality remains at its owners: local `dlog` integration
+in `KleinQuadricGrothendieckDeRham`, Arnold relation evaluation in
+`ArnoldRelations`, q-stable twistor data in `QDeformedTwistorAmplituhedronBridge`,
+and the finite ring commutation identity in `GrandUnificationLinker`. None of
+these establishes BCFW recursion or a scattering residue formula.
 
 This lane must be discovered through the live LeanTrail syntax graph before
 new sockets are added.  On the current graph, the relevant owner slice was
@@ -188,7 +195,9 @@ These are navigation evidence only; the Lean files remain proof authority.
 - the sample finite q-Gram matrix at `q = 1/2` has positive eigenvalues;
 - the algebraic q-CCR relation reduces to Toeplitz/CAR/CCR endpoint readouts.
 
-`formalizations/on_shell_residue_bcfw_witness.py` checks only:
+`formalizations/on_shell_residue_bcfw_witness.py` checks only the following
+symbolic/finite inputs; it does not establish a Lean BCFW theorem or a physical
+residue factorization:
 
 - the local model `∮ dz/z = 2*pi*i`;
 - a symbolic three-pole balance `r12 + r23 + r31 = 0`;

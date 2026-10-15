@@ -12,14 +12,14 @@ example : ¬ Phase.precedes Phase.kernelCertifiedPromotion Phase.primaMateriaInt
 
 def openCandidate : TypedArchetype Nat .candidate where
   name := `InfoGeometry.MetaCompiler.Tests.openCandidate
-  phase := Phase.multiAgentCandidateRepair
+  phase := Phase.toNat Phase.multiAgentCandidateRepair
   claim := fun n => n + 0 = n
-  evidence := PUnit.unit
+  evidence := trivial
 
 def promotedCandidate : TypedArchetype Nat .proved :=
   TypedArchetype.promoteToProved openCandidate (by intro n; change n + 0 = n; exact Nat.add_zero n)
 
-example : promotedCandidate.phase = Phase.multiAgentCandidateRepair := rfl
+example : promotedCandidate.phase = Phase.toNat Phase.multiAgentCandidateRepair := rfl
 example : promotedCandidate.name = `InfoGeometry.MetaCompiler.Tests.openCandidate := rfl
 
 end InfoGeometry.MetaCompiler.Tests

@@ -46,11 +46,13 @@ theorem clifford_relations (A B : Fin 10) :
   have hpolar :
       QuadraticMap.polar (⇑cl55Metric) (Pi.single A 1) (Pi.single B 1) =
         2 * cl55Matrix A B := by
-    dsimp [cl55Metric, Matrix.toQuadraticMap']
+    change QuadraticMap.polar
+      (LinearMap.BilinMap.toQuadraticMap (Matrix.toLinearMap₂' ℝ cl55Matrix))
+      (Pi.single A 1) (Pi.single B 1) = _
     rw [LinearMap.BilinMap.polar_toQuadraticMap]
-    simp [cl55Matrix, Matrix.toLinearMap₂'_apply, Pi.single_apply]
+    simp [cl55Matrix, Matrix.toLinearMap₂'_apply', Pi.single_apply]
     fin_cases A <;> fin_cases B <;>
-      norm_num [Matrix.toLinearMap₂'_apply, Pi.single_apply]
+      norm_num [Matrix.toLinearMap₂'_apply', Pi.single_apply]
   rw [hpolar]
 
 /-- Each generator squares to the diagonal metric coefficient prescribed by

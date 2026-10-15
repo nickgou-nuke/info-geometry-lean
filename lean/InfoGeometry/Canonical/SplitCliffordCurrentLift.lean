@@ -1,5 +1,5 @@
+import Mathlib.Algebra.Lie.OfAssociative
 import InfoGeometry.Canonical.SplitCliffordDirectLimit
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
 
 open scoped TensorProduct
@@ -11,6 +11,8 @@ namespace InfoGeometry.Canonical.SplitCliffordCurrentLift
 open InfoGeometry.Canonical.SplitCliffordDirectLimit
 open InfoGeometry.Canonical.SplitCliffordTensorBridge
 open InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
+
+attribute [local instance] LieRing.ofAssociativeRing
 
 set_option synthInstance.maxHeartbeats 200000
 
@@ -97,15 +99,13 @@ theorem splitCliffordInfinityCurrentMorphism_current_mode_bracket :
           ((m : ℝ) * splitCliffordInfinityCurrentMorphism.datum.killingForm X Y) •
             (if m + n = 0 then splitCliffordInfinityCurrentMorphism.datum.kCentral else 0) := by
   intro m n X Y
-  simpa [splitCliffordInfinityCurrentMorphism] using
-    splitCliffordInfinity_current_mode_bracket m n X Y
+  exact splitCliffordInfinity_current_mode_bracket m n X Y
 
 /-- The split completion's current central element commutes with everything. -/
 theorem splitCliffordInfinityCurrentMorphism_current_central_commutes :
     ∀ X : SplitCliffordInfinity,
       ⁅splitCliffordInfinityCurrentMorphism.datum.kCentral, X⁆ = 0 := by
   intro X
-  simpa [splitCliffordInfinityCurrentMorphism] using
-    splitCliffordInfinity_current_central_commutes X
+  exact splitCliffordInfinity_current_central_commutes X
 
 end InfoGeometry.Canonical.SplitCliffordCurrentLift

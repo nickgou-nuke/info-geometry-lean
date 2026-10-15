@@ -140,7 +140,7 @@ theorem continuous_symmetricExpertNormReadout
     (n : Nat) (v : ArnoldMajoranaCarrier E) :
     Continuous (symmetricExpertNormReadout (E := E) n v) := by
   have hcoord := continuous_arnoldMajoranaNetworkFunctionEquiv (E := E) n
-  apply continuous_finset_sum Finset.univ
+  apply continuous_finsetSum
   intro e he
   have he' :
       Continuous (fun N =>
@@ -199,17 +199,19 @@ theorem symmetricExpertNormReadout_levelSet_isClosed
     (n : Nat) (v : ArnoldMajoranaCarrier E) (c : ℝ) :
     IsClosed {N : ArnoldMajoranaNetwork n E |
       symmetricExpertNormReadout (E := E) n v N = c} := by
-  simpa only [Set.preimage, Set.mem_setOf_eq] using
-    (isClosed_singleton : IsClosed ({c} : Set ℝ)).preimage
-      (continuous_symmetricExpertNormReadout (E := E) n v)
+  change IsClosed
+    ((symmetricExpertNormReadout (E := E) n v) ⁻¹' ({c} : Set ℝ))
+  exact (isClosed_singleton : IsClosed ({c} : Set ℝ)).preimage
+    (continuous_symmetricExpertNormReadout (E := E) n v)
 
 theorem symmetricExpertNormReadoutOnModuli_levelSet_isClosed
     (n : Nat) (v : ArnoldMajoranaCarrier E) (c : ℝ) :
     IsClosed {q : ArnoldMajoranaModuli n E |
       symmetricExpertNormReadoutOnModuli (E := E) n v q = c} := by
-  simpa only [Set.preimage, Set.mem_setOf_eq] using
-    (isClosed_singleton : IsClosed ({c} : Set ℝ)).preimage
-      (continuous_symmetricExpertNormReadoutOnModuli (E := E) n v)
+  change IsClosed
+    ((symmetricExpertNormReadoutOnModuli (E := E) n v) ⁻¹' ({c} : Set ℝ))
+  exact (isClosed_singleton : IsClosed ({c} : Set ℝ)).preimage
+    (continuous_symmetricExpertNormReadoutOnModuli (E := E) n v)
 
 theorem symmetricExpertNormReadoutOnModuli_mk
     (n : Nat) (v : ArnoldMajoranaCarrier E)
@@ -282,9 +284,9 @@ theorem symmetricExpertNormReadoutVectorOnModuli_fiber_isClosed
     (y : Fin m → ℝ) :
     IsClosed {q : ArnoldMajoranaModuli n E |
       symmetricExpertNormReadoutVectorOnModuli (E := E) n m vs q = y} := by
-  simpa only [Set.preimage, Set.mem_setOf_eq] using
-    (isClosed_singleton : IsClosed ({y} : Set (Fin m → ℝ))).preimage
-      (continuous_symmetricExpertNormReadoutVectorOnModuli
-        (E := E) n m vs)
+  change IsClosed
+    ((symmetricExpertNormReadoutVectorOnModuli (E := E) n m vs) ⁻¹' ({y} : Set (Fin m → ℝ)))
+  exact (isClosed_singleton : IsClosed ({y} : Set (Fin m → ℝ))).preimage
+    (continuous_symmetricExpertNormReadoutVectorOnModuli (E := E) n m vs)
 
 end InfoGeometry.Canonical.MoE

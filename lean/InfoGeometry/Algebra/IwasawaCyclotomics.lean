@@ -20,7 +20,7 @@ theorem KPart_discriminant (angle : ℝ) :
   unfold traceDiscriminant
   rw [KPart_det]
   simp only [KPart, Matrix.trace, Fin.sum_univ_two, Matrix.of_apply,
-    Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons]
+    Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.diag]
   nlinarith [Real.cos_sq_add_sin_sq angle]
 
 theorem KPart_discriminant_neg_iff (angle : ℝ) :
@@ -34,7 +34,8 @@ theorem KPart_discriminant_neg_iff (angle : ℝ) :
 
 theorem NPart_discriminant (parameter : ℝ) :
     traceDiscriminant (NPart parameter) = 0 := by
-  simp [traceDiscriminant, NPart_det, NPart, Matrix.trace, Fin.sum_univ_two]
+  norm_num [traceDiscriminant, NPart, Matrix.trace, Fin.sum_univ_two,
+    Matrix.diag]
 
 theorem APart_discriminant (parameter : ℝ) :
     traceDiscriminant (APart parameter) =
@@ -45,7 +46,7 @@ theorem APart_discriminant (parameter : ℝ) :
   unfold traceDiscriminant
   rw [APart_det]
   simp only [APart, Matrix.trace, Fin.sum_univ_two, Matrix.of_apply,
-    Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons]
+    Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.diag]
   nlinarith
 
 theorem APart_discriminant_pos_iff (parameter : ℝ) :

@@ -54,17 +54,8 @@ def coordinateCoroot (i : Fin 2) : TracelessWeight :=
 
 theorem coordinateWeight_apply_coordinateCoroot (i j : Fin 2) :
     coordinateWeights i (coordinateCoroot j) = if i = j then 2 else 0 := by
-  fin_cases i
-  · by_cases h : j = 0
-    · subst j
-      simp [coordinateWeights, coordinateCoroot, coordWeight, tracelessWeightEquiv]
-    · simp [coordinateWeights, coordinateCoroot, coordWeight, tracelessWeightEquiv, h,
-        Ne.symm h]
-  · by_cases h : j = 1
-    · subst j
-      simp [coordinateWeights, coordinateCoroot, coordWeight, tracelessWeightEquiv]
-    · simp [coordinateWeights, coordinateCoroot, coordWeight, tracelessWeightEquiv, h,
-        Ne.symm h]
+  fin_cases i <;> fin_cases j <;>
+    simp [coordinateWeights, coordinateCoroot, coordWeight, tracelessWeightEquiv]
 
 theorem coordinateWeights_linearIndependent :
     LinearIndependent ℝ coordinateWeights := by
@@ -161,10 +152,10 @@ theorem simpleWeight_simpleCoroot_pairing (i j : Fin 2) :
     simpleWeight i (simpleCoroot j) =
       simpleCartanMatrix i j := by
   fin_cases i <;> fin_cases j
-  · simpa [simpleWeight, simpleCoroot] using shortSimpleCoroot_pairing_short
-  · simpa [simpleWeight, simpleCoroot] using longSimpleCoroot_pairing_short
-  · simpa [simpleWeight, simpleCoroot] using shortSimpleCoroot_pairing_long
-  · simpa [simpleWeight, simpleCoroot] using longSimpleCoroot_pairing_long
+  · simpa [simpleWeight, simpleCoroot, simpleCartanMatrix] using shortSimpleCoroot_pairing_short
+  · simpa [simpleWeight, simpleCoroot, simpleCartanMatrix] using longSimpleCoroot_pairing_short
+  · simpa [simpleWeight, simpleCoroot, simpleCartanMatrix] using shortSimpleCoroot_pairing_long
+  · simpa [simpleWeight, simpleCoroot, simpleCartanMatrix] using longSimpleCoroot_pairing_long
 
 theorem simpleWeight_linearIndependent :
     LinearIndependent ℝ simpleWeight := by

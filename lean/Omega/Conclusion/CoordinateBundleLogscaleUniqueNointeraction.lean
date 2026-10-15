@@ -19,7 +19,7 @@ theorem paper_conclusion_coordinate_bundle_logscale_unique_nointeraction (n : �
         · simp
         have hs0 : s ≤ n := by omega
         have hs1 : s + 1 ≤ n := by omega
-        have hs2 : s + 2 ≤ n := by simpa [Nat.succ_eq_add_one] using hs
+        have hs2 : s + 2 ≤ n := by omega
         have hrec : u (s + 2) = 2 * u (s + 1) - u s := by
           have h := hsecond s hs2
           linarith
@@ -32,7 +32,7 @@ theorem paper_conclusion_coordinate_bundle_logscale_unique_nointeraction (n : �
   · rintro ⟨A, B, haffine⟩ s hs
     have hs0 : s ≤ n := by omega
     have hs1 : s + 1 ≤ n := by omega
-    have hs2 : s + 2 ≤ n := hs
+    have hs2 : s + 2 ≤ n := by omega
     rw [haffine (s + 2) hs2, haffine (s + 1) hs1, haffine s hs0]
     push_cast
     ring

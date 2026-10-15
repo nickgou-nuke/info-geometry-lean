@@ -1,5 +1,4 @@
 import InfoGeometry.Canonical.FiniteSingleModeCARMatrixBridge
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # A genuine finite matrix-to-operator `StarAlgHom`
@@ -25,13 +24,11 @@ abbrev MatrixOperator := FinKetSpace Bool →L[ℂ] FinKetSpace Bool
 noncomputable def matrixOperatorAlgHom :
     Matrix Bool Bool ℂ →ₐ[ℂ] MatrixOperator :=
   { toFun := matrixOp
-    map_one' := by
-      simpa using (matrixOp_id (ι := Bool))
+    map_one' := matrixOp_id (ι := Bool)
     map_mul' := by
       intro M N
       rw [ContinuousLinearMap.mul_def, matrixOp_comp]
-    map_zero' := by
-      simpa using (matrixOp_zero (κ := Bool) (ι := Bool))
+    map_zero' := matrixOp_zero (κ := Bool) (ι := Bool)
     map_add' := by
       intro M N
       exact matrixOp_add M N

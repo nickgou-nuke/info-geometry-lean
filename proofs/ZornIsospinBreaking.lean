@@ -7,57 +7,47 @@ namespace ZornIsospinBreaking
 
 open FureyZornFermionBridge
 
-/-- 
-Isospin is embedded as the diagonal idempotent structure of the split octonions.
-Proton and Neutron states correspond to the orthogonal lepton projectors:
-  P = Eplus, N = Eminus
--/
+/-- A model label for the upper diagonal idempotent; no particle-state
+identification is part of this definition. -/
 def ProtonProjector : ZornOPParavector.Zorn := leptonProjectorPlus
+/-- A model label for the lower diagonal idempotent; no particle-state
+identification is part of this definition. -/
 def NeutronProjector : ZornOPParavector.Zorn := leptonProjectorMinus
 
 /-- 
-The Isospin T_plus operator (beta decay transition N -> P) is defined by the 
-off-diagonal nilpotent lane map.
+The symbol `TPlus` names the upper triplet lane in this finite algebraic model;
+it is not itself a beta-decay operator representation.
 -/
 def TPlus (u : ColorTriplet) : ZornOPParavector.Zorn := quarkTripletLane u
 
 /-- 
-The Isospin T_minus operator (beta decay transition P -> N) is the conjugate 
-nilpotent lane map.
+The symbol `TMinus` names the lower anti-triplet lane in this finite model;
+no physical transition interpretation is assumed.
 -/
 def TMinus (v : ColorTriplet) : ZornOPParavector.Zorn := antiquarkTripletLane v
 
-/-- 
-Superallowed 0+ -> 0+ beta decay preserves the total Zorn Norm (Determinant).
-This represents the Conserved Vector Current (CVC) hypothesis geometrically.
--/
-def SuperallowedTransition (u : ColorTriplet) : Prop :=
-  ZornOPParavector.zornDet (TPlus u) = 0
+/-- The modeled upper triplet lane is square-zero in the Zorn algebra. This
+is algebraic nilpotence, not a beta-decay or mass-shell conservation theorem. -/
+theorem triplet_lane_square_zero (u : ColorTriplet) :
+    ZornOPParavector.SquareZero (TPlus u) := by
+  simpa [TPlus, quarkTripletLane] using ZornOPParavector.Nup_sq u
 
-/-- 
-Theorem: The Superallowed beta transition operators are strictly nilpotent, 
-guaranteeing that the base transition preserves the split-octonionic mass shell.
--/
-theorem superallowed_transition_is_nilpotent (u : ColorTriplet) :
+/-- The same upper lane has zero Zorn norm, a separate scalar readout from
+its square-zero product identity. -/
+theorem triplet_lane_zorn_norm_eq_zero (u : ColorTriplet) :
     ZornOPParavector.zornDet (TPlus u) = 0 := by
-  simp [TPlus, quarkTripletLane, ZornOPParavector.Nup, ZornOPParavector.zornDet,
-    SplitOctonionBraidSU3.zornNorm, SplitOctonionBraidSU3.dot3, Fin.sum_univ_three]
+  simp [TPlus, quarkTripletLane, ZornOPParavector.Nup,
+    ZornOPParavector.zornDet, SplitOctonionBraidSU3.zornNorm,
+    SplitOctonionBraidSU3.dot3, Fin.sum_univ_three]
 
-/-- 
-Isospin Symmetry Breaking (\delta_C) is mathematically defined as the non-associator 
-measuring the obstruction to factorizing the beta decay through the triplet lanes.
-(A B) C - A (B C) ≠ 0 when cross products leak into the diagonal.
--/
+/-- The associator is an algebraic obstruction in the split-octonion carrier.
+No identification with the physical isospin-breaking parameter `δ_C` is made. -/
 def IsospinBreakingObstruction (A B C : ZornAssociatorSplitOctonion.Zorn) : ZornAssociatorSplitOctonion.Zorn :=
   ZornAssociatorSplitOctonion.associator A B C
 
-/-- 
-V_ud Unitarity Tension Theorem:
-The standard CKM unitarity |V_ud|^2 + |V_us|^2 + |V_ub|^2 = 1 holds if and only 
-if the IsospinBreakingObstruction is exactly zero. Because the Zorn algebra 
-is non-associative, \delta_C > 0 is a mandatory geometric necessity!
--/
-theorem delta_C_is_geometric_necessity :
+/-- This particular finite Zorn carrier has a nonzero associator witness.
+It does not imply a CKM unitarity relation or a nonzero physical `δ_C`. -/
+theorem zorn_associator_has_nonzero_witness :
     ∃ A B C : ZornAssociatorSplitOctonion.Zorn, IsospinBreakingObstruction A B C ≠ 0 := by
   use ZornAssociatorSplitOctonion.U ZornAssociatorSplitOctonion.e₁
   use ZornAssociatorSplitOctonion.L ZornAssociatorSplitOctonion.e₁

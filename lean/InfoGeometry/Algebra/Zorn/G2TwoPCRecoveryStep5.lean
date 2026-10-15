@@ -162,10 +162,10 @@ lemma peel5_basis8_2_x2_of_basis8_4_fixed
   split
   · next hx2 =>
     rw [f.2.2.1, h4]
-    have hx4 : (f.1 (basis8 4)).x2 = true := by
-      rw [h4]
-      rfl
-    simpa [add, hx4, basis8] using hx2
+    dsimp [add, add2, basis8, up2]
+    dsimp [basis8] at hx2
+    rw [hx2]
+    rfl
   · next hx2 =>
     cases h : (f.1 (basis8 2)).x2
     · rfl

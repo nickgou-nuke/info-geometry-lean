@@ -125,8 +125,9 @@ lemma conclusion_primorial_axis_second_order_ceiling_control (m : ℕ) (p : ℝ)
     have hr' : (r : ℝ) < conclusion_primorial_axis_second_order_proxy m p := Nat.lt_ceil.1 hr
     exact not_lt_of_ge hthreshold hr'
   · exact sub_nonneg.mpr (Nat.le_ceil _)
-  · simpa [sub_eq_add_neg] using
-      (sub_lt_iff_lt_add'.2 (Nat.ceil_lt_add_one hproxy_nonneg))
+  · have hceil := Nat.ceil_lt_add_one hproxy_nonneg
+    dsimp [conclusion_primorial_axis_second_order_rmin]
+    linarith
 
 lemma conclusion_primorial_axis_second_order_proof :
     conclusion_primorial_axis_second_order_statement := by

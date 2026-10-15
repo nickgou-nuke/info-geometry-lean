@@ -82,47 +82,39 @@ def sixWeyl (a b : ZMod 2) (c d : ZMod 3) : M6C :=
 def sixWeylBasis : Finset (ZMod 2 × ZMod 2 × ZMod 3 × ZMod 3) :=
   Finset.univ
 
+lemma zmod2_cases (a : ZMod 2) : a = 0 ∨ a = 1 := by
+  fin_cases a <;> [left; right] <;> rfl
+
 /-- Sheet multiplication rule: Xᵃ Zᵇ Xᶜ Zᵈ = (-1)ᵇᶜ Xᵃ⁺ᶜ Zᵇ⁺ᵈ. -/
 theorem sheetWeyl_mul (a b c d : ZMod 2) :
     sheetWeyl a b * sheetWeyl c d =
       ((if (b.val : ℕ) * (c.val : ℕ) = 1 then (-1 : ℂ) else (1 : ℂ)) : ℂ) •
         sheetWeyl (a + c) (b + d) := by
   have hflip : sheetFlip * sheetFlip = (1 : M2C) := by
-    ext i j
-    fin_cases i <;> fin_cases j <;>
+    ext i j; fin_cases i <;> fin_cases j <;>
       norm_num [sheetFlip, Matrix.mul_apply, Fin.sum_univ_two, Matrix.one_apply]
   have hgamma : sheetGamma * sheetGamma = (1 : M2C) := by
-    ext i j
-    fin_cases i <;> fin_cases j <;>
+    ext i j; fin_cases i <;> fin_cases j <;>
       norm_num [sheetGamma, sheetPlus, sheetMinus, Matrix.mul_apply,
         Fin.sum_univ_two, Matrix.one_apply]
   have hanti : sheetGamma * sheetFlip = -(sheetFlip * sheetGamma) := by
-    ext i j
-    fin_cases i <;> fin_cases j <;>
+    ext i j; fin_cases i <;> fin_cases j <;>
       norm_num [sheetGamma, sheetPlus, sheetMinus, sheetFlip,
         Matrix.mul_apply, Fin.sum_univ_two, Matrix.one_apply]
-  have h0 : (0 : Fin 0 → ℂ) = ![] := by
-    funext i
-    exact Fin.elim0 i
-  have h1 : (0 : Fin 1 → ℂ) = ![0] := by
-    funext i
-    fin_cases i
-    rfl
-  fin_cases a <;> fin_cases b <;> fin_cases c <;> fin_cases d <;>
-    norm_num [sheetWeyl, sheetFlip, sheetGamma, Matrix.mul_apply,
-      Fin.sum_univ_two, Matrix.smul_apply, Matrix.one_apply, pow_two,
-      pow_succ, ZMod.val, ZMod.val_natCast, ZMod.val_ofNat, ZMod.val_zero, ZMod.val_one,
-      hflip, hgamma, hanti] <;>
-    first
-    | (ext i j <;> fin_cases i <;> fin_cases j <;>
-        norm_num [sheetPlus, sheetMinus, sheetFlip, sheetGamma,
-          Matrix.mul_apply, Fin.sum_univ_two, Matrix.smul_apply,
-          Matrix.one_apply, Matrix.single, h0, h1] <;>
-        try exact ⟨h0, h1⟩)
-    | norm_num [sheetPlus, sheetMinus, sheetFlip, sheetGamma,
-        Matrix.mul_apply, Fin.sum_univ_two, Matrix.smul_apply,
-        Matrix.one_apply, Matrix.single, h0, h1] <;>
-      try exact ⟨h0, h1⟩
+  have hval0 : (ZMod.val (0 : ZMod 2)) = 0 := rfl
+  have hval1 : (ZMod.val (1 : ZMod 2)) = 1 := by decide
+  have hval2 : (ZMod.val (2 : ZMod 2)) = 0 := rfl
+  have hval11 : (ZMod.val ((1 : ZMod 2) + 1)) = 0 := rfl
+  rcases zmod2_cases a with rfl | rfl <;>
+  rcases zmod2_cases b with rfl | rfl <;>
+  rcases zmod2_cases c with rfl | rfl <;>
+  rcases zmod2_cases d with rfl | rfl <;>
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    norm_num [sheetWeyl, sheetFlip, sheetGamma, sheetPlus, sheetMinus,
+      Matrix.mul_apply, Fin.sum_univ_two, Matrix.smul_apply, Matrix.one_apply,
+      pow_two, pow_succ, pow_one, pow_zero,
+      hval0, hval1, hval2, hval11,
+      hflip, hgamma, hanti]
 
 /-- Color commutation: Cⁿ S = ω₃ⁿ S Cⁿ. -/
 lemma color_clock_shift_comm (n : ℕ) :
@@ -233,23 +225,53 @@ theorem sixWeyl_mul (a b : ZMod 2 × ZMod 2) (c d : ZMod 3 × ZMod 3) (a' b' : Z
   simp [Matrix.kroneckerMap, mul_assoc, mul_comm, mul_left_comm]
 
 /-- Sheet Weyl trace: Tr(Xᵃ Zᵇ) = 2 if a=b=0, else 0. -/
+lemma sheetWeyl_0_0 : sheetWeyl 0 0 = 1 := by
+  simp [sheetWeyl, pow_zero, ZMod.val_zero]
+
+lemma sheetWeyl_0_1 : sheetWeyl 0 1 = sheetGamma := by
+  simp [sheetWeyl, pow_zero, pow_one, ZMod.val_zero, ZMod.val_one]
+
+lemma sheetWeyl_1_0 : sheetWeyl 1 0 = sheetFlip := by
+  simp [sheetWeyl, pow_zero, pow_one, ZMod.val_zero, ZMod.val_one]
+
+lemma sheetWeyl_1_1 : sheetWeyl 1 1 = sheetFlip * sheetGamma := by
+  simp [sheetWeyl, pow_one, ZMod.val_one]
+
+lemma trace_sheetFlip : trace sheetFlip = 0 := by
+  simp [sheetFlip, Matrix.trace, Fin.sum_univ_two]
+
+lemma trace_sheetGamma : trace sheetGamma = 0 := by
+  simp [sheetGamma, sheetPlus, sheetMinus, Matrix.trace, Fin.sum_univ_two]
+
+lemma trace_sheetFlip_mul_sheetGamma : trace (sheetFlip * sheetGamma) = 0 := by
+  simp [sheetFlip, sheetGamma, sheetPlus, sheetMinus, Matrix.trace, Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- Sheet Weyl trace: Tr(Xᵃ Zᵇ) = 2 if a=b=0, else 0. -/
 theorem sheetWeyl_trace (a b : ZMod 2) :
     trace (sheetWeyl a b) = if a = 0 ∧ b = 0 then (2 : ℂ) else 0 := by
-  fin_cases a <;> fin_cases b <;>
-    norm_num [sheetWeyl, sheetFlip, sheetGamma, Matrix.trace,
-      Matrix.mul_apply, Fin.sum_univ_two, Matrix.one_apply, pow_two,
-      pow_succ, ZMod.val, ZMod.val_natCast, ZMod.val_ofNat, sheetPlus,
-      sheetMinus, sheetGamma]
+  rcases zmod2_cases a with rfl | rfl <;>
+  rcases zmod2_cases b with rfl | rfl
+  · rw [if_pos ⟨rfl, rfl⟩, sheetWeyl_0_0, Matrix.trace_one]
+    simp
+  · rw [if_neg (by decide), sheetWeyl_0_1, trace_sheetGamma]
+  · rw [if_neg (by decide), sheetWeyl_1_0, trace_sheetFlip]
+  · rw [if_neg (by decide), sheetWeyl_1_1, trace_sheetFlip_mul_sheetGamma]
 
 /-- Color Weyl trace: Tr(Sᶜ Cᵈ) = 3 if c=d=0, else 0. -/
 theorem colorWeyl_trace (c d : ZMod 3) :
     trace (colorWeyl c d) = if c = 0 ∧ d = 0 then (3 : ℂ) else 0 := by
   let fc : Fin 3 := ⟨c.val, c.isLt⟩
   let fd : Fin 3 := ⟨d.val, d.isLt⟩
-  have hω : InfoGeometry.Topology.Parafermion.omega = ω3 := rfl
-  simpa [colorWeyl,
-    InfoGeometry.Canonical.QutritWeylOperatorBasis.weylWord, fc, fd, hω] using
-    (InfoGeometry.Canonical.QutritWeylOperatorBasis.weylWord_trace fc fd)
+  have htrace := InfoGeometry.Canonical.QutritWeylOperatorBasis.weylWord_trace fc fd
+  have h_eq : (fc = 0 ∧ fd = 0) ↔ (c = 0 ∧ d = 0) := by
+    simp [fc, fd, Fin.ext_iff, ZMod.val_eq_zero]
+  by_cases h : c = 0 ∧ d = 0
+  · have hf : fc = 0 ∧ fd = 0 := h_eq.mpr h
+    rw [if_pos h, if_pos hf] at *
+    exact htrace
+  · have hf : ¬(fc = 0 ∧ fd = 0) := fun hf' => h (h_eq.mp hf')
+    rw [if_neg h, if_neg hf] at *
+    exact htrace
 
 /-- Sheet Weyl adjoint: (Xᵃ Zᵇ)† = (-1)^{ab} Xᵃ Zᵇ (self-adjoint up to sign). -/
 theorem sheetWeyl_star (a b : ZMod 2) :
@@ -265,16 +287,76 @@ theorem sheetWeyl_star (a b : ZMod 2) :
         sheetFlip, sheetGamma, Matrix.mul_apply, Fin.sum_univ_two,
         Matrix.smul_apply, Matrix.one_apply]
 
+lemma trace_sheetGamma_mul_sheetFlip : trace (sheetGamma * sheetFlip) = 0 := by
+  simp [sheetFlip, sheetGamma, sheetPlus, sheetMinus, Matrix.trace, Matrix.mul_apply, Fin.sum_univ_two]
+
 /-- Hilbert–Schmidt orthogonality for sheet Weyl: Tr((Xᵃ Zᵇ)† Xᶜ Zᵈ) = 2 δ_{a,c} δ_{b,d}. -/
 theorem sheetWeyl_trace_orthogonal (a b a' b' : ZMod 2) :
     trace (star (sheetWeyl a b) * sheetWeyl a' b') =
       (if a = a' ∧ b = b' then (2 : ℂ) else 0) := by
-  fin_cases a <;> fin_cases b <;> fin_cases a' <;> fin_cases b' <;>
-    norm_num [sheetWeyl, sheetFlip, sheetGamma, Matrix.conjTranspose,
-      Matrix.conjTranspose_apply, Matrix.mul_apply, Fin.sum_univ_two,
-      Matrix.smul_apply, Matrix.one_apply, pow_two, pow_succ,
-      ZMod.val, ZMod.val_natCast, ZMod.val_ofNat, sheetPlus, sheetMinus,
-      Matrix.trace]
+  rcases zmod2_cases a with rfl | rfl <;>
+  rcases zmod2_cases b with rfl | rfl <;>
+  rcases zmod2_cases a' with rfl | rfl <;>
+  rcases zmod2_cases b' with rfl | rfl
+  · rw [if_pos ⟨rfl, rfl⟩, sheetWeyl_0_0, star_one, one_mul, Matrix.trace_one]; simp
+  · rw [if_neg (by decide), sheetWeyl_0_0, sheetWeyl_0_1, star_one, one_mul, trace_sheetGamma]
+  · rw [if_neg (by decide), sheetWeyl_0_0, sheetWeyl_1_0, star_one, one_mul, trace_sheetFlip]
+  · rw [if_neg (by decide), sheetWeyl_0_0, sheetWeyl_1_1, star_one, one_mul, trace_sheetFlip_mul_sheetGamma]
+  · rw [if_neg (by decide), sheetWeyl_0_1, sheetWeyl_0_0, mul_one]
+    have : trace (star sheetGamma) = 0 := by
+      simp [sheetGamma, sheetPlus, sheetMinus, Matrix.trace, Fin.sum_univ_two]
+    exact this
+  · rw [if_pos ⟨rfl, rfl⟩, sheetWeyl_0_1]
+    have h1 : star sheetGamma * sheetGamma = 1 := by
+      ext i j; fin_cases i <;> fin_cases j <;>
+        simp [sheetGamma, sheetPlus, sheetMinus, Matrix.mul_apply, Fin.sum_univ_two]
+    rw [h1, Matrix.trace_one]; simp
+  · rw [if_neg (by decide), sheetWeyl_0_1, sheetWeyl_1_0]
+    have h1 : star sheetGamma = sheetGamma := by
+      ext i j; fin_cases i <;> fin_cases j <;> simp [sheetGamma, sheetPlus, sheetMinus]
+    rw [h1, trace_sheetGamma_mul_sheetFlip]
+  · rw [if_neg (by decide), sheetWeyl_0_1, sheetWeyl_1_1]
+    have h1 : star sheetGamma * (sheetFlip * sheetGamma) = -(sheetFlip) := by
+      ext i j; fin_cases i <;> fin_cases j <;>
+        simp [sheetFlip, sheetGamma, sheetPlus, sheetMinus, Matrix.mul_apply, Fin.sum_univ_two]
+    rw [h1, Matrix.trace_neg, trace_sheetFlip, neg_zero]
+  · rw [if_neg (by decide), sheetWeyl_1_0, sheetWeyl_0_0, mul_one]
+    have : trace (star sheetFlip) = 0 := by
+      simp [sheetFlip, Matrix.trace, Fin.sum_univ_two]
+    exact this
+  · rw [if_neg (by decide), sheetWeyl_1_0, sheetWeyl_0_1]
+    have h1 : star sheetFlip = sheetFlip := by
+      ext i j; fin_cases i <;> fin_cases j <;> simp [sheetFlip]
+    rw [h1, trace_sheetFlip_mul_sheetGamma]
+  · rw [if_pos ⟨rfl, rfl⟩, sheetWeyl_1_0]
+    have h1 : star sheetFlip * sheetFlip = 1 := by
+      ext i j; fin_cases i <;> fin_cases j <;>
+        simp [sheetFlip, Matrix.mul_apply, Fin.sum_univ_two]
+    rw [h1, Matrix.trace_one]; simp
+  · rw [if_neg (by decide), sheetWeyl_1_0, sheetWeyl_1_1]
+    have h1 : star sheetFlip * (sheetFlip * sheetGamma) = sheetGamma := by
+      ext i j; fin_cases i <;> fin_cases j <;>
+        simp [sheetFlip, sheetGamma, sheetPlus, sheetMinus, Matrix.mul_apply, Fin.sum_univ_two]
+    rw [h1, trace_sheetGamma]
+  · rw [if_neg (by decide), sheetWeyl_1_1, sheetWeyl_0_0, mul_one]
+    have : trace (star (sheetFlip * sheetGamma)) = 0 := by
+      simp [sheetFlip, sheetGamma, sheetPlus, sheetMinus, Matrix.trace, Fin.sum_univ_two]
+    exact this
+  · rw [if_neg (by decide), sheetWeyl_1_1, sheetWeyl_0_1]
+    have h1 : star (sheetFlip * sheetGamma) * sheetGamma = -(sheetFlip) := by
+      ext i j; fin_cases i <;> fin_cases j <;>
+        simp [sheetFlip, sheetGamma, sheetPlus, sheetMinus, Matrix.mul_apply, Fin.sum_univ_two]
+    rw [h1, Matrix.trace_neg, trace_sheetFlip, neg_zero]
+  · rw [if_neg (by decide), sheetWeyl_1_1, sheetWeyl_1_0]
+    have h1 : star (sheetFlip * sheetGamma) * sheetFlip = sheetGamma := by
+      ext i j; fin_cases i <;> fin_cases j <;>
+        simp [sheetFlip, sheetGamma, sheetPlus, sheetMinus, Matrix.mul_apply, Fin.sum_univ_two]
+    rw [h1, trace_sheetGamma]
+  · rw [if_pos ⟨rfl, rfl⟩, sheetWeyl_1_1]
+    have h1 : star (sheetFlip * sheetGamma) * (sheetFlip * sheetGamma) = 1 := by
+      ext i j; fin_cases i <;> fin_cases j <;>
+        simp [sheetFlip, sheetGamma, sheetPlus, sheetMinus, Matrix.mul_apply, Fin.sum_univ_two]
+    rw [h1, Matrix.trace_one]; simp
 
 /-- Hilbert–Schmidt orthogonality for color Weyl: Tr((Sᶜ Cᵈ)† Sᶜ' Cᵈ') = 3 δ_{c,c'} δ_{d,d'}. -/
 theorem colorWeyl_trace_orthogonal (c d c' d' : ZMod 3) :
@@ -284,12 +366,29 @@ theorem colorWeyl_trace_orthogonal (c d c' d' : ZMod 3) :
   let fd : Fin 3 := ⟨d.val, d.isLt⟩
   let fc' : Fin 3 := ⟨c'.val, c'.isLt⟩
   let fd' : Fin 3 := ⟨d'.val, d'.isLt⟩
-  have hω : InfoGeometry.Topology.Parafermion.omega = ω3 := rfl
-  convert (InfoGeometry.Canonical.QutritWeylOperatorBasis.weylWord_hs_orthogonal
-    fc fd fc' fd') using 1 <;>
-    simp [Matrix.star_eq_conjTranspose, colorWeyl,
-      InfoGeometry.Canonical.QutritWeylOperatorBasis.weylWord,
-      fc, fd, fc', fd', hω]
+  have horth := InfoGeometry.Canonical.QutritWeylOperatorBasis.weylWord_hs_orthogonal fc fd fc' fd'
+  have hc : (fc = fc') ↔ c = c' := by
+    constructor
+    · intro h; exact ZMod.val_injective 3 (congrArg Fin.val h)
+    · rintro rfl; rfl
+  have hd : (fd = fd') ↔ d = d' := by
+    constructor
+    · intro h; exact ZMod.val_injective 3 (congrArg Fin.val h)
+    · rintro rfl; rfl
+  have h_eq : (fc = fc' ∧ fd = fd') ↔ (c = c' ∧ d = d') := by
+    rw [hc, hd]
+  have hstar : star (colorWeyl c d) * colorWeyl c' d' =
+      (InfoGeometry.Canonical.QutritWeylOperatorBasis.weylWord fc fd)ᴴ *
+        InfoGeometry.Canonical.QutritWeylOperatorBasis.weylWord fc' fd' := by
+    rfl
+  rw [hstar]
+  by_cases h : c = c' ∧ d = d'
+  · have hf : fc = fc' ∧ fd = fd' := h_eq.mpr h
+    rw [if_pos h, if_pos hf] at *
+    exact horth
+  · have hf : ¬(fc = fc' ∧ fd = fd') := fun hf' => h (h_eq.mp hf')
+    rw [if_neg h, if_neg hf] at *
+    exact horth
 
 /-- Hilbert–Schmidt orthogonality for six-state Weyl: Tr((sixWeyl)† sixWeyl) = 6 δ. -/
 theorem sixWeyl_trace_orthogonal (a b : ZMod 2 × ZMod 2) (c d : ZMod 3 × ZMod 3) (a' b' : ZMod 2 × ZMod 2) (c' d' : ZMod 3 × ZMod 3) :

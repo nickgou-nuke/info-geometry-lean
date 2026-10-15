@@ -26,8 +26,11 @@ noncomputable section
 def concreteWeylKleinPair :
     InfoGeometry.Canonical.KleinMonodromyRepresentationSpace.KleinMonodromyPair
       SplitOctF2Aut := by
-  exact ⟨(s, c), by
-    simpa [s_sq] using s_c_s⟩
+  refine ⟨(s, c), ?_⟩
+  have hs_inv : s⁻¹ = s := by
+    rw [← mul_one s⁻¹, ← s_sq, ← mul_assoc, inv_mul_cancel, one_mul]
+  rw [hs_inv]
+  exact s_c_s
 
 /-- The concrete morphism from the Klein presentation to the Weyl carrier. -/
 def kleinToConcreteWeyl : KleinGroup →* SplitOctF2Aut :=
@@ -50,7 +53,10 @@ theorem g2Weyl_kleinConjugation :
         (kleinToConcreteWeyl (toKlein genA))⁻¹ =
       (kleinToConcreteWeyl (toKlein genB))⁻¹ := by
   rw [kleinToConcreteWeyl_genA, kleinToConcreteWeyl_genB]
-  simpa [s_sq] using s_c_s
+  have hs_inv : s⁻¹ = s := by
+    rw [← mul_one s⁻¹, ← s_sq, ← mul_assoc, inv_mul_cancel, one_mul]
+  rw [hs_inv]
+  exact s_c_s
 
 end
 end InfoGeometry.Exceptional.G2WeylKleinBridge

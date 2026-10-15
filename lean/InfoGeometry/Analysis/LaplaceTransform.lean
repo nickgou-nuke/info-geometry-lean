@@ -126,10 +126,9 @@ theorem add {f g : ℝ → E} {s : ℂ}
     (hf : LaplaceConvergent μ f s) (hg : LaplaceConvergent μ g s) :
     laplaceIntegral μ (fun t => f t + g t) s =
       laplaceIntegral μ f s + laplaceIntegral μ g s := by
-  change ∫ t, laplaceKernel s t • (f t + g t) ∂μ =
-    laplaceIntegral μ f s + laplaceIntegral μ g s
-  simpa [smul_add] using
-    (MeasureTheory.integral_add hf hg)
+  dsimp [laplaceIntegral]
+  simp_rw [smul_add]
+  exact MeasureTheory.integral_add hf hg
 
 /-- Laplace transform is homogeneous on convergent inputs. -/
 theorem smul (c : ℂ) {f : ℝ → E} {s : ℂ}
@@ -155,15 +154,21 @@ theorem sub {f g : ℝ → E} {s : ℂ}
     (hf : LaplaceConvergent μ f s) (hg : LaplaceConvergent μ g s) :
     laplaceIntegral μ (fun t => f t - g t) s =
       laplaceIntegral μ f s - laplaceIntegral μ g s := by
-  change ∫ t, laplaceKernel s t • (f t - g t) ∂μ =
-    laplaceIntegral μ f s - laplaceIntegral μ g s
-  simpa [smul_sub] using (MeasureTheory.integral_sub hf hg)
+  dsimp [laplaceIntegral]
+  simp_rw [smul_sub]
+  exact MeasureTheory.integral_sub hf hg
 
 /-- Convergence is preserved by addition. -/
 theorem convergent_add {f g : ℝ → E} {s : ℂ}
     (hf : LaplaceConvergent μ f s) (hg : LaplaceConvergent μ g s) :
     LaplaceConvergent μ (fun t => f t + g t) s := by
-  simpa [LaplaceConvergent, smul_add] using hf.add hg
+  dsimp [LaplaceConvergent]
+  have hfun : (fun t => laplaceKernel s t • (f t + g t)) =
+      (fun t => laplaceKernel s t • f t) + (fun t => laplaceKernel s t • g t) := by
+    ext t
+    exact smul_add _ _ _
+  rw [hfun]
+  exact hf.add hg
 
 /-- Convergence is preserved by scalar multiplication. -/
 theorem convergent_smul (c : ℂ) {f : ℝ → E} {s : ℂ}
@@ -410,10 +415,11 @@ theorem convergent_add {f g : ℝ → E} {s : ℂ}
       (MeasureTheory.volume.restrict (Set.Ioi (0 : ℝ)))
   have hfun :
       (fun t : ℝ => laplaceKernel s t • (f t + g t)) =
-        (fun t : ℝ => laplaceKernel s t • f t + laplaceKernel s t • g t) := by
-    funext t
+        (fun t : ℝ => laplaceKernel s t • f t) + (fun t : ℝ => laplaceKernel s t • g t) := by
+    ext t
     exact smul_add _ _ _
-  simpa [hfun] using hf.integrable.add hg.integrable
+  rw [hfun]
+  exact hf.integrable.add hg.integrable
 
 /-- Positive-half-line convergence is preserved by scalar multiplication. -/
 theorem convergent_smul (c : ℂ) {f : ℝ → E} {s : ℂ}

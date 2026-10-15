@@ -139,7 +139,10 @@ def patchPathTransport
     (a : CategoryTheory.Paths (PatchVertex (α := α) P))
     (x : (patchStateDiagram (α := α) (𝕜 := 𝕜) (T := T) (D := D) S P).obj a) :
     patchPathTransport (α := α) (𝕜 := 𝕜) (T := T) (D := D) S (𝟙 a) x = x := by
-  simp [patchPathTransport]
+  simp only [patchPathTransport]
+  rw [(CategoryTheory.pathComposition (PatchVertex (α := α) P)).map_id]
+  rw [(patchStateDiagram (α := α) (𝕜 := 𝕜) (T := T) (D := D) S P).map_id]
+  exact CategoryTheory.id_apply (C := Type _) x
 
 @[simp] theorem patchPathTransport_cons
     {P : FinitePatch (α := α)}
@@ -149,12 +152,10 @@ def patchPathTransport
     patchPathTransport (α := α) (𝕜 := 𝕜) (T := T) (D := D) S (p ≫ q) x =
       patchPathTransport (α := α) (𝕜 := 𝕜) (T := T) (D := D) S q
         (patchPathTransport (α := α) (𝕜 := 𝕜) (T := T) (D := D) S p x) := by
-  simpa [patchPathTransport] using
-    congrFun
-      ((patchStateDiagram (α := α) (𝕜 := 𝕜) (T := T) (D := D) S P).map_comp
-        ((CategoryTheory.pathComposition (PatchVertex (α := α) P)).map p)
-        ((CategoryTheory.pathComposition (PatchVertex (α := α) P)).map q))
-      x
+  simp only [patchPathTransport]
+  rw [(CategoryTheory.pathComposition (PatchVertex (α := α) P)).map_comp]
+  rw [(patchStateDiagram (α := α) (𝕜 := 𝕜) (T := T) (D := D) S P).map_comp]
+  exact CategoryTheory.comp_apply (C := Type _) _ _ x
 
 /-- Directed proof graph obtained by forgetting only the order relation on a patch. -/
 noncomputable def patchDirectedProofGraph

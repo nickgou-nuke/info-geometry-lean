@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.AlbertPeirceChiralFrameEmbedding
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RealSplitAlbertTopologicalReadout
+import Mathlib.Topology.Instances.Matrix
 
 namespace InfoGeometry.Topology
 

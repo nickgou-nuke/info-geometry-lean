@@ -43,15 +43,15 @@ noncomputable def toFunctor (V : FragmentVertexDiagram D) :
   letI : Preorder (Fin n) := D.reachPreorder
   refine
     { obj := fun u => V.carrier u
-      map := fun {u v} f => V.map (leOfHom f)
+      map := fun {u v} f => ↾(V.map (leOfHom f))
       map_id := ?_
       map_comp := ?_ }
   · intro u
-    funext x
+    ext x
     have h := congrFun (V.map_refl u) x
     simpa using h
   · intro u v w f g
-    funext x
+    ext x
     have h := congrFun (V.map_trans (leOfHom f) (leOfHom g)) x
     simpa [Function.comp_apply] using h
 
@@ -64,7 +64,7 @@ noncomputable def carrierColimit (V : FragmentVertexDiagram D) : Type :=
 noncomputable def ι (V : FragmentVertexDiagram D) (u : Fin n) :
     V.carrier u → V.carrierColimit := by
   letI : Preorder (Fin n) := D.reachPreorder
-  exact colimit.ι V.toFunctor u
+  exact (colimit.ι V.toFunctor u : V.carrier u → V.carrierColimit)
 
 /-- Colimit injections commute with every reachable fragmentation map. -/
 theorem ι_naturality (V : FragmentVertexDiagram D)
@@ -72,8 +72,9 @@ theorem ι_naturality (V : FragmentVertexDiagram D)
     (V.ι v) ∘ V.map h = V.ι u := by
   letI : Preorder (Fin n) := D.reachPreorder
   let f : u ⟶ v := homOfLE h
-  funext x
-  exact congrFun (colimit.w V.toFunctor f) x
+  ext x
+  exact congrArg (fun g : V.carrier u ⟶ V.carrierColimit => g x)
+    (colimit.w V.toFunctor f)
 
 /-- Universal map out of the fragmentation colimit from a cocone-compatible
 family of functions. -/
@@ -86,12 +87,12 @@ noncomputable def descend (V : FragmentVertexDiagram D)
   let t : Cocone V.toFunctor :=
     { pt := X
       ι :=
-        { app := fun u => k u
+        { app := fun u => ↾(k u)
           naturality := by
             intro u v f
-            funext x
+            ext x
             exact congrFun (hk (leOfHom f)) x } }
-  exact colimit.desc V.toFunctor t
+  exact (colimit.desc V.toFunctor t : V.carrierColimit → X)
 
 /-- The universal descent map agrees with the supplied map on every fragment
 carrier. -/
@@ -105,13 +106,13 @@ theorem descend_ι (V : FragmentVertexDiagram D)
   let t : Cocone V.toFunctor :=
     { pt := X
       ι :=
-        { app := fun i => k i
+        { app := fun i => ↾(k i)
           naturality := by
             intro i j f
-            funext x
+            ext x
             exact congrFun (hk (leOfHom f)) x } }
-  funext x
-  exact congrFun (colimit.ι_desc t u) x
+  ext x
+  exact congrArg (fun f : V.carrier u ⟶ X => f x) (colimit.ι_desc t u)
 
 end FragmentVertexDiagram
 

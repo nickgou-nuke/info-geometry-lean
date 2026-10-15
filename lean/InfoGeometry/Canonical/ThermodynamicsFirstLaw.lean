@@ -40,10 +40,11 @@ open InfoGeometry.Canonical.DeRhamPotential
 variable {A : Type*} [Ring A]
 
 /-- The additive derivations of the underlying ring. -/
-abbrev TotalDynamics (A : Type*) [Ring A] := Derivation A
+abbrev TotalDynamics (A : Type*) [Ring A] :=
+  InfoGeometry.Modular.ExactSequence.Derivation A
 
 /-- The historical predicate `isHeatFlow` means that the derivation is inner. -/
-def isHeatFlow (D : Derivation A) : Prop :=
+def isHeatFlow (D : InfoGeometry.Modular.ExactSequence.Derivation A) : Prop :=
   ∃ K : A, ∀ x : A, D x = (modularDerivation K) x
 
 /-- Quotient of derivations by the native inner-derivation relation. -/
@@ -51,13 +52,16 @@ abbrev MacroscopicWork (A : Type*) [Ring A] :=
   ModularFlowHomogeneousSpace A
 
 /-- The zero quotient class consists precisely of inner derivations. -/
-theorem first_law_exact_sequence (D : Derivation A) :
+theorem first_law_exact_sequence
+    (D : InfoGeometry.Modular.ExactSequence.Derivation A) :
     modularFlowProjection D = outZero ↔ isHeatFlow D :=
   exact_sequence_inner_iff_kernel D
 
 /-- Commuting a derivation with an inner derivation gives an inner derivation. -/
-theorem work_induces_heat_friction (D : Derivation A) (K : A) :
-    Derivation.derivationCommutator D (modularDerivation K) = modularDerivation (D K) := by
+theorem work_induces_heat_friction
+    (D : InfoGeometry.Modular.ExactSequence.Derivation A) (K : A) :
+    InfoGeometry.Modular.ExactSequence.Derivation.derivationCommutator D
+      (modularDerivation K) = modularDerivation (D K) := by
   ext X
   exact dual_flow_commutator D K X
 

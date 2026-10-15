@@ -17,7 +17,7 @@ lemma conclusion_surface_lagrangian_realizability_standard_generator_injective
       (conclusion_surface_lagrangian_realizability_standard_generator g) := by
   intro i j hij
   apply Fin.ext
-  simpa using congrArg (fun x : Fin (2 * g) => x.1) hij
+  exact congrArg (fun x : Fin (2 * g) => x.1) hij
 
 /-- Concrete data for realizing a primitive Lagrangian on a genus-`g` surface. The data consists
 of a target family of generators together with a boundary automorphism sending the standard

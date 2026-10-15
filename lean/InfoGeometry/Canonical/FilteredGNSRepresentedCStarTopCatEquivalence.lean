@@ -43,7 +43,7 @@ def completionToClosureTopCatMap :
     TopCat.of (representedAlgebraicRangeCompletion Stage sys ω) ⟶
       TopCat.of (representedCStarClosure Stage sys ω) :=
   TopCat.ofHom
-    { toFun := representedRangeCompletionStarAlgEquiv Stage sys ω
+    { toFun := representedRangeCompletionHomeomorph Stage sys ω
       continuous_toFun :=
         (representedRangeCompletionHomeomorph_continuous Stage sys ω) }
 
@@ -51,18 +51,18 @@ def closureToCompletionTopCatMap :
     TopCat.of (representedCStarClosure Stage sys ω) ⟶
       TopCat.of (representedAlgebraicRangeCompletion Stage sys ω) :=
   TopCat.ofHom
-    { toFun := (representedRangeCompletionStarAlgEquiv Stage sys ω).symm
+    { toFun := (representedRangeCompletionHomeomorph Stage sys ω).symm
       continuous_toFun :=
         (representedRangeCompletionHomeomorph_continuous_inv Stage sys ω) }
 
 theorem completionToClosureTopCatMap_apply (x : representedAlgebraicRangeCompletion Stage sys ω) :
     completionToClosureTopCatMap Stage sys ω x =
-      representedRangeCompletionStarAlgEquiv Stage sys ω x :=
+      representedRangeCompletionHomeomorph Stage sys ω x :=
   rfl
 
 theorem closureToCompletionTopCatMap_apply (x : representedCStarClosure Stage sys ω) :
     closureToCompletionTopCatMap Stage sys ω x =
-      (representedRangeCompletionStarAlgEquiv Stage sys ω).symm x :=
+      (representedRangeCompletionHomeomorph Stage sys ω).symm x :=
   rfl
 
 /- The categorical hom remembers the verified finite-stage completion readout. -/
@@ -73,10 +73,10 @@ theorem closureToCompletionTopCatMap_apply (x : representedCStarClosure Stage sy
           (algebraicStarDirectLimitOf Stage sys i a)) =
       algebraicColimitToRepresentedClosure Stage sys ω
         (algebraicStarDirectLimitOf Stage sys i a) := by
-  simpa [completionToClosureTopCatMap,
-    representedRangeCompletionStarAlgEquiv]
-    using representedRangeCompletionContinuousAlgEquiv_stage
-      Stage sys ω i a
+  change representedRangeCompletionEquiv Stage sys ω
+      (algebraicColimitRangeRestrict Stage sys ω
+        (algebraicStarDirectLimitOf Stage sys i a)) = _
+  exact representedRangeCompletionEquiv_stage Stage sys ω i a
 
 theorem closureToCompletion_comp_completionToClosure :
     completionToClosureTopCatMap Stage sys ω ≫
@@ -85,9 +85,9 @@ theorem closureToCompletion_comp_completionToClosure :
   apply ContinuousMap.ext
   intro x
   change
-    (representedRangeCompletionStarAlgEquiv Stage sys ω).symm
-        (representedRangeCompletionStarAlgEquiv Stage sys ω x) = x
-  exact (representedRangeCompletionStarAlgEquiv Stage sys ω).left_inv x
+    (representedRangeCompletionHomeomorph Stage sys ω).symm
+        (representedRangeCompletionHomeomorph Stage sys ω x) = x
+  exact (representedRangeCompletionHomeomorph Stage sys ω).left_inv x
 
 theorem completionToClosure_comp_closureToCompletion :
     closureToCompletionTopCatMap Stage sys ω ≫
@@ -96,9 +96,9 @@ theorem completionToClosure_comp_closureToCompletion :
   apply ContinuousMap.ext
   intro x
   change
-    representedRangeCompletionStarAlgEquiv Stage sys ω
-        ((representedRangeCompletionStarAlgEquiv Stage sys ω).symm x) = x
-  exact (representedRangeCompletionStarAlgEquiv Stage sys ω).right_inv x
+    representedRangeCompletionHomeomorph Stage sys ω
+        ((representedRangeCompletionHomeomorph Stage sys ω).symm x) = x
+  exact (representedRangeCompletionHomeomorph Stage sys ω).right_inv x
 
 def completionClosureTopCatIso :
     TopCat.of (representedAlgebraicRangeCompletion Stage sys ω) ≅

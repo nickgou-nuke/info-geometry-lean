@@ -88,8 +88,8 @@ theorem affineFrame_bracket (M : FrameMatrix) (b : Fin 3 → ℝ)
   change ⁅matrixFrame M X i + b i • (1 : A),
       matrixFrame M X j + b j • (1 : A)⁆ = _
   rw [central_shift_bracket]
-  simp only [matrixFrame_apply, Fin.sum_univ_three, add_lie, lie_add,
-    smul_lie, lie_smul, smul_smul]
+  simp only [matrixFrame_apply, Fin.sum_univ_three, Ring.lie_def, add_mul, mul_add,
+    smul_mul_assoc, mul_smul_comm, smul_smul]
   module
 
 /-- Ordered operator quadratic form. Symmetry is not used to commute operators. -/

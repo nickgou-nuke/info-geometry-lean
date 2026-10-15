@@ -47,7 +47,7 @@ private theorem zeckendorf_nodup :
 private theorem registerOfIndices_mem_iff {l : List Nat} (hRep : l.IsZeckendorfRep) (k : Nat) :
     0 < registerOfIndices l k ↔ k + 2 ∈ l := by
   rw [registerOfIndices_apply_eq_count hRep]
-  simpa using List.count_pos_iff_mem
+  exact List.count_pos_iff
 
 private theorem registerOfIndices_stable {l : List Nat} (hRep : l.IsZeckendorfRep) :
     StableCfg (registerOfIndices l) := by
@@ -73,12 +73,12 @@ private theorem NF_pr_reduces (a : DigitCfg) : Relation.ReflTransGen Step a (NF_
   have hVal : valPr b = valPr (NF_pr a) := by
     calc
       valPr b = valPr a := by
-        simpa using (reflTransGen_value hab)
+        exact reflTransGen_value hab
       _ = valPr (NF_pr a) := by
         simp [NF_pr]
   have hEq : b = NF_pr a := by
     apply irreducible_eq_of_value_eq hIrrB (NF_pr_irreducible a)
-    simpa using hVal
+    exact hVal
   simpa [hEq] using hab
 
 /-- Paper-facing wrapper: every prime-register state reduces to the canonical register

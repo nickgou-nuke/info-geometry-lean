@@ -4,16 +4,25 @@ namespace InfoGeometry.Synthesis.ZornBraidIntertwiner.Tests
 
 open InfoGeometry.Categorical.ZornUHFColimit
 open InfoGeometry.Physics.B3PresentedGroup (B3 B3Gen)
+open InfoGeometry.Physics.YangBaxterZornBridge (zornPhi zornPhi_sig0 zornPhi_sig1)
 
 example :
     (zornColimitBraidRepresentation (PresentedGroup.of B3Gen.sig0) :
       Module.End ℂ ZornColimit) = zornBraidGeneratorColimit1 :=
-  zornColimitBraidRepresentation_sig0
+  by
+    change zornColimitMatrixAction
+      (zornPhi (PresentedGroup.of B3Gen.sig0 : B3) : Matrix (Fin 8) (Fin 8) ℂ) = _
+    rw [zornPhi_sig0]
+    rfl
 
 example :
     (zornColimitBraidRepresentation (PresentedGroup.of B3Gen.sig1) :
       Module.End ℂ ZornColimit) = zornBraidGeneratorColimit2 :=
-  zornColimitBraidRepresentation_sig1
+  by
+    change zornColimitMatrixAction
+      (zornPhi (PresentedGroup.of B3Gen.sig1 : B3) : Matrix (Fin 8) (Fin 8) ℂ) = _
+    rw [zornPhi_sig1]
+    rfl
 
 example (braid : B3) :
     zornColimitBraidRepresentation braid * zornColimitBraidRepresentation braid⁻¹ = 1 := by

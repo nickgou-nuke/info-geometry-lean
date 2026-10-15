@@ -44,12 +44,13 @@ Canonical finite count-ray realization of a GW projective-count calibration.
 projective rays carry the relative modular/count Hamiltonian readout.
 -/
 @[rep_depth projective]
-structure GWCanonicalCountRayBridge
+structure GWCanonicalCountRayBridge.{uG, uT, uTarget, uCoeff, uCountAtom}
     (n : ℕ) [Nonempty (Fin n)]
-    (G T Target Coeff : Type*) where
+    (G : Type uG) (T : Type uT) (Target : Type uTarget) (Coeff : Type uCoeff) where
   /-- GW localization count-shadow calibration. -/
   projectiveCounts :
-    GWProjectiveCountCalibration G T Target Coeff
+    GWProjectiveCountCalibration.{uG, uT, uTarget, uCoeff, uCountAtom}
+      G T Target Coeff
 
   /-- Positive finite count profile for the localized state. -/
   counts :

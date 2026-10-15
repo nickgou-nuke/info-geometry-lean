@@ -15,6 +15,7 @@ def xiAdamsNorm (m : ℕ) (F : ℂ → ℂ) : ℂ → ℂ :=
 theorem paper_xi_adams_norm_holomorphic (m : ℕ) (_hm : 1 ≤ m) {F : ℂ → ℂ}
     (hF : XiDiskAnalytic F) : XiDiskAnalytic (xiAdamsNorm m F) := by
   intro z
-  simpa [XiDiskAnalytic, xiAdamsNorm] using (hF z).pow m
+  change AnalyticAt ℂ (fun z => F z ^ m) z
+  exact (hF z).pow m
 
 end Omega.Zeta

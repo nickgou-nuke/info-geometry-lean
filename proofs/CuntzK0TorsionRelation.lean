@@ -11,7 +11,7 @@ theorem torsion_of_succ_nsmul_eq_self {K : Type*} [AddCommGroup K]
     (n : ℕ) (u : K) (h : (n + 1) • u = u) :
     n • u = 0 := by
   have h' : n • u + u = u := by
-    change AddMonoid.nsmul (n + 1) u = u at h
+    change (n + 1) • u = u at h
     rw [AddMonoid.nsmul_succ] at h
     exact h
   have h'' : n • u + u = 0 + u := by simpa using h'

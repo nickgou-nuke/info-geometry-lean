@@ -49,8 +49,8 @@ theorem associatorDefect_cocycle (a b c d : R) :
 /-- The associator defect vanishes exactly when multiplication is associative. -/
 theorem associatorDefect_eq_zero_iff_associative :
     associatorDefect (R := R) = 0 ↔ Std.Associative (fun x y : R => x * y) := by
-  simpa [associatorDefect] using
-    (associator_eq_zero_iff_associative (R := R))
+  change associator = 0 ↔ _
+  exact associator_eq_zero_iff_associative
 
 end GenericAssociator
 

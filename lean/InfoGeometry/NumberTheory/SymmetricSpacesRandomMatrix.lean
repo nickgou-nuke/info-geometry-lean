@@ -31,11 +31,11 @@ def negatedSpace : Submodule ℝ L :=
 
 @[simp] theorem mem_fixedSpace (vector : L) :
     vector ∈ fixedSpace σ ↔ σ vector = vector := by
-  simp [fixedSpace, Module.End.mem_eigenspace_iff]
+  simp [fixedSpace]
 
 @[simp] theorem mem_negatedSpace (vector : L) :
     vector ∈ negatedSpace σ ↔ σ vector = -vector := by
-  simp [negatedSpace, Module.End.mem_eigenspace_iff]
+  simp [negatedSpace]
 
 theorem bracket_eigenvectors {first second : L} {firstValue secondValue : ℝ}
     (hfirst : σ first = firstValue • first)
@@ -83,6 +83,8 @@ theorem decomposition_unique {vector fixed negated : L}
       negated = Pminus σ.toLinearMap vector := by
   rw [hsum]
   simp only [Pplus_apply, Pminus_apply, LinearMap.map_add]
+  change fixed = (⅟(2 : ℝ)) • (fixed + σ fixed) + (⅟(2 : ℝ)) • (negated + σ negated) ∧
+    negated = (⅟(2 : ℝ)) • (fixed - σ fixed) + (⅟(2 : ℝ)) • (negated - σ negated)
   rw [hfixed, hnegated]
   simp only [invOf_eq_inv]
   constructor <;> module
@@ -170,14 +172,22 @@ inductive DysonLabel
   | unitary
   | orthogonal
   | symplectic
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype DysonLabel where
+  elems := {DysonLabel.unitary, .orthogonal, .symplectic}
+  complete x := by cases x <;> simp
 
 inductive ArithmeticCompactGroupLabel
   | unitary
   | compactSymplectic
   | specialOrthogonalEven
   | specialOrthogonalOdd
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype ArithmeticCompactGroupLabel where
+  elems := {ArithmeticCompactGroupLabel.unitary, .compactSymplectic, .specialOrthogonalEven, .specialOrthogonalOdd}
+  complete x := by cases x <;> simp
 
 theorem dyson_label_count : Fintype.card DysonLabel = 3 := by decide
 

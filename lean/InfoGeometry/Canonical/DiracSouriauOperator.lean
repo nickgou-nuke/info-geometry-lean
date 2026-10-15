@@ -105,14 +105,17 @@ theorem exists_drazinInverse {K : Type*} [Field K] (S : DiracSouriauSector K) :
   -- Prove the Drazin laws in Matrix form
   constructor
   · apply Matrix.toLin'.injective
-    simpa [M, D, Matrix.toLin'_toMatrix', Matrix.toLin'_mul] using hd.1
+    simpa [M, D, Matrix.toLin'_toMatrix', Matrix.toLin'_mul,
+      Module.End.mul_eq_comp] using hd.1
   · constructor
     · apply Matrix.toLin'.injective
-      simpa [M, D, Matrix.toLin'_toMatrix', Matrix.toLin'_mul] using hd.2.1
+      simpa [M, D, Matrix.toLin'_toMatrix', Matrix.toLin'_mul,
+        Module.End.mul_eq_comp] using hd.2.1
     · apply Matrix.toLin'.injective
       -- Adjust for composition order: (f^(k+1)) ∘ₗ d = f^k
       have h3 := hd.2.2
-      simpa [M, D, Matrix.toLin'_toMatrix', Matrix.toLin'_mul, Matrix.toLin'_pow] using h3
+      simpa [M, D, Matrix.toLin'_toMatrix', Matrix.toLin'_mul,
+        Matrix.toLin'_pow, Module.End.mul_eq_comp] using h3
 
 /--
 Predicate encoding the Drazin inverse property.

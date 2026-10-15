@@ -16,11 +16,12 @@ open InfoGeometry.Canonical.MaurerCartanFactorization
 open InfoGeometry.Canonical.ArnoldCohenBCFWBridge
 
 /-!
-# Para-Kähler Quantum Geometric Tensor (QGT) and Maurer-Cartan Berry Framework
+# Algebraic Para-Complex, Bilinear-Form, and Arnold-Relation Identities
 
-This module formalizes the resolution of the Projective Logarithmic Boundary
-Geometry and Arnold-Cohen relations within the **Maurer-Cartan / QGT / Berry Framework**
-on **Para-Kähler (split-signature / neutral) manifolds**.
+This module formalizes identities for para-complex structures, bilinear forms,
+and abstract exterior-form data. Its algebraic structures do not by themselves
+construct a para-Kähler manifold, a differential-geometric connection, or a
+physical Berry phase.
 
 ## Conceptual Core:
 1. **Para-Complex Structure ($K^2 = +1$)**:
@@ -38,12 +39,10 @@ on **Para-Kähler (split-signature / neutral) manifolds**.
    $$\mathcal{Q}_{\text{para}}(u, v) = g(u, v) + e \Omega(u, v), \quad \text{where } e^2 = +1.$$
    This unifies the Fisher-Rao / Hessian information metric $g$ with the Berry curvature $\Omega$.
 
-4. **Maurer-Cartan Flat Connection and Logarithmic Resolution**:
-   The flat connection $\theta = g^{-1} dg$ satisfies the Maurer-Cartan equation:
-   $$d\theta + \theta \wedge \theta = 0.$$
-   The Arnold-Cohen 3-term relations $\sum_{\text{cyclic}} \omega_{12} \wedge \omega_{23} = 0$
-   and the Klein quadric $Q(p) = 0$ are the exact abelianized shadows of the Maurer-Cartan
-   flatness on the para-Kähler homogeneous manifold.
+4. **Abstract three-term relation**:
+   The Arnold-Cohen-shaped identity follows from the coefficient relation in
+   `LogarithmicOneFormData` and the alternating bilinear form. No Maurer-Cartan
+   connection, Klein-quadric map, or scattering residue is constructed here.
 -/
 
 variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V]
@@ -286,9 +285,8 @@ theorem MaurerCartanFlatConnection.curvature_smul_right
   simp only [map_smul, smul_mul_assoc, mul_smul_comm]
   rw [← smul_sub]
 
-/-- **Theorem**: The Maurer-Cartan Curvature Tensor on Para-Kähler Homogeneous Spaces.
-    Resolves the Arnold mixed 3-term logarithmic relation as the flat Maurer-Cartan curvature
-    identity: $\sum_{\text{cyclic}} \omega_{12} \wedge \omega_{23} = 0$. -/
+/-- The abstract logarithmic-form data satisfy the three-term identity proved
+from their coefficient relation. This is not a curvature theorem. -/
 theorem maurer_cartan_arnold_resolution
     {M : Type*} [AddCommGroup M] [Module R M]
     (alg : ExteriorFormAlgebra (R := R) M)
@@ -298,9 +296,8 @@ theorem maurer_cartan_arnold_resolution
     alg.wedge (data.form dz k i) (data.form dz i j) = 0 :=
   arnold_cohen_three_term_relation alg dz data i j k
 
-/-- **Theorem**: BCFW Pole Factorization from Maurer-Cartan Curvature.
-    The on-shell collinear residue is identically the Maurer-Cartan cross-channel compensation:
-    $\omega_{ij} \wedge \omega_{jk} = - (\omega_{jk} \wedge \omega_{ki} + \omega_{ki} \wedge \omega_{ij})$. -/
+/-- Rearrangement of the three-term identity. The conclusion is an algebraic
+equality in `ExteriorFormAlgebra`, not an on-shell pole or residue theorem. -/
 theorem maurer_cartan_bcfw_factorization
     {M : Type*} [AddCommGroup M] [Module R M]
     (alg : ExteriorFormAlgebra (R := R) M)

@@ -66,8 +66,6 @@ theorem paper_xi_terminal_zm_hurwitz_generator_cycle_types_on_160_and_40 :
       simp only [Nat.lcm_one_left]
       rw [foldl_lcm_replicate 2 12 3 (by omega)]
       norm_num
-      rw [foldl_lcm_replicate 1 28 6 (by omega)]
-      norm_num
     · constructor
       · unfold xi_terminal_zm_hurwitz_generator_cycle_types_on_160_and_40_support
         unfold xi_terminal_zm_hurwitz_generator_cycle_types_on_160_and_40_lengths40

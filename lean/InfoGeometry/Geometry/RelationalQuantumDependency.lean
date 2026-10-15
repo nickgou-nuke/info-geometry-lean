@@ -9,7 +9,15 @@ inductive Archetype
   | cocyclicFrameTransport
   | circleNormPreservation
   | particleWaveCovariance
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype Archetype where
+  elems := {Archetype.equivariantFrame, Archetype.particleNormalization,
+    Archetype.actionCocycle, Archetype.cocyclicFrameTransport,
+    Archetype.circleNormPreservation, Archetype.particleWaveCovariance}
+  complete := by
+    intro x
+    cases x <;> simp
 
 open Archetype
 

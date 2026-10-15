@@ -153,13 +153,15 @@ theorem paper_pom_diagonal_observation_strong_unidentifiability
   refine ⟨?_, ?_, ?_⟩
   · simpa [
       pom_diagonal_observation_strong_unidentifiability_data.statement,
-      pom_diagonal_observation_strong_unidentifiability_data.pom_diagonal_observation_strong_unidentifiability_leftData
+      pom_diagonal_observation_strong_unidentifiability_data.pom_diagonal_observation_strong_unidentifiability_leftData,
+      pom_diagonal_moment_free_energy_degeneracy_data.statement
     ] using
       paper_pom_diagonal_moment_free_energy_degeneracy
         (D.pom_diagonal_observation_strong_unidentifiability_leftData)
   · simpa [
       pom_diagonal_observation_strong_unidentifiability_data.statement,
-      pom_diagonal_observation_strong_unidentifiability_data.pom_diagonal_observation_strong_unidentifiability_rightData
+      pom_diagonal_observation_strong_unidentifiability_data.pom_diagonal_observation_strong_unidentifiability_rightData,
+      pom_diagonal_moment_free_energy_degeneracy_data.statement
     ] using
       paper_pom_diagonal_moment_free_energy_degeneracy
         (D.pom_diagonal_observation_strong_unidentifiability_rightData)

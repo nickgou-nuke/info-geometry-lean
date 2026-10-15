@@ -21,17 +21,14 @@ theorem paper_fold_infonce_bayes_infonce_power_sum_expansion (m K : Nat) :
   rw [Omega.OperatorAlgebra.paper_fold_infonce_laplace_renyi_moment_expansion]
   dsimp
   have hIcc :
-      Finset.Icc 2 K = (Finset.Icc 1 (K - 1)).map ⟨Nat.succ, by
-        intro a b h
-        exact Nat.succ.inj h⟩ := by
+      Finset.Icc 2 K = (Finset.Icc 1 (K - 1)).map ⟨Nat.succ, Nat.succ_injective⟩ := by
     ext q
-    simp only [Finset.mem_Icc, Finset.mem_map, Function.Embedding.coeFn_mk]
+    simp only [Finset.mem_Icc, Finset.mem_map]
     constructor
     · intro hq
-      refine ⟨q - 1, ?_, by omega⟩
-      omega
-    · intro hq
-      rcases hq with ⟨a, ha, rfl⟩
+      refine ⟨q - 1, by omega, by dsimp; omega⟩
+    · rintro ⟨a, ha, rfl⟩
+      dsimp
       omega
   rw [hIcc, Finset.sum_map]
   refine Finset.sum_congr rfl ?_

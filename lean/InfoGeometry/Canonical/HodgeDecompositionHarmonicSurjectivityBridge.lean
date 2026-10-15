@@ -42,7 +42,7 @@ theorem harmonicToCohomologyLinearMap_surjective_from_decomposition
   obtain ⟨w, rfl⟩ := Submodule.Quotient.mk_surjective _ c
   rcases h_decomp w with ⟨alpha, h, hw⟩
   use h
-  dsimp [harmonicToCohomologyLinearMap]
+  change Submodule.Quotient.mk ⟨h.1, LinearMap.mem_ker.2 (h_closed h.1 h.2)⟩ = Submodule.Quotient.mk w
   rw [Submodule.Quotient.eq]
   rw [Submodule.mem_comap]
   rw [LinearMap.mem_range]

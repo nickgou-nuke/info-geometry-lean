@@ -1,5 +1,4 @@
 import InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The normalized axial grading in the circular Peirce basis
@@ -790,22 +789,27 @@ theorem zeroWeightSubmodule_le_axialEigenspace_zero :
     zeroWeightSubmodule ≤ axialEigenspace 0 := by
   refine Submodule.span_le.2 ?_
   rintro x (rfl | rfl)
-  · simpa [circularPeirceBasis_zero, axialWeight] using
-      circularPeirceBasis_mem_axialEigenspace (0 : Fin 8)
-  · simpa [circularPeirceBasis_four, axialWeight] using
-      circularPeirceBasis_mem_axialEigenspace (4 : Fin 8)
+  · have h := circularPeirceBasis_mem_axialEigenspace (0 : Fin 8)
+    rw [circularPeirceBasis_zero] at h
+    exact h
+  · have h := circularPeirceBasis_mem_axialEigenspace (4 : Fin 8)
+    rw [circularPeirceBasis_four] at h
+    exact h
 
 theorem positiveWeightSubmodule_le_axialEigenspace_one :
     positiveWeightSubmodule ≤ axialEigenspace 1 := by
   refine Submodule.span_le.2 ?_
   rintro x ⟨i, rfl⟩
   fin_cases i
-  · simpa [circularPeirceBasis_one, axialWeight] using
-      circularPeirceBasis_mem_axialEigenspace (1 : Fin 8)
-  · simpa [circularPeirceBasis_two, axialWeight] using
-      circularPeirceBasis_mem_axialEigenspace (2 : Fin 8)
-  · simpa [circularPeirceBasis_three, axialWeight] using
-      circularPeirceBasis_mem_axialEigenspace (3 : Fin 8)
+  · have h := circularPeirceBasis_mem_axialEigenspace (1 : Fin 8)
+    rw [circularPeirceBasis_one] at h
+    exact h
+  · have h := circularPeirceBasis_mem_axialEigenspace (2 : Fin 8)
+    rw [circularPeirceBasis_two] at h
+    exact h
+  · have h := circularPeirceBasis_mem_axialEigenspace (3 : Fin 8)
+    rw [circularPeirceBasis_three] at h
+    exact h
 
 theorem axialEigenspace_one_le_positiveWeightSubmodule :
     axialEigenspace 1 ≤ positiveWeightSubmodule := by
@@ -906,12 +910,15 @@ theorem negativeWeightSubmodule_le_axialEigenspace_neg_one :
   refine Submodule.span_le.2 ?_
   rintro x ⟨i, rfl⟩
   fin_cases i
-  · simpa [circularPeirceBasis_five, axialWeight] using
-      circularPeirceBasis_mem_axialEigenspace (5 : Fin 8)
-  · simpa [circularPeirceBasis_six, axialWeight] using
-      circularPeirceBasis_mem_axialEigenspace (6 : Fin 8)
-  · simpa [circularPeirceBasis_seven, axialWeight] using
-      circularPeirceBasis_mem_axialEigenspace (7 : Fin 8)
+  · have h := circularPeirceBasis_mem_axialEigenspace (5 : Fin 8)
+    rw [circularPeirceBasis_five] at h
+    exact h
+  · have h := circularPeirceBasis_mem_axialEigenspace (6 : Fin 8)
+    rw [circularPeirceBasis_six] at h
+    exact h
+  · have h := circularPeirceBasis_mem_axialEigenspace (7 : Fin 8)
+    rw [circularPeirceBasis_seven] at h
+    exact h
 
 theorem axialEigenspace_neg_one_le_negativeWeightSubmodule :
     axialEigenspace (-1) ≤ negativeWeightSubmodule := by

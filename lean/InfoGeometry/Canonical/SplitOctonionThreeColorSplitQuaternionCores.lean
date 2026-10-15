@@ -151,64 +151,55 @@ private theorem threeColorStandardGenerator_linearIndependent
 theorem threeColorStandardCore_le_threeColorCore
     (c : SplitOctonionColour) :
     threeColorStandardCore c ≤ threeColorCore c := by
+  have hstd0 : threeColorStandardGenerator c 0 = rationalBasis .one := rfl
+  have hstd1 : threeColorStandardGenerator c 1 = fundamentalSymmetry := rfl
+  have hstd2 : threeColorStandardGenerator c 2 = rationalBasis (threeColorBasisIndex c) := by cases c <;> rfl
+  have hstd3 : threeColorStandardGenerator c 3 = rationalBasis (threeColorLBasisIndex c) := by cases c <;> rfl
   refine Submodule.span_le.2 ?_
   intro x hx
   rcases hx with ⟨i, rfl⟩
   fin_cases i
   · -- rationalBasis .one = n₊ + n₋
-    have h₁ : (rationalBasis (IntegralSplitBasis.one : IntegralSplitBasis) : ThreeColorCoreCarrier) ∈ threeColorCore c := by
-      have h₂ : modularNPlus + modularNMinus = (rationalBasis (IntegralSplitBasis.one : IntegralSplitBasis) : ThreeColorCoreCarrier) := by
-        rw [modularPolarized_one]
-      have h₃ : modularNPlus ∈ threeColorCore c := modularNPlus_mem_threeColorCore c
-      have h₄ : modularNMinus ∈ threeColorCore c := modularNMinus_mem_threeColorCore c
-      have h₅ : modularNPlus + modularNMinus ∈ threeColorCore c := (threeColorCore c).add_mem h₃ h₄
-      rw [h₂] at h₅
-      exact h₅
-    simpa [threeColorStandardGenerator, threeColorStandardLabel] using h₁
+    dsimp
+    rw [hstd0]
+    have h₂ : modularNPlus + modularNMinus = (rationalBasis (IntegralSplitBasis.one : IntegralSplitBasis) : ThreeColorCoreCarrier) := by
+      rw [modularPolarized_one]
+    have h₅ : modularNPlus + modularNMinus ∈ threeColorCore c :=
+      (threeColorCore c).add_mem (modularNPlus_mem_threeColorCore c) (modularNMinus_mem_threeColorCore c)
+    rwa [h₂] at h₅
   · -- fundamentalSymmetry = n₊ - n₋
-    have h₁ : (fundamentalSymmetry : ThreeColorCoreCarrier) ∈ threeColorCore c := by
-      have h₂ : modularNPlus - modularNMinus = (fundamentalSymmetry : ThreeColorCoreCarrier) := by
-        rw [modularPolarized_epsilon]
-      have h₃ : modularNPlus ∈ threeColorCore c := modularNPlus_mem_threeColorCore c
-      have h₄ : modularNMinus ∈ threeColorCore c := modularNMinus_mem_threeColorCore c
-      have h₅ : modularNPlus - modularNMinus ∈ threeColorCore c := (threeColorCore c).sub_mem h₃ h₄
-      rw [h₂] at h₅
-      exact h₅
-    simpa [threeColorStandardGenerator, threeColorStandardLabel] using h₁
+    dsimp
+    rw [hstd1]
+    have h₂ : modularNPlus - modularNMinus = (fundamentalSymmetry : ThreeColorCoreCarrier) := by
+      rw [modularPolarized_epsilon]
+    have h₅ : modularNPlus - modularNMinus ∈ threeColorCore c :=
+      (threeColorCore c).sub_mem (modularNPlus_mem_threeColorCore c) (modularNMinus_mem_threeColorCore c)
+    rwa [h₂] at h₅
   · -- colourUnit c = phaseAxis c = σ₋ - σ₊
-    have h₁ : (rationalBasis (threeColorBasisIndex c) : ThreeColorCoreCarrier) ∈ threeColorCore c := by
-      have h₂ : modularSigmaMinus c - modularSigmaPlus c = (phaseAxis c : ThreeColorCoreCarrier) := by
-        rw [modularPolarized_phaseAxis]
-      have h₃ : modularSigmaMinus c ∈ threeColorCore c := modularSigmaMinus_mem_threeColorCore c
-      have h₄ : modularSigmaPlus c ∈ threeColorCore c := modularSigmaPlus_mem_threeColorCore c
-      have h₅ : modularSigmaMinus c - modularSigmaPlus c ∈ threeColorCore c := (threeColorCore c).sub_mem h₃ h₄
-      have h₆ : (phaseAxis c : ThreeColorCoreCarrier) ∈ threeColorCore c := by
-        rw [h₂] at h₅
-        exact h₅
-      have h₇ : (phaseAxis c : ThreeColorCoreCarrier) = (colourUnit c : ThreeColorCoreCarrier) := by
-        simp [phaseAxis, colourUnit]
-      have h₈ : (colourUnit c : ThreeColorCoreCarrier) = (rationalBasis (threeColorBasisIndex c) : ThreeColorCoreCarrier) := by
-        cases c <;> rfl
-      rw [h₇, h₈] at h₆
-      exact h₆
-    simpa [threeColorStandardGenerator, threeColorStandardLabel] using h₁
+    dsimp
+    rw [hstd2]
+    have h₂ : modularSigmaMinus c - modularSigmaPlus c = (phaseAxis c : ThreeColorCoreCarrier) := by
+      rw [modularPolarized_phaseAxis]
+    have h₅ : modularSigmaMinus c - modularSigmaPlus c ∈ threeColorCore c :=
+      (threeColorCore c).sub_mem (modularSigmaMinus_mem_threeColorCore c) (modularSigmaPlus_mem_threeColorCore c)
+    have h₆ : (phaseAxis c : ThreeColorCoreCarrier) ∈ threeColorCore c := by
+      rwa [h₂] at h₅
+    have h₇ : (phaseAxis c : ThreeColorCoreCarrier) = (rationalBasis (threeColorBasisIndex c) : ThreeColorCoreCarrier) := by
+      cases c <;> rfl
+    rwa [h₇] at h₆
   · -- colourLUnit c = modularJ c = σ₊ + σ₋
-    have h₁ : (rationalBasis (threeColorLBasisIndex c) : ThreeColorCoreCarrier) ∈ threeColorCore c := by
-      have h₂ : modularSigmaPlus c + modularSigmaMinus c = (modularJ c : ThreeColorCoreCarrier) := by
-        rw [modularPolarized_modularJ]
-      have h₃ : modularSigmaPlus c ∈ threeColorCore c := modularSigmaPlus_mem_threeColorCore c
-      have h₄ : modularSigmaMinus c ∈ threeColorCore c := modularSigmaMinus_mem_threeColorCore c
-      have h₅ : modularSigmaPlus c + modularSigmaMinus c ∈ threeColorCore c := (threeColorCore c).add_mem h₃ h₄
-      have h₆ : (modularJ c : ThreeColorCoreCarrier) ∈ threeColorCore c := by
-        rw [h₂] at h₅
-        exact h₅
-      have h₇ : (modularJ c : ThreeColorCoreCarrier) = (colourLUnit c : ThreeColorCoreCarrier) := by
-        rw [modularJ_eq_colourLUnit]
-      have h₈ : (colourLUnit c : ThreeColorCoreCarrier) = (rationalBasis (threeColorLBasisIndex c) : ThreeColorCoreCarrier) := by
-        cases c <;> rfl
-      rw [h₇, h₈] at h₆
-      exact h₆
-    simpa [threeColorStandardGenerator, threeColorStandardLabel] using h₁
+    dsimp
+    rw [hstd3]
+    have h₂ : modularSigmaPlus c + modularSigmaMinus c = (modularJ c : ThreeColorCoreCarrier) := by
+      rw [modularPolarized_modularJ]
+    have h₅ : modularSigmaPlus c + modularSigmaMinus c ∈ threeColorCore c :=
+      (threeColorCore c).add_mem (modularSigmaPlus_mem_threeColorCore c) (modularSigmaMinus_mem_threeColorCore c)
+    have h₆ : (modularJ c : ThreeColorCoreCarrier) ∈ threeColorCore c := by
+      rwa [h₂] at h₅
+    have h₇ : (modularJ c : ThreeColorCoreCarrier) = (rationalBasis (threeColorLBasisIndex c) : ThreeColorCoreCarrier) := by
+      rw [modularJ_eq_colourLUnit]
+      cases c <;> rfl
+    rwa [h₇] at h₆
 
 theorem threeColorCore_le_threeColorStandardCore
     (c : SplitOctonionColour) :
@@ -272,7 +263,11 @@ theorem threeColorCore_closed_mul
       induction hy using Submodule.span_induction with
       | mem q hq =>
           rcases hq with ⟨q, rfl⟩
-          fin_cases p <;> fin_cases q <;> simp [threeColorCoreGenerator]
+          have hgen0 : threeColorCoreGenerator c 0 = modularNPlus := rfl
+          have hgen1 : threeColorCoreGenerator c 1 = modularNMinus := rfl
+          have hgen2 : threeColorCoreGenerator c 2 = modularSigmaPlus c := rfl
+          have hgen3 : threeColorCoreGenerator c 3 = modularSigmaMinus c := rfl
+          fin_cases p <;> fin_cases q <;> simp [hgen0, hgen1, hgen2, hgen3]
       | zero => simp [threeColorCore_mul_zero_right]
       | add y z hy hz ihy ihz =>
           rw [splitOctonionMulQ_add_right]; exact (threeColorCore c).add_mem ihy ihz
@@ -308,12 +303,12 @@ theorem threeColorCore_associative
               rcases hr with ⟨r, rfl⟩
               exact threeColorCoreGenerator_assoc c p q r
           | zero =>
-              simp [threeColorCore_mul_zero_right, threeColorCore_mul_zero_left]
+              simp [threeColorCore_mul_zero_right]
           | add z w hz hw ihz ihw =>
-              simp only [splitOctonionMulQ_add_left, splitOctonionMulQ_add_right]
+              simp only [splitOctonionMulQ_add_right]
               rw [ihz, ihw]
           | smul a z hz ih =>
-              simp only [splitOctonionMulQ_smul_left, splitOctonionMulQ_smul_right]
+              simp only [splitOctonionMulQ_smul_right]
               rw [ih]
       | zero =>
           simp [threeColorCore_mul_zero_right, threeColorCore_mul_zero_left]
@@ -324,12 +319,12 @@ theorem threeColorCore_associative
           simp only [splitOctonionMulQ_smul_left, splitOctonionMulQ_smul_right]
           rw [ih]
   | zero =>
-      simp [threeColorCore_mul_zero_left, threeColorCore_mul_zero_right]
+      simp [threeColorCore_mul_zero_left]
   | add x y hx hy ihx ihy =>
-      simp only [splitOctonionMulQ_add_left, splitOctonionMulQ_add_right]
+      simp only [splitOctonionMulQ_add_left]
       rw [ihx, ihy]
   | smul a x hx ih =>
-      simp only [splitOctonionMulQ_smul_left, splitOctonionMulQ_smul_right]
+      simp only [splitOctonionMulQ_smul_left]
       rw [ih]
 
 /-- Public associativity theorem under the owner-level `colorCore` name. -/
@@ -350,14 +345,16 @@ private theorem threeColorCoreGenerator_linearIndependent
   have h₂ := congrFun hg (IntegralSplitBasis.l)
   have h₃ := congrFun hg (threeColorBasisIndex c)
   have h₄ := congrFun hg (threeColorLBasisIndex c)
-  fin_cases c <;> fin_cases i <;>
-    simp [threeColorCoreGenerator, rationalBasis, modularNPlus,
-      modularNMinus, modularSigmaPlus, modularSigmaMinus, modularJ,
-      phaseAxis, fundamentalSymmetry, colourUnit, colourLUnit,
-      threeColorBasisIndex, threeColorLBasisIndex, Pi.smul_apply,
-      splitOctonionMulQ, splitQuaternionOfQ, splitQuaternionLPartQ,
-      splitQuaternionConjQ, splitQuaternionAddQ, splitQuaternionMulQ,
-      splitOctonionOfQuaternionPairQ, Fin.sum_univ_succ] at h₁ h₂ h₃ h₄ ⊢ <;>
+  have hgen0 : threeColorCoreGenerator c 0 = modularNPlus := rfl
+  have hgen1 : threeColorCoreGenerator c 1 = modularNMinus := rfl
+  have hgen2 : threeColorCoreGenerator c 2 = modularSigmaPlus c := rfl
+  have hgen3 : threeColorCoreGenerator c 3 = modularSigmaMinus c := rfl
+  cases c <;> fin_cases i <;>
+    simp [Fin.sum_univ_four, hgen0, hgen1, hgen2, hgen3, modularNPlus, modularNMinus,
+      modularSigmaPlus, modularSigmaMinus, modularJ_eq_colourLUnit,
+      colourUnit, colourLUnit, phaseAxis, fundamentalSymmetry,
+      threeColorBasisIndex, threeColorLBasisIndex,
+      rationalBasis, Pi.smul_apply, Pi.single] at h₁ h₂ h₃ h₄ ⊢ <;>
     linarith
 
 /-- The polarized generators viewed as elements of the coloured core subtype. -/
@@ -388,10 +385,7 @@ noncomputable def colorPolarizedBasis (c : SplitOctonionColour) :
     Module.Basis (Fin 4) ℚ (colorCore c) :=
   basisOfLinearIndependentOfCardEqFinrank
     (colorPolarizedGenerators_linearIndependent c)
-    (by
-      simp [finrank_colorCore c]
-      <;>
-      rfl)
+    (by simp [finrank_colorCore c])
 
 @[simp] theorem colorPolarizedBasis_apply
     (c : SplitOctonionColour) (i : Fin 4) :
@@ -399,7 +393,7 @@ noncomputable def colorPolarizedBasis (c : SplitOctonionColour) :
   exact congrFun
     (coe_basisOfLinearIndependentOfCardEqFinrank
       (colorPolarizedGenerators_linearIndependent c)
-      (by simp [finrank_colorCore c] <;> rfl))
+      (by simp [finrank_colorCore c]))
     i
 
 end

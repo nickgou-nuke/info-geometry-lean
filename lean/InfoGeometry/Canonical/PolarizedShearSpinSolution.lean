@@ -39,8 +39,10 @@ theorem hasDerivAt_oscillator (nu k a b t : ℝ) (hk : k ≠ 0) :
   have hbase := hdamping.exp.mul
     ((hphase.cos.mul_const a).add ((hphase.sin.div_const k).mul_const b))
   convert hbase using 1
-  dsimp [oscillator]
-  field_simp [hk]
+  · ext r
+    dsimp [oscillator]
+  · dsimp [oscillator]
+    field_simp [hk]
 
 /-- The explicit solution `exp(-nu*t) (cos(k*t) I + sin(k*t)/k L) x0`. -/
 def solution (s w nu k : ℝ) (x0 : Vec2) (t : ℝ) : Vec2 :=

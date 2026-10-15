@@ -101,6 +101,6 @@ theorem projectionRankSystem_completion_real_readout_eq_bounded
   rw [projectionRankSystem_completion_real_readout]
   have h := congrArg (fun q : RealUnitInterval => (q : ℝ))
     (normalizedRealReadout_eq_stage S n)
-  simpa [dyadicToRealInterval] using h
+  exact h
 
 end InfoGeometry.Canonical.DyadicDirectLimitCompletionTopologicalBridge

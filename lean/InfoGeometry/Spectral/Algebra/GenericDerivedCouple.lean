@@ -126,9 +126,9 @@ theorem directDerivedI_mem_range
   C.incomingI_iDeg_mem p x.1
 
 /-- The source-arrow index of the homology component receiving `j′` from `D′ p`. -/
-def derivedJPageIndex
+abbrev derivedJPageIndex
     (C : GradedExactCouple R I D E iDeg jDeg kDeg) (p : I) : I :=
-  C.differentialDegree.symm (jDeg (iDeg.symm p))
+  C.differentialDegree.symm (derivedJDegree iDeg jDeg p)
 
 @[simp]
 theorem differentialDegree_derivedJPageIndex
@@ -182,15 +182,29 @@ def jToTargetCycles
     rw [show
       LinearEquiv.cast (R := R) (M := E) h y =
           C.j (iDeg.symm p) x by
-        simp [y]]
+        change
+          (LinearEquiv.cast (R := R) (M := E) h)
+              ((LinearEquiv.cast (R := R) (M := E) h).symm
+                (C.j (iDeg.symm p) x)) = _
+        exact (LinearEquiv.cast (R := R) (M := E) h).apply_symm_apply _]
     rw [hd]
     exact (map_zero e).symm
   map_add' x y := by
-    ext
-    simp [map_add]
+    apply Subtype.ext
+    change LinearEquiv.cast (R := R) (M := E)
+        (C.differentialDegree_derivedJPageIndex p).symm
+        (C.j (iDeg.symm p) (x + y)) = _
+    rw [map_add]
+    exact (LinearEquiv.cast (R := R) (M := E)
+      (C.differentialDegree_derivedJPageIndex p).symm).map_add _ _
   map_smul' r x := by
-    ext
-    simp [map_smul]
+    apply Subtype.ext
+    change LinearEquiv.cast (R := R) (M := E)
+        (C.differentialDegree_derivedJPageIndex p).symm
+        (C.j (iDeg.symm p) (r • x)) = _
+    rw [map_smul]
+    exact (LinearEquiv.cast (R := R) (M := E)
+      (C.differentialDegree_derivedJPageIndex p).symm).map_smul _ _
 
 @[simp]
 theorem jToTargetCycles_coe
@@ -201,8 +215,7 @@ theorem jToTargetCycles_coe
         (R := R) (M := E)
         (C.differentialDegree_derivedJPageIndex p).symm
         (C.j (iDeg.symm p) x) :=
-  by
-    simp [jToTargetCycles]
+  rfl
 
 /-- The original `j` map followed by the native homology quotient. -/
 def jToDerivedE
@@ -490,11 +503,23 @@ def kTargetCyclesToDirectDerivedD
     ⟨C.k p (C.directCycleValue p x),
       C.k_directCycleValue_mem_DirectDerivedD p x⟩
   map_add' x y := by
-    ext
-    simp [directCycleValue, map_add]
+    apply Subtype.ext
+    change C.k p (LinearEquiv.cast (R := R) (M := E)
+        (C.differentialDegree.apply_symm_apply p) (x.1 + y.1)) =
+      C.k p (LinearEquiv.cast (R := R) (M := E)
+        (C.differentialDegree.apply_symm_apply p) x.1) +
+      C.k p (LinearEquiv.cast (R := R) (M := E)
+        (C.differentialDegree.apply_symm_apply p) y.1)
+    rw [(LinearEquiv.cast (R := R) (M := E)
+      (C.differentialDegree.apply_symm_apply p)).map_add, map_add]
   map_smul' r x := by
-    ext
-    simp [directCycleValue, map_smul]
+    apply Subtype.ext
+    change C.k p (LinearEquiv.cast (R := R) (M := E)
+        (C.differentialDegree.apply_symm_apply p) (r • x.1)) =
+      r • C.k p (LinearEquiv.cast (R := R) (M := E)
+        (C.differentialDegree.apply_symm_apply p) x.1)
+    rw [(LinearEquiv.cast (R := R) (M := E)
+      (C.differentialDegree.apply_symm_apply p)).map_smul, map_smul]
 
 @[simp]
 theorem kTargetCyclesToDirectDerivedD_coe
@@ -655,7 +680,10 @@ theorem ker_directDerivedK_le_range_directDerivedJ
   have hkDerived :
       C.kTargetCyclesToDirectDerivedD
           (derivedJDegree iDeg jDeg p) x = 0 := by
-    simpa [directDerivedK] using hx
+    change C.directDerivedK (derivedJDegree iDeg jDeg p)
+      (Submodule.Quotient.mk x) = 0 at hx
+    rw [C.directDerivedK_mk] at hx
+    exact hx
   have hk :
       C.k (jDeg (iDeg.symm p))
           (C.directCycleValue (jDeg (iDeg.symm p)) x) = 0 := by
@@ -1005,7 +1033,10 @@ def directCycleOf
   have hdCast := C.differential_cast h x₀
   have hx₀ :
       LinearEquiv.cast (R := R) (M := E) h x₀ = x := by
-    simp [x₀]
+    change
+      (LinearEquiv.cast (R := R) (M := E) h)
+          ((LinearEquiv.cast (R := R) (M := E) h).symm x) = _
+    exact (LinearEquiv.cast (R := R) (M := E) h).apply_symm_apply _
   rw [hx₀, hx] at hdCast
   let e :=
     LinearEquiv.cast

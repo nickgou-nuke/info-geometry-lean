@@ -54,7 +54,7 @@ theorem stageConnection_iota_seq (n m : ℕ) :
       have hcomm :
           (C.stageConnection (n + (m + 1))).comp (C.iota (n + m)) =
             (C.iota (n + m)).comp (C.stageConnection (n + m)) := by
-        simpa [Nat.add_assoc] using C.stageConnection_comm (n + m)
+        convert C.stageConnection_comm (n + m) using 1
       rw [hcomm, LinearMap.comp_assoc, ih, ← LinearMap.comp_assoc]
 
 /-- The ambient cone map is independent of the chosen later representative. -/

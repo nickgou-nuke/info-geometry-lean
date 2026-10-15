@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Convex.Function
+import Mathlib.Analysis.Analytic.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
 

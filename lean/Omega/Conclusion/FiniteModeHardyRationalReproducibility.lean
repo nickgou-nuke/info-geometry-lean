@@ -36,8 +36,7 @@ theorem paper_conclusion_finite_mode_hardy_rational_reproducibility
     (D : conclusion_finite_mode_hardy_rational_reproducibility_data) :
     D.kernel_geometric_series ∧ D.denominator_closed_form ∧ D.rank_eq := by
   refine ⟨rfl, ?_, ?_⟩
-  · simpa [conclusion_finite_mode_hardy_rational_reproducibility_data.kernel] using
-      (mul_neg_geom_sum D.z D.N)
+  · exact mul_neg_geom_sum D.z D.N
   · simp [conclusion_finite_mode_hardy_rational_reproducibility_data.rank_eq]
 
 end Omega.Conclusion

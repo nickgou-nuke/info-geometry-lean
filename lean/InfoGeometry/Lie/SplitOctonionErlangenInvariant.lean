@@ -26,18 +26,12 @@ noncomputable def canonicalDetQuadratic :
       InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3 X)
     (by
       intro r X
-      have ha : (r • X).a = r * X.a := by
-        rw [Equiv.smul_def InfoGeometry.Canonical.ZornMatrix.coordEquiv]
-        rfl
-      have hb : (r • X).b = r * X.b := by
-        rw [Equiv.smul_def InfoGeometry.Canonical.ZornMatrix.coordEquiv]
-        rfl
+      have ha : (r • X).a = r * X.a := InfoGeometry.Canonical.ZornMatrix.smul_a r X
+      have hb : (r • X).b = r * X.b := InfoGeometry.Canonical.ZornMatrix.smul_b r X
       have hx (i : Fin 3) : (r • X).x i = r * X.x i := by
-        rw [Equiv.smul_def InfoGeometry.Canonical.ZornMatrix.coordEquiv]
-        rfl
+        rw [InfoGeometry.Canonical.ZornMatrix.smul_x, Pi.smul_apply, smul_eq_mul]
       have hy (i : Fin 3) : (r • X).y i = r * X.y i := by
-        rw [Equiv.smul_def InfoGeometry.Canonical.ZornMatrix.coordEquiv]
-        rfl
+        rw [InfoGeometry.Canonical.ZornMatrix.smul_y, Pi.smul_apply, smul_eq_mul]
       simp [InfoGeometry.Algebra.Zorn.ZornMatrix.detZ,
         InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3,
         InfoGeometry.Canonical.ZornMatrix.dot, ha, hb, hx, hy]
@@ -50,18 +44,12 @@ noncomputable def canonicalDetQuadratic :
       ring)
     (by
       intro r X Y
-      have ha : (r • X).a = r * X.a := by
-        rw [Equiv.smul_def InfoGeometry.Canonical.ZornMatrix.coordEquiv]
-        rfl
-      have hb : (r • X).b = r * X.b := by
-        rw [Equiv.smul_def InfoGeometry.Canonical.ZornMatrix.coordEquiv]
-        rfl
+      have ha : (r • X).a = r * X.a := InfoGeometry.Canonical.ZornMatrix.smul_a r X
+      have hb : (r • X).b = r * X.b := InfoGeometry.Canonical.ZornMatrix.smul_b r X
       have hx (i : Fin 3) : (r • X).x i = r * X.x i := by
-        rw [Equiv.smul_def InfoGeometry.Canonical.ZornMatrix.coordEquiv]
-        rfl
+        rw [InfoGeometry.Canonical.ZornMatrix.smul_x, Pi.smul_apply, smul_eq_mul]
       have hy (i : Fin 3) : (r • X).y i = r * X.y i := by
-        rw [Equiv.smul_def InfoGeometry.Canonical.ZornMatrix.coordEquiv]
-        rfl
+        rw [InfoGeometry.Canonical.ZornMatrix.smul_y, Pi.smul_apply, smul_eq_mul]
       simp [QuadraticMap.polar, InfoGeometry.Algebra.Zorn.ZornMatrix.detZ,
         InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3,
         InfoGeometry.Canonical.ZornMatrix.dot, ha, hb, hx, hy,

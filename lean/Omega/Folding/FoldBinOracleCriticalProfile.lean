@@ -78,7 +78,6 @@ theorem paper_conclusion_foldbin_oracle_critical_profile (B : ℕ → ℕ) (τ :
   have hf : Continuous f := by
     refine (continuous_const.mul (continuous_const.min continuous_id)).add ?_
     exact continuous_const.mul (continuous_const.min continuous_id)
-  rw [foldBinCriticalProfile_eq_expr τ]
-  simpa [foldBinCriticalSucc, f] using hf.continuousAt.tendsto.comp hlim
+  exact hf.continuousAt.tendsto.comp hlim
 
 end Omega.Folding

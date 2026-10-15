@@ -15,7 +15,13 @@ inductive Archetype
   | localCounting
   | localCertification
   | globalCoverage
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype Archetype where
+  elems := {.arithmetic, .continuation, .reflection, .localCounting,
+    .localCertification, .globalCoverage}
+  complete x := by
+    cases x <;> decide
 
 abbrev DependencyContext := Finset Archetype
 
@@ -76,12 +82,8 @@ class RiemannSymmetric (function : ℂ → ℂ) : Prop where
 
 instance entireRiemannXi_riemannSymmetric : RiemannSymmetric entireRiemannXi where
   zero_reflection point := by
-    constructor
-    · exact entireRiemannXi_reflected_zero
-    · intro reflectedZero
-      have twice := entireRiemannXi_reflected_zero reflectedZero
-      change entireRiemannXi (critical_reflection (critical_reflection point)) = 0 at twice
-      rwa [critical_reflection_involutive point] at twice
+    change entireRiemannXi point = 0 ↔ entireRiemannXi (1 - star point) = 0
+    rw [entireRiemannXi_one_sub, ← entireRiemannXi_conj, star_eq_zero]
 
 structure CertifiedRegion (function : ℂ → ℂ) where
   carrier : Set ℂ
@@ -171,15 +173,9 @@ theorem counterexample_is_symmetric : RiemannSymmetric counterexample_f := by
   intro point
   have reflected : counterexample_f (critical_reflection point) =
       star (counterexample_f point) := by
-    simp only [counterexample_f, critical_reflection, map_mul, map_sub, star_one]
+    simp only [counterexample_f, critical_reflection, star_mul, star_sub, star_one]
     ring
-  rw [reflected]
-  constructor
-  · intro zeroAt
-    rw [zeroAt, star_zero]
-  · intro reflectedZero
-    have originalZero := congrArg star reflectedZero
-    simpa only [star_star, star_zero] using originalZero
+  rw [reflected, star_eq_zero]
 
 theorem zero_reflection_does_not_imply_confinement :
     ¬ (∀ candidate : ℂ → ℂ, RiemannSymmetric candidate →

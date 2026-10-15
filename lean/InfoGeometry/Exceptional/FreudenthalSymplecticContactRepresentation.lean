@@ -60,8 +60,9 @@ def symplecticContactRepresentation :
         · simp [symplecticForm_add_right]
           ring
         · apply Prod.ext
-          · simp
-            module
+          · dsimp
+            simp only [add_smul, map_add]
+            abel
           · simp [symplecticForm_add_right]
             ring
       map_smul' := by
@@ -70,31 +71,33 @@ def symplecticContactRepresentation :
         · simp [symplecticForm_smul_right]
           ring
         · apply Prod.ext
-          · simp
-            module
+          · dsimp
+            simp only [mul_smul, map_smul, smul_add]
           · simp [symplecticForm_smul_right]
             ring }
   map_add' u v := by
     apply LinearMap.ext
     rintro ⟨a, ⟨x, b⟩⟩
+    dsimp
     apply Prod.ext
-    · simp [symplecticForm_add_left]
+    · simp only [symplecticForm_add_left]
       ring
     · apply Prod.ext
-      · simp
-        module
-      · simp [symplecticForm_add_left]
+      · simp only [smul_add]
+        abel
+      · simp only [symplecticForm_add_left]
         ring
   map_smul' c u := by
     apply LinearMap.ext
     rintro ⟨a, ⟨x, b⟩⟩
+    dsimp
     apply Prod.ext
-    · simp [symplecticForm_smul_left]
+    · simp only [symplecticForm_smul_left]
       ring
     · apply Prod.ext
-      · simp
-        module
-      · simp [symplecticForm_smul_left]
+      · simp only [smul_add]
+        rw [smul_comm a c, smul_comm b c]
+      · simp only [symplecticForm_smul_left]
         ring
 
 @[simp] theorem symplecticContactRepresentation_apply

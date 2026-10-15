@@ -49,7 +49,7 @@ private def requestRoots (requests : Array Request) : NameSet := Id.run do
 
 def capture (requests : Array Request) : CoreM Snapshot := do
   let kernel := (← getEnv).toKernelEnv
-  let dependencyEnvironment := Environment.ofKernelEnv kernel
+  let dependencyEnvironment ← getEnv
   let roots := requestRoots requests
   let mut covered := roots
   for root in roots.toList do
@@ -66,7 +66,7 @@ def audit (snapshot : Snapshot) : MetaM (Array TelemetryRow) := do
     throwError "epistemic.empty_request"
   let environment ← getEnv
   let kernel := environment.toKernelEnv
-  let dependencyEnvironment := Environment.ofKernelEnv kernel
+  let dependencyEnvironment := environment
   for (name, oldInfo) in snapshot.environment.constants do
     let some currentInfo := kernel.find? name
       | throwError "epistemic.stale_evidence: {name} disappeared"

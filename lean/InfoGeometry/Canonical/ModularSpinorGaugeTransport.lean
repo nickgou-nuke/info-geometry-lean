@@ -27,7 +27,7 @@ noncomputable abbrev ModularSpinorCarrier := QuantumKMSCarrier
 abbrev ModularSpinorGaugeConnection (E : Type*) := SplitG2GaugeConnection E
 
 /-- Parallel transport in the modular-spinor lane is the native split-`G₂` transport. -/
-abbrev modularSpinorTransport {E : Type*} (A : ModularSpinorGaugeConnection E) :
+noncomputable abbrev modularSpinorTransport {E : Type*} (A : ModularSpinorGaugeConnection E) :
     List E → SplitG2Automorphism :=
   parallelTransport A
 
@@ -48,7 +48,7 @@ theorem modularSpinorTransport_preserves_threeForm
   exact parallelTransport_preserves_threeForm A path x y z
 
 /-- Triangle curvature in the modular-spinor lane is the native split-`G₂` curvature. -/
-abbrev modularSpinorCurvature {E : Type*} (A : ModularSpinorGaugeConnection E)
+noncomputable abbrev modularSpinorCurvature {E : Type*} (A : ModularSpinorGaugeConnection E)
     (e₁ e₂ e₃ : E) : SplitG2Automorphism :=
   curvature A e₁ e₂ e₃
 

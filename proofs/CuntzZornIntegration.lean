@@ -71,8 +71,8 @@ theorem fibonacciCuntzOperator_fusion :
 
 /-- Local matrix representation in the basis {S₁, S₂} -/
 def FibonacciLocalMatrix : Matrix (Fin 2) (Fin 2) ℝ :=
-  ![![0, 1],
-    ![1, 1]]
+  !![0, 1;
+     1, 1]
 
 /-- Synthesis map constructing the submodule element from coordinate vector -/
 def synth (v : Fin 2 → ℝ) : A :=
@@ -103,8 +103,7 @@ theorem synth_injective : Function.Injective (synth S₁ S₂) := by
 theorem synth_intertwine (v : Fin 2 → ℝ) :
     CuntzFibonacciOperator S₁ S₂ * synth S₁ S₂ v = synth S₁ S₂ (FibonacciLocalMatrix *ᵥ v) := by
   dsimp [synth, FibonacciLocalMatrix, Matrix.mulVec, dotProduct]
-  simp only [mul_add, Algebra.mul_smul_comm, Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one,
-    Matrix.head_cons, zero_mul, one_mul, zero_add, add_zero]
+  simp only [mul_add, Algebra.mul_smul_comm, Fin.sum_univ_two]
   -- We have v 0 • (CuntzFibonacciOperator * S₁) + v 1 • (CuntzFibonacciOperator * S₂)
   rw [CuntzFibonacciOperator_mul_S₁ S₁ S₂, CuntzFibonacciOperator_mul_S₂ S₁ S₂]
   simp [smul_add, add_smul]
@@ -114,12 +113,8 @@ theorem synth_intertwine (v : Fin 2 → ℝ) :
 theorem FibonacciLocalMatrix_sq :
     FibonacciLocalMatrix * FibonacciLocalMatrix = 1 + FibonacciLocalMatrix := by
   ext i j
-  dsimp [FibonacciLocalMatrix, Matrix.mul_apply, Matrix.add_apply, Matrix.one_apply]
-  fin_cases i <;> fin_cases j <;> {
-    rw [Fin.sum_univ_two]
-    simp only [Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons]
-    norm_num
-  }
+  fin_cases i <;> fin_cases j <;>
+    norm_num [FibonacciLocalMatrix, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- Peirce Spectral Layer -/
 def phi : ℝ := (1 + Real.sqrt 5) / 2
@@ -148,7 +143,7 @@ def P_minus : Matrix (Fin 2) (Fin 2) ℝ :=
 lemma vecMulVec_mul_vecMulVec {n : Type*} [Fintype n] [CommRing R] (v : n → R) :
     vecMulVec v v * vecMulVec v v = dotProduct v v • vecMulVec v v := by
   ext i j
-  dsimp [vecMulVec, dotProduct, Matrix.mul_apply, smul_apply, smul_eq_mul]
+  dsimp [vecMulVec, dotProduct, Matrix.mul_apply, Matrix.smul_apply, smul_eq_mul]
   calc
     ∑ k, (v i * v k) * (v k * v j)
       = ∑ k, (v k * v k) * (v i * v j) := by congr; ext k; ring

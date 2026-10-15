@@ -117,6 +117,6 @@ noncomputable def operatorObservationRangeCovariantFlowCompHausIso
       operatorObservationRangeCompHausCovariantFlowHom Φ t h_t y := by
   change operatorObservationRangeCovariantFlowHomeomorph Φ t h_t h_neg_t y =
     operatorObservationRangeCompHausCovariantFlowHom Φ t h_t y
-  rw [operatorObservationRangeCovariantFlowHomeomorph_apply]
+  exact operatorObservationRangeCovariantFlowHomeomorph_apply Φ t h_t h_neg_t y
 
 end InfoGeometry.Topology

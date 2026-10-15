@@ -71,14 +71,14 @@ theorem frame_affine_gl1_gl2 (F : BogoliubovInertialFrame) :
     affineSuperBracket (frameWeylQ F) Z2Parity.even Z2Parity.even gl1 gl2 =
       (2 * Complex.I) • gl3 := by
   rw [frame_affine_even_even_lie]
-  simpa [lieBracket] using gl1_comm_gl2
+  simpa [lieBracket, sub_eq_add_neg] using gl1_comm_gl2
 
 /-- Concrete SU(3) color identity: `[λ₁,λ₃]=-2iλ₂`. -/
 theorem frame_affine_gl1_gl3 (F : BogoliubovInertialFrame) :
     affineSuperBracket (frameWeylQ F) Z2Parity.even Z2Parity.even gl1 gl3 =
       (-2 * Complex.I) • gl2 := by
   rw [frame_affine_even_even_lie]
-  simpa [lieBracket] using gl1_comm_gl3
+  simpa [lieBracket, sub_eq_add_neg] using gl1_comm_gl3
 
 /-- The Gell-Mann diagonal Cartan pair remains commuting in every Bogoliubov
 frame. -/

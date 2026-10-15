@@ -47,7 +47,8 @@ theorem dressedField_change_frame
     (equivariant : IsCocyclic cocycle field) (configuration : Configuration) :
     dressedField second field configuration =
       frameTransport cocycle first second configuration • dressedField first field configuration := by
-  simpa only [normalize_change_frame] using
+  simpa only [dressedField, frameTransport, Function.comp_apply,
+    normalize_change_frame] using
     equivariant ((second configuration)⁻¹ * first configuration) (normalize first configuration)
 
 @[simp] theorem frameTransport_self

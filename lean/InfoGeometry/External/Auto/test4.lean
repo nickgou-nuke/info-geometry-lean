@@ -19,7 +19,7 @@ lemma zeroCommutator_det_trace_cube_identity :
     (1 / 3 : Q) * trace (((0 : Matrix (Fin 3) (Fin 3) Q) * 0 - 0 * 0) ^ 3)
   have hz : (0 : Matrix (Fin 3) (Fin 3) Q) * 0 - 0 * 0 = 0 := by
     simp
-  rw [hz, Matrix.det_zero (Nonempty.intro (0 : Fin 3))]
+  rw [hz, Matrix.det_zero]
   simp
 
 end Test4

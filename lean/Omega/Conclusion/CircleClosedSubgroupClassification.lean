@@ -39,7 +39,8 @@ theorem paper_conclusion_circle_closed_subgroup_classification :
       intro a ha hsEq
       have haFinite : IsOfFinAddOrder a := addOrderOf_pos_iff.mp (Nat.pos_of_ne_zero ha)
       have hsFinite : Set.Finite (s : Set (AddCircle (1 : ℝ))) := by
-        simpa [hsEq] using haFinite.finite_zmultiples
+        rw [hsEq]
+        exact haFinite.finite_zmultiples
       exact hsFinite.not_infinite hsInfinite
     exact
       (AddCircle.dense_addSubgroup_iff_ne_zmultiples (p := (1 : ℝ)) (s := s)).2 hsDenseCriterion

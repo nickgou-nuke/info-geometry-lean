@@ -29,10 +29,10 @@ theorem flip_metric : flipEquivalence Eplus = -Eplus := by
   fin_cases row <;> fin_cases column <;>
     norm_num [J1, Eplus, Matrix.mul_apply, Fin.sum_univ_two]
 
-example (operator : Mat2) :
+  example (operator : Mat2) :
     flipEquivalence (kreinConjugate Eplus (star operator)) =
       kreinConjugate Eplus (star (flipEquivalence operator)) :=
-  map_conjugate_star_of_metric_sign (flipEquivalence : Mat2 →⋆ₐ[ℝ] Mat2)
+  map_conjugate_star_of_metric_sign flipEquivalence.toStarAlgHom
     Eplus Eplus (Or.inr flip_metric) operator
 
 example (operator : {operator : Mat2 // kreinConjugate Eplus (star operator) = operator}) :

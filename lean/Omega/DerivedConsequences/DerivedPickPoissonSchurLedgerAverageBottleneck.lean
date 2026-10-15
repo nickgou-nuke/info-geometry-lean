@@ -130,6 +130,6 @@ theorem paper_derived_pick_poisson_schur_ledger_average_bottleneck
   refine ⟨?_, hthermo.1, hthermo.2⟩
   rcases hcollapse with ⟨m, hm, hlogm⟩
   refine ⟨m, ?_, hlogm⟩
-  simpa [xiPickPoissonCollapseFactor] using hm
+  simpa [xiPickPoissonCollapseFactor, div_eq_mul_inv] using hm
 
 end Omega.DerivedConsequences

@@ -16,6 +16,19 @@ noncomputable section
 
 variable {V : Type*} [Fintype V]
 
+@[simp] theorem realTokenHilbertSpace_add_apply
+    (ψ φ : RealTokenHilbertSpace (V := V)) (i : V × Fin 2) :
+    (ψ + φ) i = ψ i + φ i := rfl
+
+@[simp] theorem realTokenHilbertSpace_smul_apply
+    (r : ℝ) (ψ : RealTokenHilbertSpace (V := V)) (i : V × Fin 2) :
+  (r • ψ) i = (r : ℂ) * ψ i := by
+  have h := congrArg (fun f : TokenHilbertSpace V => f i)
+    (RestrictScalars.addEquiv_map_smul
+      (R := ℝ) (S := ℂ) (M := TokenHilbertSpace V) r ψ)
+  change (r • ψ) i = (r : ℂ) * ψ i at h
+  exact h
+
 def realTokenPhaseOperator : RealTokenOperator (V := V) where
   toFun ψ := fun i => Complex.I * ψ i
   map_add' ψ φ := by
@@ -34,11 +47,11 @@ def realTokenPhaseOperator : RealTokenOperator (V := V) where
 theorem realTokenPhaseOperator_sq :
     (realTokenPhaseOperator (V := V)).comp
         (realTokenPhaseOperator (V := V)) =
-      -(LinearMap.id : RealTokenOperator (V := V)) := by
+      (-1 : ℝ) • (LinearMap.id : RealTokenOperator (V := V)) := by
   apply LinearMap.ext
   intro ψ
   funext i
-  change Complex.I * (Complex.I * ψ i) = -ψ i
+  change Complex.I * (Complex.I * ψ i) = (-1 : ℝ) • ψ i
   rw [← mul_assoc, Complex.I_mul_I]
   simp
 
@@ -78,22 +91,28 @@ theorem realTokenChiralityLinear_sq :
     (realTokenChiralityLinear (V := V)).comp
         (realTokenChiralityLinear (V := V)) =
       (LinearMap.id : RealTokenOperator (V := V)) := by
-  simpa [realTokenChiralityLinear] using
-    congrArg (complexOperatorToReal (V := V))
-      (tokenChiralityComplex_sq (V := V))
+  change
+    (complexOperatorToReal (tokenChiralityComplex (V := V))).comp
+      (complexOperatorToReal (tokenChiralityComplex (V := V))) =
+      complexOperatorToReal (LinearMap.id : TokenHilbertSpace V →ₗ[ℂ] TokenHilbertSpace V)
+  rw [← complexOperatorToReal_comp, tokenChiralityComplex_sq]
 
 def realTokenChiralityPlusProjector : RealTokenOperator (V := V) :=
   (1 / 2 : ℝ) • (LinearMap.id + realTokenChiralityLinear (V := V))
 
 def realTokenChiralityMinusProjector : RealTokenOperator (V := V) :=
-  (1 / 2 : ℝ) • (LinearMap.id - realTokenChiralityLinear (V := V))
+  (1 / 2 : ℝ) •
+    (LinearMap.id + (-1 : ℝ) • realTokenChiralityLinear (V := V))
 
 theorem realTokenChiralityProjectors_add :
     realTokenChiralityPlusProjector (V := V) +
         realTokenChiralityMinusProjector (V := V) =
       (LinearMap.id : RealTokenOperator (V := V)) := by
-  simp only [realTokenChiralityPlusProjector, realTokenChiralityMinusProjector,
-    smul_add, sub_eq_add_neg]
+  apply LinearMap.ext
+  intro ψ
+  funext i
+  change (1 / 2 : ℝ) • (ψ i + realTokenChiralityLinear ψ i) +
+      (1 / 2 : ℝ) • (ψ i + (-1 : ℝ) • realTokenChiralityLinear ψ i) = ψ i
   module
 
 theorem realTokenChiralityPlusProjector_idempotent :
@@ -102,14 +121,19 @@ theorem realTokenChiralityPlusProjector_idempotent :
       realTokenChiralityPlusProjector (V := V) := by
   apply LinearMap.ext
   intro ψ
+  funext i
   simp only [realTokenChiralityPlusProjector, LinearMap.comp_apply,
     LinearMap.smul_apply, LinearMap.add_apply, smul_add, map_add,
-    map_smul, LinearMap.id_apply]
+    map_smul, LinearMap.id_apply, realTokenHilbertSpace_add_apply,
+    realTokenHilbertSpace_smul_apply]
   have hsq := congrArg (fun T : RealTokenOperator (V := V) => T ψ)
     (realTokenChiralityLinear_sq (V := V))
-  change realTokenChiralityLinear (realTokenChiralityLinear ψ) = ψ at hsq
+  have hsq := congrArg (fun f : RealTokenHilbertSpace (V := V) => f i) hsq
+  change realTokenChiralityLinear (realTokenChiralityLinear ψ) i = ψ i at hsq
   rw [hsq]
-  module
+  ring_nf
+  norm_num
+  ring
 
 theorem realTokenChiralityMinusProjector_idempotent :
     (realTokenChiralityMinusProjector (V := V)).comp
@@ -117,44 +141,59 @@ theorem realTokenChiralityMinusProjector_idempotent :
       realTokenChiralityMinusProjector (V := V) := by
   apply LinearMap.ext
   intro ψ
+  funext i
   simp only [realTokenChiralityMinusProjector, LinearMap.comp_apply,
-    LinearMap.smul_apply, LinearMap.sub_apply, smul_sub, map_sub,
-    map_smul, LinearMap.id_apply]
+    LinearMap.smul_apply, LinearMap.add_apply, smul_add, map_add,
+    map_smul, LinearMap.id_apply, realTokenHilbertSpace_add_apply,
+    realTokenHilbertSpace_smul_apply]
   have hsq := congrArg (fun T : RealTokenOperator (V := V) => T ψ)
     (realTokenChiralityLinear_sq (V := V))
-  change realTokenChiralityLinear (realTokenChiralityLinear ψ) = ψ at hsq
+  have hsq := congrArg (fun f : RealTokenHilbertSpace (V := V) => f i) hsq
+  change realTokenChiralityLinear (realTokenChiralityLinear ψ) i = ψ i at hsq
   rw [hsq]
-  module
+  ring_nf
+  norm_num
+  ring
 
 theorem realTokenChiralityPlusProjector_comp_minus :
     (realTokenChiralityPlusProjector (V := V)).comp
         (realTokenChiralityMinusProjector (V := V)) = 0 := by
   apply LinearMap.ext
   intro ψ
+  funext i
   simp only [realTokenChiralityPlusProjector, realTokenChiralityMinusProjector,
     LinearMap.comp_apply, LinearMap.smul_apply, LinearMap.add_apply,
-    LinearMap.sub_apply, smul_add, smul_sub, map_sub, map_smul,
-    LinearMap.id_apply, LinearMap.zero_apply]
+    smul_add, map_add, map_smul,
+    LinearMap.id_apply, LinearMap.zero_apply, realTokenHilbertSpace_add_apply,
+    realTokenHilbertSpace_smul_apply]
   have hsq := congrArg (fun T : RealTokenOperator (V := V) => T ψ)
     (realTokenChiralityLinear_sq (V := V))
-  change realTokenChiralityLinear (realTokenChiralityLinear ψ) = ψ at hsq
+  have hsq := congrArg (fun f : RealTokenHilbertSpace (V := V) => f i) hsq
+  change realTokenChiralityLinear (realTokenChiralityLinear ψ) i = ψ i at hsq
   rw [hsq]
-  module
+  ring_nf
+  norm_num
+  rfl
 
 theorem realTokenChiralityMinusProjector_comp_plus :
     (realTokenChiralityMinusProjector (V := V)).comp
         (realTokenChiralityPlusProjector (V := V)) = 0 := by
   apply LinearMap.ext
   intro ψ
+  funext i
   simp only [realTokenChiralityPlusProjector, realTokenChiralityMinusProjector,
     LinearMap.comp_apply, LinearMap.smul_apply, LinearMap.add_apply,
-    LinearMap.sub_apply, smul_add, smul_sub, map_add, map_smul,
-    LinearMap.id_apply, LinearMap.zero_apply]
+    smul_add, map_add, map_smul,
+    LinearMap.id_apply, LinearMap.zero_apply, realTokenHilbertSpace_add_apply,
+    realTokenHilbertSpace_smul_apply]
   have hsq := congrArg (fun T : RealTokenOperator (V := V) => T ψ)
     (realTokenChiralityLinear_sq (V := V))
-  change realTokenChiralityLinear (realTokenChiralityLinear ψ) = ψ at hsq
+  have hsq := congrArg (fun f : RealTokenHilbertSpace (V := V) => f i) hsq
+  change realTokenChiralityLinear (realTokenChiralityLinear ψ) i = ψ i at hsq
   rw [hsq]
-  module
+  ring_nf
+  norm_num
+  rfl
 
 theorem realTokenPhaseOperator_commutes_chirality_linear :
     (realTokenPhaseOperator (V := V)).comp
@@ -164,8 +203,9 @@ theorem realTokenPhaseOperator_commutes_chirality_linear :
   apply LinearMap.ext
   intro ψ
   funext i
-  by_cases h : i.2 = 0 <;> simp [realTokenPhaseOperator,
-    realTokenChiralityLinear, tokenChiralityComplex, h]
+  change Complex.I * (if i.2 = 0 then ψ i else -ψ i) =
+    if i.2 = 0 then Complex.I * ψ i else -(Complex.I * ψ i)
+  split_ifs <;> ring
 
 theorem realTokenOperator_commutes_chirality_implies_plusProjector
     (T : RealTokenOperator (V := V))
@@ -175,12 +215,15 @@ theorem realTokenOperator_commutes_chirality_implies_plusProjector
       (realTokenChiralityPlusProjector (V := V)).comp T := by
   apply LinearMap.ext
   intro ψ
+  funext i
   simp only [realTokenChiralityPlusProjector, LinearMap.comp_apply,
     LinearMap.smul_apply, LinearMap.add_apply, smul_add, map_add,
-    map_smul, LinearMap.id_apply]
+    map_smul, LinearMap.id_apply, realTokenHilbertSpace_add_apply,
+    realTokenHilbertSpace_smul_apply]
   have hc := congrArg (fun U : RealTokenOperator (V := V) => U ψ) hT
-  change T (realTokenChiralityLinear ψ) =
-    realTokenChiralityLinear (T ψ) at hc
+  have hc := congrArg (fun f : RealTokenHilbertSpace (V := V) => f i) hc
+  change T (realTokenChiralityLinear ψ) i =
+    realTokenChiralityLinear (T ψ) i at hc
   rw [hc]
 
 theorem realTokenOperator_commutes_chirality_implies_minusProjector
@@ -191,12 +234,15 @@ theorem realTokenOperator_commutes_chirality_implies_minusProjector
       (realTokenChiralityMinusProjector (V := V)).comp T := by
   apply LinearMap.ext
   intro ψ
+  funext i
   simp only [realTokenChiralityMinusProjector, LinearMap.comp_apply,
-    LinearMap.smul_apply, LinearMap.sub_apply, smul_sub, map_sub,
-    map_smul, LinearMap.id_apply]
+    LinearMap.smul_apply, LinearMap.add_apply, smul_add, map_add,
+    map_smul, LinearMap.id_apply, realTokenHilbertSpace_add_apply,
+    realTokenHilbertSpace_smul_apply]
   have hc := congrArg (fun U : RealTokenOperator (V := V) => U ψ) hT
-  change T (realTokenChiralityLinear ψ) =
-    realTokenChiralityLinear (T ψ) at hc
+  have hc := congrArg (fun f : RealTokenHilbertSpace (V := V) => f i) hc
+  change T (realTokenChiralityLinear ψ) i =
+    realTokenChiralityLinear (T ψ) i at hc
   rw [hc]
 
 theorem realTokenPhaseOperator_commutes_chiralityPlusProjector :
@@ -206,13 +252,16 @@ theorem realTokenPhaseOperator_commutes_chiralityPlusProjector :
         (realTokenPhaseOperator (V := V)) := by
   apply LinearMap.ext
   intro ψ
+  funext i
   simp only [realTokenChiralityPlusProjector, LinearMap.comp_apply,
     LinearMap.smul_apply, LinearMap.add_apply, smul_add, map_add,
-    map_smul, LinearMap.id_apply]
+    map_smul, LinearMap.id_apply, realTokenHilbertSpace_add_apply,
+    realTokenHilbertSpace_smul_apply]
   have hc := congrArg (fun T : RealTokenOperator (V := V) => T ψ)
     (realTokenPhaseOperator_commutes_chirality_linear (V := V))
-  change realTokenPhaseOperator (realTokenChiralityLinear ψ) =
-    realTokenChiralityLinear (realTokenPhaseOperator ψ) at hc
+  have hc := congrArg (fun f : RealTokenHilbertSpace (V := V) => f i) hc
+  change realTokenPhaseOperator (realTokenChiralityLinear ψ) i =
+    realTokenChiralityLinear (realTokenPhaseOperator ψ) i at hc
   rw [hc]
 
 theorem realTokenPhaseOperator_commutes_chiralityMinusProjector :
@@ -222,13 +271,16 @@ theorem realTokenPhaseOperator_commutes_chiralityMinusProjector :
         (realTokenPhaseOperator (V := V)) := by
   apply LinearMap.ext
   intro ψ
+  funext i
   simp only [realTokenChiralityMinusProjector, LinearMap.comp_apply,
-    LinearMap.smul_apply, LinearMap.sub_apply, smul_sub, map_sub,
-    map_smul, LinearMap.id_apply]
+    LinearMap.smul_apply, LinearMap.add_apply, smul_add, map_add,
+    map_smul, LinearMap.id_apply, realTokenHilbertSpace_add_apply,
+    realTokenHilbertSpace_smul_apply]
   have hc := congrArg (fun T : RealTokenOperator (V := V) => T ψ)
     (realTokenPhaseOperator_commutes_chirality_linear (V := V))
-  change realTokenPhaseOperator (realTokenChiralityLinear ψ) =
-    realTokenChiralityLinear (realTokenPhaseOperator ψ) at hc
+  have hc := congrArg (fun f : RealTokenHilbertSpace (V := V) => f i) hc
+  change realTokenPhaseOperator (realTokenChiralityLinear ψ) i =
+    realTokenChiralityLinear (realTokenPhaseOperator ψ) i at hc
   rw [hc]
 
 theorem complexOperatorToReal_commutes_phase
@@ -273,8 +325,9 @@ theorem realTokenPhaseOperator_commutes_chirality :
         realTokenChiralityOperator (realTokenPhaseOperator ψ) := by
   intro ψ
   funext i
-  by_cases h : i.2 = 0 <;> simp [realTokenPhaseOperator,
-    realTokenChiralityOperator, h]
+  change Complex.I * (if i.2 = 0 then ψ i else -ψ i) =
+    if i.2 = 0 then Complex.I * ψ i else -(Complex.I * ψ i)
+  split_ifs <;> ring
 
 end
 end InfoGeometry.Dynamics

@@ -39,8 +39,10 @@ theorem paper_unit_circle_cayley_haar_forces_cauchy (x : ℝ) :
   refine ⟨?_, ?_, ?_⟩
   · apply Complex.ext <;> simp [unitCirclePhaseEmbedding, unitCircleCayleyMap, Real.cos_add_pi,
       Real.sin_add_pi]
-  · simpa [cayleyAngle, two_mul, div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc] using
-      (Real.hasDerivAt_arctan x).const_mul 2
+  · change HasDerivAt (fun t : ℝ => Real.arctan t + Real.arctan t)
+      (2 / (1 + x ^ 2)) x
+    convert (Real.hasDerivAt_arctan x).add (Real.hasDerivAt_arctan x) using 1 <;>
+      field_simp <;> ring
   · simp [cayleyHaarPullbackDensity, cauchyDensity, div_eq_mul_inv, mul_left_comm, mul_comm]
 
 end

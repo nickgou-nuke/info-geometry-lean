@@ -1,0 +1,19 @@
+import Experimental.Sandbox.MadelungDiscreteGraphFisherBridge
+
+/-! Kernel-facing audit surface for the finite matrix-gradient variation. -/
+
+namespace InfoGeometry.Experimental.Sandbox.MadelungDiscreteGraphFisher.Audit
+
+#check InfoGeometry.Experimental.Sandbox.MadelungDiscreteGraphFisher.graphAmplitudeEnergyAlong_variation
+#check InfoGeometry.Experimental.Sandbox.MadelungDiscreteGraphFisher.graphGradient_affine
+#check InfoGeometry.Experimental.Sandbox.MadelungDiscreteGraphFisher.graphAmplitudeVariation_eq_nodeLaplacian_pairing
+#check InfoGeometry.Experimental.Sandbox.MadelungDiscreteGraphFisher.graphAmplitudeEnergy_zero_iff
+#check InfoGeometry.Experimental.Sandbox.MadelungDiscreteGraphFisher.graphAmplitudeEnergy_nonneg
+
+#print axioms InfoGeometry.Experimental.Sandbox.MadelungDiscreteGraphFisher.graphAmplitudeEnergyAlong_variation
+#print axioms InfoGeometry.Experimental.Sandbox.MadelungDiscreteGraphFisher.graphGradient_affine
+#print axioms InfoGeometry.Experimental.Sandbox.MadelungDiscreteGraphFisher.graphAmplitudeVariation_eq_nodeLaplacian_pairing
+#print axioms InfoGeometry.Experimental.Sandbox.MadelungDiscreteGraphFisher.graphAmplitudeEnergy_zero_iff
+#print axioms InfoGeometry.Experimental.Sandbox.MadelungDiscreteGraphFisher.graphAmplitudeEnergy_nonneg
+
+end InfoGeometry.Experimental.Sandbox.MadelungDiscreteGraphFisher.Audit

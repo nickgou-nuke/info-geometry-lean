@@ -17,6 +17,8 @@ noncomputable section
 
 namespace InfoGeometry.Exceptional.Freudenthal
 
+attribute [local instance 100] LieRing.ofAssociativeRing LieAlgebra.ofAssociativeAlgebra
+
 variable {J : Type*} [AddCommGroup J] [Module ℝ J]
 
 def coordinateEquiv :
@@ -33,8 +35,13 @@ def coordinateEquiv :
 noncomputable instance : AddCommGroup (FreudenthalCharge J) :=
   Equiv.addCommGroup coordinateEquiv
 
+def coordinateAddEquiv :
+    FreudenthalCharge J ≃+ (ℝ × ℝ × J × J) where
+  toEquiv := coordinateEquiv
+  map_add' _ _ := rfl
+
 noncomputable instance : Module ℝ (FreudenthalCharge J) :=
-  Equiv.module ℝ coordinateEquiv
+  AddEquiv.module ℝ coordinateAddEquiv
 
 def heisenbergCoordinateEquiv :
     HeisenbergElement J ≃ (FreudenthalCharge J × ℝ) where
@@ -46,8 +53,13 @@ def heisenbergCoordinateEquiv :
 noncomputable instance : AddCommGroup (HeisenbergElement J) :=
   Equiv.addCommGroup heisenbergCoordinateEquiv
 
+def heisenbergCoordinateAddEquiv :
+    HeisenbergElement J ≃+ (FreudenthalCharge J × ℝ) where
+  toEquiv := heisenbergCoordinateEquiv
+  map_add' _ _ := rfl
+
 noncomputable instance : Module ℝ (HeisenbergElement J) :=
-  Equiv.module ℝ heisenbergCoordinateEquiv
+  AddEquiv.module ℝ heisenbergCoordinateAddEquiv
 
 @[simp] theorem heisenbergCoordinateEquiv_apply (X : HeisenbergElement J) :
     heisenbergCoordinateEquiv X = (X.charge, X.center) := rfl

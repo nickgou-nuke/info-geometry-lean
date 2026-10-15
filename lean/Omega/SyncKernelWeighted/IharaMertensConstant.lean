@@ -43,7 +43,8 @@ theorem paper_ihara_mertens_constant (D : Omega.SyncKernelWeighted.IharaMertensC
       D.finitePart = D.logC + ∑' k : ℕ, D.mobiusLogZeta (k + 2) := by
   have hclosed :
       D.finitePart = D.logC + ∑' k : ℕ, D.mobiusLogZeta (k + 2) := by
-    simpa [Omega.Zeta.AbelFinitePartMobiusZetaData.finitePartClosedForm] using
+    simpa [IharaMertensConstantData.toAbelFinitePartMobiusZetaData,
+      Omega.Zeta.AbelFinitePartMobiusZetaData.finitePartClosedForm] using
       Omega.Zeta.paper_etds_abel_finite_part_mobius_zeta D.toAbelFinitePartMobiusZetaData
   refine ⟨?_, hclosed⟩
   exact

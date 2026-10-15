@@ -77,16 +77,16 @@ def checkedRInvHom
   comm := by
     apply LinearMap.ext
     intro x
+    change D.checkR.symm ((PairObj X).N x) =
+      (PairObj X).N (D.checkR.symm x)
     have hx := LinearMap.congr_fun hR (D.checkR.symm x)
-    change D.checkR.symm ((PairObj X).N x) = (PairObj X).N (D.checkR.symm x)
-    calc
-      D.checkR.symm ((PairObj X).N x) =
-          D.checkR.symm ((PairObj X).N (D.checkR (D.checkR.symm x))) := by
-            rw [D.checkR.apply_symm_apply]
-      _ = D.checkR.symm (D.checkR ((PairObj X).N (D.checkR.symm x))) := by
-            exact congrArg D.checkR.symm hx.symm
-      _ = (PairObj X).N (D.checkR.symm x) := by
-            simp
+    change D.checkR ((PairObj X).N (D.checkR.symm x)) =
+      (PairObj X).N (D.checkR (D.checkR.symm x)) at hx
+    have hsymm : D.checkR (D.checkR.symm x) = x :=
+      D.checkR.apply_symm_apply x
+    rw [hsymm] at hx
+    rw [← hx]
+    exact D.checkR.symm_apply_apply _
 
 /-- The checked `R` is therefore an isomorphism in the finite-nilpotent
 logarithmic category. -/
@@ -101,11 +101,13 @@ def checkedRIso
   hom_inv_id := by
     apply LogEndModule.Hom.ext
     ext x
-    simp [checkedRHom, checkedRInvHom]
+    change D.checkR.symm (D.checkR x) = x
+    exact D.checkR.symm_apply_apply x
   inv_hom_id := by
     apply LogEndModule.Hom.ext
     ext x
-    simp [checkedRHom, checkedRInvHom]
+    change D.checkR (D.checkR.symm x) = x
+    exact D.checkR.apply_symm_apply x
 
 /-- Local checked `R` acting on tensor slots 2 and 3. -/
 def checkedR23Hom
@@ -136,9 +138,7 @@ theorem checkedR23Hom_hom
     (hR : D.checkR.toLinearMap.comp (PairObj X).N =
       (PairObj X).N.comp D.checkR.toLinearMap) :
     (checkedR23Hom X D hR).hom = (map23 𝕜 X D.checkR).toLinearMap := by
-  ext x y z
-  simp [checkedR23Hom, checkedRHom, LogNilpotentModule.tensorHom,
-    LogEndModule.tensorHom, map23]
+  rfl
 
 /-- Readback of the categorical 1--2 action is exactly the repository-owned
 `map12` construction. -/
@@ -152,8 +152,7 @@ theorem checkedR12Hom_hom
   intro t
   simp [checkedR12Hom, checkedRHom, LogNilpotentModule.tensorHom,
     LogNilpotentModule.associatorIso, LogEndModule.tensorHom,
-    LogEndModule.associatorHom, LogEndModule.associatorInv,
-    map12, LinearEquiv.trans_apply]
+    LogEndModule.associatorHom, LogEndModule.associatorInv, map12]
   rfl
 
 /-- The repository-owned Yang--Baxter theorem lifts to equality of genuine
@@ -166,11 +165,22 @@ theorem checkedR_yangBaxter
     checkedR12Hom X D hR ≫ checkedR23Hom X D hR ≫ checkedR12Hom X D hR =
       checkedR23Hom X D hR ≫ checkedR12Hom X D hR ≫ checkedR23Hom X D hR := by
   apply LogEndModule.Hom.ext
-  ext t
+  apply LinearMap.ext
+  intro t
+  change (checkedR12Hom X D hR).hom
+      ((checkedR23Hom X D hR).hom ((checkedR12Hom X D hR).hom t)) =
+    (checkedR23Hom X D hR).hom
+      ((checkedR12Hom X D hR).hom ((checkedR23Hom X D hR).hom t))
+  rw [checkedR12Hom_hom, checkedR23Hom_hom]
   have hYB := D.yangBaxter
   rw [D.checkR12_eq, D.checkR23_eq] at hYB
   have ht := LinearMap.congr_fun hYB t
-  simpa [LogNilpotentModule.hom_comp, checkedR12Hom_hom,
-    checkedR23Hom_hom, LinearMap.comp_apply] using ht
+  change (map12 𝕜 X.toLogEndModule.V D.checkR).toLinearMap
+      ((map23 𝕜 X.toLogEndModule.V D.checkR).toLinearMap
+        ((map12 𝕜 X.toLogEndModule.V D.checkR).toLinearMap t)) =
+    (map23 𝕜 X.toLogEndModule.V D.checkR).toLinearMap
+      ((map12 𝕜 X.toLogEndModule.V D.checkR).toLinearMap
+        ((map23 𝕜 X.toLogEndModule.V D.checkR).toLinearMap t)) at ht
+  exact ht
 
 end InfoGeometry.Categorical.LogNilpotentCheckedRAdapter

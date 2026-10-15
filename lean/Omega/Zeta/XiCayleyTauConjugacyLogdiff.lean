@@ -111,7 +111,10 @@ private lemma xi_cayley_tau_conjugacy_logdiff_logderiv_proof
   have hone_ne : 1 - D.x ≠ 0 := sub_ne_zero.mpr (by linarith [D.x_mem_Ioo.2])
   have hden :
       HasDerivAt (fun y : ℝ => 1 - y) (-1) D.x := by
-    simpa using (hasDerivAt_const D.x 1).sub (hasDerivAt_id D.x)
+    convert (hasDerivAt_const D.x (1 : ℝ)).sub (hasDerivAt_id D.x) using 1
+    · funext y
+      rfl
+    · ring
   have hquot_raw :
       HasDerivAt (fun y : ℝ => y / (1 - y)) ((((1 : ℝ) * (1 - D.x)) - D.x * (-1)) / (1 - D.x) ^ 2)
         D.x :=

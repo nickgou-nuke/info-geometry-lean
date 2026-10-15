@@ -39,7 +39,8 @@ def mk (rho : selfAdjoint (Matrix (Fin n) (Fin n) ℂ))
 def rhoVal : Matrix (Fin n) (Fin n) ℂ := state.rho
 
 theorem rho_self_adj : (rhoVal state).conjTranspose = rhoVal state := by
-  simpa only [rhoVal, Matrix.star_eq_conjTranspose] using state.rho.property
+  have h : star (state.rho : Matrix (Fin n) (Fin n) ℂ) = state.rho := selfAdjoint.mem_iff.mp state.rho.property
+  rwa [Matrix.star_eq_conjTranspose] at h
 
 /-- State Evaluation Functional ω(A) = Tr(ρ * A). -/
 def apply (A : Matrix (Fin n) (Fin n) ℂ) : ℂ :=

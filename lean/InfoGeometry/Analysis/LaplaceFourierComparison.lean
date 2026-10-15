@@ -115,12 +115,14 @@ theorem laplace_unique_on_fourier_axis
     have hfw :
         InfoGeometry.Analysis.LaplaceTransform.laplaceTransform f
           ((2 * Real.pi * Complex.I) * w) = 𝓕 f w := by
-      simpa [Real.fourier_eq] using
+      simpa [Real.fourier_eq', Real.fourierChar_apply, Circle.smul_def,
+        mul_comm, mul_left_comm, mul_assoc] using
         (laplaceTransform_eq_fourierChar (f := f) (w := w))
     have hgw :
         InfoGeometry.Analysis.LaplaceTransform.laplaceTransform g
           ((2 * Real.pi * Complex.I) * w) = 𝓕 g w := by
-      simpa [Real.fourier_eq] using
+      simpa [Real.fourier_eq', Real.fourierChar_apply, Circle.smul_def,
+        mul_comm, mul_left_comm, mul_assoc] using
         (laplaceTransform_eq_fourierChar (f := g) (w := w))
     calc
       𝓕 f w =
@@ -150,7 +152,8 @@ theorem laplaceFourierAxis_continuous
       Real.continuous_fourierChar (by
         simpa using (continuous_mul : Continuous fun p : ℝ × ℝ => p.1 * p.2)) hf)
   unfold VectorFourier.fourierIntegral at h
-  simpa [mul_comm] using h
+  simpa [Real.fourierChar_apply, Circle.smul_def,
+    mul_comm, mul_left_comm, mul_assoc] using h
 
 /-- The Laplace transform is continuous on the Fourier axis under integrability. -/
 theorem laplaceTransform_continuous_on_fourier_axis
@@ -181,7 +184,8 @@ theorem laplace_fourierInv_on_axis
         InfoGeometry.Analysis.LaplaceTransform.laplaceTransform f
           ((2 * Real.pi * Complex.I) * w)) = 𝓕 f := by
     ext w
-    simpa [Real.fourier_eq] using
+    simpa [Real.fourier_eq', Real.fourierChar_apply, Circle.smul_def,
+      mul_comm, mul_left_comm, mul_assoc] using
       (laplaceTransform_eq_fourierChar (f := f) (w := w))
   calc
     𝓕⁻ (fun w : ℝ =>
@@ -232,7 +236,8 @@ theorem verticalLineTransform_eq_fourier
             ((2 * Real.pi * Complex.I) * w) := hshift
     _ = FourierTransform.fourier (fun t : ℝ =>
           Complex.exp (-(σ * (t : ℂ))) • f t) w := by
-          simpa [Real.fourier_eq]
+          simpa [Real.fourier_eq', Real.fourierChar_apply, Circle.smul_def,
+            mul_comm, mul_left_comm, mul_assoc]
             using
               (laplaceTransform_eq_fourierChar
                 (f := fun t : ℝ => Complex.exp (-(σ * (t : ℂ))) • f t)
@@ -309,7 +314,8 @@ theorem verticalLineTransform_shift
       verticalLineTransform (E := E) τ
         (fun t : ℝ => Complex.exp (-((σ - τ : ℂ) * (t : ℂ))) • f t) := by
   ext w
-  simpa [verticalLineTransform, sub_eq_add_neg, add_comm, add_left_comm, add_assoc]
+  simpa [verticalLineTransform, InfoGeometry.Analysis.LaplaceTransform.laplaceTransform,
+    sub_eq_add_neg, add_comm, add_left_comm, add_assoc]
     using
       (InfoGeometry.Analysis.LaplaceTransform.laplaceTransform.add_spectral
         (E := E) (f := f) (s := (τ : ℂ) + (2 * Real.pi * Complex.I) * w)

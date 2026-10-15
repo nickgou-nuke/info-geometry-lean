@@ -194,7 +194,8 @@ theorem continuous_zorn_add :
 /-- The native trace is a continuous scalar readout. -/
 theorem continuous_zornTrace :
     Continuous (fun X : Zorn => ZornMatrix.zornTrace X) := by
-  simpa [ZornMatrix.zornTrace] using continuous_zorn_a.add continuous_zorn_b
+  change Continuous (fun X : Zorn => X.a + X.b)
+  convert continuous_zorn_a.add continuous_zorn_b using 1
 
 /-- The native quadratic norm is a continuous scalar readout. -/
 theorem continuous_zornNorm :
@@ -203,7 +204,8 @@ theorem continuous_zornNorm :
     continuous_zorn_a.mul continuous_zorn_b
   have hvw : Continuous (fun X : Zorn => Vec3.dot X.v X.w) :=
     continuous_vec3_dot.comp (continuous_zorn_v.prodMk continuous_zorn_w)
-  simpa [ZornMatrix.zornNorm] using hab.sub hvw
+  change Continuous (fun X : Zorn => X.a * X.b - Vec3.dot X.v X.w)
+  convert hab.sub hvw using 1
 
 /-! ### Associator data of the operator lift -/
 

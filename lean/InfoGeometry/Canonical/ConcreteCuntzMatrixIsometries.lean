@@ -72,7 +72,7 @@ theorem cuntzMatrix_completeness :
     cuntzMatrixS1 * cuntzMatrixS1.conjTranspose + cuntzMatrixS2 * cuntzMatrixS2.conjTranspose = 1 := by
   rw [cuntzMatrix_projector1, cuntzMatrix_projector2]
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [add_apply]
+  fin_cases i <;> fin_cases j <;> simp [Matrix.add_apply]
 
 /-- **Theorem**: Orthogonality S₁* S₂ = 0 (1×1 zero matrix). -/
 theorem cuntzMatrix_orthogonality1 :

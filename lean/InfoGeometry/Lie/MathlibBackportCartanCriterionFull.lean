@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Janos Wolosz
 -/
 import Mathlib.Algebra.Algebra.Rat
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.MathlibBackportAdjointAction
 import InfoGeometry.Lie.MathlibBackportBasisLieEnd
 import InfoGeometry.Lie.MathlibBackportCartanCriterionFoundations
@@ -101,7 +100,6 @@ theorem isNilpotent_derivedSeries_of_traceForm_eq_zero_aux {K : Type*}
   let I := (ν : K) × Fin (finrank K (s.eigenspace ν))
   let v : Basis I K M := eigenDecomp.collectedBasis fun μ ↦ finBasis K (s.eigenspace μ)
   have : Fintype I := FiniteDimensional.fintypeBasisIndex v
-  letI : Fintype I := this
   let μ : I → K := Sigma.fst
   have hsv (i : I) : s (v i) = μ i • v i :=
     mem_eigenspace_iff.mp (eigenDecomp.collectedBasis_mem _ i)
@@ -131,7 +129,7 @@ theorem isNilpotent_derivedSeries_of_traceForm_eq_zero_aux {K : Type*}
   /- Which will follow from the fact that the following `f`-linear expression vanishes. -/
   suffices ∑ i, (f ⟨μ i, hμ i⟩) • (⟨μ i, hμ i⟩ : E) = 0 by
     have hf := congrArg f this
-    simpa only [map_sum, map_zero, map_smul, sq] using hf
+    simpa only [map_sum, map_zero, map_smul, sq, smul_eq_mul] using hf
   let fμ (i : I) : K := f ⟨μ i, hμ i⟩
   /- Defining `fμ i = f ⟨μ i, hμ i⟩`, we can restate our goal as `∑ i, fμ i * μ i = 0`. -/
   suffices ∑ i, fμ i * μ i = 0 by simp [Subtype.ext_iff, fμ, ← this, smul_def]

@@ -19,7 +19,8 @@ namespace RealUHFProjectionRankSystem
 noncomputable def canonicalDyadicCocone : DyadicCocone DyadicRational where
   leg n := (dyadicStageLinearMap n).toAddMonoidHom
   compatible n z := by
-    simpa [LinearMap.comp_apply, dyadicDouble, dyadicStageLinearMap] using
+    simpa [LinearMap.comp_apply, dyadicDouble, dyadicBond,
+      dyadicStageLinearMap] using
       dyadicStageMap_succ n z
 
 theorem canonicalDyadicCocone_lift_stage (n : ℕ) (z : ℤ) :

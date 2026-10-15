@@ -66,15 +66,16 @@ def CP3Nonzero (Z : CP3HomogeneousCoords) : Prop :=
 
 /-- Standard four projective twistor lane basis elements. -/
 def cp3LaneBasis (i : Fin 4) : CP3HomogeneousCoords :=
-  match i with
-  | ⟨0, _⟩ => { omega0 := 1, omega1 := 0, pi0 := 0, pi1 := 0 }
-  | ⟨1, _⟩ => { omega0 := 0, omega1 := 1, pi0 := 0, pi1 := 0 }
-  | ⟨2, _⟩ => { omega0 := 0, omega1 := 0, pi0 := 1, pi1 := 0 }
-  | ⟨_, _⟩ => { omega0 := 0, omega1 := 0, pi0 := 0, pi1 := 1 }
+  match i.val with
+  | 0 => { omega0 := 1, omega1 := 0, pi0 := 0, pi1 := 0 }
+  | 1 => { omega0 := 0, omega1 := 1, pi0 := 0, pi1 := 0 }
+  | 2 => { omega0 := 0, omega1 := 0, pi0 := 1, pi1 := 0 }
+  | _ => { omega0 := 0, omega1 := 0, pi0 := 0, pi1 := 1 }
 
 /-- Every lane basis element is a valid nonzero homogeneous twistor. -/
 theorem cp3LaneBasis_nonzero (i : Fin 4) : CP3Nonzero (cp3LaneBasis i) := by
-  fin_cases i <;> simp [CP3Nonzero, cp3LaneBasis]
+  rcases i with ⟨i, hi⟩
+  interval_cases i <;> norm_num [CP3Nonzero, cp3LaneBasis]
 
 /-- Read the current symbolic twistor lane from a Cantor boundary sequence. -/
 def cantorHeadTwistor (b : C4Boundary) : CP3HomogeneousCoords :=

@@ -15,7 +15,7 @@ open InfoGeometry.Clifford.Cl11TensorTowerLimit
 
 noncomputable section
 
-universe u
+universe u v
 
 /-!
 # Modular-spinor / Cl(1,1) sequential colimit bridge
@@ -33,10 +33,10 @@ existing owner surfaces together and re-exports the native facts already proved
 in each.
 -/
 
-variable {E Sections BoundarySections Gr Open : Type*}
+variable {E Sections BoundarySections : Type*} {Gr Open : Type v}
 variable [AddCommGroup Sections] [Module ℝ Sections]
 variable [AddCommGroup BoundarySections] [Module ℝ BoundarySections]
-variable [TopologicalSpace Gr] [Category Open]
+variable [TopologicalSpace Gr] [Category.{v, v} Open]
 variable {J : Type u} [Category.{u, u} J]
 
 /-- The sheaf cover condition remains available inside the sequential colimit

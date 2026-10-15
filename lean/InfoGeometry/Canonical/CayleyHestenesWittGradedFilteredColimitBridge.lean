@@ -60,8 +60,10 @@ theorem colimitEnd_mul (S T : WittEnd) :
       (colimitEnd S * colimitEnd T)
         ((colimit.ι WittConstantFunctor j).hom x)
     simp only [Module.End.mul_apply, colimitEnd_on_stage]
-  simpa [colimitEnd, Module.End.mul_apply, ModuleCat.comp_apply] using
-    congrArg ModuleCat.Hom.hom hcat
+  ext x
+  have hpoint := congrArg (fun f :
+      colimit WittConstantFunctor ⟶ colimit WittConstantFunctor => f.hom x) hcat
+  simpa [colimitEnd, Module.End.mul_apply, ModuleCat.comp_apply] using hpoint
 
 theorem colimitEnd_one :
     colimitEnd (1 : WittEnd) = (1 : Module.End ℝ WittColimit) := by
@@ -76,7 +78,10 @@ theorem colimitEnd_one :
       (colimit.ι WittConstantFunctor j).hom x
     rw [colimitEnd_on_stage]
     rfl
-  simpa [colimitEnd] using congrArg ModuleCat.Hom.hom hcat
+  ext x
+  have hpoint := congrArg (fun f :
+      colimit WittConstantFunctor ⟶ colimit WittConstantFunctor => f.hom x) hcat
+  simpa [colimitEnd] using hpoint
 
 theorem colimitEnd_neg (T : WittEnd) :
     colimitEnd (-T) = -colimitEnd T := by

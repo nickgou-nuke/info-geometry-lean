@@ -29,7 +29,8 @@ def KleinQuadric (t x y z : R) : Prop :=
 
 theorem causalDeterminant_eq_quadratic (t x y z : R) :
     CausalDeterminant t x y z = t ^ 2 - x ^ 2 + y ^ 2 - z ^ 2 := by
-  simp [CausalDeterminant, CausalMatrix, Matrix.det_fin_two]
+  rw [CausalDeterminant, Matrix.det_fin_two]
+  dsimp [CausalMatrix]
   ring
 
 theorem kleinQuadric_iff_quadratic (t x y z : R) :

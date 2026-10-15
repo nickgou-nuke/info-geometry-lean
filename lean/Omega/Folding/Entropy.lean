@@ -137,7 +137,8 @@ theorem tendsto_mul_exp_neg_of_tendsto_one_zero
   have hExp : Tendsto (fun m : ℕ => Real.exp (-eps m)) atTop (𝓝 1) := by
     have hNeg : Tendsto (fun m : ℕ => -eps m) atTop (𝓝 0) := by
       simpa using heps.neg
-    simpa using Real.continuous_exp.continuousAt.tendsto.comp hNeg
+    simpa [Function.comp_def, Real.exp_zero] using
+      Real.continuous_exp.continuousAt.tendsto.comp hNeg
   simpa using hu.mul hExp
 
 /-- A real number dominates `1` if it eventually dominates a sequence converging to `1`. -/
@@ -266,7 +267,9 @@ theorem topological_entropy_eq_log_phi :
     Tendsto (fun n => Real.log (Nat.fib (n + 2) : ℝ) / (n : ℝ)) atTop (𝓝 (Real.log φ)) := by
   let u : ℕ → ℝ := fun k => Real.log ((Nat.fib (k + 3) : ℝ) / Nat.fib (k + 2))
   have hu : Tendsto u atTop (𝓝 (Real.log φ)) := by
-    simpa [u, add_assoc] using log_fib_ratio_tendsto.comp (tendsto_add_atTop_nat 1)
+    apply Filter.Tendsto.congr' (Filter.Eventually.of_forall fun k => ?_)
+      (log_fib_ratio_tendsto.comp (tendsto_add_atTop_nat 1))
+    dsimp [u]
   have hcesaro : Tendsto (fun n : ℕ => (n : ℝ)⁻¹ * (∑ i ∈ Finset.range n, u i))
       atTop (𝓝 (Real.log φ)) :=
     hu.cesaro
@@ -622,7 +625,8 @@ theorem one_sub_fibRadius_sq_tendsto :
           (((Nat.fib m : ℝ) + 2) * φ ^ (-(m : ℝ))))
       atTop (𝓝 1) := by
     have hne : ((Real.sqrt 5)⁻¹ : ℝ) ≠ 0 := inv_ne_zero hsqrt5
-    simpa [hne] using hFib1.div fib_add_two_mul_phi_neg_tendsto_inv_sqrt5 hne
+    have hdiv := hFib1.div fib_add_two_mul_phi_neg_tendsto_inv_sqrt5 hne
+    convert hdiv using 1 <;> norm_num [hne]
   have hInv : Tendsto
       (fun m : ℕ => (Real.sqrt 5 * (((Nat.fib m : ℝ) + 2) * φ ^ (-(m : ℝ))))⁻¹)
       atTop (𝓝 1) := by

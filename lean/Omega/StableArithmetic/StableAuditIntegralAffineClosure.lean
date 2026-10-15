@@ -11,7 +11,7 @@ abbrev stable_audit_integral_affine_closure_poly := MvPolynomial (Fin 2) ℤ
 
 /-- A concrete strong-Gröbner ideal certificate for a dashboard pair. In this seed certificate the
 antecedent ideal is represented by the verified top ideal, so every reduced consequent is zero. -/
-def stable_audit_integral_affine_closure_antecedentIdeal
+noncomputable def stable_audit_integral_affine_closure_antecedentIdeal
     (_i : Fin stable_audit_integral_affine_closure_dashboard_pair_count) :
     Ideal stable_audit_integral_affine_closure_poly :=
   ⊤

@@ -86,9 +86,7 @@ theorem logCFTKMSCanonical_flow_continuous
         InfoGeometry.Physics.Algebra.continuousUnipotentFlow M p.1) :=
     (InfoGeometry.Physics.Algebra.continuous_continuousUnipotentFlow
       (M := M)).comp continuous_fst
-  simpa [logCFTKMSCanonical,
-    TopologicalMonodromyKMSBridge.unipotentMonodromyReadoutDatum] using
-      hflow.mul continuous_snd
+  exact continuous_mul.comp (hflow.prodMk continuous_snd)
 
 /--
 The canonical logarithmic CFT KMS readout flow is a continuous linear
@@ -111,14 +109,14 @@ noncomputable def logCFTKMSCanonical_flowEquiv
         change ((InfoGeometry.Physics.Algebra.continuousUnipotentFlow M (-t) *
             InfoGeometry.Physics.Algebra.continuousUnipotentFlow M t) * T) x = T x
         rw [InfoGeometry.Physics.Algebra.continuousUnipotentFlow_neg_mul M hM t]
-        simp [ContinuousLinearMap.mul_apply]
+        simp
       right_inv := by
         intro T
         ext x
         change ((InfoGeometry.Physics.Algebra.continuousUnipotentFlow M t *
             InfoGeometry.Physics.Algebra.continuousUnipotentFlow M (-t)) * T) x = T x
         rw [InfoGeometry.Physics.Algebra.continuousUnipotentFlow_mul_neg M hM t]
-        simp [ContinuousLinearMap.mul_apply] }
+        simp }
   exact ContinuousLinearEquiv.mk e
     (ContinuousLinearMap.mul ℝ EndH
       (InfoGeometry.Physics.Algebra.continuousUnipotentFlow M t)).continuous
@@ -131,9 +129,10 @@ noncomputable def logCFTKMSCanonical_flowEquiv
     (hM : InfoGeometry.Physics.Algebra.ContinuousMonodromyOperatorLaws M) :
     (logCFTKMSCanonical_flowEquiv (H := H) M t hM).symm
         ((logCFTKMSCanonical (H := H) M hM).readout.flow t T) = T := by
-  simpa [logCFTKMSCanonical_flowEquiv, logCFTKMSCanonical] using
-    (ContinuousLinearEquiv.symm_apply_apply
-      (logCFTKMSCanonical_flowEquiv (H := H) M t hM) T)
+  change (logCFTKMSCanonical_flowEquiv (H := H) M t hM).symm
+    (InfoGeometry.Physics.Algebra.continuousUnipotentFlow M t * T) = T
+  exact ContinuousLinearEquiv.symm_apply_apply
+    (logCFTKMSCanonical_flowEquiv (H := H) M t hM) T
 
 end
 

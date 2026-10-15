@@ -80,7 +80,10 @@ theorem gm_zeck_normalized_limit_measure_verified :
     funext s
     rfl
   · intro ν hν
-    simpa [gm_zeck_normalized_limit_measure_limit_measure] using (hν 0).symm
+    funext s
+    have hs := congrFun (hν 0) s
+    simpa [gm_zeck_normalized_limit_measure_empirical_measure,
+      gm_zeck_normalized_limit_measure_limit_measure] using hs.symm
   · ext i j
     fin_cases i
     fin_cases j

@@ -153,7 +153,8 @@ theorem fourVector_chiralBipolar_square (A : Fin 4 → ℝ) :
     $$\det(\mathbb{A}) = A_0^2 - A_1^2 + A_2^2 - A_3^2$$ -/
 theorem fourVector_det_minkowski (A : Fin 4 → ℝ) :
     (fourVectorPotentialMatrix A).det = A 0 ^ 2 - A 1 ^ 2 + A 2 ^ 2 - A 3 ^ 2 := by
-  dsimp [fourVectorPotentialMatrix, Matrix.det_fin_two]
-  ring
+  rw [Matrix.det_fin_two]
+  dsimp [fourVectorPotentialMatrix]
+  ring_nf
 
 end InfoGeometry.QuantumContext.ChiralBipolarAttention

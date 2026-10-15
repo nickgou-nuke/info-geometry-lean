@@ -35,7 +35,8 @@ theorem rationalCanonicalZornEquiv_map_mul
       ZornMatrix.mul (rationalCanonicalZornEquiv x)
         (rationalCanonicalZornEquiv y) := by
   apply (zornMatrixVectorLinearEquiv (R := ℚ)).injective
-  simpa [rationalCanonicalZornEquiv, zornMatrixToVector_mul] using
+  simpa [rationalCanonicalZornEquiv, zornMatrixToVector_mul,
+    zornMatrixToVector_toMatrix] using
     zornVectorMatrixRationalEquiv_map_mul x y
 
 /-- The order-three signed colour cycle transported to canonical Zorn

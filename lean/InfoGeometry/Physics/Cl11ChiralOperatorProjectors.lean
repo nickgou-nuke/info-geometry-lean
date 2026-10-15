@@ -1,6 +1,7 @@
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Normed.Algebra.MatrixExponential
+import Mathlib.Analysis.SpecialFunctions.Exponential
 import InfoGeometry.Physics.Cl11ChiralCARBridge
 
 noncomputable section

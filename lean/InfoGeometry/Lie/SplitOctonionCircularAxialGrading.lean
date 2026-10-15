@@ -1,5 +1,4 @@
 import InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.Algebra.LinearTripotentTrifactor
 import InfoGeometry.Lie.SplitOctonionCircularOperatorReadout
 import Mathlib.Data.Matrix.Basic
@@ -59,46 +58,52 @@ theorem axialGrading_basis (i : Fin 8) :
     axialGrading (circularPeirceBasis i) =
       axialWeight i • circularPeirceBasis i := by
   fin_cases i
-  · rw [axialGrading, LinearMap.smul_apply]
-    simp only [circularPeirceBasis_apply, frame]
+  · change axialGrading (circularPeirceBasis 0) = axialWeight 0 • circularPeirceBasis 0
+    rw [circularPeirceBasis_zero, axialGrading]
+    simp only [LinearMap.smul_apply]
     rw [ellCommutator_uPlus]
-    simp [axialWeight]
-    have hzero : ({a := 0, b := 0, x := 0, y := 0} : CZ) = 0 := by rfl
-    rw [hzero, smul_zero]
-  · rw [axialGrading, LinearMap.smul_apply]
-    simp only [circularPeirceBasis_apply, frame]
+    simp only [axialWeight, smul_zero, zero_smul]
+  · change axialGrading (circularPeirceBasis 1) = axialWeight 1 • circularPeirceBasis 1
+    rw [circularPeirceBasis_one, axialGrading]
+    simp only [LinearMap.smul_apply]
     rw [ellCommutator_rootPlus]
-    simp [axialWeight]
-  · rw [axialGrading, LinearMap.smul_apply]
-    simp only [circularPeirceBasis_apply, frame]
+    simp only [smul_smul]
+    norm_num [axialWeight]
+  · change axialGrading (circularPeirceBasis 2) = axialWeight 2 • circularPeirceBasis 2
+    rw [circularPeirceBasis_two, axialGrading]
+    simp only [LinearMap.smul_apply]
     rw [ellCommutator_rootPlus]
-    simp [axialWeight]
-  · rw [axialGrading, LinearMap.smul_apply]
-    simp only [circularPeirceBasis_apply, frame]
+    simp only [smul_smul]
+    norm_num [axialWeight]
+  · change axialGrading (circularPeirceBasis 3) = axialWeight 3 • circularPeirceBasis 3
+    rw [circularPeirceBasis_three, axialGrading]
+    simp only [LinearMap.smul_apply]
     rw [ellCommutator_rootPlus]
-    simp [axialWeight]
-  · rw [axialGrading, LinearMap.smul_apply]
-    simp only [circularPeirceBasis_apply, frame]
+    simp only [smul_smul]
+    norm_num [axialWeight]
+  · change axialGrading (circularPeirceBasis 4) = axialWeight 4 • circularPeirceBasis 4
+    rw [circularPeirceBasis_four, axialGrading]
+    simp only [LinearMap.smul_apply]
     rw [ellCommutator_uMinus]
-    simp [axialWeight]
-    have hzero : ({a := 0, b := 0, x := 0, y := 0} : CZ) = 0 := by rfl
-    rw [hzero, smul_zero]
-  · rw [axialGrading, LinearMap.smul_apply]
-    simp only [circularPeirceBasis_apply, frame]
+    simp only [axialWeight, smul_zero, zero_smul]
+  · change axialGrading (circularPeirceBasis 5) = axialWeight 5 • circularPeirceBasis 5
+    rw [circularPeirceBasis_five, axialGrading]
+    simp only [LinearMap.smul_apply]
     rw [ellCommutator_rootMinus]
-    simp only [axialWeight]
-    module
-
-  · rw [axialGrading, LinearMap.smul_apply]
-    simp only [circularPeirceBasis_apply, frame]
+    simp only [smul_smul]
+    norm_num [axialWeight]
+  · change axialGrading (circularPeirceBasis 6) = axialWeight 6 • circularPeirceBasis 6
+    rw [circularPeirceBasis_six, axialGrading]
+    simp only [LinearMap.smul_apply]
     rw [ellCommutator_rootMinus]
-    simp only [axialWeight]
-    module
-  · rw [axialGrading, LinearMap.smul_apply]
-    simp only [circularPeirceBasis_apply, frame]
+    simp only [smul_smul]
+    norm_num [axialWeight]
+  · change axialGrading (circularPeirceBasis 7) = axialWeight 7 • circularPeirceBasis 7
+    rw [circularPeirceBasis_seven, axialGrading]
+    simp only [LinearMap.smul_apply]
     rw [ellCommutator_rootMinus]
-    simp only [axialWeight]
-    module
+    simp only [smul_smul]
+    norm_num [axialWeight]
 
 theorem circularPeirceBasis_mem_eigenspace (i : Fin 8) :
     circularPeirceBasis i ∈

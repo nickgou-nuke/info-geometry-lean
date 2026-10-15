@@ -1,0 +1,12 @@
+{
+  "claim": "Geometric Synthesis of Cl(1,1), Split-Quaternions, Three Planar Subalgebras, and Cl(1,2) Internal Geometric Complexification",
+  "carrier": "Mat2C",
+  "hypotheses": [],
+  "target_conclusion": "I_3D * I_3D = -oneC ∧ (∀ M : Mat2C, I_3D * M = M * I_3D) ∧ e1C * e1C = oneC ∧ e2C * e2C = -oneC ∧ fC * fC = -oneC",
+  "target_symbol": "cl12_internal_complexification",
+  "prerequisites": [
+    "Mathlib.Data.Matrix.Basic",
+    "Mathlib.LinearAlgebra.Matrix.Notation",
+    "Mathlib.Tactic"
+  ]
+}

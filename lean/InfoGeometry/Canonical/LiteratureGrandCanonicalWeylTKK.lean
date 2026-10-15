@@ -550,9 +550,9 @@ thermodynamic model; they are not inferred from the chiral `KKTCore` grading.
 @[rep_depth transport]
 structure LiteratureWeylGrandCanonicalTKKKKTBridge
     (R Gauge Parameter Curvature G I X A S : Type*) extends
-      LiteratureWeylGrandCanonicalTKKBridge
+  LiteratureWeylGrandCanonicalTKKBridge
         R Gauge Parameter Curvature G I X A S where
-  kktOptimization : KarushKuhnTuckerThermodynamicData
+  kktOptimization : KarushKuhnTuckerThermodynamicData.{0, 0, 0, 0}
 
 /--
 Literature-backed bridge where the optimization KKT packet is not a bare list
@@ -561,9 +561,9 @@ of propositions but is induced by explicit residual equations.
 @[rep_depth transport]
 structure ConstructiveLiteratureWeylGrandCanonicalTKKKKTBridge
     (R Gauge Parameter Curvature G I X A S : Type*) extends
-      LiteratureWeylGrandCanonicalTKKBridge
+  LiteratureWeylGrandCanonicalTKKBridge
         R Gauge Parameter Curvature G I X A S where
-  kktCertificate : KarushKuhnTuckerResidualCertificate
+  kktCertificate : KarushKuhnTuckerResidualCertificate.{0, 0, 0, 0}
 
 namespace ConstructiveLiteratureWeylGrandCanonicalTKKKKTBridge
 

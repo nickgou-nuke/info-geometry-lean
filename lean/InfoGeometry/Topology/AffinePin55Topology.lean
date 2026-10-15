@@ -92,18 +92,16 @@ theorem affinePin55_isTopologicalGroup_of_continuous_action
   have h_action' : Continuous (fun p :
       (Multiplicative V55 × realSplitPin55) ×
         (Multiplicative V55 × realSplitPin55) =>
-    (realSplitPinAction p.1.2) p.2.1) := by
-    simpa only [Function.comp_apply] using
-      h_action.comp (continuous_fst.snd.prodMk continuous_snd.fst)
+    (realSplitPinAction p.1.2) p.2.1) :=
+    (h_action.comp (continuous_fst.snd.prodMk continuous_snd.fst)).congr (fun _ => rfl)
   have h_coordMul : Continuous coordMul := by
     dsimp [coordMul]
     exact (continuous_fst.fst.mul h_action').prodMk
       (continuous_fst.snd.mul continuous_snd.snd)
   have h_action_inv : Continuous (fun p :
       Multiplicative V55 × realSplitPin55 =>
-      (realSplitPinAction p.2⁻¹) (p.1⁻¹)) := by
-    simpa only [Function.comp_apply] using
-      h_action.comp (continuous_snd.inv.prodMk continuous_fst.inv)
+      (realSplitPinAction p.2⁻¹) (p.1⁻¹)) :=
+    (h_action.comp (continuous_snd.inv.prodMk continuous_fst.inv)).congr (fun _ => rfl)
   have h_coordInv : Continuous coordInv := by
     dsimp [coordInv]
     exact h_action_inv.prodMk continuous_snd.inv

@@ -3,30 +3,27 @@ import proofs.MirrorNucleiIsospinGNS
 import proofs.GoutevTonevNuclearHamiltonian
 
 /-!
-# Coriolis Decoupling in K=1/2 Bands
+# Doubled-angular-momentum parity and finite parameter model
 
-This module formalizes the **Coriolis decoupling parameter** `a` for K=1/2 rotational bands
-in terms of the underlying **CPT inversion** on the Klein bottle topology.
+This file uses `twoJ : ℕ` as the doubled angular-momentum index. For odd
+`twoJ`, the offset `(twoJ+1)/2` is the integer `j+1/2`; this lets the parity
+factor and amplitude be stated without fractional powers of `-1`. It proves
+exact arithmetic identities for that model. It does not derive a nuclear
+Hamiltonian or establish CPT symmetry or Klein-bottle topology.
 
 ## Main Results
 
-1. **Coriolis signature** `(-1)^(J+1/2)` arises from `k²·σ₃·k² = σ₃` CPT invariant
-2. **Decoupling parameter** `a` is determined by the chiral isospin structure
-3. **Prediction** for mirror nuclei A=43,47,67 based on proven topology
+1. Increasing `twoJ` by two negates the parity factor; increasing it by four
+   preserves that factor.
+2. The absolute value of the arithmetic expression is exactly its amplitude.
+3. The selected half-integer-indexed values are computed exactly; they are
+   not empirical predictions derived from a physical model.
 
-## Physical Background
+## Motivation and formal scope
 
-In rotational spectroscopy of deformed nuclei, K=1/2 bands exhibit anomalous energy spacing:
-
-E(J) = E₀ + A·J(J+1) + (-1)^(J+1/2) · B·(J+1/2)
-
-The alternating term is the **Coriolis decoupling**, caused by the unpaired nucleon's
-motion in the deformed potential.
-
-In TKK framework, this alternation is the macroscopic shadow of:
-  k² · σ₃ · k² = σ₃   (CPT inversion on Klein bottle)
-
-where k is the 2π rotation operator with k² = -1 (fermionic double cover).
+The definitions are independent of the imported matrix identities; no
+rotation operator or topological quotient occurs in their types. The formula
+is recorded as an algebraic model, not as a statement about observed spectra.
 -/
 
 noncomputable section
@@ -36,217 +33,101 @@ open MirrorNucleiIsospinGNS
 open GoutevTonevNuclearHamiltonian
 open Matrix
 
-/-- The K=1/2 band rotational energy formula with Coriolis decoupling -/
-def rotationalEnergyK12 (E₀ A B : ℝ) (J : ℕ) : ℝ :=
-  E₀ + A * (J : ℝ) * ((J : ℝ) + 1) + (-1 : ℝ)^(J + 1) * B * ((J : ℝ) + 1/2)
+/-- The natural-number offset `(2j+1)/2`; on odd `twoJ = 2j`, this is the
+integer `j+1/2`. -/
+def halfIntegerOffset (twoJ : ℕ) : ℝ := (((twoJ + 1) / 2 : ℕ) : ℝ)
 
-/-- 
-The Coriolis signature factor: (-1)^(J+1/2)
+/-- Alternating factor for a doubled angular-momentum index. On odd indices,
+the exponent equals the half-integer shift `j+1/2`. -/
+def coriolisSignature (twoJ : ℕ) : ℝ :=
+  (-1 : ℝ) ^ ((twoJ + 1) / 2)
 
-This alternating sign is the macroscopic manifestation of the CPT inversion
-k² · σ₃ · k² = σ₃ on the Klein bottle.
+/-- Rotational expression with doubled angular momentum `twoJ`. On odd
+`twoJ`, `j = twoJ/2` is half-integral and the alternating exponent and
+amplitude are both the exact integer `j+1/2`. -/
+def rotationalEnergyK12 (E₀ A B : ℝ) (twoJ : ℕ) : ℝ :=
+  let j : ℝ := (twoJ : ℝ) / 2
+  E₀ + A * j * (j + 1) + coriolisSignature twoJ * B * halfIntegerOffset twoJ
 
-For J = 1/2, 5/2, 9/2, ... : signature = -1
-For J = 3/2, 7/2, 11/2, ... : signature = +1
--/
-def coriolisSignature (J : ℕ) : ℝ := (-1 : ℝ)^(J + 1)
-
-/-- 
-Theorem: Coriolis signature from CPT inversion.
-
-The alternating sign in K=1/2 band energies is structurally enforced by the
-Klein bottle monodromy k⁴ = 1 and the CPT relation k²·σ₃·k² = σ₃.
-
-Physical interpretation:
-- The unpaired nucleon's wavefunction picks up a phase under 2π rotation
-- This phase is (-1) due to fermionic double cover (k² = -1)
-- The CPT inversion ensures single-valuedness over 4π (k⁴ = 1)
--/
-theorem coriolis_signature_from_cpt_inversion :
-    ∀ (J_half : ℕ) -- J = J_half + 1/2 where J_half ∈ {0,1,2,...}
-    , coriolisSignature J_half = (-1 : ℝ)^(J_half + 1) := by
-  intro J_half
-  rfl  -- Definition
-
-/-- The signature genuinely alternates under one unit of the integer index. -/
-theorem coriolisSignature_succ (J : ℕ) :
-    coriolisSignature (J + 1) = -coriolisSignature J := by
+/-- Increasing the doubled index by two increases the half-integer exponent by
+one and reverses the sign. -/
+theorem coriolisSignature_add_two (twoJ : ℕ) :
+    coriolisSignature (twoJ + 2) = -coriolisSignature twoJ := by
   unfold coriolisSignature
-  rw [show J + 1 + 1 = (J + 1) + 1 by omega, pow_succ, pow_succ]
+  have hexp : (twoJ + 2 + 1) / 2 = (twoJ + 1) / 2 + 1 := by omega
+  rw [hexp, pow_succ]
   ring
 
-/-- Two successive index shifts return the original signature. -/
-theorem coriolisSignature_period_two (J : ℕ) :
-    coriolisSignature (J + 2) = coriolisSignature J := by
-  rw [show J + 2 = (J + 1) + 1 by omega, coriolisSignature_succ,
-    coriolisSignature_succ]
+/-- A shift of four in doubled angular momentum restores the alternating
+factor. -/
+theorem coriolisSignature_add_four (twoJ : ℕ) :
+    coriolisSignature (twoJ + 4) = coriolisSignature twoJ := by
+  rw [show twoJ + 4 = (twoJ + 2) + 2 by omega,
+    coriolisSignature_add_two, coriolisSignature_add_two]
   ring
 
-/-- 
-Decoupling parameter `a` for K=1/2 bands.
+/-- Arithmetic decoupling expression `(-1)^(j+1/2)(j+1/2)` indexed by
+`twoJ = 2j`. No measured nuclear parameter is asserted. -/
+def decouplingParameter (twoJ : ℕ) : ℝ :=
+  coriolisSignature twoJ * halfIntegerOffset twoJ
 
-In the standard rotational formula:
-  E(J) = A·J(J+1) + (-1)^(J+1/2) · B·(J+1/2)
-
-the decoupling parameter is:
-  a = B/A
-
-For a single j-shell nucleon in K=1/2 state:
-  a = (-1)^(j+1/2) · (j + 1/2)
-
-This is determined by the chiral isospin structure via the CPT invariant.
--/
-def decouplingParameter (j : ℕ) : ℝ := (-1 : ℝ)^(j + 1) * ((j : ℝ) + 1/2)
-
-/-- 
-Theorem: Decoupling parameter bounds from topology.
-
-For K=1/2 bands in mirror nuclei, the decoupling parameter `a` satisfies:
-  |a| ≤ (j_max + 1/2)
-
-where j_max is the maximum angular momentum of the valence orbital.
-
-This bound follows from the ℤ₄ monodromy k⁴ = 1 which restricts the
-possible chiral phases.
--/
-theorem decoupling_parameter_bound (j : ℕ) :
-    |decouplingParameter j| ≤ (j : ℝ) + 1/2 := by
-  unfold decouplingParameter
+/-- The absolute value of this expression is exactly its nonnegative
+amplitude. -/
+theorem decouplingParameter_abs (twoJ : ℕ) :
+    |decouplingParameter twoJ| = halfIntegerOffset twoJ := by
+  unfold decouplingParameter coriolisSignature halfIntegerOffset
   rw [abs_mul, abs_pow]
   norm_num
-  rw [abs_of_nonneg (by positivity)]
+
+/-- Value label for the arithmetic expression at `twoJ = 3` (`j = 3/2`). -/
+def a_A31_d32 : ℝ := decouplingParameter 3
+
+/-- Value label for the arithmetic expression at `twoJ = 7` (`j = 7/2`). -/
+def a_A47_f72 : ℝ := decouplingParameter 7
+
+/-- Value label for the arithmetic expression at `twoJ = 9` (`j = 9/2`). -/
+def a_A67_g92 : ℝ := decouplingParameter 9
+
+/-- On odd doubled indices the half-integer amplitude is positive, so the
+decoupling expression is nonzero. -/
+theorem decouplingParameter_ne_zero_of_odd (twoJ : ℕ) (hOdd : Odd twoJ) :
+    decouplingParameter twoJ ≠ 0 := by
+  intro hzero
+  have habs := decouplingParameter_abs twoJ
+  rw [hzero, abs_zero] at habs
+  have hpos : 0 < halfIntegerOffset twoJ := by
+    unfold halfIntegerOffset
+    have htwo : 1 ≤ twoJ := hOdd.pos
+    have hq : 0 < (twoJ + 1) / 2 := by omega
+    exact_mod_cast hq
+  linarith
+
+/-- Exact arithmetic value of the formula at doubled index `3` (`j=3/2`). -/
+theorem decouplingParameter_d32_value : a_A31_d32 = 2 := by
+  norm_num [a_A31_d32, decouplingParameter, coriolisSignature, halfIntegerOffset]
+
+/-- Exact arithmetic value of the formula at doubled index `7` (`j=7/2`). -/
+theorem decouplingParameter_f72_value : a_A47_f72 = 4 := by
+  norm_num [a_A47_f72, decouplingParameter, coriolisSignature, halfIntegerOffset]
+
+/-- Exact arithmetic value of the formula at doubled index `9` (`j=9/2`). -/
+theorem decouplingParameter_g92_value : a_A67_g92 = -5 := by
+  norm_num [a_A67_g92, decouplingParameter, coriolisSignature, halfIntegerOffset]
 
 /-- 
-Example: A=31 (³¹P/³¹S) - d₃/₂ nucleon.
-
-For a d₃/₂ orbital (j=3/2), the predicted decoupling parameter is:
-  a = (-1)^(3/2+1/2) · (3/2 + 1/2) = (-1)² · 2 = 2
-
-Wait, let me recalculate: j = 2 (integer for 3/2 in our ℕ indexing)
-  a = (-1)^(2+1) · (2 + 1/2) = -2.5
--/
-def a_A31_d32 : ℝ := decouplingParameter 2  -- d₃/₂ orbital
-
-/-- 
-Example: A=47 (⁴⁷Mn/⁴⁷Ti) - f₇/₂ nucleon.
-
-For an f₇/₂ orbital (j=7/2), the predicted decoupling parameter is:
-  a = (-1)^(7/2+1/2) · (7/2 + 1/2) = (-1)⁴ · 4 = 4
-
-Using j = 3 (for 7/2):
-  a = (-1)^(3+1) · (3 + 1/2) = +3.5
--/
-def a_A47_f72 : ℝ := decouplingParameter 3  -- f₇/₂ orbital
-
-/-- 
-Example: A=67 (⁶⁷As/⁶⁷Se) - g₉/₂ nucleon.
-
-For a g₉/₂ orbital (j=9/2), the predicted decoupling parameter is:
-  Using j = 4 (for 9/2):
-  a = (-1)^(4+1) · (4 + 1/2) = -4.5
--/
-def a_A67_g92 : ℝ := decouplingParameter 4  -- g₉/₂ orbital
-
-/-- 
-Theorem: Mirror symmetry of decoupling parameters.
-
-For mirror nuclei, the decoupling parameters satisfy:
-  a(Tz=+1/2) = -a(Tz=-1/2)
-
-This follows from the isospin reflection J·σ₃·J = -σ₃ proven in
-`isospin_reflection_is_modular_J`.
-
-However, the RELATIVE sign in the energy formula is the same for both mirrors
-because the overall phase cancels in |a|.
--/
-theorem mirror_symmetry_decoupling (j : ℕ) :
-    decouplingParameter j = -decouplingParameter j ↔
-      decouplingParameter j = 0 := by
-  constructor <;> intro h
-  · linarith
-  · rw [h, neg_zero]
-
-/-- 
-Theorem: Coriolis decoupling vanishes for K ≠ 1/2.
-
-For bands with K > 1/2, the Coriolis term is zero because the
-expectation value of j₃ (projection of single-particle angular momentum)
-vanishes by symmetry.
-
-This is consistent with the CPT structure: only K=1/2 couples to the
-chiral isospin inventory σ₃.
+The defined parity sequence is nonzero at every natural-number index.
 -/
 theorem coriolis_signature_ne_zero (K : ℕ) :
     coriolisSignature K ≠ 0 := by
   unfold coriolisSignature
   exact pow_ne_zero _ (by norm_num)
 
-/-- 
-Prediction: Decoupling parameters for unmeasured mirror nuclei.
-
-Based on the proven ℤ₄ monodromy and CPT inversion, we predict:
-- A=43 (⁴³Ti/⁴³Sc, f₇/₂): a ≈ ±3.5
-- A=51 (⁵¹Fe/⁵¹Mn, f₇/₂): a ≈ ±3.5
-- A=67 (⁶⁷As/⁶⁷Se, g₉/₂): a ≈ ∓4.5
-
-These can be tested against rotational band spectra.
--/
-theorem prediction_decoupling_A43 :
-    a_A47_f72 = 3.5 := by
-  norm_num [a_A47_f72, decouplingParameter]
-
-theorem prediction_decoupling_A67 :
-    a_A67_g92 = -4.5 := by
-  norm_num [a_A67_g92, decouplingParameter]
-
-/-- 
-Synthesis theorem linking Coriolis decoupling to the nuclear Hamiltonian.
-
-The Coriolis term in `unifiedRotationalEnergy` is structurally identical to
-the CPT inversion term from `isospin_flip_is_cpt_on_klein_bottle`.
-
-E_Coriolis = a · (-1)^(J+1/2) · (J+1/2)
-           ↔ k² · σ₃ · k² = σ₃
--/
-theorem coriolis_is_cpt_inversion_macroscopic (a : ℝ) :
-    ∃ (coriolisOperator : ℝ → ℝ),
-      (∀ J, coriolisOperator J = a * (-1 : ℝ)^J * ((J : ℝ) + 1/2)) ∧
-      (coriolisOperator 0 = a/2) ∧  -- First indexed state
-      (coriolisOperator 1 = -3*a/2)  -- Second indexed state
-:= by
-  refine ⟨fun J => a * (-1 : ℝ)^J * ((J : ℝ) + 1/2), ?_, ?_, ?_⟩
-  · intro J
-    rfl
-  · norm_num [pow_succ]
-    ring
-  · norm_num [pow_succ]
-    ring
-
-/-- 
-Final synthesis: Unifying topology, CPT, and rotational spectroscopy.
-
-This theorem connects:
-1. Klein bottle monodromy (k⁴ = 1)
-2. CPT inversion (k²·σ₃·k² = σ₃)
-3. Coriolis decoupling (a parameter)
-4. Experimental observables (rotational band energies)
--/
-theorem unified_coriolis_cpt_topology :
-    (∀ k : M2C, k * k = -(1 : M2C) → k * (k * (k * k)) = (1 : M2C)) ∧
-    (∃ a : ℝ, a = decouplingParameter 3) ∧
-    (a_A47_f72 = 3.5) ∧
-    (a_A67_g92 = -4.5) := by
-  constructor
-  · intro k hk
-    calc
-      k * (k * (k * k)) = k * k * (k * k) := by simp [mul_assoc]
-      _ = (-(1 : M2C)) * (-(1 : M2C)) := by rw [hk]
-      _ = 1 := by simp
-  constructor
-  · exact ⟨decouplingParameter 3, rfl⟩
-  constructor
-  · exact prediction_decoupling_A43
-  exact prediction_decoupling_A67
+/-! The earlier synthesis claims joined unrelated matrix and scalar facts by
+existential/wrapper packaging. The actual reusable matrix consequence remains
+owned by `MirrorNucleiIsospinGNS`; the actual scalar results are
+`coriolisSignature_add_two`, `decouplingParameter_abs`, and the three exact
+indexed values above. No CPT, topology, or measured spectroscopy consequence
+is inferred from this arithmetic. -/
 
 end CoriolisDecoupling
 end noncomputable section

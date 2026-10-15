@@ -10,6 +10,7 @@ transitive downstream support and depth in the formal dependency DAG.
 
 from __future__ import annotations
 
+import argparse
 import json
 import os
 import sys
@@ -419,9 +420,13 @@ def load_bridge_evidence_index(
 
 def main() -> int:
     root = repo_root()
+    parser = argparse.ArgumentParser(description="Advisory declaration graph signals; not a mathematical vacuity gate.")
+    parser.add_argument("--json-out", type=Path, default=root / "reports/theorem-significance.json")
+    parser.add_argument("--md-out", type=Path, default=root / "reports/theorem-significance.md")
+    args = parser.parse_args()
     
     # 1. Load the ground truth from Pauli Authority (ArangoDB or local artifacts)
-    print("[pauli-audit] Loading truthful graph mass from Pauli Authority...")
+    print("[graph-review] Reading existing declaration graph without refresh or database mutation...")
     decl_key_to_full, profiles = load_decl_graph(root)
     
     if not profiles:
@@ -471,7 +476,7 @@ def main() -> int:
 
     # 2. Render the Truthful Verdict
     md_lines = [
-        "# ⚖️ Pauli Authority Audit: Truthful Significance Index",
+        "# Advisory Declaration Graph Review",
         "",
         "> **Protocol:** Truth lives in Lean; structure lives in the graph.",
         f"> **Snapshot:** {len(profiles)} declarations analysed via Pauli Authority.",
@@ -498,18 +503,21 @@ def main() -> int:
 
     md_lines.extend([
         "",
-        "## 🗑️ Confirmed Vacuity (Pruning Candidates)",
-        "| Vacuous Declaration | Location |",
+        "## Isolated Declarations Requiring Source Review",
+        "Isolation does not establish vacuity and does not authorize deletion.",
+        "| Candidate Declaration | Location |",
         "| :--- | :--- |"
     ])
     
     for v in vacuous[:30]:
         md_lines.append(f"| `{v['name']}` | `{v['file']}:{v['line']}` |")
 
-    report_path = root / "reports" / "theorem-significance.md"
+    report_path = args.md_out
+    report_path.parent.mkdir(parents=True, exist_ok=True)
     report_path.write_text("\n".join(md_lines), encoding="utf-8")
 
-    json_path = root / "reports" / "theorem-significance.json"
+    json_path = args.json_out
+    json_path.parent.mkdir(parents=True, exist_ok=True)
     json_payload: list[dict[str, Any]] = []
     for name, p in profiles.items():
         json_payload.append(
@@ -530,14 +538,17 @@ def main() -> int:
                 "is_sink": p.is_sink,
                 "classification_basis": "graph-topology",
                 "graph_grounded_signal": True,
-                "heuristic_signal": False,
-                "hard_verdict_allowed": True,
+                "heuristic_signal": True,
+                "hard_verdict_allowed": False,
+                "semantic_audit_performed": False,
+                "coverage_complete": False,
+                "violations": [],
             }
         )
     json_path.write_text(json.dumps(json_payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
-    print(f"[pauli-audit] Formal audit complete. Wrote {report_path.relative_to(root)}")
-    print(f"[pauli-audit] Machine report: {json_path.relative_to(root)}")
+    print(f"[graph-review] Advisory report written: {report_path}")
+    print(f"[graph-review] Machine report: {json_path}")
     return 0
 
 if __name__ == "__main__":

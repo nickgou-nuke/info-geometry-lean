@@ -4,13 +4,13 @@
       "command": "lake",
       "args": [
         "env",
-        "/home/goutev/info-geometry-lean/OpenGauss/venv/bin/python",
+        "/home/goutev/repos/info-geometry-lean/OpenGauss/venv/bin/python",
         "-m",
         "lean_lsp_mcp"
       ],
-      "cwd": "/home/goutev/info-geometry-lean",
+      "cwd": "/home/goutev/repos/info-geometry-lean",
       "env": {
-        "LEAN_PROJECT_PATH": "/home/goutev/info-geometry-lean"
+        "LEAN_PROJECT_PATH": "/home/goutev/repos/info-geometry-lean"
       }
     }
   }

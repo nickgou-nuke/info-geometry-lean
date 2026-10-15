@@ -45,9 +45,8 @@ def addressInverseLimitEquiv
         intro m n h
         calc
           binaryRestrict h (binaryFamily n)
-              = (D.sheetEquiv m (D.truncate h (a.1 n))).2 := by
-                  simpa [binaryFamily, binaryRestrict] using
-                    (congrArg Prod.snd (D.truncate_compatible h (a.1 n))).symm
+              = (D.sheetEquiv m (D.truncate h (a.1 n))).2 :=
+                  (congrArg Prod.snd (D.truncate_compatible h (a.1 n))).symm
           _ = (D.sheetEquiv m (a.1 m)).2 := by rw [a.2 m n h]
     ((D.sheetEquiv 0 (a.1 0)).1, ⟨binaryFamily, hbinary⟩)
   invFun y :=
@@ -57,8 +56,9 @@ def addressInverseLimitEquiv
       calc
         D.sheetEquiv m (D.truncate h ((D.sheetEquiv n).symm (y.1, y.2.1 n)))
             = (y.1, binaryRestrict h (y.2.1 n)) := by
-                simpa [binaryRestrict] using D.truncate_compatible h ((D.sheetEquiv n).symm
-                  (y.1, y.2.1 n))
+                have hcompat := D.truncate_compatible h ((D.sheetEquiv n).symm (y.1, y.2.1 n))
+                rw [(D.sheetEquiv n).apply_symm_apply] at hcompat
+                exact hcompat
         _ = (y.1, y.2.1 m) := by rw [y.2.2 m n h]
         _ = D.sheetEquiv m ((D.sheetEquiv m).symm (y.1, y.2.1 m)) := by
               symm

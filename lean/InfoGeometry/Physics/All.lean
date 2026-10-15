@@ -120,6 +120,21 @@ import InfoGeometry.Physics.DilationMetaplecticOperator
 import InfoGeometry.Physics.BerryKeatingDilationSpectrumAudit
 import InfoGeometry.Physics.KreinBRSTGhostConfinement
 import InfoGeometry.Physics.KreinBRSTGhostConfinementAudit
+import InfoGeometry.Physics.KreinBdGMassDecoupling
+import InfoGeometry.Physics.ChevalleySpinorIdeal
+import InfoGeometry.Physics.ChevalleyDyads
+import InfoGeometry.Physics.ChevalleyDyadIsomorphism
+import InfoGeometry.Physics.ChevalleyKreinDirac
+import InfoGeometry.Physics.ChevalleyKreinDiracAudit
+import InfoGeometry.Physics.ChevalleyTomitaTakesaki
+import InfoGeometry.Physics.ChevalleyTomitaTakesakiAudit
+import InfoGeometry.Physics.TripotentFiveGradingDecomposition
+import InfoGeometry.Physics.ChevalleyNambuCARBridge
+import InfoGeometry.Physics.NambuSpinorHolonomy
+import InfoGeometry.Physics.CanonicalSpinorBdGSynthesis
+import InfoGeometry.Physics.HyperbolicBogoliubovRotation
+import InfoGeometry.Physics.Cl11WittChevalleyBridge
+import InfoGeometry.Physics.NambuSpinorGrassmannian
 import InfoGeometry.Physics.SelbergTraceAharonovBohm
 import InfoGeometry.Physics.SelbergTraceAharonovBohmAudit
 import InfoGeometry.Physics.RiemannKleinBottleThroatBridge
@@ -197,6 +212,15 @@ import InfoGeometry.Physics.SelfConcordantModularSouriau
 import InfoGeometry.Physics.SelfConcordantModularSouriauAudit
 import InfoGeometry.Physics.WillertonIsbellAmariDuality
 import InfoGeometry.Physics.WillertonIsbellAmariDualityAudit
+import InfoGeometry.Physics.HarmonicWeakHorizonBdG
+import InfoGeometry.Physics.NoncommutativeZornBdGDerivations
+import InfoGeometry.Physics.NoncommutativeZornBdGDerivationsAudit
+import InfoGeometry.Physics.LogCFTSymplecticSpinorBridge
+import InfoGeometry.Physics.LogCFTSymplecticSpinorBridgeAudit
+import InfoGeometry.Physics.ChevalleyMultiDyads
+import InfoGeometry.Physics.JordanWignerMultiDyads
+import InfoGeometry.Physics.JordanWignerMultiDyadsAudit
+import InfoGeometry.Physics.JordanWignerNonVacuityAssay
 
 /-!
 # Physics Umbrella

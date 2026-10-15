@@ -23,9 +23,9 @@ first-collision path density. -/
 theorem firstCollisionKernel_eq_existing_flux {μ d : ℝ} {p : Point}
     (hd : 0 < d) (hz : 0 ≤ p.2) :
     firstCollisionKernel μ d p =
-      ApollonianBipolarField.fluxDensity 1 (sourceRange d p) Real.pi *
+      InfoGeometry.Nuclear.ApollonianBipolarField.fluxDensity 1 (sourceRange d p) Real.pi *
         collisionDensity μ (materialPath d p) := by
-  unfold firstCollisionKernel ApollonianBipolarField.fluxDensity collisionDensity
+  unfold firstCollisionKernel InfoGeometry.Nuclear.ApollonianBipolarField.fluxDensity collisionDensity
   rw [sourceRange_sq hd hz]
   ring
 
@@ -35,10 +35,11 @@ theorem response_eq_existing_flux_integral (μ d R L : ℝ) (hd : 0 < d)
     (κ : Point → ℝ) :
     response μ d R L κ =
       ∫ p in cylinder R L,
-        (ApollonianBipolarField.fluxDensity 1 (sourceRange d p) Real.pi *
+        (InfoGeometry.Nuclear.ApollonianBipolarField.fluxDensity 1 (sourceRange d p) Real.pi *
           collisionDensity μ (materialPath d p)) * κ p := by
   apply setIntegral_congr_fun (measurableSet_cylinder R L)
   intro p hp
+  change firstCollisionKernel μ d p * κ p = _
   rw [firstCollisionKernel_eq_existing_flux hd hp.2.1]
 
 /-- On the axis, the existing separation d + z is the radius of EACH local
@@ -46,10 +47,10 @@ interaction point; z remains an integration variable. -/
 theorem on_axis_kernel_uses_existing_separation {μ d z : ℝ}
     (hd : 0 < d) (hz : 0 ≤ z) :
     firstCollisionKernel μ d ((0, 0), z) =
-      ApollonianBipolarField.fluxDensity (collisionDensity μ z)
-        (ApollonianBipolarField.interPolarDist d z) Real.pi := by
+      InfoGeometry.Nuclear.ApollonianBipolarField.fluxDensity (collisionDensity μ z)
+        (InfoGeometry.Nuclear.ApollonianBipolarField.interPolarDist d z) Real.pi := by
   unfold firstCollisionKernel
-  rw [materialPath_on_axis hd hz, ApollonianBipolarField.inter_polar_dist_eq]
-  simp [rangeSq, ApollonianBipolarField.fluxDensity, collisionDensity]
+  rw [materialPath_on_axis hd hz, InfoGeometry.Nuclear.ApollonianBipolarField.inter_polar_dist_eq]
+  simp [rangeSq, InfoGeometry.Nuclear.ApollonianBipolarField.fluxDensity, collisionDensity]
 
 end InfoGeometry.Sandbox.PR169.DetectorResponseIntegral

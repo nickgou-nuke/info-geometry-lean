@@ -68,7 +68,7 @@ theorem one_sub_ellActiveSupport_eq_flowZero :
 theorem ellActiveSupport_idempotent :
     ellActiveSupport * ellActiveSupport = ellActiveSupport := by
   have hT : ellGrading * ellGrading * ellGrading = ellGrading := by
-    simpa [pow_three] using ellGrading_tripotent
+    exact ellGrading_tripotent_mul
   unfold ellActiveSupport
   calc
     (ellGrading * ellGrading) * (ellGrading * ellGrading) =
@@ -116,7 +116,7 @@ theorem ellActiveDefectInvolution_on_flowZero (X : CZ) :
 theorem ellActiveDefectInvolution_on_flowPlus (X : CZ) :
     ellActiveDefectInvolution (flowPlus X) = flowPlus X := by
   have hT : ellGrading * ellGrading * ellGrading = ellGrading := by
-    simpa [pow_three] using ellGrading_tripotent
+    exact ellGrading_tripotent_mul
   have hQp : ellActiveSupport * flowPlus = flowPlus := by
     unfold ellActiveSupport flowPlus
     change (ellGrading * ellGrading) * projPos ellGrading =
@@ -133,7 +133,7 @@ theorem ellActiveDefectInvolution_on_flowPlus (X : CZ) :
 theorem ellActiveDefectInvolution_on_flowMinus (X : CZ) :
     ellActiveDefectInvolution (flowMinus X) = flowMinus X := by
   have hT : ellGrading * ellGrading * ellGrading = ellGrading := by
-    simpa [pow_three] using ellGrading_tripotent
+    exact ellGrading_tripotent_mul
   have hQm : ellActiveSupport * flowMinus = flowMinus := by
     unfold ellActiveSupport flowMinus
     change (ellGrading * ellGrading) * projNeg ellGrading =

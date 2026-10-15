@@ -7,7 +7,11 @@ inductive BoundaryAxis where
   | modulus
   | zeros
   | endpoint
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype BoundaryAxis where
+  elems := {BoundaryAxis.modulus, BoundaryAxis.zeros, BoundaryAxis.endpoint}
+  complete := by intro a; cases a <;> decide
 
 /-- A boundary audit is faithful when it sees every one of the three distinguished axes. -/
 def faithfulAudit (audit : Finset BoundaryAxis) : Prop :=

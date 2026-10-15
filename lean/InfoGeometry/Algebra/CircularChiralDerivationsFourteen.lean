@@ -84,10 +84,48 @@ inductive GaugeGenerator : Type
   -- 6 Chiral Parafermionic Quarks (Horizon Tilting)
   | quarkUp0 | quarkUp1 | quarkUp2
   | quarkDown0 | quarkDown1 | quarkDown2
-deriving DecidableEq, Repr, Fintype
+deriving DecidableEq, Repr
+
+def gaugeGeneratorFinEquiv : GaugeGenerator ≃ Fin 14 where
+  toFun := fun
+    | .cartan0 => 0
+    | .cartan1 => 1
+    | .gluon01 => 2
+    | .gluon02 => 3
+    | .gluon10 => 4
+    | .gluon12 => 5
+    | .gluon20 => 6
+    | .gluon21 => 7
+    | .quarkUp0 => 8
+    | .quarkUp1 => 9
+    | .quarkUp2 => 10
+    | .quarkDown0 => 11
+    | .quarkDown1 => 12
+    | .quarkDown2 => 13
+  invFun := fun
+    | 0 => .cartan0
+    | 1 => .cartan1
+    | 2 => .gluon01
+    | 3 => .gluon02
+    | 4 => .gluon10
+    | 5 => .gluon12
+    | 6 => .gluon20
+    | 7 => .gluon21
+    | 8 => .quarkUp0
+    | 9 => .quarkUp1
+    | 10 => .quarkUp2
+    | 11 => .quarkDown0
+    | 12 => .quarkDown1
+    | 13 => .quarkDown2
+  left_inv := by intro x; cases x <;> rfl
+  right_inv := by intro x; fin_cases x <;> rfl
+
+instance : Fintype GaugeGenerator :=
+  Fintype.ofEquiv (Fin 14) gaugeGeneratorFinEquiv.symm
 
 /-- 🏆 THEOREM 4: Exactly 14 Gauge Generators span the exceptional Lie algebra 𝔤₂(2). -/
-theorem gauge_generator_card : Fintype.card GaugeGenerator = 14 := rfl
+theorem gauge_generator_card : Fintype.card GaugeGenerator = 14 := by
+  rw [Fintype.card_congr gaugeGeneratorFinEquiv, Fintype.card_fin]
 
 /-- Canonical pair witnesses generating the 14 Lie derivations from ChiralBasis pairs. -/
 def gaugeWitnessPair : GaugeGenerator → (ChiralBasis × ChiralBasis)

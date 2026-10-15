@@ -22,7 +22,16 @@ inductive xi_window6_c3_cyclic_fiber_trisection_Word
   | w001001
   | w000101
   | w010101
-  deriving DecidableEq, Fintype, Repr
+  deriving DecidableEq, Repr
+
+instance : Fintype xi_window6_c3_cyclic_fiber_trisection_Word :=
+  Fintype.ofList
+    [.w000000, .w100000, .w010000, .w001000, .w101000, .w000100,
+      .w100100, .w010100, .w000010, .w100010, .w010010, .w001010,
+      .w101010, .w000001, .w010001, .w001001, .w000101, .w010101]
+    (by
+      intro x
+      cases x <;> simp)
 
 /-- The `C₃` root coordinates attached to the 18 cyclic words. -/
 abbrev xi_window6_c3_cyclic_fiber_trisection_Root := ℤ × ℤ × ℤ

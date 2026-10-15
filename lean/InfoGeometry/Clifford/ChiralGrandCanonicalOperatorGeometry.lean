@@ -685,10 +685,10 @@ theorem freeSheetHamiltonian_commutator_annihilation_plus
     algebraCommutator (freeSheetHamiltonian Eplus Eminus) (a 0) =
       -(Eplus • a 0) := by
   have hplus : algebraCommutator (sheetNumberPlus) (a 0) = -(a 0) := by
-    simpa [sheetNumberPlus] using
+    simpa [sheetNumberPlus, wittNumberOperator] using
       (quadraticWittGenerator_commutator_annihilation 0 0 0)
   have hminus : algebraCommutator (sheetNumberMinus) (a 0) = 0 := by
-    simpa [sheetNumberMinus] using
+    simpa [sheetNumberMinus, wittNumberOperator] using
       (quadraticWittGenerator_commutator_annihilation 1 1 0)
   have hplus' : sheetNumberPlus * a 0 - a 0 * sheetNumberPlus = -(a 0) := hplus
   have hminus' : sheetNumberMinus * a 0 - a 0 * sheetNumberMinus = 0 := hminus
@@ -714,10 +714,10 @@ theorem freeSheetHamiltonian_commutator_annihilation_minus
     algebraCommutator (freeSheetHamiltonian Eplus Eminus) (a 1) =
       -(Eminus • a 1) := by
   have hplus : algebraCommutator (sheetNumberPlus) (a 1) = 0 := by
-    simpa [sheetNumberPlus] using
+    simpa [sheetNumberPlus, wittNumberOperator] using
       (quadraticWittGenerator_commutator_annihilation 0 0 1)
   have hminus : algebraCommutator (sheetNumberMinus) (a 1) = -(a 1) := by
-    simpa [sheetNumberMinus] using
+    simpa [sheetNumberMinus, wittNumberOperator] using
       (quadraticWittGenerator_commutator_annihilation 1 1 1)
   have hplus' : sheetNumberPlus * a 1 - a 1 * sheetNumberPlus = 0 := hplus
   have hminus' : sheetNumberMinus * a 1 - a 1 * sheetNumberMinus = -(a 1) := hminus
@@ -743,10 +743,10 @@ theorem freeSheetHamiltonian_commutator_creation_plus
     algebraCommutator (freeSheetHamiltonian Eplus Eminus) (adag 0) =
       Eplus • adag 0 := by
   have hplus : algebraCommutator (sheetNumberPlus) (adag 0) = adag 0 := by
-    simpa [sheetNumberPlus] using
+    simpa [sheetNumberPlus, wittNumberOperator] using
       (quadraticWittGenerator_commutator_creation 0 0 0)
   have hminus : algebraCommutator (sheetNumberMinus) (adag 0) = 0 := by
-    simpa [sheetNumberMinus] using
+    simpa [sheetNumberMinus, wittNumberOperator] using
       (quadraticWittGenerator_commutator_creation 1 1 0)
   have hplus' : sheetNumberPlus * adag 0 - adag 0 * sheetNumberPlus = adag 0 := hplus
   have hminus' : sheetNumberMinus * adag 0 - adag 0 * sheetNumberMinus = 0 := hminus
@@ -772,10 +772,10 @@ theorem freeSheetHamiltonian_commutator_creation_minus
     algebraCommutator (freeSheetHamiltonian Eplus Eminus) (adag 1) =
       Eminus • adag 1 := by
   have hplus : algebraCommutator (sheetNumberPlus) (adag 1) = 0 := by
-    simpa [sheetNumberPlus] using
+    simpa [sheetNumberPlus, wittNumberOperator] using
       (quadraticWittGenerator_commutator_creation 0 0 1)
   have hminus : algebraCommutator (sheetNumberMinus) (adag 1) = adag 1 := by
-    simpa [sheetNumberMinus] using
+    simpa [sheetNumberMinus, wittNumberOperator] using
       (quadraticWittGenerator_commutator_creation 1 1 1)
   have hplus' : sheetNumberPlus * adag 1 - adag 1 * sheetNumberPlus = 0 := hplus
   have hminus' : sheetNumberMinus * adag 1 - adag 1 * sheetNumberMinus = adag 1 := hminus
@@ -813,16 +813,16 @@ theorem totalNumber_commutator_chiralCharge :
     algebraCommutator totalNumber chiralCharge = 0 := by
   have h00 : algebraCommutator (wittNumberOperator 0)
       (wittNumberOperator 0) = 0 := by
-    simpa using (quadraticWittGenerator_commutator_genuine 0 0 0 0)
+    simpa [wittNumberOperator] using (quadraticWittGenerator_commutator_genuine 0 0 0 0)
   have h01 : algebraCommutator (wittNumberOperator 0)
       (wittNumberOperator 1) = 0 := by
-    simpa using (quadraticWittGenerator_commutator_genuine 0 0 1 1)
+    simpa [wittNumberOperator] using (quadraticWittGenerator_commutator_genuine 0 0 1 1)
   have h10 : algebraCommutator (wittNumberOperator 1)
       (wittNumberOperator 0) = 0 := by
-    simpa using (quadraticWittGenerator_commutator_genuine 1 1 0 0)
+    simpa [wittNumberOperator] using (quadraticWittGenerator_commutator_genuine 1 1 0 0)
   have h11 : algebraCommutator (wittNumberOperator 1)
       (wittNumberOperator 1) = 0 := by
-    simpa using (quadraticWittGenerator_commutator_genuine 1 1 1 1)
+    simpa [wittNumberOperator] using (quadraticWittGenerator_commutator_genuine 1 1 1 1)
   unfold totalNumber chiralCharge algebraCommutator
   calc
     (wittNumberOperator 0 + wittNumberOperator 1) *

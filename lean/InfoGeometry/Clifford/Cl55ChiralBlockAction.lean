@@ -89,10 +89,8 @@ theorem restrictToChiralPlus_mul_apply
             _ = chiralPlusProjector * (A * B) := by rw [mul_assoc]) v =
       restrictToChiralPlus A hA (restrictToChiralPlus B hB v) := by
   apply Subtype.ext
-  simp only [restrictToChiralPlus, LinearMap.codRestrict_apply,
-    LinearMap.comp_apply, Matrix.mulVecLin_apply]
-  rw [← Matrix.mulVec_mulVec]
-  rfl
+  change (A * B).mulVec v.1 = A.mulVec (B.mulVec v.1)
+  exact (Matrix.mulVec_mulVec v.1 A B).symm
 
 theorem restrictToChiralMinus_mul_apply
     (A B : SpinorMatrix 5)
@@ -110,10 +108,8 @@ theorem restrictToChiralMinus_mul_apply
             _ = chiralMinusProjector * (A * B) := by rw [mul_assoc]) v =
       restrictToChiralMinus A hA (restrictToChiralMinus B hB v) := by
   apply Subtype.ext
-  simp only [restrictToChiralMinus, LinearMap.codRestrict_apply,
-    LinearMap.comp_apply, Matrix.mulVecLin_apply]
-  rw [← Matrix.mulVec_mulVec]
-  rfl
+  change (A * B).mulVec v.1 = A.mulVec (B.mulVec v.1)
+  exact (Matrix.mulVec_mulVec v.1 A B).symm
 
 theorem restrictToChiralPlus_one_apply (v : chiralPlusSector) :
     restrictToChiralPlus (1 : SpinorMatrix 5)

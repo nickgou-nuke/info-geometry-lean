@@ -39,16 +39,31 @@ theorem spinCARAutomorphism_maps_grade_family (g : Spin55) :
         (spinTransportedCl55GradeSubmodule g k : Set Cl55))
       (fun _ : Unit => spinCARAutomorphism g)
       (fun _ k => k) := by
-  simpa only [spinCARAutomorphism_apply] using
-    spinTransported_maps_grade_family g
+  change MapsToGradeBetween
+    (fun k : ℤ => (cl55GradeSubmodule k : Set Cl55))
+    (fun k : ℤ => (spinTransportedCl55GradeSubmodule g k : Set Cl55))
+    (fun _ : Unit => fun X => spinCliffordRingEquiv g X)
+    (fun _ k => k)
+  exact spinTransported_maps_grade_family g
 
 /- The CAR-facing owner exposes the corresponding exact image equality. -/
 theorem spinCARAutomorphism_grade_image (g : Spin55) (k : ℤ) :
-    (spinCARAutomorphism g : Cl55 ≃+* Cl55) ''
+      (spinCARAutomorphism g : Cl55 ≃+* Cl55) ''
         (cl55GradeSubmodule k : Set Cl55) =
       (spinTransportedCl55GradeSubmodule g k : Set Cl55) := by
-  simpa only [spinCARAutomorphism_apply] using
-    spinTransported_grade_image g k
+  change (spinCliffordRingEquiv g) ''
+      (cl55GradeSubmodule k : Set Cl55) =
+    (spinTransportedCl55GradeSubmodule g k : Set Cl55)
+  apply Set.ext
+  intro y
+  constructor
+  · rintro ⟨x, hx, rfl⟩
+    exact (spinTransported_grade_mem_iff g k x).2 hx
+  · intro hy
+    refine ⟨(spinCliffordRingEquiv g).symm y, ?_, ?_⟩
+    · apply (spinTransported_grade_mem_iff g k _).1
+      simpa using hy
+    · simp
 
 theorem spinCARAutomorphism_preserves_car (g : Spin55) (i : Fin 5) :
     spinCARAutomorphism g (annihilation55 i) *
@@ -76,7 +91,12 @@ theorem spinCARAutomorphism_preserves_quadratic_commutator
           spinCARAutomorphism g (mixedGenerator55 i j) =
       (if j = k then spinCARAutomorphism g (mixedGenerator55 i l) else 0) -
         (if i = l then spinCARAutomorphism g (mixedGenerator55 k j) else 0) := by
-  simpa only [spinCARAutomorphism_apply] using
-    spinTransportedMixedGenerator55_commutator_mixedGenerator g i j k l
+  change spinCliffordRingEquiv g (mixedGenerator55 i j) *
+          spinCliffordRingEquiv g (mixedGenerator55 k l) -
+        spinCliffordRingEquiv g (mixedGenerator55 k l) *
+          spinCliffordRingEquiv g (mixedGenerator55 i j) =
+      (if j = k then spinCliffordRingEquiv g (mixedGenerator55 i l) else 0) -
+        (if i = l then spinCliffordRingEquiv g (mixedGenerator55 k j) else 0)
+  exact spinTransportedMixedGenerator55_commutator_mixedGenerator g i j k l
 
 end InfoGeometry.Clifford.Clifford55

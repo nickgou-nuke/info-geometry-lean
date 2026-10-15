@@ -105,7 +105,8 @@ theorem momentumLinear_comp_positionLinear_sub_positionLinear_comp_momentumLinea
       LinearMap.id := by
   apply LinearMap.ext
   intro p
-  simpa [LinearMap.sub_apply] using momentum_position_commutator p
+  simpa [positionMomentumCommutator, LinearMap.sub_apply] using
+    momentum_position_commutator p
 
 theorem symmetricXPDilationLinear_comp_positionLinear_sub_positionLinear_comp_symmetricXPDilationLinear :
     symmetricXPDilationLinear.comp positionLinear -

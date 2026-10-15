@@ -26,6 +26,12 @@ def peirceStrictlyPositiveChannelCell :
     Set (Matrix (Fin 2) (Fin 2) ℝ) :=
   {M | ∀ i j, 0 < M i j}
 
+theorem maximalMinor_fin_one (C : Matrix (Fin 1) (Fin 4) ℝ)
+    (s : Fin 1 → Fin 4) :
+    maximalMinor C s = C 0 (s 0) := by
+  unfold maximalMinor
+  exact Matrix.det_fin_one _
+
 theorem peircePositiveChannel_mem_grassmannianChart
     (M : Matrix (Fin 2) (Fin 2) ℝ)
     (hM : M ∈ peircePositiveChannelCell) :
@@ -34,8 +40,15 @@ theorem peircePositiveChannel_mem_grassmannianChart
   change (∀ i j, 0 ≤ M i j) at hM
   intro s hs
   generalize h : s 0 = j
-  fin_cases j <;>
-    simp [peirceChannelFlatten, maximalMinor, h, hM]
+  fin_cases j
+  · rw [maximalMinor_fin_one, h]
+    simpa [peirceChannelFlatten] using hM 0 0
+  · rw [maximalMinor_fin_one, h]
+    simpa [peirceChannelFlatten] using hM 0 1
+  · rw [maximalMinor_fin_one, h]
+    simpa [peirceChannelFlatten] using hM 1 0
+  · rw [maximalMinor_fin_one, h]
+    simpa [peirceChannelFlatten] using hM 1 1
 
 theorem peirceStrictlyPositiveChannel_mem_grassmannianInterior
     (M : Matrix (Fin 2) (Fin 2) ℝ)
@@ -45,7 +58,14 @@ theorem peirceStrictlyPositiveChannel_mem_grassmannianInterior
   change (∀ i j, 0 < M i j) at hM
   intro s hs
   generalize h : s 0 = j
-  fin_cases j <;>
-    simp [peirceChannelFlatten, maximalMinor, h, hM]
+  fin_cases j
+  · rw [maximalMinor_fin_one, h]
+    simpa [peirceChannelFlatten] using hM 0 0
+  · rw [maximalMinor_fin_one, h]
+    simpa [peirceChannelFlatten] using hM 0 1
+  · rw [maximalMinor_fin_one, h]
+    simpa [peirceChannelFlatten] using hM 1 0
+  · rw [maximalMinor_fin_one, h]
+    simpa [peirceChannelFlatten] using hM 1 1
 
 end InfoGeometry.Canonical

@@ -1,6 +1,6 @@
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Algebra.Module.Basic
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.Tactic
 
 namespace InfoGeometry.Algebra.DeWittPeirceSuperalgebra
@@ -108,8 +108,9 @@ theorem dewitt_split (X : A) : X = body X + soul X := by
   calc X = (S.PL + S.PR) * X * (S.PL + S.PR) := h1
     _ = (S.PL * X + S.PR * X) * (S.PL + S.PR) := by rw [add_mul]
     _ = (S.PL * X * S.PL + S.PL * X * S.PR) + (S.PR * X * S.PL + S.PR * X * S.PR) := by
-        simp only [mul_add, add_mul]
-    _ = (S.PL * X * S.PL + S.PR * X * S.PR) + (S.PL * X * S.PR + S.PR * X * S.PL) := by abel
+        noncomm_ring
+    _ = (S.PL * X * S.PL + S.PR * X * S.PR) + (S.PL * X * S.PR + S.PR * X * S.PL) := by
+        ac_rfl
 
 /-- Left-Left Peirce subring invariance. -/
 lemma PL_body_PL (X : A) : S.PL * body X * S.PL = S.PL * X * S.PL := by
@@ -139,7 +140,8 @@ lemma PR_body_PR (X : A) : S.PR * body X * S.PR = S.PR * X * S.PR := by
 
 /-- Master Theorem 4: Body is Idempotent. -/
 theorem body_is_idempotent (X : A) : body (body X) = body X := by
-  dsimp [body]
+  change S.PL * body X * S.PL + S.PR * body X * S.PR =
+    S.PL * X * S.PL + S.PR * X * S.PR
   rw [PL_body_PL X, PR_body_PR X]
 
 /-- Master Theorem 5: The Superalgebra Closure ({Soul, Soul} ⊆ Body).
@@ -170,10 +172,8 @@ theorem soul_squared_is_body (X : A) :
   have h_PL_UV_PL : S.PL * (soul_LR X * soul_RL X + soul_RL X * soul_LR X) * S.PL = soul_LR X * soul_RL X := by
     dsimp [soul_LR, soul_RL]
     have h1 : S.PL * (S.PL * X * S.PR * (S.PR * X * S.PL)) * S.PL = S.PL * X * S.PR * (S.PR * X * S.PL) := by
-      calc S.PL * (S.PL * X * S.PR * (S.PR * X * S.PL)) * S.PL
-        _ = (S.PL * S.PL * X * S.PR) * (S.PR * X * S.PL * S.PL) := by repeat rw [mul_assoc]
-        _ = (S.PL * X * S.PR) * (S.PR * X * (S.PL * S.PL)) := by rw [S.h_PL_sq]; repeat rw [mul_assoc]
-        _ = S.PL * X * S.PR * (S.PR * X * S.PL) := by rw [S.h_PL_sq]
+      simp only [mul_assoc, S.h_PL_sq, S.h_PR_sq]
+      rw [← mul_assoc, S.h_PL_sq]
     have h2 : S.PL * (S.PR * X * S.PL * (S.PL * X * S.PR)) * S.PL = 0 := by
       calc S.PL * (S.PR * X * S.PL * (S.PL * X * S.PR)) * S.PL
         _ = (S.PL * S.PR) * (X * S.PL * (S.PL * X * S.PR) * S.PL) := by repeat rw [mul_assoc]
@@ -193,10 +193,8 @@ theorem soul_squared_is_body (X : A) :
         _ = 0 * (X * S.PR * (S.PR * X * S.PL) * S.PR) := by rw [h_ortho]
         _ = 0 := zero_mul _
     have h2 : S.PR * (S.PR * X * S.PL * (S.PL * X * S.PR)) * S.PR = S.PR * X * S.PL * (S.PL * X * S.PR) := by
-      calc S.PR * (S.PR * X * S.PL * (S.PL * X * S.PR)) * S.PR
-        _ = (S.PR * S.PR * X * S.PL) * (S.PL * X * S.PR * S.PR) := by repeat rw [mul_assoc]
-        _ = (S.PR * X * S.PL) * (S.PL * X * (S.PR * S.PR)) := by rw [S.h_PR_sq]; repeat rw [mul_assoc]
-        _ = S.PR * X * S.PL * (S.PL * X * S.PR) := by rw [S.h_PR_sq]
+      simp only [mul_assoc, S.h_PL_sq, S.h_PR_sq]
+      rw [← mul_assoc, S.h_PR_sq]
     calc S.PR * (S.PL * X * S.PR * (S.PR * X * S.PL) + S.PR * X * S.PL * (S.PL * X * S.PR)) * S.PR
       _ = S.PR * (S.PL * X * S.PR * (S.PR * X * S.PL)) * S.PR + S.PR * (S.PR * X * S.PL * (S.PL * X * S.PR)) * S.PR := by
           rw [mul_add, add_mul]
@@ -255,6 +253,11 @@ lemma PR_mul_G : S.PR * G (A := A) = -S.PR := by
 theorem G_body_parity_even (X : A) :
     G (A := A) * body X * G = body X := by
   dsimp [body]
+  have h_neg_mul_neg (x y : A) : (-x) * (-y) = x * y := by
+    calc
+      (-x) * (-y) = -(x * (-y)) := by rw [neg_mul]
+      _ = -(-(x * y)) := by rw [mul_neg]
+      _ = x * y := neg_neg _
   have h_dist : G (A := A) * (S.PL * X * S.PL + S.PR * X * S.PR) * G =
       (G * (S.PL * X * S.PL)) * G + (G * (S.PR * X * S.PR)) * G := by
     rw [mul_add, add_mul]
@@ -268,15 +271,9 @@ theorem G_body_parity_even (X : A) :
       _ = (G * S.PR) * X * (S.PR * G) := by repeat rw [mul_assoc]
       _ = (-S.PR) * X * (-S.PR) := by rw [G_mul_PR, PR_mul_G]
       _ = S.PR * X * S.PR := by
-          have h_neg : (-S.PR) * X * (-S.PR) = (-1 : A) * (S.PR * X) * ((-1 : A) * S.PR) := by
-            simp only [neg_eq_neg_one_mul, mul_assoc]
-          rw [h_neg]
-          have h_comm : (-1 : A) * (S.PR * X) * ((-1 : A) * S.PR) =
-              ((-1 : A) * (-1 : A)) * (S.PR * X * S.PR) := by
-            repeat rw [mul_assoc]
-          rw [h_comm]
-          have h_neg_one : (-1 : A) * (-1 : A) = 1 := by ring
-          rw [h_neg_one, one_mul]
+          calc
+            (-S.PR) * X * (-S.PR) = - (S.PR * X) * (-S.PR) := by rw [neg_mul]
+            _ = S.PR * X * S.PR := h_neg_mul_neg (S.PR * X) S.PR
   rw [h1, h2]
 
 /-- Master Theorem 7: The Soul is Parity-Odd under Chiral Grading. -/
@@ -296,7 +293,10 @@ theorem G_soul_parity_odd (X : A) :
     calc (G * (S.PR * X * S.PL)) * G
       _ = (G * S.PR) * X * (S.PL * G) := by repeat rw [mul_assoc]
       _ = (-S.PR) * X * S.PL := by rw [G_mul_PR, PL_mul_G]
-      _ = - (S.PR * X * S.PL) := by rw [neg_mul]
+      _ = - (S.PR * X * S.PL) := by
+        calc
+          (-S.PR) * X * S.PL = -(S.PR * X) * S.PL := by rw [neg_mul]
+          _ = -(S.PR * X * S.PL) := by rw [neg_mul]
   rw [h1, h2]
   abel
 

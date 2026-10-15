@@ -171,8 +171,8 @@ theorem realSplitPinSpinorUnitRepresentation_injective :
       cl55SpinorRepresentation ((g : Cl55ˣ) : Cl55) =
         cl55SpinorRepresentation ((h : Cl55ˣ) : Cl55) := by
     simpa only [realSplitPinSpinorUnitRepresentation_coe] using hcoe
-  exact cl55SpinorAlgEquiv.injective (by
-    simpa only [cl55SpinorAlgEquiv_toAlgHom_eq_representation] using hrep)
+  rw [← cl55SpinorAlgEquiv_toAlgHom_eq_representation] at hrep
+  exact cl55SpinorAlgEquiv.injective hrep
 
 end
 

@@ -54,8 +54,13 @@ theorem exists_pos_scalar_le_of_strictlyPositive
     (hA : IsStrictlyPositive (A : FiniteOperatorAlgebra n)) :
     ∃ r : ℝ, 0 < r ∧
       algebraMap ℝ (FiniteOperatorAlgebra n) r ≤ (A : FiniteOperatorAlgebra n) := by
-  exact (CFC.exists_pos_algebraMap_le_iff A.property).mpr
-    (fun x hx => hA.spectrum_pos hx)
+  have hspectrum : ∀ x ∈ spectrum ℝ (A : FiniteOperatorAlgebra n), 0 < x := by
+    intro x hx
+    exact IsStrictlyPositive.spectrum_pos
+      (𝕜 := ℝ) (A := FiniteOperatorAlgebra n)
+      (a := (A : FiniteOperatorAlgebra n)) hA hx
+  exact (CFC.exists_pos_algebraMap_le_iff
+    (a := (A : FiniteOperatorAlgebra n)) A.property).mpr hspectrum
 
 theorem strictlyPositive_of_norm_sub_lt
     [NeZero n]
@@ -113,9 +118,11 @@ theorem continuousOn_cfcLog_selfAdjoint
       ContinuousOn (CFC.log : FiniteOperatorAlgebra n → FiniteOperatorAlgebra n)
         {A | IsSelfAdjoint A ∧ IsUnit A} :=
     CFC.continuousOn_log
-  simpa only [cfcLogSelfAdjoint_apply] using
-    (hlog.comp continuous_subtype_val.continuousOn (fun ρ hρ =>
-      ⟨ρ.property, hρ.isUnit⟩))
+  change ContinuousOn
+    (fun ρ : SelfAdjointOperator n => CFC.log (ρ : FiniteOperatorAlgebra n))
+    faithfulStrictPositiveSelfAdjointLocus
+  exact hlog.comp continuous_subtype_val.continuousOn (fun ρ hρ =>
+    ⟨ρ.property, hρ.isUnit⟩)
 
 theorem continuousOn_cfcResolvent_selfAdjoint
     [NeZero n] (t : ℝ) (ht : 0 ≤ t) :

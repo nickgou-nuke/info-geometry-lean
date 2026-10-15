@@ -19,9 +19,8 @@ private theorem tendsto_fib_div_fib_add_two :
       Tendsto (fun m : ℕ => (Nat.fib m : ℝ) / Nat.fib (m + 1)) atTop (𝓝 (-ψ)) :=
     tendsto_fib_div_fib_succ_atTop
   have h₂ :
-      Tendsto (fun m : ℕ => (Nat.fib (m + 1) : ℝ) / Nat.fib (m + 2)) atTop (𝓝 (-ψ)) := by
-    simpa [Nat.add_assoc] using
-      (tendsto_fib_div_fib_succ_atTop.comp (tendsto_add_atTop_nat 1))
+      Tendsto (fun m : ℕ => (Nat.fib (m + 1) : ℝ) / Nat.fib (m + 2)) atTop (𝓝 (-ψ)) :=
+    tendsto_fib_div_fib_succ_atTop.comp (tendsto_add_atTop_nat 1)
   have hmul := h₁.mul h₂
   convert hmul using 1
   · ext m

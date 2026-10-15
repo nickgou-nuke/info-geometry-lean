@@ -1,5 +1,4 @@
 import Mathlib.Tactic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.RingTheory.Polynomial.Quotient
 import Mathlib.Algebra.Polynomial.Bivariate
 
@@ -25,7 +24,7 @@ def J : Ideal ℚ[X][Y] :=
 theorem dim_quotient_two : Module.finrank ℚ (R ⧸ I) = 2 := by
   have hI : I = J.map (Polynomial.Bivariate.equivMvPolynomial ℚ) := by
     ext p
-    simp [I, J, Ideal.map_span, Set.image_pair,
+    simp [I, J, Ideal.map_span,
       Polynomial.Bivariate.equivMvPolynomial_C_X,
       Polynomial.Bivariate.equivMvPolynomial_X]
 
@@ -44,7 +43,7 @@ theorem dim_quotient_two : Module.finrank ℚ (R ⧸ I) = 2 := by
     have e := (Polynomial.quotientSpanCXSubCAlgEquiv
       (R := ℚ[X]) (x := Polynomial.X * (Polynomial.X - C (1 : ℚ))) (y := (0 : ℚ[X]))).restrictScalars ℚ
     have hfin := e.toLinearEquiv.finrank_eq
-    simpa [J] using hfin.trans hq
+    exact hfin.trans hq
 
   have hmv : Module.finrank ℚ (R ⧸ I) = Module.finrank ℚ (ℚ[X][Y] ⧸ J) := by
     simpa [I, J, hI] using

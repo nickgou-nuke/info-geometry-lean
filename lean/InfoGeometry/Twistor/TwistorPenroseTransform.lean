@@ -1,4 +1,4 @@
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import Mathlib.Data.Fin.Basic
 import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
@@ -7,13 +7,22 @@ import Mathlib.Tactic
 open scoped BigOperators
 
 /-!
-# The Penrose Transform for Zero-Rest-Mass Fields and Self-Dual Maxwell Curvature
+# Finite spinor-array identities and incidence
 
-Formalizes:
+This file formalizes finite-index algebra over `ℂ`: the alternating `Fin 2`
+spinor form, its contraction against symmetric arrays, a curvature-shaped
+array, and the homogeneity/product rule of a separately defined incidence
+map. These calculations are useful algebraic ingredients, but this file does
+not construct twistor space, sheaf cohomology, a Penrose transform, spacetime
+derivatives, or a source-free Maxwell solution. In particular, symmetry of
+the supplied gradient array is explicit input to the contraction identity,
+not a consequence of a field equation or of cohomology.
+
+Historical claims being replaced:
 1. 2-spinor index space `Fin 2` and the symplectic Levi-Civita metric `epsilon`.
 2. Antisymmetry of the spinor metric: `ε_{ji} = - ε_{ij}`.
 3. Contraction theorem: `∑_{i, j} ε^{ij} T_{ij} = 0` for any symmetric 2-tensor.
-4. The Penrose Transform bundle `TwistorMaxwellCohomology` representing H¹(ℙ𝕋, 𝒪(-4)):
+4. The former comments overclaimed an analytic twistor cohomology interpretation; the array data below has no such structure:
    - Field spinor `ϕ_{A'B'}(x)` with symmetry `ϕ_{A'B'} = ϕ_{B'A'}`.
    - Spacetime gradient `∇_{A A'} ϕ_{B' C'}` totally symmetric in primed indices.
 5. The Zero-Rest-Mass field equation:
@@ -25,7 +34,8 @@ Formalizes:
 7. Penrose incidence relation `ω^A = i * x^{AA'} π_{A'}` and projective homogeneity.
 8. Master synthesis structure and certificate.
 
-All proofs are complete, mathlib-native, with 0 `sorry` and 0 `admit`.
+The finite-array identities below are proved in Mathlib; they should not be
+read as a formalization of the analytic Penrose transform.
 -/
 
 noncomputable section
@@ -68,83 +78,83 @@ theorem contract_epsilon_symm (T : Fin 2 → Fin 2 → ℂ) (hT : ∀ i j, T i j
     _ = T 0 1 - T 0 1 := by rw [h_symm]
     _ = 0             := by ring
 
-/-! ### 2. The Penrose Transform Cohomology Bundle -/
+/-! ### 2. Finite array data with explicit symmetries -/
 
-/-- Representation of a twistor cohomology class in `H¹(ℙ𝕋, 𝒪(-4))`
-    generating a self-dual Maxwell field on complexified Minkowski space. -/
-structure TwistorMaxwellCohomology where
-  /-- The self-dual Maxwell field spinor `ϕ_{A'B'}(x)` produced by contour integration. -/
+/-- The two finite arrays used by the algebraic readouts. Symmetry assumptions
+are theorem hypotheses, not fields of this data structure. -/
+structure TwistorMaxwellArrayData where
+  /-- A two-index array used as curvature-shaped data. -/
   field : (Fin 2 → Fin 2 → ℂ) → (Fin 2 → Fin 2 → ℂ)
-  /-- Symmetry of the field spinor: `ϕ_{A'B'} = ϕ_{B'A'}` (from π_{A'} π_{B'}). -/
-  field_symm : ∀ x i j, field x i j = field x j i
-  /-- Spacetime derivative: `∇_{A A'} ϕ_{B' C'}(x)`. -/
+  /-- A four-index array, with no derivative structure imposed. -/
   grad : (Fin 2 → Fin 2 → ℂ) → Fin 2 → Fin 2 → Fin 2 → Fin 2 → ℂ
-  /-- Symmetry in the first two primed indices (from π_{A'} π_{B'}). -/
-  grad_symm12 : ∀ x A A' B' C', grad x A A' B' C' = grad x A B' A' C'
 
-namespace TwistorMaxwellCohomology
+namespace TwistorMaxwellArrayData
 
-variable (P : TwistorMaxwellCohomology)
+variable (P : TwistorMaxwellArrayData)
 
-/-! ### 3. The Zero-Rest-Mass Field Equations -/
+/-! ### 3. Antisymmetric contraction of the supplied symmetric array -/
 
-/-- **Main Theorem 1 (Zero-Rest-Mass Field Equation)**:
-    The Penrose field spinor strictly satisfies the massless field equation:
-    `∇^{AA'} ϕ_{A'C'} = 0 ↔ ∑_{A', B'} ε^{A'B'} ∇_{AA'} ϕ_{B'C'} = 0`. -/
-theorem zero_rest_mass_equation (x : Fin 2 → Fin 2 → ℂ) (A C' : Fin 2) :
+/-- Contracting the explicitly symmetric `grad` array with `epsilon` gives
+zero. This finite identity does not assert or derive a zero-rest-mass PDE. -/
+theorem symmetric_gradient_contraction_zero
+    (x : Fin 2 → Fin 2 → ℂ) (A C' : Fin 2)
+    (hGradSymm : ∀ A' B', P.grad x A A' B' C' = P.grad x A B' A' C') :
     (∑ A' : Fin 2, ∑ B' : Fin 2, epsilon A' B' * P.grad x A A' B' C') = 0 := by
   let T : Fin 2 → Fin 2 → ℂ := fun A' B' => P.grad x A A' B' C'
-  have hT : ∀ i j, T i j = T j i := fun i j => P.grad_symm12 x A i j C'
+  have hT : ∀ i j, T i j = T j i := hGradSymm
   exact contract_epsilon_symm T hT
 
-/-! ### 4. Self-Dual Maxwell Curvature Tensor -/
+/-! ### 4. Curvature-shaped array and its algebraic symmetries -/
 
-/-- The self-dual Maxwell curvature 2-form in spinor notation:
-    `F_{AA' BB'} = ε_{AB} ϕ_{A'B'}`. -/
-def maxwellCurvature (x : Fin 2 → Fin 2 → ℂ) :
+/-- An antisymmetric-pair array built from `epsilon` and the symmetric `field`.
+This definition alone does not supply Maxwell's differential equations. -/
+def curvatureArray (x : Fin 2 → Fin 2 → ℂ) :
     Fin 2 → Fin 2 → Fin 2 → Fin 2 → ℂ :=
   fun A A' B B' => epsilon A B * P.field x A' B'
 
-/-- **Main Theorem 2 (Antisymmetry of the Maxwell Field Tensor)**:
-    Under exchange of spacetime indices `(A, A') ↔ (B, B')`, the tensor is strictly antisymmetric:
-    `F_{BB' AA'} = - F_{AA' BB'}`. -/
-theorem maxwell_antisymmetry (x : Fin 2 → Fin 2 → ℂ) (A A' B B' : Fin 2) :
-    P.maxwellCurvature x B B' A A' = - P.maxwellCurvature x A A' B B' := by
-  dsimp [maxwellCurvature]
+/-- The curvature-shaped array is antisymmetric under exchange of its two
+index pairs. This finite-array fact is not a Maxwell field construction. -/
+theorem curvature_array_pair_antisymmetric
+    (x : Fin 2 → Fin 2 → ℂ) (A A' B B' : Fin 2)
+    (hFieldSymm : ∀ i j, P.field x i j = P.field x j i) :
+    P.curvatureArray x B B' A A' = - P.curvatureArray x A A' B B' := by
+  dsimp [curvatureArray]
   rw [epsilon_antisymm B A]
-  rw [P.field_symm x B' A']
+  rw [hFieldSymm B' A']
   ring
 
-/-- **Main Theorem 3 (Vanishing of the Anti-Self-Dual Component)**:
-    Contraction with `ε^{A'B'}` isolates the anti-self-dual curvature.
-    Because `ϕ_{A'B'}` is symmetric, this component vanishes identically:
-    `∑_{A', B'} ε^{A'B'} F_{AA' BB'} = 0`. -/
-theorem maxwell_anti_self_dual_part_vanishes
-    (x : Fin 2 → Fin 2 → ℂ) (A B : Fin 2) :
-    (∑ A' : Fin 2, ∑ B' : Fin 2, epsilon A' B' * P.maxwellCurvature x A A' B B') = 0 := by
+/-- The primed-index epsilon contraction of this array vanishes by symmetry of
+`field`. This identity does not identify a Hodge-dual component or prove a
+Maxwell field equation. -/
+theorem curvature_array_epsilon_contraction_zero
+    (x : Fin 2 → Fin 2 → ℂ) (A B : Fin 2)
+    (hFieldSymm : ∀ i j, P.field x i j = P.field x j i) :
+    (∑ A' : Fin 2, ∑ B' : Fin 2, epsilon A' B' * P.curvatureArray x A A' B B') = 0 := by
   rw [Fin.sum_univ_two]
   simp only [Fin.sum_univ_two]
-  dsimp [maxwellCurvature]
+  dsimp [curvatureArray]
   rw [eps_00, eps_01, eps_10, eps_11]
-  have h_symm : P.field x 1 0 = P.field x 0 1 := P.field_symm x 1 0
+  have h_symm : P.field x 1 0 = P.field x 0 1 := hFieldSymm 1 0
   calc 0 * (epsilon A B * P.field x 0 0) + 1 * (epsilon A B * P.field x 0 1) +
        (-1 * (epsilon A B * P.field x 1 0) + 0 * (epsilon A B * P.field x 1 1))
     _ = epsilon A B * (P.field x 0 1 - P.field x 1 0) := by ring
     _ = epsilon A B * (P.field x 0 1 - P.field x 0 1) := by rw [h_symm]
     _ = 0                                            := by ring
 
-/-- **Main Theorem 4 (Source-Free Maxwell Divergence)**:
-    The divergence of the field strength tensor is governed by the ZRM equation:
-    `∑_{A', B'} ε^{A'B'} ∇_{CA'} F_{AB B' C'} = ε_{AB} * (∇^{A' C'} ϕ_{A' C'}) = 0`. -/
-theorem maxwell_source_free_divergence (x : Fin 2 → Fin 2 → ℂ) (C C' : Fin 2) :
+/-- The same symmetric-array contraction with renamed free indices. This is
+not a source-free Maxwell divergence theorem. -/
+theorem symmetric_array_contraction_readout
+    (x : Fin 2 → Fin 2 → ℂ) (C C' : Fin 2)
+    (hGradSymm : ∀ A' B', P.grad x C A' B' C' = P.grad x C B' A' C') :
     (∑ A' : Fin 2, ∑ B' : Fin 2, epsilon A' B' * P.grad x C A' B' C') = 0 :=
-  P.zero_rest_mass_equation x C C'
+  P.symmetric_gradient_contraction_zero x C C' hGradSymm
 
-end TwistorMaxwellCohomology
+end TwistorMaxwellArrayData
 
-/-! ### 5. Penrose Incidence Relation on Null Geodesics -/
+/-! ### 5. Finite complex incidence formula -/
 
-/-- The Penrose incidence relation `ω^A = i * x^{AA'} π_{A'}`. -/
+/-- The standard-form complex bilinear incidence expression. This definition
+does not itself construct projective twistor space or null geodesics. -/
 def twistorIncidence (x : Fin 2 → Fin 2 → ℂ) (pi : Fin 2 → ℂ) : Fin 2 → ℂ :=
   fun A => Complex.I * (∑ A' : Fin 2, x A A' * pi A')
 
@@ -156,6 +166,36 @@ theorem incidence_homogeneous (x : Fin 2 → Fin 2 → ℂ) (pi : Fin 2 → ℂ)
   dsimp [twistorIncidence]
   rw [Fin.sum_univ_two, Fin.sum_univ_two]
   ring
+
+/-! ### 5a. Conditional transport of chirality through incidence
+
+The file's incidence map is defined over `ℂ`, rather than over a superspace
+algebra.  The following theorem records exactly the algebraic input needed to
+transport an annihilation equation through that map: a real-linear derivation
+must kill the coordinate, the spinor, and the scalar `I`.  It does not identify
+such a derivation with a supersymmetry covariant derivative.
+-/
+
+/-- If a real-linear derivation kills the spacetime coordinates, the reference
+spinor, and `I`, then it kills the corresponding Penrose incidence component.
+This is the product-and-sum part of a chiral incidence argument. -/
+theorem incidence_derivation_eq_zero
+    (D : ℂ →ₗ[ℝ] ℂ)
+    (hD_mul : ∀ z w, D (z * w) = D z * w + z * D w)
+    (hDI : D Complex.I = 0)
+    (x : Fin 2 → Fin 2 → ℂ) (pi : Fin 2 → ℂ) (A : Fin 2)
+    (hx : ∀ A' : Fin 2, D (x A A') = 0)
+    (hpi : ∀ A' : Fin 2, D (pi A') = 0) :
+    D (twistorIncidence x pi A) = 0 := by
+  dsimp [twistorIncidence]
+  have hsum : D (∑ A' : Fin 2, x A A' * pi A') = 0 := by
+    rw [map_sum]
+    apply Finset.sum_eq_zero
+    intro A' _
+    rw [hD_mul, hx A', hpi A']
+    simp
+  rw [hD_mul, hDI, hsum]
+  simp
 
 /-! ### 6. Master Certified Synthesis -/
 

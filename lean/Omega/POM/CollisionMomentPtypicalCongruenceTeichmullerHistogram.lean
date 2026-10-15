@@ -20,7 +20,8 @@ lemma pom_collision_moment_ptypical_congruence_teichmuller_histogram_scalar
     dvd_sub_pow_of_dvd_sub (R := ℤ) hfermat j
   rw [Nat.modEq_iff_dvd]
   convert hdiv.neg_right using 1
-  simp [pow_mul, pow_succ, mul_comm]
+  all_goals
+    simp [Nat.succ_eq_add_one, pow_mul, pow_succ, mul_comm]
 
 /-- Paper label: `prop:pom-collision-moment-ptypical-congruence-teichmuller-histogram`. -/
 theorem paper_pom_collision_moment_ptypical_congruence_teichmuller_histogram

@@ -1,5 +1,6 @@
-import Mathlib.Data.Real.Basic
-import Mathlib.MeasureTheory.Measure.Dirac
+import Mathlib.Basic.Real.Basic
+import Mathlib.MeasureTheory.Measure.Dirac.Def
+import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
 import Mathlib.Tactic
 
 namespace Omega.CircleDimension

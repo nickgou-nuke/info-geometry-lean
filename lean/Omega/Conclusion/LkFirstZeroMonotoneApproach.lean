@@ -133,15 +133,21 @@ theorem paper_conclusion_lk_first_zero_monotone_approach :
   have hsinc_tendsto :
       Tendsto (fun k : ℕ => Real.sinc (conclusion_lk_first_zero_monotone_approach_x k))
         atTop (nhds 1) := by
-    simpa using Real.continuous_sinc.continuousAt.tendsto.comp hx_zero
+    have hcomp := Real.continuous_sinc.continuousAt.tendsto.comp hx_zero
+    rw [Real.sinc_zero] at hcomp
+    exact hcomp
   have halpha_tendsto :
       Tendsto conclusion_lk_first_zero_monotone_approach_alpha atTop (nhds (Real.pi ^ 2 / 4)) := by
     have hsquare :
         Tendsto
           (fun k : ℕ => Real.sinc (conclusion_lk_first_zero_monotone_approach_x k) ^ 2)
-          atTop (nhds (1 ^ 2)) := hsinc_tendsto.pow 2
-    simpa [conclusion_lk_first_zero_monotone_approach_alpha] using
-      (tendsto_const_nhds.mul hsquare)
+          atTop (nhds 1) := by
+      have h1 : (1 : ℝ) = (1 : ℝ) ^ 2 := by ring
+      rw [h1]
+      exact hsinc_tendsto.pow 2
+    have hprod := (tendsto_const_nhds (x := Real.pi ^ 2 / 4)).mul hsquare
+    rw [mul_one] at hprod
+    exact hprod
   have heigen_strict : StrictAnti conclusion_lk_first_zero_monotone_approach_eigenRatio := by
     intro k l hkl
     have halpha :

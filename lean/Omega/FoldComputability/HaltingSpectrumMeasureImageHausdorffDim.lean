@@ -35,8 +35,7 @@ theorem paper_fold_computability_halting_spectrum_measure_image_hausdorff_dim :
   · intro N
     unfold fold_computability_halting_spectrum_measure_image_hausdorff_dim_cover_radius
     exact one_div_pos.mpr (pow_pos (by norm_num : (0 : ℝ) < 2) N)
-  · simpa [fold_computability_halting_spectrum_measure_image_hausdorff_dim_evaluation_map] using
-      (LipschitzWith.id : LipschitzWith 1 (fun x : ℝ => x))
+  · exact LipschitzWith.id
   · intro x hx
     exact ⟨x, rfl⟩
   · refine ⟨0, ?_⟩

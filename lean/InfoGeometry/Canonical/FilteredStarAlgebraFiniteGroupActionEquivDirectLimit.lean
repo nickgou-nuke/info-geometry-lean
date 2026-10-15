@@ -77,7 +77,8 @@ noncomputable def algebraicColimitGroupActionEquiv (g : G) :
 
 @[simp] theorem algebraicColimitGroupActionEquiv_one :
     algebraicColimitGroupActionEquiv Stage sys A 1 =
-      (StarAlgEquiv.refl :
+      (StarAlgEquiv.refl ℂ
+        (FilteredStarAlgebraDirectLimit.AlgebraicStarDirectLimit Stage sys) :
         FilteredStarAlgebraDirectLimit.AlgebraicStarDirectLimit Stage sys ≃⋆ₐ[ℂ]
           FilteredStarAlgebraDirectLimit.AlgebraicStarDirectLimit Stage sys) := by
   ext x

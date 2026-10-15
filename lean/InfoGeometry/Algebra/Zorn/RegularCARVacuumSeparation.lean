@@ -58,10 +58,25 @@ theorem regular_anticommutator (a b : Zorn) :
   change a * (b * x) + b * (a * x) = (a * b + b * a) * x
   rw [InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.add_mul]
   apply canonicalVectorEquiv.injective
-  simpa only [canonicalVectorEquiv_mul, canonicalVectorEquiv_add] using
-    (InfoGeometry.Algebra.alternative_left_linearized
+  simp only [canonicalVectorEquiv_mul, canonicalVectorEquiv_add]
+  have h := (InfoGeometry.Algebra.alternative_left_linearized
       InfoGeometry.Algebra.zorn_left_alternative
       (canonicalVectorEquiv a) (canonicalVectorEquiv b) (canonicalVectorEquiv x)).symm
+  change InfoGeometry.Algebra.ZornVectorMatrix.add
+      (InfoGeometry.Algebra.ZornVectorMatrix.mul (canonicalVectorEquiv a)
+        (InfoGeometry.Algebra.ZornVectorMatrix.mul (canonicalVectorEquiv b)
+          (canonicalVectorEquiv x)))
+      (InfoGeometry.Algebra.ZornVectorMatrix.mul (canonicalVectorEquiv b)
+        (InfoGeometry.Algebra.ZornVectorMatrix.mul (canonicalVectorEquiv a)
+          (canonicalVectorEquiv x))) =
+    InfoGeometry.Algebra.ZornVectorMatrix.add
+      (InfoGeometry.Algebra.ZornVectorMatrix.mul
+        (InfoGeometry.Algebra.ZornVectorMatrix.mul (canonicalVectorEquiv a)
+          (canonicalVectorEquiv b)) (canonicalVectorEquiv x))
+      (InfoGeometry.Algebra.ZornVectorMatrix.mul
+        (InfoGeometry.Algebra.ZornVectorMatrix.mul (canonicalVectorEquiv b)
+          (canonicalVectorEquiv a)) (canonicalVectorEquiv x)) at h
+  exact h
 
 /-- Repeated left factors can be reassociated, by alternativity rather than associativity. -/
 theorem regular_square (a : Zorn) : L a * L a = L (a * a) := by
@@ -69,9 +84,16 @@ theorem regular_square (a : Zorn) : L a * L a = L (a * a) := by
   intro x
   change a * (a * x) = (a * a) * x
   apply canonicalVectorEquiv.injective
-  simpa only [canonicalVectorEquiv_mul] using
-    (InfoGeometry.Algebra.zorn_left_alternative
+  simp only [canonicalVectorEquiv_mul]
+  have h := (InfoGeometry.Algebra.zorn_left_alternative
       (canonicalVectorEquiv a) (canonicalVectorEquiv x)).symm
+  change InfoGeometry.Algebra.ZornVectorMatrix.mul (canonicalVectorEquiv a)
+      (InfoGeometry.Algebra.ZornVectorMatrix.mul (canonicalVectorEquiv a)
+        (canonicalVectorEquiv x)) =
+    InfoGeometry.Algebra.ZornVectorMatrix.mul
+      (InfoGeometry.Algebra.ZornVectorMatrix.mul (canonicalVectorEquiv a)
+        (canonicalVectorEquiv a)) (canonicalVectorEquiv x) at h
+  exact h
 
 /-- Exact raw upper/lower anticommutator in the canonical Zorn carrier. -/
 theorem raw_mixed_CAR (i j : Fin 3) :

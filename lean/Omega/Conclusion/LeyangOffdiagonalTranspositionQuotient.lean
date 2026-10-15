@@ -74,9 +74,9 @@ theorem paper_conclusion_leyang_offdiagonal_transposition_quotient :
         apply Equiv.Perm.ext
         intro i
         fin_cases i
-        · simpa [offDiagonalTransposition] using h0
-        · simpa [offDiagonalTransposition] using h1
-        · simpa [offDiagonalTransposition] using h2
+        · dsimp; rw [h0]; decide
+        · dsimp; rw [h1]; decide
+        · dsimp; rw [h2]; decide
         · have h3 : σ 3 = (2 : Fin 4) := by
             have hs3lt : (σ 3 : ℕ) < 4 := (σ 3).2
             interval_cases hs3 : (σ 3 : ℕ)
@@ -87,7 +87,7 @@ theorem paper_conclusion_leyang_offdiagonal_transposition_quotient :
             · exact Fin.ext hs3
             · exfalso
               exact (by decide : (3 : Fin 4) ≠ 2) (σ.injective ((Fin.ext hs3).trans h2.symm))
-          simpa [offDiagonalTransposition] using h3
+          dsimp; rw [h3]; decide
     · intro hσ
       rcases hσ with hσ | hσ
       · subst hσ

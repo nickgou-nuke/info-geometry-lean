@@ -49,6 +49,8 @@ theorem complex_example_traceRatio :
     ring_nf <;> norm_num [Complex.I_sq]
   rw [diagonalRepresentative_traceRatio _ hnonzero, hinverse]
   ring_nf
+  norm_num [Complex.I_sq]
+  ring
 
 theorem complex_example_nonreal :
     (traceRatio (diagonalRepresentative (2 + Complex.I))).im ≠ 0 := by

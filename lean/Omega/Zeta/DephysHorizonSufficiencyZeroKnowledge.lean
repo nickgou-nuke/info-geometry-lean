@@ -11,7 +11,8 @@ def dephys_horizon_sufficiency_zero_knowledge_projector_to_fixedPoint
   fun ρ =>
     ⟨dephys_idempotent_monad_i_projection_projector restrict lift ρ, by
       have hsec := hsection (dephysExternalRestriction restrict ρ)
-      simpa [dephys_idempotent_monad_i_projection_projector, dephysExternalRestriction] using
+      simpa [dephys_idempotent_monad_i_projection_projector,
+        dephys_idempotent_monad_i_projection_fixedPoints, dephysExternalRestriction] using
         congrArg lift hsec⟩
 
 lemma dephys_horizon_sufficiency_zero_knowledge_projector_preserves_externalization

@@ -58,4 +58,37 @@ def formalConjecturesTheorem : String := "Erdos1196.erdos_1196"
 
 end erdos1196ProofPin
 
+/-- Metadata for a pinned external Lean proof source. -/
+structure ExternalLeanProofPin where
+  /-- Repository URL. -/
+  repository : String
+  /-- Exact commit used locally. -/
+  commit : String
+  /-- Local checkout path. -/
+  localPath : String
+  /-- Upstream Lean toolchain recorded by the proof repository. -/
+  upstreamToolchain : String
+  /-- Local Lean toolchain used by this vendored checkout. -/
+  localToolchain : String
+  /-- Main external theorem declaration. -/
+  mainTheorem : String
+  /-- Formal-conjectures bridge theorem declaration. -/
+  formalConjecturesTheorem : String
+  deriving Repr
+
+/--
+Pinned external proof source for the primitive-sets-above theorem.
+
+This is metadata only; it is not a mathematical axiom and does not assert the
+external theorem inside this namespace.
+-/
+def erdos1196ProofPin : ExternalLeanProofPin where
+  repository := erdos1196ProofPin.repository
+  commit := erdos1196ProofPin.commit
+  localPath := erdos1196ProofPin.localPath
+  upstreamToolchain := erdos1196ProofPin.upstreamToolchain
+  localToolchain := erdos1196ProofPin.localToolchain
+  mainTheorem := erdos1196ProofPin.mainTheorem
+  formalConjecturesTheorem := erdos1196ProofPin.formalConjecturesTheorem
+
 end InfoGeometry.Arithmetic

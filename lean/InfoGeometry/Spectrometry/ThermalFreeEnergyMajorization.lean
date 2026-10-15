@@ -42,7 +42,7 @@ theorem lineFreeEnergy_le_quadratic (anchor candidate cutoff temperature : ℝ)
       lineFreeEnergy_le_tangent anchor candidate cutoff temperature temperature_pos
     _ ≤ lineFreeEnergy anchor cutoff temperature +
         lineWeight anchor cutoff temperature *
-          ((candidate ^ 2 - anchor ^ 2) / (2 * anchor)) := add_le_add_left weighted _
+          ((candidate ^ 2 - anchor ^ 2) / (2 * anchor)) := by linarith
     _ = _ := by ring
 
 end

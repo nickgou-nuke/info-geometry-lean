@@ -37,7 +37,11 @@ open InfoGeometry.Clifford.ConformalLieAlgebra55
 /-- Indices for the basis `{H, Ep, Em, G1, G2}`. -/
 inductive B : Type
   | H | Ep | Em | G1 | G2
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype B where
+  elems := {B.H, .Ep, .Em, .G1, .G2}
+  complete x := by cases x <;> simp
 
 open B
 

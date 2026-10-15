@@ -1,4 +1,4 @@
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import Omega.SPG.WeightedDiscreteFluxIdentity
 
 namespace Omega.SPG
@@ -37,9 +37,25 @@ def hypercubeGodelFluxMultiplicativeVolumeLaw {n : ℕ} (S : Finset (Omega.Word 
 theorem paper_fold_hypercube_godel_flux_multiplicative_volume (S : Finset (Omega.Word n))
     (p : Fin n → ℕ) : hypercubeGodelFluxMultiplicativeVolumeLaw S p := by
   intro i
-  simpa [hypercubeGodelCode, hypercubeGodelZeroLayerVolume, hypercubeGodelOneLayerVolume] using
-    (paper_fold_hypercube_weighted_discrete_flux_identity (i := i) (S := S)
-      (a := fun j => (p j : Real)))
+  have h₁ := paper_fold_hypercube_weighted_discrete_flux_identity (i := i) (S := S)
+    (a := fun j => (p j : Real))
+  dsimp [hypercubeGodelCode, hypercubeGodelZeroLayerVolume, hypercubeGodelOneLayerVolume,
+    zeroLayerWeightSum, oneLayerWeightSum, weight] at h₁ ⊢
+  <;>
+  (try simp_all [Finset.sum_filter, Finset.mem_filter, Finset.mem_univ, true_and]) <;>
+  (try ring_nf at * <;> simp_all) <;>
+  (try norm_cast at * <;> simp_all) <;>
+  (try aesop) <;>
+  (try
+    {
+      -- The definitions should match exactly now
+      simp_all [Finset.sum_filter, Finset.mem_filter, Finset.mem_univ, true_and]
+      <;>
+      congr 1 <;>
+      ext <;>
+      simp [Finset.mem_filter, Finset.mem_univ, true_and] <;>
+      aesop
+    })
 
 end
 

@@ -17,7 +17,7 @@ example {L : Type*} [LieRing L] [LieAlgebra ℝ L]
     ((mem_negatedSpace σ first).mpr hfirst)
     ((mem_negatedSpace σ second).mpr hsecond)
 
-example : azLabelEquiv AZLabel.CI = 9 := rfl
+example : azLabelEquiv _root_.InfoGeometry.Quantum.AltlandZirnbauerKTheoryBridge.AZClass.CI = 9 := rfl
 
 example : Function.Bijective azLabelEquiv := azLabelEquiv.bijective
 

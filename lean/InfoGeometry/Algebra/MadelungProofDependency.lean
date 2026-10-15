@@ -10,7 +10,13 @@ inductive Archetype
   | commutingDerivations
   | hamiltonJacobi
   | eulerEquation
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype Archetype :=
+  Fintype.ofList [.logDensity, .osmoticScore, .curvatureIdentity,
+    .commutingDerivations, .hamiltonJacobi, .eulerEquation] (by
+      intro x
+      cases x <;> simp)
 
 open Archetype
 

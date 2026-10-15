@@ -18,7 +18,7 @@ def commutator {R : Type*} [Ring R] (a b : R) : R :=
 theorem Cl_bonding_map_preserves_commutator {m n : ℕ} (h : m ≤ n) (a b : Cl_nn m) :
     Cl_bonding_map_of_le h (commutator a b) =
       commutator (Cl_bonding_map_of_le h a) (Cl_bonding_map_of_le h b) := by
-  dsimp [commutator]
+  dsimp [commutator, Cl_functor]
   rw [map_sub, map_mul, map_mul]
 
 def colimit_ι (n : ℕ) : Cl_functor.obj n ⟶ CliffordInfinity :=
@@ -26,8 +26,15 @@ def colimit_ι (n : ℕ) : Cl_functor.obj n ⟶ CliffordInfinity :=
 
 theorem colimit_commutator_simple {m : ℕ} (a b : Cl_nn m) :
     commutator (colimit_ι m a) (colimit_ι m b) = colimit_ι m (commutator a b) := by
-  dsimp [commutator]
-  rw [map_sub, map_mul, map_mul]
+  let f : ↑(Cl_functor.obj m) →+* ↑CliffordInfinity := (colimit_ι m).hom
+  let a' : ↑(Cl_functor.obj m) := a
+  let b' : ↑(Cl_functor.obj m) := b
+  change f a' * f b' - f b' * f a' = f (a' * b' - b' * a')
+  calc
+    f a' * f b' - f b' * f a' = f (a' * b') - f (b' * a') := by
+      simp only [map_mul]
+    _ = f (a' * b' - b' * a') := by
+      rw [map_sub]
 
 theorem modular_hamiltonian_well_defined_in_colimit :
     ∃ (_K : CliffordInfinity), ∀ {m : ℕ} (a b : Cl_nn m),
@@ -59,7 +66,6 @@ theorem clifford_infinity_is_continuous_algebraic_field :
   · intro x y z
     noncomm_ring
   · intro n a b
-    dsimp [commutator]
-    rw [map_sub, map_mul, map_mul]
+    exact colimit_commutator_simple a b
 
 end InfoGeometry.OperatorAlgebra

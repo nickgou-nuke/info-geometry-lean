@@ -29,8 +29,7 @@ namespace InfoGeometry.Topology.CantorBoundaryCuntzFamily
 open ParafermionIdentityRealization
 open UHFInductiveColimit
 
-/-- The Cantor boundary over a finite alphabet of `N` symbols. -/
-def CantorBoundaryN (N : ℕ) : Type := ℕ → Fin N
+abbrev CantorBoundaryN (N : ℕ) : Type := ℕ → Fin N
 
 /-- Head symbol of a Cantor boundary sequence. -/
 def headN {N : ℕ} (b : CantorBoundaryN N) : Fin N := b 0

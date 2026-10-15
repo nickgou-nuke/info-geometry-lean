@@ -7,7 +7,13 @@ namespace Omega.POM
 inductive pom_nontrivial_schur_vanishing_iff_single_fiber_partition_shape
   | qCycle
   | oneCycle
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype pom_nontrivial_schur_vanishing_iff_single_fiber_partition_shape where
+  elems := {.qCycle, .oneCycle}
+  complete := by
+    intro shape
+    cases shape <;> simp
 
 /-- The concrete Schur-channel package attached to a positive fiber list and an exponent `q ≥ 2`.
 The list models the positive multiplicities `d_m(x)`. -/

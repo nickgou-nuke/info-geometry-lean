@@ -7,7 +7,7 @@ This module combines the verified ingredients:
 
 * the `pg` reciprocal glide fixed line `k₂=0` imposes
   `c_k = (-1)^k c_k`, extinguishing odd modes;
-* the fixed-line Zorn paravector has mass shell `N(P)=E²-px²`;
+* the fixed-line Zorn paravector has split-norm readout `N(P)=E²-px²`;
 * RG collapse keeps the lower nilpotent defect, with `N(Z)=0` and `Z²=0`;
 * the nilpotent Itakura--Saito remainder vanishes;
 * the listed identities assemble the thermodynamic/minimizing attractor interpretation.
@@ -98,7 +98,8 @@ def collapsedFixedLower (px : ℂ) : Zorn where
   u := fun _ => 0
   v := fixedLineMomentum px
 
-/-- Fixed-line mass shell. -/
+/-- Fixed-line split-norm identity.  Calling this a physical mass-shell
+relation requires a separate identification of `E`, `px`, and the mass. -/
 theorem fixed_paravector_mass_shell (E px : ℂ) :
     zornNorm (fixedParavector E px) = E^2 - px^2 := by
   simp [zornNorm, fixedParavector, fixedLineMomentum, dot3, Fin.sum_univ_three]

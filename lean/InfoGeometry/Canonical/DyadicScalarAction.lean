@@ -28,7 +28,9 @@ theorem continuous_dyadicScalarMul :
     Continuous (fun p : DyadicRational × DyadicRational =>
       dyadicScalarMul p.1 p.2) := by
   apply continuous_induced_rng.mpr
-  simpa [Function.comp_def, dyadicScalarMul_value] using
+  change Continuous (fun p : DyadicRational × DyadicRational =>
+    (p.1 : ℚ) * (p.2 : ℚ))
+  exact
     ((continuous_subtype_val.comp continuous_fst).mul
       (continuous_subtype_val.comp continuous_snd))
 

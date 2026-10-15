@@ -11,14 +11,9 @@ def convert_rels (rels : FreeMonoid' α → FreeMonoid' α → Prop) : Set (Free
 theorem presented_identity_works : ∀ r ∈ convert_rels rels,
     (FreeGroup.lift PresentedGroup.of r : PresentedGroup (convert_rels rels)) = 1 := by
   intro r h
-  rw [← (QuotientGroup.eq_one_iff r).mpr (Subgroup.subset_normalClosure h)]
-  apply @FreeGroup.induction_on α _ r
-  · rfl
-  · exact fun x => rfl
-  · exact fun x _ => rfl
-  intro _ _ hx hy
-  rw [map_mul, hx, hy]
-  rfl
+  rw [← FreeGroup.lift_unique (PresentedGroup.mk (convert_rels rels))
+    (by intro x; rfl)]
+  exact PresentedGroup.mk_eq_one_iff.mpr (Subgroup.subset_normalClosure h)
 
 theorem lift_eq_lift_lift_of {G : Type} {a : FreeMonoid' α} [Group G] (f : α → G) :
     FreeMonoid'.lift f a = (FreeGroup.lift f) (FreeMonoid'.lift (FreeGroup.of) a) := by

@@ -42,8 +42,9 @@ theorem hasDerivAt_axialFlow_coordinate (X : CanonicalZorn) (t : ℝ) :
         (fun s : ℝ => Real.exp (s * axialWeight i))
         (Real.exp (t * axialWeight i) * (1 * axialWeight i)) t :=
       by
-        simpa only [Function.comp_apply] using
-          (Real.hasDerivAt_exp (t * axialWeight i)).comp t harg
+        convert (Real.hasDerivAt_exp (t * axialWeight i)).comp t harg using 1
+        ext s
+        rfl
     convert hexp.mul_const (coordinateEquiv X i) using 1 <;> ring
   exact hcoord
 

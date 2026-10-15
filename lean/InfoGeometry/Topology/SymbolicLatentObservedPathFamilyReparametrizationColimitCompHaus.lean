@@ -61,13 +61,9 @@ theorem observedSymbolicLatentPathFamilyReparametrizationColimitCompHausReadout_
         (fun t : SymbolicPathDomain => symbolicObservationMap S (H (p, t)))
         R.at_zero
       apply Subtype.ext
-      simpa [observedSymbolicLatentPathFamilyStartImageTopCatHom,
-        observedSymbolicLatentPathFamilyImageEvaluationTopCatHom,
-        observedSymbolicLatentPathFamilyReparametrizationImageCompHausHom_forget,
-        observedSymbolicLatentPathFamilyReparametrizationImageMap,
-        observedSymbolicLatentPathFamily,
-        symbolicLatentPathFamilyStartParameterTopCatHom,
-        TopCat.comp_app, TopCat.ofHom] using hR.symm
+      change symbolicObservationMap S (H (p, 0)) =
+        symbolicObservationMap S (H (p, R.parameter 0))
+      exact hR.symm
   | extended =>
       rw [← Category.assoc,
         symbolicLatentPathFamilyReparametrizationColimitHom_extended,

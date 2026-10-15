@@ -90,16 +90,19 @@ noncomputable def relativeEntropyBifiltrationLimitCutoffFamilyAt
         (Opposite.op ε₂, t) ⟶
           (Opposite.op ε₁, t) :=
       ⟨(homOfLE hε).op, homOfLE (le_refl t)⟩
+    let p₂ := relativeEntropyBifiltrationLimitProjection n
+      (Opposite.op ε₂, t) x
+    let p₁ := relativeEntropyBifiltrationLimitProjection n
+      (Opposite.op ε₁, t) x
+    change SouriauRelativeEntropyPersistenceQuotient.RelativeEntropySublevelQuotient
+      (n := n) ε₂ 0 t at p₂
+    change SouriauRelativeEntropyPersistenceQuotient.RelativeEntropySublevelQuotient
+      (n := n) ε₁ 0 t at p₁
     change
       relativeEntropyPersistenceCutoffColimitMap hε
-          (relativeEntropyPersistenceColimitStage ε₂ t
-            (relativeEntropyBifiltrationLimitProjection n
-              (Opposite.op ε₂, t) x)) =
-        relativeEntropyPersistenceColimitStage ε₁ t
-          (relativeEntropyBifiltrationLimitProjection n
-            (Opposite.op ε₁, t) x)
-    rw [relativeEntropyCutoffTime_to_colimit
-      hε (le_refl t)]
+          (relativeEntropyPersistenceColimitStage ε₂ t p₂) =
+        relativeEntropyPersistenceColimitStage ε₁ t p₁
+    rw [relativeEntropyCutoffTime_to_colimit hε (le_refl t) p₂]
     exact congrArg
       (relativeEntropyPersistenceColimitStage ε₁ t)
       (relativeEntropyBifiltrationLimitProjection_compat

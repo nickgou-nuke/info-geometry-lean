@@ -225,6 +225,10 @@ def splitOctonionEtaBilinear : SplitOctonionCarrier →ₗ[ℝ] SplitOctonionCar
     apply LinearMap.ext
     intro v
     dsimp [dot4]
+    change (∑ i : Fin 4, (u1.1 i + u2.1 i) * v.1 i) -
+        (∑ i : Fin 4, (u1.2 i + u2.2 i) * v.2 i) =
+      ((∑ i : Fin 4, u1.1 i * v.1 i) - (∑ i : Fin 4, u1.2 i * v.2 i)) +
+        ((∑ i : Fin 4, u2.1 i * v.1 i) - (∑ i : Fin 4, u2.2 i * v.2 i))
     have h1 : (∑ i : Fin 4, (u1.1 i + u2.1 i) * v.1 i) = (∑ i, u1.1 i * v.1 i) + (∑ i, u2.1 i * v.1 i) := by
       rw [← Finset.sum_add_distrib]
       apply Finset.sum_congr rfl
@@ -242,6 +246,9 @@ def splitOctonionEtaBilinear : SplitOctonionCarrier →ₗ[ℝ] SplitOctonionCar
     apply LinearMap.ext
     intro v
     dsimp [dot4]
+    change (∑ i : Fin 4, (r * u.1 i) * v.1 i) -
+        (∑ i : Fin 4, (r * u.2 i) * v.2 i) =
+      r * ((∑ i : Fin 4, u.1 i * v.1 i) - (∑ i : Fin 4, u.2 i * v.2 i))
     have h1 : (∑ i : Fin 4, (r * u.1 i) * v.1 i) = r * (∑ i, u.1 i * v.1 i) := by
       rw [Finset.mul_sum]
       apply Finset.sum_congr rfl
@@ -287,6 +294,10 @@ def splitOctonionCartanInvolution : CartanInvolution splitOctonionKreinDatum whe
   eta_symmetric := by
     intro u v
     dsimp [splitOctonionKreinDatum, splitOctonionEtaBilinear, splitOctonionCartanLinear, dot4]
+    change (∑ i : Fin 4, u.1 i * v.1 i) -
+        (∑ i : Fin 4, (-u.2 i) * v.2 i) =
+      (∑ i : Fin 4, u.1 i * v.1 i) -
+        (∑ i : Fin 4, u.2 i * (-v.2 i))
     have h2 : (∑ i : Fin 4, -u.2 i * v.2 i) = (∑ i : Fin 4, u.2 i * -v.2 i) := by
       apply Finset.sum_congr rfl
       intro i _
@@ -295,6 +306,8 @@ def splitOctonionCartanInvolution : CartanInvolution splitOctonionKreinDatum whe
   pos_def := by
     intro u hu
     dsimp [splitOctonionKreinDatum, splitOctonionEtaBilinear, splitOctonionCartanLinear, dot4]
+    change 0 < (∑ i : Fin 4, u.1 i * u.1 i) -
+      (∑ i : Fin 4, u.2 i * (-u.2 i))
     have h_sign : (∑ i : Fin 4, u.2 i * -u.2 i) = - (∑ i : Fin 4, u.2 i * u.2 i) := by
       rw [← Finset.sum_neg_distrib]
       apply Finset.sum_congr rfl
@@ -323,11 +336,15 @@ theorem splitOctonion_hilbertInnerJ_eq (u v : SplitOctonionCarrier) :
     hilbertInnerJ splitOctonionKreinDatum splitOctonionCartanInvolution u v =
       dot4 u.1 v.1 + dot4 u.2 v.2 := by
   dsimp [hilbertInnerJ, splitOctonionKreinDatum, splitOctonionEtaBilinear, splitOctonionCartanInvolution, splitOctonionCartanLinear, dot4]
+  change (∑ i : Fin 4, u.1 i * v.1 i) -
+      (∑ i : Fin 4, u.2 i * (-v.2 i)) =
+    dot4 u.1 v.1 + dot4 u.2 v.2
   have h2 : (∑ i : Fin 4, u.2 i * -v.2 i) = - (∑ i : Fin 4, u.2 i * v.2 i) := by
     rw [← Finset.sum_neg_distrib]
     apply Finset.sum_congr rfl
     intro i _
     ring
   rw [h2, sub_neg_eq_add]
+  rfl
 
 end InfoGeometry.QuantumGeometry

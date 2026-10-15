@@ -104,7 +104,7 @@ theorem paper_conclusion_golden_sprt_onebit_ancillary (D : GoldenSprtOnebitAncil
     simpa [GoldenSprtOnebitAncillaryData.terminalLikelihoodExponent,
       GoldenSprtOnebitAncillaryData.terminalSign] using
       paper_conclusion_golden_sprt_terminal_sign_minimal_sufficiency D.T ys hstep hstop
-  · simpa using bscMutualInformation_eq_closed_form D.errorProb
+  · exact bscMutualInformation_eq_closed_form D.errorProb
 
 end
 

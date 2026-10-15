@@ -22,8 +22,8 @@ open InfoGeometry.Physics.Algebra
 theorem axialGrading_isDrazinInverse :
     IsDrazinInverse axialGrading axialGrading 1 := by
   refine IsDrazinInverse.mk ?_ rfl ?_
-  · simpa [pow_three] using axialGrading_tripotent
-  · simpa [pow_one, pow_two, pow_three] using axialGrading_tripotent.symm
+  · simpa [pow_three, mul_assoc] using axialGrading_tripotent
+  · simpa [pow_one, pow_two, pow_three, mul_assoc] using axialGrading_tripotent.symm
 
 /-- The Drazin regular/support projector is the active-sector projector. -/
 theorem axial_drazinProjector_eq_active :

@@ -18,6 +18,11 @@ open HestenesBivectorCarrier
 abbrev Algebra := Cl14
 abbrev EvenPart := CliffordAlgebra.evenOdd Q14 0
 
+private theorem hestenesAdjoint_asEven (y : EvenPart) :
+    hestenesAdjoint y = hestenesAdjoint (asEvenAlgebra y) := by
+  apply Subtype.ext
+  rfl
+
 private theorem neg_smul_neg (x : ClPlus14) :
     (-1 : ℝ) • ((-1 : ℝ) • x) = x := by
   rw [smul_smul]
@@ -40,7 +45,11 @@ theorem hestenesAdjoint_paravectorHodge (y : EvenPart) :
       -(hestenesAdjoint (asEvenAlgebra y) *
         asEvenAlgebra spacetimePseudoscalar) := by
     apply Subtype.ext
-    simpa [asEvenAlgebra] using paravectorHodge_val y
+    change (paravectorHodge y : Algebra) =
+      -((hestenesAdjoint (asEvenAlgebra y) : Algebra) *
+        (asEvenAlgebra spacetimePseudoscalar : Algebra))
+    rw [paravectorHodge_val, ← hestenesAdjoint_asEven]
+    simp [asEvenAlgebra]
   rw [hp, hestenesAdjoint_neg, hestenesAdjoint_mul,
     hestenesAdjoint_involutive,
     HestenesDistinctHodge.hestenesAdjoint_spacetimePseudoscalar]
@@ -96,12 +105,14 @@ theorem paravectorHodge_selfAdjoint_to_skew
       -(hestenesAdjoint (asEvenAlgebra y) *
         asEvenAlgebra spacetimePseudoscalar) := by
     apply Subtype.ext
-    simpa [asEvenAlgebra] using paravectorHodge_val y
+    change (paravectorHodge y : Algebra) =
+      -((hestenesAdjoint (asEvenAlgebra y) : Algebra) *
+        (asEvenAlgebra spacetimePseudoscalar : Algebra))
+    rw [paravectorHodge_val, ← hestenesAdjoint_asEven]
+    simp [asEvenAlgebra]
   rw [hestenesAdjoint_paravectorHodge, hp, hy]
   rw [omega_comm_asEvenAlgebra]
-  simpa only [neg_neg] using
-    neg_neg_mul_left (asEvenAlgebra y)
-      (asEvenAlgebra spacetimePseudoscalar)
+  simp only [neg_neg]
 
 theorem paravectorHodge_skew_to_selfAdjoint
     {y : EvenPart} (hy : y ∈ skewAdjointEven) :
@@ -112,7 +123,11 @@ theorem paravectorHodge_skew_to_selfAdjoint
       -(hestenesAdjoint (asEvenAlgebra y) *
         asEvenAlgebra spacetimePseudoscalar) := by
     apply Subtype.ext
-    simpa [asEvenAlgebra] using paravectorHodge_val y
+    change (paravectorHodge y : Algebra) =
+      -((hestenesAdjoint (asEvenAlgebra y) : Algebra) *
+        (asEvenAlgebra spacetimePseudoscalar : Algebra))
+    rw [paravectorHodge_val, ← hestenesAdjoint_asEven]
+    simp [asEvenAlgebra]
   rw [hestenesAdjoint_paravectorHodge, hp, hy]
   rw [omega_comm_asEvenAlgebra]
   exact (neg_neg_mul_left (asEvenAlgebra y)
@@ -147,7 +162,8 @@ def selfAdjointSkewAdjointEquiv :
       paravectorHodgeLinear.map_add (x : EvenPart) (y : EvenPart)
   map_smul' r x := by
     apply Subtype.ext
-    simpa only [Submodule.coe_smul, paravectorHodgeLinear_apply] using
+    simpa only [Submodule.coe_smul, paravectorHodgeLinear_apply,
+      RingHom.id_apply] using
       paravectorHodgeLinear.map_smul r (x : EvenPart)
 
 def productProjPlus : EvenPart →ₗ[ℝ] EvenPart :=

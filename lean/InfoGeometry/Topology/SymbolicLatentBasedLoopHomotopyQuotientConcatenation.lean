@@ -77,18 +77,28 @@ theorem basedLoopHomotopyQuotientConcatenation_mk
   · have hrel : SymbolicLatentPathHomotopic
         (basedLoopHomotopyQuotientRepresentativeLoop
           (basedLoopHomotopyQuotient_mk γ₀)).1 γ₀.1 :=
-      Quotient.exact (by
-        simpa using
-          (basedLoopHomotopyQuotientRepresentative_quotient_eq
-            (basedLoopHomotopyQuotient_mk γ₀)))
+      Quotient.exact (show
+        symbolicLatentPathHomotopyQuotientMap
+            (basedLoopHomotopyQuotientRepresentative
+              (basedLoopHomotopyQuotient_mk γ₀)) =
+          symbolicLatentPathHomotopyQuotientMap γ₀.1 from by
+            calc
+              _ = (basedLoopHomotopyQuotient_mk γ₀).1 :=
+                basedLoopHomotopyQuotientRepresentative_quotient_eq _
+              _ = symbolicLatentPathHomotopyQuotientMap γ₀.1 := rfl)
     exact hrel.some
   · have hrel : SymbolicLatentPathHomotopic
         (basedLoopHomotopyQuotientRepresentativeLoop
           (basedLoopHomotopyQuotient_mk γ₁)).1 γ₁.1 :=
-      Quotient.exact (by
-        simpa using
-          (basedLoopHomotopyQuotientRepresentative_quotient_eq
-            (basedLoopHomotopyQuotient_mk γ₁)))
+      Quotient.exact (show
+        symbolicLatentPathHomotopyQuotientMap
+            (basedLoopHomotopyQuotientRepresentative
+              (basedLoopHomotopyQuotient_mk γ₁)) =
+          symbolicLatentPathHomotopyQuotientMap γ₁.1 from by
+            calc
+              _ = (basedLoopHomotopyQuotient_mk γ₁).1 :=
+                basedLoopHomotopyQuotientRepresentative_quotient_eq _
+              _ = symbolicLatentPathHomotopyQuotientMap γ₁.1 := rfl)
     exact hrel.some
 
 theorem basedLoopHomotopyQuotientConcatenation_endpoints

@@ -126,7 +126,8 @@ theorem boost_block_diagonal_preserves_zero_mode
   have hOff : zeroModeProjector X * B * cozeroModeProjector X = 0 :=
     (off_block_vanish_of_isGZero (X := X) (A := B) hB).1
   have hsum : zeroModeProjector X + cozeroModeProjector X = (1 : EndH) := by
-    simpa [zeroModeProjector, cozeroModeProjector] using plusProjector_add_minusProjector (X := X)
+    rw [ContinuousLinearMap.one_def]
+    exact plusProjector_add_minusProjector (X := X)
   calc
     zeroModeProjector X * B
         = zeroModeProjector X * B * (1 : EndH) := by simp
@@ -143,7 +144,8 @@ theorem boost_block_diagonal_preserves_zero_mode_right
   have hOffR : cozeroModeProjector X * B * zeroModeProjector X = 0 :=
     (off_block_vanish_of_isGZero (X := X) (A := B) hB).2
   have hsum : zeroModeProjector X + cozeroModeProjector X = (1 : EndH) := by
-    simpa [zeroModeProjector, cozeroModeProjector] using plusProjector_add_minusProjector (X := X)
+    rw [ContinuousLinearMap.one_def]
+    exact plusProjector_add_minusProjector (X := X)
   calc
     B * zeroModeProjector X
         = (1 : EndH) * B * zeroModeProjector X := by simp
@@ -186,7 +188,8 @@ theorem cozeroModeProjector_commutes_of_isGZero
     (hA : IsGZero X A) :
     cozeroModeProjector X * A = A * cozeroModeProjector X := by
   have hsum : zeroModeProjector X + cozeroModeProjector X = (1 : EndH) := by
-    simpa [zeroModeProjector, cozeroModeProjector] using plusProjector_add_minusProjector (X := X)
+    rw [ContinuousLinearMap.one_def]
+    exact plusProjector_add_minusProjector (X := X)
   have hL : zeroModeProjector X * A = A * zeroModeProjector X :=
     zeroModeProjector_commutes_of_isGZero (X := X) (A := A) hA
   apply add_left_cancel (a := zeroModeProjector X * A)
@@ -196,7 +199,7 @@ theorem cozeroModeProjector_commutes_of_isGZero
     _ = A := by simp [hsum]
     _ = A * (zeroModeProjector X + cozeroModeProjector X) := by simp [hsum]
     _ = A * zeroModeProjector X + A * cozeroModeProjector X := by simp [mul_add]
-    _ = zeroModeProjector X * A + A * cozeroModeProjector X := by simpa [hL]
+    _ = zeroModeProjector X * A + A * cozeroModeProjector X := by simp [hL]
 
 theorem block_normal_form_of_off_blocks_zero
     (X : InfoGeometry.Quantum.RealSplitCl11Action H) (A : EndH)
@@ -204,7 +207,8 @@ theorem block_normal_form_of_off_blocks_zero
     (hmp : cozeroModeProjector X * A * zeroModeProjector X = 0) :
     A = zeroModePart X A + cozeroModePart X A := by
   have hsum : zeroModeProjector X + cozeroModeProjector X = (1 : EndH) := by
-    simpa [zeroModeProjector, cozeroModeProjector] using plusProjector_add_minusProjector (X := X)
+    rw [ContinuousLinearMap.one_def]
+    exact plusProjector_add_minusProjector (X := X)
   calc
     A = (zeroModeProjector X + cozeroModeProjector X) * A * (zeroModeProjector X + cozeroModeProjector X) := by
           simp [hsum]
@@ -471,8 +475,7 @@ theorem zeroMode_polarized_det_shadow_pos_iff_pfaffian_ne_zero
     0 < (toMatrix (zeroModePart X (commutator (uPlus X A) (uMinus X B)))).det
       ↔ P.pfaffian ≠ 0 := by
   constructor
-  · intro hpos
-    intro hpf
+  · intro hpos hpf
     have hzero :
         (toMatrix (zeroModePart X (commutator (uPlus X A) (uMinus X B)))).det = 0 :=
       (zeroMode_polarized_det_shadow_zero_iff_pfaffian_zero

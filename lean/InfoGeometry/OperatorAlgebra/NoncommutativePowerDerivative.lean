@@ -76,9 +76,11 @@ power derivative.
 theorem hasFDerivAt_exponentialTerm (n : ℕ) (a : A) :
     HasFDerivAt (exponentialTerm (𝕜 := 𝕜) n)
       (exponentialTermDerivative (𝕜 := 𝕜) n a) a := by
-  simpa [exponentialTerm, exponentialTermDerivative] using
+  convert
     (hasFDerivAt_power_noncommutative (𝕜 := 𝕜) n a).const_smul
       ((n.factorial : 𝕜)⁻¹)
+  · rfl
+  · rfl
 
 /--
 Termwise differentiation of the noncommutative exponential series.

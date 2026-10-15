@@ -33,20 +33,27 @@ theorem operatorDeckMap_add_group (omega : ℂ)
     (homega : omega ^ 2 + omega + 1 = 0)
     (g h : Deck2) (A : Op) :
     operatorDeckMap (g + h) A = operatorDeckMap h (operatorDeckMap g A) := by
-  fin_cases g <;> fin_cases h
-  · simp [operatorDeckMap]
-  · simp [operatorDeckMap]
-  · simp [operatorDeckMap]
-  · exact (operatorGlide_involutive omega homega A).symm
+  rcases deck2_zero_or_one g with rfl | rfl <;>
+    rcases deck2_zero_or_one h with rfl | rfl
+  · rw [zero_add]
+    simp [operatorDeckMap]
+  · rw [zero_add]
+    simp [operatorDeckMap]
+  · rw [add_zero]
+    simp [operatorDeckMap]
+  · have h11 : (1 : Deck2) + 1 = 0 := by decide
+    rw [h11]
+    exact (operatorGlide_involutive omega homega A).symm
 
 theorem continuous_operatorDeckAction :
     Continuous (fun p : Deck2 × Op ↦ operatorDeckMap p.1 p.2) := by
   rw [continuous_prod_of_discrete_left]
   intro g
   fin_cases g
-  · simpa [operatorDeckMap] using
-      (continuous_id : Continuous (id : Op → Op))
-  · simpa [operatorDeckMap] using operatorGlide_continuous
+  · change Continuous (id : Op → Op)
+    exact continuous_id
+  · change Continuous operatorGlide
+    exact operatorGlide_continuous
 
 def operatorCoordChange (i j x : Base) (A : Op) : Op :=
   operatorDeckMap (deckTransition i j x) A

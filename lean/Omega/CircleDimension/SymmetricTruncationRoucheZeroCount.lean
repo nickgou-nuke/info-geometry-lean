@@ -1,5 +1,6 @@
 import Mathlib.Analysis.Calculus.Deriv.Basic
-import Mathlib.Data.Complex.Basic
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Complex.Basic
 import Mathlib.Tactic
 import Omega.CircleDimension.SymmetricTruncationExplicitError
 
@@ -85,14 +86,21 @@ lemma boundaryLowerBound_le_norm_truncatedXi (D : SymmetricTruncationRoucheZeroC
 
 lemma deriv_truncatedXi (D : SymmetricTruncationRoucheZeroCountData) (s : ℂ) :
     deriv D.truncatedXi s = 1 := by
-  unfold truncatedXi
-  simpa using (((hasDerivAt_id s).sub_const D.root).deriv)
+  have h := HasDerivAt.sub_const D.root (hasDerivAt_id s)
+  exact h.deriv
 
 lemma deriv_fullXi (D : SymmetricTruncationRoucheZeroCountData) (s : ℂ) :
     deriv D.fullXi s = 1 := by
-  unfold fullXi truncatedXi
-  simpa [symmTruncXiError] using
-    ((((hasDerivAt_id s).sub_const D.root).add (hasDerivAt_const s (0 : ℂ))).deriv)
+  have hfun : D.fullXi = fun s => (s - D.root) + 0 := by
+    ext w
+    simp [fullXi, truncatedXi, symmTruncXiError]
+  rw [hfun]
+  have hlin : HasDerivAt (fun s => s - D.root) 1 s := HasDerivAt.sub_const D.root (hasDerivAt_id s)
+  have hconst : HasDerivAt (fun _ : ℂ => (0 : ℂ)) 0 s := hasDerivAt_const s 0
+  have hadd : HasDerivAt (fun s => (s - D.root) + 0) (1 + 0) s := HasDerivAt.add hlin hconst
+  have h1 : (1 : ℂ) + 0 = 1 := add_zero 1
+  rw [h1] at hadd
+  exact hadd.deriv
 
 lemma explicitXiError_le_bound (D : SymmetricTruncationRoucheZeroCountData) (s : ℂ)
     (hs : D.onBoundary s) :

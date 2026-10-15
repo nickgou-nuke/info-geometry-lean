@@ -6,6 +6,7 @@ namespace InfoGeometry.Nuclear.WaleckaZornSoloviev
 
 open InfoGeometry.Nuclear.NambuGorkov
 open InfoGeometry.Nuclear.WaleckaZornBdG
+open InfoGeometry.Physics.NuclearTwoModeFiveGradeLieModel
 open InfoGeometry.Physics.NuclearFiveGradeCommonCarrierRepresentation
 open InfoGeometry.Physics.NuclearFiveGradeSolovievCommonCompression
 open InfoGeometry.Physics.SolovievQPNMEigenproblem
@@ -26,19 +27,23 @@ theorem coefficientHamiltonian_square (state : NambuGorkovCarrier ℝ) :
 theorem coefficientHamiltonian_grade_zero (state : NambuGorkovCarrier ℝ) :
     RepresentedHasGrade 0 (coefficientHamiltonian state) := by
   unfold RepresentedHasGrade coefficientHamiltonian
-  rw [← coefficientLift_commutes_representation, sub_self, zero_smul]
+  rw [← coefficientLift_commutes_representation, sub_self]
+  simp
 
 theorem coefficientHamiltonian_preserves_grade (state : NambuGorkovCarrier ℝ)
     (grade : ℤ) (channel : Operator) (channel_grade : RepresentedHasGrade grade channel) :
     RepresentedHasGrade grade (coefficientHamiltonian state * channel) := by
   have zero_component : InfoGeometry.Canonical.IsCommutatorComponent
-      (representation InfoGeometry.Physics.NuclearTwoModeFiveGradeLieModel.gradingOperator)
-      (coefficientHamiltonian state) 0 := coefficientHamiltonian_grade_zero state
+      (representation gradingOperator)
+      (coefficientHamiltonian state) (0 : ℝ) := by
+    simpa [InfoGeometry.Canonical.IsCommutatorComponent, RepresentedHasGrade] using
+      coefficientHamiltonian_grade_zero state
   have channel_component : InfoGeometry.Canonical.IsCommutatorComponent
-      (representation InfoGeometry.Physics.NuclearTwoModeFiveGradeLieModel.gradingOperator)
+      (representation gradingOperator)
       channel (grade : ℝ) := channel_grade
-  simpa only [zero_add] using
-    InfoGeometry.Canonical.commutatorAction_product_component zero_component channel_component
+  have h := InfoGeometry.Canonical.commutatorAction_product_component zero_component channel_component
+  rw [zero_add] at h
+  exact h
 
 theorem coefficientHamiltonian_commutes_phonons (state : NambuGorkovCarrier ℝ) :
     coefficientHamiltonian state * phononCreation =

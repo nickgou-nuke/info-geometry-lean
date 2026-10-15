@@ -37,26 +37,26 @@ theorem gaugeComp_rel : ∀ ⦃x y : QuantumMatrixFree R⦄,
       simp only [smul_smul] at h0
       have hs : u * (u * q) = q * (u * u) := by ring
       rw [hs] at h0
-      simpa [smul_smul] using h0
+      simpa [smul_smul, entry, freeEntry] using h0
   | sameColumn i k j hik =>
       simp [gaugeComp, gaugeFree, freeEntry]
       have h0 := congrArg (fun z => u • (u • z)) (entry_sameColumn R q i k j hik)
       simp only [smul_smul] at h0
       have hs : u * (u * q) = q * (u * u) := by ring
       rw [hs] at h0
-      simpa [smul_smul] using h0
+      simpa [smul_smul, entry, freeEntry] using h0
   | separated i k j l hik hlj =>
       simp [gaugeComp, gaugeFree, freeEntry]
       have h0 := congrArg (fun z => u • (u • z)) (entry_separated R q i k j l hik hlj)
       simp only [smul_smul] at h0
-      simpa [smul_smul] using h0
+      simpa [smul_smul, entry, freeEntry] using h0
   | crossing i k j l hik hjl =>
       simp [gaugeComp, gaugeFree, freeEntry]
       have h0 := congrArg (fun z => u • (u • z)) (entry_crossing R q i k j l hik hjl)
       simp only [smul_smul, smul_sub] at h0
       have hs : u * (u * (q - q⁻¹)) = (q - q⁻¹) * (u * u) := by ring
       rw [hs] at h0
-      simpa [smul_smul] using h0
+      simpa [smul_smul, entry, freeEntry] using h0
 
 noncomputable def gaugeAlgHom : QuantumMatrixAlgebra R q →ₐ[R] QuantumMatrixAlgebra R q :=
   RingQuot.liftAlgHom R ⟨gaugeComp R q u, gaugeComp_rel R q u⟩

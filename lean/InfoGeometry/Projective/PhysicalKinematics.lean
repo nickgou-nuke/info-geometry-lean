@@ -8,15 +8,16 @@ Gauge-invariant kinematics interfaces and descent principles on projective doubl
 -/
 
 namespace InfoGeometry.Projective
-namespace InfoGeometry.Projective
 
 open InfoGeometry.Krein
 
+universe u v w
+
 /-- A minimal physics-kinematics interface:
 representatives `V`, a gauge group acting on `V`, and physical states as gauge classes. -/
-structure PhysicalKinematics (V : Type _) [Zero V] where
-  State : Type _
-  Gauge : Type _
+structure PhysicalKinematics (V : Type u) [Zero V] where
+  State : Type v
+  Gauge : Type w
   [instMonoid : Monoid Gauge]
   [instAct : MulAction Gauge V]
   ray : V → State

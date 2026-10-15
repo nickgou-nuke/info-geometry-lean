@@ -28,7 +28,7 @@ variable (𝕜 : Type u) [Field 𝕜]
 
 /-- A logarithmic module with an explicitly certified finite nilpotency order. -/
 structure LogNilpotentModule where
-  toLogEndModule : LogEndModule 𝕜
+  toLogEndModule : LogEndModule.{u, v} 𝕜
   nilpotencyOrder : ℕ
   nilpotent : toLogEndModule.N ^ nilpotencyOrder = 0
 
@@ -99,6 +99,35 @@ def tensorObj (X Y : LogNilpotentModule 𝕜) : LogNilpotentModule 𝕜 where
       X.nilpotencyOrder Y.nilpotencyOrder
       X.nilpotent Y.nilpotent
 
+/-- The carrier of the categorical tensor object is the underlying tensor
+product.  This readback is useful when transporting pure-tensor formulas
+through bundled logarithmic objects. -/
+theorem tensorObj_carrier (X Y : LogNilpotentModule 𝕜) :
+    (tensorObj X Y).toLogEndModule.V =
+      TensorProduct 𝕜 X.toLogEndModule.V Y.toLogEndModule.V := rfl
+
+/-- The carrier readback as a linear equivalence, retaining the bundled
+module structures on both sides of the categorical tensor object. -/
+def tensorObj_carrierEquiv (X Y : LogNilpotentModule 𝕜) :
+    (tensorObj X Y).toLogEndModule.V ≃ₗ[𝕜]
+      TensorProduct 𝕜 X.toLogEndModule.V Y.toLogEndModule.V := by
+  refine
+    { toFun := id
+      invFun := id
+      left_inv := fun _ => rfl
+      right_inv := fun _ => rfl
+      map_add' := ?_
+      map_smul' := ?_ }
+  · intro x y
+    rfl
+  · intro c x
+    rfl
+
+@[simp]
+theorem tensorObj_carrierEquiv_apply (X Y : LogNilpotentModule 𝕜)
+    (x : (tensorObj X Y).toLogEndModule.V) :
+    tensorObj_carrierEquiv X Y x = x := rfl
+
 /-- Tensor product of logarithmic intertwining morphisms. -/
 def tensorHom {X X' Y Y' : LogNilpotentModule 𝕜}
     (f : X ⟶ X') (g : Y ⟶ Y') :
@@ -136,12 +165,18 @@ def associatorIso (X Y Z : LogNilpotentModule 𝕜) :
       X.toLogEndModule Y.toLogEndModule Z.toLogEndModule
     hom_inv_id := by
       apply LogEndModule.Hom.ext
-      ext x y z
-      simp [LogEndModule.associatorHom, LogEndModule.associatorInv]
+      apply LinearMap.ext
+      intro w
+      change (TensorProduct.assoc 𝕜 X.toLogEndModule.V Y.toLogEndModule.V Z.toLogEndModule.V).symm
+          ((TensorProduct.assoc 𝕜 X.toLogEndModule.V Y.toLogEndModule.V Z.toLogEndModule.V) w) = w
+      exact (TensorProduct.assoc 𝕜 X.toLogEndModule.V Y.toLogEndModule.V Z.toLogEndModule.V).left_inv w
     inv_hom_id := by
       apply LogEndModule.Hom.ext
-      ext x y z
-      simp [LogEndModule.associatorHom, LogEndModule.associatorInv] }
+      apply LinearMap.ext
+      intro w
+      change (TensorProduct.assoc 𝕜 X.toLogEndModule.V Y.toLogEndModule.V Z.toLogEndModule.V)
+          ((TensorProduct.assoc 𝕜 X.toLogEndModule.V Y.toLogEndModule.V Z.toLogEndModule.V).symm w) = w
+      exact (TensorProduct.assoc 𝕜 X.toLogEndModule.V Y.toLogEndModule.V Z.toLogEndModule.V).right_inv w }
 
 @[simp]
 theorem associatorHom_tmul (X Y Z : LogNilpotentModule 𝕜)

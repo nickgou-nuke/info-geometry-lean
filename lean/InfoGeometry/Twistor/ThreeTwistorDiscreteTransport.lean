@@ -94,7 +94,7 @@ theorem closureDefect_eq_one_gauge_invariant (T : TriangleTransportDatum G)
   constructor
   · intro h
     have h' := congrArg (fun z => g 0 * z * (g 0)⁻¹) h
-    simpa [mul_assoc] using h'
+    simpa [closureDefect, mul_assoc] using h'
   · intro h
     change T.holonomy = 1 at h
     rw [h]

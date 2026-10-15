@@ -26,6 +26,15 @@ def kreinAdjoint (M : Matrix (VB ⊕ VW) (VB ⊕ VW) R) : Matrix (VB ⊕ VW) (VB
 def diracDHK (K : Matrix VW VB R) : Matrix (VB ⊕ VW) (VB ⊕ VW) R :=
   Matrix.fromBlocks 0 K.conjTranspose K 0
 
+/-- Squaring the bipartite block Dirac operator gives the two Gram operators
+on the black and white sectors.  This identity uses only matrix block
+multiplication; it does not require a Kasteleyn condition on `K`. -/
+theorem diracDHK_sq (K : Matrix VW VB R) :
+    diracDHK K * diracDHK K =
+      Matrix.fromBlocks (K.conjTranspose * K) 0 0 (K * K.conjTranspose) := by
+  ext (i | i) (j | j) <;>
+    simp [diracDHK, Matrix.fromBlocks_multiply]
+
 /-! ### 3. Chiral Symmetry and Krein Anti-Self-Adjointness -/
 
 /-- Theorem: The Dirac-Hodge-Krein operator strictly anti-commutes with chirality.

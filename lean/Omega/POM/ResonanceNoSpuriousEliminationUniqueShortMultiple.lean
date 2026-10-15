@@ -55,7 +55,7 @@ theorem paper_pom_resonance_no_spurious_elimination_unique_short_multiple
   have hBmultiple : D.Bcoeffs ∈ D.principalization.multipleModule := by
     simpa [hEq] using D.nullmodeCoeff
   refine ⟨D.witness, ?_, ?_⟩
-  · exact ⟨hBmultiple, by simpa [extendShort] using D.witness_eq_Bcoeffs⟩
+  · exact ⟨hBmultiple, D.witness_eq_Bcoeffs⟩
   · intro Q hQ
     exact D.extendShort_injective (hQ.2.trans D.witness_eq_Bcoeffs.symm)
 

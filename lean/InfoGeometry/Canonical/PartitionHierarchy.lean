@@ -135,7 +135,7 @@ theorem totalPartition_eq_sum_fiberPartition
     (G : FiniteCoarseGraining X Y) (energy : X → ℝ) (β : ℝ) :
     totalPartition energy β = ∑ y, fiberPartition G energy β y := by
   unfold totalPartition fiberPartition
-  simpa using
+  simpa [FiniteCoarseGraining.totalWeight] using
     (FiniteCoarseGraining.totalWeight_eq_sum_fiberWeight
       (G := G) (w := boltzmannWeight energy β))
 

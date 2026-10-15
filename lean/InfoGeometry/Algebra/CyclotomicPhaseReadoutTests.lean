@@ -18,9 +18,11 @@ example : phaseWeight 3 0 * phaseWeight 3 0 ≠ phaseWeight 3 0 :=
 
 theorem identity_has_empty_imaginary_sector :
     projector (1 : Module.End ℂ ℂ) 1 = 0 := by
-  ext vector
-  have eigen : (1 : Module.End ℂ ℂ) vector = root4 0 • vector := by simp
-  simpa using projector_on_eigenvector (1 : Module.End ℂ ℂ) 1 0 vector eigen
+  apply LinearMap.ext
+  intro x
+  have eigen : (1 : Module.End ℂ ℂ) x = root4 0 • x := by simp
+  have h := projector_on_eigenvector (1 : Module.End ℂ ℂ) 1 0 x eigen
+  simpa using h
 
 example (operator : Module.End ℂ (Fin 4 → ℂ)) (periodic : operator ^ 4 = 1) :
     LinearMap.range (projector operator 2) = Module.End.eigenspace operator (root4 2) :=

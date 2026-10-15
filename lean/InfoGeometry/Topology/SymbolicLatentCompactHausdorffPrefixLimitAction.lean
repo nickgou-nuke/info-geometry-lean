@@ -54,7 +54,7 @@ theorem prefixLimitCoordinatewiseHomeomorph_stage_apply
             (boundaryCoordinatewiseHomeomorph γ
               (ConcreteCategory.hom (prefixBoundaryLimitIso (A := A)).inv x))) i =
         γ (ConcreteCategory.hom (prefixBoundaryLimitIso (A := A)).inv x i) := by
-          simpa [boundaryCoordinatewiseHomeomorph_apply] using h₁
+          simpa [TopCat.homeoOfIso, boundaryCoordinatewiseHomeomorph_apply] using h₁
     _ = γ ((limit.π (prefixDiagram (A := A)) (Opposite.op n)).hom x i) := by
       congr 1
       have h₂ := prefixBoundaryLimitIso_hom_apply (A := A) n

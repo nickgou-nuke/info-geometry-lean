@@ -38,7 +38,13 @@ theorem affinePin_conj_translation
         (affinePinGlide 0 r)⁻¹ =
       affinePinGlide
         (((realSplitPinAction r) (Multiplicative.ofAdd t)).toAdd) 1 := by
-  apply SemidirectProduct.ext <;>
-    simp [affinePinGlide, realSplitPinAction, nativeOrthogonalAction]
+  have h0 : affinePinGlide 0 r = SemidirectProduct.inr r := rfl
+  have ht : affinePinGlide t 1 = SemidirectProduct.inl (Multiplicative.ofAdd t) := rfl
+  have hrhs : affinePinGlide (((realSplitPinAction r) (Multiplicative.ofAdd t)).toAdd) 1 =
+      SemidirectProduct.inl ((realSplitPinAction r) (Multiplicative.ofAdd t)) := by
+    ext <;> simp [affinePinGlide]
+  rw [h0, ht, hrhs]
+  rw [← (SemidirectProduct.inr : realSplitPin55 →* AffinePin55Native).map_inv]
+  exact (SemidirectProduct.inl_aut r (Multiplicative.ofAdd t)).symm
 
 end InfoGeometry.Canonical.KleinAffinePin55RealizationBridge

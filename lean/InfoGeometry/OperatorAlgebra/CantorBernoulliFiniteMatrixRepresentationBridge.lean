@@ -31,8 +31,23 @@ def bitWordMatrixLinearRepresentation (n : ℕ) :
   toFun := bitWordMatrixRepresentationFun n
   map_add' A B := by
     classical
-    simp [bitWordMatrixRepresentationFun, add_smul,
-      Finset.sum_add_distrib]
+    change (∑ u : BitWord n, ∑ v : BitWord n,
+        (A u v + B u v) • bitWordUnit n u v) =
+      (∑ u : BitWord n, ∑ v : BitWord n, A u v • bitWordUnit n u v) +
+        ∑ u : BitWord n, ∑ v : BitWord n, B u v • bitWordUnit n u v
+    calc
+      (∑ u : BitWord n, ∑ v : BitWord n,
+          (A u v + B u v) • bitWordUnit n u v) =
+        ∑ u : BitWord n, ∑ v : BitWord n,
+          (A u v • bitWordUnit n u v + B u v • bitWordUnit n u v) := by
+            apply Finset.sum_congr rfl
+            intro u hu
+            apply Finset.sum_congr rfl
+            intro v hv
+            exact add_smul (A u v) (B u v) (bitWordUnit n u v)
+      _ = (∑ u : BitWord n, ∑ v : BitWord n, A u v • bitWordUnit n u v) +
+          ∑ u : BitWord n, ∑ v : BitWord n, B u v • bitWordUnit n u v := by
+            simp_rw [Finset.sum_add_distrib]
   map_smul' c A := by
     classical
     simp [bitWordMatrixRepresentationFun, mul_smul, Finset.smul_sum]
@@ -51,11 +66,9 @@ def bitWordMatrixLinearRepresentation (n : ℕ) :
     · intro j _ hjv
       have : (Matrix.single u v (1 : ℂ)) u j = 0 := by
         rw [Matrix.single_apply]
-        have h_cond : ¬(u = u ∧ v = j) := by
-          intro ⟨_, hvj⟩
-          exact hjv hvj.symm
-        rw [if_neg h_cond]
-      rw [this, zero_smul]
+        simp [hjv.symm]
+      rw [this]
+      exact zero_smul ℂ (bitWordUnit n u j)
     · simp
   · intro i _ hiu
     have : (∑ j : BitWord n, (Matrix.single u v (1 : ℂ)) i j • bitWordUnit n i j) = 0 := by
@@ -63,11 +76,9 @@ def bitWordMatrixLinearRepresentation (n : ℕ) :
       intro j _
       have hzero : (Matrix.single u v (1 : ℂ)) i j = 0 := by
         rw [Matrix.single_apply]
-        have h_cond : ¬(u = i ∧ v = j) := by
-          intro ⟨hui, _⟩
-          exact hiu hui.symm
-        rw [if_neg h_cond]
-      rw [hzero, zero_smul]
+        simp [hiu.symm]
+      rw [hzero]
+      exact zero_smul ℂ (bitWordUnit n i j)
     exact this
   · simp
 
@@ -86,11 +97,9 @@ def bitWordMatrixLinearRepresentation (n : ℕ) :
     · intro j _ hjv
       have : (Matrix.single u v c) u j = 0 := by
         rw [Matrix.single_apply]
-        have h_cond : ¬(u = u ∧ v = j) := by
-          intro ⟨_, hvj⟩
-          exact hjv hvj.symm
-        rw [if_neg h_cond]
-      rw [this, zero_smul]
+        simp [hjv.symm]
+      rw [this]
+      exact zero_smul ℂ (bitWordUnit n u j)
     · simp
   · intro i _ hiu
     have : (∑ j : BitWord n, (Matrix.single u v c) i j • bitWordUnit n i j) = 0 := by
@@ -98,11 +107,9 @@ def bitWordMatrixLinearRepresentation (n : ℕ) :
       intro j _
       have hzero : (Matrix.single u v c) i j = 0 := by
         rw [Matrix.single_apply]
-        have h_cond : ¬(u = i ∧ v = j) := by
-          intro ⟨hui, _⟩
-          exact hiu hui.symm
-        rw [if_neg h_cond]
-      rw [hzero, zero_smul]
+        simp [hiu.symm]
+      rw [hzero]
+      exact zero_smul ℂ (bitWordUnit n i j)
     exact this
   · simp
 
@@ -121,7 +128,8 @@ theorem bitWordMatrixLinearRepresentation_diagonal_sum
     rw [Finset.sum_eq_single u]
     · rw [Matrix.one_apply_eq, one_smul]
     · intro v _ hvu
-      rw [Matrix.one_apply_ne (Ne.symm hvu), zero_smul]
+      rw [Matrix.one_apply_ne (Ne.symm hvu)]
+      exact zero_smul ℂ (bitWordUnit n u v)
     · simp
   rw [h_diag]
   exact bitWordUnit_level_sum_one n

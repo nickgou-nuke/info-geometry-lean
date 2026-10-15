@@ -1,4 +1,4 @@
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Module.LinearMap.Basic
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
@@ -135,7 +135,7 @@ theorem poincare_residue_contraction
     (hα : α X = 1) (hβ : β X = 0) :
     interiorContraction X α β = β := by
   ext v
-  dsimp [interiorContraction, wedge]
+  change α X * β v - α v * β X = β v
   rw [hα, hβ]
   ring
 

@@ -264,6 +264,7 @@ theorem paper_terminal_foldbin6_fiber_hamming_three_valued (x : Omega.X 6) :
         hdist_ge
     have hC_card : C.card = 2 :=
       terminal_foldbin6_fiber_hamming_three_valued_delta5_implies_twofold C hC_two hpair
-    simpa [P, C, hcardC] using hC_card
+    have hP_card : P.card = 2 := hcardC.symm.trans hC_card
+    simpa [P, terminal_foldbin6_fiber_hamming_three_valued_preimages] using hP_card
 
 end Omega.GU

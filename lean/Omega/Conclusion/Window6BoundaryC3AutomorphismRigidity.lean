@@ -3,6 +3,9 @@ import Omega.Conclusion.Window6BoundaryC3DiagonalIrreducibleSplitting
 
 namespace Omega.Conclusion
 
+set_option linter.unusedSimpArgs false
+set_option linter.unnecessarySimpa false
+
 /-- Concrete rigidity statement for `C₃`-equivariant boundary-parity automorphisms. Every such
 automorphism fixes the diagonal line and is one of the three powers of the boundary rotation. -/
 def conclusion_window6_boundary_c3_automorphism_rigidity_statement : Prop :=
@@ -133,12 +136,13 @@ theorem paper_conclusion_window6_boundary_c3_automorphism_rigidity :
         simp [boundaryE0, boundaryE2] at hcoord
       exact hneq (φ.injective hsame)
   refine ⟨hfixdiag, ?_⟩
+
   rcases hv_class with hve0 | hve1 | hve2
   · left
     intro x
     have hE0 : φ boundaryE0 = boundaryE0 := hve0
-    have hE2 : φ boundaryE2 = boundaryE2 := by simpa [hve0] using hφe2
-    have hE1 : φ boundaryE1 = boundaryE1 := by simpa [hve0] using hφe1
+    have hE2 : φ boundaryE2 = boundaryE2 := by rw [hφe2, hve0, boundaryRotate_e0]
+    have hE1 : φ boundaryE1 = boundaryE1 := by rw [hφe1, hve0, boundaryRotate_e0, boundaryRotate_e2]
     calc
       φ x = φ (x 0 • boundaryE0 + x 1 • boundaryE1 + x 2 • boundaryE2) := by
         conv_lhs => rw [boundaryVector_eq_sum_basis x]
@@ -149,8 +153,8 @@ theorem paper_conclusion_window6_boundary_c3_automorphism_rigidity :
     right
     intro x
     have hE0 : φ boundaryE0 = boundaryE1 := hve1
-    have hE2 : φ boundaryE2 = boundaryE0 := by simpa [hve1] using hφe2
-    have hE1 : φ boundaryE1 = boundaryE2 := by simpa [hve1] using hφe1
+    have hE2 : φ boundaryE2 = boundaryE0 := by rw [hφe2, hve1, boundaryRotate_e1]
+    have hE1 : φ boundaryE1 = boundaryE2 := by rw [hφe1, hve1, boundaryRotate_e1, boundaryRotate_e0]
     calc
       φ x = φ (x 0 • boundaryE0 + x 1 • boundaryE1 + x 2 • boundaryE2) := by
         conv_lhs => rw [boundaryVector_eq_sum_basis x]
@@ -163,8 +167,8 @@ theorem paper_conclusion_window6_boundary_c3_automorphism_rigidity :
     left
     intro x
     have hE0 : φ boundaryE0 = boundaryE2 := hve2
-    have hE2 : φ boundaryE2 = boundaryE1 := by simpa [hve2] using hφe2
-    have hE1 : φ boundaryE1 = boundaryE0 := by simpa [hve2] using hφe1
+    have hE2 : φ boundaryE2 = boundaryE1 := by rw [hφe2, hve2, boundaryRotate_e2]
+    have hE1 : φ boundaryE1 = boundaryE0 := by rw [hφe1, hve2, boundaryRotate_e2, boundaryRotate_e1]
     calc
       φ x = φ (x 0 • boundaryE0 + x 1 • boundaryE1 + x 2 • boundaryE2) := by
         conv_lhs => rw [boundaryVector_eq_sum_basis x]

@@ -9,7 +9,6 @@ theorem paper_op_algebra_fold_unlink_evaluates_to_collision_moment {OmegaTy XTy 
     (fold : OmegaTy -> XTy) (m r : Nat) (hcard : Fintype.card OmegaTy = 2 ^ m) :
     ((∑ x, (foldWatataniIndexElement fold x : Rat) ^ (r + 1)) / 2 ^ m) =
       foldWatataniTracedIndexMoment fold r := by
-  simpa [foldWatataniIndexElement] using
-    (paper_op_algebra_fold_watatani_index_moments fold m r hcard).2.2.symm
+  simp [foldWatataniIndexElement, foldWatataniTracedIndexMoment, hcard]
 
 end Omega.OperatorAlgebra

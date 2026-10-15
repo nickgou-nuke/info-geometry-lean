@@ -69,7 +69,13 @@ theorem realSplitPinNullAction_isHomeomorph (g : realSplitPin55) :
     (splitPinLinearFamily g) (splitPinLinearFamily_preserves_Q55 g) 0
     (splitPinLinearFamily_continuous g)
     (splitPinLinearFamily_symm_continuous g)
-  convert h using 1
+  have hfun : realSplitPinNullAction g =
+      nullProjectiveGenerator Q55 (splitPinLinearFamily g)
+        (splitPinLinearFamily_preserves_Q55 g) 0 := by
+    funext p
+    exact realSplitPinNullAction_eq_nullProjectiveGenerator g p
+  rw [hfun]
+  exact h
 
 /-- Actual homeomorphism representing one real split-Pin element on the
 projective `Q55` null boundary. -/
@@ -109,7 +115,13 @@ theorem realSplitPinOrderedNullAction_isHomeomorph
     (splitPinLinearFamily g) (splitPinLinearFamily_preserves_Q55 g) 0 n
     (splitPinLinearFamily_continuous g)
     (splitPinLinearFamily_symm_continuous g)
-  convert h using 1
+  have hfun : realSplitPinOrderedNullAction n g =
+      mapOrderedConfiguration Q55 (splitPinLinearFamily g)
+        (splitPinLinearFamily_preserves_Q55 g) 0 n := by
+    funext p
+    exact realSplitPinOrderedNullAction_eq_mapOrderedConfiguration g n p
+  rw [hfun]
+  exact h
 
 /-- Actual homeomorphism representing one real split-Pin element on ordered
 distinct projective-null configurations. -/
@@ -194,7 +206,13 @@ theorem realSplitPinUnorderedNullAction_isHomeomorph
     (splitPinLinearFamily g) (splitPinLinearFamily_preserves_Q55 g) 0 n
     (splitPinLinearFamily_continuous g)
     (splitPinLinearFamily_symm_continuous g)
-  convert h using 1
+  have hfun : realSplitPinUnorderedNullAction n g =
+      mapUnorderedConfiguration Q55 (splitPinLinearFamily g)
+        (splitPinLinearFamily_preserves_Q55 g) 0 n := by
+    funext p
+    exact realSplitPinUnorderedNullAction_eq_mapUnorderedConfiguration g n p
+  rw [hfun]
+  exact h
 
 /-- Actual homeomorphism representing one real split-Pin element on the
 unordered marked-null configuration carrier. -/

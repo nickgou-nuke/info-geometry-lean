@@ -22,9 +22,9 @@ def datum : DIIISuperfluidDatum Op where
   Theta := theta
   Xi := xi
   chi := chi
-  Theta_square := by simpa [Op] using theta_sq
-  Xi_square := by simpa [Op] using xi_sq
-  chi_square := by simpa [Op] using chi_sq
+  Theta_square := by simpa only [Module.End.mul_eq_comp, Module.End.one_eq_id] using theta_sq
+  Xi_square := by simpa only [Module.End.mul_eq_comp, Module.End.one_eq_id] using xi_sq
+  chi_square := by simpa only [Module.End.mul_eq_comp, Module.End.one_eq_id] using chi_sq
   time_reversal_symmetry := by simp
   particle_hole_symmetry := by simp
   chiral_symmetry := by simp

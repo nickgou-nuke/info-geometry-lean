@@ -664,7 +664,8 @@ theorem sourceVortexSeed_comp_J_eq_J_comp_sinkVortexSeed_of_commute_modularJ
   let Pplus : EndH := (canonicalVortexPair (E := E)).source
   let Pminus : EndH := (canonicalVortexPair (E := E)).sink
   have hHJ : H.comp J = J.comp H := by
-    simpa [H, J] using hComm.eq.symm
+    change H * J = J * H
+    exact hComm.eq.symm
   have hPJ : Pplus.comp J = J.comp Pminus := (canonicalVortexPair (E := E)).source_comp_J
   calc
     (sourceVortexSeed (E := E) V).comp J
@@ -701,7 +702,8 @@ theorem sinkVortexSeed_comp_J_eq_J_comp_sourceVortexSeed_of_commute_modularJ
   let Pplus : EndH := (canonicalVortexPair (E := E)).source
   let Pminus : EndH := (canonicalVortexPair (E := E)).sink
   have hHJ : H.comp J = J.comp H := by
-    simpa [H, J] using hComm.eq.symm
+    change H * J = J * H
+    exact hComm.eq.symm
   have hPJ : Pminus.comp J = J.comp Pplus := (canonicalVortexPair (E := E)).sink_comp_J
   calc
     (sinkVortexSeed (E := E) V).comp J

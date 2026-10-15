@@ -199,7 +199,8 @@ theorem localShannonEntropy_eq_massieu_sub_expectedOccupation_mul_log
           have hprob_sum : Finset.sum (Finset.range κ) (stateProbability κ x) = 1 := by
             unfold stateProbability parafermionLocalFactor
             have hden : Finset.sum (Finset.range κ) (fun i => x ^ i) ≠ 0 := by
-              simpa using hQ.ne'
+              change 0 < Finset.sum (Finset.range κ) (fun i => x ^ i) at hQ
+              exact ne_of_gt hQ
             rw [← Finset.sum_div]
             exact div_self hden
           simp [hprob_sum, localExpectedOccupation, parafermionMassieu]
@@ -307,9 +308,11 @@ theorem fermionicCollapse_eq_primeSuperalgebra
       (B := { cutoff := P, kappa := 2, weight := primeWeight β, beta := β, mu := 0 })
       =
     finiteSquarefreeProduct P β := by
-  simpa [PrimeParafermionGrandCanonicalPacket.partition, primeWeight]
-    using (PrimeParafermionGrandCanonicalPacket.partition_two_eq_squarefreeProduct
-      (B := { cutoff := P, kappa := 2, weight := primeWeight β, beta := β, mu := 0 }))
+  change PrimeParafermionGrandCanonicalPacket.partition
+      (B := { cutoff := P, kappa := 2, weight := primeWeight β, beta := β, mu := 0 }) =
+    ∏ p ∈ P.primes, (1 + primeWeight β p)
+  exact PrimeParafermionGrandCanonicalPacket.partition_two_eq_squarefreeProduct
+    (B := { cutoff := P, kappa := 2, weight := primeWeight β, beta := β, mu := 0 })
 
 /-- The `κ = 2` prime parafermion packet equals the finite square-free fermion sum. -/
 theorem fermionicCollapse_eq_squarefreePartitionSum

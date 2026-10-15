@@ -19,9 +19,10 @@ theorem hasDerivAt_quadratic (point : ℝ) :
     HasDerivAt quadraticGeometry.potential point point := by
   change HasDerivAt (fun value : ℝ => (1 / 2 : ℝ) * ‖value‖ ^ 2) point point
   simp only [Real.norm_eq_abs, sq_abs]
-  convert ((hasDerivAt_id point).pow 2).const_mul (1 / 2 : ℝ) using 1
-  norm_num
-  ring
+  have h := HasDerivAt.const_mul (1 / 2 : ℝ) ((hasDerivAt_id point).pow 2)
+  convert h using 1
+  · rfl
+  · norm_num [id_eq] <;> ring
 
 theorem quadratic_dualMap : quadraticGeometry.dualMap = id := by
   funext point
@@ -60,9 +61,14 @@ theorem hasDerivAt_trajectory (initial target time : ℝ) :
     HasDerivAt (trajectory initial target)
       (naturalVelocity quadraticGeometry (trajectory initial target time) target) time := by
   rw [quadratic_naturalVelocity]
-  convert ((((hasDerivAt_id time).neg).exp).const_mul (initial - target)).const_add target
-    using 1
-  simp [trajectory]
+  have h := HasDerivAt.const_add target (HasDerivAt.const_mul (initial - target) (hasDerivAt_id time).neg.exp)
+  have hderiv : (initial - target) * (Real.exp ((-id) time) * -1) =
+      -(trajectory initial target time - target) := by
+    dsimp [trajectory]
+    ring
+  convert h using 1
+  · rfl
+  · simpa [id_eq, trajectory, mul_comm] using hderiv.symm
 
 theorem trajectory_ne_target (initial target time : ℝ) (distinct : initial ≠ target) :
     trajectory initial target time ≠ target := by
@@ -85,6 +91,10 @@ theorem divergence_exact_decay (initial target time : ℝ) :
 theorem trajectory_tendsto_target (initial target : ℝ) :
     Tendsto (trajectory initial target) atTop (𝓝 target) := by
   have limit := (Real.tendsto_exp_neg_atTop_nhds_zero.const_mul (initial - target)).const_add target
-  simpa [trajectory] using limit
+  have htarget : target + (initial - target) * 0 = target := by ring
+  rw [htarget] at limit
+  change Tendsto (fun x : ℝ => target + (initial - target) * Real.exp (-x))
+    atTop (𝓝 target)
+  exact limit
 
 end InfoGeometry.Epistemology.QuadraticNaturalGradientFlow

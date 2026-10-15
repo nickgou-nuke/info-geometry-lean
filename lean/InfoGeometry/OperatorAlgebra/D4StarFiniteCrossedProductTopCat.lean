@@ -36,8 +36,9 @@ theorem continuous_observableEmbedding :
   apply continuous_pi
   intro r
   by_cases hr : r = 1
-  · simpa [observableEmbedding, hr] using
-      (continuous_id : Continuous fun f : D4StarObservable => f)
+  · simp only [observableEmbedding, if_pos hr]
+    change Continuous (fun f : D4StarObservable => f)
+    exact continuous_id
   · simpa [observableEmbedding, hr] using
       (continuous_const : Continuous fun _ : D4StarObservable =>
         (0 : D4StarObservable))

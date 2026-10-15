@@ -37,7 +37,9 @@ private def q55ToFin10 : V55 ≃ₗ[ℝ] (Fin 10 → ℝ) :=
       funext i
       fin_cases i <;> rfl }
 
-private def q55ToSplit5 : V55 ≃ₗ[ℝ] SplitSpace 5 :=
+/-- The linear coordinate equivalence from the native `Q55` carrier to the
+recursive symmetric split carrier `SplitSpace 5`. -/
+def q55ToSplit5 : V55 ≃ₗ[ℝ] SplitSpace 5 :=
   q55ToFin10.trans vec55SplitEquiv
 
 theorem q55ToSplit5_wittBasis (i : Fin 10) :
@@ -65,9 +67,9 @@ theorem cl55ToSplitCl55_map_ι (v : V55) :
     cl55ToSplitCl55 (ι55 v) =
       CliffordAlgebra.ι (InfoGeometry.Clifford.SpinorRep.SplitQuad 5)
         (q55ToSplit5 v) := by
-  dsimp [cl55ToSplitCl55, CliffordAlgebra.equivOfIsometry]
+  change CliffordAlgebra.map q55ToSplit5Isometry.toIsometry (ι55 v) = _
   rw [CliffordAlgebra.map_apply_ι]
-  rfl
+  congr 1
 
 noncomputable def cl55ToCl11TensorCl44 :
     Cl55 ≃ₐ[ℝ] SplitClNNTensorStep 4 :=
@@ -85,9 +87,11 @@ theorem cl55SpinorRepresentation_ι (v : V55) :
       InfoGeometry.Clifford.SpinorRep.recursiveGamma 5 (q55ToSplit5 v) := by
   dsimp [cl55SpinorRepresentation, cl55ToSplitCl55,
     CliffordAlgebra.equivOfIsometry]
-  rw [CliffordAlgebra.map_apply_ι]
-  exact InfoGeometry.Clifford.SpinorRep.spinorRepresentation_ι 5
-    (q55ToSplit5 v)
+  change InfoGeometry.Clifford.SpinorRep.spinorRepresentation 5
+      (CliffordAlgebra.map q55ToSplit5Isometry.toIsometry (ι55 v)) = _
+  rw [CliffordAlgebra.map_apply_ι,
+    InfoGeometry.Clifford.SpinorRep.spinorRepresentation_ι]
+  congr 1
 
 theorem cl55SpinorRepresentation_surjective_iff_gamma_generate :
     Function.Surjective cl55SpinorRepresentation ↔

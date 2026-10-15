@@ -131,9 +131,12 @@ else
     # 4. Axiom & Debt Audit (sorry/axiom/admit count)
     run_check "Axiom & Debt Audit" python3 tools/infra/axiom_audit.py --fail-on-gaps
 
-    # 5. Semantic vacuity audit (tracked all-subfolder review surface)
-    run_check "Semantic Vacuity Audit (review-only)" \
-        python3 tools/quality/semantic_vacuity_gate.py --tracked lean --fail-on none
+    # 5. Semantic vacuity audit over every tracked Lean source in the repository.
+    # Error-level findings and incomplete source coverage block this gate;
+    # warning-level heuristic findings remain visible for independent review.
+    run_check "Semantic Vacuity Audit (repository-wide)" \
+        python3 tools/quality/semantic_vacuity_gate.py --tracked . --fail-on error --fail-prefix lean/ \
+          --json-out artifacts/vacuity_full.json
 
     # 6. Semantic content audit (proof holes, trivial theorems)
     run_gate "Semantic Content Audit" python3 tools/quality/semantic_content_audit.py --file-prefix lean --gate

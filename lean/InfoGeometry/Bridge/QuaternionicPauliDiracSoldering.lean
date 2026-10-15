@@ -45,7 +45,7 @@ theorem soldering_mul_cosoldering (P : PauliParavector) :
   fin_cases i <;> fin_cases j <;>
     simp [PauliParavector.pauliMatrix, coSolderingMap,
       PauliParavector.minkowskiNormSq, Matrix.mul_apply,
-      Matrix.one_apply, Fin.sum_univ_two] <;> ring_nf
+      Fin.sum_univ_two] <;> ring_nf
   all_goals rw [Complex.I_sq]
   all_goals ring
 
@@ -56,20 +56,27 @@ theorem cosoldering_mul_soldering (P : PauliParavector) :
   fin_cases i <;> fin_cases j <;>
     simp [PauliParavector.pauliMatrix, coSolderingMap,
       PauliParavector.minkowskiNormSq, Matrix.mul_apply,
-      Matrix.one_apply, Fin.sum_univ_two] <;> ring_nf
+      Fin.sum_univ_two] <;> ring_nf
   all_goals rw [Complex.I_sq]
   all_goals ring
 
 def chiralWeylOperator (A B : PauliBlock) : Module.End ℂ DiracSpinor where
   toFun ψ := (A *ᵥ ψ.2, B *ᵥ ψ.1)
-  map_add' := by intro x y; ext <;> simp [Matrix.mulVec_add]
-  map_smul' := by intro c x; ext <;> simp [Matrix.mulVec_smul]
+  map_add' x y := by
+    apply Prod.ext
+    · dsimp; rw [mulVec_add]
+    · dsimp; rw [mulVec_add]
+  map_smul' c x := by
+    apply Prod.ext
+    · dsimp; rw [mulVec_smul]
+    · dsimp; rw [mulVec_smul]
 
 theorem chiralWeylOperator_sq_apply (A B : PauliBlock) (ψ : DiracSpinor) :
     chiralWeylOperator A B (chiralWeylOperator A B ψ) =
       ((A * B) *ᵥ ψ.1, (B * A) *ᵥ ψ.2) := by
-  rcases ψ with ⟨ψL, ψR⟩
-  apply Prod.ext <;> simp [chiralWeylOperator, Matrix.mulVec_mulVec]
+  apply Prod.ext
+  · dsimp [chiralWeylOperator]; rw [mulVec_mulVec]
+  · dsimp [chiralWeylOperator]; rw [mulVec_mulVec]
 
 theorem soldered_chiralWeylOperator_sq_apply
     (P : PauliParavector) (ψ : DiracSpinor) :
@@ -122,9 +129,9 @@ theorem commute_every_quaternionic_axis_of_two
   calc
     N * (a • I + b • J + c • K) =
         a • (N * I) + b • (N * J) + c • (N * K) := by
-      simp [mul_add, mul_smul_comm]
+      simp [mul_add]
     _ = a • (I * N) + b • (J * N) + c • (K * N) := by rw [hNI, hNJ, hNK]
-    _ = (a • I + b • J + c • K) * N := by simp [add_mul, smul_mul_assoc]
+    _ = (a • I + b • J + c • K) * N := by simp [add_mul]
 
 end QuaternionicOperators
 end InfoGeometry.Bridge.QuaternionicPauliDiracSoldering

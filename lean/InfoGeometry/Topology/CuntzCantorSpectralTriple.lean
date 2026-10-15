@@ -1419,10 +1419,13 @@ theorem e2_isSelfAdjoint_of_commutes_canonicalPhase
   exact CuntzMajoranaCandidates.e2_isSelfAdjoint_of_phaseAxis
     (M := M.toCuntzMajoranaCandidates)
     (by
-      simpa [CuntzMajoranaCandidates.carrierPhaseAxis, canonicalRealDoubledPhaseAxis] using
-        (canonicalRealDoubledPhaseAxis_star_eq_neg (E := E)))
+      rw [doubledSpace_carrierPhaseAxis_eq_clockAxis,
+        ← canonicalRealDoubledPhaseAxis_eq_clockAxis]
+      exact canonicalRealDoubledPhaseAxis_star_eq_neg (E := E))
     (by
-      simpa [CuntzMajoranaCandidates.carrierPhaseAxis, canonicalRealDoubledPhaseAxis] using hComm)
+      rw [doubledSpace_carrierPhaseAxis_eq_clockAxis,
+        ← canonicalRealDoubledPhaseAxis_eq_clockAxis]
+      exact hComm)
 
 /--
 If the left Cuntz branch commutes with the canonical doubled phase axis, then its

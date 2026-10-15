@@ -63,6 +63,9 @@ theorem action_lie_hom (x y : L.L) (v : S.V) :
   rfl
 
 -- The native mathlib skew-adjoint Lie subalgebra of End(V) for the bilinear form beta
+local instance : LieRing (Module.End R S.V) := LieRing.ofAssociativeRing
+local instance : LieAlgebra R (Module.End R S.V) := LieAlgebra.ofAssociativeAlgebra
+
 def nativeSkewAdjointLieSubalgebra : LieSubalgebra R (Module.End R S.V) :=
   skewAdjointLieSubalgebra S.beta
 

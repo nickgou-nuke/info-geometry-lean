@@ -106,8 +106,7 @@ theorem nonassociative_witness :
   intro h
   have hr := congrArg Prod.snd h
   simp [qi, qj, ell, embed, splitMul] at hr
-  have hk := congrArg (fun q : HRot => q.imK) hr
-  norm_num at hk
+  norm_num at hr
 
 theorem left_alternative (x y : Carrier) :
     x * (x * y) = (x * x) * y := by

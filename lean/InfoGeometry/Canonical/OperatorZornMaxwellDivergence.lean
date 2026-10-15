@@ -113,7 +113,7 @@ theorem maxwellZorn_ampere_x (p : Fin 4 → A) (Phi : FourPotential A) :
   unfold adjointDivergenceMinkowski electric magnetic
   rw [fieldStrength_self_zero, adjointCovariant_zero]
   rw [fieldStrength_swap p Phi 2 1, adjointCovariant_neg]
-  simp
+  simp; abel
 
 theorem maxwellZorn_ampere_y (p : Fin 4 → A) (Phi : FourPotential A) :
     adjointDivergenceMinkowski p Phi 2 =
@@ -123,7 +123,7 @@ theorem maxwellZorn_ampere_y (p : Fin 4 → A) (Phi : FourPotential A) :
   unfold adjointDivergenceMinkowski electric magnetic
   rw [fieldStrength_self_zero, adjointCovariant_zero]
   rw [fieldStrength_swap p Phi 3 2, adjointCovariant_neg]
-  simp
+  simp; abel
 
 theorem maxwellZorn_ampere_z (p : Fin 4 → A) (Phi : FourPotential A) :
     adjointDivergenceMinkowski p Phi 3 =
@@ -133,6 +133,6 @@ theorem maxwellZorn_ampere_z (p : Fin 4 → A) (Phi : FourPotential A) :
   unfold adjointDivergenceMinkowski electric magnetic
   rw [fieldStrength_self_zero, adjointCovariant_zero]
   rw [fieldStrength_swap p Phi 1 3, adjointCovariant_neg]
-  simp
+  simp; abel
 
 end InfoGeometry.Canonical.OperatorZornFourPotentialGauge

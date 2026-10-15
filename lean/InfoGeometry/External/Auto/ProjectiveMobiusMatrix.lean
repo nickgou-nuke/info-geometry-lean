@@ -103,7 +103,7 @@ theorem mobiusOption_projective_rescale_some {u : Kˣ}
                 simp [Matrix.smul_apply, mul_assoc]
         _ = 0 := hzero
     have hleft : mobiusOption (u • M) (some z) = none := by
-      simpa [mobiusOption, Matrix.smul_apply, hcond] using hcond
+      simp [mobiusOption, Units.smul_def, Matrix.smul_apply, smul_eq_mul, hzero]
     have hright : mobiusOption M (some z) = none := by
       simpa [mobiusOption, h] using h
     calc

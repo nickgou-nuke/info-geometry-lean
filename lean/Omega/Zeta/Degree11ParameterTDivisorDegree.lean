@@ -11,7 +11,14 @@ inductive xi_degree11_parameter_t_divisor_degree_pole_point where
   | infinity_one
   | infinity_two
   | infinity_three
-  deriving DecidableEq, Fintype, Repr
+  deriving DecidableEq, Repr
+
+instance : Fintype xi_degree11_parameter_t_divisor_degree_pole_point where
+  elems := {.alpha_plus, .alpha_minus, .imag_pos, .imag_neg,
+    .infinity_one, .infinity_two, .infinity_three}
+  complete := by
+    intro point
+    cases point <;> simp
 
 /-- The ordered pole divisor support recorded in the paper. -/
 def xi_degree11_parameter_t_divisor_degree_pole_points :

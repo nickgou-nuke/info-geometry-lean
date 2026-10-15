@@ -41,8 +41,9 @@ example (twist : KleinInvolution A) (coefficient phase : A) :
 
 example [Algebra ℝ A] (field : KleinBrillouinQuotient → A)
     (point : BrillouinTorus) :
-    fieldEquiv field (torusGlide point) = fieldEquiv field point :=
-  (fieldEquiv field).property point
+    (fieldEquiv field).1 (torusGlide point) =
+      (fieldEquiv field).1 point :=
+  (fieldEquiv field).2 point
 
 #print axioms fixed_product_iff_coefficient_odd
 #print axioms equation_covariant

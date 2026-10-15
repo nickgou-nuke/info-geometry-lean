@@ -496,10 +496,19 @@ omit [FiniteDimensional ℝ E] in
 @[simp] theorem restrictedVolumeCharacter_weylGaugeRescale
     (w : E ≃ₗ[ℝ] E) (g : RestrictedSheetEquiv E) :
     restrictedVolumeCharacter (weylGaugeRescale w g) = restrictedVolumeCharacter g := by
-  cases g
-  unfold restrictedVolumeCharacter weylGaugeRescale VolumeHom
-  simp [LinearEquiv.det_trans]
-  group
+  cases g with
+  | mk plus minus =>
+      simp only [restrictedVolumeCharacter, weylGaugeRescale, Base.VolumeHom,
+        LinearEquiv.det_trans]
+      calc
+        LinearEquiv.det plus * LinearEquiv.det w *
+            (LinearEquiv.det minus * LinearEquiv.det w)⁻¹ =
+            LinearEquiv.det plus * LinearEquiv.det w *
+              ((LinearEquiv.det minus)⁻¹ * (LinearEquiv.det w)⁻¹) := by rw [mul_inv]
+        _ = LinearEquiv.det plus *
+              (LinearEquiv.det w * (LinearEquiv.det w)⁻¹) *
+                (LinearEquiv.det minus)⁻¹ := by ac_rfl
+        _ = LinearEquiv.det plus * (LinearEquiv.det minus)⁻¹ := by simp
 
 omit [FiniteDimensional ℝ E] in
 @[simp] theorem restrictedVolumeCharacter_weylGaugeRescaleByScalar

@@ -42,7 +42,7 @@ theorem continuous_totalPrepotentialCoefficient {dim : ℕ} :
     Continuous (totalPrepotentialCoefficient :
       GromovWittenPrepotential dim → ℝ) := by
   unfold totalPrepotentialCoefficient
-  apply continuous_finset_sum
+  apply continuous_finsetSum
   intro t ht
   have hF3 : Continuous (fun F : GromovWittenPrepotential dim => F.F3) :=
     continuous_induced_dom
@@ -62,15 +62,20 @@ theorem totalPrepotentialCoefficientOnGaugeQuotient_levelSet_isClosed
     {dim : ℕ} (c : ℝ) :
     IsClosed {q : GromovWittenPrepotentialGaugeQuotient dim |
       totalPrepotentialCoefficientOnGaugeQuotient q = c} := by
-  simpa only [Set.preimage, Set.mem_setOf_eq] using
-    (isClosed_singleton : IsClosed ({c} : Set ℝ)).preimage
-      (continuous_totalPrepotentialCoefficientOnGaugeQuotient (dim := dim))
+  have : {q : GromovWittenPrepotentialGaugeQuotient dim |
+      totalPrepotentialCoefficientOnGaugeQuotient q = c} =
+      totalPrepotentialCoefficientOnGaugeQuotient ⁻¹' {c} := by
+    ext x
+    simp
+  rw [this]
+  exact isClosed_singleton.preimage
+    (continuous_totalPrepotentialCoefficientOnGaugeQuotient (dim := dim))
 
 theorem continuous_prepotentialCoefficientEnergy {dim : ℕ} :
     Continuous (prepotentialCoefficientEnergy :
       GromovWittenPrepotential dim → ℝ) := by
   unfold prepotentialCoefficientEnergy
-  apply continuous_finset_sum
+  apply continuous_finsetSum
   intro t ht
   have hF3 : Continuous (fun F : GromovWittenPrepotential dim => F.F3) :=
     continuous_induced_dom
@@ -125,8 +130,13 @@ theorem prepotentialCoefficientEnergyOnGaugeQuotient_levelSet_isClosed
     {dim : ℕ} (c : ℝ) :
     IsClosed {q : GromovWittenPrepotentialGaugeQuotient dim |
       prepotentialCoefficientEnergyOnGaugeQuotient q = c} := by
-  simpa only [Set.preimage, Set.mem_setOf_eq] using
-    (isClosed_singleton : IsClosed ({c} : Set ℝ)).preimage
-      (continuous_prepotentialCoefficientEnergyOnGaugeQuotient (dim := dim))
+  have : {q : GromovWittenPrepotentialGaugeQuotient dim |
+      prepotentialCoefficientEnergyOnGaugeQuotient q = c} =
+      prepotentialCoefficientEnergyOnGaugeQuotient ⁻¹' {c} := by
+    ext x
+    simp
+  rw [this]
+  exact isClosed_singleton.preimage
+    (continuous_prepotentialCoefficientEnergyOnGaugeQuotient (dim := dim))
 
 end InfoGeometry.Canonical

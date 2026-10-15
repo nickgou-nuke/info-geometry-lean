@@ -4,11 +4,13 @@ namespace InfoGeometry.Exceptional.CuntzArchimedeanColimitTests
 
 open InfoGeometry.Clifford CuntzArchimedeanColimit
 
-example : norm (⟨0, 0, 1, 1⟩ : SplitQuaternion) = -2 := by
-  norm_num [norm]
+example : InfoGeometry.Clifford.norm (⟨0, 0, 1, 1⟩ : SplitQuaternion) = -2 := by
+  dsimp [InfoGeometry.Clifford.norm]
+  norm_num
 
-example : norm (⟨0, 0, 1, 1⟩ : SplitQuaternion) ≠ 0 := by
-  norm_num [norm]
+example : InfoGeometry.Clifford.norm (⟨0, 0, 1, 1⟩ : SplitQuaternion) ≠ 0 := by
+  dsimp [InfoGeometry.Clifford.norm]
+  norm_num
 
 example : (⟨0, 1, 1, 0⟩ : SplitQuaternion) ≠ 0 := by
   intro equality

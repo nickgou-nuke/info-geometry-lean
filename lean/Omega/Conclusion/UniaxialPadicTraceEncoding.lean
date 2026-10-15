@@ -74,9 +74,16 @@ theorem conclusion_uniaxial_padic_trace_encoding_take_digits (E : Type*) [Fintyp
         funext i
         exact hprefix i
     _ = (conclusion_uniaxial_padic_trace_encoding_digits E N w).take M := by
-        simpa [conclusion_uniaxial_padic_trace_encoding_digits, Fin.take] using
-          (Fin.ofFn_take_eq_take_ofFn hMN
-            (fun i : Fin N => conclusion_uniaxial_padic_trace_encoding_digit E (w i)))
+        change List.ofFn (fun i : Fin M =>
+          conclusion_uniaxial_padic_trace_encoding_digit E
+            (w ⟨i.1, Nat.lt_of_lt_of_le i.2 hMN⟩)) = _
+        calc
+          _ = List.ofFn (Fin.take M hMN
+              (fun i : Fin N => conclusion_uniaxial_padic_trace_encoding_digit E (w i))) := by
+                congr 1
+          _ = (List.ofFn (fun i : Fin N =>
+              conclusion_uniaxial_padic_trace_encoding_digit E (w i))).take M :=
+                Fin.ofFn_take_eq_take_ofFn hMN _
 
 theorem conclusion_uniaxial_padic_trace_encoding_mod_compat (E : Type*) [Fintype E]
     {p M N : ℕ} (hp : 1 < p) (hcard : Fintype.card E < p) (hMN : M ≤ N)

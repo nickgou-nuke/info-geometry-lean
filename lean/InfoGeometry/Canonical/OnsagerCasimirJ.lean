@@ -46,6 +46,8 @@ theorem modularConjugationJ_preserves_inner
   repeat rw [WithLp.ofLp_fst, WithLp.ofLp_snd]
   simp [modular_j, add_comm]
 
+variable [CompleteSpace E]
+
 /-- `K = Jε` anticommutes with `J` on the right as well as on the left. -/
 @[rep_depth krein]
 theorem modularComplexI_comp_modularConjugationJ

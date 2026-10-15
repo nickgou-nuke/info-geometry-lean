@@ -44,11 +44,6 @@ variable
     ContinuousStarInductiveSystem.CompatibleStateFamily
       Stage sys)
 
-local instance globalBoundedOperatorCStarAlgebra :
-    CStarAlgebra
-      (GNSHilbertColimit Stage sys ω →L[ℂ]
-        GNSHilbertColimit Stage sys ω) where
-
 /-- Concrete algebraic operator range of the global filtered GNS
 representation. -/
 abbrev representedAlgebraicRange :=
@@ -98,8 +93,10 @@ theorem representedOperatorRingSeminorm_sub_eq_zero_iff
     representedOperatorRingSeminorm Stage sys ω (a - b) = 0 ↔
       algebraicColimitRangeRestrict Stage sys ω a =
         algebraicColimitRangeRestrict Stage sys ω b := by
-  rw [representedOperatorRingSeminorm_eq_zero_iff,
-    ← algebraicColimitRangeRestrict_eq_iff_sub_mem_kernel]
+  rw [representedOperatorRingSeminorm_eq_zero_iff]
+  exact
+    (algebraicColimitRangeRestrict_eq_iff_sub_mem_kernel
+      (Stage := Stage) (sys := sys) (ω := ω) a b).symm
 
 /-- Faithful inclusion of the represented algebraic range into its
 operator-norm C-star closure. -/
@@ -122,10 +119,8 @@ by the definition of that closure. -/
 theorem representedAlgebraicRangeInclusion_denseRange :
     DenseRange
       (representedAlgebraicRangeInclusion Stage sys ω) := by
-  change DenseRange
-    (Set.inclusion
-      (StarSubalgebra.le_topologicalClosure
-        (representedAlgebraicRange Stage sys ω)))
-  simp [-SetLike.coe_sort_coe]
+  exact (denseRange_inclusion_iff
+    (StarSubalgebra.le_topologicalClosure
+      (representedAlgebraicRange Stage sys ω))).2 Set.Subset.rfl
 
 end CStarStateColimit.Native.FilteredGNSFaithfulRangeQuotient

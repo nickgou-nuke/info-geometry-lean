@@ -55,7 +55,8 @@ def matrixOp [DecidableEq ι] (M : Matrix κ ι ℂ) :
 @[simp]
 theorem matrixOp_apply [DecidableEq ι] (M : Matrix κ ι ℂ) (v : FinKetSpace ι) :
     (matrixOp M v : κ → ℂ) = M *ᵥ (v : ι → ℂ) := by
-  simpa [matrixOp] using Matrix.toEuclideanLin_apply M v
+  change (Matrix.toEuclideanLin M v).ofLp = M *ᵥ v.ofLp
+  rw [Matrix.ofLp_toLpLin, Matrix.toLin'_apply]
 
 /-- A matrix sends a coordinate ket to the corresponding column. -/
 theorem matrixOp_apply_ket [DecidableEq ι]

@@ -42,7 +42,7 @@ theorem split_attention_as_residual
     let attn := softmaxAttention splitMetricTriadicInstance.toTriadicCore I hI keys
     attn.attention q = q + ∑ i ∈ I, (attn.weights q i) • keys i := by
   dsimp
-  simpa using
+  simpa [softmaxAttention] using
     (GeometricAttentionMap.attention_decomposition_residual
       (attn := softmaxAttention splitMetricTriadicInstance.toTriadicCore I hI keys)
       (toV := fun q' => q')

@@ -12,5 +12,4 @@ def zeroCommutatorDeterminant : Q :=
 
 lemma zeroCommutator_det_trace_cube_identity :
     zeroCommutatorDeterminant = (1 / 3 : Q) * trace (⁅zeroMatrixA, zeroMatrixB⁆ ^ 3) := by
-  simp [zeroCommutatorDeterminant, zeroMatrixA, zeroMatrixB]
-  exact Matrix.det_zero ⟨0⟩
+  simp [zeroCommutatorDeterminant, zeroMatrixA, zeroMatrixB, Ring.lie_def]

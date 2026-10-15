@@ -7,6 +7,7 @@ namespace InfoGeometry.Geometry.NullConeAlgebra
 open Matrix
 open InfoGeometry.Geometry.PauliParavectorBridge
 open InfoGeometry.Canonical.MatrixStageLorentzKANSoldering
+open scoped ComplexOrder
 
 inductive Archetype
   | matrix
@@ -15,7 +16,7 @@ inductive Archetype
   | lorentz
   | nilpotence
   | nullAddition
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
 
 namespace Archetype
 
@@ -54,6 +55,7 @@ theorem det_eq_zero_of_square_zero
     operator.det = 0 := by
   have productZero : operator.det * operator.det = 0 := by
     rw [← Matrix.det_mul, squareZero]
+    exact det_zero
   rcases mul_eq_zero.mp productZero with vanished | vanished
   · exact vanished
   · exact vanished

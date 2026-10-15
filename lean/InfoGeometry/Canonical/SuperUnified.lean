@@ -1,3 +1,4 @@
+import Mathlib.Algebra.Lie.OfAssociative
 import InfoGeometry.Clifford.Grading
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Jordan.Core
@@ -53,6 +54,9 @@ theorem clifford_decomposition (A B : End E) :
     _ = A.comp B := by simp [smul_smul]
 
 end SuperAlgebra
+
+local instance : LieRing (End E) := LieRing.ofAssociativeRing
+local instance : LieAlgebra ℝ (End E) := LieAlgebra.ofAssociativeAlgebra
 
 section SuperKaehlerGeometry
 
@@ -169,9 +173,7 @@ def StructureGroupLieAlgebra (S : SuperKaehlerStructure (E := E)) :
       _ = (r • A).comp S.J := by simp [ContinuousLinearMap.smul_comp]
   lie_mem' := by
     intro A B hA hB
-    change IsBosonic S.J (A * B - B * A)
-    simpa [lieBracket] using
-      (bracket_boson_boson_is_bosonic (S := S) hA hB)
+    exact bracket_boson_boson_is_bosonic (S := S) hA hB
 
 /-- Odd (`fermionic`) linear subspace. -/
 def SuperchargeSpace (S : SuperKaehlerStructure (E := E)) :

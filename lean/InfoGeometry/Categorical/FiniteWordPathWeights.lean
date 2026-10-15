@@ -83,7 +83,11 @@ theorem levelWeightSum_eq_pow {R : Type*} [CommSemiring R]
   classical
   unfold levelWeightSum wordWeight
   symm
-  simpa only [Finset.sum_univ_pi] using
+  have hpi : Fintype.piFinset (fun _ : Fin k => (Finset.univ : Finset (Fin n))) =
+      (Finset.univ : Finset (Fin k → Fin n)) := by
+    ext w
+    simp
+  simpa only [hpi] using
     (Finset.sum_pow' (s := (Finset.univ : Finset (Fin n))) (f := r) k)
 
 theorem levelWeightSum_succ {R : Type*} [CommSemiring R]

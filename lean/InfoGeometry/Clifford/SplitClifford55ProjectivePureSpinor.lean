@@ -29,6 +29,48 @@ def IsMaximalNeutralTotallyNull
       InfoGeometry.Clifford.BudinichSpinorsNullVectors.IsTotallyNull
           neutralPairing T → W ≤ T → T ≤ W
 
+/-- Every totally null subspace of the neutral `(5,5)` carrier has dimension
+at most five. The proof converts the normalized neutral pairing to the
+nondegenerate bilinear form and compares the subspace with its orthogonal. -/
+theorem finrank_le_five_of_totallyNull
+    (W : Submodule ℝ NeutralSpace)
+    (hW : InfoGeometry.Clifford.BudinichSpinorsNullVectors.IsTotallyNull
+      neutralPairing W) :
+    Module.finrank ℝ W ≤ 5 := by
+  let B := InfoGeometry.Clifford.NeutralPhaseSpaceCore.canonicalNeutralBilin
+    (E := V5)
+  have hW_B : InfoGeometry.Clifford.BudinichSpinorsNullVectors.IsTotallyNull
+      (fun x y => B x y) W := by
+    intro x hx y hy
+    have h := hW x hx y hy
+    rw [neutralPairing] at h
+    change InfoGeometry.Clifford.NeutralPhaseSpaceCore.canonicalNeutralBilin
+      (E := V5) x y = 0
+    rw [InfoGeometry.Clifford.NeutralPhaseSpaceCore.canonicalNeutralBilin_apply]
+    linarith
+  have hle : W ≤ B.orthogonal W := by
+    intro x hx
+    rw [LinearMap.BilinForm.mem_orthogonal_iff]
+    intro y hy
+    exact hW_B y hy x hx
+  have horth := LinearMap.BilinForm.finrank_orthogonal
+    InfoGeometry.Clifford.NeutralPhaseSpaceCore.canonicalNeutralBilin_nondegenerate W
+  have hWdim : Module.finrank ℝ W ≤ 10 := by
+    rw [← neutralSpace_finrank]
+    exact Submodule.finrank_le W
+  have hsum : Module.finrank ℝ W + Module.finrank ℝ (B.orthogonal W) = 10 := by
+    rw [horth, neutralSpace_finrank]
+    exact Nat.add_sub_of_le hWdim
+  have hmono := Submodule.finrank_mono hle
+  have htwice : 2 * Module.finrank ℝ W ≤ 10 := by
+    calc
+      2 * Module.finrank ℝ W =
+          Module.finrank ℝ W + Module.finrank ℝ W := by omega
+      _ ≤ Module.finrank ℝ W + Module.finrank ℝ (B.orthogonal W) :=
+        Nat.add_le_add_left hmono _
+      _ = 10 := hsum
+  omega
+
 theorem neutralAnnihilator_smul
     (a : ℝ) (ψ : Spinor) (ha : a ≠ 0) :
     neutralAnnihilator (a • ψ) = neutralAnnihilator ψ := by
@@ -136,10 +178,6 @@ theorem pureSpinor_annihilator_orthogonal_eq
       (E := V5)).orthogonal (neutralAnnihilator ψ) = neutralAnnihilator ψ := by
   let B := InfoGeometry.Clifford.NeutralPhaseSpaceCore.canonicalNeutralBilin
       (E := V5)
-  have hrefl : B.IsRefl := by
-    intro x y
-    simp [B, InfoGeometry.Clifford.NeutralPhaseSpaceCore.canonicalNeutralBilin_apply,
-      add_comm]
   have hnullB : InfoGeometry.Clifford.BudinichSpinorsNullVectors.IsTotallyNull
       (fun x y => B x y) (neutralAnnihilator ψ) := by
     intro x hx y hy
@@ -153,7 +191,8 @@ theorem pureSpinor_annihilator_orthogonal_eq
     exact hnullB y hy x hx
   have horth : Module.finrank ℝ (B.orthogonal (neutralAnnihilator ψ)) = 5 := by
     have h := LinearMap.BilinForm.finrank_orthogonal
-      InfoGeometry.Clifford.NeutralPhaseSpaceCore.canonicalNeutralBilin_nondegenerate hrefl (neutralAnnihilator ψ)
+      InfoGeometry.Clifford.NeutralPhaseSpaceCore.canonicalNeutralBilin_nondegenerate
+      (neutralAnnihilator ψ)
     rw [neutralSpace_finrank, hψ.2] at h
     norm_num at h ⊢
     exact h

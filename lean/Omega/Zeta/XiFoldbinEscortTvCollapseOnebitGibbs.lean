@@ -76,7 +76,10 @@ theorem paper_xi_foldbin_escort_tv_collapse_onebit_gibbs :
       Tendsto (fun m : ℕ => (Nat.fib (m + 1) : ℝ) / Nat.fib (m + 2)) atTop
         (nhds (Real.goldenRatio⁻¹)) := by
     rw [hphiinv]
-    simpa [Nat.add_assoc] using (tendsto_fib_div_fib_succ_atTop.comp (tendsto_add_atTop_nat 1))
+    have hshift :=
+      tendsto_fib_div_fib_succ_atTop.comp (tendsto_add_atTop_nat 1)
+    exact hshift.congr' (Filter.Eventually.of_forall fun m => by
+      simp [Nat.add_assoc])
   have htheta :
       Tendsto (fun m : ℕ => xi_foldbin_escort_tv_collapse_onebit_gibbs_theta m) atTop
         (nhds thetaInf) := by

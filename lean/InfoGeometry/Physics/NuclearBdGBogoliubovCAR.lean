@@ -116,10 +116,9 @@ theorem bogoliubovAnnihilation_sq (u v : ℝ) :
   ext i j
   fin_cases i <;> fin_cases j <;>
     norm_num [bogoliubovAnnihilation, a1, a2Dag,
-      Matrix.mul_apply, Fin.sum_univ_four] <;>
-    simp [Matrix.cons_val_zero, Matrix.cons_val_one,
-      Matrix.cons_val_two, Matrix.cons_val_three] <;>
-    ring
+      Matrix.mul_apply, Fin.sum_univ_four,
+      Matrix.cons_val_zero, Matrix.cons_val_one,
+      Matrix.cons_val_two, Matrix.cons_val_three] <;> ring
 
 /-- The creation operator is nilpotent for all coefficients. -/
 theorem bogoliubovCreation_sq (u v : ℝ) :
@@ -128,10 +127,9 @@ theorem bogoliubovCreation_sq (u v : ℝ) :
   ext i j
   fin_cases i <;> fin_cases j <;>
     norm_num [bogoliubovCreation, a1Dag, a2,
-      Matrix.mul_apply, Fin.sum_univ_four] <;>
-    simp [Matrix.cons_val_zero, Matrix.cons_val_one,
-      Matrix.cons_val_two, Matrix.cons_val_three] <;>
-    ring
+      Matrix.mul_apply, Fin.sum_univ_four,
+      Matrix.cons_val_zero, Matrix.cons_val_one,
+      Matrix.cons_val_two, Matrix.cons_val_three] <;> ring
 
 /-- Exact CAR preservation under a normalized real Bogoliubov rotation. -/
 theorem bogoliubov_CAR_of_normalized

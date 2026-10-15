@@ -125,6 +125,7 @@ theorem colimitBoolObservable_factorization
   intro i
   rw [← Category.assoc, colimitBoolObservable_stage,
     colimitQuotientObservable_stage]
+  rfl
 
 theorem colimitBoolObservable_roundtrip
     (C : Cocone (topologicalDiagram T))

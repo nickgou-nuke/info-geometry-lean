@@ -41,7 +41,7 @@ private lemma chiTwelve_value_zero : chiTwelve (0 : ZMod 12) = 0 := by
   exact chiTwelve_nonunit 0 (by decide)
 
 private lemma chiTwelve_value_one : chiTwelve (1 : ZMod 12) = 1 := by
-  convert chiTwelve_unitOne using 1 <;> decide
+  convert chiTwelve_unitOne using 1 <;> norm_num [unitOne]
 
 private lemma chiTwelve_value_two : chiTwelve (2 : ZMod 12) = 0 := by
   exact chiTwelve_nonunit 2 (by decide)
@@ -53,13 +53,13 @@ private lemma chiTwelve_value_four : chiTwelve (4 : ZMod 12) = 0 := by
   exact chiTwelve_nonunit 4 (by decide)
 
 private lemma chiTwelve_value_five : chiTwelve (5 : ZMod 12) = -1 := by
-  convert chiTwelve_unitFive using 1 <;> decide
+  convert chiTwelve_unitFive using 1 <;> norm_num [unitFive]
 
 private lemma chiTwelve_value_six : chiTwelve (6 : ZMod 12) = 0 := by
   exact chiTwelve_nonunit 6 (by decide)
 
 private lemma chiTwelve_value_seven : chiTwelve (7 : ZMod 12) = -1 := by
-  convert chiTwelve_unitSeven using 1 <;> decide
+  convert chiTwelve_unitSeven using 1 <;> norm_num [unitSeven]
 
 private lemma chiTwelve_value_eight : chiTwelve (8 : ZMod 12) = 0 := by
   exact chiTwelve_nonunit 8 (by decide)
@@ -71,7 +71,7 @@ private lemma chiTwelve_value_ten : chiTwelve (10 : ZMod 12) = 0 := by
   exact chiTwelve_nonunit 10 (by decide)
 
 private lemma chiTwelve_value_eleven : chiTwelve (11 : ZMod 12) = 1 := by
-  convert chiTwelve_unitEleven using 1 <;> decide
+  convert chiTwelve_unitEleven using 1 <;> norm_num [unitEleven]
 
 theorem chosenGaussSum12_expansion :
     chosenGaussSum12 = zeta12 - zeta12 ^ 5 - zeta12 ^ 7 + zeta12 ^ 11 := by

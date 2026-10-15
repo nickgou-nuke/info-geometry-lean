@@ -71,6 +71,7 @@ theorem observedSymbolicLatentPathFamilyImage_evaluation_factorization_unique
   have hq := congrArg (fun m => m q x) hu
   simpa [observedSymbolicLatentPathFamilyImageEvaluationTopCatHom,
     observedSymbolicLatentPathFamilyImageInclusionTopCatHom,
+    observedSymbolicLatentPathFamilyTopCatHom,
     TopCat.comp_app, TopCat.ofHom] using hq
 
 end InfoGeometry.Topology

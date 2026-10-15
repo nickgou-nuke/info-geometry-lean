@@ -1,4 +1,4 @@
-import Mathlib.Analysis.NormedSpace.OperatorNorm.Basic
+import Mathlib.Analysis.Normed.Operator.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.Algebra.LogCFTDiracCommutator
 
@@ -32,7 +32,9 @@ theorem continuous_kreinAdjoint
     (K : KreinSpaceStructure H) :
     Continuous (fun A : H →L[ℝ] H => kreinOperatorAdjoint K A A) := by
   unfold kreinOperatorAdjoint
-  simpa [ContinuousLinearMap.comp_assoc] using
+  change Continuous ((fun A : H →L[ℝ] H => K.J.comp A) ∘
+    fun A : H →L[ℝ] H => A.comp K.J)
+  exact
     (ContinuousLinearMap.postcomp (E := H) (F := H) (G := H) K.J).continuous.comp
       (ContinuousLinearMap.precomp (E := H) (F := H) (G := H) K.J).continuous
 
@@ -57,8 +59,8 @@ theorem continuous_spectral_dirac_monodromy_commutator
     (ContinuousLinearMap.precomp (E := H) (F := H) (G := H) M.N).continuous
   have hpost : Continuous (fun D : H →L[ℝ] H => M.N.comp D) :=
     (ContinuousLinearMap.postcomp (E := H) (F := H) (G := H) M.N).continuous
-  simpa [ContinuousLinearMap.sub_apply, ContinuousLinearMap.smul_apply] using
-    (Continuous.smul continuous_const (hpre.sub hpost))
+  have hscalar : Continuous (fun _ : H →L[ℝ] H => M.lambda) := continuous_const
+  exact Continuous.smul hscalar (hpre.sub hpost)
 
 theorem spectral_dirac_commutator_norm_bound
     (M : ContinuousMonodromyOperator H) (D : H →L[ℝ] H) :

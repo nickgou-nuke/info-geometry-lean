@@ -249,7 +249,7 @@ end InfinitesimalDictionaryPacket
 
 section CoadjointConnes
 
-variable {Orbit LieCoalg Alg : Type*} [Ring Alg] [CommSemiring Alg]
+variable {Orbit LieCoalg Alg : Type*} [CommRing Alg]
 variable (ctx : ConnesCocycle.CocycleOverCoadjointOrbit Orbit Alg LieCoalg)
 variable (flow : CausalNonequilibriumFlow Alg)
 

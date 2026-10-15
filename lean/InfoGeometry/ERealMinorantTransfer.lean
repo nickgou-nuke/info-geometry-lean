@@ -43,7 +43,8 @@ theorem affine_minorant_extendedFenchelConj_ne_top
     affine_minorant_coe M x
   have htransfer :=
     ereal_minorant_transfer_point (M.slope x) M.intercept (f x) hminorant
-  simpa using htransfer
+  rw [EReal.coe_neg]
+  exact htransfer
 
 /-- An affine minorant supplies the lower witness required by the extended
 Fenchel biconjugate. -/

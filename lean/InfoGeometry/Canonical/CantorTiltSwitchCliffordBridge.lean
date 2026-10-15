@@ -919,5 +919,5 @@ theorem constructCantorTiltSwitchCliffordBridgeTarget
 {Op : Type} [Ring Op]
 (R : CantorCliffordRepresentation Op) :
 CantorTiltSwitchCliffordBridgeTarget := by
-exact ⟨{ Op := Op, instRing := inferInstance, representation := R }⟩
+  exact ⟨{ Op := Op, instRing := inferInstance, representation := R }⟩
 end InfoGeometry.Canonical.CantorTiltSwitchCliffordBridge

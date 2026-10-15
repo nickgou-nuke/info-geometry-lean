@@ -34,10 +34,16 @@ def finTwoCuntzFamily : CStarCuntzFamily B (Fin 2) where
   ortho := by
     intro i j
     fin_cases i <;> fin_cases j
-    · simpa [vLeft] using vLeft_adjoint_comp_vLeft
-    · simpa [vLeft, vRight] using vLeft_adjoint_comp_vRight
-    · simpa [vLeft, vRight] using vRight_adjoint_comp_vLeft
-    · simpa [vRight] using vRight_adjoint_comp_vRight
+    · change (normalizedPrependBitLpAdjoint false).comp vLeft =
+        ContinuousLinearMap.id ℂ L2Boundary
+      exact vLeft_adjoint_comp_vLeft
+    · change (normalizedPrependBitLpAdjoint false).comp vRight = 0
+      exact vLeft_adjoint_comp_vRight
+    · change (normalizedPrependBitLpAdjoint true).comp vLeft = 0
+      exact vRight_adjoint_comp_vLeft
+    · change (normalizedPrependBitLpAdjoint true).comp vRight =
+        ContinuousLinearMap.id ℂ L2Boundary
+      exact vRight_adjoint_comp_vRight
   partition := by
     rw [Fin.sum_univ_two]
     change vLeft.comp (normalizedPrependBitLpAdjoint false) +
@@ -55,6 +61,8 @@ def spatialCuntzPositiveExtension :
     intro x
     rfl
 
+set_option maxHeartbeats 2000000 in
+set_option synthInstance.maxHeartbeats 1000000 in
 theorem spatialCuntzGNS_expectation_recovery (A : B) :
     inner ℂ spatialGNSVacuum
       (spatialGNSRepresentation A spatialGNSVacuum) =

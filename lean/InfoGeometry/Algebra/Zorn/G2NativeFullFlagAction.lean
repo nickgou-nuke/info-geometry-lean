@@ -111,8 +111,10 @@ theorem nativeFlagMap_point_val_mul
 theorem nativeFlagMap_snd_val
     (g : SplitOctF2Aut) (F : NativeFlag) :
     (nativeFlagMap g F).2.1 = F.2.1.image (octImAction g) := by
-  simpa [nativeFlagMap] using
-    (nativeLineFiberMap_apply_val g F.1.1 F.2)
+  dsimp [nativeFlagMap]
+  generalize_proofs hp
+  cases hp
+  exact nativeLineFiberMap_apply_val g F.1.1 F.2
 
 theorem nativeFlagMap_snd_val_mul
     (g h : SplitOctF2Aut) (F : NativeFlag) :
@@ -183,8 +185,10 @@ theorem nativeFlagMap_one
   · have hxy : (nativeFlagMap (1 : SplitOctF2Aut) F).1.1 = F.1.1 :=
       congrArg Subtype.val hp
     have hval : (nativeFlagMap (1 : SplitOctF2Aut) F).2.1 = F.2.1 := by
-      simpa [nativeFlagMap] using
-        (nativeLineFiberMap_one_apply_val F.1.1 F.2)
+      dsimp [nativeFlagMap]
+      generalize_proofs hp
+      cases hp
+      exact nativeLineFiberMap_one_apply_val F.1.1 F.2
     have hline := nativeLine_transport_heq_of_val_eq hxy
       (nativeFlagMap (1 : SplitOctF2Aut) F).2 F.2 hval
     rw [nativeLineFamily_cast_eq_recOn hxy

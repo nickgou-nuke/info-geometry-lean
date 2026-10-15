@@ -81,8 +81,8 @@ def riemann_zeros_to_lightcones_model (Z : ℂ → ℂ) : Prop :=
 /-- The core Layer-12 assertion, kept as a model-theoretic axiom field. -/
 theorem riemann_zeros_are_lightcones {Z : ℂ → ℂ}
     (H : riemann_zeros_to_lightcones_model Z) :
-    ∀ s, Z s = 0 → (paravector_temperature s.re s.im).parabolic := by
-  simpa using H
+    ∀ s, Z s = 0 → (paravector_temperature s.re s.im).parabolic :=
+  H
 
 /-- Consolidated geometric-zeta package: graded reciprocal pole, paravector
     determinant, and explicit lightcone compatibility schema. -/

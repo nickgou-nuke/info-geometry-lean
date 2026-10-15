@@ -42,9 +42,17 @@ theorem externalBudgetTensorRate_limit (b : ℕ) (hb : 1 ≤ b) :
       atTop (nhds (Real.logb 2 (b : ℝ))) := by
   have hlog_nonneg : 0 ≤ Real.logb 2 (b : ℝ) := by
     exact Real.logb_nonneg (by norm_num) (by exact_mod_cast hb)
-  simpa [externalBudgetTensorRate, mul_comm, mul_left_comm, mul_assoc] using
+  have hcomp :=
     (tendsto_nat_ceil_mul_div_atTop (R := ℝ) (a := Real.logb 2 (b : ℝ)) hlog_nonneg).comp
       tendsto_natCast_atTop_atTop
+  have hfun : (fun m : ℕ => (externalBudgetTensorRate b m : ℝ) / (m : ℝ)) =
+      ((fun x : ℝ => (↑⌈Real.logb 2 (b : ℝ) * x⌉₊ : ℝ) / x) ∘ Nat.cast) := by
+    ext m
+    dsimp
+    congr 2
+    rw [externalBudgetTensorRate, mul_comm]
+  rw [hfun]
+  exact hcomp
 
 theorem externalBudgetTensorRoundingErrorLaw_true (b : ℕ) (hb : 1 ≤ b) :
     externalBudgetTensorRoundingErrorLaw b := by

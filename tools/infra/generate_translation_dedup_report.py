@@ -15,9 +15,17 @@ from __future__ import annotations
 
 import argparse
 import json
+import hashlib
+import sys
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
+
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+for _path in (_REPO_ROOT, _REPO_ROOT / "src"):
+    if str(_path) not in sys.path:
+        sys.path.insert(0, str(_path))
+from igf.common.json_io import load_strict_jsonl
 from typing import Any, Iterable
 
 
@@ -29,10 +37,6 @@ DEFAULT_MD_OUT = Path("reports/dag/translation-dedup-report.md")
 
 # [lossless-compact] utc_now_iso folded into igf.common.time_utils.utc_now_iso
 from igf.common.time_utils import utc_now_iso
-
-
-# [lossless-compact] iter_jsonl folded into igf.common.json_io.iter_jsonl
-from igf.common.json_io import iter_jsonl
 
 
 def exact_buckets(topologies: list[dict[str, Any]], hash_kind: str) -> list[dict[str, Any]]:
@@ -52,10 +56,41 @@ def exact_buckets(topologies: list[dict[str, Any]], hash_kind: str) -> list[dict
 
 
 def build_report(wire_dir: Path, translation_dir: Path) -> dict[str, Any]:
-    topologies = list(iter_jsonl(wire_dir / "ig_decl_topologies.jsonl"))
-    candidates = list(iter_jsonl(translation_dir / "ig_translation_candidates.jsonl"))
-    edges = list(iter_jsonl(translation_dir / "ig_translation_edges.jsonl"))
-    sccs = list(iter_jsonl(translation_dir / "ig_translation_scc.jsonl"))
+    topologies, topology_input = load_strict_jsonl(wire_dir / "ig_decl_topologies.jsonl", ("decl",))
+    candidates, candidate_input = load_strict_jsonl(translation_dir / "ig_translation_candidates.jsonl",
+                                                  ("sourceDecl", "targetDecl", "candidateKind", "verified"))
+    edges, edge_input = load_strict_jsonl(translation_dir / "ig_translation_edges.jsonl",
+                                        ("sourceDecl", "targetDecl", "translationKind"))
+    sccs, scc_input = load_strict_jsonl(translation_dir / "ig_translation_scc.jsonl",
+                                     ("memberCount", "members", "translationSccHash"))
+    if not topologies:
+        raise ValueError("declaration topology input is empty; coverage is unknown")
+    for row in topologies:
+        if not isinstance(row["decl"], str) or not row["decl"].strip():
+            raise ValueError("invalid topology declaration")
+        for key in ("ownerAwareHash", "patternHash", "roleHash"):
+            if key in row and not isinstance(row[key], str):
+                raise ValueError(f"invalid topology hash {key}")
+    for row in candidates + edges:
+        for key in ("sourceDecl", "targetDecl"):
+            if not isinstance(row[key], str) or not row[key].strip():
+                raise ValueError(f"invalid {key}")
+        for key in ("candidateKind", "translationKind", "verificationTier"):
+            if key in row and (not isinstance(row[key], str) or not row[key].strip()):
+                raise ValueError(f"invalid {key}")
+        for key in ("verified", "leanVerified", "reviewOnly"):
+            if key in row and not isinstance(row[key], bool):
+                raise ValueError(f"invalid boolean {key}")
+        if "signals" in row and not isinstance(row["signals"], dict):
+            raise ValueError("invalid signals object")
+    for row in sccs:
+        if (not isinstance(row["memberCount"], int) or isinstance(row["memberCount"], bool)
+                or not isinstance(row["members"], list)
+                or row["memberCount"] != len(row["members"])
+                or any(not isinstance(member, str) or not member.strip() for member in row["members"])
+                or not isinstance(row["translationSccHash"], str)
+                or not row["translationSccHash"].strip()):
+            raise ValueError("invalid SCC membership schema")
 
     verified_candidates = [row for row in candidates if bool(row.get("verified"))]
     lean_verified_candidates = [row for row in verified_candidates if bool(row.get("leanVerified"))]
@@ -72,31 +107,33 @@ def build_report(wire_dir: Path, translation_dir: Path) -> dict[str, Any]:
         "generated_at": utc_now_iso(),
         "wire_dir": str(wire_dir),
         "translation_dir": str(translation_dir),
-        "truth_boundary": "dedup report is advisory; Lean/hash evidence remains authoritative",
+        "truth_boundary": "advisory: upstream verification flags are reported, not independently checked",
+        "semantic_verification_performed": False,
+        "inputs": [topology_input, candidate_input, edge_input, scc_input],
         "stats": {
             "declaration_topologies": len(topologies),
             "translation_candidates": len(candidates),
-            "verified_candidates": len(verified_candidates),
-            "lean_verified_candidates": len(lean_verified_candidates),
+            "upstream_verified_candidates": len(verified_candidates),
+            "upstream_lean_verified_candidates": len(lean_verified_candidates),
             "review_only_candidates": len(review_candidates),
-            "verified_translation_edges": len(edges),
+            "upstream_translation_edges": len(edges),
             "translation_sccs": len(sccs),
             "nontrivial_translation_sccs": len(verified_sccs),
         },
         "candidate_kind_counts": dict(sorted(candidate_kind_counts.items())),
-        "verified_edge_kind_counts": dict(sorted(edge_kind_counts.items())),
-        "verified_edge_tier_counts": dict(sorted(edge_tier_counts.items())),
+        "upstream_edge_kind_counts": dict(sorted(edge_kind_counts.items())),
+        "upstream_edge_tier_counts": dict(sorted(edge_tier_counts.items())),
         "exact_buckets": {
             "ownerAwareHash": exact_buckets(topologies, "ownerAwareHash"),
             "patternHash": exact_buckets(topologies, "patternHash"),
             "roleHash": exact_buckets(topologies, "roleHash"),
         },
-        "verified_translation_sccs": verified_sccs,
+        "derived_translation_sccs": verified_sccs,
         "top_vector_review_candidates": sorted(
             vector_review,
             key=lambda row: -float((row.get("signals") or {}).get("logicVectorCosine", 0.0) or 0.0),
         )[:50],
-        "top_verified_edges": sorted(
+        "top_upstream_edges": sorted(
             edges,
             key=lambda row: (str(row.get("translationKind", "")), str(row.get("sourceDecl", "")), str(row.get("targetDecl", ""))),
         )[:100],
@@ -123,14 +160,14 @@ def build_markdown(report: dict[str, Any]) -> str:
     for key, value in report.get("candidate_kind_counts", {}).items():
         lines.append(f"- `{key}`: `{value}`")
     lines.append("")
-    lines.append("## Verified Edge Kinds")
+    lines.append("## Upstream Edge Kinds")
     lines.append("")
-    for key, value in report.get("verified_edge_kind_counts", {}).items():
+    for key, value in report.get("upstream_edge_kind_counts", {}).items():
         lines.append(f"- `{key}`: `{value}`")
     lines.append("")
     lines.append("## Verification Tiers")
     lines.append("")
-    for key, value in report.get("verified_edge_tier_counts", {}).items():
+    for key, value in report.get("upstream_edge_tier_counts", {}).items():
         lines.append(f"- `{key}`: `{value}`")
     lines.append("")
     lines.append("## Exact Hash Buckets")
@@ -150,11 +187,11 @@ def build_markdown(report: dict[str, Any]) -> str:
                 decls += ", ..."
             lines.append(f"| {row.get('count', 0)} | `{str(row.get('hash', ''))[:24]}` | {decls} |")
         lines.append("")
-    lines.append("## Verified Translation SCCs")
+    lines.append("## Derived Translation SCCs")
     lines.append("")
-    sccs = report.get("verified_translation_sccs", [])
+    sccs = report.get("derived_translation_sccs", [])
     if not sccs:
-        lines.append("_No nontrivial verified translation SCCs._")
+        lines.append("_No nontrivial derived translation SCCs._")
     else:
         lines.append("| members | translationSccHash | declarations |")
         lines.append("|---:|---|---|")
@@ -193,7 +230,11 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
-    report = build_report(args.wire_dir, args.translation_dir)
+    try:
+        report = build_report(args.wire_dir, args.translation_dir)
+    except (OSError, EOFError, UnicodeError, ValueError) as exc:
+        print(f"ERROR: invalid input evidence: {exc}", file=sys.stderr)
+        return 2
     args.json_out.parent.mkdir(parents=True, exist_ok=True)
     args.json_out.write_text(json.dumps(report, indent=2, sort_keys=True, ensure_ascii=True) + "\n", encoding="utf-8")
     args.md_out.parent.mkdir(parents=True, exist_ok=True)

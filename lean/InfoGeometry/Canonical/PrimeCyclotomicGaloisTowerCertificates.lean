@@ -32,7 +32,13 @@ inductive PrimeStage where
   | p7
   | p11
   | p13
-deriving DecidableEq, Repr, Fintype
+deriving DecidableEq, Repr
+
+instance : Fintype PrimeStage where
+  elems := {.p2, .p3, .p5, .p7, .p11, .p13}
+  complete := by
+    intro stage
+    cases stage <;> simp
 
 /-- The prime introduced at a stage. -/
 def stagePrime : PrimeStage → ℕ

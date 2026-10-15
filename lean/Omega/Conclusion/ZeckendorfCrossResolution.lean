@@ -128,8 +128,8 @@ theorem paper_conclusion_zeckendorf_resolution_lock_m6 :
   unfold conclusion_zeckendorf_resolution_lock_m6_statement
   refine ⟨?_, ?_, ?_⟩
   · constructor
-    · simpa [conclusion_zeckendorf_resolution_lock_m6_finite_indices] using
-        Omega.ZeckSig.zeckendorf_resolution_lock_m6
+    · rw [Omega.ZeckSig.zeckendorf_resolution_lock_m6]
+      simp [conclusion_zeckendorf_resolution_lock_m6_finite_indices, add_assoc]
     · simp [conclusion_zeckendorf_resolution_lock_m6_has_visible_pair,
         conclusion_zeckendorf_resolution_lock_m6_finite_indices]
   · intro n hn4 hn7 hn_ne

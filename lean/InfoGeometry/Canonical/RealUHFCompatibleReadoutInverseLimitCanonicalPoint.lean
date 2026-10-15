@@ -33,15 +33,19 @@ theorem normalizedTraceInverseLimitPoint_projection
       compatibleReadoutInverseLimitIso.hom ≫
           limit.π readoutDiagram n =
         readoutInverseCone.π.app n := by
-    simpa [compatibleReadoutInverseLimitIso] using
-      (IsLimit.conePointUniqueUpToIso_hom_comp
-        readoutInverseConeIsLimit (limit.isLimit readoutDiagram) n)
+    change
+      (IsLimit.conePointUniqueUpToIso readoutInverseConeIsLimit
+        (limit.isLimit readoutDiagram)).hom ≫
+          limit.π readoutDiagram n =
+        readoutInverseCone.π.app n
+    exact IsLimit.conePointUniqueUpToIso_hom_comp
+      readoutInverseConeIsLimit (limit.isLimit readoutDiagram) n
   have h := congrArg
     (fun f => f normalizedTraceReadoutFamily) hmap
   change (limit.π readoutDiagram n)
       (compatibleReadoutInverseLimitIso.hom normalizedTraceReadoutFamily) =
-    normalizedTraceReadoutFamily.1 n
-  simpa [TopCat.comp_app, readoutInverseCone, coordinateTopCatHom] using h
+    (readoutInverseCone.π.app n) normalizedTraceReadoutFamily
+  exact h
 
 end InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitCanonicalPoint
 end

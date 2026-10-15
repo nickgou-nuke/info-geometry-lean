@@ -126,8 +126,17 @@ theorem paper_unit_circle_boundary_endpoint_heat_decay
   have hlimit :
       Tendsto (unitCircleBoundaryEndpointHeat endpointAtomMass K μ) atTop
         (nhds endpointAtomMass) := by
-    simpa [unitCircleBoundaryEndpointHeat, add_assoc, add_left_comm, add_comm] using
-      (tendsto_const_nhds.add herror_zero)
+    have hrewrite :
+        unitCircleBoundaryEndpointHeat endpointAtomMass K μ =
+          fun N => endpointAtomMass +
+            (unitCircleBoundaryEndpointHeat endpointAtomMass K μ N - endpointAtomMass) := by
+      funext N
+      ring
+    rw [hrewrite]
+    have hconstant :
+        Tendsto (fun _ : ℕ => endpointAtomMass) atTop (nhds endpointAtomMass) :=
+      tendsto_const_nhds
+    simpa using hconstant.add herror_zero
   refine ⟨hanti, hlimit, ?_⟩
   intro N
   simpa [tailMass] using hbounds N

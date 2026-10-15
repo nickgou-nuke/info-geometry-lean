@@ -83,21 +83,21 @@ theorem physical_ghost_zero_range_le_ker
     (chi : integerGhostEigenspace g_op (-1 : ℤ)) :
     physicalGhostZeroMap q g_op h_comm (-1 : ℤ) chi ∈
       LinearMap.ker (physicalGhostZeroMap q g_op h_comm (0 : ℤ)) := by
-  simpa only [physicalGhostZeroMap_eq_integer] using
-    integer_graded_brst_range_le_ker q g_op hq2 h_comm (-1 : ℤ) chi
+  rw [LinearMap.mem_ker]
+  have h_comp := physical_ghost_zero_composition_zero q g_op hq2 h_comm
+  exact LinearMap.congr_fun h_comp chi
 
 /-- **Theorem**: Exact Physical Ghost-Zero Class Zero [Q_{-1} χ_{-1}] = 0 ∈ H^0_Q. -/
 theorem physical_ghost_zero_exact_class_zero
     (q g_op : Module.End R (ExteriorAlgebra R V))
-    (hq2 : q.comp q = 0)
+    (_hq2 : q.comp q = 0)
     (h_comm : g_op.comp q - q.comp g_op = q)
     (chi : integerGhostEigenspace g_op (-1 : ℤ)) :
     Submodule.Quotient.mk (p := LinearMap.range (physicalGhostZeroMap q g_op h_comm (-1 : ℤ)))
       (physicalGhostZeroMap q g_op h_comm (-1 : ℤ) chi) =
-      (Submodule.Quotient.mk 0 : physicalGhostZeroCohomologyModule q g_op hq2 h_comm) := by
-  rw [physicalGhostZeroMap_range_eq_integer]
-  simpa only [physicalGhostZeroMap_eq_integer, physicalGhostZeroCohomologyModule] using
-    integer_graded_brst_exact_state_class_zero q g_op hq2 h_comm (-1 : ℤ) chi
+      (Submodule.Quotient.mk 0 : physicalGhostZeroCohomologyModule q g_op _hq2 h_comm) := by
+  rw [Submodule.Quotient.eq, sub_zero, LinearMap.mem_range]
+  exact ⟨chi, rfl⟩
 
 /-- **Theorem**: Master Physical Ghost-Zero BRST Cochain Sector Synthesis H^0_Q.
     Unifies:

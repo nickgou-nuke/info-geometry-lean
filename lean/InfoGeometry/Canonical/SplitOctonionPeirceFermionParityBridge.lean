@@ -53,19 +53,16 @@ theorem peirceFermionNumberMat_eq_transverseProjector :
 
 theorem zeroModeProjectorMat_eq_longitudinalProjector :
     zeroModeProjectorMat = longitudinalProjectorMat := by
-  rw [zeroModeProjectorMat, peirceFermionNumberMat_eq_transverseProjector]
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [longitudinalProjectorMat, transverseProjectorMat,
-      Matrix.sub_apply]
+  rw [zeroModeProjectorMat, peirceFermionNumberMat_eq_transverseProjector,
+    ← longitudinal_transverse_projectors_complete, add_sub_cancel_right]
 
 theorem peirceParityMat_eq_middleSign :
     peirceParityMat = longitudinalTransverseMat := by
   rw [peirceParityMat, peirceFermionNumberMat_eq_transverseProjector]
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [longitudinalTransverseMat, transverseProjectorMat,
-      Matrix.sub_apply] <;> norm_num
+  rw [← longitudinal_transverse_projectors_complete]
+  rw [longitudinalTransverseMat_eq_sub_projectors]
+  rw [two_smul]
+  abel
 
 /-- The combined Cayley--Hestenes square is exactly the Peirce parity matrix. -/
 theorem sectorwiseCayley_wittHestenes_square_eq_peirceParity :

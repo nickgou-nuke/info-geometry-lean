@@ -17,6 +17,7 @@ def symbolicPathReversalParameter : C(SymbolicPathDomain, SymbolicPathDomain) :=
     continuous_toFun :=
       (continuous_const.sub continuous_subtype_val).subtype_mk (by
         intro t
+        dsimp
         constructor <;> linarith [t.property.1, t.property.2])
   }
 

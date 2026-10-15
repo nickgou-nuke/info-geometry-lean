@@ -68,8 +68,9 @@ theorem kleinHamiltonian_sq (α β γ kx ky : ℝ) :
     kleinHamiltonian α β γ kx ky * kleinHamiltonian α β γ kx ky =
       epDiscriminant α β γ kx ky • (1 : Mat2C) := by
   ext i j
+  rw [Matrix.mul_apply]
   fin_cases i <;> fin_cases j <;>
-    simp [kleinHamiltonian, epDiscriminant, Matrix.mul_apply, Fin.sum_univ_two]
+    simp [kleinHamiltonian, epDiscriminant, Fin.sum_univ_two]
   all_goals ring_nf; try rw [Complex.I_sq]; ring_nf
 
 /-- At discriminant zero the two-band Hamiltonian is square-zero. -/

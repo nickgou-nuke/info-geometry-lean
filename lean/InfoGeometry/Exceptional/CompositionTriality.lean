@@ -82,40 +82,95 @@ noncomputable instance : AddCommGroup (TrialityTriple mul) where
   nsmul := nsmulRec
   zsmul := zsmulRec
   add_assoc T U V := by
-    apply TrialityTriple.ext <;> dsimp [add]
-    all_goals exact add_assoc _ _ _
+    apply TrialityTriple.ext
+    · change (T.t₁ + U.t₁) + V.t₁ = T.t₁ + (U.t₁ + V.t₁)
+      exact add_assoc _ _ _
+    · change (T.t₂ + U.t₂) + V.t₂ = T.t₂ + (U.t₂ + V.t₂)
+      exact add_assoc _ _ _
+    · change (T.t₃ + U.t₃) + V.t₃ = T.t₃ + (U.t₃ + V.t₃)
+      exact add_assoc _ _ _
   zero_add T := by
-    apply TrialityTriple.ext <;> dsimp [zero, add]
-    all_goals exact zero_add _
+    apply TrialityTriple.ext
+    · change (0 : Module.End R A) + T.t₁ = T.t₁
+      exact zero_add _
+    · change (0 : Module.End R A) + T.t₂ = T.t₂
+      exact zero_add _
+    · change (0 : Module.End R A) + T.t₃ = T.t₃
+      exact zero_add _
   add_zero T := by
-    apply TrialityTriple.ext <;> dsimp [zero, add]
-    all_goals exact add_zero _
+    apply TrialityTriple.ext
+    · change T.t₁ + (0 : Module.End R A) = T.t₁
+      exact add_zero _
+    · change T.t₂ + (0 : Module.End R A) = T.t₂
+      exact add_zero _
+    · change T.t₃ + (0 : Module.End R A) = T.t₃
+      exact add_zero _
   neg_add_cancel T := by
-    apply TrialityTriple.ext <;> dsimp [neg, add]
-    all_goals exact neg_add_cancel _
+    apply TrialityTriple.ext
+    · change -T.t₁ + T.t₁ = 0
+      exact neg_add_cancel _
+    · change -T.t₂ + T.t₂ = 0
+      exact neg_add_cancel _
+    · change -T.t₃ + T.t₃ = 0
+      exact neg_add_cancel _
   add_comm T U := by
-    apply TrialityTriple.ext <;> dsimp [add]
-    all_goals exact add_comm _ _
+    apply TrialityTriple.ext
+    · change T.t₁ + U.t₁ = U.t₁ + T.t₁
+      exact add_comm _ _
+    · change T.t₂ + U.t₂ = U.t₂ + T.t₂
+      exact add_comm _ _
+    · change T.t₃ + U.t₃ = U.t₃ + T.t₃
+      exact add_comm _ _
 
 noncomputable instance : Module R (TrialityTriple mul) where
   one_smul T := by
-    apply TrialityTriple.ext <;> dsimp [smul]
-    all_goals exact one_smul _ _
+    apply TrialityTriple.ext
+    · change (1 : R) • T.t₁ = T.t₁
+      exact one_smul _ _
+    · change (1 : R) • T.t₂ = T.t₂
+      exact one_smul _ _
+    · change (1 : R) • T.t₃ = T.t₃
+      exact one_smul _ _
   mul_smul r s T := by
-    apply TrialityTriple.ext <;> dsimp [smul]
-    all_goals exact mul_smul _ _ _
+    apply TrialityTriple.ext
+    · change (r * s) • T.t₁ = r • (s • T.t₁)
+      exact mul_smul _ _ _
+    · change (r * s) • T.t₂ = r • (s • T.t₂)
+      exact mul_smul _ _ _
+    · change (r * s) • T.t₃ = r • (s • T.t₃)
+      exact mul_smul _ _ _
   smul_zero r := by
-    apply TrialityTriple.ext <;> dsimp [smul, zero]
-    all_goals exact smul_zero _
+    apply TrialityTriple.ext
+    · change r • (0 : Module.End R A) = 0
+      exact smul_zero _
+    · change r • (0 : Module.End R A) = 0
+      exact smul_zero _
+    · change r • (0 : Module.End R A) = 0
+      exact smul_zero _
   smul_add r T U := by
-    apply TrialityTriple.ext <;> dsimp [smul, add]
-    all_goals exact smul_add _ _ _
+    apply TrialityTriple.ext
+    · change r • (T.t₁ + U.t₁) = r • T.t₁ + r • U.t₁
+      exact smul_add _ _ _
+    · change r • (T.t₂ + U.t₂) = r • T.t₂ + r • U.t₂
+      exact smul_add _ _ _
+    · change r • (T.t₃ + U.t₃) = r • T.t₃ + r • U.t₃
+      exact smul_add _ _ _
   add_smul r s T := by
-    apply TrialityTriple.ext <;> dsimp [smul, add]
-    all_goals exact add_smul _ _ _
+    apply TrialityTriple.ext
+    · change (r + s) • T.t₁ = r • T.t₁ + s • T.t₁
+      exact add_smul _ _ _
+    · change (r + s) • T.t₂ = r • T.t₂ + s • T.t₂
+      exact add_smul _ _ _
+    · change (r + s) • T.t₃ = r • T.t₃ + s • T.t₃
+      exact add_smul _ _ _
   zero_smul T := by
-    apply TrialityTriple.ext <;> dsimp [smul]
-    all_goals exact zero_smul _ _
+    apply TrialityTriple.ext
+    · change (0 : R) • T.t₁ = 0
+      exact zero_smul _ _
+    · change (0 : R) • T.t₂ = 0
+      exact zero_smul _ _
+    · change (0 : R) • T.t₃ = 0
+      exact zero_smul _ _
 
 /-- The ordinary commutator in an endomorphism ring. -/
 def endCommutator (S T : Module.End R A) : Module.End R A :=
@@ -194,8 +249,13 @@ theorem commutator_skew (T U : TrialityTriple mul) :
 
 theorem commutator_self (T : TrialityTriple mul) :
     commutator T T = 0 := by
-  apply TrialityTriple.ext <;> change _ = 0
-  all_goals simp [commutator]
+  apply TrialityTriple.ext
+  · change T.t₁ * T.t₁ - T.t₁ * T.t₁ = 0
+    noncomm_ring
+  · change T.t₂ * T.t₂ - T.t₂ * T.t₂ = 0
+    noncomm_ring
+  · change T.t₃ * T.t₃ - T.t₃ * T.t₃ = 0
+    noncomm_ring
 
 theorem commutator_add_left (T U V : TrialityTriple mul) :
     commutator (T + U) V = commutator T V + commutator U V := by

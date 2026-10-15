@@ -62,14 +62,14 @@ theorem paper_fold_resonance_truncation_error
   have htail_lower :
       foldResonanceTailLowerProduct u N M ≤ foldResonanceTailProduct u N M := by
     unfold foldResonanceTailLowerProduct foldResonanceTailProduct
-    refine Finset.prod_le_prod ?_ ?_
+    refine Finset.prod_le_prod₀ ?_ ?_
     · intro n hn
       exact le_of_lt (Real.exp_pos _)
     · intro n hn
       exact hlower n hn
   have htail_le_one : foldResonanceTailProduct u N M ≤ 1 := by
     unfold foldResonanceTailProduct
-    refine Finset.prod_le_one ?_ ?_
+    refine Finset.prod_le_one₀ ?_ ?_
     · intro n hn
       exact foldResonanceFactor_nonneg u n
     · intro n hn

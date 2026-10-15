@@ -213,7 +213,6 @@ theorem krein_projector_laws :
     module
   · simp [kreinPlusProjector, kreinMinusProjector, splitQuaternionK, sub_eq_add_neg,
       mul_add, add_mul, smul_add]
-    module
   · simp [kreinPlusProjector, kreinMinusProjector, splitQuaternionK]
     module
 
@@ -239,7 +238,6 @@ theorem causal_null_closure_laws :
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
   · simp [causalNullPlus, splitQuaternionI, splitQuaternionJ, mul_add, add_mul,
       smul_add]
-    module
   · simp [causalNullMinus, splitQuaternionI, splitQuaternionJ, sub_eq_add_neg,
       mul_add, add_mul, smul_add]
     module

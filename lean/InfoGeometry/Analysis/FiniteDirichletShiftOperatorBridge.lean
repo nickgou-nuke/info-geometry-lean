@@ -98,7 +98,8 @@ noncomputable def translationShiftUnitHom :
   toFun u := translationShiftUnit u
   map_one' := by
     apply Units.ext
-    simpa using translationShift_zero
+    change translationShift (0 : ℝ) = 1
+    exact translationShift_zero
   map_mul' u v := by
     apply Units.ext
     change translationShift (u.toAdd + v.toAdd) =
@@ -144,7 +145,9 @@ noncomputable def positiveNatTranslationShiftUnitHom : ℕ+ →* ScaleEndˣ wher
   toFun n := translationShiftUnit (Real.log (n.1 : ℝ))
   map_one' := by
     apply Units.ext
-    simpa [translationShiftUnit] using translationShift_zero
+    change translationShift (Real.log ((1 : ℕ+).1 : ℝ)) = 1
+    rw [show ((1 : ℕ+).1 : ℝ) = 1 by norm_cast, Real.log_one]
+    exact translationShift_zero
   map_mul' := by
     intro m n
     apply Units.ext

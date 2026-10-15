@@ -3,6 +3,17 @@ name: audit-proof
 description: Use when auditing or formalizing Lean 4 proof code under a strict theorem-owner policy: no wrappers, sockets, witness packets, certificates, `_True` surfaces, hidden structure-field proofs, fake bridges, `sorry`, `admit`, or axioms; output owner-side Lean code with a three-bucket audit map and genuine kernel-checked proofs.
 ---
 
+<!-- repository-context-rule -->
+## Repository context rule
+
+For repository work, the current checked-out codebase is the context. Search
+existing implementation and trace actual carriers, definitions, imports,
+instances, theorem statements, and uses before claiming a structure is missing
+or incorrect. A local absence is not a repository-wide absence. Names,
+heuristics, summaries, and documentation guide discovery but do not override
+source. Follow `docs/REPO_DEEP_SEARCH_PROTOCOL.md` before repo-wide gap claims.
+
+
 # Audit Proof
 
 ## System Prompt

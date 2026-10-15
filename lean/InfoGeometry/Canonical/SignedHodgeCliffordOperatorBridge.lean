@@ -56,10 +56,18 @@ noncomputable def CliffordBivectorHodge
     SignedHodgeOperator R
       (InfoGeometry.Canonical.HestenesBivectorCarrier.Bivector13 Q) where
   operator := InfoGeometry.Canonical.HestenesBivectorCarrier.hodgeBivector Q
-  squareSign := -1
+  squareSign := (-1 : R)
   square := by
-    simpa using
-      (InfoGeometry.Canonical.HestenesBivectorCarrier.hodgeBivector_comp_self Q)
+    have hsmul : (-1 : R) •
+        (LinearMap.id :
+          InfoGeometry.Canonical.HestenesBivectorCarrier.Bivector13 Q →ₗ[R]
+          InfoGeometry.Canonical.HestenesBivectorCarrier.Bivector13 Q) =
+        -LinearMap.id := by
+      ext x
+      simp [LinearMap.smul_apply]
+    exact
+      (InfoGeometry.Canonical.HestenesBivectorCarrier.hodgeBivector_comp_self Q).trans
+        hsmul.symm
 
 theorem CliffordBivectorHodge_squareSign
     {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M]
@@ -103,7 +111,7 @@ noncomputable def bivectorBasis
     [HasSpacetimeBasis Q]
     (hB : LinearIndependent R (basisBivector Q)) (i : Fin 6) :
     (bivectorBasis Q hB i : CliffordAlgebra Q) = basisBivector Q i := by
-  exact Module.Basis.span_apply hB i
+  exact congrArg Subtype.val (Module.Basis.span_apply hB i)
 
 noncomputable def bivectorCoordinateEquiv
     {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M]

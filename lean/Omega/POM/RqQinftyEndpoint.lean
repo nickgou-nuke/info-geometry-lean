@@ -42,7 +42,11 @@ theorem paper_pom_rq_qinfty_endpoint
       Real.continuousAt_const_rpow Real.goldenRatio_pos.ne'
     have hinv : Tendsto (fun q : ℕ => ((q : ℝ)⁻¹)) atTop (𝓝 0) :=
       tendsto_inv_atTop_zero.comp tendsto_natCast_atTop_atTop
-    simpa [one_div] using hcont.tendsto.comp hinv
+    simp only [one_div]
+    change Tendsto
+      ((fun x : ℝ => Real.goldenRatio ^ x) ∘ fun q : ℕ => (q : ℝ)⁻¹)
+      atTop (𝓝 1)
+    simpa only [Real.rpow_zero] using hcont.tendsto.comp hinv
   have hupper :
       Tendsto (fun q : ℕ =>
         Real.sqrt Real.goldenRatio * Real.goldenRatio ^ ((1 : ℝ) / (q : ℝ)))

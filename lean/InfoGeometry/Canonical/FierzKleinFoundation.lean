@@ -50,7 +50,10 @@ inductive I4 where
   | x
   | y
   | z
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype I4 :=
+  ⟨⟨{.t, .x, .y, .z}, by decide⟩, by intro i; cases i <;> decide⟩
 
 instance : Inhabited I4 := ⟨I4.t⟩
 

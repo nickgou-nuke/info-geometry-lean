@@ -3,6 +3,17 @@ name: spire-paperproof-validator
 description: Visual auditing and goal state inspection for Lean 4. Use when debugging complex tactic blocks, inspecting goal splitting behavior, or performing a visual 'Distrustful Audit' of AI-generated proofs to ensure nomological closure.
 ---
 
+<!-- repository-context-rule -->
+## Repository context rule
+
+For repository work, the current checked-out codebase is the context. Search
+existing implementation and trace actual carriers, definitions, imports,
+instances, theorem statements, and uses before claiming a structure is missing
+or incorrect. A local absence is not a repository-wide absence. Names,
+heuristics, summaries, and documentation guide discovery but do not override
+source. Follow `docs/REPO_DEEP_SEARCH_PROTOCOL.md` before repo-wide gap claims.
+
+
 ## Constructive Closure Mandate
 
 Replacing witness-gated and external-certificate leftovers with native Lean 4 proofs is the highest mandate. **Kernel-Checked Evidence Only.** Paperproof is an inspection aid for checking that proof branches terminate in genuine Lean evidence, not vacuous placeholders. Never use visual clarity to obscure a lack of symbolic rigor. Every node in the tree must represent a valid step toward kernel-checked closure, and final authority remains the Lean kernel plus explicit axiom-surface audit.

@@ -35,6 +35,23 @@ attribute [local simp] Matrix.vecHead Matrix.vecTail Matrix.cons_val_zero
   Matrix.cons_val_one Matrix.cons_val_two Matrix.cons_val_succ
   Pi.smul_apply Pi.add_apply Pi.sub_apply Pi.neg_apply
 
+@[simp] lemma add_a (z1 z2 : CZ) : (z1 + z2).a = z1.a + z2.a :=
+  congrArg (fun c : ZornMatrix.Coord ℝ => c.1) (ZornMatrix.coordAddEquiv.map_add z1 z2)
+
+@[simp] lemma add_b (z1 z2 : CZ) : (z1 + z2).b = z1.b + z2.b :=
+  congrArg (fun c : ZornMatrix.Coord ℝ => c.2.1) (ZornMatrix.coordAddEquiv.map_add z1 z2)
+
+@[simp] lemma add_x (z1 z2 : CZ) : (z1 + z2).x = z1.x + z2.x :=
+  congrArg (fun c : ZornMatrix.Coord ℝ => c.2.2.1) (ZornMatrix.coordAddEquiv.map_add z1 z2)
+
+@[simp] lemma add_y (z1 z2 : CZ) : (z1 + z2).y = z1.y + z2.y :=
+  congrArg (fun c : ZornMatrix.Coord ℝ => c.2.2.2) (ZornMatrix.coordAddEquiv.map_add z1 z2)
+
+@[simp] lemma smul_a' (c : ℝ) (z : CZ) : (c • z).a = c * z.a := ZornMatrix.smul_a c z
+@[simp] lemma smul_b' (c : ℝ) (z : CZ) : (c • z).b = c * z.b := ZornMatrix.smul_b c z
+@[simp] lemma smul_x' (c : ℝ) (z : CZ) : (c • z).x = c • z.x := ZornMatrix.smul_x c z
+@[simp] lemma smul_y' (c : ℝ) (z : CZ) : (c • z).y = c • z.y := ZornMatrix.smul_y c z
+
 /-- Coordinate-weighted axial endomorphism: upper and lower vector slots have
 opposite weights, while the two diagonal coordinates are fixed. -/
 def axialCartanEnd (k : Fin 3 → ℝ) : EndCZ where
@@ -44,9 +61,17 @@ def axialCartanEnd (k : Fin 3 → ℝ) : EndCZ where
       x := fun i => k i * Z.x i
       y := fun i => -(k i) * Z.y i }
   map_add' X Y := by
-    ext i <;> simp [ZornMatrix.add_def] <;> ring
+    apply ZornMatrix.ext
+    · simp
+    · simp
+    · funext i; simp; ring
+    · funext i; simp; ring
   map_smul' r X := by
-    ext i <;> simp [Equiv.smul_def, coordEquiv] <;> ring
+    apply ZornMatrix.ext
+    · simp
+    · simp
+    · funext i; simp; ring
+    · funext i; simp; ring
 
 @[simp] theorem axialCartanEnd_apply (k : Fin 3 → ℝ) (Z : CZ) :
     axialCartanEnd k Z =
@@ -78,14 +103,15 @@ theorem axialCartanEnd_isDerivation
   intro X Y
   cases X
   cases Y
-  ext i
+  apply ZornMatrix.ext
   · simp [axialCartanEnd, ZornMatrix.mul, ZornMatrix.dot,
       ZornMatrix.cross]
     ring
   · simp [axialCartanEnd, ZornMatrix.mul, ZornMatrix.dot,
       ZornMatrix.cross]
     ring
-  · fin_cases i
+  · funext i
+    fin_cases i
     · simp [axialCartanEnd, ZornMatrix.mul, ZornMatrix.dot,
         ZornMatrix.cross, hk0]
       ring
@@ -95,7 +121,8 @@ theorem axialCartanEnd_isDerivation
     · simp [axialCartanEnd, ZornMatrix.mul, ZornMatrix.dot,
         ZornMatrix.cross, hk2]
       ring
-  · fin_cases i
+  · funext i
+    fin_cases i
     · simp [axialCartanEnd, ZornMatrix.mul, ZornMatrix.dot,
         ZornMatrix.cross, hk0]
       ring
@@ -112,19 +139,27 @@ theorem axialCartanEnd_isDerivation
     (k : Fin 3 → ℝ) (i : Fin 3) :
     axialCartanEnd k (chiralUpperBasis i) =
       k i • chiralUpperBasis i := by
-  ext j <;>
-    simp [axialCartanEnd, chiralUpperBasis, Equiv.smul_def, coordEquiv,
-      Pi.single_apply]
-  all_goals fin_cases i <;> fin_cases j <;> norm_num
+  apply ZornMatrix.ext
+  · simp [axialCartanEnd, chiralUpperBasis, ZornMatrix.smul_a]
+  · simp [axialCartanEnd, chiralUpperBasis, ZornMatrix.smul_b]
+  · funext j
+    simp [axialCartanEnd, chiralUpperBasis, ZornMatrix.smul_x]
+    fin_cases i <;> fin_cases j <;> norm_num
+  · funext j
+    simp [axialCartanEnd, chiralUpperBasis, ZornMatrix.smul_y]
 
 @[simp] theorem axialCartanEnd_chiralLowerBasis
     (k : Fin 3 → ℝ) (i : Fin 3) :
     axialCartanEnd k (chiralLowerBasis i) =
       -(k i) • chiralLowerBasis i := by
-  ext j <;>
-    simp [axialCartanEnd, chiralLowerBasis, Equiv.smul_def, coordEquiv,
-      Pi.single_apply]
-  all_goals fin_cases i <;> fin_cases j <;> norm_num
+  apply ZornMatrix.ext
+  · simp [axialCartanEnd, chiralLowerBasis, ZornMatrix.smul_a]
+  · simp [axialCartanEnd, chiralLowerBasis, ZornMatrix.smul_b]
+  · funext j
+    simp [axialCartanEnd, chiralLowerBasis, ZornMatrix.smul_x]
+  · funext j
+    simp [axialCartanEnd, chiralLowerBasis, ZornMatrix.smul_y]
+    fin_cases i <;> fin_cases j <;> norm_num
 
 /-- The traceless coordinate Cartan action is an actual element of the
 native derivation Lie subalgebra, rather than merely a separately packaged
@@ -145,7 +180,11 @@ theorem axialCartanEnd_commutes_axialGrading
   change axialCartanEnd k (axialGrading Z) =
     axialGrading (axialCartanEnd k Z)
   rw [axialGrading_apply, axialCartanEnd_apply, axialGrading_apply]
-  ext i <;> simp [axialCartanEnd]
+  apply ZornMatrix.ext
+  · simp [axialCartanEnd]
+  · simp [axialCartanEnd]
+  · funext i; simp [axialCartanEnd]
+  · funext i; simp [axialCartanEnd]
 
 /-- The same infinitesimal Cartan action preserves the positive Peirce/root
 projector. -/
@@ -158,7 +197,11 @@ theorem axialCartanEnd_commutes_axialPPlus
     axialPPlus (axialCartanEnd k Z)
   rw [axialPPlus_apply, axialCartanEnd_apply, axialPPlus_apply]
   rw [colorProject_apply, colorProject_apply]
-  ext i <;> simp [axialCartanEnd]
+  apply ZornMatrix.ext
+  · simp [axialCartanEnd]
+  · simp [axialCartanEnd]
+  · funext i; simp [axialCartanEnd]
+  · funext i; simp [axialCartanEnd]
 
 /-- The negative Peirce/root sector is preserved as well. -/
 theorem axialCartanEnd_commutes_axialPMinus
@@ -170,7 +213,11 @@ theorem axialCartanEnd_commutes_axialPMinus
     axialPMinus (axialCartanEnd k Z)
   rw [axialPMinus_apply, axialCartanEnd_apply, axialPMinus_apply]
   rw [anticolorProject_apply, anticolorProject_apply]
-  ext i <;> simp [axialCartanEnd]
+  apply ZornMatrix.ext
+  · simp [axialCartanEnd]
+  · simp [axialCartanEnd]
+  · funext i; simp [axialCartanEnd]
+  · funext i; simp [axialCartanEnd]
 
 /-- The stationary/defect Peirce sector is preserved infinitesimally. -/
 theorem axialCartanEnd_commutes_axialPZero
@@ -181,7 +228,11 @@ theorem axialCartanEnd_commutes_axialPZero
   change axialCartanEnd k (axialPZero Z) =
     axialPZero (axialCartanEnd k Z)
   rw [axialPZero_apply, axialCartanEnd_apply, axialPZero_apply]
-  ext i <;> simp [axialCartanEnd]
+  apply ZornMatrix.ext
+  · simp [axialCartanEnd]
+  · simp [axialCartanEnd]
+  · funext i; simp [axialCartanEnd]
+  · funext i; simp [axialCartanEnd]
 
 /-- The infinitesimal Cartan action commutes with the native Drazin support
 projector, independently of the finite closed-flow construction. -/

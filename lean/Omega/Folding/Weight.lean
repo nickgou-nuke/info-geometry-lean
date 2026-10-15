@@ -20,7 +20,7 @@ def weight : {m : Nat} → Word m → Nat
     weight (X.appendFalse x).1 = weight x.1 := by
   simp [X.appendFalse, weight_snoc]
 
-@[simp] theorem weight_appendTrue (x : X m) (hLast : get x.1 (m - 1) = false) :
+@[simp] theorem weight_appendTrue (x : X m) (hLast : X.EndsInZero x) :
     weight (X.appendTrue x hLast).1 = weight x.1 + Nat.fib (m + 2) := by
   simp [X.appendTrue, weight_snoc]
 
@@ -54,7 +54,7 @@ theorem weight_word_one (w : Word 1) :
   | zero => rfl
   | succ m ih =>
     simp only [weight, Bool.false_eq_true, ↓reduceIte, Nat.add_zero]
-    convert ih using 2
+    exact ih
 
 /-- weight(w) = Σ_{i : Fin m} (if w i then Nat.fib (i+2) else 0).
     def:pom-fiber-adm-path -/
@@ -76,7 +76,7 @@ theorem weight_pos_iff_exists_true (w : Word m) :
   constructor
   · -- (→) weight > 0 → ∃ true bit. Contrapositive: all false → weight = 0.
     intro hw
-    by_contra h; push_neg at h
+    by_contra h; push Not at h
     have : w = fun _ => false := funext fun i => by
       cases hi : w i
       · rfl
@@ -97,7 +97,7 @@ theorem weight_zero_iff_allFalse (w : Word m) :
   constructor
   · intro hw
     have hno := mt (weight_pos_iff_exists_true w).mpr (by omega)
-    push_neg at hno
+    push Not at hno
     funext i; exact Bool.eq_false_iff.mpr (hno i)
   · intro h; rw [h, weight_allFalse]
 

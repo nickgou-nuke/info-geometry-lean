@@ -20,7 +20,7 @@ theorem symbolicObservationQuotientRangeMap_isQuotientMap
     [Fintype ι]
     (S : FiniteSymbolicLatentSystem X ι) :
     Topology.IsQuotientMap (symbolicObservationQuotientRangeMap S) := by
-  exact IsQuotientMap.of_surjective_continuous
+  exact Topology.IsQuotientMap.of_surjective_continuous
     (symbolicObservationQuotientRangeEquiv S).surjective
     (continuous_symbolicObservationQuotientRangeMap S)
 

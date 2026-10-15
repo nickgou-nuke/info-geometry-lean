@@ -46,20 +46,15 @@ lemma kernelContainedInTargetKernel_of_strictlyCommutes (D : BCQuotientUniversal
     D.kernelContainedInTargetKernel := by
   intro x y hxy
   change Relation.EqvGen D.bcGenerator x y at hxy
-  let p : D.β → D.β → Prop := fun a b => D.quotientMap a = D.quotientMap b
-  have hp : ∀ a b, D.bcGenerator a b → p a b := by
+  have hp : ∀ a b, D.bcGenerator a b → D.quotientMap a = D.quotientMap b := by
     intro a b hab
     rcases hab with ⟨t, rfl, rfl⟩
     exact D.strictlyCommutes t
-  have hEqv : Equivalence p := by
-    refine ⟨?_, ?_, ?_⟩
-    · intro a
-      rfl
-    · intro a b hab
-      exact hab.symm
-    · intro a b c hab hbc
-      exact hab.trans hbc
-  exact (Equivalence.eqvGen_iff hEqv).1 (Relation.EqvGen.mono hp hxy)
+  induction hxy with
+  | rel a b h => exact hp a b h
+  | refl a => rfl
+  | symm a b _ hab => exact hab.symm
+  | trans a b c _ _ hab hbc => exact hab.trans hbc
 
 lemma quotientMap_respects_bcSetoid (D : BCQuotientUniversalData) {x y : D.β}
     (hxy : (D.bcSetoid).r x y) : D.quotientMap x = D.quotientMap y :=

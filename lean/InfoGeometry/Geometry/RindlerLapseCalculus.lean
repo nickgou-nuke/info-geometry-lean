@@ -23,8 +23,11 @@ def radius (a x : ℝ) : ℝ := x + a⁻¹
 def stationaryAcceleration (a x : ℝ) : ℝ := a / lapse a x
 
 theorem hasDerivAt_lapse (a x : ℝ) : HasDerivAt (lapse a) a x := by
-  convert ((hasDerivAt_id x).const_mul a).const_add 1 using 1 <;>
-    simp [lapse, mul_comm]
+  change HasDerivAt (fun y => 1 + a * y) a x
+  convert ((hasDerivAt_id x).const_mul a).const_add 1 using 1
+  · funext y
+    dsimp
+  · ring
 
 theorem lapse_eq_mul_radius (a x : ℝ) (ha : a ≠ 0) :
     lapse a x = a * radius a x := by
@@ -53,8 +56,11 @@ theorem hasDerivAt_log_lapse (a x : ℝ) (hx : lapse a x ≠ 0) :
 
 theorem hasDerivAt_stationaryAcceleration (a x : ℝ) (hx : lapse a x ≠ 0) :
     HasDerivAt (stationaryAcceleration a) (-(stationaryAcceleration a x) ^ 2) x := by
-  convert (hasDerivAt_const x a).div (hasDerivAt_lapse a x) hx using 1 <;>
-    simp [stationaryAcceleration, div_pow, pow_two] <;> ring
+  convert (hasDerivAt_const x a).div (hasDerivAt_lapse a x) hx using 1
+  · rfl
+  · dsimp [stationaryAcceleration]
+    field_simp [hx]
+    ring
 
 /-- Opposite signs distinguish support acceleration from the gravitational force convention. -/
 theorem negative_log_gradient (a x : ℝ) (hx : lapse a x ≠ 0) :
@@ -66,13 +72,21 @@ def minkowskiPosition (a x t : ℝ) : ℝ := radius a x * Real.cosh (a * t)
 
 theorem hasDerivAt_minkowskiTime (a x t : ℝ) (ha : a ≠ 0) :
     HasDerivAt (minkowskiTime a x) (lapse a x * Real.cosh (a * t)) t := by
-  convert (((hasDerivAt_id t).const_mul a).sinh.const_mul (radius a x)) using 1 <;>
-    simp [minkowskiTime, lapse_eq_mul_radius a x ha] <;> ring
+  convert (((hasDerivAt_id t).const_mul a).sinh.const_mul (radius a x)) using 1
+  · ext y
+    simp [minkowskiTime, mul_comm]
+  · simp only [id_eq]
+    rw [lapse_eq_mul_radius a x ha]
+    ring
 
 theorem hasDerivAt_minkowskiPosition (a x t : ℝ) (ha : a ≠ 0) :
     HasDerivAt (minkowskiPosition a x) (lapse a x * Real.sinh (a * t)) t := by
-  convert (((hasDerivAt_id t).const_mul a).cosh.const_mul (radius a x)) using 1 <;>
-    simp [minkowskiPosition, lapse_eq_mul_radius a x ha] <;> ring
+  convert (((hasDerivAt_id t).const_mul a).cosh.const_mul (radius a x)) using 1
+  · ext y
+    simp [minkowskiPosition, mul_comm]
+  · simp only [id_eq]
+    rw [lapse_eq_mul_radius a x ha]
+    ring
 
 theorem hasDerivAt_minkowskiTime_space (a t x : ℝ) :
     HasDerivAt (fun y => minkowskiTime a y t) (Real.sinh (a * t)) x := by

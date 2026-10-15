@@ -23,7 +23,9 @@ def O55 : Subgroup M10ˣ where
           (((g : M10).transpose * eta55 * (g : M10)) * (h : M10)) := by
             simp only [Matrix.mul_assoc]
       _ = (h : M10).transpose * (eta55 * (h : M10)) := by rw [hg]
-      _ = eta55 := by simpa only [Matrix.mul_assoc] using hh
+      _ = eta55 := by
+        rw [← Matrix.mul_assoc]
+        exact hh
   inv_mem' := by
     intro g hg
     let G : M10 := (g : M10)

@@ -1,4 +1,6 @@
 import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Complex.Basic
 import Omega.GU.JoukowskyGodelLeadingCoeffRigidity
@@ -53,7 +55,6 @@ theorem paper_group_jg_leyang_mahler_free_energy
     cor:group-jg-leyang-free-energy-linear-flux -/
 theorem paper_group_jg_leyang_free_energy_linear_flux (n : ℕ) (c t : ℝ) :
     HasDerivAt (fun s : ℝ => c + n * s) n t := by
-  simpa [mul_comm, mul_left_comm, mul_assoc] using
-    (((hasDerivAt_id t).const_mul (n : ℝ)).const_add c)
+  simpa using (hasDerivAt_const_add_iff c).2 (hasDerivAt_const_mul (n : ℝ))
 
 end Omega.GU

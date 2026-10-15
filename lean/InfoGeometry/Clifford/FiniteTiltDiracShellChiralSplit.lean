@@ -115,7 +115,8 @@ def finiteTiltRightChiralShell (m : ℝ) : Mat2 :=
 theorem finiteTiltDiracShell_chiral_decomposition (m : ℝ) :
     finiteTiltLeftChiralShell m + finiteTiltRightChiralShell m =
       finiteTiltDiracShell m := by
-  simpa [finiteTiltLeftChiralShell, finiteTiltRightChiralShell] using
+  simpa [finiteTiltLeftChiralShell, finiteTiltRightChiralShell,
+    ComplementaryProjectors.pComponent, ComplementaryProjectors.qComponent, Mat2] using
       ComplementaryProjectors.left_decomposition
       finiteTiltChiralProjectors (finiteTiltDiracShell m)
 
@@ -135,7 +136,9 @@ theorem finiteTiltCurrentDensity_chiral_pair_decomposition :
     finiteTiltChiralProjectorPair.PL * finiteTiltCurrentDensity +
       finiteTiltChiralProjectorPair.PR * finiteTiltCurrentDensity =
         finiteTiltCurrentDensity := by
-  simpa [finiteTiltChiralProjectorPair] using
+  simpa [finiteTiltChiralProjectorPair,
+    finiteTiltChiralProjectors, ComplementaryProjectors.pComponent,
+    ComplementaryProjectors.qComponent, Mat2] using
     ComplementaryProjectors.left_decomposition
       finiteTiltChiralProjectors finiteTiltCurrentDensity
 
@@ -145,7 +148,9 @@ theorem finiteTiltDiracShell_chiral_pair_decomposition (m : ℝ) :
     finiteTiltChiralProjectorPair.PL * finiteTiltDiracShell m +
       finiteTiltChiralProjectorPair.PR * finiteTiltDiracShell m =
         finiteTiltDiracShell m := by
-  simpa [finiteTiltChiralProjectorPair] using
+  simpa [finiteTiltChiralProjectorPair,
+    finiteTiltChiralProjectors, ComplementaryProjectors.pComponent,
+    ComplementaryProjectors.qComponent, Mat2] using
     ComplementaryProjectors.left_decomposition
       finiteTiltChiralProjectors (finiteTiltDiracShell m)
 

@@ -1,6 +1,7 @@
 import InfoGeometry.Lie.G2SO44SO55LieInclusionBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionDerivationWittBlockRealization
+import Mathlib.Algebra.Lie.OfAssociative
 
 noncomputable section
 set_option maxHeartbeats 800000
@@ -10,6 +11,10 @@ open InfoGeometry.Lie.G2SO44SO55LieInclusionBridge
 open InfoGeometry.Lie.SplitOctonionDerivationWittBlockRealization
 abbrev Derivation := SplitOctonionDerivationWittOrthogonalBridge.Derivation
 abbrev Mat10 := InfoGeometry.Algebra.FiniteSpin.Mat10R
+
+local instance : LieRing Mat10 := LieRing.ofAssociativeRing
+local instance : LieAlgebra ℝ Mat10 := LieAlgebra.ofAssociativeAlgebra
+
 def derivationToSO55 (D : Derivation) : Mat10 := so44ToSO55 (canonicalDerivationFinMatrix D)
 theorem so44ToSO55_injective : Function.Injective so44ToSO55 := by
   intro M N h; ext i j

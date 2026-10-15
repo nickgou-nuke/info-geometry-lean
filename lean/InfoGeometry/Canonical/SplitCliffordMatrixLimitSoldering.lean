@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitCliffordDirectLimit
+import InfoGeometry.Algebra.SuperGrassmannianClifford
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.SpinorRep
 import InfoGeometry.Clifford.Cl11TensorTowerLimit
@@ -159,18 +160,8 @@ atom rather than the identity. -/
 noncomputable def gradedTensorSuccessor (n : ℕ) :
     SplitGammaMatrix n →ₗ[ℝ] SplitGammaMatrix (n + 1) where
   toFun A := appendAtom A gradingAtom
-  map_add' A B := by
-    ext i j
-    rcases i with ⟨i, a⟩
-    rcases j with ⟨j, b⟩
-    simp [appendAtom_apply]
-    ring
-  map_smul' c A := by
-    ext i j
-    rcases i with ⟨i, a⟩
-    rcases j with ⟨j, b⟩
-    simp [appendAtom_apply]
-    ring
+  map_add' A B := appendAtom_add_left A B gradingAtom
+  map_smul' c A := appendAtom_smul_left c A gradingAtom
 
 @[simp] theorem gradedTensorSuccessor_apply (n : ℕ) (A : SplitGammaMatrix n) :
     gradedTensorSuccessor n A = appendAtom A gradingAtom := rfl
@@ -226,9 +217,169 @@ noncomputable def totalGradingTensor : (n : ℕ) → SplitGammaMatrix n
   | 0 => (1 : SplitGammaMatrix 0)
   | n + 1 => appendAtom (totalGradingTensor n) gradingAtom
 
+/-- The recursively tensored grading element is an involution at every
+finite stage. This is the algebraic input needed for the even/odd projections
+below; it follows from the local Clifford volume element squaring to one. -/
+theorem totalGradingTensor_sq (n : ℕ) :
+    totalGradingTensor n * totalGradingTensor n = 1 := by
+  induction n with
+  | zero => simp [totalGradingTensor]
+  | succ n ih =>
+      rw [totalGradingTensor, appendAtom_square, ih, gradingAtom_sq]
+      simpa using (appendAtom_smul_one_left (n := n) (r := 1))
+
+/-- Conjugation by the recursively tensored grading atom negates every
+recursive Clifford generator. This is the tensor-matrix realization of the
+native Clifford grade involution on the generating vector space. -/
+theorem totalGradingTensor_conj_recursiveGammaTensor (n : ℕ)
+    (v : SplitSpace n) :
+    totalGradingTensor n * recursiveGammaTensor n v * totalGradingTensor n =
+      -recursiveGammaTensor n v := by
+  induction n with
+  | zero =>
+      simp [totalGradingTensor, recursiveGammaTensor]
+  | succ n ih =>
+      rcases v with ⟨x, xs⟩
+      let X := recursiveGammaTensor n xs
+      let G := totalGradingTensor n
+      let H := x.1 • gammaPlusAtom + x.2 • gammaMinusAtom
+      have hH : gradingAtom * H = -(H * gradingAtom) :=
+        eq_neg_of_add_eq_zero_left (gradingAtom_splitHeadAtom_anticomm x)
+      have hconjH : gradingAtom * H * gradingAtom = -H := by
+        calc
+          gradingAtom * H * gradingAtom = -(H * gradingAtom) * gradingAtom := by
+            rw [hH]
+          _ = -H := by rw [neg_mul, mul_assoc, gradingAtom_sq, mul_one]
+      have hhead :
+          appendAtom G gradingAtom * appendAtom X gradingAtom *
+              appendAtom G gradingAtom = -appendAtom X gradingAtom := by
+        calc
+          _ = appendAtom ((G * X) * G) ((gradingAtom * gradingAtom) * gradingAtom) := by
+            rw [appendAtom_mul, appendAtom_mul]
+          _ = appendAtom (-X) gradingAtom := by
+            rw [gradingAtom_sq, one_mul, ih xs]
+          _ = -appendAtom X gradingAtom := by
+            rw [← neg_one_smul ℝ X, appendAtom_smul_left, neg_one_smul]
+      have htail :
+          appendAtom G gradingAtom * appendAtom (1 : SplitGammaMatrix n) H *
+              appendAtom G gradingAtom =
+            -appendAtom (1 : SplitGammaMatrix n) H := by
+        calc
+          _ = appendAtom ((G * 1) * G) ((gradingAtom * H) * gradingAtom) := by
+            rw [appendAtom_mul, appendAtom_mul]
+          _ = appendAtom (1 : SplitGammaMatrix n) (-H) := by
+            rw [mul_one, show G * G = 1 from totalGradingTensor_sq n,
+              hconjH]
+          _ = -appendAtom (1 : SplitGammaMatrix n) H := by
+            rw [← neg_one_smul ℝ H, appendAtom_smul_right, neg_one_smul]
+      change (appendAtom G gradingAtom) *
+          (appendAtom X gradingAtom + appendAtom (1 : SplitGammaMatrix n) H) *
+          (appendAtom G gradingAtom) = _
+      rw [mul_add, add_mul, hhead, htail]
+      rw [show recursiveGammaTensor (n + 1) (x, xs) =
+        appendAtom X gradingAtom + appendAtom (1 : SplitGammaMatrix n) H by rfl]
+      rw [neg_add]
+
 /-- Transport of the total grading involution to the matrix stage carrier. -/
 noncomputable def totalGrading (n : ℕ) : MatrixStage n :=
   tensorToMatrixStage n (totalGradingTensor n)
+
+/-- The native matrix reindexing from the tensor carrier to `MatrixStage`
+preserves multiplication. This records that `tensorToMatrixStage` is the
+composite of the two Mathlib matrix algebra equivalences, not just a linear
+carrier map. -/
+theorem tensorToMatrixStage_map_mul (n : ℕ)
+    (A B : SplitGammaMatrix n) :
+    tensorToMatrixStage n (A * B) =
+      tensorToMatrixStage n A * tensorToMatrixStage n B := by
+  change (InfoGeometry.Clifford.TowerMatrix.matEquivFinPowTwo n).symm
+      ((tensorMatrixEquivFinPowTwo n) (A * B)) = _
+  calc
+    _ = (InfoGeometry.Clifford.TowerMatrix.matEquivFinPowTwo n).symm
+          ((tensorMatrixEquivFinPowTwo n) A * (tensorMatrixEquivFinPowTwo n) B) :=
+        congrArg _ ((tensorMatrixEquivFinPowTwo n).map_mul A B)
+    _ = _ := (InfoGeometry.Clifford.TowerMatrix.matEquivFinPowTwo n).symm.map_mul _ _
+
+/-- The tensor-to-stage reindexing preserves the multiplicative identity. -/
+theorem tensorToMatrixStage_map_one (n : ℕ) :
+    tensorToMatrixStage n (1 : SplitGammaMatrix n) = 1 := by
+  change (InfoGeometry.Clifford.TowerMatrix.matEquivFinPowTwo n).symm
+      ((tensorMatrixEquivFinPowTwo n) 1) = 1
+  simp
+
+/-- The grading involution remains square-one after transport to the
+finite-stage matrix carrier. -/
+theorem totalGrading_sq (n : ℕ) :
+    totalGrading n * totalGrading n = 1 := by
+  change tensorToMatrixStage n (totalGradingTensor n) *
+      tensorToMatrixStage n (totalGradingTensor n) = 1
+  rw [← tensorToMatrixStage_map_mul, totalGradingTensor_sq,
+    tensorToMatrixStage_map_one]
+
+/-- The transported matrix grading acts on each recursive Clifford generator
+as Mathlib's odd grade involution prescribes. -/
+theorem totalGrading_conj_stageMap_generator (n : ℕ) (v : SplitSpace n) :
+    totalGrading n * stageMap n (CliffordAlgebra.ι (SplitQuad n) v) *
+        totalGrading n =
+      -stageMap n (CliffordAlgebra.ι (SplitQuad n) v) := by
+  have hrep : stageMap n (CliffordAlgebra.ι (SplitQuad n) v) =
+      tensorToMatrixStage n (recursiveGammaTensor n v) := by
+    rw [stageMap_on_generator]
+    rfl
+  calc
+    _ = tensorToMatrixStage n (totalGradingTensor n) *
+          tensorToMatrixStage n (recursiveGammaTensor n v) *
+          tensorToMatrixStage n (totalGradingTensor n) := by
+            rw [totalGrading, hrep]
+    _ = tensorToMatrixStage n
+          (totalGradingTensor n * recursiveGammaTensor n v *
+            totalGradingTensor n) := by
+            rw [← tensorToMatrixStage_map_mul, ← tensorToMatrixStage_map_mul]
+    _ = tensorToMatrixStage n (-(recursiveGammaTensor n v)) := by
+          rw [totalGradingTensor_conj_recursiveGammaTensor]
+    _ = -stageMap n (CliffordAlgebra.ι (SplitQuad n) v) := by
+          rw [map_neg, hrep]
+
+/-- Conjugation by a square-one grading element preserves products. -/
+theorem totalGrading_conj_mul (n : ℕ) (A B : MatrixStage n) :
+    totalGrading n * (A * B) * totalGrading n =
+      (totalGrading n * A * totalGrading n) *
+        (totalGrading n * B * totalGrading n) := by
+  have hG : totalGrading n * totalGrading n = 1 := totalGrading_sq n
+  calc
+    totalGrading n * (A * B) * totalGrading n =
+        totalGrading n * A * (totalGrading n * totalGrading n) * B * totalGrading n := by
+          rw [hG]
+          noncomm_ring
+    _ = (totalGrading n * A * totalGrading n) *
+          (totalGrading n * B * totalGrading n) := by noncomm_ring
+
+/-- The recursive spinor representation intertwines Mathlib's Clifford
+grade involution with matrix conjugation by the transported grading element. -/
+theorem stageMap_involute_eq_totalGrading_conj (n : ℕ)
+    (x : SplitClNNAlg n) :
+    stageMap n (CliffordAlgebra.involute x) =
+      totalGrading n * stageMap n x * totalGrading n := by
+  induction x using CliffordAlgebra.induction with
+  | algebraMap r =>
+      simp [Algebra.algebraMap_eq_smul_one, totalGrading_sq]
+  | ι v =>
+      simpa only [CliffordAlgebra.involute_ι, map_neg] using
+        (totalGrading_conj_stageMap_generator n v).symm
+  | mul a b ha hb =>
+      calc
+        stageMap n (CliffordAlgebra.involute (a * b)) =
+            stageMap n (CliffordAlgebra.involute a * CliffordAlgebra.involute b) := by
+              rw [map_mul]
+        _ = totalGrading n * stageMap n (a * b) * totalGrading n := by
+              rw [map_mul, ha, hb, map_mul, ← totalGrading_conj_mul]
+  | add a b ha hb =>
+      calc
+        stageMap n (CliffordAlgebra.involute (a + b)) =
+            stageMap n (CliffordAlgebra.involute a + CliffordAlgebra.involute b) := by
+              rw [map_add]
+        _ = totalGrading n * stageMap n (a + b) * totalGrading n := by
+              rw [map_add, ha, hb, map_add, mul_add, add_mul]
 
 /-- Even-parity projection under the total grading involution. -/
 noncomputable def splitEven (n : ℕ) (A : MatrixStage n) : MatrixStage n :=
@@ -238,16 +389,110 @@ noncomputable def splitEven (n : ℕ) (A : MatrixStage n) : MatrixStage n :=
 noncomputable def splitOdd (n : ℕ) (A : MatrixStage n) : MatrixStage n :=
   (1 / 2 : ℝ) • (A - totalGrading n * A * totalGrading n)
 
+/-- The finite matrix carrier decomposes as the sum of its even and odd
+parts for conjugation by the recursively defined split grading element. -/
+theorem splitEven_add_splitOdd (n : ℕ) (A : MatrixStage n) :
+    splitEven n A + splitOdd n A = A := by
+  ext i j
+  simp [splitEven, splitOdd]
+  ring
+
+/-- The even projection fixes the unit, and the odd projection kills it. -/
+theorem splitProjections_one (n : ℕ) :
+    splitEven n (1 : MatrixStage n) = 1 ∧
+      splitOdd n (1 : MatrixStage n) = 0 := by
+  constructor
+  · unfold splitEven
+    rw [mul_one, totalGrading_sq]
+    rw [show (1 : MatrixStage n) + 1 = (2 : ℝ) • (1 : MatrixStage n) by
+      rw [two_smul]]
+    rw [smul_smul]
+    norm_num
+  · unfold splitOdd
+    rw [mul_one, totalGrading_sq]
+    norm_num
+
+/-- Mathlib-even Clifford elements map to the fixed subspace of the matrix
+grading, so the even projection fixes their represented operators. -/
+theorem splitProjections_stageMap_even (n : ℕ) (x : SplitClNNAlg n)
+    (hx : x ∈ CliffordAlgebra.evenOdd (SplitQuad n) 0) :
+    splitEven n (stageMap n x) = stageMap n x ∧
+      splitOdd n (stageMap n x) = 0 := by
+  have hconj : totalGrading n * stageMap n x * totalGrading n = stageMap n x := by
+    rw [← stageMap_involute_eq_totalGrading_conj]
+    rw [CliffordAlgebra.involute_eq_of_mem_even hx]
+  constructor
+  · unfold splitEven
+    rw [hconj]
+    rw [show stageMap n x + stageMap n x =
+      (2 : ℝ) • stageMap n x by rw [two_smul]]
+    rw [smul_smul]
+    norm_num
+  · unfold splitOdd
+    rw [hconj]
+    simp
+
+/-- Mathlib-odd Clifford elements map to the negative subspace of the matrix
+grading, so the odd projection fixes their represented operators. -/
+theorem splitProjections_stageMap_odd (n : ℕ) (x : SplitClNNAlg n)
+    (hx : x ∈ CliffordAlgebra.evenOdd (SplitQuad n) 1) :
+    splitEven n (stageMap n x) = 0 ∧
+      splitOdd n (stageMap n x) = stageMap n x := by
+  have hconj : totalGrading n * stageMap n x * totalGrading n =
+      -stageMap n x := by
+    rw [← stageMap_involute_eq_totalGrading_conj]
+    rw [CliffordAlgebra.involute_eq_of_mem_odd hx, map_neg]
+  constructor
+  · unfold splitEven
+    rw [hconj]
+    simp
+  · unfold splitOdd
+    rw [hconj, sub_neg_eq_add]
+    rw [show stageMap n x + stageMap n x =
+      (2 : ℝ) • stageMap n x by rw [two_smul]]
+    rw [smul_smul]
+    norm_num
+
+/-- The exterior model's native super-grade-zero submodule is represented in
+the matrix stage by the fixed eigenspace of `totalGrading`. -/
+theorem splitProjections_superGrade_zero (n : ℕ)
+    (x : InfoGeometry.Algebra.SuperGrassmannianClifford.SplitExteriorStage n)
+    (hx : x ∈ InfoGeometry.Algebra.SuperGrassmannianClifford.superGrade
+      (SplitQuad n) 0) :
+    splitEven n (stageMap n
+      ((InfoGeometry.Algebra.SuperGrassmannianClifford.cliffordExteriorEquiv
+        (SplitQuad n)).symm x)) =
+        stageMap n
+          ((InfoGeometry.Algebra.SuperGrassmannianClifford.cliffordExteriorEquiv
+            (SplitQuad n)).symm x) := by
+  apply (splitProjections_stageMap_even n _ ?_).1
+  change (InfoGeometry.Algebra.SuperGrassmannianClifford.cliffordExteriorEquiv
+    (SplitQuad n)).symm x ∈ CliffordAlgebra.evenOdd (SplitQuad n) 0 at hx
+  exact hx
+
+/-- The exterior model's native super-grade-one submodule is represented in
+the matrix stage by the negative eigenspace of `totalGrading`. -/
+theorem splitProjections_superGrade_one (n : ℕ)
+    (x : InfoGeometry.Algebra.SuperGrassmannianClifford.SplitExteriorStage n)
+    (hx : x ∈ InfoGeometry.Algebra.SuperGrassmannianClifford.superGrade
+      (SplitQuad n) 1) :
+    splitOdd n (stageMap n
+      ((InfoGeometry.Algebra.SuperGrassmannianClifford.cliffordExteriorEquiv
+        (SplitQuad n)).symm x)) =
+        stageMap n
+          ((InfoGeometry.Algebra.SuperGrassmannianClifford.cliffordExteriorEquiv
+            (SplitQuad n)).symm x) := by
+  apply (splitProjections_stageMap_odd n _ ?_).2
+  change (InfoGeometry.Algebra.SuperGrassmannianClifford.cliffordExteriorEquiv
+    (SplitQuad n)).symm x ∈ CliffordAlgebra.evenOdd (SplitQuad n) 1 at hx
+  exact hx
+
 /-- Linear embedding of split tensor with atom B. -/
 noncomputable def appendAtomLin (n : ℕ) (B : Matrix (Fin 2) (Fin 2) ℝ) :
     SplitGammaMatrix n →ₗ[ℝ] SplitGammaMatrix (n + 1) where
   toFun A := appendAtom A B
-  map_add' A C := by
-    ext ⟨i, a⟩ ⟨j, b⟩
-    simp [appendAtom_apply, add_mul]
-  map_smul' c A := by
-    ext ⟨i, a⟩ ⟨j, b⟩
-    simp [appendAtom_apply, mul_assoc]
+  map_add' A C := appendAtom_add_left A C B
+  map_smul' c A := appendAtom_smul_left c A B
 
 /-- The total grading involution as a linear map on M_{2ⁿ}(ℝ). -/
 noncomputable def totalGradingLin (n : ℕ) : MatrixStage n →ₗ[ℝ] MatrixStage n where
@@ -286,6 +531,28 @@ theorem twistedStageEmbed_apply (n : ℕ) (A : MatrixStage n) :
         (appendAtom (matrixStageToTensor n (splitEven n A)) (1 : Matrix (Fin 2) (Fin 2) ℝ) +
          appendAtom (matrixStageToTensor n (splitOdd n A)) gradingAtom) := rfl
 
+/-- The parity-twisted successor preserves the unit. This is the first
+unconditional algebra-homomorphism law for the corrected graded bond. -/
+theorem twistedStageEmbed_one (n : ℕ) :
+    twistedStageEmbed n (1 : MatrixStage n) = 1 := by
+  rw [twistedStageEmbed_apply]
+  rcases splitProjections_one n with ⟨he, ho⟩
+  rw [he, ho]
+  have hunit : appendAtom (1 : SplitGammaMatrix n)
+      (1 : Matrix (Fin 2) (Fin 2) ℝ) = 1 := by
+    ext i j
+    rcases i with ⟨i, a⟩
+    rcases j with ⟨j, b⟩
+    change (if i = j then (1 : ℝ) else 0) *
+        (if a = b then (1 : ℝ) else 0) =
+      if (i, a) = (j, b) then (1 : ℝ) else 0
+    by_cases hij : i = j <;> by_cases hab : a = b <;>
+      simp [hij, hab]
+  rw [show matrixStageToTensor n (1 : MatrixStage n) =
+      (1 : SplitGammaMatrix n) by simp [matrixStageToTensor]]
+  simp only [map_zero, appendAtom_zero_left, add_zero]
+  rw [hunit, tensorToMatrixStage_map_one]
+
 /-- On purely odd elements (such as generator images under the spinor representation),
 the twisted matrix bond applies the graded stage successor. -/
 theorem twistedStageEmbed_of_odd (n : ℕ) (A : MatrixStage n)
@@ -308,6 +575,20 @@ theorem twisted_stageMap_generator_bond (n : ℕ) (xs : SplitSpace n)
         (stageMap n (CliffordAlgebra.ι (SplitQuad n) xs)) := by
   rw [stageMap_splitCliffordStep_eq_gradedStageSuccessor]
   exact (twistedStageEmbed_of_odd n (stageMap n (CliffordAlgebra.ι (SplitQuad n) xs)) h_odd h_split).symm
+
+/-- Unconditional generator bond: the oddness needed by the parity-twisted
+matrix successor follows from Mathlib's native Clifford `evenOdd` grading. -/
+theorem twisted_stageMap_generator_bond_native (n : ℕ) (xs : SplitSpace n) :
+    stageMap (n + 1)
+        (splitCliffordStep n (CliffordAlgebra.ι (SplitQuad n) xs)) =
+      twistedStageEmbed n
+        (stageMap n (CliffordAlgebra.ι (SplitQuad n) xs)) := by
+  have hodd : CliffordAlgebra.ι (SplitQuad n) xs ∈
+      CliffordAlgebra.evenOdd (SplitQuad n) 1 :=
+    CliffordAlgebra.ι_mem_evenOdd_one (Q := SplitQuad n) xs
+  rcases splitProjections_stageMap_odd n
+      (CliffordAlgebra.ι (SplitQuad n) xs) hodd with ⟨h_even, h_odd⟩
+  exact twisted_stageMap_generator_bond n xs h_even h_odd
 
 /-! The graded successor factor is involutive, but is not itself the unit. -/
 theorem appendAtom_gradingAtom_mul (n : ℕ)
@@ -512,10 +793,15 @@ theorem gradedTensorSuccessor_not_algHom (n : ℕ) :
       _ = gradedTensorSuccessor n (1 : SplitGammaMatrix n) := hone
       _ = appendAtom (1 : SplitGammaMatrix n) gradingAtom := hfactor
   have hmatrix := congrArg
-      (fun M => M (tensorIndexDefault n, 0) (tensorIndexDefault n, 1)) hone'
-  norm_num [appendAtom_apply, InfoGeometry.Clifford.GammaMatrices.TensorIndex,
-    Matrix.one_apply, gradingAtom, gamma12,
-    InfoGeometry.Clifford.Cl11Matrix.J1] at hmatrix
+      (fun M : SplitGammaMatrix (n + 1) => M (tensorIndexDefault n, (0 : Fin 2)) (tensorIndexDefault n, (1 : Fin 2))) hone'
+  rw [appendAtom_apply, Matrix.one_apply_eq, one_mul] at hmatrix
+  have h0 : (1 : SplitGammaMatrix (n + 1)) (tensorIndexDefault n, (0 : Fin 2)) (tensorIndexDefault n, (1 : Fin 2)) = 0 :=
+    Matrix.one_apply_ne (by simp)
+  rw [h0] at hmatrix
+  have hg01 : gradingAtom (0 : Fin 2) (1 : Fin 2) = 1 := by
+    norm_num [gradingAtom, gamma12, InfoGeometry.Clifford.Cl11Matrix.J1]
+  rw [hg01] at hmatrix
+  exact zero_ne_one hmatrix
 
 /-! The full finite-stage coherence proposition needed for an untwisted colimit soldering. -/
 def BondCoherence : Prop :=

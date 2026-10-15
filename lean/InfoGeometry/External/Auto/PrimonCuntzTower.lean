@@ -255,9 +255,8 @@ theorem stageToSequence_embIter (n k : ℕ) (f : Stage n) :
       simp
   | succ k ih =>
       rw [embIter_succ]
-      exact (by
-        simpa [Nat.add_assoc] using
-          (stageToSequence_emb (n + k) (embIter n k f)).trans ih)
+      convert (stageToSequence_emb (n + k) (embIter n k f)).trans ih using 1 <;>
+        congr 1 <;> omega
 
 /-- The algebraic Dirac is compatible with every finite iterated Cuntz lift. -/
 theorem algebraicDirac_embIter_compatible (n k : ℕ) (f : Stage n) :

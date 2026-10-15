@@ -1,0 +1,13 @@
+import Experimental.Sandbox.Physics.BdGParticleHoleSpectralPairing
+
+/-! Kernel-facing audit surface for finite BdG particle-hole spectral pairing. -/
+
+namespace InfoGeometry.Experimental.BdGParticleHoleSpectralPairing.Audit
+
+#check InfoGeometry.Experimental.BdGParticleHoleSpectralPairing.matrix_eigenvector_pairing
+#check InfoGeometry.Experimental.BdGParticleHoleSpectralPairing.eigenvector_transport
+
+#print axioms InfoGeometry.Experimental.BdGParticleHoleSpectralPairing.matrix_eigenvector_pairing
+#print axioms InfoGeometry.Experimental.BdGParticleHoleSpectralPairing.eigenvector_transport
+
+end InfoGeometry.Experimental.BdGParticleHoleSpectralPairing.Audit

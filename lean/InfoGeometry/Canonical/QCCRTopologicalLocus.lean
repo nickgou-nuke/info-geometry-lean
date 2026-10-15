@@ -87,7 +87,7 @@ theorem majorana_pair_mem_operatorQCCRLocus_neg_one
   calc
     M.gamma u * M.gamma v + M.gamma v * M.gamma u =
         (2 * inner ℝ u v) • ContinuousLinearMap.id ℝ S := by
-      simpa [anticommutator] using M.car u v
+      simpa [ContinuousLinearMap.mul_def, anticommutator] using M.car u v
     _ = ContinuousLinearMap.id ℝ S := by rw [h_norm, one_smul]
 
 /-- A Cuntz isometry pair lies in the zero-parameter fiber after reversing

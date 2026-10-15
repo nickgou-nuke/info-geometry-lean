@@ -10,6 +10,8 @@ theorem paper_conclusion_window6_boundary_unique_equivariant_geometric_scalar
   rcases hcycle with ⟨hab, hbc⟩
   subst b
   subst c
-  fin_cases a <;> simp
+  fin_cases a
+  · left; exact ⟨rfl, rfl, rfl⟩
+  · right; exact ⟨rfl, rfl, rfl⟩
 
 end Omega.Conclusion

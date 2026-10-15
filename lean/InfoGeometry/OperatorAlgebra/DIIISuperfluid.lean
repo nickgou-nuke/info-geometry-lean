@@ -284,20 +284,20 @@ def signDatum : DIIISignDatum (EndR H) where
 /-- The DIII chiral grading square is derived from the DIII sign skeleton. -/
 theorem chi_sq_derived :
     D.chi.comp D.chi = ContinuousLinearMap.id ℝ H := by
-  simpa [signDatum, DIIISignDatum.chi, D.chi_eq] using
-    (D.signDatum.chi_sq)
+  simpa [signDatum, DIIISignDatum.chi, D.chi_eq,
+    ContinuousLinearMap.mul_def, ContinuousLinearMap.one_def] using D.signDatum.chi_sq
 
 /-- Phase-linearity of `chi` is derived from the two phase-reversing mirrors. -/
 theorem chi_phase_linear_derived :
     D.chi.comp D.K = D.K.comp D.chi := by
-  simpa [signDatum, DIIISignDatum.chi, D.chi_eq] using
-    (D.signDatum.chi_phase_linear)
+  simpa [signDatum, DIIISignDatum.chi, D.chi_eq,
+    ContinuousLinearMap.mul_def] using D.signDatum.chi_phase_linear
 
 /-- The Majorana particle-hole mirror flips the DIII chiral grading. -/
 theorem Xi_flips_chi :
     (D.Xi.comp D.chi).comp D.Xi = -D.chi := by
-  simpa [signDatum, DIIISignDatum.chi, D.chi_eq] using
-    (D.signDatum.Xi_flips_chi)
+  simpa [signDatum, DIIISignDatum.chi, D.chi_eq,
+    ContinuousLinearMap.mul_def] using D.signDatum.Xi_flips_chi
 
 end DIIISuperfluidDatum
 

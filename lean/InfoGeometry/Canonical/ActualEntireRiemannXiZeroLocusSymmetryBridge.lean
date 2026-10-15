@@ -93,7 +93,7 @@ theorem actualEntireCenteredXiZeroLocus_subset_closed_centered_strip :
   change entireRiemannXi ((1 / 2 : ℂ) + z) = 0 at hz
   have hstrip := entireRiemannXi_zero_mem_closed_critical_strip hz
   norm_num [Complex.add_re] at hstrip
-  constructor <;> dsimp at hstrip ⊢ <;> linarith [hstrip.1, hstrip.2]
+  constructor <;> linarith [hstrip.1, hstrip.2]
 
 theorem isClosed_actualEntireCenteredXiZeroLocus :
     IsClosed actualEntireCenteredXiZeroLocus := by

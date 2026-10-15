@@ -113,25 +113,15 @@ theorem tkkParamMap_injective : Function.Injective tkkParamMap := by
   intro p q hpq
   rcases p with ⟨u, ⟨⟨a, A⟩, v⟩⟩
   rcases q with ⟨u', ⟨⟨a', A'⟩, v'⟩⟩
-  have hzero : pGen (u - u') + dGen (a - a') +
-      middleRotation (A.1 - A'.1) + kGen (v - v') = 0 := by
-    have h := hpq
-    change pGen u + dGen a + middleRotation A.1 + kGen v =
-      pGen u' + dGen a' + middleRotation A'.1 + kGen v' at h
-    have hz := sub_eq_zero.mpr h
-    apply funext
-    intro x
-    have hx := congrFun hz x
-    simp [sub_eq_add_neg, pGen, dGen, kGen, middleRotation,
-      B10_sub_left, B10_sub_right] at hx ⊢
-    rcases hx with ⟨hx₁, hx₂, hx₃⟩
-    constructor
-    · rw [B10_symm, B10_add_left, B10_neg_left]
-      linear_combination hx₁
-    · constructor
-      · simpa [add_assoc, add_comm, add_left_comm] using hx₂
-      · rw [B10_symm, B10_add_left, B10_neg_left]
-        linear_combination hx₃
+  have hzero :
+      tkkParamMap ((u, ((a, A), v)) - (u', ((a', A'), v'))) = 0 := by
+    calc
+      tkkParamMap ((u, ((a, A), v)) - (u', ((a', A'), v'))) =
+          tkkParamMap (u, ((a, A), v)) - tkkParamMap (u', ((a', A'), v')) :=
+        map_sub tkkParamMap _ _
+      _ = 0 := sub_eq_zero.mpr hpq
+  change pGen (u - u') + dGen (a - a') +
+      middleRotation (A.1 - A'.1) + kGen (v - v') = 0 at hzero
   rcases tkk_param_zero_components (u - u') (a - a')
       (A.1 - A'.1) (v - v') hzero with ⟨hu, ha, hA, hv⟩
   have hu' : u = u' := sub_eq_zero.mp hu

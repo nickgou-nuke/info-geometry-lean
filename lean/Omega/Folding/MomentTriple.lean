@@ -1,6 +1,8 @@
 import Omega.Folding.MomentRecurrence
 import Mathlib.Algebra.Order.BigOperators.Ring.Finset
 
+set_option maxRecDepth 10000
+
 namespace Omega
 
 -- ══════════════════════════════════════════════════════════════
@@ -500,21 +502,27 @@ theorem momentSum_two_ten_rec : momentSum 2 10 = 8320 := by
   have h := momentSum_two_recurrence 7
   simp only [show (7 : Nat) + 3 = 10 from rfl, show (7 : Nat) + 2 = 9 from rfl,
     show (7 : Nat) + 1 = 8 from rfl, momentSum_two_seven_rec,
-    momentSum_two_eight_rec, momentSum_two_nine_rec] at h; omega
+    momentSum_two_eight_rec, momentSum_two_nine_rec] at h
+  norm_num at h
+  omega
 
 /-- prop:pom-s2-recurrence -/
 theorem momentSum_two_eleven_rec : momentSum 2 11 = 20640 := by
   have h := momentSum_two_recurrence 8
   simp only [show (8 : Nat) + 3 = 11 from rfl, show (8 : Nat) + 2 = 10 from rfl,
     show (8 : Nat) + 1 = 9 from rfl, momentSum_two_eight_rec,
-    momentSum_two_nine_rec, momentSum_two_ten_rec] at h; omega
+    momentSum_two_nine_rec, momentSum_two_ten_rec] at h
+  norm_num at h
+  omega
 
 /-- prop:pom-s2-recurrence -/
 theorem momentSum_two_twelve_rec : momentSum 2 12 = 51216 := by
   have h := momentSum_two_recurrence 9
   simp only [show (9 : Nat) + 3 = 12 from rfl, show (9 : Nat) + 2 = 11 from rfl,
     show (9 : Nat) + 1 = 10 from rfl, momentSum_two_nine_rec,
-    momentSum_two_ten_rec, momentSum_two_eleven_rec] at h; omega
+    momentSum_two_ten_rec, momentSum_two_eleven_rec] at h
+  norm_num at h
+  omega
 
 -- ══════════════════════════════════════════════════════════════
 -- S_2 mod 16 divisibility
@@ -830,7 +838,9 @@ theorem momentSum_two_thirteen_rec : momentSum 2 13 = 127072 := by
   have h := momentSum_two_recurrence 10
   rw [show (10 : Nat) + 1 = 11 from rfl, show (10 : Nat) + 2 = 12 from rfl,
     show (10 : Nat) + 3 = 13 from rfl, momentSum_two_ten_rec,
-    momentSum_two_eleven_rec, momentSum_two_twelve_rec] at h; omega
+    momentSum_two_eleven_rec, momentSum_two_twelve_rec] at h
+  norm_num at h
+  omega
 
 /-- The penultimate weight F_{m+3}−3 has exactly one word, by symmetry with weight 1.
     prop:pom-ewc-penultimate -/
@@ -859,7 +869,9 @@ theorem momentSum_two_fourteen_rec : momentSum 2 14 = 315296 := by
   have h := momentSum_two_recurrence 11
   rw [show (11 : Nat) + 1 = 12 from rfl, show (11 : Nat) + 2 = 13 from rfl,
     show (11 : Nat) + 3 = 14 from rfl, momentSum_two_eleven_rec,
-    momentSum_two_twelve_rec, momentSum_two_thirteen_rec] at h; omega
+    momentSum_two_twelve_rec, momentSum_two_thirteen_rec] at h
+  norm_num at h
+  omega
 
 /-- Weight 2 is achieved by exactly one word for m ≥ 2.
     prop:pom-ewc-weight-two -/
@@ -941,7 +953,9 @@ theorem momentSum_two_fifteen_rec : momentSum 2 15 = 782304 := by
   have h := momentSum_two_recurrence 12
   rw [show (12 : Nat) + 1 = 13 from rfl, show (12 : Nat) + 2 = 14 from rfl,
     show (12 : Nat) + 3 = 15 from rfl, momentSum_two_twelve_rec,
-    momentSum_two_thirteen_rec, momentSum_two_fourteen_rec] at h; omega
+    momentSum_two_thirteen_rec, momentSum_two_fourteen_rec] at h
+  norm_num at h
+  omega
 
 /-- Weight 4 is achieved by exactly one word for m ≥ 3.
     prop:pom-ewc-weight-four -/
@@ -1078,7 +1092,9 @@ theorem momentSum_two_sixteen_rec : momentSum 2 16 = 1941056 := by
   have h := momentSum_two_recurrence 13
   rw [show (13 : Nat) + 1 = 14 from rfl, show (13 : Nat) + 2 = 15 from rfl,
     show (13 : Nat) + 3 = 16 from rfl, momentSum_two_thirteen_rec,
-    momentSum_two_fourteen_rec, momentSum_two_fifteen_rec] at h; omega
+    momentSum_two_fourteen_rec, momentSum_two_fifteen_rec] at h
+  norm_num at h
+  omega
 
 /-- S₂(17) = 4816128, computed via three-step recurrence from S₂(14..16).
     prop:pom-moment-s2-seventeen -/
@@ -1086,7 +1102,9 @@ theorem momentSum_two_seventeen_rec : momentSum 2 17 = 4816128 := by
   have h := momentSum_two_recurrence 14
   rw [show (14 : Nat) + 1 = 15 from rfl, show (14 : Nat) + 2 = 16 from rfl,
     show (14 : Nat) + 3 = 17 from rfl, momentSum_two_fourteen_rec,
-    momentSum_two_fifteen_rec, momentSum_two_sixteen_rec] at h; omega
+    momentSum_two_fifteen_rec, momentSum_two_sixteen_rec] at h
+  norm_num at h
+  omega
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase R73: ewc(6)=2 + S₂(18)
@@ -1126,7 +1144,9 @@ theorem momentSum_two_eighteen_rec : momentSum 2 18 = 11949760 := by
   have h := momentSum_two_recurrence 15
   rw [show (15 : Nat) + 1 = 16 from rfl, show (15 : Nat) + 2 = 17 from rfl,
     show (15 : Nat) + 3 = 18 from rfl, momentSum_two_fifteen_rec,
-    momentSum_two_sixteen_rec, momentSum_two_seventeen_rec] at h; omega
+    momentSum_two_sixteen_rec, momentSum_two_seventeen_rec] at h
+  norm_num at h
+  omega
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase R156: ewc(7)=1 + ewc(F-9)=1

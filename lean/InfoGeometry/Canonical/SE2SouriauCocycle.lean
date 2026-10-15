@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.Barbaresco2020Souriau
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Algebra.Group.Basic
+import Mathlib.Topology.Instances.Matrix
+import Mathlib.Topology.Algebra.Group.Matrix
 import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
 
 /-!

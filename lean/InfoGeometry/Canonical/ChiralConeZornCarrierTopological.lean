@@ -21,7 +21,7 @@ abbrev ZornCoordinate :=
 def zornCoordinates : Zorn → ZornCoordinate := fun X =>
   (X.a, (X.u, (X.v, X.b)))
 
-instance : TopologicalSpace Zorn :=
+noncomputable instance : TopologicalSpace Zorn :=
   TopologicalSpace.induced zornCoordinates inferInstance
 
 theorem continuous_zornCoordinates : Continuous zornCoordinates :=
@@ -50,47 +50,15 @@ attribute [fun_prop] continuous_zorn_a continuous_zorn_u
 
 theorem continuous_zorn_dot3 :
     Continuous (fun p : Zorn × Zorn => dot3 p.1.u p.2.v) := by
-  have h0 := (continuous_apply 0).comp
-    (continuous_zorn_u.comp
-      (continuous_fst : Continuous (fun p : Zorn × Zorn => p.1)))
-  have h1 := (continuous_apply 1).comp
-    (continuous_zorn_u.comp
-      (continuous_fst : Continuous (fun p : Zorn × Zorn => p.1)))
-  have h2 := (continuous_apply 2).comp
-    (continuous_zorn_u.comp
-      (continuous_fst : Continuous (fun p : Zorn × Zorn => p.1)))
-  have k0 := (continuous_apply 0).comp
-    (continuous_zorn_v.comp
-      (continuous_snd : Continuous (fun p : Zorn × Zorn => p.2)))
-  have k1 := (continuous_apply 1).comp
-    (continuous_zorn_v.comp
-      (continuous_snd : Continuous (fun p : Zorn × Zorn => p.2)))
-  have k2 := (continuous_apply 2).comp
-    (continuous_zorn_v.comp
-      (continuous_snd : Continuous (fun p : Zorn × Zorn => p.2)))
-  simpa [dot3] using (((h0.mul k0).add (h1.mul k1)).add (h2.mul k2))
+  change Continuous (fun p : Zorn × Zorn =>
+    p.1.u 0 * p.2.v 0 + p.1.u 1 * p.2.v 1 + p.1.u 2 * p.2.v 2)
+  fun_prop
 
 theorem continuous_zorn_dot3_vu :
     Continuous (fun p : Zorn × Zorn => dot3 p.1.v p.2.u) := by
-  have h0 := (continuous_apply 0).comp
-    (continuous_zorn_v.comp
-      (continuous_fst : Continuous (fun p : Zorn × Zorn => p.1)))
-  have h1 := (continuous_apply 1).comp
-    (continuous_zorn_v.comp
-      (continuous_fst : Continuous (fun p : Zorn × Zorn => p.1)))
-  have h2 := (continuous_apply 2).comp
-    (continuous_zorn_v.comp
-      (continuous_fst : Continuous (fun p : Zorn × Zorn => p.1)))
-  have k0 := (continuous_apply 0).comp
-    (continuous_zorn_u.comp
-      (continuous_snd : Continuous (fun p : Zorn × Zorn => p.2)))
-  have k1 := (continuous_apply 1).comp
-    (continuous_zorn_u.comp
-      (continuous_snd : Continuous (fun p : Zorn × Zorn => p.2)))
-  have k2 := (continuous_apply 2).comp
-    (continuous_zorn_u.comp
-      (continuous_snd : Continuous (fun p : Zorn × Zorn => p.2)))
-  simpa [dot3] using (((h0.mul k0).add (h1.mul k1)).add (h2.mul k2))
+  change Continuous (fun p : Zorn × Zorn =>
+    p.1.v 0 * p.2.u 0 + p.1.v 1 * p.2.u 1 + p.1.v 2 * p.2.u 2)
+  fun_prop
 
 theorem continuous_zorn_cross3 :
     Continuous (fun p : Zorn × Zorn => cross3 p.1.v p.2.v) := by
@@ -179,7 +147,7 @@ theorem continuous_zornSmul :
 
 theorem continuous_leftRegular (X : Zorn) :
     Continuous (leftRegular X) := by
-  simpa [leftRegular, Function.comp_def] using
-    (continuous_zornMul.comp (continuous_const.prodMk continuous_id))
+  change Continuous (fun Y : Zorn => zornMul X Y)
+  exact continuous_zornMul.comp (continuous_const.prodMk continuous_id)
 
 end InfoGeometry.Canonical.ChiralConeZornCarrier

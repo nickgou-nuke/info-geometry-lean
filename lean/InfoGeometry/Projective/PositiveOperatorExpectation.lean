@@ -26,6 +26,9 @@ def diagonalState (i : ι) : Matrix ι ι ℝ →ₗ[ℝ] ℝ where
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
 
+@[simp] theorem diagonalState_apply (i : ι) (M : Matrix ι ι ℝ) :
+    diagonalState i M = M i i := rfl
+
 def operatorExpectation (q : Ray ι) : Matrix ι ι ℝ →ₗ[ℝ] ℝ := evaluation q diagonalState
 
 @[simp] theorem operatorExpectation_one (q : Ray ι) :
@@ -52,12 +55,22 @@ def e12 : Matrix (Fin 2) (Fin 2) ℝ := !![0,1;0,0]
 def e21 : Matrix (Fin 2) (Fin 2) ℝ := !![0,0;1,0]
 def e11 : Matrix (Fin 2) (Fin 2) ℝ := !![1,0;0,0]
 
+lemma e11_mul_e11 : e11 * e11 = e11 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [e11, Matrix.mul_apply, Fin.sum_univ_two]
+
 /-- Positive expectation is not multiplicative, even in the coefficient algebra. -/
 theorem expectation_not_multiplicative :
     operatorExpectation (ray twoWeights) (e11*e11) ≠
       operatorExpectation (ray twoWeights) e11 * operatorExpectation (ray twoWeights) e11 := by
-  norm_num [operatorExpectation, evaluation, diagonalState, rayMean, ray, mean,
-    weightedSum, twoWeights, PositiveMeasure.Z, e11, Matrix.mul_apply, Fin.sum_univ_two]
+  rw [e11_mul_e11]
+  intro h
+  have hval : operatorExpectation (ray twoWeights) e11 = 2 / 3 := by
+    simp [operatorExpectation, evaluation, diagonalState_apply, rayMean, ray, mean,
+      weightedSum, twoWeights, PositiveMeasure.Z, e11, Fin.sum_univ_two]
+    norm_num
+  rw [hval] at h
+  norm_num at h
 
 def curvedZorn : OperatorZornMatrix (Matrix (Fin 2) (Fin 2) ℝ) :=
   sigmaPlus ![e12,e21,0]
@@ -66,18 +79,17 @@ def curvedZorn : OperatorZornMatrix (Matrix (Fin 2) (Fin 2) ℝ) :=
 theorem associator_expectation_one_third :
     (readout (ray twoWeights) diagonalState
       (OperatorZornFourPotentialGauge.associator curvedZorn curvedZorn (nPlus 1))).sigma_minus 2 = (1/3 : ℝ) := by
-  norm_num [readout, coefficientReadout, evaluation, diagonalState,
+  simp only [readout, coefficientReadout, evaluation, diagonalState_apply,
     rayMean, ray, mean, weightedSum, twoWeights, PositiveMeasure.Z,
     OperatorZornFourPotentialGauge.associator, curvedZorn, nPlus, sigmaPlus, operatorZornCoordinates,
-    NCZornElement.mul, NCZornElement.zornDot, NCZornElement.zornCross,
-    e12, e21, Matrix.mul_apply, Fin.sum_univ_two, HSub.hSub, Sub.sub]
+    e12, e21, Fin.sum_univ_two]
+  norm_num
 
 theorem associator_expectation_ne_zero :
     readout (ray twoWeights) diagonalState
       (OperatorZornFourPotentialGauge.associator curvedZorn curvedZorn (nPlus 1)) ≠ 0 := by
   intro h
   have hv := congrArg (fun Z : OperatorZornMatrix ℝ => Z.sigma_minus 2) h
-  dsimp at hv
   rw [associator_expectation_one_third] at hv
   change (1/3 : ℝ) = 0 at hv
   norm_num at hv

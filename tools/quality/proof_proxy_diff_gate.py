@@ -39,6 +39,16 @@ PROXY_DECL_NAME_RE = re.compile(
     r"(Witness|Certificate|Certified|Interface|Guard|Law|Proxy|Readback|Assumption|Packet|Carrier|(?:^|_)of_witness(?:_|$)|(?:^|_)of_identification(?:_|$))",
     re.IGNORECASE,
 )
+ABBREV_DECL_RE = re.compile(
+    r"^\s*abbrev\s+(?P<name>[A-Za-z_][A-Za-z0-9_'.]*)\b"
+    r"(?P<rhs>[^\n]*(?:\n[ \t]+[^\n]*)*)$",
+    re.MULTILINE,
+)
+SOCKET_DOC_DECL_RE = re.compile(
+    r"/--(?P<doc>.*?)-/\s*(?:@\[[^\n]*\]\s*)*"
+    r"(?:structure|class)\s+(?P<name>[A-Za-z_][A-Za-z0-9_'.]*)\b",
+    re.DOTALL,
+)
 PROXY_FILE_RE = re.compile(
     r"(Witness|Certificate|Interface|Proxy|Packet|Carrier)\.lean$",
     re.IGNORECASE,
@@ -117,6 +127,29 @@ def is_proxy_namespace(namespaces: tuple[str, ...]) -> bool:
 
 def has_proxy_namespace(namespace_options: list[tuple[str, ...]]) -> bool:
     return any(is_proxy_namespace(namespaces) for namespaces in namespace_options)
+
+
+def documented_socket_structures(src: str) -> set[str]:
+    """Return structure names whose own docstring explicitly calls them sockets.
+
+    Such structures are proof placeholders when they merely store the law a
+    caller is meant to prove.  The explicit source annotation is required so
+    deletion of an ordinary public structure remains rejected by this gate.
+    """
+    return {
+        match.group("name")
+        for match in SOCKET_DOC_DECL_RE.finditer(src)
+        if re.search(r"\bsocket\b", match.group("doc"), re.IGNORECASE)
+    }
+
+
+def aliases_to_proxy_types(src: str) -> set[str]:
+    """Find abbrevs whose right-hand side names an existing proxy."""
+    aliases: set[str] = set()
+    for match in ABBREV_DECL_RE.finditer(src):
+        if match and PROXY_DECL_NAME_RE.search(match.group("rhs")):
+            aliases.add(match.group("name"))
+    return aliases
 
 
 def is_proxy_field(name: str, typ: str) -> bool:
@@ -269,6 +302,8 @@ def main() -> int:
     debt_comment_files: set[str] = set()
     before_text_cache: dict[str, str] = {}
     namespace_cache: dict[str, dict[str, list[tuple[str, ...]]]] = {}
+    socket_name_cache: dict[str, set[str]] = {}
+    proxy_alias_cache: dict[str, set[str]] = {}
     added_field_cache: dict[str, set[str]] = {}
 
     for path, line_no, line in added_lines:
@@ -305,7 +340,18 @@ def main() -> int:
                 else read_at(args.base, path)
             )
             namespace_cache[path] = declaration_namespaces(before_text_cache[path])
-        if has_proxy_namespace(namespace_cache[path].get(name, [])):
+            socket_name_cache[path] = documented_socket_structures(before_text_cache[path])
+            proxy_alias_cache[path] = aliases_to_proxy_types(before_text_cache[path])
+        socket_names = socket_name_cache[path]
+        proxy_aliases = proxy_alias_cache[path]
+        namespace_options = namespace_cache[path].get(name, [])
+        if has_proxy_namespace(namespace_options) or any(
+            any(socket_name in namespaces for socket_name in socket_names)
+            or any(proxy_alias in namespaces for proxy_alias in proxy_aliases)
+            for namespaces in namespace_options
+        ):
+            continue
+        if name in socket_names or name in proxy_aliases:
             continue
         if kind in {"def", "abbrev"}:
             if path not in added_field_cache:

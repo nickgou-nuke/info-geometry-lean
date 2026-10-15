@@ -1,5 +1,4 @@
 import Mathlib.Tactic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.UHFInductiveColimitBoundary
 import InfoGeometry.Canonical.TensorTowerColimit
 
@@ -80,9 +79,11 @@ theorem cliffordSeq_eq_zero (n m : ℕ) (X : CliffordStage 𝕜 n) :
   · intro h
     have h' : cliffordEmbedSuccLinear (𝕜 := 𝕜) (n + m) (cliffordSeq (𝕜 := 𝕜) n m X) = 0 := by
       simpa [cliffordSeq, iota_seq] using h
-    change cliffordEmbedSucc (𝕜 := 𝕜) (n + m) (cliffordSeq (𝕜 := 𝕜) n m X) = 0 at h'
+    have h0 : cliffordEmbedSucc (𝕜 := 𝕜) (n + m) 0 = 0 :=
+      (cliffordEmbedSuccLinear (𝕜 := 𝕜) (n + m)).map_zero
     have hstep' : cliffordEmbedSucc (𝕜 := 𝕜) (n + m) (cliffordSeq (𝕜 := 𝕜) n m X) = cliffordEmbedSucc (𝕜 := 𝕜) (n + m) 0 := by
-      simpa [cliffordEmbedSucc] using h'
+      rw [h0]
+      exact h'
     have hstep : cliffordSeq (𝕜 := 𝕜) n m X = 0 :=
       cliffordEmbedSucc_injective (𝕜 := 𝕜) (n + m) hstep'
     exact ih hstep

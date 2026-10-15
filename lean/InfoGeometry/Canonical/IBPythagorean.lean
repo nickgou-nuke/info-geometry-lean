@@ -301,7 +301,7 @@ theorem ibMarginalPythagorean_identity_of_marginalization
                 (pX := pX) (encoder := encoder) (h_meas := h_meas)).symm
   have h_comp_int :
       Integrable f (((encoderKernel encoder h_meas) ∘ₖ Kernel.const Unit (pX : Measure X)) ()) := by
-    simpa [h_comp] using h_marginal_int
+    exact h_comp ▸ h_marginal_int
   have h_shift_int :
       Integrable (fun x => ∫ t, f t ∂(encoder x : Measure T)) (pX : Measure X) := by
     simpa [encoderKernel] using h_comp_int.integral_comp
@@ -432,8 +432,15 @@ theorem ibNextMarginalPythagoreanWitness_of_marginalization
     IBMarginalPythagoreanWitness
       pX q_n (IBNextMarginal pX q_n β D hInt h_meas)
       β D (IBNextEncoder q_n β D hInt) hKL_current hKL_next := by
-  simpa [IBNextEncoder, IBNextMarginal] using
-    (ibMarginalPythagoreanWitness_of_marginalization
+  have h_marginal :
+      IBNextMarginal pX q_n β D hInt h_meas =
+        IBMarginalize pX (IBNextEncoder q_n β D hInt) h_meas.aemeasurable := by
+    apply ProbabilityMeasure.toMeasure_injective
+    change IBStepMeasure pX q_n β D hInt =
+      bindEncoderMeasure pX (IBNextEncoder q_n β D hInt)
+    rfl
+  cases h_marginal
+  exact ibMarginalPythagoreanWitness_of_marginalization
       (pX := pX)
       (q_old := q_n)
       (β := β)
@@ -443,7 +450,7 @@ theorem ibNextMarginalPythagoreanWitness_of_marginalization
       (hKL_old := hKL_current)
       (hKL_new := hKL_next)
       (hKL_marginal := hKL_marginal)
-      (h_local_new := h_local_next))
+      (h_local_new := h_local_next)
 
 omit [Nonempty T] in
 theorem IBMarginalDescentWitness.of_pythagorean

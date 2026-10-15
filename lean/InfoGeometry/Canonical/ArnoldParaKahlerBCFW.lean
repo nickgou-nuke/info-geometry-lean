@@ -21,23 +21,23 @@ open InfoGeometry.Canonical.AlbertCayleyDickson
 set_option linter.unusedVariables false
 
 /-!
-# Arnold-BCFW Chiral Factorization on Para-Kähler Symmetric Spaces
+# Arnold-Form Identity and Algebraic Consequences
 
-This module formalizes the resolution of the Amplituhedron frontier cluster
-via **Para-Kähler Maurer-Cartan Geometry** and **Chiral Klein Nilpotency**:
+This module specializes abstract para-complex and exterior-form identities.
+It does not construct a scattering amplitude, an on-shell shift, or a physical
+residue. Historical API names refer only to the propositions in their Lean types:
 
-1. **Maurer-Cartan Flatness on Para-Kähler Space**:
-   The flat connection $\theta = g^{-1} dg$ on the para-Kähler symmetric space
-   satisfies $d\theta + \theta \wedge \theta = 0$.
+1. **Abstract three-term identity**:
+   The coefficient relation in `LogarithmicOneFormData` implies the cyclic
+   exterior-form identity.
 
-2. **Arnold-Cohen 3-Term Relation**:
-   The Orlik-Solomon relations on the configuration space punctures:
-     $\omega_{ij} \wedge \omega_{jk} + \omega_{jk} \wedge \omega_{ki} + \omega_{ki} \wedge \omega_{ij} = 0$
-   are the exact abelianized shadows of the Maurer-Cartan flatness.
+2. **Arnold-shaped relation**:
+   This equation is abstract; no Orlik–Solomon quotient or Maurer-Cartan
+   flatness is asserted here.
 
-3. **On-Shell BCFW Residue Factorization**:
-   The collinear pole residue is identically the cross-channel Maurer-Cartan compensation:
-     $\omega_{ij} \wedge \omega_{jk} = - (\omega_{jk} \wedge \omega_{ki} + \omega_{ki} \wedge \omega_{ij})$.
+3. **Algebraic rearrangement (not physical on-shell factorization)**:
+   The cyclic identity is rearranged into an equality of exterior-form
+   products; no physical residue is represented.
 
 4. **Supplied square-zero equations ($S_\pm^2 = 0$)**:
    These are explicit premises when transported; they are not inferred from
@@ -50,9 +50,7 @@ via **Para-Kähler Maurer-Cartan Geometry** and **Chiral Klein Nilpotency**:
 
 variable {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M]
 
-/-- 🏆 THEOREM 1 (Maurer-Cartan Flatness Resolves Arnold-Cohen Relations):
-    The 3-term Arnold-Cohen identity on logarithmic 1-forms is the exact algebraic
-    shadow of Maurer-Cartan flatness on the Para-Kähler configuration space. -/
+/-- The abstract coefficient relation yields the cyclic exterior-form identity. -/
 theorem arnold_cohen_maurer_cartan_flatness
     (alg : ExteriorFormAlgebra (R := R) M)
     (dz : ℕ → M) (data : LogarithmicOneFormData (R := R) dz) (i j k : ℕ) :
@@ -61,9 +59,9 @@ theorem arnold_cohen_maurer_cartan_flatness
     alg.wedge (data.form dz k i) (data.form dz i j) = 0 :=
   maurer_cartan_arnold_resolution alg dz data i j k
 
-/-- 🏆 THEOREM 2 (On-Shell BCFW Residue Factorization):
-    The collinear factorization of the scattering form is given by the exact
-    Maurer-Cartan cross-channel compensation:
+/-- Theorem 2 (Algebraic rearrangement of the Arnold-shaped identity):
+    This is an equality in the abstract exterior-form carrier, not a physical
+    residue factorization:
       $\omega_{ij} \wedge \omega_{jk} = - (\omega_{jk} \wedge \omega_{ki} + \omega_{ki} \wedge \omega_{ij})$. -/
 theorem bcfw_collinear_factorization
     (alg : ExteriorFormAlgebra (R := R) M)
@@ -73,8 +71,7 @@ theorem bcfw_collinear_factorization
          alg.wedge (data.form dz k i) (data.form dz i j)) :=
   maurer_cartan_bcfw_factorization alg dz data i j k
 
-/-- 🏆 THEOREM 4 (Nilpotency of Logarithmic 1-Forms):
-    Every logarithmic 1-form generator satisfies $\omega_{ij} \wedge \omega_{ij} = 0$. -/
+/-- Alternation makes each abstract form generator square to zero. -/
 theorem log_form_nilpotent
     (alg : ExteriorFormAlgebra (R := R) M)
     (dz : ℕ → M) (data : LogarithmicOneFormData (R := R) dz) (i j : ℕ) :

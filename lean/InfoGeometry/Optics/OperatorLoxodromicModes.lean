@@ -89,14 +89,7 @@ theorem modeGenerator_mul_jointProjector
     algebraMap ℝ Op (η * modeSign ε + θ * modeSign σ) * (p * q)
   have hh := hyperbolic_mul_selected_projector S ε
   have hc := circular_mul_selected_projector S σ
-  have hcomm := S.projector_commute ε σ
-  have hcomm' : p * q = q * p := by
-    change choose ε (Hproj S).Pleft (Hproj S).Pright *
-      choose σ (Cproj S).Pleft (Cproj S).Pright =
-        choose σ (Cproj S).Pleft (Cproj S).Pright *
-          choose ε (Hproj S).Pleft (Hproj S).Pright
-    simpa only [CommutingInvolutions.hyperbolicInvolution,
-      CommutingInvolutions.circularInvolution] using hcomm
+  have hcomm' : p * q = q * p := S.hyperbolic_projector_commutes_circular_projector ε σ
   change S.hyperbolic * p = algebraMap ℝ Op (modeSign ε) * p at hh
   change S.circular * q = algebraMap ℝ Op (modeSign σ) * q at hc
   calc

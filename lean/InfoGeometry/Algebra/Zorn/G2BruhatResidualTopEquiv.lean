@@ -32,12 +32,19 @@ noncomputable def bruhatTopToCanonical :
       invFun := fun α => ⟨α.1, by rw [hs]; exact α.2⟩
       left_inv := by intro α; rfl
       right_inv := by intro α; rfl }
+  have hroots :
+      canonicalSignedInversionRoots (weylElementOfNF ((3 : ZMod 6), false)) =
+        Finset.univ := by
+    rw [← bruhatInversionRoots_eq_canonicalSigned]
+    exact bruhatInversionRoots_longest
   let targetEquiv :
       {α : G2PositiveRoot //
           α ∈ canonicalSignedInversionRoots (weylElementOfNF (3, false))} ≃
         {α : G2PositiveRoot // α ∈ canonicalSignedInversionRoots G2WeylElement.w0} :=
-    { toFun := fun α => ⟨α.1, by simp at α ⊢⟩
-      invFun := fun α => ⟨α.1, by simp at α ⊢⟩
+    { toFun := fun α => ⟨α.1, by
+          simpa only [canonicalSignedInversionRoots_w0] using Finset.mem_univ α.1⟩
+      invFun := fun α => ⟨α.1, by
+          simpa only [hroots] using Finset.mem_univ α.1⟩
       left_inv := by intro α; rfl
       right_inv := by intro α; rfl }
   exact ((sourceEquiv.arrowCongr (Equiv.refl Bool)).trans

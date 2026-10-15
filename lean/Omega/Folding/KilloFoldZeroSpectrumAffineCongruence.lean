@@ -35,7 +35,6 @@ private lemma card_range_filter_modEq (n q r : ℕ) (hq : q ∣ n) :
                 (Nat.ModEq.add_right r0 ((dvd_mul_right q k).modEq_zero_nat))
             exact hmul.trans hr0_mod
         · intro a ha b hb hab
-          dsimp at hab
           rw [Nat.mul_comm q a, Nat.mul_comm q b] at hab
           exact Nat.mul_right_cancel hqpos (Nat.add_left_cancel hab)
         · intro a ha
@@ -172,7 +171,8 @@ private lemma foldFiberSingletonZeroSet_nonempty_iff_gcd_dvd_half (M j : ℕ) (h
     rcases hne with ⟨k, hk⟩
     have hmod : k.1 * w ≡ M / 2 [MOD M] := by
       have hhalf_lt : M / 2 < M := Nat.div_lt_self hMpos (by decide)
-      simpa [foldFiberSingletonZeroSet, foldFiberHalfResidue, Nat.ModEq,
+      rcases Finset.mem_filter.mp hk with ⟨_, hk⟩
+      simpa [w, foldFiberHalfResidue, Nat.ModEq,
         Nat.mod_eq_of_lt hhalf_lt] using hk
     have hmodg : k.1 * w ≡ M / 2 [MOD g] := by
       exact hmod.of_dvd (Nat.gcd_dvd_right _ _)
@@ -249,7 +249,8 @@ private lemma foldFiberSingletonZeroSet_nonempty_iff_gcd_dvd_half (M j : ℕ) (h
       have hhalf_lt : M / 2 < M := Nat.div_lt_self hMpos (by decide)
       refine ⟨⟨kNat, hkNat_lt_M⟩, ?_⟩
       have hkEq : kNat * w % M = M / 2 := Nat.mod_eq_of_modEq hsol_M hhalf_lt
-      simpa [foldFiberSingletonZeroSet, foldFiberHalfResidue, Nat.ModEq] using hkEq
+      simp only [foldFiberSingletonZeroSet, Finset.mem_filter, Finset.mem_univ, true_and]
+      simpa [w, foldFiberHalfResidue] using hkEq
 
 /-- Paper label: `thm:killo-fold-zero-spectrum-affine-congruence`. -/
 theorem paper_killo_fold_zero_spectrum_affine_congruence (m j : ℕ) :

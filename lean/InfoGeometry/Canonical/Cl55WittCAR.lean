@@ -43,21 +43,40 @@ private theorem jwStringWithBase_transpose
         jwStringWithBase localMatᵀ n k
   | 0, k => Fin.elim0 k
   | n + 1, k => by
-      by_cases h : (k : ℕ) < n
-      · simp only [jwStringWithBase, dif_pos h]
-        rw [InfoGeometry.Clifford.TowerMatrix.transpose_kronecker]
-        simp only [transpose_one]
-        rw [jwStringWithBase_transpose localMat n ⟨k, h⟩]
-      · simp only [jwStringWithBase, dif_neg h]
-        rw [InfoGeometry.Clifford.TowerMatrix.transpose_kronecker]
-        simp only [globalChirality]
+      cases k using Fin.lastCases with
+      | cast k =>
+        rw [← InfoGeometry.Clifford.Cl11TensorTower.matStageEmbed_jwStringWithBase,
+          ← InfoGeometry.Clifford.Cl11TensorTower.matStageEmbed_jwStringWithBase]
+        simp only [matStageEmbed]
+        have htranspose :
+            ((jwStringWithBase localMat n k) ⊗ₖ
+                (1 : Matrix (Fin 2) (Fin 2) ℝ))ᵀ =
+              (jwStringWithBase localMat n k)ᵀ ⊗ₖ
+                (1 : Matrix (Fin 2) (Fin 2) ℝ) := by
+          simpa [InfoGeometry.Clifford.TowerMatrix.Idx] using
+            (InfoGeometry.Clifford.TowerMatrix.transpose_kronecker
+              (jwStringWithBase localMat n k)
+              (1 : Matrix (Fin 2) (Fin 2) ℝ))
+        have htr := congrArg (fun A : MatStage n => A ⊗ₖ
+          (1 : Matrix (Fin 2) (Fin 2) ℝ))
+          (jwStringWithBase_transpose localMat n k)
+        simpa [InfoGeometry.Clifford.TowerMatrix.Idx] using htranspose.trans htr
+      | last =>
+        rw [show Fin.last n = ⟨n, Nat.lt_succ_self n⟩ by rfl]
+        rw [jwStringWithBase_last, jwStringWithBase_last]
         have hgc :
             (InfoGeometry.Clifford.TowerMatrix.kronPow gamma_chiral_base n)ᵀ =
               InfoGeometry.Clifford.TowerMatrix.kronPow gamma_chiral_base n := by
           simpa [InfoGeometry.Clifford.TowerMatrix.Jn] using
             (InfoGeometry.Clifford.TowerMatrix.Jn_transpose
               gamma_chiral_base gamma_chiral_base_transpose n)
-        rw [hgc]
+        have htr :
+            (globalChirality n ⊗ₖ localMat)ᵀ =
+              (globalChirality n)ᵀ ⊗ₖ localMatᵀ := by
+          simpa [InfoGeometry.Clifford.TowerMatrix.Idx] using
+            (InfoGeometry.Clifford.TowerMatrix.transpose_kronecker
+              (globalChirality n) localMat)
+        simpa [InfoGeometry.Clifford.TowerMatrix.Idx, globalChirality, hgc] using htr
 
 theorem globalChirality_transpose (n : ℕ) :
     (globalChirality n)ᵀ = globalChirality n := by
@@ -164,8 +183,9 @@ theorem same_site_car :
                 (1 : Matrix (Fin 2) (Fin 2) ℝ)) = 1
         rw [← Matrix.mul_kronecker_mul, ← Matrix.mul_kronecker_mul,
           ← Matrix.add_kronecker]
-        simpa using congrArg (fun A : MatStage n => A ⊗ₖ
-          (1 : Matrix (Fin 2) (Fin 2) ℝ)) ih
+        simpa [jwCreation, jwAnnihilation] using
+          congrArg (fun A : MatStage n => A ⊗ₖ
+            (1 : Matrix (Fin 2) (Fin 2) ℝ)) ih
       · have hk : k = Fin.last n := Fin.eq_last_of_not_lt h
         subst k
         simp [jwCreation, jwAnnihilation, jwStringWithBase]

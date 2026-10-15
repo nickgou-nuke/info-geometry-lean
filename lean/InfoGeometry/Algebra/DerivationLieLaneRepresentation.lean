@@ -2,6 +2,8 @@ import InfoGeometry.Algebra.DerivationLieLane
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.OfAssociative
 
+attribute [local instance 100] LieRing.ofAssociativeRing LieAlgebra.ofAssociativeAlgebra
+
 /-!
 # Operator representation carried by a derivation Lie lane
 

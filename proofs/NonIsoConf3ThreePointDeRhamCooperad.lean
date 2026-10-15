@@ -90,7 +90,12 @@ inductive ThreePointStage where
   | orlikSolomon
   | d4Candidate
   | pointCount
-  deriving DecidableEq, Fintype, Repr
+  deriving DecidableEq, Repr
+
+instance : Fintype ThreePointStage where
+  elems := {ThreePointStage.cooperad, ThreePointStage.orlikSolomon,
+    ThreePointStage.d4Candidate, ThreePointStage.pointCount}
+  complete := by intro x; cases x <;> simp
 
 /-- Data available at each finite stage.  The final stage contains all previous
 requirements, so this is an inductive colimit as cumulative finite evidence. -/

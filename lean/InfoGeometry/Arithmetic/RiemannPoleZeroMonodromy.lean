@@ -110,7 +110,7 @@ def localDivisorDataOfNormalForm
     {R : Type*} [CommRing R]
     (F : LocalLaurentNormalForm (R := R)) : LocalDivisorData R :=
   { order := F.order
-    unit := F.unit }
+    unit := F.unit.coeff }
 
 @[simp] theorem localDivisorDataOfNormalForm_order
     {R : Type*} [CommRing R]

@@ -1,5 +1,4 @@
 import Mathlib
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.MassSpectrometry.DirectedOperatorDoubling
 import InfoGeometry.MassSpectrometry.MellinMassEncoding
 import InfoGeometry.MassSpectrometry.ValuedFragmentationDAG
@@ -57,14 +56,17 @@ theorem antisymmetricPart_crossGram_self_eq_zero {n d : ℕ}
 theorem crossGram_can_have_nonzero_antisymmetricPart :
     ∃ Z₁ Z₂ : Matrix (Fin 2) (Fin 2) ℝ,
       antisymmetricPart (crossGramOperator Z₁ Z₂) ≠ 0 := by
-  let Z₁ : Matrix (Fin 2) (Fin 2) ℝ := !![1, 0; 0, 0]
-  let Z₂ : Matrix (Fin 2) (Fin 2) ℝ := !![0, 0; 1, 0]
+  let Z₁ : Matrix (Fin 2) (Fin 2) ℝ := ![![1, 0], ![0, 0]]
+  let Z₂ : Matrix (Fin 2) (Fin 2) ℝ := ![![0, 0], ![1, 0]]
   refine ⟨Z₁, Z₂, ?_⟩
   intro h
   have hij := congr_fun (congr_fun h (0 : Fin 2)) (1 : Fin 2)
-  norm_num [antisymmetricPart, crossGramOperator, Z₁, Z₂,
-    Matrix.mul_apply, Fin.sum_univ_two, Matrix.transpose_apply,
-    Matrix.vecHead, Matrix.vecCons] at hij
+  dsimp [antisymmetricPart, crossGramOperator] at hij
+  rw [Matrix.mul_apply, Matrix.mul_apply] at hij
+  rw [Fin.sum_univ_two, Fin.sum_univ_two] at hij
+  repeat rw [Matrix.transpose_apply] at hij
+  dsimp [Z₁, Z₂] at hij
+  norm_num at hij
 
 /-! ## Log-mass causal cone -/
 

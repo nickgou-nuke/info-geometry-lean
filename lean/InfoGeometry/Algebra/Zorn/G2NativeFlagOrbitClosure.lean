@@ -31,10 +31,10 @@ theorem nativeFlag_orbit_eq_univ :
     canonical orbit--stabilizer bridge; it does not identify the stabilizer
     with the PC subgroup. -/
 noncomputable def nativeFlag_quotientStabilizerEquiv :
-    G2NativeFullFlagCarrier.NativeFlag ≃
+  G2NativeFullFlagCarrier.NativeFlag ≃
       SplitOctF2Aut ⧸ MulAction.stabilizer SplitOctF2Aut nativeBaseFlag := by
   exact (Equiv.Set.univ G2NativeFullFlagCarrier.NativeFlag).symm.trans
-    ((Equiv.setCongr nativeFlag_orbit_eq_univ).symm.trans
+    ((Set.equivOfEq nativeFlag_orbit_eq_univ).symm.trans
       (MulAction.orbitEquivQuotientStabilizer
         SplitOctF2Aut nativeBaseFlag))
 

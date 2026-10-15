@@ -15,6 +15,8 @@ open InfoGeometry.Clifford.ConformalLieAlgebra55
 open InfoGeometry.Canonical.ConformalFiveGradeInversion
 open InfoGeometry.Exceptional.Freudenthal
 
+attribute [local instance 100] LieRing.ofAssociativeRing LieAlgebra.ofAssociativeAlgebra
+
 instance instBracketProd {A B : Type*} [Bracket A A] [Bracket B B] : Bracket (A × B) (A × B) where
   bracket x y := (⁅x.1, y.1⁆, ⁅x.2, y.2⁆)
 
@@ -56,6 +58,13 @@ instance instLieAlgebraProd {R A B : Type*} [CommRing R] [LieRing A] [LieRing B]
 
 variable {J : Type*} [AddCommGroup J] [Module ℝ J]
 variable (datum : CubicJordanDatum J)
+
+local instance cl55LieRing : LieRing Cl55 := LieRing.ofAssociativeRing
+local instance cl55LieAlgebra : LieAlgebra ℝ Cl55 := LieAlgebra.ofAssociativeAlgebra
+local instance jointEnvelopeLieRing : LieRing (JointEnvelope (J := J)) :=
+  LieRing.ofAssociativeRing
+local instance jointEnvelopeLieAlgebra : LieAlgebra ℝ (JointEnvelope (J := J)) :=
+  LieAlgebra.ofAssociativeAlgebra
 
 /-- Native Cl(5,5) Lie homomorphism into the common Zorn envelope. -/
 def cl55EnvelopeLieHom :

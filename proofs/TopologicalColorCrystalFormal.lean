@@ -14,9 +14,9 @@ Finite theorem-honest condensed-matter layer:
   deferred rather than claimed.
 * The `SU(3)` Cartan/Weyl chamber is represented as a fundamental Brillouin
   wedge in the `(λ₃,λ₈)` plane.
-* The Brillouin Klein bottle is represented by an orientation-reversing glide
-  whose fixed line is `k₂=0`, together with the spectral CPT/Hill--Wheeler
-  fixed line `Re(s)=1/2`.
+* An integer-pair reflection negates the second coordinate, and a separately
+  defined finite Hill--Wheeler average has real part `1/2`. These identities
+  do not construct a Brillouin-zone quotient, Klein bottle, or CPT action.
 * Bloch modes are represented by loop-current modes `A z^m`; the zero-mode
   Γ-point recovers the usual `SU(3)` commutator.
 
@@ -55,7 +55,8 @@ theorem mem_weylChamberSU3_iff (h : ℝ × ℝ) :
 
 
 
-/-- Integer reciprocal-space glide/reflection model for the Klein Brillouin zone. -/
+/-- Reflection of the second integer coordinate. No reciprocal-space quotient
+or glide translation is defined here. -/
 def kleinGlideBZ (k : ℤ × ℤ) : ℤ × ℤ := (k.1, -k.2)
 
 /-- The glide fixed line is the Brillouin-zone axis `k₂=0`. -/
@@ -69,7 +70,8 @@ theorem kleinGlideBZ_fixed_iff (k : ℤ × ℤ) :
   · intro h
     ext <;> simp [h]
 
-/-- Spectral CPT/Hill--Wheeler projection picks the critical fixed line. -/
+/-- The imported finite Hill--Wheeler average has real part `1/2`. This is a
+separate scalar identity, not a consequence of `kleinGlideBZ_fixed_iff`. -/
 theorem cpt_bloch_klein_fixed_line (s : ℂ) :
     (cptHillWheelerAverage s).re = 1 / 2 :=
   cptHillWheelerAverage_re s

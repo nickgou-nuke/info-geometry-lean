@@ -44,12 +44,8 @@ theorem paper_conclusion_two_prime_dense_orbit_hyperbola_leaf :
       Omega.GU.paper_group_jg_prime_register_phase_bohr_dense ⟨1, one_ne_zero⟩
   · intro θ _hθ
     refine ⟨?_, ?_⟩
-    · simpa [conclusion_two_prime_dense_orbit_hyperbola_leaf_log_point] using
-        (show Continuous (fun x : ℝ =>
-          (Complex.exp (x : ℂ) + Complex.exp (-(x : ℂ))) * Complex.cos (θ : ℂ) +
-            (Complex.exp (x : ℂ) - Complex.exp (-(x : ℂ))) *
-              Complex.sin (θ : ℂ) * Complex.I) by
-          continuity)
+    · unfold conclusion_two_prime_dense_orbit_hyperbola_leaf_log_point
+      fun_prop
     · intro x
       refine ⟨Real.exp_pos x, ?_⟩
       simp [conclusion_two_prime_dense_orbit_hyperbola_leaf_log_point,

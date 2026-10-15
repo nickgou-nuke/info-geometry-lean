@@ -5,6 +5,8 @@ import InfoGeometry.Canonical.BitWordSimplexFaceCancellation
 import InfoGeometry.Canonical.BitWordSimplexSignCancellation
 import InfoGeometry.OperatorAlgebra.OperatorExteriorAlgebraGeneral
 import Mathlib.Algebra.Category.ModuleCat.Basic
+import Mathlib.Algebra.BigOperators.Pi
+import Mathlib.Algebra.Module.Submodule.LinearMap
 import Mathlib.AlgebraicTopology.AlternatingFaceMapComplex
 import Mathlib.AlgebraicTopology.SimplicialObject.Basic
 
@@ -1412,20 +1414,39 @@ noncomputable def bitWordSimplexCochains (n : ℕ) :
       c (σ ∘ i.succAbove) := by
   rfl
 
+lemma neg_one_zpow_smul_eq_pow_mul {R : Type*} [Ring R] (i : ℕ) :
+    ∀ (M : R), (-1 : ℤ) ^ i • M = (-1 : R) ^ i * M := by
+  induction i with
+  | zero =>
+    intro M
+    rw [pow_zero, pow_zero, one_smul, one_mul]
+  | succ j ih =>
+    intro M
+    rw [pow_succ, mul_smul, neg_one_smul]
+    rw [pow_succ, mul_assoc, neg_one_mul]
+    rw [ih (-M)]
+
 theorem alternatingCofaceMap_apply
     (n k : ℕ) (c : SimplexCochain n k)
     (σ : Fin (k + 2) → Vertex n) :
     (AlgebraicTopology.AlternatingCofaceMapComplex.objD
       (bitWordSimplexCochains n) k).hom c σ =
       simplexCoboundary c σ := by
-  have hface (i : Fin (k + 2)) :
-      (⇑i.succAboveOrderEmb : Fin (k + 1) → Fin (k + 2)) = i.succAbove := by
-    rfl
-  simp [AlgebraicTopology.AlternatingCofaceMapComplex.objD,
-    bitWordSimplexCochains, CosimplicialObject.δ, simplexCochainMap,
-      simplexCoboundary, SimplexCategory.δ, Fin.succAbove,
-    bitWordSimplexCochains_δ_apply, ModuleCat.hom_sum,
-    ModuleCat.hom_zsmul, zsmul_eq_mul, hface]
+  dsimp [AlgebraicTopology.AlternatingCofaceMapComplex.objD, simplexCoboundary]
+  rw [ModuleCat.hom_sum]
+  have h1 : (∑ i : Fin (k + 2), ModuleCat.Hom.hom ((-1 : ℤ) ^ (i : ℕ) • (bitWordSimplexCochains n).δ i)) c =
+      ∑ i : Fin (k + 2), (ModuleCat.Hom.hom ((-1 : ℤ) ^ (i : ℕ) • (bitWordSimplexCochains n).δ i)) c :=
+    LinearMap.sum_apply Finset.univ _ c
+  rw [h1]
+  let F : Fin (k + 2) → SimplexCochain n (k + 1) :=
+    fun i => (ModuleCat.Hom.hom ((-1 : ℤ) ^ (i : ℕ) • (bitWordSimplexCochains n).δ i)) c
+  change (∑ i, F i) σ = _
+  rw [Finset.sum_apply σ Finset.univ F]
+  refine Finset.sum_congr rfl (fun i _ => ?_)
+  dsimp [F]
+  change (-1 : ℤ) ^ (i : ℕ) • (((bitWordSimplexCochains n).δ i).hom c σ) = _
+  rw [bitWordSimplexCochains_δ_apply]
+  exact neg_one_zpow_smul_eq_pow_mul i.1 (c (σ ∘ i.succAbove))
 
 theorem simplexCoboundary_squared
     (n k : ℕ) (c : SimplexCochain n k) :

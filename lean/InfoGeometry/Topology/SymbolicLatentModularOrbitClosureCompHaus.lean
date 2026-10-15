@@ -58,9 +58,9 @@ theorem symbolicLatentModularOrbitClosureCompHausTopCatHom_isClosedEmbedding
     (Φ : SymbolicLatentModularFlow X) (x : X) :
     Topology.IsClosedEmbedding
       (symbolicLatentModularOrbitClosureCompHausTopCatHom Φ x) := by
-  dsimp [symbolicLatentModularOrbitClosureCompHausTopCatHom]
-  simpa [symbolicLatentModularOrbitClosureCompHaus] using
-    (Φ.orbitClosure_isClosedEmbedding x)
+  change Topology.IsClosedEmbedding
+    (Subtype.val : SymbolicLatentModularOrbitClosure Φ x → X)
+  exact Φ.orbitClosure_isClosedEmbedding x
 
 
 end InfoGeometry.Topology

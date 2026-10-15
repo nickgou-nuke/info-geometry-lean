@@ -57,10 +57,11 @@ theorem localEdgeOne_comp_inverse
   simp only [fibWhiskerRight]
   rw [← fibTensorHom_comp]
   rw [tauFusionTreeAssociator_comp_inv τ s hs hτ]
-  simpa [FibHom.comp, FibHom.id, parenthesizedObject, fourTau, tauObject] using
-    (fibTensorHom_id
-      (fibTensorObj (fibTensorObj tauObject tauObject) tauObject)
-      tauObject)
+  have hid : FibHom.comp (FibHom.id tauObject) (FibHom.id tauObject) =
+      FibHom.id tauObject := by
+    ext <;> simp [FibHom.comp, FibHom.id]
+  rw [hid]
+  exact fibTensorHom_id _ _
 
 theorem localEdgeThree_comp_inverse
     (τ s : ℂ) (hs : s ^ 2 = τ) (hτ : τ ^ 2 + τ = 1) :
@@ -75,8 +76,10 @@ theorem localEdgeThree_comp_inverse
   simp only [fibWhiskerLeft]
   rw [← fibTensorHom_comp]
   rw [tauFusionTreeAssociator_comp_inv τ s hs hτ]
-  simpa [FibHom.comp, FibHom.id, parenthesizedObject, fourTau, tauObject] using
-    (fibTensorHom_id tauObject
-      (fibTensorObj (fibTensorObj tauObject tauObject) tauObject))
+  have hid : FibHom.comp (FibHom.id tauObject) (FibHom.id tauObject) =
+      FibHom.id tauObject := by
+    ext <;> simp [FibHom.comp, FibHom.id]
+  rw [hid]
+  exact fibTensorHom_id _ _
 
 end InfoGeometry.Categorical.FibonacciFourAnyonLocalAssociators

@@ -118,11 +118,15 @@ theorem hasDerivAt_metricOfOperator_transportedKreinMetric_apply
     (U' := fun s => InfoGeometry.Canonical.expTransport (A := EndH)
       V.connectionGenerator V.maurerCartanCurvature s)
     (G := G₀) (t := t) (u := u) (v := v)
-  simpa [BogoliubovVielbeinBundle.localFrame,
-    BogoliubovVielbeinBundle.maurerCartanCurvature,
-    InfoGeometry.Canonical.BerryPhase.hestenesMaurerCartanCurvature] using
-    (InfoGeometry.Canonical.hasDerivAt_expTransport
-      (A := EndH) V.connectionGenerator V.reference t)
+  change HasDerivAt
+    (fun s => InfoGeometry.Canonical.expTransport (A := EndH)
+      V.connectionGenerator V.reference s)
+    (InfoGeometry.Canonical.expTransport (A := EndH) V.connectionGenerator
+      (InfoGeometry.Canonical.BogoliubovTransport.transportCommutator
+        V.connectionGenerator V.reference) t) t
+  rw [← InfoGeometry.Canonical.BogoliubovTransport.lieBracket_eq_transportCommutator]
+  exact InfoGeometry.Canonical.hasDerivAt_expTransport
+    (A := EndH) V.connectionGenerator V.reference t
 
 theorem deriv_metricOfOperator_transportedKreinMetric_apply
     (V : BogoliubovVielbeinBundle (E := E)) (G₀ : EndH) (t : ℝ)

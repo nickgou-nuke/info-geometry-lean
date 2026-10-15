@@ -22,7 +22,7 @@ variable [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] [Kre
 /--
 Skew-symmetry predicate in the Krein channel: `[Wu,v] = -[u,Wv]`.
 -/
-def IsSkewSymmetric (W : H →ₗ[ℝ] H) : Prop :=
+def IsSkewSymmetric (W : H → H) : Prop :=
   ∀ u v : H,
     KreinSpace.kreinInner (H := H) (W u) v = -KreinSpace.kreinInner (H := H) u (W v)
 
@@ -31,7 +31,7 @@ end KreinSkew
 section PfaffianCore
 
 variable {H : Type*}
-variable [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+variable [AddCommGroup H] [Module ℝ H]
 
 /--
 Pfaffian of a 2D skew-symmetric operator.

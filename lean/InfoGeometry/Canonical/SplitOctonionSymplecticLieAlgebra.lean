@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.SplitOctonionChiralPhaseSpace
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Algebra.Lie.OfAssociative
 
 /-!
 # The infinitesimal symplectic endomorphism target
@@ -13,6 +14,10 @@ namespace InfoGeometry.Canonical.SplitOctonionChiralPhaseSpace
 open scoped BigOperators
 
 noncomputable section
+
+local instance : LieRing (Phase →ₗ[ℝ] Phase) := LieRing.ofAssociativeRing
+local instance : LieAlgebra ℝ (Phase →ₗ[ℝ] Phase) :=
+  LieAlgebra.ofAssociativeAlgebra
 
 /-- Infinitesimal preservation of the native phase-space form. -/
 def IsOmegaSymplectic (A : Phase →ₗ[ℝ] Phase) : Prop :=

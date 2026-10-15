@@ -44,13 +44,25 @@ def complete3Tile : MultiPointTile (Fin 3) where
 /-- The complete three-point tile has the three unoriented edges of `K₃`. -/
 inductive Edge3 where
   | e12 | e23 | e13
-  deriving DecidableEq, Fintype, Repr
+  deriving DecidableEq, Repr
+
+instance : Fintype Edge3 where
+  elems := {Edge3.e12, Edge3.e23, Edge3.e13}
+  complete := by
+    intro x
+    cases x <;> simp
 
 /-- The two generator types appearing in the proposed quadric-configuration
 cohomology model: phase classes and flux classes. -/
 inductive GenKind where
   | phase | flux
-  deriving DecidableEq, Fintype, Repr
+  deriving DecidableEq, Repr
+
+instance : Fintype GenKind where
+  elems := {GenKind.phase, GenKind.flux}
+  complete := by
+    intro x
+    cases x <;> simp
 
 /-- A formal arity-three generator. -/
 structure SpinTileGenerator where

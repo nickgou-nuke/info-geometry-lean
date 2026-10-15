@@ -48,6 +48,6 @@ theorem paper_xi_cdim_localization_solenoid_quotient_order_endomorphism
   · intro hTS
     refine ⟨xi_cdim_localization_solenoid_quotient_order_endomorphism_identity hTS, ?_⟩
     intro x y hxy
-    simpa using hxy
+    exact hxy
 
 end Omega.Zeta

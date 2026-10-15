@@ -64,7 +64,8 @@ theorem R_inv :
 theorem M_inv :
     (M : ChiralZornMatrix A ≃* ChiralZornMatrix A)⁻¹ = M := by
   apply inv_eq_of_mul_eq_one_right
-  simpa using M_pow_two (A := A)
+  rw [← sq]
+  exact M_pow_two (A := A)
 
 theorem M_conjugates_R_to_inverse :
     (M : ChiralZornMatrix A ≃* ChiralZornMatrix A) * R * M⁻¹ = R⁻¹ := by
@@ -93,37 +94,24 @@ theorem rotationPower_add (i j : ZMod 3) :
   simpa [rotationPower, pow_add] using
     (pow_eq_pow_of_modEq hmod (R_pow_three (A := A)))
 
+lemma zmod3_cases (k : ZMod 3) : k = 0 ∨ k = 1 ∨ k = 2 := by
+  fin_cases k <;> first | left; rfl | right; left; rfl | right; right; rfl
+
+theorem rotationPower_neg (i : ZMod 3) :
+    rotationPower (A := A) (-i) = (rotationPower i)⁻¹ := by
+  rcases zmod3_cases i with rfl | rfl | rfl
+  · simp [rotationPower]
+  · change R ^ 2 = R⁻¹
+    exact (R_inv (A := A)).symm
+  · change R = (R ^ 2)⁻¹
+    have h : (R⁻¹ : ChiralZornMatrix A ≃* ChiralZornMatrix A)⁻¹ = (R ^ 2)⁻¹ := by
+      rw [R_inv]
+    simpa using h
+
 theorem rotationPower_sub (i j : ZMod 3) :
     rotationPower (A := A) (j - i) =
       rotationPower j * (rotationPower i)⁻¹ := by
-  have hsub00 : (0 : ZMod 3) - 0 = 0 := by decide
-  have hsub01 : (0 : ZMod 3) - 1 = 2 := by decide
-  have hsub02 : (0 : ZMod 3) - 2 = 1 := by decide
-  have hsub10 : (1 : ZMod 3) - 0 = 1 := by decide
-  have hsub11 : (1 : ZMod 3) - 1 = 0 := by decide
-  have hsub12 : (1 : ZMod 3) - 2 = 2 := by decide
-  have hsub20 : (2 : ZMod 3) - 0 = 2 := by decide
-  have hsub21 : (2 : ZMod 3) - 1 = 1 := by decide
-  have hsub22 : (2 : ZMod 3) - 2 = 0 := by decide
-  have hrot : (R : ChiralZornMatrix A ≃* ChiralZornMatrix A) ^ 3 = 1 :=
-    R_pow_three
-  have hR2inv : (R : ChiralZornMatrix A ≃* ChiralZornMatrix A) ^ 2 = R⁻¹ := by
-    symm
-    apply inv_eq_of_mul_eq_one_right
-    rw [← pow_succ']
-    simpa using hrot
-  have cases3 (k : ZMod 3) : k = 0 ∨ k = 1 ∨ k = 2 := by
-    fin_cases k <;> simp
-  rcases cases3 i with rfl | rfl | rfl <;>
-    rcases cases3 j with rfl | rfl | rfl <;>
-      simp [rotationPower, hsub00, hsub01, hsub02, hsub10, hsub11,
-        hsub12, hsub20, hsub21, hsub22, hrot, hR2inv, inv_pow, pow_two] <;>
-      group <;> norm_num [ZMod.val] <;>
-      first
-      | exact hR2inv
-      | calc
-          R = (R⁻¹)⁻¹ := by simp
-          _ = (R ^ 2)⁻¹ := by rw [hR2inv]
+  rw [sub_eq_add_neg, rotationPower_add, rotationPower_neg]
 
 theorem rotationPower_mul_M (i : ZMod 3) :
     rotationPower (A := A) i * M = M * (rotationPower i)⁻¹ := by
@@ -143,9 +131,7 @@ theorem rotationPower_mul_M (i : ZMod 3) :
         simp only [mul_assoc]
         rw [← pow_two M, hM]
         simp
-  have cases3 (k : ZMod 3) : k = 0 ∨ k = 1 ∨ k = 2 := by
-    fin_cases k <;> simp
-  rcases cases3 i with rfl | rfl | rfl
+  rcases zmod3_cases i with rfl | rfl | rfl
   · simp [rotationPower]
   · change R * M = M * R⁻¹
     rw [R_inv]
@@ -163,11 +149,10 @@ theorem M_rotationPower_M (i : ZMod 3) :
   have hM : (M : ChiralZornMatrix A ≃* ChiralZornMatrix A) ^ 2 = 1 := M_pow_two
   have hR2inv : (R : ChiralZornMatrix A ≃* ChiralZornMatrix A) ^ 2 = R⁻¹ :=
     (R_inv (A := A)).symm
-  have cases3 (k : ZMod 3) : k = 0 ∨ k = 1 ∨ k = 2 := by
-    fin_cases k <;> simp
-  rcases cases3 i with rfl | rfl | rfl
+  rcases zmod3_cases i with rfl | rfl | rfl
   · change M * 1 * M = (1 : ChiralZornMatrix A ≃* ChiralZornMatrix A)⁻¹
     simp only [mul_one, inv_one]
+    rw [← sq]
     exact hM
   · change M * R * M = R⁻¹
     calc
@@ -349,8 +334,9 @@ theorem order12_dihedral_model_card :
 
 theorem order12_dihedral_model_noncommutative :
     ¬ Std.Commutative (fun x y : Order12DihedralModel => x * y) := by
-  simpa [Order12DihedralModel] using
-    (DihedralGroup.not_commutative (n := 6) (by decide) (by decide))
+  intro h
+  have : IsMulCommutative Order12DihedralModel := ⟨h⟩
+  exact DihedralGroup.not_commutative (n := 6) (by decide) (by decide) this
 
 end
 

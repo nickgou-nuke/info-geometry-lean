@@ -209,10 +209,8 @@ theorem map_delta_neg_bounded (n k : ℕ): ∀ x, x∈ (FreeMonoid'.map (fun x =
     x < n + k := by
   intro x h
   induction n
-  · simp [delta_neg] at h
-    exfalso
-    rcases h with ⟨a, ha, _⟩
-    exact mem_one_iff.mp ha
+  · change x ∈ ([] : List ℕ) at h
+    exact False.elim (List.not_mem_nil h)
   rename_i n ih
   unfold delta_neg at h
   rw [map_mul, mem_mul] at h
@@ -255,7 +253,7 @@ theorem sigma_delta_swap (n m : ℕ) {h : m>n}: BraidMonoidInf.mk (of m * delta_
 theorem factor_delta (n : ℕ) : n>=1 → BraidMonoidInf.mk (delta_neg n) =
     BraidMonoidInf.mk ((delta_neg (n-1))*(sigma_neg n 0)) := by
   cases n with
-  | zero => exact fun h => (Set.right_mem_Ico.mp ⟨h, h⟩).elim
+  | zero => exact fun h => by omega
   | succ n =>
     induction n with
     | zero => exact fun _ => rfl
@@ -444,9 +442,9 @@ theorem boundary_bounded (i n : ℕ) (h_n : n>0) (h : i<=n-1) : ∀ x, x ∈ bou
         induction j with
         | zero =>
           simp only [Nat.zero_eq, zero_add, mem_map] at in_delta
-          repeat unfold delta_neg at in_delta
+          simp only [delta_neg] at in_delta
           unfold sigma_neg at in_delta
-          repeat unfold count_up at in_delta
+          simp only [count_up] at in_delta
           simp only [zero_add, zero_ne_one, ↓reduceIte, zero_lt_one, mul_one, mem_of,
             exists_eq_left] at in_delta
           rw [← in_delta]

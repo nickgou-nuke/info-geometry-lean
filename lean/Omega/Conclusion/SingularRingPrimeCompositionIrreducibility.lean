@@ -22,20 +22,11 @@ theorem paper_conclusion_singular_ring_prime_composition_irreducibility
     refine ⟨hn, ?_⟩
     intro a ha hlt hdiv
     rcases hdiv with ⟨b, rfl⟩
-    have hb0 : b ≠ 0 := by
-      intro hb0
-      subst hb0
-      simp at hlt
-    have hb1 : b ≠ 1 := by
-      intro hb1
-      subst hb1
-      simp at hlt
     have hb : 2 ≤ b := by
-      have hb_pos : 0 < b := Nat.pos_of_ne_zero hb0
-      have hb_one_lt : 1 < b := lt_of_le_of_ne (Nat.succ_le_of_lt hb_pos) hb1.symm
-      exact Nat.succ_le_of_lt hb_one_lt
-    apply hindecomp
-    refine ⟨a, b, ha, hb, ?_⟩
-    simpa using hsemigroup a b (by omega) (by omega)
+      rcases b with _ | _ | b
+      · simp at hlt
+      · simp at hlt
+      · omega
+    exact hindecomp ⟨a, b, ha, hb, hsemigroup a b (by omega) (by omega)⟩
 
 end Omega.Conclusion

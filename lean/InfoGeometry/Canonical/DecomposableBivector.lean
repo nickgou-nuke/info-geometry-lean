@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
+import Mathlib.LinearAlgebra.ExteriorPower.Pairing
 
 /-!
 # Square-zero law for a decomposable bivector
@@ -11,38 +12,37 @@ The coordinate Klein-quadric realization is handled by its separate owner.
 
 namespace InfoGeometry.Canonical
 
-/-- The exterior square of a decomposable two-vector vanishes. -/
-theorem decomposableBivector_square_eq_zero
-    {R : Type*} [CommRing R] {V : Type*} [AddCommGroup V] [Module R V]
-    (u v : V) :
-    (ExteriorAlgebra.ι R u * ExteriorAlgebra.ι R v) *
-      (ExteriorAlgebra.ι R u * ExteriorAlgebra.ι R v) = 0 := by
-  let e := ExteriorAlgebra.ι R u
-  let f := ExteriorAlgebra.ι R v
-  have h₁ : e * f * (e * f) = e * (f * (e * f)) := by
-    dsimp [e, f]
-    exact mul_assoc _ _ _
-  have h₂ : f * (e * f) = (f * e) * f := by
-    dsimp [e, f]
-    exact (mul_assoc _ _ _).symm
-  have hswap : f * e = -(e * f) := by
-    dsimp [e, f]
-    have hadd :
-        ExteriorAlgebra.ι R v * ExteriorAlgebra.ι R u +
-          ExteriorAlgebra.ι R u * ExteriorAlgebra.ι R v = 0 := by
-      exact ExteriorAlgebra.ι_add_mul_swap (R := R) v u
-    exact eq_neg_of_add_eq_zero_left hadd
-  have h₃ : e * (e * (f * f)) = 0 := by
-    rw [← mul_assoc, ExteriorAlgebra.ι_sq_zero, zero_mul]
-  calc
-    (ExteriorAlgebra.ι R u * ExteriorAlgebra.ι R v) *
-        (ExteriorAlgebra.ι R u * ExteriorAlgebra.ι R v) = e * f * (e * f) := rfl
-    _ = e * (f * (e * f)) := h₁
-    _ = e * ((f * e) * f) := congrArg (e * ·) h₂
-    _ = e * ((-(e * f)) * f) := by rw [hswap]
-    _ = e * (-(e * (f * f))) := by simp only [neg_mul, mul_assoc]
-    _ = 0 := by
-      rw [mul_neg, h₃]
-      simp
+/-- An exterior product of the vectors in a finite basis of a subspace remains
+nonzero after those vectors are included in the ambient vector space. -/
+theorem exteriorPower_ιMulti_coe_basis_ne_zero
+    {K : Type*} [Field K] {n : ℕ} {V : Type*} [AddCommGroup V] [Module K V]
+    {P : Submodule K V} (b : Module.Basis (Fin n) K P) :
+    exteriorPower.ιMulti K n (fun i => (b i : V)) ≠ 0 := by
+  choose g hg using fun i : Fin n => LinearMap.exists_extend (b.coord i)
+  let f : Fin n → Module.Dual K V := g
+  have hg_apply (i j : Fin n) :
+      g i (b j : V) = (b.coord i) (b j) := by
+    exact LinearMap.congr_fun (hg i) (b j)
+  have heval :
+      (exteriorPower.alternatingMapToDual K V n f)
+          (exteriorPower.ιMulti K n (fun i => (b i : V))) = 1 := by
+    rw [exteriorPower.alternatingMapToDual_apply_ιMulti]
+    rw [show Matrix.of (fun i j => f j (b i : V)) = 1 by
+      ext i j
+      classical
+      by_cases h : i = j <;>
+        simp [f, hg_apply, h, Matrix.one_apply]]
+    exact Matrix.det_one
+  intro hzero
+  rw [hzero, map_zero] at heval
+  norm_num at heval
+
+/-- A finite linearly independent family has nonzero exterior product. -/
+theorem exteriorPower_ιMulti_ne_zero_of_linearIndependent
+    {K : Type*} [Field K] {n : ℕ} {V : Type*} [AddCommGroup V] [Module K V]
+    (v : Fin n → V) (hv : LinearIndependent K v) :
+    exteriorPower.ιMulti K n v ≠ 0 := by
+  simpa only [Module.Basis.span_apply] using
+    (exteriorPower_ιMulti_coe_basis_ne_zero (Module.Basis.span hv))
 
 end InfoGeometry.Canonical

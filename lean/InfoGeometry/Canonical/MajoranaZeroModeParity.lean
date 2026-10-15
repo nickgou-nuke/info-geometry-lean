@@ -28,10 +28,10 @@ def gamma1Val : Matrix (Fin n) (Fin n) ℂ := gamma1
 def gamma2Val : Matrix (Fin n) (Fin n) ℂ := gamma2
 
 theorem gamma1_self_adjoint : (gamma1Val gamma1).conjTranspose = gamma1Val gamma1 := by
-  simpa only [gamma1Val, Matrix.star_eq_conjTranspose] using gamma1.property
+  simpa only [gamma1Val, selfAdjoint.mem_iff, Matrix.star_eq_conjTranspose] using gamma1.property
 
 theorem gamma2_self_adjoint : (gamma2Val gamma2).conjTranspose = gamma2Val gamma2 := by
-  simpa only [gamma2Val, Matrix.star_eq_conjTranspose] using gamma2.property
+  simpa only [gamma2Val, selfAdjoint.mem_iff, Matrix.star_eq_conjTranspose] using gamma2.property
 
 /-- Fermionic Parity Operator P = I * γ₁ * γ₂. -/
 def parityOperator : Matrix (Fin n) (Fin n) ℂ :=

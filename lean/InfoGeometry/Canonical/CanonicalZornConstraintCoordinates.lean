@@ -39,7 +39,7 @@ noncomputable def constraintRangeComplement :
   Classical.choose (Submodule.exists_isCompl
     (LinearMap.range tangentConstraintReadoutLinear))
 
-noncomputable def constraintRangeComplement_isCompl :
+theorem constraintRangeComplement_isCompl :
     IsCompl (LinearMap.range tangentConstraintReadoutLinear)
       constraintRangeComplement :=
   Classical.choose_spec (Submodule.exists_isCompl
@@ -51,18 +51,16 @@ canonical data used by the differential owner. -/
 noncomputable def constraintCoordinateProjection :
     ConstraintAmbient →ₗ[ℝ] (Fin 50 → ℝ) :=
   constraintCoordinateEquiv.comp
-    ((LinearMap.range tangentConstraintReadoutLinear).linearProjOfIsCompl
+    ((LinearMap.range tangentConstraintReadoutLinear).projectionOnto
       constraintRangeComplement constraintRangeComplement_isCompl)
 
 theorem constraintCoordinateProjection_on_range (y : ConstraintTarget) :
     constraintCoordinateProjection y.1 = constraintCoordinateEquiv y := by
   unfold constraintCoordinateProjection
-  change constraintCoordinateEquiv
-      ((LinearMap.range tangentConstraintReadoutLinear).linearProjOfIsCompl
-        constraintRangeComplement constraintRangeComplement_isCompl y.1) =
-    constraintCoordinateEquiv y
-  rw [Submodule.linearProjOfIsCompl_apply_left
-    constraintRangeComplement_isCompl y]
+  simp only [LinearMap.comp_apply]
+  rw [show y.1 = (y : ConstraintAmbient) from rfl,
+      Submodule.projectionOnto_apply_left constraintRangeComplement_isCompl y]
+  rfl
 
 @[simp] theorem constraintCoordinateEquiv_apply
     (y : ConstraintTarget) (i : Fin 50) :

@@ -1,5 +1,8 @@
 import InfoGeometry.Exceptional.FreudenthalSymplecticAction
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Algebra.Lie.OfAssociative
+
+attribute [local instance 100] LieRing.ofAssociativeRing LieAlgebra.ofAssociativeAlgebra
 
 /-!
 # Bilinear TKK input from the native symplectic Freudenthal carrier
@@ -219,11 +222,7 @@ theorem symplecticTKKClosureDatum_zeroGrade_mixed
     symplecticTKKClosureDatum_mixed_val,
     symplecticTKKClosureDatum_zeroAction_minus1,
     symplecticTKKClosureDatum_zeroAction_plus1]
-  have h := zeroGrade_action_mixedSymplecticBracket D T X Y
-  have h' := congrArg
-    (fun Z : SymplecticTKKZero D =>
-      (Z : Module.End ℝ (FreudenthalCharge J))) h
-  simpa only [mixedSymplecticBracket] using h'
+  exact symplectic_commutator_rankTwo D (T : Module.End ℝ (FreudenthalCharge J)) T.property X Y
 
 theorem symplecticTKKClosureDatum_zeroGrade_jacobi
     (T U V : SymplecticTKKZero D) :

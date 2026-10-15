@@ -18,6 +18,8 @@ namespace InfoGeometry.Integration.CarnotDeRhamCohomologyBridge
 
 open InfoGeometry.Motivic.PolylogarithmicUnipotentMotive
 open InfoGeometry.Projective.PuncturedAffineLogDeRhamBridge
+open InfoGeometry.Projective.PuncturedAffineLogDifferential
+open InfoGeometry.Projective.KleinQuadric.DeRhamComplex
 
 /-- The logarithmic potential used by the weight-one polylogarithm. -/
 noncomputable def complementLogPotential (z : ℝ) : ℝ := -Real.log (1 - z)
@@ -35,8 +37,8 @@ theorem complementLogPotential_eq_polylog1 (z : ℝ) :
 `dz / (1-z)` on the complement of its pole. -/
 theorem complementLogPotential_hasDerivAt (z : ℝ) (hz : z < 1) :
     HasDerivAt complementLogPotential (complementLogDifferential z) z := by
-  simpa [complementLogPotential, complementLogDifferential, polylog1] using
-    deriv_polylog1 z hz
+  change HasDerivAt polylog1 (1 / (1 - z)) z
+  exact deriv_polylog1 z hz
 
 /-- The weight-two kernel is the weight-one logarithmic potential multiplied
 by the logarithmic differential coefficient `1/z`. -/
@@ -54,7 +56,8 @@ theorem logarithmicCohomologyGenerator_period :
 punctured-affine logarithmic generator. -/
 theorem complementLogarithmicForm_class :
     closedClass logarithmicDifferential puncturedAffineD₁
-      puncturedAffine_complex (LaurentPolynomial.C (-1 : ℂ)) (by rfl) =
+      puncturedAffine_complex (LaurentPolynomial.C (-1 : ℂ))
+        (by simp [puncturedAffineD₁]) =
       -dlogClass := by
   rw [closedClass_eq_constantCoeff_smul_dlog]
   simp
@@ -65,7 +68,8 @@ potential's differential. -/
 theorem complementLogarithmicForm_period :
     puncturedAffineH1EquivComplex
       (closedClass logarithmicDifferential puncturedAffineD₁
-        puncturedAffine_complex (LaurentPolynomial.C (-1 : ℂ)) (by rfl)) = -1 := by
+        puncturedAffine_complex (LaurentPolynomial.C (-1 : ℂ))
+          (by simp [puncturedAffineD₁])) = -1 := by
   rw [complementLogarithmicForm_class]
   simp
 

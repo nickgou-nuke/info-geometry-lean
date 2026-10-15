@@ -90,7 +90,14 @@ def fockToZorn : Exterior3 →ₗ[ℝ] Zorn where
   map_smul' r ψ := by simp
 
 @[simp] theorem fockToZorn_one : fockToZorn (1 : Exterior3) = poleMinus := by
-  simp [fockToZorn]
+  change creationLift (1 : Exterior3) poleMinus = poleMinus
+  rw [map_one]
+  rfl
+
+@[simp] theorem fockToZorn_algebraMap (r : ℝ) :
+    fockToZorn (algebraMap ℝ Exterior3 r) = r • poleMinus := by
+  change creationLift (algebraMap ℝ Exterior3 r) poleMinus = r • poleMinus
+  simp
 
 /-- Every creation operator is intertwined, on every exterior state. -/
 theorem fockToZorn_wedge (v : V3) (ψ : Exterior3) :
@@ -125,20 +132,14 @@ theorem creationMap_annihilate (j : Fin 3) (v : V3) :
 theorem fockToZorn_contract (j : Fin 3) (ψ : Exterior3) :
     fockToZorn (exteriorContract3 (LinearMap.proj j) ψ) =
       annihilate j (fockToZorn ψ) := by
+  have hVac := (regular_vacuum j).1
   refine CliffordAlgebra.left_induction (Q := (0 : QuadraticForm ℝ V3)) ?_ ?_ ?_ ψ
   · intro r
-    have hVac := (regular_vacuum j).1
-    apply InfoGeometry.Canonical.ZornMatrix.ext
-    · simp [exteriorContract3, fockToZorn, hVac,
-        InfoGeometry.Canonical.ZornMatrix.smul_a]
-    · simp [exteriorContract3, fockToZorn, hVac,
-        InfoGeometry.Canonical.ZornMatrix.smul_b]
-    · funext k
-      simp [exteriorContract3, fockToZorn, hVac,
-        InfoGeometry.Canonical.ZornMatrix.smul_x]
-    · funext k
-      simp [exteriorContract3, fockToZorn, hVac,
-        InfoGeometry.Canonical.ZornMatrix.smul_y]
+    rw [show exteriorContract3 (LinearMap.proj j) (algebraMap ℝ Exterior3 r) = 0 by
+      simp [exteriorContract3]]
+    rw [map_zero, fockToZorn_algebraMap]
+    change 0 = annihilate j (r • poleMinus)
+    rw [map_smul, hVac, smul_zero]
   · intro x y hx hy
     simp only [map_add, hx, hy]
   · intro x v hx

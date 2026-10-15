@@ -721,7 +721,7 @@ zero.
       observerDefectResidual CIK obs = 0 :=
     observerDefectResidual_eq_zero_of_deviationControlledByZD_of_ZD_eq_zero
       (E := E) (CIK := CIK) (obs := obs) hControl hZD
-  simpa [ofZDControlledObserver] using hResidual
+  simpa [ofZDControlledObserver, ofCanonicalControlledObserver] using hResidual
 
 @[simp] theorem ofControlObserver_routerResidual_eq_zero_of_ZD_eq_zero
     (CIK : CertifiedInverseKernel H₂)
@@ -804,7 +804,8 @@ noncomputable def ofDeviationZeroObserver
     observerDeviationControlledByZD_of_deviation_eq_zero (CIK := CIK) (obs := obs) hDev
   have hResidual : observerDefectResidual CIK obs = 0 :=
     observerDefectResidual_eq_zero_of_deviation_eq_zero (CIK := CIK) (obs := obs) hDev
-  simpa [ofDeviationZeroObserver, ofZDControlledObserver, ofCanonicalObserverDefect] using hResidual
+  simpa [ofDeviationZeroObserver, ofZDControlledObserver,
+    ofCanonicalObserverDefect, ofCanonicalControlledObserver] using hResidual
 
 @[simp] theorem ofStrainZeroObserver_routerResidual
     (CIK : CertifiedInverseKernel H₂)
@@ -826,7 +827,8 @@ noncomputable def ofDeviationZeroObserver
     (ofAlignedObserver (E := E) CIK obs flow hAlign).routerResidual = 0 := by
   have hResidual : observerDefectResidual CIK obs = 0 :=
     observerDefectResidual_eq_zero_of_aligned (CIK := CIK) (obs := obs) hAlign
-  simpa [ofAlignedObserver, ofZDControlledObserver, ofCanonicalObserverDefect] using hResidual
+  simpa [ofAlignedObserver, ofControlObserver, ofZDControlledObserver,
+    ofCanonicalObserverDefect, ofCanonicalControlledObserver] using hResidual
 
 /-- Sourced generator built from the bounded LLM-side residual input. -/
 noncomputable def sourcedGenerator (B : RouterDefectBoundBridge (E := E)) : EndH :=
@@ -945,7 +947,8 @@ theorem ofControlObserver_sourcedGenerator_eq_flow_of_strain_eq_zero
   have hResidual : observerDefectResidual CIK obs = 0 :=
     observerDefectResidual_eq_zero_of_strain_eq_zero
       (CIK := CIK) (obs := obs) hStrain
-  simpa [ofControlObserver, ofZDControlledObserver, ofCanonicalObserverDefect] using hResidual
+  simpa [ofControlObserver, ofZDControlledObserver,
+    ofCanonicalObserverDefect, ofCanonicalControlledObserver] using hResidual
 
 /--
 On the exact projector-deviation-zero branch, the control-witness constructor
@@ -962,7 +965,8 @@ theorem ofControlObserver_routerResidual_eq_zero_of_deviation_eq_zero
   have hResidual : observerDefectResidual CIK obs = 0 :=
     observerDefectResidual_eq_zero_of_deviation_eq_zero
       (CIK := CIK) (obs := obs) hDev
-  simpa [ofControlObserver, ofZDControlledObserver, ofCanonicalObserverDefect] using hResidual
+  simpa [ofControlObserver, ofZDControlledObserver,
+    ofCanonicalObserverDefect, ofCanonicalControlledObserver] using hResidual
 
 /--
 On the exact projector-deviation-zero branch, the control-witness constructor

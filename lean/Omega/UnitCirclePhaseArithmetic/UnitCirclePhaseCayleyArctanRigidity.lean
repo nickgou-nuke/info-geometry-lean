@@ -26,7 +26,7 @@ theorem paper_unit_circle_phase_cayley_arctan_rigidity :
         (∃ a b : ℝ, ∀ x : ℝ, g x = a * x + b) →
           g 1 = 1 → g (-1) = -1 → ∀ x : ℝ, g x = x) := by
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
-  · simpa [unit_circle_phase_cayley_arctan_rigidity_normalized_phase] using Real.continuous_arctan
+  · exact Real.continuous_arctan
   · intro x y hxy
     simpa [unit_circle_phase_cayley_arctan_rigidity_normalized_phase] using
       paper_unit_circle_phase_mobius_law x y hxy

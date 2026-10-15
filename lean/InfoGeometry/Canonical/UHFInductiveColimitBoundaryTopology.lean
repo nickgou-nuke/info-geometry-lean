@@ -549,6 +549,15 @@ theorem cylinderColimitToContinuousMapStarAlgHom_denseRange :
       (s : Set C(CantorBoundary, ℂ))) h
   change closure (↑cylinderContinuousStarSubalgebra) =
       (Set.univ : Set C(CantorBoundary, ℂ)) at h'
-  simpa [cylinderContinuousStarSubalgebra] using h'
+  have hrange : (cylinderContinuousStarSubalgebra : Set C(CantorBoundary, ℂ)) =
+      Set.range (cylinderColimitToContinuousMapStarAlgHom :
+        cylinderColimitStarSubalgebra → C(CantorBoundary, ℂ)) := by
+    ext f
+    change f ∈ (cylinderColimitToContinuousMapStarAlgHom.range : Set _) ↔
+      f ∈ Set.range (cylinderColimitToContinuousMapStarAlgHom :
+        cylinderColimitStarSubalgebra → C(CantorBoundary, ℂ))
+    rfl
+  rw [← hrange]
+  exact h'
 
 end InfoGeometry.Canonical.UHFInductiveColimitBoundaryTopology

@@ -20,6 +20,9 @@ namespace InfoGeometry.Algebra
 
 open H3Zorn
 
+set_option maxHeartbeats 3000000
+attribute [local irreducible] candidateJordanMul
+
 theorem continuous_h3ZornJordanInnerDerivation_action
     (a b : H3Zorn ℝ) :
     Continuous (fun x : H3Zorn ℝ =>
@@ -32,25 +35,21 @@ theorem continuous_h3ZornJordanInnerDerivation_action
   have hpair_a : Continuous (fun x : H3Zorn ℝ => (a, x)) :=
     hconst_a.prodMk hid
   have hbx : Continuous (fun x : H3Zorn ℝ => b * x) :=
-    by
-      simpa only [Function.comp_apply] using
-        continuous_h3Zorn_jordanMul.comp hpair_b
+    (continuous_h3Zorn_jordanMul.comp hpair_b).congr fun x => by
+      simp only [Function.comp_apply, Prod.fst, Prod.snd]
   have hax : Continuous (fun x : H3Zorn ℝ => a * x) :=
-    by
-      simpa only [Function.comp_apply] using
-        continuous_h3Zorn_jordanMul.comp hpair_a
+    (continuous_h3Zorn_jordanMul.comp hpair_a).congr fun x => by
+      simp only [Function.comp_apply, Prod.fst, Prod.snd]
   have hpair_a_bx : Continuous (fun x : H3Zorn ℝ => (a, b * x)) :=
     hconst_a.prodMk hbx
   have hpair_b_ax : Continuous (fun x : H3Zorn ℝ => (b, a * x)) :=
     hconst_b.prodMk hax
   have hab : Continuous (fun x : H3Zorn ℝ => a * (b * x)) :=
-    by
-      simpa only [Function.comp_apply] using
-        continuous_h3Zorn_jordanMul.comp hpair_a_bx
+    (continuous_h3Zorn_jordanMul.comp hpair_a_bx).congr fun x => by
+      simp only [Function.comp_apply, Prod.fst, Prod.snd]
   have hba : Continuous (fun x : H3Zorn ℝ => b * (a * x)) :=
-    by
-      simpa only [Function.comp_apply] using
-        continuous_h3Zorn_jordanMul.comp hpair_b_ax
+    (continuous_h3Zorn_jordanMul.comp hpair_b_ax).congr fun x => by
+      simp only [Function.comp_apply, Prod.fst, Prod.snd]
   exact hab.sub hba
 
 def h3ZornJordanInnerDerivationContinuousMap (a b : H3Zorn ℝ) :

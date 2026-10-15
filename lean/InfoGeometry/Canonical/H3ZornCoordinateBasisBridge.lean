@@ -95,7 +95,8 @@ def h3ZornCoordinateBasis : Module.Basis (Fin 27) ℝ (H3Zorn ℝ) :=
   rw [h_basis]
   ext j
   rw [Pi.basisFun_apply, Pi.single_apply]
-  dsimp [h3ZornLinearEquiv, h3ZornToCoord]
+  change (if j = i then (1 : ℝ) else 0) =
+    h3ZornCoordinate (h3ZornProbe i) j
   rw [h3ZornCoordinate_probe_eq]
   by_cases h : i = j
   · subst h

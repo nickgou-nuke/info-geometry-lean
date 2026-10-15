@@ -17,7 +17,7 @@ open InfoGeometry.Algebra.Zorn.G2TwoPCConcreteFacts
 open InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure
 open InfoGeometry.Algebra.Zorn.G2TwoSylowPCAutomorphisms
 
-abbrev P := nativePointStabilizer
+noncomputable abbrev P := nativePointStabilizer
 
 noncomputable def parabolicReflection : SplitOctF2Aut := swap01Aut
 noncomputable def lineShear : SplitOctF2Aut := pcGenerator 0

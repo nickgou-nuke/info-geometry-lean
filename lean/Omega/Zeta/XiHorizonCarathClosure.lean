@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Complex.Basic
+import Mathlib.Analysis.Calculus.FDeriv.Basic
 import Mathlib.Tactic
 
 namespace Omega.Zeta

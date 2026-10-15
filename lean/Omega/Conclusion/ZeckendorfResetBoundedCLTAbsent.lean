@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Mathlib.Data.Real.Sqrt
+import Mathlib.Analysis.Real.Sqrt
 import Mathlib.Analysis.SpecificLimits.Basic
 
 namespace Omega.Conclusion.ZeckendorfResetBoundedCLTAbsent
@@ -14,7 +14,12 @@ theorem one_div_sqrt_nat_tendsto_zero :
     tendsto_natCast_atTop_atTop
   have h2 : Tendsto (fun n : ℕ => Real.sqrt n) atTop atTop :=
     Real.tendsto_sqrt_atTop.comp h1
-  simpa using h2.inv_tendsto_atTop
+  have h3 := tendsto_inv_atTop_zero.comp h2
+  have heq : (fun n : ℕ => (1 : ℝ) / Real.sqrt n) = ((fun r : ℝ => r⁻¹) ∘ fun (n : ℕ) => Real.sqrt (n : ℝ)) := by
+    ext n
+    exact one_div _
+  rw [heq]
+  exact h3
 
 /-- Helper: `1 / n → 0` as `n → ∞` (ℕ cast to ℝ).
     cor:conclusion-zeckendorf-reset-no-central-limit -/
@@ -22,7 +27,12 @@ theorem one_div_nat_tendsto_zero :
     Tendsto (fun n : ℕ => (1 : ℝ) / n) atTop (𝓝 0) := by
   have h1 : Tendsto (fun n : ℕ => ((n : ℝ))) atTop atTop :=
     tendsto_natCast_atTop_atTop
-  simpa using h1.inv_tendsto_atTop
+  have h3 := tendsto_inv_atTop_zero.comp h1
+  have heq : (fun n : ℕ => (1 : ℝ) / n) = ((fun r : ℝ => r⁻¹) ∘ fun (n : ℕ) => (n : ℝ)) := by
+    ext n
+    exact one_div _
+  rw [heq]
+  exact h3
 
 /-- Bounded sequences over `√n` tend to zero.
     cor:conclusion-zeckendorf-reset-no-central-limit -/

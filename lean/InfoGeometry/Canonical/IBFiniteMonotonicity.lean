@@ -63,7 +63,7 @@ lemma finiteSliceJaynes_fullSupportPrior
     (hq : ∀ t : T, 0 < ((probMeasureToPMF q_n) t).toReal) :
     (finiteSliceJaynes q_n D x).FullSupportPrior := by
   intro t
-  simpa [finiteSliceJaynes] using hq t
+  simpa [finiteSliceJaynes, FiniteJaynesProblem.ofLogLikelihood] using hq t
 
 lemma finiteSliceJaynes_partition_eq_integral_exp
     (q_n : ProbabilityMeasure T)
@@ -249,7 +249,8 @@ private lemma finiteSlice_kl_gibbs_variational_identity_of_supportFaithful
       have hgpos : 0 < J.gibbsProb lam hZ t := by
         unfold J lam
         rw [FiniteJaynesProblem.gibbsProb_eq_prior_mul_exp_tilt]
-        simpa [finiteSliceJaynes] using mul_pos hq_t (Real.exp_pos _)
+        simpa [finiteSliceJaynes, FiniteJaynesProblem.ofLogLikelihood] using
+          mul_pos hq_t (Real.exp_pos _)
       have hmain :
           Real.log (((probMeasureToPMF p) t).toReal / J.gibbsProb lam hZ t)
             =

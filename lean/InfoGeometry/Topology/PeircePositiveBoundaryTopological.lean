@@ -72,7 +72,8 @@ theorem peirceBoundary_flatten_mem_vanishingMinorLocus
   have hb := hM.2
   change peirceBoundaryValue b M = 0 at hb
   fin_cases b <;>
+    rw [InfoGeometry.Canonical.maximalMinor_fin_one] <;>
     simpa [peirceBoundaryValue, peirceBoundaryMinorSpec,
-      maximalMinor, peirceChannelFlatten] using hb
+      peirceChannelFlatten] using hb
 
 end InfoGeometry.Topology

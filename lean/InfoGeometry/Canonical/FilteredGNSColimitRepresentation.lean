@@ -132,7 +132,7 @@ def gnsTargetInductiveCocone :
           (filteredGNSMapCLM Stage sys
             (restrictedStateFamily Stage sys cocone Ω) hij x) =
         gnsMapCLM (cocone.ι i) Ω x
-    rw [filteredGNSMapCLM_apply, gnsMapCLM_apply, gnsMapCLM_apply]
+    simp only [filteredGNSMapCLM_apply, gnsMapCLM_apply]
     exact congrFun
       (stageTargetGNSMap_transition
         Stage sys cocone Ω hij) x

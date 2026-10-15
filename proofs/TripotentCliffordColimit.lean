@@ -96,7 +96,6 @@ theorem Trip_det_scale (s : ℂ) :
 /-- The zero-mode pole of the tripotent. -/
 theorem Trip_zero_pole : (0 • (1 : M3C) - Trip).det = 0 := by
   norm_num [Trip, Matrix.det_fin_three, Matrix.smul_apply, Matrix.sub_apply]
-  simp
 
 /-- Finite diagonal doubled-sector scale model `T ↦ T⊗I₂`, represented after basis ordering. -/
 def TripLift : M6C :=

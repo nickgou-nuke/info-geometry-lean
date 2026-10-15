@@ -40,16 +40,15 @@ theorem emergent_super_conformal_scaling_with_defect :
 /-- Shifted supercurrent self-square vanishes in this finite block. -/
 theorem shifted_supercurrent_nilpotent :
     G1 * G1 = 0 := by
-  simpa [G1, InfoGeometry.Canonical.SplitCliffordJordanWignerTwoModeCurrent.Jplus]
-    using
-      (InfoGeometry.Canonical.SplitCliffordJordanWignerTwoModeCurrent.Jplus_square_zero)
+  change InfoGeometry.Canonical.SplitCliffordJordanWignerTwoModeCurrent.Jplus *
+    InfoGeometry.Canonical.SplitCliffordJordanWignerTwoModeCurrent.Jplus = 0
+  exact InfoGeometry.Canonical.SplitCliffordJordanWignerTwoModeCurrent.Jplus_square_zero
 
 /-- Shifted supercurrent is nonzero in the finite two-mode block. -/
 theorem shifted_supercurrent_nonzero :
     G1 ≠ 0 := by
-  simpa [G1, InfoGeometry.Canonical.SplitCliffordJordanWignerTwoModeCurrent.Jplus]
-    using
-      (InfoGeometry.Canonical.SplitCliffordJordanWignerTwoModeCurrent.Jplus_ne_zero)
+  change InfoGeometry.Canonical.SplitCliffordJordanWignerTwoModeCurrent.Jplus ≠ 0
+  exact InfoGeometry.Canonical.SplitCliffordJordanWignerTwoModeCurrent.Jplus_ne_zero
 
 /-- Fermionic self-anticommutator vanishes in the shifted block. -/
 theorem shifted_supercurrent_self_anticomm_zero :

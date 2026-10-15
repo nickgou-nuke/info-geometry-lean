@@ -67,7 +67,8 @@ theorem readout_eq_same_state_weak_expression (kappa : ℝ) (z v : E) :
     readout kappa z v =
       (inner ℂ z (((-Complex.I) * (kappa : ℂ)) • v) / inner ℂ z z).re := by
   have hd : inner ℂ z z = ((‖z‖ ^ 2 : ℝ) : ℂ) := by
-    simpa only [Complex.ofReal_pow] using (inner_self_eq_norm_sq_to_K (𝕜 := ℂ) z)
+    rw [← inner_self_ofReal_re (𝕜 := ℂ) z, norm_sq_eq_re_inner (𝕜 := ℂ) z]
+    rfl
   rw [inner_smul_right, hd, Complex.div_ofReal_re]
   simp [readout, current, density, Complex.mul_re, Complex.mul_im]
 

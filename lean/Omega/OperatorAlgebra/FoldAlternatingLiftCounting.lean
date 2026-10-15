@@ -16,7 +16,7 @@ noncomputable def hiddenAutomorphismSign {m : ℕ} (d : Fin m → ℕ)
 
 noncomputable def flipHidden {m : ℕ} (d : Fin m → ℕ) (x0 : Fin m)
     (σ : Equiv.Perm (Fin (d x0))) : HiddenFiberAutomorphisms d → HiddenFiberAutomorphisms d :=
-  fun ψ => Function.update ψ x0 (σ * ψ x0)
+  fun ψ => Function.update (fun x => ψ x) x0 (σ * ψ x0)
 
 noncomputable def flipLift {m : ℕ} (d : Fin m → ℕ) (x0 : Fin m)
     (σ : Equiv.Perm (Fin (d x0))) : FoldFiberNormalizer d → FoldFiberNormalizer d :=
@@ -39,7 +39,7 @@ theorem hiddenAutomorphismSign_flipHidden {m : ℕ} (d : Fin m → ℕ) (x0 : Fi
   classical
   unfold hiddenAutomorphismSign flipHidden
   have hupdate :
-      (fun x : Fin m => Equiv.Perm.sign (Function.update ψ x0 (σ * ψ x0) x)) =
+      (fun x : Fin m => Equiv.Perm.sign (Function.update (fun y => ψ y) x0 (σ * ψ x0) x)) =
         Function.update (fun y : Fin m => Equiv.Perm.sign (ψ y)) x0
           (Equiv.Perm.sign (σ * ψ x0)) := by
     funext x

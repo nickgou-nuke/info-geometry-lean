@@ -1,6 +1,7 @@
 import InfoGeometry.Clifford.Cl11TensorTower
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Algebra.Module.FiniteDimension
+import Mathlib.Topology.Instances.Matrix
 import Mathlib.Topology.Category.TopCat.Basic
 import InfoGeometry.Canonical.FilteredTopologicalDirectInverseColimit
 
@@ -72,7 +73,7 @@ def bondCLM (m n : ℕ) (h : m ≤ n) :
   rfl
 
 /-- The Clifford matrix tower as a filtered diagram in `TopCat`. -/
-def topologicalDiagram : ℕ ⥤ TopCat where
+abbrev topologicalDiagram : ℕ ⥤ TopCat where
   obj n := TopCat.of (Stage n)
   map f := TopCat.ofHom
     { toFun := bondCLM _ _ (leOfHom f)
@@ -105,9 +106,13 @@ theorem topologicalInjection_transition
     {m n : ℕ} (hmn : m ≤ n) (A : Stage m) :
     topologicalInjection n (bondAlgHom m n hmn A) =
       topologicalInjection m A := by
-  have h := (colimit.cocone topologicalDiagram).w (homOfLE hmn)
-  simpa [topologicalInjection, topologicalDiagram, bondCLM] using
-    congrArg (fun f => f A) h
+  change topologicalDirectInjection topologicalDiagram n
+      (bondAlgHom m n hmn A) =
+    topologicalDirectInjection topologicalDiagram m A
+  rw [← show topologicalDiagram.map (homOfLE hmn) A =
+      bondAlgHom m n hmn A from rfl]
+  exact topologicalDirectInjection_naturality_apply
+    topologicalDiagram (homOfLE hmn) A
 
 /-- Creation representatives survive the topological tower transition. -/
 theorem creationRepresentative_transition

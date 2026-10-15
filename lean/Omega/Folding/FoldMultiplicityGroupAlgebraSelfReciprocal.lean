@@ -194,9 +194,11 @@ theorem paper_fold_multiplicity_group_algebra_self_reciprocal (m : ℕ) (hm : 2 
             hres
         simpa [foldMultiplicityComplementIndex_involutive m hm r hr] using hback
   unfold Omega.Folding.foldMultiplicityGeneratingPolynomial
-  simpa [source, target, foldMultiplicityComplementIndex] using
+  have hcard : source.card = target.card :=
     Finset.card_bijective
       (fun S : Finset (Fin m) => (Finset.univ : Finset (Fin m)) \ S)
       hcomp_involutive.bijective hmem
+  change source.card = target.card
+  exact hcard
 
 end Omega.Folding

@@ -91,59 +91,42 @@ On generators:
 The central sign is necessary.
 -/
 noncomputable def modeFlip :
-    HeisenbergAlgebra 𝕜 →ₗ[𝕜] HeisenbergAlgebra 𝕜 :=
-  { toFun := fun X => ⟨AbelianLieAlgebraOn.modeFlip 𝕜 X.fst, -X.snd⟩
-    map_add' := by
-      intro X Y
-      apply ext'
-      · simp [AbelianLieAlgebraOn.modeFlip]
-      · simp [add_comm]
-    map_smul' := by
-      intro c X
-      apply ext'
-      · simp [AbelianLieAlgebraOn.modeFlip]
-      · simp }
+    HeisenbergAlgebra 𝕜 →ₗ[𝕜] HeisenbergAlgebra 𝕜 where
+  toFun X := ⟨AbelianLieAlgebraOn.modeFlip 𝕜 X.fst, -X.snd⟩
+  map_add' X Y := by
+    apply ext'
+    · change AbelianLieAlgebraOn.modeFlip 𝕜 (X + Y).fst =
+        AbelianLieAlgebraOn.modeFlip 𝕜 X.fst + AbelianLieAlgebraOn.modeFlip 𝕜 Y.fst
+      rw [add_fst, map_add]
+    · change -(X + Y).snd = -X.snd + -Y.snd
+      rw [add_snd, neg_add]
+  map_smul' c X := by
+    apply ext'
+    · change AbelianLieAlgebraOn.modeFlip 𝕜 (c • X).fst =
+        c • AbelianLieAlgebraOn.modeFlip 𝕜 X.fst
+      rw [smul_fst, map_smul]
+    · change -(c • X).snd = c * -X.snd
+      rw [smul_snd, mul_neg]
 
 @[simp] lemma modeFlip_kgen :
     modeFlip 𝕜 (kgen 𝕜) = - kgen 𝕜 := by
-  rw [kgen_eq']
-  have hneg :
-      - (⟨(0 : AbelianLieAlgebraOn ℤ 𝕜), (1 : 𝕜)⟩ : HeisenbergAlgebra 𝕜) =
-      ⟨(0 : AbelianLieAlgebraOn ℤ 𝕜), (-1 : 𝕜)⟩ := by
-    apply ext'
-    · let p : HeisenbergAlgebra 𝕜 →+ AbelianLieAlgebraOn ℤ 𝕜 :=
-        { toFun := fun X => X.fst
-          map_zero' := rfl
-          map_add' := by
-            intro X Y
-            rfl }
-      have h := p.map_neg
-        (⟨(0 : AbelianLieAlgebraOn ℤ 𝕜), (1 : 𝕜)⟩ : HeisenbergAlgebra 𝕜)
-      rw [show p (⟨(0 : AbelianLieAlgebraOn ℤ 𝕜), (1 : 𝕜)⟩ : HeisenbergAlgebra 𝕜) = 0 by rfl] at h
-      simpa [p] using h
-    · let q : HeisenbergAlgebra 𝕜 →+ 𝕜 :=
-        { toFun := fun X => X.snd
-          map_zero' := rfl
-          map_add' := by
-            intro X Y
-            rfl }
-      have h := q.map_neg
-        (⟨(0 : AbelianLieAlgebraOn ℤ 𝕜), (1 : 𝕜)⟩ : HeisenbergAlgebra 𝕜)
-      rw [show q (⟨(0 : AbelianLieAlgebraOn ℤ 𝕜), (1 : 𝕜)⟩ : HeisenbergAlgebra 𝕜) = 1 by rfl] at h
-      simpa [q] using h
-  simpa [modeFlip, kgen_eq'] using hneg.symm
+  apply ext'
+  · change AbelianLieAlgebraOn.modeFlip 𝕜 (kgen 𝕜).fst = (-kgen 𝕜).fst
+    rw [kgen_fst, map_zero, neg_fst, kgen_fst, neg_zero]
+  · change -(kgen 𝕜).snd = (-kgen 𝕜).snd
+    rw [neg_snd]
 
 @[simp] lemma modeFlip_jgen (n : ℤ) :
     modeFlip 𝕜 (jgen 𝕜 n) = jgen 𝕜 (-n) := by
   apply ext'
-  · simp [modeFlip, jgen_eq', AbelianLieAlgebraOn.modeFlip_jgen]
-  · simp [modeFlip, jgen_eq']
+  · change AbelianLieAlgebraOn.modeFlip 𝕜 (jgen 𝕜 n).fst = (jgen 𝕜 (-n)).fst
+    rw [jgen_fst, AbelianLieAlgebraOn.modeFlip_jgen, jgen_fst]
+  · change -(jgen 𝕜 n).snd = (jgen 𝕜 (-n)).snd
+    rw [jgen_snd, neg_zero, jgen_snd]
 
 @[simp] lemma lie_jgen_kgen (n : ℤ) :
-    ⁅jgen 𝕜 n, kgen 𝕜⁆ = 0 := by
-  apply ext'
-  · simp [bracket_def', toAbelianLieAlgebraOn_kgen]
-  · simp [bracket_def', toAbelianLieAlgebraOn_kgen]
+    ⁅jgen 𝕜 n, kgen 𝕜⁆ = 0 :=
+  (central_ofCentral 𝕜 1 (jgen 𝕜 n)).2
 
 /--
 Generator-level Lie compatibility for two current modes.

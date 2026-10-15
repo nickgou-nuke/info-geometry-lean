@@ -275,10 +275,19 @@ noncomputable def endomorphismCocone
   Cocone.mk (BraidGroupColimit B)
     (NatTrans.mk (fun n => η.app n ≫ stageInjection B n) (by
       intro X Y f
-      simp only [Functor.const_obj_obj, Functor.const_obj_map, Category.comp_id,
-        Category.assoc]
-      rw [← Category.assoc, η.naturality, Category.assoc,
-        (GrpCat.FilteredColimits.colimitCocone B).w f]))
+      simp only [Functor.const_obj_obj, Functor.const_obj_map, Category.comp_id]
+      calc
+        (B.map f ≫ η.app Y) ≫ stageInjection B Y =
+            (η.app X ≫ B.map f) ≫ stageInjection B Y := by
+              rw [← η.naturality f]
+        _ = η.app X ≫ (B.map f ≫ stageInjection B Y) := by
+              rw [Category.assoc]
+        _ = η.app X ≫ stageInjection B X := by
+              congr 1
+              change B.map f ≫
+                  (GrpCat.FilteredColimits.colimitCocone B).ι.app Y =
+                (GrpCat.FilteredColimits.colimitCocone B).ι.app X
+              exact (GrpCat.FilteredColimits.colimitCocone B).w f))
 
 /- The endomorphism of the braid-group colimit induced by a natural
 endomorphism of the finite-stage diagram. -/
@@ -293,9 +302,12 @@ theorem stageInjection_descended
     (B : BraidGroupDiagram.{u}) (η : B ⟶ B) (n : ℕ) :
     stageInjection B n ≫ descendedEndomorphism B η =
       η.app n ≫ stageInjection B n := by
-  simpa [stageInjection, descendedEndomorphism, endomorphismCocone] using
-    (GrpCat.FilteredColimits.colimitCoconeIsColimit B).fac
-      (endomorphismCocone B η) n
+  change (GrpCat.FilteredColimits.colimitCocone B).ι.app n ≫
+      (GrpCat.FilteredColimits.colimitCoconeIsColimit B).desc
+        (endomorphismCocone B η) =
+    η.app n ≫ (GrpCat.FilteredColimits.colimitCocone B).ι.app n
+  exact (GrpCat.FilteredColimits.colimitCoconeIsColimit B).fac
+    (endomorphismCocone B η) n
 
 /-- The descended first braid endomorphism read back on every finite stage. -/
 theorem stageInjection_braid1
@@ -440,7 +452,9 @@ theorem descendedRepresentation_unique
     f = descendedRepresentation B G ρ := by
   apply (GrpCat.FilteredColimits.colimitCoconeIsColimit B).hom_ext
   intro n
-  rw [h n, stageInjection_descendedRepresentation]
+  change stageInjection B n ≫ f =
+    stageInjection B n ≫ descendedRepresentation B G ρ
+  exact (h n).trans (stageInjection_descendedRepresentation B G ρ n).symm
 
 /-- A compatible representation cocone descends to a single group
 homomorphism out of the categorical braid colimit. -/

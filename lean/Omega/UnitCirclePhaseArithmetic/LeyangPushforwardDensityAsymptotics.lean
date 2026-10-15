@@ -86,7 +86,9 @@ theorem paper_leyang_pushforward_density_asymptotics :
     have hbase : ContinuousAt (fun t : ℝ => 4 * |t|) (-(1 : ℝ) / 4) :=
       (continuous_const.mul continuous_abs).continuousAt
     have hcont : ContinuousAt (fun t : ℝ => 1 / (4 * |t|)) (-(1 : ℝ) / 4) := by
-      simpa [one_div] using hbase.inv₀ (by norm_num)
+      convert hbase.inv₀ (by norm_num) using 1
+      funext t
+      exact one_div _
     have hsimpl :
         Tendsto (fun t : ℝ => 1 / (4 * |t|))
           (nhdsWithin (-(1 : ℝ) / 4) (Set.Iio (-(1 : ℝ) / 4))) (𝓝 1) := by
@@ -106,17 +108,23 @@ theorem paper_leyang_pushforward_density_asymptotics :
       exact leyangDensityRatioTail_eq t ht
     have habs : Tendsto (fun t : ℝ => |t|) atBot atTop := tendsto_abs_atBot_atTop
     have hinv : Tendsto (fun t : ℝ => |t|⁻¹) atBot (𝓝 0) := by
-      simpa [one_div] using habs.inv_tendsto_atTop
+      change Tendsto (fun t : ℝ => (|t|)⁻¹) atBot (𝓝 0)
+      exact habs.inv_tendsto_atTop
     have hsqrt : ContinuousAt (fun s : ℝ => Real.sqrt (4 - s)) 0 :=
       ((continuous_const.sub continuous_id).continuousAt).sqrt
     have hcont : ContinuousAt (fun s : ℝ => 2 / Real.sqrt (4 - s)) 0 := by
       have hinv_sqrt : ContinuousAt (fun s : ℝ => (Real.sqrt (4 - s))⁻¹) 0 := by
         exact hsqrt.inv₀ (by norm_num)
-      simpa [div_eq_mul_inv] using continuousAt_const.mul hinv_sqrt
+      have hmul : ContinuousAt (fun s : ℝ => (2 : ℝ) * (Real.sqrt (4 - s))⁻¹) 0 :=
+        (continuousAt_const : ContinuousAt (fun _ : ℝ => (2 : ℝ)) 0).mul hinv_sqrt
+      simpa only [div_eq_mul_inv] using hmul
     have hsimpl : Tendsto (fun t : ℝ => 2 / Real.sqrt (4 - 1 / |t|)) atBot (𝓝 1) := by
       have hfull0 : Tendsto (fun t : ℝ => 2 / Real.sqrt (4 - |t|⁻¹)) atBot
           (𝓝 (2 / Real.sqrt 4)) := by
-        simpa using hcont.tendsto.comp hinv
+        convert hcont.tendsto.comp hinv using 1
+        · ext t
+          rfl
+        · norm_num
       have hval : (2 / Real.sqrt 4 : ℝ) = 1 := by
         norm_num
       simpa [one_div] using (hval ▸ hfull0)

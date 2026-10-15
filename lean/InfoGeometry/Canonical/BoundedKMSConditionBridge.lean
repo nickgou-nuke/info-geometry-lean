@@ -150,9 +150,8 @@ theorem toBridge_flow_invariant
     (t : ℝ) (A : EndH) :
     B.toBridge.state.eval
         (B.boundedFlow.modularFlow.toFlowDatum.flow t A) =
-      B.toBridge.state.eval A := by
-  simpa [MinimalBoundedKMSConditionBridge.toBridge] using
-    B.flow_invariant t A
+      B.toBridge.state.eval A :=
+  B.flow_invariant t A
 
 end MinimalBoundedKMSConditionBridge
 

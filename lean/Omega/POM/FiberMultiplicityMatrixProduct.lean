@@ -49,6 +49,7 @@ lemma wordMatrix_eq_delta [Fintype A.State] [DecidableEq A.State] :
   | nil =>
       intro s t
       simp [wordMatrix, runFrom]
+      rfl
   | cons b w ih =>
       intro s t
       dsimp [wordMatrix, runFrom]
@@ -68,6 +69,7 @@ lemma wordMatrix_eq_delta [Fintype A.State] [DecidableEq A.State] :
                 simp at hu
         _ = if A.runFrom s (b :: w) = t then 1 else 0 := by
               simp [FiberMultiplicityAutomaton.runFrom, u0]
+              rfl
 
 /-- Matrix-product formulation of the deterministic path count. -/
 def matrixProductRepresentation [Fintype A.State] [DecidableEq A.State] : Prop :=
@@ -101,7 +103,11 @@ theorem paper_pom_fiber_multiplicity_matrix_product (A : FiberMultiplicityAutoma
     calc
       ∑ t, A.wordMatrix w A.start t * A.accept t
           = ∑ t, (if A.run w = t then 1 else 0) * A.accept t := by
-              simp [FiberMultiplicityAutomaton.wordMatrix_eq_delta, FiberMultiplicityAutomaton.run]
+              apply Finset.sum_congr rfl
+              intro t _
+              rw [FiberMultiplicityAutomaton.wordMatrix_eq_delta]
+              dsimp [FiberMultiplicityAutomaton.run]
+              by_cases h : A.runFrom A.start w = t <;> simp [h]
       _ = A.accept (A.run w) := by
             rw [Finset.sum_eq_single (A.run w)]
             · simp

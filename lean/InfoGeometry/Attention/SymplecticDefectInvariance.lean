@@ -63,7 +63,7 @@ theorem traceless_iff_infinitesimal_symplectic (X : Mat2R) :
   constructor
   · intro h
     have h01 := congrFun (congrFun h 0) 1
-    simp only [J_symp, smul_apply] at h01
+    simp only [J_symp, Matrix.smul_apply] at h01
     simpa using h01
   · intro h
     rw [h, zero_smul]

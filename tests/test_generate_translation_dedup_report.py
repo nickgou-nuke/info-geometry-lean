@@ -91,15 +91,16 @@ def test_generate_translation_dedup_report_separates_exact_scc_and_review(tmp_pa
     markdown = build_markdown(report)
 
     assert report["stats"]["translation_candidates"] == 3
-    assert report["stats"]["verified_candidates"] == 2
-    assert report["stats"]["lean_verified_candidates"] == 1
+    assert report["stats"]["upstream_verified_candidates"] == 2
+    assert report["stats"]["upstream_lean_verified_candidates"] == 1
     assert report["stats"]["review_only_candidates"] == 1
-    assert report["verified_edge_tier_counts"] == {"derived_canonical_hash": 1, "lean_kernel": 1}
+    assert report["upstream_edge_tier_counts"] == {"derived_canonical_hash": 1, "lean_kernel": 1}
     assert report["exact_buckets"]["patternHash"][0]["declarations"] == ["A.uMinus", "A.uPlus"]
-    assert report["verified_translation_sccs"][0]["members"] == ["A.uPlus", "A.uMinus"]
+    assert report["derived_translation_sccs"][0]["members"] == ["A.uPlus", "A.uMinus"]
+    assert report["semantic_verification_performed"] is False
     assert report["top_vector_review_candidates"][0]["targetDecl"] == "A.nearOnly"
 
     assert "Translation Dedup Report" in markdown
-    assert "Verified Translation SCCs" in markdown
+    assert "Derived Translation SCCs" in markdown
     assert "Verification Tiers" in markdown
     assert "Top Vector Review Candidates" in markdown

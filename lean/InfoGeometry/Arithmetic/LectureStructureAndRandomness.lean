@@ -23,7 +23,7 @@ open scoped BigOperators
 open BostConnesSystem
 
 export LiouvilleFiniteCorrelation
-  (finite_sign_correlation liouville_correlation_count
+  (shiftedLiouville finite_sign_correlation liouville_correlation_count
     liouville_correlation_zero_iff liouville_self_correlation
     liouville_correlation_abs_le liouville_correlation_ne_zero_of_odd_card)
 
@@ -46,7 +46,38 @@ inductive Archetype
   | zeroPairing
   | spectralRealization
   | spectralStatistics
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+private def archetypeEquivFin : Archetype ≃ Fin 11 where
+  toFun
+    | .finiteFields => 0
+    | .characters => 1
+    | .gaussIdentities => 2
+    | .primeFactorization => 3
+    | .liouvilleParity => 4
+    | .finiteCounting => 5
+    | .finiteCorrelations => 6
+    | .functionalSymmetry => 7
+    | .zeroPairing => 8
+    | .spectralRealization => 9
+    | .spectralStatistics => 10
+  invFun
+    | 0 => .finiteFields
+    | 1 => .characters
+    | 2 => .gaussIdentities
+    | 3 => .primeFactorization
+    | 4 => .liouvilleParity
+    | 5 => .finiteCounting
+    | 6 => .finiteCorrelations
+    | 7 => .functionalSymmetry
+    | 8 => .zeroPairing
+    | 9 => .spectralRealization
+    | 10 => .spectralStatistics
+    | _ => .finiteFields
+  left_inv a := by cases a <;> rfl
+  right_inv i := by fin_cases i <;> rfl
+
+instance : Fintype Archetype := Fintype.ofEquiv (Fin 11) archetypeEquivFin.symm
 
 def prerequisites : Archetype → Finset ℕ
   | .finiteFields => {0}
@@ -151,7 +182,11 @@ theorem prime_dilation_correlation (samples : Finset ℕ+) (prime : ℕ)
     (∑ index ∈ samples, liouville index * liouville (prime * index.val)) =
       -(samples.card : ℤ) := by
   have identity := dilation_correlation samples ⟨prime, prime_is_prime.pos⟩
-  simpa only [liouville_prime prime prime_is_prime, neg_one_mul] using identity
+  change (∑ index ∈ samples,
+    liouville index.val * liouville (prime * index.val)) =
+      liouville prime * (samples.card : ℤ) at identity
+  rw [liouville_prime prime prime_is_prime, neg_one_mul] at identity
+  exact identity
 
 theorem functional_symmetry_pairs_zeros (function : ℂ → ℂ)
     (reflection : ∀ point, function (1 - point) = function point)

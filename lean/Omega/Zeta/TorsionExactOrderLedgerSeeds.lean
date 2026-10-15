@@ -124,7 +124,7 @@ theorem sCoprime_12 : sCoprimePart23 12 = 1 := by
     30 = 2 · 3 · 5, so 30_{S⊥} = 30/6 = 5.
     thm:xi-localized-torsion-exact-order-ledger -/
 theorem sCoprime_30 : sCoprimePart23 30 = 5 := by
-  norm_num [sCoprimePart23, factorization_thirty_two, factorization_thirty_three]
+  simp [sCoprimePart23, factorization_thirty_two, factorization_thirty_three]
 
 /-- S-coprime part seed: 7_{S⊥} = 7 for S = {2,3}.
     7 is coprime to both 2 and 3.
@@ -134,7 +134,7 @@ theorem sCoprime_7 : sCoprimePart23 7 = 7 := by
     Nat.factorization_eq_zero_of_not_dvd (by norm_num : ¬ 2 ∣ 7)
   have h3 : (7 : ℕ).factorization 3 = 0 :=
     Nat.factorization_eq_zero_of_not_dvd (by norm_num : ¬ 3 ∣ 7)
-  norm_num [sCoprimePart23, h2, h3]
+  simp [sCoprimePart23, h2, h3]
 
 /-- S-coprime part seed: 60_{S⊥} = 5 for S = {2,3}.
     60 = 2² · 3 · 5, so 60_{S⊥} = 60/12 = 5.
@@ -150,7 +150,7 @@ theorem sCoprime_60 : sCoprimePart23 60 = 5 := by
       Nat.factorization_mul_apply_of_coprime (by norm_num : Nat.Coprime 12 5),
       factorization_twelve_three,
       Nat.factorization_eq_zero_of_not_dvd (by norm_num : ¬ 3 ∣ 5)]
-  norm_num [sCoprimePart23, h2, h3]
+  simp [sCoprimePart23, h2, h3]
 
 /-- S-coprime part seed: 35_{S⊥} = 35 for S = {2,3}.
     35 = 5 · 7, coprime to both 2 and 3.
@@ -160,7 +160,7 @@ theorem sCoprime_35 : sCoprimePart23 35 = 35 := by
     Nat.factorization_eq_zero_of_not_dvd (by norm_num : ¬ 2 ∣ 35)
   have h3 : (35 : ℕ).factorization 3 = 0 :=
     Nat.factorization_eq_zero_of_not_dvd (by norm_num : ¬ 3 ∣ 35)
-  norm_num [sCoprimePart23, h2, h3]
+  simp [sCoprimePart23, h2, h3]
 
 /-! ## Euler factor seeds for the exact-order Dirichlet series
 

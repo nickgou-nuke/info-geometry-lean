@@ -27,9 +27,8 @@ def symbolicLatentPathParameterEvaluation
 
 theorem continuous_symbolicLatentPathParameterEvaluation
     (t : SymbolicPathDomain) :
-    Continuous (symbolicLatentPathParameterEvaluation (X := X) t) := by
-  simpa [symbolicLatentPathParameterEvaluation] using
-    (ContinuousEvalConst.continuous_eval_const (X := X) t)
+    Continuous (symbolicLatentPathParameterEvaluation (X := X) t) :=
+  continuous_eval_const t
 
 /-- The start evaluation of a symbolic-latent path as a continuous map. -/
 def symbolicLatentPathStartEvaluation : SymbolicLatentPath X → X :=
@@ -41,9 +40,8 @@ def symbolicLatentPathStartEvaluation : SymbolicLatentPath X → X :=
   rfl
 
 theorem continuous_symbolicLatentPathStartEvaluation :
-    Continuous (symbolicLatentPathStartEvaluation (X := X)) := by
-  simpa [symbolicLatentPathStartEvaluation] using
-    continuous_symbolicLatentPathParameterEvaluation (X := X) (0 : SymbolicPathDomain)
+    Continuous (symbolicLatentPathStartEvaluation (X := X)) :=
+  continuous_symbolicLatentPathParameterEvaluation (X := X) (0 : SymbolicPathDomain)
 
 /-- The finish evaluation of a symbolic-latent path as a continuous map. -/
 def symbolicLatentPathFinishEvaluation : SymbolicLatentPath X → X :=
@@ -55,9 +53,8 @@ def symbolicLatentPathFinishEvaluation : SymbolicLatentPath X → X :=
   rfl
 
 theorem continuous_symbolicLatentPathFinishEvaluation :
-    Continuous (symbolicLatentPathFinishEvaluation (X := X)) := by
-  simpa [symbolicLatentPathFinishEvaluation] using
-    continuous_symbolicLatentPathParameterEvaluation (X := X) (1 : SymbolicPathDomain)
+    Continuous (symbolicLatentPathFinishEvaluation (X := X)) :=
+  continuous_symbolicLatentPathParameterEvaluation (X := X) (1 : SymbolicPathDomain)
 
 /-- The endpoint evaluation of a symbolic-latent path as a continuous map. -/
 def symbolicLatentPathEndpointsEvaluation : SymbolicLatentPath X → X × X :=

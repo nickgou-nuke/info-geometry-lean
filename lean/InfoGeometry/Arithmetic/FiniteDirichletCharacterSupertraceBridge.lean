@@ -55,8 +55,7 @@ theorem finite_dirichlet_character_mobius_supertrace_monoidHom
       ∑ S ∈ P.powerset,
         ((ArithmeticFunction.moebius (∏ p ∈ S, p) : ℤ) : ℂ) *
           dirichletWeight χ (∏ p ∈ S, p) * ∏ p ∈ S, w p := by
-  simpa [dirichletWeightMonoidHom] using
-    (finite_character_mobius_supertrace_monoidHom
-      P hprime (dirichletWeightMonoidHom χ) w)
+  simpa [InfoGeometry.Arithmetic.FiniteMobiusFermionSupertraceBridge.primeSquarefreeProduct] using
+    finite_dirichlet_character_mobius_supertrace P hprime χ w
 
 end InfoGeometry.Arithmetic.FiniteDirichletCharacterSupertraceBridge

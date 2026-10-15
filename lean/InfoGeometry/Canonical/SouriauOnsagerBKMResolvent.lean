@@ -9,15 +9,15 @@ open InfoGeometry.OperatorAlgebra.ComplexBoundedOperators
 
 variable {n : ℕ}
 
+set_option synthInstance.maxHeartbeats 100000
+
 theorem algebraMap_nonneg_cstar
     [NeZero n] (t : ℝ) (ht : 0 ≤ t) :
     0 ≤ algebraMap ℝ (FiniteOperatorAlgebra n) t := by
   rw [StarOrderedRing.nonneg_iff_spectrum_nonneg
     (R := ℝ) (algebraMap ℝ (FiniteOperatorAlgebra n) t)
     (ha := by
-      simpa using
-        (algebraMap_star_comm t
-          (A := FiniteOperatorAlgebra n)).symm)]
+      simp [IsSelfAdjoint, ← algebraMap_star_comm])]
   intro x hx
   have hx' := (CFC.spectrum_algebraMap_eq t :
     spectrum ℝ (algebraMap ℝ (FiniteOperatorAlgebra n) t) = {t})
@@ -85,24 +85,16 @@ theorem cfcResolvent_mul_shifted
     (hX : IsStrictlyPositive X) (ht : 0 ≤ t) :
     cfcResolvent X t *
       (X + algebraMap ℝ (FiniteOperatorAlgebra n) t) = 1 := by
-  unfold cfcResolvent
   have hY := strictlyPositive_add_nonneg_scalar X t hX ht
-  simpa only [CFC.rpow_one _ hY.nonneg] using
-    (CFC.rpow_neg_mul_rpow 1 hY.isUnit hY.nonneg :
-      CFC.rpow (X + algebraMap ℝ (FiniteOperatorAlgebra n) t) (-1 : ℝ) *
-        CFC.rpow (X + algebraMap ℝ (FiniteOperatorAlgebra n) t) (1 : ℝ) = 1)
+  simpa [cfcResolvent, CFC.rpow_one _ hY.nonneg] using CFC.rpow_neg_mul_rpow 1 hY
 
 theorem shifted_mul_cfcResolvent
     [NeZero n]
     (X : FiniteOperatorAlgebra n) (t : ℝ)
     (hX : IsStrictlyPositive X) (ht : 0 ≤ t) :
     (X + algebraMap ℝ (FiniteOperatorAlgebra n) t) * cfcResolvent X t = 1 := by
-  unfold cfcResolvent
   have hY := strictlyPositive_add_nonneg_scalar X t hX ht
-  simpa only [CFC.rpow_one _ hY.nonneg] using
-    (CFC.rpow_mul_rpow_neg 1 hY.isUnit hY.nonneg :
-      CFC.rpow (X + algebraMap ℝ (FiniteOperatorAlgebra n) t) (1 : ℝ) *
-        CFC.rpow (X + algebraMap ℝ (FiniteOperatorAlgebra n) t) (-1 : ℝ) = 1)
+  simpa [cfcResolvent, CFC.rpow_one _ hY.nonneg] using CFC.rpow_mul_rpow_neg 1 hY
 
 /-! ### The noncommutative resolvent difference identity -/
 

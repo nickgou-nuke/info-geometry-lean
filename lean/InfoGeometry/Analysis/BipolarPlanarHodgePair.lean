@@ -61,7 +61,9 @@ theorem hasDerivAt_phiXY_line {x y : ℝ}
   have hl0 := hg0.log (by simpa using h0)
   have hl1 := hg1.log (by simpa using h1)
   have hm := (hl0.const_mul (1 / 2 : ℝ)).sub (hl1.const_mul (1 / 2 : ℝ))
-  convert hm using 1; simp [dPhiCoeff]; ring
+  refine hm.congr_deriv ?_
+  dsimp [dPhiCoeff]
+  ring
 
 theorem dPsiCoeff_eq_hodgeRotate_dPhiCoeff (x y : ℝ) :
     dPsiCoeff x y = hodgeRotate (dPhiCoeff x y) := by

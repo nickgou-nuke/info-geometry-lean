@@ -190,13 +190,13 @@ def directLimitToCompletionLinearMap :
 /-- The canonical dense embedding bundled as a complex linear isometry. -/
 def directLimitToCompletionLinearIsometry :
     D∞ →ₗᵢ[ℂ] HilbertDirectLimit E sys :=
-  LinearIsometry.mk
+    LinearIsometry.mk
     (directLimitToCompletionLinearMap E sys)
     (fun x => by
       have h := (directLimitToCompletion_isometry E sys).dist_eq x 0
+      change ‖directLimitToCompletion E sys x‖ = ‖x‖
       simpa only [directLimitToCompletion,
-        UniformSpace.Completion.coe_zero,
-        dist_zero_right] using h)
+        UniformSpace.Completion.coe_zero, dist_zero_right] using h)
 
 @[simp] theorem directLimitToCompletionLinearIsometry_apply
     (x : D∞) :

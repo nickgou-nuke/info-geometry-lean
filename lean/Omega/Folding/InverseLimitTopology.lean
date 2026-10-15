@@ -7,15 +7,28 @@ namespace Omega.X
 /-- No11Inf is a closed subset of the product space ℕ → Bool.
     thm:fold-suite-item3-topo-closed -/
 theorem isClosed_no11Inf : IsClosed {a : ℕ → Bool | No11Inf a} := by
-  simp only [No11Inf, Set.setOf_forall]
-  apply isClosed_iInter; intro i
+  have h_eq : {a : ℕ → Bool | No11Inf a} = ⋂ i : ℕ, {a : ℕ → Bool | ¬ (a i = true ∧ a (i + 1) = true)} := by
+    ext a
+    simp [No11Inf]
+  rw [h_eq]
+  apply isClosed_iInter
+  intro i
+  have h_compl : {a : ℕ → Bool | ¬ (a i = true ∧ a (i + 1) = true)} =
+      ({a : ℕ → Bool | a i = true ∧ a (i + 1) = true})ᶜ := by
+    ext a
+    simp
+  rw [h_compl]
   apply IsOpen.isClosed_compl
   -- Show {a | a i = true ∧ a (i+1) = true} is open
   have hOpen_i : IsOpen ((fun a : ℕ → Bool => a i) ⁻¹' {true}) :=
     (isOpen_discrete ({true} : Set Bool)).preimage (continuous_apply i)
   have hOpen_i1 : IsOpen ((fun a : ℕ → Bool => a (i + 1)) ⁻¹' {true}) :=
     (isOpen_discrete ({true} : Set Bool)).preimage (continuous_apply (i + 1))
-  convert hOpen_i.inter hOpen_i1 using 1
+  have h_inter : {a : ℕ → Bool | a i = true ∧ a (i + 1) = true} =
+      ((fun a => a i) ⁻¹' {true}) ∩ ((fun a => a (i + 1)) ⁻¹' {true}) := by
+    ext a
+    simp
+  exact h_inter ▸ hOpen_i.inter hOpen_i1
 
 /-- XInfinity is compact: closed subset of compact product space ℕ → Bool. -/
 instance : CompactSpace XInfinity :=

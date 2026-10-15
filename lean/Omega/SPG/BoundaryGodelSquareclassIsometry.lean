@@ -48,7 +48,20 @@ theorem squareclass_ratio_is_xor (a b : ZMod 2) : a - b = a + b := by
     At F₂ level: the support of a + b (= a - b) is where a ≠ b.
     cor:spg-boundary-godel-ratio-squareclass-isometry -/
 private theorem zmod2_add_eq_zero_iff (a b : ZMod 2) : a + b = 0 ↔ a = b := by
-  fin_cases a <;> fin_cases b <;> simp (config := { decide := true })
+  constructor
+  · intro h
+    apply ZMod.val_injective 2
+    have hval : (a.val + b.val) % 2 = 0 := by
+      simpa only [ZMod.val_add, ZMod.val_zero] using congrArg ZMod.val h
+    have ha : a.val < 2 := ZMod.val_lt a
+    have hb : b.val < 2 := ZMod.val_lt b
+    omega
+  · intro h
+    subst b
+    apply ZMod.val_injective 2
+    rw [ZMod.val_add, ZMod.val_zero]
+    have ha : a.val < 2 := ZMod.val_lt a
+    omega
 
 theorem xor_support_eq_symm_diff (n : ℕ) (a b : Fin n → ZMod 2) :
     Finset.filter (fun i => a i + b i ≠ 0) Finset.univ =

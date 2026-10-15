@@ -6,9 +6,8 @@ import InfoGeometry.Canonical.ModularHopfCoproductRules
 import InfoGeometry.Canonical.NilpotentFluxVirasoroReadout
 import InfoGeometry.Canonical.ModularNilpotentAutomorphism
 import InfoGeometry.Canonical.SplitCliffordSourceWickVacuum
-import InfoGeometry.Canonical.SplitCliffordSourceWickBaseExternalBridge
 import InfoGeometry.Canonical.BekensteinBound
-import InfoGeometry.External.Virasoro.VirasoroAlgebra
+import InfoGeometry.Canonical.SplitCliffordSourceWickBaseExternalBridge
 
 /-!
 # Coproduct iteration, cross-flux readout, and Virasoro cocycle normalization
@@ -912,16 +911,11 @@ theorem chargedFockConformalVacuum_expectation_inner_eq
 /-- Re-exported external mode-one commutator normalisation for the charged-Fock lane. -/
 theorem chargedFock_external_mode_one_commutator
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
-    let M :
-      InfoGeometry.Canonical.CurrentSugawaraBridge.CurrentSugawaraMorphism 𝕜
-        (VirasoroProject.ChargedFockSpace 𝕜 α) :=
+    let M :=
       InfoGeometry.Canonical.CurrentSugawaraBridge.CurrentSugawaraMorphism.ofHeisenberg
         (InfoGeometry.Canonical.CurrentSugawaraBridge.chargedFockSpaceCurrentHeisenbergRep 𝕜 α)
     (M.heisenberg.J 1).commutator (M.heisenberg.J (-1)) =
-      (1 : 𝕜) •
-        (1 :
-          VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
-            VirasoroProject.ChargedFockSpace 𝕜 α) := by
+      (1 : 𝕜) • 1 := by
   simpa using
     InfoGeometry.Canonical.SplitCliffordSourceWickBaseExternalBridge.external_chargedFock_mode_one_commutator
       (𝕜 := 𝕜) α
@@ -937,11 +931,14 @@ theorem bracket_snd_eq_iteratedVirasoroCocycle_two_resonant (m : Int) :
   have hs' : (⁅VirasoroProject.VirasoroAlgebra.lgen ℝ m,
       VirasoroProject.VirasoroAlgebra.lgen ℝ (-m)⁆).snd =
       (12 : ℝ)⁻¹ * (((m : ℝ)^3) - (m : ℝ)) := by
-    simpa [div_eq_mul_inv, sub_eq_add_neg, add_assoc, add_left_comm, add_comm,
-      VirasoroProject.VirasoroAlgebra.lgen_eq', VirasoroProject.VirasoroAlgebra.cgen_eq',
-      VirasoroProject.VirasoroAlgebra.toWittAlgebra_lgen,
-      VirasoroProject.WittAlgebra.virasoroCocycle_apply_lgen_lgen,
-      mul_comm, mul_left_comm, mul_assoc] using hs
+    rw [hs]
+    rw [VirasoroProject.VirasoroAlgebra.add_snd,
+      VirasoroProject.VirasoroAlgebra.smul_snd,
+      VirasoroProject.VirasoroAlgebra.smul_snd]
+    have hlgen_snd : (VirasoroProject.VirasoroAlgebra.lgen ℝ (m + -m)).snd = 0 := rfl
+    have hcgen_snd : (VirasoroProject.VirasoroAlgebra.cgen ℝ).snd = 1 := rfl
+    rw [hlgen_snd, hcgen_snd]
+    ring
   calc
     (⁅VirasoroProject.VirasoroAlgebra.lgen ℝ m,
         VirasoroProject.VirasoroAlgebra.lgen ℝ (-m)⁆).snd =

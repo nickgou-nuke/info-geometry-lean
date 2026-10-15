@@ -1,4 +1,4 @@
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Tactic.Ring
@@ -20,6 +20,13 @@ off-diagonal elements are 3D vectors.
 
 /-- A 3D vector over integers. -/
 def Vec3Real := ℝ × ℝ × ℝ
+
+@[ext]
+lemma Vec3Real.ext {u v : Vec3Real} (h1 : u.1 = v.1) (h2 : u.2.1 = v.2.1) (h3 : u.2.2 = v.2.2) : u = v := by
+  rcases u with ⟨u1, u2, u3⟩
+  rcases v with ⟨v1, v2, v3⟩
+  dsimp at h1 h2 h3
+  rw [h1, h2, h3]
 
 /-- The cross product of two 3D vectors. -/
 def cross (u v : Vec3Real) : Vec3Real :=
@@ -346,8 +353,8 @@ theorem zorn_mul_add_left (A B C : ZornMatrixReal) :
     ring
   · dsimp [ZornMatrixReal.mul, ZornMatrixReal.add_mat, dot, cross, add, sub, smul]
     ring
-  · apply Prod.ext <;> dsimp [ZornMatrixReal.mul, ZornMatrixReal.add_mat, dot, cross, add, sub, smul] <;> ring
-  · apply Prod.ext <;> dsimp [ZornMatrixReal.mul, ZornMatrixReal.add_mat, dot, cross, add, sub, smul] <;> ring
+  · ext <;> dsimp [ZornMatrixReal.mul, ZornMatrixReal.add_mat, dot, cross, add, sub, smul] <;> ring
+  · ext <;> dsimp [ZornMatrixReal.mul, ZornMatrixReal.add_mat, dot, cross, add, sub, smul] <;> ring
 
 theorem zorn_add_mul_right (A B C : ZornMatrixReal) :
     (A + B) * C = A * C + B * C := by
@@ -358,8 +365,8 @@ theorem zorn_add_mul_right (A B C : ZornMatrixReal) :
     ring
   · dsimp [ZornMatrixReal.mul, ZornMatrixReal.add_mat, dot, cross, add, sub, smul]
     ring
-  · apply Prod.ext <;> dsimp [ZornMatrixReal.mul, ZornMatrixReal.add_mat, dot, cross, add, sub, smul] <;> ring
-  · apply Prod.ext <;> dsimp [ZornMatrixReal.mul, ZornMatrixReal.add_mat, dot, cross, add, sub, smul] <;> ring
+  · ext <;> dsimp [ZornMatrixReal.mul, ZornMatrixReal.add_mat, dot, cross, add, sub, smul] <;> ring
+  · ext <;> dsimp [ZornMatrixReal.mul, ZornMatrixReal.add_mat, dot, cross, add, sub, smul] <;> ring
 
 theorem zorn_neg_mul (A B : ZornMatrixReal) :
     (-A) * B = -(A * B) := by
@@ -370,8 +377,8 @@ theorem zorn_neg_mul (A B : ZornMatrixReal) :
     ring
   · dsimp [ZornMatrixReal.mul, ZornMatrixReal.neg, dot, cross, add, sub, smul]
     ring
-  · apply Prod.ext <;> dsimp [ZornMatrixReal.mul, ZornMatrixReal.neg, dot, cross, add, sub, smul] <;> ring
-  · apply Prod.ext <;> dsimp [ZornMatrixReal.mul, ZornMatrixReal.neg, dot, cross, add, sub, smul] <;> ring
+  · ext <;> dsimp [ZornMatrixReal.mul, ZornMatrixReal.neg, dot, cross, add, sub, smul] <;> ring
+  · ext <;> dsimp [ZornMatrixReal.mul, ZornMatrixReal.neg, dot, cross, add, sub, smul] <;> ring
 
 theorem zorn_mul_neg (A B : ZornMatrixReal) :
     A * (-B) = -(A * B) := by
@@ -382,8 +389,8 @@ theorem zorn_mul_neg (A B : ZornMatrixReal) :
     ring
   · dsimp [ZornMatrixReal.mul, ZornMatrixReal.neg, dot, cross, add, sub, smul]
     ring
-  · apply Prod.ext <;> dsimp [ZornMatrixReal.mul, ZornMatrixReal.neg, dot, cross, add, sub, smul] <;> ring
-  · apply Prod.ext <;> dsimp [ZornMatrixReal.mul, ZornMatrixReal.neg, dot, cross, add, sub, smul] <;> ring
+  · ext <;> dsimp [ZornMatrixReal.mul, ZornMatrixReal.neg, dot, cross, add, sub, smul] <;> ring
+  · ext <;> dsimp [ZornMatrixReal.mul, ZornMatrixReal.neg, dot, cross, add, sub, smul] <;> ring
 
 theorem zorn_sub_mul (A B C : ZornMatrixReal) :
     (A - B) * C = A * C - B * C := by
@@ -394,8 +401,8 @@ theorem zorn_sub_mul (A B C : ZornMatrixReal) :
     ring
   · dsimp [ZornMatrixReal.mul, ZornMatrixReal.sub_mat, dot, cross, add, sub, smul]
     ring
-  · apply Prod.ext <;> dsimp [ZornMatrixReal.mul, ZornMatrixReal.sub_mat, dot, cross, add, sub, smul] <;> ring
-  · apply Prod.ext <;> dsimp [ZornMatrixReal.mul, ZornMatrixReal.sub_mat, dot, cross, add, sub, smul] <;> ring
+  · ext <;> dsimp [ZornMatrixReal.mul, ZornMatrixReal.sub_mat, dot, cross, add, sub, smul] <;> ring
+  · ext <;> dsimp [ZornMatrixReal.mul, ZornMatrixReal.sub_mat, dot, cross, add, sub, smul] <;> ring
 
 theorem zorn_mul_sub (A B C : ZornMatrixReal) :
     A * (B - C) = A * B - A * C := by
@@ -406,8 +413,8 @@ theorem zorn_mul_sub (A B C : ZornMatrixReal) :
     ring
   · dsimp [ZornMatrixReal.mul, ZornMatrixReal.sub_mat, dot, cross, add, sub, smul]
     ring
-  · apply Prod.ext <;> dsimp [ZornMatrixReal.mul, ZornMatrixReal.sub_mat, dot, cross, add, sub, smul] <;> ring
-  · apply Prod.ext <;> dsimp [ZornMatrixReal.mul, ZornMatrixReal.sub_mat, dot, cross, add, sub, smul] <;> ring
+  · ext <;> dsimp [ZornMatrixReal.mul, ZornMatrixReal.sub_mat, dot, cross, add, sub, smul] <;> ring
+  · ext <;> dsimp [ZornMatrixReal.mul, ZornMatrixReal.sub_mat, dot, cross, add, sub, smul] <;> ring
 
 /-- The split norm of a Zorn matrix: N(A) = a * b - u · v -/
 def ZornMatrixReal.norm (A : ZornMatrixReal) : ℝ :=
@@ -433,8 +440,10 @@ theorem split_octonions_have_zero_divisors :
     apply ZornMatrixReal.ext
     · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul, zeroDivisorA, zeroDivisorB, ZornMatrixReal.zero]; norm_num
     · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul, zeroDivisorA, zeroDivisorB, ZornMatrixReal.zero]; norm_num
-    · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul, zeroDivisorA, zeroDivisorB, ZornMatrixReal.zero]; simp
-    · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul, zeroDivisorA, zeroDivisorB, ZornMatrixReal.zero]; simp
+    · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul, zeroDivisorA, zeroDivisorB, ZornMatrixReal.zero]
+      ext <;> norm_num
+    · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul, zeroDivisorA, zeroDivisorB, ZornMatrixReal.zero]
+      ext <;> norm_num
   · intro h
     have h1 : zeroDivisorA.a = ZornMatrixReal.zero.a := by { rw [h]; rfl }
     change (1 : ℝ) = 0 at h1

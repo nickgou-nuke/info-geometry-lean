@@ -57,7 +57,9 @@ theorem continuous_clr {n : ℕ} (hn : 0 < n) :
       exact Continuous.subtype_mk
         ((continuous_apply i).comp continuous_subtype_val)
         (fun p => p.2.1 i)
-    simpa only [f, Function.comp_apply] using Real.continuous_log'.comp hf
+    convert Real.continuous_log'.comp hf using 1
+    ext p
+    rfl
   have hsum : Continuous
       (fun p : PositiveSimplex n => ∑ j : Fin n, Real.log (p.1 j)) := by
     exact continuous_finset_sum _ (fun j _ => by
@@ -67,7 +69,9 @@ theorem continuous_clr {n : ℕ} (hn : 0 < n) :
         exact Continuous.subtype_mk
           ((continuous_apply j).comp continuous_subtype_val)
           (fun p => p.2.1 j)
-      simpa only [f, Function.comp_apply] using Real.continuous_log'.comp hf)
+      convert Real.continuous_log'.comp hf using 1
+      ext p
+      rfl)
   fun_prop
 
 /-- The Aitchison bilinear expression in centered coordinates. -/

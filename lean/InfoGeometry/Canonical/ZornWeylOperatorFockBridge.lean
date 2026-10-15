@@ -24,7 +24,9 @@ This module formalizes the exact mathematical nexus uniting:
    - The split octonion trace $\operatorname{tr}(X) = a + b$ and quadratic norm $N(X) = a b - \mathbf{u} \cdot \mathbf{v}$.
    - Trace identity $X + \bar{X} = \operatorname{tr}(X) \mathbf{1}$ and Cayley-Hamilton norm identity
      $X \bar{X} = \bar{X} X = N(X) \mathbf{1}$.
-   - The Pauli-Weyl lightcone nullity condition $N(X) = 0 \iff a b = \mathbf{u} \cdot \mathbf{v}$.
+   - The split-Zorn norm-zero criterion $N(X) = 0 \iff a b = \mathbf{u} \cdot \mathbf{v}$.
+     A Minkowski lightcone interpretation would require an explicit norm-preserving
+     identification with four-momentum, which is not defined in this module.
 
 2. **Transition to the Split Circular Spin Weyl Basis**:
    - Quantizing the internal directions from Cartesian $\{e_1, e_2, e_3\}$ to the split circular basis:
@@ -88,7 +90,8 @@ theorem zorn_conj_mul (X : ZornVectorMatrix R) :
     mul (conj X) X = scalar (ZornVectorMatrix.norm X) :=
   conj_norm_identity_right X
 
-/-- 🏆 THEOREM: Pauli-Weyl lightcone nullity: N(X) = 0 iff a * b = u • v. -/
+/-- The split-Zorn norm vanishes exactly when its diagonal product equals the
+dot product of its off-diagonal vectors; no Minkowski identification is asserted. -/
 theorem zorn_norm_zero_iff_lightcone (X : ZornVectorMatrix R) :
     ZornVectorMatrix.norm X = 0 ↔ X.a * X.b = ZornVec3.dot X.v X.w := by
   dsimp [ZornVectorMatrix.norm]

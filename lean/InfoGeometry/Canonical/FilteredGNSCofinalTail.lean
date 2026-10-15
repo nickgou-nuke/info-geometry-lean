@@ -122,12 +122,9 @@ def tailAlgebraicToGlobalReal
           (fun _ _ hjk => realTransition (E i₀) (S i₀) hjk)
           j x) =
       stageToDirectLimitLinearMap G GS j.1 x := by
-  simpa only [tailStageToGlobalRealMap] using
-    (Module.DirectLimit.lift_of
-      (g := tailStageToGlobalRealMap Stage sys ω i₀)
-      (tailStageToGlobalRealMap_compatible
-        Stage sys ω i₀)
-      (i := j) x)
+  unfold tailAlgebraicToGlobalReal
+  rw [Module.DirectLimit.lift_of]
+  rfl
 
 /-- The cofinal-tail descent is complex linear because both colimits inherit
 their complex actions from the same stage system. -/

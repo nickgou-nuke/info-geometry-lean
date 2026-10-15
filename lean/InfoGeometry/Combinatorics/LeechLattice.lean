@@ -113,8 +113,11 @@ theorem zero_mem_numerator :
     (0 : IntegerWord24) ∈ numerator := by
   have hz : Even (coordinateSum (0 : IntegerWord24)) := by
     simp
-  simpa [evenNumerator] using
-    evenNumerator_mem (c := (0 : Word24)) codeSubmodule.zero_mem hz
+  have hzero : evenNumerator (0 : Word24) (0 : IntegerWord24) = 0 := by
+    funext i
+    simp [evenNumerator]
+  rw [← hzero]
+  exact evenNumerator_mem (c := (0 : Word24)) codeSubmodule.zero_mem hz
 
 /-- Every even-branch numerator has even coordinates. -/
 theorem evenNumerator_coordinate_even

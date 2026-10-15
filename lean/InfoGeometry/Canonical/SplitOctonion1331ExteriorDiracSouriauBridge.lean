@@ -33,14 +33,13 @@ theorem exterior3PeirceBasis_apply (i : Fin 8) :
 theorem exterior3BasisFinset_apply (s : Finset (Fin 3)) :
     exterior3BasisFinset s = degreeBasis3 s.card ⟨s, rfl⟩ := by
   unfold exterior3BasisFinset
-  rw [Module.Basis.reindex_apply]
+  erw [Module.Basis.reindex_apply]
   exact exterior3BasisSigma_apply s.card ⟨s, rfl⟩
 
 theorem degreeBasis3_apply
     (k : ℕ) (s : Set.powersetCard (Fin 3) k) :
     degreeBasis3 k s = ExteriorAlgebra.ιMulti_family ℝ k vBasis3 s := by
-  simpa [degreeBasis3] using
-    (exteriorPower.basis_apply (n := k) (b := vBasis3) (s := s))
+  simp [degreeBasis3, exteriorPower.basis_apply]
 
 theorem exterior3PeirceBasis_ιMulti (i : Fin 8) :
     exterior3PeirceBasis i =

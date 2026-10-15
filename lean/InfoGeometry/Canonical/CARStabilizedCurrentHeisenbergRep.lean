@@ -23,6 +23,8 @@ open InfoGeometry.Canonical.SplitCARCurrentSource
 open InfoGeometry.Canonical.CurrentSugawaraBridge
 open VirasoroProject
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 variable {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜]
 
 /--

@@ -274,7 +274,6 @@ theorem trace_X_squared_spacetime (t x y z : ℝ) :
     pauli_1, pauli_2, pauli_3, identity_2]
   ring_nf
   norm_num [Complex.I_sq]
-  ring
 ---------------------------------------------------------------
 -- Part 4:  Eigenvalues — The Spacetime Spectral Theorem
 ---------------------------------------------------------------

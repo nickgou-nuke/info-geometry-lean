@@ -123,9 +123,10 @@ theorem qCcrZeroLocusSpecializationTopCatHom_injective
   intro p₁ p₂ h
   apply qCcrSpecializationZeroLocusMap_injective (A := Stage i) (qdata.q i)
   apply Subtype.ext
-  simpa [qCcrZeroLocusSpecializationTopCatHom,
-    qCcrParameterZeroLocusFiberInclusionTopCatHom,
-    qCcrSpecializationZeroLocusTopCatHom] using congrArg Subtype.val h
+  have hv := congrArg Subtype.val h
+  change (qCcrSpecializationZeroLocusMap (A := Stage i) (qdata.q i) p₁).1 =
+    (qCcrSpecializationZeroLocusMap (A := Stage i) (qdata.q i) p₂).1 at hv
+  exact hv
 
 theorem qCcrZeroLocusSpecializationTopCatHom_isEmbedding
     (qdata : CompatibleQParameter Stage sys) (i : I) :
@@ -179,8 +180,10 @@ theorem qCcrZeroLocusSpecialization_natural
       (qCcrSpecializationMap (A := Stage i) (qdata.q i) p.1) =
     qCcrSpecializationMap (A := Stage j) (qdata.q j)
       (qCcrOperatorPairTransitionMap Stage sys hij p.1)
-  simp [qCcrParameterTransitionMap, qCcrSpecializationMap,
-    qCcrOperatorPairTransitionMap, qdata.compatible hij]
+  change (sys.map hij p.1.1,
+      (sys.map hij p.1.2, sys.map hij (qdata.q i))) =
+    (sys.map hij p.1.1, (sys.map hij p.1.2, qdata.q j))
+  rw [qdata.compatible hij]
 
 def qCcrZeroLocusSpecializationNatTrans
     (qdata : CompatibleQParameter Stage sys) :
@@ -189,8 +192,13 @@ def qCcrZeroLocusSpecializationNatTrans
   app i := qCcrZeroLocusSpecializationTopCatHom Stage sys qdata i
   naturality := by
     intro i j f
-    simpa [qCcrZeroLocusTopologicalDiagram] using
-      (qCcrZeroLocusSpecialization_natural Stage sys qdata (leOfHom f)).symm
+    change qCcrZeroLocusTransitionTopCatHom_compatible Stage sys (leOfHom f)
+        (qdata.q i) (qdata.q j) (qdata.compatible (leOfHom f)) ≫
+        qCcrZeroLocusSpecializationTopCatHom Stage sys qdata j =
+      qCcrZeroLocusSpecializationTopCatHom Stage sys qdata i ≫
+        qCcrParameterZeroFiberTransitionTopCatHom Stage sys (leOfHom f)
+    exact (qCcrZeroLocusSpecialization_natural Stage sys qdata
+      (leOfHom f)).symm
 
 theorem qCcrZeroLocusSpecializationNatTrans_app_isClosedEmbedding
     (qdata : CompatibleQParameter Stage sys) (i : I) :
@@ -254,15 +262,33 @@ def qCcrZeroLocusSpecializationCocone
                 (qCcrZeroLocusSpecializationTopCatHom Stage sys qdata i ≫
                 qCcrParameterZeroFiberTransitionTopCatHom Stage sys (leOfHom f)) ≫
                   qCcrParameterZeroFiberTopologicalInjection Stage sys j := by
-                    change qCcrZeroLocusTransitionTopCatHom_compatible Stage sys
+                    change
+                      (qCcrZeroLocusTransitionTopCatHom_compatible Stage sys
                         (leOfHom f) (qdata.q i) (qdata.q j)
                         (qdata.compatible (leOfHom f)) ≫
-                        (qCcrZeroLocusSpecializationTopCatHom Stage sys qdata j ≫
-                          qCcrParameterZeroFiberTopologicalInjection Stage sys j) = _
-                    rw [← Category.assoc, ← hspec]
+                        qCcrZeroLocusSpecializationTopCatHom Stage sys qdata j) ≫
+                          qCcrParameterZeroFiberTopologicalInjection Stage sys j =
+                        (qCcrZeroLocusSpecializationTopCatHom Stage sys qdata i ≫
+                          qCcrParameterZeroFiberTransitionTopCatHom Stage sys (leOfHom f)) ≫
+                          qCcrParameterZeroFiberTopologicalInjection Stage sys j
+                    rw [← hspec]
+                    rfl
           _ = qCcrZeroLocusSpecializationTopCatHom Stage sys qdata i ≫
                 qCcrParameterZeroFiberTopologicalInjection Stage sys i := by
-                    rw [Category.assoc, hinc] }
+                    calc
+                      (qCcrZeroLocusSpecializationTopCatHom Stage sys qdata i ≫
+                          qCcrParameterZeroFiberTransitionTopCatHom Stage sys (leOfHom f)) ≫
+                          qCcrParameterZeroFiberTopologicalInjection Stage sys j
+                        = qCcrZeroLocusSpecializationTopCatHom Stage sys qdata i ≫
+                            (qCcrParameterZeroFiberTransitionTopCatHom Stage sys (leOfHom f) ≫
+                              qCcrParameterZeroFiberTopologicalInjection Stage sys j) :=
+                            Category.assoc _ _ _
+                      _ = qCcrZeroLocusSpecializationTopCatHom Stage sys qdata i ≫
+                            qCcrParameterZeroFiberTopologicalInjection Stage sys i := by
+                            exact congrArg
+                              (fun k => qCcrZeroLocusSpecializationTopCatHom
+                                Stage sys qdata i ≫ k) hinc
+      }
 
 noncomputable def qCcrZeroLocusSpecializationCoconeMap
     (qdata : CompatibleQParameter Stage sys) :
@@ -310,9 +336,6 @@ theorem qCcrZeroLocusParameterColimitMap_stage_apply
       qCcrParameterTopologicalInjection Stage sys i
         (qCcrSpecializationZeroLocusAmbientPoint
           (Stage := Stage) (qdata.q i) p).1 := by
-  have hspecial := qCcrZeroLocusSpecializationColimitMap_stage
-    Stage sys qdata i
-  have hspecial' := congrArg (fun f => f p) hspecial
   have hambient := qCcrSpecialization_colimit_inclusion_stage
     Stage sys (qdata.q i) p
   calc
@@ -321,15 +344,22 @@ theorem qCcrZeroLocusParameterColimitMap_stage_apply
       qCcrParameterZeroFiberToParameterColimit Stage sys
         (qCcrParameterZeroFiberTopologicalInjection Stage sys i
           ((qCcrZeroLocusSpecializationTopCatHom Stage sys qdata i) p)) := by
-        have h := congrArg
+        rw [qCcrZeroLocusParameterColimitMap,
+          qCcrZeroLocusSpecializationColimitMap_eq_coconeMap]
+        exact congrArg
           (fun z => qCcrParameterZeroFiberToParameterColimit Stage sys z)
-          hspecial'
-        simpa [qCcrZeroLocusParameterColimitMap] using h
+          (qCcrZeroLocusSpecializationCoconeMap_stage Stage sys qdata i p)
     _ = qCcrParameterTopologicalInjection Stage sys i
         (qCcrSpecializationZeroLocusAmbientPoint
           (Stage := Stage) (qdata.q i) p).1 := by
-        simpa [qCcrZeroLocusSpecializationTopCatHom,
-          qCcrSpecializationZeroLocusAmbientPoint] using hambient
+        have hpoint :
+            (qCcrZeroLocusSpecializationTopCatHom Stage sys qdata i) p =
+              qCcrSpecializationZeroLocusAmbientPoint
+                (Stage := Stage) (qdata.q i) p := by
+          apply Subtype.ext
+          rfl
+        rw [hpoint]
+        exact hambient
 
 noncomputable def zeroQParameterColimitMap :
     qCcrZeroLocusTopologicalColimit Stage sys

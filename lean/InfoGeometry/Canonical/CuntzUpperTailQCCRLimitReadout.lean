@@ -109,7 +109,17 @@ theorem upperTailCuntzQCCRAmbientLimitMap_projection
       intro j k f
       exact upperTailCuntzQCCRPointTopCatFamily_natural Stage T m i
         (leOfHom f)) j u
-  simpa [upperTailCuntzQCCRAmbientLimitMap,
-    upperTailCuntzQCCRLimitMap] using h
+  change topologicalInverseProjection
+      (qCcrParameterTopologicalDiagram
+        (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m)) j
+      (qCcrParameterZeroFiberToParameterLimit
+        (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m)
+        (qCcrParameterZeroFiberPointLimitMap
+          (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m)
+          (upperTailCuntzQCCRPointTopCatFamily Stage T m i) _ u)) =
+    (qCcrParameterZeroFiberToParameterNatTrans
+      (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m)).app j
+      (upperTailCuntzQCCRPointTopCatFamily Stage T m i j u) at h
+  exact h
 
 end InfoGeometry.Canonical.CuntzUpperTailQCCRLimitReadout

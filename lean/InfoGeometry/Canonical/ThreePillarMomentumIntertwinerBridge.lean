@@ -1,7 +1,7 @@
 import Mathlib.Algebra.Module.LinearMap.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
-import Mathlib.Data.Complex.Basic
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Complex.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.Algebra.Polynomial.AlgebraMap
 import Mathlib.Tactic
 import InfoGeometry.Geometry.PauliParavectorBridge
@@ -168,7 +168,7 @@ theorem conjugatedMomentum_pow_intertwines
   | succ n ih =>
       rw [pow_succ, Module.End.mul_apply]
       rw [conjugatedMomentum_apply J P v]
-      simpa [Module.End.mul_apply] using ih (P v)
+      rw [ih (P v), ← Module.End.mul_apply, ← pow_succ]
 
 theorem momentum_power_intertwines
     (d : ThreePillarMomentumDatum HMod S55) (p : Minkowski4)
@@ -179,7 +179,7 @@ theorem momentum_power_intertwines
   | succ n ih =>
       rw [pow_succ, Module.End.mul_apply]
       rw [d.intertwines]
-      simpa [Module.End.mul_apply] using ih (d.P_mod p v)
+      rw [ih (d.P_mod p v), ← Module.End.mul_apply, ← pow_succ]
 
 /-- 🏆 THEOREM 2: Inverse Intertwining:
     $J^{-1} \circ P_\mu^{\rm SUSY} = P_\mu^{\rm mod} \circ J^{-1}$. -/

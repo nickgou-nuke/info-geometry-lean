@@ -33,7 +33,8 @@ theorem spinCliffordRingEquiv_mul (g h : Spin55) (x : Cl55) :
 theorem spinCliffordRingEquiv_vector_readback (g : Spin55) (v : V55) :
     spinCliffordRingEquiv g (ι55 v) = ι55 (spinAction g v) := by
   symm
-  simpa only [spinCliffordRingEquiv, unitConjugation] using
+  simpa only [spinCliffordRingEquiv, unitConjugationRingEquiv_apply,
+    unitConjugation] using
     (show ι55 (spinAction g v) =
         (spinGroup.toUnits g : Cl55) * ι55 v *
           (↑((spinGroup.toUnits g)⁻¹) : Cl55) by
@@ -46,7 +47,12 @@ theorem spinCliffordRingEquiv_vector_readback (g : Spin55) (v : V55) :
             CliffordAlgebra.involute (spinGroup.toUnits g : Cl55) =
               (spinGroup.toUnits g : Cl55) := by
           simpa using (spinGroup.involute_eq g.property)
-        simpa only [pinTwistedAdj, hu, hinv] using hι)
+        have hinv' : CliffordAlgebra.involute (g : Cl55) = (g : Cl55) := by
+          simpa using hinv
+        change ι55 (pinTwistedAction (spinToPin g) v) =
+          (spinGroup.toUnits g : Cl55) * ι55 v *
+            (↑((spinGroup.toUnits g)⁻¹) : Cl55)
+        simpa [pinTwistedAdj, hu, hinv'] using hι)
 
 theorem spinCliffordRingEquiv_preserves_vector_range (g : Spin55) (v : V55) :
     spinCliffordRingEquiv g (ι55 v) ∈ LinearMap.range ι55 := by

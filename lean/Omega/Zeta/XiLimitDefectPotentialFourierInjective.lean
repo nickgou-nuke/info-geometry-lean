@@ -97,6 +97,12 @@ lemma xi_limit_defect_potential_fourier_injective_packet_kernel_eq
   rw [Real.log_div hnum hden]
   ring
 
+noncomputable section
+
+local instance instAddCommGroupReal_fourier : AddCommGroup ℝ :=
+  DenselyNormedField.toNontriviallyNormedField.toDivisionRing.toAddCommGroup
+local instance instModuleReal_fourier : Module ℝ ℝ := (NormedAlgebra.toNormedSpace ℝ).toModule
+
 lemma xi_limit_defect_potential_fourier_injective_packet_hasDerivAt
     (P : XiLimitDefectPacket) (x : ℝ) :
     HasDerivAt (xiPacketKernel P)
@@ -125,10 +131,14 @@ lemma xi_limit_defect_potential_fourier_injective_packet_hasDerivAt
       nlinarith [sq_nonneg (x - P.γ)]
   have hlogPlus :
       HasDerivAt (fun y => Real.log (gPlus y)) ((gPlus x)⁻¹ * (2 * (x - P.γ))) x := by
-    simpa [gPlus] using (Real.hasDerivAt_log hgPlus_ne).comp x hgPlus
+    convert (Real.hasDerivAt_log hgPlus_ne).comp x hgPlus using 1
+    · funext y
+      rfl
   have hlogMinus :
       HasDerivAt (fun y => Real.log (gMinus y)) ((gMinus x)⁻¹ * (2 * (x - P.γ))) x := by
-    simpa [gMinus] using (Real.hasDerivAt_log hgMinus_ne).comp x hgMinus
+    convert (Real.hasDerivAt_log hgMinus_ne).comp x hgMinus using 1
+    · funext y
+      rfl
   have hmain :
       HasDerivAt
         (fun y => (1 / 2 : ℝ) * Real.log (gPlus y) - (1 / 2 : ℝ) * Real.log (gMinus y))
@@ -160,9 +170,11 @@ lemma xi_limit_defect_potential_fourier_injective_potential_hasDerivAt
         xi_limit_defect_potential_fourier_injective_potential_derivative] using
         (hasDerivAt_const x (c := (0 : ℝ)))
   | cons P Ps ih =>
-      simpa [xiLimitDefectPotential,
-        xi_limit_defect_potential_fourier_injective_potential_derivative] using
-        (xi_limit_defect_potential_fourier_injective_packet_hasDerivAt P x).const_mul (P.m : ℝ) |>.add ih
+      convert ((xi_limit_defect_potential_fourier_injective_packet_hasDerivAt P x).const_mul
+        (P.m : ℝ)).add ih using 1
+      · funext y
+        rfl
+      · simp [xi_limit_defect_potential_fourier_injective_potential_derivative]
 
 lemma xi_limit_defect_potential_fourier_injective_fourier_model_eq_sum
     (packets : List XiLimitDefectPacket) (ξ : ℝ) :
@@ -236,5 +248,7 @@ theorem paper_xi_limit_defect_potential_fourier_injective
     subst hnil
     funext x
     simp [xiLimitDefectPotential]
+
+end
 
 end Omega.Zeta

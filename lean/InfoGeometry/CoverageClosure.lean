@@ -195,7 +195,7 @@ import InfoGeometry.Canonical.JaynesLDDSBridge
 import InfoGeometry.Canonical.JaynesVirasoroFormalism
 import InfoGeometry.Canonical.K0Functor
 import InfoGeometry.Canonical.KLinearGap
-import InfoGeometry.Canonical.KMSBoundaryTrajectory
+import InfoGeometry.Canonical.FractalCantorCliffordFockBridge
 import InfoGeometry.Canonical.KMSInteriorPoint
 import InfoGeometry.Canonical.KatzSarnakDensity
 import InfoGeometry.Canonical.KleinBottleBoundaryActionPacket

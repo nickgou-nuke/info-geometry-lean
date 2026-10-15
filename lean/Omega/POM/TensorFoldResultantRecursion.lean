@@ -295,7 +295,9 @@ theorem paper_pom_tensor_hadamard_pole_law_pressure_additivity
       · constructor
         · intro p q hpq
           apply D.productRoot_injective
-          simpa using congrArg Inv.inv hpq
+          change D.α p.1 * D.β p.2 = D.α q.1 * D.β q.2
+          simpa [pom_tensor_hadamard_pole_law_pressure_additivity_data.productRoot] using
+            congrArg Inv.inv hpq
         · intro p
           exact mul_ne_zero (D.leftRoot_ne_zero p.1) (D.rightRoot_ne_zero p.2)
       · constructor

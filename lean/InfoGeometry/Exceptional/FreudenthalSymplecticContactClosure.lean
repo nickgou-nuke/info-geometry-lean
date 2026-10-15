@@ -1,16 +1,20 @@
+import Mathlib.Algebra.Lie.OfAssociative
 import InfoGeometry.Exceptional.FreudenthalSymplecticContactCommonCARCCR
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Exceptional.FreudenthalSymplecticContactGrading
+import InfoGeometry.Exceptional.FreudenthalSymplecticContactLieAlgebra
 
 noncomputable section
 namespace InfoGeometry.Exceptional.Freudenthal
 variable {J : Type*} [AddCommGroup J] [Module ℝ J]
 variable (D : CubicJordanDatum J)
 
+attribute [local instance 100] LieRing.ofAssociativeRing LieAlgebra.ofAssociativeAlgebra
+
 abbrev contactRho : FiveGradedCarrier D →ₗ⁅ℝ⁆ SymplecticContactEnd (J := J) :=
   symplecticContactRepresentationLieHom D
 
-theorem contactRho_injective :
+theorem contactRho_injective (D : CubicJordanDatum J) :
     Function.Injective (contactRho D) :=
   symplecticContactRepresentationLieHom_injective D
 

@@ -26,7 +26,6 @@ abbrev BaseFiber := universalQuotientMap ⁻¹' ({basePoint} : Set KleinBrilloui
 
 private instance : IsCancelSMul AffineKleinGroup Cover :=
   universalQuotientMap_isQuotientCovering.isCancelSMul
-    universalQuotientMap AffineKleinGroup
 
 def fiberOfDeck (g : AffineKleinGroup) : BaseFiber :=
   ⟨g • baseLift, by
@@ -73,8 +72,7 @@ theorem monodromy_from_deck (p : KleinPiOne) (g : AffineKleinGroup) :
       g • (monodromyEndpoint p).1 := by
   refine Quotient.inductionOn p ?_
   intro γ
-  have hγ₀ : γ 0 = universalQuotientMap baseLift := by
-    simp [basePoint]
+  have hγ₀ : γ 0 = universalQuotientMap baseLift := γ.source
   let Γ₀ := universalQuotientMap_isCovering.liftPath γ baseLift hγ₀
   let gΓ : C(I, Cover) :=
     ⟨fun t ↦ g • Γ₀ t, (continuous_const_smul g).comp Γ₀.continuous⟩
@@ -124,7 +122,8 @@ theorem loopToDeck_mul_reverse (p q : KleinPiOne) :
 def loopToDeckForward (p : KleinPiOne) : AffineKleinGroup := (loopToDeck p)⁻¹
 
 theorem loopToDeckForward_one : loopToDeckForward 1 = 1 := by
-  simp [loopToDeckForward, loopToDeck_one]
+  change (loopToDeck 1)⁻¹ = 1
+  rw [loopToDeck_one, inv_one]
 
 theorem loopToDeckForward_mul (p q : KleinPiOne) :
     loopToDeckForward (p * q) = loopToDeckForward p * loopToDeckForward q := by
@@ -163,16 +162,14 @@ theorem monodromyEndpoint_injective : Function.Injective monodromyEndpoint := by
   intro p q hpq
   obtain ⟨γ, rfl⟩ := Path.Homotopic.Quotient.mk_surjective p
   obtain ⟨δ, rfl⟩ := Path.Homotopic.Quotient.mk_surjective q
-  let Γ := universalQuotientMap_isCovering.liftPath γ baseLift (by
-    simp [basePoint])
-  let Δ := universalQuotientMap_isCovering.liftPath δ baseLift (by
-    simp [basePoint])
+  have hγ_src : γ 0 = universalQuotientMap baseLift := γ.source
+  have hδ_src : δ 0 = universalQuotientMap baseLift := δ.source
+  let Γ := universalQuotientMap_isCovering.liftPath γ baseLift hγ_src
+  let Δ := universalQuotientMap_isCovering.liftPath δ baseLift hδ_src
   have hΓ₀ : Γ 0 = baseLift :=
-    universalQuotientMap_isCovering.liftPath_zero γ baseLift (by
-      simp [basePoint])
+    universalQuotientMap_isCovering.liftPath_zero γ baseLift hγ_src
   have hΔ₀ : Δ 0 = baseLift :=
-    universalQuotientMap_isCovering.liftPath_zero δ baseLift (by
-      simp [basePoint])
+    universalQuotientMap_isCovering.liftPath_zero δ baseLift hδ_src
   have hΓΔ₁ : Γ 1 = Δ 1 := congrArg Subtype.val hpq
   let Γp : Path baseLift (Γ 1) := ⟨Γ, hΓ₀, rfl⟩
   let Δp : Path baseLift (Γ 1) := ⟨Δ, hΔ₀, hΓΔ₁.symm⟩
@@ -185,8 +182,7 @@ theorem monodromyEndpoint_injective : Function.Injective monodromyEndpoint := by
   have hs : basePoint = f baseLift := rfl
   have htΓ : basePoint = f (Γ 1) := by
     change basePoint = universalQuotientMap (Γ 1)
-    have hl := congrFun (universalQuotientMap_isCovering.liftPath_lifts γ baseLift (by
-      simp [basePoint])) 1
+    have hl := congrFun (universalQuotientMap_isCovering.liftPath_lifts γ baseLift hγ_src) 1
     change universalQuotientMap
       ((universalQuotientMap_isCovering.liftPath γ baseLift _) 1) = γ 1 at hl
     rw [show Γ = universalQuotientMap_isCovering.liftPath γ baseLift _ from rfl, hl]
@@ -195,12 +191,10 @@ theorem monodromyEndpoint_injective : Function.Injective monodromyEndpoint := by
   let Δm : Path basePoint basePoint := (Δp.map f.continuous).cast hs htΓ
   have hΓm : Γm = γ := by
     ext t
-    exact congrFun (universalQuotientMap_isCovering.liftPath_lifts γ baseLift (by
-      simp [basePoint])) t
+    exact congrFun (universalQuotientMap_isCovering.liftPath_lifts γ baseLift hγ_src) t
   have hΔm : Δm = δ := by
     ext t
-    exact congrFun (universalQuotientMap_isCovering.liftPath_lifts δ baseLift (by
-      simp [basePoint])) t
+    exact congrFun (universalQuotientMap_isCovering.liftPath_lifts δ baseLift hδ_src) t
   rw [← hΓm, ← hΔm]
   exact hmap.pathCast hs htΓ
 

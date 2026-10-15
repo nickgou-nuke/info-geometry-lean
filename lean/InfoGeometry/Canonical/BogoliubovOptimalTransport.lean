@@ -82,8 +82,8 @@ Curved lane (`χ ≠ 0`) is exactly non-alignment of spectral and metric support
 theorem chiObstruction_ne_zero_iff_non_alignment
     (c : CertifiedModularReduction (E := E)) :
     chiObstruction c ≠ 0 ↔ ¬ c.SpectralMetricAlignment := by
-  simpa [chiObstruction] using
-    c.curved_regular_lane_iff_non_alignment
+  change c.anomaly ≠ 0 ↔ ¬ c.SpectralMetricAlignment
+  exact c.curved_regular_lane_iff_non_alignment
 
 /--
 Regular-lane optimality condition for an operator flow `U`.

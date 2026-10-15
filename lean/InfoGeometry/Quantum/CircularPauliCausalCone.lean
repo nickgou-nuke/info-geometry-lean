@@ -393,8 +393,9 @@ theorem zornCorrelationReadout_y3
 theorem zornCorrelationReadout_eq_mul
     (X Y : InfoGeometry.Algebra.Zorn.Concrete.ZornCell ℂ) :
     zornCorrelationReadout X Y = X * Y := by
-  simpa [InfoGeometry.Algebra.Zorn.Concrete.ZornCell.instMulZornCell] using
-    zornCorrelationReadout_eq_zornMul X Y
+  change zornCorrelationReadout X Y =
+    InfoGeometry.Algebra.Zorn.Concrete.ZornCell.mulZ X Y
+  exact zornCorrelationReadout_eq_zornMul X Y
 
 structure OperatorSheet where
   scalar : ℂ

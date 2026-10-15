@@ -50,7 +50,7 @@ omit [CompleteSpace H] [KreinSpace H] [KreinGradedModule H] in
 lemma isCompactEnd_comp_right {S T : EndH H}
     (hS : IsCompactEnd H S) :
     IsCompactEnd H (S.comp T) := by
-  simpa [IsCompactEnd] using
+  simpa [IsCompactEnd, ContinuousLinearMap.coe_comp] using
     IsCompactOperator.comp_clm (hf := hS) (g := T)
 
 omit [CompleteSpace H] [KreinSpace H] [KreinGradedModule H] in
@@ -58,7 +58,7 @@ omit [CompleteSpace H] [KreinSpace H] [KreinGradedModule H] in
 lemma isCompactEnd_comp_left {S T : EndH H}
     (hT : IsCompactEnd H T) :
     IsCompactEnd H (S.comp T) := by
-  simpa [IsCompactEnd] using
+  simpa [IsCompactEnd, ContinuousLinearMap.coe_comp] using
     IsCompactOperator.clm_comp (hf := hT) (g := S)
 
 /-- Grading conjugation preserves compactness of bounded endomorphisms. -/

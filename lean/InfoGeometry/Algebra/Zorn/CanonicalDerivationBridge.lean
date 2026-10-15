@@ -23,6 +23,10 @@ open InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge
 open InfoGeometry.Algebra.Zorn.G2TrifactorSU3
 open InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 
+-- Mathlib keeps this instance local to avoid an instance diamond when an
+-- endomorphism ring is also used as its own Lie module.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 abbrev VectorDerivation := ZornVectorMatrix.Derivation (R := ℝ)
 abbrev CanonicalEnd := Module.End ℝ CZ
 abbrev Kingdon :=
@@ -149,7 +153,7 @@ noncomputable def kingdonDerivationLinearMap : VectorDerivation →ₗ[ℝ] King
     intro x
     apply kingdonCanonicalLinearEquiv.injective
     simpa only [toKingdonEnd_apply, LinearEquiv.apply_symm_apply, LinearEquiv.map_add,
-      LinearMap.add_apply] using
+      LinearMap.add_apply, canonicalDerivationLinearMap_apply] using
       LinearMap.congr_fun (canonicalDerivationLinearMap.map_add D E)
         (kingdonCanonicalLinearEquiv x)
   map_smul' r D := by
@@ -157,7 +161,7 @@ noncomputable def kingdonDerivationLinearMap : VectorDerivation →ₗ[ℝ] King
     intro x
     apply kingdonCanonicalLinearEquiv.injective
     simpa only [toKingdonEnd_apply, LinearEquiv.apply_symm_apply, LinearEquiv.map_smul,
-      LinearMap.smul_apply, RingHom.id_apply] using
+      LinearMap.smul_apply, RingHom.id_apply, canonicalDerivationLinearMap_apply] using
       LinearMap.congr_fun (canonicalDerivationLinearMap.map_smul r D)
         (kingdonCanonicalLinearEquiv x)
 
@@ -191,8 +195,8 @@ noncomputable def kingdonDerivationLieHom : VectorDerivation →ₗ⁅ℝ⁆ Kin
   map_lie' := by
     intro D E
     change toKingdonEnd (ZornVectorMatrix.Derivation.bracket D E) =
-      ⁅toKingdonEnd D, toKingdonEnd E⁆
-    simpa only [LieRing.of_associative_ring_bracket] using toKingdonEnd_bracket D E
+      toKingdonEnd D * toKingdonEnd E - toKingdonEnd E * toKingdonEnd D
+    exact toKingdonEnd_bracket D E
 
 /-- The Kingdon derivation Lie algebra as the exact transported image. -/
 noncomputable def kingdonDerivationLieAlgebra : LieSubalgebra ℝ KingdonEnd :=

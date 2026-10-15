@@ -1,5 +1,4 @@
 import InfoGeometry.Canonical.ActualEntireRiemannXiDifferentialFormBridge
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The actual zero-free closed one-form datum for `riemannXi`
@@ -49,8 +48,8 @@ noncomputable def actual : Datum where
 
 @[simp] theorem actual_form_apply (s : ℂ) (v : Fin 1 → ℂ) :
     actual.form s v = v 0 * entireRiemannXiLogDifferential s := by
-  simpa only [actual_form] using
-    entireRiemannXiLogDifferentialForm_apply s v
+  rw [actual_form, entireRiemannXiLogDifferentialForm_apply,
+    entireRiemannXiLogOneForm_apply]
 
 theorem actual_form_differentiableOn_zero_free :
     DifferentiableOn ℂ actual.form

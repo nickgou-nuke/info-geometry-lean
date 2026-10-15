@@ -206,7 +206,11 @@ theorem continuous_octTrace :
     Int.cast_continuous.comp continuous_splitOctEquiv.fst
   have hb : Continuous (fun Z : SplitOct => (Z.b : ℝ)) :=
     Int.cast_continuous.comp continuous_splitOctEquiv.snd.fst
-  simpa [octTrace] using ha.add hb
+  have hfun : (fun Z : SplitOct => (Z.a : ℝ) + (Z.b : ℝ)) = octTrace := by
+    funext Z
+    rfl
+  rw [← hfun]
+  exact ha.add hb
 
 theorem continuous_traceBilin_left (Y : AlbertMatrix) :
     Continuous (fun X : AlbertMatrix => traceBilin X Y) := by
@@ -222,8 +226,33 @@ theorem continuous_traceBilin_left (Y : AlbertMatrix) :
     (continuous_const : Continuous (fun _ : AlbertMatrix => octTrace Y.z₂))
   have h₁₂ := (continuous_octTrace.comp continuous_albertMatrix_z₃).mul
     (continuous_const : Continuous (fun _ : AlbertMatrix => octTrace Y.z₃))
-  simpa [traceBilin] using
-    (((((h₁.add h₂).add h₃).add h₂₃).add h₃₁).add h₁₂)
+  have hfun : (fun X : AlbertMatrix =>
+      X.α₁ * Y.α₁ + X.α₂ * Y.α₂ + X.α₃ * Y.α₃ +
+        octTrace X.z₁ * octTrace Y.z₁ +
+        octTrace X.z₂ * octTrace Y.z₂ +
+        octTrace X.z₃ * octTrace Y.z₃) = fun X => traceBilin X Y := by
+    funext X
+    rfl
+  rw [← hfun]
+  exact (((((h₁.add h₂).add h₃).add h₂₃).add h₃₁).add h₁₂)
+
+private theorem albertMatrix_add_α₁ (X Y : AlbertMatrix) :
+    (X + Y).α₁ = X.α₁ + Y.α₁ := rfl
+
+private theorem albertMatrix_add_α₂ (X Y : AlbertMatrix) :
+    (X + Y).α₂ = X.α₂ + Y.α₂ := rfl
+
+private theorem albertMatrix_add_α₃ (X Y : AlbertMatrix) :
+    (X + Y).α₃ = X.α₃ + Y.α₃ := rfl
+
+private theorem albertMatrix_add_z₁ (X Y : AlbertMatrix) :
+    (X + Y).z₁ = X.z₁ + Y.z₁ := rfl
+
+private theorem albertMatrix_add_z₂ (X Y : AlbertMatrix) :
+    (X + Y).z₂ = X.z₂ + Y.z₂ := rfl
+
+private theorem albertMatrix_add_z₃ (X Y : AlbertMatrix) :
+    (X + Y).z₃ = X.z₃ + Y.z₃ := rfl
 
 theorem continuous_albertMatrix_add :
     Continuous (fun p : AlbertMatrix × AlbertMatrix => p.1 + p.2) := by
@@ -245,7 +274,9 @@ theorem continuous_albertMatrix_add :
   have hcoords := hα₁.prodMk (hα₂.prodMk (hα₃.prodMk
     (hz₁.prodMk (hz₂.prodMk hz₃))))
   apply (continuous_induced_rng).2
-  simpa [Function.comp_def, albertMatrixEquiv] using hcoords
+  simpa [Function.comp_def, albertMatrixEquiv, albertMatrix_add_α₁,
+    albertMatrix_add_α₂, albertMatrix_add_α₃, albertMatrix_add_z₁,
+    albertMatrix_add_z₂, albertMatrix_add_z₃] using hcoords
 
 theorem continuous_traceBilin :
     Continuous (fun p : AlbertMatrix × AlbertMatrix => traceBilin p.1 p.2) := by
@@ -279,7 +310,16 @@ theorem continuous_traceBilin :
   have hsum12345 := hsum1234.add (hz₁.mul kz₁)
   have hsum123456 := hsum12345.add (hz₂.mul kz₂)
   have hsum := hsum123456.add (hz₃.mul kz₃)
-  simpa [traceBilin] using hsum
+  have hfun : (fun p : AlbertMatrix × AlbertMatrix =>
+      p.1.α₁ * p.2.α₁ + p.1.α₂ * p.2.α₂ + p.1.α₃ * p.2.α₃ +
+        octTrace p.1.z₁ * octTrace p.2.z₁ +
+        octTrace p.1.z₂ * octTrace p.2.z₂ +
+        octTrace p.1.z₃ * octTrace p.2.z₃) =
+      fun p => traceBilin p.1 p.2 := by
+    funext p
+    rfl
+  rw [← hfun]
+  exact hsum
 
 theorem continuous_detZ :
     Continuous (detZ : SplitOct → ℤ) := by
@@ -303,7 +343,12 @@ theorem continuous_detZ :
   have hxy₁ := hx₁.mul hy₁
   have hxy₂ := hx₂.mul hy₂
   have hinner := (hxy₀.add hxy₁).add hxy₂
-  simpa [detZ] using (ha.mul hb).sub hinner
+  have hfun : (fun Z : SplitOct => Z.a * Z.b -
+      (Z.x0 * Z.y0 + Z.x1 * Z.y1 + Z.x2 * Z.y2)) = detZ := by
+    funext Z
+    rfl
+  rw [← hfun]
+  exact (ha.mul hb).sub hinner
 
 theorem continuous_detZ_real :
     Continuous (fun Z : SplitOct => (detZ Z : ℝ)) :=
@@ -330,6 +375,13 @@ theorem continuous_normCubic :
   have hsum₁ := hterm₁₂₃.add hterm₁
   have hsum₂ := hsum₁.add hterm₂
   have hsum₃ := hsum₂.add hterm₃
-  simpa [normCubic] using hsum₃.sub htriple
+  have hfun : (fun X : AlbertMatrix =>
+      X.α₁ * X.α₂ * X.α₃ + X.α₁ * (detZ X.z₁ : ℝ) +
+        X.α₂ * (detZ X.z₂ : ℝ) + X.α₃ * (detZ X.z₃ : ℝ) -
+        (octTrace (mulZ (mulZ X.z₁ X.z₂) X.z₃) : ℝ)) = normCubic := by
+    funext X
+    rfl
+  rw [← hfun]
+  exact hsum₃.sub htriple
 
 end InfoGeometry.Algebra.CubicJordanOs

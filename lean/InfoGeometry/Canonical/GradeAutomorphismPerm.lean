@@ -37,25 +37,32 @@ def nonZeroGradeToKleinFour : NonZeroGrade → KleinFour
   | NonZeroGrade.g₃ => (1, 1)
 
 /-- Convert a `KleinFour` element (assumed non‑zero) back to a `NonZeroGrade`. -/
-def kleinFourToNonZeroGrade! (g : KleinFour) : NonZeroGrade :=
-  match g with
-  | (1, 0) => NonZeroGrade.g₁
-  | (0, 1) => NonZeroGrade.g₂
-  | (1, 1) => NonZeroGrade.g₃
-  | _      => NonZeroGrade.g₁
+noncomputable def kleinFourToNonZeroGrade! (g : KleinFour) : NonZeroGrade := by
+  classical
+  by_cases h₁ : g = (1, 0)
+  · exact NonZeroGrade.g₁
+  · by_cases h₂ : g = (0, 1)
+    · exact NonZeroGrade.g₂
+    · by_cases h₃ : g = (1, 1)
+      · exact NonZeroGrade.g₃
+      · exact NonZeroGrade.g₁
 
 lemma nonZeroGrade_inv (x : KleinFour) (h : x ≠ (0,0)) :
     nonZeroGradeToKleinFour (kleinFourToNonZeroGrade! x) = x := by
-  revert x h
-  decide
+  rcases x with ⟨a, b⟩
+  fin_cases a <;> fin_cases b
+  · exact False.elim (h rfl)
+  · decide
+  · decide
+  · decide
 
 lemma kleinFourToNonZeroGrade!_inv (g : NonZeroGrade) :
     kleinFourToNonZeroGrade! (nonZeroGradeToKleinFour g) = g := by
-  cases g <;> rfl
+  cases g <;> simp [kleinFourToNonZeroGrade!, nonZeroGradeToKleinFour]
 
 /-- Turn an additive equivalence of `KleinFour` into a permutation of the three
 non‑zero grades. This yields the concrete `S₃`‑action we need. -/
-def gradeAutomorphismPerm (e : KleinFour ≃+ KleinFour) : Equiv.Perm NonZeroGrade :=
+noncomputable def gradeAutomorphismPerm (e : KleinFour ≃+ KleinFour) : Equiv.Perm NonZeroGrade :=
   { toFun := fun g => kleinFourToNonZeroGrade! (e (nonZeroGradeToKleinFour g))
     invFun := fun g => kleinFourToNonZeroGrade! (e.symm (nonZeroGradeToKleinFour g))
     left_inv := by
@@ -117,7 +124,9 @@ lemma gradeAutomorphismPerm_swap :
     gradeAutomorphismPerm (swapGradeAddEquiv) =
       (Equiv.swap NonZeroGrade.g₁ NonZeroGrade.g₂) := by
   ext g
-  cases g <;> rfl
+  cases g <;>
+    simp [gradeAutomorphismPerm, swapGradeAddEquiv, nonZeroGradeToKleinFour,
+      kleinFourToNonZeroGrade!, Equiv.swap_apply_def]
 
 def rotPerm : Equiv.Perm NonZeroGrade :=
   { toFun := fun g => match g with | .g₁ => .g₂ | .g₂ => .g₃ | .g₃ => .g₁
@@ -129,17 +138,19 @@ def rotPerm : Equiv.Perm NonZeroGrade :=
 lemma gradeAutomorphismPerm_rot :
     gradeAutomorphismPerm (rotGradeAddEquiv) = rotPerm := by
   ext g
-  cases g <;> rfl
+  cases g <;>
+    simp [gradeAutomorphismPerm, rotGradeAddEquiv, rotPerm,
+      nonZeroGradeToKleinFour, kleinFourToNonZeroGrade!]
 
 /-- The map `gradeAutomorphismPerm` is a group homomorphism from the additive
 automorphism group of `KleinFour` to the symmetric group `S₃`. -/
-def gradeAutomorphismPermHom : (KleinFour ≃+ KleinFour) →* Equiv.Perm NonZeroGrade :=
-  { toFun := gradeAutomorphismPerm
-    map_one' := by
+noncomputable def gradeAutomorphismPermHom : AddAut KleinFour →+ Additive (Equiv.Perm NonZeroGrade) :=
+  { toFun := fun e => Additive.ofMul (gradeAutomorphismPerm e)
+    map_zero' := by
       ext g
       change kleinFourToNonZeroGrade! (nonZeroGradeToKleinFour g) = g
-      cases g <;> rfl
-    map_mul' := by
+      exact kleinFourToNonZeroGrade!_inv g
+    map_add' := by
       intro e₁ e₂
       ext g
       change kleinFourToNonZeroGrade! (e₁ (e₂ (nonZeroGradeToKleinFour g))) =

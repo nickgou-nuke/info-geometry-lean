@@ -29,12 +29,19 @@ abbrev colourReflection : ColourMatrix :=
 theorem colourReflection_conj_shift :
     colourReflection * colourShift * colourReflection =
       colourShift * colourShift := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [colourReflection, colourShift, qutritPermutationMatrix,
-      Equiv.Perm.permMatrix, sigma2, qutritShiftMatrix,
-      qutritGeneralizedPauliX, Matrix.mul_apply, Fin.sum_univ_three,
-      Equiv.swap_apply_def]
+  have hperm : sigma2 * qutritCycle * sigma2 = qutritCycle * qutritCycle := by
+    ext i
+    fin_cases i <;> rfl
+  rw [colourReflection, colourShift, qutritGeneralizedPauliX_eq_shift,
+    qutritShiftMatrix_eq_qutritPermutationMatrix_qutritCycle]
+  calc
+    qutritPermutationMatrix sigma2 * qutritPermutationMatrix qutritCycle *
+        qutritPermutationMatrix sigma2 =
+        qutritPermutationMatrix (sigma2 * qutritCycle * sigma2) := by
+      rw [← qutritPermutationMatrix_mul, ← qutritPermutationMatrix_mul]
+    _ = qutritPermutationMatrix (qutritCycle * qutritCycle) := by rw [hperm]
+    _ = qutritPermutationMatrix qutritCycle *
+        qutritPermutationMatrix qutritCycle := qutritPermutationMatrix_mul _ _
 
 theorem colourReflection_conj_clock :
     colourReflection * colourClock * colourReflection =

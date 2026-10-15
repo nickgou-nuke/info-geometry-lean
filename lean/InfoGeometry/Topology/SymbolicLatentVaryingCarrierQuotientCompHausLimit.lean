@@ -20,7 +20,7 @@ open CategoryTheory.Limits
 
 variable {ι : Type} [Fintype ι]
 
-noncomputable def compactIndexedObservationQuotientCompHausLimit
+noncomputable abbrev compactIndexedObservationQuotientCompHausLimit
     {J : Type} [Category J]
     (D : Jᵒᵖ ⥤ CompactSymbolicLatentSystemObject ι) : CompHaus :=
   limit (compactIndexedObservationQuotientDiagram D)
@@ -139,7 +139,8 @@ theorem compactIndexedObservationQuotientCompHausLimitMap_comp
             (D := D) (E := E) τ).app j ≫
           (compactIndexedObservationQuotientCompHausLimitMappedNatTrans
             (D := E) (E := F) υ).app j := by
-      simp [compactIndexedObservationQuotientCompHausLimitMappedNatTrans]
+      simp only [compactIndexedObservationQuotientCompHausLimitMappedNatTrans,
+        NatTrans.comp_app, Functor.map_comp]
     _ = (compactIndexedObservationQuotientCompHausLimitMap τ ≫
           compactIndexedObservationQuotientCompHausLimitProjection E j) ≫
           (compactIndexedObservationQuotientCompHausLimitMappedNatTrans
@@ -160,7 +161,7 @@ theorem compactIndexedObservationQuotientCompHausLimitMap_comp
           compactIndexedObservationQuotientCompHausLimitProjection F j := by
       simp [Category.assoc]
 
-noncomputable def compactIndexedObservationRangeCompHausLimit
+noncomputable abbrev compactIndexedObservationRangeCompHausLimit
     {J : Type} [Category J]
     (D : Jᵒᵖ ⥤ CompactSymbolicLatentSystemObject ι) : CompHaus :=
   limit (compactIndexedObservationRangeDiagram D)
@@ -254,38 +255,17 @@ theorem compactIndexedObservationRangeCompHausLimitMap_comp
         compactIndexedObservationRangeCompHausLimitMap υ := by
   apply limit.hom_ext
   intro j
-  calc
-    compactIndexedObservationRangeCompHausLimitMap (τ ≫ υ) ≫
-          limit.π (compactIndexedObservationRangeDiagram F) j =
-        limit.π (compactIndexedObservationRangeDiagram D) j ≫
-          (compactIndexedObservationRangeCompHausLimitMappedNatTrans
-            (D := D) (E := F) (τ ≫ υ)).app j :=
-      compactIndexedObservationRangeCompHausLimitMap_projection (τ ≫ υ) j
-    _ = limit.π (compactIndexedObservationRangeDiagram D) j ≫
-          (compactIndexedObservationRangeCompHausLimitMappedNatTrans
-            (D := D) (E := E) τ).app j ≫
-          (compactIndexedObservationRangeCompHausLimitMappedNatTrans
-            (D := E) (E := F) υ).app j := by
-      simp [compactIndexedObservationRangeCompHausLimitMappedNatTrans]
-    _ = (compactIndexedObservationRangeCompHausLimitMap τ ≫
-          limit.π (compactIndexedObservationRangeDiagram E) j) ≫
-          (compactIndexedObservationRangeCompHausLimitMappedNatTrans
-            (D := E) (E := F) υ).app j := by
-      rw [compactIndexedObservationRangeCompHausLimitMap_projection τ j]
-      exact (Category.assoc _ _ _).symm
-    _ = compactIndexedObservationRangeCompHausLimitMap τ ≫
-          (limit.π (compactIndexedObservationRangeDiagram E) j ≫
-            (compactIndexedObservationRangeCompHausLimitMappedNatTrans
-              (D := E) (E := F) υ).app j) := by
-      exact Category.assoc _ _ _
-    _ = compactIndexedObservationRangeCompHausLimitMap τ ≫
-          (compactIndexedObservationRangeCompHausLimitMap υ ≫
-            limit.π (compactIndexedObservationRangeDiagram F) j) := by
-      rw [compactIndexedObservationRangeCompHausLimitMap_projection υ j]
-    _ = (compactIndexedObservationRangeCompHausLimitMap τ ≫
-          compactIndexedObservationRangeCompHausLimitMap υ) ≫
-          limit.π (compactIndexedObservationRangeDiagram F) j := by
-      simp [Category.assoc]
+  rw [compactIndexedObservationRangeCompHausLimitMap_projection (τ ≫ υ) j,
+    Category.assoc, compactIndexedObservationRangeCompHausLimitMap_projection υ j,
+    ← Category.assoc, compactIndexedObservationRangeCompHausLimitMap_projection τ j]
+  change
+    limit.π (D ⋙ compactSymbolicLatentObservationRangeCompHausFunctor) j ≫
+        compactSymbolicLatentObservationRangeCompHausFunctor.map
+          ((τ ≫ υ).app j) =
+      (limit.π (D ⋙ compactSymbolicLatentObservationRangeCompHausFunctor) j ≫
+        compactSymbolicLatentObservationRangeCompHausFunctor.map (τ.app j)) ≫
+        compactSymbolicLatentObservationRangeCompHausFunctor.map (υ.app j)
+  rw [NatTrans.comp_app, Functor.map_comp, Category.assoc]
 
 theorem compactIndexedObservationQuotientRangeCompHausLimitIso_naturality
     {J : Type} [Category J]
@@ -337,11 +317,10 @@ theorem compactIndexedObservationQuotientRangeCompHausLimitIso_naturality
               (ι := ι)).hom.app (D.obj j) ≫
               compactSymbolicLatentObservationRangeCompHausFunctor.map
                 (τ.app j))
-      simpa only [Category.assoc] using
-        congrArg
-          (fun f => compactIndexedObservationQuotientCompHausLimitProjection D j ≫ f)
-          ((compactSymbolicLatentObservationQuotientRangeCompHausNaturalIso
-            (ι := ι)).hom.naturality (τ.app j))
+      exact congrArg
+        (fun f => compactIndexedObservationQuotientCompHausLimitProjection D j ≫ f)
+        ((compactSymbolicLatentObservationQuotientRangeCompHausNaturalIso
+          (ι := ι)).hom.naturality (τ.app j))
     _ = (compactIndexedObservationQuotientRangeCompHausLimitIso D).hom ≫
           limit.π (compactIndexedObservationRangeDiagram D) j ≫
           (compactIndexedObservationRangeCompHausLimitMappedNatTrans

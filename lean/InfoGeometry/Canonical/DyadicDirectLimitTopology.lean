@@ -22,7 +22,12 @@ theorem continuous_dyadicDirectLimitEquiv :
 theorem continuous_dyadicDirectLimitEquiv_symm :
     Continuous (dyadicDirectLimitEquiv.symm : DyadicRational → DyadicDirectLimit) := by
   apply continuous_induced_rng.mpr
-  simpa [Function.comp_def] using (continuous_id : Continuous (id : DyadicRational → DyadicRational))
+  have hcomp :
+      (dyadicDirectLimitEquiv ∘ dyadicDirectLimitEquiv.symm) = id := by
+    funext q
+    exact dyadicDirectLimitEquiv.apply_symm_apply q
+  rw [hcomp]
+  exact continuous_id
 
 theorem continuous_dyadicDirectLimitValue :
     Continuous dyadicDirectLimitValue := by

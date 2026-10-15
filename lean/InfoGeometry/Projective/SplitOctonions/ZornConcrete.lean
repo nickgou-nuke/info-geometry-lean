@@ -202,38 +202,26 @@ def concretePolarDatum
   add := addCell
   polar_scale_left_zero := by
     intro u X Y
+    change polarExpr B (scaleCell u X) Y = 0 ↔ polarExpr B X Y = 0
+    rw [polarExpr_scale_left]
     constructor
     · intro h
-      change polarExpr B (scaleCell u X) Y = 0 at h
-      rw [polarExpr_scale_left] at h
-      have hzero : polarExpr B X Y = 0 := by
-        rcases mul_eq_zero.mp h with hu | hr
-        · exact False.elim (Units.ne_zero u hu)
-        · exact hr
-      simpa [polarExpr] using hzero
+      rcases mul_eq_zero.mp h with hu | hr
+      · exact False.elim (Units.ne_zero u hu)
+      · exact hr
     · intro h
-      change polarExpr B (scaleCell u X) Y = 0
-      change polarExpr B X Y = 0 at h
-      rw [polarExpr_scale_left]
-      rw [h]
-      simp [polarExpr]
+      rw [h, mul_zero]
   polar_scale_right_zero := by
     intro u X Y
+    change polarExpr B X (scaleCell u Y) = 0 ↔ polarExpr B X Y = 0
+    rw [polarExpr_scale_right]
     constructor
     · intro h
-      change polarExpr B X (scaleCell u Y) = 0 at h
-      rw [polarExpr_scale_right] at h
-      have hzero : polarExpr B X Y = 0 := by
-        rcases mul_eq_zero.mp h with hu | hr
-        · exact False.elim (Units.ne_zero u hu)
-        · exact hr
-      simpa [polarExpr] using hzero
+      rcases mul_eq_zero.mp h with hu | hr
+      · exact False.elim (Units.ne_zero u hu)
+      · exact hr
     · intro h
-      change polarExpr B X (scaleCell u Y) = 0
-      change polarExpr B X Y = 0 at h
-      rw [polarExpr_scale_right]
-      rw [h]
-      simp [polarExpr]
+      rw [h, mul_zero]
 
 /-- Canonical positive diagonal null representative. -/
 def pPlusRep (B : V →ₗ[R] V →ₗ[R] R) :
@@ -350,160 +338,49 @@ theorem projective_polar_incidence_iff
 theorem pPlusIncident_upperLightray
     (B : V →ₗ[R] V →ₗ[R] R) {v : V} (hv : v ≠ 0) :
     Incident (concretePolarDatum B)
-      (ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B)
-        ⟨{ a := 1, b := 0, v := 0, w := 0 }, by simp [ZornCell.detZ], by
-          intro h
-          have ha := congrArg ZornCell.a h
-          exact one_ne_zero ha⟩)
-  (ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B)
-        ⟨{ a := 0, b := 0, v := v, w := 0 }, by simp [ZornCell.detZ], by
-          intro h
-          have hvec := congrArg ZornCell.v h
-          exact hv hvec⟩) := by
-  have hrep :
-      IncidentRep (concretePolarDatum B)
-        ⟨{ a := 1, b := 0, v := 0, w := 0 }, by
-          simp [ZornCell.detZ], by
-            intro h
-            have ha := congrArg ZornCell.a h
-            exact one_ne_zero ha⟩
-        ⟨{ a := 0, b := 0, v := v, w := 0 }, by
-          simp [ZornCell.detZ], by
-            intro h
-            have hvec := congrArg ZornCell.v h
-            exact hv hvec⟩ := by
-    rw [concretePolarDatum_incidentRep_iff]
-    simp [ZornCell.detZ]
-  exact (incident_mk_iff (D := concretePolarDatum B)
-      (X := ⟨{ a := 1, b := 0, v := 0, w := 0 }, by
-        simp [ZornCell.detZ], by
-          intro h
-          have ha := congrArg ZornCell.a h
-          exact one_ne_zero ha⟩)
-      (Y := ⟨{ a := 0, b := 0, v := v, w := 0 }, by
-        simp [ZornCell.detZ], by
-          intro h
-          have hvec := congrArg ZornCell.v h
-          exact hv hvec⟩)).2 hrep
+      (ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B) (pPlusRep B))
+      (ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B) (upperLightrayRep B hv)) := by
+  apply (projective_polar_incidence_iff B (pPlusRep B) (upperLightrayRep B hv)).2
+  rw [polarExpr_closed]
+  simp [pPlusRep, upperLightrayRep]
 
 /-- The canonical negative diagonal ray is incident with every lower lightray. -/
 theorem pMinusIncident_lowerLightray
     (B : V →ₗ[R] V →ₗ[R] R) {w : V} (hw : w ≠ 0) :
     Incident (concretePolarDatum B)
-      (ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B)
-        ⟨{ a := 0, b := 1, v := 0, w := 0 }, by simp [ZornCell.detZ], by
-          intro h
-          have hb := congrArg ZornCell.b h
-          exact one_ne_zero hb⟩)
-  (ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B)
-        ⟨{ a := 0, b := 0, v := 0, w := w }, by simp [ZornCell.detZ], by
-          intro h
-          have hvec := congrArg ZornCell.w h
-          exact hw hvec⟩) := by
-  have hrep :
-      IncidentRep (concretePolarDatum B)
-        ⟨{ a := 0, b := 1, v := 0, w := 0 }, by
-          simp [ZornCell.detZ], by
-            intro h
-            have hb := congrArg ZornCell.b h
-            exact one_ne_zero hb⟩
-        ⟨{ a := 0, b := 0, v := 0, w := w }, by
-          simp [ZornCell.detZ], by
-            intro h
-            have hvec := congrArg ZornCell.w h
-            exact hw hvec⟩ := by
-    rw [concretePolarDatum_incidentRep_iff]
-    simp [ZornCell.detZ]
-  exact (incident_mk_iff (D := concretePolarDatum B)
-      (X := ⟨{ a := 0, b := 1, v := 0, w := 0 }, by
-        simp [ZornCell.detZ], by
-          intro h
-          have hb := congrArg ZornCell.b h
-          exact one_ne_zero hb⟩)
-      (Y := ⟨{ a := 0, b := 0, v := 0, w := w }, by
-        simp [ZornCell.detZ], by
-          intro h
-          have hvec := congrArg ZornCell.w h
-          exact hw hvec⟩)).2 hrep
+      (ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B) (pMinusRep B))
+      (ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B) (lowerLightrayRep B hw)) := by
+  apply (projective_polar_incidence_iff B (pMinusRep B) (lowerLightrayRep B hw)).2
+  rw [polarExpr_closed]
+  simp [pMinusRep, lowerLightrayRep]
 
 /-- The canonical positive and negative diagonal rays are not incident over a nontrivial field. -/
 theorem pPlus_notIncident_pMinus
-    [Nontrivial R] (B : V →ₗ[R] V →ₗ[R] R) :
+    (B : V →ₗ[R] V →ₗ[R] R) :
     ¬ Incident (concretePolarDatum B)
-  (ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B)
-        ⟨{ a := 1, b := 0, v := 0, w := 0 }, by simp [ZornCell.detZ], by
-          intro h
-          have ha := congrArg ZornCell.a h
-          exact one_ne_zero ha⟩)
-      (ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B)
-        ⟨{ a := 0, b := 1, v := 0, w := 0 }, by simp [ZornCell.detZ], by
-          intro h
-          have hb := congrArg ZornCell.b h
-          exact one_ne_zero hb⟩) := by
+      (ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B) (pPlusRep B))
+      (ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B) (pMinusRep B)) := by
   intro h
-  have hrep :
-      (1 : R) = 0 := by
-    have hrep0 :=
-      (incident_mk_iff (D := concretePolarDatum B)
-        (X := ⟨{ a := 1, b := 0, v := 0, w := 0 }, by
-          simp [ZornCell.detZ], by
-            intro h
-            have ha := congrArg ZornCell.a h
-            exact one_ne_zero ha⟩)
-        (Y := ⟨{ a := 0, b := 1, v := 0, w := 0 }, by
-          simp [ZornCell.detZ], by
-            intro h
-            have hb := congrArg ZornCell.b h
-            exact one_ne_zero hb⟩)).1 h
-    rw [concretePolarDatum_incidentRep_iff] at hrep0
-    simpa [ZornCell.detZ] using hrep0
-  exact one_ne_zero hrep
+  have h0 := (projective_polar_incidence_iff B (pPlusRep B) (pMinusRep B)).1 h
+  rw [polarExpr_closed] at h0
+  simp [pPlusRep, pMinusRep] at h0
 
 /-- Upper and lower lightrays are incident iff the polar form vanishes on the off-diagonal pair. -/
 theorem upperLightrayIncident_lowerLightray_iff
     (B : V →ₗ[R] V →ₗ[R] R) {v w : V} (hv : v ≠ 0) (hw : w ≠ 0) :
     Incident (concretePolarDatum B)
-  (ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B)
-        ⟨{ a := 0, b := 0, v := v, w := 0 }, by simp [ZornCell.detZ], by
-          intro h
-          have hvec := congrArg ZornCell.v h
-          exact hv hvec⟩)
-      (ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B)
-        ⟨{ a := 0, b := 0, v := 0, w := w }, by simp [ZornCell.detZ], by
-          intro h
-          have hvec := congrArg ZornCell.w h
-          exact hw hvec⟩)
+      (ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B) (upperLightrayRep B hv))
+      (ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B) (lowerLightrayRep B hw))
       ↔ B v w = 0 := by
   constructor
   · intro h
-    have hrep :=
-      (incident_mk_iff (D := concretePolarDatum B)
-        (X := ⟨{ a := 0, b := 0, v := v, w := 0 }, by
-          simp [ZornCell.detZ], by
-            intro h
-            have hvec := congrArg ZornCell.v h
-            exact hv hvec⟩)
-        (Y := ⟨{ a := 0, b := 0, v := 0, w := w }, by
-          simp [ZornCell.detZ], by
-            intro h
-            have hvec := congrArg ZornCell.w h
-            exact hw hvec⟩)).1 h
-    rw [concretePolarDatum_incidentRep_iff] at hrep
-    simpa [ZornCell.detZ] using hrep
+    have h0 := (projective_polar_incidence_iff B (upperLightrayRep B hv) (lowerLightrayRep B hw)).1 h
+    rw [polarExpr_closed] at h0
+    simpa [upperLightrayRep, lowerLightrayRep] using h0
   · intro h
-    apply (incident_mk_iff (D := concretePolarDatum B)
-        (X := ⟨{ a := 0, b := 0, v := v, w := 0 }, by
-          simp [ZornCell.detZ], by
-            intro h
-            have hvec := congrArg ZornCell.v h
-            exact hv hvec⟩)
-        (Y := ⟨{ a := 0, b := 0, v := 0, w := w }, by
-          simp [ZornCell.detZ], by
-            intro h
-            have hvec := congrArg ZornCell.w h
-            exact hw hvec⟩)).2
-    rw [concretePolarDatum_incidentRep_iff]
-    simpa [ZornCell.detZ] using h
+    apply (projective_polar_incidence_iff B (upperLightrayRep B hv) (lowerLightrayRep B hw)).2
+    rw [polarExpr_closed]
+    simp [upperLightrayRep, lowerLightrayRep, h]
 
 /-! ## Canonical wrapper lemmas in terms of the named representatives -/
 
@@ -514,9 +391,8 @@ theorem pPlusIncident_upperLightray_ray
       (ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B)
         (pPlusRep (R := R) (V := V) B))
       (ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B)
-        (upperLightrayRep (R := R) (V := V) B hv)) := by
-  simpa [pPlusRep, upperLightrayRep] using
-    (pPlusIncident_upperLightray (R := R) (V := V) B hv)
+        (upperLightrayRep (R := R) (V := V) B hv)) :=
+  pPlusIncident_upperLightray (R := R) (V := V) B hv
 
 /-- The canonical negative ray is incident with the canonical lower lightray ray. -/
 theorem pMinusIncident_lowerLightray_ray
@@ -525,20 +401,18 @@ theorem pMinusIncident_lowerLightray_ray
       (ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B)
         (pMinusRep (R := R) (V := V) B))
       (ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B)
-        (lowerLightrayRep (R := R) (V := V) B hw)) := by
-  simpa [pMinusRep, lowerLightrayRep] using
-    (pMinusIncident_lowerLightray (R := R) (V := V) B hw)
+        (lowerLightrayRep (R := R) (V := V) B hw)) :=
+  pMinusIncident_lowerLightray (R := R) (V := V) B hw
 
 /-- The canonical positive and negative rays are not incident over a nontrivial field. -/
 theorem pPlus_notIncident_pMinus_ray
-    [Nontrivial R] (B : V →ₗ[R] V →ₗ[R] R) :
+    (B : V →ₗ[R] V →ₗ[R] R) :
     ¬ Incident (concretePolarDatum B)
       (ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B)
         (pPlusRep (R := R) (V := V) B))
       (ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B)
-        (pMinusRep (R := R) (V := V) B)) := by
-  simpa [pPlusRep, pMinusRep] using
-    (pPlus_notIncident_pMinus (R := R) (V := V) B)
+        (pMinusRep (R := R) (V := V) B)) :=
+  pPlus_notIncident_pMinus (R := R) (V := V) B
 
 /-- Upper and lower canonical rays are incident iff the polar form vanishes. -/
 theorem upperLightrayIncident_lowerLightray_iff_ray
@@ -548,9 +422,8 @@ theorem upperLightrayIncident_lowerLightray_iff_ray
         (upperLightrayRep (R := R) (V := V) B hv))
       (ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B)
         (lowerLightrayRep (R := R) (V := V) B hw))
-      ↔ B v w = 0 := by
-  simpa [upperLightrayRep, lowerLightrayRep] using
-    (upperLightrayIncident_lowerLightray_iff (R := R) (V := V) B hv hw)
+      ↔ B v w = 0 :=
+  upperLightrayIncident_lowerLightray_iff (R := R) (V := V) B hv hw
 
 end PolarDatum
 

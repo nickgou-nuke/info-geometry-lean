@@ -22,7 +22,8 @@ theorem paper_conclusion_gauge_anomaly_superpoisson_fano
     have hdiv := hvar.div hmean hden_ne
     have hconst : ((118 : ℝ) / 243) / ((4 : ℝ) / 9) = (59 : ℝ) / 54 := by
       norm_num
-    simpa [hconst] using hdiv
+    rw [hconst] at hdiv
+    convert hdiv using 1
   have hquot_eq :
       (fun m : ℕ => (variance m / (m : ℝ)) / (mean m / (m : ℝ))) =ᶠ[atTop]
         fun m : ℕ => variance m / mean m := by

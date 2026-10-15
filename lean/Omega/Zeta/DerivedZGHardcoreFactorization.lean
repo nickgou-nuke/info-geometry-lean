@@ -123,7 +123,7 @@ lemma hardcoreCylinderTrunc_pos (D : DerivedZGHardcoreFactorizationData) (N : �
 lemma hardcoreCylinderTrunc_le_one (D : DerivedZGHardcoreFactorizationData) (N : ℕ) :
     D.hardcoreCylinderTrunc N ≤ 1 := by
   unfold hardcoreCylinderTrunc
-  refine Finset.prod_le_one ?_ ?_
+  refine Finset.prod_le_one₀ ?_ ?_
   · intro i hi
     exact le_of_lt (D.hardcoreCylinderFactor_pos i)
   · intro i hi
@@ -135,7 +135,7 @@ lemma hardcoreCylinderTrunc_step_le (D : DerivedZGHardcoreFactorizationData) (N 
   have hmul :=
     mul_le_mul_of_nonneg_left (D.hardcoreCylinderFactor_le_one N)
       (le_of_lt (D.hardcoreCylinderTrunc_pos N))
-  simpa [one_mul] using hmul
+  simpa [hardcoreCylinderTrunc] using hmul
 
 lemma finiteEulerFactor_eq_finiteZetaQuotient (D : DerivedZGHardcoreFactorizationData) (N : ℕ) :
     D.finiteEulerFactor N = D.finiteZetaQuotient N := by

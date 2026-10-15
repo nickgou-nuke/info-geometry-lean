@@ -81,7 +81,7 @@ structure DrazinTKKAnomalyCalibration
   /-- The mapped operatorial shadow equals the supplied TKK anomaly readout. -/
   shadow_calibrates_anomaly :
     ∀ (X_L : L) (s : State),
-      shadowReadout (operatorialCentralDefectShadow (A := A) (B := B) CIK X hX) =
+      shadowReadout (operatorialCentralDefectShadow (A := A) (B := B) (F := E) CIK X hX) =
         TKK_A.anomalyReadout X_L s
 
   /-- The anomaly datum and Ricci-flux datum use the same closure defect. -/
@@ -96,7 +96,7 @@ namespace DrazinTKKAnomalyCalibration
 
 variable {CIK : CertifiedInverseKernel H₂}
 variable {X : RealSplitKreinDiracFredholmModule A B H₂}
-variable {hX : ChiralFredholmSurface X}
+variable {hX : ChiralFredholmSurface (A := A) (B := B) (H := H₂) X}
 variable {TKK_A : InfoGeometry.OperatorAlgebra.TKKConformalClosure.AnomalyClosureDefectDatum L State Geometry}
 variable {TKK_R : InfoGeometry.OperatorAlgebra.TKKConformalClosure.TKKRicciFluxDatum L State Geometry}
 variable {G : FiveGrading L}
@@ -105,11 +105,12 @@ variable {Absorp : TKKDefectAbsorbedInPlusTwo L State Geometry TKK_R G}
 /-- The operatorial Drazin shadow readout equals the TKK closure defect. -/
 @[rep_depth transport]
 theorem operatorial_shadow_eq_closure_defect
-    (calib : DrazinTKKAnomalyCalibration CIK X hX TKK_A TKK_R G Absorp)
+    (calib : DrazinTKKAnomalyCalibration (A := A) (B := B) (E := E)
+      CIK X hX TKK_A TKK_R G Absorp)
     (X_L : L)
     (s : State) :
     DrazinTKKAnomalyCalibration.shadowReadout calib
-        (operatorialCentralDefectShadow (A := A) (B := B) CIK X hX) =
+        (operatorialCentralDefectShadow (A := A) (B := B) (F := E) CIK X hX) =
       InfoGeometry.OperatorAlgebra.TKKConformalClosure.TKKClosureDefect.defect
         (InfoGeometry.OperatorAlgebra.TKKConformalClosure.AnomalyClosureDefectDatum.closureDefect TKK_A)
         X_L s :=
@@ -122,11 +123,12 @@ readout supplied by the absorption witness.
 -/
 @[rep_depth transport]
 theorem operatorial_shadow_eq_plusTwoReadout
-    (calib : DrazinTKKAnomalyCalibration CIK X hX TKK_A TKK_R G Absorp)
+    (calib : DrazinTKKAnomalyCalibration (A := A) (B := B) (E := E)
+      CIK X hX TKK_A TKK_R G Absorp)
     (X_L : L)
     (s : State) :
     DrazinTKKAnomalyCalibration.shadowReadout calib
-        (operatorialCentralDefectShadow (A := A) (B := B) CIK X hX) =
+        (operatorialCentralDefectShadow (A := A) (B := B) (F := E) CIK X hX) =
       Absorp.plusTwoReadout (Absorp.defectToPlusTwo X_L s) :=
   (operatorial_shadow_eq_closure_defect calib X_L s).trans
     ((DrazinTKKAnomalyCalibration.defect_alignment calib X_L s).trans
@@ -135,7 +137,8 @@ theorem operatorial_shadow_eq_plusTwoReadout
 /-- The five-graded representative of the calibrated anomaly lies in `g_+2`. -/
 @[rep_depth transport]
 theorem operatorial_shadow_has_plusTwo_representative
-    (_calib : DrazinTKKAnomalyCalibration CIK X hX TKK_A TKK_R G Absorp)
+    (_calib : DrazinTKKAnomalyCalibration (A := A) (B := B) (E := E)
+      CIK X hX TKK_A TKK_R G Absorp)
     (X_L : L)
     (s : State) :
     Absorp.defectToPlusTwo X_L s ∈ G.gPosTwo :=
@@ -147,14 +150,15 @@ shadow readout.
 -/
 @[rep_depth transport]
 theorem ricciFlux_eq_operatorial_shadow_of_curvature_stationary
-    (calib : DrazinTKKAnomalyCalibration CIK X hX TKK_A TKK_R G Absorp)
+    (calib : DrazinTKKAnomalyCalibration (A := A) (B := B) (E := E)
+      CIK X hX TKK_A TKK_R G Absorp)
     (X_L : L)
     (s : State)
     (hstat :
       TKK_R.derivativeAlong.deriv TKK_R.curvatureReadout.curvature X_L s = 0) :
     TKK_R.ricciFlux X_L s =
       DrazinTKKAnomalyCalibration.shadowReadout calib
-        (operatorialCentralDefectShadow (A := A) (B := B) CIK X hX) :=
+        (operatorialCentralDefectShadow (A := A) (B := B) (F := E) CIK X hX) :=
   let hflux :
       TKK_R.ricciFlux X_L s =
         InfoGeometry.OperatorAlgebra.TKKConformalClosure.TKKClosureDefect.defect
@@ -167,17 +171,23 @@ theorem ricciFlux_eq_operatorial_shadow_of_curvature_stationary
 
 /-- The operatorial shadow remains Drazin defect-supported on the source lane. -/
 @[rep_depth transport]
-theorem operatorial_shadow_isDefectSupported :
+theorem operatorial_shadow_isDefectSupported
+    (CIK : CertifiedInverseKernel H₂)
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X) :
     CertifiedInverseKernel.IsDefectSupportedK CIK
-      (operatorialCentralDefectShadow (A := A) (B := B) CIK X hX) :=
-  operatorialCentralDefectShadow_isDefectSupported (A := A) (B := B) CIK X hX
+      (operatorialCentralDefectShadow (A := A) (B := B) (F := E) CIK X hX) :=
+  operatorialCentralDefectShadow_isDefectSupported (A := A) (B := B) (F := E) CIK X hX
 
 /-- The operatorial shadow remains central on the Drazin lane. -/
 @[rep_depth transport]
-theorem operatorial_shadow_isDrazinLaneCentral :
+theorem operatorial_shadow_isDrazinLaneCentral
+    (CIK : CertifiedInverseKernel H₂)
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X) :
     CertifiedInverseKernel.IsDrazinLaneCentralK CIK
-      (operatorialCentralDefectShadow (A := A) (B := B) CIK X hX) :=
-  operatorialCentralDefectShadow_isDrazinLaneCentral (A := A) (B := B) CIK X hX
+      (operatorialCentralDefectShadow (A := A) (B := B) (F := E) CIK X hX) :=
+  operatorialCentralDefectShadow_isDrazinLaneCentral (A := A) (B := B) (F := E) CIK X hX
 
 end DrazinTKKAnomalyCalibration
 

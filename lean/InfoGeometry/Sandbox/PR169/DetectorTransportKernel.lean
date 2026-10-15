@@ -119,7 +119,9 @@ theorem materialPath_sq_eq_separationSq {d : ℝ} {p : Point}
 theorem materialPath_on_axis {d z : ℝ} (hd : 0 < d) (hz : 0 ≤ z) :
     materialPath d ((0, 0), z) = z := by
   have hgap : 0 < d + z := by linarith
-  simp only [materialPath, sourceRange, rangeSq, zero_pow, zero_add]
+  simp only [materialPath, sourceRange, rangeSq]
+  have hrad : (0 : ℝ) ^ 2 + 0 ^ 2 + (d + z) ^ 2 = (d + z) ^ 2 := by ring
+  rw [hrad]
   rw [Real.sqrt_sq (le_of_lt hgap)]
   exact mul_div_cancel_right₀ z (ne_of_gt hgap)
 
@@ -168,9 +170,15 @@ theorem continuousOn_materialPath (R L d : ℝ) (hd : 0 < d) :
 theorem continuousOn_firstCollisionKernel (R L μ d : ℝ) (hd : 0 < d) :
     ContinuousOn (firstCollisionKernel μ d) (cylinder R L) := by
   have hp := continuousOn_materialPath R L d hd
+  have harg : ContinuousOn (fun p => -μ * materialPath d p) (cylinder R L) :=
+    continuousOn_const.mul hp
+  have hmaps : MapsTo (fun p => -μ * materialPath d p) (cylinder R L) univ :=
+    fun _ _ => Set.mem_univ _
+  have hdecay : ContinuousOn (fun p => Real.exp (-μ * materialPath d p))
+      (cylinder R L) := Real.continuous_exp.continuousOn.comp harg hmaps
   unfold firstCollisionKernel
   apply ContinuousOn.div
-  · exact continuousOn_const.mul ((continuousOn_const.mul hp).exp)
+  · exact continuousOn_const.mul hdecay
   · exact continuousOn_const.mul (continuous_rangeSq d).continuousOn
   · intro p hp
     exact mul_ne_zero (mul_ne_zero (by norm_num) Real.pi_ne_zero)

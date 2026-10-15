@@ -62,8 +62,7 @@ inequality yields an explicit upper control on the horizontal shift. -/
 theorem paper_app_jensen_defect_controls_offcritical_shift
     (D : JensenDefectControlsOffcriticalShiftData) :
     D.repulsionRadiusLowerBound ∧ D.explicitShiftUpperBound := by
-  refine ⟨by
-    simpa [JensenDefectControlsOffcriticalShiftData.repulsionRadius] using D.hr0_le_repulsion, ?_⟩
+  refine ⟨D.hr0_le_repulsion, ?_⟩
   have hdelta_bound :
       D.delta ≤ (1 - D.repulsionRadius) / (1 + D.repulsionRadius) := by
     simpa [JensenDefectControlsOffcriticalShiftData.repulsionRadius] using

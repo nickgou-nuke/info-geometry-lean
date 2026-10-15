@@ -53,8 +53,7 @@ lemma deriv_killoEscortTheta (q : ℝ) :
   have hArg : HasDerivAt (fun x : ℝ => (x + 1) * L) L q := by
     simpa [L, one_mul] using (((hasDerivAt_id q).add_const 1).mul_const L)
   have hExp :
-      HasDerivAt (fun x : ℝ => Real.exp ((x + 1) * L)) (Real.exp ((q + 1) * L) * L) q := by
-    simpa [L, mul_comm] using (Real.hasDerivAt_exp ((q + 1) * L)).comp q hArg
+      HasDerivAt (fun x : ℝ => Real.exp ((x + 1) * L)) (Real.exp ((q + 1) * L) * L) q := hArg.exp
   have hDen :
       HasDerivAt (fun x : ℝ => 1 + Real.exp ((x + 1) * L)) (Real.exp ((q + 1) * L) * L) q := by
     convert (hasDerivAt_const q (1 : ℝ)).add hExp using 1 <;> simp
@@ -63,7 +62,9 @@ lemma deriv_killoEscortTheta (q : ℝ) :
         (-(Real.exp ((q + 1) * L) * L) / (1 + Real.exp ((q + 1) * L)) ^ 2) q := by
     have hne : (1 + Real.exp ((q + 1) * L) : ℝ) ≠ 0 := by positivity
     unfold killoEscortTheta
-    simpa [one_div] using hDen.inv hne
+    have h := (hasDerivAt_const q (1 : ℝ)).div hDen hne
+    simp only [zero_mul, one_mul, zero_sub] at h
+    exact h
   have hderiv := hTheta.deriv
   have htheta :
       killoEscortTheta q * (1 - killoEscortTheta q) =
@@ -107,10 +108,7 @@ lemma killoEscortFisher_strictAnti {q₁ q₂ : ℝ} (hq₁ : 0 ≤ q₁) (hq : 
       have : 0 < q₂ + 1 := by linarith
       nlinarith
     simpa [b] using Real.one_lt_exp_iff.mpr harg
-  have hab : a < b := by
-    refine Real.exp_strictMono ?_
-    dsimp [a, b]
-    nlinarith [hq, hL]
+  have hab : a < b := Real.exp_lt_exp.mpr (by nlinarith [hq, hL])
   have hcross : b * (1 + a) ^ 2 < a * (1 + b) ^ 2 := by
     have hid : a * (1 + b) ^ 2 - b * (1 + a) ^ 2 = (b - a) * (a * b - 1) := by ring
     have hpos : 0 < a * (1 + b) ^ 2 - b * (1 + a) ^ 2 := by

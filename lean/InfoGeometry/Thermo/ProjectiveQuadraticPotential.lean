@@ -18,7 +18,7 @@ owner supplies the separate strictly convex scalar model needed by the
 Amari--Souriau `LegendrePotential` interface.
 -/
 
-def quadraticPotential (t : ℝ) : ℝ := t ^ (2 : ℕ)
+abbrev quadraticPotential (t : ℝ) : ℝ := t ^ (2 : ℕ)
 
 noncomputable def scalarInteraction : ℝ →ₗ[ℝ] ℝ →ₗ[ℝ] ℝ :=
   (LinearMap.id : ℝ →ₗ[ℝ] ℝ).smulRight (LinearMap.id : ℝ →ₗ[ℝ] ℝ)
@@ -44,17 +44,16 @@ theorem scalarQuadraticOperatorFamily_bregman_self (x : ℝ) :
 def quadraticLegendrePotential : InfoGeometry.Convex.LegendrePotential where
   f := quadraticPotential
   smooth := by
-    simpa [quadraticPotential] using
-      ((contDiff_id : ContDiff ℝ 2 id).pow 2)
+    change ContDiff ℝ 2 (fun t : ℝ => t ^ (2 : ℕ))
+    exact contDiff_id.pow 2
   strict_convex := by
-    simpa [quadraticPotential] using
-      (Even.strictConvexOn_pow (n := 2)
-        (by decide : Even 2) (by decide : (2 : ℕ) ≠ 0))
+    change StrictConvexOn ℝ Set.univ (fun t : ℝ => t ^ (2 : ℕ))
+    exact Even.strictConvexOn_pow (by decide) (by decide)
 
 theorem quadraticPotential_deriv (t : ℝ) :
     deriv quadraticPotential t = 2 * t := by
-  unfold quadraticPotential
-  simpa using (deriv_pow_field (x := t) (n := 2))
+  rw [deriv_pow_field (x := t) (n := 2)]
+  simp
 
 theorem quadraticLegendrePotential_fisher (t : ℝ) :
     InfoGeometry.Convex.LegendrePotential.fisher quadraticLegendrePotential t = 2 := by
@@ -64,7 +63,8 @@ theorem quadraticLegendrePotential_fisher (t : ℝ) :
     funext t
     exact quadraticPotential_deriv t
   rw [hderiv]
-  simpa using (hasDerivAt_id t).const_mul 2 |>.deriv
+  have h : HasDerivAt (fun t => 2 * t) 2 t := by simpa using (hasDerivAt_id t).const_mul 2
+  exact h.deriv
 
 theorem quadraticLegendrePotential_fisher_pos (t : ℝ) :
     0 < InfoGeometry.Convex.LegendrePotential.fisher quadraticLegendrePotential t := by

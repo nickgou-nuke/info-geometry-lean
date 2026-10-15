@@ -199,7 +199,8 @@ theorem souriauBoundaryFreeEntropy_eq_entropy_sub_KL
     souriauBoundaryFreeEntropy M T L θ θ' =
       souriauBoundaryEntropy M T - InfoGeometry.ConvexDuality.KL_param L.f θ θ' := by
   rw [souriauBoundaryFreeEntropy_eq_entropy_sub_bregman]
-  simpa using (souriauBregmanPenalty_eq_KL_param (L := L) θ θ')
+  rw [← souriauBregmanPenalty_eq_KL_param]
+  rfl
 
 /-- The Souriau free-entropy functional is log-partition minus KL/Bregman penalty. -/
 theorem souriauFreeEntropyFunctional_eq_log_partition_sub_bregman
@@ -217,7 +218,8 @@ theorem souriauFreeEntropyFunctional_eq_log_partition_sub_KL
     souriauFreeEntropyFunctional M T L θ θ' =
       Real.log (souriauPartition M T) - InfoGeometry.ConvexDuality.KL_param L.f θ θ' := by
   rw [souriauFreeEntropyFunctional_eq_log_partition_sub_bregman]
-  simpa using (souriauBregmanPenalty_eq_KL_param (L := L) θ θ')
+  rw [← souriauBregmanPenalty_eq_KL_param]
+  rfl
 
 /-- The `β` score of the free entropy potential is the shifted mean readout. -/
 theorem freeEntropy_beta_score

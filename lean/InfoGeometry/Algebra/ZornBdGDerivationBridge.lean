@@ -1,6 +1,6 @@
 import Mathlib.Data.Matrix.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Tactic
 
@@ -55,15 +55,31 @@ theorem sigmaVec_mul (u v : Fin 3 → ℂ) :
         Complex.I • sigmaVec (cross3 u v) := by
   have hI : Complex.I * Complex.I = -1 := Complex.I_mul_I
   ext i j
+  rw [Matrix.mul_apply, Fin.sum_univ_two, Matrix.add_apply, Matrix.smul_apply, Matrix.smul_apply, smul_eq_mul, smul_eq_mul]
   fin_cases i <;> fin_cases j
-  · simp [mul_apply, Fin.sum_univ_two, sigmaVec, dot3, cross3, smul_apply, add_apply]
+  · simp [sigmaVec, dot3, cross3, Matrix.one_apply]
     linear_combination -hI * (u 1 * v 1)
-  · simp [mul_apply, Fin.sum_univ_two, sigmaVec, dot3, cross3, smul_apply, add_apply]
+  · simp [sigmaVec, dot3, cross3, Matrix.one_apply]
     linear_combination -hI * (u 0 * v 2 - u 2 * v 0)
-  · simp [mul_apply, Fin.sum_univ_two, sigmaVec, dot3, cross3, smul_apply, add_apply]
+  · simp [sigmaVec, dot3, cross3, Matrix.one_apply]
     linear_combination -hI * (u 2 * v 0 - u 0 * v 2)
-  · simp [mul_apply, Fin.sum_univ_two, sigmaVec, dot3, cross3, smul_apply, add_apply]
+  · simp [sigmaVec, dot3, cross3, Matrix.one_apply]
     linear_combination -hI * (u 1 * v 1)
+
+/--
+  THEOREM 2: The Anticommutator selects the Dot Product (Scalar Channel)
+  {Σ(u), Σ(v)} = 2 (u · v) I₂
+-/
+lemma sigmaVec_neg (w : Fin 3 → ℂ) : sigmaVec (-w) = - sigmaVec w := by
+  ext i j
+  rw [Matrix.neg_apply]
+  fin_cases i <;> fin_cases j <;> simp [sigmaVec] <;> ring
+
+lemma dot3_comm (u v : Fin 3 → ℂ) : dot3 v u = dot3 u v := by
+  simp [dot3]; ring
+
+lemma cross3_anti (u v : Fin 3 → ℂ) : cross3 v u = - cross3 u v := by
+  ext i; fin_cases i <;> simp [cross3] <;> ring
 
 /--
   THEOREM 2: The Anticommutator selects the Dot Product (Scalar Channel)
@@ -72,16 +88,8 @@ theorem sigmaVec_mul (u v : Fin 3 → ℂ) :
 theorem sigmaVec_anticomm (u v : Fin 3 → ℂ) :
     sigmaVec u * sigmaVec v + sigmaVec v * sigmaVec u =
       (2 * dot3 u v) • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
-  have h1 := sigmaVec_mul u v
-  have h2 := sigmaVec_mul v u
-  have h_cross : cross3 u v = - cross3 v u := by
-    ext i; fin_cases i <;> simp [cross3] <;> ring
-  have h_dot : dot3 v u = dot3 u v := by
-    simp [dot3]; ring
-  rw [h1, h2, h_dot, h_cross]
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [sigmaVec, dot3, cross3, smul_apply, add_apply] <;> ring
+  rw [sigmaVec_mul u v, sigmaVec_mul v u, dot3_comm, cross3_anti, sigmaVec_neg, smul_neg]
+  module
 
 /--
   THEOREM 3: The Commutator selects the Cross Product (Oriented Bivector Channel)
@@ -90,16 +98,8 @@ theorem sigmaVec_anticomm (u v : Fin 3 → ℂ) :
 theorem sigmaVec_comm (u v : Fin 3 → ℂ) :
     sigmaVec u * sigmaVec v - sigmaVec v * sigmaVec u =
       (2 * Complex.I) • sigmaVec (cross3 u v) := by
-  have h1 := sigmaVec_mul u v
-  have h2 := sigmaVec_mul v u
-  have h_cross : cross3 v u = - cross3 u v := by
-    ext i; fin_cases i <;> simp [cross3] <;> ring
-  have h_dot : dot3 v u = dot3 u v := by
-    simp [dot3]; ring
-  rw [h1, h2, h_dot, h_cross]
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [sigmaVec, dot3, cross3, smul_apply, sub_apply] <;> ring
+  rw [sigmaVec_mul u v, sigmaVec_mul v u, dot3_comm, cross3_anti, sigmaVec_neg, smul_neg]
+  module
 
 end PauliSolderedCrossProductBridge
 

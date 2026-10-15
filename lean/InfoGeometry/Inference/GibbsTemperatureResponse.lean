@@ -76,8 +76,7 @@ theorem deriv_mean_at_inverse_temperature
     exact mean_eq_firstMoment_div_partition params t
   have hmean : DifferentiableAt ℝ (mean params) ε⁻¹ := by
     rw [hmean_fun]
-    simpa [div_eq_mul_inv] using
-      hnum.mul (hden.inv (ne_of_gt (partition_pos params ε⁻¹)))
+    exact hnum.div hden (ne_of_gt (partition_pos params ε⁻¹))
   have hinv : HasDerivAt (fun t : ℝ => t⁻¹) (-(ε ^ (2 : ℕ))⁻¹) ε :=
     hasDerivAt_inv (ne_of_gt hε)
   have hcomp := hmean.hasDerivAt.comp ε hinv

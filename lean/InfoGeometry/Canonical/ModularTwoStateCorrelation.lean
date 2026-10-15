@@ -308,11 +308,17 @@ theorem hasDerivAt_stateTransportPhaseShiftedChannelCorrelation_at_zero
         (fun t : ℝ => stateTransportedOperator (E := E) M ψ Y t)
         (stateInducedDynamics (E := E) M ψ Y)
         0 := by
-    simpa [stateTransportedOperator, stateInducedDynamics] using
-      (InfoGeometry.Canonical.hasDerivAt_expTransport_at_zero
+    have hExp0 :=
+      InfoGeometry.Canonical.hasDerivAt_expTransport_at_zero
         (A := EndH)
         (stateRelativeModularGenerator (E := E) M ψ)
-        Y)
+        Y
+    have hLie : ⁅stateRelativeModularGenerator (E := E) M ψ, Y⁆ =
+        stateInducedDynamics (E := E) M ψ Y :=
+      lieBracket_eq_transportCommutator (E := E)
+        (stateRelativeModularGenerator (E := E) M ψ) Y
+    rw [hLie] at hExp0
+    exact hExp0
   have hMain :
       HasDerivAt
         (fun t : ℝ =>
@@ -371,11 +377,9 @@ theorem deriv_comparisonTransportPhaseShiftedChannelCorrelation_at_zero_eq_compa
       =
     comparisonMetricReadout R Y
       R.comparisonState
-      ((channelPhaseAxis (E := E) X) R.comparisonState) := by
-  simpa [comparisonTransportPhaseShiftedChannelCorrelation]
-    using
-      deriv_stateTransportPhaseShiftedChannelCorrelation_at_zero_eq_stateQGTMetricReadout
-        (E := E) R.modularData R.comparisonState X Y
+      ((channelPhaseAxis (E := E) X) R.comparisonState) :=
+  deriv_stateTransportPhaseShiftedChannelCorrelation_at_zero_eq_stateQGTMetricReadout
+    (E := E) R.modularData R.comparisonState X Y
 
 end Core
 

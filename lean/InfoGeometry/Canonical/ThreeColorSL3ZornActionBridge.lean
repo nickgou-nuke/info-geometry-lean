@@ -48,7 +48,6 @@ noncomputable abbrev zornSL3Action
 
 theorem zornSL3Action_mul_of_covariant
     (g : Matrix.SpecialLinearGroup (Fin 3) ℂ)
-    (hpair : InfoGeometry.Physics.ThreeColorSL3ZornAction.PreservesPairing g)
     (hcross : InfoGeometry.Physics.ThreeColorSL3ZornAction.PreservesCrossFundamental g)
     (hdualCross : InfoGeometry.Physics.ThreeColorSL3ZornAction.PreservesDualCross g)
     (X Y : Zorn) :
@@ -56,15 +55,14 @@ theorem zornSL3Action_mul_of_covariant
       InfoGeometry.Physics.SplitOctonionBraidSU3.zornMul
         (zornSL3Action g X) (zornSL3Action g Y) :=
   InfoGeometry.Physics.ThreeColorSL3ZornAction.zornSL3Action_mul_of_covariant
-    g hpair hcross hdualCross X Y
+    g hcross hdualCross X Y
 
 theorem zornSL3Action_preserves_norm_of_pairing
     (g : Matrix.SpecialLinearGroup (Fin 3) ℂ)
-    (hpair : InfoGeometry.Physics.ThreeColorSL3ZornAction.PreservesPairing g)
     (X : Zorn) :
     InfoGeometry.Physics.SplitOctonionBraidSU3.zornNorm (zornSL3Action g X) =
       InfoGeometry.Physics.SplitOctonionBraidSU3.zornNorm X :=
   InfoGeometry.Physics.ThreeColorSL3ZornAction.zornSL3Action_preserves_norm_of_pairing
-    g hpair X
+    g X
 
 end InfoGeometry.Canonical.ThreeColorSL3ZornActionBridge

@@ -1,5 +1,4 @@
 import Mathlib.Tactic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 import Mathlib.LinearAlgebra.CliffordAlgebra.Fold
 import Mathlib.LinearAlgebra.QuadraticForm.Prod
@@ -30,6 +29,8 @@ set_option linter.unusedTactic false
 set_option linter.unnecessarySimpa false
 
 namespace InfoGeometry.Clifford.Cl3ComplexMatrixProduct
+
+noncomputable section
 
 abbrev Vec3 : Type := ℂ × ℂ × ℂ
 abbrev Mat2C : Type := Matrix (Fin 2) (Fin 2) ℂ
@@ -169,17 +170,23 @@ lemma e3_sq : e3 * e3 = 1 := by
   rw [e3, CliffordAlgebra.ι_sq_scalar]
   simp [q3_apply, Algebra.algebraMap_eq_smul_one]
 
+@[simp] lemma polar_q3_e1_e2 : QuadraticMap.polar q3 (1, 0, 0) (0, 1, 0) = 0 := by
+  simp [QuadraticMap.polar, q3_apply]
+
+@[simp] lemma polar_q3_e1_e3 : QuadraticMap.polar q3 (1, 0, 0) (0, 0, 1) = 0 := by
+  simp [QuadraticMap.polar, q3_apply]
+
+@[simp] lemma polar_q3_e2_e3 : QuadraticMap.polar q3 (0, 1, 0) (0, 0, 1) = 0 := by
+  simp [QuadraticMap.polar, q3_apply]
+
 lemma e1_mul_e2_neg : e1 * e2 = -(e2 * e1) := by
-  rw [e1, e2, CliffordAlgebra.ι_mul_ι_comm]
-  simp [q3, QuadraticMap.polar, QuadraticMap.prod_apply, Algebra.algebraMap_eq_smul_one]
+  rw [e1, e2, CliffordAlgebra.ι_mul_ι_comm, polar_q3_e1_e2, map_zero, zero_sub]
 
 lemma e1_mul_e3_neg : e1 * e3 = -(e3 * e1) := by
-  rw [e1, e3, CliffordAlgebra.ι_mul_ι_comm]
-  simp [q3, QuadraticMap.polar, QuadraticMap.prod_apply, Algebra.algebraMap_eq_smul_one]
+  rw [e1, e3, CliffordAlgebra.ι_mul_ι_comm, polar_q3_e1_e3, map_zero, zero_sub]
 
 lemma e2_mul_e3_neg : e2 * e3 = -(e3 * e2) := by
-  rw [e2, e3, CliffordAlgebra.ι_mul_ι_comm]
-  simp [q3, QuadraticMap.polar, QuadraticMap.prod_apply, Algebra.algebraMap_eq_smul_one]
+  rw [e2, e3, CliffordAlgebra.ι_mul_ι_comm, polar_q3_e2_e3, map_zero, zero_sub]
 
 lemma e2_mul_e1 : e2 * e1 = -(e1 * e2) := by
   have h := congrArg Neg.neg e1_mul_e2_neg
@@ -453,5 +460,7 @@ lemma cl3ToProd_injective : Function.Injective cl3ToProd := by
 
 noncomputable def cl3EquivProdMat2C : CliffordAlgebra q3 ≃ₐ[ℂ] ProdMat2C :=
   AlgEquiv.ofBijective cl3ToProd ⟨cl3ToProd_injective, cl3ToProd_surjective⟩
+
+end
 
 end InfoGeometry.Clifford.Cl3ComplexMatrixProduct

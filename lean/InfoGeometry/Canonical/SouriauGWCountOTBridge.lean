@@ -22,6 +22,8 @@ namespace InfoGeometry.Canonical.SouriauGWCountOTBridge
 open InfoGeometry.Canonical.SouriauMetriplecticOptimalTransport
 open InfoGeometry.GromovWittenErlangen
 
+universe uCountAtom
+
 variable {State LieGroup LieAlgebra LieDual Observable : Type*}
 variable {n : ℕ} [Nonempty (Fin n)]
 variable {LG T Target Coeff : Type*}
@@ -42,7 +44,7 @@ structure SouriauGWCountOTCalibration
   souriau : SouriauLieThermoData State LieGroup LieAlgebra LieDual
 
   /-- GW projective count-ray realization. -/
-  gw : GWCanonicalCountRayBridge n LG T Target Coeff
+  gw : GWCanonicalCountRayBridge.{_, _, _, _, uCountAtom} n LG T Target Coeff
 
   /-- Free-energy functional on density states. -/
   freeEnergy : FreeEnergyFunctional State
@@ -68,7 +70,7 @@ structure SouriauGWCountOTCalibration
 
 namespace SouriauGWCountOTCalibration
 
-variable (C : SouriauGWCountOTCalibration
+variable (C : SouriauGWCountOTCalibration.{uCountAtom}
   (State := State) (LieGroup := LieGroup) (LieAlgebra := LieAlgebra)
   (LieDual := LieDual) (Observable := Observable) (n := n)
   (LG := LG) (T := T) (Target := Target) (Coeff := Coeff))

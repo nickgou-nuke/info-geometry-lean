@@ -65,20 +65,26 @@ noncomputable def clH : CliffordAlgebra q11 :=
 theorem cl_bracket_H_E : ⁅clH, clE⁆ = (2 : ℝ) • clE := by
   apply cl11EquivMat.injective
   change cl11EquivMat (clH * clE - clE * clH) = _
+  have h := bracket_H_E
+  rw [Ring.lie_def] at h
   simpa only [clH, clE, map_sub, map_mul, map_smul,
-    AlgEquiv.apply_symm_apply] using bracket_H_E
+    AlgEquiv.apply_symm_apply] using h
 
 theorem cl_bracket_H_F : ⁅clH, clF⁆ = (-2 : ℝ) • clF := by
   apply cl11EquivMat.injective
   change cl11EquivMat (clH * clF - clF * clH) = _
+  have h := bracket_H_F
+  rw [Ring.lie_def] at h
   simpa only [clH, clF, map_sub, map_mul, map_smul,
-    AlgEquiv.apply_symm_apply] using bracket_H_F
+    AlgEquiv.apply_symm_apply] using h
 
 theorem cl_bracket_E_F : ⁅clE, clF⁆ = clH := by
   apply cl11EquivMat.injective
   change cl11EquivMat (clE * clF - clF * clE) = _
+  have h := bracket_E_F
+  rw [Ring.lie_def] at h
   simpa only [clE, clF, clH, map_sub, map_mul,
-    AlgEquiv.apply_symm_apply] using bracket_E_F
+    AlgEquiv.apply_symm_apply] using h
 
 theorem cl11ParabolicSL2Triple :
     ⁅clH, clE⁆ = (2 : ℝ) • clE ∧

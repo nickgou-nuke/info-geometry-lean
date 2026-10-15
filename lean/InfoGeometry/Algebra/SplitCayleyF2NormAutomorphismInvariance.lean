@@ -16,12 +16,10 @@ theorem delta1NativeAutomorphism_norm (r : Vec3) (x : SplitOctF2) :
     zornNorm ((delta1NativeAutomorphism r).1 x) = zornNorm x := by
   let c : Cayley := cayleySplitOctF2Equiv.symm x
   have hc : cayleyToSplitOctF2 (delta1 r c) =
-      (delta1NativeAutomorphism r).1 x := by
-    have h := AddMulAutomorphism.toSplitOctF2Equiv_cayley_readback
-      (delta1AddMulAutomorphism r) x
-    have h' := congrArg cayleySplitOctF2Equiv h
-    simpa only [cayleyToSplitOctF2, delta1NativeAutomorphism,
-      AddMulAutomorphism.toSplitOctF2Equiv, Equiv.apply_symm_apply] using h'.symm
+      (delta1NativeAutomorphism r).1 x :=
+    (congrArg cayleySplitOctF2Equiv
+      (AddMulAutomorphism.toSplitOctF2Equiv_cayley_readback (delta1AddMulAutomorphism r) x)).symm.trans
+      (cayleySplitOctF2Equiv.apply_symm_apply _)
   calc
     zornNorm ((delta1NativeAutomorphism r).1 x) =
         zornNorm (cayleyToSplitOctF2 (delta1 r c)) := by rw [hc]
@@ -36,12 +34,10 @@ theorem delta2NativeAutomorphism_norm (r : Vec3) (x : SplitOctF2) :
     zornNorm ((delta2NativeAutomorphism r).1 x) = zornNorm x := by
   let c : Cayley := cayleySplitOctF2Equiv.symm x
   have hc : cayleyToSplitOctF2 (delta2 r c) =
-      (delta2NativeAutomorphism r).1 x := by
-    have h := AddMulAutomorphism.toSplitOctF2Equiv_cayley_readback
-      (delta2AddMulAutomorphism r) x
-    have h' := congrArg cayleySplitOctF2Equiv h
-    simpa only [cayleyToSplitOctF2, delta2NativeAutomorphism,
-      AddMulAutomorphism.toSplitOctF2Equiv, Equiv.apply_symm_apply] using h'.symm
+      (delta2NativeAutomorphism r).1 x :=
+    (congrArg cayleySplitOctF2Equiv
+      (AddMulAutomorphism.toSplitOctF2Equiv_cayley_readback (delta2AddMulAutomorphism r) x)).symm.trans
+      (cayleySplitOctF2Equiv.apply_symm_apply _)
   calc
     zornNorm ((delta2NativeAutomorphism r).1 x) =
         zornNorm (cayleyToSplitOctF2 (delta2 r c)) := by rw [hc]
@@ -56,10 +52,9 @@ theorem cyclicNativeAutomorphism_norm (x : SplitOctF2) :
     zornNorm (cyclicNativeAutomorphism.1 x) = zornNorm x := by
   let c : Cayley := cayleySplitOctF2Equiv.symm x
   have hc : cayleyToSplitOctF2 (cyclicAction c) =
-      cyclicNativeAutomorphism.1 x := by
-    have h := cyclicNativeAutomorphism_cayley_readback x
-    have h' := congrArg cayleySplitOctF2Equiv h
-    simpa only [cayleyToSplitOctF2, c, Equiv.apply_symm_apply] using h'.symm
+      cyclicNativeAutomorphism.1 x :=
+    (congrArg cayleySplitOctF2Equiv (cyclicNativeAutomorphism_cayley_readback x)).symm.trans
+      (cayleySplitOctF2Equiv.apply_symm_apply _)
   calc
     zornNorm (cyclicNativeAutomorphism.1 x) =
         zornNorm (cayleyToSplitOctF2 (cyclicAction c)) := by rw [hc]
@@ -74,10 +69,9 @@ theorem shearNativeAutomorphism_norm (x : SplitOctF2) :
     zornNorm (shearNativeAutomorphism.1 x) = zornNorm x := by
   let c : Cayley := cayleySplitOctF2Equiv.symm x
   have hc : cayleyToSplitOctF2 (shearAction c) =
-      shearNativeAutomorphism.1 x := by
-    have h := shearNativeAutomorphism_cayley_readback x
-    have h' := congrArg cayleySplitOctF2Equiv h
-    simpa only [cayleyToSplitOctF2, c, Equiv.apply_symm_apply] using h'.symm
+      shearNativeAutomorphism.1 x :=
+    (congrArg cayleySplitOctF2Equiv (shearNativeAutomorphism_cayley_readback x)).symm.trans
+      (cayleySplitOctF2Equiv.apply_symm_apply _)
   calc
     zornNorm (shearNativeAutomorphism.1 x) =
         zornNorm (cayleyToSplitOctF2 (shearAction c)) := by rw [hc]

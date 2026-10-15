@@ -1,5 +1,6 @@
 import InfoGeometry.Orthogonal.O55WittRootRepresentation
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Algebra.Lie.OfAssociative
 
 /-!
 # The real split form `so(5,5)` and its complexification
@@ -19,6 +20,9 @@ open InfoGeometry.Orthogonal.O55D5
 open InfoGeometry.Orthogonal.O55Witt
 
 abbrev RealMat10 := Matrix Index Index ℝ
+
+local instance : LieRing RealMat10 := LieRing.ofAssociativeRing
+local instance : LieAlgebra ℝ RealMat10 := LieAlgebra.ofAssociativeAlgebra
 
 /-- Real Witt adjoint. -/
 def realWittAdjoint (X : RealMat10) : RealMat10 := fun p q =>
@@ -52,7 +56,7 @@ theorem realWittAdjoint_mul (X Y : RealMat10) :
     ∑ x, X (flipIndex q) x * Y x (flipIndex p) =
         ∑ x, X (flipIndex q) (flipIndex x) *
           Y (flipIndex x) (flipIndex p) := by
-            simpa using
+            simpa [flipIndexEquiv] using
               (Equiv.sum_comp flipIndexEquiv
                 (fun x => X (flipIndex q) x * Y x (flipIndex p))).symm
     _ = ∑ x, Y (flipIndex x) (flipIndex p) *

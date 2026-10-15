@@ -45,7 +45,8 @@ def axialActiveDefectInvolution : EndCZ :=
       { a := -X.a, b := -X.b, x := X.x, y := X.y } := by
   ext i <;>
     simp [axialActiveDefectInvolution, axialActiveSupport_apply,
-      Equiv.smul_def, coordEquiv] <;> ring
+      ZornMatrix.smul_a, ZornMatrix.smul_b, ZornMatrix.smul_x,
+      ZornMatrix.smul_y] <;> ring
 
 /-- `Q` is exactly the native Drazin support projector. -/
 theorem axialActiveSupport_eq_drazinProjector :

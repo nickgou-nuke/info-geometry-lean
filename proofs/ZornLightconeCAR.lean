@@ -145,7 +145,6 @@ theorem lightconeChannelProjector_ne_zero (r : Fin 3) :
         (0 : SpinorPlus8) := by
     simpa using hfirst
   have ha := congrArg (fun X : SpinorPlus8 => X.val.u r) hfirst'
-  simp only [map_zero, Pi.zero_apply] at ha
   fin_cases r <;>
     simp [S, cliffordMinus, cliffordPlus,
       upperLightconeVector, lowerLightconeVector, zornConj, zornMul,

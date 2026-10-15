@@ -142,8 +142,9 @@ theorem cantorBratteliPathMap_recover
     (T : MDPASCantorAddressSystem ι Op State LieAlgebra LieDual)
     (q : FiniteMDPASJMDirectSystem.DirectLimitCarrier T.direct) :
     coherentPathEquivCantorBoundary (T.cantorBratteliPathMap q) = T.cantorLimitMap q := by
-  simpa [cantorBratteliPathMap] using
-    coherentPathToBoundary_boundaryToCoherentPath (T.cantorLimitMap q)
+  change coherentPathToBoundary
+      (boundaryToCoherentPath (T.cantorLimitMap q)) = T.cantorLimitMap q
+  exact coherentPathToBoundary_boundaryToCoherentPath (T.cantorLimitMap q)
 
 /-- Finite-stage addresses become finite Bratteli prefixes after the Boolean lift. -/
 theorem cantorBratteliPathMap_ofStage

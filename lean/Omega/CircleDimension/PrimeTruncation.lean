@@ -102,7 +102,8 @@ theorem paper_prime_ledger_non_finitizable_ufd :
     apply Subtype.ext
     apply Nat.eq_of_factorization_eq a.ne_zero b.ne_zero
     intro p
-    simpa [natPrimeLedger] using congrArg (fun f : ℕ →₀ ℕ => f p) h
+    change natPrimeLedger a p = natPrimeLedger b p
+    exact DFunLike.congr_fun h p
   · intro a b h
     apply Subtype.ext
     apply Nat.eq_of_factorization_eq a.ne_zero b.ne_zero

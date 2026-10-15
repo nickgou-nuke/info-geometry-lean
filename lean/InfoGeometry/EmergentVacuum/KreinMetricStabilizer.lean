@@ -1,6 +1,6 @@
 import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Defs
 import Mathlib.LinearAlgebra.Matrix.ConjTranspose
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import Mathlib.Tactic
 
 namespace InfoGeometry.EmergentVacuum.KreinMetricStabilizer
@@ -14,33 +14,41 @@ def metricStabilizer (metric : Matrix Index Index ℂ) :
   one_mem' := by simp
   mul_mem' := by
     intro first second firstPreserves secondPreserves
-    change (first : Matrix Index Index ℂ).conjTranspose * metric * ↑first = metric
+    change (first : Matrix Index Index ℂ).conjTranspose * metric *
+      (first : Matrix Index Index ℂ) = metric
       at firstPreserves
-    change (second : Matrix Index Index ℂ).conjTranspose * metric * ↑second = metric
+    change (second : Matrix Index Index ℂ).conjTranspose * metric *
+      (second : Matrix Index Index ℂ) = metric
       at secondPreserves
-    change ((first : Matrix Index Index ℂ) * ↑second).conjTranspose * metric *
-      (↑first * ↑second) = metric
+    change ((first : Matrix Index Index ℂ) * (second : Matrix Index Index ℂ)).conjTranspose *
+      metric * ((first : Matrix Index Index ℂ) * (second : Matrix Index Index ℂ)) = metric
     rw [Matrix.conjTranspose_mul]
     calc
       (second : Matrix Index Index ℂ).conjTranspose *
-          (first : Matrix Index Index ℂ).conjTranspose * metric * (↑first * ↑second) =
+          (first : Matrix Index Index ℂ).conjTranspose * metric *
+            ((first : Matrix Index Index ℂ) * (second : Matrix Index Index ℂ)) =
           (second : Matrix Index Index ℂ).conjTranspose *
-            ((first : Matrix Index Index ℂ).conjTranspose * metric * ↑first) * ↑second := by
+            ((first : Matrix Index Index ℂ).conjTranspose * metric *
+              (first : Matrix Index Index ℂ)) * (second : Matrix Index Index ℂ) := by
               simp only [mul_assoc]
       _ = metric := by rw [firstPreserves, secondPreserves]
   inv_mem' := by
     intro transform preserves
-    change (transform : Matrix Index Index ℂ).conjTranspose * metric * ↑transform = metric
+    change (transform : Matrix Index Index ℂ).conjTranspose * metric *
+      (transform : Matrix Index Index ℂ) = metric
       at preserves
-    change (↑transform⁻¹ : Matrix Index Index ℂ).conjTranspose * metric * ↑transform⁻¹ = metric
+    change (↑transform⁻¹ : Matrix Index Index ℂ).conjTranspose * metric *
+      (↑transform⁻¹ : Matrix Index Index ℂ) = metric
     have adjointInverse : (↑transform⁻¹ : Matrix Index Index ℂ).conjTranspose *
         (transform : Matrix Index Index ℂ).conjTranspose = 1 := by
       rw [← Matrix.conjTranspose_mul, transform.mul_inv, Matrix.conjTranspose_one]
     calc
-      (↑transform⁻¹ : Matrix Index Index ℂ).conjTranspose * metric * ↑transform⁻¹ =
+      (↑transform⁻¹ : Matrix Index Index ℂ).conjTranspose * metric *
+          (↑transform⁻¹ : Matrix Index Index ℂ) =
           (↑transform⁻¹ : Matrix Index Index ℂ).conjTranspose *
-            ((transform : Matrix Index Index ℂ).conjTranspose * metric * ↑transform) *
-              ↑transform⁻¹ := by rw [preserves]
+            ((transform : Matrix Index Index ℂ).conjTranspose * metric *
+              (transform : Matrix Index Index ℂ)) *
+              (↑transform⁻¹ : Matrix Index Index ℂ) := by rw [preserves]
       _ = ((↑transform⁻¹ : Matrix Index Index ℂ).conjTranspose *
           (transform : Matrix Index Index ℂ).conjTranspose) * metric *
             ((transform : Matrix Index Index ℂ) * ↑transform⁻¹) := by
@@ -54,14 +62,20 @@ def specialMetricStabilizer (metric : Matrix Index Index ℂ) :
 theorem mem_specialMetricStabilizer (metric : Matrix Index Index ℂ)
     (transform : Matrix.GeneralLinearGroup Index ℂ) :
     transform ∈ specialMetricStabilizer metric ↔
-      (transform : Matrix Index Index ℂ).conjTranspose * metric * ↑transform = metric ∧
+      (transform : Matrix Index Index ℂ).conjTranspose * metric *
+          (transform : Matrix Index Index ℂ) = metric ∧
         Matrix.det (transform : Matrix Index Index ℂ) = 1 := by
-  change (_ ∧ Matrix.GeneralLinearGroup.det transform = 1) ↔ _
+  change ((transform : Matrix Index Index ℂ).conjTranspose * metric *
+      (transform : Matrix Index Index ℂ) = metric ∧
+      Matrix.GeneralLinearGroup.det transform = 1) ↔ _
   constructor
   · rintro ⟨preserves, determinant⟩
+    change (transform : Matrix Index Index ℂ).conjTranspose * metric *
+      (transform : Matrix Index Index ℂ) = metric at preserves
     exact ⟨preserves, congrArg Units.val determinant⟩
   · rintro ⟨preserves, determinant⟩
-    exact ⟨preserves, Units.ext determinant⟩
+    refine ⟨?_, Units.ext determinant⟩
+    exact preserves
 
 theorem special_le_metricStabilizer (metric : Matrix Index Index ℂ) :
     specialMetricStabilizer metric ≤ metricStabilizer metric := inf_le_left

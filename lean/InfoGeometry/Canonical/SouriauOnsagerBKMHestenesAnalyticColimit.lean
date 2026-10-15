@@ -77,7 +77,7 @@ def doubledContinuousLinearMap
   map_smul' c v := by
     apply DoubledSpace.ext <;> simp
   cont := by
-    simpa [to_doubled] using
+    simpa [to_doubled, Function.comp_def] using
       (WithLp.prod_continuous_toLp
           (p := (2 : ENNReal)) (α := F) (β := F)).comp
         ((L.cont.comp

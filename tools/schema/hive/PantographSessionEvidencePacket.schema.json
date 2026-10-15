@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "PantographSessionEvidencePacket.schema.json",
+  "title": "PantographSessionEvidencePacket",
+  "allOf": [
+    { "$ref": "common_envelope.schema.json" },
+    { "$ref": "authority.schema.json" },
+    { "$ref": "representation.schema.json" },
+    {
+      "type": "object",
+      "required": [
+        "kind", "status", "packet_version", "packet_hash", "authority",
+        "promotion_allowed", "origin_candidate_ref", "pantograph_session_key",
+        "candidate_link_basis",
+        "pantograph_session_id", "root_event_key", "source_snapshot_sha256",
+        "environment_fingerprint", "build_fingerprint", "target_expression",
+        "request_count", "response_count", "request_keys", "response_keys",
+        "request_sha256s", "response_sha256s",
+        "replay_outcome", "replay_result", "replay_result_sha256", "evidence_scope"
+      ],
+      "properties": {
+        "kind": { "const": "PantographSessionEvidencePacket" },
+        "status": { "enum": ["replay_matched", "replay_diverged", "replay_process_failed", "replay_refused"] },
+        "authority": { "const": "navigation" },
+        "promotion_allowed": { "const": false },
+        "packet_version": { "type": "string", "minLength": 1 },
+        "packet_hash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "origin_candidate_ref": { "$ref": "source_ref.schema.json" },
+        "candidate_link_basis": { "const": "caller_asserted_candidate_binding" },
+        "pantograph_session_key": { "type": "string", "minLength": 1 },
+        "pantograph_session_id": { "type": "string", "minLength": 1 },
+        "root_event_key": { "type": "string", "minLength": 1 },
+        "source_path": { "type": "string", "minLength": 1 },
+        "source_snapshot_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "environment_fingerprint": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "build_fingerprint": { "type": "string", "minLength": 1 },
+        "declaration_fingerprint": { "type": "string", "minLength": 1 },
+        "target_expression": { "type": "string", "minLength": 1 },
+        "request_count": { "type": "integer", "minimum": 1 },
+        "response_count": { "type": "integer", "minimum": 1 },
+        "request_keys": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "response_keys": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "request_sha256s": { "type": "array", "minItems": 1, "items": { "type": "string", "pattern": "^[0-9a-f]{64}$" } },
+        "response_sha256s": { "type": "array", "minItems": 1, "items": { "type": "string", "pattern": "^[0-9a-f]{64}$" } },
+        "replay_outcome": { "enum": ["matched", "mismatch", "process_failed", "refused_or_failed"] },
+        "replay_result": { "type": "object" },
+        "replay_result_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "replay_completed_request_count": { "type": "integer", "minimum": 0 },
+        "evidence_scope": { "const": "pantograph_interaction_replay_only" },
+        "kernel_proof": { "const": false },
+        "owner_build": { "const": false },
+        "independent_audit": { "const": false }
+      },
+      "additionalProperties": true
+    }
+  ]
+}

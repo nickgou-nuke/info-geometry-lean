@@ -32,7 +32,9 @@ def fullTwist : B3 := delta ^ 2
 theorem sigmaOne_braid_sigmaTwo :
     sigmaOne * sigmaTwo * sigmaOne = sigmaTwo * sigmaOne * sigmaTwo := by
   have h := Braid.braid_group.braid (n := 0) (i := (0 : Fin 1))
-  simpa [sigmaOne, sigmaTwo] using h
+  change Braid.σ' 2 0 * Braid.σ 1 * Braid.σ' 2 0 =
+    Braid.σ 1 * Braid.σ' 2 0 * Braid.σ 1
+  exact h
 
 /-- The pure generator on strands 1 and 2. -/
 def pureA12 : B3 := sigmaOne ^ 2

@@ -30,7 +30,7 @@ theorem SymbolicLatentObservableModularFlow.observationQuotientRangeFlowCompHaus
         Φ.observationQuotientFlowCompHausHom h_flow t ≫
           (symbolicObservationQuotientCompHausIso S).hom := by
   apply (cancel_epi (symbolicObservationQuotientCompHausIso S).hom).1
-  simp only [Category.assoc, Iso.hom_inv_id_assoc]
+  simp only [Iso.hom_inv_id_assoc]
   apply ConcreteCategory.hom_ext
   intro q
   change
@@ -47,7 +47,7 @@ theorem SymbolicLatentObservableModularFlow.observationQuotientRangeFlowCompHaus
             ((symbolicObservationQuotientRangeCompactHomeomorph S) ⟦x⟧))) =
       (symbolicObservationQuotientRangeCompactHomeomorph S)
         (descendedSymbolicLatentObservationFlow Φ t ⟦x⟧)
-  rw [Homeomorph.symm_apply_apply, Φ.observationQuotientFlowHomeomorph_apply h_flow t]
-  rfl
+  rw [Homeomorph.symm_apply_apply,
+    Φ.observationQuotientFlowHomeomorph_apply h_flow t]
 
 end InfoGeometry.Topology

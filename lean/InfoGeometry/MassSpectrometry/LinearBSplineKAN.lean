@@ -62,7 +62,8 @@ theorem continuous_linearBSpline (center width : ℝ) :
     habs.div_const width
   have hinterior : Continuous (fun x : ℝ => 1 - |x - center| / width) :=
     continuous_const.sub hratio
-  simpa [linearBSpline] using continuous_const.max hinterior
+  change Continuous (fun x : ℝ => max 0 (1 - |x - center| / width))
+  exact continuous_const.max hinterior
 
 /-- Parameters for a finite B-spline KAN specialization. -/
 structure LinearBSplineKANData (q : ℕ) where

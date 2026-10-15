@@ -1,15 +1,6 @@
 import InfoGeometry.Canonical.CuntzUpperTailQCCRInverseRestriction
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
-/-!
-# Nested upper-tail restriction and coherence
-
-Restriction of a compatible family from a smaller upper tail to a larger one
-is functorial.  This owner provides the between-tail maps and proves that
-their composites agree with the direct restriction map, separately for the
-ambient and zero-fibre q-CCR diagrams.
--/
-
 noncomputable section
 
 namespace InfoGeometry.Canonical.CuntzUpperTailQCCRRestrictionCoherence
@@ -30,7 +21,7 @@ variable [∀ n, PartialOrder (Stage n)]
 variable [∀ n, StarOrderedRing (Stage n)]
 variable (T : CuntzStarTower Stage)
 
-def upperTailQCCRParameterRestrictionCone_between
+abbrev upperTailQCCRParameterRestrictionCone_between
     (m n : ℕ) (hmn : m ≤ n) :
     Cone (qCcrParameterTopologicalDiagram
       (UpperTailStage Stage n) (upperTailContinuousStarSystem Stage T n)) where
@@ -44,14 +35,17 @@ def upperTailQCCRParameterRestrictionCone_between
           ⟨j.1, le_trans hmn j.2⟩
       naturality := by
         intro j k f
-        have h := topologicalInverseProjection_naturality
+        apply TopCat.hom_ext
+        apply ContinuousMap.ext
+        intro x
+        have h := topologicalInverseProjection_naturality_apply
           (qCcrParameterTopologicalDiagram
             (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m))
           (CategoryTheory.homOfLE
             (show (⟨j.1, le_trans hmn j.2⟩ : UpperNatIndex m) ≤
               ⟨k.1, le_trans hmn k.2⟩ from leOfHom f))
-        simpa [qCcrParameterTopologicalDiagram,
-          qCcrParameterTransitionMap, upperTailContinuousStarSystem] using h.symm }
+          x
+        exact h.symm }
 
 noncomputable def upperTailQCCRParameterRestrictionMap_between
     (m n : ℕ) (hmn : m ≤ n) :
@@ -92,12 +86,11 @@ theorem upperTailQCCRParameterRestrictionMap_between_comp
     (upperTailQCCRParameterRestrictionMap_between Stage T m n hmn ≫
       upperTailQCCRParameterRestrictionMap_between Stage T n k hnk)
   intro j
-  rw [Category.assoc,
-    upperTailQCCRParameterRestrictionMap_between_projection,
-    upperTailQCCRParameterRestrictionMap_between_projection]
-  rfl
+  rw [Category.assoc]
+  rw [upperTailQCCRParameterRestrictionMap_between_projection]
+  exact upperTailQCCRParameterRestrictionMap_between_projection Stage T m n hmn ⟨j.1, le_trans hnk j.2⟩
 
-def upperTailQCCRZeroFiberRestrictionCone_between
+abbrev upperTailQCCRZeroFiberRestrictionCone_between
     (m n : ℕ) (hmn : m ≤ n) :
     Cone (qCcrParameterZeroFiberTopologicalDiagram
       (UpperTailStage Stage n) (upperTailContinuousStarSystem Stage T n)) where
@@ -111,16 +104,17 @@ def upperTailQCCRZeroFiberRestrictionCone_between
           ⟨j.1, le_trans hmn j.2⟩
       naturality := by
         intro j k f
-        have h := topologicalInverseProjection_naturality
+        apply TopCat.hom_ext
+        apply ContinuousMap.ext
+        intro x
+        have h := topologicalInverseProjection_naturality_apply
           (qCcrParameterZeroFiberTopologicalDiagram
             (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m))
           (CategoryTheory.homOfLE
             (show (⟨j.1, le_trans hmn j.2⟩ : UpperNatIndex m) ≤
               ⟨k.1, le_trans hmn k.2⟩ from leOfHom f))
-        simpa [qCcrParameterZeroFiberTopologicalDiagram,
-          qCcrParameterZeroFiberTransitionTopCatHom,
-          qCcrParameterZeroFiberTransitionMap,
-          qCcrParameterTransitionMap, upperTailContinuousStarSystem] using h.symm }
+          x
+        exact h.symm }
 
 noncomputable def upperTailQCCRZeroFiberRestrictionMap_between
     (m n : ℕ) (hmn : m ≤ n) :
@@ -161,9 +155,8 @@ theorem upperTailQCCRZeroFiberRestrictionMap_between_comp
     (upperTailQCCRZeroFiberRestrictionMap_between Stage T m n hmn ≫
       upperTailQCCRZeroFiberRestrictionMap_between Stage T n k hnk)
   intro j
-  rw [Category.assoc,
-    upperTailQCCRZeroFiberRestrictionMap_between_projection,
-    upperTailQCCRZeroFiberRestrictionMap_between_projection]
-  rfl
+  rw [Category.assoc]
+  rw [upperTailQCCRZeroFiberRestrictionMap_between_projection]
+  exact upperTailQCCRZeroFiberRestrictionMap_between_projection Stage T m n hmn ⟨j.1, le_trans hnk j.2⟩
 
 end InfoGeometry.Canonical.CuntzUpperTailQCCRRestrictionCoherence

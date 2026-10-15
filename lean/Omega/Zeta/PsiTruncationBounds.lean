@@ -122,6 +122,7 @@ theorem paper_finite_part_logm_gap_truncation_bounds (x : ℝ) (hx0 : 0 < x) (hx
       · ext k
         rw [show 2 * k + 1 = Nat.succ (2 * k) by omega, pow_succ, pow_mul]
         ring
+      · rw [div_eq_mul_inv]
     have hterm :
         ∀ k : ℕ, (2 : ℝ) * (1 / (2 * k + 1)) * u ^ (2 * k + 1) ≤
           2 * u ^ (2 * k + 1) := by

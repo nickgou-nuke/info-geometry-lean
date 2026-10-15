@@ -30,7 +30,7 @@ abbrev integralSpin44 := spinGroup (zornNorm (R := ℤ))
 /-- The integral Clifford-spin action as an integral linear endomorphism. -/
 def integralSpinLinear (g : integralSpin44) :
     Module.End ℤ (DiracSpinor16 (R := ℤ)) :=
-  spinDiracRepresentation (R := ℤ) g
+  (spinDiracRepresentation (R := ℤ) g).val
 
 theorem integralSpinLinear_add (g : integralSpin44) (Ψ Φ : DiracSpinor16 (R := ℤ)) :
     integralSpinLinear g (Ψ + Φ) = integralSpinLinear g Ψ + integralSpinLinear g Φ := by
@@ -41,13 +41,13 @@ theorem integralSpinLinear_smul (g : integralSpin44) (n : ℤ) (Ψ : DiracSpinor
   exact map_smul (integralSpinLinear g) n Ψ
 
 theorem integralSpinLinear_one : integralSpinLinear 1 = 1 := by
-  change (spinDiracRepresentation (R := ℤ) 1 : Module.End ℤ (DiracSpinor16 (R := ℤ))) = 1
+  dsimp [integralSpinLinear]
   rw [map_one]
   rfl
 
 theorem integralSpinLinear_mul (g h : integralSpin44) :
     integralSpinLinear (g * h) = integralSpinLinear g * integralSpinLinear h := by
-  change (spinDiracRepresentation (R := ℤ) (g * h) : Module.End ℤ (DiracSpinor16 (R := ℤ))) = _
+  dsimp [integralSpinLinear]
   rw [map_mul]
   rfl
 
@@ -84,25 +84,22 @@ theorem integralSpinLinear_inv (g : integralSpin44) :
       (((integralSpinRepresentation g)⁻¹ :
         LinearMap.GeneralLinearGroup ℤ (DiracSpinor16 (R := ℤ))) :
           Module.End ℤ (DiracSpinor16 (R := ℤ))) := by
-  change ((spinDiracRepresentation (R := ℤ) g⁻¹ :
-    LinearMap.GeneralLinearGroup ℤ (DiracSpinor16 (R := ℤ))) :
-      Module.End ℤ (DiracSpinor16 (R := ℤ))) = _
-  exact congrArg (fun u : LinearMap.GeneralLinearGroup ℤ
-    (DiracSpinor16 (R := ℤ)) =>
-      (u : Module.End ℤ (DiracSpinor16 (R := ℤ))))
-    (spinDiracRepresentation_inv g)
+  change (spinDiracRepresentation (R := ℤ) g⁻¹).val = _
+  exact congrArg Units.val (spinDiracRepresentation_inv g)
 
 theorem integralSpinLinear_inv_mul_apply
     (g : integralSpin44) (Ψ : DiracSpinor16 (R := ℤ)) :
     integralSpinLinear g⁻¹ (integralSpinLinear g Ψ) = Ψ := by
-  have h := (integralSpinRepresentation g).inv_val
-  exact LinearMap.congr_fun h Ψ
+  change (((integralSpinRepresentation g)⁻¹).val * (integralSpinRepresentation g).val) Ψ = Ψ
+  rw [← Units.val_mul, inv_mul_cancel, Units.val_one]
+  rfl
 
 theorem integralSpinLinear_mul_inv_apply
     (g : integralSpin44) (Ψ : DiracSpinor16 (R := ℤ)) :
     integralSpinLinear g (integralSpinLinear g⁻¹ Ψ) = Ψ := by
-  have h := (integralSpinRepresentation g).val_inv
-  exact LinearMap.congr_fun h Ψ
+  change ((integralSpinRepresentation g).val * ((integralSpinRepresentation g)⁻¹).val) Ψ = Ψ
+  rw [← Units.val_mul, mul_inv_cancel, Units.val_one]
+  rfl
 
 theorem integralSpinLinear_injective (g : integralSpin44) :
     Function.Injective (integralSpinLinear g) := by
@@ -125,5 +122,3 @@ theorem integralSpinLinear_bijective (g : integralSpin44) :
   ⟨integralSpinLinear_injective g, integralSpinLinear_surjective g⟩
 
 end InfoGeometry.Canonical.ZornIntegralSpinRepresentation
-
-end noncomputable section

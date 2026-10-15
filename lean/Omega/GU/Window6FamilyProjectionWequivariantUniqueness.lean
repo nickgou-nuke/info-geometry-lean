@@ -46,9 +46,9 @@ private theorem window6_projection_basepoint
     ∀ i : Fin 3, π (0, i) = i := by
   intro i
   fin_cases i
-  · let j : Fin 3 := π (0, 0)
-    have hfix : j = Equiv.swap (1 : Fin 3) 2 j := by
-      simpa [j] using hEqv (Equiv.swap (1 : Fin 3) 2) 0 0
+  · have hswap : Equiv.swap (1 : Fin 3) 2 0 = 0 := by decide
+    have hstep := hEqv (Equiv.swap (1 : Fin 3) 2) 0 0
+    rw [hswap] at hstep
     change π (0, 0) = 0
     have hlt : (π (0, 0)).1 < 3 := (π (0, 0)).2
     interval_cases hval : (π (0, 0)).1
@@ -58,21 +58,29 @@ private theorem window6_projection_basepoint
       have hπ : π (0, 0) = 1 := by
         apply Fin.ext
         simpa using hval
+      have hswap1 : Equiv.swap (1 : Fin 3) 2 1 = 2 := by decide
       have hbad : (1 : Fin 3) = 2 := by
-        simpa [j, hπ] using hfix
+        calc (1 : Fin 3) = π (0, 0) := hπ.symm
+          _ = (Equiv.swap (1 : Fin 3) 2) (π (0, 0)) := hstep
+          _ = (Equiv.swap (1 : Fin 3) 2) 1 := by rw [hπ]
+          _ = 2 := hswap1
       have hbadv : (1 : Nat) = 2 := congrArg Fin.val hbad
       omega
     · exfalso
       have hπ : π (0, 0) = 2 := by
         apply Fin.ext
         simpa using hval
+      have hswap2 : Equiv.swap (1 : Fin 3) 2 2 = 1 := by decide
       have hbad : (2 : Fin 3) = 1 := by
-        simpa [j, hπ] using hfix
+        calc (2 : Fin 3) = π (0, 0) := hπ.symm
+          _ = (Equiv.swap (1 : Fin 3) 2) (π (0, 0)) := hstep
+          _ = (Equiv.swap (1 : Fin 3) 2) 2 := by rw [hπ]
+          _ = 1 := hswap2
       have hbadv : (2 : Nat) = 1 := congrArg Fin.val hbad
       omega
-  · let j : Fin 3 := π (0, 1)
-    have hfix : j = Equiv.swap (0 : Fin 3) 2 j := by
-      simpa [j] using hEqv (Equiv.swap (0 : Fin 3) 2) 0 1
+  · have hswap : Equiv.swap (0 : Fin 3) 2 1 = 1 := by decide
+    have hstep := hEqv (Equiv.swap (0 : Fin 3) 2) 0 1
+    rw [hswap] at hstep
     change π (0, 1) = 1
     have hlt : (π (0, 1)).1 < 3 := (π (0, 1)).2
     interval_cases hval : (π (0, 1)).1
@@ -80,8 +88,12 @@ private theorem window6_projection_basepoint
       have hπ : π (0, 1) = 0 := by
         apply Fin.ext
         simpa using hval
+      have hswap0 : Equiv.swap (0 : Fin 3) 2 0 = 2 := by decide
       have hbad : (0 : Fin 3) = 2 := by
-        simpa [j, hπ] using hfix
+        calc (0 : Fin 3) = π (0, 1) := hπ.symm
+          _ = (Equiv.swap (0 : Fin 3) 2) (π (0, 1)) := hstep
+          _ = (Equiv.swap (0 : Fin 3) 2) 0 := by rw [hπ]
+          _ = 2 := hswap0
       have hbadv : (0 : Nat) = 2 := congrArg Fin.val hbad
       omega
     · apply Fin.ext
@@ -90,13 +102,17 @@ private theorem window6_projection_basepoint
       have hπ : π (0, 1) = 2 := by
         apply Fin.ext
         simpa using hval
+      have hswap2 : Equiv.swap (0 : Fin 3) 2 2 = 0 := by decide
       have hbad : (2 : Fin 3) = 0 := by
-        simpa [j, hπ] using hfix
+        calc (2 : Fin 3) = π (0, 1) := hπ.symm
+          _ = (Equiv.swap (0 : Fin 3) 2) (π (0, 1)) := hstep
+          _ = (Equiv.swap (0 : Fin 3) 2) 2 := by rw [hπ]
+          _ = 0 := hswap2
       have hbadv : (2 : Nat) = 0 := congrArg Fin.val hbad
       omega
-  · let j : Fin 3 := π (0, 2)
-    have hfix : j = Equiv.swap (0 : Fin 3) 1 j := by
-      simpa [j] using hEqv (Equiv.swap (0 : Fin 3) 1) 0 2
+  · have hswap : Equiv.swap (0 : Fin 3) 1 2 = 2 := by decide
+    have hstep := hEqv (Equiv.swap (0 : Fin 3) 1) 0 2
+    rw [hswap] at hstep
     change π (0, 2) = 2
     have hlt : (π (0, 2)).1 < 3 := (π (0, 2)).2
     interval_cases hval : (π (0, 2)).1
@@ -104,16 +120,24 @@ private theorem window6_projection_basepoint
       have hπ : π (0, 2) = 0 := by
         apply Fin.ext
         simpa using hval
+      have hswap0 : Equiv.swap (0 : Fin 3) 1 0 = 1 := by decide
       have hbad : (0 : Fin 3) = 1 := by
-        simpa [j, hπ] using hfix
+        calc (0 : Fin 3) = π (0, 2) := hπ.symm
+          _ = (Equiv.swap (0 : Fin 3) 1) (π (0, 2)) := hstep
+          _ = (Equiv.swap (0 : Fin 3) 1) 0 := by rw [hπ]
+          _ = 1 := hswap0
       have hbadv : (0 : Nat) = 1 := congrArg Fin.val hbad
       omega
     · exfalso
       have hπ : π (0, 2) = 1 := by
         apply Fin.ext
         simpa using hval
+      have hswap1 : Equiv.swap (0 : Fin 3) 1 1 = 0 := by decide
       have hbad : (1 : Fin 3) = 0 := by
-        simpa [j, hπ] using hfix
+        calc (1 : Fin 3) = π (0, 2) := hπ.symm
+          _ = (Equiv.swap (0 : Fin 3) 1) (π (0, 2)) := hstep
+          _ = (Equiv.swap (0 : Fin 3) 1) 1 := by rw [hπ]
+          _ = 0 := hswap1
       have hbadv : (1 : Nat) = 0 := congrArg Fin.val hbad
       omega
     · apply Fin.ext

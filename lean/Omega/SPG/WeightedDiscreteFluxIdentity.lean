@@ -1,5 +1,5 @@
 import Mathlib.Data.Fintype.BigOperators
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.Tactic
 import Omega.Core.Word
 import Omega.SPG.CoarsegrainedCutFlux
@@ -47,7 +47,8 @@ theorem weight_flipAt_of_zero {n : Nat} (i : Fin n) (a : Fin n → Real) (w : Om
   classical
   unfold weight
   have hi : i ∈ (Finset.univ : Finset (Fin n)) := Finset.mem_univ i
-  rw [Finset.prod_eq_mul_prod_diff_singleton hi, Finset.prod_eq_mul_prod_diff_singleton hi]
+  rw [Finset.prod_eq_mul_prod_sdiff_singleton_of_mem hi,
+    Finset.prod_eq_mul_prod_sdiff_singleton_of_mem hi]
   have hrest :
       ∏ j ∈ Finset.univ \ {i}, (if flipAt i w j then a j else 1) =
         ∏ j ∈ Finset.univ \ {i}, (if w j then a j else 1) := by

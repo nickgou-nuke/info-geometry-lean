@@ -67,7 +67,8 @@ abbrev dualTopologicalLimit : TopCat.{u} :=
 
 /-- Projection from the dual-functional limit to stage `i`. -/
 def dualTopologicalProjection (i : I) :
-    dualTopologicalLimit Dual sys ⟶ TopCat.of (Dual i) :=
+    dualTopologicalLimit Dual sys ⟶
+      (dualTopologicalDiagram Dual sys).obj (Opposite.op i) :=
   limit.π (dualTopologicalDiagram Dual sys) (Opposite.op i)
 
 theorem dualTopologicalProjection_naturality
@@ -119,13 +120,13 @@ theorem dualTopologicalLimitMap_projection_apply
 
 /-! A compatible family of continuous coordinates gives a canonical point in
 the inverse limit through `limit.lift`. -/
-abbrev CompatibleDualFamily (X : TopCat.{u}) :=
-  ∀ i : I, X ⟶ TopCat.of (Dual i)
+abbrev CompatibleDualFamily (sys : DualRestrictionSystem Dual) (X : TopCat.{u}) :=
+  ∀ i : I, X ⟶ (dualTopologicalDiagram Dual sys).obj (Opposite.op i)
 
 variable {X : TopCat.{u}}
 
 def compatibleDualFamilyCone
-    (c : CompatibleDualFamily Dual X)
+    (c : CompatibleDualFamily Dual sys X)
     (hc : ∀ {i j : I} (hij : i ≤ j),
       c j ≫
           (dualTopologicalDiagram Dual sys).map (dualHom hij) =
@@ -136,13 +137,15 @@ def compatibleDualFamilyCone
     { app := fun i => c i.unop
       naturality := by
         intro i j f
-        dsimp
-        rw [Category.id_comp]
-        exact Eq.symm (hc (leOfHom f.unop)) }
+        have hf : f = dualHom (leOfHom f.unop) := Subsingleton.elim _ _
+        change 𝟙 X ≫ c j.unop =
+          c i.unop ≫ (dualTopologicalDiagram Dual sys).map f
+        rw [hf, Category.id_comp]
+        exact (hc (leOfHom f.unop)).symm }
 
 /-- Lift a compatible dual-functional family into the native inverse limit. -/
 def compatibleDualFamilyLift
-    (c : CompatibleDualFamily Dual X)
+    (c : CompatibleDualFamily Dual sys X)
     (hc : ∀ {i j : I} (hij : i ≤ j),
       c j ≫
           (dualTopologicalDiagram Dual sys).map (dualHom hij) =
@@ -152,7 +155,7 @@ def compatibleDualFamilyLift
     (compatibleDualFamilyCone Dual sys c hc)
 
 theorem compatibleDualFamilyLift_projection
-    (c : CompatibleDualFamily Dual X)
+    (c : CompatibleDualFamily Dual sys X)
     (hc : ∀ {i j : I} (hij : i ≤ j),
       c j ≫
           (dualTopologicalDiagram Dual sys).map (dualHom hij) =
@@ -163,7 +166,7 @@ theorem compatibleDualFamilyLift_projection
     (compatibleDualFamilyCone Dual sys c hc) (Opposite.op i)
 
 theorem compatibleDualFamilyLift_unique
-    (c : CompatibleDualFamily Dual X)
+    (c : CompatibleDualFamily Dual sys X)
     (hc : ∀ {i j : I} (hij : i ≤ j),
       c j ≫
           (dualTopologicalDiagram Dual sys).map (dualHom hij) =
@@ -179,7 +182,7 @@ theorem compatibleDualFamilyLift_unique
   rw [h i.unop, compatibleDualFamilyLift_projection Dual sys c hc]
 
 theorem compatibleDualFamilyLift_map_fixed
-    (c : CompatibleDualFamily Dual X)
+    (c : CompatibleDualFamily Dual sys X)
     (hc : ∀ {i j : I} (hij : i ≤ j),
       c j ≫
           (dualTopologicalDiagram Dual sys).map (dualHom hij) =
@@ -193,21 +196,15 @@ theorem compatibleDualFamilyLift_map_fixed
     compatibleDualFamilyLift Dual sys c hc := by
   apply limit.hom_ext
   intro i
-  calc
+  change (compatibleDualFamilyLift Dual sys c hc ≫
+      dualTopologicalLimitMap Dual sys α) ≫
+        dualTopologicalProjection Dual sys i.unop =
     compatibleDualFamilyLift Dual sys c hc ≫
-        dualTopologicalLimitMap Dual sys α ≫
-          dualTopologicalProjection Dual sys i.unop =
-          compatibleDualFamilyLift Dual sys c hc ≫
-          dualTopologicalProjection Dual sys i.unop ≫
-            α.app (Opposite.op i.unop) := by
-              rw [dualTopologicalLimitMap_projection]
-    _ = c i.unop ≫ α.app (Opposite.op i.unop) := by
-          simpa only [Category.assoc] using
-            congrArg (fun k => k ≫ α.app (Opposite.op i.unop))
-              (compatibleDualFamilyLift_projection Dual sys c hc i.unop)
-    _ = c i.unop := hα i.unop
-    _ = compatibleDualFamilyLift Dual sys c hc ≫
-        dualTopologicalProjection Dual sys i.unop := by
-          exact (compatibleDualFamilyLift_projection Dual sys c hc i.unop).symm
+      dualTopologicalProjection Dual sys i.unop
+  conv_lhs =>
+    rw [Category.assoc, dualTopologicalLimitMap_projection,
+      ← Category.assoc, compatibleDualFamilyLift_projection,
+      hα i.unop]
+  exact (compatibleDualFamilyLift_projection Dual sys c hc i.unop).symm
 
 end FilteredColimit.Native.TopologicalDual

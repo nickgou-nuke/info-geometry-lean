@@ -43,21 +43,24 @@ theorem paper_xi_window6_group_quotient_isotropy_strata
     calc
       Fintype.card G = Fintype.card ↥(MulAction.orbit G ω2) * Fintype.card (MulAction.stabilizer G ω2) := by
         simpa using
-          (MulAction.card_orbit_mul_card_stabilizer_eq_card_group (α := G) (β := Ω) ω2).symm
+          (MulAction.card_orbit_mul_card_stabilizer_eq_card_group
+            (G := G) (X := Ω) ω2).symm
       _ = 2 * Fintype.card (MulAction.stabilizer G ω2) := by rw [hω2']
   have h3dvd : 3 ∣ Fintype.card G := by
     refine ⟨Fintype.card (MulAction.stabilizer G ω3), ?_⟩
     calc
       Fintype.card G = Fintype.card ↥(MulAction.orbit G ω3) * Fintype.card (MulAction.stabilizer G ω3) := by
         simpa using
-          (MulAction.card_orbit_mul_card_stabilizer_eq_card_group (α := G) (β := Ω) ω3).symm
+          (MulAction.card_orbit_mul_card_stabilizer_eq_card_group
+            (G := G) (X := Ω) ω3).symm
       _ = 3 * Fintype.card (MulAction.stabilizer G ω3) := by rw [hω3']
   have h4dvd : 4 ∣ Fintype.card G := by
     refine ⟨Fintype.card (MulAction.stabilizer G ω4), ?_⟩
     calc
       Fintype.card G = Fintype.card ↥(MulAction.orbit G ω4) * Fintype.card (MulAction.stabilizer G ω4) := by
         simpa using
-          (MulAction.card_orbit_mul_card_stabilizer_eq_card_group (α := G) (β := Ω) ω4).symm
+          (MulAction.card_orbit_mul_card_stabilizer_eq_card_group
+            (G := G) (X := Ω) ω4).symm
       _ = 4 * Fintype.card (MulAction.stabilizer G ω4) := by rw [hω4']
   let _ := h2dvd
   simpa using

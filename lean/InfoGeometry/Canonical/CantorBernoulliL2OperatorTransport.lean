@@ -541,7 +541,7 @@ theorem tail_measure_map_restrict_prependBitBranch (b : Bool) :
     simpa [Function.comp_def, tail_prependBit] using
       (Measure.map_id (μ := μC))
   rw [prependBit_measure_map_eq_two_restrict_branch b,
-    Measure.map_smul] at hcomp
+    Measure.map_smul _ continuous_tail.measurable.aemeasurable] at hcomp
   apply Measure.ext
   intro s hs
   have h := congrArg (fun ν : Measure Boundary => ν s) hcomp
@@ -594,9 +594,9 @@ theorem branchPrependLpIsometry_comp_branchTailLpIsometry (b : Bool)
   calc
     branchPrependLpIsometry b (branchTailLpIsometry b f) x =
         branchTailLpIsometry b f (prependBit b x) := by
-          simpa [Function.comp_apply] using hx
+          simpa [branchPrependLpIsometry, Function.comp_apply] using hx
     _ = f (tail (prependBit b x)) := by
-          simpa [Function.comp_apply] using houtx
+          simpa [branchTailLpIsometry, Function.comp_apply] using houtx
     _ = f x := by rw [tail_prependBit]
 
 theorem tail_measure_map : Measure.map tail μC = μC := by
@@ -888,11 +888,10 @@ theorem rawPrependBitFunction_eLpNorm (b : Bool) (f : L2Boundary) :
 
 theorem rawPrependBitFunction_memLp (b : Bool) (f : L2Boundary) :
     MemLp (rawPrependBitFunction b f) 2 μC := by
-  apply MemLp.indicator (measurableSet_prependBitBranch b)
-  have hcomp :
-      MemLp ((fun x : Boundary => f x) ∘ tail) 2 μC :=
-    (Lp.memLp f).comp_measurePreserving tail_measurePreserving
-  simpa [rawPrependBitFunction] using hcomp
+  rw [memLp_iff, rawPrependBitFunction_eLpNorm]
+  apply ENNReal.mul_lt_top
+  · finiteness
+  · exact Lp.eLpNorm_lt_top f
 
 theorem rawPrependBitFunction_ae_congr (b : Bool)
     {f g : L2Boundary} (h : f =ᵐ[μC] g) :
@@ -929,7 +928,7 @@ theorem rawPrependBitLp_norm_le (b : Bool) (f : L2Boundary) :
   calc
     eLpNorm (rawPrependBitFunction b f) 2 μC ≤
         eLpNorm ((fun x : Boundary => f x) ∘ tail) 2 μC := by
-      exact eLpNorm_indicator_le _
+      exact eLpNorm_indicator_le (fun x => f (tail x)) (measurableSet_prependBitBranch b)
     _ = eLpNorm (f : Boundary →ₘ[μC] ℂ) 2 μC := by
       rw [← AEEqFun.eLpNorm_compMeasurePreserving
         (f : Boundary →ₘ[μC] ℂ) tail_measurePreserving]
@@ -971,7 +970,7 @@ def rawPrependBitLpLinearMap (b : Bool) : L2Boundary →ₗ[ℂ] L2Boundary wher
 def rawPrependBitLpContinuousLinearMap (b : Bool) : L2Boundary →L[ℂ] L2Boundary :=
   (rawPrependBitLpLinearMap b).mkContinuous 1 (by
     intro f
-    simpa using rawPrependBitLp_norm_le b f)
+    simpa [rawPrependBitLpLinearMap] using rawPrependBitLp_norm_le b f)
 
 noncomputable def prependBitLpNormFactor : ℝ :=
   ((1 / 2 : ℝ≥0∞) ^ (1 / (2 : ℝ≥0∞)).toReal).toReal
@@ -988,7 +987,7 @@ theorem prependBitLpNormFactor_sq :
   rw [pow_two]
   let x : ℝ≥0∞ := (1 / 2 : ℝ≥0∞) ^ (1 / (2 : ℝ≥0∞)).toReal
   have hmul : (x * x).toReal = x.toReal * x.toReal := by
-    rw [ENNReal.toReal_mul] <;> norm_num
+    rw [ENNReal.toReal_mul]
   change x.toReal * x.toReal = (1 / 2 : ℝ)
   rw [← hmul]
   dsimp [x]
@@ -1119,7 +1118,7 @@ theorem prependBitFunction_memLp (b : Bool) (f : L2Boundary) :
     exact hrestrict.smul_measure (by simp)
   have hcomp := hbranch_memLp.comp_measurePreserving
     (prependBitMeasurePreserving b)
-  simpa [prependBitFunction, Function.comp_def] using hcomp
+  exact hcomp
 
 def prependBitLp (b : Bool) (f : L2Boundary) : L2Boundary :=
   (prependBitFunction_memLp b f).toLp (prependBitFunction b f)
@@ -1252,7 +1251,7 @@ theorem normalizedPrependBitLp_partition :
         (k⁻¹ : ℂ) • (k • branchIndicatorLp true f) = f
     rw [inv_smul_smul₀ hk, inv_smul_smul₀ hk,
       branchIndicatorLp_partition]
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.comp_apply, ContinuousLinearMap.id_apply]
+  simp only [add_apply, ContinuousLinearMap.comp_apply, ContinuousLinearMap.id_apply]
   rw [← hf]
   have hF : (normalizedPrependBitLpAdjoint false) (normalizedPrependBitLpContinuousLinearMap false f₀ + normalizedPrependBitLpContinuousLinearMap true f₁) = f₀ := by
     rw [map_add]

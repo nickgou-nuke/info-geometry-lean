@@ -69,9 +69,10 @@ noncomputable def symbolicLatentSolutionFiberCompHausFunctor
     rfl
   map_comp := by
     intro S T U f g
-    simpa using
-      (symbolicLatentSolutionFiberCompHausHom_comp (S := S) (T := T) (U := U)
-        (g := g) (f := f) values)
+    change symbolicLatentSolutionFiberCompHausHom
+        (SymbolicLatentMorphism.comp g f) values = _
+    exact symbolicLatentSolutionFiberCompHausHom_comp
+      (S := S) (T := T) (U := U) (g := g) (f := f) values
 
 end
 end InfoGeometry.Topology

@@ -45,7 +45,9 @@ abbrev e (i j : Fin 2) : Coeff := E 2 i j
 
 /-- Completeness of the two range projections. -/
 theorem diagonal_sum : e 0 0 + e 1 1 = 1 := by
-  simpa [Fin.sum_univ_two] using matrix_unit_sum_diag_eq_one 2
+  have h : E 2 0 0 + E 2 1 1 = (1 : CuntzAlg 2) := by
+    simpa [Fin.sum_univ_two] using matrix_unit_sum_diag_eq_one 2
+  exact congrArg (fun x : CuntzAlg 2 => (x : Coeff)) h
 
 /-- Symmetric off-diagonal direction. -/
 def u : Coeff := e 0 1 + e 1 0
@@ -55,6 +57,15 @@ def v : Coeff := e 0 0 - e 1 1
 
 /-- Real skew direction. -/
 def w : Coeff := e 0 1 - e 1 0
+
+private theorem star_neg_coeff (x : Coeff) : star (-x) = -star x := by
+  change (starAddEquiv : Coeff ≃+ Coeff) (-x) = -star x
+  exact map_neg (starAddEquiv : Coeff ≃+ Coeff) x
+
+private theorem star_e (i j : Fin 2) :
+    (starAddEquiv : Coeff ≃+ Coeff) (e i j) = e j i := by
+  change star (e i j) = e j i
+  exact e_star i j
 
 @[simp] theorem u_sq : u * u = 1 := by
   simpa [u, mul_add, add_mul, add_comm] using diagonal_sum
@@ -74,7 +85,7 @@ def w : Coeff := e 0 1 - e 1 0
 
 @[simp] theorem v_u : v * u = w := by
   simp [u, v, w, sub_mul, mul_add]
-  abel
+  abel_nf
 
 @[simp] theorem u_w : u * w = -v := by
   simp [u, v, w, add_mul, mul_sub]
@@ -91,13 +102,17 @@ def w : Coeff := e 0 1 - e 1 0
   abel
 
 @[simp] theorem star_u : star u = u := by
-  simp only [u, star_add, e_star]
-  abel
+  change (starAddEquiv : Coeff ≃+ Coeff) (e 0 1 + e 1 0) = e 0 1 + e 1 0
+  rw [map_add, star_e, star_e]
+  abel_nf
 @[simp] theorem star_v : star v = v := by
-  simp only [v, star_sub, e_star]
+  change (starAddEquiv : Coeff ≃+ Coeff) (e 0 0 - e 1 1) = _
+  rw [map_sub, star_e, star_e]
+  rfl
 @[simp] theorem star_w : star w = -w := by
-  simp only [w, star_sub, e_star]
-  abel
+  change (starAddEquiv : Coeff ≃+ Coeff) (e 0 1 - e 1 0) = -(e 0 1 - e 1 0)
+  rw [map_sub, star_e, star_e]
+  abel_nf
 
 /-- The four corrected block generators, ordered with signs `+,+,-,-`. -/
 def gamma : Fin 4 → Block :=
@@ -125,7 +140,11 @@ theorem spin_square (x : Fin 4 → ℝ) :
     spin x * spin x = (-x 1 * x 1 + x 2 * x 2 + x 3 * x 3) • (1 : Coeff) := by
   simp only [spin, add_mul, mul_add, smul_mul_smul]
   rw [w_sq, u_sq, v_sq, w_u, u_w, w_v, v_w, u_v, v_u]
-  module
+  simp only [add_smul, sub_smul, neg_smul, smul_neg]
+  simp only [neg_mul]
+  rw [mul_comm (x 2) (x 1), mul_comm (x 3) (x 1), mul_comm (x 3) (x 2)]
+  abel_nf
+  simp [Algebra.smul_def, neg_one_mul, neg_smul] <;> abel_nf
 
 /-- Real-linear map of generators into the two-sheet operator blocks. -/
 def gammaVector : (Fin 4 → ℝ) →ₗ[ℝ] Block where
@@ -147,12 +166,18 @@ theorem gammaVector_square (x : Fin 4 → ℝ) :
       quadratic x • (1 : Coeff) := by
     simp only [add_mul, mul_sub, smul_mul_assoc, mul_smul_comm, one_mul, mul_one,
       spin_square, quadratic_apply]
-    module
+    simp only [spin, smul_add, smul_sub, smul_smul, add_smul, sub_smul,
+      neg_smul, smul_neg, neg_mul]
+    abel_nf
+    simp [Algebra.smul_def, neg_one_mul, neg_smul] <;> abel_nf
   have hR : (x 0 • (1 : Coeff) - spin x) * (x 0 • (1 : Coeff) + spin x) =
       quadratic x • (1 : Coeff) := by
     simp only [sub_mul, mul_add, smul_mul_assoc, mul_smul_comm, one_mul, mul_one,
       spin_square, quadratic_apply]
-    module
+    simp only [spin, smul_add, smul_sub, smul_smul, add_smul, sub_smul,
+      neg_smul, smul_neg, neg_mul]
+    abel_nf
+    simp [Algebra.smul_def, neg_one_mul, neg_smul] <;> abel_nf
   rw [Algebra.algebraMap_eq_smul_one]
   ext i j
   fin_cases i <;> fin_cases j

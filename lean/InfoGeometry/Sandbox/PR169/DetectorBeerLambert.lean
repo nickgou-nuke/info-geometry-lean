@@ -29,8 +29,11 @@ theorem continuous_collisionDensity (μ : ℝ) : Continuous (collisionDensity μ
 
 theorem hasDerivAt_collisionPrimitive (μ t : ℝ) :
     HasDerivAt (fun u : ℝ => -Real.exp (-μ * u)) (collisionDensity μ t) t := by
-  convert (((hasDerivAt_id t).const_mul (-μ)).exp).neg using 1 <;>
-    simp [collisionDensity] <;> ring
+  convert (((hasDerivAt_id t).const_mul (-μ)).exp).neg using 1
+  · funext u
+    rfl
+  · simp [collisionDensity]
+    ring
 
 /-- Exact Beer--Lambert first-collision probability, valid algebraically even
 at μ = 0; physical bounds use μ ≥ 0 and ℓ ≥ 0. -/

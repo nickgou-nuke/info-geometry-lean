@@ -96,7 +96,8 @@ theorem expertNormEnergyOnModuli_nonneg {K : ℕ}
     0 ≤ expertNormEnergyOnModuli (V := V) (K := K) q := by
   refine Quotient.inductionOn q ?_
   intro v
-  simpa only [expertNormEnergyOnModuli_quotientMap] using
+  simpa [expertNormEnergyOnModuli, sinkhornRoutingLossOnModuli,
+    invariantLift, quotientMap] using
     expertNormEnergy_nonneg v
 
 theorem expertNormEnergyOnModuli_sublevel_isClosed {K : ℕ} (c : ℝ) :

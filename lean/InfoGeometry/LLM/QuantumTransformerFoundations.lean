@@ -84,8 +84,7 @@ theorem doubly_stochastic_total_mass (P : Matrix N N ℝ) (hP : ∀ i, rowSum P 
 
 /-- The elliptic compact component $K = \\mathrm{SO}(2)$: continuous rotary phase flow (RoPE). -/
 def so2Rotor (θ : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
-  ![![Real.cos θ, -Real.sin θ],
-    ![Real.sin θ, Real.cos θ]]
+  !![Real.cos θ, -Real.sin θ; Real.sin θ, Real.cos θ]
 
 @[simp]
 theorem so2Rotor_det (θ : ℝ) :
@@ -96,8 +95,7 @@ theorem so2Rotor_det (θ : ℝ) :
 
 /-- The abelian positive scaling component $A = \\mathbb{R}^+$: conformal dilation flow. -/
 def weylScale (s : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
-  ![![Real.exp s, 0],
-    ![0, Real.exp (-s)]]
+  !![Real.exp s, 0; 0, Real.exp (-s)]
 
 @[simp]
 theorem weylScale_det (s : ℝ) :
@@ -109,8 +107,7 @@ theorem weylScale_det (s : ℝ) :
 
 /-- The nilpotent unipotent component $N$: parabolic linear translation (ALiBi). -/
 def alibiNilpotent (u : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
-  ![![1, u],
-    ![0, 1]]
+  !![1, u; 0, 1]
 
 @[simp]
 theorem alibiNilpotent_det (u : ℝ) :
@@ -119,8 +116,7 @@ theorem alibiNilpotent_det (u : ℝ) :
 
 /-- The infinitesimal nilpotent generator of the parabolic translation flow. -/
 def nilpotentGenerator : Matrix (Fin 2) (Fin 2) ℝ :=
-  ![![0, 1],
-    ![0, 0]]
+  !![0, 1; 0, 0]
 
 /-- Square-zero nilpotent identity governing ALiBi linear bias propagation: $N^2 = 0$. -/
 theorem nilpotent_sq_zero :

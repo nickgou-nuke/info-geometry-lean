@@ -1,7 +1,7 @@
 import Mathlib.Analysis.InnerProductSpace.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.InnerProductSpace.Adjoint
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.Tactic
 
@@ -30,6 +30,8 @@ noncomputable section
 open ContinuousLinearMap
 open LieAlgebra
 open InnerProductSpace
+
+attribute [local instance 100] LieRing.ofAssociativeRing
 
 local postfix:90 "†" => starRingEnd _
 

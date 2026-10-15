@@ -436,10 +436,10 @@ structure AutomorphicLResonanceWitness
     BoundaryScatteringLFunctionDatum W
 
   operators :
-    CompatibleAutomorphicOperatorFamily W
+    CompatibleAutomorphicOperatorFamily.{uBulk, uBoundary, uHecke} W
 
   hecke_euler_compatibility :
-    HasHeckeEulerCompatibility operators cuspL
+    HasHeckeEulerCompatibility.{uBulk, uBoundary, uHecke} operators cuspL
 
 /--
 Admissibility package for constructing an automorphic L-resonance witness.

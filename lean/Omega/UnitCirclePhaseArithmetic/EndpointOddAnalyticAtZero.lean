@@ -30,16 +30,19 @@ theorem paper_endpoint_odd_analytic_at_zero (m : ℕ) (hm : Odd m) :
   have hscaleArg : ContinuousAt (fun σ : ℝ => -(1 + σ) * Real.log 2) 0 := by
     exact (continuousAt_const.add continuousAt_id).neg.mul continuousAt_const
   have hscale : ContinuousAt (fun σ : ℝ => endpointDyadicScale 2 σ) 0 := by
-    simpa [endpointDyadicScale] using Real.continuous_exp.continuousAt.comp hscaleArg
+    simpa [endpointDyadicScale, Function.comp_def] using
+      Real.continuous_exp.continuousAt.comp hscaleArg
   have hzetaArg : ContinuousAt (fun σ : ℝ => (1 + σ) - 1) 0 := by
     exact (continuousAt_const.add continuousAt_id).sub continuousAt_const
   have hzeta : ContinuousAt (fun σ : ℝ => endpointZetaSymbol (1 + σ)) 0 := by
-    simpa [endpointZetaSymbol] using
-      (continuousAt_const.mul (Real.continuous_exp.continuousAt.comp hzetaArg))
+    change ContinuousAt (fun σ : ℝ => (Real.pi / 2) * Real.exp ((1 + σ) - 1)) 0
+    exact continuousAt_const.mul (Real.continuous_exp.continuousAt.comp hzetaArg)
   have hfactor : ContinuousAt (fun σ : ℝ => 1 - endpointDyadicScale 2 σ) 0 := by
     exact continuousAt_const.sub hscale
   have hbaseCont : ContinuousAt endpointLChi4Symbol 0 := by
-    simpa [endpointLChi4Symbol, endpointOddClassSum] using hfactor.mul hzeta
+    change ContinuousAt
+      (fun σ : ℝ => (1 - endpointDyadicScale 2 σ) * endpointZetaSymbol (1 + σ)) 0
+    exact hfactor.mul hzeta
   have hbaseZero : endpointLChi4Symbol 0 = Real.pi / 4 := by
     calc
       endpointLChi4Symbol 0 = (1 - (1 / 2 : ℝ)) * (Real.pi / 2) := by

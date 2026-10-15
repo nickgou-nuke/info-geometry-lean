@@ -16,7 +16,15 @@ inductive Archetype
   | transportEquivalence
   | centeredNormalization
   | commonProfileRecovery
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype Archetype where
+  elems := {Archetype.positiveScale, Archetype.positiveFactorization,
+    Archetype.logarithmicRepresentation, Archetype.transportEquivalence,
+    Archetype.centeredNormalization, Archetype.commonProfileRecovery}
+  complete := by
+    intro x
+    cases x <;> simp
 
 open Archetype
 

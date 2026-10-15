@@ -65,7 +65,7 @@ noncomputable instance natTailFunctor_final (m : ℕ) :
   Functor.final_of_adjunction (natTailAdjunction m)
 
 /-- The tensor-power module diagram with the first `m` finite stages removed. -/
-def tailTensorPowerModuleDiagram (m : ℕ) : ℕ ⥤ ModuleCat ℂ :=
+abbrev tailTensorPowerModuleDiagram (m : ℕ) : ℕ ⥤ ModuleCat ℂ :=
   natTailFunctor m ⋙ standardTensorPowerModuleDiagram
 
 /-- The fixed infinite generator index `i`, viewed at tail stage `k`. -/
@@ -101,11 +101,13 @@ def tailGeneratorNatTrans (i : ℕ) :
         rw [hmap]
         exact standardTensorPowerModuleDiagram_map_succ (i + k)
       rw [hstep]
-      simpa [tailTensorPowerModuleDiagram, natTailFunctor,
-        tailGeneratorEquiv, tailGeneratorIndex, ModuleCat.comp_apply,
-        Functor.ofSequence_map_homOfLE_succ,
-        standardHadjiivanovBraidProject_sigma, Nat.add_assoc] using
-        congrArg (fun f => f v) h.symm)
+      have hpoint := LinearMap.congr_fun h.symm v
+      change
+        ((tailGeneratorEquiv i (k + 1)).toLinearMap ∘ₗ
+          (appendPrimaryBonding (i + k + 1)).hom) v =
+        ((appendPrimaryBonding (i + k + 1)).hom ∘ₗ
+          (tailGeneratorEquiv i k).toLinearMap) v
+      exact hpoint)
 
 /-- The inverse checked-R slices are natural on the same upper tail. -/
 def tailGeneratorInvNatTrans (i : ℕ) :
@@ -134,10 +136,12 @@ def tailGeneratorInvNatTrans (i : ℕ) :
         rw [hmap]
         exact standardTensorPowerModuleDiagram_map_succ (i + k)
       rw [hstep]
-      simpa [tailTensorPowerModuleDiagram, natTailFunctor,
-        tailGeneratorEquiv, tailGeneratorIndex, ModuleCat.comp_apply,
-        Functor.ofSequence_map_homOfLE_succ,
-        standardHadjiivanovBraidProject_sigma, Nat.add_assoc] using hv.symm)
+      change
+        ((tailGeneratorEquiv i (k + 1)).symm.toLinearMap ∘ₗ
+          (appendPrimaryBonding (i + k + 1)).hom) v =
+        ((appendPrimaryBonding (i + k + 1)).hom ∘ₗ
+          (tailGeneratorEquiv i k).symm.toLinearMap) v
+      exact hv.symm)
 
 /-- Natural automorphism of the upper-tail tensor-power diagram. -/
 def tailGeneratorNatIso (i : ℕ) :
@@ -145,13 +149,17 @@ def tailGeneratorNatIso (i : ℕ) :
   hom := tailGeneratorNatTrans i
   inv := tailGeneratorInvNatTrans i
   hom_inv_id := by
-    ext k
-    simp [tailGeneratorNatTrans, tailGeneratorInvNatTrans,
-      tailGeneratorEquiv]
+    ext k x
+    change
+      (tailGeneratorEquiv i k).symm.toLinearMap
+        ((tailGeneratorEquiv i k).toLinearMap x) = x
+    exact (tailGeneratorEquiv i k).symm_apply_apply x
   inv_hom_id := by
-    ext k
-    simp [tailGeneratorNatTrans, tailGeneratorInvNatTrans,
-      tailGeneratorEquiv]
+    ext k x
+    change
+      (tailGeneratorEquiv i k).toLinearMap
+        ((tailGeneratorEquiv i k).symm.toLinearMap x) = x
+    exact (tailGeneratorEquiv i k).apply_symm_apply x
 
 /-- Automorphism induced by the `i`th checked-R generator on the tail colimit. -/
 def tailGeneratorColimitAut (i : ℕ) :

@@ -20,7 +20,8 @@ theorem paper_window6_golden_s3c2_c6_phase_source :
       σ ^ 6 = (σ ^ 3) ^ 2 := by rw [show 6 = 3 * 2 by decide, pow_mul]
       _ = 1 := by simp [hσ3]
   have hε6 : ε ^ 6 = 1 := by
-    change (0 : ZMod 2) = 0
+    change Multiplicative.ofAdd (6 • (1 : ZMod 2)) = 1
+    rw [ofAdd_eq_one]
     decide
   refine ⟨(σ, ε), ?_⟩
   refine ⟨?_, ?_, ?_⟩
@@ -28,8 +29,9 @@ theorem paper_window6_golden_s3c2_c6_phase_source :
     exact Prod.ext hσ6 hε6
   · intro h
     have hsnd := congrArg Prod.snd h
-    change (1 : ZMod 2) = 0 at hsnd
-    norm_num at hsnd
+    change Multiplicative.ofAdd (3 • (1 : ZMod 2)) = 1 at hsnd
+    rw [ofAdd_eq_one] at hsnd
+    exact (by decide : (3 : ZMod 2) ≠ 0) hsnd
   · intro h
     have hfst := congrArg Prod.fst h
     have h0 := congrArg (fun τ => τ 0) hfst

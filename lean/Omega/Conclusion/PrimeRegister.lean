@@ -1015,20 +1015,36 @@ theorem godelEncoding_mono_of_le (primes : ℕ → ℕ) (offset : ℕ) (u v : Li
     (hp : ∀ i, 1 < primes i)
     (hle : ∀ (i : Fin u.length), u[i] ≤ v[i.val]'(by omega)) :
     godelEncoding primes offset u ≤ godelEncoding primes offset v := by
-  rw [godelEncoding_prod_finset, godelEncoding_prod_finset]
-  rw [hlen]
-  apply Finset.prod_le_prod
-  · intro i _
-    exact Nat.zero_le _
-  · intro i hi
-    simp only [Finset.mem_range] at hi
+  rw [godelEncoding_prod_finset, godelEncoding_prod_finset, ← hlen]
+  gcongr with i hi
+  · exact Nat.zero_lt_of_lt (hp (offset + i))
+  · simp only [Finset.mem_range] at hi
     have hi' : i < u.length := by omega
     have hle_i := hle ⟨i, hi'⟩
-    -- u[i]! = u[i] when i < u.length
     have hu : u[i]! = u[i]'hi' := by simp [List.getElem!_eq_getElem?_getD, List.getElem?_eq_getElem hi']
     have hv : v[i]! = v[i]'(by omega) := by simp [List.getElem!_eq_getElem?_getD, List.getElem?_eq_getElem (by omega : i < v.length)]
     rw [hu, hv]
-    exact Nat.pow_le_pow_right (by linarith [hp (offset + i)]) hle_i
+    exact hle_i
+
+lemma nat_prod_lt_prod_of_lt {ι : Type*} [DecidableEq ι] (s : Finset ι) (f g : ι → ℕ)
+    (j : ι) (hj : j ∈ s)
+    (hle : ∀ i ∈ s, f i ≤ g i)
+    (hlt : f j < g j)
+    (hpos : ∀ i ∈ s, 0 < f i) :
+    ∏ i ∈ s, f i < ∏ i ∈ s, g i := by
+  rw [← Finset.mul_prod_erase s f hj, ← Finset.mul_prod_erase s g hj]
+  have hprod_pos : 0 < ∏ i ∈ s.erase j, f i := by
+    apply Finset.prod_pos
+    intro i hi
+    exact hpos i (Finset.mem_of_mem_erase hi)
+  have hprod_le : ∏ i ∈ s.erase j, f i ≤ ∏ i ∈ s.erase j, g i := by
+    gcongr with i hi
+    exact hle i (Finset.mem_of_mem_erase hi)
+  have h1 : f j * ∏ i ∈ s.erase j, f i < g j * ∏ i ∈ s.erase j, f i :=
+    Nat.mul_lt_mul_of_pos_right hlt hprod_pos
+  have h2 : g j * ∏ i ∈ s.erase j, f i ≤ g j * ∏ i ∈ s.erase j, g i :=
+    Nat.mul_le_mul_left (g j) hprod_le
+  omega
 
 /-- Gödel encoding is strictly monotone when at least one exponent is strictly less.
     thm:conclusion-godel-semidirect-law -/
@@ -1038,25 +1054,24 @@ theorem godelEncoding_strict_mono_of_lt (primes : ℕ → ℕ) (offset : ℕ) (u
     (hle : ∀ (i : Fin u.length), u[i] ≤ v[i.val]'(by omega))
     (j : Fin u.length) (hlt : u[j] < v[j.val]'(by omega)) :
     godelEncoding primes offset u < godelEncoding primes offset v := by
-  rw [godelEncoding_prod_finset, godelEncoding_prod_finset, hlen]
-  apply Finset.prod_lt_prod
-  · intro i _
-    exact Nat.pos_of_ne_zero (pow_ne_zero _ (by linarith [hp (offset + i)]))
+  rw [godelEncoding_prod_finset, godelEncoding_prod_finset, ← hlen]
+  apply nat_prod_lt_prod_of_lt (Finset.range u.length)
+    (fun i => primes (offset + i) ^ u[i]!)
+    (fun i => primes (offset + i) ^ v[i]!)
+    j.val (Finset.mem_range.mpr j.isLt)
   · intro i hi
     simp only [Finset.mem_range] at hi
     have hi' : i < u.length := by omega
-    have hu : u[i]! = u[i]'hi' := by
-      simp [List.getElem?_eq_getElem hi']
-    have hv : v[i]! = v[i]'(by omega) := by
-      simp [List.getElem?_eq_getElem (by omega : i < v.length)]
+    have hu : u[i]! = u[i]'hi' := by simp [List.getElem?_eq_getElem hi']
+    have hv : v[i]! = v[i]'(by omega) := by simp [List.getElem?_eq_getElem (by omega : i < v.length)]
     rw [hu, hv]
     exact Nat.pow_le_pow_right (by linarith [hp (offset + i)]) (hle ⟨i, hi'⟩)
-  · exact ⟨j.val, Finset.mem_range.mpr (by omega), by
-      have hu : u[j.val]! = u[j] := by simp
-      have hv : v[j.val]! = v[j.val]'(by omega) := by
-        simp [List.getElem?_eq_getElem (by omega : j.val < v.length)]
-      rw [hu, hv]
-      exact Nat.pow_lt_pow_right (hp (offset + j.val)) hlt⟩
+  · have hu : u[j.val]! = u[j] := by simp
+    have hv : v[j.val]! = v[j.val]'(by omega) := by simp [List.getElem?_eq_getElem (by omega : j.val < v.length)]
+    rw [hu, hv]
+    exact Nat.pow_lt_pow_right (hp (offset + j.val)) hlt
+  · intro i _
+    exact Nat.pos_of_ne_zero (pow_ne_zero _ (by linarith [hp (offset + i)]))
 
 /-- Gödel encoding is > 1 when some exponent is positive.
     thm:conclusion-godel-semidirect-law -/

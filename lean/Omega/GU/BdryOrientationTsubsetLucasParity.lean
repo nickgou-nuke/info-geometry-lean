@@ -21,7 +21,7 @@ lemma odd_choose_bit_bit_iff (a0 b0 : Bool) (a b : ℕ) :
   have hmod : Nat.choose (Nat.bit a0 a) (Nat.bit b0 b) % 2 =
       (Nat.choose ((Nat.bit a0 a) % 2) ((Nat.bit b0 b) % 2) *
         Nat.choose ((Nat.bit a0 a) / 2) ((Nat.bit b0 b) / 2)) % 2 := by
-    simpa using
+    simpa only [Nat.ModEq] using
       (Choose.choose_modEq_choose_mod_mul_choose_div_nat
         (n := Nat.bit a0 a) (k := Nat.bit b0 b) (p := 2))
   rw [Nat.odd_iff, hmod, ← Nat.odd_iff, Nat.odd_mul]

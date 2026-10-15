@@ -3,6 +3,9 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.NCG.NoncommutativeNoetherPoisson
 import Mathlib.LinearAlgebra.Alternating.Basic
 import Mathlib.Algebra.Lie.Cochain
+import Mathlib.Algebra.Lie.OfAssociative
+
+attribute [local instance 100] LieRing.ofAssociativeRing
 
 set_option linter.unusedSectionVars false
 
@@ -159,12 +162,12 @@ def linearMapToNativeDerivationForm
         intro v i x y
         have hi : i = 0 := Fin.eq_zero i
         subst i
-        simpa [Function.update] using f.map_add x y)
+        simp [Function.update, f.map_add])
       (by
         intro v i c x
         have hi : i = 0 := Fin.eq_zero i
         subst i
-        simpa [Function.update] using f.map_smul c x)
+        simp [Function.update, f.map_smul])
   exact
     { toMultilinearMap := m
       map_eq_zero_of_eq' := by
@@ -336,7 +339,7 @@ def LieSystem.toLinearDerivationAction
             map_zero' := congrArg NCDerivation.toLinearMap S.derivation_zero
             map_add' := fun X Y =>
               congrArg NCDerivation.toLinearMap (S.derivation_add X Y) }
-        exact ρ.map_zsmul D n }
+        exact ρ.map_zsmul n D }
   leibniz := by
     intro D a b
     exact (S.derivation D).leibniz a b
@@ -454,12 +457,12 @@ def linearFormToDerivationForm {𝔤 A : Type*} [AddCommGroup 𝔤] [AddCommGrou
         intro v i x y
         have hi : i = 0 := Fin.eq_zero i
         subst i
-        simpa [Function.update] using ω.map_add _ _)
+        simp [Function.update, ω.map_add])
       (by
         intro v i c x
         have hi : i = 0 := Fin.eq_zero i
         subst i
-        simpa [Function.update] using ω.map_smul c _)
+        simp [Function.update, ω.map_smul])
   exact
     { toMultilinearMap := m
       map_eq_zero_of_eq' := by

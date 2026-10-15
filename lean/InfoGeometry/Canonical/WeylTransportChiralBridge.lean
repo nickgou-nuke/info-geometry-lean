@@ -58,7 +58,7 @@ def FlatCurvatureValueBridge.retarget
 
 /-- Compatibility adapter: any chiral-scale bridge induces an
 operator-obstruction bridge. -/
-def FlatCurvatureProjectorObstructionBridge.ofChiralScaleBridge
+noncomputable def FlatCurvatureProjectorObstructionBridge.ofChiralScaleBridge
     (CI : ConformalInference E)
     (Δ : WeylDifferentialOperator ℝ X A)
     (γ : WeylTrajectory I X)
@@ -68,7 +68,7 @@ def FlatCurvatureProjectorObstructionBridge.ofChiralScaleBridge
 
 /-- Compatibility adapter: any operator-obstruction bridge induces a
 chiral-scale bridge as a corollary. -/
-def FlatCurvatureChiralScaleBridge.ofProjectorObstructionBridge
+noncomputable def FlatCurvatureChiralScaleBridge.ofProjectorObstructionBridge
     (CI : ConformalInference E)
     (Δ : WeylDifferentialOperator ℝ X A)
     (γ : WeylTrajectory I X)
@@ -148,7 +148,7 @@ theorem holonomy_eq_chiralScale_of_flat_of_projectorObstructionBridge
   exact holonomy_eq_chiralScale_of_flat_compat
     (CI := CI) (Δ := Δ) (γ := γ) (bridge := bridge) (B := B) hFlat
 
-def finiteSumFlatCurvatureValueBridge
+abbrev finiteSumFlatCurvatureValueBridge
     (Δ : WeylDifferentialOperator ℝ X A)
     (γ : WeylTrajectory I X)
     (H : WeylHolonomyMap A ℝ)
@@ -168,7 +168,7 @@ def finiteSumFlatCurvatureValueBridge
     intro B hZero
     exact hZeroToTarget B hZero
 
-abbrev finiteSumFlatCurvatureProjectorObstructionBridge
+noncomputable abbrev finiteSumFlatCurvatureProjectorObstructionBridge
     (CI : ConformalInference E)
     (Δ : WeylDifferentialOperator ℝ X A)
     (γ : WeylTrajectory I X)
@@ -186,7 +186,7 @@ abbrev finiteSumFlatCurvatureProjectorObstructionBridge
 Canonical finite-trajectory scalar constructor as a compatibility layer over
 the operator-first bridge.
 -/
-def finiteSumFlatCurvatureChiralScaleBridge
+noncomputable def finiteSumFlatCurvatureChiralScaleBridge
     (CI : ConformalInference E)
     (Δ : WeylDifferentialOperator ℝ X A)
     (γ : WeylTrajectory I X)
@@ -226,7 +226,7 @@ theorem finiteSum_holonomy_eq_target_of_flat
     (WeylLineIntegrator.finiteSumIntegrator (I := I) (A := A)).holonomy H B γ = target := by
   let bridge := finiteSumFlatCurvatureValueBridge
     (Δ := Δ) (γ := γ) (H := H) (target := target) hZeroToTarget
-  simpa [bridge] using
+  simpa [bridge, finiteSumFlatCurvatureValueBridge] using
     holonomy_eq_target_of_flat (bridge := bridge) (B := B) hFlat
 
 end

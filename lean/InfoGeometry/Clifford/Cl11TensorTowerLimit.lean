@@ -59,9 +59,9 @@ theorem stageStarMap_compat
       stageStarMap i x
     rw [hstar]
     have hb :
-        ofStage (t + 1) (stageBond t (star (bondMap stageBond i t hmt x))) =
+      ofStage (t + 1) (stageBond t (star (bondMap stageBond i t hmt x))) =
           ofStage t (star (bondMap stageBond i t hmt x)) := by
-      simpa [stageBond] using
+      simpa [ofStage, stageBond] using
         (directLimitOf_bond (Stage := Stage) stageBond t
           (star (bondMap stageBond i t hmt x)))
     rw [hb]
@@ -73,8 +73,7 @@ theorem bondMap_star (m n : ℕ) (h : m ≤ n) (x : Stage m) :
     (m := m)
     (P := fun t ht => bondMap stageBond m t ht (star x) = star (bondMap stageBond m t ht x))
     ?base ?succ n h
-  · dsimp only
-    have h1 : bondMap stageBond m m le_rfl (star x) = star x := by
+  · have h1 : bondMap stageBond m m le_rfl (star x) = star x := by
       simp [bondMap_refl]
     have h2 : bondMap stageBond m m le_rfl x = x := by
       simp [bondMap_refl]
@@ -146,8 +145,11 @@ noncomputable instance : Algebra ℝ Limit :=
     intro r x
     induction x using DirectLimit.induction with
     | _ n x =>
-        rw [realAlgebraMap_stage]
-        simpa using congrArg (ofStage n) (Algebra.commutes r x))
+        rw [realAlgebraMap_stage n]
+        change ofStage n (algebraMap ℝ (Stage n) r) * ofStage n x =
+          ofStage n x * ofStage n (algebraMap ℝ (Stage n) r)
+        rw [← (ofStage n).map_mul, ← (ofStage n).map_mul]
+        exact congrArg (ofStage n) (Algebra.commutes r x))
 
 @[simp]
 theorem ofStage_zero (n : ℕ) :

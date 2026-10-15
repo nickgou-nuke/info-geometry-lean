@@ -44,12 +44,18 @@ def stageRestrict (n : ℕ) : MatStage (n + 1) →ₗ[ℝ] MatStage n where
   map_add' := by
     intro X Y
     ext i j
-    simp [div_eq_mul_inv, add_mul]
+    change
+      ((X (i, 0) (j, 0) + Y (i, 0) (j, 0)) +
+        (X (i, 1) (j, 1) + Y (i, 1) (j, 1))) / 2 =
+      (X (i, 0) (j, 0) + X (i, 1) (j, 1)) / 2 +
+        (Y (i, 0) (j, 0) + Y (i, 1) (j, 1)) / 2
     ring
   map_smul' := by
     intro c X
     ext i j
-    simp [div_eq_mul_inv, add_mul, mul_assoc]
+    change
+      (c * X (i, 0) (j, 0) + c * X (i, 1) (j, 1)) / 2 =
+        c * ((X (i, 0) (j, 0) + X (i, 1) (j, 1)) / 2)
     ring
 
 @[simp] theorem stageRestrict_apply (n : ℕ) (X : MatStage (n + 1))
@@ -61,7 +67,10 @@ def stageRestrict (n : ℕ) : MatStage (n + 1) →ₗ[ℝ] MatStage n where
 @[simp] theorem stageRestrict_stageEmbed (n : ℕ) (A : MatStage n) :
     stageRestrict n (stageEmbed n A) = A := by
   ext i j
-  simp [stageRestrict, stageEmbed_apply, matStageEmbed]
+  rw [stageEmbed_apply]
+  change ((matStageEmbed n A) (i, 0) (j, 0) +
+      (matStageEmbed n A) (i, 1) (j, 1)) / 2 = A i j
+  simp [matStageEmbed, Matrix.kroneckerMap_apply]
 
 /-- Trace readback of the diagonal-block restriction. -/
 theorem trace_stageRestrict (n : ℕ) (X : MatStage (n + 1)) :
@@ -122,21 +131,27 @@ def cl11CompatibleLocalStateNet : CompatibleLocalStateNet (A := MatStage) where
 /-- The compatible-net restriction is a left inverse to the inductive embedding. -/
 @[simp] theorem cl11CompatibleLocalStateNet_restrict_embed (n : ℕ) (A : MatStage n) :
     cl11CompatibleLocalStateNet.restrict n (cl11InductiveAlgebraNet.embed n A) = A := by
-  simpa [cl11CompatibleLocalStateNet] using stageRestrict_stageEmbed n A
+  rw [cl11CompatibleLocalStateNet_restrict_eq]
+  change stageRestrict n (matStageEmbed n A) = A
+  exact stageRestrict_stageEmbed n A
 
 /-- The compatible net and the inductive Markov net agree on one-step embedding readback. -/
 @[simp] theorem cl11CompatibleLocalStateNet_state_embed
     (n : ℕ) (A : MatStage n) :
     cl11CompatibleLocalStateNet.state (n + 1) (cl11InductiveAlgebraNet.embed n A) =
       cl11CompatibleLocalStateNet.state n A := by
-  simpa [cl11CompatibleLocalStateNet] using cl11_normalizedTrace_one_step n A
+  rw [cl11CompatibleLocalStateNet_state_eq_markovTrace,
+    cl11CompatibleLocalStateNet_state_eq_markovTrace]
+  exact cl11_normalizedTrace_one_step n A
 
 /-- The compatible net inherits finite stability along every iterated embedding. -/
 theorem cl11CompatibleLocalStateNet_state_embedMap
     (m n : ℕ) (h : m ≤ n) (A : MatStage m) :
     cl11CompatibleLocalStateNet.state n (cl11InductiveAlgebraNet.embedMap m n h A) =
       cl11CompatibleLocalStateNet.state m A := by
-  simpa [cl11CompatibleLocalStateNet] using cl11_normalizedTrace_stable_embedMap m n h A
+  rw [cl11CompatibleLocalStateNet_state_eq_markovTrace,
+    cl11CompatibleLocalStateNet_state_eq_markovTrace]
+  exact cl11_normalizedTrace_stable_embedMap m n h A
 
 /-!
 #### BUCKET 1: CLOSED FINITE THEOREMS

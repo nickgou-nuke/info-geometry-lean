@@ -22,20 +22,25 @@ import hashlib
 import json
 import os
 import re
+import sys
 from collections import defaultdict
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Tuple
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+if __package__ in (None, ""):
+    sys.path.insert(0, str(REPO_ROOT))
+
+from tools.quality.semantic_vacuity_gate import strip_comments
 
 # ---------------------------------------------------------------------------
-# Regex patterns
+# Lexical patterns (not Lean compiler AST)
 # ---------------------------------------------------------------------------
 
 DECL_RE = re.compile(
-    r"^\s*(?:noncomputable\s+)?"
+    r"^[ \t]*(?:@\[[^\n]*?\][ \t]*)*(?:(?:private|protected|noncomputable|unsafe|partial)\s+)*"
     r"(theorem|lemma|def|instance|axiom|class|structure|abbrev|inductive|example)\s+"
-    r"([a-zA-Z_]['\w]*)",
+    r"([\w][\w'.]*)",
     re.MULTILINE,
 )
 
@@ -102,8 +107,14 @@ def should_skip(dirname: str, exclude: Set[str]) -> bool:
 
 
 def collect_lean_files(root: Path, exclude: Set[str]) -> List[Path]:
+    if not root.exists():
+        raise FileNotFoundError(root)
+    if root.is_file():
+        return [root] if root.suffix == ".lean" else []
     paths: List[Path] = []
-    for base, dirs, files in os.walk(root):
+    def walk_error(exc: OSError) -> None:
+        raise exc
+    for base, dirs, files in os.walk(root, onerror=walk_error):
         dirs[:] = [d for d in dirs if not should_skip(d, exclude)]
         for fn in files:
             if fn.endswith(".lean"):
@@ -112,13 +123,13 @@ def collect_lean_files(root: Path, exclude: Set[str]) -> List[Path]:
 
 
 def iter_decl_ranges(text: str) -> List[Tuple[str, str, int, int, int]]:
-    """Return (kind, name, line, start_byte, end_byte) for each declaration."""
-    matches = list(DECL_RE.finditer(text))
+    """Return (kind, name, line, start_character, end_character) for each declaration."""
+    matches = list(DECL_RE.finditer(strip_comments(text, mask_literals=True)))
     decls = []
     for i, m in enumerate(matches):
         kind, name = m.group(1), m.group(2)
         line = text[:m.start()].count("\n") + 1
-        start = m.end()
+        start = m.start()
         end = matches[i + 1].start() if i + 1 < len(matches) else len(text)
         decls.append((kind, name, line, start, end))
     return decls
@@ -174,7 +185,7 @@ def extract_graph(
     include_imports: bool = True,
     max_token_fanout: int = 4,
 ) -> Dict[str, Any]:
-    """Extract a full AST dependency graph from all .lean files under `root`.
+    """Extract a lexical declaration/reference candidate graph from all .lean files under `root`.
 
     Returns a dict with ``nodes``, ``edges``, and ``meta``.
     """
@@ -185,12 +196,21 @@ def extract_graph(
     name_to_ids: Dict[str, List[str]] = defaultdict(list)
     imports_by_file: Dict[str, List[str]] = {}
 
+    failures = []
+    successful = []
     for path in lean_files:
-        rel = str(path.relative_to(root))
         try:
-            text = path.read_text(encoding="utf-8", errors="ignore")
-        except Exception:
+            rel = path.resolve().relative_to(REPO_ROOT).as_posix()
+        except ValueError:
+            rel = str(path.resolve())
+        try:
+            text = path.read_text(encoding="utf-8")
+        except (OSError, UnicodeError) as exc:
+            failures.append({"file": rel, "error": str(exc)})
             continue
+        successful.append(rel)
+        source_hash = hashlib.sha256(text.encode("utf-8")).hexdigest()
+        text = strip_comments(text, mask_literals=True)
 
         imports = extract_imports(text)
         namespace = extract_namespace(text)
@@ -218,6 +238,9 @@ def extract_graph(
                 "namespace": namespace,
                 "line": line,
                 "span": [start, end],
+                "span_unit": "unicode_codepoint",
+                "source_sha256": source_hash,
+                "span_source": "lexical_declaration_range",
             }
             decls.append((path, rel, node, text[start:end]))
             name_to_ids[name].append(nid)
@@ -265,6 +288,13 @@ def extract_graph(
         "imports": imports_by_file if include_imports else {},
         "meta": {
             "input_files": len(lean_files),
+            "files_selected": len(lean_files),
+            "files_read": len(successful),
+            "successfully_read_paths": successful,
+            "read_failures": failures,
+            "coverage_complete": bool(lean_files) and not failures,
+            "authority": "lexical declaration/reference candidates; not compiler AST",
+            "path_basis": "repository_relative_or_absolute",
             "nodes": len(nodes),
             "edges": len(edges),
             "root": str(root),
@@ -311,7 +341,7 @@ def save_graph(
 
 def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Extract a Lean AST declaration-reference graph."
+        description="Extract a lexical Lean declaration-reference candidate graph."
     )
     parser.add_argument(
         "--root", default="lean",
@@ -371,7 +401,7 @@ def main() -> int:
 
     meta = graph["meta"]
     print(f"Files: {meta['input_files']}  Nodes: {meta['nodes']}  Edges: {meta['edges']}")
-    return 0
+    return 0 if meta["coverage_complete"] else 2
 
 
 if __name__ == "__main__":

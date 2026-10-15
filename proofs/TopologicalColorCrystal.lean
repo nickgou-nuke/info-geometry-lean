@@ -3,15 +3,15 @@ import proofs.TripotentCliffordColimit
 import proofs.TopologicalColorCrystalFormal
 
 /-!
-# Topological Color Crystal — Bott Periodicity, Weyl Brillouin Zone, Bloch Waves
+# Finite algebraic readouts for periods, Weyl inequalities, and loop modes
 
-Spacetime at the Planck scale is a topological gauge insulator:
-1. Bott periodicity → Clifford vacuum crystal (period 2ℂ, period 8ℝ)
-2. Weyl chamber → Brillouin zone of the SU(3) color gauge
-3. Klein bottle CPT → orientation-reversing glide on Brillouin zone
-4. Bloch waves → Hill-Wheeler projected loop currents
-
-Zero sorries.
+This module collects finite identities: integer translations by named Clifford
+periods, membership in a specified coordinate quadrant, a reflection on
+integer pairs, and matrix loop-current commutators. These statements do not
+construct a Brillouin-zone quotient, prove Klein-bottle topology or CPT
+symmetry, establish Bott-periodicity isomorphisms, or derive Bloch's spectral
+theorem. Historical module and declaration names remain for compatibility;
+the scope is the finite algebra stated in Lean.
 -/
 
 noncomputable section
@@ -57,16 +57,11 @@ theorem weyl_chamber_is_brillouin_zone (h : ℝ × ℝ) :
     h ∈ TopologicalColorCrystalFormal.WeylChamberSU3 ↔ 0 ≤ h.1 ∧ 0 ≤ h.2 := by
   exact TopologicalColorCrystalFormal.mem_weylChamberSU3_iff h
 
-/-! ## 3. Klein bottle CPT: glide reflection on the Brillouin zone -/
+/-! ## 3. Integer-pair reflection -/
 
-/- The CPT spectral involution s ↦ 1-s̄ involves complex conjugation,
-which REVERSES ORIENTATION (Time + Parity reversal).  On the Brillouin
-zone, this acts as a glide reflection — a translation composed with
-a reflection.
-
-The combination of periodic momentum (torus) with orientation reversal
-(glide) topologically folds the Brillouin zone from a torus T² into
-a Klein bottle.  The critical line Re(s) = ½ is the invariant axis. -/
+/- The following map negates the second integer coordinate. Its fixed set is
+the first-coordinate axis. This file defines no periodic quotient, glide
+translation, or identification with complex spectral reflection. -/
 /-- The integer Brillouin-zone glide has exactly the zero second-coordinate
 fixed locus. -/
 theorem cpt_glide_klein_bottle_algebraic_core (k : ℤ × ℤ) :

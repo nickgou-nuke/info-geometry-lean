@@ -120,7 +120,7 @@ noncomputable def phaseAxisObservable (H : EndH) : EndH :=
 theorem phaseAxisObservable_eq_phaseAxisForce (H : EndH) :
     phaseAxisObservable (E := E) H = phaseAxisForce (E := E) H := by
   simpa [phaseAxisObservable, phaseAxisK] using
-    phaseAxisForce_eq_transportCommutator_complex_i (E := E) H
+    (phaseAxisForce_eq_transportCommutator_complex_i (E := E) H).symm
 
 /-- Dictionary entry: `𝓕₊(T) := [T, P₊]`. -/
 @[rep_depth transport]

@@ -49,9 +49,9 @@ theorem continuous_zornVectorMatrix_rational_w (i : Fin 3) :
 
 theorem continuous_zornVectorMatrix_rational_trace :
     Continuous (fun X : ZornVectorMatrix ℚ => ZornVectorMatrix.trace X) := by
-  simpa [ZornVectorMatrix.trace] using
-    continuous_zornVectorMatrix_rational_a.add
-      continuous_zornVectorMatrix_rational_b
+  change Continuous (fun X : ZornVectorMatrix ℚ => X.a + X.b)
+  exact continuous_zornVectorMatrix_rational_a.add
+    continuous_zornVectorMatrix_rational_b
 
 theorem continuous_zornVectorMatrix_rational_norm :
     Continuous (fun X : ZornVectorMatrix ℚ => ZornVectorMatrix.norm X) := by
@@ -64,9 +64,13 @@ theorem continuous_zornVectorMatrix_rational_norm :
   have hdot : Continuous (fun X : ZornVectorMatrix ℚ =>
       X.v 0 * X.w 0 + X.v 1 * X.w 1 + X.v 2 * X.w 2) := by
     exact ((hv₀.mul hw₀).add (hv₁.mul hw₁)).add (hv₂.mul hw₂)
-  simpa [ZornVectorMatrix.norm, ZornVec3.dot_eq_sum_coords] using
-    (continuous_zornVectorMatrix_rational_a.mul
-      continuous_zornVectorMatrix_rational_b).sub hdot
+  have hdot' : Continuous (fun X : ZornVectorMatrix ℚ =>
+      ZornVec3.dot X.v X.w) :=
+    hdot.congr (fun X => (ZornVec3.dot_eq_sum_coords X.v X.w).symm)
+  change Continuous (fun X : ZornVectorMatrix ℚ =>
+    X.a * X.b - ZornVec3.dot X.v X.w)
+  exact (continuous_zornVectorMatrix_rational_a.mul
+    continuous_zornVectorMatrix_rational_b).sub hdot'
 
 def zornVectorMatrixRationalTraceTopCat :
     TopCat.of (ZornVectorMatrix ℚ) ⟶ TopCat.of ℚ :=
@@ -85,8 +89,8 @@ def zornVectorMatrixRationalCartanChargeTopCat :
   TopCat.ofHom
     { toFun := ZornVectorMatrix.cartanChargeFn
       continuous_toFun := by
-        simpa [ZornVectorMatrix.cartanChargeFn] using
-          continuous_zornVectorMatrix_rational_a }
+        change Continuous (fun X : ZornVectorMatrix ℚ => X.a)
+        exact continuous_zornVectorMatrix_rational_a }
 
 @[simp] theorem zornVectorMatrixRationalCartanChargeTopCat_apply
     (X : ZornVectorMatrix ℚ) :

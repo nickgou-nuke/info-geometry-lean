@@ -181,3 +181,61 @@ def test_enqueue_leantrail_goal_sets_task_kind(monkeypatch) -> None:
     task_docs = [doc for coll, doc in inserted if coll == "hive_tasks"]
     assert task_docs
     assert task_docs[0]["task_kind"] == "proof.search.leantrail"
+
+
+def test_renew_task_lease_and_expired_management(monkeypatch) -> None:
+    calls: list[tuple[str, dict]] = []
+
+    def fake_aql(endpoint, database, username, password, query, bind_vars):
+        calls.append((query, bind_vars))
+        if "UPDATE task WITH" in query and "lease_renewed_at" in query:
+            return [{
+                "_key": bind_vars["task_key"],
+                "worker_id": bind_vars["worker_id"],
+                "status": "leased",
+                "lease_expires_at": "2026-10-14T20:00:00Z",
+            }]
+        elif "FILTER task.status == \"leased\"" in query and "RETURN task" in query:
+            return [{
+                "_key": "task-expired-1",
+                "status": "leased",
+                "lease_expires_at": "2026-10-14T12:00:00Z",
+            }]
+        elif "reaped_at" in query:
+            return [{
+                "_key": "task-expired-1",
+                "status": "pending",
+                "worker_id": None,
+                "lease_expires_at": None,
+            }]
+        return []
+
+    monkeypatch.setattr(queue_tool, "aql", fake_aql)
+
+    # 1. Test renew_task_lease
+    renewed = queue_tool.renew_task_lease(
+        "http://127.0.0.1:8540", "hive_live", "root", "alexandria_root",
+        task_key_value="task-100", worker_id="worker-01", lease_seconds=300,
+    )
+    assert renewed is not None
+    assert renewed["status"] == "leased"
+    assert calls[0][1]["task_key"] == "task-100"
+    assert calls[0][1]["worker_id"] == "worker-01"
+    assert calls[0][1]["lease_seconds"] == 300
+
+    # 2. Test check_expired_tasks
+    expired = queue_tool.check_expired_tasks(
+        "http://127.0.0.1:8540", "hive_live", "root", "alexandria_root",
+        queue_name="proof-search",
+    )
+    assert len(expired) == 1
+    assert expired[0]["_key"] == "task-expired-1"
+
+    # 3. Test reap_expired_tasks
+    reaped = queue_tool.reap_expired_tasks(
+        "http://127.0.0.1:8540", "hive_live", "root", "alexandria_root",
+        queue_name="proof-search",
+    )
+    assert len(reaped) == 1
+    assert reaped[0]["status"] == "pending"
+    assert reaped[0]["lease_expires_at"] is None

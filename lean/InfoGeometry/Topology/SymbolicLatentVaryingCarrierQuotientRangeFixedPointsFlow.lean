@@ -63,7 +63,8 @@ theorem continuous_compactIndexedObservationQuotientCompHausLimitFixedPointActio
       compactIndexedObservationQuotientCompHausLimitFixedPointSet D α t =>
         (p.1, p.2.1)) := by
     exact continuous_fst.prodMk (continuous_subtype_val.comp continuous_snd)
-  simpa only [Function.comp_apply] using hjoint.comp hinput
+  exact (hjoint.comp hinput).congr fun p => by
+    simp [Function.comp_apply]
 
 noncomputable def compactIndexedObservationQuotientCompHausLimitFixedPointActionCompHausHom
     {J : Type} [Category J]
@@ -137,7 +138,8 @@ theorem continuous_compactIndexedObservationRangeCompHausLimitFixedPointAction
       compactIndexedObservationRangeCompHausLimitFixedPointSet D α t =>
         (p.1, p.2.1)) := by
     exact continuous_fst.prodMk (continuous_subtype_val.comp continuous_snd)
-  simpa only [Function.comp_apply] using hjoint.comp hinput
+  exact (hjoint.comp hinput).congr fun p => by
+    simp [Function.comp_apply]
 
 noncomputable def compactIndexedObservationRangeCompHausLimitFixedPointActionCompHausHom
     {J : Type} [Category J]
@@ -245,6 +247,9 @@ theorem compactIndexedObservationRangeCompHausLimitFixedPointAction_add
   apply Subtype.ext
   have h := congrArg (fun f => f x.1)
     (compactIndexedObservationRangeCompHausLimitAction_add D α hαadd r s)
+  change compactIndexedObservationRangeCompHausLimitAction D α s
+      (compactIndexedObservationRangeCompHausLimitAction D α r x.1) =
+    compactIndexedObservationRangeCompHausLimitAction D α (s + r) x.1
   simpa [add_comm] using h.symm
 
 theorem compactIndexedObservationQuotientCompHausLimitFixedPointActionCompHausHom_zero

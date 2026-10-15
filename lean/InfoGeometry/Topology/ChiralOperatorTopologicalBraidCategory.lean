@@ -38,8 +38,11 @@ theorem chiralOperatorTensorR12TopCatIso_yang_baxter :
   apply TopCat.hom_ext
   apply ContinuousMap.ext
   intro p
-  simpa only [TopCat.comp_app] using
-    chiralOperatorTensorR12_yang_baxter p
+  change chiralOperatorTensorR12
+      (chiralOperatorTensorR23 (chiralOperatorTensorR12 p)) =
+    chiralOperatorTensorR23
+      (chiralOperatorTensorR12 (chiralOperatorTensorR23 p))
+  exact chiralOperatorTensorR12_yang_baxter p
 
 theorem chiralOperatorTensorR12TopCatIso_quadratic :
     (chiralOperatorTensorR12TopCatIso (A := A)).hom ≫
@@ -48,8 +51,8 @@ theorem chiralOperatorTensorR12TopCatIso_quadratic :
   apply TopCat.hom_ext
   apply ContinuousMap.ext
   intro p
-  simpa only [TopCat.comp_app, TopCat.id_app] using
-    chiralOperatorTensorR12_quadratic p
+  change chiralOperatorTensorR12 (chiralOperatorTensorR12 p) = p
+  exact chiralOperatorTensorR12_quadratic p
 
 theorem chiralOperatorTensorR23TopCatIso_quadratic :
     (chiralOperatorTensorR23TopCatIso (A := A)).hom ≫
@@ -58,8 +61,8 @@ theorem chiralOperatorTensorR23TopCatIso_quadratic :
   apply TopCat.hom_ext
   apply ContinuousMap.ext
   intro p
-  simpa only [TopCat.comp_app, TopCat.id_app] using
-    chiralOperatorTensorR23_quadratic p
+  change chiralOperatorTensorR23 (chiralOperatorTensorR23 p) = p
+  exact chiralOperatorTensorR23_quadratic p
 
 theorem continuous_operatorSageFeatureTripleMap :
     Continuous (operatorSageFeatureTripleMap (A := A)) := by
@@ -95,8 +98,9 @@ theorem operatorSageFeatureTripleTopCatHom_R12_naturality :
   apply TopCat.hom_ext
   apply ContinuousMap.ext
   intro p
-  simpa only [TopCat.comp_app] using
-    operatorSageFeatureTriple_R12_intertwines p
+  change operatorSageFeatureTensorR12 (operatorSageFeatureTripleMap p) =
+    operatorSageFeatureTripleMap (chiralOperatorTensorR12 p)
+  exact (operatorSageFeatureTriple_R12_intertwines p).symm
 
 theorem operatorSageFeatureTripleTopCatHom_R23_naturality :
     operatorSageFeatureTripleTopCatHom (A := A) ≫
@@ -106,8 +110,9 @@ theorem operatorSageFeatureTripleTopCatHom_R23_naturality :
   apply TopCat.hom_ext
   apply ContinuousMap.ext
   intro p
-  simpa only [TopCat.comp_app] using
-    operatorSageFeatureTriple_R23_intertwines p
+  change operatorSageFeatureTensorR23 (operatorSageFeatureTripleMap p) =
+    operatorSageFeatureTripleMap (chiralOperatorTensorR23 p)
+  exact (operatorSageFeatureTriple_R23_intertwines p).symm
 
 theorem operatorSageFeatureTensorR12TopCatIso_yang_baxter :
     (operatorSageFeatureTensorR12TopCatIso (A := A)).hom ≫
@@ -119,8 +124,11 @@ theorem operatorSageFeatureTensorR12TopCatIso_yang_baxter :
   apply TopCat.hom_ext
   apply ContinuousMap.ext
   intro p
-  simpa only [TopCat.comp_app] using
-    operatorSageFeatureTensorR12_yang_baxter p
+  change operatorSageFeatureTensorR12
+      (operatorSageFeatureTensorR23 (operatorSageFeatureTensorR12 p)) =
+    operatorSageFeatureTensorR23
+      (operatorSageFeatureTensorR12 (operatorSageFeatureTensorR23 p))
+  exact operatorSageFeatureTensorR12_yang_baxter p
 
 noncomputable def chiralOperatorQuotientTensorR12TopCatIso :
     TopCat.of (ChiralOperatorQuotientTensor3 A) ≅
@@ -142,8 +150,11 @@ theorem chiralOperatorQuotientTensorR12TopCatIso_yang_baxter :
   apply TopCat.hom_ext
   apply ContinuousMap.ext
   intro p
-  simpa only [TopCat.comp_app] using
-    chiralOperatorQuotientTensorR12_yang_baxter p
+  change chiralOperatorQuotientTensorR12
+      (chiralOperatorQuotientTensorR23 (chiralOperatorQuotientTensorR12 p)) =
+    chiralOperatorQuotientTensorR23
+      (chiralOperatorQuotientTensorR12 (chiralOperatorQuotientTensorR23 p))
+  exact chiralOperatorQuotientTensorR12_yang_baxter p
 
 end
 end InfoGeometry.Topology

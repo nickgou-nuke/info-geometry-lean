@@ -31,8 +31,8 @@ noncomputable def flowMinus : EndCZ :=
 
 theorem flow_zero_annihilated : ellGrading * flowZero = 0 := by
   unfold flowZero
-  have h₃ : ellGrading * ellGrading * ellGrading = ellGrading := by
-    simpa [pow_three] using ellGrading_tripotent
+  have h₃ : ellGrading * ellGrading * ellGrading = ellGrading :=
+    ellGrading_tripotent_mul
   calc
     ellGrading * (1 - ellGrading * ellGrading) =
         ellGrading - ellGrading * ellGrading * ellGrading := by
@@ -43,8 +43,7 @@ theorem flow_zero_range_eq_ker :
     LinearMap.range flowZero = LinearMap.ker ellGrading := by
   apply le_antisymm
   · rw [LinearMap.range_le_ker_iff]
-    simpa [LinearMap.comp_apply, Module.End.mul_apply] using
-      flow_zero_annihilated
+    exact flow_zero_annihilated
   · intro X hX
     rw [LinearMap.mem_ker] at hX
     rw [LinearMap.mem_range]

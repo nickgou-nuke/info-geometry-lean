@@ -766,8 +766,8 @@ Phase-linearity forces commutation with the canonical doubled-space clock axis.
 theorem commute_clockAxis_of_IsPhaseLinear
     {A : EndH}
     (hPhase : IsPhaseLinear (E := E) A) :
-    Commute A (InfoGeometry.Krein.clockAxis (E := E)) := by
-  simpa [IsPhaseLinear] using hPhase
+    Commute A (InfoGeometry.Krein.clockAxis (E := E)) :=
+  hPhase
 
 omit [CompleteSpace E] in
 /--
@@ -986,12 +986,13 @@ theorem deriv_modularTransport_conjugation_eq_expTransport_modularDeriv
       (modularTransportGenerator (E := E) hMod)
       (modularDeriv (E := E) hMod A)
       t := by
-  simpa [modularDeriv, transportCommutator] using
-    (InfoGeometry.Canonical.hasDerivAt_expTransport
-      (A := EndH)
-      (X := modularTransportGenerator (E := E) hMod)
-      (A₀ := A)
-      t).deriv
+  have h := (InfoGeometry.Canonical.hasDerivAt_expTransport
+    (A := EndH)
+    (X := modularTransportGenerator (E := E) hMod)
+    (A₀ := A)
+    t).deriv
+  rw [lieBracket_eq_transportCommutator] at h
+  exact h
 
 theorem deriv_modularTransport_conjugation_eq_expTransport_modularScaleDeriv_of_gaugePart_eq_zero
     (hMod A : EndH)
@@ -1217,8 +1218,8 @@ theorem modularTransportFlow_preserves_inner_of_isSelfAdjoint_of_IsPhaseLinear
     have hGenStar :
         star (modularTransportGenerator (E := E) hMod)
           =
-        -(modularTransportGenerator (E := E) hMod) := by
-      simpa [ContinuousLinearMap.star_eq_adjoint] using hGenSkew
+        -(modularTransportGenerator (E := E) hMod) :=
+      skewAdjoint.mem_iff.mp hGenSkew
     rw [skewAdjoint.mem_iff]
     calc
       star (t • modularTransportGenerator (E := E) hMod)

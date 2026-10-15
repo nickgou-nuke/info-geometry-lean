@@ -48,7 +48,7 @@ theorem compactIndexedObservationQuotientCompHausLimit_isClosed_fixedPointGraphO
   have haction : Continuous (fun p : Set.Icc a b ×
       compactIndexedObservationQuotientCompHausLimit D =>
         compactIndexedObservationQuotientCompHausLimitAction D α p.1.1 p.2) := by
-    simpa only [Function.comp_apply] using hjoint.comp hinput
+    convert hjoint.comp hinput using 1 <;> rfl
   exact isClosed_eq haction continuous_snd
 
 set_option maxHeartbeats 1000000 in
@@ -68,7 +68,7 @@ theorem compactIndexedObservationRangeCompHausLimit_isClosed_fixedPointGraphOn
   have haction : Continuous (fun p : Set.Icc a b ×
       compactIndexedObservationRangeCompHausLimit D =>
         compactIndexedObservationRangeCompHausLimitAction D α p.1.1 p.2) := by
-    simpa only [Function.comp_apply] using hjoint.comp hinput
+    convert hjoint.comp hinput using 1 <;> rfl
   exact isClosed_eq haction continuous_snd
 
 theorem compactIndexedObservationQuotientCompHausLimit_isCompact_fixedPointGraphOn

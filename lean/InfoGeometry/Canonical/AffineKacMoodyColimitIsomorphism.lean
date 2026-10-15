@@ -73,14 +73,50 @@ theorem colimitMap_range_eq_union :
     LinearMap.range (affineFiniteModeColimitMap Φ hΦ hΦs).hom = 
       affineFiniteModeUnion Φ hΦ hΦs := by
   apply le_antisymm
-  · let f := colimit.desc (affineFiniteModeDiagram Φ hΦ hΦs) (unionCocone Φ hΦ hΦs)
+  · let f : colimit (affineFiniteModeDiagram Φ hΦ hΦs) ⟶
+        ModuleCat.of 𝕜 (affineFiniteModeUnion Φ hΦ hΦs) :=
+      colimit.desc (affineFiniteModeDiagram Φ hΦ hΦs) (unionCocone Φ hΦ hΦs)
     have h_fac : f ≫ ModuleCat.ofHom (Submodule.subtype (affineFiniteModeUnion Φ hΦ hΦs)) = (affineFiniteModeColimitMap Φ hΦ hΦs) := by
       apply colimit.hom_ext
       intro j
-      have h1 : (unionCocone Φ hΦ hΦs).ι.app j ≫ ModuleCat.ofHom (Submodule.subtype (affineFiniteModeUnion Φ hΦ hΦs)) = (affineFiniteModeCocone Φ hΦ hΦs).ι.app j := by
-        apply ModuleCat.hom_ext; apply LinearMap.ext; intro x; rfl
-      have h2 : colimit.ι (affineFiniteModeDiagram Φ hΦ hΦs) j ≫ (affineFiniteModeColimitMap Φ hΦ hΦs) = (affineFiniteModeCocone Φ hΦ hΦs).ι.app j := affineFiniteModeColimitMap_stage Φ hΦ hΦs j
-      rw [← Category.assoc, colimit.ι_desc, h1, h2]
+      have h1 : ModuleCat.ofHom (Submodule.inclusion
+          (le_iSup (fun N => affineFiniteModeStage Φ hΦ hΦs N) j)) ≫
+          ModuleCat.ofHom (Submodule.subtype
+            (⨆ N : ℕ, affineFiniteModeStage Φ hΦ hΦs N)) =
+          (affineFiniteModeCocone Φ hΦ hΦs).ι.app j := by
+        apply ModuleCat.hom_ext
+        change (Submodule.subtype
+              (⨆ N : ℕ, affineFiniteModeStage Φ hΦ hΦs N)).comp
+            (Submodule.inclusion
+              (le_iSup (fun N => affineFiniteModeStage Φ hΦ hΦs N) j)) =
+          (Submodule.subtype (affineFiniteModeStage Φ hΦ hΦs j))
+        exact Submodule.subtype_comp_inclusion
+          (affineFiniteModeStage Φ hΦ hΦs j)
+          (⨆ N : ℕ, affineFiniteModeStage Φ hΦ hΦs N)
+          (le_iSup (fun N => affineFiniteModeStage Φ hΦ hΦs N) j)
+      have h2 : colimit.ι (affineFiniteModeDiagram Φ hΦ hΦs) j ≫
+          (affineFiniteModeColimitMap Φ hΦ hΦs) =
+          (affineFiniteModeCocone Φ hΦ hΦs).ι.app j :=
+        affineFiniteModeColimitMap_stage Φ hΦ hΦs j
+      have hdesc : colimit.ι (affineFiniteModeDiagram Φ hΦ hΦs) j ≫ f =
+          ModuleCat.ofHom (Submodule.inclusion
+            (le_iSup (fun N => affineFiniteModeStage Φ hΦ hΦs N) j)) := by
+        change colimit.ι (affineFiniteModeDiagram Φ hΦ hΦs) j ≫
+          colimit.desc (affineFiniteModeDiagram Φ hΦ hΦs)
+            (unionCocone Φ hΦ hΦs) = ModuleCat.ofHom (Submodule.inclusion
+              (le_iSup (fun N => affineFiniteModeStage Φ hΦ hΦs N) j))
+        exact colimit.ι_desc (unionCocone Φ hΦ hΦs) j
+      change (colimit.ι (affineFiniteModeDiagram Φ hΦ hΦs) j ≫ f) ≫
+          ModuleCat.ofHom (Submodule.subtype
+            (⨆ N : ℕ, affineFiniteModeStage Φ hΦ hΦs N)) =
+        colimit.ι (affineFiniteModeDiagram Φ hΦ hΦs) j ≫ affineFiniteModeColimitMap Φ hΦ hΦs
+      rw [hdesc, h2]
+      change ModuleCat.ofHom (Submodule.inclusion
+          (le_iSup (fun N => affineFiniteModeStage Φ hΦ hΦs N) j)) ≫
+          ModuleCat.ofHom (Submodule.subtype
+            (⨆ N : ℕ, affineFiniteModeStage Φ hΦ hΦs N)) =
+        ModuleCat.ofHom (Submodule.subtype (affineFiniteModeStage Φ hΦ hΦs j))
+      exact h1
     intro x hx
     rcases hx with ⟨y, rfl⟩
     have h_eval : (Submodule.subtype (affineFiniteModeUnion Φ hΦ hΦs)) (f.hom y) = (affineFiniteModeColimitMap Φ hΦ hΦs).hom y := by

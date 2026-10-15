@@ -10,7 +10,8 @@ open InfoGeometry.Canonical.DyadicStageReadoutTopCat
 noncomputable section
 
 def dyadicStageDiagram : ℕ ⥤ TopCat :=
-  Functor.ofSequence (fun n => dyadicStageTransitionTopCatHom n)
+  Functor.ofSequence (X := fun _ => TopCat.of ℤ)
+    (fun n => dyadicStageTransitionTopCatHom n)
 
 def dyadicStageReadoutCocone : Cocone dyadicStageDiagram where
   pt := dyadicRationalTopCat
@@ -27,7 +28,7 @@ def dyadicStageReadoutCocone : Cocone dyadicStageDiagram where
       rw [hmap]
       exact dyadicStageReadoutTopCatHom_compatibility n)
 
-noncomputable def dyadicStageTopCatColimit : TopCat :=
+abbrev dyadicStageTopCatColimit : TopCat :=
   colimit dyadicStageDiagram
 
 noncomputable def dyadicStageColimitReadout :
@@ -58,17 +59,18 @@ theorem dyadicStageColimitReadout_surjective :
         dyadicStageTopCatColimit → dyadicRationalTopCat) := by
   intro q
   rcases q.property with ⟨z, n, hq⟩
-  refine ⟨colimit.ι dyadicStageDiagram n z, ?_⟩
-  have hstage := congrArg (fun f => f z)
+  let z' : dyadicStageDiagram.obj n := z
+  refine ⟨colimit.ι dyadicStageDiagram n z', ?_⟩
+  have hstage := congrArg (fun f => f z')
     (dyadicStageColimitReadout_stage n)
+  change dyadicStageColimitReadout (colimit.ι dyadicStageDiagram n z') =
+    (dyadicStageReadoutCocone.ι.app n) z' at hstage
+  rw [dyadicStageReadoutCocone_stage] at hstage
   change dyadicStageColimitReadout
-      (colimit.ι dyadicStageDiagram n z) = q
-  rw [show dyadicStageColimitReadout
-      (colimit.ι dyadicStageDiagram n z) = dyadicStageMap n z by
-        simpa [CategoryTheory.Category.assoc,
-          dyadicStageReadoutCocone_stage] using hstage]
+      (colimit.ι dyadicStageDiagram n z') = q
+  rw [hstage]
   apply Subtype.ext
-  exact hq.symm
+  simpa [z', dyadicStageMap] using hq.symm
 
 end
 end InfoGeometry.Canonical.DyadicStageTopCatColimit

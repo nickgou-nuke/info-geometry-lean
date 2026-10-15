@@ -37,6 +37,8 @@ theorem paper_xi_prime_register_minimal_ideal_left_zero_band (n : ℕ) (hn : 0 <
     rfl
   · intro I hI hideal a
     rcases hI with ⟨f, hf⟩
-    exact (by simpa [Function.comp] using (hideal f hf (fun _ : Fin n => a)).1)
+    have hcomp : ((fun _ : Fin n => a) ∘ f) = (fun _ => a) := by funext x; rfl
+    rw [← hcomp]
+    exact (hideal f hf (fun _ => a)).1
 
 end Omega.Zeta

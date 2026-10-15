@@ -1,5 +1,5 @@
 import Mathlib.Analysis.Complex.Basic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Fintype.Basic
@@ -34,9 +34,8 @@ theorem adjugate_trace_eq (M : Matrix (Fin 2) (Fin 2) ℂ) :
     (D * adj(B))₀₀ = D₀₀ B₁₁ - D₀₁ B₁₀. -/
 theorem cd_adjugate_generates_cross_product (B D : Matrix (Fin 2) (Fin 2) ℂ) :
     (D * adjugate2x2 B) 0 0 = D 0 0 * B 1 1 - D 0 1 * B 1 0 := by
-  dsimp [adjugate2x2, mul_apply]
-  rw [Fin.sum_univ_two]
-  dsimp
+  rw [Matrix.mul_apply, Fin.sum_univ_two]
+  dsimp [adjugate2x2]
   ring
 
 /-- **Theorem**: 2x2 Matrix Times Its Adjugate Equals Determinant Times Identity:
@@ -45,21 +44,17 @@ theorem matrix_mul_adjugate_eq_det (M : Matrix (Fin 2) (Fin 2) ℂ) :
     M * adjugate2x2 M = (M 0 0 * M 1 1 - M 0 1 * M 1 0) • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
   ext i j
   fin_cases i <;> fin_cases j
-  · dsimp [adjugate2x2, mul_apply, smul_apply, one_apply]
-    rw [Fin.sum_univ_two]
-    dsimp
+  · rw [Matrix.mul_apply, Fin.sum_univ_two, Matrix.smul_apply, Matrix.one_apply]
+    dsimp [adjugate2x2]
     ring
-  · dsimp [adjugate2x2, mul_apply, smul_apply, one_apply]
-    rw [Fin.sum_univ_two]
-    dsimp
+  · rw [Matrix.mul_apply, Fin.sum_univ_two, Matrix.smul_apply, Matrix.one_apply]
+    dsimp [adjugate2x2]
     ring
-  · dsimp [adjugate2x2, mul_apply, smul_apply, one_apply]
-    rw [Fin.sum_univ_two]
-    dsimp
+  · rw [Matrix.mul_apply, Fin.sum_univ_two, Matrix.smul_apply, Matrix.one_apply]
+    dsimp [adjugate2x2]
     ring
-  · dsimp [adjugate2x2, mul_apply, smul_apply, one_apply]
-    rw [Fin.sum_univ_two]
-    dsimp
+  · rw [Matrix.mul_apply, Fin.sum_univ_two, Matrix.smul_apply, Matrix.one_apply]
+    dsimp [adjugate2x2]
     ring
 
 /-- **Theorem**: Trace of Matrix Times Its Adjugate Equals 2 * det(M). -/

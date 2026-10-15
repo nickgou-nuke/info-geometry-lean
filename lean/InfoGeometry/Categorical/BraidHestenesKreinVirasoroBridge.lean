@@ -40,7 +40,7 @@ structure BridgeData
     [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg]
     [LieAlgebra ℝ Alg]
     [AddCommGroup Tangent] [Module ℝ Tangent] where
-  closure : ClosureData Weight Tangent State
+  closure : ClosureData.{u} Weight Tangent State
   sugawara :
     PrimeSugawaraVirasoroPacket PrimeLabel Field Coeff Finite Alg
 

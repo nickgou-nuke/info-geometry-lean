@@ -33,24 +33,37 @@ def genF : Matrix (Fin 2) (Fin 2) ℝ :=
 theorem genJ_sq_eq_neg_one :
     genJ * genJ = - 1 := by
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [genJ, Matrix.mul_apply, Fin.sum_univ_two]
+  change (∑ k : Fin 2, genJ i k * genJ k j) = (-1 : Matrix (Fin 2) (Fin 2) ℝ) i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [genJ, Matrix.one_apply, Fin.sum_univ_two]
 
 theorem genK_sq_eq_one :
     genK * genK = 1 := by
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [genK, Matrix.mul_apply, Fin.sum_univ_two]
+  change (∑ k : Fin 2, genK i k * genK k j) = (1 : Matrix (Fin 2) (Fin 2) ℝ) i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [genK, Matrix.one_apply, Fin.sum_univ_two]
 
 theorem comm_K_E :
     genK * genE - genE * genK = (2 : ℝ) • genE := by
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [genK, genE, Matrix.mul_apply, Fin.sum_univ_two] <;> norm_num
+  change (∑ k : Fin 2, genK i k * genE k j) -
+      (∑ k : Fin 2, genE i k * genK k j) = 2 * genE i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [genK, genE, Fin.sum_univ_two]
 
 theorem comm_K_F :
     genK * genF - genF * genK = -((2 : ℝ) • genF) := by
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [genK, genF, Matrix.mul_apply, Fin.sum_univ_two] <;> norm_num
+  change (∑ k : Fin 2, genK i k * genF k j) -
+      (∑ k : Fin 2, genF i k * genK k j) = -(2 * genF i j)
+  fin_cases i <;> fin_cases j <;>
+    norm_num [genK, genF, Fin.sum_univ_two]
 
 theorem comm_E_F :
     genE * genF - genF * genE = genK := by
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [genE, genF, genK, Matrix.mul_apply, Fin.sum_univ_two]
+  change (∑ k : Fin 2, genE i k * genF k j) -
+      (∑ k : Fin 2, genF i k * genE k j) = genK i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [genE, genF, genK, Fin.sum_univ_two]

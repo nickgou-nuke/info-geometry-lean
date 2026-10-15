@@ -125,7 +125,11 @@ theorem toTopologicalColimitMap_unique
   change f (topologicalInjection Stage sys i a) =
     ρ.toTopologicalColimitMap Stage sys
       (topologicalInjection Stage sys i a)
-  rw [hf, ρ.toTopologicalColimitMap_inclusion]
+  calc
+    f (topologicalInjection Stage sys i a) = ULift.up (ρ.readout i a) := hf i a
+    _ = ρ.toTopologicalColimitMap Stage sys
+        (topologicalInjection Stage sys i a) :=
+      (ρ.toTopologicalColimitMap_inclusion Stage sys i a).symm
 
 theorem toTopCatNaturalTransformation_eq_of_readout_eq
     {ρ σ : CompatibleContinuousStateReadout Stage sys}
@@ -235,7 +239,12 @@ theorem CompatibleStateFamily.toTopologicalColimitMap_unique
   change f (topologicalInjection Stage sys i a) =
     ω.toTopologicalColimitMap Stage sys
       (topologicalInjection Stage sys i a)
-  rw [hf, ω.toTopologicalColimitMap_inclusion]
+  calc
+    f (topologicalInjection Stage sys i a) =
+        ULift.up ((ω.toContinuousReadout Stage sys).readout i a) := hf i a
+    _ = ω.toTopologicalColimitMap Stage sys
+        (topologicalInjection Stage sys i a) :=
+      (ω.toTopologicalColimitMap_inclusion Stage sys i a).symm
 
 theorem StarInductiveCocone.restrictedState_topologicalColimitMap_eq
     {Ainf : Type u}

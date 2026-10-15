@@ -133,7 +133,7 @@ theorem trace_zero_of_basisGamma_anticommutes
   have hscalar :
       cayleySign j * LinearMap.trace ℂ _ M =
         -(cayleySign j * LinearMap.trace ℂ _ M) := by
-    simpa only [map_smul, map_neg] using hcyc
+    simpa only [map_smul, map_neg, smul_eq_mul] using hcyc
   have hzero : cayleySign j * LinearMap.trace ℂ _ M = 0 := by
     have htwo : (2 : ℂ) *
         (cayleySign j * LinearMap.trace ℂ _ M) = 0 := by

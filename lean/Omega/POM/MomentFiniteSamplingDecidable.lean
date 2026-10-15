@@ -66,10 +66,14 @@ theorem paper_pom_moment_finite_sampling_decidable
   · intro n
     calc
       D.leftMoment n = D.realizeFromWindow D.leftHankelNormalForm n := by
-        simpa [leftHankelNormalForm] using D.left_realization n
+        change D.leftMoment n =
+          D.realizeFromWindow (fun i => D.leftMoment (D.offset + i.1)) n
+        exact D.left_realization n
       _ = D.realizeFromWindow D.rightHankelNormalForm n := by rw [hWindow]
       _ = D.rightMoment n := by
-        simpa [rightHankelNormalForm] using (D.right_realization n).symm
+        change D.realizeFromWindow
+          (fun i => D.rightMoment (D.offset + i.1)) n = D.rightMoment n
+        exact (D.right_realization n).symm
   · simpa [sameFingerprints, leftFingerprint, rightFingerprint] using congrArg
       (fun window => (window, D.realizeFromWindow window)) hWindow
 

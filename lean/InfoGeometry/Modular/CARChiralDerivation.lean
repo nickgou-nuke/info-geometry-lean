@@ -1,9 +1,8 @@
 import Mathlib.Algebra.Algebra.Basic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Algebra.Hom
 import Mathlib.Algebra.Star.Basic
 import Mathlib.Algebra.Star.StarAlgHom
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import Mathlib.Tactic
 
 set_option linter.unusedSectionVars false
@@ -113,7 +112,7 @@ MAIN THEOREM 1 (Action on Annihilation Operator):
 -/
 theorem chiralDeriv_c_eq_gamma :
     chiralDeriv beta car.Gamma car.c = (2 * beta) • (car.Gamma * car.c) := by
-  dsimp [chiralDeriv, bracket, chiralHamiltonian]
+  rw [chiralDeriv_apply]
   rw [smul_mul_assoc, mul_smul_comm]
   have hc : car.c * car.Gamma = - (car.Gamma * car.c) := by
     have h := car.anticomm_c
@@ -130,7 +129,7 @@ MAIN THEOREM 2 (Action on Creation Operator):
 -/
 theorem chiralDeriv_cdag_eq_gamma :
     chiralDeriv beta car.Gamma car.c_dag = (2 * beta) • (car.Gamma * car.c_dag) := by
-  dsimp [chiralDeriv, bracket, chiralHamiltonian]
+  rw [chiralDeriv_apply]
   rw [smul_mul_assoc, mul_smul_comm]
   have hc : car.c_dag * car.Gamma = - (car.Gamma * car.c_dag) := by
     have h := car.anticomm_cdag
@@ -148,7 +147,8 @@ The chiral generator commutes with the fermion number operator:
 -/
 theorem chiralDeriv_numberOp_zero :
     chiralDeriv beta car.Gamma (numberOp car) = 0 := by
-  dsimp [numberOp, chiralDeriv, bracket, chiralHamiltonian]
+  rw [chiralDeriv_apply]
+  dsimp [numberOp]
   have h_comm : car.Gamma * (car.c_dag * car.c) = (car.c_dag * car.c) * car.Gamma := by
     calc
       car.Gamma * (car.c_dag * car.c)
@@ -166,7 +166,7 @@ MAIN THEOREM 4 (Self-Commutation with Parity Involution):
 -/
 theorem chiralDeriv_gamma_zero :
     chiralDeriv beta car.Gamma car.Gamma = 0 := by
-  dsimp [chiralDeriv, bracket, chiralHamiltonian]
+  rw [chiralDeriv_apply]
   rw [smul_mul_assoc, mul_smul_comm, sub_self]
 
 /-! =========================================================================
@@ -191,7 +191,7 @@ MAIN THEOREM 5 (Action on Any Mode k):
 -/
 theorem multimode_chiralDeriv_c (k : Fin n) :
     chiralDeriv beta mcar.Gamma (mcar.c k) = (2 * beta) • (mcar.Gamma * mcar.c k) := by
-  dsimp [chiralDeriv, bracket, chiralHamiltonian]
+  rw [chiralDeriv_apply]
   rw [smul_mul_assoc, mul_smul_comm]
   have hc : mcar.c k * mcar.Gamma = - (mcar.Gamma * mcar.c k) := by
     have h := mcar.anticomm_c k
@@ -200,7 +200,7 @@ theorem multimode_chiralDeriv_c (k : Fin n) :
 
 theorem multimode_chiralDeriv_cdag (k : Fin n) :
     chiralDeriv beta mcar.Gamma (mcar.c_dag k) = (2 * beta) • (mcar.Gamma * mcar.c_dag k) := by
-  dsimp [chiralDeriv, bracket, chiralHamiltonian]
+  rw [chiralDeriv_apply]
   rw [smul_mul_assoc, mul_smul_comm]
   have hc : mcar.c_dag k * mcar.Gamma = - (mcar.Gamma * mcar.c_dag k) := by
     have h := mcar.anticomm_cdag k

@@ -17,7 +17,7 @@ private lemma not_denominatorSupportedBy_inv_prime_not_mem {S : Finset ℕ} {p :
   have hden : (((p : ℚ)⁻¹).den) = p := by
     simpa using Rat.inv_natCast_den_of_pos (a := p) hp.pos
   have hdiv : p ∣ (((p : ℚ)⁻¹).den) := by
-    simpa [hden] using (dvd_rfl : p ∣ p)
+    rw [hden]
   exact hpS (hsupp p hp hdiv)
 
 /-- Paper label: `cor:cdim-star-no-continuous-section-finite-truncation`. The universal
@@ -41,7 +41,7 @@ theorem paper_cdim_star_no_continuous_section_finite_truncation (S : Finset ℕ)
   have hmul_sub : (p : ℕ) • φ ((p : ℚ)⁻¹) = localizedOne S := by
     calc
       (p : ℕ) • φ ((p : ℚ)⁻¹) = φ ((p : ℕ) • ((p : ℚ)⁻¹)) := by
-        simpa using (φ.map_nsmul ((p : ℚ)⁻¹) p).symm
+        simpa using (φ.map_nsmul p ((p : ℚ)⁻¹)).symm
       _ = φ 1 := by rw [hsource]
       _ = localizedOne S := hφ1
   have hmul_rat : (p : ℚ) * (φ ((p : ℚ)⁻¹) : ℚ) = 1 := by
@@ -55,7 +55,9 @@ theorem paper_cdim_star_no_continuous_section_finite_truncation (S : Finset ℕ)
       _ = (p : ℚ)⁻¹ * (p : ℚ) := by
         field_simp [hp0Q]
   have hsupported : denominatorSupportedBy S ((p : ℚ)⁻¹) := by
-    simpa [hq] using (φ ((p : ℚ)⁻¹)).2
+    have hmem := (φ ((p : ℚ)⁻¹)).2
+    rw [hq] at hmem
+    exact hmem
   exact not_denominatorSupportedBy_inv_prime_not_mem hp hpS hsupported
 
 end Omega.CircleDimension

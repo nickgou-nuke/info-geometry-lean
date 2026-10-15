@@ -1,4 +1,7 @@
 import Mathlib.Tactic
+import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Analysis.Calculus.Deriv.Mul
+import Mathlib.Analysis.Calculus.Deriv.Pow
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 open Complex
 open Matrix
@@ -62,7 +65,7 @@ theorem fisherMetric (θ : ℝ) : deriv (fun (x : ℝ) => x^2/2) θ = θ := by
     simpa using hasDerivAt_pow 2 θ
   have hhalf : HasDerivAt (fun (x : ℝ) => (1/2 : ℝ)*x^2) ((1/2 : ℝ)*(2*θ)) θ :=
     hsq.const_mul (1/2 : ℝ)
-  simpa [mul_comm, mul_left_comm, mul_assoc] using hhalf.deriv
+  convert hhalf.deriv using 1 <;> ring_nf
 
 /-══════════════════════════════════════════════════════════════════════
    Th3: V₄ KLEIN FOUR-GROUP IN PSL(2,ℝ)  

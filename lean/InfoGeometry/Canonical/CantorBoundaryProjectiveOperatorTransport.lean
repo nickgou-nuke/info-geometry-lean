@@ -284,7 +284,8 @@ theorem projective_boundaryDifferential_hodge
       q (prefixBoundaryLimitIso.inv.hom z))
     (UHF_Laplacian_continuousMap_eq_id
       (inverseLimitContinuousPushforward g))
-  simpa [UHF_Laplacian_continuousMap] using h
+  simpa [UHF_Laplacian_continuousMap, UHF_Laplacian_op,
+    UHF_boundary_continuousMap, star_UHF_boundary_continuousMap] using h
 
 theorem inverseLimitPullback_pushforward (g : InverseLimitFunction) :
     inverseLimitPullback (inverseLimitPushforward g) = g := by

@@ -147,7 +147,8 @@ def weakValueLinear : Operator ι →ₗ[ℂ] ℂ where
   toFun := weakValue p
   map_add' := weakValue_add p
   map_smul' c A := by
-    simpa only [smul_eq_mul] using weakValue_smul p c A
+    change weakValue p (c • A) = c * weakValue p A
+    exact weakValue_smul p c A
 
 @[simp] theorem weakValueLinear_apply (A : Operator ι) :
     weakValueLinear p A = weakValue p A := rfl

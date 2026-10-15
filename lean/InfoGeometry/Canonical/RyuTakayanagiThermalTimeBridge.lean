@@ -335,7 +335,7 @@ theorem identityDepthPositiveBranchBridge_full_clock_readout
       ((n : ℤ) : ℂ) * (∮ z in C((0 : ℂ), B.radius), poleForm z) = logarithmicPhase (n : ℤ) ∧
       Complex.exp (((n : ℤ) : ℂ) * (∮ z in C((0 : ℂ), B.radius), poleForm z)) = (1 : ℂ) ∧
       subtreeEntropy n = minimalSurfaceArea n / (4 * effectiveNewtonConstant) := by
-  simpa [identityDepthPositiveBranchBridge] using
+  simpa [identityDepthPositiveBranchBridge, entropyOfStep, areaOfStep] using
     positiveBranch_full_clock_readout (B := identityDepthPositiveBranchBridge (E := E) B) n A
 
 /--

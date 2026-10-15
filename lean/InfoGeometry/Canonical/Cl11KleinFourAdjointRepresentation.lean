@@ -126,13 +126,15 @@ theorem adjointAlgHom_one :
     adjointAlgHom (1 : Mat2ˣ) = (AlgEquiv.refl : Mat2 ≃ₐ[ℝ] Mat2) := by
   apply AlgEquiv.ext
   intro A
-  simpa only [adjointAlgHom_apply] using adjoint_one A
+  change adjointAlgEquiv (1 : Mat2ˣ) A = A
+  exact adjoint_one A
 
 theorem adjointAlgHom_neg_one :
     adjointAlgHom (-1 : Mat2ˣ) = (AlgEquiv.refl : Mat2 ≃ₐ[ℝ] Mat2) := by
   apply AlgEquiv.ext
   intro A
-  simpa only [adjointAlgHom_apply] using adjoint_neg_one A
+  change adjointAlgEquiv (-1 : Mat2ˣ) A = A
+  exact adjoint_neg_one A
 
 theorem adjointAlgHom_neg_unit (u : Mat2ˣ) :
     adjointAlgHom (-u) = adjointAlgHom u := by

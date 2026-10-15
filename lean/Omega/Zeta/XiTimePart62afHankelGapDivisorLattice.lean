@@ -45,8 +45,8 @@ theorem paper_xi_time_part62af_hankel_gap_divisor_lattice :
       exact hsubset (dvd_refl D₂)
   · intro D₁ D₂
     ext x
-    simpa [xi_time_part62af_hankel_gap_divisor_lattice_layer, Set.mem_inter_iff] using
-      (lcm_dvd_iff : Nat.lcm D₁ D₂ ∣ x ↔ D₁ ∣ x ∧ D₂ ∣ x).symm
+    change (D₁ ∣ x ∧ D₂ ∣ x) ↔ D₁.lcm D₂ ∣ x
+    exact lcm_dvd_iff.symm
   · intro Δ degD hdeg
     refine ⟨rfl, rfl, ?_⟩
     simp [xi_time_part62af_hankel_gap_divisor_lattice_idealRank,

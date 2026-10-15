@@ -54,6 +54,11 @@ noncomputable def lieChannel (A : EndH) : EndH :=
 
 noncomputable def hodgeDirac : EndH := D.d + D.delta
 
+/-- The sign convention `d - δ` for the Dirac--Kähler operator.  This is
+distinct from `hodgeDirac = d + δ`, whose square is the positive Hodge
+Laplacian. -/
+noncomputable def diracKahler : EndH := D.d - D.delta
+
 noncomputable def hodgeLaplacian : EndH :=
   D.d * D.delta + D.delta * D.d
 
@@ -718,6 +723,136 @@ theorem hodgeLaplacian_even :
               simp only [mul_neg, neg_neg]
               noncomm_ring
     _ = D.hodgeLaplacian * D.Gamma := by rw [hsq]
+
+/-- The difference convention squares to the negative Hodge Laplacian. -/
+theorem diracKahler_sq_neg_laplacian :
+    D.diracKahler * D.diracKahler = -D.hodgeLaplacian := by
+  dsimp [diracKahler, hodgeLaplacian]
+  calc
+    (D.d - D.delta) * (D.d - D.delta) =
+        D.d * D.d - D.d * D.delta - D.delta * D.d + D.delta * D.delta := by
+          noncomm_ring
+    _ = -(D.d * D.delta + D.delta * D.d) := by
+          rw [D.d_sq, D.delta_sq]
+          noncomm_ring
+
+/-- The difference convention is odd for the form-parity grading. -/
+theorem diracKahler_odd :
+    D.Gamma * D.diracKahler = -(D.diracKahler * D.Gamma) := by
+  dsimp [diracKahler]
+  rw [mul_sub, D.d_odd, D.delta_odd, sub_mul]
+  noncomm_ring
+
+/-- Applying `d - δ` to an exact form has no `d` component, by `d² = 0`;
+its value is coexact. -/
+theorem diracKahler_on_exact (x : H) :
+    D.diracKahler (D.d x) = -D.delta (D.d x) := by
+  have hd : D.d (D.d x) = 0 := by
+    have h := congrArg (fun f : EndH => f x) D.d_sq
+    simpa using h
+  change D.d (D.d x) - D.delta (D.d x) = -D.delta (D.d x)
+  rw [hd]
+  simp
+
+/-- Applying `d - δ` to a coexact form has no `δ` component, by `δ² = 0`;
+its value is exact. -/
+theorem diracKahler_on_coexact (x : H) :
+    D.diracKahler (D.delta x) = D.d (D.delta x) := by
+  have hδ : D.delta (D.delta x) = 0 := by
+    have h := congrArg (fun f : EndH => f x) D.delta_sq
+    simpa using h
+  change D.d (D.delta x) - D.delta (D.delta x) = D.d (D.delta x)
+  rw [hδ]
+  simp
+
+/-- A state closed under both nilpotents is annihilated by both Dirac
+conventions. -/
+theorem dirac_operators_vanish_on_closed_coclosed (x : H)
+    (hd : D.d x = 0) (hδ : D.delta x = 0) :
+    D.hodgeDirac x = 0 ∧ D.diracKahler x = 0 := by
+  constructor <;> simp [hodgeDirac, diracKahler, hd, hδ]
+
+/-- The ordered product of the sum and difference conventions is the
+commutator of the two nilpotents. -/
+theorem hodgeDirac_mul_diracKahler :
+    D.hodgeDirac * D.diracKahler = D.delta * D.d - D.d * D.delta := by
+  dsimp [hodgeDirac, diracKahler]
+  rw [add_mul, mul_sub, mul_sub, D.d_sq, D.delta_sq]
+  noncomm_ring
+
+/-- The Hodge Laplacian commutes with the positive eigenspace projector of
+the grading. This uses the existing Peirce projector and the evenness theorem. -/
+theorem hodgeLaplacian_commutes_nilpotentPlusProjector :
+    D.hodgeLaplacian * D.nilpotentPlusProjector =
+      D.nilpotentPlusProjector * D.hodgeLaplacian := by
+  rw [nilpotentPlusProjector]
+  calc
+    D.hodgeLaplacian * ((2 : ℝ)⁻¹ • (1 + D.Gamma)) =
+        (2 : ℝ)⁻¹ • (D.hodgeLaplacian * (1 + D.Gamma)) := by
+          rw [mul_smul_comm]
+    _ = (2 : ℝ)⁻¹ • ((1 + D.Gamma) * D.hodgeLaplacian) := by
+          congr 1
+          calc
+            D.hodgeLaplacian * (1 + D.Gamma) =
+                D.hodgeLaplacian + D.hodgeLaplacian * D.Gamma := by
+                  rw [mul_add, mul_one]
+            _ = D.hodgeLaplacian + D.Gamma * D.hodgeLaplacian := by
+                  rw [← D.hodgeLaplacian_even]
+            _ = (1 + D.Gamma) * D.hodgeLaplacian := by
+                  rw [add_mul, one_mul]
+    _ = ((2 : ℝ)⁻¹ • (1 + D.Gamma)) * D.hodgeLaplacian := by
+          rw [smul_mul_assoc]
+
+/-- The Hodge Laplacian commutes with the negative eigenspace projector of
+the grading. -/
+theorem hodgeLaplacian_commutes_nilpotentMinusProjector :
+    D.hodgeLaplacian * D.nilpotentMinusProjector =
+      D.nilpotentMinusProjector * D.hodgeLaplacian := by
+  rw [nilpotentMinusProjector]
+  calc
+    D.hodgeLaplacian * ((2 : ℝ)⁻¹ • (1 - D.Gamma)) =
+        (2 : ℝ)⁻¹ • (D.hodgeLaplacian * (1 - D.Gamma)) := by
+          rw [mul_smul_comm]
+    _ = (2 : ℝ)⁻¹ • ((1 - D.Gamma) * D.hodgeLaplacian) := by
+          congr 1
+          calc
+            D.hodgeLaplacian * (1 - D.Gamma) =
+                D.hodgeLaplacian - D.hodgeLaplacian * D.Gamma := by
+                  rw [mul_sub, mul_one]
+            _ = D.hodgeLaplacian - D.Gamma * D.hodgeLaplacian := by
+                  rw [← D.hodgeLaplacian_even]
+            _ = (1 - D.Gamma) * D.hodgeLaplacian := by
+                  rw [sub_mul, one_mul]
+    _ = ((2 : ℝ)⁻¹ • (1 - D.Gamma)) * D.hodgeLaplacian := by
+          rw [smul_mul_assoc]
+
+/-- The Laplacian has no transition from the positive grading sector to the
+negative grading sector. -/
+theorem hodgeLaplacian_plus_to_minus_zero :
+    D.nilpotentPlusProjector * D.hodgeLaplacian * D.nilpotentMinusProjector = 0 := by
+  calc
+    D.nilpotentPlusProjector * D.hodgeLaplacian * D.nilpotentMinusProjector =
+        (D.hodgeLaplacian * D.nilpotentPlusProjector) *
+          D.nilpotentMinusProjector := by
+            rw [D.hodgeLaplacian_commutes_nilpotentPlusProjector]
+    _ = D.hodgeLaplacian *
+        (D.nilpotentPlusProjector * D.nilpotentMinusProjector) := by
+          rw [mul_assoc]
+    _ = 0 := by rw [D.nilpotentPlusProjector_mul_minusProjector, mul_zero]
+
+/-- The Laplacian has no transition from the negative grading sector to the
+positive grading sector. -/
+theorem hodgeLaplacian_minus_to_plus_zero :
+    D.nilpotentMinusProjector * D.hodgeLaplacian * D.nilpotentPlusProjector = 0 := by
+  calc
+    D.nilpotentMinusProjector * D.hodgeLaplacian * D.nilpotentPlusProjector =
+        (D.hodgeLaplacian * D.nilpotentMinusProjector) *
+          D.nilpotentPlusProjector := by
+            rw [D.hodgeLaplacian_commutes_nilpotentMinusProjector]
+    _ = D.hodgeLaplacian *
+        (D.nilpotentMinusProjector * D.nilpotentPlusProjector) := by
+          rw [mul_assoc]
+    _ = 0 := by rw [D.nilpotentMinusProjector_mul_plusProjector, mul_zero]
 
 end Data
 end

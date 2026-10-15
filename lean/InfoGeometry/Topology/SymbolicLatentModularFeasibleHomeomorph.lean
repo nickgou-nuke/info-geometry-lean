@@ -66,7 +66,7 @@ theorem SymbolicLatentObservableModularFlow.feasibleHomeomorph_zero_apply
     (x : S.feasibleSet targets) :
     Φ.feasibleHomeomorph targets 0 x = x := by
   apply Subtype.ext
-  simpa using Φ.toSymbolicLatentModularFlow.zero_apply x.1
+  exact Φ.toSymbolicLatentModularFlow.zero_apply x.1
 
 theorem SymbolicLatentObservableModularFlow.feasibleHomeomorph_add_apply
     {X : Type*} [TopologicalSpace X]

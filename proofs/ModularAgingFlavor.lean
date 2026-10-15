@@ -110,8 +110,7 @@ def jarlskogCommutatorDeterminant : Q :=
 
 lemma jarlskog_trace_identity : 
   jarlskogCommutatorDeterminant = (1 / 3 : Q) * trace (⁅massMatrixU, massMatrixD⁆ ^ 3) := by
-  simp [jarlskogCommutatorDeterminant, massMatrixU, massMatrixD]
-  exact Matrix.det_zero ⟨0⟩
+  simp [jarlskogCommutatorDeterminant, massMatrixU, massMatrixD, Ring.lie_def]
 
 def determinantIdentityValue : Q := 1
 
@@ -229,8 +228,7 @@ theorem ckmMatrixEntryCount_eq_nine : ckmMatrixEntryCount = 9 := rfl
 theorem determinantIdentityValue_eq_one : determinantIdentityValue = 1 := rfl
 
 theorem jarlskogCommutatorDeterminant_eq_zero : jarlskogCommutatorDeterminant = 0 := by
-  simp [jarlskogCommutatorDeterminant, massMatrixU, massMatrixD]
-  exact Matrix.det_zero ⟨0⟩
+  simp [jarlskogCommutatorDeterminant, massMatrixU, massMatrixD, Ring.lie_def]
 
 theorem colorAnomaly_eq_zero : colorAnomaly = 0 := by
   norm_num [colorAnomaly, hypercharge_Q_L, hypercharge_u_R, hypercharge_d_R]

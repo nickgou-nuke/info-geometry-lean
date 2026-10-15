@@ -122,7 +122,8 @@ theorem exteriorCARPair_limit_image_car
       (hQ0 := (P 0).eps_sq_zero)
       (hR0 := (P 0).iota_sq_zero)
       (hclosure0 := by
-        simpa [InfoGeometry.Arithmetic.PrimeMajoranaCAR.anticomm] using
+        simpa [InfoGeometry.Arithmetic.PrimeMajoranaCAR.anticomm,
+          InfoGeometry.Algebra.FiniteInductiveSUSY.anticomm] using
           (P 0).eps_iota_add_iota_eps)
       (hZQ0 := by simp)
       (hZR0 := by simp)
@@ -140,7 +141,9 @@ theorem exteriorCARPair_limit_image_car
         simp)
       n
   rcases h with ⟨hQ, hR, hQR, _, _, _⟩
-  exact ⟨hQ, hR, by simpa using hQR⟩
+  exact ⟨hQ, hR, by
+    simpa [InfoGeometry.Arithmetic.PrimeMajoranaCAR.anticomm,
+      InfoGeometry.Algebra.FiniteInductiveSUSY.anticomm] using hQR⟩
 
 /-- The compatible cone reads back the transported `c = ε + ι` Majorana at stage zero. -/
 theorem exteriorCARPair_cMajorana_limit_image

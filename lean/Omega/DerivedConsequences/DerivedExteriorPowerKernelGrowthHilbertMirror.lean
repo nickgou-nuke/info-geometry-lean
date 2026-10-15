@@ -247,7 +247,7 @@ theorem paper_derived_exterior_power_kernel_growth_hilbert_mirror (q k : ℕ) :
           fun S => Finset.sum S fun i => i)) (s + 1) (Nat.succ_le_succ (Nat.zero_le s))
     rw [paper_derived_exterior_power_kernel_growth_hilbert_mirror_hilbert_layer_eq_countP]
     simpa [paper_derived_exterior_power_kernel_growth_hilbert_mirror_kernel_growth,
-      List.countP_map, Nat.succ_le_iff] using hstep.symm
+      List.countP_map, Nat.succ_le_iff, Function.comp_def] using hstep.symm
   · intro s hs
     exact paper_derived_exterior_power_kernel_growth_hilbert_mirror_mirror_law q k s hs
 

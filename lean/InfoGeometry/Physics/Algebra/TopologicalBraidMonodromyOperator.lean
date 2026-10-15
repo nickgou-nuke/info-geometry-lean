@@ -1,4 +1,4 @@
-import Mathlib.Analysis.NormedSpace.OperatorNorm.Basic
+import Mathlib.Analysis.Normed.Operator.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FibonacciHadjiivanovIntertwiner
 
@@ -138,13 +138,16 @@ theorem modular_flow_group_homomorphism
 
 theorem continuous_continuousModularMonodromyFlow :
     Continuous (continuousModularMonodromyFlow M) := by
-  unfold continuousModularMonodromyFlow
-  refine Continuous.smul ?_ ?_
-  · exact Real.continuous_exp.comp
-      (Continuous.mul continuous_id continuous_const)
-  · refine Continuous.add continuous_const ?_
-    exact Continuous.smul
-      (Continuous.mul continuous_id continuous_const) continuous_const
+  change Continuous (fun t : ℝ =>
+    Real.exp (t * Real.log |M.lambda|) •
+      ((1 : H →L[ℝ] H) + (t * (1 / M.lambda)) • M.N))
+  exact (continuous_smul : Continuous
+    (fun p : ℝ × (H →L[ℝ] H) => p.1 • p.2)).comp
+      ((Real.continuous_exp.comp
+        (Continuous.mul continuous_id continuous_const)).prodMk
+        (Continuous.add continuous_const
+          (Continuous.smul
+            (Continuous.mul continuous_id continuous_const) continuous_const)))
 
 /--
 The modular monodromy flow is a continuous linear equivalence with inverse

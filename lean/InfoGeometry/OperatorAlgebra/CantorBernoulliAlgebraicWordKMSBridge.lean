@@ -98,8 +98,11 @@ theorem gaugeConditionalExpectationLinear_idempotent :
 theorem gaugeConditionalExpectationLinear_preserves_uhf (c : WordSpan)
     (h_uhf : ∀ p ∈ c.support, p.1.length = p.2.length) :
     gaugeConditionalExpectationLinear c = c := by
-  dsimp [gaugeConditionalExpectationLinear, Finsupp.linearCombination, Finsupp.lsum]
-  dsimp [Finsupp.sum]
+  change Finsupp.linearCombination ℂ
+      (fun p => if p.1.length = p.2.length then Finsupp.single p (1 : ℂ) else 0) c = c
+  rw [Finsupp.linearCombination_apply]
+  change (∑ i ∈ c.support, c i •
+      (if i.1.length = i.2.length then Finsupp.single i (1 : ℂ) else 0)) = c
   have h_sum : (∑ i ∈ c.support, c i • (if i.1.length = i.2.length then Finsupp.single i (1 : ℂ) else 0)) =
       ∑ i ∈ c.support, c i • Finsupp.single i 1 := by
     apply Finset.sum_congr rfl

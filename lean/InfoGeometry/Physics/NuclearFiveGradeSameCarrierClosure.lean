@@ -1,3 +1,4 @@
+import Mathlib.Algebra.Lie.OfAssociative
 import InfoGeometry.Physics.NuclearFiveGradeCommonCarrierLieHom
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.NuclearFiveGradeSolovievCommonCompression
@@ -31,6 +32,9 @@ open InfoGeometry.Physics.NuclearFiveGradeSolovievCommonCompression
 open InfoGeometry.Physics.NuclearBdGTwoLevelExact
 open InfoGeometry.Physics.NuclearBdGSolovievAffineBridge
 open InfoGeometry.Physics.SolovievQPNMEigenproblem
+
+local instance : LieRing M4R := LieRing.ofAssociativeRing
+local instance : LieRing Operator := LieRing.ofAssociativeRing
 
 /-- Complete same-carrier theorem packet. -/
 theorem nuclear_same_carrier_closure_packet

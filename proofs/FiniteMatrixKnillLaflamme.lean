@@ -25,7 +25,8 @@ theorem rankOneProjector_compression {n : Type*} [Fintype n] [DecidableEq n]
     (ψ : n → ℂ) (A : Matrix n n ℂ) :
     rankOneProjector ψ * A * rankOneProjector ψ = dotProduct (star ψ) (A *ᵥ ψ) • rankOneProjector ψ := by
   ext i j
-  simp only [rankOneProjector, vecMulVec_apply, dotProduct, mul_apply, mulVec, smul_apply, smul_eq_mul, Pi.star_apply]
+  simp only [rankOneProjector, vecMulVec_apply, dotProduct, mul_apply, mulVec,
+    _root_.Matrix.smul_apply, smul_eq_mul, Pi.star_apply]
   calc ∑ k, (∑ l, ψ i * starRingEnd ℂ (ψ l) * A l k) * (ψ k * starRingEnd ℂ (ψ j))
     _ = ∑ k, ∑ l, (ψ i * starRingEnd ℂ (ψ l) * A l k) * (ψ k * starRingEnd ℂ (ψ j)) := by simp_rw [Finset.sum_mul]
     _ = ∑ k, ∑ l, (starRingEnd ℂ (ψ l) * (A l k * ψ k)) * (ψ i * starRingEnd ℂ (ψ j)) := by congr; ext k; congr; ext l; ring

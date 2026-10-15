@@ -32,9 +32,12 @@ def zeckIndices : {m : Nat} → X m → List Nat
     zeckIndices (appendFalse x) = zeckIndices x := by
   simp [zeckIndices, Omega.last]
 
-@[simp] theorem zeckIndices_appendTrue (x : X m) (hLast : get x.1 (m - 1) = false) :
+@[simp] theorem zeckIndices_appendTrue (x : X m) (hLast : EndsInZero x) :
     zeckIndices (appendTrue x hLast) = (m + 2) :: zeckIndices x := by
-  simp [zeckIndices, Omega.last]
+  have hlast : Omega.last (appendTrue x hLast).1 = true := by
+    rw [appendTrue_val, last_snoc]
+  have hrest : restrict (appendTrue x hLast) = x := restrict_appendTrue x hLast
+  simp only [zeckIndices, hlast, hrest, ↓reduceIte]
 
 theorem mem_zeckIndices_lt : ∀ {m : Nat} (x : X m) {a : Nat},
     a ∈ zeckIndices x → a < m + 2
@@ -169,7 +172,10 @@ theorem stableValue_eq_of_zeckIndices_eq {x y : X m} (h : zeckIndices x = zeckIn
   | zero => rfl
   | succ m ih =>
     simp only [zeckIndices, Omega.last, Bool.false_eq_true, ↓reduceIte]
-    convert ih using 2
+    have hrest : restrict (⟨fun _ => false, no11_allFalse⟩ : X (m + 1)) = ⟨fun _ => false, no11_allFalse⟩ :=
+      Subtype.ext rfl
+    rw [hrest]
+    exact ih
 
 end X
 

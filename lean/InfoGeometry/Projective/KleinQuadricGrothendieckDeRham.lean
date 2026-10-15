@@ -68,12 +68,14 @@ def grothendieckLog (z : ℂ) : ℂ := Complex.log z
 /-- Logarithmic derivative on the principal branch away from `0` on the slit plane. -/
 theorem grothendieckLog_deriv_log (z : ℂ) (hz : z ∈ Complex.slitPlane) :
     HasDerivAt grothendieckLog (1 / z) z := by
-  simpa [grothendieckLog] using (Complex.hasDerivAt_log hz)
+  rw [one_div]
+  exact Complex.hasDerivAt_log hz
 
 /-- Negative logarithmic derivative on the principal branch (minus-sign convention). -/
 theorem grothendieckLog_deriv_neg_log (z : ℂ) (hz : z ∈ Complex.slitPlane) :
     HasDerivAt (fun w : ℂ => -grothendieckLog w) (-(1 / z)) z := by
-  simpa [grothendieckLog] using (Complex.hasDerivAt_log hz).neg
+  rw [one_div]
+  exact (Complex.hasDerivAt_log hz).neg
 
 /-- On a circular contour the `d log` class gives the standard `2πi` winding form. -/
 theorem circleIntegral_grothendieck_dlog (R : ℝ) (hR : 0 < R) :

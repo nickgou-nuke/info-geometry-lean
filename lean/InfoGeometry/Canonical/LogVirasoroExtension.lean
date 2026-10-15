@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.Algebra.Lie.OfAssociative
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.LogJordanKreinCore
 import InfoGeometry.Canonical.SplitCARCurrentSourceAdapter
@@ -33,6 +34,9 @@ open InfoGeometry.Canonical.LogJordanVirasoroIntertwiner
 variable {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
 variable [AddCommGroup V] [Module 𝕜 V]
 variable {A : Type*} [Ring A]
+
+local instance : LieRing (Module.End 𝕜 V) := LieRing.ofAssociativeRing
+local instance : LieRing (Module.End 𝕜 (V × V)) := LieRing.ofAssociativeRing
 
 /-- The logarithmic extension carrier space $V_{\text{log}} = V \times V$. -/
 abbrev Vlog (V : Type*) := V × V
@@ -180,15 +184,24 @@ noncomputable def makeLogIntertwiner
     ext w
     · dsimp [makeLogVirasoroRepresentation, blockOp]
       rw [jordanCell_mulVec_apply]
-      simp only [Matrix.cons_val_zero, Matrix.cons_val_one, map_add, map_smul, hL0, hc0]
-      rw [smul_smul, smul_smul]
-      simp only [mul_comm]
-      rw [add_smul]
-      abel
+      simp only [Matrix.cons_val_zero, Matrix.cons_val_one]
+      change ρ (VirasoroAlgebra.lgen 𝕜 0)
+          (((Pi.single w (1 : 𝕜) : Fin 2 → 𝕜) 0) • v0 +
+            ((Pi.single w (1 : 𝕜) : Fin 2 → 𝕜) 1) •
+              c (VirasoroAlgebra.lgen 𝕜 0) v0) +
+        c (VirasoroAlgebra.lgen 𝕜 0) (((Pi.single w (1 : 𝕜) : Fin 2 → 𝕜) 1) • v0) =
+        (Δ * ((Pi.single w (1 : 𝕜) : Fin 2 → 𝕜) 0) +
+          ((Pi.single w (1 : 𝕜) : Fin 2 → 𝕜) 1)) • v0 +
+          (Δ * ((Pi.single w (1 : 𝕜) : Fin 2 → 𝕜) 1)) •
+            c (VirasoroAlgebra.lgen 𝕜 0) v0
+      fin_cases w <;>
+        simp [Pi.single, map_add, map_smul, hL0, h_comm_apply, hc0, smul_smul] <;> abel
     · dsimp [makeLogVirasoroRepresentation, blockOp]
       rw [jordanCell_mulVec_apply]
-      simp only [Matrix.cons_val_zero, Matrix.cons_val_one, map_smul, hL0]
-      rw [smul_smul]
-      simp only [mul_comm]
+      simp only [Matrix.cons_val_zero, Matrix.cons_val_one]
+      change ρ (VirasoroAlgebra.lgen 𝕜 0)
+          (((Pi.single w (1 : 𝕜) : Fin 2 → 𝕜) 1) • v0) =
+        (Δ * ((Pi.single w (1 : 𝕜) : Fin 2 → 𝕜) 1)) • v0
+      fin_cases w <;> simp [Pi.single, map_smul, hL0, smul_smul]
 
 end InfoGeometry.Canonical.LogVirasoroExtension

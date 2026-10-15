@@ -99,7 +99,7 @@ theorem paper_cdim_cayley_window_mass_conservation (lam : ℝ) (δ : ℝ) (_hlam
         exact (div_le_div_iff₀ hden_pos hdena_pos).2 hmul
       · simp [S, hz]
   have hswap_int :
-      Integrable (Function.uncurry fun s γ : ℝ => s / (γ ^ 2 + s ^ 2))
+      Integrable (fun z : ℝ × ℝ => z.1 / (z.2 ^ 2 + z.1 ^ 2))
         ((volume.restrict (Set.uIoc a b)).prod volume) := by
     have hOn :
         IntegrableOn (fun z : ℝ × ℝ => z.1 / (z.2 ^ 2 + z.1 ^ 2)) S (volume.prod volume) := by
@@ -110,7 +110,7 @@ theorem paper_cdim_cayley_window_mass_conservation (lam : ℝ) (δ : ℝ) (_hlam
           (volume.prod volume).restrict (Set.Ioc a b ×ˢ Set.univ) := by
       simpa [Measure.restrict_univ] using
         (Measure.prod_restrict (μ := volume) (ν := volume) (Set.Ioc a b) Set.univ)
-    simpa [IntegrableOn, S, Set.uIoc_of_le hab, Function.uncurry, hprod] using hOn
+    simpa [IntegrableOn, S, Set.uIoc_of_le hab, hprod] using hOn
   rw [← intervalIntegral_integral_swap hswap_int]
   rw [intervalIntegral.integral_of_le hab]
   have hconst_ae :

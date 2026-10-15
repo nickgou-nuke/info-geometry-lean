@@ -143,7 +143,7 @@ structure TomitaRealifiedDrazinBoundaryPolarization
     [Ring Op]
     (D : KreinDrazinBoundarySupport K Op) where
   /-- Realification witness connecting complex Tomita data to Krein polarization. -/
-  tomitaRealification : TomitaKreinRealificationWitness
+  tomitaRealification : TomitaKreinRealificationWitness.{0, 0, 0, 0, 0, 0}
   /-- Predicate selecting the generalized-zero/Drazin-defect sector. -/
   generalizedZeroSector : K → Prop
   /-- The generalized-zero sector is the Drazin defect support. -/

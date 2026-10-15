@@ -28,11 +28,15 @@ lemma pom_diagonal_rate_absorbing_hausdorff_moment_tail_iter_forward_diff_const_
         c * pom_diagonal_rate_absorbing_hausdorff_moment_tail_iter_forward_diff m f k
   | 0, f, k => rfl
   | m + 1, f, k => by
-      simpa [pom_diagonal_rate_absorbing_hausdorff_moment_tail_iter_forward_diff,
-        pom_diagonal_rate_absorbing_hausdorff_moment_tail_forward_diff,
-        mul_sub_left_distrib] using
-        pom_diagonal_rate_absorbing_hausdorff_moment_tail_iter_forward_diff_const_mul c m
-          (pom_diagonal_rate_absorbing_hausdorff_moment_tail_forward_diff f) k
+      simp only [pom_diagonal_rate_absorbing_hausdorff_moment_tail_iter_forward_diff]
+      rw [show pom_diagonal_rate_absorbing_hausdorff_moment_tail_forward_diff
+          (fun n => c * f n) =
+          (fun n => c * pom_diagonal_rate_absorbing_hausdorff_moment_tail_forward_diff f n) by
+        funext n
+        simp [pom_diagonal_rate_absorbing_hausdorff_moment_tail_forward_diff,
+          mul_sub_left_distrib]]
+      exact pom_diagonal_rate_absorbing_hausdorff_moment_tail_iter_forward_diff_const_mul c m
+        (pom_diagonal_rate_absorbing_hausdorff_moment_tail_forward_diff f) k
 
 lemma pom_diagonal_rate_absorbing_hausdorff_moment_tail_iter_forward_diff_add :
     ∀ m (f g : ℕ → ℚ) (k : ℕ),

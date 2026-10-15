@@ -204,9 +204,10 @@ theorem arnoldQuantumPresentation_generator_mem_submodule
       v ∈ U → (net.moe.experts e).apply v ∈ U)
     (hψ : ψ ∈ U) :
     (arnoldQuantumPresentation (E := E) n net β).generator ψ ∈ U := by
-  simpa [arnoldQuantumPresentation] using
-    (InfoGeometry.Canonical.ArnoldNetworkPresentation.arnoldGenerator_mem_submodule
-      (E := E) n net β U ψ hU hψ)
+  change InfoGeometry.Canonical.ArnoldNetworkPresentation.arnoldGenerator
+      (E := E) n net β ψ ∈ U
+  exact InfoGeometry.Canonical.ArnoldNetworkPresentation.arnoldGenerator_mem_submodule
+    (E := E) n net β U ψ hU hψ
 
 end ArnoldBridge
 

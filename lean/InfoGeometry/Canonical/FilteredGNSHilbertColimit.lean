@@ -131,4 +131,26 @@ theorem gnsHilbertColimit_complete :
     CompleteSpace (GNSHilbertColimit Stage sys ω) :=
   inferInstance
 
+/-- Two bounded operators on the filtered GNS Hilbert colimit are equal when
+they agree on every canonical stage image. -/
+theorem continuousLinearMap_eq_of_gnsStage_eq
+    {T U :
+      GNSHilbertColimit Stage sys ω →L[ℂ]
+        GNSHilbertColimit Stage sys ω}
+    (h :
+      ∀ (j : I) (x : GNSStage Stage sys ω j),
+        T (gnsStageToHilbertColimit Stage sys ω j x) =
+          U (gnsStageToHilbertColimit Stage sys ω j x)) :
+    T = U := by
+  apply ContinuousLinearMap.ext
+  have hfun : (T : GNSHilbertColimit Stage sys ω →
+      GNSHilbertColimit Stage sys ω) = U := by
+    apply UniformSpace.Completion.denseRange_coe.equalizer
+      T.continuous U.continuous
+    funext y
+    induction y using Module.DirectLimit.induction_on with
+    | ih j x =>
+        exact h j x
+  exact fun x => congrFun hfun x
+
 end CStarStateColimit.Native.FilteredGNSHilbertColimit

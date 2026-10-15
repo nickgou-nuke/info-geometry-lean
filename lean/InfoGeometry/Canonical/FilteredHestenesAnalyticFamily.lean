@@ -51,8 +51,9 @@ def colimitReadoutCauchyAnalyticAt
       (F.colimitReadout n) x :=
   { deriv := (C.ι n).comp ((F.analytic n x).deriv)
     has_fderiv_at := by
-      simpa [colimitReadout] using
-        (C.ι n).hasFDerivAt.comp x (F.analytic n x).has_fderiv_at
+      change HasFDerivAt ((C.ι n) ∘ F.map n)
+        ((C.ι n).comp ((F.analytic n x).deriv)) x
+      exact (C.ι n).hasFDerivAt.comp x (F.analytic n x).has_fderiv_at
     phase_linear_deriv :=
       PhaseStructure.comp_phaseLinear
         (clockPhaseStructure (C.Base n))
@@ -79,18 +80,34 @@ theorem colimitReadout_bond
   rw [← F.map_bond n x]
   exact C.ι_bond_apply n (F.map n x)
 
+private theorem map_bond_stage (n : ℕ)
+    (x : C.toFilteredPhaseCone.Stage n) :
+    F.map (n + 1) (C.toFilteredPhaseCone.bond n x) =
+      C.bond n (F.map n x) :=
+  (F.map_bond n x).symm
+
 /-! Compatibility with an arbitrary finite composite of bonding maps. -/
 theorem colimitReadout_bondIterate
     (n : ℕ) : ∀ m : ℕ, ∀ x : DoubledSpace (C.Base n),
       F.colimitReadout (n + m)
           (C.toFilteredPhaseCone.bondIterate n m x) =
         F.colimitReadout n x
-  | 0, x => by simp [FilteredPhaseCone.bondIterate, colimitReadout]
+  | 0, x => by
+      change C.ι n (F.map n x) = C.ι n (F.map n x)
+      rfl
   | m + 1, x => by
-      simpa [FilteredPhaseCone.bondIterate, Nat.add_assoc] using
-        (F.colimitReadout_bond (n + m)
-          (C.toFilteredPhaseCone.bondIterate n m x)).trans
-          (colimitReadout_bondIterate n m x)
+      change C.ι (n + (m + 1))
+        (F.map (n + (m + 1))
+          (C.toFilteredPhaseCone.bondIterate n (m + 1) x)) = _
+      simp only [Nat.add_succ, FilteredPhaseCone.bondIterate_succ]
+      change C.ι ((n + m) + 1)
+        (F.map ((n + m) + 1)
+          (C.toFilteredPhaseCone.bond (n + m)
+            (C.toFilteredPhaseCone.bondIterate n m x))) =
+        C.ι n (F.map n x)
+      rw [map_bond_stage]
+      rw [C.ι_bond_apply]
+      exact colimitReadout_bondIterate n m x
 
 /-- The derivative obtained after advancing one stage and differentiating
 along the bonding map equals the derivative of the original colimit readout. -/
@@ -125,15 +142,25 @@ theorem colimitReadout_deriv_bondIterate
           (C.toFilteredPhaseCone.bondIterate n m x)).deriv)).comp
         (C.toFilteredPhaseCone.bondIterate n m) =
       (C.ι n).comp ((F.analytic n x).deriv)
-  | 0, x => by simp [FilteredPhaseCone.bondIterate]
+  | 0, x => by
+      change
+        ((C.ι n).comp ((F.analytic n x).deriv)).comp
+          (ContinuousLinearMap.id ℝ (DoubledSpace (C.Base n))) = _
+      simp
   | m + 1, x => by
       have hstep := F.colimitReadout_deriv_bond
         (n + m) (C.toFilteredPhaseCone.bondIterate n m x)
       have hprev := colimitReadout_deriv_bondIterate n m x
       have hcomp := congrArg
         (fun L => L.comp (C.toFilteredPhaseCone.bondIterate n m)) hstep
-      simpa [FilteredPhaseCone.bondIterate, Nat.add_assoc,
-        ContinuousLinearMap.comp_assoc] using hcomp.trans hprev
+      change
+        (((C.ι ((n + m) + 1)).comp
+          ((F.analytic ((n + m) + 1)
+            (C.bond (n + m)
+              (C.toFilteredPhaseCone.bondIterate n m x))).deriv)).comp
+            (C.bond (n + m))).comp
+          (C.toFilteredPhaseCone.bondIterate n m) = _
+      simpa only [ContinuousLinearMap.comp_apply] using hcomp.trans hprev
 
 /-- The colimit-readout derivative obeys the Hestenes clock-axis
 Cauchy--Riemann law. -/

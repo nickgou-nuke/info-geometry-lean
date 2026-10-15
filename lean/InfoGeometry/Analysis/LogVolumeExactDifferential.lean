@@ -28,8 +28,8 @@ theorem hasDerivAt_logVolumePotential
     HasDerivAt
       (logVolumePotential Q)
       (Q' / Q t)
-      t := by
-  simpa [logVolumePotential] using hQ.log hQt
+      t :=
+  hQ.log hQt
 
 /--
 The derivative of the global logarithmic potential is the logarithmic-volume

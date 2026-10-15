@@ -30,11 +30,13 @@ def nativeRankTwoRotorUnit (s t : ℝ) : Cl55ˣ where
       (ropeBivector55_sq 2 3 (by decide))
       disjoint_bivector_commute_01_23 s t
   inv_val := by
-    simpa only [neg_neg] using (rankTwoRotor_inverse
+    have h := rankTwoRotor_inverse
       (ropeBivector55 0 1) (ropeBivector55 2 3)
       (ropeBivector55_sq 0 1 (by decide))
       (ropeBivector55_sq 2 3 (by decide))
-      disjoint_bivector_commute_01_23 (-s) (-t))
+      disjoint_bivector_commute_01_23 (-s) (-t)
+    rw [neg_neg, neg_neg] at h
+    exact h
 
 def nativeBivectorRotorUnits (theta0 : ℝ) : Multiplicative ℤ →* Cl55ˣ :=
   discreteRotorUnitsHom (ropeBivector55 0 1)

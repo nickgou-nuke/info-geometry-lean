@@ -44,12 +44,12 @@ theorem angularDirectionalDerivative_analytic_witness
     HasDerivAt (fun t : ℝ => angularOneFormAt (s + (t : ℂ) * u) v)
       (angularDirectionalDerivative s u v) 0 := by
   have hreal := ((hasDerivAt_omegaCoeff_along hs u).mul_const v).comp_ofReal
-  have h := (Complex.imCLM.hasFDerivAt.comp 0 hreal).hasDerivAt
+  have h := Complex.imCLM.hasFDerivAt.comp_hasDerivAt 0 hreal
   have heq (z : ℂ) : dlog01 z = omegaCoeff z := by
     simp only [dlog01, omegaCoeff, one_div]
     rw [show (1 : ℂ) - z = -(z - 1) by ring, inv_neg]
     rfl
-  simpa [angularOneFormAt_apply, heq, angularDirectionalDerivative] using h
+  simpa only [Function.comp_def, Complex.imCLM_apply, angularOneFormAt_apply, heq, angularDirectionalDerivative] using! h
 
 def angularExteriorDerivativeAt (s u v : ℂ) : ℝ :=
   angularDirectionalDerivative s u v - angularDirectionalDerivative s v u

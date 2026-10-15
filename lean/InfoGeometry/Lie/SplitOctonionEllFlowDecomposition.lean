@@ -11,6 +11,7 @@ open InfoGeometry.Algebra.Zorn.SplitQuaternionCore
 open InfoGeometry.Lie.SplitOctonionEllPolarization
 open InfoGeometry.Lie.SplitOctonionEllOperatorTrifactor
 open InfoGeometry.Lie.SplitOctonionEllNativeTrifactor
+open InfoGeometry.Canonical.ZornMatrix
 
 abbrev CZ := CanonicalZorn
 
@@ -37,12 +38,12 @@ theorem ellGrading_ellWeightBasisReal (i : Fin 8) :
     rw [ellGrading_apply, ellCommutator_rootMinus]
     rw [smul_smul]
     norm_num
-  · simp only [ellWeightBasis, ellWeight, zero_smul]
-    rw [ellGrading_apply, ellCommutator_apply]
+  · change ellGrading 1 = (0 : ℝ) • (1 : CZ)
+    rw [zero_smul, ellGrading_apply, ellCommutator_apply]
     ext j <;>
       simp [lUnit,
         InfoGeometry.Canonical.ZornMatrix.mul,
-        Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv,
+        smul_a, smul_b, smul_x, smul_y,
         InfoGeometry.Canonical.ZornMatrix.dot,
         InfoGeometry.Canonical.ZornMatrix.cross]
   · norm_num [ellWeightBasis, ellWeight, ellGrading_apply,

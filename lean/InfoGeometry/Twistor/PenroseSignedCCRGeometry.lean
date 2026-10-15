@@ -1,6 +1,8 @@
 import InfoGeometry.Twistor.PenrosePolynomialCCR
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+import Mathlib.LinearAlgebra.Dual.Defs
+import InfoGeometry.Krein.InvolutiveSelfDualCarrier
 
 /-!
 # The signed real bi-twistor carrier behind the CCR triple
@@ -21,6 +23,7 @@ namespace InfoGeometry.Twistor.PenroseSignedCCRGeometry
 
 open InfoGeometry.Twistor.PenroseTwistor
 open InfoGeometry.Twistor.PenrosePolynomialCCR
+open InfoGeometry.Krein
 
 /-- Real-linear scalar complex structure on the existing twistor carrier. -/
 def phaseJ : TwistorCarrier →ₗ[ℝ] TwistorCarrier where
@@ -83,6 +86,70 @@ theorem metric_self (z : TwistorCarrier) :
   rw [metric_apply, twistorRealQuadraticForm_apply]
   rfl
 
+/-- The real-signature involution, positive on the first chiral pair and
+negative on the second. It is the linear operator underlying the `(2,2)` form. -/
+def signatureInvolution : TwistorCarrier →ₗ[ℝ] TwistorCarrier where
+  toFun z := fun i => if i.val < 2 then z i else -z i
+  map_add' z w := by
+    funext i
+    fin_cases i <;> simp <;> ac_rfl
+  map_smul' r z := by
+    funext i
+    fin_cases i <;> simp
+
+@[simp] theorem signatureInvolution_apply (z : TwistorCarrier) (i : Fin 4) :
+    signatureInvolution z i = if i.val < 2 then z i else -z i := rfl
+
+@[simp] theorem signatureInvolution_involutive (z : TwistorCarrier) :
+    signatureInvolution (signatureInvolution z) = z := by
+  funext i
+  fin_cases i <;> simp [signatureInvolution]
+
+/-- Evaluating the signed Hermitian form against its signature-flipped vector
+is the positive coordinate energy, proving that the form has zero radical. -/
+theorem metric_signature_energy (z : TwistorCarrier) :
+    metric z (signatureInvolution z) = 2 * ∑ i : Fin 4, Complex.normSq (z i) := by
+  rw [metric_apply, twistorHermitian_apply]
+  simp [signatureInvolution, Fin.sum_univ_four, Complex.normSq, Complex.mul_re]
+  <;> ring
+
+/-- The Penrose metric induces the canonical real-linear map from twistors to
+their algebraic dual, using the repository's generic pairing-to-dual owner. -/
+def twistorMetricFlat : TwistorCarrier →ₗ[ℝ] Module.Dual ℝ TwistorCarrier :=
+  pairingFlat metric
+
+@[simp] theorem twistorMetricFlat_apply (z w : TwistorCarrier) :
+    twistorMetricFlat z w = metric z w := rfl
+
+/-- Nondegeneracy of the real `(2,2)` Penrose pairing. -/
+theorem twistorMetricFlat_injective : Function.Injective twistorMetricFlat := by
+  intro z w h
+  have hsub : twistorMetricFlat (z - w) = 0 := by
+    rw [map_sub, h, sub_self]
+  have heval := congrArg (fun φ : Module.Dual ℝ TwistorCarrier =>
+    φ (signatureInvolution (z - w))) hsub
+  change metric (z - w) (signatureInvolution (z - w)) = 0 at heval
+  rw [metric_signature_energy] at heval
+  have hsum : (∑ i : Fin 4, Complex.normSq ((z - w) i)) = 0 := by
+    nlinarith
+  apply funext
+  intro i
+  have hcoord : Complex.normSq ((z - w) i) = 0 := by
+    have hle := Finset.single_le_sum
+      (fun j _ => Complex.normSq_nonneg ((z - w) j)) (Finset.mem_univ i)
+    rw [hsum] at hle
+    exact le_antisymm (by linarith) (Complex.normSq_nonneg _)
+  have hz : (z - w) i = 0 := Complex.normSq_eq_zero.mp hcoord
+  exact sub_eq_zero.mp hz
+
+/-- A twistor as an actual algebraic covector, obtained from the nondegenerate
+Penrose pairing rather than by identifying the vector and dual carriers. -/
+def twistorToDual : TwistorCarrier →ₗ[ℝ] Module.Dual ℝ TwistorCarrier :=
+  twistorMetricFlat
+
+theorem twistorToDual_injective : Function.Injective twistorToDual :=
+  twistorMetricFlat_injective
+
 /-- Dual-conjugation sign in the chosen diagonal Hermitian frame. -/
 def dualSign (i : Fin 4) : ℂ := if i.val < 2 then 1 else -1
 
@@ -97,6 +164,22 @@ def signedPair : TwistorCarrier →ₗ[ℝ] Coeff where
     apply Prod.ext
     · rfl
     · funext i; apply Complex.ext <;> simp [Complex.mul_re, Complex.mul_im] <;> ring
+
+/-- The signed CCR lower coefficient block is the coordinate representative of
+the real Penrose pairing: evaluation is recovered by taking the real part of
+its contraction, with the factor `2` fixed by the owner's metric convention. -/
+theorem metric_eq_signedPair_contraction (z w : TwistorCarrier) :
+    metric z w = 2 * (contraction w (signedPair z).2).re := by
+  rw [metric_apply, twistorHermitian_apply]
+  simp [signedPair, contraction, dualSign, Fin.sum_univ_four,
+    Complex.mul_re, Complex.mul_im]
+  <;> ring
+
+/-- The coordinate signed-conjugation formula evaluates exactly to the
+pairing-defined covector. -/
+theorem twistorToDual_apply_signedPair (z w : TwistorCarrier) :
+    twistorToDual z w = 2 * (contraction w (signedPair z).2).re := by
+  rw [twistorToDual, twistorMetricFlat_apply, metric_eq_signedPair_contraction]
 
 /-- The coefficient-frame form of the chapter's complex-structure operation. -/
 def coefficientJ (A : Coeff) : Coeff :=

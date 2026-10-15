@@ -421,6 +421,7 @@ theorem momentSum_two_eight_rec : momentSum 2 8 = 1352 := by
     momentSum_two_seven_rec] at h
   omega
 
+set_option maxRecDepth 10000 in
 /-- thm:pom-s2-nine-rec -/
 theorem momentSum_two_nine_rec : momentSum 2 9 = 3352 := by
   have h := momentSum_two_recurrence 6

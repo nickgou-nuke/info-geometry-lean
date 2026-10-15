@@ -51,7 +51,7 @@ theorem zornPlus_mul_circularPeirceBasis (i : Fin 8) :
       | 6 => 0
       | 7 => 0
       | _ => 0 := by
-  fin_cases i <;> simp only [Fin.isValue]
+  fin_cases i <;> dsimp
   · rw [circularPeirceBasis_apply, circularPeirceBasis_apply]
     change zornPlus * cartesianZornLinearEquiv scalarPlus =
       cartesianZornLinearEquiv scalarPlus
@@ -93,7 +93,7 @@ theorem zornMinus_mul_circularPeirceBasis (i : Fin 8) :
       | 6 => circularPeirceBasis 6
       | 7 => circularPeirceBasis 7
       | _ => 0 := by
-  fin_cases i <;> simp only [Fin.isValue]
+  fin_cases i <;> dsimp
   · rw [circularPeirceBasis_apply]
     change zornMinus * cartesianZornLinearEquiv scalarPlus = 0
     rw [cartesianZorn_scalarPlus, zornMinus_mul_zornPlus]
@@ -135,7 +135,7 @@ theorem circularPeirceBasis_mul_zornPlus (i : Fin 8) :
       | 6 => circularPeirceBasis 6
       | 7 => circularPeirceBasis 7
       | _ => 0 := by
-  fin_cases i <;> simp only [Fin.isValue]
+  fin_cases i <;> dsimp
   · rw [circularPeirceBasis_apply, circularPeirceBasis_apply]
     change cartesianZornLinearEquiv scalarPlus * zornPlus =
       cartesianZornLinearEquiv scalarPlus
@@ -177,7 +177,7 @@ theorem circularPeirceBasis_mul_zornMinus (i : Fin 8) :
       | 6 => 0
       | 7 => 0
       | _ => 0 := by
-  fin_cases i <;> simp only [Fin.isValue]
+  fin_cases i <;> dsimp
   · rw [circularPeirceBasis_apply]
     change cartesianZornLinearEquiv scalarPlus * zornMinus = 0
     rw [cartesianZorn_scalarPlus, zornPlus_mul_zornMinus]

@@ -635,34 +635,59 @@ theorem isCARPair_of_linear_CARWitness
     IsCARPair (E := E) a adag := by
   rcases hLinearCAR with ⟨haa, hdd, had⟩
   refine ⟨?_, ?_, ?_⟩
-  · apply ContinuousLinearMap.ext
+  · unfold anticommutator
+    rw [superBracket_odd_odd]
+    apply ContinuousLinearMap.ext
     intro x
-    have h := LinearMap.congr_fun haa x
-    simpa [anticommutator,
-      RealMajoranaCategory.anticommutator,
-      ContinuousLinearMap.comp_apply] using h
-  · apply ContinuousLinearMap.ext
+    exact LinearMap.congr_fun haa x
+  · unfold anticommutator
+    rw [superBracket_odd_odd]
+    apply ContinuousLinearMap.ext
     intro x
-    have h := LinearMap.congr_fun hdd x
-    simpa [anticommutator,
-      RealMajoranaCategory.anticommutator,
-      ContinuousLinearMap.comp_apply] using h
-  · apply ContinuousLinearMap.ext
+    exact LinearMap.congr_fun hdd x
+  · unfold anticommutator
+    rw [superBracket_odd_odd]
+    apply ContinuousLinearMap.ext
     intro x
-    have h := LinearMap.congr_fun had x
-    simpa [anticommutator,
-      RealMajoranaCategory.anticommutator,
-      ContinuousLinearMap.comp_apply] using h
+    exact LinearMap.congr_fun had x
 
 /-- Continuous doubled-space CAR annihilation operator from the concrete `Cl(1,1)` null mode `u_-`. -/
 noncomputable def cliffordConcreteAnnihilation : FockEnd E :=
   InfoGeometry.Krein.cl11RepLin (E := E)
-    (RealMajoranaCategory.cl11_uMinus (E := E))
+    RealMajoranaCategory.cl11_uMinus
 
 /-- Continuous doubled-space CAR creation operator from the concrete `Cl(1,1)` null mode `u_+`. -/
 noncomputable def cliffordConcreteCreation : FockEnd E :=
   InfoGeometry.Krein.cl11RepLin (E := E)
-    (RealMajoranaCategory.cl11_uPlus (E := E))
+    RealMajoranaCategory.cl11_uPlus
+
+@[simp] lemma cliffordConcreteAnnihilation_apply_to_doubled (x y : E) :
+    cliffordConcreteAnnihilation (E := E) (InfoGeometry.Krein.to_doubled x y)
+      = InfoGeometry.Krein.to_doubled (0 : E) x := by
+  change InfoGeometry.Krein.cl11RepLin (E := E) RealMajoranaCategory.cl11_uMinus (InfoGeometry.Krein.to_doubled x y) = _
+  rw [RealMajoranaCategory.cl11_uMinus]
+  rw [InfoGeometry.Krein.cl11RepLin_apply_to_doubled]
+  have h1 : ((1 / 2 : ℝ) - (1 / 2 : ℝ)) • y = (0 : E) := by
+    have : ((1 / 2 : ℝ) - (1 / 2 : ℝ)) = 0 := sub_self _
+    rw [this, zero_smul]
+  have h2 : ((1 / 2 : ℝ) + (1 / 2 : ℝ)) • x = x := by
+    have : ((1 / 2 : ℝ) + (1 / 2 : ℝ)) = 1 := by norm_num
+    rw [this, one_smul]
+  rw [h1, h2]
+
+@[simp] lemma cliffordConcreteCreation_apply_to_doubled (x y : E) :
+    cliffordConcreteCreation (E := E) (InfoGeometry.Krein.to_doubled x y)
+      = InfoGeometry.Krein.to_doubled y (0 : E) := by
+  change InfoGeometry.Krein.cl11RepLin (E := E) RealMajoranaCategory.cl11_uPlus (InfoGeometry.Krein.to_doubled x y) = _
+  rw [RealMajoranaCategory.cl11_uPlus]
+  rw [InfoGeometry.Krein.cl11RepLin_apply_to_doubled]
+  have h1 : ((1 / 2 : ℝ) - (-(1 / 2 : ℝ))) • y = y := by
+    have : ((1 / 2 : ℝ) - (-(1 / 2 : ℝ))) = 1 := by norm_num
+    rw [this, one_smul]
+  have h2 : ((1 / 2 : ℝ) + (-(1 / 2 : ℝ))) • x = (0 : E) := by
+    have : ((1 / 2 : ℝ) + (-(1 / 2 : ℝ))) = 0 := by norm_num
+    rw [this, zero_smul]
+  rw [h1, h2]
 
 @[simp] theorem cliffordConcreteAnnihilation_toLinearMap :
     (cliffordConcreteAnnihilation (E := E)).toLinearMap
@@ -674,31 +699,20 @@ noncomputable def cliffordConcreteCreation : FockEnd E :=
   intro w
   have hw : InfoGeometry.Krein.to_doubled (WithLp.fst w) (WithLp.snd w) = w := by
     apply InfoGeometry.Krein.DoubledSpace.ext <;> simp [InfoGeometry.Krein.to_doubled]
-  have hhalf (z : E) : ((((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) : ℝ) • z) = z := by
-    have hscalar : (((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) : ℝ) = 1 := by norm_num
-    simp [hscalar]
   rw [← hw]
-  calc
-    (cliffordConcreteAnnihilation (E := E)).toLinearMap
-        (InfoGeometry.Krein.to_doubled (WithLp.fst w) (WithLp.snd w))
-        = InfoGeometry.Krein.to_doubled (0 : E) ((((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) : ℝ) • (WithLp.fst w)) := by
-            simpa [cliffordConcreteAnnihilation,
-              RealMajoranaCategory.cl11_uMinus,
-              sub_eq_add_neg, add_assoc, add_left_comm, add_comm] using
-                (InfoGeometry.Krein.cl11RepLin_apply_to_doubled
-                  (E := E) ((1 / 2 : ℝ)) ((1 / 2 : ℝ)) (WithLp.fst w) (WithLp.snd w))
-    _ = InfoGeometry.Krein.to_doubled (0 : E) (WithLp.fst w) := by
-          simp [hhalf]
-    _ = (RealMajoranaCategory.ladderOfRealization
+  have hL : (cliffordConcreteAnnihilation (E := E)).toLinearMap (InfoGeometry.Krein.to_doubled (WithLp.fst w) (WithLp.snd w))
+      = InfoGeometry.Krein.to_doubled (0 : E) (WithLp.fst w) := by
+    exact cliffordConcreteAnnihilation_apply_to_doubled (WithLp.fst w) (WithLp.snd w)
+  have hR : (RealMajoranaCategory.ladderOfRealization
           (RealMajoranaCategory.cl11CanonicalPolarizedMajorana (E := E))
           (RealMajoranaCategory.cl11SplitCliffordDatum E)
           (RealMajoranaCategory.cl11_concrete_ladder_realization (E := E))).annihil
-            (InfoGeometry.Krein.to_doubled (WithLp.fst w) (WithLp.snd w)) := by
-          symm
-          simpa [RealMajoranaCategory.ladderOfRealization,
-            RealMajoranaCategory.SplitCliffordDatum.majoranaField]
-            using RealMajoranaCategory.cl11_majoranaField_uMinus_apply_to_doubled
-              (E := E) (x := WithLp.fst w) (y := WithLp.snd w)
+            (InfoGeometry.Krein.to_doubled (WithLp.fst w) (WithLp.snd w))
+      = InfoGeometry.Krein.to_doubled (0 : E) (WithLp.fst w) := by
+    change RealMajoranaCategory.SplitCliffordDatum.majoranaField (RealMajoranaCategory.cl11SplitCliffordDatum E)
+      RealMajoranaCategory.cl11_uMinus (InfoGeometry.Krein.to_doubled (WithLp.fst w) (WithLp.snd w)) = _
+    exact RealMajoranaCategory.cl11_majoranaField_uMinus_apply_to_doubled (WithLp.fst w) (WithLp.snd w)
+  exact hL.trans hR.symm
 
 @[simp] theorem cliffordConcreteCreation_toLinearMap :
     (cliffordConcreteCreation (E := E)).toLinearMap
@@ -710,65 +724,20 @@ noncomputable def cliffordConcreteCreation : FockEnd E :=
   intro w
   have hw : InfoGeometry.Krein.to_doubled (WithLp.fst w) (WithLp.snd w) = w := by
     apply InfoGeometry.Krein.DoubledSpace.ext <;> simp [InfoGeometry.Krein.to_doubled]
-  have hhalf (z : E) : ((((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) : ℝ) • z) = z := by
-    have hscalar : (((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) : ℝ) = 1 := by norm_num
-    simp [hscalar]
   rw [← hw]
-  calc
-    (cliffordConcreteCreation (E := E)).toLinearMap
-        (InfoGeometry.Krein.to_doubled (WithLp.fst w) (WithLp.snd w))
-        = InfoGeometry.Krein.to_doubled ((((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) : ℝ) • (WithLp.snd w)) (0 : E) := by
-            simpa [cliffordConcreteCreation,
-              RealMajoranaCategory.cl11_uPlus,
-              sub_eq_add_neg, add_assoc, add_left_comm, add_comm] using
-                (InfoGeometry.Krein.cl11RepLin_apply_to_doubled
-                  (E := E) ((1 / 2 : ℝ)) (-(1 / 2 : ℝ)) (WithLp.fst w) (WithLp.snd w))
-    _ = InfoGeometry.Krein.to_doubled (WithLp.snd w) (0 : E) := by
-          simp [hhalf]
-    _ = (RealMajoranaCategory.ladderOfRealization
+  have hL : (cliffordConcreteCreation (E := E)).toLinearMap (InfoGeometry.Krein.to_doubled (WithLp.fst w) (WithLp.snd w))
+      = InfoGeometry.Krein.to_doubled (WithLp.snd w) (0 : E) := by
+    exact cliffordConcreteCreation_apply_to_doubled (WithLp.fst w) (WithLp.snd w)
+  have hR : (RealMajoranaCategory.ladderOfRealization
           (RealMajoranaCategory.cl11CanonicalPolarizedMajorana (E := E))
           (RealMajoranaCategory.cl11SplitCliffordDatum E)
           (RealMajoranaCategory.cl11_concrete_ladder_realization (E := E))).create
-            (InfoGeometry.Krein.to_doubled (WithLp.fst w) (WithLp.snd w)) := by
-          symm
-          simpa [RealMajoranaCategory.ladderOfRealization,
-            RealMajoranaCategory.SplitCliffordDatum.majoranaField]
-            using RealMajoranaCategory.cl11_majoranaField_uPlus_apply_to_doubled
-              (E := E) (x := WithLp.fst w) (y := WithLp.snd w)
-
-@[simp] lemma cliffordConcreteAnnihilation_apply_to_doubled (x y : E) :
-    cliffordConcreteAnnihilation (E := E) (InfoGeometry.Krein.to_doubled x y)
-      = InfoGeometry.Krein.to_doubled (0 : E) x := by
-  have hhalf (z : E) : ((((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) : ℝ) • z) = z := by
-    have hscalar : (((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) : ℝ) = 1 := by norm_num
-    simp [hscalar]
-  calc
-    cliffordConcreteAnnihilation (E := E) (InfoGeometry.Krein.to_doubled x y)
-        = InfoGeometry.Krein.to_doubled (0 : E) ((((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) : ℝ) • x) := by
-            simpa [cliffordConcreteAnnihilation,
-              RealMajoranaCategory.cl11_uMinus,
-              sub_eq_add_neg, add_assoc, add_left_comm, add_comm] using
-                (InfoGeometry.Krein.cl11RepLin_apply_to_doubled
-                  (E := E) ((1 / 2 : ℝ)) ((1 / 2 : ℝ)) x y)
-    _ = InfoGeometry.Krein.to_doubled (0 : E) x := by
-          simp [hhalf]
-
-@[simp] lemma cliffordConcreteCreation_apply_to_doubled (x y : E) :
-    cliffordConcreteCreation (E := E) (InfoGeometry.Krein.to_doubled x y)
-      = InfoGeometry.Krein.to_doubled y (0 : E) := by
-  have hhalf (z : E) : ((((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) : ℝ) • z) = z := by
-    have hscalar : (((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) : ℝ) = 1 := by norm_num
-    simp [hscalar]
-  calc
-    cliffordConcreteCreation (E := E) (InfoGeometry.Krein.to_doubled x y)
-        = InfoGeometry.Krein.to_doubled ((((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) : ℝ) • y) (0 : E) := by
-            simpa [cliffordConcreteCreation,
-              RealMajoranaCategory.cl11_uPlus,
-              sub_eq_add_neg, add_assoc, add_left_comm, add_comm] using
-                (InfoGeometry.Krein.cl11RepLin_apply_to_doubled
-                  (E := E) ((1 / 2 : ℝ)) (-(1 / 2 : ℝ)) x y)
-    _ = InfoGeometry.Krein.to_doubled y (0 : E) := by
-          simp [hhalf]
+            (InfoGeometry.Krein.to_doubled (WithLp.fst w) (WithLp.snd w))
+      = InfoGeometry.Krein.to_doubled (WithLp.snd w) (0 : E) := by
+    change RealMajoranaCategory.SplitCliffordDatum.majoranaField (RealMajoranaCategory.cl11SplitCliffordDatum E)
+      RealMajoranaCategory.cl11_uPlus (InfoGeometry.Krein.to_doubled (WithLp.fst w) (WithLp.snd w)) = _
+    exact RealMajoranaCategory.cl11_majoranaField_uPlus_apply_to_doubled (WithLp.fst w) (WithLp.snd w)
+  exact hL.trans hR.symm
 
 /--
 The concrete split-`Cl(1,1)` null-mode ladder pair is a genuine CAR pair in the
@@ -779,7 +748,8 @@ theorem cliffordConcreteIsCARPair :
       (cliffordConcreteAnnihilation (E := E))
       (cliffordConcreteCreation (E := E)) := by
   apply isCARPair_of_linear_CARWitness (E := E)
-  simpa using (RealMajoranaCategory.car_realization_of_clifford_concrete (E := E))
+  rw [cliffordConcreteAnnihilation_toLinearMap, cliffordConcreteCreation_toLinearMap]
+  exact RealMajoranaCategory.car_realization_of_clifford_concrete (E := E)
 
 end CliffordCAR
 

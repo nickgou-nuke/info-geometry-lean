@@ -109,7 +109,7 @@ def prefixConeIsLimit : IsLimit prefixCone := by
         apply Fin.ext
         rfl
       rw [hcast] at hi
-      simpa [prefixLimitLift, prefixRestriction] using hi
+      exact hi
   · intro s m hm
     apply TopCat.hom_ext
     apply ContinuousMap.ext
@@ -118,15 +118,13 @@ def prefixConeIsLimit : IsLimit prefixCone := by
     have h := congrArg (fun q => (ConcreteCategory.hom q) x)
       (hm (Opposite.op (n + 1)))
     have hlast := congrFun h (Fin.last n)
-    change (TopCat.Hom.hom m) x n =
-      (TopCat.Hom.hom (prefixLimitLift s)) x n
-    simpa [prefixLimitLift] using hlast
+    exact hlast
 
 /-! The categorical limit object is canonically isomorphic to the existing
 Cantor boundary carrier. -/
 
 noncomputable def prefixBoundaryLimitIso :
-    prefixCone.pt ≅ limit prefixDiagram :=
+    TopCat.of CantorBoundary ≅ limit prefixDiagram :=
   prefixConeIsLimit.conePointUniqueUpToIso (limit.isLimit prefixDiagram)
 
 noncomputable instance prefixLimit_compactSpace :
@@ -138,7 +136,7 @@ noncomputable instance prefixLimit_compactSpace :
 
 noncomputable instance prefixLimit_t2Space :
     T2Space (↑(limit prefixDiagram)) := by
-  letI : T2Space (↑prefixCone.pt) := by
+  have : T2Space (↑(TopCat.of CantorBoundary)) := by
     change T2Space CantorBoundary
     infer_instance
   exact (TopCat.homeoOfIso prefixBoundaryLimitIso).t2Space
@@ -161,7 +159,7 @@ theorem prefixBoundaryLimitIso_hom_apply (n : ℕ)
 /-! Branch self-similarity transported to the categorical limit object. -/
 
 noncomputable def prependBitHom (b : Bool) :
-    prefixCone.pt ⟶ prefixCone.pt :=
+    TopCat.of CantorBoundary ⟶ TopCat.of CantorBoundary :=
   { hom' :=
       { toFun := prependBit b
         continuous_toFun := continuous_prependBit b } }
@@ -186,7 +184,12 @@ theorem prefixLimitPrependBit_isClosedEmbedding (b : Bool) :
   let H := TopCat.homeoOfIso prefixBoundaryLimitIso
   have hcomp := H.isClosedEmbedding.comp (prependBit_isClosedEmbedding b)
   have hcomp' := hcomp.comp H.symm.isClosedEmbedding
-  simpa [prefixLimitPrependBit, prependBitHom, H, TopCat.homeoOfIso] using hcomp'
+  have heq : (ConcreteCategory.hom (prefixLimitPrependBit b)) =
+      H ∘ prependBit b ∘ H.symm := by
+    ext x
+    rfl
+  rw [heq]
+  exact hcomp'
 
 theorem prefixLimitPrependBit_image_closed (b : Bool) :
     IsClosed (Set.range (ConcreteCategory.hom (prefixLimitPrependBit b))) :=
@@ -220,16 +223,15 @@ theorem prefixLimitPrependBit_range (b : Bool) :
       Set.range (prependBit b)
     refine ⟨H.symm x, ?_⟩
     have hx := hconj x
-    rw [hx]
-    simp [H, TopCat.homeoOfIso]
+    rw [hx, H.symm_apply_apply]
   · intro hy
     rcases hy with ⟨z, hz⟩
     refine ⟨H z, ?_⟩
-    have hz' := hconj (H z)
-    simp only [H.symm_apply_apply] at hz'
-    rw [hz']
-    rw [hz]
-    simp [H, TopCat.homeoOfIso]
+    have hz' : (ConcreteCategory.hom (prefixLimitPrependBit b)) (H z) =
+        H (prependBit b z) := by
+      change H (prependBit b (H.symm (H z))) = _
+      rw [H.symm_apply_apply]
+    rw [hz', hz, H.apply_symm_apply]
 
 theorem prefixLimitBranchSet_compl (b : Bool) :
     (prefixLimitBranchSet b)ᶜ = prefixLimitBranchSet (!b) := by
@@ -314,10 +316,14 @@ theorem prefixLimit_projection_eq_boundaryPrefix (n : ℕ)
     (x : ↑(limit prefixDiagram)) :
     (limit.π prefixDiagram (Opposite.op n)).hom x =
       boundaryPrefix n ((TopCat.homeoOfIso prefixBoundaryLimitIso).symm x) := by
+  let H := TopCat.homeoOfIso prefixBoundaryLimitIso
+  have heq : prefixBoundaryLimitIso.hom.hom (H.symm x) = x := by
+    change H (H.symm x) = x
+    exact H.apply_symm_apply x
   funext i
-  have h := prefixBoundaryLimitIso_hom_apply n
-    ((TopCat.homeoOfIso prefixBoundaryLimitIso).symm x) i
-  simpa using h
+  have h := prefixBoundaryLimitIso_hom_apply n (H.symm x) i
+  rw [heq] at h
+  exact h
 
 def extendWord (n : ℕ) (w : BitWord n) : CantorBoundary :=
   fun k => if hk : k < n then w ⟨k, hk⟩ else false
@@ -335,23 +341,24 @@ theorem prefixLimit_projection_surjective (n : ℕ) :
   let H := TopCat.homeoOfIso prefixBoundaryLimitIso
   refine ⟨H (extendWord n w), ?_⟩
   rw [prefixLimit_projection_eq_boundaryPrefix]
-  simpa [H] using boundaryPrefix_extendWord n w
+  rw [H.symm_apply_apply]
+  exact boundaryPrefix_extendWord n w
 
 theorem prefixLimit_projection_isOpenMap (n : ℕ) :
     IsOpenMap
       ((limit.π prefixDiagram (Opposite.op n)).hom :
         (↑(limit prefixDiagram) → (Fin n → Bool))) := by
-  letI : DiscreteTopology (↑(prefixDiagram.obj (Opposite.op n))) := by
+  have : DiscreteTopology (↑(prefixDiagram.obj (Opposite.op n))) := by
     change DiscreteTopology (Fin n → Bool)
     infer_instance
-  intro U hU
+  intro U _
   exact isOpen_discrete _
 
 theorem prefixLimit_projection_isClosedMap (n : ℕ) :
     IsClosedMap
       ((limit.π prefixDiagram (Opposite.op n)).hom :
         (↑(limit prefixDiagram) → (Fin n → Bool))) := by
-  letI : T2Space (↑(prefixDiagram.obj (Opposite.op n))) := by
+  have : T2Space (↑(prefixDiagram.obj (Opposite.op n))) := by
     change T2Space (Fin n → Bool)
     infer_instance
   exact (limit.π prefixDiagram (Opposite.op n)).hom.continuous.isClosedMap
@@ -395,6 +402,7 @@ theorem prefixLimitCylinderSet_eq_projection_fiber (n : ℕ) (w : BitWord n) :
   change boundaryPrefix n ((TopCat.homeoOfIso prefixBoundaryLimitIso).symm x) = w ↔
     (limit.π prefixDiagram (Opposite.op n)).hom x = w
   rw [prefixLimit_projection_eq_boundaryPrefix]
+  rfl
 
 theorem prefixLimitCylinderSet_disjoint {n : ℕ} {w v : BitWord n}
     (h : w ≠ v) :
@@ -407,9 +415,7 @@ theorem prefixLimitCylinderSet_disjoint {n : ℕ} {w v : BitWord n}
 theorem prefixLimitCylinderSet_mem_partition (n : ℕ)
     (x : ↑(limit prefixDiagram)) :
     ∃ w : BitWord n, x ∈ prefixLimitCylinderSet n w := by
-  refine ⟨(limit.π prefixDiagram (Opposite.op n)).hom x, ?_⟩
-  rw [prefixLimitCylinderSet_eq_projection_fiber]
-  rfl
+  refine ⟨boundaryPrefix n ((TopCat.homeoOfIso prefixBoundaryLimitIso).symm x), rfl⟩
 
 theorem prefixLimitCylinderSet_iUnion_eq_univ (n : ℕ) :
     (⋃ w : BitWord n, prefixLimitCylinderSet n w) = Set.univ := by
@@ -461,6 +467,7 @@ theorem prefixLimitCylinderSet_restriction_preimage
   change prefixRestriction f ((limit.π prefixDiagram m).hom x) = w ↔
     (limit.π prefixDiagram n).hom x = w
   rw [prefixLimit_projection_map f x]
+  rfl
 
 theorem prefixLimitBranchSet_eq_projection_fiber (b : Bool) :
     prefixLimitBranchSet b =
@@ -493,18 +500,16 @@ theorem prefixLimitPrependBit_projection_apply (b : Bool) (n : ℕ)
     (limit.π prefixDiagram (Opposite.op (n + 1))).hom
         ((ConcreteCategory.hom (prefixLimitPrependBit b)) x) =
       prependWord n b ((limit.π prefixDiagram (Opposite.op n)).hom x) := by
-  rw [prefixLimit_projection_eq_boundaryPrefix]
-  have hconj := prefixLimitPrependBit_projection b (n + 1)
-  have h := congrArg (fun q => (ConcreteCategory.hom q) x) hconj
+  let H := TopCat.homeoOfIso prefixBoundaryLimitIso
   have hpre :
-      (TopCat.homeoOfIso prefixBoundaryLimitIso).symm
-          ((ConcreteCategory.hom (prefixLimitPrependBit b)) x) =
-        prependBit b ((TopCat.homeoOfIso prefixBoundaryLimitIso).symm x) := by
-    simp [prefixLimitPrependBit, prependBitHom, TopCat.homeoOfIso]
-    rfl
+      H.symm ((ConcreteCategory.hom (prefixLimitPrependBit b)) x) =
+        prependBit b (H.symm x) := by
+    change H.symm (H (prependBit b (H.symm x))) = _
+    rw [H.symm_apply_apply]
+  rw [prefixLimit_projection_eq_boundaryPrefix (n + 1)]
   rw [hpre]
   rw [boundaryPrefix_succ_prependBit]
-  rw [prefixLimit_projection_eq_boundaryPrefix]
+  rw [← prefixLimit_projection_eq_boundaryPrefix n]
 
 theorem prependWord_injective (n : ℕ) (b : Bool) :
     Function.Injective (prependWord n b) := by
@@ -530,10 +535,9 @@ theorem prefixLimitPrependBit_cylinder_preimage (b : Bool) (n : ℕ)
   rw [prefixLimitPrependBit_projection_apply]
   constructor
   · intro h
-    apply (prependWord_injective n b)
-    simpa using h
+    exact prependWord_injective n b h
   · intro h
-    simpa using congrArg (prependWord n b) h
+    rw [h]
 
 theorem prefixLimitPrependBit_cylinder_image (b : Bool) (n : ℕ)
     (w : BitWord n) :
@@ -549,17 +553,21 @@ theorem prefixLimitPrependBit_cylinder_image (b : Bool) (n : ℕ)
         ((ConcreteCategory.hom (prefixLimitPrependBit b)) x) =
       prependWord n b w
     rw [prefixLimitPrependBit_projection_apply]
-    simp [hx]
+    rw [hx]
   · intro hy
     let H := TopCat.homeoOfIso prefixBoundaryLimitIso
-    have hy' : H.symm y ∈ cylinderSet (n + 1) (prependWord n b w) := by
-      exact hy
+    have hy' : H.symm y ∈ cylinderSet (n + 1) (prependWord n b w) := hy
     rw [← cylinderSet_prependBit_image] at hy'
     obtain ⟨x, hx, hxy⟩ := hy'
     refine ⟨H x, ?_, ?_⟩
     · change H.symm (H x) ∈ cylinderSet n w
-      simpa using hx
+      rw [H.symm_apply_apply]
+      exact hx
     · apply H.symm.injective
-      simpa [prefixLimitPrependBit, prependBitHom, H, TopCat.homeoOfIso] using hxy
+      have hconj : (ConcreteCategory.hom (prefixLimitPrependBit b)) (H x) =
+          H (prependBit b x) := by
+        change H (prependBit b (H.symm (H x))) = _
+        rw [H.symm_apply_apply]
+      rw [hconj, H.symm_apply_apply, hxy]
 
 end InfoGeometry.Canonical.UHFInductiveColimitBoundaryInverseLimit

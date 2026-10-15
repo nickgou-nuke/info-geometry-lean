@@ -124,7 +124,7 @@ theorem diracKahler_hodge_conjugate (d : EndCZ) :
 theorem diracKahler_hodge_conjugate_apply (d : EndCZ) (x : CZ) :
     e0 • (diracKahler d (e0 • x)) = diracKahler d x := by
   have h := LinearMap.congr_fun (diracKahler_hodge_conjugate d) x
-  simpa only [Module.End.mul_apply] using h
+  exact h
 
 /-! ### 4. Chirality Anticommutation and the Hodge Laplacian -/
 

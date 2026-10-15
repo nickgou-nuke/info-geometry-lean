@@ -1,3 +1,10 @@
+<!-- repository-context-rule -->
+> **Repository grounding:** For repository work, the checked-out codebase is
+> the context. Search existing implementation and trace its real definitions,
+> imports, instances, theorems, and uses before declaring a structure missing
+> or incorrect. A finding in one file is not a repo-wide finding. See
+> [`docs/REPO_DEEP_SEARCH_PROTOCOL.md`](docs/REPO_DEEP_SEARCH_PROTOCOL.md).
+
 # Discovery Export Tools
 
 Extract theorem inventories from Lean 4 and create standalone paper repos.

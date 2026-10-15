@@ -146,7 +146,8 @@ theorem observedSymbolicLatentPathFamilyTopCatColimitImageReadout_unique
   intro x
   apply Subtype.ext
   simpa [TopCat.comp_app, TopCat.ofHom,
-    observedSymbolicLatentPathFamilyTopCatColimitImageReadout] using
+    observedSymbolicLatentPathFamilyTopCatColimitImageReadout,
+    observedSymbolicLatentPathFamilyImageInclusionTopCatHom] using
     congrArg (fun m => m x) (hstage'.trans hfactor'.symm)
 
 end InfoGeometry.Topology.SymbolicLatentPathFamilyTopCatColimitImage

@@ -62,10 +62,10 @@ theorem factorization_injOn_smooth (S : Finset ℕ) (B : ℕ) :
     Set.InjOn (fun n (p : ℕ) (_ : p ∈ S) => n.factorization p)
       ((Finset.Icc 1 B).filter (fun n => ∀ p, p.Prime → p ∣ n → p ∈ S) : Set ℕ) := by
   intro a ha b hb heq
-  simp only [Finset.coe_filter, Set.mem_setOf_eq, Finset.mem_Icc] at ha hb
+  simp only [Finset.coe_filter, Set.mem_ofPred_eq, Finset.mem_Icc] at ha hb
   have ha0 : a ≠ 0 := by omega
   have hb0 : b ≠ 0 := by omega
-  rw [← Nat.factorization_prod_pow_eq_self ha0, ← Nat.factorization_prod_pow_eq_self hb0]
+  rw [← Nat.prod_factorization_pow_eq_self ha0, ← Nat.prod_factorization_pow_eq_self hb0]
   congr 1; ext p
   by_cases hp : p.Prime
   · by_cases hpa : p ∣ a
@@ -117,12 +117,11 @@ theorem N_S_le_log2_pow_card (S : Finset ℕ) (B : ℕ) (hS : ∀ p ∈ S, 2 ≤
   calc N_S S B
       ≤ ∏ p ∈ S, (Nat.log p B + 1) := N_S_le_prod_log S B hS
     _ ≤ ∏ _p ∈ S, (Nat.log 2 B + 1) := by
-        apply Finset.prod_le_prod
-        · intro p _; omega
-        · intro p hp
-          have : Nat.log p B ≤ Nat.log 2 B :=
-            Nat.log_anti_left (by omega : (1 : ℕ) < 2) (hS p hp)
-          omega
+        refine Finset.prod_le_prod ?_
+        intro p hp
+        have : Nat.log p B ≤ Nat.log 2 B :=
+          Nat.log_anti_left (by omega : (1 : ℕ) < 2) (hS p hp)
+        omega
     _ = (Nat.log 2 B + 1) ^ S.card := Finset.prod_const _
 
 /-- Paper package: denominator growth finite `S`, product and power bounds.

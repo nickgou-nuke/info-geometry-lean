@@ -37,7 +37,7 @@ theorem splitOctonionBoost_add (s t : ℝ) :
   rw [splitOctonionBoost, splitOctonionBoost, splitOctonionBoost,
     Real.cosh_add, Real.sinh_add]
   simp only [zMul_add_left, zMul_add_right, zMul_smul_left, zMul_smul_right,
-    zMul_one, one_zMul, l_sq]
+    KingdonCanonicalBridge.zMul_one, KingdonCanonicalBridge.one_zMul, l_sq]
   module
 
 /- The boost is diagonal in the scalar chiral/Witt basis. -/
@@ -118,7 +118,7 @@ theorem splitOctonionBoost_chiral_eigenvalue
       (Real.cosh η + ε * Real.sinh η) •
         chiralNull ⟨0, by decide⟩ ε := by
   rw [splitOctonionBoost, zMul_add_left, zMul_smul_left,
-    zMul_smul_left, one_zMul, chiralNull_left_ell_eigenvector _ _ hε]
+    zMul_smul_left, KingdonCanonicalBridge.one_zMul, chiralNull_left_ell_eigenvector _ _ hε]
   module
 
 theorem splitOctonionBoost_neg_mul (η : ℝ) :

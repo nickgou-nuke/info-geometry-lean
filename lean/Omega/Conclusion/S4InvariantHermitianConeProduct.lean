@@ -1,4 +1,4 @@
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import Mathlib.Tactic
 
 namespace Omega.Conclusion
@@ -11,7 +11,14 @@ inductive conclusion_s4_invariant_hermitian_cone_product_block
   | conclusion_s4_invariant_hermitian_cone_product_block_four
   | conclusion_s4_invariant_hermitian_cone_product_block_three
   | conclusion_s4_invariant_hermitian_cone_product_block_nine
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype conclusion_s4_invariant_hermitian_cone_product_block where
+  elems := {.conclusion_s4_invariant_hermitian_cone_product_block_five,
+    .conclusion_s4_invariant_hermitian_cone_product_block_four,
+    .conclusion_s4_invariant_hermitian_cone_product_block_three,
+    .conclusion_s4_invariant_hermitian_cone_product_block_nine}
+  complete := by rintro (_|_|_|_) <;> simp
 
 namespace conclusion_s4_invariant_hermitian_cone_product_block
 

@@ -100,7 +100,11 @@ theorem tensor_color_objects_cube_zero
   exact InfoGeometry.Categorical.LogEndModuleNilpotentClosure.tensorObj_cube_zero_of_sq_zero
     (colorObject F a).toLogEndModule
     (colorObject F b).toLogEndModule
-    (by simpa [pow_two, Module.End.mul_eq_comp] using F.nilpotent_sq a)
-    (by simpa [pow_two, Module.End.mul_eq_comp] using F.nilpotent_sq b)
+    (by
+      rw [pow_two, Module.End.mul_eq_comp]
+      exact F.nilpotent_sq a)
+    (by
+      rw [pow_two, Module.End.mul_eq_comp]
+      exact F.nilpotent_sq b)
 
 end InfoGeometry.Categorical.HadjiivanovLogNilpotentBraidAdapter

@@ -135,8 +135,7 @@ theorem rationalCircularFrameMatrix_inv :
     ext i j
     fin_cases i <;> fin_cases j <;>
       norm_num [rationalCircularFrameMatrix, rationalCircularFrame,
-        rationalFrameVector, rationalAxis, rationalCoordinates, zeroVec3, zeroVZ] <;>
-      simp
+        rationalFrameVector, rationalAxis, rationalCoordinates, zeroVec3, zeroVZ]
   rw [hframe]
   apply Matrix.inv_eq_right_inv
   ext i j
@@ -205,10 +204,14 @@ theorem nativeMatrixExponential_add (i : Fin 14) (s t : ℝ) :
   exact (Commute.refl (nativeParameterMatrix i)).smul_left s |>.smul_right t
 
 theorem hasDerivAt_nativeMatrixExponential (i : Fin 14) (t : ℝ) :
-    HasDerivAt (nativeMatrixExponential i)
-      (nativeMatrixExponential i t * nativeParameterMatrix i) t := by
-  simpa [nativeMatrixExponential] using
-    (hasDerivAt_exp_smul_const (x := nativeParameterMatrix i) (t := t))
+    @HasDerivAt ℝ _ (Matrix (Fin 8) (Fin 8) ℝ)
+      Matrix.frobeniusNormedRing.toAddCommGroup
+      (NormedAlgebra.toNormedSpace (Matrix (Fin 8) (Fin 8) ℝ)).toModule
+      PseudoMetricSpace.toUniformSpace.toTopologicalSpace
+      _
+      (nativeMatrixExponential i)
+      (nativeMatrixExponential i t * nativeParameterMatrix i) t :=
+  hasDerivAt_exp_smul_const (x := nativeParameterMatrix i) (t := t)
 
 theorem nativeDerivationMatrix_map_lie (D E : Der) :
     nativeDerivationMatrix ⁅D, E⁆ =
@@ -271,7 +274,7 @@ theorem rootBracket_eq_sum_rootDerivation (i j : Fin 14) :
   have hpk : Pi.single k (1 : ℝ) = parameterUnit k := by
     ext l
     by_cases h : l = k <;>
-      simp [parameterUnit, Pi.single_apply, h]
+      simp [parameterUnit, h]
   rw [hpk]
 
 abbrev structureConstant (i j k : Fin 14) : ℝ :=

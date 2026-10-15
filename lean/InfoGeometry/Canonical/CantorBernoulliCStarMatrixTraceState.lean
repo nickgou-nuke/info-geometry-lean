@@ -1,4 +1,6 @@
 import Mathlib.Analysis.CStarAlgebra.CStarMatrix
+import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Instances
+import Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.Rpow.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CuntzMatrixFiniteTraceFaithfulness
 import InfoGeometry.Canonical.CuntzMatrixTraceTower
@@ -28,6 +30,14 @@ namespace InfoGeometry.Canonical.CantorBernoulliCStarMatrixTraceState
 
 abbrev CStarMatrixStage (n : ℕ) :=
   CStarMatrix (Fin (2 ^ n)) (Fin (2 ^ n)) ℂ
+
+local instance cstarMatrixStageRealCFC (n : ℕ) :
+    NonUnitalContinuousFunctionalCalculus ℝ (CStarMatrixStage n) IsSelfAdjoint :=
+  IsSelfAdjoint.instNonUnitalContinuousFunctionalCalculus
+
+local instance cstarMatrixStageNonnegSpectrum (n : ℕ) :
+    NonnegSpectrumClass ℝ (CStarMatrixStage n) :=
+  CStarAlgebra.instNonnegSpectrumClass
 
 private def matrixEquiv (n : ℕ) :
     MatrixStage n ≃⋆ₐ[ℂ] CStarMatrixStage n :=

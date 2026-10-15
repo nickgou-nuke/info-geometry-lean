@@ -42,6 +42,11 @@ abbrev Mat8 := InfoGeometry.Algebra.FiniteSpin.Mat8R
 abbrev Mat10 := InfoGeometry.Lie.SplitOctonionDerivationSO55Bridge.Mat10
 abbrev Mat10Sum := Matrix (Fin 8 ⊕ Fin 2) (Fin 8 ⊕ Fin 2) ℝ
 
+local instance : LieRing Mat10 := LieRing.ofAssociativeRing
+local instance : LieAlgebra ℝ Mat10 := LieAlgebra.ofAssociativeAlgebra
+local instance : LieRing (CliffordAlgebra Q55) := LieRing.ofAssociativeRing
+local instance : LieAlgebra ℝ (CliffordAlgebra Q55) := LieAlgebra.ofAssociativeAlgebra
+
 /-- The exact (5,5) Levi metric transported to Fin 10 via the canonical coordinate bijection. -/
 def eta55FromSum : Mat10 :=
   fun i j => eta55Levi (fin10Equiv i) (fin10Equiv j)

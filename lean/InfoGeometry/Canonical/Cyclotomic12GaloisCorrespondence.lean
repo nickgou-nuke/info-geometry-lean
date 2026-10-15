@@ -100,8 +100,10 @@ abbrev Cyclotomic12Group := Gal(Cyclotomic12Field / ℚ)
 
 /-! Mathlib's native cyclotomic extension instance supplies the finite Galois
     hypothesis for the concrete twelfth cyclotomic field. -/
-noncomputable instance cyclotomic12_isGalois : IsGalois ℚ Cyclotomic12Field :=
-  IsCyclotomicExtension.isGalois {12} ℚ Cyclotomic12Field
+noncomputable instance cyclotomic12_isGalois : IsGalois ℚ Cyclotomic12Field := by
+  letI : IsCyclotomicExtension {12} ℚ Cyclotomic12Field :=
+    CyclotomicField.isCyclotomicExtension 12 ℚ
+  exact IsCyclotomicExtension.isGalois {12} ℚ Cyclotomic12Field
 
 theorem cyclotomic12_native_isGalois : IsGalois ℚ Cyclotomic12Field :=
   inferInstance

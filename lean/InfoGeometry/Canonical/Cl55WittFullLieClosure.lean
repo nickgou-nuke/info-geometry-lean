@@ -1,6 +1,9 @@
 import InfoGeometry.Canonical.Cl55WittFiveGradeDecomposition
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Cl55WittLieSubalgebra
+import Mathlib.Algebra.Lie.Subalgebra
+import Mathlib.Algebra.Lie.OfAssociative
+
+attribute [local instance 100] LieRing.ofAssociativeRing LieAlgebra.ofAssociativeAlgebra
 
 /-!
 # Full Lie closure of the five-mode Witt grading
@@ -35,7 +38,7 @@ inductive WittLane
   | zero
   | posOne
   | posTwo
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
 
 /-- Integer degree of a lane. -/
 def WittLane.degree : WittLane → ℤ

@@ -20,6 +20,11 @@ open InfoGeometry.Canonical.TwelveFoldArithmeticNative
 
 noncomputable section
 
+local instance : NeZero (12 : ℚ) := ⟨by norm_num⟩
+
+local instance : IsCyclotomicExtension {12} ℚ (CyclotomicField 12 ℚ) := by
+  exact CyclotomicField.isCyclotomicExtension 12 ℚ
+
 theorem primitive_twelfth_root_iff {ζ : ℂ} :
     (Polynomial.cyclotomic 12 ℂ).IsRoot ζ ↔ IsPrimitiveRoot ζ 12 := by
   simpa using (Polynomial.isRoot_cyclotomic_iff (R := ℂ) (n := 12) (μ := ζ))

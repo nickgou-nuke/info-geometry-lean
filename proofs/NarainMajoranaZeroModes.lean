@@ -38,7 +38,10 @@ theorem hamiltonian_charge_conjugation_parity
     - (weylHamiltonian W (fun i => - k i)) * zornChargeConjugation := by
   rw [zornChargeConjugation, one_mul, mul_one]
   have hembed : W.embed (fun i => -k i) = -(W.embed k) := by
-    simpa only [Pi.neg_apply] using W.embed.map_neg k
+    calc
+      W.embed (fun i => -k i) = W.embed (-k) := by
+        congr 1
+      _ = -(W.embed k) := W.embed.map_neg k
   change diracGamma (W.embed k) = -diracGamma (W.embed (fun i => -k i))
   rw [hembed]
   change diracGammaLinear (W.embed k) = -diracGammaLinear (-(W.embed k))

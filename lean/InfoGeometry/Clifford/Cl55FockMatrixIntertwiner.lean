@@ -271,7 +271,7 @@ theorem fockRecursiveCoordinateEndAlgEquiv_apply (a : A) :
         neutralCliffordFockMatrixAlgEquiv a := by
     have h := congrArg (fun f => f a)
       neutralCliffordFockMatrixAlgEquiv_toAlgHom
-    simpa [Function.comp_apply] using h
+    simpa [Function.comp_apply] using h.symm
   rw [hF]
   have hR :
       (LinearMap.toMatrixAlgEquiv (Pi.basisFun ℝ (Fin 32)))

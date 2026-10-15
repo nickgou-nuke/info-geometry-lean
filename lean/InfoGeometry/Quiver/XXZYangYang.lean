@@ -23,6 +23,11 @@ silently asserted here.
 
 noncomputable section
 
+local instance instComplexAddCommGroup : AddCommGroup ℂ :=
+  (DenselyNormedField.toNontriviallyNormedField (α := ℂ)).toDivisionRing.toAddCommGroup
+local instance (priority := 2000) instComplexModule : Module ℂ ℂ :=
+  (inferInstance : NormedAlgebra ℂ ℂ).toNormedSpace.toModule
+
 namespace KoroteevZeitlin.Bethe.XXZYangYang
 
 open Complex BigOperators Finset
@@ -37,7 +42,11 @@ theorem hasDerivAt_logPrimitive {z : ℂ} (hz : z ∈ Complex.slitPlane) :
   have h :=
     ((hasDerivAt_id z).mul (Complex.hasDerivAt_log hz)).sub
       (hasDerivAt_id z)
-  convert h using 1 <;> simp [logPrimitive, Complex.slitPlane_ne_zero hz]
+  convert h using 1
+  · rfl
+  · simp only [id_eq, one_mul]
+    rw [mul_inv_cancel₀ (Complex.slitPlane_ne_zero hz)]
+    ring
 
 /--
 Normalized affine logarithmic primitive.  The factor `q⁻¹` cancels the
@@ -56,11 +65,14 @@ theorem hasDerivAt_normalizedAffineLogPrimitive
       HasDerivAt (fun y : ℂ => logPrimitive (q * y - c))
         (Complex.log (q * x - c) * q) x :=
     by
-      simpa only [Function.comp_apply] using
-        (hasDerivAt_logPrimitive hx).comp x harg
-  have hscaled := hcomp.const_mul q⁻¹
-  simpa [normalizedAffineLogPrimitive, hq, mul_assoc, mul_left_comm,
-    mul_comm] using hscaled
+      convert (hasDerivAt_logPrimitive hx).comp x harg using 1
+      · rfl
+  have hscaled := hcomp.smul_const (q⁻¹)
+  convert hscaled using 1
+  · ext y
+    simp [normalizedAffineLogPrimitive, smul_eq_mul, mul_comm]
+  · simp only [smul_eq_mul]
+    field_simp [hq]
 
 /-- Unnormalized affine primitive with unit slope. -/
 def translatedLogPrimitive (c x : ℂ) : ℂ :=
@@ -72,8 +84,9 @@ theorem hasDerivAt_translatedLogPrimitive
       (Complex.log (x - c)) x := by
   have harg : HasDerivAt (fun y : ℂ => y - c) 1 x :=
     (hasDerivAt_id x).sub_const c
-  simpa [translatedLogPrimitive, Function.comp_def] using
-    (hasDerivAt_logPrimitive hx).comp x harg
+  convert (hasDerivAt_logPrimitive hx).comp x harg using 1
+  · rfl
+  · simp
 
 variable {r : ℕ}
 

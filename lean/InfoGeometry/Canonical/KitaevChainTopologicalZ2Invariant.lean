@@ -50,8 +50,8 @@ theorem parity_involution :
 theorem parity_trace_conservation :
     trace ((p.parity : Matrix (Fin n) (Fin n) ℂ) *
       (p.parity : Matrix (Fin n) (Fin n) ℂ).conjTranspose) = n := by
-  have hp : (p.parity : Matrix (Fin n) (Fin n) ℂ).conjTranspose = p.parity := by
-    simpa only [Matrix.star_eq_conjTranspose] using p.parity.property
+  have hp : (p.parity : Matrix (Fin n) (Fin n) ℂ).conjTranspose = p.parity :=
+    p.parity.property
   rw [hp, p.h_involution, trace_one, Fintype.card_fin]
 
 /-- **Theorem**: Majorana Edge State Parity Intertwining & Trace Conservation:
@@ -73,8 +73,8 @@ theorem majorana_edge_parity_trace
         rw [h_anti_comm]
       _ = - ((m.gamma : Matrix (Fin n) (Fin n) ℂ) *
         ((p.parity : Matrix (Fin n) (Fin n) ℂ) * p.parity)) := by noncomm_ring
-  have hp : (p.parity : Matrix (Fin n) (Fin n) ℂ).conjTranspose = p.parity := by
-    simpa only [Matrix.star_eq_conjTranspose] using p.parity.property
+  have hp : (p.parity : Matrix (Fin n) (Fin n) ℂ).conjTranspose = p.parity :=
+    p.parity.property
   rw [hp, h_step, p.h_involution, mul_one, trace_neg]
 
 end KitaevChain

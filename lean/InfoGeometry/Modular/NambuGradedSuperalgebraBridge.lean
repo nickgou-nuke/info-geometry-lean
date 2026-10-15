@@ -1,5 +1,4 @@
 import Mathlib.Data.Matrix.Basic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Block
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Algebra.Module.LinearMap.Basic
@@ -36,8 +35,8 @@ theorem Gamma_sq : (Gamma : BlockMat) * Gamma = 1 := by
   simp only [mul_one, mul_zero, add_zero, mul_neg, neg_neg, zero_add]
   ext (i | i) (j | j)
   · simp [fromBlocks_apply₁₁, one_apply]
-  · simp [fromBlocks_apply₁₂, zero_apply]
-  · simp [fromBlocks_apply₂₁, zero_apply]
+  · simp [fromBlocks_apply₁₂, Matrix.zero_apply]
+  · simp [fromBlocks_apply₂₁, Matrix.zero_apply]
   · simp [fromBlocks_apply₂₂, one_apply]
 
 /-- The Supertrace of a block matrix: STr(M) = Tr(M₁₁) - Tr(M₂₂). -/
@@ -113,16 +112,16 @@ theorem H_BdG_anticommutes_with_C (h Δ Δ_adj h_adj c : SubMat)
   simp only [zero_mul, add_zero, mul_zero, zero_add]
   rw [fromBlocks_add]
   ext (i | i) (j | j)
-  · simp only [fromBlocks_apply₁₁, zero_apply]
+  · simp only [fromBlocks_apply₁₁, Matrix.zero_apply]
     have h1 : (c * Δ_adj + Δ * c) i j = 0 := by rw [h_pair2]; rfl
     exact h1
-  · simp only [fromBlocks_apply₁₂, zero_apply]
+  · simp only [fromBlocks_apply₁₂, Matrix.zero_apply]
     have h2 : (c * (-h_adj) + h * c) i j = 0 := by rw [h_norm2]; rfl
     exact h2
-  · simp only [fromBlocks_apply₂₁, zero_apply]
+  · simp only [fromBlocks_apply₂₁, Matrix.zero_apply]
     have h3 : (c * h + (-h_adj) * c) i j = 0 := by rw [h_norm1]; rfl
     exact h3
-  · simp only [fromBlocks_apply₂₂, zero_apply]
+  · simp only [fromBlocks_apply₂₂, Matrix.zero_apply]
     have h4 : (c * Δ + Δ_adj * c) i j = 0 := by rw [h_pair1]; rfl
     exact h4
 

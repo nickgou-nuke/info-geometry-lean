@@ -22,8 +22,12 @@ theorem hasFDerivAt_gaussianEnergy (observed point : Space) :
   have derivative := ((hasStrictFDerivAt_norm_sq (point - observed)).hasFDerivAt.comp
     point ((hasFDerivAt_id point).sub_const observed)).const_mul (1 / 2 : ℝ)
   convert derivative using 1
-  ext direction
-  simp [ContinuousLinearMap.smul_apply]
+  · rfl
+  · ext direction
+    simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.id_apply,
+      smul_apply]
+    simp only [smul_eq_mul]
+    ring
 
 theorem hasFDerivAt_gaussianObjective
     (weights : Line → ℝ) (observed : Line → Space) (point : Space) :
@@ -33,8 +37,9 @@ theorem hasFDerivAt_gaussianObjective
     (fun line _ => (hasFDerivAt_gaussianEnergy (observed line) point).const_mul
       (weights line))
   convert derivative using 1
-  ext direction
-  simp [weightedScore]
+  · rfl
+  · ext direction
+    simp [innerSL_apply_apply, weightedScore]
 
 theorem gaussian_stationary_iff_barycenter
     (weights : Line → ℝ) (observed : Line → Space) (point : Space)

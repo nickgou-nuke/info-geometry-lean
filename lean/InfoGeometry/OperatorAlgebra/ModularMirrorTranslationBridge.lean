@@ -1,8 +1,8 @@
 import Mathlib.Data.Matrix.Basic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
+import Mathlib.LinearAlgebra.Matrix.ConjTranspose
 import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 
@@ -163,19 +163,9 @@ def pauliBasis (μ : Fin 4) : Matrix (Fin 2) (Fin 2) ℂ :=
 /-- 🏆 THEOREM 5: All Pauli matrices are Hermitian: $(\sigma^\mu)^\dagger = \sigma^\mu$. -/
 theorem pauliBasis_hermitian (μ : Fin 4) :
     star (pauliBasis μ) = pauliBasis μ := by
-  fin_cases μ
-  · dsimp [pauliBasis, pauli0]
-    ext i j
-    fin_cases i <;> fin_cases j <;> simp
-  · dsimp [pauliBasis, pauli1]
-    ext i j
-    fin_cases i <;> fin_cases j <;> simp
-  · dsimp [pauliBasis, pauli2]
-    ext i j
-    fin_cases i <;> fin_cases j <;> simp
-  · dsimp [pauliBasis, pauli3]
-    ext i j
-    fin_cases i <;> fin_cases j <;> simp
+  ext i j
+  rw [Matrix.star_apply]
+  fin_cases μ <;> fin_cases i <;> fin_cases j <;> simp [pauliBasis, pauli0, pauli1, pauli2, pauli3]
 
 /-- Relative translation generator: $P_\mu^{\mathrm{rel}} = P_\mu^L - P_\mu^R$. -/
 def relativeTranslation (PL PR : Mat n) : Mat n →ₗ[ℂ] Mat n :=

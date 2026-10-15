@@ -13,7 +13,14 @@ inductive Archetype
   | relativeFluctuation
   | standardization
   | scalingIdentity
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype Archetype :=
+  Fintype.ofList
+    [.exponentialModel, .probabilityCoordinate, .oddsCoordinate,
+      .informationScaling, .reciprocalVariance, .equalMoments,
+      .relativeFluctuation, .standardization, .scalingIdentity]
+    (by intro x; cases x <;> simp)
 
 def prerequisites : Archetype → Finset ℕ
   | .exponentialModel => {0}

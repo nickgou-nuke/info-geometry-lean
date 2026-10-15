@@ -1,4 +1,5 @@
 import Mathlib
+import Mathlib.Algebra.Lie.OfAssociative
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Orthogonal.O55D5RootMultigrading
 
@@ -28,6 +29,9 @@ open InfoGeometry.Orthogonal.O55D5
 abbrev Side := Fin 2
 abbrev Index := Side × Axis
 abbrev Mat10 := Matrix Index Index ℂ
+
+local instance : LieRing Mat10 := LieRing.ofAssociativeRing
+local instance : LieAlgebra ℂ Mat10 := LieAlgebra.ofAssociativeAlgebra
 
 /-- Exchange the two Witt sheets. -/
 def flipSide : Side → Side := fun s => if s = 0 then 1 else 0
@@ -129,7 +133,7 @@ theorem wittAdjoint_mul (X Y : Mat10) :
     ∑ x, X (flipIndex q) x * Y x (flipIndex p) =
         ∑ x, X (flipIndex q) (flipIndex x) *
           Y (flipIndex x) (flipIndex p) := by
-            simpa using
+            simpa [flipIndexEquiv] using
               (Equiv.sum_comp flipIndexEquiv
                 (fun x => X (flipIndex q) x * Y x (flipIndex p))).symm
     _ = ∑ x, Y (flipIndex x) (flipIndex p) *

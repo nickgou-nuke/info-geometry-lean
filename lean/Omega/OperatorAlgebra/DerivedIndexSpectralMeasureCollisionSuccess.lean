@@ -54,10 +54,14 @@ theorem paper_derived_index_spectral_measure_collision_success :
   · intro q
     have hmoment :=
       (paper_op_algebra_fold_watatani_index_moments derivedIndexFold 2 q (by norm_num)).2.2
+    have hmoment' := hmoment
+    norm_num at hmoment'
     calc
-      derivedIndexCollisionMoment q = 2 * (2 ^ (q + 1)) / 4 := by
+      derivedIndexCollisionMoment q =
+          (2 ^ (q + 1) + 2 ^ (q + 1)) / 4 := by
         simpa [derivedIndexCollisionMoment, foldWatataniIndexCoefficient,
-          derivedIndexFold_fiber_card] using hmoment
+          derivedIndexFold_fiber_card] using hmoment'
+      _ = 2 * (2 ^ (q + 1)) / 4 := by ring
       _ = 2 * (2 * 2 ^ q) / 4 := by rw [pow_succ]; ring
       _ = derivedIndexSpectralAverage 1 q := by
         unfold derivedIndexSpectralAverage

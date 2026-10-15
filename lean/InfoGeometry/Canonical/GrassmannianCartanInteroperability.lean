@@ -1,5 +1,6 @@
 import Mathlib.Analysis.Calculus.DifferentialForm.Basic
 import Mathlib.Analysis.Matrix.Normed
+import Mathlib.Analysis.Normed.Module.Alternating.Basic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.Tactic
@@ -189,10 +190,20 @@ theorem symmetricPair_stabilizer_origin
 /-! ## 5. Genuine Mathlib differential forms on the Grassmannian matrix chart -/
 
 open scoped Matrix.Norms.Elementwise
+attribute [local instance]
+  Matrix.seminormedAddCommGroup
+  Matrix.normedAddCommGroup
+  Matrix.normedSpace
 
 /-- The finite `2 x 4` matrix chart used by the Grassmannian lane. -/
 abbrev GrassmannianMatrixChart :=
   Matrix (Fin 2) (Fin 4) ℝ
+
+instance (n : ℕ) : NormedAddCommGroup (GrassmannianMatrixChart [⋀^Fin n]→L[ℝ] ℝ) :=
+  ContinuousAlternatingMap.instNormedAddCommGroup
+
+instance (n : ℕ) : NormedSpace ℝ (GrassmannianMatrixChart [⋀^Fin n]→L[ℝ] ℝ) :=
+  ContinuousAlternatingMap.instNormedSpace
 
 /-- Genuine Mathlib differential forms on the matrix chart. -/
 abbrev GrassmannianDifferentialForm (n : ℕ) :=

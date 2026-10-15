@@ -1,3 +1,4 @@
+import InfoGeometry.Canonical.DecomposableBivector
 import InfoGeometry.Projective.ExteriorKleinTwoPlaneEquiv
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -74,7 +75,7 @@ theorem combinedFrame_wedge_eq_zero_iff_incident
   rw [PlanesIncident, ← combinedFrame_linearIndependent_iff_disjoint]
   constructor
   · intro hw hli
-    exact (exterior_ιMulti_ne_zero_of_linearIndependent _ hli) hw
+    exact (InfoGeometry.Canonical.exteriorPower_ιMulti_ne_zero_of_linearIndependent _ hli) hw
   · intro hli
     exact (exteriorPower.ιMulti ℝ 4).map_linearDependent _ hli
 

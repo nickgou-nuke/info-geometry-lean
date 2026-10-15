@@ -58,8 +58,8 @@ theorem paper_conclusion_window6_fixedwindow_hidden_analytic_diffeomorphism
   refine ⟨?_, ?_, ?_, ?_⟩
   · norm_num [conclusion_window6_fixedwindow_hidden_analytic_diffeomorphism_data.pressure_strict_convex]
   · simp [conclusion_window6_fixedwindow_hidden_analytic_diffeomorphism_data.derivative_formula]
-  · simpa [conclusion_window6_fixedwindow_hidden_analytic_diffeomorphism_data.derivative_diffeomorphism]
-      using Function.bijective_id
+  · dsimp [conclusion_window6_fixedwindow_hidden_analytic_diffeomorphism_data.derivative_diffeomorphism]
+    exact Function.bijective_id
   · have h24 : (2 : ℝ) < 4 := by norm_num
     simpa [conclusion_window6_fixedwindow_hidden_analytic_diffeomorphism_data.endpoint_freezing]
       using Real.log_lt_log (by norm_num) h24

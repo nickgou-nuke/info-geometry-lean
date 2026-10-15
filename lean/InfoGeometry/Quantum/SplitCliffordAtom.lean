@@ -20,7 +20,7 @@ action. The distinguished four generators are derived as
 `{Id, ε, J, J∘ε}`.
 -/
 structure Atom where
-  core : RealMajoranaCore
+  core : RealMajoranaCore.{u}
 
 instance : CoeSort Atom (Type u) := ⟨fun X => X.core⟩
 

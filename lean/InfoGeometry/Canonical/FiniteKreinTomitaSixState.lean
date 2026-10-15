@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.SheetSplitQuaternionic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Topology.Instances.Matrix
 
 /-!
 # Finite six-state Tomita identities

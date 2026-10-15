@@ -231,17 +231,25 @@ theorem metricOp_isSymmetric (x : E) :
   by_cases hx : DifferentiableAt ℝ H.grad x
   · have hxGrad : HasFDerivAt H.grad (H.metricOp x) x := by
       simpa [HessianGeometry.metricOp] using hx.hasFDerivAt
-    let f' : E → E →L[ℝ] ℝ := fun y => InnerProductSpace.toDual ℝ E (H.grad y)
-    let f'' : E →L[ℝ] E →L[ℝ] ℝ :=
-      (InnerProductSpace.toDualMap ℝ E).toContinuousLinearMap.comp (H.metricOp x)
+    let dualMap : E →L[ℝ] StrongDual ℝ E :=
+      (InnerProductSpace.toDualMap ℝ E).toContinuousLinearMap
+    let f' : E → StrongDual ℝ E := fun y => dualMap (H.grad y)
+    let f'' : E →L[ℝ] StrongDual ℝ E :=
+      dualMap.comp (H.metricOp x)
     have hSecond : HasFDerivAt f' f'' x := by
-      simpa [f', f''] using
-        ((InnerProductSpace.toDualMap ℝ E).toContinuousLinearMap.hasFDerivAt.comp x hxGrad)
+      change HasFDerivAt (dualMap ∘ H.grad) f'' x
+      exact dualMap.hasFDerivAt.comp x hxGrad
+    have hf' : ∀ y, HasFDerivAt H.potential (f' y) y := by
+      intro y
+      convert H.has_gradient y using 1
+      ext v
+      rfl
     intro u v
     have hsymm := second_derivative_symmetric
       (f := H.potential) (f' := f') (f'' := f'')
-      (hf := H.has_gradient) hSecond u v
-    simpa [f'', InnerProductSpace.toDual_apply_apply, real_inner_comm] using hsymm
+      (hf := hf') hSecond u v
+    change inner ℝ (H.metricOp x u) v = inner ℝ (H.metricOp x v) u at hsymm
+    simpa [real_inner_comm] using hsymm
   · simp [HessianGeometry.metricOp, fderiv_zero_of_not_differentiableAt hx]
 
 -- theorem-class: derived
@@ -284,8 +292,9 @@ theorem metric_quadratic_nonneg (x u : E) :
       have hxGrad_at_ray0 : HasFDerivAt H.grad (H.metricOp x) (ray 0) := by
         simpa [ray] using hxGrad
       exact HasFDerivAt.comp (x := (0 : ℝ)) (f := ray) hxGrad_at_ray0 hray.hasFDerivAt
-    have hgrad_ray : HasDerivAt (fun t : ℝ => H.grad (ray t)) (H.metricOp x u) 0 := by
-      simpa using hgrad_ray_f.hasDerivAt
+    have hgrad_ray : HasDerivAt (H.grad ∘ ray) (H.metricOp x u) 0 := by
+      simpa [Function.comp_def, ContinuousLinearMap.comp_apply,
+        ContinuousLinearMap.smulRight_apply] using hgrad_ray_f.hasDerivAt
     have hu : HasDerivAt (fun _ : ℝ => u) 0 0 := by
       simpa using (hasDerivAt_const (x := (0 : ℝ)) u)
     have hprobe_deriv : HasDerivAt probe (inner ℝ (H.metricOp x u) u) 0 := by

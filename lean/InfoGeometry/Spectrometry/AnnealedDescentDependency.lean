@@ -11,7 +11,15 @@ inductive Archetype
   | descent
   | energyLowerBound
   | energyConvergence
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype Archetype where
+  elems := {Archetype.concaveFreeEnergy, Archetype.regularAnchor,
+    Archetype.majorization, Archetype.quadraticMinimum, Archetype.descent,
+    Archetype.energyLowerBound, Archetype.energyConvergence}
+  complete := by
+    intro x
+    cases x <;> simp
 
 open Archetype
 

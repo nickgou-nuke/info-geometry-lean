@@ -12,15 +12,17 @@ import InfoGeometry.Algebra.ZornVectorMatrix
 import InfoGeometry.Canonical.GunaydinGurseyQuarkBasisBridge
 
 /-!
-# Pauli–Weyl Lightcone, Twistor Quantization, & Günaydin–Gürsey Quark Color
+# Pauli–Weyl Matrix Readout, Twistor Quantization, & Günaydin–Gürsey Quark Color
 
 This module formalizes the exact mathematical nexus uniting:
 1. **The Pauli–Weyl Lightcone & Dyadic Spinor Factorization**:
-   - Spacetime coordinates represented as $2 \times 2$ matrices in $\mathrm{Mat}_2(R) \cong \mathbb{H}'$.
-   - The lightcone condition $\det(X) = 0$.
-   - Any dyadic spinor product $X = \pi \lambda^T$ identically satisfies $\det(X) = 0$
-     and $X^2 = \operatorname{tr}(X) X$, proving that every lightlike 4-vector factorizes
-     into a dyad of chiral Pauli–Weyl spinors.
+   - The explicit map pauliMatrix22 sends four coordinates to a matrix whose
+     determinant is the displayed neutral-signature quadratic form.
+   - Every dyadic spinor product $X = \pi \lambda^T$ has determinant zero and
+     satisfies $X^2 = \operatorname{tr}(X) X$.
+   - These are forward algebraic identities over a commutative ring. The converse
+     factorization of every determinant-zero matrix, and its interpretation as a
+     physical Minkowski lightcone, are not proved by this module.
 
 2. **Polarized Quaternionic Subspaces in Split Cayley–Dickson Doubling**:
    - Under split doubling $\mathbb{O}' = \mathbb{H}'_1 \oplus \mathbb{H}'_2 \ell$ ($\ell^2 = +1$),
@@ -62,9 +64,11 @@ open InfoGeometry.Canonical.GunaydinGursey
 
 variable {R : Type*} [CommRing R]
 
-/-! ### 1. Pauli–Weyl Lightcone & Dyadic Spinor Factorization -/
+/-! ### 1. Pauli–Weyl Matrix and Dyadic Spinor Identities -/
 
-/-- Relativistic 4-vector mapped to a 2x2 matrix in neutral signature (2,2). -/
+/-- A coordinate quadruple mapped to a 2×2 matrix whose determinant has
+neutral signature `(2,2)`; this definition alone does not identify it with a
+Minkowski four-momentum. -/
 def pauliMatrix22 (x0 x1 x2 x3 : R) : Matrix (Fin 2) (Fin 2) R :=
   ![![x0 + x3, x1 - x2],
     ![x1 + x2, x0 - x3]]
@@ -93,12 +97,13 @@ theorem dyadicSpinorMatrix_sq (pi lambda : Fin 2 → R) :
     dyadicSpinorMatrix pi lambda * dyadicSpinorMatrix pi lambda =
       (pi 0 * lambda 0 + pi 1 * lambda 1) • dyadicSpinorMatrix pi lambda := by
   ext i j
-  fin_cases i <;> fin_cases j <;> {
-    simp [dyadicSpinorMatrix, Matrix.mul_apply, Fin.sum_univ_two]
-    ring
-  }
+  change (∑ k : Fin 2, dyadicSpinorMatrix pi lambda i k *
+      dyadicSpinorMatrix pi lambda k j) =
+    (pi 0 * lambda 0 + pi 1 * lambda 1) * dyadicSpinorMatrix pi lambda i j
+  fin_cases i <;> fin_cases j <;> simp [dyadicSpinorMatrix] <;> ring
 
-/-- When the trace vanishes, the lightlike spinor dyad is square-nilpotent. -/
+/-- When the trace vanishes, the dyadic matrix is square-nilpotent. This is a
+matrix identity; no Lorentzian interpretation is part of the hypotheses. -/
 theorem dyadicSpinorMatrix_nilpotent_of_tr_zero (pi lambda : Fin 2 → R)
     (htr : pi 0 * lambda 0 + pi 1 * lambda 1 = 0) :
     dyadicSpinorMatrix pi lambda * dyadicSpinorMatrix pi lambda = 0 := by
@@ -365,70 +370,10 @@ theorem lepton_singlet_subalgebra (X Y : ZornVectorMatrix R)
   · simp [mul, hXv, hYw, ZornVec3.dot_eq_sum_coords]
   · simp [mul, hXw, hYv, ZornVec3.dot_eq_sum_coords]
 
-/-! ### 5. Master Packet -/
-
-/-- Master packet packaging the Pauli-Weyl lightcone dyad, twistor quantization, and quark SU(3) color algebra. -/
-structure PauliWeylTwistorQuarkColorPacket where
-  dyad_det :
-    ∀ (pi lambda : Fin 2 → ℝ),
-      (dyadicSpinorMatrix pi lambda).det = 0
-  dyad_sq :
-    ∀ (pi lambda : Fin 2 → ℝ),
-      dyadicSpinorMatrix pi lambda * dyadicSpinorMatrix pi lambda =
-        (pi 0 * lambda 0 + pi 1 * lambda 1) • dyadicSpinorMatrix pi lambda
-  peirce_ortho :
-    ∀ {A : Type*} [Ring A] [Algebra ℝ A] (J : A),
-      J * J = 1 → peircePlus J * peirceMinus J = 0
-  peirce_id :
-    ∀ {A : Type*} [Ring A] [Algebra ℝ A] (J : A),
-      peircePlus J + peirceMinus J = 1
-  twistor_helicity_omega :
-    ∀ {A : Type*} [Ring A] (omega pi c : A),
-      commutator omega pi = c →
-      c * omega = omega * c →
-      commutator (helicityOperator omega pi) omega = - 2 * c * omega
-  twistor_helicity_pi :
-    ∀ {A : Type*} [Ring A] (omega pi c : A),
-      commutator omega pi = c →
-      c * pi = pi * c →
-      commutator (helicityOperator omega pi) pi = 2 * c * pi
-  ell_sq :
-    mul (ellZorn (R := ℝ)) ellZorn = one
-  quark_nilpotent :
-    ∀ i : Fin 3, mul (u i : ZornVectorMatrix ℝ) (u i) = zero
-  antiquark_nilpotent :
-    ∀ i : Fin 3, mul (uStar i : ZornVectorMatrix ℝ) (uStar i) = zero
-  diquark_01 :
-    mul (u 0 : ZornVectorMatrix ℝ) (u 1) = uStar 2
-  diquark_12 :
-    mul (u 1 : ZornVectorMatrix ℝ) (u 2) = uStar 0
-  diquark_20 :
-    mul (u 2 : ZornVectorMatrix ℝ) (u 0) = uStar 1
-  car_same :
-    ∀ i : Fin 3,
-      add (mul (u i : ZornVectorMatrix ℝ) (uStar i))
-          (mul (uStar i) (u i)) = neg one
-  car_diff :
-    ∀ (i j : Fin 3),
-      i ≠ j →
-      add (mul (u i : ZornVectorMatrix ℝ) (uStar j))
-          (mul (uStar j) (u i)) = zero
-
-/-- Constructor for the master packet. -/
-def makePauliWeylTwistorQuarkColorPacket : PauliWeylTwistorQuarkColorPacket where
-  dyad_det := dyadicSpinorMatrix_det
-  dyad_sq := dyadicSpinorMatrix_sq
-  peirce_ortho := peirce_ortho
-  peirce_id := peirce_sum_id
-  twistor_helicity_omega := twistor_helicity_scaling_omega
-  twistor_helicity_pi := twistor_helicity_scaling_pi
-  ell_sq := ellZorn_sq
-  quark_nilpotent := quark_color_nilpotent
-  antiquark_nilpotent := antiquark_color_nilpotent
-  diquark_01 := diquark_color_01
-  diquark_12 := diquark_color_12
-  diquark_20 := diquark_color_20
-  car_same := quark_antiquark_car_same
-  car_diff := quark_antiquark_car_diff
+/-!
+The named dyad, Peirce, helicity, and CAR theorems above are the reusable
+interfaces. The former master packet only collected these existing propositions
+as proof fields, had no consumers, and supplied no new mathematical carrier.
+-/
 
 end InfoGeometry.Canonical.PauliWeylTwistorQuarkColor

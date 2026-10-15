@@ -12,7 +12,7 @@ def polarParameter (radius angle : ℝ) : ℂ :=
 
 theorem polarParameter_mul_reciprocal (radius angle : ℝ) (hradius : radius ≠ 0) :
     polarParameter radius angle * polarParameter radius⁻¹ (-angle) = 1 := by
-  ext
+  apply Complex.ext
   · simp only [polarParameter, Complex.mul_re, Complex.one_re, Real.cos_neg, Real.sin_neg]
     calc
       radius * Real.cos angle * (radius⁻¹ * Real.cos angle) -
@@ -46,7 +46,7 @@ theorem polar_trace (radius angle : ℝ) (hradius : radius ≠ 0) :
     Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons]
   change polarParameter radius angle + (polarParameter radius angle)⁻¹ = _
   rw [polarParameter_inv radius angle hradius]
-  ext <;> simp [polarParameter] <;> ring
+  apply Complex.ext <;> simp [polarParameter] <;> ring
 
 theorem polar_traceRatio_sub_four_im (radius angle : ℝ) (hradius : radius ≠ 0) :
     (traceRatio (diagonalRepresentative (polarParameter radius angle)) - 4).im =

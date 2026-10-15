@@ -1,7 +1,10 @@
 import Mathlib.Tactic
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 set_option linter.unusedVariables false
+open intervalIntegral
 
 /-!
 # The Jaynes-Lean Cobordism: Finite-Sets Colimit Bridge
@@ -170,8 +173,7 @@ theorem finiteEntropy_const_one_tendsto :
       (fun N : ℕ => finiteEntropy (fun _ : ℝ => 1) (N + 1) (Nat.succ_pos N))
       atTop
       (𝓝 (continuousEntropy (fun _ : ℝ => 1))) := by
-  simpa [finiteEntropy_const_one, continuousEntropy_const_one] using
-    (tendsto_const_nhds : Tendsto (fun _ : ℕ => (0 : ℝ)) atTop (𝓝 0))
+  simp [finiteEntropy_const_one, continuousEntropy_const_one]
 
 ---------------------------------------------------------------
 -- 3. The Directed Colimit: Universal Cone

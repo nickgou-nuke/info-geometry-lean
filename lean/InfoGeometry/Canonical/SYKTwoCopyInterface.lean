@@ -248,9 +248,9 @@ theorem topologicalIndexZ2_append_owner
 
 /-- Tagged repo-tier claim for the finite `ℤ₂` append owner theorem. -/
 @[rep_depth transport]
-def topologicalIndexZ2_append_owner_claim.{u} :
+def topologicalIndexZ2_append_owner_claim :
     TaggedClaim
-      (∀ (chain₁ chain₂ : List (InfoGeometry.Quantum.KitaevChain.KitaevCell.{u})),
+      (∀ (chain₁ chain₂ : List InfoGeometry.Quantum.KitaevChain.KitaevCell),
         macroscopicVolume chain₁ ≠ 0 →
         macroscopicVolume chain₂ ≠ 0 →
         topologicalIndexZ2 (chain₁ ++ chain₂)
@@ -259,14 +259,14 @@ def topologicalIndexZ2_append_owner_claim.{u} :
 
 /-- The finite `ℤ₂` append owner claim is tagged as repo theorem. -/
 @[rep_depth transport]
-theorem topologicalIndexZ2_append_owner_claim_is_repo.{u} :
-    (topologicalIndexZ2_append_owner_claim.{u}).isRepoTheorem := by
+theorem topologicalIndexZ2_append_owner_claim_is_repo :
+    topologicalIndexZ2_append_owner_claim.isRepoTheorem := by
   rfl
 
 /-- The finite `ℤ₂` append owner claim is constructively inhabited. -/
 @[rep_depth transport]
-theorem topologicalIndexZ2_append_owner_claim_holds.{u} :
-    (topologicalIndexZ2_append_owner_claim.{u}).statement := by
+theorem topologicalIndexZ2_append_owner_claim_holds :
+    topologicalIndexZ2_append_owner_claim.statement := by
   intro chain₁ chain₂ h₁ h₂
   exact topologicalIndexZ2_append_owner chain₁ chain₂ h₁ h₂
 

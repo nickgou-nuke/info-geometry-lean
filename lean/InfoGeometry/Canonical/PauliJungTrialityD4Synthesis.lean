@@ -17,7 +17,13 @@ inductive ColorChannel
   | red
   | green
   | blue
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype ColorChannel where
+  elems := {ColorChannel.red, ColorChannel.green, ColorChannel.blue}
+  complete := by
+    intro c
+    cases c <;> simp
 
 def trialityPermute : ColorChannel → ColorChannel
   | .red => .green
@@ -133,9 +139,9 @@ def d4StarGraph : SimpleGraph FourPlaneVertex where
     | Sum.inl _, Sum.inr _ => True
     | Sum.inr _, Sum.inl _ => True
     | _, _ => False
-  symm := by
-    intro v w
-    cases v <;> cases w <;> simp
+  symm := ⟨by
+    intro v w h
+    cases v <;> cases w <;> simp_all⟩
   loopless := by
     refine Std.Irrefl.mk ?_
     intro v
@@ -245,4 +251,3 @@ def pauliGradeAutomorphismPerm (σ : KleinFour ≃+ KleinFour) : Equiv.Perm (Fin
 -- grades of the Klein‑four and the symmetric group `S₃` acting on three elements.
 
 end InfoGeometry.Canonical
-

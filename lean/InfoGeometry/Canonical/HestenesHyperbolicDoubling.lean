@@ -298,15 +298,15 @@ theorem left_alternative (x y : QuaternionDouble) :
       have hbs : b * (a + star a) = (a + star a) * b := by
         rw [hs]
         simpa [two_mul] using
-          (QuaternionAlgebra.coe_commutes (2 * a.re) b).symm
+          (Quaternion.coe_commutes (2 * a.re) b).symm
       have hsb : (a + star a) * star d = star d * (a + star a) := by
         rw [hs]
         simpa [two_mul] using
-          (QuaternionAlgebra.coe_commutes (2 * a.re) (star d))
+          (Quaternion.coe_commutes (2 * a.re) (star d))
       have hsc : (a + star a) * star c = star c * (a + star a) := by
         rw [hs]
         simpa [two_mul] using
-          (QuaternionAlgebra.coe_commutes (2 * a.re) (star c))
+          (Quaternion.coe_commutes (2 * a.re) (star c))
       have hba : b * a + b * star a = b * (a + star a) :=
         (mul_add b a (star a)).symm
       have hbb : star b * b =
@@ -318,11 +318,11 @@ theorem left_alternative (x y : QuaternionDouble) :
       have hnorm_c :
           (algebraMap ℝ (Quaternion ℝ) (Quaternion.normSq b)) * c =
             c * (algebraMap ℝ (Quaternion ℝ) (Quaternion.normSq b)) := by
-        exact QuaternionAlgebra.coe_commutes _ _
+        exact Quaternion.coe_commutes _ _
       have hnorm_d :
           (algebraMap ℝ (Quaternion ℝ) (Quaternion.normSq b)) * d =
             d * (algebraMap ℝ (Quaternion ℝ) (Quaternion.normSq b)) := by
-        exact QuaternionAlgebra.coe_commutes _ _
+        exact Quaternion.coe_commutes _ _
       apply AlbertStep.ext
       · simp only [AlbertStep.mul]
         simp only [one_smul, star_add, star_mul]

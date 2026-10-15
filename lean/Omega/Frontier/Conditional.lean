@@ -121,7 +121,7 @@ theorem generatedDefectCertificate_sound (m : Nat) (h : FullGeneration m) (d : W
     globalDefect (Nat.le_add_right m (generatedDefectCertificate m h d).k)
         (generatedDefectCertificate m h d).input
       = d := by
-  simpa [generatedDefectCertificate_claimed] using
+  simpa [generatedDefectCertificate, generatedDefectCertificate_claimed] using
     (generatedDefectCertificate m h d).sound (generatedDefectCertificate_valid m h d)
 
 /-- Canonical rewrite-step certificates preserve the represented value.

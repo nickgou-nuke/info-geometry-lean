@@ -1,3 +1,4 @@
+import Mathlib.Algebra.Lie.OfAssociative
 import InfoGeometry.Canonical.BosonizationConstructiveCurrent
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CurrentSugawaraBridge
@@ -17,6 +18,8 @@ This module closes the interface adapter gap:
 -/
 
 namespace InfoGeometry.Canonical.SplitCARCurrentSourceAdapter
+
+attribute [local instance 100] LieRing.ofAssociativeRing
 
 open Filter
 open InfoGeometry.Canonical.BosonizationConstructiveCurrent

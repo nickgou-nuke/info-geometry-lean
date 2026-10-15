@@ -15,7 +15,7 @@ noncomputable section
 
 namespace CStarStateColimit.Native.FilteredGNSNormPullbackBinding
 
-set_option maxHeartbeats 80000
+set_option maxHeartbeats 1200000
 set_option linter.unusedSectionVars false
 
 open CStarStateColimit.Native
@@ -45,7 +45,7 @@ def rawToRepresentedClosureStarAlgHom
     AlgebraicStarDirectLimit Stage sys →⋆ₐ[ℂ]
       representedCStarClosure Stage sys ω :=
   (representedAlgebraicRangeInclusion Stage sys ω).comp
-    (rawToRangeStarAlgEquiv Stage sys ω hρ)
+    (rawToRangeStarAlgEquiv Stage sys ω hρ).toStarAlgHom
 
 @[simp] theorem rawToRepresentedClosureStarAlgHom_apply
     (hρ : Function.Injective (rangeAlgHom Stage sys ω))

@@ -17,52 +17,58 @@ open CategoryTheory CategoryTheory.Limits
 
 variable {α β γ : Type}
 
-private def pointMap (α : Type) : α ⟶ Unit := fun _ => ()
+private def pointMap (α : Type) : α ⟶ Unit := TypeCat.ofHom fun _ => ()
 
 noncomputable def carrier (f : α → β) : Type :=
-  pushout f (pointMap α)
+  pushout (TypeCat.ofHom f) (pointMap α)
 
 noncomputable def quotient (f : α → β) : β → carrier f :=
-  pushout.inl f (pointMap α)
+  pushout.inl (TypeCat.ofHom f) (pointMap α)
 
 noncomputable def basepoint (f : α → β) : Unit → carrier f :=
-  pushout.inr f (pointMap α)
+  pushout.inr (TypeCat.ofHom f) (pointMap α)
 
 @[simp]
 theorem quotient_glue (f : α → β) (x : α) :
     quotient f (f x) = basepoint f () := by
-  exact congrFun (pushout.condition (f := f) (g := pointMap α)) x
+  exact ConcreteCategory.congr_hom
+    (pushout.condition (f := TypeCat.ofHom f) (g := pointMap α)) x
 
 noncomputable def lift
     (f : α → β) (u : β → γ) (v : Unit → γ)
     (h : ∀ x, u (f x) = v ()) : carrier f → γ :=
-  pushout.desc u v (by
-    change (f : α ⟶ β) ≫ (u : β ⟶ γ) =
-      (pointMap α : α ⟶ Unit) ≫ (v : Unit ⟶ γ)
-    ext x
-    exact h x)
+  pushout.desc (f := TypeCat.ofHom f) (g := pointMap α)
+    (TypeCat.ofHom u) (TypeCat.ofHom v) (by
+    apply ConcreteCategory.ext_apply
+    intro x
+    simpa only [ConcreteCategory.comp_apply, ConcreteCategory.hom_ofHom,
+      TypeCat.Fun.coe_mk] using h x)
 
 @[simp]
 theorem lift_quotient
     (f : α → β) (u : β → γ) (v : Unit → γ)
     (h : ∀ x, u (f x) = v ()) (y : β) :
     lift f u v h (quotient f y) = u y := by
-  exact congrFun (pushout.inl_desc u v (by
-    change (f : α ⟶ β) ≫ (u : β ⟶ γ) =
-      (pointMap α : α ⟶ Unit) ≫ (v : Unit ⟶ γ)
-    ext x
-    exact h x)) y
+  exact ConcreteCategory.congr_hom (pushout.inl_desc
+    (f := TypeCat.ofHom f) (g := pointMap α)
+    (TypeCat.ofHom u) (TypeCat.ofHom v) (by
+      apply ConcreteCategory.ext_apply
+      intro x
+      simpa only [ConcreteCategory.comp_apply, ConcreteCategory.hom_ofHom,
+        TypeCat.Fun.coe_mk] using h x)) y
 
 @[simp]
 theorem lift_basepoint
     (f : α → β) (u : β → γ) (v : Unit → γ)
     (h : ∀ x, u (f x) = v ()) :
     lift f u v h (basepoint f ()) = v () := by
-  exact congrFun (pushout.inr_desc u v (by
-    change (f : α ⟶ β) ≫ (u : β ⟶ γ) =
-      (pointMap α : α ⟶ Unit) ≫ (v : Unit ⟶ γ)
-    ext x
-    exact h x)) ()
+  exact ConcreteCategory.congr_hom (pushout.inr_desc
+    (f := TypeCat.ofHom f) (g := pointMap α)
+    (TypeCat.ofHom u) (TypeCat.ofHom v) (by
+      apply ConcreteCategory.ext_apply
+      intro x
+      simpa only [ConcreteCategory.comp_apply, ConcreteCategory.hom_ofHom,
+        TypeCat.Fun.coe_mk] using h x)) ()
 
 theorem lift_unique
     (f : α → β) (u : β → γ) (v : Unit → γ)
@@ -73,20 +79,18 @@ theorem lift_unique
     k = lift f u v h := by
   funext z
   have hk₁ :
-      pushout.inl f (pointMap α) ≫ k =
-        pushout.inl f (pointMap α) ≫ lift f u v h := by
-    change (fun y => k (quotient f y)) =
-      fun y => lift f u v h (quotient f y)
-    funext y
+      pushout.inl (TypeCat.ofHom f) (pointMap α) ≫ TypeCat.ofHom k =
+        pushout.inl (TypeCat.ofHom f) (pointMap α) ≫ TypeCat.ofHom (lift f u v h) := by
+    ext y
+    change k (quotient f y) = lift f u v h (quotient f y)
     rw [hk y, lift_quotient]
   have hk₂ :
-      pushout.inr f (pointMap α) ≫ k =
-        pushout.inr f (pointMap α) ≫ lift f u v h := by
-    change (fun p => k (basepoint f p)) =
-      fun p => lift f u v h (basepoint f p)
-    funext p
+      pushout.inr (TypeCat.ofHom f) (pointMap α) ≫ TypeCat.ofHom k =
+        pushout.inr (TypeCat.ofHom f) (pointMap α) ≫ TypeCat.ofHom (lift f u v h) := by
+    ext p
     cases p
+    change k (basepoint f ()) = lift f u v h (basepoint f ())
     rw [hk', lift_basepoint]
-  exact congrFun (pushout.hom_ext hk₁ hk₂) z
+  exact ConcreteCategory.congr_hom (pushout.hom_ext hk₁ hk₂) z
 
 end InfoGeometry.Spectral.Homotopy.CategoricalCofiber

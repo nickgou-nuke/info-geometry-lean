@@ -45,14 +45,14 @@ open InfoGeometry.Arithmetic.BostConnesSystem
 /-! ### 1. The Commutative Subalgebra (≅ C(Ẑ)) -/
 
 /-- Wrapper for the commutative algebra structure. -/
-structure CommutativeBoundaryAlgebra (C_comm : Type u) where
+class CommutativeBoundaryAlgebra (C_comm : Type u) where
   [commRing : CommRing C_comm]
   [starRing : StarRing C_comm]
   [algebra : Algebra ℂ C_comm]
 
-attribute [instance] CommutativeBoundaryAlgebra.commRing
-attribute [instance] CommutativeBoundaryAlgebra.starRing
-attribute [instance] CommutativeBoundaryAlgebra.algebra
+attribute [instance, instance_reducible] CommutativeBoundaryAlgebra.commRing
+attribute [instance, instance_reducible] CommutativeBoundaryAlgebra.starRing
+attribute [instance, instance_reducible] CommutativeBoundaryAlgebra.algebra
 
 /--
 The generating elements e(r) for r ∈ ℚ, representing the roots of unity
@@ -114,8 +114,8 @@ class GaloisActionData (G : Type u) where
   /-- Faithfulness: if g acts as identity on all rationals, then g = 1. -/
   act_faithful : ∀ g, (∀ r, actOnQ g r = r) → g = 1
 
-attribute [instance] GaloisActionData.group
-attribute [instance] GaloisActionData.topologicalSpace
+attribute [instance, instance_reducible] GaloisActionData.group
+attribute [instance, instance_reducible] GaloisActionData.topologicalSpace
 
 /--
 Lifted Galois action on the commutative algebra: g · e(r) = e(g·r).

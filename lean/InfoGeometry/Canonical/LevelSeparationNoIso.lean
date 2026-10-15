@@ -1,7 +1,7 @@
 import Mathlib.Algebra.Lie.OfAssociative
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basis
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.LinearAlgebra.Dimension.Constructions
 import Mathlib.LinearAlgebra.FiniteDimensional.Basic
 import Mathlib.LinearAlgebra.Finsupp.VectorSpace
@@ -57,8 +57,8 @@ theorem A0_finrank :
 theorem heisenbergFreeCarrier_not_finiteDimensional :
     ¬ FiniteDimensional ℝ HeisenbergFreeCarrier := by
   intro h
-  letI : FiniteDimensional ℝ HeisenbergFreeCarrier := h
-  haveI : Fintype (Option ℤ) :=
+  have : FiniteDimensional ℝ HeisenbergFreeCarrier := h
+  have : Fintype (Option ℤ) :=
     FiniteDimensional.fintypeBasisIndex
       (Finsupp.basisSingleOne : Module.Basis (Option ℤ) ℝ HeisenbergFreeCarrier)
   exact Fintype.false (α := Option ℤ) inferInstance
@@ -72,8 +72,8 @@ This uses its canonical basis `HeisenbergAlgebra.basisJK`, indexed by
 theorem heisenbergAlgebra_not_finiteDimensional :
     ¬ FiniteDimensional ℝ (HeisenbergAlgebra ℝ) := by
   intro h
-  letI : FiniteDimensional ℝ (HeisenbergAlgebra ℝ) := h
-  haveI : Fintype (Option ℤ) :=
+  have : FiniteDimensional ℝ (HeisenbergAlgebra ℝ) := h
+  have : Fintype (Option ℤ) :=
     FiniteDimensional.fintypeBasisIndex (HeisenbergAlgebra.basisJK ℝ)
   exact Fintype.false (α := Option ℤ) inferInstance
 
@@ -101,6 +101,8 @@ theorem finiteAtom_not_linearEquiv_heisenbergAlgebra :
     ¬ Nonempty (FiniteTomitaKreinAtom ≃ₗ[ℝ] HeisenbergAlgebra ℝ) := by
   rintro ⟨e⟩
   exact heisenbergAlgebra_not_finiteDimensional e.finiteDimensional
+
+attribute [local instance] LieRing.ofAssociativeRing LieAlgebra.ofAssociativeAlgebra
 
 /--
 There is no Lie-algebra equivalence from the commutator Lie algebra of the

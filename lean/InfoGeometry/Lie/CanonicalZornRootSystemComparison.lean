@@ -109,18 +109,20 @@ def simpleWeightOnCartan (i : Fin 2) : Cartan → ℝ :=
 theorem nativeShortSimpleWeight_value :
     (nativeRootWeightMathlib nativeShortSimpleIndex).toFun =
       simpleWeightOnCartan 0 := by
+  have hshort := paper_positive_root_chain.1
   funext x
   simpa [nativeRootWeightMathlib, nativeRootWeight, nativeShortSimpleIndex,
     simpleWeightOnCartan] using
-      congrArg (fun f : Weight => f (axialCartanLieEquiv.symm x)) paper_e10_weight
+      congrArg (fun f : Weight => f (axialCartanLieEquiv.symm x)) hshort
 
 theorem nativeLongSimpleWeight_value :
     (nativeRootWeightMathlib nativeLongSimpleIndex).toFun =
       simpleWeightOnCartan 1 := by
+  have hlong := paper_positive_root_chain.2.1
   funext x
   simpa [nativeRootWeightMathlib, nativeRootWeight, nativeLongSimpleIndex,
     simpleWeightOnCartan] using
-      congrArg (fun f : Weight => f (axialCartanLieEquiv.symm x)) paper_e01_weight
+      congrArg (fun f : Weight => f (axialCartanLieEquiv.symm x)) hlong
 
 theorem nativePositiveRootWeight_chain :
     (nativeRootWeightMathlib ⟨9, by decide, by decide⟩).toFun =
@@ -148,31 +150,25 @@ theorem native_highest_root_weight :
 
 theorem native_root_string_top_nontrivial :
     LieAlgebra.rootSpace Cartan
-        (3 • (nativeRootWeightMathlib nativeShortSimpleIndex).toFun +
-          (nativeRootWeightMathlib nativeLongSimpleIndex).toFun) ≠ ⊥ := by
-  have hchain := (nativePositiveRootWeight_chain).2.2
+        (3 • nativeRootWeight nativeShortSimpleIndex +
+          nativeRootWeight nativeLongSimpleIndex) ≠ ⊥ := by
+  rcases paper_positive_root_chain with ⟨h10, h01, _, _, h11, _⟩
   have hmem := rootDerivation_mem_rootSpace
     (⟨11, by decide, by decide⟩ : nonzeroIndex)
-  change rootDerivation 11 ∈ LieModule.genWeightSpace Der
-    (nativeRootWeight ⟨11, by decide, by decide⟩) at hmem
   have hweight : nativeRootWeight ⟨11, by decide, by decide⟩ =
       3 • nativeRootWeight nativeShortSimpleIndex +
         nativeRootWeight nativeLongSimpleIndex := by
-        funext x
-        simpa [nativeRootWeightMathlib, nativeRootWeight,
-          nativeShortSimpleIndex, nativeLongSimpleIndex] using congrFun hchain x
+    have hroot : rootWeight 11 = 3 • rootWeight 10 + rootWeight 1 := by
+      rcases paper_positive_root_chain with ⟨h10, h01, _, _, h11, _⟩
+      rw [← h10, ← h01] at h11
+      exact h11
+    funext x
+    simpa [nativeRootWeight, nativeShortSimpleIndex, nativeLongSimpleIndex] using
+      congrArg (fun f : Weight => f (axialCartanLieEquiv.symm x)) hroot
   rw [hweight] at hmem
   intro hbot
-  change LieModule.genWeightSpace Der
-    (3 • (nativeRootWeightMathlib nativeShortSimpleIndex).toFun +
-      (nativeRootWeightMathlib nativeLongSimpleIndex).toFun) = ⊥ at hbot
-  have hmem' : rootDerivation 11 ∈ LieModule.genWeightSpace Der
-      (3 • (nativeRootWeightMathlib nativeShortSimpleIndex).toFun +
-        (nativeRootWeightMathlib nativeLongSimpleIndex).toFun) := by
-    simpa [nativeRootWeightMathlib, nativeRootWeight,
-      nativeShortSimpleIndex, nativeLongSimpleIndex] using hmem
-  rw [hbot] at hmem'
-  exact rootDerivation_ne_zero 11 (by simpa using hmem')
+  rw [hbot] at hmem
+  exact rootDerivation_ne_zero 11 (by simpa using hmem)
 
 private theorem rootWeight_four_short_add_long_not_mem_range :
     4 • rootWeight 10 + rootWeight 1 ∉ Set.range (rootWeight : Fin 14 → Weight) := by
@@ -190,16 +186,15 @@ private theorem rootWeight_four_short_add_long_not_mem_range :
 
 theorem native_root_string_next_vanishing :
     LieAlgebra.rootSpace Cartan
-        (4 • (nativeRootWeightMathlib nativeShortSimpleIndex).toFun +
-          (nativeRootWeightMathlib nativeLongSimpleIndex).toFun) = ⊥ := by
+        (4 • nativeRootWeight nativeShortSimpleIndex +
+          nativeRootWeight nativeLongSimpleIndex) = ⊥ := by
   apply mathlib_rootSpace_eq_bot_of_not_native_rootWeight
   intro j hj
   have hEq : rootWeight j = 4 • rootWeight 10 + rootWeight 1 := by
     apply LinearMap.ext
     intro k
     have hh := congrFun hj (axialCartanLieEquiv k)
-    simpa [LinearEquiv.symm_apply_apply, nativeRootWeightMathlib,
-      nativeRootWeight, nativeShortSimpleIndex, nativeLongSimpleIndex, rootWeight] using hh
+    simpa [nativeRootWeight, nativeShortSimpleIndex, nativeLongSimpleIndex] using hh
   exact rootWeight_four_short_add_long_not_mem_range ⟨j, hEq⟩
 
 local instance canonicalZorn_isNoetherian : IsNoetherian ℝ Der :=
@@ -222,13 +217,16 @@ theorem native_short_long_chainTopCoeff :
       nativeShortSimpleIndex] using hz
   have h3 : (3 : ℤ) ≤ LieModule.chainTopCoeff α.toFun β := by
     exact ((LieAlgebra.IsKilling.rootSpace_zsmul_add_ne_bot_iff α β hα 3).mp (by
-      simpa [α, β] using native_root_string_top_nontrivial)).1
+      simpa [α, β, nativeRootWeightMathlib, nativeRootWeight] using
+        native_root_string_top_nontrivial)).1
   have h4not : ¬ (4 : ℤ) ≤ LieModule.chainTopCoeff α.toFun β := by
     intro h4
     have hbot : -(4 : ℤ) ≤ (LieModule.chainBotCoeff α.toFun β : ℤ) := by omega
     have hne := (LieAlgebra.IsKilling.rootSpace_zsmul_add_ne_bot_iff α β hα 4).mpr
       ⟨h4, hbot⟩
-    exact hne (by simpa [α, β] using native_root_string_next_vanishing)
+    exact hne (by
+      simpa [α, β, nativeRootWeightMathlib, nativeRootWeight] using
+        native_root_string_next_vanishing)
   have htop : LieModule.chainTopCoeff α.toFun β < 4 := by
     by_contra h
     apply h4not
@@ -268,24 +266,25 @@ theorem native_short_long_chainBotCoeff :
     simpa [α, nativeRootWeightMathlib, nativeRootWeight,
       nativeShortSimpleIndex] using hz
   have hneg : LieAlgebra.rootSpace Cartan
-      (-(α.toFun) + β.toFun) = ⊥ := by
+      (-nativeRootWeight nativeShortSimpleIndex +
+        nativeRootWeight nativeLongSimpleIndex) = ⊥ := by
     apply mathlib_rootSpace_eq_bot_of_not_native_rootWeight
     intro j hj
     have hEq : rootWeight j = rootWeight 1 - rootWeight 10 := by
       apply LinearMap.ext
       intro k
       have hh := congrFun hj (axialCartanLieEquiv k)
-      simpa [LinearEquiv.symm_apply_apply, α, β, nativeRootWeightMathlib,
-        nativeRootWeight, nativeShortSimpleIndex, nativeLongSimpleIndex,
-        rootWeight, sub_eq_add_neg, add_assoc, add_left_comm, add_comm] using hh
+      simpa [α, β, nativeRootWeight, nativeShortSimpleIndex, nativeLongSimpleIndex,
+        sub_eq_add_neg, add_assoc, add_left_comm, add_comm] using hh
     exact rootWeight_long_sub_short_not_mem_range ⟨j, hEq⟩
   have hnot : ¬ (1 : ℤ) ≤ LieModule.chainBotCoeff α.toFun β := by
     intro h1
     have htop : (-1 : ℤ) ≤ LieModule.chainTopCoeff α.toFun β := by omega
     have hne := (LieAlgebra.IsKilling.rootSpace_zsmul_add_ne_bot_iff α β hα (-1)).mpr
       ⟨htop, h1⟩
-    apply hne
-    simpa [α, β, sub_eq_add_neg, add_comm] using hneg
+    exact hne (by
+      simpa [α, β, nativeRootWeightMathlib, nativeRootWeight,
+        sub_eq_add_neg, add_comm] using hneg)
   exact Nat.eq_zero_of_not_pos (by
     simpa [Nat.one_le_iff_ne_zero] using hnot)
 
@@ -315,37 +314,31 @@ theorem native_short_coroot_on_long_root :
   change LieModule.chainBotCoeff (⇑α) β = 0 at hb
   change LieModule.chainTopCoeff (⇑α) β = 3 at ht
   rw [hb, ht] at h
-  have h' : β.toFun (LieAlgebra.IsKilling.coroot α) = -3 := by
+  have h' : β (LieAlgebra.IsKilling.coroot α) = -3 := by
     simpa [α, β] using h
-  simpa [P, α, β, nativeRootIndex_value] using h'
+  change β (LieAlgebra.IsKilling.coroot α) = -3
+  exact h'
 
 theorem native_long_string_top_nontrivial :
     LieAlgebra.rootSpace Cartan
-        ((nativeRootWeightMathlib nativeLongSimpleIndex).toFun +
-          (nativeRootWeightMathlib nativeShortSimpleIndex).toFun) ≠ ⊥ := by
-  have hchain := (nativePositiveRootWeight_chain).1
+        (nativeRootWeight nativeLongSimpleIndex +
+          nativeRootWeight nativeShortSimpleIndex) ≠ ⊥ := by
   have hmem := rootDerivation_mem_rootSpace
     (⟨9, by decide, by decide⟩ : nonzeroIndex)
-  change rootDerivation 9 ∈ LieModule.genWeightSpace Der
-    (nativeRootWeight ⟨9, by decide, by decide⟩) at hmem
   have hweight : nativeRootWeight ⟨9, by decide, by decide⟩ =
       nativeRootWeight nativeLongSimpleIndex + nativeRootWeight nativeShortSimpleIndex := by
+    rcases paper_positive_root_chain with ⟨h10, h01, h9, _, _, _⟩
+    have hroot : rootWeight 9 = rootWeight 1 + rootWeight 10 := by
+      rw [← h10, ← h01] at h9
+      rw [add_comm]
+      exact h9
     funext x
-    simpa [nativeRootWeightMathlib, nativeRootWeight,
-      nativeShortSimpleIndex, nativeLongSimpleIndex, simpleWeightOnCartan,
-      simpleWeight, paper_e01_weight, paper_e10_weight] using congrFun hchain x
+    simpa [nativeRootWeight, nativeLongSimpleIndex, nativeShortSimpleIndex] using
+      congrArg (fun f : Weight => f (axialCartanLieEquiv.symm x)) hroot
   rw [hweight] at hmem
   intro hbot
-  change LieModule.genWeightSpace Der
-    ((nativeRootWeightMathlib nativeLongSimpleIndex).toFun +
-      (nativeRootWeightMathlib nativeShortSimpleIndex).toFun) = ⊥ at hbot
-  have hmem' : rootDerivation 9 ∈ LieModule.genWeightSpace Der
-      ((nativeRootWeightMathlib nativeLongSimpleIndex).toFun +
-        (nativeRootWeightMathlib nativeShortSimpleIndex).toFun) := by
-    simpa [nativeRootWeightMathlib, nativeRootWeight,
-      nativeShortSimpleIndex, nativeLongSimpleIndex] using hmem
-  rw [hbot] at hmem'
-  exact rootDerivation_ne_zero 9 (by simpa using hmem')
+  rw [hbot] at hmem
+  exact rootDerivation_ne_zero 9 (by simpa using hmem)
 
 private theorem rootWeight_two_long_add_short_not_mem_range :
     2 • rootWeight 1 + rootWeight 10 ∉ Set.range (rootWeight : Fin 14 → Weight) := by
@@ -362,16 +355,16 @@ private theorem rootWeight_two_long_add_short_not_mem_range :
 
 theorem native_long_string_next_vanishing :
     LieAlgebra.rootSpace Cartan
-        (2 • (nativeRootWeightMathlib nativeLongSimpleIndex).toFun +
-          (nativeRootWeightMathlib nativeShortSimpleIndex).toFun) = ⊥ := by
+        (2 • nativeRootWeight nativeLongSimpleIndex +
+          nativeRootWeight nativeShortSimpleIndex) = ⊥ := by
   apply mathlib_rootSpace_eq_bot_of_not_native_rootWeight
   intro j hj
   have hEq : rootWeight j = 2 • rootWeight 1 + rootWeight 10 := by
     apply LinearMap.ext
     intro k
-    have hh := congrFun hj (axialCartanLieEquiv k)
-    simpa [LinearEquiv.symm_apply_apply, nativeRootWeightMathlib,
-      nativeRootWeight, nativeShortSimpleIndex, nativeLongSimpleIndex, rootWeight] using hh
+    simpa [nativeRootWeight, nativeShortSimpleIndex,
+      nativeLongSimpleIndex] using
+      congrFun hj (axialCartanLieEquiv k)
   exact rootWeight_two_long_add_short_not_mem_range ⟨j, hEq⟩
 
 theorem native_long_short_chainTopCoeff :
@@ -391,13 +384,16 @@ theorem native_long_short_chainTopCoeff :
       nativeLongSimpleIndex] using hz
   have h1 : (1 : ℤ) ≤ LieModule.chainTopCoeff α.toFun β := by
     exact ((LieAlgebra.IsKilling.rootSpace_zsmul_add_ne_bot_iff α β hα 1).mp (by
-      simpa [α, β] using native_long_string_top_nontrivial)).1
+      simpa [α, β, nativeRootWeightMathlib, nativeRootWeight] using
+        native_long_string_top_nontrivial)).1
   have h2not : ¬ (2 : ℤ) ≤ LieModule.chainTopCoeff α.toFun β := by
     intro h2
     have hbot : -(2 : ℤ) ≤ (LieModule.chainBotCoeff α.toFun β : ℤ) := by omega
     have hne := (LieAlgebra.IsKilling.rootSpace_zsmul_add_ne_bot_iff α β hα 2).mpr
       ⟨h2, hbot⟩
-    exact hne (by simpa [α, β] using native_long_string_next_vanishing)
+    exact hne (by
+      simpa [α, β, nativeRootWeightMathlib, nativeRootWeight] using
+        native_long_string_next_vanishing)
   have htop : LieModule.chainTopCoeff α.toFun β < 2 := by
     by_contra h
     apply h2not
@@ -436,24 +432,26 @@ theorem native_long_short_chainBotCoeff :
     have hz := congrFun hzero (axialCartanLieEquiv k)
     simpa [α, nativeRootWeightMathlib, nativeRootWeight,
       nativeLongSimpleIndex] using hz
-  have hneg : LieAlgebra.rootSpace Cartan (-α.toFun + β.toFun) = ⊥ := by
+  have hneg : LieAlgebra.rootSpace Cartan
+      (-nativeRootWeight nativeLongSimpleIndex +
+        nativeRootWeight nativeShortSimpleIndex) = ⊥ := by
     apply mathlib_rootSpace_eq_bot_of_not_native_rootWeight
     intro j hj
     have hEq : rootWeight j = rootWeight 10 - rootWeight 1 := by
       apply LinearMap.ext
       intro k
       have hh := congrFun hj (axialCartanLieEquiv k)
-      simpa [LinearEquiv.symm_apply_apply, α, β, nativeRootWeightMathlib,
-        nativeRootWeight, nativeShortSimpleIndex, nativeLongSimpleIndex,
-        rootWeight, sub_eq_add_neg, add_assoc, add_left_comm, add_comm] using hh
+      simpa [α, β, nativeRootWeight, nativeShortSimpleIndex, nativeLongSimpleIndex,
+        sub_eq_add_neg, add_assoc, add_left_comm, add_comm] using hh
     exact rootWeight_short_sub_long_not_mem_range ⟨j, hEq⟩
   have hnot : ¬ (1 : ℤ) ≤ LieModule.chainBotCoeff α.toFun β := by
     intro h1
     have htop : (-1 : ℤ) ≤ LieModule.chainTopCoeff α.toFun β := by omega
     have hne := (LieAlgebra.IsKilling.rootSpace_zsmul_add_ne_bot_iff α β hα (-1)).mpr
       ⟨htop, h1⟩
-    apply hne
-    simpa [α, β, sub_eq_add_neg, add_comm] using hneg
+    exact hne (by
+      simpa [α, β, nativeRootWeightMathlib, nativeRootWeight,
+        sub_eq_add_neg, add_comm] using hneg)
   exact Nat.eq_zero_of_not_pos (by
     simpa [Nat.one_le_iff_ne_zero] using hnot)
 
@@ -471,9 +469,10 @@ theorem native_long_coroot_on_short_root :
   change LieModule.chainBotCoeff (⇑α) β = 0 at hb
   change LieModule.chainTopCoeff (⇑α) β = 1 at ht
   rw [hb, ht] at h
-  have h' : β.toFun (LieAlgebra.IsKilling.coroot α) = -1 := by
+  have h' : β (LieAlgebra.IsKilling.coroot α) = -1 := by
     simpa [α, β] using h
-  simpa [P, α, β, nativeRootIndex_value] using h'
+  change β (LieAlgebra.IsKilling.coroot α) = -1
+  exact h'
 
 /-! The calibrated simple roots instantiate Mathlib's native embedded-G₂ API. -/
 noncomputable def nativeEmbeddedG2 : P.EmbeddedG2 := by
@@ -494,8 +493,16 @@ noncomputable def nativeEmbeddedG2 : P.EmbeddedG2 := by
     short := nativeRootIndex nativeShortSimpleIndex
     pairingIn_long_short := by
       apply (FaithfulSMul.algebraMap_injective ℤ ℝ)
-      rw [P.algebraMap_pairingIn]
-      simpa using native_short_coroot_on_long_root }
+      have hpair : P.pairing (nativeRootIndex nativeLongSimpleIndex)
+          (nativeRootIndex nativeShortSimpleIndex) = -3 := by
+        change (LieAlgebra.IsKilling.rootSystem
+          (Cartan : LieSubalgebra ℝ Der)).pairing
+            (nativeRootIndex nativeLongSimpleIndex)
+            (nativeRootIndex nativeShortSimpleIndex) = -3
+        rw [LieAlgebra.IsKilling.rootSystem_pairing_apply]
+        exact native_short_coroot_on_long_root
+      rw [P.algebraMap_pairingIn ℤ, hpair]
+      norm_num }
 
 theorem nativeRootIndex_self_coroot_pairing (i : nonzeroIndex) :
     (P.root (nativeRootIndex i)) (P.coroot (nativeRootIndex i)) = 2 := by
@@ -509,7 +516,9 @@ theorem nativeRootIndex_self_coroot_pairing (i : nonzeroIndex) :
     simpa [LieSubalgebra.root] using (nativeRootIndex i).2
   have h := LieAlgebra.IsKilling.root_apply_coroot
     (α := (nativeRootIndex i).1) hα
-  simpa [P] using h
+  change nativeRootWeightMathlib i
+    (LieAlgebra.IsKilling.coroot (nativeRootIndex i).1) = 2
+  exact h
 
 theorem nativeRootIndex_pairing_apply (i j : nonzeroIndex) :
     P.pairing (nativeRootIndex j) (nativeRootIndex i) =

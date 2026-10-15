@@ -87,9 +87,14 @@ theorem SymbolicLatentLocalChartMap.mapPathImageTopCatHom_factorization_unique
     u = F.mapPathImageTopCatHom γ hγ := by
   apply TopCat.hom_ext
   ext y
-  have hy : (u y).1 = F.toFun y.1 := by
-    simpa [TopCat.comp_app, TopCat.ofHom] using
-      congrArg (fun m => m y) hu
-  simpa [SymbolicLatentLocalChartMap.mapPathImageTopCatHom] using hy
+  have hy := congrArg (fun m => m y) hu
+  have hy' : (u y).1 = F.toFun y.1 := by
+    simpa [SymbolicLatentLocalPath.imageInclusionTopCatHom,
+      SymbolicLatentLocalChartMap.mapPathImageTopCatHom,
+      TopCat.comp_app, TopCat.ofHom] using hy
+  have hmap :
+      (F.mapPathImageTopCatHom γ hγ y).1 = F.toFun y.1 := by
+    rfl
+  exact hy'.trans hmap.symm
 
 end InfoGeometry.Topology

@@ -48,8 +48,10 @@ lemma xiLimitDefectPotentialL1Summand_integrable (D : XiLimitDefectPotentialL1Su
         (fun _ : ℝ => (1 : ℝ))) := by
     rw [MeasureTheory.integrable_indicator_iff measurableSet_Icc]
     simp [MeasureTheory.IntegrableOn]
-  simpa [XiLimitDefectPotentialL1SumruleData.summand, mul_comm, mul_left_comm, mul_assoc] using
-    hbase.const_mul (D.weight i)
+  change Integrable (fun x => D.weight i *
+    Set.indicator (Set.Icc (D.center i - Real.pi) (D.center i + Real.pi))
+      (fun _ : ℝ => (1 : ℝ)) x)
+  exact hbase.const_mul (D.weight i)
 
 lemma xiLimitDefectPotentialL1Indicator_integral_two_pi (D : XiLimitDefectPotentialL1SumruleData)
     (i : Fin D.n) :
@@ -100,7 +102,10 @@ lemma xiLimitDefectPotentialL1_integrable (D : XiLimitDefectPotentialL1SumruleDa
   refine Finset.induction_on (Finset.univ : Finset (Fin D.n)) ?_ ?_
   · simp
   · intro i s hi hs
-    simpa [hi, Pi.add_apply] using (xiLimitDefectPotentialL1Summand_integrable D i).add hs
+    convert (xiLimitDefectPotentialL1Summand_integrable D i).add hs using 1
+    funext x
+    rw [Finset.sum_insert hi]
+    rfl
 
 lemma xiLimitDefectPotentialL1_integral (D : XiLimitDefectPotentialL1SumruleData) :
     ∫ x, D.defectPotential x = 2 * Real.pi * D.weightedSum := by

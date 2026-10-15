@@ -83,7 +83,8 @@ private lemma xi_time_part57bc_frozen_support_exact_local_inversion_rate_limit
     Omega.Conclusion.binfoldUpperEndpointBudget_limit
       D.xi_time_part57bc_frozen_support_exact_local_inversion_rate_base
       D.xi_time_part57bc_frozen_support_exact_local_inversion_rate_base_ge_one
-  simpa [Omega.Conclusion.binfoldFreezingSlope,
+  simpa [xi_time_part57bc_frozen_support_exact_local_inversion_rate_bit_budget,
+    Omega.Conclusion.binfoldFreezingSlope,
     xi_time_part57bc_frozen_support_exact_local_inversion_rate_alpha_star, Real.log_div_log] using
     hlimit
 

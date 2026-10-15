@@ -47,8 +47,9 @@ def actualEntireRiemannXiReadoutNormalizationDatum :
 theorem actualEntireRiemannXiReadoutNormalizationDatum_even (t : ℝ) :
     actualEntireRiemannXiReadoutNormalizationDatum.Z (-t) =
       actualEntireRiemannXiReadoutNormalizationDatum.Z t := by
-  simpa only [actualEntireRiemannXiReadoutNormalizationDatum_Z] using
-    InfoGeometry.Topology.ActualEntireXiRealReadoutBridge.actualEntireRiemannXiRealReadout_even t
+  change actualEntireRiemannXiRealReadoutDatum.Z (-t) =
+    actualEntireRiemannXiRealReadoutDatum.Z t
+  exact InfoGeometry.Topology.ActualEntireXiRealReadoutBridge.actualEntireRiemannXiRealReadout_even t
 
 theorem actualEntireRiemannXiReadoutNormalizationDatum_zero_iff (t : ℝ) :
     actualEntireRiemannXiReadoutNormalizationDatum.xi_crit t = 0 ↔

@@ -7,8 +7,19 @@ description: Run OpenGauss-style project workflows natively in Codex CLI for thi
 
 This skill is the project-local Codex entry point for OpenGauss-style workflows.
 It uses Codex's current session and repository tools; it does not install or run
-the OpenGauss submodule, create a second queue, start background swarms, or
-delegate authority to an external agent.
+the OpenGauss submodule, create a second persistent queue, or start unattended
+background swarms. Codex collaborators may provide bounded research, proof
+proposals, and adversarial reviews, but the coordinating agent owns source
+promotion and the final verification evidence.
+
+For explicit multi-agent work, follow
+`docs/CODEX_AGENT_SWARM_PROTOCOL.md` and use the active session's native
+`collaboration.spawn_agent` API to adapt the repository's Leader / Orchestrator /
+Worker model, assume-and-recurse proof loop, paired refuter, and independent
+gate-panel review. The coordinating Codex agent owns existing-file edits and
+all final Lean/QMS checks. This session-level team is distinct from the
+repository's Hive workers, vendored Antigravity SDK, and Archon/Python queue;
+choose one scheduler per theorem task.
 
 ## Workflow selection
 

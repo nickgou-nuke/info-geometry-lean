@@ -33,6 +33,6 @@ theorem projectiveLimitUnitIntervalMeasure_map_subtypeVal :
 theorem projectiveLimitReadoutMeasure_isProbabilityMeasure :
     IsProbabilityMeasure projectiveLimitReadoutMeasure := by
   rw [← projectiveLimitUnitIntervalMeasure_map_subtypeVal]
-  exact Measure.isProbabilityMeasure_map continuous_subtype_val.aemeasurable
+  infer_instance
 
 end InfoGeometry.Canonical.CantorReadoutMeasurePushforward

@@ -1,5 +1,6 @@
 import InfoGeometry.Exceptional.FreudenthalChargeLinear
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Algebra.Lie.OfAssociative
 
 /-!
 # The proven symplectic mixed bracket on Freudenthal charges
@@ -13,6 +14,8 @@ does not identify that subalgebra with `𝔢₇`.
 noncomputable section
 
 namespace InfoGeometry.Exceptional.Freudenthal
+
+attribute [local instance 100] LieRing.ofAssociativeRing LieAlgebra.ofAssociativeAlgebra
 
 variable {J : Type*} [AddCommGroup J] [Module ℝ J]
 variable (D : CubicJordanDatum J)

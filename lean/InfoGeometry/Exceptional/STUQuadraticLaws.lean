@@ -59,7 +59,7 @@ theorem stuQuadraticLaws_adjoint_cross_linearization
     stuAdjointCross (stuAdjointQuad x) (stuAdjointCross x y) =
       stuNormCubic x • y +
         stuTraceBilin (stuAdjointQuad x) y • x := by
-  simpa [stuQuadraticLaws_cross_apply] using
+  simpa [STU_Datum, stuQuadraticLaws_cross_apply] using
     CubicJordanQuadraticLaws.adjoint_cross_linearization
       stuQuadraticLaws x y
 
@@ -72,7 +72,7 @@ theorem stuAdjointQuad_line (r : ℝ) (x y : STUCarrier) :
     stuAdjointQuad (x + r • y) =
       stuAdjointQuad x + r • stuAdjointCross x y +
         r ^ 2 • stuAdjointQuad y := by
-  simpa [stuQuadraticLaws_cross_apply] using
+  simpa [STU_Datum, stuQuadraticLaws_cross_apply] using
     CubicJordanQuadraticLaws.adjoint_line stuQuadraticLaws r x y
 
 theorem stuNormCubic_line (r : ℝ) (x y : STUCarrier) :

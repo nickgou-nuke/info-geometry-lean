@@ -51,7 +51,10 @@ private lemma hypercube_linear_area_law_density_x_term_tendsto_zero
     (X : ℕ → ℕ)
     (hX : Tendsto (fun n => (X n : ℝ) / (2 : ℝ) ^ n) atTop (nhds 0)) :
     Tendsto (hypercube_linear_area_law_density_x_term X) atTop (nhds 0) := by
-  simpa [hypercube_linear_area_law_density_x_term] using
+  change Tendsto
+    (fun n => ((X n : ℝ) / (2 : ℝ) ^ n) * hypercube_linear_area_law_density_one_over n)
+    atTop (nhds 0)
+  simpa only [zero_mul] using
     hX.mul hypercube_linear_area_law_density_one_over_tendsto_zero
 
 private lemma hypercube_linear_area_law_density_normalized_error_tendsto_zero

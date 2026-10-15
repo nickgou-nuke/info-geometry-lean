@@ -1,4 +1,4 @@
-import Mathlib.Logic.IsEmpty.Basic
+import Mathlib.Basic.IsEmpty.Basic
 import Mathlib.Tactic
 import Omega.TypedAddressBiaxialCompletion.PreferredMinimalInstantiationExtraction
 
@@ -14,7 +14,32 @@ inductive PreferredMinimalInstantiationLayer
   | spectral
   | ledger
   | budget
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype PreferredMinimalInstantiationLayer :=
+  Fintype.ofEquiv (Fin 6)
+    { toFun := fun i =>
+        match i.val with
+        | 0 => .lost
+        | 1 => .fold
+        | 2 => .localLayer
+        | 3 => .spectral
+        | 4 => .ledger
+        | _ => .budget
+      invFun := fun layer =>
+        match layer with
+        | .lost => 0
+        | .fold => 1
+        | .localLayer => 2
+        | .spectral => 3
+        | .ledger => 4
+        | .budget => 5
+      left_inv := by
+        intro i
+        fin_cases i <;> rfl
+      right_inv := by
+        intro layer
+        cases layer <;> rfl }
 
 /-- A fixed witness package on an inhabited singleton state, used when the original state is
 empty and any attempted layer removal must therefore change the package globally. -/

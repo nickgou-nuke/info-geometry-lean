@@ -19,10 +19,14 @@ def positiveSimplexCore (ε : ℝ) : Set (Fin n → ℝ) :=
 theorem isClosed_positiveSimplexCore (ε : ℝ) :
     IsClosed (positiveSimplexCore (n := n) ε) := by
   have hlower : IsClosed {P : Fin n → ℝ | ∀ i, ε ≤ P i} := by
-    simpa only [Set.setOf_forall] using
-      isClosed_iInter (fun i => isClosed_Ici.preimage (continuous_apply i))
-  simpa [positiveSimplexCore, Set.setOf_and] using
-    (isClosed_probabilitySimplex (n := n)).inter hlower
+    have : {P : Fin n → ℝ | ∀ i, ε ≤ P i} = ⋂ i, (fun P => P i) ⁻¹' Set.Ici ε := by
+      ext P; simp [Set.mem_iInter, Set.mem_Ici]
+    rw [this]
+    exact isClosed_iInter (fun i => isClosed_Ici.preimage (continuous_apply i))
+  have : positiveSimplexCore (n := n) ε = probabilitySimplex (n := n) ∩ {P : Fin n → ℝ | ∀ i, ε ≤ P i} := by
+    ext P; rfl
+  rw [this]
+  exact (isClosed_probabilitySimplex (n := n)).inter hlower
 
 theorem isCompact_positiveSimplexCore (ε : ℝ) :
     IsCompact (positiveSimplexCore (n := n) ε) := by

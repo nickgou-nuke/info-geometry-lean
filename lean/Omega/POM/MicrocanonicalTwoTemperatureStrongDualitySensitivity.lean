@@ -1,5 +1,7 @@
 import Omega.POM.MicrocanonicalTwoTemperatureJsIdentity
+import Mathlib.Analysis.Calculus.Deriv.Add
 import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Tactic
 
 namespace Omega.POM

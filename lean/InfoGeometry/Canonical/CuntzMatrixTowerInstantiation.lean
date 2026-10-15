@@ -64,7 +64,11 @@ theorem matrixTraceState_one (n : ℕ) : matrixTraceState n 1 = 1 := by
 /-- **Theorem**: Trace of star A * A is a non-negative real scalar. -/
 theorem matrixTrace_star_mul_self_nonneg (n : ℕ) (A : MatrixStage n) :
     0 ≤ (Matrix.trace (star A * A)).re := by
-  dsimp [Matrix.trace, mul_apply, star, conjTranspose_apply]
+  have h_tr : Matrix.trace (star A * A) =
+      ∑ i : Fin (2 ^ n), ∑ k : Fin (2 ^ n), starRingEnd ℂ (A k i) * A k i := by
+    simp only [Matrix.trace, Matrix.diag_apply, Matrix.mul_apply,
+      Matrix.star_apply, Complex.star_def]
+  rw [h_tr]
   have h_elem (k i : Fin (2 ^ n)) : (starRingEnd ℂ (A k i) * A k i).re = Complex.normSq (A k i) := by
     rw [mul_comm, Complex.mul_conj]
     rfl
@@ -86,7 +90,7 @@ theorem matrixTrace_star_mul_self_nonneg (n : ℕ) (A : MatrixStage n) :
 theorem matrixTrace_star_mul_self_im_zero (n : ℕ) (A : MatrixStage n) :
     (Matrix.trace (star A * A)).im = 0 := by
   have hself : star (star A * A) = star A * A := by
-    simp [Matrix.star_mul]
+    simp [star_mul]
   have hconj : star (Matrix.trace (star A * A)) = Matrix.trace (star A * A) := by
     rw [← Matrix.trace_conjTranspose]
     exact congrArg Matrix.trace hself

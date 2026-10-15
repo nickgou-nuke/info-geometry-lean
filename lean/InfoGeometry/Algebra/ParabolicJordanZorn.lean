@@ -35,8 +35,7 @@ theorem fixed_iff_second_coordinate_zero (parameter : ℝ) (hnonzero : parameter
     have hfirst := congrFun hequal 0
     simp [shearEnd, Matrix.mulVecLin_apply, NPart, Matrix.mulVec,
       dotProduct, Fin.sum_univ_two] at hfirst
-    have hproduct : parameter * vector 1 = 0 := by linarith
-    exact (mul_eq_zero.mp hproduct).resolve_left hnonzero
+    exact hfirst.resolve_left hnonzero
   · intro hsecond
     ext index
     fin_cases index <;>
@@ -116,13 +115,36 @@ theorem not_similar_to_diagonal (parameter : ℝ) (hnonzero : parameter ≠ 0) :
       have hfirst := congrFun hzero 0
       have hsecond := congrFun hzero 1
       apply hdet
-      fin_cases column <;>
-        simp_all [vector, Matrix.det_fin_two]
+      have h00 : basisMatrix 0 column = 0 := by simpa [vector] using hfirst
+      have h10 : basisMatrix 1 column = 0 := by simpa [vector] using hsecond
+      fin_cases column
+      · change basisMatrix 0 0 = 0 at h00
+        change basisMatrix 1 0 = 0 at h10
+        simp [Matrix.det_fin_two, h00, h10]
+      · change basisMatrix 0 1 = 0 at h00
+        change basisMatrix 1 1 = 0 at h10
+        simp [Matrix.det_fin_two, h00, h10]
     have heigen : shearEnd parameter vector = entries column • vector := by
       ext row
       have hentry := congrArg (fun matrix : Mat2 => matrix row column) hequal
-      simpa [shearEnd, Matrix.mulVecLin_apply, Matrix.mulVec, dotProduct,
-        Matrix.mul_apply, Matrix.diagonal, vector] using hentry
+      have hentry' :
+          NPart parameter row 0 * basisMatrix 0 column +
+              NPart parameter row 1 * basisMatrix 1 column =
+            basisMatrix row column * entries column := by
+        simpa [shearEnd, Matrix.mulVec, dotProduct, Matrix.mul_apply,
+          Matrix.diagonal, vector] using hentry
+      have hleft :
+          (shearEnd parameter vector) row =
+            NPart parameter row 0 * basisMatrix 0 column +
+              NPart parameter row 1 * basisMatrix 1 column := by
+        simp [shearEnd, Matrix.mulVec, dotProduct, Fin.sum_univ_two, vector]
+      calc
+        (shearEnd parameter vector) row =
+            NPart parameter row 0 * basisMatrix 0 column +
+              NPart parameter row 1 * basisMatrix 1 column := hleft
+        _ = basisMatrix row column * entries column := hentry'
+        _ = entries column * vector row := by
+          simp [vector, mul_comm]
     have hvalue := eigenvalue_eq_one parameter (entries column) vector hvector heigen
     have hfixed : shearEnd parameter vector = vector := by simpa [hvalue] using heigen
     exact (fixed_iff_second_coordinate_zero parameter hnonzero vector).mp hfixed
@@ -132,7 +154,7 @@ theorem not_similar_to_diagonal (parameter : ℝ) (hnonzero : parameter ≠ 0) :
 theorem shear_add (first second : ℝ) : NPart first * NPart second = NPart (first + second) := by
   ext row column
   fin_cases row <;> fin_cases column <;>
-    simp [NPart, Matrix.mul_apply, Fin.sum_univ_two]
+    simp [NPart, Matrix.mul_apply, Fin.sum_univ_two] <;> ring
 
 theorem shear_pow (parameter : ℝ) (exponent : ℕ) :
     NPart parameter ^ exponent = NPart ((exponent : ℝ) * parameter) := by
@@ -148,8 +170,10 @@ theorem shear_pow (parameter : ℝ) (exponent : ℕ) :
 
 theorem shear_no_positive_period (parameter : ℝ) (hnonzero : parameter ≠ 0)
     (exponent : ℕ) (hpositive : 0 < exponent) : NPart parameter ^ exponent ≠ 1 := by
-  rw [shear_pow, NPart_eq_one_iff]
-  exact mul_ne_zero (by exact_mod_cast (Nat.ne_of_gt hpositive)) hnonzero
+  rw [shear_pow]
+  intro h
+  have hzero := (NPart_eq_one_iff _).mp h
+  exact (mul_ne_zero (by exact_mod_cast (Nat.ne_of_gt hpositive)) hnonzero) hzero
 
 theorem inverse_parameter_not_transpose (parameter : ℝ) (hnonzero : parameter ≠ 0) :
     NPart (-parameter) ≠ (NPart parameter).transpose := by

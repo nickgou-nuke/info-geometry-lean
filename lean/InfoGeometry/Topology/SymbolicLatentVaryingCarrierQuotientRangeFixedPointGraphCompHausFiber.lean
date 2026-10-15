@@ -39,8 +39,7 @@ theorem compactIndexedObservationQuotientCompHausLimitFixedPointGraphOn_isClosed
       (compactIndexedObservationQuotientCompHausLimitFixedPointGraphOn_fiber
         D α a b t) := by
   apply isClosed_eq
-  · simpa only [Function.comp_apply] using
-    (continuous_subtype_val.comp
+  · exact (continuous_subtype_val.comp
       (continuous_fst.comp continuous_subtype_val) :
       Continuous (fun p :
         compactIndexedObservationQuotientCompHausLimitFixedPointGraphOn
@@ -55,8 +54,7 @@ theorem compactIndexedObservationRangeCompHausLimitFixedPointGraphOn_isClosed_fi
       (compactIndexedObservationRangeCompHausLimitFixedPointGraphOn_fiber
         D α a b t) := by
   apply isClosed_eq
-  · simpa only [Function.comp_apply] using
-    (continuous_subtype_val.comp
+  · exact (continuous_subtype_val.comp
       (continuous_fst.comp continuous_subtype_val) :
       Continuous (fun p :
         compactIndexedObservationRangeCompHausLimitFixedPointGraphOn

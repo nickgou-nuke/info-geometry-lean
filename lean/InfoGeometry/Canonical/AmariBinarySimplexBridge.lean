@@ -121,10 +121,8 @@ theorem fisherExp_eq_logistic_mul_complement (θ : ℝ) :
 /-! ## Native Hessian readout -/
 
 theorem deriv_massieu (θ : ℝ) :
-    deriv massieu θ = logistic θ := by
-  simpa [massieu, logistic,
-    InfoGeometry.ExponentialFamily.Bernoulli.logPartition] using
-    InfoGeometry.ExponentialFamily.Bernoulli.deriv_logPartition θ
+    deriv massieu θ = logistic θ :=
+  InfoGeometry.ExponentialFamily.Bernoulli.deriv_logPartition θ
 
 theorem deriv_logistic (θ : ℝ) :
     deriv logistic θ = fisherExp θ := by
@@ -186,22 +184,35 @@ theorem hasDerivAt_negativeEntropy {s : ℝ}
       HasDerivAt (fun x : ℝ => x * Real.log x)
         (Real.log s + 1) s := by
     have h := (hasDerivAt_id s).mul (Real.hasDerivAt_log hs0)
-    convert h using 1 <;> simp only [id_eq] <;> field_simp <;> ring
+    have hd : (1 : ℝ) * Real.log s + s * s⁻¹ = Real.log s + 1 := by
+      rw [mul_inv_cancel₀ hs0]
+      ring
+    exact hd ▸ h
   have hinner : HasDerivAt (fun x : ℝ => 1 - x) (-1 : ℝ) s := by
-    simpa using (hasDerivAt_const s (1 : ℝ)).sub (hasDerivAt_id s)
+    have h := (hasDerivAt_const s (1 : ℝ)).sub (hasDerivAt_id s)
+    have hd : (0 : ℝ) - 1 = -1 := by ring
+    exact hd ▸ (h : HasDerivAt (fun x => 1 - x) (0 - 1) s)
   have hsecond :
       HasDerivAt (fun x : ℝ => (1 - x) * Real.log (1 - x))
         (-(Real.log (1 - s) + 1)) s := by
     have hlog := (Real.hasDerivAt_log hq0).comp s hinner
     have h := hinner.mul hlog
-    convert h using 1 <;> simp [Function.comp_def] <;> field_simp <;> ring
+    have hd : -1 * Real.log (1 - s) + (1 - s) * ((1 - s)⁻¹ * -1) = -(Real.log (1 - s) + 1) := by
+      have hcancel : (1 - s) * (1 - s)⁻¹ = 1 := mul_inv_cancel₀ hq0
+      calc
+        -1 * Real.log (1 - s) + (1 - s) * ((1 - s)⁻¹ * -1)
+          = -1 * Real.log (1 - s) + ((1 - s) * (1 - s)⁻¹) * -1 := by ring
+        _ = -1 * Real.log (1 - s) + 1 * -1 := by rw [hcancel]
+        _ = -(Real.log (1 - s) + 1) := by ring
+    exact hd ▸ h
   have hlogit :
       Real.log (s / (1 - s)) = Real.log s - Real.log (1 - s) :=
     Real.log_div hs0 hq0
-  unfold negativeEntropy logit
-  convert hfirst.add hsecond using 1
-  rw [hlogit]
-  ring
+  have hd : (Real.log s + 1) + -(Real.log (1 - s) + 1) = logit s := by
+    unfold logit
+    rw [hlogit]
+    ring
+  exact hd ▸ (hfirst.add hsecond : HasDerivAt negativeEntropy ((Real.log s + 1) + -(Real.log (1 - s) + 1)) s)
 
 theorem deriv_negativeEntropy {s : ℝ}
     (hs : s ∈ Set.Ioo (0 : ℝ) 1) :

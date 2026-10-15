@@ -13,13 +13,17 @@ complete algebraic decomposition of `2×2` complex matrices that simultaneously 
 
 * **Lie closure** (commutators): `[σ⁺, σ⁻] = σ³` — chirality/helicity grading.
 * **Jordan closure** (anticommutators): `{σ⁺, σ⁻} = I` — transverse completeness.
-* **Nilpotent square** (causal cone): `(σ⁺)² = (σ⁻)² = 0` — null vector factorization.
+* **Nilpotent square**: `(σ⁺)² = (σ⁻)² = 0` — the ladder operators are
+  nilpotent. This is a matrix-algebra fact, not the null condition on a
+  soldered spacetime vector.
 * **CAR identification**: σ⁺ is the fermionic annihilation, σ⁻ the creation operator.
 
-When soldered onto spacetime vectors via the Pauli map `v^μ σ_μ`, the chiral algebra
-provides the spinor-helicity decomposition: null vectors (on the causal cone) factorize
-as `λ ⊗ λ̃†`, and the circular polarization basis `{ε⁺, ε⁻}` is the soldered image of
-`{σ⁺, σ⁻}` acting on the little group.
+Under the Pauli soldering map `v^μ σ_μ`, the causal-cone condition is determinant
+zero. In the real four-vector case this gives a Hermitian singular matrix of rank
+at most one; a spinor factorization additionally needs the corresponding positivity
+and factorization argument. In particular, singularity does not mean that the
+soldered matrix is nilpotent. The circular polarization basis `{ε⁺, ε⁻}` is a
+separate representation-theoretic construction.
 
 -/
 
@@ -161,9 +165,9 @@ theorem σ3c_eq_sigma3 : σ3c = SolderingSpinConnectionBogoliubov.σ3 := by
 
 /-! ## Nilpotency and the causal cone
 
-The fundamental algebraic fact: σ⁺ and σ⁻ are nilpotent of order 2. This nilpotency
-is the algebraic expression of the causal cone — null vectors, when soldered, produce
-rank-1 matrices that decompose cleanly in the chiral basis.
+The chiral ladder matrices are nilpotent, while the causal cone for a soldered
+four-vector is characterized by determinant zero. These are distinct algebraic
+conditions: a nonzero null vector can have a nonzero, non-nilpotent soldered matrix.
 -/
 
 /-- σ⁺ is nilpotent: `(σ⁺)² = 0`. -/
@@ -509,6 +513,24 @@ theorem causal_cone_iff_solder_det_zero (t x y z : ℂ) :
     (SolderingSpinConnectionBogoliubov.solder t x y z).det = 0 ↔
     t^2 - x^2 - y^2 - z^2 = 0 := by
   rw [SolderingSpinConnectionBogoliubov.solder_det t x y z]
+
+/-- A concrete future-null soldered vector is singular but its matrix is not
+square-zero. This rules out identifying the nilpotency of `σ⁺` and `σ⁻` with
+the causal-cone condition on general soldered vectors. -/
+theorem null_solder_not_nilpotent :
+    (SolderingSpinConnectionBogoliubov.solder 1 0 0 1).det = 0 ∧
+      SolderingSpinConnectionBogoliubov.solder 1 0 0 1 *
+        SolderingSpinConnectionBogoliubov.solder 1 0 0 1 ≠ 0 := by
+  constructor
+  · rw [SolderingSpinConnectionBogoliubov.solder_det]
+    norm_num
+  · intro h
+    have h00 := congrFun (congrFun h 0) 0
+    norm_num [SolderingSpinConnectionBogoliubov.solder,
+      SolderingSpinConnectionBogoliubov.σ1,
+      SolderingSpinConnectionBogoliubov.σ2,
+      SolderingSpinConnectionBogoliubov.σ3,
+      Matrix.mul_apply, Fin.sum_univ_two] at h00
 
 /-- The chiral decomposition coefficients of a soldered real 4-vector: the
 coefficient functions extract the Minkowski coordinates from the chiral components. -/

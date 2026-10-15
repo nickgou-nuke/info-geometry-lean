@@ -1,5 +1,4 @@
 import InfoGeometry.Canonical.SE2SouriauCocycle
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # The native topological `SE(2)` action on homogeneous points
@@ -124,11 +123,8 @@ def specialLinearOrbitMap (v : HomogeneousPoint) :
     SL3Carrier → HomogeneousPoint := fun A => A • v
 
 theorem continuous_specialLinearOrbitMap (v : HomogeneousPoint) :
-    Continuous (specialLinearOrbitMap v) := by
-  unfold specialLinearOrbitMap
-  simpa only [Function.comp_apply] using
-    continuous_specialLinearPointAction.comp
-      (continuous_id.prodMk continuous_const)
+    Continuous (specialLinearOrbitMap v) :=
+  continuous_id.smul continuous_const
 
 def specialLinearOrbitContinuousMap (v : HomogeneousPoint) :
     C(SL3Carrier, HomogeneousPoint) :=
@@ -141,8 +137,8 @@ def specialLinearOrbit (v : HomogeneousPoint) :
 theorem specialLinearOrbitMap_mul (v : HomogeneousPoint)
     (A B : SL3Carrier) :
     specialLinearOrbitMap v (A * B) =
-      specialLinearOrbitMap (specialLinearOrbitMap v B) A := by
-  simp [specialLinearOrbitMap, mul_smul]
+      specialLinearOrbitMap (specialLinearOrbitMap v B) A :=
+  mul_smul A B v
 
 instance : MulAction SE2RotationCarrier HomogeneousPoint where
   smul := se2MatrixAction
@@ -151,8 +147,8 @@ instance : MulAction SE2RotationCarrier HomogeneousPoint where
 
 theorem continuous_homogeneousPoint_action :
     Continuous (fun p : SE2RotationCarrier × HomogeneousPoint =>
-      p.1 • p.2) := by
-  simpa only [SMul.smul] using continuous_se2MatrixAction
+      p.1 • p.2) :=
+  continuous_se2MatrixAction
 
 instance : ContinuousSMul SE2RotationCarrier HomogeneousPoint where
   continuous_smul := continuous_homogeneousPoint_action
@@ -167,11 +163,8 @@ theorem homogeneousOrbitMap_factorization (v : HomogeneousPoint) :
   exact se2_action_factors_through_SL3 g v
 
 theorem continuous_homogeneousOrbitMap (v : HomogeneousPoint) :
-    Continuous (homogeneousOrbitMap v) := by
-  unfold homogeneousOrbitMap
-  simpa only [Function.comp_apply] using
-      continuous_homogeneousPoint_action.comp
-      (continuous_id.prodMk continuous_const)
+    Continuous (homogeneousOrbitMap v) :=
+  continuous_id.smul continuous_const
 
 def homogeneousOrbitContinuousMap (v : HomogeneousPoint) :
     C(SE2RotationCarrier, HomogeneousPoint) :=

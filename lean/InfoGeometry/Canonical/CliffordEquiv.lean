@@ -72,7 +72,10 @@ theorem e₁_R_sq : e₁_R * e₁_R = -1 := by
   calc
     e₁_R * e₁_R = algebraMap ℝ (CliffordAlgebra q11_R)
                     (q11_R (fun i => if i = 1 then 1 else 0)) := ι_sq_scalar _ _
-    _ = -1 := by simp [q11_R, proj_apply]
+    _ = -1 := by
+      rw [show q11_R (fun i => if i = 1 then 1 else 0) = -1 by
+        simp [q11_R, proj_apply]]
+      simp only [map_neg, map_one]
 
 /-- Quadratic form of signature (2, 0) over ℝ. -/
 def q20 : QuadraticForm ℝ (Fin 2 → ℝ) := proj 0 0 + proj 1 1
@@ -87,18 +90,22 @@ theorem cl20_e₁_sq : cl20_e₁ * cl20_e₁ = 1 := by
   calc
     cl20_e₁ * cl20_e₁ = algebraMap ℝ (CliffordAlgebra q20)
                           (q20 (fun i => if i = 0 then 1 else 0)) := ι_sq_scalar _ _
-    _ = 1 := by simp [q20, proj_apply]
+    _ = 1 := by
+      rw [show q20 (fun i => if i = 0 then 1 else 0) = 1 by simp [q20, proj_apply]]
+      exact map_one (algebraMap ℝ (CliffordAlgebra q20))
 
 theorem cl20_e₂_sq : cl20_e₂ * cl20_e₂ = 1 := by
   calc
     cl20_e₂ * cl20_e₂ = algebraMap ℝ (CliffordAlgebra q20)
                           (q20 (fun i => if i = 1 then 1 else 0)) := ι_sq_scalar _ _
-    _ = 1 := by simp [q20, proj_apply]
+    _ = 1 := by
+      rw [show q20 (fun i => if i = 1 then 1 else 0) = 1 by simp [q20, proj_apply]]
+      exact map_one (algebraMap ℝ (CliffordAlgebra q20))
 
 theorem cl20_orth : q20.IsOrtho (fun i => if i = 0 then 1 else 0)
                                  (fun i => if i = 1 then 1 else 0) := by
-  dsimp [q20, IsOrtho, proj_apply]
-  ring
+  rw [QuadraticMap.isOrtho_def]
+  simp [q20, proj_apply, Pi.add_apply]
 
 theorem cl20_anticomm : cl20_e₁ * cl20_e₂ + cl20_e₂ * cl20_e₁ = 0 := by
   have h := ι_mul_ι_add_swap_of_isOrtho cl20_orth
@@ -137,7 +144,7 @@ def HestenesLiftMap {A : Type*} [Ring A] [Algebra ℝ A] (S : A) : ℝ →ₗ[�
 theorem HestenesLiftMap_sq {A : Type*} [Ring A] [Algebra ℝ A] (S : A) (hS : S * S = -1) (r : ℝ) :
     HestenesLiftMap S r * HestenesLiftMap S r =
       algebraMap ℝ A (CliffordAlgebraComplex.Q r) := by
-  dsimp [HestenesLiftMap, CliffordAlgebraComplex.Q]
+  change (r • S) * (r • S) = algebraMap ℝ A (-(r * r))
   have h1 : (r • S) * (r • S) = (r * r) • (S * S) := by
     rw [smul_mul_smul]
   rw [h1, hS]
@@ -154,7 +161,6 @@ noncomputable def complexLift {A : Type*} [Ring A] [Algebra ℝ A] (S : A) (hS :
   toFun z := algebraMap ℝ A z.re + z.im • S
   map_one' := by simp
   map_mul' x y := by
-    dsimp
     have hS' : (x.im • S) * (y.im • S) = - algebraMap ℝ A (x.im * y.im) := by
       have h_smul : (x.im • S) * (y.im • S) = (x.im * y.im) • (S * S) := by
         rw [smul_mul_smul]
@@ -332,8 +338,9 @@ noncomputable def complexLiftEquiv {A : Type*} [Ring A] [Algebra ℝ A] [Nontriv
   LinearEquiv.ofBijective (complexLiftRange S hS) ⟨by
     intro z1 z2 h
     simp [complexLiftRange] at h
+    have hval : complexLift S hS z1 = complexLift S hS z2 := congrArg Subtype.val h
     have h_eq : complexLift S hS (z1 - z2) = 0 := by
-      simp [map_sub, h]
+      rw [map_sub, hval, sub_self]
     have h_inj : (z1 - z2).re = 0 ∧ (z1 - z2).im = 0 := by
       have h_eq2 : complexLift S hS (z1 - z2) =
                    algebraMap ℝ A (z1 - z2).re + (z1 - z2).im • S := by

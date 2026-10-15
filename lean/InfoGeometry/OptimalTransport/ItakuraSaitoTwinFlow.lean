@@ -53,7 +53,12 @@ theorem hasDerivAt_potential {state : ℝ} (valid : state ∈ Set.Ioo (0 : ℝ) 
         (1 / (1 - state) ^ 2) state := by
     convert (hasDerivAt_id state).div
       ((hasDerivAt_const state (1 : ℝ)).sub (hasDerivAt_id state)) complement_ne
-      using 1 <;> ring_nf
+      using 1
+    · ext value
+      rfl
+    · dsimp
+      field_simp [complement_ne]
+      <;> ring_nf
   have logarithm_derivative := ratio_derivative.log
     (ne_of_gt (div_pos valid.1 complement_pos))
   have derivative := (ratio_derivative.sub logarithm_derivative).sub_const 1
@@ -62,7 +67,8 @@ theorem hasDerivAt_potential {state : ℝ} (valid : state ∈ Set.Ioo (0 : ℝ) 
     (gradient state) state
   convert derivative using 1
   dsimp [gradient]
-  field_simp [state_ne, complement_ne] <;> ring_nf
+  field_simp [state_ne, complement_ne]
+  <;> ring_nf
 
 theorem deriv_potential {state : ℝ} (valid : state ∈ Set.Ioo (0 : ℝ) 1) :
     deriv potential state = gradient state :=
@@ -83,7 +89,9 @@ theorem energy_derivative_along_descent {trajectory : ℝ → ℝ} {time : ℝ}
     (velocity : HasDerivAt trajectory (-gradient (trajectory time)) time) :
     HasDerivAt (fun instant => potential (trajectory instant))
       (-(gradient (trajectory time)) ^ 2) time := by
-  convert (hasDerivAt_potential valid).comp time velocity using 1 <;> ring
+  convert (hasDerivAt_potential valid).comp time velocity using 1
+  · rfl
+  · ring
 
 theorem energy_deriv_nonpos {trajectory : ℝ → ℝ} {time : ℝ}
     (valid : trajectory time ∈ Set.Ioo (0 : ℝ) 1)

@@ -58,7 +58,7 @@ theorem nativeFlagStabilizer_eq_unipotentSubgroup_of_ambient_card
     (h_enum : Fintype.card SplitOctF2Aut = 12096) :
     nativeFlagStabilizer = unipotentSubgroup := by
   apply nativeFlagStabilizer_eq_unipotentSubgroup_of_flag_transitive h_enum
-  simpa only [smul_eq_mul] using intrinsicFlag_orbit_surjective
+  simpa only [smul_intrinsicFlag] using intrinsicFlag_orbit_surjective
 
 noncomputable def quotientIntrinsicFlagEquiv_of_ambient_card
     (h_enum : Fintype.card SplitOctF2Aut = 12096) :
@@ -66,6 +66,6 @@ noncomputable def quotientIntrinsicFlagEquiv_of_ambient_card
   apply G2StructuralFlagQuotient.quotientFlagEquivOfStabilizerEq
     baseIntrinsicFlag unipotentSubgroup
   · exact nativeFlagStabilizer_eq_unipotentSubgroup_of_ambient_card h_enum
-  · simpa only [smul_eq_mul] using intrinsicFlag_orbit_surjective
+  · simpa only [smul_intrinsicFlag] using intrinsicFlag_orbit_surjective
 
 end InfoGeometry.Algebra.Zorn.G2NativeFlagStabilizerCardinality

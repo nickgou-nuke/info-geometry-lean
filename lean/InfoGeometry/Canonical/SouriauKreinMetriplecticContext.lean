@@ -1,5 +1,4 @@
 import InfoGeometry.Canonical.OnsagerReciprocity
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Operators
 import InfoGeometry.Canonical.OperatorialCramerRao
 import InfoGeometry.Canonical.OperatorFenchelRegularCone
@@ -568,7 +567,9 @@ theorem canonicalEntropyProduction_nonneg_of_cramerRaoResponse
     CramerRaoOperatorialResponseContext.diagonalMetricResponse_nonneg R
   rw [diagonalMetricResponse, responseCoefficient, operatorMetricHessianForm_diag] at hDiag
   simpa [InfoGeometry.Canonical.Operators.entropyProduction,
-    InfoGeometry.Canonical.Operators.operatorFisherDiagonal] using hDiag
+    InfoGeometry.Canonical.Operators.operatorFisherDiagonal,
+    InfoGeometry.Canonical.OperatorialHessianBridge.operatorInformationHessian_eq_double_transportCommutator,
+    InfoGeometry.Canonical.RelationalInformationDynamics.operatorInformationHessian_eq_double_transportCommutator] using hDiag
 
 /--
 One-channel operatorial second-law gate from the regular Drazin/Krein cone.
@@ -586,7 +587,9 @@ theorem canonicalEntropyProduction_nonneg_of_regularCone
     RegularConeXResponseContext.diagonalMetricResponse_nonneg R
   rw [diagonalMetricResponse, responseCoefficient, operatorMetricHessianForm_diag] at hDiag
   simpa [InfoGeometry.Canonical.Operators.entropyProduction,
-    InfoGeometry.Canonical.Operators.operatorFisherDiagonal] using hDiag
+    InfoGeometry.Canonical.Operators.operatorFisherDiagonal,
+    InfoGeometry.Canonical.OperatorialHessianBridge.operatorInformationHessian_eq_double_transportCommutator,
+    InfoGeometry.Canonical.RelationalInformationDynamics.operatorInformationHessian_eq_double_transportCommutator] using hDiag
 
 /--
 Supergraded even/odd Onsager block packet on the operatorial carrier.
@@ -648,7 +651,7 @@ theorem metricResponse_eq_half_probe_observableLieHessian_add_swap :
       (2 : ℝ)⁻¹ *
         (C.P.probe (observableLieHessian (E := E) C.X C.Y C.A)
           + C.P.probe (observableLieHessian (E := E) C.Y C.X C.A)) := by
-  simpa [metricResponse] using
+  simpa [metricResponse, responseCoefficient] using
     InfoGeometry.Canonical.OnsagerReciprocity.operatorMetricHessianForm_eq_half_probe_observableLieHessian_add_swap
       (E := E) C.P C.A C.X C.Y
 

@@ -155,7 +155,8 @@ theorem property_bondIterate
   induction m with
   | zero =>
       intro x hx
-      simpa using hx
+      change P n x = true
+      exact hx
   | succ m ih =>
       intro x hx
       rw [FilteredPhaseCone.bondIterate_succ]

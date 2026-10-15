@@ -20,9 +20,10 @@ abbrev ExtAlg (R ι : Type*) [CommRing R] [DecidableEq ι] :=
 noncomputable def gen (i j : ι) : ExtAlg R ι :=
   ExteriorAlgebra.ι R (ω i j)
 
--- The cyclic exterior-algebra expression associated with three indices.
--- Its vanishing requires an Arnold relation; it is not asserted for arbitrary indices.
-noncomputable def bcfw_recursion_arnold_cohen (i j k : ι) : ExtAlg R ι :=
+/-- The cyclic exterior-algebra expression associated with three indices.
+Its vanishing requires an Arnold relation; this definition is not a BCFW
+recursion or residue formula. -/
+noncomputable def arnold_cohen_cyclic_expression (i j k : ι) : ExtAlg R ι :=
   (gen i j * gen j k) + (gen j k * gen k i) + (gen k i * gen i j)
 
 /-

@@ -49,9 +49,9 @@ noncomputable def identityCone : HestenesKreinCone where
 
 theorem identityCone_bond_surjective (n : ℕ) :
     Function.Surjective (identityCone.bond n) := by
-  simpa only [identityCone_bond_apply] using
-    (Function.surjective_id :
-      Function.Surjective (id : DoubledSpace IdentityBase → DoubledSpace IdentityBase))
+  change Function.Surjective
+    (id : DoubledSpace IdentityBase → DoubledSpace IdentityBase)
+  exact Function.surjective_id
 
 theorem identityCone_bond_range_eq_univ (n : ℕ) :
     Set.range (identityCone.bond n) = Set.univ := by
@@ -64,9 +64,9 @@ theorem identityCone_bond_range_eq_univ (n : ℕ) :
 
 theorem identityCone_ι_surjective (n : ℕ) :
     Function.Surjective (identityCone.ι n) := by
-  simpa only [identityCone_ι_apply] using
-    (Function.surjective_id :
-      Function.Surjective (id : DoubledSpace IdentityBase → DoubledSpace IdentityBase))
+  change Function.Surjective
+    (id : DoubledSpace IdentityBase → DoubledSpace IdentityBase)
+  exact Function.surjective_id
 
 theorem identityCone_ι_range_eq_univ (n : ℕ) :
     Set.range (identityCone.ι n) = Set.univ := by
@@ -74,13 +74,13 @@ theorem identityCone_ι_range_eq_univ (n : ℕ) :
 
 theorem identityCone_bond_isometry (n : ℕ) :
     Isometry (identityCone.bond n) := by
-  simpa only [identityCone_bond_apply] using
-    (isometry_id : Isometry (id : DoubledSpace IdentityBase → DoubledSpace IdentityBase))
+  change Isometry (id : DoubledSpace IdentityBase → DoubledSpace IdentityBase)
+  exact isometry_id
 
 theorem identityCone_ι_isometry (n : ℕ) :
     Isometry (identityCone.ι n) := by
-  simpa only [identityCone_ι_apply] using
-    (isometry_id : Isometry (id : DoubledSpace IdentityBase → DoubledSpace IdentityBase))
+  change Isometry (id : DoubledSpace IdentityBase → DoubledSpace IdentityBase)
+  exact isometry_id
 
 theorem identityCone_stage_representation
     (ψ : DoubledSpace IdentityBase) :

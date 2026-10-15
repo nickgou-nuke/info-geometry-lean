@@ -62,7 +62,7 @@ theorem summary_trichotomy_sector_closure
 
 section StandardSector
 
-variable {H : Type*} [NormedAddCommGroup H] [NormedSpace ℂ H]
+variable {H : Type*} [NormedAddCommGroup H]
   [InnerProductSpace ℂ H] [CompleteSpace H]
 
 /-- Combined closure citation for reduced Tomita transport on the standard physical sector. -/

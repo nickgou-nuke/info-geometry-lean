@@ -53,8 +53,7 @@ theorem paper_conclusion_stokes_energy_h1_second_order (D : StokesEnergyH1Second
         localSecondOrderError (D.martingale Q) =
           ((D.martingale Q).left - (D.martingale Q).right) ^ 2 / 4 := by
     intro Q
-    have hinc := (paper_conclusion_stokes_energy_dyadic_martingale (D.martingale Q)).2.2
-    simpa [localSecondOrderError] using hinc
+    exact (paper_conclusion_stokes_energy_dyadic_martingale (D.martingale Q)).2.2
   have hsum :
       ∑ Q : Fin D.cellCount, localSecondOrderError (D.martingale Q) ≤
         ∑ Q : Fin D.cellCount, D.cellH1 Q * dyadicSecondOrderRate D.m := by

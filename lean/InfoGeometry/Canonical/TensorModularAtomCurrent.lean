@@ -30,6 +30,8 @@ open InfoGeometry.Canonical.CurrentSugawaraBridge
 open InfoGeometry.Canonical.SplitCliffordHeisenbergBridge
 open VirasoroProject
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 section WickMechanism
 
 variable {A : Type*} [Ring A]

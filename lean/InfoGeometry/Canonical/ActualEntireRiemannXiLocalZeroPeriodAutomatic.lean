@@ -40,8 +40,11 @@ theorem normalized_logDifferential_circleIntegral_of_factorization_auto
     exact (ne_of_gt hR).symm
   have hpole : CircleIntegrable
       (logarithmicPole rho (m : ℤ)) rho R := by
-    change CircleIntegrable (fun z : ℂ => -(m : ℂ) * (z - rho)⁻¹) rho R
-    simpa using h_inv.const_smul (a := -(m : ℂ))
+    have h : logarithmicPole rho (m : ℤ) = (-(m : ℂ)) • (fun z : ℂ => (z - rho)⁻¹) := by
+      ext z
+      simp [logarithmicPole, div_eq_mul_inv, smul_eq_mul]
+    rw [h]
+    exact h_inv.const_smul
   have hcorr : CircleIntegrable (fun z => h z / g z) rho R := by
     have hquot : DifferentiableOn ℂ (fun z => h z / g z)
         (Metric.closedBall rho R) :=

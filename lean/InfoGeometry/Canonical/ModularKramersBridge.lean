@@ -152,9 +152,13 @@ theorem phaseAxisK_commutes_modularFlow_of_IsPhaseLinear
     Commute (phaseAxisK (E := E)) (modularTransportFlow (E := E) hMod t) := by
   show (phaseAxisK (E := E)) * modularTransportFlow (E := E) hMod t =
       modularTransportFlow (E := E) hMod t * (phaseAxisK (E := E))
-  simpa [phaseAxisK] using
-    (complex_i_comp_modularTransportFlow_eq_modularTransportFlow_comp_complex_i_of_IsPhaseLinear
-      (E := E) hMod hPhase t)
+  have hphaseAxisK : phaseAxisK (E := E) = complex_i (E := E) := by
+    apply ContinuousLinearMap.ext
+    intro u
+    apply DoubledSpace.ext <;> simp [phaseAxisK, modular_j, spectral_epsilon, complex_i]
+  rw [hphaseAxisK]
+  exact complex_i_comp_modularTransportFlow_eq_modularTransportFlow_comp_complex_i_of_IsPhaseLinear
+    (E := E) hMod hPhase t
 
 /--
 If `Θ` commutes with modular conjugation `J`, Kramers pairing is equivariant

@@ -57,4 +57,7 @@ theorem no_anomalous_mobius_witten_phase_twists
   (_t : Throat)
   (h_vac : defect_free_vacuum w) :
   ¬ has_anomalous_twist (explicit_cobordism_map w _t) := by
-  simpa [explicit_cobordism_map, has_anomalous_twist] using h_vac
+  change w.defect = none at h_vac
+  change ¬ w.defect.isSome
+  rw [h_vac]
+  simp

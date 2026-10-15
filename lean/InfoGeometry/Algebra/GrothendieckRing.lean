@@ -178,9 +178,12 @@ def grothendieckRingMap
     Grothendieck M →+* Grothendieck N where
   toFun := grothendieckFunctor f.toAddMonoidHom
   map_one' := by
-    rw [← grothendieckMap_one (M := M)]
-    simpa [grothendieckMap] using
-      grothendieckFunctor_mk f.toAddMonoidHom (1, 0)
+    calc
+      grothendieckFunctor f.toAddMonoidHom 1 =
+          grothendieckFunctor f.toAddMonoidHom (grothendieckMap M 1) :=
+        congrArg (grothendieckFunctor f.toAddMonoidHom) grothendieckMap_one.symm
+      _ = grothendieckMap N (f 1) := grothendieckFunctor_map f.toAddMonoidHom 1
+      _ = 1 := by rw [f.map_one, grothendieckMap_one]
   map_mul' := grothendieckFunctor_map_mul f
   map_zero' := (grothendieckFunctor f.toAddMonoidHom).map_zero
   map_add' := (grothendieckFunctor f.toAddMonoidHom).map_add
@@ -190,8 +193,7 @@ theorem grothendieckRingMap_apply_canonical
     {N : Type u} [CommSemiring N] (f : M →+* N) (m : M) :
     grothendieckRingMap f (grothendieckMap M m) =
       grothendieckMap N (f m) := by
-  simpa [grothendieckMap] using
-    grothendieckFunctor_mk f.toAddMonoidHom (m, 0)
+  exact grothendieckFunctor_map f.toAddMonoidHom m
 
 theorem ringHom_ext_of_grothendieckMap
     {A : Type*} [CommRing A]
@@ -235,10 +237,15 @@ noncomputable def grothendieckRingLift
     refine Quotient.inductionOn₂ (s₁ := grothendieckSetoid M)
       (s₂ := grothendieckSetoid M) x y ?_
     intro a b
-    dsimp [grothendieckMul, grothendieckLift, grothendieckMap]
-    change (f (a.1 * b.1 + a.2 * b.2) -
-        f (a.1 * b.2 + a.2 * b.1)) = _
-    simp only [map_add, map_mul]
+    change grothendieckLift f.toAddMonoidHom
+        (Quotient.mk (grothendieckSetoid M)
+          (a.1 * b.1 + a.2 * b.2, a.1 * b.2 + a.2 * b.1)) =
+      grothendieckLift f.toAddMonoidHom (Quotient.mk (grothendieckSetoid M) a) *
+        grothendieckLift f.toAddMonoidHom (Quotient.mk (grothendieckSetoid M) b)
+    rw [grothendieckLift_mk, grothendieckLift_mk, grothendieckLift_mk]
+    simp only [map_add]
+    have happly (m : M) : f.toAddMonoidHom m = f m := rfl
+    simp only [happly, f.map_mul]
     ring
   map_zero' := (grothendieckLift f.toAddMonoidHom).map_zero
   map_add' := (grothendieckLift f.toAddMonoidHom).map_add

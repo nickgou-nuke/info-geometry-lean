@@ -200,32 +200,30 @@ noncomputable def splitQuaternionEquivMatrix :
   left_inv := matrixToSplitQuaternion_splitQuaternionToMatrixQ
   right_inv := splitQuaternionToMatrixQ_matrixToSplitQuaternion
 
-noncomputable def splitQuaternionAddEquivMatrix :
-    SplitQuaternion ≃+ Matrix (Fin 2) (Fin 2) ℝ :=
-  { splitQuaternionEquivMatrix with
-    map_add' := fun x y => rfl }
-
 noncomputable instance : AddCommGroup SplitQuaternion :=
   Equiv.addCommGroup splitQuaternionEquivMatrix
+
+noncomputable def splitQuaternionAddEquivMatrix :
+  SplitQuaternion ≃+ Matrix (Fin 2) (Fin 2) ℝ :=
+  { splitQuaternionEquivMatrix with
+    map_add' := fun x y => by simp [Equiv.add_def] }
 
 noncomputable instance : Module ℝ SplitQuaternion :=
   AddEquiv.module ℝ splitQuaternionAddEquivMatrix
 
+noncomputable instance : Ring SplitQuaternion :=
+  Equiv.ring splitQuaternionEquivMatrix
+
 noncomputable def splitQuaternionRingEquivMatrix :
     SplitQuaternion ≃+* Matrix (Fin 2) (Fin 2) ℝ :=
-  { splitQuaternionAddEquivMatrix with
-    map_mul' := fun x y => rfl }
+  Equiv.ringEquiv splitQuaternionEquivMatrix
 
-noncomputable instance : Ring SplitQuaternion :=
-  RingEquiv.ring splitQuaternionRingEquivMatrix
+noncomputable instance : Algebra ℝ SplitQuaternion :=
+  Equiv.algebra ℝ splitQuaternionEquivMatrix
 
 noncomputable def splitQuaternionAlgEquivMatrix :
     SplitQuaternion ≃ₐ[ℝ] Matrix (Fin 2) (Fin 2) ℝ :=
-  { splitQuaternionRingEquivMatrix with
-    commutes' := fun r => rfl }
-
-noncomputable instance : Algebra ℝ SplitQuaternion :=
-  AlgEquiv.algebra splitQuaternionAlgEquivMatrix
+  Equiv.algEquiv ℝ splitQuaternionEquivMatrix
 
 /--
 The fundamental equivalence $\mathbb{H}_s \cong M_2(\mathbb{R})$.

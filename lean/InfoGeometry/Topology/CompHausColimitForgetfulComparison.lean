@@ -19,11 +19,18 @@ open CategoryTheory.Limits
 
 variable {J : Type} [Category J]
 
-noncomputable def compHausTopColimit
+noncomputable abbrev compHausTopColimit
     (F : J ⥤ CompHaus)
     [CompactSpace ((colimit (F ⋙ compHausToTop) : TopCat) : Type)]
     [T2Space ((colimit (F ⋙ compHausToTop) : TopCat) : Type)] : CompHaus :=
   CompHaus.of ((colimit (F ⋙ compHausToTop) : TopCat) : Type)
+
+theorem compHausTopColimit_forget
+    (F : J ⥤ CompHaus)
+    [CompactSpace ((colimit (F ⋙ compHausToTop) : TopCat) : Type)]
+    [T2Space ((colimit (F ⋙ compHausToTop) : TopCat) : Type)] :
+    compHausToTop.obj (compHausTopColimit F) = colimit (F ⋙ compHausToTop) :=
+  rfl
 
 noncomputable def compHausColimitToTopColimitCocone
     (F : J ⥤ CompHaus)
@@ -42,8 +49,25 @@ noncomputable def compHausColimitToTopColimitCocone
         (colimit.ι (F ⋙ compHausToTop) k)
             ((F.map f) x) =
           (colimit.ι (F ⋙ compHausToTop) j) x
-      simpa using congrArg (fun h => h x)
+      let xTop : (F ⋙ compHausToTop).obj j := x
+      have hw := congrArg
+        (fun h : (F ⋙ compHausToTop).obj j ⟶
+          colimit (F ⋙ compHausToTop) => h xTop)
         (colimit.w (F ⋙ compHausToTop) f)
+      rw [CategoryTheory.comp_apply] at hw
+      change (colimit.ι (F ⋙ compHausToTop) k) ((F.map f) x) =
+        (colimit.ι (F ⋙ compHausToTop) j) x at hw
+      exact hw
+
+/-- The forgotten compact-Hausdorff colimit is identified with the TopCat
+colimit object by the carrier equality. -/
+noncomputable def compHausTopColimitForgetIso
+    (F : J ⥤ CompHaus)
+    [CompactSpace ((colimit (F ⋙ compHausToTop) : TopCat) : Type)]
+    [T2Space ((colimit (F ⋙ compHausToTop) : TopCat) : Type)] :
+    compHausToTop.obj (compHausTopColimit F) ≅
+      colimit (F ⋙ compHausToTop) :=
+  eqToIso (compHausTopColimit_forget F)
 
 noncomputable def compHausColimitToTopColimit
     (F : J ⥤ CompHaus)
@@ -85,15 +109,18 @@ noncomputable def topColimitToCompHausColimitCompHaus
     [CompactSpace ((colimit (F ⋙ compHausToTop) : TopCat) : Type)]
     [T2Space ((colimit (F ⋙ compHausToTop) : TopCat) : Type)] :
     compHausTopColimit F ⟶ colimit F := by
-  exact ⟨topColimitToCompHausColimit F⟩
+  exact compHausToTop.preimage
+    ((compHausTopColimitForgetIso F).hom ≫
+      topColimitToCompHausColimit F)
 
 theorem topColimitToCompHausColimitCompHaus_forget
     (F : J ⥤ CompHaus)
     [CompactSpace ((colimit (F ⋙ compHausToTop) : TopCat) : Type)]
     [T2Space ((colimit (F ⋙ compHausToTop) : TopCat) : Type)] :
     compHausToTop.map (topColimitToCompHausColimitCompHaus F) =
-      topColimitToCompHausColimit F :=
-  rfl
+      (compHausTopColimitForgetIso F).hom ≫
+        topColimitToCompHausColimit F :=
+  compHausToTop.map_preimage _
 
 theorem compHausColimitToTopColimit_stage
     (F : J ⥤ CompHaus)
@@ -102,14 +129,17 @@ theorem compHausColimitToTopColimit_stage
     (j : J) :
     compHausToTop.map (colimit.ι F j) ≫
         compHausToTop.map (compHausColimitToTopColimit F) =
-      colimit.ι (F ⋙ compHausToTop) j := by
-  change
-    compHausToTop.map (colimit.ι F j) ≫
-        compHausToTop.map (colimit.desc F
-          (compHausColimitToTopColimitCocone F)) =
-      colimit.ι (F ⋙ compHausToTop) j
-  rw [← compHausToTop.map_comp, colimit.ι_desc]
-  rfl
+      colimit.ι (F ⋙ compHausToTop) j ≫
+        (compHausTopColimitForgetIso F).inv := by
+  rw [← compHausToTop.map_comp]
+  have h := congrArg compHausToTop.map
+    (colimit.ι_desc (compHausColimitToTopColimitCocone F) j)
+  rw [compHausToTop.map_comp] at h
+  change compHausToTop.map (colimit.ι F j) ≫
+      compHausToTop.map (compHausColimitToTopColimit F) =
+    colimit.ι (F ⋙ compHausToTop) j ≫
+      (compHausTopColimitForgetIso F).inv at h
+  exact h
 
 theorem topColimitToCompHausColimit_stage
     (F : J ⥤ CompHaus)
@@ -133,12 +163,24 @@ theorem compHausColimitForgetfulComparison_hom_inv_id
   have hFF : (compHausToTop).FullyFaithful := by
     simpa using (CompHausLike.fullyFaithfulCompHausLikeToTop (fun _ => True))
   apply hFF.map_injective
-  simp only [compHausToTop.map_comp, compHausToTop.map_id]
+  simp only [Functor.map_comp, compHausToTop.map_id]
   rw [topColimitToCompHausColimitCompHaus_forget]
-  rw [← Category.assoc,
-    compHausColimitToTopColimit_stage,
-    topColimitToCompHausColimit_stage]
-  simp
+  calc
+    (compHausToTop.map (colimit.ι F j) ≫
+        compHausToTop.map (compHausColimitToTopColimit F)) ≫
+        (compHausTopColimitForgetIso F).hom ≫
+        topColimitToCompHausColimit F =
+      colimit.ι (F ⋙ compHausToTop) j ≫
+        (compHausTopColimitForgetIso F).inv ≫
+        (compHausTopColimitForgetIso F).hom ≫
+        topColimitToCompHausColimit F := by
+          exact congrArg
+            (fun f => f ≫ (compHausTopColimitForgetIso F).hom ≫
+              topColimitToCompHausColimit F)
+            (compHausColimitToTopColimit_stage F j)
+    _ = compHausToTop.map (colimit.ι F j) := by
+      rw [Iso.inv_hom_id_assoc]
+      exact topColimitToCompHausColimit_stage F j
 
 theorem compHausColimitForgetfulComparison_inv_hom_id
     (F : J ⥤ CompHaus)
@@ -150,13 +192,37 @@ theorem compHausColimitForgetfulComparison_inv_hom_id
   have hFF : (compHausToTop).FullyFaithful := by
     simpa using (CompHausLike.fullyFaithfulCompHausLikeToTop (fun _ => True))
   apply hFF.map_injective
-  simp only [compHausToTop.map_comp, compHausToTop.map_id]
+  simp only [Functor.map_comp, compHausToTop.map_id]
   rw [topColimitToCompHausColimitCompHaus_forget]
-  apply colimit.hom_ext
-  intro j
-  rw [← Category.assoc, topColimitToCompHausColimit_stage,
-    compHausColimitToTopColimit_stage]
-  exact (Category.comp_id _).symm
+  have h :
+      (compHausTopColimitForgetIso F).inv ≫
+          ((compHausTopColimitForgetIso F).hom ≫
+            topColimitToCompHausColimit F) ≫
+            compHausToTop.map (compHausColimitToTopColimit F) =
+        (compHausTopColimitForgetIso F).inv := by
+    apply colimit.hom_ext
+    intro j
+    calc
+      colimit.ι (F ⋙ compHausToTop) j ≫
+          (compHausTopColimitForgetIso F).inv ≫
+          ((compHausTopColimitForgetIso F).hom ≫
+            topColimitToCompHausColimit F) ≫
+            compHausToTop.map (compHausColimitToTopColimit F) =
+        colimit.ι (F ⋙ compHausToTop) j ≫
+          topColimitToCompHausColimit F ≫
+          compHausToTop.map (compHausColimitToTopColimit F) := by
+            simp only [Category.assoc, Iso.inv_hom_id_assoc]
+      _ = compHausToTop.map (colimit.ι F j) ≫
+          compHausToTop.map (compHausColimitToTopColimit F) := by
+            exact congrArg
+              (fun f => f ≫ compHausToTop.map (compHausColimitToTopColimit F))
+              (topColimitToCompHausColimit_stage F j)
+      _ = colimit.ι (F ⋙ compHausToTop) j ≫
+          (compHausTopColimitForgetIso F).inv :=
+            compHausColimitToTopColimit_stage F j
+  have h' := congrArg
+    (fun f => (compHausTopColimitForgetIso F).hom ≫ f) h
+  simpa only [Category.assoc, Iso.hom_inv_id_assoc, Iso.hom_inv_id] using h'
 
 noncomputable def compHausColimitForgetfulComparison
     (F : J ⥤ CompHaus)

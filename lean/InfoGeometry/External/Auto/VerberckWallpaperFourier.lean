@@ -54,9 +54,9 @@ theorem p6_coefficient_cycle
   have h3 : c (-k₁, -k₂) = c (-k₁ + k₂, -k₁) := by
     simpa [p6R] using h (-k₁ + k₂, -k₁)
   have h4 : c (-k₂, k₁ - k₂) = c (-k₁, -k₂) := by
-    simpa [p6R] using h (-k₁, -k₂)
+    simpa [p6R, sub_eq_add_neg] using h (-k₁, -k₂)
   have h5 : c (k₁ - k₂, k₁) = c (-k₂, k₁ - k₂) := by
-    simpa [p6R] using h (-k₂, k₁ - k₂)
+    simpa [p6R, sub_eq_add_neg] using h (-k₂, k₁ - k₂)
   exact ⟨h1.symm, (h2.trans h1).symm, (h3.trans (h2.trans h1)).symm,
     (h4.trans (h3.trans (h2.trans h1))).symm,
     (h5.trans (h4.trans (h3.trans (h2.trans h1)))).symm⟩

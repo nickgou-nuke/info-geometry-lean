@@ -39,8 +39,8 @@ theorem paper_xi_primitive_prime_divisor_forces_unbounded_prime_support :
         dsimp [p]
         exact Nat.minFac_dvd (a + 1)
       refine ⟨p, hp_prime, ?_, ?_⟩
-      · dsimp [a]
-        simpa [minimalAuditChainLcm, Nat.mul_comm] using dvd_mul_of_dvd_right hp_dvd_factor a
+      · simpa [a, minimalAuditChainLcm, Nat.mul_comm] using
+          dvd_mul_of_dvd_right hp_dvd_factor a
       · simp only [Nat.succ_sub_one]
         intro hp_dvd_prev
         have hp_dvd_a : p ∣ a := by

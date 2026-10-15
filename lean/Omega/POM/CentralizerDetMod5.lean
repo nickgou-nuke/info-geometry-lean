@@ -15,8 +15,7 @@ theorem centralizer_det_formula (a b : ℤ) :
     (a • (1 : Matrix (Fin 2) (Fin 2) ℤ) + b • Graph.goldenMeanAdjacency).det =
       a ^ 2 + a * b - b ^ 2 := by
   simp only [det_fin_two]
-  simp only [Graph.goldenMeanAdjacency, smul_apply, one_apply, add_apply,
-    Fin.isValue]
+  simp only [Graph.goldenMeanAdjacency, Matrix.smul_apply, Matrix.add_apply, Fin.isValue]
   norm_num
   ring
 
@@ -110,12 +109,10 @@ theorem paper_pom_centralizer_det_norm_mod5 :
   · intro p hp hp_ne_five y
     by_cases hp_two : p = 2
     · subst p
-      fin_cases y <;>
-        first
-        | exact ⟨0, 0, by decide⟩
-        | exact ⟨1, 0, by decide⟩
+      fin_cases y
+      · exact ⟨0, 0, rfl⟩
+      · exact ⟨1, 0, rfl⟩
     · letI : Fact p.Prime := ⟨hp⟩
-      classical
       let f : (ZMod p)[X] := X ^ 2 - C (4 * y)
       let g : (ZMod p)[X] := -(C (5 : ZMod p) * X ^ 2)
       have hf2 : degree f = 2 := by
@@ -133,7 +130,7 @@ theorem paper_pom_centralizer_det_norm_mod5 :
         dsimp [g]
         compute_degree
         · norm_num
-          exact ⟨by decide, hfive_ne_zero⟩
+          exact hfive_ne_zero
       have hodd : Fintype.card (ZMod p) % 2 = 1 := by
         rw [ZMod.card]
         exact (Nat.Prime.mod_two_eq_one_iff_ne_two hp).mpr hp_two

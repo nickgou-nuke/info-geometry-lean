@@ -1,0 +1,14 @@
+import Experimental.Sandbox.MadelungGraphIncidenceKernel
+
+namespace InfoGeometry.Experimental.Sandbox.MadelungGraphIncidenceKernel.Audit
+
+open InfoGeometry.Experimental.Sandbox.MadelungGraphIncidenceKernel
+
+#check incidence_eq_zero_iff_adjacent_eq
+#check equal_of_reachable_of_incidence_eq_zero
+#check incidence_eq_zero_iff_componentwise_constant
+#check incidence_eq_zero_iff_constant_on_reachable_pairs
+
+#print axioms incidence_eq_zero_iff_componentwise_constant
+
+end InfoGeometry.Experimental.Sandbox.MadelungGraphIncidenceKernel.Audit

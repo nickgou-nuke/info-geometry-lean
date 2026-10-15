@@ -3,6 +3,7 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Group.Subgroup.Lattice
 import Mathlib.Data.Fintype.Card
 import Mathlib.GroupTheory.GroupAction.Basic
+import Mathlib.Logic.Equiv.Set
 
 /-!
 # Double cosets as product-group orbits
@@ -122,8 +123,8 @@ theorem doubleCoset_card_mul_stabilizer_card
     Fintype.card {x : G // x ∈ doubleCoset H g K} *
         Fintype.card (MulAction.stabilizer (H × K) g) =
       Fintype.card (H × K) := by
-  rw [← Fintype.card_congr (Equiv.setCongr
-    (ProductAction.orbit_eq_doubleCoset H K g))]
+  rw [Fintype.card_congr (Set.equivOfEq
+    (ProductAction.orbit_eq_doubleCoset H K g).symm)]
   exact MulAction.card_orbit_mul_card_stabilizer_eq_card_group (H × K) g
 
 theorem doubleCoset_card_mul_intersection_card

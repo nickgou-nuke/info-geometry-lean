@@ -30,7 +30,7 @@ the resulting finite set of actual binary words.
 
 namespace InfoGeometry.Combinatorics.ExtendedBinaryGolay
 
-abbrev F₂ := ZMod 2
+abbrev F₂ := InfoGeometry.Combinatorics.BinaryCyclicGolayPolynomial.F₂
 abbrev Message := Fin 12 → F₂
 abbrev Word23 := Fin 23 → F₂
 abbrev Word24 := Fin 24 → F₂
@@ -60,10 +60,12 @@ theorem generatorCoefficient_zero_of_range {k : ℕ}
 theorem generatorCoefficient_eq_generator_coeff {k : ℕ} (hk : k < 23) :
     generatorCoefficient k =
       InfoGeometry.Combinatorics.BinaryCyclicGolayPolynomial.generator.coeff k := by
+  change (generatorCoefficient k : ZMod 2) =
+    InfoGeometry.Combinatorics.BinaryCyclicGolayPolynomial.generator.coeff k
   unfold generatorCoefficient
   rw [Nat.mod_eq_of_lt hk]
-  simpa [InfoGeometry.Combinatorics.BinaryCyclicGolayPolynomial.generatorCoefficientFormula] using
-    (InfoGeometry.Combinatorics.BinaryCyclicGolayPolynomial.generator_coeff_of_lt k hk).symm
+  have h := (InfoGeometry.Combinatorics.BinaryCyclicGolayPolynomial.generator_coeff_of_lt k hk).symm
+  convert h using 1 <;> rfl
 
 /-- Cyclic convolution of a twelve-bit message with the Golay generator. -/
 def cyclicGolayWord (m : Message) : Word23 :=
@@ -332,9 +334,11 @@ private theorem encode_kernel_zero :
   have hprefix : Matrix.mulVec prefixMatrix m = 0 := by
     funext j
     have h23 : j.val < 23 := by omega
-    have h := congrFun hm ⟨j.val, by omega⟩
+    have h := congrFun hm (⟨j.val, by omega⟩ : Fin 24)
+    have hencoded : encode m (⟨j.val, by omega⟩ : Fin 24) = 0 := by
+      simpa [encode, h23] using h
     have hzero : cyclicGolayWord m ⟨j.val, h23⟩ = 0 := by
-      simpa only [encode, dif_pos h23] using h
+      simpa [encode, h23] using hencoded
     rw [prefixMatrix_mulVec_apply]
     simpa using hzero
   apply prefixMatrix_mulVec_injective
@@ -586,7 +590,7 @@ theorem codeSubmodule_le_orthogonal :
 theorem finrank_orthogonal_codeSubmodule :
     Module.finrank F₂ (dotBilin.orthogonal codeSubmodule) = 12 := by
   rw [dotBilin.finrank_orthogonal
-    dotBilin_nondegenerate dotBilin_isRefl]
+    dotBilin_nondegenerate codeSubmodule]
   rw [finrank_codeSubmodule]
   simp [Word24]
 

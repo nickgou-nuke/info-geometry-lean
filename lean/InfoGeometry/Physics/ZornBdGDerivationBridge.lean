@@ -1,6 +1,6 @@
 import Mathlib.Data.Matrix.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Tactic
 
@@ -50,14 +50,16 @@ theorem sigmaVec_mul (u v : Fin 3 → ℂ) :
       (dot3 u v) • (1 : Matrix (Fin 2) (Fin 2) ℂ) +
         Complex.I • sigmaVec (cross3 u v) := by
   ext i j
+  rw [Matrix.mul_apply]
+  simp only [Matrix.add_apply, Matrix.smul_apply]
   fin_cases i <;> fin_cases j
-  · simp [mul_apply, Fin.sum_univ_two, sigmaVec, smul_apply, add_apply, dot3, cross3]
+  · simp [Fin.sum_univ_two, sigmaVec, dot3, cross3]
     linear_combination -(u 1 * v 1 * Complex.I_mul_I)
-  · simp [mul_apply, Fin.sum_univ_two, sigmaVec, smul_apply, add_apply, dot3, cross3]
+  · simp [Fin.sum_univ_two, sigmaVec, dot3, cross3]
     linear_combination (u 2 * v 0 - u 0 * v 2) * Complex.I_mul_I
-  · simp [mul_apply, Fin.sum_univ_two, sigmaVec, smul_apply, add_apply, dot3, cross3]
+  · simp [Fin.sum_univ_two, sigmaVec, dot3, cross3]
     linear_combination -(u 2 * v 0 - u 0 * v 2) * Complex.I_mul_I
-  · simp [mul_apply, Fin.sum_univ_two, sigmaVec, smul_apply, add_apply, dot3, cross3]
+  · simp [Fin.sum_univ_two, sigmaVec, dot3, cross3]
     linear_combination -(u 1 * v 1 * Complex.I_mul_I)
 
 /-- Linearity of Pauli soldering with respect to vector negation -/
@@ -84,7 +86,7 @@ theorem sigmaVec_anticomm (u v : Fin 3 → ℂ) :
     dsimp [dot3]; ring
   rw [h1, h2, h_dot, h_cross, sigmaVec_neg]
   ext i j
-  simp only [add_apply, smul_apply, smul_eq_mul, neg_apply, smul_neg]
+  simp only [Matrix.add_apply, Matrix.smul_apply, smul_eq_mul, Matrix.neg_apply, smul_neg]
   ring
 
 /--
@@ -102,7 +104,7 @@ theorem sigmaVec_comm (u v : Fin 3 → ℂ) :
     dsimp [dot3]; ring
   rw [h1, h2, h_dot, h_cross, sigmaVec_neg]
   ext i j
-  simp only [sub_apply, add_apply, smul_apply, smul_eq_mul, neg_apply, smul_neg]
+  simp only [Matrix.sub_apply, Matrix.add_apply, Matrix.smul_apply, smul_eq_mul, Matrix.neg_apply, smul_neg]
   ring
 
 end InfoGeometry.Physics.PauliSolderedCrossProductBridge
@@ -358,7 +360,7 @@ theorem bdgReadout_diagonal_blocks (Z : Zorn ℂ) :
     block11 (bdgReadout Z) = Z.a • (1 : Matrix (Fin 2) (Fin 2) ℂ) ∧
     block22 (bdgReadout Z) = Z.b • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
   constructor <;> ext i j <;> fin_cases i <;> fin_cases j <;>
-    simp [block11, block22, bdgReadout, smul_apply]
+    simp [block11, block22, bdgReadout, Matrix.smul_apply]
 
 end InfoGeometry.Physics.ZornBdGSolderingReadout
 
@@ -408,9 +410,28 @@ theorem cartan_seed_generates_pairing
     (D : Zorn ℂ → Zorn ℂ) (a b t : ℂ) :
     block12 (bdgReadout (firstOrderFlow D (normalSeed a b) t)) =
       t • sigmaVec (D (normalSeed a b)).u := by
+  rw [bdgReadout_block12_eq_sigmaVec]
+  have hu : (firstOrderFlow D (normalSeed a b) t).u =
+      fun i => t * (D (normalSeed a b)).u i := by
+    change (fun i => (normalSeed a b).u i + t * (D (normalSeed a b)).u i) = _
+    ext i
+    change (0 : ℂ) + t * (D (normalSeed a b)).u i = _
+    ring
+  rw [hu]
   ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [firstOrderFlow, normalSeed, block12, bdgReadout, sigmaVec, smul_apply] <;>
+  fin_cases i <;> fin_cases j
+  · change t * (D (normalSeed a b)).u 2 = t * (D (normalSeed a b)).u 2
+    rfl
+  · change t * (D (normalSeed a b)).u 0 -
+      Complex.I * (t * (D (normalSeed a b)).u 1) =
+      t * ((D (normalSeed a b)).u 0 - Complex.I * (D (normalSeed a b)).u 1)
+    ring
+  · change t * (D (normalSeed a b)).u 0 +
+      Complex.I * (t * (D (normalSeed a b)).u 1) =
+      t * ((D (normalSeed a b)).u 0 + Complex.I * (D (normalSeed a b)).u 1)
+    ring
+  · change -(t * (D (normalSeed a b)).u 2) =
+      t * (-(D (normalSeed a b)).u 2)
     ring
 
 end InfoGeometry.Physics.G2BdGOrbit

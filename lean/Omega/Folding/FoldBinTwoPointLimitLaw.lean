@@ -42,37 +42,27 @@ private lemma foldBinLastBitClassMass_zero_tendsto :
       Filter.atTop (nhds (Real.goldenRatio / Real.sqrt 5)) := by
   have hshift :
       Filter.Tendsto
-        (fun m : ℕ => (Nat.fib (m + 1) : ℝ) * (Real.goldenRatio ^ (m + 1))⁻¹)
-        Filter.atTop (nhds ((Real.sqrt 5)⁻¹)) := by
-    have hshift0 :=
-      Filter.Tendsto.comp Omega.Entropy.fib_mul_phi_neg_tendsto_inv_sqrt5
-        (Filter.tendsto_add_atTop_nat 1)
-    simpa [Function.comp] using hshift0
+        (fun m : ℕ => (Nat.fib (m + 1) : ℝ) * Real.goldenRatio ^ (-((m + 1 : ℕ) : ℝ)))
+        Filter.atTop (nhds ((Real.sqrt 5)⁻¹)) :=
+    Omega.Entropy.fib_mul_phi_neg_tendsto_inv_sqrt5.comp (Filter.tendsto_add_atTop_nat 1)
   have hEq :
       (fun m : ℕ => (foldBinLastBitClassMass m false : ℝ) * Real.goldenRatio ^ (-(m : ℝ))) =ᶠ[Filter.atTop]
         fun m : ℕ =>
-          Real.goldenRatio * ((Nat.fib (m + 1) : ℝ) * (Real.goldenRatio ^ (m + 1))⁻¹) :=
+          Real.goldenRatio * ((Nat.fib (m + 1) : ℝ) * Real.goldenRatio ^ (-((m + 1 : ℕ) : ℝ))) :=
     Filter.Eventually.of_forall fun m => by
-      calc
-        (foldBinLastBitClassMass m false : ℝ) * Real.goldenRatio ^ (-(m : ℝ)) =
-            (Nat.fib (m + 1) : ℝ) * Real.goldenRatio ^ (-(m : ℝ)) := by
-              simp [foldBinLastBitClassMass]
-        _ = Real.goldenRatio * ((Nat.fib (m + 1) : ℝ) * (Real.goldenRatio ^ (m + 1))⁻¹) := by
-              have hpow :
-                  Real.goldenRatio ^ (-(m : ℝ)) =
-                    Real.goldenRatio * (Real.goldenRatio ^ (m + 1))⁻¹ := by
-                rw [Real.rpow_neg Real.goldenRatio_pos.le, Real.rpow_natCast]
-                field_simp [pow_ne_zero (m + 1) Real.goldenRatio_ne_zero]
-                ring
-              calc
-                (Nat.fib (m + 1) : ℝ) * Real.goldenRatio ^ (-(m : ℝ)) =
-                    (Nat.fib (m + 1) : ℝ) *
-                      (Real.goldenRatio * (Real.goldenRatio ^ (m + 1))⁻¹) := by
-                        rw [hpow]
-                _ = Real.goldenRatio * ((Nat.fib (m + 1) : ℝ) * (Real.goldenRatio ^ (m + 1))⁻¹) := by
-                    ring
+      dsimp
+      have hpos : 0 < Real.goldenRatio := Real.goldenRatio_pos
+      have h_exp : (-(m : ℝ)) = 1 + (-((m + 1 : ℕ) : ℝ)) := by push_cast; ring
+      have hpow : Real.goldenRatio ^ (-(m : ℝ)) = Real.goldenRatio * Real.goldenRatio ^ (-((m + 1 : ℕ) : ℝ)) := by
+        rw [h_exp, Real.rpow_add hpos, Real.rpow_one]
+      have hmass : (foldBinLastBitClassMass m false : ℝ) = (Nat.fib (m + 1) : ℝ) := by
+        simp [foldBinLastBitClassMass]
+      rw [hmass, hpow]
+      ring
   refine Filter.Tendsto.congr' hEq.symm ?_
-  simpa [one_div, mul_comm, mul_left_comm, mul_assoc] using hshift.const_mul Real.goldenRatio
+  have hmul := hshift.const_mul Real.goldenRatio
+  rw [div_eq_mul_inv]
+  exact hmul
 
 private lemma foldBinLastBitClassMass_one_tendsto :
     Filter.Tendsto

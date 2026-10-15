@@ -38,8 +38,7 @@ abbrev Mat2C := InfoGeometry.Algebra.FiniteSpin.Mat2C
 
 /-- The nilpotent part of the standard size-two Jordan block. -/
 def jordanNilpotent : Mat2C :=
-  ![![0, 1],
-    ![0, 0]]
+  fun i j => if i = 0 ∧ j = 1 then 1 else 0
 
 /-- The standard Jordan block with repeated eigenvalue `lam`. -/
 def jordanBlock (lam : ℂ) : Mat2C :=

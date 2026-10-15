@@ -174,13 +174,17 @@ def globalDefect (h : m ≤ n) (ω : Word n) : Word m :=
 theorem globalDefect_step (h : m ≤ n) (ω : Word (n + 1)) :
     globalDefect (Nat.le_trans h (Nat.le_succ n)) ω
       = xorWord (restrictWord h (localDefect ω)) (globalDefect h (truncate ω)) := by
-  simp [localDefect, globalDefect, restrictWord_xor]
-  symm
-  simpa [xorWord_comm] using
-    (xorWord_cancel_middle
-      (a := restrictWord h (truncate (Fold ω).1))
-      (b := restrictWord h (Fold (truncate ω)).1)
-      (c := (Fold (restrictWord h (truncate ω))).1))
+  simp only [localDefect, globalDefect, restrictWord_xor, X.restrictLE_val]
+  rw [restrictWord_trans_succ h ω, restrictWord_trans_succ h (Fold ω).1]
+  ext i
+  simp only [xorWord_apply]
+  have hrestrict : ((Fold ω).restrict).1 = truncate (Fold ω).1 := rfl
+  rw [hrestrict]
+  generalize (Fold (restrictWord h (truncate ω))).1 i = c
+  generalize restrictWord h (truncate (Fold ω).1) i = a
+  generalize restrictWord h (Fold (truncate ω)).1 i = b
+  cases a <;> cases b <;> cases c <;> rfl
+
 
 /-- Recursive xor-sum of all projected local defects between resolutions `m` and `m+k`. -/
 def defectChain (m : Nat) : ∀ k : Nat, Word (m + k) → Word m
@@ -526,8 +530,8 @@ theorem localDefect_compose (η : Word (m + 2)) :
     xorWord (restrictWord (Nat.le_succ m) (localDefect η))
       (localDefect (truncate η)) := by
   have h := globalDefect_step (h := Nat.le_succ m) (ω := η)
-  rw [localDefect_eq_globalDefect] at h
-  convert h using 2
+  rw [← localDefect_eq_globalDefect] at h
+  exact h
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase 210: Last-false defect vanishes

@@ -70,14 +70,14 @@ theorem critical_line_is_invariant_orbit (s : ℂ) :
 /-- `tau` preserves the real part exactly on the critical line. -/
 theorem tau_preserves_re_iff_critical_line (s : ℂ) :
     (tau s).re = s.re ↔ s.re = (1 / 2 : ℝ) := by
-  unfold tau
   constructor
   · intro h
-    have h' : (1 - s.re : ℝ) = s.re := by simpa [Complex.sub_re] using h
+    have h' : (1 - s.re : ℝ) = s.re := by
+      simpa [tau, functionalReflection, Complex.sub_re] using h
     linarith
   · intro hs
     have h' : (1 - s.re : ℝ) = s.re := by linarith
-    simpa [Complex.sub_re] using h'
+    simpa [tau, functionalReflection, Complex.sub_re] using h'
 
 /--
 If a state is fixed by `gamma`, then the functional and arithmetic reflections
@@ -94,7 +94,8 @@ theorem stable_state_reflection (s : ℂ) (h_stable : gamma s = s) :
   apply Complex.ext
   · have h_re : (1 - s.re : ℝ) = s.re := by
       nlinarith [hs']
-    simpa [tau, sigma, Complex.sub_re] using h_re
+    change (functionalReflection s).re = (conjugationReflection s).re
+    simpa [functionalReflection, conjugationReflection, Complex.sub_re] using h_re
   · simp [tau, sigma, functionalReflection, conjugationReflection]
 
 end InfoGeometry.Arithmetic.ZetaDihedral

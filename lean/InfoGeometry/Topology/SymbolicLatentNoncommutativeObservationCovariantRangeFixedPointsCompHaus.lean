@@ -34,15 +34,26 @@ theorem isClosed_operatorObservationRangeCovariantFixedPointSet
     (Φ : NoncommutativeObservableCovariantFlow S) (t : ℝ)
     (h_t : Continuous (Φ.operatorAction t)) :
     IsClosed (operatorObservationRangeCovariantFixedPointSet Φ t h_t) := by
-  letI : CompactSpace (Set.range S.operatorObservationMap) :=
-    isCompact_iff_compactSpace.mp
-      (isCompact_range (continuous_operatorObservationMap S))
+  have h_eq : operatorObservationRangeCovariantFixedPointSet Φ t h_t =
+      ⋂ i : ι, {y : Set.range S.operatorObservationMap |
+        Φ.operatorAction t (y.1 i) = y.1 i} := by
+    ext y
+    simp only [Set.mem_ofPred_eq, Set.mem_iInter]
+    constructor
+    · intro hy i
+      change operatorObservationRangeCompHausCovariantFlowHom Φ t h_t y = y at hy
+      have hval := congrArg (fun z : Set.range S.operatorObservationMap => z.1 i) hy
+      simpa only [operatorObservationRangeCompHausCovariantFlowHom_apply] using hval
+    · intro hy
+      apply Subtype.ext
+      funext i
+      exact hy i
+  rw [h_eq]
+  apply isClosed_iInter
+  intro i
   exact isClosed_eq
-    (by
-      apply Continuous.subtype_mk
-      exact continuous_pi (fun i =>
-        h_t.comp ((continuous_apply i).comp continuous_subtype_val)))
-    continuous_id
+    (h_t.comp ((continuous_apply i).comp continuous_subtype_val))
+    ((continuous_apply i).comp continuous_subtype_val)
 
 noncomputable def operatorObservationRangeCovariantFixedPointCompHaus
     {S : NoncommutativeObservableSystem X A ι}

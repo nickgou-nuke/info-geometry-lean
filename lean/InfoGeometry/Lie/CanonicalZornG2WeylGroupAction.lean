@@ -235,20 +235,12 @@ theorem transportedCartanActionRange_le_canonicalCartanWeylSubgroup :
   · intro u hu
     simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at hu
     rcases hu with rfl | rfl
-    · simpa [shortGenerator] using
-        (show cartanToTracelessHom
-            (cartanAction ⟨shortGenerator,
-              by exact Subgroup.subset_closure (by simp [shortGenerator])⟩) ∈
-            CanonicalZornG2CoxeterRelations.cartanWeylSubgroup from by
-          rw [cartanToTracelessHom_cartanAction_short]
-          exact Subgroup.subset_closure (by simp))
-    · simpa [longGenerator] using
-        (show cartanToTracelessHom
-            (cartanAction ⟨longGenerator,
-              by exact Subgroup.subset_closure (by simp [longGenerator])⟩) ∈
-            CanonicalZornG2CoxeterRelations.cartanWeylSubgroup from by
-          rw [cartanToTracelessHom_cartanAction_long]
-          exact Subgroup.subset_closure (by simp))
+    · change cartanToTracelessHom canonicalShortReflectionEquiv ∈ _
+      rw [cartanToTracelessHom_short]
+      exact Subgroup.subset_closure (by simp)
+    · change cartanToTracelessHom canonicalLongReflectionEquiv ∈ _
+      rw [cartanToTracelessHom_long]
+      exact Subgroup.subset_closure (by simp)
   · simp
   · intro u v _ _ hu hv
     change cartanToTracelessHom (u.1 * v.1) ∈ _
@@ -293,8 +285,9 @@ theorem canonicalCartanActionHom_injective :
   apply cartanAction_injective
   have ht : cartanEquivToTracelessEquiv (cartanAction w) =
       cartanEquivToTracelessEquiv (cartanAction v) := by
-    simpa [canonicalCartanActionHom, cartanEquivToTracelessEquiv] using
-      congrArg Subtype.val h
+    change cartanToTracelessHom (cartanAction w) =
+      cartanToTracelessHom (cartanAction v)
+    exact congrArg Subtype.val h
   apply LinearEquiv.ext
   intro x
   have hx := congrArg

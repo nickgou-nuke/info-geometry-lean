@@ -134,7 +134,8 @@ theorem primon_boson_signed_partition_cancel
     (P : PrimeRegister) (s : ℂ)
     (h : ∀ p ∈ P.primes, 1 - modeWeight s primeEnergy zeroChemicalPotential p ≠ 0) :
     primonPartition P s * PrimeSpecialization.finitePrimeSignedPartition P s = 1 := by
-  simpa [primonPartition, PrimeSpecialization.finitePrimeSignedPartition] using
+  simpa [primonPartition, PrimeSpecialization.finitePrimeBosonPartition,
+    PrimeSpecialization.finitePrimeSignedPartition] using
     boson_mul_signedPartition_eq_one
       (modes := P.primes) (s := s) (E := primeEnergy) (μ := zeroChemicalPotential) h
 
@@ -297,7 +298,7 @@ theorem primonChiralVirasoroClosure (n m : ℤ) :
   refine ⟨?_, ?_, ?_, ?_⟩
   · simpa using (VirasoroProject.ChiralVirasoro.lgenLeft_bracket (𝕜 := ℂ) n m)
   · simpa using (VirasoroProject.ChiralVirasoro.lgenRight_bracket (𝕜 := ℂ) n m)
-  · simpa using
+  · simpa [VirasoroProject.ChiralVirasoro.lgenLeft, VirasoroProject.ChiralVirasoro.lgenRight] using
       (VirasoroProject.ChiralVirasoro.inLeft_bracket_inRight (𝕜 := ℂ)
         (VirasoroProject.VirasoroAlgebra.lgen ℂ n)
         (VirasoroProject.VirasoroAlgebra.lgen ℂ m))

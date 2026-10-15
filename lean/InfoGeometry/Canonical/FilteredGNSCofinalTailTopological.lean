@@ -18,6 +18,9 @@ a general `TopCat` colimit injection is assumed.
 
 noncomputable section
 
+set_option synthInstance.maxHeartbeats 80000
+set_option maxHeartbeats 400000
+
 namespace CStarStateColimit.Native.FilteredGNSCofinalTailTopological
 
 open CStarStateColimit.Native
@@ -162,11 +165,23 @@ theorem upperGnsTopologicalColimitToHilbert_eq_tail_comparison
     (upperGnsTopologicalDiagram Stage sys ω i₀)
     (upperGnsTopologicalCocone Stage sys ω i₀)
   intro j
-  rw [← Category.assoc,
-    upperGnsToTailHilbertColimitMap_stage]
   apply TopCat.hom_ext
   apply ContinuousMap.ext
   intro x
+  change tailHilbertGlobalHomeomorph Stage sys ω i₀
+      (upperGnsToTailHilbertColimitMap Stage sys ω i₀
+        (topologicalDirectInjection
+          (upperGnsTopologicalDiagram Stage sys ω i₀) j x)) =
+    (upperGnsTopologicalCocone Stage sys ω i₀).ι.app j x
+  have hstage := congrArg (fun f => f x)
+    (upperGnsToTailHilbertColimitMap_stage Stage sys ω i₀ j)
+  have hstage' :
+      upperGnsToTailHilbertColimitMap Stage sys ω i₀
+          (topologicalDirectInjection
+            (upperGnsTopologicalDiagram Stage sys ω i₀) j x) =
+        (upperGnsToTailHilbertCocone Stage sys ω i₀).ι.app j x := by
+    simpa only [TopCat.comp_app] using hstage
+  rw [hstage']
   exact tailHilbertGlobalHomeomorph_stage Stage sys ω i₀ j x
 
 /-- The transported global stage representation, exposed as a continuous
@@ -195,12 +210,15 @@ theorem globalStageRepresentationTopCatHom_intertwines
       tailCompletedRepresentationTopCatHom Stage sys ω a ≫
         tailToGlobalTopCatMap Stage sys ω i₀ := by
   apply TopCat.hom_ext
-  ext x
+  apply ContinuousMap.ext
+  intro x
   have h := congrArg (fun f => f x)
     (globalStageRepresentation_intertwines Stage sys ω a)
-  simpa only [tailToGlobalTopCatMap, globalStageRepresentationTopCatHom,
-    tailCompletedRepresentationTopCatHom, TopCat.comp_app,
-    ContinuousLinearMap.comp_apply] using h
+  change globalStageRepresentationStarAlgHom Stage sys ω i₀ a
+      (tailHilbertGlobalEquiv Stage sys ω i₀ x) =
+    tailHilbertGlobalEquiv Stage sys ω i₀
+      (tailCompletedRepresentation Stage sys ω a x)
+  exact h
 
 /-! Stagewise GNS operators form a natural endomorphism of the upper-tail
 `TopCat` diagram.  Its colimit map can therefore be compared directly with
@@ -260,8 +278,13 @@ theorem upperTailRepresentationColimitMap_stage
         topologicalDirectInjection
           (upperGnsTopologicalDiagram Stage sys ω i₀) j
           (tailGNSOperator Stage sys ω (star a) j x) := by
-    simpa only [TopCat.comp_app, tailGNSOperatorTopCatHom_apply,
-      upperTailRepresentationNatTrans] using h
+    change upperTailRepresentationColimitMap Stage sys ω (star a)
+        (topologicalDirectInjection
+          (upperGnsTopologicalDiagram Stage sys ω i₀) j x) =
+      topologicalDirectInjection
+        (upperGnsTopologicalDiagram Stage sys ω i₀) j
+        (tailGNSOperator Stage sys ω (star a) j x) at h
+    simpa only [tailGNSOperator_star] using h
   rw [tailGNSOperator_star] at h'
   exact h'
 
@@ -285,34 +308,82 @@ theorem upperTailRepresentationColimitMap_intertwines_global
         globalStageRepresentationTopCatHom Stage sys ω a := by
   apply colimit.hom_ext
   intro j
-  calc
-    topologicalDirectInjection
-          (upperGnsTopologicalDiagram Stage sys ω i₀) j ≫
+  change topologicalDirectInjection
+      (upperGnsTopologicalDiagram Stage sys ω i₀) j ≫
         (upperTailRepresentationColimitMap Stage sys ω a ≫
           upperGnsTopologicalColimitToHilbert Stage sys ω i₀) =
+    topologicalDirectInjection
+      (upperGnsTopologicalDiagram Stage sys ω i₀) j ≫
+        (upperGnsTopologicalColimitToHilbert Stage sys ω i₀ ≫
+          globalStageRepresentationTopCatHom Stage sys ω a)
+  apply TopCat.hom_ext
+  ext x
+  change upperGnsTopologicalColimitToHilbert Stage sys ω i₀
+      (upperTailRepresentationColimitMap Stage sys ω a
         (topologicalDirectInjection
-          (upperGnsTopologicalDiagram Stage sys ω i₀) j ≫
-          upperTailRepresentationColimitMap Stage sys ω a) ≫
-          upperGnsTopologicalColimitToHilbert Stage sys ω i₀ :=
-      (Category.assoc _ _ _).symm
-    _ = ((upperTailRepresentationNatTrans Stage sys ω a).app j ≫
-          topologicalDirectInjection
-            (upperGnsTopologicalDiagram Stage sys ω i₀) j) ≫
-          upperGnsTopologicalColimitToHilbert Stage sys ω i₀ := by
-      rw [upperTailRepresentationColimitMap_stage]
-    _ = (upperTailRepresentationNatTrans Stage sys ω a).app j ≫
-          ((upperGnsTopologicalCocone Stage sys ω i₀).ι.app j) := by
-      rw [Category.assoc,
-        upperGnsTopologicalColimitToHilbert_stage]
-    _ = (upperGnsTopologicalCocone Stage sys ω i₀).ι.app j ≫
-          globalStageRepresentationTopCatHom Stage sys ω a :=
-      upperTailRepresentation_stage_global_intertwines Stage sys ω a j
-    _ = topologicalDirectInjection
-          (upperGnsTopologicalDiagram Stage sys ω i₀) j ≫
-          (upperGnsTopologicalColimitToHilbert Stage sys ω i₀ ≫
-            globalStageRepresentationTopCatHom Stage sys ω a) := by
-      rw [← upperGnsTopologicalColimitToHilbert_stage,
-        ← Category.assoc]
+          (upperGnsTopologicalDiagram Stage sys ω i₀) j x)) =
+    globalStageRepresentationTopCatHom Stage sys ω a
+      (upperGnsTopologicalColimitToHilbert Stage sys ω i₀
+        (topologicalDirectInjection
+          (upperGnsTopologicalDiagram Stage sys ω i₀) j x))
+  have hmap := congrArg (fun f => f x)
+    (upperTailRepresentationColimitMap_stage Stage sys ω a j)
+  have hmap' :
+      upperTailRepresentationColimitMap Stage sys ω a
+          (topologicalDirectInjection
+            (upperGnsTopologicalDiagram Stage sys ω i₀) j x) =
+        topologicalDirectInjection
+          (upperGnsTopologicalDiagram Stage sys ω i₀) j
+          (tailGNSOperator Stage sys ω a j x) := by
+    change upperTailRepresentationColimitMap Stage sys ω a
+        (topologicalDirectInjection
+          (upperGnsTopologicalDiagram Stage sys ω i₀) j x) =
+      topologicalDirectInjection
+        (upperGnsTopologicalDiagram Stage sys ω i₀) j
+        (tailGNSOperator Stage sys ω a j x) at hmap
+    simpa only [ConcreteCategory.comp_apply] using hmap
+  have hreadout := congrArg (fun f => f (tailGNSOperator Stage sys ω a j x))
+    (upperGnsTopologicalColimitToHilbert_stage Stage sys ω i₀ j)
+  have hreadout' :
+      upperGnsTopologicalColimitToHilbert Stage sys ω i₀
+          (topologicalDirectInjection
+            (upperGnsTopologicalDiagram Stage sys ω i₀) j
+            (tailGNSOperator Stage sys ω a j x)) =
+        (upperGnsTopologicalCocone Stage sys ω i₀).ι.app j
+          (tailGNSOperator Stage sys ω a j x) := by
+    change upperGnsTopologicalColimitToHilbert Stage sys ω i₀
+        (topologicalDirectInjection
+          (upperGnsTopologicalDiagram Stage sys ω i₀) j
+          (tailGNSOperator Stage sys ω a j x)) =
+      (upperGnsTopologicalCocone Stage sys ω i₀).ι.app j
+        (tailGNSOperator Stage sys ω a j x) at hreadout
+    simpa only [ConcreteCategory.comp_apply] using hreadout
+  have hglobal := congrArg (fun f => f x)
+    (upperTailRepresentation_stage_global_intertwines Stage sys ω a j)
+  have hglobal' :
+      (upperGnsTopologicalCocone Stage sys ω i₀).ι.app j
+          ((upperTailRepresentationNatTrans Stage sys ω a).app j x) =
+        globalStageRepresentationTopCatHom Stage sys ω a
+          ((upperGnsTopologicalCocone Stage sys ω i₀).ι.app j x) := by
+    change (upperGnsTopologicalCocone Stage sys ω i₀).ι.app j
+        ((upperTailRepresentationNatTrans Stage sys ω a).app j x) =
+      globalStageRepresentationTopCatHom Stage sys ω a
+        ((upperGnsTopologicalCocone Stage sys ω i₀).ι.app j x) at hglobal
+    simpa only [ConcreteCategory.comp_apply] using hglobal
+  have hreadoutBase := congrArg (fun f => f x)
+    (upperGnsTopologicalColimitToHilbert_stage Stage sys ω i₀ j)
+  have hreadoutBase' :
+      upperGnsTopologicalColimitToHilbert Stage sys ω i₀
+          (topologicalDirectInjection
+            (upperGnsTopologicalDiagram Stage sys ω i₀) j x) =
+        (upperGnsTopologicalCocone Stage sys ω i₀).ι.app j x := by
+    change upperGnsTopologicalColimitToHilbert Stage sys ω i₀
+        (topologicalDirectInjection
+          (upperGnsTopologicalDiagram Stage sys ω i₀) j x) =
+      (upperGnsTopologicalCocone Stage sys ω i₀).ι.app j x at hreadoutBase
+    simpa only [ConcreteCategory.comp_apply] using hreadoutBase
+  rw [hmap', hreadout', hreadoutBase']
+  exact hglobal'
 
 /-- The topological global readout retains the involution supplied by its
 bundled `StarAlgHom`. -/
@@ -458,8 +529,7 @@ the operator involution because it is induced by a `StarAlgEquiv`. -/
       star (globalStageOperatorConjugationHomeomorph Stage sys ω i₀ T) := by
   rw [globalStageOperatorConjugationHomeomorph_apply,
     globalStageOperatorConjugationHomeomorph_apply]
-  exact StarHomClass.map_star
-    ((tailHilbertGlobalEquiv Stage sys ω i₀).conjStarAlgEquiv) T
+  exact (tailHilbertGlobalEquiv Stage sys ω i₀).conjStarAlgEquiv.map_star' T
 
 @[simp] theorem globalStageOperatorConjugationHomeomorph_symm_star
     {i₀ : I}
@@ -468,18 +538,9 @@ the operator involution because it is induced by a `StarAlgEquiv`. -/
     (globalStageOperatorConjugationHomeomorph Stage sys ω i₀).symm
         (star T) =
       star ((globalStageOperatorConjugationHomeomorph Stage sys ω i₀).symm T) := by
-  calc
-    (globalStageOperatorConjugationHomeomorph Stage sys ω i₀).symm
-          (star T) =
-        (globalStageOperatorConjugationHomeomorph Stage sys ω i₀).symm
-          (star ((globalStageOperatorConjugationHomeomorph Stage sys ω i₀)
-            ((globalStageOperatorConjugationHomeomorph Stage sys ω i₀).symm T))) := by
-          rw [(globalStageOperatorConjugationHomeomorph Stage sys ω i₀).apply_symm_apply]
-    _ = (globalStageOperatorConjugationHomeomorph Stage sys ω i₀).symm
-          ((globalStageOperatorConjugationHomeomorph Stage sys ω i₀)
-            (star ((globalStageOperatorConjugationHomeomorph Stage sys ω i₀).symm T))) := by
-          rw [globalStageOperatorConjugationHomeomorph_star]
-    _ = star ((globalStageOperatorConjugationHomeomorph Stage sys ω i₀).symm T) := by
-          rw [(globalStageOperatorConjugationHomeomorph Stage sys ω i₀).symm_apply_apply]
+  apply (globalStageOperatorConjugationHomeomorph Stage sys ω i₀).injective
+  rw [(globalStageOperatorConjugationHomeomorph Stage sys ω i₀).apply_symm_apply,
+    globalStageOperatorConjugationHomeomorph_star,
+    (globalStageOperatorConjugationHomeomorph Stage sys ω i₀).apply_symm_apply]
 
 end CStarStateColimit.Native.FilteredGNSCofinalTailTopological

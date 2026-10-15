@@ -56,7 +56,7 @@ theorem paper_conclusion_prime_register_ellipse_complete_equivalence :
       primeRegisterEllipseImageClassification := by
   refine ⟨?_, ?_, ?_⟩
   · intro r s
-    simp [primeRegisterMul, primeRegisterNorm, primeRegisterOfPNat]
+    exact Nat.factorizationEquiv.symm_apply_apply _
   · intro r s h
     have hAxis : primeRegisterNorm r = primeRegisterNorm s := by
       exact congrArg PrimeRegisterEllipse.majorAxis h
@@ -67,6 +67,9 @@ theorem paper_conclusion_prime_register_ellipse_complete_equivalence :
       exact ⟨primeRegisterNorm r, rfl⟩
     · rintro ⟨n, rfl⟩
       refine ⟨primeRegisterOfPNat n, ?_⟩
-      simp [primeRegisterEllipseMap, primeAxisEllipse, primeRegisterNorm, primeRegisterOfPNat]
+      have h : primeRegisterNorm (primeRegisterOfPNat n) = n :=
+        Nat.factorizationEquiv.symm_apply_apply n
+      change primeAxisEllipse (primeRegisterNorm (primeRegisterOfPNat n)) = primeAxisEllipse n
+      rw [h]
 
 end Omega.Conclusion

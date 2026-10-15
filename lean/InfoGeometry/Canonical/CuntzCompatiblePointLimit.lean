@@ -93,7 +93,12 @@ theorem cuntzCompatiblePointAmbientLimitMap_projection
     (by
       intro i j f
       exact cuntzCompatiblePointTopCatFamily_natural sys family (leOfHom f)) i u
-  simpa [cuntzCompatiblePointAmbientLimitMap,
-    cuntzCompatiblePointLimitMap] using h
+  change topologicalInverseProjection (qCcrParameterTopologicalDiagram Stage sys) i
+      (qCcrParameterZeroFiberToParameterLimit Stage sys
+        (qCcrParameterZeroFiberPointLimitMap Stage sys
+          (cuntzCompatiblePointTopCatFamily sys family) _ u)) =
+    (qCcrParameterZeroFiberToParameterNatTrans Stage sys).app i
+      (cuntzCompatiblePointTopCatFamily sys family i u) at h
+  exact h
 
 end InfoGeometry.Canonical.CuntzCompatiblePointLimit

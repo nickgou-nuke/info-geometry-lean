@@ -38,6 +38,34 @@ theorem trivial_proof : 1 = 1 := by
     assert "soft" in severities
 
 
+def test_scan_lean_file_flags_anonymous_example_proof_hole(tmp_path: Path) -> None:
+    lean_file = tmp_path / "AnonymousExample.lean"
+    lean_file.write_text(
+        """example : True := by
+  sorry
+
+theorem named_ok : True := by
+  exact True.intro
+
+noncomputable example : True := by
+  sorry
+""",
+        encoding="utf-8",
+    )
+
+    findings = scan_lean_file(lean_file)
+
+    holes = [
+        item.finding == "proof-hole"
+        and item.declaration_kind == "example"
+        for item in findings
+    ]
+    assert sum(holes) == 2, findings
+    assert {
+        item.declaration_name for item in findings if item.finding == "proof-hole"
+    } == {"<anonymous-example-1>", "<anonymous-example-2>"}
+
+
 def test_run_audit_skips_unstable_when_requested(tmp_path: Path) -> None:
     lean_root = tmp_path / "lean"
     stable = lean_root / "InfoGeometry" / "Core.lean"

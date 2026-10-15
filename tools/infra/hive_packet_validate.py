@@ -35,6 +35,7 @@ SCHEMA_BY_KIND = {
     "RetrievalHypothesisPacket": SCHEMA_DIR / "RetrievalHypothesisPacket.schema.json",
     "ExecutionIntentPacket": SCHEMA_DIR / "ExecutionIntentPacket.schema.json",
     "LeanVerificationPacket": SCHEMA_DIR / "LeanVerificationPacket.schema.json",
+    "PantographSessionEvidencePacket": SCHEMA_DIR / "PantographSessionEvidencePacket.schema.json",
     "BuildPacket": SCHEMA_DIR / "BuildPacket.schema.json",
     "AuditPacket": SCHEMA_DIR / "AuditPacket.schema.json",
     "ChatGPTSocraticAuditPacket": SCHEMA_DIR / "ChatGPTSocraticAuditPacket.schema.json",

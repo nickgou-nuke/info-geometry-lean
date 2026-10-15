@@ -5,7 +5,7 @@ import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.Algebra.Lie.BaseChange
 import Mathlib.LinearAlgebra.Dimension.Constructions
 import Mathlib.LinearAlgebra.FreeModule.Basic
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import InfoGeometry.Lie.CanonicalZornDerivation
 import InfoGeometry.Lie.CanonicalZornDerivationDimension
 
@@ -69,21 +69,12 @@ theorem complexified_finrank :
   exact finrank_canonicalZornDerivations
 
 /-- The abstract 14-dimensional Chevalley presentation of $\mathfrak{g}_2(\mathbb{C})$. -/
-def g2ChevalleyLieAlgebra : Type :=
+abbrev g2ChevalleyLieAlgebra : Type :=
   Fin 14 → ℂ
-
-instance : AddCommGroup g2ChevalleyLieAlgebra := by
-  dsimp [g2ChevalleyLieAlgebra]
-  infer_instance
-
-instance : Module ℂ g2ChevalleyLieAlgebra := by
-  dsimp [g2ChevalleyLieAlgebra]
-  infer_instance
 
 /-- Dimension of the abstract Chevalley $\mathfrak{g}_2(\mathbb{C})$ Lie algebra is 14. -/
 theorem g2Chevalley_finrank :
-    Module.finrank ℂ g2ChevalleyLieAlgebra = 14 := by
-  dsimp [g2ChevalleyLieAlgebra]
-  simp
+    Module.finrank ℂ g2ChevalleyLieAlgebra = 14 :=
+  Module.finrank_fin_fun ℂ
 
 end InfoGeometry.Lie.CanonicalZornComplexifiedG2

@@ -497,8 +497,9 @@ lemma gibbsCandidate_mem_feasible
     refine ⟨?_, ?_⟩
     · intro i
       simpa [gibbsCandidate] using gibbs_nonneg (f := P.obs) (lam := lam) i
-    · simpa [gibbsCandidate] using gibbs_sum_one (f := P.obs) (lam := lam)
-  · simpa [gibbsCandidate] using hE
+    · simpa [gibbsCandidate, Normalized] using
+        gibbs_sum_one (f := P.obs) (lam := lam)
+  · simpa [gibbsCandidate, gibbsExpectation] using hE
 
 /-- Canonicalized Gibbs optimality:
 on any additional linear-feasible class, entropy is maximized by the Gibbs candidate
@@ -514,8 +515,9 @@ theorem gibbsCandidate_maximizes_entropy_on_feasible
     · refine ⟨?_, ?_⟩
       · intro i
         simpa [gibbsCandidate] using gibbs_nonneg (f := P.obs) (lam := lam) i
-      · simpa [gibbsCandidate] using gibbs_sum_one (f := P.obs) (lam := lam)
-    · simpa [gibbsCandidate] using hE
+      · simpa [gibbsCandidate, Normalized] using
+          gibbs_sum_one (f := P.obs) (lam := lam)
+    · simpa [gibbsCandidate, gibbsExpectation] using hE
   have hopt :=
     gibbs_maximizes_shannon_under_moment
       (f := P.obs) (E := P.expected) (lam := lam)

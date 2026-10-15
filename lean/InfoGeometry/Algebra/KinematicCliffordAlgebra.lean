@@ -2,7 +2,7 @@ import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.QuadraticForm.Basic
 import Mathlib.Data.Matrix.Basic
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 
 /-!
 # The Infinite Sequence of Kinematic Clifford Algebras
@@ -29,7 +29,7 @@ The quadratic form associated with a kinematic signature $\vec{\kappa}$.
 For a vector space $V = \mathbb{R}^n$ with basis $e_i$, $Q(e_i) = \kappa_i$.
 -/
 def kinematicQuadraticForm (n : ℕ) (kappa : Fin n → ℝ) : QuadraticMap ℝ (Fin n → ℝ) ℝ :=
-  Matrix.toQuadraticMap' (Matrix.diagonal kappa)
+  Matrix.toQuadraticForm' (Matrix.diagonal kappa)
 
 /--
 The N-dimensional Kinematic Clifford Algebra.

@@ -1,6 +1,10 @@
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.CrossProduct
+import Mathlib.LinearAlgebra.UnitaryGroup
+import Mathlib.Analysis.InnerProductSpace.PiL2
+import Mathlib.Analysis.InnerProductSpace.Projection.Reflection
+import Mathlib.Analysis.InnerProductSpace.Projection.FiniteDimensional
 import InfoGeometry.Canonical.LieGeometricDuality
 
 /-!
@@ -153,9 +157,12 @@ theorem so3_converse_equal_casimir (x y : V3) (h : casimir x = casimir y) :
   let yE : EuclideanSpace ℝ (Fin 3) := (EuclideanSpace.equiv (Fin 3) ℝ).symm y
   let b : OrthonormalBasis (Fin 3) ℝ (EuclideanSpace ℝ (Fin 3)) := EuclideanSpace.basisFun (Fin 3) ℝ
 
+  have hdot : x ⬝ᵥ x = y ⬝ᵥ y := by
+    change x ⬝ᵥ x = y ⬝ᵥ y at h
+    exact h
   have hnorm_sq : ‖xE‖ ^ 2 = ‖yE‖ ^ 2 := by
-    rw [PiLp.norm_sq_eq_of_L2, PiLp.norm_sq_eq_of_L2]
-    simpa [pow_two] using h
+    rw [EuclideanSpace.real_norm_sq_eq, EuclideanSpace.real_norm_sq_eq]
+    simpa [dotProduct, xE, yE, EuclideanSpace.equiv, pow_two] using hdot
   have hnorm : ‖xE‖ = ‖yE‖ := by
     nlinarith [hnorm_sq, norm_nonneg xE, norm_nonneg yE]
 

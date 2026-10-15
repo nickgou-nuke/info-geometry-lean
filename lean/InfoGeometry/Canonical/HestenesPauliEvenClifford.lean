@@ -1,5 +1,6 @@
 import Mathlib.LinearAlgebra.CliffordAlgebra.Even
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
 import Mathlib.Tactic.FinCases
 import InfoGeometry.Clifford.Spacetime
@@ -181,7 +182,7 @@ theorem evenBasis_coe (i : Fin 8) :
             (CliffordAlgebra.ι q14 (vecBasis 1) * CliffordAlgebra.ι q14 (vecBasis 0) ) := by
   fin_cases i <;> rfl
 
-def evenSpan : Submodule ℝ ClPlus14 :=
+noncomputable def evenSpan : Submodule ℝ ClPlus14 :=
   Submodule.span ℝ (Set.range evenBasis)
 
 theorem evenBasis_mem_evenSpan (i : Fin 8) :
@@ -419,7 +420,7 @@ theorem even_mem_fullCanonicalSpan (x : ClPlus14) :
     x.1 ∈ fullCanonicalSpan := by
   induction x.1, x.2 using CliffordAlgebra.even_induction with
   | algebraMap r =>
-      simpa [Algebra.algebraMap_eq_smul_one] using
+      simpa [Algebra.algebraMap_eq_smul_one, fullCanonicalBasis] using
         fullCanonicalSpan.smul_mem r (Submodule.subset_span ⟨0, rfl⟩)
   | add x y _ _ hx hy =>
       exact fullCanonicalSpan.add_mem hx hy
@@ -443,7 +444,8 @@ theorem clPlusVal_range_eq_fullCanonicalSpan :
   · apply Submodule.span_le.2
     rintro y ⟨i, rfl⟩
     refine ⟨evenBasis i, ?_⟩
-    simpa [clPlusVal, fullCanonicalBasis, mul_assoc] using evenBasis_coe i
+    simpa [clPlusVal, fullCanonicalBasis, cliffordGenerator, mul_assoc] using
+      evenBasis_coe i
 
 noncomputable def clPlusValRangeEquiv :
     ClPlus14 ≃ₗ[ℝ] ↥clPlusVal.range :=
@@ -454,10 +456,14 @@ noncomputable def fullSpanBasis (i : Fin 8) : ↥fullCanonicalSpan :=
 
 theorem fullSpanBasis_span_top :
     Submodule.span ℝ (Set.range fullSpanBasis) = ⊤ := by
-  simpa [fullSpanBasis, fullCanonicalSpan] using
-    (Submodule.span_range_subtype_eq_top_iff fullCanonicalSpan
-      (s := fullCanonicalBasis)
-      (hs := fun i => Submodule.subset_span ⟨i, rfl⟩)).2 rfl
+  change
+    Submodule.span ℝ
+        (Set.range fun i =>
+          (⟨fullCanonicalBasis i, Submodule.subset_span ⟨i, rfl⟩⟩ :
+            ↥fullCanonicalSpan)) = ⊤
+  exact (Submodule.span_range_subtype_eq_top_iff fullCanonicalSpan
+    (s := fullCanonicalBasis)
+    (hs := fun i => Submodule.subset_span ⟨i, rfl⟩)).2 rfl
 
 theorem fullCanonicalSpan_finrank_le_eight :
     Module.finrank ℝ (↥fullCanonicalSpan) ≤ 8 :=
@@ -572,6 +578,7 @@ noncomputable def clPlusToPauli : CliffordAlgebra.even q14 →ₐ[ℝ] M2C :=
 
 theorem finrank_M2C_real : Module.finrank ℝ M2C = 8 := by
   rw [Module.finrank_matrix]
+  rw [Complex.finrank_real_complex]
   norm_num
 
 noncomputable def sigma1 : ClPlus14 :=

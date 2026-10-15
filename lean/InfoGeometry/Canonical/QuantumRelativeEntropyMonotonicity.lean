@@ -62,7 +62,8 @@ theorem kl_divergence_nonneg (P Q : Fin n → ℝ)
     For any real n × n matrices A and B, Tr((A - B)ᵀ (A - B)) ≥ 0 with equality iff A = B. -/
 theorem matrix_diff_trace_nonneg (A B : Matrix (Fin n) (Fin n) ℝ) :
     0 ≤ trace ((A - B)ᵀ * (A - B)) := by
-  dsimp [trace, mul_apply, transpose, sub_apply]
+  simp only [trace, Matrix.diag_apply, Matrix.mul_apply, Matrix.transpose_apply,
+    Matrix.sub_apply]
   apply Finset.sum_nonneg
   intro i _
   apply Finset.sum_nonneg

@@ -143,7 +143,12 @@ private theorem bAdicValue_injective_of_canonical {B : ℕ} (hB : 1 < B) :
 private theorem canonicalDigits_streamPrefix {B : ℕ} {e : ℕ → ℕ}
     (h : ∀ n, 0 < e n ∧ e n < B) (n : ℕ) : canonicalDigits B (streamPrefix e n) := by
   intro i
-  simpa [canonicalDigits, streamPrefix, List.get_ofFn] using h i
+  have hi : i.val < n := by
+    simpa [streamPrefix] using i.isLt
+  change 0 < (List.ofFn (fun j : Fin n => e j))[i.val] ∧
+    (List.ofFn (fun j : Fin n => e j))[i.val] < B
+  rw [List.getElem_ofFn]
+  exact h i.val
 
 /-- The `2^L`-adic affine host turns semidirect concatenation into affine composition, is faithful
 on finite canonical codes, and separates infinite streams by their compatible `B`-adic prefixes.

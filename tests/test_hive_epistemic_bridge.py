@@ -1,12 +1,81 @@
+import hashlib
 import json
 
 import pytest
 
-from tools.infra.hive_epistemic_bridge import MARKER, RECEIPT_SCHEMA, check_admission_output
+from tools.infra.hive_epistemic_bridge import (
+    MARKER,
+    RECEIPT_SCHEMA,
+    check_admission_output,
+    read_candidate_receipt,
+    validate_candidate_archive_record,
+)
+from tools.infra.proof_artifact_receipt import build_candidate_receipt
 from tools.infra.hive_workflow_policy import check_workflow_policy
 
 
 TARGETS = ["Example.first", "Example.second"]
+
+
+def candidate_record():
+    row = {
+        "record_type": "automath_lean_candidate",
+        "authority": "candidate_record_not_proof_authority",
+        "status": "lean_checked_pending_review",
+        "candidate_sha256": "a" * 64,
+        "lean_file": "tmp/candidate.lean",
+        "source_path": "lean/Example.lean",
+        "source_snapshot_sha256": "b" * 64,
+        "source_snapshot_current_sha256": "b" * 64,
+        "source_context_changed": False,
+        "toolchain": "leanprover/lean4:v4.34.1",
+        "lakefile_sha256": "c" * 64,
+        "lake_manifest_sha256": "d" * 64,
+        "git_head": "e" * 40,
+        "lean_check_returncode": 0,
+        "lean_output_sha256": "f" * 64,
+        "semantic_vacuity_returncode": 0,
+        "semantic_vacuity_output_sha256": "1" * 64,
+        "axiom_audit_status": "not_requested",
+        "axiom_audit_declarations": [],
+        "axiom_audit_returncode": None,
+        "axiom_audit_output_sha256": "",
+    }
+    receipt_input = dict(row)
+    row["audit_receipt"] = build_candidate_receipt(receipt_input)
+    return row
+
+
+def test_candidate_receipt_reader_returns_only_bound_valid_receipts():
+    row = candidate_record()
+    checked = validate_candidate_archive_record(row)
+    assert checked["ok"]
+    assert checked["promotion_allowed"] is False
+    assert read_candidate_receipt(row) == row["audit_receipt"]
+
+
+def test_candidate_receipt_reader_rejects_digest_and_binding_tampering():
+    row = candidate_record()
+    row["audit_receipt"]["artifact"]["sha256"] = "0" * 64
+    assert not validate_candidate_archive_record(row)["ok"]
+    row = candidate_record()
+    row["candidate_sha256"] = "0" * 64
+    assert read_candidate_receipt(row) is None
+
+
+def test_candidate_receipt_reader_rejects_malformed_sections_and_promotion_claims():
+    for edit in (
+        lambda receipt: receipt.update(environment=None),
+        lambda receipt: receipt["review"].update(promotionAllowed=True),
+    ):
+        row = candidate_record()
+        receipt = row["audit_receipt"]
+        edit(receipt)
+        unsigned = {key: value for key, value in receipt.items() if key != "receiptSha256"}
+        receipt["receiptSha256"] = hashlib.sha256(
+            json.dumps(unsigned, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
+        ).hexdigest()
+        assert read_candidate_receipt(row) is None
 
 
 def receipt():

@@ -15,7 +15,9 @@ theorem paper_conclusion_continuous_legendre_euler_fenchel_contact
   have ht0 : t ≠ 0 := ne_of_gt ht
   have hquot :
       HasDerivAt (fun s => (Λ s + c) / s) (((Λ' t) * t - (Λ t + c)) / t ^ 2) t := by
-    simpa [mul_one] using (hΛ.add_const c).div (hasDerivAt_id t) ht0
+    have h := (hΛ.add_const c).div (hasDerivAt_id t) ht0
+    rw [mul_one] at h
+    exact h
   have hderiv : (((Λ' t) * t - (Λ t + c)) / t ^ 2) = 0 := HasDerivAt.unique hquot hcrit
   have ht2 : (t ^ 2 : ℝ) ≠ 0 := pow_ne_zero 2 ht0
   have hnum : (Λ' t) * t - (Λ t + c) = 0 := by

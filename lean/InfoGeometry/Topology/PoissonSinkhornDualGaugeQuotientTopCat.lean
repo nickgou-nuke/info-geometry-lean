@@ -111,8 +111,9 @@ theorem dualGaugeQuotient_objective_factorization_unique
   induction q using Quotient.inductionOn with
   | _ p =>
       have hp := congrArg (fun m => m p) hu
-      simpa [dualGaugeQuotientMapTopCatHom,
-        dualObjectiveGaugeQuotientTopCatHom,
-        dualObjectiveTopCatHom, TopCat.comp_app, TopCat.ofHom] using hp
+      change (u.hom (dualGaugeQuotientMap p)) =
+        dualObjectiveGaugeQuotient C (dualGaugeQuotientMap p)
+      rw [dualObjectiveGaugeQuotient_mk]
+      exact hp
 
 end InfoGeometry.Topology.PoissonSinkhornDualGaugeQuotientTopCat

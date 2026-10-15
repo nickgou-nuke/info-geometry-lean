@@ -162,13 +162,19 @@ theorem realAlbert_diagonalSupport_sub
   constructor
   · change X.z₁ + -Y.z₁ = RealSplitOct.zero
     rw [hX₁, hY₁]
+    change RealSplitOct.add RealSplitOct.zero (RealSplitOct.neg RealSplitOct.zero) =
+      RealSplitOct.zero
     ext <;> simp [RealSplitOct.zero, RealSplitOct.add, RealSplitOct.neg]
   constructor
   · change X.z₂ + -Y.z₂ = RealSplitOct.zero
     rw [hX₂, hY₂]
+    change RealSplitOct.add RealSplitOct.zero (RealSplitOct.neg RealSplitOct.zero) =
+      RealSplitOct.zero
     ext <;> simp [RealSplitOct.zero, RealSplitOct.add, RealSplitOct.neg]
   · change X.z₃ + -Y.z₃ = RealSplitOct.zero
     rw [hX₃, hY₃]
+    change RealSplitOct.add RealSplitOct.zero (RealSplitOct.neg RealSplitOct.zero) =
+      RealSplitOct.zero
     ext <;> simp [RealSplitOct.zero, RealSplitOct.add, RealSplitOct.neg]
 
 theorem realAlbert_diagonalSupport_add
@@ -204,14 +210,17 @@ theorem realAlbert_diagonalSupport_neg
   constructor
   · change -X.z₁ = RealSplitOct.zero
     rw [hX₁]
-    exact neg_zero
+    change RealSplitOct.neg RealSplitOct.zero = RealSplitOct.zero
+    ext <;> simp [RealSplitOct.neg, RealSplitOct.zero]
   constructor
   · change -X.z₂ = RealSplitOct.zero
     rw [hX₂]
-    exact neg_zero
+    change RealSplitOct.neg RealSplitOct.zero = RealSplitOct.zero
+    ext <;> simp [RealSplitOct.neg, RealSplitOct.zero]
   · change -X.z₃ = RealSplitOct.zero
     rw [hX₃]
-    exact neg_zero
+    change RealSplitOct.neg RealSplitOct.zero = RealSplitOct.zero
+    ext <;> simp [RealSplitOct.neg, RealSplitOct.zero]
 
 theorem realAlbert_diagonalSupport_smul
     (r : ℝ) (X : RealAlbertMatrix)
@@ -221,14 +230,17 @@ theorem realAlbert_diagonalSupport_smul
   constructor
   · change r • X.z₁ = RealSplitOct.zero
     rw [hX₁]
-    exact smul_zero r
+    change RealSplitOct.smul r RealSplitOct.zero = RealSplitOct.zero
+    ext <;> simp [RealSplitOct.smul, RealSplitOct.zero]
   constructor
   · change r • X.z₂ = RealSplitOct.zero
     rw [hX₂]
-    exact smul_zero r
+    change RealSplitOct.smul r RealSplitOct.zero = RealSplitOct.zero
+    ext <;> simp [RealSplitOct.smul, RealSplitOct.zero]
   · change r • X.z₃ = RealSplitOct.zero
     rw [hX₃]
-    exact smul_zero r
+    change RealSplitOct.smul r RealSplitOct.zero = RealSplitOct.zero
+    ext <;> simp [RealSplitOct.smul, RealSplitOct.zero]
 
 theorem realAlbert_peirce_triangle_associator_isDiagonalSupport
     (x y z : RealSplitOct) :

@@ -19,7 +19,8 @@ private theorem fib_endpoint_step (m : ℕ) :
 
 theorem endpointWord_no11 : ∀ m, No11 (endpointWord m)
   | 0 => by
-      simpa [endpointWord] using (no11_allFalse : No11 (fun _ : Fin 0 => false))
+      intro i hi hi1
+      simpa [get, endpointWord] using hi
   | 1 => by
       intro i hi hi1
       have : ¬ i + 1 < 1 := by omega
@@ -77,7 +78,9 @@ theorem endpointWord_unique : ∀ {m : ℕ} (w : Word m),
   | 1, w, _, hw => by
       have hbit : w ⟨0, Nat.zero_lt_one⟩ = true := by
         have hpos : 0 < weight w := by
-          have : weight w = 1 := by simpa using hw
+          have : weight w = 1 := by
+            norm_num [Nat.fib] at hw
+            exact hw
           omega
         rcases (weight_pos_iff_exists_true w).mp hpos with ⟨i, hi⟩
         have : i = ⟨0, Nat.zero_lt_one⟩ := Fin.ext (by omega)

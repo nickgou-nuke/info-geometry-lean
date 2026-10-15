@@ -163,7 +163,9 @@ def grothendieckDiagram
           (grothendieckMap A shiftMap (leOfHom f)).toIntLinearMap
     have h := congrArg AddMonoidHom.toIntLinearMap
       (grothendieckMap_comp A shiftMap (leOfHom f) (leOfHom g)).symm
-    simpa [AddMonoidHom.comp_apply, LinearMap.comp_apply] using h
+    ext x
+    simpa [AddMonoidHom.comp_apply, LinearMap.comp_apply] using
+      congrArg (fun F => F x) h
 
 abbrev GrothendieckColimit
     (A : ℕ → Type*) [∀ n, AddCommGroup (A n)]
@@ -292,10 +294,21 @@ structure GrothendieckExtendedFiveGrading (L : Type*) [AddCommGroup L] [Module �
 
 variable (L : Type*) [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
 
+@[simp] lemma zmodFive_val_0 : (0 : ZMod 5).val = 0 := ZMod.val_zero
+@[simp] lemma zmodFive_val_1 : (1 : ZMod 5).val = 1 :=
+  rfl
+@[simp] lemma zmodFive_val_2 : (2 : ZMod 5).val = 2 :=
+  rfl
+@[simp] lemma zmodFive_val_3 : (3 : ZMod 5).val = 3 :=
+  rfl
+@[simp] lemma zmodFive_val_4 : (4 : ZMod 5).val = 4 :=
+  rfl
+
 /--
 Concrete `ZMod 5`-component keys for the five grade subspaces.
 -/
-def fiveGradeZMod5Keys : ZMod 5 → ℤ
+def fiveGradeZMod5Keys (k : ZMod 5) : ℤ :=
+  match k.val with
   | 0 => -2
   | 1 => -1
   | 2 => 0
@@ -303,27 +316,31 @@ def fiveGradeZMod5Keys : ZMod 5 → ℤ
   | 4 => 2
   | _ => 0
 
-@[simp] lemma fiveGradeZMod5Keys_0 : fiveGradeZMod5Keys (0 : ZMod 5) = -2 := rfl
-@[simp] lemma fiveGradeZMod5Keys_1 : fiveGradeZMod5Keys (1 : ZMod 5) = -1 := rfl
-@[simp] lemma fiveGradeZMod5Keys_2 : fiveGradeZMod5Keys (2 : ZMod 5) = 0 := rfl
-@[simp] lemma fiveGradeZMod5Keys_3 : fiveGradeZMod5Keys (3 : ZMod 5) = 1 := rfl
-@[simp] lemma fiveGradeZMod5Keys_4 : fiveGradeZMod5Keys (4 : ZMod 5) = 2 := rfl
+@[simp] lemma fiveGradeZMod5Keys_0 : fiveGradeZMod5Keys (0 : ZMod 5) = -2 := by
+  simp [fiveGradeZMod5Keys]
+@[simp] lemma fiveGradeZMod5Keys_1 : fiveGradeZMod5Keys (1 : ZMod 5) = -1 := by
+  simp [fiveGradeZMod5Keys]
+@[simp] lemma fiveGradeZMod5Keys_2 : fiveGradeZMod5Keys (2 : ZMod 5) = 0 := by
+  simp [fiveGradeZMod5Keys]
+@[simp] lemma fiveGradeZMod5Keys_3 : fiveGradeZMod5Keys (3 : ZMod 5) = 1 := by
+  simp [fiveGradeZMod5Keys]
+@[simp] lemma fiveGradeZMod5Keys_4 : fiveGradeZMod5Keys (4 : ZMod 5) = 2 := by
+  simp [fiveGradeZMod5Keys]
 
 /-- Given a `FiveGrading`, construct a `CyclicFiveGrading` with the canonical
 `ZMod 5`-indexed grading.  Mapping: `0→gNegTwo, 1→gNegOne, 2→gZero,
 3→gPosOne, 4→gPosTwo`. -/
 def fiveGradingToCyclic (FG : FiveGrading L) : CyclicFiveGrading L where
   fiveGrading := FG
-  cyclicGradeMap k :=
-    -- The `match` on a `ZMod 5` literal reduces by definition
-    match k with
-    | (0 : ZMod 5) => FG.gNegTwo
-    | (1 : ZMod 5) => FG.gNegOne
-    | (2 : ZMod 5) => FG.gZero
-    | (3 : ZMod 5) => FG.gPosOne
-    | (4 : ZMod 5) => FG.gPosTwo
+  cyclicGradeMap k := match k.val with
+    | 0 => FG.gNegTwo
+    | 1 => FG.gNegOne
+    | 2 => FG.gZero
+    | 3 => FG.gPosOne
+    | 4 => FG.gPosTwo
     | _ => FG.gZero
-  cyclicGradeMap_matches_fiveGrading := ⟨rfl, rfl, rfl, rfl, rfl⟩
+  cyclicGradeMap_matches_fiveGrading := by
+    simp
 
 /-- Extract the five `ZMod 5` grade components from a `CyclicFiveGrading`
 into the concrete named subspaces of `FiveGrading`.
@@ -351,48 +368,25 @@ theorem CyclicFiveGrading.ext (G H : CyclicFiveGrading L)
 /-- Round-tripping recovers the original `CyclicFiveGrading`. -/
 theorem cyclicFiveGradingToFive_toCyclic (CG : CyclicFiveGrading L) :
     fiveGradingToCyclic L (cyclicFiveGradingToFive L CG) = CG := by
+  classical
   apply CyclicFiveGrading.ext
-  · rfl
+  · change CG.fiveGrading = CG.fiveGrading
+    rfl
   · intro k
     rcases CG.cyclicGradeMap_matches_fiveGrading with ⟨h0, h1, h2, h3, h4⟩
-    -- Since `fiveGradingToCyclic` only distinguishes 0,1,2,3,4, we prove
-    -- the equality for each of the 5 cases individually and reduce using `decide`
-    -- on the ZMod 5 equality tests.
-    have h_cases : ∀ i : ZMod 5, (fiveGradingToCyclic L (cyclicFiveGradingToFive L CG)).cyclicGradeMap i =
-      CG.cyclicGradeMap i := by
-      -- brute-force all 5 elements
-      have : Finset.univ = ({(0 : ZMod 5), 1, 2, 3, 4} : Finset (ZMod 5)) := by decide
-      have : ∀ x : ZMod 5, x ∈ ({(0 : ZMod 5), 1, 2, 3, 4} : Finset (ZMod 5)) := by
-        intro x; simpa [this] using Finset.mem_univ x
-      intro x
-      have hx : x ∈ ({(0 : ZMod 5), 1, 2, 3, 4} : Finset (ZMod 5)) := this x
-      -- `simp` can use `Finset.mem_insert` and `Finset.mem_singleton` to break down the `∨`
-      simp at hx
-      rcases hx with (rfl|rfl|rfl|rfl|rfl)
-      · calc
-          (fiveGradingToCyclic L (cyclicFiveGradingToFive L CG)).cyclicGradeMap (0 : ZMod 5)
-              = CG.fiveGrading.gNegTwo := rfl
-          _ = CG.cyclicGradeMap (0 : ZMod 5) := h0.symm
-      · calc
-          (fiveGradingToCyclic L (cyclicFiveGradingToFive L CG)).cyclicGradeMap (1 : ZMod 5)
-              = CG.fiveGrading.gNegOne := rfl
-          _ = CG.cyclicGradeMap (1 : ZMod 5) := h1.symm
-      · calc
-          (fiveGradingToCyclic L (cyclicFiveGradingToFive L CG)).cyclicGradeMap (2 : ZMod 5)
-              = CG.fiveGrading.gZero := rfl
-          _ = CG.cyclicGradeMap (2 : ZMod 5) := h2.symm
-      · calc
-          (fiveGradingToCyclic L (cyclicFiveGradingToFive L CG)).cyclicGradeMap (3 : ZMod 5)
-              = CG.fiveGrading.gPosOne := rfl
-          _ = CG.cyclicGradeMap (3 : ZMod 5) := h3.symm
-      · calc
-          (fiveGradingToCyclic L (cyclicFiveGradingToFive L CG)).cyclicGradeMap (4 : ZMod 5)
-              = CG.fiveGrading.gPosTwo := rfl
-          _ = CG.cyclicGradeMap (4 : ZMod 5) := h4.symm
-    exact h_cases k
+    rw [← ZMod.natCast_zmod_val k]
+    have hk := ZMod.val_lt k
+    interval_cases hv : k.val
+    · simpa [fiveGradingToCyclic, cyclicFiveGradingToFive, hv] using h0.symm
+    · simpa [fiveGradingToCyclic, cyclicFiveGradingToFive, hv] using h1.symm
+    · simpa [fiveGradingToCyclic, cyclicFiveGradingToFive, hv] using h2.symm
+    · simpa [fiveGradingToCyclic, cyclicFiveGradingToFive, hv] using h3.symm
+    · simpa [fiveGradingToCyclic, cyclicFiveGradingToFive, hv] using h4.symm
 
 /-- Round-tripping recovers the original `FiveGrading`. -/
 theorem fiveGradingToCyclic_cyclicToFive (FG : FiveGrading L) :
-    cyclicFiveGradingToFive L (fiveGradingToCyclic L FG) = FG := rfl
+    cyclicFiveGradingToFive L (fiveGradingToCyclic L FG) = FG := by
+  change FG = FG
+  rfl
 
 end InfoGeometry.Canonical.CyclicGradingGrothendieck

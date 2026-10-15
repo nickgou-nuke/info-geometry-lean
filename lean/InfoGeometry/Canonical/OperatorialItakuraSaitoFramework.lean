@@ -440,8 +440,10 @@ theorem finite_logDet_derivative_readout
     (Matrix.isUnit_iff_isUnit_det (J t)).mp hinv
   have hdet_ne : (J t).det ≠ 0 := isUnit_iff_ne_zero.mp hunitdet
   have hlog := (Real.hasDerivAt_log hdet_ne).comp t hdet
-  convert hlog using 1
-  field_simp [hdet_ne]
+  have hderiv : ((J t).det)⁻¹ * ((J t).det * Matrix.trace ((J t)⁻¹ * Jdot)) =
+      Matrix.trace ((J t)⁻¹ * Jdot) := by
+    rw [← mul_assoc, inv_mul_cancel₀ hdet_ne, one_mul]
+  exact hlog.congr_deriv hderiv
 
 theorem finite_logDet_deriv_readout
     {J : ℝ → Matrix n n ℝ} {Jdot : Matrix n n ℝ} {t : ℝ}

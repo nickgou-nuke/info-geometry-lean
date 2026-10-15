@@ -42,8 +42,9 @@ theorem pcWord_mem_nativeFlagStabilizer (e : Fin 6 → Bool) :
     exact htransport.trans (by
       apply heq_of_eq
       apply Subtype.ext
-      rw [eqRec_intrinsicLine_val hp]
-      simp only [intrinsicLineMap_val]
+      have hval := eqRec_intrinsicLine_val hp
+        (intrinsicLineMap (G2TwoSylowSubgroup.pcWord e) baseIntrinsicFlag.2)
+      refine hval.trans ?_
       change zornZeroTripleMap (G2TwoSylowSubgroup.pcWord e)
           baseIntrinsicLine.1 = baseIntrinsicLine.1
       ext v
@@ -100,7 +101,7 @@ theorem pcWord_mem_nativeFlagStabilizer (e : Fin 6 → Bool) :
             rw [hval]
             exact hw
           exact (mem_baseIntrinsicLine_iff _).mpr hwpoint
-        simpa only [G2TwoSylowSubgroup.pcWord] using this)
+        exact this)
 
 theorem unipotentSubgroup_le_nativeFlagStabilizer :
     unipotentSubgroup ≤ nativeFlagStabilizer := by

@@ -84,12 +84,26 @@ theorem coefficientwiseComparison_convolution
         constantObservableSystem observableAction
         (coefficientwiseComparison i F)
         (coefficientwiseComparison i K) := by
-  simpa [coefficientwiseComparison, crossedProductMul, limitConvolution,
-    ObservableStage, constantObservableSystem, observableAction,
-    InfoGeometry.OperatorAlgebra.FiniteGroupCrossedProductDirectLimitConvolution.stageConvolution] using
-    InfoGeometry.OperatorAlgebra.FiniteGroupCrossedProductDirectLimitConvolution.coefficientwiseComparison_convolution
-      (Stage := ObservableStage) (sys := constantObservableSystem)
-      (A := observableAction) i F K
+  funext r
+  rw [coefficientwiseComparison_apply]
+  change (algebraicStarDirectLimitOf ObservableStage constantObservableSystem i)
+      (∑ g : Equiv.Perm ColorChannel,
+        D4StarCrossedProduct.coeff F g *
+        colorPullback g (D4StarCrossedProduct.coeff K (g.symm * r))) = _
+  rw [map_sum]
+  rw [limitConvolution]
+  apply Finset.sum_congr rfl
+  intro g hg
+  rw [map_mul]
+  rw [coefficientwiseComparison_apply, coefficientwiseComparison_apply]
+  change (algebraicStarDirectLimitOf ObservableStage constantObservableSystem i) (D4StarCrossedProduct.coeff F g) *
+      (algebraicStarDirectLimitOf ObservableStage constantObservableSystem i)
+        (colorPullback g (D4StarCrossedProduct.coeff K (g.symm * r))) =
+    (algebraicStarDirectLimitOf ObservableStage constantObservableSystem i) (F g) *
+      observableColimitAction g
+        ((algebraicStarDirectLimitOf ObservableStage constantObservableSystem i) (K (g⁻¹ * r)))
+  rw [observableColimitAction_on_stage]
+  rfl
 
 theorem coefficientwiseComparison_star
     (i : ℕ)
@@ -98,11 +112,16 @@ theorem coefficientwiseComparison_star
       limitConvolutionStar ℕ (Equiv.Perm ColorChannel) ObservableStage
         constantObservableSystem observableAction
         (coefficientwiseComparison i F) := by
-  simpa [coefficientwiseComparison, crossedProductStar, limitConvolutionStar,
-    ObservableStage, constantObservableSystem, observableAction,
-    InfoGeometry.OperatorAlgebra.FiniteGroupCrossedProductDirectLimitConvolution.stageConvolutionStar] using
-    InfoGeometry.OperatorAlgebra.FiniteGroupCrossedProductDirectLimitConvolution.coefficientwiseComparison_star
-      (Stage := ObservableStage) (sys := constantObservableSystem)
-      (A := observableAction) i F
+  funext r
+  rw [coefficientwiseComparison_apply]
+  rw [limitConvolutionStar]
+  rw [coefficientwiseComparison_apply]
+  change (algebraicStarDirectLimitOf ObservableStage constantObservableSystem i)
+      (crossedProductStar F r) =
+    observableColimitAction r
+      (star ((algebraicStarDirectLimitOf ObservableStage constantObservableSystem i) (F r⁻¹)))
+  rw [← map_star (algebraicStarDirectLimitOf ObservableStage constantObservableSystem i)]
+  rw [observableColimitAction_on_stage]
+  rfl
 
 end InfoGeometry.OperatorAlgebra.D4StarCrossedProductDirectLimitComparison

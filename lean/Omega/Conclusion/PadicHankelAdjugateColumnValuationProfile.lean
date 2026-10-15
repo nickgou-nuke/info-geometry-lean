@@ -29,7 +29,7 @@ structure conclusion_padic_hankel_adjugate_column_valuation_profile_data where
 namespace conclusion_padic_hankel_adjugate_column_valuation_profile_data
 
 /-- The nonempty finite index set supplied by the recorded standard basis vector. -/
-def conclusion_padic_hankel_adjugate_column_valuation_profile_univ_nonempty
+theorem conclusion_padic_hankel_adjugate_column_valuation_profile_univ_nonempty
     (D : conclusion_padic_hankel_adjugate_column_valuation_profile_data) :
     (Finset.univ :
       Finset (Fin D.conclusion_padic_hankel_adjugate_column_valuation_profile_d)).Nonempty :=
@@ -171,8 +171,7 @@ theorem paper_conclusion_padic_hankel_adjugate_column_valuation_profile
           hi_mem
       unfold conclusion_padic_hankel_adjugate_column_valuation_profile_column_min
       rw [hi_eq]
-      simpa [conclusion_padic_hankel_adjugate_column_valuation_profile_basis_solution_val]
-        using hle
+      exact hle
     · refine Finset.le_inf' (s := (Finset.univ : Finset
         (Fin D.conclusion_padic_hankel_adjugate_column_valuation_profile_d)))
         (H := D.conclusion_padic_hankel_adjugate_column_valuation_profile_univ_nonempty)

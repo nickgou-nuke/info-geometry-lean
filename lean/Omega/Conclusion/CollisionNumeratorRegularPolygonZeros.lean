@@ -1,5 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Analysis.SpecialFunctions.Pow.Continuity
 import Mathlib.Tactic
 
 namespace Omega.Conclusion
@@ -72,7 +73,7 @@ theorem paper_conclusion_collision_numerator_regular_polygon_zeros :
         Filter.Tendsto
           (fun T : ℕ => (2 / (((2 : ℝ) ^ (q + 2)) - 2)) ^ (1 / (T + 1 : ℝ)))
           Filter.atTop (nhds ((2 / (((2 : ℝ) ^ (q + 2)) - 2)) ^ (0 : ℝ))) := by
-      exact tendsto_const_nhds.rpow tendsto_one_div_add_atTop_nhds_zero_nat
+      exact Tendsto.rpow tendsto_const_nhds tendsto_one_div_add_atTop_nhds_zero_nat
         (Or.inl hbase_pos.ne')
     simpa [conclusion_collision_numerator_regular_polygon_zeros_radius, Real.rpow_zero,
       Nat.cast_add, Nat.cast_one] using hpow

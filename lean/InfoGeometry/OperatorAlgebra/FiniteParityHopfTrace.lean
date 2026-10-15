@@ -33,10 +33,16 @@ theorem positiveCarrierTrace_eq_cycle_add_range
           LinearMap.trace ℝ (Vplus ⧸ LinearMap.ker C.dPlus)
             (TraceKernelRangeTransport.quotientByKernelMap
               C.dPlus f.positive f.negative f.commutes_dPlus) := by
-      simpa [TraceInvariantSubmodule.invariantRestriction,
-        TraceInvariantSubmodule.invariantQuotientMap,
-        TraceKernelRangeTransport.quotientByKernelMap,
-        positiveCycleMap] using
+      have hcycle : f.positiveCycleMap =
+          TraceInvariantSubmodule.invariantRestriction f.positive
+            (LinearMap.ker C.dPlus)
+            (TraceKernelRangeTransport.kernel_invariant
+              C.dPlus f.positive f.negative f.commutes_dPlus) := by
+        ext x
+        rfl
+      rw [hcycle]
+      simpa [TraceInvariantSubmodule.invariantQuotientMap,
+        TraceKernelRangeTransport.quotientByKernelMap] using
         (TraceInvariantSubmodule.trace_eq_trace_restriction_add_trace_quotient
           f.positive (LinearMap.ker C.dPlus)
           (TraceKernelRangeTransport.kernel_invariant
@@ -60,10 +66,16 @@ theorem negativeCarrierTrace_eq_cycle_add_range
           LinearMap.trace ℝ (Vminus ⧸ LinearMap.ker C.dMinus)
             (TraceKernelRangeTransport.quotientByKernelMap
               C.dMinus f.negative f.positive f.commutes_dMinus) := by
-      simpa [TraceInvariantSubmodule.invariantRestriction,
-        TraceInvariantSubmodule.invariantQuotientMap,
-        TraceKernelRangeTransport.quotientByKernelMap,
-        negativeCycleMap] using
+      have hcycle : f.negativeCycleMap =
+          TraceInvariantSubmodule.invariantRestriction f.negative
+            (LinearMap.ker C.dMinus)
+            (TraceKernelRangeTransport.kernel_invariant
+              C.dMinus f.negative f.positive f.commutes_dMinus) := by
+        ext x
+        rfl
+      rw [hcycle]
+      simpa [TraceInvariantSubmodule.invariantQuotientMap,
+        TraceKernelRangeTransport.quotientByKernelMap] using
         (TraceInvariantSubmodule.trace_eq_trace_restriction_add_trace_quotient
           f.negative (LinearMap.ker C.dMinus)
           (TraceKernelRangeTransport.kernel_invariant
@@ -83,10 +95,15 @@ theorem positiveCycleTrace_eq_boundary_add_cohomology
             f.maps_positiveBoundaries) +
         LinearMap.trace ℝ C.PositiveCohomology
           f.positiveCohomologyMap := by
-  simpa [TraceInvariantSubmodule.invariantQuotientMap,
-    positiveCohomologyMap] using
-    (TraceInvariantSubmodule.trace_eq_trace_restriction_add_trace_quotient
-      f.positiveCycleMap C.positiveBoundaries f.maps_positiveBoundaries)
+  change LinearMap.trace ℝ (LinearMap.ker C.dPlus) f.positiveCycleMap =
+    LinearMap.trace ℝ C.positiveBoundaries
+      (TraceInvariantSubmodule.invariantRestriction f.positiveCycleMap
+        C.positiveBoundaries f.maps_positiveBoundaries) +
+    LinearMap.trace ℝ (LinearMap.ker C.dPlus ⧸ C.positiveBoundaries)
+      (C.positiveBoundaries.mapQ C.positiveBoundaries f.positiveCycleMap
+        f.maps_positiveBoundaries)
+  exact TraceInvariantSubmodule.trace_eq_trace_restriction_add_trace_quotient
+    f.positiveCycleMap C.positiveBoundaries f.maps_positiveBoundaries
 
 theorem negativeCycleTrace_eq_boundary_add_cohomology
     (f : Hom C C)
@@ -99,10 +116,15 @@ theorem negativeCycleTrace_eq_boundary_add_cohomology
             f.maps_negativeBoundaries) +
         LinearMap.trace ℝ C.NegativeCohomology
           f.negativeCohomologyMap := by
-  simpa [TraceInvariantSubmodule.invariantQuotientMap,
-    negativeCohomologyMap] using
-    (TraceInvariantSubmodule.trace_eq_trace_restriction_add_trace_quotient
-      f.negativeCycleMap C.negativeBoundaries f.maps_negativeBoundaries)
+  change LinearMap.trace ℝ (LinearMap.ker C.dMinus) f.negativeCycleMap =
+    LinearMap.trace ℝ C.negativeBoundaries
+      (TraceInvariantSubmodule.invariantRestriction f.negativeCycleMap
+        C.negativeBoundaries f.maps_negativeBoundaries) +
+    LinearMap.trace ℝ (LinearMap.ker C.dMinus ⧸ C.negativeBoundaries)
+      (C.negativeBoundaries.mapQ C.negativeBoundaries f.negativeCycleMap
+        f.maps_negativeBoundaries)
+  exact TraceInvariantSubmodule.trace_eq_trace_restriction_add_trace_quotient
+    f.negativeCycleMap C.negativeBoundaries f.maps_negativeBoundaries
 
 theorem positiveBoundaryTrace_eq_range
     (f : Hom C C)

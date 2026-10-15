@@ -68,8 +68,9 @@ theorem paper_fold_hypercube_godel_hodge_torsor {n : ℕ} (D : HypercubeGodelHod
   let torsorData : FoldBoundaryStokesTorsorData n := hypercubeGodelBoundaryTorsorData D
   have hnonempty : torsorData.solutionSet.Nonempty := by
     refine ⟨hypercubeGodelCanonicalFlow D, ?_⟩
-    simpa [torsorData, hypercubeGodelBoundaryTorsorData, hypercubeGodelCanonicalFlow,
-      Omega.SPG.boundaryMultigraphFeasible, FoldBoundaryStokesTorsorData.solutionSet] using hFlow
+    change Omega.SPG.boundaryMultigraphFeasible D.coordinateData
+      (hypercubeGodelCanonicalFlow D)
+    exact hFlow
   have htorsor :=
     paper_fold_boundary_stokes_torsor_h1_h1 n torsorData hnonempty
   have hRank :

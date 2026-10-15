@@ -67,10 +67,7 @@ This is exactly the color Peirce projector.
 theorem ellFlowPPlus_coord (Z : CZ) :
     ellFlowPPlus Z = { a := 0, b := 0, x := Z.x, y := 0 } := by
   rw [ellFlowPPlus_apply, diagEllGrading_sq_coord, diagEllGrading_coord]
-  ext <;> simp [smul_eq_mul, Equiv.smul_def, coordEquiv]
-  <;> try ring
-  all_goals try { rename_i i; fin_cases i <;>
-    simp [smul_eq_mul, Equiv.smul_def, coordEquiv] }
+  ext <;> (simp [smul_a, smul_b, smul_x, smul_y] <;> linarith)
 
 /--
 Coordinate action of `P_-^ℓ`:
@@ -81,10 +78,7 @@ This is exactly the anticolor Peirce projector.
 theorem ellFlowPMinus_coord (Z : CZ) :
     ellFlowPMinus Z = { a := 0, b := 0, x := 0, y := Z.y } := by
   rw [ellFlowPMinus_apply, diagEllGrading_sq_coord, diagEllGrading_coord]
-  ext <;> simp [smul_eq_mul, Equiv.smul_def, coordEquiv]
-  <;> try ring
-  all_goals try { rename_i i; fin_cases i <;>
-    simp [smul_eq_mul, Equiv.smul_def, coordEquiv] }
+  ext <;> (simp [smul_a, smul_b, smul_x, smul_y] <;> linarith)
 
 /--
 Coordinate action of `P_0^ℓ`:

@@ -86,7 +86,9 @@ theorem expectedDirectionalCharge_covariance (w : W) (beta v : Fin 2 → ℝ) :
   intro m _
   have hp : realGibbsWeight D.base (parameterLeftAction (D := D) w beta)
       (D.stateAction w m) = realGibbsWeight D.base beta m := by
-    simpa using probability_diagonal_invariant (D := D) w beta m
+    change realGibbsWeight D.base (parameterLeftAction (D := D) w beta)
+      (w • m) = realGibbsWeight D.base beta m
+    exact probability_diagonal_invariant (D := D) w beta m
   rw [hp]
   have hpair : (∑ i, parameterLeftAction (D := D) w v i *
       D.base.momentMap (D.stateAction w m) i) =
@@ -126,17 +128,25 @@ theorem fisherSouriau_covariance (w : W) (beta u v : Fin 2 → ℝ) :
   intro m _
   have hp : realGibbsWeight D.base (parameterLeftAction (D := D) w beta)
       (D.stateAction w m) = realGibbsWeight D.base beta m := by
-    simpa using probability_diagonal_invariant (D := D) w beta m
+    change realGibbsWeight D.base (parameterLeftAction (D := D) w beta)
+      (w • m) = realGibbsWeight D.base beta m
+    exact probability_diagonal_invariant (D := D) w beta m
   have hu : centeredDirectionalCharge (D := D)
       (parameterLeftAction (D := D) w beta)
       (parameterLeftAction (D := D) w u) (D.stateAction w m) =
       centeredDirectionalCharge (D := D) beta u m := by
-    simpa using centeredDirectionalCharge_covariance (D := D) w beta u m
+    change centeredDirectionalCharge (D := D)
+      (parameterLeftAction (D := D) w beta)
+      (parameterLeftAction (D := D) w u) (w • m) = _
+    exact centeredDirectionalCharge_covariance (D := D) w beta u m
   have hv : centeredDirectionalCharge (D := D)
       (parameterLeftAction (D := D) w beta)
       (parameterLeftAction (D := D) w v) (D.stateAction w m) =
       centeredDirectionalCharge (D := D) beta v m := by
-    simpa using centeredDirectionalCharge_covariance (D := D) w beta v m
+    change centeredDirectionalCharge (D := D)
+      (parameterLeftAction (D := D) w beta)
+      (parameterLeftAction (D := D) w v) (w • m) = _
+    exact centeredDirectionalCharge_covariance (D := D) w beta v m
   rw [hp, hu, hv]
 
 theorem fisherSouriauQuadratic_covariance (w : W) (beta v : Fin 2 → ℝ) :

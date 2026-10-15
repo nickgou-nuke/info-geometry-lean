@@ -192,7 +192,6 @@ lemma resolvent_eigenmode_step (T : E →ₗ[ℝ] E) (τ : ℝ) (J : E →ₗ[�
   have h3 : (1 + τ * lam) • J v = v := by
     rw [← J.map_smul, h2]
   have h4 := congr_arg (fun y : E => (1 + τ * lam)⁻¹ • y) h3
-  dsimp at h4
   rw [smul_smul, inv_mul_cancel₀ h_denom, one_smul] at h4
   exact h4
 

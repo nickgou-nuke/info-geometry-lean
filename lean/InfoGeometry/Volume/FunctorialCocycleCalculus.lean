@@ -188,8 +188,10 @@ theorem multiplicativeTwoCocycleClass_eq_zero_iff_isCoboundary {ω : G × G -> M
     refine (groupCohomology.H2π_eq_zero_iff
       (A := Rep.ofMulDistribMulAction G M)
       (x := groupCohomology.cocyclesOfIsMulCocycle₂ hω)).mpr ?_
-    simpa using
-      (groupCohomology.coboundariesOfIsMulCoboundary₂ (f := ω) h).2
+    change (Additive.ofMul ∘ ω) ∈
+      groupCohomology.coboundaries₂ (Rep.ofMulDistribMulAction G M)
+    exact
+      (groupCohomology.coboundariesOfIsMulCoboundary₂ (f := ω) h).property
 
 end HigherCocycles
 

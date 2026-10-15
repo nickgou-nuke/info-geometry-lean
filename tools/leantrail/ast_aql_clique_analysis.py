@@ -14,6 +14,12 @@ from collections import defaultdict, deque
 from pathlib import Path
 from typing import Any, Dict, List, Set, Tuple
 
+REPO_ROOT = Path(__file__).resolve().parents[2]
+if __package__ in (None, ""):
+    sys.path.insert(0, str(REPO_ROOT))
+
+from tools.quality.semantic_vacuity_gate import strip_comments
+
 def stable_hash(obj: Any) -> str:
     payload = json.dumps(obj, sort_keys=True)
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()[:16]
@@ -23,32 +29,59 @@ def load_graph(path: Path) -> Dict[str, Any]:
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
 
-def find_sorries_for_nodes(nodes: List[Dict[str, Any]], repo_root: Path) -> Set[str]:
-    print("Scanning source files for sorry/admit instances...")
-    contaminated = set()
-    file_sorries = {}
+def inspect_node_sources(nodes: List[Dict[str, Any]], repo_root: Path) -> Dict[str, Any]:
+    """Inspect full lexical declaration spans; missing/stale sources stay unknown."""
+    cache = {}
+    hashes = {}
+    contaminated, unknown = set(), set()
+    failures = []
     for node in nodes:
-        file_path = node.get("file")
-        if not file_path:
+        label = node.get("file")
+        nid = node["id"]
+        if not label:
+            unknown.add(nid)
             continue
-        abs_path = repo_root / file_path
-        if file_path not in file_sorries:
-            file_sorries[file_path] = set()
-            if abs_path.exists():
+        if label not in cache:
+            path = Path(label)
+            candidates = [path] if path.is_absolute() else [repo_root / path, repo_root / "lean" / path, repo_root / "proofs" / path]
+            existing = list(dict.fromkeys(p.resolve() for p in candidates if p.is_file()))
+            if len(existing) != 1:
+                cache[label] = None
+                failures.append({"file": label, "error": "missing or ambiguous source path"})
+            else:
                 try:
-                    content = abs_path.read_text(encoding="utf-8", errors="ignore")
-                    for idx, line in enumerate(content.splitlines(), start=1):
-                        if re.search(r"\b(sorry|admit)\b", line):
-                            file_sorries[file_path].add(idx)
-                except Exception:
-                    pass
-        
-        node_line = node.get("line")
-        if node_line and node_line in file_sorries[file_path]:
-            contaminated.add(node["id"])
-        elif node.get("kind") == "Axiom":
-            contaminated.add(node["id"])
-    return contaminated
+                    raw = existing[0].read_text(encoding="utf-8")
+                    hashes[label] = hashlib.sha256(raw.encode("utf-8")).hexdigest()
+                    cache[label] = strip_comments(raw, mask_literals=True)
+                except (OSError, UnicodeError) as exc:
+                    cache[label] = None
+                    failures.append({"file": label, "error": str(exc)})
+        text = cache[label]
+        if text is None:
+            unknown.add(nid)
+            continue
+        if node.get("kind") == "Axiom":
+            contaminated.add(nid)
+        span = node.get("span")
+        if (node.get("source_sha256") == hashes.get(label)
+                and node.get("span_unit") == "unicode_codepoint" and isinstance(span, list)
+                and len(span) == 2 and all(isinstance(x, int) for x in span)
+                and 0 <= span[0] <= span[1] <= len(text)):
+            body = text[span[0]:span[1]]
+        else:
+            # Legacy exports lack a validated span. Do not certify them clean.
+            unknown.add(nid)
+            body = text
+        if re.search(r"\b(sorry|admit)\b", body):
+            contaminated.add(nid)
+    return {"contaminated": contaminated, "unknown": unknown, "read_failures": failures,
+            "files_selected": len(cache), "files_read": sum(v is not None for v in cache.values())}
+
+
+def find_sorries_for_nodes(nodes: List[Dict[str, Any]], repo_root: Path) -> Set[str]:
+    """Compatibility API, conservatively includes unknown source declarations."""
+    result = inspect_node_sources(nodes, repo_root)
+    return result["contaminated"] | result["unknown"]
 
 def propagate_contamination(
     edges: List[Dict[str, Any]],
@@ -274,7 +307,11 @@ def main() -> int:
     
     print(f"Loaded {len(nodes)} nodes, {len(edges)} edges.")
     
-    initial_contaminated = find_sorries_for_nodes(nodes, repo_root)
+    extraction_coverage = graph.get("meta", {})
+    extraction_complete = extraction_coverage.get("coverage_complete") is True
+    source_scan = inspect_node_sources(nodes, repo_root)
+    initial_contaminated = source_scan["contaminated"]
+    unknown = propagate_contamination(edges, source_scan["unknown"])
     print(f"Initial contaminated declarations: {len(initial_contaminated)}")
     
     contaminated = propagate_contamination(edges, initial_contaminated)
@@ -282,7 +319,7 @@ def main() -> int:
     
     wl_hashes = compute_wl_hashes(nodes, edges, rounds=args.rounds)
     
-    longest_chains = find_longest_clean_chains(nodes, edges, contaminated)
+    longest_chains = find_longest_clean_chains(nodes, edges, contaminated | unknown)
     
     cliques = find_namespace_cliques(nodes, edges)
     
@@ -290,12 +327,16 @@ def main() -> int:
     report_json_path = Path(args.report_json)
     report_json_path.parent.mkdir(parents=True, exist_ok=True)
     report_data = {
+        "authority": "lexical reference graph heuristics; no kernel verification or nonvacuity claim",
+        "extraction_coverage": extraction_coverage,
+        "source_coverage": {k: v for k, v in source_scan.items() if k not in {"contaminated", "unknown"}},
+        "unknown_nodes": sorted(unknown),
         "summary": {
             "total_nodes": len(nodes),
             "total_edges": len(edges),
-            "clean_nodes": len(nodes) - len(contaminated),
+            "lexical_hole_free_candidates": len(nodes) - len(contaminated | unknown),
             "contaminated_nodes": len(contaminated),
-            "clean_percentage": round(100 * (len(nodes) - len(contaminated)) / len(nodes), 2)
+            "lexical_hole_free_percentage": round(100 * (len(nodes) - len(contaminated | unknown)) / len(nodes), 2)
             if len(nodes) else 0,
         },
         "longest_clean_chains": longest_chains,
@@ -309,16 +350,17 @@ def main() -> int:
     
     # Save Markdown report
     report_md_path = Path(args.report_md)
+    report_md_path.parent.mkdir(parents=True, exist_ok=True)
     with open(report_md_path, "w", encoding="utf-8") as f:
         f.write("# AST AQL Graph Analysis Report\n\n")
         f.write("## Graph Metrics\n\n")
         f.write(f"- **Total Nodes:** {len(nodes)}\n")
         f.write(f"- **Total Edges:** {len(edges)}\n")
-        f.write(f"- **Clean Nodes (Verified):** {len(nodes) - len(contaminated)}\n")
+        f.write(f"- **Nodes without detected lexical holes (not verified):** {len(nodes) - len(contaminated | unknown)}\n")
         f.write(f"- **Contaminated Nodes:** {len(contaminated)}\n")
-        f.write(f"- **Clean Ratio:** {report_data['summary']['clean_percentage']}%\n\n")
+        f.write(f"- **Lexical hole-free candidate ratio:** {report_data['summary']['lexical_hole_free_percentage']}%\n\n")
         
-        f.write("## Longest Clean Conductive Wires\n\n")
+        f.write("## Longest candidate chains excluding holes and unknown sources\n\n")
         for i, path in enumerate(longest_chains, start=1):
             f.write(f"### Wire #{i} (Length: {len(path)})\n\n")
             for node in path:
@@ -342,7 +384,7 @@ def main() -> int:
                 f.write("\n")
                 
     print(f"✓ Saved Markdown report to {report_md_path}")
-    return 0
+    return 2 if not extraction_complete or unknown or source_scan["read_failures"] else 0
 
 if __name__ == "__main__":
     sys.exit(main())

@@ -1,4 +1,4 @@
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Tactic.FinCases
@@ -35,9 +35,42 @@ Proves computationally that the non-symmorphic glide reflection (R * T)
 squares strictly to the positive Spin Parity (+I), definitively 
 annihilating the spatial translation without any abstract assumptions.
 -/
+lemma T_core_eq :
+    T_core = ![![0, 1], ![-1, 0]] := by
+  ext i j
+  fin_cases i <;> fin_cases j
+  · change I * (s2 0 0) = 0
+    dsimp [s2]; ring
+  · change I * (s2 0 1) = 1
+    dsimp [s2]; simp [Complex.I_mul_I]
+  · change I * (s2 1 0) = -1
+    dsimp [s2]; simp [Complex.I_mul_I]
+  · change I * (s2 1 1) = 0
+    dsimp [s2]; ring
+
+def J_core : Matrix (Fin 2) (Fin 2) ℂ := ![![ -1, 0 ], ![ 0, 1 ]]
+
+lemma R_core_mul_T_core :
+    R_core * T_core = J_core := by
+  ext i j
+  rw [Matrix.mul_apply, Fin.sum_univ_two]
+  fin_cases i <;> fin_cases j <;> {
+    rw [T_core_eq]
+    dsimp [R_core, s1, J_core]
+    ring
+  }
+
+lemma J_core_sq :
+    J_core * J_core = 1 := by
+  ext i j
+  rw [Matrix.mul_apply, Fin.sum_univ_two]
+  fin_cases i <;> fin_cases j <;> {
+    dsimp [J_core]
+    simp
+  }
+
 theorem explicit_glide_compactification :
     (R_core * T_core) * (R_core * T_core) = 1 := by
-  ext i j
-  fin_cases i <;> fin_cases j <;> simp [R_core, T_core, s1, s2, mul_apply, I_mul_I]
+  rw [R_core_mul_T_core, J_core_sq]
 
 end InfoGeometry.Physics.Pin55

@@ -1,22 +1,26 @@
 #!/usr/bin/env python3
-"""
-Axiom & Debt Auditor for info-geometry-lean
+"""Lexically scan maintained Lean proof sources for explicit closure debt.
 
-Scans all Lean 4 files under `lean/`, runs compilation checks,
-and generates a machine-readable JSON report of verified modules
-vs. open closure debt (sorry / axiom / admit).
+This source audit detects standalone ``sorry``/``admit`` tokens and axiom
+declarations after masking comments, strings, and quoted identifiers. It does
+not compile Lean or inspect transitive kernel axiom dependencies; use the
+compiled ``axiom_check.lean`` runner for that separate audit.
 """
 
 from __future__ import annotations
 
 import json
-import os
 import re
 import subprocess
 import sys
 import argparse
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from tools.quality.audit_constructivity import strip_comments
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 LEAN_DIR = REPO_ROOT / "lean"
@@ -24,42 +28,45 @@ OUTPUT_REPORT = REPO_ROOT / "artifacts" / "axiom_audit_report.json"
 
 
 def lean_source_files(include_ignored: bool) -> list[Path]:
-    """Return repo source files, excluding ignored fixtures by default."""
+    """Return maintained theorem sources; forensic mode selects repository Lean files."""
     if include_ignored:
-        return sorted(LEAN_DIR.glob("**/*.lean"))
-
-    try:
-        result = subprocess.run(
-            ["git", "ls-files", "--cached", "--others", "--exclude-standard", "--", "lean/*.lean"],
-            cwd=REPO_ROOT,
-            check=True,
-            capture_output=True,
-            text=True,
+        excluded = {".git", ".lake", ".lake-packages", "node_modules", "external_refs"}
+        return sorted(
+            path for path in REPO_ROOT.rglob("*.lean")
+            if path.is_file() and not any(part in excluded for part in path.relative_to(REPO_ROOT).parts)
         )
-    except (OSError, subprocess.CalledProcessError):
-        return sorted(LEAN_DIR.glob("**/*.lean"))
 
-    paths = []
-    for raw_path in result.stdout.splitlines():
-        path = REPO_ROOT / raw_path
-        if path.is_relative_to(LEAN_DIR) and path.is_file():
-            paths.append(path)
-    return sorted(paths)
-
-
-def scan_file(filepath: Path) -> dict[str, Any] | None:
-    if not filepath.exists() or not filepath.is_file():
-        return None
-    try:
-        content = filepath.read_text(encoding="utf-8", errors="ignore")
-    except Exception:
-        return None
-    clean_content = re.sub(
-        r'/-.*?-/|--.*|"(?:[^"\\]|\\.)*"|«[^»]*»|`+[^`\n]*`+|`[a-zA-Z_][a-zA-Z0-9._]*|[a-zA-Z0-9_.-]*\.(?:sorry|admit|axiom)[a-zA-Z0-9_.-]*|[a-zA-Z0-9_.-]*(?:sorry|admit|axiom)\.[a-zA-Z0-9_.-]*',
-        lambda m: "".join("\n" if c == "\n" else " " for c in m.group(0)),
-        content,
-        flags=re.DOTALL
+    result = subprocess.run(
+        ["git", "ls-files", "--cached", "--others", "--exclude-standard", "--", "lean", "proofs", "lib", "*.lean"],
+        cwd=REPO_ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
     )
+    return sorted(
+        REPO_ROOT / raw_path
+        for raw_path in result.stdout.splitlines()
+        if raw_path.endswith(".lean")
+        and (REPO_ROOT / raw_path).is_file()
+        and (Path(raw_path).parts[0] in {"lean", "proofs", "lib"} or len(Path(raw_path).parts) == 1)
+    )
+
+
+AXIOM_DECL_RE = re.compile(
+    r"^\s*(?:(?:@\[[^\n]*?\]\s*)|(?:(?:private|protected|local|unsafe|noncomputable)\s+))*"
+    r"(?:axiom|postulate)\b",
+    re.MULTILINE,
+)
+DEBT_TOKEN_RE = {
+    token: re.compile(rf"(?<![\w.«.]){token}(?![\w.'»])")
+    for token in ("sorry", "admit")
+}
+
+
+def scan_file(filepath: Path) -> dict[str, Any]:
+    """Scan one source file. Read/decoding failures are raised to the caller."""
+    content = filepath.read_text(encoding="utf-8")
+    clean_content = strip_comments(content, strip_strings=True, strip_quoted_identifiers=True)
     lines = clean_content.splitlines()
 
     sorries = []
@@ -67,21 +74,17 @@ def scan_file(filepath: Path) -> dict[str, Any] | None:
     admits = []
 
     for idx, line in enumerate(lines, start=1):
-        stripped = line.strip()
-        if not stripped:
-            continue
-        # A qualified identifier such as `DAG.Morphism.admit` is metadata,
-        # not the Lean `admit` command.  Only standalone proof-debt tokens
-        # count; this keeps the repo-wide audit honest without rejecting
-        # legitimate trace-class names.
-        if re.search(r"(?<![A-Za-z0-9_.])sorry(?![A-Za-z0-9_.])", stripped):
+        if DEBT_TOKEN_RE["sorry"].search(line):
             sorries.append(idx)
-        if re.search(r"(?<![A-Za-z0-9_.])axiom(?![A-Za-z0-9_.])", stripped):
+        if AXIOM_DECL_RE.match(line):
             axioms.append(idx)
-        if re.search(r"(?<![A-Za-z0-9_.])admit(?![A-Za-z0-9_.])", stripped):
+        if DEBT_TOKEN_RE["admit"].search(line):
             admits.append(idx)
 
-    rel_path = str(filepath.relative_to(REPO_ROOT))
+    try:
+        rel_path = str(filepath.resolve().relative_to(REPO_ROOT))
+    except ValueError:
+        rel_path = str(filepath)
 
     return {
         "file": rel_path,
@@ -93,8 +96,22 @@ def scan_file(filepath: Path) -> dict[str, Any] | None:
     }
 
 
+def scan_files(filepaths: list[Path]) -> tuple[list[dict[str, Any]], list[dict[str, str]]]:
+    results: list[dict[str, Any]] = []
+    failures: list[dict[str, str]] = []
+    for filepath in filepaths:
+        try:
+            results.append(scan_file(filepath))
+        except (OSError, UnicodeError) as exc:
+            failures.append({"file": str(filepath), "error": str(exc)})
+    return results, failures
+
+
 def run_lean_check(filepath: Path) -> dict[str, Any]:
-    rel_path = str(filepath.relative_to(REPO_ROOT))
+    try:
+        rel_path = str(filepath.resolve().relative_to(REPO_ROOT))
+    except ValueError:
+        rel_path = str(filepath)
     cmd = ["lake", "env", "lean", str(filepath)]
     try:
         res = subprocess.run(
@@ -155,20 +172,20 @@ def main() -> int:
     args = parser.parse_args()
 
     if args.files:
-        lean_files = [p.resolve() for p in args.files if p.is_file() and p.suffix == ".lean"]
+        lean_files = [p.resolve() for p in args.files if p.suffix == ".lean"]
     else:
-        lean_files = lean_source_files(args.include_ignored)
+        try:
+            lean_files = lean_source_files(args.include_ignored)
+        except (OSError, subprocess.CalledProcessError) as exc:
+            print(f"Unable to select Lean sources: {exc}", file=sys.stderr)
+            return 2
 
-    results = []
+    results, read_failures = scan_files(lean_files)
     clean_count = 0
     debt_count = 0
     total_sorries = 0
 
-    for f in lean_files:
-        info = scan_file(f)
-        if info is None:
-            continue
-        results.append(info)
+    for info in results:
         if info["clean"]:
             clean_count += 1
         else:
@@ -177,16 +194,25 @@ def main() -> int:
 
     OUTPUT_REPORT.parent.mkdir(parents=True, exist_ok=True)
     report = {
-        "timestamp": os.popen("date -u +'%Y-%m-%dT%H:%M:%SZ'").read().strip(),
+        "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "include_ignored": args.include_ignored,
+        "selection_scope": "forensic_repository" if args.include_ignored else "maintained_lean_proof_sources",
+        "source_roots": ["repository Lean files except excluded external/cache directories"] if args.include_ignored else ["lean/", "proofs/", "lib/", "<repo-root>/*.lean"],
         "total_files": len(lean_files),
+        "files_read": len(results),
+        "read_failures": read_failures,
+        "coverage_complete": len(results) == len(lean_files) and not read_failures and bool(lean_files),
         "clean_files": clean_count,
         "debt_files": debt_count,
         "total_open_gaps": total_sorries,
         "files": results,
     }
 
-    OUTPUT_REPORT.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    try:
+        OUTPUT_REPORT.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    except OSError as exc:
+        print(f"Unable to write audit report {OUTPUT_REPORT}: {exc}", file=sys.stderr)
+        return 2
     if args.format == "json":
         print(json.dumps(report, indent=2))
     else:
@@ -198,6 +224,9 @@ def main() -> int:
         print(f"   Total Open Gaps (sorry/axiom/admit): {total_sorries}")
         print(f"   Report saved to: {OUTPUT_REPORT}")
 
+    if not lean_files or read_failures:
+        print("❌ Axiom & Debt Audit failed: source selection or read coverage is incomplete.", file=sys.stderr)
+        return 2
     if args.fail_on_gaps and total_sorries:
         print(
             "❌ Axiom & Debt Audit failed: open closure debt is present "

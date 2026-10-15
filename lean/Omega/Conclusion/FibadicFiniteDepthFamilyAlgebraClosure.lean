@@ -1,5 +1,5 @@
+import Mathlib.Data.Fintype.Card
 import Mathlib.Data.Nat.Fib.Basic
-import Mathlib.Data.Nat.Lattice
 import Mathlib.Tactic
 
 namespace Omega.Conclusion
@@ -29,7 +29,7 @@ theorem paper_conclusion_fibadic_finite_depth_family_algebra_closure (D : Finset
     Fintype.card
         (Fin (conclusion_fibadic_finite_depth_family_algebra_closure_lcm D)) =
       conclusion_fibadic_finite_depth_family_algebra_closure_lcm D := by
-  refine ⟨?_, ?_, by simp [conclusion_fibadic_finite_depth_family_algebra_closure_lcm]⟩
+  refine ⟨?_, ?_, Fintype.card_fin _⟩
   · intro e he
     exact Finset.dvd_lcm he
   · intro N

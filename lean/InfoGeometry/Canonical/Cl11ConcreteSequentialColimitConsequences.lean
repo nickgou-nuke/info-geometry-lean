@@ -32,17 +32,29 @@ theorem cl11_bondSeq_eq_finiteAdvance (n m : ℕ)
   induction m with
   | zero =>
       simp [InfoGeometry.Canonical.InductiveColimitBridge.SequentialColimitSystem.bondSeq,
-        finiteAdvance]
+        finiteAdvance, InfoGeometry.Clifford.Cl11TensorTowerIteration.iteratedStageEmbed]
   | succ m ih =>
       rw [InfoGeometry.Canonical.InductiveColimitBridge.SequentialColimitSystem.bondSeq_succ,
         ih]
-      change stageBond (n + m)
-          (InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.bondMap stageBond n
-            (n + m) (Nat.le_add_right n m) x) =
-        InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.bondMap stageBond n
-          (n + m + 1) (Nat.le_add_right n (m + 1)) x
-      rw [InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.bondMap_succ]
-      rfl
+      have hcomp : finiteAdvance n (m + 1) x =
+          finiteAdvance (n + m) 1 (finiteAdvance n m x) := by
+        change InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.bondMap
+            stageBond n (n + (m + 1)) (Nat.le_add_right n (m + 1)) x =
+          InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.bondMap
+            stageBond (n + m) ((n + m) + 1) (Nat.le_succ (n + m))
+              (InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.bondMap
+                stageBond n (n + m) (Nat.le_add_right n m) x)
+        exact InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.bondMap_apply_trans
+          (Stage := fun k => InfoGeometry.Clifford.Cl11TensorTowerLimit.Stage k)
+          stageBond n (n + m) (n + m + 1)
+          (Nat.le_add_right n m) (Nat.le_succ (n + m)) x
+      rw [hcomp]
+      change InfoGeometry.Clifford.Cl11TensorTower.stageEmbed (n + m)
+        (finiteAdvance n m x) =
+        InfoGeometry.Clifford.Cl11TensorTowerIteration.iteratedStageEmbed
+          (n + m) 1 (finiteAdvance n m x)
+      exact (InfoGeometry.Clifford.Cl11TensorTowerIteration.iteratedStageEmbed_one_apply
+        (n + m) (finiteAdvance n m x)).symm
 
 /-! The concrete image of the first-stage Hestenes phase representative. -/
 def phaseAxisImage : Limit :=

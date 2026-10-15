@@ -1,4 +1,5 @@
-import Mathlib.Data.Finite.Card
+import Mathlib.SetTheory.Cardinal.Finite
+import Mathlib.Tactic
 
 namespace Omega.Conclusion
 
@@ -17,7 +18,7 @@ theorem paper_conclusion_external_budget_tensor_multiplicativity {D1 Y1 D2 Y2 : 
     (pi1 : D1 -> Y1) (pi2 : D2 -> Y2) :
     externalBudget (fun x : Prod D1 D2 => (pi1 x.1, pi2 x.2)) =
       externalBudget pi1 * externalBudget pi2 := by
-  simpa [conclusion_external_budget_tensor_multiplicativity_externalBudget] using
-    (Nat.card_prod D1 D2)
+  simp [conclusion_external_budget_tensor_multiplicativity_externalBudget,
+    Nat.card_prod]
 
 end Omega.Conclusion

@@ -3,6 +3,7 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2TwoExplicitGenerators
 import InfoGeometry.Algebra.Zorn.G2BNBruhatFramework
 import Mathlib.Logic.Equiv.Defs
+import Mathlib.Data.Set.Finite.Basic
 import Mathlib.Tactic
 
 open InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
@@ -34,7 +35,9 @@ def projectiveSplitOctF2 :=
 
 theorem projective_points_count :
     Fintype.card projectiveSplitOctF2 = 255 := by
-  simp [projectiveSplitOctF2, splitOctF2_card_eq_256]
+  change Fintype.card { v : SplitOctF2 | v ≠ 0 } = 255
+  rw [Set.card_ne_eq (0 : SplitOctF2)]
+  rw [splitOctF2_card_eq_256]
 
 /-! ## Step 3: Faithful action on projective space -/
 

@@ -206,8 +206,7 @@ theorem laplaceInversePos_laplaceTransform_eq
   have hpos : 0 < Real.exp (-x) := Real.exp_pos (-x)
   have hcont : ContinuousAt (fun t : ℝ => f (-Real.log t)) (Real.exp (-x)) := by
     have hlog : ContinuousAt (fun t : ℝ => -Real.log t) (Real.exp (-x)) := by
-      simpa using
-        (Real.continuousAt_log (ne_of_gt hpos)).neg
+      exact (Real.continuousAt_log (ne_of_gt hpos)).neg
     exact hcf.continuousAt.comp hlog
   have hinv :
       mellinInv σ (InfoGeometry.Analysis.LaplaceTransform.laplaceTransform f)

@@ -156,9 +156,12 @@ theorem continuous_scalarDilation_time_coordinate
     (ρ : CompatibleContinuousReadoutFamily)
     (n : ℕ) (X : MatStage n) :
     Continuous (fun t : ℝ => (pullback scalarDilationStageFlow t ρ).1 n X) := by
-  simpa only [scalarDilation_pullback_apply] using
-    (Real.continuous_exp.smul
-      (continuous_const : Continuous (fun _ : ℝ => ρ.1 n X)))
+  simp only [scalarDilation_pullback_apply]
+  convert ((continuous_smul : Continuous (fun p : ℝ × ℝ => p.1 • p.2)).comp
+    (Real.continuous_exp.prodMk
+      (continuous_const : Continuous (fun _ : ℝ => ρ.1 n X)))) using 1
+  ext t
+  rfl
 
 theorem identityStageFlow_pullback
     (t : ℝ) (ρ : CompatibleContinuousReadoutFamily) :

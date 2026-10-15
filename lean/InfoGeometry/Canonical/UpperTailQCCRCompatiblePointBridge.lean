@@ -58,8 +58,10 @@ def upperTailCompatibleQCCRFullCocone
             qCcrParameterTransitionMap Stage T.toContinuousStarInductiveSystem
                 (show j.1 ≤ k.1 from leOfHom f) (family.point j).1 =
               (family.point k).1 := by
-          simpa [qCcrParameterZeroFiberTransitionMap,
-            upperTailContinuousStarSystem] using hfamily'
+          change qCcrParameterTransitionMap Stage T.toContinuousStarInductiveSystem
+              (show j.1 ≤ k.1 from leOfHom f) (family.point j).1 =
+            (family.point k).1 at hfamily'
+          exact hfamily'
         have htransition := qCcrParameterTopologicalInjection_transition Stage
           T.toContinuousStarInductiveSystem (show j.1 ≤ k.1 from leOfHom f)
           (family.point j).1
@@ -114,7 +116,15 @@ theorem upperTailCompatibleQCCRFullParameterColimitMap_stage_apply
         qCcrParameterTopologicalInjection
           (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m) j
           (family.point j).1 := by
-    simpa [qCcrParameterZeroFiberToParameterNatTrans] using hincl'
+    change qCcrParameterZeroFiberToParameterColimit
+        (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m)
+        (qCcrParameterZeroFiberTopologicalInjection
+          (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m) j
+          (family.point j)) =
+      qCcrParameterTopologicalInjection
+        (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m) j
+        (family.point j).1 at hincl'
+    exact hincl'
   have htail := upperTailQCCRParameterToFullColimitMap_stage
     Stage T m j (family.point j).1
   calc
@@ -177,30 +187,16 @@ theorem upperTailCompatibleQCCRFullParameterColimitMap_congr
     (hfamily : ∀ j, family₁.point j = family₂.point j) :
     upperTailCompatibleQCCRFullParameterColimitMap Stage T m family₁ =
       upperTailCompatibleQCCRFullParameterColimitMap Stage T m family₂ := by
-  rw [upperTailCompatibleQCCRFullParameterColimitMap_eq_coconeMap
-      Stage T m family₁,
-    upperTailCompatibleQCCRFullParameterColimitMap_eq_coconeMap
-      Stage T m family₂]
-  change topologicalDirectDescend
-      ((Functor.const (UpperNatIndex m)).obj (TopCat.of PUnit))
-      (upperTailCompatibleQCCRFullCocone Stage T m family₁) =
-    topologicalDirectDescend
-      ((Functor.const (UpperNatIndex m)).obj (TopCat.of PUnit))
-      (upperTailCompatibleQCCRFullCocone Stage T m family₂)
-  symm
-  apply topologicalDirectDescend_unique
-    ((Functor.const (UpperNatIndex m)).obj (TopCat.of PUnit))
-    (upperTailCompatibleQCCRFullCocone Stage T m family₁)
-  intro j
-  rw [topologicalDirectDescend_stage]
-  apply TopCat.hom_ext
-  apply ContinuousMap.ext
-  intro u
-  change qCcrParameterTopologicalInjection Stage
-      T.toContinuousStarInductiveSystem j.1 (family₂.point j).1 =
-    qCcrParameterTopologicalInjection Stage
-      T.toContinuousStarInductiveSystem j.1 (family₁.point j).1
-  rw [congrArg Subtype.val (hfamily j)]
+  have hfamilies : family₁ = family₂ := by
+    cases family₁ with
+    | mk point₁ compatible₁ =>
+      cases family₂ with
+      | mk point₂ compatible₂ =>
+        have hpoint : point₁ = point₂ :=
+          funext fun j => Subtype.ext (congrArg Subtype.val (hfamily j))
+        cases hpoint
+        congr 1
+  rw [hfamilies]
 
 theorem upperTailCompatibleQCCRFullCoconeMap_congr
     (m : ℕ)

@@ -55,9 +55,9 @@ For the explicit matrices above, `σ₁ σ₂ σ₁ = σ₂ σ₁ σ₂`.
 theorem su3_parafermion_braiding (t : ℂ) :
     sigma_1 t * sigma_2 t * sigma_1 t = sigma_2 t * sigma_1 t * sigma_2 t := by
   ext i j
+  simp only [Matrix.mul_apply]
   fin_cases i <;> fin_cases j <;>
-    simp [sigma_1, sigma_2, Matrix.mul_apply, Fin.sum_univ_three]
-  all_goals ring_nf
+    simp [sigma_1, sigma_2, Fin.sum_univ_three] <;> ring_nf
 
 end InfoGeometry.Topology.Parafermion
 

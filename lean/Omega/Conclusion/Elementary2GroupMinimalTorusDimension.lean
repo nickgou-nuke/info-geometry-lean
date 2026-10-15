@@ -61,6 +61,6 @@ theorem paper_conclusion_elementary_2group_minimal_torus_dimension (ν : ℕ) :
       conclusion_elementary_2group_minimal_torus_dimension_coordinate_sign_embedding ν,
       ?_⟩
     intro x y hxy
-    simpa using hxy
+    exact hxy
 
 end Omega.Conclusion

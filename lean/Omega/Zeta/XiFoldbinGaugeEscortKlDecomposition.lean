@@ -91,7 +91,8 @@ theorem paper_xi_foldbin_gauge_escort_kl_decomposition (m : ℕ) :
         (hpos := by
           intro x
           exact hmass_pos x)
-    simpa [sub_eq_add_neg, add_comm, add_left_comm, add_assoc] using h
+    simpa [xi_foldbin_gauge_escort_kl_decomposition_mass,
+      sub_eq_add_neg, add_comm, add_left_comm, add_assoc] using h
   have hcol_pos : 0 < Col := by
     dsimp [Col, p, xi_foldbin_gauge_escort_kl_decomposition_collision]
     have hone :

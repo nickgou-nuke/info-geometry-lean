@@ -10,6 +10,9 @@ noncomputable section
 noncomputable def xi_stieltjes_semidir_pde_orbit (S₀ : ℝ → ℝ) (τ t : ℝ) : ℝ :=
   Real.exp (-τ) * S₀ (Real.exp (-τ) * t)
 
+local instance instAddCommGroupReal_stieltjes : AddCommGroup ℝ := Real.normedAddCommGroup.toAddCommGroup
+local instance instModuleReal_stieltjes : Module ℝ ℝ := (NormedAlgebra.toNormedSpace ℝ).toModule
+
 /-- Paper label: `prop:xi-stieltjes-semidir-pde`.
 The two-parameter Stieltjes orbit satisfies the scaling law
 `S(τ, t) = exp(-τ) S(0, exp(-τ) t)`, and differentiating this identity in `τ` gives the first
@@ -27,7 +30,10 @@ theorem paper_xi_stieltjes_semidir_pde
         Real.exp (-τ) * xi_stieltjes_semidir_pde_orbit S₀ 0 (Real.exp (-τ) * t) := by
     simp [xi_stieltjes_semidir_pde_orbit]
   have hexp : HasDerivAt (fun σ : ℝ => Real.exp (-σ)) (-Real.exp (-τ)) τ := by
-    simpa using (Real.hasDerivAt_exp (-τ)).comp τ ((hasDerivAt_id τ).neg)
+    convert (Real.hasDerivAt_exp (-τ)).comp τ ((hasDerivAt_id τ).neg) using 1
+    · funext σ
+      rfl
+    · ring_nf
   have hargτ : HasDerivAt (fun σ : ℝ => Real.exp (-σ) * t) (-Real.exp (-τ) * t) τ := by
     simpa [mul_comm, mul_left_comm, mul_assoc] using hexp.mul_const t
   have hcompτ :
@@ -39,8 +45,8 @@ theorem paper_xi_stieltjes_semidir_pde
         (-(t * (S₀' * (Real.exp (-τ) * Real.exp (-τ)))) -
           xi_stieltjes_semidir_pde_orbit S₀ τ t) τ := by
     unfold xi_stieltjes_semidir_pde_orbit
-    simpa [mul_comm, mul_left_comm, mul_assoc, add_comm, add_left_comm, add_assoc] using
-      hexp.mul hcompτ
+    convert hexp.mul hcompτ using 1
+    ring_nf
   have hargt : HasDerivAt (fun u : ℝ => Real.exp (-τ) * u) (Real.exp (-τ)) t := by
     simpa [mul_comm, mul_left_comm, mul_assoc] using (hasDerivAt_id t).const_mul (Real.exp (-τ))
   have hcompt :

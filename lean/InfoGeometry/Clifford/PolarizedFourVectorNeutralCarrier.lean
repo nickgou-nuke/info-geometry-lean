@@ -139,8 +139,5 @@ theorem sourceSignedExchange_not_positive :
   intro h
   have hbad := h ((0, ![0, 1, 0, 0]), (0, 0))
   norm_num [sourcePolar, sourceQuadratic, sourceSignedExchange] at hbad
-  have hneg : (0 : ℝ) ≤ -1 / 2 := by
-    simpa using hbad
-  linarith
 
 end InfoGeometry.Clifford.PolarizedFourVectorNeutralCarrier

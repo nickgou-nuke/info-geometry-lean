@@ -74,8 +74,12 @@ private lemma xi_terminal_gbc_anomaly_coordinate_count_kernel_chain_eventual_sta
       D.xi_terminal_gbc_anomaly_coordinate_count_kernel_chain m ⊆
         D.xi_terminal_gbc_anomaly_coordinate_count_kernel_chain m0 :=
     hanti hm
-  apply Finset.eq_of_subset_of_card_le hsubset
-  simpa [c] using (Eq.ge (hm0 m hm))
+  have hc : (D.xi_terminal_gbc_anomaly_coordinate_count_kernel_chain m0).card ≤
+      (D.xi_terminal_gbc_anomaly_coordinate_count_kernel_chain m).card := by
+    have heq : chain m0 = chain m := hm0 m hm
+    have heq' : c m0 = c m := congrArg OrderDual.ofDual heq
+    exact heq'.le
+  exact Finset.eq_of_subset_of_card_le hsubset hc
 
 end xi_terminal_gbc_anomaly_coordinate_count_Data
 

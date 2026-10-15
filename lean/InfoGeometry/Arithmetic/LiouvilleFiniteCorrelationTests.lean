@@ -22,7 +22,7 @@ example :
 
 example (index : ℕ+) (shift : ℕ) :
     liouville index * liouville (index.val + shift) ≠ 0 := by
-  simpa using liouville_correlation_ne_zero_of_odd_card
+  simpa [shiftedLiouville] using liouville_correlation_ne_zero_of_odd_card
     {index} shift (by simp)
 
 #print axioms finite_correlation_dependencies

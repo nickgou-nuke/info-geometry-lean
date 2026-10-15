@@ -54,14 +54,12 @@ theorem nambuTau3_split
       nambuBlockDiag P.bdg.H.toAddMonoidHom P.bdg.chiral.toAddMonoidHom (nambuTau3 v) -
       nambuBlockOffDiag P.bdg.particleHole.toAddMonoidHom P.bdg.timeReversal.toAddMonoidHom
         (nambuTau3 v) := by
-  simpa [nambuBlock, nambuGorkovOp] using
-    (nambuTau3_full_split
-      (A := H₂)
-      (a := P.bdg.H.toAddMonoidHom)
-      (b := P.bdg.particleHole.toAddMonoidHom)
-      (c := P.bdg.timeReversal.toAddMonoidHom)
-      (d := P.bdg.chiral.toAddMonoidHom)
-      v)
+  change nambuTau3 (nambuBlockFull P.bdg.H.toAddMonoidHom
+      P.bdg.particleHole.toAddMonoidHom P.bdg.timeReversal.toAddMonoidHom
+      P.bdg.chiral.toAddMonoidHom v) = _
+  exact nambuTau3_full_split
+    P.bdg.H.toAddMonoidHom P.bdg.particleHole.toAddMonoidHom
+    P.bdg.timeReversal.toAddMonoidHom P.bdg.chiral.toAddMonoidHom v
 
 /-- The induced Nambu block square is the generic doubled square expansion. -/
 theorem nambuBlock_square_apply

@@ -90,7 +90,9 @@ theorem length_eq_two {v : FreeMonoid' α} :
   constructor
   · intro h
     obtain ⟨a, b, hv⟩ := List.length_eq_two.mp h
-    exact ⟨a, b, by simpa [of] using hv⟩
+    refine ⟨a, b, ?_⟩
+    change v = [a] ++ [b]
+    exact hv
   · rintro ⟨a, b, rfl⟩
     rfl
 
@@ -102,6 +104,31 @@ theorem of_neq_one (a : α) : of a ≠ (1 : FreeMonoid' α) := by
   intro h
   have := congrArg length h
   simp [length, of] at this
+
+theorem mul_eq_one {a b : FreeMonoid' α} (h : a * b = 1) : a = 1 ∧ b = 1 := by
+  change a ++ b = [] at h
+  have ha : a = [] := List.append_eq_nil_iff.mp h |>.1
+  have hb : b = [] := List.append_eq_nil_iff.mp h |>.2
+  exact ⟨ha, hb⟩
+
+theorem mul_eq_of {a b : FreeMonoid' α} {i : α}
+    (h : a * b = of i) : a = 1 ∧ b = of i ∨ a = of i ∧ b = 1 := by
+  change a ++ b = [i] at h
+  cases a with
+  | nil =>
+      left
+      simp only [List.nil_append] at h
+      subst h
+      exact ⟨rfl, rfl⟩
+  | cons x xs =>
+      right
+      cases b with
+      | nil =>
+          simp only [List.append_nil] at h
+          exact ⟨h, rfl⟩
+      | cons y ys =>
+          have hlen := congrArg List.length h
+          simp [List.length_append] at hlen
 
 /-- Set of symbols appearing in a word. -/
 def symbols [DecidableEq α] (a : FreeMonoid' α) : Finset α := a.toFinset
@@ -121,8 +148,10 @@ def mem (m : α) (a : FreeMonoid' α) := m ∈ toList a
 instance : Membership α (FreeMonoid' α) := ⟨fun a m => mem m a⟩
 
 theorem mem_one_iff {m : α} : m ∈ (1 : FreeMonoid' α) ↔ False := by
-  change m ∈ ([] : List α) ↔ False
-  simp
+  change List.Mem m ([] : List α) ↔ False
+  constructor
+  · exact List.not_mem_nil
+  · exact False.elim
 
 @[simp] theorem mem_of {m n : α} : m ∈ (of n : FreeMonoid' α) ↔ m = n := by
   change m ∈ ([n] : List α) ↔ m = n
@@ -173,7 +202,12 @@ protected theorem inductionOn' {p : FreeMonoid' α → Prop} (a : FreeMonoid' α
 
 theorem eq_one_or_has_last_elem (u : FreeMonoid' α) :
     u = 1 ∨ ∃ front last, u = front * of last := by
-  simpa [of] using (List.eq_nil_or_concat u)
+  rcases List.eq_nil_or_concat u with hnil | ⟨front, last, hconcat⟩
+  · exact Or.inl hnil
+  · refine Or.inr ⟨front, last, ?_⟩
+    rw [List.concat_eq_append] at hconcat
+    change u = front ++ [last]
+    exact hconcat
 
 def casesOn {C : FreeMonoid' α → Sort*} (xs : FreeMonoid' α) (h0 : C 1)
     (ih : ∀ x xs, C (of x * xs)) : C xs :=

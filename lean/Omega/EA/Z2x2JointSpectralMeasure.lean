@@ -60,8 +60,8 @@ theorem paper_fold_groupoid_z2x2_joint_spectral_measure
         exact_mod_cast hmass
       calc
         Finset.univ.sum (normalizedBlockTrace m d)
-            = (∑ x : Z2x2Character, (d x : ℚ)) / (2 ^ m : ℚ) := by
-                simp [normalizedBlockTrace, Finset.sum_div]
+            = ∑ x : Z2x2Character, (d x : ℚ) / (2 ^ m : ℚ) := rfl
+        _ = (∑ x : Z2x2Character, (d x : ℚ)) / (2 ^ m : ℚ) := by rw [← Finset.sum_div]
         _ = (2 ^ m : ℚ) / (2 ^ m : ℚ) := by rw [hsum_cast]
         _ = 1 := by simp [hpow_ne]
     · intro f

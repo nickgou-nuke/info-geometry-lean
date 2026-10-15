@@ -44,11 +44,11 @@ theorem continuous_prepotentialWDVVResidualReadout {dim : ℕ}
     Continuous (prepotentialWDVVResidualReadout i j k l) := by
   unfold prepotentialWDVVResidualReadout
   apply Continuous.sub
-  · apply continuous_finset_sum
+  · apply continuous_finsetSum
     intro a ha
     exact (continuous_prepotentialEntryReadout i j a).mul
       (continuous_prepotentialEntryReadout a k l)
-  · apply continuous_finset_sum
+  · apply continuous_finsetSum
     intro a ha
     exact (continuous_prepotentialEntryReadout j k a).mul
       (continuous_prepotentialEntryReadout i a l)
@@ -57,8 +57,6 @@ theorem prepotentialWDVVResidualReadout_zeroLocus_isClosed {dim : ℕ}
     (i j k l : Fin dim) :
     IsClosed {F : GromovWittenPrepotential dim |
       prepotentialWDVVResidualReadout i j k l F = 0} := by
-  simpa only [Set.preimage, Set.mem_setOf_eq] using
-    (isClosed_singleton : IsClosed ({0} : Set ℝ)).preimage
-      (continuous_prepotentialWDVVResidualReadout i j k l)
+  exact isClosed_eq (continuous_prepotentialWDVVResidualReadout i j k l) continuous_const
 
 end InfoGeometry.Canonical

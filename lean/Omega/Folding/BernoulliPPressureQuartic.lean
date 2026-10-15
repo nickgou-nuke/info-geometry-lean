@@ -91,8 +91,7 @@ theorem paper_fold_bernoulli_p_pressure_quartic_clt_variance
   rcases paper_fold_bernoulli_p_parry_pressure_chain D.p D.hp D.hp1 with
     ⟨hRight, _, _, _, _, _, _⟩
   refine ⟨⟨hRight, D.quartic_root⟩, ?_, D.gamma_closed, D.variance_closed⟩
-  simpa [BernoulliPPressureQuarticData.pressureAnalytic, bernoulliPPressure] using
-    (analyticAt_id.add analyticAt_const :
-      AnalyticAt ℝ (fun t : ℝ => t + D.pressureShift) D.theta)
+  change AnalyticAt ℝ (fun t : ℝ => t + D.pressureShift) D.theta
+  exact analyticAt_id.add analyticAt_const
 
 end Omega.Folding

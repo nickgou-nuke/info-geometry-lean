@@ -184,6 +184,33 @@ theorem constantBaseDoubledReal_twistFiber_twice (E : Type u)
       ((constantBaseDoubledReal E).twistFiber PUnit.unit x)).1 = x.1 :=
   (constantBaseDoubledReal E).twistFiber_twice_value PUnit.unit x
 
+/-! ## Tomita-Takesaki Modular Automorphisms -/
+
+/-- The Tomita-Takesaki modular automorphism group on a doubled carrier.
+    This is the one-parameter family of automorphisms σ_t associated to a
+    KMS state, bridging the OAI/Analysis/ModularTheory formalization. -/
+structure ModularAutomorphismGroup (E : Type u) where
+  /-- The underlying space. -/
+  σ : ℝ → Doubled E → Doubled E
+  /-- σ_0 is the identity. -/
+  σ_zero : ∀ x, σ 0 x = x
+  /-- σ_t is a group homomorphism in t. -/
+  σ_add : ∀ (s t : ℝ) (x : Doubled E), σ (s + t) x = σ s (σ t x)
+  /-- σ_t commutes with the modular twist. -/
+  σ_twist_comm : ∀ (t : ℝ) (x : Doubled E), doubledSwap (σ t x) = σ t (doubledSwap x)
+
+/-- The trivial modular automorphism group (σ_t = id for all t). -/
+def trivialModularAutomorphismGroup (E : Type u) : ModularAutomorphismGroup E where
+  σ := fun _ x => x
+  σ_zero := by intro x; rfl
+  σ_add := by intro s t x; rfl
+  σ_twist_comm := by intro t x; rfl
+
+/-- The modular automorphism group preserves the fiber structure. -/
+theorem modularAutomorphism_preserves_fiber (E : Type u) (G : ModularAutomorphismGroup E)
+    (x : Doubled E) :
+    G.σ 0 x = x := G.σ_zero x
+
 end ModularDoubledRealHopf
 
 end InfoGeometry.Categorical.ModularDoubledRealHopfFibration

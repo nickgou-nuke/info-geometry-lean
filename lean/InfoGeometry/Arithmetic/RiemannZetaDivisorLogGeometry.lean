@@ -37,7 +37,10 @@ theorem deriv_exp_pullback
     deriv (fun y : ℝ => f (Real.exp y)) t =
       eulerDerivReal f (Real.exp t) := by
   have hcomp := hf.hasDerivAt.comp t (Real.hasDerivAt_exp t)
-  simpa [eulerDerivReal, mul_comm] using hcomp.deriv
+  calc
+    deriv (fun y : ℝ => f (Real.exp y)) t = deriv (f ∘ Real.exp) t := rfl
+    _ = eulerDerivReal f (Real.exp t) := by
+      simpa [eulerDerivReal, mul_comm] using hcomp.deriv
 
 /-- Exact form of `x d/dx = d/d(log x)` for positive real `x`. -/
 theorem eulerDeriv_eq_deriv_logCoord
@@ -72,8 +75,10 @@ theorem deriv_logCoverPullback
     convert (hasDerivAt_const w a).add (Complex.hasDerivAt_exp w) using 1 <;>
       simp
   have hcomp := hf.hasDerivAt.comp w hinner
-  simpa [logCoverPullback, centeredEulerDeriv, mul_comm, mul_left_comm,
-    mul_assoc] using hcomp.deriv
+  calc
+    deriv (logCoverPullback a f) w = deriv (f ∘ fun z => a + Complex.exp z) w := rfl
+    _ = centeredEulerDeriv a f (a + Complex.exp w) := by
+      simpa [centeredEulerDeriv, mul_comm, mul_left_comm, mul_assoc] using hcomp.deriv
 
 /-! ## Native divisor order and logarithmic derivative -/
 

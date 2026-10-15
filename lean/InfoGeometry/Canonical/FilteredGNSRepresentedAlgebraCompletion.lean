@@ -16,12 +16,14 @@ noncomputable section
 
 namespace CStarStateColimit.Native.FilteredGNSRepresentedAlgebraCompletion
 
-set_option synthInstance.maxHeartbeats 80000
-set_option maxHeartbeats 400000
+set_option synthInstance.maxHeartbeats 200000
+set_option maxHeartbeats 1200000
 set_option linter.unusedSectionVars false
 
 open CStarStateColimit.Native
 open CStarStateColimit.Native.FilteredGNSHilbertColimit
+open CStarStateColimit.Native.FilteredStarAlgebraDirectLimit
+open CStarStateColimit.Native.FilteredGNSAlgebraicColimitRepresentation
 open CStarStateColimit.Native.FilteredGNSRepresentedCStarClosure
 open CStarStateColimit.Native.FilteredGNSFaithfulRangeQuotient
 open CStarStateColimit.Native.FilteredGNSRepresentedRangeCompletion
@@ -39,11 +41,6 @@ variable
   (ω :
     ContinuousStarInductiveSystem.CompatibleStateFamily
       Stage sys)
-
-local instance globalBoundedOperatorCStarAlgebra :
-    CStarAlgebra
-      (GNSHilbertColimit Stage sys ω →L[ℂ]
-        GNSHilbertColimit Stage sys ω) where
 
 /-- The completion equivalence preserves the multiplicative unit. -/
 theorem representedRangeCompletionEquiv_map_one :
@@ -68,7 +65,8 @@ def representedRangeCompletionRingHom :
             representedCStarClosure Stage sys ω) :=
     (representedAlgebraicRangeLinearIsometry
       Stage sys ω).isometry
-  exact h.extensionHom
+  exact UniformSpace.Completion.extensionHom
+    (representedAlgebraicRangeInclusion Stage sys ω).toRingHom h.continuous
 
 @[simp] theorem representedRangeCompletionRingHom_coe
     (x : representedAlgebraicRange Stage sys ω) :
@@ -76,8 +74,10 @@ def representedRangeCompletionRingHom :
         (x :
           representedAlgebraicRangeCompletion Stage sys ω) =
       representedAlgebraicRangeInclusion Stage sys ω x := by
-  unfold representedRangeCompletionRingHom
-  apply Isometry.extensionHom_coe
+  exact UniformSpace.Completion.extensionHom_coe
+    (representedAlgebraicRangeInclusion Stage sys ω).toRingHom
+    ((representedAlgebraicRangeLinearIsometry Stage sys ω).isometry.continuous)
+    x
 
 /-- The native completed ring homomorphism is exactly the previously
 constructed completion isometry. -/
@@ -109,7 +109,7 @@ theorem representedRangeCompletionEquiv_map_mul
         Stage sys ω (x * y)).symm
     _ = representedRangeCompletionRingHom Stage sys ω x *
         representedRangeCompletionRingHom Stage sys ω y :=
-      map_mul (representedRangeCompletionRingHom Stage sys ω) x y
+      (representedRangeCompletionRingHom Stage sys ω).map_mul x y
     _ = representedRangeCompletionEquiv Stage sys ω x *
         representedRangeCompletionEquiv Stage sys ω y := by
       exact congrArg₂ (· * ·)

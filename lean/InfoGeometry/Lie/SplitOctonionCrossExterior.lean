@@ -92,7 +92,8 @@ theorem nativeCrossExteriorMap_surjective :
 
 theorem nativeCrossExteriorMap_finrank_eq :
     Module.finrank ℝ Bivector3 = Module.finrank ℝ Vec3 := by
-  rw [exteriorPower.finrank_eq ℝ 2, Module.finrank_pi]
+  rw [exteriorPower.finrank_eq (R := ℝ) (M := Vec3) (n := 2),
+    Module.finrank_pi]
   norm_num
 
 /-- In three dimensions, the native cross contraction identifies bivectors

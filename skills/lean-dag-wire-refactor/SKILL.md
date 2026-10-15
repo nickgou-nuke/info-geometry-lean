@@ -3,6 +3,17 @@ name: lean-dag-wire-refactor
 description: Use for info-geometry-lean cleanup work that runs DAG, ArangoDB, LeanTrail, graph-overlay, de Bruijn/hash/WL, and Hodge/causal-cone analyses to find redundant theorem wires, duplicate namespaces, pure forwarding modules, stale dropins, compatibility shims, and duplicate proof surfaces, then refactors them only through Lean-checked owner edits.
 ---
 
+<!-- repository-context-rule -->
+## Repository context rule
+
+For repository work, the current checked-out codebase is the context. Search
+existing implementation and trace actual carriers, definitions, imports,
+instances, theorem statements, and uses before claiming a structure is missing
+or incorrect. A local absence is not a repository-wide absence. Names,
+heuristics, summaries, and documentation guide discovery but do not override
+source. Follow `docs/REPO_DEEP_SEARCH_PROTOCOL.md` before repo-wide gap claims.
+
+
 # Lean DAG Wire Refactor
 
 Use this skill for repository-wide redundancy cleanup in

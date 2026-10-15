@@ -44,7 +44,7 @@ theorem descend_unique (f : X → G) (g : Carrier X →* G)
   apply MonoidHom.ext
   intro x
   induction x using FreeGroup.induction_on with
-  | C1 => simp
+  | one => simp
   | of x => exact (h x).trans (descend_inclusion f x).symm
   | inv_of x hx => simp [hx]
   | mul x y hx hy => simp [map_mul, hx, hy]

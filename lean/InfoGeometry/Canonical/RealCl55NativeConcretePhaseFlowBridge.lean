@@ -148,7 +148,7 @@ theorem nativeConcretePhaseFlowOnImage_intertwines_dirac
       (concreteHestenesPhaseFlow t (concreteDirac3 v φ x)) =
     nativeConcreteHestenesEmbedding
       (concreteDirac3 v φ (concreteHestenesPhaseFlow t x))
-  simpa only [Module.End.mul_apply] using
+  simpa only [LinearMap.comp_apply, Module.End.mul_apply] using
     congrArg nativeConcreteHestenesEmbedding h
 
 noncomputable def nativeConcreteLaplacianActionOnImage
@@ -235,7 +235,7 @@ theorem nativeConcretePhaseFlowOnImage_intertwines_laplacian
       (concreteHestenesPhaseFlow t (concreteLaplacian3 v φ x)) =
     nativeConcreteHestenesEmbedding
       (concreteLaplacian3 v φ (concreteHestenesPhaseFlow t x))
-  simpa only [Module.End.mul_apply] using
+  simpa only [LinearMap.comp_apply, Module.End.mul_apply] using
     congrArg nativeConcreteHestenesEmbedding h
 
 end InfoGeometry.Canonical.RealCl55NativeConcretePhaseFlowBridge

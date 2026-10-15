@@ -1,5 +1,5 @@
-import Mathlib.Data.Complex.Basic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Basic.Complex.Basic
+import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.ToLin
 import Mathlib.Tactic.Ring
@@ -75,57 +75,64 @@ def X_matrix (z : ℂ) : Matrix (Fin 2) (Fin 2) ℂ :=
 theorem s_squared_eq_one :
     s_matrix * s_matrix = 1 := by
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [s_matrix, mul_apply, Fin.sum_univ_two]
+  fin_cases i <;> fin_cases j <;>
+    { rw [Matrix.mul_apply, Fin.sum_univ_two, Matrix.one_apply]
+      simp [s_matrix] }
 
 /-- Reflection twists the diagonal parameter: s X(z) = X(z⁻¹) s. -/
 theorem s_X_relation (z : ℂ) :
     s_matrix * X_matrix z = X_matrix z⁻¹ * s_matrix := by
   ext i j
-  fin_cases i <;> fin_cases j
-  · simp [s_matrix, X_matrix, mul_apply, Fin.sum_univ_two]
-  · simp [s_matrix, X_matrix, mul_apply, Fin.sum_univ_two]
-  · simp [s_matrix, X_matrix, mul_apply, Fin.sum_univ_two]
-  · simp [s_matrix, X_matrix, mul_apply, Fin.sum_univ_two]
+  fin_cases i <;> fin_cases j <;>
+    { rw [Matrix.mul_apply, Fin.sum_univ_two, Matrix.mul_apply, Fin.sum_univ_two]
+      dsimp [s_matrix, X_matrix]
+      simp [inv_inv] }
 
 /-- Reflection anticommutes with Y(w): s Y(w) = - Y(w) s. -/
 theorem s_Y_anticommutes (w : ℂ) :
     s_matrix * Y_matrix w = - (Y_matrix w * s_matrix) := by
   ext i j
-  fin_cases i <;> fin_cases j
-  · simp [s_matrix, Y_matrix, mul_apply, Fin.sum_univ_two]
-  · simp [s_matrix, Y_matrix, mul_apply, Fin.sum_univ_two]
-  · simp [s_matrix, Y_matrix, mul_apply, Fin.sum_univ_two]
-  · simp [s_matrix, Y_matrix, mul_apply, Fin.sum_univ_two]
+  fin_cases i <;> fin_cases j <;>
+    { rw [Matrix.mul_apply, Fin.sum_univ_two, Matrix.neg_apply, Matrix.mul_apply, Fin.sum_univ_two]
+      dsimp [s_matrix, Y_matrix]
+      ring }
 
 /-- Generators X(z) and Y(w) commute: X(z) Y(w) = Y(w) X(z). -/
 theorem X_Y_commutes (w z : ℂ) :
     X_matrix z * Y_matrix w = Y_matrix w * X_matrix z := by
   ext i j
-  fin_cases i <;> fin_cases j
-  · simp [X_matrix, Y_matrix, mul_apply, Fin.sum_univ_two]; ring
-  · simp [X_matrix, Y_matrix, mul_apply, Fin.sum_univ_two]
-  · simp [X_matrix, Y_matrix, mul_apply, Fin.sum_univ_two]
-  · simp [X_matrix, Y_matrix, mul_apply, Fin.sum_univ_two]; ring
+  fin_cases i <;> fin_cases j <;>
+    { rw [Matrix.mul_apply, Fin.sum_univ_two, Matrix.mul_apply, Fin.sum_univ_two]
+      dsimp [X_matrix, Y_matrix]
+      ring }
 
 /-- Right inverse property for X(z). -/
 theorem X_matrix_mul_inv (z : ℂ) (hz : z ≠ 0) :
     X_matrix z * X_matrix z⁻¹ = 1 := by
   ext i j
   fin_cases i <;> fin_cases j
-  · simp [X_matrix, mul_apply, Fin.sum_univ_two, mul_inv_cancel₀ hz]
-  · simp [X_matrix, mul_apply, Fin.sum_univ_two]
-  · simp [X_matrix, mul_apply, Fin.sum_univ_two]
-  · simp [X_matrix, mul_apply, Fin.sum_univ_two, inv_inv, inv_mul_cancel₀ hz]
+  · rw [Matrix.mul_apply, Fin.sum_univ_two, Matrix.one_apply]
+    simp [X_matrix, mul_inv_cancel₀ hz]
+  · rw [Matrix.mul_apply, Fin.sum_univ_two, Matrix.one_apply]
+    simp [X_matrix]
+  · rw [Matrix.mul_apply, Fin.sum_univ_two, Matrix.one_apply]
+    simp [X_matrix]
+  · rw [Matrix.mul_apply, Fin.sum_univ_two, Matrix.one_apply]
+    simp [X_matrix, inv_inv, inv_mul_cancel₀ hz]
 
 /-- Left inverse property for X(z). -/
 theorem X_matrix_inv_mul (z : ℂ) (hz : z ≠ 0) :
     X_matrix z⁻¹ * X_matrix z = 1 := by
   ext i j
   fin_cases i <;> fin_cases j
-  · simp [X_matrix, mul_apply, Fin.sum_univ_two, inv_mul_cancel₀ hz]
-  · simp [X_matrix, mul_apply, Fin.sum_univ_two]
-  · simp [X_matrix, mul_apply, Fin.sum_univ_two]
-  · simp [X_matrix, mul_apply, Fin.sum_univ_two, inv_inv, mul_inv_cancel₀ hz]
+  · rw [Matrix.mul_apply, Fin.sum_univ_two, Matrix.one_apply]
+    simp [X_matrix, inv_mul_cancel₀ hz]
+  · rw [Matrix.mul_apply, Fin.sum_univ_two, Matrix.one_apply]
+    simp [X_matrix]
+  · rw [Matrix.mul_apply, Fin.sum_univ_two, Matrix.one_apply]
+    simp [X_matrix]
+  · rw [Matrix.mul_apply, Fin.sum_univ_two, Matrix.one_apply]
+    simp [X_matrix, inv_inv, mul_inv_cancel₀ hz]
 
 /-- Algebraic matrix inverse identity: (X(z))⁻¹ = X(z⁻¹). -/
 theorem X_matrix_inv_eq (z : ℂ) (hz : z ≠ 0) :

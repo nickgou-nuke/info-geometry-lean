@@ -9,6 +9,7 @@ The module is import-safe. The browser-harness globals (`new_tab`, `js`,
 from __future__ import annotations
 
 import json
+import hashlib
 import os
 import subprocess
 import time
@@ -16,6 +17,7 @@ from pathlib import Path
 
 from tools.infra.chatgpt_lane_guard import browser_chatgpt_lane
 from tools.infra.lean_audit_prompt import build_lean_fix_prompt, extract_replacement_lean
+from tools.build_lock import acquire_build_lock
 
 DEFAULT_CHATGPT_URL = os.environ.get(
     "CHATGPT_URL", "https://chatgpt.com/?temporary-chat=true"
@@ -218,9 +220,11 @@ def wait_for_final_message(
         else:
             print("No messages yet...")
         time.sleep(poll_seconds)
-    if last_messages:
-        print("Timed out waiting for final stop signal; returning latest collected message.")
+    if last_messages and not streaming() and last_messages[-1].get("text", "").strip():
+        print("Final response captured at the timeout boundary.")
         return last_messages
+    if last_messages:
+        raise RuntimeError("response still streaming at timeout; readback required")
     raise RuntimeError("timed out")
 
 
@@ -279,20 +283,28 @@ def run_audit_and_save(
         relative = target_file.resolve().relative_to(repo_root.resolve())
     except ValueError:
         relative = Path(target_file.name)
-    candidate_file = candidate_dir / ("__".join(relative.parts) + f".browser.{os.getpid()}.lean")
-    candidate_file.write_text(replacement, encoding="utf-8")
+    normalized = replacement.rstrip() + "\n"
+    digest = hashlib.sha256(normalized.encode("utf-8")).hexdigest()
+    candidate_file = candidate_dir / ("__".join(relative.parts) + f".browser.{digest}.lean")
+    if candidate_file.exists():
+        if candidate_file.read_text(encoding="utf-8") != normalized:
+            raise RuntimeError(f"candidate hash collision at {candidate_file}")
+    else:
+        with candidate_file.open("x", encoding="utf-8") as handle:
+            handle.write(normalized)
     print(
         f"Candidate saved: {candidate_file} "
         f"{len(replacement)} chars, {replacement.count(chr(10))} lines"
     )
 
-    lean = subprocess.run(
-        ["lake", "env", "lean", str(candidate_file)],
-        capture_output=True,
-        text=True,
-        timeout=60,
-        cwd=str(repo_root),
-    )
+    with acquire_build_lock(None, f"chatgpt-candidate:{os.getpid()}:{candidate_file.name}", block=True):
+        lean = subprocess.run(
+            ["lake", "env", "lean", str(candidate_file)],
+            capture_output=True,
+            text=True,
+            timeout=60,
+            cwd=str(repo_root),
+        )
 
     if lean.returncode == 0:
         print("COMPILE_SUCCESS")

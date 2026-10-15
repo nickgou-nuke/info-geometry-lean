@@ -109,8 +109,8 @@ theorem diagonalBarrier_hasDerivAt_a
     simpa [one_div] using Real.hasDerivAt_log ha
   have hconst : HasDerivAt (fun _ : ℝ => Real.log b) 0 a :=
     hasDerivAt_const a (Real.log b)
-  change HasDerivAt ((fun x : ℝ => -Real.log x) - (fun _ : ℝ => Real.log b)) (-(a⁻¹)) a
-  simpa using hlog.neg.sub hconst
+  convert hlog.neg.sub hconst using 1
+  ring
 
 /--
 First derivative in the `b` coordinate:
@@ -125,8 +125,8 @@ theorem diagonalBarrier_hasDerivAt_b
     hasDerivAt_const b (-Real.log a)
   have hlog : HasDerivAt Real.log (b⁻¹) b := by
     simpa [one_div] using Real.hasDerivAt_log hb
-  change HasDerivAt ((fun _ : ℝ => -Real.log a) - (fun y : ℝ => Real.log y)) (-(b⁻¹)) b
-  simpa using hconst.sub hlog
+  convert hconst.sub hlog using 1
+  ring
 
 /--
 Derivative of the `a`-gradient:
@@ -139,12 +139,8 @@ theorem diagonalBarrier_hessian_a
     {a : ℝ} (ha : a ≠ 0) :
     HasDerivAt (fun x : ℝ => -(x⁻¹)) (a⁻¹ ^ 2) a := by
   have hinv : HasDerivAt (fun x : ℝ => x⁻¹) (-(a ^ 2)⁻¹) a := hasDerivAt_inv ha
-  have hneg : HasDerivAt (fun x : ℝ => -(x⁻¹)) ((a ^ 2)⁻¹) a := by
-    simpa using hinv.neg
-  have hpow : (a ^ 2)⁻¹ = a⁻¹ ^ 2 := by
-    field_simp [ha]
-  rw [← hpow]
-  exact hneg
+  convert hinv.neg using 1
+  field_simp [ha]
 
 /--
 Derivative of the `b`-gradient:
@@ -155,12 +151,8 @@ theorem diagonalBarrier_hessian_b
     {b : ℝ} (hb : b ≠ 0) :
     HasDerivAt (fun y : ℝ => -(y⁻¹)) (b⁻¹ ^ 2) b := by
   have hinv : HasDerivAt (fun y : ℝ => y⁻¹) (-(b ^ 2)⁻¹) b := hasDerivAt_inv hb
-  have hneg : HasDerivAt (fun y : ℝ => -(y⁻¹)) ((b ^ 2)⁻¹) b := by
-    simpa using hinv.neg
-  have hpow : (b ^ 2)⁻¹ = b⁻¹ ^ 2 := by
-    field_simp [hb]
-  rw [← hpow]
-  exact hneg
+  convert hinv.neg using 1
+  field_simp [hb]
 
 /-- The `a` Hessian entry is strictly positive in the cone interior. -/
 theorem diagonalBarrier_hessian_a_pos

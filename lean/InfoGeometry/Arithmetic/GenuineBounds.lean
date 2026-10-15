@@ -1,8 +1,10 @@
 import Mathlib.Tactic
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.NumberTheory.PrimeCounting
 
 open Real
+open scoped Interval
 
 /-! # Genuine Quantum Counting and Fluctuation Bounds
 

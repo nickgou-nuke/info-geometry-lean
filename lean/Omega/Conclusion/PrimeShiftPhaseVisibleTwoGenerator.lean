@@ -153,7 +153,9 @@ theorem paper_conclusion_prime_shift_phase_visible_two_generator {A : Type*} [Ad
   have hRegisterEq : fRegister = gRegister := by
     apply Finsupp.addHom_ext
     intro t n
-    simp [gRegister, primeShiftVisiblePart, hsingle t n]
+    change fRegister (Finsupp.single t n) =
+      primeShiftVisiblePart ζ (Finsupp.single t n)
+    rw [hsingle t n, primeShiftVisiblePart, primeShiftOmega_single]
   have hRegister : ∀ r : PrimeRegisterObject, f (r, 0) = primeShiftVisiblePart ζ r := by
     intro r
     change fRegister r = gRegister r

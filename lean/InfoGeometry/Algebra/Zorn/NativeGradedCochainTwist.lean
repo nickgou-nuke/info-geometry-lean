@@ -66,7 +66,9 @@ def matrixCochain (x y : Z2Grade) : ℝˣ := signUnit (matrixExponent x y)
 def splitCochain (x y : Z2Grade) : ℝˣ := signUnit (splitExponent x y)
 
 private theorem bit_cases (b : ZMod 2) : b = 0 ∨ b = 1 := by
-  fin_cases b <;> simp
+  fin_cases b
+  · exact Or.inl rfl
+  · exact Or.inr rfl
 
 private theorem zmod_two : (2 : ZMod 2) = 0 := by
   exact ZMod.natCast_self 2

@@ -74,7 +74,7 @@ def conclusion_window6_coxeter_ramanujan_dirichlet_decomposition_chi3 :
 
 def conclusion_window6_coxeter_ramanujan_dirichlet_decomposition_statement : Prop :=
   conclusion_window6_coxeter_ramanujan_dirichlet_decomposition_long_profile =
-      3 • conclusion_window6_coxeter_ramanujan_dirichlet_decomposition_one +
+      (3 : ℚ) • conclusion_window6_coxeter_ramanujan_dirichlet_decomposition_one +
         (1 / 2 : ℚ) • conclusion_window6_coxeter_ramanujan_dirichlet_decomposition_c3 -
           (1 / 2 : ℚ) • conclusion_window6_coxeter_ramanujan_dirichlet_decomposition_chi3 ∧
     conclusion_window6_coxeter_ramanujan_dirichlet_decomposition_short_profile =
@@ -98,7 +98,7 @@ def conclusion_window6_coxeter_ramanujan_dirichlet_decomposition_statement : Pro
 
 lemma conclusion_window6_coxeter_ramanujan_dirichlet_decomposition_long_eq :
     conclusion_window6_coxeter_ramanujan_dirichlet_decomposition_long_profile =
-      3 • conclusion_window6_coxeter_ramanujan_dirichlet_decomposition_one +
+      (3 : ℚ) • conclusion_window6_coxeter_ramanujan_dirichlet_decomposition_one +
         (1 / 2 : ℚ) • conclusion_window6_coxeter_ramanujan_dirichlet_decomposition_c3 -
           (1 / 2 : ℚ) • conclusion_window6_coxeter_ramanujan_dirichlet_decomposition_chi3 := by
   ext j

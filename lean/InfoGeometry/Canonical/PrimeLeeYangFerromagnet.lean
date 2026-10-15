@@ -209,30 +209,14 @@ theorem sum_ell_sigma_sq (σ : Fin N → ℝ) :
         (D.ell i * σ i)^2 +
           (∑ j, if i = j then 0 else D.ell i * D.ell j * σ i * σ j) := by
       intro i
-      have h_sum_split := Finset.sum_eq_add_sum_diff_singleton (Finset.mem_univ i)
-        (fun j => (D.ell i * σ i) * (D.ell j * σ j))
-      rw [h_sum_split]
       have h_diag : (D.ell i * σ i)^2 =
-          (D.ell i * σ i) * (D.ell i * σ i) := by ring
-      rw [← h_diag]
-      congr 1
-      have h_ite : (∑ x ∈ Finset.univ \ {i},
-          (D.ell i * σ i) * (D.ell x * σ x)) =
-          ∑ j ∈ Finset.univ, if i = j then 0 else
-            D.ell i * D.ell j * σ i * σ j := by
-        have h_ite_split := Finset.sum_eq_add_sum_diff_singleton (Finset.mem_univ i)
-          (fun j => if i = j then 0 else D.ell i * D.ell j * σ i * σ j)
-        simp only [if_true, zero_add] at h_ite_split
-        rw [h_ite_split]
-        apply Finset.sum_congr rfl
-        intro j hj
-        have hj_ne : i ≠ j := by
-          intro h_eq
-          subst h_eq
-          exact (Finset.mem_sdiff.mp hj).2 (Finset.mem_singleton_self i)
-        simp [hj_ne]
+          ∑ j, if i = j then (D.ell i * σ i) * (D.ell j * σ j) else 0 := by
+        rw [Fintype.sum_ite_eq]
         ring
-      rw [h_ite]
+      rw [h_diag, ← Finset.sum_add_distrib]
+      apply Finset.sum_congr rfl
+      intro j _
+      split_ifs <;> ring
     calc
       (∑ i, ∑ j, (D.ell i * σ i) * (D.ell j * σ j)) =
           ∑ i, ((D.ell i * σ i)^2 +

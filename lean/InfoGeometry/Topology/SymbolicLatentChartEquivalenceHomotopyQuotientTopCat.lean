@@ -60,10 +60,7 @@ theorem SymbolicLatentChartEquivalence.pathHomotopyQuotientTopCatHom_id
   ext q
   change mapSymbolicLatentPathHomotopyQuotient
       (SymbolicLatentChartEquivalence.id C).toMorphism.continuousMap q = q
-  simpa [SymbolicLatentChartEquivalence.id,
-    SymbolicLatentChartEquivalence.toMorphism,
-    SymbolicLatentChartMorphism.id] using
-    congrFun (mapSymbolicLatentPathHomotopyQuotient_id (X := X)) q
+  exact congrFun (mapSymbolicLatentPathHomotopyQuotient_id (X := X)) q
 
 theorem SymbolicLatentChartEquivalence.pathHomotopyQuotientTopCatHom_comp
     {X Y Z : Type} [TopologicalSpace X] [TopologicalSpace Y]
@@ -82,11 +79,9 @@ theorem SymbolicLatentChartEquivalence.pathHomotopyQuotientTopCatHom_comp
       (G.comp F).toMorphism.continuousMap q =
     mapSymbolicLatentPathHomotopyQuotient G.toMorphism.continuousMap
       (mapSymbolicLatentPathHomotopyQuotient F.toMorphism.continuousMap q)
-  simpa [SymbolicLatentChartEquivalence.comp,
-    SymbolicLatentChartEquivalence.pathHomotopyQuotientTopCatHom] using
-    congrFun
-      (SymbolicLatentChartMorphism.mapPathHomotopyQuotient_comp
-        (G := G.toMorphism) (F := F.toMorphism)) q
+  exact congrFun
+    (SymbolicLatentChartMorphism.mapPathHomotopyQuotient_comp
+      (G := G.toMorphism) (F := F.toMorphism)) q
 
 theorem SymbolicLatentChartEquivalence.pathHomotopyQuotientTopCatHom_comp_apply
     {X Y Z : Type} [TopologicalSpace X] [TopologicalSpace Y]

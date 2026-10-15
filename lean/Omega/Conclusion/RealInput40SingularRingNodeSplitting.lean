@@ -1,4 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Sqrt
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Mul
+import Mathlib.Analysis.Calculus.Deriv.Inv
 import Mathlib.Tactic
 
 namespace Omega.Conclusion
@@ -145,7 +148,9 @@ lemma realInput40NodeEigenvalueBranch_hasDerivAt (s : ℝ) :
       HasDerivAt (fun U : ℝ => -1 + realInput40NodeSlope s * U) (realInput40NodeSlope s) 0 := by
     convert (hasDerivAt_const (x := 0) (-1)).add
       ((hasDerivAt_id 0).const_mul (realInput40NodeSlope s)) using 1
-    ring
+    · funext U
+      simp
+    · ring
   have hValue : (-1 + realInput40NodeSlope s * (0 : ℝ)) ≠ 0 := by norm_num
   have hInv :
       HasDerivAt (fun U : ℝ => (-1 + realInput40NodeSlope s * U)⁻¹) (-realInput40NodeSlope s) 0 := by
@@ -153,12 +158,6 @@ lemma realInput40NodeEigenvalueBranch_hasDerivAt (s : ℝ) :
     ring
   unfold realInput40NodeEigenvalueBranch realInput40NodeLinearBranch
   simpa [one_div] using hInv
-
-lemma realInput40ExplicitRingBranch_hasDerivAt :
-    HasDerivAt realInput40ExplicitRingBranch (-(1 / 2)) 1 := by
-  have hSqrt : HasDerivAt (fun u : ℝ => Real.sqrt u) (1 / (2 * Real.sqrt 1)) 1 :=
-    Real.hasDerivAt_sqrt (by norm_num)
-  simpa [realInput40ExplicitRingBranch] using hSqrt.neg
 
 namespace RealInput40SingularRingNodeSplittingData
 
@@ -195,6 +194,19 @@ theorem paper_real_input_40_singular_ring_node_splitting
     have h' : Real.sqrt 89 = -Real.sqrt 89 := by
       simpa [realInput40NodeSlope] using h
     exact hslope h'
+
+noncomputable section ExplicitRingBranchDerivative
+
+lemma realInput40ExplicitRingBranch_hasDerivAt :
+    HasDerivAt realInput40ExplicitRingBranch (-(1 / 2)) 1 := by
+  have hSqrt : HasDerivAt (fun u : ℝ => Real.sqrt u) (1 / (2 * Real.sqrt 1)) 1 :=
+    Real.hasDerivAt_sqrt (by norm_num)
+  convert hSqrt.neg using 1
+  · funext u
+    rfl
+  · norm_num
+
+end ExplicitRingBranchDerivative
 
 /-- First-order eigenvalue drifts at the real-input-40 singular ring node.
     cor:real-input-40-singular-ring-eigenvalue-drift -/

@@ -1,7 +1,6 @@
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Tactic.Ring
 import InfoGeometry.Canonical.ZornAssociatorDerivationCurvatureBridge
-import InfoGeometry.Meta.ArchetypePipeline
 import InfoGeometry.Canonical.ZbwDarwinDemodulation
 
 /-!

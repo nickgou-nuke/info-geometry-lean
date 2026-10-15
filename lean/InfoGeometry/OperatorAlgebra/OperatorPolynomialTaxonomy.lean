@@ -48,7 +48,9 @@ def zeroProjectorOfTwoPotent (T : End R V) : End R V := 1 - T
 theorem nonzeroProjectorOfTwoPotent_idempotent
     (T : End R V) (hT : IsNPotent T 2) :
     IsIdempotent (nonzeroProjectorOfTwoPotent T) := by
-  simpa [IsIdempotent, nonzeroProjectorOfTwoPotent] using hT
+  change T * T = T at hT
+  change T * T = T
+  exact hT
 
 theorem zeroProjectorOfTwoPotent_idempotent
     (T : End R V) (hT : IsNPotent T 2) :
@@ -92,6 +94,7 @@ theorem twoPotent_mul_zeroProjector (T : End R V) (hT : IsNPotent T 2) :
 
 theorem twoPotent_mul_nonzeroProjector (T : End R V) (hT : IsNPotent T 2) :
     T * nonzeroProjectorOfTwoPotent T = T := by
+  change T * T = T at hT
   simpa [nonzeroProjectorOfTwoPotent] using hT
 
 end InfoGeometry.OperatorAlgebra.OperatorPolynomialTaxonomy

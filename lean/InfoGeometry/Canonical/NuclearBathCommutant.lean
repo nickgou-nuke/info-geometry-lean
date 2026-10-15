@@ -27,6 +27,8 @@ operators on itself.  This is the carrier on which the repository's KMS/GNS
 owners can later be instantiated. -/
 abbrev AdjointOperator := Module.End ℝ Alg
 
+local instance : LieRing AdjointOperator := LieRing.ofAssociativeRing
+
 def adjointOperator (X : Alg) : AdjointOperator :=
   LieAlgebra.ad ℝ Alg X
 

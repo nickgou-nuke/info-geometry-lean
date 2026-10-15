@@ -895,6 +895,16 @@ lean_lib InfoGeometry where
   -- them and wire them into the provided library surface.
   globs := #[.andSubmodules `InfoGeometry]
 
+-- OAI is compiled from the inspected external checkout against the root
+-- Mathlib pin, without resolving its unrelated workspace-wide dependencies.
+lean_lib OAI where
+  srcDir := "../external_refs/openai-math/lean"
+  globs := #[
+    .submodules `OAI.Analysis.Cuntz,
+    .submodules `OAI.Analysis.Quasitrace,
+    .submodules `OAI.Algebra.OrderedStates
+  ]
+
 @[default_target, test_driver]
 lean_lib InfoGeometryTestSuite where
   srcDir := "../tests"

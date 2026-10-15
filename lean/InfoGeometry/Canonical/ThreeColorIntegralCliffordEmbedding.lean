@@ -12,7 +12,13 @@ namespace InfoGeometry.Canonical
 
 inductive IntegralSplitBasis
   | one | l | i | il | j | jl | k | kl
-deriving DecidableEq, Fintype
+deriving DecidableEq
+
+instance : Fintype IntegralSplitBasis where
+  elems := { .one, .l, .i, .il, .j, .jl, .k, .kl }
+  complete := by
+    intro b
+    cases b <;> simp
 
 abbrev StandardIntegralSplitOctonion := IntegralSplitBasis → ℤ
 
@@ -59,7 +65,7 @@ theorem coordinatesToOrder_bijective : Function.Bijective coordinatesToOrder := 
       simpa [coordinatesToOrder, chiralI, chiralL, chiralJ, chiralX] using
         congrArg (fun M => M 0 0) h1
     have h11 : x 0 - x 1 = y 0 - y 1 := by
-      simpa [coordinatesToOrder, chiralI, chiralL, chiralJ, chiralX] using
+      simpa [coordinatesToOrder, chiralI, chiralL, chiralJ, chiralX, sub_eq_add_neg] using
         congrArg (fun M => M 1 1) h1
     have h01 : -x 2 + x 3 = -y 2 + y 3 := by
       simpa [coordinatesToOrder, chiralI, chiralL, chiralJ, chiralX] using
@@ -96,9 +102,9 @@ theorem coordinatesToOrder_bijective : Function.Bijective coordinatesToOrder := 
     have hk2 : A 0 0 = A 1 1 + 2 * k := by omega
     have hm2 : A 0 1 = A 1 0 + 2 * m := by omega
     fin_cases i <;> fin_cases j <;> {
-      dsimp [coordinatesToOrder, chiralI, chiralL, chiralJ, chiralX]
-      ring_nf
-      try omega
+      simp [coordinatesToOrder, chiralI, chiralL, chiralJ, chiralX,
+        c0, c1, c2, c3, Matrix.of_apply]
+      all_goals omega
     }
 
 noncomputable def chiralOrderCoordinateEquiv : ChiralOrderCoordinates ≃ₗ[ℤ] integerChiralOrder :=

@@ -161,10 +161,14 @@ theorem eq_smul_volume_of_anticommutes_all_gamma (x : Cl55)
 theorem involute_cliffordMonomial55 (I : Finset (Fin 10)) :
     CliffordAlgebra.involute (cliffordMonomial55 I) =
       ((-1 : ℝ) ^ I.card) • cliffordMonomial55 I := by
-  simpa [cliffordMonomial55, gamma55, Finset.length_sort, List.map_map,
-    Function.comp_def] using
-    (CliffordAlgebra.involute_prod_map_ι (Q := Q55)
-      ((I.sort (· ≤ ·)).map fin10Basis55))
+  change CliffordAlgebra.involute
+      (((I.sort (· ≤ ·)).map gamma55).prod) =
+    ((-1 : ℝ) ^ I.card) • ((I.sort (· ≤ ·)).map gamma55).prod
+  have hmap : (I.sort (· ≤ ·)).map gamma55 =
+      ((I.sort (· ≤ ·)).map fin10Basis55).map (CliffordAlgebra.ι Q55) := by
+    simp [gamma55, ι55, List.map_map, Function.comp_def]
+  rw [hmap, CliffordAlgebra.involute_prod_map_ι, List.length_map,
+    Finset.length_sort]
 
 @[simp] theorem involute_volume55 :
     CliffordAlgebra.involute (cliffordMonomial55 (Finset.univ : Finset (Fin 10))) =

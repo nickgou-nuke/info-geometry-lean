@@ -108,7 +108,8 @@ def readoutQuotientRangeEquiv {Obs Y : Type*} (f : Obs → Y) :
   right_inv := by
     rintro ⟨y, ⟨A, hA⟩⟩
     apply Subtype.ext
-    simpa using (Classical.choose_spec (show ∃ B, f B = y from ⟨A, hA⟩))
+    rw [readoutQuotientRange_mk]
+    exact Classical.choose_spec (show ∃ B, f B = y from ⟨A, hA⟩)
 
 theorem readoutQuotientRangeEquiv_bijective {Obs Y : Type*} (f : Obs → Y) :
     Function.Bijective (readoutQuotientRange f) :=

@@ -31,7 +31,8 @@ theorem paper_pom_faithful_2x2_geometric_primorial_area_law {T N : ℕ} (p : Fin
       primeDetArea p w = Real.pi * ledgerProduct p := by
     unfold primeDetArea w
     rw [parikhPrimeProduct_eq_list_prod]
-    simpa [Function.comp, ledgerProduct] using (Fin.prod_univ_def fun i => (p i : ℝ)).symm
+    simp only [ledgerProduct]
+    rw [(Fin.prod_univ_def fun i : Fin T => p i).symm]
   calc
     Real.log (primeDetArea p w) = Real.log Real.pi + Real.log (ledgerProduct p) := by
       rw [harea, Real.log_mul Real.pi_ne_zero hledger_pos.ne']

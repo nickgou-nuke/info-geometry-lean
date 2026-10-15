@@ -87,11 +87,15 @@ lemma perm_fin_three_center_trivial (z : Equiv.Perm (Fin 3))
     rcases hz0vals with hz0val | hz0val | hz0val
     · exact Fin.ext hz0val
     · have hz0one : z 0 = 1 := Fin.ext hz0val
-      have : z 2 = 1 := by simpa [hz0one] using hz02
+      have hswap : Equiv.swap (0 : Fin 3) 2 1 = 1 :=
+        Equiv.swap_apply_of_ne_of_ne (by decide) (by decide)
+      have : z 2 = 1 := by rw [hz02, hz0one, hswap]
       have hsame : z 2 = z 0 := by simpa [hz0one] using this
       cases z.injective hsame
     · have hz0two : z 0 = 2 := Fin.ext hz0val
-      have : z 1 = 2 := by simpa [hz0two] using hz01
+      have hswap : Equiv.swap (0 : Fin 3) 1 2 = 2 :=
+        Equiv.swap_apply_of_ne_of_ne (by decide) (by decide)
+      have : z 1 = 2 := by rw [hz01, hz0two, hswap]
       have hsame : z 1 = z 0 := by simpa [hz0two] using this
       cases z.injective hsame
   have hz1 : z 1 = 1 := by simpa [hz0] using hz01

@@ -29,6 +29,9 @@ open TKKJordanPairData.TKKGrade
 open InfoGeometry.Physics.SplitOctonionBraidSU3
 open CanonicalZornProjectiveTKKBridge
 
+-- Matrix commutators give the Lie bracket on the associative matrix ring.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 /-- Indices for the conformal block decomposition `1 ⊕ 8 ⊕ 1`. -/
 inductive ConformalIndex where
   | minus

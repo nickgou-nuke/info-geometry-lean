@@ -61,9 +61,7 @@ theorem centralMul_ne_twistedMul :
   rw [centralMul_doublingUnit_mul_quaternionEmbed,
     twistedMul_doublingUnit_mul_quaternionEmbed]
   have hstar : star quaternionI = -quaternionI := by
-    ext <;>
-      simp [Quaternion.instStar,
-        QuaternionAlgebra.instStarQuaternionAlgebra, quaternionI]
+    ext <;> simp [quaternionI]
   rw [hstar]
   intro h
   exact quaternionI_ne_neg (doubledPart_injective h)

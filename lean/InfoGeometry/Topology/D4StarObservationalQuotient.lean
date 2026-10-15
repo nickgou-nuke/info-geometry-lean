@@ -27,6 +27,7 @@ theorem starObservationalQuotient_descended_eq_id
     (t : ℤ) (b : Bool) :
     descended starObservationalQuotient t b = b := by
   obtain ⟨q, rfl⟩ := d4StarQuotientHomeomorphBool.surjective b
+  change descended starObservationalQuotient t (quotientToBool q) = quotientToBool q
   simpa [starObservationalQuotient, starQuotientFlow] using
     (descended_commutes starObservationalQuotient t q)
 

@@ -53,7 +53,11 @@ noncomputable def logBraidThreeGenerators (p : ℂ) :
     apply LinearEquiv.ext
     intro t
     have ht := LinearMap.congr_fun (logCheckedR_yangBaxter X hX p) t
-    simpa [LinearMap.comp_apply] using ht
+    change logCheckedR12 X hX p (logCheckedR23 X hX p (logCheckedR12 X hX p t)) =
+      logCheckedR23 X hX p (logCheckedR12 X hX p (logCheckedR23 X hX p t))
+    change logCheckedR12 X hX p (logCheckedR23 X hX p (logCheckedR12 X hX p t)) =
+      logCheckedR23 X hX p (logCheckedR12 X hX p (logCheckedR23 X hX p t)) at ht
+    exact ht
 
 /-- Group-level action of the repository's presented `B₃` on the logarithmic
 triple tensor carrier. -/
@@ -71,13 +75,13 @@ noncomputable def logBraidRepresentation (p : ℂ) :
 @[simp]
 theorem logBraidGroup3Hom_sigmaOne (p : ℂ) :
     logBraidGroup3Hom X hX p sigmaOne = logCheckedR12 X hX p := by
-  simp [logBraidGroup3Hom, logBraidThreeGenerators]
+  rfl
 
 /-- The second abstract braid generator acts by `checkR` on tensor slots 2--3. -/
 @[simp]
 theorem logBraidGroup3Hom_sigmaTwo (p : ℂ) :
     logBraidGroup3Hom X hX p sigmaTwo = logCheckedR23 X hX p := by
-  simp [logBraidGroup3Hom, logBraidThreeGenerators]
+  rfl
 
 /-- The representation readback of the first generator is the underlying
 linear map of the local `R₁₂`. -/
@@ -104,7 +108,8 @@ theorem logBraidRepresentation_artin (p : ℂ) :
       logBraidGroup3Hom X hX p sigmaTwo *
         logBraidGroup3Hom X hX p sigmaOne *
         logBraidGroup3Hom X hX p sigmaTwo := by
-  simpa using (logBraidThreeGenerators X hX p).artin
+  rw [logBraidGroup3Hom_sigmaOne, logBraidGroup3Hom_sigmaTwo]
+  exact (logBraidThreeGenerators X hX p).artin
 
 /-- Inverse braid generators are represented by the inverse local checked
 operators, inherited from the universal presented-group owner. -/
@@ -112,16 +117,12 @@ operators, inherited from the universal presented-group owner. -/
 theorem logBraidGroup3Hom_sigmaOne_inv (p : ℂ) :
     logBraidGroup3Hom X hX p sigmaOne⁻¹ =
       (logCheckedR12 X hX p)⁻¹ := by
-  simpa [logBraidGroup3Hom, logBraidThreeGenerators] using
-    (BraidThreeGenerators.toGroupHom_sigmaOne_inv
-      (logBraidThreeGenerators X hX p))
+  rfl
 
 @[simp]
 theorem logBraidGroup3Hom_sigmaTwo_inv (p : ℂ) :
     logBraidGroup3Hom X hX p sigmaTwo⁻¹ =
       (logCheckedR23 X hX p)⁻¹ := by
-  simpa [logBraidGroup3Hom, logBraidThreeGenerators] using
-    (BraidThreeGenerators.toGroupHom_sigmaTwo_inv
-      (logBraidThreeGenerators X hX p))
+  rfl
 
 end InfoGeometry.Categorical.LogNilpotentBraidGroup3Representation

@@ -1,9 +1,12 @@
 import proofs.SO55MetricCongruence
+import Mathlib.Algebra.Lie.OfAssociative
 
 /-! # Lie equivalence between hyperbolic and diagonal `so(5,5)` models -/
 
 noncomputable section
 namespace SO55HyperbolicDiagonalLieEquiv
+
+attribute [local instance 100] LieRing.ofAssociativeRing LieAlgebra.ofAssociativeAlgebra
 
 open SplitOctonionTKK55
 open SplitOctonionTKK55Blocks

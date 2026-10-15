@@ -23,19 +23,19 @@ abbrev Mat2Q := InfoGeometry.Algebra.FiniteSpin.Mat2Q
 
 /-- The `1+1` Minkowski metric with signature `(-,+)`. -/
 def eta : Mat2Q :=
-  ![![-1, 0], ![0, 1]]
+  fun i j => if i = 0 ∧ j = 0 then -1 else if i = 1 ∧ j = 1 then 1 else 0
 
 /-- A rational Lorentz boost: `(5/4)^2 - (3/4)^2 = 1`. -/
 def boost : Mat2Q :=
-  ![![5 / 4, 3 / 4], ![3 / 4, 5 / 4]]
+  fun i j => if i = j then 5 / 4 else 3 / 4
 
 /-- Explicit inverse of `boost`. -/
 def boostInv : Mat2Q :=
-  ![![5 / 4, -3 / 4], ![-3 / 4, 5 / 4]]
+  fun i j => if i = j then 5 / 4 else -(3 / 4)
 
 /-- Finite symplectic/complex atom for the conservative channel. -/
 def J : Mat2Q :=
-  ![![0, 1], ![-1, 0]]
+  fun i j => if i = 0 ∧ j = 1 then 1 else if i = 1 ∧ j = 0 then -1 else 0
 
 /-- Finite metric atom for the dissipative channel. -/
 def G : Mat2Q :=

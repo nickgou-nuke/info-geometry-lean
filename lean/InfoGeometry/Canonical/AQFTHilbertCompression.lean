@@ -44,9 +44,8 @@ def firstLegEmbedding : E →L[ℝ] InfoGeometry.Krein.DoubledSpace E where
         apply (WithLp.ofLp_injective 2)
         simp [InfoGeometry.Krein.to_doubled, smul_zero] }
   cont := by
-    simpa [InfoGeometry.Krein.to_doubled] using
-      (WithLp.prod_continuous_toLp (p := 2) (α := E) (β := E)).comp
-        (continuous_id.prodMk (continuous_const (y := (0 : E))))
+    exact (WithLp.prod_continuous_toLp (p := 2) (α := E) (β := E)).comp
+      (continuous_id.prodMk (continuous_const (y := (0 : E))))
 
 /-- First-leg projection `(x,y) ↦ x` from doubled space. -/
 def firstLegProjection : InfoGeometry.Krein.DoubledSpace E →L[ℝ] E where

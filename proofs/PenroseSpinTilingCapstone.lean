@@ -235,7 +235,7 @@ theorem finite_spine_kernel_from_colimit_target
             rcases hgeo with
               ⟨h32, h01, h23, hmixed, htkk, hstr, hgcov, h3col, hprod, hos, hgap⟩
             refine And.intro ?_ ?_
-            · simpa only using hcard
+            · simpa [penroseTileIncidenceCard] using hcard
             refine And.intro ?_ ?_
             · simpa only using h32
             refine And.intro ?_ ?_
@@ -243,7 +243,7 @@ theorem finite_spine_kernel_from_colimit_target
             refine And.intro ?_ ?_
             · simpa only using hr12
             refine And.intro ?_ ?_
-            · simpa only using hpc
+            · simpa [penroseTilePointCountSkeleton] using hpc
             refine And.intro ?_ ?_
             · simpa only using h01
             refine And.intro ?_ ?_

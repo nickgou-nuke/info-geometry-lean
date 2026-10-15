@@ -31,8 +31,9 @@ def scalar (x : ℝ) : ℝ :=
 theorem hasDerivAt_scalar (x : ℝ) :
     HasDerivAt scalar (1 - Real.exp (-x)) x := by
   convert ((hasDerivAt_neg x).exp).sub
-      (hasDerivAt_const x (1 : ℝ)) |>.add (hasDerivAt_id x) using 1 <;>
-    simp [scalar] <;> ring
+      (hasDerivAt_const x (1 : ℝ)) |>.add (hasDerivAt_id x) using 1
+  · rfl
+  · ring
 
 theorem deriv_scalar (x : ℝ) :
     deriv scalar x = 1 - Real.exp (-x) :=

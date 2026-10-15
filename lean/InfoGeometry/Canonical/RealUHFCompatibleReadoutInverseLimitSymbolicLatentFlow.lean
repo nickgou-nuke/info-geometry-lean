@@ -36,14 +36,18 @@ noncomputable def scalarDilationSymbolicLatentFlow :
     SymbolicLatentModularFlow (limit readoutDiagram).carrier where
   act := fun t ρ =>
     scalarDilationReadoutInverseLimitAction t ρ
-  continuous_act :=
-    InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitContinuousAction.continuous_scalarDilationReadoutInverseLimitAction_joint
+  continuous_act := by
+    exact InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitContinuousAction.continuous_scalarDilationReadoutInverseLimitAction_joint
   zero_apply := normalized_action_zero
   add_apply := by
     intro s t ρ
     have h := congrArg (fun f => f ρ)
       (scalarDilationReadoutInverseLimitAction_add t s)
-    simpa [TopCat.comp_app, add_comm] using h
+    rw [add_comm t s] at h
+    change scalarDilationReadoutInverseLimitAction (s + t) ρ =
+      scalarDilationReadoutInverseLimitAction s
+        (scalarDilationReadoutInverseLimitAction t ρ)
+    exact h
 
 @[simp] theorem scalarDilationSymbolicLatentFlow_apply
     (t : ℝ) (ρ : (limit readoutDiagram).carrier) :

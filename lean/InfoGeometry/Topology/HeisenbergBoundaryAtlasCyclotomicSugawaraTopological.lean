@@ -26,6 +26,8 @@ open VirasoroProject
 
 noncomputable section
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 variable {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜]
 
 instance heisenbergCyclotomicParameterTopologicalSpace :
@@ -117,9 +119,13 @@ theorem boundaryAtlasCyclotomicSugawaraReadout_currentSugawara_central
       (1 :
         VirasoroProject.ChargedFockSpace 𝕜 p.1 →ₗ[𝕜]
           VirasoroProject.ChargedFockSpace 𝕜 p.1) := by
-  simpa [boundaryAtlasCyclotomicSugawaraReadout] using
-    (InfoGeometry.Canonical.HeisenbergBoundaryAtlas.canonicalAtlas_currentSugawara_central
-      (𝕜 := 𝕜) p.1)
+  change (InfoGeometry.Canonical.HeisenbergCyclotomicAtlas.canonicalAtlas
+      (𝕜 := 𝕜) p.1 p.2.1 p.2.2).heisenberg.currentRep.currentSugawaraRepresentation
+      (VirasoroAlgebra.cgen 𝕜) =
+        (1 : VirasoroProject.ChargedFockSpace 𝕜 p.1 →ₗ[𝕜]
+          VirasoroProject.ChargedFockSpace 𝕜 p.1)
+  exact InfoGeometry.Canonical.HeisenbergCyclotomicAtlas.canonicalAtlas_currentSugawara_central
+    (𝕜 := 𝕜) p.1 p.2.1 p.2.2
 
 /-- The `lgen` readout is preserved in the combined packet. -/
 theorem boundaryAtlasCyclotomicSugawaraReadout_currentSugawara_lgen_apply
@@ -130,6 +136,10 @@ theorem boundaryAtlasCyclotomicSugawaraReadout_currentSugawara_lgen_apply
         ((InfoGeometry.Canonical.HeisenbergCyclotomicAtlas.canonicalAtlas
           (𝕜 := 𝕜) p.1 p.2.1 p.2.2).heisenberg.currentRep)
         n := by
-  simpa [boundaryAtlasCyclotomicSugawaraReadout] using
-    (InfoGeometry.Canonical.HeisenbergBoundaryAtlas.canonicalAtlas_currentSugawara_lgen_apply
-      (𝕜 := 𝕜) p.1 n)
+  change (InfoGeometry.Canonical.HeisenbergBoundaryAtlas.canonicalAtlas
+      (𝕜 := 𝕜) p.1).currentRep.currentSugawaraRepresentation
+      (VirasoroAlgebra.lgen 𝕜 n) =
+        (InfoGeometry.Canonical.HeisenbergBoundaryAtlas.canonicalAtlas
+          (𝕜 := 𝕜) p.1).currentRep.sugawaraStressMode n
+  exact InfoGeometry.Canonical.HeisenbergBoundaryAtlas.canonicalAtlas_currentSugawara_lgen_apply
+    (𝕜 := 𝕜) p.1 n

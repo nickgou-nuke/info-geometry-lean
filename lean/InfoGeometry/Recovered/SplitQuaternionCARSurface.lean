@@ -32,7 +32,6 @@ def matrix_bdag : Matrix (Fin 2) (Fin 2) ℝ :=
 
 lemma matrix_b_sq : matrix_b * matrix_b = 0 := by
   simp [matrix_b, mul_add, add_mul]
-  module
 
 lemma matrix_bdag_sq : matrix_bdag * matrix_bdag = 0 := by
   simp [matrix_bdag, mul_sub, sub_mul]

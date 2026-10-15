@@ -48,9 +48,7 @@ theorem paper_conclusion_golden_resonance_fib_luc_two_positive_clusters :
       conclusion_golden_resonance_fib_luc_two_positive_clusters_lucPoint] using hNe
   · simpa [conclusion_golden_resonance_fib_luc_two_positive_clusters_fibPoint] using hFibCluster
   · simpa [conclusion_golden_resonance_fib_luc_two_positive_clusters_lucPoint] using hLucCluster
-  · simpa [conclusion_golden_resonance_fib_luc_two_positive_clusters_sequence,
-      Omega.DerivedConsequences.derived_golden_resonance_diagonal_multiplier_essential_clusters_noncompact]
-      using hNoDecay
+  · exact hNoDecay
   · intro l hlim
     have hShift :
         Tendsto

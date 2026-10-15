@@ -14,6 +14,38 @@ noncomputable section
 variable {P X ι : Type} [TopologicalSpace P] [TopologicalSpace X]
   [Fintype ι]
 
+def symbolicLatentPathFamilyDiagramParameterReparametrizationHom
+    (R : SymbolicLatentPathReparametrization) :
+    (symbolicLatentPathFamilyTopCatDiagram (P := P)).obj .extended ⟶
+      (symbolicLatentPathFamilyTopCatDiagram (P := P)).obj .extended :=
+  { hom' :=
+      { toFun := fun q => (q.1, R.parameter q.2)
+        continuous_toFun := by
+          change Continuous (fun q : P × SymbolicPathDomain =>
+            (q.1, R.parameter q.2))
+          exact continuous_fst.prodMk
+            (R.parameter.continuous.comp continuous_snd) } }
+
+theorem symbolicLatentPathFamilyDiagramParameterReparametrizationHom_identity :
+    symbolicLatentPathFamilyDiagramParameterReparametrizationHom
+        (P := P) identitySymbolicLatentPathReparametrization =
+      𝟙 ((symbolicLatentPathFamilyTopCatDiagram (P := P)).obj .extended) := by
+  apply TopCat.hom_ext
+  apply ContinuousMap.ext
+  intro q
+  rfl
+
+theorem symbolicLatentPathFamilyDiagramParameterReparametrizationHom_comp
+    (R S : SymbolicLatentPathReparametrization) :
+    symbolicLatentPathFamilyDiagramParameterReparametrizationHom
+        (P := P) (composeSymbolicLatentPathReparametrization R S) =
+      symbolicLatentPathFamilyDiagramParameterReparametrizationHom (P := P) R ≫
+        symbolicLatentPathFamilyDiagramParameterReparametrizationHom (P := P) S := by
+  apply TopCat.hom_ext
+  apply ContinuousMap.ext
+  intro q
+  rfl
+
 /-!
 # Reparametrization on the corridor colimit
 
@@ -32,7 +64,7 @@ noncomputable def symbolicLatentPathFamilyReparametrizationColimitCocone
           | .initial =>
               colimit.ι (symbolicLatentPathFamilyTopCatDiagram (P := P)) .initial
           | .extended =>
-              symbolicLatentPathFamilyParameterReparametrizationTopCatHom R ≫
+              symbolicLatentPathFamilyDiagramParameterReparametrizationHom R ≫
                 colimit.ι (symbolicLatentPathFamilyTopCatDiagram (P := P)) .extended
         naturality := by
           intro i j g
@@ -41,10 +73,17 @@ noncomputable def symbolicLatentPathFamilyReparametrizationColimitCocone
           | idInitial => rfl
           | idExtended => rfl
           | step =>
+              change (symbolicLatentPathFamilyTopCatDiagram (P := P)).map
+                  SpinorStage.Hom.step ≫
+                    (symbolicLatentPathFamilyDiagramParameterReparametrizationHom R ≫
+                      colimit.ι (symbolicLatentPathFamilyTopCatDiagram (P := P))
+                        SpinorStage.extended) =
+                colimit.ι (symbolicLatentPathFamilyTopCatDiagram (P := P))
+                  SpinorStage.initial
               have hparameter :
                   (symbolicLatentPathFamilyTopCatDiagram (P := P)).map
                       SpinorStage.Hom.step ≫
-                    symbolicLatentPathFamilyParameterReparametrizationTopCatHom R =
+                    symbolicLatentPathFamilyDiagramParameterReparametrizationHom R =
                 (symbolicLatentPathFamilyTopCatDiagram (P := P)).map
                     SpinorStage.Hom.step := by
                 apply TopCat.hom_ext
@@ -52,10 +91,21 @@ noncomputable def symbolicLatentPathFamilyReparametrizationColimitCocone
                 intro p
                 change (p, R.parameter 0) = (p, 0)
                 rw [R.at_zero]
-              rw [← Category.assoc, hparameter]
-              exact colimit.w
-                (symbolicLatentPathFamilyTopCatDiagram (P := P))
-                SpinorStage.Hom.step } }
+              calc
+                _ = (symbolicLatentPathFamilyTopCatDiagram (P := P)).map
+                      SpinorStage.Hom.step ≫
+                    colimit.ι (symbolicLatentPathFamilyTopCatDiagram (P := P))
+                      SpinorStage.extended := by
+                    exact (reassoc_of% hparameter)
+                      (colimit.ι
+                        (symbolicLatentPathFamilyTopCatDiagram (P := P))
+                        SpinorStage.extended)
+                _ = colimit.ι (symbolicLatentPathFamilyTopCatDiagram (P := P))
+                      SpinorStage.initial :=
+                    colimit.w
+                      (symbolicLatentPathFamilyTopCatDiagram (P := P))
+                      SpinorStage.Hom.step }
+  }
 
 noncomputable def symbolicLatentPathFamilyReparametrizationColimitHom
     (R : SymbolicLatentPathReparametrization) :
@@ -86,11 +136,14 @@ theorem symbolicLatentPathFamilyReparametrizationColimitHom_extended
     (R : SymbolicLatentPathReparametrization) :
     colimit.ι (symbolicLatentPathFamilyTopCatDiagram (P := P)) .extended ≫
         symbolicLatentPathFamilyReparametrizationColimitHom R =
-      symbolicLatentPathFamilyParameterReparametrizationTopCatHom R ≫
+      symbolicLatentPathFamilyDiagramParameterReparametrizationHom R ≫
         colimit.ι (symbolicLatentPathFamilyTopCatDiagram (P := P)) .extended := by
-  simpa [symbolicLatentPathFamilyReparametrizationColimitCocone] using
-    symbolicLatentPathFamilyReparametrizationColimitHom_stage
-      (P := P) R .extended
+  change colimit.ι (symbolicLatentPathFamilyTopCatDiagram (P := P)) .extended ≫
+      symbolicLatentPathFamilyReparametrizationColimitHom R =
+    symbolicLatentPathFamilyDiagramParameterReparametrizationHom R ≫
+      colimit.ι (symbolicLatentPathFamilyTopCatDiagram (P := P)) .extended
+  exact symbolicLatentPathFamilyReparametrizationColimitHom_stage
+    (P := P) R .extended
 
 theorem symbolicLatentPathFamilyReparametrizationColimitReadout_natural
     {S : FiniteSymbolicLatentSystem X ι}
@@ -119,12 +172,11 @@ theorem symbolicLatentPathFamilyReparametrizationColimitReadout_natural
       rw [← Category.assoc,
         symbolicLatentPathFamilyReparametrizationColimitHom_extended,
         Category.assoc,
-        symbolicLatentPathFamilyTopCatColimitReadout_stage,
-        symbolicLatentPathFamilyTopCatColimitReadout_stage]
-      change symbolicLatentPathFamilyParameterReparametrizationTopCatHom R ≫
-          observedSymbolicLatentPathFamilyTopCatHom S H h_obs =
-        observedSymbolicLatentPathFamilyTopCatHom S
-          (reparametrizeSymbolicLatentPathFamily R H) h_obs
+        symbolicLatentPathFamilyTopCatColimitReadout_stage
+          (S := S) (H := H) (h_obs := h_obs) .extended,
+        symbolicLatentPathFamilyTopCatColimitReadout_stage
+          (S := S) (H := reparametrizeSymbolicLatentPathFamily R H)
+          (h_obs := h_obs) .extended]
       apply TopCat.hom_ext
       apply ContinuousMap.ext
       intro q
@@ -142,7 +194,7 @@ theorem symbolicLatentPathFamilyReparametrizationColimitHom_identity :
       exact (Category.comp_id _).symm
   | extended =>
       rw [symbolicLatentPathFamilyReparametrizationColimitHom_extended,
-        symbolicLatentPathFamilyParameterReparametrizationTopCatHom_identity]
+        symbolicLatentPathFamilyDiagramParameterReparametrizationHom_identity]
       exact (Category.comp_id _).symm
 
 theorem symbolicLatentPathFamilyReparametrizationColimitHom_comp
@@ -160,13 +212,45 @@ theorem symbolicLatentPathFamilyReparametrizationColimitHom_comp
         symbolicLatentPathFamilyReparametrizationColimitHom_initial,
         symbolicLatentPathFamilyReparametrizationColimitHom_initial]
   | extended =>
-      rw [← Category.assoc,
-        symbolicLatentPathFamilyReparametrizationColimitHom_extended,
-        Category.assoc,
-        symbolicLatentPathFamilyReparametrizationColimitHom_extended,
-        ← Category.assoc,
-        ← symbolicLatentPathFamilyParameterReparametrizationTopCatHom_comp,
-        symbolicLatentPathFamilyReparametrizationColimitHom_extended]
+      calc
+        _ =
+            (colimit.ι (symbolicLatentPathFamilyTopCatDiagram (P := P)) .extended ≫
+              symbolicLatentPathFamilyReparametrizationColimitHom R) ≫
+              symbolicLatentPathFamilyReparametrizationColimitHom S :=
+          Category.assoc _ _ _
+        _ =
+            (symbolicLatentPathFamilyDiagramParameterReparametrizationHom R ≫
+              colimit.ι (symbolicLatentPathFamilyTopCatDiagram (P := P)) .extended) ≫
+              symbolicLatentPathFamilyReparametrizationColimitHom S :=
+          congrArg (fun f => f ≫ symbolicLatentPathFamilyReparametrizationColimitHom S)
+            (symbolicLatentPathFamilyReparametrizationColimitHom_extended
+              (P := P) R)
+        _ = symbolicLatentPathFamilyDiagramParameterReparametrizationHom R ≫
+              (colimit.ι (symbolicLatentPathFamilyTopCatDiagram (P := P)) .extended ≫
+                symbolicLatentPathFamilyReparametrizationColimitHom S) :=
+          Category.assoc _ _ _
+        _ = symbolicLatentPathFamilyDiagramParameterReparametrizationHom R ≫
+              (symbolicLatentPathFamilyDiagramParameterReparametrizationHom S ≫
+                colimit.ι (symbolicLatentPathFamilyTopCatDiagram (P := P)) .extended) :=
+          congrArg (fun f => symbolicLatentPathFamilyDiagramParameterReparametrizationHom R ≫ f)
+            (symbolicLatentPathFamilyReparametrizationColimitHom_extended
+              (P := P) S)
+        _ = (symbolicLatentPathFamilyDiagramParameterReparametrizationHom R ≫
+              symbolicLatentPathFamilyDiagramParameterReparametrizationHom S) ≫
+              colimit.ι (symbolicLatentPathFamilyTopCatDiagram (P := P)) .extended :=
+          (Category.assoc _ _ _).symm
+        _ = symbolicLatentPathFamilyDiagramParameterReparametrizationHom
+              (composeSymbolicLatentPathReparametrization R S) ≫
+              colimit.ι (symbolicLatentPathFamilyTopCatDiagram (P := P)) .extended :=
+          congrArg (fun f => f ≫ colimit.ι
+            (symbolicLatentPathFamilyTopCatDiagram (P := P)) .extended)
+            (symbolicLatentPathFamilyDiagramParameterReparametrizationHom_comp
+              (P := P) R S).symm
+        _ = colimit.ι (symbolicLatentPathFamilyTopCatDiagram (P := P)) .extended ≫
+              symbolicLatentPathFamilyReparametrizationColimitHom
+                (composeSymbolicLatentPathReparametrization R S) :=
+          (symbolicLatentPathFamilyReparametrizationColimitHom_extended
+            (P := P) (composeSymbolicLatentPathReparametrization R S)).symm
 
 end
 

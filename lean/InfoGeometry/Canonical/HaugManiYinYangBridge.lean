@@ -143,9 +143,12 @@ theorem mixedSector_conj_realDoubledScalar
     (a b : ℝ) :
     mixedSector * realDoubledScalar a b * mixedSector =
       realDoubledScalar a (-b) := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
-    simp [realDoubledScalar, phaseAxis, mixedSector, J, eps,
-      Matrix.mul_apply, Matrix.vecCons, Fin.sum_univ_two]
+  rw [realDoubledScalar, realDoubledScalar, mul_add, add_mul]
+  rw [Algebra.mul_smul_comm, Algebra.mul_smul_comm,
+    Algebra.smul_mul_assoc, Algebra.smul_mul_assoc]
+  rw [mixedSector]
+  simp only [mixedSector_conj_phaseAxis]
+  simp [smul_neg, neg_smul]
 
 @[simp]
 theorem realDoubledScalar_apply_zero_zero (a b : ℝ) :

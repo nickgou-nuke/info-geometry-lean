@@ -499,7 +499,9 @@ theorem momentSum_three_eight_of
   have h := hrec 5
   simp only [show (5 : Nat) + 3 = 8 from rfl, show (5 : Nat) + 2 = 7 from rfl,
     show (5 : Nat) + 1 = 6 from rfl,
-    momentSum_three_five, momentSum_three_six, momentSum_three_seven] at h; omega
+    momentSum_three_five, momentSum_three_six, momentSum_three_seven] at h
+  norm_num at h
+  omega
 
 /-- S_3(9) = 23912.
     prop:pom-s3-recurrence -/
@@ -510,7 +512,9 @@ theorem momentSum_three_nine_of
   have h := hrec 6
   simp only [show (6 : Nat) + 3 = 9 from rfl, show (6 : Nat) + 2 = 8 from rfl,
     show (6 : Nat) + 1 = 7 from rfl,
-    momentSum_three_six, momentSum_three_seven, momentSum_three_eight_of hrec] at h; omega
+    momentSum_three_six, momentSum_three_seven, momentSum_three_eight_of hrec] at h
+  norm_num at h
+  omega
 
 /-- S_3(10) = 73888.
     prop:pom-s3-recurrence -/
@@ -521,7 +525,9 @@ theorem momentSum_three_ten_of
   have h := hrec 7
   simp only [show (7 : Nat) + 3 = 10 from rfl, show (7 : Nat) + 2 = 9 from rfl,
     show (7 : Nat) + 1 = 8 from rfl,
-    momentSum_three_seven, momentSum_three_eight_of hrec, momentSum_three_nine_of hrec] at h; omega
+    momentSum_three_seven, momentSum_three_eight_of hrec, momentSum_three_nine_of hrec] at h
+  norm_num at h
+  omega
 
 /-- S_3(m) is even for m ≥ 1 (conditional).
     prop:pom-s3-recurrence -/

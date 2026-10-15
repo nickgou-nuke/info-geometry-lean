@@ -51,8 +51,8 @@ theorem sum_split_diagonal (n : ℕ) {A : Type*} [AddCommMonoid A]
           intro i _
           calc
             (∑ j : Fin n, F i j) = F i i + ∑ j ∈ (Finset.univ \ {i}), F i j := by
-              simpa using
-                Finset.sum_eq_add_sum_diff_singleton (Finset.mem_univ i) (fun j => F i j)
+              rw [← Finset.sum_erase_add _ _ (Finset.mem_univ i), add_comm,
+                ← Finset.sdiff_singleton_eq_erase]
             _ = F i i + ∑ j : Fin n, if i = j then 0 else F i j := by
               congr 1
               calc

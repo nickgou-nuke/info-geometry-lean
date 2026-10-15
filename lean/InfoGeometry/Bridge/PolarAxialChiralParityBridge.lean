@@ -21,8 +21,18 @@ def diracChirality : Module.End ℂ DiracSpinor where
 
 def chiralEvenOperator (L R : PauliBlock) : Module.End ℂ DiracSpinor where
   toFun ψ := (L *ᵥ ψ.1, R *ᵥ ψ.2)
-  map_add' := by intro x y; ext <;> simp [Matrix.mulVec_add]
-  map_smul' := by intro c x; ext <;> simp [Matrix.mulVec_smul]
+  map_add' := by
+    intro x y
+    change (L *ᵥ (x.1 + y.1), R *ᵥ (x.2 + y.2)) =
+      (L *ᵥ x.1 + L *ᵥ y.1, R *ᵥ x.2 + R *ᵥ y.2)
+    exact Prod.ext (Matrix.mulVec_add L x.1 y.1)
+      (Matrix.mulVec_add R x.2 y.2)
+  map_smul' := by
+    intro c x
+    change (L *ᵥ (c • x.1), R *ᵥ (c • x.2)) =
+      (c • (L *ᵥ x.1), c • (R *ᵥ x.2))
+    exact Prod.ext (Matrix.mulVec_smul L c x.1)
+      (Matrix.mulVec_smul R c x.2)
 
 theorem diracChirality_sq :
     diracChirality.comp diracChirality =
@@ -37,14 +47,21 @@ theorem chiralEvenOperator_commutes_chirality (L R : PauliBlock) :
       (chiralEvenOperator L R).comp diracChirality := by
   apply LinearMap.ext
   rintro ⟨ψL, ψR⟩
-  ext <;> simp [diracChirality, chiralEvenOperator, Matrix.mulVec_neg] <;> ring
+  apply Prod.ext
+  · rfl
+  · change -(R *ᵥ ψR) = R *ᵥ (-ψR)
+    rw [Matrix.mulVec_neg]
 
 theorem chiralWeylOperator_anticommutes_chirality (A B : PauliBlock) :
     diracChirality.comp (chiralWeylOperator A B) =
       -((chiralWeylOperator A B).comp diracChirality) := by
   apply LinearMap.ext
   rintro ⟨ψL, ψR⟩
-  ext <;> simp [diracChirality, chiralWeylOperator, Matrix.mulVec_neg] <;> ring
+  apply Prod.ext
+  · change A *ᵥ ψR = -(A *ᵥ (-ψR))
+    rw [Matrix.mulVec_neg]
+    simp
+  · rfl
 
 theorem chiralWeylOperator_sq_eq_even (A B : PauliBlock) :
     (chiralWeylOperator A B).comp (chiralWeylOperator A B) =

@@ -71,12 +71,8 @@ theorem paper_conclusion_wedderburn_threshold_holography
   rcases hpkg with ⟨M, hM, htail, hhist, hmoment⟩
   refine ⟨?_, ?_, rfl⟩
   · intro t ht
-    simpa [d, conclusion_wedderburn_threshold_holography_data.capacityCurveDeterminesTailCounts,
-      conclusion_wedderburn_threshold_holography_data.tailCounts,
-      conclusion_wedderburn_threshold_holography_data.capacityCurve] using htail t ht
+    exact htail t ht
   · intro k
-    simpa [d, conclusion_wedderburn_threshold_holography_data.tailCountsDetermineHistogram,
-      conclusion_wedderburn_threshold_holography_data.histogram,
-      conclusion_wedderburn_threshold_holography_data.tailCounts] using hhist k
+    exact hhist k
 
 end Omega.Zeta

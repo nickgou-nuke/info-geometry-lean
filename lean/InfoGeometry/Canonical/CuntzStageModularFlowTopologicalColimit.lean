@@ -98,7 +98,7 @@ theorem modularFlowTopologicalColimitMap_comp_stateTopologicalColimitMap
   apply TopCat.hom_ext
   apply ContinuousMap.ext
   intro a
-  rw [TopCat.comp_app]
+  dsimp [topologicalDiagram] at a
   change CStarStateColimit.Native.ContinuousStarInductiveSystem.StarInductiveCocone.stateTopologicalColimitMap
       (Stage := Stage) (sys := system Stage T) cocone ω
       (modularFlowTopologicalColimitMap Stage T Φ t
@@ -119,9 +119,10 @@ theorem modularFlowTopologicalColimitMap_zero :
   apply TopCat.hom_ext
   apply ContinuousMap.ext
   intro a
-  rw [TopCat.comp_app]
+  dsimp [topologicalDiagram] at a
   change modularFlowTopologicalColimitMap Stage T Φ 0
-      (topologicalInjection Stage (system Stage T) n a) = _
+      (topologicalInjection Stage (system Stage T) n a) =
+    topologicalInjection Stage (system Stage T) n a
   rw [modularFlowTopologicalColimitMap_inclusion]
   exact congrArg (topologicalInjection Stage (system Stage T) n)
     (Φ.flow_zero n a)
@@ -135,6 +136,7 @@ theorem modularFlowTopologicalColimitMap_add (t s : ℝ) :
   apply TopCat.hom_ext
   apply ContinuousMap.ext
   intro a
+  dsimp [topologicalDiagram] at a
   change modularFlowTopologicalColimitMap Stage T Φ (t + s)
       (topologicalInjection Stage (system Stage T) n a) =
     modularFlowTopologicalColimitMap Stage T Φ t

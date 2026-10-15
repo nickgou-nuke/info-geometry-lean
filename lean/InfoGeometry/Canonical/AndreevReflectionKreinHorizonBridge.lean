@@ -18,13 +18,13 @@ open Matrix Complex
 
 namespace AndreevReflectionKreinHorizonBridge
 
-/-- Fundamental Krein Space Metric J Matrix: J = ![![1, 0], ![0, -1]]. -/
-def kreinJ : Matrix (Fin 2) (Fin 2) ℂ := ![![1, 0], ![0, -1]]
+/-- Fundamental Krein Space Metric J Matrix: J = !![1, 0; 0, -1]. -/
+def kreinJ : Matrix (Fin 2) (Fin 2) ℂ := !![1, 0; 0, -1]
 
 /-- The displayed diagonal matrix is an involution under native matrix multiplication. -/
 theorem krein_J_squared_is_identity : kreinJ * kreinJ = 1 := by
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [kreinJ, Matrix.mul_apply, Fin.sum_univ_two]
+  fin_cases i <;> fin_cases j <;> simp [kreinJ, mul_apply, Fin.sum_univ_two]
 
 /-- Horizon Null Vector Condition:
     The Hermitian form for diag(1,-1) vanishes on vectors (x,x). -/
@@ -39,13 +39,13 @@ theorem krein_diagonal_is_null (x : ℂ) :
 namespace Andreev
 
 /-- Nambu particle-hole channel exchange matrix. -/
-def particleHoleC : Matrix (Fin 2) (Fin 2) ℂ := ![![0, 1], ![1, 0]]
+def particleHoleC : Matrix (Fin 2) (Fin 2) ℂ := !![0, 1; 1, 0]
 
 /-- Exchanging particle-hole channels twice acts as the identity. -/
 theorem particle_hole_C_squared_is_identity : particleHoleC * particleHoleC = 1 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [particleHoleC, Matrix.mul_apply, Fin.sum_univ_two]
+    simp [particleHoleC, mul_apply, Fin.sum_univ_two]
 
 /-- Two-channel reflection block, with normal and Andreev amplitudes in its first column. -/
 def reflectionScatteringMatrix (r_N r_A t_N t_A : ℂ) : Matrix (Fin 2) (Fin 2) ℂ :=

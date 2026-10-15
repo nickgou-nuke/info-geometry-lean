@@ -54,7 +54,7 @@ theorem beta44_eq_matrix (x y : HVector) :
     Fin.sum_univ_succ]
 
 theorem beta44_symmetric (x y : HVector) : beta44 x y = beta44 y x := by
-  simp [beta44, mul_comm, mul_left_comm]
+  simp [beta44, mul_comm]
 
 /-- Hyperbolic extension of the middle metric. -/
 def metric55 : HMatrix
@@ -104,7 +104,7 @@ theorem sum_HIndex {R : Type*} [AddCommMonoid R] (f : HIndex → R) :
 
 theorem beta44_flat (x y : HVector) :
     ∑ i : Fin 8, flat x i * y i = beta44 x y := by
-  simp [flat, beta44, mul_assoc, mul_left_comm, mul_comm]
+  simp [flat, beta44, mul_comm]
 
 theorem P_hyperbolicOrthogonal (x : HVector) :
     hyperbolicOrthogonal (P x) := by
@@ -233,7 +233,7 @@ theorem hyperbolicOrthogonal_entry_constraints {A : HMatrix}
     split_ifs at h ⊢ <;> linarith
   · intro i j
     have hij := entry (.middle i) (.middle j)
-    simp [disassemble, metric55, Matrix.mul_apply, sum_HIndex] at hij
+    simp [metric55, Matrix.mul_apply, sum_HIndex] at hij
     unfold disassemble
     split_ifs at hij ⊢ <;> linarith
 
@@ -330,6 +330,7 @@ theorem D_P_bracket {a : ℝ} {K : Matrix (Fin 8) (Fin 8) ℝ}
   · exact P_hyperbolicOrthogonal _
   · simp [disassemble, hBracket, D, P, matVec, Matrix.mul_apply,
       Matrix.mulVec, sum_HIndex]
+    congr 1
     funext i
     simp [dotProduct]
     ring
@@ -343,6 +344,7 @@ theorem D_N_bracket {a : ℝ} {K : Matrix (Fin 8) (Fin 8) ℝ}
   · exact N_hyperbolicOrthogonal _
   · simp [disassemble, hBracket, D, N, matVec, Matrix.mul_apply,
       Matrix.mulVec, sum_HIndex]
+    congr 1
     funext i
     simp [dotProduct]
     ring

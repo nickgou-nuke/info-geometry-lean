@@ -99,6 +99,11 @@ theorem seam_cross_overlap_zero (u v : Vec3) (h_ortho : vecDot u v = 0) :
     kreinPairing (ePlus u) (modularJ (ePlus v)) = 0 := by
   rw [seam_cross_overlap, h_ortho, neg_zero]
 
+/-- Certified archetype discharge: seam cross-noise vanishing under modular conjugation J. -/
+theorem discharge_zero_seam_noise (u v : Vec3) (h_ortho : vecDot u v = 0) :
+    kreinPairing (ePlus u) (modularJ (ePlus v)) = 0 :=
+  seam_cross_overlap_zero u v h_ortho
+
 /-! ### 2. Aharonov-Albert-Vaidman (AAV) Weak Measurement -/
 
 /-- Aharonov weak value definition: Ω_w = Num / Denom. -/

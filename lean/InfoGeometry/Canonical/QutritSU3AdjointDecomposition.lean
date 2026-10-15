@@ -70,10 +70,10 @@ theorem traceless_finrank : Module.finrank ℂ traceless = 8 := by
   have hmatrix : Module.finrank ℂ QutritMatrix = 9 := by
     simp [Module.finrank_matrix]
   have htop : Module.finrank ℂ (⊤ : Submodule ℂ ℂ) = 1 := by simp
-  rw [htop] at hrank
-  rw [hmatrix] at hrank
-  dsimp [traceless]
-  linarith
+  rw [htop, hmatrix] at hrank
+  rw [show (9 : ℕ) = 1 + 8 from rfl] at hrank
+  exact add_left_cancel hrank
+
 
 theorem scalar_finrank : Module.finrank ℂ scalar = 1 := by
   exact finrank_span_singleton (by simp : (1 : QutritMatrix) ≠ 0)
@@ -217,7 +217,6 @@ theorem decompositionMap_surjective : Function.Surjective decompositionMap := by
   let A : QutritMatrix := c • (1 : QutritMatrix) + H.1
   have hH : Matrix.trace H.1 = 0 := H.property
   refine ⟨A, ?_⟩
-  change decompositionMap A = (c, H)
   apply Prod.ext
   · simp [decompositionMap, A, hH, Matrix.trace_add, Matrix.trace_smul, trace_one]
   · apply Subtype.ext

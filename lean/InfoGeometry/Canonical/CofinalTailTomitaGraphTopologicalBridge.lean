@@ -103,11 +103,22 @@ theorem upperGraphTopologicalColimitToGlobalPair_factorization
   apply TopCat.hom_ext
   apply ContinuousMap.ext
   intro p
-  rw [← Category.assoc, upperGraphTopologicalColimitToGraph_stage]
   change
     graphTopologicalColimitToGlobalPair Stage sys ω
-        ((colimit.cocone (graphTopologicalDiagram Stage sys ω)).ι.app j.1 p) =
+        (upperGraphTopologicalColimitToGraph Stage sys ω i₀
+          (topologicalDirectInjection
+            (upperGraphTopologicalDiagram Stage sys ω i₀) j p)) =
       graphStageToGlobalPair Stage sys ω j.1 p
+  have hstage := congrArg (fun f => f p)
+    (upperGraphTopologicalColimitToGraph_stage Stage sys ω i₀ j)
+  change upperGraphTopologicalColimitToGraph Stage sys ω i₀
+      (topologicalDirectInjection
+        (upperGraphTopologicalDiagram Stage sys ω i₀) j p) =
+    (upperGraphToGraphColimitCocone Stage sys ω i₀).ι.app j p at hstage
+  rw [hstage]
+  change graphTopologicalColimitToGlobalPair Stage sys ω
+      ((colimit.cocone (graphTopologicalDiagram Stage sys ω)).ι.app j.1 p) =
+    graphStageToGlobalPair Stage sys ω j.1 p
   exact graphTopologicalColimitToGlobalPair_stage Stage sys ω j.1 p
 
 theorem upperGraphTopologicalColimitToGlobalPair_mem_globalTomitaGraphClosure
@@ -119,7 +130,10 @@ theorem upperGraphTopologicalColimitToGlobalPair_mem_globalTomitaGraphClosure
   have h := congrArg (fun f => f x)
     (upperGraphTopologicalColimitToGlobalPair_factorization
       Stage sys ω i₀)
-  simpa only [TopCat.comp_app] using h.symm
+  change upperGraphTopologicalColimitToGlobalPair Stage sys ω i₀ x =
+    graphTopologicalColimitToGlobalPair Stage sys ω
+      (upperGraphTopologicalColimitToGraph Stage sys ω i₀ x) at h
+  exact h.symm
 
 theorem upperGraphTopologicalColimitToGlobalPair_fst_mem_globalTomitaDomain
     (i₀ : I) (x : upperGraphTopologicalColimit Stage sys ω i₀) :

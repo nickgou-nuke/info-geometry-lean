@@ -35,9 +35,6 @@ theorem triality_supercharge_is_surjective_involution
   constructor
   · exact inst.trialitySupercharge_sq_eq_id
   · intro y
-    refine ⟨inst.trialitySupercharge y, ?_⟩
-    change (inst.trialitySupercharge.comp inst.trialitySupercharge) y = y
-    rw [inst.trialitySupercharge_sq_eq_id]
-    rfl
+    refine ⟨inst.trialitySupercharge y, LinearMap.congr_fun inst.trialitySupercharge_sq_eq_id y⟩
 
 end InfoGeometry.Benchmarks.Triality

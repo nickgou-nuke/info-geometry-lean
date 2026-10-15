@@ -223,12 +223,12 @@ theorem ancestor_log_normSq_derivative
       (2 * Ξ t * dΞ t + 2 * Υ t * dΥ t) t := by
     exact hasDerivAt_normSq_of_components Ξ Υ (dΞ t) (dΥ t) t hΞ hΥ
   have h_comp := (Real.hasDerivAt_log hρ).comp t h_normSq
-  convert h_comp using 1
-  unfold chiralRadialRate radialNumerator ancestor
-  have h_rw : 2 * ((Ξ t * dΞ t + Υ t * dΥ t) / normSq ⟨Ξ t, Υ t⟩) =
-      (normSq ⟨Ξ t, Υ t⟩)⁻¹ * (2 * Ξ t * dΞ t + 2 * Υ t * dΥ t) := by
+  have h_deriv : (normSq (ancestor Ξ Υ t))⁻¹ * (2 * Ξ t * dΞ t + 2 * Υ t * dΥ t) =
+      2 * chiralRadialRate (ancestor Ξ Υ t) (dΞ t, dΥ t) := by
+    dsimp [chiralRadialRate, radialNumerator, ancestor]
     ring
-  rw [h_rw]
+  rw [← h_deriv]
+  exact h_comp
 
 theorem phase_current_quadrature
     (Ξ Υ dΞ dΥ : ℝ → ℝ) (t : ℝ)
@@ -274,7 +274,7 @@ def finiteMomentum (K : ℝ) (d : Fin n → Fin n → ℝ) : Matrix (Fin n) (Fin
 
 theorem finiteMomentum_smul (K L : ℝ) (d : Fin n → Fin n → ℝ) :
     finiteMomentum (K + L) d = finiteMomentum K d + finiteMomentum L d := by
-  simp [finiteMomentum, add_smul]
+  exact add_smul K L d
 
 def matrixCommutator {n : ℕ} (A B : Matrix (Fin n) (Fin n) ℝ) := A * B - B * A
 
@@ -484,17 +484,20 @@ theorem finiteJostDeterminant_logDeriv_eq_sum_inv_of_ne_zero {n : ℕ}
       (fun w : ℝ => ∏ i : Fin n, (w - energy i)) by
     funext w
     exact finiteJostDeterminant_eq_energy_product energy w]
-  rw [logDeriv_prod]
-  · simp only [logDeriv]
-    congr 1
+  rw [logDeriv_fun_prod]
+  · congr 1
     funext i
-    simp [sub_eq_add_neg]
-  · intro i hi hzero
+    have h_deriv : deriv (fun w : ℝ => w - energy i) z = 1 := by
+      have hd : HasDerivAt (fun w : ℝ => w - energy i) 1 z := by
+        simpa using (hasDerivAt_id z).sub_const (energy i)
+      exact hd.deriv
+    rw [logDeriv_apply, h_deriv, one_div]
+  · intro i _hi hzero
     apply hz
-    rw [finiteJostDeterminant_eq_energy_product]
-    exact Finset.prod_eq_zero (Finset.mem_univ i) hzero
+    rw [finiteJostDeterminant_eq_zero_iff]
+    exact ⟨i, sub_eq_zero.mp hzero⟩
   · intro i _hi
-    simp
+    exact differentiableAt_id.sub_const (energy i)
 
 theorem finiteJostDeterminant_zero_iff_eigenstate {n : ℕ}
     (energy : Fin n → ℝ) (z : ℝ) :
@@ -510,7 +513,7 @@ theorem finiteJostDeterminant_zero_iff_eigenstate {n : ℕ}
     simp at hi
   · rintro ⟨v, hv, heigen⟩
     by_contra hno
-    push_neg at hno
+    push Not at hno
     apply hv
     funext i
     have hi := congrFun heigen i

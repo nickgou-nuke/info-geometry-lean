@@ -148,14 +148,10 @@ theorem paper_xi_comoving_prefix_chebyshev_center_law
         nlinarith [hr_nonneg, hr_le]
       have hinf :
           xi_comoving_prefix_chebyshev_center_law_assignment_margin Γ hΓ (fun _ => δ₀) x0 ≤
-            xi_comoving_prefix_chebyshev_center_law_margin δ₀ b x0 := by
-        unfold xi_comoving_prefix_chebyshev_center_law_assignment_margin
-        simpa using
-          (Finset.inf'_le (s := Γ)
-            (f := fun γ => xi_comoving_prefix_chebyshev_center_law_margin δ₀ γ x0) hb)
-      exact hinf.trans <|
-        xi_comoving_prefix_chebyshev_center_law_margin_le_of_sq_le hδ₀ (by
-          simpa [sub_eq_add_neg, add_comm, add_left_comm, add_assoc] using hsq)
+            xi_comoving_prefix_chebyshev_center_law_margin δ₀ b x0 :=
+        Finset.inf'_le (s := Γ)
+          (f := fun γ => xi_comoving_prefix_chebyshev_center_law_margin δ₀ γ x0) hb
+      exact hinf.trans (xi_comoving_prefix_chebyshev_center_law_margin_le_of_sq_le (r := r) hδ₀ hsq)
     · have hx' : m ≤ x0 := le_of_not_ge hx
       have hr_le : r ≤ x0 - a := by
         dsimp [m, r] at hx' ⊢
@@ -164,22 +160,16 @@ theorem paper_xi_comoving_prefix_chebyshev_center_law
         nlinarith [hr_nonneg, hr_le]
       have hinf :
           xi_comoving_prefix_chebyshev_center_law_assignment_margin Γ hΓ (fun _ => δ₀) x0 ≤
-            xi_comoving_prefix_chebyshev_center_law_margin δ₀ a x0 := by
-        unfold xi_comoving_prefix_chebyshev_center_law_assignment_margin
-        simpa using
-          (Finset.inf'_le (s := Γ)
-            (f := fun γ => xi_comoving_prefix_chebyshev_center_law_margin δ₀ γ x0) ha)
-      exact hinf.trans <|
-        xi_comoving_prefix_chebyshev_center_law_margin_le_of_sq_le hδ₀ (by
-          simpa [sub_eq_add_neg, add_comm, add_left_comm, add_assoc] using hsq)
+            xi_comoving_prefix_chebyshev_center_law_margin δ₀ a x0 :=
+        Finset.inf'_le (s := Γ)
+          (f := fun γ => xi_comoving_prefix_chebyshev_center_law_margin δ₀ γ x0) ha
+      exact hinf.trans (xi_comoving_prefix_chebyshev_center_law_margin_le_of_sq_le (r := r) hδ₀ hsq)
   · apply le_antisymm
     · have hinf :
         xi_comoving_prefix_chebyshev_center_law_assignment_margin Γ hΓ (fun _ => δ₀) m ≤
-          xi_comoving_prefix_chebyshev_center_law_margin δ₀ a m := by
-        unfold xi_comoving_prefix_chebyshev_center_law_assignment_margin
-        simpa [m] using
-          (Finset.inf'_le (s := Γ)
-            (f := fun γ => xi_comoving_prefix_chebyshev_center_law_margin δ₀ γ m) ha)
+          xi_comoving_prefix_chebyshev_center_law_margin δ₀ a m :=
+        Finset.inf'_le (s := Γ)
+          (f := fun γ => xi_comoving_prefix_chebyshev_center_law_margin δ₀ γ m) ha
       have hsq : (a - m) ^ 2 = r ^ 2 := by
         dsimp [m, r]
         ring_nf

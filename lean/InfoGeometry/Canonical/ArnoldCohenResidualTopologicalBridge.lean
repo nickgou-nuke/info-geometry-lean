@@ -49,9 +49,10 @@ theorem continuous_acOuter (i j : Fin din) :
 
 theorem continuous_acBivector (i j : Fin din) :
     Continuous (fun Γ : Fin din → Fin dE → ℝ => acBivector Γ i j) := by
-  simpa [acBivector] using
-    (continuous_acOuter (din := din) (dE := dE) i j).sub
-      (continuous_acOuter (din := din) (dE := dE) j i)
+  change Continuous (fun Γ : Fin din → Fin dE → ℝ =>
+    acOuter (Γ i) (Γ j) - acOuter (Γ j) (Γ i))
+  exact (continuous_acOuter (din := din) (dE := dE) i j).sub
+    (continuous_acOuter (din := din) (dE := dE) j i)
 
 theorem continuous_acResidual (i j k : Fin din) :
     Continuous (fun Γ : Fin din → Fin dE → ℝ => acResidual Γ i j k) := by
@@ -61,25 +62,29 @@ theorem continuous_acResidual (i j k : Fin din) :
     (continuous_acBivector (din := din) (dE := dE) k i)
   have h₃ := (continuous_acBivector (din := din) (dE := dE) k i).matrix_mul
     (continuous_acBivector (din := din) (dE := dE) i j)
-  simpa [acResidual] using (h₁.add h₂).add h₃
+  change Continuous (fun Γ : Fin din → Fin dE → ℝ =>
+    acBivector Γ i j * acBivector Γ j k +
+      acBivector Γ j k * acBivector Γ k i +
+      acBivector Γ k i * acBivector Γ i j)
+  exact (h₁.add h₂).add h₃
 
 theorem continuous_acFrobeniusSq :
     Continuous (fun M : Matrix (Fin dE) (Fin dE) ℝ => acFrobeniusSq M) := by
   unfold acFrobeniusSq
-  apply continuous_finset_sum Finset.univ
+  apply continuous_finsetSum
   intro a ha
-  apply continuous_finset_sum Finset.univ
+  apply continuous_finsetSum
   intro b hb
   exact ((continuous_apply b).comp (continuous_apply a)).pow 2
 
 theorem continuous_acResidualLoss :
     Continuous (fun Γ : Fin din → Fin dE → ℝ => acResidualLoss Γ) := by
   unfold acResidualLoss
-  apply continuous_finset_sum Finset.univ
+  apply continuous_finsetSum
   intro i hi
-  apply continuous_finset_sum Finset.univ
+  apply continuous_finsetSum
   intro j hj
-  apply continuous_finset_sum Finset.univ
+  apply continuous_finsetSum
   intro k hk
   exact continuous_acFrobeniusSq.comp (continuous_acResidual i j k)
 
@@ -160,9 +165,9 @@ theorem acResidualLoss_eq_zero_iff
 
 theorem acResidualLoss_levelSet_isClosed (c : ℝ) :
     IsClosed {Γ : Fin din → Fin dE → ℝ | acResidualLoss Γ = c} := by
-  simpa only [Set.preimage, Set.mem_setOf_eq] using
-    (isClosed_singleton : IsClosed ({c} : Set ℝ)).preimage
-      (continuous_acResidualLoss (din := din) (dE := dE))
+  change IsClosed (acResidualLoss ⁻¹' ({c} : Set ℝ))
+  exact (isClosed_singleton : IsClosed ({c} : Set ℝ)).preimage
+    (continuous_acResidualLoss (din := din) (dE := dE))
 
 theorem acResidualZeroLocus_isClosed :
     IsClosed {Γ : Fin din → Fin dE → ℝ | acResidualLoss Γ = 0} :=

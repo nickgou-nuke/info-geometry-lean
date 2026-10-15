@@ -64,16 +64,11 @@ private lemma conclusion_leyang_zero_measure_stokes_inversion_ldp_rayPressure_ha
     HasDerivAt conclusion_leyang_zero_measure_stokes_inversion_ldp_rayPressure
       (conclusion_leyang_zero_measure_stokes_inversion_ldp_raySlopeIntegrand (Real.exp θ)) θ := by
   have harg_ne : Real.exp θ - 1 ≠ 0 := by
-    have harg_pos : 0 < Real.exp θ - 1 := by
-      have hexp_gt_one : 1 < Real.exp θ := by simpa using Real.one_lt_exp_iff.mpr hθ
-      linarith
+    have hexp_gt_one : 1 < Real.exp θ := by simpa using Real.one_lt_exp_iff.mpr hθ
     linarith
   have hinner : HasDerivAt (fun t : ℝ => Real.exp t - 1) (Real.exp θ) θ := by
     simpa using (Real.hasDerivAt_exp θ).sub_const 1
-  simpa [conclusion_leyang_zero_measure_stokes_inversion_ldp_rayPressure,
-    conclusion_leyang_zero_measure_stokes_inversion_ldp_potential,
-    conclusion_leyang_zero_measure_stokes_inversion_ldp_raySlopeIntegrand, div_eq_mul_inv,
-    mul_comm, mul_left_comm, mul_assoc] using hinner.log harg_ne
+  exact hinner.log harg_ne
 
 private lemma conclusion_leyang_zero_measure_stokes_inversion_ldp_rate_hasDerivAt
     (s : ℝ) (hs : 1 < s) :
@@ -84,16 +79,19 @@ private lemma conclusion_leyang_zero_measure_stokes_inversion_ldp_rate_hasDerivA
   have hleft :
       HasDerivAt (fun t : ℝ => t * Real.log t) (Real.log s + 1) s := by
     simpa [add_comm] using Real.hasDerivAt_mul_log (ne_of_gt hs_pos)
+  have hsub : HasDerivAt (fun t : ℝ => t - 1) 1 s := by
+    simpa using (hasDerivAt_id s).sub_const 1
   have hright :
       HasDerivAt (fun t : ℝ => (t - 1) * Real.log (t - 1)) (Real.log (s - 1) + 1) s := by
-    have hsub : HasDerivAt (fun t : ℝ => t - 1) 1 s := by
-      simpa [sub_eq_add_neg] using (hasDerivAt_id s).sub_const 1
-    simpa [div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc, add_comm, add_left_comm,
-      add_assoc, hs_sub_ne] using hsub.mul (hsub.log hs_sub_ne)
+    have hmul : HasDerivAt (fun t : ℝ => (t - 1) * Real.log (t - 1))
+        (1 * Real.log (s - 1) + (s - 1) * (1 / (s - 1))) s :=
+      hsub.mul (hsub.log hs_sub_ne)
+    apply hmul.congr_deriv
+    rw [one_mul, mul_one_div_cancel hs_sub_ne, add_comm]
   have hmain :
       HasDerivAt conclusion_leyang_zero_measure_stokes_inversion_ldp_rate
-        ((Real.log s + 1) - (Real.log (s - 1) + 1)) s := by
-    simpa [conclusion_leyang_zero_measure_stokes_inversion_ldp_rate] using hleft.sub hright
+        ((Real.log s + 1) - (Real.log (s - 1) + 1)) s :=
+    hleft.sub hright
   have hs_ne : s ≠ 0 := ne_of_gt hs_pos
   have hdual_ne : conclusion_leyang_zero_measure_stokes_inversion_ldp_dualPoint s ≠ 0 := by
     unfold conclusion_leyang_zero_measure_stokes_inversion_ldp_dualPoint
@@ -106,7 +104,10 @@ private lemma conclusion_leyang_zero_measure_stokes_inversion_ldp_rate_hasDerivA
         symm
         exact Real.log_div hs_ne hs_sub_ne
       _ = Real.log (conclusion_leyang_zero_measure_stokes_inversion_ldp_dualPoint s) := by rfl
-  simpa [hlog] using hmain
+  have hderiv_eq : (Real.log s + 1) - (Real.log (s - 1) + 1) =
+      Real.log (conclusion_leyang_zero_measure_stokes_inversion_ldp_dualPoint s) := by
+    linear_combination hlog
+  exact hmain.congr_deriv hderiv_eq
 
 /-- Paper label: `thm:conclusion-leyang-zero-measure-stokes-inversion-ldp`. For the explicit
 single-zero logarithmic potential `F(u) = log (u - 1)` on the positive ray `u > 1`, differentiating

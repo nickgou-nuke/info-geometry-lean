@@ -34,7 +34,7 @@ theorem expertPoissonFreeEnergy_smul {K : ℕ}
       expertPoissonFreeEnergy M ε v := by
   change (∑ k : Fin K,
       FiniteGibbs.freeEnergy M.gibbsModel (v (σ.symm k)) ε.1) = _
-  simpa using
+  simpa [expertPoissonFreeEnergy] using
     (Fintype.sum_equiv σ.symm
       (fun k : Fin K => FiniteGibbs.freeEnergy M.gibbsModel (v (σ.symm k)) ε.1)
       (fun k : Fin K => FiniteGibbs.freeEnergy M.gibbsModel (v k) ε.1)

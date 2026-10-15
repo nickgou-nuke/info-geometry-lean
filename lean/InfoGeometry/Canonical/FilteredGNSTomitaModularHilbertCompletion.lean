@@ -161,7 +161,8 @@ def modularQuotientToCompletionLinearIsometry :
       have h :=
         (modularQuotientToCompletion_isometry
           Stage sys ω hclos).dist_eq x 0
-      simpa only [modularQuotientToCompletion,
+      simpa only [modularQuotientToCompletionLinearMap,
+        modularQuotientToCompletion, LinearMap.coe_mk, AddHom.coe_mk,
         UniformSpace.Completion.coe_zero,
         dist_zero_right] using h)
 

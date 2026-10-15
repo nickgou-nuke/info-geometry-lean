@@ -39,8 +39,9 @@ theorem boolToQuotient_quotientToBool (q : D4StarQuotient) :
       cases v with
       | inr u => rfl
       | inl c =>
-          simpa [boolToQuotient, quotientToBool] using
-            (outer_vertices_same_class c ColorChannel.red).symm
+          change starQuotientMap (outerVertex ColorChannel.red) =
+            starQuotientMap (outerVertex c)
+          exact (outer_vertices_same_class c ColorChannel.red).symm
 
 noncomputable def d4StarQuotientEquivBool : D4StarQuotient ≃ Bool :=
   { toFun := quotientToBool

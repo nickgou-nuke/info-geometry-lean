@@ -68,9 +68,12 @@ def embedRight (b : Atom) : StageTwo :=
 /-- Order-zero: the left and right embedded observables commute. -/
 theorem orderZero (a : StageOne) (b : Atom) :
     commutator (embedLeft a) (embedRight b) = 0 := by
-  unfold commutator embedLeft embedRight
-  rw [← Matrix.mul_kronecker_mul, ← Matrix.mul_kronecker_mul]
-  simp
+  change (a ⊗ₖ (1 : Atom)) * ((1 : StageOne) ⊗ₖ b) -
+      ((1 : StageOne) ⊗ₖ b) * (a ⊗ₖ (1 : Atom)) = 0
+  have h1 := Matrix.mul_kronecker_mul a (1 : StageOne) (1 : Atom) b
+  have h2 := Matrix.mul_kronecker_mul (1 : StageOne) a b (1 : Atom)
+  rw [mul_one, one_mul] at h1 h2
+  rw [← h1, ← h2, sub_self]
 
 /-- First commutator with a left observable:
 the right-Dirac term drops out and only [D_L,a] ⊗ β_R remains. -/
@@ -78,9 +81,14 @@ theorem commutator_compositeDirac_embedLeft
     (DL a : StageOne) (betaR DR : Atom) :
     commutator (compositeDirac DL betaR DR) (embedLeft a) =
       commutatorL DL a ⊗ₖ betaR := by
-  unfold commutator compositeDirac embedLeft commutatorL
+  change (DL ⊗ₖ betaR + (1 : StageOne) ⊗ₖ DR) * (a ⊗ₖ (1 : Atom)) -
+      (a ⊗ₖ (1 : Atom)) * (DL ⊗ₖ betaR + (1 : StageOne) ⊗ₖ DR) =
+    (DL * a - a * DL) ⊗ₖ betaR
   rw [Matrix.add_mul, Matrix.mul_add]
-  repeat rw [← Matrix.mul_kronecker_mul]
+  rw [← Matrix.mul_kronecker_mul DL a betaR (1 : Atom),
+      ← Matrix.mul_kronecker_mul (1 : StageOne) a DR (1 : Atom),
+      ← Matrix.mul_kronecker_mul a DL (1 : Atom) betaR,
+      ← Matrix.mul_kronecker_mul a (1 : StageOne) (1 : Atom) DR]
   simp only [Matrix.one_mul, Matrix.mul_one]
   ext x y
   simp [Matrix.kroneckerMap_apply]
@@ -94,9 +102,14 @@ theorem commutator_compositeDirac_embedRight
     commutator (compositeDirac DL betaR DR) (embedRight b) =
       DL ⊗ₖ commutatorR betaR b +
       (1 : StageOne) ⊗ₖ commutatorR DR b := by
-  unfold commutator compositeDirac embedRight commutatorR
+  change (DL ⊗ₖ betaR + (1 : StageOne) ⊗ₖ DR) * ((1 : StageOne) ⊗ₖ b) -
+      ((1 : StageOne) ⊗ₖ b) * (DL ⊗ₖ betaR + (1 : StageOne) ⊗ₖ DR) =
+    DL ⊗ₖ (betaR * b - b * betaR) + (1 : StageOne) ⊗ₖ (DR * b - b * DR)
   rw [Matrix.add_mul, Matrix.mul_add]
-  repeat rw [← Matrix.mul_kronecker_mul]
+  rw [← Matrix.mul_kronecker_mul DL (1 : StageOne) betaR b,
+      ← Matrix.mul_kronecker_mul (1 : StageOne) (1 : StageOne) DR b,
+      ← Matrix.mul_kronecker_mul (1 : StageOne) DL b betaR,
+      ← Matrix.mul_kronecker_mul (1 : StageOne) (1 : StageOne) b DR]
   simp only [Matrix.one_mul, Matrix.mul_one]
   ext x y
   simp [Matrix.kroneckerMap_apply]
@@ -111,8 +124,11 @@ theorem orderOne_factorization
         (embedRight b) =
       commutatorL DL a ⊗ₖ commutatorR betaR b := by
   rw [commutator_compositeDirac_embedLeft]
-  unfold commutator embedRight commutatorR
-  rw [← Matrix.mul_kronecker_mul, ← Matrix.mul_kronecker_mul]
+  change (commutatorL DL a ⊗ₖ betaR) * ((1 : StageOne) ⊗ₖ b) -
+      ((1 : StageOne) ⊗ₖ b) * (commutatorL DL a ⊗ₖ betaR) =
+    commutatorL DL a ⊗ₖ (betaR * b - b * betaR)
+  rw [← Matrix.mul_kronecker_mul (commutatorL DL a) (1 : StageOne) betaR b,
+      ← Matrix.mul_kronecker_mul (1 : StageOne) (commutatorL DL a) b betaR]
   simp only [Matrix.mul_one, Matrix.one_mul]
   ext x y
   simp [Matrix.kroneckerMap_apply]
@@ -127,7 +143,9 @@ theorem orderOne_of_right_even
         (commutator (compositeDirac DL betaR DR) (embedLeft a))
         (embedRight b) = 0 := by
   rw [orderOne_factorization, heven]
-  simp
+  ext i j
+  simp [Matrix.kroneckerMap_apply]
+  rfl
 
 /-- Equivalent hypothesis written directly as β_R b = b β_R. -/
 theorem orderOne_of_right_commutes
@@ -167,9 +185,14 @@ theorem dual_orderOne_factorization
         (commutator (compositeDirac DL betaR DR) (embedRight b))
         (embedLeft a) = commutatorL DL a ⊗ₖ commutatorR betaR b := by
   rw [commutator_compositeDirac_embedRight]
-  unfold commutator embedLeft commutatorL
+  change (DL ⊗ₖ commutatorR betaR b + (1 : StageOne) ⊗ₖ commutatorR DR b) * (a ⊗ₖ (1 : Atom)) -
+      (a ⊗ₖ (1 : Atom)) * (DL ⊗ₖ commutatorR betaR b + (1 : StageOne) ⊗ₖ commutatorR DR b) =
+    (DL * a - a * DL) ⊗ₖ commutatorR betaR b
   rw [Matrix.add_mul, Matrix.mul_add]
-  repeat rw [← Matrix.mul_kronecker_mul]
+  rw [← Matrix.mul_kronecker_mul DL a (commutatorR betaR b) (1 : Atom),
+      ← Matrix.mul_kronecker_mul (1 : StageOne) a (commutatorR DR b) (1 : Atom),
+      ← Matrix.mul_kronecker_mul a DL (1 : Atom) (commutatorR betaR b),
+      ← Matrix.mul_kronecker_mul a (1 : StageOne) (1 : Atom) (commutatorR DR b)]
   simp only [Matrix.one_mul, Matrix.mul_one]
   ext x y
   simp [Matrix.kroneckerMap_apply]
@@ -183,7 +206,13 @@ theorem dual_orderOne_of_right_commutes
         (commutator (compositeDirac DL betaR DR) (embedRight b))
         (embedLeft a) = 0 := by
   rw [dual_orderOne_factorization]
-  simp [commutatorR, heven]
+  have hcomm : commutatorR betaR b = 0 := by
+    dsimp [commutatorR]
+    rw [heven, sub_self]
+  rw [hcomm]
+  ext i j
+  simp [Matrix.kroneckerMap_apply]
+  rfl
 
 /-- Consolidated finite bipartite order-zero/order-one packet. -/
 theorem bipartite_order_packet

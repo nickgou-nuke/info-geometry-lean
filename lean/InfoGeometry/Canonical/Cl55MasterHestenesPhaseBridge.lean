@@ -56,35 +56,16 @@ theorem hestenesPhaseHead_sq :
       hestenesPhaseHead n * hestenesPhaseHead n =
         -(1 : MatStage (n + 1))
   | 0 => by
-      change kronPow hestenesPhaseBase 1 * kronPow hestenesPhaseBase 1 =
-        -(1 : MatStage 1)
-      dsimp [kronPow]
-      rw [← Matrix.mul_kronecker_mul, hestenesPhaseBase_sq]
-      ext i j
-      cases i with
-      | mk i0 i1 =>
-          cases j with
-          | mk j0 j1 =>
-              have h0 : i0 = j0 := Subsingleton.elim _ _
-              subst h0
-              fin_cases i0
-              fin_cases i1 <;> fin_cases j1 <;> simp
+      simpa [phaseAxisStage, hestenesPhaseHead] using phaseAxisStage_sq
   | n + 1 => by
       change (hestenesPhaseHead n ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℝ)) *
           (hestenesPhaseHead n ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℝ)) =
         -(1 : MatStage (n + 2))
       rw [← Matrix.mul_kronecker_mul, hestenesPhaseHead_sq n]
-      ext i j
-      by_cases hij : i = j
-      · subst j
-        simp
-      · by_cases h1 : i.1 = j.1
-        · have h2 : i.2 ≠ j.2 := by
-            intro h2
-            apply hij
-            exact Prod.ext h1 h2
-          simp [Matrix.neg_apply, hij, h1, h2]
-        · simp [Matrix.neg_apply, Matrix.one_apply, hij, h1]
+      simp only [one_mul]
+      rw [← neg_one_smul ℝ (1 : MatStage (n + 1)),
+        Matrix.smul_kronecker, Matrix.one_kronecker_one, neg_one_smul]
+      rfl
 
 theorem hestenesPhaseBase_anticomm_gammaChiralBase :
     hestenesPhaseBase * gamma_chiral_base +
@@ -120,15 +101,16 @@ theorem hestenesPhaseHead_anticomm_globalChirality :
       hestenesPhaseHead n * globalChirality (n + 1) +
           globalChirality (n + 1) * hestenesPhaseHead n = 0
   | 0 => by
-      change kronPow hestenesPhaseBase 1 * kronPow gamma_chiral_base 1 +
-          kronPow gamma_chiral_base 1 * kronPow hestenesPhaseBase 1 = 0
-      dsimp [kronPow]
+      change ((1 : MatStage 0) ⊗ₖ hestenesPhaseBase) *
+          ((1 : MatStage 0) ⊗ₖ gamma_chiral_base) +
+          ((1 : MatStage 0) ⊗ₖ gamma_chiral_base) *
+            ((1 : MatStage 0) ⊗ₖ hestenesPhaseBase) = 0
       rw [← Matrix.mul_kronecker_mul, ← Matrix.mul_kronecker_mul]
       simp only [mul_one]
       rw [← Matrix.kronecker_add]
       simpa using congrArg
         (fun A : Matrix (Fin 2) (Fin 2) ℝ =>
-          (1 : Matrix (Fin 1) (Fin 1) ℝ) ⊗ₖ A)
+          (1 : MatStage 0) ⊗ₖ A)
         hestenesPhaseBase_anticomm_gammaChiralBase
   | n + 1 => by
       change (hestenesPhaseHead n ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℝ)) *

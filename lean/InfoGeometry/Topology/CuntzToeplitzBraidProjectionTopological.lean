@@ -25,8 +25,9 @@ def braidProjectionMap (O2 : CuntzTwoAlgebra A) : ℝ × ℝ → A :=
 theorem continuous_braidProjectionMap
     (O2 : CuntzTwoAlgebra A) :
     Continuous (braidProjectionMap O2) := by
-  simpa [braidProjectionMap] using
-    (continuous_cuntzBraidProjectionOperator (A := A) O2)
+  change Continuous (fun p : ℝ × ℝ =>
+    cuntzBraidProjectionOperator O2 p.1 p.2)
+  exact continuous_cuntzBraidProjectionOperator (A := A) O2
 
 /-- The braid projection remains continuous on the diagonal parameter slice. -/
 theorem continuous_braidProjectionMap_diag

@@ -135,12 +135,11 @@ theorem hasDerivAt_normSq_of_components
       (fun u => normSq { scalar := f u, bivector := g u })
       (2 * f t * df + 2 * g t * dg) t := by
   have h1 : HasDerivAt (fun u => (f u) ^ 2) (2 * f t * df) t := by
-    have h := hf.pow 2
-    simpa [mul_assoc] using h
+    simpa [pow_one] using hf.fun_pow 2
   have h2 : HasDerivAt (fun u => (g u) ^ 2) (2 * g t * dg) t := by
-    have h := hg.pow 2
-    simpa [mul_assoc] using h
+    simpa [pow_one] using hg.fun_pow 2
   exact h1.add h2
+
 
 /--
 The normalized rotor associated to a nonzero chiral phase.

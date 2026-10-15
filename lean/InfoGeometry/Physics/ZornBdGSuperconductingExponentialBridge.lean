@@ -104,6 +104,19 @@ def sigmaVec (u : Fin 3 → ℂ) : Matrix (Fin 2) (Fin 2) ℂ :=
 theorem sigmaVec_zero : sigmaVec (fun _ => 0) = 0 := by
   ext i j; fin_cases i <;> fin_cases j <;> simp [sigmaVec]
 
+/-- The Pauli soldering map is linear in its three coordinates. -/
+theorem sigmaVec_smul (c : ℂ) (u : Fin 3 → ℂ) :
+    sigmaVec (c • u) = c • sigmaVec u := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    rw [Matrix.smul_apply] <;>
+    simp [sigmaVec, smul_eq_mul] <;> ring
+
+/-- Negation is preserved by the Pauli soldering map. -/
+theorem sigmaVec_neg (u : Fin 3 → ℂ) :
+    sigmaVec (-u) = -sigmaVec u := by
+  simpa using sigmaVec_smul (-1 : ℂ) u
+
 /--
   🏆 THEOREM 2: The Fundamental Pauli Product Identity
   Σ(u) Σ(v) = (u · v) I₂ + i Σ(u × v)
@@ -113,14 +126,16 @@ theorem sigmaVec_mul (u v : Fin 3 → ℂ) :
       (dot3 u v) • (1 : Matrix (Fin 2) (Fin 2) ℂ) +
         Complex.I • sigmaVec (cross3 u v) := by
   ext i j
+  rw [Matrix.mul_apply]
+  simp only [Matrix.add_apply, Matrix.smul_apply]
   fin_cases i <;> fin_cases j
-  · simp [sigmaVec, dot3, cross3, mul_apply, Fin.sum_univ_two, smul_apply, add_apply]
+  · simp [sigmaVec, dot3, cross3, Fin.sum_univ_two]
     linear_combination -Complex.I_sq * (u 1 * v 1)
-  · simp [sigmaVec, dot3, cross3, mul_apply, Fin.sum_univ_two, smul_apply, add_apply]
+  · simp [sigmaVec, dot3, cross3, Fin.sum_univ_two]
     linear_combination Complex.I_sq * (u 2 * v 0 - u 0 * v 2)
-  · simp [sigmaVec, dot3, cross3, mul_apply, Fin.sum_univ_two, smul_apply, add_apply]
+  · simp [sigmaVec, dot3, cross3, Fin.sum_univ_two]
     linear_combination Complex.I_sq * (u 0 * v 2 - u 2 * v 0)
-  · simp [sigmaVec, dot3, cross3, mul_apply, Fin.sum_univ_two, smul_apply, add_apply]
+  · simp [sigmaVec, dot3, cross3, Fin.sum_univ_two]
     linear_combination -Complex.I_sq * (u 1 * v 1)
 
 /--
@@ -137,9 +152,8 @@ theorem sigmaVec_anticomm (u v : Fin 3 → ℂ) :
   have h_dot : dot3 v u = dot3 u v := by
     simp [dot3]; ring
   rw [h1, h2, h_dot, h_cross]
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [sigmaVec, dot3, cross3, smul_apply, add_apply] <;> ring
+  rw [sigmaVec_neg]
+  module
 
 /--
   🏆 THEOREM 4: The Commutator extracts the Oriented Bivector Channel (Cross Product)
@@ -155,9 +169,8 @@ theorem sigmaVec_comm (u v : Fin 3 → ℂ) :
   have h_dot : dot3 v u = dot3 u v := by
     simp [dot3]; ring
   rw [h1, h2, h_dot, h_cross]
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [sigmaVec, dot3, cross3, smul_apply, sub_apply] <;> ring
+  rw [sigmaVec_neg]
+  module
 
 /-- 
   Associative 4×4 BdG Hamiltonian Readout Map:
@@ -249,16 +262,13 @@ theorem pairing_generation_theorem (w1 w2 : Fin 3 → ℂ) (h k t : ℂ) :
     pairingBlock (bdgReadout (lieFlow (pairingDerivation w1 w2) (normalState h k) t)) =
       (t * (h - k)) • sigmaVec w1 := by
   rw [pairingBlock_eq_sigmaVec]
-  ext i j
-  fin_cases i <;> fin_cases j
-  · simp [lieFlow, pairingDerivation, normalState, sigmaVec, smul_apply]
+  have hu : (lieFlow (pairingDerivation w1 w2) (normalState h k) t).u =
+      (t * (h - k)) • w1 := by
+    funext i
+    simp [lieFlow, pairingDerivation, normalState, smul_eq_mul]
     ring
-  · simp [lieFlow, pairingDerivation, normalState, sigmaVec, smul_apply]
-    ring
-  · simp [lieFlow, pairingDerivation, normalState, sigmaVec, smul_apply]
-    ring
-  · simp [lieFlow, pairingDerivation, normalState, sigmaVec, smul_apply]
-    ring
+  rw [hu]
+  exact sigmaVec_smul _ _
 
 /-- 
   🏆 THEOREM 8: When the normal state is central (h = k), the diagonal splitting vanishes

@@ -15,19 +15,19 @@ structure xi_logistic_depth_design_law_Data where
 equidistant spacing family. -/
 def xi_logistic_depth_design_law_configuration
     (_D : xi_logistic_depth_design_law_Data) : Type :=
-  Unit
+  PUnit
 
 /-- The canonical equidistant fixed-span configuration. -/
 def xi_logistic_depth_design_law_equidistantConfig
     (D : xi_logistic_depth_design_law_Data) :
     xi_logistic_depth_design_law_configuration D :=
-  ()
+  PUnit.unit
 
 /-- Every configuration in the collapsed seed has the prescribed fixed span. -/
 def xi_logistic_depth_design_law_fixedSpan
     (D : xi_logistic_depth_design_law_Data)
     (_x : xi_logistic_depth_design_law_configuration D) : Prop :=
-  _x = ()
+  _x = PUnit.unit
 
 /-- The equidistant predicate in the collapsed fixed-span seed. -/
 def xi_logistic_depth_design_law_equidistant
@@ -76,19 +76,22 @@ theorem paper_xi_logistic_depth_design_law (D : xi_logistic_depth_design_law_Dat
     xi_logistic_depth_design_law_statement D := by
   refine ⟨rfl, ?_, ?_, ?_, ?_⟩
   · intro x _hx
-    cases x
-    simp [xi_logistic_depth_design_law_error]
+    simpa [xi_logistic_depth_design_law_error] using
+      (le_rfl : D.baselineError ≤ D.baselineError)
   · intro x _hx
     cases x
     simp [xi_logistic_depth_design_law_error,
       xi_logistic_depth_design_law_equidistantConfig]
+    rfl
   · intro x _hx
     cases x
     simp [xi_logistic_depth_design_law_equidistant,
       xi_logistic_depth_design_law_equidistantConfig]
   · intro x _hx
     cases x
-    simp [xi_logistic_depth_design_law_error,
-      xi_logistic_depth_design_law_fanoLowerBound]
+    simpa [xi_logistic_depth_design_law_error,
+      xi_logistic_depth_design_law_fanoLowerBound] using
+      (le_rfl : xi_logistic_depth_design_law_fanoLowerBound D D.baselineError ≤
+        xi_logistic_depth_design_law_fanoLowerBound D D.baselineError)
 
 end Omega.Zeta

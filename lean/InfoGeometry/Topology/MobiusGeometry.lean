@@ -15,7 +15,7 @@ open scoped ComplexConjugate
 namespace InfoGeometry
 
 /-- The Riemann sphere, represented as the complex plane extended by a point at infinity. -/
-def RiemannSphere := Option ℂ
+abbrev RiemannSphere := Option ℂ
 
 instance : Inhabited RiemannSphere := ⟨none⟩
 
@@ -253,7 +253,7 @@ lemma maps_to_01inf (z1 z2 z3 : RiemannSphere) (h12 : z1 ≠ z2) (h23 : z2 ≠ z
           | some z3 =>
               have hz23 : z2 ≠ z3 := by
                 intro hz
-                exact h23 (by simp [hz])
+                exact h23 (congrArg some hz)
               let M : MobiusTransform :=
                 { a := 0
                   b := z2 - z3
@@ -266,14 +266,14 @@ lemma maps_to_01inf (z1 z2 z3 : RiemannSphere) (h12 : z1 ≠ z2) (h23 : z2 ≠ z
                     rw [hdet]
                     exact neg_ne_zero.mpr (sub_ne_zero.mpr hz23) }
               refine ⟨M, ?_, ?_, ?_⟩
-              · simp [M, MobiusTransform.eval]
+              · simp [M, MobiusTransform.eval] <;> rfl
               · have hden : z2 - z3 ≠ 0 := sub_ne_zero.mpr hz23
-                have hden' : z2 + -z3 ≠ 0 := by simpa using hden
+                have hden' : z2 + -z3 ≠ 0 := by simpa only [sub_eq_add_neg] using hden
                 have hq : (z2 - z3) / (z2 + -z3) = (1 : ℂ) := by
                   simpa [sub_eq_add_neg] using congrArg id (div_self hden)
-                simp [M, MobiusTransform.eval, hden', hq]
+                simp [M, MobiusTransform.eval, hden', hq] <;> rfl
               · have hden0 : z3 + -z3 = 0 := by ring
-                simp [M, MobiusTransform.eval, hden0]
+                simp [M, MobiusTransform.eval, hden0] <;> rfl
   | some z1 =>
       cases z2 with
       | none =>
@@ -282,7 +282,7 @@ lemma maps_to_01inf (z1 z2 z3 : RiemannSphere) (h12 : z1 ≠ z2) (h23 : z2 ≠ z
           | some z3 =>
               have hz13 : z1 ≠ z3 := by
                 intro hz
-                exact h13 (by simp [hz])
+                exact h13 (congrArg some hz)
               let M : MobiusTransform :=
                 { a := 1
                   b := -z1
@@ -295,17 +295,17 @@ lemma maps_to_01inf (z1 z2 z3 : RiemannSphere) (h12 : z1 ≠ z2) (h23 : z2 ≠ z
                     exact sub_ne_zero.mpr hz13 }
               refine ⟨M, ?_, ?_, ?_⟩
               · have hden : z1 - z3 ≠ 0 := sub_ne_zero.mpr hz13
-                have hden' : z1 + -z3 ≠ 0 := by simpa using hden
-                simp [M, MobiusTransform.eval, hden']
-              · simp [M, MobiusTransform.eval]
+                have hden' : z1 + -z3 ≠ 0 := by simpa only [sub_eq_add_neg] using hden
+                simp [M, MobiusTransform.eval, hden'] <;> rfl
+              · simp [M, MobiusTransform.eval] <;> rfl
               · have hden0 : z3 + -z3 = 0 := by ring
-                simp [M, MobiusTransform.eval, hden0]
+                simp [M, MobiusTransform.eval, hden0] <;> rfl
       | some z2 =>
           cases z3 with
           | none =>
               have hz12 : z1 ≠ z2 := by
                 intro hz
-                exact h12 (by simp [hz])
+                exact h12 (congrArg some hz)
               let M : MobiusTransform :=
                 { a := 1
                   b := -z1
@@ -318,21 +318,21 @@ lemma maps_to_01inf (z1 z2 z3 : RiemannSphere) (h12 : z1 ≠ z2) (h23 : z2 ≠ z
                     exact sub_ne_zero.mpr hz12.symm }
               refine ⟨M, ?_, ?_, ?_⟩
               · have hden : z2 - z1 ≠ 0 := sub_ne_zero.mpr hz12.symm
-                simp [M, MobiusTransform.eval, hden]
+                simp [M, MobiusTransform.eval, hden] <;> rfl
               · have hden : z2 - z1 ≠ 0 := sub_ne_zero.mpr hz12.symm
                 have hsub : z2 + -z1 = z2 - z1 := by ring
-                simp [M, MobiusTransform.eval, hden, hsub]
-              · simp [M, MobiusTransform.eval]
+                simp [M, MobiusTransform.eval, hden, hsub] <;> rfl
+              · simp [M, MobiusTransform.eval] <;> rfl
           | some z3 =>
               have hz12 : z1 ≠ z2 := by
                 intro hz
-                exact h12 (by simp [hz])
+                exact h12 (congrArg some hz)
               have hz23 : z2 ≠ z3 := by
                 intro hz
-                exact h23 (by simp [hz])
+                exact h23 (congrArg some hz)
               have hz13 : z1 ≠ z3 := by
                 intro hz
-                exact h13 (by simp [hz])
+                exact h13 (congrArg some hz)
               let M : MobiusTransform :=
                 { a := z2 - z3
                   b := -(z2 - z3) * z1
@@ -358,7 +358,7 @@ lemma maps_to_01inf (z1 z2 z3 : RiemannSphere) (h12 : z1 ≠ z2) (h23 : z2 ≠ z
                   rw [hiden]
                   exact hneq
                 have hnum : (z2 - z3) * z1 + (z3 - z2) * z1 = 0 := by ring
-                simp [M, MobiusTransform.eval, hden1, hnum]
+                simp [M, MobiusTransform.eval, hden1, hnum] <;> rfl
               · have hden2 : (z2 - z1) * z2 + (z1 - z2) * z3 ≠ 0 := by
                   have hneq : (z2 - z1) * (z2 - z3) ≠ 0 :=
                     mul_ne_zero (sub_ne_zero.mpr hz12.symm) (sub_ne_zero.mpr hz23)
@@ -376,37 +376,36 @@ lemma maps_to_01inf (z1 z2 z3 : RiemannSphere) (h12 : z1 ≠ z2) (h23 : z2 ≠ z
                     ring
                   rw [hnumden]
                   exact div_self hden2
-                simp [M, MobiusTransform.eval, hden2, hq]
+                simp [M, MobiusTransform.eval, hden2, hq] <;> rfl
               · have hden0 : (z2 - z1) * z3 + (z1 - z2) * z3 = 0 := by ring
-                simp [M, MobiusTransform.eval, hden0]
+                simp [M, MobiusTransform.eval, hden0] <;> rfl
 
 lemma mobius_unique_01inf (M : MobiusTransform) (h0 : M.eval (some 0) = some 0)
     (h1 : M.eval (some 1) = some 1) (hinf : M.eval none = none) :
     ∀ z, M.eval z = z := by
   have hc : M.c = 0 := by
     dsimp [MobiusTransform.eval] at hinf
-    split_ifs at hinf with h
-    exact h
+    split_ifs at hinf with h <;> simp_all
   have hb : M.b = 0 := by
     dsimp [MobiusTransform.eval] at h0
     have hdenom : M.c * 0 + M.d = M.d := by ring
     rw [hdenom] at h0
-    split_ifs at h0 with hd
-    have h0' := Option.some.inj h0
-    have hnum : M.a * 0 + M.b = M.b := by ring
-    rw [hnum] at h0'
-    exact div_eq_zero_iff.mp h0' |>.resolve_right hd
+    have hd : M.d ≠ 0 := by
+      intro hd
+      simp [MobiusTransform.eval, hdenom, hd] at h0
+    simp [hd] at h0
+    exact h0
   have had : M.a = M.d := by
     dsimp [MobiusTransform.eval] at h1
     have hdenom : M.c * 1 + M.d = M.d := by rw [hc, zero_mul, zero_add]
     rw [hdenom] at h1
-    split_ifs at h1 with hd
-    have h1' := Option.some.inj h1
-    have hnum : M.a * 1 + M.b = M.a := by rw [hb, mul_one, add_zero]
-    rw [hnum] at h1'
+    have hd : M.d ≠ 0 := by
+      intro hd
+      simp [MobiusTransform.eval, hdenom, hd] at h1
+    simp [hd, hb] at h1
+    have h1' : M.a / M.d = 1 := h1
     have h1'' := (div_eq_iff_mul_eq hd).mp h1'
-    rw [one_mul] at h1''
-    exact h1''.symm
+    simpa using h1''.symm
   have hd_ne : M.d ≠ 0 := by
     intro hd
     have hdet := M.det_ne_zero
@@ -415,10 +414,11 @@ lemma mobius_unique_01inf (M : MobiusTransform) (h0 : M.eval (some 0) = some 0)
   intro z
   cases z with
   | none =>
-      dsimp [MobiusTransform.eval]
-      rw [if_pos hc]
+      change (if M.c = 0 then none else some (M.a / M.c)) = none
+      simp [hc]
   | some z' =>
-      dsimp [MobiusTransform.eval]
+      change (if M.c * z' + M.d = 0 then none else
+        some ((M.a * z' + M.b) / (M.c * z' + M.d))) = some z'
       have hdenom : M.c * z' + M.d = M.d := by rw [hc, zero_mul, zero_add]
       rw [hdenom]
       have hnum : M.a * z' + M.b = M.d * z' := by rw [hb, had, add_zero]
@@ -467,6 +467,8 @@ theorem fixed_point_quadratic (M : MobiusTransform) (hc : M.c ≠ 0) (γ : ℂ) 
   · have hden' : M.c * γ + M.d ≠ 0 := hden
     constructor
     · intro h
+      change (if M.c * γ + M.d = 0 then none else
+        some ((M.a * γ + M.b) / (M.c * γ + M.d))) = some γ at h
       rw [if_neg hden'] at h
       have hdiv : (M.a * γ + M.b) / (M.c * γ + M.d) = γ := Option.some.inj h
       have hnumden : M.a * γ + M.b = γ * (M.c * γ + M.d) := by
@@ -487,7 +489,9 @@ theorem fixed_point_quadratic (M : MobiusTransform) (hc : M.c ≠ 0) (γ : ℂ) 
       have hdiv : (M.a * γ + M.b) / (M.c * γ + M.d) = γ := by
         rw [div_eq_iff hden']
         exact hnumden
-      simp [hden, hdiv]
+      change (if M.c * γ + M.d = 0 then none else
+        some ((M.a * γ + M.b) / (M.c * γ + M.d))) = some γ
+      simp [hden, hdiv] <;> rfl
 
 /-- When c = 0 and a ≠ d, the fixed points are exactly ∞ and -b/(a-d). -/
 theorem fixed_point_linear (M : MobiusTransform) (hc : M.c = 0) (had : M.a ≠ M.d) :
@@ -506,13 +510,13 @@ theorem fixed_point_linear (M : MobiusTransform) (hc : M.c = 0) (had : M.a ≠ M
         left
         rfl
       · intro _
-        simp [MobiusTransform.is_fixed_point, MobiusTransform.eval, hc]
+        simp [MobiusTransform.is_fixed_point, MobiusTransform.eval, hc] <;> rfl
   | some γ =>
       constructor
       · intro h
         have h' := h
         simp [MobiusTransform.is_fixed_point, MobiusTransform.eval, hc, hd_nonzero] at h'
-        have hdiv : (M.a * γ + M.b) / M.d = γ := Option.some.inj h'
+        have hdiv : (M.a * γ + M.b) / M.d = γ := h'
         have hnumden : M.a * γ + M.b = γ * M.d := by
           rw [div_eq_iff hd_nonzero] at hdiv
           exact hdiv
@@ -530,17 +534,18 @@ theorem fixed_point_linear (M : MobiusTransform) (hc : M.c = 0) (had : M.a ≠ M
         exact congrArg some hsol
       · intro h
         rcases h with h | h
-        · cases h
+        · cases h <;> rfl
         · have hγ : γ = - M.b / (M.a - M.d) := Option.some.inj h
           subst hγ
           have hcalc : (M.a * (- M.b / (M.a - M.d)) + M.b) / M.d = - M.b / (M.a - M.d) := by
             have hden1 : M.a - M.d ≠ 0 := sub_ne_zero.mpr had
             field_simp [hd_nonzero, hden1]
             ring
-          dsimp [MobiusTransform.is_fixed_point, MobiusTransform.eval]
-          rw [hc]
-          rw [if_neg (by simpa using hd_nonzero)]
-          simp [hcalc]
+          change (if M.c * (-M.b / (M.a - M.d)) + M.d = 0 then none else
+            some ((M.a * (-M.b / (M.a - M.d)) + M.b) /
+              (M.c * (-M.b / (M.a - M.d)) + M.d))) =
+            some (-M.b / (M.a - M.d))
+          simp [hc, hd_nonzero, hcalc]
 
 /-- When c = 0 and a = d (and b ≠ 0 for non-identity), the only fixed point is ∞ (translation). -/
 theorem fixed_point_translation (M : MobiusTransform) (hc : M.c = 0) (had : M.a = M.d) (hb : M.b ≠ 0) :
@@ -550,7 +555,7 @@ theorem fixed_point_translation (M : MobiusTransform) (hc : M.c = 0) (had : M.a 
   | none =>
       constructor
       · intro _; rfl
-      · intro _; simp [MobiusTransform.is_fixed_point, MobiusTransform.eval, hc]
+      · intro _; simp [MobiusTransform.is_fixed_point, MobiusTransform.eval, hc] <;> rfl
   | some z' =>
       constructor
       · intro hfix
@@ -563,7 +568,7 @@ theorem fixed_point_translation (M : MobiusTransform) (hc : M.c = 0) (had : M.a 
         have hd : M.d = M.a := had.symm
         have hfixOpt := hfix
         simp [MobiusTransform.is_fixed_point, MobiusTransform.eval, hc, hd, ha] at hfixOpt
-        have hfix' : ((M.a * z' + M.b) / M.a : ℂ) = z' := Option.some.inj hfixOpt
+        have hfix' : ((M.a * z' + M.b) / M.a : ℂ) = z' := hfixOpt
         have hlin : M.a * z' + M.b = z' * M.a := by
           exact (div_eq_iff ha).mp hfix'
         have hb0 : M.b = 0 := by
@@ -594,15 +599,18 @@ theorem three_fixed_points_implies_identity (M : MobiusTransform)
         intro z
         cases z with
         | none =>
-            dsimp [MobiusTransform.eval]
-            rw [if_pos hc]
+            change (if M.c = 0 then none else some (M.a / M.c)) = none
+            simp [hc]
         | some z =>
-            dsimp [MobiusTransform.eval]
+            change (if M.c * z + M.d = 0 then none else
+              some ((M.a * z + M.b) / (M.c * z + M.d))) = some z
             have hden : M.c * z + M.d = M.d := by rw [hc, zero_mul, zero_add]
-            rw [hden, if_neg hd_ne]
+            rw [hden]
+            change (if M.d = 0 then none else some ((M.a * z + M.b) / M.d)) = some z
+            simp only [if_neg hd_ne]
             have hnum : M.a * z + M.b = M.d * z := by rw [had, hb, add_zero]
             rw [hnum]
-            congr 1
+            apply congrArg some
             rw [mul_comm]
             exact mul_div_cancel_right₀ z hd_ne
       · have hfix := fixed_point_translation M hc had hb
@@ -625,10 +633,8 @@ theorem three_fixed_points_implies_identity (M : MobiusTransform)
           · exact False.elim (h13 (by rw [hz1, hz3]))
         · exact False.elim (h12 (by rw [hz1, hz2]))
   · have hnone_not_fixed : ¬ M.is_fixed_point none := by
-      dsimp [MobiusTransform.is_fixed_point, MobiusTransform.eval]
-      rw [if_neg hc]
-      intro h
-      cases h
+      change ¬ ((if M.c = 0 then none else some (M.a / M.c)) = none)
+      simp [hc]
     cases z1 with
     | none => exact False.elim (hnone_not_fixed f1)
     | some γ1 =>
@@ -712,12 +718,15 @@ def non_parabolic_matrix (k γ1 γ2 : ℂ) (hk0 : k ≠ 0) (_hk : k ≠ 1) (hγ 
 lemma non_parabolic_matrix_fixed_left (k γ1 γ2 : ℂ)
     (hk0 : k ≠ 0) (hk : k ≠ 1) (hγ : γ1 ≠ γ2) :
     (non_parabolic_matrix k γ1 γ2 hk0 hk hγ).is_fixed_point (some γ1) := by
-  dsimp [MobiusTransform.is_fixed_point, MobiusTransform.eval, non_parabolic_matrix]
+  dsimp [MobiusTransform.is_fixed_point, non_parabolic_matrix]
   have hden : (1 - k) * γ1 + (k * γ1 - γ2) ≠ 0 := by
     have hden_eq : (1 - k) * γ1 + (k * γ1 - γ2) = γ1 - γ2 := by ring
     rw [hden_eq]
     exact sub_ne_zero.mpr hγ
-  rw [if_neg hden]
+  change (if (1 - k) * γ1 + (k * γ1 - γ2) = 0 then none else
+    some (((γ1 - k * γ2) * γ1 + (k - 1) * γ1 * γ2) /
+      ((1 - k) * γ1 + (k * γ1 - γ2)))) = some γ1
+  simp only [if_neg hden]
   congr 1
   rw [div_eq_iff hden]
   ring
@@ -726,12 +735,15 @@ lemma non_parabolic_matrix_fixed_left (k γ1 γ2 : ℂ)
 lemma non_parabolic_matrix_fixed_right (k γ1 γ2 : ℂ)
     (hk0 : k ≠ 0) (hk : k ≠ 1) (hγ : γ1 ≠ γ2) :
     (non_parabolic_matrix k γ1 γ2 hk0 hk hγ).is_fixed_point (some γ2) := by
-  dsimp [MobiusTransform.is_fixed_point, MobiusTransform.eval, non_parabolic_matrix]
+  dsimp [MobiusTransform.is_fixed_point, non_parabolic_matrix]
   have hden : (1 - k) * γ2 + (k * γ1 - γ2) ≠ 0 := by
     have hden_eq : (1 - k) * γ2 + (k * γ1 - γ2) = k * (γ1 - γ2) := by ring
     rw [hden_eq]
     exact mul_ne_zero hk0 (sub_ne_zero.mpr hγ)
-  rw [if_neg hden]
+  change (if (1 - k) * γ2 + (k * γ1 - γ2) = 0 then none else
+    some (((γ1 - k * γ2) * γ2 + (k - 1) * γ1 * γ2) /
+      ((1 - k) * γ2 + (k * γ1 - γ2)))) = some γ2
+  simp only [if_neg hden]
   congr 1
   rw [div_eq_iff hden]
   ring
@@ -755,12 +767,14 @@ def parabolic_matrix (β γ : ℂ) (_hβ : β ≠ 0) : MobiusTransform :=
 /-- The parameter point is a finite fixed point of the parabolic normal-form matrix. -/
 lemma parabolic_matrix_fixed_point (β γ : ℂ) (hβ : β ≠ 0) :
     (parabolic_matrix β γ hβ).is_fixed_point (some γ) := by
-  dsimp [MobiusTransform.is_fixed_point, MobiusTransform.eval, parabolic_matrix]
+  dsimp [MobiusTransform.is_fixed_point, parabolic_matrix]
   have hden : β * γ + (1 - γ * β) ≠ 0 := by
     have hden_eq : β * γ + (1 - γ * β) = 1 := by ring
     rw [hden_eq]
     exact one_ne_zero
-  rw [if_neg hden]
+  change (if β * γ + (1 - γ * β) = 0 then none else
+    some (((1 + γ * β) * γ + -β * γ ^ 2) / (β * γ + (1 - γ * β)))) = some γ
+  simp only [if_neg hden]
   congr 1
   rw [div_eq_iff hden]
   ring
@@ -894,12 +908,12 @@ def translation_transform (b : ℂ) : MobiusTransform :=
 /-- Translation acts by adding the translation parameter on finite points. -/
 lemma translation_transform_eval_some (b z : ℂ) :
     (translation_transform b).eval (some z) = some (z + b) := by
-  simp [MobiusTransform.eval, translation_transform]
+  simp [MobiusTransform.eval, translation_transform] <;> rfl
 
 /-- Translation fixes the point at infinity. -/
 lemma translation_transform_eval_none (b : ℂ) :
     (translation_transform b).eval none = none := by
-  simp [MobiusTransform.eval, translation_transform]
+  simp [MobiusTransform.eval, translation_transform] <;> rfl
 
 /-- A Möbius transform with `c = 0` and `a = d ≠ 0` acts as a translation on finite points. -/
 lemma translation_like_eval (M : MobiusTransform) (hc : M.c = 0) (had : M.a = M.d)
@@ -911,7 +925,7 @@ lemma translation_like_eval (M : MobiusTransform) (hc : M.c = 0) (had : M.a = M.
     exact ha
   have hq : (M.d * z + M.b) / M.d = z + M.b / M.d := by
     field_simp [hd]
-  simp [MobiusTransform.eval, hc, hd, had, hq]
+  simp [MobiusTransform.eval, hc, hd, had, hq] <;> rfl
 
 /-- Parabolic normal form in the coordinate chart where the unique fixed point
     is already the point at infinity.  The full finite-fixed-point theorem
@@ -927,8 +941,8 @@ theorem parabolic_normal_form_at_infinity (M : MobiusTransform)
     by_contra hnc
     have hnone : M.eval none = none := f_inf
     dsimp [MobiusTransform.eval] at hnone
-    rw [if_neg hnc] at hnone
-    cases hnone
+    change (if M.c = 0 then none else some (M.a / M.c)) = none at hnone
+    simp [hnc] at hnone
   have hNa : M.a ≠ 0 := by
     intro ha
     have hdet : M.a * M.d - M.b * M.c = 0 := by
@@ -954,17 +968,17 @@ theorem parabolic_normal_form_at_infinity (M : MobiusTransform)
   · refine ⟨translation_transform (M.b / M.a), ?_⟩
     constructor
     · intro z
-      simp [translation_transform, MobiusTransform.eval]
+      simp [translation_transform, MobiusTransform.eval] <;> rfl
     · let I : MobiusTransform :=
         { a := 1, b := 0, c := 0, d := 1, det_ne_zero := by norm_num }
       refine ⟨I, I, ?_, ?_⟩
       · intro z
         cases z with
-        | none => simp [I, MobiusTransform.eval]
-        | some z => simp [I, MobiusTransform.eval]
+        | none => simp [I, MobiusTransform.eval] <;> rfl
+        | some z => simp [I, MobiusTransform.eval] <;> rfl
       · intro z
         cases z with
-        | none => simp [I, translation_transform, MobiusTransform.eval, hc]
+        | none => simp [I, translation_transform, MobiusTransform.eval, hc] <;> rfl
         | some z =>
             simpa [I, translation_transform, MobiusTransform.eval] using
               (translation_like_eval M hc had hNa z)
@@ -977,12 +991,12 @@ def dilation_transform (a : ℂ) (ha : a ≠ 0) : MobiusTransform :=
 /-- Dilation acts by scalar multiplication on finite points. -/
 lemma dilation_transform_eval_some (a z : ℂ) (ha : a ≠ 0) :
     (dilation_transform a ha).eval (some z) = some (a * z) := by
-  simp [MobiusTransform.eval, dilation_transform]
+  simp [MobiusTransform.eval, dilation_transform] <;> rfl
 
 /-- Dilation fixes the point at infinity. -/
 lemma dilation_transform_eval_none (a : ℂ) (ha : a ≠ 0) :
     (dilation_transform a ha).eval none = none := by
-  simp [MobiusTransform.eval, dilation_transform]
+  simp [MobiusTransform.eval, dilation_transform] <;> rfl
 
 /-- Inversion and reflection (1/z) -/
 def inversion_transform : MobiusTransform :=
@@ -991,12 +1005,12 @@ def inversion_transform : MobiusTransform :=
 /-- Inversion sends zero to infinity. -/
 lemma inversion_transform_eval_zero :
     inversion_transform.eval (some 0) = none := by
-  simp [MobiusTransform.eval, inversion_transform]
+  simp [MobiusTransform.eval, inversion_transform] <;> rfl
 
 /-- Inversion sends infinity to zero. -/
 lemma inversion_transform_eval_none :
     inversion_transform.eval none = some 0 := by
-  simp [MobiusTransform.eval, inversion_transform]
+  simp [MobiusTransform.eval, inversion_transform] <;> rfl
 
 /-- The inverse Möbius transformation: `f⁻¹(z) = (d*z - b) / (-c*z + a)`. -/
 def inv (M : MobiusTransform) : MobiusTransform :=
@@ -1476,6 +1490,7 @@ theorem parabolic_normal_form (M : MobiusTransform) (z1 : RiemannSphere)
           have hz'' : g.eval (M.eval ((inv g).eval z)) = z := by
             simpa [N, eval_comp] using hz'
           have hz''' := congrArg (fun w : RiemannSphere => (inv g).eval w) hz''
+          change M.eval ((inv g).eval z) = (inv g).eval z
           simpa [eval_inv_left] using hz'''
         have hz1 : (inv g).eval z = some γ := h_unique _ hfixM
         calc

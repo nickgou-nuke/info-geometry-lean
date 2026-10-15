@@ -29,7 +29,10 @@ def dotBilin : LinearMap.BilinForm ℝ V3 :=
 @[simp] theorem dotBilin_apply (v w : V3) : dotBilin v w = ∑ i, v i * w i := rfl
 
 theorem dotBilin_symm (v w : V3) : dotBilin v w = dotBilin w v := by
-  simp [dotBilin_apply, mul_comm]
+  rw [dotBilin_apply, dotBilin_apply]
+  apply Finset.sum_congr rfl
+  intro i hi
+  exact mul_comm (v i) (w i)
 
 /-- The negative-definite quadratic form, as a native Mathlib quadratic form. -/
 def negativeQuadratic : QuadraticForm ℝ V3 := -dotBilin.toQuadraticMap
@@ -47,7 +50,7 @@ def gamma : V3 →ₗ[ℝ] Exterior3End where
   map_smul' r v := by
     apply LinearMap.ext
     intro ψ
-    simp [exteriorWedge3, exteriorContract3, map_smul, smul_mul_assoc,
+    simp [exteriorWedge3, exteriorContract3, map_smul,
       smul_sub]
 
 @[simp] theorem gamma_apply (v : V3) :
@@ -60,7 +63,7 @@ theorem gamma_sq (v : V3) : gamma v * gamma v = (-dotBilin v v) • (1 : Exterio
         exteriorWedge3 v * exteriorContract3 (dotBilin v)) := by
       simp only [gamma_apply, sub_mul, mul_sub, exteriorWedge3_sq, exteriorContract3_sq]
       abel
-    _ = _ := by rw [exteriorContract3_wedge3_CAR]; simp
+    _ = _ := by rw [exteriorContract3_wedge3_CAR]; module
 
 /-- The complete associative negative Clifford algebra acts on the exterior carrier. -/
 def negativeCliffordRep : CliffordAlgebra negativeQuadratic →ₐ[ℝ] Exterior3End :=
@@ -103,40 +106,61 @@ theorem gamma_reflection (n v : V3) (hn : dotBilin n n = 1) :
 def reflectionUnit (n : V3) (hn : dotBilin n n = 1) : Exterior3Endˣ where
   val := gamma n
   inv := -gamma n
-  val_inv := by rw [mul_neg, gamma_sq, hn]; simp
-  inv_val := by rw [neg_mul, gamma_sq, hn]; simp
+  val_inv := by
+    apply LinearMap.ext
+    intro ψ
+    have hs : gamma n (gamma n ψ) = -ψ := by
+      have h := congrArg (fun T : Exterior3End => T ψ) (gamma_sq n)
+      simpa [hn] using h
+    calc
+      gamma n ((-gamma n) ψ) = -(gamma n (gamma n ψ)) := by
+        rw [LinearMap.neg_apply, map_neg]
+      _ = ψ := by rw [hs]; module
+  inv_val := by
+    apply LinearMap.ext
+    intro ψ
+    have hs : gamma n (gamma n ψ) = -ψ := by
+      have h := congrArg (fun T : Exterior3End => T ψ) (gamma_sq n)
+      simpa [hn] using h
+    calc
+      (-gamma n) (gamma n ψ) = -(gamma n (gamma n ψ)) := by
+        rw [LinearMap.neg_apply]
+      _ = ψ := by rw [hs]; module
 
 @[simp] theorem reflectionUnit_sq (n : V3) (hn : dotBilin n n = 1) :
     (reflectionUnit n hn : Exterior3End) * reflectionUnit n hn = -1 := by
   change gamma n * gamma n = -1
   rw [gamma_sq, hn]
-  simp
+  norm_num [Algebra.smul_def]
 
 /-- Exterior parity changes sign on every Clifford vector. -/
 theorem gamma_odd (v : V3) (ψ : Exterior3) :
     exteriorGrade3 (gamma v ψ) = -(gamma v (exteriorGrade3 ψ)) := by
   change exteriorGrade3 (exteriorWedge3 v ψ - exteriorContract3 (dotBilin v) ψ) = _
   rw [map_sub, exteriorGrade3_wedge, exteriorGrade3_contract]
-  simp [gamma, sub_eq_add_neg]
-  abel
+  rw [gamma_apply]
+  simp only [LinearMap.sub_apply]
+  module
 
 /-- Products of two vectors preserve parity, giving the even spin-operator layer. -/
 theorem gamma_pair_even (v w : V3) (ψ : Exterior3) :
     exteriorGrade3 ((gamma v * gamma w) ψ) =
       (gamma v * gamma w) (exteriorGrade3 ψ) := by
-  simp only [Module.End.mul_apply, gamma_odd, map_neg, neg_neg]
+  simp only [Module.End.mul_apply]
+  rw [gamma_odd v (gamma w ψ), gamma_odd w ψ]
+  simp only [map_neg, neg_neg]
 
 /-- Orthogonal unit normals produce a square-minus-one lifted half-turn. -/
 theorem bivector_sq (v w : V3) (hv : dotBilin v v = 1)
     (hw : dotBilin w w = 1) (hvw : dotBilin v w = 0) :
     (gamma v * gamma w) * (gamma v * gamma w) = -1 := by
-  have hanti : gamma w * gamma v = -(gamma v * gamma w) := by
-    have h := gamma_anticommutator v w
-    rw [hvw, mul_zero, zero_smul] at h
-    exact eq_neg_of_add_eq_zero_right h
+  have hplane : planeReflection v w = w := by
+    simp [planeReflection, hvw]
+  have hreflection : gamma v * gamma w * gamma v = gamma w := by
+    rw [gamma_reflection v w hv, hplane]
   calc
-    _ = gamma v * (gamma w * gamma v) * gamma w := by noncomm_ring
-    _ = -(gamma v * gamma v * (gamma w * gamma w)) := by rw [hanti]; noncomm_ring
-    _ = -1 := by rw [gamma_sq, gamma_sq, hv, hw]; simp
+    _ = (gamma v * gamma w * gamma v) * gamma w := by noncomm_ring
+    _ = gamma w * gamma w := by rw [hreflection]
+    _ = -1 := by rw [gamma_sq, hw]; norm_num [Algebra.smul_def]
 
 end InfoGeometry.Clifford.ExteriorNegativeCliffordReflection

@@ -19,7 +19,7 @@ theorem paper_fold_spectrum_nontrivial_bound {n : ℕ} (w : Fin n → ℝ) (θ :
     intro j hj
     exact abs_nonneg _
   have hrest_le_one : rest ≤ 1 := by
-    refine Finset.prod_le_one ?_ ?_
+    refine Finset.prod_le_one₀ ?_ ?_
     · intro j hj
       exact abs_nonneg _
     · intro j hj

@@ -54,7 +54,12 @@ theorem exchange_neg (X : OperatorZornMatrix A) :
 
 theorem exchange_sub (X Y : OperatorZornMatrix A) :
     exchange (X - Y) = exchange X - exchange Y := by
-  rw [sub_eq_add_neg, sub_eq_add_neg, exchange_add, exchange_neg]
+  calc
+    exchange (X - Y) = exchange (X + -Y) :=
+      congrArg exchange (sub_eq_add_neg X Y)
+    _ = exchange X + exchange (-Y) := exchange_add X (-Y)
+    _ = exchange X + -exchange Y := by rw [exchange_neg]
+    _ = exchange X - exchange Y := (sub_eq_add_neg _ _).symm
 
 theorem exchange_mul (X Y : OperatorZornMatrix A) :
     exchange (X * Y) = exchange X * exchange Y := by

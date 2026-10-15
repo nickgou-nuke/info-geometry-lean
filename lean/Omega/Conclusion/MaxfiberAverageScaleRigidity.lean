@@ -48,8 +48,8 @@ theorem paper_conclusion_maxfiber_average_scale_rigidity :
     simp [conclusion_maxfiber_average_scale_rigidity_M,
       conclusion_maxfiber_average_scale_rigidity_avg,
       conclusion_maxfiber_average_scale_rigidity_profile, div_eq_mul_inv]
-  rw [hratioEq]
-  convert hscaled using 1
+  rw [hratioEq, div_eq_mul_inv]
+  exact hscaled
 
 end
 

@@ -114,11 +114,9 @@ theorem finitePositiveDensityRatioAtTime_hasDerivAt
       (fun τ : ℝ => finitePositiveDensityRatioAtTime ΔK τ i)
       ((-ΔK i) * finitePositiveDensityRatioAtTime ΔK t i)
       t := by
-  have hlin : HasDerivAt (fun τ : ℝ => -(τ * ΔK i)) (-ΔK i) t := by
-    simpa [neg_mul, mul_comm, mul_left_comm, mul_assoc] using
-      (((hasDerivAt_id' t).mul_const (ΔK i)).neg)
-  simpa [finitePositiveDensityRatioAtTime, mul_comm, mul_left_comm, mul_assoc] using
-    (Real.hasDerivAt_exp (-(t * ΔK i))).comp t hlin
+  simpa [finitePositiveDensityRatioAtTime, Real.exp_eq_exp_ℝ, smul_eq_mul, mul_comm,
+    mul_left_comm, mul_assoc, neg_mul] using
+    (hasDerivAt_exp_smul_const (-(ΔK i)) t)
 
 /-- At modular time zero, the infinitesimal scalar generator is `-ΔK`. -/
 theorem finitePositiveDensityRatioAtTime_hasDerivAt_zero

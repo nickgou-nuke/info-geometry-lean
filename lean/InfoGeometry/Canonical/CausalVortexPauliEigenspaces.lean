@@ -29,7 +29,7 @@ theorem pauliZeroMode_number_eq_zero :
   fin_cases i <;>
     simp [pauliZeroMode, pauli_number_operator_eq_one_add_sigma2,
       Matrix.mulVec, Matrix.add_apply, Matrix.one_apply, σ2,
-      Matrix.vecCons, Complex.I_mul_I]
+      Matrix.vecHead, Matrix.vecTail, Complex.I_mul_I]
 
 theorem pauliTwoMode_number_eq_two :
     pauliNumberOperator.mulVec pauliTwoMode =
@@ -38,7 +38,7 @@ theorem pauliTwoMode_number_eq_two :
   fin_cases i <;>
     simp [pauliTwoMode, pauli_number_operator_eq_one_add_sigma2,
       Matrix.mulVec, Matrix.add_apply, Matrix.one_apply, σ2,
-      Matrix.vecCons, Complex.I_mul_I] <;>
+      Matrix.vecHead, Matrix.vecTail, Complex.I_mul_I] <;>
     ring
 
 theorem pauliZeroMode_projector_fixed :
@@ -56,13 +56,15 @@ theorem pauliVector_decomposition (v : PauliVector) :
   refine ⟨(v 1 - Complex.I * v 0) / 2,
     (v 1 + Complex.I * v 0) / 2, ?_⟩
   funext i
-  fin_cases i <;>
-    simp [pauliZeroMode, pauliTwoMode, Matrix.vecCons]
-    <;> ring_nf
-    <;> simp
+  fin_cases i
+  · simp [pauliZeroMode, pauliTwoMode]
+    ring_nf
+    simp
+  · simp [pauliZeroMode, pauliTwoMode]
+    ring
 
 theorem pauliVector_decomposition_unique
-    {v : PauliVector} {a b c d : ℂ}
+    {_v : PauliVector} {a b c d : ℂ}
     (h : a • pauliZeroMode + b • pauliTwoMode =
       c • pauliZeroMode + d • pauliTwoMode) :
     a = c ∧ b = d := by

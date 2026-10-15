@@ -69,11 +69,10 @@ theorem hasStrictFDerivAt_reducedAutomorphismConstraintReadout
     HasStrictFDerivAt
       (reducedAutomorphismConstraintReadout P)
       (P.comp tangentConstraintReadoutContinuous)
-      (ContinuousLinearMap.id ℝ CZ) := by
-  simpa [reducedAutomorphismConstraintReadout, Function.comp_def] using
-    P.hasStrictFDerivAt.comp
-      (ContinuousLinearMap.id ℝ CZ)
-      hasStrictFDerivAt_ambientAutomorphismConstraintReadout
+      (ContinuousLinearMap.id ℝ CZ) :=
+  P.hasStrictFDerivAt.comp
+    (ContinuousLinearMap.id ℝ CZ)
+    hasStrictFDerivAt_ambientAutomorphismConstraintReadout
 
 /-- Vanishing of the full 520-dimensional constraint always implies vanishing
 of every linear reduced readout. -/

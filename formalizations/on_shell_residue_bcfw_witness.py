@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""Finite witness for `OnShellResidueBCFWBridge.lean`.
+"""Standalone symbolic checks for a local contour integral and finite identities.
+
+This script is not a witness for a Lean module and is not proof evidence.
 
 This checks only local algebra/bookkeeping:
 
@@ -9,7 +11,8 @@ This checks only local algebra/bookkeeping:
 * the illustrative diagram bookkeeping `220 -> 1` has difference `219`.
 
 It does not prove a residue theorem on a compactification, BCFW recursion, an
-amplituhedron volume formula, or a scattering-amplitude theorem.
+amplituhedron volume formula, or a scattering-amplitude theorem. The 3-pole
+balance and diagram-count checks are algebra/bookkeeping examples only.
 """
 
 from __future__ import annotations

@@ -1,5 +1,6 @@
 import InfoGeometry.Topology.KleinGlideCovering
 import Mathlib.Topology.VectorBundle.Basic
+import Mathlib.Topology.FiberBundle.Trivialization
 
 /-!
 # A chosen covering atlas for the Klein glide quotient
@@ -55,7 +56,7 @@ theorem sheetSet_disjoint (b : Base) (g : Deck2)
     exact ⟨⟨y, interior_subset hy, rfl⟩, interior_subset hx⟩))
 
 /-- The covering trivialization chosen at each base point. -/
-def coverTriv (b : Base) : Trivialization Deck2 quotientMap :=
+def coverTriv (b : Base) : Bundle.Trivialization Deck2 quotientMap :=
   quotientMap_isAddQuotientCovering.toIsQuotientMap.trivializationOfVAddDisjoint
     (@quotientMap_eq_iff_orbit) (sheetSet b) (isOpen_sheetSet b)
     (sheetSet_disjoint b)

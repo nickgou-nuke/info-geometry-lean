@@ -275,7 +275,9 @@ noncomputable def gradingTensor : (n : ℕ) → SplitGammaMatrix n
       ext i j
       rcases i with ⟨i, a⟩
       rcases j with ⟨j, b⟩
-      simp only [appendAtom_apply, Matrix.one_apply]
+      change (if i = j then (1 : ℝ) else 0) *
+          (if a = b then (1 : ℝ) else 0) =
+        (if (i, a) = (j, b) then (1 : ℝ) else 0)
       by_cases hij : i = j <;> by_cases hab : a = b <;>
         simp [hij, hab]
 
@@ -932,8 +934,16 @@ theorem orderedGammaVolume55_eq_chiralityMatrix :
       [gammaBasis55 0, gammaBasis55 1, gammaBasis55 2, gammaBasis55 3,
         gammaBasis55 4, gammaBasis55 5, gammaBasis55 6, gammaBasis55 7,
         gammaBasis55 8, gammaBasis55 9] := by
-    simpa only [List.map_ofFn, Function.comp_id, List.map_cons, List.map_nil] using
-      congrArg (List.map gammaBasis55) hindices
+    calc
+      List.ofFn gammaBasis55 = List.ofFn (gammaBasis55 ∘ fun i : Fin 10 => i) := by
+        rfl
+      _ = (List.ofFn (fun i : Fin 10 => i)).map gammaBasis55 := by
+        rw [List.map_ofFn]
+      _ = [gammaBasis55 0, gammaBasis55 1, gammaBasis55 2, gammaBasis55 3,
+          gammaBasis55 4, gammaBasis55 5, gammaBasis55 6, gammaBasis55 7,
+          gammaBasis55 8, gammaBasis55 9] := by
+        simpa only [List.map_cons, List.map_nil] using
+          congrArg (List.map gammaBasis55) hindices
   rw [orderedGammaVolume55_eq_matrix, orderedGammaVolume55_matrix,
     ← List.prod_eq_foldl, hlist]
   exact hpaired.trans hchir
@@ -1050,7 +1060,7 @@ theorem gammaJordanNullPlus_eq_u5 :
         InfoGeometry.Clifford.ConformalLieAlgebra55.u5 := by
   rw [gammaJordanNullPlus, hermitianGamma, gamma55,
     vec55Split_jordanNullPlus]
-  simpa [InfoGeometry.Clifford.ConformalLieAlgebra55.u5] using
+  simpa [InfoGeometry.Clifford.ConformalLieAlgebra55.u5, gammaHeadNullMinus] using
     (spinorRepresentation_ι 5 (headNullMinus 4)).symm
 
 theorem gammaJordanNullMinus_eq_v5 :
@@ -1059,7 +1069,7 @@ theorem gammaJordanNullMinus_eq_v5 :
         InfoGeometry.Clifford.ConformalLieAlgebra55.v5 := by
   rw [gammaJordanNullMinus, hermitianGamma, gamma55,
     vec55Split_jordanNullMinus]
-  simpa [InfoGeometry.Clifford.ConformalLieAlgebra55.v5] using
+  simpa [InfoGeometry.Clifford.ConformalLieAlgebra55.v5, gammaHeadNullPlus] using
     (spinorRepresentation_ι 5 (headNullPlus 4)).symm
 
 theorem spinorRepresentation_J5 :

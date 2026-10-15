@@ -45,6 +45,9 @@ open InfoGeometry.Canonical.Cl55MasterChiralHodgeBlockBridge
 
 abbrev Mat32 := Cl55MasterWittSpinorEnvelopeBridge.Mat32
 
+local instance : LieRing Mat32 := LieRing.ofAssociativeRing
+local instance : LieAlgebra ℝ Mat32 := LieAlgebra.ofAssociativeAlgebra
+
 /-- Structure packaging a G₂ derivation representation on the master 32D spinor carrier S_{5,5}. -/
 structure G2SpinorRepresentation where
   rho : Mat32

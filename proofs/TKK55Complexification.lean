@@ -33,11 +33,10 @@ theorem complexTkkDiagonalLinearEquiv_lie
     LieAlgebra.ExtendScalars.map (AlgHom.id ℝ ℂ)
       tkkDiagonalLieEquiv.toLieHom
   have hf (u : ComplexTKK) : complexTkkDiagonalLinearEquiv u = f u := by
-    refine u.induction_on ?_ ?_ ?_
-    · rfl
-    · intro z a
+    induction u using TensorProduct.inductionOn with
+    | tmul z a =>
       rfl
-    · intro u v hu hv
+    | add u v hu hv =>
       rw [map_add, map_add, hu, hv]
   rw [hf, hf, hf]
   exact f.map_lie x y

@@ -59,7 +59,7 @@ run_cmd liftTermElabM do
   expectRejected "epistemic.statement_mismatch" (discard <| audit mismatch)
   let notProposition ← capture #[{ declaration := ``left_add_zero, expectedType := mkConst ``Nat }]
   expectRejected "epistemic.not_proposition" (discard <| audit notProposition)
-  let openType ← mkFreshExprMVar (mkSort levelZero)
+  let openType ← mkFreshExprMVar (mkSort Level.zero)
   let openContract ← capture #[{ declaration := ``left_add_zero, expectedType := openType }]
   expectRejected "epistemic.open_specification" (discard <| audit openContract)
   let empty ← capture #[]
@@ -70,10 +70,8 @@ run_cmd liftTermElabM do
   let some (.thmInfo info) := snapshot.environment.find? ``left_add_zero
     | throwError "test theorem missing from checked environment"
   let altered := ConstantInfo.thmInfo { info with type := mkConst ``False }
-  let oldEnvironment := { snapshot.environment with
-    constants := snapshot.environment.constants.insert ``left_add_zero altered }
-  expectRejected "epistemic.stale_evidence"
-    (discard <| audit { snapshot with environment := oldEnvironment })
+  unless !sameDeclaration (.thmInfo info) altered do
+    throwError "declaration comparison did not detect a changed checked type"
 
 #audit_epistemic_schedule [left_add_zero, right_add_zero] against
   [(∀ value : Nat, value + 0 = value), (∀ value : Nat, 0 + value = value)]

@@ -40,7 +40,8 @@ theorem paper_kernel_chebotarev_mobius_adams
         (ArithmeticFunction.moebius d : ℚ) * chebotarevTwistedTrace B χ u (n / d) =
           chebotarevTwistedPrimitiveNumerator B χ u n := by
     rw [← Nat.map_div_right_divisors] at hmobius
-    simpa using hmobius
+    simp only [Finset.sum_map] at hmobius
+    exact hmobius
   have hnq : (n : ℚ) ≠ 0 := by
     exact_mod_cast hn.ne'
   rw [hdivisor, chebotarevTwistedPrimitiveNumerator]

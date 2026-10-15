@@ -76,7 +76,7 @@ theorem adj_symm (G : MolecularGraph n) {i j : Fin n} :
 /-- Native Mathlib `SimpleGraph` shadow of the labelled bond structure. -/
 def toSimpleGraph (G : MolecularGraph n) : SimpleGraph (Fin n) where
   Adj := G.Adj
-  symm := fun _ _ h => (G.adj_symm).mp h
+  symm := ⟨fun _ _ h => (G.adj_symm).mp h⟩
   loopless := ⟨fun i => G.not_adj_self i⟩
 
 /-- Exact structure-preserving embedding of one molecular graph into another. -/

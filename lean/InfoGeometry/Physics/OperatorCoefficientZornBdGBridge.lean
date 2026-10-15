@@ -1,6 +1,7 @@
 import Mathlib.Analysis.Complex.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
+import Mathlib.Data.Matrix.Mul
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic
 
@@ -73,6 +74,11 @@ def sigmaVec (u : Fin 3 → ℂ) : Matrix (Fin 2) (Fin 2) ℂ :=
   ![![u 2, u 0 - Complex.I * u 1],
     ![u 0 + Complex.I * u 1, -u 2]]
 
+@[simp] theorem sigmaVec_neg (u : Fin 3 → ℂ) : sigmaVec (-u) = -sigmaVec u := by
+  ext i j
+  rw [Matrix.neg_apply]
+  fin_cases i <;> fin_cases j <;> simp [sigmaVec] <;> ring
+
 theorem sigmaVec_zero : sigmaVec (fun _ => 0) = 0 := by
   ext i j; fin_cases i <;> fin_cases j <;> { simp [sigmaVec] }
 
@@ -85,14 +91,15 @@ theorem sigmaVec_mul (u v : Fin 3 → ℂ) :
       (dot3 u v) • (1 : Matrix (Fin 2) (Fin 2) ℂ) +
         Complex.I • sigmaVec (cross3 u v) := by
   ext i j
+  rw [Matrix.mul_apply, Matrix.add_apply, Matrix.smul_apply, Matrix.smul_apply]
   fin_cases i <;> fin_cases j
-  · simp [sigmaVec, dot3, cross3, mul_apply, Fin.sum_univ_two, smul_apply, add_apply]
+  · simp [sigmaVec, dot3, cross3, Fin.sum_univ_two]
     linear_combination -Complex.I_sq * (u 1 * v 1)
-  · simp [sigmaVec, dot3, cross3, mul_apply, Fin.sum_univ_two, smul_apply, add_apply]
+  · simp [sigmaVec, dot3, cross3, Fin.sum_univ_two]
     linear_combination Complex.I_sq * (u 2 * v 0 - u 0 * v 2)
-  · simp [sigmaVec, dot3, cross3, mul_apply, Fin.sum_univ_two, smul_apply, add_apply]
+  · simp [sigmaVec, dot3, cross3, Fin.sum_univ_two]
     linear_combination Complex.I_sq * (u 0 * v 2 - u 2 * v 0)
-  · simp [sigmaVec, dot3, cross3, mul_apply, Fin.sum_univ_two, smul_apply, add_apply]
+  · simp [sigmaVec, dot3, cross3, Fin.sum_univ_two]
     linear_combination -Complex.I_sq * (u 1 * v 1)
 
 /--
@@ -109,9 +116,8 @@ theorem sigmaVec_anticomm (u v : Fin 3 → ℂ) :
   have h_dot : dot3 v u = dot3 u v := by
     simp [dot3]; ring
   rw [h1, h2, h_dot, h_cross]
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    { simp [sigmaVec, dot3, cross3, smul_apply, add_apply]; ring }
+  simp only [sigmaVec_neg, smul_neg]
+  module
 
 /--
   THEOREM 3: The Commutator selects the Cross Product (Oriented Bivector Channel)
@@ -127,9 +133,8 @@ theorem sigmaVec_comm (u v : Fin 3 → ℂ) :
   have h_dot : dot3 v u = dot3 u v := by
     simp [dot3]; ring
   rw [h1, h2, h_dot, h_cross]
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    { simp [sigmaVec, dot3, cross3, smul_apply, sub_apply]; ring }
+  simp only [sigmaVec_neg, smul_neg]
+  module
 
 end PauliSolderedCrossProductBridge
 
@@ -488,8 +493,8 @@ theorem bdgReadout_diagonal_blocks (Z : Zorn ℂ) :
     block11 (bdgReadout Z) = Z.a • (1 : Matrix (Fin 2) (Fin 2) ℂ) ∧
     block22 (bdgReadout Z) = Z.b • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
   constructor
-  · ext i j; fin_cases i <;> fin_cases j <;> simp [block11, bdgReadout, smul_apply]
-  · ext i j; fin_cases i <;> fin_cases j <;> simp [block22, bdgReadout, smul_apply]
+  · ext i j; fin_cases i <;> fin_cases j <;> simp [block11, bdgReadout, Matrix.smul_apply]
+  · ext i j; fin_cases i <;> fin_cases j <;> simp [block22, bdgReadout, Matrix.smul_apply]
 
 end ZornBdGSolderingReadout
 

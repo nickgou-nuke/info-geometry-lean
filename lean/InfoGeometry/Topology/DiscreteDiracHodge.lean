@@ -198,7 +198,6 @@ theorem diracHodge_anticommutes_chirality
   ext i
   · simp [diracHodge, exteriorDerivative, codifferential, chirality]
   · simp [diracHodge, exteriorDerivative, codifferential, chirality]
-    ring
   · simp [diracHodge, exteriorDerivative, codifferential, chirality]
 
 theorem diracHodge_sq_eq_hodgeLaplacian

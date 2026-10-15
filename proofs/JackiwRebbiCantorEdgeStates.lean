@@ -5,20 +5,15 @@ import proofs.TrappedHarmonicModes
 import proofs.ChiralConeAlgebraFinality
 
 /-!
-# Jackiw--Rebbi edge states on the Cantor/Klein boundary
+# Finite boundary-mode and affine-reflection identities
 
-This module formalizes the finite boundary-localization layer:
-
-* the Klein/CPT glide fixes the critical core `σ = 1/2`;
-* the glide-axis selection rule extinguishes odd modes;
-* the Fourier--Mellin Dirac symbol has an exact boundary zero-mode at
-  zero momentum;
-* that zero-mode is the finite shadow of a Jackiw--Rebbi edge state trapped on
-  the boundary defect.
-
-The analytic PDE/domain-wall proof of the Jackiw--Rebbi mechanism is outside
-this finite module; here we record the exact finite kernel and selection
-arithmetic proved by the imported layers.
+This module packages finite algebraic readouts: an imported affine reflection
+fixes a coordinate locus, an imported selection-rule premise forces an odd-mode
+coefficient to vanish, and a specified finite matrix at parameter zero has a
+nonzero kernel vector. These calculations do not construct a spectral-cylinder
+quotient, identify the affine reflection with CPT, or prove a Jackiw--Rebbi
+PDE/domain-wall edge state. Historical declaration names remain for
+compatibility; theorem statements give the exact finite claims checked here.
 -/
 
 noncomputable section
@@ -27,7 +22,7 @@ namespace JackiwRebbiCantorEdgeStates
 
 open Complex
 
-/-- Finite boundary Dirac operator on the Klein/CPT core. -/
+/-- A finite matrix-valued parameter readout used in the kernel calculation. -/
 def boundaryDirac (s : ℂ) : Matrix (Fin 2) (Fin 2) ℂ :=
   DiracResolventZeroModeTripotent.sI_minus_X s 0 0
 
@@ -55,7 +50,8 @@ theorem boundaryZeroMode_killed_by_core :
   ext i
   simp
 
-/-- The Klein/CPT glide fixes the critical line `σ = 1/2`. -/
+/-- The imported affine reflection fixes exactly its coordinate line
+`σ = 1/2`. -/
 theorem klein_core_fixed_line (s : SpectralCPTKleinBottle.SpectralCylinder) :
     SpectralCPTKleinBottle.cptGlide s = s ↔
       SpectralCPTKleinBottle.criticalCore s :=
@@ -104,8 +100,9 @@ theorem all_parafermion_lanes_are_edge_states :
   · rfl
   · rfl
 
-/-- Boundary localization combines the finite zero-mode equation with the Klein
-core selection rule. -/
+/-- Finite conjunction of the stated matrix, affine-coordinate, selection-rule,
+finite-list, and nilpotence facts. It is not an analytic edge-localization
+theorem. -/
 theorem jackiw_rebbi_edge_localization :
     boundaryDirac 0 = 0 ∧
     (boundaryDirac 0).mulVec boundaryZeroMode = 0 ∧
@@ -156,8 +153,9 @@ theorem jackiw_rebbi_edge_localization :
   refine And.intro hColorThree ?_
   refine And.intro hSPlus hSMinus
 
-/-- Final synthesis: the finite Jackiw--Rebbi edge-state kernel, the Klein core,
-and the glide extinction rule line up on the same localization mechanism. -/
+/-- Finite conjunction adding two Boolean mode classifications to the facts
+listed in `jackiw_rebbi_edge_localization`. It does not assert a shared
+localization mechanism. -/
 theorem jackiw_rebbi_cantor_edge_states_synthesis :
     boundaryDirac 0 = 0 ∧
     (boundaryDirac 0).mulVec boundaryZeroMode = 0 ∧

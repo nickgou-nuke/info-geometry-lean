@@ -79,8 +79,11 @@ theorem paper_conclusion_binfold_escort_csiszar_blackwell_phi
   refine ⟨?_, ?_, ?_, ?_, ?_⟩
   · intro f
     exact paper_xi_time_part9od_escort_escort_fdiv_binary_closure f D.p D.q
-  · simpa [xiEscortBinaryLaw, abs_sub_comm] using
-      xiEscortTvDistance_blockLaw (xiEscortTheta D.p) (xiEscortTheta D.q)
+  · have h_law (s : ℕ) : xiEscortBinaryLaw s = xiEscortBlockLaw (xiEscortTheta s) := by
+      ext (_ | _) <;> rfl
+    rw [h_law, h_law, abs_sub_comm]
+    exact xiEscortTvDistance_blockLaw (xiEscortTheta D.p) (xiEscortTheta D.q)
+
   · simpa [BinfoldEscortCsiszarBlackwellPhiDatum.chi2Limit] using
       xiEscortBinaryChi2_closed D.p D.q
   · exact binfoldEscortChi2UniformBaseline_closed

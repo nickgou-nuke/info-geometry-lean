@@ -79,14 +79,19 @@ theorem paper_xi_fold_reversible_lift_length_lowerbound_kappa
       _ = D.xi_fold_reversible_lift_length_lowerbound_kappa_lengthWords * Real.log 2 := by
             rw [Real.log_pow]
   have hlog2 : 0 < Real.log 2 := Real.log_pos one_lt_two
-  have hlength : D.lengthLowerBound := by
+  have hlength :
+      Real.log D.xi_fold_reversible_lift_length_lowerbound_kappa_fiberCard / Real.log 2 ≤
+        D.xi_fold_reversible_lift_length_lowerbound_kappa_lengthWords := by
     exact (div_le_iff₀ hlog2).2 (by simpa [mul_comm] using hlogCard)
-  have hentropy : D.entropyFormLowerBound := by
-    simpa [entropyFormLowerBound,
-      D.xi_fold_reversible_lift_length_lowerbound_kappa_entropy_eq_log_multiplicity] using
-      hlength
+  have hentropy :
+      D.xi_fold_reversible_lift_length_lowerbound_kappa_entropy / Real.log 2 ≤
+        D.xi_fold_reversible_lift_length_lowerbound_kappa_lengthWords := by
+    rw [D.xi_fold_reversible_lift_length_lowerbound_kappa_entropy_eq_log_multiplicity]
+    exact hlength
   refine ⟨hlength, hentropy, ?_⟩
-  simpa [coarseLowerBound,
-    D.xi_fold_reversible_lift_length_lowerbound_kappa_kappa_eq_entropy_bits] using hentropy
+  change D.xi_fold_reversible_lift_length_lowerbound_kappa_kappa ≤
+    D.xi_fold_reversible_lift_length_lowerbound_kappa_lengthWords
+  rw [D.xi_fold_reversible_lift_length_lowerbound_kappa_kappa_eq_entropy_bits]
+  exact hentropy
 
 end Omega.Zeta

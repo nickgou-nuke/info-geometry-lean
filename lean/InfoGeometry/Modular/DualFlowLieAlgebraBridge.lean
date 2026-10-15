@@ -7,7 +7,7 @@ import Mathlib.Algebra.Lie.Subalgebra
 import Mathlib.Algebra.Lie.Ideal
 import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.Algebra.Lie.Derivation.Basic
-import Mathlib.Algebra.Lie.Derivation.AdjointAction
+import Mathlib.Algebra.Lie.AdjointAction.Derivation
 import Mathlib.Algebra.Lie.Quotient
 import Mathlib.Tactic
 
@@ -181,6 +181,9 @@ SECTION 2: The Full Native Mathlib Lie Algebra and Lie Ideal Structure
 -/
 
 namespace InfoGeometry.Modular.FullLieAlgebra
+
+attribute [local instance 100] LieRing.ofAssociativeRing
+attribute [local instance 100] LieAlgebra.ofAssociativeAlgebra
 
 variable (R : Type*) [CommRing R]
 variable (A : Type*) [Ring A] [Algebra R A]

@@ -37,9 +37,19 @@ def matrixMetric : Module.End ℝ Mat2 :=
     ((KreinSpace.J (H := Carrier)).toLinearEquiv.toLinearMap.comp matrixToHilbert.toLinearMap)
 
 theorem matrixMetric_apply (matrix : Mat2) : matrixMetric matrix = Eplus * matrix := by
-  ext row column
-  fin_cases row <;>
-    simp [matrixMetric, matrixToHilbert, Eplus, Matrix.mul_apply, Fin.sum_univ_two]
+  change matrixToHilbert.symm (KreinSpace.J (matrixToHilbert matrix)) = Eplus * matrix
+  apply matrixToHilbert.injective
+  simp only [LinearEquiv.apply_symm_apply]
+  have hEplus : Eplus * matrix = ![matrix 0, -matrix 1] := by
+    ext row column
+    fin_cases row <;> simp [Eplus, Matrix.mul_apply, Fin.sum_univ_two]
+  rw [hEplus]
+  apply HilbertDoubled.ext
+  apply DoubledSpace.ext
+  · ext column
+    fin_cases column <;> rfl
+  · ext column
+    fin_cases column <;> rfl
 
 theorem metric_transport (matrix : Mat2) :
     matrixToHilbert (matrixMetric matrix) = KreinSpace.J (matrixToHilbert matrix) := by

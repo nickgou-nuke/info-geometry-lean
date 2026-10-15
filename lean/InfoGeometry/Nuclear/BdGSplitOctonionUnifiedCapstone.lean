@@ -1,7 +1,6 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import Mathlib.Analysis.SpecialFunctions.Sqrt
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
@@ -25,8 +24,8 @@ This capstone module formally closes all structural and conceptual links across:
 
 2. **Zorn Vector-Matrix Nambu-Gorkov Quasiparticle Lift**:
    - Nambu-Gorkov Hamiltonian $X_{\text{NG}} = \begin{pmatrix} \xi & \vec{\Delta} \\ \vec{\Delta} & -\xi \end{pmatrix}$.
-   - Zorn determinant / Klein Quadric identity: $\operatorname{det}_Z(X_{\text{NG}}) = - (\xi^2 + \|\vec{\Delta}\|^2) = - E_{\text{quasiparticle}}^2$.
-   - Mass-shell characterization: $\det_Z(X) = 0 \iff (\xi = 0 \land \vec{\Delta} = \vec{0})$.
+   - Zorn reduced-norm / Bogoliubov energy identity: $\operatorname{det}_Z(X_{\text{NG}}) = - (\xi^2 + \|\vec{\Delta}\|^2) = - E_{\text{quasiparticle}}^2$.
+   - Gap-closing characterization over the real parameter carrier: $\det_Z(X)=0 \iff (\xi=0 \land \vec{\Delta}=\vec{0})$. This is not the Plücker Klein-quadric relation or a relativistic mass-shell theorem.
 
 3. **Class DIII Topological Superfluid Laws & Connes Dirac Triple**:
    - Time-reversal $\Theta^2 = -I$, Particle-hole $\Xi^2 = +I$, Chiral grading $\chi^2 = +I$.
@@ -76,20 +75,19 @@ def nambuGorkovMatrix2x2 (xi delta_mag : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
 `det(X) = - (xi² + delta_mag²) = - E²`. -/
 theorem nambuGorkovMatrix2x2_det (xi delta_mag : ℝ) :
     (nambuGorkovMatrix2x2 xi delta_mag).det = - (xi ^ 2 + delta_mag ^ 2) := by
-  dsimp [nambuGorkovMatrix2x2]
   rw [Matrix.det_fin_two]
-  dsimp
+  dsimp [nambuGorkovMatrix2x2]
   ring
 
 /-- 🏆 THEOREM: The trace of the squared Nambu-Gorkov matrix is `2 (xi² + delta_mag²) = 2 E²`. -/
 theorem nambuGorkovMatrix2x2_trace_sq (xi delta_mag : ℝ) :
     ((nambuGorkovMatrix2x2 xi delta_mag) * (nambuGorkovMatrix2x2 xi delta_mag)).trace =
       2 * (xi ^ 2 + delta_mag ^ 2) := by
-  dsimp [nambuGorkovMatrix2x2, Matrix.trace, Matrix.mul_apply, Matrix.diag]
+  dsimp [Matrix.trace, Matrix.diag]
   rw [Fin.sum_univ_two]
-  dsimp
+  rw [Matrix.mul_apply, Matrix.mul_apply]
   rw [Fin.sum_univ_two, Fin.sum_univ_two]
-  dsimp
+  dsimp [nambuGorkovMatrix2x2]
   ring
 
 /-! ## 2. Symmetric Bogoliubov Eigenvalue Spectrum and Anomaly Cancellation -/
@@ -143,30 +141,30 @@ theorem d3_topological_laws :
   refine ⟨?_, ?_, ?_, ?_⟩
   · ext i j
     fin_cases i <;> fin_cases j <;> {
-      dsimp [d3TimeReversal, Matrix.mul_apply, Matrix.neg_apply, Matrix.one_apply]
+      rw [Matrix.mul_apply, Matrix.neg_apply, Matrix.one_apply]
       rw [Fin.sum_univ_two]
-      dsimp
+      dsimp [d3TimeReversal]
       ring
     }
   · ext i j
     fin_cases i <;> fin_cases j <;> {
-      dsimp [d3ParticleHole, Matrix.mul_apply, Matrix.one_apply]
+      rw [Matrix.mul_apply, Matrix.one_apply]
       rw [Fin.sum_univ_two]
-      dsimp
+      dsimp [d3ParticleHole]
       ring
     }
   · ext i j
     fin_cases i <;> fin_cases j <;> {
-      dsimp [d3Chiral, Matrix.mul_apply, Matrix.one_apply]
+      rw [Matrix.mul_apply, Matrix.one_apply]
       rw [Fin.sum_univ_two]
-      dsimp
+      dsimp [d3Chiral]
       ring
     }
   · ext i j
     fin_cases i <;> fin_cases j <;> {
-      dsimp [d3TimeReversal, d3ParticleHole, d3Chiral, Matrix.mul_apply]
+      rw [Matrix.mul_apply]
       rw [Fin.sum_univ_two]
-      dsimp
+      dsimp [d3TimeReversal, d3ParticleHole, d3Chiral]
       ring
     }
 
@@ -176,9 +174,9 @@ theorem d3_chiral_anticommutes_gap (delta_mag : ℝ) :
     d3Chiral * (nambuGorkovMatrix2x2 0 delta_mag) + (nambuGorkovMatrix2x2 0 delta_mag) * d3Chiral = 0 := by
   ext i j
   fin_cases i <;> fin_cases j <;> {
-    dsimp [d3Chiral, nambuGorkovMatrix2x2, Matrix.mul_apply, Matrix.add_apply, Matrix.zero_apply]
+    rw [Matrix.add_apply, Matrix.mul_apply, Matrix.mul_apply, Matrix.zero_apply]
     rw [Fin.sum_univ_two, Fin.sum_univ_two]
-    dsimp
+    dsimp [d3Chiral, nambuGorkovMatrix2x2]
     ring
   }
 
@@ -190,7 +188,7 @@ theorem d3_chiral_anticommutes_gap (delta_mag : ℝ) :
 Unifies into a single kernel-checked deduction:
 1. **Split-Octonion Norm = Negative Squared Bogoliubov Dispersion**:
    $$\operatorname{zornNorm}(X_{\text{NG}}) = - (\xi^2 + \|\vec{\Delta}\|^2) = - E_{\text{quasiparticle}}^2$$
-2. **Klein Quadric Mass-Shell Characterization**:
+2. **Nambu-Gorkov zero-norm criterion**:
    $$\det_Z(X_{\text{NG}}) = 0 \iff (\xi = 0 \land \vec{\Delta} = \vec{0})$$
 3. **Trace Duality and Fisher Metric**:
    $$\mathcal{I}_F = \operatorname{Tr}(X_{\text{NG}}^2) = \sum_i \lambda_i^2 = 2 E_k^2 = - 2 \operatorname{zornNorm}(X_{\text{NG}})$$

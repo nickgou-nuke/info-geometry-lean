@@ -165,7 +165,7 @@ theorem exists_drazinInverse_of_fitting {T : Module.End K V} {k : ℕ}
   have hk : IsCompl Ker Ran :=
     InfoGeometry.Algebraic.Fitting.isCompl_ker_pow_range_pow (T := T) (k := k) ha hd
 
-  let πRan : V →ₗ[K] Ran := Ran.linearProjOfIsCompl Ker hk.symm
+  let πRan : V →ₗ[K] Ran := Ran.projectionOnto Ker hk.symm
 
   have hT_map_Ran : ∀ x : Ran, T x.1 ∈ Ran := by
     intro x
@@ -188,7 +188,8 @@ theorem exists_drazinInverse_of_fitting {T : Module.End K V} {k : ℕ}
       ⟨x, hx, hTx⟩
     refine ⟨⟨x, hx⟩, ?_⟩
     apply Subtype.ext
-    simpa [TR] using hTx
+    change T x = (y : V)
+    exact hTx
 
   have hTR_inj : Function.Injective TR := by
     intro x y hxy
@@ -245,7 +246,7 @@ theorem exists_drazinInverse_of_fitting {T : Module.End K V} {k : ℕ}
       exact Submodule.linearProjOfIsCompl_apply_left hk.symm xR
     have hTK : T (xK : V) ∈ Ker := hT_map_Ker xK xK.2
     have hπTK : πRan (T (xK : V)) = 0 := by
-      exact Submodule.linearProjOfIsCompl_apply_right' hk.symm _ hTK
+      exact Submodule.projectionOnto_apply_of_mem_right hk.symm hTK
     have hTRxR : T (xR : V) ∈ Ran := hT_map_Ran xR
     have hπTRxR : πRan (T (xR : V)) = ⟨T xR, hTRxR⟩ := by
       exact Submodule.linearProjOfIsCompl_apply_left hk.symm ⟨T xR, hTRxR⟩

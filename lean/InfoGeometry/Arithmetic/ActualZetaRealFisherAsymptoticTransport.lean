@@ -37,7 +37,7 @@ theorem actualZetaRealFisherInformation_rescaled_tendsto_of_logMul_rescaled
           LSeries (LSeries.logMul (↗ArithmeticFunction.vonMangoldt))
             (beta : ℂ)).re))
       (𝓝[>] (1 : ℝ)) (𝓝 (1 : ℝ)) := by
-    simpa using Complex.continuous_re.continuousAt.tendsto.comp hlog
+    exact Complex.continuous_re.continuousAt.tendsto.comp hlog
   apply hreal.congr'
   filter_upwards [self_mem_nhdsWithin] with beta hbeta
   rw [actualZetaRealFisherInformation_eq_vonMangoldt_logMul_re hbeta]

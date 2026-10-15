@@ -1,5 +1,6 @@
 import Mathlib.Analysis.Calculus.Deriv.Comp
 import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Analysis.Calculus.Deriv.Add
 import Mathlib.Tactic
 
 namespace Omega.POM
@@ -8,11 +9,12 @@ lemma pom_logm_linear_response_zero_even_deriv {f : ℝ → ℝ} {f' : ℝ}
     (heven : ∀ θ, f (-θ) = f θ) (hderiv : HasDerivAt f f' 0) :
     f' = 0 := by
   have hcomp : HasDerivAt (fun θ : ℝ => f (-θ)) (-f') 0 := by
-    have hnegArg : HasDerivAt (fun θ : ℝ => -θ) (-1) 0 := by
-      simpa using (hasDerivAt_neg (0 : ℝ))
+    have hnegArg : HasDerivAt (fun θ : ℝ => -θ) (-1) 0 :=
+      hasDerivAt_neg' 0
     have hderiv_zero : HasDerivAt f f' (-0 : ℝ) := by
       simpa using hderiv
-    simpa [Function.comp] using (HasDerivAt.comp (x := (0 : ℝ)) hderiv_zero hnegArg)
+    simpa [Function.comp_def] using
+      (HasDerivAt.comp (x := (0 : ℝ)) hderiv_zero hnegArg)
   have hfun : (fun θ : ℝ => f (-θ)) = f := by
     funext θ
     simpa using heven θ

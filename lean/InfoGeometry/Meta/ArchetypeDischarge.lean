@@ -27,15 +27,19 @@ def autoDischargeCascade (mvarId : MVarId) : TermElabM Unit := do
     ("rfl",      (← `(tactic| intros; rfl)).raw),
     ("decide",   (← `(tactic| intros; decide)).raw),
     ("simp_all", (← `(tactic| intros; simp_all)).raw),
-    ("omega",    (← `(tactic| intros; omega)).raw)
+    ("omega",    (← `(tactic| intros; try split <;> omega)).raw)
   ].mapM fun (n, t) => pure (n, t)
 
+  let s ← saveState
   for (name, tac) in solvers do
     try
-      let remaining ← runWithHeartbeats mvarId 20 tac
+      let remaining ← runWithHeartbeats mvarId 200 tac
       if remaining.isEmpty then
         return ()
+      else
+        s.restore
     catch _ =>
+      s.restore
       continue
 
   throwError "Automated discharge cascade exhausted portfolio [rfl, decide, simp_all, omega] without closing goal."

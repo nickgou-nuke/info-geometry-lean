@@ -71,8 +71,12 @@ theorem rotation_eq_scalar_combination (angle : ℝ) :
 
 theorem exp_fourthRoot (angle : ℝ) :
     NormedSpace.exp (angle • fourthRoot) = KPart angle := by
-  rw [InfoGeometry.Physics.HestenesKreinOperatorCalculus.exp_of_sq_eq_neg_one
-    fourthRoot fourthRoot_square, ← rotation_eq_scalar_combination]
+  calc
+    NormedSpace.exp (angle • fourthRoot) =
+        Real.cos angle • (1 : Mat2) + Real.sin angle • fourthRoot :=
+      InfoGeometry.Physics.HestenesKreinOperatorCalculus.exp_of_sq_eq_neg_one
+        fourthRoot fourthRoot_square angle
+    _ = KPart angle := by rw [← rotation_eq_scalar_combination]
 
 theorem rotation_pi_half : KPart (Real.pi / 2) = fourthRoot := by
   rw [rotation_eq_scalar_combination]

@@ -9,7 +9,25 @@ open InfoGeometry.Quantum.ComplexKramersAntiunitary
 
 inductive Weight where
   | minus2 | minus1 | zero | plus1 | plus2
-  deriving DecidableEq, Fintype, Repr
+  deriving DecidableEq, Repr
+
+private def weightFinEquiv : Fin 5 ≃ Weight where
+  toFun
+    | 0 => .minus2
+    | 1 => .minus1
+    | 2 => .zero
+    | 3 => .plus1
+    | 4 => .plus2
+  invFun
+    | .minus2 => 0
+    | .minus1 => 1
+    | .zero => 2
+    | .plus1 => 3
+    | .plus2 => 4
+  left_inv i := by fin_cases i <;> rfl
+  right_inv w := by cases w <;> rfl
+
+instance : Fintype Weight := Fintype.ofEquiv (Fin 5) weightFinEquiv
 
 def Weight.value : Weight → ℤ
   | .minus2 => -2 | .minus1 => -1 | .zero => 0 | .plus1 => 1 | .plus2 => 2

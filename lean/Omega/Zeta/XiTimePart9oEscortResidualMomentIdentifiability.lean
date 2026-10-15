@@ -34,8 +34,8 @@ theorem paper_xi_time_part9o_escort_residual_moment_identifiability (r : ℕ) (h
       linarith
     have htheta_anti :
         StrictAnti Omega.Conclusion.conclusion_escort_two_state_closure_theta := by
-      simpa [Omega.Conclusion.conclusion_escort_two_state_closure_theta] using
-        (Omega.Conclusion.binfoldEscortTheta_strictAnti Real.one_lt_goldenRatio)
+      change StrictAnti (Omega.Conclusion.binfoldEscortTheta Real.goldenRatio)
+      exact Omega.Conclusion.binfoldEscortTheta_strictAnti Real.one_lt_goldenRatio
     intro q₁ q₂ hmoment
     have htheta :
         Omega.Conclusion.conclusion_escort_two_state_closure_theta q₁ =

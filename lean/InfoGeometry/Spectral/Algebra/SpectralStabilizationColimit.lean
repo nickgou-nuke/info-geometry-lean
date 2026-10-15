@@ -122,7 +122,11 @@ theorem stabilizedPageFunctor_step
       ModuleCat.ofHom
         (stabilizedPageTailTransport S h p n (n + 1)
           (Nat.le_add_right n 1)) := by
-  simp [stabilizedPageFunctor]
+  simpa [stabilizedPageFunctor] using
+    (Functor.ofSequence_map_homOfLE_succ
+      (fun k => ModuleCat.ofHom
+        (stabilizedPageTailTransport S h p k (k + 1)
+          (Nat.le_add_right k 1))) n)
 
 /-- The successive maps of the transported tail are isomorphisms.  This is
 not an additional stabilization hypothesis: the tail was defined by the
@@ -134,7 +138,8 @@ theorem stabilizedPageFunctor_step_isIso
   rw [stabilizedPageFunctor_step]
   rw [← stabilizedPageTailTransportIso_hom S h p n (n + 1)
     (Nat.le_add_right n 1)]
-  infer_instance
+  exact (stabilizedPageTailTransportIso S h p n (n + 1)
+    (Nat.le_add_right n 1)).isIso_hom
 
 /-- The stable page receives the canonical legs from the transported tail. -/
 noncomputable def stabilizedPageCocone
@@ -145,9 +150,16 @@ noncomputable def stabilizedPageCocone
       (app := fun n => ModuleCat.ofHom (stabilizedPageLeg S h p n))
       (naturality := by
         intro n
+        rw [stabilizedPageFunctor_step]
+        simp only [Functor.const_obj_map]
         ext x
-        simp [stabilizedPageFunctor,
-          stabilizedPageLeg, stabilizedPageTailTransport, stablePageTransport]) }
+        change (stabilizedPageLeg S h p (n + 1)).comp
+            (stabilizedPageTailTransport S h p n (n + 1)
+              (Nat.le_add_right n 1)) x =
+          stabilizedPageLeg S h p n x
+        exact LinearMap.congr_fun
+          (stabilizedPageTail_comm S h p n (n + 1)
+            (Nat.le_add_right n 1)) x) }
 
 @[simp]
 theorem stabilizedPageCocone_leg

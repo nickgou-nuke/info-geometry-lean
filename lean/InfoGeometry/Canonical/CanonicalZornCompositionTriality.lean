@@ -575,7 +575,11 @@ inductive TrialitySector where
   | vector
   | spinorPlus
   | spinorMinus
-  deriving DecidableEq, Fintype, Repr
+  deriving DecidableEq, Repr
+
+instance : Fintype TrialitySector where
+  elems := {.vector, .spinorPlus, .spinorMinus}
+  complete sector := by cases sector <;> decide
 
 /-- A tagged copy of the canonical Zorn carrier. -/
 @[ext] structure ZornCopy (sector : TrialitySector) where
@@ -620,8 +624,18 @@ def copyEquivCoordinates (sector : TrialitySector) :
 instance (sector : TrialitySector) : AddCommGroup (ZornCopy sector) :=
   (copyEquivCoordinates sector).addCommGroup
 
+/-- Additive form of the canonical coordinate equivalence. -/
+def copyAddEquivCoordinates (sector : TrialitySector) :
+    ZornCopy sector ≃+ (Fin 8 → ℂ) where
+  toEquiv := copyEquivCoordinates sector
+  map_add' X Y := by
+    change zornCoordinates
+      (coordinatesToZorn (zornCoordinates X.val + zornCoordinates Y.val)) =
+        zornCoordinates X.val + zornCoordinates Y.val
+    exact zornCoordinates_coordinatesToZorn _
+
 instance (sector : TrialitySector) : Module ℂ (ZornCopy sector) :=
-  (copyEquivCoordinates sector).module ℂ
+  AddEquiv.module ℂ (copyAddEquivCoordinates sector)
 
 /-- The transported linear coordinate equivalence. -/
 def copyLinearEquivCoordinates (sector : TrialitySector) :
@@ -630,16 +644,13 @@ def copyLinearEquivCoordinates (sector : TrialitySector) :
   invFun := (copyEquivCoordinates sector).symm
   left_inv := (copyEquivCoordinates sector).left_inv
   right_inv := (copyEquivCoordinates sector).right_inv
-  map_add' X Y := by
-    change zornCoordinates
-      (coordinatesToZorn (zornCoordinates X.val + zornCoordinates Y.val)) =
-        zornCoordinates X.val + zornCoordinates Y.val
-    exact zornCoordinates_coordinatesToZorn _
+  map_add' := (copyAddEquivCoordinates sector).map_add
   map_smul' c X := by
-    change zornCoordinates
-      (coordinatesToZorn (c • zornCoordinates X.val)) =
-        c • zornCoordinates X.val
-    exact zornCoordinates_coordinatesToZorn _
+    change copyAddEquivCoordinates sector
+      ((copyAddEquivCoordinates sector).symm
+        (c • copyAddEquivCoordinates sector X)) =
+      c • copyEquivCoordinates sector X
+    exact (copyAddEquivCoordinates sector).apply_symm_apply _
 
 /-- Addition on a tagged copy agrees with the explicit Zorn addition. -/
 theorem zornCopy_add_val (sector : TrialitySector) (X Y : ZornCopy sector) :

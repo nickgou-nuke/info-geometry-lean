@@ -20,12 +20,13 @@ noncomputable section
 
 namespace CStarStateColimit.Native.FilteredGNSRepresentedCompletionModularTransport
 
-set_option synthInstance.maxHeartbeats 80000
-set_option maxHeartbeats 400000
+set_option synthInstance.maxHeartbeats 800000
+set_option maxHeartbeats 1200000
 set_option linter.unusedSectionVars false
 
 open CStarStateColimit.Native
 open CStarStateColimit.Native.FilteredGNSHilbertColimit
+open CStarStateColimit.Native.FilteredGNSAlgebraicColimitRepresentation
 open CStarStateColimit.Native.FilteredGNSRepresentedCStarClosure
 open CStarStateColimit.Native.FilteredGNSFaithfulRangeQuotient
 open CStarStateColimit.Native.FilteredGNSRepresentedRangeCompletion
@@ -46,10 +47,9 @@ variable
     ContinuousStarInductiveSystem.CompatibleStateFamily
       Stage sys)
 
-local instance globalBoundedOperatorCStarAlgebra :
-    CStarAlgebra
-      (GNSHilbertColimit Stage sys ω →L[ℂ]
-        GNSHilbertColimit Stage sys ω) where
+local instance representedAlgebraicRangeCompletionCStarAlgebraInst :
+    CStarAlgebra (representedAlgebraicRangeCompletion Stage sys ω) :=
+  representedAlgebraicRangeCompletionCStarAlgebra Stage sys ω
 
 /-- Transport a concrete represented-closure star-algebra automorphism to the
 completed represented carrier. -/
@@ -82,17 +82,19 @@ theorem transportStarAlgAutFromClosure_isometry
         representedAlgebraicRangeCompletion Stage sys ω →
           representedAlgebraicRangeCompletion Stage sys ω) := by
   let e := representedRangeCompletionEquiv Stage sys ω
-  have hcomp :
-      Isometry
-        ((e.symm : representedCStarClosure Stage sys ω →
-          representedAlgebraicRangeCompletion Stage sys ω) ∘
-          ((σ : representedCStarClosure Stage sys ω →
-            representedCStarClosure Stage sys ω) ∘
-            (e : representedAlgebraicRangeCompletion Stage sys ω →
-              representedCStarClosure Stage sys ω))) :=
-    e.symm.isometry.comp (hσ.comp e.isometry)
-  simpa [transportStarAlgAutFromClosure, e]
-    using hcomp
+  have heq : (transportStarAlgAutFromClosure Stage sys ω σ :
+      representedAlgebraicRangeCompletion Stage sys ω →
+        representedAlgebraicRangeCompletion Stage sys ω) =
+      (e.symm : representedCStarClosure Stage sys ω →
+        representedAlgebraicRangeCompletion Stage sys ω) ∘
+        ((σ : representedCStarClosure Stage sys ω →
+          representedCStarClosure Stage sys ω) ∘
+          (e : representedAlgebraicRangeCompletion Stage sys ω →
+            representedCStarClosure Stage sys ω)) := by
+    ext x
+    rfl
+  rw [heq]
+  exact e.symm.isometry.comp (hσ.comp e.isometry)
 
 /-- A packaged modular/KMS candidate on the completed represented carrier:
 a transported star-automorphism together with its isometry proof. -/

@@ -52,7 +52,13 @@ def rootWeylAction (p : WeylG2) : Equiv.Perm RootCarrier :=
 
 theorem rootWeylAction_simple_reflection_sq :
     (rootWeylAction (0, true)) ^ 2 = 1 := by
-  simpa [rootWeylAction, rootWeylNF] using s1Root_sq
+  change (s1Root.trans (cRoot ^ (0 : ℕ))) ^ 2 = 1
+  rw [pow_zero]
+  have htrans : s1Root.trans (1 : G2CoordinateRoot ≃ G2CoordinateRoot) = s1Root := by
+    apply Equiv.ext
+    intro r
+    exact Subtype.ext rfl
+  rw [htrans, s1Root_sq]
 
 theorem rootWeylAction_cyclic_generator_pow_six :
     (rootWeylAction (1, false)) ^ 6 = 1 := by

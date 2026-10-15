@@ -46,7 +46,7 @@ theorem transportEnd_jointProjector_of_axes
       CommutingInvolutions.circularInvolution,
       InfoGeometry.OperatorAlgebra.ChiralInvolution.Pleft,
       InfoGeometry.OperatorAlgebra.ChiralInvolution.Pright,
-      Bool.false_eq_true, if_false, if_true,
+      Bool.false_eq_true, ite_false, ite_true,
       map_mul, map_smul, map_add, map_sub, map_one, hH, hC]
 
 /-- Fixing both axes makes vector transport preserve each joint-projector range. -/
@@ -60,12 +60,16 @@ theorem transport_mem_jointProjector_range
     (S.U t : NeutralSpace E ≃L[ℝ] NeutralSpace E) v ∈
       LinearMap.range (P.jointProjector hSign cSign).toLinearMap := by
   rcases hv with ⟨w, rfl⟩
-  let U : NeutralSpace E ≃L[ℝ] NeutralSpace E := S.U t
-  refine ⟨U w, ?_⟩
-  have h := congrArg (fun A : EndN (E := E) => A (U w))
+  refine ⟨(S.U t : NeutralSpace E ≃L[ℝ] NeutralSpace E) w, ?_⟩
+  have h := congrArg (fun A : EndN (E := E) => A ((S.U t : NeutralSpace E ≃L[ℝ] NeutralSpace E) w))
     (transportEnd_jointProjector_of_axes S t P hH hC hSign cSign)
-  change U (P.jointProjector hSign cSign (U.symm (U w))) =
-    P.jointProjector hSign cSign (U w) at h
-  simpa only [ContinuousLinearEquiv.symm_apply_apply] using h.symm
+  change (S.U t : NeutralSpace E ≃L[ℝ] NeutralSpace E)
+      (P.jointProjector hSign cSign
+        ((S.U t : NeutralSpace E ≃L[ℝ] NeutralSpace E).symm
+          ((S.U t : NeutralSpace E ≃L[ℝ] NeutralSpace E) w))) =
+    (P.jointProjector hSign cSign) ((S.U t : NeutralSpace E ≃L[ℝ] NeutralSpace E) w) at h
+  rw [ContinuousLinearEquiv.symm_apply_apply] at h
+  exact h.symm
+
 
 end InfoGeometry.Canonical.SpinConnectionPolarization

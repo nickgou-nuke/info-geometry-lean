@@ -28,7 +28,9 @@ open InfoGeometry.Krein
 
 section Core
 
-variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+universe u
+
+variable {H : Type u} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
 
 local notation "H2" => DoubledSpace H
 local notation "EndH" => AlgebraEnd H
@@ -74,7 +76,9 @@ noncomputable def ofNormalizedVectorState
         intro c A
         simp [VectorState.expectation, inner_smul_left] }
   normalized := by
-    simpa using hnorm
+    change ξ.expectation (1 : EndH) = 1
+    rw [ContinuousLinearMap.one_def]
+    exact hnorm
 
 @[rep_depth krein]
 theorem ofNormalizedVectorState_probe_apply
@@ -94,8 +98,8 @@ part of the ontology of statehood itself.
 -/
 @[rep_depth krein]
 structure RepresentationFrame
-    (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] where
-  Index : Type*
+    (H : Type u) [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] where
+  Index : Type u
   coordinate : Index → DoubledSpace H
 
 /--
@@ -108,7 +112,7 @@ as additional representational scaffolding.
 -/
 @[rep_depth operator]
 structure StateRepresentationBridge
-    (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] where
+    (H : Type u) [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] where
   state : PositiveNormalizedFunctional H
   carrier : StandardFormCarrier H
   frame : RepresentationFrame H

@@ -15,6 +15,8 @@ resulting five-grade weights on the hopping operators. It does not claim a
 global TKK decomposition of the whole Cuntz algebra.
 -/
 
+noncomputable section
+
 namespace InfoGeometry.Physics.CuntzMatrixUnitFiveGrading
 
 open InfoGeometry.Algebra.CuntzTensorQuotient
@@ -23,7 +25,7 @@ open InfoGeometry.Algebra.CuntzMatrixUnits
 abbrev Cuntz3 := CuntzAlg 3
 
 noncomputable abbrev hop := InfoGeometry.Algebra.CuntzMatrixUnitFiveGradingBridge.hop
-abbrev commutator := InfoGeometry.Algebra.CuntzMatrixUnitFiveGradingBridge.commutator
+noncomputable abbrev commutator := InfoGeometry.Algebra.CuntzMatrixUnitFiveGradingBridge.commutator
 abbrev colourWeight := InfoGeometry.Algebra.CuntzMatrixUnitFiveGradingBridge.colourWeight
 noncomputable abbrev gradingOp := InfoGeometry.Algebra.CuntzMatrixUnitFiveGradingBridge.gradingOp
 abbrev IsGradedComponent :=

@@ -1,5 +1,4 @@
 import InfoGeometry.Analysis.BipolarLoopLiftHomotopyInvariant
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Deck integers on homotopy classes
@@ -15,7 +14,7 @@ noncomputable section
 
 namespace InfoGeometry.Analysis.BipolarDeckIntegerHomotopyClass
 
-open Complex Topology
+open Complex _root_.Topology
 open InfoGeometry.Analysis.BipolarLoopExpLift
 open InfoGeometry.Analysis.BipolarLoopWindingCarrier
 open InfoGeometry.Analysis.BipolarLoopLiftHomotopyInvariant
@@ -40,9 +39,8 @@ theorem liftEndpointInteger_refl
     (hW : x = (⟨Complex.exp W, Complex.exp_ne_zero W⟩ : NonzeroComplex)) :
     liftEndpointInteger (Path.refl x) W hW = 0 := by
   apply liftEndpointInteger_eq_of_endpoint (Path.refl x) W hW
-  have hconst := Complex.isCoveringMap_exp.liftPath_const (e := W) hW
-  have hend := congrArg (fun p : C(↑unitInterval, ℂ) => p 1) hconst
-  simpa [Path.refl] using hend
+  simp only [Int.cast_zero, zero_mul, add_zero]
+  exact congr($(Complex.isCoveringMap_exp.liftPath_const hW) 1)
 
 @[simp] theorem deckIntegerClass_mk
     {x : NonzeroComplex} (W : ℂ)

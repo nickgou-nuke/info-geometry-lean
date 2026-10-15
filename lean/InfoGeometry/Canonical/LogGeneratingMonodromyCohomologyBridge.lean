@@ -44,9 +44,10 @@ theorem logGeneratingPotential_derivative_zero
     (ω : EndH E →L[ℝ] ℝ) (K : EndH E)
     (hω1 : ω (1 : EndH E) = 1) :
     HasDerivAt (logGeneratingPotential ω K) (ω K) 0 := by
-  simpa [logGeneratingPotential] using
-    (hasDerivAt_logInformationPartitionFunction_zero_of_normalized
-      (ω := ω) (K := K) hω1)
+  change HasDerivAt (fun τ : ℝ => logInformationPartitionFunction ω K τ)
+    (ω K) 0
+  exact hasDerivAt_logInformationPartitionFunction_zero_of_normalized
+    (E := E) (ω := ω) (K := K) hω1
 
 theorem logGeneratingPotential_derivative_eq_operator_readout
     (ω : EndH E →L[ℝ] ℝ) (K : EndH E)

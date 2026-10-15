@@ -270,7 +270,7 @@ theorem pairTerm_commute_of_ne {i j : ℕ} (hij : i ≠ j) :
       have hsi_tj : Commute (switch (n := n) ⟨i, hi⟩) (tilt (n := n) ⟨j, hj⟩) := by
         have h := tilt_switch_comm_of_ne (n := n) (i := ⟨j, hj⟩) (j := ⟨i, hi⟩) (by
           intro h; exact hij (congrArg Fin.val h.symm))
-        simpa [Commute, mul_assoc] using h.symm
+        exact h.symm
       have hsi_sj : Commute (switch (n := n) ⟨i, hi⟩) (switch (n := n) ⟨j, hj⟩) := by
         exact switch_comm (n := n) (i := ⟨i, hi⟩) (j := ⟨j, hj⟩) (by
           intro h; exact hij (congrArg Fin.val h))

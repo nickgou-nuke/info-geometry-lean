@@ -145,17 +145,17 @@ stage and every finite stage already proves the throat condition.  The
 `zornSubsystem` field says every zero-state lies in a Zorn-maximal admissible
 subsystem where no leakage is possible.
 -/
-structure KreinRHColimitZornClosure
+structure KreinRHColimitZornClosure.{u_stage}
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     [KreinSpace H]
     (C : KreinSpectralChart H) where
-  colimitSupport : KreinInductiveColimitSupportCertificate C
+  colimitSupport : KreinInductiveColimitSupportCertificate.{_, u_stage} C
   zornSubsystem : KreinZornMaximalSubsystemCertificate C
 
 namespace KreinRHColimitZornClosure
 
 /-- The order-surface theorem is shared by every closure package. -/
-def orderSurfaces
+theorem orderSurfaces
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     [KreinSpace H] {C : KreinSpectralChart H}
     (_P : KreinRHColimitZornClosure C) : TwinOrderStability :=

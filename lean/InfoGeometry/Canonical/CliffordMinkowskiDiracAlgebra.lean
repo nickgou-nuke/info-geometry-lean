@@ -85,7 +85,7 @@ theorem gamma3_square : gamma3 * gamma3 = -1 := by
 theorem gamma0_gamma1_anticommute : gamma0 * gamma1 + gamma1 * gamma0 = 0 := by
   dsimp [gamma0, gamma1]
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [add_apply]
+  fin_cases i <;> fin_cases j <;> simp [Matrix.add_apply, Matrix.mul_apply, Fin.sum_univ_four]
 
 /-- **Theorem**: Charge Conjugation Matrix Square: C² = -I₄. -/
 theorem charge_conjugation_square : chargeConjugation * chargeConjugation = -1 := by

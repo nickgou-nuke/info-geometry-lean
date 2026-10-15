@@ -37,6 +37,7 @@ HIVE_COLLECTION_BY_KIND = {
     "PauliCritique": "hive_pauli_critiques",
     "InvariantDraft": "hive_invariants",
     "TheoremCandidatePacket": "hive_candidate_packets",
+    "PantographSessionEvidencePacket": "hive_pantograph_session_evidence",
     "TranslationPacket": "hive_translation_packets",
     "RetrievalHypothesisPacket": "hive_retrieval_packets",
     "ExecutionIntentPacket": "hive_execution_intents",

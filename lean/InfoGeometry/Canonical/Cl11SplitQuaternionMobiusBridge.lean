@@ -51,7 +51,9 @@ theorem splitL_sq : splitL * splitL = splitOne := by
 
 theorem splitI_splitL_anticommute :
     splitI * splitL + splitL * splitI = 0 := by
-  simpa [add_comm] using cl11_generator_relations.2.2
+  have h := cl11_generator_relations.2.2
+  rw [add_comm] at h
+  exact h
 
 theorem splitIL_eq_sigma3 : splitIL = sigma3 := by
   ext i j
@@ -264,7 +266,8 @@ noncomputable def scaleMobius (M : InfoGeometry.MobiusTransform)
 theorem scaleMobius_equiv (M : InfoGeometry.MobiusTransform)
     (lam : ℂ) (hlam : lam ≠ 0) :
     InfoGeometry.MobiusTransform.equiv M (scaleMobius M lam hlam) := by
-  simpa [scaleMobius] using InfoGeometry.pgl_equivalence M lam hlam
+  intro z
+  exact InfoGeometry.pgl_equivalence M lam hlam z
 
 theorem equiv_comp_inv_is_identity
     {M N : InfoGeometry.MobiusTransform}
@@ -455,8 +458,8 @@ theorem fixedPointEquation_two_real_roots_of_discriminant_pos
       (a := A 1 0) (b := A 1 1 - A 0 0) (c := -A 0 1) ha (by
         rw [fixedPointEquation_discriminant_eq_mobiusDiscriminant A]
         exact hΔ)
-  exact ⟨x, y, hxy, by simpa [fixedPointEquation] using hx,
-    by simpa [fixedPointEquation] using hy⟩
+  exact ⟨x, y, hxy, by dsimp [fixedPointEquation]; rw [sub_eq_add_neg]; exact hx,
+    by dsimp [fixedPointEquation]; rw [sub_eq_add_neg]; exact hy⟩
 
 theorem fixedPointEquation_real_root_of_discriminant_zero
     (A : SplitQuaternion) (ha : A 1 0 ≠ 0)
@@ -467,7 +470,7 @@ theorem fixedPointEquation_real_root_of_discriminant_zero
       (a := A 1 0) (b := A 1 1 - A 0 0) (c := -A 0 1) ha (by
         rw [fixedPointEquation_discriminant_eq_mobiusDiscriminant A]
         exact hΔ)
-  exact ⟨x, by simpa [fixedPointEquation] using hx⟩
+  exact ⟨x, by dsimp [fixedPointEquation]; rw [sub_eq_add_neg]; exact hx⟩
 
 noncomputable def classifyMobiusDiscriminant (A : SplitQuaternion) :
     MobiusDiscriminantClass :=
@@ -791,7 +794,7 @@ theorem nilpotentCone_subset_kleinQuadric :
   intro A hA
   change A.det = 0
   have hdet := congrArg Matrix.det hA
-  rw [Matrix.det_mul, Matrix.det_zero (by infer_instance)] at hdet
+  rw [Matrix.det_mul, Matrix.det_zero] at hdet
   exact mul_self_eq_zero.mp hdet
 
 theorem splitNull_mem_nilpotentCone : splitNull ∈ nilpotentCone := by
@@ -1422,8 +1425,10 @@ theorem mobius_equiv_implies_determinant_proportional
     identity_mobius_matrix_is_scalar
       (InfoGeometry.comp (InfoGeometry.inv M) N) hidentity
   have hCa' : M.d * N.a - M.b * N.c = lam := by
+    rw [sub_eq_add_neg]
     simpa [InfoGeometry.comp, InfoGeometry.inv] using hCa
   have hCb' : M.d * N.b - M.b * N.d = 0 := by
+    rw [sub_eq_add_neg]
     simpa [InfoGeometry.comp, InfoGeometry.inv] using hCb
   have hCc' : -M.c * N.a + M.a * N.c = 0 := by
     simpa [InfoGeometry.comp, InfoGeometry.inv] using hCc
@@ -1548,10 +1553,10 @@ coefficient topology on representatives is made explicit. -/
 def mobiusCoordinates (M : InfoGeometry.MobiusTransform) : ℂ × ℂ × ℂ × ℂ :=
   (M.a, M.b, M.c, M.d)
 
-instance : TopologicalSpace InfoGeometry.MobiusTransform :=
+noncomputable instance : TopologicalSpace InfoGeometry.MobiusTransform :=
   TopologicalSpace.induced mobiusCoordinates inferInstance
 
-instance : TopologicalSpace InfoGeometry.PGL2C :=
+noncomputable instance : TopologicalSpace InfoGeometry.PGL2C :=
   inferInstanceAs (TopologicalSpace (Quotient InfoGeometry.mobiusSetoid))
 
 theorem continuous_mobiusCoordinates : Continuous mobiusCoordinates :=

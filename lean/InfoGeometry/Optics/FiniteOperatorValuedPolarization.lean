@@ -34,6 +34,11 @@ def blockMatrixEquiv (W : Type*) :
     ext i j a b
     rfl
 
+@[simp] theorem blockMatrixEquiv_symm_apply
+    (A : Matrix (Fin 2) (Fin 2) (Matrix W W ℂ))
+    (i j : Fin 2) (a b : W) :
+    (blockMatrixEquiv W).symm A (i, a) (j, b) = A i j a b := rfl
+
 /-- Four internal operator blocks are exactly one sheet-indexed operator. -/
 def finiteOperatorPolarizationEquiv :
     CausalOperatorCoordinates (Matrix W W ℂ) ≃ OperatorValuedMatrix W :=
@@ -160,10 +165,10 @@ theorem finiteOperatorPolarizationEquiv_eq_kronecker
       kronecker circularMatrix A.circular := by
   ext ⟨i, a⟩ ⟨j, b⟩
   fin_cases i <;> fin_cases j <;>
-    simp [finiteOperatorPolarizationEquiv, blockMatrixEquiv,
+    simp [finiteOperatorPolarizationEquiv,
       causalOperatorCoordinatesEquiv, reconstruct_causal, kronecker,
       I_mat, Gamma_mat, J_mat, circularMatrix, K_mat, Matrix.smul_apply,
-      sub_eq_add_neg]
+      blockMatrixEquiv_symm_apply, sub_eq_add_neg]
 
 /-- Every sheet-indexed operator has the unique four-term Kronecker expansion. -/
 theorem operator_valued_polarization_kronecker

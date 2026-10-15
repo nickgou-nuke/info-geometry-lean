@@ -36,7 +36,11 @@ inductive ChiralEdgeLabel where
   | uPlus
   | uMinus
   | neutral
-deriving DecidableEq, Repr, Fintype
+deriving DecidableEq, Repr
+
+instance : Fintype ChiralEdgeLabel where
+  elems := {ChiralEdgeLabel.uPlus, ChiralEdgeLabel.uMinus, ChiralEdgeLabel.neutral}
+  complete := by rintro (_|_|_) <;> decide
 
 /--
 Carrier for a projective horizon/string diagram.

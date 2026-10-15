@@ -26,7 +26,7 @@ structure CompatibleStarGroupAction
     (sys : ContinuousStarInductiveSystem Stage) where
   action : ∀ i, G → Stage i ≃⋆ₐ[ℂ] Stage i
   action_one : ∀ i, action i 1 =
-    (StarAlgEquiv.refl : Stage i ≃⋆ₐ[ℂ] Stage i)
+    (StarAlgEquiv.refl ℂ (Stage i) : Stage i ≃⋆ₐ[ℂ] Stage i)
   action_mul : ∀ i (g h : G),
     action i (g * h) = (action i h).trans (action i g)
   action_transition : ∀ {i j : I} (hij : i ≤ j) (g : G) (x : Stage i),
@@ -40,7 +40,7 @@ def actionFamily
     (A : CompatibleStarGroupAction I G Stage sys) (g : G) (i : I) :
     Stage i →⋆ₐ[ℂ] AlgebraicStarDirectLimit Stage sys :=
   (algebraicStarDirectLimitOf Stage sys i).comp
-    (A.action i g : Stage i →⋆ₐ[ℂ] Stage i)
+    (A.action i g).toStarAlgHom
 
 theorem actionFamily_compatible
     (I G : Type u) [Preorder I] [Nonempty I] [IsDirectedOrder I]
@@ -78,6 +78,10 @@ noncomputable def algebraicColimitGroupAction
     algebraicColimitGroupAction I G Stage sys A g
         (algebraicStarDirectLimitOf Stage sys i x) =
       algebraicStarDirectLimitOf Stage sys i (A.action i g x) := by
+  change liftStarAlgHom Stage sys
+    (actionFamily I G Stage sys A g)
+    (actionFamily_compatible I G Stage sys A g)
+      (algebraicStarDirectLimitOf Stage sys i x) = _
   exact liftStarAlgHom_of Stage sys
     (actionFamily I G Stage sys A g)
     (actionFamily_compatible I G Stage sys A g) i x

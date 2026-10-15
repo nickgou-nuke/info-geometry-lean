@@ -37,6 +37,7 @@ theorem le_binfoldMaxFiber (d : α → ℕ) (x : α) :
   unfold binfoldMaxFiber
   exact Finset.le_sup (Finset.mem_univ x)
 
+omit [DecidableEq α] in
 theorem binfoldExactInversionAdmits_iff (d : α → ℕ) (B : ℕ) :
     binfoldExactInversionAdmits d B ↔ binfoldMaxFiber d ≤ 2 ^ B := by
   constructor
@@ -67,9 +68,17 @@ theorem binfoldUpperEndpointBudget_limit (b : ℕ) (hb : 1 ≤ b) :
   have hlog_nonneg : 0 ≤ binfoldFreezingSlope b := by
     unfold binfoldFreezingSlope
     exact Real.logb_nonneg (by norm_num) (by exact_mod_cast hb)
-  simpa [binfoldUpperEndpointBudget, binfoldFreezingSlope, mul_comm, mul_left_comm, mul_assoc] using
+  have hcomp :=
     (tendsto_nat_ceil_mul_div_atTop (R := ℝ) (a := Real.logb 2 (b : ℝ)) hlog_nonneg).comp
       tendsto_natCast_atTop_atTop
+  have hfun : (fun m : ℕ => (binfoldUpperEndpointBudget b m : ℝ) / m) =
+      ((fun x : ℝ => (↑⌈Real.logb 2 (b : ℝ) * x⌉₊ : ℝ) / x) ∘ Nat.cast) := by
+    ext m
+    dsimp
+    congr 2
+    rw [binfoldUpperEndpointBudget, mul_comm]
+  rw [hfun]
+  exact hcomp
 
 theorem binfoldFreezingPressureRay_slope (b : ℕ) (gStar beta : ℝ) :
     binfoldFreezingPressureRay b gStar beta - binfoldFreezingPressureRay b gStar 0 =

@@ -19,7 +19,7 @@ namespace AtomicWittIntoTC1Data
 
 /-- Atomic generators are indexed by the weight `β` together with the multiplicity/period data
 `n, m`. -/
-def Generator (D : AtomicWittIntoTC1Data) : Type u :=
+abbrev Generator (D : AtomicWittIntoTC1Data) : Type u :=
   D.Beta × ℕ × ℕ
 
 /-- The atomic Big-Witt semiring is modeled as the free commutative semiring on the generators. -/
@@ -40,7 +40,10 @@ noncomputable def lift (D : AtomicWittIntoTC1Data) : D.WAtom →+* D.TC1 :=
 
 @[simp] theorem lift_atom (D : AtomicWittIntoTC1Data) (β : D.Beta) (n m : ℕ) :
     D.lift (D.atom β n m) = D.block β n m := by
-  simp [lift, atom, blockOnGenerator]
+  change MvPolynomial.eval₂Hom (Nat.castRingHom D.TC1) D.blockOnGenerator
+    (MvPolynomial.X (β, n, m)) = D.block β n m
+  rw [MvPolynomial.eval₂Hom_X']
+  rfl
 
 end AtomicWittIntoTC1Data
 

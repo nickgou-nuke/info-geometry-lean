@@ -37,7 +37,6 @@ theorem delta2_mul_beta_structural (r : Vec3) (x y : Cayley) :
       simp [delta2, mul, dot, cross]
       ring_nf
       simp [sub_eq_add_neg]
-      ring
 
 theorem delta2_mul_u_structural (r : Vec3) (x y : Cayley) :
     (delta2 r (x * y)).u = (delta2 r x * delta2 r y).u := by

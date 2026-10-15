@@ -112,11 +112,15 @@ theorem cast_mod_two_eq_zero_iff (i : ZMod 4) :
     rcases hcases with h0 | h2
     · left
       apply ZMod.val_injective 4
-      simpa [ZMod.val] using h0
+      simpa only [ZMod.val_zero] using h0
     · right
       apply ZMod.val_injective 4
-      simpa [ZMod.val] using h2
-  · rintro (rfl | rfl) <;> norm_num [ZMod.val]
+      calc
+        i.val = 2 := h2
+        _ = (2 : ZMod 4).val := by decide
+  · rintro (rfl | rfl)
+    · exact ⟨0, by simp⟩
+    · exact ⟨1, by decide⟩
 
 theorem projectivize_kernel_eq_centralSign :
     projectivize.ker = centralSignSubgroup := by

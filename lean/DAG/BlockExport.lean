@@ -26,6 +26,21 @@ structure ScopeFrame where
   name : Name
   deriving BEq, Inhabited, ToJson, FromJson
 
+/-- A concrete namespace frame for the DAG exporter itself. -/
+def scopeFrameNamespaceModel : ScopeFrame :=
+  ⟨.namespace, Name.mkSimple "DAG"⟩
+
+/-- A section frame is distinct from the namespace frame even when both carry
+the same name. -/
+def scopeFrameSectionModel : ScopeFrame :=
+  ⟨.section, Name.mkSimple "DAG"⟩
+
+theorem scopeFrame_models_distinct :
+    scopeFrameNamespaceModel ≠ scopeFrameSectionModel := by
+  intro h
+  have hk := congrArg ScopeFrame.kind h
+  cases hk
+
 /-- A categorical morphism representing a proof step or state transition. -/
 structure TacticMorphism where
   tacticSyntax : String
@@ -618,12 +633,13 @@ def emitQuiver (e : Export) : String := Id.run do
   let mut b : Array String := #[]
 
   b := b.push "import Mathlib.CategoryTheory.FreeCategory\n"
-  b := b.push "import Mathlib.Algebra.Category.ModuleCat.Basic\n"
-  b := b.push "import Mathlib.Data.Real.Basic\n"
-  b := b.push "import Socratic\n\n"
-  b := b.push "set_option maxRecDepth 2000000\n"
+  b := b.push "/-!\n"
+  b := b.push "Generated block dependency quiver. Vertices represent source blocks with primary declarations;\n"
+  b := b.push "edges represent dependencies extracted from the Lean environment. This export assigns no\n"
+  b := b.push "denotational semantics to declarations and carries no theorem proofs.\n"
+  b := b.push "-/\n\n"
 
-  b := b.push "namespace Socratic.Generated\n\n"
+  b := b.push "namespace DAG.GeneratedDependencyQuiver\n\n"
   b := b.push "inductive Obj\n"
   for i in [:n] do
     b := b.push s!"  | block_{i}\n"
@@ -634,25 +650,7 @@ def emitQuiver (e : Export) : String := Id.run do
       let some v := semanticOf.get? origV | continue
       b := b.push s!"  | edge_{u}_{v} : Edge .block_{u} .block_{v}\n"
 
-  b := b.push "\nnoncomputable def fileSyntax : Socratic.Syntax := {\n"
-  b := b.push "  Obj := Obj,\n"
-  b := b.push "  Hom := Edge\n"
-  b := b.push "}\n\n"
-
-  b := b.push "noncomputable def coreSem : Socratic.Semantics fileSyntax (Type) :=\n"
-  b := b.push "  { obj := fun _ => PUnit,\n"
-  b := b.push "    map := fun _ => id }\n\n"
-
-  b := b.push "noncomputable def fileHomTriple : Socratic.HomTriple fileSyntax := {\n"
-  b := b.push "  ProgSem := coreSem,\n"
-  b := b.push "  SpecSem := coreSem,\n"
-  b := b.push "  VecSem := coreSem,\n"
-  b := b.push "  spec_isProp := by intro _; infer_instance,\n"
-  b := b.push "  sound := 𝟙 _,\n"
-  b := b.push "  encode := 𝟙 _\n"
-  b := b.push "}\n\n"
-
-  b := b.push "end Socratic.Generated\n"
+  b := b.push "end DAG.GeneratedDependencyQuiver\n"
   String.intercalate "" b.toList
 
 def escapeLeanString (s : String) : String :=

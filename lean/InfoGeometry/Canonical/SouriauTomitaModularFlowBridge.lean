@@ -667,7 +667,10 @@ theorem constructive_kms_packet
     C.logContext.modularHamiltonian =
       C.logContext.souriauMoment.momentOperator
         C.logContext.souriauMoment.geometricTemperature := by
-  simpa [C.toSouriauTomitaKMSContext_state_eq] using
+  have hlog : C.toSouriauTomitaKMSContext.logContext = C.logContext := rfl
+  have hbeta : C.toSouriauTomitaKMSContext.beta = C.beta := rfl
+  simpa only [C.toSouriauTomitaKMSContext_state_eq, hlog, hbeta,
+    SouriauTomitaKMSContext.sigma, SouriauTomitaKMSContext.modularBeta] using
     (C.toSouriauTomitaKMSContext.constructive_kms_packet A B s t)
 
 /-- Backward-compatible broad constructor theorem from the cyclic zero-thermal branch. -/
@@ -734,6 +737,9 @@ theorem ofCyclicZeroThermal_kms_eval_mul_souriau_modular_eq_eval_flip
       state := state
       beta := beta }
   simpa [MinimalSouriauTomitaKMSContext.state,
+    ofCyclicZeroThermal,
+    MinimalSouriauTomitaKMSContext.sigma,
+    MinimalSouriauTomitaKMSContext.modularBeta,
     CyclicSouriauTomitaKMSContext.toMinimalSouriauTomitaKMSContext] using
     (C.kms.eval_mul_modular_eq_eval_flip A B)
 
@@ -801,7 +807,12 @@ theorem SouriauTomitaKMSContext.ofCyclicZeroThermal_kms_eval_mul_souriau_modular
           geometricTemperature state beta).logContext.souriauAdditiveModularFlow beta B) =
       (SouriauTomitaKMSContext.ofCyclicZeroThermal (H := H) (Symmetry := Symmetry)
         geometricTemperature state beta).state.eval (B * A) := by
-  simpa [SouriauTomitaKMSContext.ofCyclicZeroThermal, SouriauTomitaKMSContext.sigma,
-    SouriauTomitaKMSContext.modularBeta] using
+  simpa [SouriauTomitaKMSContext.ofCyclicZeroThermal, SouriauTomitaKMSContext.state,
+    SouriauTomitaKMSContext.sigma, SouriauTomitaKMSContext.modularBeta,
+    MinimalSouriauTomitaKMSContext.toSouriauTomitaKMSContext,
+    MinimalSouriauTomitaKMSContext.ofCyclicZeroThermal,
+    CyclicSouriauTomitaKMSContext.toMinimalSouriauTomitaKMSContext,
+    MinimalSouriauTomitaKMSContext.state, MinimalSouriauTomitaKMSContext.sigma,
+    MinimalSouriauTomitaKMSContext.modularBeta] using
     ((SouriauTomitaKMSContext.ofCyclicZeroThermal (H := H) (Symmetry := Symmetry)
       geometricTemperature state beta).kms_eval_mul_souriau_modular_eq_eval_flip A B)

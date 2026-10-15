@@ -137,13 +137,23 @@ noncomputable def derivedJ (C : ExactCouple R D E) (pq : Z2) :
 theorem derivedJ_imageRepresentative
     (C : ExactCouple R D E) (pq : Z2)
     (x : D (shiftK pq)) :
-    C.derivedJ pq
+      C.derivedJ pq
         ⟨C.i (shiftK pq) x, ⟨x, rfl⟩⟩ =
       C.jToDerivedE pq x := by
-  simp [derivedJ, derivedJOnQuotient]
+  have hxrange :
+      C.i (shiftK pq) x ∈ LinearMap.range (C.i (shiftK pq)) :=
+    ⟨x, rfl⟩
+  change C.derivedJOnQuotient pq
+    ((C.i (shiftK pq)).quotKerEquivRange.symm
+      ⟨C.i (shiftK pq) x, hxrange⟩) = C.jToDerivedE pq x
+  have hq :=
+    LinearMap.quotKerEquivRange_symm_apply_image
+      (f := C.i (shiftK pq)) x hxrange
+  rw [hq]
+  simp [derivedJOnQuotient]
 
 /-- The derived `D` index receiving the map from `DerivedE C pq`. -/
-def derivedKIndex (pq : Z2) : Z2 :=
+abbrev derivedKIndex (pq : Z2) : Z2 :=
   shiftIPre (shiftK (shiftK pq))
 
 @[simp]
@@ -560,15 +570,17 @@ theorem incomingDerivedI_comp_derivedK
       have harg :
           LinearEquiv.cast
               (R := R) (M := D)
-              (shiftI_derivedIPreIndex (shiftK pq))
+            (shiftI_derivedIPreIndex (shiftK pq))
               (C.kTargetCyclesToDerivedD pq x).1 =
             C.k (shiftK pq) x.1 := by
-        let e :=
-          LinearEquiv.cast
-            (R := R) (M := D)
-            (shiftI_derivedKIndex pq)
-        simpa [kTargetCyclesToDerivedD, reindexedTargetK, e] using
-          e.apply_symm_apply (C.k (shiftK pq) x.1)
+        let e := LinearEquiv.cast (R := R) (M := D)
+          (shiftI_derivedIPreIndex (shiftK pq))
+        change e (LinearEquiv.cast
+          (R := R) (M := D)
+          (shiftI_derivedKIndex pq).symm
+          (C.k (shiftK pq) x.1)) = C.k (shiftK pq) x.1
+        convert e.apply_symm_apply (C.k (shiftK pq) x.1) using 1
+        rfl
       rw [harg]
       exact hik
 
@@ -577,8 +589,8 @@ theorem range_derivedK_le_ker_incomingDerivedI
     (C : ExactCouple R D E) (pq : Z2) :
     LinearMap.range (C.derivedK pq) ≤
       LinearMap.ker (C.incomingDerivedI (shiftK pq)) := by
-  rw [LinearMap.range_le_ker_iff]
-  exact C.incomingDerivedI_comp_derivedK pq
+  exact LinearMap.range_le_ker_iff.mpr
+    (C.incomingDerivedI_comp_derivedK pq)
 
 /-- The reverse inclusion at the second derived `D` vertex. -/
 theorem ker_incomingDerivedI_le_range_derivedK

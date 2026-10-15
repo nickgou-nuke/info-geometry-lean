@@ -7,6 +7,8 @@ import InfoGeometry.OperatorAlgebra.NoncommutativeDuhamelFrechetBridge
 
 noncomputable section
 set_option autoImplicit false
+set_option synthInstance.maxHeartbeats 400000
+set_option maxHeartbeats 400000
 
 namespace InfoGeometry.Canonical.NoncommutativeGibbsSecondDerivativeCenteredBridge
 
@@ -32,14 +34,12 @@ theorem gibbs_exponentialDerivative_eq_duhamelDerivative
   apply ContinuousLinearMap.ext
   intro A
   have hcont :
-      ContinuousAt
-        (InfoGeometry.OperatorAlgebra.duhamelPerturbationIntegral H A) 0 := by
-    simpa [InfoGeometry.OperatorAlgebra.duhamelPerturbationIntegral,
-      InfoGeometry.OperatorAlgebra.duhamelDifferenceQuotient] using
-      (InfoGeometry.OperatorAlgebra.continuous_duhamelDifferenceQuotient H A).continuousAt
+      Continuous
+        (InfoGeometry.OperatorAlgebra.duhamelPerturbationIntegral H A) :=
+    InfoGeometry.OperatorAlgebra.continuous_duhamelDifferenceQuotient H A
   exact
     InfoGeometry.OperatorAlgebra.exponentialDerivative_apply_eq_duhamelDerivative_of_continuousAt
-      H A hcont
+      H A hcont.continuousAt
 
 theorem exponentialDerivative_complex_restrictScalars_eq_real
     {n : ℕ} (H : GibbsOperator n) :

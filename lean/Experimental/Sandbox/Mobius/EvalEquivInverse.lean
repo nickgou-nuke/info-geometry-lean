@@ -27,13 +27,13 @@ lemma mobiusEvalEquiv_inv_symm_apply
 lemma mobiusEvalEquiv_symm_trans_self
     (M : InfoGeometry.MobiusTransform) :
     (mobiusEvalEquiv M).symm.trans (mobiusEvalEquiv M) = Equiv.refl InfoGeometry.RiemannSphere := by
-  ext z
-  exact (mobiusEvalEquiv M).apply_symm_apply z
+  ext z a
+  simp
 
 lemma mobiusEvalEquiv_trans_symm_self
     (M : InfoGeometry.MobiusTransform) :
     (mobiusEvalEquiv M).trans (mobiusEvalEquiv M).symm = Equiv.refl InfoGeometry.RiemannSphere := by
-  ext z
-  exact (mobiusEvalEquiv M).symm_apply_apply z
+  ext z a
+  simp
 
 end Experimental.Sandbox.Mobius

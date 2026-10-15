@@ -14,19 +14,19 @@ open InfoGeometry.Physics.Algebra
 
 variable {R : Type*} [Ring R] [Algebra ℝ R]
 
-def gradeNegTwoSubmodule (e : R) : Submodule ℝ R :=
+noncomputable def gradeNegTwoSubmodule (e : R) : Submodule ℝ R :=
   LinearMap.range (gradeNegTwoProjector e)
 
-def gradeNegOneSubmodule (e : R) : Submodule ℝ R :=
+noncomputable def gradeNegOneSubmodule (e : R) : Submodule ℝ R :=
   LinearMap.range (gradeNegOneProjector e)
 
-def gradeZeroSubmodule (e : R) : Submodule ℝ R :=
+noncomputable def gradeZeroSubmodule (e : R) : Submodule ℝ R :=
   LinearMap.range (gradeZeroProjector e)
 
-def gradePosOneSubmodule (e : R) : Submodule ℝ R :=
+noncomputable def gradePosOneSubmodule (e : R) : Submodule ℝ R :=
   LinearMap.range (gradePosOneProjector e)
 
-def gradePosTwoSubmodule (e : R) : Submodule ℝ R :=
+noncomputable def gradePosTwoSubmodule (e : R) : Submodule ℝ R :=
   LinearMap.range (gradePosTwoProjector e)
 
 theorem mem_gradeNegTwoSubmodule {e x : R} :

@@ -82,11 +82,13 @@ theorem gammaTensorSubalgebra_top :
   | zero =>
       apply top_unique
       intro M _
-      have hscalar : M = (M () ()) • (1 : SplitGammaMatrix 0) := by
-        ext i j
-        cases i
-        cases j
-        simp
+      letI : Unique (TensorIndex 0) := inferInstanceAs (Unique PUnit)
+      have hscalar : M =
+          (M default default) •
+            (1 : SplitGammaMatrix 0) := by
+        apply (Matrix.uniqueEquiv (m := TensorIndex 0) (n := TensorIndex 0)
+          (A := ℝ)).injective
+        simp [Matrix.uniqueEquiv]
       rw [hscalar]
       exact (gammaTensorSubalgebra 0).smul_mem
         (gammaTensorSubalgebra 0).one_mem _
@@ -131,8 +133,7 @@ theorem gammaTensorSubalgebra_top :
       have hAll : ∀ z : TensorProduct ℝ (SplitGammaMatrix n)
           (Matrix (Fin 2) (Fin 2) ℝ), e z ∈ S := by
         intro z
-        refine TensorProduct.induction_on z ?_ ?_ ?_
-        · simpa using S.zero_mem
+        refine TensorProduct.inductionOn z ?_ ?_
         · intro A B
           have hA : appendRightAlgHom n A ∈ S := by
             apply htail_le
@@ -147,8 +148,11 @@ theorem gammaTensorSubalgebra_top :
           simpa [appendRightAlgHom_apply, appendLeftAlgHom_apply,
             appendAtom_mul] using S.mul_mem hA hB
         · intro x y hx hy
-          simpa [e, map_add] using S.add_mem hx hy
-      simpa [e] using hAll (e.symm M)
+          rw [map_add]
+          exact S.add_mem hx hy
+      change M ∈ S
+      rw [← e.apply_symm_apply M]
+      exact hAll (e.symm M)
 
 theorem splitSpinorRepresentation_surjective_of_gammaTensor (n : ℕ) :
     Function.Surjective

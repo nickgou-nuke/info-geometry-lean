@@ -22,6 +22,8 @@ Zorn unit gives `D x = 0`.
 
 noncomputable section
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace InfoGeometry.Lie.CanonicalZornOperatorDerivationLane
 
 open InfoGeometry.Algebra

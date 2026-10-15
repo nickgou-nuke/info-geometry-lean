@@ -163,7 +163,6 @@ theorem dualPlusMap_bijective : Function.Bijective dualPlusMap := by
     refine ⟨LinearMap.dualMap plusSectionMap f, ?_⟩
     apply LinearMap.ext
     intro X
-    dsimp [LinearMap.dualMap_apply]
     have h := congrArg f (plusSection_plusRead X)
     exact h
 
@@ -177,8 +176,9 @@ def wittChiralDuality : VMinus ≃ₗ[ℝ] Module.Dual ℝ VPlus :=
 theorem wittChiralDuality_apply (X : VMinus) (Y : VPlus) :
     wittChiralDuality X Y =
       wittCovectorDuality (minusRead X) (plusRead Y) := by
-  dsimp [wittChiralDuality, dualPlusEquiv, dualPlusMap, LinearMap.dualMap_apply]
+  change dualPlusMap (wittCovectorDuality (minusEquiv.symm X)) Y = _
   rw [minusEquiv_symm_apply]
+  rfl
 
 def plusPartMap : Coord →ₗ[ℝ] VPlus :=
   { toFun := fun X =>

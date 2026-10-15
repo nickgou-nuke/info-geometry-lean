@@ -91,30 +91,38 @@ private theorem nat21_pow30 : 21 ^ 30 ≡ 55 [MOD 571] := by
       exact ((nat21_pow16.mul nat21_pow8).mul nat21_pow4).mul nat21_pow2
     _ ≡ 55 [MOD 571] := by norm_num [Nat.ModEq]
 
+private theorem zmod571_natCast_21 : ((21 : ℕ) : ZMod 571) = 21 := by
+  norm_num
+
 private theorem zmod21_pow285 : (21 : ZMod 571) ^ 285 = 1 := by
   have hcast : ((21 ^ 285 : ℕ) : ZMod 571) = 1 :=
     (ZMod.natCast_eq_natCast_iff _ _ _).2 nat21_pow285
-  simpa only [Nat.cast_pow] using hcast
+  rw [Nat.cast_pow, zmod571_natCast_21] at hcast
+  exact hcast
 
 private theorem zmod21_pow95 : (21 : ZMod 571) ^ 95 = 461 := by
   have hcast : ((21 ^ 95 : ℕ) : ZMod 571) = 461 :=
     (ZMod.natCast_eq_natCast_iff _ _ _).2 nat21_pow95
-  simpa only [Nat.cast_pow] using hcast
+  rw [Nat.cast_pow, zmod571_natCast_21] at hcast
+  exact hcast
 
 private theorem zmod21_pow57 : (21 : ZMod 571) ^ 57 = 481 := by
   have hcast : ((21 ^ 57 : ℕ) : ZMod 571) = 481 :=
     (ZMod.natCast_eq_natCast_iff _ _ _).2 nat21_pow57
-  simpa only [Nat.cast_pow] using hcast
+  rw [Nat.cast_pow, zmod571_natCast_21] at hcast
+  exact hcast
 
 private theorem zmod21_pow15 : (21 : ZMod 571) ^ 15 = 59 := by
   have hcast : ((21 ^ 15 : ℕ) : ZMod 571) = 59 :=
     (ZMod.natCast_eq_natCast_iff _ _ _).2 nat21_pow15
-  simpa only [Nat.cast_pow] using hcast
+  rw [Nat.cast_pow, zmod571_natCast_21] at hcast
+  exact hcast
 
 private theorem zmod21_pow30 : (21 : ZMod 571) ^ 30 = 55 := by
   have hcast : ((21 ^ 30 : ℕ) : ZMod 571) = 55 :=
     (ZMod.natCast_eq_natCast_iff _ _ _).2 nat21_pow30
-  simpa only [Nat.cast_pow] using hcast
+  rw [Nat.cast_pow, zmod571_natCast_21] at hcast
+  exact hcast
 
 private theorem prime_dvd_285 {p : ℕ} (hp : Nat.Prime p) (hpdvd : p ∣ 285) :
     p = 3 ∨ p = 5 ∨ p = 19 := by

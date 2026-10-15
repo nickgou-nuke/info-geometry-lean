@@ -169,6 +169,7 @@ def nullRepresentative (ε : A) : Spinor2 A :=
 def diagonalNullRepresentative (ε : A) : Spinor2 A :=
   ⟨ε, ε⟩
 
+omit [NonAssocSemiring A] in
 @[ext]
 theorem ext {ψ φ : Spinor2 A}
     (hpos : ψ.ψ_pos = φ.ψ_pos) (hneg : ψ.ψ_neg = φ.ψ_neg) : ψ = φ := by
@@ -286,8 +287,7 @@ structure KleinSpinorOrbitStratification (A : Type*) [NonAssocSemiring A] where
 
 namespace KleinSpinorOrbitStratification
 
-variable {A : Type*} [NonAssocSemiring A]
-(S : KleinSpinorOrbitStratification A)
+variable {A : Type*} [NonAssocSemiring A] (S : KleinSpinorOrbitStratification A)
 
 /-- The generic representative belongs to its supplied raw-action orbit. -/
 theorem genericRepresentative_mem_orbit :

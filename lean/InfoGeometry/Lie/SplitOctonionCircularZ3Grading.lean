@@ -81,45 +81,39 @@ theorem uMinus_mem_circularGradeSubmodule_zero :
 theorem circularGradeSubmodules_sup_eq_top :
     circularGradeSubmodule 0 ⊔ circularGradeSubmodule 1 ⊔
         circularGradeSubmodule 2 = (⊤ : Submodule ℝ CZ) := by
-  simpa [circularGradeSubmodule] using weightSubmodules_sup_eq_top
+  change zeroWeightSubmodule ⊔ positiveWeightSubmodule ⊔
+    (if (2 : ZMod 3) = 0 then zeroWeightSubmodule else
+      if (2 : ZMod 3) = 1 then positiveWeightSubmodule else negativeWeightSubmodule) = ⊤
+  rw [if_neg (by decide : (2 : ZMod 3) ≠ 0)]
+  rw [if_neg (by decide : (2 : ZMod 3) ≠ 1)]
+  exact weightSubmodules_sup_eq_top
 
 theorem circularPeirceBasis_mem_circularGradeSubmodule (i : Fin 8) :
     circularPeirceBasis i ∈ circularGradeSubmodule (circularGrade i) := by
   fin_cases i
   · simp only [circularPeirceBasis_apply, frame, circularGrade]
     rw [circularGradeSubmodule]
-    simp only [if_pos]
     exact Submodule.subset_span (by simp)
   · simp only [circularPeirceBasis_apply, frame, circularGrade]
     rw [circularGradeSubmodule]
-    simp only [if_neg (show (1 : ZMod 3) ≠ 0 by decide), if_pos]
     exact Submodule.subset_span ⟨0, rfl⟩
   · simp only [circularPeirceBasis_apply, frame, circularGrade]
     rw [circularGradeSubmodule]
-    simp only [if_neg (show (1 : ZMod 3) ≠ 0 by decide), if_pos]
     exact Submodule.subset_span ⟨1, rfl⟩
   · simp only [circularPeirceBasis_apply, frame, circularGrade]
     rw [circularGradeSubmodule]
-    simp only [if_neg (show (1 : ZMod 3) ≠ 0 by decide), if_pos]
     exact Submodule.subset_span ⟨2, rfl⟩
   · simp only [circularPeirceBasis_apply, frame, circularGrade]
     rw [circularGradeSubmodule]
-    simp only [if_pos]
     exact Submodule.subset_span (by simp)
   · simp only [circularPeirceBasis_apply, frame, circularGrade]
     rw [circularGradeSubmodule]
-    simp only [if_neg (show (2 : ZMod 3) ≠ 0 by decide),
-      if_neg (show (2 : ZMod 3) ≠ 1 by decide)]
     exact Submodule.subset_span ⟨0, rfl⟩
   · simp only [circularPeirceBasis_apply, frame, circularGrade]
     rw [circularGradeSubmodule]
-    simp only [if_neg (show (2 : ZMod 3) ≠ 0 by decide),
-      if_neg (show (2 : ZMod 3) ≠ 1 by decide)]
     exact Submodule.subset_span ⟨1, rfl⟩
   · simp only [circularPeirceBasis_apply, frame, circularGrade]
     rw [circularGradeSubmodule]
-    simp only [if_neg (show (2 : ZMod 3) ≠ 0 by decide),
-      if_neg (show (2 : ZMod 3) ≠ 1 by decide)]
     exact Submodule.subset_span ⟨2, rfl⟩
 
 theorem rootPlus_mul_rootMinus_mem_circularGradeSubmodule_add
@@ -140,7 +134,8 @@ theorem rootPlus_mul_rootMinus_mem_circularGradeSubmodule_add
           iUnit, jUnit, kQuaternionUnit, lUnit,
           InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul,
           InfoGeometry.Canonical.ZornMatrix.mul,
-          Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv,
+          Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordAddEquiv,
+          InfoGeometry.Canonical.ZornMatrix.coordEquiv,
           InfoGeometry.Canonical.ZornMatrix.dot,
           InfoGeometry.Canonical.ZornMatrix.cross] <;>
         (try fin_cases i) <;> norm_num
@@ -165,7 +160,8 @@ theorem rootMinus_mul_rootPlus_mem_circularGradeSubmodule_add
           iUnit, jUnit, kQuaternionUnit, lUnit,
           InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul,
           InfoGeometry.Canonical.ZornMatrix.mul,
-          Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv,
+          Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordAddEquiv,
+          InfoGeometry.Canonical.ZornMatrix.coordEquiv,
           InfoGeometry.Canonical.ZornMatrix.dot,
           InfoGeometry.Canonical.ZornMatrix.cross] <;>
         (try fin_cases i) <;> norm_num
@@ -184,7 +180,8 @@ theorem rootPlus_mul_rootMinus_eq_ite (a b : Fin 3) :
           iUnit, jUnit, kQuaternionUnit, lUnit,
           InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul,
           InfoGeometry.Canonical.ZornMatrix.mul,
-          Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv,
+          Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordAddEquiv,
+          InfoGeometry.Canonical.ZornMatrix.coordEquiv,
           InfoGeometry.Canonical.ZornMatrix.dot,
           InfoGeometry.Canonical.ZornMatrix.cross] <;>
         (try fin_cases ‹Fin 3›) <;> norm_num
@@ -202,7 +199,8 @@ theorem rootMinus_mul_rootPlus_eq_ite (a b : Fin 3) :
           iUnit, jUnit, kQuaternionUnit, lUnit,
           InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul,
           InfoGeometry.Canonical.ZornMatrix.mul,
-          Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv,
+          Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordAddEquiv,
+          InfoGeometry.Canonical.ZornMatrix.coordEquiv,
           InfoGeometry.Canonical.ZornMatrix.dot,
           InfoGeometry.Canonical.ZornMatrix.cross] <;>
         (try fin_cases ‹Fin 3›) <;> norm_num
@@ -318,7 +316,8 @@ theorem rootPlus_zero_mul_rootPlus_one :
       InfoGeometry.Canonical.ZornMatrix.mul,
       InfoGeometry.Canonical.ZornMatrix.dot,
       InfoGeometry.Canonical.ZornMatrix.cross,
-      Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv]
+      Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordAddEquiv,
+      InfoGeometry.Canonical.ZornMatrix.coordEquiv]
   all_goals (try fin_cases ‹Fin 3›) <;> norm_num
 
 theorem rootPlus_one_mul_rootPlus_two :
@@ -329,7 +328,8 @@ theorem rootPlus_one_mul_rootPlus_two :
       InfoGeometry.Canonical.ZornMatrix.mul,
       InfoGeometry.Canonical.ZornMatrix.dot,
       InfoGeometry.Canonical.ZornMatrix.cross,
-      Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv]
+      Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordAddEquiv,
+      InfoGeometry.Canonical.ZornMatrix.coordEquiv]
   all_goals (try fin_cases ‹Fin 3›) <;> norm_num
 
 theorem rootPlus_two_mul_rootPlus_zero :
@@ -340,7 +340,8 @@ theorem rootPlus_two_mul_rootPlus_zero :
       InfoGeometry.Canonical.ZornMatrix.mul,
       InfoGeometry.Canonical.ZornMatrix.dot,
       InfoGeometry.Canonical.ZornMatrix.cross,
-      Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv]
+      Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordAddEquiv,
+      InfoGeometry.Canonical.ZornMatrix.coordEquiv]
   all_goals (try fin_cases ‹Fin 3›) <;> norm_num
 
 theorem rootPlus_one_mul_rootPlus_zero :
@@ -351,7 +352,8 @@ theorem rootPlus_one_mul_rootPlus_zero :
       InfoGeometry.Canonical.ZornMatrix.mul,
       InfoGeometry.Canonical.ZornMatrix.dot,
       InfoGeometry.Canonical.ZornMatrix.cross,
-      Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv]
+      Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordAddEquiv,
+      InfoGeometry.Canonical.ZornMatrix.coordEquiv]
   all_goals (try fin_cases ‹Fin 3›) <;> norm_num
 
 theorem rootPlus_two_mul_rootPlus_one :
@@ -362,7 +364,8 @@ theorem rootPlus_two_mul_rootPlus_one :
       InfoGeometry.Canonical.ZornMatrix.mul,
       InfoGeometry.Canonical.ZornMatrix.dot,
       InfoGeometry.Canonical.ZornMatrix.cross,
-      Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv]
+      Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordAddEquiv,
+      InfoGeometry.Canonical.ZornMatrix.coordEquiv]
   all_goals (try fin_cases ‹Fin 3›) <;> norm_num
 
 theorem rootPlus_zero_mul_rootPlus_two :
@@ -373,7 +376,8 @@ theorem rootPlus_zero_mul_rootPlus_two :
       InfoGeometry.Canonical.ZornMatrix.mul,
       InfoGeometry.Canonical.ZornMatrix.dot,
       InfoGeometry.Canonical.ZornMatrix.cross,
-      Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv]
+      Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordAddEquiv,
+      InfoGeometry.Canonical.ZornMatrix.coordEquiv]
   all_goals (try fin_cases ‹Fin 3›) <;> norm_num
 
 theorem rootPlus_zero_mul_rootPlus_one_mem_grade_add :
@@ -381,14 +385,16 @@ theorem rootPlus_zero_mul_rootPlus_one_mem_grade_add :
       circularGradeSubmodule (circularGrade 1 + circularGrade 2) := by
   rw [rootPlus_zero_mul_rootPlus_one]
   have h := circularPeirceBasis_mem_circularGradeSubmodule (7 : Fin 8)
-  simpa [circularPeirceBasis_seven, circularGrade,
-    circularGradeSubmodule] using h
+  have hgrade : circularGrade 1 + circularGrade 2 = circularGrade 7 := by decide
+  rw [hgrade]
+  simpa [frame] using h
 
 theorem rootMinus_two_ne_zero : rootMinus 2 ≠ 0 := by
   intro h
   have hx := congrArg (fun Z : CZ => Z.x 1) h
   simp [rootMinus, chiralNull, ellBasis, quaternionBasis,
       jUnit, kQuaternionUnit, lUnit, Equiv.smul_def,
+      InfoGeometry.Canonical.ZornMatrix.coordAddEquiv,
       InfoGeometry.Canonical.ZornMatrix.coordEquiv,
       zMul, InfoGeometry.Canonical.ZornMatrix.mul,
       InfoGeometry.Canonical.ZornMatrix.dot,
@@ -440,6 +446,7 @@ theorem ellCommutator_not_derivation :
   have hcoord : (rootMinus 2).x 1 = (-1 / 2 : ℝ) := by
     simp [rootMinus, chiralNull, ellBasis, quaternionBasis,
       kQuaternionUnit, lUnit, Equiv.smul_def,
+      InfoGeometry.Canonical.ZornMatrix.coordAddEquiv,
       InfoGeometry.Canonical.ZornMatrix.coordEquiv,
       zMul, InfoGeometry.Canonical.ZornMatrix.mul,
       InfoGeometry.Canonical.ZornMatrix.dot,

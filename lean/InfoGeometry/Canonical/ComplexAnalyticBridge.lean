@@ -165,13 +165,20 @@ noncomputable def analyticAt_liftedToDoubled_cauchyAnalyticAt
         HasFDerivAt (fun v : H₂ℝ => f (doubledToComplex v))
           (dR.comp complexDoubledCLE.symm.toContinuousLinearMap)
           (complexToDoubled z) := by
-      simpa [dR, dC, doubledToComplex, doubledToComplex_complexToDoubled] using
-        (((h_an.differentiableAt.hasFDerivAt).restrictScalars ℝ).comp (complexToDoubled z)
-          (complexDoubledCLE.symm.toContinuousLinearMap.hasFDerivAt))
+      convert (((h_an.differentiableAt.hasFDerivAt).restrictScalars ℝ).comp
+        (complexToDoubled z)
+        (complexDoubledCLE.symm.toContinuousLinearMap.hasFDerivAt)) using 1 <;>
+        simp [dR, dC, ContinuousLinearMap.comp_apply,
+          doubledToComplex_complexToDoubled]
+      · funext v
+        rfl
     have h_outer :
         HasFDerivAt complexToDoubled complexDoubledCLE.toContinuousLinearMap (f z) :=
       complexDoubledCLE.toContinuousLinearMap.hasFDerivAt
-    simpa [lifted, deriv] using h_outer.comp (complexToDoubled z) h_inner
+    change HasFDerivAt
+      (complexToDoubled ∘ fun v : H₂ℝ => f (doubledToComplex v)) deriv
+      (complexToDoubled z)
+    exact h_outer.comp (complexToDoubled z) h_inner
   · have h_to :
         complexPhaseStructure.IsPhaseLinearMap
           complexDoubledCLE.toContinuousLinearMap doubledPhaseStructure := by
@@ -179,7 +186,7 @@ noncomputable def analyticAt_liftedToDoubled_cauchyAnalyticAt
       intro w
       change complexToDoubled (complexPhaseStructure.K w) =
           doubledPhaseStructure.K (complexToDoubled w)
-      simpa [complexPhaseStructure, doubledPhaseStructure]
+      simpa [complexPhaseStructure, complexIMap, doubledPhaseStructure]
         using (clockAxis_complexToDoubled w).symm
     have h_from :
         doubledPhaseStructure.IsPhaseLinearMap
@@ -188,7 +195,7 @@ noncomputable def analyticAt_liftedToDoubled_cauchyAnalyticAt
       intro v
       change doubledToComplex (doubledPhaseStructure.K v) =
           complexPhaseStructure.K (doubledToComplex v)
-      simpa [complexPhaseStructure, doubledPhaseStructure]
+      simpa [complexPhaseStructure, complexIMap, doubledPhaseStructure]
         using doubledToComplex_clockAxis v
     have h_mid :
         complexPhaseStructure.IsPhaseLinearMap dR complexPhaseStructure := by
@@ -199,10 +206,9 @@ noncomputable def analyticAt_liftedToDoubled_cauchyAnalyticAt
           complexPhaseStructure :=
       PhaseStructure.comp_phaseLinear doubledPhaseStructure complexPhaseStructure complexPhaseStructure
         h_from h_mid
-    simpa [deriv] using
-      (PhaseStructure.comp_phaseLinear
-        doubledPhaseStructure complexPhaseStructure doubledPhaseStructure
-        h_inner h_to)
+    exact PhaseStructure.comp_phaseLinear
+      doubledPhaseStructure complexPhaseStructure doubledPhaseStructure
+      h_inner h_to
 
 /-! ## Analyticity atlas: theorem-safe one-way formulations -/
 

@@ -254,7 +254,8 @@ theorem phaseAxisForce_from_cartanScaleShadow
         (E := E) (BogoliubovTransport.modularTransportGenerator (E := E) H) =
       (2 : ℝ) • ((cartanScaleShadow (E := E) H).comp (doubledPhaseAxis (E := E))) :=
   by
-    simpa [cartanScaleShadow, doubledPhaseAxis]
+    simpa [cartanScaleShadow, doubledPhaseAxis,
+      BogoliubovTransport.modularGeneratorScalePart]
       using
         BogoliubovTransport.phaseAxisForce_eq_from_phaseAntilinearPart
           (E := E) (BogoliubovTransport.modularTransportGenerator (E := E) H)

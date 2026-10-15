@@ -48,12 +48,17 @@ theorem projectiveDeckMap_add (omega : ℂ)
     (g h : Deck2) (q : ProjectiveState) :
     projectiveDeckMap omega homega (g + h) q =
       projectiveDeckMap omega homega h (projectiveDeckMap omega homega g q) := by
-  have h11 : (1 + 1 : Deck2) = 0 := by native_decide
-  fin_cases g <;> fin_cases h
-  · simp [projectiveDeckMap]
-  · simp [projectiveDeckMap]
-  · simp [projectiveDeckMap]
-  · exact (projectiveTheta_involutive omega homega q).symm
+  rcases deck2_zero_or_one g with rfl | rfl <;>
+    rcases deck2_zero_or_one h with rfl | rfl
+  · rw [zero_add]
+    simp [projectiveDeckMap]
+  · rw [zero_add]
+    simp [projectiveDeckMap]
+  · rw [add_zero]
+    simp [projectiveDeckMap]
+  · have h11 : (1 : Deck2) + 1 = 0 := by decide
+    rw [h11]
+    exact (projectiveTheta_involutive omega homega q).symm
 
 theorem continuous_projectiveDeckAction (omega : ℂ)
     (homega : omega ^ 2 + omega + 1 = 0) :
@@ -62,9 +67,10 @@ theorem continuous_projectiveDeckAction (omega : ℂ)
   rw [continuous_prod_of_discrete_left]
   intro g
   fin_cases g
-  · simpa [projectiveDeckMap] using
-      (continuous_id : Continuous (id : ProjectiveState → ProjectiveState))
-  · simpa [projectiveDeckMap] using projectiveTheta_continuous omega homega
+  · change Continuous (id : ProjectiveState → ProjectiveState)
+    exact continuous_id
+  · change Continuous (projectiveTheta omega homega)
+    exact projectiveTheta_continuous omega homega
 
 def projectiveCoordChange (omega : ℂ)
     (homega : omega ^ 2 + omega + 1 = 0)

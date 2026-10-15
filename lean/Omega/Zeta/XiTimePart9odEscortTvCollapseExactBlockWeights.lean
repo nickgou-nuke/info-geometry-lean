@@ -21,7 +21,13 @@ theorem paper_xi_time_part9od_escort_tv_collapse_exact_block_weights
         (xiEscortExactBlockWeightsLaw (blockMass m false) (blockMass m true)) ≤
           C * xiEscortCollapseRate m := by
   intro m
-  simpa [xiEscortExactBlockWeightsLaw, xiEscortExactBlockLaw, xiEscortBlockLaw, hMass m] using
-    hApprox m
+  have heq : xiEscortExactBlockWeightsLaw (blockMass m false) (blockMass m true) =
+      xiEscortExactBlockLaw (fun m => blockMass m true) m := by
+    funext b
+    cases b
+    · simp [xiEscortExactBlockWeightsLaw, xiEscortExactBlockLaw, xiEscortBlockLaw, hMass]
+    · simp [xiEscortExactBlockWeightsLaw, xiEscortExactBlockLaw, xiEscortBlockLaw]
+  rw [heq]
+  exact hApprox m
 
 end Omega.Zeta

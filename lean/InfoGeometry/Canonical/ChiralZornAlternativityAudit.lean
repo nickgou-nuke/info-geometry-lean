@@ -31,8 +31,7 @@ private theorem ofNC_mul (X Y : InfoGeometry.Physics.NCG.NCZornElement BdGBlockQ
     ofNC (InfoGeometry.Physics.NCG.NCZornElement.mul X Y) =
       ChiralZornMatrix.mul (ofNC X) (ofNC Y) := by
   apply chiralZornEquivNC.injective
-  simpa only [chiralZornEquivNC_apply, to_of] using
-    (toNC_mul (ofNC X) (ofNC Y)).symm
+  exact (toNC_mul (ofNC X) (ofNC Y)).symm
 
 theorem bdg_left_alternativity_fails :
     ChiralZornMatrix.mul

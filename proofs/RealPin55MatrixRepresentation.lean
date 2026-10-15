@@ -68,8 +68,8 @@ theorem fullPinMatrix_mem_O55 (g : FullPin55) :
     simp only [Qcoord55, QuadraticMap.comp_apply,
       LinearEquiv.coe_coe, LinearEquiv.symm_apply_apply]
     exact fullPin55_preserves_Q g (v55Fin10Equiv.symm x)
-  have hm := congrArg QuadraticMap.toMatrix' hcomp
-  rw [QuadraticMap.toMatrix'_comp, Qcoord55_toMatrix] at hm
+  have hm := congrArg QuadraticForm.toMatrix' hcomp
+  rw [QuadraticForm.toMatrix'_comp, Qcoord55_toMatrix] at hm
   change A.transpose * eta55 * A = eta55
   simpa [F, A] using hm
 

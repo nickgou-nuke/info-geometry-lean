@@ -39,7 +39,10 @@ theorem hasDerivAt_phiXY {x y : ℝ}
   have hlog1 := (Real.hasDerivAt_log h1).comp x hg1
   have hmain := (hlog0.const_mul (1 / 2 : ℝ)).sub
     (hlog1.const_mul (1 / 2 : ℝ))
-  convert hmain using 1 <;> ring
+  convert hmain using 1
+  · funext t
+    dsimp [phiXY, Function.comp_apply]
+  · ring
 
 theorem hasDerivAt_phiXY_half (y : ℝ) :
     HasDerivAt (fun t => phiXY t y)
@@ -67,7 +70,10 @@ theorem hasDerivAt_phiXY_second {x y : ℝ}
   have hlog1 := (Real.hasDerivAt_log h1).comp y (hg ((x - 1) ^ 2))
   have hmain := (hlog0.const_mul (1 / 2 : ℝ)).sub
     (hlog1.const_mul (1 / 2 : ℝ))
-  convert hmain using 1 <;> ring
+  convert hmain using 1
+  · funext t
+    dsimp [phiXY, Function.comp_apply]
+  · ring
 
 theorem deriv_phiXY_half (y : ℝ) :
     deriv (fun t => phiXY t y) (1 / 2) = 1 / ((1 / 4 : ℝ) + y ^ 2) :=
@@ -86,7 +92,15 @@ theorem hasDerivAt_phiXY_comp {f g : ℝ → ℝ} {t u v : ℝ}
   have hl0 := ((hf.pow 2).add (hg.pow 2)).log h0
   have hl1 := (((hf.sub_const 1).pow 2).add (hg.pow 2)).log h1
   have hm := (hl0.const_mul (1 / 2 : ℝ)).sub (hl1.const_mul (1 / 2 : ℝ))
-  convert hm using 1 <;> simp [phiXY, Pi.add_apply, Pi.pow_apply] <;> ring
+  convert hm using 1
+  · funext a
+    dsimp [phiXY, Function.comp_apply]
+  · simp only [Pi.add_apply, Pi.pow_apply]
+    have hden : (f t - 1) ^ 2 + g t ^ 2 =
+        1 - f t * 2 + f t ^ 2 + g t ^ 2 := by ring
+    rw [hden]
+    field_simp [h0, h1]
+    <;> ring
 
 theorem boundaryKernel_pos (y : ℝ) :
     0 < 1 / ((1 / 4 : ℝ) + y ^ 2) := by positivity

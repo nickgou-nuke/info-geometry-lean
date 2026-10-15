@@ -23,8 +23,6 @@ structure LogPotentialSystem (S : Type*) where
   beta : ℝ
   nonempty : Nonempty S
 
-attribute [instance] LogPotentialSystem.fintypeS
-
 variable {S S₁ S₂ : Type*}
 
 /-- Partition function `Z(β)`. -/

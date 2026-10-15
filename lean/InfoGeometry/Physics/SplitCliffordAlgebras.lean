@@ -384,9 +384,9 @@ The split Clifford carrier and its `ZMod 2` grading are fixed by `Q11`, so they
 are not repeated as proposition fields.  Variable closure data consists of a
 five-graded Lie algebra and a native Mathlib group action on its carrier.
 -/
-structure ProjectiveAffineConformalClosure
-    (R G : Type*) [CommRing R] [Group G] where
-  tkk : TKKJordanPairData.FiveGradedLieAlgebra R
+structure ProjectiveAffineConformalClosure.{uR, uG, uL}
+    (R : Type uR) (G : Type uG) [CommRing R] [Group G] where
+  tkk : TKKJordanPairData.FiveGradedLieAlgebra.{uR, uL} R
   structureGroupAction : MulAction G tkk.L
 
 namespace ProjectiveAffineConformalClosure
@@ -740,17 +740,34 @@ def splitSpinorDim (n : ℕ) : ℕ :=
 @[simp] theorem splitSpinorDim_five : splitSpinorDim 5 = 32 := by
   norm_num [splitSpinorDim]
 
-/-- The `Cl(4,4)` real spinor sheet has dimension `16`. -/
-def chiralSheetDim : ℕ := splitSpinorDim 4
+/-- Arithmetic prediction for the dimension of one half of the `Cl(4,4)`
+spinor size.  This is dimension bookkeeping only: it does not construct a
+spinor representation or prove a chirality decomposition. -/
+def cl44ChiralHalfDim : ℕ := 2 ^ (4 - 1)
 
-/-- The `Cl(5,5)` real spinor carrier has two `16`-dimensional chiral sheets. -/
-def doubledChiralDim : ℕ := chiralSheetDim + chiralSheetDim
+/-- Arithmetic prediction for the dimension of one half of the `Cl(5,5)`
+spinor size.  This is dimension bookkeeping only: it does not construct a
+spinor representation or prove a chirality decomposition. -/
+def cl55ChiralHalfDim : ℕ := 2 ^ (5 - 1)
 
-@[simp] theorem chiralSheetDim_eq_16 : chiralSheetDim = 16 := by
-  norm_num [chiralSheetDim, splitSpinorDim]
+/-- The two predicted `Cl(5,5)` half-spin dimensions add to the full spinor
+size `2^5`. -/
+def doubledChiralDim : ℕ := cl55ChiralHalfDim + cl55ChiralHalfDim
+
+@[simp] theorem cl44ChiralHalfDim_eq_8 : cl44ChiralHalfDim = 8 := by
+  norm_num [cl44ChiralHalfDim]
+
+/-- The two `Cl(4,4)` half-spin dimension predictions sum to the full
+spinor-size prediction `2^4`. -/
+theorem cl44_chiral_halves_sum_to_spinor_size :
+    cl44ChiralHalfDim + cl44ChiralHalfDim = splitSpinorDim 4 := by
+  norm_num [cl44ChiralHalfDim, splitSpinorDim]
+
+@[simp] theorem cl55ChiralHalfDim_eq_16 : cl55ChiralHalfDim = 16 := by
+  norm_num [cl55ChiralHalfDim]
 
 @[simp] theorem doubledChiralDim_eq_32 : doubledChiralDim = 32 := by
-  norm_num [doubledChiralDim, chiralSheetDim, splitSpinorDim]
+  norm_num [doubledChiralDim, cl55ChiralHalfDim]
 
 /-- The two real chiral sheets supplied by the `Cl(1,1)` factor. -/
 inductive ChiralSheet where

@@ -91,6 +91,34 @@ theorem contract_add_swap (φ ψ : Module.Dual ℝ V5) :
 def neutralAction (w : V5 × Module.Dual ℝ V5) : SpinorEnd :=
   wedge w.1 + contract w.2
 
+/-- The first vector factor of a decomposable bivector annihilates that
+spinor under the neutral creation/contraction action. -/
+theorem neutralAction_leftFactor_annihilates_bivector (u v : V5) :
+    neutralAction (u, (0 : Module.Dual ℝ V5))
+      (ExteriorAlgebra.ι ℝ u * ExteriorAlgebra.ι ℝ v) = 0 := by
+  simp [neutralAction, wedge, contract, ← mul_assoc]
+
+/-- The second vector factor of a decomposable bivector also annihilates that
+spinor; this uses the exterior anticommutation law. -/
+theorem neutralAction_rightFactor_annihilates_bivector (u v : V5) :
+    neutralAction (v, (0 : Module.Dual ℝ V5))
+      (ExteriorAlgebra.ι ℝ u * ExteriorAlgebra.ι ℝ v) = 0 := by
+  have h := congrArg (fun T : SpinorEnd => T (ExteriorAlgebra.ι ℝ v))
+    (wedge_add_swap v u)
+  simpa [neutralAction, wedge, contract, Module.End.mul_apply,
+    ← mul_assoc, ExteriorAlgebra.ι_sq_zero] using h
+
+/-- A covector vanishing on both factors annihilates their decomposable
+bivector by the native Mathlib contraction identity. -/
+theorem neutralAction_covector_annihilates_bivector
+    (u v : V5) (φ : Module.Dual ℝ V5)
+    (hu : φ u = 0) (hv : φ v = 0) :
+    neutralAction ((0 : V5), φ)
+      (ExteriorAlgebra.ι ℝ u * ExteriorAlgebra.ι ℝ v) = 0 := by
+  simp [neutralAction, wedge, contract,
+    CliffordAlgebra.contractLeft_ι_mul,
+    CliffordAlgebra.contractLeft_ι, hu, hv]
+
 def gammaPlus (i : Fin 5) : SpinorEnd :=
   neutralAction (basisVector i, dualBasisVector i)
 
@@ -297,7 +325,8 @@ theorem neutralAction_satisfiesRealCliffordRelation :
       neutralPairing neutralActionMap := by
   intro w z ψ
   have h := neutralAction_anticommutator w z
-  simpa [Module.End.mul_apply] using congrArg (fun T : SpinorEnd => T ψ) h
+  simpa [Module.End.mul_apply, neutralActionMap] using
+    congrArg (fun T : SpinorEnd => T ψ) h
 
 /-! ## The universal Clifford representation -/
 
@@ -308,7 +337,9 @@ noncomputable def neutralCliffordRep :
   CliffordAlgebra.lift _
     ⟨neutralActionMap, by
       intro w
-      simpa [InfoGeometry.Clifford.NeutralPhaseSpaceCore.canonicalNeutralFormUnscaled_apply]
+      simpa [neutralActionMap,
+        InfoGeometry.Clifford.NeutralPhaseSpaceCore.canonicalNeutralFormUnscaled_apply,
+        Algebra.smul_def]
         using neutralAction_sq w⟩
 
 @[simp] theorem neutralCliffordRep_ι (w : NeutralSpace) :

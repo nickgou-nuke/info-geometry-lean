@@ -154,10 +154,11 @@ theorem weylRootAction_sr_zero_apply (r : G2Root) :
 theorem weylRootAction_sr_one_apply (r : G2Root) :
     InfoGeometry.Algebra.Zorn.G2RootSystemWeylBridge.weylRootAction
         (1, true) r = concreteRootAction G2ArtinPresentation.sigmaOne r := by
-  simpa [InfoGeometry.Algebra.Zorn.G2RootSystemWeylBridge.weylRootAction,
-    InfoGeometry.Algebra.Zorn.G2RootSystemWeylBridge.cActionPow,
-    InfoGeometry.Algebra.Zorn.G2RootSystemWeylBridge.cActionPowNat] using
-    (concreteRootAction_sigmaOne_apply r).symm
+  change sAction (InfoGeometry.Algebra.Zorn.G2RootSystemWeylBridge.cActionPowNat
+    (ZMod.val (1 : ZMod 6)) r) = concreteRootAction G2ArtinPresentation.sigmaOne r
+  rw [ZMod.val_one_eq_one_mod, Nat.mod_eq_of_lt (by decide)]
+  change sAction (cAction r) = _
+  exact (concreteRootAction_sigmaOne_apply r).symm
 
 /-! The transported root action has the expected coordinate readback for
     every Artin element.  This is the global compatibility statement for
@@ -382,7 +383,8 @@ private theorem artinToCoxeterRelationRespected :
     FreeGroup.lift_apply_of, artinToCoxeterAssignment]
   simp [DihedralGroup.sr_mul_sr, DihedralGroup.r_mul_r,
     DihedralGroup.inv_r]
-  convert (DihedralGroup.r_one_pow_n (n := 6)) using 1
+  rw [← DihedralGroup.r_zero]
+  congr 1
 
 noncomputable def artinToCoxeter :
     G2ArtinPresentation.ArtinG2 →* DihedralGroup 6 :=
@@ -453,7 +455,12 @@ theorem dihedralSwapHom_involutive :
     dihedralSwapHom.comp dihedralSwapHom = MonoidHom.id (DihedralGroup 6) := by
   apply MonoidHom.ext
   intro x
-  cases x <;> simp [dihedralSwapHom, dihedralSwap]
+  cases x with
+  | r k => simp [MonoidHom.comp_apply, dihedralSwapHom_r, neg_neg]
+  | sr k =>
+      simp only [MonoidHom.comp_apply, dihedralSwapHom_sr]
+      congr 1
+      ring
 
 theorem artinToCoxeter_swap_compatibility
     (w : G2ArtinPresentation.ArtinG2) :
@@ -705,8 +712,14 @@ theorem quotientToConcreteWeyl_rootAut_conj
           (quotientToDihedral w)) r) := by
   obtain ⟨w, rfl⟩ := QuotientGroup.mk'_surjective
     G2ArtinPresentation.involutionKernel w
-  simpa only [quotientToConcreteWeyl_mk, quotientToDihedral_mk] using
-    (artinToConcreteWeyl_rootAut_conj w r)
+  change (quotientToConcreteWeyl (G2ArtinPresentation.artinQuotientMap w)).val *
+      rootAut r * ((quotientToConcreteWeyl
+        (G2ArtinPresentation.artinQuotientMap w)).val)⁻¹ =
+    rootAut (InfoGeometry.Algebra.Zorn.G2RootSystemWeylBridge.weylRootAction
+      (InfoGeometry.Algebra.Zorn.G2ConcreteWeylG2.dihedralParameterMap
+        (quotientToDihedral (G2ArtinPresentation.artinQuotientMap w))) r)
+  rw [quotientToConcreteWeyl_mk, quotientToDihedral_mk]
+  exact artinToConcreteWeyl_rootAut_conj w r
 
 @[simp] theorem artinToConcreteWeyl_sigmaZero :
     artinToConcreteWeyl G2ArtinPresentation.sigmaZero =
@@ -748,7 +761,7 @@ private theorem concreteRelationRespected :
     simpa [G2ArtinPresentation.relations] using hr
   subst r
   simpa only [G2ArtinPresentation.relation, map_mul, map_inv,
-    FreeGroup.lift_apply_of] using
+    FreeGroup.lift_apply_of, concreteAssignment] using
     (show s * t * s * t * s * t *
         (t * s * t * s * t * s)⁻¹ =
       (1 : InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.SplitOctF2Aut) by
@@ -953,7 +966,8 @@ private theorem concreteWeylRelationRespected :
   subst r
   apply Subtype.ext
   simpa only [G2ArtinPresentation.relation, map_mul, map_inv,
-    FreeGroup.lift_apply_of, concreteWeylAssignment] using
+    FreeGroup.lift_apply_of, concreteWeylAssignment, Subgroup.coe_mul,
+    Subgroup.coe_inv, Subgroup.coe_one] using
     (show s * t * s * t * s * t *
         (t * s * t * s * t * s)⁻¹ =
       (1 : InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.SplitOctF2Aut) from
@@ -988,8 +1002,12 @@ theorem concreteActionWeyl_eq_artinToConcreteWeyl :
   apply PresentedGroup.ext
   intro x
   fin_cases x
-  · simpa [G2ArtinPresentation.sigmaZero] using concreteActionWeyl_sigmaZero
-  · simpa [G2ArtinPresentation.sigmaOne] using concreteActionWeyl_sigmaOne
+  · change concreteActionWeyl G2ArtinPresentation.sigmaZero =
+      artinToConcreteWeyl G2ArtinPresentation.sigmaZero
+    rw [concreteActionWeyl_sigmaZero, artinToConcreteWeyl_sigmaZero]
+  · change concreteActionWeyl G2ArtinPresentation.sigmaOne =
+      artinToConcreteWeyl G2ArtinPresentation.sigmaOne
+    rw [concreteActionWeyl_sigmaOne, artinToConcreteWeyl_sigmaOne]
 
 /-! The two existing Artin representations agree on generator labels.  The
 carriers remain intentionally distinct: one is the explicit root

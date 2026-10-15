@@ -8,6 +8,7 @@ import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
 import Mathlib.LinearAlgebra.Matrix.Vec
 import Mathlib.Tactic
 import Mathlib.Topology.Constructions
+import Mathlib.Topology.Instances.Matrix
 
 /-!
 # Split-Quaternionic Jacobian Cocycle
@@ -677,12 +678,17 @@ theorem tendsto_hprime_iff_entries {ι : Type*} {l : Filter ι} {qSeq : ι → H
     {q : HPrime} :
     Filter.Tendsto qSeq l (nhds q) ↔
       ∀ i j : Fin 2, Filter.Tendsto (fun n => qSeq n i j) l (nhds (q i j)) := by
+  change Filter.Tendsto (fun n i => qSeq n i) l (nhds (fun i => q i)) ↔ _
   rw [tendsto_pi_nhds]
   constructor
   · intro h i j
-    exact tendsto_pi_nhds.mp (h i) j
+    have hij := h i
+    rw [tendsto_pi_nhds] at hij
+    exact hij j
   · intro h i
-    exact tendsto_pi_nhds.mpr fun j => h i j
+    rw [tendsto_pi_nhds]
+    intro j
+    exact h i j
 
 /-- The first column sector in the `M₂(ℝ)` model. -/
 def firstColumn (q : HPrime) : Fin 2 → ℝ :=
@@ -793,6 +799,7 @@ namespace HPrimeGroupoidCoefficientSystem
 variable (S : HPrimeGroupoidCoefficientSystem Γ)
 
 /-- Realize the split-quaternionic coefficient system as the generic groupoid cocycle substrate. -/
+@[reducible]
 def toGroupoidMultiplicativeCoefficientSystem :
     GroupoidMultiplicativeCoefficientSystem Γ where
   coeff _ := HPrimeUnit
@@ -841,8 +848,8 @@ theorem scalarRN_groupoidCocycle_chain_rule
     {X Y Z : Γ} (f : X ⟶ Y) (g : Y ⟶ Z) :
     scalarRN (C.toFun (f ≫ g)) = scalarRN (C.toFun f) * scalarRN (C.toFun g) := by
   rw [hprimeGroupoidCocycle_chain_rule C f g]
-  simp [HPrimeGroupoidCoefficientSystem.toGroupoidMultiplicativeCoefficientSystem,
-    scalarRN, unitNorm_mul, hpres f (C.toFun g), abs_mul]
+  dsimp [scalarRN]
+  rw [unitNorm_mul, abs_mul, hpres f (C.toFun g)]
 
 /--
 If arrow transport preserves the split norm, the extracted logarithmic
@@ -872,8 +879,7 @@ theorem logJac4D_groupoidCocycle_chain_rule
     {X Y Z : Γ} (f : X ⟶ Y) (g : Y ⟶ Z) :
     logJac4D (C.toFun (f ≫ g)) =
       logJac4D (C.toFun f) + logJac4D (C.toFun g) := by
-  rw [logJac4D_eq_two_logAbsSplitNorm, logJac4D_eq_two_logAbsSplitNorm,
-    logJac4D_eq_two_logAbsSplitNorm]
+  simp_rw [logJac4D_eq_two_logAbsSplitNorm]
   rw [logAbsSplitNorm_groupoidCocycle_chain_rule C hpres f g]
   ring
 

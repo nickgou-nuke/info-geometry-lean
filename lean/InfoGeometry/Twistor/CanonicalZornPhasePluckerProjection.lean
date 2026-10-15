@@ -25,6 +25,11 @@ abbrev CanonicalZorn := InfoGeometry.Canonical.ZornMatrix ℝ
 
 def offDiagonalPhase (X : CanonicalZorn) : Phase := (X.x, X.y)
 
+private theorem chiralPairing_eq_canonicalZornDot (x y : Fin 3 → ℝ) :
+    chiralPairing x y = InfoGeometry.Canonical.ZornMatrix.dot x y := by
+  simp [chiralPairing, InfoGeometry.Algebra.Vec3.dot,
+    InfoGeometry.Canonical.ZornMatrix.dot]
+
 def plucker6ToPhase
     (P : InfoGeometry.Projective.KleinQuadricPlucker.Plucker6 ℝ) : Phase :=
   (![P.p01, P.p02, P.p03], ![P.p23, -P.p13, P.p12])
@@ -121,8 +126,8 @@ theorem kleinQ_offDiagonalPhase (X : CanonicalZorn) :
     InfoGeometry.Projective.KleinQuadricPlucker.Plucker6.kleinQ
         (phaseToPlucker6 (offDiagonalPhase X)) =
       InfoGeometry.Canonical.ZornMatrix.dot X.x X.y := by
-  simpa [offDiagonalPhase, chiralPairing] using
-    (kleinQ_phaseToPlucker6 (offDiagonalPhase X))
+  rw [kleinQ_phaseToPlucker6]
+  exact chiralPairing_eq_canonicalZornDot X.x X.y
 
 theorem kleinNull_offDiagonalPhase_iff (X : CanonicalZorn) :
     InfoGeometry.Projective.KleinQuadricPlucker.Plucker6.kleinQ
@@ -185,7 +190,9 @@ theorem offDiagonalPhase_pluckerLine_of_null
       InfoGeometry.Projective.KleinQuadricPlucker.Plucker6.pluckerLine U V =
         phaseToPlucker6 (offDiagonalPhase X) := by
   apply phaseNull_has_pluckerLine_of_q0_ne_zero
-  · simpa [offDiagonalPhase, chiralPairing] using hnull
+  · change chiralPairing X.x X.y = 0
+    rw [chiralPairing_eq_canonicalZornDot]
+    exact hnull
   · exact hx0
 
 theorem offDiagonalPhase_pluckerLine_of_kleinNull

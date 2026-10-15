@@ -36,6 +36,9 @@ open InfoGeometry.Lie.SplitOctonionSO44SO55OrthogonalBridge
 
 abbrev Mat10 := InfoGeometry.Algebra.FiniteSpin.Mat10R
 
+local instance : LieRing Mat10 := LieRing.ofAssociativeRing
+local instance : LieAlgebra ℝ Mat10 := LieAlgebra.ofAssociativeAlgebra
+
 /-- The canonical (5,5) Levi metric on Fin 10. -/
 def eta55LeviMat10 : Mat10 :=
   fun i j => eta55Levi (fin10Equiv i) (fin10Equiv j)

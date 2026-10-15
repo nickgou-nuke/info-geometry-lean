@@ -64,29 +64,37 @@ theorem trace_mul_eq_zero_of_anticomm_invariance
 
 /-- Concrete Pauli Z (Chirality / Tilt operator). -/
 def tilt2 : Matrix (Fin 2) (Fin 2) ℂ :=
-  ![![1, 0], ![0, -1]]
+  fun i j => match i, j with
+    | 0, 0 => 1
+    | 0, 1 => 0
+    | 1, 0 => 0
+    | 1, 1 => -1
 
 /-- Concrete Pauli X (Charge / Switch operator). -/
 def switch2 : Matrix (Fin 2) (Fin 2) ℂ :=
-  ![![0, 1], ![1, 0]]
+  fun i j => match i, j with
+    | 0, 0 => 0
+    | 0, 1 => 1
+    | 1, 0 => 1
+    | 1, 1 => 0
 
 /-- 🏆 THEOREM: Tilt squared is identity: $T^2 = I$. -/
 theorem tilt2_sq : tilt2 * tilt2 = 1 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-  { dsimp [tilt2]; simp [Matrix.mul_apply, Fin.sum_univ_two] }
+    norm_num [tilt2, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- 🏆 THEOREM: Switch squared is identity: $S^2 = I$. -/
 theorem switch2_sq : switch2 * switch2 = 1 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-  { dsimp [switch2]; simp [Matrix.mul_apply, Fin.sum_univ_two] }
+    norm_num [switch2, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- 🏆 THEOREM: Tilt and Switch strictly anticommute: $TS = -ST$. -/
 theorem tilt2_switch2_anticomm : tilt2 * switch2 = - (switch2 * tilt2) := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-  { dsimp [tilt2, switch2]; simp [Matrix.mul_apply, Fin.sum_univ_two] }
+    norm_num [tilt2, switch2, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- A boundary state on the 2×2 carrier. -/
 structure BoundaryState2 where

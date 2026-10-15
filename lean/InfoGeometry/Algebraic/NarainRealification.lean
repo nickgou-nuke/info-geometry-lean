@@ -41,7 +41,6 @@ theorem narainRealification_splitQuadraticForm_eq_four_sum
   simp [narainToSplit, Fintype.sum_sum_type, ← Finset.sum_add_distrib, - Finset.sum_neg_distrib]
   apply Finset.sum_congr rfl
   intro i _
-  dsimp [splitWeight]
   ring
 
 /--

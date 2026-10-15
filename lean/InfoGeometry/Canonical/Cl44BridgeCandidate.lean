@@ -26,7 +26,7 @@ open InfoGeometry.Canonical.OperatorProjectorMismatch
 open InfoGeometry.Canonical.ConformalUnification
 open InfoGeometry.Canonical.MetricTransport
 
-universe uGenerator uHilbert uKreinGenerator uKreinHilbert uKreinOuter uKreinAux uSplit
+universe uGenerator uHilbert
 
 /-- Compatibility carrier expected by operator-owner-map tests. -/
 structure Cl44BridgeCandidate where
@@ -71,7 +71,7 @@ structure Candidate where
   realCliffordRepresentation :
     InfoGeometry.OperatorAlgebra.RealGWClifford.RealCliffordHilbertModulePacket.{uGenerator, uHilbert}
   splitSignature :
-    InfoGeometry.OperatorAlgebra.RealGWClifford.RealGWToSplitKreinBridgePacket.{uKreinGenerator, uKreinHilbert, uKreinOuter, uKreinAux, uSplit}
+    InfoGeometry.OperatorAlgebra.RealGWClifford.RealGWToSplitKreinBridgePacket
   spin44OrSO44Readout : InfoGeometry.Canonical.Spin44CharacterShadow.Cartan4
   nullConePreservation :
     ∃ (K : Type) (_ : Field K) (V : Type) (_ : AddCommGroup V) (_ : Module K V)
@@ -87,8 +87,7 @@ This replaces the former untyped `operatorSystem` socket with the actual
 continuous-operator space owned by the representation carrier.
 -/
 def Candidate.operatorSystem
-    (C : Candidate.{uGenerator, uHilbert, uKreinGenerator, uKreinHilbert,
-      uKreinOuter, uKreinAux}) : Type _ :=
+    (C : Candidate.{uGenerator, uHilbert}) : Type _ :=
   C.realCliffordRepresentation.HilbertCarrier →L[ℝ]
     C.realCliffordRepresentation.HilbertCarrier
 
@@ -99,7 +98,7 @@ structure Cl44BridgeTearPoint where
 
 /-- A supplied candidate exposes the concrete structures it actually owns. -/
 theorem candidate_requires_concrete_data
-    (C : Candidate.{uGenerator, uHilbert, uKreinGenerator, uKreinHilbert, uKreinOuter, uKreinAux, uSplit}) :
+    (C : Candidate.{uGenerator, uHilbert}) :
     (∃ (R : Type) (_ : Ring R) (P : ProjectorPair R),
       ProjectorPair.ProjectorAgreement P) ∧
       (∃ (R : Type) (_ : Ring R) (P P' : ProjectorPair R),
@@ -116,7 +115,7 @@ theorem candidate_requires_concrete_data
         (CI : ConformalInference E),
         (‖CI.projectorObstruction‖₊ = CI.obstructionScale ∧ CI.obstructionScale = ‖CI.projectorObstruction‖₊ ∧ CI.chiralScale = CI.obstructionScale ∧ CI.epsilon = CI.obstructionScale ∧ CI.unitOfAction = CI.obstructionScale ∧ CI.unitOfAction = ‖CI.projectorObstruction‖₊)) ∧
       Nonempty (InfoGeometry.OperatorAlgebra.RealGWClifford.RealCliffordHilbertModulePacket.{uGenerator, uHilbert}) ∧
-      Nonempty (InfoGeometry.OperatorAlgebra.RealGWClifford.RealGWToSplitKreinBridgePacket.{uKreinGenerator, uKreinHilbert, uKreinOuter, uKreinAux, uSplit}) ∧
+      Nonempty (InfoGeometry.OperatorAlgebra.RealGWClifford.RealGWToSplitKreinBridgePacket) ∧
       Nonempty InfoGeometry.Canonical.Spin44CharacterShadow.Cartan4 ∧
       (∃ (K : Type) (_ : Field K) (V : Type) (_ : AddCommGroup V) (_ : Module K V)
         (q : QuadraticForm K V),
@@ -149,7 +148,7 @@ theorem candidate_requires_concrete_data
 
 /-- The null-cone preservation structure is available as an explicit owner packet. -/
 theorem candidate_nullConePreservation_packet
-    (C : Candidate.{uGenerator, uHilbert, uKreinGenerator, uKreinHilbert, uKreinOuter, uKreinAux, uSplit}) :
+    (C : Candidate.{uGenerator, uHilbert}) :
     ∃ (K : Type) (_ : Field K) (V : Type) (_ : AddCommGroup V) (_ : Module K V)
       (q : QuadraticForm K V),
       Nonempty (NullConeConfinement.ConfinementOperator q) :=
@@ -157,14 +156,14 @@ theorem candidate_nullConePreservation_packet
 
 /-- The quantization data are available as an explicit owner packet. -/
 theorem candidate_quantization_packet
-    (C : Candidate.{uGenerator, uHilbert, uKreinGenerator, uKreinHilbert, uKreinOuter, uKreinAux, uSplit}) :
+    (C : Candidate.{uGenerator, uHilbert}) :
     ∃ (Op : Type) (_ : NormedAddCommGroup Op) (_ : NormedSpace ℝ Op),
       Nonempty (OperatorThermodynamics.FirstQuantizationLaw Op) :=
   C.quantization
 
 /-- The Weyl supertrace data expose the finite denominator/parity equality. -/
 theorem candidate_weylSupertrace_denominator_eq_paritySupertrace
-    (C : Candidate.{uGenerator, uHilbert, uKreinGenerator, uKreinHilbert, uKreinOuter, uKreinAux, uSplit}) :
+    (C : Candidate.{uGenerator, uHilbert}) :
     ∃ (W : WeylSupertraceOwner.FiniteWeylSupertraceOwner),
       InfoGeometry.Canonical.SouriauThermalEvaluation.finiteEvaluatedDenominator W.evaluation =
         InfoGeometry.Canonical.SouriauThermalEvaluation.finiteEvaluatedAlternatingSum W.evaluation := by
@@ -178,7 +177,7 @@ def candidate_weylSupertrace_packet
 
 /-- The Weyl supertrace packet also reads through the finite Möbius/Euler equality. -/
 theorem candidate_weylSupertrace_mobiusDirichlet_eq_finiteFermionicEulerProduct
-    (C : Candidate.{uGenerator, uHilbert, uKreinGenerator, uKreinHilbert, uKreinOuter, uKreinAux, uSplit}) :
+    (C : Candidate.{uGenerator, uHilbert}) :
     let x : ℕ → ℂ := fun p => ((candidate_weylSupertrace_packet C).evaluation.e_neg_alpha p : ℂ)
     InfoGeometry.Arithmetic.MobiusDirichletInverseBridge.finiteMobiusDirichletPolynomial
         (WeylSupertraceOwner.toPrimeRegister (candidate_weylSupertrace_packet C)) x =
@@ -191,7 +190,7 @@ theorem candidate_weylSupertrace_mobiusDirichlet_eq_finiteFermionicEulerProduct
 
 /-- A conformal canopy package yields the operator-owner branch. -/
 theorem candidate_conformal_operator_owner
-    (C : Candidate.{uGenerator, uHilbert, uKreinGenerator, uKreinHilbert, uKreinOuter, uKreinAux, uSplit}) :
+    (C : Candidate.{uGenerator, uHilbert}) :
     ∃ (E : Type) (_ : NormedAddCommGroup E) (_ : InnerProductSpace ℝ E) (_ : CompleteSpace E)
       (CI : ConformalInference E) (X : InfoGeometry.Quantum.RealSplitCl11Action E),
       ConformalInference.ObstructionOperatorOwner (CI := CI) X := by
@@ -206,7 +205,7 @@ theorem candidate_conformal_operator_owner
 
 /-- A conformal canopy package yields the scalar-readout branch. -/
 theorem candidate_conformal_scalar_readout
-    (C : Candidate.{uGenerator, uHilbert, uKreinGenerator, uKreinHilbert, uKreinOuter, uKreinAux, uSplit}) :
+    (C : Candidate.{uGenerator, uHilbert}) :
     ∃ (E : Type) (_ : NormedAddCommGroup E) (_ : InnerProductSpace ℝ E) (_ : CompleteSpace E)
       (CI : ConformalInference E),
       (‖CI.projectorObstruction‖₊ = CI.obstructionScale ∧ CI.obstructionScale = ‖CI.projectorObstruction‖₊ ∧ CI.chiralScale = CI.obstructionScale ∧ CI.epsilon = CI.obstructionScale ∧ CI.unitOfAction = CI.obstructionScale ∧ CI.unitOfAction = ‖CI.projectorObstruction‖₊) := by
@@ -221,7 +220,7 @@ theorem candidate_conformal_scalar_readout
 
 /-- The conformal canopy package closes both the operator-owner and scalar-readout branches. -/
 theorem candidate_conformal_branch_closure
-    (C : Candidate.{uGenerator, uHilbert, uKreinGenerator, uKreinHilbert, uKreinOuter, uKreinAux, uSplit}) :
+    (C : Candidate.{uGenerator, uHilbert}) :
     ∃ (E : Type) (_ : NormedAddCommGroup E) (_ : InnerProductSpace ℝ E) (_ : CompleteSpace E)
       (CI : ConformalInference E) (X : InfoGeometry.Quantum.RealSplitCl11Action E),
       ConformalInference.ObstructionOperatorOwner (CI := CI) X ∧
@@ -239,26 +238,26 @@ theorem candidate_conformal_branch_closure
 
 /-- The real Clifford representation data are nonempty. -/
 theorem candidate_realCliffordRepresentation_nonempty
-    (C : Candidate.{uGenerator, uHilbert, uKreinGenerator, uKreinHilbert, uKreinOuter, uKreinAux, uSplit}) :
+    (C : Candidate.{uGenerator, uHilbert}) :
     Nonempty (InfoGeometry.OperatorAlgebra.RealGWClifford.RealCliffordHilbertModulePacket.{uGenerator, uHilbert}) :=
   ⟨C.realCliffordRepresentation⟩
 
 /-- The real Clifford representation data are already a concrete packet. -/
 def candidate_realCliffordRepresentation_packet
-    (C : Candidate.{uGenerator, uHilbert, uKreinGenerator, uKreinHilbert, uKreinOuter, uKreinAux, uSplit}) :
+    (C : Candidate.{uGenerator, uHilbert}) :
     InfoGeometry.OperatorAlgebra.RealGWClifford.RealCliffordHilbertModulePacket.{uGenerator, uHilbert} :=
   C.realCliffordRepresentation
 
 /-- The split-signature data are nonempty. -/
 theorem candidate_splitSignature_nonempty
-    (C : Candidate.{uGenerator, uHilbert, uKreinGenerator, uKreinHilbert, uKreinOuter, uKreinAux, uSplit}) :
-    Nonempty (InfoGeometry.OperatorAlgebra.RealGWClifford.RealGWToSplitKreinBridgePacket.{uKreinGenerator, uKreinHilbert, uKreinOuter, uKreinAux, uSplit}) :=
+    (C : Candidate.{uGenerator, uHilbert}) :
+    Nonempty (InfoGeometry.OperatorAlgebra.RealGWClifford.RealGWToSplitKreinBridgePacket) :=
   ⟨C.splitSignature⟩
 
 /-- The split-signature data are already a concrete packet. -/
 def candidate_splitSignature_packet
-    (C : Candidate.{uGenerator, uHilbert, uKreinGenerator, uKreinHilbert, uKreinOuter, uKreinAux, uSplit}) :
-    InfoGeometry.OperatorAlgebra.RealGWClifford.RealGWToSplitKreinBridgePacket.{uKreinGenerator, uKreinHilbert, uKreinOuter, uKreinAux, uSplit} :=
+    (C : Candidate.{uGenerator, uHilbert}) :
+    InfoGeometry.OperatorAlgebra.RealGWClifford.RealGWToSplitKreinBridgePacket :=
   C.splitSignature
 
 /-- The `Spin(4,4)`-style readout is a concrete Cartan carrier. -/

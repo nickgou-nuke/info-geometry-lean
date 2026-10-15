@@ -16,7 +16,7 @@ abbrev MobiusTransform := InfoGeometry.MobiusTransform
 
 namespace MobiusTransform
 
-noncomputable def eval (M : MobiusTransform) (z : RiemannSphere) : RiemannSphere :=
+noncomputable abbrev eval (M : MobiusTransform) (z : RiemannSphere) : RiemannSphere :=
   InfoGeometry.MobiusTransform.eval M z
 
 def equiv (M1 M2 : MobiusTransform) : Prop :=

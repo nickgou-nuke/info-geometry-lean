@@ -147,10 +147,15 @@ theorem negIdSL2R_smul
   have h :
       negIdSL2R • T.toRealUpperHalfPlane =
         T.toRealUpperHalfPlane := by
-    ext <;>
-      simp [negIdSL2R, RealUpperHalfPlane.smul_def, RealUpperHalfPlane.moebius,
+    ext
+    · dsimp [negIdSL2R, RealUpperHalfPlane.moebius, RealUpperHalfPlane.smul_def,
         RealUpperHalfPlane.a, RealUpperHalfPlane.b, RealUpperHalfPlane.c,
         RealUpperHalfPlane.d, RealUpperHalfPlane.denomSq]
+      ring
+    · dsimp [negIdSL2R, RealUpperHalfPlane.moebius, RealUpperHalfPlane.smul_def,
+        RealUpperHalfPlane.a, RealUpperHalfPlane.b, RealUpperHalfPlane.c,
+        RealUpperHalfPlane.d, RealUpperHalfPlane.denomSq]
+      ring
   rw [h]
   exact ofRealUpperHalfPlane_toRealUpperHalfPlane T
 

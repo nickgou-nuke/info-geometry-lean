@@ -168,9 +168,13 @@ theorem realWeylCycle_maps_nativeCartanSpan
   · change conjugateNativeDerivationLinear realWeylCycle 0 ∈ nativeCartanSpan
     simpa only [map_zero] using nativeCartanSpan.zero_mem
   · intro E F _ _ hE hF
-    simpa only [map_add] using nativeCartanSpan.add_mem hE hF
+    change conjugateNativeDerivationLinear realWeylCycle (E + F) ∈ nativeCartanSpan
+    rw [map_add]
+    exact nativeCartanSpan.add_mem hE hF
   · intro a E _ hE
-    simpa only [map_smul] using nativeCartanSpan.smul_mem a hE
+    change conjugateNativeDerivationLinear realWeylCycle (a • E) ∈ nativeCartanSpan
+    rw [map_smul]
+    exact nativeCartanSpan.smul_mem a hE
 
 /-
 theorem realWeylReflection_maps_nativeCartanSpan

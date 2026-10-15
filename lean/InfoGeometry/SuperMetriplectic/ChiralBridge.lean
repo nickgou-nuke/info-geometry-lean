@@ -91,8 +91,8 @@ theorem toChiralSuperchargeClosure_rightShadow_eq_QR :
 @[rep_depth transport]
 theorem toChiralSuperchargeClosure_netOddShadow_eq_QD :
     (toChiralSuperchargeClosure B).netOddShadow = B.U.QD := by
-  simpa [InfoGeometry.SuperMetriplectic.ChiralSuperchargeClosure.netOddShadow] using
-    (B.U.projected_supercharge_eq_sub_chiral).symm
+  change B.U.QR - B.U.QL = B.U.QD
+  exact (B.U.projected_supercharge_eq_sub_chiral).symm
 
 @[rep_depth transport]
 theorem toChiralSuperchargeClosure_translationShadow_eq_drazinTranslationCandidate :

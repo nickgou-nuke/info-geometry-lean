@@ -87,9 +87,11 @@ theorem chiralOperatorQuotientTensor3CompHausR12Iso_yang_baxter :
   apply TopCat.hom_ext
   apply ContinuousMap.ext
   intro p
-  change ChiralOperatorQuotientTensor3 A at p
-  simpa only [Functor.map_comp, TopCat.comp_app] using
-    chiralOperatorQuotientTensorR12_yang_baxter p
+  change chiralOperatorQuotientTensorR12
+      (chiralOperatorQuotientTensorR23 (chiralOperatorQuotientTensorR12 p)) =
+    chiralOperatorQuotientTensorR23
+      (chiralOperatorQuotientTensorR12 (chiralOperatorQuotientTensorR23 p))
+  exact chiralOperatorQuotientTensorR12_yang_baxter p
 
 theorem chiralOperatorQuotientTensor3CompHausR12Iso_quadratic :
     (chiralOperatorQuotientTensor3CompHausR12Iso (A := A)).hom ≫
@@ -99,9 +101,9 @@ theorem chiralOperatorQuotientTensor3CompHausR12Iso_quadratic :
   apply TopCat.hom_ext
   apply ContinuousMap.ext
   intro p
-  change ChiralOperatorQuotientTensor3 A at p
-  simpa only [Functor.map_comp, TopCat.comp_app, TopCat.id_app] using
-    chiralOperatorQuotientTensorR12_quadratic p
+  change chiralOperatorQuotientTensorR12
+      (chiralOperatorQuotientTensorR12 p) = p
+  exact chiralOperatorQuotientTensorR12_quadratic p
 
 theorem chiralOperatorQuotientTensor3CompHausR23Iso_quadratic :
     (chiralOperatorQuotientTensor3CompHausR23Iso (A := A)).hom ≫
@@ -111,9 +113,9 @@ theorem chiralOperatorQuotientTensor3CompHausR23Iso_quadratic :
   apply TopCat.hom_ext
   apply ContinuousMap.ext
   intro p
-  change ChiralOperatorQuotientTensor3 A at p
-  simpa only [Functor.map_comp, TopCat.comp_app, TopCat.id_app] using
-    chiralOperatorQuotientTensorR23_quadratic p
+  change chiralOperatorQuotientTensorR23
+      (chiralOperatorQuotientTensorR23 p) = p
+  exact chiralOperatorQuotientTensorR23_quadratic p
 
 end
 end InfoGeometry.Topology

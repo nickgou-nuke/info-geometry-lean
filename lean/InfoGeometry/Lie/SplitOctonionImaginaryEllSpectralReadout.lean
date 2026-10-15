@@ -121,12 +121,12 @@ theorem imaginaryEllPZero_mul_T : imaginaryEllPZero * T = 0 := by
 @[simp] theorem imaginaryEllT_apply_PMinus (X : Imaginary) :
     T (imaginaryEllPMinus X) = -imaginaryEllPMinus X := by
   have h := congrArg (fun A : EndT => A X) imaginaryEllT_mul_PMinus
-  simpa only [Module.End.mul_apply] using h
+  simpa only [Module.End.mul_apply, LinearMap.neg_apply] using h
 
 theorem imaginaryEllT_apply_PZero (X : Imaginary) :
     T (imaginaryEllPZero X) = 0 := by
   have h := congrArg (fun A : EndT => A X) imaginaryEllT_mul_PZero
-  simpa only [Module.End.mul_apply] using h
+  simpa only [Module.End.mul_apply, LinearMap.zero_apply] using h
 
 @[simp] theorem imaginaryEllPPlus_mul_PMinus :
     imaginaryEllPPlus * imaginaryEllPMinus = 0 := by

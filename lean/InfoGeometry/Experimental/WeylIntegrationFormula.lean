@@ -2,8 +2,9 @@ import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.RootSystem.WeylGroup
 import Mathlib.LinearAlgebra.RootSystem.RootPositive
-import Mathlib.MeasureTheory.Measure.MeasureSpace
-import Mathlib.Data.Complex.Basic
+import Mathlib.MeasureTheory.Measure.MeasureSpaceDef
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.Basic.Complex.Basic
 import InfoGeometry.Arithmetic.PrimeWeylDenominatorBridge
 import InfoGeometry.Canonical.FormalPrimeRootSystem
 import InfoGeometry.Canonical.WeylA1Character

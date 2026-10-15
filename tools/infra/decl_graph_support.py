@@ -79,15 +79,24 @@ def structural_role_for_profile(**kwargs) -> str:
     if rth >= 3 or dm >= 10 or rv >= 3: return "load_bearing"
     return "supported_theorem"
 
-def load_decl_graph(root: Path) -> tuple[dict[tuple[str, int, str], str], dict[str, GraphProfile]]:
-    # ⚖️ PAULI AUTHORITY: ArangoDB (Auto-Filled) or Local Formal DAG
-    arango_data = get_authority_data(root)
+def load_decl_graph(root: Path, *, allow_refresh: bool = False) -> tuple[dict[tuple[str, int, str], str], dict[str, GraphProfile]]:
+    """Read local graph artifacts without launching builds or changing databases.
+
+    ``allow_refresh`` is an explicit opt-in to the legacy refresh path, which
+    can build exporters and replace graph collections. Ordinary report callers
+    must leave it false. Graph profiles are navigation evidence only.
+    """
+    arango_data = get_authority_data(root) if allow_refresh else {}
     if arango_data:
         print(f"[pauli-authority] Primary ArangoDB authority ACTIVE ({len(arango_data)} declarations)")
     else:
-        print("[pauli-authority] ArangoDB unreachable. Ensuring local formal DAG mirror...")
-        if (root / "tools" / "infra" / "hydrate_arango_topology.py").exists():
+        print("[decl-graph] Reading local graph artifacts; freshness is not inferred.")
+        if allow_refresh and (root / "tools" / "infra" / "hydrate_arango_topology.py").exists():
             ensure_truth_artifacts(root)
+
+    for required in (root / DECL_INDEX_PATH, root / EDGE_INDEX_PATH):
+        if not required.is_file():
+            raise FileNotFoundError(f"required declaration graph input missing: {required}")
 
     decl_rows = load_jsonl(root / DECL_INDEX_PATH)
     edge_rows = load_jsonl(root / EDGE_INDEX_PATH)

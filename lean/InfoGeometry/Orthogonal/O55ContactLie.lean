@@ -1,11 +1,14 @@
 import InfoGeometry.Orthogonal.O55ContactCarrier
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Algebra.Lie.OfAssociative
 
 /-! Native orthogonal endomorphism lane over the `(5,5)` contact carrier. -/
 
 noncomputable section
 
 namespace InfoGeometry.Orthogonal.O55Contact
+
+attribute [local instance 100] LieRing.ofAssociativeRing
 
 abbrev End55 := Module.End ℝ Vector55
 
@@ -84,13 +87,19 @@ def contactEuler : O55Lie :=
 @[simp] theorem contactEuler_mem :
     (contactEuler : End55) = contactEulerEnd := rfl
 
+private lemma contactWeightR_cube (i : Fin 10) :
+    contactWeightR i ^ 3 = contactWeightR i := by
+  fin_cases i <;> norm_num [contactWeightR, contactWeight]
+
 theorem contactEuler_cube :
     contactEulerEnd * contactEulerEnd * contactEulerEnd = contactEulerEnd := by
   apply LinearMap.ext
   intro x
   funext i
-  fin_cases i <;>
-    simp [Module.End.mul_apply, contactEulerEnd, contactWeightR,
-      contactWeight]
+  simp only [Module.End.mul_apply, contactEulerEnd_apply]
+  calc
+    contactWeightR i * (contactWeightR i * (contactWeightR i * x i)) =
+        contactWeightR i ^ 3 * x i := by ring
+    _ = contactWeightR i * x i := by rw [contactWeightR_cube]
 
 end InfoGeometry.Orthogonal.O55Contact

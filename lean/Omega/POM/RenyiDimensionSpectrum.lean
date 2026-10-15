@@ -185,6 +185,7 @@ theorem paper_pom_renyi_dimension_spectrum
     · ext m
       simp [pomRenyiDimensionApprox, pomRenyiEntropyRateSequence, div_eq_mul_inv, mul_assoc,
         mul_left_comm, mul_comm]
+    · rw [mul_comm]
   refine ⟨?_, hdenom_ne, ?_⟩
   · intro m
     rw [pomRenyiDimensionApprox, div_eq_mul_inv]

@@ -126,7 +126,8 @@ def qCcrSpecializationZeroLocusFiberMap (q : A) :
       have hraw : qCcrRelation p.1.1 p.1.2.1 p.1.2.2 = 0 := p.2.1
       simpa [p.2.2] using hraw
     ⟨cp, by
-      simpa [qCcrZeroLocus, qCcrResidualContinuousMap] using hzero⟩
+      change qCcrRelation cp.1 cp.2 q = 0
+      exact hzero⟩
 
 /-- Right inverse: `specialization ∘ fiberMap = id` on the fixed-q ambient fiber. -/
 theorem qCcrSpecializationZeroLocusMap_rightInverse (q : A) :

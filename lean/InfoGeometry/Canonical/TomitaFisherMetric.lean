@@ -141,8 +141,8 @@ theorem fisherQuad_eq_zero_iff_euclidean_sq_zero (v : V2R) :
     have hsum_eq : (v 0 0) ^ 2 + (v 1 0) ^ 2 = 0 := le_antisymm (by simpa [hsq] using hsum_nonneg) (by simpa [hsq])
     have h0sq : (v 0 0) ^ 2 = 0 := by nlinarith [sq_nonneg (v 0 0), sq_nonneg (v 1 0), hsum_eq]
     have h1sq : (v 1 0) ^ 2 = 0 := by nlinarith [sq_nonneg (v 0 0), sq_nonneg (v 1 0), hsum_eq]
-    have h0 : v 0 0 = 0 := pow_eq_zero h0sq
-    have h1 : v 1 0 = 0 := pow_eq_zero h1sq
+    have h0 : v 0 0 = 0 := by nlinarith
+    have h1 : v 1 0 = 0 := by nlinarith
     exact (fisherQuad_eq_zero_iff v).2 ⟨h0, h1⟩
 
 end InfoGeometry.Canonical.TomitaFisherMetric

@@ -44,11 +44,12 @@ probability gauge sections, density matrices, surprisal operators, and
 projective modular count profiles.
 -/
 @[rep_depth operator]
-structure GWProjectiveCountProbabilityBridge
+structure GWProjectiveCountProbabilityBridge.{uG, uT, uTarget, uCoeff, uCountAtom}
     (n : ℕ) [Nonempty (Fin n)]
-    (G T Target Coeff : Type*) where
+    (G : Type uG) (T : Type uT) (Target : Type uTarget) (Coeff : Type uCoeff) where
   canonical :
-    GWCanonicalCountRayBridge n G T Target Coeff
+    GWCanonicalCountRayBridge.{uG, uT, uTarget, uCoeff, uCountAtom}
+      n G T Target Coeff
 
 namespace GWProjectiveCountProbabilityBridge
 
@@ -115,16 +116,20 @@ data is calibrated as a readout of the projective count/probability/operator
 lane.
 -/
 @[rep_depth operator]
-structure GWProjectiveCountDrazinBridge
+structure GWProjectiveCountDrazinBridge.{uG, uT, uTarget, uCoeff, uAlgebra,
+    uCountAtom, uDivisor, uBlock, uDivision, uProjection}
     (n : ℕ) [Nonempty (Fin n)]
-    (G T Target Coeff Algebra : Type*) [Ring Algebra] [StarRing Algebra] where
+    (G : Type uG) (T : Type uT) (Target : Type uTarget) (Coeff : Type uCoeff)
+    (Algebra : Type uAlgebra) [Ring Algebra] [StarRing Algebra] where
   /-- Count/probability/operator readout of the GW localization graph. -/
   projectiveProbability :
-    GWProjectiveCountProbabilityBridge n G T Target Coeff
+    GWProjectiveCountProbabilityBridge.{uG, uT, uTarget, uCoeff, uCountAtom}
+      n G T Target Coeff
 
   /-- Existing Drazin/GW localization bridge. -/
   drazin :
-    DrazinGromovWittenLocalizationBridge G T Target Coeff Algebra
+    DrazinGromovWittenLocalizationBridge.{uG, uT, uTarget, uCoeff, uAlgebra,
+      uDivisor, uBlock, uDivision, uProjection} G T Target Coeff Algebra
 
   /--
   The Drazin localization packet and the projective-count packet refer to the

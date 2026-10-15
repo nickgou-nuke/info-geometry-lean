@@ -58,7 +58,9 @@ example : trivialChirality.Pright = 0 := by
 example : ∃ part : ℝ × ℝ, part * part = part ∧ part ≠ 0 ∧ part ≠ 1 ∧
     part * trivialChirality.Pleft = part := by
   refine ⟨(1, 0), ?_⟩
-  norm_num [trivialChirality, ChiralInvolution.Pleft, Prod.mk_mul_mk]
+  norm_num [trivialChirality, ChiralInvolution.Pleft, Prod.mk_mul_mk,
+    Prod.smul_mk]
+  apply Prod.ext <;> norm_num
 
 #print axioms complement_Pleft_eq_Pright
 #print axioms commute_Pleft

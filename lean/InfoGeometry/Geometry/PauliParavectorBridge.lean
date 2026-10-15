@@ -70,7 +70,7 @@ instance minkowski4AddCommMonoid : AddCommMonoid Minkowski4 where
   nsmul_zero u := by
     apply Minkowski4.ext <;> change 0 = 0 <;> rfl
   nsmul_succ n u := by
-    apply Minkowski4.ext <;> change _ = _ + _ <;> ring
+    apply Minkowski4.ext <;> exact succ_nsmul _ n
 
 instance minkowski4SMul : SMul ℝ Minkowski4 where
   smul a u := ⟨a * u.t, a * u.x, a * u.y, a * u.z⟩
@@ -170,152 +170,15 @@ theorem det_pauliMatrix_eq_mass_sq
     Matrix.det (pauliMatrix p) = ((m ^ 2 : ℝ) : ℂ) := by
   rw [det_pauliMatrix, hp]
 
-/-! ## 2. Spin/rotor readout sockets -/
+/-! ## 2. Exact scope of the finite readout
 
-/--
-Spinor transport socket.
-
-A model supplies a spinor action on Pauli matrices, intended as `X ↦ L X L†`.
-This file does not prove the `SL(2,ℂ)` double-cover theorem.
+The determinant identity and its null/mass-shell consequences above are the
+concrete results of this coordinate adapter. They do not define a spin-group
+action, a spinor-to-bivector map, or a Pauli--Lubanski coupling. Such structures
+would need specified carriers and an actual action; storing the desired law as
+a field and re-exporting it proves no additional result. The canonical
+Pauli/Hestenes owner contains the separate rotor-frame and spin-momentum
+development, with its own explicit proof boundary.
 -/
-@[rep_depth operator]
-structure PauliSpinorTransport where
-  /-- Transport/action on Pauli matrices. -/
-  transform : PauliMat → PauliMat
-
-  /-- Determinant preservation under the supplied transport. -/
-  preservesQuadratic :
-    ∀ v : Minkowski4,
-      Matrix.det (transform (pauliMatrix v)) = Matrix.det (pauliMatrix v)
-
-namespace PauliSpinorTransport
-
-variable (T : PauliSpinorTransport)
-
-/-- Re-export of determinant/Minkowski-norm preservation. -/
-@[rep_depth operator]
-theorem determinant_preserved
-    (v : Minkowski4) :
-    Matrix.det (T.transform (pauliMatrix v)) = Matrix.det (pauliMatrix v) :=
-  T.preservesQuadratic v
-
-end PauliSpinorTransport
-
-/--
-Bivector/spin-plane readout socket.
-
-In Hestenes language, spin is a bivector/rotor datum extracted from the spinor,
-not a component of the momentum paravector itself.
-
-This finite interface owns only the readout map.  A model-specific law requires
-actual bivector operations and is not represented by an opaque proposition.
--/
-@[rep_depth operator]
-structure SpinBivectorReadout
-    (Spinor Bivector : Type*) where
-  /-- Spin plane/bivector readout. -/
-  spinPlane : Spinor → Bivector
-  /-- Model-specific relation defining a valid spin-plane readout. -/
-  IsSpinPlaneReadout : Spinor → Bivector → Prop
-  /-- Every selected spin plane satisfies that relation. -/
-  spinPlane_spec : ∀ psi, IsSpinPlaneReadout psi (spinPlane psi)
-
-namespace SpinBivectorReadout
-
-variable {Spinor Bivector : Type*}
-
-theorem readout_holds
-    (S : SpinBivectorReadout Spinor Bivector) (psi : Spinor) :
-    S.IsSpinPlaneReadout psi (S.spinPlane psi) :=
-  S.spinPlane_spec psi
-
-end SpinBivectorReadout
-
-/--
-Momentum-spin coupling socket.
-
-Momentum and spin are read together through a common spinor carrier.  No
-Pauli--Lubanski coupling equation is asserted until a concrete representation
-supplies one.
--/
-@[rep_depth operator]
-structure MomentumSpinCoupling
-    (Spinor Bivector : Type*) where
-  /-- Momentum/paravector readout. -/
-  momentum : Spinor → Minkowski4
-
-  /-- Spin bivector/plane readout. -/
-  spinReadout : SpinBivectorReadout Spinor Bivector
-
-  /-- Helicity readout. -/
-  helicity : Spinor → ℝ
-
-  /-- Pauli-Lubanski-style readout. -/
-  pauliLubanskiReadout : Spinor → Minkowski4
-
-  /-- Relation coupling the four model-specific readouts. -/
-  CouplingLaw : Minkowski4 → Bivector → ℝ → Minkowski4 → Prop
-
-  /-- The selected readouts satisfy the coupling relation. -/
-  coupling :
-    ∀ psi,
-      CouplingLaw (momentum psi) (spinReadout.spinPlane psi)
-        (helicity psi) (pauliLubanskiReadout psi)
-
-namespace MomentumSpinCoupling
-
-variable {Spinor Bivector : Type*}
-
-theorem coupling_holds
-    (C : MomentumSpinCoupling Spinor Bivector) (psi : Spinor) :
-    C.CouplingLaw (C.momentum psi) (C.spinReadout.spinPlane psi)
-      (C.helicity psi) (C.pauliLubanskiReadout psi) :=
-  C.coupling psi
-
-end MomentumSpinCoupling
-
-/-! ## 3. Native finite Souriau spin-particle realization -/
-
-abbrev SouriauFiniteSpinReadout :=
-  InfoGeometry.Physics.MDPASJMSouriau.FiniteSpinParticleCertificate
-
-namespace SouriauFiniteSpinReadout
-
-open InfoGeometry.Physics.MDPASJMSouriau
-
-variable (C : SouriauFiniteSpinReadout)
-
-theorem spin_antisymmetric :
-    IsAntisymmetric (wedge C.u C.v) :=
-  C.spin_antisym
-
-theorem spin_plucker :
-    pfaffian4 (wedge C.u C.v) = 0 :=
-  InfoGeometry.Physics.MDPASJMSouriau.FiniteSpinParticleCertificate.spin_plucker C
-
-theorem spin_transverse
-    (hu : dot C.u C.p = 0) (hv : dot C.v C.p = 0) :
-    contractRight (wedge C.u C.v) C.p = 0 :=
-  InfoGeometry.Physics.MDPASJMSouriau.FiniteSpinParticleCertificate.spin_transverse
-    C hu hv
-
-theorem lorentz_power_zero :
-    dot C.p (lorentzForce C.field C.p) = 0 :=
-  InfoGeometry.Physics.MDPASJMSouriau.FiniteSpinParticleCertificate.lorentz_power_zero C
-
-theorem normal_moment_readout
-    (C : SouriauFiniteSpinReadout)
-    (q m sB : ℚ) (hm : m ≠ 0) :
-    gyromagneticReadout q m 2 sB = q * sB / m :=
-  InfoGeometry.Physics.MDPASJMSouriau.FiniteSpinParticleCertificate.normal_moment_readout
-    C q m sB hm
-
-theorem spin_half_prequantization
-    (C : SouriauFiniteSpinReadout) (h : ℚ) :
-    SpinPrequantized (h / 2) h :=
-  InfoGeometry.Physics.MDPASJMSouriau.FiniteSpinParticleCertificate.spin_half_prequantization
-    C h
-
-end SouriauFiniteSpinReadout
 
 end InfoGeometry.Geometry.PauliParavectorBridge

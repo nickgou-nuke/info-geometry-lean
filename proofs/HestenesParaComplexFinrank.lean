@@ -41,7 +41,8 @@ def adjointEven (y : EvenPart) : EvenPart :=
     adjointEven (x - y) = adjointEven x - adjointEven y := by
   rw [sub_eq_add_neg, adjointEven_add]
   have hn : adjointEven (-y) = -adjointEven y := by
-    simpa only [neg_one_smul] using adjointEven_smul (-1 : ℝ) y
+    change adjointEven ((-1 : ℝ) • y) = -adjointEven y
+    exact adjointEven_smul (-1 : ℝ) y
   rw [hn]
   simp only [sub_eq_add_neg]
 

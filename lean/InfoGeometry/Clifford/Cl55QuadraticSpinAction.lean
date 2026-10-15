@@ -19,6 +19,8 @@ open InfoGeometry.Clifford.SpinorRep
 
 variable {ι R Op : Type*} [CommRing R] [Ring Op] [Algebra R Op]
 
+attribute [local instance 100] LieRing.ofAssociativeRing LieAlgebra.ofAssociativeAlgebra
+
 def diracBivector (gamma : ι → Op) (i j : ι) : Op :=
   gamma i * gamma j - gamma j * gamma i
 

@@ -84,7 +84,7 @@ A 'Scale Anomaly' constant emerges, proportional to ε.
 -/
 theorem scale_anomaly_emergence
     : CBA.CI.chiralScale > 0 → ¬ CBA.SatisfiesFlatWeights := by
-  simpa [SatisfiesFlatWeights, SatisfiesPWeight, SatisfiesKWeight] using CBA.anomaly_breaks_weights
+  simpa [SatisfiesFlatWeights, SatisfiesPWeight, SatisfiesKWeight, D] using CBA.anomaly_breaks_weights
 
 omit [FiniteDimensional ℝ E] in
 /-- Theorem `scale_anomaly_breaks_weight_closure`. -/

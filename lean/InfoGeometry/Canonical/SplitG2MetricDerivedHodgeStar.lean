@@ -51,7 +51,7 @@ def metricStar34 (H : SplitG2MetricDerivedHodgeStar) :
     SplitG2ThreeForms →ₗ[ℚ] SplitG2FourForms :=
   H.metricStar.toLinearMap
 
-def metricStar43 (H : SplitG2MetricDerivedHodgeStar) :
+noncomputable def metricStar43 (H : SplitG2MetricDerivedHodgeStar) :
     SplitG2FourForms →ₗ[ℚ] SplitG2ThreeForms :=
   H.metricStar.symm.toLinearMap
 

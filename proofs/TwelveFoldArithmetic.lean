@@ -20,6 +20,9 @@ power identities as order claims.
 -/
 
 noncomputable section
+
+local instance : IsCyclotomicExtension {12} ℚ (CyclotomicField 12 ℚ) := by
+  exact CyclotomicField.isCyclotomicExtension 12 ℚ
 namespace TwelveFoldArithmetic
 
 open TwelveFoldSheetColorOmega TwelveFoldSpectralBridge
@@ -252,11 +255,26 @@ theorem cyclotomic_twelve_explicit :
     have hdeg2 : (Polynomial.X + (1 : Polynomial ℚ)).degree = 1 := by
       simpa using (Polynomial.degree_X_add_C (1 : ℚ))
     have hdeg3 : (Polynomial.X ^ 2 + Polynomial.X + 1 : Polynomial ℚ).degree = 2 := by
-      simpa [Polynomial.cyclotomic_three] using (Polynomial.degree_cyclotomic 3 ℚ)
+      have h := Polynomial.degree_cyclotomic 3 ℚ
+      have hφ : Nat.totient 3 = 2 := by decide
+      rw [Polynomial.cyclotomic_three] at h
+      rw [hφ] at h
+      change _ = (2 : WithBot ℕ) at h
+      exact h
     have hdeg4 : (Polynomial.X ^ 2 + 1 : Polynomial ℚ).degree = 2 := by
-      simpa [h4] using (Polynomial.degree_cyclotomic 4 ℚ)
+      have h := Polynomial.degree_cyclotomic 4 ℚ
+      have hφ : Nat.totient 4 = 2 := by decide
+      rw [h4] at h
+      rw [hφ] at h
+      change _ = (2 : WithBot ℕ) at h
+      exact h
     have hdeg6 : (Polynomial.X ^ 2 - Polynomial.X + 1 : Polynomial ℚ).degree = 2 := by
-      simpa [Polynomial.cyclotomic_six] using (Polynomial.degree_cyclotomic 6 ℚ)
+      have h := Polynomial.degree_cyclotomic 6 ℚ
+      have hφ : Nat.totient 6 = 2 := by decide
+      rw [Polynomial.cyclotomic_six] at h
+      rw [hφ] at h
+      change _ = (2 : WithBot ℕ) at h
+      exact h
     norm_num [mul_assoc, Polynomial.degree_mul, hdeg1, hdeg2, hdeg3, hdeg4, hdeg6]
     exact bot_lt_iff_ne_bot.mpr (by simp)
   have hdiv := Polynomial.div_modByMonic_unique

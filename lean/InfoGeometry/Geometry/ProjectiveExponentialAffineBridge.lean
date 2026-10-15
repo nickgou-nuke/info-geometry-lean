@@ -1,9 +1,8 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Exp
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Algebra.BigOperators.Ring.Finset
 
@@ -158,7 +157,6 @@ def toLogAffineClass {n : ℕ} : PosProjectiveRay n → LogAffineClass n :=
     (by
       rintro x y ⟨c, hc, h⟩
       apply Quotient.sound
-      dsimp
       refine ⟨Real.log c, ?_⟩
       ext i
       have hi := congrFun h i
@@ -173,7 +171,6 @@ def toPosProjectiveRay {n : ℕ} : LogAffineClass n → PosProjectiveRay n :=
     (by
       rintro θ1 θ2 ⟨c, h⟩
       apply Quotient.sound
-      dsimp
       refine ⟨Real.exp c, Real.exp_pos c, ?_⟩
       ext i
       have hi := congrFun h i
@@ -193,7 +190,6 @@ def projectiveExponentialEquiv (n : ℕ) :
     induction q using Quotient.ind
     rename_i x
     apply Quotient.sound
-    dsimp [toPosProjectiveRay, toLogAffineClass]
     refine ⟨1, Real.zero_lt_one, ?_⟩
     ext i
     dsimp [expMap, logMap]
@@ -203,7 +199,6 @@ def projectiveExponentialEquiv (n : ℕ) :
     induction q using Quotient.ind
     rename_i θ
     apply Quotient.sound
-    dsimp [toPosProjectiveRay, toLogAffineClass]
     refine ⟨0, ?_⟩
     ext i
     dsimp [expMap, logMap]

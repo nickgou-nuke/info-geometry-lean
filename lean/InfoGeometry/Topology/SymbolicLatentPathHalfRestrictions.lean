@@ -63,25 +63,29 @@ noncomputable def symbolicSecondHalfParameter :
 
 theorem symbolicFirstHalfParameter_zero :
     symbolicFirstHalfParameter 0 = (0 : SymbolicPathDomain) := by
-  apply Subtype.ext
-  norm_num [symbolicFirstHalfParameter, symbolicFirstHalfValue]
+  refine Subtype.ext ?_
+  change ((0 : ℝ) / 2) = 0
+  norm_num
 
 theorem symbolicFirstHalfParameter_one :
     symbolicFirstHalfParameter 1 =
       (⟨(1 : ℝ) / 2, by constructor <;> norm_num⟩ : SymbolicPathDomain) := by
-  apply Subtype.ext
-  norm_num [symbolicFirstHalfParameter, symbolicFirstHalfValue]
+  refine Subtype.ext ?_
+  change ((1 : ℝ) / 2) = 1 / 2
+  rfl
 
 theorem symbolicSecondHalfParameter_zero :
     symbolicSecondHalfParameter 0 =
       (⟨(1 : ℝ) / 2, by constructor <;> norm_num⟩ : SymbolicPathDomain) := by
-  apply Subtype.ext
-  norm_num [symbolicSecondHalfParameter, symbolicSecondHalfValue]
+  refine Subtype.ext ?_
+  change (1 + (0 : ℝ)) / 2 = 1 / 2
+  norm_num
 
 theorem symbolicSecondHalfParameter_one :
     symbolicSecondHalfParameter 1 = (1 : SymbolicPathDomain) := by
-  apply Subtype.ext
-  norm_num [symbolicSecondHalfParameter, symbolicSecondHalfValue]
+  refine Subtype.ext ?_
+  change (1 + (1 : ℝ)) / 2 = 1
+  norm_num
 
 noncomputable def symbolicFirstHalfPath
     {X : Type*} [TopologicalSpace X]
@@ -125,9 +129,8 @@ theorem symbolicFirstHalfPath_endpoints
     (symbolicFirstHalfPath γ).endpoints =
       (γ.start,
         γ (⟨(1 : ℝ) / 2, by constructor <;> norm_num⟩ : SymbolicPathDomain)) := by
-  ext
-  · simpa [SymbolicLatentPath.start] using (symbolicFirstHalfPath_start (γ := γ))
-  · simpa [SymbolicLatentPath.finish] using (symbolicFirstHalfPath_finish (γ := γ))
+  dsimp [SymbolicLatentPath.endpoints]
+  rw [symbolicFirstHalfPath_start, symbolicFirstHalfPath_finish]
 
 theorem symbolicSecondHalfPath_finish
     {X : Type*} [TopologicalSpace X]
@@ -151,8 +154,7 @@ theorem symbolicSecondHalfPath_endpoints
     (symbolicSecondHalfPath γ).endpoints =
       (γ (⟨(1 : ℝ) / 2, by constructor <;> norm_num⟩ : SymbolicPathDomain),
         γ.finish) := by
-  ext
-  · simpa [SymbolicLatentPath.start] using (symbolicSecondHalfPath_start (γ := γ))
-  · simpa [SymbolicLatentPath.finish] using (symbolicSecondHalfPath_finish (γ := γ))
+  dsimp [SymbolicLatentPath.endpoints]
+  rw [symbolicSecondHalfPath_start, symbolicSecondHalfPath_finish]
 
 end InfoGeometry.Topology

@@ -171,14 +171,20 @@ theorem throatConjugation_coordinateAction_swap :
   fin_cases i
   · apply Equiv.ext
     intro x
-    simpa [throatConjugation, coordinateAction_sigmaZero,
-      artinGeneratorSwap_sigmaZero] using
+    change kleinRootLabelThroatFlip
+        (coordinateAction sigmaZero (kleinRootLabelThroatFlip.symm x)) =
+      coordinateAction (artinGeneratorSwap sigmaZero) x
+    rw [artinGeneratorSwap_sigmaZero, coordinateAction_sigmaOne]
+    simpa [coordinateAction_sigmaOne, Equiv.apply_symm_apply] using
       (kleinRootLabelThroatFlip_coordinateAction_swap_sigmaZero
         (kleinRootLabelThroatFlip.symm x))
   · apply Equiv.ext
     intro x
-    simpa [throatConjugation, coordinateAction_sigmaOne,
-      artinGeneratorSwap_sigmaOne] using
+    change kleinRootLabelThroatFlip
+        (coordinateAction sigmaOne (kleinRootLabelThroatFlip.symm x)) =
+      coordinateAction (artinGeneratorSwap sigmaOne) x
+    rw [artinGeneratorSwap_sigmaOne, coordinateAction_sigmaZero]
+    simpa [coordinateAction_sigmaZero, Equiv.apply_symm_apply] using
       (kleinRootLabelThroatFlip_coordinateAction_swap_sigmaOne
         (kleinRootLabelThroatFlip.symm x))
 

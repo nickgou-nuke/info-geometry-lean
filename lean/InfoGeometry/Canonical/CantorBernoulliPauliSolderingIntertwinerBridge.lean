@@ -75,8 +75,12 @@ def cantorSolder (P : FourMomentum) : B :=
 theorem cantorSolder_intertwines (P : FourMomentum) (x : Spinor) :
     cantorSolder P (spinorToCantorL2 x) =
       spinorToCantorL2 (Matrix.toEuclideanLin (pauliMomentum P) x) := by
-  dsimp [cantorSolder]
-  simp only [pauliBasisCuntz_intertwines]
+  change
+    (P.E • pauliBasisCuntz 0 + P.px • pauliBasisCuntz 1 +
+      P.py • pauliBasisCuntz 2 + P.pz • pauliBasisCuntz 3)
+        (spinorToCantorL2 x) =
+      spinorToCantorL2 (Matrix.toEuclideanLin (pauliMomentum P) x)
+  simp only [add_apply, smul_apply, pauliBasisCuntz_intertwines]
   simp only [← map_smul, ← map_add]
   congr 1
   ext i

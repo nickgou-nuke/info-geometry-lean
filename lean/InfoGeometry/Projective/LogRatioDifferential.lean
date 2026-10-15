@@ -34,6 +34,8 @@ def logDifferential (w : Weight ι) : (ι → ℝ) →ₗ[ℝ] (ι × ι → ℝ
     logDifferential w v (i,j) = v i / w i - v j / w j := rfl
 
 /-- Actual derivative along an affine variation through a positive representative. -/
+local instance : AddCommGroup ℝ := Real.normedAddCommGroup.toAddCommGroup
+
 theorem hasDerivAt_logRatios (w : Weight ι) (v : ι → ℝ) (i j : ι) :
     HasDerivAt (fun t : ℝ => Real.log (w i + t * v i) - Real.log (w j + t * v j))
       (logDifferential w v (i,j)) 0 := by
@@ -43,7 +45,8 @@ theorem hasDerivAt_logRatios (w : Weight ι) (v : ι → ℝ) (i j : ι) :
     simpa using ((hasDerivAt_id (0 : ℝ)).mul_const (v j)).const_add (w j)
   have hwi : w i + (0 : ℝ) * v i ≠ 0 := by simpa using (w.pos i).ne'
   have hwj : w j + (0 : ℝ) * v j ≠ 0 := by simpa using (w.pos j).ne'
-  simpa [logDifferential] using (hi.log hwi).sub (hj.log hwj)
+  convert (hi.log hwi).sub (hj.log hwj) using 1 <;>
+    simp [logDifferential]
 
 @[simp] theorem logDifferential_radial (w : Weight ι) (c : ℝ) :
     logDifferential w (fun i => c * w i) = 0 := by

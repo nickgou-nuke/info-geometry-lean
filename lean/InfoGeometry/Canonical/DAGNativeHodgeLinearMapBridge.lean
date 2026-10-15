@@ -120,13 +120,11 @@ theorem dagDirac_sq_eq_laplacian
     (tc : DAG.TwoComplex α)
     (hboundary : dagBoundaryOneMatrix tc * dagBoundaryTwoMatrix tc = 0) :
     dagDirac tc * dagDirac tc = dagLaplacian tc := by
-  have h := congrArg
-    (Matrix.toLin' :
-      Matrix (DAGCell tc) (DAGCell tc) ℚ →
-        Module.End ℚ (DAGCellSpace tc))
-    (dagDiracMatrix_sq_eq_laplacianMatrix
-      (dagBoundaryOneMatrix tc) (dagBoundaryTwoMatrix tc) hboundary)
-  simpa [dagDirac, dagLaplacian, dagDiracMatrix, Matrix.toLin'_mul] using h
+  have hmatrix := dagDiracMatrix_sq_eq_laplacianMatrix
+      (dagBoundaryOneMatrix tc) (dagBoundaryTwoMatrix tc) hboundary
+  change Matrix.toLin' (dagDiracMatrix tc) ∘ₗ Matrix.toLin' (dagDiracMatrix tc) =
+    Matrix.toLin' (dagLaplacianMatrix (dagBoundaryOneMatrix tc) (dagBoundaryTwoMatrix tc))
+  rw [← Matrix.toLin'_mul, dagDiracMatrix, hmatrix]
 
 def dagChirality (tc : DAG.TwoComplex α) :
     Module.End ℚ (DAGCellSpace tc) :=
@@ -205,11 +203,9 @@ theorem dagChirality_sq
     · subst hij
       cases i <;> simp [cellParity]
     · simp [hij]
-  have h := congrArg
-    (Matrix.toLin' :
-      Matrix (DAGCell tc) (DAGCell tc) ℚ →
-        Module.End ℚ (DAGCellSpace tc)) hmatrix
-  simpa [dagChirality, dagChiralityMatrix, Matrix.toLin'_mul] using h
+  change Matrix.toLin' (dagChiralityMatrix tc) ∘ₗ Matrix.toLin' (dagChiralityMatrix tc) = 1
+  rw [← Matrix.toLin'_mul, hmatrix]
+  exact Matrix.toLin'_one
 
 def dagChiralProjectorPlus (tc : DAG.TwoComplex α) :
     Module.End ℚ (DAGCellSpace tc) :=

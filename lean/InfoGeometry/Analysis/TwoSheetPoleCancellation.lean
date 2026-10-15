@@ -44,9 +44,12 @@ theorem reflection (h : HasSimplePoleCoefficientAt f a r) (c : ℂ) :
       (𝓝[≠] (c - a)) (𝓝[≠] a) := by
     apply tendsto_nhdsWithin_iff.mpr
     constructor
-    · have ht := ((continuousAt_const :
-        ContinuousAt (fun _ : ℂ => c) (c - a)).sub continuousAt_id).tendsto
-      simpa using ht.mono_left nhdsWithin_le_nhds
+    · have hcont : ContinuousAt (fun z : ℂ => c - z) (c - a) :=
+        continuousAt_const.sub continuousAt_id
+      have hval : c - (c - a) = a := by ring
+      have ht := hcont.tendsto.mono_left (y := 𝓝[≠] (c - a)) nhdsWithin_le_nhds
+      rw [hval] at ht
+      exact ht
     · filter_upwards [self_mem_nhdsWithin] with z hz
       simp only [Set.mem_compl_iff, Set.mem_singleton_iff] at hz ⊢
       intro he
@@ -95,9 +98,11 @@ theorem conjugate_reflection (h : HasSimplePoleCoefficientAt f a r) (c : ℂ) :
 theorem eq_zero_of_tendsto (h : HasSimplePoleCoefficientAt f a r)
     {b : ℂ} (hf : Tendsto f (𝓝[≠] a) (𝓝 b)) : r = 0 := by
   have ht : Tendsto (fun z : ℂ => z - a) (𝓝[≠] a) (𝓝 0) := by
-    simpa using ((continuousAt_id : ContinuousAt (fun z : ℂ => z) a).sub
-      (continuousAt_const : ContinuousAt (fun _ : ℂ => a) a)).tendsto.mono_left
-      (y := 𝓝[≠] a) nhdsWithin_le_nhds
+    have hcont : ContinuousAt (fun z : ℂ => z - a) a := continuousAt_id.sub continuousAt_const
+    have hval : a - a = (0 : ℂ) := sub_self a
+    have ht := hcont.tendsto.mono_left (y := 𝓝[≠] a) nhdsWithin_le_nhds
+    rw [hval] at ht
+    exact ht
   exact h.unique (by simpa [HasSimplePoleCoefficientAt] using ht.mul hf)
 
 /-- A nonzero simple-pole coefficient has no continuous extension, even if

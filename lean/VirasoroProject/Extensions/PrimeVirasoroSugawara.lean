@@ -1,9 +1,10 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Canonical.SugawaraAlgebraicLemmas
 import InfoGeometry.Arithmetic.PrimeMajoranaOPE
 import InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
-import VirasoroProject.VirasoroAlgebra
+import InfoGeometry.External.Virasoro.VirasoroAlgebra
 import InfoGeometry.OperatorAlgebra.VirasoroProjectBridge
 import InfoGeometry.Canonical.SplitCliffordHeisenbergBridge
 
@@ -40,37 +41,31 @@ open InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
 
 /-! ## Prime OPE and current layer -/
 
-/--
-Owner-backed level-one current-current evidence.
-
-This is deliberately not a `Unit` token.  The packet carries the concrete
-canonical infinite-current commutator laws currently available in the imported
-split-Clifford/Heisenberg owner layer.  A future Laurent/OPE realization can
-add a symbolic transport theorem, but the present evidence already has typed
-mathematical content.
--/
 namespace CurrentCurrentLevelOneEvidence
-  /-- Canonical resonant level-one Heisenberg commutator. -/
-  theorem owner_level_one
-    ∀ (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜],
-      ⁅InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 1,
-        InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 (-1)⁆ =
-        (1 : 𝕜) • InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Kinf 𝕜 :=
-    InfoGeometry.Canonical.SplitCliffordHeisenbergBridge.canonicalInfiniteCurrent_lie_one_neg_one
-      (𝕜 := 𝕜)
 
-  /-- Canonical reversed resonant commutator. -/
-  theorem owner_level_one_reverse
-    ∀ (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜],
-      ⁅InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 (-1),
-        InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 1⁆ =
-        ((-1 : Int) : 𝕜) • InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Kinf 𝕜 :=
-    InfoGeometry.Canonical.SplitCliffordHeisenbergBridge.canonicalInfiniteCurrent_lie_neg_one_one
-      (𝕜 := 𝕜)
+/-- Canonical resonant level-one Heisenberg commutator. -/
+@[rep_depth operator]
+theorem owner_level_one
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] :
+    ⁅InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 1,
+      InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 (-1)⁆ =
+      (1 : 𝕜) • InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Kinf 𝕜 :=
+  InfoGeometry.Canonical.SplitCliffordHeisenbergBridge.canonicalInfiniteCurrent_lie_one_neg_one
+    (𝕜 := 𝕜)
+
+/-- Canonical reversed resonant commutator. -/
+@[rep_depth operator]
+theorem owner_level_one_reverse
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] :
+    ⁅InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 (-1),
+      InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 1⁆ =
+      ((-1 : Int) : 𝕜) • InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Kinf 𝕜 :=
+  InfoGeometry.Canonical.SplitCliffordHeisenbergBridge.canonicalInfiniteCurrent_lie_neg_one_one
+    (𝕜 := 𝕜)
 
 end CurrentCurrentLevelOneEvidence
 
-/-- Canonical level-one evidence supplied by the split-Clifford Heisenberg owner. -/
+/-- Both canonical level-one laws, discharged directly by the infinite-current owner. -/
 @[rep_depth operator]
 theorem canonicalCurrentCurrentLevelOneEvidence :
     (∀ (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜],
@@ -108,15 +103,6 @@ structure PrimeCurrentOPEPacket
   mobiusCurrent :
     MobiusCurrentOPE PrimeLabel Field
 
-  /-- Symbolic level-one current-current OPE law. -/
-  -- DEBT_ID: PVS-CCL1-001
-  -- DEBT_KIND: THEOREM_DEBT
-  -- THEOREM_DEBT: owner-side same-mode and off-diagonal current-action laws for
-  -- `j_p = c_p d_p` now exist, and a specialized concrete owner corridor also
-  -- transports them into the symbolic `MobiusCurrentOPE` socket; what this file
-  -- still lacks is the Laurent/OPE realization transporting the owner
-  -- current-current level-one theorem into the symbolic
-  -- `PrimeCurrentOPEPacket` carrier.
 namespace PrimeCurrentOPEPacket
 
 variable {PrimeLabel Field Coeff : Type*}
@@ -133,15 +119,16 @@ level-one Heisenberg commutator.  What is still missing here is the
 Laurent/OPE realization that transports that owner current-current theorem into
 the symbolic `PrimeCurrentOPEPacket` interface.
 -/
-def CurrentCurrentLevelOneLaw (_P : PrimeCurrentOPEPacket PrimeLabel Field Coeff) : Prop :=
+def CurrentCurrentLevelOneLaw : Prop :=
   ∀ (𝕜 : Type*) [_root_.Field 𝕜] [CharZero 𝕜],
     ⁅InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 1,
       InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 (-1)⁆ =
       (1 : 𝕜) • InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Kinf 𝕜
 
+/-- The packet exposes both canonical laws without storing duplicate evidence. -/
 @[rep_depth operator]
 theorem current_current_level_one_evidence
-    (P : PrimeCurrentOPEPacket PrimeLabel Field Coeff) :
+    :
     (∀ (𝕜 : Type*) [_root_.Field 𝕜] [CharZero 𝕜],
         ⁅InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 1,
           InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 (-1)⁆ =
@@ -155,8 +142,7 @@ theorem current_current_level_one_evidence
 /-- The packet exposes the imported owner-backed level-one current-current law. -/
 @[rep_depth operator]
 theorem currentCurrentLevelOneLaw_holds
-    (P : PrimeCurrentOPEPacket PrimeLabel Field Coeff) :
-    CurrentCurrentLevelOneLaw P :=
+    : CurrentCurrentLevelOneLaw :=
 by
   intro 𝕜 _ _
   exact CurrentCurrentLevelOneEvidence.owner_level_one 𝕜
@@ -177,8 +163,8 @@ Concrete level-one current-current readback on the canonical infinite-current
 owner carrier.
 
 This theorem is the exact owner theorem currently available to the prime
-Sugawara corridor.  The symbolic packet now stores this typed evidence through
-`CurrentCurrentLevelOneEvidence`; the remaining gap is the Laurent/OPE
+Sugawara corridor.  The direct `CurrentCurrentLevelOneEvidence` theorems expose
+this typed owner result; the remaining gap is the Laurent/OPE
 realization transporting it into the symbolic `Field` carrier.
 -/
 @[rep_depth operator]

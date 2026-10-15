@@ -8,7 +8,7 @@ variable {N : Type*} [Fintype N] [DecidableEq N]
 
 /-- Sample space: Boolean-valued functions on `N`.
     thm:spg-random-bulk-boundary-saturation -/
-def Sample (N : Type*) : Type _ := N → Bool
+abbrev Sample (N : Type*) : Type _ := N → Bool
 
 instance sampleFintype : Fintype (Sample N) := by
   unfold Sample

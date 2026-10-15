@@ -29,7 +29,7 @@ def braid_rels_inf : Set (FreeGroup ℕ) :=
   {r | ∃ i j : ℕ, i + 2 ≤ j ∧ r = .of i * .of j * (.of i)⁻¹ * (.of j)⁻¹}
 
 def braid_group (n : ℕ) := PresentedGroup (braid_rels n.pred)
-def braid_group_inf := PresentedGroup braid_rels_inf
+abbrev braid_group_inf := PresentedGroup braid_rels_inf
 
 instance (n : ℕ) : Group (braid_group n) := by
   unfold braid_group

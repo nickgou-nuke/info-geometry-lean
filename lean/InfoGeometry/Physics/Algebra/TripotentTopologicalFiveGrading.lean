@@ -1,4 +1,4 @@
-import Mathlib.Analysis.NormedSpace.OperatorNorm.Basic
+import Mathlib.Analysis.Normed.Operator.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.Algebra.TripotentFiveGradingDecomposition
 
@@ -24,9 +24,9 @@ def continuousLeftMul (a : A) : A →L[ℝ] A :=
 /-- Continuous right multiplication, obtained from the native linear owner. -/
 def continuousRightMul (b : A) : A →L[ℝ] A :=
   ContinuousLinearMap.mk (rightMulLinear b) (by
-    simpa using
-      ((continuous_id : Continuous (fun x : A => x)).mul
-        (continuous_const : Continuous (fun _ : A => b))))
+    change Continuous (fun x : A => x * b)
+    exact (continuous_id : Continuous (fun x : A => x)).mul
+      (continuous_const : Continuous (fun _ : A => b)))
 
 @[simp] theorem continuousLeftMul_apply (a x : A) :
     continuousLeftMul a x = a * x :=
@@ -188,8 +188,13 @@ theorem continuousFiveGradeDecomposeLinear
   have hPosTwo : Continuous (fun x : A =>
       continuousFiveGradeComponentLinear (A := A) e .posTwo x) :=
     (continuousFiveGradeComponentLinear (A := A) e .posTwo).continuous
-  simpa [fiveGradeDecomposeLinear, continuousFiveGradeComponentLinear] using
-    (((hNegTwo.prodMk hNegOne).prodMk hZero).prodMk hPosOne).prodMk hPosTwo
+  change Continuous (fun x : A =>
+    ((((continuousFiveGradeComponentLinear (A := A) e .negTwo x,
+      continuousFiveGradeComponentLinear (A := A) e .negOne x),
+      continuousFiveGradeComponentLinear (A := A) e .zero x),
+      continuousFiveGradeComponentLinear (A := A) e .posOne x),
+      continuousFiveGradeComponentLinear (A := A) e .posTwo x))
+  exact (((hNegTwo.prodMk hNegOne).prodMk hZero).prodMk hPosOne).prodMk hPosTwo
 
 theorem continuousFiveGradeRecomposeLinear
     (e : A) : Continuous (fiveGradeRecomposeLinear e) := by

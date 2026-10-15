@@ -47,7 +47,8 @@ theorem rankOne_posSemidef (v : (n × n) → ℂ) :
   let C : Matrix (n × n) Unit ℂ := fun a _ => v a
   have hC : C * Cᴴ = rankOne v := by
     ext a b
-    simp [C, rankOne, Matrix.mul_apply]
+    rw [Matrix.mul_apply, Fintype.sum_unique, conjTranspose_apply]
+    rfl
   rw [← hC]
   exact Matrix.posSemidef_self_mul_conjTranspose C
 

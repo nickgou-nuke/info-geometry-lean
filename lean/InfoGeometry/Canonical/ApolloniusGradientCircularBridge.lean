@@ -142,10 +142,12 @@ theorem puncturedPlaneToDoubled_injective :
   intro s t h
   apply Subtype.ext
   apply Complex.ext
-  · have hfst := congrArg (fun v => InfoGeometry.Krein.fst_L v) h
-    simpa using hfst
-  · have hsnd := congrArg (fun v => InfoGeometry.Krein.snd_L v) h
-    simpa using hsnd
+  · have hfst := congrArg WithLp.fst h
+    simpa [puncturedPlaneToDoubled, planePointToDoubled,
+      puncturedPlaneToPlanePoint] using hfst
+  · have hsnd := congrArg WithLp.snd h
+    simpa [puncturedPlaneToDoubled, planePointToDoubled,
+      puncturedPlaneToPlanePoint] using hsnd
 
 theorem eta_zero_iff_soldered_fst_eq_half (s : PuncturedPlane) :
     eta s = 0 ↔

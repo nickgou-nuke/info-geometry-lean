@@ -47,7 +47,7 @@ theorem paper_kernel_pressure_endpoints (K L : KernelPressureFamily) :
   · intro u v huv
     dsimp [perronRoot, weightedKernel]
     nlinarith [K.monotone_weights, huv]
-  · simpa [perronRoot, weightedKernel] using
-      (continuous_const.add (continuous_id.mul continuous_const))
+  · unfold perronRoot weightedKernel
+    exact continuous_const.add (continuous_id.mul continuous_const)
 
 end Omega.EA

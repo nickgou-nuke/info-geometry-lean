@@ -1,6 +1,7 @@
 import Mathlib.Analysis.Normed.Module.Basic
+import Mathlib.Algebra.Algebra.RestrictScalars
+import Mathlib.Algebra.Module.LinearMap.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
-import Mathlib.Topology.Algebra.Module.LinearMap
 import InfoGeometry.Dynamics.EntropicTokenDynamics
 
 /-!
@@ -22,6 +23,18 @@ abbrev RealTokenHilbertSpace :=
 
 abbrev RealTokenOperator :=
   RealTokenHilbertSpace (V := V) →ₗ[ℝ] RealTokenHilbertSpace (V := V)
+
+local instance realTokenOperatorSub : Sub (RealTokenOperator (V := V)) where
+  sub T U :=
+    { toFun := fun ψ => T ψ - U ψ
+      map_add' := by
+        intro x y
+        simp only [map_add]
+        abel
+      map_smul' := by
+        intro c ψ
+        rw [map_smul, map_smul, smul_sub]
+        rfl }
 
 def complexOperatorToReal (T : TokenHilbertSpace V →ₗ[ℂ] TokenHilbertSpace V) :
     RealTokenOperator (V := V) :=

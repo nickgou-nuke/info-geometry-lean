@@ -77,7 +77,7 @@ theorem paper_xi_hankel_shift_det_integrality_padic_drift
       rw [padicValNat.mul
           D.xi_hankel_shift_det_integrality_padic_drift_hbase
           (pow_ne_zero _ D.xi_hankel_shift_det_integrality_padic_drift_hratio),
-        padicValNat.pow _ D.xi_hankel_shift_det_integrality_padic_drift_hratio]
+        padicValNat.pow]
     simpa [padicDriftAffine, xi_hankel_shift_det_integrality_padic_drift_shiftedDeterminant,
       xi_hankel_shift_det_integrality_padic_drift_shiftOperatorDet] using hvaluation
 
@@ -122,7 +122,7 @@ theorem paper_xi_hankel_padic_stiffness_drift_dichotomy_badprimes
     rw [padicValNat.mul
         D.xi_hankel_shift_det_integrality_padic_drift_hbase
         (pow_ne_zero _ hshift_ne),
-      padicValNat.pow _ hshift_ne]
+      padicValNat.pow]
   refine ⟨?_, ?_, ?_⟩
   · intro hzero r
     rw [hval r, hzero, mul_zero, add_zero]

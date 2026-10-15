@@ -123,7 +123,7 @@ theorem secondCountableTopology_h3Zorn
     [SecondCountableTopology ℝ]
     [SecondCountableTopology (Fin 3 → ℝ)] :
     SecondCountableTopology (H3Zorn ℝ) := by
-  letI : SecondCountableTopology (ZornVectorMatrix ℝ) :=
+  let : SecondCountableTopology (ZornVectorMatrix ℝ) :=
     secondCountableTopology_zornVectorMatrix
   exact h3ZornRealHomeomorph.secondCountableTopology
 
@@ -159,9 +159,8 @@ theorem continuous_h3Zorn_c :
   continuous_h3ZornRealCoordEquiv.snd.snd.snd.snd.snd
 
 theorem continuous_zornVectorMatrix_trace :
-    Continuous (ZornVectorMatrix.trace : ZornVectorMatrix ℝ → ℝ) := by
-  simpa [ZornVectorMatrix.trace] using
-    continuous_zornVectorMatrix_a.add continuous_zornVectorMatrix_b
+    Continuous (ZornVectorMatrix.trace : ZornVectorMatrix ℝ → ℝ) :=
+  continuous_zornVectorMatrix_a.add continuous_zornVectorMatrix_b
 
 theorem continuous_zornVectorMatrix_norm :
     Continuous (ZornVectorMatrix.norm : ZornVectorMatrix ℝ → ℝ) := by
@@ -171,13 +170,10 @@ theorem continuous_zornVectorMatrix_norm :
   have hw₀ := continuous_zornVectorMatrix_w (0 : Fin 3)
   have hw₁ := continuous_zornVectorMatrix_w (1 : Fin 3)
   have hw₂ := continuous_zornVectorMatrix_w (2 : Fin 3)
-  have hdot : Continuous (fun X : ZornVectorMatrix ℝ =>
-      X.v 0 * X.w 0 + X.v 1 * X.w 1 + X.v 2 * X.w 2) := by
+  have hdot : Continuous (fun X : ZornVectorMatrix ℝ => ZornVec3.dot X.v X.w) := by
+    simp_rw [ZornVec3.dot_eq_sum_coords]
     exact ((hv₀.mul hw₀).add (hv₁.mul hw₁)).add (hv₂.mul hw₂)
-  change Continuous (fun X : ZornVectorMatrix ℝ =>
-    X.a * X.b - ZornVec3.dot X.v X.w)
-  simpa [ZornVec3.dot_eq_sum_coords] using
-    (continuous_zornVectorMatrix_a.mul continuous_zornVectorMatrix_b).sub hdot
+  exact (continuous_zornVectorMatrix_a.mul continuous_zornVectorMatrix_b).sub hdot
 
 theorem continuous_zornVectorMatrix_mul_a :
     Continuous (fun p : ZornVectorMatrix ℝ × ZornVectorMatrix ℝ =>
@@ -190,9 +186,9 @@ theorem continuous_zornVectorMatrix_mul_a :
       ((continuous_zornVectorMatrix_w 1).comp continuous_snd)
     have h₂ := ((continuous_zornVectorMatrix_v 2).comp continuous_fst).mul
       ((continuous_zornVectorMatrix_w 2).comp continuous_snd)
-    simpa [ZornVec3.dot_eq_sum_coords] using (h₀.add h₁).add h₂
-  simpa [ZornVectorMatrix.mul] using
-    ((continuous_zornVectorMatrix_a.comp continuous_fst).mul
+    simp_rw [ZornVec3.dot_eq_sum_coords]
+    exact (h₀.add h₁).add h₂
+  exact ((continuous_zornVectorMatrix_a.comp continuous_fst).mul
       (continuous_zornVectorMatrix_a.comp continuous_snd)).add hdot
 
 theorem continuous_zornVectorMatrix_mul_b :
@@ -206,17 +202,17 @@ theorem continuous_zornVectorMatrix_mul_b :
       ((continuous_zornVectorMatrix_v 1).comp continuous_snd)
     have h₂ := ((continuous_zornVectorMatrix_w 2).comp continuous_fst).mul
       ((continuous_zornVectorMatrix_v 2).comp continuous_snd)
-    simpa [ZornVec3.dot_eq_sum_coords] using (h₀.add h₁).add h₂
-  simpa [ZornVectorMatrix.mul] using
-    hdot.add ((continuous_zornVectorMatrix_b.comp continuous_fst).mul
+    simp_rw [ZornVec3.dot_eq_sum_coords]
+    exact (h₀.add h₁).add h₂
+  exact hdot.add ((continuous_zornVectorMatrix_b.comp continuous_fst).mul
       (continuous_zornVectorMatrix_b.comp continuous_snd))
 
 theorem continuous_zornVectorMatrix_mul_v (i : Fin 3) :
     Continuous (fun p : ZornVectorMatrix ℝ × ZornVectorMatrix ℝ =>
       (ZornVectorMatrix.mul p.1 p.2).v i) := by
   fin_cases i
-  · simpa [ZornVectorMatrix.mul, ZornVec3.cross] using
-      (((continuous_zornVectorMatrix_a.comp continuous_fst).mul
+  · dsimp [ZornVectorMatrix.mul, ZornVec3.cross]
+    exact (((continuous_zornVectorMatrix_a.comp continuous_fst).mul
         ((continuous_zornVectorMatrix_v 0).comp continuous_snd)).add
         ((continuous_zornVectorMatrix_b.comp continuous_snd).mul
           ((continuous_zornVectorMatrix_v 0).comp continuous_fst))).sub
@@ -224,8 +220,8 @@ theorem continuous_zornVectorMatrix_mul_v (i : Fin 3) :
           ((continuous_zornVectorMatrix_w 2).comp continuous_snd) |>.sub
           (((continuous_zornVectorMatrix_w 2).comp continuous_fst).mul
             ((continuous_zornVectorMatrix_w 1).comp continuous_snd)))
-  · simpa [ZornVectorMatrix.mul, ZornVec3.cross] using
-      (((continuous_zornVectorMatrix_a.comp continuous_fst).mul
+  · dsimp [ZornVectorMatrix.mul, ZornVec3.cross]
+    exact (((continuous_zornVectorMatrix_a.comp continuous_fst).mul
         ((continuous_zornVectorMatrix_v 1).comp continuous_snd)).add
         ((continuous_zornVectorMatrix_b.comp continuous_snd).mul
           ((continuous_zornVectorMatrix_v 1).comp continuous_fst))).sub
@@ -233,8 +229,8 @@ theorem continuous_zornVectorMatrix_mul_v (i : Fin 3) :
           ((continuous_zornVectorMatrix_w 0).comp continuous_snd) |>.sub
           (((continuous_zornVectorMatrix_w 0).comp continuous_fst).mul
             ((continuous_zornVectorMatrix_w 2).comp continuous_snd)))
-  · simpa [ZornVectorMatrix.mul, ZornVec3.cross] using
-      (((continuous_zornVectorMatrix_a.comp continuous_fst).mul
+  · dsimp [ZornVectorMatrix.mul, ZornVec3.cross]
+    exact (((continuous_zornVectorMatrix_a.comp continuous_fst).mul
         ((continuous_zornVectorMatrix_v 2).comp continuous_snd)).add
         ((continuous_zornVectorMatrix_b.comp continuous_snd).mul
           ((continuous_zornVectorMatrix_v 2).comp continuous_fst))).sub
@@ -247,8 +243,8 @@ theorem continuous_zornVectorMatrix_mul_w (i : Fin 3) :
     Continuous (fun p : ZornVectorMatrix ℝ × ZornVectorMatrix ℝ =>
       (ZornVectorMatrix.mul p.1 p.2).w i) := by
   fin_cases i
-  · simpa [ZornVectorMatrix.mul, ZornVec3.cross] using
-      (((continuous_zornVectorMatrix_a.comp continuous_snd).mul
+  · dsimp [ZornVectorMatrix.mul, ZornVec3.cross]
+    exact (((continuous_zornVectorMatrix_a.comp continuous_snd).mul
         ((continuous_zornVectorMatrix_w 0).comp continuous_fst)).add
         ((continuous_zornVectorMatrix_b.comp continuous_fst).mul
           ((continuous_zornVectorMatrix_w 0).comp continuous_snd))).add
@@ -256,8 +252,8 @@ theorem continuous_zornVectorMatrix_mul_w (i : Fin 3) :
           ((continuous_zornVectorMatrix_v 2).comp continuous_snd) |>.sub
           (((continuous_zornVectorMatrix_v 2).comp continuous_fst).mul
             ((continuous_zornVectorMatrix_v 1).comp continuous_snd)))
-  · simpa [ZornVectorMatrix.mul, ZornVec3.cross] using
-      (((continuous_zornVectorMatrix_a.comp continuous_snd).mul
+  · dsimp [ZornVectorMatrix.mul, ZornVec3.cross]
+    exact (((continuous_zornVectorMatrix_a.comp continuous_snd).mul
         ((continuous_zornVectorMatrix_w 1).comp continuous_fst)).add
         ((continuous_zornVectorMatrix_b.comp continuous_fst).mul
           ((continuous_zornVectorMatrix_w 1).comp continuous_snd))).add
@@ -265,8 +261,8 @@ theorem continuous_zornVectorMatrix_mul_w (i : Fin 3) :
           ((continuous_zornVectorMatrix_v 0).comp continuous_snd) |>.sub
           (((continuous_zornVectorMatrix_v 0).comp continuous_fst).mul
             ((continuous_zornVectorMatrix_v 2).comp continuous_snd)))
-  · simpa [ZornVectorMatrix.mul, ZornVec3.cross] using
-      (((continuous_zornVectorMatrix_a.comp continuous_snd).mul
+  · dsimp [ZornVectorMatrix.mul, ZornVec3.cross]
+    exact (((continuous_zornVectorMatrix_a.comp continuous_snd).mul
         ((continuous_zornVectorMatrix_w 2).comp continuous_fst)).add
         ((continuous_zornVectorMatrix_b.comp continuous_fst).mul
           ((continuous_zornVectorMatrix_w 2).comp continuous_snd))).add
@@ -310,24 +306,22 @@ theorem continuous_zornVectorMatrix_sub :
     Continuous
       (fun p : ZornVectorMatrix ℝ × ZornVectorMatrix ℝ =>
         ZornVectorMatrix.sub p.1 p.2) := by
-  have ha := (continuous_zornVectorMatrix_a.comp continuous_fst).sub
-    (continuous_zornVectorMatrix_a.comp continuous_snd)
-  have hb := (continuous_zornVectorMatrix_b.comp continuous_fst).sub
-    (continuous_zornVectorMatrix_b.comp continuous_snd)
+  have ha := (continuous_zornVectorMatrix_a.comp continuous_fst).add
+    (continuous_zornVectorMatrix_a.comp continuous_snd).neg
+  have hb := (continuous_zornVectorMatrix_b.comp continuous_fst).add
+    (continuous_zornVectorMatrix_b.comp continuous_snd).neg
   have hv : Continuous (fun p : ZornVectorMatrix ℝ × ZornVectorMatrix ℝ =>
-      fun i => p.1.v i - p.2.v i) := by
+      fun i => p.1.v i + -p.2.v i) := by
     exact continuous_pi (fun i =>
-      (continuous_zornVectorMatrix_v i).comp continuous_fst |>.sub
-        ((continuous_zornVectorMatrix_v i).comp continuous_snd))
+      (continuous_zornVectorMatrix_v i).comp continuous_fst |>.add
+        ((continuous_zornVectorMatrix_v i).comp continuous_snd).neg)
   have hw : Continuous (fun p : ZornVectorMatrix ℝ × ZornVectorMatrix ℝ =>
-      fun i => p.1.w i - p.2.w i) := by
+      fun i => p.1.w i + -p.2.w i) := by
     exact continuous_pi (fun i =>
-      (continuous_zornVectorMatrix_w i).comp continuous_fst |>.sub
-        ((continuous_zornVectorMatrix_w i).comp continuous_snd))
+      (continuous_zornVectorMatrix_w i).comp continuous_fst |>.add
+        ((continuous_zornVectorMatrix_w i).comp continuous_snd).neg)
   apply (continuous_induced_rng).2
-  simpa [ZornVectorMatrix.coordEquiv, ZornVectorMatrix.sub,
-    ZornVectorMatrix.add, ZornVectorMatrix.neg, Function.comp_def] using
-    ha.prodMk (hv.prodMk (hw.prodMk hb))
+  exact ha.prodMk (hv.prodMk (hw.prodMk hb))
 
 theorem continuous_zornVectorMatrix_smul :
     Continuous
@@ -400,7 +394,7 @@ theorem continuous_h3Zorn_normCubic :
   have hsum₁ := hterm₁₂₃.sub hterm₁
   have hsum₂ := hsum₁.sub hterm₂
   have hsum₃ := hsum₂.sub hterm₃
-  simpa [H3Zorn.normCubic] using hsum₃.add htriple
+  exact hsum₃.add htriple
 
 theorem isClosed_graph_h3Zorn_normCubic :
     IsClosed
@@ -596,8 +590,7 @@ theorem continuous_h3Zorn_traceBilin :
   have htrace_a := continuous_zornVectorMatrix_trace.comp hmul_a
   have htrace_b := continuous_zornVectorMatrix_trace.comp hmul_b
   have htrace_c := continuous_zornVectorMatrix_trace.comp hmul_c
-  simpa [H3Zorn.traceBilin] using
-    (((((hdiag₁.add hdiag₂).add hdiag₃).add htrace_a).add htrace_b).add htrace_c)
+  exact (((((hdiag₁.add hdiag₂).add hdiag₃).add htrace_a).add htrace_b).add htrace_c)
 
 theorem continuous_h3Zorn_crossProduct :
     Continuous (fun p : H3Zorn ℝ × H3Zorn ℝ =>
@@ -1154,9 +1147,7 @@ theorem subset_S3Saturation (K : Set (H3Zorn ℝ)) :
   intro X hX
   unfold S3Saturation
   simp only [Set.mem_union]
-  have hId : S3OnH3Zorn S3Perm.id X = X := by
-    change S3OnH3Zorn S3Perm.id X = X
-    rfl
+  have hId : S3OnH3Zorn S3Perm.id X = X := rfl
   aesop
 
 theorem S3Saturation_mono {K L : Set (H3Zorn ℝ)} (hKL : K ⊆ L) :

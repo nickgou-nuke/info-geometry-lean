@@ -207,7 +207,8 @@ theorem vonMangoldt_LSeries_second_iteratedDeriv_eq_logMul
         (s := (β : ℂ)) (by simpa using hlt_logMul)
       have hneg := hderivβ.neg.deriv
       rw [LSeries_deriv hlt_logMul]
-      simpa only [Pi.neg_apply] using hneg
+      change deriv (-LSeries (LSeries.logMul (↗ArithmeticFunction.vonMangoldt))) _ = _
+      exact hneg
     _ = LSeries
         (LSeries.logMul (LSeries.logMul (↗ArithmeticFunction.vonMangoldt)))
         (β : ℂ) := by

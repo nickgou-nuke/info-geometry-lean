@@ -57,14 +57,22 @@ conjugation because all three Pauli matrices are Hermitian. -/
 theorem sigmaVec_conjTranspose (u : Fin 3 → ℂ) :
     (sigmaVec u)ᴴ = sigmaVec (fun i => star (u i)) := by
   ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [sigmaVec, Matrix.conjTranspose_apply] <;> ring
+  fin_cases i <;> fin_cases j
+  · dsimp [Matrix.conjTranspose, Matrix.transpose, sigmaVec]
+  · dsimp [Matrix.conjTranspose, Matrix.transpose, sigmaVec]
+    rw [map_add, map_mul, show (starRingEnd ℂ) Complex.I = -Complex.I from Complex.conj_I]
+    ring
+  · dsimp [Matrix.conjTranspose, Matrix.transpose, sigmaVec]
+    rw [map_sub, map_mul, show (starRingEnd ℂ) Complex.I = -Complex.I from Complex.conj_I]
+    ring
+  · dsimp [Matrix.conjTranspose, Matrix.transpose, sigmaVec]
+    rw [map_neg]
 
 /-- Transpose flips exactly the sigma_2 coordinate. -/
 theorem sigmaVec_transpose_formula (u : Fin 3 → ℂ) :
     Matrix.transpose (sigmaVec u) = sigmaVec ![u 0, -u 1, u 2] := by
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [sigmaVec] <;> ring
+  fin_cases i <;> fin_cases j <;> simp [sigmaVec, Matrix.transpose] <;> ring
 
 /-- The Pauli soldering is transpose-skew exactly on the sigma_2 channel. -/
 theorem sigmaVec_transpose_eq_neg_iff (u : Fin 3 → ℂ) :
@@ -72,18 +80,25 @@ theorem sigmaVec_transpose_eq_neg_iff (u : Fin 3 → ℂ) :
       u 0 = 0 ∧ u 2 = 0 := by
   constructor
   · intro h
-    have h01 := congrArg
-      (fun M : Matrix (Fin 2) (Fin 2) ℂ => M 0 1) h
-    have h00 := congrArg
-      (fun M : Matrix (Fin 2) (Fin 2) ℂ => M 0 0) h
-    simp [sigmaVec] at h01 h00
+    have h01 := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℂ => M 0 1) h
+    have h00 := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℂ => M 0 0) h
+    change sigmaVec u 1 0 = - sigmaVec u 0 1 at h01
+    change sigmaVec u 0 0 = - sigmaVec u 0 0 at h00
+    simp only [sigmaVec, cons_val_zero, cons_val_one] at h01 h00
     constructor
     · linear_combination (1 / 2 : ℂ) * h01
     · linear_combination (1 / 2 : ℂ) * h00
   · rintro ⟨h0, h2⟩
     ext i j
-    fin_cases i <;> fin_cases j <;>
-      simp [sigmaVec, h0, h2] <;> ring
+    fin_cases i <;> fin_cases j
+    · change sigmaVec u 0 0 = - sigmaVec u 0 0
+      simp [sigmaVec, h2]
+    · change sigmaVec u 1 0 = - sigmaVec u 0 1
+      simp [sigmaVec, h0]
+    · change sigmaVec u 0 1 = - sigmaVec u 1 0
+      simp [sigmaVec, h0]
+    · change sigmaVec u 1 1 = - sigmaVec u 1 1
+      simp [sigmaVec, h2]
 
 /-! ## 2. Source-side physical compatibility predicates -/
 

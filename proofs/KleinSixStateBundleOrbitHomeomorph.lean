@@ -192,14 +192,17 @@ private theorem localOrbit_continuousAt (omega : ℂ)
     continuousAt_id.prodMk continuousAt_const
   have hs : ContinuousAt (chartSection i) p.1 := by
     unfold chartSection
-    simpa only [Function.comp_apply] using
-      (ContinuousAt.comp (f := fun b : Base ↦ (b, (0 : Deck2)))
-        ((coverTriv i).toOpenPartialHomeomorph.continuousAt_symm ht) hpair)
+    change ContinuousAt
+      (fun b : Base ↦ (coverTriv i).toOpenPartialHomeomorph.symm (b, (0 : Deck2))) p.1
+    exact ContinuousAt.comp (f := fun b : Base ↦ (b, (0 : Deck2)))
+      ((coverTriv i).toOpenPartialHomeomorph.continuousAt_symm ht) hpair
   have htotal : ContinuousAt
       (fun q : Base × State ↦ (chartSection i q.1, q.2)) p :=
     (hs.comp continuousAt_fst).prodMk continuousAt_snd
-  simpa only [localOrbit, Function.comp_apply] using
-    continuous_quot_mk.continuousAt.comp htotal
+  change ContinuousAt
+    (fun q : Base × State ↦
+      totalQuotientMap omega homega (chartSection i q.1, q.2)) p
+  exact continuous_quotient_mk'.continuousAt.comp htotal
 
 theorem coreToOrbit_continuous (omega : ℂ)
     (homega : omega ^ 2 + omega + 1 = 0) :

@@ -92,10 +92,11 @@ instance : DecidableRel d4FinStarAdj :=
 
 def d4FinStarGraph : SimpleGraph (Fin 4) where
   Adj := d4FinStarAdj
-  symm := by
-    intro i j
-    simp only [d4FinStarAdj]
-    tauto
+  symm := {
+    symm := fun i j hij => by
+      simp only [d4FinStarAdj] at *
+      tauto
+  }
   loopless := by
     exact ⟨fun i => by simp [d4FinStarAdj]⟩
 

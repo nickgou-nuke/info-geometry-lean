@@ -38,7 +38,9 @@ lemma localizedCrossHomDeterminedByOne_holds (S T : FinitePrimeLocalization) :
 lemma localizedAutomorphism_eq_mul {S : FinitePrimeLocalization}
     (σ : LocalizedIntegerGroup S ≃+ LocalizedIntegerGroup S) (z : LocalizedIntegerGroup S) :
     σ z = z * σ 1 := by
-  simpa [LocalizedIntegerGroup, zsmul_eq_mul] using σ.toAddMonoidHom.map_zsmul (1 : ℤ) z
+  have h := σ.toAddMonoidHom.map_zsmul z (1 : ℤ)
+  rw [zsmul_eq_mul, mul_one, zsmul_eq_mul] at h
+  exact h
 
 lemma localizedAutomorphismUnitDescription_holds (S : FinitePrimeLocalization) :
     localizedAutomorphismUnitDescription S := by

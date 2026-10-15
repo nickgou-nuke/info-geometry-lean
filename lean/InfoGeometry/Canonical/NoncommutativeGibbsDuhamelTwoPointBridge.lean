@@ -19,6 +19,8 @@ a separate restriction-of-scalars theorem and is not hidden by coercions here.
 
 noncomputable section
 set_option autoImplicit false
+set_option synthInstance.maxHeartbeats 300000
+set_option maxHeartbeats 800000
 
 namespace InfoGeometry.Canonical.NoncommutativeGibbsDuhamelTwoPointBridge
 
@@ -26,6 +28,7 @@ open MeasureTheory
 open scoped Interval
 open SouriauOnsagerBKM
 open InfoGeometry.OperatorAlgebra
+open InfoGeometry.Canonical.NoncommutativeGibbsExpectationBridge
 open InfoGeometry.Canonical.NoncommutativeGibbsTwoPointFrechetBridge
 
 abbrev Operator (n : ℕ) := FiniteOperatorAlgebra n
@@ -47,21 +50,13 @@ theorem trace_duhamelDerivative_mul_eq_duhamelTwoPoint
     NormedSpace.exp ((1 - s) • H) *
       A *
         NormedSpace.exp (s • H)
-  have hf : IntervalIntegrable f volume (0 : ℝ) 1 := by
-    letI : NormedSpace ℝ (Operator n) :=
-      NormedSpace.restrictScalars ℝ ℂ (Operator n)
-    letI : NormedAlgebra ℝ (Operator n) :=
-      NormedAlgebra.restrictScalars ℝ ℂ (Operator n)
-    letI : NormedAlgebra ℚ (Operator n) :=
-      NormedAlgebra.restrictScalars ℚ ℝ (Operator n)
-    apply Continuous.intervalIntegrable
-    dsimp [f]
-    fun_prop
+  have hf : IntervalIntegrable f volume (0 : ℝ) 1 :=
+    intervalIntegrable_duhamelOperatorIntegrand H A
   rw [duhamelDerivative_apply_integral]
   change
-    tracedRightMulCLM B (∫ s in (0 : ℝ)..1, f s) =
-      ∫ s in (0 : ℝ)..1, tracedRightMulCLM B (f s)
-  exact ((tracedRightMulCLM B).intervalIntegral_comp_comm hf).symm
+    ((tracedRightMulCLM B).restrictScalars ℝ) (∫ s in (0 : ℝ)..1, f s) =
+      ∫ s in (0 : ℝ)..1, ((tracedRightMulCLM B).restrictScalars ℝ) (f s)
+  exact (((tracedRightMulCLM B).restrictScalars ℝ).intervalIntegral_comp_comm hf).symm
 
 /--
 The two-insertion trace of the changed-origin real Fréchet derivative is the
@@ -80,10 +75,8 @@ theorem trace_exponentialDerivative_mul_eq_duhamelTwoPoint
                 B) := by
   have hcont :
       ContinuousAt
-        (InfoGeometry.OperatorAlgebra.duhamelPerturbationIntegral H A) 0 := by
-    simpa [InfoGeometry.OperatorAlgebra.duhamelPerturbationIntegral,
-      InfoGeometry.OperatorAlgebra.duhamelDifferenceQuotient] using
-      (InfoGeometry.OperatorAlgebra.continuous_duhamelDifferenceQuotient H A).continuousAt
+        (InfoGeometry.OperatorAlgebra.duhamelDifferenceQuotient H A) 0 :=
+    (InfoGeometry.OperatorAlgebra.continuous_duhamelDifferenceQuotient H A).continuousAt
   have hderiv :=
     InfoGeometry.OperatorAlgebra.exponentialDerivative_apply_eq_duhamelDerivative_of_continuousAt
       H A hcont

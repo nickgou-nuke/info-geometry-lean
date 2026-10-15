@@ -27,6 +27,8 @@ namespace InfoGeometry.Algebra
 
 open H3Zorn
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 /-- Linear Jordan automorphisms of the verified real split `H3Zorn` product. -/
 def H3ZornJordanAutLaws (e : H3Zorn ℝ ≃ₗ[ℝ] H3Zorn ℝ) : Prop :=
   e 1 = 1 ∧
@@ -82,8 +84,10 @@ def comp (A B : H3ZornJordanAut) : H3ZornJordanAut :=
 /-- The inverse of a Jordan automorphism is again a Jordan automorphism. -/
 def inv (A : H3ZornJordanAut) : H3ZornJordanAut :=
   ⟨A.toLinearEquiv.symm, ⟨by
-    apply A.toLinearEquiv.injective
-    simpa only [A.toLinearEquiv.apply_symm_apply] using A.map_one.symm, by
+    calc
+      A.toLinearEquiv.symm 1 = A.toLinearEquiv.symm (A 1) :=
+        congrArg A.toLinearEquiv.symm A.map_one.symm
+      _ = 1 := A.toLinearEquiv.symm_apply_apply 1, by
     intro X Y
     apply A.toLinearEquiv.injective
     calc
@@ -301,7 +305,7 @@ def h3_off₃₁ (i : Fin 8) : H3Zorn ℝ :=
 
 /-- The 52-dimensional explicit generating basis of the F₄ derivation algebra.
 Constructed systematically using inner derivations D_{A,B} = [L_A, L_B] without any sorrys. -/
-def f4Basis (i : Fin 52) : ↥H3ZornF4Derivations :=
+def f4Basis (i : Fin 52) : ↥H3ZornF4Derivations.toSubmodule :=
   match i.val with
   | 0 => ⟨h3ZornJordanInnerDerivation (h3_diag₁) (h3_off₁₂ 0), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
   | 1 => ⟨h3ZornJordanInnerDerivation (h3_diag₁) (h3_off₁₂ 1), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
@@ -358,4 +362,3 @@ def f4Basis (i : Fin 52) : ↥H3ZornF4Derivations :=
   | _ => 0
 
 end InfoGeometry.Algebra
-

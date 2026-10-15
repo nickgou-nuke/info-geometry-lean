@@ -41,7 +41,7 @@ theorem ellipticGateLogSpeedFourierCoeffAtMultiple_padicVal
     _ = padicValRat p (c ^ n) - padicValRat p (2 * n : ℚ) := by
           rw [padicValRat.neg]
     _ = (n : ℤ) * padicValRat p c - padicValRat p (2 * n : ℚ) := by
-          rw [padicValRat.pow hc]
+          rw [padicValRat.pow c]
     _ = (n : ℤ) * padicValRat p c - (padicValRat p (2 : ℚ) + padicValRat p (n : ℚ)) := by
           rw [hmul]
     _ = (n : ℤ) * padicValRat p c - padicValRat p n - padicValRat p 2 := by

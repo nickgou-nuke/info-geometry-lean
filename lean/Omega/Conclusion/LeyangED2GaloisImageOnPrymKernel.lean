@@ -44,8 +44,8 @@ theorem paper_conclusion_leyang_ed2_galois_image_on_prym_kernel :
       conclusion_leyang_ed2_galois_image_on_prym_kernel_discriminant
     refine ⟨?_, ?_, ?_⟩
     · intro x
-      fin_cases x <;> norm_num [conclusion_leyang_ed2_galois_image_on_prym_kernel_cubic]
-      decide
+      simp only [conclusion_leyang_ed2_galois_image_on_prym_kernel_cubic, eval_add, eval_pow, eval_X, eval_one]
+      fin_cases x <;> decide
     · norm_num
     · rw [Fintype.card_perm]
       norm_num

@@ -102,11 +102,11 @@ theorem bregman_div_zero :
 
 /-- Single-mode 2×2 modular operator $\Delta(\beta, \omega) = \operatorname{diag}(1, e^{-\beta\omega})$. -/
 def delta_matrix (β ω : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
-  ![![1, 0], ![0, exp (- (β * ω))]]
+  Matrix.diagonal (fun i : Fin 2 => if i = 0 then 1 else exp (- (β * ω)))
 
 /-- Single-mode 2×2 modular Hamiltonian $\log \Delta(\beta, \omega) = \operatorname{diag}(0, -\beta\omega)$. -/
 def log_delta_matrix (β ω : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
-  ![![0, 0], ![0, - (β * ω)]]
+  Matrix.diagonal (fun i : Fin 2 => if i = 0 then 0 else - (β * ω))
 
 /-- Operatorial Araki vacuum shape deformation: $D_{\text{Araki}} = \Delta - I - \log \Delta$. -/
 def araki_shape_deformation (β ω : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
@@ -114,9 +114,12 @@ def araki_shape_deformation (β ω : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
 
 /-- 🏆 THEOREM: The Araki deformation on the diagonal corresponds directly to the scalar Bregman divergence. -/
 theorem araki_shape_deformation_diagonal (β ω : ℝ) :
-    araki_shape_deformation β ω = ![![0, 0], ![0, bregman_div (- (β * ω))]] := by
-  ext i j; fin_cases i <;> fin_cases j <;>
-  { dsimp [araki_shape_deformation, delta_matrix, log_delta_matrix, bregman_div]; simp }
+    araki_shape_deformation β ω =
+      Matrix.diagonal (fun i : Fin 2 =>
+        if i = 0 then 0 else bregman_div (- (β * ω))) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [araki_shape_deformation, delta_matrix, log_delta_matrix, bregman_div]
 
 /-- 🏆 THEOREM: At the flat boundary ($\beta = 0$), the operatorial Araki shape deformation vanishes identically:
 $$D_{\text{Araki}}(0, \omega) = 0$$ -/

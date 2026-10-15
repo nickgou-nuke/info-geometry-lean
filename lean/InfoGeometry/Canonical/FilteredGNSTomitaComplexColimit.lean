@@ -131,12 +131,12 @@ def complexScalarDirectLimit
         (fun k => closedTomitaDomain (ω.state k))
         (fun _ _ h => domainTransition Stage sys ω h)
         i (c • x) := by
-  simpa only [complexScalarCoconeMap,
-    stageComplexScalarMap] using
-    (Module.DirectLimit.lift_of
+  rw [complexScalarDirectLimit,
+    Module.DirectLimit.lift_of
       (g := complexScalarCoconeMap Stage sys ω c)
       (complexScalarCoconeMap_compatible Stage sys ω c)
-      (i := i) x)
+      (i := i) x]
+  rfl
 
 /-- The descended complex scalar operation. -/
 noncomputable instance complexSMulClosedDomainDirectLimit :
@@ -226,7 +226,8 @@ theorem commonStageModularPairing_smul_left_complex
     LinearMap.congr_fun h
       (domainTransition Stage sys ω
         (le_commonUpper_right i j) y)
-  simpa only [LinearMap.smul_apply, smul_eq_mul] using happ
+  simpa only [LinearMap.smul_apply, smul_eq_mul,
+    starRingEnd_apply] using happ
 
 /-- Complex homogeneity of the common-stage pairing in its second argument. -/
 theorem commonStageModularPairing_smul_right_complex
@@ -302,7 +303,7 @@ def complexDirectLimitModularForm :
             Stage sys ω hclos).map_add z₁ z₂) w)
     (by
       intro c z w
-      simpa only [smul_eq_mul] using
+      simpa only [smul_eq_mul, starRingEnd_apply] using
         directLimitModularForm_smul_left_complex
           Stage sys ω hclos c z w)
     (by
@@ -312,7 +313,7 @@ def complexDirectLimitModularForm :
           Stage sys ω hclos z).map_add w₁ w₂)
     (by
       intro c z w
-      simpa only [smul_eq_mul] using
+      simpa only [smul_eq_mul, RingHom.id_apply] using
         directLimitModularForm_smul_right_complex
           Stage sys ω hclos c z w)
 

@@ -519,29 +519,33 @@ theorem root_representation_exists_scaled_inner_witness (r : G2Root) :
   rcases r with ⟨l, k⟩
   fin_cases l <;> fin_cases k
   · exact ⟨1, canonicalVectorEquiv canonicalE11,
-      canonicalVectorEquiv (canonicalV 0), by simpa using shortZero_eq_inner_E11_V0⟩
+      canonicalVectorEquiv (canonicalV 0), by
+        convert shortZero_eq_inner_E11_V0 using 1 <;> norm_num <;> rfl⟩
   · exact ⟨1, canonicalVectorEquiv canonicalE11,
-      canonicalVectorEquiv (canonicalV 1), by simpa using shortOne_eq_inner_E11_V1⟩
+      canonicalVectorEquiv (canonicalV 1), by
+        convert shortOne_eq_inner_E11_V1 using 1 <;> norm_num <;> rfl⟩
   · exact ⟨-1, canonicalVectorEquiv canonicalE11,
-      canonicalVectorEquiv (canonicalU 2), by simpa using shortTwo_eq_neg_inner_E11_U2⟩
+      canonicalVectorEquiv (canonicalU 2), by exact shortTwo_eq_neg_inner_E11_U2⟩
   · exact ⟨1, canonicalVectorEquiv canonicalE11,
-      canonicalVectorEquiv (canonicalV 2), by simpa using shortThree_eq_inner_E11_V2⟩
+      canonicalVectorEquiv (canonicalV 2), by
+        convert shortThree_eq_inner_E11_V2 using 1 <;> norm_num <;> rfl⟩
   · exact ⟨1, canonicalVectorEquiv canonicalE11,
-      canonicalVectorEquiv (canonicalU 1), by simpa using shortFour_eq_inner_E11_U1⟩
+      canonicalVectorEquiv (canonicalU 1), by
+        convert shortFour_eq_inner_E11_U1 using 1 <;> norm_num <;> rfl⟩
   · exact ⟨-1, canonicalVectorEquiv canonicalE11,
-      canonicalVectorEquiv (canonicalU 0), by simpa using shortFive_eq_neg_inner_E11_U0⟩
+      canonicalVectorEquiv (canonicalU 0), by exact shortFive_eq_neg_inner_E11_U0⟩
   · exact ⟨-1 / 3, canonicalVectorEquiv (canonicalU 1),
-      canonicalVectorEquiv (canonicalV 0), by simpa using longZero_eq_neg_third_inner_U1_V0⟩
+      canonicalVectorEquiv (canonicalV 0), by exact longZero_eq_neg_third_inner_U1_V0⟩
   · exact ⟨-1 / 3, canonicalVectorEquiv (canonicalU 2),
-      canonicalVectorEquiv (canonicalV 0), by simpa using longOne_eq_neg_third_inner_U2_V0⟩
+      canonicalVectorEquiv (canonicalV 0), by exact longOne_eq_neg_third_inner_U2_V0⟩
   · exact ⟨-1 / 3, canonicalVectorEquiv (canonicalU 0),
-      canonicalVectorEquiv (canonicalV 1), by simpa using longTwo_eq_neg_third_inner_U0_V1⟩
+      canonicalVectorEquiv (canonicalV 1), by exact longTwo_eq_neg_third_inner_U0_V1⟩
   · exact ⟨-1 / 3, canonicalVectorEquiv (canonicalU 2),
-      canonicalVectorEquiv (canonicalV 1), by simpa using longThree_eq_neg_third_inner_U2_V1⟩
+      canonicalVectorEquiv (canonicalV 1), by exact longThree_eq_neg_third_inner_U2_V1⟩
   · exact ⟨-1 / 3, canonicalVectorEquiv (canonicalU 0),
-      canonicalVectorEquiv (canonicalV 2), by simpa using longFour_eq_neg_third_inner_U0_V2⟩
+      canonicalVectorEquiv (canonicalV 2), by exact longFour_eq_neg_third_inner_U0_V2⟩
   · exact ⟨-1 / 3, canonicalVectorEquiv (canonicalU 1),
-      canonicalVectorEquiv (canonicalV 2), by simpa using longFive_eq_neg_third_inner_U1_V2⟩
+      canonicalVectorEquiv (canonicalV 2), by exact longFive_eq_neg_third_inner_U1_V2⟩
 
 theorem root_representation_ne_zero (r : G2Root) :
     zornDerivationRootRepresentation r ≠ 0 := by
@@ -596,8 +600,10 @@ theorem cycle_covariant_of_scaled_inner_witness
   change conjugateNativeDerivationLinear realWeylCycle
       (a • NativeStanDerivationBilinear.innerDerivation x y) = _
   rw [(conjugateNativeDerivationLinear realWeylCycle).map_smul]
-  simpa [conjugateNativeDerivationLinear_apply] using
-    congrArg (fun D => a • D) (realWeylCycle_innerDerivation_covariant x y)
+  rw [conjugateNativeDerivationLinear_apply]
+  change a • (realWeylCycle •
+      NativeStanDerivationBilinear.innerDerivation x y) = _
+  rw [realWeylCycle_innerDerivation_covariant]
 
 theorem reflection_covariant_of_scaled_inner_witness
     (r : G2Root) (a : ℝ) (x y : ZornVectorMatrix ℝ)
@@ -611,8 +617,10 @@ theorem reflection_covariant_of_scaled_inner_witness
   change conjugateNativeDerivationLinear realWeylReflection
       (a • NativeStanDerivationBilinear.innerDerivation x y) = _
   rw [(conjugateNativeDerivationLinear realWeylReflection).map_smul]
-  simpa [conjugateNativeDerivationLinear_apply] using
-    congrArg (fun D => a • D) (realWeylReflection_innerDerivation_covariant x y)
+  rw [conjugateNativeDerivationLinear_apply]
+  change a • (realWeylReflection •
+      NativeStanDerivationBilinear.innerDerivation x y) = _
+  rw [realWeylReflection_innerDerivation_covariant]
 
 theorem cycle_maps_root_to_scaled_inner_pair (r : G2Root) :
     ∃ (a : ℝ) (x y : ZornVectorMatrix ℝ),

@@ -1,7 +1,7 @@
 import Mathlib
-import VirasoroProject.VirasoroAlgebra
-import VirasoroProject.WittAlgebra
-import VirasoroProject.VirasoroCocycle
+import InfoGeometry.External.Virasoro.VirasoroAlgebra
+import InfoGeometry.External.Virasoro.WittAlgebra
+import InfoGeometry.External.Virasoro.VirasoroCocycle
 import VirasoroProject.VirasoroVerma
 
 /-!
@@ -90,4 +90,4 @@ theorem modularToLieVermaMap_enveloping_smul
         modularToLieVermaMap (𝕜 := 𝕜) (M := M) (c := c) (h := h) D v := by
   simpa [modularToLieVermaMap] using D.map.map_smul (ιUEA 𝕜 X) v
 
-end InfoGeometry.Bridge.ModularVirasoro
+end VirasoroProject.Extensions.ModularVirasoro

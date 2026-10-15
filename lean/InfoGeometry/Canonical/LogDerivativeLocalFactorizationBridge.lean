@@ -1,5 +1,4 @@
 import InfoGeometry.Canonical.ZetaLogDerivativeCirclePeriodBridge
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Logarithmic derivatives from a local factorization
@@ -34,8 +33,11 @@ theorem localLogDerivativeModel_circleIntegral
     simp [abs_of_pos hR, hR.ne']
     exact (ne_of_gt hR).symm
   have hpole : CircleIntegrable (logarithmicPole rho m) rho R := by
-    change CircleIntegrable (fun z : ℂ => -(m : ℂ) * (z - rho)⁻¹) rho R
-    simpa using h_inv.const_smul (a := -(m : ℂ))
+    have h : logarithmicPole rho m = (-(m : ℂ)) • (fun z : ℂ => (z - rho)⁻¹) := by
+      ext z
+      simp [logarithmicPole, div_eq_mul_inv, smul_eq_mul]
+    rw [h]
+    exact h_inv.const_smul
   have hcorr : CircleIntegrable (fun z => h z / g z) rho R := by
     have hquot : DifferentiableOn ℂ (fun z => h z / g z)
         (Metric.closedBall rho R) := hh.fun_div hg hg0
@@ -67,6 +69,7 @@ theorem deriv_div_factorization
       (m : ℂ) * (z - rho) ^ (m - 1) * g z +
         (z - rho) ^ m * h z := by
     rw [hfactor]
+    change deriv ((fun x => x - rho) ^ m * g) z = _
     simpa using hprod.deriv
   have hpow_succ : (z - rho) ^ m =
       (z - rho) ^ (m - 1) * (z - rho) := by
@@ -182,8 +185,11 @@ theorem normalized_logDerivative_circleIntegral_eq_neg_natCast_derived
     exact (ne_of_gt hR).symm
   have hpole : CircleIntegrable
       (logarithmicPole rho (m : ℤ)) rho R := by
-    change CircleIntegrable (fun z : ℂ => -(m : ℂ) * (z - rho)⁻¹) rho R
-    simpa using h_inv.const_smul (a := -(m : ℂ))
+    have h : logarithmicPole rho (m : ℤ) = (-(m : ℂ)) • (fun z : ℂ => (z - rho)⁻¹) := by
+      ext z
+      simp [logarithmicPole, div_eq_mul_inv, smul_eq_mul]
+    rw [h]
+    exact h_inv.const_smul
   have hcorr : CircleIntegrable (fun z => h z / g z) rho R := by
     have hquot : DifferentiableOn ℂ (fun z => h z / g z)
         (Metric.closedBall rho R) := hh.fun_div hg (fun z _ => hg0 z)

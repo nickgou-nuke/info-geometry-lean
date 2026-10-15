@@ -21,13 +21,8 @@ lemma middleNucleus_is_real (b : SplitOct) (h : is_middle_nucleus b) :
     have h1 := h e2 e4
     have h1_k := congr_arg (fun x : SplitOct => x.b.imK) h1
     dsimp [e2, e4] at h1_k
-    simp only [add_def, mul_def, star, smul_def, sub_def, neg_def] at h1_k
-    simp only [Quaternion.re_add, Quaternion.imI_add, Quaternion.imJ_add, Quaternion.imK_add,
-               Quaternion.re_sub, Quaternion.imI_sub, Quaternion.imJ_sub, Quaternion.imK_sub,
-               Quaternion.mul_re, Quaternion.imI_mul, Quaternion.imJ_mul, Quaternion.imK_mul,
-               Quaternion.re_neg, Quaternion.imI_neg, Quaternion.imJ_neg, Quaternion.imK_neg,
-               Quaternion.zero_re, Quaternion.zero_imI, Quaternion.zero_imJ, Quaternion.zero_imK,
-               Quaternion.one_re, Quaternion.one_imI, Quaternion.one_imJ, Quaternion.one_imK] at h1_k
+    -- dsimp above has already unfolded these operation wrappers.1_k
+    simp [add_def, mul_def, star, smul_def, sub_def, neg_def] at h1_k
     ring_nf at h1_k
     linarith [h1_k]
 
@@ -35,13 +30,8 @@ lemma middleNucleus_is_real (b : SplitOct) (h : is_middle_nucleus b) :
     have h2 := h e3 e4
     have h2_k := congr_arg (fun x : SplitOct => x.b.imI) h2
     dsimp [e3, e4] at h2_k
-    simp only [add_def, mul_def, star, smul_def, sub_def, neg_def] at h2_k
-    simp only [Quaternion.re_add, Quaternion.imI_add, Quaternion.imJ_add, Quaternion.imK_add,
-               Quaternion.re_sub, Quaternion.imI_sub, Quaternion.imJ_sub, Quaternion.imK_sub,
-               Quaternion.mul_re, Quaternion.imI_mul, Quaternion.imJ_mul, Quaternion.imK_mul,
-               Quaternion.re_neg, Quaternion.imI_neg, Quaternion.imJ_neg, Quaternion.imK_neg,
-               Quaternion.zero_re, Quaternion.zero_imI, Quaternion.zero_imJ, Quaternion.zero_imK,
-               Quaternion.one_re, Quaternion.one_imI, Quaternion.one_imJ, Quaternion.one_imK] at h2_k
+    -- dsimp above has already unfolded these operation wrappers.2_k
+    simp [add_def, mul_def, star, smul_def, sub_def, neg_def] at h2_k
     ring_nf at h2_k
     linarith [h2_k]
 
@@ -49,13 +39,8 @@ lemma middleNucleus_is_real (b : SplitOct) (h : is_middle_nucleus b) :
     have h3 := h e1 e4
     have h3_k := congr_arg (fun x : SplitOct => x.b.imJ) h3
     dsimp [e1, e4] at h3_k
-    simp only [add_def, mul_def, star, smul_def, sub_def, neg_def] at h3_k
-    simp only [Quaternion.re_add, Quaternion.imI_add, Quaternion.imJ_add, Quaternion.imK_add,
-               Quaternion.re_sub, Quaternion.imI_sub, Quaternion.imJ_sub, Quaternion.imK_sub,
-               Quaternion.mul_re, Quaternion.imI_mul, Quaternion.imJ_mul, Quaternion.imK_mul,
-               Quaternion.re_neg, Quaternion.imI_neg, Quaternion.imJ_neg, Quaternion.imK_neg,
-               Quaternion.zero_re, Quaternion.zero_imI, Quaternion.zero_imJ, Quaternion.zero_imK,
-               Quaternion.one_re, Quaternion.one_imI, Quaternion.one_imJ, Quaternion.one_imK] at h3_k
+    -- dsimp above has already unfolded these operation wrappers.3_k
+    simp [add_def, mul_def, star, smul_def, sub_def, neg_def] at h3_k
     ring_nf at h3_k
     linarith [h3_k]
 
@@ -63,13 +48,8 @@ lemma middleNucleus_is_real (b : SplitOct) (h : is_middle_nucleus b) :
     have h4 := h e1 e2
     have h4_k := congr_arg (fun x : SplitOct => x.b.imK) h4
     dsimp [e1, e2] at h4_k
-    simp only [add_def, mul_def, star, smul_def, sub_def, neg_def] at h4_k
-    simp only [Quaternion.re_add, Quaternion.imI_add, Quaternion.imJ_add, Quaternion.imK_add,
-               Quaternion.re_sub, Quaternion.imI_sub, Quaternion.imJ_sub, Quaternion.imK_sub,
-               Quaternion.mul_re, Quaternion.imI_mul, Quaternion.imJ_mul, Quaternion.imK_mul,
-               Quaternion.re_neg, Quaternion.imI_neg, Quaternion.imJ_neg, Quaternion.imK_neg,
-               Quaternion.zero_re, Quaternion.zero_imI, Quaternion.zero_imJ, Quaternion.zero_imK,
-               Quaternion.one_re, Quaternion.one_imI, Quaternion.one_imJ, Quaternion.one_imK] at h4_k
+    -- dsimp above has already unfolded these operation wrappers.4_k
+    simp [add_def, mul_def, star, smul_def, sub_def, neg_def] at h4_k
     ring_nf at h4_k
     linarith [h4_k]
 
@@ -77,13 +57,8 @@ lemma middleNucleus_is_real (b : SplitOct) (h : is_middle_nucleus b) :
     have h5 := h e2 e1
     have h5_k := congr_arg (fun x : SplitOct => x.b.imJ) h5
     dsimp [e2, e1] at h5_k
-    simp only [add_def, mul_def, star, smul_def, sub_def, neg_def] at h5_k
-    simp only [Quaternion.re_add, Quaternion.imI_add, Quaternion.imJ_add, Quaternion.imK_add,
-               Quaternion.re_sub, Quaternion.imI_sub, Quaternion.imJ_sub, Quaternion.imK_sub,
-               Quaternion.mul_re, Quaternion.imI_mul, Quaternion.imJ_mul, Quaternion.imK_mul,
-               Quaternion.re_neg, Quaternion.imI_neg, Quaternion.imJ_neg, Quaternion.imK_neg,
-               Quaternion.zero_re, Quaternion.zero_imI, Quaternion.zero_imJ, Quaternion.zero_imK,
-               Quaternion.one_re, Quaternion.one_imI, Quaternion.one_imJ, Quaternion.one_imK] at h5_k
+    -- dsimp above has already unfolded these operation wrappers.5_k
+    simp [add_def, mul_def, star, smul_def, sub_def, neg_def] at h5_k
     ring_nf at h5_k
     linarith [h5_k]
 
@@ -91,13 +66,8 @@ lemma middleNucleus_is_real (b : SplitOct) (h : is_middle_nucleus b) :
     have h6 := h e1 e3
     have h6_k := congr_arg (fun x : SplitOct => x.b.re) h6
     dsimp [e1, e3] at h6_k
-    simp only [add_def, mul_def, star, smul_def, sub_def, neg_def] at h6_k
-    simp only [Quaternion.re_add, Quaternion.imI_add, Quaternion.imJ_add, Quaternion.imK_add,
-               Quaternion.re_sub, Quaternion.imI_sub, Quaternion.imJ_sub, Quaternion.imK_sub,
-               Quaternion.mul_re, Quaternion.imI_mul, Quaternion.imJ_mul, Quaternion.imK_mul,
-               Quaternion.re_neg, Quaternion.imI_neg, Quaternion.imJ_neg, Quaternion.imK_neg,
-               Quaternion.zero_re, Quaternion.zero_imI, Quaternion.zero_imJ, Quaternion.zero_imK,
-               Quaternion.one_re, Quaternion.one_imI, Quaternion.one_imJ, Quaternion.one_imK] at h6_k
+    -- dsimp above has already unfolded these operation wrappers.6_k
+    simp [add_def, mul_def, star, smul_def, sub_def, neg_def] at h6_k
     ring_nf at h6_k
     linarith [h6_k]
 
@@ -105,13 +75,8 @@ lemma middleNucleus_is_real (b : SplitOct) (h : is_middle_nucleus b) :
     have h7 := h e1 e5
     have h7_k := congr_arg (fun x : SplitOct => x.a.imK) h7
     dsimp [e1, e5] at h7_k
-    simp only [add_def, mul_def, star, smul_def, sub_def, neg_def] at h7_k
-    simp only [Quaternion.re_add, Quaternion.imI_add, Quaternion.imJ_add, Quaternion.imK_add,
-               Quaternion.re_sub, Quaternion.imI_sub, Quaternion.imJ_sub, Quaternion.imK_sub,
-               Quaternion.mul_re, Quaternion.imI_mul, Quaternion.imJ_mul, Quaternion.imK_mul,
-               Quaternion.re_neg, Quaternion.imI_neg, Quaternion.imJ_neg, Quaternion.imK_neg,
-               Quaternion.zero_re, Quaternion.zero_imI, Quaternion.zero_imJ, Quaternion.zero_imK,
-               Quaternion.one_re, Quaternion.one_imI, Quaternion.one_imJ, Quaternion.one_imK] at h7_k
+    -- dsimp above has already unfolded these operation wrappers.7_k
+    simp [add_def, mul_def, star, smul_def, sub_def, neg_def] at h7_k
     ring_nf at h7_k
     linarith [h7_k]
 

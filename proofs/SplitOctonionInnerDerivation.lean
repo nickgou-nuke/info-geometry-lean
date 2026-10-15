@@ -109,7 +109,7 @@ theorem bracket_mkInnerDeriv_mkInnerDeriv (x y u v : SplitOct) :
     ⁅mkInnerDeriv x y, mkInnerDeriv u v⁆ =
       mkInnerDeriv (innerDeriv x y u) v +
         mkInnerDeriv u (innerDeriv x y v) := by
-  simpa only [mkInnerDeriv] using
+  simpa only [mkInnerDeriv, innerDerivLinearMap, LinearMap.coe_mk, AddHom.coe_mk] using
     bracket_mkInnerDeriv (mkInnerDeriv x y) u v
 
 end SplitOctonionInnerDerivation

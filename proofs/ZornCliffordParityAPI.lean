@@ -95,9 +95,10 @@ theorem evenOperator_preserves_plus {A : Module.End ℂ DiracSpinor16}
     (hA : IsEvenOperator A) (S : SpinorPlus8) :
     (A (S, 0)).2 = 0 := by
   have h := LinearMap.congr_fun hA (S, 0)
+  simp [Module.End.mul_apply, chiralityOperator, diracChirality] at h
   have h2 := congrArg Prod.snd h
   have h2' : -(A (S, 0)).2 = (A (S, 0)).2 := by
-    simpa [chiralityOperator] using h2
+    exact h2
   have htwo : (2 : ℂ) • (A (S, 0)).2 = 0 := by
     simpa [two_smul] using (neg_eq_iff_add_eq_zero.mp h2')
   exact (smul_eq_zero.mp htwo).resolve_left (by norm_num)
@@ -107,13 +108,13 @@ theorem evenOperator_preserves_minus {A : Module.End ℂ DiracSpinor16}
     (hA : IsEvenOperator A) (C : SpinorMinus8) :
     (A (0, C)).1 = 0 := by
   have h := LinearMap.congr_fun hA (0, C)
+  simp [Module.End.mul_apply, chiralityOperator, diracChirality] at h
   have h1 := congrArg Prod.fst h
   have hneg : A (0, -C) = -(A (0, C)) := by
     simpa using map_neg A (0, C)
   have h1' : (A (0, C)).1 = -(A (0, C)).1 := by
-    change (diracChirality (A (0, C))).1 = (A (0, -C)).1 at h1
     rw [hneg] at h1
-    simpa [chiralityOperator] using h1
+    exact h1
   have htwo : (2 : ℂ) • (A (0, C)).1 = 0 := by
     simpa [two_smul] using (eq_neg_iff_add_eq_zero.mp h1')
   exact (smul_eq_zero.mp htwo).resolve_left (by norm_num)
@@ -123,9 +124,10 @@ theorem oddOperator_reverses_plus {A : Module.End ℂ DiracSpinor16}
     (hA : IsOddOperator A) (S : SpinorPlus8) :
     (A (S, 0)).1 = 0 := by
   have h := LinearMap.congr_fun hA (S, 0)
+  simp [Module.End.mul_apply, LinearMap.neg_apply, chiralityOperator, diracChirality] at h
   have h1 := congrArg Prod.fst h
   have h1' : (A (S, 0)).1 = -(A (S, 0)).1 := by
-    simpa [chiralityOperator] using h1
+    exact h1
   have htwo : (2 : ℂ) • (A (S, 0)).1 = 0 := by
     simpa [two_smul] using (eq_neg_iff_add_eq_zero.mp h1')
   exact (smul_eq_zero.mp htwo).resolve_left (by norm_num)
@@ -135,13 +137,13 @@ theorem oddOperator_reverses_minus {A : Module.End ℂ DiracSpinor16}
     (hA : IsOddOperator A) (C : SpinorMinus8) :
     (A (0, C)).2 = 0 := by
   have h := LinearMap.congr_fun hA (0, C)
+  simp [Module.End.mul_apply, LinearMap.neg_apply, chiralityOperator, diracChirality] at h
   have h2 := congrArg Prod.snd h
   have hneg : A (0, -C) = -(A (0, C)) := by
     simpa using map_neg A (0, C)
   have h2' : -(A (0, C)).2 = (A (0, C)).2 := by
-    change (diracChirality (A (0, C))).2 = (-A (0, -C)).2 at h2
     rw [hneg] at h2
-    simpa [chiralityOperator] using h2
+    simpa using h2
   have htwo : (2 : ℂ) • (A (0, C)).2 = 0 := by
     simpa [two_smul] using (neg_eq_iff_add_eq_zero.mp h2')
   exact (smul_eq_zero.mp htwo).resolve_left (by norm_num)

@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55ExteriorBivectorDerivation
+import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.Tactic
 import Mathlib.Tactic.NoncommRing
 
@@ -17,6 +18,11 @@ namespace InfoGeometry.Clifford.Cl55ExteriorBivectorLieAction
 
 open ExteriorAlgebra
 open InfoGeometry.Clifford.Cl55ExteriorBivectorDerivation
+open InfoGeometry.Clifford.Clifford55
+
+local instance cl55LieRing : LieRing Cl55 := LieRing.ofAssociativeRing
+local instance cl55LieAlgebra : LieAlgebra ℝ Cl55 :=
+  LieAlgebra.ofAssociativeAlgebra
 
 variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V]
 
@@ -40,8 +46,9 @@ theorem liftExteriorDerivation_commutator
   | algebraMap r =>
       simp [Algebra.algebraMap_eq_smul_one, liftExteriorDerivation_one_eq_zero]
   | ι v =>
-      simp [liftExteriorDerivation_ι, LinearMap.sub_apply,
+      simp only [liftExteriorDerivation_ι, LinearMap.sub_apply,
         LinearMap.comp_apply]
+      exact (LinearMap.map_sub (ExteriorAlgebra.ι R) (f (g v)) (g (f v))).symm
   | mul a b ha hb =>
       have hfg :
           liftExteriorDerivation f (liftExteriorDerivation g (a * b)) =
@@ -65,12 +72,18 @@ theorem liftExteriorDerivation_commutator
         ← ha, ← hb]
       noncomm_ring
   | add a b ha hb =>
-      simp only [map_add, ha, hb]
+      simp only [map_add]
+      calc
+        _ = ((liftExteriorDerivation f (liftExteriorDerivation g a) -
+            liftExteriorDerivation g (liftExteriorDerivation f a)) +
+            (liftExteriorDerivation f (liftExteriorDerivation g b) -
+            liftExteriorDerivation g (liftExteriorDerivation f b))) := by abel
+        _ = _ := by rw [ha, hb]
 
 open InfoGeometry.Clifford.BivectorVectorRepresentation
 open InfoGeometry.Clifford.Cl55SpinBivectorImage
 open InfoGeometry.Clifford.Clifford55
-open InfoGeometry.Clifford.CliffordLieAlgebra
+open InfoGeometry.Clifford (soLieAlgebra)
 
 local notation "Exterior55" => ExteriorAlgebra ℝ V55
 
@@ -103,7 +116,7 @@ theorem spinBivector_commutator_preserves_vector_image
         change ⁅ι55 u * ι55 v - ι55 v * ι55 u, ι55 w⁆ =
           ι55 (2 • bivectorVectorTransform u v w)
         rw [hdiff, h₁, h₂]
-        simp only [map_neg, sub_neg_eq_add, two_smul, map_smul]
+        rw [map_neg, sub_neg_eq_add, two_smul, map_add]
     | zero =>
         intro w
         exact ⟨0, by simp⟩
@@ -140,13 +153,16 @@ noncomputable def spinBivectorAdjointOnVectorImage (X : SpinBivector55) :
       rcases z.2 with ⟨w, hw⟩
       rw [← hw]
       obtain ⟨w', hw'⟩ := spinBivector_commutator_preserves_vector_image X w
-      exact ⟨w', hw'⟩⟩
+      exact ⟨w', hw'.symm⟩⟩
   map_add' z₁ z₂ := by
     apply Subtype.ext
-    exact add_lie (X : Cl55) z₁.1 z₂.1
+    change ⁅(X : Cl55), z₁.1 + z₂.1⁆ =
+      ⁅(X : Cl55), z₁.1⁆ + ⁅(X : Cl55), z₂.1⁆
+    exact lie_add (X : Cl55) z₁.1 z₂.1
   map_smul' r z := by
     apply Subtype.ext
-    exact lie_smul (X : Cl55) r z.1
+    change ⁅(X : Cl55), r • z.1⁆ = r • ⁅(X : Cl55), z.1⁆
+    exact lie_smul r (X : Cl55) z.1
 
 /-- The induced linear action of the full native `SpinBivector55` Lie
 algebra on `V55`, transported back from the embedded vector subspace. -/
@@ -176,20 +192,29 @@ theorem spinBivectorVectorAction_commutator
   calc
     ι55 (spinBivectorVectorAction ⁅X, Y⁆ w) =
         ⁅⁅(X : Cl55), (Y : Cl55)⁆, ι55 w⁆ :=
-      ι55_spinBivectorVectorAction ⁅X, Y⁆ w
+      by
+        calc
+          ι55 (spinBivectorVectorAction ⁅X, Y⁆ w) =
+              ⁅(↑⁅X, Y⁆ : Cl55), ι55 w⁆ :=
+            ι55_spinBivectorVectorAction ⁅X, Y⁆ w
+          _ = ⁅⁅(X : Cl55), (Y : Cl55)⁆, ι55 w⁆ := rfl
     _ = ⁅(X : Cl55), ⁅(Y : Cl55), ι55 w⁆⁆ -
         ⁅(Y : Cl55), ⁅(X : Cl55), ι55 w⁆⁆ := by rw [lie_lie]
     _ = ι55 (spinBivectorVectorAction X (spinBivectorVectorAction Y w) -
           spinBivectorVectorAction Y (spinBivectorVectorAction X w)) := by
-      rw [map_sub, ι55_spinBivectorVectorAction,
-        ι55_spinBivectorVectorAction, ι55_spinBivectorVectorAction]
+      rw [LinearMap.map_sub,
+        ← ι55_spinBivectorVectorAction Y w,
+        ← ι55_spinBivectorVectorAction X w,
+        ← ι55_spinBivectorVectorAction X (spinBivectorVectorAction Y w),
+        ← ι55_spinBivectorVectorAction Y (spinBivectorVectorAction X w)]
 
 /-- Linear-map form of the vector-action bracket law. -/
 theorem spinBivectorVectorAction_map_lie (X Y : SpinBivector55) :
     spinBivectorVectorAction ⁅X, Y⁆ =
       (spinBivectorVectorAction X).comp (spinBivectorVectorAction Y) -
         (spinBivectorVectorAction Y).comp (spinBivectorVectorAction X) := by
-  ext w
+  apply LinearMap.ext
+  intro w
   exact spinBivectorVectorAction_commutator X Y w
 
 /-- The full Lie-algebra action induced on the exterior algebra. -/
@@ -236,7 +261,10 @@ theorem bivectorExteriorDerivation_commutator_ι
         (bivectorVectorTransform u₁ v₁ (bivectorVectorTransform u₂ v₂ w) -
           bivectorVectorTransform u₂ v₂ (bivectorVectorTransform u₁ v₁ w)) := by
   rw [bivectorExteriorDerivation_ι, bivectorExteriorDerivation_ι,
-    bivectorExteriorDerivation_ι, bivectorExteriorDerivation_ι, map_sub]
+    bivectorExteriorDerivation_ι, bivectorExteriorDerivation_ι]
+  exact (LinearMap.map_sub (ExteriorAlgebra.ι ℝ)
+    (bivectorVectorTransform u₁ v₁ (bivectorVectorTransform u₂ v₂ w))
+    (bivectorVectorTransform u₂ v₂ (bivectorVectorTransform u₁ v₁ w))).symm
 
 /-- The lifted commutator on a generator is exactly the adjoint Clifford
 action of the commutator of the two generating bivectors. -/
@@ -246,8 +274,11 @@ theorem bivectorExteriorDerivation_commutator_eq_clifford
         (bivectorExteriorDerivation u₂ v₂ (ExteriorAlgebra.ι ℝ w)) -
       bivectorExteriorDerivation u₂ v₂
         (bivectorExteriorDerivation u₁ v₁ (ExteriorAlgebra.ι ℝ w)) =
-      ⁅⁅ι55 u₁ * ι55 v₁, ι55 u₂ * ι55 v₂⁆, ι55 w⁆ := by
+      CliffordAlgebra.equivExterior Q55
+        ⁅⁅ι55 u₁ * ι55 v₁, ι55 u₂ * ι55 v₂⁆, ι55 w⁆ := by
   rw [bivectorExteriorDerivation_commutator_ι]
-  exact (bivector_bracket_vector_action u₁ v₁ u₂ v₂ w).symm
+  have h := congrArg (CliffordAlgebra.equivExterior Q55)
+    (bivector_bracket_vector_action u₁ v₁ u₂ v₂ w)
+  simpa [CliffordAlgebra.equivExterior, CliffordAlgebra.changeForm_ι] using h.symm
 
 end InfoGeometry.Clifford.Cl55ExteriorBivectorLieAction

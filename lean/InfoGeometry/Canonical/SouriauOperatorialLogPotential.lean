@@ -460,7 +460,8 @@ namespace SouriauNegativeLogRNDerivative
 
   @[rep_depth thermo]
   theorem souriauEntropy_eq_Phi_add_pairing_Q_beta (D : SouriauNegativeLogRNDerivative State LieAlgebra LieDual) : D.entropy = D.souriau.partitionPotential + D.souriau.pairing D.Q D.souriau.beta := by
-    simpa [entropy, modularPotential] using D.entropy_eq_Phi_add_pairing_Q_beta
+    change D.expectationBeta (fun x => -Real.log (D.rnDerivative x)) = _
+    exact D.entropy_eq_Phi_add_pairing_Q_beta
 
 end SouriauNegativeLogRNDerivative
 

@@ -29,7 +29,7 @@ This capstone module formally integrates the four monumental pillars of the Unif
    - Galois group $\operatorname{Gal}(\mathbb{Q}(\zeta_{12})/\mathbb{Q}) \cong V_4$ isomorphic to Class DIII symmetries $(\Theta, \Xi, \chi)$.
 
 2. **Pillar 2: Micro-Kinematics of Split-Octonions & Operatorial $G_2$ Geometry**
-   - Zorn matrix reduced norm as Bogoliubov mass-shell: $\operatorname{zornNorm}(X_{\text{NG}}) = - E_{\text{quasiparticle}}^2$.
+   - Zorn matrix reduced norm as a Bogoliubov energy-norm identity: $\operatorname{zornNorm}(X_{\text{NG}}) = - E_{\text{quasiparticle}}^2$. Here the energy is defined from Nambu-Gorkov parameters; this is not a Minkowski four-momentum mass shell.
    - Operatorial Cyclotomic Trace Bound: $\sum_i \Phi_{12}(\lambda_i) \ge \frac{3n}{4}$.
    - The Double Star of David: 12-root system of $G_{2(2)} \cong \operatorname{Aut}(\mathbb{O}_s)$ matching $\zeta_{12}$.
 
@@ -72,7 +72,7 @@ variable {n : ℕ}
 A single, kernel-checked logical statement combining:
 1. **Arithmetic Higgs VEV**: $\Phi_{12}(x_0) = 3/4 < 1$ at $x_0^2 = 1/2$.
 2. **Galois Group Involutions**: $\sigma^2 = 1$ in $\operatorname{Gal}(\mathbb{Q}(\zeta_{12})/\mathbb{Q})$.
-3. **Zorn Bogoliubov Mass-Shell**: $E_{\text{quasiparticle}}^2 = - \operatorname{zornNorm}(X_{\text{NG}})$.
+3. **Zorn Bogoliubov Energy-Norm Identity**: $E_{\text{quasiparticle}}^2 = - \operatorname{zornNorm}(X_{\text{NG}})$, with energy defined by the Nambu-Gorkov quadratic parameters, not a relativistic mass-shell identification.
 4. **Spectral Cyclotomic Lower Bound**: $\sum_i \Phi_{12}(\lambda_i) \ge \frac{3n}{4}$.
 5. **Double Star of David Periodicity**: $12 \times \frac{\pi}{6} = 2\pi$.
 6. **Topological Anomaly Annihilation**: $\operatorname{Tr}(T \rho) = 0$ when $S \rho S = \rho$.

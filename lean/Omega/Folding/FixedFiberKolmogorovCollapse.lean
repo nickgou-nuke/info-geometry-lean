@@ -8,9 +8,8 @@ def foldFibreStarTargetWord (n : ℕ) : FoldFibreStarWord n :=
 
 private lemma foldFibreStarTargetWord_weight (n : ℕ) :
     foldFibreStarWeight (foldFibreStarTargetWord n) = foldFibreStarTargetWeight n := by
-  simpa [foldFibreStarTargetWord, foldFibreStarTargetBlock, foldFibreStarEncode,
-    foldFibreStarEncodeBlock] using
-    foldFibreStarEncode_weight (n := n) (fun _ => false)
+  change foldFibreStarWeight (foldFibreStarEncode (fun _ => false)) = _
+  exact foldFibreStarEncode_weight (fun _ => false)
 
 /-- Paper label: `thm:fold-fixed-fiber-kolmogorov-collapse`.
 The explicit `100/011` encoder sends every source word to the same fixed target word in the

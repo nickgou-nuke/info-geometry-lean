@@ -29,7 +29,7 @@ def booleanTwoLayerAdjugateEntry (q : ℕ) (a b : ℤ) (U V : Finset (Fin q)) : 
 
 /-- Per-coordinate membership states for ordered pairs `(U,V)` whose union covers `[q]`. -/
 def BooleanCoverState :=
-  {s : Bool × Bool // s.1 || s.2}
+  {s : Bool × Bool // s.1 = true ∨ s.2 = true}
 
 deriving instance DecidableEq, Fintype for BooleanCoverState
 
@@ -46,11 +46,13 @@ def booleanCoverStateEquivFin3 : BooleanCoverState ≃ Fin 3 where
     | ⟨1, _⟩ => ⟨(false, true), by decide⟩
     | ⟨2, _⟩ => ⟨(true, true), by decide⟩
   left_inv s := by
-    cases s with
-    | mk s hs =>
-        cases s with
-        | mk b1 b2 =>
-            cases b1 <;> cases b2 <;> simp at hs ⊢
+    apply Subtype.ext
+    rcases s with ⟨⟨b1, b2⟩, hs⟩
+    cases b1 <;> cases b2
+    · simp at hs
+    · rfl
+    · rfl
+    · rfl
   right_inv i := by
     fin_cases i <;> rfl
 

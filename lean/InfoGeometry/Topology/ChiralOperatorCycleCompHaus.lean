@@ -196,10 +196,13 @@ theorem chiralOperatorCycleObservationRangeCompHausHom_natural :
           (operatorSageLatentSystem (A := A))).hom := by
   apply ConcreteCategory.hom_ext
   intro q
-  rw [ConcreteCategory.comp_apply, ConcreteCategory.comp_apply]
-  simp only [operatorObservationQuotientCompHausIso_hom_apply,
-    chiralOperatorCycleObservationRangeCompHausHom_apply,
-    chiralOperatorCycleQuotientCompHausHom_apply]
+  change ChiralOperatorObservationalQuotient A at q
+  change chiralOperatorCycleObservationRangeMap
+      (operatorObservationQuotientRangeMap
+        (operatorSageLatentSystem (A := A)) q) =
+    operatorObservationQuotientRangeMap
+      (operatorSageLatentSystem (A := A))
+      (chiralOperatorCycleQuotientMap q)
   apply Subtype.ext
   change (fun i =>
       (operatorObservationQuotientRangeMap

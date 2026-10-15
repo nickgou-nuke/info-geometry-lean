@@ -76,6 +76,7 @@ theorem one_cycle_scramble_identity
     trajectoryMatrix (moving := 1)
       (appendixPentagonWord zi zj zk zl zm) =
       (1 : Matrix (Fin (rohozhkinDim 1)) (Fin (rohozhkinDim 1)) ℚ) := by
-  simpa using appendixPentagonWord_matrix_eq_one zi zj zk zl zm h_il h_ik h_km h_jm h_jl
+  change rohozhkinMatrix (appendixPentagonWord zi zj zk zl zm) = _
+  exact appendixPentagonWord_matrix_eq_one zi zj zk zl zm h_il h_ik h_km h_jm h_jl
 
 end InfoGeometry.Topology.RohozhkinDelaunayBraiding

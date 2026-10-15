@@ -89,10 +89,10 @@ theorem finiteCartanOnsagerData_quadratic_eq_covariance
     (finiteCartanOnsagerData F β).quadratic x =
       ∑ a : Fin 2, ∑ b : Fin 2,
         x a * chargeCovariance F β a b * x b := by
-  unfold OnsagerMetricData.quadratic finiteCartanOnsagerData
-    euclideanPairingFin2 chargeCovarianceMatrix
-  simp only [Matrix.toLin'_apply, Matrix.mulVec, dotProduct]
+  change dotProduct x ((chargeCovarianceMatrix F β).mulVec x) = _
+  simp only [Matrix.mulVec, dotProduct]
   simp_rw [Finset.mul_sum]
+  dsimp [chargeCovarianceMatrix]
   apply Finset.sum_congr rfl
   intro a _ha
   apply Finset.sum_congr rfl

@@ -22,16 +22,19 @@ theorem hasDerivAt_barrier (L x : ℝ) (hx : x ^ 2 < L ^ 2) :
     HasDerivAt (barrier L) (slope L x) x := by
   convert (((hasDerivAt_const x (L ^ 2)).sub (hasDerivAt_pow 2 x)).log
     (ne_of_gt (sub_pos.mpr hx))).neg using 1
-  simp [slope]
-  ring
+  · rfl
+  · simp [slope]
+    ring
 
 theorem hasDerivAt_slope (L x : ℝ) (hx : x ^ 2 < L ^ 2) :
     HasDerivAt (slope L) (2 * (L ^ 2 + x ^ 2) / (L ^ 2 - x ^ 2) ^ 2) x := by
   convert (((hasDerivAt_id x).const_mul 2).div
     ((hasDerivAt_const x (L ^ 2)).sub (hasDerivAt_pow 2 x))
     (ne_of_gt (sub_pos.mpr hx))) using 1
-  simp
-  ring
+  · ext y
+    simp [slope]
+  · dsimp
+    ring
 
 theorem barrier_second_derivative (L x : ℝ) (hx : x ^ 2 < L ^ 2) :
     deriv (deriv (barrier L)) x = 2 * (L ^ 2 + x ^ 2) / (L ^ 2 - x ^ 2) ^ 2 := by

@@ -1,5 +1,8 @@
 import InfoGeometry.Exceptional.FreudenthalSymplecticMixedBracket
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Algebra.Lie.OfAssociative
+
+attribute [local instance 100] LieRing.ofAssociativeRing LieAlgebra.ofAssociativeAlgebra
 
 /-!
 # Symplectic action on the Freudenthal mixed bracket

@@ -39,9 +39,11 @@ theorem bridge_soldering_eq (t x y z : ℝ) :
     InfoGeometry.Spacetime.spacetimeMatrix t x y z = soldering (t, z, y, x) := by
   -- Evaluate both explicitly to show structural equivalence
   ext i j
-  fin_cases i <;> fin_cases j <;> 
-    (simp [InfoGeometry.Spacetime.spacetimeMatrix, splitOne, splitI, splitJ, splitK,
-           soldering, sigma0, sigma3, sigma1, epsilon] <;> ring)
+  fin_cases i <;> fin_cases j <;>
+    simp only [InfoGeometry.Spacetime.spacetimeMatrix, Matrix.add_apply,
+      Matrix.smul_apply] <;>
+    simp [splitOne, splitI, splitJ, splitK, soldering, sigma0, sigma3,
+      sigma1, epsilon, Matrix.of_apply, smul_eq_mul] <;> ring_nf
 
 /--
 The matrix action evaluates identically to the Soldering `pointAction`.
@@ -57,17 +59,10 @@ If `q` is a unit determinant Lorentz transformation, `splitConj q` acts as its e
 -/
 lemma splitConj_is_inv_of_unit (q : Matrix (Fin 2) (Fin 2) ℝ) (h_unit : q.det = 1) :
     q * splitConj q = 1 ∧ splitConj q * q = 1 := by
-  have h1 : q * splitConj q = q.det • 1 := by
-    ext i j
-    fin_cases i <;> fin_cases j <;> 
-      (simp [splitConj, Matrix.det_fin_two, Matrix.mul_apply, Fin.sum_univ_two]; ring)
-  have h2 : splitConj q * q = q.det • 1 := by
-    ext i j
-    fin_cases i <;> fin_cases j <;> 
-      (simp [splitConj, Matrix.det_fin_two, Matrix.mul_apply, Fin.sum_univ_two]; ring)
-  rw [h_unit] at h1 h2
-  simp at h1 h2
-  exact ⟨h1, h2⟩
+  have hnorm : splitNorm q = 1 := by
+    simpa [splitNorm, Matrix.det_fin_two] using h_unit
+  rw [mul_splitConj, splitConj_mul, hnorm]
+  simp [splitOne]
 
 /--
 Composition of matrix actions.

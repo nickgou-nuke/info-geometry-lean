@@ -45,7 +45,9 @@ theorem paper_xi_cdim_localization_solenoid_no_nontrivial_torus_input
   intro p hpS hp φ hdiv z
   have hone : φ 1 = 0 := vector_eq_zero_of_dvd_all_powers hp hdiv
   have hz : φ z = z • φ 1 := by
-    simpa using φ.map_zsmul (1 : ℤ) z
+    have h : z = z • (1 : ℤ) := (zsmul_one z).symm
+    conv_lhs => rw [h]
+    exact φ.map_zsmul z 1
   rw [hone] at hz
   simpa using hz
 

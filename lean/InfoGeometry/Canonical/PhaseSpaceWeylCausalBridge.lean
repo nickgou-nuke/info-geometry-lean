@@ -609,7 +609,8 @@ frame keeps it nonzero. -/
       (CCI.toConformalInference.leftChiralAnomalyOperator_eq_zero_iff_projectors_commute).1 hLeftZero
     exact hNonComm (by
       simpa [ConformalInference.spectralChiralProjector,
-        ConformalInference.metricChiralProjector] using hCommEq)
+        ConformalInference.metricChiralProjector,
+        ContinuousLinearMap.mul_def] using hCommEq)
   have hLeftNeLift : CCI.liftedLeftChiralAnomalyOperator ≠ 0 := by
     exact
       (InfoGeometry.Canonical.ConformalUnification.CertifiedConformalInference.liftedLeftChiralAnomalyOperator_ne_zero_iff

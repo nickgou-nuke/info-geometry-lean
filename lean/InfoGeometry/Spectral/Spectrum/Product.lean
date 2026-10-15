@@ -36,7 +36,9 @@ def isSpectrum {E F : Prespectrum} (hE : IsSpectrum E) (hF : IsSpectrum F) :
   stepEquiv_apply := by
     intro n x
     rcases x with ⟨x, y⟩
-    simp [hE.stepEquiv_apply, hF.stepEquiv_apply]
+    change ((hE.stepEquiv n) x, (hF.stepEquiv n) y) =
+      (E.step n x, F.step n y)
+    rw [hE.stepEquiv_apply, hF.stepEquiv_apply]
 
 def spectrum (E F : GPreSpectrum.Spectrum) : GPreSpectrum.Spectrum where
   prespectrum := prespectrum E.prespectrum F.prespectrum

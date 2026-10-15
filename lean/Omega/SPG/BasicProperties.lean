@@ -20,6 +20,6 @@ theorem paper_prefix_scan_error_basic_properties
     simpa [hzero] using (paper_scan_projection_address_bayes_optimality_package μ h₁ P).2
   · rintro ⟨A, hA⟩
     have hle := (paper_scan_projection_address_bayes_optimality_package μ h₁ P).1 A
-    exact le_antisymm (by simpa [hA] using hle) (zero_le _)
+    exact le_antisymm (by simpa [hA] using hle) zero_le
 
 end Omega.SPG

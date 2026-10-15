@@ -105,7 +105,7 @@ theorem paper_xi_local_jet_toeplitz_failure_semialgebraic_stratification
   · intro hnotgood
     change ¬ xi_local_jet_toeplitz_failure_semialgebraic_stratification_good_layer D.ell N at hnotgood
     change ¬ ∀ j < N, |xiVerblunskyFromJet D.ell j| < 1 at hnotgood
-    push_neg at hnotgood
+    push Not at hnotgood
     have hExists :
         ∃ m,
           m < N ∧
@@ -132,10 +132,14 @@ theorem paper_xi_local_jet_toeplitz_failure_semialgebraic_stratification
     have hdetPos : 0 < T.toeplitzDet m := by
       apply T.toeplitzDet_pos_of_prefix_good
       intro j hj
-      have hjN : j < N := lt_of_lt_of_le hj hmN'
-      have hjD : j < D.N := by simpa [hN] using hjN
-      simpa [T, xi_toeplitz_psd_jet_semialgebraic_toeplitz_data, xiToeplitzDetDataFromJet,
-        XiToeplitzDetVerblunskyData.alphaAt, xiFiniteCMVPrefix, if_pos hjD] using hgood j hjN
+      have hjD : j < D.N := by omega
+      have hjN : j < N := by omega
+      have halpha : T.alphaAt j = xiVerblunskyFromJet D.ell j := by
+        dsimp [T, xi_toeplitz_psd_jet_semialgebraic_toeplitz_data, xiToeplitzDetDataFromJet,
+          XiToeplitzDetVerblunskyData.alphaAt, xiFiniteCMVPrefix]
+        simp [hjD]
+      rw [halpha]
+      exact hgood j hjN
     refine ⟨hdetPos, ?_⟩
     exact (xi_local_jet_toeplitz_failure_semialgebraic_stratification_cleared_minor_nonneg_iff
       D m).2 hdetPos.le

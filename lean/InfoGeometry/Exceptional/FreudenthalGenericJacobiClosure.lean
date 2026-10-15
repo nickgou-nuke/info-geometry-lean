@@ -34,7 +34,7 @@ inductive JacobiLane
   | zeroScale
   | plus1
   | plus2
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
 
 /-- Projector onto each atomic grading lane. -/
 def lanePart (lane : JacobiLane) (x : FiveGradedCarrier D) : FiveGradedCarrier D :=

@@ -91,16 +91,13 @@ theorem positive_master_factor (ω : ℂ)
     (hω : ω ^ 2 + ω + 1 = 0) :
     (∏ a : HexColor,
       (X - C (masterEigenvalue ω (positiveVertex a)))) = X ^ 3 - 1 := by
-  rw [← (ZMod.finEquiv 3).toEquiv.prod_comp]
   rw [Fin.prod_univ_three]
   norm_num [masterEigenvalue_positiveVertex, colorEigenvalue]
+  rw [← map_pow, ← map_pow]
   rw [show (ω ^ 2) ^ 2 = ω by
     calc
       (ω ^ 2) ^ 2 = ω * ω ^ 3 := by ring
       _ = ω := by rw [TwoSheetThreeColorWeyl.omega_cube ω hω, mul_one]]
-  have h20 : (2 : HexColor) ≠ 0 := by decide
-  have h21 : (2 : HexColor) ≠ 1 := by decide
-  simp only [h20, h21, if_false]
   calc
     _ = (X - C 1) * (X - C (ω ^ 2)) * (X - C ω) := by
       norm_num
@@ -123,16 +120,13 @@ theorem negative_master_factor (ω : ℂ)
     (∏ a : HexColor,
       (X - C (masterEigenvalue ω (negativeVertex a)))) =
       X ^ 3 - C Complex.I := by
-  rw [← (ZMod.finEquiv 3).toEquiv.prod_comp]
   rw [Fin.prod_univ_three]
   norm_num [masterEigenvalue_negativeVertex, colorEigenvalue]
+  rw [← map_pow, ← map_pow]
   rw [show (ω ^ 2) ^ 2 = ω by
     calc
       (ω ^ 2) ^ 2 = ω * ω ^ 3 := by ring
       _ = ω := by rw [TwoSheetThreeColorWeyl.omega_cube ω hω, mul_one]]
-  have h20 : (2 : HexColor) ≠ 0 := by decide
-  have h21 : (2 : HexColor) ≠ 1 := by decide
-  simp only [h20, h21, if_false]
   let s : ℂ := -Complex.I
   calc
     _ = (X - C s) * (X - C (s * ω ^ 2)) * (X - C (s * ω)) := by
@@ -302,7 +296,7 @@ theorem masterTwelve_minpoly (ω : ℂ)
     minpoly ℂ masterTwelve = (X ^ 3 - 1) * (X ^ 3 - C Complex.I) := by
   calc
     minpoly ℂ masterTwelve = minpoly ℂ masterEnd := by
-      simpa only [masterEnd] using
+      simpa only [masterEnd, Matrix.toLin'_apply'] using
         (Matrix.minpoly_toLin' (R := ℂ) masterTwelve).symm
     _ = (X ^ 3 - 1) * (X ^ 3 - C Complex.I) :=
       masterEnd_minpoly ω hω

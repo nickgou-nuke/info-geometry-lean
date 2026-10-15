@@ -147,15 +147,17 @@ lemma symmetricPair_K_eq_fixedSubgroup
 lemma symmetricPairOfCartan_K_eq_fixedSubgroup
     (θ : CartanInvolution G) :
     (symmetricPairOfCartan θ).K = θ.fixedSubgroup := by
-  simpa [symmetricPairOfCartan, CartanInvolution.fixedSubgroup, symmetricPairOfInvolution, fixedSubgroup] using
-    K_eq_fixedSubgroup (symmetricPairOfCartan θ)
+  change (symmetricPairOfCartan θ).K =
+    InfoGeometry.Architecture.fixedSubgroup θ.toMulAut
+  exact K_eq_fixedSubgroup (symmetricPairOfCartan θ)
 
 lemma symmetricPairOfInvolutiveMulAut_K_eq_fixed
     (θ : InvolutiveMulAut G) :
     (symmetricPairOfInvolutiveMulAut θ).K = fixedSubgroup θ.1 := by
-  simpa [symmetricPairOfInvolutiveMulAut, fixedSubgroup] using
-    K_eq_fixedSubgroup
-      (InfoGeometry.Architecture.symmetricPairOfInvolutiveMulAut θ)
+  change (symmetricPairOfInvolutiveMulAut θ).K =
+    InfoGeometry.Architecture.fixedSubgroup θ.1
+  exact K_eq_fixedSubgroup
+    (InfoGeometry.Architecture.symmetricPairOfInvolutiveMulAut θ)
 
 lemma symmetricPairOfInvolutiveMulAut_K_eq_fixedSubgroup
     (θ : InvolutiveMulAut G) :

@@ -10,7 +10,7 @@ open FilteredColimit.Native.Topological
 
 noncomputable section
 
-universe u
+universe u v w uE uS uB
 
 /-!
 # Modular-spinor / filtered topological colimit bridge
@@ -30,13 +30,14 @@ re-exports the native categorical laws already proved in each.
 /-- A joint owner for the modular-spinor sheaf/spectrum bridge and a native
 filtered topological direct colimit. -/
 structure ModularSpinorFilteredColimitBridge
-  {E Sections BoundarySections Gr Open : Type*}
+  {E : Type uE} {Sections : Type uS} {BoundarySections : Type uB}
+  {Gr Open : Type v}
   [AddCommGroup Sections] [Module ℝ Sections]
   [AddCommGroup BoundarySections] [Module ℝ BoundarySections]
-  [TopologicalSpace Gr] [Category Open]
+  [TopologicalSpace Gr] [Category.{v, v} Open]
   {J : Type u} [Category.{u, u} J]
   (F : J ⥤ TopCat.{u}) where
-  spectrumBridge : ModularSpinorGrassmannianSpectrumBridge
+  spectrumBridge : ModularSpinorGrassmannianSpectrumBridge.{u, v, uE, uS, uB, w}
     (E := E) (Sections := Sections) (BoundarySections := BoundarySections)
     (Gr := Gr) (Open := Open) F
   /-- A filtered topological direct colimit stage diagram. -/
@@ -44,10 +45,10 @@ structure ModularSpinorFilteredColimitBridge
 
 /-- The sheaf cover condition remains available inside the filtered colimit bridge. -/
 theorem modularSpinor_filteredColimit_monogenicSheaf_isSheafFor
-  {E Sections BoundarySections Gr Open : Type*}
+  {E Sections BoundarySections : Type*} {Gr Open : Type v}
   [AddCommGroup Sections] [Module ℝ Sections]
   [AddCommGroup BoundarySections] [Module ℝ BoundarySections]
-  [TopologicalSpace Gr] [Category Open]
+  [TopologicalSpace Gr] [Category.{v, v} Open]
   {J : Type u} [Category.{u, u} J]
   (F : J ⥤ TopCat.{u})
   (B : ModularSpinorFilteredColimitBridge
@@ -61,10 +62,10 @@ theorem modularSpinor_filteredColimit_monogenicSheaf_isSheafFor
 /-- The monogenic section membership theorem remains available inside the
 filtered colimit bridge. -/
 theorem modularSpinor_filteredColimit_monogenicSection_mem
-  {E Sections BoundarySections Gr Open : Type*}
+  {E Sections BoundarySections : Type*} {Gr Open : Type v}
   [AddCommGroup Sections] [Module ℝ Sections]
   [AddCommGroup BoundarySections] [Module ℝ BoundarySections]
-  [TopologicalSpace Gr] [Category Open]
+  [TopologicalSpace Gr] [Category.{v, v} Open]
   {J : Type u} [Category.{u, u} J]
   (F : J ⥤ TopCat.{u})
   (B : ModularSpinorFilteredColimitBridge
@@ -78,10 +79,10 @@ theorem modularSpinor_filteredColimit_monogenicSection_mem
 /-- The boundary DN kernel theorem remains available inside the
 filtered colimit bridge. -/
 theorem modularSpinor_filteredColimit_boundary_kernel_eq_traceMonogenic
-  {E Sections BoundarySections Gr Open : Type*}
+  {E Sections BoundarySections : Type*} {Gr Open : Type v}
   [AddCommGroup Sections] [Module ℝ Sections]
   [AddCommGroup BoundarySections] [Module ℝ BoundarySections]
-  [TopologicalSpace Gr] [Category Open]
+  [TopologicalSpace Gr] [Category.{v, v} Open]
   {J : Type u} [Category.{u, u} J]
   (F : J ⥤ TopCat.{u})
   (B : ModularSpinorFilteredColimitBridge
@@ -95,10 +96,10 @@ theorem modularSpinor_filteredColimit_boundary_kernel_eq_traceMonogenic
 /-- The categorical spectrum descent map from the sheaf/spectrum bridge
 remains available. -/
 noncomputable def modularSpinor_filteredColimit_gelfandSpectrumDescend
-  {E Sections BoundarySections Gr Open : Type*}
+  {E Sections BoundarySections : Type*} {Gr Open : Type v}
   [AddCommGroup Sections] [Module ℝ Sections]
   [AddCommGroup BoundarySections] [Module ℝ BoundarySections]
-  [TopologicalSpace Gr] [Category Open]
+  [TopologicalSpace Gr] [Category.{v, v} Open]
   {J : Type u} [Category.{u, u} J]
   (F : J ⥤ TopCat.{u})
   (B : ModularSpinorFilteredColimitBridge
@@ -109,10 +110,10 @@ noncomputable def modularSpinor_filteredColimit_gelfandSpectrumDescend
 
 @[reassoc (attr := simp)]
 theorem modularSpinor_filteredColimit_gelfandSpectrum_stage
-  {E Sections BoundarySections Gr Open : Type*}
+  {E Sections BoundarySections : Type*} {Gr Open : Type v}
   [AddCommGroup Sections] [Module ℝ Sections]
   [AddCommGroup BoundarySections] [Module ℝ BoundarySections]
-  [TopologicalSpace Gr] [Category Open]
+  [TopologicalSpace Gr] [Category.{v, v} Open]
   {J : Type u} [Category.{u, u} J]
   (F : J ⥤ TopCat.{u})
   (B : ModularSpinorFilteredColimitBridge
@@ -126,10 +127,10 @@ theorem modularSpinor_filteredColimit_gelfandSpectrum_stage
 
 /-- The filtered topological direct colimit stage maps are available natively. -/
 noncomputable def modularSpinor_filteredColimit_stageInjection
-  {E Sections BoundarySections Gr Open : Type*}
+  {E Sections BoundarySections : Type*} {Gr Open : Type v}
   [AddCommGroup Sections] [Module ℝ Sections]
   [AddCommGroup BoundarySections] [Module ℝ BoundarySections]
-  [TopologicalSpace Gr] [Category Open]
+  [TopologicalSpace Gr] [Category.{v, v} Open]
   {J : Type u} [Category.{u, u} J]
   (F : J ⥤ TopCat.{u})
   (B : ModularSpinorFilteredColimitBridge
@@ -140,10 +141,10 @@ noncomputable def modularSpinor_filteredColimit_stageInjection
 
 /-- Naturality of the filtered colimit stage maps. -/
 theorem modularSpinor_filteredColimit_stageInjection_naturality
-  {E Sections BoundarySections Gr Open : Type*}
+  {E Sections BoundarySections : Type*} {Gr Open : Type v}
   [AddCommGroup Sections] [Module ℝ Sections]
   [AddCommGroup BoundarySections] [Module ℝ BoundarySections]
-  [TopologicalSpace Gr] [Category Open]
+  [TopologicalSpace Gr] [Category.{v, v} Open]
   {J : Type u} [Category.{u, u} J]
   (F : J ⥤ TopCat.{u})
   (B : ModularSpinorFilteredColimitBridge
@@ -158,10 +159,10 @@ theorem modularSpinor_filteredColimit_stageInjection_naturality
 /-- Modular-spinor transport still preserves the canonical three-form
 inside the full filtered colimit bridge. -/
 theorem modularSpinor_filteredColimit_transport_preserves_threeForm
-  {E Sections BoundarySections Gr Open : Type*}
+  {E Sections BoundarySections : Type*} {Gr Open : Type v}
   [AddCommGroup Sections] [Module ℝ Sections]
   [AddCommGroup BoundarySections] [Module ℝ BoundarySections]
-  [TopologicalSpace Gr] [Category Open]
+  [TopologicalSpace Gr] [Category.{v, v} Open]
   {J : Type u} [Category.{u, u} J]
   (F : J ⥤ TopCat.{u})
   (B : ModularSpinorFilteredColimitBridge

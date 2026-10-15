@@ -77,7 +77,7 @@ theorem colimit_artin_of_stageArtin
       colim.map s₁ ≫ colim.map s₀ ≫ colim.map s₁ := by
     rw [← colim.map_comp, ← colim.map_comp, ← colim.map_comp, ← colim.map_comp]
     exact congrArg colim.map h
-  simpa [colimitOperator, Module.End.mul_apply] using
+  simpa [colimitOperator, Module.End.mul_eq_comp] using
     congrArg ModuleCat.Hom.hom hmap
 
 /-- Stage readback of the descended Artin law. -/

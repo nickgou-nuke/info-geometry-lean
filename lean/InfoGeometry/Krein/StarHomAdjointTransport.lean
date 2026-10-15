@@ -65,7 +65,10 @@ theorem self_adjoint_transport_iff (equivalence : Source ≃⋆ₐ[Scalar] Targe
     kreinConjugate targetMetric (star (equivalence operator)) = equivalence operator ↔
       kreinConjugate sourceMetric (star operator) = operator := by
   have hmap := map_conjugate_star_of_metric_sign
-    (equivalence : Source →⋆ₐ[Scalar] Target) sourceMetric targetMetric hmetric operator
+    equivalence.toStarAlgHom sourceMetric targetMetric hmetric operator
+  change kreinConjugate targetMetric (star (equivalence.toStarAlgHom operator)) =
+      equivalence.toStarAlgHom operator ↔
+    kreinConjugate sourceMetric (star operator) = operator
   rw [← hmap]
   exact equivalence.injective.eq_iff
 

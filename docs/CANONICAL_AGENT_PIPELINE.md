@@ -21,14 +21,24 @@ return here before touching repo-owned code.
 
 ## Authority Stack
 
-1. Lean source in the owner file.
-2. `lake env lean <file>` or the locked Lake build.
-3. Repo docs and skills.
-4. Arango, DAG, RAG, SymPy, LeanTrail, Hodge, WL, de Bruijn, and ChatGPT as
+1. The current checked-out repository context, discovered by source search.
+2. Lean source in the actual owner file and its imported definitions,
+   instances, theorem statements, and dependents.
+3. `lake env lean <file>` or the locked Lake build for kernel verification.
+4. Repo docs and skills as workflow guidance, not evidence that a declaration
+   exists or is absent.
+5. Arango, DAG, RAG, SymPy, LeanTrail, Hodge, WL, de Bruijn, and ChatGPT as
    evidence only.
 
 ChatGPT does not prove anything. It audits and suggests. The coding agent edits.
 Lean decides.
+
+### OpenGauss Protocol & Kernel Truth Boundary (QMS-SOP-IAA-001)
+
+- **Zero fake proofs:** 0 `sorry`, 0 `admit`, 0 custom axioms. Only standard foundational Lean 4 axioms (`[propext, Classical.choice, Quot.sound]`).
+- **Trap T16 Permanent Prohibition (Zero Scalar Toy Proxies):** Non-commutative operator algebras ($\mathcal{M}$), infinite-dimensional spectral triples, and spacetime soldering forms must never be replaced by coordinate/scalar surrogates.
+- **Wavefront Duality & Operator-Algebraic Root:** Retarded/Advanced waves are operator wavefront shells $\mathcal{O}_{\text{foc}}(\tau) = \sigma_{-\tau}(\mathcal{O}_0)$ and $\mathcal{O}_{\text{defoc}}(\tau) = \sigma_{+\tau}(\mathcal{O}_0')$ in von Neumann algebras $\mathcal{M}$ intertwined by Tomita modular conjugation $J \mathcal{O}_{\text{foc}}(\tau) J = \mathcal{O}_{\text{defoc}}(-\tau)$, Klein bottle glide reflection $\mathcal{G}_{\text{Klein}}(\mathcal{O}_{\text{foc}}(\tau)) = \mathcal{O}_{\text{defoc}}(-\tau)$, KMS thermal boundary periodicity $\tau \to \tau + i\beta$, and chiral ideal splits $P_L \leftrightarrow P_R$.
+- **Safe Build Discipline:** Never run `lake clean`. Acquire `/tmp/info-geometry-build.lock` via `python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock`. Proactively stage all edits with `git add -A`.
 
 Oracle outputs are advice artifacts, not source edits. Browser-harness and
 aiClaw tools may write response logs, JSON reports, and candidate files under
@@ -95,6 +105,14 @@ python3 tools/infra/context_preflight.py "question or target theorem" --include-
 This packet separates repo-owned code, external references, graph/indexing
 surfaces, Lean owner candidates, and generated artifact presence. It is
 navigation evidence only; proof claims still require Lean owner validation.
+
+Do not declare a mathematical structure missing or incorrect based on a
+heuristic expectation, a single name search, a single candidate module, a
+summary, or a docstring. Search related carriers and alternate formulations
+throughout repo-owned source, then trace their definitions, imports, instances,
+theorems, and uses. A result scoped to one file must be reported as scoped to
+that file; repository-wide absence requires the multi-lane procedure in
+`docs/REPO_DEEP_SEARCH_PROTOCOL.md`.
 
 ### aiClaw / ChatGPT Oracle
 
@@ -189,6 +207,11 @@ then Critic(vacuity linter)
 then Archivist(report artifact)
 ```
 
+`tools/infra/automath_pipeline_main.py` is a candidate adapter for explicit
+hypothesis batches, not a separate queue or promotion path. Its roles,
+provenance requirements, and candidate-only boundary are documented in
+`docs/AUTOMATH_COLLECTIVE_PIPELINE.md`.
+
 SymPy witnesses are persistent source artifacts. Do not use fixed temp files
 such as `.temp_witness.py`; store the witness side-by-side with the Lean file as
 `proofs/<task-id>.sp`.
@@ -232,6 +255,20 @@ ARCHON_HOME=/home/goutev/repos/info-geometry-lean/.runtime/archon-home \
 
 Do not create a second theorem queue for Archon. Archon calls the Python bridge;
 Pi calls the TypeScript extension; both use the same queue files and artifacts.
+
+### Codex Native Agent Teams
+
+When the user requests parallel Codex agents, use the active session's native
+`collaboration.spawn_agent` API and follow
+[`CODEX_AGENT_SWARM_PROTOCOL.md`](CODEX_AGENT_SWARM_PROTOCOL.md). This is
+session-level coordination, not a shell entry point. The protocol adapts the
+TeamAntigravity Leader / Orchestrator / Worker tiers, assume-and-recurse proof
+loop, paired refuter, and independent gate panels. The repository also has a
+persistent Hive swarm (`hive_motherbee.py`, `hive_swarm.py`, packet/role
+workers) and a vendored Antigravity SDK; these are distinct runtimes. The
+Archon/Python queue above is another separate deterministic local pipeline and
+does not spawn Codex agents. Select one scheduler for a theorem task; do not
+run multiple orchestration paths against it concurrently.
 
 `run.sh` also defaults runtime state to:
 

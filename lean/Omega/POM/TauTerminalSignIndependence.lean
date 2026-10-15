@@ -8,7 +8,13 @@ namespace Omega.POM
 inductive TerminalSign
   | pos
   | neg
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype TerminalSign where
+  elems := {.pos, .neg}
+  complete := by
+    intro s
+    cases s <;> simp
 
 /-- The Bernoulli mass of the terminal sign with success parameter `π`. -/
 def terminalSignMass (π : ℝ) : TerminalSign → ℝ

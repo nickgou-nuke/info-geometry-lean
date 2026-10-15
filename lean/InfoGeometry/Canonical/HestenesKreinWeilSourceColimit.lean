@@ -37,9 +37,10 @@ theorem stageReadout_bondIterate
     (n m : ℕ) (x : DoubledSpace (C.Base n)) :
     stageReadout (n + m) (C.toFilteredPhaseCone.bondIterate n m x) =
       stageReadout n x := by
-  rw [hreadout (n + m), hreadout n]
-  exact congrArg limitReadout
-    (C.toFilteredPhaseCone.ι_bondIterate_apply n m x)
+  have h1 := hreadout (n + m) (C.toFilteredPhaseCone.bondIterate n m x)
+  have h2 := congrArg limitReadout (C.toFilteredPhaseCone.ι_bondIterate_apply n m x)
+  have h3 := (hreadout n x).symm
+  exact h1.trans (h2.trans h3)
 
 def selfConvolutionValue
     {TestFunction : Type*}

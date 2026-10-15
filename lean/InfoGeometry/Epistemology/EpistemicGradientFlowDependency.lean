@@ -12,7 +12,7 @@ inductive Archetype
   | decayBound
   | equilibriumLimit
   | diracObstruction
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
 
 open Archetype
 
@@ -32,8 +32,11 @@ instance : PartialOrder Archetype where
   le_refl _ := Finset.Subset.refl _
   le_trans _ _ _ := Finset.Subset.trans
   le_antisymm := by
-    intro earlier later
-    cases earlier <;> cases later <;> decide
+    intro earlier later h₁ h₂
+    have hsets : prerequisites earlier = prerequisites later :=
+      Finset.Subset.antisymm h₁ h₂
+    cases earlier <;> cases later <;>
+      simp_all [prerequisites, Finset.subset_iff]
 
 instance : DecidableLE Archetype := fun earlier later =>
   inferInstanceAs (Decidable (prerequisites earlier ⊆ prerequisites later))

@@ -276,6 +276,8 @@ theorem FluxEqualsBoundaryEntropy.to_quartic
 
 /-! ## 5. Operator-Freudenthal boundary bridge -/
 
+universe uE uP uQ uΩ uVolume
+
 /--
 Minimal interface for an operator-side Freudenthal boundary.
 
@@ -283,12 +285,12 @@ Minimal interface for an operator-side Freudenthal boundary.
 to realize.
 -/
 structure OperatorFreudenthalBoundaryDatum
-    (E P Q : Type*)
+    (E : Type uE) (P : Type uP) (Q : Type uQ)
     [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
     [NormedAddCommGroup P] [NormedSpace ℝ P] where
   A : RealEnd E
   geometry : FreudenthalChargeGeometry Q
-  boundary : DirectedBoundary P
+  boundary : DirectedBoundary.{uP, uΩ} P
   boundaryCharges : FreudenthalBoundaryCharge boundary geometry
   horizonOperator : RealEnd E
 
@@ -297,16 +299,16 @@ Witness that the operator Freudenthal boundary is realized by Clifford/Stokes
 flux, and that the scalar flux measures the induced Freudenthal entropy.
 -/
 structure OperatorFreudenthalBoundaryFluxBridge
-    {E P Q : Type*}
+    {E : Type uE} {P : Type uP} {Q : Type uQ}
     [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
     [NormedAddCommGroup P] [NormedSpace ℝ P]
-    (D : OperatorFreudenthalBoundaryDatum E P Q) where
+    (D : OperatorFreudenthalBoundaryDatum.{uE, uP, uQ, uΩ} E P Q) where
   phase : BivectorPhase E
   resolvent : CliffordResolventFamily (P := P) D.A
   normalizationFactor : ℝ
   observer : RealEnd E →L[ℝ] ℝ
   stokes :
-    StokesTheoremWitness D.A resolvent D.boundary
+    StokesTheoremWitness.{uE, uP, uVolume, uΩ} D.A resolvent D.boundary
   horizonOperator_eq_flux :
     D.horizonOperator =
       geometricCoreProjector D.A resolvent D.boundary normalizationFactor
@@ -319,28 +321,28 @@ namespace OperatorFreudenthalBoundaryFluxBridge
 
 /-- The operator-valued Stokes flux projector associated to the bridge. -/
 def projector
-    {E P Q : Type*}
+    {E : Type uE} {P : Type uP} {Q : Type uQ}
     [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
     [NormedAddCommGroup P] [NormedSpace ℝ P]
-    {D : OperatorFreudenthalBoundaryDatum E P Q}
-    (W : OperatorFreudenthalBoundaryFluxBridge D) : RealEnd E :=
+    {D : OperatorFreudenthalBoundaryDatum.{uE, uP, uQ, uΩ} E P Q}
+    (W : OperatorFreudenthalBoundaryFluxBridge.{uE, uP, uQ, uΩ, uVolume} D) : RealEnd E :=
   geometricCoreProjector D.A W.resolvent D.boundary W.normalizationFactor
 
 theorem horizonOperator_eq_projector
-    {E P Q : Type*}
+    {E : Type uE} {P : Type uP} {Q : Type uQ}
     [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
     [NormedAddCommGroup P] [NormedSpace ℝ P]
-    {D : OperatorFreudenthalBoundaryDatum E P Q}
-    (W : OperatorFreudenthalBoundaryFluxBridge D) :
+    {D : OperatorFreudenthalBoundaryDatum.{uE, uP, uQ, uΩ} E P Q}
+    (W : OperatorFreudenthalBoundaryFluxBridge.{uE, uP, uQ, uΩ, uVolume} D) :
     D.horizonOperator = W.projector := by
   simpa [projector] using W.horizonOperator_eq_flux
 
 theorem scalarFlux_eq_quarticEntropy
-    {E P Q : Type*}
+    {E : Type uE} {P : Type uP} {Q : Type uQ}
     [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
     [NormedAddCommGroup P] [NormedSpace ℝ P]
-    {D : OperatorFreudenthalBoundaryDatum E P Q}
-    (W : OperatorFreudenthalBoundaryFluxBridge D) :
+    {D : OperatorFreudenthalBoundaryDatum.{uE, uP, uQ, uΩ} E P Q}
+    (W : OperatorFreudenthalBoundaryFluxBridge.{uE, uP, uQ, uΩ, uVolume} D) :
     FluxEqualsQuarticEntropy
       D.A W.resolvent D.boundary W.normalizationFactor W.observer
       D.geometry D.boundaryCharges := by
@@ -349,8 +351,6 @@ theorem scalarFlux_eq_quarticEntropy
 end OperatorFreudenthalBoundaryFluxBridge
 
 /-! ## 6. Constructive bridge packaging -/
-
-universe uE uP uQ uΩ uVolume
 
 /--
 Per-data construction type for an operator/Freudenthal flux bridge.

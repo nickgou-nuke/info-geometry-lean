@@ -73,8 +73,7 @@ theorem paper_xi_finite_state_time_image_discrete_or_dense
     refine ⟨c, ?_⟩
     exact (D.morphismTime_eq_integerCombination c).symm
   · exact ⟨Finset.univ.image D.edgeTime, rfl, rfl⟩
-  · simpa [integerSpanDiscrete, integerSpanDense, integerSpan, integerCombination] using
-      D.integerSpan_dichotomy
-  · simpa [timeImage] using Set.countable_range D.morphismTime
+  · exact D.integerSpan_dichotomy
+  · exact Set.countable_range D.morphismTime
 
 end Omega.Zeta

@@ -49,37 +49,64 @@ def transportedRangePoint
   rw [orbitClosureStageObservation_scalar_covariance]
   exact congrArg (fun r : ℝ => Real.exp t * r) hy
 
+theorem transportedRangePoint_val
+    (ρ : carrier) (n : ℕ) (X : MatStage n) (t : ℝ)
+    (z : stageObservationRange ρ n X) :
+    (transportedRangePoint ρ n X t z).val = Real.exp t * z.val := by
+  rfl
+
 def inverseTransportedRangePoint
     (ρ : carrier) (n : ℕ) (X : MatStage n) (t : ℝ)
     (z : stageObservationRange (flow.act t ρ) n X) :
     stageObservationRange ρ n X := by
+  let y : SymbolicLatentModularOrbitClosure flow (flow.act t ρ) :=
+    Classical.choose z.property
+  have hy : orbitClosureStageObservationTopCatHom (flow.act t ρ) n X y = z.1 :=
+    Classical.choose_spec z.property
   have hzero : flow.act (-t) (flow.act t ρ) = ρ := by
     calc
       flow.act (-t) (flow.act t ρ) = flow.act (-t + t) ρ :=
         (flow.add_apply (-t) t ρ).symm
       _ = ρ := by rw [neg_add_cancel, flow.zero_apply]
-  let y : SymbolicLatentModularOrbitClosure flow (flow.act t ρ) :=
-    Classical.choose z.property
-  have hy : orbitClosureStageObservationTopCatHom (flow.act t ρ) n X y = z.1 :=
-    Classical.choose_spec z.property
-  have hy_mem_preimage :
-      flow.act (-t) y.1 ∈
-        flow.orbitClosure (flow.act (-t) (flow.act t ρ)) := by
-    rw [← flow.actHomeomorph_image_orbitClosure (-t) (flow.act t ρ)]
-    exact ⟨y.1, y.2, rfl⟩
   have hy_mem : flow.act (-t) y.1 ∈ flow.orbitClosure ρ := by
-    rw [hzero] at hy_mem_preimage
-    exact hy_mem_preimage
+    have hmem : flow.act (-t) y.1 ∈
+        flow.orbitClosure (flow.act (-t) (flow.act t ρ)) := by
+      rw [← flow.actHomeomorph_image_orbitClosure (-t) (flow.act t ρ)]
+      exact ⟨y.1, y.2, rfl⟩
+    simpa only [hzero] using hmem
   refine ⟨Real.exp (-t) * z.1, ?_⟩
   refine ⟨⟨flow.act (-t) y.1, hy_mem⟩, ?_⟩
   change orbitClosureStageObservationTopCatHom ρ n X
       (⟨flow.act (-t) y.1, hy_mem⟩) =
     Real.exp (-t) * z.1
-  have hcov :=
-    orbitClosureStageObservation_scalar_covariance
-      (flow.act t ρ) n (-t) X y
-  rw [hy] at hcov
-  simpa [hzero] using hcov
+  let y' : SymbolicLatentModularOrbitClosure flow ρ :=
+    ⟨flow.act (-t) y.1, hy_mem⟩
+  have hback :
+      (⟨flow.act t y'.1, by
+        rw [← flow.actHomeomorph_image_orbitClosure t ρ]
+        exact ⟨y'.1, y'.2, rfl⟩⟩ :
+        SymbolicLatentModularOrbitClosure flow (flow.act t ρ)) = y := by
+    apply Subtype.ext
+    change flow.act t (flow.act (-t) y.1) = y.1
+    rw [← flow.add_apply, add_neg_cancel, flow.zero_apply]
+  have hcov := orbitClosureStageObservation_scalar_covariance ρ n t X y'
+  rw [hback, hy] at hcov
+  have hcov' : z.1 = Real.exp t *
+      orbitClosureStageObservationTopCatHom ρ n X y' := by
+    simpa [smul_eq_mul] using hcov
+  calc
+    orbitClosureStageObservationTopCatHom ρ n X y' =
+        Real.exp (-t) *
+          (Real.exp t * orbitClosureStageObservationTopCatHom ρ n X y') := by
+            rw [← mul_assoc, ← Real.exp_add, neg_add_cancel, Real.exp_zero,
+              one_mul]
+    _ = Real.exp (-t) * z.1 := by rw [← hcov']
+
+theorem inverseTransportedRangePoint_val
+    (ρ : carrier) (n : ℕ) (X : MatStage n) (t : ℝ)
+    (z : stageObservationRange (flow.act t ρ) n X) :
+    (inverseTransportedRangePoint ρ n X t z).val = Real.exp (-t) * z.val := by
+  rfl
 
 noncomputable def stageObservationRangeFlowHomeomorph
     (ρ : carrier) (n : ℕ) (X : MatStage n) (t : ℝ) :
@@ -90,13 +117,13 @@ noncomputable def stageObservationRangeFlowHomeomorph
   left_inv := by
     intro z
     apply Subtype.ext
-    dsimp [transportedRangePoint, inverseTransportedRangePoint]
+    rw [inverseTransportedRangePoint_val, transportedRangePoint_val]
     rw [← mul_assoc, ← Real.exp_add, neg_add_cancel, Real.exp_zero,
       one_mul]
   right_inv := by
     intro z
     apply Subtype.ext
-    dsimp [transportedRangePoint, inverseTransportedRangePoint]
+    rw [transportedRangePoint_val, inverseTransportedRangePoint_val]
     rw [← mul_assoc, ← Real.exp_add, add_neg_cancel, Real.exp_zero,
       one_mul]
   continuous_toFun := by
@@ -116,9 +143,7 @@ noncomputable def stageObservationRangeFlowHomeomorph
     have hinv_mem (z : stageObservationRange (flow.act t ρ) n X) :
         Real.exp (-t) * z.1 ∈ stageObservationRange ρ n X := by
       have hz := (inverseTransportedRangePoint ρ n X t z).property
-      rw [← show
-          (inverseTransportedRangePoint ρ n X t z).1 =
-            Real.exp (-t) * z.1 by rfl]
+      rw [inverseTransportedRangePoint_val ρ n X t z] at hz
       exact hz
     let f : stageObservationRange (flow.act t ρ) n X →
         stageObservationRange ρ n X := fun z =>
@@ -130,7 +155,7 @@ noncomputable def stageObservationRangeFlowHomeomorph
     have hfun : f = inverseTransportedRangePoint ρ n X t := by
       funext z
       apply Subtype.ext
-      rfl
+      exact (inverseTransportedRangePoint_val ρ n X t z).symm
     rw [← hfun]
     exact hf
 
@@ -150,7 +175,9 @@ theorem stageObservationRangeFlowHomeomorph_inverse_apply
     (ρ : carrier) (n : ℕ) (X : MatStage n)
     (z : stageObservationRange ρ n X) :
     (stageObservationRangeFlowHomeomorph ρ n X 0 z).1 = z.1 := by
-  simp [stageObservationRangeFlowHomeomorph, transportedRangePoint]
+  change (transportedRangePoint ρ n X 0 z).val = z.val
+  rw [transportedRangePoint_val]
+  simp
 
 theorem stageObservationRangeFlowHomeomorph_trans_apply
     (ρ : carrier) (n : ℕ) (X : MatStage n) (s t : ℝ)
@@ -158,8 +185,16 @@ theorem stageObservationRangeFlowHomeomorph_trans_apply
     ((stageObservationRangeFlowHomeomorph ρ n X t).trans
         (stageObservationRangeFlowHomeomorph (flow.act t ρ) n X s) z).1 =
       (stageObservationRangeFlowHomeomorph ρ n X (s + t) z).1 := by
-  simp [stageObservationRangeFlowHomeomorph, transportedRangePoint,
-    Real.exp_add, mul_assoc]
+  change (stageObservationRangeFlowHomeomorph (flow.act t ρ) n X s
+      (stageObservationRangeFlowHomeomorph ρ n X t z)).val =
+    (transportedRangePoint ρ n X (s + t) z).val
+  rw [stageObservationRangeFlowHomeomorph_apply,
+    stageObservationRangeFlowHomeomorph_apply, transportedRangePoint_val,
+    transportedRangePoint_val]
+  calc
+    Real.exp s * (Real.exp t * z.1) =
+        (Real.exp s * Real.exp t) * z.1 := by ring
+    _ = Real.exp (s + t) * z.1 := by rw [← Real.exp_add]
 
 end InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitStageObservationRangeFlowHomeomorph
 end

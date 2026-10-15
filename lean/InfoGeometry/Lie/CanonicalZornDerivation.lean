@@ -14,6 +14,8 @@ abbrev EndCZ := Module.End ℝ CZ
 abbrev VZ := InfoGeometry.Algebra.ZornVectorMatrix ℝ
 abbrev VDer := InfoGeometry.Algebra.ZornVectorMatrix.Derivation (R := ℝ)
 
+local instance : LieRing EndCZ := LieRing.ofAssociativeRing
+
 def IsDerivation (D : EndCZ) : Prop :=
   ∀ X Y : CZ, D (X * Y) = D X * Y + X * D Y
 

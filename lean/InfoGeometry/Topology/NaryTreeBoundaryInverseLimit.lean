@@ -57,7 +57,7 @@ def prefixDiagram : ℕᵒᵖ ⥤ TopCat where
     rfl
 
 /-- The cone whose point is the boundary sequence space. -/
-def prefixCone : Cone (prefixDiagram (A := A)) where
+abbrev prefixCone : Cone (prefixDiagram (A := A)) where
   pt := TopCat.of (Boundary (A := A))
   π :=
     { app := fun n =>
@@ -113,7 +113,9 @@ def prefixConeIsLimit : IsLimit (prefixCone (A := A)) := by
           apply Fin.ext
           rfl
         rw [hcast] at hi
-        simpa [prefixLimitLift, prefixRestriction] using hi
+        change (s.π.app (Opposite.op (i.1 + 1))).hom x (Fin.last i.1) =
+          (s.π.app (Opposite.op (k + 1))).hom x i
+        exact hi
   · intro s m hm
     apply TopCat.hom_ext
     apply ContinuousMap.ext
@@ -123,8 +125,13 @@ def prefixConeIsLimit : IsLimit (prefixCone (A := A)) := by
       (hm (Opposite.op (n + 1)))
     have hlast := congrFun h (Fin.last n)
     change (TopCat.Hom.hom m) x n =
-      (TopCat.Hom.hom (prefixLimitLift s)) x n
-    simpa [prefixLimitLift] using hlast
+      (s.π.app (Opposite.op (n + 1))).hom x (Fin.last n)
+    rw [CategoryTheory.hom_comp] at hlast
+    rw [Function.comp_apply] at hlast
+    have hlast' := hlast.symm
+    change (s.π.app (Opposite.op (n + 1))).hom x (Fin.last n) =
+      (TopCat.Hom.hom m) x n at hlast'
+    exact hlast'.symm
 
 /-- The canonical `TopCat` isomorphism between the boundary cone and the limit. -/
 noncomputable def prefixBoundaryLimitIso :

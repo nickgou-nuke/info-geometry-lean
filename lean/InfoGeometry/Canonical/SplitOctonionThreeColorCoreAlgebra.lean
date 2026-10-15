@@ -73,68 +73,35 @@ theorem colorCore_mul_one (c : SplitOctonionColour) (x : colorCore c) :
   apply Subtype.ext
   exact h x.1 x.2
 
-instance colorCoreNonUnitalSemiring (c : SplitOctonionColour) :
-    NonUnitalSemiring (colorCore c) := by
-  letI : NonUnitalNonAssocSemiring (colorCore c) :=
-    { left_distrib := by
-        intro x y z
-        apply Subtype.ext
-        exact splitOctonionMulQ_add_right x.1 y.1 z.1
-      right_distrib := by
-        intro x y z
-        apply Subtype.ext
-        exact splitOctonionMulQ_add_left x.1 y.1 z.1
-      zero_mul := by
-        intro x
-        apply Subtype.ext
-        exact splitOctonionMulQ_zero_left x.1
-      mul_zero := by
-        intro x
-        apply Subtype.ext
-        exact splitOctonionMulQ_zero_right x.1 }
-  letI : NonUnitalSemiring (colorCore c) :=
-    NonUnitalSemiring.mk (colorCore_mul_assoc_subtype c)
-  exact this
-
-noncomputable instance colorCoreModule (c : SplitOctonionColour) :
-    Module ℚ (colorCore c) :=
-  (colorCore c).module
-
-noncomputable instance colorCoreSemiring (c : SplitOctonionColour) :
-    Semiring (colorCore c) := by
-  letI : NonUnitalSemiring (colorCore c) := colorCoreNonUnitalSemiring c
-  letI : Module ℚ (colorCore c) := colorCoreModule c
-  letI : NatCast (colorCore c) :=
-    ⟨fun n => n • (1 : colorCore c)⟩
-  refine Semiring.mk (colorCore_one_mul c) (colorCore_mul_one c)
-    (natCast_zero := by
-      change (0 : ℕ) • (1 : colorCore c) = 0
-      exact zero_nsmul _)
-    (natCast_succ := by
-      intro n
-      change (n + 1) • (1 : colorCore c) =
-        n • (1 : colorCore c) + 1
-      rw [succ_nsmul])
-    (npow := npowRecAuto) ?_ ?_
-  · intro x
-    rfl
-  · intro n x
-    rfl
+noncomputable instance colorCoreRing (c : SplitOctonionColour) :
+    Ring (colorCore c) :=
+  { (inferInstance : AddCommGroup (colorCore c)) with
+    mul := (· * ·)
+    one := 1
+    mul_assoc := colorCore_mul_assoc_subtype c
+    one_mul := colorCore_one_mul c
+    mul_one := colorCore_mul_one c
+    left_distrib := fun x y z => by
+      apply Subtype.ext
+      exact splitOctonionMulQ_add_right x.1 y.1 z.1
+    right_distrib := fun x y z => by
+      apply Subtype.ext
+      exact splitOctonionMulQ_add_left x.1 y.1 z.1
+    zero_mul := fun x => by
+      apply Subtype.ext
+      exact splitOctonionMulQ_zero_left x.1
+    mul_zero := fun x => by
+      apply Subtype.ext
+      exact splitOctonionMulQ_zero_right x.1 }
 
 noncomputable instance colorCoreAlgebra (c : SplitOctonionColour) :
-    Algebra ℚ (colorCore c) := by
-  letI : Module ℚ (colorCore c) := colorCoreModule c
-  letI : Semiring (colorCore c) := colorCoreSemiring c
-  exact Algebra.ofModule
+    Algebra ℚ (colorCore c) :=
+  Algebra.ofModule
     (fun r x y => by
       apply Subtype.ext
-      change splitOctonionMulQ (r • x.1) y.1 =
-        r • splitOctonionMulQ x.1 y.1
       exact splitOctonionMulQ_smul_left r x.1 y.1)
     (fun r x y => by
       apply Subtype.ext
-      change splitOctonionMulQ x.1 (r • y.1) =
-        r • splitOctonionMulQ x.1 y.1
       exact splitOctonionMulQ_smul_right r x.1 y.1)
 
 end

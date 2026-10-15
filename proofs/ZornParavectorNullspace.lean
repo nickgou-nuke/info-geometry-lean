@@ -69,7 +69,9 @@ def collapsedLower (p : Vec3) : Zorn where
   u := fun _ => 0
   v := p
 
-/-- The diagonal-coordinate norm is exactly the quadratic `E²-p·p`. -/
+/-- The diagonal-coordinate split norm is exactly the quadratic `E²-p·p`.
+This is a norm readout; it is not a mass-shell equation until a mass and a
+physical coordinate identification are supplied. -/
 theorem paravector_norm_mass_shell (E : ℂ) (p : Vec3) :
     zornNorm (paravector E p) = E^2 - dot3 p p := by
   simp [zornNorm, paravector, dot3]

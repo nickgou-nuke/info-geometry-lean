@@ -48,7 +48,7 @@ def trialityCycle : Equiv.Perm TrialitySector :=
 `vector` is chosen as the commutator seed, while the two spinor sectors are
 `u ± v` combinations already developed in `Cl55V4SpinorFragmentation`.
 -/
-def trialitySectorSeed (p : ConformalNullPair) : TrialitySector → Cl55 :=
+noncomputable def trialitySectorSeed (p : ConformalNullPair) : TrialitySector → Cl55 :=
   Fin.cases
     (p.u * p.v - p.v * p.u)
     (Fin.cases
@@ -68,7 +68,7 @@ def trialitySectorSeed (p : ConformalNullPair) : TrialitySector → Cl55 :=
   rfl
 
 /-- `trialitySectorTransport` applies the formal 3-cycle to the sector label. -/
-def trialitySectorTransport (p : ConformalNullPair) (s : TrialitySector) : Cl55 :=
+noncomputable def trialitySectorTransport (p : ConformalNullPair) (s : TrialitySector) : Cl55 :=
   trialitySectorSeed p (trialityCycle s)
 
 theorem trialitySectorTransport_cycle :

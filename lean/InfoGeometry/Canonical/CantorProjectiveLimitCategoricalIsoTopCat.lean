@@ -98,9 +98,16 @@ theorem categoricalLimitFinitePrefixReadout_projective_iso (n : ℕ) :
     projectiveToCategoricalLimitTopCatIso.hom ≫
         categoricalLimitFinitePrefixReadoutTopCatHom n =
       projectiveFinitePrefixReadoutTopCatHom n := by
-  rw [categoricalLimitFinitePrefixReadoutTopCatHom,
-    ← Category.assoc, projectiveToCategoricalLimit_projection]
-  rfl
+  apply TopCat.hom_ext
+  apply ContinuousMap.ext
+  intro p
+  have harg : (limit.π prefixDiagram (Opposite.op n)).hom
+      (projectiveToCategoricalLimitTopCatIso.hom p) =
+      (projectiveProjectionTopCatHom n).hom p := by
+    funext i
+    have h1 := projectiveToCategoricalLimit_projection_apply n p i
+    exact h1
+  exact congrArg (finitePrefixReadoutTopCatHom n).hom harg
 
 theorem projectivePrefixExtend_readoutTopCat_square {n : ℕ}
     (w : BitWord n) :
@@ -140,9 +147,15 @@ theorem categoricalLimitPrefixExtend_projectionTopCat_square {n : ℕ}
     categoricalLimitPrefixExtendTopCatHom w ≫
         limit.π prefixDiagram (Opposite.op n) =
       categoricalLimitPrefixProjectionTopCatHom w := by
-  rw [categoricalLimitPrefixExtendTopCatHom,
-    categoricalLimitPrefixProjectionTopCatHom]
-  simp only [Category.assoc, projectiveToCategoricalLimit_projection]
-  rw [projectivePrefixExtend_projectionTopCat_square]
+  apply TopCat.hom_ext
+  apply ContinuousMap.ext
+  intro x
+  funext i
+  have h1 := projectiveToCategoricalLimit_projection_apply n
+    (projectivePrefixExtendTopCatHom w (projectiveToCategoricalLimitTopCatIso.inv x)) i
+  have h2 := congrArg (fun f => f (projectiveToCategoricalLimitTopCatIso.inv x))
+    (projectivePrefixExtend_projectionTopCat_square w)
+  have h2i := congrFun (congrArg (fun f => f) h2) i
+  exact h1.trans h2i
 
 end InfoGeometry.Canonical.CantorProjectiveLimitCategoricalIsoTopCat

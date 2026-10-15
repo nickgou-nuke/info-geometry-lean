@@ -59,18 +59,18 @@ theorem paper_pom_sync_subtracted_chebotarev_capacity
   have hcapacity :
       Real.log (groupCard : ℝ) ≤
         pom_sync_subtracted_chebotarev_capacity_budget lambdaValue epsilonGap deltaCheb
-          (pom_sync_subtracted_chebotarev_capacity_n_eff ambiguityShell n syncDelay syncTailBudget) := by
-    simpa [D, pom_sync_subtracted_chebotarev_capacity_budget,
-      pom_sync_subtracted_chebotarev_capacity_n_eff, POMProfiniteCylinderCapacityData.capacityBudget]
-      using paper_pom_profinite_cylinder_capacity D
+          (pom_sync_subtracted_chebotarev_capacity_n_eff ambiguityShell n syncDelay syncTailBudget) :=
+    paper_pom_profinite_cylinder_capacity D
   refine ⟨hcapacity, ?_, ?_⟩
   · intro hempty
-    simpa [pom_sync_subtracted_chebotarev_capacity_budget,
-      pom_sync_subtracted_chebotarev_capacity_n_eff,
-      pom_sync_subtracted_chebotarev_capacity_n_sync, hempty] using hcapacity
+    have h : pom_sync_subtracted_chebotarev_capacity_n_eff ambiguityShell n syncDelay syncTailBudget = n - syncDelay := by
+      simp [pom_sync_subtracted_chebotarev_capacity_n_eff, pom_sync_subtracted_chebotarev_capacity_n_sync, hempty]
+    rw [h] at hcapacity
+    exact hcapacity
   · intro hnonempty
-    simpa [pom_sync_subtracted_chebotarev_capacity_budget,
-      pom_sync_subtracted_chebotarev_capacity_n_eff,
-      pom_sync_subtracted_chebotarev_capacity_n_sync, hnonempty] using hcapacity
+    have h : pom_sync_subtracted_chebotarev_capacity_n_eff ambiguityShell n syncDelay syncTailBudget = n - syncTailBudget := by
+      simp [pom_sync_subtracted_chebotarev_capacity_n_eff, pom_sync_subtracted_chebotarev_capacity_n_sync, hnonempty]
+    rw [h] at hcapacity
+    exact hcapacity
 
 end Omega.POM

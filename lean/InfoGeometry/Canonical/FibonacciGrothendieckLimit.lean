@@ -292,9 +292,8 @@ def chargedFockHeisenbergMode (α : 𝕜) (k : Int) :
 /-- The charged Fock Heisenberg current satisfies the Sugawara local truncation hypothesis. -/
 theorem chargedFockHeisenbergMode_eventually_eq_zero
     (α : 𝕜) (v : VirasoroProject.ChargedFockSpace 𝕜 α) :
-    atTop.Eventually (fun k : Int => chargedFockHeisenbergMode (𝕜 := 𝕜) α k v = 0) := by
-  simpa [chargedFockHeisenbergMode, ModuleOfModuleAlgebra.lsmul_apply] using
-    VirasoroProject.ChargedFockSpace.eventually_jgen_smul_eq_zero 𝕜 α v
+    atTop.Eventually (fun k : Int => chargedFockHeisenbergMode (𝕜 := 𝕜) α k v = 0) :=
+  VirasoroProject.ChargedFockSpace.eventually_jgen_smul_eq_zero 𝕜 α v
 
 /--
 The charged Fock Heisenberg current satisfies the exact Heisenberg commutator
@@ -326,11 +325,6 @@ theorem chargedFockHeisenbergMode_commutator
         (1 : VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
           VirasoroProject.ChargedFockSpace 𝕜 α) := by
     ext v
-    change
-      ModuleOfModuleAlgebra.lsmul 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α)
-          (ιUEA 𝕜 (VirasoroProject.HeisenbergAlgebra.kgen 𝕜)) v = v
-    rw [ModuleOfModuleAlgebra.lsmul_apply]
-    change ιUEA 𝕜 (VirasoroProject.HeisenbergAlgebra.kgen 𝕜) • v = v
     exact VirasoroProject.ChargedFockSpace.kgen_smul 𝕜 α v
   have hbr := LieAlgebra.Representation.apply_bracket_eq_commutator ρ
     (VirasoroProject.HeisenbergAlgebra.jgen 𝕜 k)

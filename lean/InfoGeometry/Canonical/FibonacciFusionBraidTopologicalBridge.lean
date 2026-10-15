@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.ContinuousLeftActionTopCat
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
+import Mathlib.Topology.Instances.Matrix
 
 /-!
 # Topological Fibonacci fusion-space braid transport

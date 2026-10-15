@@ -39,18 +39,25 @@ def carParameterPoint (c cstar : A) : QCCRParameterSpace A :=
 def ccrParameterPoint (c cstar : A) : QCCRParameterSpace A :=
   (c, (cstar, (1 : A)))
 
+private theorem carParameterPoint_mem
+    (c cstar : A) (h : c * cstar + cstar * c = 1) :
+    carParameterPoint c cstar ∈ qCcrParameterZeroLocus (A := A) := by
+  change qCcrRelation c cstar (-1) = 0
+  exact car_is_neg_one_qccr c cstar h
+
+private theorem ccrParameterPoint_mem
+    (c cstar : A) (h : c * cstar - cstar * c = 1) :
+    ccrParameterPoint c cstar ∈ qCcrParameterZeroLocus (A := A) := by
+  change qCcrRelation c cstar 1 = 0
+  exact ccr_is_plus_one_qccr c cstar h
+
 def carParameterPointTopCatHom
     (c cstar : A) (h : c * cstar + cstar * c = 1) :
     TopCat.of PUnit ⟶
       TopCat.of (qCcrParameterZeroLocus (A := A)) :=
   TopCat.ofHom
     { toFun := fun _ =>
-        ⟨carParameterPoint c cstar,
-          by
-            change qCcrParameterResidualContinuousMap (A := A)
-                (c, (cstar, (-1 : A))) = 0
-            simpa [qCcrParameterResidualContinuousMap] using
-              (car_is_neg_one_qccr c cstar h)⟩
+        ⟨carParameterPoint c cstar, carParameterPoint_mem c cstar h⟩
       continuous_toFun := continuous_const }
 
 def ccrParameterPointTopCatHom
@@ -59,23 +66,14 @@ def ccrParameterPointTopCatHom
       TopCat.of (qCcrParameterZeroLocus (A := A)) :=
   TopCat.ofHom
     { toFun := fun _ =>
-        ⟨ccrParameterPoint c cstar,
-          by
-            change qCcrParameterResidualContinuousMap (A := A)
-                (c, (cstar, (1 : A))) = 0
-            simpa [qCcrParameterResidualContinuousMap] using
-              (ccr_is_plus_one_qccr c cstar h)⟩
+        ⟨ccrParameterPoint c cstar, ccrParameterPoint_mem c cstar h⟩
       continuous_toFun := continuous_const }
 
 @[simp] theorem carParameterPointTopCatHom_apply
     (c cstar : A) (h : c * cstar + cstar * c = 1) (u : PUnit) :
     carParameterPointTopCatHom c cstar h u =
       (⟨carParameterPoint c cstar,
-        by
-          change qCcrParameterResidualContinuousMap (A := A)
-              (c, (cstar, (-1 : A))) = 0
-          simpa [qCcrParameterResidualContinuousMap] using
-            (car_is_neg_one_qccr c cstar h)⟩ :
+        carParameterPoint_mem c cstar h⟩ :
         qCcrParameterZeroLocus (A := A)) :=
   rfl
 
@@ -83,11 +81,7 @@ def ccrParameterPointTopCatHom
     (c cstar : A) (h : c * cstar - cstar * c = 1) (u : PUnit) :
     ccrParameterPointTopCatHom c cstar h u =
       (⟨ccrParameterPoint c cstar,
-        by
-          change qCcrParameterResidualContinuousMap (A := A)
-              (c, (cstar, (1 : A))) = 0
-          simpa [qCcrParameterResidualContinuousMap] using
-            (ccr_is_plus_one_qccr c cstar h)⟩ :
+        ccrParameterPoint_mem c cstar h⟩ :
         qCcrParameterZeroLocus (A := A)) :=
   rfl
 
@@ -96,6 +90,13 @@ def cstarCuntzParameterPoint
     (F : CStarCuntzFamily A ι) (i : ι) : QCCRParameterSpace A :=
   (star (F.S i), (F.S i, (0 : A)))
 
+private theorem cstarCuntzParameterPoint_mem
+    {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (F : CStarCuntzFamily A ι) (i : ι) :
+    cstarCuntzParameterPoint F i ∈ qCcrParameterZeroLocus (A := A) := by
+  change qCcrRelation (star (F.S i)) (F.S i) 0 = 0
+  exact cstar_cuntz_generator_qccr_zero F i
+
 def cstarCuntzParameterPointTopCatHom
     {ι : Type*} [Fintype ι] [DecidableEq ι]
     (F : CStarCuntzFamily A ι) (i : ι) :
@@ -103,12 +104,7 @@ def cstarCuntzParameterPointTopCatHom
       TopCat.of (qCcrParameterZeroLocus (A := A)) :=
   TopCat.ofHom
     { toFun := fun _ =>
-        ⟨cstarCuntzParameterPoint F i,
-          by
-            change qCcrParameterResidualContinuousMap (A := A)
-                (star (F.S i), (F.S i, (0 : A))) = 0
-            simpa [qCcrParameterResidualContinuousMap] using
-              (cstar_cuntz_generator_qccr_zero F i)⟩
+        ⟨cstarCuntzParameterPoint F i, cstarCuntzParameterPoint_mem F i⟩
       continuous_toFun := continuous_const }
 
 @[simp] theorem cstarCuntzParameterPointTopCatHom_apply
@@ -116,11 +112,7 @@ def cstarCuntzParameterPointTopCatHom
     (F : CStarCuntzFamily A ι) (i : ι) (u : PUnit) :
     cstarCuntzParameterPointTopCatHom F i u =
       (⟨cstarCuntzParameterPoint F i,
-        by
-          change qCcrParameterResidualContinuousMap (A := A)
-              (star (F.S i), (F.S i, (0 : A))) = 0
-          simpa [qCcrParameterResidualContinuousMap] using
-            (cstar_cuntz_generator_qccr_zero F i)⟩ :
+        cstarCuntzParameterPoint_mem F i⟩ :
         qCcrParameterZeroLocus (A := A)) :=
   rfl
 
@@ -148,10 +140,9 @@ theorem carParameterPointTopCatHom_transition_natural
   apply ContinuousMap.ext
   intro u
   apply Subtype.ext
-  change qCcrParameterTransitionMap Stage sys hij
-      (carParameterPoint c cstar) =
-    carParameterPoint (sys.map hij c) (sys.map hij cstar)
-  simp [qCcrParameterTransitionMap, carParameterPoint]
+  change (sys.map hij c, (sys.map hij cstar, sys.map hij (-1 : Stage i))) =
+    (sys.map hij c, (sys.map hij cstar, (-1 : Stage j)))
+  simp
 
 theorem ccrParameterPointTopCatHom_transition_natural
     {I : Type u} [Preorder I]
@@ -175,10 +166,9 @@ theorem ccrParameterPointTopCatHom_transition_natural
   apply ContinuousMap.ext
   intro u
   apply Subtype.ext
-  change qCcrParameterTransitionMap Stage sys hij
-      (ccrParameterPoint c cstar) =
-    ccrParameterPoint (sys.map hij c) (sys.map hij cstar)
-  simp [qCcrParameterTransitionMap, ccrParameterPoint]
+  change (sys.map hij c, (sys.map hij cstar, sys.map hij (1 : Stage i))) =
+    (sys.map hij c, (sys.map hij cstar, (1 : Stage j)))
+  simp
 
 theorem cstarCuntzParameterPointTopCatHom_transition_natural
     {Stage : ℕ → Type}
@@ -279,8 +269,25 @@ theorem cstarCuntzParameterColimitPoint_ambient
     Stage T.toContinuousStarInductiveSystem m
   have hp := congrArg
     (fun f => f (cstarCuntzParameterZeroFiberPoint T m i)) h
-  simpa [cstarCuntzParameterColimitPoint,
-    qCcrParameterZeroFiberToParameterNatTrans] using hp
+  change
+    qCcrParameterZeroFiberToParameterColimit Stage
+      T.toContinuousStarInductiveSystem
+      (qCcrParameterZeroFiberTopologicalInjection Stage
+        T.toContinuousStarInductiveSystem m
+        (cstarCuntzParameterZeroFiberPoint T m i)) =
+    qCcrParameterTopologicalInjection Stage
+      T.toContinuousStarInductiveSystem m
+      (cstarCuntzParameterZeroFiberPoint T m i).1 at hp
+  change
+    qCcrParameterZeroFiberToParameterColimit Stage
+      T.toContinuousStarInductiveSystem
+      (qCcrParameterZeroFiberTopologicalInjection Stage
+        T.toContinuousStarInductiveSystem m
+        (cstarCuntzParameterZeroFiberPoint T m i)) =
+    qCcrParameterTopologicalInjection Stage
+      T.toContinuousStarInductiveSystem m
+      (cstarCuntzParameterZeroFiberPoint T m i).1
+  exact hp
 
 def carParameterZeroFiberPoint
     {Stage : ℕ → Type}

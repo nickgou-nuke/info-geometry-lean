@@ -1,9 +1,8 @@
 import Mathlib.Algebra.Algebra.Basic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Algebra.Hom
 import Mathlib.Algebra.Star.Basic
 import Mathlib.Algebra.Star.StarAlgHom
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 
 /-!
 # Multiplicative 1-Cocycle Identity of Connes: u_{s+t} = u_s * σ_s^φ(u_t)
@@ -98,7 +97,6 @@ theorem cocycle_inv (t : ℝ) :
     rw [add_neg_cancel, c.cocycle_zero]
   rw [c.cocycle_id] at h_zero
   have h_mul := congr_arg (fun z => star (c.u t) * z) h_zero
-  dsimp at h_mul
   rw [mul_one, ← mul_assoc, c.unitary_right, one_mul] at h_mul
   have h_flow := congr_arg (σ (-t)) h_mul
   rw [← flow_add σ, neg_add_cancel, flow_zero] at h_flow

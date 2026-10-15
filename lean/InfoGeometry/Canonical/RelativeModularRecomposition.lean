@@ -277,7 +277,8 @@ def PolarizedRecompositionData.exactPotentialRecomposition
     have h0 := hexact bplus0 bminus0
     rw [PolarizedRecompositionData.recomposedLogDensity_eq_commonCarrier_add_coupling] at h0
     have h1 := congrArg (fun x => x - R.recomposedCommonCarrierLogDensity bplus0 bminus0) h0
-    simpa [sub_eq_add_neg, add_assoc, add_left_comm, add_comm] using h1
+    simpa [PolarizedRecompositionData.vanishingCoupling,
+      sub_eq_add_neg, add_assoc, add_left_comm, add_comm] using h1
 
 /-- Vanishing global coupling forces exact recomposition through the common carrier. -/
 @[rep_depth projective, simp] theorem
@@ -319,7 +320,7 @@ def PolarizedRecompositionData.exactPotentialRecomposition
     have hpot : R.couplingPotentialDefect = 0 := by
       simpa [sub_eq_add_neg, add_assoc, add_left_comm, add_comm] using h1
     rw [PolarizedRecompositionData.couplingPotentialDefect_eq_neg_couplingLogDefect] at hpot
-    simpa using hpot
+    simpa [PolarizedRecompositionData.vanishingCoupling] using hpot
 
 /-- Logarithmic and modular-potential exact recomposition are equivalent. -/
 @[rep_depth projective] theorem

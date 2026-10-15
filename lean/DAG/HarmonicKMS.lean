@@ -218,7 +218,10 @@ lemma zero_fun_implies_zero_array {α} [BEq α] [Hashable α] (tc : TwoComplex �
     rw [Array.size_replicate]
   · intro i hi_xs hi_ys
     dsimp [zeroVectorLike]
-    rw [Array.getElem_replicate]
+    have hi_rep : i < (Array.replicate ψ.size (0 : Rat)).size := by
+      simpa using hi_xs
+    change ψ[i]'hi_xs = (Array.replicate ψ.size (0 : Rat))[i]'hi_rep
+    simp only [Array.getElem_replicate]
     have hi : i < tc.edges.size := by omega
     let k : Fin tc.edges.size := ⟨i, hi⟩
     have h_val : ψ[i] = ψ[k.val]! := by

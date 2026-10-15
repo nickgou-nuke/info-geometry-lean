@@ -203,15 +203,12 @@ theorem trifold_reconstruction (A B : SubMat) :
   dsimp [blockDiag, identityDoubled, Gamma, K_zero]
   ext i j
   rcases i with i | i <;> rcases j with j | j
-  · simp only [fromBlocks_apply₁₁, add_apply, smul_apply, sub_apply, one_apply, smul_eq_mul]
-    ring
-  · simp only [fromBlocks_apply₁₂, add_apply, smul_apply, zero_apply, smul_eq_mul]
-    ring
-  · simp only [fromBlocks_apply₂₁, add_apply, smul_apply, zero_apply, smul_eq_mul]
-    ring
-  · simp only [fromBlocks_apply₂₂, add_apply, smul_apply, sub_apply, one_apply,
-               neg_apply, smul_eq_mul]
-    ring
+  · simp [Matrix.add_apply, Matrix.smul_apply, Matrix.sub_apply, Matrix.one_apply]
+    split_ifs <;> ring
+  · simp [Matrix.add_apply, Matrix.smul_apply, Matrix.zero_apply]
+  · simp [Matrix.add_apply, Matrix.smul_apply, Matrix.zero_apply]
+  · simp [Matrix.add_apply, Matrix.smul_apply, Matrix.sub_apply, Matrix.one_apply, Matrix.neg_apply]
+    split_ifs <;> ring
 
 end TrifoldDecomposition
 

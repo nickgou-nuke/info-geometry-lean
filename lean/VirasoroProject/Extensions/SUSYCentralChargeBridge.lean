@@ -1,6 +1,6 @@
 import InfoGeometry.Canonical.CurrentSugawaraBridge
 import InfoGeometry.Canonical.SuperchargeCARCCRBridge
-import VirasoroProject.CentralChargeCalc
+import InfoGeometry.External.Virasoro.CentralChargeCalc
 import Mathlib.Tactic
 
 /-!
@@ -57,4 +57,4 @@ theorem twiceCentralN1Multiplet_eq_three_mul (n : Nat) :
   simp [twiceCentralN1Multiplet, twiceCentralMajorana, twiceCentralBoson]
   ring
 
-end InfoGeometry.Canonical.SUSYCentralChargeBridge
+end VirasoroProject.Extensions.SUSYCentralChargeBridge

@@ -18,13 +18,19 @@ def zornMoebiusActionInt (A : ZornVectorMatrix ℤ) (z : ℚ) : ℚ :=
 /-- **Главна Теорема 1**: zorn_moebius_thermal_boost -
     Модуларната ос l (диагоналната Цорнова матрица L = diag(1, -1))
     индуцира хиперболичния Möbius тласък z ↦ -z на границата. -/
-theorem zorn_moebius_thermal_boost_int (z : ℚ) (hz : z ≠ 0) :
+theorem zorn_moebius_thermal_boost_int (z : ℚ) (_hz : z ≠ 0) :
     let A_l : ZornVectorMatrix ℤ := { a := 1, b := -1, v := fun _ => 0, w := fun _ => 0 }
     zornMoebiusActionInt A_l z = - z := by
-  dsimp [zornMoebiusActionInt]
-  have h_ne : (0 * z + -1 : ℚ) ≠ 0 := by norm_num
-  rw [if_pos h_ne]
-  ring
+  intro A_l
+  unfold zornMoebiusActionInt
+  dsimp
+  split_ifs with h_ne
+  · exfalso
+    subst A_l
+    revert h_ne
+    norm_num
+  · subst A_l
+    ring
 
 /-- **Главна Теорема 2**: zorn_determinant_multiplicative -
     Детерминантата (Нормата на Цорн) е строго мултипликативна върху спиновите сектори. -/

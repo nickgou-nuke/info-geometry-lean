@@ -198,7 +198,12 @@ theorem Kambient_supported_on_Preg :
 @[rep_depth operator]
 theorem Kambient_kills_Pzero :
     Pzero c * Kambient c = 0 ∧ Kambient c * Pzero c = 0 := by
-  simpa [Pzero, Kambient, Kreg, compress] using c.hKambient_kills_Pzero
+  change
+    c.cik.spectralComplementaryProjector *
+        compress c.cik.spectralProjector (-(c.logOn c.logDomain)) = 0 ∧
+      compress c.cik.spectralProjector (-(c.logOn c.logDomain)) *
+        c.cik.spectralComplementaryProjector = 0
+  exact c.hKambient_kills_Pzero
 
 /-- No analytic logarithm certificate is available on the pure defect compression. -/
 @[rep_depth operator]
@@ -210,7 +215,18 @@ theorem no_log_on_zero_sector :
 @[rep_depth operator]
 theorem Kphys_supported_on_metric :
     Pmetric c * Kphys c = Kphys c ∧ Kphys c * Pmetric c = Kphys c := by
-  simpa [Pmetric, Kphys, Kambient, Kreg, compress] using c.hKphys_supported_on_metric
+  change
+    metricProjectorOf c.metricSide c.cik *
+        compress (metricProjectorOf c.metricSide c.cik)
+          (compress c.cik.spectralProjector (-(c.logOn c.logDomain))) =
+      compress (metricProjectorOf c.metricSide c.cik)
+        (compress c.cik.spectralProjector (-(c.logOn c.logDomain))) ∧
+      compress (metricProjectorOf c.metricSide c.cik)
+          (compress c.cik.spectralProjector (-(c.logOn c.logDomain))) *
+        metricProjectorOf c.metricSide c.cik =
+      compress (metricProjectorOf c.metricSide c.cik)
+        (compress c.cik.spectralProjector (-(c.logOn c.logDomain)))
+  exact c.hKphys_supported_on_metric
 
 /--
 Anomaly vanishes exactly when spectral and chosen metric lanes are aligned.

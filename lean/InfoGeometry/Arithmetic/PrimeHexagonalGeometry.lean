@@ -16,9 +16,15 @@ inductive Archetype
   | cyclotomicSpectrum
   | voronoiCell
   | primeLabelCovariance
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
 
-def prerequisites : Archetype → Finset Archetype
+instance : Fintype Archetype where
+  elems := {.primeLogEnergy, .reciprocalRotation, .invariantMetric,
+    .cyclotomicSpectrum, .voronoiCell, .primeLabelCovariance}
+  complete x := by
+    cases x <;> decide
+
+def prerequisites : Archetype → Set Archetype
   | .primeLogEnergy => {.primeLogEnergy}
   | .reciprocalRotation => {.reciprocalRotation}
   | .invariantMetric => {.reciprocalRotation, .invariantMetric}
@@ -28,19 +34,27 @@ def prerequisites : Archetype → Finset Archetype
 
 instance : PartialOrder Archetype where
   le earlier later := prerequisites earlier ⊆ prerequisites later
-  le_refl _ := Finset.Subset.refl _
-  le_trans _ _ _ := Finset.Subset.trans
+  le_refl _ := Set.Subset.rfl
+  le_trans _ _ _ := Set.Subset.trans
   le_antisymm := by
     intro earlier later
-    cases earlier <;> cases later <;> decide
+    cases earlier <;> cases later <;> simp_all [prerequisites, Set.subset_def]
 
 theorem cell_and_arithmetic_incomparable :
     ¬ Archetype.voronoiCell ≤ Archetype.primeLogEnergy ∧
     ¬ Archetype.primeLogEnergy ≤ Archetype.voronoiCell := by
-  change
-    ¬ prerequisites .voronoiCell ⊆ prerequisites .primeLogEnergy ∧
-    ¬ prerequisites .primeLogEnergy ⊆ prerequisites .voronoiCell
-  decide
+  classical
+  constructor
+  · intro h
+    have hmem : Archetype.invariantMetric ∈ prerequisites .voronoiCell := by
+      simp [prerequisites]
+    have hfalse : Archetype.invariantMetric ∈ prerequisites .primeLogEnergy := h hmem
+    simpa [prerequisites] using hfalse
+  · intro h
+    have hmem : Archetype.primeLogEnergy ∈ prerequisites .primeLogEnergy := by
+      simp [prerequisites]
+    have hfalse : Archetype.primeLogEnergy ∈ prerequisites .voronoiCell := h hmem
+    simpa [prerequisites] using hfalse
 
 end ProofDependency
 

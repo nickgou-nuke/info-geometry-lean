@@ -46,6 +46,7 @@ local instance : NormedRing EndH := inferInstance
 local instance : NormedAlgebra ℝ EndH := inferInstance
 local instance : IsTopologicalRing EndH := inferInstance
 local instance : CompleteSpace EndH := inferInstance
+attribute [local instance 100] LieRing.ofAssociativeRing
 
 /--
 The topological clock generator (unit bivector axis for rotation).
@@ -107,8 +108,7 @@ to the identity on the state manifold.
 theorem modular_rotation_identity :
     NormedSpace.exp ((2 * Real.pi) • clockAxis H) = (1 : EndH) := by
   have hSq : (clockAxis H).comp (clockAxis H) = -(ContinuousLinearMap.id ℝ (DoubledSpace H)) := by
-    simpa [clockAxis, InvolutiveSelfDualCarrier.K, doubledCarrier] using
-      (InvolutiveSelfDualCarrier.K_sq (X := doubledCarrier (E := H)))
+    exact InfoGeometry.Krein.clockAxis_sq H
   have hExp := InfoGeometry.Canonical.BogoliubovClosedForms.exp_eq_cos_add_sin_of_sq_eq_neg_one
     (E := H) (G := clockAxis H) hSq (2 * Real.pi)
   simp [hExp, Real.cos_two_pi, Real.sin_two_pi]
@@ -125,8 +125,7 @@ theorem winding_orbit_periodicity (K : EndH) (N : ℤ)
   rw [NormedSpace.exp_add_of_commute (hComm.smul_right _)]
   have hPower : NormedSpace.exp ((2 * Real.pi * (N : ℝ)) • clockAxis H) = 1 := by
     have hSq : (clockAxis H).comp (clockAxis H) = -(ContinuousLinearMap.id ℝ (DoubledSpace H)) := by
-      simpa [clockAxis, InvolutiveSelfDualCarrier.K, doubledCarrier] using
-        (InvolutiveSelfDualCarrier.K_sq (X := doubledCarrier (E := H)))
+      exact InfoGeometry.Krein.clockAxis_sq H
     have hExp := InfoGeometry.Canonical.BogoliubovClosedForms.exp_eq_cos_add_sin_of_sq_eq_neg_one
       (E := H) (G := clockAxis H) hSq (2 * Real.pi * (N : ℝ))
     have hArg : 2 * Real.pi * (N : ℝ) = (N : ℝ) * (2 * Real.pi) := by ring
@@ -423,7 +422,14 @@ theorem winding_orbit_periodicity_modularGeneratorGaugePart
       Commute
         (InfoGeometry.Canonical.BogoliubovTransport.modularGeneratorGaugePart (E := H) hMod)
         (InfoGeometry.Krein.clockAxis (E := H)) := by
-    simpa [InfoGeometry.Canonical.BogoliubovTransport.IsPhaseLinear, Commute] using hPhase
+    change
+      InfoGeometry.Canonical.BogoliubovTransport.modularGeneratorGaugePart (E := H) hMod *
+          InfoGeometry.Krein.clockAxis (E := H) =
+        InfoGeometry.Krein.clockAxis (E := H) *
+          InfoGeometry.Canonical.BogoliubovTransport.modularGeneratorGaugePart (E := H) hMod
+    rw [ContinuousLinearMap.mul_def, ContinuousLinearMap.mul_def]
+    simpa [InfoGeometry.Krein.clockAxis_eq_complex_i,
+      InfoGeometry.Canonical.BogoliubovTransport.IsPhaseLinear] using hPhase
   have hAxis : clockAxis H = InfoGeometry.Krein.clockAxis (E := H) := by
     rfl
   have hCommLocal :
@@ -817,8 +823,7 @@ theorem right_comp_clockAxis_eq_zero_iff
   · intro hAK
     have hSq : (clockAxis H).comp (clockAxis H) =
         -(ContinuousLinearMap.id ℝ (DoubledSpace H)) := by
-      simpa [clockAxis, InvolutiveSelfDualCarrier.K, doubledCarrier] using
-        (InvolutiveSelfDualCarrier.K_sq (X := doubledCarrier (E := H)))
+      exact InfoGeometry.Krein.clockAxis_sq H
     have hAKK : A.comp ((clockAxis H).comp (clockAxis H)) = 0 := by
       rw [← ContinuousLinearMap.comp_assoc, hAK]
       simp
@@ -928,8 +933,8 @@ theorem modularTransportGenerator_commutator_clockAxis_eq_zero_of_scaleClock_mem
         (InfoGeometry.Canonical.BogoliubovTransport.modularGeneratorScalePart (E := H) hMod)
         (clockAxis H)
         = 0 := by
-    simpa [InfoGeometry.Canonical.BogoliubovTransport.lieBracket_eq_transportCommutator]
-      using hScaleZero
+    rw [← InfoGeometry.Canonical.BogoliubovTransport.lieBracket_eq_transportCommutator]
+    exact hScaleZero
   have hFullEqScale :
       InfoGeometry.Canonical.BogoliubovTransport.transportCommutator (E := H)
         (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)

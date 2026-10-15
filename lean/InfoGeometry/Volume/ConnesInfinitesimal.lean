@@ -158,7 +158,8 @@ itself vanishes.
 @[simp] theorem modularHamiltonianAction_hasDerivAt_zero_self
     (K : AlgebraEnd H) :
     HasDerivAt (fun t : ℝ => modularHamiltonianAction (H := H) K K t) 0 0 := by
-  simpa [modularHamiltonianAction] using
+  change HasDerivAt (fun t : ℝ => expTransport K K t) 0 0
+  simpa [Ring.lie_def] using
     (hasDerivAt_expTransport_at_zero (A := AlgebraEnd H) K K)
 
 /--

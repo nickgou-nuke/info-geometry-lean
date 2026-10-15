@@ -99,8 +99,18 @@ theorem exponentialMemory_hasDerivAt (rate : ℝ) (u : ℝ → ℝ)
     rw [← Real.exp_add]
     have hz : -rate * t + rate * t = 0 := by ring
     rw [hz, Real.exp_zero]
-  have hcu := congrArg (fun r : ℝ => r * u t) hc
-  convert he.mul hi using 1 <;> dsimp [exponentialMemory] <;> nlinarith [hcu]
+  have hderiv :
+      (Real.exp (-rate * id t) * (-rate * 1)) * (∫ s in (0 : ℝ)..t, Real.exp (rate * s) * u s) +
+        Real.exp (-rate * id t) * (Real.exp (rate * t) * u t) =
+      -rate * exponentialMemory rate u t + u t := by
+    dsimp [exponentialMemory, id]
+    have hsecond : Real.exp (-rate * t) * (Real.exp (rate * t) * u t) = u t := by
+      rw [← mul_assoc, hc, one_mul]
+    have hfirst : (Real.exp (-rate * t) * (-rate * 1)) * (∫ s in (0 : ℝ)..t, Real.exp (rate * s) * u s) =
+        -rate * (Real.exp (-rate * t) * ∫ s in (0 : ℝ)..t, Real.exp (rate * s) * u s) := by
+      ring
+    rw [hfirst, hsecond]
+  exact (he.mul hi).congr_deriv hderiv
 
 @[simp] theorem exponentialMemory_zero (rate : ℝ) (u : ℝ → ℝ) :
     exponentialMemory rate u 0 = 0 := by simp [exponentialMemory]

@@ -71,8 +71,11 @@ theorem symbolicLatentPathImageMapCompHausHom_comp
     simpa using (CompHausLike.fullyFaithfulCompHausLikeToTop (fun _ => True))
   apply hFF.map_injective
   rw [Functor.map_comp]
-  simpa using
-    (symbolicLatentPathImageMapTopCatHom_comp f g hf hg γ)
+  change symbolicLatentPathImageMapTopCatHom f hf γ ≫
+      symbolicLatentPathImageMapTopCatHom g hg
+        (mapSymbolicLatentPathContinuous f hf γ) =
+    symbolicLatentPathImageMapTopCatHom (g ∘ f) (hg.comp hf) γ
+  exact symbolicLatentPathImageMapTopCatHom_comp f g hf hg γ
 
 end
 end InfoGeometry.Topology

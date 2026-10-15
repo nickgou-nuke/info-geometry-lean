@@ -1,3 +1,4 @@
+import InfoGeometry.Canonical.DecomposableBivector
 import InfoGeometry.Clifford.SplitClifford55ProjectivePureSpinor
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.ExteriorKleinTwoPlaneQuotient
@@ -65,7 +66,7 @@ theorem projectivePureSpinor_exists_nonzeroPluckerReadout
   let b : Module.Basis (Fin 5) ℝ P.1 :=
     (Module.finBasis ℝ P.1).reindex (finCongr hP)
   refine ⟨b, ?_⟩
-  exact exterior_ιMulti_coe_basis_ne_zero b
+  exact InfoGeometry.Canonical.exteriorPower_ιMulti_coe_basis_ne_zero b
 
 theorem vacuum_projectivePureSpinorGrassmannianPoint
     : projectivePureSpinorGrassmannianPoint

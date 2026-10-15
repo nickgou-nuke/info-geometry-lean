@@ -1,5 +1,4 @@
 import InfoGeometry.Analysis.BipolarElementaryContourPeriods
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Circle enclosure periods and the obstruction to a global primitive
@@ -71,14 +70,14 @@ theorem circleIntegrable_dlog01_of_avoids_punctures
     {c : ℂ} {r : ℝ} (hr : 0 ≤ r)
     (h0 : (0 : ℂ) ∉ sphere c r) (h1 : (1 : ℂ) ∉ sphere c r) :
     CircleIntegrable dlog01 c r := by
-  have heq : dlog01 = fun z : ℂ => (z - 0)⁻¹ - (z - 1)⁻¹ := by
+  have heq : dlog01 = (fun z : ℂ => (z - 0)⁻¹) - (fun z : ℂ => (z - 1)⁻¹) := by
     funext z
     rw [dlog01_eq_origin_pole_sub_one_pole]
+    dsimp
     ring
   rw [heq]
-  simpa only [sub_eq_add_neg] using
-    (circleIntegrable_pole_of_not_mem_sphere hr h0).add
-      (circleIntegrable_pole_of_not_mem_sphere hr h1).neg
+  exact (circleIntegrable_pole_of_not_mem_sphere hr h0).sub
+    (circleIntegrable_pole_of_not_mem_sphere hr h1)
 
 /-- The complete circle integral is the difference of the two enclosed-pole
 contributions, with no hypothesis about either integral's value. -/
@@ -206,7 +205,7 @@ theorem negative_radius_exterior_counterexample :
       (∮ z in C((0 : ℂ), (-1 : ℝ)), (z - 0)⁻¹) =
         (2 * Real.pi * I : ℂ) := by
   constructor
-  · simp [mem_closedBall]
+  · simp
   · exact circleIntegral.integral_sub_center_inv 0 (by norm_num)
 
 end InfoGeometry.Analysis.BipolarCircleEnclosurePeriods

@@ -312,33 +312,35 @@ theorem swapConjugated_generator_packet :
     conjugateAut_ne_one _ _ unipotentShortAut_true_ne_one,
     conjugateAut_ne_one _ _ unipotentLongAut_true_ne_one⟩
 
-theorem unipotentShortAut_add (s t : Bool) :
-    unipotentShortAut (s ^^ t) =
-      unipotentShortAut s * unipotentShortAut t := by
+theorem unipotentShortAut_false : unipotentShortAut false = 1 := by
   apply Subtype.ext
   apply Equiv.ext
   intro X
+  rfl
+
+theorem unipotentLongAut_false : unipotentLongAut false = 1 := by
+  apply Subtype.ext
+  apply Equiv.ext
+  intro X
+  rfl
+
+theorem unipotentShortAut_add (s t : Bool) :
+    unipotentShortAut (s ^^ t) =
+      unipotentShortAut s * unipotentShortAut t := by
   cases s <;> cases t
-  · rfl
-  · rfl
-  · rfl
-  · change X = (unipotentShortAut true * unipotentShortAut true).1 X
-    simpa using congrArg (fun f : SplitOctF2Aut => f.1 X)
-      (unipotentShortAut_order true).symm
+  · simp [unipotentShortAut_false]
+  · simp [unipotentShortAut_false]
+  · simp [unipotentShortAut_false]
+  · exact (unipotentShortAut_order true).symm
 
 theorem unipotentLongAut_add (s t : Bool) :
     unipotentLongAut (s ^^ t) =
       unipotentLongAut s * unipotentLongAut t := by
-  apply Subtype.ext
-  apply Equiv.ext
-  intro X
   cases s <;> cases t
-  · rfl
-  · rfl
-  · rfl
-  · change X = (unipotentLongAut true * unipotentLongAut true).1 X
-    simpa using congrArg (fun f : SplitOctF2Aut => f.1 X)
-      (unipotentLongAut_order true).symm
+  · simp [unipotentLongAut_false]
+  · simp [unipotentLongAut_false]
+  · simp [unipotentLongAut_false]
+  · exact (unipotentLongAut_order true).symm
 
 theorem swapConjugatedShort_add (s t : Bool) :
     conjugateAut swap01Aut (unipotentShortAut (s ^^ t)) =

@@ -261,14 +261,14 @@ theorem kleinLogPeriodReadoutClass_monodromy
     periodMonodromyOfClass
         kleinZeroD₀ kleinZeroD₁ kleinZeroD_complex
         (LinearMap.id : ℂ →ₗ[ℂ] ℂ)
-        (by intro η; simp [kleinZeroD₀])
+        (by intro _; simp [kleinZeroD₀])
         (kleinLogPeriodReadoutClass R) =
       unipotentPeriodMap (logarithmicPeriod R) := by
   unfold kleinLogPeriodReadoutClass
   rw [periodMonodromyOfClass_apply
     kleinZeroD₀ kleinZeroD₁ kleinZeroD_complex
     (LinearMap.id : ℂ →ₗ[ℂ] ℂ)
-    (by intro η; simp [kleinZeroD₀])
+    (by intro _; simp [kleinZeroD₀])
     (logarithmicPeriod R) (by simp [kleinZeroD₁])]
   simp
 
@@ -277,14 +277,14 @@ theorem kleinLogPeriodReadoutWindingClass_monodromy
     periodMonodromyOfClass
         kleinZeroD₀ kleinZeroD₁ kleinZeroD_complex
         (LinearMap.id : ℂ →ₗ[ℂ] ℂ)
-        (by intro η; simp [kleinZeroD₀])
+        (by intro _; simp [kleinZeroD₀])
         (InfoGeometry.Projective.KleinQuadric.DeRhamComplex.kleinLogPeriodReadoutWindingClass R n) =
       unipotentPeriodMap ((n : ℂ) * logarithmicPeriod R) := by
   unfold InfoGeometry.Projective.KleinQuadric.DeRhamComplex.kleinLogPeriodReadoutWindingClass
   rw [periodMonodromyOfClass_apply
     kleinZeroD₀ kleinZeroD₁ kleinZeroD_complex
     (LinearMap.id : ℂ →ₗ[ℂ] ℂ)
-    (by intro η; simp [kleinZeroD₀])
+    (by intro _; simp [kleinZeroD₀])
     ((n : ℂ) * logarithmicPeriod R) (by simp [kleinZeroD₁])]
   simp
 
@@ -293,7 +293,7 @@ theorem kleinLogPeriodReadoutWindingClass_monodromy_ne_one_iff
     periodMonodromyOfClass
         kleinZeroD₀ kleinZeroD₁ kleinZeroD_complex
         (LinearMap.id : ℂ →ₗ[ℂ] ℂ)
-        (by intro η; simp [kleinZeroD₀])
+        (by intro _; simp [kleinZeroD₀])
         (InfoGeometry.Projective.KleinQuadric.DeRhamComplex.kleinLogPeriodReadoutWindingClass R n) ≠
       (1 : Matrix (Fin 2) (Fin 2) ℂ) ↔
       (n : ℂ) * logarithmicPeriod R ≠ 0 := by
@@ -305,7 +305,7 @@ theorem kleinLogPeriodReadoutWindingClass_monodromy_ne_one_iff_winding_ne_zero
     periodMonodromyOfClass
         kleinZeroD₀ kleinZeroD₁ kleinZeroD_complex
         (LinearMap.id : ℂ →ₗ[ℂ] ℂ)
-        (by intro η; simp [kleinZeroD₀])
+        (by intro _; simp [kleinZeroD₀])
         (InfoGeometry.Projective.KleinQuadric.DeRhamComplex.kleinLogPeriodReadoutWindingClass R n) ≠
       (1 : Matrix (Fin 2) (Fin 2) ℂ) ↔ n ≠ 0 := by
   rw [kleinLogPeriodReadoutWindingClass_monodromy_ne_one_iff]
@@ -323,7 +323,7 @@ theorem kleinLogPeriodReadoutClass_monodromy_ne_one
     periodMonodromyOfClass
         kleinZeroD₀ kleinZeroD₁ kleinZeroD_complex
         (LinearMap.id : ℂ →ₗ[ℂ] ℂ)
-        (by intro η; simp [kleinZeroD₀])
+        (by intro _; simp [kleinZeroD₀])
         (kleinLogPeriodReadoutClass R) ≠
       (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
   rw [kleinLogPeriodReadoutClass_monodromy]
@@ -364,26 +364,26 @@ theorem kleinLogPeriodReadoutWindingClass_monodromy_add
     periodMonodromyOfClass
         kleinZeroD₀ kleinZeroD₁ kleinZeroD_complex
         (LinearMap.id : ℂ →ₗ[ℂ] ℂ)
-        (by intro η; simp [kleinZeroD₀])
+        (by intro _; simp [kleinZeroD₀])
         (InfoGeometry.Projective.KleinQuadric.DeRhamComplex.kleinLogPeriodReadoutWindingClass
           R (m + n)) =
       periodMonodromyOfClass
           kleinZeroD₀ kleinZeroD₁ kleinZeroD_complex
           (LinearMap.id : ℂ →ₗ[ℂ] ℂ)
-          (by intro η; simp [kleinZeroD₀])
+          (by intro _; simp [kleinZeroD₀])
           (InfoGeometry.Projective.KleinQuadric.DeRhamComplex.kleinLogPeriodReadoutWindingClass
             R m) *
         periodMonodromyOfClass
           kleinZeroD₀ kleinZeroD₁ kleinZeroD_complex
           (LinearMap.id : ℂ →ₗ[ℂ] ℂ)
-          (by intro η; simp [kleinZeroD₀])
+          (by intro _; simp [kleinZeroD₀])
           (InfoGeometry.Projective.KleinQuadric.DeRhamComplex.kleinLogPeriodReadoutWindingClass
             R n) := by
   rw [InfoGeometry.Projective.KleinQuadric.DeRhamComplex.kleinLogPeriodReadoutWindingClass_add]
   exact periodMonodromyOfClass_add
     kleinZeroD₀ kleinZeroD₁ kleinZeroD_complex
     (LinearMap.id : ℂ →ₗ[ℂ] ℂ)
-    (by intro η; simp [kleinZeroD₀])
+    (by intro _; simp [kleinZeroD₀])
     (InfoGeometry.Projective.KleinQuadric.DeRhamComplex.kleinLogPeriodReadoutWindingClass
       R m)
     (InfoGeometry.Projective.KleinQuadric.DeRhamComplex.kleinLogPeriodReadoutWindingClass
@@ -409,13 +409,13 @@ theorem kleinLogPeriodReadoutWindingClass_monodromy_neg_mul
     periodMonodromyOfClass
         kleinZeroD₀ kleinZeroD₁ kleinZeroD_complex
         (LinearMap.id : ℂ →ₗ[ℂ] ℂ)
-        (by intro η; simp [kleinZeroD₀])
+        (by intro _; simp [kleinZeroD₀])
         (InfoGeometry.Projective.KleinQuadric.DeRhamComplex.kleinLogPeriodReadoutWindingClass
           R (-n)) *
       periodMonodromyOfClass
         kleinZeroD₀ kleinZeroD₁ kleinZeroD_complex
         (LinearMap.id : ℂ →ₗ[ℂ] ℂ)
-        (by intro η; simp [kleinZeroD₀])
+        (by intro _; simp [kleinZeroD₀])
         (InfoGeometry.Projective.KleinQuadric.DeRhamComplex.kleinLogPeriodReadoutWindingClass
           R n) =
       (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
@@ -423,7 +423,7 @@ theorem kleinLogPeriodReadoutWindingClass_monodromy_neg_mul
   exact periodMonodromyOfClass_neg_mul
     kleinZeroD₀ kleinZeroD₁ kleinZeroD_complex
     (LinearMap.id : ℂ →ₗ[ℂ] ℂ)
-    (by intro η; simp [kleinZeroD₀])
+    (by intro _; simp [kleinZeroD₀])
     (InfoGeometry.Projective.KleinQuadric.DeRhamComplex.kleinLogPeriodReadoutWindingClass
       R n)
 
@@ -447,13 +447,13 @@ theorem kleinLogPeriodReadoutWindingClass_monodromy_mul_neg
     periodMonodromyOfClass
         kleinZeroD₀ kleinZeroD₁ kleinZeroD_complex
         (LinearMap.id : ℂ →ₗ[ℂ] ℂ)
-        (by intro η; simp [kleinZeroD₀])
+        (by intro _; simp [kleinZeroD₀])
         (InfoGeometry.Projective.KleinQuadric.DeRhamComplex.kleinLogPeriodReadoutWindingClass
           R n) *
       periodMonodromyOfClass
         kleinZeroD₀ kleinZeroD₁ kleinZeroD_complex
         (LinearMap.id : ℂ →ₗ[ℂ] ℂ)
-        (by intro η; simp [kleinZeroD₀])
+        (by intro _; simp [kleinZeroD₀])
         (InfoGeometry.Projective.KleinQuadric.DeRhamComplex.kleinLogPeriodReadoutWindingClass
           R (-n)) =
       (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
@@ -461,7 +461,7 @@ theorem kleinLogPeriodReadoutWindingClass_monodromy_mul_neg
   exact periodMonodromyOfClass_mul_neg
     kleinZeroD₀ kleinZeroD₁ kleinZeroD_complex
     (LinearMap.id : ℂ →ₗ[ℂ] ℂ)
-    (by intro η; simp [kleinZeroD₀])
+    (by intro _; simp [kleinZeroD₀])
     (InfoGeometry.Projective.KleinQuadric.DeRhamComplex.kleinLogPeriodReadoutWindingClass
       R n)
 
@@ -545,10 +545,12 @@ theorem periodMonodromyRepresentation_injective
     Function.Injective
       (periodMonodromyRepresentation d₀ d₁ hdd period hperiod) := by
   intro c₁ c₂ h
-  apply Multiplicative.toAdd.injective
+  obtain ⟨a₁, rfl⟩ := Multiplicative.ofAdd.surjective c₁
+  obtain ⟨a₂, rfl⟩ := Multiplicative.ofAdd.surjective c₂
+  congr 1
   apply hinj
   apply unipotentPeriodMap_injective
-  simpa only [periodMonodromyRepresentation_apply] using h
+  simpa only [periodMonodromyRepresentation_apply, periodMonodromyOfClass] using h
 
 theorem periodMonodromyOfClass_injective
     {Ω₀ Ω₁ Ω₂ : Type*}
@@ -677,14 +679,14 @@ theorem kleinLogPeriodReadoutClass_monodromy_eq_one_iff
     periodMonodromyOfClass
         kleinZeroD₀ kleinZeroD₁ kleinZeroD_complex
         (LinearMap.id : ℂ →ₗ[ℂ] ℂ)
-        (by intro η; simp [kleinZeroD₀])
+        (by intro _; simp [kleinZeroD₀])
         (kleinLogPeriodReadoutClass R) =
       (1 : Matrix (Fin 2) (Fin 2) ℂ) ↔
       kleinLogPeriodReadoutClass R = 0 := by
   exact periodMonodromyOfClass_eq_one_iff_class_eq_zero
     kleinZeroD₀ kleinZeroD₁ kleinZeroD_complex
     (LinearMap.id : ℂ →ₗ[ℂ] ℂ)
-    (by intro η; simp [kleinZeroD₀])
+    (by intro _; simp [kleinZeroD₀])
     kleinZeroPeriodClassFactor_injective
     (kleinLogPeriodReadoutClass R)
 
@@ -693,14 +695,14 @@ theorem kleinLogPeriodReadoutClass_monodromy_ne_one_iff
     periodMonodromyOfClass
         kleinZeroD₀ kleinZeroD₁ kleinZeroD_complex
         (LinearMap.id : ℂ →ₗ[ℂ] ℂ)
-        (by intro η; simp [kleinZeroD₀])
+        (by intro _; simp [kleinZeroD₀])
         (kleinLogPeriodReadoutClass R) ≠
       (1 : Matrix (Fin 2) (Fin 2) ℂ) ↔
       kleinLogPeriodReadoutClass R ≠ 0 := by
   exact periodMonodromyOfClass_ne_one_iff_class_ne_zero
     kleinZeroD₀ kleinZeroD₁ kleinZeroD_complex
     (LinearMap.id : ℂ →ₗ[ℂ] ℂ)
-    (by intro η; simp [kleinZeroD₀])
+    (by intro _; simp [kleinZeroD₀])
     kleinZeroPeriodClassFactor_injective
     (kleinLogPeriodReadoutClass R)
 
@@ -709,7 +711,7 @@ theorem kleinLogPeriodReadoutClass_monodromy_ne_one_iff_period_ne_zero
     periodMonodromyOfClass
         kleinZeroD₀ kleinZeroD₁ kleinZeroD_complex
         (LinearMap.id : ℂ →ₗ[ℂ] ℂ)
-        (by intro η; simp [kleinZeroD₀])
+        (by intro _; simp [kleinZeroD₀])
         (kleinLogPeriodReadoutClass R) ≠
       (1 : Matrix (Fin 2) (Fin 2) ℂ) ↔
       logarithmicPeriod R ≠ 0 := by

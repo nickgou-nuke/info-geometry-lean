@@ -592,9 +592,9 @@ theorem wick_twist_complex_signature_image
     (hσ : hasCKSignature B σ) :
     hasCKSignature (Complex.I * B) (wickCKMap σ) := by
   cases σ
-  · simpa [hasCKSignature] using wick_twist_complex_elliptic_to_hyperbolic hσ
-  · simpa [hasCKSignature] using wick_twist_complex_parabolic_fixed hσ
-  · simpa [hasCKSignature] using wick_twist_complex_hyperbolic_to_elliptic hσ
+  · simpa [hasCKSignature, wickCKMap] using wick_twist_complex_elliptic_to_hyperbolic hσ
+  · simpa [hasCKSignature, wickCKMap] using wick_twist_complex_parabolic_fixed hσ
+  · simpa [hasCKSignature, wickCKMap] using wick_twist_complex_hyperbolic_to_elliptic hσ
 
 /--
 Double complex Wick twist is period-2 at the square-class level:
@@ -2028,8 +2028,8 @@ theorem nambu_offdiag_has_parabolic_square
     (hcb : ∀ x : A, c (b x) = 0) :
     hasEndoSquareClass (nambuBlockOffDiag b c) CKSignature.parabolic := by
   intro v
-  simpa [hasEndoSquareClass] using
-    nambuBlockOffDiag_sq_zero_of_pairwise_zero b c hbc hcb v
+  change nambuBlockOffDiag b c (nambuBlockOffDiag b c v) = (0, 0)
+  exact nambuBlockOffDiag_sq_zero_of_pairwise_zero b c hbc hcb v
 
 /--
 For a CAR nilpotent pair, the difference channel is elliptic:
@@ -2482,7 +2482,7 @@ theorem n2_supercharge_split_stable_along_iterate
   intro n
   induction n with
   | zero =>
-      simpa using hsplit
+      simpa [iterMap] using hsplit
   | succ n ih =>
       have hStep := duality_transports_n2_supercharge_split
         (Dual := Φ) (hAdd := hAdd) (hMul := hMul)
@@ -2689,11 +2689,8 @@ theorem primitive_phaseChannel_eq_phaseAxis :
       phaseChannel U = (complex_i (E := E)).toLinearMap := by
     exact InfoGeometry.Quantum.SuperchargeMultiplet.phaseChannel_eq_complexI
       (E := E) U.primitive
-  calc
-    phaseChannel U = (complex_i (E := E)).toLinearMap := hComplex
-    _ =
-      ((modular_j (E := E)).toLinearMap).comp ((spectral_epsilon (E := E)).toLinearMap) := by
-        rfl
+  rw [hComplex]
+  ext x <;> rfl
 
 /--
 Legacy compatibility alias:
@@ -2885,7 +2882,10 @@ theorem projected_oddOdd_bracket_eq_two_smul_translation_plus_central :
           have hSplit :=
             InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK_eq_canonicalKineticPartK_plus_canonicalDefectCentralK
               (CIK := U.kernel)
-          exact congrArg (fun X => (2 : ℝ) • X) (by simpa [HD, drazinTranslationCandidate, InfoGeometry.Canonical.KKTClosure.ZD] using hSplit)
+          exact congrArg (fun X => (2 : ℝ) • X) (by
+            simpa [HD, drazinTranslationCandidate,
+              InfoGeometry.Canonical.KKTClosure.ZD,
+              InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalDefectCentralK] using hSplit)
     _ = (2 : ℝ) • drazinTranslationCandidate U + drazinCentralCandidate U := by
           simp [drazinCentralCandidate, smul_add]
 
@@ -3076,10 +3076,9 @@ theorem projected_odd_even_closure :
   refine ⟨projected_supercharge_is_odd U, ?_, ?_⟩
   · exact projected_hamiltonian_is_even U
   ·
-    have hFix :=
-      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonian_fixed_under_spectralGradingFlow
+    exact
+      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK_fixed_under_spectralGradingFlow
         (CIK := U.kernel) 0
-    simpa [HD] using hFix
 
 end UnifiedSuperchargePackage
 

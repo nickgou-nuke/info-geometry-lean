@@ -121,7 +121,7 @@ theorem sum_centeredScore_eq_zero_of_equal_mass
 theorem referenceMass_eq_one_of_normalized
     (R : FiniteReferenceState ι) (hR : IsNormalized R) :
     FiniteReferenceStateOps.referenceMass R = 1 :=
-  by simpa [FiniteReferenceStateOps.referenceMass] using hR
+  hR
 
 omit [Fintype ι] in
 /-- Positivity implies every reference weight is nonzero. -/

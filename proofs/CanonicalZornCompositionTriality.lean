@@ -194,7 +194,14 @@ inductive TrialitySector where
   | vector
   | spinorPlus
   | spinorMinus
-  deriving DecidableEq, Fintype, Repr
+  deriving DecidableEq, Repr
+
+instance : Fintype TrialitySector where
+  elems := {TrialitySector.vector, TrialitySector.spinorPlus,
+    TrialitySector.spinorMinus}
+  complete := by
+    intro s
+    cases s <;> simp
 
 /-- A tagged copy of the canonical Zorn carrier. -/
 @[ext] structure ZornCopy (sector : TrialitySector) where
@@ -239,26 +246,17 @@ def copyEquivCoordinates (sector : TrialitySector) :
 instance (sector : TrialitySector) : AddCommGroup (ZornCopy sector) :=
   (copyEquivCoordinates sector).addCommGroup
 
+def copyAddEquivCoordinates (sector : TrialitySector) :
+    ZornCopy sector ≃+ (Fin 8 → ℂ) :=
+  (copyEquivCoordinates sector).addEquiv
+
 instance (sector : TrialitySector) : Module ℂ (ZornCopy sector) :=
-  (copyEquivCoordinates sector).module ℂ
+  (copyAddEquivCoordinates sector).module ℂ
 
 /-- The transported linear coordinate equivalence. -/
 def copyLinearEquivCoordinates (sector : TrialitySector) :
-    ZornCopy sector ≃ₗ[ℂ] (Fin 8 → ℂ) where
-  toFun := copyEquivCoordinates sector
-  invFun := (copyEquivCoordinates sector).symm
-  left_inv := (copyEquivCoordinates sector).left_inv
-  right_inv := (copyEquivCoordinates sector).right_inv
-  map_add' X Y := by
-    change zornCoordinates
-      (coordinatesToZorn (zornCoordinates X.val + zornCoordinates Y.val)) =
-        zornCoordinates X.val + zornCoordinates Y.val
-    exact zornCoordinates_coordinatesToZorn _
-  map_smul' c X := by
-    change zornCoordinates
-      (coordinatesToZorn (c • zornCoordinates X.val)) =
-        c • zornCoordinates X.val
-    exact zornCoordinates_coordinatesToZorn _
+    ZornCopy sector ≃ₗ[ℂ] (Fin 8 → ℂ) :=
+  (copyAddEquivCoordinates sector).linearEquiv ℂ
 
 /-- Each typed triality copy is finite-dimensional because its coordinate
 equivalence has the finite function space `Fin 8 → ℂ` as source. -/

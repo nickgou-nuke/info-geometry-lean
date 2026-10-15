@@ -57,8 +57,10 @@ theorem point_injective : Function.Injective point := by
     change boundaryPrefix n x = w at hx
     exact hx
   have hy' : boundaryPrefix n y ≠ w := by
-    change boundaryPrefix n y = w at hy
-    exact hy
+    intro hprefix
+    apply hy
+    change boundaryPrefix n y = w
+    exact hprefix
   have hgx : g.1 x ≠ 0 := by
     change f (boundaryPrefix n x) ≠ 0
     simp [f, hx']
@@ -85,7 +87,13 @@ theorem continuous_point : Continuous point := by
   have hpre : point ⁻¹' PrimeSpectrum.zeroLocus s =
       ⋂ f : s, {x : CantorBoundary | f.1.1 x = 0} := by
     ext x
-    simp [PrimeSpectrum.mem_zeroLocus, mem_point_ideal_iff]
+    simp only [Set.mem_preimage, PrimeSpectrum.mem_zeroLocus, Set.mem_iInter,
+      Set.mem_setOf_eq, Set.subset_def]
+    constructor
+    · intro hx a
+      exact (mem_point_ideal_iff x a.1).1 (hx a.1 a.2)
+    · intro hx a ha
+      exact (mem_point_ideal_iff x a).2 (hx ⟨a, ha⟩)
   rw [hpre]
   apply isClosed_iInter
   intro f

@@ -58,7 +58,7 @@ Every conjunct delegates to an already compiled owner theorem.  The statement is
 therefore a navigation/capstone surface, not a new independent model.
 -/
 def KitaevCuntzCliffordOwnerTarget : Prop :=
-  (∀ (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E],
+  (∀ (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E],
     InfoGeometry.Quantum.RealMajoranaCategory.MajoranaCARWitness
       (cl11DoubledCore E)
       (SplitCliffordDatum.majoranaPairing (cl11SplitCliffordDatum E))
@@ -79,10 +79,10 @@ def KitaevCuntzCliffordOwnerTarget : Prop :=
           DAG.GradedBottInclusion.bottInclusionOdd X
         + DAG.GradedBottInclusion.bottInclusionOdd X *
           DAG.GradedBottInclusion.bottInclusionEven D = 0) ∧
-  (∀ chain₁ chain₂ : List (KitaevCell.{u}),
+  (∀ chain₁ chain₂ : List KitaevCell,
     macroscopicVolume (chain₁ ++ chain₂) =
       macroscopicVolume chain₁ * macroscopicVolume chain₂) ∧
-  (∀ chain₁ chain₂ : List (KitaevCell.{u}),
+  (∀ chain₁ chain₂ : List KitaevCell,
     macroscopicVolume chain₁ ≠ 0 →
       macroscopicVolume chain₂ ≠ 0 →
         topologicalIndexZ2 (chain₁ ++ chain₂) =
@@ -90,8 +90,8 @@ def KitaevCuntzCliffordOwnerTarget : Prop :=
   (∀ (S : Type v) [NormedAddCommGroup S] [InnerProductSpace ℝ S] [CompleteSpace S]
       (M : RealMajoranaDatum (S := S))
       (P0 : KPolarization (S := S) M)
-      (localOp : KitaevCell.{u} → S →L[ℝ] S)
-      (chain : List (KitaevCell.{u})),
+      (localOp : KitaevCell → S →L[ℝ] S)
+      (chain : List KitaevCell),
     topologicalIndexZ2 chain = 1 →
       SimplifiedBoundaryModel (M := M) (P0 := P0) localOp chain →
         HasZeroMode (S := S)

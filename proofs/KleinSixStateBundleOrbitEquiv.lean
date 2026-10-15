@@ -68,8 +68,8 @@ theorem coverCoord_glide (k : BrillouinTorus) :
   generalize h1 : coverCoord (torusGlide k) = b
   fin_cases a <;> fin_cases b
   · exact False.elim (hne (h1.trans h0.symm))
-  · simp_all
-  · simp_all
+  · exact (zero_add (1 : Deck2)).symm
+  · exact h11.symm
   · exact False.elim (hne (h1.trans h0.symm))
 
 theorem fibreCoordinate_glide_invariant (omega : ℂ)
@@ -110,8 +110,7 @@ private theorem representativeToCore_respects (omega : ℂ)
     rcases x with ⟨k, v⟩
     apply Bundle.TotalSpace.ext
     · exact (quotientMap_glide k).symm
-    · simpa [representativeToCore, totalGlide] using
-        (fibreCoordinate_glide_invariant omega homega k v).symm
+    · exact heq_of_eq ((fibreCoordinate_glide_invariant omega homega k v).symm)
 
 /-- Orbit quotient to the native vector-bundle core total space. -/
 def orbitToCore (omega : ℂ) (homega : omega ^ 2 + omega + 1 = 0) :

@@ -87,7 +87,7 @@ lemma add
           ext x
           simp [ContinuousLinearMap.add_comp, add_comm]
 
-    omit [CompleteSpace S] in
+omit [CompleteSpace S] in
 /-- Oddness is closed under real scaling. -/
 lemma smul
     (P0 : KPolarization (S := S) M)

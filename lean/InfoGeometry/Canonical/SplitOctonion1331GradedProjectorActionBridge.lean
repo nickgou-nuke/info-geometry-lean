@@ -75,23 +75,23 @@ theorem peirceHodgeStar_maps_1331_grades :
   · refine ⟨peirceHodgeStar (projectorPP y), ?_⟩
     simpa [peirce1331Grade, peirce1331Projector, peirce1331Complement,
       Module.End.mul_apply] using
-      congrArg (fun T : Module.End ℝ PeirceCarrier => T y)
-        peirceHodgeStar_projectorPP_projectorMM
+      (congrArg (fun T : Module.End ℝ PeirceCarrier => T y)
+        peirceHodgeStar_projectorPP_projectorMM).symm
   · refine ⟨peirceHodgeStar (projectorPM y), ?_⟩
     simpa [peirce1331Grade, peirce1331Projector, peirce1331Complement,
       Module.End.mul_apply] using
-      congrArg (fun T : Module.End ℝ PeirceCarrier => T y)
-        peirceHodgeStar_projectorPM_projectorMP
+      (congrArg (fun T : Module.End ℝ PeirceCarrier => T y)
+        peirceHodgeStar_projectorPM_projectorMP).symm
   · refine ⟨peirceHodgeStar (projectorMP y), ?_⟩
     simpa [peirce1331Grade, peirce1331Projector, peirce1331Complement,
       Module.End.mul_apply] using
-      congrArg (fun T : Module.End ℝ PeirceCarrier => T y)
-        peirceHodgeStar_projectorMP_projectorPM
+      (congrArg (fun T : Module.End ℝ PeirceCarrier => T y)
+        peirceHodgeStar_projectorMP_projectorPM).symm
   · refine ⟨peirceHodgeStar (projectorMM y), ?_⟩
     simpa [peirce1331Grade, peirce1331Projector, peirce1331Complement,
       Module.End.mul_apply] using
-      congrArg (fun T : Module.End ℝ PeirceCarrier => T y)
-        peirceHodgeStar_projectorMM_projectorPP
+      (congrArg (fun T : Module.End ℝ PeirceCarrier => T y)
+        peirceHodgeStar_projectorMM_projectorPP).symm
 
 theorem peirceHodgeStar_image_1331_grade (k : Fin 4) :
     peirceHodgeStarLinearEquiv '' peirce1331Grade k =
@@ -99,11 +99,10 @@ theorem peirceHodgeStar_image_1331_grade (k : Fin 4) :
   apply linearEquiv_mapsToGradeBetween_image_eq
     peirceHodgeStarLinearEquiv peirce1331Grade peirce1331Grade
     peirce1331Complement peirce1331Complement
+  · intro i x hx
+    rw [peirceHodgeStarLinearEquiv_apply]
+    exact peirceHodgeStar_maps_1331_grades () i hx
   · intro i
-    have h := peirceHodgeStar_maps_1331_grades
-    simpa [peirceHodgeStarLinearEquiv_apply] using h () i
-  · intro i
-    have h := peirceHodgeStar_maps_1331_grades
     have hsymm : ∀ x : PeirceCarrier,
         peirceHodgeStarLinearEquiv.symm x = peirceHodgeStar x := by
       intro x
@@ -112,7 +111,8 @@ theorem peirceHodgeStar_image_1331_grade (k : Fin 4) :
         peirceHodgeStar_sq
       simpa [peirceHodgeStarLinearEquiv_apply, Module.End.mul_apply] using hs.symm
     intro x hx
-    simpa [hsymm, peirceHodgeStarLinearEquiv_apply] using h () i hx
+    rw [hsymm]
+    exact peirceHodgeStar_maps_1331_grades () i hx
   · intro i
     fin_cases i <;> rfl
 
@@ -129,12 +129,10 @@ theorem peirceHodgeStar_maps_1331_grades_image_eq (k : Fin 4) :
       peirce1331Grade (peirce1331Complement k) := by
   apply linearEquiv_mapsToGradeBetween_image_eq peirceHodgeStarEquiv
     peirce1331Grade peirce1331Grade peirce1331Complement peirce1331Complement
-  · intro k
-    simpa [peirceHodgeStarEquiv] using
-      peirceHodgeStar_maps_1331_grades () k
-  · intro k
-    simpa [peirceHodgeStarEquiv] using
-      peirceHodgeStar_maps_1331_grades () k
+  · intro k x hx
+    exact peirceHodgeStar_maps_1331_grades () k hx
+  · intro k x hx
+    exact peirceHodgeStar_maps_1331_grades () k hx
   · intro i
     fin_cases i <;> rfl
 

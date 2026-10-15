@@ -170,7 +170,9 @@ theorem drazinKillsPrimitiveFermion
     (F : PrimitiveFermion Obs)
     (hA : D.A = F.op) :
     D.AD = 0 := by
-  exact hD (by simpa [hA] using F.nilpotent)
+  apply hD
+  rw [hA]
+  exact F.nilpotent
 
 /--
 Drazin preservation law for a stable scaled projector.

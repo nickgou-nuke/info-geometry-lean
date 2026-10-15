@@ -1,5 +1,9 @@
 import InfoGeometry.KK.RealSplitKreinKasparovCycle
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Algebra.Lie.OfAssociative
+
+attribute [local instance 100] LieRing.ofAssociativeRing
+attribute [local instance 100] LieAlgebra.ofAssociativeAlgebra
 
 /-!
 # Equivariance interface for the primitive real split-Krein cycle

@@ -47,17 +47,23 @@ theorem window6_no_translation_quotient_subgroup :
   have h21eq : cBinFold 6 37 = cBinFold 6 58 := by native_decide
   have h34eq : cBinFold 6 37 = cBinFold 6 3 := by native_decide
   have h21 : (21 : ZMod 64) ∈ H := by
-    have : ((58 : ZMod 64) - (37 : ZMod 64)) ∈ H := (hH 37 58).mp h21eq
-    simpa using this
+    have hmem : ((58 : ZMod 64) - (37 : ZMod 64)) ∈ H := (hH 37 58).mp h21eq
+    convert hmem using 1 <;> norm_num
   have h34 : (34 : ZMod 64) ∈ H := by
-    have : ((37 : ZMod 64) - (3 : ZMod 64)) ∈ H := (hH 3 37).mp h34eq.symm
-    simpa using this
-  have h13 : (13 : ZMod 64) ∈ H := by simpa using H.sub_mem h34 h21
-  have h8 : (8 : ZMod 64) ∈ H := by simpa using H.sub_mem h21 h13
-  have h5 : (5 : ZMod 64) ∈ H := by simpa using H.sub_mem h13 h8
-  have h3 : (3 : ZMod 64) ∈ H := by simpa using H.sub_mem h8 h5
-  have h2 : (2 : ZMod 64) ∈ H := by simpa using H.sub_mem h5 h3
-  have h1 : (1 : ZMod 64) ∈ H := by simpa using H.sub_mem h3 h2
+    have hmem : ((37 : ZMod 64) - (3 : ZMod 64)) ∈ H := (hH 3 37).mp h34eq.symm
+    convert hmem using 1 <;> norm_num
+  have h13 : (13 : ZMod 64) ∈ H := by
+    convert H.sub_mem h34 h21 using 1 <;> norm_num
+  have h8 : (8 : ZMod 64) ∈ H := by
+    convert H.sub_mem h21 h13 using 1 <;> norm_num
+  have h5 : (5 : ZMod 64) ∈ H := by
+    convert H.sub_mem h13 h8 using 1 <;> norm_num
+  have h3 : (3 : ZMod 64) ∈ H := by
+    convert H.sub_mem h8 h5 using 1 <;> norm_num
+  have h2 : (2 : ZMod 64) ∈ H := by
+    convert H.sub_mem h5 h3 using 1 <;> norm_num
+  have h1 : (1 : ZMod 64) ∈ H := by
+    convert H.sub_mem h3 h2 using 1 <;> norm_num
   have h01 : cBinFold 6 0 = cBinFold 6 1 := by
     exact (hH 0 1).2 (by simpa using h1)
   have hneq : cBinFold 6 0 ≠ cBinFold 6 1 := by

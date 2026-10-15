@@ -134,17 +134,46 @@ theorem centered_proposal_can_increase_loss :
 theorem centered_proposal_can_increase_profiled_loss :
     centeredProfileLoss (fun _row : Fin 1 => (![1, 1] : Fin 2 → ℝ)) 0 <
       centeredProfileLoss (fun _row : Fin 1 => (![1, 1] : Fin 2 → ℝ)) logTwoCenter := by
+  let observed : Matrix (Fin 1) (Fin 2) ℝ := fun _ => ![1, 1]
+  have hzero : acquisitionScales (0 : aitchisonSpace 2) = ![1, 1] := by
+    funext i
+    fin_cases i <;> simp [acquisitionScales]
+  have hprofile_unit : optimalProfile observed (![1, 1]) = fun _ => 1 := by
+    funext row
+    fin_cases row
+    rw [optimal_profile_formula]
+    norm_num [observed, scaleSquareSum, Fin.sum_univ_two]
+  have hprofile_center : optimalProfile observed (![2, 1 / 2]) = fun _ => 10 / 17 := by
+    funext row
+    fin_cases row
+    rw [optimal_profile_formula]
+    norm_num [observed, scaleSquareSum, Fin.sum_univ_two]
+  change centeredProfileLoss observed 0 < centeredProfileLoss observed logTwoCenter
   unfold centeredProfileLoss
-  rw [log_two_center_scales]
-  norm_num [totalLoss, rowLoss, acquisitionScales, optimal_profile_formula,
-    scaleSquareSum, Fin.sum_univ_two]
+  rw [hzero, log_two_center_scales, hprofile_unit, hprofile_center]
+  norm_num [observed, totalLoss, rowLoss, Fin.sum_univ_two]
 
 example : guardedCenterStep (fun _row : Fin 1 => (![1, 1] : Fin 2 → ℝ))
     0 logTwoCenter = 0 := by
+  let observed : Matrix (Fin 1) (Fin 2) ℝ := fun _ => ![1, 1]
+  have hzero : acquisitionScales (0 : aitchisonSpace 2) = ![1, 1] := by
+    funext i
+    fin_cases i <;> simp [acquisitionScales]
+  have hprofile_unit : optimalProfile observed (![1, 1]) = fun _ => 1 := by
+    funext row
+    fin_cases row
+    rw [optimal_profile_formula]
+    norm_num [observed, scaleSquareSum, Fin.sum_univ_two]
+  change guardedCenterStep observed 0 logTwoCenter = 0
   unfold guardedCenterStep
   rw [log_two_center_scales]
-  norm_num [centeredProfileLoss, totalLoss, rowLoss, acquisitionScales,
-    optimal_profile_formula, scaleSquareSum, Fin.sum_univ_two]
+  have hreject : ¬ totalLoss observed (![2, 1 / 2])
+      (optimalProfile observed (acquisitionScales (0 : aitchisonSpace 2))) ≤
+        centeredProfileLoss observed 0 := by
+    unfold centeredProfileLoss
+    rw [hzero, hprofile_unit]
+    norm_num [observed, centeredProfileLoss, totalLoss, rowLoss, Fin.sum_univ_two]
+  rw [if_neg hreject]
 
 example (observed : Matrix (Fin 2) (Fin 2) ℝ) (current : aitchisonSpace 2) :
     guardedCenterStep observed current current = current := by

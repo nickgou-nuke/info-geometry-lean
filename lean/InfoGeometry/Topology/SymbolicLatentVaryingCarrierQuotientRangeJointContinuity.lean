@@ -54,7 +54,10 @@ theorem continuous_compactIndexedObservationRangeCompHausLimitAction_joint_of_qu
       exact htransport p]
   have hcomp := hquotient.comp hf
   have houter := e.continuous.comp hcomp
-  simpa only [Function.comp_apply] using houter
+  change Continuous (fun p : ℝ × compactIndexedObservationRangeCompHausLimit D =>
+    e (compactIndexedObservationQuotientCompHausLimitAction D α p.1
+      (e.symm p.2)))
+  exact houter
 
 theorem continuous_compactIndexedObservationQuotientCompHausLimitAction_joint_of_range
     {J : Type} [Category J]

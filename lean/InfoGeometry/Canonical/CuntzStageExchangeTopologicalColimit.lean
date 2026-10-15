@@ -80,6 +80,7 @@ theorem exchangeTopologicalColimitMap_involution
   apply TopCat.hom_ext
   apply ContinuousMap.ext
   intro a
+  dsimp [topologicalDiagram] at a
   change exchangeTopologicalColimitMap Stage T Θ hcompat
       (exchangeTopologicalColimitMap Stage T Θ hcompat
         (topologicalInjection Stage (system Stage T) n a)) =

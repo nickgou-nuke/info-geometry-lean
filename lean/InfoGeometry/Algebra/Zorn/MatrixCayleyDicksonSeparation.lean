@@ -1,7 +1,7 @@
 import InfoGeometry.Algebra.ZornMatrix
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.ZornMatrixRealModule
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 import Mathlib.LinearAlgebra.Dimension.Constructions
 import Mathlib.LinearAlgebra.Matrix.Notation
@@ -211,11 +211,11 @@ theorem matrixSplitLinearEquiv_double (A B : RealCore) :
 /-- The central complex generator is sent to `ell` by the linear map. -/
 theorem matrixSplitLinearEquiv_I :
     matrixSplitLinearEquiv (Complex.I • (1 : ComplexMatrix)) = ell := by
+  change matrixToSplit (Complex.I • (1 : ComplexMatrix)) = ell
   apply ZornMatrix.ext <;>
     first | (funext i; fin_cases i) | skip
   all_goals
-    simp [matrixSplitLinearEquiv, matrixToSplit, ell,
-      ZornMatrix.U, ZornMatrix.V, ZornMatrix.add,
+    simp [matrixToSplit, ell, ZornMatrix.U, ZornMatrix.V,
       ZornMatrix.Vec3.basis, Vec3.add]
 
 /-- Left and right reassociations of a native Zorn triple have different diagonal entries. -/
@@ -256,9 +256,8 @@ theorem matrixSplitLinearEquiv_not_multiplicative :
 theorem ell_not_supercommutative_odd : ¬ ell * ell = -(ell * ell) := by
   rw [ell_sq]
   intro h
-  have ha : (1 : ℝ) = -1 := by
-    simpa [ZornMatrix.I, ZornMatrixRealModule.neg] using
-      congrArg ZornMatrix.a h
+  have ha := congrArg ZornMatrix.a h
+  change (1 : ℝ) = -1 at ha
   norm_num at ha
 
 end InfoGeometry.Algebra.Zorn.MatrixCayleyDicksonSeparation

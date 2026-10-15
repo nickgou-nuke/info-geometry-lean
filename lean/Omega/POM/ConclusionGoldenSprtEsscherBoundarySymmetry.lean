@@ -1,4 +1,7 @@
+import Mathlib.Data.Fintype.Basic
 import Mathlib.Tactic
+
+set_option backward.isDefEq.respectTransparency false
 
 namespace Omega.POM
 

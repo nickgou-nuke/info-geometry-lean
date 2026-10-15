@@ -4,6 +4,8 @@ import InfoGeometry.Canonical.RealSplitKreinHilbertizationBridge
 import InfoGeometry.Canonical.Cl55MasterParityOddnessBridge
 import InfoGeometry.Canonical.Cl55MasterHestenesPhaseBridge
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 /-!
 # Native finite `Module.End` readout for the Cl(5,5) master packet
 
@@ -838,7 +840,10 @@ noncomputable def nativeKreinAdjoint (T : NativeSpinorCLM) : NativeSpinorCLM :=
 @[simp] theorem nativeKreinAdjoint_one :
     nativeKreinAdjoint (ContinuousLinearMap.id ℝ NativeSpinorCarrier) =
       ContinuousLinearMap.id ℝ NativeSpinorCarrier := by
-  simp [nativeKreinAdjoint, nativeChirality_sq]
+  unfold nativeKreinAdjoint
+  rw [ContinuousLinearMap.adjoint_id]
+  simp only [ContinuousLinearMap.comp_id]
+  exact nativeChirality_sq
 
 theorem nativeKreinAdjoint_mul (S T : NativeSpinorCLM) :
     nativeKreinAdjoint (S.comp T) =
@@ -1649,10 +1654,14 @@ def canonicalNativeG2EquivariantFiniteFredholmDatum :
   action := nativeG2LieHom
   action_commutes_gamma := by
     intro A
-    simpa using nativeG2LieHom_commutes_chirality A
+    change (nativeG2LieHom A).comp nativeChirality =
+      nativeChirality.comp (nativeG2LieHom A)
+    exact nativeG2LieHom_commutes_chirality A
   action_commutes_hodge := nativeG2LieHom_commutes_hodge
   action_commutes_F := by
     intro A
-    simpa using nativeG2LieHom_commutes_normalizedDirac A
+    change (nativeG2LieHom A).comp nativeNormalizedDirac =
+      nativeNormalizedDirac.comp (nativeG2LieHom A)
+    exact nativeG2LieHom_commutes_normalizedDirac A
 
 end InfoGeometry.Canonical.RealCl55FiniteModuleEndBridge

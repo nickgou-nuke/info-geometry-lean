@@ -51,10 +51,8 @@ def drazinComplementaryProjection (A B : EndH) : EndH :=
 /-- Readback decomposition `P + Q = 1` for Drazin projectors. -/
 theorem drazinProjection_add_complementaryProjection (A B : EndH) :
     drazinProjection (E := E) A B + drazinComplementaryProjection (E := E) A B =
-      (ContinuousLinearMap.id ℝ H₂) := by
-  simpa [drazinProjection, drazinComplementaryProjection] using
-    (InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection_add_complementaryProjection
-      (a := A) (b := B))
+      (ContinuousLinearMap.id ℝ H₂) :=
+  InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection_add_complementaryProjection
 
 /-- Readback: Drazin projection is idempotent under a Drazin-Cartan witness. -/
 theorem drazinProjection_is_idempotent_of_isDrazinCartanEigenOperator

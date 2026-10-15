@@ -13,11 +13,11 @@ namespace InfoGeometry.Canonical
 
 def d4IncidenceGraph : SimpleGraph KleinFour where
   Adj g h := (g = (0,0) ∧ h ≠ (0,0)) ∨ (h = (0,0) ∧ g ≠ (0,0))
-  symm := by
+  symm := ⟨by
     intro g h hAdj
     rcases hAdj with hAdj | hAdj
     · exact Or.inr hAdj
-    · exact Or.inl hAdj
+    · exact Or.inl hAdj⟩
   loopless := ⟨by
     intro g hAdj
     rcases hAdj with hAdj | hAdj
@@ -26,11 +26,11 @@ def d4IncidenceGraph : SimpleGraph KleinFour where
 
 def d4DynkinGraph : SimpleGraph (Fin 4) where
   Adj i j := (i = 0 ∧ j ≠ 0) ∨ (j = 0 ∧ i ≠ 0)
-  symm := by
+  symm := ⟨by
     intro i j h
     rcases h with h | h
     · exact Or.inr h
-    · exact Or.inl h
+    · exact Or.inl h⟩
   loopless := ⟨by
     intro i h
     rcases h with h | h
@@ -90,7 +90,7 @@ theorem d4Incidence_diameter : d4IncidenceGraph.Connected ∧ (∀ v w : KleinFo
   intro v w
   by_cases hv : v = (0, 0)
   · by_cases hw : w = (0, 0)
-    · rw [hv, hw, SimpleGraph.dist_self]; exact zero_le 2
+    · rw [hv, hw, SimpleGraph.dist_self]; norm_num
     · have h_adj : d4IncidenceGraph.Adj v w := by
         rw [hv]; exact Or.inl ⟨rfl, hw⟩
       have hd : d4IncidenceGraph.dist v w = 1 := SimpleGraph.dist_eq_one_iff_adj.mpr h_adj
@@ -118,9 +118,9 @@ def d4IncidenceMatrix (g h : KleinFour) : Bool :=
 theorem d4IncidenceMatrix_symm (g h : KleinFour) :
     d4IncidenceMatrix g h = d4IncidenceMatrix h g := by
   by_cases h_adj : d4IncidenceGraph.Adj g h
-  · have h_adj_symm := d4IncidenceGraph.symm h_adj
+  · have h_adj_symm := h_adj.symm
     simp [d4IncidenceMatrix, h_adj, h_adj_symm]
-  · have h_adj_symm : ¬ d4IncidenceGraph.Adj h g := fun h_symm => h_adj (d4IncidenceGraph.symm h_symm)
+  · have h_adj_symm : ¬ d4IncidenceGraph.Adj h g := fun h_symm => h_adj h_symm.symm
     simp [d4IncidenceMatrix, h_adj, h_adj_symm]
 
 theorem d4IncidenceMatrix_diag (g : KleinFour) :

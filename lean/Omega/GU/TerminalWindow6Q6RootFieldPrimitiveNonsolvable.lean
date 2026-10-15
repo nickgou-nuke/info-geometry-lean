@@ -20,7 +20,7 @@ def q6NoStrictIntermediateField : Prop :=
 
 /-- The Galois group proxy `S₍20₎` is not solvable, so the roots are not solvable by radicals. -/
 def q6NotSolvableByRadicals : Prop :=
-  ¬ IsSolvable (Equiv.Perm (Fin q6RootFieldDegree))
+  ¬ Group.IsSolvable (Equiv.Perm (Fin q6RootFieldDegree))
 
 /-- Paper-facing certificate for the degree, primitivity, and nonsolvability of the `q6` root
 field. -/

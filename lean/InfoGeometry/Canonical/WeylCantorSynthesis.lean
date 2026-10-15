@@ -115,7 +115,7 @@ colimit fixed point of the Weyl integration functional.
 Source: ConnesCocycle.CocycleOverCoadjointOrbit.vanishingAtFiberBoundary
 -/
 theorem cocycleVanishingOnCantorFiber
-    {Orbit LieAlg LieCoalg : Type*} [AddCommGroup LieAlg] [Ring LieAlg] [CommSemiring LieAlg]
+    {Orbit LieAlg LieCoalg : Type*} [CommRing LieAlg]
     (ctx : ConnesCocycle.CocycleOverCoadjointOrbit Orbit LieAlg LieCoalg)
     (X : LieAlg) (hfiber : ctx.isFiberDirection X)
     (hH_eq : ctx.H₁ = ctx.H₂) :
@@ -136,7 +136,7 @@ This combines:
 5. The adjoint orbit determinant invariance (LieOrbitAdjointInvariants)
 -/
 theorem weylCantorColimitFixedPoint
-    {Orbit LieAlg LieCoalg : Type*} [AddCommGroup LieAlg] [Ring LieAlg] [CommSemiring LieAlg]
+    {Orbit LieAlg LieCoalg : Type*} [CommRing LieAlg]
     (ctx : ConnesCocycle.CocycleOverCoadjointOrbit Orbit LieAlg LieCoalg)
     (L : FormalPrimeRootLattice)
     (hfiber : ∀ X : LieAlg, ctx.isFiberDirection X)

@@ -29,7 +29,8 @@ theorem paper_conclusion_gauge_anomaly_selfaveraging_despite_superpoisson
     have hdiv := hvar.div hmean_sq hden_ne
     have hconst : ((118 : ℝ) / 243) / (((4 : ℝ) / 9) ^ 2) = (59 : ℝ) / 24 := by
       norm_num
-    simpa [hconst] using hdiv
+    rw [hconst] at hdiv
+    convert hdiv using 1
   have hmain_eq :
       (fun m : ℕ => (variance m / (m : ℝ)) / (mean m / (m : ℝ)) ^ 2) =ᶠ[atTop]
         fun m : ℕ => (m : ℝ) * variance m / mean m ^ 2 := by

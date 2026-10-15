@@ -21,8 +21,32 @@ variable {V : Type*} [Fintype V]
 
 open scoped NNReal
 
+local instance tokenPiLpAddCommGroup : AddCommGroup (TokenPiLpSpace V) :=
+  (PiLp.normedAddCommGroup 2 (fun _ : V × Fin 2 => ℂ)).toAddCommGroup
+
+local instance tokenPiLpTopologicalSpace : TopologicalSpace (TokenPiLpSpace V) :=
+  PseudoMetricSpace.toUniformSpace.toTopologicalSpace
+
+local instance tokenPiLpNormedSpace : NormedSpace ℝ (TokenPiLpSpace V) :=
+  PiLp.normedSpace 2 ℝ (fun _ : V × Fin 2 => ℂ)
+
+local instance tokenPiLpModule : Module ℝ (TokenPiLpSpace V) :=
+  tokenPiLpNormedSpace.toModule
+
 abbrev CoupledTokenContextState :=
   RealTokenHilbertSpace (V := V) × RealContextOperator (V := V)
+
+instance coupledTokenContextNormedSpace :
+    NormedSpace ℝ (CoupledTokenContextState (V := V)) :=
+  { Prod.instModule with
+    norm_smul_le := fun s x => by
+      change max ‖s • x.1‖ ‖s • x.2‖ ≤
+        ‖s‖ * max ‖x.1‖ ‖x.2‖
+      apply max_le
+      · exact (norm_smul_le s x.1).trans
+          (mul_le_mul_of_nonneg_left (le_max_left _ _) (norm_nonneg _))
+      · exact (ContinuousLinearMap.opNorm_smul_le s x.2).trans
+          (mul_le_mul_of_nonneg_left (le_max_right _ _) (norm_nonneg _)) }
 
 def realTokenCoordinateMap :
     RealTokenHilbertSpace (V := V) →ₗ[ℝ]
@@ -52,27 +76,48 @@ theorem realTokenCoordinateMap_injective :
   intro ψ φ h
   funext p
   apply Complex.ext
-  · simpa using congr_fun h (p, 0)
-  · simpa using congr_fun h (p, 1)
+  · have hcoord := congr_fun h (p, 0)
+    change (ψ p).re = (φ p).re at hcoord
+    exact hcoord
+  · have hcoord := congr_fun h (p, 1)
+    change (ψ p).im = (φ p).im at hcoord
+    exact hcoord
 
 instance realTokenFiniteDimensional :
     FiniteDimensional ℝ (RealTokenHilbertSpace (V := V)) :=
-  FiniteDimensional.of_injective
-    (realTokenCoordinateMap (V := V))
-    (realTokenCoordinateMap_injective (V := V))
+  by
+    classical
+    exact FiniteDimensional.of_injective
+      (K := ℝ)
+      (V := RealTokenHilbertSpace (V := V))
+      (V₂ := ((V × Fin 2) × Fin 2 → ℝ))
+      (realTokenCoordinateMap (V := V))
+      (realTokenCoordinateMap_injective (V := V))
 
-def realTokenToPiLpLinear :
-    RealTokenHilbertSpace (V := V) →ₗ[ℝ] TokenPiLpSpace V where
+def realTokenToPiLpLinear
+    : RealTokenHilbertSpace (V := V) →ₗ[ℝ] TokenPiLpSpace V where
   toFun ψ := tokenToPiLp ψ
   map_add' ψ φ := by
     rfl
   map_smul' c ψ := by
     rfl
 
-noncomputable def realTokenToPiLp :
-    RealTokenHilbertSpace (V := V) →L[ℝ] TokenPiLpSpace V :=
+noncomputable def realTokenToPiLp
+    : RealTokenHilbertSpace (V := V) →L[ℝ] TokenPiLpSpace V :=
   { toLinearMap := realTokenToPiLpLinear (V := V)
-    cont := LinearMap.continuous_of_finiteDimensional _ }
+    cont := by
+      letI : Module ℝ (RealTokenHilbertSpace (V := V)) :=
+        realTokenHilbertModule (V := V)
+      letI : NormedSpace ℝ (RealTokenHilbertSpace (V := V)) :=
+        realTokenHilbertNormedSpace (V := V)
+      letI : FiniteDimensional ℝ (RealTokenHilbertSpace (V := V)) :=
+        FiniteDimensional.of_injective
+          (realTokenCoordinateMap (V := V))
+          (realTokenCoordinateMap_injective (V := V))
+      exact (realTokenToPiLpLinear (V := V)).continuous_of_finiteDimensional }
+
+@[simp] theorem realTokenToPiLp_apply (ψ : RealTokenHilbertSpace (V := V)) :
+    realTokenToPiLp (V := V) ψ = tokenToPiLp ψ := rfl
 
 def coupledTokenContextRhs
     (tokenRhs : ℝ → CoupledTokenContextState (V := V) →
@@ -136,8 +181,27 @@ theorem tokenContext_tokenToPiLp_hasDerivAt
     (hx : HasDerivAt x (tokenContextRhs gen ctx response D t (x t)) t) :
     HasDerivAt (fun τ => realTokenToPiLp (V := V) ((x τ).1))
       (realTokenToPiLp (V := V) (realifiedTotalTokenGenerator gen (x t).1)) t := by
-  simpa [Function.comp_def, tokenContextRhs] using
-    (realTokenToPiLp (V := V)).hasFDerivAt.comp_hasDerivAt_of_eq t hx.fst rfl
+  have hx₁ : HasDerivAt (fun τ => (x τ).1)
+      (realifiedTotalTokenGenerator gen (x t).1) t := by
+    letI : Module ℝ (RealTokenHilbertSpace (V := V)) :=
+      realTokenHilbertModule (V := V)
+    letI : NormedSpace ℝ (RealTokenHilbertSpace (V := V)) :=
+      realTokenHilbertNormedSpace (V := V)
+    have hproj := @HasFDerivAt.fst ℝ _ ℝ _ _
+      (RealTokenHilbertSpace (V := V)) _ (realTokenHilbertNormedSpace (V := V))
+      (RealContextOperator (V := V)) _ _ t x
+      (ContinuousLinearMap.toSpanSingleton ℝ
+        (tokenContextRhs gen ctx response D t (x t))) hx.hasFDerivAt
+    simpa [Function.comp_def, tokenContextRhs, coupledTokenContextRhs] using
+      hproj.hasDerivAt
+  have hmap : HasFDerivAt (realTokenToPiLp (V := V))
+      (realTokenToPiLp (V := V)) ((x t).1) :=
+    (realTokenToPiLp (V := V)).hasFDerivAt
+  exact (@HasFDerivAt.comp_hasDerivAt ℝ _
+      (RealTokenHilbertSpace (V := V)) _ (realTokenHilbertNormedSpace (V := V))
+      (TokenPiLpSpace V) _ _ (fun τ => (x τ).1)
+      (realifiedTotalTokenGenerator gen (x t).1) t
+      (realTokenToPiLp (V := V)) (realTokenToPiLp (V := V)) hmap hx₁)
 
 theorem tokenContext_tokenToPiLp_equation
     (gen : TokenGenerator (V := V))
@@ -150,7 +214,17 @@ theorem tokenContext_tokenToPiLp_equation
       (transportTokenGeneratorReal gen
         (realTokenToPiLp (V := V) ((x t).1))) t := by
   have h := tokenContext_tokenToPiLp_hasDerivAt gen ctx response D hx
-  convert h using 1
+  have hgen (ψ : RealTokenHilbertSpace (V := V)) :
+      realTokenToPiLp (V := V) (realifiedTotalTokenGenerator gen ψ) =
+        transportTokenGeneratorReal gen (realTokenToPiLp (V := V) ψ) := by
+    let ψ₀ : TokenHilbertSpace V :=
+      RestrictScalars.addEquiv ℝ ℂ (TokenHilbertSpace V) ψ
+    change tokenToPiLp
+        (totalTokenGenerator gen
+          (tokenFromPiLp (tokenToPiLp ψ₀))) =
+      tokenToPiLp (totalTokenGenerator gen ψ₀)
+    rw [tokenFromPiLp_toPiLp]
+  simpa only [hgen] using h
 
 def tokenComponentPiLpTrajectory
     (gen : TokenGenerator (V := V))
@@ -262,7 +336,17 @@ theorem tokenContext_token_component_hasDerivAt
     (hx : HasDerivAt x (tokenContextRhs gen ctx response D t (x t)) t) :
     HasDerivAt (fun τ => (x τ).1)
       (realifiedTotalTokenGenerator gen (x t).1) t := by
-  simpa using hx.fst
+  letI : Module ℝ (RealTokenHilbertSpace (V := V)) :=
+    realTokenHilbertModule (V := V)
+  letI : NormedSpace ℝ (RealTokenHilbertSpace (V := V)) :=
+    realTokenHilbertNormedSpace (V := V)
+  have hproj := @HasFDerivAt.fst ℝ _ ℝ _ _
+    (RealTokenHilbertSpace (V := V)) _ (realTokenHilbertNormedSpace (V := V))
+    (RealContextOperator (V := V)) _ _ t x
+    (ContinuousLinearMap.toSpanSingleton ℝ
+      (tokenContextRhs gen ctx response D t (x t))) hx.hasFDerivAt
+  simpa [Function.comp_def, tokenContextRhs, coupledTokenContextRhs] using
+    hproj.hasDerivAt
 
 /-- The context component of a coupled trajectory satisfies its native
     context equation.  This is the product-projection counterpart of
@@ -277,7 +361,25 @@ theorem tokenContext_context_component_hasDerivAt
     (hx : HasDerivAt x (tokenContextRhs gen ctx response D t (x t)) t) :
     HasDerivAt (fun τ => (x τ).2)
       (realContextRhs ctx response D (x t).2 (x t).1) t := by
-  simpa using hx.snd
+  letI : Module ℝ (RealTokenHilbertSpace (V := V)) :=
+    realTokenHilbertModule (V := V)
+  letI : NormedSpace ℝ (RealTokenHilbertSpace (V := V)) :=
+    realTokenHilbertNormedSpace (V := V)
+  have hproj := @HasFDerivAt.snd ℝ _ ℝ _ _
+    (RealTokenHilbertSpace (V := V)) _ (realTokenHilbertNormedSpace (V := V))
+    (RealContextOperator (V := V)) _ _ t x
+    (ContinuousLinearMap.toSpanSingleton ℝ
+      (tokenContextRhs gen ctx response D t (x t))) hx.hasFDerivAt
+  have hproj' := hproj.hasDerivAt
+  simp only [ContinuousLinearMap.comp_apply,
+    ContinuousLinearMap.toSpanSingleton_apply] at hproj'
+  have h_eval : ContinuousLinearMap.snd ℝ
+      (RealTokenHilbertSpace (V := V)) (RealContextOperator (V := V))
+      ((1 : ℝ) • tokenContextRhs gen ctx response D t (x t)) =
+      realContextRhs ctx response D (x t).2 (x t).1 := by
+    simp [ContinuousLinearMap.snd, LinearMap.snd,
+      tokenContextRhs, coupledTokenContextRhs]
+  exact hproj'.congr_deriv h_eval
 
 theorem exists_coupledTokenContext_state_on_Icc
     [CompleteSpace (RealTokenHilbertSpace (V := V))]
@@ -339,8 +441,8 @@ theorem exists_constant_coupledTokenContext_state
           (Set.Icc tmin tmax) t := by
   refine ⟨fun _ => x₀, rfl, ?_⟩
   intro t ht
-  simpa [heq t] using
-    (hasDerivAt_const (x := t) (c := x₀)).hasDerivWithinAt
+  rw [heq t]
+  exact (hasDerivAt_const (x := t) (c := x₀)).hasDerivWithinAt
 
 theorem exists_constant_tokenContext_equilibrium
     (gen : TokenGenerator (V := V))

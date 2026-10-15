@@ -1045,10 +1045,10 @@ theorem full_smooth_legendre_constructive_theorem
       ∧ Cleg.fenchel_legendre_contact
       ∧ Cleg.entropy_gradient_eq_beta
       ∧ Cleg.entropyHessian Q = Cleg.inverseFisherHessian Q := by
-  dsimp [ofLogPartitionGramFisher, ofLogPartitionAndFisherCovariance]
+  dsimp [ofLogPartitionGramFisher, ofLogPartitionAndFisherCovariance, first_variation_eq_moment]
   exact
     ⟨rfl,
-      by simpa using thermodynamicMoment_eq_gradient.symm,
+      thermodynamicMoment_eq_gradient.symm,
       rfl,
       rfl,
       fisher_symmetric β X Y,
@@ -1163,10 +1163,10 @@ theorem full_smooth_legendre_gram_constructive_theorem
       ∧ Cgram.entropy_gradient_eq_beta
       ∧ Cgram.entropyHessian Q = Cgram.inverseFisherHessian Q := by
   dsimp [ofSmoothLegendreGramReadout, ofSmoothLegendreReadout,
-    ofLogPartitionAndFisherCovariance]
+    ofLogPartitionAndFisherCovariance, first_variation_eq_moment]
   exact
     ⟨rfl,
-      by simpa using thermodynamicMoment_eq_gradient.symm,
+      thermodynamicMoment_eq_gradient.symm,
       rfl,
       rfl,
       fisherHessian_eq_gram X Y,
@@ -1856,17 +1856,17 @@ theorem full_smooth_legendre_square_dissipation_constructive_theorem
       ∧ C.hessian.entropyHessian Q =
         C.hessian.inverseFisherHessian Q
       ∧ 0 ≤ C.metriplectic.totalEntropyRate x := by
+  let C' :=
+    ofSmoothLegendreSquareDissipation
+      moment geometricTemperature reversibleVectorField metricVectorField
+      entropy dissipationAmplitude partitionFunction thermodynamicMoment
+      nonzeroTangent souriauEntropy legendre thermodynamicMoment_eq_gradient
+      thermodynamicPairing fenchel_legendre_contact fisher_symmetric
+      fisher_nonnegative fisher_positive_of_nonzero
   exact
     InfiniteCoadjointOrbitHessianMetriplecticContext.full_infinite_dimensional_coadjoint_orbit_hessian_metriplectic_theorem
-      (C :=
-        ofSmoothLegendreSquareDissipation
-          moment geometricTemperature reversibleVectorField metricVectorField
-          entropy dissipationAmplitude partitionFunction thermodynamicMoment
-          nonzeroTangent souriauEntropy legendre thermodynamicMoment_eq_gradient
-          thermodynamicPairing fenchel_legendre_contact fisher_symmetric
-          fisher_nonnegative fisher_positive_of_nonzero)
-      β Q X Y x
-      (by simpa using thermodynamicMoment_eq_gradient.symm)
+      (C := C') β Q X Y x
+      C'.hessian.first_variation_eq_moment_proof
       rfl
       fenchel_legendre_contact
       rfl
@@ -1935,10 +1935,10 @@ theorem full_smooth_legendre_gram_square_dissipation_constructive_theorem
     InfiniteCoadjointOrbitHessianContext.ofSmoothLegendreReadout,
     InfiniteCoadjointOrbitHessianContext.ofLogPartitionAndFisherCovariance,
     InfiniteCoadjointOrbitMetriplecticContext.ofMomentImageSquareDissipation,
-    InfiniteCoadjointOrbitMetriplecticContext.ofMomentImage]
+    InfiniteCoadjointOrbitHessianContext.first_variation_eq_moment]
   exact
     ⟨rfl,
-      by simpa using thermodynamicMoment_eq_gradient.symm,
+      thermodynamicMoment_eq_gradient.symm,
       rfl,
       rfl,
       fisherHessian_eq_gram X Y,
@@ -2027,10 +2027,10 @@ theorem full_smooth_legendre_gram_square_dissipation_inverse_laws_theorem
     InfiniteCoadjointOrbitHessianContext.ofSmoothLegendreReadout,
     InfiniteCoadjointOrbitHessianContext.ofLogPartitionAndFisherCovariance,
     InfiniteCoadjointOrbitMetriplecticContext.ofMomentImageSquareDissipation,
-    InfiniteCoadjointOrbitMetriplecticContext.ofMomentImage]
+    InfiniteCoadjointOrbitHessianContext.first_variation_eq_moment]
   exact
     ⟨rfl,
-      by simpa using thermodynamicMoment_eq_gradient.symm,
+      thermodynamicMoment_eq_gradient.symm,
       rfl,
       rfl,
       fisherHessian_eq_gram X Y,

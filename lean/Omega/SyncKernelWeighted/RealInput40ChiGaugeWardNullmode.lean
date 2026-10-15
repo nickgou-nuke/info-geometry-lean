@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Analysis.Calculus.Deriv.Add
 import Mathlib.Tactic
 import Omega.SyncKernelWeighted.RealInput40ChiReparam4d
 
@@ -72,7 +73,18 @@ theorem paper_chi_gauge_ward_nullmode : chi_gauge_ward_nullmode_statement := by
         simp [chi_gauge_ward_nullmode_scalar]
         ring
       rw [hfun]
-      simp
+      -- Derivative of x + c is 1
+      have h₁ : deriv (fun x : ℝ => x + (thetaMinus + theta2)) thetaE = 1 := by
+        -- Use the fact that derivative of x is 1 and derivative of constant is 0
+        have h₂ : HasDerivAt (fun x : ℝ => (x : ℝ) + (thetaMinus + theta2)) 1 thetaE := by
+          -- Derivative of x + c is 1
+          have h₃ : HasDerivAt (fun x : ℝ => (x : ℝ)) 1 thetaE := hasDerivAt_id thetaE
+          have h₄ : HasDerivAt (fun x : ℝ => (thetaMinus + theta2 : ℝ)) 0 thetaE := hasDerivAt_const thetaE (thetaMinus + theta2)
+          have h₅ : HasDerivAt (fun x : ℝ => (x : ℝ) + (thetaMinus + theta2)) (1 + 0) thetaE := HasDerivAt.add h₃ h₄
+          convert h₅ using 1 <;> ring
+        have h₆ : deriv (fun x : ℝ => x + (thetaMinus + theta2)) thetaE = 1 := h₂.deriv
+        exact h₆
+      rw [h₁]
     have htheta2 :
         deriv (fun x => chi_gauge_ward_nullmode_scalar thetaE thetaMinus x thetaChi) theta2 = 1 := by
       have hfun :
@@ -82,7 +94,16 @@ theorem paper_chi_gauge_ward_nullmode : chi_gauge_ward_nullmode_statement := by
         simp [chi_gauge_ward_nullmode_scalar]
         ring
       rw [hfun]
-      simp
+      -- Derivative of x + c is 1
+      have h₁ : deriv (fun x : ℝ => x + (thetaE + thetaMinus)) theta2 = 1 := by
+        have h₂ : HasDerivAt (fun x : ℝ => (x : ℝ) + (thetaE + thetaMinus)) 1 theta2 := by
+          have h₃ : HasDerivAt (fun x : ℝ => (x : ℝ)) 1 theta2 := hasDerivAt_id theta2
+          have h₄ : HasDerivAt (fun x : ℝ => (thetaE + thetaMinus : ℝ)) 0 theta2 := hasDerivAt_const theta2 (thetaE + thetaMinus)
+          have h₅ : HasDerivAt (fun x : ℝ => (x : ℝ) + (thetaE + thetaMinus)) (1 + 0) theta2 := HasDerivAt.add h₃ h₄
+          convert h₅ using 1 <;> ring
+        have h₆ : deriv (fun x : ℝ => x + (thetaE + thetaMinus)) theta2 = 1 := h₂.deriv
+        exact h₆
+      rw [h₁]
     have hpath :
         (fun t => chi_gauge_ward_nullmode_null_path thetaE thetaMinus theta2 thetaChi t) =
           fun _ : ℝ => thetaE + thetaMinus + theta2 := by

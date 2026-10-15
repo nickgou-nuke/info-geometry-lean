@@ -54,8 +54,7 @@ Discharge a claim at compile-time.
 Because `s` is strictly constrained to `.proved`, callers can never supply a `.candidate`
 or `.validated` archetype to extract a theorem.
 -/
-@[inline]
-def discharge {Input : Type u} (arch : TypedArchetype Input .proved) (x : Input) : arch.claim x :=
+theorem discharge {Input : Type u} (arch : TypedArchetype Input .proved) (x : Input) : arch.claim x :=
   arch.evidence x
 
 /--
@@ -69,14 +68,6 @@ def promoteToProved {Input : Type u} {s : Status}
     phase    := arch.phase
     claim    := arch.claim
     evidence := pf }
-
-/-- Promote a candidate to validated stage (e.g., after empirical or countermodel checks). -/
-def promoteToValidated {Input : Type u}
-    (arch : TypedArchetype Input .candidate) : TypedArchetype Input .validated :=
-  { name     := arch.name
-    phase    := arch.phase
-    claim    := arch.claim
-    evidence := trivial }
 
 end TypedArchetype
 
@@ -256,9 +247,9 @@ elab "#search_typed_archetypes" : command => do
     let env ← getEnv
     let registered := getRegisteredArchetypes env
 
-    let mut provedCount := 0
-    let mut candidateCount := 0
-    let mut validatedCount := 0
+    let mut provedCount := (0 : Nat)
+    let mut candidateCount := (0 : Nat)
+    let mut validatedCount := (0 : Nat)
 
     let mut report := m!"--- Registered Typed Archetypes ({registered.size}) ---\n"
     for entry in registered do

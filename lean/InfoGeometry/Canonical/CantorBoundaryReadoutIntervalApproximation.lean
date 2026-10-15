@@ -42,7 +42,8 @@ theorem intervalReadout_approximation
       dist x (intervalReadout w) < ε := by
   obtain ⟨w, hw⟩ := exists_realBinaryReadout_close x.1 x.2 hε
   refine ⟨w, ?_⟩
-  simpa [intervalReadout, Real.dist_eq] using hw
+  change dist (x : ℝ) (realBinaryReadout w) < ε
+  simpa [Real.dist_eq] using hw
 
 theorem intervalReadout_mem_closure_range (x : UnitInterval) :
     x ∈ closure (Set.range intervalReadout) := by

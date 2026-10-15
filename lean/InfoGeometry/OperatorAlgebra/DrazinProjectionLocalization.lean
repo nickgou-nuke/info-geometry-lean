@@ -278,10 +278,10 @@ theorem toDrazinInverseData_inverse :
 end RelativeCoreNilpotentDecomposition
 
 /-- Simple residue factors of a semisimple quotient/block decomposition. -/
-structure DivisionResidueBlockPacket where
-  Block : Type*
-  DivisionCarrier : Block → Type*
-  residueProjection : Block → Type*
+structure DivisionResidueBlockPacket.{uBlock, uDivision, uProjection} where
+  Block : Type uBlock
+  DivisionCarrier : Block → Type uDivision
+  residueProjection : Block → Type uProjection
   carrier_divisionRing : ∀ b, DivisionRing (DivisionCarrier b)
 
 namespace DivisionResidueBlockPacket

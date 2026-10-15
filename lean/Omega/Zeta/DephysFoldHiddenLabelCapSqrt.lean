@@ -34,7 +34,8 @@ theorem paper_dephys_fold_hidden_label_cap_sqrt
   have hsqrt :=
     paper_dephys_fold_stinespring_sqrt_law k d hk hk'
       (by simpa [dephys_fold_hidden_label_cap_sqrt_stinespring_bound,
-        dephys_fold_hidden_label_cap_sqrt_hidden_label_cap] using hStine)
+        dephys_fold_hidden_label_cap_sqrt_hidden_label_cap,
+        dephys_fold_stinespring_sqrt_law_stinespring_bound] using hStine)
   have hclosed :
       dephys_fold_hidden_label_cap_sqrt_hidden_label_cap (2 * k) = Nat.fib (k + 2) := by
     simpa [dephys_fold_hidden_label_cap_sqrt_hidden_label_cap] using

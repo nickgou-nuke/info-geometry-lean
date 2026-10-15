@@ -280,7 +280,7 @@ theorem trace_laggedCoincidenceDirac_square (F : Matrix n n ℝ) :
   have htrace :
       (∑ i : n, (F * F.transpose) i i) =
         ∑ i : n, (F.transpose * F) i i := by
-    simpa only [Matrix.trace] using Matrix.trace_mul_comm F F.transpose
+    simpa only [Matrix.trace, Matrix.diag_apply] using Matrix.trace_mul_comm F F.transpose
   rw [htrace]
   ring
 

@@ -46,8 +46,9 @@ example : (1 / 2 : ℝ) * (1 - 1 / 2) = 1 / 4 :=
   (quadratic_balance_equality_iff (1 / 2)).mpr rfl
 
 example : (0 : ℝ) * (1 - 0) ≠ 1 / 4 := by
-  rw [quadratic_balance_equality_iff]
-  norm_num
+  intro h
+  have := (quadratic_balance_equality_iff 0).mp h
+  norm_num at this
 
 example {Algebra : Type*} [Ring Algebra] [StarRing Algebra]
     (first second operator : Algebra)

@@ -27,7 +27,7 @@ This module formalizes the grand physical-mathematical dictionary unifying:
    - Infinite Fisher-Rao boundary distance: $\operatorname{Dist}_{\text{Fisher}}(\theta, \partial\Omega) \to +\infty$.
 
 3. **Split-Octonion Witt Planes & Nambu-Gorkov Micro-Generators**:
-   - Zorn reduced norm as Bogoliubov quasiparticle dispersion:
+   - Zorn reduced norm as the Bogoliubov quasiparticle energy-norm identity:
      $$\operatorname{zornNorm}(X_{\text{NG}}) = - (\xi^2 + \|\vec{\Delta}\|^2) = - E_{\text{quasiparticle}}^2$$
    - Pauli exclusion from Witt ladder nilpotency: $(u_a^+)^2 = 0$, $(u_a^-)^2 = 0$.
    - Koszul-Vinberg barrier $\Phi(X_{\text{NG}}) = -\log(E_{\text{quasiparticle}}^2) \to +\infty$ as $E \to 0$.
@@ -204,7 +204,7 @@ Unifies:
 4. **Algebraic Squared Barrier Inequality**: $(D\mathcal{I}_F)^2 \le 4 \mathcal{I}_F^3$.
 5. **Dikin Ellipsoid Confinement**: $\Delta \rho^2 < \mathcal{I}_F^{-1}$.
 6. **Bregman Hard-Core Saturation**: $e^{-x} - 1 + x \ge 0$ with unique minimum at equilibrium.
-7. **Nambu-Gorkov Bogoliubov Mass-Shell**: $\operatorname{zornNorm}(X_{\text{NG}}) = - E_{\text{quasiparticle}}^2$.
+7. **Nambu-Gorkov Bogoliubov Energy-Norm Identity**: $\operatorname{zornNorm}(X_{\text{NG}}) = - E_{\text{quasiparticle}}^2$ for the energy defined from Nambu-Gorkov parameters; no relativistic four-momentum shell is asserted.
 8. **Relativistic Speed Bounds**: $c_s < c$ and $v_F < c$ (Causal containment).
 -/
 theorem grand_quantum_cramer_rao_nuclear_barrier_synthesis

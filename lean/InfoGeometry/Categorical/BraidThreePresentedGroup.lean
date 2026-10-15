@@ -25,10 +25,10 @@ def sigmaTwo : BraidGroup3 := PresentedGroup.of Generator.sigmaTwo
 
 theorem artin_relation :
     sigmaOne * sigmaTwo * sigmaOne = sigmaTwo * sigmaOne * sigmaTwo := by
-  apply eq_of_mul_inv_eq_one
-  simpa [sigmaOne, sigmaTwo, artinRelator] using
-    (PresentedGroup.one_of_mem (rels := relations) (x := artinRelator)
-      (by simp [relations]))
+  have h := PresentedGroup.one_of_mem (rels := relations) (x := artinRelator) (by simp [relations])
+  dsimp [artinRelator] at h
+  simp only [map_mul, map_inv] at h
+  exact eq_of_mul_inv_eq_one h
 
 def garsideDelta : BraidGroup3 := sigmaOne * sigmaTwo * sigmaOne
 

@@ -69,7 +69,9 @@ theorem fibonacciBraidPacket_restricted_artin :
           fibonacciBraidNPotentData_laws (0 : Fin 2) *
         nPotentRestrictedAction fibonacciBraidNPotentData
           fibonacciBraidNPotentData_laws (1 : Fin 2) := by
-  simpa using horizon_restricted_braid_artin
+  change horizonRestrictedR * horizonRestrictedB * horizonRestrictedR =
+    horizonRestrictedB * horizonRestrictedR * horizonRestrictedB
+  exact horizon_restricted_braid_artin
 
 theorem fibonacciBraidPacket_restricted_noncommutative :
     nPotentRestrictedAction fibonacciBraidNPotentData
@@ -80,6 +82,8 @@ theorem fibonacciBraidPacket_restricted_noncommutative :
           fibonacciBraidNPotentData_laws (1 : Fin 2) *
         nPotentRestrictedAction fibonacciBraidNPotentData
           fibonacciBraidNPotentData_laws (0 : Fin 2) := by
-  simpa using horizon_restricted_braid_noncommutative
+  change horizonRestrictedR * horizonRestrictedB ≠
+    horizonRestrictedB * horizonRestrictedR
+  exact horizon_restricted_braid_noncommutative
 
 end InfoGeometry.Physics.Algebra.FibonacciNPotentInvariantPacketBridge

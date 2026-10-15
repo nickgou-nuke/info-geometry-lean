@@ -1,10 +1,13 @@
 import InfoGeometry.Exceptional.FreudenthalSymplecticContactGrading
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Algebra.Lie.OfAssociative
 
 noncomputable section
 namespace InfoGeometry.Exceptional.Freudenthal
 
 variable {J : Type*} [AddCommGroup J] [Module ℝ J]
+
+attribute [local instance 100] LieRing.ofAssociativeRing LieAlgebra.ofAssociativeAlgebra
 
 abbrev SymplecticContactSheet :=
   SymplecticContactModule (J := J) × SymplecticContactModule (J := J)

@@ -203,8 +203,7 @@ theorem fundamentalGroupWordMap_append_heq
       (wordContinuousMap_append Q ρ hQ n hcont u v) p
   have hcomp := fundamentalGroup_map_comp fu fv p
   unfold fundamentalGroupWordMap
-  exact hmaps.trans (heq_of_eq (by
-    simpa only [fu, fv, wordContinuousMap_apply] using hcomp))
+  exact hmaps.trans (heq_of_eq hcomp)
 
 theorem wordContinuousMap_braid_rewrite
     [TopologicalSpace V]

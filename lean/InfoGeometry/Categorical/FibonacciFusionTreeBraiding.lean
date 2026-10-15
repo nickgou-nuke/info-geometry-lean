@@ -30,16 +30,12 @@ theorem rMatrix_mul_inv (q : Units ℂ) :
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [fibonacciRMatrix, Matrix.mul_apply, Fin.sum_univ_two]
-  · exact inv_mul_cancel₀ (pow_ne_zero 4 (Units.ne_zero q))
-  · exact mul_inv_cancel₀ (pow_ne_zero 3 (Units.ne_zero q))
 
 theorem rMatrix_inv_mul (q : Units ℂ) :
     fibonacciRMatrix q⁻¹ * fibonacciRMatrix q = 1 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [fibonacciRMatrix, Matrix.mul_apply, Fin.sum_univ_two]
-  · exact mul_inv_cancel₀ (pow_ne_zero 4 (Units.ne_zero q))
-  · exact inv_mul_cancel₀ (pow_ne_zero 3 (Units.ne_zero q))
 
 noncomputable def rLinearEquiv (q : Units ℂ) :
     FusionTree ≃ₗ[ℂ] FusionTree := by

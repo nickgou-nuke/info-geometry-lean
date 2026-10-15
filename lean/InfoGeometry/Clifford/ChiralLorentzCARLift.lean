@@ -212,7 +212,6 @@ theorem numberOperator_commutator_annihilation
       rw [hannihilation, mul_zero]
     _ = -annihilation := by
       have h := congrArg (fun z : Op => z * annihilation) hcar
-      dsimp at h
       rw [add_mul, mul_assoc, hannihilation, mul_zero, zero_add, one_mul] at h
       have hneg := congrArg (fun z : Op => -z) h
       calc
@@ -236,7 +235,6 @@ theorem numberOperator_commutator_creation
           simp
     _ = creation := by
       have h := congrArg (fun z : Op => creation * z) hcar
-      dsimp at h
       rw [mul_add] at h
       rw [← mul_assoc, hcreation, zero_mul, zero_add, mul_one] at h
       calc

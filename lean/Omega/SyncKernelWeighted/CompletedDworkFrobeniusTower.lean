@@ -64,7 +64,8 @@ theorem paper_completed_dwork_frobenius_tower
   have hquot :
       completedPrimitive (p ^ (n + 1)) =
         (completedChebyshev (p ^ (n + 1)) - completedChebyshev (p ^ n)) / (p ^ (n + 1)) := by
-    simpa [CompletedPrimitivePrimePowerDifferenceQuotientData.primePowerDifferenceQuotient] using
+    simpa [CompletedPrimitivePrimePowerDifferenceQuotientData.primePowerDifferenceQuotient,
+      completed_dwork_frobenius_tower_prime_power_data] using
       paper_completed_primitive_prime_power_difference_quotient
         completed_dwork_frobenius_tower_prime_power_data
   have hprime_frobenius :

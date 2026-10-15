@@ -27,7 +27,7 @@ read through this generic colimit interface.
 
 namespace InfoGeometry.Canonical.InductiveColimitBridge
 
-universe u v
+universe u v w x
 
 /-- A concrete sequential directed system with a cocone into a proposed limit. -/
 structure SequentialColimitSystem where
@@ -61,7 +61,8 @@ theorem toLimit_bondSeq (n m : ℕ) (x : S.Stage n) :
       calc
         S.toLimit (n + (m + 1)) (S.bondSeq n (m + 1) x)
             = S.toLimit (n + m) (S.bondSeq n m x) := by
-                simpa [Nat.add_assoc] using S.cone_comm (n + m) (S.bondSeq n m x)
+                rw [bondSeq_succ]
+                convert S.cone_comm (n + m) (S.bondSeq n m x) using 1
         _ = S.toLimit n x := ih
 
 /-- A finite-stage property compatible with the transition maps. -/
@@ -76,7 +77,8 @@ theorem compatibleProperty_bondSeq
   induction m with
   | zero => exact hx
   | succ m ih =>
-      simpa [Nat.add_assoc] using hP (n + m) (S.bondSeq n m x) ih
+      rw [bondSeq_succ]
+      convert hP (n + m) (S.bondSeq n m x) ih using 1
 
 /--
 A limit property readout for a stage property.  This is the proof-level map
@@ -148,9 +150,9 @@ to an infinite-generator colimit.  `LeftStage` may model the `q`-CCR side and
 `RightStage` the Cuntz--Toeplitz side; this file requires only transition maps
 and compatible finite equivalences.
 -/
-structure CompatibleFiniteEquivalenceTower where
-  Left : SequentialColimitSystem
-  Right : SequentialColimitSystem
+structure CompatibleFiniteEquivalenceTower.{u₁, v₁, w₁, x₁} where
+  Left : SequentialColimitSystem.{u₁, v₁}
+  Right : SequentialColimitSystem.{w₁, x₁}
   equivAt : ∀ n : ℕ, Left.Stage n → Right.Stage n → Prop
   equiv_compat : ∀ (n : ℕ) (x : Left.Stage n) (y : Right.Stage n),
     equivAt n x y → equivAt (n + 1) (Left.bond n x) (Right.bond n y)
@@ -170,8 +172,9 @@ theorem finite_equiv_transports
   induction m with
   | zero => exact hxy
   | succ m ih =>
-      simpa [Nat.add_assoc] using
-        T.equiv_compat (n + m) (T.Left.bondSeq n m x) (T.Right.bondSeq n m y) ih
+      rw [SequentialColimitSystem.bondSeq_succ, SequentialColimitSystem.bondSeq_succ]
+      convert T.equiv_compat (n + m) (T.Left.bondSeq n m x)
+        (T.Right.bondSeq n m y) ih using 1
 
 /-- A finite compatible equivalence has an infinite-colimit readout. -/
 theorem finite_equiv_to_colimit

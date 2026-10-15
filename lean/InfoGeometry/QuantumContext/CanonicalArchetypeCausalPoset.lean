@@ -2,38 +2,27 @@ import Mathlib.Data.Finset.Order
 import Mathlib.Tactic
 
 /-!
-# The Canonical Causal Poset of Physical and Mathematical Archetypes
+# A Finite Poset of Repository Archetype Labels
 
-This module formalizes the stream of consciousness of the repository into an exact,
-mathematically rigorous, and cycle-free **Causal Poset** (`PartialOrder CanonicalArchetype`)
-in native Mathlib Lean 4.
+This module equips a finite collection of repository archetype labels with the
+partial order induced by inclusion of their explicitly assigned prerequisite
+index sets. The results concern this encoding only; they do not establish
+physical causation or prove the analytic, geometric, or dynamical claims
+suggested by the labels.
 
-## The Causal Chain of Archetypes
-1. **Colimit Loom** (`colimitLoom`):
-   Filtered direct inductive colimits $\varinjlim A_n$ replace the unphysical continuum $\infty$.
-2. **Bivector Rotor** (`bivectorRotor`):
-   Real oriented spin-plane bivectors $J^2 = -1$ replace the clumsy scalar imaginary unit $i \in \mathbb{C}$.
-3. **Zorn Chiral Bilateral** (`zornChiralBilateral`):
-   Non-associative split-octonion Zorn matrices couple history ($p^+$) and destiny ($p^-$) into a bilateral connection.
-4. **Four-Vector Soldering** (`fourVectorSoldering`):
-   The electrodynamic 4-vector potential $A_\mu$ is lifted to an operator-valued matrix in $M_2(\operatorname{End}(W))$.
-5. **Softmax Obstruction** (`softmaxObstruction`):
-   Formal no-go theorem proving that standard positive-diagonal softmax attention fails the Peirce commutant swap.
-6. **Chiral Bipolar Routing** (`chiralBipolarRouting`):
-   The off-diagonal commutator routing $C(A) = A - \operatorname{diag}(A)$ overcoming the softmax obstruction.
-7. **Dirac Commutant Gate** (`diracCommutantGate`):
-   Verification of the Peirce sector swap $P C = C (1 - P)$ and chiral anticommutation $G C + C G = 0$.
-8. **Hamiltonian Mass Shell** (`hamiltonianMassShell`):
-   Strict algebraic deduction of the relativistic Dirac dispersion $(p G + C)^2 = (p^2 + m^2) \cdot 1$.
-9. **Contact Variational Flow** (`contactVariationalFlow`):
-   Vanishing duality gap between the Fisher information capacity and the critical line Casimir eigenvalue.
+The constructors are labels and `causalPrerequisites` is the data defining
+their order. No physical model is defined here. In particular,
+`hamiltonianMassShell` is only a label: this module contains no momentum,
+metric, Hamiltonian, or dispersion relation. The CAR/Nambu labels record the
+dependency structure of the separately proved operator identities; they do
+not identify that branch with the scalar mass-shell label.
 
 Zero debt, 0 sorry, 0 admit, kernel-verified in Lean 4.
 -/
 
 namespace InfoGeometry.QuantumContext.CanonicalArchetypeCausalPoset
 
-/-- The nine canonical archetypes of the physical and mathematical architecture. -/
+/-- Twenty-seven labels used by this finite prerequisite-index encoding. -/
 inductive CanonicalArchetype
   | colimitLoom
   | bivectorRotor
@@ -44,9 +33,44 @@ inductive CanonicalArchetype
   | diracCommutantGate
   | hamiltonianMassShell
   | contactVariationalFlow
-  deriving DecidableEq, Fintype
+  | carNilpotentBase
+  | carPeirceInvolution
+  | chevalleySpinorDyad
+  | multiModeCAR
+  | kreinHyperbolicRotation
+  | carNambuFourthRoot
+  | nambuComplexStructure
+  | nambuSpinorHolonomy
+  | scalarBdGMassModel
+  | logCFTJordanShear
+  | logCFTSymplecticMaster
+  | noncommutativeOperatorRing
+  | noncommutativeBdGBlocks
+  | noncommutativeZornMultiplication
+  | zornMatrixSliceEmbedding
+  | zornLeibnizDerivation
+  | zornPairingActionFormula
+  | zornBdGCurvatureReadout
+  deriving DecidableEq
 
-/-- Causal prerequisite indices encoding the exact flow of mathematical dependence. -/
+instance : Fintype CanonicalArchetype where
+  elems := { .colimitLoom, .bivectorRotor, .zornChiralBilateral,
+    .fourVectorSoldering, .softmaxObstruction, .chiralBipolarRouting,
+    .diracCommutantGate, .hamiltonianMassShell, .contactVariationalFlow,
+    .carNilpotentBase, .carPeirceInvolution, .chevalleySpinorDyad,
+    .multiModeCAR, .kreinHyperbolicRotation, .carNambuFourthRoot,
+    .nambuComplexStructure, .nambuSpinorHolonomy, .scalarBdGMassModel,
+    .logCFTJordanShear, .logCFTSymplecticMaster,
+    .noncommutativeOperatorRing, .noncommutativeBdGBlocks,
+    .noncommutativeZornMultiplication, .zornMatrixSliceEmbedding,
+    .zornLeibnizDerivation, .zornPairingActionFormula,
+    .zornBdGCurvatureReadout }
+  complete := by
+    intro x
+    cases x <;> simp
+
+/-- Explicit prerequisite-index sets; inclusion, not physical causation, defines
+the order used by this module. -/
 def causalPrerequisites : CanonicalArchetype → Finset ℕ
   | .colimitLoom            => {0}
   | .bivectorRotor          => {0, 1}
@@ -57,6 +81,24 @@ def causalPrerequisites : CanonicalArchetype → Finset ℕ
   | .diracCommutantGate     => {0, 1, 4, 5, 6}
   | .hamiltonianMassShell   => {0, 1, 2, 3, 4, 5, 6, 7}
   | .contactVariationalFlow => {0, 1, 2, 3, 4, 5, 6, 7, 8}
+  | .carNilpotentBase => {0, 9}
+  | .carPeirceInvolution => {0, 9, 10}
+  | .chevalleySpinorDyad => {0, 9, 10, 11}
+  | .multiModeCAR => {0, 9, 10, 11, 12}
+  | .kreinHyperbolicRotation => {0, 9, 10, 11, 12, 13}
+  | .carNambuFourthRoot => {0, 9, 10, 11, 14}
+  | .nambuComplexStructure => {0, 9, 10, 11, 14, 15}
+  | .nambuSpinorHolonomy => {0, 9, 10, 11, 14, 15, 16}
+  | .scalarBdGMassModel => {0, 9, 10, 11, 12, 13, 17}
+  | .logCFTJordanShear => {0, 9, 10, 11, 25}
+  | .logCFTSymplecticMaster => {0, 9, 10, 11, 14, 15, 16, 25, 26}
+  | .noncommutativeOperatorRing => {0, 18}
+  | .noncommutativeBdGBlocks => {0, 18, 19}
+  | .noncommutativeZornMultiplication => {0, 18, 20}
+  | .zornMatrixSliceEmbedding => {0, 18, 20, 21}
+  | .zornLeibnizDerivation => {0, 18, 20, 22}
+  | .zornPairingActionFormula => {0, 18, 20, 23}
+  | .zornBdGCurvatureReadout => {0, 18, 19, 20, 21, 24}
 
 /-- **Theorem 1 (Causal Prerequisites Faithfulness)**:
     The assignment of causal prerequisites is strictly injective. -/
@@ -73,46 +115,155 @@ instance : PartialOrder CanonicalArchetype :=
 instance : DecidableRel (α := CanonicalArchetype) (· ≤ ·) :=
   fun left right => inferInstanceAs (Decidable (causalPrerequisites left ⊆ causalPrerequisites right))
 
-/-- **Theorem 2 (The Colimit Loom Precedes All Downstream Archetypes)**:
-    Every physical and mathematical archetype causally depends on the colimit bedrock. -/
+/-- The `colimitLoom` index set is included in every encoded prerequisite set. -/
 theorem colimit_precedes_all (a : CanonicalArchetype) :
     CanonicalArchetype.colimitLoom ≤ a := by
   cases a <;> decide
 
-/-- **Theorem 3 (Bivector Rotor Precedes Zorn Operator Potentials)**:
-    Decomplexification into geometric rotors strictly precedes the split-octonion Zorn connection. -/
+/-- Encoded prerequisite inclusion from the bivector label to the Zorn label. -/
 theorem bivector_precedes_zorn :
     CanonicalArchetype.bivectorRotor ≤ CanonicalArchetype.zornChiralBilateral := by
   decide
 
-/-- **Theorem 4 (Zorn Chiral Bilateral Precedes 4-Vector Soldering)**:
-    The bilateral history/destiny Zorn connection precedes electrodynamic causal soldering. -/
+/-- Encoded prerequisite inclusion from the Zorn label to the soldering label. -/
 theorem zorn_precedes_soldering :
     CanonicalArchetype.zornChiralBilateral ≤ CanonicalArchetype.fourVectorSoldering := by
   decide
 
-/-- **Theorem 5 (Softmax Obstruction Strictly Precedes Chiral Bipolar Routing)**:
-    The discovery of the no-go obstruction causally generates the off-diagonal routing repair. -/
+/-- Encoded prerequisite inclusion between the softmax and routing labels. -/
 theorem obstruction_precedes_chiral_repair :
     CanonicalArchetype.softmaxObstruction ≤ CanonicalArchetype.chiralBipolarRouting := by
   decide
 
-/-- **Theorem 6 (Chiral Routing Enables the Dirac Commutant Gate)**:
-    The bipolar off-diagonal routing causally enables the Peirce swap and anticommutation. -/
+/-- Encoded prerequisite inclusion from the routing label to the commutant label. -/
 theorem chiral_repair_enables_dirac_gate :
     CanonicalArchetype.chiralBipolarRouting ≤ CanonicalArchetype.diracCommutantGate := by
   decide
 
-/-- **Theorem 7 (Dirac Commutant Gate Enables the Hamiltonian Mass Shell)**:
-    Anticommutation causally yields the relativistic energy-momentum dispersion. -/
+/-- Encoded prerequisite inclusion only; no mass-shell theorem is proved here. -/
 theorem dirac_gate_enables_mass_shell :
     CanonicalArchetype.diracCommutantGate ≤ CanonicalArchetype.hamiltonianMassShell := by
   decide
 
-/-- **Theorem 8 (Hamiltonian Mass Shell Enables the Contact Variational Flow)**:
-    The mass shell completes the bridge to the vanishing Fisher-Casimir duality gap. -/
+/-- Encoded prerequisite inclusion only; no variational-flow consequence is proved here. -/
 theorem mass_shell_enables_contact_flow :
     CanonicalArchetype.hamiltonianMassShell ≤ CanonicalArchetype.contactVariationalFlow := by
+  decide
+
+/-! The following order facts integrate the CAR/BdG synthesis and its Nambu
+holonomy consequences into this shared prerequisite poset. -/
+
+theorem car_base_precedes_peirce :
+    CanonicalArchetype.carNilpotentBase ≤ CanonicalArchetype.carPeirceInvolution := by
+  decide
+
+theorem car_peirce_precedes_chevalley_dyad :
+    CanonicalArchetype.carPeirceInvolution ≤ CanonicalArchetype.chevalleySpinorDyad := by
+  decide
+
+theorem chevalley_dyad_precedes_multimode_car :
+    CanonicalArchetype.chevalleySpinorDyad ≤ CanonicalArchetype.multiModeCAR := by
+  decide
+
+theorem multimode_car_precedes_krein_rotation :
+    CanonicalArchetype.multiModeCAR ≤ CanonicalArchetype.kreinHyperbolicRotation := by
+  decide
+
+theorem chevalley_dyad_precedes_car_nambu :
+    CanonicalArchetype.chevalleySpinorDyad ≤ CanonicalArchetype.carNambuFourthRoot := by
+  decide
+
+theorem car_nambu_precedes_complex_structure :
+    CanonicalArchetype.carNambuFourthRoot ≤ CanonicalArchetype.nambuComplexStructure := by
+  decide
+
+theorem complex_structure_precedes_spinor_holonomy :
+    CanonicalArchetype.nambuComplexStructure ≤ CanonicalArchetype.nambuSpinorHolonomy := by
+  decide
+
+theorem krein_rotation_precedes_scalar_mass_model :
+    CanonicalArchetype.kreinHyperbolicRotation ≤ CanonicalArchetype.scalarBdGMassModel := by
+  decide
+
+/-- The multi-mode/Krein path and the CAR/Nambu path are distinct branches in
+the encoded prerequisite order; neither label is silently identified with the other. -/
+theorem krein_and_car_nambu_branches_incomparable :
+    ¬ CanonicalArchetype.kreinHyperbolicRotation ≤ CanonicalArchetype.carNambuFourthRoot ∧
+      ¬ CanonicalArchetype.carNambuFourthRoot ≤ CanonicalArchetype.kreinHyperbolicRotation := by
+  decide
+
+/-! ### LogCFT Jordan shear and symplectic master stages -/
+
+theorem chevalley_dyad_precedes_logcft_shear :
+    CanonicalArchetype.chevalleySpinorDyad ≤ CanonicalArchetype.logCFTJordanShear := by
+  decide
+
+theorem spinor_holonomy_precedes_logcft_master :
+    CanonicalArchetype.nambuSpinorHolonomy ≤ CanonicalArchetype.logCFTSymplecticMaster := by
+  decide
+
+theorem logcft_shear_precedes_logcft_master :
+    CanonicalArchetype.logCFTJordanShear ≤ CanonicalArchetype.logCFTSymplecticMaster := by
+  decide
+
+theorem logcft_shear_and_spinor_holonomy_incomparable :
+    ¬ CanonicalArchetype.logCFTJordanShear ≤ CanonicalArchetype.nambuSpinorHolonomy ∧
+      ¬ CanonicalArchetype.nambuSpinorHolonomy ≤ CanonicalArchetype.logCFTJordanShear := by
+  decide
+
+theorem logcft_shear_and_zorn_incomparable :
+    ¬ CanonicalArchetype.logCFTJordanShear ≤ CanonicalArchetype.zornBdGCurvatureReadout ∧
+      ¬ CanonicalArchetype.zornBdGCurvatureReadout ≤ CanonicalArchetype.logCFTJordanShear := by
+  decide
+
+/-! The noncommutative Zorn lane is added as a separate branch. Its curvature
+readout depends on both the matrix BdG calculation and the proved matrix-to-Zorn
+multiplicative embedding. The displayed pairing formula is kept separate from
+the Leibniz-derivation structure because the current owner proves no map
+identifying those two objects. -/
+
+theorem noncommutative_ring_precedes_bdg_blocks :
+    CanonicalArchetype.noncommutativeOperatorRing ≤
+      CanonicalArchetype.noncommutativeBdGBlocks := by
+  decide
+
+theorem noncommutative_ring_precedes_zorn_multiplication :
+    CanonicalArchetype.noncommutativeOperatorRing ≤
+      CanonicalArchetype.noncommutativeZornMultiplication := by
+  decide
+
+theorem zorn_multiplication_precedes_matrix_slice :
+    CanonicalArchetype.noncommutativeZornMultiplication ≤
+      CanonicalArchetype.zornMatrixSliceEmbedding := by
+  decide
+
+theorem zorn_multiplication_precedes_leibniz_derivation :
+    CanonicalArchetype.noncommutativeZornMultiplication ≤
+      CanonicalArchetype.zornLeibnizDerivation := by
+  decide
+
+theorem zorn_multiplication_precedes_pairing_formula :
+    CanonicalArchetype.noncommutativeZornMultiplication ≤
+      CanonicalArchetype.zornPairingActionFormula := by
+  decide
+
+theorem bdg_blocks_precede_zorn_curvature_readout :
+    CanonicalArchetype.noncommutativeBdGBlocks ≤
+      CanonicalArchetype.zornBdGCurvatureReadout := by
+  decide
+
+theorem zorn_matrix_slice_precedes_curvature_readout :
+    CanonicalArchetype.zornMatrixSliceEmbedding ≤
+      CanonicalArchetype.zornBdGCurvatureReadout := by
+  decide
+
+/-- The owner has a Leibniz derivation structure and a separate pairing-action
+formula, but no theorem identifying the latter as an instance of the former. -/
+theorem zorn_derivation_and_pairing_formula_incomparable :
+    ¬ CanonicalArchetype.zornLeibnizDerivation ≤
+        CanonicalArchetype.zornPairingActionFormula ∧
+      ¬ CanonicalArchetype.zornPairingActionFormula ≤
+        CanonicalArchetype.zornLeibnizDerivation := by
   decide
 
 /-- **Theorem 9 (Incomparability of Independent Branches)**:

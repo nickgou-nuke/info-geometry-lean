@@ -37,6 +37,7 @@ local notation "Kop" => InfoGeometry.Krein.clockAxis (E := E)
 
 noncomputable local instance : NormedRing EndH := inferInstance
 noncomputable local instance : NormedAlgebra ℝ EndH := inferInstance
+noncomputable local instance : LieRing EndH := LieRing.ofAssociativeRing
 
 /-- The phase-axis Cartan involution on endomorphisms: `θ(A) = -KAK`. -/
 @[rep_depth transport]
@@ -248,18 +249,17 @@ theorem gaugeClock_commutator_mem_phaseAxis_even
     (hMod : EndH) :
     ⁅modularGeneratorGaugePart (E := E) hMod, Kop⁆
       ∈ (phaseAxisSymmetricLieAlgebra (E := E)).evenLieSubalgebra := by
-  have hg :
-      modularGeneratorGaugePart (E := E) hMod
-        ∈ (phaseAxisSymmetricLieAlgebra (E := E)).𝔨 := by
-    simpa [InfoGeometry.Core.SymmetricLieAlgebra.𝔨] using
-      modularGeneratorGaugePart_mem_phaseAxis_even (E := E) hMod
-  have hk :
-      Kop ∈ (phaseAxisSymmetricLieAlgebra (E := E)).𝔨 := by
-    simpa [InfoGeometry.Core.SymmetricLieAlgebra.𝔨] using
-      clockAxis_mem_phaseAxis_even (E := E)
-  simpa [InfoGeometry.Core.SymmetricLieAlgebra.𝔨] using
-    InfoGeometry.Core.SymmetricLieAlgebra.bracket_k_k
-      (S := phaseAxisSymmetricLieAlgebra (E := E)) hg hk
+  let S := phaseAxisSymmetricLieAlgebra (E := E)
+  have hg : modularGeneratorGaugePart (E := E) hMod ∈ S.evenSubmodule := by
+    change modularGeneratorGaugePart (E := E) hMod ∈ S.evenLieSubalgebra
+    exact modularGeneratorGaugePart_mem_phaseAxis_even (E := E) hMod
+  have hk : Kop ∈ S.evenSubmodule := by
+    change Kop ∈ S.evenLieSubalgebra
+    exact clockAxis_mem_phaseAxis_even (E := E)
+  have hbr := InfoGeometry.Core.SymmetricLieAlgebra.bracket_k_k
+    (S := S) hg hk
+  change ⁅modularGeneratorGaugePart (E := E) hMod, Kop⁆ ∈ S.evenSubmodule at hbr
+  exact hbr
 
 omit [CompleteSpace E] in
 /--

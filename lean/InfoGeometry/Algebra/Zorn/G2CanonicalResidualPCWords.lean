@@ -47,12 +47,12 @@ theorem residualToPCExponent_at (w : G2WeylElement)
 
 noncomputable def canonicalResidualPCWord (w : G2WeylElement)
     (e : CanonicalResidualExponent w) : SplitOctF2Aut :=
-  pcWord (residualToPCExponent w e)
+  G2TwoSylowSubgroup.pcWord (residualToPCExponent w e)
 
 theorem canonicalResidualPCWord_mem_pcSubgroup (w : G2WeylElement)
     (e : CanonicalResidualExponent w) :
     canonicalResidualPCWord w e ∈ pcSubgroup := by
-  exact pcWord_mem_pcSubgroup _
+  exact G2TwoSylowSubgroup.pcWord_mem_sylow _
 
 theorem canonicalResidualPCWord_injective (w : G2WeylElement) :
     Function.Injective (canonicalResidualPCWord w) := by
@@ -60,8 +60,7 @@ theorem canonicalResidualPCWord_injective (w : G2WeylElement) :
   apply funext
   intro α
   have hExp : residualToPCExponent w e₁ = residualToPCExponent w e₂ := by
-    apply pcWord_injective_concrete
-    simpa [canonicalResidualPCWord] using h
+    exact G2TwoSylowSubgroup.pcWord_injective h
   have hpc := congrFun hExp (rootPCAlignment α.1)
   rw [residualToPCExponent_at, residualToPCExponent_at] at hpc
   exact hpc

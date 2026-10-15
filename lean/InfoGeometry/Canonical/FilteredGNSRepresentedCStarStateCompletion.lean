@@ -18,7 +18,8 @@ noncomputable section
 
 namespace CStarStateColimit.Native.FilteredGNSRepresentedCStarStateCompletion
 
-set_option synthInstance.maxHeartbeats 80000
+set_option synthInstance.maxHeartbeats 500000
+set_option maxHeartbeats 1000000
 set_option linter.unusedSectionVars false
 
 open CStarStateColimit.Native
@@ -81,12 +82,17 @@ def representedPreGNSToGNS
 theorem representedPreGNSToGNS_denseRange
     (ρ : State (representedCStarClosure Stage sys ω)) :
     DenseRange (representedPreGNSToGNS (Stage := Stage) (sys := sys) (ω := ω) ρ) :=
-  UniformSpace.Completion.denseRange_coe
+  by
+    change DenseRange (UniformSpace.Completion.coe')
+    exact UniformSpace.Completion.denseRange_coe
 
 theorem representedPreGNSToGNS_isometry
     (ρ : State (representedCStarClosure Stage sys ω)) :
-    Isometry (representedPreGNSToGNS (Stage := Stage) (sys := sys) (ω := ω) ρ) :=
-  UniformSpace.Completion.coe_isometry
+    Isometry (representedPreGNSToGNS (Stage := Stage) (sys := sys) (ω := ω) ρ) := by
+  intro x y
+  change edist (UniformSpace.Completion.coe' x)
+    (UniformSpace.Completion.coe' y) = edist x y
+  exact UniformSpace.Completion.edist_eq x y
 
 theorem representedGNS_complete
     (ρ : State (representedCStarClosure Stage sys ω)) :
@@ -108,14 +114,14 @@ def algebraicColimitToRepresentedGNS
     AlgebraicStarDirectLimit Stage sys →⋆ₐ[ℂ]
       (representedGNS (Stage := Stage) (sys := sys) (ω := ω) ρ →L[ℂ]
         representedGNS (Stage := Stage) (sys := sys) (ω := ω) ρ) :=
-  (representedGNSStarAlgHom (Stage := Stage) (sys := sys) (ω := ω) ρ).comp
+  (representedGNSStarAlgHom Stage sys ω ρ).comp
     (algebraicColimitToRepresentedClosure Stage sys ω)
 
 @[simp] theorem algebraicColimitToRepresentedGNS_apply
     (ρ : State (representedCStarClosure Stage sys ω))
     (a : AlgebraicStarDirectLimit Stage sys) :
-    algebraicColimitToRepresentedGNS (Stage := Stage) (sys := sys) (ω := ω) ρ a =
-      representedGNSStarAlgHom (Stage := Stage) (sys := sys) (ω := ω) ρ
+    algebraicColimitToRepresentedGNS Stage sys ω ρ a =
+      representedGNSStarAlgHom Stage sys ω ρ
         (algebraicColimitToRepresentedClosure Stage sys ω a) :=
   rfl
 

@@ -179,8 +179,9 @@ theorem actFiveGradedTransported_one
     actFiveGradedTransported D rep 1 u = u := by
   apply FiveGradedCarrier.ext
   · rfl
-  · simpa using congrArg (fun f : FreudenthalCharge J ≃ₗ[ℝ] FreudenthalCharge J => f u.minus1)
-      (rep.act_one)
+  · change (rep.act 1) u.minus1 = u.minus1
+    exact congrArg (fun f : FreudenthalCharge J ≃ₗ[ℝ] FreudenthalCharge J => f u.minus1)
+      rep.act_one
   · apply Subtype.ext
     change (rep.act 1).toLinearMap.comp
         ((u.zero_symp : Module.End ℝ (FreudenthalCharge J)).comp
@@ -188,8 +189,9 @@ theorem actFiveGradedTransported_one
     rw [rep.act_one]
     rfl
   · rfl
-  · simpa using congrArg (fun f : FreudenthalCharge J ≃ₗ[ℝ] FreudenthalCharge J => f u.plus1)
-      (rep.act_one)
+  · change (rep.act 1) u.plus1 = u.plus1
+    exact congrArg (fun f : FreudenthalCharge J ≃ₗ[ℝ] FreudenthalCharge J => f u.plus1)
+      rep.act_one
   · rfl
 
 theorem actFiveGradedTransported_mul

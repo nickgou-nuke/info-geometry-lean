@@ -314,8 +314,7 @@ theorem typedGaugeTransformedPotential_fieldStrength
   rw [map_add, O.d₀_value]
   have hz := O.d₁_d₀_zero gauge
   rw [O.d₁_value] at hz
-  rw [← O.d₀_value gauge]
-  simpa [LinearMap.comp_apply] using hz
+  simpa [fieldStrength, O.d₀_value] using hz
 
 theorem typed_sourced_equation
     (D : FormDifferentialLaplacianData (R := R) (V := V))

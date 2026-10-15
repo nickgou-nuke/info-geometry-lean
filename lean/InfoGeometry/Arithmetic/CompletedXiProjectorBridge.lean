@@ -101,11 +101,28 @@ abbrev CompletedXiAnchor :=
 /--
 A theorem-safe completed-ξ projector packet.
 
-`packet` is the existing completed-zeta Massieu shell; `anchor` is the native
-fixed-locus subtype above.
+`packet` supplies a potential and gradient for the existing completed-zeta
+Bregman expression; `anchor` is the native fixed-locus subtype above. No
+convexity or analytic property of the supplied potential is assumed here.
 -/
+structure CompletedZetaMassieuPacket where
+  potential : ℂ → ℂ
+  gradient : ℂ → ℂ
+
+namespace CompletedZetaMassieuPacket
+
+/-- The Bregman expression associated to the supplied potential and gradient. -/
+def divergence (P : CompletedZetaMassieuPacket) (s₁ s₂ : ℂ) : ℂ :=
+  completedZetaBregman P.potential P.gradient s₁ s₂
+
+@[simp] theorem divergence_self (P : CompletedZetaMassieuPacket) (s : ℂ) :
+    P.divergence s s = 0 :=
+  completedZetaBregman_self_eq_zero P.potential P.gradient s
+
+end CompletedZetaMassieuPacket
+
 structure CompletedXiProjectorPacket where
-  packet : CompletedZetaMassieuPacket
+  packet : InfoGeometry.Arithmetic.CompletedXiProjectorBridge.CompletedZetaMassieuPacket
   anchor : CompletedXiAnchor
 
 namespace CompletedXiProjectorPacket

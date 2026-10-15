@@ -1,7 +1,7 @@
 import Mathlib.Analysis.InnerProductSpace.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Tactic
 
@@ -69,7 +69,7 @@ theorem gibbsObservable_ofLp_apply (D : CartanSouriauDatum State) (i : Fin 2)
   classical
   change (Matrix.toEuclideanLin
       (Matrix.diagonal (fun x => (D.momentMap x i : ℂ))) v).ofLp x = _
-  rw [Matrix.ofLp_toEuclideanLin_apply]
+  rw [Matrix.ofLp_toLpLin, Matrix.toLin'_apply]
   rw [Matrix.mulVec_diagonal]
 
 
@@ -137,7 +137,7 @@ theorem centeredGibbsObservable_ofLp_apply
   change (Matrix.toEuclideanLin
       (Matrix.diagonal (fun x =>
         (D.momentMap x i - souriauChargeMean D beta i : ℂ))) v).ofLp x = _
-  rw [Matrix.ofLp_toEuclideanLin_apply]
+  rw [Matrix.ofLp_toLpLin, Matrix.toLin'_apply]
   rw [Matrix.mulVec_diagonal]
 
 theorem centeredGibbsObservable_expectation_zero

@@ -12,9 +12,9 @@ def N : Matrix (Fin 2) (Fin 2) ℂ := ![![0, 1], ![0, 0]]
 
 /-- Proof that N is strictly nilpotent (N^2 = 0) -/
 theorem n_is_nilpotent : N * N = 0 := by
-  dsimp [N]
   ext i j
-  fin_cases i <;> fin_cases j <;> norm_num [Matrix.mul_apply, Fin.sum_univ_two]
+  change ∑ k : Fin 2, N i k * N k j = 0
+  fin_cases i <;> fin_cases j <;> simp [N]
 
 /-- 
 A matrix `X` is the Drazin inverse of `A` with index `k` if it satisfies
@@ -99,9 +99,10 @@ and enforces irrotational phase flow in Souriau's Lie group thermodynamics.
 -/
 theorem weyl_anomaly_emergence :
     P1 - P2 = ![![1, 0], ![0, -1]] := by
-  dsimp [P1, P2, N, N_MP]
   ext i j
-  fin_cases i <;> fin_cases j <;> norm_num [Matrix.mul_apply, Fin.sum_univ_two]
+  change (∑ k : Fin 2, N i k * N_MP k j) -
+    (∑ k : Fin 2, N_MP i k * N k j) = (![![1, 0], ![0, -1]] : Matrix (Fin 2) (Fin 2) ℂ) i j
+  fin_cases i <;> fin_cases j <;> simp [N, N_MP]
 
 end VarlamovAnomaly
 

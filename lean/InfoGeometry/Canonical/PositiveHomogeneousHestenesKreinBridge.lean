@@ -120,9 +120,11 @@ theorem state_bondIterate (F : FilteredBarrierReadout) :
     F.state (n + m) (F.bondIterate n m x) = F.state n x
   | n, 0, x => rfl
   | n, m + 1, x => by
-      simpa [bondIterate, Nat.add_assoc] using
-        (F.state_bond (n + m) (bondIterate F n m x)).trans
-          (state_bondIterate F n m x)
+      change F.state (n + (m + 1))
+        (F.bond (n + m) (bondIterate F n m x)) = F.state n x
+      have h := (F.state_bond (n + m) (bondIterate F n m x)).trans
+        (state_bondIterate F n m x)
+      exact h
 
 theorem barrier_bondIterate (F : FilteredBarrierReadout) (n m : ℕ) (x : F.Stage n) :
     barrier (F.state (n + m) (bondIterate F n m x)) =

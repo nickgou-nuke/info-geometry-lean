@@ -18,6 +18,12 @@ open VirasoroProject
 
 noncomputable section
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
+local instance linearEndLieRing (𝕜 V : Type*) [Semiring 𝕜]
+    [AddCommGroup V] [Module 𝕜 V] : LieRing (V →ₗ[𝕜] V) :=
+  LieRing.ofAssociativeRing
+
 variable {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
 variable [AddCommGroup V] [Module 𝕜 V]
 

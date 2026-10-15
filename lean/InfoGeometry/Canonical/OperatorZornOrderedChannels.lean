@@ -118,6 +118,5 @@ theorem sourceProduct_not_left_alternative :
   norm_num [sourceProduct, sourceWitness, sourceProbe, sigmaPlus,
     operatorZornCoordinates, symmetricDot, operatorDot, NCZornElement.zornDot,
     commutatorCross, commutatorCrossTwice, epsilon3, Fin.sum_univ_succ] at hc
-  simp at hc
 
 end InfoGeometry.Canonical.OperatorZornOrderedChannels

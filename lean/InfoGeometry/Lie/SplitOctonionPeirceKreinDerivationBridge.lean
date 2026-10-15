@@ -36,21 +36,11 @@ abbrev Chiral4 := InfoGeometry.Algebra.FiniteSpin.Vec4R
 
 /-- Embedding of the chiral subspace $V_+$ into $\mathbb{R}^{4,4}$. -/
 def embedPlus (v : Chiral4) : Coord :=
-  fun i => match i with
-  | 0 => v 0
-  | 1 => v 1
-  | 2 => v 2
-  | 3 => v 3
-  | _ => 0
+  ![v 0, v 1, v 2, v 3, 0, 0, 0, 0]
 
 /-- Embedding of the chiral subspace $V_-$ into $\mathbb{R}^{4,4}$. -/
 def embedMinus (w : Chiral4) : Coord :=
-  fun i => match i with
-  | 4 => w 0
-  | 5 => w 1
-  | 6 => w 2
-  | 7 => w 3
-  | _ => 0
+  ![0, 0, 0, 0, w 0, w 1, w 2, w 3]
 
 /-- Split-octonion quadratic form $N(X) = x_0 x_4 - (x_1 x_5 + x_2 x_6 + x_3 x_7)$. -/
 def kreinNorm (x : Coord) : ℝ :=
@@ -108,29 +98,25 @@ def leftMulUMinus : Coord →ₗ[ℝ] Coord where
 theorem leftMulUPlus_on_VPlus (v : Chiral4) :
     leftMulUPlus (embedPlus v) = embedPlus v := by
   ext i
-  fin_cases i <;>
-  · dsimp [leftMulUPlus, embedPlus]
+  fin_cases i <;> rfl
 
 /-- 🏆 THEOREM 1B: $L_{u_+}$ annihilates the opposite chiral subspace $V_-$. -/
 theorem leftMulUPlus_on_VMinus (w : Chiral4) :
     leftMulUPlus (embedMinus w) = 0 := by
   ext i
-  fin_cases i <;>
-  · dsimp [leftMulUPlus, embedMinus]
+  fin_cases i <;> rfl
 
 /-- 🏆 THEOREM 1C: $L_{u_-}$ annihilates the chiral subspace $V_+$. -/
 theorem leftMulUMinus_on_VPlus (v : Chiral4) :
     leftMulUMinus (embedPlus v) = 0 := by
   ext i
-  fin_cases i <;>
-  · dsimp [leftMulUMinus, embedPlus]
+  fin_cases i <;> rfl
 
 /-- 🏆 THEOREM 1D: $L_{u_-}$ is identity on the opposite chiral subspace $V_-$. -/
 theorem leftMulUMinus_on_VMinus (w : Chiral4) :
     leftMulUMinus (embedMinus w) = embedMinus w := by
   ext i
-  fin_cases i <;>
-  · dsimp [leftMulUMinus, embedMinus]
+  fin_cases i <;> rfl
 
 /-- 🏆 THEOREM 1E (Chiral Projector Completeness): $L_{u_+} + L_{u_-} = \operatorname{id}$. -/
 theorem leftMul_chiral_completeness (X : Coord) :

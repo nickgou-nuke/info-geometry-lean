@@ -69,9 +69,8 @@ theorem iterated_zeroMode_image_ne_zero
     C.ι (n + m)
       ((C.toFilteredPhaseCone).bondIterate n m x) ≠ 0 := by
   have hcompat :
-      C.ι (n + m) ((C.toFilteredPhaseCone).bondIterate n m x) = C.ι n x := by
-    simpa [HestenesKreinCone.toFilteredPhaseCone] using
-      (C.toFilteredPhaseCone).ι_bondIterate_apply n m x
+      C.ι (n + m) ((C.toFilteredPhaseCone).bondIterate n m x) = C.ι n x :=
+    (C.toFilteredPhaseCone).ι_bondIterate_apply n m x
   rw [hcompat]
   intro hzero
   apply hx_ne
@@ -93,9 +92,8 @@ theorem iterated_globalKernel_survival
   constructor
   · exact iterated_zeroMode_image_ne_zero (C := C) hι hx_ne
   · have hcompat :
-        C.ι (n + m) ((C.toFilteredPhaseCone).bondIterate n m x) = C.ι n x := by
-      simpa [HestenesKreinCone.toFilteredPhaseCone] using
-        (C.toFilteredPhaseCone).ι_bondIterate_apply n m x
+        C.ι (n + m) ((C.toFilteredPhaseCone).bondIterate n m x) = C.ι n x :=
+      (C.toFilteredPhaseCone).ι_bondIterate_apply n m x
     rw [hcompat]
     exact F.globalOperator_zero_of_stage_zero Tlimit hT hx_zero
 

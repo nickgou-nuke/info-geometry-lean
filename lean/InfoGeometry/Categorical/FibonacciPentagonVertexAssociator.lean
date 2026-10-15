@@ -43,7 +43,6 @@ theorem vertexAssociator_comp_inverse
   ext x j
   simp [vertexAssociator, LinearMap.comp_apply,
     Matrix.toLin'_mul, fiveChannelAssociatorMatrix_sq τ s hs hτ]
-  rw [Equiv.symm_apply_apply]
 
 theorem vertexAssociator_inverse_comp
     (v w : PentagonVertex) (τ s : ℂ)
@@ -53,7 +52,6 @@ theorem vertexAssociator_inverse_comp
   ext x j
   simp [vertexAssociator, LinearMap.comp_apply,
     Matrix.toLin'_mul, fiveChannelAssociatorMatrix_sq τ s hs hτ]
-  rw [Equiv.symm_apply_apply]
 
 /-! The same transport written directly on the explicit unit/tau block
 function spaces.  This is the formal multiplicity carrier, rather than the
@@ -83,7 +81,6 @@ theorem formalVertexAssociator_comp_inverse
   ext x j
   simp [formalVertexAssociator, LinearMap.comp_apply,
     fiveChannelAssociatorMatrix_sq τ s hs hτ]
-  rw [Equiv.symm_apply_apply]
 
 theorem formalVertexAssociator_inverse_comp
     (v w : PentagonVertex) (τ s : ℂ)
@@ -93,7 +90,6 @@ theorem formalVertexAssociator_inverse_comp
   ext x j
   simp [formalVertexAssociator, LinearMap.comp_apply,
     fiveChannelAssociatorMatrix_sq τ s hs hτ]
-  rw [Equiv.symm_apply_apply]
 
 theorem formalVertexAssociator_ne_identity
     (v : PentagonVertex) (τ s : ℂ)

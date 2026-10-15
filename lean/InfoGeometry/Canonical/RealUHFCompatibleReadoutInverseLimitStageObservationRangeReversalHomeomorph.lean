@@ -70,7 +70,19 @@ def reversalTransportedRangePointInv
   have hreadoutInv :
       orbitClosureStageObservationTopCatHom ρ n X y0 = z.1 := by
     have h := hreadout (R.involution ρ) n X y
-    simpa [y0, R.involution.involutive ρ] using h.trans hy
+    have h' : stageObservationTopCatHom n X
+        (R.orbitClosureHomeomorph (R.involution ρ) y).1 =
+        stageObservationTopCatHom n X y.1 := by
+      change orbitClosureStageObservationTopCatHom (R.involution (R.involution ρ))
+        n X (R.orbitClosureHomeomorph (R.involution ρ) y) =
+        orbitClosureStageObservationTopCatHom (R.involution ρ) n X y
+      exact h
+    have hy' : stageObservationTopCatHom n X y.1 = z.1 := by
+      change orbitClosureStageObservationTopCatHom (R.involution ρ) n X y = z.1
+      exact hy
+    change stageObservationTopCatHom n X y0.1 = z.1
+    rw [show y0.1 = (R.orbitClosureHomeomorph (R.involution ρ) y).1 by rfl]
+    exact h'.trans hy'
   exact ⟨z.1, ⟨y0, hreadoutInv⟩⟩
 
 noncomputable def stageObservationRangeReversalHomeomorph

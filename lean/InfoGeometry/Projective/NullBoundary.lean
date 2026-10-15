@@ -56,6 +56,19 @@ structure NullRep (D : ProjectiveNullBoundaryDatum K R T) where
   null : D.IsNull Z
   nonzero : Z ≠ D.zero
 
+namespace NullRep
+
+variable {D : ProjectiveNullBoundaryDatum K R T}
+
+/-- Nonzero-null representatives are equal when their underlying vectors agree. -/
+theorem ext_Z {X Y : NullRep D} (h : X.Z = Y.Z) : X = Y := by
+  cases X
+  cases Y
+  cases h
+  rfl
+
+end NullRep
+
 variable (D : ProjectiveNullBoundaryDatum K R T)
 
 /-- Unit scaling preserves the nonzero null cone. -/
@@ -125,6 +138,9 @@ def mapBoundary (f : BoundaryHom D E) : ProjectiveNullBoundary D → ProjectiveN
     rcases hXY with ⟨u, hXY⟩
     refine ⟨u, ?_⟩
     exact f.map_scale u X.Z ▸ congrArg f.toFun hXY)
+
+@[simp] theorem mapBoundary_nullMk (f : BoundaryHom D E) (Z : NullRep D) :
+    f.mapBoundary (nullMk D Z) = nullMk E (f.mapNullRep Z) := rfl
 
 end BoundaryHom
 

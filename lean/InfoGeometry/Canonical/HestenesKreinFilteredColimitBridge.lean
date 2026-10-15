@@ -70,8 +70,12 @@ theorem KColimit_sq (D : Datum (F := F)) :
     have hstage := congrArg (fun η : F ⟶ F => η.app j) D.K_sq
     simpa [KColimit, ModuleCat.comp_apply] using
       congrArg (fun f => (colimit.ι F j).hom f) (congrArg (fun f => f a) hstage)
-  simpa [KColimit, Module.End.mul_apply, LinearMap.neg_apply] using
-    congrArg ModuleCat.Hom.hom hcat
+  have hhom := congrArg ModuleCat.Hom.hom hcat
+  rw [ModuleCat.hom_comp] at hhom
+  ext x
+  have hx := congrArg (fun f : ↑(colimit F) →ₗ[ℝ] ↑(colimit F) => f x) hhom
+  simpa [KColimit, Module.End.mul_eq_comp, LinearMap.comp_apply,
+    ModuleCat.hom_neg, ModuleCat.hom_id, LinearMap.neg_apply] using hx
 
 theorem etaColimit_sq (D : Datum (F := F)) :
     etaColimit D * etaColimit D = (1 : ColimitEnd F) := by
@@ -87,8 +91,12 @@ theorem etaColimit_sq (D : Datum (F := F)) :
     have hstage := congrArg (fun η : F ⟶ F => η.app j) D.eta_sq
     simpa [etaColimit, ModuleCat.comp_apply] using
       congrArg (fun f => (colimit.ι F j).hom f) (congrArg (fun f => f a) hstage)
-  simpa [etaColimit, Module.End.mul_apply] using
-    congrArg ModuleCat.Hom.hom hcat
+  have hhom := congrArg ModuleCat.Hom.hom hcat
+  rw [ModuleCat.hom_comp] at hhom
+  ext x
+  have hx := congrArg (fun f : ↑(colimit F) →ₗ[ℝ] ↑(colimit F) => f x) hhom
+  simpa [etaColimit, Module.End.mul_eq_comp, LinearMap.comp_apply,
+    ModuleCat.hom_id] using hx
 
 theorem KColimit_etaColimit_anticomm (D : Datum (F := F)) :
     KColimit D * etaColimit D =
@@ -109,8 +117,12 @@ theorem KColimit_etaColimit_anticomm (D : Datum (F := F)) :
     have hstage := congrArg (fun η : F ⟶ F => η.app j) hbase
     simpa [KColimit, etaColimit, ModuleCat.comp_apply] using
       congrArg (fun f => (colimit.ι F j).hom f) (congrArg (fun f => f a) hstage)
-  simpa [KColimit, etaColimit, Module.End.mul_apply, LinearMap.neg_apply] using
-    congrArg ModuleCat.Hom.hom hcat
+  have hhom := congrArg ModuleCat.Hom.hom hcat
+  rw [ModuleCat.hom_comp] at hhom
+  ext x
+  have hx := congrArg (fun f : ↑(colimit F) →ₗ[ℝ] ↑(colimit F) => f x) hhom
+  simpa [KColimit, etaColimit, Module.End.mul_eq_comp, LinearMap.comp_apply,
+    ModuleCat.hom_neg, ModuleCat.hom_comp, LinearMap.neg_apply] using hx
 
 def colimitDatum (D : Datum (F := F)) :
     InfoGeometry.Canonical.HestenesKreinSplitQuaternionBridge.Datum

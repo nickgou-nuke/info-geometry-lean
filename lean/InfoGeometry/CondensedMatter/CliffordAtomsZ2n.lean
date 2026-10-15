@@ -316,7 +316,7 @@ structure CliffordAtomsZ2nOwnerTarget
     (Op State : Type*) [Ring Op] where
   fourAtomChirality : FourAtomChirality Op
   hypercubeAction : CliffordHypercubeAction (Fin 4) Op State
-  anomalyDatum : LocalToGlobalAnomalyDatum.{0}
+  anomalyDatum : LocalToGlobalAnomalyDatum
 
 namespace CliffordAtomsZ2nOwnerTarget
 
@@ -337,7 +337,7 @@ def hypercubeAction_of
 /-- The owner target exposes the local-to-global anomaly datum directly. -/
 def anomalyDatum_of
     (T : CliffordAtomsZ2nOwnerTarget Op State) :
-    LocalToGlobalAnomalyDatum.{0} :=
+    LocalToGlobalAnomalyDatum :=
   T.anomalyDatum
 
 end CliffordAtomsZ2nOwnerTarget

@@ -61,7 +61,9 @@ theorem BoundaryKernelFlag.incidence_zero_first
     (F : BoundaryKernelFlag) :
     F.toBoundaryIncidenceFlag.Z.1 = 0 := by
   rw [F.toBoundaryIncidenceFlag.hInc]
-  simp [incidenceLinearMap, omegaLinearMap, F.hker]
+  change Complex.I • Matrix.mulVec (pauliMatrix F.v) F.π = 0
+  rw [F.hker]
+  simp
 
 theorem BoundaryKernelFlag.incidence_special_form
     (F : BoundaryKernelFlag) :

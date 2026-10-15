@@ -176,7 +176,7 @@ theorem tau_eq_cayleyToFugacity (s : ℂ) :
 
 theorem tau_one_sub_eq_inv (s : ℂ) :
     tau (1 - s) = (tau s)⁻¹ := by
-  simpa [tau] using
+  simpa [tau, projectiveRatio, homogeneousCoord, cayleyToFugacity] using
     (cayleyToFugacity_one_sub_eq_inv s)
 
 /-- Diagonal determinant-one split-Cartan flow on homogeneous coordinates. -/

@@ -1,35 +1,26 @@
 import Mathlib.Algebra.Ring.Basic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Finsupp.Basic
 import Mathlib.LinearAlgebra.Basis.Defs
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
-import Mathlib.NumberTheory.LSeries.RiemannZeta
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Tactic
 
 /-!
-# Finite Arnold, Exterior-Generator, and Plücker Identities
+# Finite Arnold and Plücker Identities
 
 This module contains separate algebraic statements, with their carriers kept
 distinct:
 
-1. A rational identity for three real variables and a three-term expression
-   on generators of a free exterior algebra.  The latter is defined here, but
-   no BCFW recursion theorem is asserted for it.
-2. The values named `SPlus` and `SMinus` are both the same diagonal edge
-   generator `omegaGen R i i`; their square-zero proofs are instances of
-   `ExteriorAlgebra.ι_sq_zero`.  They are not distinct chiral channels,
-   Cuntz generators, or a Klein-boundary factorization.
-3. The stated syzygy, antisymmetry, and diagonal-zero identities for explicit
+1. A rational identity for three real variables and a separately defined
+   three-term exterior-algebra expression.  The latter is not asserted to
+   vanish and no BCFW recursion theorem is asserted here.
+2. The stated syzygy, antisymmetry, and diagonal-zero identities for explicit
    minors of a `2 × n` real matrix.
-4. `bostConnesPartition` is, by definition, the complex Riemann-zeta function.
-   This declaration is only a zeta readout; it does not construct a Bost–Connes
-   algebra, a KMS state, a trace, or a partition-function theorem.
 
-The aggregate packet below records selected algebraic propositions for an
-existing dependent interface.  Its existence does not identify these separate
-facts as a physical synthesis; replacing that packet requires coordinated
-repair of its capstone consumer.
+These carriers remain separate: the rational identity is not a BCFW recursion,
+the exterior-generator relation is not a chiral/Cuntz relation, and the
+Plücker identities are not a Minkowski mass-shell theorem.  Exterior generator
+nilpotence is available directly as `ExteriorAlgebra.ι_sq_zero` in Mathlib.
 -/
 
 noncomputable section
@@ -45,7 +36,11 @@ namespace InfoGeometry.Canonical.AmplituhedronBostConnesSynthesis
 def arnoldCocycle (w12 w23 w31 : ℝ) : ℝ :=
   w12 * w23 + w23 * w31 + w31 * w12
 
-/-- Logarithmic differential 1-form $\omega_{ij} = \frac{1}{z_i - z_j}$. -/
+/- The scalar coefficient below is reminiscent of the coefficient of a
+logarithmic differential form, but this file defines only a real-valued
+function, not a differential form. -/
+/-- Scalar coefficient `1 / (z1 - z2)` used in the rational identity above;
+this function is not itself a differential form. -/
 def logForm (z1 z2 : ℝ) : ℝ :=
   1 / (z1 - z2)
 
@@ -63,7 +58,7 @@ theorem arnold_cohen_rational_syzygy (z1 z2 z3 : ℝ)
   field_simp [hz12, hz23, hz31]
   ring
 
-/-! ### Stratum 2: Free Edge Module & Exterior Algebra BCFW Generators -/
+/-! ### Stratum 2: Free Edge Module and Exterior Algebra -/
 
 variable {R : Type*} [CommRing R]
 variable {ι : Type*} [DecidableEq ι]
@@ -81,43 +76,13 @@ noncomputable def omegaGen (R : Type*) [CommRing R] (i j : ι) :
     ExteriorAlgebra R ((ι × ι) →₀ R) :=
   ExteriorAlgebra.ι R (edgeSingle R i j)
 
-/-- The BCFW mixed Arnold-Cohen 3-term relation element. -/
+/-- A mixed three-term expression in the exterior edge generators.  It is not
+asserted to vanish and is not a formalization of BCFW recursion. -/
 noncomputable def bcfwArnoldMixed (R : Type*) [CommRing R] (i j k : ι) :
     ExteriorAlgebra R ((ι × ι) →₀ R) :=
   omegaGen R i j * omegaGen R j k +
   omegaGen R j k * omegaGen R k i +
   omegaGen R k i * omegaGen R i j
-
-/-! ### Exterior-generator square-zero examples (not Cuntz or on-shell data) -/
-
-/-- A named copy of the diagonal exterior edge generator `omegaGen R i i`. -/
-noncomputable def SPlus (R : Type*) [CommRing R] (i : ι) :
-    ExteriorAlgebra R ((ι × ι) →₀ R) :=
-  omegaGen R i i
-
-/-- The second name denotes the same diagonal exterior edge generator as
-    `SPlus`; it is not an independent negative-chirality element. -/
-noncomputable def SMinus (R : Type*) [CommRing R] (i : ι) :
-    ExteriorAlgebra R ((ι × ι) →₀ R) :=
-  omegaGen R i i
-
-/--
-The square of `SPlus` vanishes because it is an injected exterior-algebra
-generator.  This does not state an on-shell or Cuntz relation.
--/
-theorem SPlus_sq {R : Type*} [CommRing R] {ι : Type*} (i : ι) :
-    SPlus R i * SPlus R i = 0 := by
-  dsimp [SPlus, omegaGen]
-  exact ExteriorAlgebra.ι_sq_zero (edgeSingle R i i)
-
-/--
-The same exterior-generator square-zero fact holds for `SMinus`, which is
-definitionally the same element as `SPlus`.
--/
-theorem SMinus_sq {R : Type*} [CommRing R] {ι : Type*} (i : ι) :
-    SMinus R i * SMinus R i = 0 := by
-  dsimp [SMinus, omegaGen]
-  exact ExteriorAlgebra.ι_sq_zero (edgeSingle R i i)
 
 /-! ### Stratum 4: Plücker Coordinates & Grassmannian Syzygies on Gr(2, n) -/
 
@@ -147,63 +112,5 @@ theorem plucker_syzygy {n : ℕ} (C : Matrix (Fin 2) (Fin n) ℝ) (a b c d : Fin
     pluckerMinor C a d * pluckerMinor C b c = 0 := by
   dsimp [pluckerMinor]
   ring
-
-/-! ### Stratum 5: All-Loop Integrand as Bost-Connes KMS Partition Function -/
-
-/--
-The complex zeta readout named `bostConnesPartition`.  No thermal trace or KMS
-interpretation is part of this definition.
--/
-noncomputable def bostConnesPartition (β : ℂ) : ℂ :=
-  riemannZeta β
-
-/-! ### Stratum 6: Master Amplituhedron-Bost-Connes Synthesis Packet -/
-
-/--
-Aggregate carrier for the explicitly listed rational, exterior-generator,
-and minor identities.  It is a proof packet retained for the dependent
-capstone interface, not a theorem identifying BCFW recursion, Klein geometry,
-or a Bost–Connes KMS state.
--/
-structure AmplituhedronBostConnesSynthesisPacket where
-  -- Stratum 1: Rational Arnold-Cohen Syzygy
-  arnold_rat_syzygy :
-    ∀ (z1 z2 z3 : ℝ) (h12 : z1 ≠ z2) (h23 : z2 ≠ z3) (h31 : z3 ≠ z1),
-      arnoldCocycle (logForm z1 z2) (logForm z2 z3) (logForm z3 z1) = 0
-
-  -- Stratum 2: Square-zero elements in the stated associative carrier.
-  -- These relations alone are not Plücker, Klein, or mass-shell data.
-  splus_nilpotent :
-    ∀ {R : Type*} [CommRing R] {ι : Type*} (i : ι),
-      SPlus R i * SPlus R i = 0
-  sminus_nilpotent :
-    ∀ {R : Type*} [CommRing R] {ι : Type*} (i : ι),
-      SMinus R i * SMinus R i = 0
-
-  -- Stratum 3: Plücker Syzygies
-  plucker_syz :
-    ∀ {n : ℕ} (C : Matrix (Fin 2) (Fin n) ℝ) (a b c d : Fin n),
-      pluckerMinor C a b * pluckerMinor C c d -
-      pluckerMinor C a c * pluckerMinor C b d +
-      pluckerMinor C a d * pluckerMinor C b c = 0
-  plucker_anti :
-    ∀ {n : ℕ} (C : Matrix (Fin 2) (Fin n) ℝ) (i j : Fin n),
-      pluckerMinor C j i = - pluckerMinor C i j
-  plucker_diag :
-    ∀ {n : ℕ} (C : Matrix (Fin 2) (Fin n) ℝ) (i : Fin n),
-      pluckerMinor C i i = 0
-
-/--
-Constructor supplying the listed algebraic facts to the legacy dependent
-packet interface.  Its construction does not promote that interface to a
-physical or analytic synthesis theorem.
--/
-def makeAmplituhedronBostConnesSynthesisPacket : AmplituhedronBostConnesSynthesisPacket where
-  arnold_rat_syzygy := arnold_cohen_rational_syzygy
-  splus_nilpotent := SPlus_sq
-  sminus_nilpotent := SMinus_sq
-  plucker_syz := plucker_syzygy
-  plucker_anti := plucker_antisymm
-  plucker_diag := plucker_self_zero
 
 end InfoGeometry.Canonical.AmplituhedronBostConnesSynthesis

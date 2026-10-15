@@ -145,7 +145,8 @@ theorem dagChiralEnd_sq :
     dagChiralEnd * dagChiralEnd = 1 := by
   have h := congrArg Matrix.mulVecLin
     (chiralGamma_sq (n0 := 8) (n1 := 8) (n2 := 0))
-  simpa [dagChiralEnd, Matrix.mulVecLin_mul] using h
+  simpa [dagChiralEnd, Matrix.mulVecLin_mul,
+    Module.End.mul_eq_comp, Module.End.one_eq_id] using h
 
 theorem dagChiralEnd_anticommutes_dagDiracEnd
     (B1 : Matrix (Fin 8) (Fin 8) ℝ)
@@ -155,7 +156,7 @@ theorem dagChiralEnd_anticommutes_dagDiracEnd
   have h := congrArg Matrix.mulVecLin
     (dirac_anticommutes_gamma B1 B2)
   simpa [dagChiralEnd, dagDiracEnd, Matrix.mulVecLin_add,
-    Matrix.mulVecLin_mul] using h
+    Matrix.mulVecLin_mul, Module.End.mul_eq_comp, Module.End.one_eq_id] using h
 
 theorem transported_dagChiralEnd_trace_mul_zero
     (B1 : Matrix (Fin 8) (Fin 8) ℝ)

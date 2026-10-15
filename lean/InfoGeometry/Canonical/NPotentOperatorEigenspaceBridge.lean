@@ -172,7 +172,9 @@ theorem nPotent_power_pred_range_eq_fixed_submodule (n : ℕ) (hn : 2 ≤ n)
     have hx0 := LinearMap.mem_ker.mp hx
     change (T ^ (n - 1)) x = x
     have : x - (T ^ (n - 1)) x = 0 := by
-      simpa only [sub_eq_add_neg] using hx0
+      change (1 - T ^ (n - 1)) x = 0 at hx0
+      change x - (T ^ (n - 1)) x = 0 at hx0
+      exact hx0
     exact sub_eq_zero.mp this |>.symm
 
 theorem mem_nPotent_power_pred_range_iff (n : ℕ) (hn : 2 ≤ n)

@@ -1,5 +1,4 @@
 import InfoGeometry.Canonical.CelikCantorClifford
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Categorical.FibonacciBraiding
 import InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
 import InfoGeometry.Canonical.FibonacciParafermionAtoms
@@ -134,7 +133,7 @@ theorem fibonacci_R_anticomm_with_V (q : Units ℂ) :
     fibonacciRMatrix q * V * fibonacciRMatrix q =
       (((q ^ (-4 : ℤ) : Units ℂ) : ℂ) * ((q ^ (3 : ℤ) : Units ℂ) : ℂ)) • V := by
   ext i j; fin_cases i <;> fin_cases j <;>
-    simp [V, fibonacciRMatrix, Matrix.mul_apply, smul_apply, Matrix.of_apply]
+    simp [V, fibonacciRMatrix, Matrix.mul_apply, Matrix.smul_apply, Matrix.of_apply]
   all_goals ring
 
 /-! ### 3. The Braid Generator from the Pauli Algebra -/

@@ -80,10 +80,10 @@ def affineChartHomeomorph : Point2 ≃ₜ affineChart where
 theorem se2MatrixAction_mapsTo_affineChart
     (g : SE2RotationCarrier) :
     Set.MapsTo (se2MatrixAction g) affineChart affineChart := by
-  intro x hx
-  change (se2MatrixAction g x) 2 = 1
-  simpa [se2MatrixAction, se2MatrixRepresentation, se2GroupMatrix,
-    affineChart, Matrix.mulVec] using hx
+  intro x (hx : x 2 = 1)
+  have h : (se2MatrixAction g x) 2 = Matrix.vecHead (Matrix.vecTail (Matrix.vecTail x)) := by
+    simp [se2MatrixAction, se2MatrixRepresentation, se2GroupMatrix, Matrix.mulVec]
+  exact h.trans hx
 
 theorem se2MatrixAction_affineChart_image
     (g : SE2RotationCarrier) :
@@ -240,10 +240,8 @@ theorem homogeneousLift_affineOrbitMap
   exact (se2MatrixAction_homogeneousLift g v).symm
 
 theorem continuous_affineOrbitMap (v : Point2) :
-    Continuous (affineOrbitMap v) := by
-  unfold affineOrbitMap
-  simpa only [Function.comp_apply] using
-    continuous_affinePointAction.comp (continuous_id.prodMk continuous_const)
+    Continuous (affineOrbitMap v) :=
+  continuous_id.smul continuous_const
 
 def affineOrbitContinuousMap (v : Point2) :
     C(SE2RotationCarrier, Point2) :=
@@ -414,7 +412,7 @@ theorem pathConnectedSpace_affineOrbitQuotient :
 
 theorem isPathConnected_affineOrbitQuotient_univ :
     IsPathConnected (Set.univ : Set (Quotient affineOrbitSetoid)) := by
-  letI := pathConnectedSpace_affineOrbitQuotient
+  have := pathConnectedSpace_affineOrbitQuotient
   exact isPathConnected_univ
 
 theorem isConnected_affineOrbitQuotient_univ :

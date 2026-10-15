@@ -79,18 +79,22 @@ theorem paper_xi_terminal_zm_jg_critical_square_even_sign_defect :
       · right
         funext i
         fin_cases i
-        · simpa using h0
+        · dsimp [xi_terminal_zm_jg_critical_square_even_sign_defect_full_sign]
+          exact h0
         · have h1 : eps 1 = true := by
             simpa [xi_terminal_zm_jg_critical_square_even_sign_defect_kummer_sign_subgroup, h0]
               using h
-          simpa using h1
+          dsimp [xi_terminal_zm_jg_critical_square_even_sign_defect_full_sign]
+          exact h1
       · left
         funext i
         fin_cases i
-        · simpa using h0
+        · dsimp [xi_terminal_zm_jg_critical_square_even_sign_defect_zero_sign]
+          simpa using h0
         · have h1 : eps 1 = false := by
             simpa [xi_terminal_zm_jg_critical_square_even_sign_defect_kummer_sign_subgroup, h0]
               using h
+          dsimp [xi_terminal_zm_jg_critical_square_even_sign_defect_zero_sign]
           simpa using h1
     · rintro (rfl | rfl) <;> rfl
 

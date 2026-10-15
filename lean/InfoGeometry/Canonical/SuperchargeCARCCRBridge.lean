@@ -128,8 +128,10 @@ theorem parity_modular_supercharge_ccr_eq_two_cpt :
     (paritySuperchargeOp (E := E)).comp (modularSuperchargeOp (E := E))
         - (modularSuperchargeOp (E := E)).comp (paritySuperchargeOp (E := E))
       = (2 : ℝ) • (complex_i (E := E)) := by
-          simpa [paritySuperchargeOp, modularSuperchargeOp] using
-            clmComm_modular_j_spectral_epsilon (E := E)
+          change clmComm (modular_j (E := E))
+            (spectral_epsilon (E := E)) =
+            (2 : ℝ) • complex_i (E := E)
+          exact clmComm_modular_j_spectral_epsilon (E := E)
     _ = (2 : ℝ) • cptSuperchargeOp (E := E) := by
           rw [cptSuperchargeOp_eq_complex_i]
 

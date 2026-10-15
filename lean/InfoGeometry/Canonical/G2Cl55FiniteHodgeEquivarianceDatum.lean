@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.SplitOctonionDerivationSpinorLiftBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.G2Cl55ChiralEquivarianceBridge
+import Mathlib.Algebra.Lie.OfAssociative
 
 /-!
 # Finite `G₂`--`Cl(5,5)` Hodge equivariance datum
@@ -26,6 +27,11 @@ open InfoGeometry.Canonical.SplitOctonionDerivationSpinorLiftBridge
 
 abbrev Mat32 := Cl55MasterWittSpinorEnvelopeBridge.Mat32
 abbrev Derivation := SplitOctonionDerivationSpinorLiftBridge.Derivation
+
+-- The split-octonion bridge keeps matrix Lie instances local; this datum
+-- needs the corresponding associative-matrix Lie structure for its action.
+local instance : LieRing Mat32 := LieRing.ofAssociativeRing
+local instance : LieAlgebra ℝ Mat32 := LieAlgebra.ofAssociativeAlgebra
 
 /-- The finite operator datum carried by a Lie action on the master spinor
 carrier.  The two commutation fields are the exact equivariance hypotheses;
@@ -221,8 +227,8 @@ theorem finiteKasparovPhaseOfNativeLift_phase_odd
     (N : NativeSpinorLiftDatum) :
     MasterChirality * (finiteKasparovPhaseOfNativeLift N).phase +
         (finiteKasparovPhaseOfNativeLift N).phase * MasterChirality = 0 := by
-  simpa [finiteKasparovPhaseOfNativeLift] using
-    normalizedHodgePhase_is_chirality_odd
+  rw [finiteKasparovPhaseOfNativeLift_phase]
+  exact normalizedHodgePhase_is_chirality_odd
 
 theorem finiteKasparovPhaseOfNativeLift_action_phase
     (N : NativeSpinorLiftDatum) (D : Derivation) :

@@ -25,8 +25,7 @@ variable (hX : X.N ^ 2 = 0)
 theorem logCheckedR_zero :
     logCheckedR X hX 0 = TensorProduct.comm ℂ X X := by
   ext t
-  refine TensorProduct.induction_on t ?_ ?_ ?_
-  · simp
+  refine TensorProduct.inductionOn t ?_ ?_
   · intro x y
     simp [logCheckedR_tmul]
   · intro a b ha hb

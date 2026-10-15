@@ -25,7 +25,7 @@ def zornScale (q q_inv : R) (Z : ZornMatrix R) : ZornMatrix R where
 private theorem smul_coord (r : R) (Z : ZornMatrix R) :
     r • Z =
       { a := r * Z.a, b := r * Z.b, x := fun i => r * Z.x i, y := fun i => r * Z.y i } := by
-  ext <;> rw [Equiv.smul_def coordEquiv] <;> rfl
+  ext <;> simp [Pi.smul_apply]
 
 @[simp] theorem zornScale_zornPlus (q q_inv : R) :
     zornScale q q_inv zornPlus = zornPlus := by

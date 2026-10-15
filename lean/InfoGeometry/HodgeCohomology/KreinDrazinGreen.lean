@@ -13,12 +13,14 @@ variable {operator green : Space →L[ℝ] Space} {index : ℕ}
 omit [CompleteSpace Space] metric in
 theorem linear_drazin_inverse (inverse : IsDrazinInverse operator green index) :
     IsDrazinInverse operator.toLinearMap green.toLinearMap index := by
-  let forget : (Space →L[ℝ] Space) →+* Module.End ℝ Space :=
+  let forget : (Space →L[ℝ] Space) →+* (Space →ₗ[ℝ] Space) :=
     ContinuousLinearMap.toLinearMapRingHom
   refine IsDrazinInverse.mk ?_ ?_ ?_
   · exact congrArg forget inverse.comm
   · exact congrArg forget inverse.idempotent
-  · simpa only [map_mul, map_pow] using congrArg forget inverse.power
+  ·
+    simpa only [ContinuousLinearMap.toLinearMap_mul, ContinuousLinearMap.toLinearMap_pow]
+      using congrArg ContinuousLinearMap.toLinearMap inverse.power
 
 theorem green_krein_adjoint (inverse : IsDrazinInverse operator green index)
     (self_adjoint : IsKreinSelfAdjoint operator) : kreinAdjoint green = green := by

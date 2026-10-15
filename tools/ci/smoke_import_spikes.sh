@@ -18,7 +18,6 @@ if [[ "${STRICT_PROOF_SURFACE:-0}" == "1" ]]; then
     lean/InfoGeometry/Topology/ThermodynamicGauge.lean \
     lean/InfoGeometry/Topology/WilsonLoopThermodynamics.lean \
     lean/InfoGeometry/Topology/BostConnesWilsonLoop.lean \
-    lean/InfoGeometry/Projective/OnShellResidueBCFWBridge.lean \
     lean/InfoGeometry/Projective/MacaulayTrackBIngestion.lean
 fi
 

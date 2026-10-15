@@ -10,7 +10,7 @@ open FilteredColimit.Native.Topological
 
 noncomputable section
 
-universe u
+universe u v w
 
 /-!
 # Modular-spinor / Grassmannian sheaf bridge
@@ -28,17 +28,17 @@ this file only packages the three owner surfaces together and re-exports the
 native categorical and sheaf laws already proved elsewhere.
 -/
 
-variable {E Sections BoundarySections Gr Open : Type*}
+variable {E Sections BoundarySections : Type*} {Gr Open : Type v}
 variable [AddCommGroup Sections] [Module ℝ Sections]
 variable [AddCommGroup BoundarySections] [Module ℝ BoundarySections]
-variable [TopologicalSpace Gr] [Category Open]
+variable [TopologicalSpace Gr] [Category.{v, v} Open]
 variable {J : Type u} [Category.{u, u} J]
 
 /-- Joint owner for the modular-spinor boundary bridge and a native sheaf layer. -/
 structure ModularSpinorGrassmannianSheafBridge where
   boundaryBridge : ModularSpinorGrassmannianBoundaryBridge
     (E := E) (Sections := Sections) (BoundarySections := BoundarySections)
-  sheafData : MonogenicSheafData Gr Open
+  sheafData : MonogenicSheafData.{v, v, w, v} Gr Open
 
 /-/ The spectrum presentation reuses the sheaf bridge; `F` is supplied by the
     surrounding categorical readout and is not additional carrier data. -/

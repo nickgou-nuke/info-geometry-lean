@@ -7,7 +7,13 @@ namespace InfoGeometry.Canonical
 
 inductive PeirceBoundaryCoordinate
   | a00 | a01 | a10 | a11
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype PeirceBoundaryCoordinate where
+  elems := {.a00, .a01, .a10, .a11}
+  complete := by
+    intro b
+    cases b <;> simp
 
 def peirceBoundaryValue
     (b : PeirceBoundaryCoordinate)

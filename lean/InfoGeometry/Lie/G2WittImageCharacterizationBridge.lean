@@ -1,5 +1,8 @@
+import Mathlib.Algebra.Lie.OfAssociative
 import InfoGeometry.Lie.SplitOctonionDerivationWittBlockRealization
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+
+attribute [local instance 100] LieRing.ofAssociativeRing
 
 /-!
 # Intrinsic Leibniz selector for the transported `G₂` Witt image

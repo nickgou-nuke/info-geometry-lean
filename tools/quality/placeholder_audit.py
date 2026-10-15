@@ -30,6 +30,10 @@ DECL_HEADER_RE = re.compile(
     r"\s+([A-Za-z0-9_'.]+)",
     re.M,
 )
+ANONYMOUS_EXAMPLE_RE = re.compile(
+    r"^\s*(?:(?:noncomputable|partial|opaque|private|protected|local)\s+)*example\b",
+    re.M,
+)
 
 # declaration-level and file-level placeholder discovery for high-signal trust debt
 PLACEHOLDER_NAME_RE = re.compile(r"^(?:external|hyp|unproven|todo|stub|bridge)_[A-Za-z0-9_']*", re.I)
@@ -592,7 +596,8 @@ def scan_lean_file(path: Path) -> list[TrustFinding]:
     lines = clean.splitlines()
     findings: list[TrustFinding] = []
     headers = list(DECL_HEADER_RE.finditer(clean))
-    if not headers:
+    anonymous_examples = list(ANONYMOUS_EXAMPLE_RE.finditer(clean))
+    if not headers and not anonymous_examples:
         return []
 
     for idx, header in enumerate(headers):
@@ -600,9 +605,37 @@ def scan_lean_file(path: Path) -> list[TrustFinding]:
         name = header.group(2)
         start = header.start()
         line_no = audit_constructivity.line_of(clean, start)
-        end = headers[idx + 1].start() if idx + 1 < len(headers) else len(clean)
+        following = [
+            next_header.start()
+            for next_header in headers[idx + 1 :]
+        ] + [
+            example.start()
+            for example in anonymous_examples
+            if example.start() > start
+        ]
+        end = min(following) if following else len(clean)
         block = clean[start:end]
         findings.extend(classify_declaration(kind, name, line_no, block, lines, path))
+
+    # Lean `example` declarations have no identifier, so the named declaration
+    # parser cannot own their proof blocks.  Scan each anonymous example up to
+    # the next declaration/example boundary and classify it through the same
+    # trust rules as named theorem declarations.
+    for idx, example in enumerate(anonymous_examples):
+        start = example.start()
+        following = [
+            header.start() for header in headers if header.start() > start
+        ] + [
+            other.start() for other in anonymous_examples if other.start() > start
+        ]
+        end = min(following) if following else len(clean)
+        line_no = audit_constructivity.line_of(clean, start)
+        name = f"<anonymous-example-{idx + 1}>"
+        findings.extend(
+            classify_declaration(
+                "example", name, line_no, clean[start:end], lines, path
+            )
+        )
 
     return findings
 

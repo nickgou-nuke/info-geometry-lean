@@ -73,15 +73,15 @@ def finiteDefectD1 : Matrix (Fin 1) (Fin 1) ℝ :=
 
 /-- The finite defect De Rham complex instance for the 2×2 model. -/
 instance : FinsuppDeRhamComplex Unit Unit Unit ℝ where
-  d0_mat := (fun _ _ => (1 : ℝ))
-  d1_mat := (fun _ _ => (0 : ℝ))
-  complex_condition := by
-    ext i j
-    fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_succ, finiteDefectD0, finiteDefectD1]
-    <;> norm_num
+  d0_mat := 1
+  d1_mat := 0
+  complex_condition := by simp
   d0 := fun ω => finsupp_d0 (fun _ _ => (1 : ℝ)) ω
   d1 := fun ω => finsupp_d1 (fun _ _ => (0 : ℝ)) ω
-  d0_spec := by intro ω; rfl
+  d0_spec := by
+    intro ω
+    ext e
+    simp [finsupp_d0]
   d1_spec := by intro ω; rfl
   d_squared_zero := by
     intro f x

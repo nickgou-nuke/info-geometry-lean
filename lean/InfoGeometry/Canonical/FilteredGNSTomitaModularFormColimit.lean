@@ -323,13 +323,9 @@ def pairStageAgainstDirectLimit
           (fun _ _ h => domainTransition Stage sys ω h)
           j y) =
       commonStageModularPairing Stage sys ω hclos i j x y := by
-  simpa only [pairingRightAtStage] using
-    (Module.DirectLimit.lift_of
-      (g := pairingRightAtStage
-        Stage sys ω (hclos := hclos) i x)
-      (pairingRightAtStage_compatible
-        Stage sys ω (hclos := hclos) i x)
-      (i := j) y)
+  unfold pairStageAgainstDirectLimit
+  rw [Module.DirectLimit.lift_of]
+  rfl
 
 /-- A first-stage vector determines a real-linear functional on the direct
 limit. -/

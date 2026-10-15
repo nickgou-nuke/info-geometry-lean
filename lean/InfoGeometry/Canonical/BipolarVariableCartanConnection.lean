@@ -59,7 +59,9 @@ theorem hasDerivAt_dlog01 {s : ℂ} (hs : s ∈ punctured01) :
   have h0 : HasDerivAt (fun z : ℂ => z⁻¹) (-(s ^ 2)⁻¹) s :=
     hasDerivAt_inv hs.1
   have hlin : HasDerivAt (fun z : ℂ => 1 - z) (-1) s := by
-    simpa using (hasDerivAt_const s (1 : ℂ)).sub (hasDerivAt_id s)
+    convert (hasDerivAt_id s).const_sub (1 : ℂ) using 1
+    funext z
+    rfl
   have h1 := hlin.inv (one_sub_ne_zero_of_mem hs)
   convert h0.add h1 using 1 <;>
     try simp [dlog01, dlog01Deriv, one_div]
@@ -97,8 +99,10 @@ theorem hasDerivAt_variableCartanConnection_along
   have hline : HasDerivAt (fun t : ℂ => s + t * u) u 0 := by
     convert
       (hasDerivAt_const (x := (0 : ℂ)) (c := s)).add
-        ((hasDerivAt_id (x := (0 : ℂ))).mul_const u) using 1 <;>
+        ((hasDerivAt_id (x := (0 : ℂ))).mul_const u) using 1
+    · funext t
       simp
+    · simp
   have hcoeff := (hasDerivAt_dlog01 hs).comp_of_eq 0 hline (by ring)
   apply hasDerivAt_pi.2
   intro i
@@ -204,7 +208,9 @@ theorem hasDerivAt_plusWeight
   have hhalf := (hasDerivAt_bipolarLog hs hslit).div_const (2 : ℂ)
   have hexp :=
     (Complex.hasDerivAt_exp (bipolarLog s / 2)).comp s hhalf
-  simpa [plusWeight, mul_comm, mul_left_comm, mul_assoc] using hexp
+  convert hexp using 1
+  · rfl
+  · simpa [plusWeight, mul_comm]
 
 /-- Genuine derivative of the negative half-weight on a compatible log chart. -/
 theorem hasDerivAt_minusWeight
@@ -215,16 +221,18 @@ theorem hasDerivAt_minusWeight
   have hhalf := (hasDerivAt_bipolarLog hs hslit).neg.div_const (2 : ℂ)
   have hexp :=
     (Complex.hasDerivAt_exp (-bipolarLog s / 2)).comp s hhalf
-  simpa [minusWeight, mul_comm, mul_left_comm, mul_assoc] using hexp
+  convert hexp using 1
+  · rfl
+  · simpa [minusWeight, mul_comm]
 
 /-- The matrix half-log lift has the displayed genuine derivative. -/
 theorem hasDerivAt_halfLogLift
     {s : ℂ} (hs : s ∈ punctured01)
     (hslit : crossRatio01 s ∈ Complex.slitPlane) :
     HasDerivAt halfLogLift (halfLogLiftDerivative s) s := by
-  rw [hasDerivAt_pi]
+  apply hasDerivAt_pi.2
   intro i
-  rw [hasDerivAt_pi]
+  apply hasDerivAt_pi.2
   intro j
   fin_cases i <;> fin_cases j
   · simpa [halfLogLift, halfLogLiftDerivative] using
@@ -253,9 +261,18 @@ theorem hasDerivAt_halfLogLift_along
   intro i
   apply hasDerivAt_pi.2
   intro j
-  have h := BipolarHalfLogLiftAnalyticPureGauge.hasDerivAt_halfLogLift_entry_along
+  have hdiff : halfLogLiftDifferential s v =
+      BipolarHalfLogLiftAnalyticPureGauge.halfLogLiftAnalyticDifferential s v := by
+    ext a b
+    simp [halfLogLiftDifferential, halfLogLiftDerivative,
+      BipolarHalfLogLiftAnalyticPureGauge.halfLogLiftAnalyticDifferential,
+      BipolarHalfLogLiftAnalyticPureGauge.halfLogLiftAnalyticDerivative,
+      Matrix.smul_apply]
+  rw [show halfLogLiftDifferential s v i j =
+    BipolarHalfLogLiftAnalyticPureGauge.halfLogLiftAnalyticDifferential s v i j from
+      congrArg (fun M : Matrix2C => M i j) hdiff]
+  exact BipolarHalfLogLiftAnalyticPureGauge.hasDerivAt_halfLogLift_entry_along
     hs hslit v i j
-  convert h using 1
 
 /-- Algebraic local pure-gauge identity `G⁻¹ dG = A`. -/
 theorem halfLogLiftInv_mul_differential (s v : ℂ) :

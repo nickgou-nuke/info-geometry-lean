@@ -1,6 +1,7 @@
 import InfoGeometry.Lie.SplitOctonionGogberashviliDerivationBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionCircularMultiplicationTable
+import Mathlib.Algebra.Lie.OfAssociative
 
 /-!
 # Appendix-D generator packet
@@ -24,6 +25,8 @@ namespace InfoGeometry.Lie.CanonicalZornG2AppendixDGenerators
 
 open InfoGeometry.Lie.SplitOctonionGogberashviliDerivationBridge
 open InfoGeometry.Algebra.Zorn.ParityTwistedLeviCivita
+
+local instance : LieRing (Module.End ℝ PaperZorn) := LieRing.ofAssociativeRing
 
 /-! ### The source-coordinate carrier used by Appendix D -/
 
@@ -348,11 +351,15 @@ theorem appendixDGenerator_apply (i : Fin 14) :
 
 theorem appendixDGenerator_linearIndependent :
     LinearIndependent ℝ appendixDGenerator := by
-  simpa only [appendixDGenerator] using paperDerivationBasis.linearIndependent
+  change LinearIndependent ℝ (paperDerivationBasis :
+    Fin 14 → (paperDerivationLieHom).range)
+  exact paperDerivationBasis.linearIndependent
 
 theorem appendixDGenerator_span_eq_top :
     Submodule.span ℝ (Set.range appendixDGenerator) = ⊤ := by
-  simpa only [appendixDGenerator] using paperDerivationBasis.span_eq
+  change Submodule.span ℝ
+    (Set.range (paperDerivationBasis : Fin 14 → (paperDerivationLieHom).range)) = ⊤
+  exact paperDerivationBasis.span_eq
 
 noncomputable def appendixDGenerator_basis :
     Module.Basis (Fin 14) ℝ PaperDer :=

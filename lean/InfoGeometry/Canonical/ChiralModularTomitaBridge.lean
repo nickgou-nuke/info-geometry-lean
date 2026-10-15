@@ -157,7 +157,9 @@ theorem root_tomita_conj_chiral_sum_fixed
   apply DoubledSpace.ext <;>
     simp [ContinuousLinearMap.add_apply, rootDiracPlus_apply,
       rootDiracMinus_apply, modular_j_apply, plusPoint, minusPoint,
-      InfoGeometry.Krein.to_doubled]
+      InfoGeometry.Krein.to_doubled,
+      spectralPlusProj_apply_eq_plusPoint,
+      spectralMinusProj_apply_eq_minusPoint]
 
 theorem root_tomita_conj_chiral_difference_anti_fixed
     (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
@@ -174,7 +176,9 @@ theorem root_tomita_conj_chiral_difference_anti_fixed
   apply DoubledSpace.ext <;>
     simp [ContinuousLinearMap.sub_apply, rootDiracPlus_apply,
       rootDiracMinus_apply, modular_j_apply, plusPoint, minusPoint,
-      InfoGeometry.Krein.to_doubled]
+      InfoGeometry.Krein.to_doubled,
+      spectralPlusProj_apply_eq_plusPoint,
+      spectralMinusProj_apply_eq_minusPoint]
 
 /-! The derived Krein fundamental symmetry has its own parity law.  It is
 not the assumed PT interface above: for the native root arrows, `ε` is odd for

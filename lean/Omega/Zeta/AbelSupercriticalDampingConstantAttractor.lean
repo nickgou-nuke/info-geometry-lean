@@ -77,7 +77,7 @@ theorem paper_abel_supercritical_damping_constant_attractor
     (summable_geometric_of_lt_one D.hq_nonneg D.hq_lt_one).mul_left D.C
   have hnorm_summable : Summable (fun n : ℕ => ‖f n‖) :=
     Summable.of_nonneg_of_le (fun _ => norm_nonneg _) hf_bound hmajorant
-  have hf_summable : Summable f := summable_norm_iff.mp hnorm_summable
+  have hf_summable : Summable f := Summable.of_norm hnorm_summable
   have htail_eq :
       (∑' n : ℕ, f (n + 1)) = (∑' n : ℕ, f n) - D.coeff 0 := by
     have hsplit : f 0 + ∑' n : ℕ, f (n + 1) = ∑' n : ℕ, f n := by

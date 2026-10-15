@@ -24,7 +24,14 @@ open LightConeConf3DeRhamCooperad
 /-- The six oriented edges of the three-point graph. -/
 inductive OrientedEdge3 where
   | e12 | e21 | e13 | e31 | e23 | e32
-  deriving DecidableEq, Fintype, Repr
+  deriving DecidableEq, Repr
+
+instance : Fintype OrientedEdge3 where
+  elems := {OrientedEdge3.e12, OrientedEdge3.e21, OrientedEdge3.e13,
+    OrientedEdge3.e31, OrientedEdge3.e23, OrientedEdge3.e32}
+  complete := by
+    intro e
+    cases e <;> simp
 
 /-- Reverse an oriented edge. -/
 def reverse : OrientedEdge3 → OrientedEdge3

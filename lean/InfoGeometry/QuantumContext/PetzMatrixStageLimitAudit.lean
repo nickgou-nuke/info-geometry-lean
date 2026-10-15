@@ -1,0 +1,16 @@
+import InfoGeometry.QuantumContext.PetzMatrixStageLimit
+
+namespace InfoGeometry.QuantumContext.PetzMatrixStageLimit.Audit
+
+open InfoGeometry.QuantumContext.PetzMatrixStageLimit
+
+#print axioms causalChannel_stageMorphism
+#print axioms petzRecoveryMap_stageMorphism
+#print axioms causalChannel_canonicalStageHom
+#print axioms petzRecoveryMap_canonicalStageHom
+#print axioms causalChannel_mixedStage_readback
+#print axioms petzRecoveryMap_mixedStage_readback
+#print axioms stiefel_colimit_trace_defect_zero_iff
+#print axioms compile_petz_matrix_stage_limit
+
+end InfoGeometry.QuantumContext.PetzMatrixStageLimit.Audit

@@ -57,7 +57,6 @@ theorem paper_cdim_unitary_selfadjoint_log (D : ReadableTimeWordPrincipalPhaseGe
       simpa using (Complex.exp_mul_I (x := -(Real.pi / 2 : ℝ)))
     · simp [ReadableTimeWordPrincipalPhaseGeneratorData.principalPhase,
         ReadableTimeWordPrincipalPhaseGeneratorData.shiftSpectrum]
-      simpa using (Complex.exp_mul_I (x := (-Real.pi : ℝ)))
     · simp [ReadableTimeWordPrincipalPhaseGeneratorData.principalPhase,
         ReadableTimeWordPrincipalPhaseGeneratorData.shiftSpectrum]
 

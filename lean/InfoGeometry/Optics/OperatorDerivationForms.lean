@@ -342,8 +342,8 @@ theorem frechetOperatorDerivationOfLinear_hasFDerivAt
     (hD : ∀ a b, D (a * b) = D a * b + a * D b) (a : A) :
     HasFDerivAt D
       (frechetOperatorDerivationOfLinear D hD).toContinuousLinearMap a := by
-  simpa only [frechetOperatorDerivationOfLinear_apply] using
-    (frechetOperatorDerivationOfLinear D hD).hasFDerivAt a
+  rw [← LinearMap.coe_toContinuousLinearMap' D]
+  exact ContinuousLinearMap.hasFDerivAt (LinearMap.toContinuousLinearMap D)
 
 /-- On a finite-dimensional operator algebra, every thermodynamic linear
 Leibniz derivation has a canonical continuous Fréchet realization. -/
@@ -362,8 +362,8 @@ theorem frechetOperatorDerivationOfThermodynamic_hasFDerivAt
     (D : ThermodynamicOperatorDerivation A) (a : A) :
     HasFDerivAt D
       (frechetOperatorDerivationOfThermodynamic D).toContinuousLinearMap a := by
-  simpa only [frechetOperatorDerivationOfThermodynamic_apply] using
-    (frechetOperatorDerivationOfThermodynamic D).hasFDerivAt a
+  rw [← LinearMap.coe_toContinuousLinearMap' D.toLinearMap]
+  exact ContinuousLinearMap.hasFDerivAt (LinearMap.toContinuousLinearMap D.toLinearMap)
 
 end FiniteDimensional
 

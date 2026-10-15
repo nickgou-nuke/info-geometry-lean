@@ -49,7 +49,7 @@ theorem non_hermitian_unpaired (Bx By : B) (h_noncomm : ¬ Commute Bx By) :
       _ = 1 * (By * Bx) := by rw [h_eq]
       _ = By * Bx := by group
   apply h_noncomm
-  simpa using h_comm
+  exact (commute_iff_eq Bx By).2 h_comm
 
 /-- Concrete finite noncommuting adjacent Majorana braid pair. -/
 theorem majorana_braid_noncommuting :
@@ -63,7 +63,6 @@ theorem majorana_braid_noncommuting :
   simp only [InfoGeometry.GrandUnification.MajoranaBraidGroup.braid12,
     InfoGeometry.GrandUnification.MajoranaBraidGroup.braid23, Matrix.mul_apply] at h_entry
   norm_num [Fin.sum_univ_succ] at h_entry
-  simp at h_entry
 
 /-- Concrete finite adjacent Artin relation for the same Majorana braid pair. -/
 theorem majorana_braid_artin :

@@ -6,7 +6,11 @@ namespace Omega.EA
 `000,001,002,010,100,101,0-12,1-12,01-1,11-1`. -/
 inductive Sync10State
   | q000 | q001 | q002 | q010 | q100 | q101 | q0m12 | q1m12 | q01m1 | q11m1
-  deriving DecidableEq, Fintype, Repr
+  deriving DecidableEq, Repr
+
+instance : Fintype Sync10State where
+  elems := {.q000, .q001, .q002, .q010, .q100, .q101, .q0m12, .q1m12, .q01m1, .q11m1}
+  complete x := by cases x <;> simp
 
 /-- The deterministic transition table of the 10-state synchronization kernel. -/
 def sync10Step : Sync10State → Fin 3 → Sync10State

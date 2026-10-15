@@ -1,0 +1,30 @@
+import Experimental.Sandbox.SuperGrassmannian.GraphDiracSupercarrierEmbedding
+
+/-!
+# Axiomatic Audit for Sandbox GraphDiracSupercarrierEmbedding
+Target: `lean/Experimental/Sandbox/SuperGrassmannian/GraphDiracSupercarrierEmbeddingAudit.lean`
+-/
+
+open Experimental.Sandbox.SuperGrassmannian.GraphDiracSupercarrierEmbedding
+
+#print axioms superTrace_add
+#print axioms superTrace_smul
+#print axioms superTrace_neg
+#print axioms superTrace_scaleMode
+#print axioms superTrace_volumeMode
+#print axioms superTrace_hodgeDiracChiral
+#print axioms hodgeDiracChiral_sq
+#print axioms superTrace_hodgeDiracChiral_sq
+#print axioms scaleMode_hodgeDiracChiral_comm
+#print axioms total_deformation_superTrace
+#print axioms balanced_graph_superTrace
+#print axioms chiralParity_sq
+#print axioms hodgeDirac_anticomm_parity
+#print axioms hodgeDiracChiral_isBerezinianInvariant
+#print axioms hodgeDiracChiral_sq_isBerezinianInvariant
+#print axioms volumeMode_isBerezinianInvariant
+#print axioms balanced_deformation_isBerezinianInvariant
+#print axioms balanced_berezinian_homothety
+#print axioms unbalanced_berezinian_factor
+#print axioms balanced_graph_berezinian_homothety
+#print axioms compile_graph_dirac_supercarrier_embedding

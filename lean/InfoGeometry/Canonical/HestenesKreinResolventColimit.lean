@@ -195,10 +195,17 @@ theorem stageResolventSum_bondIterate
     stageResolventSum marks z stageSpectrum (n + m)
         (C.toFilteredPhaseCone.bondIterate n m x) =
       stageResolventSum marks z stageSpectrum n x := by
+  let x₀ : (C.toFilteredPhaseCone).Stage n := by
+    change DoubledSpace (C.Base n)
+    exact x
+  change stageResolventSum marks z stageSpectrum (n + m)
+      (C.toFilteredPhaseCone.bondIterate n m x₀) =
+    stageResolventSum marks z stageSpectrum n x
   rw [stageResolventSum_eq_limitResolventSum marks z stageSpectrum
-      limitSpectrum hSpectrum (n + m),
+      limitSpectrum hSpectrum (n + m)
+        (C.toFilteredPhaseCone.bondIterate n m x₀),
     stageResolventSum_eq_limitResolventSum marks z stageSpectrum
-      limitSpectrum hSpectrum n]
+      limitSpectrum hSpectrum n x]
   unfold limitResolventSum symmetricResolventSum
   apply Finset.sum_congr rfl
   intro i hi

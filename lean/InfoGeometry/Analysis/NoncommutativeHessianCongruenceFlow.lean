@@ -14,9 +14,19 @@ noncomputable section
 
 open scoped Matrix.Norms.Frobenius
 
+attribute [-instance] instTopologicalSpaceMatrix Matrix.addCommGroup Matrix.module
+
 namespace InfoGeometry.Analysis.NoncommutativeHessianCongruenceFlow
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
+
+local instance (priority := 3000) : AddCommGroup (Matrix n n ℝ) :=
+  (Matrix.frobeniusNormedRing : NormedRing (Matrix n n ℝ)).toAddCommGroup
+
+local instance (priority := 3000) : Module ℝ (Matrix n n ℝ) :=
+  letI : NormedRing (Matrix n n ℝ) := Matrix.frobeniusNormedRing
+  letI : NormedAlgebra ℝ (Matrix n n ℝ) := Matrix.frobeniusNormedAlgebra
+  (NormedAlgebra.toNormedSpace (Matrix n n ℝ)).toModule
 
 def hessianCongruencePath
     (U : ℝ → Matrix n n ℝ) (H₀ : Matrix n n ℝ) :
@@ -35,7 +45,10 @@ theorem hasDerivAt_hessianCongruence
         (U t).transpose * H₀ * Udot t) t := by
   have hleft := hUt.mul (hasDerivAt_const t H₀)
   have hall := hleft.mul hU
-  simpa [hessianCongruencePath, Matrix.mul_assoc] using hall
+  convert hall using 1
+  · ext s
+    simp [hessianCongruencePath, Matrix.mul_assoc]
+  · simp [Matrix.mul_assoc]
 
 theorem hasDerivAt_hessianCongruence_of_right_generator
     {U Udot : ℝ → Matrix n n ℝ}

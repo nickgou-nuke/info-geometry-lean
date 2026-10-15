@@ -360,9 +360,9 @@ theorem density_sum_eq_one
     modes.powerset.sum (density modes s E μ) =
         modes.powerset.sum
           (fun S =>
-            InfoGeometry.Arithmetic.PrimonFinite.weight (modeWeight s E μ) S *
-              (fermionPartition modes s E μ)⁻¹) := by
-          simp [density, microstateWeight]
+              InfoGeometry.Arithmetic.PrimonFinite.weight (modeWeight s E μ) S *
+                (fermionPartition modes s E μ)⁻¹) := by
+            rfl
     _ =
         modes.powerset.sum
           (InfoGeometry.Arithmetic.PrimonFinite.weight (modeWeight s E μ)) *

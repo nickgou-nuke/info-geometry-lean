@@ -127,7 +127,7 @@ This is the core analytic fact: the modular Hamiltonians H₁, H₂ coincide on
 the non-toral fiber boundary, forcing D_X ω = 0.
 -/
 theorem fiberCocycleVanishing
-    {Orbit LieAlg LieCoalg : Type*} [AddCommGroup LieAlg] [Ring LieAlg] [CommSemiring LieAlg]
+    {Orbit LieAlg LieCoalg : Type*} [CommRing LieAlg]
     (ctx : ConnesCocycle.CocycleOverCoadjointOrbit Orbit LieAlg LieCoalg)
     (X : LieAlg) (hfiber : ctx.isFiberDirection X)
     (hH_eq : ctx.H₁ = ctx.H₂) :
@@ -150,7 +150,7 @@ This is stated conditionally — the full change-of-variables formula and the
 chiral metric splitting that forces H₁ = H₂ are open debt.
 -/
 theorem weylIntegration_is_colimit_fixedPoint
-    {Orbit LieAlg LieCoalg : Type*} [AddCommGroup LieAlg] [Ring LieAlg] [CommSemiring LieAlg]
+    {Orbit LieAlg LieCoalg : Type*} [CommRing LieAlg]
     (ctx : ConnesCocycle.CocycleOverCoadjointOrbit Orbit LieAlg LieCoalg)
     (X : LieAlg)
     (hfiber : ctx.isFiberDirection X)

@@ -159,6 +159,95 @@ noncomputable def canonical : Cl11Dictionary E where
   simpa [canonical, modularComplexI_eq_complex_i]
     using (complex_i_to_doubled (E := E) x ξ)
 
+/-! ### Isotropic generators for the doubled `Cl(1,1)` atom
+
+The null pair uses the `1/2` normalization. With the `1 / √2` normalization
+the mixed anticommutator is `2`, not `1`, under the convention
+`J² = 1`, `(Jε)² = -1`.
+-/
+
+/-- The nilpotent creation map `(J + Jε) / 2` on the doubled carrier. -/
+noncomputable def nullCreation : EndH :=
+  (1 / 2 : ℝ) • ((canonical (E := E)).J + (canonical (E := E)).K)
+
+/-- The nilpotent annihilation map `(J - Jε) / 2` on the doubled carrier. -/
+noncomputable def nullAnnihilation : EndH :=
+  (1 / 2 : ℝ) • ((canonical (E := E)).J - (canonical (E := E)).K)
+
+@[simp] theorem nullCreation_apply (u : H₂) :
+    nullCreation (E := E) u = to_doubled 0 (WithLp.fst u) := by
+  have hu : u = to_doubled (WithLp.fst u) (WithLp.snd u) := by
+    apply DoubledSpace.ext <;> simp [to_doubled]
+  rw [hu]
+  apply DoubledSpace.ext
+  · simp [nullCreation, WithLp.smul_fst, WithLp.add_fst]
+  · simp [nullCreation, WithLp.smul_snd, WithLp.add_snd]
+    module
+
+@[simp] theorem nullAnnihilation_apply (u : H₂) :
+    nullAnnihilation (E := E) u = to_doubled (WithLp.snd u) 0 := by
+  have hu : u = to_doubled (WithLp.fst u) (WithLp.snd u) := by
+    apply DoubledSpace.ext <;> simp [to_doubled]
+  rw [hu]
+  apply DoubledSpace.ext
+  · simp [nullAnnihilation, WithLp.smul_fst, WithLp.sub_fst]
+    module
+  · simp [nullAnnihilation, WithLp.smul_snd, WithLp.sub_snd]
+
+/-- The normalized null creation map is square-zero. -/
+theorem nullCreation_sq :
+    (nullCreation (E := E)).comp (nullCreation (E := E)) = 0 := by
+  apply ContinuousLinearMap.ext
+  intro u
+  simp [ContinuousLinearMap.comp_apply, nullCreation_apply, to_doubled]
+
+/-- The normalized null annihilation map is square-zero. -/
+theorem nullAnnihilation_sq :
+    (nullAnnihilation (E := E)).comp (nullAnnihilation (E := E)) = 0 := by
+  apply ContinuousLinearMap.ext
+  intro u
+  simp [ContinuousLinearMap.comp_apply, nullAnnihilation_apply, to_doubled]
+
+/-- The normalized null maps satisfy the one-mode CAR. -/
+theorem null_creation_annihilation_CAR :
+    (nullAnnihilation (E := E)).comp (nullCreation (E := E)) +
+      (nullCreation (E := E)).comp (nullAnnihilation (E := E)) =
+        ContinuousLinearMap.id ℝ H₂ := by
+  apply ContinuousLinearMap.ext
+  intro u
+  have hu : u = to_doubled (WithLp.fst u) (WithLp.snd u) := by
+    apply DoubledSpace.ext <;> simp [to_doubled]
+  rw [hu]
+  apply DoubledSpace.ext <;>
+    simp [ContinuousLinearMap.comp_apply, nullCreation_apply,
+      nullAnnihilation_apply, WithLp.add_fst, WithLp.add_snd]
+
+/-- The normalized null pair reconstructs the positive split generator `J`. -/
+theorem null_generators_sum_eq_J :
+    nullCreation (E := E) + nullAnnihilation (E := E) =
+      (canonical (E := E)).J := by
+  apply ContinuousLinearMap.ext
+  intro u
+  have hu : u = to_doubled (WithLp.fst u) (WithLp.snd u) := by
+    apply DoubledSpace.ext <;> simp [to_doubled]
+  rw [hu]
+  rw [ContinuousLinearMap.add_apply, nullCreation_apply, nullAnnihilation_apply,
+    canonical_J_to_doubled]
+  apply DoubledSpace.ext <;> simp [to_doubled]
+
+/-- The normalized null pair reconstructs the negative split generator `Jε`. -/
+theorem null_generators_sub_eq_K :
+    nullCreation (E := E) - nullAnnihilation (E := E) =
+      (canonical (E := E)).K := by
+  apply ContinuousLinearMap.ext
+  intro u
+  have hu : u = to_doubled (WithLp.fst u) (WithLp.snd u) := by
+    apply DoubledSpace.ext <;> simp [to_doubled]
+  rw [hu]
+  rw [ContinuousLinearMap.sub_apply, nullCreation_apply, nullAnnihilation_apply,
+    canonical_K_to_doubled]
+  apply DoubledSpace.ext <;> simp [to_doubled]
+
 /-- The canonical conjugation atom is even for the modular block grading. -/
 theorem canonical_J_isEven :
     isEven (E := E) (canonical (E := E)).J := by

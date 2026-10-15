@@ -123,7 +123,8 @@ theorem imaginaryEllT_a (X : Imaginary) :
     InfoGeometry.Lie.SplitOctonionEllPolarization.ellCommutator,
     lUnit, InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul,
     InfoGeometry.Canonical.ZornMatrix.dot,
-    Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv,
+    Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordAddEquiv,
+    InfoGeometry.Canonical.ZornMatrix.coordEquiv,
     Fin.sum_univ_three]
   ring
 
@@ -133,7 +134,8 @@ theorem imaginaryEllT_b (X : Imaginary) :
     InfoGeometry.Lie.SplitOctonionEllPolarization.ellCommutator,
     lUnit, InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul,
     InfoGeometry.Canonical.ZornMatrix.dot,
-    Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv,
+    Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordAddEquiv,
+    InfoGeometry.Canonical.ZornMatrix.coordEquiv,
     Fin.sum_univ_three]
   ring
 
@@ -148,7 +150,8 @@ theorem imaginaryEllT_x (X : Imaginary) :
       lUnit, InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul,
       InfoGeometry.Canonical.ZornMatrix.dot,
       InfoGeometry.Canonical.ZornMatrix.cross,
-      Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv,
+      Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordAddEquiv,
+      InfoGeometry.Canonical.ZornMatrix.coordEquiv,
       Fin.sum_univ_three, Pi.single_apply]
   <;> ring
 
@@ -163,7 +166,8 @@ theorem imaginaryEllT_y (X : Imaginary) :
       lUnit, InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul,
       InfoGeometry.Canonical.ZornMatrix.dot,
       InfoGeometry.Canonical.ZornMatrix.cross,
-      Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv,
+      Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordAddEquiv,
+      InfoGeometry.Canonical.ZornMatrix.coordEquiv,
       Fin.sum_univ_three, Pi.single_apply]
   <;> ring
 
@@ -213,29 +217,34 @@ theorem imaginaryEllT_kernel_eq_span :
     rw [Submodule.mem_span_singleton]
     refine ⟨X.1.x 0, ?_⟩
     apply imaginaryCoordLinearEquiv.injective
+    have hell : imaginaryCoordLinearEquiv
+        InfoGeometry.Lie.SplitOctonionEllPolarization.ellImaginary =
+          (0, (![1, 0, 0] : Fin 3 → ℝ), (![1, 0, 0] : Fin 3 → ℝ)) := by
+      rfl
+    rw [map_smul, hell]
+    change (X.1.x 0 •
+        (0, (![1, 0, 0] : Fin 3 → ℝ), (![1, 0, 0] : Fin 3 → ℝ))) =
+      (X.1.a, X.1.x, X.1.y)
     apply Prod.ext
-    · simp [imaginaryCoordLinearEquiv,
-        InfoGeometry.Lie.SplitOctonionEllPolarization.ellImaginary,
-        lUnit,
-        Pi.single_apply, smul_a, smul_b, smul_x, smul_y,
-        ha0, hb0, hy0]
-    · apply Prod.ext <;>
-        funext i <;> fin_cases i <;>
-        simp [imaginaryCoordLinearEquiv,
-          InfoGeometry.Lie.SplitOctonionEllPolarization.ellImaginary,
-          lUnit,
-          Pi.single_apply, smul_a, smul_b, smul_x, smul_y,
-          hx10, hx20, hy0, hy10, hy20]
+    · simp [ha0]
+    · apply Prod.ext
+      · funext i
+        fin_cases i
+        · simp [Pi.single_apply]
+        · simp [Pi.single_apply, hx10]
+        · simp [Pi.single_apply, hx20]
+      · funext i
+        fin_cases i
+        · simp [Pi.single_apply, hy0]
+        · simp [Pi.single_apply, hy10]
+        · simp [Pi.single_apply, hy20]
   · apply (Submodule.span_singleton_le_iff_mem _ _).mpr
     apply LinearMap.mem_ker.mpr
     apply Subtype.ext
-    simp [imaginaryEllT, imaginaryEllCommutator,
-      InfoGeometry.Lie.SplitOctonionEllPolarization.ellCommutator,
-      InfoGeometry.Lie.SplitOctonionEllPolarization.ellImaginary,
-      lUnit, InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul,
-      InfoGeometry.Canonical.ZornMatrix.dot,
-      InfoGeometry.Canonical.ZornMatrix.cross,
-      Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv]
+    ext <;>
+      simp [imaginaryEllT_a, imaginaryEllT_b, imaginaryEllT_x, imaginaryEllT_y,
+        InfoGeometry.Lie.SplitOctonionEllPolarization.ellImaginary,
+        lUnit, InfoGeometry.Canonical.ZornMatrix.cross, Pi.single_apply]
 
 theorem finrank_activeSupport : Module.finrank ℝ Support = 6 := by
   rw [activeSupport_eq_range_imaginaryEllT]

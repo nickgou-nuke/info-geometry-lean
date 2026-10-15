@@ -131,12 +131,14 @@ theorem sigmaNeg_mul_sigmaPos (k : Fin 3) :
 
 theorem sigmaPos_sq (k : Fin 3) :
     zornMul (sigmaPos k) (sigmaPos k) = zornZero := by
-  simpa [sigmaPos] using
+  simpa [sigmaPos, E_k, InfoGeometry.Physics.ZornScalingFlow.upperNil,
+    e_k, zornZero] using
     (InfoGeometry.Physics.ZornScalingFlow.upperNil_sq_zero (e_k k))
 
 theorem sigmaNeg_sq (k : Fin 3) :
     zornMul (sigmaNeg k) (sigmaNeg k) = zornZero := by
-  simpa [sigmaNeg] using
+  simpa [sigmaNeg, F_k, InfoGeometry.Physics.ZornScalingFlow.lowerNil,
+    e_k, zornZero] using
     (InfoGeometry.Physics.ZornScalingFlow.lowerNil_sq_zero (e_k k))
 
 theorem chiralPlane_CAR (k : Fin 3) :

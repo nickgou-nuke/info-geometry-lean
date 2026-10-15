@@ -29,9 +29,8 @@ theorem paper_conclusion_discrete_gauge_double_exp (m : ℕ) :
   refine ⟨?_, ?_, ?_⟩
   · unfold conclusion_discrete_gauge_double_exp_fiberwise_proxy
       conclusion_discrete_gauge_double_exp_uniform_proxy
-    exact Finset.prod_le_prod
-      (fun x _ => Nat.zero_le _)
-      (fun x _ => Nat.factorial_le (Omega.X.fiberMultiplicity_le_max x))
+    gcongr with x
+    exact Omega.X.fiberMultiplicity_le_max x
   · simp [conclusion_discrete_gauge_double_exp_uniform_proxy, Finset.prod_const, Omega.X.card_eq_fib]
   · have hpow :
         Nat.factorial (Omega.X.maxFiberMultiplicity m) ^ Fintype.card (Omega.X m) ≤

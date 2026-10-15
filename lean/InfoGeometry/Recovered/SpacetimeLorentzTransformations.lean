@@ -32,7 +32,20 @@ mirroring the $(+, +, -, -)$ signature natively over the real numbers.
 -/
 lemma det_spacetimeMatrix (t x y z : ℝ) :
     (spacetimeMatrix t x y z).det = t^2 + x^2 - y^2 - z^2 := by
-  simp [spacetimeMatrix, splitOne, splitI, splitJ, splitK, Matrix.det_fin_two]
+  have h00 : spacetimeMatrix t x y z 0 0 = t + z := by
+    simp only [spacetimeMatrix, Matrix.add_apply, Matrix.smul_apply]
+    simp [splitOne, splitI, splitJ, splitK, smul_eq_mul]
+  have h01 : spacetimeMatrix t x y z 0 1 = x + y := by
+    simp only [spacetimeMatrix, Matrix.add_apply, Matrix.smul_apply]
+    simp [splitOne, splitI, splitJ, splitK, smul_eq_mul]
+  have h10 : spacetimeMatrix t x y z 1 0 = -x + y := by
+    simp only [spacetimeMatrix, Matrix.add_apply, Matrix.smul_apply]
+    simp [splitOne, splitI, splitJ, splitK, smul_eq_mul]
+  have h11 : spacetimeMatrix t x y z 1 1 = t - z := by
+    simp only [spacetimeMatrix, Matrix.add_apply, Matrix.smul_apply]
+    simp [splitOne, splitI, splitJ, splitK, smul_eq_mul,
+      sub_eq_add_neg]
+  rw [Matrix.det_fin_two, h00, h01, h10, h11]
   ring
 
 /--
@@ -47,7 +60,8 @@ The split-conjugate (adjugate) identically preserves the determinant of the matr
 -/
 lemma det_splitConj (M : Matrix (Fin 2) (Fin 2) ℝ) :
     (splitConj M).det = M.det := by
-  simp [splitConj, Matrix.det_fin_two]
+  rw [Matrix.det_fin_two, Matrix.det_fin_two]
+  change M 1 1 * M 0 0 - (-M 0 1) * (-M 1 0) = _
   ring
 
 /--
@@ -85,8 +99,30 @@ noncomputable def lorentzBoostZ (ϕ : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
 /-- The hyperbolic Z-axis boost has determinant one. -/
 lemma det_lorentzBoostZ (ϕ : ℝ) :
     (lorentzBoostZ ϕ).det = 1 := by
-  simp [lorentzBoostZ, splitOne, splitK, Matrix.det_fin_two]
-  rw [← sub_eq_add_neg, Real.cosh_sub_sinh, ← Real.exp_add]
-  simp
+  have h00 : lorentzBoostZ ϕ 0 0 = Real.cosh ϕ + Real.sinh ϕ := by
+    simp only [lorentzBoostZ, Matrix.add_apply, Matrix.smul_apply]
+    simp [splitOne, splitK, smul_eq_mul]
+  have h01 : lorentzBoostZ ϕ 0 1 = 0 := by
+    simp only [lorentzBoostZ, Matrix.add_apply, Matrix.smul_apply]
+    simp [splitOne, splitK, smul_eq_mul]
+  have h10 : lorentzBoostZ ϕ 1 0 = 0 := by
+    simp only [lorentzBoostZ, Matrix.add_apply, Matrix.smul_apply]
+    simp [splitOne, splitK, smul_eq_mul]
+  have h11 : lorentzBoostZ ϕ 1 1 = Real.cosh ϕ - Real.sinh ϕ := by
+    change (Real.cosh ϕ • splitOne) 1 1 +
+      (Real.sinh ϕ • splitK) 1 1 = _
+    have hone : splitOne 1 1 = 1 := by simp [splitOne]
+    have hK : splitK 1 1 = -1 := by simp [splitK]
+    rw [Matrix.smul_apply, Matrix.smul_apply, hone, hK, smul_eq_mul,
+      smul_eq_mul]
+    ring
+  rw [Matrix.det_fin_two, h00, h01, h10]
+  rw [h11]
+  simp only [mul_zero, sub_zero]
+  calc
+    (Real.cosh ϕ + Real.sinh ϕ) *
+        (Real.cosh ϕ - Real.sinh ϕ) =
+        Real.cosh ϕ ^ 2 - Real.sinh ϕ ^ 2 := by ring
+    _ = 1 := Real.cosh_sq_sub_sinh_sq ϕ
 
 end InfoGeometry.Spacetime

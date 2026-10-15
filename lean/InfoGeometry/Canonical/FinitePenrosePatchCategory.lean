@@ -139,14 +139,14 @@ def mapLocalState (S : SpinNet α 𝕜 T D) {P Q : FinitePatch (α := α)} (f : 
 /-- The patch-local-state assignment is a functor to `Type`. -/
 def localStateFunctor (S : SpinNet α 𝕜 T D) : FinitePatch (α := α) ⥤ Type _ where
   obj P := localState (α := α) S P
-  map f := mapLocalState (α := α) S f
+  map f := ↾(mapLocalState (α := α) S f)
   map_id := by
     intro P
-    funext x
+    ext x
     exact mapLocalState_id (α := α) S P x
   map_comp := by
     intro P Q R f g
-    funext x
+    ext x
     exact mapLocalState_comp (α := α) S f g x
 
 section PatchCocones

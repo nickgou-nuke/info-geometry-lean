@@ -52,7 +52,9 @@ theorem paper_phase_lift_spectral_bound :
       calc
         u⁻¹ = Complex.exp (-θ * Complex.I) := hu_inv_exp
         _ = Real.cos θ - Real.sin θ * Complex.I := by
-              simpa [neg_mul, Complex.exp_mul_I] using Complex.exp_mul_I (-θ)
+              rw [Complex.exp_mul_I, Complex.cos_neg, Complex.sin_neg,
+                ← Complex.ofReal_cos, ← Complex.ofReal_sin]
+              ring
         _ = (x / 2 : ℂ) - Complex.I * s := by
               simp [θ, s, Real.cos_arccos hx_left hx_right, Real.sin_arccos, mul_comm]
     refine ⟨hu_norm, ?_⟩

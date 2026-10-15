@@ -48,7 +48,7 @@ open InfoGeometry.Clifford.CliffordBott
 /-! ## The graded inclusions -/
 
 /-- Even graded inclusion: I₂ ⊗ x. Ring homomorphism. -/
-def bottInclusionEven {n : ℕ} (x : SplitClNNAlg n) : Matrix (Fin 2) (Fin 2) (SplitClNNAlg n) :=
+noncomputable def bottInclusionEven {n : ℕ} (x : SplitClNNAlg n) : Matrix (Fin 2) (Fin 2) (SplitClNNAlg n) :=
   λ i j =>
     match i, j with
     | 0, 0 => x
@@ -56,7 +56,7 @@ def bottInclusionEven {n : ℕ} (x : SplitClNNAlg n) : Matrix (Fin 2) (Fin 2) (S
     | _, _ => 0
 
 /-- Odd graded inclusion: Γ ⊗ x. Carries the Jordan-Wigner string (-1 on bottom right). -/
-def bottInclusionOdd {n : ℕ} (x : SplitClNNAlg n) : Matrix (Fin 2) (Fin 2) (SplitClNNAlg n) :=
+noncomputable def bottInclusionOdd {n : ℕ} (x : SplitClNNAlg n) : Matrix (Fin 2) (Fin 2) (SplitClNNAlg n) :=
   λ i j =>
     match i, j with
     | 0, 0 => x
@@ -104,7 +104,7 @@ where D_new encodes the 2×2 incidence of the new edge. The
 bottInclusionOdd applies the Jordan-Wigner string to ensure
 anticommutation with the causal past.
 -/
-def diracStep {n : ℕ}
+noncomputable def diracStep {n : ℕ}
     (D_past : SplitClNNAlg n)
     (D_new : SplitClNNAlg n) :
     Matrix (Fin 2) (Fin 2) (SplitClNNAlg n) :=

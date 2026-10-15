@@ -112,7 +112,7 @@ theorem paper_conclusion_strictification_quotients_category_equivalence :
       refine Quotient.inductionOn q ?_
       intro x
       cases x
-      simpa using hg PUnit.unit
+      exact hg PUnit.unit
   exact ⟨visibleLabel, hvisible, hkernel, hfactor,
     ⟨conclusion_strictification_quotients_category_equivalence_equiv⟩⟩
 

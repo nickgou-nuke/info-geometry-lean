@@ -355,21 +355,21 @@ theorem spinTransportedMixedGenerator55_commutator_mixedGenerator
   · subst k
     subst l
     simpa only [spinTransportedMixedGenerator55, map_mul, map_sub, map_zero,
-      if_pos rfl] using
+      ite_eq_left rfl, ite_true] using
       congrArg (spinCliffordRingEquiv g)
         (mixedGenerator55_commutator_mixedGenerator i j j i)
   · subst k
     simpa only [spinTransportedMixedGenerator55, map_mul, map_sub, map_zero,
-      if_pos rfl, if_neg hil] using
+      ite_eq_left rfl, ite_true, ite_eq_right hil] using
       congrArg (spinCliffordRingEquiv g)
         (mixedGenerator55_commutator_mixedGenerator i j j l)
   · subst l
     simpa only [spinTransportedMixedGenerator55, map_mul, map_sub, map_zero,
-      if_neg hjk, if_pos rfl] using
+      ite_eq_right hjk, ite_eq_left rfl, ite_true] using
       congrArg (spinCliffordRingEquiv g)
         (mixedGenerator55_commutator_mixedGenerator i j k i)
   · simpa only [spinTransportedMixedGenerator55, map_mul, map_sub, map_zero,
-      if_neg hjk, if_neg hil] using
+      ite_eq_right hjk, ite_eq_right hil] using
       congrArg (spinCliffordRingEquiv g)
         (mixedGenerator55_commutator_mixedGenerator i j k l)
 

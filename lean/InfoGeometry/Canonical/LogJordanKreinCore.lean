@@ -1,7 +1,9 @@
 import InfoGeometry.Clifford.LogCftMonodromy
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Normed.Algebra.MatrixExponential
+import Mathlib.Analysis.SpecialFunctions.Exponential
 import Mathlib.LinearAlgebra.Matrix.Trace
+import Mathlib.Tactic
 
 noncomputable section
 
@@ -112,8 +114,8 @@ private theorem exp_smul_nilpotent (t : ℝ) :
   rw [tsum_eq_sum (s := Finset.range 2)]
   · simp [Finset.sum_range_succ, pow_zero, pow_one]
   · intro n hn
-    have h2n : 2 ≤ n := by
-      simpa using hn
+    have hn' : ¬ n < 2 := by simpa only [Finset.mem_range] using hn
+    have h2n : 2 ≤ n := Nat.not_lt.mp hn'
     have hpow2 : (t • N) ^ 2 = 0 := by
       rw [pow_two, smul_mul_assoc, mul_smul_comm, smul_smul,
         jordanNilpotent_sq, smul_zero]
@@ -140,10 +142,16 @@ theorem exp_jordanCell (t delta : ℝ) :
           t • InfoGeometry.Clifford.LogCftMonodromy.jordanNilpotent
     rw [InfoGeometry.Clifford.LogCftMonodromy.l0_cell_decomposition]
     module
-  rw [hdecomp, NormedSpace.exp_add_of_commute]
-  · rw [exp_smul_one, exp_smul_nilpotent]
-    simp
-  · exact (Commute.one_left (t • N)).smul_left (t * delta)
+  have hcomm : Commute ((t * delta) • (1 : M2R)) (t • N) := by
+    change ((t * delta) • (1 : M2R)) * (t • N) =
+      (t • N) * ((t * delta) • (1 : M2R))
+    apply Matrix.ext
+    intro i j
+    simp [Matrix.mul_apply, Fin.sum_univ_two, Matrix.one_apply]
+    ring
+  rw [hdecomp]
+  rw [Matrix.exp_add_of_commute _ _ hcomm, exp_smul_one, exp_smul_nilpotent]
+  simp
 
 theorem trace_exp_jordanCell (t delta : ℝ) :
     Matrix.trace (NormedSpace.exp (t • L0 delta)) =

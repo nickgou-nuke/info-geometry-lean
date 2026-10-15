@@ -47,9 +47,7 @@ theorem thirdRootPhase_triple_product {phase : ℂ} (h_phase : IsThirdRootPhase 
 
 /-- The finite `3 × 3` diagonal vortex operator associated to a phase. -/
 def diagonalVortexOperator (phase : ℂ) : Matrix (Fin 3) (Fin 3) ℂ :=
-  ![![1, 0, 0],
-    ![0, 1, 0],
-    ![0, 0, phase]]
+  Matrix.diagonal (fun i : Fin 3 => if i = 2 then phase else 1)
 
 /-- A diagonal vortex operator with third-root phase has order dividing three. -/
 theorem diagonalVortexOperator_cube_eq_one {phase : ℂ} (h_phase : IsThirdRootPhase phase) :

@@ -16,6 +16,7 @@ noncomputable section
 namespace InfoGeometry.Canonical.CuntzUpperTailQCCRColimitReadout
 
 open CategoryTheory CategoryTheory.Limits
+open InfoGeometry.OperatorAlgebra.QCCRResidual
 open InfoGeometry.Canonical.CuntzStarInductiveSystem
 open InfoGeometry.Canonical.CuntzTowerUpperTailActionColimit
 open InfoGeometry.Canonical.FilteredQCCRParameterTopologicalColimit
@@ -56,11 +57,9 @@ def upperTailCuntzQCCRPoint
       p ∈ qCcrParameterZeroLocus (A := Stage j.1)} :=
   ⟨(star ((T.family j.1).S (Fin.castLE j.2 i)),
       ((T.family j.1).S (Fin.castLE j.2 i), (0 : Stage j.1))), by
-    change qCcrParameterResidualContinuousMap (A := Stage j.1)
-        (star ((T.family j.1).S (Fin.castLE j.2 i)),
-          ((T.family j.1).S (Fin.castLE j.2 i), (0 : Stage j.1))) = 0
-    simpa [qCcrParameterResidualContinuousMap] using
-      cstar_cuntz_generator_qccr_zero (T.family j.1) (Fin.castLE j.2 i)⟩
+    dsimp [qCcrParameterZeroLocus, qCcrParameterResidualContinuousMap]
+    exact cstar_cuntz_generator_qccr_zero
+      (T.family j.1) (Fin.castLE j.2 i)⟩
 
 def upperTailCuntzPointFamily
     (m : ℕ) (i : Fin m) :
@@ -159,7 +158,14 @@ theorem upperTailCuntzQCCRParameterColimitMap_stage_apply
         qCcrParameterTopologicalInjection
           (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m) j
           (upperTailCuntzQCCRPoint Stage T m i j).1 := by
-    simpa [qCcrParameterZeroFiberToParameterNatTrans] using hincl'
+    change upperTailCuntzQCCRZeroFiberToParameterColimit Stage T m
+        (qCcrParameterZeroFiberTopologicalInjection
+          (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m) j
+          (upperTailCuntzQCCRPoint Stage T m i j)) =
+      qCcrParameterTopologicalInjection
+        (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m) j
+        (upperTailCuntzQCCRPoint Stage T m i j).1 at hincl'
+    exact hincl'
   calc
     upperTailCuntzQCCRParameterColimitMap Stage T m i
         (topologicalDirectInjection
@@ -171,7 +177,23 @@ theorem upperTailCuntzQCCRParameterColimitMap_stage_apply
         have hpoint' := congrArg
           (fun z => upperTailCuntzQCCRZeroFiberToParameterColimit Stage T m z)
           hpoint
-        simpa [upperTailCuntzQCCRParameterColimitMap] using hpoint'
+        change upperTailCuntzQCCRZeroFiberToParameterColimit Stage T m
+            (upperTailCuntzQCCRColimitMap Stage T m i
+              (topologicalDirectInjection
+                ((Functor.const (UpperNatIndex m)).obj (TopCat.of PUnit)) j u)) =
+          upperTailCuntzQCCRZeroFiberToParameterColimit Stage T m
+            (qCcrParameterZeroFiberTopologicalInjection
+              (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m) j
+              (upperTailCuntzQCCRPoint Stage T m i j)) at hpoint'
+        change upperTailCuntzQCCRZeroFiberToParameterColimit Stage T m
+            (upperTailCuntzQCCRColimitMap Stage T m i
+              (topologicalDirectInjection
+                ((Functor.const (UpperNatIndex m)).obj (TopCat.of PUnit)) j u)) =
+          upperTailCuntzQCCRZeroFiberToParameterColimit Stage T m
+            (qCcrParameterZeroFiberTopologicalInjection
+              (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m) j
+              (upperTailCuntzQCCRPoint Stage T m i j))
+        exact hpoint'
     _ = qCcrParameterTopologicalInjection
         (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m) j
         (upperTailCuntzQCCRPoint Stage T m i j).1 := by

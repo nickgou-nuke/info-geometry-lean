@@ -1,0 +1,191 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import Mathlib.Algebra.Ring.Basic
+import Mathlib.Tactic.Abel
+
+set_option linter.deprecated false
+set_option linter.unusedVariables false
+
+/-!
+# The Drazin Generalized Inverse and the Nilpotent Spectral Kernel
+
+While the Moore–Penrose pseudoinverse $\rho^+$ is metric-dependent and designed for
+Hermitian density matrices, the **Drazin inverse** $A^D$ is purely algebraic, metric-free,
+and strictly commutes with the operator:
+$$A A^D = A^D A$$
+
+In an autoregressive Transformer, the Softmax transition matrix $P$ is directed and non-symmetric.
+Its Markov generator $L = \mathbf{1} - P$ has index $k = 1$. The Drazin inverse (group inverse $L^\#$)
+isolates the generalized nilpotent kernel from the invertible ergodic core:
+
+1. **The Three Drazin Axioms for Index $k$**:
+   - $D A D = D$
+   - $A D = D A$
+   - $A^{k+1} D = A^k$
+2. **The Spectral Projectors**:
+   - Active core projector: $P_{\text{core}} = A D = D A$, with $P^2 = P$ and $P A = A P$.
+   - Generalized kernel projector: $Q_{\text{kernel}} = \mathbf{1} - A D$, with $Q^2 = Q$.
+   - Completeness & orthogonality: $P + Q = \mathbf{1}$ and $P \cdot Q = 0$.
+3. **Fundamental Kernel Annihilation Law**:
+   $$A^k \cdot (\mathbf{1} - A D) = 0$$
+   The operator $A^k$ is identically annihilated on the complementary subspace.
+4. **Group Inverse Specialization (Index $k = 1$ for Markov Chains)**:
+   - $A \cdot (\mathbf{1} - P) = 0$ (the transient nilpotent error vanishes identically).
+   - Clean algebraic reconstruction: $A \cdot P = A$.
+
+All proofs are 100% native Mathlib 4, strictly constructive, in an arbitrary associative ring,
+with zero `sorry`s, zero `admit`s, and zero custom axioms.
+-/
+
+namespace InfoGeometry.QuantumContext.Drazin
+
+variable {R : Type*} [Ring R]
+
+/-! --------------------------------------------------------------------------
+    Section 1: The Drazin Axioms and Spectral Projectors
+    -------------------------------------------------------------------------- -/
+
+/-- Predicate stating that D is the Drazin inverse of A with index k. -/
+structure IsDrazinInverse (A D : R) (k : ℕ) : Prop where
+  drazin_one   : D * A * D = D
+  comm         : A * D = D * A
+  index_eq     : A ^ (k + 1) * D = A ^ k
+
+variable {A D : R} {k : ℕ}
+
+/-- The Drazin Spectral Projector P = A · D = D · A. -/
+def spectralProj (A D : R) : R := A * D
+
+/-- The Generalized Kernel Projector Q = 1 - P. -/
+def kernelProj (A D : R) : R := 1 - spectralProj A D
+
+/-! --------------------------------------------------------------------------
+    Section 2: Idempotency and Commutation of the Spectral Projector
+    -------------------------------------------------------------------------- -/
+
+/-- P strictly commutes with A: P · A = A · P. -/
+theorem spectralProj_comm (hD : IsDrazinInverse A D k) :
+    spectralProj A D * A = A * spectralProj A D := by
+  dsimp [spectralProj]
+  rw [mul_assoc, ← hD.comm, ← mul_assoc]
+
+/-- P is an idempotent projector: P² = P. -/
+theorem spectralProj_idempotent (hD : IsDrazinInverse A D k) :
+    spectralProj A D * spectralProj A D = spectralProj A D := by
+  dsimp [spectralProj]
+  calc
+    (A * D) * (A * D) = A * (D * A * D) := by
+      rw [mul_assoc, mul_assoc, ← mul_assoc D A D]
+    _ = A * D := by rw [hD.drazin_one]
+
+/-- Q = 1 - P is an idempotent projector: Q² = Q. -/
+theorem kernelProj_idempotent (hD : IsDrazinInverse A D k) :
+    kernelProj A D * kernelProj A D = kernelProj A D := by
+  dsimp [kernelProj]
+  have hP := spectralProj_idempotent hD
+  rw [mul_sub, mul_one, sub_mul, one_mul, hP, sub_self, sub_zero]
+
+/-- Completeness: P + Q = 1. -/
+theorem spectral_add_kernel :
+    spectralProj A D + kernelProj A D = 1 := by
+  dsimp [kernelProj]
+  abel
+
+/-- Orthogonality: P · Q = 0. -/
+theorem spectral_mul_kernel (hD : IsDrazinInverse A D k) :
+    spectralProj A D * kernelProj A D = 0 := by
+  dsimp [kernelProj]
+  have hP := spectralProj_idempotent hD
+  rw [mul_sub, mul_one, hP, sub_self]
+
+/-! --------------------------------------------------------------------------
+    Section 3: Kernel Annihilation Theorems
+    -------------------------------------------------------------------------- -/
+
+/--
+The Fundamental Kernel Annihilation Law:
+A^k · (1 - P) = 0.
+The operator A^k is identically annihilated by the complementary Drazin projector.
+-/
+theorem index_annihilates_kernel_proj (hD : IsDrazinInverse A D k) :
+    A ^ k * kernelProj A D = 0 := by
+  dsimp [kernelProj, spectralProj]
+  have h_idx := hD.index_eq
+  calc
+    A ^ k * (1 - A * D) = A ^ k * 1 - A ^ k * (A * D) := by rw [mul_sub]
+    _ = A ^ k - (A ^ k * A) * D := by rw [mul_one, mul_assoc]
+    _ = A ^ k - A ^ (k + 1) * D := by rw [← pow_succ A k]
+    _ = A ^ k - A ^ k := by rw [h_idx]
+    _ = 0 := sub_self (A ^ k)
+
+/-! --------------------------------------------------------------------------
+    Section 4: Group Inverse Specialization (Index k = 1 for Markov Chains)
+    -------------------------------------------------------------------------- -/
+
+/-- For Markov chains and index-1 operators, the nilpotent part is strictly ZERO. -/
+theorem group_inverse_nilpotent_zero (h1 : IsDrazinInverse A D 1) :
+    A * kernelProj A D = 0 := by
+  have h := index_annihilates_kernel_proj h1
+  rw [pow_one] at h
+  exact h
+
+/-- For index 1, A decomposes cleanly into A = A · P. -/
+theorem group_inverse_reconstruction (h1 : IsDrazinInverse A D 1) :
+    A * spectralProj A D = A := by
+  have h := group_inverse_nilpotent_zero h1
+  calc
+    A * spectralProj A D = A * spectralProj A D + 0 := by rw [add_zero]
+    _ = A * spectralProj A D + A * kernelProj A D := by rw [h]
+    _ = A * (spectralProj A D + kernelProj A D) := by rw [← mul_add]
+    _ = A * 1 := by rw [spectral_add_kernel]
+    _ = A := mul_one A
+
+/-! --------------------------------------------------------------------------
+    Section 5: Master Certificate & Compilation Constructor
+    -------------------------------------------------------------------------- -/
+
+/--
+Master Certificate for the Drazin Spectral Kernel:
+1. Commutation: P A = A P.
+2. Idempotency: P² = P, Q² = Q.
+3. Completeness & Orthogonality: P + Q = 1, P Q = 0.
+4. Annihilation: A^k Q = 0.
+5. Group inverse nilpotency: A Q = 0 (k = 1).
+6. Reconstruction: A P = A (k = 1).
+-/
+structure DrazinSpectralKernelCertificate (R : Type*) [Ring R] : Prop where
+  proj_comm : ∀ (A D : R) (k : ℕ) (hD : IsDrazinInverse A D k),
+    spectralProj A D * A = A * spectralProj A D
+  proj_idem : ∀ (A D : R) (k : ℕ) (hD : IsDrazinInverse A D k),
+    spectralProj A D * spectralProj A D = spectralProj A D
+  kernel_idem : ∀ (A D : R) (k : ℕ) (hD : IsDrazinInverse A D k),
+    kernelProj A D * kernelProj A D = kernelProj A D
+  completeness : ∀ (A D : R), spectralProj A D + kernelProj A D = 1
+  orthogonality : ∀ (A D : R) (k : ℕ) (hD : IsDrazinInverse A D k),
+    spectralProj A D * kernelProj A D = 0
+  annihilation : ∀ (A D : R) (k : ℕ) (hD : IsDrazinInverse A D k),
+    A ^ k * kernelProj A D = 0
+  group_nilpotent : ∀ (A D : R) (h1 : IsDrazinInverse A D 1),
+    A * kernelProj A D = 0
+  group_reconstruct : ∀ (A D : R) (h1 : IsDrazinInverse A D 1),
+    A * spectralProj A D = A
+
+/--
+Master compilation constructor verifying that the Drazin spectral kernel
+is 100% mathematically closed in Lean 4 without custom axioms.
+-/
+theorem compile_drazin_spectral_kernel (R : Type*) [Ring R] :
+    DrazinSpectralKernelCertificate R where
+  proj_comm := fun _ _ _ => spectralProj_comm
+  proj_idem := fun _ _ _ => spectralProj_idempotent
+  kernel_idem := fun _ _ _ => kernelProj_idempotent
+  completeness := fun _ _ => spectral_add_kernel
+  orthogonality := fun _ _ _ => spectral_mul_kernel
+  annihilation := fun _ _ _ => index_annihilates_kernel_proj
+  group_nilpotent := fun _ _ => group_inverse_nilpotent_zero
+  group_reconstruct := fun _ _ => group_inverse_reconstruction
+
+end InfoGeometry.QuantumContext.Drazin

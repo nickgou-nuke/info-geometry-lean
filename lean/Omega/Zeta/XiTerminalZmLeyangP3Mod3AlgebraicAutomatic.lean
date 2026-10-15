@@ -66,8 +66,8 @@ theorem paper_xi_terminal_zm_leyang_perron_p3_mod3_algebraic_automatic :
   refine ⟨?_, hzero, ?_, ?_, ?_, ?_⟩
   · intro u v
     rfl
-  · simpa [xi_terminal_zm_leyang_perron_p3_mod3_algebraic_automatic_formal_derivative] using
-      hderiv 0
+  · rw [xi_terminal_zm_leyang_perron_p3_mod3_algebraic_automatic_formal_derivative, hderiv 0]
+    decide
   · norm_num [xi_terminal_zm_leyang_perron_p3_mod3_algebraic_automatic_formal_derivative,
       xi_terminal_zm_leyang_perron_p3_semistable_degree_drop_formal_derivative]
   · intro i

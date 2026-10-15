@@ -155,10 +155,11 @@ omit [CompleteSpace E] [FiniteDimensional ℝ E] in
 @[simp] theorem determinantCharacter_gaugeRescale
     (w : E ≃L[ℝ] E) (g : LiftedSheetAut (E := E)) :
     determinantCharacter { plus := w.trans g.plus, minus := w.trans g.minus } = determinantCharacter g := by
-  cases g
-  unfold determinantCharacter toRestrictedSheetEquiv RestrictedSheetEquiv.restrictedVolumeCharacter VolumeHom
-  simp [LinearEquiv.det_trans]
-  group
+  change RestrictedSheetEquiv.restrictedVolumeCharacter
+      (RestrictedSheetEquiv.weylGaugeRescale w.toLinearEquiv (toRestrictedSheetEquiv g)) =
+    RestrictedSheetEquiv.restrictedVolumeCharacter (toRestrictedSheetEquiv g)
+  exact RestrictedSheetEquiv.restrictedVolumeCharacter_weylGaugeRescale
+    (E := E) w.toLinearEquiv (toRestrictedSheetEquiv g)
 
 omit [CompleteSpace E] [FiniteDimensional ℝ E] in
 @[simp] theorem relativeVolumeScale_gaugeRescale

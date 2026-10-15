@@ -228,8 +228,9 @@ theorem hasDerivAt_firstMomentNumerator (θ : ℝ) :
 /-- The derivative of the log-partition is the Gibbs mean. -/
 theorem hasDerivAt_logPartition (θ : ℝ) :
     HasDerivAt F.logPartition (F.mean θ) θ := by
-  simpa [logPartition, mean] using
-    (F.hasDerivAt_partition θ).log (F.partition_ne_zero θ)
+  change HasDerivAt (fun t => Real.log (F.partition t))
+    (F.firstMomentNumerator θ / F.partition θ) θ
+  exact (F.hasDerivAt_partition θ).log (F.partition_ne_zero θ)
 
 @[simp] theorem deriv_logPartition (θ : ℝ) :
     deriv F.logPartition θ = F.mean θ :=

@@ -64,14 +64,14 @@ theorem rootResidualGenerator_injective :
     have hv := congrFun he (rootPCAlignment α)
     simp [oneAtBit, oneAt] at hv
     have hv' : rootPCAlignment β = rootPCAlignment α := by
-      simpa only [rootPCAlignment_apply] using hv
+      exact of_decide_eq_true (by simpa only [rootPCAlignment_apply] using hv)
     exact hne hv'.symm
   exact rootPCAlignment.injective hi
 
 theorem rootResidualGenerator_range_eq_pcGenerator_range :
     Set.range rootResidualGenerator = Set.range pcGenerator := by
-  simpa [rootResidualGenerator] using
-    pcPositiveRootPacket_range_eq_pcGenerator_range
+  change Set.range pcPositiveRootPacket = Set.range pcGenerator
+  exact pcPositiveRootPacket_range_eq_pcGenerator_range
 
 theorem rootResidualGenerator_range_card :
     Nat.card (Set.range rootResidualGenerator) = 6 := by

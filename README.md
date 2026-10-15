@@ -1,3 +1,10 @@
+<!-- repository-context-rule -->
+> **Repository grounding:** For repository work, the checked-out codebase is
+> the context. Search existing implementation and trace its real definitions,
+> imports, instances, theorems, and uses before declaring a structure missing
+> or incorrect. A finding in one file is not a repo-wide finding. See
+> [`docs/REPO_DEEP_SEARCH_PROTOCOL.md`](docs/REPO_DEEP_SEARCH_PROTOCOL.md).
+
 # InfoGeometry: The Spinorial Prima Materia
 
 > *"This is a living artifact of human–AI collaboration: a machine-checked Lean 4 formalization of information geometry, quantum foundations, and spacetime structure from first principles."*
@@ -29,6 +36,13 @@ This repository is not a sanitized textbook. It is the raw, authentic record of 
 
 > [!IMPORTANT]
 > **The Colimit Continuum Invariant:** Continuous boundaries, horizons, and physical limits in this repository are not derived via naive measure theory or analytical continuation. They are strictly constructed via **Categorical Direct Inductive Colimits**, pushing finite algebraic structures through the UHF $2^\infty$ boundary without analytical hallucination.
+>
+> **The Kernel Source-of-Truth & Operator Wavefront Law (OpenGauss Protocol QMS-SOP-IAA-001):**
+> 1. **Lean owner files decide truth:** Only kernel-checked source edits count. Graph tools, transcripts, and CAS outputs are navigation aids only.
+> 2. **Zero fake proofs:** Exactly 0 `sorry`, 0 `admit`, 0 custom axioms; strictly foundational Lean 4 axioms (`[propext, Classical.choice, Quot.sound]`).
+> 3. **Trap T16 Permanent Prohibition (Zero Scalar Toy Proxies):** Non-commutative operator algebras and infinite-dimensional quantum structures must never be replaced by coordinate/scalar surrogates.
+> 4. **Operator Wavefront Duality:** Retarded/Advanced waves are operator wavefront shells $\mathcal{O}_{\text{foc}}(\tau) = \sigma_{-\tau}(\mathcal{O}_0)$ and $\mathcal{O}_{\text{defoc}}(\tau) = \sigma_{+\tau}(\mathcal{O}_0')$ in von Neumann algebras $\mathcal{M}$ intertwined by Tomita modular conjugation $J \mathcal{O}_{\text{foc}}(\tau) J = \mathcal{O}_{\text{defoc}}(-\tau)$, Klein glide reflection $\mathcal{G}_{\text{Klein}}(\mathcal{O}_{\text{foc}}(\tau)) = \mathcal{O}_{\text{defoc}}(-\tau)$, KMS thermal periodicity $\tau \to \tau + i\beta$, and chiral ideal splits $P_L \leftrightarrow P_R$.
+> 5. **Sequential Build Discipline:** Never run `lake clean`. Acquire `/tmp/info-geometry-build.lock` via `python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock`. Proactively stage all edits with `git add -A`.
 
 ---
 

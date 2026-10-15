@@ -74,14 +74,14 @@ theorem residual_eq_zero_iff (d : DerivativeData) (m : ℝ) (ψ : Coordinates) :
       (residual d m ψ).y2 = 0 ∧ (residual d m ψ).y3 = 0 := by
   constructor
   · intro h
-    exact ⟨by simpa using congrArg ZornCell.r h,
-      by simpa using congrArg ZornCell.s h,
-      by simpa using congrArg ZornCell.x1 h,
-      by simpa using congrArg ZornCell.x2 h,
-      by simpa using congrArg ZornCell.x3 h,
-      by simpa using congrArg ZornCell.y1 h,
-      by simpa using congrArg ZornCell.y2 h,
-      by simpa using congrArg ZornCell.y3 h⟩
+    exact ⟨by simpa [zero_val, zeroZ] using congrArg ZornCell.r h,
+      by simpa [zero_val, zeroZ] using congrArg ZornCell.s h,
+      by simpa [zero_val, zeroZ] using congrArg ZornCell.x1 h,
+      by simpa [zero_val, zeroZ] using congrArg ZornCell.x2 h,
+      by simpa [zero_val, zeroZ] using congrArg ZornCell.x3 h,
+      by simpa [zero_val, zeroZ] using congrArg ZornCell.y1 h,
+      by simpa [zero_val, zeroZ] using congrArg ZornCell.y2 h,
+      by simpa [zero_val, zeroZ] using congrArg ZornCell.y3 h⟩
   · rintro ⟨hr, hs, hx1, hx2, hx3, hy1, hy2, hy3⟩
     apply zorn_ext
     · exact hr

@@ -178,7 +178,7 @@ theorem primeEulerPerturbation_continuousOn_of_re_gt_one
   have hpert : ContinuousOn
       (fun s : ℂ => (1 - (p : ℂ) ^ (-s))⁻¹ - 1) U :=
     hinv.sub continuous_const.continuousOn
-  simpa [primeEulerPerturbation, primeEulerFactor] using hpert
+  exact hpert
 
 theorem primeEulerProduct_locallyUniform_on_re_margin
     {U : Set ℂ} (hU : IsOpen U)

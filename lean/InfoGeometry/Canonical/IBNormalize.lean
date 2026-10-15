@@ -98,8 +98,8 @@ theorem baScoreMeasure_normalize_eq_step
       ((baScoreMeasure prob pT_givenX x).normalize)
       =
     ibBlahutArimotoStep prob pT_givenX x := by
-  simpa [baScoreMeasure, ibBlahutArimotoStepUnnormalized,
-    baScore_eq_baScoreFrozen_induced] using
+  simpa [baScoreMeasure, ibBlahutArimotoStep, ibBlahutArimotoStepFrozen,
+    ibBlahutArimotoStepUnnormalized, baScore_eq_baScoreFrozen_induced] using
     probMeasureToPMF_normalize_discreteScoreMeasure
       (f := ibBlahutArimotoStepUnnormalized prob pT_givenX x)
       (hf0 := (ibBlahutArimotoScoreSlice prob pT_givenX x).nonzero)

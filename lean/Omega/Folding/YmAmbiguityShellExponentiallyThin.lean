@@ -24,9 +24,11 @@ private theorem fib_shift_two_le_sqrt_three_pow_pair :
       constructor
       · norm_num [sqrt_three_sq]
       · have hsqrt_nonneg : 0 ≤ Real.sqrt 3 := by positivity
-        have : 5 ≤ Real.sqrt 3 ^ 3 := by
+        have hle : (5 : ℝ) ≤ Real.sqrt 3 ^ 3 := by
           nlinarith [sqrt_three_sq, hsqrt_nonneg]
-        simpa using this
+        have hfib : (Nat.fib (0 + 5) : ℝ) = 5 := rfl
+        rw [hfib]
+        exact hle
   | k + 1 => by
       rcases fib_shift_two_le_sqrt_three_pow_pair k with ⟨hk4, hk5⟩
       constructor

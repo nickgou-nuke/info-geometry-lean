@@ -318,8 +318,9 @@ theorem continuous_hestenesStokesCompositionAction
       ((hestenesStokesParameterAdd p.1).1,
         (hestenesStokesParameterAdd p.1).2, p.2)) :=
     hsum.fst.prodMk (hsum.snd.prodMk continuous_snd)
-  simpa only [hestenesStokesCompositionAction] using
-    (continuous_realLoxodromicAction K I hK_cont hI_cont).comp hparameterMap
+  have hlift := continuous_hestenesStokesLift K I hK_cont hI_cont
+  simpa only [hestenesStokesCompositionAction, Function.comp_def] using
+    hlift.comp hparameterMap
 
 def hestenesStokesFlow
     (K I : HestenesStokesCarrier →ₗ[ℝ] HestenesStokesCarrier)

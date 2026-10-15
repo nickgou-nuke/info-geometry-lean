@@ -35,7 +35,11 @@ theorem range_toGL_eq_preimage_one (R : Type u) (V : Type v)
     [CommRing R] [Fintype V] [DecidableEq V] :
     Set.range (Matrix.SpecialLinearGroup.toGL : «SL» R V → «GL» R V) =
       detHom R V ⁻¹' {1} := by
-  simpa [detHom] using (Matrix.SpecialLinearGroup.range_toGL (n := V) (A := R))
+  ext g
+  have h := (Matrix.SpecialLinearGroup.range_toGL_eq_ker_det (n := V) (R := R))
+  have hg := Subgroup.ext_iff.mp h g
+  rw [MonoidHom.mem_range, MonoidHom.mem_ker] at hg
+  exact hg
 
 /-- Logarithmic absolute determinant on `GL(ℝ)`. -/
 @[blueprint "def:determinant-log-abs"]

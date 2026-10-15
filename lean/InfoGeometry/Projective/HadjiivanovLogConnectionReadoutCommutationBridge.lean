@@ -63,8 +63,7 @@ theorem logarithmicConnection_unipotent
     (R : LogResidue V) (p : ℂ) (x : LogSection V) :
     logarithmicConnection R (sectionUnipotentReadout R p x) =
       sectionUnipotentReadout R p (logarithmicConnection R x) := by
-  refine TensorProduct.induction_on x ?_ ?_ ?_
-  · simp
+  refine TensorProduct.inductionOn x ?_ ?_
   · exact logarithmicConnection_unipotent_tmul R p
   · intro x y hx hy
     simp [map_add, hx, hy]
@@ -103,8 +102,7 @@ theorem logarithmicConnection_monodromyReadout
     (R : LogResidue V) (x : LogSection V) :
     logarithmicConnection R (sectionMonodromyReadout R x) =
       sectionMonodromyReadout R (logarithmicConnection R x) := by
-  refine TensorProduct.induction_on x ?_ ?_ ?_
-  · simp
+  refine TensorProduct.inductionOn x ?_ ?_
   · intro f v
     simp only [sectionMonodromyReadout_tmul, logarithmicConnection,
       LinearMap.add_apply, baseLogOperator_tmul,

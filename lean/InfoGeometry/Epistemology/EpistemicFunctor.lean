@@ -38,7 +38,13 @@ inductive CompilationArchetype
   | topologicalSchedule
   | proofEvidence
   | kernelCertifiedAdmission
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype CompilationArchetype where
+  elems := {.rawStreamToken, .causalPrerequisiteOrder, .topologicalSchedule,
+    .proofEvidence, .kernelCertifiedAdmission}
+  complete x := by
+    cases x <;> decide
 
 open CompilationArchetype
 

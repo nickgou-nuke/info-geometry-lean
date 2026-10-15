@@ -103,7 +103,8 @@ guaranteeing the geometric consistency of the Conformal mapping.
 -/
 theorem pointAtInfinity_mem_boundary :
     pointAtInfinity v_inf hv_inf_ne ∈ ProjectiveBoundary Q v_inf := by
-  dsimp [ProjectiveBoundary, IsOnProjectiveBoundary, pointAtInfinity, Projectivization.mk]
+  change IsOnProjectiveBoundary Q v_inf (pointAtInfinity v_inf hv_inf_ne)
+  dsimp [IsOnProjectiveBoundary, pointAtInfinity, Projectivization.mk]
   -- Native Mathlib property: polar Q x x = 2 * Q x
   have h_polar : QuadraticMap.polar Q v_inf v_inf = 2 • Q v_inf := by
     exact QuadraticMap.polar_self Q v_inf

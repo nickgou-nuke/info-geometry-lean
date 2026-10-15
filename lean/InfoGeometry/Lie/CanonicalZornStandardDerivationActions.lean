@@ -230,7 +230,6 @@ theorem opposite_standard_double_v_u (i : Fin 3) :
       canonicalStandardDerivationOfCanonical canonicalE11 (canonicalV i)⁆ ≠ 0 := by
   intro h
   have h0 := congrArg (fun D : Der => D.1 canonicalE11) h
-  dsimp only at h0
   rw [bracket_apply] at h0
   have hinner (x : CanonicalZornDerivation.CZ) :
       (⁅canonicalStandardDerivationOfCanonical canonicalE11 (canonicalV i),
@@ -255,7 +254,7 @@ theorem opposite_standard_double_v_u (i : Fin 3) :
         (directCanonicalStanDerMap canonicalE11 (canonicalV i) (canonicalU i)) x)
     have hcn := congrArg Neg.neg hc
     rw [bracket_apply] at hcn
-    simpa only [sub_eq_add_neg, neg_add, neg_neg] using hcn
+    simpa only [canonicalStandardDerivationOfCanonical, sub_eq_add_neg, neg_add, neg_neg] using hcn
   simp_rw [hinner] at h0
   change -(directCanonicalStanDerMap
       (directCanonicalStanDerMap canonicalE11 (canonicalV i) canonicalE11)
@@ -476,7 +475,6 @@ theorem opposite_standard_double_u_v (i : Fin 3) :
   rw [hC, hOuter]
   intro h
   have h0 := congrArg (fun D : Der => D.1 canonicalE11) h
-  dsimp only at h0
   change (2 : ℕ) •
       ((-canonicalStandardDerivationOfCanonical canonicalE11 (canonicalU i)).1 canonicalE11) = 0 at h0
   rw [show (-canonicalStandardDerivationOfCanonical canonicalE11 (canonicalU i)).1 canonicalE11 =
@@ -703,11 +701,8 @@ theorem direct_cross_7_12_C_v1 :
   rw [directCanonicalStanDerMap_apply_normal_form]
   simp only [u_mul_v_self 1, v_mul_u_self 1, v_mul_v_self 1,
     e11_mul_v, e22_mul_v, v_mul_e11, v_mul_e22,
-    u_mul_v_self, v_mul_u_self, u_mul_e11, u_mul_e22,
-    InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.zero_mul,
     InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.mul_zero,
-    zero_sub, sub_zero, add_zero, zero_add, smul_zero, sub_mul, mul_sub,
-    neg_smul, smul_sub]
+    zero_sub, sub_zero, smul_zero, sub_mul, mul_sub, neg_smul]
   module
 
 theorem standard_bracket_cross_7_12 :
@@ -790,7 +785,7 @@ theorem opposite_standard_double_cross_7_12 :
     norm_num [canonicalU, InfoGeometry.Algebra.ZornVectorMatrix.U,
       InfoGeometry.Algebra.ZornVectorMatrix.zero,
       InfoGeometry.Algebra.ZornVectorMatrix.smul,
-      InfoGeometry.Algebra.ZornVec3.basis, canonicalVectorEquiv] at hu) using 1 <;>
+      InfoGeometry.Algebra.ZornVec3.basis, canonicalVectorEquiv] at hu) using 1;
     module
 
 theorem standard_bracket_cross_1_5 :
@@ -818,11 +813,7 @@ theorem direct_cross_1_5_S_u1 :
       (2 : ℝ) • canonicalU 1 := by
   rw [directCanonicalStanDerMap_apply_normal_form]
   simp only [u_mul_v_self 1, v_mul_u_self 1, e11_mul_u, e22_mul_u,
-    u_mul_e11, u_mul_e22, e11_mul_e11, e22_mul_e22,
-    InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.zero_mul,
-    InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.mul_zero,
-    zero_sub, sub_zero, add_zero, zero_add, smul_zero, sub_mul, mul_sub,
-    smul_sub]
+    u_mul_e11, u_mul_e22, zero_sub, sub_zero, sub_mul, mul_sub, smul_sub]
   module
 
 theorem direct_cross_1_5_S_v0 :
@@ -831,11 +822,7 @@ theorem direct_cross_1_5_S_v0 :
   rw [directCanonicalStanDerMap_apply_normal_form]
   simp only [u_mul_v_self 1, v_mul_u_self 1, v_one_mul_v_zero,
     e11_mul_v, e22_mul_v, v_mul_e11, v_mul_e22,
-    u_mul_v_self, v_mul_u_self, u_one_mul_u_two,
-    InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.zero_mul,
-    InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.mul_zero,
-    zero_sub, sub_zero, add_zero, zero_add, smul_zero, sub_mul, mul_sub,
-    smul_sub, neg_smul]
+    u_one_mul_u_two, zero_sub, sub_zero, sub_mul, mul_sub]
   module
 
 theorem standard_bracket_S_A_cross_1_5 :
@@ -887,7 +874,6 @@ theorem opposite_standard_double_cross_1_5 :
   intro h
   norm_num [smul_smul, sub_eq_add_neg, add_smul] at h
   have h0 := congrArg (fun D : Der => D.1 (canonicalU 0)) h
-  dsimp only at h0
   change (9 : ℝ) •
       (canonicalStandardDerivationOfCanonical (canonicalU 1) (canonicalV 0)).1
         (canonicalU 0) + (9 : ℝ) •

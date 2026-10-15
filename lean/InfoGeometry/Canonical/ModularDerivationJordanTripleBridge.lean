@@ -114,7 +114,7 @@ theorem innerDerivation_eq_two_smul_lieProduct
     (K X : EndH) :
     innerDerivation K X =
       (2 : ℝ) • InfoGeometry.Canonical.SuperJordanLie.lieProduct K X := by
-  simpa [innerDerivation,
+  simpa [innerDerivation, ContinuousLinearMap.mul_def,
     InfoGeometry.Canonical.BogoliubovFockSuper.fockCommutator,
     InfoGeometry.Canonical.BogoliubovFockSuper.superBracket_even_left] using
     (InfoGeometry.Canonical.SuperJordanLie.fockCommutator_eq_two_smul_lieProduct
@@ -129,7 +129,7 @@ theorem associativeProduct_eq_jordan_add_half_innerDerivation
     K.comp X =
       InfoGeometry.SuperUnified.jordanProduct K X +
         (2 : ℝ)⁻¹ • innerDerivation K X := by
-  simpa [InfoGeometry.SuperUnified.lieBracket, innerDerivation] using
+  simpa [InfoGeometry.SuperUnified.lieBracket, innerDerivation, ContinuousLinearMap.mul_def] using
     (InfoGeometry.SuperUnified.clifford_decomposition
       (E := E) K X)
 

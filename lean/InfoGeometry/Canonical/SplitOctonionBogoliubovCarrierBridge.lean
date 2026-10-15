@@ -114,10 +114,12 @@ theorem quaternionicTransportedHyperbolicAxisOperator_sq (g : Quaternion ℝ)
   simpa [quaternionicTransportedHyperbolicAxisOperator, LinearMap.comp_apply] using
     congrArg splitOctonionQuaternionicCarrierEquiv h
 
+set_option synthInstance.maxHeartbeats 100000 in
 noncomputable def quaternionicTransportedHyperbolicAxisOperatorCLM (g : Quaternion ℝ) :
     DoubledSpace (Quaternion ℝ) →L[ℝ] DoubledSpace (Quaternion ℝ) :=
   LinearMap.toContinuousLinearMap (quaternionicTransportedHyperbolicAxisOperator g)
 
+set_option synthInstance.maxHeartbeats 100000 in
 noncomputable def canonicalQuaternionicBogoliubovVielbein (g : Quaternion ℝ) :
     BogoliubovVielbeinBundle (E := Quaternion ℝ) :=
   { reference := ContinuousLinearMap.id ℝ _
@@ -136,6 +138,8 @@ noncomputable abbrev canonicalQuaternionicSplitOctonionVielbein (g : Quaternion 
     For this canonical bundle the reference is the identity, so that frame is
     transport-fixed; it is therefore intentionally distinct from the
     transported hyperbolic flow above. -/
+set_option synthInstance.maxHeartbeats 500000 in
+set_option maxHeartbeats 1000000 in
 theorem canonicalQuaternionicSplitOctonionVielbein_localFrame (g : Quaternion ℝ)
     (t : ℝ) :
     (canonicalQuaternionicSplitOctonionVielbein g).localFrame t =
@@ -153,6 +157,15 @@ abbrev SplitOctonionCoordinateSpace :=
   EuclideanSpace ℝ (Fin 4) × EuclideanSpace ℝ (Fin 4)
 
 abbrev QuaternionCoordinateSpace := EuclideanSpace ℝ (Fin 4)
+
+noncomputable instance quaternionCoordinateDoubled_finiteDimensional :
+    FiniteDimensional ℝ (DoubledSpace QuaternionCoordinateSpace) := by
+  letI : FiniteDimensional ℝ QuaternionCoordinateSpace := inferInstance
+  letI : FiniteDimensional ℝ
+      (QuaternionCoordinateSpace × QuaternionCoordinateSpace) := Module.Finite.prod
+  exact Module.Finite.equiv
+    (WithLp.linearEquiv (2 : ENNReal) ℝ
+      (QuaternionCoordinateSpace × QuaternionCoordinateSpace)).symm
 
 noncomputable def quaternionCoordinateEquiv :
     Quaternion ℝ ≃ₗ[ℝ] QuaternionCoordinateSpace :=
@@ -192,11 +205,21 @@ noncomputable def canonicalQuaternionDoubledGenerator (g : Quaternion ℝ) :
       (hyperbolicAxisOperator g)).comp
     splitOctonionDoubledQuaternionEquiv.symm.toLinearMap
 
+set_option synthInstance.maxHeartbeats 500000 in
 noncomputable def canonicalQuaternionDoubledGeneratorCLM (g : Quaternion ℝ) :
     DoubledSpace QuaternionCoordinateSpace →L[ℝ]
       DoubledSpace QuaternionCoordinateSpace :=
-  LinearMap.toContinuousLinearMap (canonicalQuaternionDoubledGenerator g)
+  letI : IsModuleTopology ℝ (DoubledSpace QuaternionCoordinateSpace) :=
+    letI : IsModuleTopology ℝ QuaternionCoordinateSpace :=
+      IsModuleTopology.iso (EuclideanSpace.equiv (Fin 4) ℝ).symm
+    IsModuleTopology.iso
+      (WithLp.prodContinuousLinearEquiv (2 : ENNReal) ℝ
+        QuaternionCoordinateSpace QuaternionCoordinateSpace).symm
+  { toLinearMap := canonicalQuaternionDoubledGenerator g
+    cont := LinearMap.continuous_of_finiteDimensional _ }
 
+set_option synthInstance.maxHeartbeats 500000 in
+set_option maxHeartbeats 1000000 in
 noncomputable def canonicalQuaternionDoubledVielbein (g : Quaternion ℝ) :
     BogoliubovVielbeinBundle (E := QuaternionCoordinateSpace) :=
   { reference := ContinuousLinearMap.id ℝ _

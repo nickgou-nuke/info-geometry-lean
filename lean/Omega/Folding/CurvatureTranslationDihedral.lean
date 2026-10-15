@@ -16,6 +16,13 @@ noncomputable def curvatureTranslationInv (x : X m) : X m :=
 noncomputable def curvatureTranslationSection (r : Fin (Nat.fib (m + 2))) : X m :=
   (curvatureTranslation (m := m)^[r.1]) (X.stableZero (m := m))
 
+private theorem stableValue_curvatureTranslationSection (m : Nat)
+    (r : Fin (Nat.fib (m + 2))) (hm1 : 1 ≤ m) :
+    stableValue (curvatureTranslationSection (m := m) r) = r.1 := by
+  change stableValue ((X.stableSucc^[r.1]) (X.stableZero (m := m))) = r.1
+  simpa [X.stableValue_stableZero, Nat.zero_add, Nat.mod_eq_of_lt r.2] using
+    (X.stableValue_stableSucc_iterate (X.stableZero (m := m)) r.1 hm1)
+
 private theorem Nat.mod_add_mod_right' (a b n : Nat) (_hn : 0 < n) :
     (a % n + b) % n = (a + b) % n := by
   conv_rhs => rw [← Nat.mod_add_div a n]
@@ -81,14 +88,10 @@ theorem paper_fold_curvature_dihedral_action (m : Nat) (hm : 2 ≤ m) :
   have hval := congrArg stableValue hrs
   have hr :
       stableValue (curvatureTranslationSection (m := m) r) = r.1 := by
-    simpa [curvatureTranslationSection, curvatureTranslation, X.stableValue_stableZero,
-      Nat.zero_add, Nat.mod_eq_of_lt r.2] using
-      (X.stableValue_stableSucc_iterate (X.stableZero (m := m)) r.1 hm1)
+    exact stableValue_curvatureTranslationSection m r hm1
   have hs :
       stableValue (curvatureTranslationSection (m := m) s) = s.1 := by
-    simpa [curvatureTranslationSection, curvatureTranslation, X.stableValue_stableZero,
-      Nat.zero_add, Nat.mod_eq_of_lt s.2] using
-      (X.stableValue_stableSucc_iterate (X.stableZero (m := m)) s.1 hm1)
+    exact stableValue_curvatureTranslationSection m s hm1
   exact hr.symm.trans (hval.trans hs)
 
 /-- The translation orbit through `stableZero` runs through the whole stable space exactly once.
@@ -121,14 +124,10 @@ theorem paper_fold_curvature_translation_full_cycle (m : Nat) :
         have hval := congrArg stableValue hrs
         have hr :
             stableValue (curvatureTranslationSection (m := n + 1) r) = r.1 := by
-          simpa [curvatureTranslationSection, curvatureTranslation, X.stableValue_stableZero,
-            Nat.zero_add, Nat.mod_eq_of_lt r.2] using
-            (X.stableValue_stableSucc_iterate (X.stableZero (m := n + 1)) r.1 hm1)
+          exact stableValue_curvatureTranslationSection (n + 1) r hm1
         have hs :
             stableValue (curvatureTranslationSection (m := n + 1) s) = s.1 := by
-          simpa [curvatureTranslationSection, curvatureTranslation, X.stableValue_stableZero,
-            Nat.zero_add, Nat.mod_eq_of_lt s.2] using
-            (X.stableValue_stableSucc_iterate (X.stableZero (m := n + 1)) s.1 hm1)
+          exact stableValue_curvatureTranslationSection (n + 1) s hm1
         exact hr.symm.trans (hval.trans hs)
       · intro x
         refine ⟨X.stableValueFin x, ?_⟩
@@ -137,10 +136,7 @@ theorem paper_fold_curvature_translation_full_cycle (m : Nat) :
             stableValue
                 (curvatureTranslationSection (m := n + 1) (X.stableValueFin x)) =
               (X.stableValueFin x).1 := by
-          simpa [curvatureTranslationSection, curvatureTranslation, X.stableValue_stableZero,
-            Nat.zero_add, Nat.mod_eq_of_lt (X.stableValueFin x).2] using
-            (X.stableValue_stableSucc_iterate (X.stableZero (m := n + 1))
-              (X.stableValueFin x).1 hm1)
+          exact stableValue_curvatureTranslationSection (n + 1) (X.stableValueFin x) hm1
         simpa [X.stableValueFin] using hsection
 
 end Omega

@@ -40,9 +40,8 @@ theorem denseRange_gnsTopologicalColimitToHilbert :
     rcases Set.mem_iUnion.mp hy with ⟨i, ⟨x, rfl⟩⟩
     refine ⟨topologicalDirectInjection
       (gnsTopologicalDiagram Stage sys ω) i x, ?_⟩
-    have h := congrArg (fun f => f x)
-      (gnsTopologicalColimitToHilbert_stage Stage sys ω i)
-    simpa [TopCat.comp_app] using h
+    exact congrFun (congrArg ContinuousMap.toFun
+      (congrArg TopCat.Hom.hom (gnsTopologicalColimitToHilbert_stage Stage sys ω i))) x
   exact Dense.mono hsub
     (dense_iUnion_range_gnsStageToHilbertColimitContinuousLinearMap
       Stage sys ω)

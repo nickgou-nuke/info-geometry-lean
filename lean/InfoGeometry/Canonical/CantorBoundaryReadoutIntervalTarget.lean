@@ -122,7 +122,8 @@ noncomputable def quotientReadoutIntervalHomeomorph
     quotientReadoutIntervalEquiv
       (quotientReadoutInterval_surjective_of_metric_approximation happrox)
   have he : Continuous e := by
-    simpa [e] using continuous_quotientReadoutInterval
+    change Continuous quotientReadoutInterval
+    exact continuous_quotientReadoutInterval
   exact Continuous.homeoOfEquivCompactToT2 he
 
 theorem quotientReadoutIntervalHomeomorph_apply

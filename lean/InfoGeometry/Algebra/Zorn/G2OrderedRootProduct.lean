@@ -68,6 +68,7 @@ theorem topOrderedRootProduct_eq_pcWord
     funext i
     simp [topPCExponent, rootResidualGenerator_eq_pcGenerator,
       topOrderedInversionRoots_apply]
+    rfl
   exact congrArg List.prod (congrArg List.ofFn hfun)
 
 end InfoGeometry.Algebra.Zorn.G2OrderedRootProduct

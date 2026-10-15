@@ -13,9 +13,9 @@ boundary topology remains a separate obligation in
 -/
 
 noncomputable def hyperbolicSL2Matrix (t : ℝ) : SL2BoundaryMatrix ℝ where
-  matrix := ![![Real.exp t, 0], ![0, Real.exp (-t)]]
+  matrix := Matrix.diagonal (fun i : Fin 2 => if i = 0 then Real.exp t else Real.exp (-t))
   det_eq_one := by
-    simp [det2, ← Real.exp_add]
+    simp [det2, Matrix.diagonal_apply, ← Real.exp_add]
 
 theorem hyperbolicSL2Matrix_zero :
     hyperbolicSL2Matrix 0 = SL2BoundaryMatrix.identity := by
@@ -28,7 +28,7 @@ theorem hyperbolicSL2Matrix_add (s t : ℝ) :
       (hyperbolicSL2Matrix s).mul (hyperbolicSL2Matrix t) := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [hyperbolicSL2Matrix, SL2BoundaryMatrix.mul,
+    simp [hyperbolicSL2Matrix, SL2BoundaryMatrix.mul, Matrix.diagonal_apply,
       Matrix.mul_apply, Fin.sum_univ_two, ← Real.exp_add] <;> ring
 
 noncomputable def hyperbolicSL2Flow : SL2BoundaryFlow ℝ where

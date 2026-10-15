@@ -40,7 +40,8 @@ theorem l_mul_k_eq_leftLk :
 
 theorem leftLi_null_minus_sq :
     splitOctonionMul (iOct + leftLi) (iOct + leftLi) = 0 := by
-  simpa [leftLi] using hypercomplexNullMinus_sq
+  rw [leftLi, ← sub_eq_add_neg]
+  exact hypercomplexNullMinus_sq
 
 theorem leftLj_null_minus_sq :
     splitOctonionMul (jOct + leftLj) (jOct + leftLj) = 0 := by

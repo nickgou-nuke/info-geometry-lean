@@ -46,14 +46,19 @@ def orthogonal55Action :
   map_mul' g h := by
     apply MulEquiv.ext
     intro x
-    change ((g * h : GL10) : O55Matrix).mulVec (x : V55) =
-      ((g : GL10) : O55Matrix).mulVec
-        (((h : GL10) : O55Matrix).mulVec (x : V55))
+    change Multiplicative.ofAdd (((g * h : GL10) : O55Matrix).mulVec (x : V55)) =
+      Multiplicative.ofAdd (((g : GL10) : O55Matrix).mulVec
+        (((h : GL10) : O55Matrix).mulVec (x : V55)))
+    apply congrArg Multiplicative.ofAdd
+    let xv : V55 := Multiplicative.toAdd x
+    change ((g * h : GL10) : O55Matrix).mulVec xv =
+      ((g : GL10) : O55Matrix).mulVec (((h : GL10) : O55Matrix).mulVec xv)
     have hgh :
         ((g.1 * h.1 : GL10) : O55Matrix) =
           (g.1 : O55Matrix) * (h.1 : O55Matrix) := by
       simpa using (Units.val_mul g.1 h.1)
-    rw [hgh, Matrix.mulVec_mulVec]
+    rw [hgh]
+    rw [Matrix.mulVec_mulVec]
 
 abbrev AffineOrthogonal55Native : Type _ :=
   Multiplicative V55 ⋊[orthogonal55Action] OrthogonalGroup55
@@ -113,9 +118,17 @@ theorem affineNative_conj_translation
         (affineNativeGlide 0 r)⁻¹ =
       affineNativeGlide
         (((r : GL10) : O55Matrix).mulVec t) 1 := by
-  apply SemidirectProduct.ext
-  · simp [affineNativeGlide, orthogonal55Action]
-    rfl
-  · simp [affineNativeGlide, orthogonal55Action]
+  rw [affineNativeGlide, SemidirectProduct.mk_eq_inl_mul_inr,
+    affineNativeGlide, SemidirectProduct.mk_eq_inl_mul_inr,
+    affineNativeGlide, SemidirectProduct.mk_eq_inl_mul_inr]
+  have hzero : Multiplicative.ofAdd (0 : V55) = 1 := rfl
+  rw [hzero]
+  simp only [map_one, one_mul, mul_one]
+  have h_action : orthogonal55Action r (Multiplicative.ofAdd t) =
+      Multiplicative.ofAdd (((r : GL10) : O55Matrix).mulVec t) := rfl
+  rw [← h_action]
+  simpa only [map_inv] using
+    (SemidirectProduct.inl_aut (φ := orthogonal55Action) r
+      (Multiplicative.ofAdd t)).symm
 
 end InfoGeometry.Canonical.AffineOrthogonal55Glide

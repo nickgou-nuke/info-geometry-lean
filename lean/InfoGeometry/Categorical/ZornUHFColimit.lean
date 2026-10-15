@@ -125,9 +125,9 @@ theorem stageMul_naturality {n m : ℕ} (f : n ⟶ m) :
 abbrev ZornColimit := colimit zornStageFunctor
 
 @[simp] theorem colimit_ι_map_apply {n m : ℕ} (f : n ⟶ m) (x : ZornStage n) :
-    colimit.ι zornStageFunctor m (zornStageFunctor.map f x) =
+      colimit.ι zornStageFunctor m (zornStageFunctor.map f x) =
       colimit.ι zornStageFunctor n x := by
-  simpa using congr_fun
+  exact congr_fun
     (congrArg (fun q : zornStageFunctor.obj n ⟶ ZornColimit =>
       (q : zornStageFunctor.obj n → ZornColimit)) (colimit.w zornStageFunctor f)) x
 
@@ -152,7 +152,7 @@ theorem pairMul_naturality_right (n : ℕ) {m k : ℕ} (f : m ⟶ k) :
   apply ModuleCat.MonoidalCategory.tensor_ext
   intro x y
   change pairMul n k (x ⊗ₜ[ℂ] zornStageFunctor.map f y) = pairMul n m (x ⊗ₜ[ℂ] y)
-  rw [pairMul_tmul, pairMul_tmul]
+  rw [pairMul_tmul n k x (zornStageFunctor.map f y), pairMul_tmul n m x y]
   let hNM : max n m ≤ max n k :=
     max_le (le_max_left n k) ((leOfHom f).trans (le_max_right n k))
   rw [← colimit_ι_map_apply (homOfLE hNM)]
@@ -164,7 +164,7 @@ theorem pairMul_naturality_left {n k : ℕ} (f : n ⟶ k) (m : ℕ) :
   apply ModuleCat.MonoidalCategory.tensor_ext
   intro x y
   change pairMul k m (zornStageFunctor.map f x ⊗ₜ[ℂ] y) = pairMul n m (x ⊗ₜ[ℂ] y)
-  rw [pairMul_tmul, pairMul_tmul]
+  rw [pairMul_tmul k m (zornStageFunctor.map f x) y, pairMul_tmul n m x y]
   let hNM : max n m ≤ max k m :=
     max_le ((leOfHom f).trans (le_max_left k m)) (le_max_right k m)
   rw [← colimit_ι_map_apply (homOfLE hNM)]
@@ -253,15 +253,36 @@ theorem colimitMul_ι_tmul_ι (n m : ℕ) (x : ZornStage n) (y : ZornStage m) :
     colimitMul
         (colimit.ι zornStageFunctor n x ⊗ₜ[ℂ] colimit.ι zornStageFunctor m y) =
         rightDesc n (x ⊗ₜ[ℂ] colimit.ι zornStageFunctor m y) := by
-      simpa using LinearMap.congr_fun
-        (congrArg (fun q : zornStageFunctor.obj n ⊗ ZornColimit ⟶ ZornColimit =>
-          q.hom)
-          (colimitMul_fac_left n)) (x ⊗ₜ[ℂ] colimit.ι zornStageFunctor m y)
+      calc
+        colimitMul
+            (colimit.ι zornStageFunctor n x ⊗ₜ[ℂ] colimit.ι zornStageFunctor m y) =
+            ((colimit.ι zornStageFunctor n ⊗ₘ 𝟙 ZornColimit) ≫ colimitMul)
+              (x ⊗ₜ[ℂ] colimit.ι zornStageFunctor m y) := by
+                change colimitMul
+                  ((colimit.ι zornStageFunctor n ⊗ₘ 𝟙 ZornColimit)
+                    (x ⊗ₜ[ℂ] colimit.ι zornStageFunctor m y)) = _
+                simp only [CategoryTheory.comp_apply]
+        _ = rightDesc n (x ⊗ₜ[ℂ] colimit.ι zornStageFunctor m y) := by
+          change ((colimit.ι zornStageFunctor n ⊗ₘ 𝟙 ZornColimit) ≫ colimitMul).hom
+              (x ⊗ₜ[ℂ] colimit.ι zornStageFunctor m y) =
+            (rightDesc n).hom (x ⊗ₜ[ℂ] colimit.ι zornStageFunctor m y)
+          exact LinearMap.congr_fun (congrArg (fun q => q.hom)
+            (colimitMul_fac_left n)) _
     _ = pairMul n m (x ⊗ₜ[ℂ] y) := by
-      simpa using LinearMap.congr_fun
-        (congrArg (fun q : zornStageFunctor.obj n ⊗ zornStageFunctor.obj m ⟶ ZornColimit =>
-          q.hom)
-          (rightDesc_fac n m)) (x ⊗ₜ[ℂ] y)
+      calc
+        rightDesc n (x ⊗ₜ[ℂ] colimit.ι zornStageFunctor m y) =
+            ((𝟙 (zornStageFunctor.obj n) ⊗ₘ colimit.ι zornStageFunctor m) ≫ rightDesc n)
+              (x ⊗ₜ[ℂ] y) := by
+                change rightDesc n
+                  ((𝟙 (zornStageFunctor.obj n) ⊗ₘ colimit.ι zornStageFunctor m)
+                    (x ⊗ₜ[ℂ] y)) = _
+                simp only [CategoryTheory.comp_apply]
+        _ = pairMul n m (x ⊗ₜ[ℂ] y) := by
+          change ((𝟙 (zornStageFunctor.obj n) ⊗ₘ colimit.ι zornStageFunctor m) ≫
+              rightDesc n).hom (x ⊗ₜ[ℂ] y) =
+            (pairMul n m).hom (x ⊗ₜ[ℂ] y)
+          exact LinearMap.congr_fun (congrArg (fun q => q.hom)
+            (rightDesc_fac n m)) _
 
 /-- The elementwise product induced by the descended tensor morphism. -/
 def colimitProduct (x y : ZornColimit) : ZornColimit := colimitMul (x ⊗ₜ[ℂ] y)

@@ -1,5 +1,5 @@
-import VirasoroProject.CentralExtension
-import VirasoroProject.HeisenbergAlgebra
+import InfoGeometry.External.Virasoro.CentralExtension
+import InfoGeometry.External.Virasoro.HeisenbergAlgebra
 
 /-!
 # N=2 mode central extension
@@ -51,7 +51,7 @@ noncomputable def rgen (i : ι) : N2ModeBase ι 𝕜 :=
 noncomputable def hgen (i : ι) : N2ModeBase ι 𝕜 :=
   AbelianLieAlgebraOn.jgen 𝕜 (N2ModeLabel.h i)
 
-@[simp] theorem lie_qgen_rgen [Field 𝕜] (i j : ι) :
+@[simp] theorem lie_qgen_rgen (i j : ι) :
     ⁅qgen 𝕜 i, rgen 𝕜 j⁆ = 0 := by
   rfl
 
@@ -144,8 +144,9 @@ noncomputable def cocycle : LieTwoCocycle 𝕜 (N2ModeBase ι 𝕜) 𝕜 where
   toBilin := bilin 𝕜
   self' X := by
     apply self_eq_neg.mp
-    simpa only [LinearMap.neg_apply, LinearMap.coe_mk, AddHom.coe_mk]
-      using LinearMap.congr_fun₂ (bilin_eq_neg_flip 𝕜) X X
+    have h := LinearMap.congr_fun₂ (bilin_eq_neg_flip 𝕜) X X
+    change bilin 𝕜 X X = -(bilin 𝕜 X X)
+    simpa only [LinearMap.neg_apply, LinearMap.flip_apply] using h
   leibniz' X Y Z := by
     simp only [AbelianLieAlgebraOn.lie_def, map_zero, LinearMap.zero_apply,
       (lie_skew X Z).symm, neg_zero, add_zero]
@@ -255,4 +256,4 @@ theorem bracket_central_component_eq_cocycle
 
 end N2CentralExt
 
-end InfoGeometry.Algebra.N2ModeCentralExtension
+end VirasoroProject.Extensions.N2ModeCentralExtension

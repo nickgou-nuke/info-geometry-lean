@@ -67,6 +67,6 @@ theorem parameter_hessian_self_pos
   rw [← quotientBKMForm_mk]
   apply quotientBKMForm_pos
   intro zero_class
-  exact identifiable (Submodule.Quotient.mk_eq_zero.mp zero_class)
+  exact identifiable ((Submodule.Quotient.mk_eq_zero _).mp zero_class)
 
 end InfoGeometry.Canonical.GibbsHessianScalarGaugeBridge

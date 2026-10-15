@@ -1,3 +1,5 @@
+import Mathlib.Basic.Real.Basic
+
 noncomputable section
 
 namespace InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket

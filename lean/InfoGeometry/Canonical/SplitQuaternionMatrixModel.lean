@@ -1,5 +1,4 @@
 import InfoGeometry.Clifford.Cl11Matrix
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.SplitQ11CausalCone
 import Mathlib.Tactic.FinCases
 import Mathlib.Tactic.NormNum
@@ -77,7 +76,7 @@ theorem splitComplexEpsilon_not_nilpotent :
     have h00 := congrArg (fun M : Mat2 => M 0 0) h
     norm_num at h00
   have hsq : (1 : Mat2) = 0 := by
-    simpa [splitComplexEpsilon_sq] using h0
+    rw [← splitComplexEpsilon_sq, h0]
   exact h1 hsq
 
 @[simp] theorem splitQuaternionI_sq :
@@ -242,14 +241,12 @@ theorem splitNilpotentMinus_sq :
   simpa [splitNilpotentMinus] using (matrix_causal_null_closure_laws).2.1
 
 theorem splitNilpotentPlus_mul_minus :
-    splitNilpotentPlus * splitNilpotentMinus = splitIdempotentPlus := by
-  simpa [splitNilpotentPlus, splitNilpotentMinus]
-    using (matrix_causal_null_closure_laws).2.2.1
+    splitNilpotentPlus * splitNilpotentMinus = splitIdempotentPlus :=
+  (matrix_causal_null_closure_laws).2.2.1
 
 theorem splitNilpotentMinus_mul_plus :
-    splitNilpotentMinus * splitNilpotentPlus = splitIdempotentMinus := by
-  simpa [splitNilpotentPlus, splitNilpotentMinus]
-    using (matrix_causal_null_closure_laws).2.2.2.1
+    splitNilpotentMinus * splitNilpotentPlus = splitIdempotentMinus :=
+  (matrix_causal_null_closure_laws).2.2.2.1
 
 /--
 Correct split/Krein spine:

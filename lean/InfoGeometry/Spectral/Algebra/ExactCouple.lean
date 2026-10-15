@@ -1,5 +1,6 @@
 import Mathlib.Algebra.Module.Submodule.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.CategoryTheory.Category.Basic
 import Mathlib.Tactic
 
 /-!
@@ -92,5 +93,42 @@ theorem differential_comp_differential (pq : Z2) :
   simp [differential, LinearMap.comp_apply, hzero]
 
 end ExactCouple
+
+/-- A map between exact couples on possibly different bigraded module families.
+The component maps commute with the three structure arrows; this is the actual
+morphism data used to transport the differential. -/
+structure ExactCoupleMap (R : Type u) [Ring R]
+    {D E D' E' : Z2 → Type u}
+    [∀ pq, AddCommGroup (D pq)] [∀ pq, AddCommGroup (E pq)]
+    [∀ pq, AddCommGroup (D' pq)] [∀ pq, AddCommGroup (E' pq)]
+    [∀ pq, Module R (D pq)] [∀ pq, Module R (E pq)]
+    [∀ pq, Module R (D' pq)] [∀ pq, Module R (E' pq)]
+    (C : ExactCouple R D E) (C' : ExactCouple R D' E') where
+  dMap : ∀ pq, D pq →ₗ[R] D' pq
+  eMap : ∀ pq, E pq →ₗ[R] E' pq
+  comm_i : ∀ pq x, dMap (shiftI pq) (C.i pq x) = C'.i pq (dMap pq x)
+  comm_j : ∀ pq x, eMap pq (C.j pq x) = C'.j pq (dMap pq x)
+  comm_k : ∀ pq x, dMap (shiftK pq) (C.k pq x) = C'.k pq (eMap pq x)
+
+namespace ExactCoupleMap
+
+variable {R : Type u} [Ring R]
+variable {D E D' E' : Z2 → Type u}
+variable [∀ pq, AddCommGroup (D pq)] [∀ pq, AddCommGroup (E pq)]
+variable [∀ pq, AddCommGroup (D' pq)] [∀ pq, AddCommGroup (E' pq)]
+variable [∀ pq, Module R (D pq)] [∀ pq, Module R (E pq)]
+variable [∀ pq, Module R (D' pq)] [∀ pq, Module R (E' pq)]
+variable {C : ExactCouple R D E} {C' : ExactCouple R D' E'}
+
+/-- The exact-couple differential is natural under every diagram map. -/
+theorem map_differential (f : ExactCoupleMap R C C') (pq : Z2) (x : E pq) :
+    f.eMap (shiftK pq) (C.differential pq x) =
+      C'.differential pq (f.eMap pq x) := by
+  change f.eMap (shiftK pq)
+      (C.j (shiftK pq) (C.k pq x)) =
+    C'.j (shiftK pq) (C'.k pq (f.eMap pq x))
+  rw [f.comm_j, f.comm_k]
+
+end ExactCoupleMap
 
 end InfoGeometry.Spectral.Algebra

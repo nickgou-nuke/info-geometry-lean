@@ -114,7 +114,8 @@ theorem exp_of_sq_eq_zero
   rw [tsum_eq_sum (s := Finset.range 2)]
   · simp [Finset.range, pow_zero, pow_one, add_comm]
   · intro n hn
-    have h2n : 2 ≤ n := by simpa using hn
+    have hn' : 1 < n := by simpa using hn
+    have h2n : 2 ≤ n := Nat.succ_le_iff.mpr hn'
     have hpow2 : (t • G) ^ 2 = 0 := by
       rw [pow_two, smul_mul_assoc, mul_smul_comm]
       have hG' : G * G = (0 : A) := by simpa [pow_two] using hG

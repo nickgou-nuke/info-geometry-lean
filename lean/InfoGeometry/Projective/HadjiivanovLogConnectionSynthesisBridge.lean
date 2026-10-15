@@ -29,10 +29,9 @@ theorem sectionInversion_sectionBraidTransport_commute
     (F : LogResidueBraidFrame V) (g : BraidGroup) (x : LogSection V) :
     sectionInversion (sectionBraidTransport F g x) =
       sectionBraidTransport F g (sectionInversion x) := by
-  refine TensorProduct.induction_on x ?_ ?_ ?_
-  · simp
+  refine TensorProduct.inductionOn x ?_ ?_
   · intro f v
-    simp
+    simp [sectionInversion_tmul, sectionBraidTransport_tmul]
   · intro x y hx hy
     simp [map_add, hx, hy]
 

@@ -64,8 +64,7 @@ def branchInverseLimitEquiv
       calc
         dyadicRestrict h (dyadicFamily n)
             = (D.sheetEquiv m (D.truncate h (a.1 n))).2 := by
-                simpa [dyadicFamily, dyadicRestrict] using
-                  (congrArg Prod.snd (D.truncate_compatible h (a.1 n))).symm
+                exact (congrArg Prod.snd (D.truncate_compatible h (a.1 n))).symm
         _ = (D.sheetEquiv m (a.1 m)).2 := by rw [a.2 m n h]
     ((D.sheetEquiv 0 (a.1 0)).1, ⟨dyadicFamily, hdyadic⟩)
   invFun y :=
@@ -75,8 +74,9 @@ def branchInverseLimitEquiv
       calc
         D.sheetEquiv m (D.truncate h ((D.sheetEquiv n).symm (y.1, y.2.1 n)))
             = (y.1, dyadicRestrict h (y.2.1 n)) := by
-                simpa [dyadicRestrict] using D.truncate_compatible h ((D.sheetEquiv n).symm
-                  (y.1, y.2.1 n))
+                have H := D.truncate_compatible h ((D.sheetEquiv n).symm (y.1, y.2.1 n))
+                simp only [Equiv.apply_symm_apply] at H
+                exact H
         _ = (y.1, y.2.1 m) := by rw [y.2.2 m n h]
         _ = D.sheetEquiv m ((D.sheetEquiv m).symm (y.1, y.2.1 m)) := by
               symm
@@ -117,7 +117,7 @@ theorem paper_conclusion_leyang_five_sheet_dyadic_cover
     intro j hj
     exact hj.symm
   · intro n
-    letI := D.levelFintype n
+    let _ := D.levelFintype n
     calc
       Fintype.card (D.Level n) = Fintype.card (Fin 5 × (Fin n → Fin 4)) :=
         Fintype.card_congr (D.sheetEquiv n)

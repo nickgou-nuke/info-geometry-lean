@@ -43,14 +43,12 @@ affine cube over `ZMod 2`. -/
 theorem paper_conclusion_coordinate_bundle_posterior_hypercube_clipping
     (D : conclusion_coordinate_bundle_posterior_hypercube_clipping_data) :
     conclusion_coordinate_bundle_posterior_hypercube_clipping_claim D := by
-  refine ⟨?_, ?_⟩
-  · simpa [conclusion_coordinate_bundle_posterior_hypercube_clipping_affineCube,
-      conclusion_coordinate_bundle_posterior_hypercube_clipping_restrictedSection]
-      using D.posteriorFiber_eq
-  · intro eps eta h
-    funext i
-    have hcoord := congrFun h i
-    simpa [conclusion_coordinate_bundle_posterior_hypercube_clipping_restrictedSection,
-      i.property] using hcoord
+  refine ⟨D.posteriorFiber_eq, ?_⟩
+  intro eps eta h
+  funext ⟨i, hi⟩
+  have hcoord := congrFun h i
+  dsimp [conclusion_coordinate_bundle_posterior_hypercube_clipping_restrictedSection] at hcoord
+  simp [hi] at hcoord
+  exact hcoord
 
 end Omega.Conclusion

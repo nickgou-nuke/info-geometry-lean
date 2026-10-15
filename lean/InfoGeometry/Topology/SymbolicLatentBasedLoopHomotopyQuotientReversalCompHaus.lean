@@ -71,13 +71,16 @@ theorem symbolicLatentBasedLoopHomotopyQuotientReversalCompHausIso_involutive
     (symbolicLatentBasedLoopHomotopyQuotientReversalCompHausIso (x := x)).hom ≫
         (symbolicLatentBasedLoopHomotopyQuotientReversalCompHausIso (x := x)).hom =
       𝟙 (CompHaus.of (SymbolicLatentBasedLoopHomotopyQuotient x)) := by
-  have hFF : (compHausToTop).FullyFaithful := by
-    simpa using (CompHausLike.fullyFaithfulCompHausLikeToTop (fun _ => True))
-  apply hFF.map_injective
-  simpa [Functor.map_comp,
-    symbolicLatentBasedLoopHomotopyQuotientReversalCompHausIso] using
+  apply ConcreteCategory.hom_ext
+  intro q
+  have h := congrArg (fun k => k q)
     (symbolicLatentBasedLoopHomotopyQuotientReversalTopCatHom_involutive
       (X := X) x)
+  change (TopCat.Hom.hom
+      (symbolicLatentBasedLoopHomotopyQuotientReversalTopCatHom x))
+      ((TopCat.Hom.hom
+        (symbolicLatentBasedLoopHomotopyQuotientReversalTopCatHom x)) q) = q
+  exact h
 
 theorem symbolicLatentBasedLoopHomotopyQuotientReversalCompHausIso_endpoint
     {X : Type} [TopologicalSpace X]
@@ -87,14 +90,18 @@ theorem symbolicLatentBasedLoopHomotopyQuotientReversalCompHausIso_endpoint
     (symbolicLatentBasedLoopHomotopyQuotientReversalCompHausIso (x := x)).hom ≫
         symbolicLatentBasedLoopHomotopyQuotientEndpointCompHausHom (x := x) =
       symbolicLatentBasedLoopHomotopyQuotientEndpointCompHausHom (x := x) := by
-  have hFF : (compHausToTop).FullyFaithful := by
-    simpa using (CompHausLike.fullyFaithfulCompHausLikeToTop (fun _ => True))
-  apply hFF.map_injective
-  simpa [Functor.map_comp,
-    symbolicLatentBasedLoopHomotopyQuotientReversalCompHausIso,
-    symbolicLatentBasedLoopHomotopyQuotientEndpointCompHausHom] using
+  apply ConcreteCategory.hom_ext
+  intro q
+  have h := congrArg (fun k => k q)
     (symbolicLatentBasedLoopHomotopyQuotientReversalTopCatHom_endpoint
       (X := X) x)
+  change (TopCat.Hom.hom
+      (symbolicLatentBasedLoopHomotopyQuotientEndpointTopCatHom x))
+      ((TopCat.Hom.hom
+        (symbolicLatentBasedLoopHomotopyQuotientReversalTopCatHom x)) q) =
+    (TopCat.Hom.hom
+      (symbolicLatentBasedLoopHomotopyQuotientEndpointTopCatHom x)) q
+  exact h
 
 theorem symbolicLatentBasedLoopHomotopyQuotientEndpointCompHausHom_natural
     {X Y : Type} [TopologicalSpace X] [TopologicalSpace Y]
@@ -108,15 +115,20 @@ theorem symbolicLatentBasedLoopHomotopyQuotientEndpointCompHausHom_natural
         symbolicLatentBasedLoopHomotopyQuotientEndpointCompHausHom (x := y) =
       symbolicLatentBasedLoopHomotopyQuotientEndpointCompHausHom (x := x) ≫
         symbolicLatentPathHomotopyEndpointMapCompHausHom f := by
-  have hFF : (compHausToTop).FullyFaithful := by
-    simpa using (CompHausLike.fullyFaithfulCompHausLikeToTop (fun _ => True))
-  apply hFF.map_injective
-  simpa [Functor.map_comp,
-    symbolicLatentBasedLoopHomotopyQuotientCompHausHom,
-    symbolicLatentBasedLoopHomotopyQuotientEndpointCompHausHom,
-    symbolicLatentPathHomotopyEndpointMapCompHausHom] using
+  apply ConcreteCategory.hom_ext
+  intro q
+  have h := congrArg (fun k => k q)
     (symbolicLatentBasedLoopHomotopyQuotientEndpointTopCatHom_natural
       f hxy)
+  change (TopCat.Hom.hom
+      (symbolicLatentBasedLoopHomotopyQuotientEndpointTopCatHom y))
+      ((TopCat.Hom.hom
+        (symbolicLatentBasedLoopHomotopyQuotientTopCatHom f hxy)) q) =
+    (TopCat.Hom.hom
+      (symbolicLatentPathHomotopyEndpointMapTopCatHom f))
+      ((TopCat.Hom.hom
+        (symbolicLatentBasedLoopHomotopyQuotientEndpointTopCatHom x)) q)
+  exact h
 
 theorem symbolicLatentBasedLoopHomotopyQuotientReversalCompHausIso_natural
     {X Y : Type} [TopologicalSpace X] [TopologicalSpace Y]
@@ -131,13 +143,19 @@ theorem symbolicLatentBasedLoopHomotopyQuotientReversalCompHausIso_natural
       (symbolicLatentBasedLoopHomotopyQuotientReversalCompHausIso
           (x := x)).hom ≫
         symbolicLatentBasedLoopHomotopyQuotientCompHausHom f hxy := by
-  have hFF : (compHausToTop).FullyFaithful := by
-    simpa using (CompHausLike.fullyFaithfulCompHausLikeToTop (fun _ => True))
-  apply hFF.map_injective
-  simpa [Functor.map_comp,
-    symbolicLatentBasedLoopHomotopyQuotientCompHausHom,
-    symbolicLatentBasedLoopHomotopyQuotientReversalCompHausIso] using
+  apply ConcreteCategory.hom_ext
+  intro q
+  have h := congrArg (fun k => k q)
     (symbolicLatentBasedLoopHomotopyQuotientReversalTopCatHom_natural
       f hxy)
+  change (TopCat.Hom.hom
+      (symbolicLatentBasedLoopHomotopyQuotientReversalTopCatHom y))
+      ((TopCat.Hom.hom
+        (symbolicLatentBasedLoopHomotopyQuotientTopCatHom f hxy)) q) =
+    (TopCat.Hom.hom
+      (symbolicLatentBasedLoopHomotopyQuotientTopCatHom f hxy))
+      ((TopCat.Hom.hom
+        (symbolicLatentBasedLoopHomotopyQuotientReversalTopCatHom x)) q)
+  exact h
 
 end InfoGeometry.Topology

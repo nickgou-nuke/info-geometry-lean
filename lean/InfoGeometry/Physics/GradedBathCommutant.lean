@@ -3,6 +3,8 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.Basic
 import InfoGeometry.OperatorAlgebra.FiveGradedInformationLedger
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 /-!
 # Graded bath commutants for nuclear operator models
 

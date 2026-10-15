@@ -78,6 +78,7 @@ lemma inner_projBase_left (v : ArnoldMajoranaCarrier E) (x : E) :
     ⟪projBase v, x⟫_ℝ = ⟪v, embedBase x⟫_ℝ := by
   dsimp [projBase, embedBase, InfoGeometry.Krein.to_doubled]
   rw [inner_zero_right, add_zero]
+  rfl
 
 omit [CompleteSpace E] [FiniteDimensional ℝ E] in
 lemma inner_projBase_right (v : ArnoldMajoranaCarrier E) (x : E) :

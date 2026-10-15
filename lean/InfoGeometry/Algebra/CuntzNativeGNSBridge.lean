@@ -67,8 +67,14 @@ theorem gnsVacuum_norm_sq (hφ : φ 1 = 1) :
 
 theorem gnsRepresentation_apply_vacuum (a : A) :
     cuntzGNSRepresentation φ a (gnsVacuum φ) = (φ.toPreGNS a : φ.GNS) := by
-  simpa [cuntzGNSRepresentation, gnsVacuum] using
-    (InfoGeometry.OperatorAlgebra.PositiveLinearMapGNSVacuum.gnsOrbitMap_eq_gnsRepresentation_vacuum φ a).symm
+  calc
+    cuntzGNSRepresentation φ a (gnsVacuum φ) =
+        InfoGeometry.OperatorAlgebra.PositiveLinearMapGNSVacuum.gnsOrbitMap φ a := by
+      exact
+        (InfoGeometry.OperatorAlgebra.PositiveLinearMapGNSVacuum.gnsOrbitMap_eq_gnsRepresentation_vacuum
+          φ a).symm
+    _ = (φ.toPreGNS a : φ.GNS) :=
+      InfoGeometry.OperatorAlgebra.PositiveLinearMapGNSVacuum.gnsOrbitMap_eq_completionEmbedding φ a
 
 theorem gns_state_expectation_recovery (a : A) :
     ⟪gnsVacuum φ, cuntzGNSRepresentation φ a (gnsVacuum φ)⟫_ℂ = φ a := by

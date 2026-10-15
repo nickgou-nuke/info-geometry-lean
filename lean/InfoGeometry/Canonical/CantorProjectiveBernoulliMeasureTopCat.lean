@@ -57,8 +57,7 @@ def projectiveLimitUnitIntervalMeasure : Measure (Set.Icc (0 : ℝ) 1) :=
 instance projectiveLimitUnitIntervalMeasure_isProbabilityMeasure :
     IsProbabilityMeasure projectiveLimitUnitIntervalMeasure := by
   unfold projectiveLimitUnitIntervalMeasure
-  exact Measure.isProbabilityMeasure_map
-    continuous_projectiveLimitUnitIntervalReadout.measurable.aemeasurable
+  infer_instance
 
 theorem topCat_readout_pushforward_is_probability :
     IsProbabilityMeasure

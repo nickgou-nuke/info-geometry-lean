@@ -23,14 +23,21 @@ lemma linearized_jordan_identity
     2 • (x * (y * (x * z))) + z * (y * (x * x)) := by
   have h0 := two_nsmul_lie_lmul_lmul_add_add_eq_zero (A := J) x x z
   have hy2raw := congrArg (fun f : AddMonoid.End J => f y) h0
-  have hy2 : 2 • ((x * ((x * z) * y) - (x * z) * (x * y)) +
-      (x * ((z * x) * y) - (z * x) * (x * y)) +
-      (z * ((x * x) * y) - (x * x) * (z * y))) = 0 := by
-    simpa [Ring.lie_def, nsmul_add, AddMonoid.End.mulLeft] using hy2raw
+  have hadd (f g : AddMonoid.End J) : (f + g) y = f y + g y := rfl
+  have hsub (f g : AddMonoid.End J) : (f - g) y = f y - g y := rfl
+  have hmul (a b : J) :
+      (L a * L b) y = a * (b * y) := by
+    change a * (b * y) = a * (b * y)
+    rfl
   have hy : ((x * ((x * z) * y) - (x * z) * (x * y)) +
       (x * ((z * x) * y) - (z * x) * (x * y)) +
       (z * ((x * x) * y) - (x * x) * (z * y))) = 0 := by
-    exact (nsmul_eq_zero_iff_right (M := J) (n := 2) (by norm_num)).mp hy2
+    have hyraw :
+        ((L x * L (x * z) - L (x * z) * L x) +
+          (L x * L (z * x) - L (z * x) * L x) +
+          (L z * L (x * x) - L (x * x) * L z)) y = 0 := by
+      simpa [Ring.lie_def] using hy2raw
+    simpa only [hadd, hsub, hmul] using hyraw
   simp [mul_comm] at hy ⊢
   abel_nf at hy
   rw [← sub_eq_zero]

@@ -48,7 +48,8 @@ local notation "EndH" => H →L[ℝ] H
   have hEven : IsEven (H := H) (X.π a) := X.π_even_apply a
   have hConj : epsConj X.cl11 (X.π a) = X.π a := by
     unfold IsEven gradeConj at hEven
-    simpa [epsConj, hGrade, mul_assoc] using hEven
+    ext u
+    simpa [epsConj, hGrade] using congrArg (fun F : EndH => F u) hEven
   exact isGZero_of_epsConj_eq (X := X.cl11) hConj
 
 @[rep_depth krein] theorem rho_isGZero_of_gradeCLM_eq_eps
@@ -59,7 +60,8 @@ local notation "EndH" => H →L[ℝ] H
   have hEven : IsEven (H := H) (X.ρ b) := X.ρ_even_apply b
   have hConj : epsConj X.cl11 (X.ρ b) = X.ρ b := by
     unfold IsEven gradeConj at hEven
-    simpa [epsConj, hGrade, mul_assoc] using hEven
+    ext u
+    simpa [epsConj, hGrade] using congrArg (fun F : EndH => F u) hEven
   exact isGZero_of_epsConj_eq (X := X.cl11) hConj
 
 @[rep_depth krein] theorem gZeroPart_F_eq_zero_of_gradeCLM_eq_eps
@@ -69,7 +71,8 @@ local notation "EndH" => H →L[ℝ] H
   have hOdd : IsOdd (H := H) X.F := X.F_odd
   have hConj : epsConj X.cl11 X.F = -X.F := by
     unfold IsOdd gradeConj at hOdd
-    simpa [epsConj, hGrade, mul_assoc] using hOdd
+    ext u
+    simpa [epsConj, hGrade] using congrArg (fun F : EndH => F u) hOdd
   exact gZeroPart_eq_zero_of_epsConj_neg (X := X.cl11) hConj
 
 @[rep_depth krein] theorem F_eq_gOnePart_add_gNegOnePart_of_gradeCLM_eq_eps
@@ -79,7 +82,8 @@ local notation "EndH" => H →L[ℝ] H
   have hOdd : IsOdd (H := H) X.F := X.F_odd
   have hConj : epsConj X.cl11 X.F = -X.F := by
     unfold IsOdd gradeConj at hOdd
-    simpa [epsConj, hGrade, mul_assoc] using hOdd
+    ext u
+    simpa [epsConj, hGrade] using congrArg (fun F : EndH => F u) hOdd
   exact gOnePart_add_gNegOnePart_eq_of_epsConj_neg (X := X.cl11) hConj
 
 

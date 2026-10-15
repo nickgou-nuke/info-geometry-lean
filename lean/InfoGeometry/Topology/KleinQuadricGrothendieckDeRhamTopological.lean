@@ -40,9 +40,10 @@ theorem continuous_chiralDetPotential :
       chiralDetPotential p.1 p.2) := by
   have hs : Continuous (splitPotential : FourVectorC → ℂ) :=
     continuous_splitPotential
-  simpa [chiralDetPotential] using
-    ((hs.comp continuous_fst).mul (hs.comp continuous_snd)).mul
-      (hs.comp (continuous_fst.sub continuous_snd))
+  change Continuous (fun p : FourVectorC × FourVectorC =>
+    splitPotential p.1 * splitPotential p.2 * splitPotential (p.1 - p.2))
+  convert ((hs.comp continuous_fst).mul (hs.comp continuous_snd)).mul
+      (hs.comp (continuous_fst.sub continuous_snd)) using 1 <;> ext p <;> rfl
 
 /-- The zero-locus of the chiral Klein determinant potential is closed. -/
 theorem isClosed_chiralDetPotential_zero :

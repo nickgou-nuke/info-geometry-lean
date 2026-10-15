@@ -95,8 +95,7 @@ theorem cuntzCornerMap_injective :
 
 /-- 3. Fibonacci Local Matrix and Cuntz Operator -/
 def fibonacciMatrix : Matrix (Fin 2) (Fin 2) ℂ :=
-  ![![0, 1],
-    ![1, 1]]
+  !![0, 1; 1, 1]
 
 def fibonacciCuntzOperator : A :=
   S 0 * star (S 1) +
@@ -108,11 +107,10 @@ theorem cuntzCornerMap_fibonacciMatrix :
   dsimp [cuntzCornerMap, fibonacciMatrix, cuntzMatrixUnit, fibonacciCuntzOperator]
   simp only [zero_smul, one_smul, zero_add, add_zero]
 
-/-- 4. Fusion Rules transported across the corner -/
 theorem fibonacciMatrix_sq :
     fibonacciMatrix * fibonacciMatrix = fibonacciMatrix + 1 := by
   ext i j
-  fin_cases i <;> fin_cases j <;> (simp [fibonacciMatrix, Matrix.mul_apply]; try ring)
+  fin_cases i <;> fin_cases j <;> simp [fibonacciMatrix, Matrix.mul_apply, Fin.sum_univ_two]
 
 theorem fibonacciCuntzOperator_sq :
     fibonacciCuntzOperator S * fibonacciCuntzOperator S =

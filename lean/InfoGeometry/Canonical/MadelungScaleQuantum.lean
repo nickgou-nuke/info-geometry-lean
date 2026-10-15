@@ -415,8 +415,10 @@ theorem dilationInLogCoordinates (ψ : ℝ → ℂ) (q : ℝ) (ℏ : ℝ) (K : �
   = -K * ℏ * deriv (unitaryLogTransform ψ) q := by
   have hhalf : HasDerivAt (fun x : ℝ => Real.exp (x / 2))
       (Real.exp (q / 2) / 2) q := by
-    convert (Real.hasDerivAt_exp (q / 2)).comp q
-      ((hasDerivAt_id q).div_const (2 : ℝ)) using 1 <;> ring
+    have h : HasDerivAt (fun x : ℝ => x / 2) (1 / 2 : ℝ) q := by
+      simpa using (hasDerivAt_id q).div_const (2 : ℝ)
+    have h2 := (Real.hasDerivAt_exp (q / 2)).scomp q h
+    exact h2.congr_deriv (by ring)
   have hcomp : HasDerivAt (fun x : ℝ => ψ (Real.exp x))
       (deriv ψ (Real.exp q) * (Real.exp q : ℂ)) q := by
     simpa [Function.comp_def, smul_eq_mul, mul_comm] using
@@ -441,14 +443,11 @@ theorem canonicalCommutationLogScale (ψ : ℝ → ℂ) (q : ℝ) (ℏ : ℝ) (K
   have hq : HasDerivAt (fun x : ℝ => (x : ℂ)) (1 : ℂ) q := by
     simpa using (hasDerivAt_id (x := (q : ℂ))).comp_ofReal
   have hprod := hq.mul hψ
-  have hprod' := hprod.deriv
   change (q : ℂ) * (-K * ℏ * deriv ψ q) -
       (-K * ℏ * deriv (fun x : ℝ => (x : ℂ) * ψ x) q) =
       K * ℏ * ψ q
-  have hprod'' : deriv (fun x : ℝ => (x : ℂ) * ψ x) q =
-      1 * ψ q + (q : ℂ) * deriv ψ q := by
-    simpa [Pi.mul_apply] using hprod'
-  rw [hprod'']
+  rw [show (fun x : ℝ => (x : ℂ) * ψ x) = (fun x : ℝ => (x : ℂ)) * ψ from rfl]
+  rw [hprod.deriv]
   ring
 
 /-- Madelung decomposition of Hestenes–Krein ancestor -/

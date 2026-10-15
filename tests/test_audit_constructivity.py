@@ -50,6 +50,27 @@ theorem real_gap : True := by
             findings = audit_constructivity.scan_file(path)
         self.assertTrue(any(f.category == "proof-hole" for f in findings), findings)
 
+    def test_scan_file_reports_anonymous_example_sorry(self):
+        source = "example : True := by\n  sorry\n"
+        with tempfile.TemporaryDirectory(dir=REPO_ROOT, prefix="audit-constructivity-") as temp_dir:
+            path = Path(temp_dir) / "Anonymous.lean"
+            path.write_text(source, encoding="utf-8")
+            findings = audit_constructivity.scan_file(path)
+        self.assertTrue(any(f.category == "proof-hole" for f in findings), findings)
+
+    def test_scan_file_reports_modified_and_attributed_axioms(self):
+        source = """-- axiom comment : False
+@[implemented_by hiddenImpl] private axiom hidden : False
+protected postulate alsoHidden : True
+def safeName := DAG.Morphism.axiom
+"""
+        with tempfile.TemporaryDirectory(dir=REPO_ROOT, prefix="audit-constructivity-") as temp_dir:
+            path = Path(temp_dir) / "AxiomForms.lean"
+            path.write_text(source, encoding="utf-8")
+            findings = audit_constructivity.scan_file(path)
+        axioms = [f for f in findings if f.category == "axiom"]
+        self.assertEqual([f.line for f in axioms], [2, 3], findings)
+
 
 if __name__ == "__main__":
     unittest.main()

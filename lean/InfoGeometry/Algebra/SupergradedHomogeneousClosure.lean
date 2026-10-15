@@ -44,9 +44,13 @@ theorem superBracket_mem
     rw [← hcomm]
     exact G.mul_mem q p hy hx
   by_cases h : p && q
-  · simpa [superBracket, h] using
+  · simpa [Homogeneous, superBracket,
+      InfoGeometry.Algebra.SupergradedBracket.anticommutator,
+      InfoGeometry.Algebra.SupergradedBracket.commutator, h] using
       (G.component (Bool.xor p q)).add_mem hxy hyx
-  · simpa [superBracket, h] using
+  · simpa [Homogeneous, superBracket,
+      InfoGeometry.Algebra.SupergradedBracket.anticommutator,
+      InfoGeometry.Algebra.SupergradedBracket.commutator, h] using
       (G.component (Bool.xor p q)).sub_mem hxy hyx
 
 theorem gradedJordanProduct_mem
@@ -62,10 +66,10 @@ theorem gradedJordanProduct_mem
     rw [← hcomm]
     exact G.mul_mem q p hy hx
   by_cases h : p && q
-  · simpa [gradedJordanProduct, gradedSign, h, sub_eq_add_neg] using
+  · simpa [Homogeneous, gradedJordanProduct, gradedSign, h, sub_eq_add_neg] using
       (G.component (Bool.xor p q)).smul_mem (2 : R)⁻¹
         ((G.component (Bool.xor p q)).sub_mem hxy hyx)
-  · simpa [gradedJordanProduct, gradedSign, h] using
+  · simpa [Homogeneous, gradedJordanProduct, gradedSign, h] using
       (G.component (Bool.xor p q)).smul_mem (2 : R)⁻¹
         ((G.component (Bool.xor p q)).add_mem hxy hyx)
 
@@ -73,18 +77,18 @@ theorem odd_mul_odd_mem_even
     (G : BinaryGrading (R := R) (A := A)) {x y : A}
     (hx : x ∈ Homogeneous G true) (hy : y ∈ Homogeneous G true) :
     x * y ∈ Homogeneous G false := by
-  simpa using G.mul_mem true true hx hy
+  simpa [Homogeneous] using G.mul_mem true true hx hy
 
 theorem odd_superBracket_mem_even
     (G : BinaryGrading (R := R) (A := A)) {x y : A}
     (hx : x ∈ Homogeneous G true) (hy : y ∈ Homogeneous G true) :
     superBracket true true x y ∈ Homogeneous G false := by
-  simpa using superBracket_mem G true true hx hy
+  simpa [Homogeneous] using superBracket_mem G true true hx hy
 
 theorem odd_gradedJordanProduct_mem_even
     (G : BinaryGrading (R := R) (A := A)) {x y : A}
     (hx : x ∈ Homogeneous G true) (hy : y ∈ Homogeneous G true) :
     gradedJordanProduct (R := R) true true x y ∈ Homogeneous G false := by
-  simpa using gradedJordanProduct_mem G true true hx hy
+  simpa [Homogeneous] using gradedJordanProduct_mem G true true hx hy
 
 end InfoGeometry.Algebra.SupergradedHomogeneousClosure

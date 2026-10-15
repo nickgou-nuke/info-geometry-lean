@@ -20,7 +20,7 @@ open InfoGeometry.Canonical.BoundaryFibonacciIntertwinerObstruction
 open InfoGeometry.Physics
 open InfoGeometry.Canonical.YangBaxterProof
 
-abbrev B3FibonacciHom :=
+noncomputable abbrev B3FibonacciHom :=
   LinearMap.ker simultaneousGeneratorDefect
 
 theorem mem_B3FibonacciHom_iff

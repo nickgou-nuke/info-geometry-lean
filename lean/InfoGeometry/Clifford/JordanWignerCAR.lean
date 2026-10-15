@@ -35,7 +35,8 @@ lemma globalChirality_sq (k : ℕ) : globalChirality k * globalChirality k = 1 :
 GENUINE THEOREM: The single-site Jordan-Wigner creation operator squares to zero natively.
 -/
 theorem jw_u_new_sq (k : ℕ) : jw_u_new k * jw_u_new k = 0 := by
-  unfold jw_u_new
+  change ((globalChirality k) ⊗ₖ a_dagger_base) *
+      ((globalChirality k) ⊗ₖ a_dagger_base) = 0
   rw [← Matrix.mul_kronecker_mul]
   rw [globalChirality_sq, a_dagger_base_sq]
   ext i j
@@ -45,7 +46,8 @@ theorem jw_u_new_sq (k : ℕ) : jw_u_new k * jw_u_new k = 0 := by
 GENUINE THEOREM: The single-site Jordan-Wigner annihilation operator squares to zero natively.
 -/
 theorem jw_v_new_sq (k : ℕ) : jw_v_new k * jw_v_new k = 0 := by
-  unfold jw_v_new
+  change ((globalChirality k) ⊗ₖ a_base) *
+      ((globalChirality k) ⊗ₖ a_base) = 0
   rw [← Matrix.mul_kronecker_mul]
   rw [globalChirality_sq, a_base_sq]
   ext i j
@@ -55,7 +57,10 @@ theorem jw_v_new_sq (k : ℕ) : jw_v_new k * jw_v_new k = 0 := by
 GENUINE THEOREM: The single-site Jordan-Wigner creation and annihilation operators satisfy the CAR anticommutation relation {u, v} = 1 natively.
 -/
 theorem jw_uv_anticomm_new (k : ℕ) : jw_u_new k * jw_v_new k + jw_v_new k * jw_u_new k = 1 := by
-  unfold jw_u_new jw_v_new
+  change ((globalChirality k) ⊗ₖ a_dagger_base) *
+      ((globalChirality k) ⊗ₖ a_base) +
+    ((globalChirality k) ⊗ₖ a_base) *
+      ((globalChirality k) ⊗ₖ a_dagger_base) = 1
   rw [← Matrix.mul_kronecker_mul, ← Matrix.mul_kronecker_mul]
   rw [globalChirality_sq]
   have h_add : (1 : MatStage k) ⊗ₖ (a_dagger_base * a_base) + (1 : MatStage k) ⊗ₖ (a_base * a_dagger_base) = (1 : MatStage k) ⊗ₖ (a_dagger_base * a_base + a_base * a_dagger_base) := by

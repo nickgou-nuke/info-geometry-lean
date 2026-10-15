@@ -28,7 +28,7 @@ instance : Add OctDerivation where
     toLinearMap := D1.toLinearMap + D2.toLinearMap
     leibniz' := by 
       intro x y
-      simp only [add_apply, D1.leibniz', D2.leibniz']
+      simp only [LinearMap.add_apply, D1.leibniz', D2.leibniz']
       simp only [add_mul, mul_add]
       abel
   }
@@ -38,7 +38,7 @@ instance : Neg OctDerivation where
     toLinearMap := -D.toLinearMap
     leibniz' := by 
       intro x y
-      simp only [neg_apply]
+      simp only [LinearMap.neg_apply]
       have hd := D.leibniz' x y
       rw [hd, neg_add, neg_mul, mul_neg]
   }
@@ -57,7 +57,7 @@ instance : SMul ℝ OctDerivation where
     toLinearMap := c • D.toLinearMap
     leibniz' := by
       intro x y
-      simp only [smul_apply, D.leibniz']
+      simp only [LinearMap.smul_apply, D.leibniz']
       simp only [smul_add, smul_mul_assoc, mul_smul_comm]
   }
 
@@ -89,7 +89,7 @@ instance : Bracket OctDerivation OctDerivation where
     toLinearMap := D1.toLinearMap ∘ₗ D2.toLinearMap - D2.toLinearMap ∘ₗ D1.toLinearMap
     leibniz' := by
       intro x y
-      simp only [sub_apply, comp_apply]
+      simp only [LinearMap.sub_apply, LinearMap.comp_apply]
       have hd1 := D1.leibniz'
       have hd2 := D2.leibniz'
       have h1 : D1.toLinearMap (D2.toLinearMap (x * y)) = D1.toLinearMap (D2.toLinearMap x * y) + D1.toLinearMap (x * D2.toLinearMap y) := by

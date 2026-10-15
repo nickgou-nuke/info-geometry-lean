@@ -88,10 +88,12 @@ theorem nativeKlein_glide_square_zpow_eq_inr (k : ℤ) :
 theorem nativeKlein_glide_conjugates_translation :
     nativeKleinGlide * nativeKleinTranslation * nativeKleinGlide⁻¹ =
       nativeKleinTranslation⁻¹ := by
-  apply SemidirectProduct.ext
-  · simp [nativeKleinGlide, nativeKleinTranslation, integerInversionAction,
-      integerNegMulAut]
-  · simp [nativeKleinGlide, nativeKleinTranslation]
+  change SemidirectProduct.inr (Multiplicative.ofAdd 1) *
+      SemidirectProduct.inl (Multiplicative.ofAdd 1) *
+      (SemidirectProduct.inr (Multiplicative.ofAdd 1))⁻¹ =
+    (SemidirectProduct.inl (Multiplicative.ofAdd 1))⁻¹
+  rw [← map_inv, ← SemidirectProduct.inl_aut, ← map_inv]
+  congr 1
 
 theorem nativeKlein_relator_eq_one :
     nativeKleinGlide * nativeKleinTranslation * nativeKleinGlide⁻¹ *
@@ -136,13 +138,21 @@ This is an algebraic center witness, not a topological identification.
 theorem nativeKlein_glide_square_central
     (x : NativeKleinSemidirect) :
     nativeKleinGlide ^ 2 * x = x * nativeKleinGlide ^ 2 := by
+  have hg2 : nativeKleinGlide ^ 2 = SemidirectProduct.inr (Multiplicative.ofAdd 2) := by
+    change (SemidirectProduct.inr (Multiplicative.ofAdd 1) : NativeKleinSemidirect) ^ 2 = _
+    rw [← map_pow]
+    congr 1
+  rw [hg2]
   apply SemidirectProduct.ext
-  · simp [nativeKleinGlide, integerInversionAction, integerNegMulAut, pow_two]
-    change Multiplicative.ofAdd (-(-x.left.toAdd)) = x.left
-    simp
-  · simp [nativeKleinGlide, pow_two]
-    rw [← ofAdd_add]
-    simp [mul_comm]
+  · simp only [SemidirectProduct.mul_left, SemidirectProduct.left_inr,
+      SemidirectProduct.right_inr, one_mul, map_one, mul_one]
+    have hact : integerInversionAction (Multiplicative.ofAdd 2) = 1 := by
+      rw [integerInversionAction_ofAdd_eq_one_iff_even]
+      exact even_two
+    rw [hact]
+    rfl
+  · simp only [SemidirectProduct.mul_right, SemidirectProduct.right_inr]
+    exact mul_comm _ _
 
 theorem nativeKlein_glide_square_mem_center :
     nativeKleinGlide ^ 2 ∈ Subgroup.center NativeKleinSemidirect := by
@@ -222,7 +232,8 @@ theorem nativeKleinPresentationRep_surjective :
   rw [← (SemidirectProduct.inl : Multiplicative ℤ →* NativeKleinSemidirect).map_zpow,
     ← (SemidirectProduct.inr : Multiplicative ℤ →* NativeKleinSemidirect).map_zpow]
   rw [← ofAdd_zsmul, ← ofAdd_zsmul]
-  simpa only [zsmul_one] using SemidirectProduct.inl_left_mul_inr_right x
+  simp only [zsmul_eq_mul, mul_one]
+  exact SemidirectProduct.inl_left_mul_inr_right x
 
 theorem nativeKlein_integer_conjugation :
     ∀ n : ℤ,

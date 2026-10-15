@@ -33,7 +33,26 @@ inductive UnconsciousArchetype
   | animusLogos
   | chiralSyzygy
   | selfIndividuation
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+private def unconsciousArchetypeEquivFin : UnconsciousArchetype ≃ Fin 5 where
+  toFun
+    | .primaMateria => 0
+    | .shadowProjection => 1
+    | .animusLogos => 2
+    | .chiralSyzygy => 3
+    | .selfIndividuation => 4
+  invFun
+    | 0 => .primaMateria
+    | 1 => .shadowProjection
+    | 2 => .animusLogos
+    | 3 => .chiralSyzygy
+    | _ => .selfIndividuation
+  left_inv x := by cases x <;> rfl
+  right_inv i := by fin_cases i <;> rfl
+
+instance : Fintype UnconsciousArchetype :=
+  Fintype.ofEquiv (Fin 5) unconsciousArchetypeEquivFin.symm
 
 open UnconsciousArchetype
 

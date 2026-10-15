@@ -11,8 +11,8 @@ variable (S : Fin 2 → A) [CuntzO2 (S 0) (S 1)]
 
 /-- The real local Fibonacci matrix -/
 def fibonacciMatrixReal : Matrix (Fin 2) (Fin 2) ℝ :=
-  ![![0, 1],
-    ![1, 1]]
+  !![0, 1;
+     1, 1]
 
 /-- Eigenvalues: Golden ratio and its conjugate -/
 noncomputable def phi : ℝ := (1 + Real.sqrt 5) / 2
@@ -34,8 +34,8 @@ macro "fib_simp" : tactic =>
     fin_cases i <;> fin_cases j <;> (
       dsimp [fibonacciPeircePlus, fibonacciPeirceMinus, fibonacciMatrixReal, phi, tau]
       simp [Matrix.add_apply, Matrix.sub_apply, Matrix.smul_apply, Matrix.mul_apply,
-            Matrix.one_apply, Matrix.transpose_apply, Fin.sum_univ_two,
-            mul_add, add_mul]
+            Matrix.one_apply, Matrix.transpose_apply, Matrix.of_apply, Fin.sum_univ_two,
+            smul_eq_mul, mul_add, add_mul]
     )
   ))
 
@@ -59,15 +59,12 @@ theorem fibonacciPeirceMinus_idempotent :
 theorem fibonacciPeircePlus_selfAdjoint :
     fibonacciPeircePlusᵀ = fibonacciPeircePlus := by
   ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [fibonacciPeircePlus, fibonacciMatrixReal, tau, Matrix.transpose_apply];
-    ring
+  fin_cases i <;> fin_cases j <;> rfl
 
 theorem fibonacciPeirceMinus_selfAdjoint :
     fibonacciPeirceMinusᵀ = fibonacciPeirceMinus := by
   ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [fibonacciPeirceMinus, fibonacciMatrixReal, phi, Matrix.transpose_apply]
+  fin_cases i <;> fin_cases j <;> rfl
 
 theorem fibonacciPeirce_orthogonal :
     fibonacciPeircePlus * fibonacciPeirceMinus = 0 := by
@@ -83,10 +80,7 @@ theorem fibonacciMatrix_mul_peircePlus :
 
 theorem fibonacciMatrix_mul_peirceMinus :
     fibonacciMatrixReal * fibonacciPeirceMinus = (-tau) • fibonacciPeirceMinus := by
-  fib_simp <;>
-    (have hs : Real.sqrt 5 ≠ 0 := by positivity
-     field_simp [hs]
-     nlinarith [sqrt5_sq])
+  fib_proof
 
 /-- Cuntz images of the Peirce projectors -/
 def ofRealMatrix (M : Matrix (Fin 2) (Fin 2) ℝ) : Matrix (Fin 2) (Fin 2) ℂ :=

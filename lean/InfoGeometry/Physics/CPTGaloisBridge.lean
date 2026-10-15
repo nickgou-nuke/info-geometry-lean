@@ -48,7 +48,13 @@ inductive GaloisCPT
   | T
   | CP
   | CPT
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype GaloisCPT where
+  elems := { .I, .T, .CP, .CPT }
+  complete := by
+    intro x
+    cases x <;> simp
 
 /-- Exponent mapping from CPT symmetry to Galois automorphism power in $(\mathbb{Z}/12\mathbb{Z})^\times$. -/
 def galoisExponent : GaloisCPT → ℕ

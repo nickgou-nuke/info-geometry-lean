@@ -14,7 +14,13 @@ inductive RepoArchetype
   | carnotInformation
   | souriauKMS
   | metaEpistemicCompiler
-  deriving DecidableEq, Fintype, Repr
+  deriving DecidableEq, Repr
+
+instance : Fintype RepoArchetype where
+  elems := {.qedTwoPoint, .matheronCovariogram, .fisherRaoIsometry,
+    .carnotInformation, .souriauKMS, .metaEpistemicCompiler}
+  complete x := by
+    cases x <;> decide
 
 open RepoArchetype
 

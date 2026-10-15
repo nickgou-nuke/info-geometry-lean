@@ -41,7 +41,8 @@ noncomputable def symbolicLatentSolutionFiberCompHausTopCatHom
 theorem symbolicLatentSolutionFiberCompHausTopCatHom_isIso
     (S : FiniteSymbolicLatentSystem X ι) (values : ι → ℝ) :
     IsIso (symbolicLatentSolutionFiberCompHausTopCatHom S values) := by
-  simpa [symbolicLatentSolutionFiberCompHausTopCatHom] using
-    (inferInstance : IsIso (𝟙 (TopCat.of (symbolicLatentSolutionFiber S values))))
+  refine IsIso.mk ⟨TopCat.ofHom { toFun := id, continuous_toFun := continuous_id }, ?_, ?_⟩
+  · ext; rfl
+  · ext; rfl
 
 end InfoGeometry.Topology

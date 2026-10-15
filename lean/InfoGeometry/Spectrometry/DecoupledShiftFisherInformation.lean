@@ -13,11 +13,11 @@ theorem hasDerivAt_log_stateProbability (energy cutoff temperature : ℝ) (accep
   have weight_pos := (line_weight_bounds energy cutoff temperature).1
   have complement_pos := sub_pos.mpr (line_weight_bounds energy cutoff temperature).2
   cases accepted
-  · simp only [stateProbability, acceptedIndicator, Bool.false_eq_true, if_false, sub_zero]
+  · simp only [stateProbability, acceptedIndicator, Bool.false_eq_true, ite_false, sub_zero]
     convert ((hasDerivAt_lineWeight energy cutoff temperature).const_sub 1).log
       (ne_of_gt complement_pos) using 1
     field_simp
-  · simp only [stateProbability, acceptedIndicator, if_true]
+  · simp only [stateProbability, acceptedIndicator, ite_true]
     convert (hasDerivAt_lineWeight energy cutoff temperature).log
       (ne_of_gt weight_pos) using 1
     field_simp
@@ -46,9 +46,10 @@ theorem hasDerivAt_log_jointProbability_common_shift
         Real.log (stateProbability (energies line + offset) cutoff temperature (configuration line)))
         ((lineWeight (energies line + shift) cutoff temperature -
           acceptedIndicator (configuration line)) / temperature) shift := by
-    simpa using
+    convert
       (hasDerivAt_log_stateProbability (energies line + shift) cutoff temperature
         (configuration line)).comp shift ((hasDerivAt_id shift).const_add (energies line))
+      using 1 <;> (first | rfl | simp)
   simpa only [activeSupport, acceptedCount, ← Finset.sum_div, Finset.sum_sub_distrib] using
     HasDerivAt.fun_sum (u := Finset.univ) (fun line _ => line_derivative line)
 

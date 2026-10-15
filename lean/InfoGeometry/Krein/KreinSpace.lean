@@ -10,6 +10,7 @@ import Mathlib.Algebra.Lie.Basic
 import Mathlib.Topology.Algebra.Module.Spaces.ContinuousLinearMap
 import Mathlib.Topology.Algebra.Module.Spaces.CompactConvergenceCLM
 import Mathlib.Tactic.Abel
+import InfoGeometry.GrandUnification.ArchetypeDictionary
 
 /-!
 # Real Krein Spaces — Canonical Mathlib 4.28.x Implementation
@@ -94,6 +95,27 @@ lemma jCLM_adjoint_eq :
   jCLM_adjoint_eq (H := H)
 
 lemma jCLM_selfAdjoint : IsSelfAdjoint (jCLM (H := H)) := jCLM_adjoint_eq
+
+/-- Fundamental symmetry as a split involution in the algebra of continuous linear operators. -/
+noncomputable def kreinSplitInvolution :
+    InfoGeometry.GrandUnification.ArchetypeDictionary.SplitInvolution ℝ (H →L[ℝ] H) where
+  epsilon := jCLM (H := H)
+  sq_eq_one := by
+    change (jCLM (H := H)).comp (jCLM (H := H)) = ContinuousLinearMap.id ℝ H
+    exact jCLM_comp_self
+
+/-- Positive Krein projector P₊ = (1 + J) / 2. -/
+noncomputable def P_plus : H →L[ℝ] H :=
+  (kreinSplitInvolution (H := H)).P_plus
+
+/-- Negative Krein projector P₋ = (1 - J) / 2. -/
+noncomputable def P_minus : H →L[ℝ] H :=
+  (kreinSplitInvolution (H := H)).P_minus
+
+/-- Certified completeness discharge: P₊ + P₋ = 1. -/
+theorem discharge_completeness :
+    P_plus (H := H) + P_minus (H := H) = 1 :=
+  (kreinSplitInvolution (H := H)).P_plus_add_P_minus
 
 /-! ### Krein inner product and adjoint -/
 

@@ -72,7 +72,7 @@ theorem cocycle_two_neg_two
   have h := P.cocycle_on_opposite_modes 2
   have h' := h
   ring_nf at h'
-  simpa using h'
+  simpa [div_eq_mul_inv] using h'
 
 /-- The mode-(-2) opposite-mode cocycle is exactly `-c/2`. -/
 theorem cocycle_neg_two_two

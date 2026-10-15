@@ -32,9 +32,12 @@ def prepare (pending : List Node) (request : Node → Request) :
   | none => throwError "hive.epistemic.unschedulable"
   | some schedule =>
       let snapshot ← capture (schedule.map request).toArray
-      return { schedule, computed,
-        snapshot := { snapshot with requests := (schedule.map request).toArray },
-        requests_match := rfl }
+      return {
+        schedule := schedule
+        computed := computed
+        snapshot := { snapshot with requests := (schedule.map request).toArray }
+        requests_match := rfl
+      }
 
 def withAdmission {Result : Type} {pending : List Node} {request : Node → Request}
     (plan : PreparedPlan pending request)

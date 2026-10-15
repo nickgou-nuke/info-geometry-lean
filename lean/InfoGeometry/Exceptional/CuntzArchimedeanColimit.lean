@@ -53,12 +53,12 @@ theorem no_normalized_real_trace {Algebra : Type*} [Ring Algebra] [StarRing Alge
 open InfoGeometry.Clifford
 
 theorem equal_negative_coordinates_norm (scale : ℝ) :
-    norm (⟨0, 0, scale, scale⟩ : SplitQuaternion) = -2 * scale ^ 2 := by
-  dsimp [norm]
+    InfoGeometry.Clifford.norm (⟨0, 0, scale, scale⟩ : SplitQuaternion) = -2 * scale ^ 2 := by
+  dsimp [InfoGeometry.Clifford.norm]
   ring
 
 theorem equal_negative_coordinates_null_iff (scale : ℝ) :
-    norm (⟨0, 0, scale, scale⟩ : SplitQuaternion) = 0 ↔ scale = 0 := by
+    InfoGeometry.Clifford.norm (⟨0, 0, scale, scale⟩ : SplitQuaternion) = 0 ↔ scale = 0 := by
   rw [equal_negative_coordinates_norm]
   constructor
   · intro equality
@@ -68,8 +68,9 @@ theorem equal_negative_coordinates_null_iff (scale : ℝ) :
     norm_num
 
 theorem opposite_signature_coordinates_null (scale : ℝ) :
-    norm (⟨0, scale, scale, 0⟩ : SplitQuaternion) = 0 := by
-  simp [norm]
+    InfoGeometry.Clifford.norm (⟨0, scale, scale, 0⟩ : SplitQuaternion) = 0 := by
+  dsimp [InfoGeometry.Clifford.norm]
+  ring
 
 theorem opposite_signature_coordinates_square_zero (scale : ℝ) :
     (⟨0, scale, scale, 0⟩ : SplitQuaternion) * ⟨0, scale, scale, 0⟩ = 0 := by

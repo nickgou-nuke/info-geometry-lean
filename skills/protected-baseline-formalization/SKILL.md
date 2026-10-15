@@ -5,6 +5,17 @@ metadata:
   short-description: Protected Lean formalization workflow
 ---
 
+<!-- repository-context-rule -->
+## Repository context rule
+
+For repository work, the current checked-out codebase is the context. Search
+existing implementation and trace actual carriers, definitions, imports,
+instances, theorem statements, and uses before claiming a structure is missing
+or incorrect. A local absence is not a repository-wide absence. Names,
+heuristics, summaries, and documentation guide discovery but do not override
+source. Follow `docs/REPO_DEEP_SEARCH_PROTOCOL.md` before repo-wide gap claims.
+
+
 # Protected baseline formalization
 
 Operating identity for repository-wide formalization work in `info-geometry-lean`.
@@ -51,8 +62,10 @@ Check every gate before each build-related command:
 - **`.lake/packages/` is read-only** (`chmod -R a-w`). Never run `lake update`, never edit `lakefile.lean` or `lake-manifest.json` without explicit human approval, never touch vendored dependency toolchains. If an import breaks, work within the pinned Mathlib cache (`v4.34.1`).
 - **Continuous tracking:** after creating or modifying any file, immediately run `git add -A`. Staged work is protected from rogue `git restore`.
 - **Do not edit dirty external submodules.**
-- **Subagent sandbox:** never delegate file repairs/rewrites to a subagent on the live owner file. Give subagents only new-file tasks in a sandbox, supplying sufficient mathematical context extracted from the old file.
 - **Truth boundary:** graph tools, transcripts, CAS results, and oracle suggestions are navigation/review evidence only. Only kernel-checked Lean source edits count as truth.
+- **Zero fake proofs:** 0 `sorry`, 0 `admit`, 0 custom axioms. Only standard foundational Lean 4 axioms (`[propext, Classical.choice, Quot.sound]`).
+- **Trap T16 Permanent Prohibition (Zero Scalar Toy Proxies):** Non-commutative operator algebras ($\mathcal{M}$), infinite-dimensional spectral triples, and spacetime soldering forms must never be replaced by coordinate/scalar surrogates.
+- **Wavefront Duality & Operator-Algebraic Root (OpenGauss Protocol QMS-SOP-IAA-001):** Retarded/Advanced waves are operator wavefront shells $\mathcal{O}_{\text{foc}}(\tau) = \sigma_{-\tau}(\mathcal{O}_0)$ and $\mathcal{O}_{\text{defoc}}(\tau) = \sigma_{+\tau}(\mathcal{O}_0')$ in von Neumann algebras $\mathcal{M}$ intertwined by Tomita modular conjugation $J \mathcal{O}_{\text{foc}}(\tau) J = \mathcal{O}_{\text{defoc}}(-\tau)$, Klein bottle glide reflection $\mathcal{G}_{\text{Klein}}(\mathcal{O}_{\text{foc}}(\tau)) = \mathcal{O}_{\text{defoc}}(-\tau)$, KMS thermal boundary periodicity $\tau \to \tau + i\beta$, and chiral ideal splits $P_L \leftrightarrow P_R$.
 
 ## Repository architecture — owners exist before you rewrite
 

@@ -16,7 +16,7 @@ noncomputable section
 
 namespace CStarStateColimit.Native.FilteredGNSFaithfulCStarRepresentation
 
-set_option maxHeartbeats 80000
+set_option maxHeartbeats 1200000
 set_option linter.unusedSectionVars false
 
 open CStarStateColimit.Native
@@ -116,7 +116,11 @@ theorem algebraicColimitToRepresentedClosure_isometry
   letI := faithfulPulledNormedRing Stage sys ω hρ
   have hIsoRep : Isometry ((faithfulStarRepresentation Stage sys ω hρ).rep) :=
     (faithfulStarRepresentation Stage sys ω hρ).rep_isometry
-  simpa [faithfulStarRepresentation_apply_eq_closureMap
-    (Stage := Stage) (sys := sys) (ω := ω) hρ] using hIsoRep
+  intro a b
+  rw [← faithfulStarRepresentation_apply_eq_closureMap
+    (Stage := Stage) (sys := sys) (ω := ω) hρ a,
+    ← faithfulStarRepresentation_apply_eq_closureMap
+      (Stage := Stage) (sys := sys) (ω := ω) hρ b]
+  exact hIsoRep a b
 
 end CStarStateColimit.Native.FilteredGNSFaithfulCStarRepresentation

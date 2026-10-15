@@ -25,8 +25,11 @@ noncomputable def pseudoscalar_K [CompleteSpace E] : EndH :=
 
 /-- The volume form K squares to -1 (the involution property of the pseudoscalar). -/
 theorem pseudoscalar_K_sq [CompleteSpace E] :
-    (pseudoscalar_K (E := E)).comp (pseudoscalar_K (E := E)) = -(1 : EndH) := by
-  simpa [pseudoscalar_K] using (complex_i_sq (E := E))
+    (pseudoscalar_K (E := E)).comp (pseudoscalar_K (E := E)) =
+      -(ContinuousLinearMap.id ℝ H₂) := by
+  change (complex_i (E := E)).comp (complex_i (E := E)) =
+    -(ContinuousLinearMap.id ℝ H₂)
+  exact complex_i_sq (E := E)
 
 /--
 Tomita conjugation flips the pseudoscalar phase axis.
@@ -35,18 +38,22 @@ This is the operator-level readback of the real doubled `i = Jε` relation:
 `J K J = -K`.
 -/
 theorem J_K_anticommute [CompleteSpace E] :
-    modular_j (E := E) * pseudoscalar_K (E := E) * modular_j (E := E) =
+    ((modular_j (E := E)).comp (pseudoscalar_K (E := E))).comp (modular_j (E := E)) =
       -pseudoscalar_K (E := E) := by
   have hJK :
-      modular_j (E := E) * pseudoscalar_K (E := E) =
+      (modular_j (E := E)).comp (pseudoscalar_K (E := E)) =
         spectral_epsilon (E := E) := by
-    simpa [pseudoscalar_K] using (modular_j_comp_complex_i (E := E))
+    change (modular_j (E := E)).comp (complex_i (E := E)) =
+      spectral_epsilon (E := E)
+    exact modular_j_comp_complex_i (E := E)
   calc
-    modular_j (E := E) * pseudoscalar_K (E := E) * modular_j (E := E)
-        = spectral_epsilon (E := E) * modular_j (E := E) := by
+    ((modular_j (E := E)).comp (pseudoscalar_K (E := E))).comp (modular_j (E := E))
+        = (spectral_epsilon (E := E)).comp (modular_j (E := E)) := by
             rw [hJK]
     _ = -pseudoscalar_K (E := E) := by
-          simpa [pseudoscalar_K] using (spectral_epsilon_comp_modular_j (E := E))
+          change (spectral_epsilon (E := E)).comp (modular_j (E := E)) =
+            -(complex_i (E := E))
+          exact spectral_epsilon_comp_modular_j (E := E)
 
 /-- The discrete Dirac-Hodge Operator D on the Cuntz algebra.
 D = S_L + J S_L J

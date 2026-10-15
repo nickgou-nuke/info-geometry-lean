@@ -1,5 +1,4 @@
 import InfoGeometry.Canonical.GrandCanonicalExperts
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SpectralInference
 import InfoGeometry.Canonical.HyperbolicRotor
 import InfoGeometry.Canonical.KreinDoubledAtom
@@ -334,12 +333,11 @@ end BistochasticLift
 
 section SplitDoubledLane
 
-variable {E : Type*}
+variable (E : Type)
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [FiniteDimensional ℝ E]
 
 /-- Canonical split doubled carrier (`E ⊕ E`) on the `L²` lane. -/
-abbrev SplitDoubledCarrier (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
-    [CompleteSpace E] : Type _ :=
+abbrev SplitDoubledCarrier : Type _ :=
   InfoGeometry.Krein.DoubledSpace E
 
 /-- Canonical doubled atom on the split carrier (`J`, `ε`, `K = Jε`). -/
@@ -349,11 +347,9 @@ noncomputable def splitDoubledAtom :
 
 omit [FiniteDimensional ℝ E] in
 @[simp] theorem splitDoubledAtom_phaseAxis_sq :
-    (splitDoubledAtom (E := E)).K.comp (splitDoubledAtom (E := E)).K
-      = -(LinearMap.id : splitDoubledAtom (E := E) →ₗ[ℝ] splitDoubledAtom (E := E)) := by
-  simpa [splitDoubledAtom] using
-    (InfoGeometry.Canonical.KreinDoubledAtom.K_sq_eq_neg_id
-      (InfoGeometry.Canonical.cl11DoubledAtom E))
+    (splitDoubledAtom E).K.comp (splitDoubledAtom E).K
+      = -(LinearMap.id : (splitDoubledAtom E) →ₗ[ℝ] (splitDoubledAtom E)) :=
+  InfoGeometry.Canonical.KreinDoubledAtom.K_sq_eq_neg_id (splitDoubledAtom E)
 
 /-- Dimension closure: doubled lane has exactly twice the base real dimension. -/
 theorem splitDoubledCarrier_finrank_eq_two_mul_finrank :
@@ -373,7 +369,7 @@ theorem splitDoubledCarrier_finrank_eq_128_of_finrank_eq_64
     Module.finrank ℝ (SplitDoubledCarrier E) = 128 := by
   calc
     Module.finrank ℝ (SplitDoubledCarrier E)
-        = 2 * Module.finrank ℝ E := splitDoubledCarrier_finrank_eq_two_mul_finrank (E := E)
+        = 2 * Module.finrank ℝ E := splitDoubledCarrier_finrank_eq_two_mul_finrank E
     _ = 2 * 64 := by simp [h64]
     _ = 128 := by norm_num
 

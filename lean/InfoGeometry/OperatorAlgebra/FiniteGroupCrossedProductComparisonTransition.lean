@@ -48,8 +48,10 @@ noncomputable def coefficientwiseComparisonCocone :
   map := coefficientwiseComparison I G Stage sys
   map_transition := by
     intro i j hij F
-    simpa [coefficientwiseComparisonFamily, stageCrossedProductTransition] using
-      (coefficientwiseComparisonFamily_transition Stage sys hij F).symm
+    change coefficientwiseComparisonFamily Stage sys j
+        (fun g => sys.map hij (F g)) =
+      coefficientwiseComparisonFamily Stage sys i F
+    exact (coefficientwiseComparisonFamily_transition Stage sys hij F).symm
   map_convolution := by
     intro i F K
     exact coefficientwiseComparisonPacket_convolution Stage sys A i F K
@@ -98,14 +100,18 @@ theorem comparison_transition_convolution
       coefficientwiseComparison I G Stage sys j
           (stageCrossedProductTransition Stage sys hij F) =
         coefficientwiseComparison I G Stage sys i F := by
-    simpa [coefficientwiseComparisonFamily, stageCrossedProductTransition] using
-      (coefficientwiseComparisonFamily_transition Stage sys hij F).symm
+    change coefficientwiseComparisonFamily Stage sys j
+        (fun g => sys.map hij (F g)) =
+      coefficientwiseComparisonFamily Stage sys i F
+    exact (coefficientwiseComparisonFamily_transition Stage sys hij F).symm
   have hK :
       coefficientwiseComparison I G Stage sys j
           (stageCrossedProductTransition Stage sys hij K) =
         coefficientwiseComparison I G Stage sys i K := by
-    simpa [coefficientwiseComparisonFamily, stageCrossedProductTransition] using
-      (coefficientwiseComparisonFamily_transition Stage sys hij K).symm
+    change coefficientwiseComparisonFamily Stage sys j
+        (fun g => sys.map hij (K g)) =
+      coefficientwiseComparisonFamily Stage sys i K
+    exact (coefficientwiseComparisonFamily_transition Stage sys hij K).symm
   rw [hF, hK]
 
 theorem comparison_transition_star
@@ -123,8 +129,10 @@ theorem comparison_transition_star
       coefficientwiseComparison I G Stage sys j
           (stageCrossedProductTransition Stage sys hij F) =
         coefficientwiseComparison I G Stage sys i F := by
-    simpa [coefficientwiseComparisonFamily, stageCrossedProductTransition] using
-      (coefficientwiseComparisonFamily_transition Stage sys hij F).symm
+    change coefficientwiseComparisonFamily Stage sys j
+        (fun g => sys.map hij (F g)) =
+      coefficientwiseComparisonFamily Stage sys i F
+    exact (coefficientwiseComparisonFamily_transition Stage sys hij F).symm
   rw [hF]
 
 end

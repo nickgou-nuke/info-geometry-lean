@@ -23,7 +23,14 @@ def J_zero : Matrix (Fin 2) (Fin 2) ℚ :=
   ![![1, 0], ![0, -1]]
 
 /-- Theorem: Chiral Raising and Lowering operators are strict nilpotents. -/
-theorem j_plus_nilpotent : J_plus * J_plus = 0 := by ext i j; fin_cases i <;> fin_cases j <;> simp [J_plus, mul_apply, Fin.sum_univ_two]
-theorem j_minus_nilpotent : J_minus * J_minus = 0 := by ext i j; fin_cases i <;> fin_cases j <;> simp [J_minus, mul_apply, Fin.sum_univ_two]
+theorem j_plus_nilpotent : J_plus * J_plus = 0 := by
+  ext i j
+  change (∑ k : Fin 2, J_plus i k * J_plus k j) = 0
+  fin_cases i <;> fin_cases j <;> norm_num [J_plus]
+
+theorem j_minus_nilpotent : J_minus * J_minus = 0 := by
+  ext i j
+  change (∑ k : Fin 2, J_minus i k * J_minus k j) = 0
+  fin_cases i <;> fin_cases j <;> norm_num [J_minus]
 
 end InfoGeometry.Algebra.SpinCore

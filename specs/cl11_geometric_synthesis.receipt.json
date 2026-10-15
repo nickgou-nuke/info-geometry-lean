@@ -1,0 +1,108 @@
+{
+  "schema": "info_geometry.proof_artifact_receipt.v1",
+  "authority": "candidate_observation_not_proof_authority",
+  "artifact": {
+    "path": "lean/InfoGeometry/Clifford/Cl11GeometricSynthesis.lean",
+    "sha256": "b41df6427464accdbaf30ee5878b714d5b10e1867de9e839b03c6d9094ee34f2"
+  },
+  "source": {
+    "path": "lean/InfoGeometry/Clifford/Cl11GeometricSynthesis.lean",
+    "snapshotSha256": "b41df6427464accdbaf30ee5878b714d5b10e1867de9e839b03c6d9094ee34f2",
+    "currentSnapshotSha256": "b41df6427464accdbaf30ee5878b714d5b10e1867de9e839b03c6d9094ee34f2",
+    "changedSincePrompt": false
+  },
+  "environment": {
+    "toolchain": "leanprover/lean4:v4.34.1",
+    "lakefileSha256": "5372c9a95ed8f6488bc0ce257c906c83658449668db4627259d72d542c77d9f7",
+    "lakeManifestSha256": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "gitHead": "17d436b864feeb5876f2392e550aa7fa6ef0d55c"
+  },
+  "checks": {
+    "leanProcess": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "lean/InfoGeometry/Clifford/Cl11GeometricSynthesis.lean"
+      ],
+      "returncode": 0,
+      "outputSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": "passed"
+    },
+    "semanticVacuityGate": {
+      "returncode": 0,
+      "outputSha256": "a7cb77df71d19218bbeae97ab0a451544df16fc7f68792a26b32a6b5e8aeb3e8",
+      "status": "passed"
+    },
+    "axiomAudit": {
+      "status": "collected",
+      "declarations": [
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.one_eq_one_matrix",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.e1_sq",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.e2_sq",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.omega_sq",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.e1_mul_e2",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.e2_mul_e1",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.e1_e2_anticomm",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.omega_e1_anticomm",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.omega_e2_anticomm",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.P_plus_explicit",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.P_minus_explicit",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.P_plus_sq",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.P_minus_sq",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.P_plus_mul_P_minus",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.P_minus_mul_P_plus",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.P_plus_add_P_minus",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.n_plus_explicit",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.n_minus_explicit",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.n_plus_sq",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.n_minus_sq",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.n_plus_mul_n_minus",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.n_minus_mul_n_plus",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.n_anticomm_sum",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.i_cockle_sq",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.j_cockle_sq",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.k_cockle_sq",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.i_mul_j_cockle",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.j_mul_i_cockle",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.j_mul_k_cockle",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.k_mul_j_cockle",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.k_mul_i_cockle",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.i_mul_k_cockle",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.cockle_triad_product",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.elliptic_mul",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.hyperbolic_mul",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.eps_parabolic_explicit",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.eps_parabolic_sq",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.parabolic_mul",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.oneC_eq_one_matrix",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.e1C_sq",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.e2C_sq",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.fC_sq",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.e1C_e2C_anticomm",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.e1C_fC_anticomm",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.e2C_fC_anticomm",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.I_3D_eq_imaginary",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.I_3D_sq",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.I_3D_comm_any",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.I_3D_comm_e1C",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.I_3D_comm_e2C",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.I_3D_comm_fC",
+        "InfoGeometry.Clifford.Cl11GeometricSynthesis.cl12_internal_complexification"
+      ],
+      "returncode": 0,
+      "outputSha256": "ce2b31eb3e4a32f9abfdd6764f996d3f58dc46bd5fede7b5c2e1d8b2960ab18a",
+      "output": "'InfoGeometry.Clifford.Cl11GeometricSynthesis.one_eq_one_matrix' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.e1_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.e2_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.omega_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.e1_mul_e2' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.e2_mul_e1' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.e1_e2_anticomm' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.omega_e1_anticomm' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.omega_e2_anticomm' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.P_plus_explicit' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.P_minus_explicit' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.P_plus_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.P_minus_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.P_plus_mul_P_minus' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.P_minus_mul_P_plus' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.P_plus_add_P_minus' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.n_plus_explicit' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.n_minus_explicit' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.n_plus_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.n_minus_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.n_plus_mul_n_minus' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.n_minus_mul_n_plus' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.n_anticomm_sum' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.i_cockle_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.j_cockle_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.k_cockle_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.i_mul_j_cockle' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.j_mul_i_cockle' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.j_mul_k_cockle' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.k_mul_j_cockle' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.k_mul_i_cockle' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.i_mul_k_cockle' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.cockle_triad_product' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.elliptic_mul' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.hyperbolic_mul' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.eps_parabolic_explicit' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.eps_parabolic_sq' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.parabolic_mul' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.oneC_eq_one_matrix' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.e1C_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.e2C_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.fC_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.e1C_e2C_anticomm' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.e1C_fC_anticomm' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.e2C_fC_anticomm' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.I_3D_eq_imaginary' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.I_3D_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.I_3D_comm_any' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.I_3D_comm_e1C' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.I_3D_comm_e2C' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.I_3D_comm_fC' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Clifford.Cl11GeometricSynthesis.cl12_internal_complexification' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n"
+    }
+  },
+  "review": {
+    "status": "kernel_checked_pending_owner_review",
+    "promotionAllowed": false
+  },
+  "score": {
+    "status": "unconfigured",
+    "value": null,
+    "meaning": null
+  },
+  "receiptSha256": "0a721f7daacfe7c43ed19be72c9382f569c5c950759407a137bd27268c19e38e"
+}

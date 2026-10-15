@@ -38,29 +38,13 @@ local notation "EndH" => H₂ →L[ℝ] H₂
 theorem kLinear_iff_isPhaseLinear
     (A : EndH) :
     KLinear (E := E) A ↔ IsPhaseLinear (E := E) A := by
-  constructor
-  · intro hK
-    have hComplex : A.comp (complex_i (E := E)) = (complex_i (E := E)).comp A := by
-      simpa [modularK_eq_complex_i (E := E)] using hK
-    exact (isPhaseLinear_iff_comp_complex_i (E := E) A).2 hComplex
-  · intro hPhase
-    have hComplex : A.comp (complex_i (E := E)) = (complex_i (E := E)).comp A :=
-      (isPhaseLinear_iff_comp_complex_i (E := E) A).1 hPhase
-    simpa [modularK_eq_complex_i (E := E)] using hComplex
+  rw [KLinear, isPhaseLinear_iff_comp_complex_i, modularK_eq_complex_i]
 
 /-- `K`-antilinearity in `RealBdG` is exactly phase-antilinearity in Bogoliubov transport form. -/
 theorem kAntilinear_iff_isPhaseAntilinear
     (A : EndH) :
     KAntilinear (E := E) A ↔ IsPhaseAntilinear (E := E) A := by
-  constructor
-  · intro hK
-    have hComplex : A.comp (complex_i (E := E)) = -((complex_i (E := E)).comp A) := by
-      simpa [modularK_eq_complex_i (E := E)] using hK
-    exact (isPhaseAntilinear_iff_comp_complex_i (E := E) A).2 hComplex
-  · intro hPhase
-    have hComplex : A.comp (complex_i (E := E)) = -((complex_i (E := E)).comp A) :=
-      (isPhaseAntilinear_iff_comp_complex_i (E := E) A).1 hPhase
-    simpa [modularK_eq_complex_i (E := E)] using hComplex
+  rw [KAntilinear, isPhaseAntilinear_iff_comp_complex_i, modularK_eq_complex_i]
 
 /-- Conjugation by `K` coincides with conjugation by the canonical phase axis `Jε`. -/
 theorem kConjugate_eq_phaseConjugate

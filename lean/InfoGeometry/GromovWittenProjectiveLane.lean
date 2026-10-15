@@ -1,4 +1,4 @@
-import Mathlib.Logic.Nonempty
+import Mathlib.Basic.Nonempty
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!

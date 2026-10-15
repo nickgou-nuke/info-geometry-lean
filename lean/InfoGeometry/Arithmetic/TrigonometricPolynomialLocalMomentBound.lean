@@ -34,12 +34,11 @@ theorem hasDerivAt_finiteTrigonometricPolynomial
   intro n hn
   let C : ℂ := 2 * (Real.pi : ℂ) * Complex.I * (n : ℂ)
   have hlin : HasDerivAt (fun x : ℝ => C * (x : ℂ)) C t := by
-    simpa [C] using
-      (ContinuousLinearMap.hasDerivAt Complex.ofRealCLM (x := t)).const_mul C
+    simpa [C] using ((hasDerivAt_id (t : ℂ)).comp_ofReal.const_mul C)
   have hexp : HasDerivAt
       (fun x : ℝ => Complex.exp (C * (x : ℂ)))
       (Complex.exp (C * (t : ℂ)) * C) t := by
-    simpa using (Complex.hasDerivAt_exp (C * (t : ℂ))).comp t hlin
+    exact (Complex.hasDerivAt_exp (C * (t : ℂ))).comp t hlin
   simpa [C, mul_assoc, mul_left_comm, mul_comm] using hexp.const_mul (a n)
 
 theorem deriv_finiteTrigonometricPolynomial

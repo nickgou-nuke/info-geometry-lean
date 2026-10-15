@@ -27,7 +27,7 @@ def rowVec4 (M : Matrix2x4) (r : Fin 2) : Vec4 :=
     | I4.z => M r 3
 
 /-- The six ordered 2-by-2 minors of the two rows of `M`. -/
-def matrixPluckerCoords (M : Matrix2x4) : PluckerCoords :=
+def matrixPluckerCoords (M : Matrix2x4) : InfoGeometry.Algebra.FiniteSpin.Vec6R :=
   pluckerCoords (rowVec4 M 0) (rowVec4 M 1)
 
 def swapRows (M : Matrix2x4) : Matrix2x4 :=
@@ -58,6 +58,17 @@ theorem matrixPluckerCoords_klein_relation (M : Matrix2x4) :
       - matrixPluckerCoords M 1 * matrixPluckerCoords M 4
       + matrixPluckerCoords M 2 * matrixPluckerCoords M 3 = 0 := by
   exact pluckerCoords_on_klein (rowVec4 M 0) (rowVec4 M 1)
+
+private theorem maximalMinor_fin2 (M : Matrix2x4) (a b : Fin 4) :
+    maximalMinor M ![a, b] = M 0 a * M 1 b - M 0 b * M 1 a := by
+  unfold maximalMinor
+  calc
+    Matrix.det (fun i j => M i (![a, b] j)) =
+        (fun i j => M i (![a, b] j)) 0 0 *
+          (fun i j => M i (![a, b] j)) 1 1 -
+          (fun i j => M i (![a, b] j)) 0 1 *
+          (fun i j => M i (![a, b] j)) 1 0 := Matrix.det_fin_two _
+    _ = M 0 a * M 1 b - M 0 b * M 1 a := by simp
 
 theorem matrixPluckerCoords_swapRows (M : Matrix2x4) :
     matrixPluckerCoords (swapRows M) =
@@ -102,6 +113,36 @@ theorem matrixPlucker_nonnegative_readout
     0 ≤ matrixPluckerCoords M i :=
   hM i
 
+private theorem maximalMinor_nonnegative_of_matrixPluckerNonnegative
+    (M : Matrix2x4) (hM : MatrixPluckerNonnegative M)
+    (a b : Fin 4) (hab : a < b) :
+    0 ≤ maximalMinor M ![a, b] := by
+  rw [maximalMinor_fin2]
+  fin_cases a <;> fin_cases b <;> try norm_num at hab
+  all_goals
+    first
+    | exact (by simpa [MatrixPluckerNonnegative, matrixPluckerCoords_apply] using hM 0)
+    | exact (by simpa [MatrixPluckerNonnegative, matrixPluckerCoords_apply] using hM 1)
+    | exact (by simpa [MatrixPluckerNonnegative, matrixPluckerCoords_apply] using hM 2)
+    | exact (by simpa [MatrixPluckerNonnegative, matrixPluckerCoords_apply] using hM 3)
+    | exact (by simpa [MatrixPluckerNonnegative, matrixPluckerCoords_apply] using hM 4)
+    | exact (by simpa [MatrixPluckerNonnegative, matrixPluckerCoords_apply] using hM 5)
+
+private theorem maximalMinor_positive_of_matrixPluckerPositive
+    (M : Matrix2x4) (hM : MatrixPluckerPositive M)
+    (a b : Fin 4) (hab : a < b) :
+    0 < maximalMinor M ![a, b] := by
+  rw [maximalMinor_fin2]
+  fin_cases a <;> fin_cases b <;> try norm_num at hab
+  all_goals
+    first
+    | exact (by simpa [MatrixPluckerPositive, matrixPluckerCoords_apply] using hM 0)
+    | exact (by simpa [MatrixPluckerPositive, matrixPluckerCoords_apply] using hM 1)
+    | exact (by simpa [MatrixPluckerPositive, matrixPluckerCoords_apply] using hM 2)
+    | exact (by simpa [MatrixPluckerPositive, matrixPluckerCoords_apply] using hM 3)
+    | exact (by simpa [MatrixPluckerPositive, matrixPluckerCoords_apply] using hM 4)
+    | exact (by simpa [MatrixPluckerPositive, matrixPluckerCoords_apply] using hM 5)
+
 /-! The canonical chart owner quantifies over all strict-monotone column
     selections.  For `Gr(2,4)`, its six standard selections are exactly the
     six coordinates used by `matrixPluckerCoords`. -/
@@ -115,111 +156,67 @@ theorem positiveGrassmannianInterior_mem_matrixPluckerPositive
   · have h := hM ![0, 1] (by
       intro i j hij
       fin_cases i <;> fin_cases j <;> simp_all)
+    rw [maximalMinor_fin2 M 0 1] at h
     rw [matrixPluckerCoords_apply]
-    simpa [maximalMinor, Matrix.det_fin_two] using h
+    exact h
   · have h := hM ![0, 2] (by
       intro i j hij
       fin_cases i <;> fin_cases j <;> simp_all)
+    rw [maximalMinor_fin2 M 0 2] at h
     rw [matrixPluckerCoords_apply]
-    simpa [maximalMinor, Matrix.det_fin_two] using h
+    exact h
   · have h := hM ![0, 3] (by
       intro i j hij
       fin_cases i <;> fin_cases j <;> simp_all)
+    rw [maximalMinor_fin2 M 0 3] at h
     rw [matrixPluckerCoords_apply]
-    simpa [maximalMinor, Matrix.det_fin_two] using h
+    exact h
   · have h := hM ![1, 2] (by
       intro i j hij
       fin_cases i <;> fin_cases j <;> simp_all)
+    rw [maximalMinor_fin2 M 1 2] at h
     rw [matrixPluckerCoords_apply]
-    simpa [maximalMinor, Matrix.det_fin_two] using h
+    exact h
   · have h := hM ![1, 3] (by
       intro i j hij
       fin_cases i <;> fin_cases j <;> simp_all)
+    rw [maximalMinor_fin2 M 1 3] at h
     rw [matrixPluckerCoords_apply]
-    simpa [maximalMinor, Matrix.det_fin_two] using h
+    exact h
   · have h := hM ![2, 3] (by
       intro i j hij
       fin_cases i <;> fin_cases j <;> simp_all)
+    rw [maximalMinor_fin2 M 2 3] at h
     rw [matrixPluckerCoords_apply]
-    simpa [maximalMinor, Matrix.det_fin_two] using h
+    exact h
 
 theorem matrixPluckerPositive_mem_positiveGrassmannianInterior
     (M : Matrix2x4)
     (hM : MatrixPluckerPositive M) :
     M ∈ positiveGrassmannianInterior (k := 2) (n := 4) := by
   intro s hs
-  fin_cases s
-  all_goals simp_all [Multiset.Pi.cons_same, Multiset.Pi.cons_ne,
-    maximalMinor, Matrix.det_fin_two]
-  case «0» =>
-    have h := hs (a := (0 : Fin 2)) (b := 1) (by decide)
-    simp [Multiset.Pi.cons_same, Multiset.Pi.cons_ne] at h
-  case «1» => simpa [matrixPluckerCoords_apply] using hM 0
-  case «2» => simpa [matrixPluckerCoords_apply] using hM 1
-  case «3» => simpa [matrixPluckerCoords_apply] using hM 2
-  case «4» =>
-    have h := hs (a := (0 : Fin 2)) (b := 1) (by decide)
-    simp [Multiset.Pi.cons_same, Multiset.Pi.cons_ne] at h
-  case «5» =>
-    have h := hs (a := (0 : Fin 2)) (b := 1) (by decide)
-    simp [Multiset.Pi.cons_same, Multiset.Pi.cons_ne] at h
-  case «6» => simpa [matrixPluckerCoords_apply] using hM 3
-  case «7» => simpa [matrixPluckerCoords_apply] using hM 4
-  case «8» =>
-    have h := hs (a := (0 : Fin 2)) (b := 1) (by decide)
-    simp [Multiset.Pi.cons_same, Multiset.Pi.cons_ne] at h
-  case «9» =>
-    have h := hs (a := (0 : Fin 2)) (b := 1) (by decide)
-    simp [Multiset.Pi.cons_same, Multiset.Pi.cons_ne] at h
-  case «10» =>
-    have h := hs (a := (0 : Fin 2)) (b := 1) (by decide)
-    simp [Multiset.Pi.cons_same, Multiset.Pi.cons_ne] at h
-  case «11» => simpa [matrixPluckerCoords_apply] using hM 5
-  case «12» =>
-    have h := hs (a := (0 : Fin 2)) (b := 1) (by decide)
-    simp [Multiset.Pi.cons_same, Multiset.Pi.cons_ne] at h
-  case «13» =>
-    have h := hs (a := (0 : Fin 2)) (b := 1) (by decide)
-    simp [Multiset.Pi.cons_same, Multiset.Pi.cons_ne] at h
-  case «14» =>
-    have h := hs (a := (0 : Fin 2)) (b := 1) (by decide)
-    simp [Multiset.Pi.cons_same, Multiset.Pi.cons_ne] at h
-  case «15» =>
-    have h := hs (a := (0 : Fin 2)) (b := 1) (by decide)
-    simp [Multiset.Pi.cons_same, Multiset.Pi.cons_ne] at h
+  let a := s 0
+  let b := s 1
+  have hab : a < b := by simpa [a, b] using hs (by decide)
+  have hs_eq : s = ![a, b] := by
+    funext j
+    fin_cases j <;> simp [a, b]
+  rw [hs_eq]
+  exact maximalMinor_positive_of_matrixPluckerPositive M hM a b hab
 
 theorem matrixPluckerNonnegative_mem_positiveGrassmannianChart
     (M : Matrix2x4)
     (hM : MatrixPluckerNonnegative M) :
     M ∈ positiveGrassmannianChart (k := 2) (n := 4) := by
   intro s hs
-  fin_cases s
-  all_goals simp_all [Multiset.Pi.cons_same, Multiset.Pi.cons_ne,
-    maximalMinor, Matrix.det_fin_two]
-  case «1» => simpa [matrixPluckerCoords_apply] using hM 0
-  case «2» => simpa [matrixPluckerCoords_apply] using hM 1
-  case «3» => simpa [matrixPluckerCoords_apply] using hM 2
-  case «4» =>
-    have h := hs (a := (0 : Fin 2)) (b := 1) (by decide)
-    simp [Multiset.Pi.cons_same, Multiset.Pi.cons_ne] at h
-  case «6» => simpa [matrixPluckerCoords_apply] using hM 3
-  case «7» => simpa [matrixPluckerCoords_apply] using hM 4
-  case «8» =>
-    have h := hs (a := (0 : Fin 2)) (b := 1) (by decide)
-    simp [Multiset.Pi.cons_same, Multiset.Pi.cons_ne] at h
-  case «9» =>
-    have h := hs (a := (0 : Fin 2)) (b := 1) (by decide)
-    simp [Multiset.Pi.cons_same, Multiset.Pi.cons_ne] at h
-  case «11» => simpa [matrixPluckerCoords_apply] using hM 5
-  case «12» =>
-    have h := hs (a := (0 : Fin 2)) (b := 1) (by decide)
-    simp [Multiset.Pi.cons_same, Multiset.Pi.cons_ne] at h
-  case «13» =>
-    have h := hs (a := (0 : Fin 2)) (b := 1) (by decide)
-    simp [Multiset.Pi.cons_same, Multiset.Pi.cons_ne] at h
-  case «14» =>
-    have h := hs (a := (0 : Fin 2)) (b := 1) (by decide)
-    simp [Multiset.Pi.cons_same, Multiset.Pi.cons_ne] at h
+  let a := s 0
+  let b := s 1
+  have hab : a < b := by simpa [a, b] using hs (by decide)
+  have hs_eq : s = ![a, b] := by
+    funext j
+    fin_cases j <;> simp [a, b]
+  rw [hs_eq]
+  exact maximalMinor_nonnegative_of_matrixPluckerNonnegative M hM a b hab
 
 theorem positiveGrassmannianChart_mem_matrixPluckerNonnegative
     (M : Matrix2x4)
@@ -230,33 +227,39 @@ theorem positiveGrassmannianChart_mem_matrixPluckerNonnegative
   · have h := hM ![0, 1] (by
       intro i j hij
       fin_cases i <;> fin_cases j <;> simp_all)
+    rw [maximalMinor_fin2 M 0 1] at h
     rw [matrixPluckerCoords_apply]
-    simpa [maximalMinor, Matrix.det_fin_two] using h
+    exact h
   · have h := hM ![0, 2] (by
       intro i j hij
       fin_cases i <;> fin_cases j <;> simp_all)
+    rw [maximalMinor_fin2 M 0 2] at h
     rw [matrixPluckerCoords_apply]
-    simpa [maximalMinor, Matrix.det_fin_two] using h
+    exact h
   · have h := hM ![0, 3] (by
       intro i j hij
       fin_cases i <;> fin_cases j <;> simp_all)
+    rw [maximalMinor_fin2 M 0 3] at h
     rw [matrixPluckerCoords_apply]
-    simpa [maximalMinor, Matrix.det_fin_two] using h
+    exact h
   · have h := hM ![1, 2] (by
       intro i j hij
       fin_cases i <;> fin_cases j <;> simp_all)
+    rw [maximalMinor_fin2 M 1 2] at h
     rw [matrixPluckerCoords_apply]
-    simpa [maximalMinor, Matrix.det_fin_two] using h
+    exact h
   · have h := hM ![1, 3] (by
       intro i j hij
       fin_cases i <;> fin_cases j <;> simp_all)
+    rw [maximalMinor_fin2 M 1 3] at h
     rw [matrixPluckerCoords_apply]
-    simpa [maximalMinor, Matrix.det_fin_two] using h
+    exact h
   · have h := hM ![2, 3] (by
       intro i j hij
       fin_cases i <;> fin_cases j <;> simp_all)
+    rw [maximalMinor_fin2 M 2 3] at h
     rw [matrixPluckerCoords_apply]
-    simpa [maximalMinor, Matrix.det_fin_two] using h
+    exact h
 
 theorem matrixPlucker_positive_scaleFirstRow
     (l : ℝ) (hl : 0 < l) (M : Matrix2x4)

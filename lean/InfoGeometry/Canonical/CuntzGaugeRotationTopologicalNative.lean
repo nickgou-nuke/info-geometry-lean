@@ -23,7 +23,13 @@ theorem nativeRotationParameterSet_isClosed
     exact isClosed_eq
       ((continuous_fst.mul continuous_fst).add
         (continuous_snd.mul continuous_snd)) continuous_const
-  simpa [nativeRotationParameterSet] using h₁.inter (h₂.inter h₃)
+  have hset : nativeRotationParameterSet (R := R) =
+      {p : R × R | star p.1 = p.1} ∩
+        ({p | star p.2 = p.2} ∩ {p | p.1 * p.1 + p.2 * p.2 = 1}) := by
+    ext p
+    simp [nativeRotationParameterSet]
+  rw [hset]
+  exact h₁.inter (h₂.inter h₃)
 
 theorem realNativeRotationParameterSet_isCompact :
     IsCompact (nativeRotationParameterSet (R := ℝ)) := by

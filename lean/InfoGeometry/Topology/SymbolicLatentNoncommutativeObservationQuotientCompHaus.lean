@@ -1,6 +1,7 @@
 import InfoGeometry.Topology.SymbolicLatentNoncommutativeObservationTopCat
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Category.CompHaus.Basic
+import Mathlib.Topology.Separation.Hausdorff
 
 /-!
 # Compact-Hausdorff packaging of noncommutative observational quotients
@@ -90,7 +91,7 @@ theorem continuous_operatorObservationQuotientRangeMap
 theorem operatorObservationQuotientRangeMap_isQuotientMap
     (S : NoncommutativeObservableSystem X A ι) :
     Topology.IsQuotientMap (operatorObservationQuotientRangeMap S) := by
-  exact IsQuotientMap.of_surjective_continuous
+  exact Topology.IsQuotientMap.of_surjective_continuous
     (operatorObservationQuotientRangeEquiv S).surjective
     (continuous_operatorObservationQuotientRangeMap S)
 

@@ -99,6 +99,8 @@ lemma pom_diagonal_rate_refresh_reward_clt_centeredBlockSecondMoment_nonneg {X :
   have hsecond :=
     (D.pom_diagonal_rate_refresh_reward_clt_varianceData).blockRewardSecondMoment_nonneg
   simpa [pom_diagonal_rate_refresh_reward_clt_varianceData,
+    pom_diagonal_rate_refresh_reward_clt_variance_data.secondMomentFinite,
+    pom_diagonal_rate_refresh_reward_clt_variance_data.blockRewardSecondMoment,
     pom_diagonal_rate_refresh_reward_clt_centeredBlockSecondMoment,
     pom_diagonal_rate_refresh_reward_clt_centeredObservable] using hsecond
 
@@ -118,10 +120,11 @@ theorem paper_pom_diagonal_rate_refresh_reward_clt {X : Type} [Fintype X]
   refine ⟨hMarkov, hRegen, rfl, D.pom_diagonal_rate_refresh_reward_clt_centeredBlockMean_zero, ?_,
     ?_, hCountVariance⟩
   · simpa [pom_diagonal_rate_refresh_reward_clt_varianceData,
+      pom_diagonal_rate_refresh_reward_clt_variance_data.secondMomentFinite,
+      pom_diagonal_rate_refresh_reward_clt_variance_data.blockRewardSecondMoment,
       pom_diagonal_rate_refresh_reward_clt_centeredBlockSecondMoment,
       pom_diagonal_rate_refresh_reward_clt_centeredObservable] using hSecondMoment
   · simpa [pom_diagonal_rate_refresh_reward_clt_varianceDensity,
-      pom_diagonal_rate_refresh_reward_clt_varianceData,
       pom_diagonal_rate_refresh_reward_clt_centeredBlockSecondMoment,
       pom_diagonal_rate_refresh_reward_clt_centeredBlockMean,
       pom_diagonal_rate_refresh_reward_clt_centeredObservable] using hVariance

@@ -20,20 +20,22 @@ def window6WeylFiber (i : Fin 3) :=
   {g : Window6WeylModel // window6WeylProjection g = i}
 
 noncomputable instance instFintypeWindow6WeylFiber (i : Fin 3) : Fintype (window6WeylFiber i) := by
+  classical
   dsimp [window6WeylFiber, window6WeylProjection]
   infer_instance
 
 /-- Each boundary fiber is canonically a `16`-point translate of the subgroup model. -/
 noncomputable def window6WeylFiberEquiv (i : Fin 3) :
     Window6WeylFamilySubgroupModel ≃ window6WeylFiber i where
-  toFun a := ⟨(a, (Fintype.equivFin (ZMod 3)).symm i), by simp [window6WeylProjection]⟩
+  toFun a := ⟨(a, (Fintype.equivFin (ZMod 3)).symm i), by
+    exact (Fintype.equivFin (ZMod 3)).apply_symm_apply i⟩
   invFun g := g.1.1
   left_inv a := rfl
   right_inv g := by
     rcases g with ⟨⟨a, b⟩, hb⟩
     have hb' : b = (Fintype.equivFin (ZMod 3)).symm i := by
       apply (Fintype.equivFin (ZMod 3)).injective
-      simpa [window6WeylProjection] using hb
+      exact hb.trans ((Fintype.equivFin (ZMod 3)).apply_symm_apply i).symm
     apply Subtype.ext
     simp [hb']
 

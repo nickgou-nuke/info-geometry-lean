@@ -1,6 +1,6 @@
 import Mathlib.Data.Matrix.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.Linarith
 import InfoGeometry.Canonical.CantorColimitProjectiveBoundaryBridge
@@ -40,15 +40,9 @@ theorem bernoulliWeight_child_sum {n : ℕ} (p : ℝ) (w : BitWord n) :
   rw [Fin.prod_univ_castSucc]
   rw [Fin.prod_univ_castSucc]
   have h_w0_last : (if w0 (Fin.last n) = 0 then p else 1 - p) = p := by
-    dsimp [w0, Fin.last]
-    have hlt : ¬ n < n := Nat.lt_irrefl n
-    rw [dif_neg hlt]
-    simp
+    simp [w0, Fin.last]
   have h_w1_last : (if w1 (Fin.last n) = 0 then p else 1 - p) = 1 - p := by
-    dsimp [w1, Fin.last]
-    have hlt : ¬ n < n := Nat.lt_irrefl n
-    rw [dif_neg hlt]
-    simp
+    simp [w1, Fin.last]
   have h_w0_prefix : (fun i : Fin n => if w0 i.castSucc = 0 then p else 1 - p) =
                      (fun i : Fin n => if w i = 0 then p else 1 - p) := by
     ext i

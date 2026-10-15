@@ -45,8 +45,8 @@ def parameterUnit (j : Fin 14) : Params :=
 
 def coordWeight (j : Fin 3) : Weight where
   toFun k := k.1 j
-  map_add' k l := rfl
-  map_smul' a k := rfl
+  map_add' _ _ := rfl
+  map_smul' _ _ := rfl
 
 def rootWeight (j : Fin 14) : Weight :=
   match j with
@@ -85,7 +85,6 @@ theorem rootWeight_range_eq_zero_union_short_long :
   · rintro ⟨j, rfl⟩
     fin_cases j <;> simp [rootWeight]
   · intro h
-    simp only [Set.mem_union, Set.mem_insert_iff, Set.mem_singleton_iff] at h
     rcases h with h | h
     · rcases h with h | h
       · exact ⟨6, by simpa [rootWeight] using h.symm⟩
@@ -163,7 +162,7 @@ theorem adCartanCoordinates_parameterUnit (k : TracelessWeight) (j : Fin 14) :
   rw [rootWeight_eq_adCartanDiagonalCoefficient]
   have hunit : parameterUnit j = Pi.single j (1 : ℝ) := by
     funext i
-    by_cases h : i = j <;> simp [parameterUnit, Pi.single_apply, h]
+    by_cases h : i = j <;> simp [parameterUnit, h]
   rw [hunit]
   exact adCartanCoordinates_basis_eigen k j
 
@@ -217,7 +216,7 @@ theorem rootDerivationBasis_apply (j : Fin 14) :
   · subst i
     simp [parameterUnit]
   · have h' : i ≠ j := Ne.symm h
-    simp [parameterUnit, Pi.single_apply, h, h']
+    simp [parameterUnit, h']
 
 theorem adCartan_rootDerivation (k : TracelessWeight) (j : Fin 14) :
     adCartan k (rootDerivation j) =
@@ -315,8 +314,7 @@ theorem rootWeight_eval_code (j : Fin 14) (i : Fin 2) :
     rootWeight j (tracelessWeightEquiv (Pi.single i (1 : ℝ))) =
       (rootWeightCode j i : ℝ) := by
   fin_cases j <;> fin_cases i <;>
-    simp [rootWeight, coordWeight, rootWeightCode, tracelessWeightEquiv,
-      Fin.sum_univ_three]
+    simp [rootWeight, coordWeight, rootWeightCode, tracelessWeightEquiv]
   <;> norm_num
 
 theorem adCartanWeight_separates_nonzero_indices
@@ -449,30 +447,16 @@ theorem jointEigenspace_zero_eq_cartanRootSpan :
       rw [adCartan_rootDerivation, rootWeight_zero_6]
       have hk : (0 : Weight) k = 0 := rfl
       rw [hk]
-      have hs : SMul.smul (0 : ℝ) (rootDerivation 6 : Der) = 0 := by
-        apply Subtype.ext
-        change (0 : ℝ) • (rootDerivation 6 : CanonicalZornDerivation.EndCZ) = 0
-        exact _root_.zero_smul ℝ _
-      calc
-        (0 : ℝ) • (rootDerivation 6 : Der) = 0 := _root_.zero_smul ℝ _
-        _ = SMul.smul 0 (rootDerivation 6 : Der) := hs.symm
     · apply (mem_jointEigenspace_iff 0 (rootDerivation 13)).2
       intro k
       rw [adCartan_rootDerivation, rootWeight_zero_13]
       have hk : (0 : Weight) k = 0 := rfl
       rw [hk]
-      have hs : SMul.smul (0 : ℝ) (rootDerivation 13 : Der) = 0 := by
-        apply Subtype.ext
-        change (0 : ℝ) • (rootDerivation 13 : CanonicalZornDerivation.EndCZ) = 0
-        exact _root_.zero_smul ℝ _
-      calc
-        (0 : ℝ) • (rootDerivation 13 : Der) = 0 := _root_.zero_smul ℝ _
-        _ = SMul.smul 0 (rootDerivation 13 : Der) := hs.symm
 
 theorem cartanRootSpan_finrank : Module.finrank ℝ cartanRootSpan = 2 := by
-  letI : FiniteDimensional ℝ Der :=
-    FiniteDimensional.of_fintype_basis rootDerivationBasis
-  letI : FiniteDimensional ℝ cartanRootSpan :=
+  have : FiniteDimensional ℝ Der :=
+    Module.Finite.of_basis rootDerivationBasis
+  have : FiniteDimensional ℝ cartanRootSpan :=
     FiniteDimensional.finiteDimensional_submodule cartanRootSpan
   let v : Fin 2 → Der := ![rootDerivation 6, rootDerivation 13]
   have hv : LinearIndependent ℝ v := by
@@ -496,8 +480,8 @@ theorem cartanRootSpan_finrank : Module.finrank ℝ cartanRootSpan = 2 := by
 
 theorem nativeCartan_eq_cartanRootSpan :
     (axialCartanLieSubalgebra : Submodule ℝ Der) = cartanRootSpan := by
-  letI : FiniteDimensional ℝ Der :=
-    FiniteDimensional.of_fintype_basis rootDerivationBasis
+  have : FiniteDimensional ℝ Der :=
+    Module.Finite.of_basis rootDerivationBasis
   apply Submodule.eq_of_le_of_finrank_eq
   · intro D hD
     have hJ : D ∈ jointEigenspace 0 := by
@@ -506,8 +490,9 @@ theorem nativeCartan_eq_cartanRootSpan :
       exact cartan_mem_jointEigenspace_zero k
     rw [jointEigenspace_zero_eq_cartanRootSpan] at hJ
     exact hJ
-  · simpa only [cartanRootSpan_finrank] using
-      axialCartanLieSubalgebra_finrank
+  · change Module.finrank ℝ ↥axialCartanLieSubalgebra = _
+    rw [cartanRootSpan_finrank]
+    exact axialCartanLieSubalgebra_finrank
 
 def nonzeroIndex := {j : Fin 14 // j ≠ 6 ∧ j ≠ 13}
 deriving DecidableEq, Fintype
@@ -665,8 +650,8 @@ theorem rootSpace_bracket_mem_jointEigenspace_add
 
 theorem rootSpace_finrank (j : nonzeroIndex) :
     Module.finrank ℝ (rootSpace j.1) = 1 := by
-  letI : FiniteDimensional ℝ Der :=
-    FiniteDimensional.of_fintype_basis rootDerivationBasis
+  have : FiniteDimensional ℝ Der :=
+    Module.Finite.of_basis rootDerivationBasis
   exact finrank_span_singleton (rootDerivation_ne_zero j.1)
 
 theorem rootDerivation_nonzero_linearIndependent :
@@ -718,8 +703,8 @@ theorem rootDerivation_bracket_mem_cartan_of_neg
   exact jointEigenspace_zero_eq_cartanRootSpan ▸ hmem
 
 theorem rootSpaceSum_finrank : Module.finrank ℝ rootSpaceSum = 12 := by
-  letI : FiniteDimensional ℝ Der :=
-    FiniteDimensional.of_fintype_basis rootDerivationBasis
+  have : FiniteDimensional ℝ Der :=
+    Module.Finite.of_basis rootDerivationBasis
   have hdim := Submodule.finrank_add_eq_of_isCompl
     cartanRootSpan_isComplement_rootSpaceSum
   rw [cartanRootSpan_finrank,

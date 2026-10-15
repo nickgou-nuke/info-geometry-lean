@@ -16,6 +16,8 @@ import Mathlib.Algebra.Module.Submodule.LinearMap
 open Matrix
 open LieAlgebra
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace InfoGeometry.Algebra
 
 /-- Carrier set for 𝔰𝔲(n): skew-Hermitian trace-zero complex matrices. -/
@@ -53,7 +55,7 @@ def su (n : Type*) [Fintype n] [DecidableEq n] : LieSubalgebra ℝ (Matrix n n �
     · rw [LieRing.of_associative_ring_bracket, Matrix.trace_sub, Matrix.trace_mul_comm, sub_self]
 
 /-- The inclusion 𝔰𝔲(n) → Matrix n n ℂ as a linear map. -/
-def su_inclusion (n : Type*) [Fintype n] [DecidableEq n] :
+noncomputable def su_inclusion (n : Type*) [Fintype n] [DecidableEq n] :
     su n →ₗ[ℝ] Matrix n n ℂ :=
   (su n).toSubmodule.subtype
 

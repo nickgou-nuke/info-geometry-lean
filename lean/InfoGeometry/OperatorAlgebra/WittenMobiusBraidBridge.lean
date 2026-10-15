@@ -27,19 +27,21 @@ theorem braidWindingNumber_eq_sub (word : List (ArtinGenerator N × Bool)) :
   · rcases p with ⟨i, b⟩
     cases b
     · dsimp [braidWindingNumber] at ih ⊢
+      simp only [List.map_cons, List.sum_cons]
       rw [show (List.filter (fun p => p.snd = true) ((i, false) :: tail)).length =
           (List.filter (fun p => p.snd = true) tail).length by rfl]
       rw [show (List.filter (fun p => p.snd = false) ((i, false) :: tail)).length =
           (List.filter (fun p => p.snd = false) tail).length + 1 by rfl]
       rw [ih]
-      omega
+      simp <;> omega
     · dsimp [braidWindingNumber] at ih ⊢
+      simp only [List.map_cons, List.sum_cons]
       rw [show (List.filter (fun p => p.snd = true) ((i, true) :: tail)).length =
           (List.filter (fun p => p.snd = true) tail).length + 1 by rfl]
       rw [show (List.filter (fun p => p.snd = false) ((i, true) :: tail)).length =
           (List.filter (fun p => p.snd = false) tail).length by rfl]
       rw [ih]
-      omega
+      simp <;> omega
 
 theorem witten_reflection_winding_vanishes
     (word : List (ArtinGenerator N × Bool))

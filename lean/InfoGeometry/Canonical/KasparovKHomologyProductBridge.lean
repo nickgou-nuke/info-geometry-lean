@@ -29,7 +29,8 @@ variable {n : ℕ} [DecidableEq (Fin n)] (modAB modBC modCD : KasparovModule n)
 def fredholm_operator : Matrix (Fin n) (Fin n) ℂ := modAB.1
 
 theorem h_self_adjoint : (fredholm_operator modAB).conjTranspose = fredholm_operator modAB := by
-  simpa only [fredholm_operator, Matrix.star_eq_conjTranspose] using modAB.1.property
+  have h : star (modAB.1 : Matrix (Fin n) (Fin n) ℂ) = modAB.1 := selfAdjoint.star_val_eq
+  rwa [Matrix.star_eq_conjTranspose] at h
 
 theorem h_involution : fredholm_operator modAB * fredholm_operator modAB = 1 := by
   exact modAB.2

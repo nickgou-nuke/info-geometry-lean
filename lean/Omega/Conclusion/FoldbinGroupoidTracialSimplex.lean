@@ -1,4 +1,4 @@
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.Tactic
 
 namespace Omega.Conclusion.FoldbinGroupoidTracialSimplex
@@ -65,12 +65,10 @@ theorem escortWeight_mem_tracialSimplex
   · intro w
     dsimp [escortWeight, denom]
     exact div_nonneg (by positivity) hdenom_pos.le
-  · dsimp [escortWeight, denom]
-    have hdenom_ne : denom ≠ 0 := ne_of_gt hdenom_pos
-    calc
-      Finset.univ.sum (escortWeight d) = denom / denom := by
-        simp [escortWeight, denom, Finset.sum_div]
-      _ = 1 := by simp [hdenom_ne]
+  · have hdenom_ne : denom ≠ 0 := ne_of_gt hdenom_pos
+    change (∑ w, (d w : ℝ) ^ 2 / denom) = 1
+    rw [← Finset.sum_div]
+    exact div_self hdenom_ne
 
 set_option maxHeartbeats 400000 in
 /-- Paper-facing package: finite direct sums of matrix blocks have simplex-valued tracial states,

@@ -18,7 +18,16 @@ inductive Archetype
   | lossLowerBoundedness
   | scaleDescentContract
   | sequenceInfimumConvergence
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype Archetype where
+  elems := {Archetype.totalLossDefinition, Archetype.matrixPythagoreanIdentity,
+    Archetype.globalProfileMinimizer, Archetype.uniqueProfileCharacterization,
+    Archetype.lossLowerBoundedness, Archetype.scaleDescentContract,
+    Archetype.sequenceInfimumConvergence}
+  complete := by
+    intro archetype
+    cases archetype <;> simp
 
 open Archetype
 

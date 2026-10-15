@@ -16,9 +16,16 @@ inductive Archetype
   | separableModel
   | rankOneExactness
   | iteratePreservation
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
 
 open Archetype
+
+instance : Fintype Archetype where
+  elems := {centeredGeometry, exponentiatedScales, leastSquaresProjection,
+    logMeanInvariance, separableModel, rankOneExactness, iteratePreservation}
+  complete := by
+    intro archetype
+    cases archetype <;> simp
 
 def prerequisites : Archetype → Finset Archetype
   | centeredGeometry => {centeredGeometry}

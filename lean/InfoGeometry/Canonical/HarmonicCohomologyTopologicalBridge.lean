@@ -49,7 +49,9 @@ theorem continuous_harmonicToCohomology
   have h_cont :=
     (continuous_deRhamQuotientMk d).comp
       (continuous_harmonicToClosedMap d dstar h_closed)
-  simpa [harmonicToCohomologyLinearMap, harmonicToClosedMap] using h_cont
+  change Continuous
+    (deRhamQuotientMk d ∘ harmonicToClosedMap d dstar h_closed)
+  exact h_cont
 
 /-- The harmonic representative projection as a `TopCat` morphism. -/
 def harmonicToCohomologyTopCat

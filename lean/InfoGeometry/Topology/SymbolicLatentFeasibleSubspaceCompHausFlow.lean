@@ -95,8 +95,7 @@ theorem symbolicLatentFeasibleSubspaceCompHausFlowIso_add
   intro x
   change F.feasibleSubspaceMap (s + t) targets x =
     F.feasibleSubspaceMap s targets (F.feasibleSubspaceMap t targets x)
-  simpa [F.feasibleSubspaceHomeomorph_apply] using
-    F.feasibleSubspaceHomeomorph_add_apply s t targets x
+  exact F.feasibleSubspaceHomeomorph_add_apply s t targets x
 
 theorem symbolicLatentFeasibleSubspaceCompHausFlowIso_inv_eq_neg_hom
     {S : FiniteSymbolicLatentSystem X ι}

@@ -27,8 +27,13 @@ theorem hasDerivAt_krein_square {x : ℝ → H} {A : H →L[ℝ] H} {t : ℝ}
   have h := hJ.inner ℝ hx
   have hz := (isKreinSkewAdjoint_iff A).mp hA (x t) (x t)
   change kreinInner (A (x t)) (x t) + kreinInner (x t) (A (x t)) = 0 at hz
-  convert h using 1
-  simpa only [Function.comp_def, kreinInner_def, jCLM_apply, add_comm] using hz.symm
+  have h_deriv_eq :
+      inner ℝ ((⇑jCLM ∘ x) t) (A (x t)) + inner ℝ (jCLM (A (x t))) (x t) = 0 := by
+    have h1 : inner ℝ ((⇑jCLM ∘ x) t) (A (x t)) = kreinInner (x t) (A (x t)) := rfl
+    have h2 : inner ℝ (jCLM (A (x t))) (x t) = kreinInner (A (x t)) (x t) := rfl
+    rw [h1, h2, add_comm, hz]
+  rw [h_deriv_eq] at h
+  exact h
 
 /-- Time dependence of the generator is allowed; the Krein metric is fixed. -/
 theorem krein_square_conserved {x : ℝ → H} {A : ℝ → H →L[ℝ] H}

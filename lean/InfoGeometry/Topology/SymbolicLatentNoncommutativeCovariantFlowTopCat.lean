@@ -63,18 +63,19 @@ theorem operatorCommutingLocus_covariant_iff
   rw [operatorCommutatorProfile_covariant Φ t x]
   constructor
   · intro h
-    have h' := congrArg (fun f : ι → ι → A =>
-      fun i j => (Φ.operatorAction t).symm (f i j)) h
-    funext i j
-    have hij := congrFun (congrFun h' i) j
-    simpa using hij
-  · intro h
-    funext i j
+    ext i j
     have hij := congrFun (congrFun h i) j
-    change Φ.operatorAction t
-        (operatorCommutator ((S.observable i).eval x)
-          ((S.observable j).eval x)) = 0
-    simpa using congrArg (Φ.operatorAction t) hij
+    change Φ.operatorAction t (operatorCommutator ((S.observable i).eval x) ((S.observable j).eval x)) = 0 at hij
+    have h0 : Φ.operatorAction t (operatorCommutator ((S.observable i).eval x) ((S.observable j).eval x)) =
+        Φ.operatorAction t 0 := by
+      rw [map_zero, hij]
+    exact (Φ.operatorAction t).injective h0
+  · intro h
+    ext i j
+    have hij := congrFun (congrFun h i) j
+    change operatorCommutator ((S.observable i).eval x) ((S.observable j).eval x) = 0 at hij
+    change Φ.operatorAction t (operatorCommutator ((S.observable i).eval x) ((S.observable j).eval x)) = 0
+    rw [hij, map_zero]
 
 def descendedCovariantOperatorObservationFlow
     {S : NoncommutativeObservableSystem X A ι}

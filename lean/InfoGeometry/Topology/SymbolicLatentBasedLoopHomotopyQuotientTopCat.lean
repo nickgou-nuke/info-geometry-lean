@@ -54,13 +54,14 @@ theorem symbolicLatentBasedLoopHomotopyQuotientEndpointTopCatHom_constant
       (x, x) :=
   rfl
 
-  theorem symbolicLatentBasedLoopHomotopyQuotientInclusionTopCatHom_natural
+theorem symbolicLatentBasedLoopHomotopyQuotientInclusionTopCatHom_natural
     {X Y : Type} [TopologicalSpace X] [TopologicalSpace Y]
     (f : C(X, Y)) {x : X} {y : Y} (hxy : f x = y) :
     symbolicLatentBasedLoopHomotopyQuotientTopCatHom f hxy ≫
         symbolicLatentBasedLoopHomotopyQuotientInclusionTopCatHom y =
       symbolicLatentBasedLoopHomotopyQuotientInclusionTopCatHom x ≫
         symbolicLatentPathHomotopyQuotientTopCatHom f := by
+  apply TopCat.hom_ext
   ext q
   rfl
 

@@ -21,11 +21,11 @@ else:
 
 
 ROOT = repo_root()
-IMPORT_RE = re.compile(r"^\s*import\s+([A-Za-z0-9_.]+)\s*$", re.M)
+IMPORT_RE = re.compile(r"^[ \t]*import[ \t]+([^\n]+)$", re.M)
 DECL_HEADER_RE = re.compile(
-    r"^\s*(?:noncomputable\s+)?(?:private\s+|protected\s+)?"
+    r"^[ \t]*(?:@\[[^\n]*?\][ \t]*)*(?:(?:noncomputable|private|protected|unsafe|partial)\s+)*"
     r"(def|abbrev|theorem|lemma|structure|class|instance|axiom|inductive)\s+"
-    r"([A-Za-z0-9_'.]+)",
+    r"([\w][\w'.]*|«[^»]+»)",
     re.M,
 )
 
@@ -195,51 +195,15 @@ def all_lean_files(
     exclude_prefixes: list[str] | None = None,
     manifest_modules: set[str] | None = None,
 ) -> list[Path]:
-    if scope == "canonical":
-        roots = [ROOT / "lean" / "InfoGeometry" / "Canonical"]
-    elif scope == "quarantine":
-        roots = [ROOT / "lean" / "InfoGeometry" / "Unstable"]
-    else:
-        # The semantic gate is repo-wide, but its authoritative source set is
-        # the tracked/non-ignored Lean tree.  Ignored scratch fixtures (for
-        # example `lean/test_axiom.lean`) remain available to forensic audits
-        # without poisoning the release gate.
-        try:
-            result = subprocess.run(
-                [
-                    "git",
-                    "ls-files",
-                    "--cached",
-                    "--others",
-                    "--exclude-standard",
-                    "--",
-                    "lean/*.lean",
-                ],
-                cwd=ROOT,
-                check=True,
-                capture_output=True,
-                text=True,
-            )
-            files = sorted(
-                path
-                for raw in result.stdout.splitlines()
-                if (path := ROOT / raw).is_file()
-                and path.is_relative_to(ROOT / "lean")
-            )
-        except (OSError, subprocess.CalledProcessError):
-            roots = [ROOT / "lean"]
-            files = sorted(path for root in roots for path in root.rglob("*.lean") if path.is_file())
-    if scope in {"canonical", "quarantine"}:
-        files = sorted(path for root in roots for path in root.rglob("*.lean") if path.is_file())
+    files = audit_constructivity.maintained_lean_files()
     if scope == "quarantine" and manifest_modules:
         for module in sorted(manifest_modules):
             path = module_to_path(module)
-            if path is not None and path not in files:
-                files.append(path)
-        files = sorted(set(files))
-    top = ROOT / "lean" / "InfoGeometry.lean"
-    if scope == "all" and top.exists():
-        files.insert(0, top)
+            if path is None:
+                # Include missing manifested owner to make coverage failure visible.
+                path = ROOT / "lean" / Path(module.replace(".", "/")).with_suffix(".lean")
+            files.append(path)
+    files = sorted(set(files))
     file_prefixes = file_prefixes or []
     module_prefixes = module_prefixes or []
     exclude_prefixes = exclude_prefixes or []
@@ -262,15 +226,21 @@ def all_lean_files(
 all_infogeometry_files = all_lean_files
 
 
-def importers_by_module(files: list[Path] | None = None) -> dict[str, list[str]]:
+def importers_by_module(files: list[Path] | None = None, *, failures: list[dict[str, str]] | None = None) -> dict[str, list[str]]:
     importers: dict[str, list[str]] = defaultdict(list)
-    for path in files or all_infogeometry_files():
-        if not path.is_file():
+    for path in files if files is not None else all_infogeometry_files():
+        try:
+            text = audit_constructivity.strip_comments(path.read_text(encoding="utf-8"), strip_strings=True)
+        except (OSError, UnicodeError) as exc:
+            if failures is None:
+                raise
+            failures.append({"file": rel(path), "phase": "importers", "error": str(exc)})
             continue
-        text = audit_constructivity.strip_comments(path.read_text(encoding="utf-8"))
         owner = module_name(path)
         for match in IMPORT_RE.finditer(text):
-            importers[match.group(1)].append(owner)
+            for imported in match.group(1).split():
+                if re.fullmatch(r"[\w.]+", imported):
+                    importers[imported].append(owner)
     return {key: sorted(values) for key, values in importers.items()}
 
 
@@ -351,8 +321,8 @@ def finding_in_scope(
 def source_excerpt(path: Path, line: int, radius: int = 3) -> dict[str, Any]:
     try:
         lines = path.read_text(encoding="utf-8").splitlines()
-    except OSError:
-        return {"line": line, "available": False, "text": ""}
+    except (OSError, UnicodeError) as exc:
+        return {"line": line, "available": False, "text": "", "error": str(exc)}
     start = max(1, line - radius)
     end = min(len(lines), line + radius)
     body = "\n".join(f"{idx}: {lines[idx - 1]}" for idx in range(start, end + 1))
@@ -360,24 +330,36 @@ def source_excerpt(path: Path, line: int, radius: int = 3) -> dict[str, Any]:
 
 
 def declaration_headers(path: Path, module: str) -> list[dict[str, Any]]:
-    try:
-        text = path.read_text(encoding="utf-8")
-    except OSError:
-        return []
-    scan_text = audit_constructivity.strip_comments(text)
-    headers: list[dict[str, Any]] = []
-    for match in DECL_HEADER_RE.finditer(scan_text):
+    text = path.read_text(encoding="utf-8")
+    scan_text = audit_constructivity.strip_comments(text, strip_strings=True)
+    headers = []
+    stack: list[tuple[str, str]] = []
+    current_namespace = ""
+    scope_re = re.compile(r"^[ \t]*(namespace|section|end)(?:[ \t]+([\w.]+))?[ \t]*$")
+    for line_no, line in enumerate(scan_text.splitlines(), 1):
+        event = scope_re.match(line)
+        if event:
+            kind, label = event.groups()
+            if kind == "end":
+                if stack:
+                    _, current_namespace = stack.pop()
+            else:
+                stack.append((label or "", current_namespace))
+                if kind == "namespace" and label:
+                    current_namespace = (current_namespace + "." + label).strip(".")
+            continue
+        match = DECL_HEADER_RE.match(line)
+        if not match:
+            continue
         raw_name = match.group(2)
-        name = raw_name if raw_name.startswith("InfoGeometry.") else f"{module}.{raw_name}"
-        headers.append(
-            {
-                "line": audit_constructivity.line_of(scan_text, match.start()),
-                "kind": match.group(1),
-                "name": name,
-                "raw_name": raw_name,
-            }
-        )
-    headers.sort(key=lambda row: int(row["line"]))
+        if raw_name.startswith("_root_."):
+            name = raw_name[len("_root_."):]
+        else:
+            name = (current_namespace + "." + raw_name).strip(".")
+        headers.append({"line": line_no, "kind": match.group(1), "name": name,
+                        "raw_name": raw_name, "namespace": current_namespace,
+                        "name_resolution": "lexical_approximation_not_elaborated",
+                        "source_module": module})
     return headers
 
 
@@ -403,6 +385,7 @@ def finding_payload(
         payload["enclosing_decl_kind"] = owner["kind"]
         payload["enclosing_decl_line"] = owner["line"]
         payload["enclosing_decl_raw_name"] = owner["raw_name"]
+        payload["enclosing_decl_name_resolution"] = owner["name_resolution"]
     else:
         payload["enclosing_decl"] = None
         payload["enclosing_decl_kind"] = None
@@ -458,12 +441,16 @@ def collect_findings(
     *,
     include_review: bool,
     include_manifest_consistency: bool,
+    failures: list[dict[str, str]] | None = None,
+    successful: list[str] | None = None,
 ) -> list[audit_constructivity.Finding]:
     findings: list[audit_constructivity.Finding] = []
     if include_manifest_consistency:
         try:
             findings.extend(audit_constructivity.scan_manifest_consistency())
         except Exception as exc:
+            if failures is not None:
+                failures.append({"file": str(getattr(audit_constructivity, "MANIFEST", "")), "phase": "manifest_consistency", "error": str(exc)})
             manifest_path = getattr(audit_constructivity, "MANIFEST", ROOT / "scripts/quality/quarantine_manifest.txt")
             findings.append(
                 audit_constructivity.Finding(
@@ -474,9 +461,14 @@ def collect_findings(
                 )
             )
     for path in files:
-        if not path.is_file():
-            continue
-        findings.extend(audit_constructivity.scan_file(path, include_review=include_review))
+        try:
+            findings.extend(audit_constructivity.scan_file(path, include_review=include_review))
+            if successful is not None:
+                successful.append(rel(path))
+        except (OSError, UnicodeError) as exc:
+            if failures is None:
+                raise
+            failures.append({"file": rel(path), "phase": "source", "error": str(exc)})
     findings.sort(key=lambda item: (item.path, item.line, item.category))
     return findings
 
@@ -492,17 +484,26 @@ def build_report(
     include_manifest_consistency: bool = True,
 ) -> dict[str, Any]:
     manifest, manifest_present, manifest_error = read_manifest()
-    files = all_infogeometry_files(
-        scope=scope,
-        file_prefixes=file_prefixes,
-        module_prefixes=module_prefixes,
-        exclude_prefixes=exclude_prefixes,
-        manifest_modules=set(manifest),
-    )
+    failures: list[dict[str, str]] = []
+    if manifest_error and (include_manifest_consistency or scope in {"stable", "quarantine"}):
+        failures.append({"file": str(audit_constructivity.MANIFEST), "phase": "manifest_read", "error": manifest_error})
+    successful: list[str] = []
+    try:
+        files = all_infogeometry_files(
+            scope=scope,
+            file_prefixes=file_prefixes,
+            module_prefixes=module_prefixes,
+            exclude_prefixes=exclude_prefixes,
+            manifest_modules=set(manifest),
+        )
+    except (OSError, subprocess.CalledProcessError) as exc:
+        files = []
+        failures.append({"file": "", "phase": "selection", "error": str(exc)})
     findings = collect_findings(
         files,
         include_review=include_review,
         include_manifest_consistency=include_manifest_consistency,
+        failures=failures, successful=successful,
     )
     findings = [
         finding
@@ -520,7 +521,11 @@ def build_report(
     for finding in findings:
         by_path[finding.path].append(finding)
 
-    importers = importers_by_module(all_infogeometry_files(scope="all"))
+    try:
+        importers = importers_by_module(all_infogeometry_files(scope="all"), failures=failures)
+    except (OSError, subprocess.CalledProcessError) as exc:
+        importers = {}
+        failures.append({"file": "", "phase": "importer_selection", "error": str(exc)})
     modules: list[ModuleAudit] = []
     category_counts: Counter[str] = Counter()
     status_counts: Counter[str] = Counter()
@@ -528,7 +533,11 @@ def build_report(
     for rpath, module_findings in sorted(by_path.items()):
         mod, maybe_path = resolve_finding_location(rpath)
         path = maybe_path
-        headers = declaration_headers(path, mod) if path is not None else []
+        try:
+            headers = declaration_headers(path, mod) if path is not None else []
+        except (OSError, UnicodeError) as exc:
+            headers = []
+            failures.append({"file": rpath, "phase": "declaration_headers", "error": str(exc)})
         categories = {finding.category for finding in module_findings}
         status, action = semantic_status(categories)
         category_counts.update(finding.category for finding in module_findings)
@@ -562,7 +571,7 @@ def build_report(
         if path is None:
             continue
         rpath = rel(path)
-        if rpath in by_path:
+        if rpath in by_path or rpath not in successful:
             continue
         if not in_scope(
             path,
@@ -606,6 +615,11 @@ def build_report(
     return {
         "schema": "info_geometry.semantic_content_audit.v1",
         "policy": POLICY,
+        "coverage": {"selected_paths": [rel(p) for p in files],
+                     "successfully_read_paths": successful, "read_failures": failures,
+                     "files_selected": len(files), "files_read": len(successful),
+                     "coverage_complete": bool(files) and not failures and (manifest_present or (not include_manifest_consistency and scope not in {"stable", "quarantine"})),
+                     "authority": "lexical findings and approximate attribution; no semantic or kernel verification"},
         "inputs": {
             "source": "current checkout Lean source",
             "scope": scope,
@@ -621,7 +635,7 @@ def build_report(
             "uses_folder_as_truth_label": False,
             "mutates_quarantine_manifest": False,
             "transitive_impact_available": False,
-            "impact_scope": "all InfoGeometry direct importers only",
+            "impact_scope": "maintained Lean corpus direct importers; lexical import parsing",
         },
         "summary": {
             "selected_file_count": len(files),
@@ -655,6 +669,9 @@ def write_md(report: dict[str, Any], path: Path) -> None:
         "graph_boundary",
     ):
         lines.append(f"- `{key}`: {report['policy'][key]}")
+    lines.append("")
+    lines.append("## Coverage")
+    lines.append(json.dumps(report["coverage"], sort_keys=True))
     lines.append("")
     lines.append("## Summary")
     summary = report["summary"]
@@ -748,6 +765,8 @@ def main() -> int:
     args.json_out.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     write_md(report, args.md_out)
     print(json.dumps(report["summary"], indent=2, sort_keys=True))
+    if not report["coverage"]["coverage_complete"]:
+        return 2
     if args.gate_review:
         if report["summary"]["selected_file_count"] == 0:
             return 1

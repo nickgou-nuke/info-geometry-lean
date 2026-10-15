@@ -366,8 +366,11 @@ def kahlerAtiyahRepresentation
   CliffordAlgebra.lift (metricQuadraticForm g)
     ⟨cartanCliffordActionMap g, by
       intro v
-      simpa [metricQuadraticForm] using
-        cartanCliffordAction_sq g v⟩
+      simpa only [Algebra.algebraMap_eq_smul_one] using
+        (show cartanCliffordActionMap g v * cartanCliffordActionMap g v =
+            (metricQuadraticForm g v) • (1 : FormEnd V) by
+          simpa [cartanCliffordActionMap, metricQuadraticForm] using
+            cartanCliffordAction_sq g v)⟩
 
 @[simp] theorem kahlerAtiyahRepresentation_ι
     (g : LinearMap.BilinForm ℝ V) (v : V) :

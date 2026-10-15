@@ -211,13 +211,13 @@ noncomputable def nativeConcreteHestenesEmbedding :
 theorem nativeConcreteHestenesEmbedding_injective :
     Function.Injective nativeConcreteHestenesEmbedding := by
   intro x y hxy
-  have hcoordinate := congrArg
-    (fun z : NativeSpinorCarrier => z.ofLp) hxy
-  have hcoordinate' :
-      doubledFockEmbedding (doubledCoordinateEquiv x) =
-        doubledFockEmbedding (doubledCoordinateEquiv y) := by
-    simpa [nativeConcreteHestenesEmbedding, doubledCoordinateEquiv,
-      LinearMap.comp_apply] using hcoordinate
+  have hnative :
+      coordinateToNative (doubledFockEmbedding (doubledCoordinateEquiv x)) =
+        coordinateToNative (doubledFockEmbedding (doubledCoordinateEquiv y)) := by
+    change coordinateToNative (doubledFockEmbedding (doubledCoordinateEquiv x)) =
+      coordinateToNative (doubledFockEmbedding (doubledCoordinateEquiv y)) at hxy
+    exact hxy
+  have hcoordinate' := coordinateToNative.injective hnative
   have hspinor := doubledFockEmbedding_injective hcoordinate'
   exact doubledCoordinateEquiv.injective hspinor
 
@@ -412,7 +412,7 @@ theorem nativeConcretePhaseAction_intertwines_laplacian
     (fun T : DoubledExterior3End => T x) (concreteDirac3_phase v φ)
   have h' : hestenesPhase3 (concreteDirac3 v φ x) =
       concreteDirac3 v φ (hestenesPhase3 x) := by
-    simpa only [Module.End.mul_apply] using h
+    simpa [Module.End.mul_apply] using h
   rw [h']
   rw [ContinuousLinearMap.comp_apply,
     nativeConcretePhaseAction_intertwines,
@@ -700,7 +700,12 @@ theorem nativeConcreteChiralComplexOnImage_sq :
     have h := congrArg (fun T : DoubledExterior3End => T
       (nativeConcreteHestenesEmbeddingEquiv.symm z))
       hestenesChiralComplex3_sq
-    simpa only [Module.End.mul_apply] using h
+    have hneg : (-(1 : DoubledExterior3End))
+        (nativeConcreteHestenesEmbeddingEquiv.symm z) =
+          -nativeConcreteHestenesEmbeddingEquiv.symm z := by
+      simp
+    rw [Module.End.mul_apply, hneg] at h
+    exact h
   simpa only [nativeConcreteHestenesEmbedding, map_neg] using
     congrArg nativeConcreteHestenesEmbedding hpoint
 

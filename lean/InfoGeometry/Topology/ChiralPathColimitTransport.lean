@@ -21,19 +21,21 @@ variable {G : ChiralDigraph} {u v : G.Vertex}
 
 /-- A stagewise readout of a directed-path tower into one homotopy-class
 carrier.  The compatibility equations are carried by the native cocone. -/
-structure ChiralPathClassCocone (D : J ⥤ Type _) where
+structure ChiralPathClassCocone {G : ChiralDigraph} {u v : G.Vertex}
+    (D : J ⥤ Type _) where
   ι : ∀ j, D.obj j → DirectedPathClass G u v
-  naturality : ∀ {j k} (f : j ⟶ k), D.map f ≫ ι k = ι j
+  naturality : ∀ {j k} (f : j ⟶ k) (x : D.obj j), ι k (D.map f x) = ι j x
 
 def ChiralPathClassCocone.toCocone
     {D : J ⥤ Type _}
     (c : ChiralPathClassCocone (G := G) (u := u) (v := v) D) : Cocone D where
   pt := DirectedPathClass G u v
   ι :=
-    { app := c.ι
+    { app := fun j => ↾(c.ι j)
       naturality := by
         intro j k f
-        simpa using c.naturality f }
+        ext x
+        exact c.naturality f x }
 
 /-- The canonical readout from a stage diagram to directed path classes. -/
 noncomputable def chiralPathColimitReadout
@@ -49,7 +51,7 @@ theorem chiralPathColimitReadout_stage
     (c : ChiralPathClassCocone (G := G) (u := u) (v := v) D)
     [HasColimit D]
     (j : J) :
-    colimit.ι D j ≫ chiralPathColimitReadout D c = c.ι j := by
+    colimit.ι D j ≫ chiralPathColimitReadout D c = ↾(c.ι j) := by
   exact colimit.ι_desc c.toCocone j
 
 theorem chiralPathColimitReadout_unique

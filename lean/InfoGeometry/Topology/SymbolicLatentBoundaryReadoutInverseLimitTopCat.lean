@@ -45,6 +45,7 @@ theorem boundaryReadoutToPrefixLimit_stage
   rw [boundaryReadoutToPrefixLimit]
   rw [Category.assoc, prefixBoundaryLimitIso_hom_comp]
   rw [← Category.assoc, boundaryReadout_stage]
+  rfl
 
 theorem boundaryReadoutToPrefixLimit_stage_apply
     (D : SymbolicLatentSequence ι)
@@ -53,15 +54,15 @@ theorem boundaryReadoutToPrefixLimit_stage_apply
         ((boundaryReadoutToPrefixLimit D S).hom
           ((colimit.ι (carrierDiagram D) n).hom x)) i =
       S.address n x i.1 := by
+  change ((carrierDiagram D).obj n : Type) at x
   have h := congrArg (fun f => f.hom x)
     (boundaryReadoutToPrefixLimit_stage D S n)
-  have h' :
-      (limit.π (prefixDiagram (A := A)) (Opposite.op n)).hom
-          ((boundaryReadoutToPrefixLimit D S).hom
-            ((colimit.ι (carrierDiagram D) n).hom x)) =
-        (fun j : Fin n => S.address n x j.1) := by
-    simpa [Category.assoc, prefixCone, boundaryAddressCocone] using h
-  exact congrFun h' i
+  have hi := congrArg (fun y : Fin n → A => y i) h
+  calc
+    _ = ((TopCat.Hom.hom
+          ((boundaryAddressCocone D S).ι.app n ≫
+            (prefixCone (A := A)).π.app (Opposite.op n))) x) i := hi
+    _ = S.address n x i.1 := by rfl
 
 theorem prefixBoundaryLimit_ext
     {A : Type} [TopologicalSpace A]
@@ -110,12 +111,13 @@ theorem boundaryReadoutToPrefixLimit_isIso_of_bijective
     (h_inj : Function.Injective (boundaryReadout D S).hom)
     (h_surj : Function.Surjective (boundaryReadout D S).hom) :
     IsIso (boundaryReadoutToPrefixLimit D S) := by
-  letI :=
+  have hreadout :=
     InfoGeometry.Topology.SymbolicLatentBoundaryCylinderQuotientTopCat.boundaryReadout_isIso_of_bijective
       S h_inj h_surj
   change IsIso
     (boundaryReadout D S ≫ prefixBoundaryLimitIso (A := A).hom)
-  infer_instance
+  exact IsIso.comp_isIso' hreadout
+    (prefixBoundaryLimitIso (A := A)).isIso_hom
 
 theorem boundaryReadoutToPrefixLimit_isQuotientMap_of_surjective
     (D : SymbolicLatentSequence ι)
@@ -130,6 +132,12 @@ theorem boundaryReadoutToPrefixLimit_isQuotientMap_of_surjective
   have hlimit :=
     (TopCat.homeoOfIso (prefixBoundaryLimitIso (A := A))).isQuotientMap
   have hcomp := hlimit.comp hreadout
-  simpa [boundaryReadoutToPrefixLimit, Category.assoc] using hcomp
+  have hfun : (boundaryReadoutToPrefixLimit D S).hom =
+      (TopCat.homeoOfIso (prefixBoundaryLimitIso (A := A))) ∘
+        (boundaryReadout D S).hom := by
+    funext x
+    rfl
+  rw [hfun]
+  exact hcomp
 
 end InfoGeometry.Topology.SymbolicLatentBoundaryReadoutInverseLimit

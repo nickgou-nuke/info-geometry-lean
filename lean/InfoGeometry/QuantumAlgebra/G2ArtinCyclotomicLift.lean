@@ -1,7 +1,6 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import Mathlib
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 namespace InfoGeometry.QuantumAlgebra.G2ArtinLift
 
@@ -77,120 +76,130 @@ theorem Bs_mul_Bl (r3 : K) (hr3 : r3 ^ 2 = 3) :
     BsCartan r3 * BlCartan r3 = ![![2, -r3], ![r3, -1]] := by
   ext i j
   fin_cases i <;> fin_cases j
-  · simp [BsCartan, BlCartan, Matrix.mul_apply, Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one]
-    calc
-      -1 + r3 * r3 = -1 + r3 ^ 2 := by ring
-      _ = -1 + 3 := by rw [hr3]
-      _ = 2 := by ring
-  · simp [BsCartan, BlCartan, Matrix.mul_apply, Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one]
-  · simp [BsCartan, BlCartan, Matrix.mul_apply, Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one]
-  · simp [BsCartan, BlCartan, Matrix.mul_apply, Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one]
+  · rw [Matrix.mul_apply, Fin.sum_univ_two]
+    dsimp [BsCartan, BlCartan]
+    linear_combination hr3
+  · rw [Matrix.mul_apply, Fin.sum_univ_two]
+    dsimp [BsCartan, BlCartan]
+    ring
+  · rw [Matrix.mul_apply, Fin.sum_univ_two]
+    dsimp [BsCartan, BlCartan]
+    ring
+  · rw [Matrix.mul_apply, Fin.sum_univ_two]
+    dsimp [BsCartan, BlCartan]
+    ring
 
 theorem Bl_mul_Bs (r3 : K) (hr3 : r3 ^ 2 = 3) :
     BlCartan r3 * BsCartan r3 = ![![-1, r3], ![-r3, 2]] := by
   ext i j
   fin_cases i <;> fin_cases j
-  · simp [BsCartan, BlCartan, Matrix.mul_apply, Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one]
-  · simp [BsCartan, BlCartan, Matrix.mul_apply, Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one]
-  · simp [BsCartan, BlCartan, Matrix.mul_apply, Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one]
-  · simp [BsCartan, BlCartan, Matrix.mul_apply, Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one]
-    calc
-      r3 * r3 + -1 = r3 ^ 2 - 1 := by ring
-      _ = 3 - 1 := by rw [hr3]
-      _ = 2 := by ring
+  · rw [Matrix.mul_apply, Fin.sum_univ_two]
+    dsimp [BsCartan, BlCartan]
+    ring
+  · rw [Matrix.mul_apply, Fin.sum_univ_two]
+    dsimp [BsCartan, BlCartan]
+    ring
+  · rw [Matrix.mul_apply, Fin.sum_univ_two]
+    dsimp [BsCartan, BlCartan]
+    ring
+  · rw [Matrix.mul_apply, Fin.sum_univ_two]
+    dsimp [BsCartan, BlCartan]
+    linear_combination hr3
+
+/-- Explicit square of the Coxeter matrix $C^2 = (B_s B_\ell)^2$. -/
+def CoxeterCartanSq (r3 : K) : Matrix (Fin 2) (Fin 2) K :=
+  ![![1, -r3],
+    ![r3, -2]]
 
 theorem coxeter_cartan_sq (r3 : K) (hr3 : r3 ^ 2 = 3) :
-    (CoxeterCartan r3) ^ 2 = ![![1, -r3], ![r3, -2]] := by
-  dsimp [CoxeterCartan]
-  rw [sq, Bs_mul_Bl r3 hr3]
+    (CoxeterCartan r3) ^ 2 = CoxeterCartanSq r3 := by
+  have hsq : (CoxeterCartan r3) ^ 2 = CoxeterCartan r3 * CoxeterCartan r3 := pow_two _
+  refine hsq.trans ?_
+  have hC : CoxeterCartan r3 = ![![2, -r3], ![r3, -1]] := Bs_mul_Bl r3 hr3
   ext i j
   fin_cases i <;> fin_cases j
-  · simp [Matrix.mul_apply, Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one]
-    calc
-      2 * 2 + -(r3 * r3) = 4 - r3 ^ 2 := by ring
-      _ = 4 - 3 := by rw [hr3]
-      _ = 1 := by ring
-  · simp [Matrix.mul_apply, Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one]
+  · rw [Matrix.mul_apply, Fin.sum_univ_two, hC]
+    dsimp [CoxeterCartanSq]
+    linear_combination -hr3
+  · rw [Matrix.mul_apply, Fin.sum_univ_two, hC]
+    dsimp [CoxeterCartanSq]
     ring
-  · simp [Matrix.mul_apply, Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one]
+  · rw [Matrix.mul_apply, Fin.sum_univ_two, hC]
+    dsimp [CoxeterCartanSq]
     ring
-  · simp [Matrix.mul_apply, Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one]
-    calc
-      -(r3 * r3) + 1 = -(r3 ^ 2) + 1 := by ring
-      _ = -3 + 1 := by rw [hr3]
-      _ = -2 := by ring
+  · rw [Matrix.mul_apply, Fin.sum_univ_two, hC]
+    dsimp [CoxeterCartanSq]
+    linear_combination -hr3
 
 /-- 🏆 THEOREM 2: Exact cube of the Coxeter matrix is $-I$: $(B_s B_\ell)^3 = -I$. -/
 theorem coxeter_cartan_pow_three (r3 : K) (hr3 : r3 ^ 2 = 3) :
-    (CoxeterCartan r3) ^ 3 = -1 := by
+    (CoxeterCartan r3) ^ 3 = (-1 : Matrix (Fin 2) (Fin 2) K) := by
   have h3 : (CoxeterCartan r3) ^ 3 = (CoxeterCartan r3) ^ 2 * CoxeterCartan r3 := by
-    calc
-      (CoxeterCartan r3) ^ 3 = (CoxeterCartan r3) ^ (2 + 1) := rfl
-      _ = (CoxeterCartan r3) ^ 2 * (CoxeterCartan r3) ^ 1 := by rw [pow_add]
-      _ = _ := by rw [pow_one]
-  change (CoxeterCartan r3) ^ 3 = -1
-  rw [h3, coxeter_cartan_sq r3 hr3]
-  dsimp [CoxeterCartan]
-  rw [Bs_mul_Bl r3 hr3]
+    rw [pow_succ]
+  refine h3.trans ?_
+  rw [coxeter_cartan_sq r3 hr3]
+  have hC : CoxeterCartan r3 = ![![2, -r3], ![r3, -1]] := Bs_mul_Bl r3 hr3
   ext i j
   fin_cases i <;> fin_cases j
-  · simp [Matrix.mul_apply, Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one]
-    calc
-      2 + -(r3 * r3) = 2 - r3 ^ 2 := by ring
-      _ = 2 - 3 := by rw [hr3]
-      _ = -1 := by ring
-  · simp [Matrix.mul_apply, Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one]
-  · simp [Matrix.mul_apply, Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one]
+  · rw [Matrix.mul_apply, Fin.sum_univ_two, hC, Matrix.neg_apply, Matrix.one_apply]
+    dsimp [CoxeterCartanSq]
+    linear_combination -hr3
+  · rw [Matrix.mul_apply, Fin.sum_univ_two, hC, Matrix.neg_apply, Matrix.one_apply]
+    dsimp [CoxeterCartanSq]
     ring
-  · simp [Matrix.mul_apply, Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one]
-    calc
-      -(r3 * r3) + 2 = -(r3 ^ 2) + 2 := by ring
-      _ = -3 + 2 := by rw [hr3]
-      _ = -1 := by ring
+  · rw [Matrix.mul_apply, Fin.sum_univ_two, hC, Matrix.neg_apply, Matrix.one_apply]
+    dsimp [CoxeterCartanSq]
+    ring
+  · rw [Matrix.mul_apply, Fin.sum_univ_two, hC, Matrix.neg_apply, Matrix.one_apply]
+    dsimp [CoxeterCartanSq]
+    linear_combination -hr3
+
+/-- Explicit square of the reverse Cartan product $(B_\ell B_s)^2$. -/
+def BlBsSq (r3 : K) : Matrix (Fin 2) (Fin 2) K :=
+  ![![-2, r3],
+    ![-r3, 1]]
 
 theorem bl_bs_sq (r3 : K) (hr3 : r3 ^ 2 = 3) :
-    (BlCartan r3 * BsCartan r3) ^ 2 = ![![ -2, r3], ![-r3, 1]] := by
-  rw [sq, Bl_mul_Bs r3 hr3]
+    (BlCartan r3 * BsCartan r3) ^ 2 = BlBsSq r3 := by
+  have hsq : (BlCartan r3 * BsCartan r3) ^ 2 = (BlCartan r3 * BsCartan r3) * (BlCartan r3 * BsCartan r3) := pow_two _
+  refine hsq.trans ?_
+  have hB : BlCartan r3 * BsCartan r3 = ![![ -1, r3], ![-r3, 2]] := Bl_mul_Bs r3 hr3
   ext i j
   fin_cases i <;> fin_cases j
-  · simp [Matrix.mul_apply, Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one]
-    calc
-      1 + -(r3 * r3) = 1 - r3 ^ 2 := by ring
-      _ = 1 - 3 := by rw [hr3]
-      _ = -2 := by ring
-  · simp [Matrix.mul_apply, Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one]
+  · rw [Matrix.mul_apply, Fin.sum_univ_two, hB]
+    dsimp [BlBsSq]
+    linear_combination -hr3
+  · rw [Matrix.mul_apply, Fin.sum_univ_two, hB]
+    dsimp [BlBsSq]
     ring
-  · simp [Matrix.mul_apply, Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one]
+  · rw [Matrix.mul_apply, Fin.sum_univ_two, hB]
+    dsimp [BlBsSq]
     ring
-  · simp [Matrix.mul_apply, Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one]
-    calc
-      -(r3 * r3) + 2 * 2 = -(r3 ^ 2) + 4 := by ring
-      _ = -3 + 4 := by rw [hr3]
-      _ = 1 := by ring
+  · rw [Matrix.mul_apply, Fin.sum_univ_two, hB]
+    dsimp [BlBsSq]
+    linear_combination -hr3
 
 theorem bl_bs_pow_three (r3 : K) (hr3 : r3 ^ 2 = 3) :
-    (BlCartan r3 * BsCartan r3) ^ 3 = -1 := by
+    (BlCartan r3 * BsCartan r3) ^ 3 = (-1 : Matrix (Fin 2) (Fin 2) K) := by
   have h3 : (BlCartan r3 * BsCartan r3) ^ 3 = (BlCartan r3 * BsCartan r3) ^ 2 * (BlCartan r3 * BsCartan r3) := by
-    calc
-      (BlCartan r3 * BsCartan r3) ^ 3 = (BlCartan r3 * BsCartan r3) ^ (2 + 1) := rfl
-      _ = (BlCartan r3 * BsCartan r3) ^ 2 * (BlCartan r3 * BsCartan r3) ^ 1 := by rw [pow_add]
-      _ = _ := by rw [pow_one]
-  rw [h3, bl_bs_sq r3 hr3, Bl_mul_Bs r3 hr3]
+    rw [pow_succ]
+  refine h3.trans ?_
+  rw [bl_bs_sq r3 hr3]
+  have hB : BlCartan r3 * BsCartan r3 = ![![ -1, r3], ![-r3, 2]] := Bl_mul_Bs r3 hr3
   ext i j
   fin_cases i <;> fin_cases j
-  · simp [Matrix.mul_apply, Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one]
-    calc
-      2 + -(r3 * r3) = 2 - r3 ^ 2 := by ring
-      _ = 2 - 3 := by rw [hr3]
-      _ = -1 := by ring
-  · simp [Matrix.mul_apply, Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one]
+  · rw [Matrix.mul_apply, Fin.sum_univ_two, hB, Matrix.neg_apply, Matrix.one_apply]
+    dsimp [BlBsSq]
+    linear_combination -hr3
+  · rw [Matrix.mul_apply, Fin.sum_univ_two, hB, Matrix.neg_apply, Matrix.one_apply]
+    dsimp [BlBsSq]
     ring
-  · simp [Matrix.mul_apply, Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one]
-  · simp [Matrix.mul_apply, Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one]
-    calc
-      -(r3 * r3) + 2 = -(r3 ^ 2) + 2 := by ring
-      _ = -3 + 2 := by rw [hr3]
-      _ = -1 := by ring
+  · rw [Matrix.mul_apply, Fin.sum_univ_two, hB, Matrix.neg_apply, Matrix.one_apply]
+    dsimp [BlBsSq]
+    ring
+  · rw [Matrix.mul_apply, Fin.sum_univ_two, hB, Matrix.neg_apply, Matrix.one_apply]
+    dsimp [BlBsSq]
+    linear_combination -hr3
 
 /-- 🏆 THEOREM 3: Exact 6-term Artin braid relation $(B_s B_\ell)^3 = (B_\ell B_s)^3 = -I$. -/
 theorem g2_artin_braid_relation_cartan (r3 : K) (hr3 : r3 ^ 2 = 3) :
@@ -202,7 +211,7 @@ theorem g2_artin_braid_relation_cartan (r3 : K) (hr3 : r3 ^ 2 = 3) :
       BsCartan r3 * BlCartan r3 * BsCartan r3 * BlCartan r3 * BsCartan r3 * BlCartan r3 =
           ((BsCartan r3 * BlCartan r3) * (BsCartan r3 * BlCartan r3)) * (BsCartan r3 * BlCartan r3) := by
         simp only [mul_assoc]
-      _ = (BsCartan r3 * BlCartan r3) ^ 2 * (BsCartan r3 * BlCartan r3) := by rw [sq]
+      _ = (BsCartan r3 * BlCartan r3) ^ 2 * (BsCartan r3 * BlCartan r3) := by rw [pow_two]
       _ = (BsCartan r3 * BlCartan r3) ^ 3 := by
         calc
           (BsCartan r3 * BlCartan r3) ^ 2 * (BsCartan r3 * BlCartan r3) =
@@ -215,7 +224,7 @@ theorem g2_artin_braid_relation_cartan (r3 : K) (hr3 : r3 ^ 2 = 3) :
       BlCartan r3 * BsCartan r3 * BlCartan r3 * BsCartan r3 * BlCartan r3 * BsCartan r3 =
           ((BlCartan r3 * BsCartan r3) * (BlCartan r3 * BsCartan r3)) * (BlCartan r3 * BsCartan r3) := by
         simp only [mul_assoc]
-      _ = (BlCartan r3 * BsCartan r3) ^ 2 * (BlCartan r3 * BsCartan r3) := by rw [sq]
+      _ = (BlCartan r3 * BsCartan r3) ^ 2 * (BlCartan r3 * BsCartan r3) := by rw [pow_two]
       _ = (BlCartan r3 * BsCartan r3) ^ 3 := by
         calc
           (BlCartan r3 * BsCartan r3) ^ 2 * (BlCartan r3 * BsCartan r3) =
@@ -233,7 +242,7 @@ theorem cartan_coxeter_pow_six (r3 : K) (hr3 : r3 ^ 2 = 3) :
     rw [← pow_mul, h_mul]
   rw [h6, coxeter_cartan_pow_three r3 hr3]
   have h_neg_sq : (-1 : Matrix (Fin 2) (Fin 2) K) ^ 2 = 1 := by
-    rw [sq, neg_mul_neg, mul_one]
+    rw [pow_two, neg_mul_neg, mul_one]
   exact h_neg_sq
 
 /-- 🏆 THEOREM 5: The $\zeta$-twisted spin Coxeter operator $C_{\text{spin}} = \zeta \cdot (B_s B_\ell)$ satisfies $C_{\text{spin}}^6 = -I$. -/

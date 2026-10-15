@@ -50,10 +50,9 @@ theorem posGaugePoleScaleAction_polePoint
     (C D : ℂ) (c : InfoGeometry.Stratum.PosGauge) (v : ℂ) :
     posGaugePoleScaleAction C D c (-(C / D) + v) =
       InfoGeometry.Canonical.LeeYangAsanoScaleBlowupBridge.poleScalePoint
-        C D c.1 v := by
-  simpa [posGaugePoleScaleAction, posGaugeToRealUnits] using
-    (InfoGeometry.AsanoRuelle.poleScaleAction_polePoint
-      C D (posGaugeToRealUnits c) v)
+        C D c.1 v :=
+  InfoGeometry.AsanoRuelle.poleScaleAction_polePoint
+    C D (posGaugeToRealUnits c) v
 
 /-- The radius-`delta` source neighborhood around the Möbius pole. -/
 def poleScaleNeighborhood (C D : ℂ) (delta : ℝ) : Set ℂ :=
@@ -110,7 +109,7 @@ theorem asano_endpoint_disjunction_left_of_explicit_scale
     asano_left_pole_in_K1_of_explicit_scale
       A B C D K1 K2 hD hNondeg hK1_closed hK2_bdd h_zerofree
   have hpole : -(C / D) ∈ K1 := by
-    convert hpole_raw using 1 <;> ring
+    convert hpole_raw using 1; ring
   exact Or.inl ⟨
     InfoGeometry.Canonical.AsanoRuelleTopologicalEndpoint.left_pole_nonzero
       C D K1 hK1_no_zero hpole_raw,

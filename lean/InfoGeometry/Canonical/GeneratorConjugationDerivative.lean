@@ -16,7 +16,7 @@ variable {A : Type*}
 variable [NormedRing A] [NormedAlgebra ℝ A] [StarRing A]
 
 def conjugationCurve (u : ℝ → A) (x : A) (t : ℝ) : A :=
-  u t * x * star (u t)
+  (u t * x) * star (u t)
 
 theorem hasDerivAt_conjugationCurve
     (u u' : ℝ → A) (x : A) (t : ℝ)
@@ -27,6 +27,8 @@ theorem hasDerivAt_conjugationCurve
   have hleft : HasDerivAt (fun s => u s * x) (u' t * x) t :=
     hu.mul_const x
   have hprod := hleft.mul hstar
-  simpa [conjugationCurve, mul_assoc] using hprod
+  change HasDerivAt
+    ((fun s => u s * x) * (fun s => star (u s))) _ t
+  exact hprod
 
 end InfoGeometry.Canonical.GeneratorConjugationDerivative

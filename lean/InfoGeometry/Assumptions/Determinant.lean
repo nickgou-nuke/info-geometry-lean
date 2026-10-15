@@ -39,7 +39,10 @@ theorem ker_det_eq_SL (R : Type u) (V : Type v)
     [CommRing R] [Fintype V] [DecidableEq V] :
     Set.range (Matrix.SpecialLinearGroup.toGL : «SL» R V → «GL» R V) =
       detHom R V ⁻¹' {1} := by
-  simpa [detHom] using (Matrix.SpecialLinearGroup.range_toGL (n := V) (A := R))
+  ext x
+  have h := (Matrix.SpecialLinearGroup.range_toGL_eq_ker_det (n := V) (R := R))
+  have hmem := Subgroup.ext_iff.mp h x
+  simpa [Subgroup.mem_carrier, MonoidHom.mem_range, MonoidHom.mem_ker, detHom] using hmem
 
 /-- Draft logarithmic absolute determinant. -/
 @[blueprint "def:determinant-log-abs"]

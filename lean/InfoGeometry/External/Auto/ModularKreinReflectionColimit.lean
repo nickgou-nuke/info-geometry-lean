@@ -68,9 +68,8 @@ theorem J_commutes_with_embIter :
         T.J (n + (k + 1)) (KreinTower.embIter T n (k + 1) x)
             = T.J (n + (k + 1)) (T.emb (n + k) (KreinTower.embIter T n k x)) := by
                 rfl
-        _ = T.emb (n + k) (T.J (n + k) (KreinTower.embIter T n k x)) := by
-                simpa [Nat.add_assoc] using
-                  (T.J_comm (n := n + k) (x := KreinTower.embIter T n k x))
+        _ = T.emb (n + k) (T.J (n + k) (KreinTower.embIter T n k x)) :=
+          T.J_comm (n + k) (KreinTower.embIter T n k x)
         _ = T.emb (n + k) (KreinTower.embIter T n k (T.J n x)) := by
                 exact congrArg (T.emb (n + k)) (ih (n := n) x)
         _ = KreinTower.embIter T n (k + 1) (T.J n x) := by

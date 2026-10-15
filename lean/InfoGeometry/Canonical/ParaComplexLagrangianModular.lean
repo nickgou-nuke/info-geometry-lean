@@ -9,7 +9,7 @@ import InfoGeometry.Twistor.PenroseIncidence
 import InfoGeometry.Twistor.TwoTwistorSpacetimeRealityAdjacency
 
 /-!
-# Para-Complex Neutral Lagrangian Modular Triad & Twistor Mass Condensation
+# Para-Complex Neutral Lagrangian Modular Triad & Finite Zorn Matrix Readout
 
 This module formalizes the exact mathematical foundation of the
 Holomorphic-Antiholomorphic-Real geometric triad without conflating neutral geometry
@@ -36,12 +36,13 @@ with positive-definite Hilbert spaces:
    - Self-polar cone is the fixed locus $J \xi = \xi$.
    - Modular invariance: $J(J \xi) = \xi$.
 
-4. **Zorn 2x2 Real Algebraic Engine & Mass Condensation**:
+4. **Zorn 2x2 Real Algebraic Engine & Conditional Quadratic Readout**:
    - Traceless Zorn matrix $\hat{Z}(p, \Delta) = \begin{pmatrix} p & \Delta \\ \Delta & -p \end{pmatrix}$.
    - Trace zero: $\operatorname{tr}(\hat{Z}) = 0$.
-   - Mass-shell condensation: $\hat{Z}^2 = (p^2 + \Delta^2) \mathbb{I}_2 = E^2 \mathbb{I}_2$.
-   - Massless limit $\Delta = 0$: decoupled null rays $\hat{Z}^2 = p^2 \mathbb{I}_2$.
-   - Massive condensation $\Delta = m > 0$: avoided crossing spectral gap $p^2 + m^2 > 0$.
+   - Matrix square: $\hat{Z}^2 = (p^2 + \Delta^2) \mathbb{I}_2$; given the additional scalar premise $p^2 + \Delta^2 = E^2$, this equals $E^2 \mathbb{I}_2$.
+   - The slice $\Delta = 0$ gives $\hat{Z}^2 = p^2 \mathbb{I}_2$; it is not a null or massless momentum assertion without an explicit physical readout.
+   - For $\Delta = m > 0$, $p^2 + m^2 > 0$ is proved scalar positivity. A physical dispersion law or dynamical avoided-crossing claim requires additional definitions and hypotheses.
+   - The theorem name `zorn_mass_shell_condensation` is retained for compatibility; its proposition is the conditional matrix identity above, not an identification with the Minkowski mass shell.
 
 5. **Penrose Twistor Integration**:
    - A single twistor on a chiral leaf is intrinsically null ($B(Z_+, Z_+) = 0$).
@@ -128,7 +129,7 @@ theorem self_polar_cone_invariant (T : TomitaModularReflection V) (ξ : V)
   have h_id := LinearMap.congr_fun T.J_sq ξ
   simpa using h_id
 
-/-! ### 4. Real 2x2 Zorn Matrix Algebra & Relativistic Mass Condensation -/
+/-! ### 4. Real 2x2 Zorn Matrix Algebra & Conditional Quadratic Readout -/
 
 /-- Real $2 \times 2$ Zorn matrix encoding the chiral connection $p$ and off-diagonal mass bridge $\Delta$. -/
 def zornMatrix (p : ℝ) (Δ : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
@@ -152,10 +153,10 @@ theorem zorn_determinant (p : ℝ) (Δ : ℝ) :
   simp
   ring
 
-/-- **Theorem (Relativistic Mass-Shell Condensation)**:
-    The square of the Zorn matrix equals the relativistic mass-shell $E^2 \mathbb{I}_2$.
-    The off-diagonal element $\Delta = m$ bridges the holomorphic (left) and antiholomorphic (right)
-    sectors, condensing the topological vacuum into the macroscopic mass shell $p^2 + m^2 = E^2$. -/
+/-- **Conditional Zorn matrix quadratic identity**: assuming the scalar equality
+    `p^2 + Δ^2 = E_energy^2`, the square of this matrix is `E_energy^2` times
+    the identity. This theorem does not identify the parameters with a
+    relativistic four-momentum or prove a physical mass-shell law. -/
 theorem zorn_mass_shell_condensation (p : ℝ) (Δ : ℝ) (E_energy : ℝ)
     (h_mass_shell : p ^ 2 + Δ ^ 2 = E_energy ^ 2) :
     (zornMatrix p Δ) * (zornMatrix p Δ) = (E_energy ^ 2) • (1 : Matrix (Fin 2) (Fin 2) ℝ) := by
@@ -171,9 +172,9 @@ theorem zorn_mass_shell_condensation (p : ℝ) (Δ : ℝ) (E_energy : ℝ)
   · simp [Matrix.mul_apply, Fin.sum_univ_two]
     linear_combination h_mass_shell
 
-/-- **Theorem (Massless Limit / Decoupled Chiral Null Rays)**:
-    When the mass bridge is absent ($\Delta = 0$), $\hat{Z}^2 = p^2 \mathbb{I}_2$,
-    representing decoupled left- and right-moving massless rays. -/
+/-- On the parameter slice `Δ = 0`, the matrix square is `p^2` times the
+    identity. This algebraic slice alone does not assert null propagation or
+    identify `p` as a physical momentum. -/
 theorem zorn_massless_decoupling (p : ℝ) :
     (zornMatrix p 0) * (zornMatrix p 0) = (p ^ 2) • (1 : Matrix (Fin 2) (Fin 2) ℝ) := by
   have h := zorn_mass_shell_condensation p 0 p (by ring)

@@ -43,7 +43,12 @@ theorem basedLoopConcatenation_associative_quotient_readout
     reparametrizeSymbolicLatentPath_homotopic
       associativityReparametrization
       (leftAssociativeBasedLoopConcatenation γ₀ γ₁ γ₂).1
-  simpa [rightAssociativeBasedLoopConcatenation_eq_reparametrized_left
-    γ₀ γ₁ γ₂] using hrepr.symm
+  rw [rightAssociativeBasedLoopConcatenation_eq_reparametrized_left
+    γ₀ γ₁ γ₂]
+  change SymbolicLatentPathHomotopic
+    (reparametrizeSymbolicLatentPath associativityReparametrization
+      (leftAssociativeBasedLoopConcatenation γ₀ γ₁ γ₂).1)
+    (leftAssociativeBasedLoopConcatenation γ₀ γ₁ γ₂).1
+  exact hrepr.symm
 
 end InfoGeometry.Topology

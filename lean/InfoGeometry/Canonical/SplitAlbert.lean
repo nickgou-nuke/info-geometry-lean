@@ -198,6 +198,6 @@ theorem splitAlbertTraceZero_finrank_eq_26 :
   have h' : Module.finrank ℝ (LinearMap.ker splitAlbertTrace) = 26 := by
     apply Nat.succ.inj
     simpa [Nat.succ_eq_add_one, add_comm, splitAlbertCarrier_finrank_eq_27] using h
-  simpa [splitAlbertTraceZero] using h'
+  exact h'
 
 end InfoGeometry.Canonical.SplitAlbert

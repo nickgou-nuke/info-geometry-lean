@@ -36,8 +36,8 @@ noncomputable def primonBond (n : ℕ) :
   concreteStep n
 
 @[simp] theorem primonBond_trace (n : ℕ) (A : PrimonStage n) :
-    matrixTraceState (n + 1) (primonBond n A) = matrixTraceState n A := by
-exact concreteData.trace_compatible n A
+    matrixTraceState (n + 1) (primonBond n A) = matrixTraceState n A :=
+  concreteData.trace_compatible n A
 
 theorem primonBond_injective (n : ℕ) :
     Function.Injective (primonBond n) := by

@@ -180,9 +180,8 @@ theorem bosonicZetaPartition_eq_riemannZeta
 theorem fermionicSquarefreePartition_eq_product
     (P : PrimeCutoff) (β : ℝ) :
     fermionicSquarefreePartition P β =
-      Finset.prod P.primes (fun p => 1 + primeWeight β p) := by
-  simpa [fermionicSquarefreePartition, primeWeight] using
-    finiteFermionicSquarefreePartition_eq_product P β
+      Finset.prod P.primes (fun p => 1 + primeWeight β p) :=
+  finiteFermionicSquarefreePartition_eq_product P β
 
 @[rep_depth thermo]
 theorem mobiusSupertrace_eq_denominator

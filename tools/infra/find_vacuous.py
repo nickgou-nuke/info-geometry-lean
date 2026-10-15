@@ -25,11 +25,12 @@ def run_aql(query, bind_vars=None):
         endpoint=arango_endpoint().rstrip("/"),
         database=arango_database(),
         username=arango_username(),
-        password=arango_password("alexandria_root"),
+        password=arango_password(),
     )
     return execute_aql(target, query, bind_vars or {})
 
 def main():
+    print("Heuristic candidates only; source and kernel review required.")
     # Attempt 1: Check for explicit vacuous or surrogate flags in ig_nodes or components
     print("Finding vacuous theorems in ArangoDB...")
     
@@ -49,18 +50,24 @@ def main():
         for r in results:
             print(f"- {r['name']}")
     except Exception as e:
-        print(f"Error querying Arango: {e}")
+        raise RuntimeError("Arango candidate query failed; audit incomplete") from e
         
     print("\nChecking canonical policy lint output for 'trivial_proof'...")
     try:
-        with open("reports/dag/policy-lint-report.json") as f:
+        with (REPO_ROOT / "reports/dag/policy-lint-report.json").open() as f:
             lint_data = json.load(f)
+            if not isinstance(lint_data, dict) or not isinstance(lint_data.get("violations"), list):
+                raise ValueError("Policy lint report requires a violations list")
             vacuous = [v for v in lint_data.get("violations", []) if "trivial" in v.get("reason", "")]
             print(f"Found {len(vacuous)} trivial/vacuous theorems in lint report:")
             for v in vacuous:
                 print(f"- {v['name']} ({v['reason']})")
     except Exception as e:
-        print(f"Could not read lint report: {e}")
+        raise RuntimeError("Policy lint input missing or invalid; audit incomplete") from e
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as exc:
+        print(f"find_vacuous: audit failed ({type(exc).__name__})", file=sys.stderr)
+        sys.exit(1)

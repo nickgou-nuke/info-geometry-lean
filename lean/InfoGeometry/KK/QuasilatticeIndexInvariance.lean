@@ -176,7 +176,8 @@ omit [CompleteSpace E] [KreinSpace H₂] [KreinGradedModule H₂] in
     {T : EndH}
     (hT : KreinGradedModule.IsEven (H := H₂) T) :
     Commute (KreinGradedModule.gradeCLM (H := H₂)) T := by
-  simpa using gradeCLM_comp_eq_comp_gradeCLM_of_isEven (E := E) hT
+  exact (commute_iff_eq _ _).2
+    (gradeCLM_comp_eq_comp_gradeCLM_of_isEven (E := E) hT)
 
 @[rep_depth transport] lemma inverseQuasilatticeFlow_commutes_grade
     (V : BogoliubovVielbeinBundle (E := E))
@@ -362,7 +363,8 @@ omit [KreinSpace H₂] [KreinGradedModule H₂] in
         simp
       _ = ((eNeg.comp ePos).comp D).comp eNeg := by
         rw [show eNeg.comp ePos = ContinuousLinearMap.id ℝ H₂ by
-          simpa [ContinuousLinearMap.mul_def] using hCancel]
+          rw [← ContinuousLinearMap.one_def]
+          exact hCancel]
       _ = eNeg.comp (((ePos.comp D).comp eNeg)) := by
         simp [ContinuousLinearMap.comp_assoc]
   have hMainLin :

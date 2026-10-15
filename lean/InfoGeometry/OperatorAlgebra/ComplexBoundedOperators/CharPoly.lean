@@ -1,6 +1,7 @@
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Matrix.Spectrum
+import Mathlib.Analysis.Complex.Polynomial.Basic
 
 /-!
 # InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.CharPoly

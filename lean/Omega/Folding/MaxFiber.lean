@@ -100,9 +100,7 @@ instance decEqX (m : Nat) : DecidableEq (X m) :=
 def cFiberMult (x : X m) : Nat :=
   (Finset.univ.filter (fun w : Word m => Fold w = x)).card
 
-theorem cFiberMult_eq (x : X m) : cFiberMult x = X.fiberMultiplicity x := by
-  unfold cFiberMult X.fiberMultiplicity; congr 1; unfold X.fiber; ext w
-  simp only [Finset.mem_filter, Finset.mem_univ, true_and]
+theorem cFiberMult_eq (x : X m) : cFiberMult x = X.fiberMultiplicity x := rfl
 
 def cMaxFiberMult (m : Nat) : Nat :=
   (@Finset.univ (X m) (fintypeX m)).sup'

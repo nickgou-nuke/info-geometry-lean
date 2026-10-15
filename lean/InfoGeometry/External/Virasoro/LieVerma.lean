@@ -194,11 +194,16 @@ lemma VermaHW.hwVec_cyclic (η : weight tri) :
 
 lemma VermaHW.upper_smul_hwVec (η : weight tri) {E : 𝓰} (hE : E ∈ tri.upper) :
     ιUEA 𝕜 E • VermaHW.hwVec η = 0 := by
-  simpa [weightHW] using VermaModule.apply_hwVec_eq (weightHW η) (Sum.inr ⟨E, hE⟩)
+  change ιUEA 𝕜 E • VermaModule.hwVec (weightHW η) = 0
+  simpa only [weightHW, map_zero, zero_smul] using
+    VermaModule.apply_hwVec_eq (weightHW η) (Sum.inr ⟨E, hE⟩)
 
 lemma VermaHW.cartan_smul_hwVec (η : weight tri) {H : 𝓰} (hH : H ∈ tri.cartan) :
     ιUEA 𝕜 H • VermaHW.hwVec η = (η ⟨H, hH⟩) • VermaHW.hwVec η := by
-  simpa [weightHW] using VermaModule.apply_hwVec_eq (weightHW η) (Sum.inl ⟨H, hH⟩)
+  change ιUEA 𝕜 H • VermaModule.hwVec (weightHW η) =
+    (algebraMap 𝕜 (𝓤 𝕜 𝓰) (η ⟨H, hH⟩)) • VermaModule.hwVec (weightHW η)
+  simpa only [weightHW] using
+    VermaModule.apply_hwVec_eq (weightHW η) (Sum.inl ⟨H, hH⟩)
 
 noncomputable def VermaHW.universalMap (η : weight tri)
     (M : Type*) [AddCommGroup M] [Module (𝓤 𝕜 𝓰) M] {hwv : M}

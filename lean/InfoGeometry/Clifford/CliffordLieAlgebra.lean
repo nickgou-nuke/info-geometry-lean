@@ -10,6 +10,8 @@ namespace InfoGeometry.Clifford
 
 open CliffordAlgebra
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 /-- 
 The Lie algebra of bivectors in a Clifford algebra Cl(Q).
 These span a Lie subalgebra isomorphic to so(Q).
@@ -34,4 +36,3 @@ def bivector (m1 m2 : InfoGeometry.CliffordTower.SplitSpace n) : soNN n :=
 end soNN
 
 end InfoGeometry.Clifford
-

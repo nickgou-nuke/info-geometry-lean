@@ -55,7 +55,8 @@ theorem operatorGlide_involutive (ω : ℂ) (hω : ω ^ 2 + ω + 1 = 0) :
   · change (reindexSix theta * (reindexSix theta * A * reindexSix theta) *
       reindexSix theta) = A
     have hR : reindexSix theta * reindexSix theta = (1 : Operator) := by
-      simpa using deckFibreAction_theta_sq ω hω
+      rw [← map_mul, theta_sq ω hω]
+      exact map_one reindexSix
     calc
       reindexSix theta * (reindexSix theta * A * reindexSix theta) *
           reindexSix theta =

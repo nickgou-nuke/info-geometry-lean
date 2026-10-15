@@ -1,4 +1,5 @@
 import Mathlib
+import Mathlib.Algebra.Lie.OfAssociative
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.HeisenbergBoundaryAtlasTopological
 import InfoGeometry.Topology.CurrentHeisenbergSugawaraTopological
@@ -28,6 +29,12 @@ open VirasoroProject
 noncomputable section
 
 variable {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜]
+
+local instance boundaryAtlasEndLieRing (α : 𝕜) :
+    LieRing
+      (VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+        VirasoroProject.ChargedFockSpace 𝕜 α) :=
+  LieRing.ofAssociativeRing
 
 instance boundaryAtlasSugawaraPacketTopologicalSpace :
     TopologicalSpace
@@ -80,7 +87,7 @@ def boundaryAtlasSugawaraPacket (α : 𝕜) :
 parameter space. -/
 theorem continuous_boundaryAtlasSugawaraPacket :
     Continuous (boundaryAtlasSugawaraPacket (𝕜 := 𝕜)) := by
-  simpa [boundaryAtlasSugawaraPacket] using
+  simpa [boundaryAtlasSugawaraPacket, topologicalCurrentSugawaraReadout] using
     (continuous_of_discreteTopology :
       Continuous (boundaryAtlasSugawaraPacket (𝕜 := 𝕜)))
 
@@ -88,7 +95,7 @@ theorem continuous_boundaryAtlasSugawaraPacket :
 discrete parameter space. -/
 theorem isLocallyConstant_boundaryAtlasSugawaraPacket :
     IsLocallyConstant (boundaryAtlasSugawaraPacket (𝕜 := 𝕜)) := by
-  simpa [boundaryAtlasSugawaraPacket] using
+  simpa [boundaryAtlasSugawaraPacket, topologicalCurrentSugawaraReadout] using
     (IsLocallyConstant.of_discrete
       (f := boundaryAtlasSugawaraPacket (𝕜 := 𝕜)))
 
@@ -100,9 +107,11 @@ theorem boundaryAtlasSugawaraPacket_currentSugawara_central
       (1 :
         VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
           VirasoroProject.ChargedFockSpace 𝕜 α) := by
-  simpa [boundaryAtlasSugawaraPacket] using
-    (InfoGeometry.Canonical.HeisenbergBoundaryAtlas.canonicalAtlas_currentSugawara_central
-      (𝕜 := 𝕜) α)
+  change (InfoGeometry.Canonical.HeisenbergBoundaryAtlas.canonicalAtlas
+    (𝕜 := 𝕜) α).currentRep.currentSugawaraRepresentation
+      (VirasoroAlgebra.cgen 𝕜) = _
+  exact InfoGeometry.Canonical.HeisenbergBoundaryAtlas.canonicalAtlas_currentSugawara_central
+    (𝕜 := 𝕜) α
 
 /-- The `lgen` readout is preserved in the bridge packet. -/
 theorem boundaryAtlasSugawaraPacket_currentSugawara_lgen_apply
@@ -112,6 +121,8 @@ theorem boundaryAtlasSugawaraPacket_currentSugawara_lgen_apply
       InfoGeometry.Canonical.CurrentSugawaraBridge.CurrentHeisenbergRep.sugawaraStressMode
         ((InfoGeometry.Canonical.HeisenbergBoundaryAtlas.canonicalAtlas (𝕜 := 𝕜) α).currentRep)
         n := by
-  simpa [boundaryAtlasSugawaraPacket] using
-    (InfoGeometry.Canonical.HeisenbergBoundaryAtlas.canonicalAtlas_currentSugawara_lgen_apply
-      (𝕜 := 𝕜) α n)
+  change (InfoGeometry.Canonical.HeisenbergBoundaryAtlas.canonicalAtlas
+    (𝕜 := 𝕜) α).currentRep.currentSugawaraRepresentation
+      (VirasoroAlgebra.lgen 𝕜 n) = _
+  exact InfoGeometry.Canonical.HeisenbergBoundaryAtlas.canonicalAtlas_currentSugawara_lgen_apply
+    (𝕜 := 𝕜) α n

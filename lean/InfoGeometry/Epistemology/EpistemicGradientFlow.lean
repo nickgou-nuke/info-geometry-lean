@@ -71,6 +71,11 @@ theorem hasDerivAt_relativeEntropy (initial time : ℝ) :
       (-fisherExp (initial * Real.exp (-time)) * (initial * Real.exp (-time)) ^ 2) time := by
   have derivative := ((hasDerivAt_negativeEntropy (entropyRelaxation_mem_Ioo initial time)).sub_const
     (negativeEntropy midpoint)).comp time (hasDerivAt_entropyRelaxation initial time)
+  have h_eq : relativeEntropy initial =
+      (fun x => negativeEntropy x - negativeEntropy midpoint) ∘ entropyRelaxation initial := by
+    ext t
+    rfl
+  rw [h_eq]
   convert derivative using 1
   unfold entropyGradientField entropyRelaxation
   rw [logit_logistic]

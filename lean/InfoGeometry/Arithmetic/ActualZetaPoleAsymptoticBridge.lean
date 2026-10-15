@@ -178,6 +178,9 @@ theorem realPartitionSeries_log_rescaled_pole_tendsto
   have hlog :=
     (Real.continuousAt_log (by norm_num : (1 : ℝ) ≠ 0)).tendsto.comp
       realPartitionSeries_rescaled_pole_tendsto
+  change Tendsto
+    (Real.log ∘ fun β : ℝ => (β - 1) * realPartitionSeries β)
+    (𝓝[>] (1 : ℝ)) (𝓝 (0 : ℝ))
   simpa using hlog
 
 theorem realPartitionSeries_log_add_log_pole_model_eq_rescaled

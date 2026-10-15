@@ -64,7 +64,8 @@ noncomputable def ι (M : MolecularFragmentDiagram D) (u : Fin n) :
 preserves them exactly. -/
 theorem atom_compatible (M : MolecularFragmentDiagram D)
     {u v : Fin n} (h : D.Reach u v) :
-    (M.graph v).atom ∘ (M.map h).toFun = (M.graph u).atom := by
+    (M.graph v).atom ∘ M.vertexDiagram.map h = (M.graph u).atom := by
+  change (M.graph v).atom ∘ (M.map h).toFun = (M.graph u).atom
   ext i
   exact (M.map h).atom_preserving i
 
@@ -73,16 +74,16 @@ noncomputable def atomLabel (M : MolecularFragmentDiagram D) :
     M.VertexColimit → AtomLabel :=
   M.vertexDiagram.descend (fun u => (M.graph u).atom) (by
     intro u v h
-    simpa only [CategoryTheory.types_comp] using atom_compatible M h)
+    exact atom_compatible M h)
 
 /-- The colimit label restricts to the original atom label at every
 fragmentation stage. -/
 theorem atomLabel_ι (M : MolecularFragmentDiagram D)
     (u : Fin n) :
     M.atomLabel ∘ M.ι u = (M.graph u).atom := by
-  simpa only [CategoryTheory.types_comp] using M.vertexDiagram.descend_ι
+  exact M.vertexDiagram.descend_ι
     (fun i => (M.graph i).atom)
-    (by intro i j h; simpa only [CategoryTheory.types_comp] using atom_compatible M h) u
+    (by intro i j h; exact atom_compatible M h) u
 
 /-- Bond relation on the colimit: two reconstructed vertices are bonded when
 they are images of a bonded pair in at least one fragment stage. -/

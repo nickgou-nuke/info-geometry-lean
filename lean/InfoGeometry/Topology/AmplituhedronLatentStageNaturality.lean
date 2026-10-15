@@ -34,10 +34,10 @@ theorem continuous_coordinateMap_step :
   apply continuous_pi
   intro ij
   by_cases h : ij.2.val < 3
-  · simpa [h] using
+  · simpa [h, coordinateCarrier, coordinateTopologicalSpace] using
       (continuous_apply
         (⟨ij.1, (⟨ij.2.val, h⟩ : Fin 3)⟩ : Fin 4 × Fin 3))
-  · simpa [h] using
+  · simpa [h, coordinateCarrier, coordinateTopologicalSpace] using
       (continuous_const : Continuous
         (fun _ : (Fin 4 × Fin 3 → ℝ) => (0 : ℝ)))
 

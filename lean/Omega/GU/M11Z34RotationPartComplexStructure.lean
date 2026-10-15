@@ -19,6 +19,11 @@ abbrev m11Z34Coord0 : M11Z34RotationCoordinate := ⟨0, by decide⟩
 /-- The second coordinate in each real rotation plane. -/
 abbrev m11Z34Coord1 : M11Z34RotationCoordinate := ⟨1, by decide⟩
 
+private lemma m11Z34Coord1_ne_coord0 : m11Z34Coord1 ≠ m11Z34Coord0 := by
+  intro h
+  have hv := congrArg Fin.val h
+  norm_num [m11Z34Coord0, m11Z34Coord1] at hv
+
 /-- Blockwise quarter-turn operator on the rotation part. -/
 def m11Z34QuarterTurn (v : M11Z34RotationPart) : M11Z34RotationPart :=
   fun i j => if j = m11Z34Coord0 then -v i m11Z34Coord1 else v i m11Z34Coord0
@@ -34,12 +39,14 @@ def m11Z34RotationAction (k : ZMod 34) (v : M11Z34RotationPart) : M11Z34Rotation
 private lemma m11Z34QuarterTurn_sq (v : M11Z34RotationPart) :
     m11Z34QuarterTurn (m11Z34QuarterTurn v) = fun i j => -v i j := by
   ext i j
-  fin_cases j <;> simp [m11Z34QuarterTurn, m11Z34Coord0, m11Z34Coord1]
+  fin_cases j <;>
+    simp [m11Z34QuarterTurn, m11Z34Coord0, m11Z34Coord1, m11Z34Coord1_ne_coord0]
 
 private lemma m11Z34QuarterTurn_neg (v : M11Z34RotationPart) :
     m11Z34QuarterTurn (fun i j => -v i j) = fun i j => -(m11Z34QuarterTurn v i j) := by
   ext i j
-  fin_cases j <;> simp [m11Z34QuarterTurn, m11Z34Coord0, m11Z34Coord1]
+  fin_cases j <;>
+    simp [m11Z34QuarterTurn, m11Z34Coord0, m11Z34Coord1, m11Z34Coord1_ne_coord0]
 
 private lemma m11Z34QuarterTurn_commutes_with_action (k : ZMod 34) (v : M11Z34RotationPart) :
     m11Z34QuarterTurn (m11Z34RotationAction k v) = m11Z34RotationAction k (m11Z34QuarterTurn v) := by

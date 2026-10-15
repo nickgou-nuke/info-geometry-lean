@@ -119,7 +119,8 @@ theorem quadraticGradientFlow_equation (θ₀ τ : ℝ) :
       deriv (fun u : ℝ => θ₀ * Real.exp (-u)) τ =
         θ₀ * (-Real.exp (-τ)) := by
     have hexp : HasDerivAt (fun u : ℝ => Real.exp (-u)) (-Real.exp (-τ)) τ := by
-      simpa using (Real.hasDerivAt_exp (-τ)).comp τ (hasDerivAt_id τ).neg
+      simpa only [Function.comp_def, mul_neg_one] using
+        (Real.hasDerivAt_exp (-τ)).comp τ (hasDerivAt_id τ).neg
     simpa using hexp.const_mul θ₀ |>.deriv
   rw [h]
   ring

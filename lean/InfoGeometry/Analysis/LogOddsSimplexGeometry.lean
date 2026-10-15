@@ -35,22 +35,27 @@ theorem hasDerivAt_logit {p : ℝ} (hp : p ∈ Set.Ioo (0 : ℝ) 1) :
     HasDerivAt logit (1 / (p * (1 - p))) p := by
   have hp0 := hp.1.ne'
   have hq0 := (sub_pos.mpr hp.2).ne'
-  have hq := (hasDerivAt_const p (1 : ℝ)).sub (hasDerivAt_id p)
+  have hq : HasDerivAt (fun x => 1 - x) (0 - 1) p :=
+    (hasDerivAt_const p (1 : ℝ)).sub (hasDerivAt_id p)
   have hr := ((hasDerivAt_id p).div hq hq0).log (div_ne_zero hp0 hq0)
-  convert hr using 1
-  dsimp [logit]
-  field_simp
-  ring
+  have hderiv_eq : ((1 * (1 - p) - p * (0 - 1)) / (1 - p) ^ 2) / (p / (1 - p)) =
+      1 / (p * (1 - p)) := by
+    field_simp [hp0, hq0]
+    ring
+  exact hr.congr_deriv hderiv_eq
 
 theorem hasDerivAt_fisherMix {p : ℝ} (hp : p ∈ Set.Ioo (0 : ℝ) 1) :
     HasDerivAt fisherMix ((2 * p - 1) / (p * (1 - p)) ^ 2) p := by
   have hp0 := hp.1.ne'
   have hq0 := (sub_pos.mpr hp.2).ne'
-  have hprod := (hasDerivAt_id p).mul
-    ((hasDerivAt_const p (1 : ℝ)).sub (hasDerivAt_id p))
-  convert (hasDerivAt_const p (1 : ℝ)).div hprod (mul_ne_zero hp0 hq0) using 1
-  dsimp [fisherMix]
-  ring
+  have hq : HasDerivAt (fun x => 1 - x) (0 - 1) p :=
+    (hasDerivAt_const p (1 : ℝ)).sub (hasDerivAt_id p)
+  have hprod := (hasDerivAt_id p).mul hq
+  have hdiv := (hasDerivAt_const p (1 : ℝ)).div hprod (mul_ne_zero hp0 hq0)
+  have hderiv_eq : (0 * (p * (1 - p)) - 1 * (1 * (1 - p) + p * (0 - 1))) /
+      (p * (1 - p)) ^ 2 = (2 * p - 1) / (p * (1 - p)) ^ 2 := by
+    ring
+  exact hdiv.congr_deriv hderiv_eq
 
 /-- Scalar Levi-Civita coefficient computed from the actual metric derivative. -/
 theorem logOdds_connection {p : ℝ} (hp : p ∈ Set.Ioo (0 : ℝ) 1) :
@@ -73,10 +78,13 @@ theorem binary_amplitude_speed (p : ℝ → ℝ) (u t : ℝ)
     4 * ((deriv (fun s => Real.sqrt (p s)) t) ^ 2 +
       (deriv (fun s => Real.sqrt (1 - p s)) t) ^ 2) =
       fisherMix (p t) * u ^ 2 := by
-  have hq := (hasDerivAt_const t (1 : ℝ)).sub hd
+  have hq : HasDerivAt (fun s => 1 - p s) (-u) t := by
+    have hsub := (hasDerivAt_const t (1 : ℝ)).sub hd
+    rw [← zero_sub u]
+    exact hsub
   have hfirst := fisher_rao_madelung_deriv p u t hd hp.1
   have hsecond := fisher_rao_madelung_deriv (fun s => 1 - p s) (-u) t
-    (by simpa using hq) (sub_pos.mpr hp.2)
+    hq (sub_pos.mpr hp.2)
   have hp0 := hp.1.ne'
   have hq0 := (sub_pos.mpr hp.2).ne'
   calc
@@ -99,9 +107,11 @@ theorem hasDerivAt_trajectory (v ξ₀ t : ℝ) :
       (2 * v * trajectory v ξ₀ t * (1 - trajectory v ξ₀ t)) t := by
   have hin := (((hasDerivAt_id t).const_mul v).add_const ξ₀).const_mul 2
   have h := (hasDerivAt_logistic (2 * (v * t + ξ₀))).comp t hin
-  convert h using 1
-  simp only [trajectory]
-  ring
+  have hderiv_eq : logistic (2 * (v * t + ξ₀)) * (1 - logistic (2 * (v * t + ξ₀))) * (2 * (v * 1)) =
+      2 * v * trajectory v ξ₀ t * (1 - trajectory v ξ₀ t) := by
+    dsimp [trajectory]
+    ring
+  exact h.congr_deriv hderiv_eq
 
 theorem trajectory_acceleration (v ξ₀ t : ℝ) :
     deriv (deriv (trajectory v ξ₀)) t =

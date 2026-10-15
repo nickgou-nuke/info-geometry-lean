@@ -3,7 +3,7 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import Mathlib.Topology.Instances.Complex
 import Mathlib.Tactic
 
@@ -43,8 +43,7 @@ theorem hasDerivAt_yangYangLFunction (ε : ℝ) :
   have h_exp_pos : 0 < Real.exp (-ε) := Real.exp_pos _
   have h_den_pos : 0 < 1 + Real.exp (-ε) := by linarith
   have h_inner : HasDerivAt (fun x : ℝ => 1 + Real.exp (-x)) (- Real.exp (-ε)) ε := by
-    have h_neg_x : HasDerivAt (fun x : ℝ => -x) (-1) ε := by
-      simpa only [neg_one_mul] using (hasDerivAt_id ε).neg
+    have h_neg_x : HasDerivAt (fun x : ℝ => -x) (-1) ε := hasDerivAt_neg' ε
     have h_exp := HasDerivAt.exp h_neg_x
     have h_exp_eval : Real.exp (-ε) * -1 = - Real.exp (-ε) := by ring
     rw [h_exp_eval] at h_exp

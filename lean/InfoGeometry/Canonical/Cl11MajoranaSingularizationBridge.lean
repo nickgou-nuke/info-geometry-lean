@@ -40,9 +40,8 @@ theorem cl11KContinuous_eq_modular_j_comp_spectral_epsilon :
       (modular_j (E := E)).comp (spectral_epsilon (E := E)) := by
   apply ContinuousLinearMap.ext
   intro v
-  have h := congrArg (fun T => T v)
-    (cl11DoubledCore_K_eq_modular_j_comp_spectral_epsilon (E := E))
-  simpa [cl11KContinuous, ContinuousLinearMap.comp_apply] using h
+  exact LinearMap.congr_fun
+    (cl11DoubledCore_K_eq_modular_j_comp_spectral_epsilon (E := E)) v
 
 /-- If the certified logarithmic hook is the native Cl(1,1) Majorana
 operator, its regularized ambient generator is supported on `Preg` and

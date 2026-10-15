@@ -50,6 +50,9 @@ noncomputable instance : Algebra ℝ Limit :=
     induction x using DirectLimit.induction with
     | _ n x =>
         rw [realAlgebraMap_stage]
-        simpa using congrArg (ofStage n) (Algebra.commutes r x))
+        change ofStage n (algebraMap ℝ (Stage n) r) * ofStage n x =
+          ofStage n x * ofStage n (algebraMap ℝ (Stage n) r)
+        rw [← (ofStage n).map_mul, ← (ofStage n).map_mul]
+        exact congrArg (ofStage n) (Algebra.commutes r x))
 
 end InfoGeometry.Clifford.RealCantorOpLimit

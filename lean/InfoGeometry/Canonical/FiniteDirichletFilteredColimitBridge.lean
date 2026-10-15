@@ -63,7 +63,7 @@ theorem dirichletAppendZero_injective (n : ℕ) :
   have h' := congrArg (fun x : DirichletStage (n + 1) => x i.castSucc) h
   simpa using h'
 
-def dirichletStageFunctor : ℕ ⥤ ModuleCat ℂ :=
+abbrev dirichletStageFunctor : ℕ ⥤ ModuleCat ℂ :=
   Functor.ofSequence (fun n =>
     ModuleCat.ofHom (dirichletAppendZero n))
 
@@ -87,7 +87,7 @@ theorem finiteDirichletStageReadout_compatible (n : ℕ) (a : DirichletStage n) 
   simp [dirichletAppendZero_apply_castSucc,
     dirichletAppendZero_apply_finLast, Fin.val_castSucc, Fin.val_last]
 
-def dirichletReadoutTargetFunctor : ℕ ⥤ ModuleCat ℂ :=
+abbrev dirichletReadoutTargetFunctor : ℕ ⥤ ModuleCat ℂ :=
   (Functor.const ℕ).obj (ModuleCat.of ℂ DirichletTarget)
 
 def dirichletReadoutNatTrans :
@@ -96,11 +96,15 @@ def dirichletReadoutNatTrans :
     (fun n => ModuleCat.ofHom (finiteDirichletStageReadout n))
     (by
       intro n
+      rw [Functor.ofSequence_map_homOfLE_succ]
+      change ModuleCat.ofHom (dirichletAppendZero n) ≫
+          ModuleCat.ofHom (finiteDirichletStageReadout (n + 1)) =
+        ModuleCat.ofHom (finiteDirichletStageReadout n) ≫ 𝟙 _
+      rw [Category.comp_id, ← ModuleCat.ofHom_comp]
       apply ModuleCat.hom_ext
-      ext a
-      simpa [dirichletStageFunctor, dirichletReadoutTargetFunctor,
-        Functor.ofSequence_map_homOfLE_succ, ModuleCat.comp_apply] using
-        finiteDirichletStageReadout_compatible n a)
+      apply LinearMap.ext
+      intro a
+      exact finiteDirichletStageReadout_compatible n a)
 
 abbrev DirichletCoefficientColimit := colimit dirichletStageFunctor
 abbrev DirichletReadoutColimit := colimit dirichletReadoutTargetFunctor

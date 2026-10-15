@@ -25,9 +25,6 @@ theorem paper_operator_singular_boundary_fixedpoint_zeta_euler
       ∀ n k,
         singularBoundaryPrimitiveCoefficient K n k =
           (singularBoundaryEulerProduct K n).coeff k := by
-  rcases paper_ihara_witt_primitive_spectrum K with ⟨hExp, hEuler, hCoeff⟩
-  refine ⟨hExp.trans hEuler.symm, ?_⟩
-  intro n k
-  simpa [singularBoundaryPrimitiveCoefficient, singularBoundaryEulerProduct, hEuler] using hCoeff n k
+  exact ⟨rfl, fun n k => rfl⟩
 
 end Omega.Zeta

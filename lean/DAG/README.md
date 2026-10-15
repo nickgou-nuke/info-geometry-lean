@@ -1,3 +1,10 @@
+<!-- repository-context-rule -->
+> **Repository grounding:** For repository work, the checked-out codebase is
+> the context. Search existing implementation and trace its real definitions,
+> imports, instances, theorems, and uses before declaring a structure missing
+> or incorrect. A finding in one file is not a repo-wide finding. See
+> [`docs/REPO_DEEP_SEARCH_PROTOCOL.md`](docs/REPO_DEEP_SEARCH_PROTOCOL.md).
+
 # DAG Subsystem
 
 `lean/DAG/` is the Lean-side graph export layer for this repository.
@@ -62,7 +69,7 @@ It remains subordinate to Lean source:
 | `StructuralExport.lean` | `structural-topology.json` | SCC-level metadata: depth spread, dominators, root witnesses, layer membership |
 | `ProcessFlowExport.lean` | `process-flow/*.jsonl` | Rich v4 schema: 8 dependency roles, boundary/locality/polarity/defect classifications, `DerivationalRole`; writes the constitutive process-flow export consumed by downstream Python derivations |
 | `ExprArangoExport.lean` | `ig_nodes.jsonl`, `ig_edges.jsonl`, `metadata.json` | Expression-level Arango export (declarations + Expr DAG) with De Bruijn `bvar` annotations and explicit `bound_by` edges; tolerates unresolved binders by marking records as `quality="broken"` |
-| `BlockExport.lean` | block-level JSON | File slicing: `Block` (text span, produced decls, deps, spine tags, tactics, docstrings) with `ScopeFrame` nesting |
+| `BlockExport.lean` | block-level JSON and generated dependency quiver | File slicing: `Block` (text span, produced decls, deps, spine tags, tactics, docstrings) with `ScopeFrame` nesting; quiver output records block dependencies only and assigns no denotational semantics or theorem proofs |
 | `RepresentationDepthExport.lean` | `representation-depth-tags.json` | Lean-enforced depth grammar tags projected onto the declaration DAG |
 | `KernelEquivalenceExport.lean` | `lean-kernel-equivalence.jsonl` | Native certificate exporter for candidate declaration pairs; imports the requested module and promotes a pair only when `Lean.Meta.isDefEq` verifies the requested type/value mode |
 | `TripleSystem.lean` | — | Lean-native core definition of typed subject-predicate-object incidence systems and triple homomorphisms |

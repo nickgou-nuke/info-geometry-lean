@@ -35,16 +35,9 @@ noncomputable def repulsionDerivative (D : JensenDefectLogDerivativeData) (rho :
 theorem repulsionRadius_hasDerivAt (D : JensenDefectLogDerivativeData)
     {rho : ℝ} (hrho : 0 < rho) (hrho_lt : rho < 1) :
     HasDerivAt (fun t => repulsionRadius t (D.defect t)) (D.repulsionDerivative rho) rho := by
-  have hExp :
-      HasDerivAt (fun t => Real.exp (-D.defect t))
-        (Real.exp (-D.defect rho) * (-D.defectDerivative rho)) rho := by
-    simpa [mul_assoc, mul_left_comm, mul_comm] using
-      ((Real.hasDerivAt_exp (-D.defect rho)).comp rho ((D.defect_hasDerivAt hrho hrho_lt).neg))
-  have hProd :
-      HasDerivAt (fun t => t * Real.exp (-D.defect t))
-        (1 * Real.exp (-D.defect rho) +
-          rho * (Real.exp (-D.defect rho) * (-D.defectDerivative rho))) rho := by
-    simpa using (hasDerivAt_id rho).mul hExp
+  have hExp := ((D.defect_hasDerivAt hrho hrho_lt).neg).exp
+  have hProd := (hasDerivAt_id rho).mul hExp
+  dsimp only [id, Pi.neg_apply, Pi.mul_apply] at hProd
   have hFormula :
       1 * Real.exp (-D.defect rho) +
           rho * (Real.exp (-D.defect rho) * (-D.defectDerivative rho)) =
@@ -52,7 +45,7 @@ theorem repulsionRadius_hasDerivAt (D : JensenDefectLogDerivativeData)
     unfold repulsionDerivative
     ring
   rw [hFormula] at hProd
-  simpa [repulsionRadius] using hProd
+  exact hProd
 
 end JensenDefectLogDerivativeData
 

@@ -107,13 +107,11 @@ def TimeReversiblePositionRepresentation.ofFunctionRepresentation
     (by intro t; rfl)
     (by
       intro t
-      dsimp
       rw [← ρ.value_add (-t) t]
       rw [neg_add_cancel]
       exact ρ.value_zero)
     (by
       intro t
-      dsimp
       rw [← ρ.value_add t (-t)]
       rw [add_neg_cancel]
       exact ρ.value_zero)
@@ -285,12 +283,12 @@ noncomputable def ellipticRotor_timeReversibleRepresentation (θ : ℝ) :
     (by intro t; rfl)
     (by
       intro t
-      simpa [neg_add_cancel, ellipticRotor_zero θ] using
-        (ellipticRotor_add θ (-t) t).symm)
+      change ellipticRotor θ (-t) * ellipticRotor θ t = 1
+      rw [← ellipticRotor_add θ (-t) t, neg_add_cancel, ellipticRotor_zero])
     (by
       intro t
-      simpa [add_neg_cancel, ellipticRotor_zero θ] using
-        (ellipticRotor_add θ t (-t)).symm)
+      change ellipticRotor θ t * ellipticRotor θ (-t) = 1
+      rw [← ellipticRotor_add θ t (-t), add_neg_cancel, ellipticRotor_zero])
 
 noncomputable def hyperbolicRotor_timeReversibleRepresentation (θ : ℝ) :
     TimeReversiblePositionRepresentation
@@ -301,12 +299,12 @@ noncomputable def hyperbolicRotor_timeReversibleRepresentation (θ : ℝ) :
     (by intro t; rfl)
     (by
       intro t
-      simpa [neg_add_cancel, hyperbolicRotor_zero θ] using
-        (hyperbolicRotor_add θ (-t) t).symm)
+      change hyperbolicRotor θ (-t) * hyperbolicRotor θ t = 1
+      rw [← hyperbolicRotor_add θ (-t) t, neg_add_cancel, hyperbolicRotor_zero])
     (by
       intro t
-      simpa [add_neg_cancel, hyperbolicRotor_zero θ] using
-        (hyperbolicRotor_add θ t (-t)).symm)
+      change hyperbolicRotor θ t * hyperbolicRotor θ (-t) = 1
+      rw [← hyperbolicRotor_add θ t (-t), add_neg_cancel, hyperbolicRotor_zero])
 
 theorem expJordanCell_add (Δ s t : ℝ) :
     expJordanCell (s + t) Δ = expJordanCell s Δ * expJordanCell t Δ := by

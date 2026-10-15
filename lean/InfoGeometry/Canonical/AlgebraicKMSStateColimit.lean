@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.CuntzMatrixCompatibleStateNet
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Canonical.CuntzMatrixTowerGeneratorCompatibility
 import Mathlib.Algebra.Ring.Action.ConjAct
 
 /-!
@@ -155,9 +156,8 @@ theorem densityCompatible_stageInjection
       have hstep :
           stageInjection (n + 1) (concreteStep n (D n)) =
             stageInjection n (D n) := by
-        simpa [concreteMap, map_succ, map_id] using
-          (stageInjection_concrete_transition
-            (Nat.le.step (le_refl n)) (D n))
+        rw [← concreteMap_succ_step n]
+        exact stageInjection_concrete_transition (Nat.le_succ n) (D n)
       exact hstep.trans (densityCompatible_stageInjection D hD n)
 
 /-- An invertible initial density gives the corresponding primary colimit

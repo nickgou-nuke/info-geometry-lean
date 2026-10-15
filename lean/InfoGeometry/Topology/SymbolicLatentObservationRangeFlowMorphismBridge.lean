@@ -32,7 +32,6 @@ theorem symbolicObservationQuotientCompHausHomOfMorphism_eq_flow
       Φ.toQuotientCompHausHom h_flow t := by
   apply ConcreteCategory.hom_ext
   intro q
-  rw [symbolicObservationQuotientCompHausHomOfMorphism_apply]
   change F.quotientMap q =
     descendedSymbolicLatentObservationFlow Φ t q
   exact hF q

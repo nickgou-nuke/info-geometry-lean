@@ -112,10 +112,18 @@ theorem nilpotent_is_lightlike (X : RealPauliOp) :
   intro h
   have hsq : toSplitQuaternion X * toSplitQuaternion X = 0 := by
     apply SplitQuaternion.ext
-    · simpa [RealPauliOp_mul, toSplitQuaternion, fromSplitQuaternion] using congrArg RealPauliOp.t h
-    · simpa [RealPauliOp_mul, toSplitQuaternion, fromSplitQuaternion] using congrArg RealPauliOp.y h
-    · simpa [RealPauliOp_mul, toSplitQuaternion, fromSplitQuaternion] using congrArg RealPauliOp.x h
-    · simpa [RealPauliOp_mul, toSplitQuaternion, fromSplitQuaternion] using congrArg RealPauliOp.z h
+    · change (toSplitQuaternion X * toSplitQuaternion X).w = 0
+      simpa [RealPauliOp_mul, toSplitQuaternion, fromSplitQuaternion] using
+        congrArg RealPauliOp.t h
+    · change (toSplitQuaternion X * toSplitQuaternion X).x = 0
+      simpa [RealPauliOp_mul, toSplitQuaternion, fromSplitQuaternion] using
+        congrArg RealPauliOp.y h
+    · change (toSplitQuaternion X * toSplitQuaternion X).y = 0
+      simpa [RealPauliOp_mul, toSplitQuaternion, fromSplitQuaternion] using
+        congrArg RealPauliOp.x h
+    · change (toSplitQuaternion X * toSplitQuaternion X).z = 0
+      simpa [RealPauliOp_mul, toSplitQuaternion, fromSplitQuaternion] using
+        congrArg RealPauliOp.z h
   have hmul := InfoGeometry.Clifford.norm_mul (toSplitQuaternion X) (toSplitQuaternion X)
   rw [hsq] at hmul
   have hzero : InfoGeometry.Clifford.norm (0 : SplitQuaternion) = 0 := by

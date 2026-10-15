@@ -1,5 +1,5 @@
-import Mathlib.Data.Real.Basic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Basic.Real.Basic
+import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Tactic
@@ -87,13 +87,17 @@ theorem fibonacci_f_matrix_involutive {F : Type*} [CommRing F] (a b : F) (h_norm
     fibonacciFMatrix a b * fibonacciFMatrix a b = 1 := by
   ext i j
   fin_cases i <;> fin_cases j
-  · simp [fibonacciFMatrix, mul_apply, Fin.sum_univ_two]
+  · rw [Matrix.mul_apply, Fin.sum_univ_two, Matrix.one_apply]
+    dsimp [fibonacciFMatrix]
     linear_combination h_norm
-  · simp [fibonacciFMatrix, mul_apply, Fin.sum_univ_two]
+  · rw [Matrix.mul_apply, Fin.sum_univ_two, Matrix.one_apply]
+    dsimp [fibonacciFMatrix]
     ring
-  · simp [fibonacciFMatrix, mul_apply, Fin.sum_univ_two]
+  · rw [Matrix.mul_apply, Fin.sum_univ_two, Matrix.one_apply]
+    dsimp [fibonacciFMatrix]
     ring
-  · simp [fibonacciFMatrix, mul_apply, Fin.sum_univ_two]
+  · rw [Matrix.mul_apply, Fin.sum_univ_two, Matrix.one_apply]
+    dsimp [fibonacciFMatrix]
     linear_combination h_norm
 
 /-! ### 3. B₃ Braid Group Artin Relations -/
@@ -119,7 +123,10 @@ theorem artin_braid_relation_involutive {F : Type*} [CommRing F] :
     (braidGen1 : Matrix (Fin 2) (Fin 2) F) * braidGen2 * braidGen1 =
     braidGen2 * braidGen1 * braidGen2 := by
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [braidGen1, braidGen2, mul_apply, Fin.sum_univ_two]
+  fin_cases i <;> fin_cases j <;>
+    { repeat rw [Matrix.mul_apply, Fin.sum_univ_two]
+      dsimp [braidGen1, braidGen2]
+      ring }
 
 /-! ### 4. Primon Adelic Surprisal Twist -/
 

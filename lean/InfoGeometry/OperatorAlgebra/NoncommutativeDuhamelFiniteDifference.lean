@@ -63,10 +63,7 @@ theorem hasDerivAt_duhamelBridgePath
     HasDerivAt (duhamelBridgePath a h r)
       (r • duhamelFiniteDifferenceIntegrand a h r s) s := by
   letI : NormedAlgebra ℚ A := NormedAlgebra.restrictScalars ℚ ℝ A
-  have hu : HasDerivAt (fun x : ℝ => 1 - x) (-1) s := by
-    convert
-      (hasDerivAt_const (x := s) (1 : ℝ)).sub
-        (hasDerivAt_id (x := s)) using 1 <;> norm_num
+  have hu := (hasDerivAt_const s (1 : ℝ)).sub (hasDerivAt_id s)
   have hleft0 :
       HasDerivAt
         (fun u : ℝ => NormedSpace.exp (u • a))
@@ -82,20 +79,13 @@ theorem hasDerivAt_duhamelBridgePath
         (fun x : ℝ => NormedSpace.exp (x • (a + r • h)))
         ((a + r • h) * NormedSpace.exp (s • (a + r • h))) s :=
     (hasStrictDerivAt_exp_smul_const' (a + r • h) s).hasDerivAt
-  have hprod :=
-    (ContinuousLinearMap.mul ℝ A).hasDerivAt_of_bilinear hleft hright
-  change HasDerivAt
-    (fun x : ℝ =>
-      NormedSpace.exp ((1 - x) • a) *
-        NormedSpace.exp (x • (a + r • h))) _ s
-  convert hprod using 1
-  · change r • duhamelFiniteDifferenceIntegrand a h r s =
-      NormedSpace.exp ((1 - s) • a) *
-          ((a + r • h) * NormedSpace.exp (s • (a + r • h))) +
-        (-(NormedSpace.exp ((1 - s) • a) * a)) *
-          NormedSpace.exp (s • (a + r • h))
-    unfold duhamelFiniteDifferenceIntegrand
-    symm
+  have h_deriv_eq :
+      (-(NormedSpace.exp ((1 - s) • a) * a)) *
+          NormedSpace.exp (s • (a + r • h)) +
+        NormedSpace.exp ((1 - s) • a) *
+          ((a + r • h) * NormedSpace.exp (s • (a + r • h))) =
+      r • duhamelFiniteDifferenceIntegrand a h r s := by
+    rw [add_comm]
     calc
       NormedSpace.exp ((1 - s) • a) *
             ((a + r • h) * NormedSpace.exp (s • (a + r • h))) +
@@ -124,6 +114,10 @@ theorem hasDerivAt_duhamelBridgePath
           (NormedSpace.exp ((1 - s) • a) * h *
             NormedSpace.exp (s • (a + r • h))) := by
           simp only [mul_assoc, mul_smul_comm, smul_mul_assoc]
+  have hprod := hleft.mul hright
+  change HasDerivAt (duhamelBridgePath a h r) _ s at hprod
+  rw [h_deriv_eq] at hprod
+  exact hprod
 
 /-- The scaled insertion kernel is continuous in the path parameter. -/
 theorem continuous_duhamelFiniteDifferenceIntegrand_s

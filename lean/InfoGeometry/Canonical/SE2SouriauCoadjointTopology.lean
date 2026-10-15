@@ -1,5 +1,4 @@
 import InfoGeometry.Canonical.SE2SouriauCoadjointOrbit
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SE2SouriauNoncompact
 import InfoGeometry.Canonical.SE2SouriauCompactOrbit
 import Mathlib.GroupTheory.QuotientGroup.Basic
@@ -287,9 +286,7 @@ theorem casimirFiberCylinderParam_injective_of_pos
   have hj : p.1 = q.1 := by
     have hcoord := congrArg
       (fun w : CasimirFiberCarrier r => w.1.1) hpq
-    simpa [casimirFiberCylinderParam, coadjointRotationRepresentative,
-      rotationMomentumAction, momentumRotationFiber,
-      momentumRotationCoordinates] using hcoord
+    exact hcoord
   have hrep : coadjointRotationRepresentative (le_of_lt hr) p.1 =
       coadjointRotationRepresentative (le_of_lt hr) q.1 := by
     rw [hj]
@@ -422,8 +419,7 @@ theorem se2CarrierRotationProjection_surjective :
 
 theorem isOpenMap_se2CarrierRotationProjection :
     IsOpenMap se2CarrierRotationProjection := by
-  simpa only [se2CarrierRotationProjection, Function.comp_apply] using
-    isOpenMap_fst.comp se2CarrierProductHomeomorph.isOpenMap
+  exact isOpenMap_fst.comp se2CarrierProductHomeomorph.isOpenMap
 
 theorem isQuotientMap_se2CarrierRotationProjection :
     Topology.IsQuotientMap se2CarrierRotationProjection := by
@@ -535,9 +531,8 @@ theorem isEmbedding_se2CarrierOrbitQuotientMap_of_pos
 theorem isQuotientMap_se2CarrierOrbitQuotientMap_of_pos
     {r : ℝ} (hr : 0 < r) (q : CasimirFiberCarrier r) :
     Topology.IsQuotientMap (se2CarrierOrbitQuotientMap q) := by
-  simpa only [se2CarrierOrbitQuotientMap, Function.comp_apply] using
-    (rotationOrbitCarrierHomeomorph q).isQuotientMap.comp
-      (isQuotientMap_rotationOrbitMapCarrier_of_pos hr q)
+  exact (rotationOrbitCarrierHomeomorph q).isQuotientMap.comp
+    (isQuotientMap_rotationOrbitMapCarrier_of_pos hr q)
 
 noncomputable def se2CarrierOrbitQuotientSection_of_pos
     {r : ℝ} (hr : 0 < r) (q : CasimirFiberCarrier r) :
@@ -574,9 +569,8 @@ theorem se2CarrierOrbitQuotientSection_rightInverse_of_pos
 theorem isProperMap_se2CarrierOrbitQuotientMap
     {r : ℝ} (q : CasimirFiberCarrier r) :
     IsProperMap (se2CarrierOrbitQuotientMap q) := by
-  simpa only [se2CarrierOrbitQuotientMap, Function.comp_apply] using
-    (rotationOrbitCarrierHomeomorph q).isProperMap.comp
-      (isProperMap_rotationOrbitMapCarrier q)
+  exact (rotationOrbitCarrierHomeomorph q).isProperMap.comp
+    (isProperMap_rotationOrbitMapCarrier q)
 
 theorem continuous_se2CarrierOrbitQuotientMap
     {r : ℝ} (q : CasimirFiberCarrier r) :
@@ -609,9 +603,8 @@ theorem isOpenMap_rotationOrbitMapCarrier_of_pos
 theorem isOpenMap_se2CarrierOrbitQuotientMap_of_pos
     {r : ℝ} (hr : 0 < r) (q : CasimirFiberCarrier r) :
     IsOpenMap (se2CarrierOrbitQuotientMap q) := by
-  simpa only [se2CarrierOrbitQuotientMap, Function.comp_apply] using
-    (rotationOrbitCarrierHomeomorph q).isOpenMap.comp
-      (isOpenMap_rotationOrbitMapCarrier_of_pos hr q)
+  exact (rotationOrbitCarrierHomeomorph q).isOpenMap.comp
+    (isOpenMap_rotationOrbitMapCarrier_of_pos hr q)
 
 theorem isOpenQuotientMap_se2CarrierOrbitQuotientMap_of_pos
     {r : ℝ} (hr : 0 < r) (q : CasimirFiberCarrier r) :
@@ -807,8 +800,7 @@ theorem continuous_se2CarrierOrbitCarrierAction
   have hmap : Continuous (fun p : MatrixSE2Carrier × SE2CarrierOrbitCarrier q =>
       (p.1, p.2.1)) := by
     fun_prop
-  simpa only [Function.comp_apply] using
-    continuous_se2CarrierMomentumAction.comp hmap
+  exact continuous_se2CarrierMomentumAction.comp hmap
 
 instance {r : ℝ} (q : CasimirFiberCarrier r) :
     ContinuousSMul MatrixSE2Carrier (SE2CarrierOrbitCarrier q) where
@@ -957,9 +949,11 @@ theorem continuous_se2CarrierTranslationQuotientEquiv :
       (QuotientGroup.mk : MatrixSE2Carrier → se2CarrierTranslationQuotient) :=
     QuotientGroup.isQuotientMap_mk _
   apply hq.continuous_iff.mpr
-  simpa only [Function.comp_apply,
-    se2CarrierTranslationQuotientEquiv_mk] using
-    continuous_se2CarrierRotationProjection
+  have hcomp : (se2CarrierTranslationQuotientEquiv ∘ QuotientGroup.mk) = se2CarrierRotationProjection := by
+    funext g
+    exact se2CarrierTranslationQuotientEquiv_mk g
+  rw [hcomp]
+  exact continuous_se2CarrierRotationProjection
 
 theorem se2CarrierTranslationQuotientEquiv_symm_eq_lift :
     (se2CarrierTranslationQuotientEquiv.symm :
@@ -1040,10 +1034,8 @@ theorem se2CarrierTranslationSlice_range_eq_kernel :
     have hc := congrArg (fun x : RotationCarrier => x.1.1) hg
     have hs := congrArg (fun x : RotationCarrier => x.1.2) hg
     ext
-    · simpa [se2CarrierRotationProjection, se2CarrierProductHomeomorph,
-        se2CarrierTranslationSlice] using hc.symm
-    · simpa [se2CarrierRotationProjection, se2CarrierProductHomeomorph,
-        se2CarrierTranslationSlice] using hs.symm
+    · exact hc.symm
+    · exact hs.symm
     · rfl
     · rfl
 
@@ -1673,9 +1665,9 @@ theorem se2CarrierTranslationQuotientOrbitEquivariantTopologicalEquiv_symm_trans
       (EquivariantTopologicalEquiv.symm
         (se2CarrierTranslationQuotientOrbitEquivariantTopologicalEquiv_of_pos hr q))
       (se2CarrierTranslationQuotientOrbitEquivariantTopologicalEquiv_of_pos hr q)).forward w = w := by
-  simpa [EquivariantTopologicalEquiv.trans_forward_apply,
-    EquivariantTopologicalEquiv.symm_forward_apply] using
-    se2CarrierTranslationQuotientOrbitActionHom_inv_right_of_pos hr q w
+  rw [EquivariantTopologicalEquiv.trans_forward_apply,
+    EquivariantTopologicalEquiv.symm_forward_apply]
+  exact se2CarrierTranslationQuotientOrbitActionHom_inv_right_of_pos hr q w
 
 theorem se2CarrierTranslationQuotientOrbitEquivariantTopologicalEquiv_trans_symm
     {r : ℝ} (hr : 0 < r) (q : CasimirFiberCarrier r)
@@ -1684,9 +1676,9 @@ theorem se2CarrierTranslationQuotientOrbitEquivariantTopologicalEquiv_trans_symm
       (se2CarrierTranslationQuotientOrbitEquivariantTopologicalEquiv_of_pos hr q)
       (EquivariantTopologicalEquiv.symm
         (se2CarrierTranslationQuotientOrbitEquivariantTopologicalEquiv_of_pos hr q))).forward a = a := by
-  simpa [EquivariantTopologicalEquiv.trans_forward_apply,
-    EquivariantTopologicalEquiv.symm_forward_apply] using
-    se2CarrierTranslationQuotientOrbitActionHom_inv_left_of_pos hr q a
+  rw [EquivariantTopologicalEquiv.trans_forward_apply,
+    EquivariantTopologicalEquiv.symm_forward_apply]
+  exact se2CarrierTranslationQuotientOrbitActionHom_inv_left_of_pos hr q a
 
 theorem se2CarrierTranslationQuotientOrbitEquivariantTopologicalEquiv_symm_trans_eq_refl
     {r : ℝ} (hr : 0 < r) (q : CasimirFiberCarrier r) :

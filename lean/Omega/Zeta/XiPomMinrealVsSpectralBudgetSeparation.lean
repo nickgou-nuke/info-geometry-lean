@@ -69,7 +69,7 @@ theorem paper_xi_pom_minreal_vs_spectral_budget_separation
                   (r := (((a₂ - a₁ : ℤ) : ℚ) ^ 2)) (neg_ne_zero.mpr hHq) (pow_ne_zero 2 hgap)
       _ = padicValRat p (hankel2 ω₁ ω₂ a₁ a₂ : ℚ) +
             (2 : ℤ) * padicValRat p ((a₂ - a₁ : ℤ) : ℚ) := by
-              rw [padicValRat.neg, padicValRat.pow hgap]
+              rw [padicValRat.neg, padicValRat.pow (((a₂ - a₁ : ℤ) : ℚ))]
               norm_num
   refine ⟨hankel2_vandermonde_square ω₁ ω₂ a₁ a₂, hspectral, ?_⟩
   rw [xiPomCollisionImpliesStrictSeparation]

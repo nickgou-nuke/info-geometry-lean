@@ -85,17 +85,16 @@ theorem braid_rel_holds (h1 : first_rw_closure reversing_rels a b) :
       rw [← FreeGroup.mul_mk, ← FreeGroup.mul_mk, ← FreeGroup.mul_mk, ← FreeGroup.mul_mk,
         QuotientGroup.mk_mul, QuotientGroup.mk_mul, QuotientGroup.mk_mul, QuotientGroup.mk_mul,
         mul_left_inj, mul_right_inj]
-      let A : PresentedGroup braid_rels_inf := QuotientGroup.mk (FreeGroup.of c)
-      let B : PresentedGroup braid_rels_inf := QuotientGroup.mk (FreeGroup.of d)
+      let A : PresentedGroup braid_rels_inf := PresentedGroup.of c
+      let B : PresentedGroup braid_rels_inf := PresentedGroup.of d
       change A⁻¹ * B = B * A * B⁻¹ * A⁻¹
       have hb : A * B * A = B * A * B := by
         dsimp [A, B]
         rcases Nat.dist_eq_one j with hc | hd
         · subst c
-          symm
-          simpa [Braid.σi, mul_assoc] using (braid_group_inf.braid d)
+          exact (braid_group_inf.braid d).symm
         · subst d
-          simpa [Braid.σi, mul_assoc] using (braid_group_inf.braid c)
+          exact braid_group_inf.braid c
       have hcong := congrArg (fun x : PresentedGroup braid_rels_inf => A⁻¹ * x * B⁻¹ * A⁻¹) hb
       group at hcong ⊢
       exact hcong.symm
@@ -103,25 +102,24 @@ theorem braid_rel_holds (h1 : first_rw_closure reversing_rels a b) :
     rw [← FreeGroup.mul_mk, ← FreeGroup.mul_mk, ← FreeGroup.mul_mk, ← FreeGroup.mul_mk,
       QuotientGroup.mk_mul, QuotientGroup.mk_mul, QuotientGroup.mk_mul, QuotientGroup.mk_mul,
       mul_left_inj, mul_right_inj]
-    let E : PresentedGroup braid_rels_inf := QuotientGroup.mk (FreeGroup.of e)
-    let G : PresentedGroup braid_rels_inf := QuotientGroup.mk (FreeGroup.of g)
+    let E : PresentedGroup braid_rels_inf := PresentedGroup.of e
+    let G : PresentedGroup braid_rels_inf := PresentedGroup.of g
     change E⁻¹ * G = G * E⁻¹
     have hc : E * G = G * E := by
       dsimp [E, G]
       rcases or_dist_iff.mp j with heg | hge
-      · simpa [Braid.σi] using (braid_group_inf.comm heg)
-      · symm
-        simpa [Braid.σi] using (braid_group_inf.comm hge)
+      · exact braid_group_inf.comm heg
+      · exact (braid_group_inf.comm hge).symm
     have hcong := congrArg (fun x : PresentedGroup braid_rels_inf => E⁻¹ * x * E⁻¹) hc
     group at hcong ⊢
     exact hcong.symm
   | trans _ _ h1 h2 => exact h1.trans h2
 
 theorem grid_to_rev' (h : grid a b c d) : second_rw_closure reversing_rels'
-    (FreeMonoid.lift (fun x => FreeMonoid.of (x, false)) (FreeMonoid'.reverse a) *
-    FreeMonoid.lift (fun x => FreeMonoid.of (x, true)) b)
-    (FreeMonoid.lift (fun x => FreeMonoid.of (x, true)) d *
-    FreeMonoid.lift (fun x => FreeMonoid.of (x, false)) (FreeMonoid'.reverse c)) := by
+    (FreeMonoid'.lift (fun x => FreeMonoid.of (x, false)) (FreeMonoid'.reverse a) *
+    FreeMonoid'.lift (fun x => FreeMonoid.of (x, true)) b)
+    (FreeMonoid'.lift (fun x => FreeMonoid.of (x, true)) d *
+    FreeMonoid'.lift (fun x => FreeMonoid.of (x, false)) (FreeMonoid'.reverse c)) := by
   induction h with
   | empty => exact second_rw_closure.refl _
   | top_bottom i => exact second_rw_closure.refl _
@@ -144,10 +142,10 @@ theorem grid_to_rev' (h : grid a b c d) : second_rw_closure reversing_rels'
 
 theorem exists_rev'_from_grid_existence (a b : FreeMonoid' ℕ) :
     ∃ c d, second_rw_closure reversing_rels'
-    (FreeMonoid.lift (fun x => FreeMonoid.of (x, false)) (FreeMonoid'.reverse a) *
-    FreeMonoid.lift (fun x => FreeMonoid.of (x, true)) b)
-    (FreeMonoid.lift (fun x => FreeMonoid.of (x, true)) d *
-    FreeMonoid.lift (fun x => FreeMonoid.of (x, false)) (FreeMonoid'.reverse c)) := by
+    (FreeMonoid'.lift (fun x => FreeMonoid.of (x, false)) (FreeMonoid'.reverse a) *
+    FreeMonoid'.lift (fun x => FreeMonoid.of (x, true)) b)
+    (FreeMonoid'.lift (fun x => FreeMonoid.of (x, true)) d *
+    FreeMonoid'.lift (fun x => FreeMonoid.of (x, false)) (FreeMonoid'.reverse c)) := by
   rcases existence a b with ⟨c, d, hgrid⟩
   exact ⟨c, d, grid_to_rev' hgrid⟩
 
@@ -167,8 +165,8 @@ exist by `existence`, and grid outputs are unique by `unicity`.
 
 theorem reversing_path_between_grid_outputs {a b c d : FreeMonoid' ℕ} (h : grid a b c d) :
     second_rw_closure reversing_rels'
-    (FreeMonoid.lift (fun x => FreeMonoid.of (x, false)) (FreeMonoid'.reverse a) *
-    FreeMonoid.lift (fun x => FreeMonoid.of (x, true)) b)
-    (FreeMonoid.lift (fun x => FreeMonoid.of (x, true)) d *
-    FreeMonoid.lift (fun x => FreeMonoid.of (x, false)) (FreeMonoid'.reverse c)) :=
+    (FreeMonoid'.lift (fun x => FreeMonoid.of (x, false)) (FreeMonoid'.reverse a) *
+    FreeMonoid'.lift (fun x => FreeMonoid.of (x, true)) b)
+    (FreeMonoid'.lift (fun x => FreeMonoid.of (x, true)) d *
+    FreeMonoid'.lift (fun x => FreeMonoid.of (x, false)) (FreeMonoid'.reverse c)) :=
   grid_to_rev' h

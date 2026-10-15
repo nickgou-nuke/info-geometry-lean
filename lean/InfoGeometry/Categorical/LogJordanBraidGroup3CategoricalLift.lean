@@ -76,12 +76,21 @@ theorem standardCategorical_artin :
         standardCategoricalSigmaOne =
       standardCategoricalSigmaTwo ≫ standardCategoricalSigmaOne ≫
         standardCategoricalSigmaTwo := by
-  letI : BraidedCategory (LogNilpotentModule ℂ) := ambientBraidedCategory
-  simpa [standardCategoricalSigmaOne, standardCategoricalSigmaTwo,
-    standardSymmetricSigmaOne, standardSymmetricSigmaTwo,
-    LogNilpotentModule.hom_comp] using
-    (congrArg (fun e => e.hom)
-      (CategoryTheory.BraidedCategory.yang_baxter_iso
-        standardJordanObject standardJordanObject standardJordanObject))
+  apply LogEndModule.Hom.ext
+  change
+    ((logCheckedR12 standardJordanObject standardJordanObject_sq_zero
+          logShearBase).toLinearMap.comp
+        (logCheckedR23 standardJordanObject standardJordanObject_sq_zero
+          logShearBase).toLinearMap).comp
+        (logCheckedR12 standardJordanObject standardJordanObject_sq_zero
+          logShearBase).toLinearMap =
+      ((logCheckedR23 standardJordanObject standardJordanObject_sq_zero
+            logShearBase).toLinearMap.comp
+          (logCheckedR12 standardJordanObject standardJordanObject_sq_zero
+            logShearBase).toLinearMap).comp
+        (logCheckedR23 standardJordanObject standardJordanObject_sq_zero
+          logShearBase).toLinearMap
+  simpa only [LinearMap.comp_assoc] using
+    standard_logCheckedR_yangBaxter
 
 end InfoGeometry.Categorical.LogJordanBraidGroup3CategoricalLift

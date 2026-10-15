@@ -80,6 +80,8 @@ theorem modular_comp_parity_eq_neg_complexI
 theorem parity_modular_anticommutator_eq_zero
     (M : SuperchargeMultiplet (E := E)) :
     RealMajoranaCategory.anticommutator M.parity.Q M.modular.Q.toLinearMap = 0 := by
+  dsimp [RealMajoranaCategory.anticommutator]
+  rw [M.parity_eq_modularJ, M.modular_eq_epsilon]
   ext v
   have hAnti :
       (modular_j (E := E)) ((spectral_epsilon (E := E)) v)
@@ -87,7 +89,6 @@ theorem parity_modular_anticommutator_eq_zero
       -((spectral_epsilon (E := E)) ((modular_j (E := E)) v)) := by
     exact congrArg (fun T : H₂ →L[ℝ] H₂ => T v)
       (modular_j_spectral_epsilon_anticommute (E := E))
-  rw [RealMajoranaCategory.anticommutator, M.parity_eq_modularJ, M.modular_eq_epsilon]
   change modular_j (spectral_epsilon v) + spectral_epsilon (modular_j v) = 0
   rw [hAnti]
   simp

@@ -68,16 +68,16 @@ variable {H G : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
     (q k : H) (g h : G) :
     KreinSpace.kreinInner (R.action g q) (R.action h k) =
       KreinSpace.kreinInner q (R.action (g⁻¹ * h) k) := by
-  have hfactor : g * (g⁻¹ * h) = h := by simp
-  have haction : R.action h k =
-      R.action g (R.action (g⁻¹ * h) k) := by
-    calc
-      R.action h k = R.action (g * (g⁻¹ * h)) k := by rw [hfactor]
-      _ = R.action g (R.action (g⁻¹ * h) k) := by
-        rw [R.action_mul]
-        rfl
-  rw [haction]
-  exact R.krein_isometry g q (R.action (g⁻¹ * h) k)
+    have hfactor : g * (g⁻¹ * h) = h := by simp
+    have haction : R.action h k =
+        R.action g (R.action (g⁻¹ * h) k) := by
+      calc
+        R.action h k = R.action (g * (g⁻¹ * h)) k := by rw [hfactor]
+        _ = R.action g (R.action (g⁻¹ * h) k) := by
+          rw [R.action_mul]
+          rfl
+    rw [haction]
+    exact R.krein_isometry g q (R.action (g⁻¹ * h) k)
 
 theorem adjoint_score (R : KreinGroupRepresentation H G)
     (q k : H) (g : G) :

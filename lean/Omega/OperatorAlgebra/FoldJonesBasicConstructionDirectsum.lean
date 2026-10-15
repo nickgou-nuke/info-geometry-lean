@@ -1,5 +1,5 @@
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import Mathlib.Data.Matrix.Basis
 import Mathlib.LinearAlgebra.Matrix.ConjTranspose
 import Mathlib.Tactic
@@ -79,26 +79,9 @@ omit [Fintype X] in
 lemma sum_diagonal_fiberMatrixUnit (fold : Ω → X) (x : X) :
     (∑ ω : foldFiber fold x, fiberMatrixUnit fold x ω ω) =
       (1 : Matrix (foldFiber fold x) (foldFiber fold x) ℂ) := by
-  ext i j
-  rw [Matrix.one_apply, Fintype.sum_apply, Fintype.sum_apply]
-  by_cases h : i = j
-  · subst h
-    rw [if_pos rfl, Finset.sum_eq_single i]
-    · simp [fiberMatrixUnit, Matrix.single]
-    · intro b _ hbi
-      simp [fiberMatrixUnit, Matrix.single, hbi]
-    · intro hi
-      exact False.elim (hi (Finset.mem_univ i))
-  · rw [if_neg h]
-    refine Finset.sum_eq_zero ?_
-    intro b hb
-    by_cases hbi : b = i
-    · have hbj : b ≠ j := by
-        intro hbj
-        exact h (hbi.symm.trans hbj)
-      have hij : i ≠ j := h
-      simp [fiberMatrixUnit, Matrix.single, hbi, hij]
-    · simp [fiberMatrixUnit, Matrix.single, hbi]
+  simpa [fiberMatrixUnit] using
+    (Matrix.sum_single_one :
+      (∑ ω : foldFiber fold x, Matrix.single ω ω (1 : ℂ)) = 1)
 
 /-- Paper-facing finite-dimensional Jones basic construction package: the fold basis decomposes as
 a direct sum of fiber blocks, each block carries canonical matrix units, and the diagonal matrix

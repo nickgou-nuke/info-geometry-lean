@@ -1,5 +1,5 @@
 import Mathlib.Analysis.Analytic.Constructions
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import Mathlib.Tactic
 import Omega.SyncKernelWeighted.RealInput40PrimedirichletDenseBranch
 
@@ -41,9 +41,14 @@ theorem paper_primedirichlet_branch_inherit : primedirichlet_branch_inherit_stat
   refine ⟨⟨hsum, hDense, hNearAxis⟩, ?_⟩
   intro p hp
   refine ⟨?_, ?_⟩
-  · simpa [primedirichlet_branch_inherit_remainder] using
-      (analyticAt_id.add analyticAt_const :
-        AnalyticAt ℝ (fun σ : ℝ => σ + Real.log (p : ℝ)) 0)
+  · have h : AnalyticAt ℝ (fun σ : ℝ => σ + Real.log (p : ℝ)) 0 := by
+      -- The sum of analytic functions is analytic
+      have h₁ : AnalyticAt ℝ (fun σ : ℝ => (σ : ℝ)) 0 := analyticAt_id
+      have h₂ : AnalyticAt ℝ (fun σ : ℝ => Real.log (p : ℝ)) 0 := analyticAt_const
+      exact AnalyticAt.add h₁ h₂
+    convert h using 1
+    <;> funext σ
+    <;> simp [primedirichlet_branch_inherit_remainder]
   · intro t ε hε
     have htClosure : t ∈ closure realInput40DenseBranchHeights := hDense t
     rcases Metric.mem_closure_iff.1 htClosure ε hε with ⟨y, hy, hyε⟩

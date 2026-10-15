@@ -40,6 +40,8 @@ def modularS : SL2R :=
 /-- The modular `S` lift squares to the central element `-I`. -/
 theorem modularS_sq :
     modularS * modularS = negIdSL2R := by
+  apply Subtype.ext
+  change modularS.1 * modularS.1 = negIdSL2R.1
   ext i j
   fin_cases i <;> fin_cases j <;>
     norm_num [modularS, negIdSL2R, Matrix.mul_apply]
@@ -80,9 +82,12 @@ theorem modularS_smul_unitImaginary :
   have h :
       toRealUpperHalfPlane (modularS • unitImaginary) =
         toRealUpperHalfPlane unitImaginary := by
+    rw [toRealUpperHalfPlane_smul]
+    change RealUpperHalfPlane.moebius modularS
+      (toRealUpperHalfPlane unitImaginary) = toRealUpperHalfPlane unitImaginary
     ext <;>
-      simp [unitImaginary, PositiveSouriauTemperature.temp, modularS, smul_def, ofRealUpperHalfPlane,
-        toRealUpperHalfPlane, RealUpperHalfPlane.smul_def,
+      norm_num [unitImaginary, toRealUpperHalfPlane,
+        PositiveSouriauTemperature.temp, Complex.I, modularS,
         RealUpperHalfPlane.moebius, RealUpperHalfPlane.a,
         RealUpperHalfPlane.b, RealUpperHalfPlane.c, RealUpperHalfPlane.d,
         RealUpperHalfPlane.denomSq]
@@ -100,9 +105,8 @@ theorem modularS_smul_unitImaginary :
 theorem unitImaginary_stationary_modularS :
     ProjectiveLiftTemperatureInversion.StationaryTemperature
       modularSLiftInversion unitImaginary := by
-  simpa [ProjectiveLiftTemperatureInversion.StationaryTemperature,
-    ProjectiveLiftTemperatureInversion.closure, modularSLiftInversion] using
-    modularS_smul_unitImaginary
+  change modularS • unitImaginary = unitImaginary
+  exact modularS_smul_unitImaginary
 
 /-- The modular `S` closure fixes the unit imaginary temperature. -/
 theorem modularS_closure_unitImaginary :

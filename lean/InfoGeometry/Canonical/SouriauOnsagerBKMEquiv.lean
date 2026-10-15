@@ -20,6 +20,8 @@ open InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.CblinfunMatrix
 
 variable {n : ℕ}
 
+set_option synthInstance.maxHeartbeats 100000
+
 theorem FaithfulDensityOperator.kuboMoriTransformLinear_injective
     (D : FaithfulDensityOperator n)
     (h_rpow : Continuous D.rpow) :
@@ -58,7 +60,8 @@ noncomputable def FaithfulDensityOperator.kuboMoriTransformCLE
     (h_rpow : Continuous D.rpow)
     (A : FiniteOperatorAlgebra n) :
     D.kuboMoriTransformCLE h_rpow A = D.kuboMoriTransform A := by
-  rfl
+  change D.kuboMoriTransformCLM h_rpow A = D.kuboMoriTransform A
+  exact D.kuboMoriTransformCLM_apply h_rpow A
 
 /-- The canonical inverse of the finite-dimensional Kubo--Mori transform. -/
 noncomputable def FaithfulDensityOperator.inverseKuboMoriCLM
@@ -83,6 +86,11 @@ theorem FaithfulDensityOperator.transform_apply_inverseKuboMoriCLM
     D.kuboMoriTransform
         (D.inverseKuboMoriCLM h_rpow A) = A := by
   unfold inverseKuboMoriCLM
-  exact (D.kuboMoriTransformCLE h_rpow).apply_symm_apply A
+  calc
+    D.kuboMoriTransform ((D.kuboMoriTransformCLE h_rpow).symm A) =
+        (D.kuboMoriTransformCLE h_rpow)
+          ((D.kuboMoriTransformCLE h_rpow).symm A) :=
+      (D.kuboMoriTransformCLE_apply h_rpow _).symm
+    _ = A := (D.kuboMoriTransformCLE h_rpow).apply_symm_apply A
 
 end SouriauOnsagerBKM

@@ -210,7 +210,7 @@ theorem outerEscapeSequence_no_limit :
 
 theorem outerAxis_not_complete : ¬ CompleteSpace OuterAxis := by
   intro hcomplete
-  letI : CompleteSpace OuterAxis := hcomplete
+  let : CompleteSpace OuterAxis := hcomplete
   obtain ⟨x, hx⟩ := cauchySeq_tendsto_of_complete outerEscapeSequence_cauchy
   exact outerEscapeSequence_no_limit ⟨x, hx⟩
 
@@ -232,12 +232,10 @@ noncomputable def outerEscapeCompletionLimit :
 theorem outerEscapeSequence_completion_cauchy :
     CauchySeq
       (fun n => (outerEscapeSequence n : UniformSpace.Completion OuterAxis)) := by
-  change Cauchy
-    (atTop.map
-      (fun n => (outerEscapeSequence n : UniformSpace.Completion OuterAxis)))
-  simpa only [Filter.map_map] using
-    (Cauchy.map outerEscapeSequence_cauchy
-      (UniformSpace.Completion.uniformContinuous_coe (α := OuterAxis)))
+  have h := Cauchy.map outerEscapeSequence_cauchy
+    (UniformSpace.Completion.uniformContinuous_coe (α := OuterAxis))
+  rw [Filter.map_map] at h
+  exact h
 
 theorem outerEscapeSequence_tendsto_completion :
     Tendsto

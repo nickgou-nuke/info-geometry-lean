@@ -1,5 +1,7 @@
 import InfoGeometry.Canonical.PeirceNullConeKinematicEmbedding
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Topology.Instances.Matrix
+import Mathlib.Topology.MetricSpace.Basic
 
 namespace InfoGeometry.Topology
 

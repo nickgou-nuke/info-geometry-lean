@@ -252,7 +252,7 @@ theorem zornDerivationExpRealAut_preserves_detZ
     (X : CZ) :
     InfoGeometry.Canonical.ZornMatrix.detZ (zornDerivationExpAutomorphism D X) =
       InfoGeometry.Canonical.ZornMatrix.detZ X := by
-  simpa [zornDerivationExpRealAut_apply] using
+  simpa [zornDerivationExpRealAut_apply, zornDerivationExpAutomorphism] using
     zornFlow_preserves_detZ D 1 X
 
 /-- The time-one exponential preserves the canonical split null cone. -/
@@ -265,7 +265,7 @@ theorem zornDerivationExpRealAut_preserves_null
         (zornDerivationExpAutomorphism D X) ↔
       InfoGeometry.Algebra.Zorn.ZornMatrix.IsNull
         InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3 X := by
-  simpa [zornDerivationExpRealAut_apply] using
+  simpa [zornDerivationExpRealAut_apply, zornDerivationExpAutomorphism] using
     zornFlow_preserves_null D 1 X
 
 end InfoGeometry.Canonical.CanonicalZornDerivationExponential

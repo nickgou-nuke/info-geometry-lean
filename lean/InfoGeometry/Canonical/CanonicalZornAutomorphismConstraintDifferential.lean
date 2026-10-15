@@ -2,9 +2,8 @@
 
 import InfoGeometry.Canonical.CanonicalZornAnalytic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
-
-/-! The differential of one multiplicativity equation on the ambient
-continuous endomorphism space. -/
+import Mathlib.Analysis.Normed.Operator.Basic
+import Mathlib.Analysis.Normed.Operator.NormedSpace
 
 namespace InfoGeometry.Canonical
 
@@ -30,26 +29,29 @@ theorem hasStrictFDerivAt_automorphismConstraintAt
       (automorphismConstraintDerivativeAt X Y A) A := by
   have h₁ : HasStrictFDerivAt (fun B : EndCZ => B (zMul X Y))
       (ContinuousLinearMap.apply ℝ CZ (zMul X Y)) A := by
-    simpa only using
-      (ContinuousLinearMap.apply ℝ CZ (zMul X Y)).hasStrictFDerivAt
+    exact (ContinuousLinearMap.apply ℝ CZ (zMul X Y)).hasStrictFDerivAt
+      |>.congr_of_eventuallyEq (Filter.Eventually.of_forall fun B => rfl)
   have h₂ : HasStrictFDerivAt (fun B : EndCZ => (B X, B Y))
       ((ContinuousLinearMap.apply ℝ CZ X).prod
         (ContinuousLinearMap.apply ℝ CZ Y)) A := by
-    simpa only using
-      ((ContinuousLinearMap.apply ℝ CZ X).prod
-        (ContinuousLinearMap.apply ℝ CZ Y)).hasStrictFDerivAt
+    exact ((ContinuousLinearMap.apply ℝ CZ X).prod
+      (ContinuousLinearMap.apply ℝ CZ Y)).hasStrictFDerivAt
+      |>.congr_of_eventuallyEq (Filter.Eventually.of_forall fun B => rfl)
   have h₃ := isBoundedBilinearMap_zMul.hasStrictFDerivAt (A X, A Y)
-  have h₄ := h₃.comp A h₂
-  simpa [automorphismConstraintAt, automorphismConstraintDerivativeAt] using h₁.sub h₄
+  have h₄ := HasStrictFDerivAt.comp A h₃ h₂
+  convert h₁.sub h₄ <;> rfl
 
 theorem automorphismConstraintDerivativeAt_apply
     (X Y : CZ) (D : EndCZ) :
     automorphismConstraintDerivativeAt X Y
         (ContinuousLinearMap.id ℝ CZ) D =
       D (zMul X Y) - zMul (D X) Y - zMul X (D Y) := by
-  ext <;>
-    simp [automorphismConstraintDerivativeAt,
-      IsBoundedBilinearMap.deriv_apply] <;> ring
+  unfold automorphismConstraintDerivativeAt
+  simp only [sub_apply, ContinuousLinearMap.apply_apply,
+    ContinuousLinearMap.comp_apply, ContinuousLinearMap.prod_apply,
+    ContinuousLinearMap.id_apply]
+  rw [isBoundedBilinearMap_zMul.deriv_apply]
+  abel
 
 theorem automorphismConstraintDerivativeAt_eq_zero_iff
     (X Y : CZ) (D : EndCZ) :
@@ -68,7 +70,8 @@ theorem automorphismConstraintDerivativeAt_eq_zero_iff
     calc
       D (zMul X Y) - zMul (D X) Y - zMul X (D Y) =
           D (zMul X Y) - (zMul (D X) Y + zMul X (D Y)) := by abel
-      _ = 0 := sub_eq_zero.mpr h
+      _ = (zMul (D X) Y + zMul X (D Y)) - (zMul (D X) Y + zMul X (D Y)) := by rw [h]
+      _ = 0 := sub_self _
 
 end
 end InfoGeometry.Canonical

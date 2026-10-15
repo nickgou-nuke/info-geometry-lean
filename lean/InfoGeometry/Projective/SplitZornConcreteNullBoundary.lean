@@ -36,15 +36,15 @@ def scaleCell (u : ℝˣ) (X : Cell) : Cell where
 
 @[simp] theorem scaleCell_one (X : Cell) :
     scaleCell 1 X = X := by
-  cases X <;> simp [scaleCell]
+  cases X; simp [scaleCell]
 
 theorem scaleCell_mul (u v : ℝˣ) (X : Cell) :
     scaleCell (u * v) X = scaleCell u (scaleCell v X) := by
-  cases X <;> simp [scaleCell, mul_assoc]
+  cases X; simp [scaleCell, mul_assoc]
 
 theorem detZ_scaleCell (u : ℝˣ) (X : Cell) :
     detZ (scaleCell u X) = (u : ℝ) * (u : ℝ) * detZ X := by
-  cases X <;> simp [scaleCell, detZ, mul_add, sub_eq_add_neg]
+  cases X; simp [scaleCell, detZ, mul_add, sub_eq_add_neg]
   ring
 
 theorem detZ_scaleCell_zero (u : ℝˣ) (X : Cell) :
@@ -111,7 +111,7 @@ def topRightNullRep : NullRep where
   null := zornTopRightNull_detZ
   nonzero := zornTopRightNull_ne_zero
 
-def topRightNullPoint : Boundary :=
+noncomputable def topRightNullPoint : Boundary :=
   ProjectiveNullBoundaryDatum.nullMk datum topRightNullRep
 
 theorem topRightNullPoint_scale_invariant (u : ℝˣ) :

@@ -91,7 +91,8 @@ noncomputable def realStageCoordinateProjection (n : ℕ) (i : Idx n) :
 
 theorem realStageCoordinateProjection_rank (n : ℕ) (i : Idx n) :
     projectionRank (realStageCoordinateProjection n i).map = 1 := by
-  simpa [realStageCoordinateProjection] using coordinateProjection_rank i
+  change projectionRank (coordinateProjection i) = 1
+  exact coordinateProjection_rank i
 
 noncomputable def halfTailSystem :
     RealUHFProjectionRankTailSystem 1 :=

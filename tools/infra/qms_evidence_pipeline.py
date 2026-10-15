@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""OpenGauss QMS Evidence Pipeline: 7-Gate Evidence State Machine.
+"""OpenGauss QMS Evidence Pipeline: seven candidate-check stages.
 
 Implements the end-to-end 7-Gate verification protocol for theorem candidates
 under the OpenGauss Quality Management System (QMS-SOP-IAA-001):
@@ -12,15 +12,14 @@ Gate 2: GROUNDING
   Poset prerequisite & acyclic cone check against repository symbols.
   Enforces well-founded partial order and absence of circular reasoning.
 
-Gate 3: ADVERSARIAL SOCRATIC REVIEW
-  Executes `tools/infra/opengauss_screener.py` strictly checking traps T1-T17,
-  non-commutativity witness requirements, and Gate 2.5 model witnesses.
+Gate 3: STATIC TRAP SCREEN
+  Runs the static checks implemented by `tools/infra/opengauss_screener.py`.
 
-Gate 4: INTERACTIVE PROVER / PANTOGRAPH
-  Verifies complete goal closure (0 sorry, 0 admit, 0 unclosed goals),
-  and interfaces with the subgoal memoization cache.
+Gate 4: STATIC PROOF-HOLE SCAN
+  Lexically scans for sorry/admit. It does not run Pantograph or prove goal
+  closure; the Lean compiler check is Gate 5.
 
-Gate 5: KERNEL & INTEGRATION
+Gate 5: KERNEL SOURCE CHECK
   Runs `flock -x /tmp/info-geometry-build.lock lake env lean <file>` and
   audits `#print axioms` ensuring ONLY standard core axioms (`propext`,
   `Quot.sound`, `Classical.choice`) are used, strictly 0 custom axioms.
@@ -29,9 +28,9 @@ Gate 6: STATEMENT-FIDELITY REVIEW
   Invokes `tools.quality.statement_fidelity_gate` to ensure no hypotheses
   were dropped, carrier is not weakened or surrogated, and fidelity >= 0.95.
 
-Gate 7: PROMOTION & IMMUTABLE RECEIPT
-  Invokes `tools/infra/proof_artifact_receipt.py` to mint and verify a
-  deterministic SHA256 receipt, sealing git head and environment.
+Gate 7: CANDIDATE RECEIPT
+  Writes a self-checksummed candidate observation. The receipt is not an
+  immutable signature, proof certificate, or promotion authorization.
 """
 
 from __future__ import annotations
@@ -113,8 +112,8 @@ class PipelineReport:
 
     target_file: str
     spec_file: str
-    status: str  # "PROMOTED", "REJECTED_AT_GATE_X", etc.
-    final_verdict: str  # "ACCEPTED", "REJECTED"
+    status: str  # "EVIDENCE_RECORDED_PENDING_OWNER_REVIEW", "REJECTED_AT_GATE_X", etc.
+    final_verdict: str  # "PENDING_OWNER_REVIEW", "REJECTED"
     gates: list[GateResult] = field(default_factory=list)
     halted_at_gate: int | None = None
     receipt: dict[str, Any] | None = None
@@ -226,44 +225,111 @@ def strip_comments_and_strings(text: str) -> str:
 
 
 def extract_lean_declarations(content: str) -> list[str]:
-    """Extract qualified theorem and lemma declaration names respecting namespace scoping."""
+    """Extract theorem/lemma names for the source audit, respecting namespaces."""
     lines = content.splitlines()
-    ns_stack: list[str] = []
+    scope_stack: list[tuple[str, str]] = []
     declarations: list[str] = []
 
     for line in lines:
-        clean = line.split("--")[0].strip()
+        clean = strip_comments_and_strings(line).split("--")[0].strip()
         if not clean or clean.startswith("/-"):
             continue
 
         # Track namespace opening
-        m_ns = re.match(r"^namespace\s+([A-Za-z0-9_]+)", clean)
+        m_ns = re.match(r"^namespace\s+([A-Za-z0-9_.]+)", clean)
         if m_ns:
-            ns_stack.append(m_ns.group(1))
+            scope_stack.append(("namespace", m_ns.group(1)))
+            continue
+
+        m_section = re.match(r"^section(?:\s+([A-Za-z0-9_.]+))?$", clean)
+        if m_section:
+            scope_stack.append(("section", m_section.group(1) or ""))
             continue
 
         # Track namespace closing
-        m_end = re.match(r"^end(?:\s+([A-Za-z0-9_]+))?$", clean)
+        m_end = re.match(r"^end(?:\s+([A-Za-z0-9_.]+))?$", clean)
         if m_end:
             target_ns = m_end.group(1)
-            if target_ns and target_ns in ns_stack:
-                while ns_stack and ns_stack[-1] != target_ns:
-                    ns_stack.pop()
-                if ns_stack:
-                    ns_stack.pop()
-            elif ns_stack and not target_ns:
-                # Bare 'end' closing innermost section or namespace
-                pass
+            if target_ns:
+                while scope_stack:
+                    _, scope_name = scope_stack.pop()
+                    if scope_name == target_ns:
+                        break
+            elif scope_stack:
+                scope_stack.pop()
             continue
 
-        # Match theorem or lemma declarations
-        m_decl = re.match(r"^(?:theorem|lemma)\s+([A-Za-z0-9_]+)", clean)
+        # Support same-line attributes and declaration modifiers.
+        m_decl = re.match(
+            r"^(?:(?:@\[[^\]]*\])\s*)*(?:(?:noncomputable|protected|private)\s+)*(?:theorem|lemma)\s+([^\s:{(]+)",
+            clean,
+        )
         if m_decl:
             dname = m_decl.group(1)
-            full_name = ".".join(ns_stack + [dname]) if ns_stack else dname
+            namespaces = [name for kind, name in scope_stack if kind == "namespace"]
+            full_name = ".".join(namespaces + [dname]) if namespaces else dname
             declarations.append(full_name)
 
     return declarations
+
+
+def parse_axiom_audit_output(
+    output: str, expected_declarations: Sequence[str]
+) -> tuple[dict[str, list[str]], list[str]]:
+    """Parse wrapped Lean `#print axioms` output and require every target once."""
+    dep_pattern = re.compile(
+        r"(?m)^\s*(?:info:\s*)?'(?P<name>[^']+)'\s+depends on axioms:\s*"
+        r"\[(?P<axioms>[\s\S]*?)\]"
+    )
+    nodep_pattern = re.compile(
+        r"(?m)^\s*(?:info:\s*)?'(?P<name>[^']+)'\s+does not depend on any axioms\s*$"
+    )
+    raw_parsed: dict[str, list[str]] = {}
+    errors: list[str] = []
+    expected = list(dict.fromkeys(expected_declarations))
+
+    for match in dep_pattern.finditer(output):
+        name = match.group("name").strip()
+        if name in raw_parsed:
+            errors.append(f"duplicate axiom output for declaration {name!r}")
+            continue
+        raw_axioms = match.group("axioms")
+        raw_parsed[name] = [axiom.strip() for axiom in raw_axioms.split(",") if axiom.strip()]
+
+    for match in nodep_pattern.finditer(output):
+        name = match.group("name").strip()
+        if name in raw_parsed:
+            errors.append(f"duplicate axiom output for declaration {name!r}")
+            continue
+        raw_parsed[name] = []
+
+    matched_declarations: dict[str, list[str]] = {}
+    used_output_names: set[str] = set()
+    for d in expected:
+        matched_key = None
+        if d in raw_parsed:
+            matched_key = d
+        else:
+            for k in raw_parsed:
+                if k == d or k.endswith(f".{d}") or d.endswith(f".{k}"):
+                    matched_key = k
+                    break
+        if matched_key is None:
+            errors.append(f"missing axiom output for declaration {d!r}")
+        elif matched_key in used_output_names:
+            errors.append(f"ambiguous axiom output matched multiple declarations at {matched_key!r}")
+        else:
+            matched_declarations[d] = raw_parsed[matched_key]
+            used_output_names.add(matched_key)
+
+    errors.extend(
+        f"unexpected axiom output for declaration {name!r}"
+        for name in sorted(set(raw_parsed) - used_output_names)
+    )
+
+    if not output.strip() and expected:
+        errors.append("Lean produced no axiom audit output")
+    return matched_declarations, errors
 
 
 # -----------------------------------------------------------------------------
@@ -277,11 +343,9 @@ class QMSEvidencePipeline:
         self,
         lock_file: str = "/tmp/info-geometry-build.lock",
         strict: bool = True,
-        subgoal_cache_file: Path | None = None,
     ):
         self.lock_file = lock_file
         self.strict = strict
-        self.subgoal_cache_file = subgoal_cache_file or (REPO_ROOT / "artifacts" / "pantograph_subgoal_cache.json")
 
     # -------------------------------------------------------------------------
     # Gate 1: INTAKE
@@ -428,7 +492,7 @@ class QMSEvidencePipeline:
             )
 
         # 2. Extract Declarations and Build Internal Poset Dependency DAG
-        raw_decls = re.findall(r"^\s*(?:def|theorem|lemma|structure|class)\s+([A-Za-z0-9_]+)", lean_text, re.MULTILINE)
+        raw_decls = re.findall(r"^\s*(?:def|theorem|lemma|structure|class)\s+([^\s:{(]+)", lean_text, re.MULTILINE)
         decl_names = set(raw_decls)
 
         # Build dependency adjacency list: u -> v if declaration u references declaration v
@@ -439,7 +503,7 @@ class QMSEvidencePipeline:
         current_lines: list[str] = []
 
         for line in lines:
-            m = re.match(r"^\s*(?:def|theorem|lemma|structure|class)\s+([A-Za-z0-9_]+)", line)
+            m = re.match(r"^\s*(?:def|theorem|lemma|structure|class)\s+([^\s:{(]+)", line)
             if m:
                 if current_name:
                     blocks.append((current_name, "\n".join(current_lines)))
@@ -525,10 +589,10 @@ class QMSEvidencePipeline:
         )
 
     # -------------------------------------------------------------------------
-    # Gate 3: ADVERSARIAL SOCRATIC REVIEW
+    # Gate 3: STATIC TRAP SCREEN
     # -------------------------------------------------------------------------
-    def gate_3_adversarial_socratic_review(self, packet: EvidencePacket) -> GateResult:
-        """Executes `tools/infra/opengauss_screener.py` strictly checking traps T1-T17, non-commutativity witness, Gate 2.5 model witness."""
+    def gate_3_static_trap_screen(self, packet: EvidencePacket) -> GateResult:
+        """Run the repository's static source screener; this is not an agent review."""
         t0 = time.time()
         from tools.infra.opengauss_screener import screen_lean_file
 
@@ -536,9 +600,9 @@ class QMSEvidencePipeline:
         diagnostics: list[str] = []
 
         fatal_violations = [v for v in violations if v.severity == "ERROR"]
-        strict_warnings = [v for v in violations if v.severity == "WARNING"] if self.strict else []
-
-        all_blocking = fatal_violations + strict_warnings
+        warnings = [v for v in violations if v.severity == "WARNING"]
+        blocking_warnings = warnings if self.strict else []
+        all_blocking = fatal_violations + blocking_warnings
 
         if all_blocking:
             socratic_items: list[str] = []
@@ -548,36 +612,49 @@ class QMSEvidencePipeline:
                 socratic_items.append(f"  • Trap {v.trap_id}: {v.message} (matched: '{v.matched_text}')")
 
             critique = (
-                "Gate 3 Adversarial Socratic Review Failure: "
+                "Gate 3 Static Trap Screen Failure: "
                 f"Candidate violated {len(all_blocking)} OpenGauss Trap invariants:\n"
                 + "\n".join(socratic_items)
             )
 
             return GateResult(
                 gate_number=3,
-                gate_name="ADVERSARIAL_SOCRATIC_REVIEW",
+                gate_name="STATIC_TRAP_SCREEN",
                 passed=False,
                 diagnostics=diagnostics,
                 socratic_critique=critique,
-                details={"violations": [asdict(v) for v in all_blocking]},
+                details={
+                    "violations": [asdict(v) for v in all_blocking],
+                    "warning_count": len(warnings),
+                    "strict_mode": self.strict,
+                },
                 duration_seconds=time.time() - t0,
             )
 
-        diagnostics.append(f"Passed OpenGauss 17-Trap Screener cleanly (0 errors, {len(strict_warnings)} warnings).")
+        diagnostics.append(
+            f"Static screener completed: 0 blocking findings, {len(warnings)} warnings "
+            f"({len(blocking_warnings)} treated as blocking). "
+            "This result does not represent an independent Socratic review."
+        )
         return GateResult(
             gate_number=3,
-            gate_name="ADVERSARIAL_SOCRATIC_REVIEW",
+            gate_name="STATIC_TRAP_SCREEN",
             passed=True,
             diagnostics=diagnostics,
-            details={"violations_count": 0},
+            details={
+                "violations_count": 0,
+                "warning_count": len(warnings),
+                "warnings": [asdict(v) for v in warnings],
+                "strict_mode": self.strict,
+            },
             duration_seconds=time.time() - t0,
         )
 
     # -------------------------------------------------------------------------
-    # Gate 4: INTERACTIVE PROVER / PANTOGRAPH
+    # Gate 4: STATIC PROOF-HOLE SCAN
     # -------------------------------------------------------------------------
-    def gate_4_interactive_prover(self, packet: EvidencePacket) -> GateResult:
-        """Checks goal closure, verifies 0 sorry, 0 admit, interfaces with subgoal memoization cache."""
+    def gate_4_static_proof_hole_scan(self, packet: EvidencePacket) -> GateResult:
+        """Lexically scan for proof-hole tokens; compilation is checked at Gate 5."""
         t0 = time.time()
         diagnostics: list[str] = []
         content = packet.lean_file.read_text(encoding="utf-8")
@@ -594,7 +671,7 @@ class QMSEvidencePipeline:
                 admit_matches.append((line_no, line.strip()))
 
         if sorry_matches or admit_matches:
-            critique_lines = ["Gate 4 Goal Closure Failure: Unclosed proof holes detected:"]
+            critique_lines = ["Gate 4 Static Proof-Hole Scan Failure: Unclosed proof holes detected (sorry/admit tokens):"]
             for lno, text in sorry_matches:
                 diag = f"Hole 'sorry' at line {lno}: {text[:80]}"
                 diagnostics.append(diag)
@@ -606,7 +683,7 @@ class QMSEvidencePipeline:
 
             return GateResult(
                 gate_number=4,
-                gate_name="INTERACTIVE_PROVER_PANTOGRAPH",
+                gate_name="STATIC_PROOF_HOLE_SCAN",
                 passed=False,
                 diagnostics=diagnostics,
                 socratic_critique="\n".join(critique_lines),
@@ -614,71 +691,37 @@ class QMSEvidencePipeline:
                 duration_seconds=time.time() - t0,
             )
 
-        # Interface with Subgoal Memoization Cache
-        memoization_stats = self._update_subgoal_memoization_cache(content, packet.lean_file)
-        diagnostics.append(
-            f"Goal closure verified: 0 sorry, 0 admit across all proof blocks. "
-            f"Subgoal memoization cache: {memoization_stats['subgoals_registered']} subgoals indexed "
-            f"({memoization_stats['cache_hits']} cache hits)."
-        )
+        diagnostics.append("Static lexical scan found no sorry/admit tokens; no Pantograph goal-state claim is made.")
 
         return GateResult(
             gate_number=4,
-            gate_name="INTERACTIVE_PROVER_PANTOGRAPH",
+            gate_name="STATIC_PROOF_HOLE_SCAN",
             passed=True,
             diagnostics=diagnostics,
-            details=memoization_stats,
+            details={"sorry_count": 0, "admit_count": 0, "pantograph_invoked": False},
             duration_seconds=time.time() - t0,
         )
 
-    def _update_subgoal_memoization_cache(self, content: str, lean_file: Path) -> dict[str, Any]:
-        """Compute alpha-invariant subgoal hashes and persist in local memoization cache."""
-        declarations = extract_lean_declarations(content)
-        cache_data: dict[str, Any] = {}
-        if self.subgoal_cache_file.is_file():
-            try:
-                cache_data = json.loads(self.subgoal_cache_file.read_text(encoding="utf-8"))
-            except Exception:
-                cache_data = {}
-
-        hits = 0
-        newly_registered = 0
-        now_iso = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
-
-        for decl in declarations:
-            goal_hash = hashlib.sha256(f"{lean_file.stem}:{decl}".encode("utf-8")).hexdigest()
-            if goal_hash in cache_data:
-                hits += 1
-            else:
-                newly_registered += 1
-                cache_data[goal_hash] = {
-                    "declaration": decl,
-                    "file": str(lean_file),
-                    "status": "CLOSED_NATIVE_MATHLIB",
-                    "registered_at": now_iso,
-                }
-
-        # Persist updated cache if directory exists or create
-        try:
-            self.subgoal_cache_file.parent.mkdir(parents=True, exist_ok=True)
-            self.subgoal_cache_file.write_text(json.dumps(cache_data, indent=2), encoding="utf-8")
-        except Exception:
-            pass
-
-        return {
-            "subgoals_registered": len(declarations),
-            "cache_hits": hits,
-            "newly_cached": newly_registered,
-            "cache_file": str(self.subgoal_cache_file),
-        }
-
     # -------------------------------------------------------------------------
-    # Gate 5: KERNEL & INTEGRATION
+    # Gate 5: KERNEL SOURCE CHECK
     # -------------------------------------------------------------------------
     def gate_5_kernel_and_integration(self, packet: EvidencePacket) -> GateResult:
-        """Runs `flock -x /tmp/info-geometry-build.lock lake env lean <file>` and audits `#print axioms`."""
+        """Compile an unchanged source snapshot under the build lock and audit every theorem's axioms."""
         t0 = time.time()
         diagnostics: list[str] = []
+
+        try:
+            source_bytes = packet.lean_file.read_bytes()
+        except OSError as exc:
+            return GateResult(
+                gate_number=5,
+                gate_name="KERNEL_SOURCE_CHECK",
+                passed=False,
+                diagnostics=[f"Could not snapshot candidate source: {exc}"],
+                socratic_critique="Gate 5 failed before compilation because the candidate source could not be read.",
+                duration_seconds=time.time() - t0,
+            )
+        source_sha256 = hashlib.sha256(source_bytes).hexdigest()
 
         # 1. Concurrency-Locked Lean Kernel Check
         cmd = ["flock", "-x", self.lock_file, "lake", "env", "lean", str(packet.lean_file)]
@@ -694,7 +737,7 @@ class QMSEvidencePipeline:
         except subprocess.TimeoutExpired:
             return GateResult(
                 gate_number=5,
-                gate_name="KERNEL_AND_INTEGRATION",
+                gate_name="KERNEL_SOURCE_CHECK",
                 passed=False,
                 diagnostics=["Kernel verification timed out after 180 seconds."],
                 socratic_critique="Gate 5 Kernel Failure: Lake compilation timed out under exclusive build lock.",
@@ -703,7 +746,7 @@ class QMSEvidencePipeline:
         except Exception as exc:
             return GateResult(
                 gate_number=5,
-                gate_name="KERNEL_AND_INTEGRATION",
+                gate_name="KERNEL_SOURCE_CHECK",
                 passed=False,
                 diagnostics=[f"Process execution error: {exc}"],
                 socratic_critique=f"Gate 5 Kernel Failure: Could not spawn build process: {exc}",
@@ -715,7 +758,7 @@ class QMSEvidencePipeline:
             diagnostics.append(f"Lean kernel compilation failed with returncode {proc.returncode}.")
             return GateResult(
                 gate_number=5,
-                gate_name="KERNEL_AND_INTEGRATION",
+                gate_name="KERNEL_SOURCE_CHECK",
                 passed=False,
                 diagnostics=diagnostics,
                 socratic_critique=(
@@ -726,85 +769,124 @@ class QMSEvidencePipeline:
                 duration_seconds=time.time() - t0,
             )
 
-        # 2. Strict Axiom Auditing
-        declarations = extract_lean_declarations(packet.lean_file.read_text(encoding="utf-8"))
-        if not declarations:
-            diagnostics.append("Warning: No theorems or lemmas identified for axiom auditing.")
-            axiom_output = ""
-            axiom_returncode = 0
-            audit_declarations = []
-        else:
-            source = packet.lean_file.read_text(encoding="utf-8")
-            audit_source = (
-                "import Lean\n"
-                + source.rstrip()
-                + "\n\n"
-                + "\n".join(f"#print axioms {d}" for d in declarations)
-                + "\n"
+        # Detect changes between the source snapshot and compilation before auditing.
+        current_bytes = packet.lean_file.read_bytes()
+        if hashlib.sha256(current_bytes).hexdigest() != source_sha256:
+            return GateResult(
+                gate_number=5,
+                gate_name="KERNEL_SOURCE_CHECK",
+                passed=False,
+                diagnostics=["Candidate source changed during kernel compilation."],
+                socratic_critique="Gate 5 rejected a time-of-check/time-of-use source mismatch.",
+                details={"candidate_sha256_before": source_sha256,
+                         "candidate_sha256_after_compile": hashlib.sha256(current_bytes).hexdigest()},
+                duration_seconds=time.time() - t0,
             )
 
-            with tempfile.NamedTemporaryFile(suffix=".lean", mode="w", encoding="utf-8") as temp_audit:
-                temp_audit.write(audit_source)
-                temp_audit.flush()
-                audit_cmd = ["flock", "-x", self.lock_file, "lake", "env", "lean", temp_audit.name]
-                try:
-                    audit_proc = subprocess.run(
-                        audit_cmd,
-                        cwd=REPO_ROOT,
-                        capture_output=True,
-                        text=True,
-                        timeout=180,
-                        check=False,
-                    )
-                    axiom_returncode = audit_proc.returncode
-                    axiom_output = audit_proc.stdout.strip()
-                    audit_declarations = declarations
-                except Exception as exc:
-                    return GateResult(
-                        gate_number=5,
-                        gate_name="KERNEL_AND_INTEGRATION",
-                        passed=False,
-                        diagnostics=[f"Axiom audit execution failed: {exc}"],
-                        socratic_critique=f"Gate 5 Kernel Failure: Axiom audit subprocess crashed: {exc}",
-                        duration_seconds=time.time() - t0,
-                    )
+        # 2. Strict Axiom Auditing
+        source = source_bytes.decode("utf-8")
+        declarations = extract_lean_declarations(source)
+        if not declarations:
+            return GateResult(
+                gate_number=5,
+                gate_name="KERNEL_SOURCE_CHECK",
+                passed=False,
+                diagnostics=["No theorem/lemma declarations were found; axiom audit cannot be certified."],
+                socratic_critique="Gate 5 fails closed when there are no declarations to audit.",
+                details={"candidate_sha256": source_sha256},
+                duration_seconds=time.time() - t0,
+            )
 
-            if axiom_returncode != 0:
+        audit_source = (
+            "import Lean\n"
+            + source.rstrip()
+            + "\n\n"
+            + "\n".join(f"#print axioms {d}" for d in declarations)
+            + "\n"
+        )
+
+        with tempfile.NamedTemporaryFile(suffix=".lean", mode="w", encoding="utf-8") as temp_audit:
+            temp_audit.write(audit_source)
+            temp_audit.flush()
+            audit_cmd = ["flock", "-x", self.lock_file, "lake", "env", "lean", temp_audit.name]
+            try:
+                audit_proc = subprocess.run(
+                    audit_cmd,
+                    cwd=REPO_ROOT,
+                    capture_output=True,
+                    text=True,
+                    timeout=180,
+                    check=False,
+                )
+                axiom_returncode = audit_proc.returncode
+                axiom_output = audit_proc.stdout
+                audit_declarations = declarations
+            except Exception as exc:
                 return GateResult(
                     gate_number=5,
-                    gate_name="KERNEL_AND_INTEGRATION",
+                    gate_name="KERNEL_SOURCE_CHECK",
                     passed=False,
-                    diagnostics=["Axiom audit returned non-zero exit code."],
-                    socratic_critique=f"Gate 5 Kernel Failure: Axiom elaboration failed: {audit_proc.stderr[:400]}",
+                    diagnostics=[f"Axiom audit execution failed: {exc}"],
+                    socratic_critique=f"Gate 5 Kernel Failure: Axiom audit subprocess crashed: {exc}",
                     duration_seconds=time.time() - t0,
                 )
 
-            # Audit extracted axioms against ALLOWED_CORE_AXIOMS
-            forbidden_axioms_found: dict[str, list[str]] = defaultdict(list)
-            for line in axiom_output.splitlines():
-                m_dep = re.search(r"'([^']+)'\s+depends on axioms:\s*\[([^\]]*)\]", line)
-                if m_dep:
-                    th_name = m_dep.group(1)
-                    raw_ax = [a.strip() for a in m_dep.group(2).split(",") if a.strip()]
-                    for ax in raw_ax:
-                        if ax not in ALLOWED_CORE_AXIOMS:
-                            forbidden_axioms_found[th_name].append(ax)
+        if axiom_returncode != 0:
+            return GateResult(
+                gate_number=5,
+                gate_name="KERNEL_SOURCE_CHECK",
+                passed=False,
+                diagnostics=["Axiom audit returned non-zero exit code."],
+                socratic_critique=f"Gate 5 Kernel Failure: Axiom elaboration failed: {audit_proc.stderr[:400]}",
+                duration_seconds=time.time() - t0,
+            )
 
-            if forbidden_axioms_found:
-                critique_lines = ["Gate 5 Axiom Audit Failure: Custom or unauthorized axioms detected:"]
-                for th, ax_list in forbidden_axioms_found.items():
-                    critique_lines.append(f"  • Theorem '{th}' relies on custom axioms: {ax_list}")
-                    diagnostics.append(f"Custom axioms in '{th}': {ax_list}")
+        parsed_axioms, parse_errors = parse_axiom_audit_output(axiom_output, declarations)
+        if parse_errors:
+            return GateResult(
+                gate_number=5,
+                gate_name="KERNEL_SOURCE_CHECK",
+                passed=False,
+                diagnostics=[f"Axiom audit output could not be validated: {err}" for err in parse_errors],
+                socratic_critique="Gate 5 fails closed on missing, malformed, duplicate, or unexpected axiom records.",
+                details={"axiom_audit_output": axiom_output, "axiom_audit_declarations": declarations},
+                duration_seconds=time.time() - t0,
+            )
 
-                return GateResult(
-                    gate_number=5,
-                    gate_name="KERNEL_AND_INTEGRATION",
-                    passed=False,
-                    diagnostics=diagnostics,
-                    socratic_critique="\n".join(critique_lines),
-                    details={"forbidden_axioms": dict(forbidden_axioms_found)},
-                    duration_seconds=time.time() - t0,
-                )
+        # Audit all parsed axiom lists against the allowlist.
+        forbidden_axioms_found: dict[str, list[str]] = defaultdict(list)
+        for theorem, axioms in parsed_axioms.items():
+            for axiom in axioms:
+                if axiom not in ALLOWED_CORE_AXIOMS:
+                    forbidden_axioms_found[theorem].append(axiom)
+
+        if forbidden_axioms_found:
+            critique_lines = ["Gate 5 Axiom Audit Failure: Custom or unauthorized axioms detected:"]
+            for th, ax_list in forbidden_axioms_found.items():
+                critique_lines.append(f"  • Theorem '{th}' relies on custom axioms: {ax_list}")
+                diagnostics.append(f"Custom axioms in '{th}': {ax_list}")
+
+            return GateResult(
+                gate_number=5,
+                gate_name="KERNEL_SOURCE_CHECK",
+                passed=False,
+                diagnostics=diagnostics,
+                socratic_critique="\n".join(critique_lines),
+                details={"forbidden_axioms": dict(forbidden_axioms_found)},
+                duration_seconds=time.time() - t0,
+            )
+
+        final_sha256 = hashlib.sha256(packet.lean_file.read_bytes()).hexdigest()
+        if final_sha256 != source_sha256:
+            return GateResult(
+                gate_number=5,
+                gate_name="KERNEL_SOURCE_CHECK",
+                passed=False,
+                diagnostics=["Candidate source changed before axiom audit completed."],
+                socratic_critique="Gate 5 rejected a source snapshot mismatch after axiom auditing.",
+                details={"candidate_sha256_before": source_sha256, "candidate_sha256_after_audit": final_sha256},
+                duration_seconds=time.time() - t0,
+            )
 
         diagnostics.append("Lean kernel compilation checked with exit code 0 under build lock.")
         diagnostics.append(
@@ -814,7 +896,7 @@ class QMSEvidencePipeline:
 
         return GateResult(
             gate_number=5,
-            gate_name="KERNEL_AND_INTEGRATION",
+            gate_name="KERNEL_SOURCE_CHECK",
             passed=True,
             diagnostics=diagnostics,
             details={
@@ -824,15 +906,16 @@ class QMSEvidencePipeline:
                 "axiom_audit_declarations": audit_declarations,
                 "axiom_audit_output": axiom_output,
                 "axiom_audit_returncode": axiom_returncode,
+                "candidate_sha256": source_sha256,
             },
             duration_seconds=time.time() - t0,
         )
 
     # -------------------------------------------------------------------------
-    # Gate 6: STATEMENT-FIDELITY REVIEW
+    # Gate 6: SPECIFICATION CONTRACT SCREEN
     # -------------------------------------------------------------------------
     def gate_6_statement_fidelity_review(self, packet: EvidencePacket) -> GateResult:
-        """Invokes `tools.quality.statement_fidelity_gate` ensuring no hypotheses dropped, carrier preserved, and fidelity >= 0.95."""
+        """Run syntax-based contract checks; this score is not a semantic correctness proof."""
         t0 = time.time()
         diagnostics: list[str] = []
 
@@ -863,11 +946,11 @@ class QMSEvidencePipeline:
                     critique_item.append(f"    - {diag}")
                 socratic_items.append("\n".join(critique_item))
             else:
-                diagnostics.append(f"Theorem '{th_name}' passed fidelity with score {rep.fidelity_score:.4f}.")
+                diagnostics.append(f"Theorem '{th_name}' passed syntactic contract checks (score {rep.fidelity_score:.4f}).")
 
         if failed_theorems:
             critique = (
-                f"Gate 6 Statement Fidelity Failure: {len(failed_theorems)} theorem(s) failed semantic fidelity:\n"
+                f"Gate 6 Contract Screen Failure: {len(failed_theorems)} theorem(s) failed syntactic contract checks:\n"
                 + "\n\n".join(socratic_items)
             )
             return GateResult(
@@ -881,7 +964,10 @@ class QMSEvidencePipeline:
             )
 
         avg_score = sum(r.fidelity_score for r in reports.values()) / len(reports)
-        diagnostics.append(f"All {len(reports)} theorem(s) passed statement fidelity review (average score: {avg_score:.4f} >= 0.95).")
+        diagnostics.append(
+            f"All {len(reports)} theorem(s) passed syntactic specification checks "
+            f"(heuristic score: {avg_score:.4f} >= 0.95); independent semantic review remains required."
+        )
         return GateResult(
             gate_number=6,
             gate_name="STATEMENT_FIDELITY_REVIEW",
@@ -892,15 +978,15 @@ class QMSEvidencePipeline:
         )
 
     # -------------------------------------------------------------------------
-    # Gate 7: PROMOTION & IMMUTABLE RECEIPT
+    # Gate 7: CANDIDATE RECEIPT
     # -------------------------------------------------------------------------
-    def gate_7_promotion_and_receipt(
+    def gate_7_candidate_receipt(
         self,
         packet: EvidencePacket,
         kernel_result: GateResult,
         out_receipt: Path | None = None,
     ) -> tuple[GateResult, dict[str, Any] | None, Path | None]:
-        """Invokes `tools/infra/proof_artifact_receipt.py` to mint and verify deterministic SHA256 receipt."""
+        """Record a self-checksummed candidate observation; this does not promote a theorem."""
         t0 = time.time()
         diagnostics: list[str] = []
 
@@ -931,8 +1017,20 @@ class QMSEvidencePipeline:
         if manifest_path.is_file():
             manifest_hash = hashlib.sha256(manifest_path.read_bytes()).hexdigest()
 
-        file_bytes = packet.lean_file.read_bytes()
-        candidate_sha = hashlib.sha256(file_bytes).hexdigest()
+        candidate_sha = kernel_result.details.get("candidate_sha256")
+        current_sha = hashlib.sha256(packet.lean_file.read_bytes()).hexdigest()
+        if not candidate_sha or current_sha != candidate_sha:
+            return (
+                GateResult(
+                    gate_number=7,
+                    gate_name="CANDIDATE_RECEIPT",
+                    passed=False,
+                    diagnostics=["Candidate source no longer matches the source checked by Gate 5."],
+                    socratic_critique="Gate 7 refused to bind a receipt to a changed or untracked source snapshot.",
+                    details={"kernel_candidate_sha256": candidate_sha, "current_candidate_sha256": current_sha},
+                    duration_seconds=time.time() - t0,
+                ), None, None,
+            )
 
         try:
             rel_lean_path = str(packet.lean_file.relative_to(REPO_ROOT))
@@ -944,12 +1042,146 @@ class QMSEvidencePipeline:
         audit_output_sha = hashlib.sha256(audit_output.encode("utf-8")).hexdigest() if audit_output else ""
         audit_declarations = kernel_details.get("axiom_audit_declarations", [])
 
-        # Build raw candidate archive record
-        record: dict[str, Any] = {
+        # 1. Run genuine Semantic Vacuity Audit
+        vac_script = REPO_ROOT / "tools" / "quality" / "semantic_vacuity_gate.py"
+        vac_rc: int | None = None
+        vac_stdout = ""
+        vac_sha256 = ""
+        if vac_script.is_file():
+            vac_cmd = [
+                sys.executable,
+                str(vac_script),
+                str(packet.lean_file),
+                "--fail-on",
+                "error",
+            ]
+            try:
+                vac_proc = subprocess.run(
+                    vac_cmd,
+                    cwd=REPO_ROOT,
+                    capture_output=True,
+                    text=True,
+                    timeout=60,
+                    check=False,
+                )
+                vac_rc = vac_proc.returncode
+                vac_stdout = vac_proc.stdout
+                vac_sha256 = hashlib.sha256(vac_stdout.encode("utf-8")).hexdigest()
+            except Exception as exc:
+                vac_rc = 1
+                vac_stdout = f"Semantic vacuity audit execution failed: {exc}"
+                vac_sha256 = hashlib.sha256(vac_stdout.encode("utf-8")).hexdigest()
+
+        if vac_rc is not None and vac_rc != 0:
+            diagnostics.append(f"Semantic vacuity audit failed with exit code {vac_rc}.")
+            return (
+                GateResult(
+                    gate_number=7,
+                    gate_name="CANDIDATE_RECEIPT",
+                    passed=False,
+                    diagnostics=diagnostics,
+                    socratic_critique=f"Gate 7 Semantic Vacuity Failure: Semantic vacuity audit failed (exit code {vac_rc}):\n{vac_stdout[:400]}",
+                    details={"semantic_vacuity_returncode": vac_rc, "semantic_vacuity_output": vac_stdout},
+                    duration_seconds=time.time() - t0,
+                ),
+                None,
+                None,
+            )
+
+        # 2. Check source context changed / snapshot integrity
+        prompted_source_sha = (
+            packet.raw_spec.get("source_snapshot_sha256")
+            or packet.metadata.get("source_snapshot_sha256")
+            or ""
+        )
+        if prompted_source_sha:
+            source_snapshot_sha256 = prompted_source_sha
+            source_context_changed = (prompted_source_sha != candidate_sha)
+        else:
+            # Check against git HEAD snapshot if tracked in repository
+            git_show = subprocess.run(
+                ["git", "show", f"HEAD:{rel_lean_path}"],
+                cwd=REPO_ROOT,
+                capture_output=True,
+                check=False,
+            )
+            if git_show.returncode == 0:
+                head_sha = hashlib.sha256(git_show.stdout).hexdigest()
+                source_snapshot_sha256 = head_sha
+                source_context_changed = (head_sha != candidate_sha)
+            else:
+                source_snapshot_sha256 = candidate_sha
+                source_context_changed = False
+
+        if source_context_changed:
+            record: dict[str, Any] = {
+                "lean_file": rel_lean_path,
+                "candidate_sha256": candidate_sha,
+                "source_path": rel_lean_path,
+                "source_snapshot_sha256": source_snapshot_sha256,
+                "source_snapshot_current_sha256": candidate_sha,
+                "source_context_changed": True,
+                "toolchain": toolchain,
+                "lakefile_sha256": lakefile_hash,
+                "lake_manifest_sha256": manifest_hash,
+                "git_head": git_head,
+                "lean_check_returncode": kernel_details.get("lean_returncode", 0),
+                "lean_output_sha256": hashlib.sha256(kernel_details.get("lean_output", "").encode("utf-8")).hexdigest(),
+                "semantic_vacuity_returncode": vac_rc,
+                "semantic_vacuity_output_sha256": vac_sha256,
+                "axiom_audit_status": "collected" if audit_declarations else "not_requested",
+                "axiom_audit_declarations": audit_declarations,
+                "axiom_audit_returncode": kernel_details.get("axiom_audit_returncode") if audit_declarations else None,
+                "axiom_audit_output": audit_output,
+                "axiom_audit_output_sha256": audit_output_sha,
+            }
+            receipt = build_candidate_receipt(record)
+            if not verify_candidate_receipt(receipt):
+                return (
+                    GateResult(
+                        gate_number=7,
+                        gate_name="CANDIDATE_RECEIPT",
+                        passed=False,
+                        diagnostics=["Changed-source candidate receipt failed integrity verification."],
+                        socratic_critique="Gate 7 could not verify the candidate observation receipt.",
+                        duration_seconds=time.time() - t0,
+                    ), None, None,
+                )
+            target_receipt_path = out_receipt or packet.lean_file.with_suffix(".receipt.json")
+            target_receipt_path.parent.mkdir(parents=True, exist_ok=True)
+            target_receipt_path.write_text(
+                json.dumps(receipt, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
+            )
+            snapshot_origin = "specification snapshot" if prompted_source_sha else "repository HEAD"
+            diagnostics.append(
+                f"Candidate differs from {snapshot_origin} ({source_snapshot_sha256[:8]} vs {candidate_sha[:8]}). "
+                f"Evidence recorded; owner review is required ({receipt['review']['status']})."
+            )
+            return (
+                GateResult(
+                    gate_number=7,
+                    gate_name="CANDIDATE_RECEIPT",
+                    passed=True,
+                    diagnostics=diagnostics,
+                    details={
+                        "source_context_changed": True,
+                        "receipt": receipt,
+                        "receipt_sha256": receipt["receiptSha256"],
+                        "receipt_path": str(target_receipt_path),
+                        "promotion_allowed": False,
+                    },
+                    duration_seconds=time.time() - t0,
+                ),
+                receipt,
+                target_receipt_path,
+            )
+
+        # 3. Build raw candidate archive record for verified pass
+        record = {
             "lean_file": rel_lean_path,
             "candidate_sha256": candidate_sha,
             "source_path": rel_lean_path,
-            "source_snapshot_sha256": candidate_sha,
+            "source_snapshot_sha256": source_snapshot_sha256,
             "source_snapshot_current_sha256": candidate_sha,
             "source_context_changed": False,
             "toolchain": toolchain,
@@ -958,15 +1190,13 @@ class QMSEvidencePipeline:
             "git_head": git_head,
             "lean_check_returncode": kernel_details.get("lean_returncode", 0),
             "lean_output_sha256": hashlib.sha256(kernel_details.get("lean_output", "").encode("utf-8")).hexdigest(),
-            "semantic_vacuity_returncode": 0,
-            "semantic_vacuity_output_sha256": hashlib.sha256(b"").hexdigest(),
+            "semantic_vacuity_returncode": vac_rc,
+            "semantic_vacuity_output_sha256": vac_sha256,
             "axiom_audit_status": "collected" if audit_declarations else "not_requested",
             "axiom_audit_declarations": audit_declarations,
-            "axiom_audit_returncode": kernel_details.get("axiom_audit_returncode", 0),
+            "axiom_audit_returncode": kernel_details.get("axiom_audit_returncode") if audit_declarations else None,
             "axiom_audit_output": audit_output,
             "axiom_audit_output_sha256": audit_output_sha,
-            "audit_defect": 0.0,
-            "audit_policy_version": "opengauss-v1",
         }
 
         # Mint deterministic receipt
@@ -978,7 +1208,7 @@ class QMSEvidencePipeline:
             return (
                 GateResult(
                     gate_number=7,
-                    gate_name="PROMOTION_AND_IMMUTABLE_RECEIPT",
+                    gate_name="CANDIDATE_RECEIPT",
                     passed=False,
                     diagnostics=diagnostics,
                     socratic_critique="Gate 7 Receipt Failure: Newly minted proof artifact receipt failed canonical verification.",
@@ -997,25 +1227,32 @@ class QMSEvidencePipeline:
         target_receipt_path.parent.mkdir(parents=True, exist_ok=True)
         target_receipt_path.write_text(json.dumps(receipt, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
-        diagnostics.append(f"Deterministic SHA256 receipt minted: {receipt['receiptSha256']}")
-        diagnostics.append(f"Sealed environment gitHead={git_head[:8]}, toolchain={toolchain}")
-        diagnostics.append(f"Saved immutable receipt to {target_receipt_path}")
+        diagnostics.append(f"Self-checksummed candidate observation recorded: {receipt['receiptSha256']}")
+        diagnostics.append(f"Observed environment gitHead={git_head[:8]}, toolchain={toolchain}")
+        diagnostics.append(f"Saved candidate receipt to {target_receipt_path}; promotion remains pending owner review.")
 
         return (
             GateResult(
                 gate_number=7,
-                gate_name="PROMOTION_AND_IMMUTABLE_RECEIPT",
+                gate_name="CANDIDATE_RECEIPT",
                 passed=True,
                 diagnostics=diagnostics,
                 details={
                     "receipt_sha256": receipt["receiptSha256"],
                     "receipt_path": str(target_receipt_path),
+                    "promotion_allowed": receipt["review"]["promotionAllowed"],
+                    "receipt_authority": receipt["authority"],
+                    "review_status": receipt["review"]["status"],
+                    "source_context_changed": False,
+                    "semantic_vacuity_returncode": vac_rc,
                 },
                 duration_seconds=time.time() - t0,
             ),
             receipt,
             target_receipt_path,
         )
+
+    gate_7_promotion_and_receipt = gate_7_candidate_receipt
 
     # -------------------------------------------------------------------------
     # State Machine Orchestrator
@@ -1055,31 +1292,31 @@ class QMSEvidencePipeline:
             report.total_duration_seconds = time.time() - start_time
             return report
 
-        # Gate 3: ADVERSARIAL SOCRATIC REVIEW
-        g3_res = self.gate_3_adversarial_socratic_review(packet)
+        # Gate 3: STATIC TRAP SCREEN
+        g3_res = self.gate_3_static_trap_screen(packet)
         report.gates.append(g3_res)
         if not g3_res.passed:
-            report.status = "REJECTED_AT_GATE_3_ADVERSARIAL_SOCRATIC_REVIEW"
+            report.status = "REJECTED_AT_GATE_3_STATIC_TRAP_SCREEN"
             report.final_verdict = "REJECTED"
             report.halted_at_gate = 3
             report.total_duration_seconds = time.time() - start_time
             return report
 
-        # Gate 4: INTERACTIVE PROVER / PANTOGRAPH
-        g4_res = self.gate_4_interactive_prover(packet)
+        # Gate 4: STATIC PROOF-HOLE SCAN
+        g4_res = self.gate_4_static_proof_hole_scan(packet)
         report.gates.append(g4_res)
         if not g4_res.passed:
-            report.status = "REJECTED_AT_GATE_4_INTERACTIVE_PROVER"
+            report.status = "REJECTED_AT_GATE_4_STATIC_PROOF_HOLE_SCAN"
             report.final_verdict = "REJECTED"
             report.halted_at_gate = 4
             report.total_duration_seconds = time.time() - start_time
             return report
 
-        # Gate 5: KERNEL & INTEGRATION
+        # Gate 5: KERNEL SOURCE CHECK
         g5_res = self.gate_5_kernel_and_integration(packet)
         report.gates.append(g5_res)
         if not g5_res.passed:
-            report.status = "REJECTED_AT_GATE_5_KERNEL_AND_INTEGRATION"
+            report.status = "REJECTED_AT_GATE_5_KERNEL_SOURCE_CHECK"
             report.final_verdict = "REJECTED"
             report.halted_at_gate = 5
             report.total_duration_seconds = time.time() - start_time
@@ -1095,23 +1332,23 @@ class QMSEvidencePipeline:
             report.total_duration_seconds = time.time() - start_time
             return report
 
-        # Gate 7: PROMOTION & IMMUTABLE RECEIPT
-        g7_res, receipt, receipt_path = self.gate_7_promotion_and_receipt(
+        # Gate 7: CANDIDATE RECEIPT
+        g7_res, receipt, receipt_path = self.gate_7_candidate_receipt(
             packet=packet,
             kernel_result=g5_res,
             out_receipt=out_receipt,
         )
         report.gates.append(g7_res)
         if not g7_res.passed or receipt is None:
-            report.status = "REJECTED_AT_GATE_7_PROMOTION_AND_RECEIPT"
+            report.status = "REJECTED_AT_GATE_7_CANDIDATE_RECEIPT"
             report.final_verdict = "REJECTED"
             report.halted_at_gate = 7
             report.total_duration_seconds = time.time() - start_time
             return report
 
-        # All 7 Gates Passed Cleanly
-        report.status = "PROMOTED"
-        report.final_verdict = "ACCEPTED"
+        # A candidate receipt records observations. Promotion is a separate owner action.
+        report.status = "EVIDENCE_RECORDED_PENDING_OWNER_REVIEW"
+        report.final_verdict = "PENDING_OWNER_REVIEW"
         report.receipt = receipt
         report.receipt_path = str(receipt_path) if receipt_path else None
         report.total_duration_seconds = time.time() - start_time
@@ -1137,11 +1374,11 @@ def print_text_report(report: PipelineReport) -> None:
     gate_names = [
         "1: INTAKE",
         "2: GROUNDING",
-        "3: ADVERSARIAL SOCRATIC REVIEW",
-        "4: INTERACTIVE PROVER / PANTOGRAPH",
-        "5: KERNEL & INTEGRATION",
+        "3: STATIC TRAP SCREEN",
+        "4: STATIC PROOF-HOLE SCAN",
+        "5: KERNEL SOURCE CHECK",
         "6: STATEMENT-FIDELITY REVIEW",
-        "7: PROMOTION & IMMUTABLE RECEIPT",
+        "7: CANDIDATE RECEIPT",
     ]
 
     for idx, (gname, gres) in enumerate(zip(gate_names, report.gates, strict=False), start=1):
@@ -1156,12 +1393,12 @@ def print_text_report(report: PipelineReport) -> None:
             print()
 
     print("=" * 76)
-    if report.final_verdict == "ACCEPTED":
-        print("✓ SUCCESS: PROMOTION ACCEPTED - ALL 7 GATES PASSED")
+    if report.final_verdict == "PENDING_OWNER_REVIEW":
+        print("✓ EVIDENCE RECORDED: ALL AUTOMATED CHECKS PASSED; OWNER REVIEW IS STILL REQUIRED")
         if report.receipt:
-            print(f"Deterministic Receipt SHA256: {report.receipt.get('receiptSha256')}")
+            print(f"Candidate Receipt SHA256:     {report.receipt.get('receiptSha256')}")
         if report.receipt_path:
-            print(f"Immutable Receipt File:       {report.receipt_path}")
+            print(f"Candidate Receipt File:       {report.receipt_path}")
     else:
         print(f"✗ REJECTED: PROGRESSION HALTED AT GATE {report.halted_at_gate}")
     print("=" * 76)
@@ -1205,7 +1442,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         else:
             print_text_report(report)
 
-        return 0 if report.final_verdict == "ACCEPTED" else 1
+        return 0 if report.status == "EVIDENCE_RECORDED_PENDING_OWNER_REVIEW" else 1
 
     return 0
 

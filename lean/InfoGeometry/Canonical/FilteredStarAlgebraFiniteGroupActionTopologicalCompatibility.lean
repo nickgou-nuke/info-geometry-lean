@@ -39,10 +39,11 @@ structure CompatibleTopologicalGroupAction
     (R : TopologicalRealization (Stage := Stage) (sys := sys) (B := B)) where
   action : G → B →⋆ₐ[ℂ] B
   stage_agreement : ∀ (i : I) (g : G),
-    (action g).comp (R.ι i) = (R.ι i).comp (A.action i g)
+    (action g).comp (R.ι i) = (R.ι i).comp (A.action i g).toStarAlgHom
 
 variable (R : TopologicalRealization (Stage := Stage) (sys := sys) (B := B))
-variable (T : CompatibleTopologicalGroupAction Stage sys A R)
+variable (T : CompatibleTopologicalGroupAction
+  (Stage := Stage) (sys := sys) (A := A) R)
 
 theorem topologicalGroupAction_on_stage
     (i : I) (g : G) (x : Stage i) :

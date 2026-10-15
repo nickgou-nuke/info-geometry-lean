@@ -5,21 +5,17 @@ import InfoGeometry.Canonical.BostConnesAmplituhedronBoundary
 import InfoGeometry.Canonical.AmplituhedronThermodynamicProjection
 
 /-!
-# Amplituhedron and Bost-Connes Analytic Bridge
+# Algebraic Quotient Readout and Bost-Connes Stage Map
 
-This module formally connects the Amplituhedron scattering kinematics (BCFW recursion 
-and On-Shell Factorization) with the zero-temperature Bost-Connes KMS state on the 
-infinite Cantor boundary.
+This module studies consequences of an explicitly supplied linear map from a
+quotient algebra to a finite diagonal stage. It does not construct that map from
+scattering geometry, identify the quotient with the Klein quadric, or prove a
+global amplituhedron/Bost-Connes equality.
 
-## The Synthesis Dictionary (Conceptual Invariant)
-1. **BCFW Recursion** = The mixed Arnold-Cohen relations (`ω₁₂ ∧ ω₂₃ + ω₂₃ ∧ ω₃₁ + ω₃₁ ∧ ω₁₂ = 0`).
-2. **On-Shell Factorization** = The Klein quadric boundary ($Q = 0$) represented by 
-   nilpotent chiral generators.
-3. **All-Loop Integrand / Amplituhedron Volume** = The Riemann Zeta partition function 
-   evaluated by the Bost-Connes KMS state.
-
-Following the mandate, all generators are explicitly typed, and the BCFW anomalies 
-vanish formally under the zero-temperature phase-space shattering.
+The quotient relation vanishes after passage to its own quotient, and linear
+maps preserve zero. These are algebraic facts about the defined quotient and
+map, not a derived BCFW recursion, physical boundary factorization, or KMS
+identification.
 -/
 
 noncomputable section
@@ -32,9 +28,9 @@ open InfoGeometry.Canonical.AmplituhedronThermodynamicProjection
 open InfoGeometry.Canonical.UHFInductiveColimitBoundary
 
 /-!
-### 1. Amplituhedron Volume via Bost-Connes Evaluation
-We define the Amplituhedron Volume as the mathematical trace of the kinematic 
-scattering observables evaluated by the zero-temperature Bost-Connes state.
+### 1. Finite-stage linear readout
+The function below evaluates the supplied image under the imported finite-stage
+state. Calling it an amplituhedron volume requires additional geometric data.
 -/
 
 -- To evaluate kinematic forms on the Cantor boundary, we require an intertwiner 
@@ -49,15 +45,13 @@ def amplituhedronVolumeEval (n : ℕ) (obs : BCFWKinematicAlgebra ℂ) : ℂ :=
   colimitZeroTempState n (kinematicToDiag n obs)
 
 /-!
-### 2. Vanishing of Kinematic Anomalies
-We prove that the Arnold-Cohen BCFW relation evaluates to absolute zero 
-under the Amplituhedron volume map, ensuring anomaly-free scattering.
+### 2. Vanishing of the imposed quotient relation
+The theorem below is the algebraic consequence of imposing the Arnold-type
+relation in the quotient; it makes no scattering-anomaly claim.
 -/
 
 /-- 
-**Theorem: BCFW Kinematic Anomaly Vanishes**
-When evaluated on the Bost-Connes zero-temperature boundary, the 
-Arnold-Cohen kinematic anomaly strictly vanishes.
+**Theorem: quotient relation has zero readout**
 -/
 theorem bcfw_anomaly_vanishes_on_boundary (n : ℕ) :
     amplituhedronVolumeEval kinematicToDiag n (bcfwMk ℂ (arnold_cohen_relation ℂ)) = 0 := by
@@ -100,9 +94,9 @@ theorem square_zero_pair_evaluates_to_zero (n : ℕ) (S_plus S_minus : ℂ)
     exact map_zero (finiteZeroTempState n)
 
 /-!
-### 4. Direct Zeta/Volume Comparison via Shattering
-By phase-space shattering, the infinite limit volume reduces to the 
-finite stage evaluations without any missing topological limits.
+### 4. Conditional finite-stage coherence
+The following result needs the stated compatibility of the supplied maps at
+successive stages. It is not an infinite-limit or zeta/volume theorem.
 -/
 
 /-- 

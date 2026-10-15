@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv
-import Mathlib.Data.Real.Sqrt
+import Mathlib.Analysis.Real.Sqrt
 import Mathlib.Tactic
 import InfoGeometry.Analysis.BipolarCayleyOccupation
 
@@ -23,10 +23,10 @@ def response (C B x : ℝ) : ℝ := C * x - B * x ^ 2
 
 theorem response_hasDerivAt (C B x : ℝ) :
     HasDerivAt (response C B) (C - 2 * B * x) x := by
-  convert ((hasDerivAt_id x).const_mul C).sub
-    (((hasDerivAt_id x).pow 2).const_mul B) using 1
-  simp
-  ring
+  have h := ((hasDerivAt_id x).const_mul C).sub
+    (((hasDerivAt_id x).pow 2).const_mul B)
+  have hd : C * 1 - B * (2 * x ^ (2 - 1) * 1) = C - 2 * B * x := by ring
+  exact hd ▸ h
 
 theorem dilation_defect (C B x : ℝ) :
     x * deriv (response C B) x - response C B x = -B * x ^ 2 := by
@@ -116,11 +116,12 @@ theorem log_odds_hasDerivAt (p : ℝ) (hp : 0 < p) (hp1 : p < 1) :
       (1 / (p * (1 - p))) p := by
   have h0 : p ≠ 0 := ne_of_gt hp
   have h1 : 1 - p ≠ 0 := ne_of_gt (sub_pos.mpr hp1)
-  convert ((hasDerivAt_id p).log h0).sub
-    (((hasDerivAt_const p (1 : ℝ)).sub (hasDerivAt_id p)).log h1) using 1
-  dsimp
-  field_simp
-  ring
+  have h := ((hasDerivAt_id p).log h0).sub
+    (((hasDerivAt_const p (1 : ℝ)).sub (hasDerivAt_id p)).log h1)
+  have hd : 1 / p - (0 - 1) / (1 - p) = 1 / (p * (1 - p)) := by
+    field_simp
+    ring
+  exact hd ▸ h
 
 /-- Pullback of the Euclidean metric by log odds, as a squared derivative. -/
 theorem log_odds_pullback (p : ℝ) (hp : 0 < p) (hp1 : p < 1) :
@@ -137,10 +138,10 @@ theorem logistic_field_geodesic (v p : ℝ) :
       ((2 * p - 1) / (p * (1 - p))) * (2 * v * p * (1 - p)) ^ 2 = 0 := by
   have hd : HasDerivAt (fun q : ℝ => 2 * v * q * (1 - q))
       (2 * v * (1 - 2 * p)) p := by
-    convert (((hasDerivAt_id p).const_mul (2 * v)).mul
-      ((hasDerivAt_const p (1 : ℝ)).sub (hasDerivAt_id p))) using 1
-    dsimp
-    ring
+    have h := (((hasDerivAt_id p).const_mul (2 * v)).mul
+      ((hasDerivAt_const p (1 : ℝ)).sub (hasDerivAt_id p)))
+    have hval : 2 * v * 1 * (1 - p) + 2 * v * p * (0 - 1) = 2 * v * (1 - 2 * p) := by ring
+    exact hval ▸ h
   rw [hd.deriv]
   field_simp
   ring

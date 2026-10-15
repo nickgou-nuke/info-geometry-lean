@@ -56,7 +56,7 @@ theorem paper_conclusion_boundary_subcritical_perturbation_second_order_rigidity
   let gap := fun m => (countV m - countA m) / scale m
   let main := fun m => (countA m - M * scale m) / scale m
   have hBoundaryAbs : Tendsto (fun m => |boundaryError m|) atTop (nhds 0) := by
-    simpa using (tendsto_zero_iff_abs_tendsto_zero boundaryError).1 hBoundary
+    exact (tendsto_zero_iff_abs_tendsto_zero boundaryError).1 hBoundary
   have hGapAbsLe : ∀ m, |gap m| ≤ |boundaryError m| := by
     intro m
     have hscale_pos : 0 < scale m := by

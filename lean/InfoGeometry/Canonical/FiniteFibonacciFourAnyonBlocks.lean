@@ -33,7 +33,11 @@ inductive FourAnyonChannel where
   | vacuum
   /-- Fibonacci channel, corresponding to the computational vector `|1⟩`. -/
   | fib
-  deriving DecidableEq, Repr, Fintype
+  deriving DecidableEq, Repr
+
+instance : Fintype FourAnyonChannel where
+  elems := {.vacuum, .fib}
+  complete channel := by cases channel <;> decide
 
 namespace FourAnyonChannel
 

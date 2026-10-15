@@ -108,13 +108,21 @@ theorem paper_pom_delta_min_extra_readouts
         (fun j => ((lifted j : V.dualAnnihilator) : Module.Dual ℝ (MomentAmbient d Delta))) := by
     have hker :
         (coordinateFunctionalLinear :
-          MomentAmbient d Delta →ₗ[ℝ] Module.Dual ℝ (MomentAmbient d Delta)).ker = ⊥ := by
+          (Fin (d + Delta) → ℝ) →ₗ[ℝ] Module.Dual ℝ (Fin (d + Delta) → ℝ)).ker = ⊥ := by
       exact LinearMap.ker_eq_bot.mpr coordinateFunctional_injective
-    simpa [lifted] using
-      hlin.map'
-        (coordinateFunctionalLinear :
-          MomentAmbient d Delta →ₗ[ℝ] Module.Dual ℝ (MomentAmbient d Delta))
+    have h₁ : LinearIndependent ℝ (fun j => (coordinateFunctional (constraints j) : Module.Dual ℝ (Fin (d + Delta) → ℝ))) := by
+      have h₂ := hlin.map'
+        (coordinateFunctionalLinear : (Fin (d + Delta) → ℝ) →ₗ[ℝ] Module.Dual ℝ (Fin (d + Delta) → ℝ))
         hker
+      -- The map' gives LinearIndependent (coordinateFunctionalLinear ∘ constraints)
+      -- We need LinearIndependent (fun j => coordinateFunctional (constraints j))
+      -- Since coordinateFunctionalLinear.toFun = coordinateFunctional (with implicit args), we convert
+      convert h₂ using 1
+      <;> funext j <;>
+        simp [LinearMap.toFun_eq_coe, coordinateFunctionalLinear]
+      <;>
+      rfl
+    simpa [MomentAmbient, lifted] using h₁
   have hlinSubtype : LinearIndependent ℝ lifted := by
     exact LinearIndependent.of_comp V.dualAnnihilator.subtype hlinLifted
   have hcard : Delta ≤ Module.finrank ℝ V.dualAnnihilator := by

@@ -15,7 +15,7 @@ namespace HexIndexA2RootIntertwiner
 
 open HexagonalSixRootTiling A2InsideD5RootSubsystem
 
-def colorFin (a : HexColor) : Fin 3 := ⟨a.val, a.val_lt⟩
+def colorFin (a : HexColor) : Fin 3 := a
 
 def sheetColorRoot : HexSheet × HexColor → A2Root
   | (.positive, a) =>

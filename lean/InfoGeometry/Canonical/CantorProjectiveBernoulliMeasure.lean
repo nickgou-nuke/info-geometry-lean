@@ -37,8 +37,7 @@ def projectiveLimitMeasure : Measure PrefixProjectiveLimit :=
 instance projectiveLimitMeasure_isProbabilityMeasure :
     IsProbabilityMeasure projectiveLimitMeasure := by
   unfold projectiveLimitMeasure
-  exact Measure.isProbabilityMeasure_map
-    PrefixProjectiveLimit.continuous_ofCantor.measurable.aemeasurable
+  exact inferInstance
 
 theorem projectiveLimitMeasure_apply_prefix_fiber
     (N : ℕ) (b : BitWord N) :
@@ -187,7 +186,7 @@ theorem projectiveLimit_prefix_successor_fibers_disjoint
   apply projectiveLimit_prefix_fiber_pairwise_disjoint (N + 1)
   intro h
   have hcoord := congrFun h ⟨N, Nat.lt_succ_self N⟩
-  simpa [extendSucc] using hcoord
+  simp [extendSucc] at hcoord
 
 def projectiveLimitReadoutMeasure : Measure ℝ :=
   Measure.map
@@ -197,8 +196,7 @@ def projectiveLimitReadoutMeasure : Measure ℝ :=
 instance projectiveLimitReadoutMeasure_isProbabilityMeasure :
     IsProbabilityMeasure projectiveLimitReadoutMeasure := by
   unfold projectiveLimitReadoutMeasure
-  exact Measure.isProbabilityMeasure_map
-    continuous_projectiveLimit_readout.measurable.aemeasurable
+  exact inferInstance
 
 theorem projectiveLimitReadoutMeasure_apply_compl_unitInterval :
     projectiveLimitReadoutMeasure (Set.Icc (0 : ℝ) 1)ᶜ = 0 := by
@@ -215,7 +213,7 @@ theorem projectiveLimitReadoutMeasure_apply_compl_unitInterval :
         ⟨p, rfl⟩
       exact (hp hreadout).elim
     · intro hp
-      exact False.elim (by simpa using hp)
+      simp at hp
   rw [hpre, measure_empty]
 
 def tomitaSymmetrizedMeasure : Measure PrefixProjectiveLimit :=
@@ -242,7 +240,7 @@ theorem tomita_measure_preserving_symmetrized :
   unfold tomitaSymmetrizedMeasure
   have hmeas : Measurable tomitaProjectiveLimit :=
     continuous_tomitaProjectiveLimit.measurable
-  rw [Measure.map_smul, Measure.map_add _ _ hmeas]
+  rw [Measure.map_smul _ hmeas.aemeasurable, Measure.map_add _ _ hmeas]
   have hmap :
       Measure.map tomitaProjectiveLimit
           (Measure.map tomitaProjectiveLimit projectiveLimitMeasure) =
@@ -265,8 +263,7 @@ def tomitaSymmetrizedReadoutMeasure : Measure ℝ :=
 instance tomitaSymmetrizedReadoutMeasure_isProbabilityMeasure :
     IsProbabilityMeasure tomitaSymmetrizedReadoutMeasure := by
   unfold tomitaSymmetrizedReadoutMeasure
-  exact Measure.isProbabilityMeasure_map
-    continuous_projectiveLimit_readout.measurable.aemeasurable
+  exact inferInstance
 
 def readoutTomitaReflection : ℝ → ℝ := fun x => 1 - x
 
@@ -328,7 +325,7 @@ theorem tomitaSymmetrizedReadoutMeasure_apply_compl_unitInterval :
         ⟨p, rfl⟩
       exact (hp hreadout).elim
     · intro hp
-      exact False.elim (by simpa using hp)
+      simp at hp
   rw [hpre, measure_empty]
 
 theorem tomitaSymmetrizedReadoutMeasure_integrable_id :
@@ -366,7 +363,7 @@ theorem tomitaSymmetrizedReadoutMeasure_integral_id_eq_half :
     simpa [readoutTomitaReflection] using hmap
   have hsub' := integral_sub hconst hμ
   have hconst_int : ∫ _x : ℝ, (1 : ℝ) ∂μ = 1 := by
-    simp [MeasureTheory.IsProbabilityMeasure.measure_univ]
+    simp
   have hrelation :
       (∫ x : ℝ, x ∂μ) = 1 - ∫ x : ℝ, x ∂μ := by
     calc

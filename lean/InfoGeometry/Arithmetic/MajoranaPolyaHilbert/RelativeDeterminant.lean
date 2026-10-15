@@ -24,7 +24,7 @@ theorem finiteRelativeDeterminant_self
     (A : Matrix n n ℝ) :
     finiteRelativeDeterminant A A = 0 := by
   unfold finiteRelativeDeterminant
-  rw [sub_self, Matrix.det_zero (inferInstance : Nonempty n)]
+  rw [sub_self, Matrix.det_zero]
 
 /-! ## 7. Relative determinant/scattering MBK target -/
 

@@ -66,14 +66,24 @@ theorem hasDerivAt_scalarLogReadout_zero
   have hf : HasDerivAt f (ω ⁅X, A⁆) 0 := by
     let ω_const : ℝ → (EndH →L[ℝ] ℝ) := fun _ => ω
     have hω_const : HasDerivAt ω_const 0 0 := hasDerivAt_const 0 ω
-    simpa using hω_const.clm_apply h_transport
+    have hApply :
+        HasDerivAt
+          (fun t : ℝ => ω_const t (transportedObservable (E := E) X A t))
+          ((0 : EndH →L[ℝ] ℝ) (transportedObservable (E := E) X A 0) +
+            ω ⁅X, A⁆)
+          0 := hω_const.clm_apply h_transport
+    simpa [f, ω_const] using hApply
   have hf0 : f 0 = 1 := by
     simp [f, transportedObservable, expTransport, hA]
   have hLog : HasDerivAt Real.log 1 (f 0) := by
     rw [hf0]
     simpa using Real.hasDerivAt_log (show (1 : ℝ) ≠ 0 by norm_num)
   have hcomp := hLog.comp 0 hf
-  dsimp
+  have hfun : Real.log ∘ f =
+      (fun t => Real.log (ω (transportedObservable (E := E) X A t))) := by
+    funext t
+    rfl
+  rw [hfun] at hcomp
   simpa [operatorInformationFirstVariation, lieBracket_eq_transportCommutator] using hcomp
 
 /-- Scalar, non-logarithmic transport readout underlying `scalarLogReadout`. -/
@@ -205,7 +215,10 @@ theorem deriv2_scalarLogReadout_zero
   have hquot :
       deriv (fun t : ℝ => g t / f t) 0 =
         (deriv g 0 * f 0 - g 0 * deriv f 0) / (f 0) ^ (2 : ℕ) := by
-    simpa using deriv_div (c := g) (d := f) (x := 0) hgDiff hfDiff hf0
+    change deriv (g / f) 0 =
+      (deriv g 0 * f 0 - g 0 * deriv f 0) / (f 0) ^ (2 : ℕ)
+    simpa only [Pi.div_apply] using
+      (deriv_div (c := g) (d := f) (x := 0) hgDiff hfDiff hf0)
   rw [hquot]
   have hg0 :
       g 0 = ω (operatorInformationFirstVariation (E := E) X A) := by

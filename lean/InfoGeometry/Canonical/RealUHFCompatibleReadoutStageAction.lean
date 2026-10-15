@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.RealUHFCompatibleStateInverseLimitTopologicalDynamics
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RealUHFFiniteMatrixNormedCarrier
+import Mathlib.Analysis.Normed.Operator.Bilinear
 
 /-!
 # Finite-stage linear packaging of the compatible-family action
@@ -47,10 +48,9 @@ def stageReadoutAction (n : ℕ) (t : ℝ) :
 def stageReadoutActionContinuous (n : ℕ) (t : ℝ) :
     (InfoGeometry.Clifford.Cl11TensorTower.MatStage n →L[ℝ] ℝ) →L[ℝ]
       (InfoGeometry.Clifford.Cl11TensorTower.MatStage n →L[ℝ] ℝ) :=
-  (ContinuousLinearMap.flip
-      (ContinuousLinearMap.compL ℝ
+  ((ContinuousLinearMap.compL ℝ
         (InfoGeometry.Clifford.Cl11TensorTower.MatStage n)
-        (InfoGeometry.Clifford.Cl11TensorTower.MatStage n) ℝ))
+        (InfoGeometry.Clifford.Cl11TensorTower.MatStage n) ℝ).flip)
     (scalarDilationStageFlow.flow n t)
 
 @[simp] theorem stageReadoutActionContinuous_apply
@@ -82,10 +82,9 @@ theorem stageReadoutActionContinuous_add
 def readoutRestrictionContinuous (n : ℕ) :
     (InfoGeometry.Clifford.Cl11TensorTower.MatStage n →L[ℝ] ℝ) →L[ℝ]
       (InfoGeometry.Clifford.Cl11TensorTower.MatStage (n + 1) →L[ℝ] ℝ) :=
-  (ContinuousLinearMap.flip
-      (ContinuousLinearMap.compL ℝ
+  ((ContinuousLinearMap.compL ℝ
         (InfoGeometry.Clifford.Cl11TensorTower.MatStage (n + 1))
-        (InfoGeometry.Clifford.Cl11TensorTower.MatStage n) ℝ))
+        (InfoGeometry.Clifford.Cl11TensorTower.MatStage n) ℝ).flip)
     (stageRestrictCLM n)
 
 @[simp] theorem readoutRestrictionContinuous_apply
@@ -122,8 +121,8 @@ theorem coordinateTopCatHom_action_as_stageReadoutAction
         (scalarDilationTopCatAction t ρ) =
       stageReadoutAction n t ((coordinateTopCatHom n) ρ) := by
   ext X
-  simpa only [stageReadoutAction_apply] using
-    coordinateTopCatHom_scalarDilation_naturality t n ρ X
+  rw [stageReadoutAction_apply]
+  exact coordinateTopCatHom_scalarDilation_naturality t n ρ X
 
 theorem coordinateTopCatHom_action_square
     (n : ℕ) (t : ℝ) :
@@ -134,7 +133,9 @@ theorem coordinateTopCatHom_action_square
   intro ρ
   apply ContinuousLinearMap.ext
   intro X
-  simpa only [stageReadoutActionContinuous_apply] using
-    coordinateTopCatHom_scalarDilation_naturality t n ρ X
+  change (coordinateTopCatHom n (scalarDilationTopCatAction t ρ)) X =
+    (stageReadoutActionContinuous n t (coordinateTopCatHom n ρ)) X
+  rw [stageReadoutActionContinuous_apply]
+  exact coordinateTopCatHom_scalarDilation_naturality t n ρ X
 
 end InfoGeometry.Canonical.RealUHFCompatibleReadoutStageActionTopCat

@@ -36,7 +36,7 @@ and the grading predicates extend continuously/compatibly, the invariants transp
 exactly to the ambient closure, resolving the socket natively without axioms.
 -/
 @[rep_depth transport]
-def resolveColimitInheritsInvariants_of_ambient
+noncomputable def resolveColimitInheritsInvariants_of_ambient
     (Chain : ℕ → Type u) [∀ n, Ring (Chain n)]
     (Invariants : ∀ n, SupergradedClosureAt (Chain n))
     (Bonding : ∀ n, BondingIntertwiner (Invariants n) (Invariants (n+1)))

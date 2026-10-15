@@ -191,9 +191,13 @@ theorem symbolicLatentPathFamilyImageMapTopCatHom_factorization_unique
   apply TopCat.hom_ext
   ext y
   have hy := congrArg (fun m => m y) hu
-  simpa [symbolicLatentPathFamilyImageMapTopCatHom,
-    symbolicLatentPathFamilyImageInclusionTopCatHom,
-    symbolicLatentLocalChartMapTopCatHom,
-    TopCat.comp_app, TopCat.ofHom] using hy
+  have hy' : (u y).1 = F.toFun y.1 := by
+    simpa [symbolicLatentPathFamilyImageInclusionTopCatHom,
+      symbolicLatentLocalChartMapTopCatHom,
+      TopCat.comp_app, TopCat.ofHom] using hy
+  have hmap :
+      (symbolicLatentPathFamilyImageMapTopCatHom F H y).1 = F.toFun y.1 := by
+    rfl
+  exact hy'.trans hmap.symm
 
 end InfoGeometry.Topology

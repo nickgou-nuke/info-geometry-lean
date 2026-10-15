@@ -1,10 +1,12 @@
-import Mathlib.Data.Real.Basic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Basic.Real.Basic
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Order.Filter.AtTopBot.Basic
 import Mathlib.Order.Filter.Tendsto
 import Mathlib.Topology.Basic
-import Mathlib.MeasureTheory.Measure.MeasureSpace
+import Mathlib.MeasureTheory.MeasurableSpace.Defs
+import Mathlib.MeasureTheory.Measure.MeasureSpaceDef
+import Mathlib.MeasureTheory.Measure.Map
+import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
 import InfoGeometry.Cramer
 import InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 import InfoGeometry.Meta.BridgeTarget

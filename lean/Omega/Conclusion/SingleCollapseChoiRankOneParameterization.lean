@@ -88,7 +88,10 @@ theorem paper_conclusion_single_collapse_choi_rank_one_parameterization
       conclusion_qfold_channel_choi_rank_equals_qcollision_data,
       conclusion_qfold_channel_choi_rank_equals_qcollision_block_ranks,
       conclusion_qfold_channel_choi_rank_equals_qcollision_fiber_card,
-      FoldQuantumChannelCollisionData.sqMoment] using hverified
+      FoldQuantumChannelCollisionData.sqMoment,
+      FoldQuantumChannelCollisionData.qFoldBlockRanks,
+      FoldQuantumChannelCollisionData.qCollisionProjectorRank,
+      List.map_map, Multiset.sum_toList, Function.comp_def] using hverified
   have hsplit_q :
       (∑ x : X, A x ^ D.q) =
         A D.distinguished ^ D.q + s.sum (fun x => A x ^ D.q) := by

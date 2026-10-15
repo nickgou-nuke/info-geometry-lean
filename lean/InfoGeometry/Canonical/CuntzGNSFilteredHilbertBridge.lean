@@ -1,5 +1,4 @@
 import InfoGeometry.Prequantum.AlgebraicGNSState
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Prequantum.GNSBridge
 import InfoGeometry.Algebra.CuntzGNSRepresentation
 import InfoGeometry.Algebra.CuntzKMSState
@@ -102,9 +101,10 @@ def cuntzKMSRealAlgebraicState (hpos : ∀ i, 0 < primes i) : RealAlgebraicState
   toLinearMap := cuntzKMSLinearMap n primes β
   normalized := by
     dsimp [cuntzKMSLinearMap]
-    have H := (DiagonalKMSState.canonical primes (β : ℂ) hZ).weights_sum_one
-    have H2 : (∑ i : Fin n, 1 * kmsWeight n primes (β : ℂ) i) = 1 := by
-      simpa using H
+    have H := kmsWeight_sum_eq_one n primes (β : ℂ) hZ
+    have H2 : (∑ i : Fin n, (1 : ℂ) * kmsWeight n primes (β : ℂ) i) = 1 := by
+      simp_rw [one_mul]
+      exact H
     rw [H2]
     rfl
   positive := by

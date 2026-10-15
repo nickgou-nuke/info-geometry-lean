@@ -35,7 +35,8 @@ theorem braidGroup3Hom_of
     (hArtin : FreeGroup.lift f braidRelation = 1) :
     PresentedGroup.toGroup (fun r hr => by
       have hr' : r = braidRelation := by
-        simpa [braidRelations] using hr
+        change r = braidRelation at hr
+        exact hr
       rw [hr']
       exact hArtin) (PresentedGroup.of (0 : Generator)) = f 0 := by
   exact PresentedGroup.toGroup.of _
@@ -46,7 +47,8 @@ theorem braidGroup3Hom_of_one
     (hArtin : FreeGroup.lift f braidRelation = 1) :
     PresentedGroup.toGroup (fun r hr => by
       have hr' : r = braidRelation := by
-        simpa [braidRelations] using hr
+        change r = braidRelation at hr
+        exact hr
       rw [hr']
       exact hArtin) (PresentedGroup.of (1 : Generator)) = f 1 := by
   exact PresentedGroup.toGroup.of _
@@ -58,7 +60,8 @@ noncomputable def braidGroup3Hom
     BraidGroup3 →* G :=
   PresentedGroup.toGroup (fun r hr => by
     have hr' : r = braidRelation := by
-      simpa [braidRelations] using hr
+      change r = braidRelation at hr
+      exact hr
     rw [hr']
     exact hArtin)
 

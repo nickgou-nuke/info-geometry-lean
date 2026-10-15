@@ -7,9 +7,13 @@ inductive conclusion_leyang_quadratic_shadows_incomplete_with_exact_conditional_
   | identity
   | transposition
   | threeCycle
-  deriving DecidableEq, Fintype, Repr
+  deriving DecidableEq, Repr
 
 open conclusion_leyang_quadratic_shadows_incomplete_with_exact_conditional_entropy_class
+
+instance : Fintype conclusion_leyang_quadratic_shadows_incomplete_with_exact_conditional_entropy_class where
+  elems := {identity, transposition, threeCycle}
+  complete := by rintro (identity | transposition | threeCycle) <;> simp
 
 /-- The finite probability table coming from the class sizes in `S₃`. -/
 noncomputable def conclusion_leyang_quadratic_shadows_incomplete_with_exact_conditional_entropy_prob :

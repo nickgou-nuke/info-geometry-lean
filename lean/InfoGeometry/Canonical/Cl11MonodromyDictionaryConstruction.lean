@@ -21,6 +21,7 @@ noncomputable section
 
 namespace InfoGeometry.Canonical.Cl11MonodromyDictionaryConstruction
 
+open scoped Matrix Kronecker
 open InfoGeometry.Clifford.Cl11InfiniteCarrier
 
 /-- First tensor-stage Witt creation operator in the `Cl(1,1)` tower. -/
@@ -30,18 +31,10 @@ def wittCreationStage1 : Stage 1 :=
 /-- The first tensor-stage Witt creation operator is square-zero. -/
 theorem wittCreationStage1_sq :
     wittCreationStage1 * wittCreationStage1 = 0 := by
-  dsimp [wittCreationStage1, InfoGeometry.Clifford.Cl11TensorTower.jwCreation,
-    InfoGeometry.Clifford.Cl11TensorTower.jwStringWithBase,
-    InfoGeometry.Clifford.Cl11TensorTower.globalChirality,
-    InfoGeometry.Clifford.TowerMatrix.kronPow]
-  rw [← Matrix.mul_kronecker_mul]
-  ext i j
-  rcases i with ⟨i0, i1⟩
-  rcases j with ⟨j0, j1⟩
-  have h0 : i0 = j0 := Subsingleton.elim _ _
-  subst h0
-  fin_cases i1 <;> fin_cases j1 <;>
-    simp [InfoGeometry.Clifford.Cl11TensorTower.wittCreationBase]
+  change ((1 : InfoGeometry.Clifford.TowerMatrix.Mat 0) ⊗ₖ InfoGeometry.Clifford.Cl11TensorTower.wittCreationBase) *
+    ((1 : InfoGeometry.Clifford.TowerMatrix.Mat 0) ⊗ₖ InfoGeometry.Clifford.Cl11TensorTower.wittCreationBase) = 0
+  rw [← Matrix.mul_kronecker_mul, mul_one, InfoGeometry.Clifford.Cl11TensorTower.wittCreationBase_sq,
+    Matrix.kronecker_zero]
 
 /-- The direct-limit modular generator is the canonical image of the
 stage-one Witt creation operator. -/

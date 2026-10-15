@@ -38,8 +38,11 @@ theorem maps_cycles
     (x : B₁.cycles) :
     f x ∈ B₂.cycles := by
   change B₂.d (f x) = 0
+  have hx : B₁.d (x : C₁) = 0 := x.property
   have h := congrArg (fun g : C₁ →ₗ[ℝ] C₂ => g x) hf
-  simpa [LinearMap.comp_apply, x.property] using h.symm
+  change f (B₁.d (x : C₁)) = B₂.d (f x) at h
+  rw [hx, map_zero] at h
+  exact h.symm
 
 def cycleMap
     (f : C₁ →ₗ[ℝ] C₂)

@@ -126,10 +126,11 @@ lemma zeckendorf_no_carry_additivity_sum_eq_sorted_union
       List.Perm (((s ++ t).mergeSort (· ≥ ·)).map Nat.fib) ((s ++ t).map Nat.fib) := by
     simpa [List.map_append] using
       (List.Perm.map Nat.fib (List.mergeSort_perm (s ++ t) (· ≥ ·)))
-  haveI : LeftCommutative Nat.add := ⟨Nat.add_left_comm⟩
+  have hAddLeftComm : LeftCommutative (fun a b : ℕ => a + b) := ⟨Nat.add_left_comm⟩
+  letI := hAddLeftComm
   calc
     (((s ++ t).mergeSort (· ≥ ·)).map Nat.fib).sum = ((s ++ t).map Nat.fib).sum := by
-      simpa [List.sum] using hperm.foldr_eq (f := Nat.add) 0
+      simpa [List.sum] using hperm.foldr_eq (f := fun a b : ℕ => a + b) 0
     _ = (s.map Nat.fib).sum + (t.map Nat.fib).sum := by
       simp [List.map_append, List.sum_append]
 

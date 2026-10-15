@@ -36,8 +36,8 @@ theorem heisenbergFiniteModeColimitMap_mode (k : ℤ) :
   change (heisenbergFiniteModeColimitMap (𝕜 := 𝕜)).hom
       ((colimit.ι (heisenbergFiniteModeDiagram (𝕜 := 𝕜)) s).hom x) = _
   have h := heisenbergFiniteModeColimitMap_stage (𝕜 := 𝕜) s
-  have h' := congrArg (fun f => f.hom x) h
-  simpa [heisenbergFiniteModeCocone, x] using h'
+  have hstage := congrArg (fun f => f.hom) h
+  exact congrArg (fun g => g x) hstage
 
 @[simp] theorem heisenbergFiniteModeColimitEquiv_mode (k : ℤ) :
     heisenbergFiniteModeColimitEquiv (𝕜 := 𝕜)
@@ -60,12 +60,20 @@ theorem chargedFock_vira_mode_shift
     ((chargedFockSpaceCurrentHeisenbergRep 𝕜 α).currentSugawaraRepresentation
         (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n)).commutator
       ((chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J m) =
-        -m • (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J (n + m) := by
+        (-m : 𝕜) • (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J (n + m) := by
   rw [CurrentHeisenbergRep.currentSugawaraRepresentation_lgen_apply]
-  exact sugawara_current_mode_shift
+  unfold CurrentHeisenbergRep.sugawaraStressMode
+  have h := sugawara_current_mode_shift
     (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J
     (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).trunc
     (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm n m
+  rw [h]
+  have hcast : ((-m : ℤ) : 𝕜) • (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J (n + m) =
+      (-m : 𝕜) • (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J (n + m) := by
+    push_cast
+    rfl
+  rw [← hcast]
+  exact (Int.cast_smul_eq_zsmul 𝕜 (-m) ((chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J (n + m))).symm
 
 theorem chargedFock_hasModeShift (α : 𝕜) :
     HasModeShift
@@ -76,7 +84,7 @@ theorem chargedFock_hasModeShift (α : 𝕜) :
       (fun n m => n + m)
       (fun _ m => (-m : 𝕜)) := by
   intro n m
-  simpa using chargedFock_vira_mode_shift α n m
+  exact chargedFock_vira_mode_shift α n m
 
 theorem chargedFock_vira_mapsToModeSpanGrade (α : 𝕜) :
     MapsToGrade
@@ -87,21 +95,9 @@ theorem chargedFock_vira_mapsToModeSpanGrade (α : 𝕜) :
           (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n)).commutator X)
       (fun n m => n + m) := by
   apply HasModeShift.mapsToModeSpanGrade
-    (R := 𝕜)
-    (A := VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
-      VirasoroProject.ChargedFockSpace 𝕜 α)
-    (ι := ℤ)
     (hlinear := by
       intro n c X
-      change _ * (c • X) - (c • X) * _ = _
-      ext v
-      simp [Algebra.smul_def]
-      change _ = c •
-        (((chargedFockSpaceCurrentHeisenbergRep 𝕜 α).currentSugawaraRepresentation
-            (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n)) (X v) -
-          X ((chargedFockSpaceCurrentHeisenbergRep 𝕜 α).currentSugawaraRepresentation
-            (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n) v))
-      rw [smul_sub])
+      simp only [LinearMap.commutator, Algebra.mul_smul_comm, Algebra.smul_mul_assoc, smul_sub])
   exact chargedFock_hasModeShift (𝕜 := 𝕜) α
 
 theorem chargedFock_vira_mode_mem_shifted_span
@@ -125,27 +121,13 @@ theorem chargedFock_double_vira_mode_shift (α : 𝕜) (n m : ℤ) :
       (m * (n + m) : 𝕜) •
         (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J (n + (n + m)) := by
   have h := HasModeShift.comp
-    (R := 𝕜)
-    (A := VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
-      VirasoroProject.ChargedFockSpace 𝕜 α)
-    (ι := ℤ)
-    (action₁ := fun r X =>
-      ((chargedFockSpaceCurrentHeisenbergRep 𝕜 α).currentSugawaraRepresentation
-        (VirasoroProject.VirasoroAlgebra.lgen 𝕜 r)).commutator X)
-    (action₂ := fun r X =>
-      ((chargedFockSpaceCurrentHeisenbergRep 𝕜 α).currentSugawaraRepresentation
-        (VirasoroProject.VirasoroAlgebra.lgen 𝕜 r)).commutator X)
-    (mode := (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J)
     (shift₁ := fun r q => r + q)
     (shift₂ := fun r q => r + q)
     (coeff₁ := fun _ q => (-q : 𝕜))
     (coeff₂ := fun _ q => (-q : 𝕜))
     (hlinear := by
       intro r c X
-      change _ * (c • X) - (c • X) * _ = c • (_ * X - X * _)
-      ext v
-      simp [Algebra.smul_def]
-      rw [smul_sub])
+      simp only [LinearMap.commutator, Algebra.mul_smul_comm, Algebra.smul_mul_assoc, smul_sub])
     (chargedFock_hasModeShift (𝕜 := 𝕜) α)
     (chargedFock_hasModeShift (𝕜 := 𝕜) α)
   have hh := h n m

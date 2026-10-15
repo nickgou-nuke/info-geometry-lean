@@ -47,27 +47,27 @@ split octonion multiplication table for the quark states.
 
 /-- $u_i u_0 = 0$ -/
 theorem u_mul_uZero (i : Fin 3) : mul (u i : ZornVectorMatrix R) uZero = zero := by
-  ext <;> simp [u, uZero, V, E22, mul, zero, ZornVec3.dot, ZornVec3.cross]
+  ext <;> simp [u, uZero, V, E22, mul, ZornVec3.dot, ZornVec3.cross]
 
 /-- $u_i u_0^* = u_i$ -/
 theorem u_mul_uStarZero (i : Fin 3) : mul (u i : ZornVectorMatrix R) uStarZero = u i := by
-  ext <;> simp [u, uStarZero, V, E11, mul, zero, ZornVec3.dot, ZornVec3.cross]
+  ext <;> simp [u, uStarZero, V, E11, mul, ZornVec3.dot, ZornVec3.cross]
 
 /-- $u_0 u_i = u_i$ -/
 theorem uZero_mul_u (i : Fin 3) : mul (uZero : ZornVectorMatrix R) (u i) = u i := by
-  ext <;> simp [u, uZero, V, E22, mul, zero, ZornVec3.dot, ZornVec3.cross]
+  ext <;> simp [u, uZero, V, E22, mul, ZornVec3.dot, ZornVec3.cross]
 
 /-- $u_0^* u_i = 0$ -/
 theorem uStarZero_mul_u (i : Fin 3) : mul (uStarZero : ZornVectorMatrix R) (u i) = zero := by
-  ext <;> simp [u, uStarZero, V, E11, mul, zero, ZornVec3.dot, ZornVec3.cross]
+  ext <;> simp [u, uStarZero, V, E11, mul, ZornVec3.dot, ZornVec3.cross]
 
 /-- $u_0^2 = u_0$ -/
 theorem uZero_sq : mul (uZero : ZornVectorMatrix R) uZero = uZero := by
-  ext <;> simp [uZero, E22, mul, zero, ZornVec3.dot, ZornVec3.cross]
+  ext <;> simp [uZero, E22, mul, ZornVec3.dot, ZornVec3.cross]
 
 /-- $(u_0^*)^2 = u_0^*$ -/
 theorem uStarZero_sq : mul (uStarZero : ZornVectorMatrix R) uStarZero = uStarZero := by
-  ext <;> simp [uStarZero, E11, mul, zero, ZornVec3.dot, ZornVec3.cross]
+  ext <;> simp [uStarZero, E11, mul, ZornVec3.dot, ZornVec3.cross]
 
 /-- $u_0 u_0^* = 0$ -/
 theorem uZero_mul_uStarZero : mul (uZero : ZornVectorMatrix R) uStarZero = zero := by

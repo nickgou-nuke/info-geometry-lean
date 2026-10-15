@@ -10,8 +10,8 @@ def gcDefectReal (t : ℝ) : ℝ :=
 
 /-- The GC-defect profile is continuous on the whole line. -/
 theorem gcDefectReal_continuous : Continuous gcDefectReal := by
-  simpa [gcDefectReal] using
-    (((continuous_const.mul (continuous_id.pow 2)).sub continuous_id).sub continuous_const)
+  change Continuous (fun t : ℝ => 5 * t ^ 2 - t - 1)
+  continuity
 
 /-- Near zero the GC defect is negative. -/
 theorem gcDefectReal_zero : gcDefectReal 0 = -1 := by

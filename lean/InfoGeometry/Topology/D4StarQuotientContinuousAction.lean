@@ -44,11 +44,15 @@ def quotientColorHomeomorph (σ : Equiv.Perm ColorChannel) :
         left_inv := by
           intro q
           rw [quotientColorAction_comp]
-          simpa using quotientColorAction_identity q
+          have hσ : σ.symm * σ = 1 := inv_mul_cancel σ
+          rw [hσ]
+          exact quotientColorAction_identity q
         right_inv := by
           intro q
           rw [quotientColorAction_comp]
-          simpa using quotientColorAction_identity q }
+          have hσ : σ * σ.symm = 1 := mul_inv_cancel σ
+          rw [hσ]
+          exact quotientColorAction_identity q }
     continuous_toFun := continuous_quotientColorAction σ
     continuous_invFun := continuous_quotientColorAction_inverse σ }
 

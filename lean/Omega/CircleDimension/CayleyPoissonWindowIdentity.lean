@@ -37,16 +37,13 @@ theorem paper_cdim_cayley_poisson_window_identity (gamma lam delta : Real) (hlam
     · intro x hx
       simpa [pow_two, two_mul, add_comm, add_left_comm, add_assoc, mul_comm, mul_left_comm,
         mul_assoc] using (hasDerivAt_pow 2 x).const_add (gamma^2)
-    · simpa [two_mul] using (continuous_const.mul continuous_id).continuousOn
-    · simpa [one_div] using
-        ((continuousOn_id :
-            ContinuousOn (fun y : Real => y) ((fun x : Real => gamma^2 + x^2) '' Set.uIcc a b)).inv₀
-          <| by
-            intro y hy
-            rcases hy with ⟨x, hx, rfl⟩
-            rw [Set.uIcc_of_le hab] at hx
-            have hx_pos : 0 < x := lt_of_lt_of_le ha hx.1
-            exact (add_pos_of_nonneg_of_pos (sq_nonneg gamma) (sq_pos_of_pos hx_pos)).ne')
+    · exact (continuous_const_mul (2 : ℝ)).continuousOn
+    · refine continuousOn_const.div continuousOn_id ?_
+      intro y hy
+      rcases hy with ⟨x, hx, rfl⟩
+      rw [Set.uIcc_of_le hab] at hx
+      have hx_pos : 0 < x := lt_of_lt_of_le ha hx.1
+      exact (add_pos_of_nonneg_of_pos (sq_nonneg gamma) (sq_pos_of_pos hx_pos)).ne'
   have hlog :
       ∫ s in a..b, ((fun u : Real => 1 / u) ∘ fun x : Real => gamma^2 + x^2) s * (2 * s) =
         Real.log ((gamma^2 + b^2) / (gamma^2 + a^2)) := by

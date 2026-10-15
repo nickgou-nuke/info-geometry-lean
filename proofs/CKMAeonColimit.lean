@@ -1,3 +1,4 @@
+import InfoGeometry.Canonical.SpinorialCore.MixingInvariant
 import Mathlib
 
 noncomputable section
@@ -69,20 +70,45 @@ def ckmColInner (j l : Fin 3) : Q := ∑ i : Fin 3, identityCKM i j * identityCK
 
 def kronecker (i j : Fin 3) : Q := if i = j then 1 else 0
 
-def ckmMatrix : Matrix (Fin 3) (Fin 3) Q := 1
+/-- Unmixed reference matrix over the complex scalar field. -/
+def ckmMatrix : Matrix (Fin 3) (Fin 3) ℂ := 1
 
-def jarlskog (V : Matrix (Fin 3) (Fin 3) Q) : Q :=
-  V 0 1 * V 1 2 * V 0 2 * V 1 1 - V 0 2 * V 1 1 * V 0 1 * V 1 2
+/-- Imaginary part of the conjugated CKM quartet at rows 0, 1 and columns 1, 2. -/
+def jarlskog (V : Matrix (Fin 3) (Fin 3) ℂ) : ℝ :=
+  InfoGeometry.Canonical.SpinorialCore.Mixing.quartet (V 0 1) (V 0 2) (V 1 1) (V 1 2)
 
-/-- The Jarlskog invariant $J = Im(V_{us} V_{cb} V_{ub}^* V_{cs}^*)$ evaluates to 
-exactly zero in this unmixed aeon limit. -/
-def jarlskogUnmixedInvariant : Q := jarlskog ckmMatrix
+/-- The CP-odd quartet vanishes for the unmixed reference. -/
+def jarlskogUnmixedInvariant : ℝ := jarlskog ckmMatrix
 
-/-- The intrinsic CP-violating phase vanishes. -/
-def cpPhaseUnmixedInvariant : Q := jarlskog ckmMatrix
+/-- Legacy name for the CP-odd quartet; this scalar is not a phase angle. -/
+def cpPhaseUnmixedInvariant : ℝ := jarlskog ckmMatrix
 
-/-- The determinant of the CKM matrix is strictly 1 due to exact unitarity. -/
-def determinantUnmixedInvariant : Q := Matrix.det ckmMatrix
+/-- Determinant of the unmixed reference matrix. -/
+def determinantUnmixedInvariant : ℂ := Matrix.det ckmMatrix
+
+/-- Independent unit phases on every row and column preserve the quartet. -/
+theorem jarlskog_rephasing (V : Matrix (Fin 3) (Fin 3) ℂ)
+    (r c : Fin 3 → ℂ) (hr : ∀ i, star (r i) * r i = 1)
+    (hc : ∀ j, star (c j) * c j = 1) :
+    jarlskog (fun i j => r i * V i j * c j) = jarlskog V := by
+  exact InfoGeometry.Canonical.SpinorialCore.Mixing.quartet_rephasing
+    _ _ _ _ _ _ _ _ (hr 0) (hr 1) (hc 1) (hc 2)
+
+/-- An exact unitary witness has a nonzero CKM quartet. -/
+theorem jarlskog_threeFlavorWitness :
+    jarlskog InfoGeometry.Canonical.SpinorialCore.Mixing.threeFlavorWitness =
+      5184 / 78125 := by
+  norm_num [jarlskog, InfoGeometry.Canonical.SpinorialCore.Mixing.quartet,
+    InfoGeometry.Canonical.SpinorialCore.Mixing.threeFlavorWitness,
+    Complex.mul_re, Complex.mul_im]
+
+/-- Nonvanishing is compatible with exact three-flavour unitarity. -/
+theorem exists_unitary_nonzero_jarlskog :
+    ∃ V : Matrix (Fin 3) (Fin 3) ℂ, V * V.conjTranspose = 1 ∧ jarlskog V ≠ 0 := by
+  refine ⟨InfoGeometry.Canonical.SpinorialCore.Mixing.threeFlavorWitness,
+    InfoGeometry.Canonical.SpinorialCore.Mixing.threeFlavorWitness_unitary, ?_⟩
+  rw [jarlskog_threeFlavorWitness]
+  norm_num
 
 def aeonColimitObjectCount : ℕ := 3
 def aeonTransitionCount : ℕ := 2
@@ -173,12 +199,12 @@ theorem ckmColInner_eq_kronecker (j l : Fin 3) : ckmColInner j l = kronecker j l
   fin_cases j <;> fin_cases l <;> norm_num [ckmColInner, identityCKM, kronecker]
 
 theorem jarlskogUnmixedInvariant_eq_zero : jarlskogUnmixedInvariant = 0 := by
-  dsimp [jarlskogUnmixedInvariant, jarlskog, ckmMatrix]
-  simp
+  norm_num [jarlskogUnmixedInvariant, jarlskog, ckmMatrix,
+    InfoGeometry.Canonical.SpinorialCore.Mixing.quartet]
 
 theorem cpPhaseUnmixedInvariant_eq_zero : cpPhaseUnmixedInvariant = 0 := by
-  dsimp [cpPhaseUnmixedInvariant, jarlskog, ckmMatrix]
-  simp
+  norm_num [cpPhaseUnmixedInvariant, jarlskog, ckmMatrix,
+    InfoGeometry.Canonical.SpinorialCore.Mixing.quartet]
 
 theorem determinantUnmixedInvariant_eq_one : determinantUnmixedInvariant = 1 := Matrix.det_one
 

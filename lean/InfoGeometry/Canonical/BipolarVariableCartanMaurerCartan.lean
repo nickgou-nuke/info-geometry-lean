@@ -1,5 +1,4 @@
 import InfoGeometry.Analysis.BipolarLogDifferential
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Analysis.BipolarLocalConformalCoordinate
 import InfoGeometry.Canonical.BipolarTwoSheetOperatorConnectionBridge
 import InfoGeometry.OperatorAlgebra.OperatorExteriorAlgebra
@@ -69,17 +68,19 @@ theorem omegaCoeff_eq_dlog01 {s : ℂ} (hs : s ∈ punctured01) :
 /-- Genuine complex derivative of the meromorphic coefficient on its domain. -/
 theorem hasDerivAt_omegaCoeff {s : ℂ} (hs : s ∈ punctured01) :
     HasDerivAt omegaCoeff (omegaCoeffDeriv s) s := by
-  have h0 : HasDerivAt (fun z : ℂ => z⁻¹) (-(1 : ℂ) / s ^ 2) s := by
-    convert (hasDerivAt_id s).inv hs.1 using 1 <;> ring
-  have hsub : HasDerivAt (fun z : ℂ => z - 1) 1 s := by
-    simpa using (hasDerivAt_id s).sub_const 1
-  have h1 :
-      HasDerivAt (fun z : ℂ => (z - 1)⁻¹)
-        (-(1 : ℂ) / (s - 1) ^ 2) s := by
-    convert hsub.inv (sub_ne_zero.mpr hs.2) using 1 <;> ring
-  convert h0.sub h1 using 1 <;>
-    simp [omegaCoeff, omegaCoeffDeriv] <;>
-    ring
+  have h0 : HasDerivAt (fun z : ℂ => z⁻¹) (-(s ^ 2)⁻¹) s :=
+    hasDerivAt_inv hs.1
+  have hsub : HasDerivAt (fun z : ℂ => z - 1) 1 s :=
+    (hasDerivAt_id s).sub_const 1
+  have h1 : HasDerivAt (fun z : ℂ => (z - 1)⁻¹) (-((s - 1) ^ 2)⁻¹) s := by
+    have h := (hasDerivAt_inv (sub_ne_zero.mpr hs.2)).comp s hsub
+    rw [mul_one] at h
+    exact h
+  have hdiff := h0.sub h1
+  have h_eq : (-(s ^ 2)⁻¹ - -((s - 1) ^ 2)⁻¹) = omegaCoeffDeriv s := by
+    simp [omegaCoeffDeriv, div_eq_mul_inv]
+  rw [h_eq] at hdiff
+  exact hdiff
 
 /-- Point-dependent Cartan-valued one-form
 `A_s(v) = (omega(s) v / 2) sigma3`. -/
@@ -132,13 +133,14 @@ theorem hasDerivAt_omegaCoeff_along
     HasDerivAt (fun t : ℂ => omegaCoeff (s + t * u))
       (omegaCoeffDeriv s * u) 0 := by
   have hline : HasDerivAt (fun t : ℂ => s + t * u) u 0 := by
-    convert
-      (hasDerivAt_const (x := (0 : ℂ)) (c := s)).add
-        ((hasDerivAt_id (x := (0 : ℂ))).mul_const u) using 1 <;>
-      simp
+    have h := ((hasDerivAt_id (0 : ℂ)).mul_const u).const_add s
+    rw [one_mul] at h
+    exact h
   have hs0 : s + 0 * u ∈ punctured01 := by simpa using hs
   have hcomp := (hasDerivAt_omegaCoeff hs0).comp 0 hline
-  convert hcomp using 1 <;> simp [omegaCoeffDeriv]
+  have h_zero : s + 0 * u = s := by ring
+  rw [h_zero] at hcomp
+  exact hcomp
 
 /-- Local coordinate exterior derivative obtained by alternating the two
 complex tangent directions. -/
@@ -210,8 +212,7 @@ theorem hasDerivAt_plusWeight
   have hhalf :
       HasDerivAt (fun z : ℂ => bipolarLog z / 2) (dlog01 s / 2) s :=
     hW.div_const 2
-  simpa [plusWeight] using
-    (Complex.hasDerivAt_exp (bipolarLog s / 2)).comp s hhalf
+  exact (Complex.hasDerivAt_exp (bipolarLog s / 2)).comp s hhalf
 
 /-- On the same chart, the negative diagonal entry has the opposite analytic
 derivative. -/
@@ -226,8 +227,7 @@ theorem hasDerivAt_minusWeight
       HasDerivAt (fun z : ℂ => -bipolarLog z / 2)
         (-dlog01 s / 2) s :=
     hW.neg.div_const 2
-  simpa [minusWeight] using
-    (Complex.hasDerivAt_exp (-bipolarLog s / 2)).comp s hneg
+  exact (Complex.hasDerivAt_exp (-bipolarLog s / 2)).comp s hneg
 
 /-- Compact variable-connection packet. -/
 theorem bipolar_variable_cartan_packet

@@ -4,12 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 -/
 import InfoGeometry.External.Virasoro.VirasoroAlgebra
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Virasoro.HeisenbergAlgebra
 import InfoGeometry.External.Virasoro.CentralChargeCalc
 import InfoGeometry.External.Virasoro.Commutator
 import InfoGeometry.External.Virasoro.LieAlgebraRepresentationOfBasis
-import VirasoroProject.ToMathlib.Topology.Algebra.Module.LinearMap.Defs
-import Mathlib
+import InfoGeometry.External.Virasoro.ToMathlib.Topology.Algebra.Module.LinearMap.Defs
+import Mathlib.Tactic
 
 /-!
 # The bosonic Sugawara construction
@@ -91,7 +92,7 @@ include heiComm
 /-- `heiOper k` and `heiOper l` commute unless `k = l`. -/
 lemma heiComm_of_add_ne_zero {k l : ℤ} (hkl : k + l ≠ 0) :
     (heiOper k) ∘ₗ (heiOper l) = (heiOper l) ∘ₗ (heiOper k) := by
-  simpa [hkl, sub_eq_zero, LinearMap.commutator] using heiComm k l
+  simpa [hkl, sub_eq_zero, LinearMap.commutator, Module.End.mul_eq_comp] using heiComm k l
 
 variable {heiOper}
 
@@ -293,6 +294,8 @@ lemma commutator_sugawaraGen_apply_eq_finsum_commutator_apply (n : ℤ) (A : V �
   · rw [smul_add]
     congr
     convert comp_sugawaraGenAux_apply heiTrunc (-A) n v using 1
+    · simp [sugawaraGen_apply, sugawaraGenAux]
+    · simp [sugawaraGenAux, sub_eq_add_neg]
   · exact finite_support_pairNO_heiOper_apply₀ heiTrunc n (A v)
   · apply (finite_support_pairNO_heiOper_apply₀ heiTrunc n v).subset
     refine Function.support_subset_iff'.mpr ?_
@@ -551,8 +554,16 @@ lemma commutator_sugawaraGen [CharZero 𝕜] (n m : ℤ) :
           · simp_rw [← sub_eq_add_neg]
             exact finite_support_smul_pairNO'_heiOper_apply₀ heiTrunc heiComm ..
         · have (k : ℤ) : n + m + k - n - m = k := by ring
-          simpa [← sub_eq_add_neg, add_sub_assoc', this] using
-            finite_support_smul_pairNO'_heiOper_apply₀ heiTrunc heiComm ..
+          have hfin := finite_support_smul_pairNO'_heiOper_apply
+            heiTrunc heiComm 0 (n + m) (fun i : ℤ => i - n) v
+          unfold Function.HasFiniteSupport
+          apply hfin.subset
+          intro i hi
+          simp only [Function.mem_support, ne_eq, neg_ne_zero] at hi ⊢
+          have h₁ : m + -(i - n) = n + m - i := by ring
+          have h₂ : n + m + (i - n + -m) = i := by ring
+          rw [h₁, h₂] at hi
+          simpa using hi
         · simp_rw [← sub_eq_add_neg]
           exact finite_support_smul_pairNO'_heiOper_apply₀ heiTrunc heiComm ..
       · -- The central charge calculation.
@@ -648,8 +659,10 @@ lemma commutator_sugawaraGen [CharZero 𝕜] (n m : ℤ) :
               simp only [Finset.coe_Ioc, Set.mem_Ioc, and_comm] at hk
               simp [hk]
         · simp [hnm]
-    · simpa [← sub_eq_add_neg] using
-        finite_support_smul_pairNO'_heiOper_apply₀ heiTrunc heiComm ..
+    · change (Function.support fun i : ℤ =>
+        (i - m) • (pairNO' heiOper (n + m - i) i) v).Finite
+      simpa using finite_support_smul_pairNO'_heiOper_apply
+        heiTrunc heiComm 0 (n + m) (fun i : ℤ => i - m) v
     · apply ((Set.finite_Ioc (n+m) m).union (Set.finite_Ioc m (n+m))).subset
       refine Function.support_subset_iff'.mpr ?_
       intro k hk
@@ -668,13 +681,24 @@ lemma commutator_sugawaraGen [CharZero 𝕜] (n m : ℤ) :
     grind
   · simp only [Function.support_fun_neg, ← sub_eq_add_neg]
     convert finite_support_smul_pairNO'_heiOper_apply heiTrunc heiComm n m id v using 6 with k
-    omega
+    have hsupport : Function.support
+        (fun k : ℤ => -(k • (pairNO' heiOper (m - k) (n + m - (m - k))) v)) =
+        Function.support
+        (fun k : ℤ => id k • (pairNO' heiOper (m - k) (n + k)) v) := by
+      ext k
+      simp only [Function.mem_support, ne_eq, id_eq]
+      rw [show n + m - (m - k) = n + k by ring]
+      simp
+    simp only [Function.HasFiniteSupport]
+    rw [hsupport]
 
 end commutator_sugawaraGen
 
 
 
 section representation
+
+attribute [local instance 100] LieRing.ofAssociativeRing
 
 /-- Construct a representation of Virasoro algebra from a central charge value `c` and a
 collection `(Lₙ)`, `n ∈ ℤ`, of operators satisfying the commutation relations of Virasoro
@@ -719,8 +743,10 @@ lemma VirasoroAlgebra.representationOfCentralChargeOfL_cgen
     (lComm : ∀ n m, (lOper n).commutator (lOper m)
       = (n-m) • lOper (n+m) + if n + m = 0 then (c / 12 * (n^3 - n)) • (1 : V →ₗ[𝕂] V) else 0) :
     (representationOfCentralChargeOfL c lComm) (cgen 𝕂) = c • 1 := by
-  convert LieAlgebra.representationOfBasisAux_apply_basis (VirasoroAlgebra.basisLC 𝕂) _ none
-  simp
+  change (LieAlgebra.representationOfBasisAux (VirasoroAlgebra.basisLC 𝕂)
+    (fun i : Option ℤ => match i with | none => c • (1 : V →ₗ[𝕂] V) | some n => lOper n))
+      (cgen 𝕂) = c • 1
+  rw [← VirasoroAlgebra.basisLC_none, LieAlgebra.representationOfBasisAux_apply_basis]
 
 lemma VirasoroAlgebra.representationOfCentralChargeOfL_lgen
     {𝕂 : Type*} [Field 𝕂] [CharZero 𝕂]
@@ -729,8 +755,29 @@ lemma VirasoroAlgebra.representationOfCentralChargeOfL_lgen
       = (n-m) • lOper (n+m) + if n + m = 0 then (c / 12 * (n^3 - n)) • (1 : V →ₗ[𝕂] V) else 0)
     (n : ℤ) :
     (representationOfCentralChargeOfL c lComm) (lgen 𝕂 n) = lOper n := by
-  convert LieAlgebra.representationOfBasisAux_apply_basis (VirasoroAlgebra.basisLC 𝕂) _ (some n)
-  simp
+  change (LieAlgebra.representationOfBasisAux (VirasoroAlgebra.basisLC 𝕂)
+    (fun i : Option ℤ => match i with | none => c • (1 : V →ₗ[𝕂] V) | some n => lOper n))
+      (lgen 𝕂 n) = lOper n
+  rw [← VirasoroAlgebra.basisLC_some, LieAlgebra.representationOfBasisAux_apply_basis]
+
+variable {heiOper} in
+lemma sugawaraGen_virasoro_comm [CharZero 𝕜]
+    (heiComm : ∀ k l, (heiOper k).commutator (heiOper l) =
+      if k + l = 0 then (k : 𝕜) • 1 else 0) :
+    ∀ n m : ℤ,
+      (sugawaraGen heiTrunc n).commutator (sugawaraGen heiTrunc m) =
+        (n - m) • sugawaraGen heiTrunc (n + m) +
+          if n + m = 0 then
+            ((1 : 𝕜) / 12 * ((n : 𝕜) ^ 3 - n)) • (1 : V →ₗ[𝕜] V)
+          else 0 := by
+  intro n m
+  simp only [commutator_sugawaraGen heiOper heiTrunc heiComm n m, zsmul_eq_mul,
+    Int.cast_sub, one_div, add_right_inj]
+  by_cases hnm : n + m = 0
+  · simp [hnm]
+    congr 1
+    field_simp
+  · simp [hnm]
 
 variable {heiOper} in
 /-- **The basic bosonic Sugawara representation of Virasoro algebra (c=1)**:
@@ -738,24 +785,20 @@ On a vector space with a representation of the Heisenberg algebra that acts loca
 we get a representation of the Virasoro algebra with central charge 1 by the Sugawara
 construction. -/
 noncomputable def sugawaraRepresentation [CharZero 𝕜] :
-    VirasoroAlgebra 𝕜 →ₗ⁅𝕜⁆ (V →ₗ[𝕜] V) := by
-  apply VirasoroAlgebra.representationOfCentralChargeOfL 1 (lOper := sugawaraGen heiTrunc)
-  intro n m
-  simp only [commutator_sugawaraGen heiOper heiTrunc heiComm n m, zsmul_eq_mul, Int.cast_sub,
-             one_div, add_right_inj]
-  by_cases hnm : n + m = 0
-  · simp [hnm]
-    congr 1
-    field_simp
-  · simp [hnm]
+    VirasoroAlgebra 𝕜 →ₗ⁅𝕜⁆ (V →ₗ[𝕜] V) :=
+  VirasoroAlgebra.representationOfCentralChargeOfL 1
+    (lOper := sugawaraGen heiTrunc)
+    (sugawaraGen_virasoro_comm (heiOper := heiOper) heiTrunc heiComm)
 
 open VirasoroAlgebra in
 /-- The central element `C` of the Virasoro algebra acts as `1` on the representation obtained
 by the basic bosonic Sugawara construction. -/
 lemma sugawaraRepresentation_cgen [CharZero 𝕜] :
     sugawaraRepresentation heiTrunc heiComm (cgen 𝕜) = 1 := by
-  convert VirasoroAlgebra.representationOfCentralChargeOfL_cgen ..
-  simp
+  simpa [sugawaraRepresentation] using
+    (VirasoroAlgebra.representationOfCentralChargeOfL_cgen 1
+      (lOper := sugawaraGen heiTrunc)
+      (sugawaraGen_virasoro_comm (heiOper := heiOper) heiTrunc heiComm))
 
 open VirasoroAlgebra in
 /-- The formula for the action of the Virasoro generator `Lₙ` on the representation obtained
@@ -764,8 +807,11 @@ lemma sugawaraRepresentation_lgen_apply' [CharZero 𝕜] (n : ℤ) (v : V) :
     sugawaraRepresentation heiTrunc heiComm (lgen 𝕜 n) v =
       (2 : 𝕜)⁻¹ • ∑ᶠ k, pairNO heiOper (n-k) k v := by
   rw [← sugawaraGen_apply heiTrunc]
-  apply LinearMap.congr_fun _ v
-  convert VirasoroAlgebra.representationOfCentralChargeOfL_lgen ..
+  exact congrArg (fun f : V →ₗ[𝕜] V => f v) <| by
+    simpa [sugawaraRepresentation] using
+      (VirasoroAlgebra.representationOfCentralChargeOfL_lgen 1
+        (lOper := sugawaraGen heiTrunc)
+        (sugawaraGen_virasoro_comm (heiOper := heiOper) heiTrunc heiComm) n)
 
 open VirasoroAlgebra in
 /-- The formula for the action of the Virasoro generator `Lₙ` on the representation obtained

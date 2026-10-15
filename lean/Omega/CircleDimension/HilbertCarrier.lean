@@ -1,5 +1,5 @@
 import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import Mathlib.Tactic
 
 namespace Omega.CircleDimension

@@ -8,7 +8,11 @@ noncomputable section
 namespace InfoGeometry.Orthogonal.O55Contact
 
 inductive Weight3 | minus | zero | plus
-  deriving DecidableEq, Fintype, Repr
+  deriving DecidableEq, Repr
+
+instance : Fintype Weight3 where
+  elems := {.minus, .zero, .plus}
+  complete weight := by cases weight <;> decide
 
 namespace Weight3
 def value : Weight3 → ℤ
@@ -89,7 +93,15 @@ theorem weightProjector_mul_euler (w : Weight3) :
 structure BlockDegree where
   target : Weight3
   source : Weight3
-  deriving DecidableEq, Fintype, Repr
+  deriving DecidableEq, Repr
+
+instance : Fintype BlockDegree :=
+  Fintype.ofEquiv (Weight3 × Weight3) {
+    toFun := fun p => ⟨p.1, p.2⟩
+    invFun := fun d => (d.target, d.source)
+    left_inv := by intro p; cases p; rfl
+    right_inv := by intro d; cases d; rfl
+  }
 
 namespace BlockDegree
 def contact (d : BlockDegree) : ℤ := d.target.value - d.source.value

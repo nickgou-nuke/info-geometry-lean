@@ -25,7 +25,7 @@ variable [∀ p, Module R (D p)] [∀ p, Module R (E p)]
 variable {iDeg jDeg kDeg : I ≃ I}
 
 /-- The degree of the exact-couple differential `d = j ∘ k`. -/
-def differentialDegree
+abbrev differentialDegree
     (_C : GradedExactCouple R I D E iDeg jDeg kDeg) : I ≃ I :=
   kDeg.trans jDeg
 
@@ -137,7 +137,9 @@ theorem targetCycleClass_differential_eq_zero
           have h :=
             LinearMap.congr_fun
               (C.differential_comp_differential p) x
-          simpa [LinearMap.comp_apply] using h) =
+          change C.differential (C.differentialDegree p)
+            (C.differential p x) = 0 at h
+          exact h) =
       0 := by
   apply (Submodule.Quotient.mk_eq_zero _).2
   change C.differential p x ∈ C.targetBoundaries p

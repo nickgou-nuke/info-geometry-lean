@@ -41,7 +41,7 @@ theorem paper_xi_mom_amplify_detect_true_resonance :
     apply hDetects
     have hMom : momAmplitude 1 = resonanceAmplitude := by
       simpa using hAmplifies 1
-    simpa [hMom] using hTrue
+    simpa [xi_mom_amplify_detect_true_resonance_true_resonance, hMom] using hTrue
   · rintro ⟨q, _hq, hDetector⟩
     by_contra hTrue
     have hZero : resonanceAmplitude = 0 := not_not.mp hTrue

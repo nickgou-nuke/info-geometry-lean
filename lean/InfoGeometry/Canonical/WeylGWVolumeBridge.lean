@@ -1,5 +1,4 @@
 import InfoGeometry.Canonical.StandardFormOmegaVolumeBridge
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.StandardFormProjectiveGWBridge
 import InfoGeometry.Canonical.DeterminantPhaseVolumeBridge
 import InfoGeometry.Canonical.WeylHomogeneousReadoutBridge
@@ -188,25 +187,28 @@ This is a carrier.  The equality between the physical volume and the Drazin/GW
 volume is an external predicate below.
 -/
 @[rep_depth projective]
-structure ProjectiveDrazinWeylGWVolumeFusion
-    (G T Target Coeff Op State : Type*) [Add Op] [Mul Op] where
-  projectiveCounts : GWProjectiveCountCalibration G T Target Coeff
+structure ProjectiveDrazinWeylGWVolumeFusion.{uG, uT, uTarget, uCoeff, uCountAtom, uOp, uState}
+    (G : Type uG) (T : Type uT) (Target : Type uTarget) (Coeff : Type uCoeff)
+    (Op : Type uOp) (State : Type uState) [Add Op] [Mul Op] where
+  projectiveCounts : GWProjectiveCountCalibration.{uG, uT, uTarget, uCoeff, uCountAtom} G T Target Coeff
   drazinGW : DrazinGWVolumeCalibration Op State
   volume : WeylGWVolumeCarrier State
 
 /-- External predicate: physical volume is calibrated to the existing Drazin/GW volume. -/
 @[rep_depth projective]
 def PhysicalVolumeCalibratesDrazinGW
-    {G T Target Coeff Op State : Type*} [Add Op] [Mul Op]
-    (F : ProjectiveDrazinWeylGWVolumeFusion G T Target Coeff Op State) : Prop :=
+    {G : Type uG} {T : Type uT} {Target : Type uTarget} {Coeff : Type uCoeff}
+    {Op : Type uOp} {State : Type uState} [Add Op] [Mul Op]
+    (F : ProjectiveDrazinWeylGWVolumeFusion.{uG, uT, uTarget, uCoeff, uCountAtom, uOp, uState} G T Target Coeff Op State) : Prop :=
   ∀ s : State,
     F.drazinGW.functional.readout.valid s →
       F.volume.physicalVolume s = F.drazinGW.gwVolume s
 
 namespace ProjectiveDrazinWeylGWVolumeFusion
 
-variable {G T Target Coeff Op State : Type*} [Add Op] [Mul Op]
-variable (F : ProjectiveDrazinWeylGWVolumeFusion G T Target Coeff Op State)
+variable {G : Type uG} {T : Type uT} {Target : Type uTarget} {Coeff : Type uCoeff}
+variable {Op : Type uOp} {State : Type uState} [Add Op] [Mul Op]
+variable (F : ProjectiveDrazinWeylGWVolumeFusion.{uG, uT, uTarget, uCoeff, uCountAtom, uOp, uState} G T Target Coeff Op State)
 
 @[rep_depth projective]
 theorem projectiveCounts_apply :

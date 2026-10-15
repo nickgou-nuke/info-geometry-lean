@@ -349,7 +349,11 @@ theorem spinGroupTransportHom_injective :
   apply neutralCliffordAlgEquiv_for_chevalleyQ.injective
   have hcoe := congrArg (fun z : Clifford55.Spin55 =>
     (z : Clifford55.Cl55)) gh
-  simpa only [spinGroupTransport_coe] using hcoe
+  change neutralCliffordAlgEquiv_for_chevalleyQ
+      (g : CliffordAlgebra ChevalleyQ55) =
+    neutralCliffordAlgEquiv_for_chevalleyQ
+      (h : CliffordAlgebra ChevalleyQ55) at hcoe
+  exact hcoe
 
 theorem spinGroupTransportHom_surjective :
     Function.Surjective spinGroupTransportHom := by

@@ -177,8 +177,9 @@ noncomputable instance quotientOrbitSubtypeFintype (k : Fin 12) :
 
 theorem orbitCellSubtype_card (k : Fin 12) :
     Fintype.card {i : Fin 189 // i ∈ orbitCells k} = flagCellCard k := by
-  classical
-  simpa [orbitCells] using flagCells_card k
+  change Fintype.card ↥(orbitCells k) = flagCellCard k
+  rw [Fintype.card_coe]
+  exact flagCells_card k
 
 theorem quotientOrbit_reverse_witness_of_cell_card_eq
     (hinj : Function.Injective quotientRepresentative)

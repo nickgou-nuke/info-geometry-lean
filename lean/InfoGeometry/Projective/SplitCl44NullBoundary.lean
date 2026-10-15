@@ -20,6 +20,8 @@ carrier.  It only records the common quotient pattern:
 
 open scoped Classical
 
+noncomputable section
+
 namespace InfoGeometry.Projective.SplitCl44NullBoundary
 
 open InfoGeometry.Clifford.SplitCl44CausalEnvelope
@@ -94,7 +96,7 @@ theorem splitCl44ProjectiveNullBoundary_nonempty :
           congrArg
             (CliffordAlgebra.equivExterior (InfoGeometry.Clifford.ClNN.Quad 4))
             hcontr
-        simpa using hExterior⟩, rfl, rfl⟩
+        simp at hExterior⟩, rfl, rfl⟩
 
 /-- The split `Cl(4,4)` projective null quotient is inhabited by the concrete
 head-null ray. -/

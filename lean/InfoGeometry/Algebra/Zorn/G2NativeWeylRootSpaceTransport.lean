@@ -242,7 +242,6 @@ theorem realWeylCycle_symm_U (i : Fin 3) :
   · apply (nativeAut realWeylCycle).injective
     rw [LinearEquiv.apply_symm_apply, realWeylCycle_U]
     norm_num [nextColor]
-    congr 1
 
 theorem realWeylCycle_symm_V (i : Fin 3) :
     (nativeAut realWeylCycle).symm (ZornVectorMatrix.V i) =
@@ -257,7 +256,6 @@ theorem realWeylCycle_symm_V (i : Fin 3) :
   · apply (nativeAut realWeylCycle).injective
     rw [LinearEquiv.apply_symm_apply, realWeylCycle_V]
     norm_num [nextColor]
-    congr 1
 
 noncomputable def reflectionFrameIndexInv : Fin 8 → Fin 8 := Function.invFun reflectionFrameIndex
 
@@ -983,7 +981,7 @@ theorem realWeylReflection_cartanPair_zero_mem_cartanParameterPlane :
     · subst i
       simp [InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition.parameterUnit]
     · have hz := standardColumn_V0_U0_support i h6 h13
-      simpa [InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition.parameterUnit,
+      simpa [p, InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition.parameterUnit,
         h6, h13] using hz
   change p ∈ cartanParameterPlane
   rw [hp]
@@ -2700,8 +2698,8 @@ noncomputable def restrictCanonicalDerivationEquiv
         apply Subtype.ext
         change L (((a • x : P) : canonicalZornDerivations)) =
           (RingHom.id ℝ) a • L ((x : P) : canonicalZornDerivations)
-        simpa only [RingHom.id_apply] using
-          map_smul L a ((x : P) : canonicalZornDerivations) }
+        rw [Submodule.coe_smul, RingHom.id_apply]
+        exact map_smul L a ((x : P) : canonicalZornDerivations) }
   exact LinearEquiv.ofBijective f ⟨
     (fun x y h => by
       apply Subtype.ext

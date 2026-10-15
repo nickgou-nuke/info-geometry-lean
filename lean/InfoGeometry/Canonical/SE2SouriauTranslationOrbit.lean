@@ -91,7 +91,9 @@ theorem translationAffineOrbitMap_injective (v : Point2) :
     Function.Injective (translationAffineOrbitMap v) := by
   intro x y hxy
   have hfirst := congrArg Prod.fst hxy
-  simpa [translationAffineOrbitMap_formula] using add_left_cancel hfirst
+  rw [translationAffineOrbitMap_formula v x,
+    translationAffineOrbitMap_formula v y] at hfirst
+  exact add_left_cancel hfirst
 
 theorem isEmbedding_translationAffineOrbitMap (v : Point2) :
     Topology.IsEmbedding (translationAffineOrbitMap v) := by
@@ -292,8 +294,8 @@ theorem pathConnectedSpace_translationOrbitQuotient :
 theorem translationOrbitSetoid_rel_iff_orbit_eq (v w : Point2) :
     translationOrbitSetoid.r v w ↔
       translationAffineOrbit v = translationAffineOrbit w := by
-  simpa [translationOrbitSetoid] using
-    (translationAffineOrbit_eq_iff_height_eq v w).symm
+  change v.2 = w.2 ↔ _
+  exact (translationAffineOrbit_eq_iff_height_eq v w).symm
 
 def translationOrbitQuotientAction (x : ℝ) :
     Quotient translationOrbitSetoid → Quotient translationOrbitSetoid :=

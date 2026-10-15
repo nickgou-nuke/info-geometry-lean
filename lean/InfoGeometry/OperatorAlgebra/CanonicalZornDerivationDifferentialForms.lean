@@ -53,11 +53,9 @@ commutator coordinates. -/
 theorem exteriorDerivativeOne_apply
     (ω : OperatorOneForm) (D E : Lane.L) :
     DerivationDifferentialForms.exteriorDerivativeOne Lane ω D E =
-      (D.1 * ω E - ω E * D.1) -
-        (E.1 * ω D - ω D * E.1) -
-          ω ⁅(D : Lane.L), (E : Lane.L)⁆ := by
-  simpa using
-    (DerivationDifferentialForms.exteriorDerivativeOne_apply Lane ω D E)
+      Lane.operatorAction D (ω E) -
+        Lane.operatorAction E (ω D) - ω ⁅D, E⁆ :=
+  DerivationDifferentialForms.exteriorDerivativeOne_apply Lane ω D E
 
 /-- The split-octonion operator differential squares to zero on zero-forms. -/
 theorem exteriorDerivativeOne_exteriorDerivativeZero
@@ -71,12 +69,11 @@ commutator coordinates. -/
 theorem connectionCurvature_apply
     (Γ : OperatorOneForm) (D E : Lane.L) :
     DerivationDifferentialForms.connectionCurvature Lane Γ D E =
-      (D.1 * Γ E - Γ E * D.1) -
-        (E.1 * Γ D - Γ D * E.1) -
-          Γ ⁅(D : Lane.L), (E : Lane.L)⁆ +
+      Lane.operatorAction D (Γ E) -
+        Lane.operatorAction E (Γ D) -
+          Γ ⁅D, E⁆ +
             (Γ D * Γ E - Γ E * Γ D) := by
-  simpa using
-    (DerivationDifferentialForms.connectionCurvature_apply Lane Γ D E)
+  exact DerivationDifferentialForms.connectionCurvature_apply Lane Γ D E
 
 /-- Curvature is exactly the defect in the represented Lie bracket of the
 connection-corrected derivations. -/
@@ -130,6 +127,10 @@ def canonicalMaurerCartanForm : OperatorOneForm where
     canonicalMaurerCartanForm D = -D.1 :=
   rfl
 
+private theorem lane_operatorAction_apply (D : Lane.L) (T : EndCZ) :
+    Lane.operatorAction D T = D.1 * T - T * D.1 := by
+  rfl
+
 /-- The canonical Maurer--Cartan form is flat. -/
 theorem canonicalMaurerCartanForm_curvature :
     DerivationDifferentialForms.connectionCurvature
@@ -142,7 +143,9 @@ theorem canonicalMaurerCartanForm_curvature :
   change DerivationDifferentialForms.connectionCurvature
       Lane canonicalMaurerCartanForm D E = 0
   rw [connectionCurvature_apply]
-  simp only [canonicalMaurerCartanForm_apply]
+  change Lane.operatorAction D (-E.1) - Lane.operatorAction E (-D.1) -
+      (-(⁅D, E⁆).1) + ((-D.1) * (-E.1) - (-E.1) * (-D.1)) = 0
+  rw [lane_operatorAction_apply, lane_operatorAction_apply]
   have hbr : (⁅D, E⁆ : Lane.L).1 = D.1 * E.1 - E.1 * D.1 := rfl
   rw [hbr]
   noncomm_ring

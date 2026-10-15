@@ -30,13 +30,11 @@ def propagatorUnit
     (hg : Quaternion.normSq g = 1) (η : ℝ) : EndHˣ :=
   Units.mk (R.propagator η) (R.propagator (-η))
     (by
-      simpa [ContinuousLinearMap.comp_apply] using
-        congrArg (fun T : EndH => T)
-          (R.propagator_inverse hg η).2)
+      simpa only [ContinuousLinearMap.mul_def, ContinuousLinearMap.one_def] using
+        (R.propagator_inverse hg η).2)
     (by
-      simpa [ContinuousLinearMap.comp_apply] using
-        congrArg (fun T : EndH => T)
-          (R.propagator_inverse hg η).1)
+      simpa only [ContinuousLinearMap.mul_def, ContinuousLinearMap.one_def] using
+        (R.propagator_inverse hg η).1)
 
 theorem propagatorUnit_zero
     {g : Quaternion ℝ} {V : BogoliubovVielbeinBundle (E := E)}

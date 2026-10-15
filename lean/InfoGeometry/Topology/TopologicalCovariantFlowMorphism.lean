@@ -44,7 +44,7 @@ def id (F : NoncommutativeObservableTopologicalCovariantFlow S) :
     TopologicalCovariantFlowMorphism F F where
   latentMap := fun x => x
   continuous_latentMap := continuous_id
-  operatorMap := StarAlgEquiv.refl
+  operatorMap := StarAlgEquiv.refl ℂ A
   operatorMap_continuous := continuous_id
   flow_natural := by intro t x; rfl
   observation_natural := by intro x i; rfl

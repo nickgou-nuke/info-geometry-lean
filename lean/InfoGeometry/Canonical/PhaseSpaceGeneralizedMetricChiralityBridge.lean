@@ -637,7 +637,10 @@ section SolderedProjectorAlgebra
     (toDoubledCopyRho_comp_plusProjector_eq_realized (G := G) ρ)
   have h₁' : toDoubledCopyRho (E := E) ρ (G.plusProjector X) =
       realizedPlusProjector (G := G) ρ Y := by
-    simpa [X, LinearMap.comp_apply] using h₁
+    have h := LinearMap.congr_fun (toDoubledCopyRho_comp_plusProjector_eq_realized (G := G) ρ) X
+    change toDoubledCopyRho ρ (G.plusProjector X) = realizedPlusProjector G ρ (toDoubledCopyRho ρ X) at h
+    rw [toDoubledCopyRho_fromDoubledCopyRho] at h
+    exact h
   have h₂' : toDoubledCopyRho (E := E) ρ (G.plusProjector (G.plusProjector X)) =
       realizedPlusProjector (G := G) ρ
         (toDoubledCopyRho (E := E) ρ (G.plusProjector X)) := by
@@ -674,7 +677,10 @@ section SolderedProjectorAlgebra
     (toDoubledCopyRho_comp_minusProjector_eq_realized (G := G) ρ)
   have h₁' : toDoubledCopyRho (E := E) ρ (G.minusProjector X) =
       realizedMinusProjector (G := G) ρ Y := by
-    simpa [X, LinearMap.comp_apply] using h₁
+    have h := LinearMap.congr_fun (toDoubledCopyRho_comp_minusProjector_eq_realized (G := G) ρ) X
+    change toDoubledCopyRho ρ (G.minusProjector X) = realizedMinusProjector G ρ (toDoubledCopyRho ρ X) at h
+    rw [toDoubledCopyRho_fromDoubledCopyRho] at h
+    exact h
   have h₂' : toDoubledCopyRho (E := E) ρ (G.minusProjector (G.minusProjector X)) =
       realizedMinusProjector (G := G) ρ
         (toDoubledCopyRho (E := E) ρ (G.minusProjector X)) := by

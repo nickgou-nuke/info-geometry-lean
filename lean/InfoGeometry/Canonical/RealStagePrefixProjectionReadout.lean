@@ -54,14 +54,12 @@ theorem prefixRankDyadicPoint_value (p : PrefixRankParameter) :
       (dyadicStageMap p.1 (p.2.1 : ℤ) : ℚ) := by
   rfl
 
-  theorem prefixRankReadout_real_eq_directLimit_stage
+theorem prefixRankReadout_real_eq_directLimit_stage
     (p : PrefixRankParameter) :
     (((dyadicDirectLimitEquiv
         (dyadicStage p.1 (p.2.1 : ℤ)) : DyadicRational) : ℚ) : ℝ) =
       (prefixRankReadout p : ℝ) := by
-  change (((dyadicStageMap p.1 (p.2.1 : ℤ) : DyadicRational) : ℚ) : ℝ) =
-    (prefixRankReadout p : ℝ)
-  rw [prefixRankReadout_value]
+  rw [dyadicDirectLimitEquiv_stage, prefixRankReadout_value]
   simp [dyadicStageMap]
 
 noncomputable def prefixRankCompatibleIntervalReadout
@@ -219,6 +217,12 @@ noncomputable def prefixRankDyadicTopCatHom :
     (p : PrefixRankParameter) :
     prefixRankDyadicTopCatHom p = prefixRankDyadicPoint p := rfl
 
+theorem prefixRankDyadicTopCatHom_underlying_eq :
+    (prefixRankDyadicTopCatHom : PrefixRankParameter → DyadicUnitInterval) =
+      prefixRankDyadicPoint := by
+  funext p
+  exact prefixRankDyadicTopCatHom_apply p
+
 theorem prefixRank_dyadic_topcat_factorization :
     prefixRankCompatibleIntervalReadoutTopCatHom ≫
         compatibleIntervalReadoutHomeomorphTopCatHom =
@@ -264,8 +268,8 @@ theorem denseRange_prefixRankDyadicPoint :
 
 theorem denseRange_prefixRankDyadicTopCatHom :
     DenseRange prefixRankDyadicTopCatHom := by
-  simpa only [prefixRankDyadicTopCatHom_apply] using
-    denseRange_prefixRankDyadicPoint
+  rw [prefixRankDyadicTopCatHom_underlying_eq]
+  exact denseRange_prefixRankDyadicPoint
 
 theorem prefixRankDyadicPoint_mem_closure_range
     (x : {q : ℚ // q ∈ Set.Icc (0 : ℚ) 1}) :
@@ -299,7 +303,7 @@ theorem closure_range_prefixRankReadout :
 
 theorem closure_range_prefixRankDyadicTopCatHom :
     closure (Set.range prefixRankDyadicTopCatHom) = Set.univ := by
-  simpa only [prefixRankDyadicTopCatHom_apply] using
-    closure_range_prefixRankDyadicPoint
+  rw [prefixRankDyadicTopCatHom_underlying_eq]
+  exact closure_range_prefixRankDyadicPoint
 
 end InfoGeometry.Canonical

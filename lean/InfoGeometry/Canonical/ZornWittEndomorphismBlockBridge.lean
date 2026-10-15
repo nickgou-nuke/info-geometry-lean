@@ -58,7 +58,8 @@ theorem wittSkew_iff {n : ℕ} (T : Block n) :
   · rintro ⟨hD, hB, hC⟩
     apply block_ext
     · have hDt := congrArg Matrix.transpose hD
-      simpa using hDt
+      change T.D.transpose = -T.A
+      exact hDt
     · simpa [wittAdjoint, blockNeg] using hB
     · simpa [wittAdjoint, blockNeg] using hC
     · have hD' : T.A.transpose = -T.D := by

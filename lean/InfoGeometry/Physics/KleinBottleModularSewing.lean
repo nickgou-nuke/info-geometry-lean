@@ -44,7 +44,7 @@ namespace InfoGeometry.Physics.KleinBottleSewing
 /-! ## 1. Cantor Quasilattice & Bitword Involutions -/
 
 /-- Space of infinite bitwords representing the Cantor quasilattice boundary. -/
-def Bitword : Type :=
+abbrev Bitword : Type :=
   ℕ → Fin 2
 
 /-- Shift / hopping operator on the Cantor quasilattice. -/
@@ -55,21 +55,16 @@ def hoppingShift (w : Bitword) : Bitword :=
 def chargeSwitch (w : Bitword) : Bitword :=
   fun i => if w i = 0 then 1 else 0
 
+lemma chargeSwitch_val (x : Fin 2) :
+    (if (if x = 0 then (1 : Fin 2) else 0) = 0 then (1 : Fin 2) else 0) = x := by
+  decide +revert
+
 /-- 🏆 THEOREM: The charge switch operator is strictly involutive: $\operatorname{switch}^2 = \operatorname{id}$. -/
 theorem chargeSwitch_involutive (w : Bitword) :
     chargeSwitch (chargeSwitch w) = w := by
   funext i
   dsimp [chargeSwitch]
-  have hw : w i = 0 ∨ w i = 1 := by
-    rcases w i with ⟨val, hval⟩
-    interval_cases val
-    · left; rfl
-    · right; rfl
-  rcases hw with h0 | h1
-  · rw [h0]
-    rfl
-  · rw [h1]
-    rfl
+  exact chargeSwitch_val (w i)
 
 /-! ## 2. The $V_4$ Klein Symmetry & Modular Action -/
 
@@ -79,7 +74,11 @@ inductive KleinFourOp where
   | tilt : KleinFourOp
   | switch : KleinFourOp
   | tiltSwitch : KleinFourOp
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype KleinFourOp where
+  elems := {.id, .tilt, .switch, .tiltSwitch}
+  complete := by rintro (_ | _ | _ | _) <;> simp
 
 /-- Group multiplication on $V_4$. -/
 def mulKlein : KleinFourOp → KleinFourOp → KleinFourOp

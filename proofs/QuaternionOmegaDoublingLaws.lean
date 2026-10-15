@@ -78,8 +78,7 @@ theorem twisted_nonassociative (ε : ℝ) :
   intro h
   have hr := congrArg Prod.snd h
   simp [twistedMul, omega, qi, qj] at hr
-  have hk := congrArg (fun q : H => q.imK) hr
-  norm_num at hk
+  norm_num at hr
 
 theorem four_branch_law_packet :
     (∀ x y z, biquaternionMul (biquaternionMul x y) z =

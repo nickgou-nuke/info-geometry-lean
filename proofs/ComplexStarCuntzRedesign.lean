@@ -72,12 +72,12 @@ def Tℂ {ι : Type*} [Fintype ι] [DecidableEq ι] (i : ι) : ComplexStarCuntzA
 @[simp] theorem star_complex_smul {ι : Type*} [Fintype ι] [DecidableEq ι]
     (z : ℂ) (x : ComplexStarCuntzAlg ι) :
     star (z • x) = star z • star x := by
-  refine TensorProduct.induction_on x ?_ ?_ ?_
-  · simp
-  · intro w a
+  induction x using TensorProduct.induction_on with
+  | zero => simp
+  | tmul w a =>
     change star (z * w) ⊗ₜ[ℝ] star a = (star z * star w) ⊗ₜ[ℝ] star a
     rw [StarMul.star_mul, mul_comm]
-  · intro x y hx hy
+  | add x y hx hy =>
     simp [hx, hy]
 
 /-- Concrete sanity check: the redesigned source admits genuine complex

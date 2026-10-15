@@ -15,12 +15,14 @@ namespace InfoGeometry.Algebra
 open Set
 open H3Zorn
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 def h3ZornInnerDerivationGenerators : Set
     (Module.End ℝ (H3Zorn ℝ)) :=
   {D | ∃ a b : H3Zorn ℝ,
     D = h3ZornJordanInnerDerivation a b}
 
-def h3ZornInnerDerivationSpan :
+noncomputable def h3ZornInnerDerivationSpan :
     Submodule ℝ (Module.End ℝ (H3Zorn ℝ)) :=
   Submodule.span ℝ h3ZornInnerDerivationGenerators
 

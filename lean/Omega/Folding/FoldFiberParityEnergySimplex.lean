@@ -116,6 +116,12 @@ private lemma parsevalEnergy_walshSigns_eq {m : ℕ} (I : Finset (Fin m)) :
         ((2 : ℝ) ^ m)⁻¹ := by
     rw [mul_pow, hprod]
     field_simp [htwo]
+  change ((↑m + 1 : ℝ)⁻¹) *
+      ((↑m + 1 : ℝ) *
+        (((2 : ℝ) ^ m)⁻¹ *
+          ∏ b : Fin m,
+            ‖1 + ((((if b ∈ I then (-1 : ℝ) else 1 : ℝ)) : ℂ) * Complex.I)‖) ^ 2) =
+      ((2 : ℝ) ^ m)⁻¹
   rw [hcore]
   show ((↑m + 1 : ℝ)⁻¹) * ((↑m + 1 : ℝ) * ((2 : ℝ) ^ m)⁻¹) = ((2 : ℝ) ^ m)⁻¹
   calc

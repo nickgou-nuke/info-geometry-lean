@@ -50,8 +50,8 @@ lemma primeSliceIndex_injective {i j m n : ℕ}
 lemma layeredPrime_injective {i j m n : ℕ}
     (h : layeredPrime i m = layeredPrime j n) : i = j ∧ m = n := by
   have hindex : primeSliceIndex i m = primeSliceIndex j n := by
-    apply (Nat.nth_strictMono Nat.infinite_setOf_prime).injective
-    simpa [layeredPrime] using h
+    apply (Nat.nth_strictMono Nat.infinite_setOfPred_prime).injective
+    simpa [layeredPrime, nthPrime] using h
   exact primeSliceIndex_injective hindex
 
 lemma primeSlice_disjoint {i j : ℕ} (hij : i ≠ j) :
@@ -78,7 +78,7 @@ lemma layeredPrimeProductCode_injective (k : ℕ) :
     unfold layeredPrimeProductCode
     exact Finset.dvd_prod_of_mem (fun j : Fin k => layeredPrime j.1 (x j)) (by simp)
   have hqdvdy : q ∣ layeredPrimeProductCode y := hxy ▸ hqdvdx
-  rcases (hqprime.prime.dvd_finset_prod_iff fun j : Fin k => layeredPrime j.1 (y j)).mp hqdvdy with
+  rcases (hqprime.prime.dvd_finsetProd_iff fun j : Fin k => layeredPrime j.1 (y j)).mp hqdvdy with
     ⟨j, _, hqj⟩
   have hjprime : Nat.Prime (layeredPrime j.1 (y j)) := nthPrime_prime _
   have hqeq : q = layeredPrime j.1 (y j) := (Nat.prime_dvd_prime_iff_eq hqprime hjprime).mp hqj

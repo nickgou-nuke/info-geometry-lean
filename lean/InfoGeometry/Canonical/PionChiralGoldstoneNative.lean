@@ -59,6 +59,8 @@ end SymmetricPair
 
 section ChiralMatrices
 
+attribute [local instance 100] LieRing.ofAssociativeRing LieAlgebra.ofAssociativeAlgebra
+
 abbrev M2C := InfoGeometry.Physics.ChiralCausalCone.M2C
 
 /-! These are aliases, not a second matrix realization. -/
@@ -81,17 +83,17 @@ theorem piPlus_piMinus_lie :
 
 theorem piZero_piPlus_lie :
     ⁅piZero, piPlus⁆ = piPlus := by
-  rw [piZero, piPlus]
-  rw [smul_lie]
-  simpa [smul_smul] using congrArg (fun X : M2C => (1 / 2 : ℂ) • X)
-    comm_σ3_σPlus
+  rw [piZero, piPlus, smul_lie]
+  change (1 / 2 : ℂ) • (σ3c * σPlus - σPlus * σ3c) = σPlus
+  rw [comm_σ3_σPlus, smul_smul]
+  norm_num
 
 theorem piZero_piMinus_lie :
     ⁅piZero, piMinus⁆ = -piMinus := by
-  rw [piZero, piMinus]
-  rw [smul_lie]
-  simpa [smul_smul] using congrArg (fun X : M2C => (1 / 2 : ℂ) • X)
-    comm_σ3_σMinus
+  rw [piZero, piMinus, smul_lie]
+  change (1 / 2 : ℂ) • (σ3c * σMinus - σMinus * σ3c) = -piMinus
+  rw [comm_σ3_σMinus, smul_smul]
+  simp [piMinus]
 
 def pionLieSubalgebra : LieSubalgebra ℂ M2C :=
   LieSubalgebra.lieSpan ℂ M2C {piPlus, piMinus, piZero}
@@ -216,7 +218,7 @@ theorem hestenesPionPlus_eq_doubledSpace_formula :
   rw [← hu]
   apply DoubledSpace.ext
   · simp only [hestenesPionPlus, concreteCARCreation,
-      ContinuousLinearMap.smul_apply, ContinuousLinearMap.sub_apply,
+      smul_apply, sub_apply,
       cliffordConcreteCreation_apply_to_doubled,
       WithLp.smul_fst, WithLp.sub_fst,
       modular_j_to_doubled, complex_i_to_doubled,
@@ -224,7 +226,7 @@ theorem hestenesPionPlus_eq_doubledSpace_formula :
     rw [← two_smul ℝ, ← mul_smul]
     norm_num
   · simp only [hestenesPionPlus, concreteCARCreation,
-      ContinuousLinearMap.smul_apply, ContinuousLinearMap.sub_apply,
+      smul_apply, sub_apply,
       cliffordConcreteCreation_apply_to_doubled,
       WithLp.smul_snd, WithLp.sub_snd,
       modular_j_to_doubled, complex_i_to_doubled,
@@ -240,13 +242,13 @@ theorem hestenesPionMinus_eq_doubledSpace_formula :
   rw [← hu]
   apply DoubledSpace.ext
   · simp only [hestenesPionMinus, concreteCARAnnihilation,
-      ContinuousLinearMap.smul_apply, ContinuousLinearMap.add_apply,
+      smul_apply, add_apply,
       cliffordConcreteAnnihilation_apply_to_doubled,
       WithLp.smul_fst, WithLp.add_fst,
       modular_j_to_doubled, complex_i_to_doubled,
       fst_to_doubled, add_neg_cancel, smul_zero]
   · simp only [hestenesPionMinus, concreteCARAnnihilation,
-      ContinuousLinearMap.smul_apply, ContinuousLinearMap.add_apply,
+      smul_apply, add_apply,
       cliffordConcreteAnnihilation_apply_to_doubled,
       WithLp.smul_snd, WithLp.add_snd,
       modular_j_to_doubled, complex_i_to_doubled,

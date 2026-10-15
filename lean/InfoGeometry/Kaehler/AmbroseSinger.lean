@@ -8,12 +8,14 @@ namespace InfoGeometry.Kaehler
 
 open Set
 
+universe u v w x
+
 /-- 1. Define the Smooth Manifold -/
-class SmoothManifold (M : Type _) [TopologicalSpace M]
+class SmoothManifold (M : Type u) [TopologicalSpace M]
 
 /-- 2. Define the Principal Bundle -/
-structure PrincipalBundle (M : Type _) (G : Type _) [TopologicalSpace M] [SmoothManifold M] [Group G] [TopologicalSpace G] where
-  P : Type _
+structure PrincipalBundle (M : Type u) (G : Type v) [TopologicalSpace M] [SmoothManifold M] [Group G] [TopologicalSpace G] where
+  P : Type w
   [top : TopologicalSpace P]
   proj : P → M
   action : G → P → P
@@ -41,7 +43,7 @@ algebra are supplied as data by a geometric owner.  This file does not create
 opaque constants for them and does not assert the Ambrose--Singer equality.
 -/
 structure AmbroseSingerContext (B : PrincipalBundle M G) [Connection B] (p : B.P) where
-  Loop : Type _
+  Loop : Type x
   IsContractible : Loop → Prop
   HolonomyGroup : Subgroup G
   HolonomyLieAlgebra : LieSubalgebra R g

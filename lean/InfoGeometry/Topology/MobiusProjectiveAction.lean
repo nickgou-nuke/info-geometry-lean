@@ -25,6 +25,19 @@ def pglActionHom : PGL2C →* Equiv.Perm RiemannSphere where
     intro point
     exact InfoGeometry.eval_comp firstRepresentative secondRepresentative point
 
+instance : SMul PGL2C RiemannSphere :=
+  ⟨fun transformation point => (pglActionHom transformation) point⟩
+
+instance pglMulAction : MulAction PGL2C RiemannSphere where
+  one_smul point := by
+    change pglActionHom 1 point = point
+    simp
+  mul_smul first second point := by
+    change pglActionHom (first * second) point =
+      pglActionHom first (pglActionHom second point)
+    rw [map_mul]
+    rfl
+
 @[simp] theorem pglActionHom_mk (transformation : MobiusTransform) :
     pglActionHom (Quotient.mk' transformation) = mobiusEvalEquiv transformation := rfl
 
@@ -36,11 +49,10 @@ theorem pglActionHom_injective : Function.Injective pglActionHom := by
   intro point
   exact congrArg (fun action : Equiv.Perm RiemannSphere => action point) equalActions
 
-instance pglMulAction : MulAction PGL2C RiemannSphere :=
-  MulAction.compHom RiemannSphere pglActionHom
-
 @[simp] theorem mk_smul (transformation : MobiusTransform) (point : RiemannSphere) :
-    (Quotient.mk' transformation : PGL2C) • point = transformation.eval point := rfl
+    SMul.smul (M := PGL2C) (α := RiemannSphere)
+      (Quotient.mk' transformation : PGL2C) point =
+      transformation.eval point := rfl
 
 instance pglFaithfulSMul : FaithfulSMul PGL2C RiemannSphere where
   eq_of_smul_eq_smul := by
@@ -51,7 +63,8 @@ instance pglFaithfulSMul : FaithfulSMul PGL2C RiemannSphere where
     exact equalActions point
 
 theorem eq_iff_same_action (first second : PGL2C) :
-    first = second ↔ ∀ point : RiemannSphere, first • point = second • point := by
+    first = second ↔ ∀ point : RiemannSphere,
+      (first • point : RiemannSphere) = (second • point : RiemannSphere) := by
   constructor
   · intro equalElements
     subst second
@@ -60,7 +73,8 @@ theorem eq_iff_same_action (first second : PGL2C) :
   · exact FaithfulSMul.eq_of_smul_eq_smul
 
 theorem mk_smul_toRiemannSphere (transformation : MobiusTransform) (point : CP1) :
-    (Quotient.mk' transformation : PGL2C) • point.toRiemannSphere =
+    SMul.smul (M := PGL2C) (α := RiemannSphere)
+      (Quotient.mk' transformation : PGL2C) point.toRiemannSphere =
       (transformation.actCP1 point).toRiemannSphere := by
   rw [mk_smul]
   exact (InfoGeometry.mobius_action_correspondence transformation point).symm

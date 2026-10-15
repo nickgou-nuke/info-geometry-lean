@@ -31,10 +31,8 @@ def local_inner_product (ω : ∀ n, FiniteStageFunctional n) (n : ℕ) (x y : S
 
 /-- The bonding map preserves the involution since it acts as A ⊗ I_2. -/
 theorem bond_star (n : ℕ) (A : Stage n) : stageBond n (star A) = star (stageBond n A) := by
-  ext i j
-  simp [stageBond, stageEmbed_apply, matStageEmbed, Matrix.star_apply, Matrix.one_apply]
-  congr 1
-  aesop
+  change stageEmbed n (star A) = star (stageEmbed n A)
+  exact stageEmbed_star n A
 
 /-!
 ## Isometric Transition Theorem

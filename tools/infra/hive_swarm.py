@@ -149,9 +149,13 @@ def parse_critic_decision(text: str) -> CriticDecision:
 
 
 def parse_auditor_report(text: str) -> AuditorReport:
-    verdict = parse_keyed_line(text, "VERDICT") or "conditional_pass"
+    verdict = parse_keyed_line(text, "VERDICT").lower()
+    if verdict not in {"pass", "conditional_pass", "fail"}:
+        verdict = "fail"
     notes = parse_keyed_line(text, "NOTES") or text.strip()
-    promotion_allowed = parse_keyed_line(text, "PROMOTION_ALLOWED") or "no"
+    promotion_allowed = parse_keyed_line(text, "PROMOTION_ALLOWED").lower()
+    if promotion_allowed not in {"yes", "no"}:
+        promotion_allowed = "no"
     return AuditorReport(verdict=verdict, notes=notes, promotion_allowed=promotion_allowed)
 
 
@@ -307,7 +311,8 @@ def run_one(config: SwarmConfig) -> dict[str, Any]:
         elapsed_wall_s=time.time() - started_at,
         lean_latency_s=lean_latency,
     )
-    if verification.get("status") == "success":
+    auditor_accepts = auditor.verdict == "pass" and auditor.promotion_allowed == "no"
+    if verification.get("status") == "success" and auditor_accepts:
         fossil = hive_bee.fossilize_success(config.bee, attempt)
         queue_tool.update_goal_status(
             config.bee.hive_endpoint,
@@ -319,7 +324,12 @@ def run_one(config: SwarmConfig) -> dict[str, Any]:
             extra_fields={"bee_state": "audited", "swarm_artifact": str(artifact), "auditor_verdict": auditor.verdict, "auditor_notes": auditor.notes},
         )
         return {"status": "fossilized", "task": fossil.get("task") or task, "goal": fossil.get("goal") or goal, "generator_tactic": generator_tactic, "critic": critic.__dict__, "auditor": auditor.__dict__, "artifact": str(artifact), "fossil": fossil}
-    rejection = hive_bee.record_deadend(config.bee, attempt, "lean_verification_failure")
+    failure_reason = (
+        "lean_verification_failure"
+        if verification.get("status") != "success"
+        else "auditor_rejected_or_incomplete"
+    )
+    rejection = hive_bee.record_deadend(config.bee, attempt, failure_reason)
     if int(task.get("claim_count") or 1) < hive_bee.max_attempts(goal):
         queue_tool.requeue_task(
             config.bee.hive_endpoint,
@@ -328,7 +338,11 @@ def run_one(config: SwarmConfig) -> dict[str, Any]:
             config.bee.hive_password,
             task_key_value=str(task["_key"]),
             worker_id=config.bee.worker_id,
-            error_message=f"formalizer failed after critic approval: {critic.reason}",
+            error_message=(
+                f"formalizer failed after critic approval: {critic.reason}"
+                if verification.get("status") != "success"
+                else f"auditor did not explicitly pass: {auditor.verdict}"
+            ),
         )
         queue_tool.update_goal_status(
             config.bee.hive_endpoint,
@@ -337,7 +351,7 @@ def run_one(config: SwarmConfig) -> dict[str, Any]:
             config.bee.hive_password,
             goal_key_value=str(goal["_key"]),
             status="requeued",
-            extra_fields={"bee_state": "audited", "swarm_artifact": str(artifact), "auditor_verdict": auditor.verdict, "auditor_notes": auditor.notes},
+            extra_fields={"bee_state": "audit_rejected", "swarm_artifact": str(artifact), "auditor_verdict": auditor.verdict, "auditor_notes": auditor.notes},
         )
         return {"status": "requeued", "task": task, "goal": goal, "generator_tactic": generator_tactic, "critic": critic.__dict__, "auditor": auditor.__dict__, "artifact": str(artifact), "deadend": rejection}
     queue_tool.fail_task(
@@ -356,7 +370,7 @@ def run_one(config: SwarmConfig) -> dict[str, Any]:
         config.bee.hive_password,
         goal_key_value=str(goal["_key"]),
         status="deadend",
-        extra_fields={"bee_state": "audited", "swarm_artifact": str(artifact), "auditor_verdict": auditor.verdict, "auditor_notes": auditor.notes},
+        extra_fields={"bee_state": "audit_rejected", "swarm_artifact": str(artifact), "auditor_verdict": auditor.verdict, "auditor_notes": auditor.notes},
     )
     return {"status": "deadend", "task": task, "goal": goal, "generator_tactic": generator_tactic, "critic": critic.__dict__, "auditor": auditor.__dict__, "artifact": str(artifact), "deadend": rejection}
 

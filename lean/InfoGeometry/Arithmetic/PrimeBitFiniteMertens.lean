@@ -24,13 +24,12 @@ def integerCutoffSquarefree (B : ℕ) : Finset ℕ :=
   (Finset.Icc 1 B).filter Squarefree
 
 def S_B (L : PrimeBitLattice) (B : ℕ) : Finset (PrimeBitState L) :=
-  (L.primes.powerset.attach.map
-      { toFun := fun S =>
-          (⟨S.1, Finset.mem_powerset.mp S.2⟩ : PrimeBitState L)
-        inj' := by
-          intro S T hST
-          exact Subtype.ext (congrArg (fun U : PrimeBitState L => U.1) hST) }).filter
+  (L.primes.powerset.subtype (fun ε => ε ⊆ L.primes)).filter
     (fun ε => primeBitInteger L ε ≤ B)
+
+@[simp] theorem mem_S_B_iff (L : PrimeBitLattice) (B : ℕ) (ε : PrimeBitState L) :
+    ε ∈ S_B L B ↔ primeBitInteger L ε ≤ B := by
+  simp [S_B, ε.2]
 
 theorem sum_parity_eq_squarefree_mobius_sum
     (L : PrimeBitLattice) (B : ℕ)
@@ -41,23 +40,12 @@ theorem sum_parity_eq_squarefree_mobius_sum
   classical
   refine Finset.sum_bij (fun ε _ => primeBitInteger L ε) ?_ ?_ ?_ ?_
   · intro ε hε
-    have hε' : ε ∈
-        (L.primes.powerset.attach.map
-          { toFun := fun S =>
-              (⟨S.1, Finset.mem_powerset.mp S.2⟩ : PrimeBitState L)
-            inj' := by
-              intro S T hST
-              exact Subtype.ext
-                (congrArg (fun U : PrimeBitState L => U.1) hST) }).filter
-          (fun ε => primeBitInteger L ε ≤ B) := by
-      simpa [S_B] using hε
-    rw [Finset.mem_filter] at hε'
-    change primeBitInteger L ε ∈ (Finset.Icc 1 B).filter Squarefree
-    rw [Finset.mem_filter]
+    rw [mem_S_B_iff] at hε
+    rw [integerCutoffSquarefree, Finset.mem_filter]
     exact ⟨Finset.mem_Icc.mpr
-      ⟨Nat.one_le_iff_ne_zero.mpr (primeBitInteger_ne_zero ε), hε'.2⟩,
+      ⟨Nat.one_le_iff_ne_zero.mpr (primeBitInteger_ne_zero ε), hε⟩,
       primeBitInteger_squarefree ε⟩
-  · intro ε₁ hε₁ ε₂ hε₂ heq
+  · intro ε₁ _ ε₂ _ heq
     change primeBitInteger L ε₁ = primeBitInteger L ε₂ at heq
     have h₁ := primeBitInteger_primeFactors ε₁
     have h₂ := primeBitInteger_primeFactors ε₂
@@ -78,30 +66,15 @@ theorem sum_parity_eq_squarefree_mobius_sum
       exact hL p ((Nat.le_of_dvd hnpos hpmem.2.1).trans hIcc.2) hpmem.1
     let ε : PrimeBitState L := ⟨εval, hsub⟩
     have hεmem : ε ∈ S_B L B := by
-      change ε ∈
-        (L.primes.powerset.attach.map
-          { toFun := fun S =>
-              (⟨S.1, Finset.mem_powerset.mp S.2⟩ : PrimeBitState L)
-            inj' := by
-              intro S T hST
-              exact Subtype.ext
-                (congrArg (fun U : PrimeBitState L => U.1) hST) }).filter
-          (fun ε => primeBitInteger L ε ≤ B)
-      rw [Finset.mem_filter]
-      refine ⟨?_, ?_⟩
-      · rw [Finset.mem_map]
-        let S : {S : Finset ℕ // S ∈ L.primes.powerset} :=
-          ⟨εval, Finset.mem_powerset.mpr hsub⟩
-        refine ⟨S, Finset.mem_attach L.primes.powerset S, ?_⟩
-        rfl
-      · change ∏ p ∈ εval, p ≤ B
-        rw [show εval = n.primeFactors from rfl,
-          Nat.prod_primeFactors_of_squarefree hsq]
-        exact hIcc.2
+      rw [mem_S_B_iff]
+      change ∏ p ∈ εval, p ≤ B
+      rw [show εval = n.primeFactors from rfl,
+        Nat.prod_primeFactors_of_squarefree hsq]
+      exact hIcc.2
     refine ⟨ε, hεmem, ?_⟩
     change ∏ p ∈ εval, p = n
     exact Nat.prod_primeFactors_of_squarefree hsq
-  · intro ε hε
+  · intro ε _
     exact (mobius_primeBitInteger_eq_parity ε).symm
 
 theorem sum_parity_eq_mertensFunction

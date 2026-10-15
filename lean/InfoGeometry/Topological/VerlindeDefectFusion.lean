@@ -49,8 +49,10 @@ set_option linter.unusedSimpArgs false
 /-- 2D S-матрица на Верлинде за c = 1 / Ising / Fibonacci дефектни линии:
     S = (1 / √2) * [[1, 1], [1, -1]]. -/
 def verlindeSMatrix2 : Matrix (Fin 2) (Fin 2) ℝ :=
-  ![![1 / Real.sqrt 2, 1 / Real.sqrt 2],
-    ![1 / Real.sqrt 2, - (1 / Real.sqrt 2)]]
+  fun i j =>
+    if i = 0 then 1 / Real.sqrt 2
+    else if j = 0 then 1 / Real.sqrt 2
+    else -(1 / Real.sqrt 2)
 
 /-- Квантова размерност на тривиалния дефект d₀ = 1. -/
 def quantumDimensionZero : ℝ := 1
@@ -87,11 +89,10 @@ theorem verlinde_S_matrix_unitary :
     rw [this, h_sqrt2_sq]
     norm_num
   ext i j
-  fin_cases i <;> fin_cases j
-  · simp [mul_apply, transpose_apply, Fin.sum_univ_two, h_inv_sq]; norm_num
-  · simp [mul_apply, transpose_apply, Fin.sum_univ_two]
-  · simp [mul_apply, transpose_apply, Fin.sum_univ_two]
-  · simp [mul_apply, transpose_apply, Fin.sum_univ_two, h_inv_sq]; norm_num
+  change (∑ k : Fin 2,
+      verlindeSMatrix2 i k * verlindeSMatrix2 j k) = (if i = j then 1 else 0)
+  fin_cases i <;> fin_cases j <;>
+    norm_num [verlindeSMatrix2, h_inv_sq]
 
 /-- 🏆 ТЕОРЕМА 2 (Пълна квантова размерност D² = 2):
     D² = d₀² + d₁² = 1² + 1² = 2. -/

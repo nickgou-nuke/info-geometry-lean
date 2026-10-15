@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.O55OrthogonalLieCarrier
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Algebra.Lie.OfAssociative
 
 noncomputable section
 set_option maxHeartbeats 1000000
@@ -10,6 +11,9 @@ open Matrix
 open InfoGeometry.Canonical.O55Representation
 
 abbrev HMatrix := Matrix (Fin 10) (Fin 10) ℝ
+
+local instance : LieRing HMatrix := LieRing.ofAssociativeRing
+local instance : LieAlgebra ℝ HMatrix := LieAlgebra.ofAssociativeAlgebra
 
 def hyperbolicMetricMatrix : HMatrix := fun i j =>
   if i.val = 0 ∧ j.val = 9 then 2
@@ -138,7 +142,7 @@ def hyperbolicLieSubalgebra : LieSubalgebra ℝ HMatrix :=
       intro A B hA hB
       exact hyperbolicPredicate_commutator hA hB }
 
-def HyperbolicOrthogonalLie := hyperbolicLieSubalgebra
+abbrev HyperbolicOrthogonalLie := hyperbolicLieSubalgebra
 
 def diagonalToHyperbolicInv (A : HMatrix) : HMatrix :=
   endpointChange * A * endpointChangeInv
@@ -336,8 +340,9 @@ theorem hyperbolicToDiagonal_bracket (A B : HyperbolicOrthogonalLie) :
             rw [hmul, hmul]
 
 theorem diagonalToHyperbolic_bracket (A B : Orthogonal55) :
-    diagonalToHyperbolicMap ⁅A, B⁆ =
-      ⁅diagonalToHyperbolicMap A, diagonalToHyperbolicMap B⁆ := by
+    diagonalToHyperbolicMap (⁅A, B⁆ : Orthogonal55) =
+      (⁅diagonalToHyperbolicMap A, diagonalToHyperbolicMap B⁆ :
+        HyperbolicOrthogonalLie) := by
   apply Subtype.ext
   change endpointChange * (A.1 * B.1 - B.1 * A.1) * endpointChangeInv =
     (endpointChange * A.1 * endpointChangeInv) *

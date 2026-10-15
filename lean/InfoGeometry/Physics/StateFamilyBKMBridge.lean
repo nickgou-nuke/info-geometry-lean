@@ -135,7 +135,8 @@ theorem diagonalCovariance_self_eq_zero_iff
     diagonalCovariance ρ a a = 0 ↔
       ∀ i, a i = diagonalMean ρ a := by
   rw [diagonalCovariance_self_eq_finiteGibbsVariance]
-  simpa [diagonalMean] using
+  simpa [diagonalMean,
+    InfoGeometry.Topology.FiniteGibbsFisherBridge.finiteGibbsMean] using
     (InfoGeometry.Topology.FiniteGibbsFisherBridge.finiteGibbsVariance_eq_zero_iff
       ρ.prob a ρ.prob_nonneg hpos)
 
@@ -144,7 +145,8 @@ theorem diagonalCovariance_self_eq_raw_moment
     diagonalCovariance ρ a a =
       (∑ i : n, ρ.prob i * (a i)^2) - (diagonalMean ρ a)^2 := by
   rw [diagonalCovariance_self_eq_finiteGibbsVariance]
-  simpa [diagonalMean] using
+  simpa [diagonalMean,
+    InfoGeometry.Topology.FiniteGibbsFisherBridge.finiteGibbsMean] using
     (InfoGeometry.Topology.FiniteGibbsFisherBridge.finiteGibbsVariance_eq_usual
       ρ.prob a ρ.prob_sum_one)
 

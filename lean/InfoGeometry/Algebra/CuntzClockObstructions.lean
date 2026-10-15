@@ -105,8 +105,8 @@ theorem no_normalized_cyclic_trace
     (τ : Coeff →+ ℂ) (hcyc : ∀ a b, τ (a * b) = τ (b * a)) : τ 1 ≠ 1 := by
   intro hn
   have hdiag (i : Fin 2) : τ (e i i) = τ 1 := by
-    change τ (cuntzS 2 i * cuntzSdag 2 i) = τ 1
-    rw [hcyc, cuntz_isometry]
+    change τ (shift i * shiftDag i) = τ 1
+    rw [hcyc, shiftDag_mul_shift]
   have hsum := congrArg τ diagonal_sum
   rw [map_add, hdiag 0, hdiag 1, hn] at hsum
   norm_num at hsum

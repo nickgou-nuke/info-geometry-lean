@@ -11,9 +11,11 @@ set_option linter.unusedSimpArgs false
 # Zorn–Dirac–Kähler $\mathrm{SU}(3)$ Synthesis (Stratum 24)
 
 This module formalizes the grand unification of:
-1. **The Pauli–Weyl Lightcone Condition**:
-   - Realized as the null cone of the split octonionic Zorn determinant $\det(Z) = a b - \mathbf{u} \cdot \mathbf{v} = 0$.
-   - Shows that lightcone states correspond to rank-1 factorizable twistor dyads.
+1. **The Split-Zorn Norm-Zero Locus**:
+   - The code proves the algebraic equivalence norm(Z)=0 iff a b = u · v.
+   - Separately, a rank-one 2×2 dyad has determinant zero. Identifying these
+     carriers with a Minkowski four-momentum requires an explicit map and is not
+     claimed by this module.
 2. **Split Circular Spin Weyl Coordinates**:
    - Transverse hyperbolic decomposition $u_\pm = \frac{1}{2}(u_1 \pm \tau u_2)$ with $\tau^2 = 1$.
    - Product $u_+ u_- = \frac{1}{4}(u_1^2 - u_2^2)$ vanishes on null rays, decoupling circular polarizations.
@@ -102,8 +104,9 @@ structure ZornMatrix (R : Type*) where
 
 namespace ZornMatrix
 
+omit [CommRing R] in
 @[ext]
-def ext {X Y : ZornMatrix R}
+theorem ext {X Y : ZornMatrix R}
     (ha : X.a = Y.a) (hb : X.b = Y.b)
     (hu : X.u = Y.u) (hv : X.v = Y.v) : X = Y := by
   cases X; cases Y; dsimp at ha hb hu hv; rw [ha, hb, hu, hv]
@@ -141,7 +144,10 @@ def norm (X : ZornMatrix R) : R :=
 def trace (X : ZornMatrix R) : R :=
   X.a + X.b
 
-/-- 🏆 THEOREM: The Pauli–Weyl lightcone condition: norm X = 0 iff a * b = u · v. -/
+/-- The split-Zorn norm vanishes exactly when its diagonal product equals the
+dot product of its off-diagonal vectors. The theorem name is retained for API
+compatibility; this is an algebraic norm-zero criterion, not a Minkowski
+lightcone identification. -/
 theorem lightcone_null_iff (X : ZornMatrix R) :
     norm X = 0 ↔ X.a * X.b = dot3 X.u X.v := by
   dsimp [norm]
@@ -406,40 +412,10 @@ theorem stabilizer_preserves_antiquark_sector
 end StabilizerGeometry
 
 /-!
-### Stratum 24.5: Master Synthesis Packet for Stratum 24
+The concrete results above are the module's public API: clients can use each
+proved Zorn norm, Peirce, and Fock-dimension theorem directly. The former
+aggregate proof-field structure had no external consumers and duplicated those
+results without supplying a new carrier or operation.
 -/
-
-structure ZornDiracKahlerSU3Packet (R : Type*) [CommRing R] where
-  cross_self : ∀ u : Vec3 R, cross3 u u = 0
-  lightcone_null : ∀ X : ZornMatrix R, ZornMatrix.norm X = 0 ↔ X.a * X.b = dot3 X.u X.v
-  peirce_p_sq : ZornMatrix.zornMul (ZornMatrix.PPlus (R := R)) ZornMatrix.PPlus = ZornMatrix.PPlus
-  peirce_m_sq : ZornMatrix.zornMul (ZornMatrix.PMinus (R := R)) ZornMatrix.PMinus = ZornMatrix.PMinus
-  peirce_res : ZornMatrix.add (ZornMatrix.PPlus (R := R)) ZornMatrix.PMinus = ZornMatrix.one
-  q_sq_zero : ∀ u : Vec3 R, ZornMatrix.zornMul (ZornMatrix.quark u) (ZornMatrix.quark u) = ZornMatrix.zero
-  q_bar_sq_zero : ∀ v : Vec3 R, ZornMatrix.zornMul (ZornMatrix.antiquark v) (ZornMatrix.antiquark v) = ZornMatrix.zero
-  diquark : ∀ u1 u2 : Vec3 R, ZornMatrix.zornMul (ZornMatrix.quark u1) (ZornMatrix.quark u2) = ZornMatrix.antiquark (cross3 u1 u2)
-  baryon : ∀ u1 u2 u3 : Vec3 R, ZornMatrix.zornMul (ZornMatrix.zornMul (ZornMatrix.quark u1) (ZornMatrix.quark u2)) (ZornMatrix.quark u3) =
-    ⟨0, dot3 (cross3 u1 u2) u3, 0, 0⟩
-  car : ∀ u v : Vec3 R, ZornMatrix.add (ZornMatrix.zornMul (ZornMatrix.quark u) (ZornMatrix.antiquark v))
-    (ZornMatrix.zornMul (ZornMatrix.antiquark v) (ZornMatrix.quark u)) = ZornMatrix.smul (dot3 u v) ZornMatrix.one
-  fock_total : dimOmega0 + dimOmega1 + dimOmega2 + dimOmega3 = 8
-  fock_even : dimOmega0 + dimOmega2 = 4
-  fock_odd : dimOmega1 + dimOmega3 = 4
-
-def makeZornDiracKahlerSU3Packet (R : Type*) [CommRing R] :
-    ZornDiracKahlerSU3Packet R where
-  cross_self := cross3_self
-  lightcone_null := ZornMatrix.lightcone_null_iff
-  peirce_p_sq := ZornMatrix.peirce_plus_sq
-  peirce_m_sq := ZornMatrix.peirce_minus_sq
-  peirce_res := ZornMatrix.peirce_resolution
-  q_sq_zero := ZornMatrix.quark_sq_zero
-  q_bar_sq_zero := ZornMatrix.antiquark_sq_zero
-  diquark := ZornMatrix.diquark_to_antiquark
-  baryon := ZornMatrix.baryon_three_quarks
-  car := ZornMatrix.meson_car_anticommutator
-  fock_total := fock_total_dim
-  fock_even := fock_even_dim
-  fock_odd := fock_odd_dim
 
 end InfoGeometry.Canonical.ZornDiracKahlerSU3

@@ -139,7 +139,7 @@ the STA right-bivector replacement of the scalar imaginary.
 -/
 theorem leftGamma_rightPhase_commute (mu : Fin 4) (ψ : DiracMatrix) :
     leftGamma mu (rightPhase ψ) = rightPhase (leftGamma mu ψ) := by
-  simpa [leftGamma, rightPhase] using
+  simpa [leftGamma, rightPhase, rightMul] using
     leftMul_rightMul_commute (A := DiracMatrix) (gamma mu) staPhaseBivector ψ
 
 /-- Minkowski square sign for the `(+---)` Dirac generators. -/

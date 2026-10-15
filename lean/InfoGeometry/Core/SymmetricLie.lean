@@ -822,10 +822,7 @@ noncomputable def endoSymmetricLieAlgebra
     (hJ : J.comp J = ContinuousLinearMap.id ℝ V) :
     SymmetricLieAlgebra (V →L[ℝ] V) :=
   SymmetricLieAlgebra.ofInvolutiveLieAut
-    ⟨conjugationLieEquiv J hJ, by
-      simpa [conjugationLieEquiv] using
-        (conjugationMap_involutive J hJ :
-          Function.Involutive (conjugationMap J))⟩
+    ⟨conjugationLieEquiv J hJ, fun x => conjugationMap_involutive J hJ x⟩
 
 /-- Conjugation by an endomorphism squaring to -Id as an abstract symmetric Lie algebra. -/
 noncomputable def endoSymmetricLieAlgebra_sq_neg_one
@@ -833,10 +830,7 @@ noncomputable def endoSymmetricLieAlgebra_sq_neg_one
     (hJ : J.comp J = -ContinuousLinearMap.id ℝ V) :
     SymmetricLieAlgebra (V →L[ℝ] V) :=
   SymmetricLieAlgebra.ofInvolutiveLieAut
-    ⟨conjugationLieEquiv_sq_neg_one J hJ, by
-      simpa [conjugationLieEquiv_sq_neg_one] using
-        (conjugationMapNeg_involutive J hJ :
-          Function.Involutive (conjugationMapNeg J))⟩
+    ⟨conjugationLieEquiv_sq_neg_one J hJ, fun x => conjugationMapNeg_involutive J hJ x⟩
 
 end Endomorphism
 

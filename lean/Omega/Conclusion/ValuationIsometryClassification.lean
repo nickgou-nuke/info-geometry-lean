@@ -132,10 +132,10 @@ theorem paper_conclusion_valuation_isometry_classification :
   intro c ε x
   dsimp
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · simpa [valuationOne, valuationPrime] using
-      valuationDistance_affineAction c ε valuationOne (valuationPrime .p2)
-  · simpa [valuationOne, valuationPrime] using
-      valuationDistance_affineAction c ε valuationOne (valuationPrime .p3)
+  · rw [valuationDistance_affineAction]
+    rfl
+  · rw [valuationDistance_affineAction]
+    rfl
   · rw [valuationNormalize_affineAction]
     exact valuationSignedAction_prime_p2 ε
   · rw [valuationNormalize_affineAction]

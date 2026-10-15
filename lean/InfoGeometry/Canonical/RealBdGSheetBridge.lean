@@ -54,8 +54,14 @@ omit [CompleteSpace E] in
     (A : E →L[ℝ] E) (x xi : E) :
     dualSheetChiralLift (E := E) A (to_doubled x xi : H₂) = to_doubled (A x) (-A xi) := by
   apply DoubledSpace.ext
-  · simp [dualSheetChiralLift, plusPointL, minusPointL, to_doubled]
-  · simp [dualSheetChiralLift, plusPointL, minusPointL, to_doubled]
+  · simp [dualSheetChiralLift, plusPointL, minusPointL,
+      to_doubled, ContinuousLinearMap.comp_apply,
+      InfoGeometry.Krein.SplitQuadraticSheets.plusPoint,
+      InfoGeometry.Krein.SplitQuadraticSheets.minusPoint]
+  · simp [dualSheetChiralLift, plusPointL, minusPointL,
+      to_doubled, ContinuousLinearMap.comp_apply,
+      InfoGeometry.Krein.SplitQuadraticSheets.plusPoint,
+      InfoGeometry.Krein.SplitQuadraticSheets.minusPoint]
 
 omit [CompleteSpace E] in
 @[simp] theorem plusBlockMap_dualSheetChiralLift

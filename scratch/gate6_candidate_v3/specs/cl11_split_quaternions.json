@@ -1,0 +1,12 @@
+{
+  "claim": "Formalization of Cl(1,1) Split-Quaternions, Chiral Volume Form, Nilpotent Lightcone Rays, and Cl(1,2) Biquaternion Generator Relations",
+  "carrier": "Mat2C",
+  "hypotheses": [],
+  "target_conclusion": "I_3D * I_3D = -1 ∧ (∀ M : Mat2C, I_3D * M = M * I_3D) ∧ e₁C * e₁C = 1 ∧ e₂C * e₂C = -1 ∧ fC * fC = -1",
+  "target_symbol": "cl12_biquaternion_generator_relations",
+  "prerequisites": [
+    "Mathlib.Data.Matrix.Basic",
+    "Mathlib.LinearAlgebra.Matrix.Notation",
+    "Mathlib.Tactic"
+  ]
+}

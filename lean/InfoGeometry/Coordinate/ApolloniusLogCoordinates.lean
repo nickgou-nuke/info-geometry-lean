@@ -135,10 +135,11 @@ theorem deriv_x_eta_at_half (y : ℝ) :
       HasDerivAt (fun x : ℝ => Real.log ((x - 1) ^ 2 + y ^ 2))
         (-1 / ((1 / 4 : ℝ) + y ^ 2)) (1 / 2) := by
     convert hden.log (by positivity) using 1 <;> norm_num
-  convert (hlogNum.sub hlogDen).const_mul (1 / 2 : ℝ) using 1 <;>
-    simp <;>
-    field_simp [ne_of_gt hpos] <;>
-    ring
+  convert (hlogNum.sub hlogDen).const_mul (1 / 2 : ℝ) using 1
+  · funext x
+    dsimp [etaCartesian]
+  · field_simp [ne_of_gt hpos]
+    ring_nf
 
 theorem normal_force_nonzero (y : ℝ) :
     (1 / ((1 / 4 : ℝ) + y ^ 2)) ≠ 0 := by
@@ -160,7 +161,9 @@ theorem symmetry_real_reflection_eta
     (hs : (starRingEnd ℂ) s.1 ≠ 0 ∧
       (starRingEnd ℂ) s.1 ≠ 1) :
     eta ⟨(starRingEnd ℂ) s.1, hs⟩ = eta s := by
-  rw [eta, crossRatio_conj s hs]
+  have hconj := crossRatio_conj (s := s) hs
+  change Real.log ‖crossRatio ⟨(starRingEnd ℂ) s.1, hs⟩‖ = _
+  rw [hconj]
   simp [eta]
 
 /-- Away from the principal branch cut, real-axis reflection negates `θ`. -/
@@ -170,7 +173,9 @@ theorem symmetry_real_reflection_theta
       (starRingEnd ℂ) s.1 ≠ 1)
     (hcut : (crossRatio s).im ≠ 0 ∨ 0 < (crossRatio s).re) :
     theta ⟨(starRingEnd ℂ) s.1, hs⟩ = -theta s := by
-  rw [theta, crossRatio_conj s hs, Complex.arg_conj]
+  have hconj := crossRatio_conj (s := s) hs
+  change Complex.arg (crossRatio ⟨(starRingEnd ℂ) s.1, hs⟩) = _
+  rw [hconj, Complex.arg_conj]
   by_cases hpi : Complex.arg (crossRatio s) = Real.pi
   · exfalso
     have hneg := Complex.arg_eq_pi_iff.mp hpi
@@ -192,21 +197,39 @@ theorem symmetry_critical_reflection
     (hs : 1 - (starRingEnd ℂ) s.1 ≠ 0 ∧
       1 - (starRingEnd ℂ) s.1 ≠ 1) :
     eta ⟨1 - (starRingEnd ℂ) s.1, hs⟩ = -eta s := by
-  have hsconj :
-      (starRingEnd ℂ) s.1 ≠ 0 ∧
-        (starRingEnd ℂ) s.1 ≠ 1 := by
+  have hs0 : 1 - s.1 ≠ 0 ∧ 1 - s.1 ≠ 1 := by
     constructor
     · intro h
-      apply s.property.1
-      have := congrArg (starRingEnd ℂ) h
-      simpa using this
+      have hz : 1 = s.1 := sub_eq_zero.mp h
+      exact s.property.2 hz.symm
     · intro h
-      apply s.property.2
-      have := congrArg (starRingEnd ℂ) h
-      simpa using this
-  rw [eta, chiral_inversion ⟨(starRingEnd ℂ) s.1, hsconj⟩ hs]
-  rw [norm_inv, Real.log_inv]
-  simp [eta, crossRatio_conj s hsconj]
+      have hz : s.1 = 0 := by
+        calc
+          s.1 = 1 - (1 - s.1) := by ring
+          _ = 1 - 1 := by rw [h]
+          _ = 0 := by ring
+      exact s.property.1 hz
+  let t : PuncturedPlane := ⟨1 - s.1, hs0⟩
+  have htconj : (starRingEnd ℂ) t.1 ≠ 0 ∧
+      (starRingEnd ℂ) t.1 ≠ 1 := by
+    simpa [t] using hs
+  have hsubtype :
+      (⟨1 - (starRingEnd ℂ) s.1, hs⟩ : PuncturedPlane) =
+        ⟨(starRingEnd ℂ) t.1, htconj⟩ := by
+    apply Subtype.ext
+    simp [t]
+  have hnorm :
+      ‖crossRatio ⟨1 - (starRingEnd ℂ) s.1, hs⟩‖ =
+        ‖crossRatio s‖⁻¹ := by
+    calc
+      _ = ‖(starRingEnd ℂ) (crossRatio t)‖ := by
+        rw [hsubtype, crossRatio_conj (s := t) htconj]
+      _ = ‖crossRatio t‖ := Complex.norm_conj _
+      _ = ‖(crossRatio s)⁻¹‖ := by rw [chiral_inversion s hs0]
+      _ = _ := norm_inv _
+  change Real.log ‖crossRatio ⟨1 - (starRingEnd ℂ) s.1, hs⟩‖ =
+    -Real.log ‖crossRatio s‖
+  rw [hnorm, Real.log_inv]
 
 /-- The pullback line element has finite length from `2` to arbitrarily
 large real `R`; in particular infinity is at finite metric distance. -/
@@ -228,9 +251,11 @@ theorem metric_finite_distance_to_infinity :
     have h :=
       (((hasDerivAt_id t).sub_const 1).log ht10).sub
         ((hasDerivAt_id t).log ht0)
-    convert h using 1 <;>
-      dsimp [F] <;>
-      field_simp [ht0, ht10] <;>
+    convert h using 1
+    · funext x
+      dsimp [F]
+    · change 1 / (t * (t - 1)) = 1 / (t - 1) - 1 / t
+      field_simp [ht0, ht10]
       ring
   have hint :
       IntervalIntegrable (fun t : ℝ => 1 / (t * (t - 1)))

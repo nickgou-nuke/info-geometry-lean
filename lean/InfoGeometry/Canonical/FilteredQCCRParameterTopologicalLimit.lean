@@ -56,7 +56,9 @@ def qCcrParameterZeroFiberPointCone
     { app := point
       naturality := by
         intro i j f
-        simpa using (hpoint f).symm }
+        change point j = point i ≫
+          qCcrParameterZeroFiberTransitionTopCatHom Stage sys (leOfHom f)
+        exact (hpoint f).symm }
 
 /-- The inverse-limit point determined by a compatible family of finite-stage
     zero-fibre points. -/
@@ -121,7 +123,9 @@ def qCcrParameterZeroFiberPointNatTrans
   app := point
   naturality := by
     intro i j f
-    simpa using (hpoint f).symm
+    change point j = point i ≫
+      qCcrParameterZeroFiberTransitionTopCatHom Stage sys (leOfHom f)
+    exact (hpoint f).symm
 
 /-- Direct-colimit readout of a compatible zero-fibre point family. -/
 noncomputable def qCcrParameterZeroFiberPointColimitMap
@@ -282,7 +286,7 @@ theorem qCcrParameterZeroFiberToParameterLimit_projection_apply
         (qCcrParameterTopologicalDiagram Stage sys) i
         (qCcrParameterZeroFiberToParameterLimit Stage sys x) =
       (qCcrParameterZeroFiberToParameterLimitCone Stage sys).π.app i x := by
-  simpa using congrArg (fun f => f x)
+  exact congrArg (fun f => (ConcreteCategory.hom f) x)
     (qCcrParameterZeroFiberToParameterLimit_projection Stage sys i)
 
 theorem qCcrParameterZeroFiberToParameterLimit_injective :
@@ -320,7 +324,7 @@ theorem qCcrParameterZeroFiberToParameterLimit_injective :
               (qCcrParameterZeroFiberToParameterLimit Stage sys y) := by
           rw [hxy]
         _ = (qCcrParameterZeroFiberToParameterLimitCone Stage sys).π.app i y := hy
-    simpa [qCcrParameterZeroFiberToParameterNatTrans] using hcone
+    exact hcone
   exact congrArg (fun g => g PUnit.unit) hcxcy
 
 /- The ambient parameter point is defined only after the inverse-limit
@@ -405,5 +409,6 @@ theorem qCcrParameterZeroFiberPointAmbientLimitMap_unique
     intro u
     exact qCcrParameterZeroFiberPointLimitMap_projection
       Stage sys point hpoint i u]
+  rfl
 
 end InfoGeometry.Canonical.FilteredQCCRParameterTopologicalLimit

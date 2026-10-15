@@ -41,7 +41,9 @@ lemma exceptional_has_generalized_defect_vector
     have hmono0 :
         LinearMap.iterateKer (shiftAt H op z) 1 ≤ LinearMap.iterateKer (shiftAt H op z) k :=
       OrderHom.monotone (LinearMap.iterateKer (shiftAt H op z)) (Nat.succ_le_of_lt hk0)
-    simpa [LinearMap.iterateKer, pow_one] using hmono0
+    change LinearMap.ker (shiftAt H op z ^ 1) ≤
+      LinearMap.ker (shiftAt H op z ^ k) at hmono0
+    simpa [pow_one] using hmono0
   have hlt : LinearMap.ker (shiftAt H op z) < LinearMap.ker (shiftAt H op z ^ k) :=
     lt_of_le_of_ne hmono hneq.symm
   rcases SetLike.exists_of_lt hlt with ⟨v, hvk, hv1⟩

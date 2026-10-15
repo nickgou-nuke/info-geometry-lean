@@ -79,20 +79,30 @@ theorem coherentComplexifyClStage_naturality (n : ℕ) (A : ClStage n) :
     coherentComplexifyClStage (Nat.succ n) (stageEmbed n A) =
       concreteStep n (coherentComplexifyClStage n A) := by
   ext i j
-  simp [coherentIdxEquivFinPowTwo, coherentComplexifyClStage,
-    complexifyMatrixAlgHom, concreteStep, Matrix.reindexAlgEquiv,
-    Matrix.kroneckerMap_apply, stageIndexEquiv, matStageEmbed,
-    Equiv.prodCongr]
-  apply Or.inl
-  change ↑((1 : Matrix (Fin 2) (Fin 2) ℝ)
-      (finProdFinEquiv.symm i).2 (finProdFinEquiv.symm j).2) =
-    (1 : Matrix (Fin 2) (Fin 2) ℂ)
-      (finProdFinEquiv.symm i).2 (finProdFinEquiv.symm j).2
-  rw [Matrix.one_apply, Matrix.one_apply]
-  by_cases h : (finProdFinEquiv.symm i).2 = (finProdFinEquiv.symm j).2 <;>
-    simp only [h]
-  all_goals
-    by_cases hij : i.modNat = j.modNat <;> simp
+  have hp : (coherentIdxEquivFinPowTwo (n + 1)).symm i =
+      ((coherentIdxEquivFinPowTwo n).symm ((stageIndexEquiv n).symm i).1,
+       ((stageIndexEquiv n).symm i).2) := rfl
+  have hq : (coherentIdxEquivFinPowTwo (n + 1)).symm j =
+      ((coherentIdxEquivFinPowTwo n).symm ((stageIndexEquiv n).symm j).1,
+       ((stageIndexEquiv n).symm j).2) := rfl
+  simp only [coherentComplexifyClStage, concreteStep, Matrix.reindexAlgEquiv,
+    complexifyMatrixAlgHom]
+  change Complex.ofReal
+      ((A ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℝ))
+        ((coherentIdxEquivFinPowTwo (n + 1)).symm i)
+        ((coherentIdxEquivFinPowTwo (n + 1)).symm j)) =
+    Complex.ofReal
+        (A ((coherentIdxEquivFinPowTwo n).symm ((stageIndexEquiv n).symm i).1)
+          ((coherentIdxEquivFinPowTwo n).symm ((stageIndexEquiv n).symm j).1)) *
+      (1 : Matrix (Fin 2) (Fin 2) ℂ)
+        ((stageIndexEquiv n).symm i).2 ((stageIndexEquiv n).symm j).2
+  rw [hp, hq]
+  rw [Matrix.kroneckerMap_apply]
+  by_cases h : ((stageIndexEquiv n).symm i).2 =
+      ((stageIndexEquiv n).symm j).2
+  · rw [h]
+    simp [Matrix.one_apply_eq]
+  · simp [Matrix.one_apply_ne h]
 
 theorem coherentComplexifyClStage_stageEmbedMap_naturality
     {m n : ℕ} (hmn : m ≤ n) (A : ClStage m) :
@@ -167,8 +177,7 @@ def coherentComplexificationNatTrans :
   app n := coherentComplexifyClStageTopCatHom n
   naturality := by
     intro m n f
-    apply TopCat.hom_ext
-    apply ContinuousMap.ext
+    apply TopCat.ext
     intro A
     rw [TopCat.comp_app, TopCat.comp_app]
     change coherentComplexifyClStage n (stageEmbedMap (leOfHom f) A) =
@@ -183,8 +192,7 @@ def coherentComplexificationColimitCocone :
         CuntzMatrixTraceTopologicalColimit.topologicalInclusion concreteData n
       naturality := by
         intro m n f
-        apply TopCat.hom_ext
-        apply ContinuousMap.ext
+        apply TopCat.ext
         intro A
         rw [TopCat.comp_app, TopCat.comp_app]
         change CuntzMatrixTraceTopologicalColimit.topologicalInclusion concreteData n
@@ -192,10 +200,13 @@ def coherentComplexificationColimitCocone :
           CuntzMatrixTraceTopologicalColimit.topologicalInclusion concreteData m
             (coherentComplexifyClStage m A)
         rw [coherentComplexifyClStage_stageEmbedMap_naturality]
-        simpa [CuntzMatrixTraceTopologicalColimit.continuousTransition] using
-          (FilteredColimit.Native.Topological.topologicalDirectInjection_naturality_apply
-            (CuntzMatrixTraceTopologicalColimit.topologicalDiagram concreteData)
-            (f := f) (coherentComplexifyClStage m A)) }
+        have hnat := FilteredColimit.Native.Topological.topologicalDirectInjection_naturality_apply
+          (CuntzMatrixTraceTopologicalColimit.topologicalDiagram concreteData)
+          (f := f) (coherentComplexifyClStage m A)
+        dsimp [CuntzMatrixTraceTopologicalColimit.topologicalInclusion,
+          CuntzMatrixTraceTopologicalColimit.topologicalDiagram,
+          CuntzMatrixTraceTopologicalColimit.continuousTransition] at hnat ⊢
+        exact hnat }
 
 noncomputable def coherentComplexificationColimitMap :
     Cl11MarkovJonesTopologicalColimit.topologicalColimitObject ⟶
@@ -244,9 +255,7 @@ theorem coherentComplexificationColimit_trace_factorization :
       CuntzMatrixTraceTopologicalColimit.traceTopologicalColimitMap concreteData ≫
         complexTraceToRealTopCatHom)
   intro n
-  apply TopCat.hom_ext
-  apply ContinuousMap.ext
-  intro A
+  ext (A : ClStage n)
   rw [TopCat.comp_app, TopCat.comp_app]
   change Complex.re
       (CuntzMatrixTraceTopologicalColimit.traceTopologicalColimitMap concreteData
@@ -312,11 +321,13 @@ noncomputable def coherentAlgebraicToTopological :
     (by
       intro m n h A
       rw [← coherentStageEmbedMap_eq_bondMap h A]
-      simpa [Cl11MarkovJonesTopologicalColimit.topologicalInclusion,
-        Cl11MarkovJonesTopologicalColimit.continuousStageEmbedMap] using
-        (FilteredColimit.Native.Topological.topologicalDirectInjection_naturality_apply
-          Cl11MarkovJonesTopologicalColimit.topologicalDiagram
-          (f := homOfLE h) A).symm)
+      have hnat := FilteredColimit.Native.Topological.topologicalDirectInjection_naturality_apply
+        Cl11MarkovJonesTopologicalColimit.topologicalDiagram
+        (homOfLE h) A
+      dsimp [Cl11MarkovJonesTopologicalColimit.topologicalInclusion,
+        Cl11MarkovJonesTopologicalColimit.topologicalDiagram,
+        Cl11MarkovJonesTopologicalColimit.continuousStageEmbedMap] at hnat ⊢
+      exact hnat.symm)
 
 @[simp] theorem coherentAlgebraicToTopological_ofStage
     (n : ℕ) (A : ClStage n) :
@@ -364,8 +375,7 @@ noncomputable def cliffordCARToCl11MarkovCocone :
     { app := fun n => Cl11MarkovJonesTopologicalColimit.topologicalInclusion n
       naturality := by
         intro m n f
-        apply TopCat.hom_ext
-        apply ContinuousMap.ext
+        apply TopCat.ext
         intro A
         rw [TopCat.comp_app]
         change Cl11MarkovJonesTopologicalColimit.topologicalInclusion n
@@ -374,10 +384,13 @@ noncomputable def cliffordCARToCl11MarkovCocone :
         rw [CliffordCARTopologicalColimit.bondCLM_apply,
           CliffordCARAlgebraicTopologicalComparison.bondAlgHom_eq_bondMap,
           ← coherentStageEmbedMap_eq_bondMap (leOfHom f) A]
-        simpa [Cl11MarkovJonesTopologicalColimit.continuousStageEmbedMap] using
-          (FilteredColimit.Native.Topological.topologicalDirectInjection_naturality_apply
-            Cl11MarkovJonesTopologicalColimit.topologicalDiagram
-            (f := f) A) }
+        have hnat := FilteredColimit.Native.Topological.topologicalDirectInjection_naturality_apply
+          Cl11MarkovJonesTopologicalColimit.topologicalDiagram
+          (homOfLE (leOfHom f)) A
+        dsimp [Cl11MarkovJonesTopologicalColimit.topologicalInclusion,
+          Cl11MarkovJonesTopologicalColimit.topologicalDiagram,
+          Cl11MarkovJonesTopologicalColimit.continuousStageEmbedMap] at hnat ⊢
+        exact hnat }
 
 noncomputable def cliffordCARToCl11MarkovTopological :
     CliffordCARTopologicalColimit.topologicalColimit ⟶

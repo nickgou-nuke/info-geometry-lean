@@ -58,7 +58,7 @@ Lean theorem.
 -/
 @[rep_depth thermo]
 abbrev KKTEntropyStationarityShadow :=
-  LiteratureGrandCanonicalWeylTKK.KarushKuhnTuckerThermodynamicData
+  LiteratureGrandCanonicalWeylTKK.KarushKuhnTuckerThermodynamicData.{0, 0, 0, 0}
 
 namespace KKTEntropyStationarityShadow
 
@@ -701,26 +701,17 @@ theorem full_identity_balanced_square_dissipation_packet
           C.superMoment.moment y)
       ∧ (∀ y, C.superMoment.stressTensorProjection (C.superMoment.moment y) +
           C.superMoment.supercurrentProjection (C.superMoment.moment y) = 0) := by
-  simpa using
-    (full_moment_image_square_dissipation_packet
-      (superMoment :=
-        SuperCoadjointMomentMapData.identityBalanced
-          (G := G) (Gdual := Gdual) (Orbit := Orbit)
-          moment geometricTemperature pairing parityOfGenerator
-          stressTensorProjection)
-      (entropy := entropy)
-      (reversibleFlow := id)
-      (dissipativeFlow := dissipativeFlow)
-      (dissipationAmplitude := dissipationAmplitude)
-      (reversible_entropy_invariant := by intro y; rfl)
-      (weyl_covariant := by intro g y; rfl)
-      (supertrace_balance := by
-        intro y
-        dsimp [SuperCoadjointMomentMapData.identityBalanced]
-        ring)
-      (moment_in_orbit := fun y => ⟨y, rfl⟩)
-      (reversible_in_orbit := fun y => ⟨y, rfl⟩)
-      (x := x))
+  intro C
+  dsimp [C, ofIdentityBalancedSquareDissipation, ofMomentImageSquareDissipation]
+  exact
+    ⟨⟨x, rfl⟩,
+      rfl,
+      rfl,
+      rfl,
+      rfl,
+      sq_nonneg (dissipationAmplitude x),
+      fun _ _ => rfl,
+      fun _ => by dsimp [SuperCoadjointMomentMapData.identityBalanced]; ring⟩
 
 attribute [terminal] full_identity_balanced_square_dissipation_packet
 

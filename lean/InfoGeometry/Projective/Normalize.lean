@@ -46,9 +46,15 @@ noncomputable def normalizeOnProj : PositiveMeasure.Proj (α := α) → Positive
 
 @[simp] lemma normalizeOnProj_mk (μ : InfoGeometry.PositiveMeasure α ℝ) :
     normalizeOnProj (α := α) (Quotient.mk _ μ) = PositiveMeasure.normalize (α := α) (R := ℝ) μ := by
-  unfold normalizeOnProj normalizeOnConeInteriorStateSpace
-  change normalizeOnProjLegacy (coneInteriorStateSpaceToProjectiveClass (projectiveClassToConeInteriorStateSpace (Quotient.mk _ μ))) = _
-  erw [InfoGeometry.Projective.coneInteriorStateSpaceToProjectiveClass_projectiveClass]
+  have hq :
+      coneInteriorStateSpaceToProjectiveClass (α := α)
+        (projectiveClassToConeInteriorStateSpace (α := α) (Quotient.mk _ μ : PositiveMeasure.Proj (α := α))) =
+      (Quotient.mk _ μ : PositiveMeasure.Proj (α := α)) :=
+    InfoGeometry.Projective.coneInteriorStateSpaceToProjectiveClass_projectiveClass (Quotient.mk _ μ)
+  change normalizeOnProjLegacy (α := α)
+      (coneInteriorStateSpaceToProjectiveClass (α := α)
+        (projectiveClassToConeInteriorStateSpace (α := α) (Quotient.mk _ μ : PositiveMeasure.Proj (α := α)))) = _
+  rw [hq]
   rfl
 
 /-- The canonical representative has unit mass. -/

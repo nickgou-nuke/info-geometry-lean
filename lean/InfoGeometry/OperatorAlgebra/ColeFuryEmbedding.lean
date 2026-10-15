@@ -1,3 +1,4 @@
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.SplitOctonionMultiplication
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ColeFuryIdeals
@@ -36,9 +37,11 @@ def quadrantReadout (X : SplitOct) : Spin32Matrix :=
 /-- Compatibility name for the aggregate readout; this map is not injective. -/
 abbrev embed := quadrantReadout
 
-@[simp] theorem embed_zero : embed (0 : SplitOct) = 0 := by
-  unfold embed
-  decide
+theorem embed_zero : embed (0 : SplitOct) = 0 := by
+  change (0 : ℤ) • upperLeft + (0 : ℤ) • lowerRight + (0 : ℤ) • horizonUp + (0 : ℤ) • horizonDown = 0
+  simp only [zero_smul, add_zero]
+
+attribute [simp] embed_zero
 
 theorem embed_add (X Y : SplitOct) : embed (X + Y) = embed X + embed Y := by
   change quadrantReadout (X + Y) = quadrantReadout X + quadrantReadout Y
@@ -59,8 +62,11 @@ theorem kernelElement_ne_zero : kernelElement ≠ (0 : SplitOct) := by
   norm_num at hcoord
 
 theorem embed_kernelElement : embed kernelElement = embed (0 : SplitOct) := by
-  unfold embed kernelElement
-  decide
+  rw [embed_zero]
+  change (0 : ℤ) • upperLeft + (0 : ℤ) • lowerRight + (0 + 1 + -1 : ℤ) • horizonUp + (0 : ℤ) • horizonDown = 0
+  have h : (0 + 1 + -1 : ℤ) = 0 := by decide
+  rw [h]
+  simp only [zero_smul, add_zero]
 
 theorem embed_not_injective : ¬ Function.Injective embed := by
   intro hinj
@@ -78,15 +84,57 @@ where the cross-product components vanish.
 def isAssociativeSubalgebra (X : SplitOct) : Prop :=
   X.x1 = 0 ∧ X.x2 = 0 ∧ X.y1 = 0 ∧ X.y2 = 0
 
-private theorem upperLeft_horizonUp : upperLeft * horizonUp = horizonUp := by unfold upperLeft horizonUp; decide
-private theorem upperLeft_horizonDown : upperLeft * horizonDown = 0 := by unfold upperLeft horizonDown; decide
-private theorem horizonUp_upperLeft : horizonUp * upperLeft = 0 := by unfold upperLeft horizonUp; decide
-private theorem horizonDown_upperLeft : horizonDown * upperLeft = horizonDown := by unfold upperLeft horizonDown; decide
+private theorem horizonUp_upperLeft : horizonUp * upperLeft = 0 := by
+  calc
+    horizonUp * upperLeft = horizonUp * (horizonUp * horizonDown) := by rw [horizonUp_horizonDown]
+    _ = (horizonUp * horizonUp) * horizonDown := by rw [mul_assoc]
+    _ = 0 * horizonDown := by rw [horizonUp_nilpotent]
+    _ = 0 := by rw [zero_mul]
 
-private theorem lowerRight_horizonUp : lowerRight * horizonUp = 0 := by unfold lowerRight horizonUp; decide
-private theorem lowerRight_horizonDown : lowerRight * horizonDown = horizonDown := by unfold lowerRight horizonDown; decide
-private theorem horizonUp_lowerRight : horizonUp * lowerRight = horizonUp := by unfold lowerRight horizonUp; decide
-private theorem horizonDown_lowerRight : horizonDown * lowerRight = 0 := by unfold lowerRight horizonDown; decide
+private theorem lowerRight_horizonUp : lowerRight * horizonUp = 0 := by
+  calc
+    lowerRight * horizonUp = (horizonDown * horizonUp) * horizonUp := by rw [horizonDown_horizonUp]
+    _ = horizonDown * (horizonUp * horizonUp) := by rw [mul_assoc]
+    _ = horizonDown * 0 := by rw [horizonUp_nilpotent]
+    _ = 0 := by rw [mul_zero]
+
+private theorem upperLeft_horizonDown : upperLeft * horizonDown = 0 := by
+  calc
+    upperLeft * horizonDown = (horizonUp * horizonDown) * horizonDown := by rw [horizonUp_horizonDown]
+    _ = horizonUp * (horizonDown * horizonDown) := by rw [mul_assoc]
+    _ = horizonUp * 0 := by rw [horizonDown_nilpotent]
+    _ = 0 := by rw [mul_zero]
+
+private theorem horizonDown_lowerRight : horizonDown * lowerRight = 0 := by
+  calc
+    horizonDown * lowerRight = horizonDown * (horizonDown * horizonUp) := by rw [horizonDown_horizonUp]
+    _ = (horizonDown * horizonDown) * horizonUp := by rw [mul_assoc]
+    _ = 0 * horizonUp := by rw [horizonDown_nilpotent]
+    _ = 0 := by rw [zero_mul]
+
+private theorem upperLeft_horizonUp : upperLeft * horizonUp = horizonUp := by
+  have hsum : upperLeft + lowerRight = 1 := diagonal_quadrants_sum
+  have h : (upperLeft + lowerRight) * horizonUp = 1 * horizonUp := by rw [hsum]
+  rw [add_mul, lowerRight_horizonUp, add_zero, one_mul] at h
+  exact h
+
+private theorem horizonDown_upperLeft : horizonDown * upperLeft = horizonDown := by
+  have hsum : upperLeft + lowerRight = 1 := diagonal_quadrants_sum
+  have h : horizonDown * (upperLeft + lowerRight) = horizonDown * 1 := by rw [hsum]
+  rw [mul_add, horizonDown_lowerRight, add_zero, mul_one] at h
+  exact h
+
+private theorem lowerRight_horizonDown : lowerRight * horizonDown = horizonDown := by
+  have hsum : upperLeft + lowerRight = 1 := diagonal_quadrants_sum
+  have h : (upperLeft + lowerRight) * horizonDown = 1 * horizonDown := by rw [hsum]
+  rw [add_mul, upperLeft_horizonDown, zero_add, one_mul] at h
+  exact h
+
+private theorem horizonUp_lowerRight : horizonUp * lowerRight = horizonUp := by
+  have hsum : upperLeft + lowerRight = 1 := diagonal_quadrants_sum
+  have h : horizonUp * (upperLeft + lowerRight) = horizonUp * 1 := by rw [hsum]
+  rw [mul_add, horizonUp_upperLeft, zero_add, mul_one] at h
+  exact h
 
 /--
 The aggregate readout maps split-octonion multiplication (`mulZ`) to matrix

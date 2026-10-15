@@ -34,8 +34,9 @@ lemma localizedMissingPrime_of_not_subset {S T : FinitePrimeLocalization} (hST :
 lemma localizedCrossHom_eq_mul {S T : FinitePrimeLocalization} (φ : LocalizedCrossHom S T)
     (z : LocalizedIntegerGroup S) :
     φ.1 z = z * localizedCrossHomScalar φ := by
-  simpa [LocalizedIntegerGroup, localizedCrossHomScalar, zsmul_eq_mul] using
-    φ.1.map_zsmul (1 : ℤ) z
+  have h := φ.1.map_zsmul z (1 : ℤ)
+  rw [zsmul_eq_mul, mul_one, zsmul_eq_mul] at h
+  exact h
 
 lemma localizedCrossHom_eq_zero_of_scalar_zero {S T : FinitePrimeLocalization}
     (φ : LocalizedCrossHom S T) (hφ : localizedCrossHomScalar φ = 0)

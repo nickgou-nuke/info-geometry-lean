@@ -3,6 +3,7 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SouriauConformalKKTContext
 import InfoGeometry.Canonical.NoetherInference
 import InfoGeometry.Quantum.SplitTrialityKernel
+import Mathlib.Algebra.Lie.OfAssociative
 
 /-!
 # Split `Cl(4,4)` / TKK / Jordan-Lie Bridge
@@ -240,6 +241,9 @@ section FisherKilling
 variable [FiniteDimensional ℝ H]
 variable [Invertible (2 : ℝ)]
 variable [Module.Free ℝ (Op H)] [Module.Finite ℝ (Op H)]
+
+local instance : LieRing (Op H) := LieRing.ofAssociativeRing
+local instance : LieAlgebra ℝ (Op H) := LieAlgebra.ofAssociativeAlgebra
 
 /--
 Fisher/Killing compatibility is transported from an explicit base relation

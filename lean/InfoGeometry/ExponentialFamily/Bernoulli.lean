@@ -11,8 +11,8 @@ open InfoGeometry.Convex
 open InfoGeometry.Canonical.Triality
 
 /-- Bernoulli log-partition function: ψ(η) = log(1 + exp η). -/
-noncomputable def logPartition (η : ℝ) : ℝ :=
-  Real.log (1 + Real.exp η)
+noncomputable def logPartition : ℝ → ℝ :=
+  fun η => Real.log (1 + Real.exp η)
 
 /-- The Bernoulli dual map is the expectation parameter: p = exp(η) / (1 + exp(η)). -/
 lemma deriv_logPartition (η : ℝ) :
@@ -23,7 +23,7 @@ lemma deriv_logPartition (η : ℝ) :
       (Real.exp η / (1 + Real.exp η)) η := by
     apply hbase.log
     linarith [Real.exp_pos η]
-  simpa [logPartition] using hlog.deriv
+  exact hlog.deriv
 
 /-- Bernoulli family as a 1D Hessian Geometry. -/
 noncomputable def bernoulliHessianGeometry : HessianGeometry1D where

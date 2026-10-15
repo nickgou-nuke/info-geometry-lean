@@ -28,7 +28,9 @@ theorem paper_fold_resonance_docagne
   have hj2Int : (j : Int) + 2 = (j + 2 : Nat) := by
     omega
   have hjrec : Int.fib (j + 1 : Int) = Int.fib (j - 1 : Int) + Int.fib (j : Int) := by
-    simpa [hjInt, Int.fib_natCast] using congrArg (fun n : Nat => (n : Int)) hjrecNat
+    have hj1 : (j : Int) + 1 = (j + 1 : Nat) := by omega
+    rw [hj1, hjInt, Int.fib_natCast, Int.fib_natCast, Int.fib_natCast]
+    exact_mod_cast hjrecNat
   have hA : Int.fib (m + 1 : Int) =
       Int.fib (m - j : Int) * Int.fib (j : Int) + Int.fib (a : Int) * Int.fib (j + 1 : Int) := by
     have hA_nat := Nat.fib_add (m - j) j
@@ -54,8 +56,11 @@ theorem paper_fold_resonance_docagne
   have hCassini :
       Int.fib (j : Int) * Int.fib (j + 2 : Int) - Int.fib (j + 1 : Int) ^ 2 =
         (-1 : Int) ^ (j + 1) := by
-    simpa [pow_two, mul_comm, mul_left_comm, mul_assoc] using
-      Int.fib_succ_mul_fib_pred_sub_fib_sq (j + 1 : Int)
+    have h := Int.fib_succ_mul_fib_pred_sub_fib_sq (j + 1 : Int)
+    have hstep : (j : Int) + 1 + 1 = (j : Int) + 2 := by ring
+    have hexp : ((j : Int) + 1).natAbs = j + 1 := by omega
+    rw [hstep, hexp] at h
+    simpa [pow_two, mul_comm, mul_left_comm, mul_assoc] using h
   have hm0 : Int.fib (m : Int) = Int.fib (m + 2 : Int) - Int.fib (m + 1 : Int) := by
     linarith
   have hj0 : Int.fib (j - 1 : Int) = Int.fib (j + 1 : Int) - Int.fib (j : Int) := by

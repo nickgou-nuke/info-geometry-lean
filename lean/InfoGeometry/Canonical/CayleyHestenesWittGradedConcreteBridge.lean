@@ -83,7 +83,8 @@ def wittGradedDatum : CayleyHestenesGradedDatum WittCarrier where
               rw [sectorwiseCayleyMat_wittHestenes_sector_twist]
         _ = -(longitudinalTransverseMat * wittHestenesMat *
             sectorwiseCayleyMat) := by noncomm_ring
-    simpa [Matrix.mulVecLin_mul, LinearMap.comp_assoc] using
+    simpa [Matrix.mulVecLin_mul, Module.End.mul_eq_comp,
+      LinearMap.comp_assoc] using
       congrArg Matrix.mulVecLin hmat
 
 theorem wittGradedDatum_combined_square :

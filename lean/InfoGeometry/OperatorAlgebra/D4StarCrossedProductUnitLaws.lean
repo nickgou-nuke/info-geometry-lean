@@ -25,10 +25,15 @@ theorem crossedProductOne_mul
         (fun g => (if g = 1 then 1 else 0) *
           colorPullback g (F.coeff (g.symm * r))) v = F r v
   rw [Finset.sum_eq_single 1]
-  · simp [colorPullback_one]
+  · simp [colorPullback_apply,
+      InfoGeometry.Topology.PauliJungD4Star.vertexPermutation,
+      Equiv.Perm.one_symm]
+    cases v <;> rfl
   · intro b hb hne
+    funext v
     simp [hne]
-  · simp
+  · intro hnot
+    exact False.elim (hnot (Finset.mem_univ 1))
 
 theorem crossedProductMul_one
     (F : D4StarCrossedProduct) :
@@ -40,7 +45,13 @@ theorem crossedProductMul_one
         (fun g => F.coeff g *
           colorPullback g (if g.symm * r = 1 then 1 else 0)) v = F r v
   rw [Finset.sum_eq_single r]
-  · simp
+  · change F.coeff r v *
+      colorPullback r (if r.symm * r = 1 then 1 else 0) v = F.coeff r v
+    have hr : r.symm * r = 1 := by
+      rw [Equiv.Perm.symm_mul]
+    rw [if_pos hr]
+    rw [colorPullback_apply]
+    simp
   · intro b hb hne
     have hnot : b.symm * r ≠ 1 := by
       intro h

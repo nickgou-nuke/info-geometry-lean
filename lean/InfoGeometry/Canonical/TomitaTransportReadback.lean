@@ -72,6 +72,8 @@ theorem readback_aux_append (t : TermGraph) (tokens : List StreamToken)
 /-- The transport/readback inversion theorem. -/
 theorem tomita_transport_readback_inverse (t : TermGraph) :
     readback (transport t) = some t := by
-  simpa [readback] using (readback_aux_append (t := t) (tokens := []) (stack := []))
+  have h := readback_aux_append t [] []
+  rw [List.append_nil] at h
+  exact h
 
 end InfoGeometry.Canonical.TomitaTransportReadback

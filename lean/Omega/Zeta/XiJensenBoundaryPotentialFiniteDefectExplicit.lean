@@ -26,9 +26,15 @@ lemma xi_jensen_boundary_potential_finite_defect_explicit_singleProfile_eq_cauch
     xi_jensen_boundary_potential_finite_defect_explicit_singleProfile γ δ m i =
       fun x : ℝ =>
         (4 * Real.pi * ((m i : ℝ) * (δ i / (1 + δ i)))) *
-          Probability.cauchyPDFReal (γ i) ⟨1 + δ i, by linarith⟩ x := by
+          ProbabilityTheory.cauchyPDFReal (γ i) ⟨1 + δ i, by linarith⟩ x := by
+  let σ : NNReal := ⟨1 + δ i, by linarith [hδ]⟩
+  change xi_jensen_boundary_potential_finite_defect_explicit_singleProfile γ δ m i =
+    fun x : ℝ =>
+      (4 * Real.pi * ((m i : ℝ) * (δ i / (1 + δ i)))) *
+        ProbabilityTheory.cauchyPDFReal (γ i) σ x
+  have hσ_coe : (σ : ℝ) = 1 + δ i := rfl
   funext x
-  rw [Probability.cauchyPDFReal_def]
+  rw [ProbabilityTheory.cauchyPDFReal_def, hσ_coe]
   simp [xi_jensen_boundary_potential_finite_defect_explicit_singleProfile, div_eq_mul_inv]
   field_simp [Real.pi_ne_zero, (show (1 + δ i : ℝ) ≠ 0 by linarith)]
 
@@ -36,7 +42,8 @@ lemma xi_jensen_boundary_potential_finite_defect_explicit_singleProfile_integrab
     {ι : Type} (γ δ : ι → ℝ) (m : ι → ℕ) (i : ι) (hδ : 0 < δ i) :
     Integrable (xi_jensen_boundary_potential_finite_defect_explicit_singleProfile γ δ m i) := by
   rw [xi_jensen_boundary_potential_finite_defect_explicit_singleProfile_eq_cauchy γ δ m i hδ]
-  exact (Probability.integrable_cauchyPDFReal (γ i) (γ := ⟨1 + δ i, by linarith⟩)).const_mul _
+  exact (ProbabilityTheory.integrable_cauchyPDFReal (γ i)
+    (γ := ⟨1 + δ i, by linarith⟩)).const_mul _
 
 lemma xi_jensen_boundary_potential_finite_defect_explicit_profile_integrable
     {ι : Type} [Fintype ι] [DecidableEq ι] (γ δ : ι → ℝ) (m : ι → ℕ)
@@ -44,12 +51,11 @@ lemma xi_jensen_boundary_potential_finite_defect_explicit_profile_integrable
     Integrable (xi_jensen_boundary_potential_finite_defect_explicit_profile γ δ m) := by
   classical
   unfold xi_jensen_boundary_potential_finite_defect_explicit_profile
-  refine Finset.induction_on (Finset.univ : Finset ι) ?_ ?_
-  · simp
-  · intro i s hi hs
-    simpa [hi, Pi.add_apply] using
-      (xi_jensen_boundary_potential_finite_defect_explicit_singleProfile_integrable γ δ m i
-        (hδ i)).add hs
+  simpa only [Finset.sum_apply] using
+    (integrable_finsetSum (Finset.univ : Finset ι)
+      (fun i _ =>
+        xi_jensen_boundary_potential_finite_defect_explicit_singleProfile_integrable γ δ m i
+          (hδ i)))
 
 lemma xi_jensen_boundary_potential_finite_defect_explicit_singleProfile_tendsto_zero
     {ι : Type} (γ δ : ι → ℝ) (m : ι → ℕ) (i : ι) :
@@ -60,13 +66,15 @@ lemma xi_jensen_boundary_potential_finite_defect_explicit_singleProfile_tendsto_
   have hpow : Filter.Tendsto (fun x : ℝ => x ^ 2) Filter.atTop Filter.atTop := by
     simpa using (tendsto_pow_atTop_atTop_of_one_lt one_lt_two : Filter.Tendsto (fun x : ℝ => x ^ 2) Filter.atTop Filter.atTop)
   have hsq : Filter.Tendsto (fun x : ℝ => (x - γ i) ^ 2) Filter.atTop Filter.atTop := by
-    simpa [Function.comp] using hpow.comp hsub
+    convert hpow.comp hsub using 1 <;> rfl
   have hden :
       Filter.Tendsto (fun x : ℝ => (x - γ i) ^ 2 + (1 + δ i) ^ 2) Filter.atTop Filter.atTop := by
     simpa [add_comm] using
       tendsto_atTop_add_const_right Filter.atTop ((1 + δ i) ^ 2) hsq
-  simpa [xi_jensen_boundary_potential_finite_defect_explicit_singleProfile] using
-    tendsto_const_nhds.div_atTop hden
+  change Filter.Tendsto
+    (fun x : ℝ => (m i : ℝ) * (4 * δ i) / ((x - γ i) ^ 2 + (1 + δ i) ^ 2))
+    Filter.atTop (nhds 0)
+  exact tendsto_const_nhds.div_atTop hden
 
 /-- Paper label: `thm:xi-jensen-boundary-potential-finite-defect-explicit`. The finite boundary
 potential is the explicit finite sum of the single-defect kernels; because the family is finite,

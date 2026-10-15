@@ -161,7 +161,8 @@ theorem paper_derived_finite_moments_complete_operator_topology_capacity :
       calc
         Omega.OperatorAlgebra.foldWatataniTracedIndexMoment fold q
             = (∑ x : X, (Omega.POM.oracleFiberMultiplicity fold x : ℚ) ^ (q + 1)) / 2 ^ m := by
-                simpa [Omega.POM.oracleFiberMultiplicity] using hMoment
+                simpa [Omega.POM.oracleFiberMultiplicity,
+                  Omega.OperatorAlgebra.FoldJonesBasicConstructionDirectsum.foldFiber] using hMoment
         _ =
             (Finset.sum
               (Finset.range ((Finset.sum Finset.univ (Omega.POM.oracleFiberMultiplicity fold)) + 1))

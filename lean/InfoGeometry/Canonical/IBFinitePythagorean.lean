@@ -456,7 +456,7 @@ lemma IBNextMarginal_positive_of_ref_positive
       exact Finset.single_le_sum
         (f := fun x : X => pXpmf x * enc x t)
         (s := Finset.univ)
-        (fun y _hy => (show 0 ≤ pXpmf y * enc y t by exact zero_le _))
+        (fun y _hy => (show 0 ≤ pXpmf y * enc y t by exact zero_le))
         (by simp)
     exact lt_of_lt_of_le hterm_pos hle
   rw [PMF.bind_apply, tsum_fintype]
@@ -566,7 +566,7 @@ lemma IBNextMarginal_positive_of_encoder_positive
     have hle :
         pXpmf x0 * enc x0 t ≤ ∑ x : X, pXpmf x * enc x t := by
       exact Finset.single_le_sum
-        (fun y _hy => (show 0 ≤ pXpmf y * enc y t by exact zero_le _))
+        (fun y _hy => (show 0 ≤ pXpmf y * enc y t by exact zero_le))
         (Finset.mem_univ x0)
     exact lt_of_lt_of_le hterm_pos hle
   rw [PMF.bind_apply, tsum_fintype]

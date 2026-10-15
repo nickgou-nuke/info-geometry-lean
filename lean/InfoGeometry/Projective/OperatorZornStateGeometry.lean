@@ -71,6 +71,10 @@ theorem readout_associator (q : Ray ι) (E : ι → A →ₗ[ℝ] ℝ)
       readout q E ((X*Y)*Z) - readout q E (X*(Y*Z)) := by
   exact map_sub (readout q E) _ _
 
+theorem nc_sub_to_sub (a b : OperatorZornMatrix A) :
+    @HSub.hSub _ _ _ (@instHSub _ NCZornElement.instSub) a b =
+    @HSub.hSub _ _ _ (@instHSub _ (@SubNegMonoid.toSub _ (@AddGroup.toSubNegMonoid _ OperatorZornRealModule.instZornAddGroup))) a b := rfl
+
 /-- The complete curvature-action identity survives normalized observation. -/
 theorem readout_curvatureAction (q : Ray ι) (E : ι → A →ₗ[ℝ] ℝ)
     (p : Fin 4 → A) (Phi : FourPotential A)
@@ -81,7 +85,12 @@ theorem readout_curvatureAction (q : Ray ι) (E : ι → A →ₗ[ℝ] ℝ)
       readout q E (associator (Phi ξ) (Phi η) X) +
       readout q E (associator (Phi η) (Phi ξ) X) := by
   rw [curvatureAction_eq]
-  simp only [map_add, map_sub]
+  rw [map_add]
+  congr 1
+  rw [nc_sub_to_sub]
+  rw [map_sub]
+  rw [map_add]
+  rfl
 
 def conjugationLinear (g : Aˣ) : A →ₗ[ℝ] A where
   toFun := coefficientConjugation g

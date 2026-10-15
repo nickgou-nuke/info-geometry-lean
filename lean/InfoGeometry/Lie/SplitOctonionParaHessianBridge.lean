@@ -1,6 +1,7 @@
 import InfoGeometry.Geometry.ParaHessianMixedPotential
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionEllKleinFlow
+import InfoGeometry.Lie.SplitOctonionAxialKleinPolar
 import InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 
 /-!
@@ -124,15 +125,19 @@ def negativeRoot (y : V3) : Active := activeSectorEquiv.symm (0, y)
 
 theorem activePotential_root_sum (x y : V3) :
     activePotential (positiveRoot x + negativeRoot y) = dot x y := by
-  simp [activePotential, wittPotential, positiveRoot, negativeRoot, dot]
+  simp only [activePotential, wittPotential, map_add,
+    activeSectorEquiv_positiveRoot, activeSectorEquiv_negativeRoot]
+  simp [dot]
 
 @[simp] theorem activePotential_positiveRoot (x : V3) :
     activePotential (positiveRoot x) = 0 := by
-  simp [activePotential, wittPotential, positiveRoot, dot]
+  simp [activePotential, wittPotential, positiveRoot,
+    LinearEquiv.apply_symm_apply, dot]
 
 @[simp] theorem activePotential_negativeRoot (y : V3) :
     activePotential (negativeRoot y) = 0 := by
-  simp [activePotential, wittPotential, negativeRoot, dot]
+  simp [activePotential, wittPotential, negativeRoot,
+    LinearEquiv.apply_symm_apply, dot]
 
 /-- The potential is precisely minus the native active Zorn determinant. -/
 theorem activePotential_eq_neg_detZ (X : Active) :
@@ -140,7 +145,10 @@ theorem activePotential_eq_neg_detZ (X : Active) :
       -InfoGeometry.Algebra.Zorn.ZornMatrix.detZ realCrossProduct3 X.1 := by
   rcases X with ⟨_, Y, rfl⟩
   rw [detZ_axialActiveSupport Y]
-  simp [activePotential, wittPotential, activeSectorEquiv, axialActiveSupport_apply, dot]
+  simp only [activePotential, wittPotential,
+    InfoGeometry.Lie.SplitOctonionAxialKleinPolar.activeSectorEquiv_apply',
+    axialActiveSupport_apply]
+  ring
 
 /-- The Hessian pairing is exactly the negative raw polarization of the Zorn
 quadratic form. -/
@@ -162,20 +170,22 @@ theorem activeMetric_symmetric (X Y : Active) :
 /-- Each root half is totally isotropic. -/
 @[simp] theorem activeMetric_positive_positive (x y : V3) :
     activeMetric (positiveRoot x) (positiveRoot y) = 0 := by
-  simp [activeMetric, wittMetric, dot]
+  simp [activeMetric, wittMetric, positiveRoot, LinearEquiv.apply_symm_apply, dot]
 
 @[simp] theorem activeMetric_negative_negative (x y : V3) :
     activeMetric (negativeRoot x) (negativeRoot y) = 0 := by
-  simp [activeMetric, wittMetric, dot]
+  simp [activeMetric, wittMetric, negativeRoot, LinearEquiv.apply_symm_apply, dot]
 
 /-- The mixed Hessian block is the native three-coordinate dot pairing. -/
 @[simp] theorem activeMetric_positive_negative (x y : V3) :
     activeMetric (positiveRoot x) (negativeRoot y) = dot x y := by
-  simp [activeMetric, wittMetric, dot]
+  simp [activeMetric, wittMetric, positiveRoot, negativeRoot,
+    LinearEquiv.apply_symm_apply, dot]
 
 @[simp] theorem activeMetric_negative_positive (x y : V3) :
     activeMetric (negativeRoot x) (positiveRoot y) = dot x y := by
-  simp [activeMetric, wittMetric, dot, mul_comm]
+  simp [activeMetric, wittMetric, negativeRoot, positiveRoot,
+    LinearEquiv.apply_symm_apply, dot, mul_comm]
 
 /-! ## Native mixed Hessian matrix on the three coordinate modes -/
 
@@ -188,7 +198,9 @@ theorem activeMetric_coordinate_mixed (i j : Fin 3) :
     activeMetric (positiveRoot (Pi.single i 1))
         (negativeRoot (Pi.single j 1)) =
       if i = j then 1 else 0 := by
-  simp [activeMetric, wittMetric, InfoGeometry.Canonical.ZornMatrix.dot]
+  simp [activeMetric, wittMetric, positiveRoot, negativeRoot,
+    LinearEquiv.apply_symm_apply,
+    InfoGeometry.Canonical.ZornMatrix.dot]
   fin_cases i <;> fin_cases j <;>
     simp [InfoGeometry.Canonical.ZornMatrix.dot, Fin.sum_univ_three,
       Pi.single_apply]
@@ -233,8 +245,9 @@ theorem activeMetric_grading_anti_isometry (X Y : Active) :
 /-- The transported skew form is `g(K·,·)`. -/
 theorem activeSymplectic_eq_metric_grading (X Y : Active) :
     activeSymplectic X Y = activeMetric (axialGradingOnActive X) Y := by
-  simp [activeSymplectic, activeMetric, wittSymplectic, wittMetric,
-    activeSectorEquiv_grading, signedWittGrading, dot]
+  unfold activeSymplectic activeMetric
+  rw [activeSectorEquiv_grading X]
+  simp [wittSymplectic, wittMetric, signedWittGrading, dot]
   ring
 
 @[simp] theorem activeSymplectic_positive_positive (x y : V3) :

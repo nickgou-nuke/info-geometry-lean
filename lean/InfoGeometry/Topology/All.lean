@@ -132,18 +132,17 @@ import InfoGeometry.Topology.ChiralCuntzApollonianBridgeAudit
 /-!
 # Closed finite-trace closure ledger (topology layer)
 
-3-way finite equivalence route currently formalized in this layer:
+Finite identities currently formalized in this layer:
 
-1. `Projective.OnShellResidueBCFWBridge.residue_bcfw`
-   (BCFW residue boundary)
-2. `InfoGeometry.Topology.GrandUnificationLinker.global_isometry_preservation`
-   (thermodynamic-flow/DAG compatibility)
-3. `InfoGeometry.Topology.GrandUnificationLinker.entropy_alignment`
+1. `InfoGeometry.Topology.GrandUnificationLinker.dag_edge_commutes_with_symmetric_mixed`
+   (DAG-edge commutation with a symmetric mixed element)
+2. `InfoGeometry.Topology.GrandUnificationLinker.entropy_alignment`
    (flow commutator readout under explicit hypotheses)
 
 Kernel-native lemmas in this spike include:
 - thermodynamic curvature/entropy algebra in `ThermodynamicGauge`;
-- DAG-volume preservation and boundary collapses in `GrandUnificationLinker`;
+- DAG-volume preservation and nilpotent sandwich-zero identities in
+  `GrandUnificationLinker` (these are not mass-shell or BCFW results);
 - finite Wilson-loop transport readouts in `WilsonLoopThermodynamics`.
 - q-supergrading, finite edge-dilation, and explicit deficit readouts in
   `SuperCuntzDilationCurvature`.

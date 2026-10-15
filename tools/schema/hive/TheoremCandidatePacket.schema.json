@@ -76,11 +76,24 @@
               "type": "string",
               "minLength": 1
             },
+            "target_expression": { "type": "string", "minLength": 1 },
+            "source_path": { "type": "string", "minLength": 1 },
+            "source_snapshot_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
             "candidate_shape": {
               "type": "string"
             }
           },
           "additionalProperties": true
+        },
+        "pantograph_binding": {
+          "type": "object",
+          "required": ["source_path", "source_snapshot_sha256", "target_expression"],
+          "properties": {
+            "source_path": { "type": "string", "minLength": 1 },
+            "source_snapshot_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+            "target_expression": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": false
         },
         "bridge_claim": {
           "type": "string",

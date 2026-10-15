@@ -137,9 +137,19 @@ theorem quasiparticle_eom
     ⁅M.totalHamiltonian, q.op⁆ =
       ⁅M.H_qp, q.op⁆ +
         M.coupling • ⁅M.interactionHamiltonian, q.op⁆ := by
-  unfold ThermalQuasiparticleModel.totalHamiltonian
-  rw [add_lie, add_lie, bath_bracket_quasiparticle_eq_zero M q,
-    add_zero, smul_lie]
+  have h_bath : M.H_bath * q.op = q.op * M.H_bath := by
+    have h := bath_bracket_quasiparticle_eq_zero M q
+    change M.H_bath * q.op - q.op * M.H_bath = 0 at h
+    exact sub_eq_zero.mp h
+  change
+    ((M.H_qp + M.H_bath + M.coupling • M.interactionHamiltonian) * q.op -
+      q.op * (M.H_qp + M.H_bath + M.coupling • M.interactionHamiltonian)) =
+    (M.H_qp * q.op - q.op * M.H_qp) +
+      M.coupling • (M.interactionHamiltonian * q.op -
+        q.op * M.interactionHamiltonian)
+  simp only [add_mul, mul_add, smul_mul_assoc, mul_smul_comm,
+    smul_sub, h_bath]
+  abel
 
 theorem free_quasiparticle_grade_one
     {grade : ℤ → Submodule ℝ A}
@@ -174,7 +184,15 @@ theorem interaction_bracket_grade_zero_sup_two
     (M : ThermalQuasiparticleModel grade)
     (q : QuasiparticleCreation grade M) :
     ⁅M.interactionHamiltonian, q.op⁆ ∈ grade 0 ⊔ grade 2 := by
-  rw [ThermalQuasiparticleModel.interactionHamiltonian, add_lie]
+  have h_expand : ⁅M.interactionHamiltonian, q.op⁆ =
+      ⁅M.H_int_minus, q.op⁆ + ⁅M.H_int_plus, q.op⁆ := by
+    change (M.H_int_minus + M.H_int_plus) * q.op -
+        q.op * (M.H_int_minus + M.H_int_plus) =
+      (M.H_int_minus * q.op - q.op * M.H_int_minus) +
+        (M.H_int_plus * q.op - q.op * M.H_int_plus)
+    simp only [add_mul, mul_add]
+    abel_nf
+  rw [h_expand]
   exact Submodule.add_mem_sup
     (interaction_minus_grade_zero hgrade M q)
     (interaction_plus_grade_two hgrade M q)

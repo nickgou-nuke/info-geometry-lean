@@ -26,6 +26,8 @@ open VirasoroProject
 open InfoGeometry.Canonical.CurrentSugawaraMetricDatum
 open CurrentMetricDatum
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 /-- Algebraic conjugation on endomorphisms by a linear equivalence. -/
 noncomputable def conjugateEnd
     {𝕜 V : Type*} [Field 𝕜] [AddCommGroup V] [Module 𝕜 V]
@@ -344,10 +346,12 @@ theorem currentSugawaraRepresentation_lgen_apply
     H.currentSugawaraRepresentation (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n) =
       H.sugawaraStressMode n := by
   ext v
-  rw [currentSugawaraRepresentation, sugawaraStressMode]
-  simpa [VirasoroProject.sugawaraGen_apply] using
-    (VirasoroProject.sugawaraRepresentation_lgen_apply'
-      (heiOper := H.J) H.trunc H.comm n v)
+  change VirasoroProject.sugawaraRepresentation
+      (heiOper := H.J) H.trunc H.comm
+      (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n) v =
+    VirasoroProject.sugawaraGen (heiOper := H.J) H.trunc n v
+  rw [VirasoroProject.sugawaraRepresentation_lgen_apply']
+  rfl
 
 /-- The central Virasoro readout remains fixed under conjugation. -/
 theorem currentSugawaraRepresentation_cgen_conjugate
@@ -404,7 +408,10 @@ This is the concrete source-side current datum used to package a genuine
 -/
 noncomputable def chargedFockSpaceHeisenbergMode
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) (n : Int) :
-    VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜] VirasoroProject.ChargedFockSpace 𝕜 α :=
+    ModuleOfModuleAlgebra 𝕜 (𝓤 𝕜 (VirasoroProject.HeisenbergAlgebra 𝕜))
+      (VirasoroProject.ChargedFockSpace 𝕜 α) →ₗ[𝕜]
+    ModuleOfModuleAlgebra 𝕜 (𝓤 𝕜 (VirasoroProject.HeisenbergAlgebra 𝕜))
+      (VirasoroProject.ChargedFockSpace 𝕜 α) :=
   (UniversalEnvelopingAlgebra.representation
     (𝕜 := 𝕜) (𝓰 := VirasoroProject.HeisenbergAlgebra 𝕜)
     (V := VirasoroProject.ChargedFockSpace 𝕜 α))
@@ -423,9 +430,25 @@ noncomputable def chargedFockSpaceHeisenbergMode
       (𝕜 := 𝕜) (𝓰 := VirasoroProject.HeisenbergAlgebra 𝕜)
       (V := VirasoroProject.ChargedFockSpace 𝕜 α))
       (VirasoroProject.HeisenbergAlgebra.kgen 𝕜) =
-        (1 : VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜] VirasoroProject.ChargedFockSpace 𝕜 α) := by
+        (1 : ModuleOfModuleAlgebra 𝕜
+          (𝓤 𝕜 (VirasoroProject.HeisenbergAlgebra 𝕜))
+          (VirasoroProject.ChargedFockSpace 𝕜 α) →ₗ[𝕜]
+          ModuleOfModuleAlgebra 𝕜
+            (𝓤 𝕜 (VirasoroProject.HeisenbergAlgebra 𝕜))
+            (VirasoroProject.ChargedFockSpace 𝕜 α)) := by
   ext v
-  simpa using (VirasoroProject.ChargedFockSpace.kgen_smul 𝕜 α v)
+  change ModuleOfModuleAlgebra.mkAddHom 𝕜
+      (𝓤 𝕜 (VirasoroProject.HeisenbergAlgebra 𝕜))
+      (VirasoroProject.ChargedFockSpace 𝕜 α)
+      (ιUEA 𝕜 (VirasoroProject.HeisenbergAlgebra.kgen 𝕜) •
+        ModuleOfModuleAlgebra.unMkAddHom 𝕜
+          (𝓤 𝕜 (VirasoroProject.HeisenbergAlgebra 𝕜))
+          (VirasoroProject.ChargedFockSpace 𝕜 α) v) = v
+  congr 1
+  exact VirasoroProject.ChargedFockSpace.kgen_smul 𝕜 α
+    (ModuleOfModuleAlgebra.unMkAddHom 𝕜
+      (𝓤 𝕜 (VirasoroProject.HeisenbergAlgebra 𝕜))
+      (VirasoroProject.ChargedFockSpace 𝕜 α) v)
 
 /--
 Package the charged Fock space as a `CurrentHeisenbergRep`.
@@ -435,13 +458,28 @@ universal enveloping algebra action on the charged Fock module.
 -/
 noncomputable def chargedFockSpaceCurrentHeisenbergRep
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
-    CurrentHeisenbergRep 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α) where
+    CurrentHeisenbergRep 𝕜
+      (ModuleOfModuleAlgebra 𝕜 (𝓤 𝕜 (VirasoroProject.HeisenbergAlgebra 𝕜))
+        (VirasoroProject.ChargedFockSpace 𝕜 α)) where
   J := chargedFockSpaceHeisenbergMode 𝕜 α
   trunc := by
     intro v
-    filter_upwards [VirasoroProject.ChargedFockSpace.eventually_jgen_smul_eq_zero 𝕜 α v] with
+    filter_upwards [VirasoroProject.ChargedFockSpace.eventually_jgen_smul_eq_zero 𝕜 α
+      (ModuleOfModuleAlgebra.unMkAddHom 𝕜
+        (𝓤 𝕜 (VirasoroProject.HeisenbergAlgebra 𝕜))
+        (VirasoroProject.ChargedFockSpace 𝕜 α) v)] with
       n hn
-    simpa [chargedFockSpaceHeisenbergMode] using hn
+    change ModuleOfModuleAlgebra.mkAddHom 𝕜
+      (𝓤 𝕜 (VirasoroProject.HeisenbergAlgebra 𝕜))
+      (VirasoroProject.ChargedFockSpace 𝕜 α)
+      (ιUEA 𝕜 (VirasoroProject.HeisenbergAlgebra.jgen 𝕜 n) •
+        ModuleOfModuleAlgebra.unMkAddHom 𝕜
+          (𝓤 𝕜 (VirasoroProject.HeisenbergAlgebra 𝕜))
+          (VirasoroProject.ChargedFockSpace 𝕜 α) v) = 0
+    simpa using congrArg
+      (ModuleOfModuleAlgebra.mkAddHom 𝕜
+        (𝓤 𝕜 (VirasoroProject.HeisenbergAlgebra 𝕜))
+        (VirasoroProject.ChargedFockSpace 𝕜 α)) hn
   comm := by
     intro m n
     have hbr :=

@@ -124,7 +124,10 @@ theorem paper_xi_integrated_defect_sumrule_endpoint_flux
               (paper_xi_single_defect_integrated_closed_form (D.summand i)).2
       _ = xi_integrated_defect_sumrule_endpoint_flux_closedFormSum D := by
             rfl
-  · simpa [xi_integrated_defect_sumrule_endpoint_flux_endpointFlux] using tendsto_const_nhds
+  · change Filter.Tendsto
+      (fun _ : ℕ => xi_integrated_defect_sumrule_endpoint_flux_closedFormSum D) Filter.atTop
+      (nhds (xi_integrated_defect_sumrule_endpoint_flux_closedFormSum D))
+    exact tendsto_const_nhds
 
 end
 

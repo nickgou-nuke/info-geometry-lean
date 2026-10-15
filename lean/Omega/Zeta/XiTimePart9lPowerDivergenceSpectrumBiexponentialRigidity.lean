@@ -15,10 +15,10 @@ theorem paper_xi_time_part9l_power_divergence_spectrum_biexponential_rigidity
       HasDerivAt (fun a : ℝ => Real.exp ((2 * a - 1) * L))
         ((2 * L) * Real.exp ((2 * a - 1) * L)) a := by
     have htwo : HasDerivAt (fun a : ℝ => (2 : ℝ) * a) 2 a := by
-      simpa using (hasDerivAt_const (x := a) (c := (2 : ℝ))).mul (hasDerivAt_id a)
+      simpa using (hasDerivAt_id a).const_mul (2 : ℝ)
     have hsub : HasDerivAt (fun a : ℝ => (2 : ℝ) * a - 1) 2 a := by
       convert htwo.sub (hasDerivAt_const (x := a) (c := (1 : ℝ))) using 1
-      · norm_num
+      norm_num
     have hlin : HasDerivAt (fun a : ℝ => ((2 : ℝ) * a - 1) * L) (2 * L) a := by
       simpa [mul_comm, mul_left_comm, mul_assoc] using hsub.mul_const L
     simpa [mul_comm, mul_left_comm, mul_assoc] using hlin.exp
@@ -26,7 +26,9 @@ theorem paper_xi_time_part9l_power_divergence_spectrum_biexponential_rigidity
       HasDerivAt (fun a : ℝ => Real.exp ((a - 2) * L))
         (L * Real.exp ((a - 2) * L)) a := by
     have hsub : HasDerivAt (fun a : ℝ => a - 2) 1 a := by
-      convert (hasDerivAt_id a).sub (hasDerivAt_const (x := a) (c := (2 : ℝ))) using 1
+      convert (hasDerivAt_id a).sub
+        (hasDerivAt_const (x := a) (c := (2 : ℝ))) using 1
+      · rfl
       · norm_num
     have hlin : HasDerivAt (fun a : ℝ => (a - 2) * L) L a := by
       simpa using hsub.mul_const L

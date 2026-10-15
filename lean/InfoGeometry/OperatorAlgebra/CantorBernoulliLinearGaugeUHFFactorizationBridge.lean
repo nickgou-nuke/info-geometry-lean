@@ -170,11 +170,27 @@ theorem phi0_bitWord_monomial_eq_topologicalColimitTrace
         (topologicalInjection
           InfoGeometry.Canonical.CantorBernoulliCStarMatrixTraceState.CStarMatrixStage
           InfoGeometry.Canonical.CantorBernoulliCStarMatrixTraceState.cstarMatrixInductiveSystem n
-          (Matrix.single (bitWordIndexEquiv n u) (bitWordIndexEquiv n v) 1)) =
+          (CStarMatrix.ofMatrixStarAlgEquiv
+            (Matrix.single (bitWordIndexEquiv n u) (bitWordIndexEquiv n v) 1))) =
       ULift.up (phi0 (wordMonomial (List.ofFn u) (List.ofFn v))) := by
-  rw [cstarMatrixTraceStateTopologicalColimitMap_inclusion]
-  rw [phi0_bitWord_monomial_eq_matrixTraceState]
-  rfl
+  rw [cstarMatrixTraceStateTopologicalColimitMap_inclusion,
+    phi0_bitWord_monomial_eq_matrixTraceState]
+  change ULift.up
+      (cstarMatrixPositiveTraceFunctional n
+        (CStarMatrix.ofMatrixStarAlgEquiv
+          (Matrix.single (bitWordIndexEquiv n u) (bitWordIndexEquiv n v) 1))) =
+    ULift.up
+      (matrixTraceState n
+        (Matrix.single (bitWordIndexEquiv n u) (bitWordIndexEquiv n v) 1))
+  rw [cstarMatrixPositiveTraceFunctional_apply]
+  change ULift.up
+      (matrixTraceState n
+        ((CStarMatrix.ofMatrixStarAlgEquiv).symm
+          (CStarMatrix.ofMatrixStarAlgEquiv
+            (Matrix.single (bitWordIndexEquiv n u) (bitWordIndexEquiv n v) 1)))) = _
+  exact congrArg (ULift.up ∘ matrixTraceState n)
+    ((CStarMatrix.ofMatrixStarAlgEquiv).left_inv
+      (Matrix.single (bitWordIndexEquiv n u) (bitWordIndexEquiv n v) 1))
 
 /-- 🏆 Evaluation of $\tau_0$ on single monomials $S_u S_v^\dagger$. -/
 @[simp] theorem tau0_monomial (u v : List Bool) :

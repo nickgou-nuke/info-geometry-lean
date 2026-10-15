@@ -62,9 +62,11 @@ theorem basedLoopHomotopyQuotientConcatenation_left_identity
       (basedLoopHomotopyQuotientRepresentativeLoop
         (basedLoopHomotopyQuotient_mk e)).1 e.1 :=
     Quotient.exact (by
-      simpa using
-        (basedLoopHomotopyQuotientRepresentative_quotient_eq
-          (basedLoopHomotopyQuotient_mk e)))
+      change symbolicLatentPathHomotopyQuotientMap
+          (basedLoopHomotopyQuotientRepresentative
+            (basedLoopHomotopyQuotient_mk e)) =
+        (basedLoopHomotopyQuotient_mk e).1
+      exact basedLoopHomotopyQuotientRepresentative_quotient_eq _)
   have hconcat : SymbolicLatentPathHomotopic
       (canonicalSymbolicLatentBasedLoopConcatenation
         (basedLoopHomotopyQuotientRepresentativeLoop
@@ -101,9 +103,11 @@ theorem basedLoopHomotopyQuotientConcatenation_right_identity
       (basedLoopHomotopyQuotientRepresentativeLoop
         (basedLoopHomotopyQuotient_mk e)).1 e.1 :=
     Quotient.exact (by
-      simpa using
-        (basedLoopHomotopyQuotientRepresentative_quotient_eq
-          (basedLoopHomotopyQuotient_mk e)))
+      change symbolicLatentPathHomotopyQuotientMap
+          (basedLoopHomotopyQuotientRepresentative
+            (basedLoopHomotopyQuotient_mk e)) =
+        (basedLoopHomotopyQuotient_mk e).1
+      exact basedLoopHomotopyQuotientRepresentative_quotient_eq _)
   have hconcat : SymbolicLatentPathHomotopic
       (canonicalSymbolicLatentBasedLoopConcatenation γ
         (basedLoopHomotopyQuotientRepresentativeLoop

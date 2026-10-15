@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Calculus.Deriv.MeanValue
+import Mathlib.Analysis.Calculus.Deriv.Inv
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.Normed.Field.Basic
 import Mathlib.Tactic
@@ -91,9 +92,8 @@ theorem quotient_derivative_norm_le
   have hq0 : q t ≠ 0 := norm_pos_iff.mp (lt_of_lt_of_le hε hsep)
   have heq : deriv (fun s => n s / q s) t =
       n' / q t - n t * q' / (q t) ^ 2 := by
-    change deriv (n / q) t = _
-    rw [(hn.div hq hq0).deriv]
-    field_simp
+    rw [(HasDerivAt.fun_div hn hq hq0).deriv]
+    field_simp [hq0]
   rw [heq]
   apply (norm_sub_le _ _).trans
   apply add_le_add (quotient_norm_le hε hnum' hsep)

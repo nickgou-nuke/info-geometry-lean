@@ -50,7 +50,6 @@ theorem integral_cos_two_pi_eq_zero :
   have h_ftc := integral_eq_sub_of_hasDerivAt (f := fun y => (2 * π)⁻¹ * sin (2 * π * y))
     (f' := fun x => cos (2 * π * x)) h_antideriv (h_cont.intervalIntegrable 0 1)
   rw [h_ftc]
-  dsimp
   have h0 : sin (2 * π * 0) = 0 := by
     have : (2 * π * (0:ℝ)) = 0 := by ring
     rw [this, Real.sin_zero]
@@ -63,7 +62,8 @@ theorem integral_cos_two_pi_eq_zero :
 /-- 🏆 THEOREM 2: Exact Normalization of the 1-Mode Dirichlet Kernel -/
 theorem dirichlet_kernel_one_integral :
     ∫ x in (0:ℝ)..1, (1 + 2 * cos (2 * π * x)) = 1 := by
-  have h_one_int : IntervalIntegrable (fun _ : ℝ => (1 : ℝ)) volume 0 1 := intervalIntegral.intervalIntegrable_const
+  have h_one_int : IntervalIntegrable (fun _ : ℝ => (1 : ℝ)) volume 0 1 :=
+    continuous_const.intervalIntegrable 0 1
   have h_cos_int : IntervalIntegrable (fun x => cos (2 * π * x)) volume 0 1 := by
     have h_cont : Continuous (fun x => cos (2 * π * x)) :=
       continuous_cos.comp (continuous_const.mul continuous_id)
@@ -87,7 +87,8 @@ theorem dirichlet_kernel_one_l2_energy
     intro x _
     exact h_expand x
   rw [h_int_eq]
-  have h_one_int : IntervalIntegrable (fun _ : ℝ => (1 : ℝ)) volume 0 1 := intervalIntegral.intervalIntegrable_const
+  have h_one_int : IntervalIntegrable (fun _ : ℝ => (1 : ℝ)) volume 0 1 :=
+    continuous_const.intervalIntegrable 0 1
   have h_cos_int : IntervalIntegrable (fun x => cos (2 * π * x)) volume 0 1 := by
     have h_cont : Continuous (fun x => cos (2 * π * x)) :=
       continuous_cos.comp (continuous_const.mul continuous_id)

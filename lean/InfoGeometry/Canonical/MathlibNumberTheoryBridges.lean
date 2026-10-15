@@ -1,4 +1,3 @@
-import Mathlib.NumberTheory.ArithmeticFunction
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.NumberTheory.Divisors
 import Mathlib.NumberTheory.PrimeCounting

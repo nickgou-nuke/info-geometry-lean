@@ -1107,8 +1107,7 @@ theorem operatorAdmissible_of_TKKConeBundle
     (hTKKCone : ConformalTKKConeWitness (α := α) (H := H) C)
     (X Y : EndH₂) :
     C.IsOperatorAdmissible := by
-  simpa using
-    (W.toOperatorAdmissibilityWitnessOfTKKConeBundle weylGauge hTKKCone X Y).operatorAdmissible
+  exact W.operatorAdmissible hTKKCone.coneWitness
 
 /--
 Build the stable closure context directly from a positive-partition witness and
@@ -1264,8 +1263,7 @@ theorem operatorAdmissible_of_TKKConeBundle
     (hTKKCone : ConformalTKKConeWitness (α := α) (H := H) C)
     (X Y : EndH₂) :
     C.IsOperatorAdmissible := by
-  simpa using
-    (W.toOperatorAdmissibilityWitnessOfTKKConeBundle weylGauge hTKKCone X Y).operatorAdmissible
+  exact W.toPositivePartitionWitness.operatorAdmissible hTKKCone.coneWitness
 
 /--
 Build the full stable closure context directly from the Cartan-odd partition
@@ -1878,7 +1876,8 @@ square on the constructive admissibility-plus-square branch.
 @[rep_depth transport]
 theorem fisherOnsagerProduction_eq_square :
     C.toPositiveContext.fisherOnsagerProduction = C.amplitude ^ (2 : ℕ) := by
-  simpa [toPositiveContext] using C.toSquarePositiveContext.fisherOnsagerProduction_eq_square
+  simpa [toPositiveContext, toSquarePositiveContext] using
+    C.toSquarePositiveContext.fisherOnsagerProduction_eq_square
 
 -- theorem-class: bridge
 /--

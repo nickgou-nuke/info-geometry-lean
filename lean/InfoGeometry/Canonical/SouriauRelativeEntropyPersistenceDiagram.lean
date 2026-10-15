@@ -45,6 +45,8 @@ noncomputable def relativeEntropyPersistenceDiagram {n : ℕ}
     (x : RelativeEntropySublevelQuotient (n := n) ε I.1 I.2) :
     (relativeEntropyPersistenceDiagram (n := n) ε).map
         (𝟙 I) x = x := by
-  simp
+  change relativeEntropySublevelQuotientMap ε
+    (le_refl I.1) (le_refl I.2) x = x
+  exact relativeEntropySublevelQuotientMap_refl ε I.1 I.2 x
 
 end SouriauRelativeEntropyPersistenceDiagram

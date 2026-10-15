@@ -42,12 +42,15 @@ def upperTailQCCRParameterRestrictionCone (m : ℕ) :
             T.toContinuousStarInductiveSystem) j.1
       naturality := by
         intro j k f
-        have hfull := topologicalInverseProjection_naturality
+        apply TopCat.hom_ext
+        apply ContinuousMap.ext
+        intro x
+        have hfull := topologicalInverseProjection_naturality_apply
           (qCcrParameterTopologicalDiagram Stage
             T.toContinuousStarInductiveSystem)
           (CategoryTheory.homOfLE (show j.1 ≤ k.1 from leOfHom f))
-        simpa [qCcrParameterTopologicalDiagram,
-          qCcrParameterTransitionMap, upperTailContinuousStarSystem] using hfull.symm }
+          x
+        exact hfull.symm }
 
 noncomputable def upperTailQCCRParameterRestrictionMap (m : ℕ) :
     qCcrParameterTopologicalLimit Stage T.toContinuousStarInductiveSystem ⟶
@@ -84,14 +87,15 @@ def upperTailQCCRZeroFiberRestrictionCone (m : ℕ) :
             T.toContinuousStarInductiveSystem) j.1
       naturality := by
         intro j k f
-        have hfull := topologicalInverseProjection_naturality
+        apply TopCat.hom_ext
+        apply ContinuousMap.ext
+        intro x
+        have hfull := topologicalInverseProjection_naturality_apply
           (qCcrParameterZeroFiberTopologicalDiagram Stage
             T.toContinuousStarInductiveSystem)
           (CategoryTheory.homOfLE (show j.1 ≤ k.1 from leOfHom f))
-        simpa [qCcrParameterZeroFiberTopologicalDiagram,
-          qCcrParameterZeroFiberTransitionTopCatHom,
-          qCcrParameterZeroFiberTransitionMap,
-          qCcrParameterTransitionMap, upperTailContinuousStarSystem] using hfull.symm }
+          x
+        exact hfull.symm }
 
 noncomputable def upperTailQCCRZeroFiberRestrictionMap (m : ℕ) :
     qCcrParameterZeroFiberTopologicalLimit Stage T.toContinuousStarInductiveSystem ⟶

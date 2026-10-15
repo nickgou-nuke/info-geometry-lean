@@ -68,7 +68,8 @@ def localCARPair : RealCARPair M2R where
 /-- The `C*`-free local annihilation readout from the modular seed equals the entropy flux. -/
 theorem local_entropyFlux_eq_annihilation :
     entropyFlux = localAnnihilation := by
-  simpa [localAnnihilation, entropyFlux] using (ModularNilpotentAutomorphism.entropyFlux_eq_N : entropyFlux = N)
+  simpa [localAnnihilation, entropyFlux, a] using
+    (ModularNilpotentAutomorphism.entropyFlux_eq_N : entropyFlux = N)
 
 /-- The local modular free-energy operator is zero in this sector. -/
 theorem local_informationFreeEnergy_eq_zero :

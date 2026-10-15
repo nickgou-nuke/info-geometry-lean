@@ -8,58 +8,52 @@ open Complex
 noncomputable section
 
 /-! Complexify the four Peirce channel coordinates and equip them with the
-symmetric bilinear form whose diagonal is the channel quadratic.  This is the
-minimal typed interface needed to feed the existing BCFW on-shell shift. -/
+native Mathlib symmetric bilinear form whose diagonal is the channel
+quadratic. The BCFW identities consume this form directly. -/
 
-abbrev PeirceKinematicMomentum := InfoGeometry.Algebra.FiniteSpin.Vec4C
+noncomputable def peirceKinematicForm :
+    LinearMap.BilinForm ℂ InfoGeometry.Algebra.FiniteSpin.Vec4C :=
+  LinearMap.mk₂ ℂ
+    (fun p q => (1 / 2 : ℂ) *
+      (p 0 * q 1 + p 1 * q 0 - p 2 * q 3 - p 3 * q 2))
+    (by intro p q r; simp [Pi.add_apply]; ring)
+    (by intro c p q; simp [Pi.smul_apply, smul_eq_mul]; ring)
+    (by intro p q r; simp [Pi.add_apply]; ring)
+    (by intro c p q; simp [Pi.smul_apply, smul_eq_mul]; ring)
 
-noncomputable def peirceKinematicInner
-    (p q : PeirceKinematicMomentum) : ℂ :=
-  (1 / 2 : ℂ) *
-    (p 0 * q 1 + p 1 * q 0 - p 2 * q 3 - p 3 * q 2)
+theorem peirceKinematicForm_isSymm : peirceKinematicForm.IsSymm := by
+  rw [LinearMap.BilinForm.isSymm_def]
+  intro p q
+  simp [peirceKinematicForm, LinearMap.mk₂_apply]
+  ring
 
-instance : MomentumSpace PeirceKinematicMomentum where
-  inner := peirceKinematicInner
-  inner_symm := by
-    intro p q
-    dsimp [peirceKinematicInner]
-    ring
-  inner_add_left := by
-    intro p q r
-    dsimp [peirceKinematicInner]
-    ring
-  inner_smul_left := by
-    intro c p q
-    dsimp [peirceKinematicInner]
-    ring
-
-theorem peirceKinematicInner_self (p : PeirceKinematicMomentum) :
-    peirceKinematicInner p p =
+theorem peirceKinematicForm_self (p : InfoGeometry.Algebra.FiniteSpin.Vec4C) :
+    peirceKinematicForm p p =
       p 0 * p 1 - p 2 * p 3 := by
-  simp [peirceKinematicInner]
+  simp [peirceKinematicForm, LinearMap.mk₂_apply]
   ring
 
 def complexifyChannelCoordinates
-    (p : KinematicCoordinates) : PeirceKinematicMomentum :=
+    (p : KinematicCoordinates) : InfoGeometry.Algebra.FiniteSpin.Vec4C :=
   fun i => p i
 
-theorem complexifyChannelCoordinates_inner_self (p : KinematicCoordinates) :
-    peirceKinematicInner (complexifyChannelCoordinates p)
+theorem complexifyChannelCoordinates_form_self (p : KinematicCoordinates) :
+    peirceKinematicForm (complexifyChannelCoordinates p)
         (complexifyChannelCoordinates p) =
       (channelQuadratic p : ℂ) := by
-  rw [peirceKinematicInner_self]
+  rw [peirceKinematicForm_self]
   dsimp [complexifyChannelCoordinates, channelQuadratic]
   norm_num
 
 def complexifiedChannel
-    (M : Matrix (Fin 2) (Fin 2) ℝ) : PeirceKinematicMomentum :=
+    (M : Matrix (Fin 2) (Fin 2) ℝ) : InfoGeometry.Algebra.FiniteSpin.Vec4C :=
   complexifyChannelCoordinates (channelCoordinates M)
 
 theorem complexifiedChannel_peirce_quadratic (M : Matrix (Fin 2) (Fin 2) ℝ) :
-    peirceKinematicInner (complexifiedChannel M) (complexifiedChannel M) =
+    peirceKinematicForm (complexifiedChannel M) (complexifiedChannel M) =
       (splitQuadratic (embedRealSplit M) : ℂ) := by
   unfold complexifiedChannel
-  rw [complexifyChannelCoordinates_inner_self,
+  rw [complexifyChannelCoordinates_form_self,
     embedRealSplit_quadratic_transport]
 
 end

@@ -1,11 +1,19 @@
 import Mathlib.Tactic
+import Mathlib.Data.Fintype.Basic
 
 namespace Omega.EA
 
 /-- Chapter-local enumeration of the ten states in the online delay-3 synchronizing kernel. -/
 inductive OnlineDelayFoldSyncKernelState
   | q0 | q1 | q2 | q3 | q4 | q5 | q6 | q7 | q8 | q9
-  deriving DecidableEq, Fintype, Repr
+  deriving DecidableEq, Repr
+
+def OnlineDelayFoldSyncKernelState.enumList : List OnlineDelayFoldSyncKernelState := 
+  [q0, q1, q2, q3, q4, q5, q6, q7, q8, q9]
+
+instance : Fintype OnlineDelayFoldSyncKernelState where
+  elems := ⟨OnlineDelayFoldSyncKernelState.enumList, by decide⟩
+  complete := by intro x; cases x <;> decide
 
 /-- The synchronizing kernel has exactly ten states. -/
 theorem onlineDelayFoldSyncKernelState_card :

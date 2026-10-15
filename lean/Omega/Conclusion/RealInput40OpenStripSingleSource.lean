@@ -1,3 +1,4 @@
+import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic

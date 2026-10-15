@@ -17,7 +17,15 @@ inductive Archetype
   | hamiltonianSquare
   | positiveSoftmax
   | softmaxObstruction
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype Archetype :=
+  Fintype.ofList
+    [.idempotent, .fixedRange, .hiddenKernel, .uniqueDecomposition,
+      .symmetricInnerProduct, .orthogonalDecomposition, .sectorSwap,
+      .signedMomentum, .anticommutation, .scalarCouplingSquare,
+      .hamiltonianSquare, .positiveSoftmax, .softmaxObstruction]
+    (by intro x; cases x <;> simp)
 
 def prerequisites : Archetype → Finset ℕ
   | .idempotent => {0}

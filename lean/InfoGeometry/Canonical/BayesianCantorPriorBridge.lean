@@ -70,8 +70,8 @@ theorem pointPrior_prefixPullback
       InfoGeometry.expectation
         (pointPrior n (boundaryPrefix n x))
         (indicator A) := by
-  simpa [indicator, pointPrior_expectation_boolEvalAt, cantorBooleanEvaluation] using
-    congrArg (fun b : Bool => if b then (1 : ℝ) else 0)
-      (cantorBooleanEvaluation_prefixPullback x n A)
+  rw [pointPrior_expectation_boolEvalAt, pointPrior_expectation_boolEvalAt]
+  exact congrArg (fun b : Bool => if b = true then (1 : ℝ) else 0)
+    (cantorBooleanEvaluation_prefixPullback x n A)
 
 end InfoGeometry.Canonical.BayesianCantorPriorBridge

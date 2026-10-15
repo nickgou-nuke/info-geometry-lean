@@ -38,7 +38,7 @@ theorem paper_group_jg_prime_register_ellipse_closure (t : ℝ) (ht : t ≠ 0) :
       primeRegisterDegenerateLayerInClosure t ∧
       primeRegisterUniqueDegenerateLayer := by
   have hdense : Dense (primeRegisterPhaseOrbit t) := by
-    simpa [primeRegisterPhaseOrbit] using
+    simpa [primeRegisterPhaseOrbit, GroupJGPrimeRegisterPhaseData.phaseImageDense] using
       paper_group_jg_prime_register_phase_bohr_dense ⟨t, ht⟩
   have hfull : primeRegisterEllipseFullClosure t := by
     intro y hy

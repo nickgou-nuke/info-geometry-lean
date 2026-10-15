@@ -1,10 +1,9 @@
 import Mathlib.Algebra.Algebra.Basic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Algebra.Hom
 import Mathlib.Algebra.Star.Basic
 import Mathlib.Algebra.Star.StarAlgHom
-import Mathlib.Data.Complex.Basic
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Complex.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.Tactic
 
 noncomputable section
@@ -57,8 +56,8 @@ theorem psi_comp_iota_seq (psi_comm : ∀ n, (psi (n + 1)).comp (iota n) = psi n
   · rfl
   · dsimp [iota_seq]
     rw [← StarAlgHom.comp_assoc]
-    have hcomm : (psi (n + (m + 1))).comp (iota (n + m)) = psi (n + m) := by
-      simpa [Nat.add_assoc] using psi_comm (n + m)
+    have hcomm : (psi (n + (m + 1))).comp (iota (n + m)) = psi (n + m) :=
+      psi_comm (n + m)
     rw [hcomm]
     exact ih
 
@@ -86,8 +85,8 @@ theorem deriv_comp_iota_seq (n m : ℕ) :
         (iota (n + m)).toLinearMap.comp (iota_seq A iota n m).toLinearMap := rfl
     rw [h_comp, ← LinearMap.comp_assoc]
     have hcomm : (tDeriv.deriv (n + (m + 1))).comp (iota (n + m)).toLinearMap =
-        (iota (n + m)).toLinearMap.comp (tDeriv.deriv (n + m)) := by
-      simpa [Nat.add_assoc] using tDeriv.deriv_comm (n + m)
+        (iota (n + m)).toLinearMap.comp (tDeriv.deriv (n + m)) :=
+      tDeriv.deriv_comm (n + m)
     rw [hcomm, LinearMap.comp_assoc, ih, ← LinearMap.comp_assoc]
 
 /-! =========================================================================

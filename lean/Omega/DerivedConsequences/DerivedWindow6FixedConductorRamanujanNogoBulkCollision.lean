@@ -68,7 +68,7 @@ private lemma derived_window6_fixed_conductor_ramanujan_nogo_bulk_collision_mono
   rw [abs_mul, Finset.abs_prod]
   have hprod_le_one :
       ∏ q ∈ M.support, |D.coordinate m q| ≤ 1 := by
-    refine Finset.prod_le_one ?_ ?_
+    refine Finset.prod_le_one₀ ?_ ?_
     · intro q hq
       exact abs_nonneg _
     · intro q hq

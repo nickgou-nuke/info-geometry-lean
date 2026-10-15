@@ -46,8 +46,9 @@ noncomputable def native : System where
   root_zero := positiveRootGenerator_false
   root_additive := by
     intro α s t
-    simpa [positiveRootGenerator, rootIndex] using
-      (positiveRootAction_add (rootIndex α) s t)
+    cases α <;>
+      simpa [positiveRootGenerator, rootIndex] using
+        (positiveRootAction_add _ s t)
   root_injective := by
     intro α s t h
     cases s <;> cases t

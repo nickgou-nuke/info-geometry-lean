@@ -1,5 +1,7 @@
 import InfoGeometry.Algebra.DerivationLieLane
-import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Algebra.Lie.OfAssociative
+
+attribute [local instance 100] LieRing.ofAssociativeRing
 
 /-! Honest grading contract for a future TKK/Freudenthal representation. -/
 namespace InfoGeometry.TKK.GenericRepresentation
@@ -31,7 +33,7 @@ structure FiveGradeRepresentation (K : LieActionLane R A) where
 namespace FiveGradeRepresentation
 variable {K : LieActionLane R A} (ρ : FiveGradeRepresentation K)
 
-theorem map_bracket (ρ : FiveGradeRepresentation K) (x y : K.L) :
+theorem map_bracket (_ρ : FiveGradeRepresentation K) (x y : K.L) :
     K.act ⁅x, y⁆ = ⁅K.act x, K.act y⁆ :=
   K.act.map_lie x y
 

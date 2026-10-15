@@ -175,6 +175,7 @@ theorem sageBasisVector_two_mul_one :
 theorem sageBasisVector_four_sq :
     AlbertStep.mul (sageBasisVector 4) (sageBasisVector 4) =
       sageBasisVector 0 := by
-  simpa [sageBasisVector, quaternionEmbed] using doublingUnit_sq
+  simpa [sageBasisVector, quaternionEmbed, AlbertStep.oneElem] using
+    doublingUnit_sq
 
 end InfoGeometry.Canonical.HestenesSplitOctonionBasis

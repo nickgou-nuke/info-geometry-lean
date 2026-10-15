@@ -189,8 +189,19 @@ theorem strict_channel_data_processing
   have h := InfoGeometry.Modular.EntropyMonotonicity.data_processing_inequality
     S ρ.spec σ.spec
     (fun i => ρ.pos i) (fun i => σ.pos i) T.prob_pos
-  simpa [strictChannelState, applyStrictColumnChannel,
-    InfoGeometry.Modular.EntropyMonotonicity.applyChannel, S] using h
+  have hρ : InfoGeometry.Modular.EntropyMonotonicity.applyChannel S ρ.spec =
+      applyStrictColumnChannel T ρ := by
+    funext k
+    rfl
+  have hσ : InfoGeometry.Modular.EntropyMonotonicity.applyChannel S σ.spec =
+      applyStrictColumnChannel T σ := by
+    funext k
+    rfl
+  change InfoGeometry.Modular.EntropyMonotonicity.klDivergence
+      (InfoGeometry.Modular.EntropyMonotonicity.applyChannel S ρ.spec)
+      (InfoGeometry.Modular.EntropyMonotonicity.applyChannel S σ.spec) ≤ _ at h
+  rw [hρ, hσ] at h
+  exact h
 
 end InfoGeometry.Modular.QuantumDPI
 

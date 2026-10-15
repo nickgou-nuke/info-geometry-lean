@@ -41,6 +41,7 @@ local notation "EndH" => H₂ →L[ℝ] H₂
 
 noncomputable local instance : NormedRing EndH := inferInstance
 noncomputable local instance : NormedAlgebra ℝ EndH := inferInstance
+noncomputable local instance : LieRing EndH := LieRing.ofAssociativeRing
 local instance : IsTopologicalRing EndH := inferInstance
 local instance : CompleteSpace EndH := inferInstance
 

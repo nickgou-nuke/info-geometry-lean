@@ -74,8 +74,9 @@ theorem hasDerivAt_bitwordEntropy (rate tau : ℝ)
       (Real.exp (-tau * rate) * (-rate)) tau := by
     simpa using (((hasDerivAt_id tau).neg.mul_const rate).exp)
   convert ((hexp.const_sub 1).log (ne_of_gt hden)).neg using 1
-  simp [bitwordEntropy]
-  ring
+  · funext t
+    simp [bitwordEntropy, mul_comm t rate]
+  · ring_nf
 
 theorem deriv_bitwordEntropy_neg (rate tau : ℝ)
     (hrate : 0 < rate) (htau : 0 < tau) :

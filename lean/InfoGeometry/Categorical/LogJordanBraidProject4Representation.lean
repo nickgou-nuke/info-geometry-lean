@@ -48,9 +48,10 @@ theorem standardBraid4Generator_zero_tmul
     standardBraid4Generator (0 : Fin 3)
         (x ⊗ₜ[ℂ] (y ⊗ₜ[ℂ] (z ⊗ₜ[ℂ] w))) =
       y ⊗ₜ[ℂ] (x ⊗ₜ[ℂ] (z ⊗ₜ[ℂ] w)) := by
-  simpa [standardBraid4Generator] using
-    (standardTensorPowerGenerator_zero_tmul (n := 1) x y
-      (z ⊗ₜ[ℂ] w))
+  change standardTensorPowerGenerator 2 0
+      (x ⊗ₜ[ℂ] (y ⊗ₜ[ℂ] (z ⊗ₜ[ℂ] w))) = _
+  exact standardTensorPowerGenerator_zero_tmul 1 x y
+    (z ⊗ₜ[ℂ] w)
 
 /-- Generator one acts on the middle two tensor factors. -/
 @[simp]
@@ -59,9 +60,10 @@ theorem standardBraid4Generator_one_tmul
     standardBraid4Generator (1 : Fin 3)
         (x ⊗ₜ[ℂ] (y ⊗ₜ[ℂ] (z ⊗ₜ[ℂ] w))) =
       x ⊗ₜ[ℂ] (z ⊗ₜ[ℂ] (y ⊗ₜ[ℂ] w)) := by
-  simpa [standardBraid4Generator] using
-    (standardTensorPowerGenerator_succ_tmul (n := 1) (i := 0) x
-      (y ⊗ₜ[ℂ] (z ⊗ₜ[ℂ] w)))
+  change standardTensorPowerGenerator 2 1
+      (x ⊗ₜ[ℂ] (y ⊗ₜ[ℂ] (z ⊗ₜ[ℂ] w))) = _
+  exact standardTensorPowerGenerator_succ_tmul 1 0 x
+    (y ⊗ₜ[ℂ] (z ⊗ₜ[ℂ] w))
 
 /-- Generator two acts on the last two tensor factors. -/
 @[simp]
@@ -70,9 +72,10 @@ theorem standardBraid4Generator_two_tmul
     standardBraid4Generator (2 : Fin 3)
         (x ⊗ₜ[ℂ] (y ⊗ₜ[ℂ] (z ⊗ₜ[ℂ] w))) =
       x ⊗ₜ[ℂ] (y ⊗ₜ[ℂ] (w ⊗ₜ[ℂ] z)) := by
-  simpa [standardBraid4Generator] using
-    (standardTensorPowerGenerator_succ_succ_tmul (n := 0) (i := 0) x y
-      (z ⊗ₜ[ℂ] w))
+  change standardTensorPowerGenerator 2 2
+      (x ⊗ₜ[ℂ] (y ⊗ₜ[ℂ] (z ⊗ₜ[ℂ] w))) = _
+  exact standardTensorPowerGenerator_succ_succ_tmul 0 0 x y
+    (z ⊗ₜ[ℂ] w)
 
 /-- First adjacent Artin relation on four tensor factors. -/
 theorem standardBraid4_artin_zero_one :
@@ -82,8 +85,10 @@ theorem standardBraid4_artin_zero_one :
       standardBraid4Generator (1 : Fin 3) *
         standardBraid4Generator (0 : Fin 3) *
         standardBraid4Generator (1 : Fin 3) := by
-  simpa [standardBraid4Generator] using
-    (standardTensorPower_artin 1 (0 : Fin 2))
+  change standardTensorPowerGenerator 2 0 *
+      standardTensorPowerGenerator 2 1 *
+      standardTensorPowerGenerator 2 0 = _
+  exact standardTensorPower_artin 1 0
 
 /-- Second adjacent Artin relation on four tensor factors. -/
 theorem standardBraid4_artin_one_two :
@@ -93,8 +98,10 @@ theorem standardBraid4_artin_one_two :
       standardBraid4Generator (2 : Fin 3) *
         standardBraid4Generator (1 : Fin 3) *
         standardBraid4Generator (2 : Fin 3) := by
-  simpa [standardBraid4Generator] using
-    (standardTensorPower_artin 1 (1 : Fin 2))
+  change standardTensorPowerGenerator 2 1 *
+      standardTensorPowerGenerator 2 2 *
+      standardTensorPowerGenerator 2 1 = _
+  exact standardTensorPower_artin 1 1
 
 /-- Far commutation on disjoint tensor slots. -/
 theorem standardBraid4_far_commute :
@@ -102,8 +109,9 @@ theorem standardBraid4_far_commute :
         standardBraid4Generator (2 : Fin 3) =
       standardBraid4Generator (2 : Fin 3) *
         standardBraid4Generator (0 : Fin 3) := by
-  simpa [standardBraid4Generator] using
-    (standardTensorPower_far 0 (0 : Fin 1) (0 : Fin 1) (by simp))
+  change standardTensorPowerGenerator 2 0 *
+      standardTensorPowerGenerator 2 2 = _
+  exact standardTensorPower_far 0 0 0 (by simp)
 
 /-- The three standard slices satisfy every defining relation of
 `Braid.braid_group 4`. -/
@@ -112,8 +120,10 @@ theorem standardBraid4_relations :
       FreeGroup.lift standardBraid4Generator r =
         (1 : StandardFourCarrier ≃ₗ[ℂ] StandardFourCarrier) := by
   intro r hr
-  simpa [standardBraid4Generator] using
-    (standardTensorPower_braidRelations 2 r hr)
+  change FreeGroup.lift (standardTensorPowerGenerator 2) r =
+    (1 : (tensorPowerObj standardJordanObject 4) ≃ₗ[ℂ]
+      (tensorPowerObj standardJordanObject 4))
+  exact standardTensorPower_braidRelations 2 r hr
 
 /-- Group-level logarithmic braid action on `B₄`. -/
 def standardHadjiivanovBraidProject4Hom :

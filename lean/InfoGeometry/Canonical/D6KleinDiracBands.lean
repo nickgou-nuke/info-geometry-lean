@@ -209,8 +209,10 @@ theorem quotientBandTouching_iff_radicand_zero
   intro p h
   have hp : 0 ≤ radicand p := by
     simpa [quotientRadicand] using h
-  simpa [quotientBandTouching, quotientBandGap, quotientRadicand]
-    using bandGap_eq_zero_iff p hp
+  change quotientBandGap (quotientMap p) = 0 ↔
+    quotientRadicand (quotientMap p) = 0
+  rw [quotientBandGap_pullback, quotientRadicand_pullback]
+  exact bandGap_eq_zero_iff p hp
 
 def quotientSpectralPolynomial (q : KleinHexQuotient) (lam : ℝ) : ℝ :=
   lam ^ 2 - quotientRadicand q
@@ -416,8 +418,9 @@ theorem sectorSpectralPolynomial_bandPlus
   intro p h
   have hp : 0 ≤ quotientRadicand (quotientMap p.2) := by
     simpa [sectorRadicand] using h
-  simpa [sectorSpectralPolynomial, sectorRadicand]
-    using quotientSpectralPolynomial_bandPlus (quotientMap p.2) hp
+  change quotientSpectralPolynomial (quotientMap p.2)
+    (quotientBandPlus (quotientMap p.2)) = 0
+  exact quotientSpectralPolynomial_bandPlus (quotientMap p.2) hp
 
 theorem sectorSpectralPolynomial_bandMinus
     (q : D6KleinSectorBundle)
@@ -428,8 +431,9 @@ theorem sectorSpectralPolynomial_bandMinus
   intro p h
   have hp : 0 ≤ quotientRadicand (quotientMap p.2) := by
     simpa [sectorRadicand] using h
-  simpa [sectorSpectralPolynomial, sectorRadicand]
-    using quotientSpectralPolynomial_bandMinus (quotientMap p.2) hp
+  change quotientSpectralPolynomial (quotientMap p.2)
+    (quotientBandMinus (quotientMap p.2)) = 0
+  exact quotientSpectralPolynomial_bandMinus (quotientMap p.2) hp
 
 theorem sectorSpectralPolynomial_factorization
     (q : D6KleinSectorBundle)
@@ -444,9 +448,10 @@ theorem sectorSpectralPolynomial_factorization
   change sectorSpectralPolynomial (sectorMap p.1 p.2) lam =
     (lam - sectorBandPlus (sectorMap p.1 p.2)) *
       (lam - sectorBandMinus (sectorMap p.1 p.2))
-  simpa [sectorSpectralPolynomial, sectorRadicand]
-    using quotientSpectralPolynomial_factorization
-      (quotientMap p.2) hp lam
+  change quotientSpectralPolynomial (quotientMap p.2) lam =
+    (lam - quotientBandPlus (quotientMap p.2)) *
+      (lam - quotientBandMinus (quotientMap p.2))
+  exact quotientSpectralPolynomial_factorization (quotientMap p.2) hp lam
 
 theorem sectorSpectralPolynomial_eq_zero_iff
     (q : D6KleinSectorBundle)
@@ -470,8 +475,9 @@ theorem sectorBandTouching_iff_radicand_zero
   intro p h
   have hquot : 0 ≤ quotientRadicand (quotientMap p.2) := by
     simpa [sectorRadicand] using h
-  simpa [sectorBandTouching, sectorBandGap, sectorRadicand]
-    using quotientBandTouching_iff_radicand_zero (quotientMap p.2) hquot
+  change quotientBandTouching (quotientMap p.2) ↔
+    quotientRadicand (quotientMap p.2) = 0
+  exact quotientBandTouching_iff_radicand_zero (quotientMap p.2) hquot
 
 def sectorTouchingLocus : Set D6KleinSectorBundle :=
   {q | sectorBandTouching q}
@@ -529,17 +535,17 @@ theorem sectorPartitionFunction_reindex_rotate
     (∑ q : D6KleinSectorBundle,
       sectorLocalPartition β (quotientSectorRotate k q)) =
       sectorPartitionFunction β := by
-  simpa [sectorPartitionFunction] using
-    (Equiv.sum_comp (quotientSectorRotateEquiv k)
-      (fun q => sectorLocalPartition β q))
+  change (∑ q, sectorLocalPartition β (quotientSectorRotateEquiv k q)) = _
+  exact Equiv.sum_comp (quotientSectorRotateEquiv k)
+    (fun q => sectorLocalPartition β q)
 
 theorem sectorPartitionFunction_reindex_reflect (β : ℝ) :
     (∑ q : D6KleinSectorBundle,
       sectorLocalPartition β (quotientSectorReflect q)) =
       sectorPartitionFunction β := by
-  simpa [sectorPartitionFunction] using
-    (Equiv.sum_comp quotientSectorReflectEquiv
-      (fun q => sectorLocalPartition β q))
+  change (∑ q, sectorLocalPartition β (quotientSectorReflectEquiv q)) = _
+  exact Equiv.sum_comp quotientSectorReflectEquiv
+    (fun q => sectorLocalPartition β q)
 
 end
 

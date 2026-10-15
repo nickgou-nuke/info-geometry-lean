@@ -33,15 +33,17 @@ def derived_foldbin_gauge_abelianization_even_windows_visible_character_rank (i 
 lemma derived_foldbin_gauge_abelianization_even_windows_card (i : Fin 4) :
     Fintype.card (derived_foldbin_gauge_abelianization_even_windows_abelianization i) =
       2 ^ derived_foldbin_gauge_abelianization_even_windows_abelianization_rank i := by
-  simpa [derived_foldbin_gauge_abelianization_even_windows_abelianization,
-    derived_foldbin_gauge_abelianization_even_windows_abelianization_rank] using
-    (Fintype.card_fun :
-      Fintype.card
-          (Fin (derived_foldbin_gauge_abelianization_even_windows_abelianization_rank i) →
-            ZMod 2) =
-        Fintype.card (ZMod 2) ^
-          Fintype.card
-            (Fin (derived_foldbin_gauge_abelianization_even_windows_abelianization_rank i)))
+  change Fintype.card
+      (Fin (derived_foldbin_gauge_abelianization_even_windows_abelianization_rank i) → ZMod 2) = _
+  calc
+    Fintype.card
+        (Fin (derived_foldbin_gauge_abelianization_even_windows_abelianization_rank i) → ZMod 2) =
+      Fintype.card (ZMod 2) ^
+        Fintype.card (Fin (derived_foldbin_gauge_abelianization_even_windows_abelianization_rank i)) :=
+      Fintype.card_fun
+    _ = 2 ^ derived_foldbin_gauge_abelianization_even_windows_abelianization_rank i := by
+      rw [Fintype.card_fin]
+      norm_num
 
 /-- The audited minimum-degeneracy values on the four even windows are exactly the corresponding
 Fibonacci numbers `F_{m/2}`. -/

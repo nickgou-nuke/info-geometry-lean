@@ -25,7 +25,8 @@ variable (P : selfAdjoint (Matrix (Fin n) (Fin n) ℂ))
 def matrixVal : Matrix (Fin n) (Fin n) ℂ := P
 
 theorem self_adjoint : (matrixVal P).conjTranspose = matrixVal P := by
-  simpa only [matrixVal, Matrix.star_eq_conjTranspose] using P.property
+  have h : star (P : Matrix (Fin n) (Fin n) ℂ) = P := selfAdjoint.mem_iff.mp P.property
+  rwa [Matrix.star_eq_conjTranspose] at h
 
 /-- **Theorem**: Hall Projector Idempotency P² = P. -/
 theorem hall_projector_idempotent

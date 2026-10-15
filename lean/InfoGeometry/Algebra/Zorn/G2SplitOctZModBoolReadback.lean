@@ -6,7 +6,8 @@ namespace InfoGeometry.Algebra.Zorn.G2SplitOctZornCellBridge
 theorem zModToBool_injective :
     Function.Injective zModToBool := by
   intro a b h
-  fin_cases a <;> fin_cases b <;> simp [zModToBool] at h ⊢
+  rw [← boolToZMod_zModToBool a, ← boolToZMod_zModToBool b]
+  exact congrArg boolToZMod h
 
 theorem boolToZMod_injective :
     Function.Injective boolToZMod := by

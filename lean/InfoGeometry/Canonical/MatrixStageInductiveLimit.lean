@@ -602,11 +602,11 @@ def liftStarAlgHom {B : Type*} [Semiring B] [Algebra ℂ B] [StarRing B] [StarMo
     (hf : ∀ (m n : ℕ) (h : m ≤ n), (f n).comp (stageMorphism m n h) = f m) :
     MatrixStageLimit →⋆ₐ[ℂ] B where
   toFun := liftFun (fun n => f n) (fun m n h A => by
-    have := congr_arg (fun (g : Stage m →⋆ₐ[ℂ] B) => (g A : B)) (hf m n h)
-    exact this)
+    rw [← StarAlgHom.comp_apply]
+    exact congr_arg (fun (g : Stage m →⋆ₐ[ℂ] B) => (g A : B)) (hf m n h))
   map_one' := by
     change liftFun (fun n => f n) _ (toLimit 0 1) = 1
-    rw [liftFun_toLimit, map_one]
+    simp only [liftFun_toLimit, map_one]
   map_mul' := by
     intro X Y
     induction X, Y using Quotient.inductionOn₂ with
@@ -616,11 +616,11 @@ def liftStarAlgHom {B : Type*} [Semiring B] [Algebra ℂ B] [StarRing B] [StarMo
         let k := max m n
         rw [← toLimit_stageMorphism (le_max_left m n) A, ← toLimit_stageMorphism (le_max_right m n) B]
         rw [toLimit_mul]
-        rw [liftFun_toLimit, liftFun_toLimit, liftFun_toLimit]
+        simp only [liftFun_toLimit]
         rw [map_mul]
   map_zero' := by
     change liftFun (fun n => f n) _ (toLimit 0 0) = 0
-    rw [liftFun_toLimit, map_zero]
+    simp only [liftFun_toLimit, map_zero]
   map_add' := by
     intro X Y
     induction X, Y using Quotient.inductionOn₂ with

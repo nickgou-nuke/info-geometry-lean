@@ -91,9 +91,8 @@ theorem isTopologicalMemory_iff_eq_zero
   · intro hMem
     exact (informationalZeroMode_iff_eq_zero (E := E) M ψ).mp hMem.1
   · intro hψ
-    constructor
-    · exact (informationalZeroMode_iff_eq_zero (E := E) M ψ).mpr hψ
-    · simp [hψ]
+    subst hψ
+    refine ⟨(informationalZeroMode_iff_eq_zero (E := E) M 0).mpr rfl, map_zero _⟩
 
 /--
 Topological residue/Witten index induced by the modular supercharge on the

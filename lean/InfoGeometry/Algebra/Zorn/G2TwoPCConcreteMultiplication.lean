@@ -714,7 +714,7 @@ theorem pcWord_oneAt_five_mul_oneAt_five :
   dsimp [pcGenerator, G2TwoSylowSubgroup.pcWord,
     G2TwoSylowSubgroup.pcTerm, G2TwoSylowSubgroup.pcWordFun,
     pcTermFun]
-  rfl
+  try rfl
 
 theorem pcWord_oneAt_five_mul_oneAt_five_pcCombine :
     G2TwoSylowSubgroup.pcWord (oneAt 5) *
@@ -1362,7 +1362,7 @@ theorem pcWord_oneAt_four_mul_oneAt_four :
   dsimp [pcGenerator, G2TwoSylowSubgroup.pcWord,
     G2TwoSylowSubgroup.pcTerm, G2TwoSylowSubgroup.pcWordFun,
     pcTermFun]
-  rfl
+  try rfl
 
 theorem pcWord_oneAt_four_mul_oneAt_four_pcCombine :
     G2TwoSylowSubgroup.pcWord (oneAt 4) *
@@ -1393,7 +1393,7 @@ theorem pcWord_oneAt_three_mul_oneAt_three :
   dsimp [pcGenerator, G2TwoSylowSubgroup.pcWord,
     G2TwoSylowSubgroup.pcTerm, G2TwoSylowSubgroup.pcWordFun,
     pcTermFun]
-  rfl
+  try rfl
 
 theorem pcWord_oneAt_three_mul_oneAt_three_pcCombine :
     G2TwoSylowSubgroup.pcWord (oneAt 3) *

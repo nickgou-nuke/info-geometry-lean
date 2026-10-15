@@ -28,23 +28,33 @@ variable {K V W : Type*} [Field K]
 theorem isometryEquiv_polar
     {Q : QuadraticForm K V} {R : QuadraticForm K W}
     (f : Q.IsometryEquiv R) (x y : V) :
-    QuadraticMap.polar R (f x) (f y) =
+    QuadraticMap.polar R (f.toLinearEquiv x) (f.toLinearEquiv y) =
       QuadraticMap.polar Q x y := by
   unfold QuadraticMap.polar
-  rw [← map_add f, f.map_app, f.map_app, f.map_app]
+  rw [← map_add f.toLinearEquiv]
+  have hmap (v : V) : R (f.toLinearEquiv v) = Q v := by
+    change R ((f.toLinearEquiv : V ≃ₗ[K] W).toFun v) = Q v
+    exact f.map_app' v
+  rw [hmap, hmap, hmap]
+
+theorem isometryEquiv_map_app
+    {Q : QuadraticForm K V} {R : QuadraticForm K W}
+    (f : Q.IsometryEquiv R) (x : V) :
+    R (f.toLinearEquiv x) = Q x := by
+  change R ((f.toLinearEquiv : V ≃ₗ[K] W).toFun x) = Q x
+  exact f.map_app' x
 
 /-- Projectivization of a native quadratic isometry. -/
 def projectiveIsometryMap
     {Q : QuadraticForm K V} {R : QuadraticForm K W}
     (f : Q.IsometryEquiv R) : ℙ K V → ℙ K W :=
-  Projectivization.map f.toLinearEquiv.toLinearMap
-    f.toLinearEquiv.injective
+  Projectivization.map f.toLinearEquiv.toLinearMap f.toLinearEquiv.injective
 
 @[simp] theorem projectiveIsometryMap_mk
     {Q : QuadraticForm K V} {R : QuadraticForm K W}
     (f : Q.IsometryEquiv R) (x : V) (hx : x ≠ 0) :
     projectiveIsometryMap f (Projectivization.mk K x hx) =
-      Projectivization.mk K (f x) (by
+      Projectivization.mk K (f.toLinearEquiv x) (by
         simpa using f.toLinearEquiv.injective.ne hx) := by
   rw [projectiveIsometryMap, Projectivization.map_mk]
   apply (Projectivization.mk_eq_mk_iff K _ _ _ _).2
@@ -58,7 +68,7 @@ theorem projectiveIsometryMap_preserves_null
   refine Projectivization.ind (p := p) ?_
   intro x hx hp
   rw [projectiveIsometryMap_mk, isNull_mk_iff]
-  rw [f.map_app]
+  rw [isometryEquiv_map_app]
   exact (isNull_mk_iff Q x hx).mp hp
 
 /-- Restriction of a projectivized quadratic isometry to projective null
@@ -101,8 +111,11 @@ def nullIsometryEquiv
     rw [projectiveIsometryMap_mk, projectiveIsometryMap_mk]
     apply (Projectivization.mk_eq_mk_iff K _ _ _ _).2
     refine ⟨1, ?_⟩
-    simpa only [one_smul] using
-      (f.toLinearEquiv.symm_apply_apply x).symm
+    have hsymm : f.symm.toLinearEquiv = f.toLinearEquiv.symm := by
+      ext y
+      rfl
+    simpa only [one_smul, hsymm] using
+      (LinearEquiv.symm_apply_apply f.toLinearEquiv x).symm
   right_inv p := by
     apply Subtype.ext
     change projectiveIsometryMap f
@@ -112,8 +125,11 @@ def nullIsometryEquiv
     rw [projectiveIsometryMap_mk, projectiveIsometryMap_mk]
     apply (Projectivization.mk_eq_mk_iff K _ _ _ _).2
     refine ⟨1, ?_⟩
-    simpa only [one_smul] using
-      (f.toLinearEquiv.apply_symm_apply x).symm
+    have hsymm : f.symm.toLinearEquiv = f.toLinearEquiv.symm := by
+      ext y
+      rfl
+    simpa only [one_smul, hsymm] using
+      (LinearEquiv.apply_symm_apply f.toLinearEquiv x).symm
 
 /-- The induced equivalence of projective null spaces preserves their native
 polar-incidence relation. -/

@@ -87,8 +87,10 @@ theorem inducedACharacter_parameter_dictionary
         { leviParameter := q.leviParameter
           spectralParameter := fun i => -q.spectralParameter i } x =
       canonicalG2CartanMellinCharacter q.spectralParameter x := by
-  simpa [inducedACharacter] using
-    (logarithmicACharacter_neg_eq_mellin q.spectralParameter x)
+  change logarithmicACharacter (fun i => -q.spectralParameter i) x = _
+  rw [← (show parabolicSpectralParameter q.spectralParameter =
+    (fun i => -q.spectralParameter i) from rfl)]
+  exact logarithmicACharacter_neg_eq_mellin q.spectralParameter x
 
 theorem inducedACharacter_add
     {LeviParameter : Type*}

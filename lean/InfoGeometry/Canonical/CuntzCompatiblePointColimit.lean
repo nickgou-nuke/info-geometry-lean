@@ -47,18 +47,16 @@ def CompatibleCuntzPointFamily.toQCCR
     CompatibleQCCRPointFamily sys where
   point i :=
     ⟨(family.c i, (family.cstar i, (0 : Stage i))), by
-      change qCcrParameterResidualContinuousMap (A := Stage i)
-          (family.c i, (family.cstar i, (0 : Stage i))) = 0
-      simpa [qCcrParameterResidualContinuousMap] using
-        qccr_to_cuntz_limit (family.c i) (family.cstar i) |>.2 (family.relation i)⟩
+      dsimp [qCcrParameterZeroLocus, qCcrParameterResidualContinuousMap]
+      exact (qccr_to_cuntz_limit (family.c i) (family.cstar i)).2
+        (family.relation i)⟩
   compatible := by
     intro i j hij
     apply Subtype.ext
-    change qCcrParameterTransitionMap Stage sys hij
-        (family.c i, (family.cstar i, (0 : Stage i))) =
+    change (sys.map hij (family.c i),
+        (sys.map hij (family.cstar i), sys.map hij (0 : Stage i))) =
       (family.c j, (family.cstar j, (0 : Stage j)))
-    simp [qCcrParameterTransitionMap, family.compatible_c hij,
-      family.compatible_cstar hij]
+    simp [family.compatible_c hij, family.compatible_cstar hij]
 
 noncomputable def cuntzCompatiblePointColimitMap
     (family : CompatibleCuntzPointFamily sys) :
@@ -87,18 +85,17 @@ theorem cuntzCompatiblePointParameterColimitMap_stage_apply
         (topologicalDirectInjection ((Functor.const I).obj (TopCat.of PUnit)) i u) =
       qCcrParameterTopologicalInjection Stage sys i
         (family.toQCCR.point i).1 := by
-  have hpoint := compatiblePointColimitMap_stage_apply sys family.toQCCR i u
   have hincl := qCcrParameterZeroFiberToParameterColimit_stage Stage sys i
   have hincl' := congrArg (fun f => f (family.toQCCR.point i)) hincl
-  have hincl'' :
-      qCcrParameterZeroFiberToParameterColimit Stage sys
-          (qCcrParameterZeroFiberTopologicalInjection Stage sys i
-            (family.toQCCR.point i)) =
-        qCcrParameterTopologicalInjection Stage sys i
-          (family.toQCCR.point i).1 := by
-    simpa [qCcrParameterZeroFiberToParameterNatTrans] using hincl'
-  have h := congrArg
-    (fun z => qCcrParameterZeroFiberToParameterColimit Stage sys z) hpoint
-  simpa [cuntzCompatiblePointParameterColimitMap] using h.trans hincl''
+  change qCcrParameterZeroFiberToParameterColimit Stage sys
+      (qCcrParameterZeroFiberTopologicalInjection Stage sys i
+        (family.toQCCR.point i)) =
+    qCcrParameterTopologicalInjection Stage sys i (family.toQCCR.point i).1 at hincl'
+  change qCcrParameterZeroFiberToParameterColimit Stage sys
+      (cuntzCompatiblePointColimitMap sys family
+        (topologicalDirectInjection ((Functor.const I).obj (TopCat.of PUnit)) i u)) =
+    qCcrParameterTopologicalInjection Stage sys i (family.toQCCR.point i).1
+  rw [cuntzCompatiblePointColimitMap_stage_apply]
+  exact hincl'
 
 end InfoGeometry.Canonical.CuntzCompatiblePointColimit

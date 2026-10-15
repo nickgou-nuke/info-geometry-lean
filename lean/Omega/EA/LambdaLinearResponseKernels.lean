@@ -1,4 +1,6 @@
 import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Tactic
 import Omega.EA.KernelOneSiteBernoulliClass
 
@@ -48,7 +50,7 @@ lemma kernelPressure_linearResponse (K : KernelPressureFamily) :
     LambdaLinearResponse K (K.oneWeight - K.zeroWeight) := by
   simpa [LambdaLinearResponse, perronRoot, weightedKernel, sub_eq_add_neg, add_assoc, add_comm,
     add_left_comm, mul_assoc, mul_comm, mul_left_comm] using
-    (((hasDerivAt_id 0).const_mul (K.oneWeight - K.zeroWeight)).const_add K.zeroWeight)
+    (((hasDerivAt_id (0 : ℝ)).const_mul (K.oneWeight - K.zeroWeight)).const_add K.zeroWeight)
 
 /-- Paper label: `cor:lambda-linear-response-kernels`. The audited kernels `K9`, `K13`, and `K21`
 inherit the linear-response coefficient given by the endpoint difference of their one-state kernel

@@ -40,7 +40,8 @@ theorem braidGenerator1_sq : braidGenerator1 * braidGenerator1 = 1 := by
     ToeplitzCuntzThreeVacuumBridge.ToeplitzCuntzThreeGenerators.P1,
     ToeplitzCuntzThreeVacuumBridge.ToeplitzCuntzThreeGenerators.P2,
     ToeplitzCuntzThreeVacuumBridge.ToeplitzCuntzThreeGenerators.P3,
-    Fin.ext_iff,
+    native_V3_eq_two,
+    CuntzTensorToeplitzThreeBridge.i2,
     NativeToeplitzCuntzThree.generator,
     NativeToeplitzCuntzThree.rangeProjection,
     NativeToeplitzCuntzThree.vacuumDefect, sub_eq_add_neg, star_toeplitzS] using
@@ -54,7 +55,8 @@ theorem braidGenerator2_sq : braidGenerator2 * braidGenerator2 = 1 := by
     ToeplitzCuntzThreeVacuumBridge.ToeplitzCuntzThreeGenerators.P1,
     ToeplitzCuntzThreeVacuumBridge.ToeplitzCuntzThreeGenerators.P2,
     ToeplitzCuntzThreeVacuumBridge.ToeplitzCuntzThreeGenerators.P3,
-    Fin.ext_iff,
+    native_V3_eq_two,
+    CuntzTensorToeplitzThreeBridge.i2,
     NativeToeplitzCuntzThree.generator,
     NativeToeplitzCuntzThree.rangeProjection,
     NativeToeplitzCuntzThree.vacuumDefect, sub_eq_add_neg, star_toeplitzS] using
@@ -71,7 +73,8 @@ theorem artin_braid_relation :
     ToeplitzCuntzThreeVacuumBridge.ToeplitzCuntzThreeGenerators.P1,
     ToeplitzCuntzThreeVacuumBridge.ToeplitzCuntzThreeGenerators.P2,
     ToeplitzCuntzThreeVacuumBridge.ToeplitzCuntzThreeGenerators.P3,
-    Fin.ext_iff,
+    native_V3_eq_two,
+    CuntzTensorToeplitzThreeBridge.i2,
     NativeToeplitzCuntzThree.generator,
     NativeToeplitzCuntzThree.rangeProjection,
     NativeToeplitzCuntzThree.vacuumDefect, sub_eq_add_neg, star_toeplitzS] using
@@ -91,6 +94,8 @@ theorem coxeterElement_eq_cyclicSupercharge_add_defect :
     ToeplitzCuntzThreeVacuumBridge.ToeplitzCuntzThreeGenerators.P1,
     ToeplitzCuntzThreeVacuumBridge.ToeplitzCuntzThreeGenerators.P2,
     ToeplitzCuntzThreeVacuumBridge.ToeplitzCuntzThreeGenerators.P3,
+    native_V3_eq_two,
+    CuntzTensorToeplitzThreeBridge.i2,
     Fin.ext_iff,
     ToeplitzCuntzThreeCyclicSuperchargeBridge.cyclicSupercharge,
     NativeToeplitzCuntzThree.generator,

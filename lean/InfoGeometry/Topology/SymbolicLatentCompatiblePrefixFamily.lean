@@ -29,7 +29,7 @@ noncomputable def compatiblePrefixFamilyToBoundary
 noncomputable def compatiblePrefixFamilyToLimit
     (C : CompatiblePrefixFamily (A := A)) :
     C.pt ⟶ limit (prefixDiagram (A := A)) :=
-  compatiblePrefixFamilyToBoundary C ≫ prefixBoundaryLimitIso.hom
+  prefixLimitLift C ≫ prefixBoundaryLimitIso.hom
 
 theorem compatiblePrefixFamilyToBoundary_stage
     (C : CompatiblePrefixFamily (A := A)) (n : ℕ) :
@@ -45,9 +45,20 @@ theorem compatiblePrefixFamilyToLimit_stage
     C.π.app (Opposite.op n) =
       compatiblePrefixFamilyToLimit C ≫
         limit.π (prefixDiagram (A := A)) (Opposite.op n) := by
-  rw [compatiblePrefixFamilyToLimit, Category.assoc,
-    prefixBoundaryLimitIso_hom_comp]
-  exact compatiblePrefixFamilyToBoundary_stage C n
+  change C.π.app (Opposite.op n) =
+    (prefixLimitLift C ≫ prefixBoundaryLimitIso.hom) ≫
+      limit.π (prefixDiagram (A := A)) (Opposite.op n)
+  calc
+    C.π.app (Opposite.op n) =
+        prefixLimitLift C ≫ prefixCone.π.app (Opposite.op n) :=
+      ((prefixConeIsLimit (A := A)).fac C (Opposite.op n)).symm
+    _ = prefixLimitLift C ≫
+        (prefixBoundaryLimitIso.hom ≫
+          limit.π (prefixDiagram (A := A)) (Opposite.op n)) := by
+      rw [prefixBoundaryLimitIso_hom_comp]
+    _ = (prefixLimitLift C ≫ prefixBoundaryLimitIso.hom) ≫
+        limit.π (prefixDiagram (A := A)) (Opposite.op n) := by
+      rw [← Category.assoc]
 
 theorem compatiblePrefixFamilyToBoundary_unique
     (C : CompatiblePrefixFamily (A := A))

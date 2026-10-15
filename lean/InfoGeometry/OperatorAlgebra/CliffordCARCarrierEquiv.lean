@@ -124,9 +124,10 @@ def carRecursiveGamma : FlatCAR4 →ₗ[ℝ] SpinorMatrix 4 :=
 theorem carRecursiveGamma_sq (v : FlatCAR4) :
     carRecursiveGamma v * carRecursiveGamma v =
       algebraMap ℝ (SpinorMatrix 4) (splitQuadraticForm 4 v) := by
-  rw [carRecursiveGamma, LinearMap.comp_apply, recursiveGamma_sq]
-  simpa only [SplitQuad, Quad] using
-    congrArg (algebraMap ℝ (SpinorMatrix 4)) (flatRecursiveEquiv_quad v)
+  dsimp [carRecursiveGamma]
+  rw [recursiveGamma_sq]
+  change algebraMap ℝ (SpinorMatrix 4) (Quad 4 (flatRecursiveEquiv v)) = _
+  rw [flatRecursiveEquiv_quad]
 
 def carSpinorRepresentation :
     CliffordAlgebra (splitQuadraticForm 4) →ₐ[ℝ] SpinorMatrix 4 :=

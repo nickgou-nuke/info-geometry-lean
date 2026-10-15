@@ -1,5 +1,6 @@
 import Mathlib.Analysis.Calculus.ContDiff.Operations
 import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Analysis.Calculus.Deriv.Add
 import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.Calculus.Deriv.Inv
 import Mathlib.MeasureTheory.Integral.Bochner.Basic
@@ -89,6 +90,8 @@ theorem partial_quotient (f rho : Space → ℝ) (x : Space) (i : Fin 3)
     coordPartial (fun y => f y / rho y) x i =
       (coordPartial f x i * rho x - f x * coordPartial rho x i) / rho x ^ 2 := by
   have hd := (hf x i).hasDerivAt.div (hr x i).hasDerivAt (by simpa using h0)
+  change deriv ((fun s : ℝ => f (x + s • coordinate i)) /
+    (fun s : ℝ => rho (x + s • coordinate i))) 0 = _
   simpa [coordPartial] using hd.deriv
 
 theorem partial_div_const (f : Space → ℝ) (d : ℝ) (x : Space) (i : Fin 3) :
@@ -109,8 +112,9 @@ theorem partial_projection (x : Space) (a b : Fin 3) :
     coordPartial (fun y => y a) x b = if a = b then 1 else 0 := by
   by_cases h : a = b
   · subst b
-    simpa [coordPartial, coordinate] using
-      ((hasDerivAt_id (0 : ℝ)).const_add (x a)).deriv
+    have hd : HasDerivAt (fun s : ℝ => x a + s) 1 0 :=
+      (hasDerivAt_const_add_iff (x a)).2 (hasDerivAt_id (0 : ℝ))
+    simpa [coordPartial, coordinate] using hd.deriv
   · simp [coordPartial, coordinate, h]
 
 /-- The exact weighted-current criterion for incompressibility. -/

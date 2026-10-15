@@ -1,3 +1,6 @@
+import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Analysis.Calculus.Deriv.Mul
+import Mathlib.Analysis.Calculus.Deriv.Pow
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 

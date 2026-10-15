@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.SplitCliffordCurrentLift
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Algebra.Lie.OfAssociative
 
 /-!
 # InfoGeometry.Canonical.SplitCliffordHeisenbergAdapter
@@ -59,6 +60,8 @@ theorem central_commutation_law_holds (X : SplitCliffordInfinity) :
 
 end SplitCliffordCurrentMorphism
 
+attribute [local instance] LieRing.ofAssociativeRing
+
 /-- 
 The zero-central datum already established on `SplitCliffordInfinity` provides
 a trivial, uncalibrated realization of the current morphism.
@@ -71,10 +74,10 @@ noncomputable def trivialSplitCliffordCurrentMorphism :
   Kcentral := 0
   central_commutes := by
     intro X
-    simp
+    exact zero_lie (L := SplitCliffordInfinity) X
   current_bracket := by
     intro m n
-    simp
+    rw [zero_lie (L := SplitCliffordInfinity) (0 : SplitCliffordInfinity), smul_zero]
 
 /-- 
 Compatibility theorem asserting that the split completion supports the current morphism.

@@ -43,6 +43,7 @@ theorem finiteZetaPartition_eq_log_exp_sum (N : ℕ) (β : ℝ) :
       ∑ i : Fin (N + 1),
         Real.exp (-β * Real.log (((i.val + 1 : ℕ) : ℝ))) := by
   simp [partitionZ, gibbsWeight, finiteZetaSpectrum]
+  rfl
 
 theorem finiteZetaPartition_eq_rpow_sum (N : ℕ) (β : ℝ) :
     partitionZ (finiteZetaSpectrum N) (-β) 0 =

@@ -109,7 +109,7 @@ private lemma pom_kappa_gibbs_variational_escort_frontier_partition_pos :
         D.pom_kappa_gibbs_variational_escort_frontier_observable
         D.pom_kappa_gibbs_variational_escort_frontier_q := by
   classical
-  obtain ⟨x₀⟩ := inferInstanceAs (Nonempty D.State)
+  obtain ⟨x₀⟩ := D.pom_kappa_gibbs_variational_escort_frontier_instNonempty
   have hterm_pos :
       0 <
         D.pom_kappa_gibbs_variational_escort_frontier_baseLaw x₀ *

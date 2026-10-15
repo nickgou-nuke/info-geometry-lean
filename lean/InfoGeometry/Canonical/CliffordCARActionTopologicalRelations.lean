@@ -174,17 +174,18 @@ def upperCreationActionNatTrans (m : ℕ) :
     apply TopCat.hom_ext
     apply ContinuousMap.ext
     intro A
-    have h := creationLeftAction_bond_naturality
-      j.1 k.1 (leOfHom f)
-      (Fin.castLE j.2 ⟨m, Nat.lt_succ_self m⟩) A
     have hindex :
         Fin.castLE (leOfHom f)
             (Fin.castLE j.2 ⟨m, Nat.lt_succ_self m⟩) =
           Fin.castLE k.2 ⟨m, Nat.lt_succ_self m⟩ := by
       apply Fin.ext
       rfl
-    simpa [upperCARTopologicalDiagram, bondTopCat, topologicalDiagram,
-      creationActionTopCat, TopCat.ofHom, hindex] using h.symm
+    change creationLeftAction k.1 (Fin.castLE k.2 ⟨m, Nat.lt_succ_self m⟩)
+        (bondCLM j.1 k.1 (leOfHom f) A) =
+      bondCLM j.1 k.1 (leOfHom f)
+        (creationLeftAction j.1 (Fin.castLE j.2 ⟨m, Nat.lt_succ_self m⟩) A)
+    rw [← hindex]
+    exact (creationLeftAction_bond_naturality j.1 k.1 (leOfHom f) (Fin.castLE j.2 ⟨m, Nat.lt_succ_self m⟩) A).symm
 
 def upperAnnihilationActionNatTrans (m : ℕ) :
     upperCARTopologicalDiagram m ⟶ upperCARTopologicalDiagram m where
@@ -195,17 +196,18 @@ def upperAnnihilationActionNatTrans (m : ℕ) :
     apply TopCat.hom_ext
     apply ContinuousMap.ext
     intro A
-    have h := annihilationLeftAction_bond_naturality
-      j.1 k.1 (leOfHom f)
-      (Fin.castLE j.2 ⟨m, Nat.lt_succ_self m⟩) A
     have hindex :
         Fin.castLE (leOfHom f)
             (Fin.castLE j.2 ⟨m, Nat.lt_succ_self m⟩) =
           Fin.castLE k.2 ⟨m, Nat.lt_succ_self m⟩ := by
       apply Fin.ext
       rfl
-    simpa [upperCARTopologicalDiagram, bondTopCat, topologicalDiagram,
-      annihilationActionTopCat, TopCat.ofHom, hindex] using h.symm
+    change annihilationLeftAction k.1 (Fin.castLE k.2 ⟨m, Nat.lt_succ_self m⟩)
+        (bondCLM j.1 k.1 (leOfHom f) A) =
+      bondCLM j.1 k.1 (leOfHom f)
+        (annihilationLeftAction j.1 (Fin.castLE j.2 ⟨m, Nat.lt_succ_self m⟩) A)
+    rw [← hindex]
+    exact (annihilationLeftAction_bond_naturality j.1 k.1 (leOfHom f) (Fin.castLE j.2 ⟨m, Nat.lt_succ_self m⟩) A).symm
 
 abbrev upperCARTopologicalColimit (m : ℕ) : TopCat :=
   topologicalDirectColimit (upperCARTopologicalDiagram m)
@@ -240,9 +242,8 @@ theorem upperCreationActionColimit_stage_apply
       upperCARTopologicalInjection m j
         (jwCreation j.1 (Fin.castLE j.2 ⟨m, Nat.lt_succ_self m⟩) * A) := by
   have h := upperCreationActionColimit_stage m j
-  have hv := congrArg (fun f => f A) h
-  simpa [upperCreationActionColimit, upperCARTopologicalInjection,
-    upperCreationActionNatTrans, creationActionTopCat, TopCat.ofHom] using hv
+  have hv := congrFun (congrArg ContinuousMap.toFun (congrArg TopCat.Hom.hom h)) A
+  exact hv
 
 theorem upperAnnihilationActionColimit_stage_apply
     (m : ℕ) (j : UpperNatIndex m) (A : TStage j.1) :
@@ -250,9 +251,8 @@ theorem upperAnnihilationActionColimit_stage_apply
       upperCARTopologicalInjection m j
         (jwAnnihilation j.1 (Fin.castLE j.2 ⟨m, Nat.lt_succ_self m⟩) * A) := by
   have h := upperAnnihilationActionColimit_stage m j
-  have hv := congrArg (fun f => f A) h
-  simpa [upperAnnihilationActionColimit, upperCARTopologicalInjection,
-    upperAnnihilationActionNatTrans, annihilationActionTopCat, TopCat.ofHom] using hv
+  have hv := congrFun (congrArg ContinuousMap.toFun (congrArg TopCat.Hom.hom h)) A
+  exact hv
 
 /-! ## Continuous-linear cross-site CAR identities -/
 
@@ -262,7 +262,7 @@ theorem creation_creation_cross_site_action_anticommute
         (creationLeftAction n j).comp (creationLeftAction n i) = 0 := by
   apply ContinuousLinearMap.ext
   intro A
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.comp_apply]
+  simp only [add_apply, ContinuousLinearMap.comp_apply]
   change jwCreation n i * (jwCreation n j * A) +
       jwCreation n j * (jwCreation n i * A) = 0
   rw [← mul_assoc, ← mul_assoc, ← add_mul,
@@ -274,7 +274,7 @@ theorem annihilation_annihilation_cross_site_action_anticommute
         (annihilationLeftAction n j).comp (annihilationLeftAction n i) = 0 := by
   apply ContinuousLinearMap.ext
   intro A
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.comp_apply]
+  simp only [add_apply, ContinuousLinearMap.comp_apply]
   change jwAnnihilation n i * (jwAnnihilation n j * A) +
       jwAnnihilation n j * (jwAnnihilation n i * A) = 0
   rw [← mul_assoc, ← mul_assoc, ← add_mul,
@@ -286,7 +286,7 @@ theorem creation_annihilation_cross_site_action_anticommute
         (annihilationLeftAction n j).comp (creationLeftAction n i) = 0 := by
   apply ContinuousLinearMap.ext
   intro A
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.comp_apply]
+  simp only [add_apply, ContinuousLinearMap.comp_apply]
   change jwCreation n i * (jwAnnihilation n j * A) +
       jwAnnihilation n j * (jwCreation n i * A) = 0
   rw [← mul_assoc, ← mul_assoc, ← add_mul,
@@ -298,7 +298,7 @@ theorem annihilation_creation_cross_site_action_anticommute
         (creationLeftAction n j).comp (annihilationLeftAction n i) = 0 := by
   apply ContinuousLinearMap.ext
   intro A
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.comp_apply]
+  simp only [add_apply, ContinuousLinearMap.comp_apply]
   change jwAnnihilation n i * (jwCreation n j * A) +
       jwCreation n j * (jwAnnihilation n i * A) = 0
   rw [← mul_assoc, ← mul_assoc, ← add_mul,
@@ -320,7 +320,7 @@ structure CrossSiteCARActionProfile (n : ℕ) where
     (annihilationLeftAction n i).comp (creationLeftAction n j) +
         (creationLeftAction n j).comp (annihilationLeftAction n i) = 0
 
-def crossSiteCARActionProfile (n : ℕ) : CrossSiteCARActionProfile n where
+theorem crossSiteCARActionProfile (n : ℕ) : CrossSiteCARActionProfile n where
   creation_creation := creation_creation_cross_site_action_anticommute n
   annihilation_annihilation := annihilation_annihilation_cross_site_action_anticommute n
   creation_annihilation := creation_annihilation_cross_site_action_anticommute n

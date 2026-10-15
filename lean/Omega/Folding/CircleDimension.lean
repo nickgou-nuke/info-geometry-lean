@@ -1,6 +1,6 @@
 import Mathlib.Algebra.Group.Subgroup.Basic
 import Mathlib.Data.Fintype.Card
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
 import Omega.Core.Fib
@@ -207,7 +207,7 @@ theorem semiring_hom_rigidity (r d : Nat) (f : (Fin r → ℕ) →+* (Fin d → 
     -- Sum of {0,1}-valued things equals 1 → exactly one is 1
     have hex : ∃ i : Fin r, f (e r i) j = 1 := by
       by_contra hall
-      push_neg at hall
+      push Not at hall
       have : ∀ i : Fin r, f (e r i) j = 0 := by
         intro i; rcases hidm i j with h | h
         · exact h
@@ -227,8 +227,8 @@ theorem semiring_hom_rigidity (r d : Nat) (f : (Fin r → ℕ) →+* (Fin d → 
   have heval : ∀ i : Fin r, f (e r i) j = if i = σ j then 1 else 0 := by
     intro i
     by_cases hi : i = σ j
-    · rw [if_pos hi, hi]; exact hσ j
-    · rw [if_neg hi]
+    · simp [hi, hσ j]
+    · simp [hi]
       rcases hidm i j with h | h
       · exact h
       · exact absurd (huniq j i h) hi

@@ -10,7 +10,13 @@ inductive Archetype
   | spectralReadout
   | cornerDecomposition
   | nilpotentCorners
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype Archetype :=
+  Fintype.ofList [.primitivePhase, .polygonBalance, .coordinateProjectors,
+    .spectralReadout, .cornerDecomposition, .nilpotentCorners] (by
+      intro x
+      cases x <;> simp)
 
 def prerequisites : Archetype → Finset ℕ
   | .primitivePhase => {0}

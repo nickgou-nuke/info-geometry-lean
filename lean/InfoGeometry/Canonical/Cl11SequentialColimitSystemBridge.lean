@@ -18,7 +18,7 @@ open InfoGeometry.Canonical.InductiveColimitBridge
 open InfoGeometry.Clifford.Cl11TensorTower
 open InfoGeometry.Clifford.Cl11TensorTowerLimit
 
-def cl11System : SequentialColimitSystem where
+abbrev cl11System : SequentialColimitSystem where
   Stage := fun n => InfoGeometry.Clifford.Cl11TensorTowerLimit.Stage n
   Limit := InfoGeometry.Clifford.Cl11TensorTowerLimit.Limit
   bond := fun n => InfoGeometry.Clifford.Cl11TensorTower.stageEmbed n

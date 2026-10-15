@@ -868,9 +868,10 @@ theorem pullbackLineCochain_mobiusCP1ProjectionHom_eq_self_of_fixed_projected_cp
     (h₃ : (M.actCP1 p₃).toRiemannSphere = p₃.toRiemannSphere)
     {C : Type*} (c : IncidenceGeometry.Hom.LineCochain cp1ProjectionIncidence C) :
     (mobiusCP1ProjectionHom M).pullbackLineCochain c = c := by
-  funext z
-  simp [IncidenceGeometry.Hom.pullbackLineCochain,
-    mobius_identity_of_fixed_projected_cp1_triple M p₁ p₂ p₃ h12 h23 h13 h₁ h₂ h₃ z]
+  change c ∘ (mobiusCP1ProjectionHom M).lineMap = c
+  rw [mobiusCP1ProjectionHom_lineMap_eq_id_of_fixed_projected_cp1_triple
+    M p₁ p₂ p₃ h12 h23 h13 h₁ h₂ h₃]
+  rfl
 
 /-- Line cochains on doubled projected incidence are unchanged by pullback when
 three projected `CP¹` points force the underlying Möbius line action to be the
@@ -885,10 +886,10 @@ theorem pullbackLineCochain_mobiusDoubledCP1ProjectionHom_eq_self_of_fixed_proje
     (h₃ : (M.actCP1 p₃).toRiemannSphere = p₃.toRiemannSphere)
     {C : Type*} (c : IncidenceGeometry.Hom.LineCochain doubledCP1ProjectionIncidence C) :
     (mobiusDoubledCP1ProjectionHom M).pullbackLineCochain c = c := by
-  funext z
-  simp [IncidenceGeometry.Hom.pullbackLineCochain,
-    mobius_identity_of_fixed_projected_cp1_triple M p₁ p₂ p₃ h12 h23 h13 h₁ h₂ h₃ z.1,
-    mobius_identity_of_fixed_projected_cp1_triple M p₁ p₂ p₃ h12 h23 h13 h₁ h₂ h₃ z.2]
+  change c ∘ (mobiusDoubledCP1ProjectionHom M).lineMap = c
+  rw [mobiusDoubledCP1ProjectionHom_lineMap_eq_id_of_fixed_projected_cp1_triple
+    M p₁ p₂ p₃ h12 h23 h13 h₁ h₂ h₃]
+  rfl
 
 /-- Line cochains on tripled projected incidence are unchanged by pullback when
 three projected `CP¹` points force the underlying Möbius line action to be the
@@ -903,11 +904,10 @@ theorem pullbackLineCochain_mobiusTripledCP1ProjectionHom_eq_self_of_fixed_proje
     (h₃ : (M.actCP1 p₃).toRiemannSphere = p₃.toRiemannSphere)
     {C : Type*} (c : IncidenceGeometry.Hom.LineCochain tripledCP1ProjectionIncidence C) :
     (mobiusTripledCP1ProjectionHom M).pullbackLineCochain c = c := by
-  funext z
-  simp [IncidenceGeometry.Hom.pullbackLineCochain,
-    mobius_identity_of_fixed_projected_cp1_triple M p₁ p₂ p₃ h12 h23 h13 h₁ h₂ h₃ z.1,
-    mobius_identity_of_fixed_projected_cp1_triple M p₁ p₂ p₃ h12 h23 h13 h₁ h₂ h₃ z.2.1,
-    mobius_identity_of_fixed_projected_cp1_triple M p₁ p₂ p₃ h12 h23 h13 h₁ h₂ h₃ z.2.2]
+  change c ∘ (mobiusTripledCP1ProjectionHom M).lineMap = c
+  rw [mobiusTripledCP1ProjectionHom_lineMap_eq_id_of_fixed_projected_cp1_triple
+    M p₁ p₂ p₃ h12 h23 h13 h₁ h₂ h₃]
+  rfl
 
 /-! ## Left/right Cartan--Peirce projector glue -/
 

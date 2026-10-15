@@ -86,7 +86,7 @@ theorem d4WeylGroup_preserves_d4Root
       exact simpleReflectionEquiv_preserves_d4Root i (hhb y hy))
     (fun a ha b hb hhb y hy => by
       rcases ha with ⟨i, rfl⟩
-      simpa [simpleReflectionEquiv_square] using
+      simpa [simpleReflectionEquiv, simpleReflectionEquiv_square] using
         (simpleReflectionEquiv_preserves_d4Root i (hhb y hy)))
     w.property
   exact hw x hx

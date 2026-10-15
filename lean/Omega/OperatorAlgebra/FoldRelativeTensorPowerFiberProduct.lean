@@ -58,7 +58,8 @@ lemma foldRelativeTensorPowerToFiberProduct_bijective (fold : Ω → X) (q : ℕ
       funext i
       apply Subtype.ext
       exact congrArg (fun f => f i) hfun
-    simpa [ht]
+    subst t'
+    rfl
   · intro ω
     refine ⟨⟨fold (ω.1 i0), fun i => ⟨ω.1 i, ω.2 i i0⟩⟩, ?_⟩
     apply Subtype.ext

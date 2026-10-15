@@ -176,11 +176,13 @@ theorem paper_xi_scan_profile_lp_peak_witness (κ : ℕ)
     exact
       (xi_scan_profile_lp_peak_witness_l2_le_mass_mul_peak_ratio D).trans
         (mul_le_mul_of_nonneg_left hpeak_ratio hmass_nonneg)
+  have hl1 : 0 < xi_scan_profile_lp_peak_witness_l1_identity D := D.totalMass_pos
   have hpeak :
       xi_scan_profile_lp_peak_witness_l2_diagonal_lower D /
           xi_scan_profile_lp_peak_witness_l1_identity D ≤
         xi_scan_profile_lp_peak_witness_profile D (D.gamma D.peakIndex) := by
-    exact (_root_.div_le_iff₀ D.totalMass_pos).2 (by simpa [mul_comm] using hpeak_mul)
+    rw [div_le_iff₀ hl1, mul_comm]
+    exact hpeak_mul
   exact ⟨hprofile_nonneg, D.totalMass_pos, hl2_nonneg, hpeak⟩
 
 end

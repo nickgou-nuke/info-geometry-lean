@@ -53,7 +53,7 @@ def readoutLinear (B : BoundaryPair55) : End55 →ₗ[ℝ] ℝ where
   toFun := B.readout
   map_add' := B.readout_add
   map_smul' c A := by
-    simpa only [smul_eq_mul] using B.readout_smul c A
+    simpa only [smul_eq_mul, RingHom.id_apply] using B.readout_smul c A
 
 def idempotent (B : BoundaryPair55) : End55 where
   toFun x := (B.bra x / B.overlap) • B.ket

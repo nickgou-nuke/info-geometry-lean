@@ -58,11 +58,10 @@ theorem positive_bosonic_primon_partition_pos (β : ℝ) (hβ : 1 < β) :
   have hsum := summable_positive_bosonic_primon_partition β hβ
   have hnonneg : ∀ n : ℕ+, 0 ≤ (n.1 : ℝ) ^ (-β) := fun n =>
     Real.rpow_nonneg (Nat.cast_nonneg n.1) (-β)
-  have hle : ((1 : ℕ+).1 : ℝ) ^ (-β) ≤ ∑' (n : ℕ+), (n.1 : ℝ) ^ (-β) :=
-    le_hasSum hsum.hasSum 1 (fun n _ => hnonneg n)
-  have h1 : ((1 : ℕ+).1 : ℝ) ^ (-β) = 1 := by simp
-  rw [h1] at hle
-  exact lt_of_lt_of_le zero_lt_one hle
+  let n₁ : ℕ+ := ⟨1, by omega⟩
+  have h1 : (n₁.1 : ℝ) ^ (-β) = 1 := by
+    simp [n₁, Real.one_rpow]
+  exact hsum.tsum_pos hnonneg n₁ (by rw [h1]; norm_num)
 
 /-- 2. Strict positivity of the partition sum $Z(\beta) > 0$ for $\beta > 1$. -/
 theorem bosonic_partition_sum_pos (β : ℝ) (hβ : 1 < β) :

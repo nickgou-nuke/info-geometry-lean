@@ -1,6 +1,6 @@
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
-import InfoGeometry.Canonical.NativeMathlibAmplituhedronBridge
+import InfoGeometry.Algebra.GrassmannianCartanTower
 import Mathlib.Tactic.NoncommRing
 
 noncomputable section
@@ -8,7 +8,7 @@ noncomputable section
 namespace InfoGeometry.Canonical.CovectorContractionBladeBridge
 
 open ExteriorAlgebra
-open InfoGeometry.Canonical.NativeMathlibAmplituhedronBridge
+open InfoGeometry.GrassmannianTower
 
 variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V]
 
@@ -50,7 +50,7 @@ theorem contracted_five_blade_nilpotent
   intro K4
   have hK4 : K4 = blade4 w1 w2 w3 w4 := contraction_of_adapted_five_frame lambda u w1 w2 w3 w4 hu hw1 hw2 hw3 hw4
   rw [hK4]
-  exact native_decomposable_exterior_blade_square_zero (R := R) 3 ![w1, w2, w3, w4]
+  exact decomposable_exterior_blade_square_zero (R := R) 3 ![w1, w2, w3, w4]
 
 /-!
 The contraction formula and the square-zero consequence are exposed as

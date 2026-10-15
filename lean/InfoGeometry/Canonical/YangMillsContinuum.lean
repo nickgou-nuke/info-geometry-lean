@@ -119,20 +119,24 @@ Infinitesimal generator identity at the origin:
 theorem hasDerivAt_modularShift_zero_eq_commutator
     (K A : EndH E) :
     HasDerivAt (fun τ : ℝ => modularShift (E := E) K τ A) (commutator K A) 0 := by
+  let f : ℝ → EndH E := fun τ => NormedSpace.exp (τ • K) * A
+  let g : ℝ → EndH E := fun τ => NormedSpace.exp ((-τ) • K)
   have hExpL : HasDerivAt (fun τ : ℝ => NormedSpace.exp (τ • K)) K 0 := by
     simpa using (hasDerivAt_exp_smul_const (x := K) (t := (0 : ℝ)))
-  have hExpR : HasDerivAt (fun τ : ℝ => NormedSpace.exp ((-τ) • K)) (-K) 0 := by
-    simpa [neg_smul] using (hasDerivAt_exp_smul_const (x := -K) (t := (0 : ℝ)))
-  have hProd :
-      HasDerivAt
-        (fun τ : ℝ =>
-          (NormedSpace.exp (τ • K) * A) * NormedSpace.exp ((-τ) • K))
-        (((K * A) * NormedSpace.exp ((-(0 : ℝ)) • K)) +
-          ((NormedSpace.exp (0 • K) * A) * (-K)))
-        0 := by
-    simpa [mul_assoc] using (hExpL.mul_const A).mul hExpR
-  simpa [commutator, modularShift, InfoGeometry.Krein.modular_shift,
-    InfoGeometry.Krein.krein_modular_shift, sub_eq_add_neg, mul_assoc] using hProd
+  have hExpR : HasDerivAt g (-K) 0 := by
+    simpa [g, neg_smul] using (hasDerivAt_exp_smul_const (x := -K) (t := (0 : ℝ)))
+  have hf : HasDerivAt f (K * A) 0 := by
+    simpa [f] using hExpL.mul_const A
+  have hfg : HasDerivAt (fun τ => f τ * g τ)
+      (((K * A) * g 0) + f 0 * (-K)) 0 :=
+    hf.mul hExpR
+  have hmain : HasDerivAt (fun τ => modularShift (E := E) K τ A)
+      (((K * A) * g 0) + f 0 * (-K)) 0 := by
+    simpa only [f, g, modularShift, InfoGeometry.Krein.modular_shift,
+      InfoGeometry.Krein.krein_modular_shift] using hfg
+  have hderiv : (((K * A) * g 0) + f 0 * (-K)) = commutator K A := by
+    simp [f, g, commutator, sub_eq_add_neg]
+  exact hderiv ▸ hmain
 
 /-- Scalar derivative corollary of `hasDerivAt_modularShift_zero_eq_commutator`. -/
 theorem deriv_modularShift_zero_eq_commutator

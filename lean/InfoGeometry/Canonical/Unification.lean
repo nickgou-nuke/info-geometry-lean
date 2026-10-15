@@ -246,9 +246,8 @@ theorem latticeAvatar_canonicalContinuousCl11Anomaly
   have hCont :
       (Cl11Shadow.canonicalCl11TopologicalShadow (E := FinModel (N := n))).modularAnomalyGenerator U =
         canonicalContinuousCl11Anomaly (n := n) U := by
-    simpa [canonicalContinuousCl11Anomaly] using
-      (Cl11Shadow.modularAnomalyGenerator_eq_canonicalCl11_commutator_shadow
-        (E := FinModel (N := n)) (U := U))
+    exact Cl11Shadow.modularAnomalyGenerator_eq_canonicalCl11_commutator_shadow
+      (E := FinModel (N := n)) (U := U)
   rw [← hCont]
   simpa [canonicalLatticeCl11Anomaly] using
     (latticeAvatar_canonicalCl11_modularAnomalyGenerator (N := n) U)

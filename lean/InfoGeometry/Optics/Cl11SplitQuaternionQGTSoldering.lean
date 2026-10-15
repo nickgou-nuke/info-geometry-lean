@@ -68,7 +68,7 @@ theorem cl11SplitQuaternionMatrix_injective :
   have h10 := congrFun (congrFun h (1 : Fin 2)) (0 : Fin 2)
   have h11 := congrFun (congrFun h (1 : Fin 2)) (1 : Fin 2)
   simp [cl11SplitQuaternionMatrix, splitQ_eq_matrix] at h00 h01 h10 h11
-  ext <;> dsimp <;> linarith
+  ext <;> linarith
 
 /-- Matrix adjugation on the split-quaternion packet. -/
 def splitQuaternionMatrixConjugate

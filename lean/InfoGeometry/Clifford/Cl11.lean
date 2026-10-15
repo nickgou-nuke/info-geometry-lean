@@ -53,7 +53,9 @@ lemma modularJ_spectralEpsilon_anticommute :
 lemma complexI_sq :
     (complexI (E := E)).comp (complexI (E := E)) =
       -(ContinuousLinearMap.id ℝ (DoubledSpace E)) := by
-  simpa [complexI] using (InfoGeometry.Krein.complex_i_sq (E := E))
+  simpa [complexI, modularJ, spectralEpsilon,
+    InfoGeometry.Krein.complex_i] using
+    (InfoGeometry.Krein.complex_i_sq (E := E))
 
 theorem modularJ_spectralEpsilon_hasCl11Relations :
     Cl11Relations (modularJ (E := E)) (spectralEpsilon (E := E)) := by

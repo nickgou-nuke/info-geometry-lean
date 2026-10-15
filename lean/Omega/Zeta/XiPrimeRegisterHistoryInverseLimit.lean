@@ -99,7 +99,8 @@ def xiPrimeRegisterToStream {X : Type*} (F : XiPrimeRegisterCompatibleFamily X) 
   funext k
   apply Prod.ext
   · have h0 := congrArg Prod.fst (F.2 (Nat.zero_le k))
-    simpa [xiPrimeRegisterTruncate] using h0.symm
+    change (F.1 0).1 = (F.1 k).1
+    exact h0.symm
   · funext i
     have hi : i.1 + 1 ≤ k := Nat.succ_le_of_lt i.2
     have hcomp := congrArg Prod.snd (F.2 hi)

@@ -33,6 +33,11 @@ open InfoGeometry.Arithmetic.PrimeCyclotomicDirectedTower
 
 abbrev KInf : Type := CyclotomicField 30030 ℚ
 
+noncomputable instance : IsCyclotomicExtension {30030} ℚ KInf := by
+  letI : NeZero (30030 : ℕ) := ⟨by decide⟩
+  letI : NeZero (30030 : ℚ) := ⟨by norm_num⟩
+  exact CyclotomicField.isCyclotomicExtension 30030 ℚ
+
 /-- Chosen primitive terminal root. -/
 def zetaInf : KInf := IsCyclotomicExtension.zeta 30030 ℚ KInf
 

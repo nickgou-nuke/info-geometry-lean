@@ -1,5 +1,6 @@
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Algebra.RingQuot
 import Mathlib.LinearAlgebra.TensorAlgebra.Basic
 
 /-!
@@ -53,9 +54,13 @@ def S (i : ι) : CTAlg R ι := mk (R := R) (S₀ (R := R) i)
 def T (i : ι) : CTAlg R ι := mk (R := R) (T₀ (R := R) i)
 
 theorem T_mul_S (i j : ι) : T (R := R) i * S (R := R) j = if i = j then 1 else 0 := by
-  change mk (R := R) (T₀ (R := R) i) * mk (R := R) (S₀ (R := R) j) = _
+  change RingQuot.mkAlgHom R (@Rel R ι _ _) (T₀ (R := R) i) *
+    RingQuot.mkAlgHom R (@Rel R ι _ _) (S₀ (R := R) j) = _
   rw [← map_mul]
-  simpa using RingQuot.mkAlgHom_rel R (Rel.ortho (R := R) i j)
+  rw [RingQuot.mkAlgHom_rel R (Rel.ortho (R := R) i j)]
+  change RingQuot.mkAlgHom R (@Rel R ι _ _)
+      (if i = j then 1 else 0) = (if i = j then 1 else 0)
+  split_ifs <;> simp
 
 section Lift
 

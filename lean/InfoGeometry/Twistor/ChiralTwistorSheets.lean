@@ -32,7 +32,7 @@ noncomputable def penroseTwistor4CarrierEquiv :
       fun i => z ⟨i.val + 2, by omega⟩)
   left_inv := by
     intro p
-    apply Prod.ext <;> funext i <;> simp
+    apply Prod.ext <;> funext i <;> fin_cases i <;> rfl
   right_inv := by
     intro z
     funext i
@@ -40,11 +40,11 @@ noncomputable def penroseTwistor4CarrierEquiv :
   map_add' := by
     intro p q
     funext i
-    by_cases h : i.val < 2 <;> simp [h]
+    fin_cases i <;> rfl
   map_smul' := by
     intro c p
     funext i
-    by_cases h : i.val < 2 <;> simp [h]
+    fin_cases i <;> rfl
 
 @[simp] theorem penroseTwistor4CarrierEquiv_apply (p : PenroseIncidence.Twistor4) :
     penroseTwistor4CarrierEquiv p = fun i =>

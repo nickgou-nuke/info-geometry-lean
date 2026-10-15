@@ -68,7 +68,8 @@ theorem paper_xi_defect_entropy_feasible_interval_flux_index {κ : ℕ}
         (g := fun j => mass j * (1 + depth j))
         (fun j => div_nonneg (hmass_nonneg j) (by linarith [hdepth j]))
         (fun j => mul_nonneg (hmass_nonneg j) (by linarith [hdepth j]))
-    simpa [hκdef, hAdef, hBdef, hterm] using h
+    simpa [hκdef, hAdef, hBdef, hterm,
+      xi_defect_entropy_feasible_interval_flux_index_index] using h
   have hB_eq : B = κind + Φ := by
     rw [hBdef, hκdef, hΦdef]
     calc
@@ -143,12 +144,12 @@ theorem paper_xi_defect_entropy_feasible_interval_flux_index {κ : ℕ}
         _ = (∑ j, mass j * depth j) / (1 + Φ) := by
           rw [Finset.sum_div]
         _ = Φ / (1 + Φ) := by
-          simpa [hΦdef, xi_defect_entropy_feasible_interval_flux_index_flux]
+          simp [hΦdef, xi_defect_entropy_feasible_interval_flux_index_flux]
     calc
       Φ / (1 + Φ) = ∑ j, mass j * (depth j / (1 + Φ)) := hrewrite.symm
       _ ≤ ∑ j, mass j * (depth j / (1 + depth j)) := hsum
       _ = S := by
-            simpa [hSdef, xi_defect_entropy_feasible_interval_flux_index_entropy]
+            simp [hSdef, xi_defect_entropy_feasible_interval_flux_index_entropy]
   have hupper : S ≤ κind * Φ / (κind + Φ) := by
     rw [hS_eq]
     have haux : κind - A ≤ κind - κind ^ 2 / (κind + Φ) := by

@@ -1,6 +1,8 @@
 import Mathlib.Data.Finsupp.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.CategoryTheory.Monoidal.Braided.Basic
+import Mathlib.LinearAlgebra.Matrix.Kronecker
+import Mathlib.Data.Matrix.Block
 import InfoGeometry.Categorical.FibonacciFusionCategoryData
 import InfoGeometry.Categorical.MTC_PentagonTriangle
 import InfoGeometry.Categorical.FibonacciHomSpace
@@ -205,11 +207,49 @@ noncomputable def fibTensorHom {X₁ X₂ Y₁ Y₂ : FibCat} (f : FibHom X₁ X
     (blockDiag3 (kron f.unit_comp g.tau_comp) (kron f.tau_comp g.unit_comp) (kron f.tau_comp g.tau_comp))
 
 @[simp]
+lemma reindex_one_self {m n : Type} [DecidableEq m] [DecidableEq n] (e : m ≃ n) :
+    Matrix.reindex e e (1 : Matrix m m ℂ) = 1 := by
+  ext i j
+  rw [Matrix.reindex_apply, Matrix.submatrix_apply, Matrix.one_apply, Matrix.one_apply]
+  simp
+
+@[simp]
+lemma reindex_cast_cast_one {m n : Type} [DecidableEq m] [DecidableEq n] (h₁ h₂ : m = n) :
+    Matrix.reindex (Equiv.cast h₁) (Equiv.cast h₂) (1 : Matrix m m ℂ) = 1 := by
+  have : Equiv.cast h₁ = Equiv.cast h₂ := by congr 1
+  rw [this]
+  exact reindex_one_self (Equiv.cast h₂)
+
+@[simp]
+theorem kron_one {m n : ℕ} : kron (1 : Matrix (Fin m) (Fin m) ℂ) (1 : Matrix (Fin n) (Fin n) ℂ) = 1 := by
+  unfold kron Matrix.kronecker
+  rw [Matrix.one_kronecker_one]
+  exact reindex_one_self finProdFinEquiv
+
+@[simp]
+theorem blockDiag2_one {m n : ℕ} : blockDiag2 (1 : Matrix (Fin m) (Fin m) ℂ) (1 : Matrix (Fin n) (Fin n) ℂ) = 1 := by
+  unfold blockDiag2
+  rw [Matrix.fromBlocks_one]
+  exact reindex_one_self finSumFinEquiv
+
+@[simp]
+theorem blockDiag3_one {m n p : ℕ} : blockDiag3 (1 : Matrix (Fin m) (Fin m) ℂ) (1 : Matrix (Fin n) (Fin n) ℂ) (1 : Matrix (Fin p) (Fin p) ℂ) = 1 := by
+  unfold blockDiag3
+  rw [blockDiag2_one, blockDiag2_one]
+
+@[simp]
 theorem fibTensorHom_id (X Y : FibCat) :
     fibTensorHom (FibHom.id X) (FibHom.id Y) =
       FibHom.id (fibTensorObj X Y) := by
-  ext <;>
-    simp [fibTensorHom, FibHom.id, fibTensorObj, blockDiag2, blockDiag3, kron]
+  have h_unit : (fibTensorHom (FibHom.id X) (FibHom.id Y)).unit_comp =
+      (FibHom.id (fibTensorObj X Y)).unit_comp := by
+    simp [fibTensorHom, FibHom.id, fibTensorObj]
+    exact reindex_cast_cast_one _ _
+  have h_tau : (fibTensorHom (FibHom.id X) (FibHom.id Y)).tau_comp =
+      (FibHom.id (fibTensorObj X Y)).tau_comp := by
+    simp [fibTensorHom, FibHom.id, fibTensorObj]
+    exact reindex_cast_cast_one _ _
+  exact FibHom.ext h_unit h_tau
 
 @[simp]
 theorem fibTensorHom_comp

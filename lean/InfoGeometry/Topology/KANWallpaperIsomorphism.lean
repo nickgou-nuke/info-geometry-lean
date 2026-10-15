@@ -39,15 +39,15 @@ The glide reflection operator `G` as a 3x3 projective matrix.
 It combines the parity flip `y ↦ -y` with a half-translation `x ↦ x + 1/2`.
 -/
 def G : ProjMatrix :=
-  ![![1,  0, 1/2],
-    ![0, -1,  0],
-    ![0,  0,  1]]
+  !![1,  0, 1/2;
+     0, -1,  0;
+     0,  0,  1]
 
 /-- The unit translation operator `T_x`, sending `x ↦ x + 1`. -/
 def T_x : ProjMatrix :=
-  ![![1, 0, 1],
-    ![0, 1, 0],
-    ![0, 0, 1]]
+  !![1, 0, 1;
+     0, 1, 0;
+     0, 0, 1]
 
 /--
 The square of the glide reflection is the unit `x` translation.
@@ -56,9 +56,10 @@ This is a finite projective-matrix identity.
 -/
 theorem glide_squared_is_translation : G * G = T_x := by
   ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [G, T_x, Matrix.mul_apply, Fin.sum_univ_three]
-  norm_num
+  fin_cases i <;> fin_cases j <;> {
+    simp [Matrix.mul_apply, Fin.sum_univ_three, G, T_x]
+    try norm_num
+  }
 
 /-- The nilpotent generator of the translation in this finite model, `n = T_x - I`. -/
 def n : ProjMatrix := T_x - 1
@@ -71,7 +72,7 @@ This is the finite nilpotent `N`-factor shadow used by downstream bridges.
 theorem translation_is_nilpotent_horizon : n * n = 0 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [n, T_x, Matrix.mul_apply, Fin.sum_univ_three]
+    simp [Matrix.mul_apply, Fin.sum_univ_three, n, T_x, Matrix.one_apply, Matrix.sub_apply]
 
 end InfoGeometry.Topology.KANWallpaper
 

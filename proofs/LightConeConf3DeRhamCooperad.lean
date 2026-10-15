@@ -27,13 +27,25 @@ inductive Edge3 where
   | e12
   | e13
   | e23
-  deriving DecidableEq, Fintype, Repr
+  deriving DecidableEq, Repr
+
+instance : Fintype Edge3 where
+  elems := {Edge3.e12, Edge3.e13, Edge3.e23}
+  complete := by
+    intro e
+    cases e <;> simp
 
 /-- A two-slot cooperad target for the cluster split `{1,2}|{3}`. -/
 inductive ClusterSlot where
   | inner
   | outer
-  deriving DecidableEq, Fintype, Repr
+  deriving DecidableEq, Repr
+
+instance : Fintype ClusterSlot where
+  elems := {ClusterSlot.inner, ClusterSlot.outer}
+  complete := by
+    intro s
+    cases s <;> simp
 
 /-- Edge-collapse bookkeeping for the cooperad split `{1,2}|{3}`. -/
 def collapse12 : Edge3 → ClusterSlot

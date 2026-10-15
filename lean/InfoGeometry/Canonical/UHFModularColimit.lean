@@ -60,7 +60,7 @@ def inductiveInclusion (A : Mat ι) : Mat (ι × κ) :=
 theorem inductiveInclusion_one :
     inductiveInclusion (1 : Mat ι) = (1 : Mat (ι × κ)) := by
   ext ⟨i, j⟩ ⟨k, l⟩
-  dsimp [inductiveInclusion, kronecker, one_apply]
+  dsimp [inductiveInclusion, kronecker, Matrix.one_apply]
   by_cases h : (i, j) = (k, l)
   · have hi : i = k := congr_arg Prod.fst h
     have hj : j = l := congr_arg Prod.snd h
@@ -74,7 +74,7 @@ theorem inductiveInclusion_one :
 theorem kronecker_mul (A₁ A₂ : Mat ι) (B₁ B₂ : Mat κ) :
     kronecker (A₁ * A₂) (B₁ * B₂) = kronecker A₁ B₁ * kronecker A₂ B₂ := by
   ext ⟨i, j⟩ ⟨k, l⟩
-  dsimp [kronecker, mul_apply]
+  dsimp [kronecker, Matrix.mul_apply]
   rw [Fintype.sum_prod_type]
   have h_split : (∑ x : ι, ∑ y : κ, (A₁ i x * B₁ j y) * (A₂ x k * B₂ y l)) =
                  (∑ x : ι, A₁ i x * A₂ x k) * (∑ y : κ, B₁ j y * B₂ y l) := by

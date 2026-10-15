@@ -16,9 +16,16 @@ inductive Archetype
   | freeEnergyCalculus
   | shiftHessian
   | susceptibilityBound
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
 
 open Archetype
+
+instance : Fintype Archetype where
+  elems := {varianceDecomposition, dispersion, stateEnvelope, quadraticPeak,
+    universalBound, freeEnergyCalculus, shiftHessian, susceptibilityBound}
+  complete := by
+    intro archetype
+    cases archetype <;> simp
 
 def prerequisites : Archetype → Finset Archetype
   | varianceDecomposition => {varianceDecomposition}
@@ -145,9 +152,8 @@ theorem hasDerivAt_shiftedFreeEnergy
   have line_derivative (line : Line) :
       HasDerivAt (fun offset => lineFreeEnergy (energies line + offset) cutoff temperature)
         (lineWeight (energies line + shift) cutoff temperature) shift := by
-    simpa using
-      (hasDerivAt_lineFreeEnergy (energies line + shift) cutoff temperature temperature_pos).comp
-        shift ((hasDerivAt_id shift).const_add (energies line))
+    exact HasDerivAt.comp_const_add (energies line) shift
+      (hasDerivAt_lineFreeEnergy (energies line + shift) cutoff temperature temperature_pos)
   exact HasDerivAt.fun_sum (fun line _ => line_derivative line)
 
 omit [DecidableEq Line] in
@@ -166,12 +172,17 @@ theorem hasDerivAt_shiftedActiveSupport
       shift := by
   have line_derivative (line : Line) :
       HasDerivAt (fun offset => lineWeight (energies line + offset) cutoff temperature)
-        (-lineWeight (energies line + shift) cutoff temperature *
+      (-lineWeight (energies line + shift) cutoff temperature *
           (1 - lineWeight (energies line + shift) cutoff temperature) / temperature) shift := by
-    simpa using (hasDerivAt_lineWeight (energies line + shift) cutoff temperature).comp
-      shift ((hasDerivAt_id shift).const_add (energies line))
+    exact HasDerivAt.comp_const_add (energies line) shift
+      (hasDerivAt_lineWeight (energies line + shift) cutoff temperature)
+  change HasDerivAt (fun offset =>
+    ∑ line, lineWeight (energies line + offset) cutoff temperature) _ shift
   convert HasDerivAt.fun_sum (fun line _ => line_derivative line) using 1
-  simp only [accepted_count_variance_eq_sum, ← Finset.sum_div, ← Finset.sum_neg_distrib, neg_mul]
+  rw [accepted_count_variance_eq_sum, ← Finset.sum_neg_distrib, Finset.sum_div]
+  apply Finset.sum_congr rfl
+  intro line _
+  ring
 
 theorem hasDerivAt_deriv_shiftedFreeEnergy
     (energies : Line → ℝ) (cutoff temperature shift : ℝ) (temperature_pos : 0 < temperature) :

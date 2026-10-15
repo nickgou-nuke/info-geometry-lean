@@ -5,21 +5,22 @@ import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Data.Finset.Basic
 
 /-!
-# Arnold-Cohen Relations and Orlik-Solomon BCFW Cohomology in Exterior Algebras
+# Conditional Arnold-Cohen Relations in an Alternating Algebra
 
-This module formalizes the exact 3-term Arnold-Cohen relation on the cohomology of
-configuration spaces $\operatorname{Conf}_n(\mathbb{C})$ (Orlik-Solomon algebra of type $A_{n-1}$)
-over an arbitrary commutative ring $R$:
+This module proves an algebraic consequence of explicit coefficient and
+alternating-product hypotheses over a commutative ring `R`:
 
 $$\omega_{ij} \wedge \omega_{jk} + \omega_{jk} \wedge \omega_{ki} + \omega_{ki} \wedge \omega_{ij} = 0$$
 
-where $\omega_{ij} = c_{ij} (dz_i - dz_j)$ are logarithmic 1-forms with weights satisfying
-the Euler partial fraction identity $c_{ij} c_{jk} + c_{jk} c_{ki} + c_{ki} c_{ij} = 0$.
+where the forms are represented by `LogarithmicOneFormData` and the coefficients
+satisfy the stated three-term relation. This file does not construct a
+configuration-space cohomology or Orlik-Solomon algebra, nor does it prove BCFW
+recursion, pole factorization, or a four-point scattering identity.
 
 It also proves:
 1. The quadratic nilpotency $\omega_{ij} \wedge \omega_{ij} = 0$.
-2. The 4-point Yang-Baxter / BCFW scattering decoupling identity.
-3. The exact combinatorial partition function normalization on binary tree levels.
+2. The subtraction of two instances of the assumed three-term identity.
+3. A finite binary-tree sum identity under an explicit inverse-of-two premise.
 -/
 
 noncomputable section
@@ -63,7 +64,9 @@ theorem wedge_smul_left (r : R) (a b : M) : alg.wedge (r • a) b = r • alg.we
 theorem wedge_smul_right (r : R) (a b : M) : alg.wedge a (r • b) = r • alg.wedge a b := by
   exact (alg.wedge a).map_smul r b
 
-/-- Logarithmic 1-form generator $\omega_{ij} = c_{ij} (dz_i - dz_j)$ on configuration space punctures. -/
+/-- Abstract coefficient-weighted difference `cᵢⱼ (dzᵢ - dzⱼ)`. The fields
+`skew` and `partial_fraction` are algebraic hypotheses; analytic
+configuration-space logarithmic forms require a separate instantiation. -/
 structure LogarithmicOneFormData (dz : ℕ → M) where
   c : ℕ → ℕ → R
   skew : ∀ i j, c j i = - c i j
@@ -83,8 +86,9 @@ theorem log_form_wedge_anticomm (dz : ℕ → M) (data : LogarithmicOneFormData 
     alg.wedge (data.form dz i j) (data.form dz k l) = - alg.wedge (data.form dz k l) (data.form dz i j) := by
   exact alg.wedge_anticomm (data.form dz i j) (data.form dz k l)
 
-/-- 🏆 THEOREM 3: The 3-Term Arnold-Cohen Relation (Orlik-Solomon Identity):
-    $$\omega_{ij} \wedge \omega_{jk} + \omega_{jk} \wedge \omega_{ki} + \omega_{ki} \wedge \omega_{ij} = 0$$ -/
+/-- The assumed coefficient relation implies the displayed alternating
+three-term identity in this abstract exterior-form carrier. This theorem does
+not construct configuration-space forms or an Orlik–Solomon quotient. -/
 theorem arnold_cohen_three_term_relation
     (dz : ℕ → M) (data : LogarithmicOneFormData (R := R) dz) (i j k : ℕ) :
     alg.wedge (data.form dz i j) (data.form dz j k) +
@@ -115,9 +119,10 @@ theorem arnold_cohen_three_term_relation
   change (data.c i j * data.c j k) • Δ + (data.c j k * data.c k i) • Δ + (data.c k i * data.c i j) • Δ = 0
   rw [← add_smul, ← add_smul, data.partial_fraction i j k, zero_smul]
 
-/-- 🏆 THEOREM 4: BCFW 4-Point Decoupling Identity:
-    The cyclic difference of Arnold relations across 4 punctures vanishes. -/
-theorem bcfw_four_point_decoupling
+/-- Subtracting two instances of the three-term identity gives zero. This is
+an algebraic consequence of the coefficient relation, not a BCFW or scattering
+decoupling theorem. -/
+theorem arnold_relation_subtract_two_instances
     (dz : ℕ → M) (data : LogarithmicOneFormData (R := R) dz) (i j k l : ℕ) :
     (alg.wedge (data.form dz i j) (data.form dz j k) +
      alg.wedge (data.form dz j k) (data.form dz k i) +

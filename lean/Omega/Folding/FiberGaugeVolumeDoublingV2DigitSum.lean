@@ -24,13 +24,13 @@ private lemma basePDigitSum_two_mul (n : ℕ) : basePDigitSum 2 (2 * n) = basePD
   by_cases hn : n = 0
   · simp [hn, basePDigitSum]
   · have hn_pos : 0 < n := Nat.pos_of_ne_zero hn
-    rw [basePDigitSum]
+    dsimp [basePDigitSum]
     simpa [pow_one, List.sum_append, two_mul] using
       congrArg List.sum (Nat.digits_base_pow_mul (b := 2) (k := 1) (m := n) one_lt_two hn_pos)
 
 private lemma fiberGaugeDoublingV2Term_eq_digitSum {m : ℕ} (x : Omega.X m) :
     fiberGaugeDoublingV2Term x = basePDigitSum 2 (Omega.X.fiberMultiplicity x) := by
-  haveI : Fact (Nat.Prime 2) := ⟨by decide⟩
+  have : Fact (Nat.Prime 2) := ⟨by decide⟩
   let d := Omega.X.fiberMultiplicity x
   let s := basePDigitSum 2 d
   have hdouble :
@@ -39,7 +39,7 @@ private lemma fiberGaugeDoublingV2Term_eq_digitSum {m : ℕ} (x : Omega.X m) :
       (sub_one_mul_padicValNat_factorial (p := 2) (n := 2 * d))
   have hsingle :
       padicValNat 2 (d.factorial) = d - s := by
-    simpa [basePDigitSum] using
+    simpa [s, basePDigitSum] using
       (sub_one_mul_padicValNat_factorial (p := 2) (n := d))
   have hs_le : s ≤ d := by
     simpa [d, s, basePDigitSum] using Nat.digit_sum_le 2 d

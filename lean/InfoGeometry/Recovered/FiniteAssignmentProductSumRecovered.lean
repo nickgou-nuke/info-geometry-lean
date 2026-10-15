@@ -34,7 +34,13 @@ theorem finset_assignment_sum_eq_product_sum
 inductive Occupancy where
   | empty
   | occupied
-  deriving DecidableEq, Fintype, Repr
+  deriving DecidableEq, Repr
+
+instance : Fintype Occupancy where
+  elems := {Occupancy.empty, Occupancy.occupied}
+  complete := by
+    intro x
+    cases x <;> simp
 
 /-- Local parity eigenvalue for the recovered two-state probe. -/
 def localParityEigenvalue : Occupancy → ℝ

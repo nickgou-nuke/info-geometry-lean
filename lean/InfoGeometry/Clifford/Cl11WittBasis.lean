@@ -18,19 +18,17 @@ def e_minus : Matrix (Fin 2) (Fin 2) B :=
 
 @[simp]
 theorem e_plus_sq : e_plus (B := B) * e_plus = 0 := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [e_plus, Matrix.mul_apply, Algebra.smul_def, ← map_mul, ← map_add]
+  ext i j; fin_cases i <;> fin_cases j <;> simp [e_plus, Matrix.mul_apply, Algebra.smul_def, ← map_mul]
 
 @[simp]
 theorem e_minus_sq : e_minus (B := B) * e_minus = 0 := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [e_minus, Matrix.mul_apply, Algebra.smul_def, ← map_mul, ← map_add]
+  ext i j; fin_cases i <;> fin_cases j <;> simp [e_minus, Matrix.mul_apply, Algebra.smul_def, ← map_mul]
 
 /-- The canonical anticommutation CAR relation. -/
 theorem e_plus_mul_e_minus_add_e_minus_mul_e_plus :
     e_plus (B := B) * e_minus + e_minus * e_plus = I_mat := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [e_plus, e_minus, I_mat, Algebra.smul_def, ← map_mul, ← map_add, ← map_sub, ← map_neg, map_zero, map_one]
-  · norm_num
-  · norm_num
-  · norm_num
-  · norm_num
+  ext i j; fin_cases i <;> fin_cases j <;>
+    simp [e_plus, e_minus, I_mat, Algebra.smul_def, ← map_mul, ← map_add, -map_neg]
+  all_goals norm_num
 
 end InfoGeometry.Clifford

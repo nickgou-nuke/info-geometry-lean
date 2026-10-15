@@ -243,7 +243,8 @@ theorem leftAssocIndexEquiv_eq_prodAssoc_trans_rightAssoc
   rcases x with ⟨⟨i, j⟩, k⟩
   dsimp [leftAssocIndexEquiv, rightAssocIndexEquiv]
   have hcast := finMulAssocEquiv_apply_val m n p
-    (finProdFinEquiv (⟨finProdFinEquiv (i, j), k⟩))
+    (finProdFinEquiv
+      ((finProdFinEquiv.prodCongr (Equiv.refl (Fin p))) ((i, j), k)))
   rw [hcast]
   simp [finProdFinEquiv]
   simp [Nat.mul_add, Nat.mul_comm, Nat.mul_left_comm]

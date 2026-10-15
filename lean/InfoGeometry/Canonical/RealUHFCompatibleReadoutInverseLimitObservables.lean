@@ -25,10 +25,21 @@ open InfoGeometry.Canonical.RealUHFCompatibleReadoutStageActionTopCat
 open InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitDynamics
 open InfoGeometry.Canonical.RealUHFCompatibleStateObservableTopCat
 
+def readoutDiagramStageEvaluationTopCatHom
+    (n : ℕ) (X : MatStage n) : readoutDiagram.obj n ⟶ TopCat.of ℝ := by
+  change TopCat.of (MatStage n →L[ℝ] ℝ) ⟶ TopCat.of ℝ
+  exact stageEvaluationTopCatHom n X
+
+def readoutDiagramStageActionTopCatHom
+    (n : ℕ) (t : ℝ) : readoutDiagram.obj n ⟶ readoutDiagram.obj n := by
+  change TopCat.of (MatStage n →L[ℝ] ℝ) ⟶
+    TopCat.of (MatStage n →L[ℝ] ℝ)
+  exact stageReadoutActionTopCatHom n t
+
 def inverseLimitStageEvaluationTopCatHom
     (n : ℕ) (X : MatStage n) :
     (limit readoutDiagram) ⟶ TopCat.of ℝ :=
-  limit.π readoutDiagram n ≫ stageEvaluationTopCatHom n X
+  limit.π readoutDiagram n ≫ readoutDiagramStageEvaluationTopCatHom n X
 
 theorem stageReadoutActionTopCatHom_evaluation
     (n : ℕ) (t : ℝ) (X : MatStage n) :
@@ -43,6 +54,16 @@ theorem stageReadoutActionTopCatHom_evaluation
     ρ (scalarDilationStageFlow.flow n t X)
   rw [stageReadoutActionContinuous_apply]
 
+theorem readoutDiagramStageAction_evaluation
+    (n : ℕ) (t : ℝ) (X : MatStage n) :
+    readoutDiagramStageActionTopCatHom n t ≫
+        readoutDiagramStageEvaluationTopCatHom n X =
+      readoutDiagramStageEvaluationTopCatHom n
+        (scalarDilationStageFlow.flow n t X) := by
+  change stageReadoutActionTopCatHom n t ≫ stageEvaluationTopCatHom n X =
+    stageEvaluationTopCatHom n (scalarDilationStageFlow.flow n t X)
+  exact stageReadoutActionTopCatHom_evaluation n t X
+
 theorem inverseLimitStageEvaluationTopCatHom_action
     (n : ℕ) (t : ℝ) (X : MatStage n) :
     scalarDilationReadoutInverseLimitAction t ≫
@@ -51,20 +72,20 @@ theorem inverseLimitStageEvaluationTopCatHom_action
         (scalarDilationStageFlow.flow n t X) := by
   change scalarDilationReadoutInverseLimitAction t ≫
         (limit.π readoutDiagram n ≫
-          stageEvaluationTopCatHom n X) =
+          readoutDiagramStageEvaluationTopCatHom n X) =
       limit.π readoutDiagram n ≫
-        stageEvaluationTopCatHom n
+        readoutDiagramStageEvaluationTopCatHom n
           (scalarDilationStageFlow.flow n t X)
   rw [← CategoryTheory.Category.assoc,
     scalarDilationReadoutInverseLimitAction_projection,
     CategoryTheory.Category.assoc]
   change limit.π readoutDiagram n ≫
-      stageReadoutActionTopCatHom n t ≫
-        stageEvaluationTopCatHom n X =
+      readoutDiagramStageActionTopCatHom n t ≫
+        readoutDiagramStageEvaluationTopCatHom n X =
     limit.π readoutDiagram n ≫
-      stageEvaluationTopCatHom n
+      readoutDiagramStageEvaluationTopCatHom n
         (scalarDilationStageFlow.flow n t X)
-  rw [stageReadoutActionTopCatHom_evaluation]
+  rw [readoutDiagramStageAction_evaluation]
 
 theorem inverseLimitStageEvaluation_action_apply
     (ρ : (limit readoutDiagram).carrier)
@@ -97,15 +118,15 @@ theorem compatibleReadoutInverseLimitIso_coordinateEvaluation
     coordinateEvaluationTopCatHom n X =
       compatibleReadoutInverseLimitIso.hom ≫
         inverseLimitStageEvaluationTopCatHom n X := by
-  change coordinateTopCatHom n ≫ stageEvaluationTopCatHom n X =
+  change coordinateTopCatHom n ≫ readoutDiagramStageEvaluationTopCatHom n X =
     compatibleReadoutInverseLimitIso.hom ≫
-      (limit.π readoutDiagram n ≫ stageEvaluationTopCatHom n X)
+      (limit.π readoutDiagram n ≫
+        readoutDiagramStageEvaluationTopCatHom n X)
   rw [← Category.assoc]
   rw [show compatibleReadoutInverseLimitIso.hom ≫
         limit.π readoutDiagram n = readoutInverseCone.π.app n by
-      simpa [compatibleReadoutInverseLimitIso] using
-        (IsLimit.conePointUniqueUpToIso_hom_comp
-          readoutInverseConeIsLimit (limit.isLimit readoutDiagram) n)]
+      exact IsLimit.conePointUniqueUpToIso_hom_comp
+        readoutInverseConeIsLimit (limit.isLimit readoutDiagram) n]
   rfl
 
 end InfoGeometry.Canonical.RealUHFCompatibleReadoutInverseLimitObservables

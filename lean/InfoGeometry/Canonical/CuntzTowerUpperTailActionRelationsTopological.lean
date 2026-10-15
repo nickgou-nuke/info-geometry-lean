@@ -98,6 +98,7 @@ theorem upperCuntzInitialRelationColimitMap_stage
         upperStageTopologicalInjection Stage T m j a
       else
         upperStageTopologicalInjection Stage T m j (0 : Stage j.1) := by
+  let a' : ↑((upperStageTopologicalDiagram Stage T m).obj j) := a
   have hleft := upperLeftGeneratorActionColimitMap_stage
     Stage T m k j
   have hadj :
@@ -115,7 +116,13 @@ theorem upperCuntzInitialRelationColimitMap_stage
             upperStageTopologicalInjection Stage T m j := by
     dsimp [upperCuntzInitialRelationColimitMap]
     rw [← Category.assoc, hleft, Category.assoc, hadj, ← Category.assoc]
-  have heval := congrArg (fun f => f a) hcomp
+  have heval := congrArg (fun f => f a') hcomp
+  simp only [TopCat.comp_app] at heval
+  change upperCuntzInitialRelationColimitMap Stage T m i k
+      (upperStageTopologicalInjection Stage T m j a) =
+    upperStageTopologicalInjection Stage T m j
+      (star ((T.family j.1).S (Fin.castLE j.2 i)) *
+        ((T.family j.1).S (Fin.castLE j.2 k) * a)) at heval
   by_cases hik : i = k
   · subst k
     have hinner :
@@ -123,8 +130,7 @@ theorem upperCuntzInitialRelationColimitMap_stage
             ((T.family j.1).S (Fin.castLE j.2 i) * a) = a := by
       rw [← mul_assoc, isometry_relation (F := T.family j.1) _]
       simp
-    simpa [upperLeftAdjointGeneratorActionNatTrans,
-      upperLeftGeneratorActionNatTrans, hinner] using heval
+    simpa [hinner] using heval
   · have hcast : Fin.castLE j.2 i ≠ Fin.castLE j.2 k := by
       intro h
       exact hik ((Fin.castLE_injective j.2) h)
@@ -133,8 +139,7 @@ theorem upperCuntzInitialRelationColimitMap_stage
             ((T.family j.1).S (Fin.castLE j.2 k) * a) = 0 := by
       rw [← mul_assoc, orthogonal_relation (F := T.family j.1) hcast]
       simp
-    simpa [upperLeftAdjointGeneratorActionNatTrans,
-      upperLeftGeneratorActionNatTrans, hinner, hik] using heval
+    simpa [hinner, hik] using heval
 
 theorem upperCuntzInitialRelationColimitMap_eq_id
     (m : ℕ) (i : Fin m) :
@@ -145,8 +150,10 @@ theorem upperCuntzInitialRelationColimitMap_eq_id
   apply TopCat.hom_ext
   apply ContinuousMap.ext
   intro a
-  simpa using upperCuntzInitialRelationColimitMap_stage
-    Stage T m i i j a
+  change upperCuntzInitialRelationColimitMap Stage T m i i
+      (upperStageTopologicalInjection Stage T m j a) =
+    upperStageTopologicalInjection Stage T m j a
+  simpa using upperCuntzInitialRelationColimitMap_stage Stage T m i i j a
 
 theorem upperGeneratorCornerColimitMap_stage
     (m : ℕ) (i k : Fin m) (j : UpperNatIndex m) (a : Stage j.1) :
@@ -155,6 +162,7 @@ theorem upperGeneratorCornerColimitMap_stage
       upperStageTopologicalInjection Stage T m j
         ((T.family j.1).S (Fin.castLE j.2 i) * a *
           star ((T.family j.1).S (Fin.castLE j.2 k))) := by
+  let a' : ↑((upperStageTopologicalDiagram Stage T m).obj j) := a
   have hleft := upperLeftGeneratorActionColimitMap_stage
     Stage T m i j
   have hright := upperRightAdjointGeneratorActionColimitMap_stage
@@ -168,8 +176,13 @@ theorem upperGeneratorCornerColimitMap_stage
     dsimp [upperGeneratorCornerColimitMap]
     rw [← Category.assoc, hleft, Category.assoc, hright,
       ← Category.assoc]
-  have heval := congrArg (fun f => f a) hcomp
-  simpa [upperLeftGeneratorActionNatTrans,
-    upperRightAdjointGeneratorActionNatTrans] using heval
+  have heval := congrArg (fun f => f a') hcomp
+  simp only [TopCat.comp_app] at heval
+  change upperGeneratorCornerColimitMap Stage T m i k
+      (upperStageTopologicalInjection Stage T m j a) =
+    upperStageTopologicalInjection Stage T m j
+      (((T.family j.1).S (Fin.castLE j.2 i) * a) *
+        star ((T.family j.1).S (Fin.castLE j.2 k))) at heval
+  exact heval
 
 end InfoGeometry.Canonical.CuntzTowerUpperTailActionRelationsTopological

@@ -54,15 +54,13 @@ theorem isKMS (d : Data Stage sys ω) : IsKMS Stage sys ω d :=
   d.kms_boundary
 
 theorem flow_zero (d : Data Stage sys ω) (A : Carrier Stage sys ω) :
-    d.flow.toAut 0 A = A := by
-  rw [d.flow.map_zero]
-  rfl
+    d.flow.toAut 0 A = A :=
+  congr_arg (fun e => e A) d.flow.map_zero
 
 theorem flow_add (d : Data Stage sys ω) (s t : ℝ)
     (A : Carrier Stage sys ω) :
     d.flow.toAut (s + t) A =
-      d.flow.toAut t (d.flow.toAut s A) := by
-  rw [d.flow.map_add]
-  rfl
+      d.flow.toAut t (d.flow.toAut s A) :=
+  congr_arg (fun e => e A) (d.flow.map_add s t)
 
 end CStarStateColimit.Native.FilteredGNSCompletionKMSState

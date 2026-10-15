@@ -72,7 +72,12 @@ inductive OSAlphaBasis where
   | a23
   | a12a13
   | a12a23
-  deriving DecidableEq, Fintype, Repr
+  deriving DecidableEq, Repr
+
+instance : Fintype OSAlphaBasis where
+  elems := {OSAlphaBasis.one, OSAlphaBasis.a12, OSAlphaBasis.a13,
+    OSAlphaBasis.a23, OSAlphaBasis.a12a13, OSAlphaBasis.a12a23}
+  complete := by intro x; cases x <;> simp
 
 /-- Degree in the alpha Orlik--Solomon skeleton. -/
 def osAlphaDegree : OSAlphaBasis → ℕ
@@ -166,14 +171,22 @@ theorem product_vs_os_rank_gap :
 /-- The three formal alpha generators. -/
 inductive AlphaEdge where
   | a12 | a13 | a23
-  deriving DecidableEq, Fintype, Repr
+  deriving DecidableEq, Repr
+
+instance : Fintype AlphaEdge where
+  elems := {AlphaEdge.a12, AlphaEdge.a13, AlphaEdge.a23}
+  complete := by intro x; cases x <;> simp
 
 /-- The three formal beta/flux edge labels.  A complete de Rham theorem must
 explain whether there are three independent beta edge classes or only two
 independent flux classes after relations/Gysin constraints. -/
 inductive BetaEdge where
   | b12 | b13 | b23
-  deriving DecidableEq, Fintype, Repr
+  deriving DecidableEq, Repr
+
+instance : Fintype BetaEdge where
+  elems := {BetaEdge.b12, BetaEdge.b13, BetaEdge.b23}
+  complete := by intro x; cases x <;> simp
 
 /-- Named Arnold triangle relation in degree two. -/
 inductive ArnoldRelation

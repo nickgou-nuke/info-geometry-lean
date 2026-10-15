@@ -24,7 +24,7 @@ noncomputable def symbolicLatentPathHomotopyReversalInvolution
     intro q
     exact reversePathHomotopyQuotientHomeomorph.left_inv q
 
-abbrev symbolicLatentPathHomotopyReversalFixedPointObject
+noncomputable abbrev symbolicLatentPathHomotopyReversalFixedPointObject
     {X : Type} [TopologicalSpace X] :=
   SymbolicLatentInvolutionFixedPointObject
     (symbolicLatentPathHomotopyReversalInvolution (X := X))

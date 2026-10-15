@@ -155,6 +155,11 @@ def coordinateWeylAction (w : WeylG2) : G2CoordinateRoot ≃ G2CoordinateRoot :=
     coordinateWeylAction (0, false) = 1 := by
   simp [coordinateWeylAction]
 
+@[simp] theorem coordinateWeylAction_one_symm :
+    (coordinateWeylAction (0, false)).symm = 1 := by
+  rw [coordinateWeylAction_one]
+  rfl
+
 @[simp] theorem coordinateWeylAction_cyclic_one :
     coordinateWeylAction (1, false) = cRoot := by
   change cRoot ^ (1 : ℕ) = cRoot
@@ -172,6 +177,9 @@ theorem mem_inversionRoots_iff (w : WeylG2) (α : G2PositiveRoot) :
         (positiveRootInFullCarrier α)) := by
   classical
   simp [inversionRoots]
+
+@[simp] theorem equiv_symm_one_apply {α : Type*} (x : α) :
+    (Equiv.symm (1 : Equiv.Perm α) x) = x := rfl
 
 theorem inversionRoots_one : inversionRoots (0, false) = ∅ := by
   classical

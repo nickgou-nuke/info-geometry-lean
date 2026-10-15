@@ -85,14 +85,14 @@ theorem symbolicLatentBasedLoopPathHomotopyQuotientTopCatHom_endpoint_factorizat
       symbolicLatentBasedLoopPathEndpointConstantTopCatHom x := by
   apply TopCat.hom_ext
   ext γ
-  · simpa [symbolicLatentBasedLoopPathHomotopyQuotientTopCatHom,
-      symbolicLatentBasedLoopHomotopyQuotientEndpointTopCatHom,
-      symbolicLatentBasedLoopPathEndpointConstantTopCatHom] using
-      congrArg Prod.fst (symbolicLatentBasedLoopPathHomotopyQuotientMap_endpoint γ)
-  · simpa [symbolicLatentBasedLoopPathHomotopyQuotientTopCatHom,
-      symbolicLatentBasedLoopHomotopyQuotientEndpointTopCatHom,
-      symbolicLatentBasedLoopPathEndpointConstantTopCatHom] using
-      congrArg Prod.snd (symbolicLatentBasedLoopPathHomotopyQuotientMap_endpoint γ)
+  · change (symbolicLatentPathHomotopyEndpointMap
+      (symbolicLatentBasedLoopPathHomotopyQuotientMap γ)).1 = x
+    exact congrArg Prod.fst
+      (symbolicLatentBasedLoopPathHomotopyQuotientMap_endpoint γ)
+  · change (symbolicLatentPathHomotopyEndpointMap
+      (symbolicLatentBasedLoopPathHomotopyQuotientMap γ)).2 = x
+    exact congrArg Prod.snd
+      (symbolicLatentBasedLoopPathHomotopyQuotientMap_endpoint γ)
 
 theorem symbolicLatentBasedLoopPathHomotopyQuotientTopCatHom_endpoint_factorization_unique
     {X : Type} [TopologicalSpace X] {x : X}

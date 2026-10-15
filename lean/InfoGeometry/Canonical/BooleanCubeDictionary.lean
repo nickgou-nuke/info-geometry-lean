@@ -42,14 +42,26 @@ def stateToSubsetEquiv : PrimeBitState P ≃ {S : Finset ℕ // S ⊆ P.primes} 
   toFun ψ := ⟨occupiedPrimeSet P ψ, occupiedPrimeSet_subset P ψ⟩
   invFun S := fun p => p.val ∈ S.val
   left_inv ψ := by
-    ext p
-    simp [occupiedPrimeSet]
+    funext p
+    cases hψ : ψ p
+    · simp [occupiedPrimeSet]
+      intro x hx hbit hval
+      have hsub : (⟨x, hx⟩ : {q // q ∈ P.primes}) = p := Subtype.ext hval
+      cases hsub
+      rw [hψ] at hbit
+      cases hbit
+    · simp [occupiedPrimeSet]
+      exact ⟨p.val, p.property, hψ, rfl⟩
   right_inv S := by
     apply Subtype.ext
     ext x
     simp [occupiedPrimeSet]
-    intro h
-    exact S.property h
+    constructor
+    · rintro ⟨a, ha, _haPrime, hax⟩
+      change a = x at hax
+      simpa [hax] using ha
+    · intro hx
+      exact ⟨x, hx, S.property hx, rfl⟩
 
 /-! ## 2. Subset <-> Arithmetic bridge -/
 

@@ -120,14 +120,14 @@ theorem fugacity_norm_sq_eq_one_iff_re_half (s : ℂ) (hs : 1 - s ≠ 0) :
 
 /-- Real 2x2 matrix representation of the LogCFT Jordan nilpotency -/
 def jordanNilpotent : Matrix (Fin 2) (Fin 2) ℝ :=
-  ![![0, 1], ![0, 0]]
+  !![0, 1; 0, 0]
 
 /-- 🏆 THEOREM 4: Jordan Nilpotency N² = 0 -/
 theorem jordan_nilpotent_sq :
     jordanNilpotent * jordanNilpotent = 0 := by
-  dsimp [jordanNilpotent]
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_two]
+  fin_cases i <;> fin_cases j <;>
+    simp [jordanNilpotent, Matrix.mul_apply, Fin.sum_univ_succ]
 
 /-- Logarithmic scale de Rham factor invariance: (1 / (λ * x)) * λ = 1 / x -/
 theorem log_derham_scale_invariance (x lambda : ℝ) (hx : x ≠ 0) (hlam : lambda ≠ 0) :

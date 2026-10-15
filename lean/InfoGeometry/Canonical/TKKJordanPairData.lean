@@ -125,8 +125,8 @@ theorem jordanPairIdentities :
 end JordanPair
 
 /-- A five-graded Lie-algebra interface indexed by `TKKGrade`. -/
-structure FiveGradedLieAlgebra (R : Type*) [CommRing R] where
-  L : Type*
+structure FiveGradedLieAlgebra.{uR, uL} (R : Type uR) [CommRing R] where
+  L : Type uL
   [lie_ring : LieRing L]
   [add_comm_group : AddCommGroup L]
   [module : Module R L]

@@ -111,7 +111,8 @@ theorem paper_pom_projective_pressure_holder_logconvex
     (D : ProjectivePressureHolderData) : D.logConvexPressure := by
   refine ⟨?_, ?_, ?_⟩
   · simpa [ProjectivePressureHolderData.holderStep, ProjectivePressureHolderData.transfer,
-      holderInterpolant_eq_one] using le_of_eq (lambda_qTheta_eq D)
+      ProjectivePressureHolderData.lambda, holderInterpolant_eq_one] using
+      le_of_eq (lambda_qTheta_eq D)
   · rw [ProjectivePressureHolderData.lambdaLogConvex]
     exact le_of_eq (lambda_qTheta_eq D)
   · rw [ProjectivePressureHolderData.LambdaConvex]

@@ -75,13 +75,35 @@ def lUnit : CZ :=
 def kUnit : CZ :=
   zMul iUnit lUnit
 
+@[simp] theorem kUnit_a : kUnit.a = 1 := by
+  simp [kUnit, iUnit, lUnit, zMul, InfoGeometry.Canonical.ZornMatrix.dot]
+@[simp] theorem kUnit_b : kUnit.b = -1 := by
+  simp [kUnit, iUnit, lUnit, zMul, InfoGeometry.Canonical.ZornMatrix.dot]
+@[simp] theorem kUnit_x : kUnit.x = 0 := by
+  ext i; fin_cases i <;> simp [kUnit, iUnit, lUnit, zMul, InfoGeometry.Canonical.ZornMatrix.cross]
+@[simp] theorem kUnit_y : kUnit.y = 0 := by
+  ext i; fin_cases i <;> simp [kUnit, iUnit, lUnit, zMul, InfoGeometry.Canonical.ZornMatrix.cross]
+
+theorem kUnit_def : kUnit = { a := 1, b := -1, x := 0, y := 0 } := by
+  apply InfoGeometry.Canonical.ZornMatrix.ext
+  · exact kUnit_a
+  · exact kUnit_b
+  · exact kUnit_x
+  · exact kUnit_y
+
 /-- The four generator vectors, in the order `(1, i, l, k)`. -/
-def genVec : Fin 4 → CZ
-  | ⟨0, _⟩ => 1
-  | ⟨1, _⟩ => iUnit
-  | ⟨2, _⟩ => lUnit
-  | ⟨3, _⟩ => kUnit
+def genVec (g : Fin 4) : CZ :=
+  match g.val with
+  | 0 => 1
+  | 1 => iUnit
+  | 2 => lUnit
+  | 3 => kUnit
   | _ => 1
+
+@[simp] theorem genVec_zero : genVec 0 = 1 := rfl
+@[simp] theorem genVec_one : genVec 1 = iUnit := rfl
+@[simp] theorem genVec_two : genVec 2 = lUnit := rfl
+@[simp] theorem genVec_three : genVec 3 = kUnit := rfl
 
 /-- The span of `{1, i, l, k}` as a ℝ-submodule of `CanonicalZorn`. -/
 def coreSubmodule : Submodule ℝ CZ :=
@@ -108,22 +130,20 @@ def coreSubmodule : Submodule ℝ CZ :=
 /-- `zMul` is ℝ-homogeneous in its left argument. -/
 @[simp] theorem zMul_smul_left (r : ℝ) (X Y : CZ) :
     zMul (r • X) Y = r • zMul X Y := by
-  ext i <;> simp [zMul, smul_eq_mul, Equiv.smul_def,
-    InfoGeometry.Canonical.ZornMatrix.coordEquiv,
-    InfoGeometry.Canonical.ZornMatrix.dot,
-    InfoGeometry.Canonical.ZornMatrix.cross,
-    add_mul, mul_add, sub_eq_add_neg, Pi.smul_apply, Fin.sum_univ_three]
-  all_goals ring_nf
+  apply InfoGeometry.Canonical.ZornMatrix.ext
+  · simp [zMul, InfoGeometry.Canonical.ZornMatrix.dot]; ring
+  · simp [zMul, InfoGeometry.Canonical.ZornMatrix.dot]; ring
+  · funext i; fin_cases i <;> (simp [zMul, InfoGeometry.Canonical.ZornMatrix.cross]; ring)
+  · funext i; fin_cases i <;> (simp [zMul, InfoGeometry.Canonical.ZornMatrix.cross]; ring)
 
 /-- `zMul` is ℝ-homogeneous in its right argument. -/
 @[simp] theorem zMul_smul_right (r : ℝ) (X Y : CZ) :
     zMul X (r • Y) = r • zMul X Y := by
-  ext i <;> simp [zMul, smul_eq_mul, Equiv.smul_def,
-    InfoGeometry.Canonical.ZornMatrix.coordEquiv,
-    InfoGeometry.Canonical.ZornMatrix.dot,
-    InfoGeometry.Canonical.ZornMatrix.cross,
-    add_mul, mul_add, sub_eq_add_neg, Pi.smul_apply, Fin.sum_univ_three]
-  all_goals ring_nf
+  apply InfoGeometry.Canonical.ZornMatrix.ext
+  · simp [zMul, InfoGeometry.Canonical.ZornMatrix.dot]; ring
+  · simp [zMul, InfoGeometry.Canonical.ZornMatrix.dot]; ring
+  · funext i; fin_cases i <;> (simp [zMul, InfoGeometry.Canonical.ZornMatrix.cross]; ring)
+  · funext i; fin_cases i <;> (simp [zMul, InfoGeometry.Canonical.ZornMatrix.cross]; ring)
 
 /-- Multiplying by zero on the left yields zero. -/
 theorem zMul_zero_left (Y : CZ) : zMul 0 Y = 0 := by
@@ -134,6 +154,22 @@ theorem zMul_zero_left (Y : CZ) : zMul 0 Y = 0 := by
 theorem zMul_zero_right (X : CZ) : zMul X 0 = 0 := by
   ext i <;> simp [zMul, InfoGeometry.Canonical.ZornMatrix.dot, InfoGeometry.Canonical.ZornMatrix.cross] <;>
   all_goals (try fin_cases i) <;> try rfl
+
+/-- Multiplying by one on the left is the identity. -/
+@[simp] theorem one_zMul (X : CZ) : zMul 1 X = X := by
+  apply InfoGeometry.Canonical.ZornMatrix.ext
+  · simp [zMul, InfoGeometry.Canonical.ZornMatrix.dot]
+  · simp [zMul, InfoGeometry.Canonical.ZornMatrix.dot]
+  · funext i; fin_cases i <;> simp [zMul, InfoGeometry.Canonical.ZornMatrix.cross]
+  · funext i; fin_cases i <;> simp [zMul, InfoGeometry.Canonical.ZornMatrix.cross]
+
+/-- Multiplying by one on the right is the identity. -/
+@[simp] theorem zMul_one (X : CZ) : zMul X 1 = X := by
+  apply InfoGeometry.Canonical.ZornMatrix.ext
+  · simp [zMul, InfoGeometry.Canonical.ZornMatrix.dot]
+  · simp [zMul, InfoGeometry.Canonical.ZornMatrix.dot]
+  · funext i; fin_cases i <;> simp [zMul, InfoGeometry.Canonical.ZornMatrix.cross]
+  · funext i; fin_cases i <;> simp [zMul, InfoGeometry.Canonical.ZornMatrix.cross]
 
 /-! ## Generator relations -/
 
@@ -168,50 +204,50 @@ theorem il_eq_neg_li : zMul iUnit lUnit = -(zMul lUnit iUnit) := by
 /-- `1 ∈ coreSubmodule`. -/
 @[simp] theorem one_mem_core : (1 : CZ) ∈ coreSubmodule := by
   rw [coreSubmodule]
-  rw [show (1 : CZ) = genVec (⟨0, by decide⟩ : Fin 4) from by simp [genVec]]
-  exact Submodule.subset_span (Set.mem_range_self (⟨0, by decide⟩ : Fin 4))
+  rw [show (1 : CZ) = genVec (0 : Fin 4) from rfl]
+  exact Submodule.subset_span (Set.mem_range_self (0 : Fin 4))
 
 /-- `i ∈ coreSubmodule`. -/
 @[simp] theorem i_mem_core : iUnit ∈ coreSubmodule := by
   rw [coreSubmodule]
-  rw [show (iUnit : CZ) = genVec (⟨1, by decide⟩ : Fin 4) from by simp [genVec]]
-  exact Submodule.subset_span (Set.mem_range_self (⟨1, by decide⟩ : Fin 4))
+  rw [show (iUnit : CZ) = genVec (1 : Fin 4) from rfl]
+  exact Submodule.subset_span (Set.mem_range_self (1 : Fin 4))
 
 /-- `l ∈ coreSubmodule`. -/
 @[simp] theorem l_mem_core : lUnit ∈ coreSubmodule := by
   rw [coreSubmodule]
-  rw [show (lUnit : CZ) = genVec (⟨2, by decide⟩ : Fin 4) from by simp [genVec]]
-  exact Submodule.subset_span (Set.mem_range_self (⟨2, by decide⟩ : Fin 4))
+  rw [show (lUnit : CZ) = genVec (2 : Fin 4) from rfl]
+  exact Submodule.subset_span (Set.mem_range_self (2 : Fin 4))
 
 /-- `k = il ∈ coreSubmodule`. -/
 @[simp] theorem k_mem_core : kUnit ∈ coreSubmodule := by
   rw [coreSubmodule]
-  rw [show (kUnit : CZ) = genVec (⟨3, by decide⟩ : Fin 4) from by simp [genVec]]
-  exact Submodule.subset_span (Set.mem_range_self (⟨3, by decide⟩ : Fin 4))
+  rw [show (kUnit : CZ) = genVec (3 : Fin 4) from rfl]
+  exact Submodule.subset_span (Set.mem_range_self (3 : Fin 4))
 
 /-! ## The generator multiplication table -/
 
 /-- The explicit product of two generators, written as a carrier element.
 Used to discharge closure and the associator table by `simp`. The 16 entries
 are the verified split-quaternion multiplication table (SymPy-checked). -/
-@[simp] theorem gen_mul_gen (g h : Fin 4) :
+theorem gen_mul_gen (g h : Fin 4) :
     zMul (genVec g) (genVec h) =
-      match g, h with
-      | ⟨0, _⟩, _ => genVec h
-      | _, ⟨0, _⟩ => genVec g
-      | ⟨1, _⟩, ⟨1, _⟩ => -1
-      | ⟨1, _⟩, ⟨2, _⟩ => kUnit
-      | ⟨1, _⟩, ⟨3, _⟩ => -lUnit
-      | ⟨2, _⟩, ⟨1, _⟩ => -kUnit
-      | ⟨2, _⟩, ⟨2, _⟩ => 1
-      | ⟨2, _⟩, ⟨3, _⟩ => -iUnit
-      | ⟨3, _⟩, ⟨1, _⟩ => lUnit
-      | ⟨3, _⟩, ⟨2, _⟩ => iUnit
-      | ⟨3, _⟩, ⟨3, _⟩ => 1
+      match g.val, h.val with
+      | 0, _ => genVec h
+      | _, 0 => genVec g
+      | 1, 1 => -1
+      | 1, 2 => kUnit
+      | 1, 3 => -lUnit
+      | 2, 1 => -kUnit
+      | 2, 2 => 1
+      | 2, 3 => -iUnit
+      | 3, 1 => lUnit
+      | 3, 2 => iUnit
+      | 3, 3 => 1
       | _, _ => 1 := by
   fin_cases g <;> fin_cases h <;>
   ext i <;>
-  simp [genVec, iUnit, lUnit, kUnit, zMul, InfoGeometry.Canonical.ZornMatrix.dot, InfoGeometry.Canonical.ZornMatrix.cross] <;>
+  simp [genVec, iUnit, lUnit, kUnit_def, zMul, InfoGeometry.Canonical.ZornMatrix.dot, InfoGeometry.Canonical.ZornMatrix.cross] <;>
   all_goals (try fin_cases i) <;> norm_num
 
 /-! ## Closure of the core under `zMul` -/
@@ -226,16 +262,21 @@ theorem core_closed_left_mul (g : Fin 4) (X : CZ) (hX : X ∈ coreSubmodule) :
     rcases Set.mem_range.mp hu with ⟨gu, rfl⟩
     rw [gen_mul_gen]
     fin_cases gu <;> fin_cases g <;>
-      simp only [genVec, one_mem_core, i_mem_core, l_mem_core, k_mem_core,
-        Submodule.smul_mem', Submodule.add_mem, Submodule.neg_mem,
-        Submodule.subset_span, Set.mem_range_self]
+    first
+    | exact one_mem_core
+    | exact i_mem_core
+    | exact l_mem_core
+    | exact k_mem_core
+    | exact Submodule.neg_mem _ one_mem_core
+    | exact Submodule.neg_mem _ i_mem_core
+    | exact Submodule.neg_mem _ l_mem_core
+    | exact Submodule.neg_mem _ k_mem_core
   · change zMul (genVec g) 0 ∈ coreSubmodule
     rw [zMul_zero_right]
     exact Submodule.zero_mem _
   · intro y1 y2 hy1 hy2 h1 h2
     change zMul (genVec g) y1 ∈ coreSubmodule at h1
     change zMul (genVec g) y2 ∈ coreSubmodule at h2
-    change zMul (genVec g) (y1 + y2) ∈ coreSubmodule
     rw [zMul_add_right]
     exact Submodule.add_mem _ h1 h2
   · intro c x hx h1
@@ -254,16 +295,21 @@ theorem core_closed_right_mul (g : Fin 4) (X : CZ) (hX : X ∈ coreSubmodule) :
     rcases Set.mem_range.mp hu with ⟨gu, rfl⟩
     rw [gen_mul_gen]
     fin_cases gu <;> fin_cases g <;>
-      simp only [genVec, one_mem_core, i_mem_core, l_mem_core, k_mem_core,
-        Submodule.smul_mem', Submodule.add_mem, Submodule.neg_mem,
-        Submodule.subset_span, Set.mem_range_self]
+    first
+    | exact one_mem_core
+    | exact i_mem_core
+    | exact l_mem_core
+    | exact k_mem_core
+    | exact Submodule.neg_mem _ one_mem_core
+    | exact Submodule.neg_mem _ i_mem_core
+    | exact Submodule.neg_mem _ l_mem_core
+    | exact Submodule.neg_mem _ k_mem_core
   · change zMul 0 (genVec g) ∈ coreSubmodule
     rw [zMul_zero_left]
     exact Submodule.zero_mem _
   · intro y1 y2 hy1 hy2 h1 h2
     change zMul y1 (genVec g) ∈ coreSubmodule at h1
     change zMul y2 (genVec g) ∈ coreSubmodule at h2
-    change zMul (y1 + y2) (genVec g) ∈ coreSubmodule
     rw [zMul_add_left]
     exact Submodule.add_mem _ h1 h2
   · intro c x hx h1
@@ -293,7 +339,6 @@ theorem core_closed_mul (X Y : CZ) (hX : X ∈ coreSubmodule) (hY : Y ∈ coreSu
     · intro y1 y2 hy1 hy2 h1 h2
       change zMul (genVec gu) y1 ∈ coreSubmodule at h1
       change zMul (genVec gu) y2 ∈ coreSubmodule at h2
-      change zMul (genVec gu) (y1 + y2) ∈ coreSubmodule
       rw [zMul_add_right]
       exact Submodule.add_mem _ h1 h2
     · intro c x hx h1
@@ -307,7 +352,6 @@ theorem core_closed_mul (X Y : CZ) (hX : X ∈ coreSubmodule) (hY : Y ∈ coreSu
   · intro y1 y2 hy1 hy2 h1 h2
     change zMul y1 Y ∈ coreSubmodule at h1
     change zMul y2 Y ∈ coreSubmodule at h2
-    change zMul (y1 + y2) Y ∈ coreSubmodule
     rw [zMul_add_left]
     exact Submodule.add_mem _ h1 h2
   · intro c x hx h1
@@ -323,15 +367,15 @@ theorem core_closed_mul (X Y : CZ) (hX : X ∈ coreSubmodule) (hY : Y ∈ coreSu
 theorem assoc_table (g h k : Fin 4) :
     zMul (zMul (genVec g) (genVec h)) (genVec k) =
     zMul (genVec g) (zMul (genVec h) (genVec k)) := by
-  ext i
-  · fin_cases g <;> fin_cases h <;> fin_cases k <;>
-    simp [genVec, iUnit, lUnit, kUnit, zMul, InfoGeometry.Canonical.ZornMatrix.dot, InfoGeometry.Canonical.ZornMatrix.cross]
-  · fin_cases g <;> fin_cases h <;> fin_cases k <;>
-    simp [genVec, iUnit, lUnit, kUnit, zMul, InfoGeometry.Canonical.ZornMatrix.dot, InfoGeometry.Canonical.ZornMatrix.cross]
-  · fin_cases g <;> fin_cases h <;> fin_cases k <;> (try fin_cases i) <;>
-    simp [genVec, iUnit, lUnit, kUnit, zMul, InfoGeometry.Canonical.ZornMatrix.dot, InfoGeometry.Canonical.ZornMatrix.cross]
-  · fin_cases g <;> fin_cases h <;> fin_cases k <;> (try fin_cases i) <;>
-    simp [genVec, iUnit, lUnit, kUnit, zMul, InfoGeometry.Canonical.ZornMatrix.dot, InfoGeometry.Canonical.ZornMatrix.cross]
+  fin_cases g <;> fin_cases h <;> fin_cases k <;>
+  dsimp [genVec] <;>
+  (first
+   | simp only [one_zMul, zMul_one]
+   | (apply InfoGeometry.Canonical.ZornMatrix.ext
+      · simp [iUnit, lUnit, kUnit_def, zMul, InfoGeometry.Canonical.ZornMatrix.dot, InfoGeometry.Canonical.ZornMatrix.cross]
+      · simp [iUnit, lUnit, kUnit_def, zMul, InfoGeometry.Canonical.ZornMatrix.dot, InfoGeometry.Canonical.ZornMatrix.cross]
+      · funext i; fin_cases i <;> simp [iUnit, lUnit, kUnit_def, zMul, InfoGeometry.Canonical.ZornMatrix.dot, InfoGeometry.Canonical.ZornMatrix.cross]
+      · funext i; fin_cases i <;> simp [iUnit, lUnit, kUnit_def, zMul, InfoGeometry.Canonical.ZornMatrix.dot, InfoGeometry.Canonical.ZornMatrix.cross]))
 
 /-- The induced multiplication on the core is associative.
 Every element of `coreSubmodule` is an ℝ-linear combination of the four
@@ -365,7 +409,6 @@ theorem assoc (X Y Z : CZ)
       · intro y1 y2 hy1 hy2 h1 h2
         change zMul (zMul (genVec gu) (genVec gv)) y1 = zMul (genVec gu) (zMul (genVec gv) y1) at h1
         change zMul (zMul (genVec gu) (genVec gv)) y2 = zMul (genVec gu) (zMul (genVec gv) y2) at h2
-        change zMul (zMul (genVec gu) (genVec gv)) (y1 + y2) = zMul (genVec gu) (zMul (genVec gv) (y1 + y2))
         rw [zMul_add_right, zMul_add_right, zMul_add_right, h1, h2]
       · intro c x hx h1
         change zMul (zMul (genVec gu) (genVec gv)) x = zMul (genVec gu) (zMul (genVec gv) x) at h1
@@ -376,7 +419,6 @@ theorem assoc (X Y Z : CZ)
     · intro y1 y2 hy1 hy2 h1 h2
       change zMul (zMul (genVec gu) y1) Z = zMul (genVec gu) (zMul y1 Z) at h1
       change zMul (zMul (genVec gu) y2) Z = zMul (genVec gu) (zMul y2 Z) at h2
-      change zMul (zMul (genVec gu) (y1 + y2)) Z = zMul (genVec gu) (zMul (y1 + y2) Z)
       rw [zMul_add_right, zMul_add_left, zMul_add_left, zMul_add_right, h1, h2]
     · intro c x hx h1
       change zMul (zMul (genVec gu) x) Z = zMul (genVec gu) (zMul x Z) at h1
@@ -387,7 +429,6 @@ theorem assoc (X Y Z : CZ)
   · intro y1 y2 hy1 hy2 h1 h2
     change zMul (zMul y1 Y) Z = zMul y1 (zMul Y Z) at h1
     change zMul (zMul y2 Y) Z = zMul y2 (zMul Y Z) at h2
-    change zMul (zMul (y1 + y2) Y) Z = zMul (y1 + y2) (zMul Y Z)
     rw [zMul_add_left, zMul_add_left, zMul_add_left, h1, h2]
   · intro c x hx h1
     change zMul (zMul x Y) Z = zMul x (zMul Y Z) at h1

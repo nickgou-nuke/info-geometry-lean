@@ -97,7 +97,7 @@ theorem pion_raise_lower_lie :
     ⁅pionPlus (E := E), pionMinus (E := E)⁆ =
       (2 : ℝ) • pionZero (E := E) := by
   rw [LieRing.of_associative_ring_bracket]
-  simpa [pionZero, CCRBracket, fockCommutator_eq] using
+  simpa [pionZero, CCRBracket, fockCommutator_eq, ContinuousLinearMap.mul_def] using
     (concrete_car_creation_annihilation_ccrBracket_eq_spectral_epsilon
       (E := E))
 

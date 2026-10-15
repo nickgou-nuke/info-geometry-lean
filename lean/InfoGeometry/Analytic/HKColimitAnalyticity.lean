@@ -144,7 +144,8 @@ def HKAnalyticAt_id
     {JX : HestenesKreinSpace X}
     (x : X) :
     HKColimit_HKAnalyticAt (inferInstance : HestenesKreinSpace X) (inferInstance : HestenesKreinSpace X) (fun y : X => y) x :=
-  ⟨ContinuousLinearMap.id ℝ X, by simpa using (ContinuousLinearMap.id ℝ X).hasFDerivAt, by
+  ⟨ContinuousLinearMap.id ℝ X, by
+    exact (ContinuousLinearMap.id ℝ X).hasFDerivAt, by
     ext v
     rfl⟩
 

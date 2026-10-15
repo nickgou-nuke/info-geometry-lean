@@ -345,7 +345,7 @@ theorem anomalyMomentumResidual_eq_zero_of_regularization
   have hSkew :
       ContinuousLinearMap.adjoint (EinsteinAnomaly A B_mp B_dr)
         = -EinsteinAnomaly A B_mp B_dr := by
-    simpa using
+    simpa only [ContinuousLinearMap.star_eq_adjoint] using
       (einsteinAnomaly_skew_adjoint (a := A) (b_mp := B_mp) (b_dr := B_dr)
         (k := k) h_mp h_dr h_dr_star)
   exact anomalyMomentumResidual_eq_zero_of_skew (E := E) A B_mp B_dr hSkew
@@ -415,7 +415,7 @@ theorem anomalySkew_of_regularization_of_finiteDimensional
       (E := E) A with ⟨k, B_dr, h_dr⟩
   refine ⟨k, B_dr, h_dr, ?_⟩
   intro h_dr_star
-  simpa using
+  simpa only [ContinuousLinearMap.star_eq_adjoint] using
     (einsteinAnomaly_skew_adjoint
       (a := A)
       (b_mp := B_mp)
@@ -559,7 +559,12 @@ theorem hasDerivAt_modularVelocity_zero
   let e : ℝ →L[ℝ] AlgebraEnd E :=
     (ContinuousLinearMap.id ℝ ℝ).smulRight (modularHamiltonian (E := E) K)
   have hF : HasFDerivAt (fun β : ℝ => modularVelocity (E := E) β K) e 0 := by
-    simpa [e, modularVelocity, modularHamiltonian] using (e.hasFDerivAt (x := (0 : ℝ)))
+    have he : (fun β : ℝ => β • K) = e := by
+      funext β
+      simp [e, ContinuousLinearMap.smulRight_apply]
+    change HasFDerivAt (fun β : ℝ => β • K) e 0
+    rw [he]
+    exact e.hasFDerivAt (x := (0 : ℝ))
   have hD : HasDerivAt
       (fun β : ℝ => modularVelocity (E := E) β K)
       (e 1)
@@ -593,9 +598,8 @@ noncomputable def embedBase : E →L[ℝ] ArnoldMajoranaCarrier E where
         apply (WithLp.ofLp_injective 2)
         simp [InfoGeometry.Krein.to_doubled, smul_zero] }
   cont := by
-    simpa [InfoGeometry.Krein.to_doubled] using
-      (WithLp.prod_continuous_toLp (p := 2) (α := E) (β := E)).comp
-        (continuous_id.prodMk continuous_const)
+    exact (WithLp.prod_continuous_toLp (p := 2) (α := E) (β := E)).comp
+      (continuous_id.prodMk continuous_const)
 
 /-- First-component projection from doubled carrier to the base carrier. -/
 noncomputable def projBase : ArnoldMajoranaCarrier E →L[ℝ] E where

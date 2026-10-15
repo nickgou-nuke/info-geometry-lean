@@ -101,7 +101,7 @@ private theorem derived_window6_zero_set_multiplicative_half_exponent_log_linear
     have hlin :
         Tendsto (fun n : ℕ => (((6 * n + 6 : ℕ) : ℝ))) atTop atTop := by
       exact tendsto_natCast_atTop_atTop.comp hshift_nat
-    simpa [pow_one] using
+    simpa [pow_one, Function.comp_def] using
       (Real.tendsto_pow_log_div_mul_add_atTop 1 0 1 one_ne_zero).comp hlin
   have hEq :
       (fun n : ℕ => Real.log (((6 * n + 6 : ℕ) : ℝ)) / (((6 * n + 4 : ℕ) : ℝ))) =

@@ -2,7 +2,7 @@ import Mathlib.Data.Matrix.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Analysis.Complex.Basic
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 
 set_option linter.unusedSectionVars false
 
@@ -47,9 +47,8 @@ theorem casimir_hyperboloid_identity (rho : ℝ) (z : ℂ) (hz : normSq z ≠ 1)
     have h_real : normSq z = 1 := by exact_mod_cast h_eq
     exact hz h_real
   have h_mul : z * (starRingEnd ℂ) z = (normSq z : ℂ) := by
-    refine Complex.ext ?_ ?_
-    · dsimp [normSq]; ring
-    · dsimp; ring
+    rw [mul_comm]
+    exact normSq_eq_conj_mul_self.symm
   have h_sub : (z + (starRingEnd ℂ) z)^2 - (z - (starRingEnd ℂ) z)^2 = 4 * (normSq z : ℂ) := by
     calc (z + (starRingEnd ℂ) z)^2 - (z - (starRingEnd ℂ) z)^2
       _ = 4 * (z * (starRingEnd ℂ) z) := by ring

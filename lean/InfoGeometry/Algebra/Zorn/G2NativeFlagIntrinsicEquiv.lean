@@ -125,6 +125,7 @@ theorem nativeFlagIntrinsicEquiv_action_eq
     apply intrinsicLine_eq_of_val_image_eq
     rw [hsnd_val_left, hsnd_val_right]
   rw [heq_lines]
+  rfl
 
 /-- THEOREM: The native base flag maps to the intrinsic base flag under the equivalence. -/
 theorem nativeFlagIntrinsicEquiv_baseFlag :
@@ -154,6 +155,7 @@ theorem nativeFlagIntrinsicEquiv_baseFlag :
     apply intrinsicLine_eq_of_val_image_eq
     exact hsnd_val_left
   rw [heq_lines]
+  rfl
 
 theorem intrinsicFlag_orbit_surjective :
     Function.Surjective

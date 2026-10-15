@@ -363,7 +363,8 @@ theorem e_sq : e * e = (2 : ℂ) • e := by
   -- Projector soldering: XY + YX = Z
   have hXY_YX : X * Y + Y * X = Z := by
     unfold X Y Z
-    simpa [Algebra.TensorProduct.tmul_mul_tmul] using projector_tensor_identity
+    simpa only [PPlus, PMinus, ← Algebra.TensorProduct.tmul_mul_tmul] using
+      projector_tensor_identity
   -- Assemble with grouped expansion — keeps X*Y + Y*X syntactically together
   have h_expand :
       (X + Y + Z) * (X + Y + Z) =
@@ -421,7 +422,8 @@ def klein_classification : KleinClassification where
         rw [hA_sq]; dsimp [A]; simp [smul_smul]
   decomposition := rfl
   projector_soldering := by
-    simpa [Algebra.TensorProduct.tmul_mul_tmul] using projector_tensor_identity
+    simpa only [PPlus, PMinus, ← Algebra.TensorProduct.tmul_mul_tmul] using
+      projector_tensor_identity
 
 /-! ## Synthesis -/
 

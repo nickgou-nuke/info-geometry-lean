@@ -31,6 +31,7 @@ theorem M_x_comp_M_y_eq_P_xy (k : WaveVector) : Mx (My k) = Pxy k := by
   rcases yz with ⟨y, z⟩
   simp [Mx, My, Pxy]
   ring
+  rfl
 
 #check M_x_comp_M_y_eq_P_xy
 

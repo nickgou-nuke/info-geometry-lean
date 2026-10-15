@@ -1,3 +1,5 @@
+import Mathlib.Analysis.Normed.Module.FiniteDimension
+import Mathlib.Analysis.Normed.Operator.Banach
 import InfoGeometry.Lie.SplitOctonionImaginaryAction
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -23,7 +25,8 @@ noncomputable def imaginaryAutCoords
 dimensional coordinate carrier. -/
 noncomputable def imaginaryAutCoordsHomeomorph
     (φ : SplitOctonionAut) : ImaginaryCoords ≃ₜ ImaginaryCoords :=
-  (imaginaryAutCoords φ).toContinuousLinearEquiv.toHomeomorph
+  ((imaginaryAutCoords φ).toContinuousLinearEquivOfContinuous
+    (LinearMap.continuous_of_finiteDimensional _)).toHomeomorph
 
 @[simp] theorem imaginaryAutCoordsHomeomorph_apply
     (φ : SplitOctonionAut) (x : ImaginaryCoords) :
@@ -33,7 +36,7 @@ noncomputable def imaginaryAutCoordsHomeomorph
 theorem continuous_imaginaryAutCoordsHomeomorph
     (φ : SplitOctonionAut) :
     Continuous (imaginaryAutCoordsHomeomorph φ) :=
-  (imaginaryAutCoords φ).toContinuousLinearEquiv.continuous
+  (imaginaryAutCoordsHomeomorph φ).continuous
 
 /-- The null/norm-level readout transported to the coordinate carrier. -/
 def imaginaryCoordsNormLevel (c : ℝ) : Set ImaginaryCoords :=

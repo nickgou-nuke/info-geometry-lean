@@ -79,6 +79,26 @@ theorem ofStage_superBracket
       superBracket px py (ofStage n A) (ofStage n B) := by
   exact map_superBracket (ofStage n) px py A B
 
+/-- The finite tensor-stage representation preserves the nested graded triple
+product, so both bracket levels descend to the algebraic tower limit. -/
+theorem ofStage_superTriple
+    (px py pz : Bool) {n : ℕ} (A B C : Stage n) :
+    ofStage n
+        (superBracket px py A (superBracket py pz B C)) =
+      superBracket px py (ofStage n A)
+        (superBracket py pz (ofStage n B) (ofStage n C)) := by
+  change ofStage n (stageSuperBracket px py A (stageSuperBracket py pz B C)) =
+    superBracket px py (ofStage n A)
+      (superBracket py pz (ofStage n B) (ofStage n C))
+  rw [ofStage_superBracket, ofStage_superBracket]
+
+/-- Associativity of every finite-stage matrix algebra passes to the direct
+limit through its canonical stage map. -/
+theorem ofStage_associator_zero {n : ℕ} (A B C : Stage n) :
+    (ofStage n A * ofStage n B) * ofStage n C -
+      ofStage n A * (ofStage n B * ofStage n C) = 0 := by
+  simp [mul_assoc]
+
 /-- A finite superbracket identity gives the corresponding direct-limit image identity. -/
 theorem limit_superBracket_eq
     (px py : Bool) {n : ℕ} {A B C : Stage n}

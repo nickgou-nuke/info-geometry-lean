@@ -1,5 +1,4 @@
 import InfoGeometry.Canonical.KreinCarrierInstances.Carrier
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HestenesKreinModularGeometry
 import Mathlib.Analysis.InnerProductSpace.ProdL2
 import Mathlib.Analysis.Normed.Lp.ProdLp
@@ -21,11 +20,10 @@ def fundamentalSymmetryKlein : KleinBottleCarrier →L[ℝ] KleinBottleCarrier w
     simpa [WithLp.smul_fst, WithLp.smul_snd, smul_neg] using
       (WithLp.toLp_smul (p := (2 : ENNReal)) (c := c)
         (x := (WithLp.fst p, -WithLp.snd p)))
-  cont := by
-    simpa using
-      (WithLp.prod_continuous_toLp (p := (2 : ENNReal)) (α := ℝ) (β := ℝ)).comp
-        ((WithLp.continuous_fst (p := (2 : ENNReal)) (α := ℝ) (β := ℝ)).prodMk
-          ((WithLp.continuous_snd (p := (2 : ENNReal)) (α := ℝ) (β := ℝ)).neg))
+  cont :=
+    (WithLp.prod_continuous_toLp (p := (2 : ENNReal)) (α := ℝ) (β := ℝ)).comp
+      ((WithLp.continuous_fst (p := (2 : ENNReal)) (α := ℝ) (β := ℝ)).prodMk
+        ((WithLp.continuous_snd (p := (2 : ENNReal)) (α := ℝ) (β := ℝ)).neg))
 
 /-- The diagonal modular generator `G(x,y) = (-x,y)`. -/
 def modularGeneratorKlein : KleinBottleCarrier →L[ℝ] KleinBottleCarrier where
@@ -39,11 +37,10 @@ def modularGeneratorKlein : KleinBottleCarrier →L[ℝ] KleinBottleCarrier wher
     simpa [WithLp.smul_fst, WithLp.smul_snd, smul_neg] using
       (WithLp.toLp_smul (p := (2 : ENNReal)) (c := c)
         (x := (-WithLp.fst p, WithLp.snd p)))
-  cont := by
-    simpa using
-      (WithLp.prod_continuous_toLp (p := (2 : ENNReal)) (α := ℝ) (β := ℝ)).comp
-        (((WithLp.continuous_fst (p := (2 : ENNReal)) (α := ℝ) (β := ℝ)).neg).prodMk
-          (WithLp.continuous_snd (p := (2 : ENNReal)) (α := ℝ) (β := ℝ)))
+  cont :=
+    (WithLp.prod_continuous_toLp (p := (2 : ENNReal)) (α := ℝ) (β := ℝ)).comp
+      (((WithLp.continuous_fst (p := (2 : ENNReal)) (α := ℝ) (β := ℝ)).neg).prodMk
+        (WithLp.continuous_snd (p := (2 : ENNReal)) (α := ℝ) (β := ℝ)))
 
 /-- The identity real endomorphism on the Klein carrier. -/
 def idMapKlein : KleinBottleCarrier →L[ℝ] KleinBottleCarrier :=

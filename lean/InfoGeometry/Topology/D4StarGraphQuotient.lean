@@ -65,10 +65,12 @@ theorem centre_class_eq_iff {v : FourPlaneVertex} :
     simpa [h]
 
 def quotientColorAction (σ : Equiv.Perm ColorChannel) :
-    D4StarQuotient → D4StarQuotient :=
+  D4StarQuotient → D4StarQuotient :=
   Quotient.map (vertexPermutation σ) (by
     intro v w h
-    cases v <;> cases w <;> simpa [starOrbitRel, vertexPermutation] using h)
+    change starOrbitRel v w at h
+    change starOrbitRel (vertexPermutation σ v) (vertexPermutation σ w)
+    cases v <;> cases w <;> simp [starOrbitRel, vertexPermutation] at h ⊢)
 
 theorem quotientColorAction_centre (σ : Equiv.Perm ColorChannel) :
     quotientColorAction σ (starQuotientMap centralVertex) =

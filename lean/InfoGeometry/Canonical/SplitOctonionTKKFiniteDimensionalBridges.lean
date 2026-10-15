@@ -10,6 +10,17 @@ abbrev Skew4 := skewAdjointMatricesSubmodule (1 : Matrix (Fin 4) (Fin 4) ℝ)
 abbrev So44 := LieAlgebra.Orthogonal.so' (Fin 4) (Fin 4) ℝ
 abbrev StructureAlgebraCarrier := So44 × ℝ
 
+@[simp]
+theorem mem_skewAdjoint_one {n : Type*} [Fintype n] [DecidableEq n] (A : Matrix n n ℝ) :
+    A ∈ skewAdjointMatricesSubmodule (1 : Matrix n n ℝ) ↔ Matrix.transpose A = -A := by
+  rw [mem_skewAdjointMatricesSubmodule]
+  simp only [Matrix.IsSkewAdjoint, Matrix.IsAdjointPair, Matrix.mul_one, Matrix.one_mul]
+
+@[simp]
+theorem mem_skew4 {A : Matrix (Fin 4) (Fin 4) ℝ} :
+    A ∈ Skew4 ↔ Matrix.transpose A = -A :=
+  mem_skewAdjoint_one A
+
 def skewMatrix (x : Fin 6 → ℝ) : Matrix (Fin 4) (Fin 4) ℝ :=
   !![0, x 0, x 1, x 2;
      -x 0, 0, x 3, x 4;
@@ -20,17 +31,18 @@ theorem skewMatrix_skew (x : Fin 6 → ℝ) :
     Matrix.transpose (skewMatrix x) = -skewMatrix x := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [skewMatrix, Matrix.transpose_apply] <;> ring
+    simp [skewMatrix, Matrix.transpose_apply]
 
 def skewMatrixLinear : (Fin 6 → ℝ) →ₗ[ℝ] Skew4 where
   toFun x := ⟨skewMatrix x, by
-    simpa [Matrix.IsSkewAdjoint, Matrix.IsAdjointPair] using skewMatrix_skew x⟩
+    rw [mem_skew4]
+    exact skewMatrix_skew x⟩
   map_add' x y := by
     ext i j
     fin_cases i <;> fin_cases j <;> simp [skewMatrix] <;> ring
   map_smul' c x := by
     ext i j
-    fin_cases i <;> fin_cases j <;> simp [skewMatrix] <;> ring
+    fin_cases i <;> fin_cases j <;> simp [skewMatrix]
 
 def skewCoords : Skew4 →ₗ[ℝ] (Fin 6 → ℝ) where
   toFun A := ![A.1 0 1, A.1 0 2, A.1 0 3, A.1 1 2, A.1 1 3, A.1 2 3]
@@ -43,10 +55,8 @@ def skewEquiv : Skew4 ≃ₗ[ℝ] (Fin 6 → ℝ) where
   left_inv A := by
     have hA : Matrix.transpose A.1 = -A.1 := by
       have h := A.2
-      rw [mem_skewAdjointMatricesSubmodule] at h
-      change Matrix.transpose A.1 * (1 : Matrix (Fin 4) (Fin 4) ℝ) =
-        (1 : Matrix (Fin 4) (Fin 4) ℝ) * (-A.1) at h
-      simpa only [Matrix.mul_one, Matrix.one_mul] using h
+      rw [mem_skew4] at h
+      exact h
     apply Subtype.ext
     ext i j
     have h := congrArg
@@ -84,7 +94,7 @@ def blockToSo44 : Block44 →ₗ[ℝ] So44 where
     change _ = _
     ext r c
     rcases r with r | r <;> rcases c with c | c <;>
-      simp [blockMatrix44, D44, Matrix.mul_apply, Fintype.sum_sum_type,
+      simp [blockMatrix44, D44, Matrix.mul_apply,
         LieAlgebra.Orthogonal.indefiniteDiagonal, Matrix.diagonal_apply,
         Finset.sum_ite_eq'] <;> ring
     all_goals
@@ -104,33 +114,30 @@ def blockToSo44 : Block44 →ₗ[ℝ] So44 where
 
 def topBlock (X : So44) : Skew4 :=
   ⟨fun i j => X.1 (Sum.inl i) (Sum.inl j), by
+    apply mem_skew4.mpr
+    ext i j
     have h := X.2
     change X.1 ∈ skewAdjointMatricesSubmodule D44 at h
     rw [mem_skewAdjointMatricesSubmodule] at h
-    rw [mem_skewAdjointMatricesSubmodule]
-    simp only [Matrix.IsSkewAdjoint, Matrix.IsAdjointPair,
-      Matrix.mul_one, Matrix.one_mul]
-    ext i j
     have hij := congr_fun (congr_fun h (Sum.inl i)) (Sum.inl j)
-    simpa [D44, Matrix.mul_apply, LieAlgebra.Orthogonal.indefiniteDiagonal,
-      Matrix.diagonal_apply, Finset.sum_ite_eq'] using hij⟩
+    simp [D44, Matrix.mul_apply, LieAlgebra.Orthogonal.indefiniteDiagonal,
+      Matrix.diagonal_apply, Finset.sum_ite_eq', Matrix.transpose_apply] at hij ⊢
+    exact hij⟩
 
 def middleBlock (X : So44) : Matrix (Fin 4) (Fin 4) ℝ :=
   fun i j => X.1 (Sum.inl i) (Sum.inr j)
 
 def bottomBlock (X : So44) : Skew4 :=
   ⟨fun i j => X.1 (Sum.inr i) (Sum.inr j), by
+    apply mem_skew4.mpr
+    ext i j
     have h := X.2
     change X.1 ∈ skewAdjointMatricesSubmodule D44 at h
     rw [mem_skewAdjointMatricesSubmodule] at h
-    rw [mem_skewAdjointMatricesSubmodule]
-    simp only [Matrix.IsSkewAdjoint, Matrix.IsAdjointPair,
-      Matrix.mul_one, Matrix.one_mul]
-    ext i j
     have hij := congr_fun (congr_fun h (Sum.inr i)) (Sum.inr j)
     simp [D44, Matrix.mul_apply, LieAlgebra.Orthogonal.indefiniteDiagonal,
-      Matrix.diagonal_apply, Finset.sum_ite_eq'] at hij ⊢
-    linarith⟩
+      Matrix.diagonal_apply, Finset.sum_ite_eq', Matrix.transpose_apply] at hij ⊢
+    exact neg_eq_iff_eq_neg.mp hij⟩
 
 def blockFromSo44 : So44 →ₗ[ℝ] Block44 where
   toFun X := (topBlock X, middleBlock X, bottomBlock X)
@@ -146,30 +153,20 @@ def blockEquiv : So44 ≃ₗ[ℝ] Block44 where
     rw [mem_skewAdjointMatricesSubmodule] at h
     apply Subtype.ext
     ext r c
-    rcases r with r | r <;> rcases c with c | c <;>
-      simp [blockToSo44, blockFromSo44, blockMatrix44, topBlock, middleBlock,
-        bottomBlock,
-        Matrix.fromBlocks_apply₁₁, Matrix.fromBlocks_apply₁₂,
-        Matrix.fromBlocks_apply₂₁, Matrix.fromBlocks_apply₂₂] at *
-    all_goals
-      first
-      | rfl
-      | have hrc := congr_fun (congr_fun h (Sum.inr r)) (Sum.inl c)
-        simpa [D44, Matrix.mul_apply, LieAlgebra.Orthogonal.indefiniteDiagonal,
-          Matrix.diagonal_apply, Finset.sum_ite_eq'] using hrc
+    rcases r with r | r <;> rcases c with c | c
+    · rfl
+    · rfl
+    · have hrc := congr_fun (congr_fun h (Sum.inr r)) (Sum.inl c)
+      simp [D44, Matrix.mul_apply, LieAlgebra.Orthogonal.indefiniteDiagonal,
+        Matrix.diagonal_apply, Finset.sum_ite_eq'] at hrc
+      exact hrc
+    · rfl
   right_inv x := by
-    ext r c
-    rcases r with r | r <;> rcases c with c | c <;>
-      simp [blockToSo44, blockFromSo44, blockMatrix44, topBlock, middleBlock,
-        bottomBlock,
-        Matrix.fromBlocks_apply₁₁, Matrix.fromBlocks_apply₁₂,
-        Matrix.fromBlocks_apply₂₁, Matrix.fromBlocks_apply₂₂] <;> rfl
-    all_goals
-      first
-      | change x.2.1 r c = x.2.1 r c
-        rfl
-      | change (x.2.2.1 : Matrix (Fin 4) (Fin 4) ℝ) r c = x.2.2.1 r c
-        rfl
+    ext : 1
+    · apply Subtype.ext; ext i j; rfl
+    · ext : 1
+      · ext i j; rfl
+      · apply Subtype.ext; ext i j; rfl
   map_add' := blockFromSo44.map_add
   map_smul' := blockFromSo44.map_smul
 
@@ -182,7 +179,7 @@ theorem structure_algebra_finrank :
     Module.finrank ℝ StructureAlgebraCarrier = 29 := by
   rw [Module.finrank_prod, so44_finrank, Module.finrank_self]
 
-def structureAlgebraFinrank (hSo44 : Module.finrank ℝ So44 = 28) :
+theorem structureAlgebraFinrank (hSo44 : Module.finrank ℝ So44 = 28) :
     Module.finrank ℝ StructureAlgebraCarrier = 29 := by
   rw [Module.finrank_prod, hSo44, Module.finrank_self]
 
@@ -210,7 +207,7 @@ theorem tkk_block_carrier_finrank :
   rw [Module.finrank_prod, Module.finrank_prod]
   simp [Module.finrank_matrix]
 
-def blockFinrankEquiv {L : Type*} [AddCommGroup L] [Module ℝ L]
+theorem blockFinrankEquiv {L : Type*} [AddCommGroup L] [Module ℝ L]
     (e : TKKBlockCarrier ≃ₗ[ℝ] L)
     [Module.Finite ℝ L] :
     Module.finrank ℝ L = 45 := by
@@ -229,6 +226,11 @@ abbrev Skew5 := skewAdjointMatricesSubmodule (1 : Matrix (Fin 5) (Fin 5) ℝ)
 abbrev So55 := LieAlgebra.Orthogonal.so' (Fin 5) (Fin 5) ℝ
 abbrev Block55 := Skew5 × Matrix (Fin 5) (Fin 5) ℝ × Skew5
 
+@[simp]
+theorem mem_skew5 {A : Matrix (Fin 5) (Fin 5) ℝ} :
+    A ∈ Skew5 ↔ Matrix.transpose A = -A :=
+  mem_skewAdjoint_one A
+
 def skewMatrix5 (x : Fin 10 → ℝ) : Matrix (Fin 5) (Fin 5) ℝ :=
   !![0, x 0, x 1, x 2, x 3;
      -x 0, 0, x 4, x 5, x 6;
@@ -240,17 +242,18 @@ theorem skewMatrix5_skew (x : Fin 10 → ℝ) :
     Matrix.transpose (skewMatrix5 x) = -skewMatrix5 x := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [skewMatrix5, Matrix.transpose_apply] <;> ring
+    simp [skewMatrix5, Matrix.transpose_apply]
 
 def skewMatrix5Linear : (Fin 10 → ℝ) →ₗ[ℝ] Skew5 where
   toFun x := ⟨skewMatrix5 x, by
-    simpa [Matrix.IsSkewAdjoint, Matrix.IsAdjointPair] using skewMatrix5_skew x⟩
+    rw [mem_skew5]
+    exact skewMatrix5_skew x⟩
   map_add' x y := by
     ext i j
     fin_cases i <;> fin_cases j <;> simp [skewMatrix5] <;> ring
   map_smul' c x := by
     ext i j
-    fin_cases i <;> fin_cases j <;> simp [skewMatrix5] <;> ring
+    fin_cases i <;> fin_cases j <;> simp [skewMatrix5]
 
 def skewCoords5 : Skew5 →ₗ[ℝ] (Fin 10 → ℝ) where
   toFun A := ![A.1 0 1, A.1 0 2, A.1 0 3, A.1 0 4,
@@ -264,10 +267,8 @@ def skewEquiv5 : Skew5 ≃ₗ[ℝ] (Fin 10 → ℝ) where
   left_inv A := by
     have hA : Matrix.transpose A.1 = -A.1 := by
       have h := A.2
-      rw [mem_skewAdjointMatricesSubmodule] at h
-      change Matrix.transpose A.1 * (1 : Matrix (Fin 5) (Fin 5) ℝ) =
-        (1 : Matrix (Fin 5) (Fin 5) ℝ) * (-A.1) at h
-      simpa only [Matrix.mul_one, Matrix.one_mul] using h
+      rw [mem_skew5] at h
+      exact h
     apply Subtype.ext
     ext i j
     have h := congrArg
@@ -299,7 +300,7 @@ def blockToSo55 : Block55 →ₗ[ℝ] So55 where
     change _ = _
     ext r c
     rcases r with r | r <;> rcases c with c | c <;>
-      simp [blockMatrix55, D55, Matrix.mul_apply, Fintype.sum_sum_type,
+      simp [blockMatrix55, D55, Matrix.mul_apply,
         LieAlgebra.Orthogonal.indefiniteDiagonal, Matrix.diagonal_apply,
         Finset.sum_ite_eq'] <;> ring
     all_goals
@@ -319,33 +320,30 @@ def blockToSo55 : Block55 →ₗ[ℝ] So55 where
 
 def topBlock5 (X : So55) : Skew5 :=
   ⟨fun i j => X.1 (Sum.inl i) (Sum.inl j), by
+    apply mem_skew5.mpr
+    ext i j
     have h := X.2
     change X.1 ∈ skewAdjointMatricesSubmodule D55 at h
     rw [mem_skewAdjointMatricesSubmodule] at h
-    rw [mem_skewAdjointMatricesSubmodule]
-    simp only [Matrix.IsSkewAdjoint, Matrix.IsAdjointPair,
-      Matrix.mul_one, Matrix.one_mul]
-    ext i j
     have hij := congr_fun (congr_fun h (Sum.inl i)) (Sum.inl j)
-    simpa [D55, Matrix.mul_apply, LieAlgebra.Orthogonal.indefiniteDiagonal,
-      Matrix.diagonal_apply, Finset.sum_ite_eq'] using hij⟩
+    simp [D55, Matrix.mul_apply, LieAlgebra.Orthogonal.indefiniteDiagonal,
+      Matrix.diagonal_apply, Finset.sum_ite_eq', Matrix.transpose_apply] at hij ⊢
+    exact hij⟩
 
 def middleBlock5 (X : So55) : Matrix (Fin 5) (Fin 5) ℝ :=
   fun i j => X.1 (Sum.inl i) (Sum.inr j)
 
 def bottomBlock5 (X : So55) : Skew5 :=
   ⟨fun i j => X.1 (Sum.inr i) (Sum.inr j), by
+    apply mem_skew5.mpr
+    ext i j
     have h := X.2
     change X.1 ∈ skewAdjointMatricesSubmodule D55 at h
     rw [mem_skewAdjointMatricesSubmodule] at h
-    rw [mem_skewAdjointMatricesSubmodule]
-    simp only [Matrix.IsSkewAdjoint, Matrix.IsAdjointPair,
-      Matrix.mul_one, Matrix.one_mul]
-    ext i j
     have hij := congr_fun (congr_fun h (Sum.inr i)) (Sum.inr j)
     simp [D55, Matrix.mul_apply, LieAlgebra.Orthogonal.indefiniteDiagonal,
-      Matrix.diagonal_apply, Finset.sum_ite_eq'] at hij ⊢
-    linarith⟩
+      Matrix.diagonal_apply, Finset.sum_ite_eq', Matrix.transpose_apply] at hij ⊢
+    exact neg_eq_iff_eq_neg.mp hij⟩
 
 def blockFromSo55 : So55 →ₗ[ℝ] Block55 where
   toFun X := (topBlock5 X, middleBlock5 X, bottomBlock5 X)
@@ -361,30 +359,20 @@ def blockEquiv55 : So55 ≃ₗ[ℝ] Block55 where
     rw [mem_skewAdjointMatricesSubmodule] at h
     apply Subtype.ext
     ext r c
-    rcases r with r | r <;> rcases c with c | c <;>
-      simp [blockToSo55, blockFromSo55, blockMatrix55, topBlock5, middleBlock5,
-        bottomBlock5,
-        Matrix.fromBlocks_apply₁₁, Matrix.fromBlocks_apply₁₂,
-        Matrix.fromBlocks_apply₂₁, Matrix.fromBlocks_apply₂₂] at *
-    all_goals
-      first
-      | rfl
-      | have hrc := congr_fun (congr_fun h (Sum.inr r)) (Sum.inl c)
-        simpa [D55, Matrix.mul_apply, LieAlgebra.Orthogonal.indefiniteDiagonal,
-          Matrix.diagonal_apply, Finset.sum_ite_eq'] using hrc
+    rcases r with r | r <;> rcases c with c | c
+    · rfl
+    · rfl
+    · have hrc := congr_fun (congr_fun h (Sum.inr r)) (Sum.inl c)
+      simp [D55, Matrix.mul_apply, LieAlgebra.Orthogonal.indefiniteDiagonal,
+        Matrix.diagonal_apply, Finset.sum_ite_eq'] at hrc
+      exact hrc
+    · rfl
   right_inv x := by
-    ext r c
-    rcases r with r | r <;> rcases c with c | c <;>
-      simp [blockToSo55, blockFromSo55, blockMatrix55, topBlock5, middleBlock5,
-        bottomBlock5,
-        Matrix.fromBlocks_apply₁₁, Matrix.fromBlocks_apply₁₂,
-        Matrix.fromBlocks_apply₂₁, Matrix.fromBlocks_apply₂₂] <;> rfl
-    all_goals
-      first
-      | change x.2.1 r c = x.2.1 r c
-        rfl
-      | change (x.2.2.1 : Matrix (Fin 5) (Fin 5) ℝ) r c = x.2.2.1 r c
-        rfl
+    ext : 1
+    · apply Subtype.ext; ext i j; rfl
+    · ext : 1
+      · ext i j; rfl
+      · apply Subtype.ext; ext i j; rfl
   map_add' := blockFromSo55.map_add
   map_smul' := blockFromSo55.map_smul
 

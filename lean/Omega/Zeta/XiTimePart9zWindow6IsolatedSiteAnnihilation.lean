@@ -74,9 +74,14 @@ lemma xi_time_part9z_window6_isolated_site_annihilation_centered_fiber_sum_zero
     xi_time_part9z_window6_isolated_site_annihilation_data.xi_time_part9z_window6_isolated_site_annihilation_fiberSum,
     xi_time_part9z_window6_isolated_site_annihilation_data.xi_time_part9z_window6_isolated_site_annihilation_centered,
     xi_time_part9z_window6_isolated_site_annihilation_data.xi_time_part9z_window6_isolated_site_annihilation_fiberMean,
-    Finset.sum_sub_distrib, Finset.sum_const, nsmul_eq_mul]
+    Finset.sum_sub_distrib]
+  change
+    (∑ x : D.Fiber v, D.f ⟨v, x⟩) -
+      ∑ x : D.Fiber v,
+        (∑ y : D.Fiber v, D.f ⟨v, y⟩) /
+          (Fintype.card (D.Fiber v) : ℝ) = 0
+  rw [Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
   field_simp [hcard_ne]
-  rw [Finset.card_univ]
   ring
 
 /-- Paper label: `thm:xi-time-part9z-window6-isolated-site-annihilation`. -/

@@ -94,7 +94,7 @@ theorem SymbolicLatentObservableModularFlow.observationQuotientOrbitClosureFlowH
   change descendedSymbolicLatentObservationFlow Φ t
       (descendedSymbolicLatentObservationFlow Φ s y.1) =
     descendedSymbolicLatentObservationFlow Φ (t + s) y.1
-  simpa [add_comm] using
+  simpa [add_comm, symbolicLatentObservationQuotientFlow] using
     ((symbolicLatentObservationQuotientFlow Φ h_cont).act_add t s y.1).symm
 
 theorem SymbolicLatentObservableModularFlow.observationQuotientOrbitClosureFlowTopCatHom_comp_apply
@@ -114,7 +114,7 @@ theorem SymbolicLatentObservableModularFlow.observationQuotientOrbitClosureFlowT
   change descendedSymbolicLatentObservationFlow Φ t
       (descendedSymbolicLatentObservationFlow Φ s y.1) =
     descendedSymbolicLatentObservationFlow Φ (t + s) y.1
-  simpa [add_comm] using
+  simpa [add_comm, symbolicLatentObservationQuotientFlow] using
     ((symbolicLatentObservationQuotientFlow Φ h_cont).act_add t s y.1).symm
 
 end

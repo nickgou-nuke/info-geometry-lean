@@ -111,7 +111,9 @@ theorem paper_pom_bc_profinite_reconstruction_homeo_cyl
     let xlim : pom_bc_profinite_reconstruction_homeo_cyl_point D := ⟨x, hx⟩
     have hcoord := congrArg (fun e : Equiv.Perm
         (pom_bc_profinite_reconstruction_homeo_cyl_point D) => (e xlim).1 m) hgh
-    simpa [iotaFun, pom_bc_profinite_reconstruction_homeo_cyl_iota, xlim, hxm] using hcoord
+    change D.cylinderAction m (g.1 m) (x m) = D.cylinderAction m (h.1 m) (x m) at hcoord
+    rw [hxm] at hcoord
+    exact hcoord
   · ext h
     constructor
     · intro hh

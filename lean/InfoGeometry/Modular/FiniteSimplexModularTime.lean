@@ -135,8 +135,11 @@ theorem flow_entry_hasDerivAt (p : PositiveSimplex n) (A : Matrix (Fin n) (Fin n
     ((Real.log (p.val i) - Real.log (p.val j) : ℝ) : ℂ)
   have he := hi.cexp.mul_const (A i j)
   convert he using 1
-  simp [relativeLogEigenvalue]
-  ring
+  · funext t
+    simp only [flow, phase]
+    simp only [Complex.ofRealCLM_apply]
+  · simp [relativeLogEigenvalue]
+    ring_nf
 
 theorem relativeLogAction_entry (p : PositiveSimplex n)
     (A : Matrix (Fin n) (Fin n) ℂ) (i j : Fin n) :

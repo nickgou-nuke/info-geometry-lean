@@ -204,7 +204,7 @@ private lemma foldFibreStarLedgerMacroNonneg (n : ℕ) :
 private lemma foldFibreStarLedgerMicroSum (n : ℕ) :
     Finset.univ.sum (foldFibreStarLedgerMicroDist n) = 1 := by
   rw [Fintype.sum_sigma]
-  simpa [Omega.POM.fiberMarginal] using foldFibreStarLedgerMarginal n PUnit.unit
+  simpa [Omega.POM.fiberMarginal, foldFibreStarLedgerMacroDist] using foldFibreStarLedgerMarginal n PUnit.unit
 
 private lemma foldFibreStarLedgerEntropy (n : ℕ) :
     Omega.POM.liftEntropy (foldFibreStarLedgerDegree n) (foldFibreStarLedgerMicroDist n) =

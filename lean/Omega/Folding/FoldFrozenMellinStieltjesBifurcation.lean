@@ -115,7 +115,9 @@ lemma fold_frozen_mellin_stieltjes_bifurcation_log_ratio_div_tendsto_zero
       Tendsto (fun m : ℕ => Real.log (fold_frozen_mellin_stieltjes_bifurcation_ratio D m)) atTop
         (nhds 0) := by
     have hcont : ContinuousAt Real.log 1 := Real.continuousAt_log one_ne_zero
-    simpa using hcont.tendsto.comp (fold_frozen_mellin_stieltjes_bifurcation_ratio_tendsto_one D)
+    change Tendsto (Real.log ∘ fold_frozen_mellin_stieltjes_bifurcation_ratio D) atTop (nhds 0)
+    simpa only [Real.log_one] using
+      hcont.tendsto.comp (fold_frozen_mellin_stieltjes_bifurcation_ratio_tendsto_one D)
   have hinv :
       Tendsto (fun m : ℕ => (m : ℝ)⁻¹) atTop (nhds 0) :=
     tendsto_inv_atTop_zero.comp tendsto_natCast_atTop_atTop
@@ -159,8 +161,8 @@ theorem paper_fold_frozen_mellin_stieltjes_bifurcation (D : FoldFrozenMellinStie
   · simpa [FoldFrozenMellinStieltjesBifurcationData.pressureValue] using
       paper_fold_pressure_freezing_threshold D.pressure D.alphaStar D.alphaTwo D.gStar D.a
         D.hgap D.hLower D.hUpper D.hThreshold
-  · simpa [fold_frozen_mellin_stieltjes_bifurcation_ratio] using
-      fold_frozen_mellin_stieltjes_bifurcation_ratio_tendsto_one D
+  · change Tendsto (fold_frozen_mellin_stieltjes_bifurcation_ratio D) atTop (nhds 1)
+    exact fold_frozen_mellin_stieltjes_bifurcation_ratio_tendsto_one D
   · have hratio_div_zero :=
       fold_frozen_mellin_stieltjes_bifurcation_log_ratio_div_tendsto_zero D
     have hsum :

@@ -46,20 +46,23 @@ noncomputable def S_tomita (δ : ℝ) (X : Matrix (Fin 2) (Fin 2) ℂ) : Matrix 
 -/
 theorem tomita_cuntz_cancellation (δ : ℝ) (X : Matrix (Fin 2) (Fin 2) ℂ) :
     S_tomita δ X = X.conjTranspose := by
-  dsimp [S_tomita, J_conjugation, delta_half, Matrix.conjTranspose]
   ext i j
-  have h_exp : (starRingEnd ℂ) (Complex.exp ↑δ) = Complex.exp ↑δ := by
-    rw [← Complex.ofReal_exp]
-    exact Complex.conj_ofReal (Real.exp δ)
-  have h_exp_neg : (starRingEnd ℂ) (Complex.exp (-↑δ)) = Complex.exp (-↑δ) := by
-    rw [← Complex.ofReal_neg, ← Complex.ofReal_exp]
-    exact Complex.conj_ofReal (Real.exp (-δ))
   fin_cases i <;> fin_cases j
-  · simp
-  · simp
-    rw [h_exp, mul_assoc, ← Complex.exp_add, add_neg_cancel (↑δ : ℂ), Complex.exp_zero, mul_one]
-  · simp
-    rw [h_exp_neg, mul_assoc, ← Complex.exp_add, neg_add_cancel (↑δ : ℂ), Complex.exp_zero, mul_one]
-  · simp
+  · rfl
+  · change star (X 1 0 * (Real.exp δ : ℂ)) * (Real.exp (-δ) : ℂ) = star (X 1 0)
+    rw [star_mul]
+    have h1 : star (Real.exp δ : ℂ) = (Real.exp δ : ℂ) :=
+      Complex.conj_ofReal (Real.exp δ)
+    have h2 : (Real.exp δ : ℂ) * (Real.exp (-δ) : ℂ) = 1 := by
+      rw [← Complex.ofReal_mul, ← Real.exp_add, add_neg_cancel, Real.exp_zero, Complex.ofReal_one]
+    rw [h1, mul_right_comm, h2, one_mul]
+  · change star (X 0 1 * (Real.exp (-δ) : ℂ)) * (Real.exp δ : ℂ) = star (X 0 1)
+    rw [star_mul]
+    have h1 : star (Real.exp (-δ) : ℂ) = (Real.exp (-δ) : ℂ) :=
+      Complex.conj_ofReal (Real.exp (-δ))
+    have h2 : (Real.exp (-δ) : ℂ) * (Real.exp δ : ℂ) = 1 := by
+      rw [← Complex.ofReal_mul, ← Real.exp_add, neg_add_cancel, Real.exp_zero, Complex.ofReal_one]
+    rw [h1, mul_right_comm, h2, one_mul]
+  · rfl
 
 end InfoGeometry.OperatorAlgebra

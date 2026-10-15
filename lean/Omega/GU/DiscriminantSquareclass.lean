@@ -67,7 +67,8 @@ theorem paper_group_jg_discriminant_squareclass
   have hlead :
       (quadraticJoukowskyGodelTransportData a_n a_0 r z₁ z₂ hVieta).transportLeadingCoeff =
         a_n * a_0 := by
-    simpa [quadraticJoukowskyGodelTransportData] using
+    simpa [quadraticJoukowskyGodelTransportData,
+      JoukowskyGodelTransportData.leadingCoeffRigidity] using
       paper_group_jg_lc_rigidity
         (quadraticJoukowskyGodelTransportData a_n a_0 r z₁ z₂ hVieta)
   have hw :

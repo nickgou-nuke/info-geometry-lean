@@ -119,7 +119,7 @@ theorem doubledWittHestenesPhase_commutes_dirac
     doubledWittDirac_intertwines,
     doubledWittDirac_intertwines,
     doubledWittToExterior3_intertwines_phase]
-  simpa only [LinearMap.comp_apply] using congrArg
+  simpa only [Module.End.mul_apply] using congrArg
     (fun T : DoubledExterior3End => T (doubledWittToExterior3 x))
     (concreteDirac3_phase v φ)
 
@@ -145,7 +145,7 @@ theorem doubledWittChirality_sq :
     doubledWittToExterior3 x
   rw [doubledWittChirality_intertwines,
     doubledWittChirality_intertwines]
-  simpa only [Module.End.mul_apply] using
+  simpa only [Module.End.mul_apply, Module.End.one_apply] using
     congrArg (fun T : DoubledExterior3End =>
       T (doubledWittToExterior3 x)) (concreteChirality3_sq)
 
@@ -173,7 +173,7 @@ theorem doubledWittChirality_dirac_odd
   have h := congrArg (fun T : DoubledExterior3End =>
       T (doubledWittToExterior3 x))
     (concreteChirality3_odd v φ)
-  simpa only [map_neg, LinearMap.comp_apply] using h
+  simpa only [map_neg, Module.End.mul_apply, LinearMap.neg_apply] using h
 
 theorem doubledWittHestenesPhase_commutes_chirality :
     doubledWittHestenesPhase.comp doubledWittChirality =
@@ -189,7 +189,7 @@ theorem doubledWittHestenesPhase_commutes_chirality :
     doubledWittChirality_intertwines,
     doubledWittChirality_intertwines,
     doubledWittToExterior3_intertwines_phase]
-  simpa only [LinearMap.comp_apply] using congrArg
+  simpa only [Module.End.mul_apply] using congrArg
     (fun T : DoubledExterior3End => T (doubledWittToExterior3 x))
     concreteHestenesPhase_chirality_commutes
 
@@ -441,7 +441,7 @@ theorem nativeWittPhaseOnImage_sq :
     have h := congrArg
       (fun T : DoubledWittCarrier →ₗ[ℝ] DoubledWittCarrier => T x)
       doubledWittHestenesPhase_sq
-    simpa only [Module.End.mul_apply, Module.End.one_apply] using h
+    simpa only [Module.End.mul_apply, LinearMap.neg_apply, Module.End.one_apply] using h
   rw [hphase]
   exact map_neg nativeWittHestenesEmbeddingEquiv x
 
@@ -726,7 +726,7 @@ theorem nativeWittLaplacianOnImage_chiral_factorization
         _ = nativeWittChiralDiracMinusOnImage v φ *
               nativeWittChiralDiracPlusOnImage v φ +
             nativeWittChiralDiracPlusOnImage v φ *
-              nativeWittChiralDiracMinusOnImage v φ := by noncomm_ring
+              nativeWittChiralDiracMinusOnImage v φ := by abel
 
 /-- The chiral factorization is the anticommutator identity for the two odd
 blocks. -/

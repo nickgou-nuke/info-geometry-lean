@@ -14,7 +14,8 @@ theorem paper_pom_rank2_rigidity_fibonacci_fusion_law (a b : Nat) (u : Nat → N
     simpa using h
   have hu4 : u 4 = 2 := by
     have h := hfib 4 (by norm_num)
-    simpa using h
+    norm_num [Nat.fib] at h
+    exact h
   have hrec1 := hrec 1 (by norm_num)
   have hb : b = 1 := by
     rw [h1, h2] at hrec1

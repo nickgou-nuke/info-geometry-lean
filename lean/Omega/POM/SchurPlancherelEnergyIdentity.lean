@@ -1,4 +1,4 @@
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.Tactic
 
 namespace Omega.POM
@@ -9,7 +9,11 @@ noncomputable section
 inductive SchurPartitionIndex
   | cycle
   | split
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype SchurPartitionIndex where
+  elems := {.cycle, .split}
+  complete := by rintro (_|_) <;> simp
 
 open SchurPartitionIndex
 
@@ -64,10 +68,8 @@ lemma schurColumnOrthogonality (nu mu : SchurPartitionIndex) :
     norm_num [schurCharacter, schurWeight]
   · rw [sum_over_schur_partition_index]
     norm_num [schurCharacter, schurWeight]
-    decide
   · rw [sum_over_schur_partition_index]
     norm_num [schurCharacter, schurWeight]
-    decide
   · rw [sum_over_schur_partition_index]
     norm_num [schurCharacter, schurWeight]
 

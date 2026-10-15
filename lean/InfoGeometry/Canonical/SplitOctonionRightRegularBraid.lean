@@ -52,7 +52,7 @@ theorem bivector_sq (index : Fin 2) : bivector index * bivector index = -1 := by
 
 def braidUnit (index : Fin 2) : EndCZˣ where
   val := 1 + bivector index
-  inv := algebraMap ℝ EndCZ (1 / 2) * (1 - bivector index)
+  inv := (2 : ℝ)⁻¹ • (1 - bivector index)
   val_inv := by
     rw [mul_smul_comm]
     have product : (1 + bivector index) * (1 - bivector index) =

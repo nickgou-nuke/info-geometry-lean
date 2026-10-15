@@ -84,9 +84,9 @@ lemma xi_time_part69_localized_rational_endomorphism_growth_rate_tendsto_of_lt
     exact pow_ne_zero _ (by positivity : (b : ℝ) ≠ 0)
   have hfg : f ~[atTop] g := by
     rw [Asymptotics.isEquivalent_iff_tendsto_one hg_ne]
-    simpa [f, g, Pi.div_apply] using
-      xi_time_part69_localized_rational_endomorphism_growth_rate_ratio_tendsto_one_of_lt
-        (a := a) (b := b) ha hab
+    rw [Pi.div_def]
+    exact xi_time_part69_localized_rational_endomorphism_growth_rate_ratio_tendsto_one_of_lt
+      (a := a) (b := b) ha hab
   have hg_top : Tendsto g atTop atTop :=
     xi_time_part69_localized_rational_endomorphism_growth_rate_dominant_power_tendsto_atTop hb_one
   have hlog_equiv : (fun n : ℕ => Real.log (f n)) ~[atTop] fun n : ℕ => Real.log (g n) :=
@@ -99,8 +99,9 @@ lemma xi_time_part69_localized_rational_endomorphism_growth_rate_tendsto_of_lt
     exact (Real.log_pos hg_gt_one).ne'
   have hlog_ratio :
       Tendsto (fun n : ℕ => Real.log (f n) / Real.log (g n)) atTop (𝓝 1) := by
-    simpa [Pi.div_apply] using
-      (Asymptotics.isEquivalent_iff_tendsto_one hlogg_ne).1 hlog_equiv
+    have h := (Asymptotics.isEquivalent_iff_tendsto_one hlogg_ne).1 hlog_equiv
+    rw [Pi.div_def] at h
+    exact h
   have hlogg_norm :
       Tendsto (fun n : ℕ => Real.log (g n) / ((n + 1 : ℕ) : ℝ)) atTop
         (𝓝 (Real.log (b : ℝ))) := by

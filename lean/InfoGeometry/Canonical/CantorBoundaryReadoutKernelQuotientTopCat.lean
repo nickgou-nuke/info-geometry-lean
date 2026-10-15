@@ -87,7 +87,10 @@ theorem quotientReadout_injective :
   refine Quotient.inductionOn q₂ ?_
   intro y h
   have hxy : realBinaryReadout x = realBinaryReadout y := by
-    simpa [quotientReadout] using h
+    change quotientReadout (quotientMap x) =
+      quotientReadout (quotientMap y) at h
+    rw [quotientReadout_comp, quotientReadout_comp] at h
+    exact h
   apply Quotient.sound
   exact hxy
 
@@ -103,8 +106,9 @@ theorem quotientReadout_mem_unitInterval (q : ReadoutQuotient) :
     quotientReadout q ∈ Set.Icc (0 : ℝ) 1 := by
   refine Quotient.inductionOn q ?_
   intro x
-  simpa [quotientReadout] using
-    (realBinaryReadout_mem_unitInterval x)
+  change quotientReadout (quotientMap x) ∈ Set.Icc (0 : ℝ) 1
+  rw [quotientReadout_comp]
+  exact realBinaryReadout_mem_unitInterval x
 
 theorem quotientReadout_range_eq_unitInterval :
     Set.range quotientReadout = Set.Icc (0 : ℝ) 1 := by

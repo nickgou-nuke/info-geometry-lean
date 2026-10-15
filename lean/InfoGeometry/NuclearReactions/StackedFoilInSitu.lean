@@ -19,7 +19,15 @@ inductive Archetype
   | crossSectionRecovery
   | offsetRecovery
   | measurementChain
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype Archetype where
+  elems := {Archetype.activationModel, Archetype.rateRestoration, Archetype.cascadeModel,
+    Archetype.efficiencyRatio, Archetype.distanceModel, Archetype.activityReconstruction,
+    Archetype.crossSectionRecovery, Archetype.offsetRecovery, Archetype.measurementChain}
+  complete := by
+    intro x
+    cases x <;> simp
 
 open Archetype
 

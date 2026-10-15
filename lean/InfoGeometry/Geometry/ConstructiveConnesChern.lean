@@ -17,7 +17,7 @@ open InfoGeometry.Geometry.SpectralDivisors
 
 structure ConnesChernDatum
     {Region Point Tangent A : Type*}
-    [NormedAddCommGroup A] [NormedSpace ℝ A] [Ring A]
+    [Ring A] [Module ℝ A]
     (I : GeometricIntegralBackend Region Point Tangent A)
     (D : VerifiedBoundedDirac A) where
   ccForm : OperatorOneForm Point Tangent A
@@ -26,7 +26,7 @@ structure ConnesChernDatum
 
 theorem index_eq_boundary_integral
     {Region Point Tangent A : Type*}
-    [NormedAddCommGroup A] [NormedSpace ℝ A] [Ring A]
+    [Ring A] [Module ℝ A]
     (I : GeometricIntegralBackend Region Point Tangent A)
     (D : VerifiedBoundedDirac A)
     (CC : ConnesChernDatum I D)
@@ -43,7 +43,7 @@ theorem index_eq_boundary_integral
 
 theorem kasparov_defect_is_quantized
     {Region Point Tangent A : Type*}
-    [NormedAddCommGroup A] [NormedSpace ℝ A] [Ring A]
+    [Ring A] [Module ℝ A]
     (I : GeometricIntegralBackend Region Point Tangent A)
     (D : VerifiedBoundedDirac A)
     (CC : ConnesChernDatum I D)

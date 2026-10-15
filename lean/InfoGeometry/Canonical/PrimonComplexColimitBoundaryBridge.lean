@@ -178,14 +178,18 @@ def complexifyStage (n : ℕ) : MatrixStage n →+* ComplexMatrixStage.Stage n w
   map_mul' := by
     intro A B
     ext i j
-    simp [Matrix.mul_apply]
+    dsimp [Matrix.mul_apply]
+    push_cast
+    rfl
   map_zero' := by
     ext i j
-    simp
+    rfl
   map_add' := by
     intro A B
     ext i j
-    simp
+    dsimp [Matrix.add_apply]
+    push_cast
+    rfl
 
 @[simp] theorem complexifyStage_apply
     (n : ℕ) (A : MatrixStage n) (i j : BitWord n) :
@@ -196,8 +200,7 @@ theorem complexifyStage_bond_compatible
     complexifyStage (n + 1) (matrixBond n A) =
       ComplexMatrixStage.bondFun n (complexifyStage n A) := by
   ext v w
-  dsimp [complexifyStage, matrixBond, matrixBondFun,
-    ComplexMatrixStage.bondFun]
+  simp [matrixBond, matrixBondFun, ComplexMatrixStage.bondFun]
   split_ifs <;> rfl
 
 def complexifyCone : ∀ n : ℕ,
@@ -245,10 +248,12 @@ theorem primonTrace_complexification_matches_complexTrace
   rw [primonTraceOnInverseLimit_stage,
     primonToComplexColimit_stage,
     complexTraceOnInverseLimit_stage]
-  simp [InfoGeometry.Algebra.PrimonColimitAlgebra.normalizedTrace,
+  dsimp [InfoGeometry.Algebra.PrimonColimitAlgebra.normalizedTrace,
     InfoGeometry.Algebra.PrimonColimitAlgebra.rawTrace,
     InfoGeometry.Canonical.GenuineMatrixStageMorphism.normalizedTrace,
-    complexifyStage, Matrix.trace]
+    Matrix.trace]
+  push_cast
+  rfl
 
 @[simp] theorem complexTraceOnInverseLimit_one
     (z : ↑(limit prefixDiagram)) :

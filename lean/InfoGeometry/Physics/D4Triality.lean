@@ -33,7 +33,14 @@ inductive TrialityBranch
   | vector       -- 8ᵥ: vector representation
   | spinorPlus   -- 8ₛ: positive spinor representation
   | spinorMinus  -- 8꜀: negative spinor representation
-deriving DecidableEq, Fintype, Repr
+deriving DecidableEq, Repr
+
+instance : Fintype TrialityBranch where
+  elems := {TrialityBranch.vector, TrialityBranch.spinorPlus,
+    TrialityBranch.spinorMinus}
+  complete := by
+    intro branch
+    cases branch <;> simp
 
 /-- `\mathrm{vector}\oplus\mathrm{spinorPlus}\oplus\mathrm{spinorMinus}`. -/
 structure TrialityPacket (R : Type*) where

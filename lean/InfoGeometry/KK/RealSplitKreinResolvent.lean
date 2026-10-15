@@ -68,14 +68,14 @@ lemma isCompactOperator
 lemma comp_left_isCompactEnd
     (R : RealSplitKreinResolventData H domain D) (T : EndH H) :
     IsCompactEnd H (T.comp R.resolvent) := by
-  simpa [IsCompactEnd] using
+  simpa [IsCompactEnd, ContinuousLinearMap.coe_comp] using
     IsCompactOperator.clm_comp (hf := R.isCompactOperator) (g := T)
 
 /-- Precomposing the resolvent by any bounded endomorphism stays compact. -/
 lemma comp_right_isCompactEnd
     (R : RealSplitKreinResolventData H domain D) (T : EndH H) :
     IsCompactEnd H (R.resolvent.comp T) := by
-  simpa [IsCompactEnd] using
+  simpa [IsCompactEnd, ContinuousLinearMap.coe_comp] using
     IsCompactOperator.comp_clm (hf := R.isCompactOperator) (g := T)
 
 end RealSplitKreinResolventData

@@ -1,3 +1,4 @@
+import Mathlib.Algebra.Lie.OfAssociative
 import proofs.D5ComplexMatrixRootSpaces
 
 /-! # Rational isotropic-to-diagonal equivalence for complex `so(10)` -/
@@ -7,6 +8,9 @@ set_option maxHeartbeats 1200000
 namespace D5IsotropicDiagonalLieEquiv
 
 open D5ComplexMatrixRootSpaces
+open scoped LieAlgebra
+
+local instance : LieRing CM10 := LieRing.ofAssociativeRing
 
 def diagonalMetric : CM10
   | .inl i, .inl j => if i = j then 1 else 0

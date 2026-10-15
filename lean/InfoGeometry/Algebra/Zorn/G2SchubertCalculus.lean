@@ -1,5 +1,4 @@
 import InfoGeometry.Algebra.Zorn.G2BruhatCardinalities
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2CyclotomicPoincareFactorization
 import Mathlib.RingTheory.Polynomial.Basic
 
@@ -28,9 +27,8 @@ theorem schubertCellCardinality_eq_bruhatCellSize (q : ℕ) (w : SchubertBasisIn
   rfl
 
 theorem schubertCellCardinality_sum_two :
-    (∑ w : SchubertBasisIndex, schubertCellCardinality 2 w) = 189 := by
-  simpa [schubertCellCardinality] using
-    G2BruhatCardinalities.full_flag_coset_sum_189
+    (∑ w : SchubertBasisIndex, schubertCellCardinality 2 w) = 189 :=
+  G2BruhatCardinalities.full_flag_coset_sum_189
 
 def schubertBruhatWeight (q : ℕ) (w : SchubertBasisIndex) : ℕ :=
   64 * schubertCellCardinality q w

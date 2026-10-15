@@ -174,12 +174,12 @@ theorem normalizedWeight_tendsto_zero_atTop (β : ℝ) (hβ : 1 < β) :
       Filter.Tendsto (fun n : ℕ => ((n : ℕ) : ℝ)) Filter.atTop Filter.atTop := by
     simpa using (tendsto_natCast_atTop_atTop (R := ℝ))
   have hcast :
-      Filter.Tendsto (fun n : ℕ+ => ((n : ℕ) : ℝ)) Filter.atTop Filter.atTop := by
-    simpa using hcastNat.comp tendsto_PNat_val_atTop_atTop
+      Filter.Tendsto (fun n : ℕ+ => ((n : ℕ) : ℝ)) Filter.atTop Filter.atTop :=
+    hcastNat.comp tendsto_PNat_val_atTop_atTop
   have hpow :
     Filter.Tendsto (fun n : ℕ+ => ((n : ℕ) : ℝ) ^ (-β)) Filter.atTop
-        (nhds 0) := by
-    simpa using (tendsto_rpow_neg_atTop (y := β) hβpos).comp hcast
+        (nhds 0) :=
+    (tendsto_rpow_neg_atTop (y := β) hβpos).comp hcast
   have hconst :
     Filter.Tendsto (fun _ : ℕ+ => (bostConnesPartition β)⁻¹) Filter.atTop
         (nhds ((bostConnesPartition β)⁻¹)) := tendsto_const_nhds

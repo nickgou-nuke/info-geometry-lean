@@ -140,9 +140,15 @@ theorem crossTensorEnd_comp_tensorObj_N_eq_zero
   intro x y
   have hx := congrArg (fun T : Module.End 𝕜 X => T x) hX
   have hy := congrArg (fun T : Module.End 𝕜 Y => T y) hY
+  have hx' : X.N (X.N x) = 0 := by
+    change X.N (X.N x) = 0 at hx
+    exact hx
+  have hy' : Y.N (Y.N y) = 0 := by
+    change Y.N (Y.N y) = 0 at hy
+    exact hy
   change X.N (X.N x) ⊗ₜ[𝕜] Y.N y + X.N x ⊗ₜ[𝕜] Y.N (Y.N y) = 0
-  simp [show X.N (X.N x) = 0 by simpa [Module.End.mul_eq_comp] using hx,
-    show Y.N (Y.N y) = 0 by simpa [Module.End.mul_eq_comp] using hy]
+  rw [hx', hy']
+  simp
 
 /-- For square-zero factors, applying the primitive tensor nilpotent after the
 mixed cross term also gives zero. -/
@@ -154,9 +160,15 @@ theorem tensorObj_N_comp_crossTensorEnd_eq_zero
   intro x y
   have hx := congrArg (fun T : Module.End 𝕜 X => T x) hX
   have hy := congrArg (fun T : Module.End 𝕜 Y => T y) hY
+  have hx' : X.N (X.N x) = 0 := by
+    change X.N (X.N x) = 0 at hx
+    exact hx
+  have hy' : Y.N (Y.N y) = 0 := by
+    change Y.N (Y.N y) = 0 at hy
+    exact hy
   change X.N (X.N x) ⊗ₜ[𝕜] Y.N y + X.N x ⊗ₜ[𝕜] Y.N (Y.N y) = 0
-  simp [show X.N (X.N x) = 0 by simpa [Module.End.mul_eq_comp] using hx,
-    show Y.N (Y.N y) = 0 by simpa [Module.End.mul_eq_comp] using hy]
+  rw [hx', hy']
+  simp
 
 /-- Hence the mixed square-zero cross term commutes with the primitive
 logarithmic tensor endomorphism.  In fact both ordered products vanish. -/
@@ -168,6 +180,7 @@ theorem crossTensorEnd_commute_tensorObj_N_of_sq_zero
     (tensorObj X Y).N.comp (crossTensorEnd X Y)
   rw [crossTensorEnd_comp_tensorObj_N_eq_zero X Y hX hY,
     tensorObj_N_comp_crossTensorEnd_eq_zero X Y hX hY]
+  rfl
 
 /-- General logarithmic tensor-closure bound.
 

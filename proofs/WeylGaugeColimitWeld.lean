@@ -60,14 +60,17 @@ theorem gaugeActAtEnd_mul (n : ℕ) (A B : M2C) :
     gaugeActAtEnd n (A * B) = gaugeActAtEnd n A * gaugeActAtEnd n B := by
   rcases gaugeActAt_is_representation (n+1) A B with ⟨hmul, _, _, _⟩
   apply LinearMap.ext; intro f
-  simpa using hmul f
+  change gaugeActAt (n+1) (A * B) f =
+    gaugeActAt (n+1) A (gaugeActAt (n+1) B f)
+  exact hmul f
 
 /-- The gauge representation preserves the identity. -/
 theorem gaugeActAtEnd_one (n : ℕ) :
     gaugeActAtEnd n (1 : M2C) = (1 : DiagAlg (n+1) →ₗ[ℂ] DiagAlg (n+1)) := by
   rcases gaugeActAt_is_representation (n+1) 1 1 with ⟨_, hone, _, _⟩
   apply LinearMap.ext; intro f
-  simpa using hone f
+  change gaugeActAt (n+1) 1 f = f
+  exact hone f
 
 /-! ## Transport the finite Weyl pair to the diagonal UHF algebra -/
 

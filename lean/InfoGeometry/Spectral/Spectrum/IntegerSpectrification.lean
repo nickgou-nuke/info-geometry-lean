@@ -11,16 +11,19 @@ or stable homotopy object.
 
 namespace InfoGeometry.Spectral.Spectrum.Integer.Spectrification
 
-abbrev PrespectrumToSpectrumMap (E : Prespectrum) (F : Spectrum) : Type _ :=
+universe u v
+
+abbrev PrespectrumToSpectrumMap (E : Prespectrum.{u}) (F : Spectrum.{v}) :
+    Type (max u v) :=
   Map E F.toPrespectrum
 
-structure Data (E : Prespectrum) where
-  spectrum : Spectrum
+structure Data (E : Prespectrum.{u}) where
+  spectrum : Spectrum.{u}
   unit : PrespectrumToSpectrumMap E spectrum
-  extend : ∀ {F : Spectrum}, PrespectrumToSpectrumMap E F → SpectrumMap spectrum F
-  extend_unit : ∀ {F : Spectrum} (f : PrespectrumToSpectrumMap E F),
+  extend : ∀ {F : Spectrum.{u}}, PrespectrumToSpectrumMap E F → SpectrumMap spectrum F
+  extend_unit : ∀ {F : Spectrum.{u}} (f : PrespectrumToSpectrumMap E F),
     ∀ n x, (extend f).toMap.toFun n (unit n x) = f n x
-  extend_unique : ∀ {F : Spectrum} (f : PrespectrumToSpectrumMap E F)
+  extend_unique : ∀ {F : Spectrum.{u}} (f : PrespectrumToSpectrumMap E F)
     (g : SpectrumMap spectrum F),
     (∀ n x, g.toMap.toFun n (unit n x) = f n x) → g = extend f
 

@@ -131,7 +131,11 @@ theorem relativeModularOperator_commute_from_product
     (q q0 r r0 : PositiveRay (Fin n)) :
     Commute (relativeModularOperator (n := n) q q0)
       (relativeModularOperator (n := n) r r0) := by
-  simpa [Commute] using relativeModularOperator_product_commutes (n := n) q q0 r r0
+  change relativeModularOperator (n := n) q q0 *
+      relativeModularOperator (n := n) r r0 =
+    relativeModularOperator (n := n) r r0 *
+      relativeModularOperator (n := n) q q0
+  exact relativeModularOperator_product_commutes (n := n) q q0 r r0
 
 /-- Theorem: finite relative modular operators commute. -/
 @[rep_depth operator]

@@ -75,17 +75,24 @@ def phaseFlowVector : Fin 2 → ℝ :=
     J² = +I₂ (за разлика от комплексната структура i² = -I₂). -/
 theorem paracomplex_involution :
     paraComplexStructure * paraComplexStructure = 1 := by
-  unfold paraComplexStructure
   ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [Matrix.mul_apply, Fin.sum_univ_two]
+  fin_cases i <;> fin_cases j
+  · change (∑ k : Fin 2, paraComplexStructure 0 k * paraComplexStructure k 0) = 1
+    norm_num [paraComplexStructure, Fin.sum_univ_two]
+  · change (∑ k : Fin 2, paraComplexStructure 0 k * paraComplexStructure k 1) = 0
+    norm_num [paraComplexStructure, Fin.sum_univ_two]
+  · change (∑ k : Fin 2, paraComplexStructure 1 k * paraComplexStructure k 0) = 0
+    norm_num [paraComplexStructure, Fin.sum_univ_two]
+  · change (∑ k : Fin 2, paraComplexStructure 1 k * paraComplexStructure k 1) = 1
+    norm_num [paraComplexStructure, Fin.sum_univ_two]
 
 /-- 🏆 ТЕОРЕМА 2 (Безследовост на J):
     Tr(J) = 0, осигуряващо равенство на размерностите на eigen-пространствата (1, 1). -/
 theorem paracomplex_trace_zero :
     Matrix.trace paraComplexStructure = 0 := by
-  unfold paraComplexStructure Matrix.trace
-  simp [Fin.sum_univ_two]
+  simp only [Matrix.trace, Fin.sum_univ_two, Matrix.diag_apply]
+  change paraComplexStructure 0 0 + paraComplexStructure 1 1 = 0
+  norm_num [paraComplexStructure]
 
 /-- 🏆 ТЕОРЕМА 3 (Пара-Келерова Съвместимост Ω = g · J):
     Симплектичната форма Ω е свързана с метриката и паракомплексната структура чрез
@@ -93,19 +100,18 @@ theorem paracomplex_trace_zero :
 theorem parakahler_compatibility :
     symplecticForm = ![![0, -1], ![1, 0]] ∧
     symplecticForm.det = 1 := by
-  unfold symplecticForm
   refine ⟨rfl, ?_⟩
-  rw [Matrix.det_fin_two]
-  simp
+  rw [Matrix.det_fin_two symplecticForm]
+  norm_num [symplecticForm]
 
 /-- 🏆 ТЕОРЕМА 4 (Антисиметрия на Симплектичната Форма):
     Ωᵀ = -Ω. -/
 theorem symplectic_antisymmetric :
     symplecticForm.transpose = - symplecticForm := by
-  unfold symplecticForm
   ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [Matrix.transpose_apply]
+  fin_cases i <;> fin_cases j
+  all_goals rw [Matrix.transpose_apply, Matrix.neg_apply]
+  all_goals norm_num [symplecticForm]
 
 /-!
 ### 2. Сплетен Комутатор и Симплектично Сдвояване на Потоците

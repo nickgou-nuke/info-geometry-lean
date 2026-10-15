@@ -130,13 +130,9 @@ theorem finite_car_mem_qccr_minus_oneLocus :
     (FiniteSingleModeCARMatrixBridge.annMatrix2,
       FiniteSingleModeCARMatrixBridge.creMatrix2) ∈
       finiteCARQCCRMinusOneLocus := by
-  simpa [finiteCARQCCRMinusOneLocus, qCcrZeroLocus] using
-    (CARCCRFockCuntzBridge.finite_car_qccr_residual :
-      qCcrRelation
-      FiniteSingleModeCARMatrixBridge.annMatrix2
-      FiniteSingleModeCARMatrixBridge.creMatrix2
-      (-1) = 0
-    )
+  change qCcrRelation FiniteSingleModeCARMatrixBridge.annMatrix2
+    FiniteSingleModeCARMatrixBridge.creMatrix2 (-1) = 0
+  exact CARCCRFockCuntzBridge.finite_car_qccr_residual
 
 theorem finite_car_qccr_minus_oneLocus_closed
     [T1Space (Matrix Bool Bool ℂ)] :

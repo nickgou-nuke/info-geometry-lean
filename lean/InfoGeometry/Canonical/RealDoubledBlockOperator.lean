@@ -25,7 +25,7 @@ omit [CompleteSpace E] in
     realDoubledBlockOperator (E := E) A B C D (to_doubled x ξ) =
       to_doubled (A x + B ξ) (C x + D ξ) := by
   apply DoubledSpace.ext <;>
-    simp [realDoubledBlockOperator, plusPointL, minusPointL, to_doubled,
+    simp [realDoubledBlockOperator, to_doubled,
       ContinuousLinearMap.comp_apply]
 
 omit [CompleteSpace E] in
@@ -33,7 +33,7 @@ omit [CompleteSpace E] in
     (A B C D : E →L[ℝ] E) :
     plusBlockMap (E := E) (realDoubledBlockOperator A B C D) = A := by
   ext x
-  simp [plusBlockMap, realDoubledBlockOperator, plusPointL, minusPointL,
+  simp [plusBlockMap, realDoubledBlockOperator,
     ContinuousLinearMap.comp_apply]
 
 omit [CompleteSpace E] in
@@ -41,7 +41,7 @@ omit [CompleteSpace E] in
     (A B C D : E →L[ℝ] E) :
     minusBlockMap (E := E) (realDoubledBlockOperator A B C D) = D := by
   ext x
-  simp [minusBlockMap, realDoubledBlockOperator, plusPointL, minusPointL,
+  simp [minusBlockMap, realDoubledBlockOperator,
     ContinuousLinearMap.comp_apply]
 
 omit [CompleteSpace E] in
@@ -49,7 +49,7 @@ omit [CompleteSpace E] in
     (A B C D : E →L[ℝ] E) :
     plusToMinusBlockMap (E := E) (realDoubledBlockOperator A B C D) = C := by
   ext x
-  simp [plusToMinusBlockMap, realDoubledBlockOperator, plusPointL, minusPointL,
+  simp [plusToMinusBlockMap, realDoubledBlockOperator,
     ContinuousLinearMap.comp_apply]
 
 omit [CompleteSpace E] in
@@ -57,7 +57,7 @@ omit [CompleteSpace E] in
     (A B C D : E →L[ℝ] E) :
     minusToPlusBlockMap (E := E) (realDoubledBlockOperator A B C D) = B := by
   ext x
-  simp [minusToPlusBlockMap, realDoubledBlockOperator, plusPointL, minusPointL,
+  simp [minusToPlusBlockMap, realDoubledBlockOperator,
     ContinuousLinearMap.comp_apply]
 
 end

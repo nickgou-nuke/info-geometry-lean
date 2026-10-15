@@ -48,7 +48,7 @@ theorem anomaly_strain_rotation
         -(vorticity (EinsteinAnomaly a b c) * vorticity (EinsteinAnomaly a b c)) ∧
     strainRate (EinsteinAnomaly a b c) * vorticity (EinsteinAnomaly a b c) =
         -(vorticity (EinsteinAnomaly a b c) * strainRate (EinsteinAnomaly a b c)) := by
-  simpa only [strainRate, vorticity] using
+  simpa only [strainRate, vorticity, ContinuousLinearMap.star_eq_adjoint] using
     SquareZeroStrainRotation.square_zero_scaled_star_pair (EinsteinAnomaly a b c)
       (anomaly_mul_self_eq_zero a b c h) ((2 : ℝ)⁻¹)
 

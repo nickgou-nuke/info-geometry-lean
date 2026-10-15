@@ -59,6 +59,7 @@ theorem standardHadjiivanov_sigmaOne :
   simp [standardHadjiivanovBraidGroup3Hom,
     standardHadjiivanovBraidGenerators,
     logBraidThreeGenerators]
+  rfl
 
 /-- The second braid generator acts on tensor positions 2--3 by the same local
 Hadjiivanov checked `R`. -/
@@ -70,6 +71,7 @@ theorem standardHadjiivanov_sigmaTwo :
   simp [standardHadjiivanovBraidGroup3Hom,
     standardHadjiivanovBraidGenerators,
     logBraidThreeGenerators]
+  rfl
 
 /-- The concrete logarithmic braid representation satisfies the defining Artin
 relation of `B₃`. -/

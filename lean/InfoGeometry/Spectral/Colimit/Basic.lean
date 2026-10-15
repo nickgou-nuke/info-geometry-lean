@@ -114,8 +114,8 @@ theorem sequentialColimitDesc_unique
     (t : SequentialCocone F)
     (f : K.pt ⟶ t.pt)
     (hf : ∀ n : ℕ, K.ι.app n ≫ f = t.ι.app n) :
-    f = sequentialColimitDesc hK t := by
-  simpa using hK.uniq t f hf
+    f = sequentialColimitDesc hK t :=
+  hK.uniq t f hf
 
 /-! ## Split Clifford stage inclusions -/
 

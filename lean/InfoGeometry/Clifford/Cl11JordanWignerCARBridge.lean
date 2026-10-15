@@ -20,11 +20,13 @@ theorem jwCreation_last_eq_jw_u_new (k : ℕ) :
     jwCreation (k + 1) ⟨k, Nat.lt_succ_self k⟩ = jw_u_new k := by
   simp [jwCreation, jw_u_new, jwStringWithBase_last, wittCreationBase,
     a_dagger_base]
+  rfl
 
 theorem jwAnnihilation_last_eq_jw_v_new (k : ℕ) :
     jwAnnihilation (k + 1) ⟨k, Nat.lt_succ_self k⟩ = jw_v_new k := by
   simp [jwAnnihilation, jw_v_new, jwStringWithBase_last, wittAnnihilationBase,
     a_base]
+  rfl
 
 theorem jwCreation_last_sq (k : ℕ) :
     jwCreation (k + 1) ⟨k, Nat.lt_succ_self k⟩ *
@@ -71,7 +73,7 @@ theorem jw_same_site_car :
                 (1 : Matrix (Fin 2) (Fin 2) ℝ)) = 1
         rw [← Matrix.mul_kronecker_mul, ← Matrix.mul_kronecker_mul,
           ← Matrix.add_kronecker]
-        simpa using congrArg (fun A : MatStage n => A ⊗ₖ
+        simpa [jwCreation, jwAnnihilation] using congrArg (fun A : MatStage n => A ⊗ₖ
           (1 : Matrix (Fin 2) (Fin 2) ℝ)) ih
       · have hk : k = Fin.last n := Fin.eq_last_of_not_lt h
         subst k
@@ -88,7 +90,6 @@ theorem jwAnnihilation_creation_anticommutator
   by_cases hij : i = j
   · subst j
     simp [jw_same_site_car]
-  · rw [if_neg hij]
-    exact annihilation_creation_cross_site_anticommute n i j hij
+  · simp [hij, annihilation_creation_cross_site_anticommute n i j hij]
 
 end InfoGeometry.Clifford.Cl11JordanWignerCARBridge

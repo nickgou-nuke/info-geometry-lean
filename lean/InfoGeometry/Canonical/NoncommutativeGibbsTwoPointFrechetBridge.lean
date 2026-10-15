@@ -21,6 +21,7 @@ into the centered BKM covariance owner.
 
 noncomputable section
 set_option autoImplicit false
+set_option synthInstance.maxHeartbeats 300000
 
 namespace InfoGeometry.Canonical.NoncommutativeGibbsTwoPointFrechetBridge
 
@@ -92,15 +93,14 @@ theorem hasDerivAt_twoPointNumeratorLine
         (exponentialDerivative (𝕜 := ℂ) H A * B)) 0 := by
   have hLine :
       HasDerivAt (fun z : ℂ => H + z • A) A 0 := by
-    convert
-      (hasDerivAt_const (x := (0 : ℂ)) H).add
-        ((hasDerivAt_id (x := (0 : ℂ))).smul_const A) using 1 <;>
-      simp
-  have harg : H + (0 : ℂ) • A = H := by
-    rw [zero_smul ℂ A, add_zero]
-  simpa using
-    (hasFDerivAt_twoPointNumerator H B).comp_hasDerivAt_of_eq
-      (0 : ℂ) hLine harg.symm
+    have h1 := (hasDerivAt_const (x := (0 : ℂ)) H).add
+      ((hasDerivAt_id (x := (0 : ℂ))).smul_const A)
+    rw [zero_add, one_smul] at h1
+    exact h1
+  have harg : H = H + (0 : ℂ) • A := by
+    rw [show (0 : ℂ) • A = 0 from zero_smul ℂ A, add_zero]
+  exact (hasFDerivAt_twoPointNumerator H B).comp_hasDerivAt_of_eq
+    (0 : ℂ) hLine harg
 
 /-- Normalised first moment written as a scalar quotient. -/
 noncomputable def normalizedTwoPointLine {n : ℕ}
@@ -126,12 +126,17 @@ theorem hasDerivAt_normalizedTwoPointLine
       H A
   have harg : H + (0 : ℂ) • A = H := by
     rw [zero_smul ℂ A, add_zero]
-  unfold normalizedTwoPointLine
-  convert hNum.div hDen (by
+  have hDenZero : partitionLine H A 0 ≠ 0 := by
     change tracedExponential (H + (0 : ℂ) • A) ≠ 0
     rw [harg]
-    exact hZ) using 1 <;>
-    simp [partitionLine, twoPointNumerator, harg]
+    exact hZ
+  have hDiv := hNum.div hDen hDenZero
+  have hpart : partitionLine H A 0 = tracedExponential H := by
+    change tracedExponential (H + (0 : ℂ) • A) = tracedExponential H
+    rw [harg]
+  rw [hpart, harg] at hDiv
+  change HasDerivAt (normalizedTwoPointLine H A B) _ 0 at hDiv
+  exact hDiv
 
 /-- The second-direction derivative of the normalized two-point response at
 the base point.  This is the exact quotient-rule interface needed when the

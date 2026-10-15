@@ -15,8 +15,8 @@ variable (qT : Measure T) [IsProbabilityMeasure qT]
 variable (D : X → T → ℝ) (x : X)
 
 /-- Log-partition / free-energy generator as the cumulant-generating function of the distortion. -/
-noncomputable def F (β : ℝ) : ℝ :=
-  cgf (distortionRV D x) qT β
+noncomputable def F : ℝ → ℝ :=
+  cgf (distortionRV D x) qT
 
 omit [MeasurableSpace X] [Nonempty T] [IsProbabilityMeasure qT] in
 /-- Canonical Gibbs measure from mathlib's normalized exponential tilt. -/

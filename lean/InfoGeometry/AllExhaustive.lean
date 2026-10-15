@@ -3769,7 +3769,6 @@ import InfoGeometry.Canonical.GolayPermutationSubgroup
 import InfoGeometry.Canonical.GoldenRatioInvariants
 import InfoGeometry.Canonical.GopakumarVafaTopologicalStringCapstone
 import InfoGeometry.Canonical.GottesmanKnillStabilizerCodeBridge
-import InfoGeometry.Canonical.Gr5ToGr4AmplituhedronProjectionBridge
 import InfoGeometry.Canonical.GradeAutomorphismPerm
 import InfoGeometry.Canonical.GradedBRSTCochainComplexBridge
 import InfoGeometry.Canonical.GradedBRSTLongExactSequenceBridge
@@ -4218,7 +4217,6 @@ import InfoGeometry.Canonical.KKTNoetherCharges
 import InfoGeometry.Canonical.KLDivergenceDecomposition
 import InfoGeometry.Canonical.KLinearGap
 import InfoGeometry.Canonical.KLinearRepresentation
-import InfoGeometry.Canonical.KMSBoundaryTrajectory
 import InfoGeometry.Canonical.KMSCocycleGeneratorBridge
 import InfoGeometry.Canonical.KMSColimitBridge
 import InfoGeometry.Canonical.KMSConditionBridge
@@ -4661,7 +4659,6 @@ import InfoGeometry.Canonical.NarainTamagawaCapstone
 import InfoGeometry.Canonical.NaryToeplitzTKKMoebiusClosure
 import InfoGeometry.Canonical.NaryToeplitzWeightedTripotent
 import InfoGeometry.Canonical.NaryTreeBoundaryInverseLimit
-import InfoGeometry.Canonical.NativeMathlibAmplituhedronBridge
 import InfoGeometry.Canonical.NativeMathlibBoundaryOfBoundaryBridge
 import InfoGeometry.Canonical.NativeMathlibCliffordBridge
 import InfoGeometry.Canonical.NativeMathlibSuperamplituhedronBridge
@@ -5749,10 +5746,10 @@ import InfoGeometry.Canonical.SplitCliffordChiralProjection
 import InfoGeometry.Canonical.SplitCliffordCurrentCommutator
 import InfoGeometry.Canonical.SplitCliffordCurrentLift
 import InfoGeometry.Canonical.SplitCliffordDirectLimit
+import InfoGeometry.Canonical.SplitCliffordExteriorTowerBridge
 import InfoGeometry.Canonical.SplitCliffordExternalChain
 import InfoGeometry.Canonical.SplitCliffordFiniteCAR
 import InfoGeometry.Canonical.SplitCliffordFiniteCurrentObstruction
-import InfoGeometry.Canonical.SplitCliffordFiveBladeBridge
 import InfoGeometry.Canonical.SplitCliffordFiveGrading
 import InfoGeometry.Canonical.SplitCliffordFiveGradingTrace
 import InfoGeometry.Canonical.SplitCliffordHeadEquivariance
@@ -9093,6 +9090,7 @@ import InfoGeometry.Meta.InductiveInvariantPacket
 import InfoGeometry.Meta.InductiveLimitClosureInterface
 import InfoGeometry.Meta.KeywordIndex
 import InfoGeometry.Meta.MarkovJonesInduction
+import InfoGeometry.Meta.NeuroSymbolicAdjunction
 import InfoGeometry.Meta.OwnerTarget
 import InfoGeometry.Meta.ProofShape
 import InfoGeometry.Meta.RegionPolicy
@@ -9962,8 +9960,8 @@ import InfoGeometry.Physics.BogoliubovSU3ParafermionProofChain
 import InfoGeometry.Physics.BogoliubovSU3ParafermionWeld
 import InfoGeometry.Physics.BogoliubovWeylChemicalPotential
 import InfoGeometry.Physics.BoltzmannPoissonReconstruction
-import InfoGeometry.Physics.BostConnes
 import InfoGeometry.Physics.BostConnesGNS
+import InfoGeometry.Physics.BostConnesGNSAudit
 import InfoGeometry.Physics.BostConnesMirrorSymmetry
 import InfoGeometry.Physics.BostConnesThermalTime
 import InfoGeometry.Physics.BoundaryMajoranaDefectBridge
@@ -10393,6 +10391,7 @@ import InfoGeometry.Physics.SpinAffineCasimirRigidity
 import InfoGeometry.Physics.SplitAtomParticleHole
 import InfoGeometry.Physics.SplitAtomThermalBoundary
 import InfoGeometry.Physics.SplitCliffordAlgebras
+import InfoGeometry.Physics.SplitClifford55PureSpinorVacuum
 import InfoGeometry.Physics.SplitG2SL3Concrete
 import InfoGeometry.Physics.SplitG2SL3ModuleDecomposition
 import InfoGeometry.Physics.SplitOctonionBraidSU3
@@ -10683,7 +10682,6 @@ import InfoGeometry.Projective.Null
 import InfoGeometry.Projective.NullBoundary
 import InfoGeometry.Projective.OctDeterminant
 import InfoGeometry.Projective.OctonionicKuzminBoundaryBridge
-import InfoGeometry.Projective.OnShellResidueBCFWBridge
 import InfoGeometry.Projective.OperatorZornStateGeometry
 import InfoGeometry.Projective.Orthant
 import InfoGeometry.Projective.PenroseDAGAmplituhedronRosetta

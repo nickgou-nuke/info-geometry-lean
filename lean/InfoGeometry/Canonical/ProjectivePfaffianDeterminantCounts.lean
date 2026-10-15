@@ -245,7 +245,13 @@ inductive ProjectiveCountChannel where
   | vector
   | axial
   | area
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype ProjectiveCountChannel where
+  elems := {ProjectiveCountChannel.scalar, .rotor, .vector, .axial, .area}
+  complete := by
+    intro x
+    cases x <;> decide
 
 /-- Readout from projective determinant coordinates to Fierz/Klein coordinates. -/
 abbrev ProjectiveDeterminantReadout (Γ : Type*) [Fintype Γ] :=

@@ -36,7 +36,7 @@ def simpleComplement (i : Simple) : PositiveArtinG2 :=
     (FreeMonoid.ofList (simpleComplementLetters i))
 
 def positiveGarside : PositiveArtinG2 :=
-  PresentedMonoid.mk Relation alternatingLeft
+  garside
 
 def simplePrefixLe (i j : Simple) : Prop := i.val ≤ j.val
 

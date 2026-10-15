@@ -153,7 +153,7 @@ theorem o55_structural_mirror_oriented_positive (m2 J T v t : Q) :
     CasimirIsospinHamiltonian.mirrorDifference
       (fun Tz => o55StructuralHamiltonian 1 m2 J T v Tz) t =
       (2 / 3) * t := by
-  simpa using o55_structural_mirror_difference 1 m2 J T v t
+  convert o55_structural_mirror_difference 1 m2 J T v t using 1 <;> ring
 
 end O55CasimirIsospinHamiltonian
 

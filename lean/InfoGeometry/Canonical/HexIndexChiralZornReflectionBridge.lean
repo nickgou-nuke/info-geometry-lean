@@ -147,8 +147,7 @@ theorem dihedralAction_r_hexChiralChannel (i : ZMod 3) (n : HexIndex) :
     dihedralAction (.r i) (hexChiralChannel n) =
       hexChiralChannel (hexRotationPower i n) := by
   fin_cases i
-  · change (1 : ChiralZornMatrix ℚ ≃* ChiralZornMatrix ℚ) (hexChiralChannel n) = _
-    simp [hexRotationPower]
+  · rfl
   · change rotateMulEquiv (hexChiralChannel n) = _
     rw [rotate_hexChiralChannel]
     rfl

@@ -53,7 +53,12 @@ noncomputable def chiralScalarOperatorReadout
 
 @[simp] theorem ell_sq_one (X : RealSplitCl11Action H) :
     ell X * ell X = (1 : EndH) := by
-  simpa [ell] using X.eps_sq
+  apply ContinuousLinearMap.ext
+  intro u
+  have h := congrArg (fun T : EndH => T u) X.eps_sq
+  change X.eps (X.eps u) = u at h
+  change X.eps (X.eps u) = u
+  exact h
 
 @[simp] theorem chiralScalarOperatorReadout_splitOne
     (X : RealSplitCl11Action H) :

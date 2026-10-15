@@ -57,7 +57,9 @@ theorem intrinsicFlagMap_one (F : IntrinsicFlag) :
           apply Subtype.ext
           have hval := intrinsicLine_eqRec_val hp
             (intrinsicLineMap (1 : SplitOctF2Aut) ⟨l, hl⟩)
-          simpa [intrinsicLineMap_val, zornZeroTripleMap_one] using hval)
+          have hval2 : (intrinsicLineMap (1 : SplitOctF2Aut) ⟨l, hl⟩).val = l :=
+            zornZeroTripleMap_one l
+          exact hval.trans hval2)
 
 theorem intrinsicFlagMap_mul (g h : SplitOctF2Aut) (F : IntrinsicFlag) :
     intrinsicFlagMap (g * h) F = intrinsicFlagMap g (intrinsicFlagMap h F) := by
@@ -79,7 +81,10 @@ theorem intrinsicFlagMap_mul (g h : SplitOctF2Aut) (F : IntrinsicFlag) :
           apply Subtype.ext
           have hval := intrinsicLine_eqRec_val hp
             (intrinsicLineMap (g * h) ⟨l, hl⟩)
-          simpa [intrinsicLineMap_val, zornZeroTripleMap_mul] using hval)
+          have hval2 : (intrinsicLineMap (g * h) ⟨l, hl⟩).val =
+              zornZeroTripleMap g (intrinsicLineMap h ⟨l, hl⟩).val :=
+            zornZeroTripleMap_mul g h l
+          exact hval.trans hval2)
 
 noncomputable instance : MulAction SplitOctF2Aut IntrinsicFlag where
   smul := intrinsicFlagMap

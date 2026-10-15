@@ -1,3 +1,6 @@
+import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+import Mathlib.Analysis.Convex.SpecificFunctions.Basic
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -58,12 +61,13 @@ theorem pole_partition_regularized {β : ℝ} (hβ : β ≠ 1) :
 
 theorem pole_log_first_derivative {β : ℝ} (hβ : β ≠ 1) :
     deriv laurentPoleLogPotential β = -(β - 1)⁻¹ := by
-  unfold laurentPoleLogPotential
-  have hlog :
-      HasDerivAt (fun x : ℝ => Real.log (x - 1)) ((β - 1)⁻¹) β := by
-    simpa using (Real.hasDerivAt_log (sub_ne_zero.mpr hβ)).comp β
-      ((hasDerivAt_id β).sub_const 1)
-  simpa using hlog.neg.deriv
+  have hlog := (Real.hasDerivAt_log (sub_ne_zero.mpr hβ)).comp β
+    ((hasDerivAt_id β).sub_const 1)
+  have hlog' : deriv (Real.log ∘ fun x : ℝ => x - 1) β =
+      (β - 1)⁻¹ := by
+    simpa using hlog.deriv
+  change deriv (-(Real.log ∘ fun x : ℝ => x - 1)) β = _
+  rw [deriv.neg, hlog']
 
 /-- The ordinary logarithm is strictly concave on the positive real axis,
     hence `-log` is strictly convex there. This is the standard calculus fact
@@ -74,16 +78,14 @@ theorem neg_log_strictConvexOn :
 
 theorem pole_log_second_derivative {β : ℝ} (hβ : β ≠ 1) :
     heatCapacityKernel β = ((β - 1) ^ 2)⁻¹ := by
-  unfold heatCapacityKernel laurentPoleGradient
-  have hinv :
-      HasDerivAt (fun x : ℝ => (x - 1)⁻¹) (-((β - 1) ^ 2)⁻¹) β := by
-    simpa [pow_two] using
-      (hasDerivAt_inv (sub_ne_zero.mpr hβ)).comp β
-        ((hasDerivAt_id β).sub_const 1)
-  have hneg :
-      HasDerivAt (fun x : ℝ => -((x - 1)⁻¹)) (((β - 1) ^ 2)⁻¹) β := by
-    simpa [neg_neg] using hinv.neg
-  simpa using hneg.deriv
+  have hinv := (hasDerivAt_inv (sub_ne_zero.mpr hβ)).comp β
+    ((hasDerivAt_id β).sub_const 1)
+  have hinv' : deriv ((fun y : ℝ => y⁻¹) ∘ fun x => x - 1) β =
+      -((β - 1) ^ 2)⁻¹ := by
+    simpa using hinv.deriv
+  change deriv (- ((fun y : ℝ => y⁻¹) ∘ fun x => x - 1)) β = _
+  rw [deriv.neg, hinv']
+  field_simp [sub_ne_zero.mpr hβ]
 
 /-- Consolidated finite phase-transition package. -/
 theorem phase_transition_susy_synthesis (zeta : ℂ → ℂ) (βc : ℂ) (β : ℝ)

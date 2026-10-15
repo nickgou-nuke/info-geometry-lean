@@ -36,13 +36,12 @@ def topologicalFixedPointInclusion
 theorem continuous_topologicalFixedPointInclusion
     (J : SymbolicLatentInvolution X) :
     Continuous (topologicalFixedPointInclusion J) := by
-  simpa [topologicalFixedPointInclusion] using continuous_subtype_val
+  exact continuous_subtype_val
 
 theorem isClosedEmbedding_topologicalFixedPointInclusion
     (J : SymbolicLatentInvolution X) :
     Topology.IsClosedEmbedding (topologicalFixedPointInclusion J) := by
-  simpa [topologicalFixedPointInclusion] using
-    (isClosed_symbolicLatentInvolutionFixedPointSet J).isClosedEmbedding_subtypeVal
+  exact (isClosed_symbolicLatentInvolutionFixedPointSet J).isClosedEmbedding_subtypeVal
 
 theorem topologicalFixedPointInclusion_invariant
     (J : SymbolicLatentInvolution X) :

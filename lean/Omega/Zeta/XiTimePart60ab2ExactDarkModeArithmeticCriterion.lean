@@ -34,7 +34,9 @@ theorem paper_xi_time_part60ab2_exact_dark_mode_arithmetic_criterion
       have hm1 : m % 3 = 1 := hparity.mp hEven
       omega
     exact (hcrit ((Nat.fib (m + 2) / 2 : ℕ) : ZMod (Nat.fib (m + 2)))).mpr
-      ⟨hEven, ⟨1, by omega, hm, by simp [Nat.fib]⟩⟩
+      ⟨hEven, ⟨1, by omega, hm, by
+        rw [show Nat.fib (1 + 1) = 1 by norm_num [Nat.fib]]
+        simp⟩⟩
   refine ⟨hEven_to_zero, ?_⟩
   constructor
   · intro hm

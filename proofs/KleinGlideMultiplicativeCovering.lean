@@ -81,7 +81,7 @@ theorem quotientMap_isCovering_mul : IsCoveringMap quotientMap :=
 /-- Multiplicative local trivialization extracted by Mathlib's generic
 `trivializationOfSMulDisjoint` constructor. -/
 noncomputable def multiplicativeCoverTriv (b : KleinBrillouinQuotient) :
-    Trivialization DeckMul quotientMap := by
+    Bundle.Trivialization DeckMul quotientMap := by
   exact quotientMap_isQuotient.trivializationOfSMulDisjoint
     (fun {e₁ e₂} ↦ quotientMap_eq_iff_mulOrbit e₁ e₂)
     (KleinGlideCoveringAtlas.sheetSet b)

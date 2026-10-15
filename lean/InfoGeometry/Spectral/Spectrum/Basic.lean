@@ -161,10 +161,14 @@ theorem stableHomotopyClifford_period
       =
     DirectLimit.Module.of ℝ ℕ SplitClNNAlg
         (fun m n h => splitCliffordMap m n h) n x := by
-  simpa [bottClockStage] using
-    (DirectLimit.Module.of_f
-      (f := fun m n h => splitCliffordMap m n h)
-      (i := n) (j := n + 8) (hij := Nat.le_add_right n 8) (x := x))
+  change DirectLimit.Module.of ℝ ℕ SplitClNNAlg
+      (fun m n h => splitCliffordMap m n h) (n + 8)
+      (splitCliffordMap n (n + 8) (Nat.le_add_right n 8) x) =
+    DirectLimit.Module.of ℝ ℕ SplitClNNAlg
+      (fun m n h => splitCliffordMap m n h) n x
+  exact DirectLimit.Module.of_f
+    (f := fun m n h => splitCliffordMap m n h)
+    (i := n) (j := n + 8) (hij := Nat.le_add_right n 8) (x := x)
 
 /-!
 Generalized successor-structure prespectrum calculus is deferred to

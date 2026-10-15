@@ -5,105 +5,94 @@ namespace InfoGeometry.Canonical
 
 open Complex
 
-/-- An abstract vector space over ℂ with a symmetric bilinear form (dot product).
-    This serves as the ambient momentum space. -/
-class MomentumSpace (V : Type*) [AddCommGroup V] [Module ℂ V] where
-  inner : V → V → ℂ
-  inner_symm : ∀ x y, inner x y = inner y x
-  inner_add_left : ∀ x y z, inner (x + y) z = inner x z + inner y z
-  inner_smul_left : ∀ (c : ℂ) x y, inner (c • x) y = c * inner x y
-
-export MomentumSpace (inner inner_symm inner_add_left inner_smul_left)
-
 section BCFW
 
-variable {V : Type*} [AddCommGroup V] [Module ℂ V] [MomentumSpace V]
+variable {V : Type*} [AddCommGroup V] [Module ℂ V]
+variable (B : LinearMap.BilinForm ℂ V)
 
-/-- The core data of a BCFW shift for two massless momenta p_i, p_j and a shift vector q.
-    The shift vector q must be null and orthogonal to both p_i and p_j. -/
-structure BCFWShiftData (V : Type*) [AddCommGroup V] [Module ℂ V] [MomentumSpace V] where
-  pi : V
-  pj : V
-  q : V
-  pi_null : inner pi pi = 0
-  pj_null : inner pj pj = 0
-  q_null : inner q q = 0
-  pi_ortho_q : inner pi q = 0
-  pj_ortho_q : inner pj q = 0
+/-- The shifted momentum `p_i(z) = p_i + z q`. -/
+def shiftedPi (pi q : V) (z : ℂ) : V := pi + z • q
 
-variable (data : BCFWShiftData V) (z : ℂ)
+/-- The shifted momentum `p_j(z) = p_j - z q`. -/
+def shiftedPj (pj q : V) (z : ℂ) : V := pj - z • q
 
-/-- The shifted momentum p_i(z) = p_i + z q -/
-def shiftedPi : V :=
-  data.pi + z • data.q
+/-- Bilinearity in the first argument, exposed as a reusable consequence of
+the native `BilinForm` structure. -/
+@[simp] lemma bilin_add_left (x y w : V) :
+    B (x + y) w = B x w + B y w := by
+  exact congrArg (fun f : V →ₗ[ℂ] ℂ => f w) (B.map_add x y)
 
-/-- The shifted momentum p_j(z) = p_j - z q -/
-def shiftedPj : V :=
-  data.pj - z • data.q
+@[simp] lemma bilin_smul_left (c : ℂ) (x w : V) :
+    B (c • x) w = c * B x w := by
+  exact congrArg (fun f : V →ₗ[ℂ] ℂ => f w) (B.map_smul c x)
 
-@[simp]
-lemma inner_add_right (x y z : V) : inner x (y + z) = inner x y + inner x z := by
-  rw [inner_symm, inner_add_left, inner_symm, inner_symm z x]
+@[simp] lemma bilin_add_right (x y w : V) :
+    B x (y + w) = B x y + B x w := by
+  exact (B x).map_add y w
 
-@[simp]
-lemma inner_smul_right (c : ℂ) (x y : V) : inner x (c • y) = c * inner x y := by
-  rw [inner_symm, inner_smul_left, inner_symm]
+@[simp] lemma bilin_smul_right (c : ℂ) (x y : V) :
+    B x (c • y) = c * B x y := by
+  exact (B x).map_smul c y
 
-@[simp]
-lemma inner_sub_left (x y z : V) : inner (x - y) z = inner x z - inner y z := by
-  have h : x - y = x + (-1 : ℂ) • y := by
-    rw [neg_one_smul]
-    exact sub_eq_add_neg x y
-  rw [h, inner_add_left, inner_smul_left]
+lemma bilin_sub_left (x y w : V) :
+    B (x - y) w = B x w - B y w := by
+  rw [sub_eq_add_neg, bilin_add_left]
+  simp
   ring
 
-@[simp]
-lemma inner_sub_right (x y z : V) : inner x (y - z) = inner x y - inner x z := by
-  rw [inner_symm, inner_sub_left, inner_symm, inner_symm z x]
+lemma bilin_sub_right (hB : B.IsSymm) (x y w : V) :
+    B x (y - w) = B x y - B x w := by
+  rw [hB.eq x (y - w), bilin_sub_left, hB.eq y x, hB.eq w x]
 
-attribute [simp] inner_add_left inner_smul_left
+/-- A BCFW shift preserves the left momentum's nullity. -/
+theorem bcfw_shift_left_null (hB : B.IsSymm) (pi q : V) (z : ℂ)
+    (hpi : B pi pi = 0) (hq : B q q = 0) (hpiq : B pi q = 0) :
+    B (shiftedPi pi q z) (shiftedPi pi q z) = 0 := by
+  calc
+    B (shiftedPi pi q z) (shiftedPi pi q z) =
+        B pi pi + z * B pi q + z * B q pi + z ^ 2 * B q q := by
+      simp [shiftedPi]
+      ring
+    _ = 0 := by simp [hpi, hpiq, hB.eq q pi, hq]
 
-/-- Proof that the shifted p_i(z) remains on-shell (massless). -/
-theorem bcfw_shift_left_null : inner (shiftedPi data z) (shiftedPi data z) = 0 := by
-  dsimp [shiftedPi]
-  simp [data.pi_null, data.pi_ortho_q, data.q_null, inner_symm data.q data.pi]
+/-- A BCFW shift preserves the right momentum's nullity. -/
+theorem bcfw_shift_right_null (hB : B.IsSymm) (pj q : V) (z : ℂ)
+    (hpj : B pj pj = 0) (hq : B q q = 0) (hpjq : B pj q = 0) :
+    B (shiftedPj pj q z) (shiftedPj pj q z) = 0 := by
+  calc
+    B (shiftedPj pj q z) (shiftedPj pj q z) =
+        B pj pj - z * B pj q - z * B q pj + z ^ 2 * B q q := by
+      simp [shiftedPj, bilin_sub_right B hB]
+      ring
+    _ = 0 := by simp [hpj, hpjq, hB.eq q pj, hq]
 
-/-- Proof that the shifted p_j(z) remains on-shell (massless). -/
-theorem bcfw_shift_right_null : inner (shiftedPj data z) (shiftedPj data z) = 0 := by
-  dsimp [shiftedPj]
-  simp [data.pj_null, data.pj_ortho_q, data.q_null, inner_symm data.q data.pj]
-
-/-- Total momentum conservation is preserved under the shift: p_i(z) + p_j(z) = p_i + p_j. -/
-theorem bcfw_shift_momentum_conservation :
-    shiftedPi data z + shiftedPj data z = data.pi + data.pj := by
+/-- Total momentum is conserved by the opposite shifts. -/
+theorem bcfw_shift_momentum_conservation (pi pj q : V) (z : ℂ) :
+    shiftedPi pi q z + shiftedPj pj q z = pi + pj := by
   dsimp [shiftedPi, shiftedPj]
   abel
 
-/-- For an intermediate channel momentum P_I containing p_i but not p_j, 
-    the shifted channel momentum is P_I(z) = P_I + z q. -/
-def shiftedChannel (PI : V) (z : ℂ) : V :=
-  PI + z • data.q
+/-- Channel momentum `P_I(z) = P_I + z q`. -/
+def shiftedChannel (PI q : V) (z : ℂ) : V := PI + z • q
 
-/-- The invariant mass squared of the shifted channel is P_I(z)² = P_I² + z * (2 P_I · q). -/
-lemma shiftedChannel_sq (PI : V) (z : ℂ) :
-    inner (shiftedChannel data PI z) (shiftedChannel data PI z) =
-    inner PI PI + z * (2 * inner PI data.q) := by
-  dsimp [shiftedChannel]
-  simp [data.q_null, inner_symm data.q PI]
+/-- The shifted channel quadratic is affine in the shift parameter. -/
+lemma shiftedChannel_sq (hB : B.IsSymm) (PI q : V) (z : ℂ)
+    (hq : B q q = 0) :
+    B (shiftedChannel PI q z) (shiftedChannel PI q z) =
+      B PI PI + z * (2 * B PI q) := by
+  simp [shiftedChannel, hB.eq q PI, hq]
   ring
 
-/--
-The shifted intermediate channel becomes on-shell at the affine root
-`-inner PI PI / (2 * inner PI q)` when the slope is nonzero.
--/
-theorem bcfw_channel_goes_onShell
-    (PI : V) (hslope : 2 * inner PI data.q ≠ 0) :
-    inner (shiftedChannel data PI (-inner PI PI / (2 * inner PI data.q)))
-          (shiftedChannel data PI (-inner PI PI / (2 * inner PI data.q))) = 0 := by
-  rw [shiftedChannel_sq]
+/-- If the affine channel slope is nonzero, the unique affine root puts the
+shifted channel on the null quadric. -/
+theorem bcfw_channel_goes_onShell (hB : B.IsSymm) (PI q : V)
+    (hq : B q q = 0) (hslope : 2 * B PI q ≠ 0) :
+    B (shiftedChannel PI q (-B PI PI / (2 * B PI q)))
+      (shiftedChannel PI q (-B PI PI / (2 * B PI q))) = 0 := by
+  rw [shiftedChannel_sq B hB PI q _ hq]
   have hmul :
-      (-inner PI PI / (2 * inner PI data.q)) * (2 * inner PI data.q) = -inner PI PI := by
-    exact div_mul_cancel₀ (-inner PI PI) hslope
+      (-B PI PI / (2 * B PI q)) * (2 * B PI q) = -B PI PI :=
+    div_mul_cancel₀ _ hslope
   rw [hmul]
   ring
 

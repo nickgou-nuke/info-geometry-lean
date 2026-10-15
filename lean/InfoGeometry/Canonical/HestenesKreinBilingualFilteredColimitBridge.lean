@@ -61,8 +61,9 @@ theorem colimit_left_right_commute (D : Datum (F := F)) :
     have h := congrArg (fun η : F ⟶ F => η.app j) D.commute
     simpa [leftColimit, rightColimit, ModuleCat.comp_apply] using
       congrArg (fun f => (colimit.ι F j).hom (f.hom x)) h.symm
+  ext x
   simpa [leftColimit, rightColimit, Module.End.mul_apply] using
-    congrArg ModuleCat.Hom.hom hcat
+    congrArg (fun f => f x) (congrArg ModuleCat.Hom.hom hcat)
 
 theorem colimit_bilingual_stage_readback (D : Datum (F := F)) (j : ℕ)
     (x : F.obj j) :

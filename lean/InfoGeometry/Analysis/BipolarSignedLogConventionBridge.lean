@@ -60,7 +60,8 @@ theorem hasDerivAt_signedBipolarLog
       (signedCrossRatio01 s)⁻¹ * (-1 / (s - 1) ^ 2) = dlog01 s := by
     rw [mul_comm]
     exact signedCrossRatio01_logarithmicDerivative hs
-  simpa [signedBipolarLog, hcoeff] using hcomp
+  rw [hcoeff] at hcomp
+  exact hcomp
 
 /-- Ordinary derivative readout of the local signed logarithmic branch. -/
 theorem deriv_signedBipolarLog

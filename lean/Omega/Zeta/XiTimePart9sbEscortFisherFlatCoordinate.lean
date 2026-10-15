@@ -44,8 +44,9 @@ theorem paper_xi_time_part9sb_escort_fisher_flat_coordinate :
     xi_time_part9sb_escort_fisher_flat_coordinate_statement := by
   refine ⟨?_, ?_, ?_, ?_⟩
   · intro u
-    simpa [xi_time_part9sb_escort_fisher_flat_coordinate_psi, div_eq_mul_inv] using
-      (Real.hasDerivAt_arctan u).const_mul 2
+    change HasDerivAt (fun u : ℝ => 2 * Real.arctan u)
+      (2 * (1 + u ^ 2)⁻¹) u
+    simpa [div_eq_mul_inv] using (Real.hasDerivAt_arctan u).const_mul 2
   · intro u
     rfl
   · intro u

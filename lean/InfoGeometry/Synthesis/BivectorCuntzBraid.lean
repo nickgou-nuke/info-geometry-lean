@@ -74,6 +74,8 @@ theorem bivector_covariance (automorphism : RealSplitOctonionAut) (index : Fin 2
 theorem transported_bivector_sq (automorphism : RealSplitOctonionAut) (index : Fin 2) :
     conjugateEnd automorphism (bivector index) *
         conjugateEnd automorphism (bivector index) = -1 := by
+  change (automorphism : SplitOctonionAutCandidate ℝ).conjAlgEquiv ℝ (bivector index) *
+      (automorphism : SplitOctonionAutCandidate ℝ).conjAlgEquiv ℝ (bivector index) = -1
   simpa only [map_mul, map_neg, map_one] using
     congrArg ((automorphism : SplitOctonionAutCandidate ℝ).conjAlgEquiv ℝ) (bivector_sq index)
 
@@ -84,6 +86,7 @@ theorem braidUnit_covariance (automorphism : RealSplitOctonionAut) (index : Fin 
   change (automorphism : SplitOctonionAutCandidate ℝ).conjAlgEquiv ℝ
     (1 + majorana index.castSucc * majorana index.succ) = _
   rw [map_add, map_one, map_mul]
+  rfl
 
 theorem transported_artin (automorphism : RealSplitOctonionAut) :
     conjugateEnd automorphism (braidUnit 0 : EndCZ) *
@@ -91,7 +94,19 @@ theorem transported_artin (automorphism : RealSplitOctonionAut) :
         conjugateEnd automorphism (braidUnit 0 : EndCZ) =
       conjugateEnd automorphism (braidUnit 1 : EndCZ) *
         conjugateEnd automorphism (braidUnit 0 : EndCZ) *
-        conjugateEnd automorphism (braidUnit 1 : EndCZ) := by
+      conjugateEnd automorphism (braidUnit 1 : EndCZ) := by
+  change (automorphism : SplitOctonionAutCandidate ℝ).conjAlgEquiv ℝ
+        ((braidUnit 0 : EndCZˣ) : EndCZ) *
+      (automorphism : SplitOctonionAutCandidate ℝ).conjAlgEquiv ℝ
+        ((braidUnit 1 : EndCZˣ) : EndCZ) *
+      (automorphism : SplitOctonionAutCandidate ℝ).conjAlgEquiv ℝ
+        ((braidUnit 0 : EndCZˣ) : EndCZ) =
+    (automorphism : SplitOctonionAutCandidate ℝ).conjAlgEquiv ℝ
+        ((braidUnit 1 : EndCZˣ) : EndCZ) *
+      (automorphism : SplitOctonionAutCandidate ℝ).conjAlgEquiv ℝ
+        ((braidUnit 0 : EndCZˣ) : EndCZ) *
+      (automorphism : SplitOctonionAutCandidate ℝ).conjAlgEquiv ℝ
+        ((braidUnit 1 : EndCZˣ) : EndCZ)
   simpa only [Units.val_mul, map_mul] using
     congrArg (fun unit : EndCZˣ =>
       (automorphism : SplitOctonionAutCandidate ℝ).conjAlgEquiv ℝ (unit : EndCZ))

@@ -8,7 +8,13 @@ the visible-layer sign and the fiberwise sign. -/
 inductive FoldWreathCharacter where
   | visibleSign
   | fiberSign
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+open FoldWreathCharacter
+
+instance : Fintype FoldWreathCharacter where
+  elems := {visibleSign, fiberSign}
+  complete x := by cases x <;> decide
 
 /-- The visible sign appears exactly when the visible permutation group is nontrivial. -/
 def foldWreathVisibleRank (_d n : ℕ) : ℕ :=

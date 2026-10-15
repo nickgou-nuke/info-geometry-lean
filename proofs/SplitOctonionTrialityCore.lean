@@ -43,7 +43,8 @@ def IsTriality (T : TrialityAmbient) : Prop :=
 
 lemma triality_zero : IsTriality (0 : TrialityAmbient) := by
   intro x y
-  simp only [trialityVec, trialityLeft, trialityRight, Prod.fst_zero, Prod.snd_zero, ZeroMemClass.coe_zero, zero_apply, mul_zero, zero_mul, add_zero]
+  simp only [trialityVec, trialityLeft, trialityRight, Prod.fst_zero, Prod.snd_zero,
+    ZeroMemClass.coe_zero, LinearMap.zero_apply, mul_zero, zero_mul, add_zero]
 
 lemma triality_add (T1 T2 : TrialityAmbient) (h1 : IsTriality T1) (h2 : IsTriality T2) : IsTriality (T1 + T2) := by
   intro x y
@@ -51,7 +52,7 @@ lemma triality_add (T1 T2 : TrialityAmbient) (h1 : IsTriality T1) (h2 : IsTriali
   have hb : (trialityLeft (T1 + T2)).val = (trialityLeft T1).val + (trialityLeft T2).val := rfl
   have hc : (trialityRight (T1 + T2)).val = (trialityRight T1).val + (trialityRight T2).val := rfl
   rw [ha, hb, hc]
-  simp only [add_apply]
+  simp only [LinearMap.add_apply]
   rw [h1 x y, h2 x y]
   simp only [add_mul, mul_add]
   abel
@@ -62,7 +63,7 @@ lemma triality_smul (c : ℝ) (T : TrialityAmbient) (h : IsTriality T) : IsTrial
   have hb : (trialityLeft (c • T)).val = c • (trialityLeft T).val := rfl
   have hc : (trialityRight (c • T)).val = c • (trialityRight T).val := rfl
   rw [ha, hb, hc]
-  simp only [smul_apply]
+  simp only [LinearMap.smul_apply]
   rw [h x y]
   simp only [smul_add, smul_mul_assoc, mul_smul_comm]
 
@@ -72,7 +73,7 @@ lemma triality_lie (T1 T2 : TrialityAmbient) (h1 : IsTriality T1) (h2 : IsTriali
   have hb : (trialityLeft ⁅T1, T2⁆).val = (trialityLeft T1).val ∘ₗ (trialityLeft T2).val - (trialityLeft T2).val ∘ₗ (trialityLeft T1).val := rfl
   have hc : (trialityRight ⁅T1, T2⁆).val = (trialityRight T1).val ∘ₗ (trialityRight T2).val - (trialityRight T2).val ∘ₗ (trialityRight T1).val := rfl
   rw [ha, hb, hc]
-  simp only [sub_apply, comp_apply]
+  simp only [LinearMap.sub_apply, LinearMap.comp_apply]
   
   have e1 : (trialityVec T1).val ((trialityVec T2).val (x * y)) = 
     (trialityLeft T1).val ((trialityLeft T2).val x) * y + 

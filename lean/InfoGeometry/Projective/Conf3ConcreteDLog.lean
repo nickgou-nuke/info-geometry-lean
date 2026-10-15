@@ -25,7 +25,7 @@ noncomputable section
 
 /-- The coefficient of the logarithmic form attached to an ordered pair. -/
 def dlogCoefficient (X : FQ3) (i j : Fin 3) : ℂ :=
-  1 / X.separation i j
+  grothendieck_dlog (X.separation i j)
 
 /-- Three explicit points on an affine line in `ℂ⁴`. -/
 def standardPoints : TripleC4 :=
@@ -65,7 +65,7 @@ def exponentialScalingChart (t : ℝ) : FQ3 :=
     ⟨fun i => Complex.exp (t : ℂ) • standardPoints i,
     by
       intro i j hij
-      simpa [quadSeparation_smul] using
+      simpa [quadSeparation_smul, FQ3.separation] using
         mul_ne_zero (pow_ne_zero 2 (Complex.exp_ne_zero (t : ℂ)))
           (standardPoints_pairwise_non_isotropic i j hij)⟩
 
@@ -73,7 +73,7 @@ def scaleConfiguration (c : ℂ) (X : FQ3) (hc : c ≠ 0) : FQ3 :=
     ⟨fun i => c • X.points i,
     by
       intro i j hij
-      simpa [quadSeparation_smul] using
+      simpa [quadSeparation_smul, FQ3.separation] using
         mul_ne_zero (pow_ne_zero 2 hc) (X.pairwise_non_isotropic i j hij)⟩
 
 theorem scaleConfiguration_separation
@@ -86,7 +86,7 @@ theorem dlogCoefficient_scaleConfiguration
     (c : ℂ) (X : FQ3) (hc : c ≠ 0) (i j : Fin 3) :
     dlogCoefficient (scaleConfiguration c X hc) i j =
       c⁻¹ ^ 2 * dlogCoefficient X i j := by
-  unfold dlogCoefficient
+  unfold dlogCoefficient grothendieck_dlog
   rw [scaleConfiguration_separation]
   field_simp
 
@@ -144,8 +144,8 @@ theorem hasDerivAt_exponentialScalingChart_logPotential
 theorem hasDerivAt_exponentialScalingChart_chartLogPotential
     (t : ℝ) (i j : Fin 3) (hij : i ≠ j) :
     HasDerivAt (chartLogPotential exponentialScalingChart i j) 2 t := by
-  simpa [chartLogPotential] using
-    hasDerivAt_exponentialScalingChart_logPotential t i j hij
+  change HasDerivAt (fun s => logPotential (exponentialScalingChart s) i j) 2 t
+  exact hasDerivAt_exponentialScalingChart_logPotential t i j hij
 
 theorem deriv_exponentialScalingChart_chartLogPotential
     (t : ℝ) (i j : Fin 3) (hij : i ≠ j) :
@@ -256,8 +256,10 @@ theorem conf3_concrete_arnold_relation
          (linearDLogCoefficient z 2 0 * linearDLogCoefficient z 0 1) • Δ = 0
   rw [← add_smul, ← add_smul, linearDLogCoefficient_arnold z h01 h12 h20, zero_smul]
 
-/-- BCFW pole factorization on concrete configuration-space forms. -/
-theorem conf3_concrete_bcfw_pole_factorization
+/-- Rearranging the concrete Arnold relation expresses its first wedge product
+as the negative sum of the other two. This algebraic identity is not a BCFW
+recursion theorem, pole-residue statement, or on-shell factorization result. -/
+theorem conf3_concrete_arnold_relation_rearrange
     {K : Type*} [Field K] {M : Type*} [AddCommGroup M] [Module K M]
     (alg : ExteriorFormAlgebra (R := K) M)
     (dz : Fin 3 → M) (z : Fin 3 → K)
@@ -269,31 +271,24 @@ theorem conf3_concrete_bcfw_pole_factorization
   rw [add_assoc] at h
   exact eq_neg_of_add_eq_zero_left h
 
-/- The concrete configuration coefficient uses exactly the repository's
-   canonical scalar `d log` kernel; no second logarithmic API is introduced. -/
-theorem dlogCoefficient_eq_grothendieck_dlog
-    (X : FQ3) (i j : Fin 3) :
-    dlogCoefficient X i j = grothendieck_dlog (X.separation i j) := by
-  rfl
-
 /-- The concrete logarithmic coefficient is equivariant under relabelling. -/
 theorem dlogCoefficient_permute
     (σ : Equiv.Perm (Fin 3)) (X : FQ3) (i j : Fin 3) :
     dlogCoefficient (X.permute σ) i j = dlogCoefficient X (σ i) (σ j) := by
-  unfold dlogCoefficient
+  unfold dlogCoefficient grothendieck_dlog
   rw [FQ3.separation_permute]
 
 /-- Reversing an edge does not change its quadratic logarithmic coefficient. -/
 theorem dlogCoefficient_symm (X : FQ3) (i j : Fin 3) :
     dlogCoefficient X i j = dlogCoefficient X j i := by
-  unfold dlogCoefficient
+  unfold dlogCoefficient grothendieck_dlog
   simpa [FQ3.separation] using congrArg (fun z : ℂ => 1 / z)
     (quadSeparation_comm (X.points i) (X.points j))
 
 /-- Every coefficient attached to a genuine ordered edge is defined. -/
 theorem dlogCoefficient_ne_zero (X : FQ3) (i j : Fin 3) (hij : i ≠ j) :
     dlogCoefficient X i j ≠ 0 := by
-  unfold dlogCoefficient
+  unfold dlogCoefficient grothendieck_dlog
   simp [one_div, X.pairwise_non_isotropic i j hij]
 
 /-- The cyclic coefficient sum used by the linear Arnold identity. -/
@@ -319,7 +314,7 @@ theorem standardConfiguration_dlogCoefficient_arnold_sum :
         dlogCoefficient standardConfiguration 2 0 +
       dlogCoefficient standardConfiguration 2 0 *
         dlogCoefficient standardConfiguration 0 1 = (3 / 2 : ℂ) := by
-  unfold dlogCoefficient FQ3.separation standardConfiguration standardPoints
+  unfold dlogCoefficient grothendieck_dlog FQ3.separation standardConfiguration standardPoints
     quadSeparation quadForm
   norm_num [Fin.sum_univ_succ]
 

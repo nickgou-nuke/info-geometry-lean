@@ -141,7 +141,8 @@ theorem flowMap_apollonius_readout_tendsto_zero
     Filter.Tendsto.const_mul_atTop hγ Filter.tendsto_id
   have hexp : Filter.Tendsto (fun t : ℝ => Real.exp (-γ * t))
       Filter.atTop (nhds 0) := by
-    simpa only [Function.comp_apply, neg_mul] using
+    simp_rw [neg_mul]
+    simpa only [Function.comp_def] using
       Real.tendsto_exp_neg_atTop_nhds_zero.comp hlinear
   simpa using hexp.mul_const (apolloniusRadialNegativeLog u θ)
 

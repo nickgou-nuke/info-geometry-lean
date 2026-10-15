@@ -169,6 +169,8 @@ def rightTraceCLM (B : FiniteOperatorAlgebra n) :
     rightTraceCLM B A = finiteOperatorTrace (A * B) :=
   rfl
 
+set_option synthInstance.maxHeartbeats 100000
+
 /--
 The scalar BKM pairing is exactly the finite trace pairing against the
 operator-valued Kubo--Mori transform of `A†`.  This is the strict bridge from

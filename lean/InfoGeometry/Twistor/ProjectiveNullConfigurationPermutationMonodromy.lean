@@ -126,10 +126,13 @@ noncomputable def unorderedConfigurationDeckLabelMonodromy
   map_mul' gamma delta := by
     apply Equiv.ext
     intro σ
-    dsimp
-    rw [map_mul]
-    rw [Equiv.Perm.mul_apply]
-    simp only [Equiv.apply_symm_apply]
+    let e := orderedFiberEquivPerm Q n p
+    let M := unorderedConfigurationFiberMonodromy Q n hLC hT2 p
+    change e.symm (M (gamma * delta) (e σ)) =
+      e.symm (M gamma (e (e.symm (M delta (e σ)))))
+    refine congrArg e.symm ?_
+    simp only [e.apply_symm_apply]
+    rw [M.map_mul, Equiv.Perm.mul_apply]
 
 theorem unorderedConfigurationDeckLabelMonodromy_apply
     [TopologicalSpace V]

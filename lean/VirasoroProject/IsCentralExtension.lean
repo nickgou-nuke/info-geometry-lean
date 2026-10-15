@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 -/
 import InfoGeometry.External.Virasoro.CentralExtension
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Virasoro.SectionSES
 
 /-!
@@ -81,7 +82,12 @@ def emb [IsLieAbelian 𝓪] : 𝓪 →ₗ⁅𝕜⁆ γ.CentralExtension where
   toFun := fun A ↦ ⟨0, A⟩
   map_add' A₁ A₂ := by simp [add_def]
   map_smul' c A := by simp [smul_def]
-  map_lie' := by intro A₁ A₂ ; simp [lie_def]
+  map_lie' := by
+    intro A₁ A₂
+    change (⟨0, ⁅A₁, A₂⁆⟩ : γ.CentralExtension) =
+      ⁅(⟨0, A₁⟩ : γ.CentralExtension), ⟨0, A₂⟩⁆
+    rw [lie_def]
+    ext <;> simp [LieModule.IsTrivial.trivial]
 
 /-- If `𝓮` is the (central) extension of `𝓰` by `𝓪` defined by a 2-cocycle `γ ∈ Z²(𝓰,𝓪)`,
 then `LieTwoCocycle.CentralExtension.proj` gives the corresponding projection `𝓮 ⟶ 𝓰`. -/
@@ -128,7 +134,7 @@ lemma range_emb_eq_ker_proj [IsLieAbelian 𝓪] :
 then `𝓮` is an extension of `𝓰` by `𝓪` in the sense that there is a short exact sequence
 `0 ⟶ 𝓪 ⟶ 𝓮 ⟶ 𝓰 ⟶ 0` where the two maps are `LieTwoCocycle.CentralExtension.emb` and
 `LieTwoCocycle.CentralExtension.proj`. -/
-instance isExtension [IsLieAbelian 𝓪] :
+theorem isExtension [IsLieAbelian 𝓪] :
     LieAlgebra.IsExtension (emb γ) (proj γ) where
   ker_eq_bot := ker_emb_eq_bot γ
   range_eq_top := range_proj_eq_top γ
@@ -138,7 +144,7 @@ instance isExtension [IsLieAbelian 𝓪] :
 then `𝓮` is a central extension of `𝓰` by `𝓪` in the sense that there is a short exact sequence
 `0 ⟶ 𝓪 ⟶ 𝓮 ⟶ 𝓰 ⟶ 0` where the two maps are `LieTwoCocycle.CentralExtension.emb` and
 `LieTwoCocycle.CentralExtension.proj` and the image of `𝓪` is contained in the centre of `𝓮`. -/
-instance isCentralExtension [IsLieAbelian 𝓪] (γ : LieTwoCocycle 𝕜 𝓰 𝓪) :
+theorem isCentralExtension [IsLieAbelian 𝓪] (γ : LieTwoCocycle 𝕜 𝓰 𝓪) :
     LieAlgebra.IsCentralExtension (emb γ) (proj γ) where
   __ := LieTwoCocycle.CentralExtension.isExtension γ
   central := by
@@ -185,12 +191,24 @@ noncomputable def basis {ιA ιG  : Type u'} (basA : Basis ιA 𝕜 𝓪) (basG 
 @[simp] lemma basis_eq_of_left {ιA ιG  : Type u'} (basA : Basis ιA 𝕜 𝓪) (basG : Basis ιG 𝕜 𝓰)
     (ia : ιA) :
     basis ex σ hσ basA basG (Sum.inl ia) = i (basA ia) := by
-  simp [basis]
+  change ses_basis basA basG
+    (LieSubmodule.mk_eq_bot_iff.mp ex.ker_eq_bot)
+    (congr_arg LieSubalgebra.toSubmodule ex.exact) hσ (Sum.inl ia) = _
+  exact ses_basis_eq_of_left
+    basA basG (f := i.toLinearMap) (g := p.toLinearMap)
+    (hf := LieSubmodule.mk_eq_bot_iff.mp ex.ker_eq_bot)
+    (hfg := congr_arg LieSubalgebra.toSubmodule ex.exact) hσ ia
 
 @[simp] lemma basis_eq_of_right {ιA ιG  : Type u'} (basA : Basis ιA 𝕜 𝓪) (basG : Basis ιG 𝕜 𝓰)
     (ig : ιG):
     basis ex σ hσ basA basG (Sum.inr ig) = σ (basG ig) := by
-  simp [basis]
+  change ses_basis basA basG
+    (LieSubmodule.mk_eq_bot_iff.mp ex.ker_eq_bot)
+    (congr_arg LieSubalgebra.toSubmodule ex.exact) hσ (Sum.inr ig) = _
+  exact ses_basis_eq_of_right
+    basA basG (f := i.toLinearMap) (g := p.toLinearMap)
+    (hf := LieSubmodule.mk_eq_bot_iff.mp ex.ker_eq_bot)
+    (hfg := congr_arg LieSubalgebra.toSubmodule ex.exact) hσ ig
 
 end LieAlgebra.IsExtension
 

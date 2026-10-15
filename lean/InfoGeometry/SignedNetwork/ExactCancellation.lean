@@ -63,9 +63,9 @@ theorem no_annihilationCount_function_of_signed (c : C) :
     funext x
     simp [p0, p1, signed]
   have h0' : F (signed p0) = 0 := by
-    simpa [annihilationCount] using h0
+    simpa [annihilationCount, p0] using h0
   have h1' : F (signed p1) = 1 := by
-    simpa [annihilationCount] using h1
+    simpa [annihilationCount, p1] using h1
   rw [← hsame] at h1'
   omega
 

@@ -43,7 +43,7 @@ theorem paper_xi_satake_trace_ellipse_tempered_segment :
         _ = 1 := by simp
     have hneg_exp :
         Complex.exp (-θ * Complex.I) = Real.cos θ - Real.sin θ * Complex.I := by
-      simpa [neg_mul, Complex.exp_mul_I] using (Complex.exp_mul_I (-θ))
+      simpa [neg_mul, sub_eq_add_neg, Complex.exp_mul_I] using (Complex.exp_mul_I (-θ))
     calc
       Complex.exp (θ * Complex.I) + (Complex.exp (θ * Complex.I))⁻¹
           = Complex.exp (θ * Complex.I) + Complex.exp (-θ * Complex.I) := by rw [hexp_inv]

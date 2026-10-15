@@ -39,11 +39,11 @@ theorem coordinateResidue_zero_iff (x : Lattice) :
     have h10 : (x 10 : ZMod 2) = 0 := congrArg (fun y : SmithGroup => y.2.1) hx
     have h11 : (x 11 : ZMod 364) = 0 := congrArg (fun y : SmithGroup => y.2.2) hx
     have d9 : (2 : ℤ) ∣ x 9 := by
-      simpa only [ZMod.intCast_zmod_eq_zero_iff_dvd] using h9
+      simpa only [ZMod.intCast_zmod_eq_zero_iff_dvd, Nat.cast_ofNat] using h9
     have d10 : (2 : ℤ) ∣ x 10 := by
-      simpa only [ZMod.intCast_zmod_eq_zero_iff_dvd] using h10
+      simpa only [ZMod.intCast_zmod_eq_zero_iff_dvd, Nat.cast_ofNat] using h10
     have d11 : (364 : ℤ) ∣ x 11 := by
-      simpa only [ZMod.intCast_zmod_eq_zero_iff_dvd] using h11
+      simpa only [ZMod.intCast_zmod_eq_zero_iff_dvd, Nat.cast_ofNat] using h11
     obtain ⟨a, ha⟩ := d9
     obtain ⟨b, hb⟩ := d10
     obtain ⟨c, hc⟩ := d11

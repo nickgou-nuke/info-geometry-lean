@@ -83,26 +83,6 @@ theorem lowerRight_horizonUp_zero : lowerRight * horizonUp = 0 := by
   unfold lowerRight horizonUp
   decide
 
-/-- Upper-left projection preserves the outgoing upper-right horizon. -/
-theorem upperLeft_horizonUp : upperLeft * horizonUp = horizonUp := by
-  unfold upperLeft horizonUp
-  decide
-
-/-- Lower-right projection preserves the incoming lower-left horizon. -/
-theorem lowerRight_horizonDown : lowerRight * horizonDown = horizonDown := by
-  unfold lowerRight horizonDown
-  decide
-
-/-- Upper-right horizon lands in the lower-right quadrant on the right. -/
-theorem horizonUp_lowerRight : horizonUp * lowerRight = horizonUp := by
-  unfold horizonUp lowerRight
-  decide
-
-/-- Lower-left horizon lands in the upper-left quadrant on the right. -/
-theorem horizonDown_upperLeft : horizonDown * upperLeft = horizonDown := by
-  unfold horizonDown upperLeft
-  decide
-
 /-- Upper-right horizon is killed by the upper-left quadrant on the right. -/
 theorem horizonUp_upperLeft_zero : horizonUp * upperLeft = 0 := by
   unfold horizonUp upperLeft
@@ -112,3 +92,27 @@ theorem horizonUp_upperLeft_zero : horizonUp * upperLeft = 0 := by
 theorem horizonDown_lowerRight_zero : horizonDown * lowerRight = 0 := by
   unfold horizonDown lowerRight
   decide
+
+/-- Upper-left projection preserves the outgoing upper-right horizon. -/
+theorem upperLeft_horizonUp : upperLeft * horizonUp = horizonUp := by
+  have h := congrArg (· * horizonUp) diagonal_quadrants_sum
+  rw [Matrix.add_mul, lowerRight_horizonUp_zero, add_zero, Matrix.one_mul] at h
+  exact h
+
+/-- Lower-right projection preserves the incoming lower-left horizon. -/
+theorem lowerRight_horizonDown : lowerRight * horizonDown = horizonDown := by
+  have h := congrArg (· * horizonDown) diagonal_quadrants_sum
+  rw [Matrix.add_mul, upperLeft_horizonDown_zero, zero_add, Matrix.one_mul] at h
+  exact h
+
+/-- Upper-right horizon lands in the lower-right quadrant on the right. -/
+theorem horizonUp_lowerRight : horizonUp * lowerRight = horizonUp := by
+  have h := congrArg (horizonUp * ·) diagonal_quadrants_sum
+  rw [Matrix.mul_add, horizonUp_upperLeft_zero, zero_add, Matrix.mul_one] at h
+  exact h
+
+/-- Lower-left horizon lands in the upper-left quadrant on the right. -/
+theorem horizonDown_upperLeft : horizonDown * upperLeft = horizonDown := by
+  have h := congrArg (horizonDown * ·) diagonal_quadrants_sum
+  rw [Matrix.mul_add, horizonDown_lowerRight_zero, add_zero, Matrix.mul_one] at h
+  exact h

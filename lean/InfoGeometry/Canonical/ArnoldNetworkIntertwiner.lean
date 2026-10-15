@@ -78,14 +78,6 @@ theorem arnoldToDoubledKrein_readoutPreservation_of_pointwise_eq
     ReadoutPreservation
       (arnoldToDoubledKreinIntertwiner_of_expertsFix
         (E := E) n net β hfix) := by
-  refine ⟨?_, ?_⟩
-  · intro s
-    simpa [arnoldToDoubledKreinIntertwiner_of_expertsFix,
-      ArnoldNetworkPresentation.toQuantumPresentation, doubledFierzReadout,
-      FierzChannelReadout.toQuantumPresentation] using hMetric s
-  · intro s
-    simpa [arnoldToDoubledKreinIntertwiner_of_expertsFix,
-      ArnoldNetworkPresentation.toQuantumPresentation, doubledFierzReadout,
-      FierzChannelReadout.toQuantumPresentation] using hPhase s
+  exact ⟨hMetric, hPhase⟩
 
 end InfoGeometry.Canonical.ArnoldNetworkIntertwiner

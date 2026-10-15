@@ -4,15 +4,35 @@ namespace Omega.Zeta
 
 /-- The three boundary parity coordinates, with coefficients in `𝔽₂`. -/
 abbrev xi_window6_boundary_parity_c3_equivariant_idempotents_module :=
-  ZMod 2 × ZMod 2 × ZMod 2
+  Bool × Bool × Bool
+
+/-- Addition in the coefficient field `𝔽₂`, represented by Boolean xor. -/
+def xi_window6_boundary_parity_c3_equivariant_idempotents_addBit
+    (a b : Bool) : Bool := xor a b
+
+/-- Multiplication in the coefficient field `𝔽₂`, represented by Boolean conjunction. -/
+def xi_window6_boundary_parity_c3_equivariant_idempotents_mulBit
+    (a b : Bool) : Bool := a && b
 
 /-- Cyclic convolution in the group algebra `𝔽₂[C₃]`, written on coefficient triples. -/
 def xi_window6_boundary_parity_c3_equivariant_idempotents_mul
     (a b : xi_window6_boundary_parity_c3_equivariant_idempotents_module) :
     xi_window6_boundary_parity_c3_equivariant_idempotents_module :=
-  (a.1 * b.1 + a.2.1 * b.2.2 + a.2.2 * b.2.1,
-    a.1 * b.2.1 + a.2.1 * b.1 + a.2.2 * b.2.2,
-      a.1 * b.2.2 + a.2.1 * b.2.1 + a.2.2 * b.1)
+  (xi_window6_boundary_parity_c3_equivariant_idempotents_addBit
+      (xi_window6_boundary_parity_c3_equivariant_idempotents_mulBit a.1 b.1)
+      (xi_window6_boundary_parity_c3_equivariant_idempotents_addBit
+        (xi_window6_boundary_parity_c3_equivariant_idempotents_mulBit a.2.1 b.2.2)
+        (xi_window6_boundary_parity_c3_equivariant_idempotents_mulBit a.2.2 b.2.1)),
+   xi_window6_boundary_parity_c3_equivariant_idempotents_addBit
+      (xi_window6_boundary_parity_c3_equivariant_idempotents_mulBit a.1 b.2.1)
+      (xi_window6_boundary_parity_c3_equivariant_idempotents_addBit
+        (xi_window6_boundary_parity_c3_equivariant_idempotents_mulBit a.2.1 b.1)
+        (xi_window6_boundary_parity_c3_equivariant_idempotents_mulBit a.2.2 b.2.2)),
+   xi_window6_boundary_parity_c3_equivariant_idempotents_addBit
+      (xi_window6_boundary_parity_c3_equivariant_idempotents_mulBit a.1 b.2.2)
+      (xi_window6_boundary_parity_c3_equivariant_idempotents_addBit
+        (xi_window6_boundary_parity_c3_equivariant_idempotents_mulBit a.2.1 b.2.1)
+        (xi_window6_boundary_parity_c3_equivariant_idempotents_mulBit a.2.2 b.1)))
 
 /-- The cyclic generator `t` acts by rotating the three boundary coordinates. -/
 def xi_window6_boundary_parity_c3_equivariant_idempotents_shift
@@ -28,22 +48,22 @@ def xi_window6_boundary_parity_c3_equivariant_idempotents_isIdempotent
 /-- The zero idempotent. -/
 def xi_window6_boundary_parity_c3_equivariant_idempotents_zero :
     xi_window6_boundary_parity_c3_equivariant_idempotents_module :=
-  (0, 0, 0)
+  (false, false, false)
 
 /-- The unit idempotent. -/
 def xi_window6_boundary_parity_c3_equivariant_idempotents_one :
     xi_window6_boundary_parity_c3_equivariant_idempotents_module :=
-  (1, 0, 0)
+  (true, false, false)
 
 /-- The nontrivial idempotent supported on `t + t²`. -/
 def xi_window6_boundary_parity_c3_equivariant_idempotents_boundary :
     xi_window6_boundary_parity_c3_equivariant_idempotents_module :=
-  (0, 1, 1)
+  (false, true, true)
 
 /-- The augmentation idempotent `1 + t + t²`. -/
 def xi_window6_boundary_parity_c3_equivariant_idempotents_augmentation :
     xi_window6_boundary_parity_c3_equivariant_idempotents_module :=
-  (1, 1, 1)
+  (true, true, true)
 
 /-- Concrete paper-facing statement: the C₃-equivariant endomorphism algebra is represented by the
 finite group algebra coefficients, and its idempotents are exactly the four CRT idempotents. -/
@@ -62,11 +82,11 @@ private lemma xi_window6_boundary_parity_c3_equivariant_idempotents_idempotent_i
     xi_window6_boundary_parity_c3_equivariant_idempotents_isIdempotent a ↔
       a.2.1 = a.2.2 := by
   rcases a with ⟨x, y, z⟩
-  fin_cases x <;> fin_cases y <;> fin_cases z <;>
+  cases x <;> cases y <;> cases z <;>
     simp [xi_window6_boundary_parity_c3_equivariant_idempotents_isIdempotent,
-      xi_window6_boundary_parity_c3_equivariant_idempotents_mul] <;>
-    norm_num <;>
-    decide
+      xi_window6_boundary_parity_c3_equivariant_idempotents_mul,
+      xi_window6_boundary_parity_c3_equivariant_idempotents_addBit,
+      xi_window6_boundary_parity_c3_equivariant_idempotents_mulBit]
 
 private lemma xi_window6_boundary_parity_c3_equivariant_idempotents_enumerate
     (a : xi_window6_boundary_parity_c3_equivariant_idempotents_module) :
@@ -76,11 +96,15 @@ private lemma xi_window6_boundary_parity_c3_equivariant_idempotents_enumerate
           a = xi_window6_boundary_parity_c3_equivariant_idempotents_boundary ∨
             a = xi_window6_boundary_parity_c3_equivariant_idempotents_augmentation := by
   rcases a with ⟨x, y, z⟩
-  fin_cases x <;> fin_cases y <;> fin_cases z <;>
+  cases x <;> cases y <;> cases z <;>
     simp [xi_window6_boundary_parity_c3_equivariant_idempotents_zero,
       xi_window6_boundary_parity_c3_equivariant_idempotents_one,
       xi_window6_boundary_parity_c3_equivariant_idempotents_boundary,
-      xi_window6_boundary_parity_c3_equivariant_idempotents_augmentation]
+      xi_window6_boundary_parity_c3_equivariant_idempotents_augmentation,
+      xi_window6_boundary_parity_c3_equivariant_idempotents_isIdempotent,
+      xi_window6_boundary_parity_c3_equivariant_idempotents_mul,
+      xi_window6_boundary_parity_c3_equivariant_idempotents_addBit,
+      xi_window6_boundary_parity_c3_equivariant_idempotents_mulBit]
 
 private lemma xi_window6_boundary_parity_c3_equivariant_idempotents_shift_three
     (a : xi_window6_boundary_parity_c3_equivariant_idempotents_module) :

@@ -384,8 +384,8 @@ with a recursively defined orbit.
 -/
 @[rep_depth operator]
 structure CelikKocakInfiniteFockCarrier
-    (Op : Type*) [Ring Op] [StarRing Op]
-    [NormedAddCommGroup Op] [NormedSpace ℂ Op] [CompleteSpace Op] where
+    (Op : Type*) [NormedRing Op] [NormedAlgebra ℂ Op]
+    [StarRing Op] [CompleteSpace Op] where
   cuntz : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op
   seedVector : Op
   leftBranch : Op →L[ℂ] Op
@@ -400,8 +400,8 @@ structure CelikKocakInfiniteFockCarrier
 
 namespace CelikKocakInfiniteFockCarrier
 
-variable {Op : Type*} [Ring Op] [StarRing Op]
-variable [NormedAddCommGroup Op] [NormedSpace ℂ Op] [CompleteSpace Op]
+variable {Op : Type*} [NormedRing Op] [NormedAlgebra ℂ Op]
+variable [StarRing Op] [CompleteSpace Op]
 variable (C : CelikKocakInfiniteFockCarrier Op)
 
 /-- The orbit at the empty word is the seed vector. -/
@@ -1082,7 +1082,11 @@ inductive FierzChannel where
   | vector
   | axial
   | area
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype FierzChannel :=
+  Fintype.ofList [.scalar, .rotor, .vector, .axial, .area]
+    (by intro x; cases x <;> simp)
 
 /-- Real Fierz readout packet. -/
 @[rep_depth operator]

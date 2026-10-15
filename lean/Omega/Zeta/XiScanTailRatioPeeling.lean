@@ -106,7 +106,8 @@ lemma xi_scan_tail_ratio_dominant_defect_dominantRatioLimit
       Filter.Tendsto (fun _ : ℕ => D.dominantRatio) Filter.atTop (nhds D.dominantRatio) :=
     tendsto_const_nhds
   have hsum := hdiff.add hconst
-  simpa [sub_add_cancel] using hsum
+  simpa [xi_scan_tail_ratio_dominant_defect_data.dominantRatioLimit,
+    sub_add_cancel] using hsum
 
 lemma xi_scan_tail_ratio_dominant_defect_exponentialConvergence
     (D : xi_scan_tail_ratio_dominant_defect_data) : D.exponentialConvergence :=

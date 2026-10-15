@@ -80,7 +80,7 @@ theorem negOnePin_commute (g : Pin55) :
   rw [negOnePin_coe]
   simp
 
-def pinSignSubgroup : Subgroup Pin55 :=
+noncomputable def pinSignSubgroup : Subgroup Pin55 :=
   Subgroup.closure ({1, negOnePin} : Set Pin55)
 
 theorem mem_pinSignSubgroup_iff (g : Pin55) :
@@ -281,4 +281,3 @@ theorem pinSignNativeQuotientAction_mk_readback (g : Pin55) :
   exact pinTwistedNativeOrthogonalAction_apply g
 
 end InfoGeometry.Clifford.Clifford55
-

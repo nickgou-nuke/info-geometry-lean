@@ -29,11 +29,7 @@ We install the typeclass instances so that `+` = `ZornVectorMatrix.add`,
 This is done by defining each instance with the explicit operation as data.
 -/
 
-noncomputable instance zvmAdd : Add (ZornVectorMatrix R) where add := ZornVectorMatrix.add
-noncomputable instance zvmNeg : Neg (ZornVectorMatrix R) where neg := ZornVectorMatrix.neg
-noncomputable instance zvmZero : Zero (ZornVectorMatrix R) where zero := ZornVectorMatrix.zero
 noncomputable instance zvmMul : Mul (ZornVectorMatrix R) where mul := ZornVectorMatrix.mul
-noncomputable instance zvmSMul : SMul R (ZornVectorMatrix R) where smul := ZornVectorMatrix.smul
 
 -- Definitional equalities — these must hold by construction
 @[simp] theorem zvm_add_def (X Y : ZornVectorMatrix R) :
@@ -47,30 +43,11 @@ noncomputable instance zvmSMul : SMul R (ZornVectorMatrix R) where smul := ZornV
 @[simp] theorem zvm_smul_def (r : R) (X : ZornVectorMatrix R) :
     r • X = ZornVectorMatrix.smul r X := rfl
 
-noncomputable instance : Sub (ZornVectorMatrix R) where sub X Y := X + (-Y)
-
-noncomputable instance : AddGroup (ZornVectorMatrix R) :=
-  AddGroup.ofLeftAxioms ZornVectorMatrix.add_assoc ZornVectorMatrix.zero_add
-    (fun X => ZornVectorMatrix.add_left_neg X)
-
-noncomputable instance : AddCommGroup (ZornVectorMatrix R) :=
-  AddCommGroup.mk ZornVectorMatrix.add_comm
-
 noncomputable instance : NonUnitalNonAssocRing (ZornVectorMatrix R) where
   zero_mul := ZornVectorMatrix.zero_mul
   mul_zero := ZornVectorMatrix.mul_zero
   left_distrib := ZornVectorMatrix.mul_add
   right_distrib := ZornVectorMatrix.add_mul
-
-noncomputable instance : Module R (ZornVectorMatrix R) where
-  one_smul := ZornVectorMatrix.one_smul
-  mul_smul := fun r s X => by
-    show ZornVectorMatrix.smul (r * s) X = ZornVectorMatrix.smul r (ZornVectorMatrix.smul s X)
-    ext i <;> simp [ZornVectorMatrix.smul, mul_assoc]
-  smul_zero := fun r => ZornVectorMatrix.smul_zero r
-  smul_add := ZornVectorMatrix.smul_add
-  add_smul := ZornVectorMatrix.add_smul
-  zero_smul := ZornVectorMatrix.zero_smul
 
 noncomputable instance : IsScalarTower R (ZornVectorMatrix R) (ZornVectorMatrix R) where
   smul_assoc r X Y := by

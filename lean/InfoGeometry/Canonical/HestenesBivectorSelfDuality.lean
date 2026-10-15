@@ -4,7 +4,7 @@ import Mathlib.LinearAlgebra.CliffordAlgebra.Grading
 import Mathlib.LinearAlgebra.CliffordAlgebra.Conjugation
 import Mathlib.LinearAlgebra.TensorProduct.Map
 import Mathlib.RingTheory.TensorProduct.Basic
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import Mathlib.LinearAlgebra.Complex.Module
 import InfoGeometry.Canonical.CliffordParityBridge
 import InfoGeometry.Canonical.HestenesBivectorCarrier
@@ -27,8 +27,7 @@ noncomputable def complexHodgeStar : ComplexBivector Q →ₗ[ℂ] ComplexBivect
 
 theorem complexHodgeStar_sq (B : ComplexBivector Q) :
     complexHodgeStar Q (complexHodgeStar Q B) = -B := by
-  refine TensorProduct.induction_on B ?_ ?_ ?_
-  · simp
+  refine TensorProduct.inductionOn B ?_ ?_
   · intro c x
     simp only [complexHodgeStar, TensorProduct.AlgebraTensorModule.map_tmul, LinearMap.id_coe, id_eq]
     have h1 : hodgeBivector Q (hodgeBivector Q x) = -x := by
@@ -48,13 +47,13 @@ noncomputable def antiSelfDualProj : ComplexBivector Q →ₗ[ℂ] ComplexBivect
 lemma selfDualProj_apply (B : ComplexBivector Q) :
     selfDualProj Q B = (2⁻¹ : ℂ) • B - (2⁻¹ * Complex.I : ℂ) • complexHodgeStar Q B := by
   dsimp [selfDualProj]
-  simp only [LinearMap.smul_apply, LinearMap.sub_apply, LinearMap.id_coe, id_eq, smul_sub, smul_smul]
+  simp only [smul_sub, smul_smul]
 
 @[simp]
 lemma antiSelfDualProj_apply (B : ComplexBivector Q) :
     antiSelfDualProj Q B = (2⁻¹ : ℂ) • B + (2⁻¹ * Complex.I : ℂ) • complexHodgeStar Q B := by
   dsimp [antiSelfDualProj]
-  simp only [LinearMap.smul_apply, LinearMap.add_apply, LinearMap.id_coe, id_eq, smul_add, smul_smul]
+  simp only [smul_add, smul_smul]
 
 @[simp]
 lemma star_selfDualProj (B : ComplexBivector Q) :

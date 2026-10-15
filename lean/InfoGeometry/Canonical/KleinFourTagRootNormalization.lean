@@ -11,48 +11,65 @@ open InfoGeometry.Topology.V4RootSystem
 abbrev V4Add := InfoGeometry.Geometry.KleinFourTag.Tag
 abbrev V4 := Multiplicative V4Add
 
-def v4RootMap : V4 → V4Group
-  | (0, 0) => V4Group.I
-  | (1, 0) => V4Group.W1
-  | (0, 1) => V4Group.W2
-  | (1, 1) => V4Group.W12
-  | _ => V4Group.I
+def v4RootMap (g : V4) : V4Group :=
+  let tag := g.toAdd
+  if tag = InfoGeometry.Geometry.KleinFourTag.id then V4Group.I
+  else if tag = InfoGeometry.Geometry.KleinFourTag.P then V4Group.W1
+  else if tag = InfoGeometry.Geometry.KleinFourTag.T then V4Group.W2
+  else V4Group.W12
 
 @[simp] theorem v4RootMap_id :
     v4RootMap (Multiplicative.ofAdd InfoGeometry.Geometry.KleinFourTag.id) =
       V4Group.I := by
-  rfl
+  norm_num [v4RootMap, InfoGeometry.Geometry.KleinFourTag.id, toAdd_ofAdd]
 
 @[simp] theorem v4RootMap_P :
-    v4RootMap (Multiplicative.ofAdd InfoGeometry.Geometry.KleinFourTag.P) =
+      v4RootMap (Multiplicative.ofAdd InfoGeometry.Geometry.KleinFourTag.P) =
       V4Group.W1 := by
-  rfl
+  norm_num [v4RootMap, InfoGeometry.Geometry.KleinFourTag.id,
+    InfoGeometry.Geometry.KleinFourTag.P, InfoGeometry.Geometry.KleinFourTag.T,
+    toAdd_ofAdd]
 
 @[simp] theorem v4RootMap_T :
-    v4RootMap (Multiplicative.ofAdd InfoGeometry.Geometry.KleinFourTag.T) =
+      v4RootMap (Multiplicative.ofAdd InfoGeometry.Geometry.KleinFourTag.T) =
       V4Group.W2 := by
-  rfl
+  norm_num [v4RootMap, InfoGeometry.Geometry.KleinFourTag.id,
+    InfoGeometry.Geometry.KleinFourTag.P, InfoGeometry.Geometry.KleinFourTag.T,
+    toAdd_ofAdd]
 
 @[simp] theorem v4RootMap_PT :
-    v4RootMap (Multiplicative.ofAdd InfoGeometry.Geometry.KleinFourTag.PT) =
+      v4RootMap (Multiplicative.ofAdd InfoGeometry.Geometry.KleinFourTag.PT) =
       V4Group.W12 := by
-  rfl
+  norm_num [v4RootMap, InfoGeometry.Geometry.KleinFourTag.id,
+    InfoGeometry.Geometry.KleinFourTag.P, InfoGeometry.Geometry.KleinFourTag.T,
+    InfoGeometry.Geometry.KleinFourTag.PT, toAdd_ofAdd]
 
 theorem v4RootMap_mul (g h : V4) :
     v4RootMap (g * h) = v4RootMap g * v4RootMap h := by
-  fin_cases g <;> fin_cases h <;> decide
+  fin_cases g <;> fin_cases h <;>
+    decide
+
+def v4RootMapInv : V4Group → V4
+  | .I => Multiplicative.ofAdd InfoGeometry.Geometry.KleinFourTag.id
+  | .W1 => Multiplicative.ofAdd InfoGeometry.Geometry.KleinFourTag.P
+  | .W2 => Multiplicative.ofAdd InfoGeometry.Geometry.KleinFourTag.T
+  | .W12 => Multiplicative.ofAdd InfoGeometry.Geometry.KleinFourTag.PT
+
+@[simp] theorem v4RootMapInv_left (g : V4) : v4RootMapInv (v4RootMap g) = g := by
+  fin_cases g <;> decide
 
 def v4RootHom : V4 →* V4Group where
   toFun := v4RootMap
-  map_one' := v4RootMap_id
+  map_one' := by decide
   map_mul' := v4RootMap_mul
 
 noncomputable def v4RootEquiv : V4 ≃* V4Group := by
   refine MulEquiv.ofBijective v4RootHom ?_
   constructor
   · intro g h hgh
-    fin_cases g <;> fin_cases h <;>
-      simp_all [v4RootHom, v4RootMap, Multiplicative.ofAdd]
+    have h' := congrArg v4RootMapInv hgh
+    change v4RootMapInv (v4RootMap g) = v4RootMapInv (v4RootMap h) at h'
+    simpa only [v4RootMapInv_left] using h'
   · intro g
     cases g with
     | I => exact ⟨Multiplicative.ofAdd InfoGeometry.Geometry.KleinFourTag.id, v4RootMap_id⟩

@@ -62,21 +62,13 @@ theorem cl11CanonicalPolarization_involution_eq_spectral_epsilon :
     (cl11CanonicalPolarization (E := E)).involution =
       (spectral_epsilon (E := E)).toLinearMap := by
   ext v
-  change (spectralPlusProj (E := E)).toLinearMap v -
-      (spectralMinusProj (E := E)).toLinearMap v =
-    (spectral_epsilon (E := E)).toLinearMap v
-  have hhalf (z : E) :
-      (2 : ℝ)⁻¹ • z + (2 : ℝ)⁻¹ • z = z := by
-    rw [← add_smul]
-    norm_num
-  apply DoubledSpace.ext
-  · simp only [spectral_epsilon]
-    simp [spectralPlusProj, spectralMinusProj, sub_eq_add_neg]
-    convert hhalf _ using 1 <;> norm_num
-  · simp only [spectral_epsilon]
-    simp [spectralPlusProj, spectralMinusProj, sub_eq_add_neg]
-    rw [← neg_add]
-    convert congrArg Neg.neg (hhalf _) using 1 <;> norm_num
+  let w : DoubledSpace E := v
+  change spectralPlusProj (E := E) w - spectralMinusProj (E := E) w =
+    spectral_epsilon (E := E) w
+  change (2 : ℝ)⁻¹ • (w + spectral_epsilon (E := E) w) -
+    (2 : ℝ)⁻¹ • (w - spectral_epsilon (E := E) w) =
+      spectral_epsilon (E := E) w
+  module
 
 theorem cl11Majorana_modular_bridge :
     (cl11DoubledCore E).J = (modular_j (E := E)).toLinearMap ∧

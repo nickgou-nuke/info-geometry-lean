@@ -16,4 +16,3 @@ text = text.replace("exact swapRowsMat_apply pr pi pr q", "simpa [A₁] using sw
 
 with open("lean/DAG/MatrixGaussJordan.lean", "w") as f:
     f.write(text)
-

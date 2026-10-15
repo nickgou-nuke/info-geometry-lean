@@ -6,6 +6,14 @@ namespace InfoGeometry.Arithmetic
 
 noncomputable section
 
+private theorem ratCyclotomicExtension (n : ℕ) [NeZero n] :
+    IsCyclotomicExtension {n} ℚ (CyclotomicField n ℚ) := by
+  exact CyclotomicField.isCyclotomicExtension n ℚ
+
+local instance (n : ℕ) [NeZero n] :
+    IsCyclotomicExtension {n} ℚ (CyclotomicField n ℚ) :=
+  ratCyclotomicExtension n
+
 private theorem primitiveRoot_power_divisor
     {N M : ℕ} [NeZero N] [NeZero M]
     (hN : 0 < N) (hM : 0 < M) (hNM : N ∣ M) :

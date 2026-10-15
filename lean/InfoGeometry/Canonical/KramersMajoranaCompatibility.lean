@@ -79,7 +79,8 @@ theorem majorana_closed_phasePartner
     {u : H₂}
     (hu : X.M.IsMajorana u) :
     X.M.IsMajorana (phasePartner (E := E) u) := by
-  simpa [phasePartner] using X.M.phaseAxis_closed hu
+  change X.M.IsMajorana (InfoGeometry.Krein.clockAxis (E := E) u)
+  exact X.M.phaseAxis_closed hu
 
 /--
 Mixed-channel stability:

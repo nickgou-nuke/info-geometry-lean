@@ -57,7 +57,9 @@ theorem coordinateFixedOrbitClosureMirrorTopCatHom_forget_apply
         have hInv' : coordinateMirror '' closure
               (fiveGradeCoordinateModularFlow.orbit f) =
             closure (fiveGradeCoordinateModularFlow.orbit f) := by
-          simpa [fiveGradeCoordinateMirrorInvolution] using hInv
+          simpa only [fiveGradeCoordinateMirrorInvolution,
+            fiveGradeCoordinateModularReversal,
+            SymbolicLatentModularFlow.orbitClosure] using hInv
         rw [hInv'] at hz
         exact hz⟩ := by
   rfl

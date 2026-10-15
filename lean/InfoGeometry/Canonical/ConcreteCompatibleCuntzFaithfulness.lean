@@ -67,7 +67,10 @@ theorem representation_injective_of_stage_maps
   induction x, y using DirectLimit.induction₂ with
   | _ n A B =>
       have hstageAB : stageMap n A = stageMap n B := by
-        simpa [colimitRepresentation_stage] using hxy
+        change colimitRepresentation (ofStage n A) =
+          colimitRepresentation (ofStage n B) at hxy
+        rw [colimitRepresentation_stage, colimitRepresentation_stage] at hxy
+        exact hxy
       have hAB : A = B := (hstage n) hstageAB
       subst B
       rfl

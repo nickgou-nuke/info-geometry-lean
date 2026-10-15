@@ -170,20 +170,18 @@ theorem F_matrix_unitary : F_matrix * F_matrix = (1 : Matrix (Fin 2) (Fin 2) ℝ
     unfold phiInvSqrt
     rw [Real.sq_sqrt phiInv_pos.le]
     rw [phiInv_sq_add_phiInv]
-  unfold F_matrix
-  ext i j; fin_cases i <;> fin_cases j
-  · -- (0,0): phiInv*phiInv + phiInvSqrt*phiInvSqrt = 1
-    simp [Matrix.mul_apply, Fin.sum_univ_two]
-    simpa [pow_two, add_comm] using ha2_add_b2
-  · -- (0,1): phiInv*phiInvSqrt + phiInvSqrt*(-phiInv) = 0
-    simp [Matrix.mul_apply, Fin.sum_univ_two]
+  ext i j
+  fin_cases i <;> fin_cases j
+  · change (∑ k : Fin 2, F_matrix 0 k * F_matrix k 0) = 1
+    simpa [F_matrix, Fin.sum_univ_two, pow_two, add_comm] using ha2_add_b2
+  · change (∑ k : Fin 2, F_matrix 0 k * F_matrix k 1) = 0
+    simp [F_matrix, Fin.sum_univ_two]
     ring
-  · -- (1,0): phiInvSqrt*phiInv + (-phiInv)*phiInvSqrt = 0
-    simp [Matrix.mul_apply, Fin.sum_univ_two]
+  · change (∑ k : Fin 2, F_matrix 1 k * F_matrix k 0) = 0
+    simp [F_matrix, Fin.sum_univ_two]
     ring
-  · -- (1,1): phiInvSqrt*phiInvSqrt + (-phiInv)*(-phiInv) = 1
-    simp [Matrix.mul_apply, Fin.sum_univ_two]
-    simpa [pow_two, add_comm] using ha2_add_b2
+  · change (∑ k : Fin 2, F_matrix 1 k * F_matrix k 1) = 1
+    simpa [F_matrix, Fin.sum_univ_two, pow_two, add_comm] using ha2_add_b2
 
 /-! ### 5. R-matrix (braiding) for Fib -/
 

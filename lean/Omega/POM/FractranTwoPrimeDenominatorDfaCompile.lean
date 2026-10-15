@@ -67,10 +67,12 @@ theorem paper_pom_fractran_two_prime_denominator_dfa_compile
     pairList.map fun qs => (encodeQ (delta qs.1 qs.2), encodeQ qs.1 * encodeSigma qs.2)
   have hPrimeQ : ∀ q, Nat.Prime (encodeQ q) := by
     intro q
-    simpa [encodeQ] using Nat.prime_nth_prime (eQ q)
+    change Nat.Prime (Nat.nth Nat.Prime (eQ q))
+    exact Nat.prime_nth_prime _
   have hPrimeSigma : ∀ s, Nat.Prime (encodeSigma s) := by
     intro s
-    simpa [encodeSigma] using Nat.prime_nth_prime (Fintype.card Q + eSigma s)
+    change Nat.Prime (Nat.nth Nat.Prime (Fintype.card Q + eSigma s))
+    exact Nat.prime_nth_prime _
   have hDisjoint : Disjoint (Set.range encodeQ) (Set.range encodeSigma) := by
     refine Set.disjoint_left.2 ?_
     intro x hxQ hxSigma
@@ -78,7 +80,9 @@ theorem paper_pom_fractran_two_prime_denominator_dfa_compile
     rcases hxSigma with ⟨s, hs⟩
     have hidx : (eQ q : Nat) = Fintype.card Q + (eSigma s : Nat) := by
       apply (Nat.nth_strictMono Nat.infinite_setOf_prime).injective
-      simpa [encodeQ, encodeSigma] using hs.symm
+      change Nat.nth Nat.Prime (eQ q) =
+        Nat.nth Nat.Prime (Fintype.card Q + eSigma s)
+      exact hs.symm
     omega
   refine ⟨encodeQ, encodeSigma, F, hPrimeQ, hPrimeSigma, hDisjoint, ?_⟩
   intro q s
@@ -183,14 +187,16 @@ theorem paper_pom_fractran_tm_local_compile_prime_sparse
       | none => (1, encodeQ qs.1 * encodeSigma qs.2)
   have hPrimeQ : ∀ q, Nat.Prime (encodeQ q) := by
     intro q
-    simpa [encodeQ] using Nat.prime_nth_prime (eQ q)
+    change Nat.Prime (Nat.nth Nat.Prime (eQ q))
+    exact Nat.prime_nth_prime _
   have hPrimeSigma : ∀ a, Nat.Prime (encodeSigma a) := by
     intro a
-    simpa [encodeSigma] using Nat.prime_nth_prime (Fintype.card Q + eSigma a)
+    change Nat.Prime (Nat.nth Nat.Prime (Fintype.card Q + eSigma a))
+    exact Nat.prime_nth_prime _
   have hPrimeMove : ∀ mv, Nat.Prime (encodeMove mv) := by
     intro mv
-    simpa [encodeMove, Nat.add_assoc] using
-      Nat.prime_nth_prime (Fintype.card Q + Fintype.card Sigma + mv)
+    change Nat.Prime (Nat.nth Nat.Prime (Fintype.card Q + Fintype.card Sigma + mv))
+    exact Nat.prime_nth_prime _
   have hDisjointQS : Disjoint (Set.range encodeQ) (Set.range encodeSigma) := by
     refine Set.disjoint_left.2 ?_
     intro x hxQ hxSigma
@@ -198,7 +204,9 @@ theorem paper_pom_fractran_tm_local_compile_prime_sparse
     rcases hxSigma with ⟨a, ha⟩
     have hidx : (eQ q : Nat) = Fintype.card Q + (eSigma a : Nat) := by
       apply (Nat.nth_strictMono Nat.infinite_setOf_prime).injective
-      simpa [encodeQ, encodeSigma] using ha.symm
+      change Nat.nth Nat.Prime (eQ q) =
+        Nat.nth Nat.Prime (Fintype.card Q + eSigma a)
+      exact ha.symm
     omega
   have hDisjointQM : Disjoint (Set.range encodeQ) (Set.range encodeMove) := by
     refine Set.disjoint_left.2 ?_
@@ -207,7 +215,9 @@ theorem paper_pom_fractran_tm_local_compile_prime_sparse
     rcases hxMove with ⟨mv, hmv⟩
     have hidx : (eQ q : Nat) = Fintype.card Q + Fintype.card Sigma + (mv : Nat) := by
       apply (Nat.nth_strictMono Nat.infinite_setOf_prime).injective
-      simpa [encodeQ, encodeMove, Nat.add_assoc] using hmv.symm
+      change Nat.nth Nat.Prime (eQ q) =
+        Nat.nth Nat.Prime (Fintype.card Q + Fintype.card Sigma + mv)
+      exact hmv.symm
     omega
   have hDisjointSM : Disjoint (Set.range encodeSigma) (Set.range encodeMove) := by
     refine Set.disjoint_left.2 ?_
@@ -217,7 +227,9 @@ theorem paper_pom_fractran_tm_local_compile_prime_sparse
     have hidx : Fintype.card Q + (eSigma a : Nat) =
         Fintype.card Q + Fintype.card Sigma + (mv : Nat) := by
       apply (Nat.nth_strictMono Nat.infinite_setOf_prime).injective
-      simpa [encodeSigma, encodeMove, Nat.add_assoc] using hmv.symm
+      change Nat.nth Nat.Prime (Fintype.card Q + eSigma a) =
+        Nat.nth Nat.Prime (Fintype.card Q + Fintype.card Sigma + mv)
+      exact hmv.symm
     omega
   refine ⟨encodeQ, encodeSigma, encodeMove, F, hPrimeQ, hPrimeSigma, hPrimeMove,
     hDisjointQS, hDisjointQM, hDisjointSM, ?_⟩

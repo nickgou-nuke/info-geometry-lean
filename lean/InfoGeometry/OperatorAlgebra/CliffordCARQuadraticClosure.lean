@@ -1,6 +1,7 @@
 import Mathlib.Algebra.Lie.OfAssociative
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.CliffordCAR
+
+attribute [local instance 100] LieRing.ofAssociativeRing
 
 /-!
 # Native quadratic CAR closure

@@ -4,6 +4,7 @@ import InfoGeometry.Algebra.SplitMetricLieAlgebra
 import Mathlib.RingTheory.GradedAlgebra.Basic
 import Mathlib.Algebra.Module.GradedModule
 import Mathlib.Algebra.Lie.Basic
+import Mathlib.CategoryTheory.Category.Basic
 import Mathlib.Tactic
 
 /-!
@@ -17,6 +18,10 @@ Concrete models (split octonion, Zorn, chiral, etc.) implement this specificatio
 -/
 
 namespace InfoGeometry.Algebra
+
+open CategoryTheory
+
+universe uR uV uL
 
 /-- The five TKK grades: -2, -1, 0, +1, +2 -/
 inductive TKKGrade where
@@ -43,12 +48,12 @@ This structure packages:
 3. Bracket closure laws respecting the 5-grade window
 4. The TKK bracket laws (neg_abelian, pos_abelian, neg_pos = zero, etc.)
 5. The inversion automorphism swapping grades ±1 and ±2, fixing grade 0 up to sign -/
-structure FiveGradedTKKSpec (R : Type*) [CommRing R] where
+structure FiveGradedTKKSpec (R : Type uR) [CommRing R] where
   -- The base split metric space
-  metric : SplitMetricSpace R
+  metric : SplitMetricSpace.{uR, uL} R
 
   -- The orthogonal Lie algebra 𝔬(β)
-  lie : SplitMetricLieAlgebra R metric
+  lie : SplitMetricLieAlgebra.{uR, uV, uL} R metric
 
   -- The 5-grading: each grade is a submodule of the Lie algebra
   -- Uses mathlib's GradedModule structure
@@ -118,6 +123,62 @@ structure FiveGradedTKKSpecHom {R : Type*} [CommRing R] (S₁ S₂ : FiveGradedT
   lie_hom : SplitMetricLieAlgebraHom S₁.lie S₂.lie
   map_grade : ∀ (g : TKKGrade) (x : S₁.lie.L), x ∈ S₁.grade g → lie_hom.toLinearMap x ∈ S₂.grade g
   map_inversion : ∀ (x : S₁.lie.L), lie_hom.toLinearMap (S₁.inversion x) = S₂.inversion (lie_hom.toLinearMap x)
+
+/-- Five-graded split-TKK specifications and their existing structure-preserving
+morphisms form a category. Composition is the actual composition of the metric
+and Lie maps; the grade and inversion equations are closed under composition. -/
+noncomputable instance fiveGradedTKKSpecCategory {R : Type*} [CommRing R] :
+    Category (FiveGradedTKKSpec R) where
+  Hom S T := FiveGradedTKKSpecHom S T
+  id S :=
+    { metric_hom :=
+        { toLinearMap := LinearMap.id
+          map_beta := by intro x y; rfl }
+      lie_hom :=
+        { toLinearMap := LinearMap.id
+          map_bracket := by intro x y; rfl }
+      map_grade := by intro g x hx; exact hx
+      map_inversion := by intro x; rfl }
+  comp {S T U} f g :=
+    { metric_hom :=
+        { toLinearMap := g.metric_hom.toLinearMap.comp f.metric_hom.toLinearMap
+          map_beta := by
+            intro x y
+            change U.metric.beta (g.metric_hom.toLinearMap
+              (f.metric_hom.toLinearMap x)) (g.metric_hom.toLinearMap
+                (f.metric_hom.toLinearMap y)) = S.metric.beta x y
+            rw [g.metric_hom.map_beta, f.metric_hom.map_beta] }
+      lie_hom :=
+        { toLinearMap := g.lie_hom.toLinearMap.comp f.lie_hom.toLinearMap
+          map_bracket := by
+            intro x y
+            change g.lie_hom.toLinearMap (f.lie_hom.toLinearMap ⁅x, y⁆) =
+              ⁅g.lie_hom.toLinearMap (f.lie_hom.toLinearMap x),
+                g.lie_hom.toLinearMap (f.lie_hom.toLinearMap y)⁆
+            rw [f.lie_hom.map_bracket, g.lie_hom.map_bracket] }
+      map_grade := by
+        intro k x hx
+        exact g.map_grade k (f.lie_hom.toLinearMap x) (f.map_grade k x hx)
+      map_inversion := by
+        intro x
+        change g.lie_hom.toLinearMap
+          (f.lie_hom.toLinearMap (S.inversion x)) = U.inversion _
+        rw [f.map_inversion, g.map_inversion]
+        simp only [LinearMap.comp_apply] }
+  id_comp := by
+    intro X Y f
+    cases f
+    rfl
+  comp_id := by
+    intro X Y f
+    cases f
+    rfl
+  assoc := by
+    intro W X Y Z f g h
+    cases f
+    cases g
+    cases h
+    rfl
 
 /-- An equivalence of 5-graded TKK specifications. -/
 structure FiveGradedTKKSpecEquiv {R : Type*} [CommRing R] (S₁ S₂ : FiveGradedTKKSpec R) where

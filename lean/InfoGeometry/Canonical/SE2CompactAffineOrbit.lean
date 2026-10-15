@@ -35,8 +35,7 @@ theorem rotationCarrierInclusion_mul (g h : RotationCarrier) :
     (g.1.1 * h.1.1 - g.1.2 * h.1.2,
       g.1.2 * h.1.1 + g.1.1 * h.1.2, 0, 0) =
       se2ParameterProduct g.1.1 g.1.2 0 0 h.1.1 h.1.2 0 0
-  dsimp [se2ParameterProduct]
-  ring
+  simp [se2ParameterProduct]
 
 def rotationCarrierInclusionHom :
     RotationCarrier →* SE2RotationCarrier where
@@ -275,11 +274,9 @@ def rotationAffineOrbitMap (v : Point2) :
     RotationCarrier → Point2 := fun g => g • v
 
 theorem continuous_rotationAffineOrbitMap (v : Point2) :
-    Continuous (rotationAffineOrbitMap v) := by
-  unfold rotationAffineOrbitMap
-  simpa only [Function.comp_apply] using
-    continuous_rotationAffinePointAction.comp
-      (continuous_id.prodMk continuous_const)
+    Continuous (rotationAffineOrbitMap v) :=
+  continuous_rotationAffinePointAction.comp
+    (continuous_id.prodMk continuous_const)
 
 def rotationAffineOrbit (v : Point2) : Set Point2 :=
   Set.range (rotationAffineOrbitMap v)
@@ -399,9 +396,8 @@ def rotationOrbitSetoid : Setoid Point2 where
 
 theorem rotationOrbitSetoid_rel_iff_orbit_eq (v w : Point2) :
     rotationOrbitSetoid.r v w ↔
-      rotationAffineOrbit v = rotationAffineOrbit w := by
-  simpa [rotationOrbitSetoid] using
-    (rotationAffineOrbit_eq_iff_pointQuadratic_eq v w).symm
+      rotationAffineOrbit v = rotationAffineOrbit w :=
+  (rotationAffineOrbit_eq_iff_pointQuadratic_eq v w).symm
 
 theorem rotationOrbitSetoid_action_compat
     (g : RotationCarrier) (v w : Point2) :
@@ -493,8 +489,9 @@ theorem rotationOrbitQuotientRadius_surjective :
   intro r
   refine ⟨Quotient.mk'' (Real.sqrt r, 0), ?_⟩
   apply Subtype.ext
-  dsimp [rotationOrbitQuotientRadius, pointQuadratic]
-  simpa [pointQuadratic] using Real.sq_sqrt r.2
+  rw [rotationOrbitQuotientRadius_mk]
+  dsimp [pointQuadratic]
+  simp [Real.sq_sqrt r.2]
 
 noncomputable def rotationOrbitQuotientRadiusEquiv :
     Quotient rotationOrbitSetoid ≃ Set.Ici (0 : ℝ) where
@@ -512,8 +509,9 @@ noncomputable def rotationOrbitQuotientRadiusEquiv :
   right_inv := by
     intro r
     apply Subtype.ext
-    dsimp [rotationOrbitQuotientRadius, pointQuadratic]
-    simpa [pointQuadratic] using Real.sq_sqrt r.2
+    rw [rotationOrbitQuotientRadius_mk]
+    dsimp [pointQuadratic]
+    simp [Real.sq_sqrt r.2]
 
 theorem continuous_rotationOrbitQuotientRadius :
     Continuous rotationOrbitQuotientRadius := by
@@ -537,8 +535,9 @@ noncomputable def rotationOrbitQuotientRadiusHomeomorph :
   right_inv := by
     intro r
     apply Subtype.ext
-    dsimp [rotationOrbitQuotientRadius, pointQuadratic]
-    simpa [pointQuadratic] using Real.sq_sqrt r.2
+    rw [rotationOrbitQuotientRadius_mk]
+    dsimp [pointQuadratic]
+    simp [Real.sq_sqrt r.2]
   continuous_toFun := continuous_rotationOrbitQuotientRadius
   continuous_invFun := by
     apply continuous_quotient_mk'.comp
@@ -604,8 +603,9 @@ instance {r : ℝ} : ContinuousSMul RotationCarrier (QuadraticLevelCarrier r) wh
 theorem continuous_rotationQuadraticAction_fixed
     {r : ℝ} (g : RotationCarrier) :
     Continuous (rotationQuadraticAction (r := r) g) := by
-  simpa only [Function.comp_apply] using
-    continuous_rotationQuadraticAction.comp (continuous_const.prodMk continuous_id)
+  apply Continuous.subtype_mk
+  exact continuous_rotationAffinePointAction.comp
+    (continuous_const.prodMk continuous_subtype_val)
 
 def rotationQuadraticActionHomeomorph
   {r : ℝ} (g : RotationCarrier) :
@@ -702,19 +702,17 @@ theorem rotationQuadraticOrbit_stabilizer_eq_bot_of_pos
       simpa [rotationQuadraticOrbitMap] using hfix
     have hge : g = (1 : RotationCarrier) :=
       rotationQuadraticOrbitMap_injective_of_pos hr v hmap
-    simpa [hge]
+    exact hge
   · intro hg
-    have hge : g = (1 : RotationCarrier) := by simpa using hg
-    subst g
+    subst hg
     exact MulAction.mem_stabilizer_iff.mpr (one_smul RotationCarrier v)
 
 theorem continuous_rotationQuadraticOrbitMap
     {r : ℝ} (v : QuadraticLevelCarrier r) :
     Continuous (rotationQuadraticOrbitMap v) := by
-  unfold rotationQuadraticOrbitMap
-  simpa only [Function.comp_apply] using
-      continuous_rotationQuadraticAction.comp
-      (continuous_id.prodMk continuous_const)
+  apply Continuous.subtype_mk
+  exact continuous_rotationAffinePointAction.comp
+    (continuous_id.prodMk continuous_const)
 
 theorem isClosedEmbedding_rotationQuadraticOrbitMap_of_pos
     {r : ℝ} (hr : 0 < r) (v : QuadraticLevelCarrier r) :
@@ -750,7 +748,7 @@ theorem rotationQuadraticOrbitMap_eq_self_of_zero
     {r : ℝ} (hr : r = 0) (v : QuadraticLevelCarrier r)
     (g : RotationCarrier) :
     rotationQuadraticOrbitMap v g = v := by
-  have hv : pointQuadratic v.1 = 0 := by simpa [hr] using v.2
+  have hv : pointQuadratic v.1 = 0 := v.2.trans hr
   have hv0 : v.1 = (0, 0) := by
     ext <;> dsimp [pointQuadratic] at hv ⊢
     · nlinarith [sq_nonneg v.1.2]

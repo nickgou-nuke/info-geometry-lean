@@ -1,5 +1,4 @@
 import InfoGeometry.Canonical.SingularBoundaryCorrection
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Singular Transport System

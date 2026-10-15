@@ -200,9 +200,14 @@ def grothendieckLift {A : Type*} [AddCommGroup A] (f : M →+ A) : Grothendieck 
         simp; abel
       _ = L X + L Y := by simp [h4, h5]
 
+/-- Evaluation of the canonical lift on a quotient representative. -/
+theorem grothendieckLift_mk {A : Type*} [AddCommGroup A] (f : M →+ A) (x : M × M) :
+    grothendieckLift f (Quotient.mk (grothendieckSetoid M) x) = f x.1 - f x.2 := rfl
+
 theorem grothendieckLift_comp {A : Type*} [AddCommGroup A] (f : M →+ A) (m : M) :
     grothendieckLift f (grothendieckMap M m) = f m := by
-  simp [grothendieckMap, grothendieckLift]
+  change f m - f 0 = f m
+  simp
 
 /-- Every element of the Grothendieck group is a difference of images of the canonical map. -/
 theorem grothendieck_eq_sub (x : Grothendieck M) : ∃ a b : M, x = grothendieckMap M a - grothendieckMap M b := by
@@ -224,8 +229,12 @@ def IsCancellationMonoid (M : Type u) [AddCommMonoid M] : Prop :=
 theorem grothendieckMap_injective_of_cancellation (h_cancel : IsCancellationMonoid M) :
     Function.Injective (grothendieckMap M) := by
   intro a b hab
-  have h_rel : GrothendieckRel (a, 0) (b, 0) := Quotient.exact (by
-    simpa [grothendieckMap] using hab)
+  have h_classes :
+      Quotient.mk (grothendieckSetoid M) (a, 0) =
+        Quotient.mk (grothendieckSetoid M) (b, 0) := by
+    change grothendieckMap M a = grothendieckMap M b at hab
+    exact hab
+  have h_rel : GrothendieckRel (a, 0) (b, 0) := Quotient.exact h_classes
   rcases h_rel with ⟨k, hk⟩
   have h_simp : a + k = b + k := by
     simpa [add_comm, add_left_comm, add_assoc] using hk
@@ -302,7 +311,8 @@ theorem grothendieckToInt_injective : Function.Injective grothendieckToInt := by
   refine Quotient.inductionOn₂ (s₁ := grothendieckSetoid ℕ) (s₂ := grothendieckSetoid ℕ) a b ?_
   intro x y h
   have h_eq_int : (x.1 : ℤ) - (x.2 : ℤ) = (y.1 : ℤ) - (y.2 : ℤ) := by
-    simpa [grothendieckToInt] using h
+    change to_int_raw x = to_int_raw y at h
+    exact h
   apply Quotient.sound
   use 0
   rw [add_zero, add_zero]
@@ -314,7 +324,14 @@ theorem grothendieckToInt_injective : Function.Injective grothendieckToInt := by
 theorem grothendieckToInt_surjective : Function.Surjective grothendieckToInt := by
   intro n
   use Quotient.mk (grothendieckSetoid ℕ) (n.toNat, (-n).toNat)
-  simp [grothendieckToInt, to_int_raw]
+  change (n.toNat : ℤ) - ((-n).toNat : ℤ) = n
+  by_cases hn : 0 ≤ n
+  · rw [Int.toNat_of_nonneg hn, Int.toNat_of_nonpos (neg_nonpos.mpr hn)]
+    omega
+  · have hn' : n < 0 := lt_of_not_ge hn
+    rw [Int.toNat_of_nonpos (le_of_lt hn'),
+      Int.toNat_of_nonneg (neg_nonneg.mpr (le_of_lt hn'))]
+    omega
 
 /-- K₀(Spec F) ≅ ℤ via the Grothendieck group of ℕ. -/
 noncomputable def grothendieckEquivInt : Grothendieck ℕ ≃+ ℤ :=
@@ -335,7 +352,20 @@ def grothendieckFunctor (f : M →+ N) : Grothendieck M →+ Grothendieck N :=
 theorem grothendieckFunctor_mk (f : M →+ N) (x : M × M) :
     grothendieckFunctor f (Quotient.mk (grothendieckSetoid M) x) =
       Quotient.mk (grothendieckSetoid N) (f x.1, f x.2) := by
-  simpa [grothendieckFunctor, grothendieckLift, grothendieckMap] using grothendieck_sub_mk (f x.1) (f x.2)
+  change grothendieckLift ((grothendieckMap N).comp f)
+    (Quotient.mk (grothendieckSetoid M) x) = _
+  rw [grothendieckLift_mk, AddMonoidHom.comp_apply]
+  exact grothendieck_sub_mk (f x.1) (f x.2)
+
+/-- The induced map sends each canonical generator to the generator of its image. -/
+theorem grothendieckFunctor_map (f : M →+ N) (m : M) :
+    grothendieckFunctor f (grothendieckMap M m) = grothendieckMap N (f m) := by
+  change grothendieckFunctor f (Quotient.mk (grothendieckSetoid M) (m, 0)) =
+    Quotient.mk (grothendieckSetoid N) (f m, 0)
+  rw [grothendieckFunctor_mk]
+  apply Quotient.sound
+  use 0
+  simp
 
 theorem grothendieckFunctor_id : grothendieckFunctor (AddMonoidHom.id M) = AddMonoidHom.id (Grothendieck M) := by
   ext x
@@ -360,9 +390,9 @@ theorem grothendieckFunctor_comp (f : M →+ N) (g : N →+ P) :
             ((grothendieckFunctor g).comp (grothendieckFunctor f)) (grothendieckMap M m)
                 = grothendieckFunctor g (grothendieckFunctor f (grothendieckMap M m)) := rfl
             _ = grothendieckFunctor g (grothendieckMap N (f m)) := by
-              simp [grothendieckFunctor_mk, grothendieckMap]
+              rw [grothendieckFunctor_map]
             _ = grothendieckMap P (g (f m)) := by
-              simp [grothendieckFunctor_mk, grothendieckMap]
+              rw [grothendieckFunctor_map]
             _ = ((grothendieckMap P).comp (g.comp f)) m := by simp)
         x
 

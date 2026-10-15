@@ -157,7 +157,7 @@ theorem scaledBraidGen_B3_braid (p : ℂˣ) :
     scaledBraidGen1 p * scaledBraidGen2 p * scaledBraidGen1 p =
       scaledBraidGen2 p * scaledBraidGen1 p * scaledBraidGen2 p := by
   have h := congrArg (conjugationHom (scaleUnit p)) braidGen_B3_braid
-  simpa only [map_mul, scaledBraidGen1, scaledBraidGen2, conjugationHom] using h
+  simpa [scaledBraidGen1, scaledBraidGen2, conjugationHom] using h
 
 /-- The conjugated Zorn representation of the presented braid group. -/
 def scaledZornPhi (p : ℂˣ) : B3PresentedGroup.B3 →* GL8 :=
@@ -185,7 +185,12 @@ theorem scaledZornPhi_charpoly (p : ℂˣ) (β : B3PresentedGroup.B3) :
     Matrix.charpoly (scaledZornPhi p β).val =
       Matrix.charpoly (zornPhi β).val := by
   rw [scaledZornPhi_conjugate]
-  exact Matrix.charpoly_units_conj (scaleUnit p) (zornPhi β).val
+  change Matrix.charpoly
+      (scaleMatrix p * (zornPhi β).val * scaleMatrix p⁻¹) = _
+  rw [Matrix.mul_assoc]
+  rw [Matrix.charpoly_mul_comm (scaleMatrix p)
+    ((zornPhi β).val * scaleMatrix p⁻¹)]
+  rw [Matrix.mul_assoc, scaleMatrix_inv_mul, Matrix.mul_one]
 
 /-- Inner conjugation does not change the kernel of the braid representation. -/
 theorem scaledZornPhi_ker (p : ℂˣ) :

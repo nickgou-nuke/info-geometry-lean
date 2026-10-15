@@ -20,7 +20,11 @@ inductive ParitySector
   | plusMinus
   | minusPlus
   | minusMinus
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype ParitySector where
+  elems := {.plusPlus, .plusMinus, .minusPlus, .minusMinus}
+  complete x := by cases x <;> simp
 
 open ParitySector
 

@@ -59,6 +59,6 @@ lemma anticommutator_orthogonality_invariant
     (O : Matrix (Fin n) (Fin n) ℝ) (hO : O * O.transpose = 1) (i j : Fin n) :
     ∑ k, O i k * O j k = if i = j then 1 else 0 := by
   have h := congrArg (fun M : Matrix (Fin n) (Fin n) ℝ => M i j) hO
-  simpa [Matrix.mul_apply, Matrix.transpose_apply] using h
+  simpa [Matrix.mul_apply, Matrix.transpose_apply, Matrix.one_apply] using h
 
 end PrimeMellinSymplecticCAR

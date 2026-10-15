@@ -45,8 +45,8 @@ lemma conclusion_screen_kirchhoff_deletion_contraction_treeMonomial_erase
     conclusion_screen_kirchhoff_deletion_contraction_treeMonomial T =
       MvPolynomial.X e *
         conclusion_screen_kirchhoff_deletion_contraction_treeMonomial (T.erase e) := by
-  rw [← insert_erase he]
-  simp [conclusion_screen_kirchhoff_deletion_contraction_treeMonomial, Finset.prod_insert, mul_comm]
+  unfold conclusion_screen_kirchhoff_deletion_contraction_treeMonomial
+  exact (Finset.mul_prod_erase (s := T) (f := fun (x : α) => (MvPolynomial.X x : MvPolynomial α ℕ)) he).symm
 
 lemma conclusion_screen_kirchhoff_deletion_contraction_contract_sum
     (Q : conclusion_screen_kirchhoff_deletion_contraction_graph α) (e : α) :

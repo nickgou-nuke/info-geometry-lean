@@ -1,9 +1,9 @@
 import Mathlib.Algebra.Field.Defs
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.Killing
+import Mathlib.Algebra.Lie.AdjointAction.Basic
 import Mathlib.LinearAlgebra.JordanChevalley
 import Mathlib.LinearAlgebra.Semisimple
-import Mathlib.RingTheory.Adjoin.Polynomial
+import Mathlib.RingTheory.Adjoin.Polynomial.Basic
 import InfoGeometry.Lie.MathlibBackportJordanChevalley
 
 /-! Project-owned adjoint Jordan--Chevalley compatibility lemmas. -/
@@ -14,52 +14,10 @@ open Algebra
 open scoped Polynomial
 attribute [local instance 100] LieRing.ofAssociativeRing
 
-variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
-
 namespace LieAlgebra
-
-theorem commute_ad_of_commute {a b : A} (h : Commute a b) :
-    Commute (ad R A a) (ad R A b) := by
-  rw [Commute, SemiconjBy, ← sub_eq_zero, ← Ring.lie_def,
-    ← (ad R A).map_lie, Ring.lie_def, sub_eq_zero.mpr h, map_zero]
 
 variable {K V : Type*} [Field K] [PerfectField K] [AddCommGroup V] [Module K V]
   [FiniteDimensional K V]
-
-theorem ad_isSemisimple_of_isSemisimple {a : Module.End K V}
-    (ha : a.IsSemisimple) :
-    (ad K (Module.End K V) a).IsSemisimple := by
-  rw [ad_eq_lmul_left_sub_lmul_right]
-  have hl : Module.End.IsSemisimple (LinearMap.mulLeft K a) := by
-    apply Module.End.isSemisimple_of_squarefree_aeval_eq_zero ha.minpoly_squarefree
-    have h : Polynomial.aeval (Algebra.lmul K (Module.End K V) a) (minpoly K a) = 0 := by
-      rw [Polynomial.aeval_algHom_apply, minpoly.aeval, map_zero]
-    simpa using h
-  have hr : Module.End.IsSemisimple (LinearMap.mulRight K a) := by
-    apply Module.End.isSemisimple_of_squarefree_aeval_eq_zero ha.minpoly_squarefree
-    have h : LinearMap.mulRight K a =
-        (Algebra.lsmul (A := (Module.End K V)ᵐᵒᵖ) K K (Module.End K V)) (.op a) := by
-      ext
-      simp [Algebra.lsmul]
-    rw [h]
-    rw [Polynomial.aeval_algHom_apply]
-    have hmin : Polynomial.aeval a (minpoly K a) = 0 := minpoly.aeval K a
-    have hpoly (p : K[X]) :
-        Polynomial.aeval (MulOpposite.op a) p =
-          MulOpposite.op (Polynomial.aeval a p) := by
-      induction p using Polynomial.induction_on' with
-      | add p q hp hq => simp [hp, hq]
-      | monomial n c =>
-          rw [Polynomial.aeval_def, Polynomial.eval₂_monomial,
-            Polynomial.aeval_def, Polynomial.eval₂_monomial]
-          change MulOpposite.op ((algebraMap K (Module.End K V)) c) *
-            MulOpposite.op (a ^ n) = _
-          rw [← MulOpposite.op_mul]
-          exact congrArg MulOpposite.op (Algebra.commutes c (a ^ n)).symm
-    ext x
-    rw [hpoly, hmin]
-    simp
-  exact hl.sub_of_commute (LinearMap.commute_mulLeft_right a a) hr
 
 variable {n s : Module.End K V}
 

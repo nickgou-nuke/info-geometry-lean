@@ -178,36 +178,61 @@ def import_jsonl(
     return request_raw("POST", url, target, payload, content_type="application/json")
 
 
+def execute_aql_response(
+    target: ArangoHttpTarget,
+    query: str,
+    bind_vars: dict[str, Any] | None = None,
+    *, timeout: float = 30, batch_size: int | None = None, count: bool = False,
+) -> dict[str, Any]:
+    """Fetch every cursor page; reject errors and incomplete cursor responses."""
+    if not query.strip():
+        raise ValueError("AQL query must not be empty")
+    if bind_vars is not None and not isinstance(bind_vars, dict):
+        raise ValueError("AQL bind variables must be an object")
+    if batch_size is not None and batch_size < 1:
+        raise ValueError("AQL batch size must be positive")
+    if timeout <= 0:
+        raise ValueError("AQL timeout must be positive")
+    payload: dict[str, Any] = {"query": query, "bindVars": bind_vars or {}, "count": count}
+    if batch_size is not None:
+        payload["batchSize"] = batch_size
+    cursor = request_json("POST", db_url(target, "/_api/cursor"), target,
+                          payload, timeout=timeout)
+    first: dict[str, Any] | None = None
+    rows: list[Any] = []
+    while True:
+        if not isinstance(cursor, dict) or cursor.get("error"):
+            raise RuntimeError("Arango returned an invalid or failed cursor response")
+        extra = cursor.get("extra", {})
+        if not isinstance(extra, dict) or not isinstance(extra.get("warnings", []), list):
+            raise RuntimeError("Arango cursor warning metadata is malformed")
+        if extra.get("warnings"):
+            raise RuntimeError("Arango returned query warnings; audit result is not complete evidence")
+        if not isinstance(cursor.get("result"), list):
+            raise RuntimeError("Arango cursor result must be a list")
+        if not isinstance(cursor.get("hasMore"), bool):
+            raise RuntimeError("Arango cursor must contain a boolean hasMore")
+        if first is None:
+            first = dict(cursor)
+        rows.extend(cursor["result"])
+        if not cursor["hasMore"]:
+            break
+        cursor_id = cursor.get("id")
+        if not isinstance(cursor_id, str) or not cursor_id:
+            raise RuntimeError("Arango cursor hasMore=true without a cursor id")
+        cursor = request_json("PUT", db_url(target, f"/_api/cursor/{quote(cursor_id)}"),
+                              target, timeout=timeout)
+    first["result"] = rows
+    first["hasMore"] = False
+    first.pop("id", None)
+    return first
+
+
 def execute_aql(
     target: ArangoHttpTarget,
     query: str,
     bind_vars: dict[str, Any] | None = None,
-    *,
-    timeout: float = 30,
-    batch_size: int | None = None,
+    *, timeout: float = 30, batch_size: int | None = None,
 ) -> list[Any]:
-    payload: dict[str, Any] = {"query": query, "bindVars": bind_vars or {}}
-    if batch_size is not None:
-        payload["batchSize"] = batch_size
-
-    cursor = request_json(
-        "POST",
-        db_url(target, "/_api/cursor"),
-        target,
-        payload,
-        timeout=timeout,
-    )
-    rows = list(cursor.get("result", []))
-    cursor_id = cursor.get("id")
-
-    while cursor.get("hasMore") and cursor_id:
-        cursor = request_json(
-            "PUT",
-            db_url(target, f"/_api/cursor/{quote(str(cursor_id))}"),
-            target,
-            timeout=timeout,
-        )
-        rows.extend(cursor.get("result", []))
-        cursor_id = cursor.get("id")
-
-    return rows
+    return execute_aql_response(target, query, bind_vars, timeout=timeout,
+                                batch_size=batch_size)["result"]

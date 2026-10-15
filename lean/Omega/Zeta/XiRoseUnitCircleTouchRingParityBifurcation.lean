@@ -43,17 +43,19 @@ theorem paper_xi_rose_unit_circle_touch_ring_parity_bifurcation
     (d n : Nat) (hcop : Nat.Coprime d n) (hnd : n < d) :
     xi_rose_unit_circle_touch_ring_parity_bifurcation_statement d n := by
   let _ := hnd
-  refine ⟨by simp [xi_rose_unit_circle_touch_ring_parity_bifurcation_touch_ring,
-    xi_rose_unit_circle_touch_ring_parity_bifurcation_touch_card], ?_, ?_⟩
+  have hcard :
+      Fintype.card (xi_rose_unit_circle_touch_ring_parity_bifurcation_touch_ring d n) =
+        2 * n / Nat.gcd (2 * n) d := by
+    change Fintype.card (Fin (2 * n / Nat.gcd (2 * n) d)) = _
+    exact Fintype.card_fin _
+  refine ⟨hcard, ?_, ?_⟩
   · intro hodd
     have hgcd : Nat.gcd (2 * n) d = 1 := by
       rw [xi_rose_unit_circle_touch_ring_parity_bifurcation_gcd_reduce d n hcop,
         xi_rose_unit_circle_touch_ring_parity_bifurcation_gcd_two_of_odd hodd]
     calc
       Fintype.card (xi_rose_unit_circle_touch_ring_parity_bifurcation_touch_ring d n)
-          = 2 * n / Nat.gcd (2 * n) d := by
-              simp [xi_rose_unit_circle_touch_ring_parity_bifurcation_touch_ring,
-                xi_rose_unit_circle_touch_ring_parity_bifurcation_touch_card]
+          = 2 * n / Nat.gcd (2 * n) d := hcard
       _ = 2 * n / 1 := by rw [hgcd]
       _ = 2 * n := by simp
   · intro heven
@@ -62,9 +64,7 @@ theorem paper_xi_rose_unit_circle_touch_ring_parity_bifurcation
         xi_rose_unit_circle_touch_ring_parity_bifurcation_gcd_two_of_even heven]
     calc
       Fintype.card (xi_rose_unit_circle_touch_ring_parity_bifurcation_touch_ring d n)
-          = 2 * n / Nat.gcd (2 * n) d := by
-              simp [xi_rose_unit_circle_touch_ring_parity_bifurcation_touch_ring,
-                xi_rose_unit_circle_touch_ring_parity_bifurcation_touch_card]
+          = 2 * n / Nat.gcd (2 * n) d := hcard
       _ = 2 * n / 2 := by rw [hgcd]
       _ = n := by simp
 

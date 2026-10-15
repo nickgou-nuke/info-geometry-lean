@@ -63,9 +63,18 @@ theorem rotation_equivalence
         (J3 * (D - J3 * m)) * (ψ * J3) := h_mouf
     _ = (J3 * D - m) * (ψ * J3) := by
       congr 1
-      rw [_root_.mul_sub, h_assoc, hJ3]
-      have hone : ZornVectorMatrix.one * m = m := by
-        simpa only [zvm_mul_def] using ZornVectorMatrix.one_mul m
+      change ZornVectorMatrix.mul J3
+          (ZornVectorMatrix.sub D (ZornVectorMatrix.mul J3 m)) =
+        ZornVectorMatrix.sub (ZornVectorMatrix.mul J3 D) m
+      have h_assoc' :
+          ZornVectorMatrix.mul J3 (ZornVectorMatrix.mul J3 m) =
+            ZornVectorMatrix.mul (ZornVectorMatrix.mul J3 J3) m := by
+        simpa only [zvm_mul_def] using h_assoc
+      have hJ3' : ZornVectorMatrix.mul J3 J3 = ZornVectorMatrix.one := by
+        simpa only [zvm_mul_def] using hJ3
+      rw [ZornVectorMatrix.mul_sub, h_assoc', hJ3']
+      have hone : ZornVectorMatrix.mul ZornVectorMatrix.one m = m :=
+        ZornVectorMatrix.one_mul m
       rw [hone]
 
 end

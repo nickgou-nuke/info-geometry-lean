@@ -71,16 +71,16 @@ noncomputable def scalarCylinderLogIncrement (r s : ℝ) : ℝ :=
   Real.log r - Real.log s
 
 theorem cylinderLogIncrement_projective_rescale
-{c r s : ℝ}
-(hc : 0 < c)
-(hr : 0 < r)
-(hs : 0 < s) :
-scalarCylinderLogIncrement (c * r) (c * s) =
-scalarCylinderLogIncrement r s := by
-unfold scalarCylinderLogIncrement
-rw [Real.log_mul (ne_of_gt hc) (ne_of_gt hr)]
-rw [Real.log_mul (ne_of_gt hc) (ne_of_gt hs)]
-ring
+    {c r s : ℝ}
+    (hc : 0 < c)
+    (hr : 0 < r)
+    (hs : 0 < s) :
+    scalarCylinderLogIncrement (c * r) (c * s) =
+      scalarCylinderLogIncrement r s := by
+  unfold scalarCylinderLogIncrement
+  rw [Real.log_mul (ne_of_gt hc) (ne_of_gt hr)]
+  rw [Real.log_mul (ne_of_gt hc) (ne_of_gt hs)]
+  ring
 
 noncomputable def cylinderLogPotential {Word : Type*} (weight : Word → ℝ) (w : Word) : ℝ :=
   -Real.log (weight w)
@@ -107,75 +107,76 @@ theorem cylinderLogIncrement_common_pos_smul
   rw [hratio]
 
 noncomputable def relativeCountModularProfile
-{ι : Type*} [Fintype ι]
-(r s : ι → ℝ) : ℝ :=
-∑ i, scalarCylinderLogIncrement (r i) (s i)
+    {ι : Type*} [Fintype ι]
+    (r s : ι → ℝ) : ℝ :=
+  ∑ i, scalarCylinderLogIncrement (r i) (s i)
 
 theorem relativeCountModularProfile_projective_rescale
-{ι : Type*} [Fintype ι]
-(c : ℝ)
-(r s : ι → ℝ)
-(hc : 0 < c)
-(hr : ∀ i, 0 < r i)
-(hs : ∀ i, 0 < s i) :
-relativeCountModularProfile (fun i => c * r i) (fun i => c * s i) =
-relativeCountModularProfile r s := by
-unfold relativeCountModularProfile
-refine Finset.sum_congr rfl ?_
-intro i hi
-exact cylinderLogIncrement_projective_rescale hc (hr i) (hs i)
+    {ι : Type*} [Fintype ι]
+    (c : ℝ)
+    (r s : ι → ℝ)
+    (hc : 0 < c)
+    (hr : ∀ i, 0 < r i)
+    (hs : ∀ i, 0 < s i) :
+    relativeCountModularProfile (fun i => c * r i) (fun i => c * s i) =
+      relativeCountModularProfile r s := by
+  unfold relativeCountModularProfile
+  refine Finset.sum_congr rfl ?_
+  intro i hi
+  exact cylinderLogIncrement_projective_rescale hc (hr i) (hs i)
 
 theorem coneVector_mem_naturalCone_of_mem
-{E : Type*}
-(naturalCone : Set E)
-(coneVector : E)
-(hmem : coneVector ∈ naturalCone) :
-coneVector ∈ naturalCone :=
-hmem
+    {E : Type*}
+    (naturalCone : Set E)
+    (coneVector : E)
+    (hmem : coneVector ∈ naturalCone) :
+    coneVector ∈ naturalCone :=
+  hmem
 
 theorem J_fixes_coneVector_of_fixed
-{E : Type*}
-(J : E → E)
-(coneVector : E)
-(hfixed : J coneVector = coneVector) :
-J coneVector = coneVector :=
-hfixed
+    {E : Type*}
+    (J : E → E)
+    (coneVector : E)
+    (hfixed : J coneVector = coneVector) :
+    J coneVector = coneVector :=
+  hfixed
 
 def outwardNormalCone {E : Type*} [SMul ℝ E] (v : E) : Set E :=
-{x | ∃ c : ℝ, 0 ≤ c ∧ x = c • v}
+  {x | ∃ c : ℝ, 0 ≤ c ∧ x = c • v}
 
 def inwardNormalCone {E : Type*} [SMul ℝ E] [Neg E] (v : E) : Set E :=
-{x | ∃ c : ℝ, 0 ≤ c ∧ x = c • (-v)}
+  {x | ∃ c : ℝ, 0 ≤ c ∧ x = c • (-v)}
 
 theorem outwardNormalCone_coneVector
-{E : Type*} [MulAction ℝ E]
-(v : E) :
-v ∈ outwardNormalCone v := by
-refine ⟨1, zero_le_one, ?_⟩
-exact (one_smul ℝ v).symm
+    {E : Type*} [MulAction ℝ E]
+    (v : E) :
+    v ∈ outwardNormalCone v := by
+  refine ⟨1, zero_le_one, ?_⟩
+  exact (one_smul ℝ v).symm
 
 theorem inwardNormalCone_coneVector
-{E : Type*} [MulAction ℝ E] [Neg E]
-(v : E) :
--v ∈ inwardNormalCone v := by
-refine ⟨1, zero_le_one, ?_⟩
-exact (one_smul ℝ (-v)).symm
+    {E : Type*} [MulAction ℝ E]
+    [Neg E]
+    (v : E) :
+    -v ∈ inwardNormalCone v := by
+  refine ⟨1, zero_le_one, ?_⟩
+  exact (one_smul ℝ (-v)).symm
 
 def pullbackMetric
-{Param State : Type*}
-(stateMap : Param → State)
-(modularMetric : State → State → ℝ)
-(x y : Param) : ℝ :=
-modularMetric (stateMap x) (stateMap y)
+    {Param State : Type*}
+    (stateMap : Param → State)
+    (modularMetric : State → State → ℝ)
+    (x y : Param) : ℝ :=
+  modularMetric (stateMap x) (stateMap y)
 
 theorem metric_eq_pullback
-{Param State : Type*}
-(stateMap : Param → State)
-(modularMetric : State → State → ℝ)
-(metric : Param → Param → ℝ)
-(hmetric : ∀ x y, metric x y = pullbackMetric stateMap modularMetric x y) :
-∀ x y, metric x y = modularMetric (stateMap x) (stateMap y) := by
-intro x y
-exact hmetric x y
+    {Param State : Type*}
+    (stateMap : Param → State)
+    (modularMetric : State → State → ℝ)
+    (metric : Param → Param → ℝ)
+    (hmetric : ∀ x y, metric x y = pullbackMetric stateMap modularMetric x y) :
+    ∀ x y, metric x y = modularMetric (stateMap x) (stateMap y) := by
+  intro x y
+  exact hmetric x y
 
 end InfoGeometry.Canonical.ModularCartanCantorSystem

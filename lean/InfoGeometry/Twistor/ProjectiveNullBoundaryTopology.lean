@@ -35,7 +35,10 @@ theorem projectiveNullLocus_isClosed
     IsClosed {p : ℙ K V | IsNull Q p} := by
   letI : TopologicalSpace (ℙ K V) :=
     projectivizationQuotientTopology (K := K) (V := V)
-  rw [isClosed_coinduced]
+  change @IsClosed (ℙ K V) (TopologicalSpace.coinduced
+    (@Quotient.mk' {v : V // v ≠ 0} (projectivizationSetoid K V))
+    inferInstance) {p : ℙ K V | IsNull Q p}
+  apply isClosed_coinduced.mpr
   change IsClosed {v : {v : V // v ≠ 0} |
     IsNull Q (Projectivization.mk K v v.property)}
   simp only [isNull_mk_iff]

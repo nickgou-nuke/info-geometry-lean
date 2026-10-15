@@ -180,8 +180,13 @@ theorem diracGamma_spinVector_conjugate
           Module.End ℂ DiracSpinor16)) := by
   have h := congrArg zornCliffordRepresentation
     (cliffordIota_spinVector_conjugate g V)
+  have h_inv :
+      zornCliffordRepresentation
+          (↑((spinGroup.toUnits g)⁻¹) : CliffordAlgebra vectorQuadratic) =
+        (((complexSpinDiracRepresentation g : DiracGL)⁻¹ : DiracGL) :
+          Module.End ℂ DiracSpinor16) := rfl
   simpa only [zornCliffordRepresentation_ι, map_mul,
-    complexSpinDiracRepresentation_val] using h
+    complexSpinDiracRepresentation_val, h_inv] using h
 
 /-- Intertwining form of gamma covariance. -/
 theorem complexSpinDirac_gamma_intertwines

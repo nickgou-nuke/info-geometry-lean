@@ -21,7 +21,7 @@ def zornCoordEquiv :
     Zorn ≃ ZornCoords :=
   InfoGeometry.Topology.ThreeColorSL3ZornActionTopological.zornCoordEquiv
 
-instance zornTopologicalSpace : TopologicalSpace Zorn :=
+noncomputable instance zornTopologicalSpace : TopologicalSpace Zorn :=
   InfoGeometry.Topology.ThreeColorSL3ZornActionTopological.zornTopologicalSpace
 
 def zornCoordHomeomorph : Zorn ≃ₜ ZornCoords :=

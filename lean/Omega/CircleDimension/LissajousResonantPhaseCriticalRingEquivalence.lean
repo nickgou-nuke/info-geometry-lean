@@ -8,10 +8,10 @@ lemma lissajous_resonant_phase_reflected_congruence (a b : ℕ) (δ : ℝ) :
   constructor
   · rintro ⟨M, N, hδ⟩
     refine ⟨M, -N, ?_⟩
-    simpa using hδ
+    rw [hδ]; push_cast; ring
   · rintro ⟨M, N, hδ⟩
     refine ⟨M, -N, ?_⟩
-    simpa using hδ
+    rw [hδ]; push_cast; ring
 
 /-- Paper label: `prop:cdim-lissajous-resonant-phase-critical-ring-equivalence`. -/
 theorem paper_cdim_lissajous_resonant_phase_critical_ring_equivalence

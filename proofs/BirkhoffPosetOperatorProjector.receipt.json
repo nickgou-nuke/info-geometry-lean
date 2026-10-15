@@ -15,7 +15,7 @@
     "toolchain": "leanprover/lean4:v4.34.1",
     "lakefileSha256": "5372c9a95ed8f6488bc0ce257c906c83658449668db4627259d72d542c77d9f7",
     "lakeManifestSha256": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
-    "gitHead": "94c8646fdbbf378f7b00e812f7ab4325f42e347b"
+    "gitHead": "17d436b864feeb5876f2392e550aa7fa6ef0d55c"
   },
   "checks": {
     "leanProcess": {
@@ -26,12 +26,12 @@
         "proofs/BirkhoffPosetOperatorProjector.lean"
       ],
       "returncode": 0,
-      "outputSha256": "2ff18e8d7aa0ffc166cb7cf2f321556286d4c0abff42433b8c4c8cb1dbc2b3f2",
+      "outputSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "status": "passed"
     },
     "semanticVacuityGate": {
       "returncode": 0,
-      "outputSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "outputSha256": "f111462690a2b7b1b2c0d5683af7c26f75abedb2a40ab687e79461279918334a",
       "status": "passed"
     },
     "axiomAudit": {
@@ -65,8 +65,8 @@
         "BirkhoffPosetOperatorProjector.IdempotentProjector.certified_defect_zero"
       ],
       "returncode": 0,
-      "outputSha256": "e456eb9e65ce806cbcb885fb9c353483b13be71bcb44cc76c1a4067e426143a5",
-      "output": "'BirkhoffPosetOperatorProjector.matJ_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'BirkhoffPosetOperatorProjector.projLeft_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'BirkhoffPosetOperatorProjector.projRight_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'BirkhoffPosetOperatorProjector.projLeft_add_projRight' depends on axioms: [propext, Classical.choice, Quot.sound]\n'BirkhoffPosetOperatorProjector.projLeft_mul_projRight' depends on axioms: [propext, Classical.choice, Quot.sound]\n'BirkhoffPosetOperatorProjector.projRight_mul_projLeft' depends on axioms: [propext, Classical.choice, Quot.sound]\n'BirkhoffPosetOperatorProjector.PeirceIdempotents.peirce_decomposition' depends on axioms: [propext]\n'BirkhoffPosetOperatorProjector.PeirceIdempotents.peirce_diff_sq' depends on axioms: [propext]\n'BirkhoffPosetOperatorProjector.nullPlus_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'BirkhoffPosetOperatorProjector.nullMinus_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'BirkhoffPosetOperatorProjector.nullPlus_mul_nullMinus' depends on axioms: [propext, Classical.choice, Quot.sound]\n'BirkhoffPosetOperatorProjector.nullMinus_mul_nullPlus' depends on axioms: [propext, Classical.choice, Quot.sound]\n'BirkhoffPosetOperatorProjector.witt_anticomm' depends on axioms: [propext, Classical.choice, Quot.sound]\n'BirkhoffPosetOperatorProjector.witt_bracket' depends on axioms: [propext, Classical.choice, Quot.sound]\n'BirkhoffPosetOperatorProjector.matrix_two_noncommutative' depends on axioms: [propext, Classical.choice, Quot.sound]\n'BirkhoffPosetOperatorProjector.matPerm12_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'BirkhoffPosetOperatorProjector.birkhoff_param_bounds' depends on axioms: [propext, Classical.choice, Quot.sound]\n'BirkhoffPosetOperatorProjector.birkhoff_2x2_decomposition' depends on axioms: [propext, Classical.choice, Quot.sound]\n'BirkhoffPosetOperatorProjector.IdempotentProjector.projCompl_sq' depends on axioms: [propext]\n'BirkhoffPosetOperatorProjector.IdempotentProjector.proj_mul_projCompl' does not depend on any axioms\n'BirkhoffPosetOperatorProjector.IdempotentProjector.projCompl_mul_proj' does not depend on any axioms\n'BirkhoffPosetOperatorProjector.IdempotentProjector.proj_add_projCompl' depends on axioms: [propext]\n'BirkhoffPosetOperatorProjector.IdempotentProjector.proj_operator_stability' depends on axioms: [propext]\n'BirkhoffPosetOperatorProjector.IdempotentProjector.defect_annihilation_left' depends on axioms: [propext]\n'BirkhoffPosetOperatorProjector.IdempotentProjector.defect_annihilation_right' depends on axioms: [propext]\n'BirkhoffPosetOperatorProjector.IdempotentProjector.certified_defect_zero' does not depend on any axioms"
+      "outputSha256": "d7c1757916e8c0d7d0f36e41b0d6bf94a1bd71d04510491f46f5ee7ebf103df3",
+      "output": "'BirkhoffPosetOperatorProjector.matJ_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'BirkhoffPosetOperatorProjector.projLeft_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'BirkhoffPosetOperatorProjector.projRight_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'BirkhoffPosetOperatorProjector.projLeft_add_projRight' depends on axioms: [propext, Classical.choice, Quot.sound]\n'BirkhoffPosetOperatorProjector.projLeft_mul_projRight' depends on axioms: [propext, Classical.choice, Quot.sound]\n'BirkhoffPosetOperatorProjector.projRight_mul_projLeft' depends on axioms: [propext, Classical.choice, Quot.sound]\n'BirkhoffPosetOperatorProjector.PeirceIdempotents.peirce_decomposition' depends on axioms: [propext]\n'BirkhoffPosetOperatorProjector.PeirceIdempotents.peirce_diff_sq' depends on axioms: [propext]\n'BirkhoffPosetOperatorProjector.nullPlus_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'BirkhoffPosetOperatorProjector.nullMinus_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'BirkhoffPosetOperatorProjector.nullPlus_mul_nullMinus' depends on axioms: [propext, Classical.choice, Quot.sound]\n'BirkhoffPosetOperatorProjector.nullMinus_mul_nullPlus' depends on axioms: [propext, Classical.choice, Quot.sound]\n'BirkhoffPosetOperatorProjector.witt_anticomm' depends on axioms: [propext, Classical.choice, Quot.sound]\n'BirkhoffPosetOperatorProjector.witt_bracket' depends on axioms: [propext, Classical.choice, Quot.sound]\n'BirkhoffPosetOperatorProjector.matrix_two_noncommutative' depends on axioms: [propext, Classical.choice, Quot.sound]\n'BirkhoffPosetOperatorProjector.matPerm12_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'BirkhoffPosetOperatorProjector.birkhoff_param_bounds' depends on axioms: [propext, Classical.choice, Quot.sound]\n'BirkhoffPosetOperatorProjector.birkhoff_2x2_decomposition' depends on axioms: [propext, Classical.choice, Quot.sound]\n'BirkhoffPosetOperatorProjector.IdempotentProjector.projCompl_sq' depends on axioms: [propext]\n'BirkhoffPosetOperatorProjector.IdempotentProjector.proj_mul_projCompl' does not depend on any axioms\n'BirkhoffPosetOperatorProjector.IdempotentProjector.projCompl_mul_proj' does not depend on any axioms\n'BirkhoffPosetOperatorProjector.IdempotentProjector.proj_add_projCompl' depends on axioms: [propext]\n'BirkhoffPosetOperatorProjector.IdempotentProjector.proj_operator_stability' depends on axioms: [propext]\n'BirkhoffPosetOperatorProjector.IdempotentProjector.defect_annihilation_left' depends on axioms: [propext]\n'BirkhoffPosetOperatorProjector.IdempotentProjector.defect_annihilation_right' depends on axioms: [propext]\n'BirkhoffPosetOperatorProjector.IdempotentProjector.certified_defect_zero' does not depend on any axioms\n"
     }
   },
   "review": {
@@ -74,11 +74,9 @@
     "promotionAllowed": false
   },
   "score": {
-    "status": "policy_estimate",
-    "value": 1.0,
-    "meaning": "scheduling metadata only; not probability or proof authority",
-    "defect": 0.0,
-    "policyVersion": "opengauss-v1"
+    "status": "unconfigured",
+    "value": null,
+    "meaning": null
   },
-  "receiptSha256": "47352369fb637aae65f2d31bd6b35a04d68293086ec7c1040bd2278f735a7aaf"
+  "receiptSha256": "572b4a31e4f32c5a76a2ef18036c8c11ce55c92d3d4ee5b91d112be9686076e2"
 }

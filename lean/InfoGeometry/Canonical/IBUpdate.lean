@@ -299,7 +299,7 @@ theorem ibBlahutArimotoScoreRay_eq_of_sameScoreRay
     ibBlahutArimotoScoreRay (X := X) (Y := Y) (T := T) prob q := by
   funext x
   apply Quotient.sound
-  simpa [ibBlahutArimotoScoreSlice, ibBlahutArimotoStepUnnormalized] using hRay x
+  exact hRay x
 
 /--
 Radial degree (volume-changing part) of the BA unnormalized score at a slice.
@@ -634,8 +634,10 @@ theorem ibBlahutArimotoProjectiveState_eq_of_score_ray_scale
               (ENNReal.mul_ne_top (hκTop x) (baScore_slice_ne_top prob pT_givenX x)))
         = ibBlahutArimotoStep prob pT_givenX x := by
     simpa using congrArg (fun f => f x) hscale
-  simpa [ibBlahutArimotoProjectiveState] using
-    congrArg InfoGeometry.MeasureProjective.Normalized.pmfToProjectiveState hx
+  rw [hx]
+  simp [ibBlahutArimotoProjectiveState, ibBlahutArimotoScoreRay, ScoreRay.projectiveState_mk,
+    ScoreRay.toProjectiveState, ScoreSlice.gaugeSection, ibBlahutArimotoScoreSlice,
+    ibBlahutArimotoStep_eq_scoreProjectiveGauge]
 
 end MeasureProjectiveBridge
 
@@ -960,7 +962,7 @@ theorem ibBlahutArimotoStep_pointwise_massNndist_le_of_normalize_intrinsicNonzer
         ((ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob q) x)
           ≤ Kc * finProbMassNndist (T := T) (p x) (q x) := by
   intro p q x
-  simpa [ibBlahutArimotoStep] using hNormalize p q x
+  simpa [ibBlahutArimotoStep, ibBlahutArimotoStepFrozen] using hNormalize p q x
 
 /--
 Internal normalize-form zero-contraction witness:
@@ -1282,7 +1284,7 @@ theorem ibBlahutArimotoStep_pointwise_massNndist_le_of_massRecipLipschitz_intrin
         ((ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob q) x)
         ≤ Kc * (finProbMassNndist (T := T) (p x) (q x)) := by
   intro p q x
-  simpa [ibBlahutArimotoStep] using
+  simpa [ibBlahutArimotoStep, ibBlahutArimotoStepFrozen] using
     (baNormalize_pointwise_massNndist_le_of_massRecipLipschitz_intrinsicUpper
       (X := X) (Y := Y) (T := T)
       (prob := prob)

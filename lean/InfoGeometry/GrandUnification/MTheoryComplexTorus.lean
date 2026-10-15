@@ -22,29 +22,17 @@ variable (V : Type*) [NormedAddCommGroup V] [NormedSpace ℂ V] [FiniteDimension
   (L : Submodule ℤ V) [DiscreteTopology L] [IsZLattice ℝ L]
 
 /-- The complex torus `V ⧸ L.toAddSubgroup`. -/
-def ComplexTorus : Type _ := V ⧸ L.toAddSubgroup
+abbrev ComplexTorus : Type _ := V ⧸ L.toAddSubgroup
 
 namespace ComplexTorus
 
 variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℂ V] [FiniteDimensional ℂ V]
   {L : Submodule ℤ V} [DiscreteTopology L] [IsZLattice ℝ L]
 
-instance instAddCommGroup : AddCommGroup (ComplexTorus V L) :=
-  inferInstanceAs (AddCommGroup (V ⧸ L.toAddSubgroup))
-
-instance instTopologicalSpace : TopologicalSpace (ComplexTorus V L) :=
-  inferInstanceAs (TopologicalSpace (V ⧸ L.toAddSubgroup))
-
-instance instIsTopologicalAddGroup : IsTopologicalAddGroup (ComplexTorus V L) :=
-  inferInstanceAs (IsTopologicalAddGroup (V ⧸ L.toAddSubgroup))
-
 instance instT2Space : T2Space (ComplexTorus V L) := by
-  letI : DiscreteTopology L.toAddSubgroup := (inferInstance : DiscreteTopology L)
-  letI : IsClosed (L.toAddSubgroup : Set V) :=
-    AddSubgroup.isClosed_of_discrete (H := L.toAddSubgroup)
-  letI : T1Space (V ⧸ L.toAddSubgroup) :=
-    inferInstance
-  simpa [ComplexTorus] using (inferInstance : T2Space (V ⧸ L.toAddSubgroup))
+  have : DiscreteTopology L.toAddSubgroup := (inferInstance : DiscreteTopology L)
+  have : IsClosed (L.toAddSubgroup : Set V) := AddSubgroup.isClosed_of_discreteTopology
+  exact inferInstance
 
 instance instConnectedSpace : ConnectedSpace (ComplexTorus V L) :=
   Function.Surjective.connectedSpace QuotientAddGroup.mk_surjective
@@ -52,7 +40,7 @@ instance instConnectedSpace : ConnectedSpace (ComplexTorus V L) :=
 
 instance instCompactSpace : CompactSpace (ComplexTorus V L) := by
   rw [← isCompact_univ_iff]
-  simpa [ComplexTorus, Set.range_quotient_mk'] using
+  simpa [Set.range_quotient_mk'] using
     (IsZLattice.isCompact_range_of_periodic L (QuotientAddGroup.mk' L.toAddSubgroup)
       continuous_quotient_mk' (by
         intro z w hw

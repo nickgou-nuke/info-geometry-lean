@@ -61,7 +61,7 @@ theorem null_zorn_is_spinor_outer_product
   let L : ZornSpinor := (Z.a, Z.y)
   let R : ZornSpinor := (1, Z.a⁻¹ • Z.x)
   have hdet : Z.a * Z.b = InfoGeometry.Canonical.ZornMatrix.dot Z.x Z.y := by
-    simpa [InfoGeometry.Algebra.Zorn.ZornMatrix.detZ] using
+    simpa [InfoGeometry.Algebra.Zorn.ZornMatrix.detZ, realCrossProduct3] using
       (sub_eq_zero.mp hnull)
   have hb : Z.b = Z.a⁻¹ * InfoGeometry.Canonical.ZornMatrix.dot Z.x Z.y := by
     field_simp [ha]
@@ -82,6 +82,7 @@ theorem pure_vector_null_is_orthogonal
       realCrossProduct3 Z = 0)
     (hpure : Z.a = 0 ∧ Z.b = 0) :
     InfoGeometry.Canonical.ZornMatrix.dot Z.x Z.y = 0 := by
-  simpa [InfoGeometry.Algebra.Zorn.ZornMatrix.detZ, hpure.1, hpure.2] using hnull
+  simpa [InfoGeometry.Algebra.Zorn.ZornMatrix.detZ, realCrossProduct3,
+    hpure.1, hpure.2] using hnull
 
 end InfoGeometry.Canonical.CanonicalZornNullFactorization

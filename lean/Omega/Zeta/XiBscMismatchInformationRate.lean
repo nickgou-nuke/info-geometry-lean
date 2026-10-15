@@ -77,7 +77,9 @@ theorem paper_xi_bsc_mismatch_information_rate
     · simp [h]
     · simp [h]
   · intro hDensity
-    simpa [xi_bsc_mismatch_information_rate_data.informationRatePrefix, mul_assoc] using
-      hDensity.const_mul (D.beta * D.noiseMean)
+    change Tendsto
+      (fun N => D.beta * (D.noiseMean * D.mismatchDensityPrefix N)) atTop
+      (nhds (D.beta * (D.noiseMean * D.mismatchDensity)))
+    simpa [mul_assoc] using hDensity.const_mul (D.beta * D.noiseMean)
 
 end Omega.Zeta

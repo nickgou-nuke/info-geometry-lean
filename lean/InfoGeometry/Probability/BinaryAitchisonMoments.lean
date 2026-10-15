@@ -95,9 +95,11 @@ theorem hasDerivAt_fisherExp (θ : ℝ) :
     HasDerivAt fisherExp (centeredMoment (logistic θ) 3) θ := by
   have hd := hasDerivAt_logistic θ
   convert hd.mul ((hasDerivAt_const θ (1 : ℝ)).sub hd) using 1
-  rw [centeredMoment_three]
-  dsimp
-  ring
+  · ext x
+    rfl
+  · rw [centeredMoment_three]
+    dsimp
+    ring
 
 /-- On the finite binary carrier, the existing Massieu Hessian is its actual
 probability-weighted centered second moment. -/

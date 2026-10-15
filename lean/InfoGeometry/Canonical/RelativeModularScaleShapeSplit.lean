@@ -268,7 +268,7 @@ theorem canonicalRelativeModularOperator_commutes_spectralProjector_of_wedgeCali
     rw [CertifiedInverseKernel.spectralComplementaryProjector,
       CertifiedInverseKernel.toInverseKernel', InverseKernel.spectralComplementaryProjector]
     simp
-  simpa [Commute, canonicalRelativeModularOperator, hProj] using hActive
+  simpa [Commute, SemiconjBy, canonicalRelativeModularOperator, hProj] using hActive
 
 /--
 CP-002 Phase A (operator lane):

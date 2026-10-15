@@ -210,8 +210,8 @@ theorem upperLeft_idempotent : upperLeft * upperLeft = upperLeft := by
 
 /-- Lower-right quadrant is an idempotent projector. -/
 theorem lowerRight_idempotent : lowerRight * lowerRight = lowerRight := by
-  unfold lowerRight
-  decide
+  apply blockReindex.injective
+  simp only [map_mul, lowerRight_reindex, InfoGeometry.Algebra.ColeFury.lowerRight_sq]
 
 /-- Diagonal quadrants are orthogonal in this block decomposition. -/
 theorem upperLeft_lowerRight_zero : upperLeft * lowerRight = 0 := by
@@ -238,13 +238,15 @@ theorem horizonDown_nilpotent : horizonDown * horizonDown = 0 :=
 
 /-- Upper-right followed by lower-left closes to the upper-left diagonal block. -/
 theorem horizonUp_horizonDown : horizonUp * horizonDown = upperLeft := by
-  unfold horizonUp horizonDown upperLeft
-  decide
+  apply blockReindex.injective
+  simp only [map_mul, horizonUp_reindex, horizonDown_reindex, upperLeft_reindex,
+    InfoGeometry.Algebra.ColeFury.horizonUp_mul_horizonDown]
 
 /-- Lower-left followed by upper-right closes to the lower-right diagonal block. -/
 theorem horizonDown_horizonUp : horizonDown * horizonUp = lowerRight := by
-  unfold horizonUp horizonDown lowerRight
-  decide
+  apply blockReindex.injective
+  simp only [map_mul, horizonDown_reindex, horizonUp_reindex, lowerRight_reindex,
+    InfoGeometry.Algebra.ColeFury.horizonDown_mul_horizonUp]
 
 /-- Anticommutator of the two horizon blocks is the full identity. -/
 theorem horizon_anticomm_identity : horizonUp * horizonDown + horizonDown * horizonUp = 1 := by

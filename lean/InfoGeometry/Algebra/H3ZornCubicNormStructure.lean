@@ -19,8 +19,13 @@ theorem adjointQuad_adjointQuad (X : H3Zorn R) :
     adjointQuad (adjointQuad X) = normCubic X • X := by
   rcases X with ⟨a1, a2, a3, a, b, c⟩
   apply ext_h3
-  · simpa only [adjointQuad, normCubic] using
-      (ZornVectorMatrix.adjoint_diagonal_composition a1 a2 a3 a b c)
+  · change (a1 * a3 - ZornVectorMatrix.norm c) *
+        (a1 * a2 - ZornVectorMatrix.norm a) -
+        ZornVectorMatrix.norm (ZornVectorMatrix.conj a * ZornVectorMatrix.conj c - a1 • b) =
+      (a1 * a2 * a3 - a1 * ZornVectorMatrix.norm b -
+        a2 * ZornVectorMatrix.norm c - a3 * ZornVectorMatrix.norm a +
+        ZornVectorMatrix.trace ((a * b) * c)) * a1
+    exact ZornVectorMatrix.adjoint_diagonal_composition a1 a2 a3 a b c
   · have h := ZornVectorMatrix.adjoint_diagonal_composition a2 a3 a1 b c a
     have ht := ZornVectorMatrix.trace_mul_cyclic a b c
     change ZornVectorMatrix.trace ((a * b) * c) =

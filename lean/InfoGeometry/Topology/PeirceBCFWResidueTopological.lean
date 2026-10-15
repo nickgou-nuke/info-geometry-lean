@@ -14,15 +14,14 @@ abstract pole family by typed Peirce channel poles. -/
 theorem continuousOn_peirce_algebraicAmplitude
     {I : Type*} [Fintype I]
     (c : I → ℂ)
-    (data : I → PeirceBCFWShiftParameters)
-    (PI : I → PeirceKinematicMomentum) :
+    (q PI : I → InfoGeometry.Algebra.FiniteSpin.Vec4C) :
     ContinuousOn
       (algebraicAmplitude c
-        (fun i => peirceChannelPole (data i) (PI i)))
+        (fun i => peirceChannelPole (q i) (PI i)))
       (BCFWMeromorphic.poleComplement
-        (fun i => peirceChannelPole (data i) (PI i))) := by
+        (fun i => peirceChannelPole (q i) (PI i))) := by
   exact BCFWMeromorphic.continuousOn_algebraicAmplitude c
-    (fun i => peirceChannelPole (data i) (PI i))
+    (fun i => peirceChannelPole (q i) (PI i))
 
 end
 

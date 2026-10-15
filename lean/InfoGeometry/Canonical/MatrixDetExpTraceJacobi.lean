@@ -4,6 +4,7 @@ import Mathlib.Analysis.Calculus.MeanValue
 import Mathlib.Analysis.Calculus.Deriv.Polynomial
 import Mathlib.Analysis.SpecialFunctions.Exponential
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Series
 import Mathlib.LinearAlgebra.Matrix.Charpoly.Coeff
 import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 
@@ -33,7 +34,7 @@ noncomputable section
 
 namespace InfoGeometry.Canonical.MatrixDetExpTraceJacobi
 
-open scoped Matrix Matrix.Norms.Operator Polynomial
+open scoped Matrix Matrix.Norms.Frobenius Polynomial
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
@@ -41,17 +42,134 @@ variable {n : Type*} [Fintype n] [DecidableEq n]
 def matrixExpFlow (A : Matrix n n ℂ) (t : ℂ) : Matrix n n ℂ :=
   NormedSpace.exp (t • A)
 
+private lemma smul_pow_even_of_sq_eq_one
+    (A : Matrix n n ℂ) (hSq : A * A = (1 : Matrix n n ℂ)) (t : ℂ) :
+    ∀ k : ℕ, (t • A) ^ (2 * k) = (t ^ (2 * k)) • (1 : Matrix n n ℂ)
+  | 0 => by simp
+  | k + 1 => by
+      have hpow2 : (t • A) ^ 2 = (t ^ 2) • (1 : Matrix n n ℂ) := by
+        rw [pow_two, smul_mul_assoc, mul_smul_comm, smul_smul, hSq]
+        simp [pow_two]
+      calc
+        (t • A) ^ (2 * (k + 1)) = (t • A) ^ (2 * k) * (t • A) ^ 2 := by
+          rw [show 2 * (k + 1) = 2 * k + 2 by omega, pow_add]
+        _ = ((t ^ (2 * k)) • (1 : Matrix n n ℂ)) *
+            ((t ^ 2) • (1 : Matrix n n ℂ)) := by
+          rw [smul_pow_even_of_sq_eq_one A hSq t k, hpow2]
+        _ = (t ^ (2 * (k + 1))) • (1 : Matrix n n ℂ) := by
+          rw [smul_mul_assoc, mul_smul_comm, smul_smul, one_mul, ← pow_add]
+          simp [show 2 * (k + 1) = 2 * k + 2 by omega]
+
+private lemma smul_pow_odd_of_sq_eq_one
+    (A : Matrix n n ℂ) (hSq : A * A = (1 : Matrix n n ℂ)) (t : ℂ) (k : ℕ) :
+    (t • A) ^ (2 * k + 1) = (t ^ (2 * k + 1)) • A := by
+  calc
+    (t • A) ^ (2 * k + 1) = (t • A) ^ (2 * k) * (t • A) := by rw [pow_succ]
+    _ = ((t ^ (2 * k)) • (1 : Matrix n n ℂ)) * (t • A) := by
+      rw [smul_pow_even_of_sq_eq_one A hSq t k]
+    _ = (t ^ (2 * k + 1)) • A := by
+      rw [smul_mul_assoc, one_mul, smul_smul]
+      simp [pow_succ]
+
+private lemma smul_pow_even_of_sq_eq_neg_one
+    (A : Matrix n n ℂ) (hSq : A * A = -(1 : Matrix n n ℂ)) (t : ℂ) :
+    ∀ k : ℕ, (t • A) ^ (2 * k) = ((-1 : ℂ) ^ k * t ^ (2 * k)) •
+      (1 : Matrix n n ℂ)
+  | 0 => by simp
+  | k + 1 => by
+      have hpow2 : (t • A) ^ 2 = ((-1 : ℂ) * t ^ 2) • (1 : Matrix n n ℂ) := by
+        calc
+          (t • A) ^ 2 = (t • A) * (t • A) := by simp [pow_two]
+          _ = (t * t) • (A * A) := by rw [smul_mul_assoc, mul_smul_comm, smul_smul]
+          _ = (t ^ 2) • (-(1 : Matrix n n ℂ)) := by simp [hSq, pow_two]
+          _ = ((-1 : ℂ) * t ^ 2) • (1 : Matrix n n ℂ) := by simp
+      calc
+        (t • A) ^ (2 * (k + 1)) = (t • A) ^ (2 * k) * (t • A) ^ 2 := by
+          rw [show 2 * (k + 1) = 2 * k + 2 by omega, pow_add]
+        _ = (((-1 : ℂ) ^ k * t ^ (2 * k)) • (1 : Matrix n n ℂ)) *
+            (((-1 : ℂ) * t ^ 2) • (1 : Matrix n n ℂ)) := by
+          rw [smul_pow_even_of_sq_eq_neg_one A hSq t k, hpow2]
+        _ = ((-1 : ℂ) ^ (k + 1) * t ^ (2 * (k + 1))) •
+            (1 : Matrix n n ℂ) := by
+          rw [smul_mul_assoc, mul_smul_comm, smul_smul, one_mul]
+          congr 1
+          rw [pow_succ, show t ^ (2 * (k + 1)) = t ^ (2 * k) * t ^ 2 by
+            rw [show 2 * (k + 1) = 2 * k + 2 by omega, pow_add]]
+          ring
+
+private lemma smul_pow_odd_of_sq_eq_neg_one
+    (A : Matrix n n ℂ) (hSq : A * A = -(1 : Matrix n n ℂ)) (t : ℂ) (k : ℕ) :
+    (t • A) ^ (2 * k + 1) = ((-1 : ℂ) ^ k * t ^ (2 * k + 1)) • A := by
+  calc
+    (t • A) ^ (2 * k + 1) = (t • A) ^ (2 * k) * (t • A) := by rw [pow_succ]
+    _ = (((-1 : ℂ) ^ k * t ^ (2 * k)) • (1 : Matrix n n ℂ)) * (t • A) := by
+      rw [smul_pow_even_of_sq_eq_neg_one A hSq t k]
+    _ = ((-1 : ℂ) ^ k * t ^ (2 * k + 1)) • A := by
+      rw [smul_mul_assoc, one_mul, smul_smul]
+      congr 1
+      rw [pow_succ]
+      ring
+
+theorem matrixExpFlow_eq_cos_add_sin_of_sq_eq_neg_one
+    (A : Matrix n n ℂ) (hSq : A * A = -(1 : Matrix n n ℂ)) (t : ℂ) :
+    matrixExpFlow A t = Complex.cos t • (1 : Matrix n n ℂ) + Complex.sin t • A := by
+  rw [matrixExpFlow, NormedSpace.exp_eq_tsum ℂ]
+  have hsum : HasSum
+      (fun k : ℕ => ((Nat.factorial k : ℕ) : ℂ)⁻¹ • (t • A) ^ k)
+      (Complex.cos t • (1 : Matrix n n ℂ) + Complex.sin t • A) := by
+    refine HasSum.even_add_odd ?_ ?_
+    · convert (Complex.hasSum_cos t).smul_const (1 : Matrix n n ℂ) using 1
+      ext k
+      rw [smul_pow_even_of_sq_eq_neg_one A hSq t k]
+      simp [div_eq_mul_inv, mul_comm] <;> ring
+    · convert (Complex.hasSum_sin t).smul_const A using 1
+      ext k
+      rw [smul_pow_odd_of_sq_eq_neg_one A hSq t k]
+      simp [div_eq_mul_inv, mul_comm] <;> ring
+  exact hsum.tsum_eq
+
+theorem matrixExpFlow_eq_cosh_add_sinh_of_sq_eq_one
+    (A : Matrix n n ℂ) (hSq : A * A = (1 : Matrix n n ℂ)) (t : ℂ) :
+    matrixExpFlow A t = Complex.cosh t • (1 : Matrix n n ℂ) + Complex.sinh t • A := by
+  rw [matrixExpFlow, NormedSpace.exp_eq_tsum ℂ]
+  have hsum : HasSum
+      (fun k : ℕ => ((Nat.factorial k : ℕ) : ℂ)⁻¹ • (t • A) ^ k)
+      (Complex.cosh t • (1 : Matrix n n ℂ) + Complex.sinh t • A) := by
+    refine HasSum.even_add_odd ?_ ?_
+    · convert (Complex.hasSum_cosh t).smul_const (1 : Matrix n n ℂ) using 1
+      ext k
+      rw [smul_pow_even_of_sq_eq_one A hSq t k]
+      simp [div_eq_mul_inv, mul_comm] <;> ring
+    · convert (Complex.hasSum_sinh t).smul_const A using 1
+      ext k
+      rw [smul_pow_odd_of_sq_eq_one A hSq t k]
+      simp [div_eq_mul_inv, mul_comm] <;> ring
+  exact hsum.tsum_eq
+
+theorem matrixExpFlow_eq_one_add_of_sq_eq_zero
+    (A : Matrix n n ℂ) (hSq : A * A = 0) (t : ℂ) :
+    matrixExpFlow A t = (1 : Matrix n n ℂ) + t • A := by
+  rw [matrixExpFlow, NormedSpace.exp_eq_tsum ℂ]
+  change (∑' k : ℕ, ((Nat.factorial k : ℕ) : ℂ)⁻¹ • (t • A) ^ k) = _
+  rw [tsum_eq_sum (s := Finset.range 2)]
+  · simp [Finset.range, pow_zero, pow_one, add_comm]
+  · intro k hk
+    have h2k : 2 ≤ k := by exact Nat.succ_le_of_lt (by simpa using hk)
+    have hpow2 : (t • A) ^ 2 = 0 := by
+      rw [pow_two, smul_mul_assoc, mul_smul_comm, smul_smul, hSq, smul_zero]
+    rw [pow_eq_zero_of_le h2k hpow2, smul_zero]
+
 /-- Right-hand derivative form for the constant matrix exponential flow. -/
 theorem hasDerivAt_matrixExpFlow_right (A : Matrix n n ℂ) (t : ℂ) :
-    HasDerivAt (matrixExpFlow A) (matrixExpFlow A t * A) t := by
-  simpa [matrixExpFlow] using
-    (hasDerivAt_exp_smul_const (x := A) (t := t))
+    HasDerivAt (fun z : ℂ => NormedSpace.exp (z • A))
+      (NormedSpace.exp (t • A) * A) t :=
+  hasDerivAt_exp_smul_const (x := A) (t := t)
 
 /-- Left-hand derivative form for the constant matrix exponential flow. -/
 theorem hasDerivAt_matrixExpFlow_left (A : Matrix n n ℂ) (t : ℂ) :
-    HasDerivAt (matrixExpFlow A) (A * matrixExpFlow A t) t := by
-  simpa [matrixExpFlow] using
-    (hasDerivAt_exp_smul_const' (x := A) (t := t))
+    HasDerivAt (fun z : ℂ => NormedSpace.exp (z • A))
+      (A * NormedSpace.exp (t • A)) t :=
+  hasDerivAt_exp_smul_const' (x := A) (t := t)
 
 /-- Entrywise left-hand derivative form for the constant matrix exponential flow. -/
 theorem hasDerivAt_matrixEntry_matrixExpFlow_left
@@ -63,9 +181,21 @@ theorem hasDerivAt_matrixEntry_matrixExpFlow_left
   have hi := (hasFDerivAt_apply (𝕜 := ℂ) i (matrixExpFlow A t)).comp t h
   have hij := (hasFDerivAt_apply (𝕜 := ℂ) j (matrixExpFlow A t i)).comp t hi
   convert hij.hasDerivAt using 1
-  · simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.proj_apply]
-    have hspan := ContinuousLinearMap.toSpanSingleton_apply_one ℂ (A * matrixExpFlow A t)
-    exact (congr_fun (congr_fun hspan i) j).symm
+  · funext z
+    rfl
+  · have hspan := ContinuousLinearMap.toSpanSingleton_apply_one ℂ
+      (A * matrixExpFlow A t)
+    calc
+      (A * matrixExpFlow A t) i j =
+          (ContinuousLinearMap.toSpanSingleton ℂ (A * matrixExpFlow A t)) 1 i j :=
+            (congr_fun (congr_fun hspan i) j).symm
+      _ = (ContinuousLinearMap.proj j ∘SL ContinuousLinearMap.proj i ∘SL
+          ContinuousLinearMap.toSpanSingleton ℂ (A * matrixExpFlow A t)) 1 := by
+        change (ContinuousLinearMap.toSpanSingleton ℂ
+            (A * matrixExpFlow A t) 1) i j =
+          (ContinuousLinearMap.toSpanSingleton ℂ
+            (A * matrixExpFlow A t) 1) i j
+        rfl
 
 /-- The constant matrix exponential flow is invertible at every parameter. -/
 theorem isUnit_matrixExpFlow (A : Matrix n n ℂ) (t : ℂ) :
@@ -145,7 +275,10 @@ theorem eq_normed_exp_mul_of_hasDerivAt_eq_const_mul
   have hg : ∀ t : ℂ, HasDerivAt g 0 t := by
     intro t
     have hlin : HasDerivAt (fun u : ℂ => -(u * c)) (-c) t := by
-      simpa using ((hasDerivAt_id' t).mul_const c).neg
+      convert ((hasDerivAt_id t).mul_const c).neg using 1
+      · funext u
+        rfl
+      · simp
     have hexp :
         HasDerivAt
           (fun u : ℂ => Complex.exp (-(u * c)))
@@ -156,7 +289,13 @@ theorem eq_normed_exp_mul_of_hasDerivAt_eq_const_mul
         c * f t * Complex.exp (-(t * c)) +
             -(f t * (Complex.exp (-(t * c)) * c)) = 0 := by
       ring
-    simpa [g, hzero_deriv] using hmul
+    change HasDerivAt (fun u : ℂ => f u * Complex.exp (-(u * c))) 0 t
+    convert hmul using 1
+    · calc
+        0 = c * f t * Complex.exp (-(t * c)) +
+            -(f t * (Complex.exp (-(t * c)) * c)) := hzero_deriv.symm
+        _ = c * f t * Complex.exp (-(t * c)) +
+            f t * (Complex.exp (-(t * c)) * -c) := by ring
   have hgdiff : Differentiable ℂ g := fun t => (hg t).differentiableAt
   have hgderiv : ∀ t : ℂ, deriv g t = 0 := fun t => (hg t).deriv
   intro t

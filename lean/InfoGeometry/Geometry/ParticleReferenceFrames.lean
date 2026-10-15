@@ -28,8 +28,9 @@ theorem relative_translate (reference : Particle) (positions : Particle → Posi
     (shift : Position) :
     relative reference (fun particle => shift + positions particle) =
       relative reference positions := by
-  simpa only [← relative_eq_normalize] using
-    normalize_invariant (particleFrame reference) (Multiplicative.ofAdd shift) positions
+  funext particle
+  simp only [relative]
+  abel
 
 theorem relative_change_reference (first second : Particle) (positions : Particle → Position) :
     relative second (relative first positions) = relative second positions := by

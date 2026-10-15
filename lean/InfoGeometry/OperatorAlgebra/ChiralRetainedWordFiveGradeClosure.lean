@@ -143,16 +143,18 @@ theorem positiveQuadratic_grade (i j : Fin 3) :
 
 theorem negativeQuadratic_grade (i j : Fin 3) :
     HasOperatorGrade N (D.negativeQuadratic i j) (-2) := by
-  simpa only [Int.neg_add] using
-    (grade_mul (D.negative_grade i) (D.negative_grade j))
+  change HasOperatorGrade N (D.negative i * D.negative j) (-2)
+  exact grade_mul (D.negative_grade i) (D.negative_grade j)
 
 theorem mixedPositiveNegative_grade (i j : Fin 3) :
     HasOperatorGrade N (D.mixedPositiveNegative i j) 0 := by
-  simpa using grade_mul (D.positive_grade i) (D.negative_grade j)
+  change HasOperatorGrade N (D.positive i * D.negative j) 0
+  exact grade_mul (D.positive_grade i) (D.negative_grade j)
 
 theorem mixedNegativePositive_grade (i j : Fin 3) :
     HasOperatorGrade N (D.mixedNegativePositive i j) 0 := by
-  simpa using grade_mul (D.negative_grade i) (D.positive_grade j)
+  change HasOperatorGrade N (D.negative i * D.positive j) 0
+  exact grade_mul (D.negative_grade i) (D.positive_grade j)
 
 def sector (g : FiveGrade) : Set A :=
   match g with

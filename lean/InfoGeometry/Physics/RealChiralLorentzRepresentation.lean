@@ -80,7 +80,11 @@ theorem diagonalRepresentation_commutes_internalPhase (g : SL2C) :
 theorem diagonalRepresentation_commutes_chirality (g : SL2C) :
     (diagonalRepresentation g : ChiralEnd).comp chirality =
       chirality.comp (diagonalRepresentation g : ChiralEnd) := by
-  ext v <;> simp [diagonalRepresentation, chirality, LinearMap.comp_apply]
+  apply LinearMap.ext
+  intro v
+  apply Prod.ext
+  · rfl
+  · exact (realSpinorRepresentation g).toLinearEquiv.map_neg v.2
 
 theorem internalPhase_commutes_chirality :
     internalPhase.comp chirality = chirality.comp internalPhase := by
@@ -94,33 +98,51 @@ def rightChiralProjector : ChiralEnd :=
 
 @[simp] theorem leftChiralProjector_apply (v : ChiralCarrier) :
     leftChiralProjector v = (v.1, 0) := by
-  ext <;> simp [leftChiralProjector, chirality] <;> ring
+  apply Prod.ext
+  · change (1 / 2 : ℝ) • (v.1 + v.1) = v.1
+    rw [← two_smul ℝ v.1, smul_smul]
+    norm_num
+  · change (1 / 2 : ℝ) • (v.2 + -v.2) = 0
+    simp
 
 @[simp] theorem rightChiralProjector_apply (v : ChiralCarrier) :
     rightChiralProjector v = (0, v.2) := by
-  ext <;> simp [rightChiralProjector, chirality] <;> ring
+  apply Prod.ext
+  · change (1 / 2 : ℝ) • (v.1 - v.1) = 0
+    simp
+  · change (1 / 2 : ℝ) • (v.2 - -v.2) = v.2
+    rw [sub_neg_eq_add, ← two_smul ℝ v.2, smul_smul]
+    norm_num
 
 theorem leftChiralProjector_idempotent :
     leftChiralProjector.comp leftChiralProjector = leftChiralProjector := by
-  ext v <;> simp [leftChiralProjector, chirality, LinearMap.comp_apply] <;> ring
+  apply LinearMap.ext
+  intro v
+  simp
 
 theorem rightChiralProjector_idempotent :
     rightChiralProjector.comp rightChiralProjector = rightChiralProjector := by
-  ext v <;> simp [rightChiralProjector, chirality, LinearMap.comp_apply] <;> ring
+  apply LinearMap.ext
+  intro v
+  simp
 
 theorem leftChiralProjector_comp_rightChiralProjector :
     leftChiralProjector.comp rightChiralProjector = 0 := by
-  ext v <;> simp [leftChiralProjector, rightChiralProjector, chirality,
-    LinearMap.comp_apply] <;> ring
+  apply LinearMap.ext
+  intro v
+  simp
 
 theorem rightChiralProjector_comp_leftChiralProjector :
     rightChiralProjector.comp leftChiralProjector = 0 := by
-  ext v <;> simp [leftChiralProjector, rightChiralProjector, chirality,
-    LinearMap.comp_apply] <;> ring
+  apply LinearMap.ext
+  intro v
+  simp
 
 theorem leftChiralProjector_add_rightChiralProjector :
     leftChiralProjector + rightChiralProjector = LinearMap.id := by
-  ext v <;> simp [leftChiralProjector, rightChiralProjector, chirality] <;> ring
+  apply LinearMap.ext
+  intro v
+  apply Prod.ext <;> simp
 
 theorem diagonalRepresentation_commutes_leftChiralProjector (g : SL2C) :
     (diagonalRepresentation g : ChiralEnd).comp leftChiralProjector =

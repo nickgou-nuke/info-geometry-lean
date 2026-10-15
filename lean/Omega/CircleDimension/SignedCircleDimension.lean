@@ -39,7 +39,7 @@ theorem paper_cdim_signed_laws :
   · intro unitsRank unitsTorsion
     simp [cdimSigned, halfCircleDim, circleDim]
   · intro quotientRank unitsTorsion quotientTorsion
-    simp [cdimSigned]
+    simp [cdimSigned, circleDim]
   · intro u₁ v₁ tu₁ tq₁ u₂ v₂ tu₂ tq₂
     simp [cdimSigned, circleDim_add, halfCircleDim_add]
     ring

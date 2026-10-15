@@ -23,7 +23,7 @@ variable [Semiring D] [Algebra R D] [Star D]
 /-- Transport a star-algebra representation through a star-algebra
 equivalence. -/
 def map (e : B ≃⋆ₐ[R] C) (π : A →⋆ₐ[R] B) : A →⋆ₐ[R] C :=
-  (e : B →⋆ₐ[R] C).comp π
+  e.toStarAlgHom.comp π
 
 @[simp] theorem map_apply (e : B ≃⋆ₐ[R] C) (π : A →⋆ₐ[R] B) (a : A) :
     map e π a = e (π a) :=
@@ -31,20 +31,12 @@ def map (e : B ≃⋆ₐ[R] C) (π : A →⋆ₐ[R] B) : A →⋆ₐ[R] C :=
 
 @[simp] theorem map_star (e : B ≃⋆ₐ[R] C) (π : A →⋆ₐ[R] B) (a : A) :
     map e π (star a) = star (map e π a) :=
-  by
-    change e (π (star a)) = star (e (π a))
-    calc
-      e (π (star a)) = e (star (π a)) := by rw [StarHomClass.map_star π]
-      _ = star (e (π a)) := StarHomClass.map_star e (π a)
+  StarHomClass.map_star (map e π) a
 
 @[simp] theorem map_mul (e : B ≃⋆ₐ[R] C) (π : A →⋆ₐ[R] B)
     (a b : A) :
     map e π (a * b) = map e π a * map e π b :=
-  by
-    change e (π (a * b)) = e (π a) * e (π b)
-    calc
-      e (π (a * b)) = e (π a * π b) := congrArg e (π.map_mul' a b)
-      _ = e (π a) * e (π b) := e.toAlgEquiv.map_mul _ _
+  (map e π).map_mul a b
 
 /-- Transport is coherent with composition of star-algebra equivalences. -/
 theorem map_trans (e₁ : B ≃⋆ₐ[R] C) (e₂ : C ≃⋆ₐ[R] D)
@@ -55,7 +47,7 @@ theorem map_trans (e₁ : B ≃⋆ₐ[R] C) (e₂ : C ≃⋆ₐ[R] D)
 
 /-- Transport along the identity equivalence is the original representation. -/
 theorem map_refl (π : A →⋆ₐ[R] B) :
-    map (StarAlgEquiv.refl : B ≃⋆ₐ[R] B) π = π := by
+    map (StarAlgEquiv.refl R B) π = π := by
   ext a
   rfl
 
@@ -64,6 +56,6 @@ representation. -/
 theorem map_symm_map (e : B ≃⋆ₐ[R] C) (π : A →⋆ₐ[R] B) :
     map e.symm (map e π) = π := by
   ext a
-  simp
+  simp [map_apply]
 
 end StarAlgEquivTransport

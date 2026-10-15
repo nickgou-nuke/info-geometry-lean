@@ -94,20 +94,20 @@ theorem sheetBarrier_recovery (x : ℝ) :
 theorem hasDerivAt_leftSheetBarrier
     {x : ℝ} (hx : x ≠ 0) :
     HasDerivAt leftSheetBarrier (-x⁻¹) x := by
-  unfold leftSheetBarrier logBarrier
-  simpa using (Real.hasDerivAt_log hx).neg
+  have h := (Real.hasDerivAt_log hx).neg
+  exact h
 
 /-- Genuine derivative of the right endpoint barrier. -/
 theorem hasDerivAt_rightSheetBarrier
     {x : ℝ} (hx : 1 - x ≠ 0) :
     HasDerivAt rightSheetBarrier ((1 - x)⁻¹) x := by
-  have hsub : HasDerivAt (fun y : ℝ => 1 - y) (-1) x := by
-    simpa using
-      (hasDerivAt_const (x := x) (c := (1 : ℝ))).sub
-        (hasDerivAt_id x)
+  have hsub : HasDerivAt (fun y : ℝ => 1 - y) (0 - 1) x :=
+    (hasDerivAt_const x (1 : ℝ)).sub (hasDerivAt_id x)
   have hlog := (Real.hasDerivAt_log hx).comp x hsub
-  unfold rightSheetBarrier logBarrier
-  convert hlog.neg using 1 <;> ring
+  have h := hlog.neg
+  have h_val : -((1 - x)⁻¹ * (0 - 1)) = (1 - x)⁻¹ := by ring
+  rw [h_val] at h
+  exact h
 
 /-- Genuine derivative of the odd logit coordinate. -/
 theorem hasDerivAt_logitCoordinate
@@ -115,14 +115,15 @@ theorem hasDerivAt_logitCoordinate
     HasDerivAt logitCoordinate (logitGradient x) x := by
   have hx : x ≠ 0 := hx0.ne'
   have h1x : 1 - x ≠ 0 := (sub_pos.mpr hx1).ne'
-  have hsub : HasDerivAt (fun y : ℝ => 1 - y) (-1) x := by
-    simpa using
-      (hasDerivAt_const (x := x) (c := (1 : ℝ))).sub
-        (hasDerivAt_id x)
+  have hsub : HasDerivAt (fun y : ℝ => 1 - y) (0 - 1) x :=
+    (hasDerivAt_const x (1 : ℝ)).sub (hasDerivAt_id x)
   have hlogx := Real.hasDerivAt_log hx
   have hlog1x := (Real.hasDerivAt_log h1x).comp x hsub
-  unfold logitCoordinate logitGradient
-  convert hlogx.sub hlog1x using 1 <;> ring
+  have h := hlogx.sub hlog1x
+  have h_val : x⁻¹ - (1 - x)⁻¹ * (0 - 1) = logitGradient x := by
+    unfold logitGradient; ring
+  rw [h_val] at h
+  exact h
 
 /-- Genuine derivative of the symmetric interval barrier. -/
 theorem hasDerivAt_intervalBarrier
@@ -130,9 +131,7 @@ theorem hasDerivAt_intervalBarrier
     HasDerivAt intervalBarrier (intervalBarrierGradient x) x := by
   have hx : x ≠ 0 := hx0.ne'
   have h1x : 1 - x ≠ 0 := (sub_pos.mpr hx1).ne'
-  simpa [intervalBarrier, intervalBarrierGradient] using
-    (hasDerivAt_leftSheetBarrier hx).add
-      (hasDerivAt_rightSheetBarrier h1x)
+  exact (hasDerivAt_leftSheetBarrier hx).add (hasDerivAt_rightSheetBarrier h1x)
 
 /-- Genuine derivative of the barrier gradient, hence the displayed Hessian is
 an actual second-derivative readout. -/
@@ -141,19 +140,15 @@ theorem hasDerivAt_intervalBarrierGradient
     HasDerivAt intervalBarrierGradient (intervalBarrierHessian x) x := by
   have hx : x ≠ 0 := hx0.ne'
   have h1x : 1 - x ≠ 0 := (sub_pos.mpr hx1).ne'
-  have hsub : HasDerivAt (fun y : ℝ => 1 - y) (-1) x := by
-    simpa using
-      (hasDerivAt_const (x := x) (c := (1 : ℝ))).sub
-        (hasDerivAt_id x)
-  have hinv0 :
-      HasDerivAt (fun y : ℝ => y⁻¹) (-(1 : ℝ) / x ^ 2) x := by
-    convert (hasDerivAt_id x).inv hx using 1 <;> ring
-  have hinv1 :
-      HasDerivAt (fun y : ℝ => (1 - y)⁻¹)
-        ((1 : ℝ) / (1 - x) ^ 2) x := by
-    convert hsub.inv h1x using 1 <;> ring
-  unfold intervalBarrierGradient intervalBarrierHessian
-  convert hinv0.neg.add hinv1 using 1 <;> ring
+  have hsub : HasDerivAt (fun y : ℝ => 1 - y) (0 - 1) x :=
+    (hasDerivAt_const x (1 : ℝ)).sub (hasDerivAt_id x)
+  have hinv0 := (hasDerivAt_inv hx).neg
+  have hinv1 := (hasDerivAt_inv h1x).comp x hsub
+  have h_val : -(-(x ^ 2)⁻¹) + -(((1 - x) ^ 2)⁻¹) * (0 - 1) = intervalBarrierHessian x := by
+    simp [intervalBarrierHessian, one_div]
+  have h := hinv0.add hinv1
+  rw [h_val] at h
+  exact h
 
 /-- Strict positivity of the interval-barrier Hessian. -/
 theorem intervalBarrierHessian_pos

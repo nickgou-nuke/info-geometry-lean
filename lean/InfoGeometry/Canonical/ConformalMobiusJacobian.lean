@@ -53,8 +53,10 @@ theorem mobiusInversion_hasFDerivAt {x : E} (hx : x ≠ 0) :
     HasFDerivAt (mobiusInversion (E := E))
       (((1 / dist x (0 : E)) ^ 2) •
         (↑((ℝ ∙ (x - (0 : E)))ᗮ.reflection.toContinuousLinearEquiv) : E →L[ℝ] E)) x := by
-  simpa [mobiusInversion] using
-    EuclideanGeometry.hasFDerivAt_inversion (c := (0 : E)) (R := (1 : ℝ)) (x := x) hx
+  change HasFDerivAt (fun y : E => EuclideanGeometry.inversion (0 : E) 1 y)
+    (((1 / dist x (0 : E)) ^ 2) •
+      (↑((ℝ ∙ (x - (0 : E)))ᗮ.reflection.toContinuousLinearEquiv) : E →L[ℝ] E)) x
+  exact EuclideanGeometry.hasFDerivAt_inversion (c := (0 : E)) (R := (1 : ℝ)) (x := x) hx
 
 section JacobianFactor
 

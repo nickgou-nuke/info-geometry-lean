@@ -86,8 +86,8 @@ theorem compactIndexedObservationQuotientCompHausColimitMap_id
     compactSymbolicLatentObservationQuotientCompHausFunctor.map (𝟙 (D.obj j)) ≫
         colimit.ι (compactIndexedObservationQuotientDiagram D) j =
       colimit.ι (compactIndexedObservationQuotientDiagram D) j
-  rw [compactSymbolicLatentObservationQuotientCompHausFunctor.map_id,
-    Category.id_comp]
+  rw [compactSymbolicLatentObservationQuotientCompHausFunctor.map_id]
+  simpa only [compactIndexedObservationQuotientDiagram, Category.id_comp]
 
 theorem compactIndexedObservationQuotientCompHausColimitMap_comp
     {J : Type} [Category J]
@@ -108,8 +108,12 @@ theorem compactIndexedObservationQuotientCompHausColimitMap_comp
     _ = (compactIndexedObservationQuotientCompHausMappedNatTrans τ).app j ≫
           (compactIndexedObservationQuotientCompHausMappedNatTrans υ).app j ≫
           compactIndexedObservationQuotientCompHausColimitStage F j := by
-      simp [compactIndexedObservationQuotientCompHausMappedNatTrans,
-        Category.assoc]
+      simp only [compactIndexedObservationQuotientCompHausMappedNatTrans,
+        NatTrans.comp_app, Functor.map_comp]
+      exact Category.assoc
+        (compactSymbolicLatentObservationQuotientCompHausFunctor.map (τ.app j))
+        (compactSymbolicLatentObservationQuotientCompHausFunctor.map (υ.app j))
+        (compactIndexedObservationQuotientCompHausColimitStage F j)
     _ = (compactIndexedObservationQuotientCompHausMappedNatTrans τ).app j ≫
           (compactIndexedObservationQuotientCompHausColimitStage E j ≫
             compactIndexedObservationQuotientCompHausColimitMap υ) := by
@@ -217,8 +221,8 @@ theorem compactIndexedObservationRangeCompHausColimitMap_id
     compactSymbolicLatentObservationRangeCompHausFunctor.map (𝟙 (D.obj j)) ≫
         colimit.ι (compactIndexedObservationRangeDiagram D) j =
       colimit.ι (compactIndexedObservationRangeDiagram D) j
-  rw [compactSymbolicLatentObservationRangeCompHausFunctor.map_id,
-    Category.id_comp]
+  rw [compactSymbolicLatentObservationRangeCompHausFunctor.map_id]
+  simpa only [compactIndexedObservationRangeDiagram, Category.id_comp]
 
 theorem compactIndexedObservationRangeCompHausColimitMap_comp
     {J : Type} [Category J]
@@ -239,8 +243,12 @@ theorem compactIndexedObservationRangeCompHausColimitMap_comp
     _ = (compactIndexedObservationRangeCompHausMappedNatTrans τ).app j ≫
           (compactIndexedObservationRangeCompHausMappedNatTrans υ).app j ≫
           colimit.ι (compactIndexedObservationRangeDiagram F) j := by
-      simp [compactIndexedObservationRangeCompHausMappedNatTrans,
-        Category.assoc]
+      simp only [compactIndexedObservationRangeCompHausMappedNatTrans,
+        NatTrans.comp_app, Functor.map_comp]
+      exact Category.assoc
+        (compactSymbolicLatentObservationRangeCompHausFunctor.map (τ.app j))
+        (compactSymbolicLatentObservationRangeCompHausFunctor.map (υ.app j))
+        (colimit.ι (compactIndexedObservationRangeDiagram F) j)
     _ = (compactIndexedObservationRangeCompHausMappedNatTrans τ).app j ≫
           (colimit.ι (compactIndexedObservationRangeDiagram E) j ≫
             compactIndexedObservationRangeCompHausColimitMap υ) := by
@@ -279,7 +287,7 @@ theorem compactIndexedObservationQuotientRangeCompHausColimitIso_naturality
       (compactIndexedObservationQuotientCompHausMappedNatTrans τ).app j ≫
           compactIndexedObservationQuotientCompHausColimitStage E j ≫
         (compactIndexedObservationQuotientRangeCompHausColimitIso E).hom := by
-      simpa [Category.assoc] using
+      simpa only [Category.assoc] using
         congrArg
           (fun f => f ≫
             (compactIndexedObservationQuotientRangeCompHausColimitIso E).hom)
@@ -300,11 +308,31 @@ theorem compactIndexedObservationQuotientRangeCompHausColimitIso_naturality
             (ι := ι)).hom.app (D.obj j) ≫
             compactSymbolicLatentObservationRangeCompHausFunctor.map (τ.app j) ≫
           colimit.ι (compactIndexedObservationRangeDiagram E) j
-      simpa [Category.assoc] using
-        congrArg
-          (fun f => f ≫ colimit.ι (compactIndexedObservationRangeDiagram E) j)
+      calc
+        (compactSymbolicLatentObservationQuotientCompHausFunctor.map (τ.app j) ≫
+            (compactSymbolicLatentObservationQuotientRangeCompHausNaturalIso
+              (ι := ι)).hom.app (E.obj j)) ≫
+            colimit.ι (compactIndexedObservationRangeDiagram E) j =
           ((compactSymbolicLatentObservationQuotientRangeCompHausNaturalIso
-            (ι := ι)).hom.naturality (τ.app j))
+              (ι := ι)).hom.app (D.obj j) ≫
+            compactSymbolicLatentObservationRangeCompHausFunctor.map (τ.app j)) ≫
+            colimit.ι (compactIndexedObservationRangeDiagram E) j := by
+          rw [(compactSymbolicLatentObservationQuotientRangeCompHausNaturalIso
+            (ι := ι)).hom.naturality (τ.app j)]
+        _ = (compactSymbolicLatentObservationQuotientRangeCompHausNaturalIso
+              (ι := ι)).hom.app (D.obj j) ≫
+            compactSymbolicLatentObservationRangeCompHausFunctor.map (τ.app j) ≫
+            colimit.ι (compactIndexedObservationRangeDiagram E) j := by
+          change
+            ((compactSymbolicLatentObservationQuotientRangeCompHausNaturalIso
+                (ι := ι)).hom.app (D.obj j) ≫
+              compactSymbolicLatentObservationRangeCompHausFunctor.map (τ.app j)) ≫
+              colimit.ι (E ⋙ compactSymbolicLatentObservationRangeCompHausFunctor) j =
+            (compactSymbolicLatentObservationQuotientRangeCompHausNaturalIso
+                (ι := ι)).hom.app (D.obj j) ≫
+              compactSymbolicLatentObservationRangeCompHausFunctor.map (τ.app j) ≫
+                colimit.ι (E ⋙ compactSymbolicLatentObservationRangeCompHausFunctor) j
+          exact Category.assoc _ _ _
     _ = (compactIndexedObservationQuotientRangeNaturalIso D).hom.app j ≫
           colimit.ι (compactIndexedObservationRangeDiagram D) j ≫
           compactIndexedObservationRangeCompHausColimitMap τ := by

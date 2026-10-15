@@ -131,7 +131,7 @@ def embedBlock (M : Mat4) : Mat5 :=
   ext i j
   by_cases hi : i.val < 4
   · by_cases hj : j.val < 4
-    · dsimp [embedBlock, mul_apply]
+    · dsimp [embedBlock, Matrix.mul_apply]
       simp only [dif_pos hi, dif_pos hj]
       rw [Fin.sum_univ_five, Fin.sum_univ_four]
       dsimp [embedBlock]
@@ -139,7 +139,7 @@ def embedBlock (M : Mat4) : Mat5 :=
     · have h_lhs : embedBlock (M * N) i j = 0 := by
         dsimp [embedBlock]; rw [dif_pos hi, dif_neg hj]
       have h_rhs : (embedBlock M * embedBlock N) i j = 0 := by
-        dsimp [mul_apply]
+        dsimp [Matrix.mul_apply]
         have h_zero (k : Fin 5) : embedBlock N k j = 0 := by
           dsimp [embedBlock]
           by_cases hk : k.val < 4
@@ -155,7 +155,7 @@ def embedBlock (M : Mat4) : Mat5 :=
   · have h_lhs : embedBlock (M * N) i j = 0 := by
       dsimp [embedBlock]; rw [dif_neg hi]
     have h_rhs : (embedBlock M * embedBlock N) i j = 0 := by
-      dsimp [mul_apply]
+      dsimp [Matrix.mul_apply]
       have h_zero (k : Fin 5) : embedBlock M i k = 0 := by
         dsimp [embedBlock]; rw [dif_neg hi]
       have : (∑ k : Fin 5, embedBlock M i k * embedBlock N k j) =

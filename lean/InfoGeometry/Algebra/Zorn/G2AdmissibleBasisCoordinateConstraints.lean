@@ -11,6 +11,27 @@ assuming a geometric interpretation or a cardinality classification.
 
 namespace InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
 
+@[simp] theorem basis8From7_apply_zero (v : Fin 7 → SplitOctF2) :
+    basis8From7 v 0 = v 0 := rfl
+
+@[simp] theorem basis8From7_apply_two (v : Fin 7 → SplitOctF2) :
+    basis8From7 v 2 = v 1 := rfl
+
+@[simp] theorem basis8From7_apply_three (v : Fin 7 → SplitOctF2) :
+    basis8From7 v 3 = v 2 := rfl
+
+@[simp] theorem basis8From7_apply_four (v : Fin 7 → SplitOctF2) :
+    basis8From7 v 4 = v 3 := rfl
+
+@[simp] theorem basis8From7_apply_five (v : Fin 7 → SplitOctF2) :
+    basis8From7 v 5 = v 4 := rfl
+
+@[simp] theorem basis8From7_apply_six (v : Fin 7 → SplitOctF2) :
+    basis8From7 v 6 = v 5 := rfl
+
+@[simp] theorem basis8From7_apply_seven (v : Fin 7 → SplitOctF2) :
+    basis8From7 v 7 = v 6 := rfl
+
 theorem mul_add (X Y Z : SplitOctF2) : mul X (add Y Z) = add (mul X Y) (mul X Z) := by
   rcases X with ⟨Xa, Xb, Xx0, Xx1, Xx2, Xy0, Xy1, Xy2⟩
   rcases Y with ⟨Ya, Yb, Yx0, Yx1, Yx2, Yy0, Yy1, Yy2⟩
@@ -642,6 +663,12 @@ def admissibleBasis7Second
     simpa [PeircePlusFiber, admissibleBasis7_first_prefix_code,
       admissibleBasis7_second_prefix_code] using
       admissibleBasis7_first_prefix_mul_second_prefix v⟩
+
+@[simp] theorem admissibleBasis7Second_val_val (v : AdmissibleBasis7Carrier) :
+    (admissibleBasis7Second v).1.1 = basisPrefix2 v := rfl
+
+@[simp] theorem admissibleBasis7_second_prefix_code_val (v : AdmissibleBasis7Carrier) :
+    (admissibleBasis7_second_prefix_code v).1 = basisPrefix2 v := rfl
 
 theorem admissibleBasis7_third_prefix_square_zero
     (v : AdmissibleBasis7Carrier) :

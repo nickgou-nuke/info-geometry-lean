@@ -85,16 +85,14 @@ theorem hasDerivAt_halfLogLift_entry_along
     HasDerivAt (fun t : ℂ => halfLogLift (s + t * v) i j)
       (halfLogLiftAnalyticDifferential s v i j) 0 := by
   have hline : HasDerivAt (fun t : ℂ => s + t * v) v 0 := by
-    convert (hasDerivAt_const (x := (0 : ℂ)) (c := s)).add
-      ((hasDerivAt_id (x := (0 : ℂ))).mul_const v) using 1 <;>
-      simp <;> ring
+    have h := ((hasDerivAt_id (0 : ℂ)).mul_const v).const_add s
+    simpa using h
   have hcomp := (hasDerivAt_halfLogLift_entry hs hslit i j).comp_of_eq
     0 hline (by ring)
-  convert hcomp using 1
-  fin_cases i <;> fin_cases j <;>
-    simp [halfLogLiftAnalyticDifferential,
-      halfLogLiftAnalyticDerivative, Matrix.smul_apply] <;>
-    ring
+  have hd : halfLogLiftAnalyticDerivative s i j * v = halfLogLiftAnalyticDifferential s v i j := by
+    simp [halfLogLiftAnalyticDifferential, Matrix.smul_apply, mul_comm]
+  rw [← hd]
+  exact hcomp
 
 /-- Genuine local pure-gauge factorization for the analytic differential. -/
 theorem halfLogLift_local_pure_gauge

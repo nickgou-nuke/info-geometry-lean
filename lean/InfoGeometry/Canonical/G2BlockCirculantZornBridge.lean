@@ -94,6 +94,7 @@ theorem blockAdjacencyInt_eq_A_G2_int :
   simp [blockAdjacencyInt, A_G2_int,
     G2TransitionDatum.adjacency, concreteG2TransitionDatum,
     blockAdjacency_eq_A_G2_bool]
+  rfl
 
 /-- The boundary determinant readout is inherited from the concrete owner. -/
 theorem boundary_det_eq_neg_1456 :

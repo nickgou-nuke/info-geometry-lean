@@ -20,6 +20,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[2]
 OLEAN_DIR = REPO_ROOT / ".lake" / "build" / "lib" / "lean"
 INDEX_SCRIPT = REPO_ROOT / "tools" / "infra" / "axiom_index.lean"
+BUILD_LOCK = Path("/tmp/info-geometry-build.lock")
 
 CANONICAL = {"propext", "Quot.sound", "Classical.choice"}
 
@@ -80,7 +81,7 @@ def scan_olean(olean_path: Path) -> tuple[list[dict], str | None]:
         return [], "not found"
     module = str(olean_path.relative_to(OLEAN_DIR).with_suffix("")).replace("/", ".")
     result = subprocess.run(
-        ["lake", "env", "lean", "--run", str(INDEX_SCRIPT), str(olean_path)],
+        ["flock", "-x", str(BUILD_LOCK), "lake", "env", "lean", "--run", str(INDEX_SCRIPT), str(olean_path.resolve())],
         cwd=REPO_ROOT,
         capture_output=True,
         text=True,
@@ -126,12 +127,14 @@ def main():
     suspicious: dict[str, list[tuple[str, str, str]]] = defaultdict(list)
     total_decls = 0
     total_nonstd = 0
+    any_error = False
 
     for i, p in enumerate(paths):
         decls, err = scan_olean(p)
         module = str(p.relative_to(OLEAN_DIR).with_suffix("")).replace("/", ".")
         if err:
             print(f"  [{i+1}/{len(paths)}] {module}: ERROR {err}")
+            any_error = True
             continue
 
         has_nonstandard = False
@@ -200,6 +203,9 @@ def main():
             "axiomless": axiomless[:100],
             "suspicious": {k: v[:5] for k, v in suspicious.items()},
         }, indent=2))
+
+    if any_error:
+        sys.exit(1)
 
 
 if __name__ == "__main__":

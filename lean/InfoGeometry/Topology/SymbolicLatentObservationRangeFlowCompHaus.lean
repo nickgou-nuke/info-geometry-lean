@@ -118,8 +118,8 @@ theorem SymbolicLatentObservableModularFlow.observationQuotientRangeFlowCompHaus
         (Y := TopCat.of (Set.range (symbolicObservationQuotientMap S)))
         (Φ.observationQuotientRangeFlowHomeomorph S h_cont t)).isIso_hom
   haveI : IsIso (compHausToTop.map (Φ.observationQuotientRangeFlowCompHausHom S h_cont t)) := by
-    simpa [SymbolicLatentObservableModularFlow.observationQuotientRangeFlowCompHausHom_forget]
-      using hTopIso
+    change IsIso (Φ.observationQuotientRangeFlowTopCatHom S h_cont t)
+    exact hTopIso
   have hFF : (compHausToTop).FullyFaithful := by
     simpa using (CompHausLike.fullyFaithfulCompHausLikeToTop (fun _ => True))
   exact hFF.isIso_of_isIso_map (Φ.observationQuotientRangeFlowCompHausHom S h_cont t)
@@ -145,14 +145,18 @@ theorem SymbolicLatentObservableModularFlow.observationQuotientRangeFlowHomeomor
     ((symbolicObservationQuotientRangeCompactHomeomorph (X := X) (ι := ι) S)
         ((symbolicLatentObservationQuotientFlow Φ h_cont).actHomeomorph (t + s)
           ((symbolicObservationQuotientRangeCompactHomeomorph (X := X) (ι := ι) S).symm q))).1 x
-  simpa [SymbolicLatentObservableModularFlow.observationQuotientFlowHomeomorph,
-    SymbolicLatentObservableModularFlow.observationQuotientFlowHomeomorph_apply,
-    SymbolicLatentFlowQuotient.actHomeomorph_apply,
-    Homeomorph.apply_symm_apply, Homeomorph.symm_apply_apply] using
-    congrArg (fun r =>
-      (symbolicObservationQuotientRangeCompactHomeomorph (X := X) (ι := ι) S r).1 x)
-      ((symbolicLatentObservationQuotientFlow Φ h_cont).actHomeomorph_add_apply t s
-        ((symbolicObservationQuotientRangeCompactHomeomorph (X := X) (ι := ι) S).symm q)).symm
+  let H := symbolicObservationQuotientRangeCompactHomeomorph (X := X) (ι := ι) S
+  let K := symbolicLatentObservationQuotientFlow Φ h_cont
+  change (H (K.actHomeomorph t (H.symm (H (K.actHomeomorph s (H.symm q)))))).1 x =
+    (H (K.actHomeomorph (t + s) (H.symm q))).1 x
+  have hcancel : H.symm (H (K.actHomeomorph s (H.symm q))) =
+      K.actHomeomorph s (H.symm q) := H.symm_apply_apply _
+  calc
+    (H (K.actHomeomorph t (H.symm (H (K.actHomeomorph s (H.symm q)))))).1 x =
+        (H (K.actHomeomorph t (K.actHomeomorph s (H.symm q)))).1 x :=
+      congrArg (fun z => (H (K.actHomeomorph t z)).1 x) hcancel
+    _ = (H (K.actHomeomorph (t + s) (H.symm q))).1 x :=
+      congrArg (fun z => (H z).1 x) (K.actHomeomorph_add_apply t s (H.symm q)).symm
 
 @[simp] theorem SymbolicLatentObservableModularFlow.observationQuotientRangeFlowHomeomorph_comp_apply
     (S : FiniteSymbolicLatentSystem X ι)

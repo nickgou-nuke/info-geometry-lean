@@ -212,7 +212,9 @@ def naryPrefixConeIsLimit (n : ℕ) : IsLimit (naryPrefixCone n) := by
           apply Fin.ext
           rfl
         rw [hcast] at hi
-        simpa [naryPrefixLimitLift, naryPrefixRestriction] using hi
+        change (s.π.app (Opposite.op (i.val + 1))).hom x (Fin.last i.val) =
+          (s.π.app (Opposite.op (k + 1))).hom x i
+        exact hi
   · intro s m hm
     apply TopCat.hom_ext
     apply ContinuousMap.ext
@@ -221,9 +223,7 @@ def naryPrefixConeIsLimit (n : ℕ) : IsLimit (naryPrefixCone n) := by
     have h := congrArg (fun q => (ConcreteCategory.hom q) x)
       (hm (Opposite.op (k + 1)))
     have hlast := congrFun h (Fin.last k)
-    change (TopCat.Hom.hom m) x k =
-      (TopCat.Hom.hom (naryPrefixLimitLift s)) x k
-    simpa [naryPrefixLimitLift] using hlast
+    exact hlast
 
 noncomputable def naryTreeBoundaryLimitIso (n : ℕ) :
     (naryPrefixCone n).pt ≅ limit (naryPrefixDiagram n) :=

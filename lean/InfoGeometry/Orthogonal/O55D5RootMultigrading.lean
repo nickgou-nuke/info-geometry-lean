@@ -28,7 +28,13 @@ abbrev Axis := Fin 5
 inductive RootSign
   | neg
   | pos
-  deriving DecidableEq, Fintype, Repr
+  deriving DecidableEq, Repr
+
+instance : Fintype RootSign where
+  elems := {RootSign.neg, RootSign.pos}
+  complete := by
+    intro s
+    cases s <;> simp
 
 namespace RootSign
 

@@ -48,14 +48,9 @@ theorem correctedT_conj_pc1 :
   apply automorphism_ext_of_basis
   intro i
   rw [G2TwoSylowSubgroup.pcWord_apply]
-  fin_cases i <;>
-    simp [correctedT_eq_word, pcWordFun, pcTermFun, pcGenerator,
-      swap01Aut_apply, swap01Fun, swapCartanAut, swapCartanEquiv,
-      swapCartanFun, cycle012Aut_apply, cycle012Fun,
-      G2TwoSylowPCAutomorphisms.pc2Aut,
-      G2TwoSylowPCAutomorphisms.pc2Equiv,
-      pc2Fun, pc3Fun, pc4Fun, pc6Fun,
-      basis8, ePlus, eMinus, up0, up1, up2, down0, down1, down2]
+  rw [correctedT_eq_word]
+  repeat rw [aut_mul_apply]
+  fin_cases i <;> rfl
 
 theorem correctedT_conj_pc2 :
     correctedT⁻¹ * pcGenerator 2 * correctedT =
@@ -66,14 +61,9 @@ theorem correctedT_conj_pc2 :
   apply automorphism_ext_of_basis
   intro i
   rw [G2TwoSylowSubgroup.pcWord_apply]
-  fin_cases i <;>
-    simp [correctedT_eq_word, pcWordFun, pcTermFun, pcGenerator,
-      swap01Aut_apply, swap01Fun, swapCartanAut, swapCartanEquiv,
-      swapCartanFun, cycle012Aut_apply, cycle012Fun,
-      G2TwoSylowPCAutomorphisms.pc3Aut,
-      G2TwoSylowPCAutomorphisms.pc3Equiv,
-      pc2Fun, pc3Fun, pc4Fun, pc5Fun, pc6Fun,
-      basis8, ePlus, eMinus, up0, up1, up2, down0, down1, down2]
+  rw [correctedT_eq_word]
+  repeat rw [aut_mul_apply]
+  fin_cases i <;> rfl
 
 theorem correctedT_conj_pc3 :
     correctedT⁻¹ * pcGenerator 3 * correctedT =
@@ -84,13 +74,9 @@ theorem correctedT_conj_pc3 :
   apply automorphism_ext_of_basis
   intro i
   rw [G2TwoSylowSubgroup.pcWord_apply]
-  fin_cases i <;>
-    simp [correctedT_eq_word, pcWordFun, pcTermFun, pcGenerator,
-      swap01Aut_apply, swap01Fun, swapCartanAut, swapCartanEquiv,
-      swapCartanFun, cycle012Aut_apply, cycle012Fun,
-      G2TwoSylowPCAutomorphisms.pc4Aut,
-      involutiveEquiv, pc2Fun, pc4Fun, pc5Fun, pc6Fun,
-      basis8, ePlus, eMinus, up0, up1, up2, down0, down1, down2]
+  rw [correctedT_eq_word]
+  repeat rw [aut_mul_apply]
+  fin_cases i <;> rfl
 
 theorem correctedT_conj_pc4 :
     correctedT⁻¹ * pcGenerator 4 * correctedT =
@@ -101,13 +87,9 @@ theorem correctedT_conj_pc4 :
   apply automorphism_ext_of_basis
   intro i
   rw [G2TwoSylowSubgroup.pcWord_apply]
-  fin_cases i <;>
-    simp [correctedT_eq_word, pcWordFun, pcTermFun, pcGenerator,
-      swap01Aut_apply, swap01Fun, swapCartanAut, swapCartanEquiv,
-      swapCartanFun, cycle012Aut_apply, cycle012Fun,
-      G2TwoSylowPCAutomorphisms.pc5Aut,
-      involutiveEquiv, pc2Fun, pc3Fun, pc5Fun,
-      basis8, ePlus, eMinus, up0, up1, up2, down0, down1, down2]
+  rw [correctedT_eq_word]
+  repeat rw [aut_mul_apply]
+  fin_cases i <;> rfl
 
 theorem correctedT_conj_pc5 :
     correctedT⁻¹ * pcGenerator 5 * correctedT =
@@ -118,13 +100,9 @@ theorem correctedT_conj_pc5 :
   apply automorphism_ext_of_basis
   intro i
   rw [G2TwoSylowSubgroup.pcWord_apply]
-  fin_cases i <;>
-    simp [correctedT_eq_word, pcWordFun, pcTermFun, pcGenerator,
-      swap01Aut_apply, swap01Fun, swapCartanAut, swapCartanEquiv,
-      swapCartanFun, cycle012Aut_apply, cycle012Fun,
-      G2TwoSylowPCAutomorphisms.pc6Aut,
-      involutiveEquiv, pc6Fun,
-      basis8, ePlus, eMinus, up0, up1, up2, down0, down1, down2]
+  rw [correctedT_eq_word]
+  repeat rw [aut_mul_apply]
+  fin_cases i <;> rfl
 
 def correctedTComplementSubgroup : Subgroup SplitOctF2Aut :=
   Subgroup.closure {pcGenerator 1, pcGenerator 2, pcGenerator 3,
@@ -212,27 +190,20 @@ theorem correctedT_complement_conj_mem_unipotent
       exact hconj ▸
         InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure.unipotentSubgroup.inv_mem ihx
 
+def correctedTRankOneExponent : PCExponent := fun i => match i with
+  | 0 => true | 1 => false | 2 => false
+  | 3 => true | 4 => false | 5 => false
+
 theorem correctedT_rank_one_witness :
-    let r : SplitOctF2Aut :=
-      G2TwoSylowSubgroup.pcWord (fun i => match i with
-        | 0 => true | 1 => false | 2 => false
-        | 3 => true | 4 => false | 5 => false)
+    let r : SplitOctF2Aut := G2TwoSylowSubgroup.pcWord correctedTRankOneExponent
     correctedT * r * correctedT = r * correctedT * r := by
   dsimp
   apply automorphism_ext_of_basis
   intro i
+  rw [correctedT_eq_word]
   repeat rw [aut_mul_apply]
   repeat rw [pcWord_apply]
-  fin_cases i <;>
-    simp [correctedT_eq_word, pcWordFun, pcTermFun,
-      swap01Aut_apply, swap01Fun, swapCartanAut, swapCartanEquiv,
-      swapCartanFun, cycle012Aut_apply, cycle012Fun,
-      pc1Fun, pc4Fun,
-      basis8, ePlus, eMinus, up0, up1, up2, down0, down1, down2]
-
-def correctedTRankOneExponent : PCExponent := fun i => match i with
-  | 0 => true | 1 => false | 2 => false
-  | 3 => true | 4 => false | 5 => false
+  fin_cases i <;> rfl
 
 theorem correctedT_borel_split (b : SplitOctF2Aut)
     (hb : b ∈ InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure.unipotentSubgroup) :

@@ -185,7 +185,7 @@ def inductionColimitPillar : Prop :=
       (∀ k : ℕ,
         DAG.GradedBottPeriodicity.stableStage k *
             DAG.GradedBottPeriodicity.stableStage k = 0) ∧
-      (∀ chain₁ chain₂ : List InfoGeometry.Quantum.KitaevChain.KitaevCell.{0},
+      (∀ chain₁ chain₂ : List InfoGeometry.Quantum.KitaevChain.KitaevCell,
         InfoGeometry.Quantum.KitaevChain.macroscopicVolume (chain₁ ++ chain₂) =
           InfoGeometry.Quantum.KitaevChain.macroscopicVolume chain₁ *
             InfoGeometry.Quantum.KitaevChain.macroscopicVolume chain₂) ∧

@@ -89,18 +89,18 @@ theorem exponentialDerivative_apply_eq_duhamelDerivative_of_continuousAt
     NormedAlgebra.restrictScalars ℚ ℝ A
   have hLine :
       HasDerivAt (fun r : ℝ => a + r • h) h 0 := by
-    convert
-      (hasDerivAt_const (x := (0 : ℝ)) a).add
-        ((hasDerivAt_id (x := (0 : ℝ))).smul_const h) using 1 <;>
-      simp
+    have h1 : HasDerivAt (fun r : ℝ => a + r • h) (0 + (1 : ℝ) • h) 0 :=
+      (hasDerivAt_const (0 : ℝ) a).add ((hasDerivAt_id (0 : ℝ)).smul_const h)
+    simpa using h1
   have hExp :
       HasDerivAt
         (fun r : ℝ => NormedSpace.exp (a + r • h))
         (exponentialDerivative (𝕜 := ℝ) a h) 0 := by
-    simpa using
+    have hComp :=
       (hasFDerivAt_exp_noncommutative
         (𝕜 := ℝ) (A := A) a).comp_hasDerivAt_of_eq
           (0 : ℝ) hLine (by simp)
+    simpa only [Function.comp_def] using hComp
   have hSlope :
       Tendsto
         (slope (fun r : ℝ => NormedSpace.exp (a + r • h)) 0)

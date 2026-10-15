@@ -39,7 +39,7 @@ def conjugationHom (a : SplitOctF2Aut) : SplitOctF2Aut →* SplitOctF2Aut where
     simp [mul_assoc]
 
 /-- The residual subgroup attached to a Weyl parameter. -/
-def residualSubgroup (p : WeylG2) : Subgroup SplitOctF2Aut :=
+noncomputable def residualSubgroup (p : WeylG2) : Subgroup SplitOctF2Aut :=
   unipotentSubgroup ⊓
     unipotentSubgroup.comap (conjugationHom (w0 * weylNF p.1 p.2))
 

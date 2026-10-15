@@ -158,7 +158,13 @@ theorem kasparov_krein_product_chain_collapses_via_connes_bridge
       AnomalousKMSFlow.anomalousIndex H C =
         (inferInstance : CuntzKTheoryPairing.ConnesChernPairing
           CuntzKTheoryPairing.O2_K0 K1).pair k ξ := by
-    simpa [kkBoundaryPairing] using hPair
+    calc
+      AnomalousKMSFlow.anomalousIndex H C =
+          kkBoundaryPairing H chain.left chain.right k ξ := hPair
+      _ = 0 := by rfl
+      _ = (inferInstance : CuntzKTheoryPairing.ConnesChernPairing
+          CuntzKTheoryPairing.O2_K0 K1).pair k ξ :=
+        (CuntzKTheoryPairing.connesChernPairing_zero_on_O2 k ξ).symm
   exact CuntzKTheoryPairing.connes_chern_holographic_minimization_summary
     (H := H) C hFaith S0 c hc k ξ hPair'
 

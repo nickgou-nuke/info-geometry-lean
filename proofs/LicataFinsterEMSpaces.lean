@@ -58,7 +58,7 @@ theorem offDiagonal_unique (G : Type u) {n k : ℕ} (h : k ≠ n)
     | diagonal g => exact False.elim (h rfl)
     | offdiag hy => congr
 
-instance offDiagonalSubsingleton (G : Type u) {n k : ℕ} (h : k ≠ n) :
+theorem offDiagonalSubsingleton (G : Type u) {n k : ℕ} (h : k ≠ n) :
     Subsingleton (EMModelPi G n k) where
   allEq := offDiagonal_unique G h
 

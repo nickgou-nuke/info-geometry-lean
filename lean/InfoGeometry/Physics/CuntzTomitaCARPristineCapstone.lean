@@ -1,6 +1,7 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import Mathlib.Data.Matrix.Basic
+import Mathlib.Data.Matrix.Mul
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.LinearAlgebra.Matrix.Diagonal
@@ -35,9 +36,9 @@ operator-algebraic chain with **zero wrappers, zero sorrys, and zero custom axio
    - Normalization: $\operatorname{Tr}(\rho) = \rho_{11} + \rho_{22} = 1 \implies \rho_{11} = \rho_{22} = 1/2$.
    - **Theorem**: The chiral anomaly index $\operatorname{Tr}(\Gamma \rho) = \rho_{11} - \rho_{22} = 1/2 - 1/2 = 0$ identically!
 
-4. **12th Cyclotomic Operatorial Potential on Majorana Mass Shell**:
+4. **12th Cyclotomic Operatorial Potential on the Majorana Gap Matrix**:
    - Gap Hamiltonian: $X = m \Gamma + \Delta \gamma_1 = \begin{pmatrix} m & \Delta \\ \Delta & -m \end{pmatrix}$.
-   - Mass shell squaring: $X^2 = (m^2 + \Delta^2) I = E_{\text{gap}}^2 I$.
+   - Gap-matrix square: $X^2 = (m^2 + \Delta^2) I$. This finite-dimensional spectral identity is not a relativistic four-momentum mass shell.
    - Operatorial Cyclotomic Higgs: $\Phi_{12}(X) = X^4 - X^2 + I = \left[(E_{\text{gap}}^2 - 1/2)^2 + 3/4\right] I$.
    - Trace Minimum: $\operatorname{Tr}(\Phi_{12}(X)) = 2 \left[(E_{\text{gap}}^2 - 1/2)^2 + 3/4\right] \ge 3/2$, achieving the VEV at $E_{\text{gap}}^2 = 1/2$.
 -/
@@ -77,44 +78,53 @@ def gamma_2 : Matrix (Fin 2) (Fin 2) ℂ :=
 
 /-- 🏆 THEOREM: Annihilation operator is nilpotent: $a^2 = 0$. -/
 theorem a_op_sq_zero : a_op * a_op = 0 := by
-  ext i j; fin_cases i <;> fin_cases j <;>
-  { dsimp [a_op]; simp [Matrix.mul_apply, Fin.sum_univ_two] }
+  ext i j
+  simp only [Matrix.mul_apply]
+  fin_cases i <;> fin_cases j <;> simp [a_op, Fin.sum_univ_two]
 
 /-- 🏆 THEOREM: Creation operator is nilpotent: $(a^*)^2 = 0$. -/
 theorem a_dag_sq_zero : a_dag * a_dag = 0 := by
-  ext i j; fin_cases i <;> fin_cases j <;>
-  { dsimp [a_dag]; simp [Matrix.mul_apply, Fin.sum_univ_two] }
+  ext i j
+  simp only [Matrix.mul_apply]
+  fin_cases i <;> fin_cases j <;> simp [a_dag, Fin.sum_univ_two]
 
 /-- 🏆 THEOREM: Fundamental CAR anticommutator: $a a^* + a^* a = I$. -/
 theorem car_anticommutator : a_op * a_dag + a_dag * a_op = 1 := by
-  ext i j; fin_cases i <;> fin_cases j <;>
-  { dsimp [a_op, a_dag]; simp [Matrix.mul_apply, Fin.sum_univ_two] }
+  ext i j
+  simp only [Matrix.add_apply, Matrix.mul_apply]
+  fin_cases i <;> fin_cases j <;> simp [a_op, a_dag, Fin.sum_univ_two]
 
 /-- 🏆 THEOREM: Number operator identification: $N = a^* a$. -/
 theorem num_op_eq : a_dag * a_op = num_op := by
-  ext i j; fin_cases i <;> fin_cases j <;>
-  { dsimp [a_dag, a_op, num_op]; simp [Matrix.mul_apply, Fin.sum_univ_two] }
+  ext i j
+  simp only [Matrix.mul_apply]
+  fin_cases i <;> fin_cases j <;> simp [a_dag, a_op, num_op, Fin.sum_univ_two]
 
 /-- 🏆 THEOREM: Chirality is $I - 2N$. -/
 theorem gamma_chirality_eq_one_sub_two_N :
     gamma_chirality = 1 - 2 • num_op := by
-  ext i j; fin_cases i <;> fin_cases j <;>
-  { dsimp [gamma_chirality, num_op]; norm_num }
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp only [Matrix.sub_apply, Matrix.smul_apply, Matrix.one_apply] <;>
+    simp [gamma_chirality, num_op] <;> norm_num
 
 /-- 🏆 THEOREM: Majorana 1 is an involution: $\gamma_1^2 = I$. -/
 theorem gamma_1_sq : gamma_1 * gamma_1 = 1 := by
-  ext i j; fin_cases i <;> fin_cases j <;>
-  { dsimp [gamma_1]; simp [Matrix.mul_apply, Fin.sum_univ_two] }
+  ext i j
+  simp only [Matrix.mul_apply]
+  fin_cases i <;> fin_cases j <;> simp [gamma_1, Fin.sum_univ_two]
 
 /-- 🏆 THEOREM: Majorana 2 is an involution: $\gamma_2^2 = I$. -/
 theorem gamma_2_sq : gamma_2 * gamma_2 = 1 := by
-  ext i j; fin_cases i <;> fin_cases j <;>
-  { dsimp [gamma_2]; simp [Matrix.mul_apply, Fin.sum_univ_two] }
+  ext i j
+  simp only [Matrix.mul_apply]
+  fin_cases i <;> fin_cases j <;> simp [gamma_2, Fin.sum_univ_two]
 
 /-- 🏆 THEOREM: Majoranas strictly anticommute: $\gamma_1 \gamma_2 + \gamma_2 \gamma_1 = 0$. -/
 theorem gamma_1_gamma_2_anticomm : gamma_1 * gamma_2 + gamma_2 * gamma_1 = 0 := by
-  ext i j; fin_cases i <;> fin_cases j <;>
-  { dsimp [gamma_1, gamma_2]; simp [Matrix.mul_apply, Fin.sum_univ_two] }
+  ext i j
+  simp only [Matrix.add_apply, Matrix.mul_apply]
+  fin_cases i <;> fin_cases j <;> simp [gamma_1, gamma_2, Fin.sum_univ_two]
 
 /-! ## 2. Tomita–Takesaki Modular Reflection & Madelung U(1) Flow -/
 
@@ -132,18 +142,21 @@ def madelung_rotation (θ : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
 
 /-- 🏆 THEOREM: Tomita $J$ reflects the annihilation operator into the creation operator: $J a = a^* J$. -/
 theorem J_reflects_a : J_conjugation * a_op = a_dag * J_conjugation := by
-  ext i j; fin_cases i <;> fin_cases j <;>
-  { dsimp [J_conjugation, gamma_1, a_op, a_dag]; simp [Matrix.mul_apply, Fin.sum_univ_two] }
+  ext i j
+  simp only [Matrix.mul_apply]
+  fin_cases i <;> fin_cases j <;> simp [J_conjugation, gamma_1, a_op, a_dag, Fin.sum_univ_two]
 
 /-- 🏆 THEOREM: Tomita $J$ reflects the creation operator into the annihilation operator: $J a^* = a J$. -/
 theorem J_reflects_a_dag : J_conjugation * a_dag = a_op * J_conjugation := by
-  ext i j; fin_cases i <;> fin_cases j <;>
-  { dsimp [J_conjugation, gamma_1, a_op, a_dag]; simp [Matrix.mul_apply, Fin.sum_univ_two] }
+  ext i j
+  simp only [Matrix.mul_apply]
+  fin_cases i <;> fin_cases j <;> simp [J_conjugation, gamma_1, a_op, a_dag, Fin.sum_univ_two]
 
 /-- 🏆 THEOREM: Phase axis $K$ satisfies $K^2 = -I$. -/
 theorem K_phase_axis_sq : K_phase_axis * K_phase_axis = - 1 := by
-  ext i j; fin_cases i <;> fin_cases j <;>
-  { dsimp [K_phase_axis]; simp [Matrix.mul_apply, Fin.sum_univ_two] }
+  ext i j
+  simp only [Matrix.mul_apply]
+  fin_cases i <;> fin_cases j <;> simp [K_phase_axis, Fin.sum_univ_two]
 
 /-- 🏆 THEOREM: Madelung rotation at $\theta = 0$ is identity: $R(0) = I$. -/
 theorem madelung_rotation_zero : madelung_rotation 0 = 1 := by
@@ -177,10 +190,10 @@ def is_klein_sewn (ρ : DensityMatrix2) : Prop :=
 theorem klein_sewn_populations_equal (ρ : DensityMatrix2)
     (h_sewn : is_klein_sewn ρ) :
     ρ.r00 = (1 / 2 : ℂ) ∧ ρ.r11 = (1 / 2 : ℂ) := by
-  have h_mat : (J_conjugation * ρ.toMatrix * J_conjugation) 0 0 = ρ.toMatrix 0 0 := by
-    rw [h_sewn]
-  dsimp [J_conjugation, gamma_1, DensityMatrix2.toMatrix] at h_mat
-  simp [Matrix.mul_apply, Fin.sum_univ_two] at h_mat
+  change J_conjugation * ρ.toMatrix * J_conjugation = ρ.toMatrix at h_sewn
+  have h_mat := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℂ => M 0 0) h_sewn
+  simp_rw [Matrix.mul_apply] at h_mat
+  simp [J_conjugation, gamma_1, DensityMatrix2.toMatrix, Fin.sum_univ_two] at h_mat
   have h_tr : ρ.r00 + ρ.r11 = 1 := ρ.trace_one
   constructor
   · linear_combination (1 / 2 : ℂ) * h_tr - (1 / 2 : ℂ) * h_mat
@@ -197,22 +210,26 @@ theorem chiral_anomaly_annihilated_at_klein_throat (ρ : DensityMatrix2)
     (h_sewn : is_klein_sewn ρ) :
     Matrix.trace (gamma_chirality * ρ.toMatrix) = 0 := by
   rcases klein_sewn_populations_equal ρ h_sewn with ⟨hr00, hr11⟩
-  dsimp [gamma_chirality, DensityMatrix2.toMatrix, Matrix.trace]
-  simp [Matrix.mul_apply, Fin.sum_univ_two]
+  simp only [Matrix.trace, Matrix.diag_apply, Fin.sum_univ_two]
+  rw [Matrix.mul_apply, Matrix.mul_apply]
+  simp [gamma_chirality, DensityMatrix2.toMatrix, Matrix.mul_apply,
+    Matrix.smul_apply, Matrix.one_apply, Fin.sum_univ_two]
   rw [hr00, hr11]
   ring
 
-/-! ## 4. 12th Cyclotomic Operatorial Potential on Majorana Mass Shell -/
+/-! ## 4. 12th Cyclotomic Operatorial Potential on the Majorana Gap Matrix -/
 
 /-- Majorana gap Hamiltonian $X = m \Gamma + \Delta \gamma_1$. -/
 def majorana_gap_matrix (m Δ : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
   ![![m, Δ], ![Δ, -m]]
 
-/-- 🏆 THEOREM: The gap matrix squares to the Bogoliubov mass-shell: $X^2 = (m^2 + \Delta^2) I$. -/
+/-- The gap matrix squares to `(m² + Δ²) I`; this algebraic identity is not
+    a relativistic mass-shell assertion. -/
 theorem majorana_gap_matrix_sq (m Δ : ℝ) :
     majorana_gap_matrix m Δ * majorana_gap_matrix m Δ = (m ^ 2 + Δ ^ 2) • (1 : Matrix (Fin 2) (Fin 2) ℝ) := by
-  ext i j; fin_cases i <;> fin_cases j <;>
-  { dsimp [majorana_gap_matrix]; simp [Matrix.mul_apply, Fin.sum_univ_two]; ring }
+  ext i j
+  simp only [Matrix.mul_apply]
+  fin_cases i <;> fin_cases j <;> simp [majorana_gap_matrix, Fin.sum_univ_two] <;> ring
 
 /-- 12th Cyclotomic scalar potential $\Phi_{12}(E) = E^4 - E^2 + 1$. -/
 def phi12_scalar (E : ℝ) : ℝ :=

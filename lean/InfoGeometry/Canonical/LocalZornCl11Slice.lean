@@ -41,16 +41,17 @@ theorem localZornMatrix_mul
         (v * c + b * y) := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [localZornMatrix, Matrix.mul_apply] <;> ring
+    rw [Matrix.mul_apply, Fin.sum_univ_two] <;>
+    simp [localZornMatrix] <;> ring
 
 theorem localZornSlice_norm_eq_det
     (e : ZornVec3 R) (he : ZornVec3.dot e e = 1)
     (a b u v : R) :
     ZornVectorMatrix.norm (localZornSlice e a b u v) =
       Matrix.det (localZornMatrix a b u v) := by
+  rw [Matrix.det_fin_two]
   simp [localZornSlice, localZornMatrix, ZornVectorMatrix.norm,
-    ZornVec3.dot_smul_left, ZornVec3.dot_smul_right, he,
-    Matrix.det_fin_two]
+    ZornVec3.dot_smul_left, ZornVec3.dot_smul_right, he]
   ring
 
 theorem localZornSlice_mul

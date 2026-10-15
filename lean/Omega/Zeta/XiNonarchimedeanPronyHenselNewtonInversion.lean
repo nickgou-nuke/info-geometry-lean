@@ -85,7 +85,7 @@ theorem paper_xi_nonarchimedean_prony_hensel_newton_inversion
             ring
       _ = padicValRat p (ω₁ : ℚ) + padicValRat p (ω₂ : ℚ) +
             (4 : ℤ) * padicValRat p ((a₂ - a₁ : ℤ) : ℚ) := by
-            rw [padicValRat.pow hgapQ]
+            rw [padicValRat.pow]
             norm_num
   let J : Matrix (Fin 4) (Fin 4) ℚ := xiPronyLinearizedNewtonMatrix2 a₁ a₂ ω₁ ω₂
   have hJdet : J.det ≠ 0 := by

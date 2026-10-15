@@ -126,25 +126,34 @@ def thetaOpEven (x : CliffordAlgebra.even (Qsplit 5)) : CliffordAlgebra.even (Qs
   by
     refine ⟨thetaOp x, ?_⟩
     have hu5 : u5 ∈ CliffordAlgebra.evenOdd (Qsplit 5) 1 := by
-      simpa [u5] using (CliffordAlgebra.ι_mem_evenOdd_one (Q := Qsplit 5) (headNullMinus 4))
+      simpa [u5, gammaHeadNullMinus] using
+        (CliffordAlgebra.ι_mem_evenOdd_one (Q := Qsplit 5) (headNullMinus 4))
     have hv5 : v5 ∈ CliffordAlgebra.evenOdd (Qsplit 5) 1 := by
-      simpa [v5] using (CliffordAlgebra.ι_mem_evenOdd_one (Q := Qsplit 5) (headNullPlus 4))
+      simpa [v5, gammaHeadNullPlus] using
+        (CliffordAlgebra.ι_mem_evenOdd_one (Q := Qsplit 5) (headNullPlus 4))
     have hu4 : u4 ∈ CliffordAlgebra.evenOdd (Qsplit 5) 1 := by
-      simpa [u4] using (CliffordAlgebra.ι_mem_evenOdd_one (Q := Qsplit 5) (tailLift 4 (headNullMinus 3)))
+      simpa [u4, gammaTail] using
+        (CliffordAlgebra.ι_mem_evenOdd_one (Q := Qsplit 5) (tailLift 4 (headNullMinus 3)))
     have hv4 : v4 ∈ CliffordAlgebra.evenOdd (Qsplit 5) 1 := by
-      simpa [v4] using (CliffordAlgebra.ι_mem_evenOdd_one (Q := Qsplit 5) (tailLift 4 (headNullPlus 3)))
+      simpa [v4, gammaTail] using
+        (CliffordAlgebra.ι_mem_evenOdd_one (Q := Qsplit 5) (tailLift 4 (headNullPlus 3)))
     have hJ5 : J5 ∈ CliffordAlgebra.evenOdd (Qsplit 5) 1 := by
       simpa [J5] using (sub_mem hu5 hv5)
     have hJ4 : J4 ∈ CliffordAlgebra.evenOdd (Qsplit 5) 1 := by
       simpa [J4] using (sub_mem hu4 hv4)
     have hJ : J ∈ CliffordAlgebra.evenOdd (Qsplit 5) 0 := by
-      simpa [J] using (SetLike.mul_mem_graded hJ5 hJ4 : J5 * J4 ∈ CliffordAlgebra.evenOdd (Qsplit 5) (1 + 1))
+      have hJraw := SetLike.mul_mem_graded hJ5 hJ4
+      have hidx : (1 : ZMod 2) + 1 = 0 := by decide
+      simpa only [J, hidx] using hJraw
     have hx0 : x.1 ∈ CliffordAlgebra.evenOdd (Qsplit 5) 0 := by
-      simpa [CliffordAlgebra.even_toSubmodule] using x.2
+      rw [← CliffordAlgebra.even_toSubmodule]
+      exact x.2
     have hJx : J * x.1 ∈ CliffordAlgebra.evenOdd (Qsplit 5) 0 := by
       simpa using (SetLike.mul_mem_graded hJ hx0 : J * x.1 ∈ CliffordAlgebra.evenOdd (Qsplit 5) (0 + 0))
     have hJxJ : J * x.1 * J ∈ CliffordAlgebra.evenOdd (Qsplit 5) 0 := by
       simpa using (SetLike.mul_mem_graded hJx hJ : (J * x.1) * J ∈ CliffordAlgebra.evenOdd (Qsplit 5) (0 + 0))
+    change thetaOp x.1 ∈ Subalgebra.toSubmodule (CliffordAlgebra.even (Qsplit 5))
+    rw [CliffordAlgebra.even_toSubmodule]
     simpa [thetaOp] using (neg_mem hJxJ)
 
 theorem theta_maps_even (g : ConformalGrade) (x : CliffordAlgebra.even (Qsplit 5)) (hx : x ∈ gradeSpaceEven g) :

@@ -126,30 +126,38 @@ private theorem nat89_pow_30 : 89 ^ 30 ≡ 64 [MOD 571] := by
       exact ((nat89_pow_16.mul nat89_pow_8).mul nat89_pow_4).mul nat89_pow_2
     _ ≡ 64 [MOD 571] := by norm_num [Nat.ModEq]
 
+private theorem zmod571_natCast_89 : ((89 : ℕ) : ZMod 571) = 89 := by
+  norm_num
+
 private theorem zmod89_pow570 : (89 : ZMod 571) ^ 570 = 1 := by
   have hcast : ((89 ^ 570 : ℕ) : ZMod 571) = 1 :=
     (ZMod.natCast_eq_natCast_iff _ _ _).2 nat89_pow_570
-  simpa only [Nat.cast_pow] using hcast
+  rw [Nat.cast_pow, zmod571_natCast_89] at hcast
+  exact hcast
 
 private theorem zmod89_pow285 : (89 : ZMod 571) ^ 285 = 570 := by
   have hcast : ((89 ^ 285 : ℕ) : ZMod 571) = 570 :=
     (ZMod.natCast_eq_natCast_iff _ _ _).2 nat89_pow_285
-  simpa only [Nat.cast_pow] using hcast
+  rw [Nat.cast_pow, zmod571_natCast_89] at hcast
+  exact hcast
 
 private theorem zmod89_pow190 : (89 : ZMod 571) ^ 190 = 461 := by
   have hcast : ((89 ^ 190 : ℕ) : ZMod 571) = 461 :=
     (ZMod.natCast_eq_natCast_iff _ _ _).2 nat89_pow_190
-  simpa only [Nat.cast_pow] using hcast
+  rw [Nat.cast_pow, zmod571_natCast_89] at hcast
+  exact hcast
 
 private theorem zmod89_pow114 : (89 : ZMod 571) ^ 114 = 481 := by
   have hcast : ((89 ^ 114 : ℕ) : ZMod 571) = 481 :=
     (ZMod.natCast_eq_natCast_iff _ _ _).2 nat89_pow_114
-  simpa only [Nat.cast_pow] using hcast
+  rw [Nat.cast_pow, zmod571_natCast_89] at hcast
+  exact hcast
 
 private theorem zmod89_pow30 : (89 : ZMod 571) ^ 30 = 64 := by
   have hcast : ((89 ^ 30 : ℕ) : ZMod 571) = 64 :=
     (ZMod.natCast_eq_natCast_iff _ _ _).2 nat89_pow_30
-  simpa only [Nat.cast_pow] using hcast
+  rw [Nat.cast_pow, zmod571_natCast_89] at hcast
+  exact hcast
 
 private theorem order_unit34 : orderOf unit34 = 285 := by
   have hunit : unit34 = Omega.GroupUnification.delta34Unit571 := by

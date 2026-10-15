@@ -29,8 +29,16 @@ theorem time_derivative (profile : ℝ → ℝ) (speed time angle slope : ℝ)
     (differentiable : HasDerivAt profile slope (angle - speed * time)) :
     HasDerivAt (fun instant => rotatingProfile profile speed instant angle)
       (slope * (-speed)) time := by
-  simpa [rotatingProfile] using differentiable.comp time
-    ((hasDerivAt_const time angle).sub ((hasDerivAt_id time).const_mul speed))
+  change HasDerivAt
+    (profile ∘ ((fun instant : ℝ => angle) - fun instant => speed * instant))
+    (slope * (-speed)) time
+  have harg : HasDerivAt
+      ((fun instant : ℝ => angle) - fun instant => speed * instant) (-speed) time := by
+    simpa using
+      (hasDerivAt_const time angle).sub
+        ((hasDerivAt_id time).const_mul speed)
+  exact differentiable.comp time
+    harg
 
 def harmonicProfile (lobes : ℕ) (radius amplitude angle : ℝ) : ℝ :=
   radius + amplitude * Real.cos ((lobes : ℝ) * angle)

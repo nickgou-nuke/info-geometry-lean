@@ -27,8 +27,8 @@ abbrev EndCZ := Module.End ℝ CZ
 theorem ellGrading_isDrazinInverse :
     IsDrazinInverse ellGrading ellGrading 1 := by
   refine IsDrazinInverse.mk ?_ rfl ?_
-  · simpa [pow_three] using ellGrading_tripotent
-  · simpa [pow_two, pow_three] using ellGrading_tripotent.symm
+  · simpa [pow_three, mul_assoc] using ellGrading_tripotent
+  · simpa [pow_two, pow_three, mul_assoc] using ellGrading_tripotent.symm
 
 /-- Native Drazin support projector `P_D = T Tᴰ = T²`. -/
 def ellNativeDrazinProjector : EndCZ :=

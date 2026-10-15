@@ -125,6 +125,36 @@ AUTO_TRACE_FRONTIER_RULES = {
 
 ROUTE_RULES = (
     RouteRule(
+        rule_id="pantograph-evidence-to-socrates-v1",
+        source_kind="PantographSessionEvidencePacket",
+        source_statuses=frozenset({"replay_matched", "replay_diverged", "replay_process_failed", "replay_refused"}),
+        assigned_role="SocratesBee",
+        task_kind="socratic.question",
+        allowed_output_kinds=("SocraticQuestionPacket", "ResiduePacket"),
+        forbidden_output_kinds=FORBIDDEN_AUTHORITY_OUTPUTS,
+        authority_ceiling="semantic",
+        instruction=(
+            "Use the linked candidate and Pantograph interaction evidence to ask a focused mathematical question. "
+            "Treat replay as interaction evidence only; do not infer theorem, build, audit, or promotion authority."
+        ),
+        priority=60,
+    ),
+    RouteRule(
+        rule_id="pantograph-evidence-to-pauli-v1",
+        source_kind="PantographSessionEvidencePacket",
+        source_statuses=frozenset({"replay_matched", "replay_diverged", "replay_process_failed", "replay_refused"}),
+        assigned_role="PauliBee",
+        task_kind="pauli.critique",
+        allowed_output_kinds=("PauliCritique", "ResiduePacket"),
+        forbidden_output_kinds=FORBIDDEN_AUTHORITY_OUTPUTS,
+        authority_ceiling="semantic",
+        instruction=(
+            "Challenge the candidate using the exact linked session provenance and replay outcome. "
+            "A replay match is not a kernel proof or owner build."
+        ),
+        priority=55,
+    ),
+    RouteRule(
         rule_id="source-observation-to-socrates-v1",
         source_kind="SourceObservationPacket",
         source_statuses=frozenset({"captured"}),
@@ -153,6 +183,22 @@ ROUTE_RULES = (
             "owner-shadow collapse, duplicate branches, and inadmissible authority jumps."
         ),
         priority=40,
+    ),
+    RouteRule(
+        rule_id="theorem-candidate-to-pantograph-swarm-v1",
+        source_kind="TheoremCandidatePacket",
+        source_statuses=frozenset({"draft", "legalized", "probe_ready"}),
+        assigned_role="PantographSwarmBee",
+        task_kind="pantograph.tactic_search",
+        allowed_output_kinds=("PantographSessionEvidencePacket", "SocraticQuestionPacket", "ResiduePacket"),
+        forbidden_output_kinds=FORBIDDEN_AUTHORITY_OUTPUTS,
+        authority_ceiling="navigation",
+        instruction=(
+            "Run interactive Pantograph tactic search over the candidate target expression. "
+            "Record session lineage in ArangoDB, evaluate alpha-invariant cache, and emit "
+            "PantographSessionEvidencePacket or SocraticQuestionPacket on failure."
+        ),
+        priority=42,
     ),
 )
 

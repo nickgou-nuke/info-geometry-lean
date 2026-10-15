@@ -555,9 +555,6 @@ theorem gnsColimitInclusion_transition
   let F :=
     gnsModuleDiagram Stage sys ω
   have hw := colimit.w F (homOfLE hij)
-  have hx := congrArg
-    (fun k : F.obj i ⟶ colimit F => k x)
-    hw.symm
   have htransition :
       (gnsDirectInductiveSystem Stage sys ω).f hij x =
         filteredGNSMap Stage sys ω hij x := by
@@ -565,8 +562,18 @@ theorem gnsColimitInclusion_transition
       filteredGNSMapCLM Stage sys ω hij x =
         filteredGNSMap Stage sys ω hij x
     exact filteredGNSMapCLM_apply Stage sys ω hij x
-  simpa [F, gnsColimitInclusion, gnsModuleDiagram,
-    htransition] using hx
+  calc
+    gnsColimitInclusion Stage sys ω i x = (colimit.ι F i).hom x := rfl
+    _ = (F.map (homOfLE hij) ≫ colimit.ι F j).hom x :=
+      congrArg (fun k : F.obj i ⟶ colimit F => k x) hw.symm
+    _ = (colimit.ι F j).hom ((F.map (homOfLE hij)).hom x) :=
+      ConcreteCategory.comp_apply _ _ _
+    _ = (colimit.ι F j).hom
+          ((gnsDirectInductiveSystem Stage sys ω).f hij x) := rfl
+    _ = gnsColimitInclusion Stage sys ω j
+          (filteredGNSMap Stage sys ω hij x) := by
+      rw [htransition]
+      rfl
 
 /-- Stage representations define the same vector in the GNS colimit after
 transporting both the observable and vector to a later stage. -/

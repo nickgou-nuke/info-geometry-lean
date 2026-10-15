@@ -67,6 +67,10 @@ def bitWordMatrixStarRepresentation (n : ℕ) :
           change (bitWordUnit n x x₁).comp (bitWordUnit n x₂ x) = _
           simpa [h₁₂] using (bitWordUnit_mul n x x₁ x₂ x)
         simp [hunit, smul_mul_assoc, mul_smul_comm, smul_smul]
+        change (0 : BoundedL2Operator) =
+          (B x₂ x * A x x₁) • (0 : BoundedL2Operator)
+        ext f
+        simp
     · by_cases h₁₂ : x₁ = x₂
       · subst x₂
         simp only [if_true]
@@ -81,6 +85,10 @@ def bitWordMatrixStarRepresentation (n : ℕ) :
           change (bitWordUnit n x x₁).comp (bitWordUnit n x₂ x₃) = _
           simpa [h₁₂] using (bitWordUnit_mul n x x₁ x₂ x₃)
         simp [hunit, smul_mul_assoc, mul_smul_comm, smul_smul]
+        change (0 : BoundedL2Operator) =
+          (B x₂ x₃ * A x x₁) • (0 : BoundedL2Operator)
+        ext f
+        simp
   map_zero' := by
     exact (bitWordMatrixLinearRepresentation n).map_zero
   map_add' A B := by
@@ -92,6 +100,19 @@ def bitWordMatrixStarRepresentation (n : ℕ) :
     simp
   map_star' A := by
     classical
+    have hstarSum (s : Finset (BitWord n)) (f : BitWord n → BoundedL2Operator) :
+        (∑ x ∈ s, f x)† = ∑ x ∈ s, (f x)† := by
+      induction s using Finset.induction_on with
+      | empty =>
+          change ContinuousLinearMap.adjoint (0 : BoundedL2Operator) = 0
+          exact ContinuousLinearMap.adjoint.map_zero
+      | @insert x s hx ih =>
+          simp only [Finset.sum_insert hx]
+          change ContinuousLinearMap.adjoint
+              (f x + ∑ y ∈ s, f y) = _
+          rw [ContinuousLinearMap.adjoint.map_add]
+          change (f x)† + (∑ y ∈ s, f y)† = _
+          rw [ih]
     have hstar (u v : BitWord n) (c : ℂ) :
         bitWordMatrixLinearRepresentation n
             (star (Matrix.single u v c)) =
@@ -107,7 +128,13 @@ def bitWordMatrixStarRepresentation (n : ℕ) :
       rw [star_smul, bitWordUnit_star]
       rfl
     rw [Matrix.matrix_eq_sum_single A]
-    simp only [map_sum, star_sum]
+    conv_lhs => simp only [star_sum]
+    simp only [map_sum]
+    conv_rhs =>
+      change (∑ x ∈ (Finset.univ : Finset (BitWord n)),
+        ∑ v : BitWord n, bitWordMatrixLinearRepresentation n
+          (Matrix.single x v (A x v)))†
+      simp only [hstarSum]
     apply Finset.sum_congr rfl
     intro u hu
     apply Finset.sum_congr rfl

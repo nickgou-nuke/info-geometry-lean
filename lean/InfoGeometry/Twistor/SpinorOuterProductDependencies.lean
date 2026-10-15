@@ -9,7 +9,15 @@ inductive Archetype
   | hermitianDiagonal
   | scalarCovariance
   | phaseInvariance
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype Archetype where
+  elems := {Archetype.outerProduct, Archetype.determinantNullity,
+    Archetype.hermitianDiagonal, Archetype.scalarCovariance,
+    Archetype.phaseInvariance}
+  complete := by
+    intro x
+    cases x <;> simp
 
 def prerequisites : Archetype → Finset ℕ
   | .outerProduct => {0}

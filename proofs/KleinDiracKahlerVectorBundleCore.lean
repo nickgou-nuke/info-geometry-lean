@@ -31,12 +31,20 @@ def deckOperatorMap (J : V →ₗ[ℝ] V) (g : Deck2) (T : V →ₗ[ℝ] V) : V 
 
 theorem deckOperatorMap_add (J : V →ₗ[ℝ] V) (hJ : J.comp J = LinearMap.id) (g h : Deck2) (T : V →ₗ[ℝ] V) :
     deckOperatorMap J (g + h) T = deckOperatorMap J h (deckOperatorMap J g T) := by
-  have h11 : (1 + 1 : Deck2) = 0 := by decide
-  fin_cases g <;> fin_cases h
-  · simp [deckOperatorMap]
-  · simp [deckOperatorMap]
-  · simp [deckOperatorMap]
-  · simp [deckOperatorMap, h11, operatorTwist_involutive J hJ T]
+  have h00 : (0 : Deck2) + 0 = 0 := by decide
+  have h01 : (0 : Deck2) + 1 = 1 := by decide
+  have h10 : (1 : Deck2) + 0 = 1 := by decide
+  have h11 : (1 : Deck2) + 1 = 0 := by decide
+  rcases deck2_zero_or_one g with rfl | rfl <;>
+    rcases deck2_zero_or_one h with rfl | rfl
+  · rw [h00]
+    simp [deckOperatorMap]
+  · rw [h01]
+    simp [deckOperatorMap]
+  · rw [h10]
+    simp [deckOperatorMap]
+  · rw [h11]
+    simp [deckOperatorMap, operatorTwist_involutive J hJ T]
 
 theorem continuous_deckOperatorMap (J : V →ₗ[ℝ] V) :
     Continuous (fun p : Deck2 × (V →ₗ[ℝ] V) ↦ deckOperatorMap J p.1 p.2) := by

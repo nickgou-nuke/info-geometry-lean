@@ -609,6 +609,7 @@ theorem momentSum_three_eleven : momentSum 3 11 = 227888 := by
     have := momentSum_three_recurrence 8
     change momentSum 3 11 + 2 * momentSum 3 8 = 2 * momentSum 3 10 + 4 * momentSum 3 9 at this
     rw [momentSum_three_eight, momentSum_three_nine, momentSum_three_ten] at this; linarith
+  norm_num at h
   omega
 
 /-- S_3(12) = 703504.
@@ -618,6 +619,7 @@ theorem momentSum_three_twelve : momentSum 3 12 = 703504 := by
     have := momentSum_three_recurrence 9
     change momentSum 3 12 + 2 * momentSum 3 9 = 2 * momentSum 3 11 + 4 * momentSum 3 10 at this
     rw [momentSum_three_nine, momentSum_three_ten, momentSum_three_eleven] at this; linarith
+  norm_num at h
   omega
 
 -- ══════════════════════════════════════════════════════════════
@@ -741,6 +743,7 @@ theorem momentSum_three_thirteen : momentSum 3 13 = 2170784 := by
     have := momentSum_three_recurrence 10
     change momentSum 3 13 + 2 * momentSum 3 10 = 2 * momentSum 3 12 + 4 * momentSum 3 11 at this
     rw [momentSum_three_ten, momentSum_three_eleven, momentSum_three_twelve] at this; linarith
+  norm_num at h
   omega
 
 /-- S_3(14) = 6699808.
@@ -750,6 +753,7 @@ theorem momentSum_three_fourteen : momentSum 3 14 = 6699808 := by
     have := momentSum_three_recurrence 11
     change momentSum 3 14 + 2 * momentSum 3 11 = 2 * momentSum 3 13 + 4 * momentSum 3 12 at this
     rw [momentSum_three_eleven, momentSum_three_twelve, momentSum_three_thirteen] at this; linarith
+  norm_num at h
   omega
 
 -- ══════════════════════════════════════════════════════════════
@@ -782,6 +786,7 @@ theorem momentSum_three_fifteen : momentSum 3 15 = 20675744 := by
   rw [show (12 : Nat) + 1 = 13 from rfl, show (12 : Nat) + 2 = 14 from rfl,
     show (12 : Nat) + 3 = 15 from rfl,
     momentSum_three_twelve, momentSum_three_thirteen, momentSum_three_fourteen] at h
+  norm_num at h
   omega
 
 -- ══════════════════════════════════════════════════════════════
@@ -795,6 +800,7 @@ theorem momentSum_three_sixteen : momentSum 3 16 = 63809152 := by
   rw [show (13 : Nat) + 1 = 14 from rfl, show (13 : Nat) + 2 = 15 from rfl,
     show (13 : Nat) + 3 = 16 from rfl,
     momentSum_three_thirteen, momentSum_three_fourteen, momentSum_three_fifteen] at h
+  norm_num at h
   omega
 
 -- ══════════════════════════════════════════════════════════════
@@ -808,6 +814,7 @@ theorem momentSum_three_seventeen : momentSum 3 17 = 196921664 := by
   rw [show (14 : Nat) + 1 = 15 from rfl, show (14 : Nat) + 2 = 16 from rfl,
     show (14 : Nat) + 3 = 17 from rfl,
     momentSum_three_fourteen, momentSum_three_fifteen, momentSum_three_sixteen] at h
+  norm_num at h
   omega
 
 /-- S_3(18) = 607728448.
@@ -817,6 +824,7 @@ theorem momentSum_three_eighteen : momentSum 3 18 = 607728448 := by
   rw [show (15 : Nat) + 1 = 16 from rfl, show (15 : Nat) + 2 = 17 from rfl,
     show (15 : Nat) + 3 = 18 from rfl,
     momentSum_three_fifteen, momentSum_three_sixteen, momentSum_three_seventeen] at h
+  norm_num at h
   omega
 
 end Omega

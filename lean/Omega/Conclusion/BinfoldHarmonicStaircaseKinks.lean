@@ -55,9 +55,10 @@ lemma conclusion_binfold_harmonic_staircase_kinks_reciprocal_tends_zero_of_const
   have hbase :
       Tendsto (fun n : ℕ => (1 / ((n : ℝ) + 1) : ℝ)) atTop (𝓝 0) :=
     tendsto_one_div_add_atTop_nhds_zero_nat
-  simpa [conclusion_binfold_harmonic_staircase_kinks_reciprocal_tends_zero,
-    conclusion_binfold_harmonic_staircase_kinks_reciprocal_sequence, one_div] using
-    tendsto_const_nhds.mul hbase
+  have hmul := hbase.const_mul c
+  rw [mul_zero] at hmul
+  simp_rw [one_div] at hmul
+  exact hmul
 
 /-- Paper label: `cor:conclusion-binfold-harmonic-staircase-kinks`. The kink set is the union of
 the two harmonic jump grids with constants `1` and `φ⁻¹`; the reciprocal sequences for both grids

@@ -26,7 +26,7 @@ noncomputable def scalarDilationCompatibleReadoutFamilyFlow :
     SymbolicLatentModularFlow CompatibleContinuousReadoutFamily where
   act := fun t ρ => scalarDilationTopCatAction t ρ
   continuous_act := by
-    simpa [scalarDilationTopCatAction_apply] using
+    simpa [scalarDilationTopCatAction] using
       continuous_scalarDilation_pullback
   zero_apply := by
     intro ρ
@@ -35,7 +35,8 @@ noncomputable def scalarDilationCompatibleReadoutFamilyFlow :
   add_apply := by
     intro s t ρ
     have h := scalarDilation_pullback_add_action t s ρ
-    simpa [add_comm] using h
+    rw [add_comm t s] at h
+    simpa [scalarDilationTopCatAction] using h
 
 @[simp] theorem scalarDilationCompatibleReadoutFamilyFlow_apply
     (t : ℝ) (ρ : CompatibleContinuousReadoutFamily) :

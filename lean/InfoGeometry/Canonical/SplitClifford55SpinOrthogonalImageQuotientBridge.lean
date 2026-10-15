@@ -123,9 +123,10 @@ theorem transportedSpinActionOrthogonal_kernel_eq_signSubgroup :
     (transportedSpinActionOrthogonal).ker =
       transportedSpinSignSubgroup := by
   ext g
-  rw [transportedSpinActionOrthogonal_mem_kernel_iff_pm_one]
-  change spinGroupTransportEquiv g = 1 ∨
-    spinGroupTransportEquiv g = negOneSpin ↔
+  apply (transportedSpinActionOrthogonal_mem_kernel_iff_pm_one g).trans
+  change
+    (spinGroupTransportEquiv g = 1 ∨
+      spinGroupTransportEquiv g = negOneSpin) ↔
       spinGroupTransportEquiv g ∈ (spinSignSubgroup : Subgroup Spin55)
   exact (mem_spinSignSubgroup_iff _).symm
 

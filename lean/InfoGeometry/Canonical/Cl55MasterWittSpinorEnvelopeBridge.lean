@@ -155,13 +155,13 @@ theorem embeddedSplitOctonionHodgeDirac_transpose :
         simpa [masterCreation, masterAnnihilation] using
           InfoGeometry.Canonical.Cl55WittCAR.creation_transpose 2]
   rw [show (masterAnnihilation 0)ᵀ = masterCreation 0 by
-        simpa using congrArg Matrix.transpose
+        simpa [masterAnnihilation, masterCreation] using congrArg Matrix.transpose
           (InfoGeometry.Canonical.Cl55WittCAR.creation_transpose 0).symm]
   rw [show (masterAnnihilation 1)ᵀ = masterCreation 1 by
-        simpa using congrArg Matrix.transpose
+        simpa [masterAnnihilation, masterCreation] using congrArg Matrix.transpose
           (InfoGeometry.Canonical.Cl55WittCAR.creation_transpose 1).symm]
   rw [show (masterAnnihilation 2)ᵀ = masterCreation 2 by
-        simpa using congrArg Matrix.transpose
+        simpa [masterAnnihilation, masterCreation] using congrArg Matrix.transpose
           (InfoGeometry.Canonical.Cl55WittCAR.creation_transpose 2).symm]
   abel
 
@@ -229,13 +229,13 @@ theorem embeddedSplitOctonionHodgeDirac_sq :
         (m₀ + m₁ + m₂) * (m₀ + m₁ + m₂) := by
       dsimp [embeddedSplitOctonionHodgeDirac, m₀, m₁, m₂,
         masterHodgeMode]
-      simp only [Matrix.add_mul, Matrix.mul_add, add_mul, mul_add]; abel
+      simp only [add_mul, mul_add]; abel
     _ =
         (m₀ * m₀ + m₁ * m₁ + m₂ * m₂) +
           ((m₀ * m₁ + m₁ * m₀) +
             (m₀ * m₂ + m₂ * m₀) +
             (m₁ * m₂ + m₂ * m₁)) := by
-      simp only [Matrix.add_mul, Matrix.mul_add, add_mul, mul_add]; abel
+      simp only [add_mul, mul_add]; abel
     _ = (3 : ℝ) • (1 : Mat32) := by
       rw [h₀, h₁, h₂, h₀₁, h₀₂, h₁₂]
       ext a b

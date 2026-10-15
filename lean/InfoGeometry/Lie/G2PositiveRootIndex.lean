@@ -57,11 +57,11 @@ theorem positiveNativeRootCount :
 abbrev PositiveNativeRoot := Set.range positiveNativeIndex
 abbrev PositiveNativeCoordinates := PositiveNativeRoot → F2
 
-def nativeRootCoordinate (r : PositiveNativeRoot) (t : F2) :
+noncomputable def nativeRootCoordinate (r : PositiveNativeRoot) (t : F2) :
     PositiveNativeCoordinates :=
   fun s => if s = r then t else 0
 
-def nativeRootSubgroup (r : PositiveNativeRoot) :
+noncomputable def nativeRootSubgroup (r : PositiveNativeRoot) :
     F2 →+ PositiveNativeCoordinates where
   toFun := nativeRootCoordinate r
   map_zero' := by

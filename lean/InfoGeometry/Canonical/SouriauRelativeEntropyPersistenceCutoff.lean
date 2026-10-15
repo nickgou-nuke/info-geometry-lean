@@ -104,8 +104,15 @@ theorem continuous_relativeEntropyCutoffQuotientMap
       (n := n) ε₁ 0 t).comp
         (continuous_relativeEntropyCoreSublevelCutoffInclusion
           (n := n) hε t)
-  simpa only [Function.comp_apply,
-    relativeEntropyCutoffQuotientMap_projection] using hcontinuous
+  have hmaps :
+      relativeEntropyCutoffQuotientMap (n := n) hε t ∘
+          relativeEntropySublevelQuotientProjection ε₂ 0 t =
+        relativeEntropySublevelQuotientProjection ε₁ 0 t ∘
+          relativeEntropyCoreSublevelCutoffInclusion hε t := by
+    funext p
+    exact relativeEntropyCutoffQuotientMap_projection hε t p
+  rw [hmaps]
+  exact hcontinuous
 
 /-- The cutoff quotient map as a bundled continuous map. -/
 def relativeEntropyCutoffQuotientContinuousMap

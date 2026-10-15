@@ -44,6 +44,9 @@ noncomputable def xi_log_defect_potential_poisson_primitive_poissonKernel (u s :
 
 /-- Package of the primitive identity, the closed-form Poisson smoothing, and the scale
 derivative formula. -/
+local instance instAddCommGroupReal_poisson : AddCommGroup ℝ := Real.normedAddCommGroup.toAddCommGroup
+local instance instModuleReal_poisson : Module ℝ ℝ := (NormedAlgebra.toNormedSpace ℝ).toModule
+
 def xi_log_defect_potential_poisson_primitive_data.package
     (D : xi_log_defect_potential_poisson_primitive_data) : Prop :=
   (∀ x,
@@ -109,10 +112,11 @@ theorem paper_xi_log_defect_potential_poisson_primitive
     have hargMinus : HasDerivAt (fun s : ℝ => s + 1 - D.δ) 1 t := by
       simpa [sub_eq_add_neg, add_assoc] using (hasDerivAt_id t).add_const (1 - D.δ)
     have hgPlusSq : HasDerivAt (fun s : ℝ => (s + 1 + D.δ) ^ 2) (2 * (t + 1 + D.δ)) t := by
-      simpa [pow_two, add_assoc, mul_comm, mul_left_comm, mul_assoc] using hargPlus.pow 2
+      convert hargPlus.pow 2 using 1
+      ring
     have hgMinusSq : HasDerivAt (fun s : ℝ => (s + 1 - D.δ) ^ 2) (2 * (t + 1 - D.δ)) t := by
-      simpa [pow_two, sub_eq_add_neg, add_assoc, mul_comm, mul_left_comm, mul_assoc] using
-        hargMinus.pow 2
+      convert hargMinus.pow 2 using 1
+      ring
     have hgPlus : HasDerivAt gPlus (2 * (t + 1 + D.δ)) t := by
       dsimp [gPlus]
       simpa using hgPlusSq.const_add (u ^ 2)
@@ -131,10 +135,14 @@ theorem paper_xi_log_defect_potential_poisson_primitive
       nlinarith [sq_nonneg u]
     have hlogPlus :
         HasDerivAt (fun s => Real.log (gPlus s)) ((gPlus t)⁻¹ * (2 * (t + 1 + D.δ))) t := by
-      simpa [gPlus] using (Real.hasDerivAt_log hgPlus_ne).comp t hgPlus
+      convert (Real.hasDerivAt_log hgPlus_ne).comp t hgPlus using 1
+      funext s
+      rfl
     have hlogMinus :
         HasDerivAt (fun s => Real.log (gMinus s)) ((gMinus t)⁻¹ * (2 * (t + 1 - D.δ))) t := by
-      simpa [gMinus] using (Real.hasDerivAt_log hgMinus_ne).comp t hgMinus
+      convert (Real.hasDerivAt_log hgMinus_ne).comp t hgMinus using 1
+      funext s
+      rfl
     have hmain :
         HasDerivAt
           (fun s =>
@@ -158,8 +166,10 @@ theorem paper_xi_log_defect_potential_poisson_primitive
           ((1 / 2 : ℝ) * ((gPlus t)⁻¹ * (2 * (t + 1 + D.δ))) -
             (1 / 2 : ℝ) * ((gMinus t)⁻¹ * (2 * (t + 1 - D.δ))))
           t := by
-      simpa [xi_log_defect_potential_poisson_primitive_smoothed, xiLogdefectPoissonPrimitive,
-        gPlus, gMinus, u] using hmain
+      convert hmain using 1
+      funext s
+      simp [xi_log_defect_potential_poisson_primitive_smoothed, xiLogdefectPoissonPrimitive,
+        gPlus, gMinus, u, xi_log_defect_potential_poisson_primitive_u]
     exact htarget ▸ (by simpa [u] using hmain')
 
 end

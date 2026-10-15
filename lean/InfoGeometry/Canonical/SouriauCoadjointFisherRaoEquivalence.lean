@@ -76,7 +76,11 @@ theorem continuousOn_souriauPsi_disk :
   have harg : ContinuousAt
       (fun q : ℝ × ℝ => 1 - (q.1 ^ 2 + q.2 ^ 2)) p := by
     fun_prop
-  simpa [souriauPsi] using (harg.log hden).neg.continuousWithinAt
+  have hlog : ContinuousAt (fun q : ℝ × ℝ => Real.log (1 - (q.1 ^ 2 + q.2 ^ 2))) p :=
+    harg.log hden
+  have hneg : ContinuousAt (fun q : ℝ × ℝ => -Real.log (1 - (q.1 ^ 2 + q.2 ^ 2))) p :=
+    hlog.neg
+  exact hneg.continuousWithinAt
 
 theorem continuousOn_poincareFisherMetric_disk (rho : ℝ) :
     ContinuousOn (fun p : ℝ × ℝ => poincareFisherMetric rho p.1 p.2)
@@ -576,7 +580,12 @@ theorem isClosed_diskRadiusSectionRange :
     isClosed_singleton.preimage hy
   have hnonneg : IsClosed ((fun p : PoincareDisk => p.1.1) ⁻¹' Set.Ici (0 : ℝ)) :=
     isClosed_Ici.preimage hx
-  simpa [diskRadiusSectionRange, Set.preimage, Set.mem_inter_iff] using hzero.inter hnonneg
+  have heq : diskRadiusSectionRange =
+      ((fun p : PoincareDisk => p.1.2) ⁻¹' ({0} : Set ℝ)) ∩
+      ((fun p : PoincareDisk => p.1.1) ⁻¹' Set.Ici (0 : ℝ)) := by
+    ext p; simp [diskRadiusSectionRange]
+  rw [heq]
+  exact hzero.inter hnonneg
 
 theorem diskRadiusSection_range_eq :
     Set.range diskRadiusSection = diskRadiusSectionRange := by
@@ -877,13 +886,10 @@ instance continuousSMul_diskSublevel (R : ℝ) :
     ContinuousSMul RotationCarrier (diskSublevel R) where
   continuous_smul := by
     apply Continuous.subtype_mk
-    change Continuous (fun gp : RotationCarrier × diskSublevel R =>
-      gp.1 • gp.2.1)
     have hpair : Continuous (fun gp : RotationCarrier × diskSublevel R =>
         (gp.1, gp.2.1)) :=
       continuous_fst.prodMk (continuous_subtype_val.comp continuous_snd)
-    simpa only [Function.comp_apply] using
-      continuous_poincareDiskRotationAction.comp hpair
+    exact continuous_poincareDiskRotationAction.comp hpair
 
 theorem diskSublevel_smul_apply (R : ℝ) (g : RotationCarrier)
     (p : diskSublevel R) :
@@ -894,11 +900,8 @@ def diskSublevelOrbitMap (R : ℝ) (p : diskSublevel R) :
     RotationCarrier → diskSublevel R := fun g => g • p
 
 theorem continuous_diskSublevelOrbitMap (R : ℝ) (p : diskSublevel R) :
-    Continuous (diskSublevelOrbitMap R p) := by
-  have hjoint : Continuous (fun gp : RotationCarrier × diskSublevel R =>
-      gp.1 • gp.2) := continuous_smul
-  simpa [diskSublevelOrbitMap] using
-    hjoint.comp (continuous_id.prodMk continuous_const)
+    Continuous (diskSublevelOrbitMap R p) :=
+  continuous_id.smul continuous_const
 
 theorem compact_diskSublevelOrbit (R : ℝ) (p : diskSublevel R) :
     IsCompact (Set.range (diskSublevelOrbitMap R p)) := by

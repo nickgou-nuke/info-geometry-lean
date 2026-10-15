@@ -17,26 +17,26 @@ namespace InfoGeometry.Algebra.ZornVectorMatrix
 
 variable {R : Type*} [CommRing R]
 
-private noncomputable def bundledAssociator
+private noncomputable abbrev bundledAssociator
     (X Y Z : ZornVectorMatrix R) : ZornVectorMatrix R :=
-  (X * Y) * Z - X * (Y * Z)
+  _root_.associator X Y Z
 
 private lemma bundledAssociator_add_left (X Y Z W : ZornVectorMatrix R) :
     bundledAssociator (X + Y) Z W =
       bundledAssociator X Z W + bundledAssociator Y Z W := by
-  simp only [bundledAssociator, _root_.add_mul]
+  simp only [bundledAssociator, _root_.associator_apply, _root_.add_mul]
   abel
 
 private lemma bundledAssociator_add_mid (X Y Z W : ZornVectorMatrix R) :
     bundledAssociator X (Y + Z) W =
       bundledAssociator X Y W + bundledAssociator X Z W := by
-  simp only [bundledAssociator, _root_.add_mul, _root_.mul_add]
+  simp only [bundledAssociator, _root_.associator_apply, _root_.add_mul, _root_.mul_add]
   abel
 
 private lemma bundledAssociator_add_right (X Y Z W : ZornVectorMatrix R) :
     bundledAssociator X Y (Z + W) =
       bundledAssociator X Y Z + bundledAssociator X Y W := by
-  simp only [bundledAssociator, _root_.mul_add]
+  simp only [bundledAssociator, _root_.associator_apply, _root_.mul_add]
   abel
 
 private lemma bundledAssociator_left_alt (X Y : ZornVectorMatrix R) :
@@ -85,8 +85,15 @@ private lemma teichmuller (A B C D : ZornVectorMatrix R) :
     bundledAssociator (A * B) C D - bundledAssociator A (B * C) D +
       bundledAssociator A B (C * D) - A * bundledAssociator B C D -
       bundledAssociator A B C * D = 0 := by
-  simp only [bundledAssociator]
-  noncomm_ring
+  have h := associator_cocycle A B C D
+  change _root_.associator (A * B) C D -
+    _root_.associator A (B * C) D +
+    _root_.associator A B (C * D) - A * _root_.associator B C D -
+    _root_.associator A B C * D = 0
+  have hn := congrArg Neg.neg h
+  simp only [neg_zero] at hn
+  abel_nf at hn ⊢
+  exact hn
 
 private lemma bundledAssociator_right_product (X Y Z : ZornVectorMatrix R) :
     bundledAssociator X Y (Z * X) = X * bundledAssociator X Y Z := by
@@ -99,7 +106,8 @@ private lemma bundledAssociator_right_product (X Y Z : ZornVectorMatrix R) :
     rw [bundledAssociator_left_alt X (Y * Z),
       bundledAssociator_left_alt X Y] at h1
     rw [show (0 : ZornVectorMatrix R) * Z = 0 from zero_mul Z] at h1
-    simpa only [_root_.add_zero, _root_.sub_zero] using h1
+    abel_nf at h1 ⊢
+    exact h1
   rw [bundledAssociator_swap23 (X * X) Z Y,
     bundledAssociator_swap23 X (X * Z) Y, bundledAssociator_left_alt,
     bundledAssociator_swap23 X Z Y, bundledAssociator_left_alt] at h2
@@ -107,8 +115,12 @@ private lemma bundledAssociator_right_product (X Y Z : ZornVectorMatrix R) :
       -bundledAssociator (X * X) Y Z + bundledAssociator X Y (X * Z) +
         X * bundledAssociator X Y Z = 0 := by
     rw [show (0 : ZornVectorMatrix R) * Y = 0 from zero_mul Y] at h2
-    simpa only [neg_neg, _root_.add_zero, _root_.sub_zero,
-      _root_.mul_neg, sub_neg_eq_add] using h2
+    change -bundledAssociator (X * X) Y Z -
+      -bundledAssociator X Y (X * Z) + 0 -
+      X * (-(bundledAssociator X Y Z)) - 0 = 0 at h2
+    simp only [_root_.mul_neg, neg_neg] at h2
+    abel_nf at h2 ⊢
+    exact h2
   have hfirst :
       bundledAssociator (X * Z) X Y = bundledAssociator X Y (X * Z) := by
     rw [bundledAssociator_swap12, bundledAssociator_swap23]
@@ -122,8 +134,8 @@ private lemma bundledAssociator_right_product (X Y Z : ZornVectorMatrix R) :
       bundledAssociator X Y (X * Z) + bundledAssociator X Y (Z * X) -
         bundledAssociator X (X * Y) Z - X * bundledAssociator X Y Z = 0 := by
     rw [show (0 : ZornVectorMatrix R) * Y = 0 from zero_mul Y] at h3
-    simpa only [neg_neg, _root_.add_zero, _root_.sub_zero,
-      _root_.mul_neg, sub_neg_eq_add] using h3
+    abel_nf at h3 ⊢
+    exact h3
   have hs :
       (bundledAssociator (X * X) Y Z - bundledAssociator X (X * Y) Z -
           X * bundledAssociator X Y Z) +
@@ -147,7 +159,6 @@ private lemma bundledAssociator_mul_right (X Y Z : ZornVectorMatrix R) :
   have h := teichmuller X Y Z X
   rw [bundledAssociator_flexible X (Y * Z),
     bundledAssociator_right_product X Y Z, bundledAssociator_cycle X Y Z] at h
-  simp only [_root_.sub_zero] at h
   have hz : bundledAssociator (X * Y) Z X - bundledAssociator X Y Z * X = 0 := by
     abel_nf at h ⊢
     exact h
@@ -162,12 +173,13 @@ theorem middle_moufang (X Y Z : ZornVectorMatrix R) :
   calc
     (X * Y) * (Z * X) =
         ((X * Y) * Z) * X - bundledAssociator (X * Y) Z X := by
-      simp only [bundledAssociator]
-      noncomm_ring
+      simp only [bundledAssociator, _root_.associator_apply]
+      abel_nf
     _ = ((X * Y) * Z) * X - bundledAssociator X Y Z * X := by rw [hxy]
     _ = (X * (Y * Z)) * X := by
-      simp only [bundledAssociator]
-      noncomm_ring
+      simp only [bundledAssociator, _root_.associator_apply]
+      rw [_root_.sub_mul]
+      abel_nf
     _ = X * ((Y * Z) * X) := by
       exact sub_eq_zero.mp hflex
 
@@ -191,12 +203,18 @@ theorem left_moufang (X Y Z : ZornVectorMatrix R) :
       (bundledAssociator Z (X * Z) Y + Z * bundledAssociator X Z Y) = 0 := by
       abel_nf at h_teich ⊢
       exact h_teich
-    rw [h_zero, sub_zero] at h_teich_rearr
-    exact h_teich_rearr
+    have h₁ := h_teich_rearr
+    have h₂ := h_zero
+    calc
+      bundledAssociator (Z * X) Z Y + bundledAssociator Z X (Z * Y) =
+          (bundledAssociator (Z * X) Z Y + bundledAssociator Z X (Z * Y) -
+            (bundledAssociator Z (X * Z) Y + Z * bundledAssociator X Z Y)) +
+          (bundledAssociator Z (X * Z) Y + Z * bundledAssociator X Z Y) := by abel
+      _ = 0 := by rw [h₁, h₂]; abel
   have h_def : bundledAssociator (Z * X) Z Y + bundledAssociator Z X (Z * Y) =
       ((Z * X) * Z) * Y - Z * (X * (Z * Y)) := by
-    simp only [bundledAssociator]
-    noncomm_ring
+    simp only [bundledAssociator, _root_.associator_apply]
+    abel
   rw [h_def] at h_sum
   exact (sub_eq_zero.mp h_sum).symm
 
@@ -218,12 +236,18 @@ theorem right_moufang (X Y Z : ZornVectorMatrix R) :
     rw [bundledAssociator_left_alt X (Y * Z), bundledAssociator_left_alt X Y] at h1
     rw [show (0 : ZornVectorMatrix R) * Z = 0 from zero_mul Z] at h1
     have e1 : bundledAssociator (X * X) Y Z - bundledAssociator X (X * Y) Z - X * bundledAssociator X Y Z = 0 := by
-      simpa only [_root_.add_zero, _root_.sub_zero] using h1
+      abel_nf at h1 ⊢
+      exact h1
     rw [bundledAssociator_swap23 (X * X) Z Y, bundledAssociator_swap23 X (X * Z) Y,
       bundledAssociator_left_alt, bundledAssociator_swap23 X Z Y, bundledAssociator_left_alt] at h2
     have e2 : -bundledAssociator (X * X) Y Z + bundledAssociator X Y (X * Z) + X * bundledAssociator X Y Z = 0 := by
       rw [show (0 : ZornVectorMatrix R) * Y = 0 from zero_mul Y] at h2
-      simpa only [neg_neg, _root_.add_zero, _root_.sub_zero, _root_.mul_neg, sub_neg_eq_add] using h2
+      change -bundledAssociator (X * X) Y Z -
+        -bundledAssociator X Y (X * Z) + 0 -
+        X * (-(bundledAssociator X Y Z)) - 0 = 0 at h2
+      simp only [_root_.mul_neg, neg_neg] at h2
+      abel_nf at h2 ⊢
+      exact h2
     have hs : (bundledAssociator (X * X) Y Z - bundledAssociator X (X * Y) Z - X * bundledAssociator X Y Z) +
       (-bundledAssociator (X * X) Y Z + bundledAssociator X Y (X * Z) + X * bundledAssociator X Y Z) = 0 := by
       rw [e1, e2, _root_.zero_add]
@@ -250,12 +274,18 @@ theorem right_moufang (X Y Z : ZornVectorMatrix R) :
       (bundledAssociator Y (X * Z) X + bundledAssociator Y X Z * X) = 0 := by
       abel_nf at h_teich ⊢
       exact h_teich
-    rw [h_zero, sub_zero] at h_teich_rearr
-    exact h_teich_rearr
+    have h₁ := h_teich_rearr
+    have h₂ := h_zero
+    calc
+      bundledAssociator (Y * X) Z X + bundledAssociator Y X (Z * X) =
+          (bundledAssociator (Y * X) Z X + bundledAssociator Y X (Z * X) -
+            (bundledAssociator Y (X * Z) X + bundledAssociator Y X Z * X)) +
+          (bundledAssociator Y (X * Z) X + bundledAssociator Y X Z * X) := by abel
+      _ = 0 := by rw [h₁, h₂]; abel
   have h_def : bundledAssociator (Y * X) Z X + bundledAssociator Y X (Z * X) =
       ((Y * X) * Z) * X - Y * (X * (Z * X)) := by
-    simp only [bundledAssociator]
-    noncomm_ring
+    simp only [bundledAssociator, _root_.associator_apply]
+    abel_nf
   rw [h_def] at h_sum
   exact sub_eq_zero.mp h_sum
 
@@ -293,10 +323,54 @@ theorem adjoint_component_composition
   change (X * Y) * conj Y = norm Y • X at hY
   have hZ := kirmse_left Z X
   change conj Z * (Z * X) = norm Z • X at hZ
-  simp only [_root_.sub_mul, _root_.mul_sub, smul_mul_assoc,
-    mul_smul_comm, smul_sub, smul_smul]
-  rw [hprod, hY, hZ]
-  module
+  change ZornVectorMatrix.sub
+      (ZornVectorMatrix.mul
+        (ZornVectorMatrix.sub (X * Y) (q • conj Z))
+        (ZornVectorMatrix.sub (Z * X) (p • conj Y)))
+      ((p * q - norm X) •
+        ZornVectorMatrix.sub (conj Z * conj Y) (r • X)) = _
+  rw [ZornVectorMatrix.sub_mul, ZornVectorMatrix.mul_sub,
+    ZornVectorMatrix.mul_sub]
+  have hprod' : ZornVectorMatrix.mul (ZornVectorMatrix.mul X Y)
+      (ZornVectorMatrix.mul Z X) =
+      ZornVectorMatrix.sub (trace ((X * Y) * Z) • X)
+        (norm X • ZornVectorMatrix.mul (conj Z) (conj Y)) := by
+    exact hprod
+  have hY' : ZornVectorMatrix.mul (ZornVectorMatrix.mul X Y) (conj Y) =
+      norm Y • X := hY
+  have hZ' : ZornVectorMatrix.mul (conj Z) (ZornVectorMatrix.mul Z X) =
+      norm Z • X := hZ
+  have hYp : ZornVectorMatrix.mul (ZornVectorMatrix.mul X Y)
+      (p • conj Y) = (p * norm Y) • X := by
+    calc
+      _ = p • ZornVectorMatrix.mul (ZornVectorMatrix.mul X Y) (conj Y) :=
+        ZornVectorMatrix.mul_smul p (ZornVectorMatrix.mul X Y) (conj Y)
+      _ = (p * norm Y) • X := by rw [hY', smul_smul]
+  have hZq : ZornVectorMatrix.mul (q • conj Z)
+      (ZornVectorMatrix.mul Z X) = (q * norm Z) • X := by
+    calc
+      _ = q • ZornVectorMatrix.mul (conj Z) (ZornVectorMatrix.mul Z X) :=
+        ZornVectorMatrix.smul_mul q (conj Z) (ZornVectorMatrix.mul Z X)
+      _ = (q * norm Z) • X := by rw [hZ', smul_smul]
+  have hcross : ZornVectorMatrix.mul (q • conj Z) (p • conj Y) =
+      (p * q) • ZornVectorMatrix.mul (conj Z) (conj Y) := by
+    calc
+      _ = q • ZornVectorMatrix.mul (conj Z) (p • conj Y) :=
+        ZornVectorMatrix.smul_mul q (conj Z) (p • conj Y)
+      _ = q • (p • ZornVectorMatrix.mul (conj Z) (conj Y)) := by
+        exact congrArg (fun W : ZornVectorMatrix R => q • W)
+          (ZornVectorMatrix.mul_smul p (conj Z) (conj Y))
+      _ = (p * q) • ZornVectorMatrix.mul (conj Z) (conj Y) := by
+        rw [smul_smul, mul_comm q p]
+  simp only [InfoGeometry.Algebra.zvm_mul_def] at hprod' hY' hZ' ⊢
+  rw [hprod', hYp, hZq, hcross]
+  simp only [ZornVectorMatrix.sub_eq_add_neg, sub_smul, smul_sub,
+    smul_add, smul_neg, smul_smul]
+  ext <;>
+    simp [_root_.sub_eq_add_neg, ZornVectorMatrix.sub_eq_add_neg,
+      ZornVectorMatrix.add, ZornVectorMatrix.neg,
+      ZornVectorMatrix.smul] <;>
+    ring
 
 /-- The cyclic diagonal component of the cubic adjoint identity. -/
 theorem adjoint_diagonal_composition

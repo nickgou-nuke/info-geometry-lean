@@ -63,8 +63,14 @@ def SL2BoundaryMatrix.inv
   matrix := !![M.matrix 1 1, -M.matrix 0 1;
     -M.matrix 1 0, M.matrix 0 0]
   det_eq_one := by
+    have hdet := M.det_eq_one
+    change M.matrix 0 0 * M.matrix 1 1 -
+      M.matrix 0 1 * M.matrix 1 0 = 1 at hdet
     simp [det2]
-    simpa [mul_comm] using M.det_eq_one
+    calc
+      _ = M.matrix 0 0 * M.matrix 1 1 -
+          M.matrix 0 1 * M.matrix 1 0 := by ring
+      _ = 1 := hdet
 
 instance {R : Type*} [CommRing R] : Inv (SL2BoundaryMatrix R) :=
   ⟨SL2BoundaryMatrix.inv⟩
@@ -83,7 +89,8 @@ theorem SL2BoundaryMatrix.mul_inv
         simp [Matrix.mul_apply, Fin.sum_univ_two, det2]
         ring
       _ = 1 := by
-        simpa [det2, sub_eq_add_neg, add_comm] using M.det_eq_one
+        change det2 M.matrix = 1
+        exact M.det_eq_one
   · simp [Matrix.mul_apply, Fin.sum_univ_two]
     ring
   · simp [Matrix.mul_apply, Fin.sum_univ_two]
@@ -130,8 +137,9 @@ theorem SL2BoundaryMatrix.identity_onBoundary
     SL2BoundaryMatrix.identity.onBoundary p = p := by
   refine Quotient.inductionOn p ?_
   intro q
-  simpa [SL2BoundaryMatrix.onBoundary_mk] using
-    congrArg projectiveBoundaryMk (SL2BoundaryMatrix.identity_applyPair q)
+  change projectiveBoundaryMk
+    (SL2BoundaryMatrix.identity.applyPair q) = projectiveBoundaryMk q
+  exact congrArg projectiveBoundaryMk (SL2BoundaryMatrix.identity_applyPair q)
 
 structure SL2BoundaryFlow (R : Type*) [CommRing R] where
   act : ℝ → SL2BoundaryMatrix R

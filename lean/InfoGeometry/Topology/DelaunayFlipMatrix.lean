@@ -51,15 +51,11 @@ theorem flip_inverse_identity (i k j l : ι) (hik : i ≠ k) (hjl : j ≠ l) :
     flipInverseStatement labels i k j l hik hjl := by
   unfold flipInverseStatement flipBlock
   ext a b
-  fin_cases a <;> fin_cases b <;> simp [Matrix.mul_apply, Fin.sum_univ_two]
-  · field_simp [labels.nonzero_den hik, labels.nonzero_den hjl]
-    ring
-  · field_simp [labels.nonzero_den hik, labels.nonzero_den hjl]
-    ring
-  · field_simp [labels.nonzero_den hik, labels.nonzero_den hjl]
-    ring
-  · field_simp [labels.nonzero_den hik, labels.nonzero_den hjl]
-    ring
+  change (∑ t : Fin 2, flipBlock labels i k j l hik a t *
+      flipBlock labels j l i k hjl t b) = _
+  fin_cases a <;> fin_cases b <;>
+    simp [flipBlock, Fin.sum_univ_two] <;>
+    field_simp [labels.nonzero_den hik, labels.nonzero_den hjl] <;> ring
 
 /-- Embed a local `2 × 2` flip block in the upper-left slot of a `4 × 4` matrix. -/
 def upperLeftEmbed2 (A : Matrix (Fin 2) (Fin 2) ℚ) : Matrix (Fin 4) (Fin 4) ℚ :=
@@ -87,9 +83,10 @@ theorem flip_far_commute_embedded_blocks
     upperLeftEmbed2 A * lowerRightEmbed2 B =
       lowerRightEmbed2 B * upperLeftEmbed2 A := by
   ext a b
+  change (∑ k : Fin 4, upperLeftEmbed2 A a k * lowerRightEmbed2 B k b) =
+    ∑ k : Fin 4, lowerRightEmbed2 B a k * upperLeftEmbed2 A k b
   fin_cases a <;> fin_cases b <;>
-    simp [upperLeftEmbed2, lowerRightEmbed2, Matrix.mul_apply, Matrix.dotProduct, Fin.sum_univ_four]
-  all_goals ring
+    simp [upperLeftEmbed2, lowerRightEmbed2, Fin.sum_univ_four]
 
 /-- 3. Pentagon Identity target.  The exact five-flip embedding remains open. -/
 def pentagonStatement (_i _j _k _l _m : ι)

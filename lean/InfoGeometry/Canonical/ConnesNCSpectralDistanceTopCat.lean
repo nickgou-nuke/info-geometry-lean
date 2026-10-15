@@ -30,7 +30,7 @@ def commutatorTopCatHom (D : A) :
           continuous_const.mul continuous_id
         have hright : Continuous (fun a : A => a * D) :=
           continuous_id.mul continuous_const
-        simpa [CuntzConnesSpectralDistance.commutator] using hleft.sub hright }
+        exact hleft.sub hright }
 
 @[simp] theorem commutatorTopCatHom_apply (D a : A) :
     commutatorTopCatHom D a = CuntzConnesSpectralDistance.commutator D a :=

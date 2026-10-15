@@ -15,9 +15,16 @@ inductive Archetype
   | thermalWeights
   | subspacePreservation
   | outlierDamping
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
 
 open Archetype
+
+instance : Fintype Archetype where
+  elems := {centeredGeometry, inverseDistance, thermalWeights,
+    subspacePreservation, outlierDamping}
+  complete := by
+    intro x
+    cases x <;> simp
 
 def prerequisites : Archetype → Finset Archetype
   | centeredGeometry => {centeredGeometry}
@@ -201,8 +208,10 @@ theorem hasFDerivAt_annealedObjective
     point cutoff temperature temperature_pos
     (fun line => hasFDerivAt_distance (observed line) point (regular line))
   convert derivative using 1
-  ext direction
-  simp [weightedScore, thermalWeights, compoundWeight, div_eq_mul_inv, mul_assoc]
+  · rfl
+  · ext direction
+    simp [innerSL_apply_apply, weightedScore, thermalWeights, compoundWeight,
+      div_eq_mul_inv, mul_assoc]
 
 theorem annealed_stationary_iff_fixed [Nonempty Line]
     (observed : Line → Space) (point : Space) (cutoff temperature : ℝ)

@@ -40,14 +40,20 @@ def fullPin55CliffordAlgEquiv (g : FullPin55) : Cl55 ≃ₐ[ℝ] Cl55 :=
 twisted-adjoint vector action used by the `O(5,5)` representation. -/
 @[simp] theorem fullPin55CliffordAlgEquiv_ι (g : FullPin55) (v : V55) :
     fullPin55CliffordAlgEquiv g (ι55 v) = ι55 (twistedVector g v) := by
-  simp [fullPin55CliffordAlgEquiv, fullPin55Isometry]
+  simp [fullPin55CliffordAlgEquiv, fullPin55Isometry,
+    CliffordAlgebra.equivOfIsometry, CliffordAlgebra.map_apply_ι,
+    twistedVectorEquiv, twistedVectorLinear]
+  change ι55 (twistedVector g v) = ι55 (twistedVector g v)
+  rfl
 
 /-- The algebra lift and the matrix orthogonal representation have the same
 action on the ten-dimensional vector carrier. -/
 theorem fullPin55_matrix_vector_readback (g : FullPin55) (v : V55) :
-    ((fullPinToO55 g : O55) : M10ˣ).val.mulVec (v55Fin10Equiv v) =
+    ((fullPinToO55 g : RealOrthogonalGroup55.O55) :
+      SplitOctonionTKK55.M10ˣ).val.mulVec (v55Fin10Equiv v) =
       v55Fin10Equiv (twistedVector g v) := by
-  simpa [fullPinToO55_coe] using fullPinMatrix_mulVec g v
+  rw [fullPinToO55_coe]
+  exact fullPinMatrix_mulVec g v
 
 /-- The CAR number operator transported by a real Pin element. -/
 def fullPin55TransportedNumberOperator (g : FullPin55) : Cl55 :=
@@ -105,17 +111,17 @@ theorem fullPin55_transports_five_grade_lanes
     rw [← fullPin55_grade_transport g 2]
     exact ⟨creation55 i * creation55 j,
       creation55_mul_creation55_mem_grade_two i j,
-      (fullPin55CliffordAlgEquiv g).map_mul _ _⟩
+      rfl⟩
   · intro i j
     rw [← fullPin55_grade_transport g 0]
     exact ⟨creation55 i * annihilation55 j,
       creation55_mul_annihilation55_mem_grade_zero i j,
-      (fullPin55CliffordAlgEquiv g).map_mul _ _⟩
+      rfl⟩
   · intro i j
     rw [← fullPin55_grade_transport g (-2)]
     exact ⟨annihilation55 i * annihilation55 j,
       annihilation55_mul_annihilation55_mem_grade_neg_two i j,
-      (fullPin55CliffordAlgEquiv g).map_mul _ _⟩
+      rfl⟩
 
 end InfoGeometry.Clifford.Clifford55
 

@@ -22,10 +22,18 @@ theorem paper_pom_forbidden_pair_fib_gap (k : ℕ) (hk : 5 ≤ k) :
         {S : Omega.PathIndSets k // v1 ∈ S.1 ∧ v4 ∈ S.1} :=
     { toFun := fun x =>
         ⟨Omega.xEquivPathIndSet k x.1, by
-          constructor <;> simp [Omega.xEquivPathIndSet, Omega.wordSupport, x.2.1, x.2.2]⟩
+          constructor
+          · change v1 ∈ Omega.wordSupport x.1
+            simpa [Omega.wordSupport] using x.2.1
+          · change v4 ∈ Omega.wordSupport x.1
+            simpa [Omega.wordSupport] using x.2.2⟩
       invFun := fun S =>
         ⟨(Omega.xEquivPathIndSet k).symm S.1, by
-          constructor <;> simp [Omega.xEquivPathIndSet, Omega.indSetToWord, S.2.1, S.2.2]⟩
+          constructor
+          · change (if v1 ∈ S.1.1 then true else false) = true
+            simp [S.2.1]
+          · change (if v4 ∈ S.1.1 then true else false) = true
+            simp [S.2.2]⟩
       left_inv := by
         intro x
         apply Subtype.ext
@@ -39,10 +47,18 @@ theorem paper_pom_forbidden_pair_fib_gap (k : ℕ) (hk : 5 ≤ k) :
         {S : Omega.PathIndSets k // v0 ∈ S.1 ∧ v3 ∈ S.1} :=
     { toFun := fun x =>
         ⟨Omega.xEquivPathIndSet k x.1, by
-          constructor <;> simp [Omega.xEquivPathIndSet, Omega.wordSupport, x.2.1, x.2.2]⟩
+          constructor
+          · change v0 ∈ Omega.wordSupport x.1
+            simpa [Omega.wordSupport] using x.2.1
+          · change v3 ∈ Omega.wordSupport x.1
+            simpa [Omega.wordSupport] using x.2.2⟩
       invFun := fun S =>
         ⟨(Omega.xEquivPathIndSet k).symm S.1, by
-          constructor <;> simp [Omega.xEquivPathIndSet, Omega.indSetToWord, S.2.1, S.2.2]⟩
+          constructor
+          · change (if v0 ∈ S.1.1 then true else false) = true
+            simp [S.2.1]
+          · change (if v3 ∈ S.1.1 then true else false) = true
+            simp [S.2.2]⟩
       left_inv := by
         intro x
         apply Subtype.ext

@@ -68,7 +68,7 @@ theorem paper_xi_hankel_cofactor_syndrome_single_coordinate
   have xi_hankel_cofactor_syndrome_single_coordinate_kernel :
       H.mulVec u = 0 := by
     ext i
-    simpa [H, u, hdet,
+    simpa [H, u, hdet, Matrix.mulVec, Matrix.mul_apply, dotProduct,
       xi_hankel_cofactor_syndrome_single_coordinate_cofactor_column] using
       congrFun (congrFun (Matrix.mul_adjugate H) i) (Fin.last d)
   have xi_hankel_cofactor_syndrome_single_coordinate_last_coordinate :

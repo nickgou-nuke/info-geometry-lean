@@ -24,9 +24,9 @@ a canonical differential form, or Yang--Baxter synthesis.
    - Consecutive minor cyclicity and non-vanishing of kinematic brackets.
 
 3. **Scalar pole cancellation and reciprocal-difference identity**:
-   - `P_sq * bcfwChannelResidue = ML * MR` holds when `P_sq ≠ 0`.
+   - `P_sq * scalarChannelQuotient = ML * MR` holds when `P_sq ≠ 0`.
    - The Arnold relation here is a rational identity, not a cohomology theorem:
-     $$\omega_{12} \wedge \omega_{23} + \omega_{23} \wedge \omega_{31} + \omega_{31} \wedge \omega_{12} = 0$$
+     $$\omega_{12}\omega_{23} + \omega_{23}\omega_{31} + \omega_{31}\omega_{12} = 0$$
 
 Canonical-form construction and geometric residue interpretation remain open
 development tasks; no theorem in this module establishes them.
@@ -87,38 +87,45 @@ theorem pluckerMinor_smul {n : ℕ} (r : ℝ) (C : Matrix (Fin 2) (Fin n) ℝ)
   simp [pluckerMinor, smul_eq_mul]
   ring
 
-/-! ### 3. BCFW On-Shell Factorization & Arnold-Cohen Relations -/
+/-! ### 3. Scalar Channel Cancellation & Arnold Rational Identity -/
 
-/-- BCFW tree-level amplitude pole channel propagator residue. -/
-def bcfwChannelResidue (ML MR : ℝ) (P_sq : ℝ) : ℝ :=
+/-- Scalar channel expression consisting of two factors and a nonzero
+    denominator. This is only an algebraic model; it is not a meromorphic
+    amplitude or a residue. -/
+def scalarChannelQuotient (ML MR : ℝ) (P_sq : ℝ) : ℝ :=
   ML * (1 / P_sq) * MR
 
-/-- 🏆 THEOREM 5 (BCFW On-Shell Residue Multiplicity):
-    $\operatorname{Res}_{P^2 \to 0} [P^2 \cdot M_n] = M_L \cdot M_R$. -/
-theorem bcfw_pole_residue (ML MR P_sq : ℝ) (hP : P_sq ≠ 0) :
-    P_sq * bcfwChannelResidue ML MR P_sq = ML * MR := by
-  unfold bcfwChannelResidue
+/-- Clearing a nonzero scalar denominator in `scalarChannelQuotient` recovers
+    the product of the two factors. This cancellation identity does not
+    evaluate a residue at the excluded value `P_sq = 0`. -/
+theorem scalarChannelQuotient_denominator_cancel
+    (ML MR P_sq : ℝ) (hP : P_sq ≠ 0) :
+    P_sq * scalarChannelQuotient ML MR P_sq = ML * MR := by
+  unfold scalarChannelQuotient
   calc P_sq * (ML * (1 / P_sq) * MR)
     _ = (P_sq * (1 / P_sq)) * (ML * MR) := by ring
     _ = 1 * (ML * MR) := by rw [mul_one_div_cancel hP]
     _ = ML * MR := by ring
 
-/-- Arnold-Cohen mixed 3-point relation in differential cohomology:
-    $\omega_{12} \omega_{23} + \omega_{23} \omega_{31} + \omega_{31} \omega_{12} = 0$. -/
-def arnoldCohenCocycle (w12 w23 w31 : ℝ) : ℝ :=
+/-- Scalar polynomial used in the reciprocal-difference identity below.
+    No differential-form or cohomology structure is asserted here. -/
+def arnoldCohenScalarExpression (w12 w23 w31 : ℝ) : ℝ :=
   w12 * w23 + w23 * w31 + w31 * w12
 
-/-- Logarithmic differential forms $\omega_{ij} = \frac{1}{z_i - z_j}$. -/
+/-- Scalar reciprocal-difference coefficient $\omega_{ij} = 1/(z_i-z_j)$.
+    This is a coefficient function, not itself a differential form. -/
 def logDiffForm (z1 z2 : ℝ) : ℝ :=
   1 / (z1 - z2)
 
-/-- 🏆 THEOREM 6 (Arnold-Cohen BCFW Cohomology Syzygy):
-    For any distinct kinematic points $z_1, z_2, z_3 \in \mathbb{R}$,
+/-- For pairwise distinct real inputs, the displayed reciprocal-difference
+    scalar expression vanishes. This rational identity is not a cohomology
+    theorem or a BCFW recursion relation:
     $\frac{1}{z_1 - z_2}\frac{1}{z_2 - z_3} + \frac{1}{z_2 - z_3}\frac{1}{z_3 - z_1} + \frac{1}{z_3 - z_1}\frac{1}{z_1 - z_2} = 0$. -/
-theorem arnold_cohen_syzygy (z1 z2 z3 : ℝ)
+theorem arnold_cohen_reciprocal_identity (z1 z2 z3 : ℝ)
     (h12 : z1 ≠ z2) (h23 : z2 ≠ z3) (h31 : z3 ≠ z1) :
-    arnoldCohenCocycle (logDiffForm z1 z2) (logDiffForm z2 z3) (logDiffForm z3 z1) = 0 := by
-  unfold arnoldCohenCocycle logDiffForm
+    arnoldCohenScalarExpression
+      (logDiffForm z1 z2) (logDiffForm z2 z3) (logDiffForm z3 z1) = 0 := by
+  unfold arnoldCohenScalarExpression logDiffForm
   have hz12 : z1 - z2 ≠ 0 := sub_ne_zero.mpr h12
   have hz23 : z2 - z3 ≠ 0 := sub_ne_zero.mpr h23
   have hz31 : z3 - z1 ≠ 0 := sub_ne_zero.mpr h31

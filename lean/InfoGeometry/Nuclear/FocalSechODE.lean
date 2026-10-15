@@ -23,7 +23,11 @@ theorem hasDerivAt_sechProfile (x : ℝ) :
     HasDerivAt sechProfile (sechSlope x) x := by
   have h := (hasDerivAt_const x (1 : ℝ)).div
     (Real.hasDerivAt_cosh x) (ne_of_gt (Real.cosh_pos x))
-  simpa [sechProfile, sechSlope] using h
+  convert h using 1
+  · rfl
+  ·
+    dsimp [sechSlope]
+    ring
 
 theorem deriv_sechProfile : deriv sechProfile = sechSlope :=
   funext fun x => (hasDerivAt_sechProfile x).deriv
@@ -35,7 +39,10 @@ theorem hasDerivAt_sechSlope_raw (x : ℝ) :
   have hc : Real.cosh x ≠ 0 := ne_of_gt (Real.cosh_pos x)
   have h := ((Real.hasDerivAt_sinh x).neg).div
     ((Real.hasDerivAt_cosh x).pow 2) (pow_ne_zero 2 hc)
-  convert h using 1; dsimp [sechSlope]; field_simp [hc]; ring
+  convert h using 1
+  · rfl
+  · norm_num
+    field_simp [hc]
 
 theorem hasDerivAt_sechSlope (x : ℝ) :
     HasDerivAt sechSlope (sechProfile x - 2 * sechProfile x ^ 3) x := by

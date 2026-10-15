@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.Analysis.Calculus.Deriv.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!

@@ -55,7 +55,7 @@ theorem affineSuperBracket_zero_gives_sigma3 :
     affineSuperBracket (0 : ℂ) Z2Parity.odd Z2Parity.odd σPlus σMinus = σ3c := by
   rw [affineSuperBracket_sigmaPlus_sigmaMinus]
   norm_num
-  simpa using PPlus_sub_PMinus
+  simpa only [sub_eq_add_neg] using PPlus_sub_PMinus
 
 /-- β = ½: the affine bracket gives the pure particle projector N₊.
 This is the Fermi surface — only the particle sector survives. -/

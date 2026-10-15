@@ -113,10 +113,10 @@ theorem sigmaTensor_descent_condition (n : ℕ) (primes : Fin n → ℕ) (t : �
     by_cases hij : i = j
     · subst hij
       rw [mul_comm (modularPhaseInv (primes i) t), modularPhase_mul_inv, one_smul]
-      simpa [map_one (sigmaTensor n primes t)] using
+      simpa [cuntzMk, map_one (sigmaTensor n primes t)] using
         RingQuot.mkAlgHom_rel ℂ (CuntzRel.orth i i)
     · have h0 : (cuntzMk n) (Sdag n i * S n j) = (cuntzMk n) 0 := by
-        simpa [hij] using RingQuot.mkAlgHom_rel ℂ (CuntzRel.orth i j)
+        simpa [cuntzMk, hij] using RingQuot.mkAlgHom_rel ℂ (CuntzRel.orth i j)
       calc
         (cuntzMk n) ((modularPhaseInv (primes i) t * modularPhase (primes j) t) • (Sdag n i * S n j))
             = (modularPhaseInv (primes i) t * modularPhase (primes j) t) • (cuntzMk n) (Sdag n i * S n j) := by rw [map_smul]
@@ -146,8 +146,13 @@ noncomputable def sigma (n : ℕ) (primes : Fin n → ℕ) (t : ℝ) : CuntzAlg 
 
 lemma sigma_mk' (n : ℕ) (primes : Fin n → ℕ) (t : ℝ) (x : CuntzTensor n) :
     sigma n primes t ((RingQuot.mkAlgHom ℂ (CuntzRel n)) x) = (RingQuot.mkAlgHom ℂ (CuntzRel n)) (sigmaTensor n primes t x) := by
-  dsimp [sigma, cuntzMk]
-  simp [RingQuot.liftAlgHom_mkAlgHom_apply, AlgHom.comp_apply]
+  change ((RingQuot.liftAlgHom ℂ)
+      ⟨(RingQuot.mkAlgHom ℂ (CuntzRel n)).comp (sigmaTensor n primes t),
+        sigmaTensor_descent_condition n primes t⟩)
+      ((RingQuot.mkAlgHom ℂ (CuntzRel n)) x) = _
+  exact RingQuot.liftAlgHom_mkAlgHom_apply ℂ
+    ((RingQuot.mkAlgHom ℂ (CuntzRel n)).comp (sigmaTensor n primes t))
+    (s := CuntzRel n) (sigmaTensor_descent_condition n primes t) x
 
 @[simp] lemma sigma_cuntzS (n : ℕ) (primes : Fin n → ℕ) (t : ℝ) (i : Fin n) :
     sigma n primes t (cuntzS n i) = modularPhase (primes i) t • cuntzS n i := by

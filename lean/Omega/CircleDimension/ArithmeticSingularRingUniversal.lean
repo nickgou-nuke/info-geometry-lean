@@ -56,7 +56,9 @@ theorem paper_cdim_arithmetic_singular_ring_universal
     funext g
     apply Subtype.ext
     apply Prod.ext
-    · simpa [Function.comp, arithmeticSingularRingFst] using congrFun hgamma.1 g
-    · simpa [Function.comp, arithmeticSingularRingSnd] using congrFun hgamma.2 g
+    · change (gamma g).1.1 = alpha g
+      exact congrFun hgamma.1 g
+    · change (gamma g).1.2 = beta g
+      exact congrFun hgamma.2 g
 
 end Omega.CircleDimension

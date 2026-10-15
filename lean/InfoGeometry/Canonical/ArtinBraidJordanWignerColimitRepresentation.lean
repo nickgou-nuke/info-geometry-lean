@@ -54,7 +54,7 @@ def majoranaMode (i : ℕ) : Limit :=
     (limit_uv_anticomm i)
 
 /-- Distinct stable Majorana modes anticommute. -/
-private theorem add_add_anticommute_of_pairwise
+theorem add_add_anticommute_of_pairwise
     {A : Type*} [Ring A] (a b c d : A)
     (hac : a * c + c * a = 0) (had : a * d + d * a = 0)
     (hbc : b * c + c * b = 0) (hbd : b * d + d * b = 0) :
@@ -153,7 +153,7 @@ def majoranaBraidUnit (i : ℕ) : Limitˣ where
 
 /-! Algebraic Clifford lemmas used by the Artin calculation. -/
 
-private theorem adjacent_majorana_artin
+theorem adjacent_majorana_artin
     {A : Type*} [Ring A] (a b c : A)
     (ha : a * a = 1) (hb : b * b = 1) (hc : c * c = 1)
     (hab : a * b + b * a = 0)

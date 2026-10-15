@@ -89,7 +89,7 @@ theorem leftGenerator_readback :
     (canonical (E := E)).target.J =
       InfoGeometry.Krein.cl11Rep (E := E)
         (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (1, 0)) := by
-  simpa using Quantum.doubledSpaceCl11Action_J_eq_cl11Rep_leftGenerator (E := E)
+  simpa [canonical] using Quantum.doubledSpaceCl11Action_J_eq_cl11Rep_leftGenerator (E := E)
 
 /-- The split pseudoscalar reads back to doubled `ε`. -/
 @[rep_depth krein]
@@ -98,7 +98,7 @@ theorem pseudoscalar_readback :
       InfoGeometry.Krein.cl11Rep (E := E)
         (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (1, 0) *
           CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (0, 1)) := by
-  simpa using Quantum.doubledSpaceCl11Action_eps_eq_cl11Rep_pseudoscalar (E := E)
+  simpa [canonical] using Quantum.doubledSpaceCl11Action_eps_eq_cl11Rep_pseudoscalar (E := E)
 
 /-- The split right generator reads back to doubled `K = J ∘ ε`. -/
 @[rep_depth krein]
@@ -106,7 +106,7 @@ theorem rightGenerator_readback :
     (canonical (E := E)).target.K =
       InfoGeometry.Krein.cl11Rep (E := E)
         (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (0, 1)) := by
-  simpa using Quantum.doubledSpaceCl11Action_K_eq_cl11Rep_rightGenerator (E := E)
+  simpa [canonical] using Quantum.doubledSpaceCl11Action_K_eq_cl11Rep_rightGenerator (E := E)
 
 /-- The doubled phase axis squares to `-1`, matching the derived matrix phase channel. -/
 @[rep_depth krein]

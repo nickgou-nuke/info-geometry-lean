@@ -38,7 +38,8 @@ theorem hasDerivAt_relativeModularSurprisal_exp_tilting
       (-v) t := by
   have h_log :=
     hasDerivAt_log_exp_tilting rho0 v t h_pos
-  simpa [relativeModularSurprisal] using h_log.neg
+  simp only [relativeModularSurprisal, div_one]
+  exact h_log.neg
 
 /-! ## Operatorial modular generator -/
 

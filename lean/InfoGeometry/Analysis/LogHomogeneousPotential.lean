@@ -55,7 +55,10 @@ theorem hasDerivAt_log_radial (c : ℝ) (hc : 0 < c) (d : ℕ) (r : ℝ) (hr : 0
 theorem radial_second_derivative (d : ℕ) (r : ℝ) (hr : 0 < r) :
     HasDerivAt (fun s : ℝ => -(d : ℝ) / s) ((d : ℝ) / r ^ 2) r := by
   convert (hasDerivAt_inv (ne_of_gt hr)).const_mul (-(d : ℝ)) using 1
-  simp [div_eq_mul_inv]
+  · funext y
+    simp [div_eq_mul_inv]
+  · rw [div_eq_mul_inv]
+    ring
 
 /-- A barrier sublevel bound gives a quantitative gap only when such a bound is supplied. -/
 theorem sublevel_gap {E : Type*} (q : E → ℝ) (x : E) (hx : 0 < q x)

@@ -21,11 +21,11 @@ def f2ToBit (z : F2) : Bool := z = 1
 
 @[simp] theorem f2ToBit_bitToF2 (b : Bool) :
     f2ToBit (bitToF2 b) = b := by
-  cases b <;> simp [f2ToBit, bitToF2]
+  cases b <;> rfl
 
 theorem bitToF2_f2ToBit (z : F2) :
     bitToF2 (f2ToBit z) = z := by
-  fin_cases z <;> simp [f2ToBit, bitToF2]
+  fin_cases z <;> rfl
 
 def carrierToVec (X : SplitOctF2) : Fin 8 → F2 :=
   fun i => bitToF2 ((splitOctF2EquivBits X) i)
@@ -318,7 +318,7 @@ theorem swapCartanMatrix_action (X : SplitOctF2) :
   simp only [carrierToVec, vecToCarrier, swapCartanMatrix_mulVec]
   fin_cases i <;>
     simp [swapCartanIndex, splitOctF2EquivBits, splitOctF2ToBits,
-      splitOctF2OfBits, bitToF2, f2ToBit, swapCartanFun]
+      splitOctF2OfBits, swapCartanFun]
 
 theorem swapCartanIndex_involutive (i : Fin 8) :
     swapCartanIndex (swapCartanIndex i) = i := by
@@ -406,7 +406,7 @@ theorem longRootMatrix_action (X : SplitOctF2) :
   simp only [carrierToVec, vecToCarrier, longRootMatrix_mulVec]
   fin_cases i <;>
     simp [splitOctF2EquivBits, splitOctF2ToBits, splitOctF2OfBits,
-      bitToF2, f2ToBit, unipotentLong, add2] <;>
+      bitToF2_add, unipotentLong, add2] <;>
     cases x1 <;> cases x2 <;> cases y1 <;> cases y2 <;> rfl
 
 
@@ -487,7 +487,7 @@ theorem shortRootMatrix_action (X : SplitOctF2) :
   simp only [carrierToVec, vecToCarrier, shortRootMatrix_mulVec]
   fin_cases i <;>
     simp [splitOctF2EquivBits, splitOctF2ToBits, splitOctF2OfBits,
-      bitToF2, f2ToBit, unipotentShort, add2] <;>
+      bitToF2_add, unipotentShort, add2] <;>
     cases x0 <;> cases x1 <;> cases y0 <;> cases y1 <;> rfl
 
 theorem shortRootMatrix_mulVec_involutive (v : Fin 8 → F2) :
@@ -626,7 +626,7 @@ theorem cycle012Matrix_action (X : SplitOctF2) :
   simp only [carrierToVec, vecToCarrier, cycle012Matrix_mulVec]
   fin_cases i <;>
     simp [splitOctF2EquivBits, splitOctF2ToBits, splitOctF2OfBits,
-      bitToF2, f2ToBit, cycle012Fun]
+      cycle012Fun]
 
 theorem cycle012Matrix_bijective :
     Function.Bijective cycle012Matrix.mulVec := by
@@ -709,7 +709,7 @@ theorem swap01Matrix_action (X : SplitOctF2) :
   simp only [carrierToVec, vecToCarrier, swap01Matrix_mulVec]
   fin_cases i <;>
     simp [splitOctF2EquivBits, splitOctF2ToBits, splitOctF2OfBits,
-      bitToF2, f2ToBit, swap01Fun]
+      swap01Fun]
 
 theorem swap01Matrix_mulVec_involutive (v : Fin 8 → F2) :
     swap01Matrix.mulVec (swap01Matrix.mulVec v) = v := by

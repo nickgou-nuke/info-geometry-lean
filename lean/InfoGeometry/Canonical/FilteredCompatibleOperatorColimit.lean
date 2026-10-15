@@ -136,12 +136,12 @@ def algebraicOperatorReal :
         ℝ I E
         (fun _ _ hij => realTransition E sys hij)
         i (T.op i x) := by
-  simpa only [stageOperatorToDirectLimitRealMap,
-    stageToDirectLimitLinearMap] using
-    (Module.DirectLimit.lift_of
+  rw [algebraicOperatorReal,
+    Module.DirectLimit.lift_of
       (g := stageOperatorToDirectLimitRealMap E sys T)
       (stageOperatorToDirectLimitRealMap_compatible E sys T)
-      (i := i) x)
+      (i := i) x]
+  rfl
 
 /-- The descended operator is complex-linear; complex scalar multiplication
 was itself descended from the same transition system. -/

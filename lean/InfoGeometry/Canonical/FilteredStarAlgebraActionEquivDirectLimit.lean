@@ -77,7 +77,8 @@ noncomputable def algebraicColimitActionEquiv (t : ℤ) :
 
 @[simp] theorem algebraicColimitActionEquiv_zero :
     algebraicColimitActionEquiv Stage sys A 0 =
-      (StarAlgEquiv.refl :
+      (StarAlgEquiv.refl ℂ
+        (FilteredStarAlgebraDirectLimit.AlgebraicStarDirectLimit Stage sys) :
         FilteredStarAlgebraDirectLimit.AlgebraicStarDirectLimit Stage sys ≃⋆ₐ[ℂ]
           FilteredStarAlgebraDirectLimit.AlgebraicStarDirectLimit Stage sys) := by
   ext x
@@ -99,7 +100,8 @@ theorem algebraicColimitActionEquiv_add (s t : ℤ) :
 @[simp] theorem algebraicColimitActionEquiv_neg_trans (t : ℤ) :
     (algebraicColimitActionEquiv Stage sys A (-t)).trans
         (algebraicColimitActionEquiv Stage sys A t) =
-      (StarAlgEquiv.refl :
+      (StarAlgEquiv.refl ℂ
+        (FilteredStarAlgebraDirectLimit.AlgebraicStarDirectLimit Stage sys) :
         FilteredStarAlgebraDirectLimit.AlgebraicStarDirectLimit Stage sys ≃⋆ₐ[ℂ]
           FilteredStarAlgebraDirectLimit.AlgebraicStarDirectLimit Stage sys) := by
   ext x
@@ -115,7 +117,8 @@ theorem algebraicColimitActionEquiv_add (s t : ℤ) :
 @[simp] theorem algebraicColimitActionEquiv_trans_neg (t : ℤ) :
     (algebraicColimitActionEquiv Stage sys A t).trans
         (algebraicColimitActionEquiv Stage sys A (-t)) =
-      (StarAlgEquiv.refl :
+      (StarAlgEquiv.refl ℂ
+        (FilteredStarAlgebraDirectLimit.AlgebraicStarDirectLimit Stage sys) :
         FilteredStarAlgebraDirectLimit.AlgebraicStarDirectLimit Stage sys ≃⋆ₐ[ℂ]
           FilteredStarAlgebraDirectLimit.AlgebraicStarDirectLimit Stage sys) := by
   ext x

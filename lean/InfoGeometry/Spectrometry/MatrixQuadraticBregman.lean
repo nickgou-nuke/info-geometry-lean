@@ -1,5 +1,6 @@
 import InfoGeometry.Amari.DuallyFlatThermodynamics
 import InfoGeometry.Spectrometry.MatrixFixedScaleLeastSquares
+import Mathlib.Analysis.Convex.Mul
 
 namespace InfoGeometry.Spectrometry.MatrixQuadraticBregman
 
@@ -17,7 +18,11 @@ def squarePotential : ConvexFunctional ℝ where
 theorem square_potential_canonical_divergence (first second : ℝ) :
     canonicalDivergence squarePotential first second = (second - first) ^ 2 := by
   have derivative : HasDerivAt squarePotential.F (2 * first) first := by
-    simpa [squarePotential] using (hasDerivAt_id first).pow 2
+    change HasDerivAt (fun value : ℝ => value ^ 2) (2 * first) first
+    convert (hasDerivAt_id first).pow 2 using 1
+    · funext value
+      rfl
+    · simp [id_eq]
   have gradient_eq : squarePotential.grad first = 2 * first := by
     simpa [ConvexFunctional.grad] using derivative.hasGradientAt.gradient
   rw [canonical_divergence_eq_bregman, gradient_eq]

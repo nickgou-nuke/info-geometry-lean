@@ -88,10 +88,13 @@ theorem propagator_eq_normedSpace_exp
     change V.connectionGenerator.comp V.connectionGenerator =
       ContinuousLinearMap.id ℝ H₂
     exact R.generator_sq hg
-  simpa [propagator] using
-    (InfoGeometry.Physics.HestenesKreinOperatorCalculus.exp_of_sq_eq_one
-      V.connectionGenerator hsq eta)
+  rw [InfoGeometry.Physics.HestenesKreinOperatorCalculus.exp_of_sq_eq_one
+    V.connectionGenerator hsq eta]
+  apply ContinuousLinearMap.ext
+  intro z
+  simp [propagator]
 
+omit [CompleteSpace E] in
 theorem propagator_zero
     (R : SplitOctonionBoostRepresentation (E := E) g V) :
     R.propagator 0 = ContinuousLinearMap.id ℝ H₂ := by
@@ -115,7 +118,7 @@ theorem propagator_add
         (Real.cosh t • z + Real.sinh t • V.connectionGenerator z) =
     Real.cosh (s + t) • z +
       Real.sinh (s + t) • V.connectionGenerator z
-  simp [map_add, map_smul]
+  simp
   rw [hK]
   rw [Real.cosh_add, Real.sinh_add]
   module

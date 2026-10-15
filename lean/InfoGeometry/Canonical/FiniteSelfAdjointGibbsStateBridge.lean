@@ -20,6 +20,9 @@ density carrier is introduced.
 
 noncomputable section
 set_option autoImplicit false
+set_option synthInstance.maxHeartbeats 300000
+set_option maxHeartbeats 800000
+set_option linter.style.haveILetI false
 
 namespace InfoGeometry.Canonical.FiniteSelfAdjointGibbsStateBridge
 
@@ -85,7 +88,7 @@ theorem star_tracedExponential_of_isSelfAdjoint
     star (tracedExponential H) = tracedExponential H := by
   letI : NormedAlgebra ℚ (Operator n) :=
     NormedAlgebra.restrictScalars ℚ ℂ (Operator n)
-  unfold tracedExponential
+  change star (finiteOperatorTrace (NormedSpace.exp H)) = finiteOperatorTrace (NormedSpace.exp H)
   rw [← finiteOperatorTrace_star]
   rw [NormedSpace.star_exp, hH.star_eq]
 
@@ -238,9 +241,8 @@ theorem hasDerivAt_realLogPartitionLine_eq_expectation
     {n : ℕ} [Nonempty (Fin n)]
     (H T : Operator n) (hH : IsSelfAdjoint H) :
     HasDerivAt (realLogPartitionLine H T)
-      (realOperatorExpectation H T) 0 := by
-  simpa [realLogPartitionLine, realOperatorExpectation] using
-    (hasDerivAt_logPartitionLine_eq_expectation_of_isSelfAdjoint
-      H T hH).real_of_complex
+      (realOperatorExpectation H T) 0 :=
+  (hasDerivAt_logPartitionLine_eq_expectation_of_isSelfAdjoint
+    H T hH).real_of_complex
 
 end InfoGeometry.Canonical.FiniteSelfAdjointGibbsStateBridge

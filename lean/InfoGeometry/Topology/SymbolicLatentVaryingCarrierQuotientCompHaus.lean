@@ -131,13 +131,13 @@ noncomputable def compactSymbolicLatentObservationQuotientRangeCompHausNaturalIs
       intro S T F
       letI : CompactSpace S.systemObject.carrier := S.compactSpace
       letI : CompactSpace T.systemObject.carrier := T.compactSpace
-      have hFF : (compHausToTop).FullyFaithful := by
-        simpa using (CompHausLike.fullyFaithfulCompHausLikeToTop (fun _ => True))
-      apply hFF.map_injective
-      simpa only [Functor.map_comp,
-        compactSymbolicLatentObservationQuotientCompHausHom_forget,
-        symbolicObservationQuotientCompHausIso_hom_forget,
-        compactSymbolicLatentObservationRangeCompHausFunctor_map_forget] using
+      apply ConcreteCategory.hom_ext
+      intro q
+      change symbolicObservationQuotientRangeMap T.systemObject.system
+          (F.toNative.toNative.quotientMap q) =
+        symbolicObservationQuotientRangeMapOfMorphism F.toNative.toNative
+          (symbolicObservationQuotientRangeMap S.systemObject.system q)
+      exact congrArg (fun f => f.hom q)
         (symbolicObservationQuotientRangeMapOfMorphism_quotient_natural
           F.toNative.toNative).symm)
 

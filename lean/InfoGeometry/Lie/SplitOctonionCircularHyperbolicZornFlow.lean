@@ -34,7 +34,7 @@ def circularNormQuad (x : Fin 8 → ℝ) : ℝ :=
 /-- The coordinate hyperbolic flow is an isometry of the circular quadratic form. -/
 theorem circularNormQuad_hyperbolicFlow (t : ℝ) (x : Fin 8 → ℝ) :
     circularNormQuad (hyperbolicFlowCoordinate t x) = circularNormQuad x := by
-  dsimp [circularNormQuad, hyperbolicFlowCoordinate, hyperbolicScale]
+  simp only [circularNormQuad, hyperbolicFlowCoordinate_apply]
   have hw0 : axialWeight 0 = 0 := rfl
   have hw4 : axialWeight 4 = 0 := rfl
   rw [hw0, hw4]
@@ -47,17 +47,19 @@ theorem circularNormQuad_hyperbolicFlow (t : ℝ) (x : Fin 8 → ℝ) :
   have hw5 : axialWeight ⟨i.val + 5, by omega⟩ = -1 := by
     fin_cases i <;> rfl
   rw [hw1, hw5]
-  change (Real.exp (t * 1) * _) * (Real.exp (t * -1) * _) = _
-  rw [mul_one, show t * -1 = -t by ring]
-  calc
-    (Real.exp t * x ⟨i.val + 1, _⟩) * (Real.exp (-t) * x ⟨i.val + 5, _⟩)
-      = (Real.exp t * Real.exp (-t)) * (x ⟨i.val + 1, _⟩ * x ⟨i.val + 5, _⟩) := by ring
-    _ = Real.exp (t + -t) * (x ⟨i.val + 1, _⟩ * x ⟨i.val + 5, _⟩) := by
-      rw [← Real.exp_add]
-    _ = Real.exp 0 * (x ⟨i.val + 1, _⟩ * x ⟨i.val + 5, _⟩) := by
-      rw [add_neg_cancel]
-    _ = x ⟨i.val + 1, _⟩ * x ⟨i.val + 5, _⟩ := by
-      rw [Real.exp_zero, one_mul]
+  have hcancel : (Real.exp (t * 1) * x ⟨i.val + 1, by omega⟩) * (Real.exp (t * -1) * x ⟨i.val + 5, by omega⟩) =
+      x ⟨i.val + 1, by omega⟩ * x ⟨i.val + 5, by omega⟩ := by
+    calc
+      (Real.exp (t * 1) * x ⟨i.val + 1, _⟩) * (Real.exp (t * -1) * x ⟨i.val + 5, _⟩)
+        = (Real.exp t * Real.exp (-t)) * (x ⟨i.val + 1, _⟩ * x ⟨i.val + 5, _⟩) := by
+        ring_nf
+      _ = Real.exp (t + -t) * (x ⟨i.val + 1, _⟩ * x ⟨i.val + 5, _⟩) := by
+        rw [← Real.exp_add]
+      _ = Real.exp 0 * (x ⟨i.val + 1, _⟩ * x ⟨i.val + 5, _⟩) := by
+        rw [add_neg_cancel]
+      _ = x ⟨i.val + 1, _⟩ * x ⟨i.val + 5, _⟩ := by
+        rw [Real.exp_zero, one_mul]
+  exact hcancel
 
 /-- The hyperbolic exponential flow on CanonicalZorn, pulled back from circular coordinates. -/
 def hyperbolicFlowZorn (t : ℝ) : CanonicalZorn →ₗ[ℝ] CanonicalZorn :=
@@ -133,10 +135,11 @@ noncomputable def hyperbolicFlowZornEquiv (t : ℝ) :
   invFun := hyperbolicFlowZorn (-t)
   left_inv := by
     intro X
-    exact LinearMap.congr_fun (hyperbolicFlowZorn_neg t) X
+    simpa only [LinearMap.comp_apply, LinearMap.id_apply] using
+      LinearMap.congr_fun (hyperbolicFlowZorn_neg t) X
   right_inv := by
     intro X
-    simpa only [neg_neg] using
+    simpa only [neg_neg, LinearMap.comp_apply, LinearMap.id_apply] using
       LinearMap.congr_fun (hyperbolicFlowZorn_neg (-t)) X
   map_add' := (hyperbolicFlowZorn t).map_add
   map_smul' := (hyperbolicFlowZorn t).map_smul

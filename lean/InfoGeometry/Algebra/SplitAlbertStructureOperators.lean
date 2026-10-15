@@ -16,6 +16,8 @@ namespace InfoGeometry.Algebra.SplitAlbertStructureOperators
 open InfoGeometry.Algebra
 open InfoGeometry.Algebra.H3Zorn
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 abbrev JordanCarrier := H3Zorn ℝ
 abbrev Operator := Module.End ℝ JordanCarrier
 /- The derivation carrier is exposed directly from its native owner. -/

@@ -396,6 +396,6 @@ theorem SL2Z_AutomorphyFactor_T_eq_one
     ∀ τ : RealUpperHalfPlane,
       SL2Z_AutomorphyFactor J hsmul matrixT τ = 1 := by
   intro τ
-  simpa [SL2Z_AutomorphyFactor] using hT τ
+  exact hT τ
 
 end InfoGeometry.Algebraic

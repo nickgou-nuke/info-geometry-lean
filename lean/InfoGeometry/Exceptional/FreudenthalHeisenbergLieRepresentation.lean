@@ -1,5 +1,8 @@
 import InfoGeometry.Exceptional.FreudenthalHeisenbergZeroGradeAction
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Algebra.Lie.OfAssociative
+
+attribute [local instance 100] LieRing.ofAssociativeRing LieAlgebra.ofAssociativeAlgebra
 
 /-!
 # The zero-grade Heisenberg representation

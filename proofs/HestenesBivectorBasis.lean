@@ -236,10 +236,11 @@ theorem bivector_disjoint_scalarPseudoscalar :
 theorem finrank_scalarPseudoscalarSubmodule :
     Module.finrank ℝ scalarPseudoscalarSubmodule = 2 := by
   have hli : LinearIndependent ℝ scalarPseudoscalarAlg := by
-    simpa [scalarPseudoscalarAlg] using
-      scalarPseudoscalar_linearIndependent.map'
-        (Submodule.subtype (CliffordAlgebra.evenOdd Q14 0))
-        (LinearMap.ker_eq_bot.mpr (Submodule.injective_subtype _))
+    change LinearIndependent ℝ
+      ((Submodule.subtype (CliffordAlgebra.evenOdd Q14 0)) ∘ scalarPseudoscalar)
+    exact scalarPseudoscalar_linearIndependent.map'
+      (Submodule.subtype (CliffordAlgebra.evenOdd Q14 0))
+      (LinearMap.ker_eq_bot.mpr (Submodule.injective_subtype _))
   let b := Module.Basis.span hli
   exact Module.finrank_eq_card_basis b
 

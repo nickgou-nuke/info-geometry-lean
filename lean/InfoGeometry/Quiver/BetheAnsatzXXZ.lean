@@ -6,7 +6,7 @@ Comm. Math. Phys. 403(2), 1005-1068 (2023)
 
 XXZ Bethe Ansatz equations and QQ-system
 -/
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Finset.Basic
 import Mathlib.Algebra.Polynomial.Basic

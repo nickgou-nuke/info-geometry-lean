@@ -1,42 +1,108 @@
 ---
 name: opengauss_commands
 description: >-
-  Provides the 9 native OpenGauss capabilities (/prove, /golf, /refactor, /autoformalize, etc.)
-  directly into the Antigravity context, powered by the lean-lsp-mcp backend.
+  Provides the extended OpenGauss / TeamAntigravity capabilities (15 commands: /prove, /check, /refute,
+  /draft, /review, /checkpoint, /refactor, /golf, /autoprove, /formalize, /autoformalize, /handoff,
+  /discover, /quarantine, /certify) directly into the Antigravity subagent context, powered by
+  tools/infra/opengauss_cli.py, tools/infra/opengauss_screener.py, the 17-Trap Catalog, and the
+  Assume-and-Recurse Top-Down Protocol.
 ---
 
-# OpenGauss Native Workflows
+# OpenGauss Native Workflows & TeamAntigravity Subagent Protocol
 
-This skill natively integrates the OpenGauss mathematical theorem orchestration system into your agent.
+This skill integrates the local **TeamAntigravity extension** of [`math-inc/opengauss`](https://github.com/math-inc/opengauss) (`OpenGauss/`).
 
-When the user requests an OpenGauss workflow (e.g. "Run /prove on X"), you must act as the requested OpenGauss subagent, utilizing your `lean-lsp-mcp` tools to accomplish the task exactly as the original `gauss_cli` Python logic would.
+Whereas upstream `math-inc/opengauss` provides a TUI wrapper (`gauss`) and PTY `SwarmManager` over the **9 `cameronfreer/lean4-skills` commands** (`/prove`, `/draft`, `/review`, `/checkpoint`, `/refactor`, `/golf`, `/autoprove`, `/formalize`, `/autoformalize`), this repository extends the protocol to **15 native CLI commands** (`python3 tools/infra/opengauss_cli.py`), an **automated 17-Trap Static Screener** (`python3 tools/infra/opengauss_screener.py`), and a **3-Tier TeamAntigravity Subagent Swarm** (`invoke_subagent` / `define_subagent` / `send_message`) governed by:
+- **Assume-and-Recurse Top-Down Protocol**: [`../../reference/TOP_DOWN_PROTOCOL.md`](../../reference/TOP_DOWN_PROTOCOL.md)
+- **17-Trap Catalog (T1–T17)**: [`../../reference/TRAP_CATALOG.md`](../../reference/TRAP_CATALOG.md)
+- **Extended Protocol Policy**: [`../../../../docs/policy/OPENGAUSS_PROTOCOL_EXTENSIONS.md`](../../../../docs/policy/OPENGAUSS_PROTOCOL_EXTENSIONS.md)
 
-## 1. `/prove` (Guided Prover)
-- **Role**: Interactive cycle-by-cycle proof engine.
-- **Workflow**: Check theorems via LSP, identify `sorry` bounds, write small helper lemmas, verify via `lake env`.
+---
 
-## 2. `/draft` (Skeleton Drafter)
-- **Role**: Converts informal math into Lean declaration skeletons with `sorry`.
+## Upstream `math-inc/opengauss` vs. Local TeamAntigravity Extension
 
-## 3. `/review` (Read-Only Auditor)
-- **Role**: Non-destructive code, axiom, and proof quality review.
+| Dimension | Upstream `math-inc/opengauss` | Local TeamAntigravity Protocol |
+|---|---|---|
+| **Command Surface** | 9 `lean4-skills` slash commands (`/prove`, `/draft`, `/review`, `/checkpoint`, `/refactor`, `/golf`, `/autoprove`, `/formalize`, `/autoformalize`) + `/swarm` | **15 deterministic CLI + subagent commands** (adds `/discover`, `/check`, `/refute`, `/handoff`, `/quarantine`, `/certify`) |
+| **Swarm Runtime** | `OpenGauss/swarm_manager.py` spawning background `claude --dangerously-skip-permissions` PTY sessions | Native **TeamAntigravity Subagents** (`invoke_subagent`) in a 3-Tier hierarchy (Leader → Orchestrator → Sandbox Worker Swarm) |
+| **Write Isolation** | Child sessions mutate the active project root directly | **Subagent Sandbox Mandate**: subagents write strictly to `scratch/` or `proofs/` sandboxes; only the Orchestrator promotes verified diffs |
+| **Adversarial Gate** | Read-only `/review` after drafting | Paired **Prover + Refuter** subagents + static **17-Trap Screener** (`T1–T17`) at Gate 2 & Gate 2.5 |
+| **Failure Handling** | `trajectory_compressor.py` + shadow git rollback | **Pillar II Residue Quarantine** (`/quarantine`) emitting `TypedObstructionPacket` JSONs into `artifacts/residue_quarantine/` |
+| **Build & Axiom Gate** | Uncoordinated `lake` calls inside child sessions | Single-flight `run_locked_lake_build.py --wait-for-build-lock` + companion `*Audit.lean` (`#print axioms` $\subseteq$ `[propext, Classical.choice, Quot.sound]`) |
 
-## 4. `/checkpoint` (State Saver)
-- **Role**: Saves state into a verified checkpoint after compiling and checking axioms.
+---
 
-## 5. `/refactor` (Proof Refactorer)
-- **Role**: Extracts reusable named lemmas, simplifies monolithic proofs.
+## The 15 OpenGauss / TeamAntigravity Commands
 
-## 6. `/golf` (Proof Optimizer)
-- **Role**: Compresses proofs, replacing slow `simp` or `native_decide` tactics with terms/`rfl`.
+### 1. `/prove` (Top-Down Assume-and-Recurse Prover)
+- **Role**: Recursive top-down theorem decomposition engine (`opengauss_cli.py prove`).
+- **Workflow**:
+  1. Define headline theorem signature.
+  2. Posit consumer-minimal helper lemmas (Anti-T11 Law).
+  3. Compile the parent glue immediately (`by exact ...`).
+  4. Dispatch sandboxed worker subagents (`Prover` paired with `Refuter`) to close leaf lemmas.
+  5. Verify `#print axioms` consists strictly of `[propext, Classical.choice, Quot.sound]`.
 
-## 7. `/autoprove` (Autonomous Prover)
-- **Role**: Unattended multi-cycle proof engine.
+### 2. `/check` (Ground-Truthed Counterexample Hunter & Consistency Auditor)
+- **Role**: Discovers counterexamples, contradictory/vacuous hypotheses, $\exists\forall$ quantifier inversions (T2/T2′), and signature clashes (T13) before proofs are attempted (`opengauss_cli.py check`).
 
-## 8. `/formalize` (Interactive Synthesis)
-- **Role**: Two-phase workflow (drafting + guided proving) requiring user interaction.
+### 3. `/refute` (Adversarial False-as-Stated Screener — 17-Trap Catalog)
+- **Role**: Adversarially screens Lean 4 files or directories against the **17 False-as-Stated Traps** (`opengauss_cli.py refute <paths> --strict`):
+  - **T1**: Raw chart-coordinate extraction off-basepoint.
+  - **T2/T2′**: Free-family quantifiers & $\exists\forall$ inversion.
+  - **T3**: Global flatness / locally constant charts (`HasLocallyConstantChartAt`).
+  - **T4**: Vacuous binders & degenerate hypotheses (`0 = 0`, `True`, `x = x`).
+  - **T5**: Localized headline leaks.
+  - **T6**: Hypothesis packaging (hypothesis identical to conclusion closed via `exact h`).
+  - **T7**: Family-as-input vs. existential output.
+  - **T8**: Per-fibre vs. joint continuity.
+  - **T9**: Two-sided interval derivatives on cutoffs (`HasDerivAt` on `Icc`/`Ici`).
+  - **T10**: $C^\infty$ at boundary over-demand.
+  - **T11**: Over-strong / non-tensorial posits.
+  - **T12**: Multi-conjunct $\exists$-freedom over-constraints.
+  - **T13**: Metric signature & orientation clashes.
+  - **T14**: Constant factor & dimension scaling mismatches.
+  - **T15**: Definitional expansion loops (`dsimp`/`unfold` on `TensorTower`/`Colimit`/`Quotient`).
+  - **T16**: Semantic Surrogate / Scalar Toy Proxy (4 sub-gates: scalar trace/det proxy structs, pre-commutator homomorphism collapse, carrier-matched non-commutativity witness requirement, and scalar tactic misuse `ring`/`linarith` on unprojected operators).
+  - **T17**: Unwitnessed Structure / Model Non-Degeneracy Risk (Gate 2.5: every `structure`/`class` must have a closed constructive inhabitant or `Inhabited` instance untainted by `axiom`/`sorry` or ambient variables).
 
-## 9. `/autoformalize` (Autonomous Formalization)
-- **Role**: End-to-end translation of CAS/informal text into fully verified Lean code.
+### 4. `/draft` (Skeleton Drafter)
+- **Role**: Generates Lean 4 declaration skeletons with explicit leaf `sorry` lemmas and glued parent theorem (`opengauss_cli.py draft`).
 
-*You now possess 1-to-1 operational equivalence with OpenGauss.*
+### 5. `/review` (Independent QMS Read-Only Auditor)
+- **Role**: Non-destructive static preflight audit under `QMS-SOP-IAA-001` (`opengauss_cli.py review <paths> --gate GATE_2|GATE_4`). Note: `GATE_4` static review reports `STATIC_REVIEW_PASSED_KERNEL_UNVERIFIED` until paired with locked Lean compilation and `#print axioms` verification.
+
+### 6. `/checkpoint` (State Saver & Continuous Tracker)
+- **Role**: Records repository state and stages specified paths (`git add`) to protect work against loss (`opengauss_cli.py checkpoint`).
+
+### 7. `/refactor` (Proof Refactorer & DAG Redundancy Cleaner)
+- **Role**: Scans for monolithic proof blocks (>25 lines) violating the Lean File Size & Lemma Reuse Mandate and suggests helper extractions (`opengauss_cli.py refactor <path>`).
+
+### 8. `/golf` (Proof Optimizer)
+- **Role**: Scans for redundant tactic sequences (`simp; ring`, `by exact rfl`, `simp only [id]`) and suggests direct replacements (`opengauss_cli.py golf <path>`).
+
+### 9. `/autoprove` (Autonomous Multi-Cycle Engine)
+- **Role**: Tracks open `sorry` counts and dead routes across cycles (`opengauss_cli.py autoprove <target>`), automatically re-hydrating banned directions from `artifacts/residue_quarantine/`.
+
+### 10. `/formalize` (Two-Phase Interactive Synthesis)
+- **Role**: Aligns informal mathematical specifications with canonical categorical owners (`TensorTowerColimit`, `SolderingIsomorphism`, etc.) and screens for traps before synthesis (`opengauss_cli.py formalize --spec "..." --phase 1|2`).
+
+### 11. `/autoformalize` (End-to-End CAS to Lean Candidate Translator)
+- **Role**: Translates symbolic CAS identities (SymPy, Macaulay2, GAP) into candidate Lean 4 theorems (`opengauss_cli.py autoformalize --cas sympy --expr "..." --name "..."`).
+
+### 12. `/handoff` (Cross-Session Context Preserver)
+- **Role**: Serializes active targets, verified checkpoints, dead routes, and next actions into an M10 Anti-Compaction handoff markdown (`opengauss_cli.py handoff`).
+
+### 13. `/discover` (Pre-Flight Declaration & Carrier Hunter — Gate 0)
+- **Role**: Scans `lean/InfoGeometry/` and Mathlib for existing structures, classes, defs, and lemmas matching a query to prevent structural duplication (`opengauss_cli.py discover --query "..."`).
+
+### 14. `/quarantine` (Rejected Route & Residue Obstruction Isolator — Pillar II)
+- **Role**: Packages a refuted statement or trap violation into an immutable `TypedObstructionPacket` JSON in `artifacts/residue_quarantine/` (`opengauss_cli.py quarantine --file ... --trap ... --desc ... --counter ... --constraint ...`).
+
+### 15. `/certify` (Companion Axiom Certification Script Generator — Pillar IV)
+- **Role**: Extracts public theorem/lemma names with their active namespace scopes and emits a companion `#print axioms` script. `--verify-kernel` builds the owner and checks the audit under the shared build lock; without it, output is only a static script candidate.
+- **CLI**: `certify --file FILE [--write-audit] [--verify-kernel] [--json]`.
+
+---
+
+*Equipped with 1-to-1 operational equivalence with upstream `math-inc/opengauss` plus the 6 TeamAntigravity adversarial, discovery, quarantine, and certification extensions.*

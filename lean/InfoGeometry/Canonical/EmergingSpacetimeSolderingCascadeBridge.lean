@@ -26,8 +26,10 @@ This module formalizes the comprehensive 4-layer Soldering Hierarchy in native L
    satisfying $\det(e_\theta) = \cosh^2\theta - \sinh^2\theta = 1$ (Area/Volume preservation)
    and thermal horizon scaling under chiral lightcone projection.
 
-5. **On-Shell Klein Quadric Null Boundary:**
+5. **Minkowski null boundary via a Hermitian determinant:**
    Lightlike vectors $v \in V$ satisfy $Q(v) = 0 \iff \det(\theta(v)) = 0$.
+   This determinant readout is distinct from the exterior-power Plücker
+   equation for decomposable bivectors.
 
 The finite algebraic identities below are checked by Lean; geometric and
 physical interpretations remain conditional on their stated carrier data.

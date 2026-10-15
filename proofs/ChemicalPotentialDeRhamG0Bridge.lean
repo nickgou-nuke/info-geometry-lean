@@ -155,7 +155,11 @@ theorem chemical_potential_mixed_alpha_beta_coupling
 basis into even/odd labels.  A concrete pullback can instantiate the labels. -/
 inductive MobiusParity where
   | even | odd
-  deriving DecidableEq, Repr, Inhabited, Fintype
+  deriving DecidableEq, Repr, Inhabited
+
+instance : Fintype MobiusParity where
+  elems := {MobiusParity.even, MobiusParity.odd}
+  complete x := by cases x <;> simp
 
 /-- A finite label for product-basis classes with a supplied Möbius
 parity assignment. -/

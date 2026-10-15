@@ -1,6 +1,7 @@
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Algebra.Opposite
+import Mathlib.Algebra.RingQuot
 import Mathlib.Algebra.Star.StarAlgHom
 import Mathlib.LinearAlgebra.TensorAlgebra.Basic
 
@@ -90,9 +91,13 @@ def T (i : ι) : CuntzAlg R ι := mk (R := R) (T₀ (R := R) i)
 
 /-- In the quotient, `Tᵢ Sⱼ = δᵢⱼ`. -/
 theorem T_mul_S (i j : ι) : T (R := R) i * S (R := R) j = if i = j then 1 else 0 := by
-  change mk (R := R) (T₀ (R := R) i) * mk (R := R) (S₀ (R := R) j) = _
+  change RingQuot.mkAlgHom R (@Rel R ι _ _ _) (T₀ (R := R) i) *
+    RingQuot.mkAlgHom R (@Rel R ι _ _ _) (S₀ (R := R) j) = _
   rw [← map_mul]
-  simpa using RingQuot.mkAlgHom_rel R (Rel.ortho (R := R) i j)
+  rw [RingQuot.mkAlgHom_rel R (Rel.ortho (R := R) i j)]
+  change RingQuot.mkAlgHom R (@Rel R ι _ _ _)
+      (if i = j then 1 else 0) = (if i = j then 1 else 0)
+  split_ifs <;> simp
 
 /-- In the quotient, the range projections sum to one. -/
 theorem partition_one : (∑ i : ι, S (R := R) i * T (R := R) i) = 1 := by
@@ -103,7 +108,10 @@ theorem partition_one : (∑ i : ι, S (R := R) i * T (R := R) i) = 1 := by
     _ = mk (R := R) (∑ i : ι, S₀ (R := R) i * T₀ (R := R) i) := by
       exact (map_sum (mk (R := R)) (fun i : ι => S₀ (R := R) i * T₀ (R := R) i) Finset.univ).symm
     _ = 1 := by
-      simpa using RingQuot.mkAlgHom_rel R (Rel.partition (R := R) (ι := ι))
+      change RingQuot.mkAlgHom R (@Rel R ι _ _ _) _ = _
+      rw [RingQuot.mkAlgHom_rel R (Rel.partition (R := R) (ι := ι))]
+      change RingQuot.mkAlgHom R (@Rel R ι _ _ _) 1 = 1
+      exact map_one _
 
 variable [Semiring A] [Algebra R A]
 
@@ -300,9 +308,10 @@ omit [Fintype ι] [DecidableEq ι] in
   change Finsupp.mapDomain (letterSwap (ι := ι))
       (Finsupp.mapDomain (letterSwap (ι := ι)) x) = x
   rw [← Finsupp.mapDomain_comp]
-  convert Finsupp.mapDomain_id (v := x) using 2
-  ext a
-  cases a <;> rfl
+  have hswap : letterSwap (ι := ι) ∘ letterSwap (ι := ι) = id := by
+    funext a
+    cases a <;> rfl
+  rw [hswap, Finsupp.mapDomain_id]
 
 /-- The algebraic Cuntz quotient carries the formal adjoint operation
 `Sᵢ ↦ Tᵢ`, `Tᵢ ↦ Sᵢ`. -/

@@ -30,10 +30,12 @@ theorem lieDerivative_commutes_exteriorDerivative_end
     (d iota_X : Module.End R (ExteriorAlgebra R V))
     (hd2 : d.comp d = 0) :
     d.comp (lieDerivativeEnd d iota_X) = (lieDerivativeEnd d iota_X).comp d := by
-  ext omega
-  simp only [lieDerivativeEnd, LinearMap.add_apply, LinearMap.comp_apply]
+  apply LinearMap.ext
+  intro omega
+  change d (d (iota_X omega) + iota_X (d omega)) =
+    d (iota_X (d omega)) + iota_X (d (d omega))
   have h_d_sq : ∀ x, d (d x) = 0 := fun x => LinearMap.congr_fun hd2 x
-  rw [LinearMap.map_add, h_d_sq (iota_X omega), zero_add, h_d_sq omega, LinearMap.map_zero, add_zero]
+  rw [map_add, h_d_sq (iota_X omega), zero_add, h_d_sq omega, map_zero, add_zero]
 
 /-- **Theorem**: Master Cartan Lie Derivative Magic Formula Synthesis.
     Unifies:

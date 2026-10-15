@@ -115,15 +115,13 @@ structure AdelicPrimonCarrier (F : Type*) [CommRing F] where
   padic_surprisal   : F      -- Discrete Primon surprisal E = log p
   total_curvature   : F      -- Symplectic 2-form curvature
 
-/-- Winding number / Chern integer quantization datum. -/
+/-- A Chern integer datum carrying a single integer-valued index. -/
 structure TopologicalChernIndex where
   chern_number : ℤ
-  is_quantized : True
 
-/-- Constructor for integer quantized topological index. -/
+/-- Constructor for an integer Chern index datum. -/
 def makeQuantizedChernIndex (k : ℤ) : TopologicalChernIndex where
   chern_number := k
-  is_quantized := trivial
 
 /-- Master bundled packet for chiral Hecke symplectic reduction over adelic Klein homotopy. -/
 structure ChiralHeckeAdelicPacket (F : Type*) [CommRing F] where

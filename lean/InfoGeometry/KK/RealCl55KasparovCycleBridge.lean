@@ -41,7 +41,7 @@ noncomputable def normalizedMasterHodgeDirac : Mat32 :=
 theorem normalizedMasterHodgeDirac_transpose :
     normalizedMasterHodgeDiracᵀ = normalizedMasterHodgeDirac := by
   dsimp [normalizedMasterHodgeDirac]
-  rw [Matrix.transpose_smul, embeddedSplitOctonionHodgeDirac_transpose]
+  rw [embeddedSplitOctonionHodgeDirac_transpose]
 
 /-- The normalized master Hodge-Dirac operator satisfies the exact involutive identity $F^2 = 1$. -/
 theorem normalizedMasterHodgeDirac_sq :

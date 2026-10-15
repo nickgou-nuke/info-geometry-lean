@@ -39,8 +39,14 @@ theorem determinant_stage_bondIterate
     (hreadout : ∀ n x, stage n x = limit (C.ι n x))
     (n m : ℕ) (x : DoubledSpace (C.Base n)) :
     stage (n + m) (C.toFilteredPhaseCone.bondIterate n m x) = stage n x := by
-  rw [hreadout (n + m), hreadout n]
-  exact congrArg limit (C.toFilteredPhaseCone.ι_bondIterate_apply n m x)
+  calc
+    stage (n + m) (C.toFilteredPhaseCone.bondIterate n m x) =
+        limit (C.ι (n + m) (C.toFilteredPhaseCone.bondIterate n m x)) :=
+      hreadout (n + m) _
+    _ = limit (C.ι n x) := congrArg limit <|
+      C.toFilteredPhaseCone.ι_bondIterate_apply n m
+        (show C.toFilteredPhaseCone.Stage n from x)
+    _ = stage n x := (hreadout n x).symm
 
 def criticalThroat (x : PositiveHomogeneousCone) : Prop :=
   homogeneousSwap x = x

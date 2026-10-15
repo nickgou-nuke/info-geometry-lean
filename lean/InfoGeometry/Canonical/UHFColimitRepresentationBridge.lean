@@ -163,7 +163,7 @@ theorem op_odd_odd_closure (T1 T2 : Module.End ℂ (CantorBoundary → ℂ)) (h1
     constructor
     · exact cylinder_mem_colimit 1 fG
     · ext f x
-      dsimp [g, S_L_linear, S_R_linear, star_S_L_linear, star_S_R_linear, S_L_op, S_R_op, star_S_L_op, star_S_R_op, fG, fL, fR, cylinder, boundaryPrefix, Algebra.lmul]
+      dsimp [g, S_L_linear, S_R_linear, star_S_L_linear, star_S_R_linear, S_L_op, S_R_op, star_S_L_op, star_S_R_op, fG, fL, fR, cylinder, boundaryPrefix]
       by_cases h : x 0 = false
       · simp [h, tail_prependBit, prependBit_tail_of_head, mul_assoc]
       · have h_true : x 0 = true := by
@@ -180,7 +180,7 @@ theorem op_odd_odd_closure (T1 T2 : Module.End ℂ (CantorBoundary → ℂ)) (h1
     constructor
     · exact cylinder_mem_colimit 1 fG
     · ext f x
-      dsimp [g, S_L_linear, S_R_linear, star_S_L_linear, star_S_R_linear, S_L_op, S_R_op, star_S_L_op, star_S_R_op, fG, fL, fR, cylinder, boundaryPrefix, Algebra.lmul]
+      dsimp [g, S_L_linear, S_R_linear, star_S_L_linear, star_S_R_linear, S_L_op, S_R_op, star_S_L_op, star_S_R_op, fG, fL, fR, cylinder, boundaryPrefix]
       by_cases h : x 0 = false
       · simp [h, tail_prependBit, prependBit_tail_of_head, mul_assoc]
       · have h_true : x 0 = true := by

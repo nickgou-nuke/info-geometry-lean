@@ -465,7 +465,10 @@ theorem pcWord_four_two_five_collect (b c d : Bool) :
         simp
       simp [hzero2]
     · cases d
-      · simpa using pcWord_four_two_generator_transport
+      · have hzero5 : G2TwoSylowSubgroup.pcWord (oneAtBit 5 false) = 1 := by
+          rw [pcWord_oneAtBit]; simp
+        rw [hzero5, mul_one]
+        exact pcWord_four_two_generator_transport
       · calc
           _ = (G2TwoSylowSubgroup.pcWord (oneAtBit 4 true) *
               G2TwoSylowSubgroup.pcWord (oneAtBit 2 true)) *
@@ -500,8 +503,10 @@ theorem pcWord_two_two_bit (b c : Bool) :
     simp
   · rw [pcWord_oneAtBit, pcWord_oneAtBit, pcWord_oneAtBit, pcWord_oneAtBit]
     simp
-  · simpa [oneAtBit, oneAt] using
-      (InfoGeometry.Algebra.Zorn.G2TwoPCConcreteMultiplication.pcWord_oneAt_two_mul_oneAt_two)
+  · simp only [pcWord_oneAtBit, ite_true, Bool.xor_self, ite_false, Bool.and_self, one_mul]
+    change G2TwoSylowPCAutomorphisms.pc3Aut * G2TwoSylowPCAutomorphisms.pc3Aut =
+      G2TwoSylowPCAutomorphisms.pc6Aut
+    exact G2TwoSylowPCAutomorphisms.pc3Aut_sq_eq_pc6Aut
 
 theorem pcWord_oneAtBit_five_comm_three (b c : Bool) :
     G2TwoSylowSubgroup.pcWord (oneAtBit 5 b) *
@@ -1019,8 +1024,10 @@ theorem pcWord_mul_oneAtBit_one_full (e : PCExponent) (c : Bool) :
             G2TwoSylowSubgroup.pcWord (oneAtBit 5 (e 1)) := by
       cases h : e 1
       · simp [h, pcWord_oneAtBit]
-      · simpa [pcWord_oneAtBit, oneAtBit, oneAt, zeroPC] using
-          pcWord_oneAt_one_mul_oneAt_one
+      · simp only [pcWord_oneAtBit, ite_true, Bool.xor_self, ite_false, one_mul]
+        change G2TwoSylowPCAutomorphisms.pc2Aut * G2TwoSylowPCAutomorphisms.pc2Aut =
+          G2TwoSylowPCAutomorphisms.pc6Aut
+        exact G2TwoSylowPCAutomorphisms.pc2Aut_sq_eq_pc6Aut
     rw [← mul_assoc
       (G2TwoSylowSubgroup.pcWord (oneAtBit 1 (e 1)))
       (G2TwoSylowSubgroup.pcWord (oneAtBit 1 true))]

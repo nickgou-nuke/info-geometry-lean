@@ -53,16 +53,14 @@ def sigmaVec (u : Fin 3 → ℂ) : Matrix (Fin 2) (Fin 2) ℂ :=
 theorem sigmaVec_add (u v : Fin 3 → ℂ) :
     sigmaVec (u + v) = sigmaVec u + sigmaVec v := by
   ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [sigmaVec, Pi.add_apply, mul_add]
-    <;> ring
+  change sigmaVec (u + v) i j = sigmaVec u i j + sigmaVec v i j
+  fin_cases i <;> fin_cases j <;> simp [sigmaVec] <;> ring
 
 theorem sigmaVec_smul (c : ℂ) (u : Fin 3 → ℂ) :
     sigmaVec (c • u) = c • sigmaVec u := by
   ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [sigmaVec, Pi.smul_apply, smul_eq_mul]
-    <;> ring
+  change sigmaVec (c • u) i j = c * sigmaVec u i j
+  fin_cases i <;> fin_cases j <;> simp [sigmaVec] <;> ring
 
 /-- The Pauli soldering is a bundled complex-linear map. -/
 def sigmaVecLinear :
@@ -106,7 +104,8 @@ theorem sigmaVec_eq_zero_iff (u : Fin 3 → ℂ) :
 theorem sigmaVec_sub (u v : Fin 3 → ℂ) :
     sigmaVec (u - v) = sigmaVec u - sigmaVec v := by
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [sigmaVec, sub_eq_add_neg] <;> ring
+  change sigmaVec (u - v) i j = sigmaVec u i j - sigmaVec v i j
+  fin_cases i <;> fin_cases j <;> simp [sigmaVec] <;> ring
 
 theorem sigmaVec_injective : Function.Injective sigmaVec := by
   intro u v h
@@ -128,13 +127,25 @@ theorem sigmaVec_mul (u v : Fin 3 → ℂ) :
         Complex.I • sigmaVec (cross3 u v) := by
   ext i j
   fin_cases i <;> fin_cases j
-  · simp [sigmaVec, dot3, cross3, mul_apply, Fin.sum_univ_two, smul_apply, add_apply]
+  · change (∑ k : Fin 2, sigmaVec u 0 k * sigmaVec v k 0) =
+      dot3 u v * (1 : Matrix (Fin 2) (Fin 2) ℂ) 0 0 +
+        Complex.I * sigmaVec (cross3 u v) 0 0
+    simp [sigmaVec, dot3, cross3, Fin.sum_univ_two]
     linear_combination -Complex.I_sq * (u 1 * v 1)
-  · simp [sigmaVec, dot3, cross3, mul_apply, Fin.sum_univ_two, smul_apply, add_apply]
+  · change (∑ k : Fin 2, sigmaVec u 0 k * sigmaVec v k 1) =
+      dot3 u v * (1 : Matrix (Fin 2) (Fin 2) ℂ) 0 1 +
+        Complex.I * sigmaVec (cross3 u v) 0 1
+    simp [sigmaVec, dot3, cross3, Fin.sum_univ_two]
     linear_combination Complex.I_sq * (u 2 * v 0 - u 0 * v 2)
-  · simp [sigmaVec, dot3, cross3, mul_apply, Fin.sum_univ_two, smul_apply, add_apply]
+  · change (∑ k : Fin 2, sigmaVec u 1 k * sigmaVec v k 0) =
+      dot3 u v * (1 : Matrix (Fin 2) (Fin 2) ℂ) 1 0 +
+        Complex.I * sigmaVec (cross3 u v) 1 0
+    simp [sigmaVec, dot3, cross3, Fin.sum_univ_two]
     linear_combination Complex.I_sq * (u 0 * v 2 - u 2 * v 0)
-  · simp [sigmaVec, dot3, cross3, mul_apply, Fin.sum_univ_two, smul_apply, add_apply]
+  · change (∑ k : Fin 2, sigmaVec u 1 k * sigmaVec v k 1) =
+      dot3 u v * (1 : Matrix (Fin 2) (Fin 2) ℂ) 1 1 +
+        Complex.I * sigmaVec (cross3 u v) 1 1
+    simp [sigmaVec, dot3, cross3, Fin.sum_univ_two]
     linear_combination -Complex.I_sq * (u 1 * v 1)
 
 /--
@@ -148,12 +159,13 @@ theorem sigmaVec_anticomm (u v : Fin 3 → ℂ) :
   have h2 := sigmaVec_mul v u
   have h_cross : cross3 u v = - cross3 v u := by
     ext i; fin_cases i <;> simp [cross3] <;> ring
+  have h_sigma_cross : sigmaVec (cross3 u v) = -sigmaVec (cross3 v u) := by
+    rw [h_cross]
+    simpa using (sigmaVec_smul (-1 : ℂ) (cross3 v u))
   have h_dot : dot3 v u = dot3 u v := by
     simp [dot3]; ring
-  rw [h1, h2, h_dot, h_cross]
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    { simp [sigmaVec, dot3, cross3, smul_apply, add_apply]; ring }
+  rw [h1, h2, h_dot, h_sigma_cross]
+  module
 
 /--
   THEOREM 3: The Commutator selects the Cross Product (Oriented Bivector Channel)
@@ -166,12 +178,13 @@ theorem sigmaVec_comm (u v : Fin 3 → ℂ) :
   have h2 := sigmaVec_mul v u
   have h_cross : cross3 v u = - cross3 u v := by
     ext i; fin_cases i <;> simp [cross3] <;> ring
+  have h_sigma_cross : sigmaVec (cross3 v u) = -sigmaVec (cross3 u v) := by
+    rw [h_cross]
+    simpa using (sigmaVec_smul (-1 : ℂ) (cross3 u v))
   have h_dot : dot3 v u = dot3 u v := by
     simp [dot3]; ring
-  rw [h1, h2, h_dot, h_cross]
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    { simp [sigmaVec, dot3, cross3, smul_apply, sub_apply]; ring }
+  rw [h1, h2, h_dot, h_sigma_cross]
+  module
 
 end PauliSolderedCrossProductBridge
 
@@ -432,8 +445,8 @@ theorem bdgReadout_diagonal_blocks (Z : Zorn ℂ) :
     block11 (bdgReadout Z) = Z.a • (1 : Matrix (Fin 2) (Fin 2) ℂ) ∧
     block22 (bdgReadout Z) = Z.b • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
   constructor
-  · ext i j; fin_cases i <;> fin_cases j <;> simp [block11, bdgReadout, smul_apply]
-  · ext i j; fin_cases i <;> fin_cases j <;> simp [block22, bdgReadout, smul_apply]
+  · ext i j; fin_cases i <;> fin_cases j <;> simp [block11, bdgReadout, Matrix.smul_apply]
+  · ext i j; fin_cases i <;> fin_cases j <;> simp [block22, bdgReadout, Matrix.smul_apply]
 
 end ZornBdGSolderingReadout
 
@@ -650,11 +663,21 @@ theorem bdgReadout_star (Z : Zorn ℂ) :
     block12 (bdgReadout (zornStar Z)) = -sigmaVec Z.u ∧
     block21 (bdgReadout (zornStar Z)) = -sigmaVec Z.v := by
   have hσu : sigmaVec (fun i => -Z.u i) = -sigmaVec Z.u := by
-    ext i j
-    fin_cases i <;> fin_cases j <;> simp [sigmaVec] <;> ring
+    calc
+      sigmaVec (fun i => -Z.u i) = sigmaVec ((-1 : ℂ) • Z.u) := by
+        congr 1
+        funext i
+        simp
+      _ = (-1 : ℂ) • sigmaVec Z.u := sigmaVec_smul (-1) Z.u
+      _ = -sigmaVec Z.u := by simp
   have hσv : sigmaVec (fun i => -Z.v i) = -sigmaVec Z.v := by
-    ext i j
-    fin_cases i <;> fin_cases j <;> simp [sigmaVec] <;> ring
+    calc
+      sigmaVec (fun i => -Z.v i) = sigmaVec ((-1 : ℂ) • Z.v) := by
+        congr 1
+        funext i
+        simp
+      _ = (-1 : ℂ) • sigmaVec Z.v := sigmaVec_smul (-1) Z.v
+      _ = -sigmaVec Z.v := by simp
   have hd := bdgReadout_diagonal_blocks (zornStar Z)
   have hu := bdgReadout_block12_eq_sigmaVec (zornStar Z)
   have hv := bdgReadout_block21_eq_sigmaVec (zornStar Z)

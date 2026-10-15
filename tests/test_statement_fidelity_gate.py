@@ -73,6 +73,56 @@ theorem matrix_two_noncommutative : nullPlus (R := ℝ) * nullMinus ≠ nullMinu
     assert len(rep.defects) == 0
 
 
+def test_missing_requested_declaration_does_not_fall_back_to_first():
+    rep = evaluate_statement_fidelity(
+        "theorem unrelated (x : Nat) : x + 0 = x := by sorry",
+        {"theorem_name": "requested", "target_relation": {"pattern": "A = A"}},
+    )
+    assert not rep.passed
+    assert rep.fidelity_score == 0.0
+    assert rep.defects[0].defect_type == "TARGET_DECLARATION_NOT_FOUND"
+
+
+def test_unrelated_structure_fields_are_not_counted_as_hypotheses():
+    code = """
+structure Unused where
+  row_sum : ∀ i : Nat, i = i
+
+theorem target (A B : Matrix (Fin 2) (Fin 2) ℝ) (h : A = B) :
+    A * B = B * A := by sorry
+"""
+    spec = {
+        "theorem_name": "target",
+        "required_hypotheses": [{"name": "row_sum", "pattern": r"row_sum"}],
+        "target_relation": {"pattern": r"A \* B = B \* A"},
+    }
+    report = evaluate_statement_fidelity(code, spec)
+    assert not report.passed
+    assert any(d.defect_type == "DROPPED_HYPOTHESIS" for d in report.defects)
+
+
+def test_variable_binders_from_closed_scope_do_not_leak():
+    code = """
+namespace Earlier
+variable (required_property : Nat = Nat)
+theorem earlier : True := by trivial
+end Earlier
+
+theorem target (n : Nat) : n + 0 = n := by sorry
+"""
+    report = evaluate_statement_fidelity(
+        code,
+        {
+            "theorem_name": "target",
+            "required_hypotheses": ["required_property"],
+            "target_relation": {"pattern": r"n \+ 0 = n"},
+        },
+    )
+    assert not report.passed
+    assert any(d.defect_type == "DROPPED_HYPOTHESIS" for d in report.defects)
+    assert not any("required_property" in item for item in report.hypotheses_detected)
+
+
 # -----------------------------------------------------------------------------
 # Intentional Mutants Tests (Fidelity Defect Penalties)
 # -----------------------------------------------------------------------------

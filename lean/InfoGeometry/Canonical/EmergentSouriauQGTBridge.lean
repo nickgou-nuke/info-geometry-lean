@@ -83,7 +83,7 @@ theorem modular_flow_trajectory_projection (ψ : NormalizedState H) (K X : EndH)
     ⟪ψ.vec, (opBracket K X) ψ.vec⟫_ℂ =
       ⟪ψ.vec, (K * X) ψ.vec⟫_ℂ - ⟪ψ.vec, (X * K) ψ.vec⟫_ℂ := by
   dsimp [opBracket]
-  simp only [inner_sub_right]
+  simp only [sub_apply, mul_apply_eq_comp, inner_sub_right]
 
 /-! =========================================================================
     PART 3: Hessian of Massieu Potential = QGT Real Symmetric Part

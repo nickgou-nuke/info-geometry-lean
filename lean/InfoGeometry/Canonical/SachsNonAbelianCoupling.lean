@@ -81,16 +81,14 @@ theorem transverse_collinearity_implies_twist_free
     (u v : Fin 3 → ℝ) (h : u 0 * v 1 = u 1 * v 0) :
     sachsOmega (sachsFromCross (crossProduct u v)) = 0 := by
   rw [sachsFromCross_omega]
-  dsimp [crossProduct]
-  linarith
+  change u 0 * v 1 - u 1 * v 0 = 0
+  exact sub_eq_zero.mpr h
 
 theorem purely_transverse_vectors_zero_shear
     (u v : Fin 3 → ℝ) (hu : u 2 = 0) (hv : v 2 = 0) :
     sachsSigma1 (sachsFromCross (crossProduct u v)) = 0 ∧
       sachsSigma2 (sachsFromCross (crossProduct u v)) = 0 := by
   rw [sachsFromCross_sigma1, sachsFromCross_sigma2]
-  dsimp [crossProduct]
-  rw [hu, hv]
-  constructor <;> ring
+  constructor <;> simp [crossProduct, hu, hv]
 
 end InfoGeometry.Canonical.SachsNonAbelianCoupling

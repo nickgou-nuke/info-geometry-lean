@@ -85,9 +85,15 @@ theorem chiralKreinSpace_kreinAdjoint (A : End (E := E)) :
       chiralKreinAdjoint (E := E) A := by
   apply ContinuousLinearMap.ext
   intro u
-  simp [KreinSpace.kreinAdjoint, KreinSpace.jCLM,
-    chiralKreinSpace, chiralSwapLIE, chiralSwapMap,
-    chiralKreinAdjoint, ContinuousLinearMap.comp_apply]
+  have h_native := @KreinSpace.kreinAdjoint_apply
+    (Carrier (E := E)) _ _ _ (chiralKreinSpace (E := E)) A u
+  change (@KreinSpace.kreinAdjoint (Carrier (E := E)) _ _ _
+      (chiralKreinSpace (E := E)) A) u = chiralKreinAdjoint (E := E) A u
+  rw [h_native]
+  change chiralSwapLIE (E := E)
+      ((ContinuousLinearMap.adjoint A) (chiralSwapLIE (E := E) u)) =
+    etaChiral ((ContinuousLinearMap.adjoint A) (etaChiral u))
+  rw [chiralSwapLIE_apply, chiralSwapLIE_apply]
 
 /-- Native J-Hermiticity for the cross-sheet polarization. -/
 def IsNativeJHermitian (A : End (E := E)) : Prop :=

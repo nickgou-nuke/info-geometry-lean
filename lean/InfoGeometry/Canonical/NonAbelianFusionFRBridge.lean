@@ -68,28 +68,28 @@ def braidGen2 (K : Type*) [CommRing K] (a b q1 q2 : K) : Matrix (Fin 2) (Fin 2) 
 
 theorem fMatrix_sq_00 (K : Type*) [CommRing K] (a b : K) (h_norm : a ^ 2 + b ^ 2 = 1) :
     (fMatrix K a b * fMatrix K a b) 0 0 = 1 := by
-  dsimp [mul_apply]
+  simp only [mul_apply]
   rw [Fin.sum_univ_two]
   dsimp [fMatrix]
   linear_combination h_norm
 
 theorem fMatrix_sq_01 (K : Type*) [CommRing K] (a b : K) :
     (fMatrix K a b * fMatrix K a b) 0 1 = 0 := by
-  dsimp [mul_apply]
+  simp only [mul_apply]
   rw [Fin.sum_univ_two]
   dsimp [fMatrix]
   ring
 
 theorem fMatrix_sq_10 (K : Type*) [CommRing K] (a b : K) :
     (fMatrix K a b * fMatrix K a b) 1 0 = 0 := by
-  dsimp [mul_apply]
+  simp only [mul_apply]
   rw [Fin.sum_univ_two]
   dsimp [fMatrix]
   ring
 
 theorem fMatrix_sq_11 (K : Type*) [CommRing K] (a b : K) (h_norm : a ^ 2 + b ^ 2 = 1) :
     (fMatrix K a b * fMatrix K a b) 1 1 = 1 := by
-  dsimp [mul_apply]
+  simp only [mul_apply]
   rw [Fin.sum_univ_two]
   dsimp [fMatrix]
   linear_combination h_norm
@@ -120,7 +120,7 @@ theorem artin_entry_00 (K : Type*) [CommRing K] (a b q1 q2 : K) (h_norm : a ^ 2 
     (h_braid : a ^ 2 * q1 ^ 2 + (b ^ 2 - a ^ 2) * q1 * q2 + a ^ 2 * q2 ^ 2 = 0) :
     (braidGen1 K q1 q2 * braidGen2 K a b q1 q2 * braidGen1 K q1 q2) 0 0 =
     (braidGen2 K a b q1 q2 * braidGen1 K q1 q2 * braidGen2 K a b q1 q2) 0 0 := by
-  dsimp [braidGen1, braidGen2, mul_apply]
+  simp only [braidGen1, braidGen2, mul_apply]
   repeat rw [Fin.sum_univ_two]
   dsimp [fMatrix, rMatrix]
   linear_combination b ^ 2 * (q1 - q2) * h_braid - q1 ^ 2 * (a ^ 2 * q1 + b ^ 2 * q2) * h_norm
@@ -129,7 +129,7 @@ theorem artin_entry_01 (K : Type*) [CommRing K] (a b q1 q2 : K) (h_norm : a ^ 2 
     (h_braid : a ^ 2 * q1 ^ 2 + (b ^ 2 - a ^ 2) * q1 * q2 + a ^ 2 * q2 ^ 2 = 0) :
     (braidGen1 K q1 q2 * braidGen2 K a b q1 q2 * braidGen1 K q1 q2) 0 1 =
     (braidGen2 K a b q1 q2 * braidGen1 K q1 q2 * braidGen2 K a b q1 q2) 0 1 := by
-  dsimp [braidGen1, braidGen2, mul_apply]
+  simp only [braidGen1, braidGen2, mul_apply]
   repeat rw [Fin.sum_univ_two]
   dsimp [fMatrix, rMatrix]
   linear_combination -a * b * (q1 - q2) * h_braid - a * b * q1 * q2 * (q1 - q2) * h_norm
@@ -138,7 +138,7 @@ theorem artin_entry_10 (K : Type*) [CommRing K] (a b q1 q2 : K) (h_norm : a ^ 2 
     (h_braid : a ^ 2 * q1 ^ 2 + (b ^ 2 - a ^ 2) * q1 * q2 + a ^ 2 * q2 ^ 2 = 0) :
     (braidGen1 K q1 q2 * braidGen2 K a b q1 q2 * braidGen1 K q1 q2) 1 0 =
     (braidGen2 K a b q1 q2 * braidGen1 K q1 q2 * braidGen2 K a b q1 q2) 1 0 := by
-  dsimp [braidGen1, braidGen2, mul_apply]
+  simp only [braidGen1, braidGen2, mul_apply]
   repeat rw [Fin.sum_univ_two]
   dsimp [fMatrix, rMatrix]
   linear_combination -a * b * (q1 - q2) * h_braid - a * b * q1 * q2 * (q1 - q2) * h_norm
@@ -147,7 +147,7 @@ theorem artin_entry_11 (K : Type*) [CommRing K] (a b q1 q2 : K) (h_norm : a ^ 2 
     (h_braid : a ^ 2 * q1 ^ 2 + (b ^ 2 - a ^ 2) * q1 * q2 + a ^ 2 * q2 ^ 2 = 0) :
     (braidGen1 K q1 q2 * braidGen2 K a b q1 q2 * braidGen1 K q1 q2) 1 1 =
     (braidGen2 K a b q1 q2 * braidGen1 K q1 q2 * braidGen2 K a b q1 q2) 1 1 := by
-  dsimp [braidGen1, braidGen2, mul_apply]
+  simp only [braidGen1, braidGen2, mul_apply]
   repeat rw [Fin.sum_univ_two]
   dsimp [fMatrix, rMatrix]
   linear_combination -b ^ 2 * (q1 - q2) * h_braid - q2 ^ 2 * (a ^ 2 * q2 + b ^ 2 * q1) * h_norm
@@ -175,7 +175,7 @@ theorem nonAbelian_braid_non_commutative (K : Type*) [CommRing K] [Nontrivial K]
   intro h_comm
   have h_offdiag : (braidGen1 K q1 q2 * braidGen2 K a b q1 q2) 0 1 =
                    (braidGen2 K a b q1 q2 * braidGen1 K q1 q2) 0 1 := by rw [h_comm]
-  dsimp [braidGen1, braidGen2, mul_apply] at h_offdiag
+  simp only [braidGen1, braidGen2, mul_apply] at h_offdiag
   repeat rw [Fin.sum_univ_two] at h_offdiag
   dsimp [fMatrix, rMatrix] at h_offdiag
   have h_diff : a * b * (q1 - q2) * q1 - a * b * (q1 - q2) * q2 = 0 := by

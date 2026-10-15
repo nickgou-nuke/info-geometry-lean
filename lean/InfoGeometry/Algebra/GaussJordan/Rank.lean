@@ -118,9 +118,11 @@ theorem pivots_le_rank (h : ReducedRowEchelon A p) : p ≤ A.rank := by
 theorem rank_eq_pivots (h : ReducedRowEchelon A p) : A.rank = p :=
   Nat.le_antisymm h.rank_le_pivots h.pivots_le_rank
 
+open Classical in
 /-- The nonzero rows of an RREF certificate are exactly its pivot rows. -/
 theorem nonzero_row_count (h : ReducedRowEchelon A p) :
     (Finset.univ.filter fun i : Fin m => A i ≠ 0).card = p := by
+  classical
   let e : Fin p → Fin m := rowIndex h.rows_le
   have he : Function.Injective e := by
     simpa [e] using rowIndex_injective h.rows_le

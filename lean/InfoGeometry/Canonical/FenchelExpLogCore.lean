@@ -1,4 +1,7 @@
 import Mathlib.Tactic
+import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Analysis.Calculus.Deriv.Mul
+import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
@@ -25,8 +28,8 @@ def phi (y x : ℝ) : ℝ := y * x - Real.exp x
 
 theorem phi_hasDerivAt (y x : ℝ) :
     HasDerivAt (phi y) (y - Real.exp x) x := by
-  unfold phi
-  simpa using (hasDerivAt_const x y).mul (hasDerivAt_id x) |>.sub (Real.hasDerivAt_exp x)
+  change HasDerivAt (fun z : ℝ => y * z - Real.exp z) (y - Real.exp x) x
+  exact (hasDerivAt_const_mul y).sub (Real.hasDerivAt_exp x)
 
 theorem phi_stationary_at_log (y : ℝ) (hy : 0 < y) :
     HasDerivAt (phi y) 0 (Real.log y) := by

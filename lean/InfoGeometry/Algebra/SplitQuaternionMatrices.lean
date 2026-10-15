@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.Data.Matrix.Mul
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometryCore.Basic
 
@@ -48,66 +49,66 @@ def sqK : M2R :=
 
 @[simp]
 theorem sqI_sq :
-sqI * sqI = -(1 : M2R) := by
-ext i j
-all_goals fin_cases i <;> fin_cases j <;>
-norm_num [sqI, Matrix.mul_apply, Fin.sum_univ_two]
+    sqI * sqI = -(1 : M2R) := by
+  ext i j
+  all_goals fin_cases i <;> fin_cases j <;>
+    norm_num [sqI, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp]
 theorem sqJ_sq :
-sqJ * sqJ = (1 : M2R) := by
-ext i j
-all_goals fin_cases i <;> fin_cases j <;>
-norm_num [sqJ, Matrix.mul_apply, Fin.sum_univ_two]
+    sqJ * sqJ = (1 : M2R) := by
+  ext i j
+  all_goals fin_cases i <;> fin_cases j <;>
+    norm_num [sqJ, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp]
 theorem sqK_sq :
-sqK * sqK = (1 : M2R) := by
-ext i j
-all_goals fin_cases i <;> fin_cases j <;>
-norm_num [sqK, Matrix.mul_apply, Fin.sum_univ_two]
+    sqK * sqK = (1 : M2R) := by
+  ext i j
+  all_goals fin_cases i <;> fin_cases j <;>
+    norm_num [sqK, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp]
 theorem sqI_mul_sqJ :
-sqI * sqJ = sqK := by
-ext i j
-all_goals fin_cases i <;> fin_cases j <;>
-norm_num [sqI, sqJ, sqK, Matrix.mul_apply, Fin.sum_univ_two]
+    sqI * sqJ = sqK := by
+  ext i j
+  all_goals fin_cases i <;> fin_cases j <;>
+    norm_num [sqI, sqJ, sqK, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp]
 theorem sqJ_mul_sqI :
-sqJ * sqI = -sqK := by
-ext i j
-all_goals fin_cases i <;> fin_cases j <;>
-norm_num [sqI, sqJ, sqK, Matrix.mul_apply, Fin.sum_univ_two]
+    sqJ * sqI = -sqK := by
+  ext i j
+  all_goals fin_cases i <;> fin_cases j <;>
+    norm_num [sqI, sqJ, sqK, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp]
 theorem sqJ_mul_sqK :
-sqJ * sqK = -sqI := by
-ext i j
-all_goals fin_cases i <;> fin_cases j <;>
-norm_num [sqI, sqJ, sqK, Matrix.mul_apply, Fin.sum_univ_two]
+    sqJ * sqK = -sqI := by
+  ext i j
+  all_goals fin_cases i <;> fin_cases j <;>
+    norm_num [sqI, sqJ, sqK, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp]
 theorem sqK_mul_sqJ :
-sqK * sqJ = sqI := by
-ext i j
-all_goals fin_cases i <;> fin_cases j <;>
-norm_num [sqI, sqJ, sqK, Matrix.mul_apply, Fin.sum_univ_two]
+    sqK * sqJ = sqI := by
+  ext i j
+  all_goals fin_cases i <;> fin_cases j <;>
+    norm_num [sqI, sqJ, sqK, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp]
 theorem sqK_mul_sqI :
-sqK * sqI = sqJ := by
-ext i j
-all_goals fin_cases i <;> fin_cases j <;>
-norm_num [sqI, sqJ, sqK, Matrix.mul_apply, Fin.sum_univ_two]
+    sqK * sqI = sqJ := by
+  ext i j
+  all_goals fin_cases i <;> fin_cases j <;>
+    norm_num [sqI, sqJ, sqK, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp]
 theorem sqI_mul_sqK :
-sqI * sqK = -sqJ := by
-ext i j
-all_goals fin_cases i <;> fin_cases j <;>
-norm_num [sqI, sqJ, sqK, Matrix.mul_apply, Fin.sum_univ_two]
+    sqI * sqK = -sqJ := by
+  ext i j
+  all_goals fin_cases i <;> fin_cases j <;>
+    norm_num [sqI, sqJ, sqK, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- Positive split idempotent `(1+j)/2`. -/
 noncomputable def Pplus : M2R :=
@@ -119,38 +120,38 @@ noncomputable def Pminus : M2R :=
 
 @[simp]
 theorem Pplus_idempotent :
-Pplus * Pplus = Pplus := by
-ext i j
-all_goals fin_cases i <;> fin_cases j <;>
-norm_num [Pplus, sqJ, Matrix.mul_apply, Fin.sum_univ_two]
+    Pplus * Pplus = Pplus := by
+  ext i j
+  all_goals fin_cases i <;> fin_cases j <;>
+    norm_num [Pplus, sqJ, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp]
 theorem Pminus_idempotent :
-Pminus * Pminus = Pminus := by
-ext i j
-all_goals fin_cases i <;> fin_cases j <;>
-norm_num [Pminus, sqJ, Matrix.mul_apply, Fin.sum_univ_two]
+    Pminus * Pminus = Pminus := by
+  ext i j
+  all_goals fin_cases i <;> fin_cases j <;>
+    norm_num [Pminus, sqJ, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp]
 theorem Pplus_mul_Pminus :
-Pplus * Pminus = (0 : M2R) := by
-ext i j
-all_goals fin_cases i <;> fin_cases j <;>
-norm_num [Pplus, Pminus, sqJ, Matrix.mul_apply, Fin.sum_univ_two]
+    Pplus * Pminus = (0 : M2R) := by
+  ext i j
+  all_goals fin_cases i <;> fin_cases j <;>
+    norm_num [Pplus, Pminus, sqJ, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp]
 theorem Pminus_mul_Pplus :
-Pminus * Pplus = (0 : M2R) := by
-ext i j
-all_goals fin_cases i <;> fin_cases j <;>
-norm_num [Pplus, Pminus, sqJ, Matrix.mul_apply, Fin.sum_univ_two]
+    Pminus * Pplus = (0 : M2R) := by
+  ext i j
+  all_goals fin_cases i <;> fin_cases j <;>
+    norm_num [Pplus, Pminus, sqJ, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp]
 theorem Pplus_add_Pminus :
-Pplus + Pminus = (1 : M2R) := by
-ext i j
-all_goals fin_cases i <;> fin_cases j <;>
-norm_num [Pplus, Pminus, sqJ]
+    Pplus + Pminus = (1 : M2R) := by
+  ext i j
+  all_goals fin_cases i <;> fin_cases j <;>
+    norm_num [Pplus, Pminus, sqJ]
 
 /-- Nilpotent split-quaternion element `i-j`. -/
 def Nsplit : M2R :=
@@ -158,16 +159,16 @@ sqI - sqJ
 
 @[simp]
 theorem Nsplit_sq_zero :
-Nsplit * Nsplit = (0 : M2R) := by
-ext i j
-all_goals fin_cases i <;> fin_cases j <;>
-norm_num [Nsplit, sqI, sqJ, Matrix.mul_apply, Fin.sum_univ_two]
+    Nsplit * Nsplit = (0 : M2R) := by
+  ext i j
+  all_goals fin_cases i <;> fin_cases j <;>
+    norm_num [Nsplit, sqI, sqJ, Matrix.mul_apply, Fin.sum_univ_two]
 
 theorem Nsplit_ne_zero :
-Nsplit ≠ (0 : M2R) := by
-intro h
-have h10 := congrArg (fun A : M2R => A 1 0) h
-norm_num [Nsplit, sqI, sqJ] at h10
+    Nsplit ≠ (0 : M2R) := by
+  intro h
+  have h10 := congrArg (fun A : M2R => A 1 0) h
+  norm_num [Nsplit, sqI, sqJ] at h10
 
 /--
 Coordinate realization of a split quaternion
@@ -181,12 +182,12 @@ w • (1 : M2R) + x • sqI + y • sqJ + z • sqK
 
 /-- Explicit matrix entries of the split-quaternion coordinate map. -/
 theorem splitQ_eq_matrix (w x y z : ℝ) :
-splitQ w x y z =
-!![w + z, x + y;
-y - x, w - z] := by
-ext i j
-all_goals fin_cases i <;> fin_cases j <;>
-simp [splitQ, sqI, sqJ, sqK] <;> ring
+    splitQ w x y z =
+      !![w + z, x + y;
+        y - x, w - z] := by
+  ext i j
+  all_goals fin_cases i <;> fin_cases j <;>
+    simp [splitQ, sqI, sqJ, sqK] <;> ring
 
 /-- Coordinate determinant for `2×2` real matrices. -/
 def det2 (A : M2R) : ℝ :=
@@ -202,34 +203,34 @@ The split-quaternion determinant/norm has signature `(2,2)`:
 `N(w + xi + yj + zk) = w² + x² - y² - z²`.
 -/
 theorem det2_splitQ (w x y z : ℝ) :
-det2 (splitQ w x y z) =
-w * w + x * x - y * y - z * z := by
-rw [splitQ_eq_matrix]
-unfold det2
-norm_num
-ring
+    det2 (splitQ w x y z) =
+      w * w + x * x - y * y - z * z := by
+  rw [splitQ_eq_matrix]
+  unfold det2
+  norm_num
+  ring
 
 /-- The real-part readout is half the trace; equivalently `trace = 2w`. -/
 theorem trace2_splitQ (w x y z : ℝ) :
-trace2 (splitQ w x y z) = 2 * w := by
-rw [splitQ_eq_matrix]
-unfold trace2
-norm_num
-ring
+    trace2 (splitQ w x y z) = 2 * w := by
+  rw [splitQ_eq_matrix]
+  unfold trace2
+  norm_num
+  ring
 
 /-- The coordinate determinant is multiplicative on `M₂(ℝ)`. -/
 theorem det2_mul (A B : M2R) :
-det2 (A * B) = det2 A * det2 B := by
-unfold det2
-simp [Matrix.mul_apply, Fin.sum_univ_two]
-ring
+    det2 (A * B) = det2 A * det2 B := by
+  unfold det2
+  simp [Matrix.mul_apply, Fin.sum_univ_two]
+  ring
 
 /-- Multiplicativity of the split-quaternion norm through the matrix model. -/
 theorem det2_splitQ_mul
-(w x y z a b c d : ℝ) :
-det2 (splitQ w x y z * splitQ a b c d) =
-det2 (splitQ w x y z) * det2 (splitQ a b c d) := by
-exact det2_mul (splitQ w x y z) (splitQ a b c d)
+    (w x y z a b c d : ℝ) :
+    det2 (splitQ w x y z * splitQ a b c d) =
+      det2 (splitQ w x y z) * det2 (splitQ a b c d) := by
+  exact det2_mul (splitQ w x y z) (splitQ a b c d)
 
 /-- A nonzero square-zero split-quaternion matrix is not the zero matrix. -/
 theorem nonzero_nilpotent_split_quaternion :

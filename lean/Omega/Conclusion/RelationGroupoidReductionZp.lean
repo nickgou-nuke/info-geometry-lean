@@ -1,5 +1,7 @@
 import Mathlib.Tactic
 
+set_option linter.dupNamespace false
+
 namespace Omega.Conclusion
 
 universe u v w
@@ -241,20 +243,17 @@ noncomputable def conclusion_relation_groupoid_reduction_zp_relation_equiv_reduc
     have htarget_action :
         D.conclusion_relation_groupoid_reduction_zp_iota omega' =
           (a.sourcePoint.1, a.sourcePoint.2 + a.shift) := htarget.trans a.action_eq
-    ext
-    · simpa using congrArg Prod.fst hsource
-    · simpa using congrArg Prod.snd hsource
+    ext : 1
+    · exact hsource
     · have hsource_r : D.r omega = a.sourcePoint.2 := by
-        simpa [conclusion_relation_groupoid_reduction_zp_iota] using congrArg Prod.snd hsource
+        exact congrArg Prod.snd hsource
       have htarget_r : D.r omega' = a.sourcePoint.2 + a.shift := by
-        simpa [conclusion_relation_groupoid_reduction_zp_iota] using
-          congrArg Prod.snd htarget_action
+        exact congrArg Prod.snd htarget_action
       calc
         D.r omega' - D.r omega = (a.sourcePoint.2 + a.shift) - a.sourcePoint.2 := by
           rw [htarget_r, hsource_r]
         _ = a.shift := by abel
-    · simpa using congrArg Prod.fst htarget
-    · simpa using congrArg Prod.snd htarget
+    · exact htarget
 
 /-- Paper label: `prop:conclusion-relation-groupoid-reduction-zp`. -/
 theorem paper_conclusion_relation_groupoid_reduction_zp

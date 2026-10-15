@@ -1,8 +1,13 @@
 import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Tactic
 import Omega.POM.A4TNewmanThresholdAdeOrdering
 
 namespace Omega.POM
+
+noncomputable section
+
 
 /-- The audited Newman threshold viewed as a real parameter. -/
 def pom_a4t_newman_transversality_tStar : ℝ :=
@@ -34,7 +39,11 @@ theorem paper_pom_a4t_newman_transversality :
   · norm_num [pom_a4t_newman_transversality_tStar, pom_a4t_newman_threshold_ade_ordering_tStar]
   · simp [pom_a4t_newman_transversality_delta]
   · norm_num [pom_a4t_newman_transversality_cStar]
-  · simpa [pom_a4t_newman_transversality_delta, sub_eq_add_neg] using
+  · change HasDerivAt
+      (fun t => pom_a4t_newman_transversality_cStar *
+        (t - pom_a4t_newman_transversality_tStar))
+      pom_a4t_newman_transversality_cStar pom_a4t_newman_transversality_tStar
+    simpa only [id_eq, mul_one] using
       ((hasDerivAt_id pom_a4t_newman_transversality_tStar).sub_const
         pom_a4t_newman_transversality_tStar).const_mul pom_a4t_newman_transversality_cStar
   · intro t ht
@@ -43,5 +52,7 @@ theorem paper_pom_a4t_newman_transversality :
     have hzero : t - pom_a4t_newman_transversality_tStar = 0 := by
       exact (mul_eq_zero.mp (by simpa [pom_a4t_newman_transversality_delta] using ht)).resolve_left hc_ne
     linarith
+
+end
 
 end Omega.POM

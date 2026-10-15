@@ -45,6 +45,15 @@ theorem prime_counting_on_lattice
       (fun n : ℕ ↦
         (π (latticeDimension n) : ℝ) / ((latticeDimension n : ℝ) / Real.log (latticeDimension n)))
       atTop (nhds 1) := by
-  simpa [latticeDimension] using h_pnt.comp latticeDimension_tendsto_atTop
+  have hcomp := h_pnt.comp latticeDimension_tendsto_atTop
+  have hfun :
+      (fun n : ℕ => (π n : ℝ) / ((n : ℝ) / Real.log n)) ∘ latticeDimension =
+        (fun n : ℕ =>
+          (π (latticeDimension n) : ℝ) /
+            ((latticeDimension n : ℝ) / Real.log (latticeDimension n))) := by
+    funext n
+    rfl
+  rw [hfun] at hcomp
+  exact hcomp
 
 end InfoGeometry.Canonical.PrimeFibonacciLattice

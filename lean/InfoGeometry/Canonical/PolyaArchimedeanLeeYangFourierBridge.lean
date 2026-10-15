@@ -79,7 +79,6 @@ theorem polya_zero_to_critical_line (D : PolyaFourierDatum) {z0 : ℂ} (hz0_zero
   intro s0
   dsimp [s0]
   have h_im : z0.im = 0 := D.h_polya_real_zeros z0 hz0_zero
-  rw [h_im]
-  simp
+  simp [Complex.add_re, Complex.mul_re, h_im]
 
 end InfoGeometry.Canonical.PolyaFourier

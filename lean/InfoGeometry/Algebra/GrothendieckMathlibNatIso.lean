@@ -29,9 +29,9 @@ abbrev grothendieckFunctorNatIso :
   Iso.refl _
 
 @[simp] theorem grothendieckFunctorNatIso_hom_app (M : AddCommMonCat.{u}) :
-    (grothendieckFunctorNatIso.hom.app M).hom' =
+    (grothendieckFunctorNatIso.hom.app M).hom =
       (InfoGeometry.Categorical.grothendieckCompletionFunctor.map
-        (𝟙 M)).hom' := by
+        (𝟙 M)).hom := by
   simp
 
 theorem grothendieckFunctorNatIso_naturality
@@ -40,6 +40,6 @@ theorem grothendieckFunctorNatIso_naturality
         grothendieckFunctorNatIso.hom.app N =
       grothendieckFunctorNatIso.hom.app M ≫
         mathlibGrothendieckFunctor.map f := by
-  simpa using (grothendieckFunctorNatIso.hom.naturality f)
+  simp
 
 end InfoGeometry.Algebra.GrothendieckMathlibNatIso

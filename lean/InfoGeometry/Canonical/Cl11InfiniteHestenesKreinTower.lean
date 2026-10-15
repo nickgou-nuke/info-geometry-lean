@@ -117,12 +117,14 @@ theorem modularGenerator_square_all :
       rw [← Matrix.mul_kronecker_mul,
         InfoGeometry.Clifford.JordanWignerCAR.gamma_chiral_base_sq]
       simp
+      rfl
   | succ n ih =>
       change
         (modularGenerator n ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℝ)) *
           (modularGenerator n ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℝ)) = _
       rw [← Matrix.mul_kronecker_mul, ih]
       simp
+      rfl
 
 def fPlus (n : ℕ) : Stage n :=
   (1 / 2 : ℝ) • (1 + modularGenerator n)
@@ -190,7 +192,10 @@ theorem phaseAxis_limit_image (n : ℕ) :
 
 theorem colimit_phaseAxis_square :
     (toLimit 0 (phaseAxis 0)) * (toLimit 0 (phaseAxis 0)) = -(1 : Limit) := by
+  have hphase : phaseAxis 0 * phaseAxis 0 = -(1 : Stage 0) := by
+    simpa [tower] using tower.phaseAxis_sq_zero
   rw [← map_mul]
-  simpa using congrArg (toLimit 0) (tower.phaseAxis_sq_zero)
+  rw [hphase]
+  simp [toLimit]
 
 end InfoGeometry.Canonical.Cl11InfiniteHestenesKreinTower

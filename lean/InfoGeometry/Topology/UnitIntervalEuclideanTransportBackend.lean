@@ -42,17 +42,23 @@ theorem unitIntervalEuclideanDatum_squaredDist_continuous :
       unitIntervalEuclideanDatum.squaredDist p.1 p.2) := by
   have hval : Continuous (fun ρ : PositiveState unitIntervalDomain =>
       (ρ.val : ℝ)) := continuous_positiveState_val
-  simpa [unitIntervalEuclideanDatum] using
-    (continuous_dist.comp
-      ((hval.comp continuous_fst).prodMk (hval.comp continuous_snd))).pow 2
+  change Continuous (fun p : PositiveState unitIntervalDomain × PositiveState unitIntervalDomain =>
+    dist p.1.val p.2.val ^ 2)
+  convert (continuous_dist.comp
+    ((hval.comp continuous_fst).prodMk (hval.comp continuous_snd))).pow 2 using 1
+  ext p
+  rfl
 
 theorem unitIntervalEuclideanDatum_dist_continuous :
     Continuous (fun p : PositiveState unitIntervalDomain × PositiveState unitIntervalDomain =>
       unitIntervalEuclideanDatum.dist p.1 p.2) := by
   have hval : Continuous (fun ρ : PositiveState unitIntervalDomain =>
       (ρ.val : ℝ)) := continuous_positiveState_val
-  simpa [unitIntervalEuclideanDatum] using
-    continuous_dist.comp
-      ((hval.comp continuous_fst).prodMk (hval.comp continuous_snd))
+  change Continuous (fun p : PositiveState unitIntervalDomain × PositiveState unitIntervalDomain =>
+    dist p.1.val p.2.val)
+  convert continuous_dist.comp
+    ((hval.comp continuous_fst).prodMk (hval.comp continuous_snd)) using 1
+  ext p
+  rfl
 
 end InfoGeometry.Topology.UnitIntervalEuclideanTransportBackend

@@ -1,1 +1,1 @@
-theorem test_add (a b : Nat) : Nat := a + b
+def test_add (a b : Nat) : Nat := a + b

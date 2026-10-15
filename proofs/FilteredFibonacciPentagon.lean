@@ -44,16 +44,8 @@ Mac Lane pentagon identity.
 theorem filtered_fibonacci_anyon_pentagon
 (F : J ⥤ C) [HasColimit F]
 (_anyon : FilteredFibonacciAnyon F) :
-PentagonIdentity
-(colimit F)
-(colimit F)
-(colimit F)
-(colimit F) := by
-simpa only [PentagonIdentity] using
-(MonoidalCategory.pentagon
-(colimit F)
-(colimit F)
-(colimit F)
-(colimit F))
+  PentagonIdentity (colimit F) (colimit F) (colimit F) (colimit F) := by
+  simpa only [PentagonIdentity] using
+    MonoidalCategory.pentagon (colimit F) (colimit F) (colimit F) (colimit F)
 
 end FibAnyonFilteredColimit

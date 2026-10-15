@@ -61,7 +61,8 @@ theorem negOneSpin_ne_one :
     congrArg spinToPin h
   rw [spinToPin_negOneSpin] at hpin
   have hneg : negOnePin = 1 := by
-    simpa using hpin
+    change negOnePin = (1 : Pin55) at hpin
+    exact hpin
   exact negOnePin_ne_one hneg
 
 theorem negOneSpin_sq : negOneSpin * negOneSpin = 1 := by
@@ -82,7 +83,7 @@ theorem negOneSpin_commute (g : Spin55) :
   rw [negOnePin_coe]
   simp
 
-def spinSignSubgroup : Subgroup Spin55 :=
+noncomputable def spinSignSubgroup : Subgroup Spin55 :=
   Subgroup.closure ({1, negOneSpin} : Set Spin55)
 
 theorem mem_spinSignSubgroup_iff (g : Spin55) :

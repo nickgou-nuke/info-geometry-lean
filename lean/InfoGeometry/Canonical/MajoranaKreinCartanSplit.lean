@@ -352,7 +352,10 @@ theorem comparisonReadout_phasePart_eq_zero_of_isThermodynamicReadoutStationary
             (stateRelativeModularGenerator (E := E) P.modularData ψ)) A) )
       =
     (0, 0) := by
-  simpa [stateGaugeDynamics, stateSourceDynamics] using
+  simpa [stateGaugeDynamics, stateSourceDynamics, modularGaugeDeriv,
+    modularScaleDeriv, relativeModularSourceDeriv, stateRelativeModularGenerator,
+    stateTransportGenerator, stateModularSeed, modularGeneratorGaugePart,
+    modularGeneratorScalePart] using
     (comparisonReadout_kSplit_eq_zero_of_isThermodynamicReadoutStationary
       (E := E) P ψ A hStationary)
 
@@ -385,7 +388,10 @@ theorem comparisonReadout_phasePart_eq_zero_of_isPotentialKillingOperator
             (stateRelativeModularGenerator (E := E) P.modularData ψ)) A) )
       =
     (0, 0) := by
-  simpa [stateGaugeDynamics, stateSourceDynamics] using
+  simpa [stateGaugeDynamics, stateSourceDynamics, modularGaugeDeriv,
+    modularScaleDeriv, relativeModularSourceDeriv, stateRelativeModularGenerator,
+    stateTransportGenerator, stateModularSeed, modularGeneratorGaugePart,
+    modularGeneratorScalePart] using
     (comparisonReadout_kSplit_eq_zero_of_isPotentialKillingOperator
       (E := E) P ψ A hKill)
 
@@ -442,7 +448,10 @@ theorem comparisonReadout_phasePart_eq_zero_of_equilibriumSeed
             (stateRelativeModularGenerator (E := E) P.modularData ψ)) A) )
       =
     (0, 0) := by
-  simpa [stateGaugeDynamics, stateSourceDynamics] using
+  simpa [stateGaugeDynamics, stateSourceDynamics, modularGaugeDeriv,
+    modularScaleDeriv, relativeModularSourceDeriv, stateRelativeModularGenerator,
+    stateTransportGenerator, stateModularSeed, modularGeneratorGaugePart,
+    modularGeneratorScalePart] using
     (comparisonReadout_kSplit_eq_zero_of_equilibriumSeed
       (E := E) P ψ A hEq)
 
@@ -515,7 +524,10 @@ theorem comparisonReadout_phasePart_eq_zero_of_firstVariation_eq_zero_of_probeFa
             (stateRelativeModularGenerator (E := E) P.modularData ψ)) A) )
       =
     (0, 0) := by
-  simpa [stateGaugeDynamics, stateSourceDynamics] using
+  simpa [stateGaugeDynamics, stateSourceDynamics, modularGaugeDeriv,
+    modularScaleDeriv, relativeModularSourceDeriv, stateRelativeModularGenerator,
+    stateTransportGenerator, stateModularSeed, modularGeneratorGaugePart,
+    modularGeneratorScalePart] using
     (comparisonReadout_kSplit_eq_zero_of_firstVariation_eq_zero_of_probeFaithful
       (E := E) P ψ A hFaithful hFirst)
 

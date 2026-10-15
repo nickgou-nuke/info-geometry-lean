@@ -39,7 +39,7 @@ theorem finiteWittenCharacter_eq_eulerProduct
     (P : InfoGeometry.Arithmetic.PrimeBitWittenIndex.PrimeRegister) (q : ℕ → ℝ) :
     finiteWittenCharacter P q =
       InfoGeometry.Arithmetic.SplitMajoranaPrimon.finiteEulerProduct P q := by
-  simpa [finiteWittenCharacter] using
+  simpa [finiteWittenCharacter, InfoGeometry.Arithmetic.SplitMajoranaPrimon.finiteEulerProduct] using
     (InfoGeometry.Arithmetic.PrimonFinite.STrF_eq_prod (modes := P.primes) (q := q))
 
 /-- The finite Witten character equals the finite Möbius-graded thermal character. -/
@@ -47,12 +47,7 @@ theorem finiteWittenCharacter_eq_mobiusGradedThermalCharacter
     (P : InfoGeometry.Arithmetic.PrimeBitWittenIndex.PrimeRegister) (q : ℕ → ℝ) :
     finiteWittenCharacter P q =
       InfoGeometry.Arithmetic.PrimeMajoranaWittenCharacter.mobiusGradedThermalCharacter P q := by
-  calc
-    finiteWittenCharacter P q = InfoGeometry.Arithmetic.SplitMajoranaPrimon.finiteEulerProduct P q :=
-      finiteWittenCharacter_eq_eulerProduct P q
-    _ = InfoGeometry.Arithmetic.PrimeMajoranaWittenCharacter.mobiusGradedThermalCharacter P q := by
-      simpa [InfoGeometry.Arithmetic.PrimeMajoranaWittenCharacter.mobiusGradedThermalCharacter] using
-        (InfoGeometry.Arithmetic.SplitMajoranaPrimon.dirichletWittenCharacter_eq_eulerProduct P q).symm
+  rfl
 
 /-- The finite Witten character agrees with the finite Dirichlet Witten character. -/
 theorem finiteWittenCharacter_eq_dirichletWittenCharacter
@@ -60,10 +55,12 @@ theorem finiteWittenCharacter_eq_dirichletWittenCharacter
     finiteWittenCharacter P q =
       InfoGeometry.Arithmetic.SplitMajoranaPrimon.dirichletWittenCharacter P q := by
   calc
-    finiteWittenCharacter P q = InfoGeometry.Arithmetic.SplitMajoranaPrimon.finiteEulerProduct P q :=
-      finiteWittenCharacter_eq_eulerProduct P q
+    finiteWittenCharacter P q = ∏ p ∈ P.primes, (1 - q p) := by
+      simpa [finiteWittenCharacter] using
+        (InfoGeometry.Arithmetic.PrimonFinite.STrF_eq_prod
+          (modes := P.primes) (q := q))
     _ = InfoGeometry.Arithmetic.SplitMajoranaPrimon.dirichletWittenCharacter P q := by
-      symm
-      exact InfoGeometry.Arithmetic.SplitMajoranaPrimon.dirichletWittenCharacter_eq_eulerProduct P q
+      simpa [InfoGeometry.Arithmetic.SplitMajoranaPrimon.finiteEulerProduct] using
+        (InfoGeometry.Arithmetic.SplitMajoranaPrimon.dirichletWittenCharacter_eq_eulerProduct P q).symm
 
 end InfoGeometry.Arithmetic.PrimeWittenCharacter

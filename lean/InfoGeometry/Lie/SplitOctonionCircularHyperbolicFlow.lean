@@ -77,7 +77,7 @@ noncomputable def hyperbolicFlowCoordinateEquiv (t : ℝ) : Coord ≃ₗ[ℝ] Co
     exact LinearMap.congr_fun (hyperbolicFlowCoordinate_neg t) x
   right_inv := by
     intro x
-    simpa only [neg_neg, LinearMap.id_apply] using
+    simpa only [neg_neg, LinearMap.comp_apply, LinearMap.id_apply] using
       LinearMap.congr_fun (hyperbolicFlowCoordinate_neg (-t)) x
   map_add' := (hyperbolicFlowCoordinate t).map_add
   map_smul' := (hyperbolicFlowCoordinate t).map_smul

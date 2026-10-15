@@ -18,6 +18,7 @@ noncomputable section
 namespace InfoGeometry.Lie.SplitOctonionAxialKleinPolar
 
 open InfoGeometry.Canonical.FierzKleinFoundation
+open InfoGeometry.Canonical.ZornMatrix
 open InfoGeometry.Lie.SplitOctonionAxialWittReduction
 open InfoGeometry.Lie.SplitOctonionAxialKleinBridge
 open InfoGeometry.Projective.ExteriorPowerPluckerBridge
@@ -50,6 +51,9 @@ theorem kleinPolar_wittKleinEquiv (X Y : WittCoordinates) :
     InfoGeometry.Canonical.ZornMatrix.dot]
   ring
 
+@[simp] theorem activeSectorEquiv_apply' (Z : ActiveSector) :
+    activeSectorEquiv Z = (Z.1.x, Z.1.y) := rfl
+
 /-- The concrete active-support/Klein equivalence preserves the polarized
 quadratic forms exactly. -/
 theorem kleinPolar_activeKleinEquiv (X Y : ActiveSector) :
@@ -61,7 +65,7 @@ theorem kleinPolar_activeKleinEquiv (X Y : ActiveSector) :
     ← kleinForm_activeKleinEquiv Y]
   rcases X with ⟨X, hX⟩
   rcases Y with ⟨Y, hY⟩
-  simp [activeKleinEquiv, activeSectorEquiv, wittKleinEquiv,
+  simp [activeKleinEquiv, activeSectorEquiv_apply', wittKleinEquiv,
     kleinPolar, kleinForm]
   ring
 

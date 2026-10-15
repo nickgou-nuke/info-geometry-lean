@@ -105,15 +105,17 @@ theorem trivialFrameProjection_action {Base : Type*}
 
 theorem trivialFrameAction_one {Base : Type*} (p : trivialFrameTotal Base) :
     trivialFrameAction p 1 = p := by
-  cases p
-  simp [trivialFrameAction]
+  apply Prod.ext
+  · rfl
+  · simp [trivialFrameAction]
 
 theorem trivialFrameAction_mul {Base : Type*} (p : trivialFrameTotal Base)
     (u v : Circle) :
     trivialFrameAction (trivialFrameAction p u) v =
       trivialFrameAction p (u * v) := by
-  cases p
-  simp [trivialFrameAction, mul_assoc]
+  apply Prod.ext
+  · rfl
+  · simp [trivialFrameAction, mul_assoc]
 
 /-- A scaled symplectic curvature datum.
 
@@ -219,7 +221,7 @@ theorem standardPlane_form_closed (X Y Z : SymplecticPlane) :
   have hZX : ⁅Z, X⁆ = (0 : SymplecticPlane) := rfl
   have hXY : ⁅X, Y⁆ = (0 : SymplecticPlane) := rfl
   rw [hYZ, hZX, hXY]
-  simp only [map_zero, add_zero, zero_add]
+  simp only [map_zero, add_zero]
 
 noncomputable def standardPlaneScaledCurvature (hbar : ℝ) (hh : hbar ≠ 0) :
     ScaledSymplecticCurvatureData standardSymplecticPlaneLeaf where

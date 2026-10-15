@@ -576,7 +576,8 @@ theorem fullPeel_eq_one_of_basis_readback
     fullPeel g = 1 := by
   apply automorphism_ext_of_basis
   intro j
-  simpa using hreadback j
+  rw [hreadback j]
+  rfl
 
 theorem fullPeel_mem_unipotent_of_basis_readback
     {g : SplitOctF2Aut}
@@ -586,7 +587,8 @@ theorem fullPeel_mem_unipotent_of_basis_readback
   apply mem_unipotentSubgroup_of_basis_action_eq
     (e := fun _ : Fin 6 => false)
   intro j
-  simpa [pcWord_zero_eq_one] using hreadback j
+  rw [hreadback j]
+  rfl
 
 theorem nativeFlagStabilizer_le_unipotent_of_fullPeel_basis_readback
     (hreadback : ∀ g : SplitOctF2Aut, g ∈ nativeFlagStabilizer →
@@ -783,15 +785,9 @@ theorem preceding_peel34_basis8_four_readback
     {g : SplitOctF2Aut}
     (hg : g ∈ nativeFlagStabilizer) :
     (peel34 (peel2 (peel1 (peel0 g)))).1 (basis8 4) = basis8 4 := by
-  have h0 : (peel0 g).1 (basis8 4) = basis8 4 := by
-    rw [peel0_apply_basis8_4]
-    exact nativeFlagStabilizer_basis8_four hg
-  have h1 : (peel1 (peel0 g)).1 (basis8 4) = basis8 4 := by
-    rw [peel1_basis8_4, h0]
-    simp [basis8, ePlus, eMinus, up0, up1, up2, down0, down1, down2]
   have h2 : (peel2 (peel1 (peel0 g))).1 (basis8 4) = basis8 4 := by
-    rw [peel2_basis8_4, h1]
-    simp [basis8, ePlus, eMinus, up0, up1, up2, down0, down1, down2]
+    rw [peel2_peel1_peel0_basis8_4_fixed]
+    exact nativeFlagStabilizer_basis8_four hg
   exact peel34_basis8_four_fixed_of_readback h2
 
 theorem preceding_peel0_basis8_five_readback
@@ -1026,17 +1022,11 @@ theorem nativeFlagStabilizer_peel34_basis8_seven_y2_readback
   have h1 := peel1_mem_nativeFlagStabilizer h0
   have h2 := peel2_mem_nativeFlagStabilizer h1
   apply peel34_basis8_seven_y2_of_readbacks
-  · have h4₀ : (peel0 g).1 (basis8 4) = basis8 4 := by
-      rw [peel0_apply_basis8_4]
-      exact nativeFlagStabilizer_basis8_four hg
-    have h4₁ : (peel1 (peel0 g)).1 (basis8 4) = basis8 4 := by
-      rw [peel1_basis8_4, h4₀]
-      simp [basis8, ePlus, eMinus, up0, up1, up2, down0, down1, down2]
-    rw [peel2_basis8_4, h4₁]
-    simp [basis8, ePlus, eMinus, up0, up1, up2, down0, down1, down2]
+  · rw [peel2_peel1_peel0_basis8_4_fixed]
+    exact nativeFlagStabilizer_basis8_four hg
   · have h6 := nativeFlagStabilizer_basis8_six_coordinate_form h2
     have hy2 := congrArg SplitOctF2.y2 h6
-    simpa [h6] using hy2
+    exact hy2
   · exact nativeFlagStabilizer_peel2_basis8_seven_y2_readback hg
 
 theorem fullPeel_basis8_seven_y2_of_preceding_x2_false
@@ -1349,17 +1339,19 @@ theorem nativeFlagStabilizer_peel0_basis8_seven_x0_coordinate_control
     (hg : g ∈ nativeFlagStabilizer) :
     ((peel0 g).1 (basis8 7)).x0 = false := by
   rw [peel0_apply_basis8_7]
-  simp only [extractBit0]
-  split
-  · rw [automorphism_map_add, automorphism_map_add]
+  by_cases h0 : extractBit0 g = true
+  · simp only [h0, ite_true]
+    rw [automorphism_map_add, automorphism_map_add]
     change ((g.1 (basis8 2)).x0 ^^
       ((g.1 (basis8 6)).x0 ^^ (g.1 (basis8 7)).x0)) = false
     have h6 := nativeFlagStabilizer_basis8_six_coordinate_form hg
     have h6x0 : (g.1 (basis8 6)).x0 = false := by
       rw [h6]
     have h2 := nativeFlagStabilizer_basis8_two_x0 hg
+    have h7x0 : (g.1 (basis8 7)).x0 = true := h0
     simp_all
-  · exact Bool.eq_false_of_not_eq_true ‹¬ (g.1 (basis8 7)).x0 = true›
+  · simp only [h0]
+    exact Bool.eq_false_of_not_eq_true h0
 
 theorem nativeFlagStabilizer_peel1_basis8_seven_x0_invariant
     {f : SplitOctF2Aut}
@@ -2101,7 +2093,7 @@ theorem fullPeel_basis8_two_readback_of_reduced_shape
   rw [hshape] at hx1
   change x1 = false at hx1
   subst x1
-  simpa [basis8] using hshape
+  exact hshape
 
 theorem fullPeel_mem_unipotent_of_generators_and_x1
     {g : SplitOctF2Aut} (hg : g ∈ nativeFlagStabilizer)

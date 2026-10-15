@@ -45,7 +45,7 @@ used by the finite Grassmannian boundary tower. -/
 
 def appendZeroColumn₂ (C : Matrix (Fin 2) (Fin n) ℝ) :
     Matrix (Fin 2) (Fin (n + 1)) ℝ :=
-  Matrix.of (fun i j => if hj : j.val < n then C i ⟨j.val, hj⟩ else 0)
+  fun i j => if hj : j.val < n then C i ⟨j.val, hj⟩ else 0
 
 /-- The linear boundary-extension map obtained by appending a zero column. -/
 def appendZeroColumn₂Linear (n : ℕ) :
@@ -69,9 +69,10 @@ theorem appendZeroColumn₂_nonnegative
     HasNonnegativeMaximalMinors (appendZeroColumn₂ C) := by
   intro s hs
   by_cases hlast : s 1 = Fin.last n
-  · unfold maximalMinor appendZeroColumn₂
-    rw [Matrix.det_fin_two]
-    simp [hlast]
+  · let D : Matrix (Fin 2) (Fin 2) ℝ := fun i j => (appendZeroColumn₂ C) i (s j)
+    change 0 ≤ Matrix.det D
+    rw [Matrix.det_fin_two D]
+    simp [D, appendZeroColumn₂, hlast]
   · let sOld : Fin 2 → Fin n := fun j =>
       (s j).castPred (by
         fin_cases j
@@ -95,8 +96,10 @@ theorem appendZeroColumn₂_nonnegative
         · exact hlast)
     have hminor :
         maximalMinor (appendZeroColumn₂ C) s = maximalMinor C sOld := by
-      unfold maximalMinor appendZeroColumn₂
-      rw [Matrix.det_fin_two, Matrix.det_fin_two]
+      let D : Matrix (Fin 2) (Fin 2) ℝ := fun i j => (appendZeroColumn₂ C) i (s j)
+      let E : Matrix (Fin 2) (Fin 2) ℝ := fun i j => C i (sOld j)
+      change Matrix.det D = Matrix.det E
+      rw [Matrix.det_fin_two D, Matrix.det_fin_two E]
       have hs1lt : (s 1).val < n := Fin.val_lt_last hlast
       have hs0lt : (s 0).val < n := by
         have h01 : s 0 < s 1 := hs (by decide)
@@ -107,7 +110,7 @@ theorem appendZeroColumn₂_nonnegative
       have h1 : sOld 1 = ⟨(s 1).val, hs1lt⟩ := by
         apply Fin.ext
         rfl
-      simp [hs0lt, hs1lt, h0, h1]
+      simp [D, E, appendZeroColumn₂, hs0lt, hs1lt, h0, h1]
     rw [hminor]
     exact hC sOld hsOld
 
@@ -123,9 +126,10 @@ theorem appendZeroColumn₂_not_mem_positiveGrassmannianInterior
     fin_cases i <;> fin_cases j <;> simp [s] at hij ⊢
     exact hn
   have hminor := hC s hs
-  unfold maximalMinor appendZeroColumn₂ at hminor
-  rw [Matrix.det_fin_two] at hminor
-  simp [s] at hminor
+  let D : Matrix (Fin 2) (Fin 2) ℝ := fun i j => (appendZeroColumn₂ C) i (s j)
+  change 0 < Matrix.det D at hminor
+  rw [Matrix.det_fin_two D] at hminor
+  simp [D, appendZeroColumn₂, s] at hminor
 
 theorem appendZeroColumn₂_boundary_classification
     (n : ℕ) (hn : 0 < n) (C : Matrix (Fin 2) (Fin n) ℝ)
@@ -228,7 +232,9 @@ theorem maximalMinor_left_mul
   let B : Matrix (Fin k) (Fin k) ℝ := fun i j => C i (s j)
   have hmat : (fun i j => (A * C) i (s j)) = A * B := by
     ext i j
-    simp [B, Matrix.mul_apply]
+    change (∑ j_1, A i j_1 * C j_1 (s j)) =
+      ∑ j_1, A i j_1 * C j_1 (s j)
+    rfl
   rw [hmat, Matrix.det_mul]
 
 theorem hasPositiveMaximalMinors_left_mul

@@ -29,7 +29,8 @@ theorem swap01_conj_pc0 :
   rw [h_inv]
   apply automorphism_ext_of_basis
   intro i
-  rw [aut_mul_apply, pcWord_apply]
+  repeat rw [aut_mul_apply]
+  repeat rw [pcWord_apply]
   fin_cases i <;>
     simp [pcWordFun, pcTermFun, pcGenerator, swap01Aut_apply, swap01Fun,
       G2TwoSylowPCAutomorphisms.pc1Aut, involutiveEquiv,
@@ -48,7 +49,8 @@ theorem swap01_conj_pc2 :
   rw [h_inv]
   apply automorphism_ext_of_basis
   intro i
-  rw [pcWord_apply]
+  repeat rw [aut_mul_apply]
+  repeat rw [pcWord_apply]
   fin_cases i <;>
     simp [pcWordFun, pcTermFun, pcGenerator, swap01Aut_apply, swap01Fun,
       G2TwoSylowPCAutomorphisms.pc3Aut,
@@ -68,7 +70,8 @@ theorem swap01_conj_pc3 :
   rw [h_inv]
   apply automorphism_ext_of_basis
   intro i
-  rw [pcWord_apply]
+  repeat rw [aut_mul_apply]
+  repeat rw [pcWord_apply]
   fin_cases i <;>
     simp [pcWordFun, pcTermFun, pcGenerator, swap01Aut_apply, swap01Fun,
       G2TwoSylowPCAutomorphisms.pc4Aut, involutiveEquiv, pc4Fun, pc6Fun,
@@ -86,7 +89,8 @@ theorem swap01_conj_pc4 :
   rw [h_inv]
   apply automorphism_ext_of_basis
   intro i
-  rw [pcWord_apply]
+  repeat rw [aut_mul_apply]
+  repeat rw [pcWord_apply]
   fin_cases i <;>
     simp [pcWordFun, pcTermFun, pcGenerator, swap01Aut_apply, swap01Fun,
       G2TwoSylowPCAutomorphisms.pc5Aut,
@@ -105,7 +109,8 @@ theorem swap01_conj_pc5 :
   rw [h_inv]
   apply automorphism_ext_of_basis
   intro i
-  rw [pcWord_apply]
+  repeat rw [aut_mul_apply]
+  repeat rw [pcWord_apply]
   fin_cases i <;>
     simp [pcWordFun, pcTermFun, pcGenerator, swap01Aut_apply, swap01Fun,
       G2TwoSylowPCAutomorphisms.pc6Aut,
@@ -427,7 +432,7 @@ theorem swap01_concrete_bn2 (b : SplitOctF2Aut)
     InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure.unipotentSubgroup
     swap01ComplementSubgroup swap01Aut swap01Aut_sq r hr
     (fun h hh => swap01_conj_complement_mem_unipotent h hh)
-    (by simpa [r] using swap01_rank_one_witness) b hb
+    swap01_rank_one_witness b hb
     (swap01_borel_split b hb)
 
 end InfoGeometry.Algebra.Zorn.G2ConcreteBN2FirstConjugation

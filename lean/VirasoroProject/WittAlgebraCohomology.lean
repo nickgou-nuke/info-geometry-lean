@@ -204,9 +204,13 @@ theorem rank_lieTwoCohomology_eq_one :
     obtain ⟨γ, hγ'⟩ := Quotient.exists_rep γ'
     obtain ⟨r, hr⟩ := exists_add_bdry_eq_smul_virasoroCocycle γ
     use r
-    convert (LinearMap.congr_arg (f := LieTwoCocycle.toLieTwoCohomology 𝕜 ..) hr).symm
-    rw [← hγ']
-    exact (LieTwoCocycle.cohomologyClass_add_bdry γ (normalizingCochain γ)).symm
+    have h1 : r • (virasoroCocycle 𝕜).cohomologyClass = (r • virasoroCocycle 𝕜).cohomologyClass :=
+      ((LieTwoCocycle.toLieTwoCohomology 𝕜 (WittAlgebra 𝕜) 𝕜).map_smul r (virasoroCocycle 𝕜)).symm
+    have h2 : (r • virasoroCocycle 𝕜).cohomologyClass = (γ + (normalizingCochain γ).bdry).cohomologyClass := by
+      rw [← hr]
+    have h3 : (γ + (normalizingCochain γ).bdry).cohomologyClass = γ.cohomologyClass :=
+      LieTwoCocycle.cohomologyClass_add_bdry γ (normalizingCochain γ)
+    exact h1.trans (h2.trans (h3.trans hγ'))
 
 end WittAlgebra -- namespace
 

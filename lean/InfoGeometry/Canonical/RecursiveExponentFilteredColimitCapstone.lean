@@ -152,13 +152,9 @@ theorem primeRegularizedDetStage_mul_primeBosonicCutoff_eq_one
       InfoGeometry.Arithmetic.PrimeSuperalgebra.finiteComplexBosonPartition S s =
         InfoGeometry.Canonical.PrimeEulerProductConvergenceBridge.primeBosonicCutoff
           (primeAt N) s := by
-    unfold InfoGeometry.Arithmetic.PrimeSuperalgebra.finiteComplexBosonPartition
-      InfoGeometry.Canonical.PrimeEulerProductConvergenceBridge.primeBosonicCutoff
-    have hprod :=
+    exact
       InfoGeometry.Canonical.PrimeEulerProductConvergenceBridge.prod_primeSubtypesBelow_eq
         (primeAt N) s
-    have hinv := congrArg Inv.inv hprod
-    simpa [S, InfoGeometry.Canonical.PrimeEulerProductConvergenceBridge.primeEulerFactor] using hinv
   rw [← hbos]
   exact
     InfoGeometry.Arithmetic.PrimeSuperalgebra.finiteComplexFermionSupertrace_mul_finiteComplexBosonPartition_eq_one

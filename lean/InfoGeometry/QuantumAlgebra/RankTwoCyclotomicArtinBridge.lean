@@ -98,25 +98,79 @@ def B2Cartan (d : R) : Matrix (Fin 2) (Fin 2) R :=
 def CCartan (d : R) : Matrix (Fin 2) (Fin 2) R :=
   B1Cartan d * B2Cartan d
 
+private theorem fin2_mul_eq (A B C : Matrix (Fin 2) (Fin 2) R)
+    (h00 : (A * B) 0 0 = C 0 0)
+    (h01 : (A * B) 0 1 = C 0 1)
+    (h10 : (A * B) 1 0 = C 1 0)
+    (h11 : (A * B) 1 1 = C 1 1) :
+    A * B = C := by
+  ext i j
+  fin_cases i <;> fin_cases j
+  · exact h00
+  · exact h01
+  · exact h10
+  · exact h11
+
+private theorem CCartan_eq_explicit (d : R) :
+    CCartan d = ![![d ^ 2 - 1, -d], ![d, -1]] := by
+  have h := Matrix.two_mul_expl (B1Cartan d) (B2Cartan d)
+  apply fin2_mul_eq
+  · convert h.1 using 1 <;> simp [B1Cartan, B2Cartan, pow_two] <;> ring
+  · convert h.2.1 using 1 <;> simp [B1Cartan, B2Cartan, pow_two] <;> ring
+  · convert h.2.2.1 using 1 <;> simp [B1Cartan, B2Cartan, pow_two] <;> ring
+  · convert h.2.2.2 using 1 <;> simp [B1Cartan, B2Cartan, pow_two] <;> ring
+
 /-- 🏆 THEOREM 3: The Coxeter product trace is $\operatorname{tr}(C(d)) = d^2 - 2$. -/
 theorem CCartan_trace (d : R) :
     Matrix.trace (CCartan d) = d ^ 2 - 2 := by
-  dsimp [CCartan, B1Cartan, B2Cartan]
-  simp [Matrix.trace, Matrix.diag, Matrix.mul_apply, Fin.sum_univ_two]
+  rw [CCartan_eq_explicit]
+  simp [Matrix.trace, Matrix.diag, Fin.sum_univ_two]
   ring
 
 /-- 🏆 THEOREM 4: For $m=6$ ($d^2 = 3$), $C^3 = -I$ and $C^6 = I$. -/
 theorem CCartan_six_order (d : R) (hd : d ^ 2 = 3) :
     (CCartan d) ^ 3 = -1 ∧ (CCartan d) ^ 6 = 1 := by
-  have hC : CCartan d = ![![d ^ 2 - 1, -d], ![d, -1]] := by
-    ext i j; fin_cases i <;> fin_cases j <;> simp [CCartan, B1Cartan, B2Cartan, Matrix.mul_apply, Fin.sum_univ_two] <;> ring
+  have hC := CCartan_eq_explicit d
+  let M : Matrix (Fin 2) (Fin 2) R := ![![d ^ 2 - 1, -d], ![d, -1]]
+  have hM2 : M ^ 2 = M - 1 := by
+    rw [pow_two]
+    have h := Matrix.two_mul_expl M M
+    apply fin2_mul_eq
+    · calc
+        (M * M) 0 0 = M 0 0 * M 0 0 + M 0 1 * M 1 0 := h.1
+        _ = M 0 0 - 1 := by
+          simp [M, pow_two]
+          linear_combination (d ^ 2 - 1) * hd
+        _ = (M - 1) 0 0 := by simp [Matrix.sub_apply, Matrix.one_apply]
+    · calc
+        (M * M) 0 1 = M 0 0 * M 0 1 + M 0 1 * M 1 1 := h.2.1
+        _ = M 0 1 := by
+          simp [M]
+          linear_combination (-d) * hd
+        _ = (M - 1) 0 1 := by simp [Matrix.sub_apply, Matrix.one_apply]
+    · calc
+        (M * M) 1 0 = M 1 0 * M 0 0 + M 1 1 * M 1 0 := h.2.2.1
+        _ = M 1 0 := by
+          simp [M]
+          linear_combination d * hd
+        _ = (M - 1) 1 0 := by simp [Matrix.sub_apply, Matrix.one_apply]
+    · calc
+        (M * M) 1 1 = M 1 0 * M 0 1 + M 1 1 * M 1 1 := h.2.2.2
+        _ = M 1 1 - 1 := by
+          simp [M]
+          linear_combination -hd
+        _ = (M - 1) 1 1 := by simp [Matrix.sub_apply, Matrix.one_apply]
+  have hM3 : M ^ 3 = -1 := by
+    calc
+      M ^ 3 = M ^ 2 * M := by rw [pow_succ]
+      _ = (M - 1) * M := by rw [hM2]
+      _ = M * M - 1 * M := by rw [Matrix.sub_mul]
+      _ = M ^ 2 - M := by rw [one_mul, pow_two]
+      _ = (M - 1) - M := by rw [hM2]
+      _ = -1 := by ext i j; fin_cases i <;> fin_cases j <;> simp
   have h3 : (CCartan d) ^ 3 = -1 := by
-    ext i j; fin_cases i <;> fin_cases j <;>
-      simp [hC, pow_three, Matrix.mul_apply, Fin.sum_univ_two]
-    · linear_combination (d ^ 4 - 2 * d ^ 2) * hd
-    · linear_combination (-d ^ 3 + d) * hd
-    · linear_combination (d ^ 3 - d) * hd
-    · linear_combination (-d ^ 2) * hd
+    rw [hC]
+    exact hM3
   constructor
   · exact h3
   · have h6 : (CCartan d) ^ 6 = ((CCartan d) ^ 3) ^ 2 := by
@@ -128,15 +182,157 @@ theorem CCartan_six_order (d : R) (hd : d ^ 2 = 3) :
 /-- 🏆 THEOREM 5: For $m=5$ ($d^2 = d + 1$), the Coxeter product has order 5: $(B_1 B_2)^5 = I$. -/
 theorem CCartan_five_order (d : R) (hd : d ^ 2 = d + 1) :
     (CCartan d) ^ 5 = 1 := by
-  have hC : CCartan d = ![![d ^ 2 - 1, -d], ![d, -1]] := by
-    ext i j; fin_cases i <;> fin_cases j <;> simp [CCartan, B1Cartan, B2Cartan, Matrix.mul_apply, Fin.sum_univ_two] <;> ring
-  have h_poly : d ^ 2 - d - 1 = 0 := by linear_combination hd
-  ext i j; fin_cases i <;> fin_cases j <;>
-    simp [hC, pow_succ, pow_succ, Matrix.mul_apply, Fin.sum_univ_two]
-  · linear_combination (d ^ 8 + d ^ 7 - 7 * d ^ 6 - 6 * d ^ 5 + 15 * d ^ 4 + 9 * d ^ 3 - 11 * d ^ 2 - 2 * d + 2) * h_poly
-  · linear_combination (-d ^ 7 - d ^ 6 + 6 * d ^ 5 + 5 * d ^ 4 - 10 * d ^ 3 - 5 * d ^ 2 + 5 * d) * h_poly
-  · linear_combination (d ^ 7 + d ^ 6 - 6 * d ^ 5 - 5 * d ^ 4 + 10 * d ^ 3 + 5 * d ^ 2 - 5 * d) * h_poly
-  · linear_combination (-d ^ 6 - d ^ 5 + 5 * d ^ 4 + 4 * d ^ 3 - 6 * d ^ 2 - 2 * d + 2) * h_poly
+  have hC := CCartan_eq_explicit d
+  let M : Matrix (Fin 2) (Fin 2) R := ![![d ^ 2 - 1, -d], ![d, -1]]
+  have hd3 : d ^ 3 = 2 * d + 1 := by
+    calc
+      d ^ 3 = d ^ 2 * d := by rw [pow_succ]
+      _ = (d + 1) * d := by rw [hd]
+      _ = d ^ 2 + d := by ring
+      _ = (d + 1) + d := by rw [hd]
+      _ = 2 * d + 1 := by ring
+  have hd4 : d ^ 4 = 3 * d + 2 := by
+    calc
+      d ^ 4 = d ^ 3 * d := by rw [pow_succ]
+      _ = (2 * d + 1) * d := by rw [hd3]
+      _ = 2 * d ^ 2 + d := by ring
+      _ = 2 * (d + 1) + d := by rw [hd]
+      _ = 3 * d + 2 := by ring
+  have hd_sub : d ^ 2 - d = 1 := by rw [hd]; ring
+  have hd_flip : d - d ^ 2 = -1 := by
+    calc
+      d - d ^ 2 = -(d ^ 2 - d) := by ring
+      _ = -1 := by rw [hd_sub]
+  have hd_sq_sub_one : d ^ 2 - 1 = d := by rw [hd]; ring
+  have hd_mul_sub : d * d - d = 1 := by simpa only [pow_two] using hd_sub
+  have hd_sub_mul : d - d * d = -1 := by simpa only [pow_two] using hd_flip
+  have hd_mul_sq_sub_one : d * d - 1 = d := by
+    simpa only [pow_two] using hd_sq_sub_one
+  have hd_cube_reduce : -d ^ 3 + 2 * d ^ 2 = 1 := by
+    rw [hd3, hd]
+    ring
+  let M2 : Matrix (Fin 2) (Fin 2) R := ![![0, -1], ![1, -d]]
+  let M3 : Matrix (Fin 2) (Fin 2) R := ![![-d, 1], ![-1, 0]]
+  let M4 : Matrix (Fin 2) (Fin 2) R := ![![-1, d], ![-d, d]]
+  have hM2 : M ^ 2 = M2 := by
+    rw [pow_two]
+    have h := Matrix.two_mul_expl M M
+    apply fin2_mul_eq
+    · calc
+        (M * M) 0 0 = M 0 0 * M 0 0 + M 0 1 * M 1 0 := h.1
+        _ = 0 := by simp [M, hd_sq_sub_one]
+        _ = M2 0 0 := by simp [M2]
+    · calc
+        (M * M) 0 1 = M 0 0 * M 0 1 + M 0 1 * M 1 1 := h.2.1
+        _ = -1 := by
+          simp [M, hd_sq_sub_one]
+          calc
+            -(d * d) + d = d - d ^ 2 := by rw [pow_two]; ring
+            _ = -1 := hd_flip
+        _ = M2 0 1 := by simp [M2]
+    · calc
+        (M * M) 1 0 = M 1 0 * M 0 0 + M 1 1 * M 1 0 := h.2.2.1
+        _ = 1 := by
+          simp [M, hd_sq_sub_one]
+          calc
+            d * d + -d = d ^ 2 - d := by rw [pow_two]; ring
+            _ = 1 := hd_sub
+        _ = M2 1 0 := by simp [M2]
+    · calc
+        (M * M) 1 1 = M 1 0 * M 0 1 + M 1 1 * M 1 1 := h.2.2.2
+        _ = -d := by
+          simp [M]
+          calc
+            -(d * d) + 1 = -(d ^ 2) + 1 := by rw [pow_two]
+            _ = -d := by rw [hd]; ring
+        _ = M2 1 1 := by simp [M2]
+  have hM3 : M2 * M = M3 := by
+    have h := Matrix.two_mul_expl M2 M
+    apply fin2_mul_eq
+    · calc
+        (M2 * M) 0 0 = M2 0 0 * M 0 0 + M2 0 1 * M 1 0 := h.1
+        _ = -d := by simp [M, M2]
+        _ = M3 0 0 := by simp [M3]
+    · calc
+        (M2 * M) 0 1 = M2 0 0 * M 0 1 + M2 0 1 * M 1 1 := h.2.1
+        _ = 1 := by simp [M, M2]
+        _ = M3 0 1 := by simp [M3]
+    · calc
+        (M2 * M) 1 0 = M2 1 0 * M 0 0 + M2 1 1 * M 1 0 := h.2.2.1
+        _ = -1 := by
+          simp [M, M2]
+          rw [hd_sq_sub_one]
+          simpa [sub_eq_add_neg] using hd_sub_mul
+        _ = M3 1 0 := by simp [M3]
+    · calc
+        (M2 * M) 1 1 = M2 1 0 * M 0 1 + M2 1 1 * M 1 1 := h.2.2.2
+        _ = 0 := by simp [M, M2]
+        _ = M3 1 1 := by simp [M3]
+  have hM4 : M3 * M = M4 := by
+    have h := Matrix.two_mul_expl M3 M
+    apply fin2_mul_eq
+    · calc
+        (M3 * M) 0 0 = M3 0 0 * M 0 0 + M3 0 1 * M 1 0 := h.1
+        _ = -1 := by
+          simp [M, M3]
+          rw [hd_sq_sub_one]
+          calc
+            -(d * d) + d = d - d * d := by ring
+            _ = -1 := hd_sub_mul
+        _ = M4 0 0 := by simp [M4]
+    · calc
+        (M3 * M) 0 1 = M3 0 0 * M 0 1 + M3 0 1 * M 1 1 := h.2.1
+        _ = d := by
+          simp [M, M3]
+          simpa [sub_eq_add_neg] using hd_mul_sq_sub_one
+        _ = M4 0 1 := by simp [M4]
+    · calc
+        (M3 * M) 1 0 = M3 1 0 * M 0 0 + M3 1 1 * M 1 0 := h.2.2.1
+        _ = -d := by simp [M, M3, hd_sq_sub_one]
+        _ = M4 1 0 := by simp [M4]
+    · calc
+        (M3 * M) 1 1 = M3 1 0 * M 0 1 + M3 1 1 * M 1 1 := h.2.2.2
+        _ = d := by simp [M, M3]
+        _ = M4 1 1 := by simp [M4]
+  have hM5 : M4 * M = 1 := by
+    have h := Matrix.two_mul_expl M4 M
+    apply fin2_mul_eq
+    · calc
+        (M4 * M) 0 0 = M4 0 0 * M 0 0 + M4 0 1 * M 1 0 := h.1
+        _ = 1 := by
+          simp [M, M4]
+          calc
+            1 - d ^ 2 + d * d = 1 - d ^ 2 + d ^ 2 := by rw [pow_two]
+            _ = 1 := by ring
+        _ = (1 : Matrix (Fin 2) (Fin 2) R) 0 0 := by simp
+    · calc
+        (M4 * M) 0 1 = M4 0 0 * M 0 1 + M4 0 1 * M 1 1 := h.2.1
+        _ = 0 := by simp [M, M4]
+        _ = (1 : Matrix (Fin 2) (Fin 2) R) 0 1 := by simp
+    · calc
+        (M4 * M) 1 0 = M4 1 0 * M 0 0 + M4 1 1 * M 1 0 := h.2.2.1
+        _ = 0 := by simp [M, M4, hd_sq_sub_one]
+        _ = (1 : Matrix (Fin 2) (Fin 2) R) 1 0 := by simp
+    · calc
+        (M4 * M) 1 1 = M4 1 0 * M 0 1 + M4 1 1 * M 1 1 := h.2.2.2
+        _ = 1 := by
+          simp [M, M4]
+          calc
+            d * d + -d = d ^ 2 - d := by rw [pow_two]; ring
+            _ = 1 := hd_sub
+        _ = (1 : Matrix (Fin 2) (Fin 2) R) 1 1 := by simp
+  have hM3pow : M ^ 3 = M3 := by
+    rw [pow_succ, hM2]
+    exact hM3
+  have hM4pow : M ^ 4 = M4 := by
+    rw [pow_succ, hM3pow]
+    exact hM4
+  have hM5pow : M ^ 5 = 1 := by
+    rw [pow_succ, hM4pow]
+    exact hM5
+  rw [hC]
+  change M ^ 5 = 1
+  exact hM5pow
 
 /-! ### Semilinear Galois Transport on the Operator Carrier -/
 

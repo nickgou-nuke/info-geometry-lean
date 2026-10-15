@@ -118,13 +118,10 @@ theorem critical_zero_to_node
     (z : CenteredZeroReadout) (hz : z.OnCriticalLine) :
     (fromCentered z.coord).toComplex = criticalNode z.tangentCoordinate := by
   apply Complex.ext
-  · dsimp [fromCentered, criticalNode, criticalLine,
-      ZetaAffineChart.toComplex]
-    rw [show z.coord.u = 0 from hz]
-    ring
-  · dsimp [fromCentered, criticalNode, criticalLine,
+  · simp [fromCentered, criticalNode, criticalLine,
+      ZetaAffineChart.toComplex, show z.coord.u = 0 from hz]
+  · simp [fromCentered, criticalNode, criticalLine,
       ZetaAffineChart.toComplex, CenteredZeroReadout.tangentCoordinate]
-    ring
 
 /-- The zero law remains an explicit hypothesis carried by the readout; critical
 location alone does not manufacture a zero. -/

@@ -1,4 +1,4 @@
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.DiracPauliGamma
 
@@ -71,7 +71,8 @@ theorem P_ASD_idempotent : P_ASD * P_ASD = P_ASD := by
 theorem P_SD_mul_P_ASD_eq_zero : P_SD * P_ASD = 0 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    (simp [P_SD, P_ASD, gamma5, Matrix.mul_apply, Fin.sum_univ_succ, Matrix.one_apply, zero_apply]; try norm_num; try ring_nf)
+    (simp [P_SD, P_ASD, gamma5, Matrix.mul_apply, Fin.sum_univ_succ, Matrix.one_apply,
+      Matrix.zero_apply]; try norm_num; try ring_nf)
 
 end
 

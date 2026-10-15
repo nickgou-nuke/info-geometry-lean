@@ -81,8 +81,9 @@ theorem finiteRelations_hold_after_succ (n : ℕ) :
     ∀ r ∈ braid_rels n,
       FreeGroup.lift
         (fun i : Fin n => (σ' (n + 1) i.castSucc : braid_group (n + 2))) r = 1 := by
-  simpa [straightStrandGenerator] using
-    (canonicalStraightStrandRelators n)
+  intro r hr
+  change FreeGroup.lift (straightStrandGenerator n) r = 1
+  exact canonicalStraightStrandRelators n r hr
 
 /-- Standard stabilization `B_{n+1} → B_{n+2}` induced by `Fin.castSucc` on
 Artin generators. -/
@@ -139,8 +140,7 @@ theorem group_generator_matches_colimit_boundary
 
 /-- The finite braid-group tower as a sequence in Mathlib's category of groups. -/
 def braidGroupDiagram : ℕ ⥤ GrpCat :=
-  Functor.ofSequence
-    (fun n => GrpCat.ofHom (finiteSuccGroupHom n))
+  Functor.ofSequence (fun n => GrpCat.ofHom (finiteSuccGroupHom n))
 
 /-- The existing infinite braid group as a cocone point for the finite tower. -/
 def braidGroupBoundaryCocone : Cocone braidGroupDiagram where
@@ -151,11 +151,14 @@ def braidGroupBoundaryCocone : Cocone braidGroupDiagram where
       (naturality := by
         intro n
         apply GrpCat.hom_ext
-        simpa [braidGroupDiagram] using finiteToInfiniteGroupHom_succ_compatible n)
+        simp only [braidGroupDiagram, Functor.ofSequence_map_homOfLE_succ]
+        change (finiteToInfiniteGroupHom (n + 1)).comp
+          (finiteSuccGroupHom n) = finiteToInfiniteGroupHom n
+        exact finiteToInfiniteGroupHom_succ_compatible n)
 
 /-- Mathlib's categorical colimit object of the finite braid-group tower. -/
 def braidGroupColimit : GrpCat :=
-  GrpCat.FilteredColimits.colimit braidGroupDiagram
+  (GrpCat.FilteredColimits.colimitCocone braidGroupDiagram).pt
 
 /-- Canonical comparison map from the categorical finite-stage colimit to the
 repository-owned presented infinite braid group. -/

@@ -1,3 +1,4 @@
+import InfoGeometry.Canonical.DecomposableBivector
 import InfoGeometry.Projective.ExteriorKleinFrameSurjection
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -24,40 +25,6 @@ open InfoGeometry.Projective.ExteriorKleinFrameSurjection
 abbrev RealTwoPlane :=
   {P : Submodule ℝ Vec4 // Module.finrank ℝ P = 2}
 
-/-- Nonvanishing of the top exterior product of a finite basis of a submodule,
-after inclusion into the ambient space. -/
-theorem exterior_ιMulti_coe_basis_ne_zero
-    {n : ℕ} {V : Type*} [AddCommGroup V] [Module ℝ V]
-    {P : Submodule ℝ V} (b : Module.Basis (Fin n) ℝ P) :
-    exteriorPower.ιMulti ℝ n (fun i => (b i : V)) ≠ 0 := by
-  choose g hg using fun i : Fin n => LinearMap.exists_extend (b.coord i)
-  let f : Fin n → Module.Dual ℝ V := g
-  have hg_apply (i j : Fin n) :
-      g i (b j : V) = (b.coord i) (b j) := by
-    exact LinearMap.congr_fun (hg i) (b j)
-  have heval :
-      (exteriorPower.alternatingMapToDual ℝ V n f)
-          (exteriorPower.ιMulti ℝ n (fun i => (b i : V))) = 1 := by
-    rw [exteriorPower.alternatingMapToDual_apply_ιMulti]
-    rw [show Matrix.of (fun i j => f j (b i : V)) = 1 by
-      ext i j
-      classical
-      by_cases h : i = j <;>
-        simp [f, hg_apply, h, Matrix.one_apply]]
-    exact Matrix.det_one
-  intro hzero
-  rw [hzero, map_zero] at heval
-  norm_num at heval
-
-/-- The universal exterior product of a finite linearly independent family is
-nonzero. -/
-theorem exterior_ιMulti_ne_zero_of_linearIndependent
-    {n : ℕ} {V : Type*} [AddCommGroup V] [Module ℝ V]
-    (v : Fin n → V) (hv : LinearIndependent ℝ v) :
-    exteriorPower.ιMulti ℝ n v ≠ 0 := by
-  simpa only [Module.Basis.span_apply] using
-    (exterior_ιMulti_coe_basis_ne_zero (Module.Basis.span hv))
-
 /-- A nonzero exterior two-frame is linearly independent. -/
 theorem nondegenerateExteriorFrame_linearIndependent
     (uv : NondegenerateExteriorFrame) :
@@ -83,7 +50,7 @@ theorem frameSpan_surjective : Function.Surjective frameSpan := by
     (Module.finBasis ℝ P).reindex (finCongr hP)
   have hwedge :
       exteriorPower.ιMulti ℝ 2 (fun i => (b i : Vec4)) ≠ 0 :=
-    exterior_ιMulti_coe_basis_ne_zero b
+    InfoGeometry.Canonical.exteriorPower_ιMulti_coe_basis_ne_zero b
   refine ⟨⟨fun i => (b i : Vec4), hwedge⟩, ?_⟩
   apply Subtype.ext
   change Submodule.span ℝ (Set.range (P.subtype ∘ b)) = P

@@ -1,3 +1,4 @@
+import Mathlib.Algebra.Lie.OfAssociative
 import InfoGeometry.Clifford.Cl11GradingSl2
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Exceptional.FreudenthalChargeLinear
@@ -20,6 +21,11 @@ noncomputable section
 variable {J : Type*} [AddCommGroup J] [Module ℝ J]
 
 abbrev Doublet := FreudenthalCharge J × FreudenthalCharge J
+
+local instance : LieRing (Module.End ℝ (FreudenthalCharge J)) :=
+  LieRing.ofAssociativeRing
+local instance : LieRing (Module.End ℝ (Doublet (J := J))) :=
+  LieRing.ofAssociativeRing
 
 def eAction : Module.End ℝ (Doublet (J := J)) where
   toFun z := (0, -z.1)

@@ -44,7 +44,7 @@ theorem derivation_transport
   have hX : S x = X := S.apply_symm_apply X
   have hY : S y = Y := S.apply_symm_apply Y
   rw [← hX, ← hY]
-  simp only [LinearMap.comp_apply, LinearEquiv.symm_apply_apply]
+  simp only [LinearEquiv.symm_apply_apply]
   rw [← hS x y]
   simp only [LinearEquiv.symm_apply_apply]
   rw [hD, map_add, hS, hS]
@@ -54,9 +54,16 @@ alignment. -/
 def realAlbertToH3Linear : RealAlbertMatrix →ₗ[ℝ] H3Zorn ℝ where
   toFun := toH3
   map_add' X Y := by
-    simpa using toH3_add X Y
+    have h_add : X + Y = RealAlbertMatrix.add X Y := by
+      cases X
+      cases Y
+      rfl
+    exact (congrArg toH3 h_add).trans (toH3_add X Y)
   map_smul' r X := by
-    simpa using toH3_smul r X
+    have h_smul : r • X = RealAlbertMatrix.smul r X := by
+      cases X
+      rfl
+    exact (congrArg toH3 h_smul).trans (toH3_smul r X)
 
 /-- The carrier alignment is bijective because the repository already owns the
 explicit inverse `fromH3`. -/

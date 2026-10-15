@@ -64,7 +64,7 @@ Degenerate package from the RN/Kähler/log-det unit-relative-volume assumptions.
       (M := M) hScaleFromKahler hUnitVolume
   have hComm' :
       Commute CI.spectralChiralProjector CI.metricChiralProjector := by
-    simpa [Commute] using hComm
+    exact (commute_iff_eq _ _).2 hComm
   exact CI.normalPhaseDegeneratePackage_of_projectors_commute hComm'
 
 /--

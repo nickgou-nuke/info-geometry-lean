@@ -57,7 +57,7 @@ theorem incidenceLinearMap_injective (x : ComplexSpacetime) :
 def incidencePlane (x : ComplexSpacetime) : Submodule ℂ Twistor4 :=
   LinearMap.range (incidenceLinearMap x)
 
-def projectiveIncidence
+noncomputable def projectiveIncidence
     (x : ComplexSpacetime) (π : Spinor2) (hπ : π ≠ 0) :
     ProjectiveTwistor3 :=
   Projectivization.mk ℂ (incidenceLinearMap x π) (by
@@ -84,7 +84,7 @@ theorem incidencePlane_exists_unique_spinor
 
 /- The linear incidence plane projectivizes to the Penrose line in projective
 twistor space.  This uses Mathlib's quotient-level projectivization map. -/
-def projectiveIncidenceMap
+noncomputable def projectiveIncidenceMap
     (x : ComplexSpacetime) :
     ProjectiveSpinorLine → ProjectiveTwistor3 :=
   Projectivization.map (incidenceLinearMap x)

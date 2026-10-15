@@ -177,6 +177,15 @@ theorem trace_parityLinear_eq_zero
     LinearMap.trace ℂ (Vec ι) parityLinear = 0 := by
   have h := trace_signedGibbsLinear_eq_product
     (ε := fun _ : ι => 0) (β := 0)
-  simpa [signedGibbsLinear, gibbsLinear, localBoltzmann] using h
+  have hg : gibbsLinear (fun _ : ι => (0 : ℝ)) 0 = LinearMap.id := by
+    apply LinearMap.ext
+    intro ψ
+    funext occ
+    simp [gibbsLinear]
+  change LinearMap.trace ℂ (Vec ι)
+      (parityLinear.comp (gibbsLinear (fun _ : ι => (0 : ℝ)) 0)) =
+    ∏ i : ι, (1 - (localBoltzmann 0 0 : ℂ)) at h
+  rw [hg, LinearMap.comp_id] at h
+  simpa [localBoltzmann] using h
 
 end InfoGeometry.Arithmetic.FiniteFockParity

@@ -20,7 +20,11 @@ inductive ChiralSector
   | diagonal
   | plus
   | minus
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype ChiralSector :=
+  Fintype.ofList [.diagonal, .plus, .minus]
+    (by intro x; cases x <;> simp)
 
 def chiralDegree : ChiralSector → ZMod 3
   | .diagonal => 0

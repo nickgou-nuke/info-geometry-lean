@@ -39,9 +39,12 @@ these matrices corresponds to addition of the angle parameter.
 -/
 theorem expSplitI_add (ϕ ψ : ℝ) :
   expSplitI (ϕ + ψ) = expSplitI ϕ * expSplitI ψ := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
-    simp [expSplitI, splitOne, splitI, Matrix.mul_apply, Fin.sum_univ_two,
-      Real.cos_add, Real.sin_add] <;>
+  ext i j
+  fin_cases i <;> fin_cases j
+  all_goals
+    rw [expSplitI, expSplitI, expSplitI]
+    simp only [Matrix.add_apply, Matrix.smul_apply, Matrix.mul_apply, Fin.sum_univ_two, smul_eq_mul]
+    simp [splitOne, splitI, Matrix.one_apply, Real.cos_add, Real.sin_add]
     ring
 
 end InfoGeometry.SplitExponential

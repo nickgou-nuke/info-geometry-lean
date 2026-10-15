@@ -40,26 +40,9 @@ theorem nativeBasePoint_nonzero : nativeBasePoint ≠ 0 := by
 
 theorem swap01Aut_fix_nativeBasePoint :
     octImAction swap01Aut nativeBasePoint = nativeBasePoint := by
-  have hinv : swap01Aut⁻¹ = swap01Aut := by
-    calc
-      swap01Aut⁻¹ = swap01Aut⁻¹ * 1 := by simp
-      _ = swap01Aut⁻¹ * (swap01Aut * swap01Aut) := by rw [swap01Aut_sq]
-      _ = (swap01Aut⁻¹ * swap01Aut) * swap01Aut := by rw [mul_assoc]
-      _ = swap01Aut := by rw [inv_mul_cancel]; simp
-  change imaginaryToOctIm
-      (G2ImaginaryIsotropicPoints.actImaginary swap01Aut
-        (octImToImaginary nativeBasePoint)) = nativeBasePoint
-  unfold G2ImaginaryIsotropicPoints.actImaginary
-  rw [← imaginaryOctImEquiv.right_inv nativeBasePoint]
-  have hsub : G2ImaginaryIsotropicPoints.actImaginary swap01Aut
-      (octImToImaginary nativeBasePoint) = octImToImaginary nativeBasePoint := by
-    apply Subtype.ext
-    change swap01Aut⁻¹.1 (octImToImaginary nativeBasePoint).1 =
-      (octImToImaginary nativeBasePoint).1
-    have hval := congrArg
-      (fun f : SplitOctF2Aut => f.1 (octImToImaginary nativeBasePoint).1) hinv
-    simpa [swap01Aut_apply] using hval
-  exact congrArg imaginaryToOctIm hsub
+  unfold octImAction
+  funext i
+  fin_cases i <;> rfl
 
 def nativeBaseIsotropicPoint : OctImIsotropicPoint :=
   ⟨nativeBasePoint, nativeBasePoint_isotropic, nativeBasePoint_nonzero⟩
@@ -71,17 +54,7 @@ theorem swap01Aut_pointData_fix :
     swap01Aut • nativeBasePointData = nativeBasePointData := by
   apply Subtype.ext
   apply Subtype.ext
-  change swap01Aut⁻¹.1 (octImToImaginary nativeBasePoint).1 =
-    (octImToImaginary nativeBasePoint).1
-  have hinv : swap01Aut⁻¹ = swap01Aut := by
-    calc
-      swap01Aut⁻¹ = swap01Aut⁻¹ * 1 := by simp
-      _ = swap01Aut⁻¹ * (swap01Aut * swap01Aut) := by rw [swap01Aut_sq]
-      _ = (swap01Aut⁻¹ * swap01Aut) * swap01Aut := by rw [mul_assoc]
-      _ = swap01Aut := by rw [inv_mul_cancel]; simp
-  have hval := congrArg
-    (fun f : SplitOctF2Aut => f.1 (octImToImaginary nativeBasePoint).1) hinv
-  simpa [swap01Aut_apply] using hval
+  rfl
 
 theorem octImAction_mul (g h : SplitOctF2Aut) (v : G2ParabolicLineFiber.OctImF2) :
     octImAction (g * h) v = octImAction g (octImAction h v) := by
@@ -92,74 +65,33 @@ theorem octImAction_mul (g h : SplitOctF2Aut) (v : G2ParabolicLineFiber.OctImF2)
 
 theorem pc1_fix : octImAction G2TwoSylowPCAutomorphisms.pc1Aut nativeBasePoint = nativeBasePoint := by
   unfold octImAction
-  change imaginaryToOctIm
-      (G2ImaginaryIsotropicPoints.actImaginary
-        G2TwoSylowPCAutomorphisms.pc1Aut (octImToImaginary nativeBasePoint)) = nativeBasePoint
   funext i
-  fin_cases i <;>
-    simp [G2ImaginaryIsotropicPoints.actImaginary, nativeBasePoint, octImToImaginary,
-      imaginaryToOctIm, G2TwoSylowPCAutomorphisms.pc1Aut,
-      involutiveEquiv, pc1Fun, boolToZMod, zModToBool]
+  fin_cases i <;> rfl
 
 theorem pc2_fix : octImAction G2TwoSylowPCAutomorphisms.pc2Aut nativeBasePoint = nativeBasePoint := by
   unfold octImAction
-  change imaginaryToOctIm
-      (G2ImaginaryIsotropicPoints.actImaginary
-        G2TwoSylowPCAutomorphisms.pc2Aut (octImToImaginary nativeBasePoint)) = nativeBasePoint
   funext i
-  fin_cases i <;>
-    simp [G2ImaginaryIsotropicPoints.actImaginary, nativeBasePoint, octImToImaginary,
-      imaginaryToOctIm, G2TwoSylowPCAutomorphisms.pc2Aut,
-      G2TwoSylowPCAutomorphisms.pc2Equiv,
-      pc2Fun, pc6Fun, boolToZMod, zModToBool]
+  fin_cases i <;> rfl
 
 theorem pc3_fix : octImAction G2TwoSylowPCAutomorphisms.pc3Aut nativeBasePoint = nativeBasePoint := by
   unfold octImAction
-  change imaginaryToOctIm
-      (G2ImaginaryIsotropicPoints.actImaginary
-        G2TwoSylowPCAutomorphisms.pc3Aut (octImToImaginary nativeBasePoint)) = nativeBasePoint
   funext i
-  fin_cases i <;>
-    simp [G2ImaginaryIsotropicPoints.actImaginary, nativeBasePoint, octImToImaginary,
-      imaginaryToOctIm, G2TwoSylowPCAutomorphisms.pc3Aut,
-      G2TwoSylowPCAutomorphisms.pc3Equiv,
-      pc3Fun, pc6Fun, boolToZMod, zModToBool]
+  fin_cases i <;> rfl
 
 theorem pc4_fix : octImAction G2TwoSylowPCAutomorphisms.pc4Aut nativeBasePoint = nativeBasePoint := by
   unfold octImAction
-  change imaginaryToOctIm
-      (G2ImaginaryIsotropicPoints.actImaginary
-        G2TwoSylowPCAutomorphisms.pc4Aut (octImToImaginary nativeBasePoint)) = nativeBasePoint
   funext i
-  fin_cases i <;>
-    simp [G2ImaginaryIsotropicPoints.actImaginary, nativeBasePoint, octImToImaginary,
-      imaginaryToOctIm, G2TwoSylowPCAutomorphisms.pc4Aut,
-      G2TwoSylowPCAutomorphisms.involutiveEquiv,
-      pc4Fun, boolToZMod, zModToBool]
+  fin_cases i <;> rfl
 
 theorem pc5_fix : octImAction G2TwoSylowPCAutomorphisms.pc5Aut nativeBasePoint = nativeBasePoint := by
   unfold octImAction
-  change imaginaryToOctIm
-      (G2ImaginaryIsotropicPoints.actImaginary
-        G2TwoSylowPCAutomorphisms.pc5Aut (octImToImaginary nativeBasePoint)) = nativeBasePoint
   funext i
-  fin_cases i <;>
-    simp [G2ImaginaryIsotropicPoints.actImaginary, nativeBasePoint, octImToImaginary,
-      imaginaryToOctIm, G2TwoSylowPCAutomorphisms.pc5Aut,
-      G2TwoSylowPCAutomorphisms.involutiveEquiv,
-      pc5Fun, boolToZMod, zModToBool]
+  fin_cases i <;> rfl
 
 theorem pc6_fix : octImAction G2TwoSylowPCAutomorphisms.pc6Aut nativeBasePoint = nativeBasePoint := by
   unfold octImAction
-  change imaginaryToOctIm
-      (G2ImaginaryIsotropicPoints.actImaginary
-        G2TwoSylowPCAutomorphisms.pc6Aut (octImToImaginary nativeBasePoint)) = nativeBasePoint
   funext i
-  fin_cases i <;>
-    simp [G2ImaginaryIsotropicPoints.actImaginary, nativeBasePoint, octImToImaginary,
-      imaginaryToOctIm, G2TwoSylowPCAutomorphisms.pc6Aut,
-      G2TwoSylowPCAutomorphisms.involutiveEquiv,
-      pc6Fun, boolToZMod, zModToBool]
+  fin_cases i <;> rfl
 
 theorem pcGenerator_fix (i : Fin 6) :
     octImAction (G2TwoSylowPCAutomorphisms.pcGenerator i) nativeBasePoint = nativeBasePoint := by
@@ -200,7 +132,7 @@ theorem pcGenerator_pointData_fix (i : Fin 6) :
   have himag := imaginaryOctImEquiv.injective hcoord
   exact congrArg Subtype.val himag
 
-def nativePointStabilizer : Subgroup SplitOctF2Aut :=
+noncomputable def nativePointStabilizer : Subgroup SplitOctF2Aut :=
   MulAction.stabilizer SplitOctF2Aut nativeBasePointData
 
 theorem pcSubgroup_le_nativePointStabilizer :

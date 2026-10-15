@@ -399,7 +399,24 @@ inductive FierzChannel where
   | phase
   | metric
   | area
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+private def FierzChannel.equivFin : FierzChannel ≃ Fin 4 where
+  toFun
+    | .scalar => 0
+    | .phase => 1
+    | .metric => 2
+    | .area => 3
+  invFun
+    | 0 => .scalar
+    | 1 => .phase
+    | 2 => .metric
+    | 3 => .area
+  left_inv := by intro x; cases x <;> rfl
+  right_inv := by intro i; fin_cases i <;> rfl
+
+instance : Fintype FierzChannel :=
+  Fintype.ofEquiv (Fin 4) FierzChannel.equivFin.symm
 
 /-- Model-supplied Fierz channel map on an observable algebra. -/
 @[rep_depth operator]

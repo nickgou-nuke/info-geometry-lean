@@ -1,5 +1,4 @@
 import InfoGeometry.Thermo.BipolarDissipativeGENERIC
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Thermo.BipolarThreeCoordinateGENERIC
 import InfoGeometry.Thermo.BipolarGENERICThreeCoordinateModel
 import InfoGeometry.Analysis.BipolarCrossRatioLog
@@ -58,8 +57,8 @@ theorem bipolarState_criticalLine (y : ℝ) :
   fin_cases i <;> simp [bipolarState, sectionMap, eta_criticalLine]
 
 theorem projectLinear_comp_sectionMap :
-    projectLinear.comp sectionMap = LinearMap.id := by
-  ext <;> simp [projectLinear, project, sectionMap]
+    projectLinear.comp sectionMap = LinearMap.id :=
+  LinearMap.ext fun x => project_sectionMap x
 
 theorem sectionMap_injective : Function.Injective sectionMap := by
   intro x y hxy

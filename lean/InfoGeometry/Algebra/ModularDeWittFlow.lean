@@ -1,6 +1,7 @@
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Algebra.Module.Basic
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
+import Mathlib.Algebra.Algebra.Basic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic
@@ -18,9 +19,27 @@ not construct a flow, assert a group law, or derive the action from a state.
 The explicit finite-dimensional inner action is constructed and proved below.
 -/
 
+/-- Abstract complementary Peirce idempotent pair on a ring `A`. -/
+class PeirceIdempotentSystem (A : Type*) [Ring A] where
+  P1 : A
+  P2 : A
+  hP1 : IsIdempotent P1
+  hP2 : IsIdempotent P2
+  h_sum : P1 + P2 = 1
+  h_ortho12 : P1 * P2 = 0
+  h_ortho21 : P2 * P1 = 0
+
 section ModularFlow
 
 variable {A : Type*} [Ring A] [Algebra ℝ A] [S : PeirceIdempotentSystem A]
+
+/-- The diagonal (even) Peirce part in a two-idempotent system. -/
+def diagonal (X : A) : A :=
+  S.P1 * X * S.P1 + S.P2 * X * S.P2
+
+/-- The off-diagonal (odd) Peirce part in a two-idempotent system. -/
+def off_diagonal (X : A) : A :=
+  S.P1 * X * S.P2 + S.P2 * X * S.P1
 
 /-- Conditional corner-action data. Its fields are hypotheses, not consequences
 of Peirce idempotency or a state-derived Tomita--Takesaki construction. -/
@@ -43,7 +62,7 @@ structure PeirceScalingSpecification (a : ℝ) where
   h_σ_12 : ∀ X, σ (S.P1 * X * S.P2) = (algebraMap ℝ A a) * (S.P1 * X * S.P2)
   h_σ_21 : ∀ X, σ (S.P2 * X * S.P1) = (algebraMap ℝ A a⁻¹) * (S.P2 * X * S.P1)
 
-variable (a : ℝ) (ha : a ≠ 0) (mod_flow : PeirceScalingSpecification a)
+variable (a : ℝ) (mod_flow : PeirceScalingSpecification (A := A) a)
 
 /-!
 # Archetype 708: Stationarity of the Classical Body
@@ -55,7 +74,6 @@ theorem body_is_stationary (X : A) :
   dsimp [diagonal]
   rw [mod_flow.map_add]
   rw [mod_flow.h_σ_11, mod_flow.h_σ_22]
-
 
 /-!
 # Archetype 709: Loxodromic Zitterbewegung of the Soul
@@ -77,10 +95,9 @@ theorem soul_evolves (X : A) :
 
 /-- The paired corner product is invariant under the stated reciprocal scaling
 hypotheses. This is an algebraic corner identity, not a Dirac mass-shell result. -/
-theorem evolved_soul_squared_invariant (X : A) :
+theorem evolved_soul_squared_invariant (ha : a ≠ 0) (X : A) :
     mod_flow.σ (S.P1 * X * S.P2) * mod_flow.σ (S.P2 * X * S.P1) =
       (S.P1 * X * S.P2) * (S.P2 * X * S.P1) := by
-  -- Evaluate the flowed components
   have h_12 : mod_flow.σ (S.P1 * X * S.P2) = (algebraMap ℝ A a) * (S.P1 * X * S.P2) := mod_flow.h_σ_12 X
   have h_21 : mod_flow.σ (S.P2 * X * S.P1) = (algebraMap ℝ A a⁻¹) * (S.P2 * X * S.P1) := mod_flow.h_σ_21 X
 
@@ -125,29 +142,40 @@ abbrev M2 := Matrix (Fin 2) (Fin 2) ℝ
 def gauge (a : ℝ) : M2 := !![a, 0; 0, 1]
 
 /-- The explicit inverse diagonal gauge. -/
-def gaugeInv (a : ℝ) : M2 := !![a⁻¹, 0; 0, 1]
+noncomputable def gaugeInv (a : ℝ) : M2 := !![a⁻¹, 0; 0, 1]
 
 /-- Inner conjugation by the diagonal gauge. -/
-def flow (a : ℝ) (X : M2) : M2 := gauge a * X * gaugeInv a
+noncomputable def flow (a : ℝ) (X : M2) : M2 := gauge a * X * gaugeInv a
 
 private theorem gauge_mul_gaugeInv (a : ℝ) (ha : a ≠ 0) :
     gauge a * gaugeInv a = (1 : M2) := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [gauge, gaugeInv, Matrix.mul_apply, Fin.sum_univ_two, ha]
+    simp [gauge, gaugeInv, Matrix.mul_apply, Fin.sum_univ_two, mul_inv_cancel₀ ha]
 
 private theorem gaugeInv_mul_gauge (a : ℝ) (ha : a ≠ 0) :
     gaugeInv a * gauge a = (1 : M2) := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [gauge, gaugeInv, Matrix.mul_apply, Fin.sum_univ_two, ha]
+    simp [gauge, gaugeInv, Matrix.mul_apply, Fin.sum_univ_two, inv_mul_cancel₀ ha]
 
 /-- Entrywise formula for the finite inner flow. -/
 theorem flow_entries (a : ℝ) (ha : a ≠ 0) (X : M2) :
     flow a X = !![X 0 0, a * X 0 1; a⁻¹ * X 1 0, X 1 1] := by
   ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [flow, gauge, gaugeInv, Matrix.mul_apply, Fin.sum_univ_two, ha] <;> ring
+  fin_cases i <;> fin_cases j
+  · dsimp [flow, gauge, gaugeInv]
+    simp [Matrix.mul_apply, Matrix.vecMul, dotProduct, Fin.sum_univ_two]
+    calc a * X 0 0 * a⁻¹ = X 0 0 * (a * a⁻¹) := by ring
+    _ = X 0 0 * 1 := by rw [mul_inv_cancel₀ ha]
+    _ = X 0 0 := by ring
+  · dsimp [flow, gauge, gaugeInv]
+    simp [Matrix.mul_apply, Matrix.vecMul, dotProduct, Fin.sum_univ_two]
+  · dsimp [flow, gauge, gaugeInv]
+    simp [Matrix.mul_apply, Matrix.vecMul, dotProduct, Fin.sum_univ_two]
+    ring
+  · dsimp [flow, gauge, gaugeInv]
+    simp [Matrix.mul_apply, Matrix.vecMul, dotProduct, Fin.sum_univ_two]
 
 /-- The diagonal (even) matrix part is fixed by the gauge flow. -/
 theorem flow_diagonal_part (a : ℝ) (ha : a ≠ 0) (x y : ℝ) :
@@ -171,12 +199,15 @@ theorem flow_lower_matrix_unit (a : ℝ) (ha : a ≠ 0) :
 theorem flow_mul (a : ℝ) (ha : a ≠ 0) (X Y : M2) :
     flow a (X * Y) = flow a X * flow a Y := by
   dsimp [flow]
-  noncomm_ring [gaugeInv_mul_gauge a ha]
+  calc
+    gauge a * (X * Y) * gaugeInv a = gauge a * X * 1 * Y * gaugeInv a := by simp [mul_assoc]
+    _ = gauge a * X * (gaugeInv a * gauge a) * Y * gaugeInv a := by rw [gaugeInv_mul_gauge a ha]
+    _ = (gauge a * X * gaugeInv a) * (gauge a * Y * gaugeInv a) := by simp [mul_assoc]
 
 /-- Successive gauge flows compose by multiplying their parameters. -/
 theorem flow_comp (a b : ℝ) (ha : a ≠ 0) (hb : b ≠ 0) (X : M2) :
     flow a (flow b X) = flow (a * b) X := by
   rw [flow_entries a ha, flow_entries b hb, flow_entries (a * b) (mul_ne_zero ha hb)]
-  ext i j <;> fin_cases i <;> fin_cases j <;> simp <;> ring
+  ext i j; fin_cases i <;> fin_cases j <;> simp <;> ring
 
 end InfoGeometry.Algebra.ModularDeWittFlow.FiniteMatrix

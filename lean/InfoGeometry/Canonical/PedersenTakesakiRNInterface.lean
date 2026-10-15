@@ -79,8 +79,11 @@ theorem delta_modularFixed (t : ℝ) :
 theorem delta_commutes_modularOperator :
     Commute R.delta R.base.rn.modularOperator := by
   rw [R.delta_eq_densityReadout_smul_id]
-  simpa [YangMillsContinuum.idEndH] using
-    (Commute.one_left R.base.rn.modularOperator).smul_left R.densityReadout
+  rw [R.base.rn.modularOperator_eq_rn]
+  have hid : YangMillsContinuum.idEndH E = (1 : EndH) := by
+    exact ContinuousLinearMap.one_def.symm
+  rw [hid]
+  exact (Commute.one_left (1 : EndH)).smul_left R.densityReadout |>.smul_right _
 
 /--
 Packaged interface law:

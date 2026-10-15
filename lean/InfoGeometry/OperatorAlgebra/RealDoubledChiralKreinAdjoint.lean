@@ -148,9 +148,13 @@ theorem isChiralKreinUnitary_iff_adjoint_comp_id (U : ChiralEnd (E := E)) :
       ContinuousLinearMap.id ℝ (H₂ (E := E)) := by
   apply ContinuousLinearMap.ext
   intro u
-  simpa [chiralKreinAdjoint, ContinuousLinearMap.comp_apply] using
-    congrArg (fun T : ChiralEnd (E := E) => T u)
-      (etaChiral_involution (E := E))
+  have h := congrArg (fun T : ChiralEnd (E := E) => T u)
+    (etaChiral_involution (E := E))
+  change etaChiral
+      ((ContinuousLinearMap.adjoint (ContinuousLinearMap.id ℝ (H₂ (E := E))))
+        (etaChiral u)) = u
+  rw [ContinuousLinearMap.adjoint_id]
+  exact h
 
 @[simp] theorem chiralKreinAdjoint_zero :
     chiralKreinAdjoint (0 : ChiralEnd (E := E)) = 0 := by

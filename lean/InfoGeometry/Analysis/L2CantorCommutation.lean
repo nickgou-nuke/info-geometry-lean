@@ -27,8 +27,15 @@ namespace InfoGeometry.Analysis.L2CantorCommutation
 
 /-! ## Binary symbols and boundary sequences -/
 
-inductive BinarySector : Type where | plus | minus
-  deriving DecidableEq, Fintype
+inductive BinarySector : Type where
+  | plus
+  | minus
+  deriving DecidableEq
+
+instance : Fintype BinarySector where
+  elems := {BinarySector.plus, BinarySector.minus}
+  complete := by intro x; cases x <;> simp
+
 open BinarySector
 
 abbrev BaseIndex := ℕ → BinarySector
@@ -47,9 +54,7 @@ def prepend (s : BinarySector) (x : BaseIndex) : BaseIndex
   simp [head, prepend]
 
 lemma head_cases (x : BaseIndex) : head x = plus ∨ head x = minus := by
-  have all : (Finset.univ : Finset BinarySector) = {plus, minus} := by decide
-  have mem : head x ∈ (Finset.univ : Finset BinarySector) := Finset.mem_univ _
-  simpa [all] using mem
+  cases head x <;> simp
 
 theorem prepend_head_tail (x : BaseIndex) : prepend (head x) (tail x) = x := by
   ext n; cases n <;> simp [prepend, head, tail]

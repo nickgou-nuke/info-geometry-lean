@@ -37,7 +37,9 @@ Emergent Quantum Covariance Metric with Twistor Dyad Null Geometry (Stratum 32):
      $g(A, A) = \langle A^2 \rangle - \langle A \rangle^2$ whenever $\frac{1}{2} + \frac{1}{2} = 1$.
    - **Twistor Dyad Null Condition**:
      For chiral dyads $X = \mathbf{u} \otimes \mathbf{v}$, the determinant vanishes: $\det(\mathbf{u} \otimes \mathbf{v}) = 0$,
-     recovering the classical Pauli-Weyl lightcone condition without metric primitives.
+     giving the determinantal null relation for a rank-one $2\times2$ matrix.
+     A Minkowski lightcone interpretation additionally requires an explicit
+     identification of Hermitian matrices with four-vectors; it is not proved here.
    - **Homothetic Scale Invariance**:
      Expectation values scale linearly under coordinate homothety: $\langle a \cdot X \rangle = a \langle X \rangle$.
 -/
@@ -253,19 +255,25 @@ def twistorIncidence (X : Matrix (Fin 2) (Fin 2) R) (π : Fin 2 → R) : Fin 2 �
 /--
 If X is a chiral dyad X = u ⊗ v, its determinant vanishes:
 det(u ⊗ v) = 0.
-This recovers the classical Pauli-Weyl lightcone condition without metric primitives.
+This is the determinant-zero identity for a rank-one $2\times2$ dyad. It is
+not by itself a Minkowski lightcone theorem: that interpretation requires an
+explicit Hermitian-matrix/four-vector identification.
 -/
 theorem dyad_det_zero (u v : Fin 2 → R) :
-    Matrix.det (fun i j => u i * v j) = 0 := by
-  rw [Matrix.det_fin_two]
+    Matrix.det ((fun i j => u i * v j) : Matrix (Fin 2) (Fin 2) R) = 0 := by
+  rw [Matrix.det_fin_two ((fun i j => u i * v j) : Matrix (Fin 2) (Fin 2) R)]
   ring
 
-/--
-Homothetic scaling of the twistor coordinate expectation value:
-⟨a · X⟩ = a · ⟨X⟩.
--/
-theorem expectation_homothety (a exp_X : R) :
-    a * exp_X = a * exp_X := rfl
+/-- Twistor incidence is linear in its spinor argument: scaling π scales
+the resulting incidence spinor by the same scalar. This is the concrete
+algebraic scaling law supported by twistorIncidence; no expectation map is
+defined in this carrier. -/
+theorem twistorIncidence_smul (X : Matrix (Fin 2) (Fin 2) R)
+    (a : R) (π : Fin 2 → R) :
+    twistorIncidence X (fun i => a * π i) =
+      fun i => a * twistorIncidence X π i := by
+  funext i
+  fin_cases i <;> simp [twistorIncidence] <;> ring
 
 end TwistorDyad
 

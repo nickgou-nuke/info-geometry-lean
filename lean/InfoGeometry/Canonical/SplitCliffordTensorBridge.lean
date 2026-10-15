@@ -51,7 +51,7 @@ abbrev SplitCl11Alg := CliffordAlgebra InfoGeometry.CliffordTower.Q11
 
 section HeadAtom
 
-variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /-- Canonical doubled-space realization of the split `Cl(1,1)` head atom. -/
 @[rep_depth krein]

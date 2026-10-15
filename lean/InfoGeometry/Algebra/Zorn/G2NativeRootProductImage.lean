@@ -555,11 +555,14 @@ theorem sAction_product_injective_of_injective
   have hs : s⁻¹ = s := by
     apply inv_eq_of_mul_eq_one_left
     exact s_sq
-  have h' := congrArg (fun z : SplitOctF2Aut => s⁻¹ * z * s) h
-  dsimp at h'
-  rw [hs, ← s_xRoot_s α e.1, ← s_xRoot_s β e.2,
-    ← s_xRoot_s α e'.1, ← s_xRoot_s β e'.2] at h'
-  simpa [mul_assoc] using h'
+  have hconj (a b : SplitOctF2Aut) : s * (a * b) * s = (s * a * s) * (s * b * s) := by
+    simp only [mul_assoc]
+    rw [← mul_assoc s s (b * s), s_sq, one_mul]
+  have h'' := congrArg (fun z : SplitOctF2Aut => s * z * s) h
+  change s * (xRoot (sAction α) e.1 * xRoot (sAction β) e.2) * s =
+    s * (xRoot (sAction α) e'.1 * xRoot (sAction β) e'.2) * s at h''
+  simp only [hconj, s_xRoot_s, sAction_involutive] at h''
+  exact h''
 
 theorem sAction_short_zero_short_two_product_injective :
     Function.Injective

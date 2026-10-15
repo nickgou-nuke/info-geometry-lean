@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!

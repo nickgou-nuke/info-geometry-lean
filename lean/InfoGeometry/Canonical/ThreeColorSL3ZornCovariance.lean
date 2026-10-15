@@ -19,20 +19,8 @@ invariance.
 
 theorem specialLinear_preserves_pairing
     (g : Matrix.SpecialLinearGroup (Fin 3) ℂ) :
-    PreservesPairing g := by
-  intro u v
-  change dot3 ((g : Matrix (Fin 3) (Fin 3) ℂ) *ᵥ u)
-      (((g⁻¹ : Matrix.SpecialLinearGroup (Fin 3) ℂ) :
-        Matrix (Fin 3) (Fin 3) ℂ)ᵀ *ᵥ v) =
-    dot3 u v
-  have hdot (x y : Fin 3 → ℂ) : dot3 x y = x ⬝ᵥ y := by
-    simp [dot3, dotProduct, Fin.sum_univ_three]
-  rw [hdot, hdot]
-  rw [Matrix.dotProduct_mulVec, Matrix.vecMul_transpose]
-  rw [Matrix.mulVec_mulVec]
-  rw [← Matrix.SpecialLinearGroup.coe_mul]
-  rw [inv_mul_cancel, Matrix.SpecialLinearGroup.coe_one]
-  simp
+    PreservesPairing g :=
+  colourActions_preserve_pairing g
 
 theorem specialLinear_preserves_cross_fundamental
     (g : Matrix.SpecialLinearGroup (Fin 3) ℂ) :
@@ -68,7 +56,6 @@ theorem specialLinear_zornSL3Action_mul
     zornSL3Action g (zornMul X Y) =
       zornMul (zornSL3Action g X) (zornSL3Action g Y) := by
   exact zornSL3Action_mul_of_covariant g
-    (specialLinear_preserves_pairing g)
     (specialLinear_preserves_cross_fundamental g)
     (specialLinear_preserves_dual_cross g) X Y
 
@@ -76,7 +63,6 @@ theorem specialLinear_zornSL3Action_preserves_norm
     (g : Matrix.SpecialLinearGroup (Fin 3) ℂ)
     (X : InfoGeometry.Physics.ThreeColorSL3ZornAction.Zorn) :
     zornNorm (zornSL3Action g X) = zornNorm X := by
-  exact zornSL3Action_preserves_norm_of_pairing g
-    (specialLinear_preserves_pairing g) X
+  exact zornSL3Action_preserves_norm_of_pairing g X
 
 end InfoGeometry.Canonical.ThreeColorSL3ZornCovariance

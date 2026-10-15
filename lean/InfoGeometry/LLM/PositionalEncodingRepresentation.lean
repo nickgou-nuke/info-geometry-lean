@@ -157,8 +157,7 @@ multiplicative wrapper of `(ℝ, +)`. -/
 def relativeHom (M : TranslationCovariantModifiers A) :
     Multiplicative ℝ →* Units A where
   toFun t := M.relativeUnit (toAdd t)
-  map_one' := by
-    simpa using M.relativeUnit_zero
+  map_one' := M.relativeUnit_zero
   map_mul' s t := by
     simpa using M.relativeUnit_add (toAdd s) (toAdd t)
 
@@ -199,7 +198,7 @@ def ofFlow (F : RealOneParameterFlow A) : TranslationCovariantModifiers A where
       F.evalUnit (t + r) * F.evalUnit (-(s + r)) =
           F.evalUnit ((t + r) + -(s + r)) :=
         (flow_evalUnit_add F (t + r) (-(s + r))).symm
-      _ = F.evalUnit (t + -s) := by congr 1 <;> ring
+      _ = F.evalUnit (t + -s) := by congr 1; ring
       _ = F.evalUnit t * F.evalUnit (-s) :=
         flow_evalUnit_add F t (-s)
   normalized t := by
@@ -230,11 +229,6 @@ open InfoGeometry.Canonical.MeanValueInvariant
 variable {E : Type u} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
 
 local notation "EndE" => E →L[ℝ] E
-
-noncomputable local instance : NormedRing EndE := inferInstance
-noncomputable local instance : NormedAlgebra ℝ EndE := inferInstance
-noncomputable local instance : NormedAlgebra ℚ EndE :=
-  NormedAlgebra.restrictScalars ℚ ℝ EndE
 
 /-- The operator exponential together with its value at negative time as an
 explicit unit. -/
@@ -272,6 +266,7 @@ def exponentialOneParameterFlow (L : EndE) : RealOneParameterFlow EndE where
 theorem exponentialOneParameterFlow_eval (L : EndE) (t : ℝ) :
     (exponentialOneParameterFlow L).eval t = flow L t := rfl
 
+omit [CompleteSpace E] in
 /-- Differentiating the group law transports the derivative at zero to every
 point on the right. -/
 theorem hasDerivAt_eval_mul_generator
@@ -281,8 +276,7 @@ theorem hasDerivAt_eval_mul_generator
   have hmul :
       HasDerivAt (fun u : ℝ => F.eval t * F.eval u)
         (F.eval t * L) 0 := by
-    simpa using
-      (hasDerivAt_const (x := (0 : ℝ)) (c := F.eval t)).mul hzero
+    exact hzero.const_mul (F.eval t)
   have htranslated :
       HasDerivAt (fun u : ℝ => F.eval (t + u))
         (F.eval t * L) 0 := by
@@ -319,12 +313,17 @@ theorem eval_eq_exponential_of_hasDerivAt_zero
         HasFDerivAt (fun u : ℝ => F.eval u * flow (-L) u)
           (0 : ℝ →L[ℝ] EndE) s := by
     intro s
-    have hprod :=
-      (hasDerivAt_eval_mul_generator F L hzero s).mul
-        (hasStrictDerivAt_flow_left (-L) s).hasDerivAt
+    have hu := hasDerivAt_eval_mul_generator F L hzero s
+    have hv := (hasStrictDerivAt_flow_left (-L) s).hasDerivAt
+    have hbilin :=
+      (ContinuousLinearMap.compL ℝ E E E).hasDerivWithinAt_of_bilinear
+        (s := Set.univ) hu.hasDerivWithinAt hv.hasDerivWithinAt
+    rw [hasDerivWithinAt_univ] at hbilin
+    change HasDerivAt (fun u => F.eval u * flow (-L) u)
+      (F.eval s * ((-L) * flow (-L) s) + (F.eval s * L) * flow (-L) s) s at hbilin
     have hzeroDeriv :
         HasDerivAt (fun u : ℝ => F.eval u * flow (-L) u) 0 s := by
-      simpa [mul_assoc] using hprod
+      simpa [mul_assoc] using hbilin
     simpa using hzeroDeriv.hasFDerivAt
   have hconst := eq_zero_time_of_hasFDerivAt_zero hinteraction t
   have hleft : F.eval t * flow (-L) t = 1 := by
@@ -353,7 +352,7 @@ theorem relativeModifier_eq_exponential_of_hasDerivAt_zero
     M.relativeModifier t = flow L t := by
   simpa using
     eval_eq_exponential_of_hasDerivAt_zero M.toRealOneParameterFlow L
-      (by simpa using hzero) t
+      (by change HasDerivAt M.relativeModifier L 0; exact hzero) t
 
 end ExponentialClassification
 
@@ -439,8 +438,7 @@ theorem alibiRelativeFlow_mulVec_clockKey (t : ℝ) :
   funext i
   fin_cases i <;>
     simp [parabolicMat, JordanBlock2.N2, alibiClockKey,
-      Matrix.mulVec, Matrix.vecHead, Matrix.vecTail, Matrix.one_apply,
-      Fin.sum_univ_two]
+      Matrix.mulVec, Matrix.vecHead, Matrix.vecTail, Matrix.one_apply]
 
 /-- Pairing the fixed slope lane with the parabolic clock gives exactly the
 linear relative-position penalty `-p t`. -/

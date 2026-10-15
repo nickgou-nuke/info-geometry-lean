@@ -133,11 +133,8 @@ def kleinReadoutPeriodClass :
 theorem kleinReadoutPeriodClass_apply (R : ℝ) :
     kleinReadoutPeriodClass (kleinLogPeriodReadoutClass R) =
       InfoGeometry.Projective.KleinQuadric.LogDeRhamClass.logarithmicPeriod R := by
-  simpa using
-    (periodClassFactor_apply kleinZeroD₀ kleinZeroD₁ kleinZeroD_complex
-      (LinearMap.id : ℂ →ₗ[ℂ] ℂ)
-      (by intro η; simp [kleinZeroD₀])
-      _ (by simp [kleinZeroD₁]))
+  change kleinZeroCohomologyEquiv (kleinLogPeriodReadoutClass R) = _
+  exact kleinZeroCohomologyEquiv_logarithmicPeriod R
 
 theorem kleinReadoutUnipotentPeriodMap_eq_logarithmicPeriod
     (R : ℝ) :
@@ -237,17 +234,9 @@ theorem kleinReadoutWindingPeriodMonodromy
         (kleinLogPeriodReadoutWindingClass R n) =
       unipotentPeriodMap (windingPeriod n) := by
   change unipotentPeriodMap
-      (kleinReadoutPeriodClass
-        (kleinLogPeriodReadoutWindingClass R n)) = _
-  change unipotentPeriodMap
-      ((periodClassFactor kleinZeroD₀ kleinZeroD₁ kleinZeroD_complex
-        (LinearMap.id : ℂ →ₗ[ℂ] ℂ)
-        (by intro η; simp [kleinZeroD₀]))
-        (closedClass kleinZeroD₀ kleinZeroD₁ kleinZeroD_complex
-          ((n : ℂ) * logarithmicPeriod R) (by simp [kleinZeroD₁]))) = _
-  rw [periodClassFactor_apply]
-  rw [windingPeriod_eq_logarithmicPeriod R hR n]
-  rfl
+      (kleinZeroCohomologyEquiv (kleinLogPeriodReadoutWindingClass R n)) = _
+  rw [kleinZeroCohomologyEquiv_windingPeriod]
+  rw [← windingPeriod_eq_logarithmicPeriod R hR n]
 
 theorem kleinReadoutWindingPeriodMonodromy_eq_one_iff
     (R : ℝ) (hR : 0 < R) (n : ℤ) :

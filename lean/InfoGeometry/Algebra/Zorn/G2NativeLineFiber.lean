@@ -336,8 +336,8 @@ theorem candidates_card : candidates.card = 6 := by
 theorem nativeLines_card : nativeLines.card = 3 := by
   decide
 
-theorem nativeBaseLine_card : Fintype.card NativeLine = 3 := by
-  simpa [NativeLine, NativeLinesThroughPoint, nativeLines] using nativeLines_card
+theorem nativeBaseLine_card : Fintype.card NativeLine = 3 :=
+  Finset.card_attach.trans nativeLines_card
 
 theorem lineSet_card (y : OctImF2) (hy : y ∈ candidates) :
     (lineSet y).card = 3 := by

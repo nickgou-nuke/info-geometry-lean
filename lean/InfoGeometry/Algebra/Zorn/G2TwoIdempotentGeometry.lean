@@ -37,7 +37,9 @@ theorem trace_one_idempotent_iff_zero_vector_pairing (X : SplitOctF2)
     | mk a b x0 x1 x2 y0 y1 y2 =>
         cases a <;> cases b <;>
           simp [zornTrace, zornVectorPairing, mul, dot3, mul2, add2,
-            cross0, cross1, cross2, Bool.xor_comm] at htrace ⊢ <;>
-          intro hdot <;> simp [Bool.and_comm, hdot]
+            cross0, cross1, cross2] at htrace ⊢ <;>
+          intro hdot
+        · revert hdot; revert x0 x1 x2 y0 y1 y2; decide
+        · revert hdot; revert x0 x1 x2 y0 y1 y2; decide
 
 end InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem

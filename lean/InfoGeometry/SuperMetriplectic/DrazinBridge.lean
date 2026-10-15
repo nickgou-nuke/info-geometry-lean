@@ -64,10 +64,16 @@ noncomputable def toSuperchargeClosure :
   Z := B.U.drazinCentralCandidate
   gamma := (2 : ℝ)
   oddOddClosure := by
-    simpa [InfoGeometry.SuperMetriplectic.SuperchargeClosure.translationShadow,
-      InfoGeometry.SuperMetriplectic.SuperchargeClosure.defectShadow,
-      InfoGeometry.SuperMetriplectic.SuperchargeClosure] using
-      (B.U.projected_oddOdd_bracket_eq_two_smul_translation_plus_central)
+    have heq : anticommutator B.U.QD B.U.QD =
+        InfoGeometry.Canonical.DrazinSupercharge.anticommutatorK B.U.QD B.U.QD := by
+      simp [InfoGeometry.Canonical.DrazinSupercharge.anticommutatorK,
+        InfoGeometry.Canonical.DrazinSupercharge.anticommutator,
+        InfoGeometry.Canonical.AssociativeSuperBracket.anticommutator,
+        InfoGeometry.Canonical.AssociativeSuperBracket.superBracket,
+        InfoGeometry.Canonical.SuperAnomaly.paritySign,
+        sub_eq_add_neg]
+    rw [heq]
+    exact B.U.projected_oddOdd_bracket_eq_two_smul_translation_plus_central
 
 @[rep_depth transport]
 theorem toSuperchargeClosure_translationShadow_eq_drazinTranslationCandidate :

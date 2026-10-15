@@ -1,6 +1,8 @@
 import Mathlib.LinearAlgebra.ExteriorPower.Basic
+import InfoGeometry.Algebra.GrassmannianCartanTower
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
+import InfoGeometry.Canonical.DecomposableBivector
 import InfoGeometry.Canonical.KleinExteriorAlternating
 import InfoGeometry.Projective.KleinQuadricPlucker
 
@@ -144,9 +146,7 @@ private theorem bivector4_exists_wedge_of_klein
             apply Bivector4.ext <;>
               simp [u, v, wedgeVec4, h01, h02, h03, h12, h13]
 
-abbrev PluckerCoords := InfoGeometry.Algebra.FiniteSpin.Vec6R
-
-def pluckerCoords (u v : Vec4) : PluckerCoords := ![
+def pluckerCoords (u v : Vec4) : InfoGeometry.Algebra.FiniteSpin.Vec6R := ![
   u I4.t * v I4.x - u I4.x * v I4.t,
   u I4.t * v I4.y - u I4.y * v I4.t,
   u I4.t * v I4.z - u I4.z * v I4.t,
@@ -158,7 +158,8 @@ def pluckerCoords (u v : Vec4) : PluckerCoords := ![
 
 This is deliberately derived from `wedgeVec4Alternating`; the six-minor
 formula has a single owner. -/
-def pluckerAlternating : Vec4 [⋀^Fin 2]→ₗ[ℝ] PluckerCoords :=
+def pluckerAlternating : Vec4 [⋀^Fin 2]→ₗ[ℝ]
+    InfoGeometry.Algebra.FiniteSpin.Vec6R :=
   bivector4CoordinateLinearEquiv.toLinearMap.compAlternatingMap
     wedgeVec4Alternating
 
@@ -170,7 +171,7 @@ def pluckerAlternating : Vec4 [⋀^Fin 2]→ₗ[ℝ] PluckerCoords :=
       bivector4CoordinateLinearEquiv_apply]
 
 noncomputable def pluckerExteriorMap :
-    (⋀[ℝ]^2 Vec4) →ₗ[ℝ] PluckerCoords :=
+    (⋀[ℝ]^2 Vec4) →ₗ[ℝ] InfoGeometry.Algebra.FiniteSpin.Vec6R :=
   exteriorPower.alternatingMapLinearEquiv pluckerAlternating
 
 theorem pluckerExteriorMap_ιMulti (u v : Vec4) :
@@ -211,13 +212,15 @@ theorem pluckerExteriorMap_surjective :
   simp [Pi.basisFun]
 
 theorem pluckerExteriorMap_finrank_eq :
-    Module.finrank ℝ (⋀[ℝ]^2 Vec4) = Module.finrank ℝ PluckerCoords := by
+    Module.finrank ℝ (⋀[ℝ]^2 Vec4) =
+      Module.finrank ℝ InfoGeometry.Algebra.FiniteSpin.Vec6R := by
   have hcard : Fintype.card I4 = 4 := by decide
-  rw [exteriorPower.finrank_eq ℝ 2, Module.finrank_pi, Module.finrank_pi, hcard]
+  rw [exteriorPower.finrank_eq (R := ℝ) (M := Vec4) (n := 2),
+    Module.finrank_pi, Module.finrank_pi, hcard]
   decide
 
 noncomputable def pluckerExteriorLinearEquiv :
-    (⋀[ℝ]^2 Vec4) ≃ₗ[ℝ] PluckerCoords := by
+    (⋀[ℝ]^2 Vec4) ≃ₗ[ℝ] InfoGeometry.Algebra.FiniteSpin.Vec6R := by
   apply LinearEquiv.ofBijective pluckerExteriorMap
   refine ⟨?_, pluckerExteriorMap_surjective⟩
   exact (LinearMap.injective_iff_surjective_of_finrank_eq_finrank
@@ -232,10 +235,14 @@ noncomputable def exteriorBivectorLinearEquiv :
 theorem exteriorBivectorLinearEquiv_ιMulti (u v : Vec4) :
     exteriorBivectorLinearEquiv (exteriorPower.ιMulti ℝ 2 ![u, v]) =
       wedgeVec4 u v := by
+  simp only [exteriorBivectorLinearEquiv, LinearEquiv.trans_apply]
   apply bivector4CoordinateLinearEquiv.injective
-  simp [exteriorBivectorLinearEquiv, pluckerExteriorLinearEquiv,
-    pluckerExteriorMap_ιMulti, pluckerCoords, wedgeVec4,
-    bivector4CoordinateLinearEquiv_apply]
+  simp only [LinearEquiv.apply_symm_apply]
+  change pluckerExteriorMap (exteriorPower.ιMulti ℝ 2 ![u, v]) =
+    bivector4CoordinateLinearEquiv (wedgeVec4 u v)
+  rw [pluckerExteriorMap_ιMulti]
+  funext i
+  fin_cases i <;> simp [pluckerCoords, wedgeVec4, bivector4CoordinateLinearEquiv_apply]
 
 /-- The universal exterior wedge and the canonical coordinate alternating map
 commute through the literal exterior/bivector linear equivalence. -/
@@ -296,6 +303,20 @@ theorem exteriorKleinForm_eq_zero_iff_decomposable
   · rintro ⟨u, v, rfl⟩
     exact exteriorKleinForm_ιMulti u v
 
+/-- The coordinate Klein-null condition implies that the corresponding
+    element has zero square in the ambient Mathlib exterior algebra.  This
+    transports the established decomposability criterion to the actual
+    exterior product; it is not a Minkowski mass-shell assertion. -/
+theorem exteriorKleinForm_eq_zero_implies_ambient_square_eq_zero
+    (X : ⋀[ℝ]^2 Vec4) (hX : exteriorKleinForm X = 0) :
+    (X : ExteriorAlgebra ℝ Vec4) * (X : ExteriorAlgebra ℝ Vec4) = 0 := by
+  obtain ⟨u, v, hdecomp⟩ :=
+    (exteriorKleinForm_eq_zero_iff_decomposable X).mp hX
+  rw [hdecomp]
+  simpa [ExteriorAlgebra.ιMulti_apply] using
+    InfoGeometry.GrassmannianTower.decomposable_exterior_blade_square_zero
+      (R := ℝ) (n := 1) ![u, v]
+
 /-- An explicit degree-two exterior element with two independent coordinate
     area components.  Its nonzero Klein form makes it nondecomposable. -/
 def nonDecomposableExteriorTwoVector : ⋀[ℝ]^2 Vec4 :=
@@ -314,17 +335,93 @@ theorem nonDecomposableExteriorTwoVector_not_decomposable :
   rw [hvalue] at hzero
   norm_num at hzero
 
-/-- Compatibility interface for clients that name the decomposable locus by
-    its explicit `ιMulti` representatives.  The proof and canonical
-    characterization are owned by `exteriorKleinForm_eq_zero_iff_decomposable`.
-    This declaration is retained because `SplitOctonionAxialKleinBridge`
-    depends on the established name. -/
-theorem exteriorKleinForm_zero_iff_exists_ιMulti
-    (X : ⋀[ℝ]^2 Vec4) :
-    exteriorKleinForm X = 0 ↔
-      ∃ u v : Vec4,
-        X = exteriorPower.ιMulti ℝ 2 ![u, v] :=
-  exteriorKleinForm_eq_zero_iff_decomposable X
+/-- The explicit nondecomposable two-vector has nonzero square in the
+ambient exterior algebra. Thus square-zero is a property of decomposable
+bivectors here, not of arbitrary elements of the exterior square. -/
+theorem nonDecomposableExteriorTwoVector_ambient_square_ne_zero :
+    (nonDecomposableExteriorTwoVector : ExteriorAlgebra ℝ Vec4) *
+        (nonDecomposableExteriorTwoVector : ExteriorAlgebra ℝ Vec4) ≠ 0 := by
+  let a : Vec4 := i4Basis I4.t
+  let b : Vec4 := i4Basis I4.x
+  let c : Vec4 := i4Basis I4.y
+  let d : Vec4 := i4Basis I4.z
+  have hcoords :
+      pluckerExteriorLinearEquiv nonDecomposableExteriorTwoVector =
+        pluckerExteriorLinearEquiv
+          (exteriorPower.ιMulti ℝ 2 ![a, b] + exteriorPower.ιMulti ℝ 2 ![c, d]) := by
+    funext i
+    simp [nonDecomposableExteriorTwoVector, exteriorBivectorLinearEquiv,
+      pluckerExteriorLinearEquiv, pluckerExteriorMap,
+      pluckerCoords, a, b, c, d, i4Basis]
+    all_goals fin_cases i <;> norm_num
+  have hrep : nonDecomposableExteriorTwoVector =
+      exteriorPower.ιMulti ℝ 2 ![a, b] + exteriorPower.ιMulti ℝ 2 ![c, d] := by
+    apply exteriorBivectorLinearEquiv.injective
+    change bivector4CoordinateLinearEquiv.symm
+        (pluckerExteriorLinearEquiv nonDecomposableExteriorTwoVector) =
+      bivector4CoordinateLinearEquiv.symm
+        (pluckerExteriorLinearEquiv
+          (exteriorPower.ιMulti ℝ 2 ![a, b] + exteriorPower.ιMulti ℝ 2 ![c, d]))
+    exact congrArg bivector4CoordinateLinearEquiv.symm hcoords
+  rw [hrep]
+  simp only [Submodule.coe_add, exteriorPower.ιMulti_apply_coe]
+  let A := ExteriorAlgebra.ιMulti ℝ 2 ![a, b]
+  let C := ExteriorAlgebra.ιMulti ℝ 2 ![c, d]
+  let frame : Fin 4 → Vec4 := ![a, b, c, d]
+  have hA : A * A = 0 := by
+    simpa [A, ExteriorAlgebra.ιMulti_apply] using
+      (InfoGeometry.GrassmannianTower.decomposable_exterior_blade_square_zero
+        (R := ℝ) (n := 1) ![a, b])
+  have hC : C * C = 0 := by
+    simpa [C, ExteriorAlgebra.ιMulti_apply] using
+      (InfoGeometry.GrassmannianTower.decomposable_exterior_blade_square_zero
+        (R := ℝ) (n := 1) ![c, d])
+  have hswap : C * A = A * C := by
+    have h := ExteriorAlgebra.ιMulti_mul_ιMulti_anticomm
+      (R := ℝ) (u := ![a, b]) (v := ![c, d])
+    norm_num at h
+    simpa [A, C] using h.symm
+  have hAC : A * C = ExteriorAlgebra.ιMulti ℝ 4 frame := by
+    dsimp [A, C]
+    rw [ExteriorAlgebra.ιMulti_mul_ιMulti]
+    congr 1
+    funext i
+    fin_cases i <;> rfl
+  have hframe_independent : LinearIndependent ℝ frame := by
+    let index : Fin 4 → I4
+      | 0 => I4.t
+      | 1 => I4.x
+      | 2 => I4.y
+      | 3 => I4.z
+      | _ => I4.t
+    have hindex : Function.Injective index := by
+      intro i j hij
+      fin_cases i <;> fin_cases j <;> simp_all [index]
+    have hbasis : LinearIndependent ℝ (fun i : I4 => i4Basis i) := by
+      convert (Pi.basisFun ℝ I4).linearIndependent using 1
+      funext i
+      ext j
+      simp [i4Basis, Pi.single_apply]
+    have hindexed := hbasis.comp index hindex
+    convert hindexed using 1
+    funext i
+    fin_cases i <;> rfl
+  have hframe_ne : ExteriorAlgebra.ιMulti ℝ 4 frame ≠ 0 := by
+    have hpow :=
+      InfoGeometry.Canonical.exteriorPower_ιMulti_ne_zero_of_linearIndependent
+        frame hframe_independent
+    intro hz
+    apply hpow
+    apply Subtype.ext
+    simpa only [exteriorPower.ιMulti_apply_coe, Submodule.coe_zero] using hz
+  have hsquare : (A + C) * (A + C) = (2 : ℝ) •
+      ExteriorAlgebra.ιMulti ℝ 4 frame := by
+    calc
+      (A + C) * (A + C) = A * A + A * C + C * A + C * C := by noncomm_ring
+      _ = (2 : ℝ) • (A * C) := by rw [hA, hC, hswap]; module
+      _ = (2 : ℝ) • ExteriorAlgebra.ιMulti ℝ 4 frame := by rw [hAC]
+  rw [hsquare]
+  exact smul_ne_zero (by norm_num) hframe_ne
 
 theorem pluckerCoords_on_klein (u v : Vec4) :
     (pluckerCoords u v) 0 * (pluckerCoords u v) 5

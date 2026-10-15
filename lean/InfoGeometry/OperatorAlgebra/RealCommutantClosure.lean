@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.Analysis.Normed.Operator.NormedSpace
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!

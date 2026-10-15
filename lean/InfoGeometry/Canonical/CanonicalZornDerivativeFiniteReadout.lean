@@ -44,7 +44,7 @@ noncomputable def derivativeConstraintReadoutLinear :
       (E (zMul (circularPeirceBasis i) (circularPeirceBasis j)) -
         zMul (E (circularPeirceBasis i)) (circularPeirceBasis j) -
           zMul (circularPeirceBasis i) (E (circularPeirceBasis j)))
-    simp only [ContinuousLinearMap.add_apply, zMul_add_left, zMul_add_right]
+    simp only [add_apply, zMul_add_left, zMul_add_right]
     abel
   map_smul' r D := by
     funext i j
@@ -55,7 +55,7 @@ noncomputable def derivativeConstraintReadoutLinear :
       (D (zMul (circularPeirceBasis i) (circularPeirceBasis j)) -
         zMul (D (circularPeirceBasis i)) (circularPeirceBasis j) -
           zMul (circularPeirceBasis i) (D (circularPeirceBasis j)))
-    simp only [ContinuousLinearMap.smul_apply, zMul_smul_left,
+    simp only [smul_apply, zMul_smul_left,
       zMul_smul_right]
     simp only [smul_sub]
 
@@ -66,12 +66,12 @@ noncomputable def tangentConstraintReadoutLinear :
   toFun D := (D (1 : CZ), derivativeConstraintReadoutLinear D)
   map_add' D E := by
     apply Prod.ext
-    · simp only [ContinuousLinearMap.add_apply]
+    · simp only [add_apply]
       rfl
     · exact derivativeConstraintReadoutLinear.map_add D E
   map_smul' r D := by
     apply Prod.ext
-    · simp only [ContinuousLinearMap.smul_apply]
+    · simp only [smul_apply]
       rfl
     · exact derivativeConstraintReadoutLinear.map_smul r D
 
@@ -469,27 +469,41 @@ noncomputable def tangentConstraintKernelProjection
     {S : Submodule ℝ EndCZ}
     (hS : IsCompl (LinearMap.ker tangentConstraintReadoutLinear) S) :
     EndCZ →ₗ[ℝ] LinearMap.ker tangentConstraintReadoutLinear :=
-  (LinearMap.ker tangentConstraintReadoutLinear).linearProjOfIsCompl S hS
+  (LinearMap.ker tangentConstraintReadoutLinear).projectionOnto S hS
 
 theorem tangentConstraintKernelProjection_apply_kernel
     {S : Submodule ℝ EndCZ}
     (hS : IsCompl (LinearMap.ker tangentConstraintReadoutLinear) S)
     (D : LinearMap.ker tangentConstraintReadoutLinear) :
     tangentConstraintKernelProjection hS D.1 = D := by
-  exact Submodule.linearProjOfIsCompl_apply_left hS D
+  exact Submodule.projectionOnto_apply_left hS D
 
 theorem tangentConstraintKernelProjection_apply_complement
     {S : Submodule ℝ EndCZ}
     (hS : IsCompl (LinearMap.ker tangentConstraintReadoutLinear) S)
     (D : S) :
     tangentConstraintKernelProjection hS D.1 = 0 := by
-  exact Submodule.linearProjOfIsCompl_apply_right hS D
+  exact Submodule.projectionOnto_apply_right hS D
 
 noncomputable def tangentConstraintComplementProjection
     {S : Submodule ℝ EndCZ}
     (hS : IsCompl (LinearMap.ker tangentConstraintReadoutLinear) S) :
     EndCZ →ₗ[ℝ] S :=
-  S.linearProjOfIsCompl (LinearMap.ker tangentConstraintReadoutLinear) hS.symm
+  S.projectionOnto (LinearMap.ker tangentConstraintReadoutLinear) hS.symm
+
+theorem tangentConstraintComplementProjection_apply_kernel
+    {S : Submodule ℝ EndCZ}
+    (hS : IsCompl (LinearMap.ker tangentConstraintReadoutLinear) S)
+    (D : LinearMap.ker tangentConstraintReadoutLinear) :
+    tangentConstraintComplementProjection hS D.1 = 0 := by
+  exact Submodule.projectionOnto_apply_right hS.symm D
+
+theorem tangentConstraintComplementProjection_apply_complement
+    {S : Submodule ℝ EndCZ}
+    (hS : IsCompl (LinearMap.ker tangentConstraintReadoutLinear) S)
+    (D : S) :
+    tangentConstraintComplementProjection hS D.1 = D := by
+  exact Submodule.projectionOnto_apply_left hS.symm D
 
 theorem tangentConstraint_decomposition
     {S : Submodule ℝ EndCZ}
@@ -503,35 +517,29 @@ theorem tangentConstraint_decomposition
     trivial
   rcases Submodule.mem_sup.mp hmem with ⟨K, hK, Q, hQ, hKQ⟩
   have hprojK : tangentConstraintKernelProjection hS D = ⟨K, hK⟩ := by
-    have hK' := Submodule.linearProjOfIsCompl_apply_left hS (⟨K, hK⟩ :
-      LinearMap.ker tangentConstraintReadoutLinear)
-    have hQ' := Submodule.linearProjOfIsCompl_apply_right hS (⟨Q, hQ⟩ : S)
     calc
       tangentConstraintKernelProjection hS D =
           tangentConstraintKernelProjection hS (K + Q) := by rw [hKQ]
       _ = tangentConstraintKernelProjection hS K +
           tangentConstraintKernelProjection hS Q := by rw [map_add]
       _ = ⟨K, hK⟩ := by
-        change (LinearMap.ker tangentConstraintReadoutLinear).linearProjOfIsCompl S hS K +
-            (LinearMap.ker tangentConstraintReadoutLinear).linearProjOfIsCompl S hS Q =
-          ⟨K, hK⟩
-        rw [hK', hQ']
-        simp
+        have hK' : tangentConstraintKernelProjection hS K = ⟨K, hK⟩ :=
+          tangentConstraintKernelProjection_apply_kernel hS ⟨K, hK⟩
+        have hQ' : tangentConstraintKernelProjection hS Q = 0 :=
+          tangentConstraintKernelProjection_apply_complement hS ⟨Q, hQ⟩
+        rw [hK', hQ', add_zero]
   have hprojQ : tangentConstraintComplementProjection hS D = ⟨Q, hQ⟩ := by
-    have hK' := Submodule.linearProjOfIsCompl_apply_right hS.symm (⟨K, hK⟩ :
-      LinearMap.ker tangentConstraintReadoutLinear)
-    have hQ' := Submodule.linearProjOfIsCompl_apply_left hS.symm (⟨Q, hQ⟩ : S)
     calc
       tangentConstraintComplementProjection hS D =
           tangentConstraintComplementProjection hS (K + Q) := by rw [hKQ]
       _ = tangentConstraintComplementProjection hS K +
           tangentConstraintComplementProjection hS Q := by rw [map_add]
       _ = ⟨Q, hQ⟩ := by
-        change S.linearProjOfIsCompl (LinearMap.ker tangentConstraintReadoutLinear) hS.symm K +
-            S.linearProjOfIsCompl (LinearMap.ker tangentConstraintReadoutLinear) hS.symm Q =
-          ⟨Q, hQ⟩
-        rw [hK', hQ']
-        simp
+        have hK' : tangentConstraintComplementProjection hS K = 0 :=
+          tangentConstraintComplementProjection_apply_kernel hS ⟨K, hK⟩
+        have hQ' : tangentConstraintComplementProjection hS Q = ⟨Q, hQ⟩ :=
+          tangentConstraintComplementProjection_apply_complement hS ⟨Q, hQ⟩
+        rw [hK', hQ', zero_add]
   rw [hprojK, hprojQ]
   exact hKQ.symm
 

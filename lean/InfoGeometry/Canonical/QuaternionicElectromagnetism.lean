@@ -59,7 +59,8 @@ theorem a_mu_identically_zero (q0 q1 q2 q3 : ℂ) :
     A0 = 0 := by
   intro Q Q_star A0
   dsimp [A0, Q, Q_star, quaternionCondensate, quaternionConjugate, embedI, embedJ, embedK]
-  simp [trace, diag, gamma0, gamma1, gamma2, gamma3, gamma5, Matrix.mul_apply, Fin.sum_univ_succ, smul_apply, add_apply, sub_apply, one_apply]
+  simp [trace, diag, gamma0, gamma1, gamma2, gamma3, gamma5, Matrix.mul_apply,
+    Fin.sum_univ_succ, Matrix.smul_apply, Matrix.add_apply, Matrix.sub_apply, one_apply]
   try ring
 
 /-- 
@@ -72,7 +73,8 @@ theorem a_mu_spatial_identically_zero (q0 q1 q2 q3 : ℂ) :
     A1 = 0 := by
   intro Q Q_star A1
   dsimp [A1, Q, Q_star, quaternionCondensate, quaternionConjugate, embedI, embedJ, embedK]
-  simp [trace, diag, gamma0, gamma1, gamma2, gamma3, gamma5, Matrix.mul_apply, Fin.sum_univ_succ, smul_apply, add_apply, sub_apply, one_apply]
+  simp [trace, diag, gamma0, gamma1, gamma2, gamma3, gamma5, Matrix.mul_apply,
+    Fin.sum_univ_succ, Matrix.smul_apply, Matrix.add_apply, Matrix.sub_apply, one_apply]
   try ring
 
 /--
@@ -87,7 +89,8 @@ theorem f_mu_nu_identically_zero (q0 q1 q2 q3 : ℂ) :
     F01 = 0 := by
   intro Q Q_star F01
   dsimp [F01, Q, Q_star, quaternionCondensate, quaternionConjugate, embedI, embedJ, embedK]
-  simp [trace, diag, gamma0, gamma1, gamma2, gamma3, gamma5, Matrix.mul_apply, Fin.sum_univ_succ, smul_apply, add_apply, sub_apply, one_apply]
+  simp [trace, diag, gamma0, gamma1, gamma2, gamma3, gamma5, Matrix.mul_apply,
+    Fin.sum_univ_succ, Matrix.smul_apply, Matrix.add_apply, Matrix.sub_apply, one_apply]
   try ring
 
 end

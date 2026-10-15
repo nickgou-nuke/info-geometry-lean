@@ -43,7 +43,7 @@ def flagBasisSequence (k : Fin 7) : Set SplitOctF2 :=
   | 6 => Set.range basis8
 
 /-- The Galois peeling tower `U_k` as the intersection of `B` and the Galois stabilizer. -/
-def galoisTower (k : Fin 7) : Subgroup SplitOctF2Aut :=
+noncomputable def galoisTower (k : Fin 7) : Subgroup SplitOctF2Aut :=
   nativeFlagStabilizer ⊓ galoisStabilizer (flagBasisSequence k)
 
 /-- Monotonicity of the basis sequence. -/

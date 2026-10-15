@@ -253,10 +253,14 @@ The Georgiev–Hadjiivanov–Todorov work describes:
 3. **Analytic exchange algebra** — the full Todorov–Hadjiivanov exchange
    algebra (explicitly marked as incomplete in `ExchangeSMatrixBridge.lean`).
 
-4. **Categorical Grothendieck semiring** — the Fibonacci fusion algebra
-   expressed as a Grothendieck semiring structure on `Algebra/Grothendieck.lean`
-   (currently `FibonacciGrothendieckLimit.lean` uses `AddCommGroup.DirectLimit`
-   instead of the universal `Grothendieck` construction).
+4. **Staged vs. Universal Grothendieck Distinction (Clarified)** — Universal
+   `K₀(Fib)` completion over `Algebra/Grothendieck.lean` is proved in
+   `Algebra/FibonacciGrothendieckRing.lean` (`fibonacciK0AddEquiv`, `k0Mul`,
+   `k0Mul_tau_tau`, `tensorTauK0_eq_k0Mul_tau`). Meanwhile,
+   `Canonical/FibonacciGrothendieckLimit.lean` intentionally uses
+   `AddCommGroup.DirectLimit` for the iterated `- ⊗ τ` colimit because
+   tensoring by `τ` (`1 ↦ τ`) is an additive bonding map rather than a unital
+   ring homomorphism.
 
 ---
 
@@ -442,13 +446,17 @@ Closed finite target:
   canonical three-strand braid group, their cyclic product, the full-twist
   identification, and its commutation with both Artin generators;
 - `Categorical/BraidPermutationQuotient.lean`, the genuine finite braid group
-  and its pure subgroup as the kernel of the canonical permutation quotient.
+  and its pure subgroup as the kernel of the canonical permutation quotient;
+- `Topology/DelaunayPureBraidRepresentation.lean`, builds cleanly; defines
+  `RohozhkinBraidGroup`, `RohozhkinMatrixUnits`, `RohozhkinPureBraidGroup`, and
+  `restrictRohozhkinBraidRepresentation`, restricting any full braid group
+  representation on `moving + 3` strands to `RohozhkinSourcePB moving`;
+- `Topology/DelaunayFlipMatrixEmbeddings.lean`, builds cleanly; defines
+  `embedBlock₂` and proves coordinate evaluation lemmas (`embedBlock₂_apply_aa`,
+  `embedBlock₂_apply_ab`, `embedBlock₂_apply_ba`, `embedBlock₂_apply_bb`,
+  `embedBlock₂_apply_other`) and identity preservation `embedBlock₂_one`.
 
 Open target:
-- `DelaunayPureBraidInvariant.lean` now binds `RohozhkinSourcePB` to the
-  canonical permutation kernel and builds, but the downstream
-  `DelaunayPureBraidRepresentation.lean` still refers to the undefined
-  `PureBraidGenerator`, `respectsPureBraidRelations`, `lift`, and `of` API;
 - connecting the existing Delaunay flip-word quotient to the canonical pure
   braid kernel, with a concrete generator map and relator proofs;
 - deriving the Appendix A matrices from a general `2n+1` triangle-basis
@@ -467,18 +475,20 @@ Boundary:
 - it is not a Fibonacci `F/R` category construction;
 - it does not yet give a knot invariant until Markov-move invariance is separately proved.
 
-### Jordan Algebra Linearization (New)
+### Jordan Algebra Linearization — **CLOSED**
 Files:
 - `lean/InfoGeometry/Algebra/JordanLinearization.lean`
 
 Mathematical role:
-- Defines the general commutative, non-associative `JordanAlgebra` typeclass over a commutative ring `K`.
-- Establishes the theorem boundary for the `linearized_jordan_identity` under translation `x → x + z`.
-- Provides the axiomatic base required for graded Lie transformations in TKK algebras.
+- Proves `InfoGeometry.Algebra.Jordan.linearized_jordan_identity`
+  (`(x * x) * (y * z) + 2 • ((x * z) * (y * x)) = 2 • (x * (y * (x * z))) + z * (y * (x * x))`)
+  directly from Mathlib's non-associative Jordan theorem
+  `two_nsmul_lie_lmul_lmul_add_add_eq_zero` over
+  `[NonUnitalNonAssocCommRing J] [IsCommJordan J] [IsAddTorsionFree J]`.
+- Zero `sorry`, zero custom axioms; no associativity or auxiliary proposition fields are assumed.
 
 Boundary:
-- Strictly algebraic; does not specialize to specific split algebras or spatial dimensions.
-- The linearized identity proof is deferred (verified numerically).
+- Strictly algebraic identity for commutative linear Jordan rings; does not by itself construct a full 5-graded TKK Lie algebra without an explicit TKK carrier adapter.
 
 ### Pin(5,5), Spin(5,5), O(5,5) quotients (Existing)
 Files:
@@ -527,15 +537,13 @@ Files:
   presented pure braid group
 - `Categorical/BraidPermutationQuotient.lean` — canonical pure braid kernel
 - `Topology/DelaunayPureBraidInvariant.lean` — local Delaunay move-invariance theorems
-- `Topology/DelaunayPureBraidRepresentation.lean` — quotient readout / GL target boundary
+- `Topology/DelaunayPureBraidRepresentation.lean` — subgroup restriction to `RohozhkinSourcePB`
+- `Topology/DelaunayFlipMatrixEmbeddings.lean` — `embedBlock₂` and `embedBlock₂_one`
 - `Topology/RohozhkinMatrix.lean` — concrete generator-matrix data
 
 Mathematical status:
-- `DelaunayPureBraidInvariant.lean` builds with `RohozhkinSourcePB` defined as
-  `pureBraidSubgroup (moving + 2)`, the actual kernel on `moving + 3` strands.
-- The targeted build of `InfoGeometry.Topology.DelaunayPureBraidRepresentation`
-  and `InfoGeometry.Topology.DelaunayFlipMatrixEmbeddings` still fails because
-  their claimed `PureBraidGenerator` / relator / lift API is undefined.
+- `DelaunayPureBraidInvariant.lean`, `DelaunayPureBraidRepresentation.lean`,
+  and `DelaunayFlipMatrixEmbeddings.lean` all build cleanly with `0 sorry`.
 - The finite rational Delaunay move algebra is distinct from a pure braid group
   until a homomorphism to the canonical kernel is constructed.
 - This layer is not a physical five-graded globality theorem and does not feed Packet C automatically.
@@ -585,3 +593,8 @@ Status: **CLOSED** (0 sorry, 0 axiom).
   and Witten 4-layer parity sum zero into a single bridge theorem.
 - Connects the `SupergradedBracket`, `OSp12.OperatorSurface`, and five-graded closure layers
   through the supertrace cancellation mechanism.
+
+### Section 14: Epistemic Colimit, Birkhoff Poset, and Souriau–Bost–Connes Verified Matrix Capstones
+- `proofs/MasterEpistemicColimitSynthesis.lean` — **CLOSED** (`0 sorry`, `0 axiom`): proves `blockEmbed` ($M_2(R) \to M_4(R)$) preserves involutions, Peirce idempotents, Witt nilpotent cones, Jordan anticommutators, Lie brackets, and genuine non-commutativity (`blockEmbed_preserves_noncommutativity`), together with `ColimitCoconeSystem.lift_stage_property_to_colimit` and `compile_master_epistemic_colimit_synthesis`.
+- `proofs/BirkhoffPosetOperatorProjector.lean` — **CLOSED** (`0 sorry`, `0 axiom`): proves the 5-archetype poset hierarchy in $M_2(\mathbb{R})$, including `PeirceIdempotents.peirce_decomposition`, `matrix_two_noncommutative`, `birkhoff_2x2_decomposition`, and `IdempotentProjector.certified_defect_zero`.
+- `lean/InfoGeometry/Canonical/SouriauBostConnesTransition.lean` — **SCOPED FINITE/LOCAL CAPSTONE** (`0 sorry`, `0 axiom`): exports `souriau_bost_connes_transition_verified` packaging finite prime Weyl denominator identities, Cayley critical-line/unit-circle equivalence, conditional RH Lee–Yang readout, finite Yang–Baxter parameters, and Dirac-sea step nilpotence, while explicitly deferring analytic Bost–Connes partition convergence to Bucket 3 per `docs/SOURIAU_BOST_CONNES_TRANSITION_STATUS.md`.

@@ -157,29 +157,32 @@ preservation from multiplication preservation. -/
 theorem realZorn_quadratic (X : CanonicalZorn) :
     zMul X X + ZornMatrix.detZ realCrossProduct3 X • (1 : CanonicalZorn) =
       realZornTrace X • X := by
-  have h1a : (1 : CanonicalZorn).a = 1 := rfl
-  have h1b : (1 : CanonicalZorn).b = 1 := rfl
-  have h1x : (1 : CanonicalZorn).x = 0 := rfl
-  have h1y : (1 : CanonicalZorn).y = 0 := rfl
-  ext i <;> simp [zMul, ZornMatrix.detZ, realCrossProduct3, realZornTrace,
-    InfoGeometry.Canonical.ZornMatrix.dot,
-    InfoGeometry.Canonical.ZornMatrix.cross,
-    Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv,
-    h1a, h1b, h1x, h1y]
-  all_goals (try fin_cases i)
-  all_goals try simp
-  all_goals ring
+  apply InfoGeometry.Canonical.ZornMatrix.ext
+  · simp [zMul, ZornMatrix.detZ, realCrossProduct3, realZornTrace,
+      InfoGeometry.Canonical.ZornMatrix.dot,
+      InfoGeometry.Canonical.ZornMatrix.cross]
+    ring
+  · simp [zMul, ZornMatrix.detZ, realCrossProduct3, realZornTrace,
+      InfoGeometry.Canonical.ZornMatrix.dot,
+      InfoGeometry.Canonical.ZornMatrix.cross]
+    ring
+  · funext i
+    fin_cases i <;>
+      simp [zMul, ZornMatrix.detZ, realCrossProduct3, realZornTrace,
+        InfoGeometry.Canonical.ZornMatrix.dot,
+        InfoGeometry.Canonical.ZornMatrix.cross] <;>
+      ring
+  · funext i
+    fin_cases i <;>
+      simp [zMul, ZornMatrix.detZ, realCrossProduct3, realZornTrace,
+        InfoGeometry.Canonical.ZornMatrix.dot,
+        InfoGeometry.Canonical.ZornMatrix.cross] <;>
+      ring
 
 @[simp] theorem realZorn_det_smul_one (r : ℝ) :
     ZornMatrix.detZ realCrossProduct3 (r • (1 : CanonicalZorn)) = r ^ 2 := by
-  have h1a : (1 : CanonicalZorn).a = 1 := rfl
-  have h1b : (1 : CanonicalZorn).b = 1 := rfl
-  have h1x : (1 : CanonicalZorn).x = 0 := rfl
-  have h1y : (1 : CanonicalZorn).y = 0 := rfl
   simp [ZornMatrix.detZ, realCrossProduct3,
-    InfoGeometry.Canonical.ZornMatrix.dot,
-    Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv,
-    h1a, h1b, h1x, h1y]
+    InfoGeometry.Canonical.ZornMatrix.dot]
   ring
 
 private theorem smul_eq_smul_one_coefficients
@@ -191,9 +194,7 @@ private theorem smul_eq_smul_one_coefficients
     constructor
     · rfl
     · have hab := congrArg (fun Y : CanonicalZorn => Y.a) h
-      have h1a : (1 : CanonicalZorn).a = 1 := rfl
-      simpa [Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv, h1a]
-        using hab.symm
+      simpa using hab.symm
   · exfalso
     apply hX
     refine ⟨a⁻¹ * b, ?_⟩

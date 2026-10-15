@@ -136,7 +136,7 @@ lemma xi_equality_pattern_2n_complete_identifiability_fin_perm
     change (Multiset.map (fun x => X - C x) ((List.ofFn w : List ℝ) : Multiset ℝ)).bind
         Polynomial.roots = ((List.ofFn w : List ℝ) : Multiset ℝ)
     rw [Multiset.bind_map]
-    simpa [Polynomial.roots_X_sub_C] using
+    simpa [Polynomial.roots_X_sub_C, Function.comp_def] using
       (Multiset.bind_singleton (s := ((List.ofFn w : List ℝ) : Multiset ℝ)) (f := id))
   have hroots_v :
       ((List.ofFn v).map fun x => X - C x).prod.roots =
@@ -145,7 +145,7 @@ lemma xi_equality_pattern_2n_complete_identifiability_fin_perm
     change (Multiset.map (fun x => X - C x) ((List.ofFn v : List ℝ) : Multiset ℝ)).bind
         Polynomial.roots = ((List.ofFn v : List ℝ) : Multiset ℝ)
     rw [Multiset.bind_map]
-    simpa [Polynomial.roots_X_sub_C] using
+    simpa [Polynomial.roots_X_sub_C, Function.comp_def] using
       (Multiset.bind_singleton (s := ((List.ofFn v : List ℝ) : Multiset ℝ)) (f := id))
   exact Quotient.exact (hroots_w.symm.trans (hroots.trans hroots_v))
 

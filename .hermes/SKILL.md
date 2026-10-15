@@ -3,6 +3,17 @@ name: deep-search-context-first
 description: "MANDATORY pre-reasoning discipline for info-geometry-lean. Before answering any question, proposing any edit, or writing any code, deep-search the repo codebase and external_refs. Never trust docstrings, file names, memory, or prior session summaries. Context is king."
 ---
 
+<!-- repository-context-rule -->
+## Repository context rule
+
+For repository work, the current checked-out codebase is the context. Search
+existing implementation and trace actual carriers, definitions, imports,
+instances, theorem statements, and uses before claiming a structure is missing
+or incorrect. A local absence is not a repository-wide absence. Names,
+heuristics, summaries, and documentation guide discovery but do not override
+source. Follow `docs/REPO_DEEP_SEARCH_PROTOCOL.md` before repo-wide gap claims.
+
+
 # Deep Search Context First — Mandatory Pre-Reasoning Discipline
 
 ## The Rule

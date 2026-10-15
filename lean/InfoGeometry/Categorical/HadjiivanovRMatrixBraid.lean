@@ -90,10 +90,14 @@ theorem hadjiivanov_sigmaZero_forget :
       (σ' 2 (0 : Fin 2))).hom.hom =
         standardHadjiivanovBraidProject3Representation
           (σ' 2 (0 : Fin 2)) := by
-  rw [hadjiivanovBraidProject3CategoricalHom_sigmaZero]
-  simpa [standardHadjiivanovBraidProject3Representation,
-    standardHadjiivanovBraidProject3Hom] using
-      standardCategoricalSigmaOne_hom
+  rw [hadjiivanovBraidProject3CategoricalHom_sigmaZero,
+    standardCategoricalSigmaOneIso_hom,
+    standardCategoricalSigmaOne_hom]
+  change standardHadjiivanovBraidRepresentation sigmaOne =
+    standardHadjiivanovBraidRepresentation
+      (braidProjectToPresentedB3 (σ' 2 (0 : Fin 2)))
+  exact congrArg standardHadjiivanovBraidRepresentation
+    braidProjectToPresentedB3_sigmaZero.symm
 
 /-- Forgetting the logarithmic categorical structure on the second generator
 recovers the existing BraidProject carrier representation. -/
@@ -102,10 +106,14 @@ theorem hadjiivanov_sigmaOne_forget :
       (σ' 2 (1 : Fin 2))).hom.hom =
         standardHadjiivanovBraidProject3Representation
           (σ' 2 (1 : Fin 2)) := by
-  rw [hadjiivanovBraidProject3CategoricalHom_sigmaOne]
-  simpa [standardHadjiivanovBraidProject3Representation,
-    standardHadjiivanovBraidProject3Hom] using
-      standardCategoricalSigmaTwo_hom
+  rw [hadjiivanovBraidProject3CategoricalHom_sigmaOne,
+    standardCategoricalSigmaTwoIso_hom,
+    standardCategoricalSigmaTwo_hom]
+  change standardHadjiivanovBraidRepresentation sigmaTwo =
+    standardHadjiivanovBraidRepresentation
+      (braidProjectToPresentedB3 (σ' 2 (1 : Fin 2)))
+  exact congrArg standardHadjiivanovBraidRepresentation
+    braidProjectToPresentedB3_sigmaOneIndex.symm
 
 /-! ## Uniform finite Hadjiivanov braid tower -/
 

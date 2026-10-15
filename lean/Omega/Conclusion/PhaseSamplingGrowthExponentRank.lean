@@ -19,6 +19,8 @@ def phaseSamplingCount (L : Type*) (N : Nat) : Nat :=
 /-- Paper label: `thm:conclusion-phase-sampling-growth-exponent-rank`. -/
 theorem paper_conclusion_phase_sampling_growth_exponent_rank (L : Type*) (N : Nat) :
     phaseSamplingCount L N = N ^ phaseRank L := by
-  simp [phaseSamplingCount, PhaseSamplingHom, phaseRank]
+  change Fintype.card (Fin 0 → Fin N) = N ^ 0
+  rw [Fintype.card_pi]
+  simp
 
 end Omega.Conclusion

@@ -727,7 +727,6 @@ theorem stability (u v : FreeMonoid' ℕ) : stable u v := by
           rw [← BraidMonoidInf.length_eq da]
           have H_ig : i.length = g.length := by
             have H2 := BraidMonoidInf.length_eq (BraidPresentedMonoid.sound (BraidPresentedMonoid.rel_alone br))
-            simp only [length_mul, add_left_inj, add_right_inj] at H2
             exact H2.symm
           rw [H_ig]
           assumption
@@ -747,7 +746,6 @@ theorem stability (u v : FreeMonoid' ℕ) : stable u v := by
           rw [← BraidMonoidInf.length_eq da]
           have H_ig : x.length = x2.length := by
             have H2 := BraidMonoidInf.length_eq (BraidPresentedMonoid.sound (BraidPresentedMonoid.rel_alone br))
-            simp only [length_mul, add_left_inj, add_right_inj] at H2
             exact H2.symm
           rw [← H_ig]
           assumption

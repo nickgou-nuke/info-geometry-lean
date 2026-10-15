@@ -221,8 +221,10 @@ theorem concreteTopologicalSocket2_packet :
     (concreteTopologicalSocket2.inv.closure.moebiusParity.transpose *
         concreteTopologicalSocket2.inv.closure.moebiusParity =
       concreteTopologicalSocket2.inv.closure.I) ∧
-    concreteTopologicalSocket2.inv.closure.gromovWittenIndex = 0 := by
-  simpa [concreteTopologicalSocket2] using
+      concreteTopologicalSocket2.inv.closure.gromovWittenIndex = 0 := by
+  simpa [concreteTopologicalSocket2, concreteSpinTopologicalInvariants2,
+    concreteAndreevHorizonSMatrix,
+    InfoGeometry.Projective.Closure.mobiusClosureFromConformalInversion2] using
     concreteAndreevHorizon_information_preservation
 
 end InfoGeometry.Projective.KasparovKreinDIIIBridge

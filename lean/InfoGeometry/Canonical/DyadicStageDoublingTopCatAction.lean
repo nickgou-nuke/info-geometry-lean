@@ -67,6 +67,12 @@ theorem dyadicStageDoublingNat_app_eq_transition (n : ℕ) :
       dyadicStageTransitionTopCatHom n := by
   rfl
 
+lemma dyadicStageMap_two_mul (n : ℕ) (z : ℤ) :
+    dyadicStageMap n (2 * z) = dyadicScalarMul dyadicTwo (dyadicStageMap n z) := by
+  apply Subtype.ext
+  simp [dyadicScalarMul, dyadicTwo, dyadicStageMap]
+  ring
+
 theorem dyadicStageReadout_doubling_naturality :
     dyadicStageDoublingNat ≫ dyadicStageReadoutCocone.ι =
       dyadicStageReadoutCocone.ι ≫ dyadicRationalDoublingNat := by
@@ -74,20 +80,7 @@ theorem dyadicStageReadout_doubling_naturality :
   funext n
   apply TopCat.hom_ext
   ext z
-  change dyadicStageReadoutCocone.ι.app n
-      (dyadicStageDoublingNat.app n z) =
-    dyadicRationalDoublingNat.app n
-      (dyadicStageReadoutCocone.ι.app n z)
-  rw [dyadicStageDoublingNat_app_eq_transition]
-  simp only [dyadicStageReadoutCocone_stage,
-    dyadicStageTransitionTopCatHom_apply,
-    dyadicRationalDoublingNat,
-    dyadicRationalDoublingTopCatHom]
-  change dyadicStageMap n ((2 : ℤ) * (show ℤ from z)) =
-    dyadicScalarMul dyadicTwo (dyadicStageMap n z)
-  apply Subtype.ext
-  simp [dyadicScalarMul, dyadicTwo, dyadicStageMap]
-  ring
+  exact dyadicStageMap_two_mul n z
 
 theorem dyadicStageReadoutColimitMap_intertwines :
     induced dyadicStageDiagram dyadicStageDoublingNat ≫
@@ -177,41 +170,20 @@ theorem dyadicStageDoubling_descends_to_directLimit :
         dyadicDirectLimitDoublingTopCatHom := by
   apply colimit.hom_ext
   intro n
-  calc
-    colimit.ι dyadicStageDiagram n ≫
-          induced dyadicStageDiagram dyadicStageDoublingNat ≫
-            dyadicStageColimitToDirectLimit =
-        (colimit.ι dyadicStageDiagram n ≫
-          induced dyadicStageDiagram dyadicStageDoublingNat) ≫
-            dyadicStageColimitToDirectLimit :=
-      (Category.assoc _ _ _).symm
-    _ = (dyadicStageDoublingNat.app n ≫
-          colimit.ι dyadicStageDiagram n) ≫
-            dyadicStageColimitToDirectLimit := by
-      rw [induced_on_stage]
-    _ = dyadicStageDoublingNat.app n ≫
-          (colimit.ι dyadicStageDiagram n ≫
-            dyadicStageColimitToDirectLimit) :=
-      Category.assoc _ _ _
-    _ = dyadicStageDoublingNat.app n ≫
-          dyadicDirectLimitStageCocone.ι.app n := by
-      rw [dyadicStageColimitToDirectLimit_stage]
-    _ = dyadicStageTransitionTopCatHom n ≫
-          dyadicDirectLimitStageTopCatHom n := by
-      rw [dyadicStageDoublingNat_app_eq_transition]
-      rfl
-    _ = dyadicDirectLimitStageTopCatHom n ≫
-          dyadicDirectLimitDoublingTopCatHom :=
-      dyadicDirectLimitDoubling_stage_square n
-    _ = (colimit.ι dyadicStageDiagram n ≫
-          dyadicStageColimitToDirectLimit) ≫
-            dyadicDirectLimitDoublingTopCatHom := by
-      rw [dyadicStageColimitToDirectLimit_stage]
-      rfl
-    _ = colimit.ι dyadicStageDiagram n ≫
-          (dyadicStageColimitToDirectLimit ≫
-            dyadicDirectLimitDoublingTopCatHom) :=
-      Category.assoc _ _ _
+  have hLHS : colimit.ι dyadicStageDiagram n ≫
+      (induced dyadicStageDiagram dyadicStageDoublingNat ≫ dyadicStageColimitToDirectLimit) =
+      dyadicStageTransitionTopCatHom n ≫ dyadicDirectLimitStageTopCatHom n := by
+    rw [← Category.assoc, induced_on_stage, Category.assoc,
+        dyadicStageColimitToDirectLimit_stage,
+        dyadicStageDoublingNat_app_eq_transition]
+    rfl
+  have hRHS : colimit.ι dyadicStageDiagram n ≫
+      (dyadicStageColimitToDirectLimit ≫ dyadicDirectLimitDoublingTopCatHom) =
+      dyadicDirectLimitStageTopCatHom n ≫ dyadicDirectLimitDoublingTopCatHom := by
+    rw [← Category.assoc, dyadicStageColimitToDirectLimit_stage]
+    rfl
+  rw [hLHS, hRHS]
+  exact dyadicDirectLimitDoubling_stage_square n
 
 end
 end InfoGeometry.Canonical.DyadicStageDoublingTopCatAction

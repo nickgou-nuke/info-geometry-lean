@@ -106,7 +106,7 @@ theorem occupation_BE_fluctuation {θ : ℝ} (hθ : θ < 0) :
       Real.exp θ / (1 - Real.exp θ) ^ 2 := by
   have hden : 1 + kappa .BE * Real.exp θ ≠ 0 := by
     have hpos := occupation_BE_denominator_pos_of_neg hθ
-    simpa using ne_of_gt hpos
+    simpa [kappa_BE, sub_eq_add_neg] using ne_of_gt hpos
   have h := occupation_fluctuation_identity .BE θ hden
   simpa [kappa_BE, sub_eq_add_neg] using h
 

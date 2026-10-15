@@ -2,6 +2,8 @@ import Mathlib.Algebra.Lie.OfAssociative
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.NoncommRing
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 set_option autoImplicit false
 
 namespace InfoGeometry.Physics.ZornTkkAlgebraicClosure

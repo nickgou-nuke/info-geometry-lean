@@ -48,8 +48,8 @@ lemma xi_time_weighted_spectral_radius_growth_law_pressure_eq (s : ℝ) :
 
 lemma xi_time_weighted_spectral_radius_growth_law_continuous :
     Continuous xi_time_weighted_spectral_radius_growth_law_spectral_radius := by
-  simpa [xi_time_weighted_spectral_radius_growth_law_spectral_radius_eq] using
-    (by continuity : Continuous fun s : ℝ => Real.exp (-s))
+  change Continuous fun s : ℝ => Real.exp (-s)
+  continuity
 
 lemma xi_time_weighted_spectral_radius_growth_law_strictAnti :
     StrictAnti xi_time_weighted_spectral_radius_growth_law_spectral_radius := by

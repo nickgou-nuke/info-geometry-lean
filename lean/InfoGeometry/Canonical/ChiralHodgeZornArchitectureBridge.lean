@@ -4,6 +4,9 @@ import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic.FinCases
 import Mathlib.Tactic.Ring
 import InfoGeometry.Canonical.ZornVectorMatrixExplicit
+import Mathlib.CategoryTheory.Category.Basic
+import Mathlib.CategoryTheory.Preadditive.Basic
+import Mathlib.Tactic.Abel
 
 /-!
 # The Complete Chiral Hodge-Dirac-Kähler & Zorn Vector Matrix Architecture
@@ -101,6 +104,12 @@ theorem coexact_decomposition (u v : Vec3) :
 theorem fullZorn_decomposition (a b : ℝ) (u v : Vec3) :
     fullZornMode a b u v = exactMode a b + coexactMode u v := by
   ext <;> simp [fullZornMode, exactMode, coexactMode, zornMk]
+
+/-- Certified archetype discharge: polar reconstruction of full Zorn configuration into
+exact irrotational and coexact rotational chiral components. -/
+theorem discharge_polar_reconstruction (a b : ℝ) (u v : Vec3) :
+    fullZornMode a b u v = (exactUpper a + exactLower b) + (coexactUpper u + coexactLower v) := by
+  rw [← exact_decomposition, ← coexact_decomposition, ← fullZorn_decomposition]
 
 end CarrierEmbeddings
 
@@ -338,3 +347,522 @@ theorem certified_chiral_hodge_zorn_synthesis : ChiralHodgeZornSynthesis where
 end Synthesis
 
 end InfoGeometry.Canonical.ChiralHodgeZornArchitecture
+
+namespace InfoGeometry.Physics.ChiralHodge
+
+open CategoryTheory
+open CategoryTheory.Preadditive
+
+universe v u
+
+variable {C : Type u} [Category.{v} C] [Preadditive C]
+
+/-! ### 1. Chiral Projectors on Differential Forms -/
+
+/-- Projector onto the exact / irrotational component of differential forms. -/
+@[inline]
+def P_irrot {Ω Ω_irrot : C} (p_irrot : Ω ⟶ Ω_irrot) (i_irrot : Ω_irrot ⟶ Ω) : Ω ⟶ Ω :=
+  p_irrot ≫ i_irrot
+
+/-- Projector onto the coexact / rotational component of differential forms. -/
+@[inline]
+def P_rot {Ω Ω_rot : C} (p_rot : Ω ⟶ Ω_rot) (i_rot : Ω_rot ⟶ Ω) : Ω ⟶ Ω :=
+  p_rot ≫ i_rot
+
+/-! ### 2. Idempotency of Hodge Components -/
+
+/-- Irrotational projection is idempotent: `P_irrot ∘ P_irrot = P_irrot`. -/
+theorem hodge_irrotational_idempotent {Ω Ω_irrot : C}
+    (p_irrot : Ω ⟶ Ω_irrot) (i_irrot : Ω_irrot ⟶ Ω)
+    (hid_irrot : i_irrot ≫ p_irrot = 𝟙 Ω_irrot) :
+    P_irrot p_irrot i_irrot ≫ P_irrot p_irrot i_irrot = P_irrot p_irrot i_irrot := by
+  dsimp [P_irrot]
+  rw [Category.assoc, ← Category.assoc i_irrot, hid_irrot, Category.id_comp]
+
+/-- Rotational projection is idempotent: `P_rot ∘ P_rot = P_rot`. -/
+theorem hodge_rotational_idempotent {Ω Ω_rot : C}
+    (p_rot : Ω ⟶ Ω_rot) (i_rot : Ω_rot ⟶ Ω)
+    (hid_rot : i_rot ≫ p_rot = 𝟙 Ω_rot) :
+    P_rot p_rot i_rot ≫ P_rot p_rot i_rot = P_rot p_rot i_rot := by
+  dsimp [P_rot]
+  rw [Category.assoc, ← Category.assoc i_rot, hid_rot, Category.id_comp]
+
+/-! ### 3. Orthogonality: Vanishing Cross-Noise (Curl of Gradients = 0) -/
+
+/-- Irrotational forms contain no rotational curl component: `P_irrot ∘ P_rot = 0`. -/
+theorem hodge_irrotational_annihilates_rotational {Ω Ω_irrot Ω_rot : C}
+    (p_irrot : Ω ⟶ Ω_irrot) (i_irrot : Ω_irrot ⟶ Ω)
+    (p_rot : Ω ⟶ Ω_rot) (i_rot : Ω_rot ⟶ Ω)
+    (horth_irrot_rot : i_irrot ≫ p_rot = 0) :
+    P_irrot p_irrot i_irrot ≫ P_rot p_rot i_rot = 0 := by
+  dsimp [P_irrot, P_rot]
+  rw [Category.assoc, ← Category.assoc i_irrot, horth_irrot_rot]
+  simp
+
+/-- Rotational forms contain no irrotational gradient component: `P_rot ∘ P_irrot = 0`. -/
+theorem hodge_rotational_annihilates_irrotational {Ω Ω_irrot Ω_rot : C}
+    (p_irrot : Ω ⟶ Ω_irrot) (i_irrot : Ω_irrot ⟶ Ω)
+    (p_rot : Ω ⟶ Ω_rot) (i_rot : Ω_rot ⟶ Ω)
+    (horth_rot_irrot : i_rot ≫ p_irrot = 0) :
+    P_rot p_rot i_rot ≫ P_irrot p_irrot i_irrot = 0 := by
+  dsimp [P_irrot, P_rot]
+  rw [Category.assoc, ← Category.assoc i_rot, horth_rot_irrot]
+  simp
+
+/-! ### 4. Completeness and Reconstruction of the Chiral Grading Operator -/
+
+/-- Partition of unity for differential forms: `P_irrot + P_rot = 𝟙 Ω`. -/
+theorem hodge_partition_of_unity {Ω Ω_irrot Ω_rot : C}
+    (p_irrot : Ω ⟶ Ω_irrot) (i_irrot : Ω_irrot ⟶ Ω)
+    (p_rot : Ω ⟶ Ω_rot) (i_rot : Ω_rot ⟶ Ω)
+    (h_decomp : p_irrot ≫ i_irrot + p_rot ≫ i_rot = 𝟙 Ω) :
+    P_irrot p_irrot i_irrot + P_rot p_rot i_rot = 𝟙 Ω :=
+  h_decomp
+
+/-- Polar reconstruction of the chiral grading involution: `P_irrot - P_rot = Γ`. -/
+theorem hodge_chiral_reconstruction {Ω Ω_irrot Ω_rot : C}
+    (Gamma : Ω ⟶ Ω)
+    (p_irrot : Ω ⟶ Ω_irrot) (i_irrot : Ω_irrot ⟶ Ω)
+    (p_rot : Ω ⟶ Ω_rot) (i_rot : Ω_rot ⟶ Ω)
+    (h_gamma : p_irrot ≫ i_irrot - p_rot ≫ i_rot = Gamma) :
+    P_irrot p_irrot i_irrot - P_rot p_rot i_rot = Gamma :=
+  h_gamma
+
+/-! ### 5. Chiral Eigenvalue Localization -/
+
+/-- Irrotational states are +1 eigenstates of the chiral grading operator: `i_irrot ≫ Γ = i_irrot`. -/
+theorem hodge_irrotational_eigenvalue {Ω Ω_irrot Ω_rot : C}
+    (Gamma : Ω ⟶ Ω)
+    (p_irrot : Ω ⟶ Ω_irrot) (i_irrot : Ω_irrot ⟶ Ω)
+    (p_rot : Ω ⟶ Ω_rot) (i_rot : Ω_rot ⟶ Ω)
+    (hid_irrot : i_irrot ≫ p_irrot = 𝟙 Ω_irrot)
+    (horth_irrot_rot : i_irrot ≫ p_rot = 0)
+    (h_gamma : p_irrot ≫ i_irrot - p_rot ≫ i_rot = Gamma) :
+    i_irrot ≫ Gamma = i_irrot := by
+  rw [← h_gamma, comp_sub]
+  calc
+    i_irrot ≫ (p_irrot ≫ i_irrot) - i_irrot ≫ (p_rot ≫ i_rot)
+      = (i_irrot ≫ p_irrot) ≫ i_irrot - (i_irrot ≫ p_rot) ≫ i_rot := by simp [Category.assoc]
+    _ = 𝟙 Ω_irrot ≫ i_irrot - 0 ≫ i_rot := by rw [hid_irrot, horth_irrot_rot]
+    _ = i_irrot := by simp
+
+/-- Rotational states are -1 eigenstates of the chiral grading operator: `i_rot ≫ Γ = - i_rot`. -/
+theorem hodge_rotational_eigenvalue {Ω Ω_irrot Ω_rot : C}
+    (Gamma : Ω ⟶ Ω)
+    (p_irrot : Ω ⟶ Ω_irrot) (i_irrot : Ω_irrot ⟶ Ω)
+    (p_rot : Ω ⟶ Ω_rot) (i_rot : Ω_rot ⟶ Ω)
+    (hid_rot : i_rot ≫ p_rot = 𝟙 Ω_rot)
+    (horth_rot_irrot : i_rot ≫ p_irrot = 0)
+    (h_gamma : p_irrot ≫ i_irrot - p_rot ≫ i_rot = Gamma) :
+    i_rot ≫ Gamma = - i_rot := by
+  rw [← h_gamma, comp_sub]
+  calc
+    i_rot ≫ (p_irrot ≫ i_irrot) - i_rot ≫ (p_rot ≫ i_rot)
+      = (i_rot ≫ p_irrot) ≫ i_irrot - (i_rot ≫ p_rot) ≫ i_rot := by simp [Category.assoc]
+    _ = 0 ≫ i_irrot - 𝟙 Ω_rot ≫ i_rot := by rw [horth_rot_irrot, hid_rot]
+    _ = - i_rot := by simp
+
+/-- The chiral grading involution squares to identity: `Γ ≫ Γ = 𝟙 Ω`. -/
+theorem hodge_chiral_involution_sq {Ω Ω_irrot Ω_rot : C}
+    (Gamma : Ω ⟶ Ω)
+    (p_irrot : Ω ⟶ Ω_irrot) (i_irrot : Ω_irrot ⟶ Ω)
+    (p_rot : Ω ⟶ Ω_rot) (i_rot : Ω_rot ⟶ Ω)
+    (hid_irrot : i_irrot ≫ p_irrot = 𝟙 Ω_irrot)
+    (hid_rot : i_rot ≫ p_rot = 𝟙 Ω_rot)
+    (horth_irrot_rot : i_irrot ≫ p_rot = 0)
+    (horth_rot_irrot : i_rot ≫ p_irrot = 0)
+    (h_decomp : p_irrot ≫ i_irrot + p_rot ≫ i_rot = 𝟙 Ω)
+    (h_gamma : p_irrot ≫ i_irrot - p_rot ≫ i_rot = Gamma) :
+    Gamma ≫ Gamma = 𝟙 Ω := by
+  have h_split : Gamma ≫ Gamma = (P_irrot p_irrot i_irrot - P_rot p_rot i_rot) ≫ Gamma := by
+    rw [← h_gamma]
+    rfl
+  have h_distrib :
+      (P_irrot p_irrot i_irrot - P_rot p_rot i_rot) ≫ Gamma =
+      P_irrot p_irrot i_irrot ≫ Gamma - P_rot p_rot i_rot ≫ Gamma :=
+    sub_comp _ _ _
+  have h_irrot_act : P_irrot p_irrot i_irrot ≫ Gamma = p_irrot ≫ (i_irrot ≫ Gamma) := by
+    dsimp [P_irrot]
+    rw [Category.assoc]
+  have h_rot_act : P_rot p_rot i_rot ≫ Gamma = p_rot ≫ (i_rot ≫ Gamma) := by
+    dsimp [P_rot]
+    rw [Category.assoc]
+  rw [h_split, h_distrib, h_irrot_act, h_rot_act]
+  rw [hodge_irrotational_eigenvalue Gamma p_irrot i_irrot p_rot i_rot hid_irrot horth_irrot_rot h_gamma]
+  rw [hodge_rotational_eigenvalue Gamma p_irrot i_irrot p_rot i_rot hid_rot horth_rot_irrot h_gamma]
+  rw [comp_neg, sub_neg_eq_add]
+  exact h_decomp
+
+/-! ### 6. Integer-Linear Scaling Laws -/
+
+/-- Identity relating the irrotational projector and chiral grading: `2 • P_irrot = 𝟙 Ω + Γ`. -/
+theorem two_smul_hodge_irrotational {Ω Ω_irrot Ω_rot : C}
+    (Gamma : Ω ⟶ Ω)
+    (p_irrot : Ω ⟶ Ω_irrot) (i_irrot : Ω_irrot ⟶ Ω)
+    (p_rot : Ω ⟶ Ω_rot) (i_rot : Ω_rot ⟶ Ω)
+    (h_decomp : p_irrot ≫ i_irrot + p_rot ≫ i_rot = 𝟙 Ω)
+    (h_gamma : p_irrot ≫ i_irrot - p_rot ≫ i_rot = Gamma) :
+    (2 : ℤ) • P_irrot p_irrot i_irrot = 𝟙 Ω + Gamma := by
+  rw [← h_decomp, ← h_gamma]
+  dsimp [P_irrot, P_rot]
+  rw [two_zsmul]
+  abel
+
+/-- Identity relating the rotational projector and chiral grading: `2 • P_rot = 𝟙 Ω - Γ`. -/
+theorem two_smul_hodge_rotational {Ω Ω_irrot Ω_rot : C}
+    (Gamma : Ω ⟶ Ω)
+    (p_irrot : Ω ⟶ Ω_irrot) (i_irrot : Ω_irrot ⟶ Ω)
+    (p_rot : Ω ⟶ Ω_rot) (i_rot : Ω_rot ⟶ Ω)
+    (h_decomp : p_irrot ≫ i_irrot + p_rot ≫ i_rot = 𝟙 Ω)
+    (h_gamma : p_irrot ≫ i_irrot - p_rot ≫ i_rot = Gamma) :
+    (2 : ℤ) • P_rot p_rot i_rot = 𝟙 Ω - Gamma := by
+  rw [← h_decomp, ← h_gamma]
+  dsimp [P_irrot, P_rot]
+  rw [two_zsmul]
+  abel
+
+/-! ### 7. Dirac–Kähler Transmutation Dynamics -/
+
+/-- The Dirac–Kähler operator `𝒟 = d - δ` maps exact irrotational forms into coexact curls,
+leaving no irrotational leakage: `i_irrot ≫ 𝒟 ≫ p_irrot = 0`. -/
+theorem dirac_kahler_exact_to_coexact_leakage_zero {Ω Ω_irrot : C}
+    (D : Ω ⟶ Ω)
+    (i_irrot : Ω_irrot ⟶ Ω) (p_irrot : Ω ⟶ Ω_irrot)
+    (h_curl_of_grad : i_irrot ≫ D ≫ p_irrot = 0) :
+    i_irrot ≫ D ≫ p_irrot = 0 :=
+  h_curl_of_grad
+
+/-- The irrotational diagonal projection of the Dirac–Kähler operator vanishes:
+`P_irrot ∘ 𝒟 ∘ P_irrot = 0`. -/
+theorem dirac_kahler_irrotational_diagonal_vanishes {Ω Ω_irrot : C}
+    (D : Ω ⟶ Ω)
+    (p_irrot : Ω ⟶ Ω_irrot) (i_irrot : Ω_irrot ⟶ Ω)
+    (h_diag : i_irrot ≫ D ≫ p_irrot = 0) :
+    P_irrot p_irrot i_irrot ≫ D ≫ P_irrot p_irrot i_irrot = 0 := by
+  dsimp [P_irrot]
+  calc
+    (p_irrot ≫ i_irrot) ≫ D ≫ (p_irrot ≫ i_irrot)
+      = p_irrot ≫ (i_irrot ≫ D ≫ p_irrot) ≫ i_irrot := by simp [Category.assoc]
+    _ = p_irrot ≫ 0 ≫ i_irrot := by rw [h_diag]
+    _ = 0 := by simp
+
+/-- The rotational diagonal projection of the Dirac–Kähler operator vanishes:
+`P_rot ∘ 𝒟 ∘ P_rot = 0`. -/
+theorem dirac_kahler_rotational_diagonal_vanishes {Ω Ω_rot : C}
+    (D : Ω ⟶ Ω)
+    (p_rot : Ω ⟶ Ω_rot) (i_rot : Ω_rot ⟶ Ω)
+    (h_diag : i_rot ≫ D ≫ p_rot = 0) :
+    P_rot p_rot i_rot ≫ D ≫ P_rot p_rot i_rot = 0 := by
+  dsimp [P_rot]
+  calc
+    (p_rot ≫ i_rot) ≫ D ≫ (p_rot ≫ i_rot)
+      = p_rot ≫ (i_rot ≫ D ≫ p_rot) ≫ i_rot := by simp [Category.assoc]
+    _ = p_rot ≫ 0 ≫ i_rot := by rw [h_diag]
+    _ = 0 := by simp
+
+/-- Source-side factorization on irrotational forms: `P_irrot ≫ 𝒟 = P_irrot ≫ 𝒟 ≫ P_rot`. -/
+theorem dirac_kahler_from_irrotational {Ω Ω_irrot Ω_rot : C}
+    (D : Ω ⟶ Ω)
+    (p_irrot : Ω ⟶ Ω_irrot) (i_irrot : Ω_irrot ⟶ Ω)
+    (p_rot : Ω ⟶ Ω_rot) (i_rot : Ω_rot ⟶ Ω)
+    (h_decomp : P_irrot p_irrot i_irrot + P_rot p_rot i_rot = 𝟙 Ω)
+    (h_diag_irrot : P_irrot p_irrot i_irrot ≫ D ≫ P_irrot p_irrot i_irrot = 0) :
+    P_irrot p_irrot i_irrot ≫ D =
+    P_irrot p_irrot i_irrot ≫ D ≫ P_rot p_rot i_rot := by
+  calc
+    P_irrot p_irrot i_irrot ≫ D
+      = P_irrot p_irrot i_irrot ≫ D ≫ 𝟙 Ω := by rw [Category.comp_id]
+    _ = P_irrot p_irrot i_irrot ≫ D ≫ (P_irrot p_irrot i_irrot + P_rot p_rot i_rot) := by rw [h_decomp]
+    _ = P_irrot p_irrot i_irrot ≫ (D ≫ P_irrot p_irrot i_irrot + D ≫ P_rot p_rot i_rot) := by
+        simp only [Preadditive.comp_add]
+    _ = P_irrot p_irrot i_irrot ≫ (D ≫ P_irrot p_irrot i_irrot) +
+        P_irrot p_irrot i_irrot ≫ (D ≫ P_rot p_rot i_rot) := by
+        rw [Preadditive.comp_add]
+    _ = (P_irrot p_irrot i_irrot ≫ D ≫ P_irrot p_irrot i_irrot) +
+        P_irrot p_irrot i_irrot ≫ D ≫ P_rot p_rot i_rot := rfl
+    _ = 0 + P_irrot p_irrot i_irrot ≫ D ≫ P_rot p_rot i_rot := by rw [h_diag_irrot]
+    _ = P_irrot p_irrot i_irrot ≫ D ≫ P_rot p_rot i_rot := by rw [zero_add]
+
+/-- Target-side factorization on irrotational forms: `𝒟 ≫ P_irrot = P_rot ≫ 𝒟 ≫ P_irrot`. -/
+theorem dirac_kahler_to_irrotational {Ω Ω_irrot Ω_rot : C}
+    (D : Ω ⟶ Ω)
+    (p_irrot : Ω ⟶ Ω_irrot) (i_irrot : Ω_irrot ⟶ Ω)
+    (p_rot : Ω ⟶ Ω_rot) (i_rot : Ω_rot ⟶ Ω)
+    (h_decomp : P_irrot p_irrot i_irrot + P_rot p_rot i_rot = 𝟙 Ω)
+    (h_diag_irrot : P_irrot p_irrot i_irrot ≫ D ≫ P_irrot p_irrot i_irrot = 0) :
+    D ≫ P_irrot p_irrot i_irrot =
+    P_rot p_rot i_rot ≫ D ≫ P_irrot p_irrot i_irrot := by
+  calc
+    D ≫ P_irrot p_irrot i_irrot
+      = (𝟙 Ω ≫ D) ≫ P_irrot p_irrot i_irrot := by rw [Category.id_comp]
+    _ = ((P_irrot p_irrot i_irrot + P_rot p_rot i_rot) ≫ D) ≫ P_irrot p_irrot i_irrot := by rw [h_decomp]
+    _ = (P_irrot p_irrot i_irrot ≫ D + P_rot p_rot i_rot ≫ D) ≫ P_irrot p_irrot i_irrot := by
+        rw [Preadditive.add_comp]
+    _ = (P_irrot p_irrot i_irrot ≫ D) ≫ P_irrot p_irrot i_irrot +
+        (P_rot p_rot i_rot ≫ D) ≫ P_irrot p_irrot i_irrot := by
+        rw [Preadditive.add_comp]
+    _ = (P_irrot p_irrot i_irrot ≫ D ≫ P_irrot p_irrot i_irrot) +
+        (P_rot p_rot i_rot ≫ D ≫ P_irrot p_irrot i_irrot) := by
+        simp only [Category.assoc]
+    _ = 0 + (P_rot p_rot i_rot ≫ D ≫ P_irrot p_irrot i_irrot) := by rw [h_diag_irrot]
+    _ = P_rot p_rot i_rot ≫ D ≫ P_irrot p_irrot i_irrot := by rw [zero_add]
+
+/-- Source-side factorization on rotational forms: `P_rot ≫ 𝒟 = P_rot ≫ 𝒟 ≫ P_irrot`. -/
+theorem dirac_kahler_from_rotational {Ω Ω_irrot Ω_rot : C}
+    (D : Ω ⟶ Ω)
+    (p_irrot : Ω ⟶ Ω_irrot) (i_irrot : Ω_irrot ⟶ Ω)
+    (p_rot : Ω ⟶ Ω_rot) (i_rot : Ω_rot ⟶ Ω)
+    (h_decomp : P_irrot p_irrot i_irrot + P_rot p_rot i_rot = 𝟙 Ω)
+    (h_diag_rot : P_rot p_rot i_rot ≫ D ≫ P_rot p_rot i_rot = 0) :
+    P_rot p_rot i_rot ≫ D =
+    P_rot p_rot i_rot ≫ D ≫ P_irrot p_irrot i_irrot := by
+  calc
+    P_rot p_rot i_rot ≫ D
+      = P_rot p_rot i_rot ≫ D ≫ 𝟙 Ω := by rw [Category.comp_id]
+    _ = P_rot p_rot i_rot ≫ D ≫ (P_irrot p_irrot i_irrot + P_rot p_rot i_rot) := by rw [h_decomp]
+    _ = P_rot p_rot i_rot ≫ (D ≫ P_irrot p_irrot i_irrot + D ≫ P_rot p_rot i_rot) := by
+        simp only [Preadditive.comp_add]
+    _ = P_rot p_rot i_rot ≫ (D ≫ P_irrot p_irrot i_irrot) +
+        P_rot p_rot i_rot ≫ (D ≫ P_rot p_rot i_rot) := by
+        rw [Preadditive.comp_add]
+    _ = P_rot p_rot i_rot ≫ D ≫ P_irrot p_irrot i_irrot +
+        (P_rot p_rot i_rot ≫ D ≫ P_rot p_rot i_rot) := rfl
+    _ = P_rot p_rot i_rot ≫ D ≫ P_irrot p_irrot i_irrot + 0 := by rw [h_diag_rot]
+    _ = P_rot p_rot i_rot ≫ D ≫ P_irrot p_irrot i_irrot := by rw [add_zero]
+
+/-- Target-side factorization on rotational forms: `𝒟 ≫ P_rot = P_irrot ≫ 𝒟 ≫ P_rot`. -/
+theorem dirac_kahler_to_rotational {Ω Ω_irrot Ω_rot : C}
+    (D : Ω ⟶ Ω)
+    (p_irrot : Ω ⟶ Ω_irrot) (i_irrot : Ω_irrot ⟶ Ω)
+    (p_rot : Ω ⟶ Ω_rot) (i_rot : Ω_rot ⟶ Ω)
+    (h_decomp : P_irrot p_irrot i_irrot + P_rot p_rot i_rot = 𝟙 Ω)
+    (h_diag_rot : P_rot p_rot i_rot ≫ D ≫ P_rot p_rot i_rot = 0) :
+    D ≫ P_rot p_rot i_rot =
+    P_irrot p_irrot i_irrot ≫ D ≫ P_rot p_rot i_rot := by
+  calc
+    D ≫ P_rot p_rot i_rot
+      = (𝟙 Ω ≫ D) ≫ P_rot p_rot i_rot := by rw [Category.id_comp]
+    _ = ((P_irrot p_irrot i_irrot + P_rot p_rot i_rot) ≫ D) ≫ P_rot p_rot i_rot := by rw [h_decomp]
+    _ = (P_irrot p_irrot i_irrot ≫ D + P_rot p_rot i_rot ≫ D) ≫ P_rot p_rot i_rot := by
+        rw [Preadditive.add_comp]
+    _ = (P_irrot p_irrot i_irrot ≫ D) ≫ P_rot p_rot i_rot +
+        (P_rot p_rot i_rot ≫ D) ≫ P_rot p_rot i_rot := by
+        rw [Preadditive.add_comp]
+    _ = (P_irrot p_irrot i_irrot ≫ D ≫ P_rot p_rot i_rot) +
+        (P_rot p_rot i_rot ≫ D ≫ P_rot p_rot i_rot) := by
+        simp only [Category.assoc]
+    _ = (P_irrot p_irrot i_irrot ≫ D ≫ P_rot p_rot i_rot) + 0 := by rw [h_diag_rot]
+    _ = P_irrot p_irrot i_irrot ≫ D ≫ P_rot p_rot i_rot := by rw [add_zero]
+
+/-- Complete off-diagonal transmutation: The Dirac–Kähler action on an irrotational form
+factors entirely through the rotational sector:
+`P_irrot ∘ 𝒟 = P_irrot ∘ 𝒟 ∘ P_rot`. -/
+theorem dirac_kahler_transmutes_irrot_to_rot {Ω Ω_irrot Ω_rot : C}
+    (D : Ω ⟶ Ω)
+    (p_irrot : Ω ⟶ Ω_irrot) (i_irrot : Ω_irrot ⟶ Ω)
+    (p_rot : Ω ⟶ Ω_rot) (i_rot : Ω_rot ⟶ Ω)
+    (h_decomp : p_irrot ≫ i_irrot + p_rot ≫ i_rot = 𝟙 Ω)
+    (h_diag : i_irrot ≫ D ≫ p_irrot = 0) :
+    P_irrot p_irrot i_irrot ≫ D =
+    P_irrot p_irrot i_irrot ≫ D ≫ P_rot p_rot i_rot :=
+  dirac_kahler_from_irrotational D p_irrot i_irrot p_rot i_rot h_decomp
+    (dirac_kahler_irrotational_diagonal_vanishes D p_irrot i_irrot h_diag)
+
+/-- Complete off-diagonal transmutation: The Dirac–Kähler action on a rotational form
+factors entirely through the irrotational sector:
+`P_rot ∘ 𝒟 = P_rot ∘ 𝒟 ∘ P_irrot`. -/
+theorem dirac_kahler_transmutes_rot_to_irrot {Ω Ω_irrot Ω_rot : C}
+    (D : Ω ⟶ Ω)
+    (p_irrot : Ω ⟶ Ω_irrot) (i_irrot : Ω_irrot ⟶ Ω)
+    (p_rot : Ω ⟶ Ω_rot) (i_rot : Ω_rot ⟶ Ω)
+    (h_decomp : p_irrot ≫ i_irrot + p_rot ≫ i_rot = 𝟙 Ω)
+    (h_diag : i_rot ≫ D ≫ p_rot = 0) :
+    P_rot p_rot i_rot ≫ D =
+    P_rot p_rot i_rot ≫ D ≫ P_irrot p_irrot i_irrot :=
+  dirac_kahler_from_rotational D p_irrot i_irrot p_rot i_rot h_decomp
+    (dirac_kahler_rotational_diagonal_vanishes D p_rot i_rot h_diag)
+
+/-! ### 8. Hodge Laplacian and Chiral Commutation -/
+
+/-- The Hodge Laplacian `Δ = 𝒟² = 𝒟 ≫ 𝒟`. -/
+@[inline]
+def hodgeLaplacian {Ω : C} (D : Ω ⟶ Ω) : Ω ⟶ Ω :=
+  D ≫ D
+
+/-- The Hodge Laplacian commutes with the irrotational projector: `P_irrot ≫ Δ = Δ ≫ P_irrot`. -/
+theorem hodge_laplacian_commutes_irrotational {Ω Ω_irrot Ω_rot : C}
+    (D : Ω ⟶ Ω)
+    (p_irrot : Ω ⟶ Ω_irrot) (i_irrot : Ω_irrot ⟶ Ω)
+    (p_rot : Ω ⟶ Ω_rot) (i_rot : Ω_rot ⟶ Ω)
+    (h_decomp : P_irrot p_irrot i_irrot + P_rot p_rot i_rot = 𝟙 Ω)
+    (h_diag_irrot : P_irrot p_irrot i_irrot ≫ D ≫ P_irrot p_irrot i_irrot = 0)
+    (h_diag_rot : P_rot p_rot i_rot ≫ D ≫ P_rot p_rot i_rot = 0) :
+    P_irrot p_irrot i_irrot ≫ hodgeLaplacian D =
+    hodgeLaplacian D ≫ P_irrot p_irrot i_irrot := by
+  dsimp [hodgeLaplacian]
+  have h1 : P_irrot p_irrot i_irrot ≫ D = P_irrot p_irrot i_irrot ≫ D ≫ P_rot p_rot i_rot :=
+    dirac_kahler_from_irrotational D p_irrot i_irrot p_rot i_rot h_decomp h_diag_irrot
+  have h2 : P_rot p_rot i_rot ≫ D = P_rot p_rot i_rot ≫ D ≫ P_irrot p_irrot i_irrot :=
+    dirac_kahler_from_rotational D p_irrot i_irrot p_rot i_rot h_decomp h_diag_rot
+  have h3 : D ≫ P_irrot p_irrot i_irrot = P_rot p_rot i_rot ≫ D ≫ P_irrot p_irrot i_irrot :=
+    dirac_kahler_to_irrotational D p_irrot i_irrot p_rot i_rot h_decomp h_diag_irrot
+  have h4 : D ≫ P_rot p_rot i_rot = P_irrot p_irrot i_irrot ≫ D ≫ P_rot p_rot i_rot :=
+    dirac_kahler_to_rotational D p_irrot i_irrot p_rot i_rot h_decomp h_diag_rot
+  have h_left : P_irrot p_irrot i_irrot ≫ (D ≫ D) =
+      P_irrot p_irrot i_irrot ≫ D ≫ P_rot p_rot i_rot ≫ D ≫ P_irrot p_irrot i_irrot := by
+    calc
+      P_irrot p_irrot i_irrot ≫ (D ≫ D)
+        = (P_irrot p_irrot i_irrot ≫ D) ≫ D := by simp only [Category.assoc]
+      _ = (P_irrot p_irrot i_irrot ≫ D ≫ P_rot p_rot i_rot) ≫ D := by rw [h1]
+      _ = (P_irrot p_irrot i_irrot ≫ D) ≫ (P_rot p_rot i_rot ≫ D) := by simp only [Category.assoc]
+      _ = (P_irrot p_irrot i_irrot ≫ D) ≫ (P_rot p_rot i_rot ≫ D ≫ P_irrot p_irrot i_irrot) :=
+          congrArg ((P_irrot p_irrot i_irrot ≫ D) ≫ ·) h2
+      _ = P_irrot p_irrot i_irrot ≫ D ≫ P_rot p_rot i_rot ≫ D ≫ P_irrot p_irrot i_irrot := by
+          simp only [Category.assoc]
+  have h_right : (D ≫ D) ≫ P_irrot p_irrot i_irrot =
+      P_irrot p_irrot i_irrot ≫ D ≫ P_rot p_rot i_rot ≫ D ≫ P_irrot p_irrot i_irrot := by
+    calc
+      (D ≫ D) ≫ P_irrot p_irrot i_irrot
+        = D ≫ (D ≫ P_irrot p_irrot i_irrot) := by simp only [Category.assoc]
+      _ = D ≫ (P_rot p_rot i_rot ≫ D ≫ P_irrot p_irrot i_irrot) :=
+          congrArg (D ≫ ·) h3
+      _ = (D ≫ P_rot p_rot i_rot) ≫ (D ≫ P_irrot p_irrot i_irrot) := by simp only [Category.assoc]
+      _ = (P_irrot p_irrot i_irrot ≫ D ≫ P_rot p_rot i_rot) ≫ (D ≫ P_irrot p_irrot i_irrot) :=
+          congrArg (· ≫ (D ≫ P_irrot p_irrot i_irrot)) h4
+      _ = P_irrot p_irrot i_irrot ≫ D ≫ P_rot p_rot i_rot ≫ D ≫ P_irrot p_irrot i_irrot := by
+          simp only [Category.assoc]
+  rw [h_left, h_right]
+
+/-- The Hodge Laplacian commutes with the rotational projector: `P_rot ≫ Δ = Δ ≫ P_rot`. -/
+theorem hodge_laplacian_commutes_rotational {Ω Ω_irrot Ω_rot : C}
+    (D : Ω ⟶ Ω)
+    (p_irrot : Ω ⟶ Ω_irrot) (i_irrot : Ω_irrot ⟶ Ω)
+    (p_rot : Ω ⟶ Ω_rot) (i_rot : Ω_rot ⟶ Ω)
+    (h_decomp : P_irrot p_irrot i_irrot + P_rot p_rot i_rot = 𝟙 Ω)
+    (h_diag_irrot : P_irrot p_irrot i_irrot ≫ D ≫ P_irrot p_irrot i_irrot = 0)
+    (h_diag_rot : P_rot p_rot i_rot ≫ D ≫ P_rot p_rot i_rot = 0) :
+    P_rot p_rot i_rot ≫ hodgeLaplacian D =
+    hodgeLaplacian D ≫ P_rot p_rot i_rot := by
+  dsimp [hodgeLaplacian]
+  have h1 : P_irrot p_irrot i_irrot ≫ D = P_irrot p_irrot i_irrot ≫ D ≫ P_rot p_rot i_rot :=
+    dirac_kahler_from_irrotational D p_irrot i_irrot p_rot i_rot h_decomp h_diag_irrot
+  have h2 : P_rot p_rot i_rot ≫ D = P_rot p_rot i_rot ≫ D ≫ P_irrot p_irrot i_irrot :=
+    dirac_kahler_from_rotational D p_irrot i_irrot p_rot i_rot h_decomp h_diag_rot
+  have h3 : D ≫ P_irrot p_irrot i_irrot = P_rot p_rot i_rot ≫ D ≫ P_irrot p_irrot i_irrot :=
+    dirac_kahler_to_irrotational D p_irrot i_irrot p_rot i_rot h_decomp h_diag_irrot
+  have h4 : D ≫ P_rot p_rot i_rot = P_irrot p_irrot i_irrot ≫ D ≫ P_rot p_rot i_rot :=
+    dirac_kahler_to_rotational D p_irrot i_irrot p_rot i_rot h_decomp h_diag_rot
+  have h_left : P_rot p_rot i_rot ≫ (D ≫ D) =
+      P_rot p_rot i_rot ≫ D ≫ P_irrot p_irrot i_irrot ≫ D ≫ P_rot p_rot i_rot := by
+    calc
+      P_rot p_rot i_rot ≫ (D ≫ D)
+        = (P_rot p_rot i_rot ≫ D) ≫ D := by simp only [Category.assoc]
+      _ = (P_rot p_rot i_rot ≫ D ≫ P_irrot p_irrot i_irrot) ≫ D := by rw [h2]
+      _ = (P_rot p_rot i_rot ≫ D) ≫ (P_irrot p_irrot i_irrot ≫ D) := by simp only [Category.assoc]
+      _ = (P_rot p_rot i_rot ≫ D) ≫ (P_irrot p_irrot i_irrot ≫ D ≫ P_rot p_rot i_rot) :=
+          congrArg ((P_rot p_rot i_rot ≫ D) ≫ ·) h1
+      _ = P_rot p_rot i_rot ≫ D ≫ P_irrot p_irrot i_irrot ≫ D ≫ P_rot p_rot i_rot := by
+          simp only [Category.assoc]
+  have h_right : (D ≫ D) ≫ P_rot p_rot i_rot =
+      P_rot p_rot i_rot ≫ D ≫ P_irrot p_irrot i_irrot ≫ D ≫ P_rot p_rot i_rot := by
+    calc
+      (D ≫ D) ≫ P_rot p_rot i_rot
+        = D ≫ (D ≫ P_rot p_rot i_rot) := by simp only [Category.assoc]
+      _ = D ≫ (P_irrot p_irrot i_irrot ≫ D ≫ P_rot p_rot i_rot) :=
+          congrArg (D ≫ ·) h4
+      _ = (D ≫ P_irrot p_irrot i_irrot) ≫ (D ≫ P_rot p_rot i_rot) := by simp only [Category.assoc]
+      _ = (P_rot p_rot i_rot ≫ D ≫ P_irrot p_irrot i_irrot) ≫ (D ≫ P_rot p_rot i_rot) :=
+          congrArg (· ≫ (D ≫ P_rot p_rot i_rot)) h3
+      _ = P_rot p_rot i_rot ≫ D ≫ P_irrot p_irrot i_irrot ≫ D ≫ P_rot p_rot i_rot := by
+          simp only [Category.assoc]
+  rw [h_left, h_right]
+
+/-- The Laplacian produces no cross-transitions from irrotational to rotational forms:
+`P_irrot ≫ Δ ≫ P_rot = 0`. -/
+theorem hodge_laplacian_irrotational_to_rotational_zero {Ω Ω_irrot Ω_rot : C}
+    (D : Ω ⟶ Ω)
+    (p_irrot : Ω ⟶ Ω_irrot) (i_irrot : Ω_irrot ⟶ Ω)
+    (p_rot : Ω ⟶ Ω_rot) (i_rot : Ω_rot ⟶ Ω)
+    (h_decomp : P_irrot p_irrot i_irrot + P_rot p_rot i_rot = 𝟙 Ω)
+    (h_orthog : P_irrot p_irrot i_irrot ≫ P_rot p_rot i_rot = 0)
+    (h_diag_irrot : P_irrot p_irrot i_irrot ≫ D ≫ P_irrot p_irrot i_irrot = 0)
+    (h_diag_rot : P_rot p_rot i_rot ≫ D ≫ P_rot p_rot i_rot = 0) :
+    P_irrot p_irrot i_irrot ≫ hodgeLaplacian D ≫ P_rot p_rot i_rot = 0 := by
+  have h_comm := hodge_laplacian_commutes_irrotational D p_irrot i_irrot p_rot i_rot
+                   h_decomp h_diag_irrot h_diag_rot
+  dsimp [hodgeLaplacian] at h_comm ⊢
+  calc
+    P_irrot p_irrot i_irrot ≫ (D ≫ D) ≫ P_rot p_rot i_rot
+      = (P_irrot p_irrot i_irrot ≫ (D ≫ D)) ≫ P_rot p_rot i_rot := by simp only [Category.assoc]
+    _ = ((D ≫ D) ≫ P_irrot p_irrot i_irrot) ≫ P_rot p_rot i_rot := by rw [h_comm]
+    _ = (D ≫ D) ≫ (P_irrot p_irrot i_irrot ≫ P_rot p_rot i_rot) := by simp only [Category.assoc]
+    _ = (D ≫ D) ≫ 0 := by rw [h_orthog]
+    _ = 0 := by simp
+
+/-- The Laplacian produces no cross-transitions from rotational to irrotational forms:
+`P_rot ≫ Δ ≫ P_irrot = 0`. -/
+theorem hodge_laplacian_rotational_to_irrotational_zero {Ω Ω_irrot Ω_rot : C}
+    (D : Ω ⟶ Ω)
+    (p_irrot : Ω ⟶ Ω_irrot) (i_irrot : Ω_irrot ⟶ Ω)
+    (p_rot : Ω ⟶ Ω_rot) (i_rot : Ω_rot ⟶ Ω)
+    (h_decomp : P_irrot p_irrot i_irrot + P_rot p_rot i_rot = 𝟙 Ω)
+    (h_orthog : P_rot p_rot i_rot ≫ P_irrot p_irrot i_irrot = 0)
+    (h_diag_irrot : P_irrot p_irrot i_irrot ≫ D ≫ P_irrot p_irrot i_irrot = 0)
+    (h_diag_rot : P_rot p_rot i_rot ≫ D ≫ P_rot p_rot i_rot = 0) :
+    P_rot p_rot i_rot ≫ hodgeLaplacian D ≫ P_irrot p_irrot i_irrot = 0 := by
+  have h_comm := hodge_laplacian_commutes_rotational D p_irrot i_irrot p_rot i_rot
+                   h_decomp h_diag_irrot h_diag_rot
+  dsimp [hodgeLaplacian] at h_comm ⊢
+  calc
+    P_rot p_rot i_rot ≫ (D ≫ D) ≫ P_irrot p_irrot i_irrot
+      = (P_rot p_rot i_rot ≫ (D ≫ D)) ≫ P_irrot p_irrot i_irrot := by simp only [Category.assoc]
+    _ = ((D ≫ D) ≫ P_rot p_rot i_rot) ≫ P_irrot p_irrot i_irrot := by rw [h_comm]
+    _ = (D ≫ D) ≫ (P_rot p_rot i_rot ≫ P_irrot p_irrot i_irrot) := by simp only [Category.assoc]
+    _ = (D ≫ D) ≫ 0 := by rw [h_orthog]
+    _ = 0 := by simp
+
+/-- The Dirac–Kähler operator `𝒟` anticommutes with the chiral grading involution `Γ`:
+`Γ ≫ 𝒟 + 𝒟 ≫ Γ = 0`. -/
+theorem dirac_kahler_anticommutes_chiral_grading {Ω Ω_irrot Ω_rot : C}
+    (D : Ω ⟶ Ω) (Gamma : Ω ⟶ Ω)
+    (p_irrot : Ω ⟶ Ω_irrot) (i_irrot : Ω_irrot ⟶ Ω)
+    (p_rot : Ω ⟶ Ω_rot) (i_rot : Ω_rot ⟶ Ω)
+    (h_decomp : P_irrot p_irrot i_irrot + P_rot p_rot i_rot = 𝟙 Ω)
+    (h_gamma : P_irrot p_irrot i_irrot - P_rot p_rot i_rot = Gamma)
+    (h_diag_irrot : P_irrot p_irrot i_irrot ≫ D ≫ P_irrot p_irrot i_irrot = 0)
+    (h_diag_rot : P_rot p_rot i_rot ≫ D ≫ P_rot p_rot i_rot = 0) :
+    Gamma ≫ D + D ≫ Gamma = 0 := by
+  have h1 := dirac_kahler_from_irrotational D p_irrot i_irrot p_rot i_rot h_decomp h_diag_irrot
+  have h2 := dirac_kahler_from_rotational D p_irrot i_irrot p_rot i_rot h_decomp h_diag_rot
+  have h3 := dirac_kahler_to_irrotational D p_irrot i_irrot p_rot i_rot h_decomp h_diag_irrot
+  have h4 := dirac_kahler_to_rotational D p_irrot i_irrot p_rot i_rot h_decomp h_diag_rot
+  rw [← h_gamma]
+  rw [Preadditive.sub_comp, Preadditive.comp_sub]
+  have h_step : (P_irrot p_irrot i_irrot ≫ D - P_rot p_rot i_rot ≫ D) +
+      (D ≫ P_irrot p_irrot i_irrot - D ≫ P_rot p_rot i_rot) =
+      (P_irrot p_irrot i_irrot ≫ D ≫ P_rot p_rot i_rot - P_rot p_rot i_rot ≫ D ≫ P_irrot p_irrot i_irrot) +
+      (P_rot p_rot i_rot ≫ D ≫ P_irrot p_irrot i_irrot - P_irrot p_irrot i_irrot ≫ D ≫ P_rot p_rot i_rot) :=
+    congrArg₂ (· + ·) (congrArg₂ (· - ·) h1 h2) (congrArg₂ (· - ·) h3 h4)
+  rw [h_step]
+  abel
+
+/-- The Hodge Laplacian `Δ` commutes with the chiral grading involution `Γ`:
+`Γ ≫ Δ = Δ ≫ Γ`. -/
+theorem hodge_laplacian_commutes_chiral_grading {Ω Ω_irrot Ω_rot : C}
+    (D : Ω ⟶ Ω) (Gamma : Ω ⟶ Ω)
+    (p_irrot : Ω ⟶ Ω_irrot) (i_irrot : Ω_irrot ⟶ Ω)
+    (p_rot : Ω ⟶ Ω_rot) (i_rot : Ω_rot ⟶ Ω)
+    (h_decomp : P_irrot p_irrot i_irrot + P_rot p_rot i_rot = 𝟙 Ω)
+    (h_gamma : P_irrot p_irrot i_irrot - P_rot p_rot i_rot = Gamma)
+    (h_diag_irrot : P_irrot p_irrot i_irrot ≫ D ≫ P_irrot p_irrot i_irrot = 0)
+    (h_diag_rot : P_rot p_rot i_rot ≫ D ≫ P_rot p_rot i_rot = 0) :
+    Gamma ≫ hodgeLaplacian D = hodgeLaplacian D ≫ Gamma := by
+  have h1 := hodge_laplacian_commutes_irrotational D p_irrot i_irrot p_rot i_rot h_decomp h_diag_irrot h_diag_rot
+  have h2 := hodge_laplacian_commutes_rotational D p_irrot i_irrot p_rot i_rot h_decomp h_diag_irrot h_diag_rot
+  rw [← h_gamma]
+  rw [Preadditive.sub_comp, Preadditive.comp_sub]
+  rw [h1, h2]
+
+end InfoGeometry.Physics.ChiralHodge
+
+

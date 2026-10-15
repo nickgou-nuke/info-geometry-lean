@@ -112,11 +112,8 @@ theorem rotation_one_not_multiplicative_on_channels :
     InfoGeometry.Lie.SplitOctonionQuaternionZornCoordinates.cartesianZornLinearEquiv,
     InfoGeometry.Canonical.ZornMatrix.mul_def,
     InfoGeometry.Canonical.ZornMatrix.mul,
-    InfoGeometry.Canonical.ZornMatrix.dot,
     InfoGeometry.Canonical.ZornMatrix.cross, Pi.single_apply] at hx
-  simp at hx
-  have hx' : (-1 : ℝ) = 1 := by simpa using hx
-  norm_num at hx'
+  try simp at hx
 
 theorem no_multiplicative_rotation_one_channel_lift :
     ¬ ∃ F : InfoGeometry.Canonical.ZornMatrix ℝ →
@@ -177,8 +174,6 @@ theorem reflection_not_multiplicative_on_channels :
     InfoGeometry.Canonical.ZornMatrix.mul,
     InfoGeometry.Canonical.ZornMatrix.dot,
     InfoGeometry.Canonical.ZornMatrix.cross, Pi.single_apply] at hy
-  simp at hy
-  have hy' : (-1 : ℝ) = 1 := by simpa using hy
-  norm_num at hy'
+  try simp at hy
 
 end InfoGeometry.Lie.SplitOctonionCartanDihedralMultiplicationAudit

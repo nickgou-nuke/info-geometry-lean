@@ -35,8 +35,8 @@ def sandwich (left insertion right : Carrier) : Carrier :=
 theorem sandwich_supported (leftProjection rightProjection left insertion right : Carrier)
     (leftSupported : left ∈ principalLeftIdeal leftProjection)
     (rightSupported : right ∈ principalLeftIdeal rightProjection) :
-    geometry.diracAdjoint leftProjection * geometry.sandwich left insertion right *
-      rightProjection = geometry.sandwich left insertion right := by
+    geometry.diracAdjoint leftProjection * sandwich geometry left insertion right *
+      rightProjection = sandwich geometry left insertion right := by
   have adjointSupported := adjoint_maps_left_ideal geometry leftProjection leftSupported
   change geometry.diracAdjoint leftProjection * geometry.diracAdjoint left =
     geometry.diracAdjoint left at adjointSupported
@@ -51,14 +51,14 @@ theorem sandwich_supported (leftProjection rightProjection left insertion right 
       rw [adjointSupported, rightSupported]
 
 theorem adjoint_sandwich (left insertion right : Carrier) :
-    geometry.diracAdjoint (geometry.sandwich left insertion right) =
-      geometry.sandwich right (geometry.diracAdjoint insertion) left := by
+    geometry.diracAdjoint (sandwich geometry left insertion right) =
+      sandwich geometry right (geometry.diracAdjoint insertion) left := by
   simp only [sandwich, geometry.diracAdjoint_mul,
     geometry.diracAdjoint_involution, mul_assoc]
 
 theorem sandwich_add_insertion (left first second right : Carrier) :
-    geometry.sandwich left (first + second) right =
-      geometry.sandwich left first right + geometry.sandwich left second right := by
+    sandwich geometry left (first + second) right =
+      sandwich geometry left first right + sandwich geometry left second right := by
   simp only [sandwich, mul_add, add_mul]
 
 theorem jones_coordinates_reconstruct_sandwich
@@ -67,8 +67,8 @@ theorem jones_coordinates_reconstruct_sandwich
     (left insertion right : Matrix (Fin 2) (Fin 2) Coefficient) :
     InfoGeometry.Clifford.reconstruct_causal
       (InfoGeometry.Clifford.causalCoordinates
-        (sheetGeometry.sandwich left insertion right)) =
-      sheetGeometry.sandwich left insertion right := by
+        (sandwich sheetGeometry left insertion right)) =
+      sandwich sheetGeometry left insertion right := by
   exact InfoGeometry.Clifford.reconstruct_causalCoordinates _
 
 end InfoGeometry.CliffordWeyl.KreinIdealBilinears

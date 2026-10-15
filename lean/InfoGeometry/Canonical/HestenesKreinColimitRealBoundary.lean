@@ -36,14 +36,24 @@ theorem upper_bond (n : ℕ) (x : DoubledSpace (C.Base n)) :
 theorem lower_bondIterate (n m : ℕ) (x : DoubledSpace (C.Base n)) :
     R.lowerStage (n + m) (C.toFilteredPhaseCone.bondIterate n m x) =
       R.lowerStage n x := by
-  rw [R.lower_ι, R.lower_ι]
-  exact congrArg R.lowerLimit (C.toFilteredPhaseCone.ι_bondIterate_apply n m x)
+  have h := congrArg R.lowerLimit
+    (C.toFilteredPhaseCone.ι_bondIterate_apply n m
+      (show C.toFilteredPhaseCone.Stage n from x))
+  rw [R.lower_ι (n + m)
+    (C.toFilteredPhaseCone.bondIterate n m
+      (show C.toFilteredPhaseCone.Stage n from x)), R.lower_ι n x]
+  exact h
 
 theorem upper_bondIterate (n m : ℕ) (x : DoubledSpace (C.Base n)) :
     R.upperStage (n + m) (C.toFilteredPhaseCone.bondIterate n m x) =
       R.upperStage n x := by
-  rw [R.upper_ι, R.upper_ι]
-  exact congrArg R.upperLimit (C.toFilteredPhaseCone.ι_bondIterate_apply n m x)
+  have h := congrArg R.upperLimit
+    (C.toFilteredPhaseCone.ι_bondIterate_apply n m
+      (show C.toFilteredPhaseCone.Stage n from x))
+  rw [R.upper_ι (n + m)
+    (C.toFilteredPhaseCone.bondIterate n m
+      (show C.toFilteredPhaseCone.Stage n from x)), R.upper_ι n x]
+  exact h
 
 theorem lower_stage_readout (n : ℕ) (x : DoubledSpace (C.Base n)) :
     R.lowerStage n x = R.lowerLimit (C.ι n x) := R.lower_ι n x

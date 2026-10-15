@@ -60,15 +60,16 @@ theorem boundaryAddressPrefixCone_lift_eq_boundaryReadout
   apply (prefixConeIsLimit (A := A)).hom_ext
   intro j
   rcases j with ⟨n⟩
-  calc
-    prefixLimitLift (boundaryAddressPrefixCone D S) ≫
-        prefixCone.π.app (Opposite.op n) =
-      (boundaryAddressPrefixCone D S).π.app (Opposite.op n) :=
-        (prefixConeIsLimit (A := A)).fac
-          (boundaryAddressPrefixCone D S) (Opposite.op n)
-    _ = boundaryReadout D S ≫ prefixCone.π.app (Opposite.op n) := by
-      simp [boundaryAddressPrefixCone, boundaryReadoutToPrefixLimit,
-        Category.assoc, prefixBoundaryLimitIso_hom_comp]
+  have hcone :
+      (boundaryAddressPrefixCone D S).π.app (Opposite.op n) =
+        boundaryReadout D S ≫ prefixCone.π.app (Opposite.op n) := by
+    change boundaryReadoutToPrefixLimit D S ≫
+        limit.π (prefixDiagram (A := A)) (Opposite.op n) =
+      boundaryReadout D S ≫ prefixCone.π.app (Opposite.op n)
+    rw [boundaryReadoutToPrefixLimit]
+    rw [Category.assoc, prefixBoundaryLimitIso_hom_comp]
+  exact ((prefixConeIsLimit (A := A)).fac
+    (boundaryAddressPrefixCone D S) (Opposite.op n)).trans hcone
 
 theorem boundaryAddressPrefixCone_to_limit_eq_readout
     (D : SymbolicLatentSequence ι)
@@ -80,6 +81,7 @@ theorem boundaryAddressPrefixCone_to_limit_eq_readout
         prefixBoundaryLimitIso (A := A).hom =
       boundaryReadout D S ≫ prefixBoundaryLimitIso (A := A).hom
   rw [boundaryAddressPrefixCone_lift_eq_boundaryReadout]
+  rfl
 
 theorem boundaryAddressPrefixCone_stage_apply
     (D : SymbolicLatentSequence ι)

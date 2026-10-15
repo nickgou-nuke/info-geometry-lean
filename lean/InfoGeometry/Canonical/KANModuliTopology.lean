@@ -94,7 +94,7 @@ theorem invariantLift_unique {Y : Type*} [TopologicalSpace Y]
   funext q
   refine Quotient.inductionOn q ?_
   intro v
-  simpa using hg v
+  simpa [quotientMap, invariantLift] using hg v
 
 theorem lift_continuous {Y : Type*} [TopologicalSpace Y]
     (f : ExpertVector V K → Y) 
@@ -143,9 +143,9 @@ theorem scalarExpertSumOnModuli_mk {K : ℕ}
 theorem scalarExpertSumOnModuli_levelSet_isClosed {K : ℕ} (c : ℝ) :
     IsClosed {q : KANModuliSpace ℝ K |
       scalarExpertSumOnModuli (K := K) q = c} := by
-  simpa only [Set.preimage, Set.mem_setOf_eq] using
-    (isClosed_singleton : IsClosed ({c} : Set ℝ)).preimage
-      (continuous_scalarExpertSumOnModuli (K := K))
+  change IsClosed (scalarExpertSumOnModuli (K := K) ⁻¹' ({c} : Set ℝ))
+  exact (isClosed_singleton : IsClosed ({c} : Set ℝ)).preimage
+    (continuous_scalarExpertSumOnModuli (K := K))
 
 def scalarExpertEnergy {K : ℕ} : ExpertVector ℝ K → ℝ :=
   fun v => ∑ i : Fin K, (v i) ^ 2
@@ -192,7 +192,7 @@ theorem scalarExpertEnergyOnModuli_nonneg {K : ℕ}
     0 ≤ scalarExpertEnergyOnModuli (K := K) q := by
   refine Quotient.inductionOn q ?_
   intro v
-  simpa only [scalarExpertEnergyOnModuli_mk] using
+  simpa [scalarExpertEnergyOnModuli, invariantLift, quotientMap] using
     scalarExpertEnergy_nonneg v
 
 theorem scalarExpertEnergy_sublevel_isClosed {K : ℕ} (c : ℝ) :
@@ -210,8 +210,8 @@ theorem scalarExpertEnergyOnModuli_sublevel_isClosed {K : ℕ} (c : ℝ) :
 theorem scalarExpertEnergyOnModuli_levelSet_isClosed {K : ℕ} (c : ℝ) :
     IsClosed {q : KANModuliSpace ℝ K |
       scalarExpertEnergyOnModuli (K := K) q = c} := by
-  simpa only [Set.preimage, Set.mem_setOf_eq] using
-    (isClosed_singleton : IsClosed ({c} : Set ℝ)).preimage
-      (continuous_scalarExpertEnergyOnModuli (K := K))
+  change IsClosed (scalarExpertEnergyOnModuli (K := K) ⁻¹' ({c} : Set ℝ))
+  exact (isClosed_singleton : IsClosed ({c} : Set ℝ)).preimage
+    (continuous_scalarExpertEnergyOnModuli (K := K))
 
 end InfoGeometry.Canonical.KANModuli

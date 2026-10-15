@@ -98,8 +98,9 @@ def cutoffModeSucc (n : ℕ) : CutoffMode n ↪ CutoffMode (n + 1) where
   toFun p :=
     ⟨p.1, by
       apply (mem_primesUpto_iff.mpr)
-      have hp := (mem_primesUpto_iff.mp (show p.1 ∈ primesUpto n from by
-        simpa [primeCutoffRegister] using p.2))
+      have hmem : p.1 ∈ primesUpto n := by
+        simpa only [primeCutoffRegister_primes] using p.2
+      have hp := (mem_primesUpto_iff.mp hmem)
       exact ⟨hp.1.trans (Nat.le_succ n), hp.2⟩⟩
   inj' a b h :=
     Subtype.ext (congrArg (fun q : CutoffMode (n + 1) => q.1) h)
@@ -112,9 +113,12 @@ theorem cutoffModeSucc_ne_new (n : ℕ) (hp : Nat.Prime (n + 1))
     cutoffModeSucc n p ≠ cutoffNewMode n hp := by
   intro h
   have hv := congrArg (fun q : CutoffMode (n + 1) => q.1) h
-  have hp_le := (mem_primesUpto_iff.mp p.2).1
+  have hmem : p.1 ∈ primesUpto n := by
+    simpa only [primeCutoffRegister_primes] using p.2
+  have hp_le := (mem_primesUpto_iff.mp hmem).1
   dsimp [cutoffModeSucc, cutoffNewMode] at hv
-  omega
+  have hlt : p.1 < n + 1 := Nat.lt_succ_of_le hp_le
+  exact (Nat.ne_of_lt hlt) hv
 
 theorem cutoffMode_succ_cases (n : ℕ) (hp : Nat.Prime (n + 1))
     (q : CutoffMode (n + 1)) :
@@ -212,9 +216,11 @@ theorem cutoffVertexSuccEquiv_old (n : ℕ) (hp : Nat.Prime (n + 1))
   apply Prod.ext
   · apply (booleanCoordinatesEquiv (CutoffMode n)).injective
     funext p
+    have hpattach : p ∈ (primeCutoffRegister n).primes.attach :=
+      Finset.mem_attach _ p
     simp [cutoffVertexSuccEquiv, cutoffModeBooleanSuccEquiv,
-      optionArrowBoolEquiv, cutoffVertexSucc,
-      booleanCoordinatesEquiv_apply_mem]
+      optionArrowBoolEquiv, cutoffVertexSucc, booleanCoordinatesEquiv_apply_mem,
+      -primeCutoffRegister_primes]
   · change booleanCoordinatesEquiv (CutoffMode (n + 1))
       (cutoffVertexSucc n S) (cutoffNewMode n hp) = false
     rw [booleanCoordinatesEquiv_apply_mem]
@@ -236,9 +242,12 @@ theorem cutoffVertexSuccEquiv_new (n : ℕ) (hp : Nat.Prime (n + 1)) :
     funext p
     have hneq : cutoffModeSucc n p ≠ cutoffNewMode n hp :=
       cutoffModeSucc_ne_new n hp p
-    simp [cutoffNewVertex, cutoffVertexSuccEquiv,
-      cutoffModeBooleanSuccEquiv, optionArrowBoolEquiv,
-      booleanCoordinatesEquiv_apply_mem, hneq]
+    have hpattach : p ∈ (primeCutoffRegister n).primes.attach :=
+      Finset.mem_attach _ p
+    simp [cutoffNewVertex, cutoffVertexSuccEquiv, cutoffModeBooleanSuccEquiv,
+      optionArrowBoolEquiv, booleanCoordinatesEquiv_apply_mem,
+      -primeCutoffRegister_primes]
+    exact hneq
   · change booleanCoordinatesEquiv (CutoffMode (n + 1))
       (cutoffNewVertex n hp) (cutoffNewMode n hp) = true
     rw [booleanCoordinatesEquiv_apply_mem]
@@ -256,9 +265,14 @@ theorem cutoffVertexSuccEquiv_addNew (n : ℕ) (hp : Nat.Prime (n + 1))
     have hmap : cutoffModeSucc n p ∈ cutoffVertexSucc n S ↔ p ∈ S := by
       rw [cutoffVertexSucc]
       simp
-    simp [cutoffVertexAddNew, cutoffVertexSuccEquiv,
-      cutoffModeBooleanSuccEquiv, optionArrowBoolEquiv,
-      booleanCoordinatesEquiv_apply_mem, hneq, hmap]
+    have hpattach : p ∈ (primeCutoffRegister n).primes.attach :=
+      Finset.mem_attach _ p
+    simp [cutoffVertexAddNew, cutoffVertexSuccEquiv, cutoffModeBooleanSuccEquiv,
+      optionArrowBoolEquiv, booleanCoordinatesEquiv_apply_mem,
+      -primeCutoffRegister_primes]
+    by_cases heq : cutoffModeSucc n p = cutoffNewMode n hp
+    · exact False.elim (hneq heq)
+    · simp [heq, hmap]
   · change booleanCoordinatesEquiv (CutoffMode (n + 1))
       (cutoffVertexAddNew n hp S) (cutoffNewMode n hp) = true
     rw [booleanCoordinatesEquiv_apply_mem]

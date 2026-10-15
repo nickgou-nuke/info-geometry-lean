@@ -24,7 +24,7 @@ noncomputable section
 
 namespace InfoGeometry.Canonical.RindlerMobiusCantorFiniteBridge
 
-open scoped BigOperators Topology
+open scoped BigOperators _root_.Topology
 open Set Filter TopologicalSpace
 open InfoGeometry.Canonical.RindlerMobiusLogDeRhamBridge
 open InfoGeometry.Dynamics.RindlerWedge
@@ -167,17 +167,25 @@ theorem projectiveLimit_partialReadout_tendsto
 
 /-! ## Cuntz branch readouts -/
 
+theorem prefixBit_eq_boundaryCons (b : Bool) (x : InfiniteBinaryWordSpace) :
+    prefixBit b x = boundaryCons b x := by
+  ext (_ | n) <;> rfl
+
 theorem realBinaryReadout_leftShift (w : InfiniteBinaryWordSpace) :
     realBinaryReadout (leftShift w) =
       (1 / 2 : ℝ) * realBinaryReadout w := by
-  simpa [leftShift, prefixBit, boundaryCons] using
-    (realBinaryReadout_boundaryCons false w)
+  have h := realBinaryReadout_boundaryCons false w
+  simp only [Bool.false_eq_true, ↓reduceIte, zero_add] at h
+  rw [leftShift, prefixBit_eq_boundaryCons]
+  exact h
 
 theorem realBinaryReadout_rightShift (w : InfiniteBinaryWordSpace) :
     realBinaryReadout (rightShift w) =
       (1 / 2 : ℝ) + (1 / 2 : ℝ) * realBinaryReadout w := by
-  simpa [rightShift, prefixBit, boundaryCons] using
-    (realBinaryReadout_boundaryCons true w)
+  have h := realBinaryReadout_boundaryCons true w
+  simp only [↓reduceIte] at h
+  rw [rightShift, prefixBit_eq_boundaryCons]
+  exact h
 
 theorem projectiveLimit_readout_leftShift (p : PrefixProjectiveLimit) :
     realBinaryReadout (leftShift (toCantor p)) =
@@ -275,8 +283,7 @@ theorem initialSegment_cylinders_nhds_basis
   · intro s hs
     obtain ⟨M, hM⟩ := hs.exists_le
     refine ⟨M + 1, trivial, ?_⟩
-    intro y hy
-    intro i hi
+    intro y hy i hi
     exact (mem_initialSegmentCylinder x y (M + 1)).mp hy i
       (lt_of_le_of_lt (hM i hi) (Nat.lt_succ_self M))
   · intro N _
@@ -306,12 +313,11 @@ theorem projectiveLimit_prefix_fiber_iInter_singleton
     (p : PrefixProjectiveLimit) :
     (⋂ N : ℕ, {q : PrefixProjectiveLimit | q.π N = p.π N}) = {p} := by
   ext q
-  simp only [Set.mem_iInter, Set.mem_setOf_eq, Set.mem_singleton_iff]
+  simp only [Set.mem_iInter, Set.mem_ofPred_eq, Set.mem_singleton_iff]
   constructor
   · intro h
     exact projectiveLimit_ext_of_all_prefixes h
-  · intro h
-    intro N
+  · intro h N
     rw [h]
 
 theorem projectiveLimit_prefix_fiber_mem_nhds
@@ -496,13 +502,12 @@ theorem projectiveLimit_prefix_fiber_subset_of_le
       exact ih (projectiveLimit_prefix_fiber_succ_subset p n hq)
 
 theorem projectiveLimit_isT2 :
-    T2Space PrefixProjectiveLimit := by
-  letI := Homeomorph.t2Space
+    T2Space PrefixProjectiveLimit :=
+  Homeomorph.t2Space
     PrefixProjectiveLimit.cantorHomeomorphPrefixProjectiveLimit
-  exact inferInstance
 
 theorem tomitaFixedLocus_isClosed : IsClosed tomitaFixedLocus := by
-  letI := projectiveLimit_isT2
+  have := projectiveLimit_isT2
   exact isClosed_eq continuous_tomitaProjectiveLimit continuous_id
 
 theorem tomitaFixedLocus_isCompact :
@@ -519,13 +524,12 @@ theorem tomitaFixedLocus_eq_empty : tomitaFixedLocus = ∅ := by
     have hbit := congrFun hword 0
     simp [toCantor_tomitaProjectiveLimit] at hbit
   · intro hp
-    exact False.elim (by simpa using hp)
+    simp at hp
 
 theorem projectiveLimit_isTotallyDisconnected :
-    TotallyDisconnectedSpace PrefixProjectiveLimit := by
-  letI := Homeomorph.totallyDisconnectedSpace
+    TotallyDisconnectedSpace PrefixProjectiveLimit :=
+  Homeomorph.totallyDisconnectedSpace
     PrefixProjectiveLimit.cantorHomeomorphPrefixProjectiveLimit
-  exact inferInstance
 
 /-! ## The binary-expansion ambiguity, exhibited constructively -/
 
@@ -545,7 +549,6 @@ private theorem boundaryPrefix_cons_zeroWord
       simp only [InfoGeometry.Canonical.FractalCantorCliffordFockBridge.boundaryConsList,
         InfoGeometry.Canonical.FractalCantorCliffordFockBridge.boundaryPrefix,
         InfoGeometry.Canonical.FractalCantorCliffordFockBridge.boundaryHead,
-        InfoGeometry.Canonical.FractalCantorCliffordFockBridge.boundaryTail,
         InfoGeometry.Canonical.FractalCantorCliffordFockBridge.boundaryTail_boundaryCons]
       rw [ih (b := fun i => b i.succ)]
       simp [InfoGeometry.Canonical.FractalCantorCliffordFockBridge.boundaryCons]
@@ -584,8 +587,10 @@ theorem binaryReadout_zeroWord :
 
 theorem binaryReadout_oneWord :
     binaryReadout oneWord = 1 := by
+  change binaryReadout (fun _ => true) = 1
   have h := binary_readout_complement zeroWord
-  simpa [zeroWord, binaryReadout_zeroWord] using h
+  simp only [zeroWord, Bool.not_false, binaryReadout_zeroWord, add_zero] at h
+  exact h
 
 theorem binaryReadout_boundaryCons_formula
     (a : Bool) (w : InfiniteBinaryWordSpace) :

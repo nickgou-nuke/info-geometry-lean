@@ -62,16 +62,18 @@ noncomputable def compatiblePointColimitMap
       qCcrParameterZeroFiberTopologicalColimit Stage sys :=
   colim.map (compatiblePointNatTrans sys family)
 
-  theorem compatiblePointColimitMap_stage
+theorem compatiblePointColimitMap_stage
     (family : CompatibleQCCRPointFamily sys) (i : I) :
     topologicalDirectInjection ((Functor.const I).obj (TopCat.of PUnit)) i ≫
         compatiblePointColimitMap sys family =
       (compatiblePointNatTrans sys family).app i ≫
         qCcrParameterZeroFiberTopologicalInjection Stage sys i := by
-  simpa [compatiblePointColimitMap,
-    qCcrParameterZeroFiberTopologicalInjection,
-    topologicalDirectInjection] using
-    (colimit.ι_map (compatiblePointNatTrans sys family) i)
+  change (colimit.cocone
+      ((Functor.const I).obj (TopCat.of PUnit))).ι.app i ≫
+        colim.map (compatiblePointNatTrans sys family) =
+    (compatiblePointNatTrans sys family).app i ≫
+      (colimit.cocone (qCcrParameterZeroFiberTopologicalDiagram Stage sys)).ι.app i
+  exact colimit.ι_map (compatiblePointNatTrans sys family) i
 
 theorem compatiblePointColimitMap_stage_apply
     (family : CompatibleQCCRPointFamily sys) (i : I) (u : PUnit) :

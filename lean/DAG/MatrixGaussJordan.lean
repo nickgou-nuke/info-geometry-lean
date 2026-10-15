@@ -3,6 +3,8 @@ import DAG.FunctionalGaussJordan
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Rank
 
+attribute [-instance] CStarMatrix.instHMulOfFintypeOfMulOfAddCommMonoid
+
 open Matrix
 
 set_option linter.unusedVariables false

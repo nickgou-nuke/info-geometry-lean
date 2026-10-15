@@ -59,7 +59,7 @@ theorem coneAction_mul (hv0_norm : Q v0 = 1) (G1 G2 : ClPlus Q) (X : ClPlus Q) :
   simp only [mul_assoc]
 
 /-- Официално регистриране на действието като MulAction в Lean 4 типажите -/
-instance (hv0_norm : Q v0 = 1) : MulAction (ClPlus Q) (ClPlus Q) where
+def coneConjugationMulAction (hv0_norm : Q v0 = 1) : MulAction (ClPlus Q) (ClPlus Q) where
   smul := coneConjugationAction Q v0
   one_smul := coneAction_one Q v0 hv0_norm
   mul_smul := coneAction_mul Q v0 hv0_norm

@@ -14,6 +14,7 @@ Verifies:
 
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 import pytest
@@ -24,6 +25,7 @@ from tools.infra.qms_evidence_pipeline import (
     PipelineReport,
     QMSEvidencePipeline,
     extract_lean_declarations,
+    parse_axiom_audit_output,
     strip_comments_and_strings,
     strip_lean_comments,
 )
@@ -94,6 +96,59 @@ def test_extract_lean_declarations():
     """
     decls = extract_lean_declarations(lean_text)
     assert decls == ["Top.th1", "Top.Inner.lm2", "Top.th3"]
+
+
+def test_parse_axiom_audit_output_handles_wrapping_and_fails_closed():
+    declarations = ["Top.good", "Top.clean"]
+    output = """'Top.good' depends on axioms: [propext,
+  Classical.choice,
+  custom_trojan]
+'Top.clean' depends on axioms: [Quot.sound]
+"""
+    parsed, errors = parse_axiom_audit_output(output, declarations)
+    assert errors == []
+    assert parsed["Top.good"] == ["propext", "Classical.choice", "custom_trojan"]
+    assert parsed["Top.clean"] == ["Quot.sound"]
+
+    _, missing = parse_axiom_audit_output("'Top.good' depends on axioms: []", declarations)
+    assert any("missing axiom output" in err for err in missing)
+    _, empty = parse_axiom_audit_output("", declarations)
+    assert any("no axiom audit output" in err for err in empty)
+
+
+def test_changed_source_is_recorded_pending_review_not_dropped(tmp_path: Path):
+    source = tmp_path / "Candidate.lean"
+    source.write_text("theorem candidate : True := by trivial\n", encoding="utf-8")
+    pipeline = QMSEvidencePipeline()
+    packet = EvidencePacket(
+        spec_path=tmp_path / "spec.json",
+        lean_file=source,
+        claim="candidate receipt test",
+        carrier="Prop",
+        hypotheses=[],
+        target_conclusion="True",
+        raw_spec={"source_snapshot_sha256": "0" * 64},
+    )
+    kernel_result = GateResult(
+        gate_number=5,
+        gate_name="KERNEL_SOURCE_CHECK",
+        passed=True,
+        details={
+            "candidate_sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
+            "lean_returncode": 0,
+            "lean_output": "",
+            "axiom_audit_declarations": [],
+            "axiom_audit_output": "",
+            "axiom_audit_returncode": 0,
+        },
+    )
+    result, receipt, receipt_path = pipeline.gate_7_candidate_receipt(
+        packet, kernel_result, out_receipt=tmp_path / "candidate.receipt.json"
+    )
+    assert result.passed
+    assert receipt is not None and receipt["review"]["promotionAllowed"] is False
+    assert receipt["review"]["status"] == "source_context_changed_pending_review"
+    assert receipt_path is not None and receipt_path.is_file()
 
 
 # -----------------------------------------------------------------------------
@@ -183,14 +238,14 @@ def test_gate_3_adversarial_screener_rejects_traps(tmp_path: Path):
 
     _, pkt = pipeline.gate_1_intake(spec_file, lean_file)
     assert pkt is not None
-    g3 = pipeline.gate_3_adversarial_socratic_review(pkt)
+    g3 = pipeline.gate_3_static_trap_screen(pkt)
     assert not g3.passed
     assert "Trap T4" in g3.socratic_critique or "Trap T16" in g3.socratic_critique
 
 
-def test_gate_4_interactive_prover_rejects_sorry(tmp_path: Path):
-    """Verify Gate 4 strictly bans sorry and admit."""
-    pipeline = QMSEvidencePipeline(subgoal_cache_file=tmp_path / "subgoal_cache.json")
+def test_gate_4_static_scan_rejects_sorry(tmp_path: Path):
+    """Verify the lexical Gate 4 scan flags sorry and admit tokens."""
+    pipeline = QMSEvidencePipeline()
 
     sorry_code = """
     import Mathlib
@@ -206,7 +261,7 @@ def test_gate_4_interactive_prover_rejects_sorry(tmp_path: Path):
 
     _, pkt = pipeline.gate_1_intake(spec_file, lean_file)
     assert pkt is not None
-    g4 = pipeline.gate_4_interactive_prover(pkt)
+    g4 = pipeline.gate_4_static_proof_hole_scan(pkt)
     assert not g4.passed
     assert "Unclosed proof holes detected" in g4.socratic_critique
     assert any("Hole 'sorry'" in d for d in g4.diagnostics)
@@ -233,10 +288,8 @@ def test_deterministic_halting_on_failure(tmp_path: Path):
 # -----------------------------------------------------------------------------
 
 def test_end_to_end_birkhoff_poset_operator_projector(tmp_path: Path):
-    """Verify 100% clean 7-gate promotion on proofs/BirkhoffPosetOperatorProjector.lean."""
-    pipeline = QMSEvidencePipeline(
-        subgoal_cache_file=tmp_path / "subgoal_cache.json"
-    )
+    """Verify clean automated checks and pending-review receipt for the Birkhoff owner file."""
+    pipeline = QMSEvidencePipeline()
 
     spec_file = REPO_ROOT / "tools" / "quality" / "statement_fidelity_birkhoff_spec.json"
     lean_file = REPO_ROOT / "proofs" / "BirkhoffPosetOperatorProjector.lean"
@@ -251,8 +304,8 @@ def test_end_to_end_birkhoff_poset_operator_projector(tmp_path: Path):
         out_receipt=out_receipt,
     )
 
-    assert report.final_verdict == "ACCEPTED"
-    assert report.status == "PROMOTED"
+    assert report.final_verdict == "PENDING_OWNER_REVIEW"
+    assert report.status == "EVIDENCE_RECORDED_PENDING_OWNER_REVIEW"
     assert report.halted_at_gate is None
     assert len(report.gates) == 7
     assert all(g.passed for g in report.gates)
@@ -263,13 +316,13 @@ def test_end_to_end_birkhoff_poset_operator_projector(tmp_path: Path):
     receipt_data = json.loads(out_receipt.read_text(encoding="utf-8"))
     assert receipt_data["artifact"]["path"] == "proofs/BirkhoffPosetOperatorProjector.lean"
     assert len(receipt_data["receiptSha256"]) == 64
+    assert receipt_data["review"]["promotionAllowed"] is False
+    assert receipt_data["checks"]["semanticVacuityGate"]["status"] == "passed"
 
 
 def test_end_to_end_master_epistemic_colimit_synthesis(tmp_path: Path):
-    """Verify 100% clean 7-gate promotion on proofs/MasterEpistemicColimitSynthesis.lean."""
-    pipeline = QMSEvidencePipeline(
-        subgoal_cache_file=tmp_path / "subgoal_cache.json"
-    )
+    """Verify automated checks and pending-review receipt for the master colimit owner file."""
+    pipeline = QMSEvidencePipeline()
 
     spec_file = REPO_ROOT / "tools" / "quality" / "statement_fidelity_master_colimit_spec.json"
     lean_file = REPO_ROOT / "proofs" / "MasterEpistemicColimitSynthesis.lean"
@@ -284,8 +337,8 @@ def test_end_to_end_master_epistemic_colimit_synthesis(tmp_path: Path):
         out_receipt=out_receipt,
     )
 
-    assert report.final_verdict == "ACCEPTED"
-    assert report.status == "PROMOTED"
+    assert report.final_verdict == "PENDING_OWNER_REVIEW"
+    assert report.status == "EVIDENCE_RECORDED_PENDING_OWNER_REVIEW"
     assert report.halted_at_gate is None
     assert len(report.gates) == 7
     assert all(g.passed for g in report.gates)

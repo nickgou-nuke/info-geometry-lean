@@ -134,7 +134,7 @@ local instance nativeDiscrete : DiscreteTopology Carrier :=
   discreteTopology_bot Carrier
 
 /-- The concrete constant stage diagram on the native ternary carrier. -/
-def stageDiagram : ℕ ⥤ TopCat where
+abbrev stageDiagram : ℕ ⥤ TopCat where
   obj _ := TopCat.of Carrier
   map _ := 𝟙 (TopCat.of Carrier)
   map_id _ := by simp
@@ -184,20 +184,8 @@ theorem exchangeColimit_involutive :
     intro x
     change star (star x) = x
     exact star_star x
-  calc
-    colimit.ι stageDiagram n ≫ exchangeColimit ≫ exchangeColimit =
-        (colimit.ι stageDiagram n ≫ exchangeColimit) ≫ exchangeColimit :=
-      (Category.assoc _ _ _).symm
-    _ = (starHom ≫ colimit.ι stageDiagram n) ≫ exchangeColimit := by
-      rw [exchangeColimit_stage]
-    _ = starHom ≫ (colimit.ι stageDiagram n ≫ exchangeColimit) :=
-      Category.assoc _ _ _
-    _ = starHom ≫ (starHom ≫ colimit.ι stageDiagram n) := by
-      rw [exchangeColimit_stage]
-    _ = (starHom ≫ starHom) ≫ colimit.ι stageDiagram n := by
-      rw [Category.assoc]
-    _ = colimit.ι stageDiagram n := by rw [hstar, Category.id_comp]
-    _ = colimit.ι stageDiagram n ≫ 𝟙 (colimit stageDiagram) := by simp
+  rw [← Category.assoc, exchangeColimit_stage, Category.assoc,
+      exchangeColimit_stage, ← Category.assoc, hstar, Category.id_comp, Category.comp_id]
 
 end NativeToeplitzCuntzThree
 

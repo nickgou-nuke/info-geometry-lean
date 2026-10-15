@@ -5,7 +5,13 @@ namespace Omega.EA
 /-- Chapter-local enumeration of the ten states of the synchronizing kernel Mealy machine. -/
 inductive SyncKernelState
   | q0 | q1 | q2 | q3 | q4 | q5 | q6 | q7 | q8 | q9
-  deriving DecidableEq, Fintype, Repr
+  deriving DecidableEq, Repr
+
+open SyncKernelState
+
+instance : Fintype SyncKernelState where
+  elems := {q0, q1, q2, q3, q4, q5, q6, q7, q8, q9}
+  complete x := by cases x <;> decide
 
 /-- The synchronizing kernel state set has cardinality `10`. -/
 theorem syncKernelState_card : Fintype.card SyncKernelState = 10 := by

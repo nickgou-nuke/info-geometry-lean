@@ -46,7 +46,32 @@ inductive TaoEpistemicArchetype
   | pedagogicalCanonicalization
   | equationalDistillation
   | collaborativeSuperTeam
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+private def taoArchetypeEquivFin : TaoEpistemicArchetype ≃ Fin 8 where
+  toFun
+    | .curiosityOpenProblem => 0
+    | .rawMachineSolution => 1
+    | .formalKernelVerification => 2
+    | .humanExposition => 3
+    | .communityPeerReview => 4
+    | .pedagogicalCanonicalization => 5
+    | .equationalDistillation => 6
+    | .collaborativeSuperTeam => 7
+  invFun
+    | 0 => .curiosityOpenProblem
+    | 1 => .rawMachineSolution
+    | 2 => .formalKernelVerification
+    | 3 => .humanExposition
+    | 4 => .communityPeerReview
+    | 5 => .pedagogicalCanonicalization
+    | 6 => .equationalDistillation
+    | _ => .collaborativeSuperTeam
+  left_inv x := by cases x <;> rfl
+  right_inv i := by fin_cases i <;> rfl
+
+instance : Fintype TaoEpistemicArchetype :=
+  Fintype.ofEquiv (Fin 8) taoArchetypeEquivFin.symm
 
 /-- Causal prerequisite indices encoding the exact mathematical and epistemic dependence.
     Notice the non-linear bifurcation:

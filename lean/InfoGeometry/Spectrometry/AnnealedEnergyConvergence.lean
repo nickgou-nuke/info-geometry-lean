@@ -11,8 +11,15 @@ theorem lineFreeEnergy_zero_le (energy cutoff temperature : ℝ)
       (div_nonpos_of_nonpos_of_nonneg (neg_nonpos.mpr energy_nonneg) temperature_pos.le)
   have partition_bound : linePartition energy cutoff temperature ≤
       linePartition 0 cutoff temperature := by
-    simpa only [linePartition, neg_zero, zero_div, Real.exp_zero] using
-      add_le_add_right exponential_bound (Real.exp (-cutoff / temperature))
+    unfold linePartition
+    rw [neg_zero, zero_div, Real.exp_zero]
+    calc
+      Real.exp (-energy / temperature) + Real.exp (-cutoff / temperature) =
+          Real.exp (-cutoff / temperature) + Real.exp (-energy / temperature) := by
+        rw [add_comm]
+      _ ≤ Real.exp (-cutoff / temperature) + 1 :=
+        add_le_add (le_refl _) exponential_bound
+      _ = 1 + Real.exp (-cutoff / temperature) := by rw [add_comm]
   have logarithm_bound := Real.log_le_log
     (line_partition_pos energy cutoff temperature) partition_bound
   exact mul_le_mul_of_nonpos_left logarithm_bound (neg_nonpos.mpr temperature_pos.le)

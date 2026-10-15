@@ -393,13 +393,13 @@ theorem matrixAction_operator_thermal_bogoliubov_car_preserved
   · intro Z
     obtain ⟨Z, rfl⟩ :=
       (matrixActionRingEquiv (R := ℂ) (W := W)).surjective Z
-    simpa only [matrixAction_mul_end] using
-      congrArg (matrixAction (R := ℂ) (W := W)) (hU Z)
+    simpa only [map_mul, matrixActionRingEquiv_apply] using
+      congrArg (matrixActionRingEquiv (R := ℂ) (W := W)) (hU Z)
   · intro Z
     obtain ⟨Z, rfl⟩ :=
       (matrixActionRingEquiv (R := ℂ) (W := W)).surjective Z
-    simpa only [matrixAction_mul_end] using
-      congrArg (matrixAction (R := ℂ) (W := W)) (hV Z)
+    simpa only [map_mul, matrixActionRingEquiv_apply] using
+      congrArg (matrixActionRingEquiv (R := ℂ) (W := W)) (hV Z)
   · simpa only [matrixAction_add, matrixAction_mul_end, matrixAction_one_end] using
       congrArg (matrixAction (R := ℂ) (W := W)) hUV
   · simpa only [matrixAction_thermalAnticommutator, matrixAction_one_end] using

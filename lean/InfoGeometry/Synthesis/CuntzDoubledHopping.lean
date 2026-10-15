@@ -44,17 +44,18 @@ theorem doubledDifference_readout : T 0 * doubledDifference * S 1 = branchDiffer
 theorem doubledDifference_anticommutes_clock :
     doubledDifference * clock = -(clock * doubledDifference) := by
   simp only [doubledDifference, clock, ← corner_one, add_mul, mul_add, sub_mul, mul_sub]
-  simp [corner_mul] <;> abel
+  simp [corner_mul]
+  abel
 
 theorem doubledDifference_commutes_shift : Commute shift doubledDifference := by
   change shift * doubledDifference = doubledDifference * shift
   simp only [doubledDifference, shift, ← corner_one, add_mul, mul_add]
-  simp [corner_mul] <;> abel
+  simp [corner_mul]
 
 theorem doubledDifference_square :
     doubledDifference * doubledDifference =
       corner (branchDifference * branchDifference) 0 0 +
         corner (branchDifference * branchDifference) 1 1 := by
-  simp [doubledDifference, add_mul, mul_add, corner_mul]
+  simp [doubledDifference, add_mul, mul_add, corner_mul, add_comm]
 
 end InfoGeometry.Synthesis.CuntzDoubledHopping

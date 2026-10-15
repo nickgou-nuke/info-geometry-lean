@@ -1,5 +1,6 @@
 import InfoGeometry.Lie.SplitOctonionDerivationWittBlockRealization
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Algebra.Lie.OfAssociative
 
 noncomputable section
 
@@ -7,6 +8,10 @@ namespace InfoGeometry.Lie.SplitOctonionWittSkewEndomorphismSubalgebra
 
 open InfoGeometry.Lie.SplitOctonionWittPairingTransportBridge
 open InfoGeometry.Lie.SplitOctonionDerivationWittBlockRealization
+open scoped LieAlgebra
+
+local instance : LieRing (Module.End ℝ Coord8) := LieRing.ofAssociativeRing
+local instance : LieAlgebra ℝ (Module.End ℝ Coord8) := LieAlgebra.ofAssociativeAlgebra
 
 abbrev Coord8 := SplitOctonionWittPairingTransportBridge.Coord8
 

@@ -37,7 +37,8 @@ lemma zmod_val_cross_ne_zero {n : ℕ} [Fact (2 ≤ n)] (u1 u2 v1 v2 : ZMod n)
     (u1.val : ℂ) * (v2.val : ℂ) - (u2.val : ℂ) * (v1.val : ℂ) ≠ 0 := by
   intro h0
   have h1 : (u1.val : ℤ) * (v2.val : ℤ) - (u2.val : ℤ) * (v1.val : ℤ) = 0 := by exact_mod_cast h0
-  have h2 : ((u1.val : ℤ) * (v2.val : ℤ) - (u2.val : ℤ) * (v1.val : ℤ) : ZMod n) = 0 := by rw [h1, Int.cast_zero]
+  have h2 : ((u1.val : ℤ) * (v2.val : ℤ) - (u2.val : ℤ) * (v1.val : ℤ) : ZMod n) = 0 := by
+    rw [← Int.cast_mul, ← Int.cast_mul, ← Int.cast_sub, h1, Int.cast_zero]
   have hn : NeZero n := ⟨by
     have h2n : 2 ≤ n := Fact.out
     omega⟩
@@ -61,17 +62,17 @@ forces the Chiral Anomaly (Maurer-Cartan 3-form) to be non-zero.
 -/
 theorem heisenberg_anomaly_nonzero {n : ℕ} [Fact (2 ≤ n)] 
     (u v : Heisenberg n)
-    (h_uncert : heisenberg_cocycle_defect u v ≠ 0) :
+    (h_uncert : u.1.1 * v.1.2 - v.1.1 * u.1.2 ≠ 0) :
     ∃ (w : Heisenberg n), maurerCartan3Form (heisenbergVector w) (heisenbergVector u) (heisenbergVector v) ≠ 0 := by
   use heisenbergCenterElement 1
+  have hval : (1 : ZMod n).val = 1 := by
+    rw [ZMod.val_one_eq_one_mod]
+    exact Nat.mod_eq_of_lt (by have h2n : 2 ≤ n := Fact.out; omega)
   have hC : ((1 : ZMod n).val : ℂ) ≠ 0 := by
-    have hn : NeZero n := ⟨by
-      have h2n : 2 ≤ n := Fact.out
-      omega⟩
-    have h_one : (1 : ZMod n).val = 1 := ZMod.val_one n
-    rw [h_one]
-    exact one_ne_zero
+    rw [hval]
+    exact_mod_cast (one_ne_zero : (1 : ℝ) ≠ 0)
   dsimp [heisenbergCenterElement, heisenbergVector]
+  simp only [ZMod.val_zero, hval, Nat.cast_zero, Nat.cast_one]
   rw [maurerCartan3Form_center_explicit]
   intro h_zero
   simp only [mul_eq_zero] at h_zero
@@ -80,7 +81,7 @@ theorem heisenberg_anomaly_nonzero {n : ℕ} [Fact (2 ≤ n)]
     · rcases h4 with h4 | h4
       · norm_num at h4
       · exact Complex.I_ne_zero h4
-    · exact hC h4
+    · exact one_ne_zero h4
   · exact zmod_val_cross_ne_zero u.1.1 u.1.2 v.1.1 v.1.2 h_uncert h_zero
 
 end InfoGeometry.Sandbox.UncertaintyAnomalySwarm

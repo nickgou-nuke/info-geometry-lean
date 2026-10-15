@@ -104,10 +104,78 @@ def flowRepresentationStageCovariance :
         (topologicalInjection
           Stage (CuntzStageModularFlowTopologicalColimit.system Stage T)
           n a)
-    rw [modularFlowTopologicalColimitMap_inclusion,
-      topologicalRepresentation_of_stage,
-      topologicalRepresentation_of_stage]
-    exact R.invariant n t a
+    have h_flow := modularFlowTopologicalColimitMap_inclusion
+      Stage T Φ t n a
+    calc
+      topologicalRepresentation
+          (Stage := Stage)
+          (sys := CuntzStageModularFlowTopologicalColimit.system Stage T)
+          (representationCocone Stage T Φ (B := B) R)
+          R.realization.ι_comm
+          R.realization.continuous_ι
+          (modularFlowTopologicalColimitMap Stage T Φ t
+            (topologicalInjection
+              Stage (CuntzStageModularFlowTopologicalColimit.system Stage T)
+              n a)) =
+        topologicalRepresentation
+          (Stage := Stage)
+          (sys := CuntzStageModularFlowTopologicalColimit.system Stage T)
+          (representationCocone Stage T Φ (B := B) R)
+          R.realization.ι_comm
+          R.realization.continuous_ι
+          (topologicalInjection
+            Stage (CuntzStageModularFlowTopologicalColimit.system Stage T)
+            n (Φ.flow n t a)) := by
+          exact congrArg
+            (fun x => topologicalRepresentation
+              (Stage := Stage)
+              (sys := CuntzStageModularFlowTopologicalColimit.system Stage T)
+              (representationCocone Stage T Φ (B := B) R)
+              R.realization.ι_comm
+              R.realization.continuous_ι x) h_flow
+      _ = topologicalRepresentation
+          (Stage := Stage)
+          (sys := CuntzStageModularFlowTopologicalColimit.system Stage T)
+          (representationCocone Stage T Φ (B := B) R)
+          R.realization.ι_comm
+          R.realization.continuous_ι
+          (topologicalInjection
+            Stage (CuntzStageModularFlowTopologicalColimit.system Stage T)
+            n a) := by
+          calc
+            topologicalRepresentation
+                Stage
+                (CuntzStageModularFlowTopologicalColimit.system Stage T)
+                (representationCocone Stage T Φ (B := B) R)
+                R.realization.ι_comm
+                R.realization.continuous_ι
+                (topologicalInjection
+                  Stage (CuntzStageModularFlowTopologicalColimit.system Stage T)
+                  n (Φ.flow n t a)) = R.realization.ι n (Φ.flow n t a) := by
+                    exact topologicalRepresentation_of_stage
+                      Stage
+                      (CuntzStageModularFlowTopologicalColimit.system Stage T)
+                      (representationCocone Stage T Φ (B := B) R)
+                      R.realization.ι_comm
+                      R.realization.continuous_ι
+                      n (Φ.flow n t a)
+            _ = R.realization.ι n a := R.invariant n t a
+            _ = topologicalRepresentation
+                Stage
+                (CuntzStageModularFlowTopologicalColimit.system Stage T)
+                (representationCocone Stage T Φ (B := B) R)
+                R.realization.ι_comm
+                R.realization.continuous_ι
+                (topologicalInjection
+                  Stage (CuntzStageModularFlowTopologicalColimit.system Stage T)
+                  n a) := by
+                    exact (topologicalRepresentation_of_stage
+                      Stage
+                      (CuntzStageModularFlowTopologicalColimit.system Stage T)
+                      (representationCocone Stage T Φ (B := B) R)
+                      R.realization.ι_comm
+                      R.realization.continuous_ι
+                      n a).symm
 
 theorem modularFlow_intertwines_invariant_representation
     (t : ℝ) :
@@ -132,6 +200,6 @@ theorem modularFlow_intertwines_invariant_representation
     R.realization.ι_comm
     R.realization.continuous_ι
     (flowRepresentationStageCovariance Stage T Φ R) t
-  simpa using h
+  simpa only [flowRepresentationData] using h
 
 end InfoGeometry.Canonical.CuntzStageModularFlowTopologicalRepresentationBridge

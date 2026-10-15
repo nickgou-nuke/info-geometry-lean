@@ -1,6 +1,7 @@
 import InfoGeometry.Clifford.CliffordLieAlgebra
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55SpinorAlgebraEquiv
+import Mathlib.Algebra.Lie.OfAssociative
 
 /-!
 # The strict `Spin(5,5)` bivector image in the spinor matrix algebra
@@ -19,6 +20,9 @@ open scoped Matrix
 open CliffordAlgebra
 open InfoGeometry.Clifford.Clifford55
 open InfoGeometry.Clifford.SpinorRep
+
+local instance cl55LieRing : LieRing (CliffordAlgebra Q55) :=
+  LieRing.ofAssociativeRing
 
 /-- The native Clifford bivector Lie algebra for the `(5,5)` quadratic form. -/
 abbrev SpinBivector55 := soLieAlgebra Q55

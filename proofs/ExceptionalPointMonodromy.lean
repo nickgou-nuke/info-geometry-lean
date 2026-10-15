@@ -108,7 +108,9 @@ theorem epMatrixMonodromy_square (A : M2R) :
 /-- Non-abelian transport for the local EP pair (`modular_j`, `chiralParity`). -/
 theorem local_ep_nonabelian_transport :
     epMatrixMonodromy (chiralParity : M2R) ≠ (chiralParity : M2R) * modular_j := by
-  simpa [epMatrixMonodromy] using
+  simpa [epMatrixMonodromy, InfoGeometry.Canonical.TopologicalBraiding.braidOperatorR,
+    InfoGeometry.Canonical.TopologicalBraiding.pauliX,
+    InfoGeometry.Canonical.TopologicalBraiding.pauliZ] using
     InfoGeometry.Canonical.TopologicalBraiding.pauliXZ_noncommute_R
 
 /-- Same statement in the trace-free doubled complex chart: monodromy and parity do not commute. -/
@@ -117,7 +119,10 @@ theorem local_ep_nonabelian_transport_complex :
         InfoGeometry.Canonical.TopologicalBraiding.pauliZc) ≠
       (InfoGeometry.Canonical.TopologicalBraiding.pauliZc *
         InfoGeometry.Canonical.TopologicalBraiding.pauliXc) := by
-  simpa using InfoGeometry.Canonical.TopologicalBraiding.pauliXZ_noncommute_C
+  simpa [InfoGeometry.Canonical.TopologicalBraiding.braidOperator,
+    InfoGeometry.Canonical.TopologicalBraiding.pauliXc,
+    InfoGeometry.Canonical.TopologicalBraiding.pauliZc] using
+    InfoGeometry.Canonical.TopologicalBraiding.pauliXZ_noncommute_C
 
 /-- `epTrajectoryMonodromy` carries only loop-count bookkeeping for a compiler trajectory. -/
 def epTrajectoryMonodromy

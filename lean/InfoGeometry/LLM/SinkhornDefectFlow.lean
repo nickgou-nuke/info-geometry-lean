@@ -741,17 +741,6 @@ noncomputable def SinkhornRNBarrierThermodynamicComparison.ofResidualReadoutEqBa
       rw [← hResidual]
       exact δ_odd_thermo_le_ZD (E := E) B }
 
-@[simp] theorem SinkhornRNBarrierThermodynamicComparison.ofResidualReadoutEqBarrier_central_readout_budget
-    {n : Nat}
-    (B : RouterDefectThermodynamicBridge (E := E))
-    (T : SinkhornTrajectory n)
-    (k : Nat)
-    (hResidual : δ_odd_thermo B = δ_relVol n T k) :
-    (SinkhornRNBarrierThermodynamicComparison.ofResidualReadoutEqBarrier
-      (E := E) B T k hResidual).central_readout_budget =
-      (by
-        simpa [hResidual] using δ_odd_thermo_le_ZD (E := E) B) := by
-  rfl
 
 /--
 An explicit RN-barrier comparison discharges the thermodynamic D3 bound.
@@ -836,6 +825,14 @@ theorem unitCounts_pos (n : Nat) :
   intro i
   simp [unitCounts]
 
+lemma rowSumCounts_pos {n : Nat} {M : SinkhornMatrix n} (hrow : HasPositiveRowSums n M) :
+    ∀ i : Fin n, 0 < rowSumCounts n M i :=
+  fun i => hrow i
+
+lemma colSumCounts_pos {n : Nat} {M : SinkhornMatrix n} (hcol : HasPositiveColSums n M) :
+    ∀ j : Fin n, 0 < colSumCounts n M j :=
+  fun j => hcol j
+
 theorem countMass_unitCounts
     (n : Nat)
     [Nonempty (Fin n)] :
@@ -889,12 +886,12 @@ def RowCountMassNormalizedWitness
     [Nonempty (Fin n)]
     (M : SinkhornMatrix n) : Prop :=
   ∃ hrow : HasPositiveRowSums n M,
-    countMass (rowSumCounts n M) hrow = n
+    countMass (rowSumCounts n M) (rowSumCounts_pos hrow) = n
 
 namespace RowCountMassNormalizedWitness
 
 /-- Positive-row component selected from the native existential statement. -/
-noncomputable def hrow
+theorem hrow
     {n : Nat}
     [Nonempty (Fin n)]
     {M : SinkhornMatrix n}
@@ -908,7 +905,7 @@ theorem hMass
     [Nonempty (Fin n)]
     {M : SinkhornMatrix n}
     (W : RowCountMassNormalizedWitness M) :
-    countMass (rowSumCounts n M) W.hrow = n :=
+    countMass (rowSumCounts n M) (rowSumCounts_pos W.hrow) = n :=
   Classical.choose_spec W
 
 end RowCountMassNormalizedWitness
@@ -927,7 +924,7 @@ noncomputable def RowRNBarrierCountProfileLift.ofMassNormalized
     [Nonempty (Fin n)]
     {M : SinkhornMatrix n}
     (hrow : HasPositiveRowSums n M)
-    (hMass : countMass (rowSumCounts n M) hrow = n) :
+    (hMass : countMass (rowSumCounts n M) (rowSumCounts_pos hrow) = n) :
     RowRNBarrierCountProfileLift n M hrow :=
   { scale := n
     scale_nonneg := Nat.cast_nonneg n
@@ -947,7 +944,7 @@ noncomputable def RowRNBarrierCountProfileLift.ofMassNormalized
         countMass_unitCounts n
       have hshift :
           countMassShift (unitCounts n) (rowSumCounts n M)
-            (unitCounts_pos n) hrow = 0 := by
+            (unitCounts_pos n) (rowSumCounts_pos hrow) = 0 := by
         rw [countMassShift_eq_neg_log_countRelativeVolumeChange]
         unfold countRelativeVolumeChange
         rw [hunitMass, hMass]
@@ -955,7 +952,7 @@ noncomputable def RowRNBarrierCountProfileLift.ofMassNormalized
       have hpot :
           InfoGeometry.Canonical.RelativePotentialCore.relativeModularPotential
               (countRay (unitCounts n) (unitCounts_pos n))
-              (countRay (rowSumCounts n M) hrow) i
+              (countRay (rowSumCounts n M) (rowSumCounts_pos hrow)) i
             = Real.log (rowSum n M i) := by
         rw [relativeModularPotential_countRay_eq_neg_relativeCountLogDensity_sub_massShift]
         rw [hshift, sub_zero]
@@ -974,7 +971,7 @@ noncomputable def ColRNBarrierCountProfileLift.ofMassNormalized
     [Nonempty (Fin n)]
     {M : SinkhornMatrix n}
     (hcol : HasPositiveColSums n M)
-    (hMass : countMass (colSumCounts n M) hcol = n) :
+    (hMass : countMass (colSumCounts n M) (colSumCounts_pos hcol) = n) :
     ColRNBarrierCountProfileLift n M hcol :=
   { scale := n
     scale_nonneg := Nat.cast_nonneg n
@@ -994,7 +991,7 @@ noncomputable def ColRNBarrierCountProfileLift.ofMassNormalized
         countMass_unitCounts n
       have hshift :
           countMassShift (unitCounts n) (colSumCounts n M)
-            (unitCounts_pos n) hcol = 0 := by
+            (unitCounts_pos n) (colSumCounts_pos hcol) = 0 := by
         rw [countMassShift_eq_neg_log_countRelativeVolumeChange]
         unfold countRelativeVolumeChange
         rw [hunitMass, hMass]
@@ -1002,7 +999,7 @@ noncomputable def ColRNBarrierCountProfileLift.ofMassNormalized
       have hpot :
           InfoGeometry.Canonical.RelativePotentialCore.relativeModularPotential
               (countRay (unitCounts n) (unitCounts_pos n))
-              (countRay (colSumCounts n M) hcol) j
+              (countRay (colSumCounts n M) (colSumCounts_pos hcol)) j
             = Real.log (colSum n M j) := by
         rw [relativeModularPotential_countRay_eq_neg_relativeCountLogDensity_sub_massShift]
         rw [hshift, sub_zero]
@@ -1087,8 +1084,8 @@ noncomputable def SinkhornRNBarrierProfileLift.ofMassNormalizedRowCounts
     {T : SinkhornTrajectory n}
     {k : Nat}
     (hk : phaseAt k = SinkhornPhase.col)
-    {hrow : HasPositiveRowSums n (T.state k)}
-    (hMass : countMass (rowSumCounts n (T.state k)) hrow = n) :
+    (hrow : HasPositiveRowSums n (T.state k))
+    (hMass : countMass (rowSumCounts n (T.state k)) (rowSumCounts_pos hrow) = n) :
     SinkhornRNBarrierProfileLift n T k :=
   SinkhornRNBarrierProfileLift.ofPhase
     (T := T) (k := k)
@@ -1130,8 +1127,8 @@ noncomputable def SinkhornRNBarrierProfileLift.ofMassNormalizedColCounts
     {T : SinkhornTrajectory n}
     {k : Nat}
     (hk : phaseAt k = SinkhornPhase.row)
-    {hcol : HasPositiveColSums n (T.state k)}
-    (hMass : countMass (colSumCounts n (T.state k)) hcol = n) :
+    (hcol : HasPositiveColSums n (T.state k))
+    (hMass : countMass (colSumCounts n (T.state k)) (colSumCounts_pos hcol) = n) :
     SinkhornRNBarrierProfileLift n T k :=
   SinkhornRNBarrierProfileLift.ofPhase
     (T := T) (k := k)
@@ -1195,14 +1192,14 @@ noncomputable def WeylThermodynamicProfileComparison.ofMassNormalizedRowCounts
     [Nonempty (Fin n)]
     (C : SinkhornRNBarrierThermodynamicComparison (E := E) n)
     (hk : phaseAt C.k = SinkhornPhase.col)
-    {hrow : HasPositiveRowSums n (C.T.state C.k)}
-    (hMass : countMass (rowSumCounts n (C.T.state C.k)) hrow = n) :
+    (hrow : HasPositiveRowSums n (C.T.state C.k))
+    (hMass : countMass (rowSumCounts n (C.T.state C.k)) (rowSumCounts_pos hrow) = n) :
     WeylThermodynamicProfileComparison (E := E)
       C.B.routerResidual
       (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) C.B.CIK) :=
   WeylThermodynamicProfileComparison.ofSinkhornRNBarrier (E := E) C
     (SinkhornRNBarrierProfileLift.ofMassNormalizedRowCounts
-      (T := C.T) (k := C.k) hk hMass)
+      (T := C.T) (k := C.k) hk hrow hMass)
 
 /--
 Witness-routed row-count constructor for the profile Weyl/thermodynamic
@@ -1230,14 +1227,14 @@ noncomputable def WeylThermodynamicProfileComparison.ofMassNormalizedColCounts
     [Nonempty (Fin n)]
     (C : SinkhornRNBarrierThermodynamicComparison (E := E) n)
     (hk : phaseAt C.k = SinkhornPhase.row)
-    {hcol : HasPositiveColSums n (C.T.state C.k)}
-    (hMass : countMass (colSumCounts n (C.T.state C.k)) hcol = n) :
+    (hcol : HasPositiveColSums n (C.T.state C.k))
+    (hMass : countMass (colSumCounts n (C.T.state C.k)) (colSumCounts_pos hcol) = n) :
     WeylThermodynamicProfileComparison (E := E)
       C.B.routerResidual
       (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) C.B.CIK) :=
   WeylThermodynamicProfileComparison.ofSinkhornRNBarrier (E := E) C
     (SinkhornRNBarrierProfileLift.ofMassNormalizedColCounts
-      (T := C.T) (k := C.k) hk hMass)
+      (T := C.T) (k := C.k) hk hcol hMass)
 
 /--
 The Sinkhorn-derived profile comparison gives the corrected readout inequality.
@@ -1263,8 +1260,8 @@ theorem operatorInformationNormReadout_le_of_massNormalizedRowCounts
     [Nonempty (Fin n)]
     (C : SinkhornRNBarrierThermodynamicComparison (E := E) n)
     (hk : phaseAt C.k = SinkhornPhase.col)
-    {hrow : HasPositiveRowSums n (C.T.state C.k)}
-    (hMass : countMass (rowSumCounts n (C.T.state C.k)) hrow = n) :
+    (hrow : HasPositiveRowSums n (C.T.state C.k))
+    (hMass : countMass (rowSumCounts n (C.T.state C.k)) (rowSumCounts_pos hrow) = n) :
     C.B.comparison.operatorInformationNormReadout C.B.routerResidual
       ≤
     C.B.comparison.operatorInformationNormReadout
@@ -1273,7 +1270,7 @@ theorem operatorInformationNormReadout_le_of_massNormalizedRowCounts
     RouterDefectBoundBridge.operatorInformationNormReadout_le_of_weylThermodynamicProfileComparison
       (E := E)
       (WeylThermodynamicProfileComparison.ofMassNormalizedRowCounts
-        (E := E) C hk hMass)
+        (E := E) C hk hrow hMass)
 
 /--
 Witness-routed row-count mass-normalization is enough to derive the operator
@@ -1304,8 +1301,8 @@ theorem operatorInformationNormReadout_le_of_massNormalizedColCounts
     [Nonempty (Fin n)]
     (C : SinkhornRNBarrierThermodynamicComparison (E := E) n)
     (hk : phaseAt C.k = SinkhornPhase.row)
-    {hcol : HasPositiveColSums n (C.T.state C.k)}
-    (hMass : countMass (colSumCounts n (C.T.state C.k)) hcol = n) :
+    (hcol : HasPositiveColSums n (C.T.state C.k))
+    (hMass : countMass (colSumCounts n (C.T.state C.k)) (colSumCounts_pos hcol) = n) :
     C.B.comparison.operatorInformationNormReadout C.B.routerResidual
       ≤
     C.B.comparison.operatorInformationNormReadout
@@ -1314,7 +1311,7 @@ theorem operatorInformationNormReadout_le_of_massNormalizedColCounts
     RouterDefectBoundBridge.operatorInformationNormReadout_le_of_weylThermodynamicProfileComparison
       (E := E)
       (WeylThermodynamicProfileComparison.ofMassNormalizedColCounts
-        (E := E) C hk hMass)
+        (E := E) C hk hcol hMass)
 
 /--
 Volume anomaly monotonicity forces one-step odd-defect monotonicity.

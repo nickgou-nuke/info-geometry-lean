@@ -27,9 +27,7 @@ private theorem godelEncoding_replicate_one_ge_factorial
       symm
       exact prod_range_add_two_eq_factorial_succ n
     _ ≤ ∏ i ∈ Finset.range n, primes i := by
-      exact Finset.prod_le_prod
-        (fun i _ => Nat.zero_le _)
-        (fun i hi => hprime_lb i (Finset.mem_range.mp hi))
+      exact Finset.prod_le_prod fun i hi => hprime_lb i (Finset.mem_range.mp hi)
 
 private theorem factorial_le_godelEncoding_of_one_event_per_slice
     (primes : ℕ → ℕ) (code : List ℕ) (hp : ∀ i, 1 < primes i)

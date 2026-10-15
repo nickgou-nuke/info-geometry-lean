@@ -117,7 +117,11 @@ theorem nativeAut_map_associator (φ : RealSplitOctonionAut)
     nativeAut φ (_root_.associator X Y Z) =
       _root_.associator (nativeAut φ X) (nativeAut φ Y) (nativeAut φ Z) := by
   unfold _root_.associator
-  rw [nativeAut_map_sub', nativeAut_map_mul' φ (X * Y) Z,
+  change nativeAut φ (ZornVectorMatrix.sub (X * Y * Z) (X * (Y * Z))) =
+    ZornVectorMatrix.sub
+      (nativeAut φ X * nativeAut φ Y * nativeAut φ Z)
+      (nativeAut φ X * (nativeAut φ Y * nativeAut φ Z))
+  rw [nativeAut_map_sub φ, nativeAut_map_mul' φ (X * Y) Z,
     nativeAut_map_mul' φ X (Y * Z), nativeAut_map_mul' φ X Y,
     nativeAut_map_mul' φ Y Z]
 
@@ -448,8 +452,44 @@ theorem conjugateNative_innerDerivation
       (zorn_right_alternative),
     stanDerMap_apply_normal_form (zorn_left_alternative)
       (zorn_right_alternative)]
-  simp only [nativeAut_map_sub', nativeAut_map_mul',
-    nativeAut_map_associator, map_nsmul, LinearEquiv.apply_symm_apply]
+  have hcomm :
+      nativeAut φ (x * y - y * x) =
+        nativeAut φ x * nativeAut φ y - nativeAut φ y * nativeAut φ x := by
+    calc
+      nativeAut φ (x * y - y * x) =
+          nativeAut φ (x * y) - nativeAut φ (y * x) :=
+        nativeAut_map_sub' φ (x * y) (y * x)
+      _ = nativeAut φ x * nativeAut φ y - nativeAut φ y * nativeAut φ x := by
+        rw [nativeAut_map_mul', nativeAut_map_mul']
+  have hassoc :
+      nativeAut φ (_root_.associator x y ((nativeAut φ).symm z)) =
+        _root_.associator (nativeAut φ x) (nativeAut φ y) z := by
+    calc
+      nativeAut φ (_root_.associator x y ((nativeAut φ).symm z)) =
+          _root_.associator (nativeAut φ x) (nativeAut φ y)
+            (nativeAut φ ((nativeAut φ).symm z)) :=
+        nativeAut_map_associator φ x y ((nativeAut φ).symm z)
+      _ = _root_.associator (nativeAut φ x) (nativeAut φ y) z := by
+        rw [LinearEquiv.apply_symm_apply]
+  calc
+    nativeAut φ
+        (((x * y - y * x) * (nativeAut φ).symm z -
+          (nativeAut φ).symm z * (x * y - y * x)) -
+          3 • _root_.associator x y ((nativeAut φ).symm z)) =
+      nativeAut φ
+          ((x * y - y * x) * (nativeAut φ).symm z -
+            (nativeAut φ).symm z * (x * y - y * x)) -
+        nativeAut φ (3 • _root_.associator x y ((nativeAut φ).symm z)) := by
+          exact nativeAut_map_sub' φ _ _
+    _ = ((nativeAut φ x * nativeAut φ y - nativeAut φ y * nativeAut φ x) * z -
+          z * (nativeAut φ x * nativeAut φ y - nativeAut φ y * nativeAut φ x)) -
+        3 • _root_.associator (nativeAut φ x) (nativeAut φ y) z := by
+          rw [nativeAut_map_sub' φ _ _, nativeAut_map_mul' φ,
+            nativeAut_map_mul' φ, hcomm,
+            show nativeAut φ (3 • _root_.associator x y ((nativeAut φ).symm z)) =
+              3 • nativeAut φ (_root_.associator x y ((nativeAut φ).symm z)) from
+              map_nsmul (nativeAut φ) 3 _, hassoc]
+          simp
 
 theorem conjugateNativeDerivation_mem_innerPairSpan
     (φ : RealSplitOctonionAut)

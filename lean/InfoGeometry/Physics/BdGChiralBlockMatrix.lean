@@ -26,6 +26,22 @@ def chiralGrading : BdGBlock A :=
 def diracOperator (Delta : A) : BdGBlock A :=
   !![0, Delta; star Delta, 0]
 
+/-- The mass-coupled BdG block matrix over a possibly noncommutative ring.
+Its entries are operators when `A` is an endomorphism ring. -/
+def massiveBdGHamiltonian (D M : A) : BdGBlock A :=
+  !![D, M; M, -D]
+
+/-- Squaring the BdG block operator gives the common diagonal `D² + M²` when
+the kinetic and pairing operators commute. The commutation hypothesis is
+exactly what removes the two off-diagonal commutators. -/
+theorem massiveBdGHamiltonian_sq (D M : A) (hcomm : D * M = M * D) :
+    massiveBdGHamiltonian D M * massiveBdGHamiltonian D M =
+      !![D * D + M * M, 0; 0, D * D + M * M] := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [massiveBdGHamiltonian, Matrix.mul_apply, Fin.sum_univ_two,
+      hcomm, mul_neg, neg_mul, neg_neg] <;> abel
+
 /-! The square below is defined by the native matrix multiplication. -/
 
 def diracSquare (Delta : A) : BdGBlock A :=
@@ -116,6 +132,29 @@ abbrev bdgStar (M : BdGBlock A) : BdGBlock A := star M
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [diracOperator, chiralGrading, Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- Conjugating the self-adjoint Dirac block by the chiral involution changes
+its sign.  This is the concrete finite-dimensional Krein-adjoint identity. -/
+theorem dirac_krein_adjoint (Delta : A) :
+    chiralGrading * star (diracOperator Delta) * chiralGrading =
+      -diracOperator Delta := by
+  have hstar : star (diracOperator Delta) = diracOperator Delta := by
+    simpa [bdgStar] using dirac_self_adjoint Delta
+  rw [hstar]
+  have hJ := chiralGrading_sq (A := A)
+  have hanti := dirac_anticommutes_with_chirality Delta
+  have hleft : chiralGrading * diracOperator Delta =
+      -(diracOperator Delta * chiralGrading) := by
+    have hanti' : chiralGrading * diracOperator Delta +
+        diracOperator Delta * chiralGrading = 0 := by
+      simpa [add_comm] using hanti
+    exact (add_eq_zero_iff_eq_neg.mp hanti')
+  calc
+    chiralGrading * diracOperator Delta * chiralGrading =
+        -(diracOperator Delta * chiralGrading * chiralGrading) := by
+          rw [hleft]
+          rw [neg_mul]
+    _ = -diracOperator Delta := by rw [mul_assoc, hJ, mul_one]
 
 /-! The off-diagonal Dirac block sends the first chiral sheet to the second. -/
 theorem diracOperator_mulVec_inl (Delta : A) (x : A) :

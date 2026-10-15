@@ -39,7 +39,9 @@ theorem qMinus_sq_zero : qMinus * qMinus = 0 := by
   exact chiralQMinus_sq 1
 
 theorem dirac_sq_eq_qAnticomm : dirac * dirac = qAnticomm := by
-  simpa [dirac, qAnticomm] using chiralDirac_sq_eq_susyHamiltonian (1 : ℝ) 1
+  change chiralDirac (1 : ℝ) 1 * chiralDirac (1 : ℝ) 1 =
+    chiralSUSYHamiltonian (1 : ℝ) 1
+  exact chiralDirac_sq_eq_susyHamiltonian (1 : ℝ) 1
 
 /-! ## Chiral Hodge--Dirac readout -/
 
@@ -51,7 +53,8 @@ noncomputable def hodgeLaplacian : Block := hodgeDirac * hodgeDirac
 
 theorem hodgeDirac_sq_eq_cross_terms :
     hodgeDirac * hodgeDirac = qPlus * qMinus + qMinus * qPlus := by
-  simpa [hodgeDirac, qAnticomm] using dirac_sq_eq_qAnticomm
+  change dirac * dirac = qPlus * qMinus + qMinus * qPlus
+  exact dirac_sq_eq_qAnticomm
 
 theorem hodgeDirac_sq_eq_qAnticomm :
     hodgeDirac * hodgeDirac = qAnticomm := by

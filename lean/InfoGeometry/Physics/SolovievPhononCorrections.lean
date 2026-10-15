@@ -106,9 +106,13 @@ inductive Archetype
   | phononCorrection
   | circularCoefficients
   | vacuumReadout
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
 
 open Archetype
+
+instance : Fintype Archetype where
+  elems := {carRelations, fermionicBogoliubov, pairNormalOrder, phononCorrection, circularCoefficients, vacuumReadout}
+  complete := by rintro (_ | _ | _ | _ | _ | _) <;> decide
 
 def prerequisites : Archetype → Finset Archetype
   | carRelations => {carRelations}

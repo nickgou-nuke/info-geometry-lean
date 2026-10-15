@@ -1,6 +1,7 @@
 import InfoGeometry.Volume.ConnesInfinitesimal
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Volume.ModularSurprisalKillingReadback
+import Mathlib.Algebra.Lie.OfAssociative
 
 /-!
 # Modular surprisal derivation equivariance
@@ -36,6 +37,12 @@ open InfoGeometry.Volume.ConnesCocycle
 
 variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
   [CompleteSpace H]
+
+noncomputable local instance : NormedRing (AlgebraEnd H) := inferInstance
+noncomputable local instance : NormedAlgebra ℝ (AlgebraEnd H) := inferInstance
+local instance : IsTopologicalRing (AlgebraEnd H) := inferInstance
+local instance : CompleteSpace (AlgebraEnd H) := inferInstance
+attribute [local instance] LieRing.ofAssociativeRing
 
 /-- The modular flow fixes the generator itself. -/
 theorem modular_flow_fixes_generator (K : AlgebraEnd H) (t : ℝ) :

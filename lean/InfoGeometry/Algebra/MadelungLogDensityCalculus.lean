@@ -40,15 +40,23 @@ theorem curvature_eq_log_density (logDensity : ℝ → ℝ) (point : ℝ)
         positiveAmplitude logDensity point =
       deriv (deriv logDensity) point / 2 + (deriv logDensity point) ^ 2 / 4 := by
   rw [deriv_positiveAmplitude logDensity differentiable]
-  have second : HasDerivAt
-      (fun location => positiveAmplitude logDensity location * (deriv logDensity location / 2))
-      ((positiveAmplitude logDensity point * (deriv logDensity point / 2)) *
-          (deriv logDensity point / 2) +
-        positiveAmplitude logDensity point * (deriv (deriv logDensity) point / 2)) point := by
-    simpa only [Pi.mul_apply] using
-      (hasDerivAt_positiveAmplitude logDensity point (differentiable point)).mul
-        (twice_differentiable.hasDerivAt.div_const 2)
-  rw [second.deriv]
+  have second :
+      deriv (fun location =>
+        positiveAmplitude logDensity location * (deriv logDensity location / 2)) point =
+        (positiveAmplitude logDensity point * (deriv logDensity point / 2)) *
+            (deriv logDensity point / 2) +
+          positiveAmplitude logDensity point * (deriv (deriv logDensity) point / 2) := by
+    change deriv ((fun location => Real.exp (logDensity location / 2)) *
+      (fun location => deriv logDensity location / 2)) point = _
+    rw [deriv_mul
+      (((differentiable point).div_const 2).exp)
+      (twice_differentiable.div_const 2)]
+    dsimp only [positiveAmplitude]
+    rw [((differentiable point).div_const 2).hasDerivAt.exp.deriv]
+    rw [deriv_div_const (c := logDensity) (d := (2 : ℝ))]
+    rw [(differentiable point).hasDerivAt.deriv]
+    rw [deriv_div_const (c := deriv logDensity) (d := (2 : ℝ))]
+  rw [second]
   have amplitude_ne := ne_of_gt (positiveAmplitude_pos logDensity point)
   field_simp
   ring

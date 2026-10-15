@@ -11,10 +11,8 @@ private theorem fiber_mult_pos (i : Fin 21) :
     0 < cBinFiberMult 6 (X.ofNat 6 i) := by
   have hmin :
       cBinFiberMin 6 ≤ cBinFiberMult 6 (X.ofNat 6 i) := by
-    simpa [cBinFiberMin] using
-      (Finset.inf'_le (s := (@Finset.univ (X 6) (fintypeX 6)))
-        (f := fun x => cBinFiberMult 6 x)
-        (by simp : X.ofNat 6 i ∈ (@Finset.univ (X 6) (fintypeX 6))))
+    exact Finset.inf'_le (s := (@Finset.univ (X 6) (fintypeX 6)))
+      (f := fun x => cBinFiberMult 6 x) (by simp)
   rw [cBinFiberMin_six] at hmin
   omega
 

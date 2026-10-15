@@ -51,7 +51,7 @@ theorem coordinate_s1_conj_c_inv_pow (n : ℕ) :
       _ = s1Root := by simp
   have h : s1Root * cRoot⁻¹ * s1Root = cRoot := by
     have hinv := congrArg Inv.inv coordinate_s1_conj_c
-    simpa [mul_assoc] using hinv
+    simpa [mul_assoc, hs] using hinv
   simpa only [hs, h] using
     (conj_pow (a := s1Root) (b := cRoot⁻¹) (i := n)).symm
 

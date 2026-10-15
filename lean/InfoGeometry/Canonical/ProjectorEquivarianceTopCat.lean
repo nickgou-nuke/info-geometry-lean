@@ -1,7 +1,7 @@
 import InfoGeometry.Canonical.ProjectorEquivariance
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Category.TopCat.Basic
-import Mathlib.Analysis.NormedSpace.OperatorNorm.Basic
+import Mathlib.Analysis.Normed.Operator.Basic
 
 /-!
 # TopCat readout of the projector/phase-flip packet

@@ -86,8 +86,12 @@ theorem paper_conclusion_hydrogenic_strict_twolevel_gauge_tower
     cases hclasses
     exact hne rfl
   · intro l
-    simp
+    dsimp [conclusion_hydrogenic_strict_twolevel_gauge_tower_phaseblind_fiber]
+    exact Fintype.card_fin 2
   · intro l mu hmu
-    simp [ne_of_gt hmu]
+    have hne : ¬ (mu : ℕ) = 0 := ne_of_gt hmu
+    dsimp [conclusion_hydrogenic_strict_twolevel_gauge_tower_phaseblind_fiber]
+    simp only [hne, ↓reduceIte]
+    exact Fintype.card_fin 4
 
 end Omega.Conclusion

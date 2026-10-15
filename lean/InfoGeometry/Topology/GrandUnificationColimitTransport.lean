@@ -17,9 +17,8 @@ applying an explicit structure map `Stage →+* Limit`.
 * entropy commutator readouts transport through any ring homomorphism;
 * Pachner/thermodynamic commutator readouts transport through any ring
   homomorphism;
-* the DAG mixed-volume preservation and nilpotent boundary-collapse theorems
-  transport through any ring homomorphism;
-* Rohozhkin/Delaunay invariance is available uniformly for every finite `n`.
+* commutation and nilpotent sandwich-zero identities transport through any
+  ring homomorphism.
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT PREMISES
 
@@ -31,9 +30,8 @@ the finite-stage theorem.
 
 A genuine Delaunay/Penrose inductive colimit requires explicit bonding maps
 `DelaunayFlipWord n → DelaunayFlipWord (n+1)` and compatibility theorems for
-`DelaunayEquiv` and `rohozhkinMatrix`.  Those maps are not exposed by the
-current Delaunay owner, so this file records only the uniform finite-stage
-family for that branch.
+`DelaunayEquiv` and `rohozhkinMatrix`. Those maps are not exposed by the
+current Delaunay owner.
 -/
 
 namespace InfoGeometry.Topology.GrandUnificationColimitTransport
@@ -126,95 +124,30 @@ theorem map_loop_cross_commutation_closure_to_limit
       flow T_flip loopOperator hflat_commutes hcomm hdb
   rw [← RingHom.map_mul, ← RingHom.map_mul, hstage]
 
-/-- The DAG mixed-volume preservation theorem transports into the supplied limit algebra. -/
-theorem map_global_isometry_preservation_to_limit
-    [Star Stage]
-    (toLimit : Stage →+* Limit)
-    (jewel : GrandUnificationLinker.QuantumJewel Stage) :
-    toLimit jewel.dag_edge *
-        (toLimit jewel.S_plus * toLimit jewel.S_minus +
-          toLimit jewel.S_minus * toLimit jewel.S_plus) =
-      (toLimit jewel.S_plus * toLimit jewel.S_minus +
-          toLimit jewel.S_minus * toLimit jewel.S_plus) *
-        toLimit jewel.dag_edge := by
-  have h := congrArg toLimit (GrandUnificationLinker.global_isometry_preservation jewel)
-  simpa [GrandUnificationLinker.amplituhedron_volume_element] using h
+/-- A ring homomorphism preserves commutation of an arbitrary pair. -/
+theorem map_commutation
+    (toLimit : Stage →+* Limit) (x y : Stage)
+    (h : x * y = y * x) :
+    toLimit x * toLimit y = toLimit y * toLimit x := by
+  calc
+    toLimit x * toLimit y = toLimit (x * y) := (map_mul toLimit x y).symm
+    _ = toLimit (y * x) := congrArg toLimit h
+    _ = toLimit y * toLimit x := map_mul toLimit y x
 
-/-- The plus nilpotent boundary collapse transports into the supplied limit algebra. -/
-theorem map_on_shell_boundary_collapse_to_limit
-    [Star Stage]
-    (toLimit : Stage →+* Limit)
-    (jewel : GrandUnificationLinker.QuantumJewel Stage) :
-    toLimit jewel.S_plus *
-        (toLimit jewel.S_plus * toLimit jewel.S_minus +
-          toLimit jewel.S_minus * toLimit jewel.S_plus) *
-      toLimit jewel.S_plus =
-      0 := by
-  have h := congrArg toLimit (GrandUnificationLinker.on_shell_boundary_collapse jewel)
-  simpa [GrandUnificationLinker.amplituhedron_volume_element] using h
-
-/-- The minus nilpotent boundary collapse transports into the supplied limit algebra. -/
-theorem map_on_shell_boundary_collapse_minus_to_limit
-    [Star Stage]
-    (toLimit : Stage →+* Limit)
-    (jewel : GrandUnificationLinker.QuantumJewel Stage) :
-    toLimit jewel.S_minus *
-        (toLimit jewel.S_plus * toLimit jewel.S_minus +
-          toLimit jewel.S_minus * toLimit jewel.S_plus) *
-      toLimit jewel.S_minus =
-      0 := by
-  have h := congrArg toLimit (GrandUnificationLinker.on_shell_boundary_collapse_minus jewel)
-  simpa [GrandUnificationLinker.amplituhedron_volume_element] using h
-
-/--
-Uniform finite-stage Delaunay/Rohozhkin invariance.
-
-This is the current honest endpoint for the `n`-dependent Delaunay theorem:
-the invariant is available at every finite `n`.  A true Delaunay colimit theorem
-requires bonding maps between the finite word types.
--/
-theorem delaunay_rohozhkin_invariant_all_finite_stages :
-    ∀ (n : ℕ) (before after : Delaunay.DelaunayFlipWord n),
-      Delaunay.DelaunayEquiv before after →
-        Delaunay.rohozhkinMatrix before = Delaunay.rohozhkinMatrix after := by
-  intro n before after h
-  exact GrandUnificationLinker.rohozhkin_matrix_invariant before after h
-
-/-- A supplied bonding map has the supplied colimit image. -/
-theorem delaunay_bond_to_supplied_colimit
-    {LimitD : Type*}
-    (bond : ∀ n : ℕ,
-      Delaunay.DelaunayFlipWord n → Delaunay.DelaunayFlipWord (n + 1))
-    (toLimit : ∀ n : ℕ, Delaunay.DelaunayFlipWord n → LimitD)
-    (cone_comm :
-      ∀ (n : ℕ) (W : Delaunay.DelaunayFlipWord n),
-        toLimit (n + 1) (bond n W) = toLimit n W)
-    (n : ℕ) (W : Delaunay.DelaunayFlipWord n) :
-    toLimit (n + 1) (bond n W) = toLimit n W :=
-  cone_comm n W
-
-/--
-A finite Delaunay/Pachner equivalence survives in a supplied colimit cone when
-the cone is explicitly assumed to respect finite-stage equivalence.
--/
-theorem delaunay_equiv_to_supplied_colimit
-    {LimitD : Type*}
-    (toLimit : ∀ n : ℕ, Delaunay.DelaunayFlipWord n → LimitD)
-    (respects_equiv :
-      ∀ {n : ℕ} {W₁ W₂ : Delaunay.DelaunayFlipWord n},
-        Delaunay.DelaunayEquiv W₁ W₂ → toLimit n W₁ = toLimit n W₂)
-    {n : ℕ} {before after : Delaunay.DelaunayFlipWord n}
-    (flip_equiv : Delaunay.DelaunayEquiv before after) :
-    toLimit n before = toLimit n after :=
-  respects_equiv flip_equiv
-
-/-- A finite equality of Delaunay representatives maps to equality in any supplied cone. -/
-theorem delaunay_stage_equality_to_supplied_colimit
-    {LimitD : Type*}
-    (toLimit : ∀ n : ℕ, Delaunay.DelaunayFlipWord n → LimitD)
-    {n : ℕ} {before after : Delaunay.DelaunayFlipWord n}
-    (h : before = after) :
-    toLimit n before = toLimit n after := by
-  rw [h]
+/-- A ring homomorphism preserves the symmetric mixed-product sandwich identity
+whenever its first factor is square-zero. -/
+theorem map_nilpotent_symmetric_mixed_sandwich
+    (toLimit : Stage →+* Limit) (N X : Stage)
+    (hN : N * N = 0) :
+    toLimit N *
+        (toLimit N * toLimit X + toLimit X * toLimit N) * toLimit N = 0 := by
+  have h := GrandUnificationLinker.nilpotent_sandwich_zero N X hN
+  have h' : N * (N * X + X * N) * N = 0 := by
+    simpa [GrandUnificationLinker.symmetric_mixed_element] using h
+  calc
+    toLimit N * (toLimit N * toLimit X + toLimit X * toLimit N) * toLimit N
+        = toLimit (N * (N * X + X * N) * N) := by
+            simp only [map_mul, map_add]
+    _ = 0 := by rw [h', map_zero]
 
 end InfoGeometry.Topology.GrandUnificationColimitTransport

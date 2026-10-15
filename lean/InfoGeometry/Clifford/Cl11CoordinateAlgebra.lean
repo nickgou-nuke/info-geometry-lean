@@ -1,4 +1,4 @@
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.Ring
 
@@ -103,32 +103,36 @@ def zsmul : ℤ → Cl11 → Cl11
   | Int.ofNat n, q => nsmul n q
   | Int.negSucc n, q => -(nsmul (Nat.succ n) q)
 
-instance : AddSemigroup Cl11 := by
-  refine AddSemigroup.mk ?_
-  intro a b c
-  change add (add a b) c = add a (add b c)
-  ext <;> simp [add] <;> ring
-
-instance : AddMonoid Cl11 := by
-  refine AddMonoid.mk ?_ ?_ nsmul
-  · intro a
+instance : AddCommGroup Cl11 where
+  add := add
+  add_assoc a b c := by
+    change add (add a b) c = add a (add b c)
+    ext <;> simp [add] <;> ring
+  zero := zero
+  zero_add a := by
     change add zero a = a
     ext <;> simp [add, zero]
-  · intro a
+  add_zero a := by
     change add a zero = a
     ext <;> simp [add, zero]
-
-instance : SubNegMonoid Cl11 := by
-  refine SubNegMonoid.mk ?_ zsmul
-  intro a b
-  change sub a b = add a (neg b)
-  ext <;> simp [sub, add, neg] <;> ring
-
-instance : AddGroup Cl11 := by
-  refine AddGroup.mk ?_
-  intro q
-  change add (neg q) q = zero
-  ext <;> simp [zero, add, neg]
+  nsmul := nsmul
+  nsmul_zero a := rfl
+  nsmul_succ n a := rfl
+  neg := neg
+  sub := sub
+  sub_eq_add_neg a b := by
+    change sub a b = add a (neg b)
+    ext <;> simp [sub, add, neg] <;> ring
+  zsmul := zsmul
+  zsmul_zero' a := rfl
+  zsmul_succ' n a := rfl
+  zsmul_neg' n a := rfl
+  neg_add_cancel a := by
+    change add (neg a) a = zero
+    ext <;> simp [add, neg, zero]
+  add_comm a b := by
+    change add a b = add b a
+    ext <;> simp [add] <;> ring
 
 instance : Mul Cl11 where
   mul := mul

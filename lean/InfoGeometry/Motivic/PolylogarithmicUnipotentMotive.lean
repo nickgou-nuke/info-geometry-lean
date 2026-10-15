@@ -74,7 +74,8 @@ theorem deriv_polylog1 (z : ℝ) (hz : z < 1) :
   have h_log := HasDerivAt.log h_sub h_ne
   have h_neg := h_log.neg
   convert h_neg using 1
-  ring
+  · rfl
+  · ring
 
 /-- Master Theorem 2: The Logarithmic Derivation of Li₁ is the Odds Ratio.
     z * d/dz [Li₁(z)] = z / (1 - z) ≡ χ(z). -/

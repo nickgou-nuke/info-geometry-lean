@@ -1,5 +1,6 @@
 import Mathlib.Data.Nat.Log
 import Mathlib.Data.Fin.Embedding
+import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic
 
 namespace Omega.CircleDimension.PhaseSeparationPrecisionExponent
@@ -25,9 +26,9 @@ theorem paper_cdim_torus_packing_bound
     Fintype.card E ≤ gridBinCount k L ∧
       Fintype.card E ≤ L ^ k := by
   rcases henc with ⟨enc, hinj⟩
-  constructor
-  · simpa using (Fintype.card_le_of_injective enc hinj)
-  · simpa [gridBinCount] using (Fintype.card_le_of_injective enc hinj)
+  have hle := Fintype.card_le_of_injective enc hinj
+  rw [Fintype.card_fin] at hle
+  exact ⟨hle, hle⟩
 
 /-- Any positive-dimensional grid can host `M` points once the side length reaches `M`. -/
 private theorem exists_gridSide (k M : ℕ) (hk : 0 < k) :
@@ -70,17 +71,17 @@ theorem paper_cdim_phase_separation_precision_exponent :
   intro G _ r k N b hG
   constructor
   · intro enc hinj
-    have hcard : Fintype.card G ≤ Fintype.card (Fin (dyadicPhaseBinCount k b)) :=
-      Fintype.card_le_of_injective enc hinj
-    have hbound : boxCard r N ≤ dyadicPhaseBinCount k b := by
-      simpa [hG, boxCard, dyadicPhaseBinCount] using hcard
+    have hcard := Fintype.card_le_of_injective enc hinj
+    rw [Fintype.card_fin] at hcard
+    rw [hG] at hcard
+    have hbound : boxCard r N ≤ dyadicPhaseBinCount k b := hcard
     refine ⟨hbound, ?_⟩
-    exact (Nat.clog_le_iff_le_pow (by decide : 1 < 2)).2 (by
-      simpa [dyadicPhaseBinCount] using hbound)
+    exact (Nat.clog_le_iff_le_pow (by decide : 1 < 2)).2 hbound
   · intro htooMany enc hinj
-    exact Nat.not_le_of_gt htooMany <| by
-      simpa [hG, boxCard, dyadicPhaseBinCount] using
-        (Fintype.card_le_of_injective enc hinj)
+    have hcard := Fintype.card_le_of_injective enc hinj
+    rw [Fintype.card_fin] at hcard
+    rw [hG] at hcard
+    exact Nat.not_le_of_gt htooMany hcard
 
 set_option maxHeartbeats 400000 in
 /-- Explicit finite-grid recovery package: the least `k`-channel grid side length supporting the

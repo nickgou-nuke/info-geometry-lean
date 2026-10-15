@@ -127,7 +127,9 @@ theorem unit_law (D : GodelPrefixPrimeMonoidData) : D.unitLaw := by
   exact ⟨unit_left D.left, unit_right D.left⟩
 
 theorem concat_iso (D : GodelPrefixPrimeMonoidData) : D.concatIso := by
-  simpa [concatIso] using splitEncoding_append D.left.1 D.right.1
+  change splitEncoding D.left.1.length (D.left.1 ++ D.right.1) =
+    (D.left.1, D.right.1)
+  exact splitEncoding_append D.left.1 D.right.1
 
 end GodelPrefixPrimeMonoidData
 

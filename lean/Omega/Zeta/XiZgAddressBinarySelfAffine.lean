@@ -73,7 +73,8 @@ lemma xi_zg_address_binary_self_affine_tail_two_admissible {s : ℕ → Bool}
     xi_zg_address_binary_self_affine_admissible
       (xi_zg_address_binary_self_affine_tail_two s) := by
   intro n hn
-  simpa [Nat.add_assoc] using hs (n + 2) hn
+  simpa [xi_zg_address_binary_self_affine_tail_two, Nat.add_assoc] using
+    hs (n + 2) hn
 
 /-- Concrete symbolic form of the strict binary self-affine ZG address decomposition. -/
 def xi_zg_address_binary_self_affine_statement (L : Nat) : Prop :=

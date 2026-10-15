@@ -46,7 +46,9 @@ theorem dlog01_residue_zero_tendsto :
           (𝓝[≠] (0 : ℂ)) (𝓝 ((1 : ℂ) - 0)))
   have hquot : Tendsto (fun z : ℂ => z / (1 - z))
       (𝓝[≠] (0 : ℂ)) (𝓝 (0 : ℂ)) := by
-    simpa using hid.div hden one_ne_zero
+    have h := hid.div hden one_ne_zero
+    rw [zero_div] at h
+    exact h
   have hregular : Tendsto (fun z : ℂ => 1 + z / (1 - z))
       (𝓝[≠] (0 : ℂ)) (𝓝 (1 : ℂ)) := by
     simpa using tendsto_const_nhds.add hquot
@@ -76,7 +78,9 @@ theorem dlog01_residue_one_tendsto :
           (𝓝[≠] (1 : ℂ)) (𝓝 ((1 : ℂ) - 1)))
   have hquot : Tendsto (fun z : ℂ => (z - 1) / z)
       (𝓝[≠] (1 : ℂ)) (𝓝 (0 : ℂ)) := by
-    simpa using hnum.div hid one_ne_zero
+    have h := hnum.div hid one_ne_zero
+    rw [zero_div] at h
+    exact h
   have hregular : Tendsto (fun z : ℂ => (z - 1) / z - 1)
       (𝓝[≠] (1 : ℂ)) (𝓝 (-1 : ℂ)) := by
     simpa using hquot.sub tendsto_const_nhds

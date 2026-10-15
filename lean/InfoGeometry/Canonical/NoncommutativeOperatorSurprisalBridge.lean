@@ -61,15 +61,17 @@ theorem operatorKKS_skew (D : FaithfulDensityOperator n)
   have h : Y * X - X * Y = -(X * Y - Y * X) := by
     noncomm_ring
   rw [h]
-  have ht := map_neg (finiteOperatorTraceLinear n)
-    (D.rho * (X * Y - Y * X))
-  have hr := congrArg Complex.re ht
   have hmul : D.rho * -(X * Y - Y * X) =
       -(D.rho * (X * Y - Y * X)) := by
     ext v
     simp
   rw [hmul]
-  simpa only [finiteOperatorTraceLinear_apply] using hr
+  have ht : finiteOperatorTrace (-(D.rho * (X * Y - Y * X))) =
+      -finiteOperatorTrace (D.rho * (X * Y - Y * X)) := by
+    change (finiteOperatorTraceLinear n) (-(D.rho * (X * Y - Y * X))) =
+      -(finiteOperatorTraceLinear n) (D.rho * (X * Y - Y * X))
+    exact map_neg (finiteOperatorTraceLinear n) (D.rho * (X * Y - Y * X))
+  rw [ht, Complex.neg_re]
 
 theorem operatorKKS_add_left (D : FaithfulDensityOperator n)
     (X₁ X₂ Y : FiniteOperatorAlgebra n) :
@@ -78,7 +80,7 @@ theorem operatorKKS_add_left (D : FaithfulDensityOperator n)
   unfold operatorKKS
   have harg : D.rho * ((X₁ + X₂) * Y - Y * (X₁ + X₂)) =
       D.rho * (X₁ * Y - Y * X₁) + D.rho * (X₂ * Y - Y * X₂) := by
-    simp [sub_eq_add_neg, add_mul, mul_add, mul_neg, neg_mul,
+    simp [sub_eq_add_neg, add_mul, mul_add,
       add_assoc, add_left_comm, add_comm]
   rw [harg]
   have ht := map_add (finiteOperatorTraceLinear n)
@@ -92,12 +94,13 @@ theorem operatorKKS_add_right (D : FaithfulDensityOperator n)
   unfold operatorKKS
   have harg : D.rho * (X * (Y₁ + Y₂) - (Y₁ + Y₂) * X) =
       D.rho * (X * Y₁ - Y₁ * X) + D.rho * (X * Y₂ - Y₂ * X) := by
-    simp [sub_eq_add_neg, add_mul, mul_add, mul_neg, neg_mul,
+    simp [sub_eq_add_neg, add_mul, mul_add,
       add_assoc, add_left_comm, add_comm]
   rw [harg]
   have ht := map_add (finiteOperatorTraceLinear n)
     (D.rho * (X * Y₁ - Y₁ * X)) (D.rho * (X * Y₂ - Y₂ * X))
   exact congrArg Complex.re ht
+
 
 theorem operatorKKS_ne_zero_of_detected_commutator
     (D : FaithfulDensityOperator n) (X Y : FiniteOperatorAlgebra n)

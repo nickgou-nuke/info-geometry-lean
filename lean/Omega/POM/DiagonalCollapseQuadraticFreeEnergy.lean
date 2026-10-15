@@ -19,7 +19,7 @@ private theorem tendsto_pomDiagonalMomentIndex_ratio (τ : ℝ) (hτ : 0 ≤ τ)
       atTop
       (nhds τ) := by
   have hinv : Tendsto (fun m : ℕ => (1 : ℝ) / (m : ℝ)) atTop (nhds 0) := by
-    simpa [one_div, div_eq_mul_inv] using
+    simpa only [one_div, Function.comp_def] using
       (tendsto_inv_atTop_zero.comp tendsto_natCast_atTop_atTop)
   have hlower :
       Tendsto (fun m : ℕ => τ - (1 : ℝ) / (m : ℝ)) atTop (nhds τ) := by

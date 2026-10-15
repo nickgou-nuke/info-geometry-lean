@@ -81,4 +81,4 @@ theorem trivialExteriorPowerComplex_d_squared
     (M : ModuleCat.{max u v} R) (n : ℕ) :
     (trivialExteriorPowerComplex M).d n ≫
       (trivialExteriorPowerComplex M).d (n + 1) = 0 := by
-  simp [trivialExteriorPowerComplex]
+  rfl

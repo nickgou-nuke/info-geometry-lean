@@ -172,7 +172,7 @@ theorem residualTupleCarrier_all_square_zero
     mul r.1.2.2.1 r.1.2.2.1 = zero ∧
     mul r.1.2.2.2.1 r.1.2.2.2.1 = zero ∧
     mul r.1.2.2.2.2 r.1.2.2.2.2 = zero := by
-  simpa [residualTupleOfFiber, residualCoordinates, residualTupleToFiber] using
+  simpa [residualTupleToFiber, residualTupleBasis, basisPrefix3, basisPrefix4, basisPrefix5, basisPrefix6, basisPrefix7] using
     (admissibleBasis7_all_prefixes_square_zero
       (residualTupleToFiber r).1).2
 
@@ -673,14 +673,10 @@ theorem admissibleBasis7_to_aut_maps_standard_prefixes
         (basisPrefix1 standardAdmissibleBasis7) = basisPrefix1 v ∧
     (admissibleBasis7_to_aut v.1 v.2).1
         (basisPrefix2 standardAdmissibleBasis7) = basisPrefix2 v := by
-  have hv := admissibleBasis7Equiv.right_inv v
-  constructor
-  · have h := congrArg basisPrefix1 hv
-    simpa [admissibleBasis7Equiv, basisRestriction7, basisPrefix1,
-      standardAdmissibleBasis7] using h
-  · have h := congrArg basisPrefix2 hv
-    simpa [admissibleBasis7Equiv, basisRestriction7, basisPrefix2,
-      standardAdmissibleBasis7] using h
+  have hv := congrArg Subtype.val (admissibleBasis7Equiv.right_inv v)
+  have h0 := congrFun hv 0
+  have h1 := congrFun hv 1
+  exact ⟨h0, h1⟩
 
 theorem admissibleBasis7_to_aut_maps_standard_basis
     (v : AdmissibleBasis7Carrier) :
@@ -690,15 +686,13 @@ theorem admissibleBasis7_to_aut_maps_standard_basis
 
 @[simp] theorem admissibleBasis7Equiv_symm_maps_ePlus
     (v : AdmissibleBasis7Carrier) :
-    (admissibleBasis7Equiv.symm v).1 ePlus = basisPrefix1 v := by
-  have h := admissibleBasis7_to_aut_maps_standard_prefixes v
-  simpa [admissibleBasis7Equiv, standardAdmissibleBasis7] using h.1
+    (admissibleBasis7Equiv.symm v).1 ePlus = basisPrefix1 v :=
+  (admissibleBasis7_to_aut_maps_standard_prefixes v).1
 
 @[simp] theorem admissibleBasis7Equiv_symm_maps_up0
     (v : AdmissibleBasis7Carrier) :
-    (admissibleBasis7Equiv.symm v).1 up0 = basisPrefix2 v := by
-  have h := admissibleBasis7_to_aut_maps_standard_prefixes v
-  simpa [admissibleBasis7Equiv, standardAdmissibleBasis7] using h.2
+    (admissibleBasis7Equiv.symm v).1 up0 = basisPrefix2 v :=
+  (admissibleBasis7_to_aut_maps_standard_prefixes v).2
 
 def canonicalP : NontrivialIdempotent :=
   ⟨ePlus, by rfl, by decide, by decide⟩

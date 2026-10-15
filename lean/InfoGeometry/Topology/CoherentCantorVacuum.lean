@@ -231,8 +231,8 @@ theorem nonAllTrueVacuum_not_exactRefinement :
     (fun v : CoherentCantorVacuum => (v.seq 1).1) h
   have hsp' : nonAllTrueSpatial 1 =
       refineSpatial (nonAllTrueSpatial 0) := by
-    simpa [nonAllTrueVacuum, exactRefinementVacuum,
-      exactRefinementSequence, nonAllTrueSector] using hsp
+    change nonAllTrueSpatial 1 = refineSpatial (nonAllTrueSpatial 0) at hsp
+    exact hsp
   rw [nonAllTrueSpatial_zero] at hsp'
   exact nonAllTrueSpatial_one_ne_refineSpatial_empty hsp'
 
@@ -244,7 +244,8 @@ theorem nonAllTrueVacuum_strict_refinement_zero :
     (fun s : Sector 1 => s.1) h
   have hsp' : refineSpatial (nonAllTrueSpatial 0) =
       nonAllTrueSpatial 1 := by
-    simpa [nonAllTrueVacuum, nonAllTrueSector] using hsp
+    change refineSpatial (nonAllTrueSpatial 0) = nonAllTrueSpatial 1 at hsp
+    exact hsp
   apply nonAllTrueSpatial_one_ne_refineSpatial_empty
   rw [← hsp', nonAllTrueSpatial_zero]
 
@@ -257,7 +258,8 @@ theorem nonAllTrueVacuum_strict_refinement (n : ℕ) :
     (fun s : Sector (n + 1) => s.1) h
   have hsp' : refineSpatial (nonAllTrueSpatial n) =
       nonAllTrueSpatial (n + 1) := by
-    simpa [nonAllTrueVacuum, nonAllTrueSector] using hsp
+    change refineSpatial (nonAllTrueSpatial n) = nonAllTrueSpatial (n + 1) at hsp
+    exact hsp
   have hw : leftChild (allTrueWord n) ∈ nonAllTrueSpatial (n + 1) := by
     intro htrue
     have hlast := congrFun htrue (Fin.last n)

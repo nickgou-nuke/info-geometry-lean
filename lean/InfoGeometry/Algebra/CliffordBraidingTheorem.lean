@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.Data.Matrix.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
@@ -35,11 +36,11 @@ def centralMatrix : CentralCore → Mat2Z
 
 /-- Concrete square-root of the central inversion. -/
 def J : Mat2Z :=
-  ![![0, 1], ![-1, 0]]
+  !![0, 1; -1, 0]
 
 /-- Split `Cl(1,1)` partner with positive square. -/
 def E : Mat2Z :=
-  ![![1, 0], ![0, -1]]
+  !![1, 0; 0, -1]
 
 /-- Finite split pseudoscalar. -/
 def P : Mat2Z := E * J

@@ -87,13 +87,18 @@ theorem boolState_to_finset_preserves_card
 theorem boolState_to_finset_preserves_stateNat
     {P : PrimeCutoff} (v : Vertex P) :
     stateNat (toExteriorState v) = representedNat v := by
-  have hmap := Finset.prod_map (s := v.val.attach) (e := toPrimeModeEmbedding (v := v))
-      (f := fun p : PrimeMode P => p.1)
-  have hmap' : ∏ x ∈ Finset.map (toPrimeModeEmbedding (v := v)) v.val.attach, x.1 =
-      ∏ x ∈ v.val.attach, x.1 := by
-    simpa [toPrimeModeEmbedding] using hmap
-  have hattach := Finset.prod_attach v.val (fun p : ℕ => p)
-  simpa [stateNat, representedNat, toExteriorState] using hmap'.trans hattach
+  change (∏ x ∈ v.val.attach.map (toPrimeModeEmbedding (v := v)), x.1) =
+    ∏ p ∈ v.val, p
+  calc
+    (∏ x ∈ v.val.attach.map (toPrimeModeEmbedding (v := v)), x.1) =
+        ∏ p ∈ v.val.attach, (toPrimeModeEmbedding (v := v) p).1 := by
+      rw [Finset.prod_map]
+    _ = ∏ p ∈ v.val.attach, p.1 := by
+      apply Finset.prod_congr rfl
+      intro p hp
+      rfl
+    _ = ∏ p ∈ v.val, p := by
+      simpa using (Finset.prod_attach v.val (fun p : ℕ => p))
 
 /-- The transported exterior carrier preserves the Möbius/chirality readout. -/
 theorem boolState_to_finset_preserves_chirality
@@ -109,12 +114,17 @@ theorem boolState_to_finset_preserves_energy
     {P : PrimeCutoff} (v : Vertex P) :
     exteriorEnergy (toExteriorState v) =
       Finset.sum v.val (fun p => Real.log p) := by
-  have hmap := Finset.sum_map (s := v.val.attach) (e := toPrimeModeEmbedding (v := v))
-      (f := fun p : PrimeMode P => Real.log p.1)
-  have hmap' : ∑ x ∈ Finset.map (toPrimeModeEmbedding (v := v)) v.val.attach, Real.log x.1 =
-      ∑ x ∈ v.val.attach, Real.log x.1 := by
-    simpa [toPrimeModeEmbedding] using hmap
-  have hattach := Finset.sum_attach v.val (fun p : ℕ => Real.log p)
-  simpa [exteriorEnergy, toExteriorState] using hmap'.trans hattach
+  change (∑ x ∈ v.val.attach.map (toPrimeModeEmbedding (v := v)), Real.log x.1) =
+    ∑ p ∈ v.val, Real.log p
+  calc
+    (∑ x ∈ v.val.attach.map (toPrimeModeEmbedding (v := v)), Real.log x.1) =
+        ∑ p ∈ v.val.attach, Real.log (toPrimeModeEmbedding (v := v) p).1 := by
+      rw [Finset.sum_map]
+    _ = ∑ p ∈ v.val.attach, Real.log p.1 := by
+      apply Finset.sum_congr rfl
+      intro p hp
+      rfl
+    _ = ∑ p ∈ v.val, Real.log p := by
+      simpa using (Finset.sum_attach v.val (fun p : ℕ => Real.log p))
 
 end InfoGeometry.Canonical.PrimeBooleanCubeExteriorBridge

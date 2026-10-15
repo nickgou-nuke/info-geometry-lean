@@ -206,20 +206,28 @@ theorem shortGenerator_longGenerator_order_six :
 theorem longReflectionEquiv_shortReflectionEquiv_order_six :
     (longReflectionEquiv * shortReflectionEquiv) ^ 6 = 1 := by
   have h := shortReflectionEquiv_longReflectionEquiv_order_six
-  have hi : ((shortReflectionEquiv * longReflectionEquiv)⁻¹) ^ 6 = 1 := by
-    rw [inv_pow, h, inv_one]
-  simpa [mul_inv_rev] using hi
+  have hs : shortReflectionEquiv⁻¹ = shortReflectionEquiv := by
+    apply (inv_eq_iff_mul_eq_one).2
+    exact shortReflectionEquiv_sq
+  have hl : longReflectionEquiv⁻¹ = longReflectionEquiv := by
+    apply (inv_eq_iff_mul_eq_one).2
+    exact longReflectionEquiv_sq
+  have hInv : longReflectionEquiv * shortReflectionEquiv =
+      (shortReflectionEquiv * longReflectionEquiv)⁻¹ := by
+    rw [mul_inv_rev, hs, hl]
+  rw [hInv, inv_pow, h]
+  simp
 
 theorem g2ReflectionGenerators_isLiftable :
     g2CoxeterMatrix.IsLiftable g2ReflectionGenerators := by
   intro i j
   fin_cases i <;> fin_cases j
-  · simpa [g2ReflectionGenerators] using shortReflectionEquiv_sq
-  · simpa [g2ReflectionGenerators, g2CoxeterMatrix] using
+  · simpa [g2ReflectionGenerators, pow_two] using shortReflectionEquiv_sq
+  · simpa [g2ReflectionGenerators, g2CoxeterMatrix_off_diag] using
       shortReflectionEquiv_longReflectionEquiv_order_six
-  · simpa [g2ReflectionGenerators, g2CoxeterMatrix] using
+  · simpa [g2ReflectionGenerators, g2CoxeterMatrix_off_diag] using
       longReflectionEquiv_shortReflectionEquiv_order_six
-  · simpa [g2ReflectionGenerators] using longReflectionEquiv_sq
+  · simpa [g2ReflectionGenerators, pow_two] using longReflectionEquiv_sq
 
 noncomputable def g2CoxeterToCartanHom :
     g2CoxeterMatrix.Group →* cartanWeylSubgroup :=
@@ -275,9 +283,13 @@ noncomputable def g2CoxeterToDihedralHom :
   fin_cases i <;> fin_cases j
   · simp [CoxeterMatrix.relation, f]
   · simp [CoxeterMatrix.relation, f]
-    convert (DihedralGroup.r_one_pow_n (n := 6)) using 1
+    change DihedralGroup.r (6 : ZMod 6) = DihedralGroup.r 0
+    exact congrArg DihedralGroup.r (ZMod.natCast_self 6)
   · simp [CoxeterMatrix.relation, f]
-    convert (DihedralGroup.r_one_pow_n (n := 6)) using 1
+    change DihedralGroup.r (-6 : ZMod 6) = DihedralGroup.r 0
+    exact congrArg DihedralGroup.r (by
+      rw [show (6 : ZMod 6) = 0 from ZMod.natCast_self 6]
+      simp)
   · simp [CoxeterMatrix.relation, f]
 
 @[simp] theorem g2CoxeterToDihedralHom_apply_simple (i : Fin 2) :
@@ -314,9 +326,9 @@ theorem g2Coxeter_generated_by_simple :
 
 theorem g2Coxeter_simple_product_order_six :
     (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ 6 = 1 := by
-  simpa [g2CoxeterMatrix] using
-    (CoxeterSystem.simple_mul_simple_pow
-      g2CoxeterMatrix.toCoxeterSystem 0 1)
+  convert CoxeterSystem.simple_mul_simple_pow
+    g2CoxeterMatrix.toCoxeterSystem 0 1 using 1 <;>
+      norm_num [g2CoxeterMatrix, CoxeterMatrix.G₂]
 
 theorem g2Coxeter_simple_product_power_add (i j : ZMod 6) :
     (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ (i + j).val =
@@ -492,7 +504,10 @@ theorem g2Coxeter_rotation_power_mul_simple_one_normal_form (k : ZMod 6) :
           (-k + 1).val =
         (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ (-k).val *
           (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) := by
-    simpa [pow_one] using h
+    have hpow : (1 : ZMod 6).val = 1 := by
+      rw [ZMod.val_one_eq_one_mod]
+    rw [hpow, pow_one] at h
+    exact h
   calc
     g2CoxeterMatrix.simple 0 *
         (g2CoxeterMatrix.simple 0 * g2CoxeterMatrix.simple 1) ^ (-k).val *

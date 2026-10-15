@@ -309,11 +309,16 @@ theorem phonon_CCR :
   | succ n =>
       change (((n + 2 : ℕ) : ℝ) • ψ (n + 1)) -
           (((n + 1 : ℕ) : ℝ) • ψ (n + 1)) = ψ (n + 1)
-      rw [← sub_smul]
       have hscalar :
           (((n + 2 : ℕ) : ℝ) - ((n + 1 : ℕ) : ℝ)) = 1 := by
         norm_num
-      rw [hscalar, one_smul]
+      calc
+        (((n + 2 : ℕ) : ℝ) • ψ (n + 1)) -
+            (((n + 1 : ℕ) : ℝ) • ψ (n + 1)) =
+            ((((n + 2 : ℕ) : ℝ) - ((n + 1 : ℕ) : ℝ)) • ψ (n + 1)) := by
+              exact (sub_smul _ _ _).symm
+        _ = (1 : ℝ) • ψ (n + 1) := by rw [hscalar]
+        _ = ψ (n + 1) := one_smul _ _
 
 /-- Every represented fermionic matrix commutes with phonon creation. -/
 theorem representation_commutes_phononCreation (M : M4R) :

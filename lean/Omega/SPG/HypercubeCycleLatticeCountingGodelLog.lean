@@ -23,7 +23,7 @@ theorem paper_hypercube_cycle_lattice_counting_godel_log
     ⟨_, hcount, hlog⟩
   refine ⟨?_, hencoding, ?_⟩
   · simpa using hcount
-  · simpa using hlog
+  · simpa [sub_eq_add_neg] using hlog
 
 end
 

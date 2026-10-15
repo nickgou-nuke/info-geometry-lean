@@ -14,7 +14,11 @@ noncomputable def zmodColor : HexColor ≃+ ZMod 3 := ZMod.finEquiv 3
 inductive HexSheet
   | positive
   | negative
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype HexSheet where
+  elems := {.positive, .negative}
+  complete := by rintro (_ | _) <;> simp
 
 def positiveVertex (a : HexColor) : HexIndex :=
   ⟨(2 * a.val) % 6, by omega⟩

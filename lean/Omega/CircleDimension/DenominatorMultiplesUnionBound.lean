@@ -121,6 +121,10 @@ theorem card_forbiddenMultiples_235_100 :
     Finset.sum_singleton] at h
   omega
 
+instance instDecidablePredNonMultiples235 :
+    DecidablePred (fun n => ∀ q ∈ ({2, 3, 5} : Finset ℕ), ¬ q ∣ n) :=
+  fun _ => inferInstance
+
 /-- Non-multiples lower bound seed: for Q={2,3,5}, B=100, at least 100-103 elements survive
     (trivially ≥ 0, but the actual count is higher due to inclusion-exclusion).
     prop:cdim-denominator-positive-density-thin-forbidden -/

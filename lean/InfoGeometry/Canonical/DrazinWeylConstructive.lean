@@ -180,9 +180,13 @@ theorem spectralEpsilon_conj_constructiveDrazinCandidate_eq
     intro x
     apply DoubledSpace.ext <;> simp [ε, spectral_epsilon]
   have hTε : T * ε = ε * T := by
-    simpa [ε] using D.operator_commutes_spectralEpsilon
+    change T.comp (spectral_epsilon (E := E)) =
+      (spectral_epsilon (E := E)).comp T
+    exact D.operator_commutes_spectralEpsilon
   have hPε : D.riesz.P * ε = ε * D.riesz.P := by
-    simpa [ε] using D.projector_commutes_spectralEpsilon
+    change D.riesz.P.comp (spectral_epsilon (E := E)) =
+      (spectral_epsilon (E := E)).comp D.riesz.P
+    exact D.projector_commutes_spectralEpsilon
   have hSε_left : Sε * T = D.riesz.P := by
     calc
       Sε * T = ε * D.riesz.S * ε * T := by simp [Sε, mul_assoc]
@@ -249,11 +253,17 @@ theorem constructiveDrazinCandidate_commutes_spectralEpsilon_of_localWeylSymmetr
     spectralEpsilon_conj_constructiveDrazinCandidate_eq (E := E) D
   apply ContinuousLinearMap.ext
   intro x
-  have hAtεx :=
-    congrArg (fun F : EndH => F (ε x)) hConj
-  have hε2x : ε (ε x) = x := by
-    exact congrArg (fun F : EndH => F x) (spectral_epsilon_involution (E := E))
-  simpa [ε, ContinuousLinearMap.comp_apply, mul_assoc, hε2x] using hAtεx.symm
+  have hAtx : ε (constructiveDrazinCandidate D.riesz (ε x)) =
+      constructiveDrazinCandidate D.riesz x := by
+    have h := congrArg (fun F : EndH => F x) hConj
+    simpa [ContinuousLinearMap.mul_apply, mul_assoc] using h
+  have hε2 (y : H₂) : ε (ε y) = y := by
+    exact congrArg (fun F : EndH => F y) (spectral_epsilon_involution (E := E))
+  calc
+    constructiveDrazinCandidate D.riesz (ε x) =
+        ε (ε (constructiveDrazinCandidate D.riesz (ε x))) :=
+      (hε2 (constructiveDrazinCandidate D.riesz (ε x))).symm
+    _ = ε (constructiveDrazinCandidate D.riesz x) := congrArg ε hAtx
 
 /--
 Local Weyl symmetry discharges the older raw candidate-commutation package.
@@ -274,7 +284,7 @@ def constructiveRieszWeylData_of_localWeylSymmetry
 Convert the legacy classical Riesz structure plus an explicit spectral-sheet
 commutation proof into the constructive Weyl bridge structure.
 -/
-def constructiveRieszWeylData_of_hasClassicalRieszDecompositionAtZero
+noncomputable def constructiveRieszWeylData_of_hasClassicalRieszDecompositionAtZero
     {T : EndH}
     (h : HasClassicalRieszDecompositionAtZero (𝕂 := ℝ) T)
     (hComm :
@@ -292,7 +302,7 @@ def constructiveRieszWeylData_of_hasClassicalRieszDecompositionAtZero
 Proof-carrying classical Riesz compatibility route into the constructive Weyl bridge
 structure.
 -/
-def constructiveRieszWeylData_of_classicalRieszWeylCompatibility
+noncomputable def constructiveRieszWeylData_of_classicalRieszWeylCompatibility
     {T : EndH}
     (W : ClassicalRieszWeylCompatibility (E := E) T) :
     ConstructiveRieszWeylData (E := E) T :=
@@ -303,7 +313,7 @@ def constructiveRieszWeylData_of_classicalRieszWeylCompatibility
 Convert the classical local-Weyl-symmetry structure into the narrower
 constructive local-symmetry owner structure.
 -/
-def constructiveRieszLocalWeylSymmetryData_of_classicalRieszLocalWeylSymmetry
+noncomputable def constructiveRieszLocalWeylSymmetryData_of_classicalRieszLocalWeylSymmetry
     {T : EndH}
     (W : ClassicalRieszLocalWeylSymmetry (E := E) T) :
     ConstructiveRieszLocalWeylSymmetryData (E := E) T where
@@ -324,7 +334,7 @@ Classical local-Weyl-symmetry route into the constructive Weyl bridge structure.
 This removes the direct classical-candidate commutation proof on the honest
 `ε`-symmetric branch.
 -/
-def constructiveRieszWeylData_of_classicalRieszLocalWeylSymmetry
+noncomputable def constructiveRieszWeylData_of_classicalRieszLocalWeylSymmetry
     {T : EndH}
     (W : ClassicalRieszLocalWeylSymmetry (E := E) T) :
     ConstructiveRieszWeylData (E := E) T :=
@@ -337,7 +347,7 @@ def constructiveRieszWeylData_of_classicalRieszLocalWeylSymmetry
 Package the broad infinite Drazin assumption lane into the constructive Weyl
 bridge using its owned classical Riesz component.
 -/
-def constructiveRieszWeylData_of_drazinInfiniteAssumptions
+noncomputable def constructiveRieszWeylData_of_drazinInfiniteAssumptions
     {T : EndH}
     (h : DrazinInfiniteAssumptions (𝕂 := ℝ) T)
     (hComm :
@@ -351,7 +361,7 @@ def constructiveRieszWeylData_of_drazinInfiniteAssumptions
 WeylCompatibility-routed infinite Drazin package: narrow the free commutation hypothesis
 surface to one proof-carrying bundle on the infinite lane.
 -/
-def constructiveRieszWeylData_of_drazinInfiniteWeylCompatibility
+noncomputable def constructiveRieszWeylData_of_drazinInfiniteWeylCompatibility
     {T : EndH}
     (W : DrazinInfiniteWeylCompatibility (E := E) T) :
     ConstructiveRieszWeylData (E := E) T :=
@@ -362,7 +372,7 @@ def constructiveRieszWeylData_of_drazinInfiniteWeylCompatibility
 Convert the broad infinite local-Weyl-symmetry structure into the narrower
 constructive local-symmetry owner structure.
 -/
-def constructiveRieszLocalWeylSymmetryData_of_drazinInfiniteLocalWeylSymmetry
+noncomputable def constructiveRieszLocalWeylSymmetryData_of_drazinInfiniteLocalWeylSymmetry
     {T : EndH}
     (W : DrazinInfiniteLocalWeylSymmetry (E := E) T) :
     ConstructiveRieszLocalWeylSymmetryData (E := E) T where
@@ -390,7 +400,7 @@ def drazinInfiniteWeylCompatibility_of_drazinInfiniteLocalWeylSymmetry
     DrazinInfiniteWeylCompatibility (E := E) T where
   assumptions := W.assumptions
   classical_candidate_commutes_spectralEpsilon := by
-    simpa [constructiveRieszWeylData_of_localWeylSymmetry,
+    simpa [constructiveDrazinCandidate, constructiveRieszWeylData_of_localWeylSymmetry,
       constructiveRieszLocalWeylSymmetryData_of_drazinInfiniteLocalWeylSymmetry,
       constructiveRieszDecompositionAtZero_of_hasClassicalRieszDecompositionAtZero]
       using
@@ -730,7 +740,7 @@ theorem exists_isDrazinInverse_isWeylCompatible_of_drazinInfiniteWeylCompatibili
       (constructiveRieszWeylData_of_drazinInfiniteWeylCompatibility (E := E) W)
 
 /-- Legacy witness-compatible bridge constructor. -/
-def constructiveRieszWeylData_of_drazinInfiniteWeylWitness
+noncomputable def constructiveRieszWeylData_of_drazinInfiniteWeylWitness
     {T : EndH}
     (W : DrazinInfiniteWeylCompatibility (E := E) T) :
     ConstructiveRieszWeylData (E := E) T :=

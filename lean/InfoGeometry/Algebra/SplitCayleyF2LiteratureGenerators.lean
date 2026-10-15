@@ -98,10 +98,8 @@ theorem elementaryDeltaNativeGenerator_true_square (kind : Bool) (i : Fin 3) :
   apply Subtype.ext
   apply Equiv.ext
   intro x
-  by_cases hk : kind
-  · simpa [elementaryDeltaNativeGenerator, hk] using
-      (delta2NativeAutomorphism_square (standardVec3 i) x)
-  · simpa [elementaryDeltaNativeGenerator, hk] using
-      (delta1NativeAutomorphism_square (standardVec3 i) x)
+  cases kind
+  · exact delta1NativeAutomorphism_square (standardVec3 i) x
+  · exact delta2NativeAutomorphism_square (standardVec3 i) x
 
 end InfoGeometry.Algebra.SplitCayleyF2

@@ -1,5 +1,5 @@
 import Mathlib.Algebra.Lie.Cochain
-import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.LinearAlgebra.Alternating.Basic
 import Mathlib.LinearAlgebra.Multilinear.Curry
 import Mathlib.Tactic
@@ -37,6 +37,8 @@ used.
 noncomputable section
 
 namespace InfoGeometry.OperatorAlgebra.DerivationDifferentialForms
+
+attribute [local instance 100] LieRing.ofAssociativeRing LieAlgebra.ofAssociativeAlgebra
 
 open InfoGeometry.Algebra
 open InfoGeometry.Algebra.DerivationLieLane

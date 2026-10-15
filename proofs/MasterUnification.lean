@@ -141,7 +141,6 @@ theorem physical_mass_vector_one :
   norm_num [U, L, ZornCore.det, ZornCore.associator,
     ZornCore.dot, ZornCore.cross, Fin.sum_univ_three,
     Matrix.cons_val_zero, Matrix.cons_val_succ, Matrix.vecHead, Matrix.vecTail]
-  simp
 
 theorem physical_mass_spinor_one :
     physical_mass_squared Z_spinor vacuum_V 1 = 1 / 4 := by

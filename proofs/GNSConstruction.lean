@@ -157,7 +157,8 @@ theorem representation_well_defined (a x y : A) (h : ω.gnsRel x y) :
 
 /-- The lifted GNS representation π: A → End(gnsSpace). -/
 def representation (a : A) : ω.gnsSpace → ω.gnsSpace :=
-  Quotient.map (ω.representationRaw a) (ω.representation_well_defined a)
+  @Quotient.map A A ω.gnsSetoid ω.gnsSetoid (ω.representationRaw a)
+    (fun _ _ h => ω.representation_well_defined a _ _ h)
 
 /-- **The GNS expectation theorem:**
     ω(a) = ⟨Ω | π(a) | Ω⟩ = ⟨[1], π(a)[1]⟩
@@ -166,10 +167,7 @@ def representation (a : A) : ω.gnsSpace → ω.gnsSpace :=
     the state value equals the vacuum expectation of the represented operator. -/
 theorem gns_expectation (a : A) :
     ω.innerProduct (ω.gnsVacuum) (ω.representation a (ω.gnsVacuum)) = ω.toFun a := by
-  unfold gnsVacuum gnsMap representation innerProduct
-  rw [Quotient.map_mk]
-  rw [Quotient.lift₂_mk]
-  unfold innerProductRaw representationRaw
+  change ω.toFun (star (1 : A) * (a * 1)) = ω.toFun a
   simp
 
 /-- The Tomita S-operator, recorded as documentation rather than as a theorem.

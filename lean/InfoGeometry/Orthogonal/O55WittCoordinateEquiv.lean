@@ -187,9 +187,17 @@ theorem skewFromPairs_extractC (X : splitO55Lie) (i j : Axis) :
 theorem extract_encode (c : Coordinates) :
     extract (encode c) = c := by
   rcases c with ⟨A, B, C⟩
-  ext i j <;> simp [extract, extractA, extractB, extractC,
-    encode, encodeMatrix, plus, minus, skewFromPairs_extractB,
-    skewFromPairs_extractC]
+  apply Prod.ext
+  · ext i j
+    change encodeMatrix (A, (B, C)) (plus i) (plus j) = A i j
+    simp [encodeMatrix, plus]
+  · apply Prod.ext
+    · funext p
+      change encodeMatrix (A, (B, C)) (plus p.1.1) (minus p.1.2) = B p
+      exact skewFromPairs_pair B p
+    · funext p
+      change encodeMatrix (A, (B, C)) (minus p.1.1) (plus p.1.2) = C p
+      exact skewFromPairs_pair C p
 
 /-- Encoding after extraction returns every Witt-skew matrix. -/
 theorem encode_extract (X : splitO55Lie) :

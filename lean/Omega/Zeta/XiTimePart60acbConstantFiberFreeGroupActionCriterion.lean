@@ -115,7 +115,9 @@ theorem paper_xi_time_part60acb_constant_fiber_free_group_action_criterion {X Y 
       · rintro ⟨g, hg⟩
         have hβ : g.down • E y = E y' := by
           simpa [Equiv.smul_def] using congrArg E hg
-        simpa [E] using congrArg Sigma.fst hβ
+        have hbase : (g.down • E y).1 = (E y').1 := congrArg Sigma.fst hβ
+        change f y = f y' at hbase
+        exact hbase
       · intro hyy'
         let z' : {t : Y // f t = f y} := ⟨y', hyy'.symm⟩
         let g : G := e (f y) z' * (e (f y) ⟨y, rfl⟩)⁻¹
@@ -130,8 +132,10 @@ theorem paper_xi_time_part60acb_constant_fiber_free_group_action_criterion {X Y 
         have hsnd : (e (f y)).symm (g * e (f y) ⟨y, rfl⟩) = z' := by
           apply (e (f y)).injective
           rw [(e (f y)).apply_symm_apply]
-          dsimp [g]
-          rw [mul_assoc, inv_mul_cancel, mul_one]
+          change (e (f y)) z' * ((e (f y) ⟨y, rfl⟩)⁻¹) *
+            e (f y) ⟨y, rfl⟩ = (e (f y)) z'
+          exact inv_mul_cancel_right
+            ((e (f y)) z') (e (f y) ⟨y, rfl⟩)
         exact Sigma.ext rfl (heq_of_eq hsnd)
 
 end Omega.Zeta

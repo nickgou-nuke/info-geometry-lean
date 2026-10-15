@@ -101,6 +101,8 @@ structure BoundaryOrbitVolume
   /-- The orbit-weight series is summable. -/
   summable_orbitWeight : Summable orbitWeight
 
+universe uK uOp uSpecOp uRay uOrbit
+
 /--
 Zeta-regularized Drazin--Krein boundary geometry package.
 
@@ -114,37 +116,37 @@ Topological volume:
 Weyl/KMS weighted orbit count over the boundary.
 -/
 structure ZetaBoundaryGeometryReadout
-    (K Op SpecOp : Type*)
+    (K : Type uK) (Op : Type uOp) (SpecOp : Type uSpecOp)
     [Ring Op]
     [SMul ℝ K] where
   /-- Krein--Drazin boundary support. -/
   support : KreinDrazinBoundarySupport K Op
   /-- Projectivized null boundary. -/
-  boundary : ProjectiveDrazinNullBoundary K Op support
+  boundary : ProjectiveDrazinNullBoundary.{uK, uOp, uRay} K Op support
   /-- Regular-sector zeta readout. -/
   zetaReadout : DrazinRegularZetaReadout K Op SpecOp support
   /-- Calibration from zeta data to topology/anomaly data. -/
   topologicalCalibration :
     ZetaTopologicalCalibration SpecOp zetaReadout.zetaData
   /-- Weyl/KMS weighted orbit volume over boundary rays. -/
-  boundaryVolume : BoundaryOrbitVolume boundary.Ray
+  boundaryVolume : BoundaryOrbitVolume.{uRay, uOrbit} boundary.Ray
 
 /-- The zeta readout in a geometry packet has the expected determinant formula. -/
 theorem packet_det_zeta_eq_exp_neg_zeta_derivative
-    {K Op SpecOp : Type*}
+    {K : Type uK} {Op : Type uOp} {SpecOp : Type uSpecOp}
     [Ring Op]
     [SMul ℝ K]
-    (G : ZetaBoundaryGeometryReadout K Op SpecOp) :
+    (G : ZetaBoundaryGeometryReadout.{uK, uOp, uSpecOp, uRay, uOrbit} K Op SpecOp) :
     G.zetaReadout.zetaData.detZeta =
       Complex.exp (-G.zetaReadout.zetaData.zetaDerivAtZero) :=
   det_zeta_eq_exp_neg_zeta_derivative G.zetaReadout.zetaData
 
 /-- The calibrated topological index in a geometry packet equals `ζ(0)`. -/
 theorem packet_topological_index_eq_zeta_zero
-    {K Op SpecOp : Type*}
+    {K : Type uK} {Op : Type uOp} {SpecOp : Type uSpecOp}
     [Ring Op]
     [SMul ℝ K]
-    (G : ZetaBoundaryGeometryReadout K Op SpecOp) :
+    (G : ZetaBoundaryGeometryReadout.{uK, uOp, uSpecOp, uRay, uOrbit} K Op SpecOp) :
     G.topologicalCalibration.topologicalIndex =
       G.zetaReadout.zetaData.zetaAtZero :=
   calibrated_topological_index_eq_zeta_zero

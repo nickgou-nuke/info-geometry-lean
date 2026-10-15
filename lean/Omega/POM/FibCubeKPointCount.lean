@@ -21,13 +21,13 @@ theorem fibcubeGapProduct_pair_gap (n : Nat) (i j : Fin n)
     fibcubeGapProduct n [i, j] =
       Nat.fib (i.val + 1) * Nat.fib (j.val - i.val - 1) * Nat.fib (n - j.val) := by
   classical
-  simpa [fibcubeGapProduct, fibcubeKPointCount] using
+  simpa [fibcubeGapProduct, fibcubeKPointCount, Omega.twoPointCount] using
     Omega.twoPointCount_eq_fib_prod n i j hlt hgap
 
 /-- Exact count of Fibonacci-cube vertices with prescribed `1`-coordinates.
     thm:pom-fibcube-kpoint-count -/
 theorem paper_pom_fibcube_kpoint_count (n : Nat) (I : List (Fin n))
-    (hChain : I.Chain' (fun i j => i.val + 2 <= j.val)) :
+    (hChain : List.IsChain (fun i j => i.val + 2 <= j.val) I) :
     (Finset.univ.filter fun x : Omega.X n => forall i, i ∈ I -> x.1 i = true).card =
       fibcubeGapProduct n I := by
   have _ := hChain

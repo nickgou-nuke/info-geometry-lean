@@ -543,7 +543,7 @@ theorem separationDepth_eq_zero_of_distinguish_zero {α : Type*}
     (distinguish : Nat → α → α → Bool) (x y : α)
     (h : distinguish 0 x y = true) :
     separationDepth distinguish x y = 0 := by
-  exact le_antisymm (separationDepth_le_of_distinguish distinguish x y 0 h) (zero_le _)
+  exact le_antisymm (separationDepth_le_of_distinguish distinguish x y 0 h) zero_le
 
 -- ══════════════════════════════════════════════════════════════
 -- Phase R169: Phase spectrum rank growth and upper bound

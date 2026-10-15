@@ -3,6 +3,17 @@ name: lean-skill-library
 description: Use when selecting, installing, or sequencing Lean 4 proof-automation skills for this repo; catalogs local skills and external GitHub skills for theorem proving, review, refactoring, visualization, and autoproofing workflows.
 ---
 
+<!-- repository-context-rule -->
+## Repository context rule
+
+For repository work, the current checked-out codebase is the context. Search
+existing implementation and trace actual carriers, definitions, imports,
+instances, theorem statements, and uses before claiming a structure is missing
+or incorrect. A local absence is not a repository-wide absence. Names,
+heuristics, summaries, and documentation guide discovery but do not override
+source. Follow `docs/REPO_DEEP_SEARCH_PROTOCOL.md` before repo-wide gap claims.
+
+
 # Lean Skill Library
 
 This skill is an index, not a proof workflow. Use it to pick the narrowest

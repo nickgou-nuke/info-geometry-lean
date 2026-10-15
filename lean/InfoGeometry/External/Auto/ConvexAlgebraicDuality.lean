@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.Geometry.Convex.Cone.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!

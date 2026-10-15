@@ -72,8 +72,10 @@ theorem leftMulMatrix_mulVec_repr (X : Zorn8) (c : Coord8) :
 theorem leftMulMatrix_mulVec (X : Zorn8) (c : Coord8) :
     Matrix.mulVec (leftMulMatrix X) c =
       coordOfZorn (ZornCell.mulZ X (zornOfCoord c)) := by
-  have h := leftMulMatrix_mulVec_repr X c
-  simpa [leftMulLinear, coordOfZorn, zornOfCoord] using h
+  have : leftMulMatrix X = LinearMap.toMatrix' (leftMulLinear X) := rfl
+  rw [this, LinearMap.toMatrix'_mulVec]
+  rfl
+
 
 theorem leftMulMatrix_mulVec_eq_pauliCorrelation (X : Zorn8) (c : Coord8) :
     Matrix.mulVec (leftMulMatrix X) c =

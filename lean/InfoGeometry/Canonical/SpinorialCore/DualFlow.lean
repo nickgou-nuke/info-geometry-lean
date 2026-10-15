@@ -18,7 +18,9 @@ theorem dual_coordinate_linearization
     (heta : HasFDerivAt eta (G : E →L[ℝ] E) (theta t))
     (htheta : HasDerivAt theta (-(G.symm (eta (theta t)))) t) :
     HasDerivAt (fun s => eta (theta s)) (-(eta (theta t))) t := by
-  simpa using heta.comp_hasDerivAt t htheta
+  have h := heta.comp_hasDerivAt t htheta
+  simp only [ContinuousLinearEquiv.coe_coe, map_neg, ContinuousLinearEquiv.apply_symm_apply] at h
+  exact h
 
 /-- The integrating factor has zero derivative for every actual solution. -/
 theorem dual_integrating_factor
@@ -31,9 +33,8 @@ theorem dual_integrating_factor
 theorem exponential_orbit_hasDerivAt (v0 : E) (t : ℝ) :
     HasDerivAt (fun s : ℝ => Real.exp (-s) • v0)
       (-(Real.exp (-t) • v0)) t := by
-  convert ((Real.hasDerivAt_exp (-t)).comp t
-    ((hasDerivAt_id t).neg)).smul_const v0 using 1
-  simp
+  have h := ((Real.hasDerivAt_exp (-t)).comp t ((hasDerivAt_id t).neg)).smul_const v0
+  simpa only [Function.comp_apply, mul_neg, mul_one, neg_smul] using h
 
 /-- Every globally differentiable solution of v' = -v is its decaying exponential orbit. -/
 theorem dual_solution_eq_exponential (v : ℝ → E)

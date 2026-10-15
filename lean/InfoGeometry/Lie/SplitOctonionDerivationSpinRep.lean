@@ -127,9 +127,11 @@ theorem commutes_Gamma_iff_offDiagComponent_eq_zero
     rcases i with i | i <;> rcases j with j | j
     · simp [offDiagComponent, Matrix.fromBlocks]
     · have hd' := congrArg (fun X : BlockMat => X (Sum.inl i) (Sum.inr j)) hd
-      simpa [diagComponent, Matrix.fromBlocks] using hd'.symm
+      dsimp [diagComponent, offDiagComponent, fromBlocks, toBlocks₁₂] at hd' ⊢
+      exact hd'.symm
     · have hd' := congrArg (fun X : BlockMat => X (Sum.inr i) (Sum.inl j)) hd
-      simpa [diagComponent, Matrix.fromBlocks] using hd'.symm
+      dsimp [diagComponent, offDiagComponent, fromBlocks, toBlocks₂₁] at hd' ⊢
+      exact hd'.symm
     · simp [offDiagComponent, Matrix.fromBlocks]
   · intro h
     apply (commutes_Gamma_iff_diagComponent_eq M).mpr

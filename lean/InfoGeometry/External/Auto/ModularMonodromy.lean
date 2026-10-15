@@ -1,4 +1,7 @@
 import Mathlib.Tactic
+import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Analysis.Calculus.Deriv.Pow
+import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 open Matrix
@@ -105,7 +108,7 @@ theorem quadratic_gradient (θ : ℝ) :
   have hhalf : HasDerivAt (fun x : ℝ => (1 / 2 : ℝ) * x ^ 2)
       ((1 / 2 : ℝ) * (2 * θ)) θ :=
     hsq.const_mul (1 / 2 : ℝ)
-  simpa [mul_comm, mul_left_comm, mul_assoc] using hhalf.deriv
+  convert hhalf.deriv using 1 <;> ring_nf
 
 theorem quadratic_legendre_value (p : ℝ) :
     p * p - p ^ 2 / 2 = p ^ 2 / 2 := by
@@ -122,7 +125,7 @@ theorem quadraticGradientFlow_equation (θ₀ τ : ℝ) :
       deriv (fun u : ℝ => θ₀ * Real.exp (-u)) τ =
         θ₀ * (-Real.exp (-τ)) := by
     have hexp : HasDerivAt (fun u : ℝ => Real.exp (-u)) (-Real.exp (-τ)) τ := by
-      simpa using (Real.hasDerivAt_exp (-τ)).comp τ (hasDerivAt_id τ).neg
+      simpa using (HasDerivAt.exp (hasDerivAt_neg τ))
     simpa using hexp.const_mul θ₀ |>.deriv
   rw [h]
   ring

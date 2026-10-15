@@ -1,5 +1,4 @@
 import InfoGeometry.Canonical.HestenesSpinAction
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
 /-!
@@ -42,7 +41,7 @@ theorem rightAdjointMultiplier_mul_reverse
     (g h : SL2C) :
     rightAdjointMultiplier (g * h) =
       rightAdjointMultiplier h * rightAdjointMultiplier g := by
-  simp [rightAdjointMultiplier, Matrix.star_mul]
+  simp [rightAdjointMultiplier, Matrix.SpecialLinearGroup.coe_mul, star_mul]
 
 /-- The genuine right-handed Weyl representation is inverse-adjoint. -/
 def rightWeyl (g : SL2C) : SL2C :=
@@ -65,7 +64,12 @@ def rightWeyl (g : SL2C) : SL2C :=
 theorem rightWeyl_mul (g h : SL2C) :
     rightWeyl (g * h) = rightWeyl g * rightWeyl h := by
   apply Subtype.ext
-  simp [rightWeyl, Matrix.star_mul]
+  rw [rightWeyl_coe]
+  rw [Matrix.SpecialLinearGroup.coe_mul]
+  rw [rightWeyl_coe, rightWeyl_coe]
+  rw [_root_.mul_inv_rev]
+  rw [Matrix.SpecialLinearGroup.coe_mul]
+  rw [star_mul]
 
 /-- Bundled right-handed Weyl representation. -/
 def rightWeylRepresentation : SL2C →* SL2C where
@@ -118,7 +122,7 @@ theorem actWeylPair_mul (g h : SL2C) (psi : WeylPair) :
 theorem spinAction_preserves_hermitian
     (g : SL2C) (X : Mat2C) (hX : star X = X) :
     star (spinAction g X) = spinAction g X := by
-  simp [spinAction, Matrix.star_mul, hX, mul_assoc]
+  simp [spinAction, star_mul, hX, mul_assoc]
 
 /-- The already-owned determinant theorem and the new adjoint-factor theorem
 form the finite real Lorentz-spin packet. -/

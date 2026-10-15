@@ -125,8 +125,8 @@ theorem etaPhi_sum_zero : (∑ j : ZMod 2, etaPhi j) = 0 := by
 /-- `zmodEtaLFunction` is `Complex.differentiable` everywhere. -/
 theorem zmodEtaLFunction_differentiable :
     Differentiable ℂ zmodEtaLFunction := by
-  simpa [zmodEtaLFunction] using
-    ZMod.differentiable_LFunction_of_sum_zero etaPhi_sum_zero
+  change Differentiable ℂ (fun s : ℂ => ZMod.LFunction etaPhi s)
+  exact ZMod.differentiable_LFunction_of_sum_zero etaPhi_sum_zero
 
 /-- On `Re(s) > 1`, `zmodEtaLFunction` agrees with its native `LSeries`. -/
 theorem zmodEtaLFunction_eq_dirichletEtaLSeries_of_one_lt_re

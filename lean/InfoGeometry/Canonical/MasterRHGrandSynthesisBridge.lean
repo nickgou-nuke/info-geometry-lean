@@ -62,9 +62,10 @@ def spectralS (z : ℂ) : ℂ :=
 theorem spectralS_re_eq_half_iff (z : ℂ) :
     (spectralS z).re = 1/2 ↔ z.im = 0 := by
   dsimp [spectralS]
-  simp only [zero_mul, one_mul, zero_sub]
-  have : (1 / 2 : ℂ).re = (1 / 2 : ℝ) := by simp
-  rw [this]
+  rw [Complex.mul_re]
+  have hhalf : (1 / 2 : ℂ).re = (1 / 2 : ℝ) := by simp
+  rw [hhalf]
+  simp only [Complex.I_re, Complex.I_im, zero_mul, one_mul, zero_sub]
   constructor <;> intro h <;> linarith
 
 /-- 🏆 THEOREM 3: Spectral Functional Reflection s ↦ 1 - s corresponds to z ↦ -z -/

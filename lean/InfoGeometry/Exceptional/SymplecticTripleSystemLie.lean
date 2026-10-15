@@ -5,6 +5,8 @@ noncomputable section
 
 namespace InfoGeometry.Exceptional
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 /-!
 # Inner derivations of a symplectic triple system
 

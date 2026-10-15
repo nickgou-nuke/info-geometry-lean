@@ -68,18 +68,22 @@ theorem jordanInnerDerivation_isLeibniz
     [IsCommJordan A] [Invertible (2 : R)] (a b : A) :
     NonAssocDerivation.IsLeibniz R A (jordanInnerDerivation (R := R) a b) := by
   intro x y
-  have h₁raw := congrArg (fun f : AddMonoid.End A => f b)
-    (two_nsmul_lie_lmul_lmul_add_add_eq_zero a x y)
-  have h₂raw := congrArg (fun f : AddMonoid.End A => f a)
-    (two_nsmul_lie_lmul_lmul_add_add_eq_zero b x y)
+  have h₁step := two_nsmul_lie_lmul_lmul_add_add_eq_zero a x y
+  rw [two_nsmul] at h₁step
+  have h₁raw := congrArg (fun f : AddMonoid.End A => f b) h₁step
+  have h₂step := two_nsmul_lie_lmul_lmul_add_add_eq_zero b x y
+  rw [two_nsmul] at h₂step
+  have h₂raw := congrArg (fun f : AddMonoid.End A => f a) h₂step
   have h₁ : 2 • (a * ((x * y) * b) - (x * y) * (a * b) +
       (x * ((y * a) * b) - (y * a) * (x * b)) +
       (y * ((a * x) * b) - (a * x) * (y * b))) = 0 := by
-    simpa [Ring.lie_def] using h₁raw
+    rw [two_nsmul]
+    exact h₁raw
   have h₂ : 2 • (b * ((x * y) * a) - (x * y) * (b * a) +
       (x * ((y * b) * a) - (y * b) * (x * a)) +
       (y * ((b * x) * a) - (b * x) * (y * a))) = 0 := by
-    simpa [Ring.lie_def] using h₂raw
+    rw [two_nsmul]
+    exact h₂raw
   have h : 2 •
       (jordanInnerDerivation (R := R) a b (x * y) -
         (jordanInnerDerivation (R := R) a b x * y +

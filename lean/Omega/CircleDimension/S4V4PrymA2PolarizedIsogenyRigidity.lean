@@ -60,21 +60,13 @@ lemma invariant_form_is_a2_multiple (a b c : ℤ)
       s4v4StandardGeneratorᵀ * symmetricIntegralForm a b c * s4v4StandardGenerator =
         symmetricIntegralForm a b c) :
     ∃ k : ℤ, symmetricIntegralForm a b c = k • a2CartanForm := by
-  have h00 : c = a := by
-    simpa [s4v4StandardGenerator, symmetricIntegralForm, Matrix.mul_apply, Fin.sum_univ_two] using
-      congrArg (fun M => M 0 0) h
-  have h01 : -b - c = b := by
-    simpa [s4v4StandardGenerator, symmetricIntegralForm, Matrix.mul_apply, Fin.sum_univ_two] using
-      congrArg (fun M => M 0 1) h
-  have h11' : b + a + (c + b) = c := by
-    simpa [s4v4StandardGenerator, symmetricIntegralForm, Matrix.mul_apply, Fin.sum_univ_two] using
-      congrArg (fun M => M 1 1) h
-  have ha : a = -2 * b := by
-    linarith
-  have hc : c = -2 * b := by
-    linarith
+  have h00 := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℤ => M 0 0) h
+  have h01 := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℤ => M 0 1) h
+  simp [s4v4StandardGenerator, symmetricIntegralForm, Matrix.mul_apply, Fin.sum_univ_two] at h00 h01
+  have ha : a = -2 * b := by linarith
+  have hc : c = -2 * b := by linarith
   refine ⟨-b, ?_⟩
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j; fin_cases i <;> fin_cases j <;>
     simp [symmetricIntegralForm, a2CartanForm, ha, hc, mul_comm]
 
 /-- The standard order-three generator is the unique integral normal form for the `C₃` action; its
@@ -109,6 +101,6 @@ theorem paper_cdim_s4_v4_prym_a2_polarized_isogeny_rigidity
     calc
       D.naturalPolarization = symmetricIntegralForm D.a D.b D.c := D.hnatural
       _ = k • a2CartanForm := hk
-      _ = a2CartanForm := by simpa [hk_one]
+      _ = a2CartanForm := by simp [hk_one]
 
 end Omega.CircleDimension

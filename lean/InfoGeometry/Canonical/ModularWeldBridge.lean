@@ -153,10 +153,8 @@ theorem relativeLogDensityOperator_self
     exact
       (RelativePotentialCore.relativeLogDensity_self
         (α := Fin n) (q := q) (a := i))
-  · rw [Pi.zero_apply]
-    rw [relativeLogDensityOperator, diagMatrix, Matrix.diagonal_apply_ne]
-    · rfl
-    · simp [hij]
+  · simp only [relativeLogDensityOperator, diagMatrix,
+      Matrix.diagonal_apply, ite_eq_right hij, Matrix.zero_apply]
 
 /-- Operator lift of the additive relative log-density cocycle. -/
 @[rep_depth operator]

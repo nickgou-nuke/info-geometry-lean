@@ -48,7 +48,12 @@ def stokesKreinAdjointContinuousLinearEquiv :
           exact stokesKreinAdjointHomeomorph_apply q
         rw [← heq]
         exact stokesKreinAdjointHomeomorph.continuous
-      simpa only [stokesKreinAdjointRealLinearEquiv_apply] using h)
+      have heq :
+          (stokesKreinAdjointRealLinearEquiv : StokesQuad → StokesQuad) =
+            stokesKreinAdjoint := by
+        funext q
+        exact stokesKreinAdjointRealLinearEquiv_apply q
+      exact h.congr (fun q => congrFun heq q))
     (by
       have h : Continuous (stokesKreinAdjoint : StokesQuad → StokesQuad) := by
         have heq : (stokesKreinAdjointHomeomorph : StokesQuad → StokesQuad) =
@@ -57,7 +62,8 @@ def stokesKreinAdjointContinuousLinearEquiv :
           exact stokesKreinAdjointHomeomorph_apply q
         rw [← heq]
         exact stokesKreinAdjointHomeomorph.continuous
-      simpa only [stokesKreinAdjointRealLinearEquiv_apply] using h)
+      change Continuous (stokesKreinAdjoint : StokesQuad → StokesQuad)
+      exact h)
 
 theorem stokesKreinAdjointContinuousLinearEquiv_apply (q : StokesQuad) :
     stokesKreinAdjointContinuousLinearEquiv q = stokesKreinAdjoint q := by

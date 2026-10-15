@@ -436,12 +436,8 @@ theorem toRelationalInformationDatum_comparisonMetricPhaseReadout_pair_eq_bohmMa
           comparison A).metric u v
     , (InfoGeometry.Canonical.PolarizedMadelungBridge.StateGeneratorField.stateQGTReadout (E := E)
           (constantStateGeneratorField (E := E) (P.modularData.modularSeed comparison))
-          comparison A).phase u v ) := by
-  symm
-  simpa using
-    congrArg (fun Q : LinearMap.BilinForm ℝ H₂ × LinearMap.BilinForm ℝ H₂ => (Q.1 u v, Q.2 u v))
-      (potentialDatum_constantStateGeneratorField_stateQGTReadout_pair_eq_comparisonReadout_pair
-        P comparison A)
+          comparison A).phase u v ) :=
+  rfl
 
 @[rep_depth transport]
 theorem toRelationalInformationDatum_bohmMadelung_stationary_iff_isPotentialKillingOperator

@@ -141,9 +141,8 @@ theorem SymbolicLatentChartEquivalence.latentFeatureRegionTopCatHom_comp
     ((G.comp F).latentFeatureRegionTopCatHom R) x =
       (F.latentFeatureRegionTopCatHom (G.featureEquiv ⁻¹' R) ≫
         G.latentFeatureRegionTopCatHom R) x := by
-  simpa [CategoryTheory.comp_apply] using
-    congrArg (fun h => h x)
-      (SymbolicLatentChartEquivalence.latentFeatureRegionTopCatHom_comp G F R)
+  rw [SymbolicLatentChartEquivalence.latentFeatureRegionTopCatHom_comp]
+  rfl
 
 theorem SymbolicLatentChartEquivalence.latentFeatureRegionInverseTopCatHom_comp
     {X Y Z : Type} [TopologicalSpace X] [TopologicalSpace Y]

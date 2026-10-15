@@ -279,8 +279,8 @@ theorem freeEnergy_eq_split
 /-- The complete free energy is convex on the full density carrier. -/
 theorem freeEnergy_convex
     (F : FreeEnergyFunctional State) :
-    ConvexOn ℝ Set.univ F.freeEnergy := by
-  simpa [freeEnergy] using F.convexity
+    ConvexOn ℝ Set.univ F.freeEnergy :=
+  F.convexity
 
 /-- Every free-energy sublevel is compact. -/
 theorem freeEnergy_sublevel_compact

@@ -75,13 +75,15 @@ theorem nativeWeylMellinOrbitSum_cartanAction_shortGenerator_invariant
     nativeWeylMellinOrbitSum c
         (cartanAction ⟨shortGenerator, shortGenerator_mem⟩ x) =
       nativeWeylMellinOrbitSum c x := by
-  simpa using nativeWeylMellinOrbitSum_shortGenerator_invariant c x
+  change nativeWeylMellinOrbitSum c (canonicalShortReflectionEquiv x) = _
+  exact nativeWeylMellinOrbitSum_shortGenerator_invariant c x
 
 theorem nativeWeylMellinOrbitSum_cartanAction_longGenerator_invariant
     (c : Cartan →ₗ[ℝ] ℂ) (x : Cartan) :
     nativeWeylMellinOrbitSum c
         (cartanAction ⟨longGenerator, longGenerator_mem⟩ x) =
       nativeWeylMellinOrbitSum c x := by
-  simpa using nativeWeylMellinOrbitSum_longGenerator_invariant c x
+  change nativeWeylMellinOrbitSum c (canonicalLongReflectionEquiv x) = _
+  exact nativeWeylMellinOrbitSum_longGenerator_invariant c x
 
 end InfoGeometry.Lie.CanonicalZornG2NativeWeylMellinBridge

@@ -42,9 +42,9 @@ theorem SymbolicLatentChartMorphism.mapPathHomotopyQuotient_id
     (C : SymbolicLatentChart X ι) :
     (SymbolicLatentChartMorphism.id C).mapPathHomotopyQuotient =
       (fun q : SymbolicLatentPathHomotopyQuotient (X := X) => q) := by
-  simpa [SymbolicLatentChartMorphism.mapPathHomotopyQuotient,
-    SymbolicLatentChartMorphism.id] using
-    (mapSymbolicLatentPathHomotopyQuotient_id (X := X))
+  change mapSymbolicLatentPathHomotopyQuotient (ContinuousMap.id X) =
+    (fun q => q)
+  exact mapSymbolicLatentPathHomotopyQuotient_id (X := X)
 
 theorem SymbolicLatentChartMorphism.mapPathHomotopyQuotient_comp
     {X Y Z : Type*}
@@ -57,10 +57,12 @@ theorem SymbolicLatentChartMorphism.mapPathHomotopyQuotient_comp
     (F : SymbolicLatentChartMorphism C D) :
     (G.comp F).mapPathHomotopyQuotient =
       G.mapPathHomotopyQuotient ∘ F.mapPathHomotopyQuotient := by
-  simpa [SymbolicLatentChartMorphism.mapPathHomotopyQuotient,
-    SymbolicLatentChartMorphism.comp] using
-    (mapSymbolicLatentPathHomotopyQuotient_comp
-      (f := F.continuousMap) (g := G.continuousMap))
+  change mapSymbolicLatentPathHomotopyQuotient
+      (G.continuousMap.comp F.continuousMap) =
+    mapSymbolicLatentPathHomotopyQuotient G.continuousMap ∘
+      mapSymbolicLatentPathHomotopyQuotient F.continuousMap
+  exact mapSymbolicLatentPathHomotopyQuotient_comp
+    (f := F.continuousMap) (g := G.continuousMap)
 
 theorem SymbolicLatentChartMorphism.mapPathHomotopyQuotient_comp_apply
     {X Y Z : Type*}

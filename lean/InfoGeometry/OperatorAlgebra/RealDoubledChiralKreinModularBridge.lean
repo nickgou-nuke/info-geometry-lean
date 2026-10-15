@@ -30,9 +30,11 @@ noncomputable def doubledModularSignCPTDatum : ModularSignCPTDatum (H₂ (E := E
   J := etaChiral (E := E)
   Kmod := complex_i (E := E)
   eps_square := by
-    simpa [gamma5] using spectral_epsilon_involution E
+    rw [ContinuousLinearMap.one_def]
+    exact spectral_epsilon_involution E
   J_square := by
-    simpa [etaChiral] using modular_j_involution E
+    rw [ContinuousLinearMap.one_def]
+    exact modular_j_involution E
   J_eps_anticomm := by
     simpa [etaChiral, gamma5] using modular_j_spectral_epsilon_anticommute E
   Kmod_eq := by

@@ -141,9 +141,8 @@ theorem tendsto_ibTrajectory_fixedPoint
     exact hiter n
   refine ⟨p_star, ?_, ?_⟩
   · exact hEq ▸ htend
-  · simpa [p_star] using
-      (ContractingWith.fixedPoint_isFixedPt
-        (f := ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob) (hf := hContr))
+  · exact (ContractingWith.fixedPoint_isFixedPt
+      (f := ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob) (hf := hContr))
 
 /--
 Contraction-driven convergence of the canonical recursively defined IB

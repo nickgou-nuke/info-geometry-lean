@@ -99,9 +99,9 @@ import time, json
 
 prompt = """You are a Socratic Oracle Referee auditing a formalization in Lean 4.
 
-Hypothesis: Bost-Connes Partition Function Divergence
-Rationale: Harmonic series non-summability at beta = 1 forces phase transition across UHF colimit.
-Apex: InfoGeometry.Canonical.BCPartitionFunction.bc_partition_divergence_at_one
+Hypothesis: Harmonic Dirichlet Series Divergence
+Rationale: The real series sum_{n≥1} n^(-1) is not summable; this fact alone does not establish a Bost-Connes phase transition.
+Apex: InfoGeometry.Canonical.BCPartitionFunction.dirichlet_powerSeries_not_summable_at_one
 
 Please audit this formal intent and provide your verdict (BREAKTHROUGH / MINOR / REJECT) with a one-line mathematical rationale."""
 

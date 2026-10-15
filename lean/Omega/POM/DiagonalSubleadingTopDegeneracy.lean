@@ -71,7 +71,10 @@ theorem paper_pom_diagonal_subleading_top_degeneracy (D : DiagonalSubleadingTopD
       simpa using (tendsto_const_nhds.add D.complementRatio_tendsto)
     have hlog : Tendsto (fun x : ℝ => Real.log x) (nhds (1 : ℝ)) (nhds (Real.log 1)) :=
       (Real.continuousAt_log (by norm_num : (1 : ℝ) ≠ 0)).tendsto
-    simpa [err, Real.log_one] using hlog.comp hOnePlus
+    change Tendsto
+      ((fun x : ℝ => Real.log x) ∘ fun m => 1 + D.complementRatio m)
+      atTop (nhds 0)
+    simpa only [Real.log_one] using hlog.comp hOnePlus
   have hleading :
       ∀ m,
         Real.log (D.partitionSum m) =

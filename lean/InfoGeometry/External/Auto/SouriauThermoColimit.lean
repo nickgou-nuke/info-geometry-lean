@@ -9,6 +9,7 @@ noncomputable section
 
 open CategoryTheory
 open CategoryTheory.Limits
+open TypeCat
 
 /-!
 # Souriau/Pauli Thermodynamic Colimit (Finite Fock to Inductive Limit)
@@ -198,7 +199,7 @@ lemma SouriauEmbed_new (modes : ℕ → ℂ) (n : ℕ) (v : SouriauFockStage n) 
 
 /-- Diagram of finite-stage Fock spaces. -/
 def SouriauFockDiagram (modes : ℕ → ℂ) : ℕ ⥤ Type :=
-  Functor.ofSequence (SouriauEmbed modes)
+  Functor.ofSequence (X := SouriauFockStage) (fun n => ↾(SouriauEmbed modes n))
 
 def SouriauFockColimit (modes : ℕ → ℂ) : Type :=
   colimit (SouriauFockDiagram modes)
@@ -218,16 +219,17 @@ def boundaryOfFinite (modes : ℕ → ℂ) (n : ℕ) (v : SouriauFockStage n) :
 -/
 def souriauBoundaryCocone (modes : ℕ → ℂ) : Cocone (SouriauFockDiagram modes) :=
   { pt := SouriauBoundaryProfile
-    ι := NatTrans.ofSequence
-      (app := boundaryOfFinite modes)
+    ι := NatTrans.ofSequence (F := SouriauFockDiagram modes)
+      (G := (Functor.const ℕ).obj SouriauBoundaryProfile)
+      (app := fun n => ↾(boundaryOfFinite modes n))
       (naturality := by
         intro n
-        funext b k
-        have hmap : (SouriauFockDiagram modes).map (homOfLE (Nat.le_add_right n 1))
-            = SouriauEmbed modes n := by
-          simpa [SouriauFockDiagram] using (Functor.ofSequence_map_homOfLE_succ
-            (f := SouriauEmbed modes) n)
-        rw [hmap]
+        ext b
+        dsimp [SouriauFockDiagram]
+        rw [Functor.ofSequence_map_homOfLE_succ]
+        funext k
+        change boundaryOfFinite modes (n + 1) (SouriauEmbed modes n b) k =
+          boundaryOfFinite modes n b k
         by_cases hkn : k < n
         · have hkn' : k < n + 1 := Nat.lt_succ_of_lt hkn
           simp [boundaryOfFinite, SouriauEmbed, hkn, hkn']

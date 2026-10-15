@@ -74,28 +74,10 @@ theorem continuous_zorn_b :
 theorem continuous_zornSL3Action
     (g : Matrix.SpecialLinearGroup (Fin 3) ℂ) :
     Continuous (zornSL3Action g) := by
-  let fundamental : (Fin 3 → ℂ) →ₗ[ℂ] (Fin 3 → ℂ) :=
-    { toFun := colourFundamentalAction g
-      map_add' u v := by
-        ext i
-        simp [colourFundamentalAction, Matrix.mulVec_add]
-      map_smul' c u := by
-        ext i
-        simp [colourFundamentalAction, Matrix.mulVec_smul] }
-  let dual : (Fin 3 → ℂ) →ₗ[ℂ] (Fin 3 → ℂ) :=
-    { toFun := colourDualAction g
-      map_add' u v := by
-        ext i
-        simp [colourDualAction, Matrix.mulVec_add]
-      map_smul' c u := by
-        ext i
-        simp [colourDualAction, Matrix.mulVec_smul] }
   have hfun : Continuous (fun X : Zorn => colourFundamentalAction g X.u) := by
-    simpa [fundamental] using
-      (LinearMap.continuous_of_finiteDimensional fundamental).comp continuous_zorn_u
+    exact (continuous_colourFundamentalAction g).comp continuous_zorn_u
   have hdu : Continuous (fun X : Zorn => colourDualAction g X.v) := by
-    simpa [dual] using
-      (LinearMap.continuous_of_finiteDimensional dual).comp continuous_zorn_v
+    exact (continuous_colourDualAction g).comp continuous_zorn_v
   have hcoord : Continuous (fun X : Zorn => zornCoordEquiv (zornSL3Action g X)) := by
     simpa [zornCoordEquiv, zornSL3Action] using
       (continuous_zorn_a.prodMk (hfun.prodMk (hdu.prodMk continuous_zorn_b)))

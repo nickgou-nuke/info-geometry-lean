@@ -5,23 +5,22 @@ import InfoGeometry.Canonical.ArnoldCohenBCFWBridge
 import InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplecticTheorem
 
 /-!
-# Amplituhedron On-Shell Boundary and Souriau Coadjoint Orbit Metriplectic Bridge
+# Finite Klein-coordinate readout
 
-This module proves the geometric synthesis between the Amplituhedron boundary
-on-shell factorization and the Souriau coadjoint orbit metriplectic system:
+This module supplies the six-coordinate polynomial carrier used by the
+two-row-minor readout in `GrandUnification.AmplituhedronTwistorPluckerDictionary`.
+Its Klein-null predicate is only the equation
+`p12 * p34 - p13 * p24 + p14 * p23 = 0`; it is not a Minkowski mass shell,
+an amplituhedron membership predicate, or a coadjoint Casimir assertion.
 
-1. **Casimir Preservation of the Klein Quadric Boundary:**
-   The on-shell Plücker invariant $Q(p) = p_{12} p_{34} - p_{13} p_{24} + p_{14} p_{23} = 0$
-   acts as a coadjoint Casimir invariant invariant under Hamiltonian flow.
-
-2. **Metriplectic Boundary Flow:**
-   The total entropy rate on the Amplituhedron boundary splits into:
-   - Reversible BCFW / Arnold-Cohen symplectic deformation (reversible rate = 0)
-   - Nonnegative Onsager dissipative KMS relaxation (metric rate ≥ 0)
-   yielding the exact Second Law on positive Grassmannian scattering geometries.
-
-The formal statements below are checked by Lean; analytic and physical
-interpretations remain parameterized by their explicit hypotheses.
+The former `amplituhedron_metriplectic_second_law` declaration merely restated
+the real-number implication `rev = 0`, `0 ≤ metric`, and
+`total = rev + metric` imply `0 ≤ total`. It contained no Plücker point,
+coadjoint orbit, or entropy dynamics and had no callers, so it did not establish
+a bridge and is intentionally not retained under a misleading name. The actual
+conditional coadjoint-orbit second-law theorem is owned by
+`SouriauCoadjointOrbitMetriplecticTheorem`; no theorem identifying it with the
+Klein equation is claimed here.
 -/
 
 noncomputable section
@@ -58,8 +57,11 @@ theorem klein_null_of_factorization (p : KinematicPluckerPoint R)
   rw [h]
   ring
 
-/-- 🏆 THEOREM 2: Metriplectic Second Law on Amplituhedron Boundary -/
-theorem amplituhedron_metriplectic_second_law
+/-- The elementary scalar-rate implication formerly presented as an
+amplituhedron second law.  This is only real addition and order: it asserts
+that a zero reversible rate plus a nonnegative metric rate gives a
+nonnegative total rate.  It carries no Plücker, orbit, or dynamics data. -/
+theorem totalRate_nonnegative_of_zero_reversible_and_nonnegative_metric
     (revEntropyRate metricEntropyRate totalEntropyRate : ℝ)
     (h_rev : revEntropyRate = 0)
     (h_metric : 0 ≤ metricEntropyRate)

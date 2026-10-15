@@ -13,6 +13,8 @@ noncomputable section
 
 namespace TKKJordanPairData.Legacy
 
+universe uR uPlus uMinus uLie
+
 /-- The five formal TKK grades. -/
 inductive TKKGrade where
   | m2 | m1 | z0 | p1 | p2
@@ -129,9 +131,9 @@ def finiteChiralKreinSeed : ChiralKreinSeed where
 /-- A record bundling a Jordan pair, five-graded Lie-algebra data, the finite
 chiral Krein seed, and four named propositions for downstream geometry
 interfaces. -/
-structure TKKCompileData (R : Type*) [CommRing R] where
-  pair : JordanPair R
-  tkk : FiveGradedLieAlgebra R
+structure TKKCompileData (R : Type uR) [CommRing R] where
+  pair : JordanPair.{uR, uPlus, uMinus} R
+  tkk : FiveGradedLieAlgebra.{uR, uLie} R
   seed : ChiralKreinSeed
   gradeZeroReceivesEta : Prop
   realForm_su22_or_so24 : Prop

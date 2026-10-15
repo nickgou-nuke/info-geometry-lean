@@ -40,8 +40,7 @@ def centeringLinearMap (density : FaithfulDensityOperator n)
     (continuous_powers : Continuous density.rpow) :
     centeringLinearMap density continuous_powers 1 = 0 := by
   change (1 : Operator n) - density.bkmRealBilinForm continuous_powers 1 1 • 1 = 0
-  rw [bkmRealBilinForm_one_one]
-  rw [zero_smul, sub_self]
+  rw [bkmRealBilinForm_one_one, one_smul, sub_self]
 
 theorem centeringLinearMap_idempotent (density : FaithfulDensityOperator n)
     (continuous_powers : Continuous density.rpow) (observable : Operator n) :
@@ -51,16 +50,17 @@ theorem centeringLinearMap_idempotent (density : FaithfulDensityOperator n)
   simp only [centeringLinearMap_apply]
   change centeredStatistic density observable -
     expectationReal density (centeredStatistic density observable) • (1 : Operator n) = _
-  rw [expectationReal_centeredStatistic density continuous_powers]
-  simp
+  rw [expectationReal_centeredStatistic density continuous_powers,
+    zero_smul ℝ (1 : Operator n), sub_zero]
 
 theorem centeredStatistic_add_scalar (density : FaithfulDensityOperator n)
     (continuous_powers : Continuous density.rpow) (observable : Operator n) (scalar : ℝ) :
     centeredStatistic density (observable + scalar • (1 : Operator n)) =
       centeredStatistic density observable := by
   rw [← centeringLinearMap_apply density continuous_powers,
-    map_add, map_smul, centeringLinearMap_one]
-  simp
+    map_add, map_smul, centeringLinearMap_one,
+    smul_zero (M := ℝ) (A := Operator n) scalar, add_zero,
+    centeringLinearMap_apply]
 
 theorem centeringLinearMap_ker (density : FaithfulDensityOperator n)
     (continuous_powers : Continuous density.rpow) :
@@ -79,7 +79,7 @@ theorem centeringLinearMap_ker (density : FaithfulDensityOperator n)
   · intro scalar_member
     obtain ⟨scalar, rfl⟩ := Submodule.mem_span_singleton.mp scalar_member
     change centeringLinearMap density continuous_powers (scalar • (1 : Operator n)) = 0
-    rw [map_smul, centeringLinearMap_one, smul_zero]
+    rw [map_smul, centeringLinearMap_one, smul_zero (M := ℝ) (A := Operator n) scalar]
 
 theorem centeredStatistic_eq_zero_iff (density : FaithfulDensityOperator n)
     (continuous_powers : Continuous density.rpow) (observable : Operator n) :

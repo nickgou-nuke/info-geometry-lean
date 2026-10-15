@@ -208,24 +208,28 @@ theorem indexedQuotientRangeColimitIso_injection
         (indexedQuotientRangeColimitIso D hquot).hom =
       (indexedQuotientRangeNaturalIso D hquot).hom.app j ≫
         colimit.ι (indexedRangeDiagram D) j :=
-  HasColimit.isoOfNatIso_ι_hom
+  HasColimit.ι_isoOfNatIso_hom
     (indexedQuotientRangeNaturalIso D hquot) j
+
+/-- The common ambient topological space for quotient and range readouts. -/
+def symbolicObservationAmbientSpace (ι : Type) [Fintype ι] : TopCat :=
+  TopCat.of (ι → ℝ)
 
 noncomputable def indexedRangeAmbientComponent
     (D : J ⥤ SymbolicLatentSystemObject ι) (j : J) :
-    (indexedRangeDiagram D).obj j ⟶ TopCat.of (ι → ℝ) :=
+    (indexedRangeDiagram D).obj j ⟶ symbolicObservationAmbientSpace ι :=
   symbolicObservationQuotientRangeInclusionTopCatHom
     (D.obj j).system
 
 noncomputable def indexedQuotientAmbientComponent
     (D : J ⥤ SymbolicLatentSystemObject ι) (j : J) :
-    (indexedQuotientDiagram D).obj j ⟶ TopCat.of (ι → ℝ) :=
+    (indexedQuotientDiagram D).obj j ⟶ symbolicObservationAmbientSpace ι :=
   symbolicObservationQuotientTopCatHom (D.obj j).system
 
 noncomputable def indexedRangeAmbientCocone
     (D : J ⥤ SymbolicLatentSystemObject ι) :
     Cocone (indexedRangeDiagram D) where
-  pt := TopCat.of (ι → ℝ)
+  pt := symbolicObservationAmbientSpace ι
   ι := { app := indexedRangeAmbientComponent D
          naturality := by
            intro j k F
@@ -234,7 +238,9 @@ noncomputable def indexedRangeAmbientCocone
 
 noncomputable def indexedRangeAmbientReadout
     (D : J ⥤ SymbolicLatentSystemObject ι) :
-    colimit (indexedRangeDiagram D) ⟶ (indexedRangeAmbientCocone D).pt :=
+    @Quiver.Hom TopCat TopCat.instCategory.toQuiver
+      (colimit (indexedRangeDiagram D))
+      (symbolicObservationAmbientSpace ι) :=
   colimit.desc (indexedRangeDiagram D) (indexedRangeAmbientCocone D)
 
 theorem indexedRangeAmbientReadout_stage
@@ -245,8 +251,9 @@ theorem indexedRangeAmbientReadout_stage
 
 theorem indexedRangeAmbientReadout_unique
     (D : J ⥤ SymbolicLatentSystemObject ι)
-    {u v : colimit (indexedRangeDiagram D) ⟶
-      (indexedRangeAmbientCocone D).pt}
+    {u v : @Quiver.Hom TopCat TopCat.instCategory.toQuiver
+      (colimit (indexedRangeDiagram D))
+      (symbolicObservationAmbientSpace ι)}
     (hu : ∀ j, colimit.ι (indexedRangeDiagram D) j ≫ u =
       (indexedRangeAmbientCocone D).ι.app j)
     (hv : ∀ j, colimit.ι (indexedRangeDiagram D) j ≫ v =
@@ -259,7 +266,7 @@ theorem indexedRangeAmbientReadout_unique
 noncomputable def indexedQuotientAmbientCocone
     (D : J ⥤ SymbolicLatentSystemObject ι) :
     Cocone (indexedQuotientDiagram D) where
-  pt := TopCat.of (ι → ℝ)
+  pt := symbolicObservationAmbientSpace ι
   ι := { app := indexedQuotientAmbientComponent D
          naturality := by
            intro j k F
@@ -268,7 +275,9 @@ noncomputable def indexedQuotientAmbientCocone
 
 noncomputable def indexedQuotientAmbientReadout
     (D : J ⥤ SymbolicLatentSystemObject ι) :
-    colimit (indexedQuotientDiagram D) ⟶ (indexedQuotientAmbientCocone D).pt :=
+    @Quiver.Hom TopCat TopCat.instCategory.toQuiver
+      (colimit (indexedQuotientDiagram D))
+      (symbolicObservationAmbientSpace ι) :=
   colimit.desc (indexedQuotientDiagram D) (indexedQuotientAmbientCocone D)
 
 theorem indexedQuotientAmbientReadout_stage
@@ -280,8 +289,9 @@ theorem indexedQuotientAmbientReadout_stage
 
 theorem indexedQuotientAmbientReadout_unique
     (D : J ⥤ SymbolicLatentSystemObject ι)
-    {u v : colimit (indexedQuotientDiagram D) ⟶
-      (indexedQuotientAmbientCocone D).pt}
+    {u v : @Quiver.Hom TopCat TopCat.instCategory.toQuiver
+      (colimit (indexedQuotientDiagram D))
+      (symbolicObservationAmbientSpace ι)}
     (hu : ∀ j, colimit.ι (indexedQuotientDiagram D) j ≫ u =
       (indexedQuotientAmbientCocone D).ι.app j)
     (hv : ∀ j, colimit.ι (indexedQuotientDiagram D) j ≫ v =
@@ -306,9 +316,10 @@ theorem indexedQuotientAmbientReadout_viaRange
   · intro j
     exact indexedQuotientAmbientReadout_stage D j
   · intro j
-    rw [← Category.assoc,
+    rw [← (@Category.assoc TopCat TopCat.instCategory),
       indexedQuotientRangeColimitIso_injection D hquot j,
-      Category.assoc, indexedRangeAmbientReadout_stage D j]
+      (@Category.assoc TopCat TopCat.instCategory),
+      indexedRangeAmbientReadout_stage D j]
     apply TopCat.hom_ext
     ext q
     refine _root_.Quotient.inductionOn q ?_
@@ -328,9 +339,9 @@ theorem indexedQuotientAmbientReadout_viaRange_stage
           indexedRangeAmbientReadout D := by
   have hvr := indexedQuotientAmbientReadout_viaRange D hquot
   rw [hvr]
-  rw [← Category.assoc,
+  rw [← (@Category.assoc TopCat TopCat.instCategory),
     indexedQuotientRangeColimitIso_injection D hquot j,
-    Category.assoc,
+    (@Category.assoc TopCat TopCat.instCategory),
     indexedRangeAmbientReadout_stage D j]
   apply TopCat.hom_ext
   ext q
@@ -353,14 +364,16 @@ variable {ι : Type} [Fintype ι]
 
 noncomputable def quotientAmbientReadout
     (D : FilteredIndexedSymbolicLatentDiagram J ι) :
-    colimit (indexedQuotientDiagram (ι := ι) D.diagram) ⟶
-      (indexedQuotientAmbientCocone (ι := ι) D.diagram).pt :=
+    @Quiver.Hom TopCat TopCat.instCategory.toQuiver
+      (colimit (indexedQuotientDiagram (ι := ι) D.diagram))
+      (symbolicObservationAmbientSpace ι) :=
   indexedQuotientAmbientReadout (ι := ι) D.diagram
 
 noncomputable def rangeAmbientReadout
     (D : FilteredIndexedSymbolicLatentDiagram J ι) :
-    colimit (indexedRangeDiagram (ι := ι) D.diagram) ⟶
-      (indexedRangeAmbientCocone (ι := ι) D.diagram).pt :=
+    @Quiver.Hom TopCat TopCat.instCategory.toQuiver
+      (colimit (indexedRangeDiagram (ι := ι) D.diagram))
+      (symbolicObservationAmbientSpace ι) :=
   indexedRangeAmbientReadout (ι := ι) D.diagram
 
 theorem quotientAmbientReadout_stage
@@ -458,7 +471,7 @@ theorem colimitIso_injection
     colimit.ι D.quotientDiagram n ≫ (D.colimitIso hquot).hom =
       (D.quotientRangeNaturalIso hquot).hom.app n ≫
         colimit.ι D.rangeDiagram n :=
-  HasColimit.isoOfNatIso_ι_hom (D.quotientRangeNaturalIso hquot) n
+  HasColimit.ι_isoOfNatIso_hom (D.quotientRangeNaturalIso hquot) n
 
 theorem colimitIso_injection_apply
     (D : SymbolicLatentSequence ι)
@@ -475,7 +488,7 @@ theorem colimitIso_injection_apply
 noncomputable def rangeAmbientCocone
     (D : SymbolicLatentSequence ι) :
   Cocone D.rangeDiagram where
-  pt := TopCat.of (ι → ℝ)
+  pt := symbolicObservationAmbientSpace ι
   ι := { app := fun n =>
       (symbolicObservationQuotientRangeInclusionTopCatHom
         (D.obj n).system),
@@ -486,7 +499,8 @@ noncomputable def rangeAmbientCocone
 
 noncomputable def rangeAmbientReadout
     (D : SymbolicLatentSequence ι) :
-    colimit D.rangeDiagram ⟶ D.rangeAmbientCocone.pt :=
+    @Quiver.Hom TopCat TopCat.instCategory.toQuiver
+      (colimit D.rangeDiagram) (symbolicObservationAmbientSpace ι) :=
   colimit.desc D.rangeDiagram D.rangeAmbientCocone
 
 theorem rangeAmbientReadout_stage
@@ -505,7 +519,8 @@ theorem rangeAmbientReadout_stage_apply
 
 theorem rangeAmbientReadout_unique
     (D : SymbolicLatentSequence ι)
-    {u v : colimit D.rangeDiagram ⟶ D.rangeAmbientCocone.pt}
+    {u v : @Quiver.Hom TopCat TopCat.instCategory.toQuiver
+      (colimit D.rangeDiagram) (symbolicObservationAmbientSpace ι)}
     (hu : ∀ n, colimit.ι D.rangeDiagram n ≫ u =
       D.rangeAmbientCocone.ι.app n)
     (hv : ∀ n, colimit.ι D.rangeDiagram n ≫ v =
@@ -528,7 +543,8 @@ noncomputable def quotientAmbientCocone
 
 noncomputable def quotientAmbientReadout
     (D : SymbolicLatentSequence ι) :
-    colimit D.quotientDiagram ⟶ D.quotientAmbientCocone.pt :=
+    @Quiver.Hom TopCat TopCat.instCategory.toQuiver
+      (colimit D.quotientDiagram) (symbolicObservationAmbientSpace ι) :=
   colimit.desc D.quotientDiagram D.quotientAmbientCocone
 
 theorem quotientAmbientReadout_stage
@@ -547,7 +563,9 @@ theorem quotientAmbientReadout_stage_apply
 
 theorem quotientAmbientReadout_unique
     (D : SymbolicLatentSequence ι)
-    {u v : colimit D.quotientDiagram ⟶ D.quotientAmbientCocone.pt}
+    {u v : @Quiver.Hom TopCat TopCat.instCategory.toQuiver
+      (colimit D.quotientDiagram)
+      (symbolicObservationAmbientSpace ι)}
     (hu : ∀ n, colimit.ι D.quotientDiagram n ≫ u =
       D.quotientAmbientCocone.ι.app n)
     (hv : ∀ n, colimit.ι D.quotientDiagram n ≫ v =

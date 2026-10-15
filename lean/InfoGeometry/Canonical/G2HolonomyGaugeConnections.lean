@@ -45,14 +45,14 @@ instance : CoeFun SplitG2Automorphism
   φ.preservesThreeForm x y z
 
 /-- The identity split-`G₂` automorphism. -/
-def id : SplitG2Automorphism where
+noncomputable def id : SplitG2Automorphism where
   toLinearEquiv := LinearEquiv.refl ℚ imaginarySplitOctonion
   preservesThreeForm := by
     intro x y z
     rfl
 
 /-- Composition of split-`G₂` automorphisms. -/
-def comp (φ ψ : SplitG2Automorphism) : SplitG2Automorphism where
+noncomputable def comp (φ ψ : SplitG2Automorphism) : SplitG2Automorphism where
   toLinearEquiv := ψ.toLinearEquiv.trans φ.toLinearEquiv
   preservesThreeForm := by
     intro x y z
@@ -86,7 +86,7 @@ abbrev edgeToG2 {E : Type*} (A : SplitG2GaugeConnection E) :
 end SplitG2GaugeConnection
 
 /-- Parallel transport along a finite path. -/
-def parallelTransport {E : Type*} (A : SplitG2GaugeConnection E)
+noncomputable def parallelTransport {E : Type*} (A : SplitG2GaugeConnection E)
     : List E → SplitG2Automorphism :=
   List.foldr (fun e acc => SplitG2Automorphism.comp (A.edgeToG2 e) acc)
     SplitG2Automorphism.id
@@ -131,7 +131,7 @@ theorem parallelTransport_preserves_threeForm
         _ = canonicalSplitG2ThreeFormValue x y z := ih
 
 /-- Triangle curvature as the holonomy around a 3-cycle. -/
-def curvature {E : Type*} (A : SplitG2GaugeConnection E)
+noncomputable def curvature {E : Type*} (A : SplitG2GaugeConnection E)
     (e₁ e₂ e₃ : E) : SplitG2Automorphism :=
   SplitG2Automorphism.comp (SplitG2Automorphism.comp (A.edgeToG2 e₁) (A.edgeToG2 e₂))
     (A.edgeToG2 e₃)

@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Lie.OfAssociative
+import Mathlib.Algebra.Module.LinearMap.End
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
@@ -10,6 +11,8 @@ the endomorphism commutator inherited from Mathlib.
 -/
 
 namespace InfoGeometry.Algebra.NonAssocDerivation
+
+attribute [local instance 100] LieRing.ofAssociativeRing
 
 variable (R A : Type*) [CommRing R] [NonUnitalNonAssocRing A] [Module R A]
   [IsScalarTower R A A] [SMulCommClass R A A]

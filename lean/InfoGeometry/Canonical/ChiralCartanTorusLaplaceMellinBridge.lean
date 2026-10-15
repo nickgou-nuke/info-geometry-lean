@@ -32,7 +32,6 @@ def CartanPoint.t₃ (t : CartanPoint) : ℝ :=
 @[simp] theorem CartanPoint.trace_zero (t : CartanPoint) :
     t.t₁ + t.t₂ + t.t₃ = 0 := by
   simp [CartanPoint.t₃]
-  ring
 
 /-- Positive multiplicative coordinates `zᵢ = exp (2 tᵢ)`. -/
 def CartanPoint.z₁ (t : CartanPoint) : ℝ := Real.exp (2 * t.t₁)

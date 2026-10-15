@@ -16,7 +16,27 @@ inductive Archetype
   | topologicalSchedule
   | proofEvidence
   | certifiedCompilation
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+private def archetypeEquivFin : Archetype ≃ Fin 6 where
+  toFun
+    | .statementSpecification => 0
+    | .dependencyOrder => 1
+    | .admissibility => 2
+    | .topologicalSchedule => 3
+    | .proofEvidence => 4
+    | .certifiedCompilation => 5
+  invFun
+    | 0 => .statementSpecification
+    | 1 => .dependencyOrder
+    | 2 => .admissibility
+    | 3 => .topologicalSchedule
+    | 4 => .proofEvidence
+    | _ => .certifiedCompilation
+  left_inv x := by cases x <;> rfl
+  right_inv i := by fin_cases i <;> rfl
+
+instance : Fintype Archetype := Fintype.ofEquiv (Fin 6) archetypeEquivFin.symm
 
 open Archetype
 
@@ -126,6 +146,7 @@ theorem certified_admission_extends_development {statement : AsPoset graph → P
     (ready : IsReady state.environment target) (proof : statement target) :
     toDevelopmentState graph state ≤
       toDevelopmentState graph (state.extend target ready proof) := by
+  letI : DecidableEq Node := inferInstanceAs (DecidableEq (AsPoset graph))
   intro node membership
   exact Finset.mem_insert_of_mem membership
 

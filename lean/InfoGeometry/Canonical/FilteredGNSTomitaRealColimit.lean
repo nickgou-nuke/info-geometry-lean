@@ -80,10 +80,7 @@ def filteredClosedTomitaDomainRealMap
         Stage sys ω hij).map_add x y
   map_smul' := by
     intro r x
-    have h :=
-      (filteredClosedTomitaDomainMap
-        Stage sys ω hij).map_smul (r : ℂ) x
-    simpa using h
+    exact (filteredClosedTomitaDomainMap Stage sys ω hij).map_smul_of_tower r x
 
 /-- Explicit real-linear restriction of a filtered completed-GNS map. -/
 def filteredGNSRealMap
@@ -99,10 +96,9 @@ def filteredGNSRealMap
         Stage sys ω hij).map_add x y
   map_smul' := by
     intro r x
-    have h :=
-      (filteredGNSMapCLM
-        Stage sys ω hij).map_smul (r : ℂ) x
-    simpa only [filteredGNSMapCLM_apply] using h
+    rw [RingHom.id_apply]
+    simpa only [filteredGNSMapCLM_apply] using
+      (filteredGNSMapCLM Stage sys ω hij).map_smul_of_tower r x
 
 /-- Real-linear filtered direct system of closed Tomita domains. -/
 def closedTomitaDomainRealDirectSystem :

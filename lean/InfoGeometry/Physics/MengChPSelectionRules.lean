@@ -54,7 +54,13 @@ inductive Multipole
   | electricTwo
   | magneticOne
   | electricThree
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype Multipole where
+  elems := {Multipole.electricTwo, Multipole.magneticOne, Multipole.electricThree}
+  complete := by
+    intro x
+    cases x <;> simp
 
 def chitureCharacter : Multipole → ℂ
   | .electricTwo | .magneticOne => -1

@@ -138,7 +138,7 @@ theorem switch_pairTerm_commute_of_ne {n i j : ℕ}
         (j := ⟨i, hi⟩) (by
           intro h
           exact hij (congrArg Fin.val h.symm))
-    simpa [Commute, mul_assoc] using h.symm
+    simpa [Commute, SemiconjBy, mul_assoc] using h.symm
   have hss : Commute (switch (n := n) ⟨i, hi⟩)
       (switch (n := n) ⟨j, hj⟩) :=
     switch_comm (n := n) (i := ⟨i, hi⟩) (j := ⟨j, hj⟩) (by

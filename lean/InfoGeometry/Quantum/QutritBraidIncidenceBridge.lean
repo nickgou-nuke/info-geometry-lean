@@ -106,9 +106,19 @@ theorem qutritShiftMatrix_eq_qutritPermutationMatrix_qutritCycle :
 /-- The cube of the cyclic qutrit shift is the identity. -/
 theorem qutritShift_cube_identity :
     qutritShiftMatrix * qutritShiftMatrix * qutritShiftMatrix = 1 := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [qutritShiftMatrix, Matrix.mul_apply, Fin.sum_univ_three]
+  rw [qutritShiftMatrix_eq_qutritPermutationMatrix_qutritCycle]
+  dsimp [qutritPermutationMatrix]
+  change Equiv.Perm.permMatrix ℂ (qutritCycle⁻¹) *
+      Equiv.Perm.permMatrix ℂ (qutritCycle⁻¹) *
+      Equiv.Perm.permMatrix ℂ (qutritCycle⁻¹) = 1
+  have hcycle : qutritCycle⁻¹ * qutritCycle⁻¹ * qutritCycle⁻¹ = 1 := by
+    ext i
+    fin_cases i <;> rfl
+  have hcycleR : qutritCycle⁻¹ *
+      (qutritCycle⁻¹ * qutritCycle⁻¹) = 1 := by
+    simpa [mul_assoc] using hcycle
+  rw [← Matrix.permMatrix_mul, ← Matrix.permMatrix_mul]
+  rw [hcycleR, Matrix.permMatrix_one]
 
 /-- Generalized qutrit Pauli `X`: the finite cyclic shift. -/
 def qutritGeneralizedPauliX : QutritMatrix :=
@@ -155,10 +165,12 @@ theorem qutrit_clock_shift_weyl (ω : ℂ) (hω : ω ^ 3 = 1) :
       ω * ω ^ 2 = ω ^ 3 := by ring
       _ = 1 := hω
   ext i j
+  rw [Matrix.mul_apply, Matrix.smul_apply, Matrix.mul_apply]
   fin_cases i <;> fin_cases j <;>
     simp [sectorPhase, sectorProjector0, sectorProjector1,
-      sectorProjector2, qutritShiftMatrix, Matrix.mul_apply, hpow, hmul]
-  all_goals first | exact hpow.symm | ring_nf
+      sectorProjector2, qutritShiftMatrix, Matrix.mul_apply,
+      Matrix.smul_apply, Fin.sum_univ_three, hpow, hmul] <;>
+    ring_nf
 
 /-- The first `MD014` sector projector is the rank-one ket projector `|0⟩⟨0|`. -/
 theorem sectorProjector0_eq_qutritKetProjector :
@@ -267,21 +279,33 @@ theorem sectorPhase_computational_eigenpacket (ω : ℂ) :
 
 /-- The cyclic shift sends `|0⟩` to `|1⟩`. -/
 theorem qutritShiftMatrix_ket0 : matrixOp qutritShiftMatrix (ket 0) = ket 1 := by
+  rw [ket_eq_ketPi, ket_eq_ketPi]
   ext i
+  change (matrixOp qutritShiftMatrix (ketPi 0) : Fin 3 → ℂ) i = _
+  rw [matrixOp_apply]
   fin_cases i <;>
-    simp [matrixOp_apply, ket, qutritShiftMatrix, Matrix.mulVec, Fin.sum_univ_three]
+    simp [qutritShiftMatrix, ketPi, Matrix.mulVec, Fin.sum_univ_three,
+      EuclideanSpace.basisFun_apply, PiLp.single_apply]
 
 /-- The cyclic shift sends `|1⟩` to `|2⟩`. -/
 theorem qutritShiftMatrix_ket1 : matrixOp qutritShiftMatrix (ket 1) = ket 2 := by
+  rw [ket_eq_ketPi, ket_eq_ketPi]
   ext i
+  change (matrixOp qutritShiftMatrix (ketPi 1) : Fin 3 → ℂ) i = _
+  rw [matrixOp_apply]
   fin_cases i <;>
-    simp [matrixOp_apply, ket, qutritShiftMatrix, Matrix.mulVec, Fin.sum_univ_three]
+    simp [qutritShiftMatrix, ketPi, Matrix.mulVec, Fin.sum_univ_three,
+      EuclideanSpace.basisFun_apply, PiLp.single_apply]
 
 /-- The cyclic shift sends `|2⟩` to `|0⟩`. -/
 theorem qutritShiftMatrix_ket2 : matrixOp qutritShiftMatrix (ket 2) = ket 0 := by
+  rw [ket_eq_ketPi, ket_eq_ketPi]
   ext i
+  change (matrixOp qutritShiftMatrix (ketPi 2) : Fin 3 → ℂ) i = _
+  rw [matrixOp_apply]
   fin_cases i <;>
-    simp [matrixOp_apply, ket, qutritShiftMatrix, Matrix.mulVec, Fin.sum_univ_three]
+    simp [qutritShiftMatrix, ketPi, Matrix.mulVec, Fin.sum_univ_three,
+      EuclideanSpace.basisFun_apply, PiLp.single_apply]
 
 /-- The cyclic-shift action on computational kets as a packet. -/
 theorem qutritShiftMatrix_computational_cycle :
@@ -324,9 +348,10 @@ theorem qutritPermutationMatrix_matrixOp_ket (σ : Equiv.Perm (Fin 3)) (i : Fin 
 /-- The identity label permutation is realized by the identity qutrit matrix. -/
 theorem qutritPermutationMatrix_one :
     qutritPermutationMatrix (1 : Equiv.Perm (Fin 3)) = 1 := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [qutritPermutationMatrix, Equiv.Perm.permMatrix]
+  have hsymm : (1 : Equiv.Perm (Fin 3)).symm = 1 := by
+    ext i
+    rfl
+  rw [qutritPermutationMatrix, hsymm, Matrix.permMatrix_one]
 
 /-- Qutrit permutation matrices multiply in the same order as semantic label permutations. -/
 theorem qutritPermutationMatrix_mul (σ τ : Equiv.Perm (Fin 3)) :

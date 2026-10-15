@@ -67,7 +67,10 @@ inductive PeirceSign where
   | pos
   | zero
   | neg
-  deriving DecidableEq, Fintype, Repr
+  deriving DecidableEq, Repr
+
+instance : Fintype PeirceSign :=
+  ⟨⟨{.pos, .zero, .neg}, by simp⟩, by intro s; cases s <;> simp⟩
 
 /-- Scalar eigenvalue attached to a Peirce label. -/
 def peirceScalar : PeirceSign → ℝ

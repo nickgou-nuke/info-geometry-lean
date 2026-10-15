@@ -331,10 +331,10 @@ theorem logicalMatrixEmbedding_zero : logicalMatrixEmbedding S 0 = 0 := by
   simp
 
 def logicalWDWMatrix (t x y : ℝ) : Matrix (Fin 2) (Fin 2) ℂ :=
-  ![![(t + x : ℂ), (y : ℂ)], ![(y : ℂ), (t - x : ℂ)]]
+  !![(t + x : ℂ), (y : ℂ); (y : ℂ), (t - x : ℂ)]
 
 def logicalWDWConjugateMatrix (t x y : ℝ) : Matrix (Fin 2) (Fin 2) ℂ :=
-  ![![(t - x : ℂ), -(y : ℂ)], ![-(y : ℂ), (t + x : ℂ)]]
+  !![(t - x : ℂ), -(y : ℂ); -(y : ℂ), (t + x : ℂ)]
 
 theorem logicalWDWMatrix_eq_zero_iff (t x y : ℝ) :
     logicalWDWMatrix t x y = 0 ↔ t = 0 ∧ x = 0 ∧ y = 0 := by

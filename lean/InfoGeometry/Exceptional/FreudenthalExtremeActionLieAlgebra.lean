@@ -119,9 +119,8 @@ theorem extremeBracket_genEplus_genEminus :
 theorem extremeBracket_genEminus_genEplus :
     extremeBracket D E (genEminus D 1) (genEplus D 1) =
       genHscale D (-E.scaleNormalization) := by
-  rw [extremeBracket_skew]
-  simp [extremeBracket_genEplus_genEminus, FiveGradedCarrier.instNeg,
-    genHscale]
+  apply FiveGradedCarrier.ext <;>
+    simp [extremeBracket, genEminus, genEplus, genHscale]
 
 theorem extremeBracket_genEplus_genEminus_of_scaleNormalization
     (hE : E.scaleNormalization = 1) :

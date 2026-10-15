@@ -50,12 +50,16 @@ theorem paper_fold_zero_window6_density_sharp_exponent :
       intro b
       filter_upwards [Filter.eventually_ge_atTop b] with n hn
       omega
-    convert Omega.Entropy.topological_entropy_eq_log_phi.comp hshift using 1
+    apply Filter.Tendsto.congr' (Filter.Eventually.of_forall fun n => ?_)
+      (Omega.Entropy.topological_entropy_eq_log_phi.comp hshift)
+    simp [Nat.add_assoc]
   · have hshift : Tendsto (fun n : ℕ => 6 * n + 4) atTop atTop := by
       refine tendsto_atTop.2 ?_
       intro b
       filter_upwards [Filter.eventually_ge_atTop b] with n hn
       omega
-    convert Omega.Entropy.topological_entropy_eq_log_phi.comp hshift using 1
+    apply Filter.Tendsto.congr' (Filter.Eventually.of_forall fun n => ?_)
+      (Omega.Entropy.topological_entropy_eq_log_phi.comp hshift)
+    simp [Nat.add_assoc]
 
 end Omega.Folding

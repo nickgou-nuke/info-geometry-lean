@@ -78,8 +78,9 @@ noncomputable def omega (i j : ι) : ArnoldAlgebra R ι :=
 /-- Edge symmetry holds in the Arnold-Cohen quotient algebra. -/
 theorem omega_symm (i j : ι) :
     omega R ι i j = omega R ι j i := by
-  simpa [omega] using
-    RingQuot.mkRingHom_rel (ArnoldRel.symm (R := R) (ι := ι) i j)
+  change (RingQuot.mkRingHom (ArnoldRel R ι)) (w R ι i j) =
+    (RingQuot.mkRingHom (ArnoldRel R ι)) (w R ι j i)
+  exact RingQuot.mkRingHom_rel (ArnoldRel.symm (R := R) (ι := ι) i j)
 
 /--
 The three-edge Arnold mixed relation maps to the quotient image of source zero.

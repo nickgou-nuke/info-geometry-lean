@@ -20,10 +20,9 @@ theorem strictly_three_transitive
   let M := InfoGeometry.Topology.MobiusRecoveredHelpers.comp
       (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M2) M1
   have hmz1 : M.eval z1 = w1 := by
-    have hcomp : M.eval z1 = (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M2).eval (M1.eval z1) := by
-      simpa [M, InfoGeometry.Topology.MobiusRecoveredHelpers.comp] using
-        (InfoGeometry.Topology.MobiusRecoveredHelpers.eval_comp
-          (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M2) M1 z1)
+    have hcomp : M.eval z1 = (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M2).eval (M1.eval z1) :=
+      InfoGeometry.Topology.MobiusRecoveredHelpers.eval_comp
+        (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M2) M1 z1
     rw [h1z1] at hcomp
     rw [hcomp]
     exact by
@@ -32,10 +31,9 @@ theorem strictly_three_transitive
       rw [h2w1] at h_inv
       exact h_inv
   have hmz2 : M.eval z2 = w2 := by
-    have hcomp : M.eval z2 = (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M2).eval (M1.eval z2) := by
-      simpa [M, InfoGeometry.Topology.MobiusRecoveredHelpers.comp] using
-        (InfoGeometry.Topology.MobiusRecoveredHelpers.eval_comp
-          (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M2) M1 z2)
+    have hcomp : M.eval z2 = (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M2).eval (M1.eval z2) :=
+      InfoGeometry.Topology.MobiusRecoveredHelpers.eval_comp
+        (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M2) M1 z2
     rw [h1z2] at hcomp
     rw [hcomp]
     exact by
@@ -44,10 +42,9 @@ theorem strictly_three_transitive
       rw [h2w2] at h_inv
       exact h_inv
   have hmz3 : M.eval z3 = w3 := by
-    have hcomp : M.eval z3 = (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M2).eval (M1.eval z3) := by
-      simpa [M, InfoGeometry.Topology.MobiusRecoveredHelpers.comp] using
-        (InfoGeometry.Topology.MobiusRecoveredHelpers.eval_comp
-          (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M2) M1 z3)
+    have hcomp : M.eval z3 = (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M2).eval (M1.eval z3) :=
+      InfoGeometry.Topology.MobiusRecoveredHelpers.eval_comp
+        (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M2) M1 z3
     rw [h1z3] at hcomp
     rw [hcomp]
     exact by
@@ -61,15 +58,13 @@ theorem strictly_three_transitive
   let M_test := InfoGeometry.Topology.MobiusRecoveredHelpers.comp M2
       (InfoGeometry.Topology.MobiusRecoveredHelpers.comp M' (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M1))
   have ht0 : M_test.eval (some 0) = some 0 := by
-    have hcomp1 : M_test.eval (some 0) = M2.eval ((InfoGeometry.Topology.MobiusRecoveredHelpers.comp M' (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M1)).eval (some 0)) := by
-      simpa [M_test, InfoGeometry.Topology.MobiusRecoveredHelpers.comp] using
-        (InfoGeometry.Topology.MobiusRecoveredHelpers.eval_comp
-          M2 (InfoGeometry.Topology.MobiusRecoveredHelpers.comp M' (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M1)) (some 0))
+    have hcomp1 : M_test.eval (some 0) = M2.eval ((InfoGeometry.Topology.MobiusRecoveredHelpers.comp M' (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M1)).eval (some 0)) :=
+      InfoGeometry.Topology.MobiusRecoveredHelpers.eval_comp
+        M2 (InfoGeometry.Topology.MobiusRecoveredHelpers.comp M' (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M1)) (some 0)
     rw [hcomp1]
     have hcomp2 : (InfoGeometry.Topology.MobiusRecoveredHelpers.comp M' (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M1)).eval (some 0) =
-        M'.eval ((InfoGeometry.Topology.MobiusRecoveredHelpers.inv M1).eval (some 0)) := by
-      simpa [InfoGeometry.Topology.MobiusRecoveredHelpers.comp] using
-        (InfoGeometry.Topology.MobiusRecoveredHelpers.eval_comp M' (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M1) (some 0))
+        M'.eval ((InfoGeometry.Topology.MobiusRecoveredHelpers.inv M1).eval (some 0)) :=
+      InfoGeometry.Topology.MobiusRecoveredHelpers.eval_comp M' (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M1) (some 0)
     rw [hcomp2]
     have h_inv : (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M1).eval (M1.eval z1) = z1 :=
       InfoGeometry.Topology.MobiusRecoveredHelpers.eval_inv_left M1 z1
@@ -78,15 +73,13 @@ theorem strictly_three_transitive
     rw [hM'.1]
     exact h2w1
   have ht1 : M_test.eval (some 1) = some 1 := by
-    have hcomp1 : M_test.eval (some 1) = M2.eval ((InfoGeometry.Topology.MobiusRecoveredHelpers.comp M' (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M1)).eval (some 1)) := by
-      simpa [M_test, InfoGeometry.Topology.MobiusRecoveredHelpers.comp] using
-        (InfoGeometry.Topology.MobiusRecoveredHelpers.eval_comp
-          M2 (InfoGeometry.Topology.MobiusRecoveredHelpers.comp M' (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M1)) (some 1))
+    have hcomp1 : M_test.eval (some 1) = M2.eval ((InfoGeometry.Topology.MobiusRecoveredHelpers.comp M' (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M1)).eval (some 1)) :=
+      InfoGeometry.Topology.MobiusRecoveredHelpers.eval_comp
+        M2 (InfoGeometry.Topology.MobiusRecoveredHelpers.comp M' (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M1)) (some 1)
     rw [hcomp1]
     have hcomp2 : (InfoGeometry.Topology.MobiusRecoveredHelpers.comp M' (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M1)).eval (some 1) =
-        M'.eval ((InfoGeometry.Topology.MobiusRecoveredHelpers.inv M1).eval (some 1)) := by
-      simpa [InfoGeometry.Topology.MobiusRecoveredHelpers.comp] using
-        (InfoGeometry.Topology.MobiusRecoveredHelpers.eval_comp M' (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M1) (some 1))
+        M'.eval ((InfoGeometry.Topology.MobiusRecoveredHelpers.inv M1).eval (some 1)) :=
+      InfoGeometry.Topology.MobiusRecoveredHelpers.eval_comp M' (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M1) (some 1)
     rw [hcomp2]
     have h_inv : (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M1).eval (M1.eval z2) = z2 :=
       InfoGeometry.Topology.MobiusRecoveredHelpers.eval_inv_left M1 z2
@@ -95,15 +88,13 @@ theorem strictly_three_transitive
     rw [hM'.2.1]
     exact h2w2
   have htinf : M_test.eval none = none := by
-    have hcomp1 : M_test.eval none = M2.eval ((InfoGeometry.Topology.MobiusRecoveredHelpers.comp M' (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M1)).eval none) := by
-      simpa [M_test, InfoGeometry.Topology.MobiusRecoveredHelpers.comp] using
-        (InfoGeometry.Topology.MobiusRecoveredHelpers.eval_comp
-          M2 (InfoGeometry.Topology.MobiusRecoveredHelpers.comp M' (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M1)) none)
+    have hcomp1 : M_test.eval none = M2.eval ((InfoGeometry.Topology.MobiusRecoveredHelpers.comp M' (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M1)).eval none) :=
+      InfoGeometry.Topology.MobiusRecoveredHelpers.eval_comp
+        M2 (InfoGeometry.Topology.MobiusRecoveredHelpers.comp M' (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M1)) none
     rw [hcomp1]
     have hcomp2 : (InfoGeometry.Topology.MobiusRecoveredHelpers.comp M' (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M1)).eval none =
-        M'.eval ((InfoGeometry.Topology.MobiusRecoveredHelpers.inv M1).eval none) := by
-      simpa [InfoGeometry.Topology.MobiusRecoveredHelpers.comp] using
-        (InfoGeometry.Topology.MobiusRecoveredHelpers.eval_comp M' (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M1) none)
+        M'.eval ((InfoGeometry.Topology.MobiusRecoveredHelpers.inv M1).eval none) :=
+      InfoGeometry.Topology.MobiusRecoveredHelpers.eval_comp M' (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M1) none
     rw [hcomp2]
     have h_inv : (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M1).eval (M1.eval z3) = z3 :=
       InfoGeometry.Topology.MobiusRecoveredHelpers.eval_inv_left M1 z3
@@ -116,17 +107,15 @@ theorem strictly_three_transitive
     intro y
     have h_z_eq : M_test.eval (M1.eval y) = M1.eval y := h_id (M1.eval y)
     have h_z_expand : M_test.eval (M1.eval y) = M2.eval (M'.eval y) := by
-      have hstep1 : M_test.eval (M1.eval y) = M2.eval ((InfoGeometry.Topology.MobiusRecoveredHelpers.comp M' (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M1)).eval (M1.eval y)) := by
-        simpa [M_test, InfoGeometry.Topology.MobiusRecoveredHelpers.comp] using
-          (InfoGeometry.Topology.MobiusRecoveredHelpers.eval_comp
-            M2 (InfoGeometry.Topology.MobiusRecoveredHelpers.comp M' (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M1)) (M1.eval y))
+      have hstep1 : M_test.eval (M1.eval y) = M2.eval ((InfoGeometry.Topology.MobiusRecoveredHelpers.comp M' (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M1)).eval (M1.eval y)) :=
+        InfoGeometry.Topology.MobiusRecoveredHelpers.eval_comp
+          M2 (InfoGeometry.Topology.MobiusRecoveredHelpers.comp M' (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M1)) (M1.eval y)
       have hstep2 : M2.eval ((InfoGeometry.Topology.MobiusRecoveredHelpers.comp M' (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M1)).eval (M1.eval y)) =
           M2.eval (M'.eval ((InfoGeometry.Topology.MobiusRecoveredHelpers.inv M1).eval (M1.eval y))) := by
-        simpa [InfoGeometry.Topology.MobiusRecoveredHelpers.comp] using
-          congrArg M2.eval (InfoGeometry.Topology.MobiusRecoveredHelpers.eval_comp
-            M' (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M1) (M1.eval y))
+        exact congrArg M2.eval (InfoGeometry.Topology.MobiusRecoveredHelpers.eval_comp
+          M' (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M1) (M1.eval y))
       have hstep3 : M2.eval (M'.eval ((InfoGeometry.Topology.MobiusRecoveredHelpers.inv M1).eval (M1.eval y))) = M2.eval (M'.eval y) := by
-        simpa using congrArg (fun t => M2.eval (M'.eval t))
+        exact congrArg (fun t => M2.eval (M'.eval t))
           (InfoGeometry.Topology.MobiusRecoveredHelpers.eval_inv_left M1 y)
       calc M_test.eval (M1.eval y) = M2.eval ((InfoGeometry.Topology.MobiusRecoveredHelpers.comp M' (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M1)).eval (M1.eval y)) := hstep1
         _ = M2.eval (M'.eval ((InfoGeometry.Topology.MobiusRecoveredHelpers.inv M1).eval (M1.eval y))) := hstep2
@@ -135,9 +124,8 @@ theorem strictly_three_transitive
     have hmain1 : M.eval y = (InfoGeometry.Topology.MobiusRecoveredHelpers.comp (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M2) M1).eval y := rfl
     have hmain2 : (InfoGeometry.Topology.MobiusRecoveredHelpers.comp (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M2) M1).eval y =
         (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M2).eval (M1.eval y) := by
-      simpa [M, InfoGeometry.Topology.MobiusRecoveredHelpers.comp] using
-        (InfoGeometry.Topology.MobiusRecoveredHelpers.eval_comp
-          (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M2) M1 y)
+      exact InfoGeometry.Topology.MobiusRecoveredHelpers.eval_comp
+        (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M2) M1 y
     have hmain3 : (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M2).eval (M1.eval y) =
         (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M2).eval (M2.eval (M'.eval y)) := by rw [← h_z_eq]
     have hmain4 : (InfoGeometry.Topology.MobiusRecoveredHelpers.inv M2).eval (M2.eval (M'.eval y)) = M'.eval y :=

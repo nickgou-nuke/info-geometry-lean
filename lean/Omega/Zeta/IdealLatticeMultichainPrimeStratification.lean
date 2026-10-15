@@ -106,7 +106,7 @@ lemma to_fromPrimeLayers (L : PrimeLayers (P := P) (k := k)) :
   · exact layerOf_le_of_mem (fromPrimeLayers L) p (L.1 p) (by simp [fromPrimeLayers,
       cumulativeIdeal])
   · have hmem := layerOf_mem (fromPrimeLayers L) p
-    simpa [fromPrimeLayers, cumulativeIdeal] using hmem
+    simpa [toPrimeLayers, fromPrimeLayers, cumulativeIdeal] using hmem
 
 lemma from_toPrimeLayers (I : Multichain (P := P) (k := k)) :
     fromPrimeLayers (toPrimeLayers I) = I := by
@@ -115,12 +115,14 @@ lemma from_toPrimeLayers (I : Multichain (P := P) (k := k)) :
   ext p
   constructor
   · intro hp
-    have hle : layerOf I p ≤ t := by
-      simpa [fromPrimeLayers, cumulativeIdeal, toPrimeLayers] using hp
-    exact I.2.2.1 hle (layerOf_mem I p)
+    dsimp [fromPrimeLayers, cumulativeIdeal, toPrimeLayers] at hp
+    simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hp
+    exact I.2.2.1 hp (layerOf_mem I p)
   · intro hp
     have hle := layerOf_le_of_mem I p t hp
-    simp [fromPrimeLayers, cumulativeIdeal, toPrimeLayers, hle]
+    dsimp [fromPrimeLayers, cumulativeIdeal, toPrimeLayers]
+    simp only [Finset.mem_filter, Finset.mem_univ, true_and]
+    exact hle
 
 /-- The layer-difference and cumulative-ideal constructions are inverse bijections. -/
 def multichainPrimeLayersEquiv :

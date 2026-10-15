@@ -1,55 +1,42 @@
-import Mathlib.Data.Complex.Basic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
-import Mathlib.NumberTheory.LSeries.RiemannZeta
-import Mathlib.Algebra.Algebra.Basic
+import Mathlib.Analysis.CStarAlgebra.GelfandNaimarkSegal
+import InfoGeometry.Canonical.CStarAlgebraStateColimit
+import InfoGeometry.Canonical.BostConnesKMS
 
 /-!
-# Bost-Connes/GNS carrier interface
+# Bost--Connes generators in the native GNS representation
 
-This file contains a small abstract GNS representation record and a zeta-valued
-partition readout.  It does not construct the Bost--Connes C*-dynamical system
-or prove a phase-transition theorem.
+The Bost--Connes partition series and its zeta identification are owned by
+`InfoGeometry.Arithmetic.BostConnesNativeZetaPartition`; the projection
+readout and its explicit KMS closure boundary are owned by
+`InfoGeometry.Canonical.BostConnesKMS`. Neither a scalar-valued function
+definition nor an arbitrary cyclic module is a C*-algebraic KMS state or a
+GNS construction. This file records the concrete transport that is justified:
+an isometric indexed generator remains an isometry in Mathlib's GNS
+representation of any supplied normalized positive state.
 -/
 
-namespace InfoGeometry.Physics.BostConnes
+noncomputable section
 
-open Complex
+namespace InfoGeometry.Physics.BostConnesGNS
 
-/-- The abstract C*-algebra analog for the Bost-Connes system. -/
-class BostConnesAlgebra (A : Type*) [Ring A] [Algebra ℂ A]
+open InfoGeometry.Canonical.BostConnesKMS
+open CStarStateColimit.Native
 
-/-- The Gelfand-Naimark-Segal (GNS) representation mapping for a state. -/
-structure GNSRepresentation (A H : Type*) [Ring A] [Algebra ℂ A] [AddCommGroup H] [Module ℂ H] where
-  pi : A →ₐ[ℂ] (H →ₗ[ℂ] H)
-  vacuum : H
-  cyclic : ∀ h : H, ∃ a : A, pi a vacuum = h
+variable {Op : Type*}
+variable [CStarAlgebra Op] [PartialOrder Op] [StarOrderedRing Op]
 
-/-- The Bost-Connes partition function mapping to the Riemann Zeta function. -/
-noncomputable def partitionFunction (β : ℂ) : ℂ :=
-  riemannZeta β
+/-- The native GNS representation sends each Cuntz-indexed Bost--Connes
+generator to an isometry. This uses the actual Mathlib GNS star-algebra
+homomorphism, not an abstract cyclicity field. -/
+theorem gns_generator_isometry
+    (C : BostConnesCuntzSystem Op)
+    (ω : State Op) (n : ℕ+) :
+    star (ω.functional.gnsStarAlgHom (S C n)) *
+        ω.functional.gnsStarAlgHom (S C n) = 1 := by
+  have hgen : star (S C n) * S C n = 1 := by
+    change star (C.generator n) * C.generator n = 1
+    exact C.generator_isometry n
+  simpa only [map_mul, map_star, map_one] using
+    congrArg ω.functional.gnsStarAlgHom hgen
 
-/-- The abstract KMS state functional parameterized by inverse temperature β. -/
-noncomputable def kmsState (β : ℂ) : ℂ :=
-  partitionFunction β
-
-/-- The critical inverse temperature where the phase transition occurs. -/
-def criticalBeta : ℂ := 1
-
-/-- Definitional readout of the chosen value at `β = 1`. -/
-theorem kmsState_critical : kmsState criticalBeta = riemannZeta 1 := rfl
-
-/-- A cyclic representation has a preimage observable for every state vector,
-by the `cyclic` field. -/
-theorem kms_yields_cyclic_vacuum_representation
-    (A H : Type*) [Ring A] [Algebra ℂ A] [AddCommGroup H] [Module ℂ H]
-    (rep : GNSRepresentation A H) (state_vector : H) :
-    ∃ (observable : A), rep.pi observable rep.vacuum = state_vector := by
-  exact rep.cyclic state_vector
-
-/-- Evaluate an observable on the cyclic vacuum vector. -/
-noncomputable def evaluateObservableVacuum
-    (A H : Type*) [Ring A] [Algebra ℂ A] [AddCommGroup H] [Module ℂ H]
-    (rep : GNSRepresentation A H) (obs : A) : H :=
-  rep.pi obs rep.vacuum
-
-end InfoGeometry.Physics.BostConnes
+end InfoGeometry.Physics.BostConnesGNS

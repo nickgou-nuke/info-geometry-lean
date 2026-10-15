@@ -62,8 +62,7 @@ theorem continuous_S3CrossProductResidual (σ : S3Perm) :
       ((continuous_S3OnH3Zorn σ).comp continuous_snd)
   have hright : Continuous (fun p : H3Zorn ℝ × H3Zorn ℝ =>
       crossProduct (S3OnH3Zorn σ p.1) (S3OnH3Zorn σ p.2)) := by
-    simpa only [Function.comp_apply] using
-      continuous_h3Zorn_crossProduct.comp hpair
+    exact (continuous_h3Zorn_crossProduct.comp hpair).congr fun p => rfl
   exact hleft.sub hright
 
 noncomputable def S3CrossProductResidualContinuousMap (σ : S3Perm) :
@@ -505,24 +504,24 @@ theorem continuous_S3ConjugateInnerDerivation_action
   have hconst_b : Continuous (fun _ : H3Zorn ℝ => b) := continuous_const
   have hbx : Continuous (fun x : H3Zorn ℝ =>
       b * S3OnH3Zorn (S3Perm.inverse σ) x) := by
-    simpa only [Function.comp_apply] using
-      continuous_h3Zorn_candidateJordanMul.comp
-        (hconst_b.prodMk hinv)
+    exact (continuous_h3Zorn_candidateJordanMul.comp
+      (hconst_b.prodMk hinv)).congr fun x => by
+        simp only [Function.comp_apply, candidateJordanMul_eq_mul]
   have hax : Continuous (fun x : H3Zorn ℝ =>
       a * S3OnH3Zorn (S3Perm.inverse σ) x) := by
-    simpa only [Function.comp_apply] using
-      continuous_h3Zorn_candidateJordanMul.comp
-        (hconst_a.prodMk hinv)
+    exact (continuous_h3Zorn_candidateJordanMul.comp
+      (hconst_a.prodMk hinv)).congr fun x => by
+        simp only [Function.comp_apply, candidateJordanMul_eq_mul]
   have hab : Continuous (fun x : H3Zorn ℝ =>
       a * (b * S3OnH3Zorn (S3Perm.inverse σ) x)) := by
-    simpa only [Function.comp_apply] using
-      continuous_h3Zorn_candidateJordanMul.comp
-        (hconst_a.prodMk hbx)
+    exact (continuous_h3Zorn_candidateJordanMul.comp
+      (hconst_a.prodMk hbx)).congr fun x => by
+        simp only [Function.comp_apply, candidateJordanMul_eq_mul]
   have hba : Continuous (fun x : H3Zorn ℝ =>
       b * (a * S3OnH3Zorn (S3Perm.inverse σ) x)) := by
-    simpa only [Function.comp_apply] using
-      continuous_h3Zorn_candidateJordanMul.comp
-        (hconst_b.prodMk hax)
+    exact (continuous_h3Zorn_candidateJordanMul.comp
+      (hconst_b.prodMk hax)).congr fun x => by
+        simp only [Function.comp_apply, candidateJordanMul_eq_mul]
   exact (continuous_S3OnH3Zorn σ).comp (hab.sub hba)
 
 noncomputable def S3ConjugateInnerDerivationJoint (σ : S3Perm)
@@ -542,20 +541,24 @@ theorem continuous_S3ConjugateInnerDerivation_joint (σ : S3Perm) :
       p.1.2) := continuous_snd.comp continuous_fst
   have hbx : Continuous (fun p : (H3Zorn ℝ × H3Zorn ℝ) × H3Zorn ℝ =>
       p.1.2 * S3OnH3Zorn (S3Perm.inverse σ) p.2) := by
-    simpa only [Function.comp_apply] using
-      continuous_h3Zorn_candidateJordanMul.comp (hb.prodMk hinv)
+    exact (continuous_h3Zorn_candidateJordanMul.comp
+      (hb.prodMk hinv)).congr fun p => by
+        simp only [Function.comp_apply, candidateJordanMul_eq_mul]
   have hax : Continuous (fun p : (H3Zorn ℝ × H3Zorn ℝ) × H3Zorn ℝ =>
       p.1.1 * S3OnH3Zorn (S3Perm.inverse σ) p.2) := by
-    simpa only [Function.comp_apply] using
-      continuous_h3Zorn_candidateJordanMul.comp (ha.prodMk hinv)
+    exact (continuous_h3Zorn_candidateJordanMul.comp
+      (ha.prodMk hinv)).congr fun p => by
+        simp only [Function.comp_apply, candidateJordanMul_eq_mul]
   have hab : Continuous (fun p : (H3Zorn ℝ × H3Zorn ℝ) × H3Zorn ℝ =>
       p.1.1 * (p.1.2 * S3OnH3Zorn (S3Perm.inverse σ) p.2)) := by
-    simpa only [Function.comp_apply] using
-      continuous_h3Zorn_candidateJordanMul.comp (ha.prodMk hbx)
+    exact (continuous_h3Zorn_candidateJordanMul.comp
+      (ha.prodMk hbx)).congr fun p => by
+        simp only [Function.comp_apply, candidateJordanMul_eq_mul]
   have hba : Continuous (fun p : (H3Zorn ℝ × H3Zorn ℝ) × H3Zorn ℝ =>
       p.1.2 * (p.1.1 * S3OnH3Zorn (S3Perm.inverse σ) p.2)) := by
-    simpa only [Function.comp_apply] using
-      continuous_h3Zorn_candidateJordanMul.comp (hb.prodMk hax)
+    exact (continuous_h3Zorn_candidateJordanMul.comp
+      (hb.prodMk hax)).congr fun p => by
+        simp only [Function.comp_apply, candidateJordanMul_eq_mul]
   exact (continuous_S3OnH3Zorn σ).comp (hab.sub hba)
 
 noncomputable def S3ConjugateInnerDerivationJointContinuousMap
@@ -641,7 +644,7 @@ theorem continuous_S3UResidual (σ : S3Perm) :
       ((continuous_S3OnH3Zorn σ).comp continuous_snd)
   have hright : Continuous (fun p : H3Zorn ℝ × H3Zorn ℝ =>
       H3Zorn.U (S3OnH3Zorn σ p.1) (S3OnH3Zorn σ p.2)) := by
-    simpa only [Function.comp_apply] using continuous_h3Zorn_U.comp hpair
+    exact (continuous_h3Zorn_U.comp hpair).congr fun p => rfl
   exact hleft.sub hright
 
 noncomputable def S3UResidualContinuousMap (σ : S3Perm) :
@@ -733,8 +736,8 @@ theorem continuous_S3AdjointResidual (σ : S3Perm) :
     (continuous_S3OnH3Zorn σ).comp continuous_h3Zorn_adjointQuad
   have hright : Continuous (fun X : H3Zorn ℝ =>
       (S3OnH3Zorn σ X).adjointQuad) := by
-    simpa only [Function.comp_apply] using
-      continuous_h3Zorn_adjointQuad.comp (continuous_S3OnH3Zorn σ)
+    exact (continuous_h3Zorn_adjointQuad.comp
+      (continuous_S3OnH3Zorn σ)).congr fun X => rfl
   exact hleft.sub hright
 
 noncomputable def S3AdjointResidualContinuousMap (σ : S3Perm) :
@@ -779,8 +782,8 @@ theorem continuous_S3JordanProductResidual (σ : S3Perm) :
   have hright : Continuous (fun p : H3Zorn ℝ × H3Zorn ℝ =>
       S3OnH3Zorn σ p.1 * S3OnH3Zorn σ p.2) :=
     by
-      simpa only [Function.comp_apply] using
-        continuous_h3Zorn_candidateJordanMul.comp hpair
+      exact (continuous_h3Zorn_candidateJordanMul.comp hpair).congr fun p => by
+        simp only [Function.comp_apply, candidateJordanMul_eq_mul]
   exact hleft.sub hright
 
 noncomputable def S3JordanProductResidualContinuousMap (σ : S3Perm) :

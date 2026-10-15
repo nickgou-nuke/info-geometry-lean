@@ -159,8 +159,16 @@ def scaledBraidGen2 (p : ℂˣ) : GL8 :=
 theorem scaledBraidGen_B3_braid (p : ℂˣ) :
     scaledBraidGen1 p * scaledBraidGen2 p * scaledBraidGen1 p =
       scaledBraidGen2 p * scaledBraidGen1 p * scaledBraidGen2 p := by
-  have h := congrArg (conjugationHom (scaleUnit p)) braidGen_B3_braid
-  simpa only [map_mul, scaledBraidGen1, scaledBraidGen2, conjugationHom] using h
+  calc
+    scaledBraidGen1 p * scaledBraidGen2 p * scaledBraidGen1 p =
+        scaleUnit p * (braidGen1 * braidGen2 * braidGen1) * (scaleUnit p)⁻¹ := by
+      simp only [scaledBraidGen1, scaledBraidGen2]
+      group
+    _ = scaleUnit p * (braidGen2 * braidGen1 * braidGen2) * (scaleUnit p)⁻¹ := by
+      rw [braidGen_B3_braid]
+    _ = scaledBraidGen2 p * scaledBraidGen1 p * scaledBraidGen2 p := by
+      simp only [scaledBraidGen1, scaledBraidGen2]
+      group
 
 /-- The conjugated Zorn representation of the presented braid group. -/
 def scaledZornPhi (p : ℂˣ) : B3PresentedGroup.B3 →* GL8 :=
@@ -185,10 +193,15 @@ theorem scaledZornPhi_det (p : ℂˣ) (β : B3PresentedGroup.B3) :
 
 /-- Characteristic polynomial is constant across the conjugated representation family. -/
 theorem scaledZornPhi_charpoly (p : ℂˣ) (β : B3PresentedGroup.B3) :
-    Matrix.charpoly (scaledZornPhi p β).val =
+  Matrix.charpoly (scaledZornPhi p β).val =
       Matrix.charpoly (zornPhi β).val := by
   rw [scaledZornPhi_conjugate]
-  exact Matrix.charpoly_units_conj (scaleUnit p) (zornPhi β).val
+  change Matrix.charpoly
+      (scaleMatrix p * (zornPhi β).val * scaleMatrix p⁻¹) = _
+  rw [Matrix.mul_assoc]
+  rw [Matrix.charpoly_mul_comm (scaleMatrix p)
+    ((zornPhi β).val * scaleMatrix p⁻¹)]
+  rw [Matrix.mul_assoc, scaleMatrix_inv_mul, Matrix.mul_one]
 
 /-- Inner conjugation does not change the kernel of the braid representation. -/
 theorem scaledZornPhi_ker (p : ℂˣ) :

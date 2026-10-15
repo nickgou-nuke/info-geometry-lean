@@ -583,6 +583,19 @@ def render_markdown(packet: dict[str, Any]) -> str:
 def build_packet(args: argparse.Namespace) -> dict[str, Any]:
     repo_root = args.repo_root.resolve()
     target = arango_target(repo_root)
+    if args.generation_id:
+        published = run_aql(
+            target,
+            """
+            FOR g IN decl_graph_generations
+              FILTER g._key == @generationId AND g.status == "complete"
+              LIMIT 1
+              RETURN g
+            """,
+            {"generationId": args.generation_id},
+        )
+        if not published:
+            raise RuntimeError(f"declaration generation {args.generation_id!r} is absent or incomplete")
     resolved = resolve_decl(
         target,
         decl=args.decl,
@@ -701,6 +714,19 @@ def build_packet(args: argparse.Namespace) -> dict[str, Any]:
 def build_multi_packet(args: argparse.Namespace, names: list[str]) -> dict[str, Any]:
     repo_root = args.repo_root.resolve()
     target = arango_target(repo_root)
+    if args.generation_id:
+        published = run_aql(
+            target,
+            """
+            FOR g IN decl_graph_generations
+              FILTER g._key == @generationId AND g.status == "complete"
+              LIMIT 1
+              RETURN g
+            """,
+            {"generationId": args.generation_id},
+        )
+        if not published:
+            raise RuntimeError(f"declaration generation {args.generation_id!r} is absent or incomplete")
     apices = resolve_authoritative_decls(
         target, decls=args.decls_collection, names=names
     )
@@ -789,6 +815,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--decl", help="Single fully qualified Lean declaration/proposition name.")
     parser.add_argument("--decl-multi", help="Comma-separated authoritative declaration apices.")
     parser.add_argument("--repo-root", type=Path, default=Path.cwd())
+    parser.add_argument("--generation-id",
+                        help="Read immutable declaration collections decls_g_ID / edges_g_ID published by refresh_decl_graph.py.")
     parser.add_argument("--decls-collection", default="decls",
                         help="Authoritative compiler-backed declaration collection.")
     parser.add_argument("--syntax-decls-collection", default="syntax_decls",
@@ -815,6 +843,14 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--json-out", type=Path)
     parser.add_argument("--md-out", type=Path)
     args = parser.parse_args(argv)
+
+    if args.generation_id:
+        if len(args.generation_id) > 32 or not all(ch.isalnum() or ch in "_-" for ch in args.generation_id):
+            parser.error("--generation-id must be at most 32 letters, digits, '_' or '-'")
+        if args.decls_collection == "decls":
+            args.decls_collection = f"decls_g_{args.generation_id}"
+        if args.edges_collection == "edges":
+            args.edges_collection = f"edges_g_{args.generation_id}"
 
     if bool(args.decl) == bool(args.decl_multi):
         parser.error("provide exactly one of --decl or --decl-multi")

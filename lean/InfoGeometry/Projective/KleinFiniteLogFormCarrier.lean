@@ -35,7 +35,8 @@ theorem globalPrimitive_derivative (z : SlitPlanePoint) :
 
 theorem globalPrimitive_derivative_in_owner (z : SlitPlanePoint) :
     HasDerivAt grothendieckLog (globalCoefficient z) z.1 := by
-  simpa only [grothendieckLog] using globalPrimitive_derivative z
+  change HasDerivAt (fun w : ℂ => Complex.log w) (globalCoefficient z) z.1
+  exact globalPrimitive_derivative z
 
 theorem globalCoefficient_eq_dlog (z : SlitPlanePoint) :
     globalCoefficient z = grothendieck_dlog z.1 := by
@@ -70,7 +71,8 @@ theorem primitive_derivative (ω : LocalLogForm) :
 
 theorem primitive_derivative_in_owner (ω : LocalLogForm) :
     HasDerivAt grothendieckLog (coefficient ω) ω.point := by
-  simpa only [grothendieckLog] using primitive_derivative ω
+  change HasDerivAt (fun z : ℂ => Complex.log z) (coefficient ω) ω.point
+  exact primitive_derivative ω
 
 theorem coefficient_eq_grothendieck_dlog (ω : LocalLogForm) :
     coefficient ω = grothendieck_dlog ω.point := by

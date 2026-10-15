@@ -11,9 +11,13 @@ inductive Archetype
   | positiveDensity
   | sldInverse
   | traceMetric
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
 
 open Archetype
+
+instance : Fintype Archetype where
+  elems := {matrixTower, faithfulTrace, isometricTransitions, dualTangentSpace, positiveDensity, sldInverse, traceMetric}
+  complete := by rintro (_ | _ | _ | _ | _ | _ | _) <;> simp
 
 def prerequisites : Archetype → Finset Archetype
   | matrixTower => {matrixTower}

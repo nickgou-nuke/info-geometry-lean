@@ -178,6 +178,10 @@ def basis7 : Fin 7 → SplitOctF2 :=
 def basisRestriction7 (f : SplitOctF2Aut) : Fin 7 → SplitOctF2 :=
   fun i => f.1 (basis7 i)
 
+@[simp] theorem one_apply (X : SplitOctF2) : (1 : SplitOctF2Aut).1 X = X := rfl
+
+@[simp] theorem basisRestriction7_one (i : Fin 7) : basisRestriction7 1 i = basis7 i := rfl
+
 def basis8From7 (v : Fin 7 → SplitOctF2) : Fin 8 → SplitOctF2
   | 0 => v 0
   | 1 => add one (v 0)
@@ -284,7 +288,8 @@ theorem automorphism_eq_one_of_fixes_basis7
     f = 1 := by
   apply automorphism_ext_of_basis7 f 1
   intro i
-  simpa using h i
+  rw [h i]
+  rfl
 
 /-! The seven-image parameterization is exact: admissible data are neither
 under- nor over-counted.  This is a structural replacement for enumerating

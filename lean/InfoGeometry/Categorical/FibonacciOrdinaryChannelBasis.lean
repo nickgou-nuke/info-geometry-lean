@@ -345,8 +345,11 @@ theorem tauFusionPathOrdinaryMatrix_eq_permutation
   change tauFusionPathEntry X Y Z τ s i.1 j.1 = _
   by_cases h : leftTauSemanticPathMap X Y Z i.1 = j.1
   · rw [tauFusionPathEntry_ordinary_eq_one X Y Z τ s i j h]
-    simp [tauFusionPathOrdinaryPermutation,
-      leftTauOrdinaryPathEquivRight, h]
+    have he : leftTauOrdinaryPathEquivRight X Y Z i = j := by
+      apply Subtype.ext
+      exact h
+    change 1 = if leftTauOrdinaryPathEquivRight X Y Z i = j then 1 else 0
+    rw [if_pos he]
   · rw [tauFusionPathEntry_ordinary_eq_zero X Y Z τ s i j h]
     have he : leftTauOrdinaryPathEquivRight X Y Z i = j ↔
         leftTauSemanticPathMap X Y Z i.1 = j.1 := by

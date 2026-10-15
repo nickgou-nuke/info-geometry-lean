@@ -31,8 +31,8 @@ theorem exists_empty_of_antitone_cylinders
     (decreasing : Antitone sets) (empty_intersection : (⋂ stage, sets stage) = ∅) :
     ∃ stage, sets stage = ∅ := by
   classical
-  letI : ∀ index, TopologicalSpace (α index) := fun _ => ⊥
-  letI : ∀ index, DiscreteTopology (α index) := fun index => discreteTopology_bot (α index)
+  let : ∀ index, TopologicalSpace (α index) := fun _ => ⊥
+  let : ∀ index, DiscreteTopology (α index) := fun index => discreteTopology_bot (α index)
   have closed (stage : ℕ) : IsClosed (sets stage) := by
     obtain ⟨indices, base, _, representation⟩ :=
       (mem_measurableCylinders _).mp (cylinders stage)
@@ -58,9 +58,9 @@ theorem content_tendsto_zero (consistent : IsProjectiveMeasureFamily marginals)
   apply tendsto_const_nhds.congr'
   filter_upwards [eventually_ge_atTop stage] with later after
   have empty_later : sets later = ∅ :=
-    Set.eq_empty_iff_forall_not_mem.mpr (fun point member => by
+    Set.eq_empty_of_forall_notMem (fun point member => by
       have earlier := decreasing after member
-      simpa only [empty, Set.mem_empty_iff_false] using earlier)
+      simp [empty] at earlier)
   simp [empty_later]
 
 variable [∀ indices, IsFiniteMeasure (marginals indices)]
@@ -71,7 +71,7 @@ theorem content_sigmaSubadditive (consistent : IsProjectiveMeasureFamily margina
     isSetRing_measurableCylinders (fun sets cylinders union_cylinder disjoint => ?_)
   exact addContent_iUnion_eq_sum_of_tendsto_zero isSetRing_measurableCylinders
     (projectiveFamilyContent consistent) (fun _ _ => projectiveFamilyContent_ne_top consistent)
-    (fun cylinders => content_tendsto_zero consistent cylinders)
+    (fun _ => content_tendsto_zero consistent)
     cylinders union_cylinder disjoint
 
 def extension (consistent : IsProjectiveMeasureFamily marginals) :
@@ -92,8 +92,9 @@ theorem extension_isProjectiveLimit (consistent : IsProjectiveMeasureFamily marg
     IsProjectiveLimit (extension consistent) marginals := by
   intro indices
   ext base measurable_base
-  rw [Measure.map_apply (measurable_restrict indices) measurable_base]
-  exact extension_cylinder consistent indices measurable_base
+  rw [Measure.map_apply _ measurable_base]
+  · exact extension_cylinder consistent indices measurable_base
+  · exact .of_eval (fun _ => measurable_pi_apply _)
 
 instance extension_isFiniteMeasure (consistent : IsProjectiveMeasureFamily marginals) :
     IsFiniteMeasure (extension consistent) :=

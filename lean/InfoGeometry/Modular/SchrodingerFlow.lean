@@ -42,7 +42,7 @@ theorem flow_add (L : EndE) (s t : ℝ) :
 
 theorem hasStrictDerivAt_flow_left (L : EndE) (t : ℝ) :
     HasStrictDerivAt (flow L) (L * flow L t) t := by
-  simpa [flow] using (hasStrictDerivAt_exp_smul_const' L t)
+  convert (hasStrictDerivAt_exp_smul_const' L t) using 1 <;> rfl
 
 private noncomputable def evalState : EndE →L[ℝ] E →L[ℝ] E :=
   (ContinuousLinearMap.apply ℝ E).flip
@@ -63,7 +63,7 @@ theorem trace_flow_preservation
     have h := τ.hasFDerivAt.comp s
       (hasDerivAt_orbit L x s).hasFDerivAt
     have hd := h.hasDerivAt
-    simpa [f, hL] using hd
+    convert hd using 1 <;> simp [f, hL] <;> (try (funext u; rfl))
   have hdiff : Differentiable ℝ f := fun s => (hderiv s).differentiableAt
   have hz : ∀ s : ℝ, deriv f s = 0 := fun s => (hderiv s).deriv
   have hc := is_const_of_deriv_eq_zero hdiff hz t 0

@@ -192,7 +192,8 @@ Proves simultaneously:
 4. **Maurer-Cartan Arnold-Cohen Resolution**:
    Flat connection logarithmic forms satisfy the Arnold-Cohen 3-term relations
    $\sum_{\mathrm{cyclic}} \omega_{ij} \wedge \omega_{jk} = 0$,
-   inducing the exact BCFW pole residue factorization.
+   Its rearrangement is algebraic only; it does not establish a flat
+   connection or BCFW pole-residue factorization.
 -/
 theorem grand_amari_souriau_para_kahler_qgt_synthesis
     (metri : ParaKahlerMetriplecticSystem R g)

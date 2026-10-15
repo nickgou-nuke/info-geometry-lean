@@ -102,18 +102,41 @@ def intrinsicEvenHodge (y : EvenPart) : EvenPart :=
     paravectorHodge (paravectorHodge y) = y := by
   apply Subtype.ext
   rw [paravectorHodge_val]
+  have htransport : paravectorHodge y =
+      HestenesHodgeEvenTransport.evenHodge y := by
+    simpa [paravectorHodge, oddHodge,
+      HestenesHodgeEvenTransport.oddHodge] using
+      (HestenesHodgeEvenTransport.evenHodge_eq_transport
+        (oddToEven.symm y)).symm
+  have hadj_carrier (z : EvenPart) :
+      hestenesAdjoint z =
+        hestenesAdjoint (HestenesHodgeEvenTransport.asEvenAlgebra z) := by
+    apply Subtype.ext
+    rfl
+  have hadj_pseudoscalar :
+      hestenesAdjoint spacetimePseudoscalar =
+        hestenesAdjoint
+          (HestenesHodgeEvenTransport.asEvenAlgebra spacetimePseudoscalar) := by
+    apply Subtype.ext
+    rfl
   have hp :
       HestenesHodgeEvenTransport.asEvenAlgebra (paravectorHodge y) =
         -(hestenesAdjoint (HestenesHodgeEvenTransport.asEvenAlgebra y) *
-          HestenesHodgeEvenTransport.asEvenAlgebra spacetimePseudoscalar) := by
+          spacetimePseudoscalar) := by
+    rw [htransport]
     apply Subtype.ext
-    simpa [HestenesHodgeEvenTransport.asEvenAlgebra] using paravectorHodge_val y
+    change (HestenesHodgeEvenTransport.evenHodge y : Algebra) =
+      -((hestenesAdjoint (HestenesHodgeEvenTransport.asEvenAlgebra y) : Algebra) *
+        (spacetimePseudoscalar : Algebra))
+    rw [HestenesHodgeEvenTransport.evenHodge_val, hadj_carrier]
+    rw [neg_mul]
   have hadj_neg (z : ClPlus14) : hestenesAdjoint (-z) = -hestenesAdjoint z := by
     simpa only [neg_one_smul] using hestenesAdjoint_smul (-1 : ℝ) z
   change -((hestenesAdjoint
       (HestenesHodgeEvenTransport.asEvenAlgebra (paravectorHodge y)) :
         ClPlus14) : Algebra) * (spacetimePseudoscalar : Algebra) = (y : Algebra)
   rw [hp, hadj_neg, hestenesAdjoint_mul, hestenesAdjoint_involutive,
+    hadj_pseudoscalar,
     hestenesAdjoint_spacetimePseudoscalar]
   rw [show ((-(-HestenesHodgeEvenTransport.asEvenAlgebra spacetimePseudoscalar *
       HestenesHodgeEvenTransport.asEvenAlgebra y) : ClPlus14) : Algebra) =

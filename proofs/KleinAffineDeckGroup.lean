@@ -25,11 +25,17 @@ def parityAction : ParityMul →* MulAut ZMul where
   toFun e := if e.toAdd = 0 then 1 else inversionAut
   map_one' := by simp
   map_mul' x y := by
-    have h11 : (1 + 1 : ZMod 2) = 0 := by native_decide
+    have hinv (n : ZMul) : inversionAut (inversionAut n) = n := by
+      apply Multiplicative.toAdd.injective
+      simp [inversionAut]
     obtain ⟨a, rfl⟩ : ∃ a : ZMod 2, Multiplicative.ofAdd a = x := ⟨x.toAdd, rfl⟩
     obtain ⟨b, rfl⟩ : ∃ b : ZMod 2, Multiplicative.ofAdd b = y := ⟨y.toAdd, rfl⟩
-    fin_cases a <;> fin_cases b <;>
-      ext n <;> simp [inversionAut, h11]
+    fin_cases a <;> fin_cases b <;> ext n
+    · rfl
+    · rfl
+    · rfl
+    · change (1 : MulAut ZMul) n = (inversionAut * inversionAut) n
+      simp [hinv]
 
 /-- Reduction modulo two, viewed multiplicatively. -/
 def parityHom : ZMul →* ParityMul :=

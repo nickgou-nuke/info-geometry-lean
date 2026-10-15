@@ -30,7 +30,11 @@ def forcing (T : ℝ) : Velocity := shear (forcingProfile T)
 
 theorem hasDerivAt_profile_space (T t r : ℝ) :
     HasDerivAt (profile T t) (T - t)⁻¹ r := by
-  simpa [profile] using (hasDerivAt_id r).const_mul (T - t)⁻¹
+  have h := (hasDerivAt_id r).const_mul (T - t)⁻¹
+  convert h using 1
+  · ext y
+    rfl
+  · ring
 
 @[simp] theorem deriv_profile_space (T t : ℝ) :
     deriv (profile T t) = (fun _ => (T - t)⁻¹) :=
@@ -39,7 +43,12 @@ theorem hasDerivAt_profile_space (T t r : ℝ) :
 theorem hasDerivAt_reciprocal_time (T t : ℝ) (ht : t ≠ T) :
     HasDerivAt (fun s => (T - s)⁻¹) ((T - t) ^ 2)⁻¹ t := by
   have hn : T - t ≠ 0 := sub_ne_zero.mpr (Ne.symm ht)
-  simpa using ((hasDerivAt_id t).const_sub T).inv hn
+  have h := ((hasDerivAt_id t).const_sub T).inv hn
+  convert h using 1
+  · ext s
+    rfl
+  · dsimp only [id]
+    ring
 
 theorem hasDerivAt_profile_time (T t r : ℝ) (ht : t ≠ T) :
     HasDerivAt (fun s => profile T s r) (forcingProfile T t r) t :=

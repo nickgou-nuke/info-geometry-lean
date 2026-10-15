@@ -4,6 +4,7 @@ import InfoGeometry.Canonical.ConformalAlgebra
 import InfoGeometry.Canonical.TomitaTakesaki
 import InfoGeometry.Canonical.WeylAnomalySource
 import InfoGeometry.Quantum.ModularAnomaly
+import Mathlib.Analysis.Normed.Operator.NormedSpace
 
 /-!
 # Research.RosettaSourceBridge
@@ -13,6 +14,11 @@ This file keeps the checked scalar, operator, and modular source identifications
 in the `InfoGeometry.Canonical.Rosetta` namespace without using the umbrella
 facade as the owner.
 -/
+
+attribute [-instance] InfoGeometry.Quantum.RealMajoranaCategory.RealMajoranaCore.instAddCommGroup
+attribute [-instance] InfoGeometry.Quantum.RealMajoranaCategory.RealMajoranaCore.instModule
+
+noncomputable section
 
 namespace InfoGeometry.Canonical.Rosetta
 
@@ -25,18 +31,6 @@ variable {E : Type}
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 local notation "Xc" => (InfoGeometry.Quantum.RealMajoranaCategory.cl11DoubledCore E)
-
-noncomputable local instance : NormedAddCommGroup Xc := by
-  change NormedAddCommGroup (InfoGeometry.Krein.DoubledSpace E)
-  infer_instance
-
-noncomputable local instance : NormedSpace ℝ Xc := by
-  change NormedSpace ℝ (InfoGeometry.Krein.DoubledSpace E)
-  infer_instance
-
-noncomputable local instance : CompleteSpace Xc := by
-  change CompleteSpace (InfoGeometry.Krein.DoubledSpace E)
-  infer_instance
 
 /--
 In the concrete real-Majorana doubled model, the legacy modular axis
@@ -125,7 +119,8 @@ private theorem rosetta_source_tension_three_presentations
     (hAnom : CBA.CI.chiralAnomalyOperator ≠ 0)
     (M : TopologicalMajoranaShadow Xc)
     (epsCLM : Xc →L[ℝ] Xc)
-    (hSigmaMap : ∀ t : ℝ, (M.sigma t : Xc →L[ℝ] Xc) = Cl11Shadow.sigmaMap epsCLM t)
+    (hSigmaMap : ∀ t : ℝ,
+      (M.sigma t).toContinuousLinearMap = Cl11Shadow.sigmaMap epsCLM t)
     (U : Xc ≃L[ℝ] Xc) :
     InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E) = InfoGeometry.Krein.dilationOperator (E := E) ∧
       CBA.IsVolumePreservingPart CBA.M ∧
@@ -183,7 +178,8 @@ private theorem modularCPT_source_rosetta
     (hAnom : CBA.CI.chiralAnomalyOperator ≠ 0)
     (M : TopologicalMajoranaShadow Xc)
     (epsCLM : Xc →L[ℝ] Xc)
-    (hSigmaMap : ∀ t : ℝ, (M.sigma t : Xc →L[ℝ] Xc) = Cl11Shadow.sigmaMap epsCLM t)
+    (hSigmaMap : ∀ t : ℝ,
+      (M.sigma t).toContinuousLinearMap = Cl11Shadow.sigmaMap epsCLM t)
     (U : Xc ≃L[ℝ] Xc) :
     InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E) = InfoGeometry.Krein.dilationOperator (E := E) ∧
       CBA.IsVolumePreservingPart CBA.M ∧

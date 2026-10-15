@@ -91,11 +91,10 @@ theorem matrixSpinRepresentation_commutes_chirality55 (g : ChevalleySpin55) :
           InfoGeometry.Clifford.SpinorRep.SpinorMatrix 5 =>
         F (spinGroupTransport g : Clifford55.Cl55))
       Clifford55.cl55SpinorAlgEquiv_toAlgHom_eq_representation
-    simpa using h
+    simpa using h.symm
   rw [hrep]
-  simpa only [spinGroupTransportEquiv_apply] using
-    (Cl55SpinGroupChiralityBridge.spinGroup_matrix_commutes_chirality55
-      (spinGroupTransportEquiv g))
+  exact Cl55SpinGroupChiralityBridge.spinGroup_matrix_commutes_chirality55
+    (spinGroupTransport g)
 
 theorem matrixSpinRepresentation_commutes_chiralPlusProjector
     (g : ChevalleySpin55) :

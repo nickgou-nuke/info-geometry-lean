@@ -479,8 +479,9 @@ theorem rapidityRelaxation_hasDerivAt (γ u t : ℝ) :
       (-γ * rapidityRelaxation γ t u) t := by
   unfold rapidityRelaxation
   have hinner : HasDerivAt (fun s : ℝ => -γ * s) (-γ) t := by
-    convert (hasDerivAt_const t (-γ)).mul (hasDerivAt_id t) using 1
-    ring
+    convert (hasDerivAt_id t).const_mul (-γ) using 1
+    · ext s; rfl
+    · ring
   have hexp := (Real.hasDerivAt_exp (-γ * t)).comp t hinner
   convert hexp.const_mul u using 1
   · funext s
@@ -500,7 +501,10 @@ theorem rapidityRelaxation_tendsto_zero {γ u : ℝ} (hγ : 0 < γ) :
     have hlinear : Tendsto (fun t : ℝ => γ * t) atTop atTop :=
       Filter.Tendsto.const_mul_atTop hγ Filter.tendsto_id
     have hexp := Real.tendsto_exp_neg_atTop_nhds_zero.comp hlinear
-    simpa only [Function.comp_apply, neg_mul] using hexp
+    convert hexp using 1
+    ext s
+    dsimp
+    ring
   simpa [mul_zero] using h_exp.mul_const u
 
 /-! ## Unified geometric corridor

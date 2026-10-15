@@ -97,13 +97,15 @@ theorem paper_pom_microcanonical_two_temperature_escort_orbit_entropy_monotone :
   · intro γ _hγ
     exact pom_microcanonical_two_temperature_escort_orbit_entropy_monotone_unique_orbit γ
   · intro a ha b hb hab
-    simpa [pom_microcanonical_two_temperature_escort_orbit_entropy_monotone_entropy] using hab
-  · simpa [pom_microcanonical_two_temperature_escort_orbit_entropy_monotone_entropy] using
-      continuousOn_id
-  · simpa [pom_microcanonical_two_temperature_escort_orbit_entropy_monotone_orbit] using
-      ((continuousAt_id : ContinuousAt (fun γ : ℝ => γ) (1 : ℝ)).tendsto.mono_left
-        (nhdsWithin_le_nhds :
-          nhdsWithin (1 : ℝ) (Set.Ioi (1 : ℝ)) ≤ nhds (1 : ℝ)))
+    simpa [pom_microcanonical_two_temperature_escort_orbit_entropy_monotone_entropy,
+      pom_microcanonical_two_temperature_escort_orbit_entropy_monotone_orbit] using hab
+  · change ContinuousOn (fun γ : ℝ => γ) (Set.Ioi (1 : ℝ))
+    exact continuousOn_id
+  · change Filter.Tendsto (fun γ : ℝ => γ)
+      (nhdsWithin (1 : ℝ) (Set.Ioi (1 : ℝ))) (nhds (1 : ℝ))
+    exact ((continuousAt_id : ContinuousAt (fun γ : ℝ => γ) (1 : ℝ)).tendsto).mono_left
+      (nhdsWithin_le_nhds :
+        nhdsWithin (1 : ℝ) (Set.Ioi (1 : ℝ)) ≤ nhds (1 : ℝ))
   · intro h hh
     refine ⟨h, ⟨hh, by
       simp [pom_microcanonical_two_temperature_escort_orbit_entropy_monotone_entropy,

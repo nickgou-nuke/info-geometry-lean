@@ -26,6 +26,8 @@ variable {α : Type*} [Fintype α]
 
 abbrev Chart (α : Type*) := EuclideanSpace ℝ α
 
+-- Use the same PiLp chart structures as the coordinate-log calculus owner.
+-- Keep the differential structures on this chart aligned with the calculus owner.
 def coordinateSurprisalPotential (i : α) : Chart α → ℝ :=
   fun x => -coordinateLogPotential i x
 
@@ -33,8 +35,9 @@ theorem hasFDerivAt_coordinateSurprisalPotential
     (i : α) {x : Chart α} (hx : x i ≠ 0) :
     HasFDerivAt (coordinateSurprisalPotential i)
       (-((1 / x i) • coordinateCLM i)) x := by
-  simpa [coordinateSurprisalPotential] using
-    (hasFDerivAt_coordinateLogPotential i hx).neg
+  convert (hasFDerivAt_coordinateLogPotential i hx).neg using 1
+  ext y
+  rfl
 
 theorem coordinateSurprisalPotential_contDiffOn
     (i : α) :

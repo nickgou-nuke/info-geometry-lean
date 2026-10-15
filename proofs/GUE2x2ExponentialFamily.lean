@@ -740,7 +740,7 @@ theorem wignerSurmise_variance :
       MeasureTheory.Integrable (fun s : ℝ => (s ^ 2 : ℝ) * wignerSurmiseGUE s - (2 : ℝ) * (s * wignerSurmiseGUE s))
         (MeasureTheory.volume.restrict (Set.Ioi (0 : ℝ))) := by
     have hsub := hS2Int.sub (hSInt.const_mul (2 : ℝ))
-    simpa using hsub
+    exact hsub.congr (Filter.Eventually.of_forall fun _ => rfl)
   have hrew :
       ∫ s in Set.Ioi (0 : ℝ), (s - 1)^2 * wignerSurmiseGUE s
         = ∫ s in Set.Ioi (0 : ℝ), (s ^ 2 : ℝ) * wignerSurmiseGUE s - (2 : ℝ) * (s * wignerSurmiseGUE s) + wignerSurmiseGUE s := by

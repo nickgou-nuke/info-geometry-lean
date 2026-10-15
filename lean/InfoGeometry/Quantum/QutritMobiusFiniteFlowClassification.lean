@@ -21,7 +21,7 @@ anyon representation, or spacetime-orientation claim is introduced here.
 
 noncomputable section
 
-open scoped Matrix.Norms.Operator
+open scoped Matrix.Norms.Frobenius
 
 namespace InfoGeometry.Quantum.QutritMobiusFiniteFlowClassification
 
@@ -147,16 +147,21 @@ private theorem exp_eq_one_add_of_sq_eq_zero
   rw [tsum_eq_sum (s := Finset.range 2)]
   · simp [Finset.range, pow_zero, pow_one, add_comm]
   · intro n hn
-    have h2n : 2 ≤ n := by simpa using hn
+    have h2n : 2 ≤ n := by
+      exact Nat.succ_le_of_lt (by simpa using hn)
     have hpow2 : (t • G) ^ 2 = 0 := by
       rw [pow_two, smul_mul_assoc, mul_smul_comm, smul_smul, hSq, smul_zero]
     rw [pow_eq_zero_of_le h2n hpow2, smul_zero]
+
+private lemma complexifyRealMat2_eq_matrixMap (A : Matrix (Fin 2) (Fin 2) ℝ) :
+    complexifyRealMat2 A = A.map Complex.ofRealHom := by
+  ext i j
+  simp [complexifyRealMat2, Matrix.map_apply]
 
 private theorem generator_sq_elliptic :
     (qutritMobiusGenerator 0).matrix * (qutritMobiusGenerator 0).matrix = -(1 : M2C) := by
   have h := congrArg (fun A : Matrix (Fin 2) (Fin 2) ℝ => A.map Complex.ofRealHom)
     (qutritMobiusOperator_sq (0 : Fin 3))
-  dsimp only at h
   rw [Matrix.map_mul] at h
   simp only [qutritOpSquareClass,
     InfoGeometry.Clifford.OpSquareTriadBridge.opSquareScalar, neg_smul, one_smul] at h
@@ -165,27 +170,27 @@ private theorem generator_sq_elliptic :
     by_cases hij : i = j <;> simp [hij]
   rw [hrhs] at h
   rw [qutritMobiusGenerator_matrix_eq_operator]
-  simpa [complexifyRealMat2, qutritOpSquareClass,
-    InfoGeometry.Clifford.OpSquareTriadBridge.opSquareScalar, Matrix.map_one] using h
+  rw [complexifyRealMat2_eq_matrixMap]
+  exact h
 
 private theorem generator_sq_parabolic :
     (qutritMobiusGenerator 1).matrix * (qutritMobiusGenerator 1).matrix = (0 : M2C) := by
   have h := congrArg (fun A : Matrix (Fin 2) (Fin 2) ℝ => A.map Complex.ofRealHom)
     (qutritMobiusOperator_sq (1 : Fin 3))
-  dsimp only at h
   rw [Matrix.map_mul] at h
   rw [qutritMobiusGenerator_matrix_eq_operator]
-  simpa [complexifyRealMat2, qutritOpSquareClass,
+  rw [complexifyRealMat2_eq_matrixMap]
+  simpa [qutritOpSquareClass,
     InfoGeometry.Clifford.OpSquareTriadBridge.opSquareScalar, Matrix.map_one] using h
 
 private theorem generator_sq_hyperbolic :
     (qutritMobiusGenerator 2).matrix * (qutritMobiusGenerator 2).matrix = (1 : M2C) := by
   have h := congrArg (fun A : Matrix (Fin 2) (Fin 2) ℝ => A.map Complex.ofRealHom)
     (qutritMobiusOperator_sq (2 : Fin 3))
-  dsimp only at h
   rw [Matrix.map_mul] at h
   rw [qutritMobiusGenerator_matrix_eq_operator]
-  simpa [complexifyRealMat2, qutritOpSquareClass,
+  rw [complexifyRealMat2_eq_matrixMap]
+  simpa [qutritOpSquareClass,
     InfoGeometry.Clifford.OpSquareTriadBridge.opSquareScalar, Matrix.map_one] using h
 
 /-- Elliptic finite flow in the qutrit Möbius triad. -/
@@ -201,22 +206,27 @@ def hyperbolicMatrixFlow (t : ℝ) : M2C := qutritMobiusMatrixFlow 2 (t : ℂ)
 theorem ellipticMatrixFlow_closedForm (t : ℝ) :
     ellipticMatrixFlow t =
       (Real.cos t : ℂ) • (1 : M2C) + (Real.sin t : ℂ) • (qutritMobiusGenerator 0).matrix := by
-  simpa [ellipticMatrixFlow, qutritMobiusMatrixFlow, matrixExpFlow] using
-    (exp_eq_cos_add_sin_of_sq_eq_neg_one generator_sq_elliptic (t : ℂ))
+  simpa [ellipticMatrixFlow, qutritMobiusMatrixFlow,
+    Complex.ofReal_cos, Complex.ofReal_sin] using
+    (matrixExpFlow_eq_cos_add_sin_of_sq_eq_neg_one
+      ((qutritMobiusGenerator 0).matrix) generator_sq_elliptic (t : ℂ))
 
 /-- Exact polynomial closed form of the square-zero parabolic exponential. -/
 theorem parabolicMatrixFlow_closedForm (t : ℝ) :
     parabolicMatrixFlow t = (1 : M2C) + (t : ℂ) • (qutritMobiusGenerator 1).matrix := by
-  simpa [parabolicMatrixFlow, qutritMobiusMatrixFlow, matrixExpFlow] using
-    (exp_eq_one_add_of_sq_eq_zero generator_sq_parabolic (t : ℂ))
+  simpa [parabolicMatrixFlow, qutritMobiusMatrixFlow] using
+    (matrixExpFlow_eq_one_add_of_sq_eq_zero
+      ((qutritMobiusGenerator 1).matrix) generator_sq_parabolic (t : ℂ))
 
 /-- Exact hyperbolic closed form of the involutive matrix exponential. -/
 theorem hyperbolicMatrixFlow_closedForm (t : ℝ) :
     hyperbolicMatrixFlow t =
       (Real.cosh t : ℂ) • (1 : M2C) +
         (Real.sinh t : ℂ) • (qutritMobiusGenerator 2).matrix := by
-  simpa [hyperbolicMatrixFlow, qutritMobiusMatrixFlow, matrixExpFlow] using
-    (exp_eq_cosh_add_sinh_of_sq_eq_one generator_sq_hyperbolic (t : ℂ))
+  simpa [hyperbolicMatrixFlow, qutritMobiusMatrixFlow,
+    Complex.ofReal_cosh, Complex.ofReal_sinh] using
+    (matrixExpFlow_eq_cosh_add_sinh_of_sq_eq_one
+      ((qutritMobiusGenerator 2).matrix) generator_sq_hyperbolic (t : ℂ))
 
 
 /-- Elliptic flow as a determinant-one finite Möbius matrix. -/

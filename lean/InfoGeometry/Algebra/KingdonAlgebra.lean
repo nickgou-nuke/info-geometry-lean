@@ -74,7 +74,7 @@ inductive Relation (B : LinearMap.BilinForm R V) : Ambient R V → Ambient R V �
         (ambientGenerator R V w * (ambientGenerator R V v * ambientGenerator R V u))
 
 /-- The smallest additive and multiplicative congruence containing the Kingdon relations. -/
-def congruence (B : LinearMap.BilinForm R V) : RingCon (Ambient R V) :=
+noncomputable def congruence (B : LinearMap.BilinForm R V) : RingCon (Ambient R V) :=
   ringConGen (Relation R V B)
 
 /-- The Kingdon algebra associated to the bilinear form `B`. -/
@@ -87,7 +87,7 @@ variable [CommRing R] [AddCommGroup V] [Module R V]
 variable (B : LinearMap.BilinForm R V)
 
 /-- The quotient map from the unital free nonassociative ambient ring. -/
-def mk (x : Ambient R V) : Algebra R V B :=
+noncomputable def mk (x : Ambient R V) : Algebra R V B :=
   RingCon.toQuotient x
 
 @[simp] theorem mk_zero : mk B (0 : Ambient R V) = 0 := rfl
@@ -451,12 +451,13 @@ theorem ambientLift_respects [Module R A] [IsScalarTower R A A] [SMulCommClass R
 /-- A relation-respecting ambient homomorphism kills the generated Kingdon congruence. -/
 theorem congruence_le_ker (f : Ambient R V →+* A) (hf : Respects B f) :
     congruence R V B ≤ RingCon.ker f := by
-  apply RingCon.ringConGen_le
+  change ringConGen (Relation R V B) ≤ RingCon.ker f
+  rw [RingCon.ringConGen_le]
   intro x y hxy
   exact (RingCon.ker_apply f).2 (hf hxy)
 
 /-- The homomorphism from the Kingdon quotient induced by a relation-respecting ambient map. -/
-def lift (f : Ambient R V →+* A) (hf : Respects B f) : Algebra R V B →+* A :=
+noncomputable def lift (f : Ambient R V →+* A) (hf : Respects B f) : Algebra R V B →+* A :=
   (congruence R V B).lift f (congruence_le_ker B f hf)
 
 /-- The Kingdon homomorphism induced by a linear map satisfying the target identities. -/
@@ -536,9 +537,9 @@ theorem liftOfLinear_unique [Module R A] [IsScalarTower R A A] [SMulCommClass R 
     (ambientLift_respects B θ hleft hright hquad hanti)
   intro x
   rcases x with ⟨r, a⟩
-  change g (mk B (r, a)) =
+  change g (mk B (⟨r, a⟩ : Ambient R V)) =
     r • (1 : A) + (FreeNonUnitalNonAssocAlgebra.lift R θ) a
-  conv_lhs => rw [← Unitization.inl_fst_add_inr_snd_eq (r, a)]
+  conv_lhs => rw [← Unitization.inl_fst_add_inr_snd_eq (⟨r, a⟩ : Ambient R V)]
   rw [mk_add, map_add, hg_scalar]
   change r • (1 : A) + freeMap a = _
   rw [hfree]

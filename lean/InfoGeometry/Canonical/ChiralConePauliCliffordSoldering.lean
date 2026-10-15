@@ -297,11 +297,11 @@ def cl3Dot (x y : Cl3Vector) : ℂ :=
   x 0 * y 0 + x 1 * y 1 + x 2 * y 2
 
 noncomputable def cl3Quadratic : QuadraticForm ℂ Cl3Vector :=
-  Matrix.toQuadraticMap' (Matrix.diagonal (fun _ : Fin 3 => (1 : ℂ)))
+  Matrix.toQuadraticForm' (Matrix.diagonal (fun _ : Fin 3 => (1 : ℂ)))
 
 theorem cl3Quadratic_apply (x : Cl3Vector) :
     cl3Quadratic x = cl3Dot x x := by
-  simp [cl3Quadratic, cl3Dot, Matrix.toQuadraticMap',
+  simp [cl3Quadratic, cl3Dot, Matrix.toQuadraticForm',
     Matrix.toLinearMap₂'_apply, Matrix.diagonal, Fin.sum_univ_three]
 
 def cl3Generator (x : Cl3Vector) : CliffordAlgebra cl3Quadratic :=

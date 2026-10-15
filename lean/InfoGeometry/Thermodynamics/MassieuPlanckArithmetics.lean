@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Exp
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.Tactic
 
 namespace InfoGeometry.Thermodynamics.MassieuPlanckArithmetics
@@ -56,10 +56,11 @@ theorem massieuZ_pos (θ : ℝ) : 0 < massieuZ θ := by
   positivity
 
 theorem softmax_zero : softmax 0 = 1 / 2 := by
-  simp [softmax, massieuZ]
+  norm_num [softmax, massieuZ]
 
 theorem fisher_curvature_at_zero : fisherCurvature 0 = 1 / 4 := by
-  simp [fisherCurvature, softmax_zero]
+  rw [fisherCurvature, softmax_zero]
+  norm_num
 
 theorem fisher_curvature_le_quarter (p : ℝ) :
     p * (1 - p) ≤ 1 / 4 := by

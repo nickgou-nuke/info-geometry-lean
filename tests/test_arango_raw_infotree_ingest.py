@@ -77,7 +77,6 @@ def test_raw_infotree_edges_preserve_projection_descent(tmp_path: Path) -> None:
     assert edges["raw_infotree_payload_field_edges"][0]["_from"] == "raw_infotree_payloads/p0"
     assert edges["raw_infotree_node_mctx_ref_edges"][0]["_to"] == "raw_infotree_mctx_refs/mr0"
     assert edges["raw_infotree_mctx_decl_edges"][0]["_from"] == "raw_infotree_mctx_refs/mr0"
-
     lctx_refs = edges["raw_infotree_source_lctx_ref_edges"]
     assert lctx_refs[0]["_from"] == "raw_infotree_mctx_decls/md0"
     assert lctx_refs[0]["_to"] == "raw_infotree_lctx_refs/lr0"

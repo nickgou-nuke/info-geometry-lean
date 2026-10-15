@@ -27,7 +27,7 @@ theorem id_is_o55_isometric (R : Type*) [CommRing R] :
 theorem neg_one_is_o55_isometric (R : Type*) [CommRing R] :
     isO55Isometric R (-1) := by
   dsimp [isO55Isometric]
-  rw [Matrix.transpose_neg, Matrix.transpose_one]
+  simp only [Matrix.transpose_one]
   simp
 
 /-- **Теорема 2 (ГРУПОВО ЗАТВАРЯНЕ)**:

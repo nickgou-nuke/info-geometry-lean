@@ -125,10 +125,8 @@ theorem zornConj_zero : zornConj 0 = 0 := by
   apply ZornMatrixReal.ext
   · rfl
   · rfl
-  · dsimp [zornConj, smul, ZornMatrixReal.zero]
-    congr 1 <;> ring
-  · dsimp [zornConj, smul, ZornMatrixReal.zero]
-    congr 1 <;> ring
+  · ext <;> dsimp [zornConj, smul, ZornMatrixReal.zero] <;> ring
+  · ext <;> dsimp [zornConj, smul, ZornMatrixReal.zero] <;> ring
 
 theorem zornConj_one : zornConj (1 : ZornMatrixReal) = 1 := by
   change zornConj ZornMatrixReal.one = ZornMatrixReal.one
@@ -181,8 +179,8 @@ theorem zornConj_fixed_iff (A : ZornMatrixReal) :
     apply ZornMatrixReal.ext
     · exact hab.symm
     · exact hab
-    · simp [zornConj, smul, hu]
-    · simp [zornConj, smul, hv]
+    · ext <;> simp [zornConj, smul, hu]
+    · ext <;> simp [zornConj, smul, hv]
 
 theorem zornConj_norm (A : ZornMatrixReal) :
     (zornConj A).norm = A.norm := by

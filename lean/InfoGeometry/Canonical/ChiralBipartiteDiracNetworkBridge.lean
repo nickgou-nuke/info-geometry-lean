@@ -68,6 +68,7 @@ def networkLaplacian (B : Matrix e v ℝ) : EndCochain v e :=
     Dminus B * Dminus B = 0 := by
   exact codifferential_sq B
 
+omit [DecidableEq v] [DecidableEq e] in
 theorem Dnet_eq_graphDirac (B : Matrix e v ℝ) :
     Dnet B = graphDirac B := by
   rfl
@@ -75,8 +76,8 @@ theorem Dnet_eq_graphDirac (B : Matrix e v ℝ) :
 /-- The network square is exactly the chiral anticommutator. -/
 theorem Dnet_sq_eq_networkLaplacian (B : Matrix e v ℝ) :
     Dnet B * Dnet B = networkLaplacian B := by
-  simpa [Dnet, networkLaplacian, Dplus, Dminus] using
-    (graphDirac_sq B)
+  rw [Dnet_eq_graphDirac, graphDirac_sq]
+  rfl
 
 /-- Pointwise form of the two Laplacian blocks B^T B and B B^T. -/
 theorem Dnet_square_blocks

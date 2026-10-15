@@ -168,8 +168,7 @@ def densityMatrixOfOpFromNonzero
 
 theorem rightGram_isHermitian (A : PauliBlock) :
     (rightGram A).IsHermitian := by
-  simpa only [Matrix.conjTranspose_conjTranspose] using
-    Matrix.isHermitian_conjTranspose_mul_self Aᴴ
+  exact Matrix.isHermitian_mul_conjTranspose_self A
 
 theorem rightGram_posSemidef (A : PauliBlock) :
     (rightGram A).PosSemidef := by
@@ -278,12 +277,17 @@ theorem gram_complexPositive (A : PauliBlock) : ComplexPositive (gram A) := by
   change 0 ≤ (star x ⬝ᵥ ((Aᴴ * A) *ᵥ x)).re
   rw [← Matrix.mulVec_mulVec, Matrix.dotProduct_mulVec,
     Matrix.vecMul_conjTranspose, star_star]
+  have hnorm (z : ℂ) : ‖z‖ ^ 2 = (star z * z).re := by
+    rw [Complex.sq_norm, Complex.normSq_apply]
+    simp only [RCLike.star_def, Complex.conj_re, Complex.conj_im, Complex.mul_re]
+    ring
   calc
     0 ≤ ∑ i : Fin 2, ‖(A *ᵥ x) i‖ ^ 2 := by positivity
     _ = (star (A *ᵥ x) ⬝ᵥ (A *ᵥ x)).re := by
-      simp only [Fin.sum_univ_two, dotProduct]
-      rw [Complex.sq_norm, Complex.sq_norm]
-      simp [Complex.normSq_apply]
+      rw [Fin.sum_univ_two]
+      simp only [dotProduct, Fin.sum_univ_two, Complex.add_re]
+      simp only [Pi.star_apply]
+      rw [← hnorm ((A *ᵥ x) 0), ← hnorm ((A *ᵥ x) 1)]
 
 /-! ## 2. Pauli/Bloch finite cone coordinates -/
 

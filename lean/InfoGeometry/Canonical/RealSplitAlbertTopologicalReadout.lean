@@ -120,7 +120,7 @@ theorem continuous_realSplitOct_smul :
 
 theorem continuous_realSplitOct_smul_left (r : ℝ) :
     Continuous (fun X : RealSplitOct => RealSplitOct.smul r X) := by
-  simpa using
+  simpa [Function.comp_def] using
     continuous_realSplitOct_smul.comp
       (continuous_const.prodMk
         (continuous_id : Continuous (id : RealSplitOct → RealSplitOct)))

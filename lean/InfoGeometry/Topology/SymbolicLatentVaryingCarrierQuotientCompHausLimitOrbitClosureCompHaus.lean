@@ -275,8 +275,15 @@ theorem compactIndexedObservationQuotientCompHausLimitOrbitClosureFlowIso_comp
   apply ConcreteCategory.hom_ext
   intro y
   apply Subtype.ext
-  simpa [Category.assoc] using
-    compactIndexedObservationQuotientCompHausLimitOrbitClosureFlowIso_comp_apply
-      D α hα0 hαadd x s t y
+  change
+    (((compactIndexedObservationQuotientCompHausLimitOrbitClosureFlowIso
+      D α hα0 hαadd x s).hom ≫
+        (compactIndexedObservationQuotientCompHausLimitOrbitClosureFlowIso
+          D α hα0 hαadd
+          (compactIndexedObservationQuotientCompHausLimitAction D α s x) t).hom) y).1 =
+      ((compactIndexedObservationQuotientCompHausLimitOrbitClosureFlowIso
+        D α hα0 hαadd x (t + s)).hom y).1
+  exact compactIndexedObservationQuotientCompHausLimitOrbitClosureFlowIso_comp_apply
+    D α hα0 hαadd x s t y
 
 end InfoGeometry.Topology

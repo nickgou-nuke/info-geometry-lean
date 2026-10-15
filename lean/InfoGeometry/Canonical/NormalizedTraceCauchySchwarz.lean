@@ -21,7 +21,8 @@ noncomputable def normalizedTrace (d : ℝ) (M : Matrix n n ℝ) : ℝ :=
 /-- Lemma 1: Trace of Aᵀ * B as double sum of entrywise products ∑ i j, A j i * B j i -/
 lemma trace_transpose_mul (A B : Matrix n n ℝ) :
     trace (A.transpose * B) = ∑ i : n, ∑ j : n, A j i * B j i := by
-  dsimp [trace, mul_apply, transpose]
+  simp only [Matrix.trace, Matrix.diag_apply, Matrix.mul_apply,
+    Matrix.transpose_apply]
 
 /-- Lemma 2: Non-negativity of trace(Aᵀ * A) ≥ 0 -/
 lemma trace_transpose_mul_self_nonneg (A : Matrix n n ℝ) :
@@ -71,7 +72,7 @@ theorem trace_cauchy_schwarz (A B : Matrix n n ℝ) :
   have h_eq : trace (A.transpose * A) * t^2 - 2 * trace (A.transpose * B) * t + trace (B.transpose * B) =
       trace ((t • A - B).transpose * (t • A - B)) := by
     rw [trace_transpose_mul (t • A - B) (t • A - B), trace_transpose_mul A A, trace_transpose_mul A B, trace_transpose_mul B B]
-    dsimp [sub_apply, smul_apply]
+    dsimp [Matrix.sub_apply, Matrix.smul_apply]
     simp only [Finset.mul_sum, Finset.sum_mul, ← Finset.sum_add_distrib, ← Finset.sum_sub_distrib]
     congr 1
     ext i

@@ -38,8 +38,7 @@ noncomputable def colimitObservableTopCatHom :
 theorem colimitObservableTopCatHom_invariant (t : ℤ) :
     colimitEndomorphismTopCatHom D C hC t ≫
         colimitObservableTopCatHom D C hC BoolCat Obs =
-      colimitObservableTopCatHom D C hC BoolCat Obs := by
-  simpa [colimitObservableTopCatHom, colimitEndomorphismTopCatHom] using
-    (colimitObservable_invariant D C hC BoolCat Obs t)
+      colimitObservableTopCatHom D C hC BoolCat Obs :=
+  colimitObservable_invariant D C hC BoolCat Obs t
 
 end InfoGeometry.Topology.ColimitDynamics

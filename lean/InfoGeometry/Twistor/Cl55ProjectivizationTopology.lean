@@ -103,20 +103,32 @@ theorem rayProjectorRep_continuous : Continuous rayProjectorRep := by
   apply continuous_pi
   intro x
   unfold rayProjectorRep euclideanDot55
-  apply Continuous.smul
-  · apply Continuous.div
+  have hscalar : Continuous (fun v : {v : V55 // v ≠ 0} =>
+      (euclideanDot55 v x / euclideanDot55 v v)) := by
+    unfold euclideanDot55
+    apply Continuous.div
     · fun_prop
     · fun_prop
     · intro v
       exact ne_of_gt (euclideanDot55_self_pos v.property)
-  · exact continuous_subtype_val
+  exact Continuous.smul hscalar continuous_subtype_val
 
 theorem rayProjector_continuous :
     @Continuous (ℙ ℝ V55) (V55 → V55)
       (projectivizationQuotientTopology (K := ℝ) (V := V55)) inferInstance
       rayProjector := by
-  rw [continuous_coinduced_dom]
-  simpa [rayProjector, Function.comp_def] using rayProjectorRep_continuous
+  letI : TopologicalSpace (ℙ ℝ V55) :=
+    projectivizationQuotientTopology (K := ℝ) (V := V55)
+  apply continuous_coinduced_dom.mpr
+  let q : {v : V55 // v ≠ 0} → ℙ ℝ V55 :=
+    @Quotient.mk' {v : V55 // v ≠ 0} (projectivizationSetoid ℝ V55)
+  have hq : rayProjector ∘ q = rayProjectorRep := by
+    funext v
+    exact Projectivization.lift_mk rayProjectorRep rayProjectorRep_smul
+      v.1 v.2
+  change Continuous (rayProjector ∘ q)
+  rw [hq]
+  exact rayProjectorRep_continuous
 
 theorem rayProjector_injective : Function.Injective rayProjector := by
   intro p q

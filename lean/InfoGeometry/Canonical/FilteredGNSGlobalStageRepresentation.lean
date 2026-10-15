@@ -21,6 +21,7 @@ noncomputable section
 namespace CStarStateColimit.Native.FilteredGNSGlobalStageRepresentation
 
 set_option synthInstance.maxHeartbeats 80000
+set_option maxHeartbeats 400000
 set_option linter.unusedSectionVars false
 
 open CStarStateColimit.Native
@@ -60,11 +61,7 @@ def globalStageRepresentationStarAlgHom
     Stage i₀ →⋆ₐ[ℂ]
       (GNSHilbertColimit Stage sys ω →L[ℂ]
         GNSHilbertColimit Stage sys ω) :=
-  ((tailHilbertGlobalEquiv Stage sys ω i₀).conjStarAlgEquiv :
-      (HilbertDirectLimit (E i₀) (S i₀) →L[ℂ]
-          HilbertDirectLimit (E i₀) (S i₀)) →⋆ₐ[ℂ]
-        (GNSHilbertColimit Stage sys ω →L[ℂ]
-          GNSHilbertColimit Stage sys ω)).comp
+  ((tailHilbertGlobalEquiv Stage sys ω i₀).conjStarAlgEquiv.toStarAlgHom).comp
     (tailCompletedRepresentationStarAlgHom
       Stage sys ω i₀)
 
@@ -76,6 +73,44 @@ def globalStageRepresentationStarAlgHom
         (tailCompletedRepresentation Stage sys ω a
           ((tailHilbertGlobalEquiv Stage sys ω i₀).symm z)) :=
   rfl
+
+theorem globalStageRepresentation_zero_apply
+    {i₀ : I} (z : GNSHilbertColimit Stage sys ω) :
+    globalStageRepresentationStarAlgHom Stage sys ω i₀ 0 z = 0 := by
+  rw [globalStageRepresentation_apply]
+  have hzero : tailCompletedRepresentation Stage sys ω (0 : Stage i₀) = 0 :=
+    (tailCompletedRepresentationStarAlgHom Stage sys ω i₀).map_zero
+  rw [hzero]
+  simp
+
+theorem globalStageRepresentation_one_apply
+    {i₀ : I} (z : GNSHilbertColimit Stage sys ω) :
+    globalStageRepresentationStarAlgHom Stage sys ω i₀ 1 z = z := by
+  rw [globalStageRepresentation_apply]
+  rw [tailCompletedRepresentation_one]
+  simp
+
+theorem globalStageRepresentation_mul_apply
+    {i₀ : I} (a b : Stage i₀) (z : GNSHilbertColimit Stage sys ω) :
+    globalStageRepresentationStarAlgHom Stage sys ω i₀ (a * b) z =
+      globalStageRepresentationStarAlgHom Stage sys ω i₀ a
+        (globalStageRepresentationStarAlgHom Stage sys ω i₀ b z) := by
+  rw [globalStageRepresentation_apply,
+    globalStageRepresentation_apply,
+    globalStageRepresentation_apply]
+  rw [tailCompletedRepresentation_mul]
+  simp
+
+theorem globalStageRepresentation_add_apply
+    {i₀ : I} (a b : Stage i₀) (z : GNSHilbertColimit Stage sys ω) :
+    globalStageRepresentationStarAlgHom Stage sys ω i₀ (a + b) z =
+      globalStageRepresentationStarAlgHom Stage sys ω i₀ a z +
+        globalStageRepresentationStarAlgHom Stage sys ω i₀ b z := by
+  rw [globalStageRepresentation_apply,
+    globalStageRepresentation_apply,
+    globalStageRepresentation_apply]
+  rw [tailCompletedRepresentation_add]
+  simp
 
 /-- The canonical cofinal unitary strictly intertwines the tail
 representation with its transported global representation. -/

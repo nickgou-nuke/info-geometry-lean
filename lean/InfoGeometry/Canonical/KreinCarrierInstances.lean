@@ -1,5 +1,4 @@
 import InfoGeometry.Canonical.KreinCarrierInstances.Carrier
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.KreinCarrierInstances.Datum
 import InfoGeometry.Canonical.KreinCarrierInstances.RotorFlow
 import InfoGeometry.Canonical.KreinCarrierInstances.CoreProjector

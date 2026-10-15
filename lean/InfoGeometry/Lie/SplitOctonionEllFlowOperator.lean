@@ -52,7 +52,7 @@ theorem diagEllCommutator_coord (Z : CZ) :
   ext <;>
     simp [diagEll, diagEllCommutator, zornPlus, zornMinus, zMul, dot, cross]
   all_goals try { rename_i i; fin_cases i <;>
-    simp [diagEll, diagEllCommutator, zornPlus, zornMinus, zMul, dot, cross] <;>
+    simp <;>
     ring_nf }
 
 noncomputable def diagEllGrading : EndCZ := (1 / 2 : ℝ) • diagEllCommutator
@@ -63,7 +63,7 @@ noncomputable def diagEllGrading : EndCZ := (1 / 2 : ℝ) • diagEllCommutator
 theorem diagEllGrading_coord (Z : CZ) :
     diagEllGrading Z = { a := 0, b := 0, x := Z.x, y := -Z.y } := by
   rw [diagEllGrading_apply, diagEllCommutator_coord]
-  ext <;> simp [smul_eq_mul, Equiv.smul_def, coordEquiv]
+  ext <;> simp [smul_a, smul_b, smul_x, smul_y]
 
 theorem diagEllGrading_sq_coord (Z : CZ) :
     diagEllGrading (diagEllGrading Z) = { a := 0, b := 0, x := Z.x, y := Z.y } := by

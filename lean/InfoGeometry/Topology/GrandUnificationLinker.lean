@@ -1,6 +1,5 @@
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
-import InfoGeometry.Topology.DelaunayFlipInterfaces
 import InfoGeometry.Topology.ThermodynamicGauge
 
 namespace InfoGeometry.Topology.GrandUnificationLinker
@@ -13,8 +12,9 @@ and the thermodynamic gauge readout.
 
 #### BUCKET 1: CLOSED FINITE THEOREMS
 The symmetric mixed element commutes with the DAG edge when both directed flow
-compatibilities are explicit. The left and right nilpotent boundary channels
-collapse under the stated square-zero hypotheses.
+compatibilities are explicit. A generic square-zero element annihilates its
+symmetric-mixed-product sandwich. These are ring identities, not mass-shell or
+scattering-residue statements.
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT PREMISES
 The entropy alignment theorem is conditional on an explicit commutator
@@ -25,38 +25,22 @@ No amplituhedron, Bost-Connes, Wilson-loop, or continuum scattering theorem is
 derived in this finite algebraic file.
 -/
 
-structure QuantumJewel (Op : Type*) [Ring Op] [Star Op] where
-  S_plus : Op
-  S_minus : Op
-  isometry_plus : star S_plus * S_plus = 1
-  isometry_minus : star S_minus * S_minus = 1
-  klein_quadric_plus : S_plus * S_plus = 0
-  klein_quadric_minus : S_minus * S_minus = 0
-  dag_edge : Op
-  thermodynamic_flow : ThermodynamicGauge.CausalNonequilibriumFlow Op
-  compat_flow_plus : dag_edge * S_plus = S_minus * dag_edge
-  compat_flow_minus : dag_edge * S_minus = S_plus * dag_edge
-
 variable {Op : Type*} [Ring Op]
 
-/-- The conservative mixed volume element in this algebraic window. -/
-def amplituhedron_volume_element [Star Op] (jewel : QuantumJewel Op) : Op :=
-  jewel.S_plus * jewel.S_minus + jewel.S_minus * jewel.S_plus
+/-- The symmetric mixed product of two elements in an associative ring. -/
+def symmetric_mixed_element (a b : Op) : Op := a * b + b * a
 
 /-- Entropy-production readout aligned to the log-affinity from an explicit
 commutator comparison. -/
 theorem entropy_alignment
-    [Star Op]
-    (jewel : QuantumJewel Op)
+    (flow : ThermodynamicGauge.CausalNonequilibriumFlow Op)
     (hcomm :
-      jewel.thermodynamic_flow.P_forward * jewel.thermodynamic_flow.P_backward
-        - jewel.thermodynamic_flow.P_backward * jewel.thermodynamic_flow.P_forward =
-          jewel.thermodynamic_flow.d_ln_Q) :
-    ThermodynamicGauge.entropy_production jewel.thermodynamic_flow =
-      jewel.thermodynamic_flow.d_ln_Q := by
+      flow.P_forward * flow.P_backward
+        - flow.P_backward * flow.P_forward = flow.d_ln_Q) :
+    ThermodynamicGauge.entropy_production flow = flow.d_ln_Q := by
   simpa using
     ThermodynamicGauge.de_rham_potential_equals_entropy_production_of_commutator
-      (flow := jewel.thermodynamic_flow) hcomm
+      (flow := flow) hcomm
 
 /--
 A Pachner flip whose commutator is coupled to entropy production is equivalently
@@ -99,171 +83,61 @@ theorem loop_cross_commutation_closure
 
 /-- Gauge covariance passes through the thermodynamic data. -/
 theorem entropy_scale_covariance
-    [Star Op]
-    (jewel : QuantumJewel Op) [Algebra ℝ Op] (l : ℝ) (h_l : l ≠ 0) :
-    (l • jewel.thermodynamic_flow.P_forward) * jewel.thermodynamic_flow.d_ln_Q
-      * ((1 / l) • jewel.thermodynamic_flow.P_backward) =
-      ThermodynamicGauge.thermodynamic_gauge_connection jewel.thermodynamic_flow := by
+    (flow : ThermodynamicGauge.CausalNonequilibriumFlow Op)
+    [Algebra ℝ Op] (l : ℝ) (h_l : l ≠ 0) :
+    (l • flow.P_forward) * flow.d_ln_Q * ((1 / l) • flow.P_backward) =
+      ThermodynamicGauge.thermodynamic_gauge_connection flow := by
   simpa using
     ThermodynamicGauge.gauge_field_covariance
-      (flow := jewel.thermodynamic_flow) l h_l
+      (flow := flow) l h_l
 
-/-- DAG flow compatibility preserves the symmetric mixed volume element. -/
-theorem global_isometry_preservation
-    [Star Op]
-    (jewel : QuantumJewel Op) :
-    jewel.dag_edge * amplituhedron_volume_element jewel =
-      amplituhedron_volume_element jewel * jewel.dag_edge := by
+/-- The two directed intertwining equations imply commutation with the
+symmetric mixed product. -/
+theorem dag_edge_commutes_with_symmetric_mixed
+    (S_plus S_minus dag_edge : Op)
+    (compat_plus : dag_edge * S_plus = S_minus * dag_edge)
+    (compat_minus : dag_edge * S_minus = S_plus * dag_edge) :
+    dag_edge * symmetric_mixed_element S_plus S_minus =
+      symmetric_mixed_element S_plus S_minus * dag_edge := by
   calc
-    jewel.dag_edge * amplituhedron_volume_element jewel
-        = jewel.dag_edge * (jewel.S_plus * jewel.S_minus)
-            + jewel.dag_edge * (jewel.S_minus * jewel.S_plus) := by
-              rw [amplituhedron_volume_element, mul_add]
-    _ = (jewel.dag_edge * jewel.S_plus) * jewel.S_minus +
-          (jewel.dag_edge * jewel.S_minus) * jewel.S_plus := by
+    dag_edge * symmetric_mixed_element S_plus S_minus
+        = dag_edge * (S_plus * S_minus) + dag_edge * (S_minus * S_plus) := by
+              rw [symmetric_mixed_element, mul_add]
+    _ = (dag_edge * S_plus) * S_minus +
+          (dag_edge * S_minus) * S_plus := by
           rw [mul_assoc, mul_assoc]
-    _ = (jewel.S_minus * jewel.dag_edge) * jewel.S_minus +
-          (jewel.S_plus * jewel.dag_edge) * jewel.S_plus := by
-          rw [jewel.compat_flow_plus, jewel.compat_flow_minus]
-    _ = jewel.S_minus * (jewel.dag_edge * jewel.S_minus) +
-          jewel.S_plus * (jewel.dag_edge * jewel.S_plus) := by
+    _ = (S_minus * dag_edge) * S_minus +
+          (S_plus * dag_edge) * S_plus := by
+          rw [compat_plus, compat_minus]
+    _ = S_minus * (dag_edge * S_minus) +
+          S_plus * (dag_edge * S_plus) := by
           rw [← mul_assoc, ← mul_assoc]
-    _ = jewel.S_minus * (jewel.S_plus * jewel.dag_edge) +
-          jewel.S_plus * (jewel.S_minus * jewel.dag_edge) := by
-          rw [jewel.compat_flow_minus, jewel.compat_flow_plus]
-    _ = jewel.S_minus * jewel.S_plus * jewel.dag_edge +
-          jewel.S_plus * jewel.S_minus * jewel.dag_edge := by
+    _ = S_minus * (S_plus * dag_edge) +
+          S_plus * (S_minus * dag_edge) := by
+          rw [compat_minus, compat_plus]
+    _ = S_minus * S_plus * dag_edge + S_plus * S_minus * dag_edge := by
           rw [mul_assoc, mul_assoc]
-    _ = jewel.S_plus * jewel.S_minus * jewel.dag_edge +
-          jewel.S_minus * jewel.S_plus * jewel.dag_edge := by
+    _ = S_plus * S_minus * dag_edge + S_minus * S_plus * dag_edge := by
           rw [add_comm]
-    _ = (jewel.S_plus * jewel.S_minus + jewel.S_minus * jewel.S_plus) * jewel.dag_edge := by
-          rw [add_mul, mul_assoc]
+    _ = symmetric_mixed_element S_plus S_minus * dag_edge := by
+          rw [symmetric_mixed_element, add_mul]
 
-/-- On-shell collapse under `S_plus^2 = 0`. -/
-theorem on_shell_boundary_collapse
-    [Star Op]
-    (jewel : QuantumJewel Op) :
-    jewel.S_plus * amplituhedron_volume_element jewel * jewel.S_plus = 0 := by
+/-- A square-zero element annihilates its sandwich with the symmetric mixed
+product, in any associative ring. -/
+theorem nilpotent_sandwich_zero (N X : Op) (hN : N * N = 0) :
+    N * symmetric_mixed_element N X * N = 0 := by
   calc
-    jewel.S_plus * amplituhedron_volume_element jewel * jewel.S_plus
-      = (jewel.S_plus * (jewel.S_plus * jewel.S_minus + jewel.S_minus * jewel.S_plus)) * jewel.S_plus := by
-          rw [amplituhedron_volume_element, mul_assoc]
-    _ = (jewel.S_plus * (jewel.S_plus * jewel.S_minus)
-          + jewel.S_plus * (jewel.S_minus * jewel.S_plus)) * jewel.S_plus := by
-          rw [mul_add]
-    _ = (jewel.S_plus * (jewel.S_plus * jewel.S_minus)) * jewel.S_plus +
-          (jewel.S_plus * (jewel.S_minus * jewel.S_plus)) * jewel.S_plus := by
-          rw [add_mul]
-    _ = jewel.S_plus * jewel.S_plus * jewel.S_minus * jewel.S_plus
-          + jewel.S_plus * jewel.S_minus * jewel.S_plus * jewel.S_plus := by
-          simp [mul_assoc]
+    N * symmetric_mixed_element N X * N
+        = (N * (N * X)) * N + (N * (X * N)) * N := by
+          simp [symmetric_mixed_element, mul_add, add_mul]
     _ = 0 := by
-          have hp1 : jewel.S_plus * jewel.S_plus * jewel.S_minus * jewel.S_plus = 0 := by
-            rw [mul_assoc]
-            rw [jewel.klein_quadric_plus]
-            simp
-          have hp2 : jewel.S_plus * jewel.S_minus * jewel.S_plus * jewel.S_plus = 0 := by
-            rw [mul_assoc]
-            rw [jewel.klein_quadric_plus]
-            simp
-          rw [hp1, hp2]
-          simp
-
-/-- On-shell collapse under `S_minus^2 = 0`. -/
-theorem on_shell_boundary_collapse_minus
-    [Star Op]
-    (jewel : QuantumJewel Op) :
-    jewel.S_minus * amplituhedron_volume_element jewel * jewel.S_minus = 0 := by
-  calc
-    jewel.S_minus * amplituhedron_volume_element jewel * jewel.S_minus
-      = (jewel.S_minus * (jewel.S_plus * jewel.S_minus + jewel.S_minus * jewel.S_plus)) * jewel.S_minus := by
-          rw [amplituhedron_volume_element, mul_assoc]
-    _ = (jewel.S_minus * (jewel.S_plus * jewel.S_minus)
-          + jewel.S_minus * (jewel.S_minus * jewel.S_plus)) * jewel.S_minus := by
-          rw [mul_add]
-    _ = (jewel.S_minus * (jewel.S_plus * jewel.S_minus)) * jewel.S_minus +
-          (jewel.S_minus * (jewel.S_minus * jewel.S_plus)) * jewel.S_minus := by
-          rw [add_mul]
-    _ = jewel.S_minus * jewel.S_plus * jewel.S_minus * jewel.S_minus
-          + jewel.S_minus * jewel.S_minus * jewel.S_plus * jewel.S_minus := by
-          simp [mul_assoc]
-    _ = 0 := by
-          have hm1 : jewel.S_minus * jewel.S_plus * jewel.S_minus * jewel.S_minus = 0 := by
-            rw [mul_assoc]
-            rw [jewel.klein_quadric_minus]
-            simp
-          have hm2 : jewel.S_minus * jewel.S_minus * jewel.S_plus * jewel.S_minus = 0 := by
-            rw [mul_assoc]
-            rw [jewel.klein_quadric_minus]
-            simp
-          rw [hm1, hm2]
-          simp
-
-/-- Both nilpotent boundary channels collapse. -/
-theorem on_shell_boundary_collapse_pair
-    [Star Op]
-    (jewel : QuantumJewel Op) :
-    jewel.S_plus * amplituhedron_volume_element jewel * jewel.S_plus = 0 ∧
-      jewel.S_minus * amplituhedron_volume_element jewel * jewel.S_minus = 0 :=
-  ⟨on_shell_boundary_collapse jewel, on_shell_boundary_collapse_minus jewel⟩
-
-variable {n : ℕ}
-
-/-- An explicitly supplied Delaunay/Pachner flip equivalence preserves the Rohozhkin matrix. -/
-theorem rohozhkin_matrix_invariant
-    (before after : InfoGeometry.Topology.Delaunay.DelaunayFlipWord n)
-    (flip_equiv : InfoGeometry.Topology.Delaunay.DelaunayEquiv before after) :
-    InfoGeometry.Topology.Delaunay.rohozhkinMatrix before =
-      InfoGeometry.Topology.Delaunay.rohozhkinMatrix after :=
-  InfoGeometry.Topology.Delaunay.rohozhkinMatrix_respects_flip_word_equiv
-    flip_equiv
-
-/-- The closed DAG-flow volume preservation theorem for a supplied jewel. -/
-theorem dag_volume_preserved
-    [Star Op]
-    (jewel : QuantumJewel Op) :
-    jewel.dag_edge * amplituhedron_volume_element jewel =
-      amplituhedron_volume_element jewel * jewel.dag_edge :=
-  global_isometry_preservation jewel
-
-/--
-Combined finite readout: the Delaunay matrix invariant and the linker volume
-invariant hold together for explicit supplied data.
--/
-theorem pachner_linker_readout
-    [Star Op]
-    (before after : InfoGeometry.Topology.Delaunay.DelaunayFlipWord n)
-    (flip_equiv : InfoGeometry.Topology.Delaunay.DelaunayEquiv before after)
-    (jewel : QuantumJewel Op) :
-    InfoGeometry.Topology.Delaunay.rohozhkinMatrix before =
-        InfoGeometry.Topology.Delaunay.rohozhkinMatrix after ∧
-      jewel.dag_edge * amplituhedron_volume_element jewel =
-        amplituhedron_volume_element jewel * jewel.dag_edge :=
-  ⟨rohozhkin_matrix_invariant before after flip_equiv, dag_volume_preserved jewel⟩
-
-/--
-Conditional thermodynamic readout alongside an explicitly supplied Delaunay/Pachner
-equivalence.
-
-The equality with `d_ln_Q` is not derived from Delaunay geometry here; it is
-read back from the explicit commutator comparison supplied for the jewel's
-thermodynamic flow.  The flip equivalence is included so this theorem has the
-same finite owner surface as the Pachner readout, without hiding it in a packet.
--/
-theorem entropy_production_eq_dlnQ
-    [Star Op]
-    (before after : InfoGeometry.Topology.Delaunay.DelaunayFlipWord n)
-    (_flip_equiv : InfoGeometry.Topology.Delaunay.DelaunayEquiv before after)
-    (jewel : QuantumJewel Op)
-    (hcomm :
-      jewel.thermodynamic_flow.P_forward *
-          jewel.thermodynamic_flow.P_backward -
-        jewel.thermodynamic_flow.P_backward *
-          jewel.thermodynamic_flow.P_forward =
-        jewel.thermodynamic_flow.d_ln_Q) :
-    ThermodynamicGauge.entropy_production jewel.thermodynamic_flow =
-      jewel.thermodynamic_flow.d_ln_Q :=
-  entropy_alignment jewel hcomm
+          have hleft : N * (N * X) = 0 := by
+            rw [← mul_assoc, hN, zero_mul]
+          have hright : (N * (X * N)) * N = 0 := by
+            calc
+              (N * (X * N)) * N = N * (X * (N * N)) := by
+                simp only [mul_assoc]
+              _ = 0 := by simp [hN]
+          rw [hleft, zero_mul, hright, add_zero]
 
 end InfoGeometry.Topology.GrandUnificationLinker

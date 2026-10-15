@@ -33,7 +33,6 @@ theorem symbolicObservationQuotientCompHausHomOfMorphism_eq_reversal
       R.toQuotientCompHausHom h_cont := by
   apply ConcreteCategory.hom_ext
   intro q
-  rw [symbolicObservationQuotientCompHausHomOfMorphism_apply]
   change F.quotientMap q =
     descendedSymbolicLatentObservationInvolution R q
   exact hF q

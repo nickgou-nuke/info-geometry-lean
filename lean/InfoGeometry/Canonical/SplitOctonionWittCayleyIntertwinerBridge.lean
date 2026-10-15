@@ -40,11 +40,10 @@ def coordinateCayleyMat : Mat8 :=
 theorem sectorwiseCayleyMat_eq_coordinateCayleyMat :
     sectorwiseCayleyMat = coordinateCayleyMat := by
   ext i j
+  simp only [sectorwiseCayleyMat, Matrix.sub_apply, Matrix.mul_apply]
   fin_cases i <;> fin_cases j <;>
-    simp [sectorwiseCayleyMat, coordinateCayleyMat,
-      longitudinalProjectorMat, transverseProjectorMat,
-      longitudinalTransverseMat, exchangeInvolutionMat,
-      Matrix.mul_apply, Fin.sum_univ_eight] <;> norm_num
+    simp [coordinateCayleyMat, longitudinalProjectorMat,
+      transverseProjectorMat, exchangeInvolutionMat, Fin.sum_univ_eight]
 
 theorem toPeirce_cayleyConj (x : Coord) :
     toPeirce (cayleyConj x) =
@@ -52,7 +51,7 @@ theorem toPeirce_cayleyConj (x : Coord) :
   ext i
   fin_cases i <;>
     simp [toPeirce, cayleyConj, coordinateCayleyMat,
-      Matrix.mulVec, Fin.sum_univ_eight]
+      Matrix.mulVec]
 
 theorem toPeirce_middleSignFlip (x : Coord) :
     toPeirce (middleSignFlip x) =
@@ -60,7 +59,7 @@ theorem toPeirce_middleSignFlip (x : Coord) :
   ext i
   fin_cases i <;>
     simp [toPeirce, middleSignFlip, longitudinalTransverseMat,
-      Matrix.mulVec, Fin.sum_univ_eight]
+      Matrix.mulVec]
 
 theorem sectorwiseCayleyMat_intertwines (x : Coord) :
     toPeirce (cayleyConj x) =

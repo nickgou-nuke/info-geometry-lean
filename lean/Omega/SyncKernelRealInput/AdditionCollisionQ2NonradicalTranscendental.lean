@@ -26,12 +26,12 @@ def addition_collision_q2_nonradical_transcendental_lindemann_input : Prop :=
 private theorem addition_collision_q2_nonradical_transcendental_real_entropy_base_algebraic :
     IsAlgebraic ℚ addition_collision_q2_nonradical_transcendental_real_entropy_base := by
   unfold addition_collision_q2_nonradical_transcendental_real_entropy_base
-  simpa using (isAlgebraic_rat ℚ (A := ℝ) (8 : ℚ))
+  simpa using (isAlgebraic_ratCast ℚ (A := ℝ) (8 : ℚ))
 
 private theorem addition_collision_q2_nonradical_transcendental_sync10_entropy_base_algebraic :
     IsAlgebraic ℚ addition_collision_q2_nonradical_transcendental_sync10_entropy_base := by
   unfold addition_collision_q2_nonradical_transcendental_sync10_entropy_base
-  simpa using (isAlgebraic_rat ℚ (A := ℝ) (4 : ℚ))
+  simpa using (isAlgebraic_ratCast ℚ (A := ℝ) (4 : ℚ))
 
 private theorem addition_collision_q2_nonradical_transcendental_real_entropy_base_ne_zero :
     addition_collision_q2_nonradical_transcendental_real_entropy_base ≠ 0 := by
@@ -60,8 +60,8 @@ theorem paper_addition_collision_q2_nonradical_transcendental
     (hLindemann : addition_collision_q2_nonradical_transcendental_lindemann_input) :
     addition_collision_q2_full_symmetric_galois_real_is_full_symmetric ∧
       addition_collision_q2_full_symmetric_galois_sync10_is_full_symmetric ∧
-      ¬ IsSolvable (Equiv.Perm (Fin addition_collision_q2_nonradical_transcendental_real_degree)) ∧
-      ¬ IsSolvable (Equiv.Perm (Fin addition_collision_q2_nonradical_transcendental_sync10_degree)) ∧
+      ¬ Group.IsSolvable (Equiv.Perm (Fin addition_collision_q2_nonradical_transcendental_real_degree)) ∧
+      ¬ Group.IsSolvable (Equiv.Perm (Fin addition_collision_q2_nonradical_transcendental_sync10_degree)) ∧
       Transcendental ℚ
         (Real.log addition_collision_q2_nonradical_transcendental_real_entropy_base) ∧
       Transcendental ℚ
@@ -69,11 +69,11 @@ theorem paper_addition_collision_q2_nonradical_transcendental
   have hGalois := paper_addition_collision_q2_full_symmetric_galois
   refine ⟨hGalois.1, hGalois.2, ?_, ?_, ?_, ?_⟩
   · simpa [addition_collision_q2_nonradical_transcendental_real_degree] using
-      (Equiv.Perm.not_solvable (Fin 26) (by
+      (Equiv.Perm.not_isSolvable (Fin 26) (by
         rw [Cardinal.mk_fin]
         norm_num))
   · simpa [addition_collision_q2_nonradical_transcendental_sync10_degree] using
-      (Equiv.Perm.not_solvable (Fin 14) (by
+      (Equiv.Perm.not_isSolvable (Fin 14) (by
         rw [Cardinal.mk_fin]
         norm_num))
   · exact hLindemann _ addition_collision_q2_nonradical_transcendental_real_entropy_base_algebraic

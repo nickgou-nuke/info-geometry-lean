@@ -77,14 +77,21 @@ theorem coordinateCliffordExponential_add (s t : ℂ) :
 
 /-- Derivative of the exact hyperbolic Clifford exponential. -/
 theorem hasDerivAt_coordinateCliffordExponential (t : ℂ) :
-    HasDerivAt coordinateCliffordExponential
+    @HasDerivAt ℂ _ CoordinateContinuousEnd
+      ContinuousLinearMap.toNormedAddCommGroup.toAddCommGroup
+      ContinuousLinearMap.toNormedSpace.toModule
+      PseudoMetricSpace.toUniformSpace.toTopologicalSpace _
+      coordinateCliffordExponential
       (Complex.sinh t • (1 : CoordinateContinuousEnd) +
         Complex.cosh t • coordinateScalarPositiveGenerator) t := by
-  simpa only [coordinateCliffordExponential] using
-    ((Complex.hasDerivAt_cosh t).smul_const
-      (1 : CoordinateContinuousEnd)).add
-      ((Complex.hasDerivAt_sinh t).smul_const
-        coordinateScalarPositiveGenerator)
+  change HasDerivAt
+    ((fun y => Complex.cosh y • (1 : CoordinateContinuousEnd)) +
+      fun y => Complex.sinh y • coordinateScalarPositiveGenerator)
+    (Complex.sinh t • (1 : CoordinateContinuousEnd) +
+      Complex.cosh t • coordinateScalarPositiveGenerator) t
+  exact ((Complex.hasDerivAt_cosh t).smul_const
+    (1 : CoordinateContinuousEnd)).add
+    ((Complex.hasDerivAt_sinh t).smul_const coordinateScalarPositiveGenerator)
 
 theorem hasDerivAt_coordinateCliffordExponential_zero :
     HasDerivAt coordinateCliffordExponential
@@ -167,8 +174,15 @@ theorem hasDerivAt_coordinateCliffordConjugationFlow_zero
       (-coordinateScalarPositiveGenerator) 0 := by
     have h1 : HasDerivAt (fun t : ℂ => Complex.cosh (-t)) 0 (0 : ℂ) := by
       simpa [Complex.cosh_neg] using Complex.hasDerivAt_cosh 0
-    have h2 : HasDerivAt (fun t : ℂ => Complex.sinh (-t)) (-1) (0 : ℂ) := by
-      simpa [Complex.sinh_neg] using (Complex.hasDerivAt_sinh (0 : ℂ)).neg
+    have h2 :
+        @HasDerivAt ℂ _ ℂ Complex.instNormedAddCommGroup.toAddCommGroup
+          (CommCStarAlgebra.toNonUnitalCommCStarAlgebra ℂ).toNonUnitalCStarAlgebra.toModule
+          PseudoMetricSpace.toUniformSpace.toTopologicalSpace _
+          (fun t : ℂ => Complex.sinh (-t)) (-1) (0 : ℂ) := by
+      convert (Complex.hasDerivAt_sinh (0 : ℂ)).neg using 1
+      · funext t
+        exact Complex.sinh_neg t
+      · rw [Complex.cosh_zero]
     have h_add := (h1.smul_const (1 : CoordinateContinuousEnd)).add (h2.smul_const coordinateScalarPositiveGenerator)
     have h_simp : (0 : ℂ) • (1 : CoordinateContinuousEnd) + (-1 : ℂ) • coordinateScalarPositiveGenerator =
         -coordinateScalarPositiveGenerator := by

@@ -96,7 +96,11 @@ noncomputable def stabilizedTailAssociatedGradedCocone
     app := fun n => d.pageToGraded n
     naturality := ?_ }
   intro m n f
-  simpa using d.pageToGraded_compatibility f
+  calc
+    (stabilizedPageFunctor S h p).map f ≫ d.pageToGraded n =
+        d.pageToGraded m := d.pageToGraded_compatibility f
+    _ = d.pageToGraded m ≫ 𝟙 d.carrier :=
+      (Category.comp_id (d.pageToGraded m)).symm
 
 /-- The stabilized-tail colimit is equivalent to the associated-graded carrier
 when the supplied comparison legs satisfy the explicit reconstruction data. -/
@@ -106,13 +110,14 @@ noncomputable def stabilizedTailColimitIsoAssociatedGraded
     (hcolim : HasColimit (stabilizedPageFunctor S h p)) :
     colimit (stabilizedPageFunctor S h p) ≅ d.carrier := by
   letI := hcolim
-  letI : ∀ n, IsIso (d.pageToGraded n) := d.pageToGraded_isIso
-  letI : ∀ n, IsIso ((stabilizedTailAssociatedGradedCocone S h p d).ι.app n) :=
-    d.pageToGraded_isIso
-  exact (Cocones.forget (stabilizedPageFunctor S h p)).mapIso
-    ((colimit.isColimit (stabilizedPageFunctor S h p)).uniqueUpToIso
-      (InfoGeometry.Category.natCoconeIsColimitOfIsoLegs
-        (stabilizedTailAssociatedGradedCocone S h p d)))
+  let c := stabilizedTailAssociatedGradedCocone S h p d
+  letI : ∀ n, IsIso (c.ι.app n) := by
+    intro n
+    simpa [c, stabilizedTailAssociatedGradedCocone] using
+      d.pageToGraded_isIso n
+  simpa [c, stabilizedTailAssociatedGradedCocone] using
+    (colimit.isColimit (stabilizedPageFunctor S h p)).coconePointUniqueUpToIso
+      (InfoGeometry.Category.natCoconeIsColimitOfIsoLegs c)
 
 end GradedExactCouple
 

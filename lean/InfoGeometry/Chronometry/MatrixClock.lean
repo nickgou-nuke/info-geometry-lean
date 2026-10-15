@@ -42,8 +42,6 @@ theorem M_clock_exact_order : orderOf M_clock = 12 := by
     have entry := congrArg (fun matrix : Matrix (Fin 4) (Fin 4) ℝ => matrix 0 2) impossible
     rw [M_clock_entries] at entry
     norm_num [pow_succ, Matrix.mul_apply, Fin.sum_univ_succ] at entry
-    change (1 : ℝ) = 0 at entry
-    norm_num at entry
 
 theorem trace_one_half_period (matrix : Matrix (Fin 2) (Fin 2) ℝ)
     (determinant : matrix.det = 1) (trace : Matrix.trace matrix = 1) :

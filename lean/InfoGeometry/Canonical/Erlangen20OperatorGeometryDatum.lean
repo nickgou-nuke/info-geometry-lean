@@ -1,4 +1,5 @@
 import Mathlib
+import Mathlib.Algebra.Lie.OfAssociative
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
@@ -15,6 +16,14 @@ kernel theorem.
 noncomputable section
 
 namespace InfoGeometry.Canonical.Erlangen20OperatorGeometryDatum
+
+local instance moduleEndLieRing (R V : Type*) [CommRing R]
+    [AddCommGroup V] [Module R V] : LieRing (Module.End R V) :=
+  LieRing.ofAssociativeRing
+
+local instance moduleEndLieAlgebra (R V : Type*) [CommRing R]
+    [AddCommGroup V] [Module R V] : LieAlgebra R (Module.End R V) :=
+  LieAlgebra.ofAssociativeAlgebra
 
 /-- A theorem-safe Erlangen 2.0 geometry datum.
 

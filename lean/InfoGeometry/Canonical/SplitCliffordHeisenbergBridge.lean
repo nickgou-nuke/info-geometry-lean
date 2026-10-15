@@ -1,4 +1,5 @@
 import Mathlib.Order.Filter.Basic
+import Mathlib.Algebra.Lie.OfAssociative
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Module.LinearMap.Basic
 import InfoGeometry.Canonical.CurrentSugawaraBridge
@@ -40,6 +41,12 @@ open Filter
 open InfoGeometry.Canonical.CurrentSugawaraBridge
 open InfoGeometry.Canonical.SplitCliffordInfiniteCurrent
 open VirasoroProject
+
+attribute [local instance 100] LieRing.ofAssociativeRing
+
+local instance linearEndLieRing (𝕜 V : Type*) [Semiring 𝕜]
+    [AddCommGroup V] [Module 𝕜 V] : LieRing (V →ₗ[𝕜] V) :=
+  LieRing.ofAssociativeRing
 
 /--
 Source-side split-Clifford current witness.

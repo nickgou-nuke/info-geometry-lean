@@ -1,4 +1,5 @@
 import Mathlib.Tactic.NoncommRing
+import Mathlib.LinearAlgebra.Matrix.Kronecker
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl11TensorTowerIteration
 import InfoGeometry.Clifford.Cl11MarkovJonesEngine
@@ -39,7 +40,11 @@ noncomputable section
 
 namespace InfoGeometry.Clifford.Cl11InfiniteCarrier
 
+open Matrix
+open scoped Kronecker
 open InfoGeometry.Clifford.Cl11TensorTowerIteration
+open InfoGeometry.Clifford.Cl11TensorTower
+open InfoGeometry.Clifford.TowerMatrix
 
 /-- Finite matrix stage of the `Cl(1,1)` tensor tower. -/
 abbrev Stage (n : ℕ) : Type := InfoGeometry.Clifford.Cl11TensorTowerLimit.Stage n
@@ -149,20 +154,23 @@ def phaseAxisStage : Stage 1 :=
 /-- The first-stage real Hestenes phase representative squares to `-1`. -/
 theorem phaseAxisStage_sq :
     phaseAxisStage * phaseAxisStage = -(1 : Stage 1) := by
-  change InfoGeometry.Clifford.Cl11TensorTower.hestenesPhaseHead 0 *
-      InfoGeometry.Clifford.Cl11TensorTower.hestenesPhaseHead 0 = -(1 : Stage 1)
-  dsimp [InfoGeometry.Clifford.Cl11TensorTower.hestenesPhaseHead,
-    InfoGeometry.Clifford.TowerMatrix.kronPow]
-  rw [← Matrix.mul_kronecker_mul]
-  rw [InfoGeometry.Clifford.Cl11TensorTower.hestenesPhaseBase_sq]
-  ext i j
-  cases i with
-  | mk i0 i1 =>
-      cases j with
-      | mk j0 j1 =>
-          have h0 : i0 = j0 := Subsingleton.elim _ _
-          subst h0
-          fin_cases i1 <;> fin_cases j1 <;> simp
+  have h : (phaseAxisStage * phaseAxisStage :
+      Matrix (InfoGeometry.Clifford.TowerMatrix.Idx 0 × Fin 2)
+        (InfoGeometry.Clifford.TowerMatrix.Idx 0 × Fin 2) ℝ) =
+      -(1 : Matrix (InfoGeometry.Clifford.TowerMatrix.Idx 0 × Fin 2)
+        (InfoGeometry.Clifford.TowerMatrix.Idx 0 × Fin 2) ℝ) := by
+    change ((1 : InfoGeometry.Clifford.TowerMatrix.Mat 0) ⊗ₖ
+        InfoGeometry.Clifford.Cl11TensorTower.hestenesPhaseBase) *
+      ((1 : InfoGeometry.Clifford.TowerMatrix.Mat 0) ⊗ₖ
+        InfoGeometry.Clifford.Cl11TensorTower.hestenesPhaseBase) = -1
+    rw [← Matrix.mul_kronecker_mul,
+      InfoGeometry.Clifford.Cl11TensorTower.hestenesPhaseBase_sq]
+    ext ⟨i0, i1⟩ ⟨j0, j1⟩
+    have h0 : i0 = j0 := Subsingleton.elim _ _
+    subst h0
+    fin_cases i0
+    fin_cases i1 <;> fin_cases j1 <;> (try simp [Matrix.one_apply]) <;> try decide
+  exact h
 
 /-- The global real bivector phase element in the algebraic direct-limit carrier. -/
 def globalPhaseAxis : CompatibleCarrier :=

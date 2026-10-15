@@ -1,6 +1,6 @@
 import Mathlib.Data.Complex.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
-import Mathlib.NumberTheory.ArithmeticFunction
+import Mathlib.NumberTheory.ArithmeticFunction.Moebius
 import InfoGeometry.Arithmetic.MoebiusWeylEuler
 import InfoGeometry.Arithmetic.LFunctionRepresentationBridge
 import InfoGeometry.Arithmetic.UResRepresentations

@@ -43,7 +43,6 @@ theorem endpointOne_middleTwo_fibonacci_matrix_artin
     · simp [fibonacciRMatrix]
     · simp [fibonacciRMatrix]
     · simp [fibonacciRMatrix]
-      rfl
   rw [hr, fibonacciBBlockEntries_matrix]
   exact fibonacci_fourAnyon_artin q τ s hq_inv hq_pow3 hq5 h_poly hτ hs
 
@@ -73,7 +72,6 @@ theorem middleFour_endpointFive_fibonacci_matrix_artin
     · simp [fibonacciRMatrix]
     · simp [fibonacciRMatrix]
     · simp [fibonacciRMatrix]
-      rfl
   rw [fibonacciBBlockEntries_matrix, hr]
   exact (fibonacci_fourAnyon_artin q τ s hq_inv hq_pow3 hq5 h_poly hτ hs).symm
 

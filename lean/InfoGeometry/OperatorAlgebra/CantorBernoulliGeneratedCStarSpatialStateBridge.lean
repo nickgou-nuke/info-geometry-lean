@@ -20,6 +20,7 @@ restriction with the distinct gauge-invariant word kernel.
 
 noncomputable section
 set_option maxHeartbeats 1600000
+set_option synthInstance.maxHeartbeats 1000000
 
 open scoped ComplexOrder
 open scoped InnerProductSpace
@@ -163,8 +164,8 @@ theorem spatialAnnihilator_mul_vLeft_eq_one :
   rw [vLeft_adjoint_comp_vLeft, vRight_adjoint_comp_vLeft]
   simp
 
-set_option maxHeartbeats 1000000 in
-set_option synthInstance.maxHeartbeats 100000 in
+set_option maxHeartbeats 2000000 in
+set_option synthInstance.maxHeartbeats 1000000 in
 theorem generatedSpatialGNS_annihilator_orbit :
     let A : Generated :=
       ⟨spatialAnnihilator, spatialAnnihilator_mem_generated⟩
@@ -186,12 +187,14 @@ theorem generatedSpatialGNS_annihilator_orbit :
         ((generatedGNSRepresentation A) *
           (generatedGNSRepresentation V)) generatedGNSVacuum := rfl
     _ = (generatedGNSRepresentation (A * V)) generatedGNSVacuum := by
-      rw [← map_mul generatedGNSRepresentation]
+      exact congrArg (fun f : generatedGNS →L[ℂ] generatedGNS =>
+        f generatedGNSVacuum) (map_mul generatedGNSRepresentation A V).symm
     _ = (generatedGNSRepresentation (1 : Generated)) generatedGNSVacuum := by
-      rw [hAV]
+      exact congrArg (fun x : Generated =>
+        generatedGNSRepresentation x generatedGNSVacuum) hAV
     _ = generatedGNSVacuum := by
-      rw [map_one generatedGNSRepresentation]
-      rfl
+      exact congrArg (fun f : generatedGNS →L[ℂ] generatedGNS =>
+        f generatedGNSVacuum) (map_one generatedGNSRepresentation)
 
 theorem generatedSpatialGNS_annihilator_vacuum_eq_zero :
     (generatedGNSRepresentation
@@ -224,7 +227,7 @@ theorem generatedSpatialGNS_annihilator_representation_ne_zero :
           (⟨vLeft, cantorL2CuntzFamily.S_mem_generatedCStarSubalgebra false⟩ : Generated))
           generatedGNSVacuum) = 0 := by
     rw [hzero]
-    exact ContinuousLinearMap.zero_apply _
+    exact zero_apply _
   have hvac : generatedGNSVacuum ≠ 0 := by
     intro hvac
     have hnorm := generatedGNSVacuum_norm

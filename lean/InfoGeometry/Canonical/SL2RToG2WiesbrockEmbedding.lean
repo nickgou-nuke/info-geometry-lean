@@ -39,23 +39,8 @@ namespace SL2RToG2Wiesbrock
 theorem boost_translation_lie_bracket :
     boostD * translationP - translationP * boostD = translationP := by
   ext i j
-  fin_cases i <;> fin_cases j
-  · dsimp [boostD, translationP, mul_apply, sub_apply]
-    rw [Fin.sum_univ_two, Fin.sum_univ_two]
-    dsimp
-    ring
-  · dsimp [boostD, translationP, mul_apply, sub_apply]
-    rw [Fin.sum_univ_two, Fin.sum_univ_two]
-    dsimp
-    ring
-  · dsimp [boostD, translationP, mul_apply, sub_apply]
-    rw [Fin.sum_univ_two, Fin.sum_univ_two]
-    dsimp
-    ring
-  · dsimp [boostD, translationP, mul_apply, sub_apply]
-    rw [Fin.sum_univ_two, Fin.sum_univ_two]
-    dsimp
-    ring
+  fin_cases i <;> fin_cases j <;>
+    norm_num [boostD, translationP, Matrix.mul_apply, Matrix.sub_apply, Fin.sum_univ_two]
 
 /-- **Theorem**: Translation Operator Matrix Trace Vanishing: Tr(P_+) = 0. -/
 theorem translation_trace_zero : trace translationP = 0 := by

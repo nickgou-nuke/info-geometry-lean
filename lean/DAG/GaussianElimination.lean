@@ -904,13 +904,12 @@ lemma pivot_step (A : Matrix m n ℚ) (i : m) (j : n) (hij : A i j ≠ 0) :
     rw [hA1_ij]
     have hrow_sum : (Finset.sum notI (λ k => a k • stdBasisMatrix k i 1)) i = 0 := by
       funext y
-      have hz : ∀ k ∈ notI, (a k • stdBasisMatrix k i 1) i = 0 := by
+      have hz : ∀ k ∈ notI, (a k • stdBasisMatrix k i 1) i y = 0 := by
         intro k hk
-        funext z
-        rw [smul_apply]
-        simp [stdBasisMatrix, (Finset.mem_filter.mp hk).2]
-      rw [Finset.sum_apply]
-      simpa only [Pi.zero_apply] using congrFun (Finset.sum_eq_zero hz) y
+        rw [Matrix.smul_apply]
+        simp [stdBasisMatrix, Pi.single_apply, (Finset.mem_filter.mp hk).2]
+      rw [Matrix.sum_apply i y notI]
+      exact Finset.sum_eq_zero hz
     rw [Matrix.mul_apply]
     have hprod : ∀ x ∈ Finset.univ,
         (Finset.sum notI (λ k => a k • stdBasisMatrix k i 1)) i x * A1 x j = 0 := by
@@ -925,16 +924,15 @@ lemma pivot_step (A : Matrix m n ℚ) (i : m) (j : n) (hij : A i j ≠ 0) :
     have hsum_row : (Finset.sum notI (λ b => a b • stdBasisMatrix b i 1)) k =
         (a k • stdBasisMatrix k i 1) k := by
       funext y
-      rw [Finset.sum_apply k notI]
-      exact congrFun (Finset.sum_eq_single (s := notI)
-        (f := fun b => (a b • stdBasisMatrix b i 1) k) k
+      rw [Matrix.sum_apply k y notI]
+      exact Finset.sum_eq_single (s := notI)
+        (f := fun b => (a b • stdBasisMatrix b i 1) k y) k
         (by
           intro b hb hbk
-          funext z
-          simp [stdBasisMatrix, hbk])
+          simp [stdBasisMatrix, Matrix.single_apply, hbk])
         (by
           intro hk_not_mem
-          exact (hk_not_mem hk_mem).elim)) y
+          exact (hk_not_mem hk_mem).elim)
     dsimp [E2]
     rw [Matrix.add_mul, Matrix.one_mul]
     have hprod :
@@ -976,16 +974,15 @@ lemma filtered_elimination_row_readback (A1 : Matrix m n ℚ) (i r : m) (j c : n
       (Finset.sum notI (λ b => -(A1 b j) • stdBasisMatrix b i 1)) r =
         (-(A1 r j) • stdBasisMatrix r i 1) r := by
     funext y
-    rw [Finset.sum_apply r notI]
-    exact congrFun (Finset.sum_eq_single (s := notI)
-      (f := fun b => (-(A1 b j) • stdBasisMatrix b i 1) r) r
+    rw [Matrix.sum_apply r y notI]
+    exact Finset.sum_eq_single (s := notI)
+      (f := fun b => (-(A1 b j) • stdBasisMatrix b i 1) r y) r
       (by
         intro b hb hbr
-        funext z
-        simp [stdBasisMatrix, hbr])
+        simp [stdBasisMatrix, Matrix.single_apply, hbr])
       (by
         intro hr_not_mem
-        exact (hr_not_mem hr_mem).elim)) y
+        exact (hr_not_mem hr_mem).elim)
   rw [Matrix.add_mul, Matrix.add_apply]
   have hprod :
       (Finset.sum notI (λ k => -(A1 k j) • stdBasisMatrix k i 1) * A1) r c =

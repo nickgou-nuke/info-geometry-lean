@@ -72,9 +72,17 @@ abbrev K_infty : Type := CyclotomicField 30030 ℚ
 
 /-- The canonical primitive 30030-th root of unity in $K_\infty$. -/
 def zeta_infty : K_infty :=
+  letI : NeZero (30030 : ℕ) := ⟨by norm_num⟩
+  letI : NeZero (30030 : ℚ) := ⟨by norm_num⟩
+  haveI : IsCyclotomicExtension {30030} ℚ K_infty :=
+    CyclotomicField.isCyclotomicExtension 30030 ℚ
   IsCyclotomicExtension.zeta 30030 ℚ K_infty
 
 theorem zeta_infty_primitive : IsPrimitiveRoot zeta_infty 30030 :=
+  letI : NeZero (30030 : ℕ) := ⟨by norm_num⟩
+  letI : NeZero (30030 : ℚ) := ⟨by norm_num⟩
+  haveI : IsCyclotomicExtension {30030} ℚ K_infty :=
+    CyclotomicField.isCyclotomicExtension 30030 ℚ
   IsCyclotomicExtension.zeta_spec 30030 ℚ K_infty
 
 /-- The stage generator $\zeta_i = \zeta_{30030}^{E_i}$. -/
@@ -126,6 +134,10 @@ theorem fieldStage_isCyclotomic (i : Fin 7) :
 /-- 🏆 Canonical $\mathbb{Q}$-Algebra Isomorphism between abstract and concrete cyclotomic fields -/
 def stageAlgEquiv (i : Fin 7) :
     CyclotomicField (conductor i) ℚ ≃ₐ[ℚ] fieldStage i := by
+  letI : NeZero ((conductor i : ℕ) : ℚ) := ⟨by exact_mod_cast (Nat.ne_of_gt (conductor_pos i))⟩
+  haveI : IsCyclotomicExtension {conductor i} ℚ
+      (CyclotomicField (conductor i) ℚ) :=
+    CyclotomicField.isCyclotomicExtension (conductor i) ℚ
   haveI : IsCyclotomicExtension {conductor i} ℚ (fieldStage i) := fieldStage_isCyclotomic i
   exact IsCyclotomicExtension.algEquiv {conductor i} ℚ (CyclotomicField (conductor i) ℚ) (fieldStage i)
 

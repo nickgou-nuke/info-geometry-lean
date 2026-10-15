@@ -61,7 +61,8 @@ theorem paper_pom_diagonal_rate_two_curve_identifiability
     rfl
   have hκ₂_mem : κ₂ ∈ Set.Ioi 0 ∧ D.distortionMap κ₂ = D.distortionMap D.κ := by
     refine ⟨hκ₂, ?_⟩
-    simpa [D] using hcurve₂
+    rw [show D.κ = κ by rfl]
+    exact hcurve₂
   rcases huniq with ⟨κ₀, hκ₀, huniq₀⟩
   have hκ_eq : κ = κ₀ := huniq₀ κ hκ_mem
   have hκ₂_eq : κ₂ = κ₀ := huniq₀ κ₂ hκ₂_mem

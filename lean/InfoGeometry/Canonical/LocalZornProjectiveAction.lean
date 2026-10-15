@@ -111,8 +111,15 @@ theorem localZornSlice_projectiveAction_mul
     fin_cases i <;> fin_cases j <;> rfl
   ext p
   simp only [Function.comp_apply]
-  rw [localZornSlice_projectiveAction_is_native,
-      localZornSlice_projectiveAction_is_native, hg, hh]
+  have houter := localZornSlice_projectiveAction_is_native
+    (colorDirection m) (colorDirection_norm m)
+    g.1.a g.1.b g.1.u g.1.v g.2
+    (localZornSliceProjectiveAction (colorDirection m) (colorDirection_norm m)
+      h.1.a h.1.b h.1.u h.1.v h.2 p)
+  have hinner := localZornSlice_projectiveAction_is_native
+    (colorDirection m) (colorDirection_norm m)
+    h.1.a h.1.b h.1.u h.1.v h.2 p
+  rw [houter, hinner, hg, hh]
   have hprod :
       localZornNormOneEquivSL2 m (localZornNormOneMul m g h) =
         (localZornNormOneEquivSL2 m g) *

@@ -29,7 +29,6 @@ theorem paper_xi_window6_reset_gap_mgf_moments (phi : ℝ) (hphi : phi ^ 2 = phi
     simp only [div_eq_mul_inv, h_inv', h_inv_sq']
     ring
   refine ⟨hmean, ?_⟩
-  dsimp [mean]
   simp only [div_eq_mul_inv, h_inv', h_inv_sq']
   ring_nf
   nlinarith [hphi]

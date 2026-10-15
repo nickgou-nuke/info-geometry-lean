@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.SplitOctonionGogberashviliCarrierBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionGogberashviliDerivationBridge
+import Mathlib.Algebra.Lie.OfAssociative
 
 /-!
 # Derivations on the explicit Gogberashvili carrier
@@ -21,6 +22,9 @@ open InfoGeometry.Lie.SplitOctonionGogberashviliDerivationBridge
 
 abbrev Cell := InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell ℝ
 abbrev Der := SplitOctonionGogberashviliDerivationBridge.Der
+
+local instance : LieRing (Module.End ℝ Cell) := LieRing.ofAssociativeRing
+local instance : LieAlgebra ℝ (Module.End ℝ Cell) := LieAlgebra.ofAssociativeAlgebra
 
 def cellDerivation (D : Der) : Module.End ℝ Cell :=
   cellToPaper.symm.toLinearMap.comp
@@ -59,7 +63,7 @@ theorem cellDerivation_conj_identity_left (D : Der) (X : Cell) :
     cellDerivation D X * cellConj X +
         X * cellDerivation D (cellConj X) = 0 := by
   apply cellToPaper.injective
-  rw [cellToPaper.map_add, cellToPaper_mul, cellToPaper_mul,
+  rw [map_add, cellToPaper_mul, cellToPaper_mul,
     cellDerivation_apply, cellDerivation_apply, cellToPaper_cellConj]
   simp only [LinearEquiv.apply_symm_apply]
   exact paperDerivation_conj_norm_identity_left D (cellToPaper X)
@@ -71,9 +75,28 @@ theorem cellDerivation_isDerivation (D : Der) (X Y : Cell) :
   rw [cellDerivation_apply, cellDerivation_apply, cellDerivation_apply]
   rw [cellToPaper_mul]
   rw [paperDerivation_isDerivation]
-  rw [(cellToPaper).map_add]
-  rw [cellToPaper_mul, cellToPaper_mul]
-  simp only [LinearEquiv.apply_symm_apply]
+  calc
+    cellToPaper (cellToPaper.symm
+      (paperDerivation D (cellToPaper X) * cellToPaper Y +
+        cellToPaper X * paperDerivation D (cellToPaper Y))) =
+      paperDerivation D (cellToPaper X) * cellToPaper Y +
+        cellToPaper X * paperDerivation D (cellToPaper Y) := by simp
+    _ = cellToPaper
+        (cellToPaper.symm (paperDerivation D (cellToPaper X)) * Y +
+          X * cellToPaper.symm (paperDerivation D (cellToPaper Y))) := by
+      symm
+      have h_add := cellToPaper.map_add
+        (cellToPaper.symm (paperDerivation D (cellToPaper X)) * Y)
+        (X * cellToPaper.symm (paperDerivation D (cellToPaper Y)))
+      calc
+        _ = cellToPaper
+              (cellToPaper.symm (paperDerivation D (cellToPaper X)) * Y) +
+            cellToPaper
+              (X * cellToPaper.symm (paperDerivation D (cellToPaper Y))) := h_add
+        _ = paperDerivation D (cellToPaper X) * cellToPaper Y +
+            cellToPaper X * paperDerivation D (cellToPaper Y) := by
+          rw [cellToPaper_mul, cellToPaper_mul]
+          simp
 
 @[simp] theorem cellDerivation_map_one (D : Der) :
     cellDerivation D
@@ -122,10 +145,9 @@ theorem cellDerivationLieHom_injective :
   apply LinearMap.ext
   intro Y
   let X : Cell := cellToPaper.symm Y
-  have h' : cellDerivation D = cellDerivation E := by
-    simpa [cellDerivationLieHom, cellDerivationLinear,
-      cellDerivationLinear_apply] using h
-  have hX := congrArg (fun F : Module.End ℝ Cell => F X) h'
+  have hX := congrArg (fun F : Module.End ℝ Cell => F X) h
+  change cellDerivationLinear D X = cellDerivationLinear E X at hX
+  rw [cellDerivationLinear_apply, cellDerivationLinear_apply] at hX
   change paperDerivation D Y = paperDerivation E Y
   simpa [cellDerivation_apply, X] using congrArg cellToPaper hX
 

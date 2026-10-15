@@ -101,7 +101,7 @@ theorem transportedChiralPlusRepresentation_matrix_readback
           InfoGeometry.Clifford.SpinorRep.SpinorMatrix 5 =>
         F (spinGroupTransport g : Clifford55.Cl55))
       Clifford55.cl55SpinorAlgEquiv_toAlgHom_eq_representation
-    simpa using h
+    simpa using h.symm
   have hmatrix :
       ((matrixSpinRepresentation g :
         SplitClifford55NeutralFormBridge.SpinMatrixGL55) :
@@ -135,7 +135,7 @@ theorem transportedChiralMinusRepresentation_matrix_readback
           InfoGeometry.Clifford.SpinorRep.SpinorMatrix 5 =>
         F (spinGroupTransport g : Clifford55.Cl55))
       Clifford55.cl55SpinorAlgEquiv_toAlgHom_eq_representation
-    simpa using h
+    simpa using h.symm
   have hmatrix :
       ((matrixSpinRepresentation g :
         SplitClifford55NeutralFormBridge.SpinMatrixGL55) :

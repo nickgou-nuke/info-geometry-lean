@@ -60,7 +60,8 @@ lemma θ_eq_neg_φ (X : Matn) :
 lemma φ_mul_rev (hJ1_sq : J1 * J1 = 1) (X Y : Matn) :
     φ J1 (X * Y) = φ J1 Y * φ J1 X := by
   have hJJ : J J1 * J J1 = (1 : Matn) := by
-    simpa using InfoGeometry.Clifford.TowerMatrix.Jn_sq J1 hJ1_sq n
+    change Jn J1 n * Jn J1 n = (1 : Mat n)
+    exact InfoGeometry.Clifford.TowerMatrix.Jn_sq J1 hJ1_sq n
   calc
     φ J1 (X * Y)
         = J J1 * (X * Y)ᵀ * J J1 := by rfl

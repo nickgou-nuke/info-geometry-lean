@@ -4,6 +4,7 @@ import Mathlib.Data.Matrix.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Data.Complex.Basic
+import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Tactic
 
 /-!
@@ -153,35 +154,31 @@ def pauliSpectralTriple : Z2GradedSpectralTriple 2 where
   tilt_sq := by
     ext i j
     fin_cases i <;> fin_cases j <;> {
-      dsimp [pauliTilt, Matrix.mul_apply, Matrix.one_apply]
-      rw [Fin.sum_univ_two]
-      dsimp
+      rw [Matrix.mul_apply, Fin.sum_univ_two]
+      dsimp [pauliTilt, Matrix.one_apply]
       ring
     }
   D := pauliDirac
   D_anticomm_tilt := by
     ext i j
     fin_cases i <;> fin_cases j <;> {
-      dsimp [pauliDirac, pauliTilt, Matrix.mul_apply, Matrix.add_apply, Matrix.zero_apply]
-      rw [Fin.sum_univ_two, Fin.sum_univ_two]
-      dsimp
+      rw [Matrix.add_apply, Matrix.mul_apply, Matrix.mul_apply, Fin.sum_univ_two, Fin.sum_univ_two]
+      dsimp [pauliDirac, pauliTilt, Matrix.zero_apply]
       ring
     }
   D_inv := pauliDirac
   D_mul_inv := by
     ext i j
     fin_cases i <;> fin_cases j <;> {
-      dsimp [pauliDirac, Matrix.mul_apply, Matrix.one_apply]
-      rw [Fin.sum_univ_two]
-      dsimp
+      rw [Matrix.mul_apply, Fin.sum_univ_two]
+      dsimp [pauliDirac, Matrix.one_apply]
       ring
     }
   inv_mul_D := by
     ext i j
     fin_cases i <;> fin_cases j <;> {
-      dsimp [pauliDirac, Matrix.mul_apply, Matrix.one_apply]
-      rw [Fin.sum_univ_two]
-      dsimp
+      rw [Matrix.mul_apply, Fin.sum_univ_two]
+      dsimp [pauliDirac, Matrix.one_apply]
       ring
     }
 
@@ -191,9 +188,8 @@ def pauliSwitchOperator : SwitchOperator 2 pauliSpectralTriple where
   tilt_switch_anticomm := by
     ext i j
     fin_cases i <;> fin_cases j <;> {
-      dsimp [pauliSpectralTriple, pauliTilt, pauliSwitch, Matrix.mul_apply, Matrix.add_apply, Matrix.zero_apply]
-      rw [Fin.sum_univ_two, Fin.sum_univ_two]
-      dsimp
+      rw [Matrix.add_apply, Matrix.mul_apply, Matrix.mul_apply, Fin.sum_univ_two, Fin.sum_univ_two]
+      dsimp [pauliSpectralTriple, pauliTilt, pauliSwitch, Matrix.zero_apply]
       ring
     }
 

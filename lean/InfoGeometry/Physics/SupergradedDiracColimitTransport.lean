@@ -25,21 +25,30 @@ noncomputable def stageOperatorTransportCocone
   supergradedDiracCrystalTopCatCompatibleCocone f hf
     (u0 ≫ supergradedDiracCrystalTopCatInjection X0 X1 f hf .initial)
     (u1 ≫ supergradedDiracCrystalTopCatInjection X0 X1 f hf .extended) (by
+      let F := supergradedDiracCrystalTopCatDiagram X0 X1 f hf
+      let u₀ : F.obj .initial ⟶ F.obj .initial := u0
+      let u₁ : F.obj .extended ⟶ F.obj .extended := u1
+      let ι₀ : F.obj .initial ⟶ supergradedDiracCrystalTopCatColimit X0 X1 f hf :=
+        supergradedDiracCrystalTopCatInjection X0 X1 f hf .initial
+      let ι₁ : F.obj .extended ⟶ supergradedDiracCrystalTopCatColimit X0 X1 f hf :=
+        supergradedDiracCrystalTopCatInjection X0 X1 f hf .extended
+      have hc : F.map DiracCrystalStage.Hom.step ≫ u₁ = u₀ ≫
+          F.map DiracCrystalStage.Hom.step := hcompat
+      have hw : F.map DiracCrystalStage.Hom.step ≫ ι₁ = ι₀ :=
+        colimit.w F DiracCrystalStage.Hom.step
+      change F.map DiracCrystalStage.Hom.step ≫ (u₁ ≫ ι₁) = u₀ ≫ ι₀
       calc
-        (supergradedDiracCrystalTopCatDiagram X0 X1 f hf).map
-            DiracCrystalStage.Hom.step ≫
-              (u1 ≫ supergradedDiracCrystalTopCatInjection X0 X1 f hf .extended) =
-          (u0 ≫ (supergradedDiracCrystalTopCatDiagram X0 X1 f hf).map
-            DiracCrystalStage.Hom.step) ≫
-              supergradedDiracCrystalTopCatInjection X0 X1 f hf .extended := by
-                simpa only [Category.assoc] using congrArg
-                  (fun z => z ≫ supergradedDiracCrystalTopCatInjection X0 X1 f hf .extended)
-                  hcompat
-        _ = u0 ≫ supergradedDiracCrystalTopCatInjection X0 X1 f hf .initial := by
-          exact congrArg
-            (fun z => u0 ≫ z)
-            (colimit.w (supergradedDiracCrystalTopCatDiagram X0 X1 f hf)
-              DiracCrystalStage.Hom.step))
+        F.map DiracCrystalStage.Hom.step ≫ (u₁ ≫ ι₁) =
+            (F.map DiracCrystalStage.Hom.step ≫ u₁) ≫ ι₁ :=
+          (Category.assoc _ _ _).symm
+        _ = (u₀ ≫ F.map DiracCrystalStage.Hom.step) ≫ ι₁ :=
+          congrArg (fun g => g ≫ ι₁) hc
+        _ = u₀ ≫ ι₀ := by
+          calc
+            (u₀ ≫ F.map DiracCrystalStage.Hom.step) ≫ ι₁ =
+                u₀ ≫ (F.map DiracCrystalStage.Hom.step ≫ ι₁) :=
+              Category.assoc _ _ _
+            _ = u₀ ≫ ι₀ := congrArg (fun g => u₀ ≫ g) hw)
 
 noncomputable def stageOperatorTransport
     {X0 X1 : Type u} [TopologicalSpace X0] [TopologicalSpace X1]

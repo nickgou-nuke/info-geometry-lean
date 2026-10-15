@@ -54,8 +54,8 @@ def colimitChiralDiracMinus (D : Datum (F := F)) : ColimitEnd F :=
 
 theorem colimitChiralityEnd_sq (D : Datum (F := F)) :
     colimitChiralityEnd D * colimitChiralityEnd D = 1 := by
-  simpa [colimitChiralityEnd] using
-    congrArg ModuleCat.Hom.hom (chiralityColimit_sq D)
+  change (chiralityColimit D).hom ∘ₗ (chiralityColimit D).hom = LinearMap.id
+  exact congrArg ModuleCat.Hom.hom (chiralityColimit_sq D)
 
 /-! The even chiral projectors and Laplacian blocks reconstructed on the
 filtered colimit carrier. -/

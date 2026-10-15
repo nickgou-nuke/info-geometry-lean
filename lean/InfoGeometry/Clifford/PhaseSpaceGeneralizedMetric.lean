@@ -1,5 +1,4 @@
 import InfoGeometry.Cartan.Involution
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.NeutralPhaseSpaceCore
 import InfoGeometry.Clifford.NeutralPhaseSpaceDoubledBridge
 import InfoGeometry.Meta.Architecture
@@ -467,9 +466,8 @@ omit [CompleteSpace E] in
     (metric : MetricDatum E) :
     (toDoubledCopyRho metric.gFlat).comp ((GeneralizedMetricDatum.ofMetric metric).polarization)
       = (modular_j (E := E)).toLinearMap.comp (toDoubledCopyRho metric.gFlat) := by
-  rw [GeneralizedMetricDatum.ofMetric_polarization]
-  simpa [GeneralizedMetricDatum.basePolarization, GeneralizedMetricDatum.ofMetric] using
-    (toDoubledCopyRho_comp_phaseJ (E := E) metric.gFlat)
+  rw [GeneralizedMetricDatum.ofMetric_polarization, basePolarization_eq_phaseJ]
+  exact toDoubledCopyRho_comp_phaseJ (E := E) metric.gFlat
 
 end Realization
 

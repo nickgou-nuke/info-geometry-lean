@@ -52,20 +52,18 @@ lemma xi_time_resolution_galois_adjunction_timeInterior_idempotent (t : ℕ) :
 
 lemma xi_time_resolution_galois_adjunction_timeInterior_fixed_iff_even (t : ℕ) :
     xi_time_resolution_galois_adjunction_timeInterior t = t ↔ Even t := by
+  unfold xi_time_resolution_galois_adjunction_timeInterior
+    xi_time_resolution_galois_adjunction_timeBound
+    xi_time_resolution_galois_adjunction_reachableResolution
   constructor
   · intro hfixed
-    have hdecomp : t % 2 + 2 * (t / 2) = t := Nat.mod_add_div t 2
-    have hmod : t % 2 = 0 := by
-      have hsum :
-          t % 2 + xi_time_resolution_galois_adjunction_timeInterior t = t := by
-        simpa [xi_time_resolution_galois_adjunction_timeInterior] using hdecomp
-      have hsum' : t % 2 + t = t := by simpa [hfixed] using hsum
-      omega
+    have hdecomp := Nat.mod_add_div t 2
+    have hmod : t % 2 = 0 := by omega
     exact Nat.even_iff.mpr hmod
   · intro hEven
     have hmod : t % 2 = 0 := Nat.even_iff.mp hEven
-    have hdecomp : t % 2 + 2 * (t / 2) = t := Nat.mod_add_div t 2
-    simpa [xi_time_resolution_galois_adjunction_timeInterior, hmod] using hdecomp
+    have hdecomp := Nat.mod_add_div t 2
+    omega
 
 /-- Paper label: `thm:xi-time-resolution-galois-adjunction`. The dyadic time map `ρ ↦ 2ρ` and
 the reachable-resolution map `t ↦ ⌊t / 2⌋` form a concrete Galois adjunction. The induced closure

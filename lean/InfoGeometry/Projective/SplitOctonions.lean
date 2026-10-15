@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Group.Units.Basic
+import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Module.LinearMap.Basic
 import Mathlib.Tactic
@@ -578,8 +579,9 @@ theorem hasDerivAt_barrierPhi_diag3_a
         (fun t : ℝ => Real.log (t * b))
         (((a * b)⁻¹) * b)
         a := by
-    simpa [one_div, mul_comm, mul_left_comm, mul_assoc] using
-      (Real.hasDerivAt_log (mul_ne_zero ha_ne hb_ne)).comp a hmul
+    convert (Real.hasDerivAt_log (mul_ne_zero ha_ne hb_ne)).comp a hmul using 1
+    · funext t
+      congr 1
   have hneg :
       HasDerivAt
         (fun t : ℝ => -Real.log (t * b))
@@ -615,7 +617,7 @@ theorem hasDerivAt_barrierPhi_diag3_hessian_a
     hasDerivAt_inv ha
   have hneg :
       HasDerivAt (fun t : ℝ => -t⁻¹) ((a ^ 2)⁻¹) a := by
-    simpa using hinv.neg
+    convert hinv.neg using 1 <;> ring
   have hcoef : (a ^ 2)⁻¹ = 1 / (a ^ 2) := by
     simp [one_div]
   rw [← hcoef]

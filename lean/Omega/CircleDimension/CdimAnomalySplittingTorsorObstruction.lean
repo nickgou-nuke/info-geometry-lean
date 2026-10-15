@@ -89,8 +89,7 @@ private lemma cdim_anomaly_splitting_torsor_obstruction_translate_difference
     cdim_anomaly_splitting_torsor_obstruction_translate
         (cdim_anomaly_splitting_torsor_obstruction_difference s t) s = t := by
   ext d <;> simp [cdim_anomaly_splitting_torsor_obstruction_translate,
-    cdim_anomaly_splitting_torsor_obstruction_difference, hs d, ht d, sub_eq_add_neg,
-    add_assoc, add_left_comm, add_comm]
+    cdim_anomaly_splitting_torsor_obstruction_difference, hs d, ht d, sub_eq_add_neg]
 
 private lemma cdim_anomaly_splitting_torsor_obstruction_translate_unique
     (s t : D →+ A0 × D)
@@ -116,11 +115,13 @@ private lemma cdim_anomaly_splitting_torsor_obstruction_cocycle_zero_iff
   · intro hc
     refine ⟨cdim_anomaly_splitting_torsor_obstruction_section_isSplitting h, ?_⟩
     intro d
-    have hd := congrArg (fun f : D →+ A0 => f d) hc
-    exact sub_eq_zero.mp (by simpa [cdim_anomaly_splitting_torsor_obstruction_cocycle] using hd)
+    dsimp [cdim_anomaly_splitting_torsor_obstruction_sectionFromHom]
+    have hd : α0 (h d) - h (αD d) = 0 := congrArg (fun f : D →+ A0 => f d) hc
+    exact sub_eq_zero.mp hd
   · rintro ⟨hs, hinv⟩
     ext d
-    exact sub_eq_zero.mpr (by simpa [cdim_anomaly_splitting_torsor_obstruction_sectionFromHom] using hinv d)
+    have hd : α0 (h d) = h (αD d) := hinv d
+    exact sub_eq_zero.mpr hd
 
 /-- Paper label: `prop:cdim-anomaly-splitting-torsor-obstruction`.
 In the affine-regular-form model `A0 × D`, splittings are exactly kernel-valued sections; they form

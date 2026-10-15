@@ -117,8 +117,8 @@ out of the digitwise product. -/
 theorem exp_affine_split (v a x0 : ℝ) (xs : List ℝ) :
     Real.exp (v * (a - x0) + (xs.map fun x => v * x).sum) =
       Real.exp (v * (a - x0)) * ((xs.map fun x => Real.exp (v * x)).prod) := by
-  rw [Real.exp_add]
-  simpa [List.map_map] using exp_sum_factorization (xs.map fun x => v * x)
+  rw [Real.exp_add, exp_sum_factorization (xs.map fun x => v * x), List.map_map]
+  rfl
 
 /-- The 2×2 Givens-rotation core used in the cosine TT construction. -/
 def cosRotationCore (θ : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=

@@ -50,7 +50,7 @@ RECIPIENTS = [
     "swarat@google.com",
     "tsoukalas@google.com",
 ]
-EMAIL_SUBJECT = "At the Crossroad of Disparate Domains in Lean 4: An Invitation to Verify and Extend an 11,970-Theorem Web to Topological Closure"
+EMAIL_SUBJECT = "At the Crossroad of Disparate Domains in Lean 4: An Invitation to Verify and Extend a Formal Mathematical Corpus"
 
 
 def check_git_status() -> dict:
@@ -98,10 +98,10 @@ Rather than formalizing standard textbook lemmas or contest mathematics, this re
 • Non-Commutative Geometry & Arithmetic Quantum Field Theory: Connes spectral triples, Tomita-Takesaki modular flows, and Bost-Connes KMS states linking prime distributions to quantum statistical mechanics.
 • Categorical Direct Inductive Colimits: Crossing directly from discrete algebraic quantum models (UHF tensor towers, Cuntz algebras) to the continuum without measure-theoretic approximations.
 
-2. The Formally Certified Baseline:
-• 11,970+ kernel-checked declarations in Lean 4 and Mathlib v4.28.1.
-• Strictly zero sorry, zero admit, zero custom axioms (standard foundational axioms: propext, Classical.choice, Quot.sound).
-• Complete reproducibility under locked compiler harnesses with zero tolerance for proof proxies.
+2. The Migration Baseline:
+• The repository is now pinned to Lean 4.34.1 and Mathlib v4.34.1; migration verification is in progress.
+• Earlier declaration counts and proof-proxy audits describe the previous baseline and are not yet claims about the migrated build.
+• The migration preserves the locked compiler workflow and does not replace kernel verification with proof proxies.
 
 3. Why This is an Unprecedented Testbed for AlphaProof & Gemini:
 • Zero Pretraining Contamination: Abstract conjectures and cross-domain unifications absent from standard textbooks, Mathlib tutorials, and contest archives. Tests genuine MCTS/policy network search on alien search trees.
@@ -111,7 +111,7 @@ Rather than formalizing standard textbook lemmas or contest mathematics, this re
 We invite you to clone, benchmark your search heuristics, and deploy your swarms!
 
 Repository: https://github.com/nickgou-nuke/info-geometry-lean
-Toolchain: Lean 4.28.1 / Mathlib v4.28.1 (lake build InfoGeometry.Canonical.All)
+Toolchain target: Lean 4.34.1 / Mathlib v4.34.1 (migration build in progress)
 
 With high respect and admiration,
 
@@ -138,9 +138,9 @@ https://github.com/nickgou-nuke/info-geometry-lean
 • Non-Commutative Geometry & Arithmetic QFT: Connes spectral triples, Tomita-Takesaki flows, and Bost-Connes KMS states linking primes to quantum mechanics.
 • Categorical Direct Inductive Colimits: Crossing from discrete algebraic models (UHF towers, Cuntz algebras) to the continuum without measure approximations.
 
-2. Verified Baseline:
-• 11,970+ kernel-checked Lean 4 declarations (Mathlib v4.28.1).
-• Zero sorry, zero admit, zero custom axioms (strictly standard: propext, Classical.choice, Quot.sound).
+2. Migration Baseline:
+• The repository targets Lean 4.34.1 and Mathlib v4.34.1; full migration verification is in progress.
+• Previously reported declaration counts and proof-proxy audits have not yet been re-established on this toolchain.
 
 3. Invitation to the DeepMind Swarm:
 • Zero Pretraining Contamination: Abstract cross-domain search trees outside textbook/contest math.
@@ -150,7 +150,7 @@ https://github.com/nickgou-nuke/info-geometry-lean
 We invite you to clone, benchmark your search agents, and explore!
 
 Repo: https://github.com/nickgou-nuke/info-geometry-lean
-Toolchain: Lean 4.28.1 / Mathlib v4.28.1 (lake build InfoGeometry.Canonical.All)
+Toolchain target: Lean 4.34.1 / Mathlib v4.34.1 (migration build in progress)
 
 With high respect and admiration,
 

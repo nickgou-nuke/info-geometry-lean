@@ -48,11 +48,13 @@ end xi_time_part9l_escort_two_block_normal_form_data
 theorem paper_xi_time_part9l_escort_two_block_normal_form
     (D : xi_time_part9l_escort_two_block_normal_form_data) : D.statement := by
   constructor
-  · simp [
-      xi_time_part9l_escort_two_block_normal_form_data.xi_time_part9l_escort_two_block_normal_form_residual,
-      Finset.sum_sub_distrib,
+  · change Finset.univ.sum (fun x : Fin D.xi_time_part9l_escort_two_block_normal_form_card =>
+      D.xi_time_part9l_escort_two_block_normal_form_pi x -
+        D.xi_time_part9l_escort_two_block_normal_form_lambda x) = 0
+    rw [Finset.sum_sub_distrib,
       D.xi_time_part9l_escort_two_block_normal_form_pi_mass,
       D.xi_time_part9l_escort_two_block_normal_form_lambda_mass]
+    exact sub_self 1
   · simpa [xi_time_part9l_escort_two_block_normal_form_data.statement,
       xi_time_part9l_escort_two_block_normal_form_data.xi_time_part9l_escort_two_block_normal_form_residual_tv,
       xi_time_part9l_escort_two_block_normal_form_data.xi_time_part9l_escort_two_block_normal_form_residual]

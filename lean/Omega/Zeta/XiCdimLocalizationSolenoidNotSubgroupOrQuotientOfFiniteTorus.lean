@@ -25,7 +25,7 @@ private lemma map_eq_sum_basis {S : Finset Nat} {n : ℕ}
     _ = ∑ i : Fin n, x i • φ (torusStdBasis i) := by
       refine Finset.sum_congr rfl ?_
       intro i hi
-      simpa using φ.map_zsmul (torusStdBasis i) (x i)
+      simpa using φ.map_zsmul (x i) (torusStdBasis i)
 
 private lemma rat_den_sum_dvd_prod {ι : Type*} [DecidableEq ι] (s : Finset ι) (q : ι → ℚ) :
     Rat.den (Finset.sum s q) ∣ Finset.prod s (fun i => Rat.den (q i)) := by
@@ -169,7 +169,7 @@ theorem paper_xi_cdim_localization_solenoid_not_subgroup_or_quotient_of_finite_t
             = φ ((p ^ k : ℤ) • localizedInvPrimePow S p k hpS hp) := by
                 rw [localizedOne_eq_zsmul_invPrimePow S p k hpS hp]
         _ = (p ^ k : ℤ) • φ (localizedInvPrimePow S p k hpS hp) := by
-              exact φ.map_zsmul (localizedInvPrimePow S p k hpS hp) (p ^ k : ℤ)
+              exact φ.map_zsmul (p ^ k : ℤ) (localizedInvPrimePow S p k hpS hp)
     have hone : φ (localizedOne S) = 0 := by
       exact vector_eq_zero_of_dvd_all_powers hp.two_le hdiv
     have hzero : localizedOne S = 0 := hφinj (by simpa using hone)

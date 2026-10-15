@@ -68,12 +68,7 @@ theorem paper_xi_time_part9w_basic_root_unity_error_exponent_to_one :
   have hsub :
       Tendsto (fun m : ℕ => 1 - xiTimePart9wBasicAout / (((m : ℝ) + 1) ^ 2)) atTop (𝓝 1) := by
     simpa using hconst.sub hterm2
-  have hadd :
-      Tendsto
-        (fun m : ℕ =>
-          (1 - xiTimePart9wBasicAout / (((m : ℝ) + 1) ^ 2)) +
-            xiTimePart9wBasicBout / (((m : ℝ) + 1) ^ 4))
-        atTop (𝓝 (1 + 0)) :=
+  have hadd : Tendsto xiTimePart9wBasicVartheta atTop (𝓝 (1 + 0)) :=
     hsub.add hterm4
   simpa [xiTimePart9wBasicVartheta] using hadd
 

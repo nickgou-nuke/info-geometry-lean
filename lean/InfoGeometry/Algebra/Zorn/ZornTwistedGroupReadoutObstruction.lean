@@ -60,7 +60,7 @@ theorem e11_mul_e22_not_unit_smul_basis :
       Basis8.cell e11 * Basis8.cell e22 = unitScaledBasis b u := by
   rintro ⟨b, u, h⟩
   have hzero : Basis8.cell e11 * Basis8.cell e22 = zeroZornCell := by
-    simpa [zeroZornCell, SignedBasis.cell] using (mulTable_correct e11 e22)
+    simpa [zeroZornCell, SignedBasis.cell, mulTable] using (mulTable_correct e11 e22)
   have hnonzero : unitScaledBasis b u ≠ zeroZornCell := by
     simpa [zeroZornCell] using basisCell_smul_unit_ne_zero b u
   apply hnonzero

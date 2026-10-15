@@ -27,7 +27,7 @@ structure SplitG2HodgeCovariantCochainData
 
 namespace SplitG2HodgeCovariantCochainData
 
-def faceHodgeAutomorphism
+noncomputable def faceHodgeAutomorphism
     {K : FiniteOrientedCellComplex}
     (D : SplitG2HodgeCovariantCochainData K)
     (σ : K.Cell 2) :

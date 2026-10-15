@@ -32,9 +32,15 @@ noncomputable def scalarRescaling (c : ℝ) :
     apply continuous_induced_rng.mpr
     change Continuous (fun ρ : CompatibleContinuousReadoutFamily =>
       fun n => c • ρ.1 n)
-    exact continuous_pi (fun n =>
-      (continuous_const.smul (continuous_apply n)).comp
-        continuous_subtype_val)
+    apply continuous_pi
+    intro n
+    have hconst :
+        Continuous (fun _ : CompatibleContinuousReadoutFamily => c) :=
+      continuous_const
+    have heval :
+        Continuous (fun ρ : CompatibleContinuousReadoutFamily => ρ.1 n) :=
+      (continuous_apply n).comp continuous_subtype_val
+    exact hconst.smul heval
 
 @[simp] theorem scalarRescaling_map_apply
     (c : ℝ) (ρ : CompatibleContinuousReadoutFamily) (n : ℕ) :

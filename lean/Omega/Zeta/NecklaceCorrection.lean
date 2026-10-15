@@ -60,7 +60,13 @@ private theorem divisors_three_value : Nat.divisors 3 = {1, 3} := by
   simpa using (Nat.Prime.divisors (by norm_num : Nat.Prime 3))
 
 private theorem divisors_four_value : Nat.divisors 4 = {1, 2, 4} := by
-  simpa using (Nat.divisors_prime_pow (p := 2) (by norm_num : Nat.Prime 2) 2)
+  change Nat.divisors (2 ^ 2) = {1, 2, 4}
+  rw [Nat.divisors_prime_pow (p := 2) (by norm_num : Nat.Prime 2) 2]
+  norm_num [Finset.map, Finset.range]
+  ext x
+  simp only [Finset.mem_insert, Finset.mem_singleton, Finset.mem_mk,
+    Multiset.mem_singleton]
+  tauto
 
 private theorem divisors_five_value : Nat.divisors 5 = {1, 5} := by
   simpa using (Nat.Prime.divisors (by norm_num : Nat.Prime 5))

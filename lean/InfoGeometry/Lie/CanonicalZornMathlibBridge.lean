@@ -218,7 +218,7 @@ theorem mathlib_nonzero_weight_eq_nativeRootWeight
     have h := congrFun hj H
     simpa [rootWeight] using h.symm
   refine ⟨⟨j, hj6, hj13⟩, ?_⟩
-  simpa [nativeRootWeight] using hj
+  exact hj
 
 /-! The native label supplied by root exhaustion is unique.  This is the
 comparison theorem needed when an abstract Mathlib root is transported back

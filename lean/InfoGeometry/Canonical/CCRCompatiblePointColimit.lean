@@ -45,18 +45,15 @@ def CompatibleCCRPointFamily.toQCCR
     CompatibleQCCRPointFamily sys where
   point i :=
     ⟨ccrParameterPoint (family.c i) (family.cstar i), by
-      change qCcrParameterResidualContinuousMap (A := Stage i)
-          (ccrParameterPoint (family.c i) (family.cstar i)) = 0
-      simpa [qCcrParameterResidualContinuousMap, ccrParameterPoint] using
-        ccr_is_plus_one_qccr (family.c i) (family.cstar i) (family.relation i)⟩
+      dsimp [qCcrParameterZeroLocus, qCcrParameterResidualContinuousMap, ccrParameterPoint]
+      exact ccr_is_plus_one_qccr (family.c i) (family.cstar i) (family.relation i)⟩
   compatible := by
     intro i j hij
     apply Subtype.ext
-    change qCcrParameterTransitionMap Stage sys hij
-        (ccrParameterPoint (family.c i) (family.cstar i)) =
-      ccrParameterPoint (family.c j) (family.cstar j)
-    simp [qCcrParameterTransitionMap, ccrParameterPoint,
-      family.compatible_c hij, family.compatible_cstar hij]
+    change (sys.map hij (family.c i),
+        (sys.map hij (family.cstar i), sys.map hij (1 : Stage i))) =
+      (family.c j, (family.cstar j, (1 : Stage j)))
+    simp [family.compatible_c hij, family.compatible_cstar hij]
 
 noncomputable def ccrCompatiblePointColimitMap
     (family : CompatibleCCRPointFamily sys) :
@@ -85,18 +82,17 @@ theorem ccrCompatiblePointParameterColimitMap_stage_apply
         (topologicalDirectInjection ((Functor.const I).obj (TopCat.of PUnit)) i u) =
       qCcrParameterTopologicalInjection Stage sys i
         (family.toQCCR.point i).1 := by
-  have hpoint := compatiblePointColimitMap_stage_apply sys family.toQCCR i u
   have hincl := qCcrParameterZeroFiberToParameterColimit_stage Stage sys i
   have hincl' := congrArg (fun f => f (family.toQCCR.point i)) hincl
-  have hincl'' :
-      qCcrParameterZeroFiberToParameterColimit Stage sys
-          (qCcrParameterZeroFiberTopologicalInjection Stage sys i
-            (family.toQCCR.point i)) =
-        qCcrParameterTopologicalInjection Stage sys i
-          (family.toQCCR.point i).1 := by
-    simpa [qCcrParameterZeroFiberToParameterNatTrans] using hincl'
-  have h := congrArg
-    (fun z => qCcrParameterZeroFiberToParameterColimit Stage sys z) hpoint
-  simpa [ccrCompatiblePointParameterColimitMap] using h.trans hincl''
+  change qCcrParameterZeroFiberToParameterColimit Stage sys
+      (qCcrParameterZeroFiberTopologicalInjection Stage sys i
+        (family.toQCCR.point i)) =
+    qCcrParameterTopologicalInjection Stage sys i (family.toQCCR.point i).1 at hincl'
+  change qCcrParameterZeroFiberToParameterColimit Stage sys
+      (ccrCompatiblePointColimitMap sys family
+        (topologicalDirectInjection ((Functor.const I).obj (TopCat.of PUnit)) i u)) =
+    qCcrParameterTopologicalInjection Stage sys i (family.toQCCR.point i).1
+  rw [ccrCompatiblePointColimitMap_stage_apply]
+  exact hincl'
 
 end InfoGeometry.Canonical.CCRCompatiblePointColimit

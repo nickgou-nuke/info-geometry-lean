@@ -67,7 +67,6 @@ representation at its endpoint permutation. -/
     celestialAssociatedDeckLinearMonodromy n p rho
         (celestialOrderedExchangeLoopClass n p sigma gamma) = rho sigma := by
   unfold celestialAssociatedDeckLinearMonodromy
-  rw [MonoidHom.comp_apply]
   have hmap :=
     celestialUnorderedFundamentalGroupMap_orderedExchangeLoopClass
       n p sigma gamma

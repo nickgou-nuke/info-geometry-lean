@@ -3,6 +3,17 @@ name: socratic-oracle-proof-repair
 description: Use when a stubborn Lean 4 proof error should be repaired through a Socratic ChatGPT oracle via aiClaw. Send the complete owner file plus all relevant build errors in one prompt, wait for the final visible answer, request one complete corrected Lean file, and accept only Lean-kernel-checked code.
 ---
 
+<!-- repository-context-rule -->
+## Repository context rule
+
+For repository work, the current checked-out codebase is the context. Search
+existing implementation and trace actual carriers, definitions, imports,
+instances, theorem statements, and uses before claiming a structure is missing
+or incorrect. A local absence is not a repository-wide absence. Names,
+heuristics, summaries, and documentation guide discovery but do not override
+source. Follow `docs/REPO_DEEP_SEARCH_PROTOCOL.md` before repo-wide gap claims.
+
+
 # Socratic Oracle Proof Repair
 
 Use this skill when a Lean proof has survived repeated local attempts and needs

@@ -1,4 +1,4 @@
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Analysis.Calculus.Deriv.Add
@@ -40,7 +40,7 @@ theorem hasDerivAt_log_barrier_metric (x : ℝ) (hx : x ≠ 0) :
     HasDerivAt (fun y => - 1 / y) (1 / x ^ 2) x := by
   have h_inv : (fun y : ℝ => - 1 / y) = (fun y : ℝ => - y⁻¹) := by
     ext y
-    rw [inv_eq_one_div]
+    ring
   rw [h_inv]
   have h1 := hasDerivAt_inv hx
   have h2 := h1.neg
@@ -55,17 +55,20 @@ theorem hasDerivAt_amari_skewness_tensor (x : ℝ) (hx : x ≠ 0) :
     HasDerivAt (fun y => 1 / y ^ 2) (- 2 / x ^ 3) x := by
   have h_pow : (fun y : ℝ => 1 / y ^ 2) = (fun y : ℝ => y ^ (-2 : ℤ)) := by
     ext y
-    have h_zpow : y ^ (-2 : ℤ) = 1 / y ^ (2 : ℤ) := zpow_neg y 2
+    have h_zpow : y ^ (-2 : ℤ) = 1 / y ^ (2 : ℤ) := by
+      simp [one_div, zpow_neg]
     have h_rpow : y ^ (2 : ℤ) = y ^ 2 := by norm_cast
     rw [h_zpow, h_rpow]
   rw [h_pow]
   have h1 := hasDerivAt_zpow (-2 : ℤ) x (Or.inl hx)
-  have h_eq : (-2 : ℝ) * x ^ (-2 - 1 : ℤ) = - 2 / x ^ 3 := by
+  have h_eq : (↑(-2 : ℤ) : ℝ) * x ^ (-2 - 1 : ℤ) = - 2 / x ^ 3 := by
     have h_sub : (-2 - 1 : ℤ) = -3 := by decide
     rw [h_sub]
-    have h_zpow3 : x ^ (-3 : ℤ) = 1 / x ^ (3 : ℤ) := zpow_neg x 3
+    have h_zpow3 : x ^ (-3 : ℤ) = 1 / x ^ (3 : ℤ) := by
+      simp [one_div, zpow_neg]
     have h_rpow3 : x ^ (3 : ℤ) = x ^ 3 := by norm_cast
     rw [h_zpow3, h_rpow3]
+    norm_num
     ring
   exact h1.congr_deriv h_eq
 
@@ -95,7 +98,7 @@ noncomputable def jko_action
     Time evolution is strictly Optimal Transport! -/
 theorem otto_villani_gradient_flow
     (F W_sq F_grad W_grad : ℝ → ℝ) (tau x : ℝ)
-    (htau : tau ≠ 0)
+    (_htau : tau ≠ 0)
     (hF : HasDerivAt F (F_grad x) x)
     (hW : HasDerivAt W_sq (W_grad x) x)
     (h_min : HasDerivAt (jko_action F W_sq tau) 0 x) :
@@ -119,11 +122,7 @@ theorem discrete_time_velocity_emergence
     W_grad / tau = - 2 * F_grad := by
   calc
     W_grad / tau = 2 * ((1 / (2 * tau)) * W_grad) := by
-      have h_frac : 2 * (1 / (2 * tau)) = 1 / tau := by
-        calc 2 * (1 / (2 * tau)) = 2 / (2 * tau) := by ring
-        _ = 1 / tau := by rw [mul_div_cancel_left₀ 1 (two_ne_zero)]
-      rw [h_frac]
-      ring
+      field_simp [htau]
     _ = 2 * (- F_grad) := by
       have h_iso : (1 / (2 * tau)) * W_grad = - F_grad := by linarith [h_flow]
       rw [h_iso]

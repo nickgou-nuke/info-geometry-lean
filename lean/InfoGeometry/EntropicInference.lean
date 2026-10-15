@@ -184,10 +184,10 @@ lemma full_support_of_marginal_eq
   intro x
   simpa [← hmarg] using hp x
 
-  omit [MeasurableSpace X] [MeasurableSpace Θ] in
-  /--
-  Strict positivity of all joint atoms implies strict positivity of each `X`-marginal atom.
-  -/
+omit [MeasurableSpace X] [MeasurableSpace Θ] in
+/--
+Strict positivity of all joint atoms implies strict positivity of each `X`-marginal atom.
+-/
 lemma marginal_x_toReal_pos_of_joint_toReal_pos
     [Nonempty Θ]
     (p : Joint X Θ)
@@ -206,17 +206,17 @@ lemma marginal_x_toReal_pos_of_joint_toReal_pos
           (f := fun θ : Θ => p (x, θ))
           (by
             intro θ _hθ
-            exact zero_le _)
+            exact zero_le)
           (by simp))
     simpa using hle'
   have hle_real : (p (x, θ0)).toReal ≤ (marginal_x p x).toReal := by
     exact ENNReal.toReal_mono ((marginal_x p).apply_ne_top x) hterm_le
   exact lt_of_lt_of_le hterm_pos hle_real
 
-  omit [MeasurableSpace X] [MeasurableSpace Θ] in
-  /--
-  Strict positivity of all joint atoms implies full support of the `X`-marginal.
-  -/
+omit [MeasurableSpace X] [MeasurableSpace Θ] in
+/--
+Strict positivity of all joint atoms implies full support of the `X`-marginal.
+-/
 lemma marginal_x_full_support_of_joint_toReal_pos
     [Nonempty Θ]
     (p : Joint X Θ)
@@ -231,10 +231,10 @@ lemma marginal_x_full_support_of_joint_toReal_pos
     exact hmx_ne_zero_real (by simp [hzero])
   exact (PMF.mem_support_iff (marginal_x p) x).2 hmx_ne_zero
 
-  omit [MeasurableSpace X] [MeasurableSpace Θ] in
-  /--
-  `toReal` ratio formula for finite conditionals under strict positivity.
-  -/
+omit [MeasurableSpace X] [MeasurableSpace Θ] in
+/--
+`toReal` ratio formula for finite conditionals under strict positivity.
+-/
 lemma cond_theta_given_x_toReal_ratio
     [Nonempty Θ]
     (p : Joint X Θ)
@@ -246,10 +246,10 @@ lemma cond_theta_given_x_toReal_ratio
     cond_theta_given_x_apply p x (marginal_x_full_support_of_joint_toReal_pos p hpos x) θ
   rw [hcond, ENNReal.toReal_mul, ENNReal.toReal_inv, div_eq_mul_inv]
 
-  omit [MeasurableSpace X] [MeasurableSpace Θ] in
-  /--
-  Factorization of a strictly positive joint into marginal times conditional, in `toReal` form.
-  -/
+omit [MeasurableSpace X] [MeasurableSpace Θ] in
+/--
+Factorization of a strictly positive joint into marginal times conditional, in `toReal` form.
+-/
 lemma joint_toReal_factor_marginal_conditional
     [Nonempty Θ]
     (p : Joint X Θ)
@@ -265,9 +265,9 @@ lemma joint_toReal_factor_marginal_conditional
   rw [hratio]
   field_simp [hpx_ne]
 
-  omit [MeasurableSpace X] [MeasurableSpace Θ] in
-  /--
-  Pointwise logarithmic split:
+omit [MeasurableSpace X] [MeasurableSpace Θ] in
+/--
+Pointwise logarithmic split:
   `log (p(x,θ)/q(x,θ)) = log (p(x)/q(x)) + log (p(θ|x)/q(θ|x))`,
   for strictly positive finite joints.
   -/
@@ -462,11 +462,11 @@ theorem kl_marginal_x_le_toReal_strict
       mul_nonneg ENNReal.toReal_nonneg ENNReal.toReal_nonneg
   linarith
 
-  omit [MeasurableSpace X] [MeasurableSpace Θ] in
-  /--
-  Conditionals of an assembled joint recover the input kernel.
-  This is the finite `Θ | X` reconstruction lemma.
-  -/
+omit [MeasurableSpace X] [MeasurableSpace Θ] in
+/--
+Conditionals of an assembled joint recover the input kernel.
+This is the finite `Θ | X` reconstruction lemma.
+-/
 lemma cond_theta_given_x_assemble
     (p_x : FinProb X) (r : X → FinProb Θ)
     {x : X} (hx : x ∈ p_x.support) :
@@ -484,10 +484,10 @@ lemma cond_theta_given_x_assemble
     _ = (p_x x * (p_x x)⁻¹) * r x θ := by ac_rfl
     _ = r x θ := by simp [hcancel]
 
-  omit [MeasurableSpace X] [MeasurableSpace Θ] in
-  /--
-  Jeffrey update preserves the conditional family `q(θ | x)`.
-  -/
+omit [MeasurableSpace X] [MeasurableSpace Θ] in
+/--
+Jeffrey update preserves the conditional family `q(θ | x)`.
+-/
 lemma cond_theta_given_x_jeffrey_joint
     (q : Joint X Θ) (p_x : FinProb X)
     (hq : ∀ x : X, x ∈ (marginal_x q).support)

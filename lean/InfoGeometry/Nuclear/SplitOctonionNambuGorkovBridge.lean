@@ -349,9 +349,10 @@ theorem bogoliubovEnergy_sq_pos (N : NambuGorkovCarrier ℝ)
   have hpos := bogoliubovEnergy_pos N h_nontriv
   exact sq_pos_of_ne_zero (ne_of_gt hpos)
 
-/-- 🏆 THEOREM (Klein Quadric Mass-Shell Characterization):
-A Nambu-Gorkov state lies on the Klein quadric boundary $\det_Z(X_{\text{NG}}) = 0$ if and only if
-both the single-particle energy vanishes ($\xi = 0$) and the pairing gap vanishes ($\vec{\Delta} = 0$). -/
+/-- The split norm of this Nambu-Gorkov carrier vanishes exactly when all
+    four real coordinates vanish. This is a coordinate norm-zero criterion;
+    it is not a Plücker/Klein-quadric decomposability statement or a
+    relativistic mass-shell theorem. -/
 theorem nambuGorkov_null_iff (N : NambuGorkovCarrier ℝ) :
     zornNorm (toZorn N) = 0 ↔ (N.xi = 0 ∧ N.delta 0 = 0 ∧ N.delta 1 = 0 ∧ N.delta 2 = 0) := by
   rw [nambu_gorkov_zornNorm]

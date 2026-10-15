@@ -79,7 +79,8 @@ theorem second_law
     (x : Op)
     (hx : InRegularCorner F.support x) :
     0 ≤ F.entropyProduction x := by
-  simpa [DrazinThermoFrame.entropyProduction] using
+  simpa [DrazinThermoFrame.entropyProduction,
+    DrazinThermoFrame.toSecondLawCertificate] using
     certificate_second F.toSecondLawCertificate x hx
 
 /-- Modular fixedness gives two-sided no leakage. -/

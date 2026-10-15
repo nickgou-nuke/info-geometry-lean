@@ -232,7 +232,9 @@ theorem kleinDLogAlong_self_eq_two
 /-- The barrier derivative is the negative logarithmic de Rham form away from the branch cut. -/
 theorem logGeneratingPotential_hasDerivAt (Q : ℂ) (hQ : Q ∈ Complex.slitPlane) :
     HasDerivAt logGeneratingPotential (-(1 / Q)) Q := by
-  simpa [logGeneratingPotential] using (Complex.hasDerivAt_log hQ).neg
+  have h := (Complex.hasDerivAt_log hQ).neg
+  rw [one_div]
+  exact h
 
 /-- Time is formalized as the de Rham 1-form cohomology of winding around the cone
     of the chiral Klein quadric of the chiral causal algebra.

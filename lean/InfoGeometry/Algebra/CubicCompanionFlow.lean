@@ -30,10 +30,16 @@ theorem exp_generator :
     rw [hangle, Real.sin_sub]
     simp [Real.sin_pi_div_three]
   have hnonzero : Real.sqrt 3 ≠ 0 := by positivity
-  rw [exp_of_sq_eq_neg_one generator generator_sq, hcos, hsin]
-  ext row column
-  fin_cases row <;> fin_cases column <;>
-    simp [generator, thirdRoot] <;> field_simp <;> ring
+  calc
+    NormedSpace.exp ((2 * Real.pi / 3) • generator) =
+        Real.cos (2 * Real.pi / 3) • (1 : Mat2) +
+          Real.sin (2 * Real.pi / 3) • generator :=
+      exp_of_sq_eq_neg_one generator generator_sq (2 * Real.pi / 3)
+    _ = thirdRoot := by
+      rw [hcos, hsin]
+      ext row column
+      fin_cases row <;> fin_cases column <;>
+        simp [generator, thirdRoot] <;> field_simp <;> ring
 
 theorem thirdRoot_not_orthogonal : thirdRoot.transpose * thirdRoot ≠ 1 := by
   intro hequal

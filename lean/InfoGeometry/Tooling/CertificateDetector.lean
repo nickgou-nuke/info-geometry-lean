@@ -84,8 +84,8 @@ theorem outward_normal_cone
 η ∈ convexOutwardNormalCone S.naturalCone ξ ↔
 η ∈ outwardConeOrthogonal S.naturalCone ξ) :
 convexOutwardNormalCone S.naturalCone ξ = outwardConeOrthogonal S.naturalCone ξ := by
-ext η
-exact hnormal η
+  ext η
+  exact hnormal η
 
 omit [CompleteSpace E] in
 @[rep_depth operator]
@@ -96,8 +96,8 @@ theorem inward_normal_cone
 η ∈ convexInwardNormalCone S.naturalCone ξ ↔
 η ∈ inwardConeOrthogonal S.naturalCone ξ) :
 convexInwardNormalCone S.naturalCone ξ = inwardConeOrthogonal S.naturalCone ξ := by
-ext η
-exact hnormal η
+  ext η
+  exact hnormal η
 
 omit [CompleteSpace E] in
 @[rep_depth operator]
@@ -143,8 +143,8 @@ variable (B : Bridge (E := E) (Functional := Functional))
 @[rep_depth operator]
 theorem coneVector_mem_selfDualCone (ω : Functional) :
 B.standardForm.coneVector ω ∈ B.selfDualCone.cone := by
-simpa [B.naturalCone_eq_selfDualCone] using
-B.standardForm.coneVector_mem_naturalCone ω
+  simpa [B.naturalCone_eq_selfDualCone] using
+    B.standardForm.coneVector_mem_naturalCone ω
 
 @[rep_depth operator]
 theorem J_fixes_coneVector (ω : Functional) :
@@ -160,8 +160,8 @@ theorem outwardNormalCone_coneVector
 η ∈ outwardConeOrthogonal B.selfDualCone.cone (B.standardForm.coneVector ω)) :
 convexOutwardNormalCone B.selfDualCone.cone (B.standardForm.coneVector ω) =
 outwardConeOrthogonal B.selfDualCone.cone (B.standardForm.coneVector ω) := by
-ext η
-exact hnormal η
+  ext η
+  exact hnormal η
 
 @[rep_depth operator]
 theorem inwardNormalCone_coneVector
@@ -172,8 +172,8 @@ theorem inwardNormalCone_coneVector
 η ∈ inwardConeOrthogonal B.selfDualCone.cone (B.standardForm.coneVector ω)) :
 convexInwardNormalCone B.selfDualCone.cone (B.standardForm.coneVector ω) =
 inwardConeOrthogonal B.selfDualCone.cone (B.standardForm.coneVector ω) := by
-ext η
-exact hnormal η
+  ext η
+  exact hnormal η
 
 @[rep_depth operator]
 def positiveOrthant_selfDual

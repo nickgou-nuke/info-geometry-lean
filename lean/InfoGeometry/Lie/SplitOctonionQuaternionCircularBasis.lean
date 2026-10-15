@@ -638,7 +638,7 @@ theorem root_reconstruction_ell (i : Fin 3) :
   rw [cartesianZorn_intertwines_closedFlow, cartesianZorn_rootPlus,
     map_smul, cartesianZorn_rootPlus]
   rw [InfoGeometry.Lie.SplitOctonionEllClosedFlow.ellFlowPhi_coord]
-  ext j <;> simp [chiralUpperBasis, Equiv.smul_def, coordEquiv]
+  ext j <;> simp [chiralUpperBasis, smul_a, smul_b, smul_x, smul_y]
 
 /-- The closed hyperbolic flow is diagonal on the circular negative roots. -/
 @[simp] theorem cartesianHyperbolicFlow_rootMinus (t : ℝ) (i : Fin 3) :
@@ -648,6 +648,6 @@ theorem root_reconstruction_ell (i : Fin 3) :
   rw [cartesianZorn_intertwines_closedFlow, cartesianZorn_rootMinus,
     map_smul, cartesianZorn_rootMinus]
   rw [InfoGeometry.Lie.SplitOctonionEllClosedFlow.ellFlowPhi_coord]
-  ext j <;> simp [chiralLowerBasis, Equiv.smul_def, coordEquiv]
+  ext j <;> simp [chiralLowerBasis, smul_a, smul_b, smul_x, smul_y]
 
 end InfoGeometry.Lie.SplitOctonionQuaternionCircularBasis

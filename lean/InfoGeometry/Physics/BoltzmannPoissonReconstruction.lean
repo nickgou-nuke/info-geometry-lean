@@ -118,14 +118,18 @@ theorem hasDerivAt_uniformChargePotential (rho eps c0 c1 x : ℝ) (heps : eps �
     HasDerivAt (uniformChargePotential rho eps c0 c1)
       (-uniformChargeField rho eps c1 x) x := by
   convert (((hasDerivAt_id x).const_mul c1).const_add c0).sub
-    (((hasDerivAt_id x).pow 2).const_mul (rho / (2 * eps))) using 1 <;>
-    dsimp [uniformChargePotential, uniformChargeField] <;>
-    field_simp [heps] <;> ring
+    (((hasDerivAt_id x).pow 2).const_mul (rho / (2 * eps))) using 1
+  all_goals
+    first | ext y | skip
+    simp [uniformChargePotential, uniformChargeField, id_eq] <;>
+      field_simp [heps] <;> norm_num <;> ring
 
 theorem hasDerivAt_uniformChargeField (rho eps c1 x : ℝ) :
     HasDerivAt (uniformChargeField rho eps c1) (rho / eps) x := by
-  convert ((hasDerivAt_id x).const_mul (rho / eps)).sub_const c1 using 1 <;>
-    simp [uniformChargeField, mul_comm]
+  convert ((hasDerivAt_id x).const_mul (rho / eps)).sub_const c1 using 1
+  all_goals
+    first | ext y | skip
+    simp [uniformChargeField, mul_comm, id_eq] <;> norm_num
 
 theorem uniformCharge_gauss (rho eps c1 x : ℝ) (heps : eps ≠ 0) :
     eps * deriv (uniformChargeField rho eps c1) x = rho := by
@@ -151,13 +155,17 @@ def logarithmicField (c a x : ℝ) : ℝ := -c * stationaryAcceleration a x
 
 theorem hasDerivAt_logarithmicPotential (c a x : ℝ) (hx : lapse a x ≠ 0) :
     HasDerivAt (logarithmicPotential c a) (-logarithmicField c a x) x := by
-  convert (hasDerivAt_log_lapse a x hx).const_mul c using 1 <;>
-    dsimp [logarithmicPotential, logarithmicField] <;> ring
+  convert (hasDerivAt_log_lapse a x hx).const_mul c using 1
+  all_goals
+    first | ext y | skip
+    simp [logarithmicPotential, logarithmicField] <;> ring_nf
 
 theorem hasDerivAt_logarithmicField (c a x : ℝ) (hx : lapse a x ≠ 0) :
     HasDerivAt (logarithmicField c a) (c * (stationaryAcceleration a x) ^ 2) x := by
-  convert (hasDerivAt_stationaryAcceleration a x hx).const_mul (-c) using 1 <;>
-    dsimp [logarithmicField] <;> ring
+  convert (hasDerivAt_stationaryAcceleration a x hx).const_mul (-c) using 1
+  all_goals
+    first | ext y | skip
+    simp [logarithmicField] <;> ring_nf
 
 /-- The electrostatic source of the chosen log-lapse profile is generally nonzero. -/
 theorem logarithmicField_gauss_source (eps c a x : ℝ) (hx : lapse a x ≠ 0) :

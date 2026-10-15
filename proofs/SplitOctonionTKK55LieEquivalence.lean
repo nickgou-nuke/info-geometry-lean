@@ -1,4 +1,5 @@
 import proofs.SplitOctonionTKK55Blocks
+import Mathlib.Algebra.Lie.OfAssociative
 
 /-!
 # Native block carrier for `so(5,5)`
@@ -12,11 +13,13 @@ hyperbolic orthogonal Lie subalgebra.
 noncomputable section
 namespace SplitOctonionTKK55LieEquivalence
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 open SplitOctonionTKK55Blocks
 
 def middleSO44 : Submodule ℝ (Matrix (Fin 8) (Fin 8) ℝ) where
   carrier := {K | betaSkew K}
-  zero_mem' := by intro i j; simp [betaSkew]
+  zero_mem' := by intro i j; simp
   add_mem' := by
     intro K L hK hL i j
     simp only [Matrix.add_apply, mul_add]
@@ -81,7 +84,6 @@ def blockLinearMap : TKKBlockCarrier →ₗ[ℝ] hyperbolicSO55Submodule where
     ext i j
     cases i <;> cases j <;>
       simp [P, D, N, flat]
-    all_goals (try split_ifs) <;> ring
 
 theorem blockLinearMap_injective : Function.Injective blockLinearMap := by
   intro q r h
@@ -128,7 +130,7 @@ theorem middleCommutator_betaSkew (K L : middleSO44) :
     hBracket_hyperbolicOrthogonal
       (D_hyperbolicOrthogonal K.2) (D_hyperbolicOrthogonal L.2)
   rw [D_D_bracket] at horth
-  simpa [disassemble, D] using disassemble_betaSkew horth
+  exact disassemble_betaSkew horth
 
 def middleCommutator (K L : middleSO44) : middleSO44 :=
   ⟨K.1 * L.1 - L.1 * K.1, middleCommutator_betaSkew K L⟩
@@ -146,6 +148,11 @@ def tkkBracket (q r : TKKBlockCarrier) : TKKBlockCarrier :=
       matVec q.2.1.2.1 r.2.2 - matVec r.2.1.2.1 q.2.2 +
         q.2.1.1 • r.2.2 - r.2.1.1 • q.2.2))
 
+@[ext]
+theorem BlockData.ext {b c : BlockData}
+    (hx : b.x = c.x) (ha : b.a = c.a) (hK : b.K = c.K) (hy : b.y = c.y) : b = c := by
+  cases b; cases c; subst hx ha hK hy; rfl
+
 theorem blockLinearMap_tkkBracket (q r : TKKBlockCarrier) :
     ((blockLinearMap (tkkBracket q r) : hyperbolicSO55Submodule) : HMatrix) =
       hBracket (blockLinearMap q : HMatrix) (blockLinearMap r : HMatrix) := by
@@ -156,18 +163,13 @@ theorem blockLinearMap_tkkBracket (q r : TKKBlockCarrier) :
   · simp [blockLinearMap, tkkBracket, middleCommutator, rankTwoSO44,
       disassemble, hBracket, P, D, N, matVec, rankTwo,
       Matrix.mul_apply, Matrix.mulVec, sum_HIndex, dotProduct]
-    constructor
-    · funext i
-      ring
-    constructor
+    ext
+    · ring
     · rw [beta44_symmetric q.1 r.2.2, beta44_symmetric r.1 q.2.2,
         ← beta44_flat r.2.2 q.1, ← beta44_flat q.2.2 r.1]
       ring
-    constructor
-    · funext i j
-      ring
-    · funext i
-      ring
+    · ring
+    · ring
 
 instance : Bracket TKKBlockCarrier TKKBlockCarrier := ⟨tkkBracket⟩
 

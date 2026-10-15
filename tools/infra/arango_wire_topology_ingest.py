@@ -27,6 +27,7 @@ Lean evidence layer.  All derived documents retain raw ids/hashes for descent.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import subprocess
 import sys
@@ -50,6 +51,8 @@ from tools.infra.arango_raw_infotree_ingest import (
     import_rows,
     iter_jsonl,
     list_collections,
+    db_url,
+    request_json,
     truncate_collection,
 )
 
@@ -375,6 +378,107 @@ def ensure_wire_indexes(target: ArangoTarget, collections: set[str] | None = Non
     return report
 
 
+def ensure_wire_indexes_for_generation(
+    target: ArangoTarget, active: set[str], collection_map: dict[str, str]
+) -> dict[str, Any]:
+    report: dict[str, Any] = {}
+    for base_collection in sorted(active):
+        target_collection = collection_map[base_collection]
+        entries = []
+        for spec in INDEX_SPECS.get(base_collection, []):
+            fields = [str(field) for field in spec["fields"]]
+            try:
+                result = ensure_index(target, target_collection, fields, unique=bool(spec.get("unique", False)))
+                entries.append({"fields": fields, "error": bool(result.get("error")), "id": result.get("id")})
+            except Exception as exc:
+                entries.append({"fields": fields, "error": True, "message": str(exc)})
+        if entries:
+            report[target_collection] = entries
+    return report
+
+
+def remap_wire_endpoints(row: dict[str, Any], collection_map: dict[str, str]) -> dict[str, Any]:
+    out = dict(row)
+    for field in ("_from", "_to"):
+        if field not in out:
+            continue
+        collection, separator, key = str(out[field]).partition("/")
+        if separator and collection in collection_map:
+            out[field] = f"{collection_map[collection]}/{key}"
+    return out
+
+
+def generation_fingerprint(input_dir: Path, build_fingerprint: str, active: set[str]) -> str:
+    digest = hashlib.sha256(build_fingerprint.encode("utf-8"))
+    for collection in sorted(active):
+        path = input_dir / ROW_FILES[collection]
+        digest.update(path.name.encode("utf-8"))
+        with path.open("rb") as stream:
+            for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+                digest.update(chunk)
+    return digest.hexdigest()[:24]
+
+
+def canonical_json(value: Any) -> str:
+    return json.dumps(value, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+
+
+def archetype_hash_bundles(input_dir: Path) -> list[tuple[dict[str, Any], str]]:
+    """Build content-addressed coarse signatures from SCC and declaration hashes.
+
+    These signatures are retrieval archetypes, not proofs of equivalence.
+    """
+    declaration_hashes: dict[str, dict[str, str]] = {}
+    for row in iter_jsonl(input_dir / ROW_FILES["ig_decl_topologies"]):
+        decl = str(row.get("decl") or "")
+        if decl:
+            declaration_hashes[decl] = {
+                field: str(row[field])
+                for field in ("patternHash", "roleHash")
+                if row.get(field)
+            }
+
+    out: list[tuple[dict[str, Any], str]] = []
+    for scc in iter_jsonl(input_dir / ROW_FILES["ig_scc"]):
+        pattern_hashes = sorted({
+            (kind, declaration_hashes[decl][kind])
+            for decl in (str(x) for x in scc.get("decls", []))
+            for kind in ("patternHash", "roleHash")
+            if decl in declaration_hashes and kind in declaration_hashes[decl]
+        })
+        bundle = {
+            "scheme": "info_geometry.archetype_hash_bundle.v1",
+            "sccPatternHash": str(scc.get("sccPatternHash") or ""),
+            "declarationPatternAndRoleHashes": [
+                {"kind": kind, "hash": value} for kind, value in pattern_hashes
+            ],
+        }
+        serialized = canonical_json(bundle)
+        key = "arch_" + hashlib.sha256(serialized.encode("utf-8")).hexdigest()
+        out.append((bundle, key))
+    return out
+
+
+def insert_immutable_signature(target: ArangoTarget, document: dict[str, Any]) -> None:
+    collection = "ig_archetype_signatures"
+    try:
+        request_json(
+            "POST", db_url(target, f"/_api/document/{collection}?waitForSync=true"),
+            username=target.username, password=target.password, payload=document,
+        )
+    except RuntimeError as exc:
+        if "1210" not in str(exc):
+            raise
+        existing = request_json(
+            "GET", db_url(target, f"/_api/document/{collection}/{document['_key']}"),
+            username=target.username, password=target.password,
+        )
+        actual = {k: v for k, v in existing.items() if k not in {"_id", "_key", "_rev"}}
+        expected = {k: v for k, v in document.items() if k != "_key"}
+        if canonical_json(actual) != canonical_json(expected):
+            raise RuntimeError(f"archetype hash collision for {document['_key']}") from exc
+
+
 def ensure_wire_collections(
     target: ArangoTarget,
     *,
@@ -430,11 +534,23 @@ def ingest_wire_topology(
     truncate: bool,
     skip_indexes: bool,
     batch_size: int,
+    build_fingerprint: str | None = None,
 ) -> dict[str, Any]:
     pf = preflight(input_dir)
     if pf["missing_files"]:
         raise RuntimeError(f"wire topology input preflight failed: missing {pf['missing_files']}")
     active = active_collections(input_dir)
+    generation_id = generation_fingerprint(input_dir, build_fingerprint, active) if build_fingerprint else None
+    if generation_id and truncate:
+        raise ValueError("--truncate is incompatible with immutable generation ingest")
+    collection_map = {
+        name: f"{name}_g_{generation_id}" if generation_id else name
+        for name in ROW_FILES
+    }
+    target_specs = [
+        CollectionSpec(collection_map[spec.name], spec.edge)
+        for spec in COLLECTION_SPECS if spec.name in active
+    ]
 
     report: dict[str, Any] = {
         "schema": "info_geometry.arango_wire_topology_ingest.v1",
@@ -443,9 +559,23 @@ def ingest_wire_topology(
         "preflight": pf,
         "active_collections": sorted(active),
         "inactive_optional_collections": sorted(OPTIONAL_ROW_COLLECTIONS - active),
-        "collections": ensure_wire_collections(target, truncate=truncate, collections=active),
+        "generation_id": generation_id,
+        "build_fingerprint": build_fingerprint,
+        "collections": ensure_wire_collections(
+            target, truncate=truncate,
+            collections=set() if generation_id else active,
+        ) if not generation_id else {},
         "imports": {},
     }
+
+    if generation_id:
+        ensure_database(target)
+        existing = list_collections(target)
+        if any(spec.name in existing for spec in target_specs):
+            raise RuntimeError(f"immutable wire-topology generation {generation_id} already exists")
+        for spec in target_specs:
+            create_collection(target, spec)
+        report["collections"] = {"created": [spec.name for spec in target_specs], "truncated": []}
 
     for collection, filename in ROW_FILES.items():
         path = input_dir / filename
@@ -457,20 +587,89 @@ def ingest_wire_topology(
             }
             continue
         rows = (normalize_wire_row(collection, row) for row in iter_jsonl(path))
-        report["imports"][collection] = import_rows(
+        if generation_id:
+            rows = (remap_wire_endpoints(row, collection_map) for row in rows)
+        target_collection = collection_map[collection]
+        report["imports"][target_collection] = import_rows(
             target,
-            collection,
+            target_collection,
             rows,
             batch_size=batch_size,
         )
 
     if not skip_indexes:
-        report["indexes"] = ensure_wire_indexes(target, active)
+        if generation_id:
+            report["indexes"] = ensure_wire_indexes_for_generation(target, active, collection_map)
+        else:
+            report["indexes"] = ensure_wire_indexes(target, active)
     report["live_counts"] = {
-        spec.name: collection_count(target, spec.name)
-        for spec in COLLECTION_SPECS
-        if spec.name in active
+        collection_map[spec.name]: collection_count(target, collection_map[spec.name])
+        for spec in COLLECTION_SPECS if spec.name in active
     }
+    if generation_id:
+        existing = list_collections(target)
+        signature_collection = "ig_archetype_signatures"
+        occurrence_collection = "ig_archetype_occurrences"
+        if signature_collection not in existing:
+            create_collection(target, CollectionSpec(signature_collection, False))
+        if occurrence_collection not in existing:
+            create_collection(target, CollectionSpec(occurrence_collection, True))
+        bundle_rows = archetype_hash_bundles(input_dir)
+        occurrence_edges = []
+        for scc, (bundle, signature_key) in zip(iter_jsonl(input_dir / ROW_FILES["ig_scc"]), bundle_rows):
+            signature = {
+                "_key": signature_key,
+                "schema": bundle["scheme"],
+                "hashBundle": bundle,
+                "hashBundleSha256": signature_key.removeprefix("arch_"),
+                "identityScope": "coarse structural archetype; retrieval/dedup index, not proof identity",
+            }
+            insert_immutable_signature(target, signature)
+            occurrence_edges.append({
+                "_key": "arche_" + hashlib.sha256(
+                    f"{generation_id}:{scc['_key']}:{signature_key}".encode("utf-8")
+                ).hexdigest(),
+                "_from": f"{collection_map['ig_scc']}/{scc['_key']}",
+                "_to": f"ig_archetype_signatures/{signature_key}",
+                "role": "scc_has_archetype_signature",
+                "generationId": generation_id,
+                "sccPatternHash": bundle["sccPatternHash"],
+            })
+        report["archetype_signature_count"] = len(bundle_rows)
+        if not skip_indexes:
+            report["archetype_indexes"] = {
+                "signatures": [
+                    ensure_index(target, "ig_archetype_signatures", ["hashBundleSha256"], unique=True),
+                    ensure_index(target, "ig_archetype_signatures", ["hashBundle.sccPatternHash"]),
+                ],
+                "occurrences": [
+                    ensure_index(target, occurrence_collection, ["generationId"]),
+                    ensure_index(target, occurrence_collection, ["_to"]),
+                ],
+            }
+        report["imports"][occurrence_collection] = import_rows(
+            target, occurrence_collection, occurrence_edges, batch_size=batch_size,
+        )
+        report["occurrence_edge_count"] = len(occurrence_edges)
+        generation_collection = "ig_graph_generations"
+        existing = list_collections(target)
+        if generation_collection not in existing:
+            create_collection(target, CollectionSpec(generation_collection, False))
+        generation_doc = {
+            "_key": generation_id,
+            "schema": "info_geometry.graph_generation.v1",
+            "status": "complete",
+            "buildFingerprint": build_fingerprint,
+            "inputFingerprint": generation_id,
+            "collections": {name: collection_map[name] for name in active},
+            "signatureEdges": occurrence_collection,
+            "liveCounts": report["live_counts"],
+            "archetypeSignatureCount": len(bundle_rows),
+        }
+        request_json(
+            "POST", db_url(target, f"/_api/document/{generation_collection}?waitForSync=true"),
+            username=target.username, password=target.password, payload=generation_doc,
+        )
     return report
 
 
@@ -482,6 +681,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--username", default=None)
     parser.add_argument("--password", default=None)
     parser.add_argument("--truncate", action="store_true")
+    parser.add_argument("--build-fingerprint", help="Enable immutable generation ingest bound to the exact Lean/Lake build environment.")
     parser.add_argument("--skip-indexes", action="store_true")
     parser.add_argument("--batch-size", type=int, default=1000)
     parser.add_argument("--json-out", type=Path, default=Path("artifacts/expr-graph/arango_wire_topology_ingest_report.json"))
@@ -505,6 +705,7 @@ def main() -> int:
             truncate=bool(args.truncate),
             skip_indexes=bool(args.skip_indexes),
             batch_size=int(args.batch_size),
+            build_fingerprint=args.build_fingerprint,
         )
     except subprocess.CalledProcessError as exc:
         print(str(exc), file=sys.stderr)

@@ -1,0 +1,12 @@
+import InfoGeometry.Physics.JordanWignerMultiDyads
+
+open InfoGeometry.Physics.JordanWignerMulti
+
+#print axioms jwParityString_zero_is_identity
+#print axioms jwParityString_extend_zero
+#print axioms jwParityString_extend_succ
+#print axioms string_commutes_outside_site0
+#print axioms string_anticommutes_inside_site0
+#print axioms jw_fermion_CAR_site0
+#print axioms jw_fermion_nilpotent_site0
+#print axioms jw_fermion_cross_anticomm_0_succ

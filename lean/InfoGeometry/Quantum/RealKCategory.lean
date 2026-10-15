@@ -94,7 +94,7 @@ noncomputable def complexSMul (X : RealKVect) (z : ℂ) (v : X) : X :=
   z.re • v + z.im • (X.K v)
 
 /-- Derived complex module structure on a `RealKVect` object. -/
-noncomputable def complexModule (X : RealKVect) : Module ℂ X where
+@[instance_reducible] noncomputable def complexModule (X : RealKVect) : Module ℂ X where
   smul z v := complexSMul X z v
   one_smul v := by
     change ((1 : ℂ).re • v + (1 : ℂ).im • X.K v = v)
@@ -216,8 +216,11 @@ noncomputable def unitIsoComplexRealK :
           map_smul' := by
             intro z x
             rw [RingHom.id_apply]
-            change z • x = z.re • x + z.im • Complex.I • x
-            exact complex_smul_eq_re_im_I_smul z x })
+            change (z • x : W) = complexSMul (complexToRealK.obj W) z x
+            rw [complex_smul_eq_re_im_I_smul z x]
+            have hK : (complexToRealK.obj W).K x = (Complex.I : ℂ) • x := rfl
+            simp [complexSMul, hK]
+            rfl })
     (by
       intro X Y f
       ext x
@@ -237,8 +240,9 @@ private lemma roundTrip_smul_eq_smulRoundTrip (X : RealKVect) (r : ℝ) (x : Rou
 
 private lemma smulRoundTrip_eq_smulOrig (X : RealKVect) (r : ℝ) (x : RoundTripObj X) :
     ((smulRoundTrip X r x : RoundTripObj X) : X) = smulOrig X r (x : X) := by
-  simp [smulRoundTrip, smulOrig, complexSMul]
-  rfl
+  dsimp [smulRoundTrip, smulOrig, complexSMul, RoundTripObj, realKToComplex,
+    asComplexModule, complexToRealK]
+  simp [Complex.ofReal_re, Complex.ofReal_im]
 
 /--
 Counit natural isomorphism for the real/complex bridge:
@@ -255,8 +259,7 @@ noncomputable def counitIsoComplexRealK :
               map_smul' := by
                 intro r x
                 rw [RingHom.id_apply]
-                rw [roundTrip_smul_eq_smulRoundTrip X r x]
-                change ((smulRoundTrip X r x : RoundTripObj X) : X) = smulOrig X r (x : X)
+                change ((r • x : RoundTripObj X) : X) = smulOrig X r (x : X)
                 exact smulRoundTrip_eq_smulOrig X r x }
           comm := by
             ext x
@@ -272,7 +275,8 @@ noncomputable def counitIsoComplexRealK :
                 intro r x
                 rw [RingHom.id_apply]
                 rw [roundTrip_smul_eq_smulRoundTrip X r (x : RoundTripObj X)]
-                change smulOrig X r x = (smulRoundTrip X r (x : RoundTripObj X) : RoundTripObj X)
+                change smulOrig X r x =
+                  (smulRoundTrip X r (x : RoundTripObj X) : RoundTripObj X)
                 exact (smulRoundTrip_eq_smulOrig X r (x : RoundTripObj X)).symm }
           comm := by
             ext x
@@ -309,7 +313,6 @@ noncomputable def moduleCatComplexEquivRealKVect : ModuleCat ℂ ≌ RealKVect w
   functor_unitIso_comp X := by
     apply RealKVect.Hom.ext
     ext x
-    change x = x
     rfl
 
 end RealKVect
@@ -476,7 +479,11 @@ theorem monodromy_power_binomial (X : RealKVect) (h : ℝ) (N : NilpotentHom X) 
     have hRN : (rotor X (-2 * Real.pi * h)).hom.comp N.toHom.hom =
         N.toHom.hom.comp (rotor X (-2 * Real.pi * h)).hom :=
       rotor_comp_nilpotent X (-2 * Real.pi * h) N
-    have hRNc : Commute (rotor X (-2 * Real.pi * h)).hom N.toHom.hom := hRN
+    have hRNc : Commute (rotor X (-2 * Real.pi * h)).hom N.toHom.hom := by
+      change (rotor X (-2 * Real.pi * h)).hom * N.toHom.hom =
+        N.toHom.hom * (rotor X (-2 * Real.pi * h)).hom
+      rw [Module.End.mul_eq_comp, Module.End.mul_eq_comp]
+      exact hRN
     exact (Commute.one_right _).add_right (hRNc.smul_right (-2 * Real.pi))
   change ((rotor X (-2 * Real.pi * h)).hom.comp
     (LinearMap.id + (-2 * Real.pi : ℝ) • N.toHom.hom)) ^ n =

@@ -242,17 +242,62 @@ theorem unorderedConfigurationCoveringFiberLinearEquiv_intertwines_monodromy
   letI : TopologicalSpace (Ordered Q n) := orderedConfigurationTopology Q n
   letI : TopologicalSpace (Unordered Q n) := unorderedConfigurationTopology Q n
   dsimp only
-  refine Finsupp.induction x ?_ ?_
-  · simp
-  · intro q a f hq hf ih
-    rw [map_add, map_add, map_add, ih]
-    let tau := (orderedFiberEquivPerm Q n p).symm q
-    have hq_eq : q = orderedFiberEquivPerm Q n p tau := by
-      exact ((orderedFiberEquivPerm Q n p).apply_symm_apply q).symm
-    rw [hq_eq]
-    rw [unorderedConfigurationCoveringLocalSystem_monodromy_label_single,
-      unorderedConfigurationCoveringFiberLinearEquiv_single,
-      unorderedConfigurationCoveringFiberLinearEquiv_single]
-    simp [tau]
+  let fiberEquiv := unorderedConfigurationCoveringFiberLinearEquiv (R := R) Q n p
+  let pathPerm := coveringMonodromyPathEquiv
+    (unorderedProjection_isQuotientCoveringMap Q n hLC hT2).isCoveringMap gamma
+  let fiberMonodromy := Finsupp.domLCongr (R := R) (M := R) pathPerm
+  let deckMonodromy : Module.End R (DeckPermutationModule R n) :=
+    (unorderedCoveringPermutationLinearMonodromy R Q n hLC hT2 p gamma :
+      Module.End R (DeckPermutationModule R n))
+  have hmon :
+      (localSystemLinearMonodromy Q n
+          (unorderedConfigurationCoveringLocalSystem (R := R) Q n hLC hT2)
+          (Quotient.mk' p) gamma :
+        Module.End R
+          ((unorderedConfigurationCoveringLocalSystem (R := R) Q n hLC hT2).obj
+            (FundamentalGroupoid.mk (Quotient.mk' p)))) =
+        ((unorderedConfigurationCoveringLocalSystem (R := R) Q n hLC hT2).map
+          gamma).hom := by
+    ext z
+    exact localSystemLinearMonodromy_apply Q n
+      (unorderedConfigurationCoveringLocalSystem (R := R) Q n hLC hT2)
+      (Quotient.mk' p) gamma z
+  have hcat :
+      ((unorderedConfigurationCoveringLocalSystem (R := R) Q n hLC hT2).map
+        gamma).hom = fiberMonodromy.toLinearMap := rfl
+  have htransport :
+      fiberEquiv.toLinearMap.comp fiberMonodromy.toLinearMap =
+        deckMonodromy.comp fiberEquiv.toLinearMap := by
+    apply LinearMap.ext
+    intro y
+    refine Finsupp.induction y ?_ ?_
+    · simp [fiberEquiv, fiberMonodromy, deckMonodromy]
+    · intro q a f hq ha ih
+      change fiberEquiv (fiberMonodromy (Finsupp.single q a + f)) =
+        deckMonodromy (fiberEquiv (Finsupp.single q a + f))
+      rw [map_add, map_add, map_add, map_add]
+      let tau := (orderedFiberEquivPerm Q n p).symm q
+      have hq_eq : q = orderedFiberEquivPerm Q n p tau := by
+        exact ((orderedFiberEquivPerm Q n p).apply_symm_apply q).symm
+      have hpath : pathPerm (orderedFiberEquivPerm Q n p tau) =
+          orderedFiberEquivPerm Q n p
+            (unorderedCoveringPermutationMonodromy Q n hLC hT2 p gamma * tau) := by
+        exact unorderedConfigurationFiberMonodromy_orderedFiberEquivPerm
+          Q n hLC hT2 p gamma tau
+      have hsingle :
+          fiberEquiv (fiberMonodromy (Finsupp.single q a)) =
+            deckMonodromy (fiberEquiv (Finsupp.single q a)) := by
+        rw [hq_eq, Finsupp.domLCongr_single, hpath]
+        dsimp [fiberEquiv]
+        simp only [unorderedConfigurationCoveringFiberLinearEquiv_single,
+          Equiv.symm_apply_apply]
+        dsimp [deckMonodromy]
+        rw [unorderedCoveringPermutationLinearMonodromy_single]
+        rw [unorderedCoveringPermutationMonodromy_apply]
+      rw [hsingle]
+      change fiberEquiv (fiberMonodromy f) = deckMonodromy (fiberEquiv f) at ih
+      rw [ih]
+  rw [hmon, hcat]
+  exact LinearMap.congr_fun htransport x
 
 end InfoGeometry.Twistor.ProjectiveNullConfigurationCoveringLocalSystem

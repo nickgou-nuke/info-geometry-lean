@@ -50,8 +50,8 @@ theorem paper_derived_window6_boundary_sector_irrep_moment_uniformity :
       derived_window6_boundary_sector_groupalgebra_isotypy_boundaryCharacterCount *
           derived_window6_boundary_sector_groupalgebra_isotypy_interiorGroupOrder =
         derived_window6_boundary_sector_groupalgebra_isotypy_totalGroupOrder := by
-    rw [hCount]
-    simpa [Nat.mul_comm] using hUniform.2.symm
+    rw [mul_comm]
+    exact hUniform.2
   refine ⟨?_, ?_, ?_, ?_⟩
   · intro χ
     refine ⟨rfl, ?_⟩

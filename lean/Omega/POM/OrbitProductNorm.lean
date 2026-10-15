@@ -28,70 +28,33 @@ theorem card_erase_univ (i : n) :
 theorem prod_offDiag_by_fst (f : n × n → K) :
     ∏ p ∈ offDiagonalPairs n, f p =
       ∏ i : n, ∏ j ∈ (Finset.univ : Finset n).erase i, f (i, j) := by
-  rw [show offDiagonalPairs n =
-        (Finset.univ : Finset n).disjiUnion
-          (fun i => ((Finset.univ : Finset n).erase i).map
-            ⟨fun j => (i, j), fun _ _ h => (Prod.mk.inj h).2⟩)
-          (fun i _ j _ hij => Finset.disjoint_left.mpr (by
-            intro p hpi hpj
-            simp only [Finset.mem_map, Function.Embedding.coeFn_mk] at hpi hpj
-            obtain ⟨a, _, hap⟩ := hpi
-            obtain ⟨b, _, hbp⟩ := hpj
-            apply hij
-            have hh : (i, a) = (j, b) := hap.trans hbp.symm
-            exact (Prod.mk.inj hh).1)) from ?_]
-  · rw [Finset.prod_disjiUnion]
-    apply Finset.prod_congr rfl
-    intro i _
-    rw [Finset.prod_map]
-    rfl
-  · ext ⟨i, j⟩
-    simp only [mem_offDiagonalPairs, Finset.mem_disjiUnion,
-      Finset.mem_map, Finset.mem_erase, Function.Embedding.coeFn_mk]
-    constructor
-    · intro hne
-      exact ⟨i, Finset.mem_univ _, j, ⟨Ne.symm hne, Finset.mem_univ _⟩, rfl⟩
-    · rintro ⟨a, _, b, ⟨hbne, _⟩, hab⟩
-      have hi : a = i := (Prod.mk.inj hab).1
-      have hj : b = j := (Prod.mk.inj hab).2
-      subst hi
-      subst hj
-      exact fun heq => hbne heq.symm
+  exact Finset.prod_finset_product (r := offDiagonalPairs n)
+    (s := (Finset.univ : Finset n))
+    (t := fun i => (Finset.univ : Finset n).erase i)
+    (f := f) (by
+      intro p
+      simp [offDiagonalPairs, ne_comm])
 
 /-- Product over off-diagonal pairs split by second coordinate.
     rem:pom-a4-u4-orbit-product-norm -/
 theorem prod_offDiag_by_snd (f : n × n → K) :
     ∏ p ∈ offDiagonalPairs n, f p =
       ∏ j : n, ∏ i ∈ (Finset.univ : Finset n).erase j, f (i, j) := by
-  rw [show offDiagonalPairs n =
-        (Finset.univ : Finset n).disjiUnion
-          (fun j => ((Finset.univ : Finset n).erase j).map
-            ⟨fun i => (i, j), fun _ _ h => (Prod.mk.inj h).1⟩)
-          (fun i _ j _ hij => Finset.disjoint_left.mpr (by
-            intro p hpi hpj
-            simp only [Finset.mem_map, Function.Embedding.coeFn_mk] at hpi hpj
-            obtain ⟨a, _, hap⟩ := hpi
-            obtain ⟨b, _, hbp⟩ := hpj
-            apply hij
-            have hh : (a, i) = (b, j) := hap.trans hbp.symm
-            exact (Prod.mk.inj hh).2)) from ?_]
-  · rw [Finset.prod_disjiUnion]
-    apply Finset.prod_congr rfl
-    intro j _
-    rw [Finset.prod_map]
-    rfl
-  · ext ⟨i, j⟩
-    simp only [mem_offDiagonalPairs, Finset.mem_disjiUnion,
-      Finset.mem_map, Finset.mem_erase, Function.Embedding.coeFn_mk]
-    constructor
-    · intro hne
-      exact ⟨j, Finset.mem_univ _, i, ⟨hne, Finset.mem_univ _⟩, rfl⟩
-    · rintro ⟨b, _, a, ⟨hane, _⟩, hab⟩
-      have hi : a = i := (Prod.mk.inj hab).1
-      have hj : b = j := (Prod.mk.inj hab).2
-      subst hi
-      subst hj
-      exact hane
+  calc
+    ∏ p ∈ offDiagonalPairs n, f p =
+        ∏ p ∈ offDiagonalPairs n, f (p.2, p.1) := by
+      apply Finset.prod_equiv (Equiv.prodComm n n)
+      · intro p
+        simp [offDiagonalPairs, ne_comm]
+      · intro p hp
+        rfl
+    _ = ∏ j : n, ∏ i ∈ (Finset.univ : Finset n).erase j, f (i, j) :=
+      Finset.prod_finset_product (r := offDiagonalPairs n)
+        (s := (Finset.univ : Finset n))
+        (t := fun j => (Finset.univ : Finset n).erase j)
+        (f := fun p => f (p.2, p.1)) (by
+          intro p
+          simp [offDiagonalPairs, ne_comm])
 
 /-- Numerator product: `∏_{i≠j} (α i)² = ∏_i (α i)^(2(|n|-1))`.
     rem:pom-a4-u4-orbit-product-norm -/

@@ -1,0 +1,82 @@
+{
+  "schema": "info_geometry.proof_artifact_receipt.v1",
+  "authority": "candidate_observation_not_proof_authority",
+  "artifact": {
+    "path": "proofs/WavefrontKMSKleinDuality.lean",
+    "sha256": "9173bd399e19deb6008038cd3b8c46a3d496fc8790364a5ad2673b1fcbe7796f"
+  },
+  "source": {
+    "path": "proofs/WavefrontKMSKleinDuality.lean",
+    "snapshotSha256": "9173bd399e19deb6008038cd3b8c46a3d496fc8790364a5ad2673b1fcbe7796f",
+    "currentSnapshotSha256": "9173bd399e19deb6008038cd3b8c46a3d496fc8790364a5ad2673b1fcbe7796f",
+    "changedSincePrompt": false
+  },
+  "environment": {
+    "toolchain": "leanprover/lean4:v4.34.1",
+    "lakefileSha256": "5372c9a95ed8f6488bc0ce257c906c83658449668db4627259d72d542c77d9f7",
+    "lakeManifestSha256": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "gitHead": "94c8646fdbbf378f7b00e812f7ab4325f42e347b"
+  },
+  "checks": {
+    "leanProcess": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "proofs/WavefrontKMSKleinDuality.lean"
+      ],
+      "returncode": 0,
+      "outputSha256": "2ff18e8d7aa0ffc166cb7cf2f321556286d4c0abff42433b8c4c8cb1dbc2b3f2",
+      "status": "passed"
+    },
+    "semanticVacuityGate": {
+      "returncode": 0,
+      "outputSha256": "ee6db4db20dc1c5b3e5cbb403003eedef98fd78babedfe3af798ffe211603e5f",
+      "status": "passed"
+    },
+    "axiomAudit": {
+      "status": "collected",
+      "declarations": [
+        "CanonicalMathlibDuality.CentralHalfInvolution.peirce_decomposition",
+        "CanonicalMathlibDuality.CentralHalfInvolution.peirce_block_annihilation",
+        "CanonicalMathlibDuality.LieChiralSplitting.kks_chiral_orthogonal",
+        "CanonicalMathlibDuality.LieChiralSplitting.kks_block_decomposition",
+        "CanonicalMathlibDuality.matI_sq",
+        "CanonicalMathlibDuality.matJ_sq",
+        "CanonicalMathlibDuality.matK_sq",
+        "CanonicalMathlibDuality.matI_mul_matJ",
+        "CanonicalMathlibDuality.matJ_mul_matI",
+        "CanonicalMathlibDuality.matI_matJ_anticomm",
+        "CanonicalMathlibDuality.matI_matJ_bracket",
+        "CanonicalMathlibDuality.matrix_two_noncommutative",
+        "CanonicalMathlibDuality.nullPlus_sq",
+        "CanonicalMathlibDuality.nullMinus_sq",
+        "CanonicalMathlibDuality.witt_anticommutator",
+        "CanonicalMathlibDuality.witt_bracket",
+        "CanonicalMathlibDuality.peirce_cartan_span",
+        "CanonicalMathlibDuality.dyadic_det_zero",
+        "CanonicalMathlibDuality.dyadic_mul_dyadic",
+        "CanonicalMathlibDuality.dyadic_nilpotent",
+        "CanonicalMathlibDuality.dyadic_trace",
+        "CanonicalMathlibDuality.KleinSystem.J_flow_comm",
+        "CanonicalMathlibDuality.KleinSystem.klein_glide_sq",
+        "CanonicalMathlibDuality.KleinSystem.green_reciprocity"
+      ],
+      "returncode": 0,
+      "outputSha256": "062b22ee9472f114f0d754c10c1a61178a5550f5a96b6179614904573a431212",
+      "output": "'CanonicalMathlibDuality.CentralHalfInvolution.peirce_decomposition' depends on axioms: [propext]\n'CanonicalMathlibDuality.CentralHalfInvolution.peirce_block_annihilation' depends on axioms: [propext]\n'CanonicalMathlibDuality.LieChiralSplitting.kks_chiral_orthogonal' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'CanonicalMathlibDuality.LieChiralSplitting.kks_block_decomposition' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'CanonicalMathlibDuality.matI_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'CanonicalMathlibDuality.matJ_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'CanonicalMathlibDuality.matK_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'CanonicalMathlibDuality.matI_mul_matJ' depends on axioms: [propext, Classical.choice, Quot.sound]\n'CanonicalMathlibDuality.matJ_mul_matI' depends on axioms: [propext, Classical.choice, Quot.sound]\n'CanonicalMathlibDuality.matI_matJ_anticomm' depends on axioms: [propext, Classical.choice, Quot.sound]\n'CanonicalMathlibDuality.matI_matJ_bracket' depends on axioms: [propext, Classical.choice, Quot.sound]\n'CanonicalMathlibDuality.matrix_two_noncommutative' depends on axioms: [propext, Classical.choice, Quot.sound]\n'CanonicalMathlibDuality.nullPlus_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'CanonicalMathlibDuality.nullMinus_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'CanonicalMathlibDuality.witt_anticommutator' depends on axioms: [propext, Classical.choice, Quot.sound]\n'CanonicalMathlibDuality.witt_bracket' depends on axioms: [propext, Classical.choice, Quot.sound]\n'CanonicalMathlibDuality.peirce_cartan_span' depends on axioms: [propext, Classical.choice, Quot.sound]\n'CanonicalMathlibDuality.dyadic_det_zero' depends on axioms: [propext, Classical.choice, Quot.sound]\n'CanonicalMathlibDuality.dyadic_mul_dyadic' depends on axioms: [propext, Classical.choice, Quot.sound]\n'CanonicalMathlibDuality.dyadic_nilpotent' depends on axioms: [propext, Classical.choice, Quot.sound]\n'CanonicalMathlibDuality.dyadic_trace' depends on axioms: [propext, Classical.choice, Quot.sound]\n'CanonicalMathlibDuality.KleinSystem.J_flow_comm' depends on axioms: [propext, Classical.choice, Quot.sound]\n'CanonicalMathlibDuality.KleinSystem.klein_glide_sq' depends on axioms: [propext, Classical.choice, Quot.sound]\n'CanonicalMathlibDuality.KleinSystem.green_reciprocity' depends on axioms: [propext, Classical.choice, Quot.sound]"
+    }
+  },
+  "review": {
+    "status": "kernel_checked_pending_owner_review",
+    "promotionAllowed": false
+  },
+  "score": {
+    "status": "policy_estimate",
+    "value": 1.0,
+    "meaning": "scheduling metadata only; not probability or proof authority",
+    "defect": 0.0,
+    "policyVersion": "opengauss-v1"
+  },
+  "receiptSha256": "c4eb8ed8405c81293c6870a4d0b198034c12d83b49a81bbdf1296eecef2aeee4"
+}

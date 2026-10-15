@@ -18,7 +18,9 @@ or Hessian claim is introduced.
 
 noncomputable section
 set_option autoImplicit false
+set_option synthInstance.maxHeartbeats 300000
 set_option maxHeartbeats 800000
+set_option linter.style.haveILetI false
 
 namespace InfoGeometry.Canonical.NoncommutativeGibbsFaithfulNormalizationBridge
 
@@ -99,9 +101,7 @@ noncomputable def faithfulGibbsDensity
   refine { rho := rho, strictlyPositive := ?_, trace_one := ?_ }
   · exact IsStrictlyPositive.smul (inv_pos.mpr hZ)
       (exp_isStrictlyPositive H hH)
-  ·
-    change finiteOperatorTrace rho = 1
-    dsimp [rho]
+  · dsimp [rho]
     rw [real_smul_eq_complex_smul]
     rw [finiteOperatorTrace_complex_smul]
     norm_num

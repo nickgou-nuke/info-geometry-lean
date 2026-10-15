@@ -68,7 +68,8 @@ theorem paper_gm_major_arc_profinite_equivalence :
       gm_major_arc_profinite_equivalence_profinite c q := by
     unfold gm_major_arc_profinite_equivalence_profinite
     unfold gm_major_arc_profinite_equivalence_normalized_frequency_sum
-    exact (div_le_iff₀ hPeriodRealPos).2 <| by simpa using hMajorArc
+    exact (div_le_iff₀ hPeriodRealPos).2 <| by
+      simpa [gm_major_arc_profinite_equivalence_major_arc] using hMajorArc
   have hIff :
       gm_major_arc_profinite_equivalence_major_arc c q ↔
         gm_major_arc_profinite_equivalence_profinite c q := by
@@ -77,7 +78,8 @@ theorem paper_gm_major_arc_profinite_equivalence :
     unfold gm_major_arc_profinite_equivalence_normalized_frequency_sum
     constructor
     · intro h
-      exact (div_le_iff₀ hPeriodRealPos).2 <| by simpa using h
+      exact (div_le_iff₀ hPeriodRealPos).2 <| by
+        simpa [gm_major_arc_profinite_equivalence_major_arc] using h
     · intro h
       have h' :
           gm_major_arc_profinite_equivalence_frequency_sum c q ≤

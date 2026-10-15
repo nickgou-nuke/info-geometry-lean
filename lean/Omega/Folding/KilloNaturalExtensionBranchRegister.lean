@@ -89,7 +89,8 @@ lemma branchRegisterDecodeImage_codeToImage {X : Type*} (T : X → X) (beta : X 
     branchRegisterDecodeImage T beta decode hT (branchRegisterCodeToImage T beta s) = s := by
   apply Subtype.ext
   funext n
-  simpa [branchRegisterDecodeImage, branchRegisterCodeToImage, branchRegisterCode] using
+  simpa [branchRegisterDecodeImage, branchRegisterDecodeExtension,
+    branchRegisterCodeToImage, branchRegisterCode] using
     branchRegisterDecode_code_history T beta decode hdecode s n
 
 lemma branchRegisterCode_decodeExtension {X : Type*} (T : X → X) (beta : X → ℕ)

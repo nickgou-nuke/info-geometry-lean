@@ -5,6 +5,7 @@ import InfoGeometry.Canonical.KaehlerGeometry
 import InfoGeometry.Core.UnifiedGeometry
 import InfoGeometry.Core.SymmetricLieGeneric
 import Mathlib.Analysis.InnerProductSpace.Adjoint
+import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.LinearAlgebra.BilinearForm.Hom
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Ring
@@ -38,6 +39,8 @@ variable {E : Type*}
 /-- Ambient operator space on the doubled carrier. -/
 abbrev Op (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :=
   InfoGeometry.Krein.DoubledSpace E →L[ℝ] InfoGeometry.Krein.DoubledSpace E
+
+local instance : LieRing (Op E) := LieRing.ofAssociativeRing
 
 /-- Local alias for the doubled carrier. -/
 abbrev DSpace (E : Type*) := InfoGeometry.Krein.DoubledSpace E
@@ -74,8 +77,7 @@ noncomputable def fisherBilinAt (v : DSpace E) :
 @[simp] lemma fisherBilinAt_apply
     (v : DSpace E) (X Y : Op E) :
     fisherBilinAt v X Y = hessian_indefinite_form (E := E) (X v) (Y v) := by
-  simp [fisherBilinAt, hessian_indefinite_form, LinearMap.BilinForm.comp_apply, evalAt,
-    KreinSpace.kreinBilin]
+  rfl
 
 /--
 Fisher/Hessian bilinear form is preserved when both the state and the operator

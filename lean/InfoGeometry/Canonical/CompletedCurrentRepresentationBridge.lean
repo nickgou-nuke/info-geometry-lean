@@ -1,5 +1,6 @@
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Algebra.Lie.OfAssociative
 import InfoGeometry.Canonical.BosonizationConstructiveCurrent
 import InfoGeometry.Canonical.CurrentSugawaraBridge
 import InfoGeometry.Canonical.SugawaraFiveGradingObstruction
@@ -72,6 +73,8 @@ section ChargedFock
 variable {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜]
 variable (α : 𝕜)
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 /-! The associative target has a genuine Mathlib Lie-algebra representation.
 The completed-current range is only a mode carrier, so the representation is
 defined on the canonical Heisenberg algebra and then evaluated on its
@@ -116,8 +119,14 @@ theorem completedCurrentHeisenbergLieRepresentation_jgen_bracket
     (VirasoroProject.HeisenbergAlgebra.jgen 𝕜 n))
 
 abbrev FockEnd :=
-  VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
-    VirasoroProject.ChargedFockSpace 𝕜 α
+  ModuleOfModuleAlgebra 𝕜
+    (UniversalEnvelopingAlgebra 𝕜
+      (VirasoroProject.HeisenbergAlgebra 𝕜))
+    (VirasoroProject.ChargedFockSpace 𝕜 α) →ₗ[𝕜]
+  ModuleOfModuleAlgebra 𝕜
+    (UniversalEnvelopingAlgebra 𝕜
+      (VirasoroProject.HeisenbergAlgebra 𝕜))
+    (VirasoroProject.ChargedFockSpace 𝕜 α)
 
 noncomputable def representedCompletedCurrentMode
     (X : CompletedCurrentModeCarrier) : FockEnd α :=
@@ -127,7 +136,8 @@ noncomputable def representedCompletedCurrentMode
 @[simp] theorem representedCompletedCurrentMode_point (n : ℤ) :
     representedCompletedCurrentMode (𝕜 := 𝕜) α (completedCurrentPoint n) =
       (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J n := by
-  simp [representedCompletedCurrentMode]
+  dsimp [representedCompletedCurrentMode]
+  rw [completedCurrentModeEquiv_symm_apply_point]
 
 theorem representedCompletedCurrentMode_commutator (m n : ℤ) :
     (representedCompletedCurrentMode (𝕜 := 𝕜) α (completedCurrentPoint m)).commutator
@@ -159,6 +169,7 @@ theorem virasoro_lgen_acts_on_completedCurrent (r m : ℤ) :
   rw [representedCompletedCurrentMode_point,
     representedCompletedCurrentMode_point]
   rw [CurrentHeisenbergRep.currentSugawaraRepresentation_lgen_apply]
+  unfold CurrentHeisenbergRep.sugawaraStressMode
   exact sugawara_current_mode_shift
     (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J
     (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).trunc

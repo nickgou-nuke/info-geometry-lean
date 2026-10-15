@@ -74,7 +74,7 @@ lemma xi_foldbin_critical_tail_three_step_rigidity_fib_ratio_tendsto :
   have h :=
     tendsto_fib_div_fib_succ_atTop.comp (Filter.tendsto_add_atTop_nat 1)
   rw [Real.inv_goldenRatio]
-  simpa [Function.comp, Nat.add_assoc] using h
+  simpa [Function.comp_def, Nat.add_assoc] using h
 
 /-- Paper label: `thm:xi-foldbin-critical-tail-three-step-rigidity`. -/
 theorem paper_xi_foldbin_critical_tail_three_step_rigidity

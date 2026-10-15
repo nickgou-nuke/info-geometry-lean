@@ -11,7 +11,15 @@ inductive xi_time_part62ea_leyang_minimal_binary_sufficient_statistic_splitting_
   | xi_time_part62ea_leyang_minimal_binary_sufficient_statistic_split
   | xi_time_part62ea_leyang_minimal_binary_sufficient_statistic_single
   | xi_time_part62ea_leyang_minimal_binary_sufficient_statistic_noroot
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype xi_time_part62ea_leyang_minimal_binary_sufficient_statistic_splitting_type where
+  elems := {.xi_time_part62ea_leyang_minimal_binary_sufficient_statistic_split,
+    .xi_time_part62ea_leyang_minimal_binary_sufficient_statistic_single,
+    .xi_time_part62ea_leyang_minimal_binary_sufficient_statistic_noroot}
+  complete := by
+    intro type
+    cases type <;> simp
 
 /-- The two binary coordinates: root/no-root and the quadratic character sign. -/
 def xi_time_part62ea_leyang_minimal_binary_sufficient_statistic_observation :

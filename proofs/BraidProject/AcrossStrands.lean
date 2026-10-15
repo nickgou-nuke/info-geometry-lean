@@ -279,12 +279,14 @@ theorem map_count_up_bounded (n k : ℕ): ∀ x, x ∈ (FreeMonoid'.map (fun x =
   · simp [count_up] at x_in
     exfalso
     rcases x_in with ⟨a, ha, _⟩
-    exact mem_one_iff.mp ha
   rename_i n ih
   rcases n
   · simp [count_up] at x_in
-    rw [x_in]
-    exact Nat.lt_one_add_iff.mpr Nat.le.refl
+    change x ∈ [0 + k] at x_in
+    simp only [Nat.zero_add] at x_in
+    have hx : x = k := List.mem_singleton.mp x_in
+    subst x
+    simpa [Nat.add_comm] using Nat.lt_succ_self k
   rename_i m
   have H : (count_up (Nat.succ (Nat.succ m)) 0 (Nat.succ (Nat.succ m))) =
       (count_up (Nat.succ (Nat.succ m) - 0) 0 (Nat.succ (Nat.succ m))) := rfl

@@ -8,7 +8,11 @@ inductive xi_time_part9zg_quadratic_sector_character_harmonic_collapse_mode
   | trivial
   | sign
   | other
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype xi_time_part9zg_quadratic_sector_character_harmonic_collapse_mode where
+  elems := {.trivial, .sign, .other}
+  complete := by rintro (_ | _ | _) <;> simp
 
 /-- The sector sign encoded by a Boolean choice: `true` means `+1`, `false` means `-1`. -/
 def xi_time_part9zg_quadratic_sector_character_harmonic_collapse_sectorSign (b : Bool) : ℝ :=
@@ -83,21 +87,20 @@ theorem paper_xi_time_part9zg_quadratic_sector_character_harmonic_collapse
     (χ ψ : xi_time_part9zg_quadratic_sector_character_harmonic_collapse_mode) :
     xi_time_part9zg_quadratic_sector_character_harmonic_collapse_average ε δ χ ψ =
       xi_time_part9zg_quadratic_sector_character_harmonic_collapse_expected ε δ χ ψ := by
-  let D := xi_time_part9zg_quadratic_sector_character_harmonic_collapse_data ε δ χ ψ
-  have hD : D.sectorAverageFormula := by
-    exact paper_xi_time_part9zg_quadratic_sector_conditional_tensor_average D
+  have hD := paper_xi_time_part9zg_quadratic_sector_conditional_tensor_average
+    (xi_time_part9zg_quadratic_sector_character_harmonic_collapse_data ε δ χ ψ)
+  change (xi_time_part9zg_quadratic_sector_character_harmonic_collapse_data ε δ χ ψ).sectorConditionalAverage = _
+  rw [hD]
   cases ε <;> cases δ <;> cases χ <;> cases ψ <;>
-    simpa [D, xi_time_part9zg_quadratic_sector_character_harmonic_collapse_average,
-      xi_time_part9zg_quadratic_sector_character_harmonic_collapse_data,
+    dsimp [xi_time_part9zg_quadratic_sector_character_harmonic_collapse_data,
       xi_time_part9zg_quadratic_sector_character_harmonic_collapse_expected,
       xi_time_part9zg_quadratic_sector_character_harmonic_collapse_sectorSign,
       xi_time_part9zg_quadratic_sector_character_harmonic_collapse_baseSign,
       xi_time_part9zg_quadratic_sector_character_harmonic_collapse_observable,
-      QuadraticSectorConditionalTensorAverageData.sectorAverageFormula,
-      QuadraticSectorConditionalTensorAverageData.sectorConditionalAverage,
       QuadraticSectorConditionalTensorAverageData.leftAverage,
       QuadraticSectorConditionalTensorAverageData.rightAverage,
       QuadraticSectorConditionalTensorAverageData.leftSignedAverage,
-      QuadraticSectorConditionalTensorAverageData.rightSignedAverage] using hD
+      QuadraticSectorConditionalTensorAverageData.rightSignedAverage] <;>
+    simp
 
 end Omega.Zeta

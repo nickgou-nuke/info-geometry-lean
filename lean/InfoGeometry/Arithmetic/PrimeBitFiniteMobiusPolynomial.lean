@@ -38,25 +38,12 @@ theorem primeCutoffMobiusPolynomial_eq_integerCutoffSquarefree
   refine Finset.sum_bij (fun ε _ => primeBitInteger (primeCutoffLattice B) ε)
     ?_ ?_ ?_ ?_
   · intro ε hε
-    have hε' : ε ∈
-        ((primeCutoffLattice B).primes.powerset.attach.map
-          { toFun := fun S =>
-              (⟨S.1, Finset.mem_powerset.mp S.2⟩ :
-                PrimeBitState (primeCutoffLattice B))
-            inj' := by
-              intro S T hST
-              exact Subtype.ext
-                (congrArg (fun U : PrimeBitState (primeCutoffLattice B) => U.1) hST) }).filter
-          (fun ε => primeBitInteger (primeCutoffLattice B) ε ≤ B) := by
-      simpa [S_B] using hε
-    rw [Finset.mem_filter] at hε'
-    change primeBitInteger (primeCutoffLattice B) ε ∈
-      (Finset.Icc 1 B).filter Squarefree
-    rw [Finset.mem_filter]
+    rw [mem_S_B_iff] at hε
+    rw [integerCutoffSquarefree, Finset.mem_filter]
     exact ⟨Finset.mem_Icc.mpr
-      ⟨Nat.one_le_iff_ne_zero.mpr (primeBitInteger_ne_zero ε), hε'.2⟩,
+      ⟨Nat.one_le_iff_ne_zero.mpr (primeBitInteger_ne_zero ε), hε⟩,
       primeBitInteger_squarefree ε⟩
-  · intro ε₁ hε₁ ε₂ hε₂ heq
+  · intro ε₁ _ ε₂ _ heq
     change primeBitInteger (primeCutoffLattice B) ε₁ =
       primeBitInteger (primeCutoffLattice B) ε₂ at heq
     have h₁ := primeBitInteger_primeFactors ε₁
@@ -74,42 +61,23 @@ theorem primeCutoffMobiusPolynomial_eq_integerCutoffSquarefree
     let εval : Finset ℕ := n.primeFactors
     have hsub : εval ⊆ (primeCutoffLattice B).primes := by
       intro p hp
-      have hpmem := Nat.mem_primeFactors.mp hp
+      have hpmem := (Nat.mem_primeFactors.mp hp)
       exact (mem_primesUpto_iff).2
         ⟨(Nat.le_of_dvd hnpos hpmem.2.1).trans hIcc.2, hpmem.1⟩
     let ε : PrimeBitState (primeCutoffLattice B) := ⟨εval, hsub⟩
     have hεmem : ε ∈ S_B (primeCutoffLattice B) B := by
-      change ε ∈
-        ((primeCutoffLattice B).primes.powerset.attach.map
-          { toFun := fun S =>
-              (⟨S.1, Finset.mem_powerset.mp S.2⟩ :
-                PrimeBitState (primeCutoffLattice B))
-            inj' := by
-              intro S T hST
-              exact Subtype.ext
-                (congrArg (fun U : PrimeBitState (primeCutoffLattice B) => U.1) hST) }).filter
-          (fun ε => primeBitInteger (primeCutoffLattice B) ε ≤ B)
-      rw [Finset.mem_filter]
-      refine ⟨?_, ?_⟩
-      · rw [Finset.mem_map]
-        let S : {S : Finset ℕ // S ∈ (primeCutoffLattice B).primes.powerset} :=
-          ⟨εval, Finset.mem_powerset.mpr hsub⟩
-        refine ⟨S, Finset.mem_attach _ S, ?_⟩
-        rfl
-      · change ∏ p ∈ εval, p ≤ B
-        rw [show εval = n.primeFactors from rfl,
-          Nat.prod_primeFactors_of_squarefree hsq]
-        exact hIcc.2
+      rw [mem_S_B_iff]
+      change ∏ p ∈ εval, p ≤ B
+      rw [show εval = n.primeFactors from rfl,
+        Nat.prod_primeFactors_of_squarefree hsq]
+      exact hIcc.2
     refine ⟨ε, hεmem, ?_⟩
     change ∏ p ∈ εval, p = n
     exact Nat.prod_primeFactors_of_squarefree hsq
-  · intro ε hε
-    change ((-1 : ℤ) ^ ε.1.card : ℂ) *
-        x (primeBitInteger (primeCutoffLattice B) ε) =
-      (ArithmeticFunction.moebius (primeBitInteger (primeCutoffLattice B) ε) : ℂ) *
-        x (primeBitInteger (primeCutoffLattice B) ε)
+  · intro ε _
     rw [mobius_primeBitInteger_eq_parity]
-    norm_num
+    push_cast
+    rfl
 
 theorem primeCutoffMobiusPolynomial_eq_integerCutoff
     (B : ℕ) (x : ℕ → ℂ) :
@@ -140,15 +108,5 @@ theorem primeCutoffMobiusPolynomial_one_eq_mertensFunction (B : ℕ) :
       Nat.lt_succ_iff]
     omega
   rw [← hset, ← herase]
-
-theorem primeCutoffMobiusPolynomial_boltzmann_eq_wittenIndexSum
-    (B : ℕ) (β : ℝ) :
-    primeCutoffMobiusPolynomial B
-        (fun n => (boltzmannWeight β n : ℂ)) =
-      ∑ n ∈ Finset.Icc 1 B, (wittenIndexTerm β n : ℂ) := by
-  rw [primeCutoffMobiusPolynomial_eq_integerCutoff]
-  unfold integerCutoffMobiusPolynomial wittenIndexTerm
-  push_cast
-  rfl
 
 end InfoGeometry.Arithmetic.PrimeBitFiniteMobiusPolynomial

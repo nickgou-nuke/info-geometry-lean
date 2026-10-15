@@ -31,12 +31,22 @@ noncomputable def complexStageEmbed (n : ℕ) :
             (1 : Matrix (Fin 2) (Fin 2) ℂ) =
           (1 : ComplexMatStage (n + 1)))
   map_mul' A B := by
-    simpa using
-      (Matrix.mul_kronecker_mul A B
-        (1 : Matrix (Fin 2) (Fin 2) ℂ)
-        (1 : Matrix (Fin 2) (Fin 2) ℂ))
-  map_zero' := by simp
-  map_add' A B := by simp [Matrix.add_kronecker]
+    change (A * B) ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℂ) =
+      (A ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℂ)) *
+        (B ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℂ))
+    simpa using Matrix.mul_kronecker_mul A B
+      (1 : Matrix (Fin 2) (Fin 2) ℂ)
+      (1 : Matrix (Fin 2) (Fin 2) ℂ)
+  map_zero' := by
+    change (0 : ComplexMatStage n) ⊗ₖ
+        (1 : Matrix (Fin 2) (Fin 2) ℂ) = 0
+    ext i j
+    simp [Matrix.kroneckerMap_apply]
+  map_add' A B := by
+    change (A + B) ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℂ) =
+      A ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℂ) +
+        B ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℂ)
+    exact Matrix.add_kronecker A B (1 : Matrix (Fin 2) (Fin 2) ℂ)
 
 noncomputable def complexNormalizedTrace (n : ℕ) : ComplexMatStage n →ₗ[ℂ] ℂ where
   toFun A := (2 ^ n : ℂ)⁻¹ * Matrix.trace A
@@ -60,9 +70,13 @@ noncomputable def complexNormalizedTrace (n : ℕ) : ComplexMatStage n →ₗ[�
 theorem complexNormalizedTrace_compatible (n : ℕ) (A : ComplexMatStage n) :
     complexNormalizedTrace (n + 1) (complexStageEmbed n A) =
       complexNormalizedTrace n A := by
-  dsimp [complexNormalizedTrace, complexStageEmbed]
+  rw [complexNormalizedTrace_apply]
+  change (2 ^ (n + 1) : ℂ)⁻¹ *
+      Matrix.trace (A ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℂ)) =
+    (2 ^ n : ℂ)⁻¹ * Matrix.trace A
   rw [Matrix.trace_kronecker]
-  simp [pow_succ, mul_assoc, mul_left_comm, mul_comm]
+  simp [complexNormalizedTrace_apply, pow_succ, mul_assoc,
+    mul_left_comm, mul_comm]
 
 theorem complexNormalizedTrace_complexify (n : ℕ) (A : MatStage n) :
     complexNormalizedTrace n (complexifyStage n A) =
@@ -107,13 +121,12 @@ theorem complexifyStage_compatible (n : ℕ) (A : MatStage n) :
     complexifyStage (n + 1) (stageEmbed n A) =
       complexStageEmbed n (complexifyStage n A) := by
   ext i j
-  by_cases h : A i.1 j.1 = 0
-  · simp [complexifyStage, complexStageEmbed, stageEmbed,
-      InfoGeometry.Clifford.Cl11TensorTower.matStageEmbed,
-      Matrix.kroneckerMap_apply, Matrix.map_apply, h]
-  · simp [complexifyStage, complexStageEmbed, stageEmbed,
-      InfoGeometry.Clifford.Cl11TensorTower.matStageEmbed,
-      Matrix.kroneckerMap_apply, Matrix.map_apply, h]
-    · by_cases h' : i.2 = j.2 <;> simp [Matrix.one_apply, h']
+  change Complex.ofReal
+      ((A ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℝ)) i j) =
+    ((Matrix.map A Complex.ofReal) ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℂ)) i j
+  change Complex.ofReal
+      (A i.1 j.1 * (if i.2 = j.2 then (1 : ℝ) else 0)) =
+    Complex.ofReal (A i.1 j.1) * (if i.2 = j.2 then (1 : ℂ) else 0)
+  by_cases h : i.2 = j.2 <;> simp [h]
 
 end InfoGeometry.Canonical.Cl11ComplexStageBridge

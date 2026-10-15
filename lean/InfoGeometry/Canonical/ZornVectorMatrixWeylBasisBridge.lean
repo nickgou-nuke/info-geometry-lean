@@ -11,10 +11,12 @@ set_option linter.unusedSimpArgs false
 # Zorn Vector Matrix Weyl Basis & Color CAR Bridge (Stratum 23b)
 
 This module formalizes the exact algebraic nexus uniting:
-1. **The Classical Pauli–Weyl Lightcone Condition**:
-   - Realized by the Zorn determinant $\det(\hat{Z}) = a b - \mathbf{u} \cdot \mathbf{v} = 0$.
-   - Quarks and antiquarks lie on the null cone: $\det(Q(\mathbf{u})) = 0$ and $\det(\bar{Q}(\mathbf{v})) = 0$.
-   - The vacuum projections $P_\pm$ are lightlike boundary states: $\det(P_\pm) = 0$.
+1. **The Split-Zorn Norm-Zero Locus**:
+   - The quadratic norm is $N(\hat{Z}) = a b - \mathbf{u} \cdot \mathbf{v}$.
+   - Quark, antiquark, and vacuum elements have zero split-Zorn norm.
+   - Calling this locus a Minkowski lightcone requires a separately defined
+     norm-preserving identification with four-momentum; this module does not
+     provide one.
 
 2. **Split Circular Spin Weyl Basis**:
    - Decouples transverse directions into circular polarization modes:
@@ -85,8 +87,9 @@ structure ZornMatrix (R : Type*) where
 
 namespace ZornMatrix
 
+omit [CommRing R] in
 @[ext]
-def ext {X Y : ZornMatrix R}
+theorem ext {X Y : ZornMatrix R}
     (ha : X.a = Y.a) (hb : X.b = Y.b)
     (hu : X.u = Y.u) (hv : X.v = Y.v) : X = Y := by
   cases X; cases Y; dsimp at ha hb hu hv; rw [ha, hb, hu, hv]
@@ -216,9 +219,11 @@ theorem peirce_fourfold_sum (X : ZornMatrix R) :
   · ext i; fin_cases i <;> { dsimp [add, quark, antiquark]; ring }
   · ext i; fin_cases i <;> { dsimp [add, quark, antiquark]; ring }
 
-/-! ### 2. Pauli-Weyl Lightcone Null Condition -/
+/-! ### 2. Split-Zorn Norm-Zero Criterion -/
 
-/-- 🏆 THEOREM: The Pauli-Weyl lightcone condition: norm X = 0 iff a * b = u · v. -/
+/-- The split-Zorn norm vanishes exactly when its diagonal product equals the
+dot product of its off-diagonal vectors. This is an algebraic norm-zero
+criterion, not a Minkowski lightcone identification. -/
 theorem pauli_weyl_lightcone_iff (X : ZornMatrix R) :
     norm X = 0 ↔ X.a * X.b = dot3 X.u X.v := by
   dsimp [norm]
@@ -402,56 +407,12 @@ theorem su3_acts_trivially_on_leptons (U : Vec3 R → Vec3 R) (hU0 : U 0 = 0) (a
 
 end ZornMatrix
 
-/-- Master packet packaging the complete Zorn Vector Matrix Weyl Basis and Color CAR mechanics. -/
-structure ZornVectorMatrixWeylBasisPacket (R : Type*) [CommRing R] where
-  cross_self : ∀ u : Vec3 R, cross3 u u = 0
-  dot_comm : ∀ u v : Vec3 R, dot3 u v = dot3 v u
-  peirce_p_sq : ZornMatrix.zornMul (ZornMatrix.PPlus (R := R)) ZornMatrix.PPlus = ZornMatrix.PPlus
-  peirce_m_sq : ZornMatrix.zornMul (ZornMatrix.PMinus (R := R)) ZornMatrix.PMinus = ZornMatrix.PMinus
-  peirce_res : ZornMatrix.add (ZornMatrix.PPlus (R := R)) ZornMatrix.PMinus = ZornMatrix.one
-  peirce_lepton : ∀ X : ZornMatrix R, ZornMatrix.zornMul (ZornMatrix.zornMul ZornMatrix.PPlus X) ZornMatrix.PPlus = ⟨X.a, 0, 0, 0⟩
-  peirce_quark : ∀ X : ZornMatrix R, ZornMatrix.zornMul (ZornMatrix.zornMul ZornMatrix.PPlus X) ZornMatrix.PMinus = ZornMatrix.quark X.u
-  pauli_weyl_q : ∀ u : Vec3 R, ZornMatrix.norm (ZornMatrix.quark u) = 0
-  pauli_weyl_q_bar : ∀ v : Vec3 R, ZornMatrix.norm (ZornMatrix.antiquark v) = 0
-  q_sq_zero : ∀ u : Vec3 R, ZornMatrix.zornMul (ZornMatrix.quark u) (ZornMatrix.quark u) = ZornMatrix.zero
-  q_bar_sq_zero : ∀ v : Vec3 R, ZornMatrix.zornMul (ZornMatrix.antiquark v) (ZornMatrix.antiquark v) = ZornMatrix.zero
-  diquark : ∀ u1 u2 : Vec3 R, ZornMatrix.zornMul (ZornMatrix.quark u1) (ZornMatrix.quark u2) = ZornMatrix.antiquark (cross3 u1 u2)
-  baryon : ∀ u1 u2 u3 : Vec3 R, ZornMatrix.zornMul (ZornMatrix.zornMul (ZornMatrix.quark u1) (ZornMatrix.quark u2)) (ZornMatrix.quark u3) =
-    ⟨0, dot3 (cross3 u1 u2) u3, 0, 0⟩
-  car : ∀ u v : Vec3 R, ZornMatrix.add (ZornMatrix.zornMul (ZornMatrix.quark u) (ZornMatrix.antiquark v))
-    (ZornMatrix.zornMul (ZornMatrix.antiquark v) (ZornMatrix.quark u)) = ZornMatrix.smul (dot3 u v) ZornMatrix.one
-  scale_q : ∀ u : Vec3 R, ZornMatrix.sub (ZornMatrix.zornMul ZornMatrix.splitCartanEll (ZornMatrix.quark u))
-    (ZornMatrix.zornMul (ZornMatrix.quark u) ZornMatrix.splitCartanEll) = ZornMatrix.smul (1 + 1) (ZornMatrix.quark u)
-  scale_q_bar : ∀ v : Vec3 R, ZornMatrix.sub (ZornMatrix.zornMul ZornMatrix.splitCartanEll (ZornMatrix.antiquark v))
-    (ZornMatrix.zornMul (ZornMatrix.antiquark v) ZornMatrix.splitCartanEll) = ZornMatrix.smul (-(1 + 1)) (ZornMatrix.antiquark v)
-  split_circular : ∀ (u1 u2 tau half : R), tau * tau = 1 →
-    let u_plus := half * (u1 + tau * u2)
-    let u_minus := half * (u1 - tau * u2)
-    u_plus * u_minus = (half * half) * (u1 * u1 - u2 * u2)
-  fock_total : ZornMatrix.fock_deg0_dim + ZornMatrix.fock_deg1_dim + ZornMatrix.fock_deg2_dim + ZornMatrix.fock_deg3_dim = 8
-  su3_stabilizer : ∀ (U : Vec3 R → Vec3 R) (_hU0 : U 0 = 0), ZornMatrix.su3_action U (ZornMatrix.PPlus (R := R)) = ZornMatrix.PPlus
-
-/-- Constructor for ZornVectorMatrixWeylBasisPacket. -/
-def makeZornVectorMatrixWeylBasisPacket (R : Type*) [CommRing R] :
-    ZornVectorMatrixWeylBasisPacket R where
-  cross_self := cross3_self
-  dot_comm := dot3_comm
-  peirce_p_sq := ZornMatrix.peirce_plus_sq
-  peirce_m_sq := ZornMatrix.peirce_minus_sq
-  peirce_res := ZornMatrix.peirce_resolution
-  peirce_lepton := ZornMatrix.peirce_lepton_singlet
-  peirce_quark := ZornMatrix.peirce_quark_triplet
-  pauli_weyl_q := ZornMatrix.quark_lightlike
-  pauli_weyl_q_bar := ZornMatrix.antiquark_lightlike
-  q_sq_zero := ZornMatrix.quark_sq_zero
-  q_bar_sq_zero := ZornMatrix.antiquark_sq_zero
-  diquark := ZornMatrix.diquark_to_antiquark
-  baryon := ZornMatrix.baryon_three_quarks
-  car := ZornMatrix.meson_car_anticommutator
-  scale_q := ZornMatrix.iwasawa_scale_quark
-  scale_q_bar := ZornMatrix.iwasawa_scale_antiquark
-  split_circular := ZornMatrix.split_circular_null_product
-  fock_total := ZornMatrix.fock_total_dim
-  su3_stabilizer := ZornMatrix.su3_preserves_pplus
+/-!
+The named declarations in the ZornMatrix namespace are the reusable API for
+the Peirce, nilpotence, norm, and color-action results. They remain
+independently available with their proofs. A former aggregate structure merely
+repackaged those propositions as fields and had no consumers, so it added no
+mathematical carrier or operation.
+-/
 
 end InfoGeometry.Canonical.ZornVectorMatrixWeylBasis

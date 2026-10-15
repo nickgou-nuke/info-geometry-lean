@@ -24,7 +24,14 @@ theorem continuous_q55 : Continuous (q55 : Vec55 → ℚ) := by
       x 0 * x 0 + x 1 * x 1 + x 2 * x 2 + x 3 * x 3 + x 4 * x 4 -
         (x 5 * x 5 + x 6 * x 6 + x 7 * x 7 + x 8 * x 8 + x 9 * x 9)) := by
     fun_prop
-  simpa [q55, QuadraticMap.proj_apply] using h
+  have hfun : (fun x : Vec55 =>
+      x 0 * x 0 + x 1 * x 1 + x 2 * x 2 + x 3 * x 3 + x 4 * x 4 -
+        (x 5 * x 5 + x 6 * x 6 + x 7 * x 7 + x 8 * x 8 + x 9 * x 9)) =
+      (q55 : Vec55 → ℚ) := by
+    funext x
+    simp [q55, QuadraticMap.proj_apply]
+  rw [← hfun]
+  exact h
 
 def q55NullLocus : Set Vec55 :=
   {x | q55 x = 0}
@@ -68,7 +75,8 @@ theorem continuous_reflect0 : Continuous (reflect0 : Vec55 → Vec55) := by
   intro i
   by_cases hi : i = 0
   · subst i
-    simpa using (continuous_neg.comp (continuous_apply 0))
+    simp only [if_pos rfl]
+    exact continuous_neg.comp (continuous_apply 0)
   · simpa [hi] using (continuous_apply i)
 
 def reflect0Homeomorph : Vec55 ≃ₜ Vec55 where
@@ -141,10 +149,12 @@ theorem reflect0_preimage_q55NegativeLocus :
 
 theorem reflect0Homeomorph_preimage_q55NullLocus :
     reflect0Homeomorph ⁻¹' q55NullLocus = q55NullLocus := by
-  simpa [reflect0Homeomorph_apply] using reflect0_preimage_q55NullLocus
+  change reflect0 ⁻¹' q55NullLocus = q55NullLocus
+  exact reflect0_preimage_q55NullLocus
 
 theorem reflect0Homeomorph_preimage_q55NonzeroNullLocus :
     reflect0Homeomorph ⁻¹' q55NonzeroNullLocus = q55NonzeroNullLocus := by
-  simpa [reflect0Homeomorph_apply] using q55NonzeroNullLocus_reflect0_preimage
+  change reflect0 ⁻¹' q55NonzeroNullLocus = q55NonzeroNullLocus
+  exact q55NonzeroNullLocus_reflect0_preimage
 
 end InfoGeometry.Topology.SpinorOrbitStratumTopological

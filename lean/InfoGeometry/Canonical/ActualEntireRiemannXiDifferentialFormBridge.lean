@@ -1,5 +1,4 @@
 import Mathlib.Analysis.Calculus.DifferentialForm.Basic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ActualEntireRiemannXiLogDerivativeBridge
 import InfoGeometry.Canonical.ActualEntireRiemannXiRegularLogDerivativeBridge
 import InfoGeometry.Canonical.ActualEntireRiemannXiZeroFreeLocus
@@ -194,9 +193,9 @@ theorem entireRiemannXiLogDifferentialForm_extDeriv_eq_zero
     (ha : DifferentiableAt ℂ entireRiemannXiLogDifferential s)
     (hform : DifferentiableAt ℂ entireRiemannXiLogDifferentialForm s) :
     extDeriv entireRiemannXiLogDifferentialForm s = 0 := by
-  rw [entireRiemannXiLogDifferentialForm_eq_scalarComplexOneForm]
+  rw [entireRiemannXiLogDifferentialForm_eq_scalarComplexOneForm] at hform ⊢
   exact scalarComplexOneForm_extDeriv_eq_zero
-    entireRiemannXiLogDifferential s ha (by simpa using hform)
+    entireRiemannXiLogDifferential s ha hform
 
 theorem entireRiemannXiLogDifferentialForm_extDeriv_eq_zero_of_differentiableAt_deriv
     (s : ℂ)

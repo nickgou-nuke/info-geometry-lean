@@ -51,9 +51,17 @@ theorem extract_affine_minorant {f : E → ℝ}
     have hs : (x,t) = (x,0) + t • (0,1) := by ext <;> simp
     rw [hs, map_add, map_smul]
     dsimp [xstar, α]
+    simp only [ContinuousLinearMap.zero_apply]
     ring
   let m : E →L[ℝ] ℝ := (α⁻¹) • xstar
   let b : ℝ := -(c * α⁻¹)
+  have ha : α * α⁻¹ = 1 := mul_inv_cancel₀ (ne_of_gt hαpos)
+  have hprod (r : ℝ) : α⁻¹ * (α * r) = r := by
+    calc
+      α⁻¹ * (α * r) = (α⁻¹ * α) * r := by ring
+      _ = r := by rw [mul_comm α⁻¹ α, ha, one_mul]
+  have hm_eval (x : E) : m x = α⁻¹ * xstar x := by
+    simp [m, smul_eq_mul]
   have hm : ∀ x, m x + b ≤ f x := by
     intro x
     have hmem : (x, f x) ∈ epigraph f := by
@@ -62,19 +70,17 @@ theorem extract_affine_minorant {f : E → ℝ}
     have h := hbelow (x, f x) hmem
     rw [hdecomp] at h
     have hi : (0:ℝ) < α⁻¹ := inv_pos.mpr hαpos
-    have := (mul_lt_mul_of_pos_right h hi)
-    dsimp [m,b]
-    have ha : α * α⁻¹ = 1 := mul_inv_cancel₀ (ne_of_gt hαpos)
-    field_simp [ha] at this ⊢
+    have hmul := mul_lt_mul_of_pos_left h hi
+    rw [mul_sub, hprod, ← hm_eval x, mul_comm α⁻¹ c] at hmul
+    dsimp [b]
     linarith
   have htarget : m x₀ + b > t₀ := by
     have h := habove
     rw [hdecomp] at h
     have hi : (0:ℝ) < α⁻¹ := inv_pos.mpr hαpos
-    have := (mul_lt_mul_of_pos_right h hi)
-    dsimp [m,b]
-    have ha : α * α⁻¹ = 1 := mul_inv_cancel₀ (ne_of_gt hαpos)
-    field_simp [ha] at this ⊢
+    have hmul := mul_lt_mul_of_pos_left h hi
+    rw [mul_sub, hprod, ← hm_eval x₀, mul_comm α⁻¹ c] at hmul
+    dsimp [b]
     linarith
   exact ⟨⟨m,b,hm⟩, htarget⟩
 

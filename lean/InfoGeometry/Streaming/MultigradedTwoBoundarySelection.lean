@@ -79,7 +79,7 @@ theorem numerator_weight_equation
     have hcomm' :
         pairing p.post (H a (A p.pre) - A (H a p.pre)) =
           pairing p.post ((μ a • A) p.pre) := by
-      simpa only [Module.End.mul_apply] using hcomm
+      simpa only [LinearMap.sub_apply, Module.End.mul_apply] using hcomm
     rw [hsub] at hcomm'
     simpa [hleft, hright, hscaled] using hcomm'
   change (β a - α a - μ a) * pairing p.post (A p.pre) = 0

@@ -358,10 +358,9 @@ noncomputable def exterior3CliffordRep :
     ⟨exterior3NeutralActionMap, by
       intro w
       rcases w with ⟨v, φ⟩
-      simpa [exterior3NeutralActionMap, exterior3NeutralAction,
+      rw [Algebra.algebraMap_eq_smul_one,
         InfoGeometry.Clifford.NeutralPhaseSpaceCore.canonicalNeutralFormUnscaled_apply]
-        using (exteriorHodgeDirac3_sq v φ).trans
-          (exteriorHodgeLaplacian3_scalar v φ)⟩
+      exact (exteriorHodgeDirac3_sq v φ).trans (exteriorHodgeLaplacian3_scalar v φ)⟩
 
 @[simp] theorem exterior3CliffordRep_ι
     (w : exterior3NeutralSpace) :

@@ -40,13 +40,13 @@ def axialCartanFlow (k : Fin 3 → ℝ) (t : ℝ) : CZ ≃ₗ[ℝ] CZ where
       x := fun i => Real.exp (-(t * k i)) * Z.x i
       y := fun i => Real.exp (t * k i) * Z.y i }
   map_add' X Y := by
-    ext i <;> simp [ZornMatrix.add_def] <;> ring
+    ext i <;> simp <;> ring
   map_smul' r X := by
-    ext i <;> simp [Equiv.smul_def, coordEquiv] <;> ring
+    ext i <;> simp <;> ring
   left_inv Z := by
-    ext i <;> simp [Real.exp_neg]
+    ext i <;> simp [← mul_assoc, ← Real.exp_add]
   right_inv Z := by
-    ext i <;> simp [Real.exp_neg]
+    ext i <;> simp [← mul_assoc, ← Real.exp_add]
 
 @[simp] theorem axialCartanFlow_apply (k : Fin 3 → ℝ) (t : ℝ) (Z : CZ) :
     axialCartanFlow k t Z =
@@ -67,19 +67,23 @@ def axialCartanFlow (k : Fin 3 → ℝ) (t : ℝ) : CZ ≃ₗ[ℝ] CZ where
     (k : Fin 3 → ℝ) (t : ℝ) (i : Fin 3) :
     axialCartanFlow k t (chiralUpperBasis i) =
       Real.exp (t * k i) • chiralUpperBasis i := by
-  ext j <;>
-    simp [axialCartanFlow, chiralUpperBasis, Equiv.smul_def, coordEquiv,
-      Pi.single_apply]
-  all_goals fin_cases i <;> fin_cases j <;> norm_num
+  ext j
+  · simp [axialCartanFlow, chiralUpperBasis]
+  · simp [axialCartanFlow, chiralUpperBasis]
+  · simp [axialCartanFlow, chiralUpperBasis, Pi.single_apply]
+    by_cases h : j = i <;> simp [h]
+  · simp [axialCartanFlow, chiralUpperBasis]
 
 @[simp] theorem axialCartanFlow_chiralLowerBasis
     (k : Fin 3 → ℝ) (t : ℝ) (i : Fin 3) :
     axialCartanFlow k t (chiralLowerBasis i) =
       Real.exp (-(t * k i)) • chiralLowerBasis i := by
-  ext j <;>
-    simp [axialCartanFlow, chiralLowerBasis, Equiv.smul_def, coordEquiv,
-      Pi.single_apply]
-  all_goals fin_cases i <;> fin_cases j <;> norm_num
+  ext j
+  · simp [axialCartanFlow, chiralLowerBasis]
+  · simp [axialCartanFlow, chiralLowerBasis]
+  · simp [axialCartanFlow, chiralLowerBasis]
+  · simp [axialCartanFlow, chiralLowerBasis, Pi.single_apply]
+    by_cases h : j = i <;> simp [h]
 
 /-- The traceless closed flow preserves the native nonassociative Zorn
 multiplication. -/
@@ -191,7 +195,7 @@ theorem axialCartanCompositionAut_preserves_det
 
 @[simp] theorem axialCartanFlow_zero (k : Fin 3 → ℝ) (Z : CZ) :
     axialCartanFlow k 0 Z = Z := by
-  ext i <;> simp [axialCartanFlow]
+  ext <;> simp [axialCartanFlow]
 
 /-- The zero parameter is the identity element of the native composition
 automorphism subgroup. -/
@@ -207,11 +211,14 @@ theorem axialCartanCompositionAut_zero
 theorem axialCartanFlow_add (k : Fin 3 → ℝ) (s t : ℝ) (Z : CZ) :
     axialCartanFlow k (s + t) Z =
       axialCartanFlow k s (axialCartanFlow k t Z) := by
-  ext i <;> simp [axialCartanFlow]
-  · rw [show (s + t) * k i = s * k i + t * k i by ring, Real.exp_add]
+  ext i
+  · simp [axialCartanFlow]
+  · simp [axialCartanFlow]
+  · simp [axialCartanFlow]
+    rw [show (s + t) * k i = s * k i + t * k i by ring, Real.exp_add]
     ring
-  · rw [show -((s + t) * k i) = -(s * k i) + -(t * k i) by ring,
-      Real.exp_add]
+  · simp [axialCartanFlow]
+    rw [show -((s + t) * k i) = -(s * k i) + -(t * k i) by ring, Real.exp_add]
     ring
 
 /-- Coordinate flows with different weight vectors commute. -/
@@ -219,7 +226,11 @@ theorem axialCartanFlow_commute
     (k l : Fin 3 → ℝ) (s t : ℝ) (Z : CZ) :
     axialCartanFlow k s (axialCartanFlow l t Z) =
       axialCartanFlow l t (axialCartanFlow k s Z) := by
-  ext i <;> simp [axialCartanFlow] <;> ring
+  ext i
+  · simp [axialCartanFlow]
+  · simp [axialCartanFlow]
+  · simp [axialCartanFlow]; ring
+  · simp [axialCartanFlow]; ring
 
 /-- The coordinate flow law is the composition law of the native
 multiplication-preserving automorphism subgroup. -/
@@ -264,7 +275,7 @@ theorem axialCartanCompositionAut_commute
 
 @[simp] theorem axialCartanFlow_neg_apply (k : Fin 3 → ℝ) (t : ℝ) (Z : CZ) :
     (axialCartanFlow k t).symm Z = axialCartanFlow k (-t) Z := by
-  ext i <;> simp [axialCartanFlow]
+  ext <;> simp [axialCartanFlow]
 
 /-- Reversing the parameter gives the inverse automorphism in the subgroup. -/
 theorem axialCartanCompositionAut_neg

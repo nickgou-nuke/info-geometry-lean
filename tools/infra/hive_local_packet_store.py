@@ -9,6 +9,8 @@ read-only lineage queries.
 from __future__ import annotations
 
 import argparse
+from contextlib import contextmanager
+import fcntl
 import json
 import shutil
 import sys
@@ -93,6 +95,19 @@ def write_store_atomic(store: Path, records: Iterable[dict[str, Any]]) -> None:
     shutil.move(str(tmp_path), store)
 
 
+@contextmanager
+def store_lock(store: Path):
+    """Serialize read-check-replace transactions for concurrent Hive workers."""
+    store.parent.mkdir(parents=True, exist_ok=True)
+    lock_path = store.with_name(store.name + ".lock")
+    with lock_path.open("a", encoding="utf-8") as lock_file:
+        fcntl.flock(lock_file.fileno(), fcntl.LOCK_EX)
+        try:
+            yield
+        finally:
+            fcntl.flock(lock_file.fileno(), fcntl.LOCK_UN)
+
+
 def append_packet(store: Path, packet: dict[str, Any], allow_duplicate: bool = False) -> tuple[str, str]:
     validate_or_raise(packet)
     digest = packet_hash(packet)
@@ -100,20 +115,71 @@ def append_packet(store: Path, packet: dict[str, Any], allow_duplicate: bool = F
     if not packet_id:
         raise StoreError("packet id is required")
 
-    records = read_store(store)
-    for existing in records:
-        existing_hash = existing.get("packet_hash") or packet_hash(existing)
-        existing_id = str(existing.get("id", ""))
-        if existing_hash == digest and not allow_duplicate:
-            return digest, "duplicate_hash_ignored"
-        if existing_id == packet_id and existing_hash != digest:
-            raise StoreError(f"packet id already exists with different hash: {packet_id}")
+    with store_lock(store):
+        records = read_store(store)
+        for existing in records:
+            existing_hash = existing.get("packet_hash") or packet_hash(existing)
+            existing_id = str(existing.get("id", ""))
+            if existing_hash == digest and not allow_duplicate:
+                return digest, "duplicate_hash_ignored"
+            if existing_id == packet_id and existing_hash != digest:
+                raise StoreError(f"packet id already exists with different hash: {packet_id}")
 
-    stored = dict(packet)
-    stored["packet_hash"] = digest
-    records.append(stored)
-    write_store_atomic(store, records)
+        stored = dict(packet)
+        stored["packet_hash"] = digest
+        records.append(stored)
+        write_store_atomic(store, records)
     return digest, "appended"
+
+
+def append_packets(store: Path, packets: Iterable[dict[str, Any]]) -> list[tuple[str, str]]:
+    """Validate and append a packet batch with one atomic store replacement.
+
+    All ids and hashes are checked against the existing ledger and each other
+    before any write occurs, so a late collision cannot leave a partial batch.
+    Identical hashes retain `append_packet`'s idempotent behavior.
+    """
+    batch = list(packets)
+    with store_lock(store):
+        records = read_store(store)
+        existing_by_id: dict[str, str] = {}
+        existing_hashes: set[str] = set()
+        for existing in records:
+            digest = str(existing.get("packet_hash") or packet_hash(existing))
+            packet_id = str(existing.get("id", "")).strip()
+            if packet_id:
+                existing_by_id[packet_id] = digest
+            existing_hashes.add(digest)
+
+        batch_by_id: dict[str, str] = {}
+        batch_hashes: set[str] = set()
+        results: list[tuple[str, str]] = []
+        pending: list[dict[str, Any]] = []
+        for packet in batch:
+            validate_or_raise(packet)
+            digest = packet_hash(packet)
+            packet_id = str(packet.get("id", "")).strip()
+            if not packet_id:
+                raise StoreError("packet id is required")
+
+            previous_id_hash = batch_by_id.get(packet_id, existing_by_id.get(packet_id))
+            if previous_id_hash is not None and previous_id_hash != digest:
+                raise StoreError(f"packet id already exists with different hash: {packet_id}")
+            batch_by_id[packet_id] = digest
+
+            if digest in existing_hashes or digest in batch_hashes:
+                results.append((digest, "duplicate_hash_ignored"))
+                continue
+
+            batch_hashes.add(digest)
+            stored = dict(packet)
+            stored["packet_hash"] = digest
+            pending.append(stored)
+            results.append((digest, "appended"))
+
+        if pending:
+            write_store_atomic(store, [*records, *pending])
+        return results
 
 
 def normalize_ref(ref: Any) -> str | None:

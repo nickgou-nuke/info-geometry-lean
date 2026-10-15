@@ -20,7 +20,22 @@ def hypercube6PrimeSupport (v : Fin 6 → ZMod 2) : Finset ℕ :=
 
 /-- Over `F₂`, XOR-support is exactly coordinate disagreement. -/
 theorem zmod2_add_ne_zero_iff_ne (a b : ZMod 2) : a + b ≠ 0 ↔ a ≠ b := by
-  fin_cases a <;> fin_cases b <;> simp [zmod2_add_self]
+  constructor
+  · intro hab heq
+    apply hab
+    apply ZMod.val_injective 2
+    simp only [ZMod.val_add, ZMod.val_zero]
+    rw [heq]
+    have hb := ZMod.val_lt b
+    omega
+  · intro hab heq
+    apply hab
+    apply ZMod.val_injective 2
+    have hval := congrArg ZMod.val heq
+    simp only [ZMod.val_add, ZMod.val_zero] at hval
+    have ha := ZMod.val_lt a
+    have hb := ZMod.val_lt b
+    omega
 
 /-- The first-six-primes labeling is injective. -/
 theorem hypercube6Prime_injective : Function.Injective hypercube6Prime := by

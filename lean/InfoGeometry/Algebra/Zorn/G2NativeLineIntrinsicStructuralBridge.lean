@@ -72,7 +72,9 @@ theorem nativeLineToIntrinsicLine_val_image
     (L : NativeLine) :
     (nativeLineToIntrinsicLine L).1.image Subtype.val = L.1 := by
   rw [nativeLineToIntrinsicLine_eq_candidate]
-  rw [intrinsicLineOfNativeCandidate_val_image_eq_lineSet]
+  rw [intrinsicLineOfNativeCandidate_val_image_eq_lineSet
+    (nativeCandidateOfLine L).1
+    ((Finset.mem_filter.mp (nativeCandidateOfLine L).2).2)]
   exact nativeCandidateOfLine_spec L
 
 theorem nativeLineToIntrinsicLine_mem
@@ -195,6 +197,11 @@ theorem nativeLineFiberEquivOfTransport_val_image
   dsimp [nativeLineFiberEquivOfTransport]
   rw [cast_intrinsicLine_val_image hgp]
   dsimp [intrinsicLineMapEquiv, intrinsicLineMap]
+  change (zornZeroTripleMap g
+    (nativeLineToIntrinsicLineEquiv
+      (((nativeLineFiberMap g nativeBasePoint).trans
+        (Equiv.cast (congrArg NativeLinesThroughPoint hg))).symm L)).1).image
+      Subtype.val = L.1
   rw [zornZeroTripleMap_val_image]
   rw [show (fun v : OctImIsotropicPoint => octImAction g v.1) = (octImAction g) ∘ Subtype.val from rfl]
   rw [← Finset.image_image]

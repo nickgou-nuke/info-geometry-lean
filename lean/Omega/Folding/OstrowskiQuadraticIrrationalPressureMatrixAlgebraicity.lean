@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Analytic.Constructions
+import Mathlib.Analysis.Calculus.Deriv.Add
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.RingTheory.Algebraic.Basic
@@ -86,9 +87,9 @@ theorem paper_ostrowski_quadratic_irrational_pressure_matrix_algebraicity
       deriv D.logMGF 0 = 1 := by
     exact hHasDeriv.deriv
   refine ⟨?_, ?_, ?_, ?_, ?_⟩
-  · simpa [OstrowskiQuadraticIrrationalPressureData.logMGF] using
-      (analyticAt_id.add analyticAt_const :
-        AnalyticAt ℝ (fun t : ℝ => t + D.pressureShift) 0)
+  · change AnalyticAt ℝ D.logMGF 0
+    change AnalyticAt ℝ (fun t : ℝ => t + D.pressureShift) 0
+    exact analyticAt_id.add analyticAt_const
   · intro t
     simp [OstrowskiQuadraticIrrationalPressureData.matrixPressure,
       OstrowskiQuadraticIrrationalPressureData.transferSpectralRadius,
@@ -96,8 +97,9 @@ theorem paper_ostrowski_quadratic_irrational_pressure_matrix_algebraicity
       OstrowskiQuadraticIrrationalPressureData.logMGF]
   · change Filter.Tendsto (fun _ : ℕ => (1 : ℝ)) Filter.atTop (nhds (1 : ℝ))
     exact tendsto_const_nhds
-  · simpa [OstrowskiQuadraticIrrationalPressureData.meanDensity] using hDeriv.symm
-  · simpa [OstrowskiQuadraticIrrationalPressureData.meanDensity] using
-      (isAlgebraic_one : IsAlgebraic ℚ (1 : ℝ))
+  · change (1 : ℝ) = deriv D.logMGF 0
+    exact hDeriv.symm
+  · change IsAlgebraic ℚ (1 : ℝ)
+    exact isAlgebraic_one
 
 end Omega.Folding

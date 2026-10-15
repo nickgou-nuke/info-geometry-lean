@@ -28,9 +28,9 @@ def colourSwapLinear : ColorTensor2 →ₗ[ℚ] ColorTensor2 where
 
 noncomputable def colourSwapContinuousLinear :
     ColorTensor2 →L[ℚ] ColorTensor2 :=
-  ContinuousLinearMap.mk colourSwapLinear
-    (by simpa [colourSwapLinear, topologicalRSwap]
-      using continuous_topologicalRSwap)
+  ⟨colourSwapLinear, continuous_pi (fun c₁ =>
+    continuous_pi (fun c₂ =>
+      (continuous_apply c₁).comp (continuous_apply c₂)))⟩
 
 @[simp] theorem colourSwapContinuousLinear_apply
     (T : ColorTensor2) :

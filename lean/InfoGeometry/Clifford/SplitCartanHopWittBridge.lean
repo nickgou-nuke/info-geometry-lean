@@ -79,7 +79,8 @@ theorem headCartanHop_bilinear_skew
   rcases x with ⟨⟨a, b⟩, xs⟩
   rcases y with ⟨⟨c, d⟩, ys⟩
   rw [headCartanHop_apply, headCartanHop_apply]
-  simp [hyperbolicBilinear, InfoGeometry.Clifford.splitB11_apply]
+  rw [Bsplit_succ_apply, Bsplit_succ_apply]
+  simp [splitB11_apply]
 
 /--
 On the selected head plane, the anti-diagonal hop flips the sign of the split
@@ -92,7 +93,9 @@ theorem headCartanHop_headPair_quadratic_neg
       - hyperbolicQuadratic (n + 1) (headPair n x) := by
   rcases x with ⟨a, b⟩
   rw [headCartanHop_headPair]
-  simp [headPair, hyperbolicQuadratic]
+  rw [headPair, headPair]
+  rw [Qsplit_succ_apply, Qsplit_succ_apply]
+  simp [splitQ11_apply]
 
 @[rep_depth krein]
 theorem headCartanHop_preserves_head_null
@@ -106,19 +109,13 @@ theorem headCartanHop_preserves_head_null
 @[rep_depth krein, simp]
 theorem headCartanHop_headNullMinus (n : ℕ) :
     headCartanHop n (headNullMinus n) = headNullMinus n := by
-  simp [headNullMinus, headPair]
+  rw [headNullMinus, headPair, headCartanHop_apply]
 
 @[rep_depth krein, simp]
 theorem headCartanHop_headNullPlus (n : ℕ) :
     headCartanHop n (headNullPlus n) = -headNullPlus n := by
-  simp [headNullPlus, headPair]
-  apply Prod.ext
-  · apply Prod.ext
-    · rw [Prod.fst_neg, Prod.fst_neg]
-    · rw [Prod.fst_neg, Prod.snd_neg]
-      norm_num
-  · rw [Prod.snd_neg]
-    simp
+  rw [headNullPlus, headPair, headCartanHop_apply]
+  ext <;> simp
 
 /-! ## Clifford/Witt CAR readback -/
 

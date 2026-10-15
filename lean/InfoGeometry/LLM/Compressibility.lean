@@ -91,7 +91,10 @@ theorem compression_ratio_le_one (node : DagNode) :
     compression_ratio node ≤ 1 := by
   unfold compression_ratio
   rw [div_le_iff₀ (by exact_mod_cast node.unwrap_length_pos)]
-  exact_mod_cast node.wrap_le_unwrap
+  calc
+    (node.wrap_length : ℚ) ≤ node.unwrap_length := by
+      simpa using (node.wrap_le_unwrap : node.wrap_length ≤ node.unwrap_length)
+    _ = 1 * node.unwrap_length := by simp
 
 /-- Theorem: A DAG with uniform macro branching `k` yields an exact 
 exponential unwrap length bound. -/

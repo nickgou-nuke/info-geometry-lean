@@ -50,8 +50,10 @@ def fibonacciArtinSystem
   adjacent i j hij := by
     fin_cases i <;> fin_cases j
     · norm_num at hij
-    · simpa using
-        fusionTree_artin_equiv q τ s hq_inv hq_pow3 hq5 h_poly hτq hs hτ
+    · have h := fusionTree_artin_equiv q τ s hq_inv hq_pow3 hq5 h_poly hτq hs hτ
+      rw [LinearEquiv.trans_assoc] at h
+      rw [← LinearEquiv.mul_eq_trans] at h
+      exact h
     · norm_num at hij
     · norm_num at hij
   farCommute i j hij := by

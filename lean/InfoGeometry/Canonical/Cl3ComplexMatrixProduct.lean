@@ -179,16 +179,22 @@ lemma e3_sq : e3 * e3 = 1 := by
   simp [q3_apply, Algebra.algebraMap_eq_smul_one]
 
 lemma e1_mul_e2_neg : e1 * e2 = -(e2 * e1) := by
-  rw [e1, e2, CliffordAlgebra.ι_mul_ι_comm]
-  simp [q3, QuadraticMap.polar, QuadraticMap.prod_apply, Algebra.algebraMap_eq_smul_one]
+  have h : q3.IsOrtho (1, 0, 0) (0, 1, 0) := by
+    rw [QuadraticMap.isOrtho_def]
+    simp [q3, QuadraticMap.prod_apply, QuadraticMap.sq_apply]
+  exact CliffordAlgebra.ι_mul_ι_comm_of_isOrtho h
 
 lemma e1_mul_e3_neg : e1 * e3 = -(e3 * e1) := by
-  rw [e1, e3, CliffordAlgebra.ι_mul_ι_comm]
-  simp [q3, QuadraticMap.polar, QuadraticMap.prod_apply, Algebra.algebraMap_eq_smul_one]
+  have h : q3.IsOrtho (1, 0, 0) (0, 0, 1) := by
+    rw [QuadraticMap.isOrtho_def]
+    simp [q3, QuadraticMap.prod_apply, QuadraticMap.sq_apply]
+  exact CliffordAlgebra.ι_mul_ι_comm_of_isOrtho h
 
 lemma e2_mul_e3_neg : e2 * e3 = -(e3 * e2) := by
-  rw [e2, e3, CliffordAlgebra.ι_mul_ι_comm]
-  simp [q3, QuadraticMap.polar, QuadraticMap.prod_apply, Algebra.algebraMap_eq_smul_one]
+  have h : q3.IsOrtho (0, 1, 0) (0, 0, 1) := by
+    rw [QuadraticMap.isOrtho_def]
+    simp [q3, QuadraticMap.prod_apply, QuadraticMap.sq_apply]
+  exact CliffordAlgebra.ι_mul_ι_comm_of_isOrtho h
 
 lemma e2_mul_e1 : e2 * e1 = -(e1 * e2) := by
   have h := congrArg Neg.neg e1_mul_e2_neg
@@ -220,7 +226,7 @@ noncomputable def cl3BasisWord (i : Fin 8) : CliffordAlgebra q3 :=
   else if i = 6 then e3 * e1
   else volume
 
-abbrev cl3Span : Submodule ℂ (CliffordAlgebra q3) :=
+noncomputable abbrev cl3Span : Submodule ℂ (CliffordAlgebra q3) :=
   Submodule.span ℂ (Set.range cl3BasisWord)
 
 lemma cl3BasisWord_mem_span (i : Fin 8) : cl3BasisWord i ∈ cl3Span :=

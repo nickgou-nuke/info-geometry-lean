@@ -49,7 +49,8 @@ theorem rankOneKernel_posSemidef (ψ : Mode ι) :
   let C : Matrix ι Unit ℂ := fun i _ => ψ i
   have hC : C * Matrix.conjTranspose C = rankOneKernel ψ := by
     ext i j
-    simp [C, rankOneKernel, Matrix.mul_apply]
+    rw [Matrix.mul_apply, Fintype.sum_unique, Matrix.conjTranspose_apply]
+    rfl
   rw [← hC]
   exact Matrix.posSemidef_self_mul_conjTranspose C
 

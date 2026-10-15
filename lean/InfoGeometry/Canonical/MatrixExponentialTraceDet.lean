@@ -1,6 +1,7 @@
 import Mathlib.Analysis.Matrix.Spectrum
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Normed.Algebra.MatrixExponential
+import Mathlib.Analysis.Normed.Module.FiniteDimension
 import Mathlib.Analysis.SpecialFunctions.Exponential
 import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 
@@ -204,24 +205,27 @@ theorem det_exp_eq_exp_trace_of_isHermitian
 
 section UpperTriangular
 
-open Matrix.Norms.Frobenius
+open scoped Matrix.Norms.Frobenius
 
-variable {ι : Type*}
+variable {ι : Type*} [Fintype ι] [DecidableEq ι]
+
+/-- Coordinate projection from a finite matrix to one entry, as a linear map. -/
+private def matrixEntryLM (i j : ι) : Matrix ι ι ℂ →ₗ[ℂ] ℂ where
+  toFun A := A i j
+  map_add' _ _ := rfl
+  map_smul' _ _ := rfl
 
 /-- Coordinate projection from a finite matrix to one entry, as a continuous linear map. -/
 private noncomputable def matrixEntryCLM (i j : ι) : Matrix ι ι ℂ →L[ℂ] ℂ :=
-  (ContinuousLinearMap.proj (R := ℂ) j : (ι → ℂ) →L[ℂ] ℂ).comp
-    (ContinuousLinearMap.proj (R := ℂ) i : Matrix ι ι ℂ →L[ℂ] (ι → ℂ))
+  LinearMap.toContinuousLinearMap (matrixEntryLM i j)
 
+omit [DecidableEq ι] in
 @[simp]
 private lemma matrixEntryCLM_apply (i j : ι) (A : Matrix ι ι ℂ) :
-    matrixEntryCLM i j A = A i j := by
-  change ((ContinuousLinearMap.proj (R := ℂ) i : Matrix ι ι ℂ →L[ℂ] (ι → ℂ)) A) j =
-    A i j
-  rfl
+    matrixEntryCLM i j A = A i j := rfl
 
 lemma upperTriangular_pow
-    [Fintype ι] [DecidableEq ι] [LinearOrder ι]
+    [LinearOrder ι]
     {A : Matrix ι ι ℂ} (hA : A.BlockTriangular id) (k : ℕ) :
     (A ^ k).BlockTriangular id := by
   induction k with
@@ -231,25 +235,13 @@ lemma upperTriangular_pow
       simpa [pow_succ] using ih.mul hA
 
 lemma exp_upperTriangular
-    [Fintype ι] [DecidableEq ι] [LinearOrder ι]
+    [LinearOrder ι]
     {A : Matrix ι ι ℂ} (hA : A.BlockTriangular id) :
-    (NormedSpace.exp A).BlockTriangular id := by
-  intro i j hij
-  rw [NormedSpace.exp_eq_tsum_rat]
-  let f : ℕ → Matrix ι ι ℂ := fun k => ((↑k.factorial : ℚ)⁻¹ : ℚ) • A ^ k
-  have hs : Summable f := by
-    simpa [f] using (NormedSpace.expSeries_summable' (𝕂 := ℚ) A)
-  have hmap := (matrixEntryCLM i j).map_tsum hs
-  have hzero : (fun k => matrixEntryCLM i j (f k)) = fun _ : ℕ => 0 := by
-    funext k
-    simp [f, upperTriangular_pow hA k hij]
-  change (∑' k : ℕ, f k) i j = 0
-  simpa [matrixEntryCLM] using
-    (by rw [hmap, hzero, tsum_zero] :
-      matrixEntryCLM i j (∑' k : ℕ, f k) = 0)
+    (NormedSpace.exp A).BlockTriangular id :=
+  Matrix.BlockTriangular.exp hA
 
 lemma upperTriangular_pow_diag
-    [Fintype ι] [DecidableEq ι] [LinearOrder ι]
+    [LinearOrder ι]
     {A : Matrix ι ι ℂ} (hA : A.BlockTriangular id) (k : ℕ) (i : ι) :
     (A ^ k) i i = (A i i) ^ k := by
   induction k with
@@ -270,22 +262,20 @@ lemma upperTriangular_pow_diag
         exact (pow_succ (A i i) k).symm
 
 lemma upperTriangular_exp_diag
-    [Fintype ι] [DecidableEq ι] [LinearOrder ι]
+    [LinearOrder ι]
     {A : Matrix ι ι ℂ} (hA : A.BlockTriangular id) (i : ι) :
     (NormedSpace.exp A) i i = NormedSpace.exp (A i i) := by
-  rw [NormedSpace.exp_eq_tsum_rat, NormedSpace.exp_eq_tsum_rat]
   let f : ℕ → Matrix ι ι ℂ := fun k => ((↑k.factorial : ℚ)⁻¹ : ℚ) • A ^ k
   let g : ℕ → ℂ := fun k => ((↑k.factorial : ℚ)⁻¹ : ℚ) • (A i i) ^ k
-  have hs : Summable f := by
-    simpa [f] using (NormedSpace.expSeries_summable' (𝕂 := ℚ) A)
+  have hs : Summable f := NormedSpace.expSeries_summable' (𝕂 := ℚ) A
   have hmap := (matrixEntryCLM i i).map_tsum hs
   have hfg : (fun k => matrixEntryCLM i i (f k)) = g := by
     funext k
     simp [f, g, upperTriangular_pow_diag hA k i]
+  rw [NormedSpace.exp_eq_tsum_rat, NormedSpace.exp_eq_tsum_rat]
   change (∑' k : ℕ, f k) i i = ∑' k : ℕ, g k
-  simpa [matrixEntryCLM, g] using
-    (by rw [hmap, hfg] :
-      matrixEntryCLM i i (∑' k : ℕ, f k) = ∑' k : ℕ, g k)
+  rw [← matrixEntryCLM_apply i i (∑' k, f k)]
+  rw [hmap, hfg]
 
 /--
 Trace-determinant law for complex upper-triangular matrices.
@@ -295,11 +285,11 @@ unrestricted mathlib TODO, but it proves the full identity on the canonical
 triangular normal form target.
 -/
 theorem det_exp_eq_exp_trace_of_upperTriangular
-    {ι : Type*} [Fintype ι] [DecidableEq ι] [LinearOrder ι]
+    [LinearOrder ι]
     (A : Matrix ι ι ℂ) (hA : A.BlockTriangular id) :
     Matrix.det (NormedSpace.exp A) =
       NormedSpace.exp (Matrix.trace A) := by
-  rw [Matrix.det_of_upperTriangular (exp_upperTriangular hA)]
+  rw [Matrix.det_of_isUpperTriangular (exp_upperTriangular hA)]
   rw [Matrix.trace]
   calc
     (∏ i, NormedSpace.exp A i i) = ∏ i, NormedSpace.exp (A i i) := by
@@ -363,7 +353,7 @@ end InfoGeometry.Canonical.MatrixExponentialTraceDet
 namespace Matrix
 
 open scoped BigOperators Matrix
-open Matrix.Norms.Frobenius
+open scoped Matrix.Norms.Frobenius
 
 lemma hasDerivAt_matrix_exp_smul_right
     {ι : Type*} [Fintype ι] [DecidableEq ι]
@@ -371,8 +361,8 @@ lemma hasDerivAt_matrix_exp_smul_right
     HasDerivAt
       (fun z : ℂ => NormedSpace.exp (z • A))
       (NormedSpace.exp (t • A) * A)
-      t := by
-  simpa using (hasDerivAt_exp_smul_const (x := A) (t := t))
+      t :=
+  hasDerivAt_exp_smul_const (x := A) (t := t)
 
 lemma hasDerivAt_matrix_exp_smul
     {ι : Type*} [Fintype ι] [DecidableEq ι]
@@ -380,8 +370,8 @@ lemma hasDerivAt_matrix_exp_smul
     HasDerivAt
       (fun z : ℂ => NormedSpace.exp (z • A))
       (A * NormedSpace.exp (t • A))
-      t := by
-  simpa using (hasDerivAt_exp_smul_const' (x := A) (t := t))
+      t :=
+  hasDerivAt_exp_smul_const' (x := A) (t := t)
 
 lemma matrix_exp_smul_inverse
     {ι : Type*} [Fintype ι] [DecidableEq ι]

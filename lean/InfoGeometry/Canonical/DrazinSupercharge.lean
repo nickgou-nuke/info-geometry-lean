@@ -739,7 +739,10 @@ theorem regularRestrictedSuperHamiltonian_fixed_under_spectralGradingFlow
       = regularRestrictedSuperHamiltonian CIK := by
   let T := CIK.toInformationCartanTriple
   have hComm : Commute (regularRestrictedSuperHamiltonian CIK) T.GammaS := by
-    simpa [T] using regularRestrictedSuperHamiltonian_commutes_GammaS (CIK := CIK)
+    exact (commute_iff_eq _ _).2 <| by
+      simpa [T, CertifiedInverseKernel.GammaS, CertifiedInverseKernel.cartanTriple,
+        CertifiedInverseKernel.toInformationCartanTriple] using
+        regularRestrictedSuperHamiltonian_commutes_GammaS (CIK := CIK)
   simpa [T] using
     T.spectralAdjointFlow_eq_self_of_commute_GammaS hComm t
 
@@ -845,7 +848,8 @@ theorem superHamiltonian_fixed_under_spectralGradingFlow
     T.spectralAdjointFlow T.GammaS t (superHamiltonian CIK) = superHamiltonian CIK := by
   let T := CIK.toInformationCartanTriple
   have hComm : Commute (superHamiltonian CIK) T.GammaS := by
-    simpa [T] using superHamiltonian_commutes_GammaS CIK
+    exact (commute_iff_eq _ _).2 <| by
+      simpa [T] using superHamiltonian_commutes_GammaS CIK
   simpa [T] using
     T.spectralAdjointFlow_eq_self_of_commute_GammaS hComm t
 
@@ -874,7 +878,8 @@ theorem superHamiltonian_commutes_spectralGradingFlow
     Commute (superHamiltonian CIK) (T.spectralGradingFlow t) := by
   let T := CIK.toInformationCartanTriple
   have hComm : Commute (superHamiltonian CIK) T.GammaS := by
-    simpa [T] using superHamiltonian_commutes_GammaS CIK
+    exact (commute_iff_eq _ _).2 <| by
+      simpa [T] using superHamiltonian_commutes_GammaS CIK
   simpa [T] using
     T.commute_spectralGradingFlow_of_commute_GammaS hComm t
 
@@ -997,8 +1002,8 @@ theorem canonicalDefectCentral_isDefectSupported :
 @[rep_depth krein]
 theorem canonicalDefectCentralK_isDefectSupportedK :
     IsDefectSupportedK CIK (canonicalDefectCentralK CIK) := by
-  simpa [canonicalDefectCentralK] using
-    canonicalDefectCentral_isDefectSupported (CIK := CIK)
+  change IsDefectSupported CIK (canonicalDefectCentral CIK)
+  exact canonicalDefectCentral_isDefectSupported (CIK := CIK)
 
 /--
 Nontrivial defect projector criterion:
@@ -1084,8 +1089,8 @@ theorem canonicalKineticPart_hasVanishingDefectBlock :
 @[rep_depth krein]
 theorem canonicalKineticPartK_hasVanishingDefectBlockK :
     HasVanishingDefectBlockK CIK (canonicalKineticPartK CIK) := by
-  simpa [canonicalKineticPartK] using
-    canonicalKineticPart_hasVanishingDefectBlock (CIK := CIK)
+  change HasVanishingDefectBlock CIK (canonicalKineticPart CIK)
+  exact canonicalKineticPart_hasVanishingDefectBlock (CIK := CIK)
 
 /--
 Defect support implies left compression by the complementary projector.
@@ -1232,6 +1237,8 @@ theorem commute_GammaS_of_isDrazinSpectralCentral
 @[rep_depth krein]
 theorem canonicalDefectCentral_isDrazinSpectralCentral :
     IsDrazinSpectralCentral CIK (canonicalDefectCentral CIK) := by
+  change Commute (canonicalDefectCentral CIK) CIK.spectralProjector ∧
+    Commute (canonicalDefectCentral CIK) CIK.spectralComplementaryProjector
   exact isDrazinSpectralCentral_of_isDefectSupported (CIK := CIK)
     (canonicalDefectCentral_isDefectSupported (CIK := CIK))
 
@@ -1239,6 +1246,8 @@ theorem canonicalDefectCentral_isDrazinSpectralCentral :
 @[rep_depth krein]
 theorem canonicalDefectCentral_isDrazinLaneCentral :
     IsDrazinLaneCentral CIK (canonicalDefectCentral CIK) := by
+  change IsDrazinSpectralCentral CIK (canonicalDefectCentral CIK) ∧
+    Commute (canonicalDefectCentral CIK) CIK.toInformationCartanTriple.GammaS
   refine ⟨canonicalDefectCentral_isDrazinSpectralCentral (CIK := CIK), ?_⟩
   exact commute_GammaS_of_isDrazinSpectralCentral (CIK := CIK)
     (canonicalDefectCentral_isDrazinSpectralCentral (CIK := CIK))
@@ -1247,15 +1256,15 @@ theorem canonicalDefectCentral_isDrazinLaneCentral :
 @[rep_depth krein]
 theorem canonicalDefectCentralK_isDrazinSpectralCentralK :
     IsDrazinSpectralCentralK CIK (canonicalDefectCentralK CIK) := by
-  simpa [canonicalDefectCentralK, IsDrazinSpectralCentralK] using
-    canonicalDefectCentral_isDrazinSpectralCentral (CIK := CIK)
+  change IsDrazinSpectralCentral CIK (canonicalDefectCentral CIK)
+  exact canonicalDefectCentral_isDrazinSpectralCentral (CIK := CIK)
 
 /-- Krein-depth bridge form of full Drazin-lane centrality for the canonical central extraction. -/
 @[rep_depth krein]
 theorem canonicalDefectCentralK_isDrazinLaneCentralK :
     IsDrazinLaneCentralK CIK (canonicalDefectCentralK CIK) := by
-  simpa [canonicalDefectCentralK, IsDrazinLaneCentralK] using
-    canonicalDefectCentral_isDrazinLaneCentral (CIK := CIK)
+  change IsDrazinLaneCentral CIK (canonicalDefectCentral CIK)
+  exact canonicalDefectCentral_isDrazinLaneCentral (CIK := CIK)
 
 /-- Krein-depth bridge: scalar multiples of `Q₀` are defect-supported. -/
 @[rep_depth krein]
@@ -1751,12 +1760,17 @@ theorem intrinsicCentralIndexResidual_isDefectSupported
       Q0 * InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalDefectCentralK CIK * Q0
         =
       InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalDefectCentralK CIK := by
-    simpa [Q0] using hCan
+    change Q0 *
+      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalDefectCentralK CIK * Q0 =
+      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalDefectCentralK CIK at hCan
+    exact hCan
   have hShadowQ :
       Q0 * operatorialCentralDefectShadow (A := A) (B := B) CIK X hX * Q0
         =
       operatorialCentralDefectShadow (A := A) (B := B) CIK X hX := by
-    simpa [Q0] using hShadow
+    change Q0 * operatorialCentralDefectShadow (A := A) (B := B) CIK X hX * Q0 =
+      operatorialCentralDefectShadow (A := A) (B := B) CIK X hX at hShadow
+    exact hShadow
   unfold InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.IsDefectSupportedK
   unfold intrinsicCentralIndexResidual
   change

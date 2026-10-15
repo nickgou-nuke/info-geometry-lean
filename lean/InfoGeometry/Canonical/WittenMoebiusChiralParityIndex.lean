@@ -78,7 +78,12 @@ theorem anomalyFree_zero :
 inductive ChiralPole where
   | plus
   | minus
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype ChiralPole where
+  elems := {ChiralPole.plus, ChiralPole.minus}
+  complete := by
+    rintro (_ | _) <;> simp
 
 /-- Read a chiral pole as the corresponding split idempotent. -/
 def ChiralPole.toChiralScalar : ChiralPole → ChiralScalar

@@ -105,7 +105,7 @@ def h3ZornReconstructLM : (Fin 27 → ℝ) →ₗ[ℝ] H3Zorn ℝ where
       · rfl
 
 /-- Full linear equivalence between `H3Zorn ℝ` and `ℝ²⁷`. -/
-def h3ZornCoordEquiv : H3Zorn ℝ ≃ₗ[ℝ] (Fin 27 → ℝ) :=
+noncomputable def h3ZornCoordEquiv : H3Zorn ℝ ≃ₗ[ℝ] (Fin 27 → ℝ) :=
   LinearEquiv.ofLinear h3ZornCoordinateLM h3ZornReconstructLM
     (LinearMap.ext coordinate_reconstructH3Zorn)
     (LinearMap.ext reconstruct_h3ZornCoordinate)

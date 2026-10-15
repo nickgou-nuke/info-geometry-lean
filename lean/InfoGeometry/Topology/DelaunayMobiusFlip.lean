@@ -74,8 +74,7 @@ omit [DecidableEq ι] in
 theorem flipBlock_det :
     Matrix.det (flipBlock labels i k j l hik) = (labels.ζ j - labels.ζ l) / (labels.ζ i - labels.ζ k) := by
   have hd : labels.ζ i - labels.ζ k ≠ 0 := labels.nonzero_den hik
-  simpa [flipBlock, rohozhkinFlipBlock, Matrix.det_fin_two] using
-    (rohozhkinFlipBlock_det (labels.ζ i) (labels.ζ k) (labels.ζ j) (labels.ζ l) hd)
+  exact rohozhkinFlipBlock_det (labels.ζ i) (labels.ζ k) (labels.ζ j) (labels.ζ l) hd
 
 omit [DecidableEq ι] in
 /-- The projective action of the flip block aligns perfectly with the Möbius evaluation. -/

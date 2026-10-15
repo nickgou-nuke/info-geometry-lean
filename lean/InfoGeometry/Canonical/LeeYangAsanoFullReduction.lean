@@ -571,7 +571,8 @@ theorem endpoint_alternative_of_topologicalEndpoint_pointwise
   have hzf :
       InfoGeometry.Analysis.AsanoContractionNative.ZeroFreeOutside K₁ K₂ A B C D := by
     intro z₁ z₂ hz₁ hz₂
-    simpa [InfoGeometry.Analysis.AsanoContractionNative.asanoPoly]
+    simpa [InfoGeometry.Analysis.AsanoContractionNative.asanoPoly,
+      InfoGeometry.Canonical.LeeYangAsanoNativeCore.asanoPhi]
       using hPhi z₁ z₂ hz₁ hz₂
   exact InfoGeometry.Analysis.AsanoContractionNative.nonDegenerate_endpoint_of_topologicalEndpointSpec
     hClosed₁ hClosed₂ hK₂_bdd hzf hD hDet

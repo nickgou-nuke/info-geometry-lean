@@ -361,7 +361,7 @@ noncomputable def cl22BottLaplacian :
 theorem cl22_bottDirac_sq_eq_cl22BottLaplacian :
     (cl22Dirac (E := E) (F := F)).comp (cl22Dirac (E := E) (F := F))
       = cl22BottLaplacian (E := E) (F := F) := by
-  simpa [cl22Dirac, cl22BottLaplacian] using
+  simpa [cl22Dirac, cl22BottLaplacian, cl11BottDirac] using
     (cl11_bottDirac_sq_eq_sum_laplacians (E := E) (F := DoubledSpace F)
       (Dn := cl11DiracSeed (E := F)))
 

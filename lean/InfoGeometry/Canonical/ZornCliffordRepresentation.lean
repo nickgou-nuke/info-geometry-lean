@@ -140,13 +140,6 @@ theorem diracGamma_sq_apply (V : ZornMatrix R) (Ψ : DiracSpinor16 (R := R)) :
     rw [zornNorm_apply]
     exact zornConj_mul_mul V Ψ.2
 
-theorem diracGamma_sq (V : ZornMatrix R) :
-    diracGamma V * diracGamma V =
-      algebraMap R (Module.End R (DiracSpinor16 (R := R))) (zornNorm V) := by
-  apply LinearMap.ext
-  intro Ψ
-  exact diracGamma_sq_apply V Ψ
-
 /-- Gamma depends linearly on its vector argument. -/
 def diracGammaLinear : ZornMatrix R →ₗ[R] Module.End R (DiracSpinor16 (R := R)) where
   toFun := diracGamma
@@ -167,15 +160,24 @@ def diracGammaLinear : ZornMatrix R →ₗ[R] Module.End R (DiracSpinor16 (R := 
     · change zornConj (c • V) * Ψ.1 = c • (zornConj V * Ψ.1)
       rw [zornConj_smul, smul_mul']
 
+theorem diracGamma_sq (V : ZornMatrix R) :
+    diracGammaLinear V * diracGammaLinear V =
+      algebraMap R (Module.End R (DiracSpinor16 (R := R))) (zornNorm V) := by
+  apply LinearMap.ext
+  intro Ψ
+  exact diracGamma_sq_apply V Ψ
+
 /-- The universal Clifford-algebra representation on the Zorn Dirac carrier. -/
 def zornCliffordRepresentation :
     CliffordAlgebra (zornNorm (R := R)) →ₐ[R] Module.End R (DiracSpinor16 (R := R)) :=
   CliffordAlgebra.lift (zornNorm (R := R)) ⟨diracGammaLinear, diracGamma_sq⟩
 
 @[simp] theorem zornCliffordRepresentation_ι (V : ZornMatrix R) :
-    zornCliffordRepresentation (CliffordAlgebra.ι zornNorm V) =
-      diracGamma V := by
-  exact CliffordAlgebra.lift_ι_apply diracGammaLinear diracGamma_sq V
+    zornCliffordRepresentation (CliffordAlgebra.ι (zornNorm (R := R)) V) =
+      diracGammaLinear V := by
+  change (CliffordAlgebra.lift (zornNorm (R := R)) ⟨diracGammaLinear, diracGamma_sq⟩)
+    (CliffordAlgebra.ι (zornNorm (R := R)) V) = diracGammaLinear V
+  rw [CliffordAlgebra.lift_ι_apply]
 
 /-- The constructed representation restricts to the two chiral Zorn actions
 on the Clifford generators. -/

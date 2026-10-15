@@ -22,12 +22,12 @@ The mapping from a Weyl group element (subset of primes) to a squarefree integer
 $w \mapsto n = \prod_{p \in w} p$.
 -/
 def weylToNat {S : PrimeA1RootSystem} (w : S.WeylGroup) : ℕ :=
-  w.attach.prod (fun p => p.val)
+  ∏ p ∈ (w : Finset S.P), (p : ℕ)
 
 /-- The Weyl cutoff product is squarefree. -/
 theorem weyl_toNat_squarefree {S : PrimeA1RootSystem} (w : S.WeylGroup) :
     Squarefree (weylToNat w) := by
-  rw [weylToNat, Finset.prod_attach]
+  unfold weylToNat
   refine Finset.squarefree_prod_of_pairwise_isCoprime ?_ ?_
   · intro x hx y hy hxy
     have hx' : Nat.Prime x := S.all_prime x x.property
@@ -44,18 +44,23 @@ theorem weyl_sign_eq_moebius {S : PrimeA1RootSystem} (w : S.WeylGroup) :
     rw [PrimeA1RootSystem.signature]
     simpa [Nat.even_iff] using (neg_one_pow_eq_ite (R := ℤ) (n := w.card)).symm
   have hμ : μ (weylToNat w) = (-1 : ℤ) ^ w.card := by
-    rw [weylToNat, Finset.prod_attach]
+    unfold weylToNat
     have hmap :
-        μ (∏ x ∈ w, (x : ℕ)) = ∏ x ∈ w, (μ (x : ℕ) : ℤ) := by
+        μ (∏ x ∈ (w : Finset S.P), (x : ℕ)) = ∏ x ∈ (w : Finset S.P), (μ (x : ℕ) : ℤ) := by
       refine ArithmeticFunction.IsMultiplicative.map_prod
         (g := fun x : S.P => (x : ℕ))
-        (f := μ) ArithmeticFunction.isMultiplicative_moebius w ?_
+        (f := μ) ArithmeticFunction.isMultiplicative_moebius (w : Finset S.P) ?_
       intro x hx y hy hxy
       have hx' : Nat.Prime x := S.all_prime x x.property
       have hy' : Nat.Prime y := S.all_prime y y.property
       exact (Nat.coprime_primes hx' hy').2 fun hval => hxy (Subtype.ext hval)
     rw [hmap]
-    simp [ArithmeticFunction.moebius_apply_prime, S.all_prime]
+    have hprime (x : S.P) : (μ (x : ℕ) : ℤ) = -1 := by
+      exact ArithmeticFunction.moebius_apply_prime (S.all_prime x x.property)
+    have hprod_eq : ∏ x ∈ (w : Finset S.P), (μ (x : ℕ) : ℤ) = ∏ x ∈ (w : Finset S.P), (-1 : ℤ) :=
+      Finset.prod_congr rfl (fun x _ => hprime x)
+    rw [hprod_eq]
+    exact Finset.prod_const (-1 : ℤ)
   exact hsig.trans hμ.symm
 
 end InfoGeometry.Arithmetic

@@ -243,7 +243,21 @@ Visible/hidden ports for the finite Stinespring block matrix.
 inductive Port where
   | visible
   | hidden
-deriving DecidableEq, Fintype, Repr
+deriving DecidableEq, Repr
+
+private def portEquivFinTwo : Fin 2 ≃ Port where
+  toFun i := if i = 0 then .visible else .hidden
+  invFun
+    | .visible => 0
+    | .hidden => 1
+  left_inv := by
+    intro i
+    fin_cases i <;> rfl
+  right_inv := by
+    intro p
+    cases p <;> rfl
+
+instance : Fintype Port := Fintype.ofEquiv (Fin 2) portEquivFinTwo
 
 /--
 Doubled Jones index:

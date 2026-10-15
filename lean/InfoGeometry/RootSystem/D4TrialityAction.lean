@@ -56,7 +56,14 @@ noncomputable def trialityAction (σ : Equiv.Perm (Fin 3)) :
 theorem trialityAction_apply (σ : Equiv.Perm (Fin 3)) (i : Fin 3) :
     trialityAction σ (trialityRepresentatives i) =
       trialityRepresentatives (σ i) := by
-  simp [trialityAction, trialityRepresentativeEquiv]
+  simp only [trialityAction, Equiv.trans_apply]
+  change trialityRepresentativeEquiv
+      (σ (trialityRepresentativeEquiv.symm (trialityRepresentatives i))) =
+    trialityRepresentativeEquiv (σ i)
+  have harg : σ (trialityRepresentativeEquiv.symm
+      (trialityRepresentativeEquiv i)) = σ i := by
+    rw [trialityRepresentativeEquiv.symm_apply_apply]
+  exact congrArg trialityRepresentativeEquiv harg
 
 theorem trialityAction_one :
     trialityAction (1 : Equiv.Perm (Fin 3)) = Equiv.refl TrialityClass := by

@@ -1,6 +1,7 @@
 import Mathlib.Data.Real.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Block
+import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.Tactic
 import InfoGeometry.Lie.SplitOctonionWittEndomorphismBlockBridge
 import InfoGeometry.Lie.SplitOctonionDerivationWittOrthogonalBridge
@@ -48,6 +49,9 @@ open InfoGeometry.Lie.CanonicalZornDerivation
 open InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition
 open InfoGeometry.Lie.CanonicalZornCartanAdjointAction
 open InfoGeometry.Lie.SplitOctonionAxialCartanErlangen
+
+local instance : LieRing (Module.End ℝ Coord8) := LieRing.ofAssociativeRing
+local instance : LieAlgebra ℝ (Module.End ℝ Coord8) := LieAlgebra.ofAssociativeAlgebra
 
 /-- Classification of G2 roots according to their block carrier in $\mathfrak{so}(V \oplus V^*)$. -/
 inductive RootBlockSector where

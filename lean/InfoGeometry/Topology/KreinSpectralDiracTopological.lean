@@ -27,8 +27,8 @@ def kreinAdjointMap (K : KreinSpaceStructure H) :
 theorem continuous_kreinAdjointMap
     (K : KreinSpaceStructure H) :
     Continuous (kreinAdjointMap K) := by
-  simpa [kreinAdjointMap] using
-    (continuous_kreinAdjoint (H := H) K)
+  change Continuous (fun A : H →L[ℝ] H => kreinOperatorAdjoint K A A)
+  exact continuous_kreinAdjoint (H := H) K
 
 /-- The reduced spectral Dirac commutator packaged as a topological map. -/
 def spectralDiracCommutatorMap
@@ -40,8 +40,9 @@ def spectralDiracCommutatorMap
 theorem continuous_spectralDiracCommutatorMap
     (M : ContinuousMonodromyOperator H) :
     Continuous (spectralDiracCommutatorMap M) := by
-  simpa [spectralDiracCommutatorMap] using
-    (continuous_spectral_dirac_monodromy_commutator (H := H) M)
+  change Continuous
+    (fun D : H →L[ℝ] H => M.lambda • (D.comp M.N - M.N.comp D))
+  exact continuous_spectral_dirac_monodromy_commutator (H := H) M
 
 @[simp] theorem kreinAdjointMap_apply
     (K : KreinSpaceStructure H) (T : H →L[ℝ] H) :

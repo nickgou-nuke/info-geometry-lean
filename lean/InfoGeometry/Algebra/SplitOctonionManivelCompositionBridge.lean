@@ -215,10 +215,10 @@ def splitOctonionCompositionAlgebra : CompositionAlgebra ℝ SplitOctonion where
       simp [neg_add_rev, neg_mul, star_star]
   mul_conj := by
     intro X
-    simpa [manivelConj] using SplitOctonion.self_mul_splitConj X
+    exact SplitOctonion.self_mul_splitConj X
   conj_mul := by
     intro X
-    simpa [manivelConj] using SplitOctonion.splitConj_mul_self X
+    exact SplitOctonion.splitConj_mul_self X
   mul_mul_conj_right := by
     intro X Y
     apply SplitOctonion.ext
@@ -281,8 +281,9 @@ def splitOctonionCompositionAlgebra : CompositionAlgebra ℝ SplitOctonion where
       simpa only [neg_smul] using hscalar
   conj_mul_mul_left := by
     intro X Y
-    simpa [manivelConj, leftRegular] using
-      SplitOctonion.splitConjugate_mul_leftRegular X Y
+    have h := SplitOctonion.splitConjugate_mul_leftRegular X Y
+    dsimp [leftRegular] at h
+    exact h
 
 @[simp] theorem splitOctonionCompositionAlgebra_q (X : SplitOctonion) :
     splitOctonionCompositionAlgebra.q X = normSQ X := rfl

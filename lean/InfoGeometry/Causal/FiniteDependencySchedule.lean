@@ -41,9 +41,14 @@ instance decidableValidSchedule [Fintype Node] [DecidableLT Node]
 omit [DecidableEq Node] in
 theorem no_strict_dependency_cycle (target : Node) :
     ¬ Relation.TransGen ((· < ·) : Node → Node → Prop) target target := by
-  rw [Relation.transGen_eq_self (r := ((· < ·) : Node → Node → Prop))
-    (fun {_ _ _} first second => lt_trans first second)]
-  exact lt_irrefl target
+  intro cycle
+  have path_lt : ∀ {first last : Node},
+      Relation.TransGen ((· < ·) : Node → Node → Prop) first last → first < last := by
+    intro first last path
+    induction path with
+    | single edge => exact edge
+    | tail _ edge previous => exact lt_trans previous edge
+  exact lt_irrefl target (path_lt cycle)
 
 omit [DecidableEq Node] in
 theorem admissible_mono {environment larger : Finset Node} {target : Node}

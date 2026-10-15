@@ -1,5 +1,4 @@
 import InfoGeometry.Canonical.SE2SouriauCoadjointOrbit
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Complex.Circle
 import Mathlib.Topology.MetricSpace.Bounded
 import Mathlib.Topology.Algebra.Group.Basic
@@ -228,8 +227,7 @@ theorem continuous_rotationMomentumAction
   have hmap : Continuous (fun x : RotationCarrier × CasimirFiberCarrier r =>
       (x.1.1.1, x.1.1.2, x.2.1)) := by
     fun_prop
-  simpa only [Function.comp_apply] using
-    continuous_momentumRotationCoordinates.comp hmap
+  exact continuous_momentumRotationCoordinates.comp hmap
 
 def rotationOrbitMap
     {r : ℝ} (q : CasimirFiberCarrier r) :
@@ -239,8 +237,7 @@ theorem continuous_rotationOrbitMap
     {r : ℝ} (q : CasimirFiberCarrier r) :
     Continuous (rotationOrbitMap q) := by
   unfold rotationOrbitMap
-  simpa only [Function.comp_apply] using
-    continuous_rotationMomentumAction.comp (continuous_id.prodMk continuous_const)
+  exact continuous_rotationMomentumAction.comp (continuous_id.prodMk continuous_const)
 
 theorem rotationOrbitMap_injective_of_pos
   {r : ℝ} (hr : 0 < r) (q : CasimirFiberCarrier r) :
@@ -385,10 +382,9 @@ instance {r : ℝ} (q : CasimirFiberCarrier r) :
 
 theorem continuous_rotationOrbitCarrierAction_fixed
     {r : ℝ} (q : CasimirFiberCarrier r) (g : RotationCarrier) :
-    Continuous (rotationOrbitCarrierAction q g) := by
-  simpa only [Function.comp_apply] using
-    (continuous_rotationOrbitCarrierAction q).comp
-      (continuous_const.prodMk continuous_id)
+    Continuous (rotationOrbitCarrierAction q g) :=
+  (continuous_rotationOrbitCarrierAction q).comp
+    (continuous_const.prodMk continuous_id)
 
 def rotationOrbitCarrierActionHomeomorph
     {r : ℝ} (q : CasimirFiberCarrier r) (g : RotationCarrier) :
@@ -917,10 +913,7 @@ def coadjointRotationOrbitQuotientAction
       Quotient (coadjointRotationOrbitSetoid (r := r)) :=
   Quotient.lift (fun q => Quotient.mk'' (g • q)) (by
     intro q w h
-    apply Quotient.sound
-    change (g • q).1.1 = (g • w).1.1
-    simpa [rotationMomentumAction, momentumRotationFiber,
-      momentumRotationCoordinates] using h)
+    exact Quotient.sound h)
 
 theorem coadjointRotationOrbitQuotientAction_mk
     {r : ℝ} (g : RotationCarrier) (q : CasimirFiberCarrier r) :
@@ -1042,12 +1035,10 @@ theorem continuous_rotationKKSOrbitReadout
     (X Y : ℝ × ℝ × ℝ) :
     Continuous (rotationKKSOrbitReadout m r q X Y) := by
   unfold rotationKKSOrbitReadout
-  have hOrbit : Continuous (fun g : RotationCarrier => g • q) := by
-    simpa only [Function.comp_apply] using
-      continuous_rotationMomentumAction.comp (continuous_id.prodMk continuous_const)
-  simpa only [Function.comp_apply] using
-    (continuous_affineKKSFiberCoordinates m r).comp
-      (hOrbit.prodMk (continuous_const.prodMk continuous_const))
+  have hOrbit : Continuous (fun g : RotationCarrier => g • q) :=
+    continuous_rotationOrbitMap q
+  exact (continuous_affineKKSFiberCoordinates m r).comp
+    (hOrbit.prodMk (continuous_const.prodMk continuous_const))
 
 def rotationKKSOrbitReadoutImage
     (m r : ℝ) (q : CasimirFiberCarrier r)

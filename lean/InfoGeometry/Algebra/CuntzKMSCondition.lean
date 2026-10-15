@@ -179,10 +179,14 @@ theorem sigmaTensorComplex_descent_condition (n : ℕ) (primes : Fin n → ℕ) 
         have h2 : -(I * z * (Real.log (primes i : ℝ) : ℂ)) + I * z * (Real.log (primes i : ℝ) : ℂ) = 0 := by ring
         rw [h2, Complex.exp_zero]
       rw [h_phase, one_smul]
-      simpa [map_one (sigmaTensorComplex n primes z)] using
-        RingQuot.mkAlgHom_rel ℂ (CuntzRel.orth i i)
+      rw [if_pos rfl]
+      change (cuntzMk n) (Sdag n i * S n i) =
+        (cuntzMk n) ((sigmaTensorComplex n primes z) 1)
+      rw [map_one, map_mul]
+      simpa [cuntzMk] using RingQuot.mkAlgHom_rel ℂ (CuntzRel.orth i i)
     · have h0 : (cuntzMk n) (Sdag n i * S n j) = (cuntzMk n) 0 := by
-        simpa [hij] using RingQuot.mkAlgHom_rel ℂ (CuntzRel.orth i j)
+        rw [map_mul]
+        simpa [cuntzMk, hij] using RingQuot.mkAlgHom_rel ℂ (CuntzRel.orth i j)
       calc
         (cuntzMk n) ((modularPhaseComplexInv (primes i) z * modularPhaseComplex (primes j) z) • (Sdag n i * S n j))
             = (modularPhaseComplexInv (primes i) z * modularPhaseComplex (primes j) z) • (cuntzMk n) (Sdag n i * S n j) := by rw [map_smul]
@@ -218,8 +222,7 @@ noncomputable def sigmaComplex (n : ℕ) (primes : Fin n → ℕ) (z : ℂ) : Cu
 lemma sigmaComplex_mk (n : ℕ) (primes : Fin n → ℕ) (z : ℂ) (x : CuntzTensor n) :
     sigmaComplex n primes z ((RingQuot.mkAlgHom ℂ (CuntzRel n)) x) =
     (RingQuot.mkAlgHom ℂ (CuntzRel n)) (sigmaTensorComplex n primes z x) := by
-  dsimp [sigmaComplex, cuntzMk]
-  simp [RingQuot.liftAlgHom_mkAlgHom_apply, AlgHom.comp_apply]
+  simp [sigmaComplex, cuntzMk]
 
 /-- For real t, σ_t^ℂ = σ_t. -/
 @[simp] lemma sigmaComplex_real (n : ℕ) (primes : Fin n → ℕ) (t : ℝ) :

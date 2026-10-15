@@ -21,17 +21,28 @@ open SouriauOnsagerBKM
 open MeasureTheory
 open scoped Interval
 
-abbrev RealFiniteOperatorAlgebra (n : ℕ) :=
-  RestrictScalars ℝ ℂ (FiniteOperatorAlgebra n)
+set_option synthInstance.maxHeartbeats 200000
+
+def RealFiniteOperatorAlgebra (n : ℕ) :=
+  FiniteOperatorAlgebra n
 
 abbrev RealFiniteOperator (n : ℕ) := RealFiniteOperatorAlgebra n
 
-noncomputable instance realFiniteOperator_completeSpace (n : ℕ) :
-    CompleteSpace (RealFiniteOperator n) := by
-  let e : RealFiniteOperator n ≃ FiniteOperatorAlgebra n := Equiv.refl _
-  apply (completeSpace_congr (e := e) (by
-    exact Equiv.isUniformEmbedding e uniformContinuous_id uniformContinuous_id)).2
-  infer_instance
+namespace RealFiniteOperator
+
+instance (n : ℕ) : NormedRing (RealFiniteOperator n) :=
+  inferInstanceAs (NormedRing (FiniteOperatorAlgebra n))
+
+instance (n : ℕ) : CompleteSpace (RealFiniteOperator n) :=
+  inferInstanceAs (CompleteSpace (FiniteOperatorAlgebra n))
+
+instance (n : ℕ) : NormedSpace ℝ (RealFiniteOperator n) :=
+  NormedSpace.restrictScalars ℝ ℂ (FiniteOperatorAlgebra n)
+
+instance (n : ℕ) : NormedAlgebra ℝ (RealFiniteOperator n) :=
+  NormedAlgebra.restrictScalars ℝ ℂ (FiniteOperatorAlgebra n)
+
+end RealFiniteOperator
 
 def realFiniteOperatorTrace (n : ℕ) :
     RealFiniteOperator n →L[ℝ] ℂ :=
@@ -39,26 +50,26 @@ def realFiniteOperatorTrace (n : ℕ) :
 
 @[simp] theorem realFiniteOperatorTrace_apply
     {n : ℕ} (T : RealFiniteOperator n) :
-    realFiniteOperatorTrace n T = finiteOperatorTrace T := rfl
+    realFiniteOperatorTrace n T = finiteOperatorTrace (T : FiniteOperatorAlgebra n) := rfl
 
 theorem realFiniteOperatorTrace_mul_comm
     {n : ℕ} (A B : RealFiniteOperator n) :
     realFiniteOperatorTrace n (A * B) =
       realFiniteOperatorTrace n (B * A) := by
-  exact finiteOperatorTrace_mul_comm A B
+  exact finiteOperatorTrace_mul_comm (A : FiniteOperatorAlgebra n) (B : FiniteOperatorAlgebra n)
 
 theorem realFiniteOperator_bkm_pairing_self_re_nonneg
     {n : ℕ} (D : FaithfulDensityOperator n)
     (A : RealFiniteOperator n) (h_rpow : Continuous D.rpow) :
-    0 ≤ (D.kuboMoriPairing A A).re := by
-  exact D.kuboMoriPairing_self_re_nonneg A h_rpow
+    0 ≤ (D.kuboMoriPairing (A : FiniteOperatorAlgebra n) (A : FiniteOperatorAlgebra n)).re := by
+  exact D.kuboMoriPairing_self_re_nonneg (A : FiniteOperatorAlgebra n) h_rpow
 
 theorem realFiniteOperator_bkm_pairing_self_re_pos
     {n : ℕ} (D : FaithfulDensityOperator n)
     (A : RealFiniteOperator n) (h_rpow : Continuous D.rpow)
     (hA : A ≠ 0) :
-    0 < (D.kuboMoriPairing A A).re := by
-  exact D.kuboMoriPairing_self_re_pos A h_rpow hA
+    0 < (D.kuboMoriPairing (A : FiniteOperatorAlgebra n) (A : FiniteOperatorAlgebra n)).re := by
+  exact D.kuboMoriPairing_self_re_pos (A : FiniteOperatorAlgebra n) h_rpow hA
 
 theorem realFiniteOperator_integrand_intervalIntegrable
     {n : ℕ} (H T : RealFiniteOperator n) :
@@ -66,10 +77,10 @@ theorem realFiniteOperator_integrand_intervalIntegrable
       (fun t : ℝ =>
         NormedSpace.exp ((1 - t) • H) * T * NormedSpace.exp (t • H))
       volume 0 1 := by
-  letI : NormedAlgebra ℚ (RealFiniteOperator n) :=
-    NormedAlgebra.restrictScalars ℚ ℝ (RealFiniteOperator n)
-  apply Continuous.intervalIntegrable
-  fun_prop
+  have hc : Continuous (fun t : ℝ => (duhamelIntegrand H t) T) :=
+    (ContinuousLinearMap.apply ℝ (RealFiniteOperator n) T).continuous.comp
+      (continuous_duhamelIntegrand H)
+  exact hc.intervalIntegrable 0 1
 
 theorem realFiniteOperatorTrace_duhamel
     {n : ℕ} (H T : RealFiniteOperator n) :
@@ -77,12 +88,7 @@ theorem realFiniteOperatorTrace_duhamel
       ∫ t in (0 : ℝ)..1,
         realFiniteOperatorTrace n
           (NormedSpace.exp ((1 - t) • H) * T * NormedSpace.exp (t • H)) := by
-  letI : NormedAlgebra ℚ (RealFiniteOperator n) :=
-    NormedAlgebra.restrictScalars ℚ ℝ (RealFiniteOperator n)
-  rw [duhamelDerivative_apply_integral]
-  change realFiniteOperatorTrace n
-      (∫ t in (0 : ℝ)..1,
-        NormedSpace.exp ((1 - t) • H) * T * NormedSpace.exp (t • H)) = _
+  rw [duhamelDerivative_apply_integral H T]
   exact (realFiniteOperatorTrace n).intervalIntegral_comp_comm
     (realFiniteOperator_integrand_intervalIntegrable H T) |>.symm
 

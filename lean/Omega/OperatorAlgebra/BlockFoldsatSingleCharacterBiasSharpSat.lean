@@ -69,8 +69,8 @@ theorem paper_block_foldsat_single_character_bias_sharp_sat
       (paper_block_foldsat_trace_criterion D accept x).2
   have hcard_pos :
       0 < (block_foldsat_single_character_bias_sharp_sat_fiber fold x).card := by
-    simpa [block_foldsat_single_character_bias_sharp_sat_fiber, D,
-      FoldPushforwardLiftData.fiberCard] using D.fiberCard_pos x
+    change 0 < D.fiberCard x
+    exact D.fiberCard_pos x
   have hcard_ne :
       block_foldsat_single_character_bias_sharp_sat_fiber_card fold x ≠ 0 := by
     simpa [block_foldsat_single_character_bias_sharp_sat_fiber_card] using

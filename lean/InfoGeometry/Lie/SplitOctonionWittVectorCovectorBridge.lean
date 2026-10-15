@@ -79,6 +79,9 @@ def toDualPlus (v : VMinus) : Module.Dual ℝ VPlus where
     dsimp [wittPairing]
     ring
 
+@[simp] theorem toDualPlus_apply (v : VMinus) (u : VPlus) :
+    toDualPlus v u = wittPairing u v := rfl
+
 /-- Basis vectors of $V_+$. -/
 def basisPlus (i : Fin 4) : VPlus := Pi.single i 1
 
@@ -90,41 +93,37 @@ def fromDualPlus (f : Module.Dual ℝ VPlus) : VMinus :=
 def wittDualityEquiv : VMinus ≃ₗ[ℝ] Module.Dual ℝ VPlus where
   toFun := toDualPlus
   map_add' v1 v2 := by
-    ext u
-    dsimp [toDualPlus, wittPairing]
+    apply LinearMap.ext
+    intro u
+    change wittPairing u (v1 + v2) = wittPairing u v1 + wittPairing u v2
+    dsimp [wittPairing]
     ring
   map_smul' c v := by
-    ext u
-    dsimp [toDualPlus, wittPairing]
+    apply LinearMap.ext
+    intro u
+    change wittPairing u (c • v) = c • wittPairing u v
+    dsimp [wittPairing]
     ring
   invFun := fromDualPlus
   left_inv v := by
     ext i
     fin_cases i
-    · dsimp [fromDualPlus, toDualPlus, wittPairing, basisPlus]
-      simp
-    · dsimp [fromDualPlus, toDualPlus, wittPairing, basisPlus]
-      simp
-    · dsimp [fromDualPlus, toDualPlus, wittPairing, basisPlus]
-      simp
-    · dsimp [fromDualPlus, toDualPlus, wittPairing, basisPlus]
-      simp
+    · simp [fromDualPlus, wittPairing, basisPlus, toDualPlus_apply]
+    · simp [fromDualPlus, wittPairing, basisPlus, toDualPlus_apply]
+    · simp [fromDualPlus, wittPairing, basisPlus, toDualPlus_apply]
+    · simp [fromDualPlus, wittPairing, basisPlus, toDualPlus_apply]
   right_inv f := by
     apply (Pi.basisFun ℝ (Fin 4)).ext
     intro i
     fin_cases i
     · rw [Pi.basisFun_apply]
-      dsimp [toDualPlus, wittPairing, fromDualPlus, basisPlus]
-      simp
+      simp [fromDualPlus, wittPairing, basisPlus, Pi.single_apply]
     · rw [Pi.basisFun_apply]
-      dsimp [toDualPlus, wittPairing, fromDualPlus, basisPlus]
-      simp
+      simp [fromDualPlus, wittPairing, basisPlus, Pi.single_apply]
     · rw [Pi.basisFun_apply]
-      dsimp [toDualPlus, wittPairing, fromDualPlus, basisPlus]
-      simp
+      simp [fromDualPlus, wittPairing, basisPlus, Pi.single_apply]
     · rw [Pi.basisFun_apply]
-      dsimp [toDualPlus, wittPairing, fromDualPlus, basisPlus]
-      simp
+      simp [fromDualPlus, wittPairing, basisPlus, Pi.single_apply]
 
 /-- 🏆 THEOREM 5: Nondegeneracy of the Witt cross-pairing on $V_+ \times V_-$. -/
 theorem wittPairing_nondegenerate_left (u : VPlus) (h : ∀ v : VMinus, wittPairing u v = 0) : u = 0 := by

@@ -39,6 +39,9 @@ def basisBivector (i : Fin 6) : CliffordAlgebra Q :=
 def Bivector13 : Submodule R (CliffordAlgebra Q) :=
   Submodule.span R (Set.range (basisBivector Q))
 
+private theorem basisBivector_mem (i : Fin 6) : basisBivector Q i ∈ Bivector13 Q := by
+  exact Submodule.subset_span (Set.mem_range_self i)
+
 theorem finrank_Bivector13_eq_six_of_linearIndependent
     [StrongRankCondition R]
     [Nontrivial R]
@@ -315,27 +318,27 @@ theorem hodge_preserves_bivector (B : CliffordAlgebra Q) (h : B ∈ Bivector13 Q
     · intro hi; rw [← hi]
       change basisBivector Q 0 * Omega (Q := Q) ∈ Bivector13 Q
       rw [hodge_basis_0]
-      exact Submodule.neg_mem _ (Submodule.smul_mem _ _ (Submodule.subset_span ⟨3, rfl⟩))
+      exact Submodule.neg_mem _ (Submodule.smul_mem _ _ (basisBivector_mem Q 3))
     · intro hi; rw [← hi]
       change basisBivector Q 1 * Omega (Q := Q) ∈ Bivector13 Q
       rw [hodge_basis_1]
-      exact Submodule.neg_mem _ (Submodule.smul_mem _ _ (Submodule.subset_span ⟨4, rfl⟩))
+      exact Submodule.neg_mem _ (Submodule.smul_mem _ _ (basisBivector_mem Q 4))
     · intro hi; rw [← hi]
       change basisBivector Q 2 * Omega (Q := Q) ∈ Bivector13 Q
       rw [hodge_basis_2]
-      exact Submodule.neg_mem _ (Submodule.smul_mem _ _ (Submodule.subset_span ⟨5, rfl⟩))
+      exact Submodule.neg_mem _ (Submodule.smul_mem _ _ (basisBivector_mem Q 5))
     · intro hi; rw [← hi]
       change basisBivector Q 3 * Omega (Q := Q) ∈ Bivector13 Q
       rw [hodge_basis_3]
-      exact Submodule.neg_mem _ (Submodule.smul_mem _ _ (Submodule.subset_span ⟨0, rfl⟩))
+      exact Submodule.neg_mem _ (Submodule.smul_mem _ _ (basisBivector_mem Q 0))
     · intro hi; rw [← hi]
       change basisBivector Q 4 * Omega (Q := Q) ∈ Bivector13 Q
       rw [hodge_basis_4]
-      exact Submodule.neg_mem _ (Submodule.smul_mem _ _ (Submodule.subset_span ⟨1, rfl⟩))
+      exact Submodule.neg_mem _ (Submodule.smul_mem _ _ (basisBivector_mem Q 1))
     · intro hi; rw [← hi]
       change basisBivector Q 5 * Omega (Q := Q) ∈ Bivector13 Q
       rw [hodge_basis_5]
-      exact Submodule.neg_mem _ (Submodule.smul_mem _ _ (Submodule.subset_span ⟨2, rfl⟩))
+      exact Submodule.neg_mem _ (Submodule.smul_mem _ _ (basisBivector_mem Q 2))
   · rw [zero_mul]; apply Submodule.zero_mem
   · intro x y hx hy hx_omega hy_omega
     rw [add_mul]

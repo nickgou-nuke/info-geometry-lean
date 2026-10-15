@@ -64,7 +64,7 @@ theorem topExteriorCoordinate_surjective :
 theorem topExteriorCoordinate_finrank_eq :
     Module.finrank ℝ ExteriorFour = Module.finrank ℝ ℝ := by
   have hcard : Fintype.card I4 = 4 := by decide
-  rw [exteriorPower.finrank_eq ℝ 4, Module.finrank_pi, hcard,
+  rw [exteriorPower.finrank_eq ℝ Vec4 4, Module.finrank_pi, hcard,
     Module.finrank_self]
   norm_num
 

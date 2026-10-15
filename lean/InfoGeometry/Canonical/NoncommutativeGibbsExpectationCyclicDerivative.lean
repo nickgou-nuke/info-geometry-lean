@@ -34,6 +34,7 @@ stronger operator equality is neither needed nor asserted.
 noncomputable section
 set_option autoImplicit false
 set_option maxHeartbeats 800000
+set_option synthInstance.maxHeartbeats 300000
 
 namespace InfoGeometry.Canonical.NoncommutativeGibbsExpectationBridge
 
@@ -99,25 +100,21 @@ theorem hasDerivAt_tracedExponentialSeriesTerm
       (tracedExponentialSeriesTermDerivative H T k z) z := by
   have hLine :
       HasDerivAt (fun w : ℂ => H + w • T) T z := by
-    convert
-      (hasDerivAt_const (x := z) H).add
-        ((hasDerivAt_id (x := z)).smul_const T) using 1 <;>
-      simp
+    have h1 := (hasDerivAt_const (x := z) H).add
+      ((hasDerivAt_id (x := z)).smul_const T)
+    rw [zero_add, one_smul] at h1
+    exact h1
   have hPower :
       HasDerivAt
         (fun w : ℂ =>
           frechetChernCharacter n k (H + w • T))
         (frechetChernCharacterDerivative n k
           (H + z • T) T) z := by
-    simpa [Function.comp_def] using
-      (hasFDerivAt_frechetChernCharacter n k
-        (H + z • T)).comp_hasDerivAt_of_eq
-          z hLine (by simp)
+    have hComp := (hasFDerivAt_frechetChernCharacter n k
+      (H + z • T)).comp_hasDerivAt z hLine
+    simpa only [Function.comp_def] using hComp
   rw [frechetChernCharacterDerivative_eq] at hPower
-  simpa [tracedExponentialSeriesTerm,
-    tracedExponentialSeriesTermDerivative,
-    frechetChernCharacter, Function.comp_def] using
-      hPower.const_mul ((k.factorial : ℂ)⁻¹)
+  exact hPower.const_mul ((k.factorial : ℂ)⁻¹)
 
 /-! ## 2. Local factorial majorant -/
 
@@ -422,17 +419,16 @@ theorem tracedExponentialDerivative_apply
       finiteOperatorTrace (NormedSpace.exp H * T) := by
   have hLine :
       HasDerivAt (fun z : ℂ => H + z • T) T 0 := by
-    simpa only [zero_smul ℂ, add_zero, zero_add, one_smul] using
-      (hasDerivAt_const (x := (0 : ℂ)) H).add
-        ((hasDerivAt_id (x := (0 : ℂ))).smul_const T)
+    have h1 := (hasDerivAt_const (x := (0 : ℂ)) H).add
+      ((hasDerivAt_id (x := (0 : ℂ))).smul_const T)
+    rw [zero_add, one_smul] at h1
+    exact h1
+  have hzero : H = H + (0 : ℂ) • T := by
+    rw [show (0 : ℂ) • T = 0 from zero_smul ℂ T, add_zero]
   have hFromFrechet :
       HasDerivAt (partitionLine H T)
-        (tracedExponentialDerivative H T) 0 := by
-    convert
-      (hasFDerivAt_tracedExponential H).comp_hasDerivAt_of_eq
-        (0 : ℂ) hLine (by rw [zero_smul ℂ T, add_zero]) using 1 <;>
-      try exact zero_smul ℂ T <;>
-      try exact zero_smul ℝ T
+        (tracedExponentialDerivative H T) 0 :=
+    (hasFDerivAt_tracedExponential H).comp_hasDerivAt_of_eq 0 hLine hzero
   exact hFromFrechet.unique (hasDerivAt_partitionLine H T)
 
 /-- The changed-origin exponential derivative and the Duhamel derivative have
@@ -466,10 +462,8 @@ theorem hasFDerivAt_logTracedExponential
     {n : ℕ} (H : Operator n)
     (hSlit : tracedExponential H ∈ Complex.slitPlane) :
     HasFDerivAt logTracedExponential
-      (logTracedExponentialDerivative H) H := by
-  simpa [logTracedExponential,
-    logTracedExponentialDerivative] using
-      (hasFDerivAt_tracedExponential H).clog hSlit
+      (logTracedExponentialDerivative H) H :=
+  (hasFDerivAt_tracedExponential H).clog hSlit
 
 /-- Every tangent evaluation of the log-partition Frechet derivative is the
 normalized Gibbs expectation. -/
@@ -500,15 +494,19 @@ theorem hasDerivAt_logPartitionLine_eq_expectation
     HasDerivAt (logPartitionLine H T)
       (operatorExpectation H T) 0 := by
   have hPartition := hasDerivAt_partitionLine H T
-  have hzero : (0 : ℂ) • T = 0 := zero_smul ℂ T
   have harg : H + (0 : ℂ) • T = H := by
-    rw [hzero, add_zero]
-  have hLog := hPartition.clog (by
+    rw [show (0 : ℂ) • T = 0 from zero_smul ℂ T, add_zero]
+  have hSlit' : partitionLine H T 0 ∈ Complex.slitPlane := by
     change tracedExponential (H + (0 : ℂ) • T) ∈ Complex.slitPlane
     rw [harg]
-    exact hSlit)
+    exact hSlit
+  have hLog := hPartition.clog hSlit'
   rw [operatorExpectation_eq_trace_div]
-  convert hLog using 1 <;> simp [logPartitionLine, partitionLine, harg]
+  have hpart : partitionLine H T 0 = tracedExponential H := by
+    change tracedExponential (H + (0 : ℂ) • T) = tracedExponential H
+    rw [harg]
+  rw [hpart] at hLog
+  exact hLog
 
 /- The same first-variation result for the translated line through an
  arbitrary base point.  This is the chain-rule form used when differentiating
@@ -520,13 +518,13 @@ theorem hasDerivAt_logPartitionLine_at
       (fun s : ℂ => logTracedExponential (H + s • T))
       (logTracedExponentialDerivative (H + z • T) T) z := by
   have hline : HasDerivAt (fun s : ℂ => H + s • T) T z := by
-    convert
-      (hasDerivAt_const (x := z) H).add
-        ((hasDerivAt_id (x := z)).smul_const T) using 1 <;>
-      simp
+    have h1 := (hasDerivAt_const (x := z) H).add
+      ((hasDerivAt_id (x := z)).smul_const T)
+    rw [zero_add, one_smul] at h1
+    exact h1
   have hcomp := (hasFDerivAt_logTracedExponential
     (H := H + z • T) hSlit).comp_hasDerivAt z hline
-  simpa only [Function.comp_def] using hcomp
+  exact hcomp
 
 /-- Four-channel noncommutative expectation theorem. Pairwise commutativity of
 the sufficient statistics is not required. -/
@@ -536,11 +534,8 @@ theorem hasDerivAt_fourOperatorLogPartitionCoordinate_eq_expectation_noncommutat
     (hSlit : fourOperatorPartition T theta ∈ Complex.slitPlane) :
     HasDerivAt
       (fourOperatorLogPartitionCoordinate T theta mu)
-      (fourOperatorExpectation T theta mu) 0 := by
-  simpa [fourOperatorLogPartitionCoordinate,
-    fourOperatorExpectation, fourOperatorPartition,
-    logPartitionLine, partitionLine] using
-    hasDerivAt_logPartitionLine_eq_expectation
-      (fourOperatorExponent T theta) (T mu) hSlit
+      (fourOperatorExpectation T theta mu) 0 :=
+  hasDerivAt_logPartitionLine_eq_expectation
+    (fourOperatorExponent T theta) (T mu) hSlit
 
 end InfoGeometry.Canonical.NoncommutativeGibbsExpectationBridge

@@ -21,6 +21,11 @@ local notation "CZ" => InfoGeometry.Canonical.ZornMatrix ℝ
 local notation "Phase" => InfoGeometry.Canonical.SplitOctonionChiralPhaseSpace.Phase
 local notation "PhaseEnd" => Module.End ℝ Phase
 
+local instance : LieRing EndCZ := LieRing.ofAssociativeRing
+local instance : LieAlgebra ℝ EndCZ := LieAlgebra.ofAssociativeAlgebra
+local instance : LieRing PhaseEnd := LieRing.ofAssociativeRing
+local instance : LieAlgebra ℝ PhaseEnd := LieAlgebra.ofAssociativeAlgebra
+
 def phaseToPaper : Phase →ₗ[ℝ] PaperZorn where
   toFun X := { a := 0, v := X.1, w := X.2, b := 0 }
   map_add' X Y := by

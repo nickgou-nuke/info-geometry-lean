@@ -136,14 +136,22 @@ theorem qCcrZeroLocusSpecializationLimitMap_injective
             (qCcrZeroLocusTopologicalDiagram Stage sys qdata) i x =
           topologicalInverseProjection
             (qCcrZeroLocusTopologicalDiagram Stage sys qdata) i y := by
-      apply qCcrZeroLocusSpecializationTopCatHom_isClosedEmbedding
-        Stage sys qdata i |>.injective
       have hproj := congrArg
         (fun z => topologicalInverseProjection
           (qCcrParameterZeroFiberTopologicalDiagram Stage sys) i z) hxy
-      simpa [qCcrZeroLocusSpecializationLimitMap_projection_apply,
-        qCcrZeroLocusSpecializationLimitCone] using hproj
-    simpa [cx, cy] using hstage
+      rw [qCcrZeroLocusSpecializationLimitMap_projection_apply,
+        qCcrZeroLocusSpecializationLimitMap_projection_apply] at hproj
+      exact (qCcrZeroLocusSpecializationTopCatHom_isClosedEmbedding
+        Stage sys qdata i).injective hproj
+    change topologicalInverseProjection
+        (qCcrZeroLocusTopologicalDiagram Stage sys qdata) i x =
+      topologicalInverseProjection
+        (qCcrZeroLocusTopologicalDiagram Stage sys qdata) i y at hstage
+    change topologicalInverseProjection
+        (qCcrZeroLocusTopologicalDiagram Stage sys qdata) i x =
+      topologicalInverseProjection
+        (qCcrZeroLocusTopologicalDiagram Stage sys qdata) i y
+    exact hstage
   exact congrArg (fun g => g PUnit.unit) hcxcy
 
 /-- The ambient inverse-limit map obtained by composing the fixed-q

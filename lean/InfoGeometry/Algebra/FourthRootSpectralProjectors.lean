@@ -103,7 +103,7 @@ theorem projector_idempotent (U : Module.End ℂ E) (hU : U ^ 4 = 1) (k : Fin 4)
     (generator_mul_projector U hU k)
   change U (projector U k x) = root4 k • projector U k x at he
   change projector U k (projector U k x) = projector U k x
-  simpa only [if_pos rfl] using projector_on_eigenvector U k k (projector U k x) he
+  simpa using projector_on_eigenvector U k k (projector U k x) he
 
 theorem projector_orthogonal (U : Module.End ℂ E) (hU : U ^ 4 = 1)
     (k l : Fin 4) (hkl : k ≠ l) : projector U k * projector U l = 0 := by
@@ -142,7 +142,7 @@ theorem projector_fixed_iff (U : Module.End ℂ E) (hU : U ^ 4 = 1)
     change U (projector U k x) = root4 k • projector U k x at he
     rwa [hx] at he
   · intro hx
-    simpa only [if_pos rfl] using projector_on_eigenvector U k k x hx
+    simpa using projector_on_eigenvector U k k x hx
 
 omit [IsScalarTower ℂ ℂ E] in
 theorem fourth_power_of_square_neg_one (U : Module.End ℂ E) (hU : U ^ 2 = -1) :

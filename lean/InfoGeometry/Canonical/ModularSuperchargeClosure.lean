@@ -796,7 +796,7 @@ theorem canonicalRelativeModularOperator_commutes_spectralProjector_of_wedgeCali
     rw [CertifiedInverseKernel.spectralComplementaryProjector,
       CertifiedInverseKernel.toInverseKernel', InverseKernel.spectralComplementaryProjector]
     simp
-  simpa [Commute, canonicalRelativeModularOperator, hProj] using hActive
+  simpa only [Commute, SemiconjBy, canonicalRelativeModularOperator, hProj] using hActive
 
 /--
 Wedge-calibrated mixed-block vanishing for the canonical bounded relative
@@ -1188,9 +1188,12 @@ theorem canonicalSeedAdditiveModularFlow_kms_of_structural
         =
       InfoGeometry.Canonical.KMSSinkhornBridge.omegaSeed (F := E) Ω (B * A) := by
   intro A B
-  simpa [canonicalSeedAdditiveModularFlow] using
-    (canonicalSeed_kms_relation_of_structural
-      (E := E) CIK β Ω hJointKernel hCommOrthogonal A B)
+  change InfoGeometry.Canonical.KMSSinkhornBridge.omegaSeed (F := E) Ω
+      (A * InfoGeometry.Krein.modular_shift
+        (modularTransportGenerator (E := E) (canonicalBivectorSeed (E := E) CIK)) β B)
+    = InfoGeometry.Canonical.KMSSinkhornBridge.omegaSeed (F := E) Ω (B * A)
+  exact canonicalSeed_kms_relation_of_structural
+    (E := E) CIK β Ω hJointKernel hCommOrthogonal A B
 
 /--
 Structural translated KMS surface in repo-native language:
@@ -1567,13 +1570,17 @@ theorem hasDerivAt_unruhFlowOfModularTime_zero :
         (fun τmod : ℝ => Real.cosh (RealTomitaCore.wedgeBoostParameter τmod))
         ((Real.sinh (RealTomitaCore.wedgeBoostParameter 0)) * (2 * Real.pi))
         0 := by
-    simpa using (Real.hasDerivAt_cosh (RealTomitaCore.wedgeBoostParameter 0)).comp 0 hWB
+    convert (Real.hasDerivAt_cosh (RealTomitaCore.wedgeBoostParameter 0)).comp 0 hWB using 1
+    ext τmod
+    rfl
   have hSinh :
       HasDerivAt
         (fun τmod : ℝ => Real.sinh (RealTomitaCore.wedgeBoostParameter τmod))
         ((Real.cosh (RealTomitaCore.wedgeBoostParameter 0)) * (2 * Real.pi))
         0 := by
-    simpa using (Real.hasDerivAt_sinh (RealTomitaCore.wedgeBoostParameter 0)).comp 0 hWB
+    convert (Real.hasDerivAt_sinh (RealTomitaCore.wedgeBoostParameter 0)).comp 0 hWB using 1
+    ext τmod
+    rfl
   have hPoly :
       HasDerivAt
         (fun τmod : ℝ =>

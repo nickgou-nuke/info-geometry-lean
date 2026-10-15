@@ -97,8 +97,12 @@ theorem realWeylReflection_maps_nativeCartanSpan
   · change conjugateNativeDerivationLinear realWeylReflection 0 ∈ nativeCartanSpan
     simpa only [map_zero] using nativeCartanSpan.zero_mem
   · intro E F _ _ hE hF
-    simpa only [map_add] using nativeCartanSpan.add_mem hE hF
+    change conjugateNativeDerivationLinear realWeylReflection (E + F) ∈ nativeCartanSpan
+    rw [map_add]
+    exact nativeCartanSpan.add_mem hE hF
   · intro a E _ hE
-    simpa only [map_smul] using nativeCartanSpan.smul_mem a hE
+    change conjugateNativeDerivationLinear realWeylReflection (a • E) ∈ nativeCartanSpan
+    rw [map_smul]
+    exact nativeCartanSpan.smul_mem a hE
 
 end InfoGeometry.Algebra.Zorn.G2NativeWeylReflectionCartanSpan

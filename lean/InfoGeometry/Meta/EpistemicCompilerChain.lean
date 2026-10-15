@@ -1,7 +1,7 @@
 import Mathlib.Data.Finset.Basic
 import Mathlib.Data.Fintype.Basic
 import Mathlib.Data.List.Basic
-import Lean
+import InfoGeometry.Meta.ArchetypePipeline
 
 /-!
 # The epistemic compiler chain
@@ -44,37 +44,18 @@ instance : PartialOrder Phase where
 theorem complete : ∀ phase, Phase.rank phase ≤ 5 := by intro phase; cases phase <;> decide
 end Phase
 
-inductive Status where
-  | candidate : Status
-  | validated : Status
-  | proved    : Status
-  deriving DecidableEq, Repr
+/-! `Status` and `TypedArchetype` are owned by `ArchetypePipeline`. Keeping a
+second declaration under the same qualified names made the type-level proof
+gate and the audited registration pipeline impossible to compose in one
+import graph. This module contributes the ordered workflow phases only. -/
 
-/-- Archetype indexed by its epistemic status at the type level. -/
-structure TypedArchetype (Input : Type) (s : Status) where
-  name        : Lean.Name
-  phase       : Phase
-  claim       : Input → Prop
-  /-- Evidence exists if and only if the status is `proved`. -/
-  evidence    : match s with
-                | .proved => ∀ x : Input, claim x
-                | _       => PUnit
+namespace Phase
 
-namespace TypedArchetype
+/-- Encode a compiler phase in the natural-number metadata used by the single
+    `TypedArchetype` owner. -/
+def toNat (phase : Phase) : Nat := rank phase
 
-/-- Discharge is a zero-cost compile-time extraction.
-    It is syntactically impossible to call this on a candidate. -/
-def discharge {Input : Type} (arch : TypedArchetype Input .proved) (x : Input) : arch.claim x :=
-  arch.evidence x
+@[simp] theorem toNat_injective : Function.Injective toNat := rank_injective
 
-/-- Safe promotion constructor requiring a genuine mathematical witness. -/
-def promoteToProved {Input : Type} {s : Status}
-    (arch : TypedArchetype Input s)
-    (pf : ∀ x : Input, arch.claim x) : TypedArchetype Input .proved :=
-  { name     := arch.name
-    phase    := arch.phase
-    claim    := arch.claim
-    evidence := pf }
-
-end TypedArchetype
+end Phase
 end InfoGeometry.MetaCompiler

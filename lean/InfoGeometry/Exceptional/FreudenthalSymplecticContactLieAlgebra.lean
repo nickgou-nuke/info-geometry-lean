@@ -1,5 +1,6 @@
 import Mathlib.Algebra.Lie.OfAssociative
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Exceptional.FreudenthalChargeLinear
 import InfoGeometry.Exceptional.FreudenthalSymplecticContactRepresentation
 
 noncomputable section
@@ -9,35 +10,51 @@ namespace InfoGeometry.Exceptional.Freudenthal
 variable {J : Type*} [AddCommGroup J] [Module ℝ J]
 variable (D : CubicJordanDatum J)
 
+attribute [local instance 100] LieRing.ofAssociativeRing LieAlgebra.ofAssociativeAlgebra
+
 theorem symplecticContactBracket_add_left
     (u v w : FiveGradedCarrier D) :
     symplecticContactBracket D (u + v) w =
       symplecticContactBracket D u w + symplecticContactBracket D v w := by
   apply symplecticContactRepresentation_injective D
-  simp only [map_add, symplecticContactRepresentation_bracket]
-  noncomm_ring
+  rw [map_add]
+  iterate 3 rw [symplecticContactRepresentation_bracket]
+  rw [map_add]
+  exact LieRing.add_lie
+    (symplecticContactRepresentation D u)
+    (symplecticContactRepresentation D v)
+    (symplecticContactRepresentation D w)
 
 theorem symplecticContactBracket_add_right
     (u v w : FiveGradedCarrier D) :
     symplecticContactBracket D u (v + w) =
       symplecticContactBracket D u v + symplecticContactBracket D u w := by
   apply symplecticContactRepresentation_injective D
-  simp only [map_add, symplecticContactRepresentation_bracket]
-  noncomm_ring
+  rw [map_add]
+  iterate 3 rw [symplecticContactRepresentation_bracket]
+  rw [map_add]
+  exact LieRing.lie_add
+    (symplecticContactRepresentation D u)
+    (symplecticContactRepresentation D v)
+    (symplecticContactRepresentation D w)
 
 theorem symplecticContactBracket_smul_right
     (c : ℝ) (u v : FiveGradedCarrier D) :
     symplecticContactBracket D u (c • v) =
       c • symplecticContactBracket D u v := by
   apply symplecticContactRepresentation_injective D
-  simp only [map_smul, symplecticContactRepresentation_bracket]
-  simp [smul_sub]
+  rw [map_smul]
+  iterate 2 rw [symplecticContactRepresentation_bracket]
+  rw [map_smul]
+  exact LieAlgebra.lie_smul c
+    (symplecticContactRepresentation D u)
+    (symplecticContactRepresentation D v)
 
 theorem symplecticContactBracket_self
     (u : FiveGradedCarrier D) :
     symplecticContactBracket D u u = 0 := by
   apply symplecticContactRepresentation_injective D
-  simp [symplecticContactRepresentation_bracket]
+  rw [symplecticContactRepresentation_bracket, map_zero, sub_self]
 
 theorem symplecticContactBracket_leibniz
     (u v w : FiveGradedCarrier D) :
@@ -45,10 +62,12 @@ theorem symplecticContactBracket_leibniz
       symplecticContactBracket D (symplecticContactBracket D u v) w +
         symplecticContactBracket D v (symplecticContactBracket D u w) := by
   apply symplecticContactRepresentation_injective D
-  simpa only [map_add, symplecticContactRepresentation_bracket, Ring.lie_def] using
-    (LieRing.leibniz_lie (symplecticContactRepresentation D u)
-      (symplecticContactRepresentation D v)
-      (symplecticContactRepresentation D w))
+  rw [map_add]
+  iterate 6 rw [symplecticContactRepresentation_bracket]
+  exact LieRing.leibniz_lie
+    (symplecticContactRepresentation D u)
+    (symplecticContactRepresentation D v)
+    (symplecticContactRepresentation D w)
 
 noncomputable instance symplecticContactLieRing :
     LieRing (FiveGradedCarrier D) where
@@ -71,10 +90,12 @@ def symplecticContactRepresentationLieHom :
   toLinearMap := symplecticContactRepresentation D
   map_lie' := by
     intro u v
-    simpa [Ring.lie_def] using
-      symplecticContactRepresentation_bracket D u v
+    change symplecticContactRepresentation D (symplecticContactBracket D u v) =
+      symplecticContactRepresentation D u * symplecticContactRepresentation D v -
+        symplecticContactRepresentation D v * symplecticContactRepresentation D u
+    exact symplecticContactRepresentation_bracket D u v
 
-theorem symplecticContactRepresentationLieHom_injective :
+theorem symplecticContactRepresentationLieHom_injective (D : CubicJordanDatum J) :
     Function.Injective (symplecticContactRepresentationLieHom D) := by
   intro u v h
   apply symplecticContactRepresentation_injective D

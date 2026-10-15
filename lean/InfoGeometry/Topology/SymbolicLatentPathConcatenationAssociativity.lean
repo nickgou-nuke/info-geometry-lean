@@ -79,10 +79,27 @@ theorem associativityParameterFunction_continuous :
         (frontier_Iic_subset symbolicConcatenationMidpoint ht)))
     subst t
     apply Subtype.ext
-    norm_num [inner, associativityParameterFunction,
-      symbolicFirstHalfParameter, symbolicFirstHalfValue,
-      associativityMiddleParameter, associativityLastParameter,
-      symbolicConcatenationMidpoint, associativityThreeQuarter]
+    have hfirst :
+        (symbolicFirstHalfParameter symbolicConcatenationMidpoint : ℝ) =
+          (1 : ℝ) / 4 := by
+      change (symbolicFirstHalfValue symbolicConcatenationMidpoint : ℝ) =
+        (1 : ℝ) / 4
+      norm_num [symbolicFirstHalfValue, symbolicConcatenationMidpoint]
+    have hinner : (inner symbolicConcatenationMidpoint : ℝ) =
+        (1 : ℝ) / 4 := by
+      change (((Set.Iic associativityThreeQuarter).piecewise
+        associativityMiddleParameter associativityLastParameter
+        symbolicConcatenationMidpoint : SymbolicPathDomain) : ℝ) =
+          (1 : ℝ) / 4
+      rw [Set.piecewise_eq_of_mem _ _ _ (by
+        change symbolicConcatenationMidpoint ≤ associativityThreeQuarter
+        change (symbolicConcatenationMidpoint : ℝ) ≤
+          (associativityThreeQuarter : ℝ)
+        norm_num [symbolicConcatenationMidpoint, associativityThreeQuarter])]
+      change max ((symbolicConcatenationMidpoint : ℝ) -
+        (1 : ℝ) / 4) 0 = (1 : ℝ) / 4
+      norm_num [symbolicConcatenationMidpoint]
+    exact hfirst.trans hinner.symm
   · exact symbolicFirstHalfParameter.continuous.continuousOn
   · exact hinner.continuousOn
 
@@ -94,8 +111,15 @@ noncomputable def associativityParameter :
 theorem associativityParameter_at_zero :
     associativityParameter 0 = (0 : SymbolicPathDomain) := by
   apply Subtype.ext
-  norm_num [associativityParameter, associativityParameterFunction,
-    symbolicFirstHalfParameter, symbolicFirstHalfValue]
+  change ((associativityParameterFunction 0 : SymbolicPathDomain) : ℝ) = 0
+  unfold associativityParameterFunction
+  have hzero : (0 : SymbolicPathDomain) ∈
+      Set.Iic symbolicConcatenationMidpoint := by
+    change (0 : SymbolicPathDomain) ≤ symbolicConcatenationMidpoint
+    change (0 : ℝ) ≤ (1 : ℝ) / 2
+    norm_num [symbolicConcatenationMidpoint]
+  rw [Set.piecewise_eq_of_mem _ _ _ hzero]
+  exact congrArg Subtype.val symbolicFirstHalfParameter_zero
 
 theorem associativityParameter_at_one :
     associativityParameter 1 = (1 : SymbolicPathDomain) := by
@@ -274,11 +298,14 @@ theorem associativity_reparametrization_middle_segment
     leftAssociativeConcatenationPath h₀₁ h₁₂
       (associativityParameter t)
   have ht_low : (1 : ℝ) / 2 < (t : ℝ) := by
-    have h : ¬ (t : ℝ) ≤ (1 : ℝ) / 2 := by
-      simpa [Set.mem_Iic, symbolicConcatenationMidpoint] using ht₀
-    exact lt_of_not_ge h
+    have h : symbolicConcatenationMidpoint < t := by
+      simpa only [Set.mem_Iic, not_le] using ht₀
+    change (1 : ℝ) / 2 < (t : ℝ) at h
+    simpa [symbolicConcatenationMidpoint] using h
   have ht_high : (t : ℝ) ≤ (3 : ℝ) / 4 := by
-    simpa [Set.mem_Iic, associativityThreeQuarter] using ht₁
+    change t ≤ associativityThreeQuarter at ht₁
+    change (t : ℝ) ≤ (associativityThreeQuarter : ℝ) at ht₁
+    simpa [associativityThreeQuarter] using ht₁
   let aR : SymbolicPathDomain := ⟨2 * (t : ℝ) - 1, by
     constructor <;> nlinarith [t.property.1, t.property.2, ht_low]
   ⟩
@@ -359,9 +386,10 @@ theorem associativity_reparametrization_last_segment
     leftAssociativeConcatenationPath h₀₁ h₁₂
       (associativityParameter t)
   have ht_low : (3 : ℝ) / 4 < (t : ℝ) := by
-    have h : ¬ (t : ℝ) ≤ (3 : ℝ) / 4 := by
-      simpa [Set.mem_Iic, associativityThreeQuarter] using ht
-    exact lt_of_not_ge h
+    have h : associativityThreeQuarter < t := by
+      simpa only [Set.mem_Iic, not_le] using ht
+    change (associativityThreeQuarter : ℝ) < (t : ℝ) at h
+    simpa [associativityThreeQuarter] using h
   let aR : SymbolicPathDomain := ⟨2 * (t : ℝ) - 1, by
     constructor <;> nlinarith [t.property.1, t.property.2, ht_low]
   ⟩
@@ -386,8 +414,10 @@ theorem associativity_reparametrization_last_segment
         associativityMiddleParameter associativityLastParameter) t : ℝ) = _
     rw [Set.piecewise_eq_of_notMem _ _ _ (by
       intro hmem
+      change t ≤ symbolicConcatenationMidpoint at hmem
+      change (t : ℝ) ≤ (symbolicConcatenationMidpoint : ℝ) at hmem
       have : (t : ℝ) ≤ (1 : ℝ) / 2 := by
-        simpa [Set.mem_Iic, symbolicConcatenationMidpoint] using hmem
+        simpa [symbolicConcatenationMidpoint] using hmem
       linarith [ht_low])]
     rw [Set.piecewise_eq_of_notMem _ _ _ ht]
     change max (2 * (t : ℝ) - 1) 0 = (aR : ℝ)

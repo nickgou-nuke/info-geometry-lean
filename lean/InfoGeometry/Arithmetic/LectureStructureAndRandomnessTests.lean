@@ -32,16 +32,17 @@ example (multiplier : ℕ+) :
   simp
 
 example (samples : Finset ℕ+) (shift : ℕ) :
-    (∑ index ∈ samples, liouville index * liouville (index.val + shift)) = 0 ↔
-      2 * ((samples.filter (fun index =>
-        liouville index = liouville (index.val + shift))).card : ℤ) =
+    (∑ index ∈ samples, liouville index * shiftedLiouville index shift) = 0 ↔
+      2 * ((samples.filter (fun (index : ℕ+) =>
+        liouville index = shiftedLiouville index shift)).card : ℤ) =
           (samples.card : ℤ) :=
   liouville_correlation_zero_iff samples shift
 
-example : legendreSym 13 5 = legendreSym 5 13 := by
-  letI : Fact (Nat.Prime 5) := ⟨by decide⟩
-  letI : Fact (Nat.Prime 13) := ⟨by decide⟩
-  exact quadratic_reciprocity_one_mod_four 5 13 (by decide) (by decide)
+local instance factPrimeFive : Fact (Nat.Prime 5) := ⟨by decide⟩
+local instance factPrimeThirteen : Fact (Nat.Prime 13) := ⟨by decide⟩
+
+example : legendreSym 13 5 = legendreSym 5 13 :=
+  quadratic_reciprocity_one_mod_four 5 13 (by decide) (by decide)
 
 example (region : CertifiedRegion
     InfoGeometry.Arithmetic.ActualRiemannXiEntireBridge.entireRiemannXi)

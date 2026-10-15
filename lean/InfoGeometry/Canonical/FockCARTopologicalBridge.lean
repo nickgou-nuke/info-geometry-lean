@@ -45,7 +45,8 @@ def annihilationTopCatHom :
 
 theorem fock_topCat_decomposition (v : DoubledSpace E) :
     creationTopCatHom (E := E) v + annihilationTopCatHom (E := E) v = v := by
-  simpa [creationTopCatHom, annihilationTopCatHom] using
+  rw [creationTopCatHom_apply, annihilationTopCatHom_apply]
+  simpa [dataPart, modelPart] using
     (data_model_decomposition (E := E) v).symm
 
 theorem fock_topCat_orthogonality (v : DoubledSpace E) :

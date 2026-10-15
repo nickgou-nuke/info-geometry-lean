@@ -39,6 +39,7 @@ open InfoGeometry.QuantumContext.ChiralBipolarAttention
 open InfoGeometry.Epistemology.JungianEpistemicCompiler
 open InfoGeometry.Epistemology.EpistemicFunctor
 open InfoGeometry.Epistemology.TaoPipelinePoset
+open InfoGeometry.Causal.FiniteDependencySchedule
 
 abbrev Mat2 := InfoGeometry.Algebra.FiniteSpin.Mat2R
 
@@ -58,8 +59,8 @@ def gradedCasimirTrace (M : Mat2) : ℝ :=
     This proves that the off-diagonal chiral channel carries zero net anomaly charge. -/
 theorem gradedCasimirTrace_vanishes (M : Mat2) :
     gradedCasimirTrace M = 0 := by
-  dsimp [gradedCasimirTrace, Matrix.trace, Fin.sum_univ_two, Matrix.mul_apply]
-  simp [leftProjection, grading, chiralBipolar]
+  simp [gradedCasimirTrace, Matrix.trace, Fin.sum_univ_two, Matrix.mul_apply,
+    leftProjection, grading, complementIdempotent, chiralBipolar]
 
 /-- The diagonal dissipative trace of the raw attention matrix:
     $$\operatorname{tr}(\operatorname{diag}(M)) = M_{00} + M_{11}$$
@@ -79,7 +80,7 @@ theorem alchemical_matrix_decomposition (M : Mat2) :
 
 /-- Frobenius inner product on $M_2(\mathbb{R})$: $\langle A, B \rangle = \operatorname{tr}(A^T B)$. -/
 def frobeniusInner (A B : Mat2) : ℝ :=
-  Matrix.trace (Aᵀ * B)
+  Matrix.trace (Matrix.transpose A * B)
 
 /-- **Theorem 2b (Frobenius Orthogonality of the Alchemical Decomposition)**:
     The diagonal dissipative heat sink and the off-diagonal chiral Dirac commutant
@@ -88,7 +89,8 @@ def frobeniusInner (A B : Mat2) : ℝ :=
     proving that thermal prompt noise and coherent quantum routing decouple cleanly. -/
 theorem alchemical_frobenius_orthogonal (M : Mat2) :
     frobeniusInner !![M 0 0, 0; 0, M 1 1] (chiralBipolar M) = 0 := by
-  dsimp [frobeniusInner, Matrix.trace, Fin.sum_univ_two, Matrix.mul_apply, Matrix.transpose_apply]
+  dsimp [frobeniusInner, Matrix.trace, Fin.sum_univ_two, Matrix.mul_apply,
+    Matrix.transpose_apply]
   simp [chiralBipolar]
 
 /-! ### Part II: Mapping Cognitive Archetypes to Relativistic Operator Geometry -/

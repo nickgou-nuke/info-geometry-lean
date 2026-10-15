@@ -17,6 +17,8 @@ no scalar or diagonal surrogate is introduced.
 
 noncomputable section
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace CanonicalZornFiveGradedClosure
 
 open TKKJordanPairData

@@ -97,20 +97,24 @@ private def futureClassEquiv (i : Observer) (p : State) :
   toFun :=
     Quotient.map
       (transportOneStepFuture Enabled Upd σI σP hEnabled hUpd i p)
-      (fun _ _ h =>
+      (fun {q r} (h : FutureEquivalent Enabled Upd Forces i p q r) =>
         transportOneStepFuture_respects
           Enabled Upd Forces σI σP hEnabled hUpd hForces h)
   invFun :=
     Quotient.map
       (transportOneStepFutureSymm Enabled Upd σI σP hEnabled hUpd i p)
-      (fun _ _ h =>
+      (fun {q r} (h : FutureEquivalent Enabled Upd Forces (σI i) (σP p) q r) =>
         transportOneStepFutureSymm_respects
           Enabled Upd Forces σI σP hEnabled hUpd hForces h)
   left_inv := by
     intro w
     refine Quotient.inductionOn w ?_
     intro q
-    simpa using congrArg
+    change Quotient.mk (futureSetoid Enabled Upd Forces i p)
+      (transportOneStepFutureSymm Enabled Upd σI σP hEnabled hUpd i p
+        (transportOneStepFuture Enabled Upd σI σP hEnabled hUpd i p q)) =
+      Quotient.mk (futureSetoid Enabled Upd Forces i p) q
+    exact congrArg
       (Quotient.mk (futureSetoid Enabled Upd Forces i p))
       (transportOneStepFuture_left_inv
         (Enabled := Enabled) (Upd := Upd) (Forces := Forces)
@@ -121,7 +125,11 @@ private def futureClassEquiv (i : Observer) (p : State) :
     intro w
     refine Quotient.inductionOn w ?_
     intro q
-    simpa using congrArg
+    change Quotient.mk (futureSetoid Enabled Upd Forces (σI i) (σP p))
+      (transportOneStepFuture Enabled Upd σI σP hEnabled hUpd i p
+        (transportOneStepFutureSymm Enabled Upd σI σP hEnabled hUpd i p q)) =
+      Quotient.mk (futureSetoid Enabled Upd Forces (σI i) (σP p)) q
+    exact congrArg
       (Quotient.mk (futureSetoid Enabled Upd Forces (σI i) (σP p)))
       (transportOneStepFuture_right_inv
         (Enabled := Enabled) (Upd := Upd) (Forces := Forces)
@@ -168,6 +176,7 @@ private theorem futureImage_transport
   constructor
   · intro hw
     rcases hw with ⟨q, hq, rfl⟩
+    change q ∈ Upd (σI i) α.1 (σP p) at hq
     have hq' : σP.symm q ∈ Upd i α.1 p := by
       exact (hUpd (i := i) (p := p) (q := σP.symm q) (α := α.1)).mpr (by
         simpa using hq)
@@ -302,20 +311,24 @@ private def actionClassEquiv (i : Observer) (p : State) :
   toFun :=
     Quotient.map
       (transportEnabledAction Enabled σI σP hEnabled i p)
-      (fun _ _ h =>
+      (fun {α β} (h : ActionEquivalent Enabled Upd Forces i p α β) =>
         transportEnabledAction_respects
           Enabled Upd Forces σI σP hEnabled hUpd hForces h)
   invFun :=
     Quotient.map
       (transportEnabledActionSymm Enabled σI σP hEnabled i p)
-      (fun _ _ h =>
+      (fun {α β} (h : ActionEquivalent Enabled Upd Forces (σI i) (σP p) α β) =>
         transportEnabledActionSymm_respects
           Enabled Upd Forces σI σP hEnabled hUpd hForces h)
   left_inv := by
     intro w
     refine Quotient.inductionOn w ?_
     intro α
-    simpa using congrArg
+    change Quotient.mk (actionSetoid Enabled Upd Forces i p)
+      (transportEnabledActionSymm Enabled σI σP hEnabled i p
+        (transportEnabledAction Enabled σI σP hEnabled i p α)) =
+      Quotient.mk (actionSetoid Enabled Upd Forces i p) α
+    exact congrArg
       (Quotient.mk (actionSetoid Enabled Upd Forces i p))
       (transportEnabledAction_left_inv
         (Enabled := Enabled) (Upd := Upd) (Forces := Forces)
@@ -326,7 +339,11 @@ private def actionClassEquiv (i : Observer) (p : State) :
     intro w
     refine Quotient.inductionOn w ?_
     intro α
-    simpa using congrArg
+    change Quotient.mk (actionSetoid Enabled Upd Forces (σI i) (σP p))
+      (transportEnabledAction Enabled σI σP hEnabled i p
+        (transportEnabledActionSymm Enabled σI σP hEnabled i p α)) =
+      Quotient.mk (actionSetoid Enabled Upd Forces (σI i) (σP p)) α
+    exact congrArg
       (Quotient.mk (actionSetoid Enabled Upd Forces (σI i) (σP p)))
       (transportEnabledAction_right_inv
         (Enabled := Enabled) (Upd := Upd) (Forces := Forces)

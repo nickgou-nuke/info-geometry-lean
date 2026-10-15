@@ -246,7 +246,10 @@ theorem kleinBottleJ_sq : kleinBottleJ * kleinBottleJ = 1 := by
           ext i j <;> fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_two]
   have hlin : Matrix.toLin' (1 : Matrix (Fin 2) (Fin 2) ℂ) = kleinBottleJ * kleinBottleJ := by
     simpa [hM] using (Matrix.toLin'_toMatrix' (f := kleinBottleJ * kleinBottleJ))
-  simpa using hlin.symm
+  calc
+    kleinBottleJ * kleinBottleJ = Matrix.toLin' (1 : Matrix (Fin 2) (Fin 2) ℂ) := hlin.symm
+    _ = LinearMap.id := Matrix.toLin'_one
+    _ = 1 := Module.End.one_eq_id.symm
 
 theorem kleinBottleΓ_sq : kleinBottleΓ * kleinBottleΓ = 1 := by
   have hM : LinearMap.toMatrix' (kleinBottleΓ * kleinBottleΓ)
@@ -261,7 +264,10 @@ theorem kleinBottleΓ_sq : kleinBottleΓ * kleinBottleΓ = 1 := by
           ext i j <;> fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_two]
   have hlin : Matrix.toLin' (1 : Matrix (Fin 2) (Fin 2) ℂ) = kleinBottleΓ * kleinBottleΓ := by
     simpa [hM] using (Matrix.toLin'_toMatrix' (f := kleinBottleΓ * kleinBottleΓ))
-  simpa using hlin.symm
+  calc
+    kleinBottleΓ * kleinBottleΓ = Matrix.toLin' (1 : Matrix (Fin 2) (Fin 2) ℂ) := hlin.symm
+    _ = LinearMap.id := Matrix.toLin'_one
+    _ = 1 := Module.End.one_eq_id.symm
 
 theorem kleinBottleTraceConjJ (A : Module.End ℂ (Fin 2 → ℂ)) :
     kleinBottleTrace (kleinBottleJ * A * kleinBottleJ) = kleinBottleTrace A := by

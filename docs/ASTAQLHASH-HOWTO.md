@@ -114,8 +114,9 @@ Run the stages in this order and stop when a prerequisite fails:
 
 ### Refresh is destructive
 
-`refresh_decl_graph.py --stream` **truncates the live collections before it writes
-any data.** In `tools/infra/refresh_decl_graph.py` the collection loop does
+The legacy `refresh_decl_graph.py --stream` mode (without `--generation-id`)
+**truncates the live collections before it writes any data.** In
+`tools/infra/refresh_decl_graph.py` that compatibility path does
 
 ```python
 if not db.has_collection(coll_name):
@@ -127,7 +128,7 @@ else:
 and the batch importer documents itself as *"Append one stream batch to a collection
 truncated before this run."*
 
-Consequences that must be respected:
+Consequences for the legacy mode:
 
 - The live `decls` and `edges` collections are **emptied at the start of the run**.
   A non-empty graph does not survive a failed or interrupted refresh.
@@ -190,6 +191,52 @@ FOR d IN decls
 The returned classes are navigation evidence only. A class is not a proof of
 vacuity, equivalence, or unsoundness until the cited owner declarations are
 read and kernel-audited.
+
+### Append-only generation mode
+
+For a non-destructive declaration-DAG refresh, pass a fresh generation ID and
+the caller-computed fingerprint for the exact toolchain, manifest, build
+inputs, and imported environment. The script creates `decls_g_ID` and
+`edges_g_ID`; it refuses to reuse existing generation collections and writes
+`decl_graph_generations/ID` with `status: complete` only after ingest and edge
+validation finish. Older generations remain untouched. The generation ID is
+limited to 32 letters, digits, `_`, or `-`.
+
+```bash
+python3 tools/infra/refresh_decl_graph.py \\
+  --stream --run-mode exe --skip-prebuild \\
+  --import-root InfoGeometry.All --namespace InfoGeometry \\
+  --arango-db infogeometry \\
+  --generation-id <fresh-id> \\
+  --build-fingerprint <toolchain-manifest-olean-source-fingerprint>
+```
+
+Query the selected generation with
+`arango_causal_chiral_cone_prompt.py --generation-id ID`; it maps the default
+`decls` and `edges` names to those generation collections. Existing readers
+that omit this option continue to address the legacy collections.
+
+The raw InfoTree importer has a parallel immutable mode. Supplying
+`--build-fingerprint` derives a 24-hex generation ID from that fingerprint and
+the actual exported JSONL/metadata bytes, writes all rows and edges into
+generation-specific collections, and publishes a complete record in
+`raw_infotree_generations`. Reusing an already-present generation is rejected;
+`--drop-existing` is incompatible with this mode. The ordinary importer path
+retains its existing replacement behavior.
+
+```bash
+python3 tools/infra/arango_raw_infotree_ingest.py \\
+  --input-dir <validated-export-dir> \\
+  --build-fingerprint <toolchain-manifest-olean-source-fingerprint>
+```
+
+Neither graph mode is a source of proof identity. Raw InfoTree keys and
+expression fingerprints are scoped navigation data; proof replay still needs
+the exact source snapshot, request/tactic sequence, and compatible Lean
+environment. `pantograph_arango_stream.py --source-snapshot FILE` stores that
+source text by SHA-256 and logs each raw Pantograph request/response in
+append-only collections. Without `--source-snapshot`, its session record
+explicitly marks the replay basis as request-log-only.
 
 ## Prerequisites
 

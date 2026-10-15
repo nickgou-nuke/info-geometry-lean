@@ -78,13 +78,19 @@ theorem paper_xi_time_part60aaa_wedderburn_information_completeness
     D.xi_time_part60aaa_wedderburn_information_completeness_statement := by
   classical
   refine ⟨?_, rfl, rfl⟩
-  simpa [
-    xi_time_part60aaa_wedderburn_information_completeness_data.xi_time_part60aaa_wedderburn_information_completeness_histogram,
-    xi_time_part60aaa_wedderburn_information_completeness_data.xi_time_part60aaa_wedderburn_information_completeness_tailCount,
-    xi_time_part60aaa_wedderburn_information_completeness_data.xi_time_part60aaa_wedderburn_information_completeness_capacity,
-    xi_time_part60aaa_wedderburn_information_completeness_data.xi_time_part60aaa_wedderburn_information_completeness_momentSpectrum] using
-    (Omega.Conclusion.paper_conclusion_capacity_finite_completeness
-      (X := D.xi_time_part60aaa_wedderburn_information_completeness_Fiber)
-      D.xi_time_part60aaa_wedderburn_information_completeness_size)
+  change Omega.Conclusion.FiniteMultiplicityDataEquivalent
+    (X := D.xi_time_part60aaa_wedderburn_information_completeness_Fiber)
+    (fun k => Fintype.card
+      {x : D.xi_time_part60aaa_wedderburn_information_completeness_Fiber //
+        D.xi_time_part60aaa_wedderburn_information_completeness_size x = k})
+    (fun t => Fintype.card
+      {x : D.xi_time_part60aaa_wedderburn_information_completeness_Fiber //
+        t ≤ D.xi_time_part60aaa_wedderburn_information_completeness_size x})
+    (fun t => Omega.Conclusion.CapacityRamanujanPlateauLaw.capacityCurve
+      D.xi_time_part60aaa_wedderburn_information_completeness_size t)
+    (fun q => ∑ x, D.xi_time_part60aaa_wedderburn_information_completeness_size x ^ q)
+  exact Omega.Conclusion.paper_conclusion_capacity_finite_completeness
+    (X := D.xi_time_part60aaa_wedderburn_information_completeness_Fiber)
+    D.xi_time_part60aaa_wedderburn_information_completeness_size
 
 end Omega.Zeta

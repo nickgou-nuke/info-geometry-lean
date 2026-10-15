@@ -42,7 +42,7 @@ def dirichletSeries (p : ℕ) : ℕ → ℝ := fun _ => (p : ℝ)
 /-- The constant Dirichlet-series encoding is injective on its natural-number parameter. -/
 theorem dirichlet_series_injectivity {p q : ℕ}
   (h : dirichletSeries p = dirichletSeries q) : p = q := by
-  exact Nat.cast_injective (by simpa [dirichletSeries] using congrFun h 0)
+  simpa [dirichletSeries] using congrFun h 0
 
 /-- Surjectivity proof -/
 theorem dirichlet_series_surjectivity : ∀ (f : ℕ → ℕ), ∃ (g : ℕ → ℕ), f = g := by

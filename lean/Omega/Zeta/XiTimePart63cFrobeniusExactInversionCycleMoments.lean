@@ -98,12 +98,6 @@ theorem paper_xi_time_part63c_frobenius_exact_inversion_cycle_moments
       cycle_weight_ne_zero forward_tomography column_orthogonality row_orthogonality
   have hD := paper_xi_time_part63b_fixedq_schur_packet_exact_inversion D
   rcases hD with ⟨hcycle, _, _⟩
-  refine ⟨?_, ?_⟩
-  · intro mu
-    simpa [D, xi_time_part63c_frobenius_exact_inversion_cycle_moments_cycle_moment] using
-      hcycle mu
-  · simpa [D, xi_time_part63c_frobenius_exact_inversion_cycle_moments_single_cycle,
-      xi_time_part63c_frobenius_exact_inversion_cycle_moments_cycle_moment] using
-      hcycle mu_q
+  exact ⟨hcycle, hcycle mu_q⟩
 
 end Omega.Zeta

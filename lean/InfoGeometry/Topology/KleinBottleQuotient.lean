@@ -18,7 +18,11 @@ inductive DependencyNode
   | affineReflection
   | fixedLocus
   | parameterEvaluation
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype DependencyNode where
+  elems := {.deckAction, .orbitQuotient, .invariantFields, .affineReflection, .fixedLocus, .parameterEvaluation}
+  complete := by intro x; cases x <;> decide
 
 def prerequisites : DependencyNode → Finset ℕ
   | .deckAction => {0}

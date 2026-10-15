@@ -215,8 +215,7 @@ private theorem add_three_sq_zero
 
 theorem rootPlusLinear_sq_zero (v : V3) :
     rootPlusLinear v * rootPlusLinear v = (0 : CZ) := by
-  simp only [rootPlusLinear, Fin.sum_univ_three, Finset.sum_add_distrib,
-    Finset.sum_mul, Finset.mul_sum]
+  simp only [rootPlusLinear, Fin.sum_univ_three]
   have h01 := rootPlus_mul_rootPlus_anticommutator (0 : Fin 3) (1 : Fin 3)
   have h02 := rootPlus_mul_rootPlus_anticommutator (0 : Fin 3) (2 : Fin 3)
   have h10 := rootPlus_mul_rootPlus_anticommutator (1 : Fin 3) (0 : Fin 3)
@@ -293,12 +292,18 @@ noncomputable def fockToZorn : Exterior3 →ₗ[ℝ] CZ where
   map_add' ψ ξ := by simp
   map_smul' c ψ := by simp
 
+@[simp] theorem fockToZorn_apply (ψ : Exterior3) :
+    fockToZorn ψ = rightCreationRepresentation ψ uPlus :=
+  rfl
+
 @[simp] theorem fockToZorn_one : fockToZorn (1 : Exterior3) = uPlus := by
-  simp [fockToZorn]
+  change rightCreationRepresentation 1 uPlus = uPlus
+  simp
 
 @[simp] theorem fockToZorn_algebraMap (r : ℝ) :
     fockToZorn (algebraMap ℝ Exterior3 r) = r • uPlus := by
-  simp [fockToZorn]
+  change rightCreationRepresentation (algebraMap ℝ Exterior3 r) uPlus = r • uPlus
+  simp
 
 theorem fockToZorn_creation (v : V3) (ψ : Exterior3) :
     fockToZorn (exteriorWedge3 v ψ) =
@@ -385,8 +390,7 @@ private def ιMode (i : Fin 3) : Exterior3 :=
 theorem fockToZorn_ιMode (i : Fin 3) :
     fockToZorn (ιMode i) =
       rightRegular (rootPlus i) (fockToZorn (1 : Exterior3)) := by
-  simpa [ιMode, exteriorWedge3] using
-    (fockToZorn_creation_mode i (1 : Exterior3))
+  simp [ιMode]
 
 def fockPreimageBasis : Fin 8 → Exterior3
   | 0 => 1
@@ -528,7 +532,7 @@ theorem fockBdGEquiv_creation_intertwines (i : Fin 3) :
       fockBdGEquiv.toLinearMap ∘ₗ exteriorWedge3 (modeVector i) := by
   apply LinearMap.ext
   intro ψ
-  simpa [fockBdGEquiv_apply] using (fockToZorn_creation_mode i ψ).symm
+  simp [fockBdGEquiv_apply]
 
 theorem fockBdGEquiv_annihilation_intertwines (i : Fin 3) :
     rightRegular (rootMinus i) ∘ₗ fockBdGEquiv.toLinearMap =

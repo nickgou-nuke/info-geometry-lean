@@ -65,26 +65,22 @@ lemma mockCheckR23_pure (a b c : mockV) :
 
 lemma mockCheckR12_apply (x : mockV ⊗[ℚ] (mockV ⊗[ℚ] mockV)) :
     mockCheckR12 x = 2 • x := by
-  refine TensorProduct.induction_on x ?_ (fun a b => ?_) ?_
-  · simp
-  · refine TensorProduct.induction_on b ?_ (fun b c => mockCheckR12_pure a b c) ?_
-    · simp
-    · intro x y hx hy
-      have htmul := TensorProduct.tmul_add (R := ℚ) a x y
-      rw [htmul, map_add, hx, hy, smul_add]
-  · intro x y hx hy
+  refine TensorProduct.inductionOn x (fun a b => ?_) (fun x y hx hy => ?_)
+  · refine TensorProduct.inductionOn b (fun b c => mockCheckR12_pure a b c)
+      (fun x y hx hy => ?_)
+    have htmul := TensorProduct.tmul_add (R := ℚ) a x y
+    rw [htmul, map_add, hx, hy, smul_add]
+  ·
     rw [map_add, hx, hy, smul_add]
 
 lemma mockCheckR23_apply (x : mockV ⊗[ℚ] (mockV ⊗[ℚ] mockV)) :
     mockCheckR23 x = 2 • x := by
-  refine TensorProduct.induction_on x ?_ (fun a b => ?_) ?_
-  · simp
-  · refine TensorProduct.induction_on b ?_ (fun b c => mockCheckR23_pure a b c) ?_
-    · simp
-    · intro x y hx hy
-      have htmul := TensorProduct.tmul_add (R := ℚ) a x y
-      rw [htmul, map_add, hx, hy, smul_add]
-  · intro x y hx hy
+  refine TensorProduct.inductionOn x (fun a b => ?_) (fun x y hx hy => ?_)
+  · refine TensorProduct.inductionOn b (fun b c => mockCheckR23_pure a b c)
+      (fun x y hx hy => ?_)
+    have htmul := TensorProduct.tmul_add (R := ℚ) a x y
+    rw [htmul, map_add, hx, hy, smul_add]
+  ·
     rw [map_add, hx, hy, smul_add]
 
 theorem mockYangBaxter :

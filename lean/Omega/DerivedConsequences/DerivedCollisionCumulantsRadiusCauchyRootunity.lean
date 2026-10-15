@@ -36,8 +36,9 @@ theorem paper_derived_collision_cumulants_radius_cauchy_rootunity :
     have hratio_lt_one : |θ| / R < 1 := by
       rw [div_lt_iff₀ hR0]
       nlinarith
-    simpa [derived_collision_cumulants_radius_cauchy_rootunity_geometric_majorant] using
-      (summable_geometric_of_lt_one hratio_nonneg hratio_lt_one).mul_left M
+    change Summable (fun i : ℕ => M * (|θ| / R) ^ i)
+    refine Summable.mul_left M ?_
+    exact summable_geometric_of_lt_one hratio_nonneg hratio_lt_one
   · intro p hp
     have hpR : (0 : ℝ) < p := by
       exact_mod_cast (lt_of_lt_of_le (by norm_num : 0 < 3) hp)

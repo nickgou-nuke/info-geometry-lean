@@ -1,6 +1,9 @@
 import InfoGeometry.Algebra.DerivationLieLane
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.CanonicalZornDerivation
+import Mathlib.Algebra.Lie.OfAssociative
+
+attribute [local instance 100] LieRing.ofAssociativeRing LieAlgebra.ofAssociativeAlgebra
 
 /-!
 # The canonical Zorn derivation lane
@@ -25,11 +28,7 @@ noncomputable def canonicalZornDerivationLane :
   L := canonicalZornDerivations
   lieRing := inferInstance
   lieAlgebra := inferInstance
-  act := {
-    toFun := fun D => D.1
-    map_add' := by intro D E; rfl
-    map_smul' := by intro r D; rfl
-    map_lie' := by intro D E; rfl }
+  act := canonicalZornDerivations.incl
 
 @[simp] theorem canonicalZornDerivationLane_act (D : canonicalZornDerivations) :
     canonicalZornDerivationLane.act D = D.1 := by
@@ -38,7 +37,6 @@ noncomputable def canonicalZornDerivationLane :
 @[simp] theorem canonicalZornDerivationLane_operatorAction (D : canonicalZornDerivations)
     (X : ZornCarrier) :
     canonicalZornDerivationLane.operatorAction D X = D.1 X := by
-  change D.1 X = D.1 X
   rfl
 
 end InfoGeometry.Lie.CanonicalZornDerivation

@@ -80,8 +80,8 @@ def riemann_zeros_to_lightcones_model (Z : ℂ → ℂ) : Prop :=
 /-- The core Layer-12 assertion, parameterized by an explicit model predicate. -/
 theorem riemann_zeros_are_lightcones {Z : ℂ → ℂ}
     (H : riemann_zeros_to_lightcones_model Z) :
-    ∀ s, Z s = 0 → (paravector_temperature s.re s.im).parabolic := by
-  simpa using H
+    ∀ s, Z s = 0 → (paravector_temperature s.re s.im).parabolic :=
+  H
 
 /-- Consolidated geometric-zeta package: graded reciprocal pole, paravector
     determinant, and coordinate form of the parabolic locus. -/

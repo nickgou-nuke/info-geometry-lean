@@ -12,9 +12,9 @@ open scoped Topology
 
 theorem hasDerivAt_massieu (parameter : ℝ) :
     HasDerivAt massieu (logistic parameter) parameter := by
-  simpa [massieu, logistic] using
-    ((Real.hasDerivAt_exp parameter).const_add 1).log
-      (by positivity : 1 + Real.exp parameter ≠ 0)
+  have h := ((Real.hasDerivAt_exp parameter).const_add 1).log
+    (by positivity : 1 + Real.exp parameter ≠ 0)
+  exact h
 
 theorem hasDerivAt_dual_gradient {probability : ℝ}
     (interior : probability ∈ Set.Ioo (0 : ℝ) 1) :

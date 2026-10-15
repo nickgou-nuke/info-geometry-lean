@@ -57,8 +57,16 @@ def stageCarrier (X0 X1 : Type u)
 
 instance stageTopologicalSpace (X0 X1 : Type u)
     [TopologicalSpace X0] [TopologicalSpace X1] (i : SpinorStage) :
-    TopologicalSpace (stageCarrier X0 X1 i) := by
-  cases i <;> simpa [stageCarrier]
+    TopologicalSpace (stageCarrier X0 X1 i) :=
+  match i with
+  | .initial => ‹TopologicalSpace X0›
+  | .extended => ‹TopologicalSpace X1›
+
+/-- The bundled stage objects retain the exact topology instances on `X0` and `X1`. -/
+def stageObject (X0 X1 : Type u)
+    [TopologicalSpace X0] [TopologicalSpace X1] : SpinorStage → TopCat
+  | .initial => TopCat.of X0
+  | .extended => TopCat.of X1
 
 /-- The stage map for the two-step tower. -/
 def stageMap (X0 X1 : Type u)
@@ -83,11 +91,12 @@ theorem continuous_stageMap (X0 X1 : Type u)
 def spinorSpectrumTopCatDiagram (X0 X1 : Type u)
     [TopologicalSpace X0] [TopologicalSpace X1]
     (f : X0 → X1) (hf : Continuous f) : SpinorStage ⥤ TopCat where
-  obj i := TopCat.of (stageCarrier X0 X1 i)
-  map g := TopCat.ofHom
-    (ContinuousMap.mk
-      (stageMap X0 X1 f g)
-      (continuous_stageMap X0 X1 f hf g))
+  obj := stageObject X0 X1
+  map := fun {i j} g =>
+    match g with
+    | .idInitial => 𝟙 (TopCat.of X0)
+    | .step => TopCat.ofHom (ContinuousMap.mk f hf)
+    | .idExtended => 𝟙 (TopCat.of X1)
   map_id := by
     intro i
     cases i <;> rfl

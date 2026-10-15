@@ -109,7 +109,9 @@ theorem offDiag_sq_scalar (B : Matrix m n R) (C : Matrix n m R) (lambda_sq : R)
     (offDiag B C) * (offDiag B C) = lambda_sq • (1 : Matrix (m ⊕ n) (m ⊕ n) R) := by
   rw [offDiag_sq, hBC, hCB]
   ext (i | i) (j | j) <;>
-    simp [Matrix.fromBlocks, smul_apply, Matrix.one_apply]
+    simp [Matrix.fromBlocks, Matrix.smul_apply, Matrix.one_apply]
+
+set_option linter.unusedSectionVars false
 
 /--
   🏆 THEOREM 3: The linear Taylor flow exp(tX) = I + t X
@@ -121,7 +123,9 @@ theorem pairing_flow_structure (B : Matrix m n R) (C : Matrix n m R) (t : R) :
     (1 : Matrix (m ⊕ n) (m ⊕ n) R) + t • (offDiag B C) =
       Matrix.fromBlocks (1 : Matrix m m R) (t • B) (t • C) (1 : Matrix n n R) := by
   ext (i | i) (j | j) <;>
-    simp [offDiag, Matrix.fromBlocks, smul_apply, Matrix.one_apply]
+    simp [offDiag, Matrix.fromBlocks, Matrix.smul_apply, Matrix.one_apply]
+
+set_option linter.unusedSectionVars true
 
 /-!
 =============================================================================
@@ -153,7 +157,7 @@ theorem pairing_anticommutes_charge (B : Matrix m n R) (C : Matrix n m R) :
       (chargeOperator (m := m) (n := n)) * (offDiag B C) = 0 := by
   dsimp [offDiag, chargeOperator]
   rw [Matrix.fromBlocks_multiply, Matrix.fromBlocks_multiply]
-  ext (i | i) (j | j) <;> simp [Matrix.fromBlocks, add_apply]
+  ext (i | i) (j | j) <;> simp [Matrix.fromBlocks, Matrix.add_apply]
 
 end InfoGeometry.Physics.SplitOctonionDerivationSpinRep
 

@@ -87,7 +87,7 @@ theorem seamRotor_preserves_quadratic (n d : ℝ) (h : d ^ 2 + n ^ 2 ≠ 0)
   have hcross : inner (𝕜 := ℝ) (complex_i v) v = 0 := by
     rw [real_inner_comm]
     exact axis_inner_zero v
-  simp only [seamRotor, ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply,
+  simp only [seamRotor, add_apply, smul_apply,
     ContinuousLinearMap.id_apply, inner_add_left, inner_add_right,
     real_inner_smul_left, real_inner_smul_right, axis_inner_zero, axis_inner_self,
     hcross, mul_zero, zero_add, add_zero]
@@ -133,7 +133,8 @@ theorem hasDerivAt_freeEnergy
     HasDerivAt (fun s => F (trajectory s))
       (-inner (𝕜 := ℝ) g (D g)) t := by
   have h := hF.comp_hasDerivAt t hx
-  simpa only [Function.comp_apply, innerSL_apply_apply, descent_pairing] using h
+  rw [innerSL_apply_apply, descent_pairing] at h
+  exact h
 
 theorem freeEnergy_deriv_nonpos
     (F : DoubledSpace E → ℝ) (trajectory : ℝ → DoubledSpace E)

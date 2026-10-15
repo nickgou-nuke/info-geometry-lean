@@ -1,5 +1,5 @@
 import InfoGeometry.Canonical.MatrixDetExpTraceJacobi
-import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Analysis.CStarAlgebra.Matrix
 import Mathlib.Analysis.Matrix.HermitianFunctionalCalculus
 import Mathlib.Analysis.Matrix.Order
 import Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.Abs
@@ -19,7 +19,7 @@ noncomputable section
 
 namespace InfoGeometry.Canonical.FiniteBogoliubovFrameDeformationEntropy
 
-open scoped Matrix MatrixOrder Matrix.Norms.Operator
+open scoped Matrix MatrixOrder Matrix.Norms.L2Operator
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
 

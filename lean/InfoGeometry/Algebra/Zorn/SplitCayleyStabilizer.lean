@@ -1,5 +1,6 @@
 import InfoGeometry.Algebra.Zorn.ConcreteComposition
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Algebra.Module.TransferInstance
 
 /-!
 # Native split-Cayley automorphism/stabilizer model
@@ -35,7 +36,7 @@ instance : AddCommGroup (ZornCell R) :=
   Equiv.addCommGroup (coordEquiv (R := R))
 
 instance : Module R (ZornCell R) :=
-  Equiv.module R (coordEquiv (R := R))
+  (coordEquiv (R := R)).addEquiv.module R
 
 end ZornCell
 

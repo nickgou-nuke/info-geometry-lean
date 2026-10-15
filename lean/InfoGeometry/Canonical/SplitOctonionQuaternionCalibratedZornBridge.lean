@@ -17,7 +17,9 @@ abbrev QuaternionCoordinates := ℝ × Vec3
 abbrev CartesianCoordinates := QuaternionCoordinates × QuaternionCoordinates
 abbrev CanonicalZorn := InfoGeometry.Lie.SplitOctonionQuaternionZornCoordinates.CZ
 
-/-! The quaternion-pair convention and the canonical Zorn product use opposite
+open InfoGeometry.Canonical.ZornMatrix
+
+/-- The quaternion-pair convention and the canonical Zorn product use opposite
 Witt placements for the two imaginary triples.  The multiplicative
 calibration is the global exchange `x = r - q`, `y = q + r`. -/
 noncomputable def calibratedCartesianZornLinearEquiv :
@@ -50,10 +52,7 @@ noncomputable def calibratedCartesianZornLinearEquiv :
   map_add' X Y := by
     ext i <;> simp <;> ring
   map_smul' c X := by
-    ext <;>
-      simp [Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv,
-        smul_eq_mul] <;>
-      ring
+    ext i <;> simp [smul_a, smul_b, smul_x, smul_y] <;> ring
 
 @[simp] theorem calibratedCartesianZornLinearEquiv_apply
     (qr : CartesianCoordinates) :

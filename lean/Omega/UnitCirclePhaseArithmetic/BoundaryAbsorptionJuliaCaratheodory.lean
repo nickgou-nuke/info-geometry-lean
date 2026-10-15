@@ -46,7 +46,7 @@ def boundaryAngularDerivative (roots : List ℂ) (ξ : ℂ) : ℂ :=
 /-- Concrete package for the boundary absorption / Julia--Caratheodory transport theorem. -/
 def BoundaryAbsorptionJuliaCaratheodoryStatement (roots : List ℂ) (ξ : ℂ) : Prop :=
   ∀ (hξ : ‖ξ‖ = 1) (hroots : ∀ a ∈ roots, ‖a‖ < 1),
-    boundaryAbsorption roots ξ = ∑ i, boundaryPoissonKernel (roots.get i) ξ ∧
+    boundaryAbsorption roots ξ = ∑ i : Fin roots.length, boundaryPoissonKernel (roots.get i) ξ ∧
       boundaryJuliaIndicator roots ξ = boundaryAbsorption roots ξ ∧
       Complex.re (boundaryAngularDerivative roots ξ) = boundaryAbsorption roots ξ ∧
       0 ≤ boundaryAbsorption roots ξ
@@ -87,8 +87,8 @@ lemma boundaryPoissonKernel_nonneg {a ξ : ℂ} (ha : ‖a‖ < 1) :
 
 lemma boundaryAbsorption_eq_sum (roots : List ℂ) (ξ : ℂ) (hξ : ‖ξ‖ = 1)
     (hroots : ∀ a ∈ roots, ‖a‖ < 1) :
-    boundaryAbsorption roots ξ = ∑ i, boundaryPoissonKernel (roots.get i) ξ := by
-  have hrot : ∀ i, ‖boundaryRotatedRoots roots ξ i‖ < 1 := by
+    boundaryAbsorption roots ξ = ∑ i : Fin roots.length, boundaryPoissonKernel (roots.get i) ξ := by
+  have hrot : ∀ i : Fin roots.length, ‖boundaryRotatedRoots roots ξ i‖ < 1 := by
     intro i
     rw [boundaryRotatedRoots, boundaryRotate_norm hξ (roots.get i)]
     exact hroots (roots.get i) (List.get_mem roots i)
@@ -96,13 +96,17 @@ lemma boundaryAbsorption_eq_sum (roots : List ℂ) (ξ : ℂ) (hξ : ‖ξ‖ = 
     (Omega.Zeta.paper_xi_endpoint_absorption_coefficient (boundaryRotatedRoots roots ξ) hrot).1
   calc
     boundaryAbsorption roots ξ =
-        ∑ i, (1 - ‖boundaryRotatedRoots roots ξ i‖ ^ 2) / ‖1 + boundaryRotatedRoots roots ξ i‖ ^ 2 := by
+        ∑ i : Fin roots.length, (1 - ‖boundaryRotatedRoots roots ξ i‖ ^ 2) / ‖1 + boundaryRotatedRoots roots ξ i‖ ^ 2 := by
           simpa [boundaryAbsorption] using hcoeff
-    _ = ∑ i, boundaryPoissonKernel (roots.get i) ξ := by
-          refine Finset.sum_congr rfl ?_
+    _ = ∑ i : Fin roots.length, boundaryPoissonKernel (roots.get i) ξ := by
+          apply Finset.sum_congr rfl
           intro i _
-          simpa [boundaryRotatedRoots] using
-            (boundaryPoissonKernel_eq_endpointPoissonMinusOne hξ (roots.get i)).symm
+          have h₁ : boundaryPoissonKernel (roots.get i) ξ = endpointPoissonMinusOne (boundaryRotate ξ (roots.get i)) := by
+            rw [boundaryPoissonKernel_eq_endpointPoissonMinusOne hξ (roots.get i)]
+          have h₂ : endpointPoissonMinusOne (boundaryRotate ξ (roots.get i)) = (1 - ‖boundaryRotate ξ (roots.get i)‖ ^ 2) / ‖1 + boundaryRotate ξ (roots.get i)‖ ^ 2 := by
+            simp [endpointPoissonMinusOne]
+          rw [h₁, h₂]
+          <;> simp [boundaryRotatedRoots]
 
 /-- Paper label: `thm:app-boundary-absorption-julia-caratheodory`. Rotating `ξ` to `-1`
 transports the endpoint absorption coefficient and Julia indicator to an arbitrary boundary point;
@@ -111,17 +115,61 @@ is nonnegative for roots in the open unit disk. -/
 theorem paper_app_boundary_absorption_julia_caratheodory (roots : List ℂ) (ξ : ℂ) :
     BoundaryAbsorptionJuliaCaratheodoryStatement roots ξ := by
   intro hξ hroots
-  refine ⟨boundaryAbsorption_eq_sum roots ξ hξ hroots, ?_, ?_, ?_⟩
-  · simpa [boundaryJuliaIndicator, boundaryAbsorption] using
-      (Omega.Zeta.paper_xi_endpoint_julia_indicator_equals_absorption
-        (κ := roots.length) (w := fun _ => (1 : ℝ)) (z := boundaryRotatedRoots roots ξ)).1
-  · simpa [boundaryAngularDerivative, boundaryAbsorption] using
-      (Omega.Zeta.paper_xi_endpoint_julia_indicator_equals_absorption
-        (κ := roots.length) (w := fun _ => (1 : ℝ)) (z := boundaryRotatedRoots roots ξ)).2.symm
-  · rw [boundaryAbsorption_eq_sum roots ξ hξ hroots]
-    refine Finset.sum_nonneg ?_
-    intro i _
-    exact boundaryPoissonKernel_nonneg (hroots (roots.get i) (List.get_mem roots i))
+  have h₁ : boundaryAbsorption roots ξ = ∑ i : Fin roots.length, boundaryPoissonKernel (roots.get i) ξ :=
+    boundaryAbsorption_eq_sum roots ξ hξ hroots
+  have h₂ : boundaryJuliaIndicator roots ξ = boundaryAbsorption roots ξ := by
+    dsimp [boundaryJuliaIndicator, boundaryAbsorption]
+    -- xiEndpointAbsorptionCoefficient a = xiEndpointAbsorption (fun _ => 1) a by definition
+    <;> simp [Omega.Zeta.xiEndpointAbsorptionCoefficient]
+    <;> rfl
+  have h₃ : Complex.re (boundaryAngularDerivative roots ξ) = boundaryAbsorption roots ξ := by
+    dsimp [boundaryAngularDerivative, boundaryAbsorption] at *
+    -- Use the theorem from XiEndpointJuliaIndicatorEqualsAbsorption
+    have h₄ := Omega.Zeta.paper_xi_endpoint_julia_indicator_equals_absorption (κ := roots.length) (w := fun _ => (1 : ℝ)) (z := boundaryRotatedRoots roots ξ)
+    have h₅ : Omega.Zeta.xiEndpointJuliaIndicator (fun _ => (1 : ℝ)) (boundaryRotatedRoots roots ξ) = Omega.Zeta.xiEndpointAbsorption (fun _ => (1 : ℝ)) (boundaryRotatedRoots roots ξ) := h₄.1
+    have h₆ : Omega.Zeta.xiEndpointAbsorption (fun _ => (1 : ℝ)) (boundaryRotatedRoots roots ξ) = Complex.re (-Omega.Zeta.xiEndpointBoundaryLogDerivative (fun _ => (1 : ℝ)) (boundaryRotatedRoots roots ξ)) := h₄.2
+    have h₇ : Omega.Zeta.xiEndpointAbsorptionCoefficient (boundaryRotatedRoots roots ξ) = Omega.Zeta.xiEndpointAbsorption (fun _ => (1 : ℝ)) (boundaryRotatedRoots roots ξ) := by
+      simp [Omega.Zeta.xiEndpointAbsorptionCoefficient]
+      <;> rfl
+    simp_all [Omega.Zeta.xiEndpointAbsorptionCoefficient]
+    <;>
+    (try ring_nf at *) <;>
+    (try simp_all [Complex.ext_iff]) <;>
+    (try norm_num at *) <;>
+    (try linarith)
+    <;>
+    (try
+      {
+        simp_all [Omega.Zeta.xiEndpointAbsorptionCoefficient, Omega.Zeta.xiEndpointAbsorption, Omega.Zeta.xiEndpointAbsorptionTerm]
+        <;>
+        norm_num at *
+        <;>
+        linarith
+      })
+  have h₄ : 0 ≤ boundaryAbsorption roots ξ := by
+    dsimp [boundaryAbsorption]
+    have hrot : ∀ i : Fin roots.length, ‖boundaryRotatedRoots roots ξ i‖ < 1 := by
+      intro i
+      rw [boundaryRotatedRoots, boundaryRotate_norm hξ (roots.get i)]
+      exact hroots (roots.get i) (List.get_mem roots i)
+    -- Use the fact that each term in the sum is non-negative
+    have h₅ : 0 ≤ Omega.Zeta.xiEndpointAbsorptionCoefficient (boundaryRotatedRoots roots ξ) := by
+      have h₆ : Omega.Zeta.xiEndpointAbsorptionCoefficient (boundaryRotatedRoots roots ξ) = ∑ i : Fin roots.length, (1 - ‖boundaryRotatedRoots roots ξ i‖ ^ 2) / ‖1 + boundaryRotatedRoots roots ξ i‖ ^ 2 := by
+        have h₇ := (Omega.Zeta.paper_xi_endpoint_absorption_coefficient (boundaryRotatedRoots roots ξ) hrot).1
+        exact h₇
+      rw [h₆]
+      apply Finset.sum_nonneg
+      intro i _
+      have h₈ : 0 ≤ (1 - ‖boundaryRotatedRoots roots ξ i‖ ^ 2 : ℝ) := by
+        have h₉ : ‖boundaryRotatedRoots roots ξ i‖ < 1 := hrot i
+        have h₁₀ : ‖boundaryRotatedRoots roots ξ i‖ ^ 2 < 1 := by
+          have h₁₁ : 0 ≤ ‖boundaryRotatedRoots roots ξ i‖ := norm_nonneg _
+          nlinarith
+        linarith
+      have h₉ : 0 ≤ (‖1 + boundaryRotatedRoots roots ξ i‖ ^ 2 : ℝ) := by positivity
+      exact div_nonneg h₈ h₉
+    linarith
+  exact ⟨h₁, h₂, h₃, h₄⟩
 
 end
 

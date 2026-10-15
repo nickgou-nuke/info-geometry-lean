@@ -58,9 +58,7 @@ theorem paper_cdim_anomaly_splitting_prime_support (D : CdimAnomalySplittingPrim
   have hbase := paper_cdim_anomaly_functorial_splitting_obstruction_rge2_tor B
   have hrank : ¬ B.rankLeOne := by
     intro hle
-    have hle' : D.freeRank ≤ 1 := by
-      simpa [B, CdimAnomalyFunctorialSplittingObstructionData.rankLeOne] using hle
-    exact Nat.not_succ_le_self 1 (le_trans D.freeRank_ge_two hle')
+    exact Nat.not_succ_le_self 1 (le_trans D.freeRank_ge_two hle)
   have hiff : ¬ B.naturalSplitting ↔ D.HasSupportedPrime := by
     constructor
     · intro hsplit

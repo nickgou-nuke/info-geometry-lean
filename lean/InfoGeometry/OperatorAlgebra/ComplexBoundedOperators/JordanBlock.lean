@@ -180,7 +180,7 @@ theorem jordanBlock_pow_apply {R : Type*} [CommSemiring R] {n : Nat} (a : R)
         (Nat.choose k (j.val - i.val) : R) * a ^ (k + i.val - j.val)
       else 0 := by
   rw [jordanBlock_pow_expansion]
-  rw [Finset.sum_apply, Finset.sum_apply]
+  rw [Matrix.sum_apply]
   simp_rw [jordanBlock_pow_expansion_term_apply]
   by_cases hij : i.val ≤ j.val
   · let d := j.val - i.val
@@ -367,7 +367,7 @@ theorem adjoinRoot_powerBasis_rev_leftMulMatrix_eq_jordanShift
   have hmin :
       pb.minpolyGen = (X ^ pb.dim : K[X]) := by
     have hmin0 : minpoly K pb.gen = (X ^ (n + 1) : K[X]) := by
-      simpa [PowerBasis.minpolyGen_eq, AdjoinRoot.powerBasis'] using
+      simpa [pb, PowerBasis.minpolyGen_eq, AdjoinRoot.powerBasis'] using
       (AdjoinRoot.minpoly_powerBasis_gen_of_monic
         (K := K)
         (f := (X ^ (n + 1) : K[X]))
@@ -375,7 +375,7 @@ theorem adjoinRoot_powerBasis_rev_leftMulMatrix_eq_jordanShift
     have hdim : pb.dim = n + 1 := by
       simp [pb, AdjoinRoot.powerBasis', PowerBasis.dim]
     simpa [PowerBasis.minpolyGen_eq, hdim] using hmin0
-  simpa using
+  simpa [pb] using
     (powerBasis_rev_leftMulMatrix_eq_jordanShift
       (K := K) (S := AdjoinRoot (X ^ (n + 1)))
       (pb := pb)
@@ -403,13 +403,36 @@ theorem adjoinRoot_powerBasis_rev_leftMulMatrix_add_scalar_eq_jordanBlock
       Matrix.reindex Fin.revPerm Fin.revPerm
         (Algebra.leftMulMatrix pb.basis (algebraMap K (AdjoinRoot (X ^ (n + 1) : K[X])) a)) =
       Matrix.scalar (Fin pb.dim) a := by
+    have hdim : pb.dim = n + 1 := by
+      simp [pb, AdjoinRoot.powerBasis']
+    have hpow (i : Fin pb.dim) : pb.basis i.rev = pb.gen ^ (n - i.val) := by
+      rw [pb.basis_eq_pow]
+      simp [hdim]
     ext i j
     by_cases hij : i = j
     · subst hij
-      simpa [Matrix.reindex, Algebra.leftMulMatrix_eq_repr_mul, Matrix.scalar, pb] using
+      have hexp : pb.dim - (i.val + 1) = n - i.val := by
+        simpa [hdim] using (Nat.succ_sub_succ_eq_sub n i.val)
+      have hcoord : pb.basis.repr (pb.gen ^ (pb.dim - (i.val + 1))) i.rev = 1 := by
+        calc
+          pb.basis.repr (pb.gen ^ (pb.dim - (i.val + 1))) i.rev =
+              pb.basis.repr (pb.gen ^ (n - i.val)) i.rev := by rw [hexp]
+          _ = pb.basis.repr (pb.basis i.rev) i.rev := by rw [hpow i]
+          _ = 1 := by rw [pb.basis.repr_self]; simp
+      simpa [Matrix.reindex, Algebra.leftMulMatrix_eq_repr_mul, Matrix.scalar,
+        hcoord] using
         (Module.Basis.repr_smul' (B := pb.basis) (i := i.rev) (r := a) (s := pb.basis i.rev))
     · have hrev : i.rev ≠ j.rev := by simpa using hij
-      simpa [Matrix.reindex, Algebra.leftMulMatrix_eq_repr_mul, Matrix.scalar, pb, hij, hrev] using
+      have hexp : pb.dim - (j.val + 1) = n - j.val := by
+        simpa [hdim] using (Nat.succ_sub_succ_eq_sub n j.val)
+      have hcoord : pb.basis.repr (pb.gen ^ (pb.dim - (j.val + 1))) i.rev = 0 := by
+        calc
+          pb.basis.repr (pb.gen ^ (pb.dim - (j.val + 1))) i.rev =
+              pb.basis.repr (pb.gen ^ (n - j.val)) i.rev := by rw [hexp]
+          _ = pb.basis.repr (pb.basis j.rev) i.rev := by rw [hpow j]
+          _ = 0 := by rw [pb.basis.repr_self]; simp [hrev]
+      simpa [Matrix.reindex, Algebra.leftMulMatrix_eq_repr_mul, Matrix.scalar,
+        hcoord, hij, hrev] using
         (Module.Basis.repr_smul' (B := pb.basis) (i := i.rev) (r := a) (s := pb.basis j.rev))
   calc
     Matrix.reindex Fin.revPerm Fin.revPerm

@@ -16,7 +16,11 @@ open QuadraticConfiguration3
 /-- The six oriented edges of the three-point graph. -/
 inductive OrientedEdge3 where
   | e12 | e21 | e13 | e31 | e23 | e32
-  deriving DecidableEq, Fintype, Repr
+  deriving DecidableEq, Repr
+
+instance : Fintype OrientedEdge3 :=
+  Fintype.ofList [.e12, .e21, .e13, .e31, .e23, .e32]
+    (by intro x; cases x <;> simp)
 
 /-- Reverse an oriented edge. -/
 def reverse : OrientedEdge3 → OrientedEdge3

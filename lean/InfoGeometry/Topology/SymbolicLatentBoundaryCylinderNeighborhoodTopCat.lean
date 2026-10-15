@@ -48,6 +48,9 @@ theorem colimitBoundaryCylinder_preimage_stage
   have hstage := congrArg
     (fun f => f.hom.toFun) (boundaryReadout_stage D S stage)
   have hx := congrFun hstage x
+  change (boundaryReadout D S).hom
+      ((colimit.ι (carrierDiagram D) stage).hom x) =
+    S.address stage x at hx
   simpa using Iff.of_eq
     (congrArg (fun y => y ∈ prefixCylinder (A := A) length w) hx)
 

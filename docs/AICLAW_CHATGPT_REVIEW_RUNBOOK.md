@@ -75,8 +75,13 @@ The repo wrapper added for controlled operation is:
 - `tools/infra/aiclaw_chat.py`
 - `tools/infra/chatgpt_lane_guard.py` for direct browser-harness senders that
   must share the same `tmp/aiclaw_queue/<platform>/busy.json` lane marker.
-- `tools/infra/socratic_clawbot.py` for Lean owner-file oracle prompts; this
-  delegates transport to `aiclaw_chat.py`.
+- `tools/infra/socratic_clawbot.py` for Lean owner-file prompts; its
+  `chatgpt_browser_harness_driver.py` uses the same shared lane guard around
+  the direct CDP/browser-harness send.
+- `tools/infra/automath_pipeline.py` for AutoMath candidate proposals; it uses
+  `tools/chatgpt-oracle/oracle_dispatch.py`, whose Tampermonkey bridge is a
+  separate local HTTP polling service on port 8765, serialized by the same
+  shared lane guard. It is not the aiClaw WebSocket transport.
 - `tools/infra/socratic_oracle_prompt_gepa.py` for archive-first GEPA-style
   prompt-profile evaluation. It does not send prompts and does not replace the
   stable default unless empirical archived outcomes justify it.

@@ -14,7 +14,11 @@ inductive Window4RigidTail
   | b0010
   | b0001
   | b0101
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype Window4RigidTail where
+  elems := {Window4RigidTail.b1000, .b1001, .b1010, .b0000, .b0100, .b0010, .b0001, .b0101}
+  complete := by rintro (_|_|_|_|_|_|_|_) <;> simp
 
 /-- The explicit suffix embedding `ι₄(x) = x01` into the window-6 shell. -/
 def window6SuffixEmbedding : Window4RigidTail → Fin 64

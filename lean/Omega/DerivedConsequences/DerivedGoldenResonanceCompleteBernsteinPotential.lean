@@ -1,5 +1,7 @@
 import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Analysis.Calculus.Deriv.Add
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
 
@@ -63,11 +65,19 @@ theorem paper_derived_golden_resonance_complete_bernstein_potential :
         0 ≤ derived_golden_resonance_complete_bernstein_potential_signed_higher n s) := by
   refine ⟨?_, ?_⟩
   · intro s hs
-    unfold derived_golden_resonance_complete_bernstein_potential_potential
-      derived_golden_resonance_complete_bernstein_potential_stieltjes
-    simpa using
-      ((HasDerivAt.sum (u := (Finset.univ : Finset (Fin 2)))
-        (fun i _ => derived_golden_resonance_complete_bernstein_potential_term_hasDerivAt i hs)))
+    have hfun :
+        derived_golden_resonance_complete_bernstein_potential_potential =
+          ∑ i ∈ (Finset.univ : Finset (Fin 2)),
+            fun t => Real.log (t + (derived_golden_resonance_complete_bernstein_potential_positive_zero i) ^ 2) := by
+      ext t
+      simp [derived_golden_resonance_complete_bernstein_potential_potential]
+    have hstieltjes :
+        derived_golden_resonance_complete_bernstein_potential_stieltjes s =
+          ∑ i ∈ (Finset.univ : Finset (Fin 2)),
+            1 / (s + (derived_golden_resonance_complete_bernstein_potential_positive_zero i) ^ 2) := rfl
+    rw [hfun, hstieltjes]
+    exact HasDerivAt.sum (u := Finset.univ)
+      (fun i _ => derived_golden_resonance_complete_bernstein_potential_term_hasDerivAt i hs)
   · intro n s hs
     unfold derived_golden_resonance_complete_bernstein_potential_signed_higher
     refine mul_nonneg (by positivity) ?_

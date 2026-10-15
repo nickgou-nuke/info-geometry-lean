@@ -80,7 +80,7 @@ theorem projective_twistor_sign_trichotomy (p : _root_.ProjectiveTwistorSpace) :
       InfoGeometry.Twistor.PenroseTwistor.IsProjectiveNull p := by
   simpa using InfoGeometry.Twistor.PenroseTwistor.projective_twistor_sign_trichotomy p
 
-def twistorMk (Z : TwistorSpace) (hZ : Z ≠ 0) (hnull : helicity Z = 0) :
+noncomputable def twistorMk (Z : TwistorSpace) (hZ : Z ≠ 0) (hnull : helicity Z = 0) :
     _root_.NullTwistorSpace :=
   InfoGeometry.Twistor.PenroseTwistor.twistorMk Z hZ hnull
 

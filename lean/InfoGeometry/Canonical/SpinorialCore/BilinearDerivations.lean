@@ -12,6 +12,8 @@ namespace InfoGeometry.Canonical.SpinorialCore.DerivationAction
 
 variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V]
 
+attribute [local instance 100] LieRing.ofAssociativeRing LieAlgebra.ofAssociativeAlgebra
+
 /-- Leibniz operators for a bilinear, possibly nonassociative product. -/
 def IsDerivation (μ : V →ₗ[R] V →ₗ[R] V) (D : Module.End R V) : Prop :=
   ∀ x y, D (μ x y) = μ (D x) y + μ x (D y)

@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Lie.Basic
+import Mathlib.Algebra.Lie.OfAssociative
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Module.LinearMap.Basic
 import Mathlib.Tactic.NoncommRing
@@ -25,6 +26,8 @@ concrete transported current family.
 -/
 
 namespace InfoGeometry.Canonical.SplitCliffordSourceCurrentWick
+
+attribute [local instance 100] LieRing.ofAssociativeRing
 
 /--
 Endomorphism-valued Wick/Schwinger commutator law.
@@ -485,8 +488,8 @@ theorem sourceJfin_constructive_window_J_trunc_comm_from_finiteCAR :
     simpa [sourceJfin_eq_JfinIndexed] using hn
   · simpa [sourceJfin_eq_JfinIndexed] using h11
   · simpa [sourceJfin_eq_JfinIndexed] using hNegNeg
-  · simpa [sourceJfin_eq_JfinIndexed] using h1Neg
-  · simpa [sourceJfin_eq_JfinIndexed] using hNeg1
+  · simpa [sourceJfin_eq_JfinIndexed, SplitCliffordFiniteCAR.commM4] using h1Neg
+  · simpa [sourceJfin_eq_JfinIndexed, SplitCliffordFiniteCAR.commM4] using hNeg1
 
 /--
 Concrete two-mode source-side `J/trunc/comm` table from finite CAR data.
@@ -859,10 +862,15 @@ theorem external_infinite_current_completion
   refine ⟨externalInfiniteJ 𝕜 α, ?_, ?_⟩
   · simpa [externalInfiniteJ] using representedChargedFockJ_trunc (𝕜 := 𝕜) α
   · intro m n
-    have hWick := representedChargedFockJ_wick (𝕜 := 𝕜) α m n
+    have hW := representedChargedFockJ_wick (𝕜 := 𝕜) α m n
+    dsimp [scalarHeisenbergShapeEnd, externalInfiniteJ]
     by_cases hmn : m + n = 0
-    · simpa [scalarHeisenbergShapeEnd, hmn] using hWick
-    · simpa [scalarHeisenbergShapeEnd, hmn] using hWick
+    · rw [if_pos hmn]
+      rw [if_pos hmn] at hW
+      exact hW
+    · rw [if_neg hmn, zero_smul]
+      rw [if_neg hmn] at hW
+      exact hW
 
 /--
 The finite two-mode table and the external infinite Heisenberg family are
@@ -877,10 +885,15 @@ theorem finite_vs_external_closure_boundary
     scalarHeisenbergShapeEnd (externalInfiniteJ 𝕜 α) := by
   refine ⟨sourceJfin_not_scalarHeisenbergShape, ?_⟩
   intro m n
-  have hWick := representedChargedFockJ_wick (𝕜 := 𝕜) α m n
+  have hW := representedChargedFockJ_wick (𝕜 := 𝕜) α m n
+  dsimp [scalarHeisenbergShapeEnd, externalInfiniteJ]
   by_cases hmn : m + n = 0
-  · simpa [externalInfiniteJ, scalarHeisenbergShapeEnd, hmn] using hWick
-  · simpa [externalInfiniteJ, scalarHeisenbergShapeEnd, hmn] using hWick
+  · rw [if_pos hmn]
+    rw [if_pos hmn] at hW
+    exact hW
+  · rw [if_neg hmn, zero_smul]
+    rw [if_neg hmn] at hW
+    exact hW
 
 /-! ## Repo-native infinite/current completion from raw CAR -/
 
@@ -1581,7 +1594,10 @@ theorem externalInfiniteJ_currentSugawara_lgen_commutator_one_neg_one
       (2 : 𝕜) •
         (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
           (VirasoroProject.VirasoroAlgebra.lgen 𝕜 0) := by
-  simpa using externalInfiniteJ_currentSugawara_lgen_commutator (𝕜 := 𝕜) α 1 (-1)
+  have h := externalInfiniteJ_currentSugawara_lgen_commutator (𝕜 := 𝕜) α 1 (-1)
+  rw [← Int.cast_smul_eq_zsmul 𝕜] at h
+  norm_num at h ⊢
+  exact h
 
 /--
 Off-diagonal Virasoro `lgen` commutator at modes `(1,0)` in the explicit
@@ -2202,10 +2218,12 @@ theorem sugawara_LJ_comm
     (-(n : 𝕜)) •
       ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).J (m + n)) := by
   let H := externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α
-  simpa [InfoGeometry.Canonical.CurrentSugawaraBridge.CurrentHeisenbergRep.sugawaraStressMode, H]
-    using
-      (VirasoroProject.commutator_sugawaraGen_heiOper
-        (heiOper := H.J) (heiComm := H.comm) (heiTrunc := H.trunc) m n)
+  have h := VirasoroProject.commutator_sugawaraGen_heiOper
+        (heiOper := H.J) (heiComm := H.comm) (heiTrunc := H.trunc) m n
+  change (VirasoroProject.sugawaraGen H.trunc m).commutator (H.J n) = _
+  rw [h, ← Int.cast_smul_eq_zsmul 𝕜]
+  push_cast
+  rfl
 
 theorem sugawara_LL_expand
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) (m n : Int) :
@@ -3247,11 +3265,9 @@ theorem virasoro_rep_on_fock_apply_bracket_readout_two_negTwo
   have hLL := hread.1
   have hcoeff : (((2 ^ 3 - 2 : 𝕜) / (12 : 𝕜)) : 𝕜) = ((6 : 𝕜) / (12 : 𝕜)) := by
     norm_num
-  refine ⟨?_, ?_⟩
-  · simpa [hcoeff] using hLL
-  · refine ⟨?_, ?_⟩
-    · simpa using hread.2.1
-    · simpa using hread.2.2
+  refine ⟨?_, hread.2⟩
+  rw [← Int.cast_smul_eq_zsmul 𝕜] at hLL
+  norm_num [hcoeff] at hLL ⊢
 
 /--
 Concrete represented bracket readout specialization at `(m,n) = (1,-1)`.
@@ -3289,9 +3305,10 @@ theorem virasoro_rep_on_fock_apply_bracket_readout_one_negOne
   have hread := virasoro_rep_on_fock_apply_bracket_readout (𝕜 := 𝕜) α 1 (-1)
   have hcoeff : (((1 ^ 3 - 1 : 𝕜) / (12 : 𝕜)) : 𝕜) = ((0 : 𝕜) / (12 : 𝕜)) := by
     norm_num
-  refine ⟨?_, ?_⟩
-  · simpa [hcoeff] using hread.1
-  · exact hread.2
+  refine ⟨?_, hread.2⟩
+  have h1 := hread.1
+  rw [← Int.cast_smul_eq_zsmul 𝕜] at h1
+  norm_num [hcoeff] at h1 ⊢
 
 /--
 Concrete represented bracket specialization at modes `(2, -2)`.
@@ -3313,7 +3330,8 @@ theorem virasoro_rep_on_fock_apply_bracket_two_negTwo
         (VirasoroProject.VirasoroAlgebra.cgen 𝕜)) := by
   have hread :=
     (virasoro_rep_on_fock_apply_bracket_readout (𝕜 := 𝕜) α 2 (-2)).1
-  simpa using hread
+  rw [← Int.cast_smul_eq_zsmul 𝕜] at hread
+  norm_num at hread ⊢
 
 /--
 Concrete represented bracket specialization at modes `(1, -1)`.
@@ -3335,7 +3353,8 @@ theorem virasoro_rep_on_fock_apply_bracket_one_negOne
         (VirasoroProject.VirasoroAlgebra.cgen 𝕜)) := by
   have hread :=
     (virasoro_rep_on_fock_apply_bracket_readout (𝕜 := 𝕜) α 1 (-1)).1
-  simpa using hread
+  rw [← Int.cast_smul_eq_zsmul 𝕜] at hread
+  norm_num at hread ⊢
 
 /--
 Concrete represented bracket specialization at modes `(1, -1)` with the
@@ -3390,11 +3409,14 @@ theorem source_to_infinite_closure_pipeline
             else 0) := by
   refine ⟨finite_support_not_heisenberg_full, ?_, ?_⟩
   · intro m n
+    have hW := heisenberg_comm_full (𝕜 := 𝕜) α m n
     by_cases hmn : m + n = 0
-    · simpa [scalarHeisenbergShapeEnd, hmn] using
-        heisenberg_comm_full (𝕜 := 𝕜) α m n
-    · simpa [scalarHeisenbergShapeEnd, hmn] using
-        heisenberg_comm_full (𝕜 := 𝕜) α m n
+    · rw [if_pos hmn]
+      rw [if_pos hmn] at hW
+      exact hW
+    · rw [if_neg hmn, zero_smul]
+      rw [if_neg hmn] at hW
+      exact hW
   · intro m n
     exact heisenberg_comm_full (𝕜 := 𝕜) α m n
 
@@ -3611,7 +3633,9 @@ theorem sugawara_commutator_two_neg_two
               VirasoroProject.ChargedFockSpace 𝕜 α)) := by
   have h :=
     sugawara_central_term_eval (𝕜 := 𝕜) α (m := 2) (n := -2) (by norm_num)
-  simpa using h
+  rw [← Int.cast_smul_eq_zsmul 𝕜] at h
+  norm_num at h ⊢
+  exact h
 
 theorem sugawara_commutator_three_neg_three
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
@@ -3626,7 +3650,9 @@ theorem sugawara_commutator_three_neg_three
               VirasoroProject.ChargedFockSpace 𝕜 α)) := by
   have h :=
     sugawara_central_term_eval (𝕜 := 𝕜) α (m := 3) (n := -3) (by norm_num)
-  simpa using h
+  rw [← Int.cast_smul_eq_zsmul 𝕜] at h
+  norm_num at h ⊢
+  exact h
 
 theorem virasoro_lgen_commutator_two_neg_two
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
@@ -3643,6 +3669,8 @@ theorem virasoro_lgen_commutator_two_neg_two
         (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
           (VirasoroProject.VirasoroAlgebra.cgen 𝕜)) := by
   have h := sugawara_LL_full (𝕜 := 𝕜) α (m := 2) (n := -2)
-  simpa using h
+  rw [← Int.cast_smul_eq_zsmul 𝕜] at h
+  norm_num at h ⊢
+  exact h
 
 end InfoGeometry.Canonical.SplitCliffordSourceCurrentWick

@@ -81,8 +81,9 @@ theorem denseRange_rationalToRealInterval :
 
 theorem denseRange_dyadicToRealInterval :
     DenseRange dyadicToRealInterval := by
-  simpa [dyadicToRealInterval, rationalToRealInterval] using
-    denseRange_rationalToRealInterval
+  change DenseRange
+    (rationalToRealInterval : RationalUnitInterval → RealUnitInterval)
+  exact denseRange_rationalToRealInterval
 
 end RealUHFProjectionRankRationalIntervalDensity
 

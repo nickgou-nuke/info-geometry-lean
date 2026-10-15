@@ -96,7 +96,11 @@ lemma xi_bulk_curvature_residue_extremal_recovery_log_tendsto {κ : ℕ}
         atTop (𝓝 (Real.log (rMax : ℝ))) :=
     (Real.continuousAt_log hrpos.ne').tendsto.comp hnorm
   have hinv : Tendsto (fun n : ℕ => (1 / (n : ℝ))) atTop (𝓝 0) := by
-    simpa [one_div] using tendsto_natCast_atTop_atTop.inv_tendsto_atTop
+    have hfun : (fun n : ℕ => 1 / (n : ℝ)) = fun n : ℕ => ((n : ℝ)⁻¹) := by
+      funext n
+      simp
+    rw [hfun]
+    exact tendsto_natCast_atTop_atTop.inv_tendsto_atTop
   have hsmall :
       Tendsto
         (fun n : ℕ =>

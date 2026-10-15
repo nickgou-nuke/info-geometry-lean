@@ -38,7 +38,9 @@ theorem P_translation_pseudo_self_adjoint
   have hM_sq := transpose_sq_mul_eta sc.Q_M eta hM
   have hN_sq := transpose_sq_mul_eta sc.Q_N eta hN
   dsimp [P_translation, K_M, K_N]
-  rw [transpose_smul, transpose_sub]
+  -- `P_translation` is a scalar multiple of the difference, so after
+  -- unfolding the transpose is applied only to that difference.
+  rw [transpose_sub]
   rw [smul_mul_assoc, sub_mul, hM_sq, hN_sq, ← mul_sub,
     ← mul_smul_comm]
 

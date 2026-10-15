@@ -1,5 +1,8 @@
 import Mathlib.Tactic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Inv
+import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 
 /-!
 # InfoGeometry.Algebra.Zorn.ConcreteBarrier
@@ -309,12 +312,14 @@ theorem barrier_deriv_a
       (fun x : ℝ => - Real.log x - Real.log b)
       (-(1 / a))
       a := by
-  have h1 : HasDerivAt (fun x : ℝ => -(Real.log x)) (-(1 / a)) a := by
-    simpa [one_div] using (Real.hasDerivAt_log ha).neg
-  have h2 : HasDerivAt (fun _ : ℝ => -Real.log b) 0 a := by
-    simpa using hasDerivAt_const a (-Real.log b)
-  change HasDerivAt ((fun x : ℝ => -Real.log x) + fun _ : ℝ => -Real.log b) (-(1 / a)) a
-  simpa using h1.add h2
+  have h_fun : (fun x : ℝ => - Real.log x - Real.log b) = (fun x : ℝ => (-Real.log x) + (-Real.log b)) := by
+    ext x
+    rw [sub_eq_add_neg]
+  rw [h_fun]
+  have h1 := (Real.hasDerivAt_log ha).neg
+  have h2 := h1.add_const (-Real.log b)
+  have h_eq : - a⁻¹ = -(1 / a) := by rw [inv_eq_one_div]
+  exact h2.congr_deriv h_eq
 
 /--
 First derivative in the `b` coordinate:
@@ -328,12 +333,14 @@ theorem barrier_deriv_b
       (fun y : ℝ => - Real.log a - Real.log y)
       (-(1 / b))
       b := by
-  have h1 : HasDerivAt (fun _ : ℝ => -Real.log a) 0 b := by
-    simpa using hasDerivAt_const b (-Real.log a)
-  have h2 : HasDerivAt (fun y : ℝ => -(Real.log y)) (-(1 / b)) b := by
-    simpa [one_div] using (Real.hasDerivAt_log hb).neg
-  change HasDerivAt ((fun _ : ℝ => -Real.log a) + fun y : ℝ => -Real.log y) (-(1 / b)) b
-  simpa [add_comm] using h1.add h2
+  have h_fun : (fun y : ℝ => - Real.log a - Real.log y) = (fun y : ℝ => (-Real.log a) + (-Real.log y)) := by
+    ext y
+    rw [sub_eq_add_neg]
+  rw [h_fun]
+  have h1 := (Real.hasDerivAt_log hb).neg
+  have h2 := h1.const_add (-Real.log a)
+  have h_eq : - b⁻¹ = -(1 / b) := by rw [inv_eq_one_div]
+  exact h2.congr_deriv h_eq
 
 /--
 Second derivative in the `a` coordinate:
@@ -347,15 +354,14 @@ theorem barrier_hessian_a
       (fun x : ℝ => -(1 / x))
       (1 / (a ^ 2))
       a := by
-  have h :
-      HasDerivAt
-        (fun x : ℝ => - x⁻¹)
-        (a⁻¹ ^ 2)
-        a := by
-    simpa using (hasDerivAt_inv ha).neg
-  have hder : a⁻¹ ^ 2 = 1 / (a ^ 2) := by
-    field_simp [ha]
-  simpa [one_div, hder] using h
+  have h_inv : (fun x : ℝ => -(1 / x)) = (fun x : ℝ => - x⁻¹) := by
+    ext x
+    rw [inv_eq_one_div]
+  rw [h_inv]
+  have h1 := (hasDerivAt_inv ha).neg
+  have h_eq : - - (a ^ 2)⁻¹ = 1 / (a ^ 2) := by
+    rw [neg_neg, inv_eq_one_div]
+  exact h1.congr_deriv h_eq
 
 /--
 Second derivative in the `b` coordinate:
@@ -369,15 +375,14 @@ theorem barrier_hessian_b
       (fun y : ℝ => -(1 / y))
       (1 / (b ^ 2))
       b := by
-  have h :
-      HasDerivAt
-        (fun y : ℝ => - y⁻¹)
-        (b⁻¹ ^ 2)
-        b := by
-    simpa using (hasDerivAt_inv hb).neg
-  have hder : b⁻¹ ^ 2 = 1 / (b ^ 2) := by
-    field_simp [hb]
-  simpa [one_div, hder] using h
+  have h_inv : (fun y : ℝ => -(1 / y)) = (fun y : ℝ => - y⁻¹) := by
+    ext y
+    rw [inv_eq_one_div]
+  rw [h_inv]
+  have h1 := (hasDerivAt_inv hb).neg
+  have h_eq : - - (b ^ 2)⁻¹ = 1 / (b ^ 2) := by
+    rw [neg_neg, inv_eq_one_div]
+  exact h1.congr_deriv h_eq
 
 /-- The `a` Hessian entry is positive inside the positive cone. -/
 theorem barrier_hessian_a_pos

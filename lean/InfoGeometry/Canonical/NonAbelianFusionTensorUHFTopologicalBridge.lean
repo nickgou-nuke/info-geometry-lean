@@ -88,7 +88,10 @@ theorem fusionTensorToUHFTopologicalColimit_stage_apply
         (fusionTensorTopologicalDiagram (K := ℂ)) n X) =
       topologicalInclusion T 2 (fusionTensorStageTwoAlgEquiv X) := by
   have h := fusionTensorToUHFTopologicalColimit_stage T n
-  have hx := congrArg (fun f => f X) h
-  simpa only [Category.assoc, fusionTensorStageTwoTopCatHom_apply] using hx
+  dsimp [topologicalDiagram] at h
+  have hx := ConcreteCategory.congr_hom h X
+  simp only [CategoryTheory.comp_apply] at hx
+  dsimp [fusionTensorStageTwoTopCatHom] at hx
+  exact hx
 
 end InfoGeometry.Canonical.NonAbelianFusionTensorUHFTopologicalBridge

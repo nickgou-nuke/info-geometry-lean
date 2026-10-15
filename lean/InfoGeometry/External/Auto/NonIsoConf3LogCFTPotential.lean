@@ -24,7 +24,10 @@ structure LogPotentialSystem (S : Type*) where
   beta : ℝ
   nonempty : Nonempty S
 
-attribute [instance] LogPotentialSystem.fintypeS
+/- The finite type is indexed by a particular system, so its projection cannot
+be a global instance: typeclass search has no way to recover that system from
+the target `Fintype S`. Definitions that sum over states install the stored
+instance locally from `sys.fintypeS`. -/
 
 variable {S S₁ S₂ : Type*}
 

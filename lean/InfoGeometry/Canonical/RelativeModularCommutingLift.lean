@@ -1,5 +1,4 @@
 import InfoGeometry.Canonical.RelativeModularHamiltonian
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
 
 open scoped BigOperators
@@ -48,8 +47,8 @@ theorem relativeModularOperator_mul_comm
 theorem relativeModularOperator_commute
     (q q0 r r0 : PositiveRay (Fin n)) :
     Commute (relativeModularOperator (n := n) q q0)
-      (relativeModularOperator (n := n) r r0) := by
-  simpa [Commute] using relativeModularOperator_mul_comm (n := n) q q0 r r0
+      (relativeModularOperator (n := n) r r0) :=
+  relativeModularOperator_mul_comm (n := n) q q0 r r0
 
 /--
 Logarithmic cocycle on the diagonal readout of `Δ`.

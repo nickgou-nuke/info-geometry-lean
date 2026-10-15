@@ -1,5 +1,5 @@
 import InfoGeometry.Physics.NuclearBdGTwoLevelExact
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import Mathlib.Algebra.Star.Basic
 import Mathlib.Data.Matrix.Basic
 
@@ -7,6 +7,7 @@ namespace InfoGeometry.Physics.AndreevHawking
 
 open Matrix
 open Complex
+open InfoGeometry.Physics.NuclearBdGTwoLevelExact
 
 /-!
 # The Universal Breathing Engine: Andreev-Hawking Phase Mirror
@@ -31,11 +32,11 @@ theorem andreev_hawking_time_reversal (ξ Δ : ℝ) (ψ : V2C) :
 
 /--
 MASTER COROLLARY: The Breathing Cycle.
-Reflecting off the holographic conjugate mirror twice perfectly restores the original state,
-completing the quantum respiratory cycle (Inhale -> Bounce -> Exhale -> Bounce).
+Reflecting off the holographic conjugate mirror twice produces the fermionic Kramers phase sign,
+completing the half respiratory cycle (Inhale -> Bounce -> Exhale -> Bounce).
 -/
 theorem universal_breathing_cycle (ψ : V2C) :
-    PhaseConjugateMirror (PhaseConjugateMirror ψ) = ψ := by
+    PhaseConjugateMirror (PhaseConjugateMirror ψ) = -ψ := by
   exact particleHole_sq ψ
 
 end InfoGeometry.Physics.AndreevHawking

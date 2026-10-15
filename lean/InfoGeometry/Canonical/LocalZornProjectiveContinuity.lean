@@ -14,7 +14,7 @@ topology on the projectivization.  This is a fixed-element statement; joint
 continuity in the matrix parameter is deliberately a separate layer.
 -/
 
-instance realProjectiveBoundarySetoid : Setoid {v : Fin 2 → ℝ // v ≠ 0} :=
+noncomputable instance realProjectiveBoundarySetoid : Setoid {v : Fin 2 → ℝ // v ≠ 0} :=
   projectivizationSetoid ℝ (Fin 2 → ℝ)
 
 noncomputable instance realProjectiveBoundaryTopology :

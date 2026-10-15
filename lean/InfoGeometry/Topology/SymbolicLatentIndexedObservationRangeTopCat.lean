@@ -173,7 +173,7 @@ noncomputable def indexedObservationRangeHomeomorph
     · intro hv
       rcases hv with ⟨y, rfl⟩
       refine ⟨F.latent.symm y, ?_⟩
-      simpa using
+      simpa [indexedCoordinateActionHomeomorph] using
         (indexedCoordinateAction_observationMap F (F.latent.symm y)).symm
     · intro hv
       rcases hv with ⟨x, hx⟩
@@ -208,7 +208,7 @@ noncomputable def indexedQuotientRangeHomeomorph
       intro y
       refine ⟨_root_.Quotient.mk (symbolicObservationalSetoid S)
           (F.latent.symm y), ?_⟩
-      simpa using
+      simpa [indexedCoordinateActionHomeomorph] using
         (indexedCoordinateAction_observationMap F (F.latent.symm y)).symm
     · intro hv
       rcases hv with ⟨q, hq⟩
@@ -224,9 +224,6 @@ noncomputable def indexedQuotientRangeHomeomorph
               (F.latent x))) =
         indexedCoordinateAction F v
       rw [symbolicObservationQuotientMap_mk]
-      change indexedCoordinateAction F
-          (symbolicObservationMap T (F.latent x)) =
-        indexedCoordinateAction F v
       rw [indexedCoordinateAction_observationMap F x]
       change symbolicObservationMap S x = indexedCoordinateAction F v at hq
       exact hq)

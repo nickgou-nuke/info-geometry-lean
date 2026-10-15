@@ -105,10 +105,11 @@ theorem concreteHestenesPhaseLogStageReadout_eq_finite
     (n : ℕ) :
     concreteHestenesPhaseLogStageReadout n =
       finiteHestenesLogOperator concreteHestenesPhaseModularDatum (n + 1) := by
-  simpa [concreteHestenesPhaseLogStageReadout,
-    finiteHestenesLogOperator] using
-    concreteHestenesPhaseCoefficientStageReadout_eq_finite
-      logCoefficients n
+  change concreteHestenesPhaseCoefficientStageReadout
+      (fun k => Real.log (k : ℝ)) n =
+    finiteHestenesDirichletOperator concreteHestenesPhaseModularDatum
+      (n + 1) (fun k => Real.log (k : ℝ))
+  exact concreteHestenesPhaseCoefficientStageReadout_eq_finite _ _
 
 theorem concreteHestenesPhaseMangoldtStageReadout_eq_finite
     (n : ℕ) :

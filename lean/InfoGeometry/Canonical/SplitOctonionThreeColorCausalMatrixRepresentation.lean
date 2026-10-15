@@ -33,6 +33,11 @@ def threeColorMatrixIndexEquiv : Fin 4 ≃ (Fin 2 × Fin 2) where
     | mk i j =>
         fin_cases i <;> fin_cases j <;> rfl
 
+@[simp] theorem threeColorMatrixIndexEquiv_zero : threeColorMatrixIndexEquiv 0 = (0, 0) := rfl
+@[simp] theorem threeColorMatrixIndexEquiv_one : threeColorMatrixIndexEquiv 1 = (1, 1) := rfl
+@[simp] theorem threeColorMatrixIndexEquiv_two : threeColorMatrixIndexEquiv 2 = (0, 1) := rfl
+@[simp] theorem threeColorMatrixIndexEquiv_three : threeColorMatrixIndexEquiv 3 = (1, 0) := rfl
+
 /-- A native basis of the coloured core, obtained from the finite-dimensional
 vector-space structure already proved in the split-octonion core owner. -/
 noncomputable def threeColorCoreMatrixBasis

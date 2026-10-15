@@ -149,11 +149,9 @@ noncomputable def observableColimitActionEquiv
 
 @[simp] theorem observableColimitActionEquiv_one :
     observableColimitActionEquiv (1 : Equiv.Perm ColorChannel) =
-      (StarAlgEquiv.refl :
-        FilteredStarAlgebraDirectLimit.AlgebraicStarDirectLimit
-          ObservableStage (constantObservableSystem) ≃⋆ₐ[ℂ]
-          FilteredStarAlgebraDirectLimit.AlgebraicStarDirectLimit
-            ObservableStage (constantObservableSystem)) := by
+      StarAlgEquiv.refl ℂ
+        (FilteredStarAlgebraDirectLimit.AlgebraicStarDirectLimit
+          ObservableStage constantObservableSystem) := by
   simpa [observableColimitActionEquiv] using
     algebraicColimitGroupActionEquiv_one
       (I := ℕ) (G := Equiv.Perm ColorChannel)

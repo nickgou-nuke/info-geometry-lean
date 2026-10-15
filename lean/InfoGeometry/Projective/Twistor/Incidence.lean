@@ -51,6 +51,63 @@ def Incidence (I : TwistorIncidenceDatum 𝕜 T D) : DualTwistor I → T → Pro
     I.Incidence ξ (I.twScale u Z) ↔ I.Incidence ξ Z :=
   I.incidence_scale_right u ξ Z
 
+/-- The two vertex colors of the directed incidence graph: twistors are black,
+and dual twistors are white. -/
+abbrev BlackWhiteVertex (_I : TwistorIncidenceDatum 𝕜 T D) : Type u :=
+  Sum T D
+
+/-- A directed black-to-white graph edge is precisely the existing Penrose
+incidence relation `I.Incidence W Z`; no beta or causal interpretation is
+inserted here. -/
+def blackWhiteIncidenceEdge (I : TwistorIncidenceDatum 𝕜 T D) :
+    BlackWhiteVertex I → BlackWhiteVertex I → Prop
+  | .inl Z, .inr W => I.Incidence W Z
+  | _, _ => False
+
+/-- The actual twistor-pair payload of a graph edge. -/
+abbrev TwistorPairEdge (I : TwistorIncidenceDatum 𝕜 T D) : Type u :=
+  {p : I.TwistorPair // I.Incidence p.2 p.1}
+
+/-- Black endpoint of an incidence edge is its twistor component. -/
+def incidenceEdgeSource (I : TwistorIncidenceDatum 𝕜 T D)
+    (e : TwistorPairEdge I) : BlackWhiteVertex I :=
+  Sum.inl e.1.1
+
+/-- White endpoint of an incidence edge is its dual-twistor component. -/
+def incidenceEdgeTarget (I : TwistorIncidenceDatum 𝕜 T D)
+    (e : TwistorPairEdge I) : BlackWhiteVertex I :=
+  Sum.inr e.1.2
+
+/-- Construct the edge payload from an actual twistor-incidence proof. -/
+def twistorPairEdgeOfIncidence (I : TwistorIncidenceDatum 𝕜 T D)
+    (Z : T) (W : D) (h : I.Incidence W Z) : TwistorPairEdge I :=
+  ⟨(Z, W), h⟩
+
+@[simp] theorem incidenceEdgeSource_pair
+    (I : TwistorIncidenceDatum 𝕜 T D) (Z : T) (W : D)
+    (h : I.Incidence W Z) :
+    incidenceEdgeSource I (twistorPairEdgeOfIncidence I Z W h) = Sum.inl Z := rfl
+
+@[simp] theorem incidenceEdgeTarget_pair
+    (I : TwistorIncidenceDatum 𝕜 T D) (Z : T) (W : D)
+    (h : I.Incidence W Z) :
+    incidenceEdgeTarget I (twistorPairEdgeOfIncidence I Z W h) = Sum.inr W := rfl
+
+@[simp] theorem incidenceEdge_source_target (I : TwistorIncidenceDatum 𝕜 T D)
+    (e : TwistorPairEdge I) :
+    blackWhiteIncidenceEdge I (incidenceEdgeSource I e) (incidenceEdgeTarget I e) :=
+  e.2
+
+@[simp] theorem blackWhiteIncidenceEdge_twistor_dual
+    (I : TwistorIncidenceDatum 𝕜 T D) (Z : T) (W : D) :
+    blackWhiteIncidenceEdge I (.inl Z) (.inr W) ↔ I.Incidence W Z :=
+  Iff.rfl
+
+@[simp] theorem blackWhiteIncidenceEdge_dual_twistor
+    (I : TwistorIncidenceDatum 𝕜 T D) (W : D) (Z : T) :
+    blackWhiteIncidenceEdge I (.inr W) (.inl Z) ↔ False :=
+  Iff.rfl
+
 end TwistorIncidenceDatum
 
 /-! ## Concrete Penrose null-projective owner
@@ -75,7 +132,6 @@ noncomputable def penroseProjectiveNullTwistor_nonempty :
     rw [InfoGeometry.Twistor.PenroseTwistor.helicity,
       InfoGeometry.Twistor.PenroseTwistor.twistorHermitian_apply]
     norm_num [z, Fin.sum_univ_succ]
-    simp [z]
   exact ⟨InfoGeometry.Twistor.PenroseTwistor.twistorMk z hz hnull⟩
 
 end InfoGeometry.Projective.Twistor

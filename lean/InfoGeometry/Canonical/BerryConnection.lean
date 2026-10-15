@@ -514,7 +514,9 @@ theorem deriv_berryOfOperator_expTransport_at
           u v)
         t := by
     simpa [hωEval] using hApply
-  simpa [hestenesMaurerCartanCurvature] using hMain.deriv
+  rw [hestenesMaurerCartanCurvature,
+    ← InfoGeometry.Canonical.BogoliubovTransport.lieBracket_eq_transportCommutator]
+  exact hMain.deriv
 
 section WeylModular
 
@@ -634,7 +636,8 @@ theorem deriv_hestenesWeylModularBerryTransport_at_eq_hestenesWeylModularBerryTw
         (hestenesWeylModularConnectionAxis g hMod)
         (hestenesWeylModularConnectionGenerator g hMod A)
         t) u v := by
-  simpa [hestenesWeylModularConnectionAxis] using
+  simpa [hestenesWeylModularConnectionAxis,
+    hestenesWeylModularConnectionGenerator] using
     deriv_berryOfOperator_expTransport_at
       (E := E)
       (X := hestenesWeylModularConnectionAxis g hMod)

@@ -32,13 +32,15 @@ amplituhedron and not a proof that the current rank fixture computes an
 - `InfoGeometry.Projective.TwistorAmplituhedronBridge.arnold_mixed_relation_kernel_readout`
   exposes the finite Arnold kernel-annihilation readout at the same bridge
   layer.
-- `InfoGeometry.Projective.OnShellResidueBCFWBridge.local_dlog_residue`
-  reuses the Klein `dlog` theorem to read out the local `2*pi*i` residue.
-- `InfoGeometry.Projective.OnShellResidueBCFWBridge.residue_bcfw`
-  exposes the residue-balance-to-BCFW implication as explicit data.
-- `InfoGeometry.Projective.OnShellResidueBCFWBridge.diagram_compression_count`
-  proves only the finite bookkeeping inequality for the supplied `220 -> 1`
-  comparison.
+- `InfoGeometry.Projective.KleinQuadricGrothendieckDeRham.circleIntegral_grothendieck_dlog`
+  is the owner of the local `2*pi*i` circle-integral identity; there is no
+  separate forwarding residue theorem.
+- `InfoGeometry.Topology.GrandUnificationLinker.dag_edge_commutes_with_symmetric_mixed`
+  proves commutation of the specified DAG edge with its symmetric mixed
+  element. This ring identity is not a residue balance or BCFW theorem.
+The former `220 -> 1` diagram-count packet was fixed-value bookkeeping, not a
+derived amplitudes result, and is not part of the Lean API. Arnold kernel
+annihilation remains owned by `InfoGeometry.Projective.ArnoldRelations`.
 
 ## Conditional Interfaces
 
@@ -61,12 +63,9 @@ cooperad/Arnold relation to a BCFW-style readout.
 Neither theorem proves the comparison.  They only keep downstream code honest
 about the required premise.
 
-```lean
-residue_bcfw
-```
-
-Use this when a separate residue owner supplies a three-pole global residue
-balance and an implication from that balance to the chosen BCFW boundary.
+The current finite DAG-edge commutation theorem has no residue-balance input.
+A genuine residue-to-BCFW result remains an open comparison obligation and
+must not be inferred from that algebraic commutation identity.
 
 ## Assumptions Required For The Next Lane
 

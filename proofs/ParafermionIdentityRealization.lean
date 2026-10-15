@@ -35,10 +35,15 @@ open UHFInductiveColimit
 abbrev M3C := Matrix (Fin 3) (Fin 3) ℂ
 abbrev ParafermionStage4 := CuntzAlg ℂ (Fin 4)
 
-/-- `CuntzAlg` derives `Semiring` which shadows `RingQuot`'s `Ring`.
-Explicitly provide `Ring` (and hence `AddCommGroup`) via the unfolding. -/
-noncomputable instance : Ring ParafermionStage4 :=
-  show Ring (RingQuot (Rel (R := ℂ) (ι := Fin 4))) from inferInstance
+noncomputable instance (priority := 2000) : Ring ParafermionStage4 :=
+  inferInstanceAs (Ring (RingQuot (Rel (R := ℂ) (ι := Fin 4))))
+
+noncomputable instance (priority := 2000) : Algebra ℂ ParafermionStage4 :=
+  inferInstanceAs (Algebra ℂ (RingQuot (Rel (R := ℂ) (ι := Fin 4))))
+
+noncomputable instance : Module ℂ ParafermionStage4 := by
+  infer_instance
+
 
 /-! ## 1. Identity realization — the parafermion algebra acts on itself -/
 

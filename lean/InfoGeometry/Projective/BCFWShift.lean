@@ -1,5 +1,4 @@
 import Mathlib.Tactic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.ArnoldRelations
 
 namespace InfoGeometry.Projective.BCFWShift
@@ -52,10 +51,8 @@ noncomputable def bcfwAlgebraShift : RingQuot (ArnoldRel R ι) →+* RingQuot (A
 /-- Evaluating the lifted shift on a quotient image simplifies to the exterior shift. -/
 theorem bcfwAlgebraShift_mkRingHom (x : ExteriorAlgebra R (EdgeModule R ι)) :
     bcfwAlgebraShift R ι f ((RingQuot.mkRingHom (ArnoldRel R ι)) x) =
-    (RingQuot.mkRingHom (ArnoldRel R ι)) (bcfwExteriorShift R ι f x) := by
-  dsimp [bcfwAlgebraShift]
-  rw [RingQuot.lift_mkRingHom_apply]
-  rfl
+    (RingQuot.mkRingHom (ArnoldRel R ι)) (bcfwExteriorShift R ι f x) :=
+  RingQuot.lift_mkRingHom_apply _ _ x
 
 /-- The lifted shift maps the mixed relation expression to the shifted mixed relation expression. -/
 theorem bcfwShift_eval_mixed (i j k : ι) :

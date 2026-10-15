@@ -22,10 +22,11 @@ theorem paper_typed_address_biaxial_completion_window6_two_sheet_charts (baseVal
       terminalFoldbin6BoundaryOffsets = {34} ∧
       terminalFoldbin6TailOffsets = {21, 34, 55} := by
   rcases paper_terminal_foldbin6_boundary_pure_f9_alias baseValue with ⟨htail, hbdry, halias⟩
+  rcases fold6_tail_offsets with ⟨h8, h9, h10⟩
   refine ⟨rfl, ?_, ?_, ?_⟩
   · refine ⟨?_, upliftOrientationParity_two_swap⟩
-    simpa using halias
-  · simpa using hbdry
-  · simpa using htail
+    simpa [h9] using halias
+  · simpa [h9] using hbdry
+  · simpa [h8, h9, h10] using htail
 
 end Omega.TypedAddressBiaxialCompletion

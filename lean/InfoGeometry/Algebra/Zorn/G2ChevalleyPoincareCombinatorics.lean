@@ -36,7 +36,11 @@ inductive G2PositiveRoot : Type
   | two_alpha_beta       -- 2α + β (short)
   | three_alpha_beta     -- 3α + β (long)
   | three_alpha_two_beta -- 3α + 2β (long, highest root)
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype G2PositiveRoot where
+  elems := { .alpha, .beta, .alpha_add_beta, .two_alpha_beta, .three_alpha_beta, .three_alpha_two_beta }
+  complete := by rintro (_ | _ | _ | _ | _ | _) <;> simp
 
 /-- Height of each positive root -/
 def rootHeight : G2PositiveRoot → ℕ
@@ -82,7 +86,11 @@ inductive G2WeylElement : Type
   | s1s2s1s2s1
   | s2s1s2s1s2
   | w0
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype G2WeylElement where
+  elems := { .id, .s1, .s2, .s1s2, .s2s1, .s1s2s1, .s2s1s2, .s1s2s1s2, .s2s1s2s1, .s1s2s1s2s1, .s2s1s2s1s2, .w0 }
+  complete := by rintro (_ | _ | _ | _ | _ | _ | _ | _ | _ | _ | _ | _) <;> simp
 
 /-- Theorem: The Weyl group W(G₂) has order 12. -/
 theorem weyl_group_card : Fintype.card G2WeylElement = 12 := by

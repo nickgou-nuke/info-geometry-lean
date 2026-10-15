@@ -109,11 +109,10 @@ private lemma xi_time_part62dc_hologram_selfaffine_cantor_dynamics_left_right_ne
     xi_time_part62dc_hologram_selfaffine_cantor_dynamics_left_digit D ≠
       xi_time_part62dc_hologram_selfaffine_cantor_dynamics_right_digit D := by
   intro h
-  have : (0 : Fin 2) = 1 := by
-    simpa [xi_time_part62dc_hologram_selfaffine_cantor_dynamics_left_digit,
-      xi_time_part62dc_hologram_selfaffine_cantor_dynamics_right_digit,
-      Omega.Conclusion.CanonicalSliceData.M] using h
-  norm_num at this
+  have hval := congrArg Fin.val h
+  norm_num [xi_time_part62dc_hologram_selfaffine_cantor_dynamics_left_digit,
+    xi_time_part62dc_hologram_selfaffine_cantor_dynamics_right_digit,
+    Omega.Conclusion.CanonicalSliceData.M] at hval
 
 private lemma xi_time_part62dc_hologram_selfaffine_cantor_dynamics_first_difference_at_one
     (D : xi_time_part62dc_hologram_selfaffine_cantor_dynamics_data) :
@@ -142,12 +141,16 @@ private lemma xi_time_part62dc_hologram_selfaffine_cantor_dynamics_left_branch_p
   ext c
   constructor
   · intro hc
+    change c 0 = xi_time_part62dc_hologram_selfaffine_cantor_dynamics_left_digit D at hc
     funext i
     fin_cases i
-    simpa [xi_time_part62dc_hologram_selfaffine_cantor_dynamics_left_prefix] using hc
+    simpa [xi_time_part62dc_hologram_selfaffine_cantor_dynamics_left_prefix,
+      Omega.Conclusion.canonicalPrefix] using hc
   · intro hc
-    simpa [xi_time_part62dc_hologram_selfaffine_cantor_dynamics_left_prefix] using
-      congrFun hc ⟨0, by decide⟩
+    have hzero := congrFun hc ⟨0, by decide⟩
+    change c 0 = xi_time_part62dc_hologram_selfaffine_cantor_dynamics_left_digit D
+    simpa [xi_time_part62dc_hologram_selfaffine_cantor_dynamics_left_prefix,
+      Omega.Conclusion.canonicalPrefix] using hzero
 
 private lemma xi_time_part62dc_hologram_selfaffine_cantor_dynamics_right_branch_piece_eq_coset
     (D : xi_time_part62dc_hologram_selfaffine_cantor_dynamics_data) :
@@ -159,12 +162,16 @@ private lemma xi_time_part62dc_hologram_selfaffine_cantor_dynamics_right_branch_
   ext c
   constructor
   · intro hc
+    change c 0 = xi_time_part62dc_hologram_selfaffine_cantor_dynamics_right_digit D at hc
     funext i
     fin_cases i
-    simpa [xi_time_part62dc_hologram_selfaffine_cantor_dynamics_right_prefix] using hc
+    simpa [xi_time_part62dc_hologram_selfaffine_cantor_dynamics_right_prefix,
+      Omega.Conclusion.canonicalPrefix] using hc
   · intro hc
-    simpa [xi_time_part62dc_hologram_selfaffine_cantor_dynamics_right_prefix] using
-      congrFun hc ⟨0, by decide⟩
+    have hzero := congrFun hc ⟨0, by decide⟩
+    change c 0 = xi_time_part62dc_hologram_selfaffine_cantor_dynamics_right_digit D
+    simpa [xi_time_part62dc_hologram_selfaffine_cantor_dynamics_right_prefix,
+      Omega.Conclusion.canonicalPrefix] using hzero
 
 private lemma xi_time_part62dc_hologram_selfaffine_cantor_dynamics_one_prefix_cylinder_image
     (D : xi_time_part62dc_hologram_selfaffine_cantor_dynamics_data) :

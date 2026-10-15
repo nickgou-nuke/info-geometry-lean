@@ -21,6 +21,6 @@ theorem paper_scan_projection_address_clarity_monotone_seeds
     simpa [hzero] using (paper_scan_projection_address_bayes_optimality_seeds μ h₀ P).2
   · rintro ⟨A, hA⟩
     have hle := (paper_scan_projection_address_bayes_optimality_seeds μ h₀ P).1 A
-    exact le_antisymm (by simpa [hA] using hle) (zero_le _)
+    exact le_antisymm (by simpa [hA] using hle) bot_le
 
 end Omega.SPG

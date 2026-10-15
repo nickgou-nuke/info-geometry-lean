@@ -30,7 +30,11 @@ inductive QuadricDivisor where
   | QA
   | QB
   | QAB
-  deriving DecidableEq, Fintype, Repr
+  deriving DecidableEq, Repr
+
+instance : Fintype QuadricDivisor where
+  elems := {QuadricDivisor.QA, QuadricDivisor.QB, QuadricDivisor.QAB}
+  complete := by intro x; cases x <;> simp
 
 open QuadricDivisor
 
@@ -246,7 +250,11 @@ theorem gysin_tate_twist_shift (n q : ℤ) :
 inductive CollapseSlot where
   | inner
   | outer
-  deriving DecidableEq, Fintype, Repr
+  deriving DecidableEq, Repr
+
+instance : Fintype CollapseSlot where
+  elems := {CollapseSlot.inner, CollapseSlot.outer}
+  complete := by intro x; cases x <;> simp
 
 /-- Collapse of the `K₃` edges along the cluster `{1,2}`.  The edge `12` is
 internal; the two edges from the cluster to point `3` become the same outer

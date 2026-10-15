@@ -55,9 +55,11 @@ theorem hasDerivAt_barrierHessian {p : ℝ} (hp : p ∈ Set.Ioo (0 : ℝ) 1) :
   have hright := (hasDerivAt_const p (1 : ℝ)).div
     (((hasDerivAt_const p (1 : ℝ)).sub (hasDerivAt_id p)).pow 2) (pow_ne_zero _ hq0)
   convert hleft.add hright using 1
-  dsimp
-  field_simp
-  ring
+  · funext x
+    simp [intervalBarrierHessian, pow_two]
+  · simp [Function.id_def]
+    field_simp [hp0, hq0]
+    <;> ring
 
 /-- Actual Hessian derivative obeys the finite self-concordance inequality. -/
 theorem barrier_self_concordance {p : ℝ} (hp : p ∈ Set.Ioo (0 : ℝ) 1) :

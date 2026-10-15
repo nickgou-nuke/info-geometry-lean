@@ -42,18 +42,18 @@ def affinePinToAffineNativeOrthogonal :
       nativeOrthogonalAction (realSplitPinOrthogonalAction g) x
     rfl)
 
-theorem affinePinToAffineNativeOrthogonal_left
+@[simp] theorem affinePinToAffineNativeOrthogonal_left
     (x : AffinePin55Native) :
     (affinePinToAffineNativeOrthogonal x).left = x.left := by
   -- left coordinate is preserved by `SemidirectProduct.map`.
-  simpa [affinePinToAffineNativeOrthogonal]
+  simp [affinePinToAffineNativeOrthogonal]
 
-theorem affinePinToAffineNativeOrthogonal_right
+@[simp] theorem affinePinToAffineNativeOrthogonal_right
     (x : AffinePin55Native) :
     (affinePinToAffineNativeOrthogonal x).right =
       realSplitPinOrthogonalAction x.right := by
   -- right coordinate follows the codomain action on the second component.
-  simpa [affinePinToAffineNativeOrthogonal]
+  simp [affinePinToAffineNativeOrthogonal]
 
 theorem affinePinToAffineNativeOrthogonal_mem_kernel_iff
     (x : AffinePin55Native) :
@@ -64,7 +64,8 @@ theorem affinePinToAffineNativeOrthogonal_mem_kernel_iff
     have hzero : x.left = 1 := by
       have h := congrArg SemidirectProduct.left
         (MonoidHom.mem_ker.mp hx)
-      simpa using h
+      rw [affinePinToAffineNativeOrthogonal_left] at h
+      exact h
     have hsign : x.right ∈ realSplitPinSignSubgroup := by
       have h := congrArg SemidirectProduct.right
         (MonoidHom.mem_ker.mp hx)
@@ -76,7 +77,7 @@ theorem affinePinToAffineNativeOrthogonal_mem_kernel_iff
   · rintro ⟨hzero, hsign⟩
     rw [MonoidHom.mem_ker]
     apply SemidirectProduct.ext
-    · simpa [hzero]
+    · simp [hzero]
     · have hk : x.right ∈ (realSplitPinOrthogonalAction).ker :=
         by simpa [realSplitPinOrthogonalAction_kernel_eq_signSubgroup] using hsign
       exact MonoidHom.mem_ker.mp hk
@@ -120,12 +121,10 @@ noncomputable def affinePinQuotientEquiv :
 
 theorem affinePinQuotientEquiv_mk (x : AffinePin55Native) :
     affinePinQuotientEquiv (QuotientGroup.mk x) =
-      affinePinToAffineNativeOrthogonal x :=
-  by
+      affinePinToAffineNativeOrthogonal x := by
   change
     QuotientGroup.kerLift affinePinToAffineNativeOrthogonal (QuotientGroup.mk x) =
       affinePinToAffineNativeOrthogonal x
-  simpa [affinePinQuotientEquiv, QuotientGroup.quotientKerEquivOfSurjective] using
-    (QuotientGroup.kerLift_mk (φ := affinePinToAffineNativeOrthogonal) x)
+  exact QuotientGroup.kerLift_mk (φ := affinePinToAffineNativeOrthogonal) x
 
 end AffinePin55Cover

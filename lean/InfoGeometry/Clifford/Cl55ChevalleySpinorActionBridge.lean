@@ -28,6 +28,11 @@ abbrev SpinorCarrier55 := SpinorSpace ℝ W5
 abbrev CliffordCarrier55 := CliffordAlgebra (splitQ (R := ℝ) (W := W5))
 abbrev SpinorEnd55 := Module.End ℝ SpinorCarrier55
 
+local instance : LieRing CliffordCarrier55 := LieRing.ofAssociativeRing
+local instance : LieAlgebra ℝ CliffordCarrier55 := LieAlgebra.ofAssociativeAlgebra
+local instance : LieRing SpinorEnd55 := LieRing.ofAssociativeRing
+local instance : LieAlgebra ℝ SpinorEnd55 := LieAlgebra.ofAssociativeAlgebra
+
 noncomputable def chevalleySpinorRep : CliffordCarrier55 →ₐ[ℝ] SpinorEnd55 :=
   abstractSpinorRep (R := ℝ) (W := W5)
 

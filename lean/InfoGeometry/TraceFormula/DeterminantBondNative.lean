@@ -54,9 +54,7 @@ lemma matrixBondFun_eq_reindex_kronecker (n : ℕ) (M : MatrixStage n) :
         (prefixSucc n w, w ⟨n, Nat.lt_succ_self n⟩) := by
       intro heq
       exact h (congrArg Prod.snd heq)
-    simp [Matrix.one_apply, bitWordSuccEquiv, hbits, hp]
-    intro h'
-    exact (h h').elim
+    simp [Matrix.one_apply, bitWordSuccEquiv, hbits, h]
 
 theorem matrixBond_det_native (n : ℕ) (M : MatrixStage n) :
     Matrix.det (matrixBond n M) = (Matrix.det M) ^ 2 := by

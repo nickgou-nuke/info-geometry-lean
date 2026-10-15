@@ -1,5 +1,6 @@
 import proofs.RealPin55QuadraticRepresentation
 import Mathlib.LinearAlgebra.Basis.Prod
+import Mathlib.LinearAlgebra.QuadraticForm.Basic
 
 /-! # Coordinates for the split real carrier `V55` -/
 
@@ -70,7 +71,7 @@ theorem associated_Qcoord55 (x y : Fin 10 → ℝ) :
 theorem Qcoord55_toMatrix : Qcoord55.toMatrix' = eta55 := by
   classical
   ext i j
-  rw [QuadraticMap.toMatrix', LinearMap.toMatrix₂'_apply,
+  rw [QuadraticForm.toMatrix', LinearMap.toMatrix₂'_apply,
     associated_Qcoord55]
   simp [dotProduct, Matrix.mulVec, eta55, Pi.single_apply]
   split_ifs <;> subst_vars <;> simp_all

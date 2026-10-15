@@ -67,17 +67,17 @@ theorem H_maps_to_mat_H : Phi 0 0 1 0 = !![1, 0; 0, -1] := by
 theorem mat_sl2_HE :
   Phi 0 0 1 0 * Phi 0 (1/2) 0 (-1/2) - Phi 0 (1/2) 0 (-1/2) * Phi 0 0 1 0 =
   2 • Phi 0 (1/2) 0 (-1/2) := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [Phi, Matrix.mul_apply, sub_apply, smul_apply, Pi.smul_apply] <;> ring
+  ext i j; fin_cases i <;> fin_cases j <;> simp [Phi, Matrix.mul_apply, Matrix.sub_apply, Matrix.smul_apply] <;> ring
 
 theorem mat_sl2_HF :
   Phi 0 0 1 0 * Phi 0 (-1/2) 0 (-1/2) - Phi 0 (-1/2) 0 (-1/2) * Phi 0 0 1 0 =
   (-2 : ℝ) • Phi 0 (-1/2) 0 (-1/2) := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [Phi, Matrix.mul_apply, sub_apply, smul_apply, Pi.smul_apply] <;> ring
+  ext i j; fin_cases i <;> fin_cases j <;> simp [Phi, Matrix.mul_apply, Matrix.sub_apply, Matrix.smul_apply] <;> ring
 
 theorem mat_sl2_EF :
   Phi 0 (1/2) 0 (-1/2) * Phi 0 (-1/2) 0 (-1/2) - Phi 0 (-1/2) 0 (-1/2) * Phi 0 (1/2) 0 (-1/2) =
   Phi 0 0 1 0 := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [Phi, Matrix.mul_apply, sub_apply] <;> ring
+  ext i j; fin_cases i <;> fin_cases j <;> simp [Phi, Matrix.mul_apply, Matrix.sub_apply] <;> ring
 
 section GaussDecomposition
 

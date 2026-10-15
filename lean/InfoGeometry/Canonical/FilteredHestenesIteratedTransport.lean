@@ -33,12 +33,13 @@ theorem bondIterate_phaseLinear (n : ℕ) :
   | 0 => by
       simpa using PhaseStructure.id_phaseLinear (C.phase n)
   | m + 1 => by
-      simpa using
-        PhaseStructure.comp_phaseLinear
-          (C.phase n) (C.phase (n + m)) (C.phase (n + (m + 1)))
-          (bondIterate_phaseLinear n m)
-          (by
-            simpa [Nat.add_assoc] using C.bond_isPhaseLinearMap (n + m))
+      have hcomp := PhaseStructure.comp_phaseLinear
+        (C.phase n) (C.phase (n + m)) (C.phase (n + m + 1))
+        (bondIterate_phaseLinear n m) (C.bond_isPhaseLinearMap (n + m))
+      change (C.phase n).IsPhaseLinearMap
+        ((C.bond (n + m)).comp (C.bondIterate n m))
+        (C.phase (n + m + 1))
+      exact hcomp
 
 /-- The canonical cone map after any finite number of transitions equals the
 canonical map from the original stage. -/

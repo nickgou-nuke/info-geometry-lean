@@ -105,8 +105,8 @@ theorem leftMultiplication_not_multiplicative :
       (ZornVectorMatrix.U 2) at h2
   norm_num [ZornVectorMatrix.mul, ZornVectorMatrix.U, ZornVec3.dot,
     ZornVec3.cross, ZornVec3.basis, Fin.sum_univ_three] at h2
-  norm_num [Fin.ext_iff] at h2
- /-- A quaternion identity between elements does not extend to their full-module left actions. -/
+
+/-- A quaternion identity between elements does not extend to their full-module left actions. -/
 theorem gamma_operator_product_ne :
     leftMultiplication (gamma (ZornVec3.basis 0)) *
         leftMultiplication (gamma (ZornVec3.basis 1)) ≠
@@ -117,7 +117,6 @@ theorem gamma_operator_product_ne :
   norm_num [Module.End.mul_apply, leftMultiplication_apply, gamma, polePlus,
     ZornVectorMatrix.E11, ZornVectorMatrix.offDiagonal, ZornVectorMatrix.mul,
     ZornVec3.dot, ZornVec3.cross, ZornVec3.basis, Fin.sum_univ_three] at h2
-  norm_num [Fin.ext_iff] at h2
 def raise (u : V) : Module.End ℝ Z := leftMultiplication (creation u)
 def lower (u : V) : Module.End ℝ Z := leftMultiplication (annihilation u)
 
@@ -177,16 +176,16 @@ def splitQuadratic : QuadraticForm ℝ (V × V) := splitBilin.toQuadraticMap
 def cliffordVector : (V × V) →ₗ[ℝ] Z where
   toFun p := ZornVectorMatrix.offDiagonal (-(p.1 + p.2)) (p.1 - p.2)
   map_add' p q := by
-    ext i <;> simp [ZornVectorMatrix.offDiagonal, ZornVectorMatrix.add] <;> ring
+    ext i <;> simp [ZornVectorMatrix.offDiagonal] <;> ring
   map_smul' c p := by
-    ext i <;> simp [ZornVectorMatrix.offDiagonal, ZornVectorMatrix.smul] <;> ring
+    ext i <;> simp [ZornVectorMatrix.offDiagonal] <;> ring
 
 theorem cliffordVector_square (p : V × V) :
     ZornVectorMatrix.mul (cliffordVector p) (cliffordVector p) =
       splitQuadratic p • ZornVectorMatrix.one := by
   ext i <;> (try fin_cases i) <;>
     simp [cliffordVector, splitQuadratic_apply, ZornVectorMatrix.offDiagonal,
-      ZornVectorMatrix.mul, ZornVectorMatrix.smul, ZornVectorMatrix.one,
+      ZornVectorMatrix.mul, ZornVectorMatrix.one,
       ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three] <;> ring
 
 def cliffordGenerator : (V × V) →ₗ[ℝ] Module.End ℝ Z :=

@@ -47,7 +47,10 @@ def e2 : CliffordAlgebra q11 := ι q11 (fun i => if i = 1 then 1 else 0)
 theorem e1_sq : e1 * e1 = 1 := by
   calc
     e1 * e1 = algebraMap ℝ (CliffordAlgebra q11) (q11 (fun i => if i = 0 then 1 else 0)) := ι_sq_scalar _ _
-    _ = 1 := by simp [q11, proj_apply]
+    _ = 1 := by
+      have hq : q11 (fun i => if i = 0 then 1 else 0) = 1 := by
+        simp [q11, proj_apply]
+      simp [hq]
 
 /--
 **Lemma 2: Generator e₂ Square Identity (e₂² = -1)**
@@ -55,13 +58,15 @@ theorem e1_sq : e1 * e1 = 1 := by
 theorem e2_sq : e2 * e2 = -1 := by
   calc
     e2 * e2 = algebraMap ℝ (CliffordAlgebra q11) (q11 (fun i => if i = 1 then 1 else 0)) := ι_sq_scalar _ _
-    _ = -1 := by simp [q11, proj_apply]
+    _ = -1 := by
+      have hq : q11 (fun i => if i = 1 then 1 else 0) = -1 := by
+        simp [q11, proj_apply]
+      simp [hq]
 
 /-- Orthogonality of basis vectors for q11. -/
 theorem q11_orth : q11.IsOrtho (fun i => if i = 0 then 1 else 0)
                               (fun i => if i = 1 then 1 else 0) := by
-  dsimp [q11, IsOrtho, proj_apply]
-  ring
+  simp [q11, IsOrtho, proj_apply]
 
 /--
 **Lemma 3: Anticommutativity Law (e₁ e₂ + e₂ e₁ = 0)**

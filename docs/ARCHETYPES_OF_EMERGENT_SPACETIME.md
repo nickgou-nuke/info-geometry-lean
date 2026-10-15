@@ -284,8 +284,8 @@ Formalizing the geometric heartbeat of the $(2n, 2n)$ para-hyperkähler manifold
   - $\operatorname{tr}(\hat{Z}) = 0$ (Weyl dilaton condition)
   - $\hat{Z}^2 = (a^2 + \Delta^2) \mathbb{I}$
   - $\det(\hat{Z}) = -(a^2 + \Delta^2)$
-  - Massless limit ($\Delta = 0$): $\hat{Z}^2 = a^2 \mathbb{I}$ (decoupled chiral null rays traveling at $\pm c$)
-  - Massive locking ($\Delta = m$): off-diagonal bridge locks the chiral modes into the relativistic mass-shell dispersion $\hat{Z}^2 = E^2 \mathbb{I} \iff a^2 + \Delta^2 = E^2$.
+  - Massless parameter slice ($\Delta = 0$): $\hat{Z}^2 = a^2 \mathbb{I}$. This is the exact matrix identity on that slice; interpreting it as null propagation requires an additional identification of $a$ and the spectral parameter with physical momentum and energy.
+  - Massive parameter slice ($\Delta = m$): $\hat{Z}^2 = E^2 \mathbb{I} \iff a^2 + \Delta^2 = E^2$. This is the proved scalar quadratic level-set for the displayed matrix family. It models the usual dispersion relation only after specifying a physical map (for example, identifying $a$ with momentum and $E$ with energy); the theorem alone does not construct a relativistic particle, a dispersion dynamics, or a Minkowski four-momentum.
   In Lean 4: [`ParaComplexHolomorphicRealBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ParaComplexHolomorphicRealBridge.lean) (`peirce_sum`, `peircePlus_idem`, `peirce_ortho`, `deRham_decomposition`, `real_seam_condition`, `zorn2_trace_zero`, `zorn2_sq`, `zorn2_det`, `zorn2_mass_shell`, `certified_paracomplex_holomorphic_real_synthesis`).
 
 ### 5.11 Non-Commutative RG Flows & Weyl Dilatation Diffusion
@@ -574,7 +574,7 @@ Fusing the ten formal proofs from OpenAI (`openai/ten-proofs`) and `LongGapsBetw
 * **Fermionic Pfaffian vs Bosonic Permanent Complexity:** The super-polynomial formula lower bound for the permanent (`Permanent.lean`) contrasts with the polynomial Pfaffian evaluation $\mathrm{Pf}(A)^2 = \det(A)$ (`Pfaffian.lean`), certifying the tractability of chiral fermionic boundaries versus interacting bosonic quantum gravity networks.
   In Lean 4: [`OpenAIFrontierUnificationBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/OpenAIFrontierUnificationBridge.lean) and [`OpenAIFrontierUnificationAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/OpenAIFrontierUnificationAudit.lean).
 
-### 5.33 Para-Complex Neutral Lagrangian Modular Triad & Zorn Mass Shell Condensation
+### 5.33 Para-Complex Neutral Lagrangian Modular Triad & Zorn Matrix Quadratic Level Set
 Formalizing the holomorphic and antiholomorphic sectors as real Lagrangian polarizations over neutral bilinear forms ($B(\tau x, y) + B(x, \tau y) = 0$), eliminating positive-definite Hilbert space collapse:
 * **Totally Isotropic Chiral Leaves:** The Peirce projectors $P_\pm = \frac{1}{2}(\operatorname{id} \pm \tau)$ project onto maximal totally isotropic Lagrangian subspaces:
   $$B(P_+ x, P_+ y) = 0, \quad B(P_- x, P_- y) = 0$$
@@ -582,9 +582,7 @@ Formalizing the holomorphic and antiholomorphic sectors as real Lagrangian polar
   $$B(Z, Z) = 2 B(P_+ Z, P_- Z)$$
 * **Klein Fixed Seam Real Locus:** On the horizon $t = 0$ where chiral coordinates coincide, the chiral temporal defect vanishes identically ($\tau v = -\tau v \implies \tau v = 0$).
 * **Tomita Modular Reflection Invariance:** The chiral modular reflection $J^2 = \operatorname{id}$ leaves states in the physical self-polar cone invariant ($J(J\xi) = \xi$).
-* **Real $2 \times 2$ Zorn Mass-Shell Condensation:** The traceless Zorn matrix $\hat{Z}(p, \Delta) = \begin{pmatrix} p & \Delta \\ \Delta & -p \end{pmatrix}$ squares to the relativistic mass-shell:
-  $$\hat{Z}(p, \Delta)^2 = (p^2 + \Delta^2)\mathbb{I}_2 = E^2 \mathbb{I}_2$$
-  where the off-diagonal mass bridge $\Delta = m > 0$ generates a strictly positive avoided crossing spectral gap $p^2 + m^2 > 0$.
+* **Real $2 \times 2$ Zorn Matrix Quadratic Level:** The traceless matrix $\hat{Z}(p, \Delta) = \begin{pmatrix} p & \Delta \\ \Delta & -p \end{pmatrix}$ satisfies the finite identity $\hat{Z}^2 = (p^2 + \Delta^2)\mathbb{I}_2$. Under the explicit scalar premise $p^2 + \Delta^2 = E^2$, this gives $\hat{Z}^2 = E^2\mathbb{I}_2$. This is a conditional matrix identity, not by itself a relativistic mass-shell theorem: a physical interpretation requires a specified map identifying these real parameters with momentum, mass, and energy. For $\Delta=m>0$, the proved inequality $p^2+m^2>0$ says the scalar square is positive; it does not alone prove a dynamical avoided-crossing claim.
 * **Penrose Twistor Reality Null Adjacency:** Two complex spacetime points sharing a common non-zero twistor satisfy $\det(X - Y) = 0$.
   In Lean 4: [`ParaComplexLagrangianModular.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ParaComplexLagrangianModular.lean) and [`ParaComplexLagrangianModularAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ParaComplexLagrangianModularAudit.lean).
 
@@ -607,7 +605,7 @@ Unifying the physical, geometric, and information-theoretic principles of modern
   * Compact $K = \mathrm{SO}(2)$: Continuous RoPE elliptic rotor flow $\operatorname{rotor}(s + t) = \operatorname{rotor}(s)\operatorname{rotor}(t)$.
   * Abelian $A = \mathbb{R}^+$: Weyl scale dilation flow $\operatorname{scale}(s + t) = \operatorname{scale}(s)\operatorname{scale}(t)$.
   * Nilpotent $N$: Parabolic flow generated by $N^2 = 0$ producing the linear ALiBi bias $-pt$.
-* **Zorn Mass Condensation & Attention Energy:** The traceless Zorn matrix $\hat{Z}(p, \Delta)$ couples the two chiral sectors, condensing onto the relativistic mass shell $\hat{Z}^2 = (p^2 + m^2)\mathbb{I}_2 = E^2\mathbb{I}_2$ with avoided crossing spectral gap $p^2 + m^2 > 0$.
+* **Zorn Matrix Quadratic Readout & Attention Energy:** The traceless matrix family $\hat{Z}(p, \Delta)$ has square $(p^2+\Delta^2)\mathbb{I}_2$. The Lean result named `zorn_mass_shell_condensation` proves the equality to $E^2\mathbb{I}_2$ only given the premise $p^2+\Delta^2=E^2$. It is therefore a conditional finite-dimensional algebraic readout; it becomes a physical dispersion relation only after an explicit parameter-to-physics identification. The separate fact $p^2+m^2>0$ for $m>0$ is scalar positivity, not a theorem about a dynamical crossing.
 * **Birkhoff–Sinkhorn Optimal Transport Routing:** Column-balanced attention matrices belong to the doubly stochastic Birkhoff polytope $\mathcal{B}_n$ and decompose into a convex quantum/thermal mixture of discrete permutations:
   $$M = \sum_\sigma w_\sigma P_\sigma, \quad w_\sigma \ge 0, \quad \sum_\sigma w_\sigma = 1$$
 * **Aharonov–Albert–Vaidman (AAV) Two-Boundary Token Transition:** The prompt $|\psi_i\rangle$ (retarded forward boundary) and target completion $\langle\psi_f|$ (advanced backward boundary) form an oblique projector $T = \frac{|\psi_i\rangle\langle\psi_f|}{\langle\psi_f|\psi_i\rangle}$ ($T^2 = T$) evaluating weak values $T(A \psi_i) = W(A) \psi_i$.
@@ -719,9 +717,7 @@ Formalizing the geometric triad of the Holomorphic, the Antiholomorphic, and the
 * **The Real Diagonal Seam:** Observable spacetime emerges on the real diagonal where the chiral splitting collapses:
   $$x \in \mathcal{M}_{\mathbb{R}} \iff P_+(x) = P_-(x) \iff \tau(x) = 0$$
   (`real_seam_characterization`, `glide_reflection_real_seam`).
-* **Zorn Mass-Shell Condensation:** The bipartite chiral coupling on the split-octonionic Zorn algebra condenses into the relativistic on-shell invariant:
-  $$\det(Z) = a d - \mathbf{u} \cdot \mathbf{v} = m^2$$
-  (`zorn_mass_shell_condensation`).
+* **Zorn Reduced-Norm Level Set:** A Zorn matrix has an algebraic quadratic reduced norm. Equating that norm to $m^2$ is a physical mass-shell statement only after the carrier, norm convention, and identification of the matrix parameters with physical momentum and mass are specified. The finite matrix-square result `zorn_mass_shell_resonance` instead assumes $p^2+\Delta^2=E^2$; neither identity alone derives a relativistic dispersion law from chiral coupling.
 * **Master Chiral Triad Synthesis:** Unifies the 6-component geometric conjunction into a kernel-certified closure (`para_complex_triad_real_emergence_synthesis`).
   In Lean 4: [`ParaComplexTriadRealEmergenceBridge.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ParaComplexTriadRealEmergenceBridge.lean) and [`ParaComplexTriadRealEmergenceAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/ParaComplexTriadRealEmergenceAudit.lean).
 
@@ -1033,14 +1029,13 @@ Formalizing the ontological chain uniting the eikonal limit, Weyl spinor rank-1 
 * **Sachs Optical Equations & Eikonal Ray Focusing:** The expansion trace satisfies $\operatorname{tr}(S) = 2 \theta$ (`sachs_trace_expansion`); for eikonal wavefronts $k = dS$, vorticity vanishes identically $\omega = 0$ (`eikonal_vorticity_annihilation`), making the Sachs screen matrix symmetric; and under the Null Energy Condition $R_{kk} \ge 0$, the beam expansion derivative satisfies $d\theta/d\lambda \le -\frac{1}{2}\theta^2 \le 0$ (`sachs_ray_focusing`).
 * **Conserved Information Current & Conformal Gauge Invariance:** The total information flux $\Phi = \rho A$ satisfies $d(\rho A)/d\lambda = 0$ strictly along the ray (`information_flux_conservation`), and the null condition is preserved under local conformal rescalings $\tilde{g} = \Omega^2 g$ (`conformal_null_invariance`).
 * **Master Synthesis:** Full conjunction certified in Mathlib 4 (`certified_penrose_eikonal_twistor_synthesis`).
-### 5.73 Twistor Penrose Transform for Zero-Rest-Mass Fields & Self-Dual Maxwell Curvature
-Formalizing Roger Penrose's twistor transform realizing zero-rest-mass (ZRM) field solutions from projective twistor cohomology classes $H^1(\mathbb{PT}^+, \mathcal{O}(-4))$:
-* **Spinor Symplectic Metric:** Symplectic metric tensor $\varepsilon_{ij}$ on $\mathbb{C}^2$ satisfying antisymmetry $\varepsilon_{ji} = -\varepsilon_{ij}$ (`epsilon_antisymm`) and symmetric contraction annihilation $\sum_{i,j} \varepsilon_{ij} T_{ij} = 0$ (`contract_epsilon_symm`).
-* **Twistor Cohomology Bundle:** Cohomological carrier `TwistorMaxwellCohomology` representing homogeneous cocycles $f(Z)$ of degree $-4$ on twistor space $\mathbb{PT}$.
-* **Zero-Rest-Mass (ZRM) Equations:** Contour integral formula yielding the symmetric rank-2 spinor field $\phi_{AB}(x)$ satisfying $\nabla^{A A'} \phi_{AB} = 0$ identically (`zero_rest_mass_equation`).
-* **Self-Dual Maxwell Curvature:** The electromagnetic field strength decomposes into $F_{\mu\nu} = \phi_{AB} \varepsilon_{A'B'} + \bar{\phi}_{A'B'} \varepsilon_{AB}$. Proves Maxwell antisymmetry $F_{\mu\nu} = -F_{\nu\mu}$ (`maxwell_antisymmetry`), exact vanishing of the anti-self-dual part (`maxwell_anti_self_dual_part_vanishes`), and source-free divergence $\nabla^\mu F_{\mu\nu} = 0$ (`maxwell_source_free_divergence`).
-* **Incidence Homogeneity & Master Synthesis:** Incidence scale invariance $f(\lambda Z) = \lambda^{-4} f(Z)$ (`incidence_homogeneous`) and certified master conjunction (`certified_twistor_penrose_transform_synthesis`).
-  In Lean 4: [`TwistorPenroseTransform.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Twistor/TwistorPenroseTransform.lean) and [`TwistorPenroseTransformAudit.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Twistor/TwistorPenroseTransformAudit.lean).
+### 5.73 Finite Spinor-Array Identities and Twistor Incidence
+The Lean module previously described these finite-index calculations as a completed Penrose transform. That interpretation is not supported by its definitions: the code has no projective twistor space, sheaf cohomology, contour integral, spacetime differential operator, or analytic field solution. The formalized content is retained under its actual algebraic scope:
+* **Spinor Symplectic Array:** `epsilon : Fin 2 → Fin 2 → ℂ` is antisymmetric (`epsilon_antisymm`). Contracting it against any symmetric two-index array gives zero (`contract_epsilon_symm`).
+* **Finite Curvature-Shaped Data:** `TwistorMaxwellArrayData` stores only arbitrary arrays. Its `grad` member is not a derivative; the local index symmetry is an explicit hypothesis to `symmetric_gradient_contraction_zero`, so the theorem is a finite antisymmetric/symmetric contraction identity, not a derived zero-rest-mass equation.
+* **Curvature-Array Identities:** `curvatureArray` is an algebraically defined four-index array. Its index-exchange antisymmetry (`curvature_array_pair_antisymmetric`) and vanishing epsilon contraction (`curvature_array_epsilon_contraction_zero`) are exact finite identities, but do not by themselves construct a Hodge decomposition or prove source-free Maxwell dynamics. `symmetric_array_contraction_readout` records the same contraction under renamed free indices.
+* **Incidence Algebra:** `twistorIncidence` is the displayed finite complex bilinear formula. `incidence_homogeneous` proves its scalar homogeneity. The separately conditional `incidence_derivation_eq_zero` only uses the stated derivation hypotheses; neither theorem constructs projective geometry or cohomology.
+  In Lean 4: [`TwistorPenroseTransform.lean`](</home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Twistor/TwistorPenroseTransform.lean>) and [`TwistorPenroseTransformAudit.lean`](</home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Twistor/TwistorPenroseTransformAudit.lean>).
 
 ### 5.74 Two-Component Chiral Acoustic Bimetric System & Dual Sound Cone Separation
 Formalizing the analogue bimetric spacetime of a two-component chiral quantum fluid with sound speeds $0 < c_- < c_+$:
@@ -1292,7 +1287,7 @@ Formalizing the grand geometric bridge between surprisal, Aitchison compositiona
 | **Chiral Hodge-Zorn Architecture**| 6-Fold Chiral Hodge / Zorn Vector Matrices / Klein Quadric | `coexact_anticomm`, `coexact_commutator_weyl`, `matterDoublet_square` | **Kernel-Checked (0 gaps)** |
 | **Green-Schwarz Inflow on Cantor Boundary** | Cuntz Carrier / 3-Form $H$ / Cantor Colimit | `green_schwarz_inflow_cancellation`, `normalizedTrace_branchChirality` | **Kernel-Checked (0 gaps)** |
 | **High-Entropy Semantic Compilation** | Poset Homomorphism / Causal Cone Transitivity | `causal_cone_frontier_closure`, `noise_annihilation` | **Kernel-Checked (0 gaps)** |
-| **Holomorphic-Antiholomorphic-Real Triad** | Para-Complex Peirce / Klein Seam / Zorn Mass Shell | `peirce_sum`, `real_seam_condition`, `zorn2_mass_shell` | **Kernel-Checked (0 gaps)** |
+| **Holomorphic-Antiholomorphic-Real Triad** | Para-Complex Peirce / Real Seam / Zorn Matrix Quadratic Level Set | `peirce_sum`, `real_seam_condition`, `zorn2_mass_shell` | **Kernel-checked algebraic identities; the Zorn result is not a physical mass-shell identification** |
 | **Non-Commutative RG Flow & Weyl Diffusion** | Homothety Group / Hodge Duality / Heat Semigroup | `scaleHomothety_comp`, `energyScale_anti_mono`, `diffusion_intertwining` | **Kernel-Checked (0 gaps)** |
 | **Para-Complex Connections & Chiral Currents** | Para-Complex Connection / Split Peirce / Isotropic Sub-bundles | `conn_comm_peircePlus`, `holomorphic_isotropic`, `chiral_current_sum` | **Kernel-Checked (0 gaps)** |
 | **Resolvent Semigroups & Lie-Trotter Splitting** | Positive Semi-Definite Resolvent / Hodge Splitting | `resolvent_unconditional_contractivity`, `hodge_trotter_resolvent_exact`, `iterated_split_contractivity` | **Kernel-Checked (0 gaps)** |
@@ -1316,7 +1311,7 @@ Formalizing the grand geometric bridge between surprisal, Aitchison compositiona
 | **Torus Reynolds Averaging** | Haar Measure on $\mathbb{T}^2$ | `angularMean_cos_sq_harmonic`, `torusCovering_measurePreserving` | **Kernel-Checked (0 gaps)** |
 | **Primon Gas Spectral Gap & Long Prime Gaps**| Bost-Connes Primon Gas / Single-Particle Hamiltonian / OpenAI Gap | `primonEnergyGap_ge_of_gap`, `primonBoltzmannRatio_le_of_gap`, `primon_spectral_vacuum` | **Kernel-Checked (0 gaps)** |
 | **OpenAI Frontier Unification & Cross-Lane** | Non-Sofic Colimit / Connes Non-Rigidity / Quantum Parallel Repetition | `tensorFidelity_le_exp_decay`, `pfaffian_fermionic_tractability`, `master_unification_theorem` | **Kernel-Checked (0 gaps)** |
-| **Para-Complex Lagrangian Modular Triad** | Neutral Bilinear Form / Peirce Isotropic Leaves / Zorn Mass Shell | `peirce_leaves_totally_isotropic`, `neutral_norm_eq_cross_pairing`, `zorn_mass_shell_condensation` | **Kernel-Checked (0 gaps)** |
+| **Para-Complex Lagrangian Modular Triad** | Neutral Bilinear Form / Peirce Isotropic Leaves / Zorn Matrix Quadratic Level Set | `peirce_leaves_totally_isotropic`, `neutral_norm_eq_cross_pairing`, `zorn_mass_shell_condensation` | **Kernel-checked conditional matrix identity; no physical mass-shell map is asserted** |
 | **Apollonian Primon Weyl Scale Synthesis** | Logarithmic Carrier / Conformal Weyl Field / OpenAI Long Gap Bound | `primonEnergyGap_ge_rel_gap`, `weylPrimonRatio_ge_one_add`, `weyl_primon_long_gap_lower_bound` | **Kernel-Checked (0 gaps)** |
 | **Chiral Quantum Transformer Capstone** | KAN / Chiral Twistor / Zorn Shell / Sinkhorn / AAV / Cuntz-Krieger / Fisher-Rao | `chiral_attention_cross_pairing`, `kan_elliptic_rotor_flow`, `master_chiral_quantum_transformer_unification` | **Kernel-Checked (0 gaps)** |
 | **Klein Bottle Glide Seam** | Para-Complex Coordinates $\tau^2 = +1$ / Glide $T_a$ | `is_on_real_seam_iff_tau_zero`, `glide_preserves_real_seam`, `glideZ_iter_two` | **Kernel-Checked (0 gaps)** |
@@ -1358,7 +1353,7 @@ Formalizing the grand geometric bridge between surprisal, Aitchison compositiona
 | **Anscombe-Madelung & Registration** | Anscombe Delta Stabilization / Madelung Amplitude $\sqrt{\rho}$ / Spacer Cancellation $d_0(E_1)-d_0(E_2)$ | `certified_anscombe_madelung_registration_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Penrose Ray Information Geometry** | Penrose Minkowski Krein Space / Null Ray $\langle J v, v \rangle = 0$ / Conformal Field Confinement | `certified_penrose_ray_information_geometry_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Penrose Eikonal Twistor Ray** | Eikonal Null Congruence / Weyl Spinor Dyad / Twistor Incidence $\omega = i X \pi$ / Sachs Focusing | `certified_penrose_eikonal_twistor_synthesis` | **Kernel-Checked (0 gaps)** |
-| **Twistor Penrose Transform** | Projective Twistor Cohomology $H^1(\mathbb{PT}^+, \mathcal{O}(-4))$ / ZRM Equations / Self-Dual Maxwell $F_{\mu\nu}$ | `certified_twistor_penrose_transform_synthesis` | **Kernel-Checked (0 gaps)** |
+| **Finite Twistor Spinor-Array Identities** | Antisymmetric/symmetric contraction / curvature-shaped array identities / incidence homogeneity | `TwistorMaxwellArrayData.symmetric_gradient_contraction_zero`, `incidence_homogeneous` | **Kernel-checked finite algebra only; no analytic Penrose transform or Maxwell PDE** |
 | **Chiral Acoustic Bimetric Cones** | Bimetric Gap $Q_+ - Q_- = -(c_+^2 - c_-^2)dt^2$ / Null Cone Separation / Evanescent Decoupling / Horizon Decoupling | `certified_chiral_acoustic_bimetric_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Chiral Anomalous Hall Deflection** | $\mathfrak{su}(2)$ Berry Curvature / $\mathbf{\Omega}_- = -\mathbf{\Omega}_+$ / Zero Work $\mathbf{v}_{\mathrm{anom}} \cdot \mathbf{F} = 0$ / Transverse Splitting $\Delta \mathbf{v} = 2 \mathbf{v}_+$ | `certified_chiral_anomalous_hall_synthesis` | **Kernel-Checked (0 gaps)** |
 | **Arnold Hydrodynamics & Beltrami** | Lamb Vector $\mathbf{L} = \boldsymbol{\omega} \times \mathbf{u} = 0$ / Bernoulli Global Constancy / Helicity $h = \lambda \|\mathbf{u}\|^2$ / ABC Flow $\operatorname{curl}\mathbf{u} = \mathbf{u}$ | `certified_arnold_hydrodynamics_beltrami_synthesis` | **Kernel-Checked (0 gaps)** |

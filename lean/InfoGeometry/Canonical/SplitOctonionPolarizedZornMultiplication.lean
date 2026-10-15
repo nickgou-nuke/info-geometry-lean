@@ -258,7 +258,7 @@ def chiralBasisChangeMatrixInv : Matrix (Fin 8) (Fin 8) ℚ := fun r c =>
   | 7, 7 => 1
   | _, _ => 0
 
-set_option maxHeartbeats 1000000 in
+set_option maxHeartbeats 3000000 in
 theorem chiralBasisChangeMatrixInv_mul :
     chiralBasisChangeMatrixInv * chiralBasisChangeMatrix = 1 := by
   ext i j
@@ -266,7 +266,7 @@ theorem chiralBasisChangeMatrixInv_mul :
     simp [Matrix.mul_apply, chiralBasisChangeMatrixInv,
       chiralBasisChangeMatrix, Fin.sum_univ_succ] <;> norm_num
 
-set_option maxHeartbeats 1000000 in
+set_option maxHeartbeats 3000000 in
 theorem chiralBasisChangeMatrix_mul_Inv :
     chiralBasisChangeMatrix * chiralBasisChangeMatrixInv = 1 := by
   ext i j
@@ -279,11 +279,12 @@ theorem chiralBasisChangeMatrix_mul_Inv :
     toNative X b =
       ∑ c : Fin 8, chiralSolderingMatrix (standardSolderingRow b) c *
         chiralCoordinate X c := by
-  cases b <;>
-    simp [toNative, chiralSolderingMatrix, chiralCoordinate,
-      standardSolderingRow, Matrix.vecCons, Fin.cons_zero, Fin.cons_succ,
-      Fin.sum_univ_succ] <;>
+  cases b
+  all_goals {
+    dsimp [standardSolderingRow, chiralSolderingMatrix, toNative, chiralCoordinate]
+    simp [Fin.sum_univ_eight]
     ring
+  }
 
 def fromNative (z : StandardRationalSplitOctonion) : PolarizedZorn where
   alpha := z .one + z .l
@@ -335,7 +336,7 @@ noncomputable def toNativeEquiv :
     toNative polarizedNPlus = modularNPlus := by
   funext b
   cases b <;> simp [toNative, polarizedNPlus, polarizedGenerator,
-    modularNPlus, fundamentalSymmetry, rationalBasis] <;> norm_num
+    modularNPlus, fundamentalSymmetry, rationalBasis]
 
 @[simp] theorem toNative_polarizedNMinus :
     toNative polarizedNMinus = modularNMinus := by
@@ -356,42 +357,42 @@ noncomputable def toNativeEquiv :
   funext b
   cases b <;> simp [toNative, polarizedSigmaRedPlus, polarizedGenerator,
     modularSigmaPlus, modularJ_eq_colourLUnit, phaseAxis, colourUnit, colourLUnit,
-    rationalBasis, Pi.single_apply] <;> norm_num
+    rationalBasis] <;> norm_num
 
 @[simp] theorem toNative_polarizedSigmaGreenPlus :
     toNative polarizedSigmaGreenPlus = modularSigmaPlus .green := by
   funext b
   cases b <;> simp [toNative, polarizedSigmaGreenPlus, polarizedGenerator,
     modularSigmaPlus, modularJ_eq_colourLUnit, phaseAxis, colourUnit, colourLUnit,
-    rationalBasis, Pi.single_apply] <;> norm_num
+    rationalBasis] <;> norm_num
 
 @[simp] theorem toNative_polarizedSigmaBluePlus :
     toNative polarizedSigmaBluePlus = modularSigmaPlus .blue := by
   funext b
   cases b <;> simp [toNative, polarizedSigmaBluePlus, polarizedGenerator,
     modularSigmaPlus, modularJ_eq_colourLUnit, phaseAxis, colourUnit, colourLUnit,
-    rationalBasis, Pi.single_apply] <;> norm_num
+    rationalBasis] <;> norm_num
 
 @[simp] theorem toNative_polarizedSigmaRedMinus :
     toNative polarizedSigmaRedMinus = modularSigmaMinus .red := by
   funext b
   cases b <;> simp [toNative, polarizedSigmaRedMinus, polarizedGenerator,
     modularSigmaMinus, modularJ_eq_colourLUnit, phaseAxis, colourUnit, colourLUnit,
-    rationalBasis, Pi.single_apply] <;> norm_num
+    rationalBasis]
 
 @[simp] theorem toNative_polarizedSigmaGreenMinus :
     toNative polarizedSigmaGreenMinus = modularSigmaMinus .green := by
   funext b
   cases b <;> simp [toNative, polarizedSigmaGreenMinus, polarizedGenerator,
     modularSigmaMinus, modularJ_eq_colourLUnit, phaseAxis, colourUnit, colourLUnit,
-    rationalBasis, Pi.single_apply] <;> norm_num
+    rationalBasis]
 
 @[simp] theorem toNative_polarizedSigmaBlueMinus :
     toNative polarizedSigmaBlueMinus = modularSigmaMinus .blue := by
   funext b
   cases b <;> simp [toNative, polarizedSigmaBlueMinus, polarizedGenerator,
     modularSigmaMinus, modularJ_eq_colourLUnit, phaseAxis, colourUnit, colourLUnit,
-    rationalBasis, Pi.single_apply] <;> norm_num
+    rationalBasis]
 
 @[simp] theorem toNative_polarizedZornSigmaPlus
     (c : SplitOctonionColour) :

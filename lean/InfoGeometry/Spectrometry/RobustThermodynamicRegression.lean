@@ -16,7 +16,15 @@ inductive Archetype
   | energyShift
   | freeEnergyDerivative
   | effectiveSupport
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype Archetype where
+  elems := {Archetype.clrProjection, Archetype.devianceEnergy,
+    Archetype.gibbsEnsemble, Archetype.energyShift,
+    Archetype.freeEnergyDerivative, Archetype.effectiveSupport}
+  complete := by
+    intro x
+    cases x <;> simp
 
 open Archetype
 
@@ -254,8 +262,12 @@ theorem hasFDerivAt_freeEnergy
       HasFDerivAt (fun parameter => Real.exp (-energies line parameter / temperature))
         (Real.exp (-energies line point / temperature) • ((-1 / temperature) • derivatives line))
         point := by
-    convert ((energy_derivatives line).const_mul (-1 / temperature)).exp using 1 <;>
-      simp [div_eq_mul_inv, mul_comm]
+    convert ((energy_derivatives line).const_mul (-1 / temperature)).exp using 1
+    · ext parameter
+      congr 1
+      ring
+    · rw [show -energies line point / temperature =
+        -1 / temperature * energies line point by ring]
   have partition_derivative :
       HasFDerivAt (fun parameter => partition (fun line => energies line parameter) temperature)
         (∑ line, Real.exp (-energies line point / temperature) •
@@ -268,12 +280,15 @@ theorem hasFDerivAt_freeEnergy
     ((partition_derivative.const_mul (1 / (Fintype.card Line : ℝ))).log
       (ne_of_gt argument_pos)).const_mul (-temperature)
   convert free_derivative using 1
-  simp only [Finset.smul_sum, smul_smul]
-  apply Finset.sum_congr rfl
-  intro line _
-  congr 1
-  dsimp [gibbsWeight]
-  field_simp
+  · rfl
+  · ext v
+    simp only [sum_apply, smul_apply,
+      Finset.smul_sum, smul_smul]
+    apply Finset.sum_congr rfl
+    intro line _
+    congr 1
+    dsimp [gibbsWeight]
+    field_simp [temperature_ne, partition_ne]
 
 theorem fderiv_freeEnergy
     (energies : Line → Parameter → ℝ)

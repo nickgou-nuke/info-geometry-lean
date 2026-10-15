@@ -1,5 +1,4 @@
 import InfoGeometry.Arithmetic.RiemannZetaEquivalences
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.ActualRiemannXiEntireBridge
 import InfoGeometry.Canonical.ActualEntireRiemannXiZeroFreeLocus
 import Mathlib.NumberTheory.LSeries.RiemannZeta
@@ -97,13 +96,15 @@ theorem riemannXi_deriv_one_sub
       _ = 0 := by ring
   have h_outer := (differentiableAt_riemannXi_of_ne hs_ref0 hs_ref1).hasDerivAt
   have h_inner : HasDerivAt (fun x : ℂ => 1 - x) (-1 : ℂ) s := by
-    convert (hasDerivAt_const (x := s) (1 : ℂ)).sub (hasDerivAt_id s) using 1 <;>
-      simp
+    have h := (hasDerivAt_const s (1 : ℂ)).sub (hasDerivAt_id s)
+    rw [zero_sub] at h
+    exact h
   have h_comp := h_outer.comp s h_inner
   have h_reflected :
       HasDerivAt (fun x : ℂ => riemannXi (1 - x))
         (-deriv riemannXi (1 - s)) s := by
-    convert h_comp using 1 <;> ring
+    rw [← mul_neg_one]
+    exact h_comp
   have h_reflected' : HasDerivAt riemannXi
       (-deriv riemannXi (1 - s)) s :=
     h_reflected.congr_of_eventuallyEq

@@ -41,9 +41,13 @@ theorem coefficient_simple_fraction (a r : ℂ) :
 theorem neg_tendsto_punctured (a : ℂ) :
     Tendsto (fun z : ℂ => -z) (𝓝[≠] (-a)) (𝓝[≠] a) := by
   refine tendsto_nhdsWithin_iff.mpr ⟨?_, ?_⟩
-  · simpa using
-      (continuousAt_id.neg.tendsto.mono_left nhdsWithin_le_nhds :
-        Tendsto (fun z : ℂ => -z) (𝓝[≠] (-a)) (𝓝 (-(-a))))
+  · have hcont : ContinuousAt (fun z : ℂ => -z) (-a) := by
+      convert (continuousAt_id.neg : ContinuousAt (-id : ℂ → ℂ) (-a)) using 1
+      funext z
+      rfl
+    have hlim : Tendsto (fun z : ℂ => -z) (𝓝 (-a)) (𝓝 a) := by
+      simpa using hcont.tendsto
+    exact hlim.mono_left nhdsWithin_le_nhds
   · filter_upwards [self_mem_nhdsWithin] with z hz
     have hz' : z ≠ -a := by simpa using hz
     simpa only [Set.mem_compl_iff, Set.mem_singleton_iff, neg_eq_iff_eq_neg] using hz'

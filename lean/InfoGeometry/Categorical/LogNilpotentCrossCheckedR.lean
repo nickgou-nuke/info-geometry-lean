@@ -78,7 +78,7 @@ def crossUnipotentMap (p : ℂ) :
 by reversing the scalar parameter. -/
 def crossUnipotentEquiv (p : ℂ) :
     (X ⊗[ℂ] X) ≃ₗ[ℂ] (X ⊗[ℂ] X) := by
-  apply LinearEquiv.ofLinear (crossUnipotentMap X hX p)
+  apply LinearEquiv.ofLinearMap (crossUnipotentMap X hX p)
     (crossUnipotentMap X hX (-p))
   · rw [crossUnipotentMap, crossUnipotentMap,
       unipotentResidueReadout_comp]
@@ -110,21 +110,12 @@ theorem logCheckedR_tmul (p : ℂ) (x y : X) :
 theorem logCheckedR_commutes_tensorN (p : ℂ) :
     (logCheckedR X hX p).toLinearMap.comp (PairObj X).N =
       (PairObj X).N.comp (logCheckedR X hX p).toLinearMap := by
-  change (TensorProduct.comm ℂ X X).toLinearMap.comp (PairObj X).N =
-    (PairObj X).N.comp (TensorProduct.comm ℂ X X).toLinearMap
-  apply LinearMap.ext
-  intro t
-  refine TensorProduct.induction_on t ?_ ?_ ?_
-  · simp
-  · intro x y
-    change (TensorProduct.comm ℂ X X)
-      (X.N x ⊗ₜ[ℂ] y + x ⊗ₜ[ℂ] X.N y) = _
-    change (TensorProduct.comm ℂ X X)
-        (X.N x ⊗ₜ[ℂ] y + x ⊗ₜ[ℂ] X.N y) =
-      X.N y ⊗ₜ[ℂ] x + y ⊗ₜ[ℂ] X.N x
-    simp [TensorProduct.comm_tmul, add_comm]
-  · intro a b ha hb
-    simp [map_add, ha, hb]
+  change
+    (LogEndModule.braidingHom X.toLogEndModule X.toLogEndModule).hom.comp
+        (LogEndModule.tensorObj X.toLogEndModule X.toLogEndModule).N =
+      (LogEndModule.tensorObj X.toLogEndModule X.toLogEndModule).N.comp
+        (LogEndModule.braidingHom X.toLogEndModule X.toLogEndModule).hom
+  exact (LogEndModule.braidingHom X.toLogEndModule X.toLogEndModule).comm
 
 /-- First local action of `checkR` on the right-associated triple tensor. -/
 def logCheckedR12 (hX : X.N ^ 2 = 0) (p : ℂ) :
@@ -148,11 +139,9 @@ theorem logCheckedR_yangBaxter (p : ℂ) :
           (logCheckedR23 X hX p).toLinearMap := by
   apply LinearMap.ext
   intro t
-  refine TensorProduct.induction_on t ?_ ?_ ?_
-  · simp
+  refine TensorProduct.inductionOn t ?_ ?_
   · intro x yz
-    refine TensorProduct.induction_on yz ?_ ?_ ?_
-    · simp
+    refine TensorProduct.inductionOn yz ?_ ?_
     · intro y z
       simp [logCheckedR12, logCheckedR23, map12, map23,
         LinearEquiv.trans_apply, LinearMap.comp_apply, logCheckedR_tmul,

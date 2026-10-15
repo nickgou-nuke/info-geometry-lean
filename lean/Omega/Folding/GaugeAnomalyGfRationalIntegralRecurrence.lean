@@ -96,7 +96,8 @@ theorem paper_fold_gauge_anomaly_gf_rational_integral_recurrence
     D.rationalGeneratingFunction ∧ D.orderFourRecurrence ∧ D.integralNormalizedCoefficients := by
   refine ⟨?_, ?_, ?_⟩
   · unfold GaugeAnomalyGfRationalIntegralRecurrenceData.rationalGeneratingFunction
-    simpa [gaugeAnomalyGeneratingFunction] using D.audited_generatingFunction
+    change D.generatingFunction = gaugeAnomalyGeneratingFunction D.u
+    exact D.audited_generatingFunction
   · unfold GaugeAnomalyGfRationalIntegralRecurrenceData.orderFourRecurrence
     intro m
     rw [D.audited_integralSequence]

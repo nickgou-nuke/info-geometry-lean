@@ -1,7 +1,6 @@
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import Mathlib.Analysis.Calculus.FDeriv.Basic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Complex.RealDeriv
 import Mathlib.Tactic
 import InfoGeometry.Canonical.ApolloniusHomogeneousCoordinatesBridge
@@ -74,7 +73,7 @@ theorem hasFDerivAt_apolloniusTauOfParameter
       (Complex.hasDerivAt_exp (apolloniusComplexCoordinateCLM u)).hasFDerivAt
     simpa using hcomplex.restrictScalars ℝ
   have h := hexp.comp u harg
-  convert h using 1
+  exact h
 
 theorem apolloniusTauFDeriv_entropyGradientVector
     (u : ApolloniusParameterSpace) :

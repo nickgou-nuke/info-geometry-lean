@@ -22,6 +22,7 @@ noncomputable def representedDerivationFlow
     (D : canonicalZornDerivations) (t : ℝ) : A :=
   NormedSpace.exp (t • ρ D)
 
+omit [CompleteSpace A] in
 @[simp]
 theorem representedDerivationFlow_zero
     (ρ : canonicalZornDerivations →ₗ[ℝ] A)
@@ -35,7 +36,7 @@ theorem representedDerivationFlow_add
     representedDerivationFlow ρ D (s + t) =
       representedDerivationFlow ρ D s *
         representedDerivationFlow ρ D t := by
-  letI : NormedAlgebra ℚ A := NormedAlgebra.restrictScalars ℚ ℝ A
+  let : NormedAlgebra ℚ A := NormedAlgebra.restrictScalars ℚ ℝ A
   have hComm : Commute (s • ρ D) (t • ρ D) := by
     exact (Commute.refl (ρ D)).smul_left s |>.smul_right t
   unfold representedDerivationFlow
@@ -61,10 +62,8 @@ theorem hasDerivAt_representedDerivationFlow
     (ρ : canonicalZornDerivations →ₗ[ℝ] A)
     (D : canonicalZornDerivations) (t : ℝ) :
     HasDerivAt (representedDerivationFlow ρ D)
-      (representedDerivationFlow ρ D t * ρ D) t := by
-  letI : NormedAlgebra ℚ A := NormedAlgebra.restrictScalars ℚ ℝ A
-  simpa [representedDerivationFlow] using
-    (hasDerivAt_exp_smul_const (x := ρ D) (t := t))
+      (representedDerivationFlow ρ D t * ρ D) t :=
+  hasDerivAt_exp_smul_const (ρ D) t
 
 theorem deriv_representedDerivationFlow_zero
     (ρ : canonicalZornDerivations →ₗ[ℝ] A)

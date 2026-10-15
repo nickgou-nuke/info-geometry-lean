@@ -26,6 +26,8 @@ noncomputable section
 
 open scoped BigOperators
 open scoped InnerProductSpace
+open scoped lp
+set_option linter.unusedSectionVars false
 
 namespace InfoGeometry.Algebra.Cuntz
 

@@ -19,18 +19,15 @@ open CategoryTheory
 The Agent Interface Functor F(X) = Input → X × Output.
 This captures the shape of a single transition.
 -/
-@[simps]
 def agentFunctor (A : Agent.{u}) : Type u ⥤ Type u where
   obj X := A.Input → X × A.Output
-  map f transition := fun i => (f (transition i).1, (transition i).2)
+  map f := TypeCat.ofHom (fun transition i => (f (transition i).1, (transition i).2))
   map_id X := by
-    funext transition i
-    ext
+    ext transition i
     · rfl
     · rfl
   map_comp f g := by
-    funext transition i
-    ext
+    ext transition i
     · rfl
     · rfl
 
@@ -43,7 +40,7 @@ structure AgentCoalgebra (A : Agent.{u}) where
 
 /-- Any operational Agent induces a canonical Coalgebra structure. -/
 def inducedCoalgebra (A : Agent.{u}) : AgentCoalgebra A where
-  α s := fun i => A.step s i
+  α := TypeCat.ofHom (fun s i => A.step s i)
 
 /-! ## The Reflection-Dynamics Bridge -/
 
@@ -64,6 +61,6 @@ structure ReflectiveCompatibility (A : Agent.{u}) (R : Reflective.{u} A) where
   -/
   commutes : ∀ s i,
     let (s_next, _) := A.step s i
-    (rep_dynamics (R.reifyState s) i).1 = R.reifyState s_next
+    (rep_dynamics.hom (R.reifyState s) i).1 = R.reifyState s_next
 
 end SelfReference

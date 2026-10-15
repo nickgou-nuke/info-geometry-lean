@@ -55,27 +55,23 @@ theorem Jfin_trunc_uniform_matrix_entry (i j : Fin 4) :
   simpa [Jfin] using
     InfoGeometry.Canonical.SplitCliffordJordanWignerTwoModeCurrent.Jfin_trunc_uniform_matrix_entry i j
 
-theorem Jfin_comm_1_1 : comm4 (Jfin 1) (Jfin 1) = (0 : M4R) := by
-  simpa [comm4, Jfin] using InfoGeometry.Canonical.SplitCliffordJordanWignerTwoModeCurrent.Jfin_comm_1_1
+theorem Jfin_comm_1_1 : comm4 (Jfin 1) (Jfin 1) = (0 : M4R) :=
+  InfoGeometry.Canonical.SplitCliffordJordanWignerTwoModeCurrent.Jfin_comm_1_1
 
-theorem Jfin_comm_neg1_neg1 : comm4 (Jfin (-1)) (Jfin (-1)) = (0 : M4R) := by
-  simpa [comm4, Jfin] using InfoGeometry.Canonical.SplitCliffordJordanWignerTwoModeCurrent.Jfin_comm_neg1_neg1
+theorem Jfin_comm_neg1_neg1 : comm4 (Jfin (-1)) (Jfin (-1)) = (0 : M4R) :=
+  InfoGeometry.Canonical.SplitCliffordJordanWignerTwoModeCurrent.Jfin_comm_neg1_neg1
 
-theorem Jfin_comm_1_neg1_explicit : comm4 (Jfin 1) (Jfin (-1)) = finiteChargeDiag := by
-  simpa [comm4, Jfin, finiteChargeDiag] using
-    InfoGeometry.Canonical.SplitCliffordJordanWignerTwoModeCurrent.Jfin_comm_1_neg1_explicit
+theorem Jfin_comm_1_neg1_explicit : comm4 (Jfin 1) (Jfin (-1)) = finiteChargeDiag :=
+  InfoGeometry.Canonical.SplitCliffordJordanWignerTwoModeCurrent.Jfin_comm_1_neg1_explicit
 
-theorem Jfin_comm_neg1_1_explicit : comm4 (Jfin (-1)) (Jfin 1) = -finiteChargeDiag := by
-  simpa [comm4, Jfin, finiteChargeDiag] using
-    InfoGeometry.Canonical.SplitCliffordJordanWignerTwoModeCurrent.Jfin_comm_neg1_1_explicit
+theorem Jfin_comm_neg1_1_explicit : comm4 (Jfin (-1)) (Jfin 1) = -finiteChargeDiag :=
+  InfoGeometry.Canonical.SplitCliffordJordanWignerTwoModeCurrent.Jfin_comm_neg1_1_explicit
 
 theorem Jfin_comm_zero_of_either_outside_support
     {m n : Int}
     (h : (m ≠ 1 ∧ m ≠ -1) ∨ (n ≠ 1 ∧ n ≠ -1)) :
-    comm4 (Jfin m) (Jfin n) = (0 : M4R) := by
-  simpa [comm4, Jfin] using
-    (InfoGeometry.Canonical.SplitCliffordJordanWignerTwoModeCurrent.Jfin_comm_m_n_zero_of_outside_support
-      (m := m) (n := n) h)
+    comm4 (Jfin m) (Jfin n) = (0 : M4R) :=
+  InfoGeometry.Canonical.SplitCliffordJordanWignerTwoModeCurrent.Jfin_comm_m_n_zero_of_outside_support h
 
 theorem represented_current_commutator_two_mode :
     ∃ J : Int → M4R,
@@ -101,8 +97,6 @@ theorem Jfin_comm_1_neg1_ne_identity :
   intro h
   have h00 := congrArg (fun M : M4R => M (0 : Fin 4) (0 : Fin 4)) h
   rw [Jfin_comm_1_neg1_explicit] at h00
-  have h01 : (0 : ℝ) = 1 := by
-    simpa [finiteChargeDiag, InfoGeometry.Canonical.SplitCliffordJordanWignerTwoModeCurrent.Hdiag] using h00
-  norm_num at h01
+  simp [finiteChargeDiag, InfoGeometry.Canonical.SplitCliffordJordanWignerTwoModeCurrent.Hdiag] at h00
 
 end InfoGeometry.Canonical.SplitCliffordJordanWignerTwoMode

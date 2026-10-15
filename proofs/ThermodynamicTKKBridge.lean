@@ -99,7 +99,11 @@ theorem affine_rindler_mu_shift_logClock
 /-- Four formal V₄/Krein labels.  This inductive type records the finite label set. -/
 inductive KreinV4 where
   | one | eta | J | etaJ
-  deriving DecidableEq, Repr, Inhabited, Fintype
+  deriving DecidableEq, Repr, Inhabited
+
+instance : Fintype KreinV4 where
+  elems := {KreinV4.one, KreinV4.eta, KreinV4.J, KreinV4.etaJ}
+  complete x := by cases x <;> simp
 
 /-- Protected affine Rindler flow on the finite V₄/Krein labels. -/
 def protectedKreinV4Flow (_a : AffineSimplexParameter) (v : KreinV4) : KreinV4 :=
@@ -113,7 +117,11 @@ theorem krein_v4_invariance_under_rindler_flow
 /-- Formal Möbius/V₄ labels used for inversion/parity bookkeeping. -/
 inductive MobiusV4 where
   | id | parity | inversion | parityInversion
-  deriving DecidableEq, Repr, Inhabited, Fintype
+  deriving DecidableEq, Repr, Inhabited
+
+instance : Fintype MobiusV4 where
+  elems := {MobiusV4.id, MobiusV4.parity, MobiusV4.inversion, MobiusV4.parityInversion}
+  complete x := by cases x <;> simp
 
 /-- Protected affine Rindler flow on the finite Möbius labels. -/
 def protectedMobiusV4Flow (_a : AffineSimplexParameter) (m : MobiusV4) : MobiusV4 :=
@@ -127,12 +135,20 @@ theorem mobius_v4_invariance_under_rindler_flow
 /-- Positive TKK grades paired with negative TKK grades. -/
 inductive PositiveTKKGrade where
   | p1 | p2
-  deriving DecidableEq, Repr, Inhabited, Fintype
+  deriving DecidableEq, Repr, Inhabited
+
+instance : Fintype PositiveTKKGrade where
+  elems := {PositiveTKKGrade.p1, PositiveTKKGrade.p2}
+  complete x := by cases x <;> simp
 
 /-- Negative TKK grades paired with positive TKK grades. -/
 inductive NegativeTKKGrade where
   | m1 | m2
-  deriving DecidableEq, Repr, Inhabited, Fintype
+  deriving DecidableEq, Repr, Inhabited
+
+instance : Fintype NegativeTKKGrade where
+  elems := {NegativeTKKGrade.m1, NegativeTKKGrade.m2}
+  complete x := by cases x <;> simp
 
 /-- Formal chiral parity index of the five-grade bookkeeping. -/
 def formalChiralParityIndex : ℤ :=

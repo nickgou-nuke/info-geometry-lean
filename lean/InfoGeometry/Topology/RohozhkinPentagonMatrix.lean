@@ -89,12 +89,24 @@ theorem pentagon_appendix_identity
       pentagonGamma3 zi zj zk zl zm *
       pentagonGamma2 zi zj zk zl zm *
       pentagonGamma1 zi zj zk zl zm = 1 := by
+  have h_il' : -zl + zi ≠ 0 := by
+    intro h
+    apply h_il
+    calc
+      zi - zl = -zl + zi := by ring
+      _ = 0 := h
+  have h_ik' : -zk + zi ≠ 0 := by
+    intro h
+    apply h_ik
+    calc
+      zi - zk = -zk + zi := by ring
+      _ = 0 := h
   ext a b
   fin_cases a <;> fin_cases b <;>
+    simp_rw [Matrix.mul_apply] <;>
     simp [pentagonGamma1, pentagonGamma2, pentagonGamma3, pentagonGamma4,
-      pentagonGamma5, Matrix.mul_apply, Fin.sum_univ_three] <;>
-    field_simp [h_il, h_ik, h_km, h_jm, h_jl] <;>
-    ring
+      pentagonGamma5, Fin.sum_univ_three] <;>
+    field_simp [h_il, h_ik, h_km, h_jm, h_jl, h_il', h_ik'] <;> ring_nf
 
 /--
 The Appendix A matrices instantiate the abstract `pentagonStatement` target

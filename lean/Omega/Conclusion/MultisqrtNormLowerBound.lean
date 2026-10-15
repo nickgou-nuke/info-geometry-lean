@@ -27,7 +27,7 @@ theorem paper_conclusion_multisqrt_norm_lower_bound :
     calc
       Finset.prod (Finset.univ.erase ε0) (fun ε => |conj ε|)
           ≤ Finset.prod (Finset.univ.erase ε0) (fun _ => M) := by
-            apply Finset.prod_le_prod
+            apply Finset.prod_le_prod₀
             · intro ε hε
               exact abs_nonneg (conj ε)
             · intro ε hε

@@ -1,3 +1,5 @@
+import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Analysis.Calculus.Deriv.Add
 import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -15,7 +17,7 @@ open scoped BigOperators
 
 /-- Finite scalar power-moment kernel. -/
 noncomputable def momentKernel {n : ℕ} (p : Fin n → ℝ) (β : ℝ) : ℝ :=
-  ∑ i, Real.rpow (p i) β
+  ∑ i, (p i) ^ β
 
 theorem momentKernel_pos {n : ℕ} (p : Fin n → ℝ) (hn : 0 < n)
     (hp : ∀ i, 0 < p i) (β : ℝ) :
@@ -59,7 +61,7 @@ theorem second_deriv_momentKernel_at_one {n : ℕ} (p : Fin n → ℝ)
         (deriv_const_rpow (hp i)
           (differentiableAt_id : DifferentiableAt ℝ id β))
     · intro i hi
-      exact (Real.hasStrictDerivAt_const_rpow (hp i) β).differentiableAt
+      exact (Real.hasStrictDerivAt_const_rpow (hp i) β).hasStrictFDerivAt.differentiableAt
   rw [hderiv]
   rw [deriv_fun_sum]
   · apply Finset.sum_congr rfl
@@ -69,7 +71,7 @@ theorem second_deriv_momentKernel_at_one {n : ℕ} (p : Fin n → ℝ)
         (Real.log (p i))).deriv
   · intro i hi
     exact ((Real.hasStrictDerivAt_const_rpow (hp i) 1).hasDerivAt.mul_const
-      (Real.log (p i))).differentiableAt
+      (Real.log (p i))).hasFDerivAt.differentiableAt
 
 theorem deriv_momentKernel_at_one {n : ℕ} (p : Fin n → ℝ)
     (hp : ∀ i, 0 < p i) :
@@ -77,9 +79,9 @@ theorem deriv_momentKernel_at_one {n : ℕ} (p : Fin n → ℝ)
       ∑ i, Real.log (p i) * p i := by
   unfold momentKernel
   rw [deriv_fun_sum]
-  · simp [deriv_rpow_in_order, hp]
+  · simp [hp]
   · intro i hi
-    exact (Real.hasStrictDerivAt_const_rpow (hp i) 1).differentiableAt
+    exact (Real.hasStrictDerivAt_const_rpow (hp i) 1).hasStrictFDerivAt.differentiableAt
 
 /-- At order one, the moment kernel is the coordinate sum. -/
 theorem momentKernel_one {n : ℕ} (p : Fin n → ℝ) :

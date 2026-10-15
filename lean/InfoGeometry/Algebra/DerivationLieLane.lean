@@ -1,5 +1,8 @@
 import InfoGeometry.Algebra.NonAssocDerivation
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Algebra.Lie.OfAssociative
+
+attribute [local instance 100] LieRing.ofAssociativeRing
 
 /-!
 # Derivation-level Lie lanes

@@ -53,6 +53,7 @@ def blockEmbed2x2 (A : Mat2C) : Mat3C :=
 theorem blockEmbed2x2_mul (A B : Mat2C) :
     blockEmbed2x2 (A * B) = blockEmbed2x2 A * blockEmbed2x2 B := by
   ext i j
+  conv_rhs => rw [Matrix.mul_apply]
   fin_cases i <;> fin_cases j <;>
     simp [blockEmbed2x2, Matrix.mul_apply, Fin.sum_univ_two, Fin.sum_univ_three]
 

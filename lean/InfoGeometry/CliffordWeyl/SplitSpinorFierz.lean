@@ -17,7 +17,7 @@ theorem representation_finrank_eq (stages : ℕ) :
     _ = (2 ^ stages) * (2 ^ stages) := by
       rw [show 2 * stages = stages + stages by omega, pow_add]
     _ = Module.finrank ℝ (SpinorMatrix stages) := by
-      simp [SpinorMatrix, Matrix, Module.finrank_pi]
+      simp [SpinorMatrix, Module.finrank_matrix]
 
 def spinorEquiv (stages : ℕ) : Cl_split stages ≃ₐ[ℝ] SpinorMatrix stages := by
   apply AlgEquiv.ofBijective (spinorRepresentation stages)

@@ -81,7 +81,7 @@ theorem clock_raising_qcommute : clock * raising = Complex.I • (raising * cloc
   ext a b
   fin_cases a <;> fin_cases b <;>
     norm_num [clock, raising, Matrix.diagonal, Matrix.mul_apply,
-      Fin.sum_univ_succ, Complex.I_sq, pow_succ] <;> simp_all
+      Fin.sum_univ_succ, Complex.I_sq, pow_succ]
 
 theorem raising_fourth : raising ^ 4 = (0 : Coeff) := by
   ext a b
@@ -103,9 +103,9 @@ theorem clock_raising_not_source_commutator :
 theorem raising_projector_shift (k : Fin 4) :
     raising * projector k = projector (k + 1) * raising := by
   ext a b
+  rw [mul_coefficientProjector_apply, coefficientProjector_mul_apply]
   fin_cases k <;> fin_cases a <;> fin_cases b <;>
-    norm_num [raising, projector, coefficientProjector, Matrix.diagonal,
-      Matrix.mul_apply, Fin.sum_univ_succ] <;> simp_all
+    norm_num [raising]
 
 theorem raising_fourierProjector_shift (k : Fin 4) :
     raising * fourierProjector k = fourierProjector (k + 1) * raising := by
@@ -160,7 +160,7 @@ theorem diagonal_sectors_lose_mixing :
     · funext i
       have hi := congrArg (fun M : Coeff => M i)
         (diagonal_projector_raising_diagonal k)
-      simpa using hi
+      simpa [mixingWitness, diagonalCoefficient, operatorZornCoordinates] using hi
     · funext i
       simp [mixingWitness, diagonalCoefficient, operatorZornCoordinates]
     · funext i

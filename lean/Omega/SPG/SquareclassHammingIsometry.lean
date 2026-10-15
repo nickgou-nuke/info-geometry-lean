@@ -12,7 +12,7 @@ theorem zmod2_sub_eq_add (a b : ZMod 2) : a - b = a + b := by
 /-- The XOR operation on F₂ is its own inverse: (a + b) + b = a.
     prop:spg-squareclass-support-hamming-isometry -/
 theorem zmod2_add_self_cancel (a b : ZMod 2) : (a + b) + b = a := by
-  fin_cases a <;> fin_cases b <;> decide
+  revert a b; decide
 
 /-- In ZMod 2, a + a = 0 (characteristic 2).
     prop:spg-squareclass-support-hamming-isometry -/

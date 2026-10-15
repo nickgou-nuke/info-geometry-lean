@@ -178,7 +178,7 @@ theorem paperEven_odd_anticommute_of_lt {n i j : ℕ}
   have hSiTj : Commute Si Tj := by
     have h := FunctionSpace.tilt_switch_comm_of_ne (n := n) (i := ⟨j, hj⟩)
       (j := ⟨i, hi⟩) (by intro h; exact Nat.ne_of_lt hij (congrArg Fin.val h.symm))
-    simpa [Commute] using h.symm
+    exact h.symm
   have hQiTj : Commute Qi Tj := by
     exact (FunctionSpace.tilt_comm_pairPrefix (n := n) (m := i) (j := j)
       (Nat.le_of_lt hij) hj).symm

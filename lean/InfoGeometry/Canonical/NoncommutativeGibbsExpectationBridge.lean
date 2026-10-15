@@ -33,6 +33,7 @@ direction.  No hypothesis wrapper, axiom, or `sorry` is introduced here.
 
 noncomputable section
 set_option autoImplicit false
+set_option synthInstance.maxHeartbeats 150000
 
 namespace InfoGeometry.Canonical.NoncommutativeGibbsExpectationBridge
 
@@ -43,6 +44,12 @@ open SouriauOnsagerBKM
 
 abbrev Operator (n : ℕ) := FiniteOperatorAlgebra n
 abbrev FourComplexParameters := InfoGeometry.Algebra.FiniteSpin.Vec4C
+
+instance (priority := 900) (n : ℕ) : NormedAlgebra ℝ (Operator n) :=
+  NormedAlgebra.restrictScalars ℝ ℂ (Operator n)
+
+instance (priority := 900) (n : ℕ) : NormedAlgebra ℚ (Operator n) :=
+  NormedAlgebra.restrictScalars ℚ ℂ (Operator n)
 
 /-! ## 1. Trace as a real continuous linear map -/
 
@@ -76,8 +83,6 @@ theorem finiteOperatorTrace_duhamelIntegrand
         (NormedSpace.exp ((1 - t) • H) * T *
           NormedSpace.exp (t • H)) =
       finiteOperatorTrace (NormedSpace.exp H * T) := by
-  letI : NormedAlgebra ℚ (Operator n) := by
-    exact NormedAlgebra.restrictScalars ℚ ℂ (Operator n)
   have hComm : Commute (t • H) ((1 - t) • H) := by
     change ((t : ℂ) • H) * (((1 - t : ℝ) : ℂ) • H) =
       (((1 - t : ℝ) : ℂ) • H) * ((t : ℂ) • H)
@@ -112,9 +117,11 @@ theorem intervalIntegrable_duhamelOperatorIntegrand
         NormedSpace.exp ((1 - t) • H) * T *
           NormedSpace.exp (t • H))
       volume 0 1 := by
-  have hcont := (continuous_duhamelIntegrand (A := Operator n) H)
-  have heval := (ContinuousLinearMap.apply ℝ (Operator n) T).continuous.comp hcont
-  simpa [duhamelIntegrand] using heval.intervalIntegrable 0 1
+  have h1 : Continuous (fun t : ℝ => NormedSpace.exp ((1 - t) • H)) :=
+    NormedSpace.exp_continuous.comp ((continuous_const.sub continuous_id).smul continuous_const)
+  have h2 : Continuous (fun t : ℝ => NormedSpace.exp (t • H)) :=
+    NormedSpace.exp_continuous.comp (continuous_id.smul continuous_const)
+  exact ((h1.mul continuous_const).mul h2).intervalIntegrable 0 1
 
 /-- The trace of the genuine noncommutative Duhamel derivative is the ordinary
 first-moment numerator.  This is unconditional in the inserted operator `T`. -/
@@ -122,7 +129,6 @@ theorem finiteOperatorTrace_duhamelDerivative
     {n : ℕ} (H T : Operator n) :
     finiteOperatorTrace (duhamelDerivative H T) =
       finiteOperatorTrace (NormedSpace.exp H * T) := by
-  letI : NormedSpace ℝ (Operator n) := NormedSpace.restrictScalars ℝ ℂ (Operator n)
   rw [duhamelDerivative_apply_integral]
   have hIntegrable := intervalIntegrable_duhamelOperatorIntegrand H T
   calc
@@ -153,7 +159,11 @@ theorem finiteOperatorTrace_duhamelDerivative
 
 /-- Finite traced operator exponential. -/
 noncomputable def tracedExponential {n : ℕ} (H : Operator n) : ℂ :=
-  finiteOperatorTrace (NormedSpace.exp H)
+  finiteOperatorTraceCLM n (NormedSpace.exp H)
+
+@[simp] theorem tracedExponential_apply {n : ℕ} (H : Operator n) :
+    tracedExponential H = finiteOperatorTrace (NormedSpace.exp H) :=
+  finiteOperatorTraceCLM_apply _
 
 /-- Its genuine changed-origin Fréchet derivative, obtained by composing the
 repository-owned noncommutative exponential derivative with the continuous
@@ -168,11 +178,10 @@ exponential. -/
 theorem hasFDerivAt_tracedExponential
     {n : ℕ} (H : Operator n) :
     HasFDerivAt tracedExponential
-      (tracedExponentialDerivative H) H := by
-  simpa [tracedExponential, tracedExponentialDerivative] using
-    (finiteOperatorTraceCLM n).hasFDerivAt.comp H
-      (hasFDerivAt_exp_noncommutative
-        (𝕜 := ℂ) (A := Operator n) H)
+      (tracedExponentialDerivative H) H :=
+  (finiteOperatorTraceCLM n).hasFDerivAt.comp H
+    (hasFDerivAt_exp_noncommutative
+      (𝕜 := ℂ) (A := Operator n) H)
 
 /-! ## 4. Commuting-direction identification -/
 
@@ -183,31 +192,22 @@ theorem exponentialDerivative_apply_of_commute_complex
     {n : ℕ} (H T : Operator n) (hComm : Commute T H) :
     exponentialDerivative (𝕜 := ℂ) H T =
       NormedSpace.exp H * T := by
-  letI : NormedAlgebra ℚ (Operator n) := by
-    exact NormedAlgebra.restrictScalars ℚ ℂ (Operator n)
   have hLine :
       HasDerivAt (fun z : ℂ => H + z • T) T 0 := by
-    convert
-      (hasDerivAt_const (x := (0 : ℂ)) H).add
-        ((hasDerivAt_id (x := (0 : ℂ))).smul_const T) using 1 <;>
-      simp [zero_smul]
+    have h1 := (hasDerivAt_const (x := (0 : ℂ)) H).add
+      ((hasDerivAt_id (x := (0 : ℂ))).smul_const T)
+    rw [zero_add, one_smul] at h1
+    exact h1
+  have hzero : H = H + (0 : ℂ) • T := by
+    rw [show (0 : ℂ) • T = 0 from zero_smul ℂ T, add_zero]
   have hFromFrechet :
-      HasDerivAt
-        (fun z : ℂ => NormedSpace.exp (H + z • T))
-        (exponentialDerivative (𝕜 := ℂ) H T) 0 := by
-    convert
-      (hasFDerivAt_exp_noncommutative
-        (𝕜 := ℂ) (A := Operator n) H).comp_hasDerivAt_of_eq
-          (0 : ℂ) hLine (by rw [zero_smul ℂ T, add_zero]) using 1 <;>
-      try exact zero_smul ℂ T <;>
-      try exact zero_smul ℝ T <;>
-      try exact zero_smul ℚ T
+      HasDerivAt (fun z : ℂ => NormedSpace.exp (H + z • T))
+        (exponentialDerivative (𝕜 := ℂ) H T) 0 :=
+    (hasFDerivAt_exp_noncommutative (𝕜 := ℂ) (A := Operator n) H).comp_hasDerivAt_of_eq 0 hLine hzero
   have hFactored :
       (fun z : ℂ => NormedSpace.exp (H + z • T)) =
         fun z : ℂ =>
           NormedSpace.exp H * NormedSpace.exp (z • T) := by
-    letI : NormedAlgebra ℚ (Operator n) := by
-      exact NormedAlgebra.restrictScalars ℚ ℂ (Operator n)
     funext z
     exact NormedSpace.exp_add_of_commute
       (hComm.symm.smul_right z)
@@ -216,11 +216,11 @@ theorem exponentialDerivative_apply_of_commute_complex
         (fun z : ℂ => NormedSpace.exp (H + z • T))
         (NormedSpace.exp H * T) 0 := by
     rw [hFactored]
-    have hzero : (0 : ℝ) • T = 0 := zero_smul ℝ T
-    have hzeroC : (0 : ℂ) • T = 0 := zero_smul ℂ T
-    simpa [zero_smul, NormedSpace.exp_zero, mul_one, hzero, hzeroC] using
-      (hasDerivAt_exp_smul_const T (0 : ℂ)).const_mul
-        (NormedSpace.exp H)
+    have hDeriv := (hasDerivAt_exp_smul_const T (0 : ℂ)).const_mul (NormedSpace.exp H)
+    have h_eval : NormedSpace.exp H * (NormedSpace.exp ((0 : ℂ) • T) * T) = NormedSpace.exp H * T := by
+      rw [show (0 : ℂ) • T = 0 from zero_smul ℂ T, NormedSpace.exp_zero, one_mul]
+    rw [h_eval] at hDeriv
+    exact hDeriv
   exact hFromFrechet.unique hFromFactorization
 
 /-- The traced Fréchet derivative has the expected first-moment numerator on
@@ -294,19 +294,16 @@ theorem hasDerivAt_partitionLine_of_commute
       (finiteOperatorTrace (NormedSpace.exp H * T)) 0 := by
   have hLine :
       HasDerivAt (fun z : ℂ => H + z • T) T 0 := by
-    convert
-      (hasDerivAt_const (x := (0 : ℂ)) H).add
-        ((hasDerivAt_id (x := (0 : ℂ))).smul_const T) using 1 <;>
-      simp [zero_smul]
+    have h1 := (hasDerivAt_const (x := (0 : ℂ)) H).add
+      ((hasDerivAt_id (x := (0 : ℂ))).smul_const T)
+    rw [zero_add, one_smul] at h1
+    exact h1
+  have hzero : H = H + (0 : ℂ) • T := by
+    rw [show (0 : ℂ) • T = 0 from zero_smul ℂ T, add_zero]
   have hComp :
       HasDerivAt (partitionLine H T)
-        (tracedExponentialDerivative H T) 0 := by
-    convert
-      (hasFDerivAt_tracedExponential H).comp_hasDerivAt_of_eq
-        (0 : ℂ) hLine (by rw [zero_smul ℂ T, add_zero]) using 1 <;>
-      try exact zero_smul ℂ T <;>
-      try exact zero_smul ℝ T <;>
-      try exact zero_smul ℚ T
+        (tracedExponentialDerivative H T) 0 :=
+    (hasFDerivAt_tracedExponential H).comp_hasDerivAt_of_eq 0 hLine hzero
   rw [tracedExponentialDerivative_apply_of_commute H T hComm] at hComp
   exact hComp
 
@@ -323,17 +320,17 @@ theorem hasDerivAt_logPartitionLine_eq_expectation_of_commute
   have hPartition := hasDerivAt_partitionLine_of_commute H T hComm
   have harg : H + (0 : ℂ) • T = H := by
     rw [show (0 : ℂ) • T = 0 from zero_smul ℂ T, add_zero]
-  have hLog := hPartition.clog (by
+  have hSlit' : partitionLine H T 0 ∈ Complex.slitPlane := by
     change tracedExponential (H + (0 : ℂ) • T) ∈ Complex.slitPlane
     rw [harg]
-    exact hSlit)
+    exact hSlit
+  have hLog := hPartition.clog hSlit'
   rw [operatorExpectation_eq_trace_div]
   have hpart : partitionLine H T 0 = tracedExponential H := by
     change tracedExponential (H + (0 : ℂ) • T) = tracedExponential H
     rw [harg]
-  convert hLog using 1 <;>
-    simp [logPartitionLine, partitionLine, tracedExponential, harg] <;>
-      try (exact zero_smul ℂ T) <;> try (exact zero_smul ℝ T)
+  rw [hpart] at hLog
+  exact hLog
 
 /-! ## 7. Four-parameter commuting operator exponential families -/
 
@@ -398,13 +395,10 @@ theorem hasDerivAt_fourOperatorLogPartitionCoordinate_eq_expectation
     (hSlit : fourOperatorPartition T theta ∈ Complex.slitPlane) :
     HasDerivAt
       (fourOperatorLogPartitionCoordinate T theta mu)
-      (fourOperatorExpectation T theta mu) 0 := by
-  simpa [fourOperatorLogPartitionCoordinate,
-    fourOperatorExpectation, fourOperatorPartition,
-    logPartitionLine, partitionLine] using
-    hasDerivAt_logPartitionLine_eq_expectation_of_commute
-      (fourOperatorExponent T theta) (T mu)
-      (sufficientStatistic_commutes_fourOperatorExponent T hComm theta mu)
-      hSlit
+      (fourOperatorExpectation T theta mu) 0 :=
+  hasDerivAt_logPartitionLine_eq_expectation_of_commute
+    (fourOperatorExponent T theta) (T mu)
+    (sufficientStatistic_commutes_fourOperatorExponent T hComm theta mu)
+    hSlit
 
 end InfoGeometry.Canonical.NoncommutativeGibbsExpectationBridge

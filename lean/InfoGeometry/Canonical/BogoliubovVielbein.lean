@@ -119,7 +119,8 @@ theorem transportedMaurerCartanCurvature_eq_expTransport_maurerCartanCurvature
     InfoGeometry.Canonical.expTransport (A := EndH)
       V.connectionGenerator V.maurerCartanCurvature t := by
   unfold transportedMaurerCartanCurvature maurerCartanCurvature localFrame
-  simpa [hestenesMaurerCartanCurvature] using
+  simpa [hestenesMaurerCartanCurvature,
+    InfoGeometry.Canonical.BogoliubovTransport.lieBracket_eq_transportCommutator] using
     (transportCommutator_expTransport (E := E) V.connectionGenerator V.reference t)
 
 /--
@@ -130,9 +131,13 @@ theorem deriv_localFrame_at_eq_transportedMaurerCartanCurvature
     (V : BogoliubovVielbeinBundle (E := E)) (t : ℝ) :
     deriv (fun s => V.localFrame s) t = V.transportedMaurerCartanCurvature t := by
   rw [V.transportedMaurerCartanCurvature_eq_expTransport_maurerCartanCurvature t]
-  simpa [localFrame, maurerCartanCurvature, hestenesMaurerCartanCurvature] using
-    (InfoGeometry.Canonical.hasDerivAt_expTransport
-      (A := EndH) (X := V.connectionGenerator) (A₀ := V.reference) t).deriv
+  change deriv (fun s => InfoGeometry.Canonical.expTransport (A := EndH)
+    V.connectionGenerator V.reference s) t =
+    InfoGeometry.Canonical.expTransport (A := EndH) V.connectionGenerator
+      (transportCommutator (E := E) V.connectionGenerator V.reference) t
+  rw [← InfoGeometry.Canonical.BogoliubovTransport.lieBracket_eq_transportCommutator]
+  exact (InfoGeometry.Canonical.hasDerivAt_expTransport
+    (A := EndH) (X := V.connectionGenerator) (A₀ := V.reference) t).deriv
 
 /--
 **Bianchi-type Identity**:
@@ -166,9 +171,10 @@ theorem bianchi_identity
         InfoGeometry.Canonical.expTransport (A := EndH)
           V.connectionGenerator
           (transportCommutator (E := E) V.connectionGenerator V.maurerCartanCurvature) t := by
-            simpa [maurerCartanCurvature, hestenesMaurerCartanCurvature] using
-              (InfoGeometry.Canonical.hasDerivAt_expTransport
-                (A := EndH) (X := V.connectionGenerator) (A₀ := V.maurerCartanCurvature) t).deriv
+            rw [← InfoGeometry.Canonical.BogoliubovTransport.lieBracket_eq_transportCommutator]
+            exact (InfoGeometry.Canonical.hasDerivAt_expTransport
+              (A := EndH) (X := V.connectionGenerator)
+              (A₀ := V.maurerCartanCurvature) t).deriv
     _ =
         transportCommutator (E := E) V.connectionGenerator
           (InfoGeometry.Canonical.expTransport (A := EndH)
@@ -189,9 +195,12 @@ The rate of frame deformation is exactly the Maurer-Cartan connection curvature.
 theorem deriv_localFrame_at_zero
     (V : BogoliubovVielbeinBundle (E := E)) :
     deriv (fun t => V.localFrame t) 0 = V.maurerCartanCurvature := by
-  simpa [localFrame, maurerCartanCurvature, hestenesMaurerCartanCurvature] using
-    InfoGeometry.Canonical.deriv_expTransport_at_zero
-      (A := EndH) (X := V.connectionGenerator) (A₀ := V.reference)
+  change deriv (fun t => InfoGeometry.Canonical.expTransport (A := EndH)
+    V.connectionGenerator V.reference t) 0 =
+    transportCommutator (E := E) V.connectionGenerator V.reference
+  rw [← InfoGeometry.Canonical.BogoliubovTransport.lieBracket_eq_transportCommutator]
+  exact InfoGeometry.Canonical.deriv_expTransport_at_zero
+    (A := EndH) (X := V.connectionGenerator) (A₀ := V.reference)
 
 /--
 Global Lie-derivative evolution law for the local spin frame at an arbitrary parameter `t`.
@@ -203,9 +212,13 @@ theorem deriv_localFrame_at
       =
     InfoGeometry.Canonical.expTransport (A := EndH)
       V.connectionGenerator V.maurerCartanCurvature t := by
-  simpa [localFrame, maurerCartanCurvature, hestenesMaurerCartanCurvature, transportCommutator] using
-    (InfoGeometry.Canonical.hasDerivAt_expTransport
-      (A := EndH) (X := V.connectionGenerator) (A₀ := V.reference) t).deriv
+  change deriv (fun s => InfoGeometry.Canonical.expTransport (A := EndH)
+    V.connectionGenerator V.reference s) t =
+    InfoGeometry.Canonical.expTransport (A := EndH) V.connectionGenerator
+      (transportCommutator (E := E) V.connectionGenerator V.reference) t
+  rw [← InfoGeometry.Canonical.BogoliubovTransport.lieBracket_eq_transportCommutator]
+  exact (InfoGeometry.Canonical.hasDerivAt_expTransport
+    (A := EndH) (X := V.connectionGenerator) (A₀ := V.reference) t).deriv
 
 end BogoliubovVielbeinBundle
 

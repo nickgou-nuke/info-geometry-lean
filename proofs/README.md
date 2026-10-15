@@ -1,3 +1,10 @@
+<!-- repository-context-rule -->
+> **Repository grounding:** For repository work, the checked-out codebase is
+> the context. Search existing implementation and trace its real definitions,
+> imports, instances, theorems, and uses before declaring a structure missing
+> or incorrect. A finding in one file is not a repo-wide finding. See
+> [`docs/REPO_DEEP_SEARCH_PROTOCOL.md`](docs/REPO_DEEP_SEARCH_PROTOCOL.md).
+
 # info-geometry-lean
 
 ## Information Geometry of Quantum Gravity — Lean 4 and SymPy Formalization
@@ -248,7 +255,7 @@ with sign-convention transport (`g₊ = native neg`, `g₋ = native pos`, `g₀ 
 
 | Script | Key Result |
 |--------|-----------|
-| `TKKClosureErlangenGeometry.py` | 5/5 grade arithmetic, 5/5 JT identities, `det(Λ X Λ†) = det(X)`, Freudenthal Square dimensions |
+| `TKKClosureErlangenGeometry.py` | Selected adjoint-weight commutators and Hermitian triple-product samples; one sampled Pauli determinant identity; determinant-preserving congruence samples and rank-two carrier dimension metadata. These are numerical diagnostics, not a five-grading, TKK closure, universal Jordan identity, or Lie-algebra isomorphism proof. |
 | `ChiralGUEWignerDyson.py` | All 18 algebraic relations, `|W|`-conditioned Poisson→GUE transition |
 | `SpacetimeGUEIsomorphism.py` | 5-way parameterization isomorphism verified, GUE→spacetime sampling, nuclear simulator |
 | `BuresMetricClosedCartography.py` | `D_B(center → boundary) = √(2−√2)`, distinguishability demonstration |
@@ -328,11 +335,11 @@ See [CITATION.cff](CITATION.cff) for complete metadata.
 
 ---
 
-## The Erlangen 2.0 Principle
+## The Erlangen 2.0 Research Program
 
 > **Felix Klein (1872):** A geometry = a space + a group acting on it. The geometric properties are the $G$-invariants.
 
-> **Erlangen 2.0 (this work):** A geometry = the invariant polynomials of the 5-graded TKK closure of a discrete algebraic structure. No background space is assumed. The space *emerges* as the spectrum of the TKK Lie algebra, and the group is its automorphism group.
+> **Erlangen-style proposal (research program):** One may seek to recover a geometry from invariant polynomials of a suitably constructed graded algebra and its automorphism group. The displayed formula is a programmatic conjecture, not a theorem established by the finite matrix diagnostics or by the current Lean TKK sockets. In particular, those diagnostics do not construct a five-graded TKK Lie algebra, derive a spacetime carrier as its spectrum, or prove a geometry/group equivalence.
 
 ---
 
@@ -375,14 +382,21 @@ not proved isomorphisms.
 
 To the high school teacher who taught complex numbers as planimetry. To the water molecules stretching in the thermal bath. To the lipid bilayers folding into their chiral sheets. To the $\gamma$-ray coincidences forming Wilson loops in the detector. To the Itakura-Saito divergence that whispered: *spectral data are projective*. To every Fibonacci number that crumbled in our hands.
 
-The fragments have assembled. The stone has spoken. The map is closed.
+The fragments remain a research program: finite algebraic identities are
+formalized in their stated carriers, while the proposed global map remains
+open until its carrier, action, and invariant-preservation theorems are
+constructed and proved.
 
 ---
 
-**Q.E.D.** — *Quod Erat Demonstrandum.* The finite algebraic spine of the Rosetta Stone compiles. The 5-graded TKK-shadow identities (grade arithmetic) hold. The full physical/geometric universe interpretation is socketed, not proved. Theorem-honesty is the foundation.
+**Status:** The finite algebraic identities in their owner files are theorems
+only at those exact scopes. The numerical script is diagnostic evidence, not
+kernel verification. A full five-graded TKK-to-spacetime construction and the
+physical/geometric universe interpretation remain open; the existing sockets
+record interfaces and boundaries, not a completed construction.
 
 ```
-  compile_finite : ChiralMatrixUnits → TKK/GUE/Minkowski Algebraic Shadows
-  Finite algebraic Rosetta Stone: compiled.
-  Analytic/physical/categorical universe:       socketed with explicit boundary.
+  finite_matrix_checks : ChiralMatrixUnits → selected matrix identities
+  finite Lean owners: kernel-checked at their stated carriers.
+  TKK/GUE/Minkowski synthesis: research program with explicit open boundaries.
 ```

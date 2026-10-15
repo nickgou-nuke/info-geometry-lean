@@ -11,7 +11,11 @@ inductive conclusion_m2_level3_forgetful_over_xi_splitting_ramification_line
   | fixedRight
   | swappedLeft
   | swappedRight
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype conclusion_m2_level3_forgetful_over_xi_splitting_ramification_line where
+  elems := {.fixedLeft, .fixedRight, .swappedLeft, .swappedRight}
+  complete := by rintro (_|_|_|_) <;> simp
 
 /-- The bielliptic involution fixes two lines and swaps the remaining pair. -/
 def conclusion_m2_level3_forgetful_over_xi_splitting_ramification_sigma :

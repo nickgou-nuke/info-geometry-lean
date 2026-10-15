@@ -44,10 +44,22 @@ theorem basedLoopHomotopyQuotientConcatenation_associative
           (basedLoopHomotopyQuotientConcatenation q₀ q₁)) =
         symbolicLatentPathHomotopyQuotientMap
           (canonicalSymbolicLatentBasedLoopConcatenation γ₀ γ₁).1 := by
-      exact (basedLoopHomotopyQuotientRepresentative_quotient_eq
-        (basedLoopHomotopyQuotientConcatenation q₀ q₁)).trans (by
-          simpa using congrArg Subtype.val
-            (basedLoopHomotopyQuotientConcatenation_eq_mk_representatives q₀ q₁))
+      have hrep := basedLoopHomotopyQuotientRepresentative_quotient_eq
+        (basedLoopHomotopyQuotientConcatenation q₀ q₁)
+      change symbolicLatentPathHomotopyQuotientMap
+          (basedLoopHomotopyQuotientRepresentative
+            (basedLoopHomotopyQuotientConcatenation q₀ q₁)) =
+        (basedLoopHomotopyQuotientConcatenation q₀ q₁).1 at hrep
+      have hconcat :
+          (basedLoopHomotopyQuotientConcatenation q₀ q₁).1 =
+            symbolicLatentPathHomotopyQuotientMap
+              (canonicalSymbolicLatentBasedLoopConcatenation γ₀ γ₁).1 := by
+        change (basedLoopHomotopyQuotientConcatenation q₀ q₁).1 =
+          (basedLoopHomotopyQuotient_mk
+            (canonicalSymbolicLatentBasedLoopConcatenation γ₀ γ₁)).1
+        exact congrArg Subtype.val
+          (basedLoopHomotopyQuotientConcatenation_eq_mk_representatives q₀ q₁)
+      exact hrep.trans hconcat
     exact Quotient.exact hq
   have h₁₂ : SymbolicLatentPathHomotopic
       (basedLoopHomotopyQuotientRepresentativeLoop
@@ -58,10 +70,22 @@ theorem basedLoopHomotopyQuotientConcatenation_associative
           (basedLoopHomotopyQuotientConcatenation q₁ q₂)) =
         symbolicLatentPathHomotopyQuotientMap
           (canonicalSymbolicLatentBasedLoopConcatenation γ₁ γ₂).1 := by
-      exact (basedLoopHomotopyQuotientRepresentative_quotient_eq
-        (basedLoopHomotopyQuotientConcatenation q₁ q₂)).trans (by
-          simpa using congrArg Subtype.val
-            (basedLoopHomotopyQuotientConcatenation_eq_mk_representatives q₁ q₂))
+      have hrep := basedLoopHomotopyQuotientRepresentative_quotient_eq
+        (basedLoopHomotopyQuotientConcatenation q₁ q₂)
+      change symbolicLatentPathHomotopyQuotientMap
+          (basedLoopHomotopyQuotientRepresentative
+            (basedLoopHomotopyQuotientConcatenation q₁ q₂)) =
+        (basedLoopHomotopyQuotientConcatenation q₁ q₂).1 at hrep
+      have hconcat :
+          (basedLoopHomotopyQuotientConcatenation q₁ q₂).1 =
+            symbolicLatentPathHomotopyQuotientMap
+              (canonicalSymbolicLatentBasedLoopConcatenation γ₁ γ₂).1 := by
+        change (basedLoopHomotopyQuotientConcatenation q₁ q₂).1 =
+          (basedLoopHomotopyQuotient_mk
+            (canonicalSymbolicLatentBasedLoopConcatenation γ₁ γ₂)).1
+        exact congrArg Subtype.val
+          (basedLoopHomotopyQuotientConcatenation_eq_mk_representatives q₁ q₂)
+      exact hrep.trans hconcat
     exact Quotient.exact hq
   have hleft : SymbolicLatentPathHomotopic
       (canonicalSymbolicLatentBasedLoopConcatenation

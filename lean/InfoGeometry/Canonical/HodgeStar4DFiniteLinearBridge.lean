@@ -54,8 +54,9 @@ noncomputable def antiSelfDualPartLinear : TwoFormC →ₗ[ℂ] TwoFormC where
 
 theorem selfDualPartLinear_add_antiSelfDualPartLinear (F : TwoFormC) :
     selfDualPartLinear F + antiSelfDualPartLinear F = F := by
-  simpa [selfDualPartLinear_apply, antiSelfDualPartLinear_apply] using
-    self_plus_anti F
+  ext i
+  change selfDualPart F i + antiSelfDualPart F i = F i
+  exact congrFun (self_plus_anti F) i
 
 theorem hodgeStarLinear_selfDualPartLinear (F : TwoFormC) :
     hodgeStarLinear (selfDualPartLinear F) =

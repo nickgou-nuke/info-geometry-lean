@@ -54,8 +54,8 @@ theorem nat_power_sample_eq_iterate
     (K : CuntzAlg n →ₗ[ℂ] CuntzAlg n) (p k : ℕ) :
     dirichletModularSample (datum primes K) (p ^ k) =
       ((sigma n primes (Real.log p)).toLinearMap) ^ k := by
-  simpa [datum_U] using
-    (dirichletModularSample_prime_power (datum primes K) p k)
+  rw [dirichletModularSample_prime_power]
+  rw [dirichletModularSample_eq_sigma]
 
 theorem prime_power_sample_eq_iterate
     (K : CuntzAlg n →ₗ[ℂ] CuntzAlg n) (p k : ℕ) (_hp : Nat.Prime p) :

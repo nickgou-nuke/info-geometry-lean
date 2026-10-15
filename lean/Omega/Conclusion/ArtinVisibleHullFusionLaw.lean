@@ -71,6 +71,8 @@ theorem paper_conclusion_artin_visible_hull_fusion_law
     rcases p.property with ⟨g, hg⟩
     refine ⟨Quotient.mk (conclusion_artin_visible_hull_fusion_law_jointKernel D) g, ?_⟩
     apply Subtype.ext
-    simpa [conclusion_artin_visible_hull_fusion_law_universalMap] using hg.symm
+    change (Quotient.mk D.kernel_one g, Quotient.mk D.kernel_two g) = p.1
+    exact hg.symm
+
 
 end Omega.Conclusion

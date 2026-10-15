@@ -26,7 +26,8 @@ theorem compact_t2_surjection_is_quotient
     (f : X → Y) (hf_cont : Continuous f)
     (hf_surj : Function.Surjective f) :
     Topology.IsQuotientMap f := by
-  refine .mk hf_surj ?_
+  refine ⟨?_, hf_surj⟩
+  refine ⟨?_⟩
   apply TopologicalSpace.ext_iff.mpr
   intro s
   constructor

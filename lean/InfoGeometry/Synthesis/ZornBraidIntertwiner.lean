@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.CanonicalZornBraidTransport
 import InfoGeometry.Canonical.SplitOctonionAutomorphism
 import InfoGeometry.Categorical.ZornColimitStageAction
+import InfoGeometry.Categorical.ZornColimitBraidAction
 
 noncomputable section
 
@@ -11,6 +12,7 @@ open InfoGeometry.Canonical
 open InfoGeometry.Canonical.CanonicalZornBraidTransport
 open InfoGeometry.Canonical.UHFInductiveColimitBoundary
 open InfoGeometry.Categorical.ZornUHFColimit
+open InfoGeometry.Categorical.ZornColimitBraidAction
 open InfoGeometry.Physics.QCDCanonicalComplexZornBridge (CanonicalZorn canonicalComplexEquiv)
 open InfoGeometry.Physics.SplitOctonionBraidSU3 (Q_k)
 open InfoGeometry.Physics.YangBaxterZornBridge (LeftMulR)

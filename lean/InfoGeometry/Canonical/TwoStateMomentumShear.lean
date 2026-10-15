@@ -66,8 +66,11 @@ theorem conj_phase_mul (y : ℝ) : star (phase y) * phase y = 1 := by
 
 theorem hasDerivAt_phase (y : ℝ) :
     HasDerivAt phase (phase y * Complex.I) y := by
-  simpa [phase] using
-    (((hasDerivAt_id y).ofReal_comp.mul_const Complex.I).cexp)
+  have h := (((hasDerivAt_id y).ofReal_comp.mul_const Complex.I).cexp)
+  have heq : Complex.exp (↑(id y) * Complex.I) * (↑(1 : ℝ) * Complex.I) = phase y * Complex.I := by
+    simp [phase]
+  rw [heq] at h
+  exact h
 
 theorem hasDerivAt_pre (y : ℝ) : HasDerivAt pre (dyPre y) y := by
   have hp : HasDerivAt rawPre (![0, phase y * Complex.I]) y := by
@@ -155,7 +158,7 @@ theorem weakDenominator_eq (d r y : ℝ) :
 theorem weakNumerator_eq (d r y : ℝ) :
     weakNumerator momentumMatrix (rawPre y) (rawPost d r y) = (r : ℂ) := by
   rw [weakNumerator, matVec_momentumMatrix, cinner_eq_inner]
-  simpa only [momentum_eq] using numerator_eq d r y
+  simpa only [post, momentum_eq] using numerator_eq d r y
 
 theorem guarded_readout {d : ℝ} (hd : d ≠ 0) (r y : ℝ) :
     weakValue? momentumMatrix (rawPre y) (rawPost d r y) = some ((r / d : ℝ) : ℂ) := by

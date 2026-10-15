@@ -90,11 +90,11 @@ noncomputable instance : MulAction (Units ℝ) PrequantumData where
     apply PrequantumData.ext <;> simp
   mul_smul := by
     intro u v P
-    symm
-    simpa [mul_assoc] using
-      (P.rescaleHbar_rescaleHbar
-        (c := (v : ℝ)) (d := (u : ℝ))
-        (hc := Units.ne_zero v) (hd := Units.ne_zero u))
+    apply PrequantumData.ext
+    · simp
+    · simp only [PrequantumData.smul_curvatureScale, Units.val_mul, div_div, mul_comm]
+    · simp only [PrequantumData.smul_hbar, Units.val_mul]
+      ring
 
 namespace PrequantumData
 

@@ -152,9 +152,7 @@ theorem supergradedDiracCrystalTopCatDescend_unique
     g = supergradedDiracCrystalTopCatDescend X0 X1 f hf c := by
   apply colimit.hom_ext
   intro i
-  dsimp [supergradedDiracCrystalTopCatInjection] at hg ⊢
-  rw [hg i]
-  exact (supergradedDiracCrystalTopCatDescend_naturality f hf c i).symm
+  exact (hg i).trans (colimit.ι_desc c i).symm
 
 /-! ## Explicit compatible two-stage readouts -/
 
@@ -205,10 +203,9 @@ theorem supergradedDiracCrystalTopCatCompatibleReadout_stage
     (i : DiracCrystalStage) :
     supergradedDiracCrystalTopCatInjection X0 X1 f hf i ≫
         supergradedDiracCrystalTopCatCompatibleReadout f hf a0 a1 hcompat =
-      (supergradedDiracCrystalTopCatCompatibleCocone f hf a0 a1 hcompat).ι.app i := by
-  simpa [supergradedDiracCrystalTopCatCompatibleReadout] using
-    (supergradedDiracCrystalTopCatDescend_naturality f hf
-      (supergradedDiracCrystalTopCatCompatibleCocone f hf a0 a1 hcompat) i)
+      (supergradedDiracCrystalTopCatCompatibleCocone f hf a0 a1 hcompat).ι.app i :=
+  supergradedDiracCrystalTopCatDescend_naturality f hf
+    (supergradedDiracCrystalTopCatCompatibleCocone f hf a0 a1 hcompat) i
 
 theorem supergradedDiracCrystalTopCatCompatibleReadout_initial
     {X0 X1 Y : Type u}
@@ -220,10 +217,9 @@ theorem supergradedDiracCrystalTopCatCompatibleReadout_initial
       (supergradedDiracCrystalTopCatDiagram X0 X1 f hf).map DiracCrystalStage.Hom.step ≫
         a1 = a0) :
     supergradedDiracCrystalTopCatInjection X0 X1 f hf .initial ≫
-        supergradedDiracCrystalTopCatCompatibleReadout f hf a0 a1 hcompat = a0 := by
-  simpa [supergradedDiracCrystalTopCatCompatibleCocone] using
-    supergradedDiracCrystalTopCatCompatibleReadout_stage f hf a0 a1 hcompat
-      DiracCrystalStage.initial
+        supergradedDiracCrystalTopCatCompatibleReadout f hf a0 a1 hcompat = a0 :=
+  supergradedDiracCrystalTopCatCompatibleReadout_stage f hf a0 a1 hcompat
+    DiracCrystalStage.initial
 
 theorem supergradedDiracCrystalTopCatCompatibleReadout_extended
     {X0 X1 Y : Type u}
@@ -235,9 +231,8 @@ theorem supergradedDiracCrystalTopCatCompatibleReadout_extended
       (supergradedDiracCrystalTopCatDiagram X0 X1 f hf).map DiracCrystalStage.Hom.step ≫
         a1 = a0) :
     supergradedDiracCrystalTopCatInjection X0 X1 f hf .extended ≫
-        supergradedDiracCrystalTopCatCompatibleReadout f hf a0 a1 hcompat = a1 := by
-  simpa [supergradedDiracCrystalTopCatCompatibleCocone] using
-    supergradedDiracCrystalTopCatCompatibleReadout_stage f hf a0 a1 hcompat
-      DiracCrystalStage.extended
+        supergradedDiracCrystalTopCatCompatibleReadout f hf a0 a1 hcompat = a1 :=
+  supergradedDiracCrystalTopCatCompatibleReadout_stage f hf a0 a1 hcompat
+    DiracCrystalStage.extended
 
 end InfoGeometry.Physics.SupergradedDiracCrystalTopCatColimit

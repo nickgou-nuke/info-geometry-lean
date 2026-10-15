@@ -143,7 +143,7 @@ theorem fibonacci_fourAnyon_artin
     fibonacciRMatrix q * fibonacciBMatrix q τ s * fibonacciRMatrix q =
       fibonacciBMatrix q τ s * fibonacciRMatrix q * fibonacciBMatrix q τ s := by
   have hR00 : fibonacciRMatrix q 0 0 = -(q : ℂ) := by simp [fibonacciRMatrix]; exact hq_inv
-  have hR11 : fibonacciRMatrix q 1 1 = (q : ℂ) ^ 3 := by simp [fibonacciRMatrix]; exact hq_pow3
+  have hR11 : fibonacciRMatrix q 1 1 = (q : ℂ) ^ 3 := by simp [fibonacciRMatrix]
   have hR01 : fibonacciRMatrix q 0 1 = 0 := by rfl
   have hR10 : fibonacciRMatrix q 1 0 = 0 := by rfl
 

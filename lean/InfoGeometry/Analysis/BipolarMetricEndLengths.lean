@@ -155,35 +155,34 @@ theorem hasDerivAt_middleAxisPrimitive
     HasDerivAt middleAxisPrimitive (middleAxisSpeed x) x := by
   have hlogx : HasDerivAt Real.log x⁻¹ x :=
     Real.hasDerivAt_log (ne_of_gt hx0)
-  have hinner : HasDerivAt (fun t : ℝ => 1 - t) (-1) x := by
-    simpa using (hasDerivAt_const x (1 : ℝ)).sub (hasDerivAt_id x)
+  have hinner : HasDerivAt (fun t : ℝ => 1 - t) (-1) x := (hasDerivAt_id x).const_sub 1
   have hlogone :
       HasDerivAt (fun t : ℝ => Real.log (1 - t))
         ((1 - x)⁻¹ * (-1)) x :=
     (Real.hasDerivAt_log (ne_of_gt (sub_pos.mpr hx1))).comp x hinner
   have h := hlogx.sub hlogone
-  convert h using 1
-  · unfold middleAxisSpeed
-    field_simp [ne_of_gt hx0, ne_of_gt (sub_pos.mpr hx1)]
-    ring
+  refine h.congr_deriv ?_
+  unfold middleAxisSpeed
+  field_simp [ne_of_gt hx0, ne_of_gt (sub_pos.mpr hx1)]
+  ring
 
 /-- Genuine derivative of the outer-axis primitive. -/
 theorem hasDerivAt_outerAxisPrimitive
     {x : ℝ} (hx : 1 < x) :
     HasDerivAt outerAxisPrimitive (outerAxisSpeed x) x := by
-  have hsub : HasDerivAt (fun t : ℝ => t - 1) 1 x := by
-    simpa using (hasDerivAt_id x).sub_const 1
-  have hlogsub :
-      HasDerivAt (fun t : ℝ => Real.log (t - 1)) (x - 1)⁻¹ x :=
-    by simpa using (Real.hasDerivAt_log (ne_of_gt (sub_pos.mpr hx))).comp x hsub
+  have hsub : HasDerivAt (fun t : ℝ => t - 1) 1 x := (hasDerivAt_id x).sub_const 1
+  have hlogsub' := (Real.hasDerivAt_log (ne_of_gt (sub_pos.mpr hx))).comp x hsub
+  have hlogsub : HasDerivAt (fun t : ℝ => Real.log (t - 1)) (x - 1)⁻¹ x := by
+    rw [mul_one] at hlogsub'
+    exact hlogsub'
   have hx0 : 0 < x := lt_trans zero_lt_one hx
   have hlogx : HasDerivAt Real.log x⁻¹ x :=
     Real.hasDerivAt_log (ne_of_gt hx0)
   have h := hlogsub.sub hlogx
-  convert h using 1
-  · unfold outerAxisSpeed
-    field_simp [ne_of_gt hx0, ne_of_gt (sub_pos.mpr hx)]
-    ring
+  refine h.congr_deriv ?_
+  unfold outerAxisSpeed
+  field_simp [ne_of_gt hx0, ne_of_gt (sub_pos.mpr hx)]
+  ring
 
 /-- The middle-axis speed is integrable on every compact subinterval of
 `(0,1)`. -/
@@ -201,8 +200,12 @@ theorem middleAxisSpeed_intervalIntegrable
     continuousAt_id.mul hsub
   have hne : x * (1 - x) ≠ 0 :=
     mul_ne_zero (ne_of_gt hx0) (ne_of_gt (sub_pos.mpr hx1))
-  change ContinuousWithinAt (fun y : ℝ => 1 / (y * (1 - y))) _ x
-  simpa [one_div] using (hden.inv₀ hne).continuousWithinAt
+  have hinv : ContinuousWithinAt (fun y : ℝ => (y * (1 - y))⁻¹) (Icc a b) x :=
+    (hden.inv₀ hne).continuousWithinAt
+  have h_eq : middleAxisSpeed = (fun y : ℝ => (y * (1 - y))⁻¹) := by
+    ext y; exact one_div (y * (1 - y))
+  rw [h_eq]
+  exact hinv
 
 /-- The outer-axis speed is integrable on every compact interval contained in
 `(1,∞)`. -/
@@ -220,8 +223,12 @@ theorem outerAxisSpeed_intervalIntegrable
     continuousAt_id.mul hsub
   have hne : x * (x - 1) ≠ 0 :=
     mul_ne_zero (ne_of_gt hx0) (ne_of_gt (sub_pos.mpr hx1))
-  change ContinuousWithinAt (fun y : ℝ => 1 / (y * (y - 1))) _ x
-  simpa [one_div] using (hden.inv₀ hne).continuousWithinAt
+  have hinv : ContinuousWithinAt (fun y : ℝ => (y * (y - 1))⁻¹) (Icc a b) x :=
+    (hden.inv₀ hne).continuousWithinAt
+  have h_eq : outerAxisSpeed = (fun y : ℝ => (y * (y - 1))⁻¹) := by
+    ext y; exact one_div (y * (y - 1))
+  rw [h_eq]
+  exact hinv
 
 /-- Exact length integral on a compact subinterval of `(0,1)`. -/
 theorem integral_middleAxisSpeed
@@ -354,7 +361,8 @@ theorem tendsto_outerAxisPrimitive_atTop :
       Tendsto (fun x : ℝ => Real.log (1 - x⁻¹)) atTop (𝓝 0) := by
     have h :=
       (Real.continuousAt_log (by norm_num : (1 : ℝ) ≠ 0)).tendsto.comp harg
-    simpa using h
+    rw [Real.log_one] at h
+    exact h
   refine (tendsto_congr' ?_).2 hlog
   filter_upwards [eventually_gt_atTop (1 : ℝ)] with x hx
   have hx0 : x ≠ 0 := ne_of_gt (lt_trans zero_lt_one hx)

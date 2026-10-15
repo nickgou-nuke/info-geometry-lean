@@ -31,6 +31,8 @@ noncomputable section
 
 namespace InfoGeometry.Canonical.HorizonZitterModes
 
+universe uObs uV4 uObs2 uV42
+
 open InfoGeometry.Canonical.DrazinModularPersistence
 open InfoGeometry.Canonical.Drazin
 open InfoGeometry.OperatorAlgebra.Thermodynamics
@@ -61,8 +63,8 @@ type has exactly four elements.
 -/
 @[rep_depth operator]
 structure KleinFourAction
-    (Obs : Type*) [Ring Obs] where
-  V4 : Type*
+    (Obs : Type uObs) [Ring Obs] where
+  V4 : Type uV4
   one : V4
   mul : V4 → V4 → V4
   action : V4 → Obs ≃+* Obs
@@ -206,11 +208,11 @@ and certified as the physical harmonic zero mode on the Drazin horizon.
 -/
 @[rep_depth operator]
 structure HorizonV4ZitterMode
-    (Obs : Type*) [Ring Obs] [Star Obs] where
+    (Obs : Type uObs2) [Ring Obs] [Star Obs] where
   flow : ModularFlow Obs
   horizon : DrazinHorizon Obs
   frequency : DrazinFrequencyData Obs
-  V4 : KleinFourAction Obs
+  V4 : KleinFourAction.{uObs2, uV42} Obs
   raw : Obs
   envelope : Obs
   horizon_fixed : IsPhysicalHorizon flow horizon

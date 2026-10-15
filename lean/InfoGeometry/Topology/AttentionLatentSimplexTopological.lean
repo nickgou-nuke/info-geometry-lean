@@ -26,8 +26,9 @@ theorem continuous_latentSoftmax_coordinate
   have hne : ∀ x : X, (∑ j : n, Real.exp (logits x j)) ≠ 0 := by
     intro x
     exact (sumExp_pos (logits x)).ne'
-  simpa [latentSoftmax, softmax, sumExp] using
-    (Real.continuous_exp.comp (hlogits i)).div hsum hne
+  change Continuous (fun x =>
+    Real.exp (logits x i) / (∑ j : n, Real.exp (logits x j)))
+  exact (Real.continuous_exp.comp (hlogits i)).div hsum hne
 
 theorem continuous_latentSoftmax
     (logits : X → n → ℝ)

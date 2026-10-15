@@ -71,7 +71,7 @@ theorem majoranaCAR_pair_mem_closed_locus
     (M.gamma u, M.gamma v) ∈ majoranaCARLocus u v := by
   change majoranaCARResidual u v (M.gamma u) (M.gamma v) = 0
   apply sub_eq_zero.mpr
-  simpa [majoranaCARResidual, anticommutator] using M.car u v
+  simpa [majoranaCARResidual, anticommutator, ContinuousLinearMap.mul_def] using M.car u v
 
 /-- The normalized CAR locus is the `q = -1` q-CCR fiber. -/
 theorem majoranaCAR_pair_qccr_neg_one_of_normalized_pair
@@ -82,7 +82,7 @@ theorem majoranaCAR_pair_qccr_neg_one_of_normalized_pair
     calc
       M.gamma u * M.gamma v + M.gamma v * M.gamma u =
           (2 * inner ℝ u v) • ContinuousLinearMap.id ℝ S := by
-            simpa [anticommutator] using M.car u v
+            simpa [anticommutator, ContinuousLinearMap.mul_def] using M.car u v
       _ = 1 := by
         rw [h_norm, one_smul]
         rfl
@@ -171,6 +171,6 @@ theorem transportedMajorana_pair_mem_closed_locus
     (T.transportGamma u) (T.transportGamma v) = 0
   apply sub_eq_zero.mpr
   rw [T.preserves_inner u v]
-  simpa [majoranaCARResidual, anticommutator] using T.transportGamma_car u v
+  simpa [majoranaCARResidual, anticommutator, ContinuousLinearMap.mul_def] using T.transportGamma_car u v
 
 end InfoGeometry.Canonical.MajoranaCARTopologicalLocus

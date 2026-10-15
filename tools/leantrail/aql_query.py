@@ -15,14 +15,15 @@ Examples:
 from __future__ import annotations
 
 import argparse
-import base64
 import json
 import os
 import sys
-import urllib.error
-import urllib.request
 from pathlib import Path
 from typing import Any
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(REPO_ROOT / "src"))
+sys.path.insert(0, str(REPO_ROOT))
 
 
 def load_env_file(path: Path) -> None:
@@ -62,45 +63,30 @@ def read_query(args: argparse.Namespace) -> str:
 
 
 def run_aql(query: str, args: argparse.Namespace) -> dict[str, Any]:
-    load_env_file(args.env_file)
-    endpoint = env_first("ARANGO_URL", "ARANGO_ENDPOINT", "ARANGO_HOST", default=args.endpoint)
-    database = env_first("ARANGO_DATABASE", "ARANGO_DB", default=args.database)
-    username = env_first("ARANGO_USERNAME", "ARANGO_USER", default=args.username)
-    password = env_first("ARANGO_PASSWORD", default=args.password) or ""
-    if not endpoint or not database or not username:
-        raise SystemExit("aql_query: missing endpoint/database/username")
-
-    body: dict[str, Any] = {"query": query, "batchSize": args.batch_size, "count": args.count}
-    if args.bind_vars:
-        try:
-            body["bindVars"] = json.loads(args.bind_vars)
-        except json.JSONDecodeError as exc:
-            raise SystemExit(f"aql_query: invalid --bind-vars JSON: {exc}") from exc
-
-    payload = json.dumps(body).encode("utf-8")
-    url = f"{endpoint.rstrip('/')}/_db/{database}/_api/cursor"
-    request = urllib.request.Request(url, data=payload, headers={"Content-Type": "application/json"})
-    token = base64.b64encode(f"{username}:{password}".encode("utf-8")).decode("ascii")
-    request.add_header("Authorization", f"Basic {token}")
-    try:
-        with urllib.request.urlopen(request, timeout=args.timeout) as response:
-            return json.load(response)
-    except urllib.error.HTTPError as exc:
-        detail = exc.read().decode("utf-8", "replace")
-        raise SystemExit(f"aql_query: HTTP {exc.code}: {detail}") from exc
-    except urllib.error.URLError as exc:
-        raise SystemExit(f"aql_query: connection failed: {exc}") from exc
+    from igf.config import (load_repo_arango_env, arango_endpoint,
+                            arango_database, arango_username, arango_password)
+    from igf.graph.arango_http import ArangoHttpTarget, execute_aql_response
+    load_repo_arango_env()
+    if args.env_file:
+        load_env_file(args.env_file)
+    target = ArangoHttpTarget(args.endpoint or arango_endpoint(),
+                             args.database or arango_database(),
+                             args.username or arango_username(), arango_password())
+    bind_vars = json.loads(args.bind_vars) if args.bind_vars else {}
+    if not isinstance(bind_vars, dict):
+        raise ValueError("--bind-vars must be a JSON object")
+    return execute_aql_response(target, query, bind_vars, timeout=args.timeout,
+                                batch_size=args.batch_size, count=args.count)
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run AQL via ArangoDB HTTP API")
     parser.add_argument("query", nargs="?", help="AQL query; if omitted, use --file or stdin")
     parser.add_argument("--file", type=Path, help="read AQL query from file")
-    parser.add_argument("--env-file", type=Path, default=Path.home() / ".config/arango/env.sh")
-    parser.add_argument("--endpoint", default="http://127.0.0.1:8530")
-    parser.add_argument("--database", default="infogeometry")
-    parser.add_argument("--username", default="root")
-    parser.add_argument("--password", default="")
+    parser.add_argument("--env-file", type=Path, default=None)
+    parser.add_argument("--endpoint", default=None)
+    parser.add_argument("--database", default=None)
+    parser.add_argument("--username", default=None)
     parser.add_argument("--bind-vars", help="JSON object for AQL bind variables")
     parser.add_argument("--batch-size", type=int, default=1000)
     parser.add_argument("--timeout", type=float, default=60.0)
@@ -112,7 +98,10 @@ def main() -> None:
     query = read_query(args).strip()
     if not query:
         raise SystemExit("aql_query: empty query")
-    response = run_aql(query, args)
+    try:
+        response = run_aql(query, args)
+    except Exception as exc:
+        raise SystemExit(f"aql_query: query failed ({type(exc).__name__}); no result produced") from exc
     if response.get("error"):
         raise SystemExit(json.dumps(response, indent=2, ensure_ascii=False))
     output: Any = response if args.raw else response.get("result", [])

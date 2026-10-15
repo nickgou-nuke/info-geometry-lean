@@ -1,5 +1,6 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Analysis.Calculus.Deriv.Add
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
 import Omega.UnitCirclePhaseArithmetic.AppJensenSingleZeroLowerBound
@@ -103,14 +104,26 @@ private lemma appJensenLogRadiusDefect_continuous (roots : Finset ℂ) :
   classical
   induction roots using Finset.induction_on with
   | empty =>
-      simpa [appJensenLogRadiusDefect] using (continuous_const : Continuous fun _ : ℝ => (0 : ℝ))
+      change Continuous (fun _ : ℝ => (0 : ℝ))
+      exact continuous_const
   | @insert z roots hz ih =>
       have hterm : Continuous (fun t : ℝ => max (t - Real.log ‖z‖) (0 : ℝ)) :=
         (continuous_id.sub continuous_const).max continuous_const
-      have ih' : Continuous (fun t : ℝ => Finset.sum roots fun w => max (t - Real.log ‖w‖) (0 : ℝ)) := by
-        simpa [appJensenLogRadiusDefect] using ih
-      unfold appJensenLogRadiusDefect
-      simpa [Finset.sum_insert, hz] using hterm.add ih'
+      have hsum (t : ℝ) :
+          Finset.sum (insert z roots) (fun w => max (t - Real.log ‖w‖) (0 : ℝ)) =
+            max (t - Real.log ‖z‖) (0 : ℝ) +
+              Finset.sum roots (fun w => max (t - Real.log ‖w‖) (0 : ℝ)) :=
+        Finset.sum_insert hz
+      have hroots : Continuous (fun t : ℝ => Finset.sum roots
+          (fun w => max (t - Real.log ‖w‖) (0 : ℝ))) := by
+        change Continuous (appJensenLogRadiusDefect roots)
+        exact ih
+      have hcont := hterm.add hroots
+      change Continuous (fun t : ℝ => Finset.sum (insert z roots)
+        (fun w => max (t - Real.log ‖w‖) (0 : ℝ)))
+      refine hcont.congr ?_
+      intro t
+      exact (hsum t).symm
 
 private lemma appJensenLogRadiusDefect_monotone (roots : Finset ℂ) :
     Monotone (appJensenLogRadiusDefect roots) := by

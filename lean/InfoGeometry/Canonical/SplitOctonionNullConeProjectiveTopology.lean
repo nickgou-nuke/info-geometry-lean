@@ -106,7 +106,11 @@ theorem splitZornNullRayLift_continuous
       SameProjectiveRay X.1 Y.1 → f X = f Y) :
     Continuous (splitZornNullRayLift f hconst) := by
   apply (isQuotientMap_quotient_mk'.continuous_iff).2
-  simpa [Function.comp_def, splitZornNullRayProjection,
-    splitZornNullRayLift] using hf
+  change Continuous (splitZornNullRayLift f hconst ∘ splitZornNullRayProjection)
+  have hcomp : splitZornNullRayLift f hconst ∘ splitZornNullRayProjection = f := by
+    funext X
+    exact splitZornNullRayLift_projection f hconst X
+  rw [hcomp]
+  exact hf
 
 end InfoGeometry.Canonical

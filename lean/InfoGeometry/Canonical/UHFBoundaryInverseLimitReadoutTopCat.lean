@@ -39,15 +39,14 @@ theorem inverseLimitReadout_prefixLimitPrependBit_square (b : Bool) :
   simp only [Category.assoc]
   rw [← Category.assoc prefixBoundaryLimitIso.hom
     prefixBoundaryLimitIso.inv readoutTopCatHom]
-  rw [prefixBoundaryLimitIso.hom_inv_id]
-  have hprepend : prependBit b = prefixBit b := by
-    funext x n
+  rw [prefixBoundaryLimitIso.hom_inv_id, Category.id_comp]
+  have hprepend : prependBitHom b = prefixTopCatHom b := by
+    ext x n
     cases n with
-    | zero => simp [prependBit, prefixBit]
-    | succ n => simp [prependBit, prefixBit]
-  simpa [prependBitHom, prefixTopCatHom, hprepend, Category.comp_id] using
-    congrArg (fun f => prefixBoundaryLimitIso.inv ≫ f)
-      (readout_prefixTopCat_square b)
+    | zero => rfl
+    | succ n => rfl
+  rw [hprepend, ← Category.assoc]
+  exact congrArg (prefixBoundaryLimitIso.inv ≫ ·) (readout_prefixTopCat_square b)
 
 theorem inverseLimitReadout_leftShift_square :
     prefixLimitPrependBit false ≫ inverseLimitReadoutTopCatHom =

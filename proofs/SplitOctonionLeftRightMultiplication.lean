@@ -19,10 +19,6 @@ def rmul (α : SplitOct) : SplitOct →ₗ[ℝ] SplitOct where
 
 lemma splitBilinear_eq (x y : SplitOct) : splitBilinear x y = (x.a * star y.a - x.b * star y.b).re := by
   dsimp [splitBilinear, splitNorm, add_def, sub_def]
-  simp only [Quaternion.re_add, Quaternion.imI_add, Quaternion.imJ_add, Quaternion.imK_add,
-             Quaternion.re_sub, Quaternion.imI_sub, Quaternion.imJ_sub, Quaternion.imK_sub,
-             Quaternion.re_mul, Quaternion.imI_mul, Quaternion.imJ_mul, Quaternion.imK_mul,
-             Quaternion.re_star, Quaternion.imI_star, Quaternion.imJ_star, Quaternion.imK_star]
   ring
 
 lemma quat_re_mul_comm (a b : ℍ[ℝ]) : (a * b).re = (b * a).re := by

@@ -41,7 +41,7 @@ structure FermionQuantumNumbers where
 - $j, k, l \mapsto u_R, u_G, u_B$ (up quarks, $Q=2/3$)
 - $il, jl, kl \mapsto d_R, d_G, d_B$ (down quarks, $Q=-1/3$)
 -/
-def splitOctToFermions (z : SplitOct) : List FermionQuantumNumbers :=
+def splitOctToFermions (_z : SplitOct) : List FermionQuantumNumbers :=
   [ ⟨0, 1/2, -1, Color.singlet⟩,        -- ν (neutrino)
     ⟨-1, -1/2, -1, Color.singlet⟩,       -- e⁻ (charged lepton)
     ⟨2/3, 1/2, 1/3, Color.red⟩,         -- u_R (up quark red)
@@ -61,7 +61,7 @@ theorem single_gen_fermions_count (z : SplitOct) :
 theorem single_gen_charge_sum_zero (z : SplitOct) :
     ((splitOctToFermions z).map FermionQuantumNumbers.electricCharge).sum = 0 := by
   dsimp [splitOctToFermions]
-  ring
+  norm_num
 
 /-- Three generations of off-diagonal Peirce spaces ($z_1, z_2, z_3$ slots). -/
 def threeGenerationsFermions (z₁ z₂ z₃ : SplitOct) : List FermionQuantumNumbers :=
@@ -70,13 +70,13 @@ def threeGenerationsFermions (z₁ z₂ z₃ : SplitOct) : List FermionQuantumNu
 /-- Three Generation Theorem: The 24 off-diagonal Peirce components yield exactly 24 fermion states. -/
 theorem three_generation_decomposition (z₁ z₂ z₃ : SplitOct) :
     (threeGenerationsFermions z₁ z₂ z₃).length = 24 := by
-  dsimp [threeGenerationsFermions, splitOctToFermions]
+  rfl
 
 /-- Standard Model Gauge Anomaly Cancellation: Total electric charge sum across all 3 generations is zero. -/
 theorem three_generations_charge_sum_zero (z₁ z₂ z₃ : SplitOct) :
     ((threeGenerationsFermions z₁ z₂ z₃).map FermionQuantumNumbers.electricCharge).sum = 0 := by
   dsimp [threeGenerationsFermions, splitOctToFermions]
-  ring
+  norm_num
 
 /-- The fermion readout attached to the three concrete off-diagonal slots of an
 Albert matrix.  The `SplitOct` values select the Peirce components; the finite

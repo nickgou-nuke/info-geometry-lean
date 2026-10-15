@@ -15,6 +15,8 @@ namespace InfoGeometry.Canonical.CoordinateTrialityLabelIntertwiner
 
 open InfoGeometry.Canonical.TrialitySpin8Permutations
 
+noncomputable section
+
 abbrev ConformalNullPair :=
   InfoGeometry.Clifford.ConformalLift55.ConformalNullPair
 
@@ -70,4 +72,5 @@ theorem coordinate_triality_cycle_order_three (c : Coordinate) :
   rw [trialityCycle_pow_three]
   rfl
 
+end
 end InfoGeometry.Canonical.CoordinateTrialityLabelIntertwiner

@@ -141,9 +141,8 @@ theorem paper_xi_time_part70d_central_fiber_second_moment
             ((xi_time_part70d_central_fiber_second_moment_phiInv +
                 xi_time_part70d_central_fiber_second_moment_phiInv ^ 4) -
               (xi_time_part70d_central_fiber_second_moment_phiInv +
-                xi_time_part70d_central_fiber_second_moment_phiInv ^ 3) ^ 2)) := by
-      simpa [xi_time_part70d_central_fiber_second_moment_variance] using
-        D.xi_time_part70d_central_fiber_second_moment_second_limit.sub hfirst_sq
+                xi_time_part70d_central_fiber_second_moment_phiInv ^ 3) ^ 2)) :=
+      D.xi_time_part70d_central_fiber_second_moment_second_limit.sub hfirst_sq
     simpa [xi_time_part70d_central_fiber_second_moment_second_constant,
       xi_time_part70d_central_fiber_second_moment_variance_constant] using hvar
 

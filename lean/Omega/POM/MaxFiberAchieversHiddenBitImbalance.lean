@@ -37,7 +37,7 @@ private theorem
     pom_max_fiber_achievers_hidden_bit_imbalance_ratio_tendsto_inv_golden_shift_shift :
     Tendsto (fun n : ℕ => (Nat.fib (n + 2) : ℝ) / Nat.fib (n + 3)) atTop
       (nhds (Real.goldenRatio⁻¹)) := by
-  simpa [Nat.add_assoc] using
+  simpa [Function.comp_def, Nat.add_assoc] using
     pom_max_fiber_achievers_hidden_bit_imbalance_ratio_tendsto_inv_golden_shift.comp
       (tendsto_add_atTop_nat 1)
 

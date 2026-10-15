@@ -42,10 +42,9 @@ noncomputable def plusPointL : E →L[ℝ] H₂ where
   map_smul' c x := by
     apply DoubledSpace.ext <;> simp [plusPoint, to_doubled]
   cont := by
-    simpa [plusPoint, to_doubled] using
-      (WithLp.prod_continuous_toLp (p := (2 : ENNReal)) (α := E) (β := E)).comp
-        ((continuous_id : Continuous fun x : E => x).prodMk
-          (continuous_const : Continuous fun _ : E => (0 : E)))
+    exact (WithLp.prod_continuous_toLp (p := (2 : ENNReal)) (α := E) (β := E)).comp
+      ((continuous_id : Continuous fun x : E => x).prodMk
+        (continuous_const : Continuous fun _ : E => (0 : E)))
 
 /-- Negative-sheet embedding as a continuous linear map. -/
 noncomputable def minusPointL : E →L[ℝ] H₂ where
@@ -55,10 +54,9 @@ noncomputable def minusPointL : E →L[ℝ] H₂ where
   map_smul' c x := by
     apply DoubledSpace.ext <;> simp [minusPoint, to_doubled]
   cont := by
-    simpa [minusPoint, to_doubled] using
-      (WithLp.prod_continuous_toLp (p := (2 : ENNReal)) (α := E) (β := E)).comp
-        ((continuous_const : Continuous fun _ : E => (0 : E)).prodMk
-          (continuous_id : Continuous fun x : E => x))
+    exact (WithLp.prod_continuous_toLp (p := (2 : ENNReal)) (α := E) (β := E)).comp
+      ((continuous_const : Continuous fun _ : E => (0 : E)).prodMk
+        (continuous_id : Continuous fun x : E => x))
 
 omit [CompleteSpace E] in
 @[simp] theorem plusPointL_apply (x : E) :
@@ -157,7 +155,7 @@ omit [CompleteSpace E] in
   apply ContinuousLinearMap.ext
   intro u
   apply DoubledSpace.ext <;>
-    simp [dualSheetLift, plusPointL, minusPointL, ContinuousLinearMap.comp_apply]
+    simp [dualSheetLift, plusPointL, minusPointL, ContinuousLinearMap.comp_apply] <;> abel
 
 /-- Positive-to-positive block extracted on the base carrier `E`. -/
 noncomputable def plusBlockMap (T : EndH) : E →L[ℝ] E :=

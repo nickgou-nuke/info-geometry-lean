@@ -70,7 +70,7 @@ theorem transitionMatrix_card :
   have hcard :=
     Fintype.card_congr
       (Equiv.ofInjective transitionMatrix transitionMatrix_injective)
-  simpa using hcard.symm
+  exact hcard.symm.trans card_a2Root
 
 def oppositeRoot (r : A2Root) : A2Root :=
   ⟨(r.1.2, r.1.1), by
@@ -122,8 +122,7 @@ theorem forward_transition_sum_eq_colorShift_sq :
     simp [transitionMatrix, rootFromIndex, next3,
       InfoGeometry.Canonical.TwoSheetThreeColorWeyl.colorShift,
       Matrix.sum_apply, Fin.sum_univ_three, Matrix.single, pow_two,
-      Matrix.mul_apply] <;>
-    decide
+      Matrix.mul_apply]
 
 theorem reverse_transition_sum_eq_colorShift :
     ∑ i : Fin 3, transitionMatrix (oppositeRoot (rootFromIndex i)) =
@@ -132,8 +131,7 @@ theorem reverse_transition_sum_eq_colorShift :
   fin_cases i <;> fin_cases j <;>
     simp [transitionMatrix, oppositeRoot, rootFromIndex, next3,
       InfoGeometry.Canonical.TwoSheetThreeColorWeyl.colorShift,
-      Matrix.sum_apply, Matrix.single] <;>
-    decide
+      Matrix.sum_apply, Fin.sum_univ_three, Matrix.single]
 
 theorem reverse_transition_sum_eq_forward_conjTranspose :
     ∑ i : Fin 3, transitionMatrix (oppositeRoot (rootFromIndex i)) =
@@ -149,8 +147,7 @@ theorem transitionMatrix_mul (r s : A2Root) :
         Matrix.single r.1.1 s.1.2 1
       else 0 := by
   by_cases h : r.1.2 = s.1.1
-  · rw [if_pos h]
-    simp [transitionMatrix, Matrix.single_mul_single_same, h]
+  · simp [h, transitionMatrix, Matrix.single_mul_single_same]
   · simp [transitionMatrix, h]
 
 theorem transitionMatrix_mul_opposite (r : A2Root) :

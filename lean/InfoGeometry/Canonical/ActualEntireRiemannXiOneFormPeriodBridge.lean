@@ -75,9 +75,7 @@ theorem entireRiemannXiLogDifferentialForm_circleIntegral_eq_zero_of_re_lt_zero
     funext z
     exact entireRiemannXiLogDifferentialForm_unit_tangent z
   rw [hcoeff]
-  simpa only [entireRiemannXiLogDifferential_eq] using
-    (entireRiemannXi_logDerivative_circleIntegral_eq_zero_of_re_lt_zero
-      rho hR hRe)
+  exact entireRiemannXi_logDerivative_circleIntegral_eq_zero_of_re_lt_zero rho hR hRe
 
 theorem normalized_entireRiemannXiLogDifferentialForm_circleIntegral
     (D : Datum) :

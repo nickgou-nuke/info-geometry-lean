@@ -35,10 +35,18 @@ noncomputable def concreteVortexOperator : Matrix (Fin 3) (Fin 3) ℂ :=
 
 theorem concreteVortexOperator_cube_eq_one :
     concreteVortexOperator * concreteVortexOperator * concreteVortexOperator = 1 := by
+  have hdiag : concreteVortexOperator =
+      Matrix.diagonal (fun i : Fin 3 => if i = 2 then omega else 1) := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [concreteVortexOperator, Matrix.diagonal]
   have hmul : omega * omega * omega = 1 := by
     simpa [pow_succ, mul_assoc] using omega_cube_eq_one
+  rw [hdiag, Matrix.diagonal_mul_diagonal, Matrix.diagonal_mul_diagonal]
   ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [concreteVortexOperator, Matrix.mul_apply, Fin.sum_univ_three, hmul]
+  by_cases hij : i = j
+  · subst j
+    by_cases hi : i = 2 <;> simp [Matrix.diagonal_apply, hi, hmul]
+  · simp [Matrix.diagonal_apply, hij]
 
 end InfoGeometry.Topology.Parafermion

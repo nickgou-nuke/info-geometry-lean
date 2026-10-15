@@ -133,9 +133,7 @@ theorem critical_two_sheet_null_pair (y : ℝ) :
        (nullBulkOfPhase (criticalSheetPhase y ChiralSheet.plus)).x,
        -(nullBulkOfPhase (criticalSheetPhase y ChiralSheet.plus)).y,
        (nullBulkOfPhase (criticalSheetPhase y ChiralSheet.plus)).z⟩ := by
-  constructor
-  · simpa [criticalSheetPhase] using criticalNullBulk_lightlike y
-  constructor
+  refine ⟨criticalNullBulk_lightlike y, ?_, ?_⟩
   · have hnorm : ‖(starRingEnd ℂ) (criticalPhase y)‖ = 1 := by
       simpa using norm_criticalPhase y
     simpa [criticalSheetPhase] using nullBulkOfPhase_lightlike hnorm

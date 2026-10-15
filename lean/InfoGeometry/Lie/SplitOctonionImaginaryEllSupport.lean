@@ -229,7 +229,7 @@ theorem imaginaryPolarBilin_nondegenerate (X : Imaginary)
   have htrace := X.2
   change X.1.a + X.1.b = 0 at htrace
   have ha' : X.1.b - X.1.a = 0 := by
-    simpa [scalarAxis, imaginaryPolarBilin, realZornTrace,
+    simpa [sub_eq_add_neg, scalarAxis, imaginaryPolarBilin, realZornTrace,
       mul_def, mul, dot, cross] using ha
   have ha0 : X.1.a = 0 := by linarith
   have hb0 : X.1.b = 0 := by linarith
@@ -333,7 +333,7 @@ theorem supportPPlus_mem (X : Support) :
     rw [supportGrading_sq]
     rfl
   have h := congrArg (fun F : Module.End ℝ Support => F X) (mul_projPos hK)
-  simpa [Module.End.mul_apply] using h
+  simpa [supportPPlus, Module.End.mul_apply] using h
 
 theorem supportPMinus_mem (X : Support) :
     supportPMinus X ∈ SupportMinus := by
@@ -355,7 +355,7 @@ theorem supportPMinus_mem (X : Support) :
     rw [supportGrading_sq]
     rfl
   have h := congrArg (fun F : Module.End ℝ Support => F X) (mul_projPos hK)
-  simpa [Module.End.mul_apply] using h
+  simpa [supportPPlus, Module.End.mul_apply] using h
 
 @[simp] theorem supportGrading_apply_PMinus (X : Support) :
     supportGrading (supportPMinus X) = -supportPMinus X := by
@@ -363,7 +363,7 @@ theorem supportPMinus_mem (X : Support) :
     rw [supportGrading_sq]
     rfl
   have h := congrArg (fun F : Module.End ℝ Support => F X) (mul_projNeg hK)
-  simpa [Module.End.mul_apply] using h
+  simpa [supportPMinus, Module.End.mul_apply] using h
 
 /-- Every support vector is the sum of its intrinsic positive and negative
 spectral components. -/

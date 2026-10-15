@@ -134,6 +134,7 @@ theorem SymbolicLatentModularReversal.orbitClosureFixedPointToAmbientCompHausHom
     Functor.map_comp,
     R.orbitClosureFixedPointCompHausHom_forget,
     symbolicLatentModularOrbitClosureCompHausHom_forget]
+  rfl
 
 noncomputable def SymbolicLatentModularReversal.orbitClosureReversalCompHausHom
     {X : Type} [TopologicalSpace X] [CompactSpace X] [T2Space X]

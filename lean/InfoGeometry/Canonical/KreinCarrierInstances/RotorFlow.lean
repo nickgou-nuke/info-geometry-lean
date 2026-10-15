@@ -1,5 +1,4 @@
 import InfoGeometry.Canonical.KreinCarrierInstances.Datum
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HestenesKreinModularGeometry
 import Mathlib.Tactic
 

@@ -47,7 +47,7 @@ theorem continuous_logCFTKMSReadoutFlow
   have hflow : Continuous (fun p : ℝ × EndH =>
       continuousUnipotentFlow M p.1) :=
     (continuous_continuousUnipotentFlow (M := M)).comp continuous_fst
-  simpa using hflow.mul continuous_snd
+  exact continuous_mul.comp (hflow.prodMk continuous_snd)
 
 @[simp] theorem logCFTKMSReadoutFlow_apply
     (M : ContinuousMonodromyOperator H) (t : ℝ) (T : EndH)
@@ -151,21 +151,8 @@ theorem logCFTKMSCanonical_flowHomeomorph_comp
     (logCFTKMSCanonical_flowHomeomorph (H := H) M t hM).trans
         (logCFTKMSCanonical_flowHomeomorph (H := H) M (-t) hM) =
       Homeomorph.refl _ := by
+  rw [logCFTKMSCanonical_flowHomeomorph_comp (H := H) M (-t) t hM]
+  rw [add_neg_cancel]
   ext T x
-  have h₀ :
-      ((logCFTKMSCanonical_flowHomeomorph (H := H) M (-t) hM)
-          (logCFTKMSCanonical_flowHomeomorph (H := H) M t hM T)) x =
-        T x := by
-    have h := logCFTKMSCanonical_flowHomeomorph_add_apply (H := H) M (-t) t T hM
-    have hzero :
-        ((logCFTKMSCanonical_flowHomeomorph (H := H) M 0 hM) T) x = T x := by
-      simpa using congrArg (fun Y : EndH => Y x)
-        (logCFTKMSCanonical_flowHomeomorph_zero_apply (H := H) M T hM)
-    have hstep :
-        ((logCFTKMSCanonical_flowHomeomorph (H := H) M (-t) hM)
-            (logCFTKMSCanonical_flowHomeomorph (H := H) M t hM T)) x =
-          ((logCFTKMSCanonical_flowHomeomorph (H := H) M 0 hM) T) x := by
-      simpa [add_comm, add_left_comm, add_assoc] using
-        congrArg (fun Y : EndH => Y x) h.symm
-    exact hstep.trans hzero
-  simpa [Homeomorph.trans] using h₀
+  exact congrArg (fun F : EndH => F x)
+    (logCFTKMSCanonical_flowHomeomorph_zero_apply (H := H) M T hM)

@@ -26,23 +26,33 @@ theorem weightedQuadratic_completed_square
         (∑ line, weights line) * ‖point - weightedCenter weights observed‖ ^ 2 := by
   let center := weightedCenter weights observed
   have cross_zero :
-      (∑ line, weights line * ⟪point - center, center - observed line⟫_ℝ) = 0 := by
+      (∑ line : Line, weights line *
+        (inner ℝ (point - center) (center - observed line))) = 0 := by
     calc
-      _ = ⟪point - center, weightedScore weights observed center⟫_ℝ := by
-        simp only [weightedScore, inner_sum, real_inner_smul_right]
-      _ = 0 := by rw [weightedCenter_score_zero weights observed mass_ne, inner_zero_right]
+      (∑ line : Line, weights line *
+          inner ℝ (point - center) (center - observed line)) =
+          inner ℝ (point - center)
+            (∑ line : Line, weights line • (center - observed line)) := by
+        rw [inner_sum]
+        simp only [real_inner_smul_right]
+      _ = 0 := by
+        change inner ℝ (point - center)
+          (weightedScore weights observed center) = 0
+        rw [weightedCenter_score_zero weights observed mass_ne, inner_zero_right]
   have expansion (line : Line) :
-      weights line * ‖point - observed line‖ ^ 2 =
-        weights line * ‖center - observed line‖ ^ 2 +
+      weights line * ‖point - (observed line)‖ ^ 2 =
+        weights line * ‖center - (observed line)‖ ^ 2 +
         weights line * ‖point - center‖ ^ 2 +
-        2 * (weights line * ⟪point - center, center - observed line⟫_ℝ) := by
-    have split : point - observed line = (point - center) + (center - observed line) := by
+        2 * (weights line *
+          inner ℝ (point - center) (center - observed line)) := by
+    have split : point - (observed line) =
+        (point - center) + (center - (observed line)) := by
       abel
     rw [split, norm_add_sq_real]
     ring
-  change (∑ line, weights line * ‖point - observed line‖ ^ 2) =
-    (∑ line, weights line * ‖center - observed line‖ ^ 2) +
-      (∑ line, weights line) * ‖point - center‖ ^ 2
+  change (∑ line : Line, weights line * ‖point - (observed line)‖ ^ 2) =
+    (∑ line : Line, weights line * ‖center - (observed line)‖ ^ 2) +
+      (∑ line : Line, weights line) * ‖point - center‖ ^ 2
   simp_rw [expansion]
   rw [Finset.sum_add_distrib, Finset.sum_add_distrib,
     ← Finset.sum_mul, ← Finset.mul_sum, cross_zero]

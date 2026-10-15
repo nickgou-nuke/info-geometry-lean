@@ -105,7 +105,8 @@ theorem nativeCircularBasis_span_top :
     exact Submodule.sum_mem _ (fun i _ =>
       Submodule.smul_mem _ _ (Submodule.subset_span ⟨i, rfl⟩))
   rw [← hZX, ← hX]
-  simpa only [nativeCircularBasis, canonicalVectorEquiv_smul] using hm
+  simpa only [nativeCircularBasis, canonicalVectorEquiv_smul,
+    InfoGeometry.Algebra.zvm_smul_def] using hm
 
 theorem chiralNativeBasis_span_top :
     Submodule.span ℝ (Set.range chiralNativeBasis) = ⊤ := by
@@ -197,7 +198,7 @@ theorem nativeInner_circularOperator (x y z : CZ) :
           (stanDerMap (R := ℝ) (canonicalVectorEquiv x)
             (canonicalVectorEquiv y) (canonicalVectorEquiv z)) =
         directCanonicalStanDerMap x y z := by
-    simpa only [LinearEquiv.symm_apply_apply] using h'
+    simpa only [Equiv.symm_apply_apply] using h'
   rw [innerDerivation_apply_value, hcanon]
   exact circularOperator_stanDerMap x y z
 
@@ -304,7 +305,7 @@ theorem innerDerivation_pair_span_of_span_top
 theorem circularPeirceBasis_vector_span_top :
     Submodule.span ℝ
         (Set.range (fun i : Fin 8 =>
-          canonicalVectorLinearEquiv
+          ellCanonicalVectorLinearEquiv
             (InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis.circularPeirceBasis i))) = ⊤ := by
   apply Submodule.eq_top_iff'.mpr
   intro X
@@ -330,7 +331,7 @@ theorem circularPeirceBasis_vector_span_top :
   simpa only [map_sum, map_smul] using hm
 
 noncomputable def nativeEllCircularBasis (i : Fin 8) : VZ :=
-  canonicalVectorLinearEquiv
+  ellCanonicalVectorLinearEquiv
     (InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis.circularPeirceBasis i)
 
 theorem nativeEllCircularBasis_span_top :

@@ -79,7 +79,10 @@ theorem splitCliffordStep_injective (n : ℕ) : Function.Injective (splitCliffor
         (CliffordAlgebra.evenOdd (Qsplit n))) := by
     intro b₁ b₂ h
     apply h_right
-    simpa [A0, Bn, GradedTensorProduct.includeRight, GradedTensorProduct.auxEquiv_tmul] using
+    simpa [A0, Bn, GradedTensorProduct.includeRight, GradedTensorProduct.auxEquiv_tmul,
+      AlgHom.ofLinearMap] using
+      -- The graded inclusion is implemented as an `AlgHom.ofLinearMap` in
+      -- the current Mathlib tensor-product API.
       congrArg
         (GradedTensorProduct.auxEquiv ℝ
           (CliffordAlgebra.evenOdd InfoGeometry.CliffordTower.Q11)

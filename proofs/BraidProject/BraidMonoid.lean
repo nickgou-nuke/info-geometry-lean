@@ -44,13 +44,13 @@ theorem length_pos {f g : FreeMonoid' ℕ} (h : braid_rels_m_inf f g) : f.length
 
 open BraidPresentedMonoid
 
-def BraidMonoidInf := BraidPresentedMonoid braid_rels_m_inf
+abbrev BraidMonoidInf := BraidPresentedMonoid braid_rels_m_inf
 
 namespace BraidMonoidInf -- end this
 
 def rel := BraidPresentedMonoid.rel braid_rels_m_inf
 
-protected def mk := BraidPresentedMonoid.mk (braid_rels_m_inf)
+protected def mk (a : FreeMonoid' ℕ) : BraidMonoidInf := BraidPresentedMonoid.mk braid_rels_m_inf a
 
 theorem mul_mk : BraidMonoidInf.mk (a * b) = BraidMonoidInf.mk a * BraidMonoidInf.mk b :=
   rfl
@@ -80,7 +80,8 @@ theorem length_mk : length (BraidMonoidInf.mk a) = a.length := rfl
 
 @[simp]
 theorem length_mul {a b : BraidMonoidInf} : length (a * b) = length a + length b := by
-  induction' a ; induction' b
+  induction a
+  induction b
   rw [← mul_mk, length_mk, length_mk, length_mk, FreeMonoid'.length_mul]
 
 theorem length_eq (h : BraidMonoidInf.mk a = BraidMonoidInf.mk b) : a.length = b.length :=
@@ -114,8 +115,8 @@ theorem braid_generators_mk : braid_generators (BraidMonoidInf.mk a) = FreeMonoi
 @[simp]
 theorem braid_generators_mul : braid_generators (a * b) =
     braid_generators a ∪ braid_generators b := by
-  induction' a
-  induction' b
+  induction a
+  induction b
   rw [← mul_mk, braid_generators_mk, braid_generators_mk, braid_generators_mk,
     symbols_mul]
 
@@ -135,7 +136,7 @@ private theorem reverse_helper : ∀ (a b : FreeMonoid' ℕ),
 
 def reverse_braid : BraidMonoidInf → BraidMonoidInf :=
   BraidPresentedMonoid.lift_of_mul (fun x => mk braid_rels_m_inf <| FreeMonoid'.reverse x)
-  (fun h1 h2 => by simp [reverse_mul, h1, h2]) reverse_helper
+  (fun h1 h2 => by rw [reverse_mul, reverse_mul, BraidPresentedMonoid.mul_mk, BraidPresentedMonoid.mul_mk, h1, h2]) reverse_helper
 
 @[simp]
 theorem reverse_braid_one : reverse_braid 1 = 1 := rfl
@@ -146,17 +147,20 @@ theorem reverse_braid_mk : reverse_braid (BraidMonoidInf.mk a) =
 
 @[simp]
 theorem reverse_braid_mul : reverse_braid (a * b) = reverse_braid b * reverse_braid a := by
-  induction' a with a1
-  induction' b with b1
-  rw [← mul_mk]
-  repeat rw [reverse_braid_mk]
-  rw [← mul_mk]
-  exact congr_arg _ reverse_mul
+  induction a with
+  | h a1 =>
+    induction b with
+    | h b1 =>
+      rw [← mul_mk]
+      repeat rw [reverse_braid_mk]
+      rw [← mul_mk]
+      exact congr_arg _ reverse_mul
 
 @[simp]
 theorem length_reverse_eq_length : length (reverse_braid a) = length a := by
-  induction' a with a1
-  simp only [reverse_braid_mk, length_mk, reverse_length]
+  induction a with
+  | h a1 =>
+    simp only [reverse_braid_mk, length_mk, reverse_length]
 
 theorem exact : mk braid_rels_m_inf a = mk braid_rels_m_inf b →
     BraidPresentedMonoid.rel braid_rels_m_inf a b := Quotient.exact

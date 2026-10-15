@@ -45,8 +45,18 @@ theorem twistedSheetOrientation_neg (X : ChiralZornMatrix A) :
 theorem twistedSheetOrientation_sub (X Y : ChiralZornMatrix A) :
     twistedSheetOrientation (X - Y) =
       twistedSheetOrientation X - twistedSheetOrientation Y := by
-  rw [sub_eq_add_neg, sub_eq_add_neg, twistedSheetOrientation_add,
-    twistedSheetOrientation_neg]
+  calc
+    twistedSheetOrientation (X - Y) =
+        twistedSheetOrientation (X + -Y) := by
+      rw [sub_eq_add_neg]
+      rfl
+    _ = twistedSheetOrientation X + twistedSheetOrientation (-Y) :=
+      twistedSheetOrientation_add X (-Y)
+    _ = twistedSheetOrientation X + -twistedSheetOrientation Y := by
+      rw [twistedSheetOrientation_neg]
+    _ = twistedSheetOrientation X - twistedSheetOrientation Y := by
+      rw [sub_eq_add_neg]
+      rfl
 
 def ordinaryCommutator (X Y : ChiralZornMatrix A) : ChiralZornMatrix A :=
   X * Y - Y * X

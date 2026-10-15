@@ -34,9 +34,10 @@ theorem cl11ToStageOne_eq_canonical :
 theorem cl11ToStageOne_apply (x : CliffordAlgebra q11) :
     TowerMatrix.matEquivFinPowTwo 1 (cl11ToStageOne x) =
       Cl11Matrix.cl11EquivMat x := by
-  simpa [cl11ToStageOne, Cl11GradingSl2.clE] using
-    (TowerMatrix.matEquivFinPowTwo 1).apply_symm_apply
-      (Cl11Matrix.cl11EquivMat x)
+  change TowerMatrix.matEquivFinPowTwo 1
+      ((TowerMatrix.matEquivFinPowTwo 1).symm (Cl11Matrix.cl11EquivMat x)) = _
+  exact (TowerMatrix.matEquivFinPowTwo 1).apply_symm_apply
+    (Cl11Matrix.cl11EquivMat x)
 
 theorem cl11ToStageOne_mul (x y : CliffordAlgebra q11) :
     cl11ToStageOne (x * y) = cl11ToStageOne x * cl11ToStageOne y := by

@@ -134,9 +134,18 @@ theorem canonicalSymbolicConcatenation_second_half
       apply Subtype.ext
       exact ht0
     subst t
-    simpa [symbolicConcatenationFirstParameter,
-      symbolicSecondHalfParameter, symbolicSecondHalfValue,
-      symbolicConcatenationMidpoint] using hend
+    have hfirstMid : symbolicConcatenationFirstParameter
+        symbolicConcatenationMidpoint = (1 : SymbolicPathDomain) := by
+      apply Subtype.ext
+      norm_num [symbolicConcatenationFirstParameter,
+        symbolicConcatenationMidpoint]
+    have hmid0 : symbolicSecondHalfParameter 0 =
+        symbolicConcatenationMidpoint := by
+      exact symbolicSecondHalfParameter_zero.trans (by
+        apply Subtype.ext
+        norm_num [symbolicConcatenationMidpoint])
+    rw [hmid0, hfirstMid]
+    exact hend
   · have hp := Set.piecewise_eq_of_notMem
       (s := Set.Iic symbolicConcatenationMidpoint)
       (f := (γ₀.comp symbolicConcatenationFirstParameter))

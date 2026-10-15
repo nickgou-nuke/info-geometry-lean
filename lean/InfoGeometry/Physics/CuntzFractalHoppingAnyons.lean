@@ -30,24 +30,24 @@ def defectVector : Matrix FractalState (Fin 1) ℝ :=
 theorem braidSigma01_defect_invariant :
     braidSigma01 * defectVector = defectVector := by
   ext i j
+  simp only [Matrix.mul_apply]
   fin_cases i <;> fin_cases j <;>
-    norm_num [braidSigma01, defectVector, Matrix.mul_apply,
-      Fin.sum_univ_succ]
+    norm_num [braidSigma01, defectVector, Fin.sum_univ_succ]
 
 theorem braidSigma12_defect_invariant :
     braidSigma12 * defectVector = defectVector := by
   ext i j
+  simp only [Matrix.mul_apply]
   fin_cases i <;> fin_cases j <;>
-    norm_num [braidSigma12, defectVector, Matrix.mul_apply,
-      Fin.sum_univ_succ]
+    norm_num [braidSigma12, defectVector, Fin.sum_univ_succ]
 
 /-- The two concrete adjacent transpositions satisfy the Artin braid relation. -/
 theorem braidSigma01_braidSigma12_braidSigma01 :
     braidSigma01 * braidSigma12 * braidSigma01 =
       braidSigma12 * braidSigma01 * braidSigma12 := by
   ext i j
+  simp only [Matrix.mul_apply]
   fin_cases i <;> fin_cases j <;>
-    norm_num [braidSigma01, braidSigma12, Matrix.mul_apply,
-      Fin.sum_univ_succ]
+    norm_num [braidSigma01, braidSigma12, Fin.sum_univ_succ]
 
 end InfoGeometry.Physics

@@ -58,10 +58,18 @@ open xi_foldbin_lastbit_tail_spectrum_single_jump_staircase_data
 theorem paper_xi_foldbin_lastbit_tail_spectrum_single_jump_staircase
     (D : xi_foldbin_lastbit_tail_spectrum_single_jump_staircase_data) :
     D.countFormula ∧ D.monotone ∧ D.singleJump := by
-  simp [xi_foldbin_lastbit_tail_spectrum_single_jump_staircase_data.countFormula,
-    xi_foldbin_lastbit_tail_spectrum_single_jump_staircase_data.monotone,
-    xi_foldbin_lastbit_tail_spectrum_single_jump_staircase_data.singleJump,
-    xi_foldbin_lastbit_tail_spectrum_single_jump_staircase_count,
-    xi_foldbin_lastbit_tail_spectrum_single_jump_staircase_threshold, admissibleTailSpectrum]
+  have hcount (V : ℕ) :
+      D.xi_foldbin_lastbit_tail_spectrum_single_jump_staircase_count V = 0 := by
+    simp [xi_foldbin_lastbit_tail_spectrum_single_jump_staircase_count,
+      admissibleTailSpectrum]
+  constructor
+  · intro V
+    rfl
+  constructor
+  · intro V W _
+    rw [hcount W, hcount V]
+  · intro V
+    rw [hcount V, hcount (V + 1)]
+    simp [admissibleTailSpectrum]
 
 end Omega.Zeta

@@ -70,7 +70,8 @@ theorem paper_xi_endpoint_heat_probe_abel_stokes_atom_recovery
     D.abelStokesGeneratingFunction ∧ D.abelLimitRecoversEndpointAtom ∧
       D.cesaroMeanRecoversEndpointAtom ∧ D.exponentialTailBound := by
   have hsep := paper_xi_endpoint_atom_separation D.endpointAtom D.tailMass D.tailMass_nonneg
-  have habel : D.abelLimitRecoversEndpointAtom := by
+  have habelTendsto :
+      Tendsto D.endpointSequence atTop (𝓝 (xiEndpointAtomMass D.endpointAtom)) := by
     have hdiff :
         Tendsto
           (fun N : ℕ =>
@@ -89,8 +90,11 @@ theorem paper_xi_endpoint_heat_probe_abel_stokes_atom_recovery
                 xiEndpointAtomMass D.endpointAtom))
           atTop (𝓝 (xiEndpointAtomMass D.endpointAtom)) := by
       simpa using hconst.add hdiff
-    simpa [XiEndpointHeatProbeAbelStokesData.endpointSequence, sub_eq_add_neg, add_assoc,
-      add_left_comm, add_comm] using hsum
+    change Tendsto
+      (fun N : ℕ => xiEndpointHeatCoefficient D.endpointAtom D.tailMass N)
+      atTop (𝓝 (xiEndpointAtomMass D.endpointAtom))
+    simpa [sub_eq_add_neg, add_assoc, add_left_comm, add_comm] using hsum
+  have habel : D.abelLimitRecoversEndpointAtom := habelTendsto
   refine ⟨?_, habel, ?_, ?_⟩
   · intro r hr
     refine ⟨Summable.mul_left _ (summable_geometric_of_abs_lt_one hr), ?_⟩
@@ -101,7 +105,10 @@ theorem paper_xi_endpoint_heat_probe_abel_stokes_atom_recovery
       _ = (1 - r)⁻¹ * xiEndpointAtomMass D.endpointAtom := by
         rw [tsum_geometric_of_abs_lt_one hr]
       _ = xiEndpointAtomMass D.endpointAtom * (1 - r)⁻¹ := by ring
-  · simpa [XiEndpointHeatProbeAbelStokesData.cesaroMean] using habel.cesaro
+  · change Tendsto
+      (fun n : ℕ => (n : ℝ)⁻¹ * ∑ i ∈ Finset.range n, D.endpointSequence i)
+      atTop (𝓝 (xiEndpointAtomMass D.endpointAtom))
+    exact habelTendsto.cesaro
   · intro N
     have hpow_nonneg : 0 ≤ D.spectralGap ^ N := pow_nonneg D.spectralGap_nonneg N
     have hpow_le_one : D.spectralGap ^ N ≤ 1 := by

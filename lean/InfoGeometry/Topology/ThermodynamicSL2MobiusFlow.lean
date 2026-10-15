@@ -6,6 +6,7 @@ import InfoGeometry.Physics.SouriauEntropyFoliation
 import Mathlib.Analysis.Complex.RealDeriv
 import Mathlib.Analysis.InnerProductSpace.Calculus
 import Mathlib.Analysis.SpecialFunctions.Complex.LogDeriv
+import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 
 /-!
 # Thermodynamic `sl₂` Möbius flow
@@ -22,7 +23,6 @@ namespace InfoGeometry.Topology.ThermodynamicSL2MobiusFlow
 open InfoGeometry.Geometry
 open InfoGeometry.Canonical.MatrixDetExpTraceJacobi
 open InfoGeometry.Physics.SouriauEntropyFoliation
-open scoped RealInnerProductSpace
 
 /-- Branch-free derivative of the real logarithmic norm of a nonvanishing complex curve. -/
 theorem hasDerivAt_real_log_norm
@@ -31,10 +31,11 @@ theorem hasDerivAt_real_log_norm
     HasDerivAt (fun s => Real.log ‖f s‖) (f' / f t).re t := by
   have hsq := hf.norm_sq
   have hnorm : ‖f t‖ ≠ 0 := norm_ne_zero_iff.mpr hne
-  have hlog := hsq.log (pow_ne_zero 2 hnorm)
+  have hlog := (Real.hasDerivAt_log (pow_ne_zero 2 hnorm)).comp t hsq
   have hhalf := hlog.const_mul (1 / 2 : ℝ)
   convert hhalf using 1
-  · funext s
+  · ext s
+    simp only [Function.comp_apply]
     rw [Real.log_pow]
     ring
   · rw [Complex.div_re]
@@ -126,6 +127,8 @@ theorem moebiusAction_mul_of_den_ne_zero
 def pgl2RiccatiVectorField (A : Matrix (Fin 2) (Fin 2) ℂ) (z : ℂ) : ℂ :=
   A 0 1 + (A 0 0 - A 1 1) * z - A 1 0 * z ^ 2
 
+section PGL2InfinitesimalDerivatives
+
 /-- First-order PGL₂ fractional-linear chart action of `I + τ A`. -/
 def pgl2InfinitesimalAction (A : Matrix (Fin 2) (Fin 2) ℂ) (z τ : ℂ) : ℂ :=
   ((1 + τ * A 0 0) * z + τ * A 0 1) /
@@ -149,17 +152,18 @@ theorem pgl2RiccatiVectorField_thermodynamicSL2Generator
 /-- The PGL₂ first-order chart action differentiates to the Riccati vector field. -/
 theorem hasDerivAt_pgl2InfinitesimalAction_zero
     (A : Matrix (Fin 2) (Fin 2) ℂ) (z : ℂ) :
-    HasDerivAt (pgl2InfinitesimalAction A z)
-      (pgl2RiccatiVectorField A z) 0 := by
+    @HasDerivAt ℂ _ ℂ
+      DenselyNormedField.toNontriviallyNormedField.toDivisionRing.toAddCommGroup
+      (NormedAlgebra.toNormedSpace ℂ).toModule _ _
+      (pgl2InfinitesimalAction A z) (pgl2RiccatiVectorField A z) 0 := by
   let a := A 0 0
   let b := A 0 1
   let c := A 1 0
   let d := A 1 1
   have hnum0 :
       HasDerivAt (fun τ : ℂ => z + τ * (a * z + b)) (a * z + b) 0 := by
-    simpa only [Pi.add_apply, id_eq, zero_add, one_mul] using
-      ((hasDerivAt_const (x := (0 : ℂ)) (c := z)).add
-        ((hasDerivAt_id (0 : ℂ)).mul_const (a * z + b)))
+    simpa only [id_eq, one_mul] using
+      ((hasDerivAt_id (0 : ℂ)).mul_const (a * z + b)).const_add z
   have hnum :
       HasDerivAt (fun τ : ℂ => (1 + τ * a) * z + τ * b) (a * z + b) 0 := by
     convert hnum0 using 1
@@ -167,9 +171,8 @@ theorem hasDerivAt_pgl2InfinitesimalAction_zero
     ring
   have hden0 :
       HasDerivAt (fun τ : ℂ => 1 + τ * (c * z + d)) (c * z + d) 0 := by
-    simpa only [Pi.add_apply, id_eq, zero_add, one_mul] using
-      ((hasDerivAt_const (x := (0 : ℂ)) (c := (1 : ℂ))).add
-        ((hasDerivAt_id (0 : ℂ)).mul_const (c * z + d)))
+    simpa only [id_eq, one_mul] using
+      ((hasDerivAt_id (0 : ℂ)).mul_const (c * z + d)).const_add 1
   have hden :
       HasDerivAt (fun τ : ℂ => τ * c * z + (1 + τ * d)) (c * z + d) 0 := by
     convert hden0 using 1
@@ -178,14 +181,19 @@ theorem hasDerivAt_pgl2InfinitesimalAction_zero
   have hden_ne : (fun τ : ℂ => τ * c * z + (1 + τ * d)) 0 ≠ 0 := by
     norm_num
   have h := hnum.div hden hden_ne
-  have h' : HasDerivAt (pgl2InfinitesimalAction A z)
-      (((a * z + b) * (0 * c * z + (1 + 0 * d)) -
-          ((1 + 0 * a) * z + 0 * b) * (c * z + d)) /
-        (0 * c * z + (1 + 0 * d)) ^ 2) 0 := by
-    convert h using 1
+  have h' : @HasDerivAt ℂ _ ℂ
+      DenselyNormedField.toNontriviallyNormedField.toDivisionRing.toAddCommGroup
+      (NormedAlgebra.toNormedSpace ℂ).toModule _ _
+      (fun τ : ℂ => ((1 + τ * A 0 0) * z + τ * A 0 1) /
+        (τ * A 1 0 * z + (1 + τ * A 1 1)))
+      (A 0 0 * z + A 0 1 - z * (A 1 0 * z + A 1 1)) 0 := by
+    convert h using 1 <;> simp [a, b, c, d]
   convert h' using 1
-  simp [pgl2RiccatiVectorField, a, b, c, d]
-  ring
+  · rfl
+  · unfold pgl2RiccatiVectorField
+    ring
+
+end PGL2InfinitesimalDerivatives
 
 /--
 Affine-chart orbit of the first-order matrix `I + tA`. This owner exposes the
@@ -196,21 +204,33 @@ def thermodynamicSL2InfinitesimalOrbit
   (z + t * ((dilation : ℂ) * z + translation)) /
     (1 + t * ((specialConformal : ℂ) * z - dilation))
 
+section ThermodynamicOrbitDerivative
+
 /-- The derivative of the Möbius chart orbit is the thermodynamic Riccati field. -/
 theorem hasDerivAt_thermodynamicSL2InfinitesimalOrbit
     (translation dilation specialConformal : ℝ) (z : ℂ) :
-    HasDerivAt (thermodynamicSL2InfinitesimalOrbit translation dilation specialConformal z)
+    @HasDerivAt ℂ _ ℂ Complex.instNormedAddCommGroup.toAddCommGroup
+      RCLike.innerProductSpace.toModule _ _
+      (thermodynamicSL2InfinitesimalOrbit translation dilation specialConformal z)
       (thermodynamicSL2VectorField translation dilation specialConformal z) 0 := by
   unfold thermodynamicSL2InfinitesimalOrbit thermodynamicSL2VectorField
-  convert
-    (((hasDerivAt_const (x := (0 : ℂ)) (c := z)).add
-        ((hasDerivAt_id (𝕜 := ℂ) 0).mul_const
-          ((dilation : ℂ) * z + translation))).div
-      ((hasDerivAt_const (x := (0 : ℂ)) (c := 1)).add
-        ((hasDerivAt_id (𝕜 := ℂ) 0).mul_const
-          ((specialConformal : ℂ) * z - dilation))) (by norm_num)) using 1 <;>
-    simp [sl2C.vectorField, thermodynamicSL2Generator] <;>
-    ring
+  have hnum : @HasDerivAt ℂ _ ℂ Complex.instNormedAddCommGroup.toAddCommGroup
+      RCLike.innerProductSpace.toModule _ _
+      (fun t : ℂ => z + t * ((dilation : ℂ) * z + translation))
+      ((dilation : ℂ) * z + translation) 0 := by
+    simpa only [id_eq, one_mul] using
+      ((hasDerivAt_id (0 : ℂ)).mul_const ((dilation : ℂ) * z + translation)).const_add z
+  have hden : @HasDerivAt ℂ _ ℂ Complex.instNormedAddCommGroup.toAddCommGroup
+      RCLike.innerProductSpace.toModule _ _
+      (fun t : ℂ => 1 + t * ((specialConformal : ℂ) * z - dilation))
+      ((specialConformal : ℂ) * z - dilation) 0 := by
+    simpa only [id_eq, one_mul] using
+      ((hasDerivAt_id (0 : ℂ)).mul_const ((specialConformal : ℂ) * z - dilation)).const_add 1
+  have h := hnum.div hden (by norm_num)
+  convert h using 1
+  · simp [sl2C.vectorField, thermodynamicSL2Generator] <;> ring
+
+end ThermodynamicOrbitDerivative
 
 /-- The translation-only sector recovers the parabolic constant vector field. -/
 theorem thermodynamicSL2_parabolic_recovery (translation : ℝ) (z : ℂ) :
@@ -587,6 +607,7 @@ theorem hasDerivAt_logJacobianNorm_real
     HasDerivAt (fun r : ℝ => v.logJacobianNorm (r : ℂ) z)
       (2 * (v.dilation.force : ℂ) -
         2 * (v.specialConformal.force : ℂ) * v.finiteOrbit (t : ℂ) z).re t := by
+  unfold logJacobianNorm
   have hf := (v.hasDerivAt_finiteOrbitJacobian (t : ℂ) z hden).comp_ofReal
   have hne := v.finiteOrbitJacobian_ne_zero (t : ℂ) z hden
   have hlog := hasDerivAt_real_log_norm hf hne

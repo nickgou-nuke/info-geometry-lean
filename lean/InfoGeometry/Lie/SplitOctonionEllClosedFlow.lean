@@ -83,7 +83,7 @@ theorem ellFlowPhi_coord (t : ℝ) (Z : CZ) :
   -- {a:=Z.a, b:=Z.b, x:=0, y:=0} + (exp t)•{a:=0,b:=0,x:=Z.x,y:=0} + (exp(-t))•{a:=0,b:=0,x:=0,y:=Z.y}
   -- = {a:=Z.a + 0 + 0, b:=Z.b + 0 + 0, x:=0 + (exp t)•Z.x + 0, y:=0 + 0 + (exp(-t))•Z.y}
   -- = {a:=Z.a, b:=Z.b, x:=(exp t)•Z.x, y:=(exp(-t))•Z.y}
-  ext i <;> simp [Equiv.smul_def, coordEquiv]
+  ext i <;> simp [smul_a, smul_b, smul_x, smul_y]
 
 /-- The uniform tripotent flow is an isometry of the native split Zorn
 quadratic form.  This is a norm-preservation statement, not a claim that the
@@ -94,7 +94,7 @@ theorem ellFlowPhi_preserves_det (t : ℝ) (Z : CZ) :
   rw [ellFlowPhi_coord]
   simp [InfoGeometry.Algebra.Zorn.ZornMatrix.detZ,
     realCrossProduct3, InfoGeometry.Canonical.ZornMatrix.dot,
-    Equiv.smul_def, coordEquiv, Fin.sum_univ_three, smul_eq_mul,
+    smul_a, smul_b, smul_x, smul_y, smul_eq_mul,
     Real.exp_neg]
   field_simp [Real.exp_ne_zero]
 
@@ -140,7 +140,7 @@ theorem ellFlowPhi_add (s t : ℝ) :
   intro Z
   change ellFlowPhi (s + t) Z = ellFlowPhi s (ellFlowPhi t Z)
   rw [ellFlowPhi_coord, ellFlowPhi_coord, ellFlowPhi_coord]
-  ext i <;> simp [Equiv.smul_def, coordEquiv, exp_add] <;> ring
+  ext i <;> simp [smul_a, smul_b, smul_x, smul_y, exp_add] <;> ring
 
 /-
 #-- Reversing the parameter gives a two-sided inverse. -/
@@ -217,8 +217,7 @@ theorem ellGamma_coord (Z : CZ) :
   rw [LinearMap.sub_apply, LinearMap.smul_apply, Module.End.one_apply]
   rw [ellQ_coord]
   ext <;>
-    simp [InfoGeometry.Canonical.ZornMatrix.coordEquiv, Equiv.smul_def,
-      smul_eq_mul] <;> ring
+    simp [smul_a, smul_b, smul_x, smul_y] <;> ring
 
 theorem ellGamma_idempotent : ellGamma * ellGamma = 1 := by
   apply LinearMap.ext
@@ -267,7 +266,7 @@ theorem ellFlowPhi_on_PPlus (t : ℝ) (Z : CZ) :
     ellFlowPhi t (ellFlowPPlus Z) =
       (exp t : ℝ) • ellFlowPPlus Z := by
   rw [ellFlowPPlus_coord, ellFlowPhi_coord]
-  ext i <;> simp [Equiv.smul_def, coordEquiv]
+  ext i <;> simp [smul_a, smul_b, smul_x, smul_y]
 
 /-
 #-- The negative Peirce sector has weight `exp (-t)`. -/
@@ -275,7 +274,7 @@ theorem ellFlowPhi_on_PMinus (t : ℝ) (Z : CZ) :
     ellFlowPhi t (ellFlowPMinus Z) =
       (exp (-t) : ℝ) • ellFlowPMinus Z := by
   rw [ellFlowPMinus_coord, ellFlowPhi_coord]
-  ext i <;> simp [Equiv.smul_def, coordEquiv]
+  ext i <;> simp [smul_a, smul_b, smul_x, smul_y]
 
 theorem ellGrading_ellWeightBasisReal_native (i : Fin 8) :
     InfoGeometry.Lie.SplitOctonionEllOperatorTrifactor.ellGrading

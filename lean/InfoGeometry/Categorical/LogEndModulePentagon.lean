@@ -37,12 +37,12 @@ theorem pentagon_identity
   apply Hom.ext
   apply TensorProduct.ext_fourfold
   intro w x y z
-  change (TensorProduct.assoc 𝕜 W.V X.V (tensorObj Y Z).V)
-      ((TensorProduct.assoc 𝕜 (tensorObj W X).V Y.V Z.V)
+  change (TensorProduct.assoc 𝕜 W.V X.V (Y.V ⊗[𝕜] Z.V))
+      ((TensorProduct.assoc 𝕜 (W.V ⊗[𝕜] X.V) Y.V Z.V)
         (w ⊗ₜ[𝕜] x ⊗ₜ[𝕜] y ⊗ₜ[𝕜] z)) =
     (TensorProduct.map (LinearMap.id : Module.End 𝕜 W.V)
         (TensorProduct.assoc 𝕜 X.V Y.V Z.V).toLinearMap)
-      ((TensorProduct.assoc 𝕜 W.V (tensorObj X Y).V Z.V)
+      ((TensorProduct.assoc 𝕜 W.V (X.V ⊗[𝕜] Y.V) Z.V)
         ((TensorProduct.map (TensorProduct.assoc 𝕜 W.V X.V Y.V).toLinearMap
           (LinearMap.id : Module.End 𝕜 Z.V))
           (w ⊗ₜ[𝕜] x ⊗ₜ[𝕜] y ⊗ₜ[𝕜] z)))

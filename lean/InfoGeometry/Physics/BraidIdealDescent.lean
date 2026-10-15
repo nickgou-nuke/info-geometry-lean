@@ -110,16 +110,12 @@ theorem tauL_maps_leftSource_to_leftTarget
     (hx : x ∈ leftSource (H := H) (H_dual := H_dual) R) :
     tauL C x ∈ leftTarget (H := H) (H_dual := H_dual) R := by
   rcases hx with ⟨y, rfl⟩
-  refine TensorProduct.induction_on y ?_ ?_ ?_
-  · -- zero
-    simp [tauL, leftTarget]
-  · -- tmul: y = eta ⊗ₜ r where r : R (as subtype)
-    intro eta r
+  refine TensorProduct.inductionOn y (fun eta r => ?_) (fun y₁ y₂ hy₁ hy₂ => ?_)
+  ·
     -- r is a Subtype (· ∈ R); h expects an element of R
     -- (id ⊗ R.subtype)(eta ⊗ₜ r) = eta ⊗ₜ (r : H⊗H)
     simpa using h eta r
-  · -- add
-    intro y₁ y₂ hy₁ hy₂
+  ·
     -- hyᵢ: tauL C ((id ⊗ R.subtype) yᵢ) ∈ leftTarget R
     -- tauL C is linear, so tauL C ((id ⊗ R.subtype)(y₁+y₂))
     --   = tauL C ((id ⊗ R.subtype) y₁ + (id ⊗ R.subtype) y₂)
@@ -135,13 +131,11 @@ theorem tauR_maps_rightSource_to_rightTarget
     (hx : x ∈ rightSource (H := H) (H_dual := H_dual) S) :
     tauR C x ∈ rightTarget (H := H) (H_dual := H_dual) S := by
   rcases hx with ⟨y, rfl⟩
-  refine TensorProduct.induction_on y ?_ ?_ ?_
-  · simp [tauR, rightTarget]
-  · intro s v
+  refine TensorProduct.inductionOn y (fun s v => ?_) (fun y₁ y₂ hy₁ hy₂ => ?_)
+  ·
     -- s is a Subtype (· ∈ S); h expects an element of S
     simpa using h s v
-  · intro y₁ y₂ hy₁ hy₂
-    simpa [map_add] using add_mem hy₁ hy₂
+  · simpa [map_add] using add_mem hy₁ hy₂
 
 /-! ## Quotient-level descended braid maps -/
 

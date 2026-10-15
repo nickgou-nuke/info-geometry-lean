@@ -30,8 +30,13 @@ information-geometric nuclear/BdG theory:
    - **Topological Boundary Inaccessibility Theorem**: Physical states in the interior of the self-concordant cone $\Omega$ cannot reach the gapless boundary $\partial\Omega$ in finite information-geometric distance.
 
 3. **Plücker-Klein Twistor Homology**:
-   - Identification of the light-like boundary $\det_Z(X) = 0$ with the Klein quadric in $\mathbb{R}P^5$.
-   - Geometric mass-shell constraint $E_k^2 = - \operatorname{zornNorm}(X) = \operatorname{kleinQ}(P) - u_+ u_-$.
+   - The Witt-polarized Penrose-to-Zorn map has the exact determinant decomposition
+     $\det_Z(X) = u_+u_- - Q_K(P)$, where $Q_K$ is the Plücker Klein form.
+   - On the explicit locus $u_+u_-=0$, determinant-nullity is equivalent to
+     Klein-nullity. This is a conditional bridge for that twistor map, not a
+     general identification of lightlike momenta with decomposable bivectors.
+   - The Nambu-Gorkov energy identity below is a separate Zorn-norm readout;
+     it does not identify the energy mass shell with the Plücker Klein quadric.
 
 4. **Grand Synthesis**:
    - Integrates the topological index, infinite distance, Nesterov-Nemirovski barrier, and Quantum Cramér-Rao bound into a single verified master theorem.
@@ -175,7 +180,7 @@ Unifies:
 1. **DIII $\mathbb{Z}_2$ Topological Invariant Stability**: $\nu(\Delta) = 1$ for all $\Delta > 0$.
 2. **Phase Transition Singularity at Boundary**: $\nu(\Delta) = 0 \iff \Delta = 0$.
 3. **Infinite Fisher-Rao Distance to Boundary**: $L(\epsilon) > 0$ and $L(\epsilon)$ exceeds any finite bound $M$.
-4. **Klein Quadric Mass-Shell Equality**: $\operatorname{zornNorm}(X_{\text{NG}}) = - E_k^2$.
+4. **Nambu-Gorkov energy/norm identity**: $\operatorname{zornNorm}(X_{\text{NG}}) = - E_k^2$.
 5. **Nesterov-Nemirovski Log-Barrier**: $\Phi(X_{\text{NG}}) = - \log(E_k^2) \to +\infty$.
 6. **Quantum Cramér-Rao Hard-Core Confinement**: $\Delta\rho_{\text{allowed}}^2 < \mathcal{I}_F^{-1} \to 0$.
 7. **Subluminal Relativistic Excitations**: $c_s < c$ and $v_F < c$.

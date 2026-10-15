@@ -37,7 +37,7 @@ theorem wittNumberOperator_eq (i : Fin 4) :
 
 theorem wittNumber_commutator_annihilation (i : Fin 4) :
     algebraCommutator (wittNumberOperator i) (a i) = -(a i) := by
-  simpa [wittNumberOperator, quadraticWittGenerator] using
+  simpa [wittNumberOperator, quadraticWittGenerator, numberOperator] using
     (numberOperator_commutator_annihilation
       (creation := adag i) (annihilation := a i)
       (hannihilation := a_sq_zero i)
@@ -45,7 +45,7 @@ theorem wittNumber_commutator_annihilation (i : Fin 4) :
 
 theorem wittNumber_commutator_creation (i : Fin 4) :
     algebraCommutator (wittNumberOperator i) (adag i) = adag i := by
-  simpa [wittNumberOperator, quadraticWittGenerator] using
+  simpa [wittNumberOperator, quadraticWittGenerator, numberOperator] using
     (numberOperator_commutator_creation
       (creation := adag i) (annihilation := a i)
       (hcreation := adag_sq_zero i)

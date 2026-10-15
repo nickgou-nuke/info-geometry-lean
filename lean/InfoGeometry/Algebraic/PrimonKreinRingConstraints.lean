@@ -74,20 +74,8 @@ theorem isKreinSelfAdjoint_iff_doubledKreinInner
     (L : EndH (E := E)) :
     IsKreinSelfAdjoint (E := E) L ↔
       ∀ u v : DoubledSpace E,
-        doubledKreinInner (E := E) (L u) v = doubledKreinInner (E := E) u (L v) := by
-  constructor
-  · intro h u v
-    have hK : KreinSpace.IsKreinSelfAdjoint (H := DoubledSpace E) L := by
-      simpa [IsKreinSelfAdjoint, doubledKreinAdjoint_eq_kreinAdjoint] using h
-    have hk := (KreinSpace.isKreinSelfAdjoint_iff (H := DoubledSpace E) L).1 hK u v
-    simpa [doubledKreinInner_eq_kreinInner] using hk
-  · intro h
-    have hK : KreinSpace.IsKreinSelfAdjoint (H := DoubledSpace E) L := by
-      apply (KreinSpace.isKreinSelfAdjoint_iff (H := DoubledSpace E) L).2
-      intro u v
-      have hk := h u v
-      simpa [doubledKreinInner_eq_kreinInner] using hk
-    simpa [IsKreinSelfAdjoint, doubledKreinAdjoint_eq_kreinAdjoint] using hK
+        doubledKreinInner (E := E) (L u) v = doubledKreinInner (E := E) u (L v) :=
+  KreinSpace.isKreinSelfAdjoint_iff (H := DoubledSpace E) L
 
 /--
 Static ring-constraint packet for a doubled real operator.

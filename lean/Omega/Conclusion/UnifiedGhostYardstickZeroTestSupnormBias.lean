@@ -120,7 +120,9 @@ lemma conclusion_unified_ghost_yardstick_zero_test_supnorm_bias_supnormBias_eq_z
   · intro hcentered
     refine le_antisymm ?_ D.conclusion_unified_ghost_yardstick_zero_test_supnorm_bias_supnormBias_nonneg
     unfold conclusion_unified_ghost_yardstick_zero_test_supnorm_bias_supnormBias
-    simp [hcentered]
+    refine Finset.sup'_le _ _ ?_
+    intro r _
+    simp [hcentered r]
 
 lemma conclusion_unified_ghost_yardstick_zero_test_supnorm_bias_uniform_iff_centered_zero
     (D : conclusion_unified_ghost_yardstick_zero_test_supnorm_bias_data) :

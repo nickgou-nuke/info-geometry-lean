@@ -30,7 +30,7 @@ def boundaryFiberEquiv (p : ℕ) (δ : ZMod p) : ZMod p ≃ boundaryFiber p δ w
     fin_cases i
     · rfl
     · apply (sub_eq_iff_eq_add).2
-      simpa [add_comm] using v.2.symm
+      simpa [boundaryTwo, add_comm] using v.2.symm
 
 noncomputable instance boundaryFiberFintype (p : ℕ) [Fact p.Prime] (δ : ZMod p) :
     Fintype (boundaryFiber p δ) :=

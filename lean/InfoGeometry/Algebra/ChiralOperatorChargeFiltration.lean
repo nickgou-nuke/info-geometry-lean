@@ -112,8 +112,16 @@ theorem chiralTripleWordGrade_operator
     (g h k : ChiralGenerator) :
     word (R := ℝ) (chiralTripleWordGrade g h k).1 =
       word (R := ℝ) [g, h] * ofGenerator (R := ℝ) k := by
-  rw [chiralTripleWordGrade]
-  simp [chiralPairWordGrade, chiralGeneratorWordGrade, word, mul_assoc]
+  change word (R := ℝ)
+      (chiralWordGradeAppend (chiralPairWordGrade g h)
+        (chiralGeneratorWordGrade k)).1 = _
+  rw [chiralWordGradeAppend_operator]
+  change word (R := ℝ)
+      (chiralWordGradeAppend (chiralGeneratorWordGrade g)
+        (chiralGeneratorWordGrade h)).1 *
+      word (R := ℝ) (chiralGeneratorWordGrade k).1 = _
+  rw [chiralWordGradeAppend_operator]
+  simp [chiralGeneratorWordGrade, word, mul_assoc]
 
 theorem sPlus_pair_has_charge_two (i j : Fin 3) :
     wordDegree [ChiralGenerator.sPlus i, ChiralGenerator.sPlus j] = 2 := by

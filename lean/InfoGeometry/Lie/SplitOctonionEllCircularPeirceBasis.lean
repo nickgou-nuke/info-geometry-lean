@@ -156,11 +156,23 @@ theorem linearIndependent_frame : LinearIndependent ℝ frame := by
     | _ => 0
   have hq : ∑ j : Fin 8, q j • ellWeightBasisReal j = 0 := by
     have h := hg
-    simp only [Fin.sum_univ_eight, frame_zero, frame_one, frame_two, frame_three,
+    rw [Fin.sum_univ_eight] at h
+    rw [frame_zero, frame_one, frame_two, frame_three,
       frame_four, frame_five, frame_six, frame_seven] at h
-    rw [Fin.sum_univ_eight]
-    simp only [q]
-    convert h using 1 <;> module
+    calc
+      ∑ j : Fin 8, q j • ellWeightBasisReal j =
+        g 0 • ((1 / 2 : ℝ) • (ellWeightBasisReal 3 + ellWeightBasisReal 4)) +
+        g 1 • ellWeightBasisReal 5 +
+        g 2 • ellWeightBasisReal 6 +
+        g 3 • ellWeightBasisReal 7 +
+        g 4 • ((1 / 2 : ℝ) • (ellWeightBasisReal 3 - ellWeightBasisReal 4)) +
+        g 5 • ellWeightBasisReal 0 +
+        g 6 • ellWeightBasisReal 1 +
+        g 7 • ellWeightBasisReal 2 := by
+          rw [Fin.sum_univ_eight]
+          simp only [q]
+          module
+      _ = 0 := h
   have hqall := (Fintype.linearIndependent_iff.mp
     ellWeightBasisReal.linearIndependent) q hq
   have h0 := hqall 0
@@ -396,7 +408,8 @@ theorem ellCommutator_uPlus :
     InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul
       ((1 / 2 : ℝ) • (1 + lUnit)) lUnit = 0
   rw [zMul_smul_right, zMul_smul_left, zMul_add_right, zMul_add_left,
-    one_zMul, zMul_one, l_sq]
+    InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.one_zMul,
+    InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.zMul_one, l_sq]
   module
 
 theorem ellCommutator_uMinus :
@@ -407,7 +420,8 @@ theorem ellCommutator_uMinus :
     InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul
       ((1 / 2 : ℝ) • (1 - lUnit)) lUnit = 0
   rw [zMul_smul_right, zMul_smul_left, zMul_sub_right, zMul_sub_left,
-    one_zMul, zMul_one, l_sq]
+    InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.one_zMul,
+    InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.zMul_one, l_sq]
   module
 
 theorem ellCommutator_frame_one :

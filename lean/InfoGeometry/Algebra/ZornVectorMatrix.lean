@@ -819,7 +819,9 @@ theorem trace_commutator_upper_lower_offDiagonal (v w : ZornVec3 R) :
 theorem commutator_U_V (i j : Fin 3) :
     commutator (U i : ZornVectorMatrix R) (V j) =
       diagonal (ZornVec3.basis i j) (-(ZornVec3.basis i j)) := by
-  simpa [U, V] using
+  change commutator (offDiagonal (ZornVec3.basis i) (fun _ => 0))
+    (offDiagonal (fun _ => 0) (ZornVec3.basis j)) = _
+  simpa [ZornVec3.dot_basis_basis, ZornVec3.basis] using
     (commutator_upper_lower_offDiagonal
       (R := R) (ZornVec3.basis i) (ZornVec3.basis j))
 
@@ -2420,32 +2422,32 @@ instance : SMul R (Derivation (R := R)) := ⟨smul⟩
 instance : SemigroupAction R (Derivation (R := R)) :=
   SemigroupAction.mk (by
     intro r s D
-    change (r * s) • D = r • (s • D)
-    simpa using (smul_smul (r := r) (s := s) (D := D)).symm)
+    change smul (r * s) D = smul r (smul s D)
+    exact (smul_smul (r := r) (s := s) (D := D)).symm)
 
 instance : MulAction R (Derivation (R := R)) :=
   MulAction.mk (by
     intro D
-    change (1 : R) • D = D
-    simpa using (one_smul (D := D)))
+    change smul (1 : R) D = D
+    exact one_smul D)
 
 instance : DistribMulAction R (Derivation (R := R)) :=
   DistribMulAction.mk (by
     intro r
-    change r • (0 : Derivation (R := R)) = 0
-    simpa using (smul_zero (r := r))) (by
+    change smul r (0 : Derivation (R := R)) = 0
+    exact smul_zero r) (by
     intro r D E
-    change r • (D + E) = r • D + r • E
-    simpa using (smul_add (r := r) (D := D) (E := E)))
+    change smul r (D + E) = smul r D + smul r E
+    exact smul_add r D E)
 
 instance : Module R (Derivation (R := R)) :=
   Module.mk (by
     intro r s D
-    change (r + s) • D = r • D + s • D
-    simpa using (add_smul (r := r) (s := s) (D := D))) (by
+    change smul (r + s) D = smul r D + smul s D
+    exact add_smul r s D) (by
     intro D
-    change (0 : R) • D = 0
-    simpa using (zero_smul (D := D)))
+    change smul (0 : R) D = 0
+    exact zero_smul D)
 
 instance : LieRing (Derivation (R := R)) :=
   { bracket := bracket
@@ -2478,6 +2480,8 @@ instance : LieRing (Derivation (R := R)) :=
             rfl
       have h0 := bracket_jacobi D E F
       rw [h1, h2] at h0
+      change bracket D (bracket E F) +
+          (-bracket E (bracket D F) + -bracket (bracket D E) F) = 0 at h0
       have h :
           bracket D (bracket E F) +
               (-(bracket E (bracket D F)) + -(bracket (bracket D E) F)) = 0 := by

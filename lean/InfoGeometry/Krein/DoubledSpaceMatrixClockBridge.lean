@@ -44,9 +44,9 @@ noncomputable def matrixAction (A : Matrix (Fin 2) (Fin 2) ℝ) :
       (A 0 0) • fst_L (E := E) + (A 0 1) • snd_L (E := E)
     let g : H₂ E →L[ℝ] E :=
       (A 1 0) • fst_L (E := E) + (A 1 1) • snd_L (E := E)
-    simpa [f, g] using
-      (WithLp.prod_continuous_toLp (p := (2 : ENNReal))
-        (α := E) (β := E)).comp (f.prod g).continuous
+    change Continuous (fun u : H₂ E => to_doubled (f u) (g u))
+    exact (WithLp.prod_continuous_toLp (p := (2 : ENNReal))
+      (α := E) (β := E)).comp (f.continuous.prodMk g.continuous)
 
 omit [CompleteSpace E] in
 @[simp]

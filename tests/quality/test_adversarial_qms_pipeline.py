@@ -64,8 +64,8 @@ def test_pipeline_accepts_authentic_birkhoff_proof(tmp_path: Path):
 
     report = pipeline.run_pipeline(spec_path=spec_file, lean_file=lean_file, out_receipt=out_receipt)
 
-    assert report.final_verdict == "ACCEPTED", f"Expected ACCEPTED, got {report.final_verdict}: {report.gates}"
-    assert report.status == "PROMOTED"
+    assert report.final_verdict == "PENDING_OWNER_REVIEW", f"Expected pending owner review, got {report.final_verdict}: {report.gates}"
+    assert report.status == "EVIDENCE_RECORDED_PENDING_OWNER_REVIEW"
     assert report.halted_at_gate is None
     assert len(report.gates) == 7
     for gate in report.gates:
@@ -81,6 +81,7 @@ def test_pipeline_accepts_authentic_birkhoff_proof(tmp_path: Path):
     assert "receiptSha256" in report.receipt
     assert out_receipt.is_file()
     assert verify_candidate_receipt(report.receipt) is True
+    assert report.receipt["review"]["promotionAllowed"] is False
 
 
 # -----------------------------------------------------------------------------
@@ -96,8 +97,8 @@ def test_pipeline_accepts_authentic_master_synthesis_proof(tmp_path: Path):
 
     report = pipeline.run_pipeline(spec_path=spec_file, lean_file=lean_file, out_receipt=out_receipt)
 
-    assert report.final_verdict == "ACCEPTED", f"Expected ACCEPTED, got {report.final_verdict}: {report.gates}"
-    assert report.status == "PROMOTED"
+    assert report.final_verdict == "PENDING_OWNER_REVIEW", f"Expected pending owner review, got {report.final_verdict}: {report.gates}"
+    assert report.status == "EVIDENCE_RECORDED_PENDING_OWNER_REVIEW"
     assert report.halted_at_gate is None
     assert len(report.gates) == 7
     for gate in report.gates:
@@ -113,6 +114,7 @@ def test_pipeline_accepts_authentic_master_synthesis_proof(tmp_path: Path):
     assert "receiptSha256" in report.receipt
     assert out_receipt.is_file()
     assert verify_candidate_receipt(report.receipt) is True
+    assert report.receipt["review"]["promotionAllowed"] is False
 
 
 # -----------------------------------------------------------------------------
@@ -163,7 +165,7 @@ def test_pipeline_rejects_scalar_proxy_mutant(tmp_path: Path):
     report = pipeline.run_pipeline(spec_path=spec_file, lean_file=mutant_lean)
     assert report.final_verdict == "REJECTED"
     assert report.halted_at_gate == 3
-    assert report.status == "REJECTED_AT_GATE_3_ADVERSARIAL_SOCRATIC_REVIEW"
+    assert report.status == "REJECTED_AT_GATE_3_STATIC_TRAP_SCREEN"
     g3 = report.gates[2]
     assert g3.passed is False
     assert any("T16" in d for d in g3.diagnostics)
@@ -189,7 +191,7 @@ def test_pipeline_rejects_hypothesis_packaging_mutant(tmp_path: Path):
     report = pipeline.run_pipeline(spec_path=spec_file, lean_file=mutant_lean)
     assert report.final_verdict == "REJECTED"
     assert report.halted_at_gate == 3
-    assert report.status == "REJECTED_AT_GATE_3_ADVERSARIAL_SOCRATIC_REVIEW"
+    assert report.status == "REJECTED_AT_GATE_3_STATIC_TRAP_SCREEN"
     g3 = report.gates[2]
     assert g3.passed is False
     assert any("T6" in d for d in g3.diagnostics)
@@ -215,7 +217,7 @@ def test_pipeline_rejects_unwitnessed_structure_mutant(tmp_path: Path):
     report = pipeline.run_pipeline(spec_path=spec_file, lean_file=mutant_lean)
     assert report.final_verdict == "REJECTED"
     assert report.halted_at_gate == 3
-    assert report.status == "REJECTED_AT_GATE_3_ADVERSARIAL_SOCRATIC_REVIEW"
+    assert report.status == "REJECTED_AT_GATE_3_STATIC_TRAP_SCREEN"
     g3 = report.gates[2]
     assert g3.passed is False
     assert any("T17" in d for d in g3.diagnostics)
@@ -241,7 +243,7 @@ def test_pipeline_rejects_custom_axiom_trojan(tmp_path: Path):
     report = pipeline.run_pipeline(spec_path=spec_file, lean_file=mutant_lean)
     assert report.final_verdict == "REJECTED"
     assert report.halted_at_gate == 5
-    assert report.status == "REJECTED_AT_GATE_5_KERNEL_AND_INTEGRATION"
+    assert report.status == "REJECTED_AT_GATE_5_KERNEL_SOURCE_CHECK"
     g5 = report.gates[4]
     assert g5.passed is False
     assert "trojan" in g5.socratic_critique
@@ -267,7 +269,7 @@ def test_pipeline_rejects_sorry_hole_mutant(tmp_path: Path):
     report = pipeline.run_pipeline(spec_path=spec_file, lean_file=mutant_lean)
     assert report.final_verdict == "REJECTED"
     assert report.halted_at_gate == 4
-    assert report.status == "REJECTED_AT_GATE_4_INTERACTIVE_PROVER"
+    assert report.status == "REJECTED_AT_GATE_4_STATIC_PROOF_HOLE_SCAN"
     g4 = report.gates[3]
     assert g4.passed is False
     assert any("sorry" in d.lower() for d in g4.diagnostics)

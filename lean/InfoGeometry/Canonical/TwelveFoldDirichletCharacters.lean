@@ -196,25 +196,23 @@ lemma chiMinus3_factorsThrough_three : chiMinus3.FactorsThrough 3 := by
     MulChar.ringHomComp]
 
 lemma chiMinus3_conductor_dvd_three : chiMinus3.conductor ∣ 3 := by
-  apply DirichletCharacter.conductor_dvd_of_mem_conductorSet chiMinus3 (by norm_num)
-  change chiMinus3.FactorsThrough 3
+  apply DirichletCharacter.conductor_dvd_of_mem_conductorSet (χ := chiMinus3) (d := 3)
+  rw [DirichletCharacter.mem_conductorSet_iff]
   exact chiMinus3_factorsThrough_three
 
 lemma chiMinus3_conductor_eq_three : chiMinus3.conductor = 3 := by
   have hd := chiMinus3_conductor_dvd_three
   have hpos : 0 < chiMinus3.conductor :=
-    Nat.pos_of_ne_zero (DirichletCharacter.conductor_ne_zero chiMinus3 (by norm_num))
+    Nat.pos_of_ne_zero chiMinus3.conductor_ne_zero
   have hne : chiMinus3 ≠ (1 : Character12) := by
     intro h
     have hv := congrArg (fun χ : Character12 => χ (unitFive : ZMod 12)) h
-    dsimp at hv
     rw [chiMinus3_unitFive] at hv
     norm_num at hv
   have hc1 : chiMinus3.conductor ≠ 1 := by
     intro hc
     apply hne
-    exact (DirichletCharacter.eq_one_iff_conductor_eq_one (χ := chiMinus3)
-      (by norm_num)).2 hc
+    exact DirichletCharacter.eq_one_iff_conductor_eq_one.2 hc
   rcases (Nat.dvd_prime (by norm_num : Nat.Prime 3)).mp hd with h | h
   · exact False.elim (hc1 h)
   · exact h
@@ -226,8 +224,8 @@ lemma chiMinus4_factorsThrough_four : chiMinus4.FactorsThrough 4 := by
     MulChar.ringHomComp]
 
 lemma chiMinus4_conductor_dvd_four : chiMinus4.conductor ∣ 4 := by
-  apply DirichletCharacter.conductor_dvd_of_mem_conductorSet chiMinus4 (by norm_num)
-  change chiMinus4.FactorsThrough 4
+  apply DirichletCharacter.conductor_dvd_of_mem_conductorSet (χ := chiMinus4) (d := 4)
+  rw [DirichletCharacter.mem_conductorSet_iff]
   exact chiMinus4_factorsThrough_four
 
 lemma chiMinus4_conductor_ne_two : chiMinus4.conductor ≠ 2 := by
@@ -237,7 +235,6 @@ lemma chiMinus4_conductor_ne_two : chiMinus4.conductor ≠ 2 := by
   obtain ⟨hdiv, χ₂, hχ⟩ := hfac
   have h5 := congrArg (fun χ : Character12 => χ (unitFive : ZMod 12)) hχ
   have h7 := congrArg (fun χ : Character12 => χ (unitSeven : ZMod 12)) hχ
-  dsimp at h5 h7
   have h5' : (DirichletCharacter.changeLevel hdiv χ₂) (unitFive : ZMod 12) =
       χ₂ (1 : ZMod 2) := by
     rw [DirichletCharacter.changeLevel_eq_cast_of_dvd χ₂ hdiv unitFive]
@@ -258,12 +255,10 @@ lemma chiMinus4_conductor_eq_four : chiMinus4.conductor = 4 := by
     have hne : chiMinus4 ≠ (1 : Character12) := by
       intro h
       have hv := congrArg (fun χ : Character12 => χ (unitSeven : ZMod 12)) h
-      dsimp at hv
       rw [chiMinus4_unitSeven] at hv
       norm_num at hv
     apply hne
-    exact (DirichletCharacter.eq_one_iff_conductor_eq_one (χ := chiMinus4)
-      (by norm_num)).2 hc
+    exact DirichletCharacter.eq_one_iff_conductor_eq_one.2 hc
   have hne2 := chiMinus4_conductor_ne_two
   have hle : chiMinus4.conductor ≤ 4 := Nat.le_of_dvd (by norm_num) hd
   interval_cases hcval : chiMinus4.conductor <;> simp_all
@@ -276,7 +271,6 @@ lemma factorsThrough_eval_eq {χ : Character12} {d : ℕ}
   obtain ⟨hd, χd, hχ⟩ := hχ
   have ha := congrArg (fun χ : Character12 => χ (a : ZMod 12)) hχ
   have hb := congrArg (fun χ : Character12 => χ (b : ZMod 12)) hχ
-  dsimp at ha hb
   rw [DirichletCharacter.changeLevel_eq_cast_of_dvd χd hd a] at ha
   rw [DirichletCharacter.changeLevel_eq_cast_of_dvd χd hd b] at hb
   rw [hab] at ha
@@ -319,7 +313,7 @@ lemma chiTwelve_not_factorsThrough_six : ¬ chiTwelve.FactorsThrough 6 := by
 
 lemma chiTwelve_conductor_eq_twelve : chiTwelve.conductor = 12 := by
   have hd := chiTwelve.conductor_dvd_level
-  have hne0 := chiTwelve.conductor_ne_zero (by norm_num)
+  have hne0 := chiTwelve.conductor_ne_zero
   have hne1 : chiTwelve.conductor ≠ 1 := by
     intro hc
     apply chiTwelve_not_factorsThrough_one

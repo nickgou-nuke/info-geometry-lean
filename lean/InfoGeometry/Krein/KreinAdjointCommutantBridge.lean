@@ -202,11 +202,17 @@ theorem finiteKreinCommutant_commutator
     (hA : CommutesWithFundamentalSymmetry A)
     (hB : CommutesWithFundamentalSymmetry B) :
     CommutesWithFundamentalSymmetry (A * B - B * A) := by
-  simpa [sub_eq_add_neg, one_smul] using
-    (finiteKreinCommutant_add (A.comp B) ((-1 : ℝ) • (B.comp A))
-      (finiteKreinCommutant_mul A B hA hB)
-      (finiteKreinCommutant_smul (-1) (B.comp A)
-      (finiteKreinCommutant_mul B A hB hA)))
+  have hcomm := finiteKreinCommutant_add (A.comp B) ((-1 : ℝ) • (B.comp A))
+    (finiteKreinCommutant_mul A B hA hB)
+    (finiteKreinCommutant_smul (-1) (B.comp A)
+      (finiteKreinCommutant_mul B A hB hA))
+  have hmulAB : A * B = A.comp B := by
+    ext x
+    exact mul_apply_eq_comp A B x
+  have hmulBA : B * A = B.comp A := by
+    ext x
+    exact mul_apply_eq_comp B A x
+  simpa only [sub_eq_add_neg, neg_one_smul, ← hmulAB, ← hmulBA] using hcomm
 
 /-- The symmetric Jordan product of two commutant operators remains in the
 fundamental-symmetry commutant. -/

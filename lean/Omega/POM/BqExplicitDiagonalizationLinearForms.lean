@@ -50,6 +50,7 @@ private theorem pom_bq_explicit_diagonalization_linear_forms_weighted_selfadjoin
     (show Matrix.diagonal d * B = B.transpose * Matrix.diagonal d from by
       ext i j
       rw [Matrix.diagonal_mul, Matrix.mul_diagonal]
+      rw [Matrix.transpose_apply]
       simp [B, d]
       by_cases hij : i.1 + j.1 ≤ q
       · have hi_le : i.1 ≤ q - j.1 := Nat.le_sub_of_add_le hij

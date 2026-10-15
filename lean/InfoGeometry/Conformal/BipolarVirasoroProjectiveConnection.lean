@@ -45,8 +45,11 @@ theorem hasDerivAt_poleDenominator (s : ℂ) :
     HasDerivAt poleDenominator (poleDenominatorDeriv s) s := by
   have h₀ := (hasDerivAt_id s).pow 2
   have h₁ := ((hasDerivAt_id s).sub_const 1).pow 2
-  convert h₀.mul h₁ using 1 <;>
-    simp [poleDenominator, poleDenominatorDeriv] <;> ring
+  have h := h₀.mul h₁
+  refine h.congr_deriv ?_
+  have : (2 : ℕ) - 1 = 1 := rfl
+  simp only [poleDenominatorDeriv, this, pow_one, mul_one, id, Pi.pow_apply]
+  ring
 
 /-- Normalized projective connection associated with the bipolar logarithmic
 Schwarzian. -/
@@ -241,14 +244,14 @@ theorem hasDerivAt_first (v : ProjectiveVectorField) (s : ℂ) :
     HasDerivAt v.first (v.second s) s := by
   have h₀ := hasDerivAt_const s v.linear
   have h₁ := (hasDerivAt_id s).const_mul (2 * v.quadratic)
-  convert h₀.add h₁ using 1 <;>
-    simp [first, second] <;> ring
+  have h := h₀.add h₁
+  refine h.congr_deriv ?_
+  simp [second]
 
 /-- The displayed third derivative is genuinely zero. -/
 theorem hasDerivAt_second (v : ProjectiveVectorField) (s : ℂ) :
-    HasDerivAt v.second (v.third s) s := by
-  simpa [second, third] using
-    hasDerivAt_const s (2 * v.quadratic)
+    HasDerivAt v.second (v.third s) s :=
+  hasDerivAt_const s (2 * v.quadratic)
 
 end ProjectiveVectorField
 

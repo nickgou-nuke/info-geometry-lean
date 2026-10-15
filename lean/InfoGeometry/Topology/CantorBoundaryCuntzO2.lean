@@ -7,7 +7,7 @@ namespace InfoGeometry.Topology.CantorBoundaryCuntzO2
 
 open CantorBoundaryCuntzFamily
 
-abbrev Boundary := ℕ → Fin 2
+abbrev Boundary := CantorBoundaryN 2
 abbrev BoundaryFunction (R : Type*) := Boundary → R
 abbrev BoundaryOperator (R : Type*) [Semiring R] :=
   BoundaryFunction R →ₗ[R] BoundaryFunction R
@@ -21,7 +21,7 @@ def S {R : Type*} [Semiring R] (i : Fin 2) : BoundaryOperator R where
     by_cases h : headN b = i <;> simp [h]
   map_smul' c f := by
     ext b
-    by_cases h : headN b = i <;> simp [h]
+    by_cases h : headN b = i <;> simp [h, RingHom.id_apply]
 
 def T {R : Type*} [Semiring R] (i : Fin 2) : BoundaryOperator R where
   toFun f b := f (prependN i b)

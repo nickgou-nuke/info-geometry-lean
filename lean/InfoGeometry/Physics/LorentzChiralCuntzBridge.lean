@@ -56,9 +56,14 @@ def expDiagSL2 (η : ℂ) : SL2C := diagSL2 (Complex.exp η) (Complex.exp_ne_zer
 /-- Multiplication law for the explicit diagonal one-parameter subgroup. -/
 theorem expDiagSL2_mul (η ξ : ℂ) :
     expDiagSL2 η * expDiagSL2 ξ = expDiagSL2 (η + ξ) := by
+  apply Subtype.ext
+  change spinMatrix (expDiagSL2 η * expDiagSL2 ξ) =
+    spinMatrix (expDiagSL2 (η + ξ))
+  rw [spinMatrix_mul]
+  rw [expDiagSL2_matrix, expDiagSL2_matrix, expDiagSL2_matrix]
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [expDiagSL2, diagSL2, Complex.exp_add, mul_comm]
+    simp [expDiagSL2, diagSL2, Matrix.mul_apply, Complex.exp_add, mul_comm]
 
 /-- The identity member of the explicit diagonal subgroup. -/
 theorem expDiagSL2_zero : expDiagSL2 0 = (1 : SL2C) := by

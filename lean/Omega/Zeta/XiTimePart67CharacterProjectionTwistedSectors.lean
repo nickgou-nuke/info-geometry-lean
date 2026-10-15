@@ -1,4 +1,4 @@
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.Tactic
 
 namespace Omega.Zeta
@@ -180,7 +180,8 @@ theorem paper_xi_time_part67_character_projection_twisted_sectors
         rw [hrewrite, abs_neg]
         apply abs_le.mpr
         constructor <;> nlinarith [abs_le.mp hdecay.1, abs_le.mp hdecay.2]
-      simpa [xi_time_part67_character_projection_twisted_sectors_centered_wave] using hmid
+      simpa [xi_time_part67_character_projection_twisted_sectors_centered_wave,
+        xi_time_part67_character_projection_twisted_sectors_mean] using hmid
     · simpa [xi_time_part67_character_projection_twisted_sectors_centered_wave,
         xi_time_part67_character_projection_twisted_sectors_sector_two,
         xi_time_part67_character_projection_twisted_sectors_mean] using

@@ -29,8 +29,8 @@ def applyCoordinateShear (Z : PlabicTwistorMatrix R) (z : R) : PlabicTwistorMatr
 The sheared rows still define a decomposable two-vector.
 -/
 theorem coordinate_shear_preserves_plucker_relation (Z : PlabicTwistorMatrix R) (z : R) :
-    IsKleinNull (extractOnShellTwistorBlade (applyCoordinateShear Z z)) := by
-  dsimp [IsKleinNull, kleinQuadricEval, extractOnShellTwistorBlade, applyCoordinateShear]
+    IsKleinNull (extractTwistorPluckerCoordinates (applyCoordinateShear Z z)) := by
+  dsimp [IsKleinNull, kleinQuadricEval, extractTwistorPluckerCoordinates, applyCoordinateShear]
   ring
 
 end InfoGeometry.GrandUnification

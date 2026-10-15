@@ -47,7 +47,7 @@ private theorem xi_projective_moment_fekete_slope_eventually_div_lt_of_div_lt
         rw [add_zero, add_zero] at hbase
         refine hbase.congr' <| (eventually_ne_atTop 0).mono fun x hx => ?_
         field_simp [hx]
-      simpa [Nat.cast_mul, Nat.cast_add] using hreal.comp tendsto_natCast_atTop_atTop
+      convert hreal.comp tendsto_natCast_atTop_atTop using 1 <;> ext k <;> rfl
     refine (hupper_tendsto.eventually (gt_mem_nhds hL)).mono fun k hk => ?_
     have hden : 0 < ((n * k + r : ℕ) : ℝ) := by positivity
     have hle :
@@ -81,7 +81,7 @@ private theorem xi_projective_moment_fekete_slope_eventually_div_lt_of_div_lt
         rw [add_zero, add_zero] at hbase
         refine hbase.congr' <| (eventually_ne_atTop 0).mono fun x hx => ?_
         field_simp [hx]
-      simpa [Nat.cast_mul, Nat.cast_add] using hreal.comp tendsto_natCast_atTop_atTop
+      convert hreal.comp tendsto_natCast_atTop_atTop using 1 <;> ext k <;> rfl
     refine
       ((hupper_tendsto.eventually (gt_mem_nhds hL)).and (eventually_ge_atTop 1)).mono
         fun k hk => ?_

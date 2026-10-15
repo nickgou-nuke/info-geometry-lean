@@ -30,33 +30,58 @@ def p_plus : Matrix (Fin 2) (Fin 2) ℝ :=
 def p_minus : Matrix (Fin 2) (Fin 2) ℝ :=
   (⅟2 : ℝ) • (I_2 - commonHyperbolicAxis)
 
+private theorem I_2_entry (i j : Fin 2) :
+    I_2 i j = if i = j then 1 else 0 := by
+  fin_cases i <;> fin_cases j <;> norm_num [I_2]
+
+private theorem L_2_entry (i j : Fin 2) :
+    L_2 i j = if i = 0 ∧ j = 0 then 1 else if i = 1 ∧ j = 1 then -1 else 0 := by
+  fin_cases i <;> fin_cases j <;> norm_num [L_2]
+
+private theorem p_plus_entry (i j : Fin 2) :
+    p_plus i j = if i = 0 ∧ j = 0 then 1 else 0 := by
+  simp only [p_plus, commonHyperbolicAxis, Matrix.smul_apply, Matrix.add_apply]
+  rw [I_2_entry, L_2_entry]
+  fin_cases i <;> fin_cases j <;> norm_num
+
+private theorem p_minus_entry (i j : Fin 2) :
+    p_minus i j = if i = 1 ∧ j = 1 then 1 else 0 := by
+  simp only [p_minus, commonHyperbolicAxis, Matrix.smul_apply, Matrix.sub_apply]
+  rw [I_2_entry, L_2_entry]
+  fin_cases i <;> fin_cases j <;> norm_num
+
+private theorem I_comp_entry (i j : Fin 2) :
+    I_comp i j = if i = 0 ∧ j = 1 then -1 else if i = 1 ∧ j = 0 then 1 else 0 := by
+  fin_cases i <;> fin_cases j <;> norm_num [I_comp]
+
+private theorem IL_comp_entry (i j : Fin 2) :
+    IL_comp i j = if i = 0 ∧ j = 1 then 1 else if i = 1 ∧ j = 0 then 1 else 0 := by
+  fin_cases i <;> fin_cases j <;> norm_num [IL_comp]
+
 /-- $p_+$ is idempotent. -/
 theorem p_plus_sq : p_plus * p_plus = p_plus := by
-  ext i j; fin_cases i <;> fin_cases j <;> {
-    simp [p_plus, commonHyperbolicAxis, I_2, L_2, Matrix.add_apply, Matrix.smul_apply, Matrix.mul_apply, Fin.sum_univ_two]
-    try ring
-  }
+  ext i j
+  rw [Matrix.mul_apply, Fin.sum_univ_two, p_plus_entry, p_plus_entry, p_plus_entry]
+  fin_cases i <;> fin_cases j <;> norm_num [p_plus_entry]
 
 /-- $p_-$ is idempotent. -/
 theorem p_minus_sq : p_minus * p_minus = p_minus := by
-  ext i j; fin_cases i <;> fin_cases j <;> {
-    simp [p_minus, commonHyperbolicAxis, I_2, L_2, Matrix.sub_apply, Matrix.smul_apply, Matrix.mul_apply, Fin.sum_univ_two]
-    try ring
-  }
+  ext i j
+  rw [Matrix.mul_apply, Fin.sum_univ_two, p_minus_entry, p_minus_entry, p_minus_entry]
+  fin_cases i <;> fin_cases j <;> norm_num [p_minus_entry]
 
 /-- Orthogonality of chiral projectors: $p_+ p_- = 0$. -/
 theorem p_plus_p_minus : p_plus * p_minus = 0 := by
-  ext i j; fin_cases i <;> fin_cases j <;> {
-    simp [p_plus, p_minus, commonHyperbolicAxis, I_2, L_2, Matrix.add_apply, Matrix.sub_apply, Matrix.smul_apply, Matrix.mul_apply, Fin.sum_univ_two]
-    try ring
-  }
+  ext i j
+  rw [Matrix.mul_apply, Fin.sum_univ_two, p_plus_entry, p_minus_entry,
+    p_plus_entry, p_minus_entry]
+  fin_cases i <;> fin_cases j <;> norm_num [p_plus_entry, p_minus_entry]
 
 /-- Completeness of chiral projectors: $p_+ + p_- = 1$. -/
 theorem p_plus_add_p_minus : p_plus + p_minus = I_2 := by
-  ext i j; fin_cases i <;> fin_cases j <;> {
-    simp [p_plus, p_minus, commonHyperbolicAxis, I_2, L_2, Matrix.add_apply, Matrix.sub_apply, Matrix.smul_apply]
-    try ring
-  }
+  ext i j
+  rw [Matrix.add_apply, p_plus_entry, p_minus_entry, I_2_entry]
+  fin_cases i <;> fin_cases j <;> norm_num
 
 /-- Local chiral null candidate `n_m^+ = e_m + e_m l`. -/
 def n_plus (e_m eMulL : Matrix (Fin 2) (Fin 2) ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
@@ -66,33 +91,41 @@ def n_plus (e_m eMulL : Matrix (Fin 2) (Fin 2) ℝ) : Matrix (Fin 2) (Fin 2) ℝ
 def n_minus (e_m eMulL : Matrix (Fin 2) (Fin 2) ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
   e_m - eMulL
 
+private theorem n_plus_entry (i j : Fin 2) :
+    n_plus I_comp IL_comp i j = if i = 1 ∧ j = 0 then 2 else 0 := by
+  simp only [n_plus, Matrix.add_apply, I_comp_entry, IL_comp_entry]
+  fin_cases i <;> fin_cases j <;> norm_num
+
+private theorem n_minus_entry (i j : Fin 2) :
+    n_minus I_comp IL_comp i j = if i = 0 ∧ j = 1 then -2 else 0 := by
+  simp only [n_minus, Matrix.sub_apply, I_comp_entry, IL_comp_entry]
+  fin_cases i <;> fin_cases j <;> norm_num
+
 /-- The positive null candidate squares to zero. -/
 theorem n_plus_sq_zero : n_plus I_comp IL_comp * n_plus I_comp IL_comp = 0 := by
-  ext i j; fin_cases i <;> fin_cases j <;> {
-    simp [n_plus, I_comp, IL_comp, Matrix.add_apply, Matrix.mul_apply, Fin.sum_univ_two]
-    try ring
-  }
+  ext i j
+  rw [Matrix.mul_apply, Fin.sum_univ_two, n_plus_entry, n_plus_entry, n_plus_entry]
+  fin_cases i <;> fin_cases j <;> norm_num
 
 /-- The negative null candidate squares to zero. -/
 theorem n_minus_sq_zero : n_minus I_comp IL_comp * n_minus I_comp IL_comp = 0 := by
-  ext i j; fin_cases i <;> fin_cases j <;> {
-    simp [n_minus, I_comp, IL_comp, Matrix.sub_apply, Matrix.mul_apply, Fin.sum_univ_two]
-    try ring
-  }
+  ext i j
+  simp only [Matrix.mul_apply, Fin.sum_univ_two, n_minus_entry]
+  fin_cases i <;> fin_cases j <;> norm_num
 
 /-- Left Peirce identity for the positive projector. -/
 theorem p_minus_n_plus : p_minus * n_plus I_comp IL_comp = n_plus I_comp IL_comp := by
-  ext i j; fin_cases i <;> fin_cases j <;> {
-    simp [p_minus, n_plus, commonHyperbolicAxis, I_2, L_2, I_comp, IL_comp, Matrix.sub_apply, Matrix.add_apply, Matrix.smul_apply, Matrix.mul_apply, Fin.sum_univ_two]
-    try ring
-  }
+  ext i j
+  rw [Matrix.mul_apply, Fin.sum_univ_two, p_minus_entry, n_plus_entry,
+    p_minus_entry, n_plus_entry, n_plus_entry]
+  fin_cases i <;> fin_cases j <;> norm_num
 
 /-- Right Peirce identity for the positive projector. -/
 theorem n_plus_p_plus : n_plus I_comp IL_comp * p_plus = n_plus I_comp IL_comp := by
-  ext i j; fin_cases i <;> fin_cases j <;> {
-    simp [p_plus, n_plus, commonHyperbolicAxis, I_2, L_2, I_comp, IL_comp, Matrix.add_apply, Matrix.smul_apply, Matrix.mul_apply, Fin.sum_univ_two]
-    try ring
-  }
+  ext i j
+  rw [Matrix.mul_apply, Fin.sum_univ_two, n_plus_entry, p_plus_entry,
+    n_plus_entry, p_plus_entry, n_plus_entry]
+  fin_cases i <;> fin_cases j <;> norm_num
 
 /-- Normalized creation/annihilation packets. -/
 def a_m (e_m eMulL : Matrix (Fin 2) (Fin 2) ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
@@ -101,29 +134,37 @@ def a_m (e_m eMulL : Matrix (Fin 2) (Fin 2) ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
 def a_m_dagger (e_m eMulL : Matrix (Fin 2) (Fin 2) ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
   (-1 / 2 : ℝ) • n_minus e_m eMulL
 
+private theorem a_m_entry (i j : Fin 2) :
+    a_m I_comp IL_comp i j = if i = 1 ∧ j = 0 then 1 else 0 := by
+  simp only [a_m, Matrix.smul_apply, n_plus_entry]
+  fin_cases i <;> fin_cases j <;> norm_num
+
+private theorem a_m_dagger_entry (i j : Fin 2) :
+    a_m_dagger I_comp IL_comp i j = if i = 0 ∧ j = 1 then 1 else 0 := by
+  simp only [a_m_dagger, Matrix.smul_apply, n_minus_entry]
+  fin_cases i <;> fin_cases j <;> norm_num
+
 theorem normalized_null_plus_sq_zero : a_m I_comp IL_comp * a_m I_comp IL_comp = 0 := by
-  ext i j; fin_cases i <;> fin_cases j <;> {
-    simp [a_m, n_plus, I_comp, IL_comp, Matrix.smul_apply, Matrix.add_apply, Matrix.mul_apply, Fin.sum_univ_two]
-    try ring
-  }
+  ext i j
+  rw [Matrix.mul_apply, Fin.sum_univ_two, a_m_entry, a_m_entry, a_m_entry]
+  fin_cases i <;> fin_cases j <;> norm_num
 
 theorem normalized_null_minus_sq_zero : a_m_dagger I_comp IL_comp * a_m_dagger I_comp IL_comp = 0 := by
-  ext i j; fin_cases i <;> fin_cases j <;> {
-    simp [a_m_dagger, n_minus, I_comp, IL_comp, Matrix.smul_apply, Matrix.sub_apply, Matrix.mul_apply, Fin.sum_univ_two]
-    try ring
-  }
+  ext i j
+  simp only [Matrix.mul_apply, Fin.sum_univ_two, a_m_dagger_entry]
+  fin_cases i <;> fin_cases j <;> norm_num
 
 theorem normalized_null_plus_mul_minus : a_m I_comp IL_comp * a_m_dagger I_comp IL_comp = p_minus := by
-  ext i j; fin_cases i <;> fin_cases j <;> {
-    simp [a_m, a_m_dagger, p_minus, n_plus, n_minus, I_comp, IL_comp, commonHyperbolicAxis, I_2, L_2, Matrix.smul_apply, Matrix.add_apply, Matrix.sub_apply, Matrix.mul_apply, Fin.sum_univ_two]
-    try ring
-  }
+  ext i j
+  rw [Matrix.mul_apply, Fin.sum_univ_two, a_m_entry, a_m_dagger_entry,
+    a_m_entry, a_m_dagger_entry, p_minus_entry]
+  fin_cases i <;> fin_cases j <;> norm_num
 
 theorem normalized_null_minus_mul_plus : a_m_dagger I_comp IL_comp * a_m I_comp IL_comp = p_plus := by
-  ext i j; fin_cases i <;> fin_cases j <;> {
-    simp [a_m, a_m_dagger, p_plus, n_plus, n_minus, I_comp, IL_comp, commonHyperbolicAxis, I_2, L_2, Matrix.smul_apply, Matrix.add_apply, Matrix.sub_apply, Matrix.mul_apply, Fin.sum_univ_two]
-    try ring
-  }
+  ext i j
+  rw [Matrix.mul_apply, Fin.sum_univ_two, a_m_dagger_entry, a_m_entry,
+    a_m_dagger_entry, a_m_entry, p_plus_entry]
+  fin_cases i <;> fin_cases j <;> norm_num
 
 theorem normalized_null_anticommutator_eq_one :
     a_m I_comp IL_comp * a_m_dagger I_comp IL_comp +

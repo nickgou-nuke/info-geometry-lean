@@ -52,9 +52,14 @@ lemma fold_computability_eps_sound_distance_noncomputable_inapproximable_distanc
       | some T => (1 / 2 : ℝ) ^ T := by
   unfold
     fold_computability_eps_sound_distance_noncomputable_inapproximable_distance
-  simpa using
-    (paper_fold_computability_eps_sound_distance_halting_spectrum
-      (f := fun _ => false) (g := fun _ => false) (T := D.haltingTime c)).2
+  change fold_computability_eps_sound_distance_halting_spectrum_epsSoundDistance
+      (fold_computability_eps_sound_distance_halting_spectrum_haltingCode (D.haltingTime c))
+      fold_computability_eps_sound_distance_halting_spectrum_constantOne =
+    match D.haltingTime c with
+    | none => 0
+    | some t => (1 / 2 : ℝ) ^ t
+  exact (paper_fold_computability_eps_sound_distance_halting_spectrum
+    (f := fun _ => false) (g := fun _ => false) (T := D.haltingTime c)).2
 
 lemma fold_computability_eps_sound_distance_noncomputable_inapproximable_not_halts_iff
     (D : fold_computability_eps_sound_distance_noncomputable_inapproximable_data) (c : D.Code) :

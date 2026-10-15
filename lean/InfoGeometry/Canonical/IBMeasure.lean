@@ -168,9 +168,11 @@ theorem rnDeriv_IBGibbs_eq
     simpa [μf] using congrArg (fun ν : FiniteMeasure T => ((ν : Measure T))) h
   have hmass_nonzero : ((μf.mass : ℝ≥0∞)) ≠ 0 := by
     exact ENNReal.coe_ne_zero.mpr (μf.mass_nonzero_iff.mpr hμf)
+  have hmass : ((μf : Measure T) Set.univ) = IBPartitionFunction qT β D x := by
+    simp [μf, IBPartitionFunction, IBUnnormalized, partitionFunction, tiltedMeasure]
   have hpart_nonzero : IBPartitionFunction qT β D x ≠ 0 := by
-    simpa [μf, IBPartitionFunction, IBUnnormalized, partitionFunction, tiltedMeasure,
-      FiniteMeasure.ennreal_mass] using hmass_nonzero
+    rw [FiniteMeasure.ennreal_mass, hmass] at hmass_nonzero
+    exact hmass_nonzero
   have htop : (IBPartitionFunction qT β D x)⁻¹ ≠ ⊤ := by
     exact ENNReal.inv_ne_top.mpr hpart_nonzero
   have hsmul :

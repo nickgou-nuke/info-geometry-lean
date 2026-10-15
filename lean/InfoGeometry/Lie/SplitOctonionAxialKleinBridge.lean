@@ -210,7 +210,7 @@ theorem detZ_eq_zero_iff_activeExterior_decomposable (X : ActiveSector) :
           exteriorPower.ιMulti ℝ 2 ![u, v] := by
   constructor
   · intro hX
-    apply (_root_.InfoGeometry.Projective.ExteriorPowerPluckerBridge.exteriorKleinForm_zero_iff_exists_ιMulti
+    apply (_root_.InfoGeometry.Projective.ExteriorPowerPluckerBridge.exteriorKleinForm_eq_zero_iff_decomposable
       (activeExteriorLinearEquiv X)).1
     rw [exteriorKleinForm_activeExterior]
     exact hX

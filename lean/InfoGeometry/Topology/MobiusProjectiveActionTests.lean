@@ -20,7 +20,8 @@ example (first second : PGL2C)
   (eq_iff_same_action first second).mpr equalActions
 
 example (point : CP1) (transformation : MobiusTransform) :
-    (Quotient.mk' transformation : PGL2C) • point.toRiemannSphere =
+    SMul.smul (M := PGL2C)
+      (Quotient.mk' transformation : PGL2C) point.toRiemannSphere =
       (transformation.actCP1 point).toRiemannSphere :=
   mk_smul_toRiemannSphere transformation point
 

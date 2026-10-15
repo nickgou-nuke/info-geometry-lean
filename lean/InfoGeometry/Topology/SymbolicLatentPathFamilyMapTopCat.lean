@@ -77,6 +77,7 @@ theorem symbolicLatentPathFamilyMapTopCatHom_factorization_unique
   simpa [symbolicLatentPathFamilyMapTopCatHom,
     symbolicLatentPathFamilyTopCatHom,
     symbolicLatentLocalChartMapTopCatHom,
+    SymbolicLatentLocalChartMap.mapFamily,
     TopCat.comp_app, TopCat.ofHom] using hq.symm
 
 theorem symbolicLatentPathFamilyMapTopCatHom_comp

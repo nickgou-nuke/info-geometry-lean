@@ -20,15 +20,13 @@ open CategoryTheory
 noncomputable def grothendieckCompletionFunctor :
     AddCommMonCat.{u} ⥤ AddCommGrpCat.{u} where
   obj M := AddCommGrpCat.of (Grothendieck (M : Type u))
-  map f := AddCommGrpCat.homAddEquiv.symm (grothendieckFunctor f.hom')
+  map f := AddCommGrpCat.ofHom (grothendieckFunctor f.hom)
   map_id M := by
     apply AddCommGrpCat.hom_ext
-    change grothendieckFunctor ((𝟙 M : M ⟶ M).hom') = _
-    simpa using (grothendieckFunctor_id (M := (M : Type u)))
+    exact grothendieckFunctor_id (M := (M : Type u))
   map_comp f g := by
     apply AddCommGrpCat.hom_ext
-    change grothendieckFunctor ((f ≫ g).hom') = _
-    simpa using (grothendieckFunctor_comp f.hom' g.hom')
+    exact grothendieckFunctor_comp f.hom g.hom
 
 @[simp]
 theorem grothendieckCompletionFunctor_obj_carrier
@@ -38,7 +36,6 @@ theorem grothendieckCompletionFunctor_obj_carrier
 @[simp]
 theorem grothendieckCompletionFunctor_map_hom
     {M N : AddCommMonCat.{u}} (f : M ⟶ N) :
-    (grothendieckCompletionFunctor.map f).hom' = grothendieckFunctor f.hom' := by
-  rfl
+    (grothendieckCompletionFunctor.map f).hom = grothendieckFunctor f.hom := rfl
 
 end InfoGeometry.Categorical

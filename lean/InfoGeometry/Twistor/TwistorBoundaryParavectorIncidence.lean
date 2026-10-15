@@ -84,6 +84,10 @@ theorem incident_boundary_kernel_spinor
     {p : Minkowski13} {ψ : Spinor2}
     (hker : Matrix.mulVec (paravectorToSolderingMatrix p) ψ = 0) :
     boundaryIncidenceLinearMap p ψ = (0, ψ) := by
-  simp [boundaryIncidenceLinearMap, incidenceLinearMap, hker]
+  rw [boundaryIncidenceLinearMap_apply]
+  apply Prod.ext
+  · rw [hker]
+    simp
+  · rfl
 
 end InfoGeometry.Twistor.TwistorBoundaryParavectorIncidence

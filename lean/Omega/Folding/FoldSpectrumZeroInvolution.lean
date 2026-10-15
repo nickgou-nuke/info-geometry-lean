@@ -22,7 +22,8 @@ private lemma foldSpectrumTerm_flip_eq_neg (m k : ℕ) (j : Fin m)
     foldSpectrumTerm m k (Function.update ω j (!(ω j))) = -foldSpectrumTerm m k ω := by
   unfold foldSpectrumTerm
   have hj : j ∈ (Finset.univ : Finset (Fin m)) := Finset.mem_univ j
-  rw [Finset.prod_eq_mul_prod_diff_singleton hj, Finset.prod_eq_mul_prod_diff_singleton hj]
+  rw [Finset.prod_eq_mul_prod_sdiff_singleton_of_mem hj,
+    Finset.prod_eq_mul_prod_sdiff_singleton_of_mem hj]
   have hrest :
       ∏ i ∈ Finset.univ \ {j},
           (if Function.update ω j (!(ω j)) i then foldSpectrumCoordinateFactor m k i.1 else 1) =

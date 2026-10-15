@@ -48,8 +48,13 @@ theorem finiteWDVVResidual_zeroLocus_isClosed {dim : ℕ}
     (i j k l : Fin dim) :
     IsClosed {W : FiniteWDVVSystem dim |
       finiteWDVVResidual W i j k l = 0} := by
-  simpa only [Set.preimage, Set.mem_setOf_eq] using
-    (isClosed_singleton : IsClosed ({0} : Set ℝ)).preimage
-      (continuous_finiteWDVVResidual i j k l)
+  have hset : {W : FiniteWDVVSystem dim |
+      finiteWDVVResidual W i j k l = 0} =
+      (fun W : FiniteWDVVSystem dim => finiteWDVVResidual W i j k l) ⁻¹' ({0} : Set ℝ) := by
+    ext W
+    simp
+  rw [hset]
+  exact (isClosed_singleton : IsClosed ({0} : Set ℝ)).preimage
+    (continuous_finiteWDVVResidual i j k l)
 
 end InfoGeometry.Canonical

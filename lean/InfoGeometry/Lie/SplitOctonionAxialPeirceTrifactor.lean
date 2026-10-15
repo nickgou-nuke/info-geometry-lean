@@ -40,10 +40,12 @@ def axialI : CZ := zornPlus - zornMinus
 def axialGrading : EndCZ where
   toFun X := { a := 0, b := 0, x := X.x, y := -X.y }
   map_add' X Y := by
-    ext i <;> simp [ZornMatrix.add_def] <;> abel
+    ext i
+    all_goals simp [ZornMatrix.add_def]
+    all_goals abel
   map_smul' r X := by
-    ext i <;>
-      simp [Equiv.smul_def, coordEquiv]
+    ext i <;> simp [ZornMatrix.smul_a, ZornMatrix.smul_b,
+      ZornMatrix.smul_x, ZornMatrix.smul_y]
 
 @[simp] theorem axialGrading_apply (X : CZ) :
     axialGrading X = { a := 0, b := 0, x := X.x, y := -X.y } :=
@@ -56,15 +58,16 @@ theorem axialGrading_eq_half_commutator (X : CZ) :
   ext i <;>
     simp [axialGrading, axialI, zornPlus, zornMinus, ZornMatrix.mul_def,
       ZornMatrix.mul, ZornMatrix.dot, ZornMatrix.cross,
-      Equiv.smul_def, coordEquiv]
-  all_goals (try fin_cases i) <;> simp <;> ring
+      ZornMatrix.smul_a, ZornMatrix.smul_b, ZornMatrix.smul_x,
+      ZornMatrix.smul_y]
+  all_goals fin_cases i <;> simp <;> ring_nf
 
 /-- The diagonal axial grading is tripotent on the full canonical carrier. -/
 theorem axialGrading_tripotent : axialGrading ^ 3 = axialGrading := by
   apply LinearMap.ext
   intro X
-  ext i <;>
-    simp [pow_succ, Module.End.mul_apply, axialGrading]
+  change axialGrading (axialGrading (axialGrading X)) = axialGrading X
+  ext i <;> simp [axialGrading_apply]
 
 /-- Positive, stationary, and negative polynomial projectors. -/
 def axialPPlus : EndCZ := projPos axialGrading
@@ -76,7 +79,8 @@ theorem axialPPlus_apply (X : CZ) : axialPPlus X = colorProject X := by
   rw [colorProject_apply]
   ext i <;>
     simp [axialPPlus, projPos, axialGrading, Module.End.mul_apply,
-      Equiv.smul_def, coordEquiv]
+      ZornMatrix.smul_a, ZornMatrix.smul_b, ZornMatrix.smul_x,
+      ZornMatrix.smul_y]
   all_goals (try fin_cases i) <;> ring
 
 /-- The negative tripotent projector is the native lower/anticolor Peirce
@@ -85,16 +89,15 @@ theorem axialPMinus_apply (X : CZ) : axialPMinus X = anticolorProject X := by
   rw [anticolorProject_apply]
   ext i <;>
     simp [axialPMinus, projNeg, axialGrading, Module.End.mul_apply,
-      Equiv.smul_def, coordEquiv]
+      ZornMatrix.smul_a, ZornMatrix.smul_b, ZornMatrix.smul_x,
+      ZornMatrix.smul_y]
   all_goals (try fin_cases i) <;> ring
 
 /-- The stationary projector extracts exactly the two diagonal coordinates. -/
 theorem axialPZero_apply (X : CZ) :
     axialPZero X = { a := X.a, b := X.b, x := 0, y := 0 } := by
   ext i <;>
-    simp [axialPZero, projZero, axialGrading, Module.End.mul_apply,
-      Equiv.smul_def, coordEquiv]
-  all_goals (try fin_cases i) <;> ring
+    simp [axialPZero, projZero, axialGrading, Module.End.mul_apply]
 
 /-- The zero sector is the sum of the two diagonal Peirce components. -/
 theorem axialPZero_apply_eq_diagonal_peirce (X : CZ) :
@@ -106,7 +109,7 @@ theorem axialPZero_apply_eq_diagonal_peirce (X : CZ) :
 
 private theorem axialGrading_mul_three :
     axialGrading * axialGrading * axialGrading = axialGrading := by
-  simpa [pow_three] using axialGrading_tripotent
+  simpa [pow_three, mul_assoc] using axialGrading_tripotent
 
 /-- The stationary projector has range exactly the kernel of the diagonal
 axial grading. -/
@@ -123,7 +126,8 @@ theorem axialPZero_range_eq_ker :
     have hx : X.x = 0 := by
       funext i
       have hi := congrArg (fun Z : CZ => Z.x i) hX
-      simpa [axialGrading] using hi
+      change X.x i = 0 at hi
+      exact hi
     have hy : X.y = 0 := by
       funext i
       have hi := congrArg (fun Z : CZ => Z.y i) hX
@@ -140,7 +144,7 @@ theorem axialPPlus_range_eq_eigenspace :
     rw [Module.End.mem_eigenspace_iff]
     have h := congrArg (fun F : EndCZ => F Y)
       (mul_projPos axialGrading_mul_three)
-    simpa [Module.End.mul_apply] using h
+    simpa [Module.End.mul_apply, axialPPlus] using h
   · intro X hX
     rw [Module.End.mem_eigenspace_iff] at hX
     have hX' : axialGrading X = X := by simpa using hX
@@ -161,7 +165,7 @@ theorem axialPMinus_range_eq_eigenspace :
     rw [Module.End.mem_eigenspace_iff]
     have h := congrArg (fun F : EndCZ => F Y)
       (mul_projNeg axialGrading_mul_three)
-    simpa [Module.End.mul_apply] using h
+    simpa [Module.End.mul_apply, axialPMinus] using h
   · intro X hX
     rw [Module.End.mem_eigenspace_iff] at hX
     have hX' : axialGrading X = -X := by simpa using hX

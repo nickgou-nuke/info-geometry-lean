@@ -94,10 +94,8 @@ theorem paper_xi_null_z2_doublecover_min_desingularization
   refine ⟨?_, ?_, hsplit.1, hsplit.2, ?_, ?_⟩
   · intro x
     rfl
-  · ext i j
-    simp [xi_null_z2_doublecover_min_desingularization_visibleObstruction,
-      xi_null_z2_doublecover_min_desingularization_splittingData,
-      NullZ2SpectralSplittingData.betaMatrix]
+  · change B - B = 0
+    exact sub_self B
   · intro v
     exact xi_null_z2_doublecover_min_desingularization_fiber_card v
   · intro d hd heven

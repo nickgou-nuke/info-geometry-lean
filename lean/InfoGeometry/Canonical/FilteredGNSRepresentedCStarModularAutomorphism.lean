@@ -1,5 +1,7 @@
 import InfoGeometry.Canonical.FilteredGNSRepresentedCStarCompletion
+import InfoGeometry.Canonical.FilteredGNSRepresentedCompletionModularTransport
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Analysis.CStarAlgebra.Hom
 import Mathlib.Algebra.Star.UnitaryStarAlgAut
 
 /-!
@@ -45,6 +47,32 @@ variable
     ContinuousStarInductiveSystem.CompatibleStateFamily
       Stage sys)
 
+local instance representedAlgebraicRangeCompletionCStarAlgebraInst :
+    CStarAlgebra (representedAlgebraicRangeCompletion Stage sys ω) :=
+  representedAlgebraicRangeCompletionCStarAlgebra Stage sys ω
+
+local instance representedAlgebraicRangeCompletionRingInst :
+    Ring (representedAlgebraicRangeCompletion Stage sys ω) :=
+  (representedAlgebraicRangeCompletionCStarAlgebra Stage sys ω).toNormedRing.toRing
+
+local instance representedAlgebraicRangeCompletionMetricSpaceInst :
+    MetricSpace (representedAlgebraicRangeCompletion Stage sys ω) :=
+  (representedAlgebraicRangeCompletionCStarAlgebra Stage sys ω).toNormedRing.toMetricSpace
+
+local instance representedCStarClosureCStarAlgebraInst :
+    CStarAlgebra (representedCStarClosure Stage sys ω) :=
+  representedCStarClosureCStarAlgebra Stage sys ω
+
+local instance representedAlgebraicRangeCompletionNonUnitalCStarAlgebraInst :
+    NonUnitalCStarAlgebra (representedAlgebraicRangeCompletion Stage sys ω) :=
+  CStarAlgebra.toNonUnitalCStarAlgebra
+    (representedAlgebraicRangeCompletion Stage sys ω)
+
+local instance representedCStarClosureNonUnitalCStarAlgebraInst :
+    NonUnitalCStarAlgebra (representedCStarClosure Stage sys ω) :=
+  CStarAlgebra.toNonUnitalCStarAlgebra
+    (representedCStarClosure Stage sys ω)
+
 /-- Completed faithful represented carrier. -/
 abbrev CompletedCarrier : Type _ :=
   representedAlgebraicRangeCompletion Stage sys ω
@@ -69,8 +97,8 @@ def modularAutOnCompletion
       ConcreteCarrier Stage sys ω) :
     CompletedCarrier Stage sys ω ≃⋆ₐ[ℂ]
       CompletedCarrier Stage sys ω :=
-  ((completionToConcreteStarAlgEquiv Stage sys ω).trans σ).trans
-    (completionToConcreteStarAlgEquiv Stage sys ω).symm
+  (completionToConcreteStarAlgEquiv Stage sys ω).trans
+    (σ.trans (completionToConcreteStarAlgEquiv Stage sys ω).symm)
 
 @[simp] theorem modularAutOnCompletion_apply
     (σ : ConcreteCarrier Stage sys ω ≃⋆ₐ[ℂ]
@@ -87,22 +115,31 @@ def modularAutOnCompletion
     (x : CompletedCarrier Stage sys ω) :
     modularAutOnCompletion Stage sys ω σ (star x) =
       star (modularAutOnCompletion Stage sys ω σ x) :=
-  map_star (modularAutOnCompletion Stage sys ω σ) x
-
-/-- Any lifted modular automorphism is isometric. -/
-theorem modularAutOnCompletion_isometry
-    (σ : ConcreteCarrier Stage sys ω ≃⋆ₐ[ℂ]
-      ConcreteCarrier Stage sys ω) :
-    Isometry (modularAutOnCompletion Stage sys ω σ) :=
-  StarAlgEquiv.isometry (modularAutOnCompletion Stage sys ω σ)
+  (modularAutOnCompletion Stage sys ω σ).map_star' x
 
 /-- Norm invariance of the lifted modular automorphism. -/
 @[simp] theorem norm_modularAutOnCompletion
     (σ : ConcreteCarrier Stage sys ω ≃⋆ₐ[ℂ]
       ConcreteCarrier Stage sys ω)
     (x : CompletedCarrier Stage sys ω) :
-    ‖modularAutOnCompletion Stage sys ω σ x‖ = ‖x‖ :=
-  StarAlgEquiv.norm_map (modularAutOnCompletion Stage sys ω σ) x
+    ‖modularAutOnCompletion Stage sys ω σ x‖ = ‖x‖ := by
+  change ‖(modularAutOnCompletion Stage sys ω σ).toNonUnitalStarAlgHom x‖ = ‖x‖
+  exact NonUnitalStarAlgHom.norm_map
+    (modularAutOnCompletion Stage sys ω σ).toNonUnitalStarAlgHom
+    (modularAutOnCompletion Stage sys ω σ).injective x
+
+/-- Any lifted modular automorphism is isometric. -/
+theorem modularAutOnCompletion_isometry
+    (σ : ConcreteCarrier Stage sys ω ≃⋆ₐ[ℂ]
+      ConcreteCarrier Stage sys ω) :
+    Isometry
+      (modularAutOnCompletion Stage sys ω σ :
+        representedAlgebraicRangeCompletion Stage sys ω →
+          representedAlgebraicRangeCompletion Stage sys ω) := by
+  exact
+    _root_.CStarStateColimit.Native.FilteredGNSRepresentedCompletionModularTransport.transportStarAlgAutFromClosure_isometry
+      Stage sys ω σ
+      (StarAlgEquiv.isometry σ)
 
 /-- Continuity of the lifted modular automorphism follows from isometry. -/
 theorem modularAutOnCompletion_continuous
@@ -191,7 +228,10 @@ def closureModularFlowOfUnitaryFlow
         = Unitary.conjStarAlgAut (S := ℂ)
             (R := ConcreteCarrier Stage sys ω)
             (UF.U s * UF.U t) := by
-              simp [UF.map_add t s]
+              exact congrArg
+                (Unitary.conjStarAlgAut (S := ℂ)
+                  (R := ConcreteCarrier Stage sys ω))
+                (UF.map_add t s)
       _ =
         (Unitary.conjStarAlgAut (S := ℂ)
             (R := ConcreteCarrier Stage sys ω)
@@ -228,12 +268,9 @@ def liftedCompletionFlow
       StarAlgEquiv.refl (R := ℂ)
         (A := CompletedCarrier Stage sys ω) := by
   ext x
-  change
-    (completionToConcreteStarAlgEquiv Stage sys ω).symm
-      ((F.toAut 0) ((completionToConcreteStarAlgEquiv Stage sys ω) x)) = x
-  rw [F.map_zero]
-  exact
-    (completionToConcreteStarAlgEquiv Stage sys ω).left_inv x
+  simp [liftedCompletionFlow, modularAutOnCompletion, F.map_zero]
+  rw [← representedRangeCompletionStarAlgEquiv_apply Stage sys ω x]
+  exact (completionToConcreteStarAlgEquiv Stage sys ω).left_inv x
 
 theorem liftedCompletionFlow_add
     (F : ClosureModularFlow Stage sys ω)
@@ -265,7 +302,9 @@ def liftedCompletionFlowStarIsometricMap
     (t : ℝ)
     (x : CompletedCarrier Stage sys ω) :
     ‖liftedCompletionFlow Stage sys ω F t x‖ = ‖x‖ :=
-  StarAlgEquiv.norm_map (liftedCompletionFlow Stage sys ω F t) x
+  by
+    simpa [liftedCompletionFlow] using
+      norm_modularAutOnCompletion Stage sys ω (F.toAut t) x
 
 /-- Packaged one-parameter star-automorphism flow on the completed represented
 carrier. -/

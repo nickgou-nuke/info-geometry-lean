@@ -6,6 +6,7 @@ of the Cartan element `h`.
 -/
 
 import Mathlib.Tactic
+import Mathlib.Algebra.Lie.OfAssociative
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.FiveGradedInformationLedger
 
@@ -18,6 +19,10 @@ open Matrix
 namespace InfoGeometry.Canonical.SL2FiveGradingExample
 
 open InfoGeometry.OperatorAlgebra.FiveGradedInformationLedger
+
+local instance : LieRing (Matrix (Fin 2) (Fin 2) ℝ) := LieRing.ofAssociativeRing
+local instance : LieAlgebra ℝ (Matrix (Fin 2) (Fin 2) ℝ) :=
+  LieAlgebra.ofAssociativeAlgebra
 
 /-! ## 1. The Lie algebra 𝔰𝔩₂(ℝ) -/
 
@@ -104,7 +109,7 @@ noncomputable def sl2FiveGrading : FiveGrading sl₂ :=
     gPosTwo := G₂'
     negOne_posOne_mem_zero := by
       intro X Y hX hY
-      have hX0 : X = 0 := by simpa using hX
+      have hX0 : X = 0 := by simpa [G₁] using hX
       subst hX0; simp [Submodule.zero_mem]
     bracket_negTwo_posTwo := by
       intro X Y hX hY
@@ -121,11 +126,11 @@ noncomputable def sl2FiveGrading : FiveGrading sl₂ :=
       exact Submodule.subset_span (by simp)
     posOne_posOne_mem_posTwo := by
       intro X Y hX hY
-      have hX0 : X = 0 := by simpa using hX
+      have hX0 : X = 0 := by simpa [G₁'] using hX
       subst hX0; simp [Submodule.zero_mem]
     negOne_negOne_mem_negTwo := by
       intro X Y hX hY
-      have hX0 : X = 0 := by simpa using hX
+      have hX0 : X = 0 := by simpa [G₁] using hX
       subst hX0; simp [Submodule.zero_mem] }
 
 end InfoGeometry.Canonical.SL2FiveGradingExample

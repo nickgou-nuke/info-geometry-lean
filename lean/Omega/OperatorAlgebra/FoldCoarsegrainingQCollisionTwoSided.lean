@@ -54,7 +54,7 @@ private lemma fiberCard_comp (f : Omega → Y) (g : Y → Z) (z : Z) :
           Finset.sum Finset.univ (fun ω => if f ω = y then (1 : ℕ) else 0) := by
           rw [Finset.sum_comm]
     _ = Finset.sum (Finset.univ.filter (fun y => g y = z)) (_root_.Omega.POM.fiberCard f) := by
-          simp [_root_.Omega.POM.fiberCard]
+          rfl
 
 private lemma sum_over_fibers (g : Y → Z) (a : Y → ℕ) :
     Finset.sum Finset.univ (fun z => Finset.sum (Finset.univ.filter (fun y => g y = z)) a) =

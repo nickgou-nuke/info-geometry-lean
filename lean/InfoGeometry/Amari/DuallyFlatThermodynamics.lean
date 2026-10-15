@@ -1,6 +1,7 @@
 import InfoGeometry.Convex.Legendre
 import InfoGeometry.Canonical.FisherWoottersQuantumPotential
 import Mathlib.Topology.Order.MonotoneConvergence
+import Mathlib.Analysis.Calculus.Deriv.Pow
 
 namespace InfoGeometry.Amari.DuallyFlatThermodynamics
 
@@ -21,7 +22,24 @@ inductive Archetype
   | inverseHessians
   | affineCoordinates
   | zeroAcceleration
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype Archetype where
+  elems := {
+    Archetype.convexDifferentiablePotential,
+    Archetype.fenchelYoungEquality,
+    Archetype.canonicalDivergence,
+    Archetype.threePointIdentity,
+    Archetype.orthogonalProjection,
+    Archetype.decreasingDivergences,
+    Archetype.inverseGradients,
+    Archetype.inverseHessians,
+    Archetype.affineCoordinates,
+    Archetype.zeroAcceleration
+  }
+  complete := by
+    intro x
+    cases x <;> simp
 
 open Archetype
 
@@ -227,7 +245,7 @@ theorem poisson_square_root_metric_pullback (radius : ℝ) (radius_pos : 0 < rad
     InfoGeometry.Canonical.FisherWoottersExtended.fisherDensity (radius ^ 2) *
       (deriv (fun value : ℝ => value ^ 2) radius) ^ 2 = 4 := by
   have derivative : HasDerivAt (fun value : ℝ => value ^ 2) (2 * radius) radius := by
-    simpa using (hasDerivAt_id radius).pow 2
+    simpa using hasDerivAt_pow 2 radius
   rw [derivative.deriv]
   simp only [InfoGeometry.Canonical.FisherWoottersExtended.fisherDensity]
   field_simp [ne_of_gt radius_pos]
@@ -237,9 +255,11 @@ theorem poisson_unit_metric_pullback (radius : ℝ) (radius_pos : 0 < radius) :
     InfoGeometry.Canonical.FisherWoottersExtended.fisherDensity ((radius / 2) ^ 2) *
       (deriv (fun value : ℝ => (value / 2) ^ 2) radius) ^ 2 = 1 := by
   have derivative : HasDerivAt (fun value : ℝ => (value / 2) ^ 2) (radius / 2) radius := by
-    convert ((hasDerivAt_id radius).div_const 2).pow 2 using 1
-    simp
-    ring
+    have h1 : HasDerivAt (fun value : ℝ => value / 2) (1 / 2 : ℝ) radius :=
+      (hasDerivAt_id radius).div_const 2
+    have h2 := (hasDerivAt_pow 2 (radius / 2)).comp radius h1
+    have heq : (2 : ℝ) * (radius / 2) ^ (2 - 1) * (1 / 2) = radius / 2 := by ring
+    exact h2.congr_deriv heq
   rw [derivative.deriv]
   simp only [InfoGeometry.Canonical.FisherWoottersExtended.fisherDensity]
   field_simp [ne_of_gt radius_pos]

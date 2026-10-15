@@ -40,7 +40,7 @@ theorem colimitEnd_involutive
     rw [← colim.map_comp]
     rw [hη, colim.map_id]
     rfl
-  simpa [colimitEnd, Module.End.mul_apply] using
+  simpa [colimitEnd, Module.End.mul_eq_comp] using
     congrArg ModuleCat.Hom.hom hmap
 
 /-- Exchange of the two sheet projectors descends through the colimit. -/
@@ -54,7 +54,7 @@ theorem colimitEnd_exchange
         colim.map fminus := by
     rw [← colim.map_comp, ← colim.map_comp]
     exact congrArg colim.map hex
-  simpa [colimitEnd, Module.End.mul_apply] using
+  simpa [colimitEnd, Module.End.mul_eq_comp] using
     congrArg ModuleCat.Hom.hom hmap
 
 /-- Stage readback for the descended sheet exchange. -/

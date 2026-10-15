@@ -233,6 +233,7 @@ theorem paper_xi_foldbin_two_phase_free_energy_variational :
       hasDerivAt_const q _
     have htotal := hconst.add hlog
     convert htotal using 1
+    · rfl
     · unfold xi_foldbin_two_phase_free_energy_variational_theta
       ring
   exact ⟨htheta_pos, htheta_lt, htheta_alt, hF_entropy, hupper, hunique, hclosed, hderiv⟩

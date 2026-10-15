@@ -21,10 +21,10 @@ structure GeneralizedCircle where
 namespace GeneralizedCircle
 
 private noncomputable def coeffMatrix (g : GeneralizedCircle) : Matrix (Fin 2) (Fin 2) ℂ :=
-  ![![(g.A : ℂ), g.B], ![conj g.B, (g.C : ℂ)]]
+  !![(g.A : ℂ), g.B; conj g.B, (g.C : ℂ)]
 
 private noncomputable def mobiusMatrix (a b c d : ℂ) : Matrix (Fin 2) (Fin 2) ℂ :=
-  ![![a, b], ![c, d]]
+  !![a, b; c, d]
 
 private noncomputable def imageMatrix (g : GeneralizedCircle) (a b c d : ℂ) : Matrix (Fin 2) (Fin 2) ℂ :=
   (mobiusMatrix a b c d)ᴴ * coeffMatrix g * mobiusMatrix a b c d

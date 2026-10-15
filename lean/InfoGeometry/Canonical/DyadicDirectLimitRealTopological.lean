@@ -26,10 +26,11 @@ def dyadicRationalRealEmbedding : DyadicRational → ℝ :=
 
 theorem dyadicRationalRealEmbedding_isEmbedding :
     Topology.IsEmbedding dyadicRationalRealEmbedding := by
-  simpa [dyadicRationalRealEmbedding, Function.comp_def] using
-    (Rat.isDenseEmbedding_coe_real.isEmbedding.comp
-      (Topology.IsEmbedding.subtypeVal :
-        Topology.IsEmbedding (Subtype.val : DyadicRational → ℚ)))
+  change Topology.IsEmbedding
+    ((fun q : ℚ => (q : ℝ)) ∘ (Subtype.val : DyadicRational → ℚ))
+  exact Rat.isDenseEmbedding_coe_real.isEmbedding.comp
+    (Topology.IsEmbedding.subtypeVal :
+      Topology.IsEmbedding (Subtype.val : DyadicRational → ℚ))
 
 def dyadicRationalRealEmbeddingAddHom : DyadicRational →+ ℝ where
   toFun := dyadicRationalRealEmbedding
@@ -155,8 +156,9 @@ theorem dyadicDirectLimitRealReadout_isEmbedding :
     Topology.IsEmbedding dyadicDirectLimitRealReadout := by
   have h := dyadicRationalRealEmbedding_isEmbedding.comp
     dyadicDirectLimitHomeomorph.isEmbedding
-  simpa [dyadicRationalRealEmbedding, dyadicDirectLimitRealReadout,
-    Function.comp_def, dyadicDirectLimitHomeomorph_apply] using h
+  change Topology.IsEmbedding
+    (dyadicRationalRealEmbedding ∘ dyadicDirectLimitHomeomorph)
+  exact h
 
 noncomputable def dyadicDirectLimitRealReadoutHomeomorph :
     DyadicDirectLimit ≃ₜ Set.range dyadicDirectLimitRealReadout :=

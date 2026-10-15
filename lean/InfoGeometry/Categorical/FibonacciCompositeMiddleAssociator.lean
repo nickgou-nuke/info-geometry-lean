@@ -258,30 +258,54 @@ noncomputable def pentagonMiddleAssociator (τ s : ℂ) :
     FibHom
       (parenthesizedObject .vertex₃)
       (parenthesizedObject .vertex₄) := by
-  simpa [parenthesizedObject, fourTau, compositeTau, tauObject] using
-    (compositeMiddleAssociator τ s)
+  have hsu := parenthesizedObject_counts .vertex₃
+  have htu := parenthesizedObject_counts .vertex₄
+  exact
+    { unit_comp := Matrix.reindex
+        (Equiv.cast (congrArg Fin hsu.1.symm))
+        (Equiv.cast (congrArg Fin htu.1.symm))
+        (1 : Matrix (Fin 2) (Fin 2) ℂ)
+      tau_comp := Matrix.reindex
+        (Equiv.cast (congrArg Fin hsu.2.symm))
+        (Equiv.cast (congrArg Fin htu.2.symm))
+        (compositeMiddleTauBlock τ s) }
 
 noncomputable def pentagonMiddleAssociatorInv (τ s : ℂ) :
     FibHom
       (parenthesizedObject .vertex₄)
       (parenthesizedObject .vertex₃) := by
-  simpa [parenthesizedObject, fourTau, compositeTau, tauObject] using
-    (compositeMiddleAssociatorInv τ s)
+  have hsu := parenthesizedObject_counts .vertex₃
+  have htu := parenthesizedObject_counts .vertex₄
+  exact
+    { unit_comp := Matrix.reindex
+        (Equiv.cast (congrArg Fin htu.1.symm))
+        (Equiv.cast (congrArg Fin hsu.1.symm))
+        (1 : Matrix (Fin 2) (Fin 2) ℂ)
+      tau_comp := Matrix.reindex
+        (Equiv.cast (congrArg Fin htu.2.symm))
+        (Equiv.cast (congrArg Fin hsu.2.symm))
+        (compositeMiddleTauBlock τ s) }
 
 theorem pentagonMiddleAssociator_comp_inv
     (τ s : ℂ) (hs : s ^ 2 = τ) (hτ : τ ^ 2 + τ = 1) :
     FibHom.comp (pentagonMiddleAssociator τ s)
         (pentagonMiddleAssociatorInv τ s) =
       FibHom.id (parenthesizedObject .vertex₃) := by
-  simpa [pentagonMiddleAssociator, pentagonMiddleAssociatorInv] using
-    (compositeMiddleAssociator_comp_inv τ s hs hτ)
+  apply FibHom.ext
+  · simp [FibHom.comp, FibHom.id, pentagonMiddleAssociator,
+      pentagonMiddleAssociatorInv]
+  · simp [FibHom.comp, FibHom.id, pentagonMiddleAssociator,
+      pentagonMiddleAssociatorInv, compositeMiddleTauBlock_sq τ s hs hτ]
 
 theorem pentagonMiddleAssociator_inv_comp
     (τ s : ℂ) (hs : s ^ 2 = τ) (hτ : τ ^ 2 + τ = 1) :
     FibHom.comp (pentagonMiddleAssociatorInv τ s)
         (pentagonMiddleAssociator τ s) =
       FibHom.id (parenthesizedObject .vertex₄) := by
-  simpa [pentagonMiddleAssociator, pentagonMiddleAssociatorInv] using
-    (compositeMiddleAssociator_inv_comp τ s hs hτ)
+  apply FibHom.ext
+  · simp [FibHom.comp, FibHom.id, pentagonMiddleAssociator,
+      pentagonMiddleAssociatorInv]
+  · simp [FibHom.comp, FibHom.id, pentagonMiddleAssociator,
+      pentagonMiddleAssociatorInv, compositeMiddleTauBlock_sq τ s hs hτ]
 
 end InfoGeometry.Categorical.FibonacciCompositeMiddleAssociator

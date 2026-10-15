@@ -1,3 +1,4 @@
+import Mathlib.Analysis.MeanInequalities
 import Mathlib.Tactic
 import Omega.Folding.BinFold
 import Omega.Folding.MomentRecurrence
@@ -684,7 +685,7 @@ theorem section_count_le_maxFiber_pow {n : ℕ} (d : Fin n → ℕ)
     (M : ℕ) (hM : ∀ i, d i ≤ M) :
     (∏ i, d i) ≤ M ^ n := by
   calc ∏ i, d i
-      ≤ ∏ _i : Fin n, M := Finset.prod_le_prod (fun i _ => Nat.zero_le _) (fun i _ => hM i)
+      ≤ ∏ _i : Fin n, M := Finset.prod_le_prod fun i _ => hM i
     _ = M ^ n := by simp [Finset.prod_const]
 
 /-- Section count satisfies AM-GM in product form: (∏ d_i) * n^n ≤ N^n.

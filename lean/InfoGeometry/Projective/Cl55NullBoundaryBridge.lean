@@ -53,7 +53,7 @@ noncomputable def datum :
 abbrev NullRep := ProjectiveNullBoundaryDatum.NullRep datum
 abbrev Boundary := ProjectiveNullBoundaryDatum.ProjectiveNullBoundary datum
 
-def mk (Z : NullRep) : Boundary :=
+noncomputable def mk (Z : NullRep) : Boundary :=
   ProjectiveNullBoundaryDatum.nullMk datum Z
 
 @[simp] theorem mk_scale (u : ℝˣ) (Z : NullRep) :

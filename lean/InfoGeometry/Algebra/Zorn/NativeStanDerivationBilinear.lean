@@ -69,15 +69,21 @@ theorem innerDerivation_swap (x y : VZ) :
   change innerDerivation y x z = -innerDerivation x y z
   rw [innerDerivation_operatorial_normal_form,
     innerDerivation_operatorial_normal_form]
-  have h := alternative_associator_swap12
-    (A := VZ) zorn_left_alternative x y z
-  have h' : (x * y) * z - x * (y * z) =
-      -((y * x) * z - y * (x * z)) := by
-    simpa [associator_apply] using h
-  rw [h']
-  simp only [sub_eq_add_neg, neg_add, neg_neg, smul_neg, neg_smul,
-    add_mul, mul_add, neg_mul, mul_neg, smul_add, add_smul,
-    smul_mul_assoc, mul_smul_comm]
+  have hcomm : y * x - x * y = -(x * y - y * x) := by abel
+  have h1 : (-(x * y - y * x)) * z - z * (-(x * y - y * x)) =
+      -((x * y - y * x) * z - z * (x * y - y * x)) := by
+    have h1a := ZornVectorMatrix.neg_mul (x * y - y * x) z
+    have h1b := ZornVectorMatrix.mul_neg z (x * y - y * x)
+    change ZornVectorMatrix.mul (ZornVectorMatrix.neg (x * y - y * x)) z -
+      ZornVectorMatrix.mul z (ZornVectorMatrix.neg (x * y - y * x)) = _
+    rw [h1a, h1b]
+    simp only [← zvm_neg_def]
+    abel
+  have h2 : (y * x) * z - y * (x * z) = -((x * y) * z - x * (y * z)) := by
+    have h := alternative_associator_swap12 (A := VZ) zorn_left_alternative y x z
+    exact h
+  rw [hcomm, h1, h2]
+  rw [smul_neg]
   abel
 
 /-! The following facts expose the algebraic image of the native bilinear map.

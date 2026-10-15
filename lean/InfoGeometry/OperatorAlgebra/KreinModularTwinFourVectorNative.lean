@@ -13,7 +13,7 @@ open InfoGeometry.Canonical.HestenesKreinModularGeometry
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 abbrev EndE (E : Type*) [NormedAddCommGroup E] [NormedSpace ℝ E] := RealEnd E
 
-def kreinConjugate (J T : EndE E) : EndE E := J.comp (T.comp J)
+def kreinConjugate (J T : EndE E) : EndE E := J * T * J
 
 theorem kreinConjugate_involutive {J : EndE E}
     (hJ : J.comp J = ContinuousLinearMap.id ℝ E) (T : EndE E) :
@@ -51,14 +51,28 @@ def polarize (X : TwinFourOperatorVector (A := EndE E)) :
 theorem polarize_plus_scalar (uPlus uMinus : Fin 3 → EndE E) :
     (K.polarize (K.fourVectorCarrier uPlus uMinus)).plus.scalar =
       K.plusDatum.modularGenerator := by
-  simpa [polarize, fourVectorCarrier, kreinConjugate,
-    ContinuousLinearMap.comp_apply] using K.plusDatum.generator_krein_selfadjoint
+  change kreinConjugate K.plusDatum.fundamentalSymmetry
+      K.plusDatum.modularGenerator = K.plusDatum.modularGenerator
+  apply ContinuousLinearMap.ext
+  intro x
+  have h := congrArg (fun f : RealEnd E => f x)
+    K.plusDatum.generator_krein_selfadjoint
+  change K.plusDatum.fundamentalSymmetry
+    (K.plusDatum.modularGenerator (K.plusDatum.fundamentalSymmetry x)) = _
+  exact h
 
 theorem polarize_minus_scalar (uPlus uMinus : Fin 3 → EndE E) :
     (K.polarize (K.fourVectorCarrier uPlus uMinus)).minus.scalar =
       K.minusDatum.modularGenerator := by
-  simpa [polarize, fourVectorCarrier, kreinConjugate,
-    ContinuousLinearMap.comp_apply] using K.minusDatum.generator_krein_selfadjoint
+  change kreinConjugate K.minusDatum.fundamentalSymmetry
+      K.minusDatum.modularGenerator = K.minusDatum.modularGenerator
+  apply ContinuousLinearMap.ext
+  intro x
+  have h := congrArg (fun f : RealEnd E => f x)
+    K.minusDatum.generator_krein_selfadjoint
+  change K.minusDatum.fundamentalSymmetry
+    (K.minusDatum.modularGenerator (K.minusDatum.fundamentalSymmetry x)) = _
+  exact h
 
 end KreinModularTwin
 end InfoGeometry.OperatorAlgebra.KreinModularTwinFourVectorNative

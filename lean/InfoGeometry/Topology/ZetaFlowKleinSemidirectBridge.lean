@@ -37,14 +37,12 @@ def tau : ZetaKlein4 := (1, 1)
     - χ_h(τ)  = -1 (functional reflection reverses vertical time)
     Equivalently: χ_h(g) = +1 if g.1 = 0 else -1. -/
 def heightCharacter (g : ZetaKlein4) : ℝ :=
-  if g.1 = 0 then 1 else -1
+  if g.1.val = 0 then 1 else -1
 
 /-- Action of V₄ on ZetaFlowPoint -/
 def act (g : ZetaKlein4) (p : ZetaFlowPoint) : ZetaFlowPoint :=
-  if g = (0, 0) then p
-  else if g = (1, 0) then sigmaReflect p
-  else if g = (0, 1) then gammaReflect p
-  else tauReflect p
+  ⟨if g.2.val = 0 then p.u else -p.u,
+    if g.1.val = 0 then p.tau else -p.tau⟩
 
 /-- Vertical flow on centered coordinates: Φ_t(u, tau) = (u, tau + t) -/
 def verticalFlow (t : ℝ) (p : ZetaFlowPoint) : ZetaFlowPoint :=
@@ -65,18 +63,9 @@ theorem flow_conjugation_unified (g : ZetaKlein4) (t : ℝ) (p : ZetaFlowPoint) 
     act g (verticalFlow t p) = verticalFlow (heightCharacter g * t) (act g p) := by
   rcases g with ⟨g1, g2⟩
   fin_cases g1 <;> fin_cases g2
-  · -- (0, 0) = identity
-    dsimp [act, heightCharacter, verticalFlow]
-    ext <;> ring
-  · -- (0, 1) = gamma
-    dsimp [act, heightCharacter, verticalFlow, gammaReflect]
-    ext <;> ring
-  · -- (1, 0) = sigma
-    dsimp [act, heightCharacter, verticalFlow, sigmaReflect]
-    ext <;> ring
-  · -- (1, 1) = tau
-    dsimp [act, heightCharacter, verticalFlow, tauReflect]
-    ext <;> ring
+  all_goals
+    simp [act, heightCharacter, verticalFlow, ZMod.val]
+    <;> ring
 
 /-- 🏆 THEOREM 3: Height Character Values on the Canonical Elements -/
 theorem heightCharacter_values :
@@ -91,15 +80,15 @@ theorem heightCharacter_values :
 theorem heightCharacter_mul (g1 g2 : ZetaKlein4) :
     heightCharacter (g1 + g2) = heightCharacter g1 * heightCharacter g2 := by
   have h_scalar : ∀ a b : ZMod 2,
-      (if (a + b) = 0 then (1 : ℝ) else -1) =
-      (if a = 0 then 1 else -1) * (if b = 0 then 1 else -1) := by
+      (if (a + b).val = 0 then (1 : ℝ) else -1) =
+      (if a.val = 0 then 1 else -1) * (if b.val = 0 then 1 else -1) := by
     intro a b
+    rw [ZMod.val_add]
     fin_cases a <;> fin_cases b
-    · simp
-    · simp
-    · simp
-    · have h : (1 : ZMod 2) + 1 = 0 := rfl
-      simp [h]
+    all_goals
+      norm_num [ZMod.val]
+  change (if (g1.1 + g2.1).val = 0 then (1 : ℝ) else -1) =
+    (if g1.1.val = 0 then 1 else -1) * (if g2.1.val = 0 then 1 else -1)
   exact h_scalar g1.1 g2.1
 
 end ZetaKlein4

@@ -14,7 +14,8 @@ noncomputable section
 
 namespace CStarStateColimit.Native.FilteredGNSRepresentedCStarTopology
 
-set_option synthInstance.maxHeartbeats 80000
+set_option synthInstance.maxHeartbeats 1200000
+set_option maxHeartbeats 1200000
 set_option linter.unusedSectionVars false
 
 open CStarStateColimit.Native
@@ -64,13 +65,13 @@ theorem representedRangeCompletionHomeomorph_continuous_inv :
 
 theorem representedRangeCompletionStarAlgEquiv_continuous :
     Continuous (representedRangeCompletionStarAlgEquiv Stage sys ω) := by
-  simpa [representedRangeCompletionStarAlgEquiv] using
-    (representedRangeCompletionEquiv Stage sys ω).continuous
+  change Continuous (representedRangeCompletionHomeomorph Stage sys ω)
+  exact representedRangeCompletionHomeomorph_continuous Stage sys ω
 
 theorem representedRangeCompletionStarAlgEquiv_continuous_inv :
     Continuous (representedRangeCompletionStarAlgEquiv Stage sys ω).symm := by
-  simpa [representedRangeCompletionStarAlgEquiv] using
-    (representedRangeCompletionEquiv Stage sys ω).symm.continuous
+  change Continuous (representedRangeCompletionHomeomorph Stage sys ω).symm
+  exact representedRangeCompletionHomeomorph_continuous_inv Stage sys ω
 
 /-- The algebraic and topological equivalences combine into Mathlib's native
 continuous algebra equivalence. -/

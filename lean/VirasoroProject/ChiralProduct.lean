@@ -105,52 +105,40 @@ noncomputable def cgenRight : ChiralVirasoro 𝕜 :=
     ⁅inLeft X, inLeft Y⁆ = inLeft ⁅X, Y⁆ := by
   ext
   · rfl
-  · simp [inLeft, Bracket.bracket]
+  · exact zero_lie (L := VirasoroAlgebra 𝕜) (0 : VirasoroAlgebra 𝕜)
 
 /-- Right-sector brackets are computed in the right component. -/
 @[simp] theorem inRight_bracket (X Y : VirasoroAlgebra 𝕜) :
     ⁅inRight X, inRight Y⁆ = inRight ⁅X, Y⁆ := by
   ext
-  · simp [inRight, Bracket.bracket]
+  · exact zero_lie (L := VirasoroAlgebra 𝕜) (0 : VirasoroAlgebra 𝕜)
   · rfl
 
 /-- Cross brackets vanish between the left and right sectors. -/
 @[simp] theorem inLeft_bracket_inRight (X Y : VirasoroAlgebra 𝕜) :
     ⁅inLeft X, inRight Y⁆ = 0 := by
-  have h1 : ⁅X, (0 : VirasoroAlgebra 𝕜)⁆ = 0 := by
-    simp
-  have h2 : ⁅(0 : VirasoroAlgebra 𝕜), Y⁆ = 0 := by
-    simp
   ext
-  · simpa [inLeft, inRight, Bracket.bracket] using h1
-  · simpa [inLeft, inRight, Bracket.bracket] using h2
+  · exact lie_zero X
+  · exact zero_lie (L := VirasoroAlgebra 𝕜) Y
 
 /-- Cross brackets vanish between the right and left sectors. -/
 @[simp] theorem inRight_bracket_inLeft (X Y : VirasoroAlgebra 𝕜) :
     ⁅inRight X, inLeft Y⁆ = 0 := by
-  have h1 : ⁅(0 : VirasoroAlgebra 𝕜), X⁆ = 0 := by
-    simp
-  have h2 : ⁅Y, (0 : VirasoroAlgebra 𝕜)⁆ = 0 := by
-    simp
   ext
-  · simpa [inLeft, inRight, Bracket.bracket] using h1
-  · simpa [inLeft, inRight, Bracket.bracket] using h2
+  · exact zero_lie (L := VirasoroAlgebra 𝕜) Y
+  · exact lie_zero X
 
 /-- The left sector `L_n` bracket is inherited from the Virasoro algebra. -/
 @[simp] theorem lgenLeft_bracket (n m : ℤ) :
     ⁅lgenLeft (𝕜 := 𝕜) n, lgenLeft (𝕜 := 𝕜) m⁆ =
-      inLeft (⁅VirasoroAlgebra.lgen 𝕜 n, VirasoroAlgebra.lgen 𝕜 m⁆) := by
-  simpa [lgenLeft, inLeft] using
-    congrArg (fun X : VirasoroAlgebra 𝕜 => (X, (0 : VirasoroAlgebra 𝕜)))
-      (VirasoroAlgebra.lgen_bracket 𝕜 n m)
+      inLeft (⁅VirasoroAlgebra.lgen 𝕜 n, VirasoroAlgebra.lgen 𝕜 m⁆) :=
+  inLeft_bracket (VirasoroAlgebra.lgen 𝕜 n) (VirasoroAlgebra.lgen 𝕜 m)
 
 /-- The right sector `L_n` bracket is inherited from the Virasoro algebra. -/
 @[simp] theorem lgenRight_bracket (n m : ℤ) :
     ⁅lgenRight (𝕜 := 𝕜) n, lgenRight (𝕜 := 𝕜) m⁆ =
-      inRight (⁅VirasoroAlgebra.lgen 𝕜 n, VirasoroAlgebra.lgen 𝕜 m⁆) := by
-  simpa [lgenRight, inRight] using
-    congrArg (fun X : VirasoroAlgebra 𝕜 => ((0 : VirasoroAlgebra 𝕜), X))
-      (VirasoroAlgebra.lgen_bracket 𝕜 n m)
+      inRight (⁅VirasoroAlgebra.lgen 𝕜 n, VirasoroAlgebra.lgen 𝕜 m⁆) :=
+  inRight_bracket (VirasoroAlgebra.lgen 𝕜 n) (VirasoroAlgebra.lgen 𝕜 m)
 
 /-- The left-sector generator bracket has no central term away from resonance. -/
 @[simp] theorem lgenLeft_bracket_of_ne_zero (n m : ℤ) (h : n + m ≠ 0) :
@@ -186,26 +174,20 @@ noncomputable def cgenRight : ChiralVirasoro 𝕜 :=
 @[simp] theorem cgenLeft_bracket (X : ChiralVirasoro 𝕜) :
     ⁅cgenLeft (𝕜 := 𝕜), X⁆ = 0 := by
   ext
-  · simpa [cgenLeft, inLeft, Bracket.bracket] using
-      (VirasoroAlgebra.cgen_bracket (𝕜 := 𝕜) X.1)
-  · simpa [cgenLeft, inLeft, Bracket.bracket] using (zero_lie X.2)
+  · exact VirasoroAlgebra.cgen_bracket 𝕜 X.1
+  · exact zero_lie (L := VirasoroAlgebra 𝕜) X.2
 
 /-- The right and left central elements commute with everything in the product. -/
 @[simp] theorem cgenRight_bracket (X : ChiralVirasoro 𝕜) :
     ⁅cgenRight (𝕜 := 𝕜), X⁆ = 0 := by
   ext
-  · simpa [cgenRight, inRight, Bracket.bracket] using (zero_lie X.1)
-  · simpa [cgenRight, inRight, Bracket.bracket] using
-      (VirasoroAlgebra.cgen_bracket (𝕜 := 𝕜) X.2)
+  · exact zero_lie (L := VirasoroAlgebra 𝕜) X.1
+  · exact VirasoroAlgebra.cgen_bracket 𝕜 X.2
 
 /-- The two central elements commute with each other. -/
 @[simp] theorem cgenLeft_bracket_cgenRight :
-    ⁅cgenLeft (𝕜 := 𝕜), cgenRight (𝕜 := 𝕜)⁆ = 0 := by
-  ext
-  · simpa [cgenLeft, cgenRight, inLeft, inRight, Bracket.bracket] using
-      (VirasoroAlgebra.cgen_bracket (𝕜 := 𝕜) (VirasoroAlgebra.cgen 𝕜))
-  · simpa [cgenLeft, cgenRight, inLeft, inRight, Bracket.bracket] using
-      (zero_lie (VirasoroAlgebra.cgen 𝕜))
+    ⁅cgenLeft (𝕜 := 𝕜), cgenRight (𝕜 := 𝕜)⁆ = 0 :=
+  inLeft_bracket_inRight (VirasoroAlgebra.cgen 𝕜) (VirasoroAlgebra.cgen 𝕜)
 
 /-- Chiral central charge bookkeeping. -/
 structure CentralCharge where

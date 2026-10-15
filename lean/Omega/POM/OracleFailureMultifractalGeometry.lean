@@ -92,8 +92,7 @@ theorem paper_pom_oracle_failure_multifractal_geometry
     · intro x hx
       rcases hx with ⟨β, hβ, rfl⟩
       exact htail_le β hβ
-  · dsimp [E, g, c]
-    unfold pom_oracle_failure_exponent_duality_from_double_ldp_failureExponent
+  · unfold pom_oracle_failure_exponent_duality_from_double_ldp_failureExponent
       pom_oracle_failure_exponent_duality_from_double_ldp_rate
     ring
 

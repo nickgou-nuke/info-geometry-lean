@@ -27,6 +27,7 @@ open InfoGeometry.Clifford.Clifford55
 open InfoGeometry.Twistor.Cl55CelestialLocalSystemMonodromy
 open InfoGeometry.Twistor.Cl55CelestialOrderedConfigurationEmbedding
 open InfoGeometry.Twistor.Cl55CelestialOrderedExchangeMonodromy
+open InfoGeometry.Twistor.Cl55CelestialUnorderedFundamentalGroup
 open InfoGeometry.Twistor.Cl55CelestialUnorderedConfiguration
 open InfoGeometry.Twistor.Cl55RealSplitPinNullConfigurationCovering
 open InfoGeometry.Twistor.ProjectiveNullConfiguration
@@ -87,6 +88,7 @@ fiber basis by left multiplication with its endpoint permutation. -/
   dsimp only
   rw [celestialPullbackLinearMonodromy_orderedExchangeLoopClass]
   unfold q55ConfigurationCoveringLocalSystem
+  unfold celestialPullbackLocalSystem
   have h :=
     unorderedConfigurationCoveringLocalSystem_monodromy_label_single
       (R := R) Q55 n
@@ -96,7 +98,12 @@ fiber basis by left multiplication with its endpoint permutation. -/
       (orderedExchangeLoopClass Q55 n
         (celestialOrderedConfigurationMap n p) sigma
         (celestialOrderedExchangeAmbientPath n p sigma gamma)) tau a
-  simpa only [
-    unorderedCoveringPermutationMonodromy_orderedExchangeLoopClass] using h
+  simp only [unorderedCoveringPermutationMonodromy_orderedExchangeLoopClass] at h
+  have hbase : (celestialUnorderedConfigurationContinuousMap n)
+      (Quotient.mk' p) =
+      Quotient.mk' (celestialOrderedConfigurationMap n p) := by
+    simp [celestialUnorderedConfigurationContinuousMap]
+  cases hbase
+  exact h
 
 end InfoGeometry.Twistor.Cl55CelestialOrderedExchangeCoveringMonodromy

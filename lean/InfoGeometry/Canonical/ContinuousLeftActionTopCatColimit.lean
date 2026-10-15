@@ -70,12 +70,9 @@ theorem translationColimit_one :
         (constantTopDiagram (J := J) (X := X))) := by
   apply colimit.hom_ext
   intro j
-  change colimit.ι
-      (constantTopDiagram (J := J) (X := X)) j ≫ translationColimit A 1 =
-    colimit.ι
-      (constantTopDiagram (J := J) (X := X)) j ≫ 𝟙 _
   rw [translationColimit_stage A 1 j, translation_one A]
-  simp
+  exact Category.id_comp
+    (colimit.ι (constantTopDiagram (J := J) (X := X)) j)
 
 theorem translationColimit_comp (a b : M) :
     translationColimit (J := J) (X := X) A a ≫
@@ -83,45 +80,15 @@ theorem translationColimit_comp (a b : M) :
       translationColimit (J := J) (X := X) A (b * a) := by
   apply colimit.hom_ext
   intro j
-  change colimit.ι
-      (constantTopDiagram (J := J) (X := X)) j ≫
-      translationColimit A a ≫ translationColimit A b =
-    colimit.ι
-        (constantTopDiagram (J := J) (X := X)) j ≫
-      translationColimit A (b * a)
-  calc
-    colimit.ι
-        (constantTopDiagram (J := J) (X := X)) j ≫
-        translationColimit A a ≫ translationColimit A b =
-      (translation A a ≫
-        colimit.ι
-          (constantTopDiagram (J := J) (X := X)) j) ≫
-        translationColimit A b := by
-          simpa only [Category.assoc] using
-            congrArg
-              (fun k => k ≫ translationColimit (J := J) (X := X) A b)
-              (translationColimit_stage (J := J) (X := X) A a j)
-    _ = translation A a ≫
-        (colimit.ι
-          (constantTopDiagram (J := J) (X := X)) j ≫
-          translationColimit A b) := by
-          simp only [Category.assoc]
-    _ = translation A a ≫
-        (translation A b ≫
-          colimit.ι
-            (constantTopDiagram (J := J) (X := X)) j) := by
-          rw [translationColimit_stage (J := J) (X := X) A b j]
-    _ = translation A (b * a) ≫
-        colimit.ι
-          (constantTopDiagram (J := J) (X := X)) j := by
-          rw [← translation_comp A a b]
-          exact (Category.assoc (translation A a) (translation A b)
-            (colimit.ι
-              (constantTopDiagram (J := J) (X := X)) j)).symm
-    _ = colimit.ι
-        (constantTopDiagram (J := J) (X := X)) j ≫
-        translationColimit A (b * a) := by
-          rw [translationColimit_stage (J := J) (X := X) A (b * a) j]
+  let ι : TopCat.of X ⟶ colimit (constantTopDiagram (J := J) (X := X)) :=
+    colimit.ι (constantTopDiagram (J := J) (X := X)) j
+  have hstage (m : M) : ι ≫ translationColimit A m = translation A m ≫ ι := by
+    dsimp [ι]
+    exact translationColimit_stage (J := J) (X := X) A m j
+  change ι ≫ translationColimit A a ≫ translationColimit A b =
+    ι ≫ translationColimit A (b * a)
+  rw [← Category.assoc, hstage a, Category.assoc, hstage b,
+    ← Category.assoc, translation_comp, ← hstage (b * a)]
 
 def colimitAction :
     ContinuousLeftAction M

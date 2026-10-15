@@ -21,7 +21,6 @@ import InfoGeometry.Projective.QDeformedTwistorAmplituhedronBridge
 import InfoGeometry.Projective.QuantumGrassmannian
 import InfoGeometry.Projective.QuantumTwistor
 import InfoGeometry.Projective.QuantumTwistorGauge
-import InfoGeometry.Projective.OnShellResidueBCFWBridge
 import InfoGeometry.Projective.DeRhamArnoldTwistorPenroseBridge
 import InfoGeometry.Projective.PenroseDelaunayKleinAmplituhedronBridge
 import InfoGeometry.Projective.PenroseDAGAmplituhedronRosetta
@@ -115,13 +114,15 @@ Kernel-bridged finite closure manifest for this projective spike:
 
 - `InfoGeometry.Topology.WilsonLoopThermodynamics` supplies the conservative
   finite loop-holonomy abstraction over thermodynamic flow words.
-- `InfoGeometry.Projective.OnShellResidueBCFWBridge` provides finite BCFW
-  residue readouts linked to the thermodynamic/flow theorem.
-- `InfoGeometry.Topology.GrandUnificationLinker` furnishes the DAG-edge
-  volume-preservation and boundary-collapse theorems feeding this interface.
+- `InfoGeometry.Projective.KleinQuadricGrothendieckDeRham` owns the local
+  `dlog` circle-integral identity, and `InfoGeometry.Projective.ArnoldRelations`
+  owns the abstract Arnold-relation kernel theorem.
+- `InfoGeometry.Topology.GrandUnificationLinker` owns a finite ring commutation
+  identity for a DAG edge and a symmetric mixed product. It is not a residue,
+  boundary-collapse, or BCFW theorem.
 
-Assumptions are intentionally explicit; no unconditional partition-function
-identification is claimed in this kernel layer.
+No BCFW residue theorem or unconditional partition-function identification is
+claimed in this kernel layer.
 -/
 
 end InfoGeometry

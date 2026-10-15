@@ -30,7 +30,7 @@ theorem trialityColorCycle_rationalBasis (b : IntegralSplitBasis) :
   ext d
   cases b <;> cases d <;>
     simp [trialityColorCycle, colorCycleBasisEquiv, colorCycleBasis,
-      colorCycleBasisInv, rationalBasis, Pi.single_apply]
+      colorCycleBasisInv, rationalBasis]
 
 theorem trialityColorCycle_colourLUnit (c : SplitOctonionColour) :
     trialityColorCycle (colourLUnit c) =
@@ -59,10 +59,12 @@ theorem trialityColorCycle_sixSectorBasisFin3
     (s : Fin 2) (c : Fin 3) :
     trialityColorCycle (sixSectorBasisFin3 s c) =
       sixSectorBasisFin3 s (fin3Successor c) := by
-  fin_cases s <;> fin_cases c <;>
-    simp [sixSectorBasisFin3, sixSectorBasis, colourFin3Equiv,
-      fin3Successor, colourSuccessor, trialityColorCycle_modularSigmaPlus,
-      trialityColorCycle_modularSigmaMinus]
+  dsimp [sixSectorBasisFin3]
+  fin_cases s
+  · simp [sixSectorBasis, trialityColorCycle_modularSigmaPlus,
+          colourFin3Equiv_fin3Successor]
+  · simp [sixSectorBasis, trialityColorCycle_modularSigmaMinus,
+          colourFin3Equiv_fin3Successor]
 
 end
 end InfoGeometry.Canonical

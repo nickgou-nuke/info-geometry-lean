@@ -200,7 +200,12 @@ def liftStarAlgHom
             (fun _ _ hij => starTransition Stage sys hij)
             i ((algebraMap ℂ (Stage i)) c)) =
         (algebraMap ℂ B) c
-    rw [DirectLimit.Ring.lift_of]
+    rw [DirectLimit.Ring.lift_of
+      (G := Stage)
+      (f := fun _ _ hij => starTransition Stage sys hij)
+      (P := B)
+      (g := fun i => (g i).toAlgHom.toRingHom)
+      (Hg := fun i j hij x => hg hij x)]
     exact (g i).commutes c
   map_star' := by
     intro z
@@ -240,6 +245,10 @@ theorem liftStarAlgHom_unique
       have hi := congrArg
         (fun f : Stage i →⋆ₐ[ℂ] B => f x)
         (hF i)
-      simpa using hi
+      change F (algebraicStarDirectLimitOf Stage sys i x) =
+        liftStarAlgHom Stage sys g hg
+          (algebraicStarDirectLimitOf Stage sys i x)
+      rw [liftStarAlgHom_of]
+      exact hi
 
 end CStarStateColimit.Native.FilteredStarAlgebraDirectLimit

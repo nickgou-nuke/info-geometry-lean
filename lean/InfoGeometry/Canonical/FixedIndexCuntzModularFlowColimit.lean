@@ -1,5 +1,4 @@
 import InfoGeometry.Canonical.FixedIndexCuntzStarTower
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Modular-flow descent for fixed-index Cuntz towers
@@ -13,6 +12,8 @@ Tomita generator is asserted by this file.
 noncomputable section
 
 namespace InfoGeometry.Canonical.FixedIndexCuntzModularFlowColimit
+
+set_option linter.unusedSectionVars false
 
 open CategoryTheory CategoryTheory.Limits
 open InfoGeometry.Canonical.FixedIndexCuntzStarTower
@@ -45,11 +46,11 @@ def flowNatTrans (t : ℝ) :
   app n := ModuleCat.ofHom ((Φ.flow n t).toAlgEquiv.toLinearMap)
   naturality := by
     intro m n f
+    dsimp [stageModuleDiagram, FilteredColimit.Native.moduleDiagram]
     apply ModuleCat.hom_ext
+    rw [ModuleCat.hom_comp, ModuleCat.hom_comp]
     ext a
-    rw [ModuleCat.comp_apply, ModuleCat.comp_apply]
-    simpa [stageModuleDiagram] using
-      (Φ.map_naturality (leOfHom f) t a).symm
+    exact (Φ.map_naturality (leOfHom f) t a).symm
 
 def flowColimitMap (t : ℝ) :
     (colimit (stageModuleDiagram Stage T) : ModuleCat ℂ) ⟶
@@ -57,24 +58,27 @@ def flowColimitMap (t : ℝ) :
   colim.map (flowNatTrans Stage T Φ t)
 
 @[simp] theorem flowColimitMap_inclusion (t : ℝ) (n : ℕ) (a : Stage n) :
-    flowColimitMap Stage T Φ t
+    (flowColimitMap Stage T Φ t).hom
         ((colimit.ι (stageModuleDiagram Stage T) n).hom a) =
       (colimit.ι (stageModuleDiagram Stage T) n).hom (Φ.flow n t a) := by
   have hι := colimit.ι_map (flowNatTrans Stage T Φ t) n
-  exact congrArg (fun f => f a) hι
+  have h_hom : (colimit.ι (stageModuleDiagram Stage T) n ≫ flowColimitMap Stage T Φ t).hom =
+      ((flowNatTrans Stage T Φ t).app n ≫ colimit.ι (stageModuleDiagram Stage T) n).hom :=
+    congrArg ModuleCat.Hom.hom hι
+  have h_app := LinearMap.congr_fun h_hom a
+  exact h_app
 
 theorem flowColimitMap_zero :
     flowColimitMap Stage T Φ 0 = 𝟙 _ := by
   apply colimit.hom_ext
   intro n
   apply ModuleCat.hom_ext
+  dsimp [stageModuleDiagram, FilteredColimit.Native.moduleDiagram]
   ext a
-  change flowColimitMap Stage T Φ 0
-      ((colimit.ι (stageModuleDiagram Stage T) n).hom a) =
+  change (flowColimitMap Stage T Φ 0).hom ((colimit.ι (stageModuleDiagram Stage T) n).hom a) =
     (colimit.ι (stageModuleDiagram Stage T) n).hom a
   rw [flowColimitMap_inclusion]
-  exact congrArg (fun f => (colimit.ι (stageModuleDiagram Stage T) n).hom f)
-    (Φ.flow_zero n a)
+  rw [Φ.flow_zero n a]
 
 theorem flowColimitMap_add (t s : ℝ) :
     flowColimitMap Stage T Φ (t + s) =
@@ -82,12 +86,13 @@ theorem flowColimitMap_add (t s : ℝ) :
   apply colimit.hom_ext
   intro n
   apply ModuleCat.hom_ext
+  dsimp [stageModuleDiagram, FilteredColimit.Native.moduleDiagram]
   ext a
-  simp only [ModuleCat.comp_apply]
-  rw [flowColimitMap_inclusion, flowColimitMap_inclusion,
-    flowColimitMap_inclusion]
-  exact congrArg (fun f => (colimit.ι (stageModuleDiagram Stage T) n).hom f)
-    (Φ.flow_add n t s a)
+  change (flowColimitMap Stage T Φ (t + s)).hom ((colimit.ι (stageModuleDiagram Stage T) n).hom a) =
+    (flowColimitMap Stage T Φ t).hom ((flowColimitMap Stage T Φ s).hom ((colimit.ι (stageModuleDiagram Stage T) n).hom a))
+  rw [flowColimitMap_inclusion]
+  rw [Φ.flow_add n t s a]
+  rw [flowColimitMap_inclusion, flowColimitMap_inclusion]
 
 theorem flowColimitMap_right_inverse (t : ℝ) :
     flowColimitMap Stage T Φ t ≫ flowColimitMap Stage T Φ (-t) = 𝟙 _ := by

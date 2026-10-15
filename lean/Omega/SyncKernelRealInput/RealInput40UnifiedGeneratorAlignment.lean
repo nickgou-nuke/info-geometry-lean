@@ -76,13 +76,53 @@ theorem real_input_40_unified_generator_alignment_positive_mode_unique
             (real_input_40_unified_generator_alignment_fisher.mulVec v) i) :
     v 0 = 0 ∧ v 1 = 0 := by
   have h0 : -(v 0) = 40 * v 0 := by
-    simpa [real_input_40_unified_generator_alignment_curvature,
+    have h0₁ := congrFun hv (⟨0, by decide⟩ : Fin 3)
+    simp [real_input_40_unified_generator_alignment_curvature,
       real_input_40_unified_generator_alignment_fisher,
-      real_input_40_unified_generator_alignment_mu_1] using congrFun hv 0
+      real_input_40_unified_generator_alignment_mu_1,
+      Matrix.mulVec_apply_eq_sum, Fin.sum_univ_succ, Fin.val_zero, Fin.val_one, Fin.val_two,
+      Matrix.one_apply] at h0₁ ⊢
+    <;>
+    (try ring_nf at h0₁ ⊢) <;>
+    (try norm_num at h0₁ ⊢) <;>
+    (try linarith) <;>
+    (try simp_all [Fin.forall_fin_succ]) <;>
+    (try aesop)
+    <;>
+    (try
+      {
+        -- The sum for index 0 is: (-1 : ℝ) * v 0 + 0 * v 1 + 0 * v 2 = -v 0
+        -- The right side is 40 * (1 * v 0) = 40 * v 0
+        norm_num [Fin.sum_univ_succ, Matrix.mulVec_apply_eq_sum, Fin.val_zero, Fin.val_one, Fin.val_two,
+          Matrix.one_apply] at h0₁ ⊢
+        <;>
+        (try ring_nf at h0₁ ⊢) <;>
+        (try linarith)
+      })
   have h1 : -(2 * v 1) = 40 * v 1 := by
-    simpa [real_input_40_unified_generator_alignment_curvature,
+    have h1₁ := congrFun hv (⟨1, by decide⟩ : Fin 3)
+    simp [real_input_40_unified_generator_alignment_curvature,
       real_input_40_unified_generator_alignment_fisher,
-      real_input_40_unified_generator_alignment_mu_1] using congrFun hv 1
+      real_input_40_unified_generator_alignment_mu_1,
+      Matrix.mulVec_apply_eq_sum, Fin.sum_univ_succ, Fin.val_zero, Fin.val_one, Fin.val_two,
+      Matrix.one_apply] at h1₁ ⊢
+    <;>
+    (try ring_nf at h1₁ ⊢) <;>
+    (try norm_num at h1₁ ⊢) <;>
+    (try linarith) <;>
+    (try simp_all [Fin.forall_fin_succ]) <;>
+    (try aesop)
+    <;>
+    (try
+      {
+        -- The sum for index 1 is: 0 * v 0 + (-2 : ℝ) * v 1 + 0 * v 2 = -2 * v 1
+        -- The right side is 40 * (1 * v 1) = 40 * v 1
+        norm_num [Fin.sum_univ_succ, Matrix.mulVec_apply_eq_sum, Fin.val_zero, Fin.val_one, Fin.val_two,
+          Matrix.one_apply] at h1₁ ⊢
+        <;>
+        (try ring_nf at h1₁ ⊢) <;>
+        (try linarith)
+      })
   constructor
   · linarith
   · linarith

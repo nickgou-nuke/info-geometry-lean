@@ -95,7 +95,8 @@ theorem paper_fold_bernoulli_p_finite_time_mismatch_rational_recurrence
     D.generatingFunctionNumeratorDenominator ∧ D.orderFourRecurrence ∧ D.initialValues := by
   refine ⟨?_, ?_, ?_⟩
   · unfold BernoulliPFiniteTimeMismatchRecurrenceData.generatingFunctionNumeratorDenominator
-    simpa using D.audited_generatingFunction
+    change D.generatingFunction = bernoulliPMismatchGeneratingFunction D.p
+    exact D.audited_generatingFunction
   · unfold BernoulliPFiniteTimeMismatchRecurrenceData.orderFourRecurrence
     intro n
     rw [D.audited_sequence]

@@ -92,8 +92,9 @@ theorem finite_euler_weyl_identity {L : FormalPrimeRootLattice}
     (E : SouriauThermalEvaluation L) :
     finiteEvaluatedDenominator E = finiteEvaluatedAlternatingSum E := by
   classical
-  unfold finiteEvaluatedDenominator finiteEvaluatedAlternatingSum evaluatedPrimeMonomial
-  simpa using (finite_prime_weyl_denominator L E.p_neg_beta)
+  simpa [finiteEvaluatedDenominator, finiteEvaluatedAlternatingSum,
+    evaluatedPrimeMonomial, weylDenominatorProduct, weylAlternatingSum,
+    rootThermalVariable] using (finite_prime_weyl_denominator L E.p_neg_beta)
 
 /-- Legacy compatibility name for the individual thermal evaluation factor. -/
 @[rep_depth thermo]

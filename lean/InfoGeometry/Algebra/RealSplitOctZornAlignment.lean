@@ -184,9 +184,10 @@ theorem toZorn_conj (X : RealSplitOct) :
 theorem fromZorn_conj (X : ZornVectorMatrix ℝ) :
     fromZorn (ZornVectorMatrix.conj X) =
       RealSplitOct.conj (fromZorn X) := by
-  have h := toZorn_conj (fromZorn X)
-  have h' := congrArg fromZorn h.symm
-  simpa only [fromZorn_toZorn] using h'
+  apply equiv.injective
+  change toZorn (fromZorn (ZornVectorMatrix.conj X)) =
+    toZorn (RealSplitOct.conj (fromZorn X))
+  rw [toZorn_fromZorn, toZorn_conj, toZorn_fromZorn]
 
 theorem toZorn_conj_def (X : RealSplitOct) :
     toZorn (RealSplitOct.conj X) = ZornVectorMatrix.conj (toZorn X) := by
@@ -207,8 +208,9 @@ theorem toZorn_norm (X : RealSplitOct) :
 theorem fromZorn_mul (X Y : ZornVectorMatrix ℝ) :
     fromZorn (ZornVectorMatrix.mul X Y) =
       RealSplitOct.mul (fromZorn X) (fromZorn Y) := by
-  have h := toZorn_mul (fromZorn X) (fromZorn Y)
-  have h' := congrArg fromZorn h.symm
-  simpa only [fromZorn_toZorn] using h'
+  apply equiv.injective
+  change toZorn (fromZorn (ZornVectorMatrix.mul X Y)) =
+    toZorn (RealSplitOct.mul (fromZorn X) (fromZorn Y))
+  rw [toZorn_fromZorn, toZorn_mul, toZorn_fromZorn, toZorn_fromZorn]
 
 end InfoGeometry.Algebra.RealSplitOctZornAlignment

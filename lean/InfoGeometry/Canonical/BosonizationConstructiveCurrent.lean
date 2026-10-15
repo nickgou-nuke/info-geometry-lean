@@ -2065,6 +2065,8 @@ open Filter
 variable {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜]
 variable {V : Type*} [AddCommGroup V] [Module 𝕜 V]
 
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 /--
 Sugawara/Virasoro theorem consumed from a Heisenberg representation.
 
@@ -2406,8 +2408,8 @@ theorem cutoffWindowCrossingTerm_eq_heisenberg_of_natAbs_le
   unfold cutoffWindowCrossingTerm
   by_cases hmn : m + n = 0
   · have hsum :
-        (∑ a ∈ cutoffWindow N, (occ a - occ (a + m))) = m := by
-      simpa using crossingNumber_cutoff_eq_mode_of_large_cutoff N m hN
+    (∑ a ∈ cutoffWindow N, (occ a - occ (a + m))) = m := by
+      simpa [polarizationIndicator] using crossingNumber_cutoff_eq_mode_of_large_cutoff N m hN
     simp [hmn, hsum]
   · simp [hmn]
 

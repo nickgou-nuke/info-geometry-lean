@@ -9,7 +9,27 @@ inductive Archetype
   | frameCocycle
   | stabilizerObstruction
   | completeNormalForm
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+private def archetypeEquivFin : Archetype ≃ Fin 6 where
+  toFun
+    | .equivariantFrame => 0
+    | .invariantComposite => 1
+    | .quotientDescent => 2
+    | .frameCocycle => 3
+    | .stabilizerObstruction => 4
+    | .completeNormalForm => 5
+  invFun
+    | 0 => .equivariantFrame
+    | 1 => .invariantComposite
+    | 2 => .quotientDescent
+    | 3 => .frameCocycle
+    | 4 => .stabilizerObstruction
+    | _ => .completeNormalForm
+  left_inv x := by cases x <;> rfl
+  right_inv i := by fin_cases i <;> rfl
+
+instance : Fintype Archetype := Fintype.ofEquiv (Fin 6) archetypeEquivFin.symm
 
 open Archetype
 

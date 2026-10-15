@@ -13,19 +13,27 @@ later bridge owners.
 
 namespace HexagonalSixRootTiling
 
-abbrev HexIndex := ZMod 6
-abbrev HexColor := ZMod 3
+abbrev HexIndex := Fin 6
+abbrev HexColor := Fin 3
 
 inductive HexSheet
   | positive
   | negative
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype HexSheet where
+  elems := {HexSheet.positive, HexSheet.negative}
+  complete := by
+    intro s
+    cases s <;> simp
 
 /-- The positive sheet is the alternating cycle `0, 2, 4`. -/
-def positiveVertex (a : HexColor) : HexIndex := 2 * (a.val : HexIndex)
+def positiveVertex (a : HexColor) : HexIndex :=
+  ⟨(2 * a.val) % 6, by omega⟩
 
 /-- The negative sheet is the alternating cycle `3, 5, 1`. -/
-def negativeVertex (a : HexColor) : HexIndex := positiveVertex a + 3
+def negativeVertex (a : HexColor) : HexIndex :=
+  ⟨(2 * a.val + 3) % 6, by omega⟩
 
 /-- Sheet parity of a sixfold label. -/
 def sheetOf (n : HexIndex) : HexSheet :=
@@ -33,10 +41,13 @@ def sheetOf (n : HexIndex) : HexSheet :=
 
 /-- Colour coordinate in the alternating ordering on each sheet. -/
 def colorOf (n : HexIndex) : HexColor :=
-  match n.val with
-  | 0 | 3 => 0
-  | 2 | 5 => 1
-  | _ => 2
+  ⟨match n.val with
+    | 0 => 0
+    | 1 => 2
+    | 2 => 1
+    | 3 => 0
+    | 4 => 2
+    | _ => 1, by fin_cases n <;> decide⟩
 
 def vertexOf : HexSheet × HexColor → HexIndex
   | (.positive, a) => positiveVertex a
@@ -73,7 +84,9 @@ theorem existsUnique_sheet_color (n : HexIndex) :
   refine ⟨sheetColorEquiv n, sheetColorEquiv.symm_apply_apply n, ?_⟩
   intro p hp
   apply sheetColorEquiv.symm.injective
-  simpa using hp
+  change vertexOf p = vertexOf (sheetOf n, colorOf n)
+  rw [vertexOf_sheet_color]
+  exact hp
 
 def positiveCycle : Finset HexIndex := Finset.univ.image positiveVertex
 def negativeCycle : Finset HexIndex := Finset.univ.image negativeVertex
@@ -101,11 +114,12 @@ theorem colorRotate_three (n : HexIndex) :
   fin_cases n <;> decide
 
 /-- Pin-glide reflection on the six cyclotomic labels. -/
-def hexReflect (n : HexIndex) : HexIndex := 3 - n
+def hexReflect (n : HexIndex) : HexIndex :=
+  ⟨(3 + 6 - n.val) % 6, by omega⟩
 
 theorem hexReflect_involutive : Function.Involutive hexReflect := by
   intro n
-  simp [hexReflect]
+  fin_cases n <;> decide
 
 @[simp] theorem hexReflect_positiveVertex (a : HexColor) :
     hexReflect (positiveVertex a) = negativeVertex (-a) := by

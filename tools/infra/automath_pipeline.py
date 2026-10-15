@@ -1,23 +1,24 @@
 #!/usr/bin/env python3
 """
-Automath Pipeline Orchestrator — Hybrid Omega + Hive Pipeline
+AutoMath candidate pipeline: research, proposal, checking, audit, and archive.
 
-Implements the three-role alchemical distillation:
-  Codex (Generative) → Socratic Verifier (CAS + Repair) → Oracle Referee → Lean Kernel Gate → Hive Commit
+The oracle proposes Lean candidates. Explicit SymPy witnesses provide
+supporting evidence; Lean checks candidates; a static semantic-vacuity gate
+screens proof shape; Arango stores append-only provenance. No stage
+automatically edits owner source.
 
 Uses:
-  - Browser-harness (BU_CDP_WS) for Codex/Oracle (cheap, no API tokens)
-  - Socratic clawbot for verification/repair
-  - 16 CAS sympy verify scripts for cheap filtering
-  - Lean kernel (lake build) as the ultimate crucible
-  - infogeometry DAG (port 8530) for topology
-  - Hive Memory ArangoDB (port 8540) for Bee memory + cross-pollination
+  - Guarded ChatGPT Pro proposal/audit lane (cheap, no API tokens)
+  - Optional hypothesis-linked SymPy witness scripts
+  - Lean kernel under the shared build lock
+  - Hive Memory ArangoDB (port 8540) for candidate provenance
 """
 
 from __future__ import annotations
 
 import argparse
 import base64
+import hashlib
 import json
 import os
 import re
@@ -26,6 +27,7 @@ import sys
 import tempfile
 import time
 import urllib.request
+import uuid
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
@@ -43,98 +45,95 @@ HIVE_MEMORY_DB = "hive_memory"
 ARANGO_ENDPOINT = os.environ.get("ARANGO_ENDPOINT", "http://127.0.0.1:8530")
 HIVE_ENDPOINT = os.environ.get("HIVE_ENDPOINT", "http://127.0.0.1:8540")
 
-# Import the safe aiClaw adapter
+# Import the Pro polling bridge; sends are serialized by the shared lane guard.
 if str(TOOLS_INFRA) not in sys.path:
     sys.path.insert(0, str(TOOLS_INFRA))
 
 from lean_audit_prompt import extract_replacement_lean, lean_candidate_reject_reason
+from chatgpt_lane_guard import browser_chatgpt_lane
+from proof_artifact_receipt import build_candidate_receipt
+from tools.infra.hive_epistemic_bridge import read_candidate_receipt
+from tools.build_lock import acquire_build_lock
 
 # Import oracle_dispatch if present
 try:
     if str(REPO_ROOT / "tools" / "chatgpt-oracle") not in sys.path:
         sys.path.insert(0, str(REPO_ROOT / "tools" / "chatgpt-oracle"))
-    from oracle_dispatch import dispatch_direct, dispatch_direct_record
+    from oracle_dispatch import dispatch_direct_record
 except ImportError:
-    dispatch_direct = None
     dispatch_direct_record = None
 
-def ask_ai(prompt: str, queue: bool = True, wait: bool = True) -> dict:
-    print("  [FORMALIZE] Routing prompt to ChatGPT Oracle Server on port 8765...")
-    if dispatch_direct is not None:
-        try:
-            response = dispatch_direct(
-                task_name="automath_formalization",
-                prompt_text=prompt,
-                model="chatgpt-5.4-pro"
-            )
-            if response:
-                return {"content": response}
-        except Exception as e:
-            print(f"  [FORMALIZE] Oracle direct dispatch failed: {e}. Falling back to browser-harness.")
-    
-    # Browser-harness fallback
-    prompt_file = Path("/tmp/formalization_prompt.txt")
-    prompt_file.write_text(prompt, encoding="utf-8")
-    result_file = Path("/tmp/chatgpt_browser_result.json")
-    if result_file.exists():
-        result_file.unlink()
-        
-    ws = os.environ.get("BU_CDP_WS", "")
-    if not ws:
-        try:
-            import urllib.request
-            import json
-            tabs = json.loads(urllib.request.urlopen("http://127.0.0.1:9222/json", timeout=2).read().decode())
-            ws_url = None
-            for tab in tabs:
-                if "webSocketDebuggerUrl" in tab and tab["type"] == "page":
-                    ws_url = tab["webSocketDebuggerUrl"]
-                    break
-            if not ws_url and tabs:
-                ws_url = tabs[0].get("webSocketDebuggerUrl", "")
-            ws = ws_url or ""
-        except Exception:
-            pass
-        if not ws:
-            try:
-                import urllib.request
-                import json
-                ws_info = json.loads(urllib.request.urlopen("http://127.0.0.1:9222/json/version", timeout=2).read().decode())
-                ws = ws_info.get("webSocketDebuggerUrl", "")
-            except Exception:
-                pass
+def ask_ai(
+    prompt: str,
+    *,
+    conversation_id: str | None = None,
+    queue: bool = True,
+    wait: bool = True,
+) -> dict:
+    del queue, wait  # The shared lane guard is mandatory for this transport.
+    if dispatch_direct_record is None:
+        raise RuntimeError("Tampermonkey oracle_dispatch is unavailable")
 
-    env = os.environ.copy()
-    env["CHATGPT_PROMPT_FILE"] = str(prompt_file)
-    if ws:
-        env["BU_CDP_WS"] = ws
-
-    harness_script = f"""import builtins
-for name in ['js', 'wait', 'new_tab', 'ensure_real_tab', 'wait_for_load']:
-    if name in globals():
-        setattr(builtins, name, globals()[name])
-
-import sys
-sys.path.insert(0, "{REPO_ROOT}")
-from tools.infra.chatgpt_browser_harness_driver import _main
-_main()
-"""
-    try:
-        subprocess.run(
-            ["browser-harness"],
-            input=harness_script,
-            cwd=REPO_ROOT,
-            env=env,
-            capture_output=True,
-            text=True,
-            timeout=600,
+    # Project-attached Pro context is useful for generation, but this legacy
+    # HTTP-polling bridge must share aiClaw's single-flight lane. Never fall
+    # through to an uncoordinated browser-harness sender after a timeout.
+    task_name = f"automath_{uuid.uuid4().hex}"
+    print(f"  [FORMALIZE] Routing one proposal through the guarded Pro lane ({task_name})...")
+    with browser_chatgpt_lane(
+        source="automath_pipeline.oracle_proposal",
+        prompt_chars=len(prompt),
+        reason="tampermonkey_oracle_request",
+    ):
+        record = dispatch_direct_record(
+            task_name=task_name,
+            prompt_text=prompt,
+            model="chatgpt-5.4-pro",
+            conversation_id=conversation_id,
+            project_url=os.environ.get("CHATGPT_PROJECT_URL", ""),
+            tag="automath_candidate",
         )
-        if result_file.exists():
-            return {"content": result_file.read_text()}
-    except Exception as e:
-        print(f"  [FORMALIZE] Browser-harness fallback failed: {e}")
-        
-    raise RuntimeError("AI formalization completely failed")
+        response = str(record.get("response") or "")
+        if record.get("status") != "completed":
+            raise RuntimeError(
+                f"oracle task {task_name} ended with status={record.get('status')}; readback required"
+            )
+        if not response.strip():
+            # The request may have reached the browser despite failed readback.
+            raise RuntimeError(f"oracle returned no final response for {task_name}; readback required")
+    return {
+        "content": response,
+        "task_id": task_name,
+        "conversation_id": record.get("conversation_id", ""),
+        "success": True,
+    }
+
+
+def candidate_path(hypothesis_id: str, code: str) -> Path:
+    """Write a content-addressed candidate outside the Lean source tree."""
+    normalized = code.rstrip() + "\n"
+    digest = hashlib.sha256(normalized.encode("utf-8")).hexdigest()
+    safe_id = re.sub(r"[^A-Za-z0-9_.-]+", "_", hypothesis_id)
+    directory = REPO_ROOT / "tmp" / "oracle_candidates" / "automath" / safe_id
+    directory.mkdir(parents=True, exist_ok=True)
+    path = directory / f"{digest}.lean"
+    if path.exists():
+        if path.read_text(encoding="utf-8") != normalized:
+            raise RuntimeError(f"candidate hash collision at {path}")
+    else:
+        with path.open("x", encoding="utf-8") as handle:
+            handle.write(normalized)
+    return path
+
+
+def reject_unproved_candidate(code: str) -> str:
+    """Reject proof-debt and obvious vacuity before invoking Lean."""
+    if re.search(r"(?<!\w)(sorry|admit|axiom)(?!\w)", code):
+        return "proof_debt_marker"
+    if re.search(r"(?<!\w)unsafe(?!\w)", code):
+        return "unsafe_declaration"
+    if re.search(r":\s*True\s*:=", code):
+        return "vacuous_true_theorem"
+    return lean_candidate_reject_reason(code)
 
 
 @dataclass
@@ -153,7 +152,7 @@ class Hypothesis:
     lean_errors: str = ""
     repair_attempts: int = 0
     oracle_verdict: str = ""
-    committed: bool = False
+    archived: bool = False
 
 
 @dataclass
@@ -161,6 +160,17 @@ class GateResult:
     passed: bool
     errors: str = ""
     warnings: list[str] = field(default_factory=list)
+    lean_returncode: int | None = None
+    lean_output_sha256: str = ""
+    semantic_vacuity_returncode: int | None = None
+    semantic_vacuity_output_sha256: str = ""
+    axiom_audit_status: str = "not_requested"
+    axiom_audit_declarations: list[str] = field(default_factory=list)
+    axiom_audit_returncode: int | None = None
+    axiom_audit_output: str = ""
+    axiom_audit_output_sha256: str = ""
+    candidate_sha256: str = ""
+    candidate_integrity_ok: bool = True
 
 
 class LeanGate:
@@ -170,55 +180,149 @@ class LeanGate:
         self.lean_root = lean_root
 
     def check(self, lean_file: Path) -> GateResult:
-        """Run `lake build` on the module containing lean_file."""
+        """Check one candidate; module builds are scheduled by the locked BuildBee."""
+        return self.check_file(lean_file)
+
+    def check_file(
+        self, lean_file: Path, *, axiom_audit_declarations: list[str] | None = None
+    ) -> GateResult:
+        """Kernel-check a candidate and optionally query Lean for named axiom dependencies."""
+        declarations = axiom_audit_declarations or []
+        if (not isinstance(declarations, list)
+                or any(not isinstance(name, str) or not re.fullmatch(
+                    r"[A-Za-z_][A-Za-z0-9_']*(?:\.[A-Za-z_][A-Za-z0-9_']*)*", name
+                ) for name in declarations)
+                or len(set(declarations)) != len(declarations)):
+            return GateResult(passed=False, errors="invalid or duplicate axiom audit declaration names")
         try:
-            result = subprocess.run(
-                ["lake", "build"],
-                cwd=self.lean_root,
+            candidate_sha = hashlib.sha256(lean_file.read_bytes()).hexdigest()
+            with acquire_build_lock(
+                None, f"automath-lean-candidate:{os.getpid()}:{lean_file.name}", block=True
+            ):
+                result = subprocess.run(
+                    ["lake", "env", "lean", str(lean_file)],
+                    cwd=REPO_ROOT,
+                    capture_output=True,
+                    text=True,
+                    timeout=120,
+                    check=False,
+                )
+                axiom_result = None
+                axiom_error = ""
+                if result.returncode == 0 and declarations:
+                    try:
+                        axiom_result = self._run_axiom_audit(lean_file, declarations)
+                    except Exception as exc:
+                        axiom_error = str(exc)
+            output = "\n".join(part for part in (result.stdout, result.stderr) if part)
+            lean_hash = hashlib.sha256(output.encode("utf-8")).hexdigest()
+            if result.returncode != 0:
+                candidate_integrity_ok = (
+                    hashlib.sha256(lean_file.read_bytes()).hexdigest() == candidate_sha
+                )
+                return GateResult(
+                    passed=False, errors=output, lean_returncode=result.returncode,
+                    lean_output_sha256=lean_hash, candidate_sha256=candidate_sha,
+                    candidate_integrity_ok=candidate_integrity_ok,
+                )
+            qms = subprocess.run(
+                [sys.executable, str(REPO_ROOT / "tools/quality/semantic_vacuity_gate.py"),
+                 "--fail-on", "error", str(lean_file)],
+                cwd=REPO_ROOT,
                 capture_output=True,
                 text=True,
-                timeout=300,
+                timeout=60,
+                check=False,
             )
-            if result.returncode == 0:
-                return GateResult(passed=True)
-            else:
-                return GateResult(passed=False, errors=result.stderr)
-        except subprocess.TimeoutExpired:
-            return GateResult(passed=False, errors="lake build timeout (300s)")
-        except Exception as e:
-            return GateResult(passed=False, errors=str(e))
+            qms_output = "\n".join(part for part in (qms.stdout, qms.stderr) if part)
+            candidate_integrity_ok = (
+                hashlib.sha256(lean_file.read_bytes()).hexdigest() == candidate_sha
+            )
+            combined = "\n".join(part for part in (output, qms_output) if part)
+            axiom_output = ""
+            axiom_status = "not_requested"
+            if axiom_result is not None:
+                axiom_output = "\n".join(
+                    part for part in (axiom_result.stdout, axiom_result.stderr) if part
+                )
+                axiom_status = (
+                    "collected"
+                    if axiom_result.returncode == 0 and axiom_output.strip()
+                    else "failed"
+                )
+            elif declarations:
+                axiom_status = "failed"
+                axiom_output = axiom_error or "axiom audit subprocess did not produce a result"
+            warnings = []
+            if not candidate_integrity_ok:
+                warnings.append("candidate bytes changed during verification")
+            return GateResult(
+                passed=qms.returncode == 0 and candidate_integrity_ok, errors=combined,
+                warnings=warnings,
+                lean_returncode=result.returncode, lean_output_sha256=lean_hash,
+                semantic_vacuity_returncode=qms.returncode,
+                semantic_vacuity_output_sha256=hashlib.sha256(
+                    qms_output.encode("utf-8")
+                ).hexdigest(),
+                axiom_audit_status=axiom_status,
+                axiom_audit_declarations=list(declarations),
+                axiom_audit_returncode=(axiom_result.returncode if axiom_result is not None else None),
+                axiom_audit_output=axiom_output,
+                axiom_audit_output_sha256=hashlib.sha256(
+                    axiom_output.encode("utf-8")
+                ).hexdigest() if axiom_result is not None or declarations else "",
+                candidate_sha256=candidate_sha,
+                candidate_integrity_ok=candidate_integrity_ok,
+            )
+        except subprocess.TimeoutExpired as exc:
+            output = "\n".join(
+                part for part in (exc.stdout or "", exc.stderr or "") if part
+            )
+            return GateResult(passed=False, errors=f"Lean check timeout (120s)\n{output}")
+        except Exception as exc:
+            return GateResult(passed=False, errors=str(exc))
 
-    def check_file(self, lean_file: Path) -> GateResult:
-        """Check a single Lean file by attempting to compile it."""
-        result = subprocess.run(
-            ["lake", "env", "lean", str(lean_file)],
-            cwd=self.lean_root,
-            capture_output=True,
-            text=True,
-            timeout=120,
-        )
-        if result.returncode == 0:
-            return GateResult(passed=True)
-        else:
-            return GateResult(passed=False, errors=result.stderr)
+    @staticmethod
+    def _run_axiom_audit(lean_file: Path, declarations: list[str]) -> subprocess.CompletedProcess[str]:
+        """Re-elaborate the candidate and run `#print axioms` for explicit names."""
+        source = lean_file.read_text(encoding="utf-8")
+        audit_source = "import Lean\n" + source.rstrip() + "\n\n" + "\n".join(
+            f"#print axioms {name}" for name in declarations
+        ) + "\n"
+        with tempfile.TemporaryDirectory(prefix="automath-axiom-audit-") as temp_dir:
+            audit_file = Path(temp_dir) / "CandidateAxiomAudit.lean"
+            audit_file.write_text(audit_source, encoding="utf-8")
+            return subprocess.run(
+                ["lake", "env", "lean", str(audit_file)],
+                cwd=REPO_ROOT,
+                capture_output=True,
+                text=True,
+                timeout=120,
+                check=False,
+            )
 
 
 class CASFilter:
-    """Cheap symbolic verification using sympy verify scripts."""
+    """Run only explicit, hypothesis-linked SymPy witness scripts."""
 
     def __init__(self, sympy_dir: Path = SYMPY_VERIFY_DIR):
         self.sympy_dir = sympy_dir
 
-    def verify(self, hypothesis: Hypothesis) -> bool:
-        """Run relevant CAS scripts against the hypothesis."""
-        relevant = [
-            "witten_parity_index.py",
-            "zeta_coordinate_symmetry.py",
-        ]
-        for script_name in relevant:
-            script = self.sympy_dir / script_name
-            if not script.exists():
-                continue
+    def verify(self, hypothesis: Hypothesis) -> tuple[bool, str, list[dict[str, str]]]:
+        """Run manifest-declared witnesses; unrelated scripts are no evidence."""
+        witnesses = hypothesis.metadata.get("cas_witnesses", [])
+        if not witnesses:
+            return True, "not_supplied", []
+        evidence: list[dict[str, str]] = []
+        for entry in witnesses:
+            relative = Path(str(entry))
+            script = (REPO_ROOT / relative).resolve()
+            try:
+                script.relative_to(self.sympy_dir.resolve())
+            except ValueError:
+                return False, "witness_outside_sympy_directory", evidence
+            if not script.is_file() or script.suffix != ".py":
+                return False, f"witness_missing:{relative}", evidence
             try:
                 result = subprocess.run(
                     [sys.executable, str(script)],
@@ -228,185 +332,162 @@ class CASFilter:
                     timeout=60,
                 )
                 if result.returncode != 0:
-                    print(f"  [CAS] FAIL: {script_name} -> {result.stderr[:200]}")
-                    return False
+                    print(f"  [CAS] FAIL: {relative} -> {result.stderr[:200]}")
+                    return False, "failed", evidence
+                evidence.append({
+                    "path": relative.as_posix(),
+                    "sha256": hashlib.sha256(script.read_bytes()).hexdigest(),
+                })
             except subprocess.TimeoutExpired:
-                print(f"  [CAS] TIMEOUT: {script_name}")
-                return False
+                print(f"  [CAS] TIMEOUT: {relative}")
+                return False, "timeout", evidence
             except Exception as e:
-                print(f"  [CAS] ERROR: {script_name} -> {e}")
-                return False
-        return True
+                print(f"  [CAS] ERROR: {relative} -> {e}")
+                return False, f"error:{e}", evidence
+        return True, "passed", evidence
 
 
 class SocraticVerifier:
-    """Socratic verifier — critique + repair via socratic_clawbot."""
+    """Socratic proposal critic through the shared guarded Pro lane."""
 
     def __init__(self):
         self.clawbot = TOOLS_INFRA / "socratic_clawbot.py"
 
     def critique(self, hypothesis: Hypothesis) -> str:
-        """Run socratic_clawbot in dry-run mode to get critique."""
-        if not self.clawbot.exists():
-            return "socratic_clawbot.py not found"
+        """Audit a checked candidate; this output is never treated as proof."""
         try:
             prompt = self._build_critique_prompt(hypothesis)
-            with tempfile.NamedTemporaryFile(mode="w", suffix=".txt", delete=False) as f:
-                f.write(prompt)
-                prompt_file = f.name
-            try:
-                result = subprocess.run(
-                    [
-                        sys.executable, str(self.clawbot),
-                        "--dry-run", "--json",
-                        "--prompt-file", prompt_file,
-                    ],
-                    cwd=REPO_ROOT,
-                    capture_output=True,
-                    text=True,
-                    timeout=180,
-                )
-                try:
-                    data = json.loads(result.stdout)
-                    return json.dumps(data, indent=2)
-                except:
-                    return result.stdout
-            finally:
-                os.unlink(prompt_file)
-        except subprocess.TimeoutExpired:
-            return "Socratic critique timeout (180s)"
+            response = ask_ai(
+                prompt=prompt,
+                conversation_id=hypothesis.metadata.get("oracle_conversation_id"),
+            )
+            hypothesis.metadata.setdefault("oracle_exchanges", []).append({
+                "role": "post_lean_critic",
+                "task_id": response["task_id"],
+                "conversation_id": response.get("conversation_id", ""),
+                "prompt_sha256": hashlib.sha256(prompt.encode("utf-8")).hexdigest(),
+                "response_sha256": hashlib.sha256(
+                    str(response.get("content", "")).encode("utf-8")
+                ).hexdigest(),
+            })
+            return str(response.get("content") or "")
         except Exception as e:
             return f"Socratic critique error: {e}"
 
     def _build_critique_prompt(self, hypothesis: Hypothesis) -> str:
+        candidate = hypothesis.lean_file.read_text(encoding="utf-8") if hypothesis.lean_file else ""
+        owner_path, owner_context = AutomathPipeline._owner_context(hypothesis.source_apex)
         return f"""Socratic critique of mathematical hypothesis:
 
 HYPOTHESIS: {hypothesis.statement}
 RATIONALE: {hypothesis.rationale}
 OBJECTS: {', '.join(hypothesis.mathematical_objects)}
 SOURCE APEX: {hypothesis.source_apex}
+OWNER MODULE: {owner_path or 'unresolved'}
+OWNER CONTEXT:
+```lean4
+{owner_context or '[unresolved; do not claim repository declarations not shown below]'}
+```
+LEAN CANDIDATE:
+```lean4
+{candidate}
+```
+LEAN AND SEMANTIC-VACUITY DIAGNOSTICS:
+{hypothesis.lean_errors or '[Lean and semantic-vacuity gates passed; inspect theorem scope and assumptions.]'}
 
 Provide a structured critique:
 1. Mathematical soundness (true/false/uncertain)
 2. Missing assumptions
 3. Potential counterexamples
 4. Suggested formalization approach in Lean 4
-5. Related existing theorems in infogeometry DAG (if known)
+5. Separate mathematical observations from claims requiring repository search
 """
-
-
-class OracleReferee:
-    """Oracle referee — ChatGPT Pro via direct dispatch API (with browser fallback)."""
-
-    def __init__(self):
-        self.driver = TOOLS_INFRA / "chatgpt_browser_harness_driver.py"
-        self.prompt_file = Path("/tmp/oracle_prompt.txt")
-        self.result_file = Path("/tmp/chatgpt_browser_result.json")
-
-    def review(self, hypothesis: Hypothesis) -> str:
-        """Send hypothesis to Oracle for referee verdict."""
-        prompt = f"""Oracle Referee Review:
-
-Hypothesis: {hypothesis.statement}
-Rationale: {hypothesis.rationale}
-Objects: {', '.join(hypothesis.mathematical_objects)}
-
-Verdict: BREAKTHROUGH / MINOR / REJECT
-Provide one-line justification.
-"""
-        # A) Call direct API via oracle_dispatch if available
-        if dispatch_direct_record is not None:
-            try:
-                print("  [ORACLE] Dispatching editorial review directly...")
-                record = dispatch_direct_record(
-                    task_name="editorial_review",
-                    prompt_text=prompt,
-                    model="chatgpt-5.4-pro"
-                )
-                verdict = record.get("response", "")
-                if verdict:
-                    return verdict
-            except Exception as e:
-                print(f"  [ORACLE] Direct dispatch failed: {e}. Falling back to browser-harness.")
-
-        # B) Clipboard/Browser-harness fallback
-        self.prompt_file.write_text(prompt)
-        ws = os.environ.get("BU_CDP_WS", "")
-        if not ws:
-            try:
-                import urllib.request
-                import json
-                ws_info = json.load(urllib.request.urlopen("http://127.0.0.1:9222/json/version", timeout=2))
-                ws = ws_info.get("webSocketDebuggerUrl", "")
-                if ws:
-                    print(f"  [ORACLE] Auto-detected browser websocket: {ws}")
-            except Exception as ex:
-                print(f"  [ORACLE] Failed to auto-detect browser websocket: {ex}")
-
-        env = os.environ.copy()
-        env["CHATGPT_PROMPT_FILE"] = str(self.prompt_file)
-        if ws:
-            env["BU_CDP_WS"] = ws
-
-        harness_script = f"""
-import sys
-sys.path.insert(0, "{REPO_ROOT}")
-from tools.infra.chatgpt_browser_harness_driver import _main
-_main()
-"""
-        try:
-            result = subprocess.run(
-                ["browser-harness"],
-                input=harness_script,
-                cwd=REPO_ROOT,
-                env=env,
-                capture_output=True,
-                text=True,
-                timeout=600,
-            )
-            if self.result_file.exists():
-                return self.result_file.read_text()
-            return result.stdout
-        except Exception as e:
-            return f"Oracle review error: {e}"
 
 
 class HiveSync:
-    """Synchronize Gold hypotheses to infogeometry DAG + Hive Memory."""
+    """Archive candidate provenance; this class does not promote Lean source."""
 
     def __init__(self):
         self.infogeo_endpoint = ARANGO_ENDPOINT
         self.hive_endpoint = HIVE_ENDPOINT
 
-    def commit_gold(self, hypothesis: Hypothesis) -> bool:
-        """Commit Gold hypothesis to both databases."""
-        print(f"HIVE COMMIT: {hypothesis.id} -> {hypothesis.lean_file}")
+    def archive_candidate(self, hypothesis: Hypothesis) -> bool:
+        """Append a candidate observation; this does not promote a theorem."""
+        print(f"HIVE CANDIDATE ARCHIVE: {hypothesis.id} -> {hypothesis.lean_file}")
         print(f"  Statement: {hypothesis.statement[:100]}...")
 
         # 1. Commit to ArangoDB (hive_memory.Thoughts)
         endpoint = self.hive_endpoint
         db = "hive_memory"
-        username = "root"
-        password = "hive_brain"
+        username = os.environ.get("ARANGO_USER", "root")
+        password = os.environ.get("ARANGO_PASSWORD", "hive_brain")
 
         # Prepare the document payload
         doc = {
-            "_key": hypothesis.id,
+            "_key": uuid.uuid4().hex,
             "id": hypothesis.id,
+            "run_id": hypothesis.metadata.get("run_id", hypothesis.id),
+            "record_type": "automath_lean_candidate",
+            "authority": "candidate_record_not_proof_authority",
+            "status": "lean_checked_pending_review",
             "statement": hypothesis.statement,
             "rationale": hypothesis.rationale,
             "mathematical_objects": hypothesis.mathematical_objects,
             "source_apex": hypothesis.source_apex,
             "cas_passed": hypothesis.cas_passed,
+            "cas_status": hypothesis.metadata.get("cas_status", "not_supplied"),
+            "cas_witness_evidence": hypothesis.metadata.get("cas_witness_evidence", []),
             "socratic_critique": hypothesis.socratic_critique,
             "oracle_verdict": hypothesis.oracle_verdict,
+            "oracle_exchanges": hypothesis.metadata.get("oracle_exchanges", []),
             "lean_file": str(hypothesis.lean_file) if hypothesis.lean_file else "",
+            "candidate_sha256": (
+                hashlib.sha256(hypothesis.lean_file.read_bytes()).hexdigest()
+                if hypothesis.lean_file and hypothesis.lean_file.is_file()
+                else ""
+            ),
+            "source_snapshot_sha256": hypothesis.metadata.get("source_snapshot_sha256", ""),
+            "source_path": hypothesis.metadata.get("source_path", ""),
+            "toolchain": hypothesis.metadata.get("toolchain", ""),
+            "lakefile_sha256": hypothesis.metadata.get("lakefile_sha256", ""),
+            "lake_manifest_sha256": hypothesis.metadata.get("lake_manifest_sha256", ""),
+            "git_head": hypothesis.metadata.get("git_head", ""),
+            "lean_check_returncode": hypothesis.metadata.get("lean_check_returncode"),
+            "lean_output_sha256": hypothesis.metadata.get("lean_output_sha256", ""),
+            "semantic_vacuity_returncode": hypothesis.metadata.get("semantic_vacuity_returncode"),
+            "semantic_vacuity_output_sha256": hypothesis.metadata.get("semantic_vacuity_output_sha256", ""),
+            "semantic_vacuity_status": hypothesis.metadata.get("semantic_vacuity_status", "not_run"),
+            "axiom_audit_status": hypothesis.metadata.get("axiom_audit_status", "not_requested"),
+            "axiom_audit_declarations": hypothesis.metadata.get("axiom_audit_declarations", []),
+            "axiom_audit_returncode": hypothesis.metadata.get("axiom_audit_returncode"),
+            "axiom_audit_output": hypothesis.metadata.get("axiom_audit_output", ""),
+            "axiom_audit_output_sha256": hypothesis.metadata.get("axiom_audit_output_sha256", ""),
+            "axiom_audit_status": hypothesis.metadata.get("axiom_audit_status", "not_requested"),
+            "axiom_audit_declarations": hypothesis.metadata.get("axiom_audit_declarations", []),
+            "axiom_audit_output": hypothesis.metadata.get("axiom_audit_output", ""),
+            "axiom_audit_output_sha256": hypothesis.metadata.get("axiom_audit_output_sha256", ""),
             "lean_errors": hypothesis.lean_errors,
             "repair_attempts": hypothesis.repair_attempts,
+            "source_snapshot_current_sha256": hypothesis.metadata.get("source_snapshot_current_sha256", ""),
+            "source_context_changed": hypothesis.metadata.get("source_context_changed", False),
+            "audit_defect": hypothesis.metadata.get("audit_defect"),
+            "audit_policy_version": hypothesis.metadata.get("audit_policy_version"),
+            "status": hypothesis.metadata.get("archive_status", "lean_checked_pending_review"),
             "timestamp": datetime.utcnow().isoformat() + "Z"
         }
+        archived_candidate_sha = doc["candidate_sha256"]
+        if archived_candidate_sha != hypothesis.metadata.get("candidate_sha256", ""):
+            print("  [HIVE] Candidate changed after Lean checking; refusing to archive")
+            return False
+        doc["audit_receipt"] = build_candidate_receipt(doc)
+        validated_receipt = read_candidate_receipt(doc)
+        if validated_receipt is None:
+            print("  [HIVE] Candidate receipt failed integrity/binding validation; not archived")
+            return False
+        doc["audit_receipt"] = validated_receipt
+        hypothesis.metadata["audit_receipt"] = doc["audit_receipt"]
 
-        # We can use simple HTTP POST to insert/replace the document
+        # POST with a fresh UUID key preserves append-only observation history.
         def auth_header(u: str, p: str) -> str:
             token = base64.b64encode(f"{u}:{p}".encode("utf-8")).decode("ascii")
             return f"Basic {token}"
@@ -421,8 +502,9 @@ class HiveSync:
         }
 
         committed_db = False
+        local_fallback = False
         try:
-            url = db_url(endpoint, db, "/_api/document/Thoughts?overwrite=true")
+            url = db_url(endpoint, db, "/_api/document/Thoughts")
             req = urllib.request.Request(url, data=json.dumps(doc).encode("utf-8"), headers=headers, method="POST")
             with urllib.request.urlopen(req) as resp:
                 result = json.loads(resp.read().decode("utf-8"))
@@ -434,36 +516,19 @@ class HiveSync:
         # Fallback log in case ArangoDB is unreachable
         if not committed_db:
             try:
-                gold_log = Path("/tmp/automath_gold_log.jsonl")
+                gold_log = Path("/tmp/automath_candidate_log.jsonl")
                 with gold_log.open("a", encoding="utf-8") as f:
                     f.write(json.dumps(doc) + "\n")
-                print("  [HIVE] Saved fallback entry to /tmp/automath_gold_log.jsonl")
+                local_fallback = True
+                print("  [HIVE] Saved fallback entry to /tmp/automath_candidate_log.jsonl")
             except Exception as fe:
                 print(f"  [HIVE] Fallback logging failed: {fe}")
 
-        # 2. Register import in OmegaAutomathCore.lean
-        try:
-            core_file = LEAN_ROOT / "InfoGeometry" / "Canonical" / "OmegaAutomathCore.lean"
-            if core_file.exists():
-                content = core_file.read_text(encoding="utf-8")
-                import_stmt = f"import InfoGeometry.Automath.Generated.{hypothesis.id.replace('-', '_').replace('.', '_')}"
-                if import_stmt not in content:
-                    lines = content.splitlines()
-                    insert_idx = 0
-                    for idx, line in enumerate(lines):
-                        if line.startswith("import "):
-                            insert_idx = idx + 1
-                    lines.insert(insert_idx, import_stmt)
-                    core_file.write_text("\n".join(lines) + "\n", encoding="utf-8")
-                    print(f"  [HIVE] Registered import in OmegaAutomathCore.lean")
-        except Exception as e:
-            print(f"  [HIVE] Failed to register import in OmegaAutomathCore.lean: {e}")
-
-        return True
+        return committed_db or local_fallback
 
     def broadcast_to_bees(self, hypothesis: Hypothesis):
-        """Broadcast new Gold to all Bees via Hive Memory."""
-        print(f"BEE BROADCAST: {hypothesis.id}")
+        """Announce candidate availability; consumers must recheck provenance."""
+        print(f"CANDIDATE AVAILABLE: {hypothesis.id}")
 
 
 class AutomathPipeline:
@@ -475,13 +540,12 @@ class AutomathPipeline:
         self.lean_gate = LeanGate()
         self.cas_filter = CASFilter()
         self.socratic = SocraticVerifier()
-        self.oracle = OracleReferee()
         self.hive = HiveSync()
-        self.gold_count = 0
+        self.candidate_count = 0
 
     def run(self, hypotheses: list[Hypothesis]) -> list[Hypothesis]:
         """Run the full pipeline on a list of hypotheses."""
-        gold = []
+        candidates = []
         for h in hypotheses:
             print(f"\n{'='*60}")
             print(f"PROCESSING: {h.id}")
@@ -489,58 +553,157 @@ class AutomathPipeline:
 
             # Stage 1: CAS Filter (cheap)
             print("  [CAS] Running symbolic verification...")
-            if not self.cas_filter.verify(h):
+            cas_ok, cas_status, cas_evidence = self.cas_filter.verify(h)
+            h.metadata["cas_status"] = cas_status
+            h.metadata["cas_witness_evidence"] = cas_evidence
+            h.cas_passed = cas_status == "passed"
+            if not cas_ok:
                 print("  [CAS] FAILED — discarding")
                 continue
-            h.cas_passed = True
-            print("  [CAS] PASSED")
+            print(f"  [CAS] {cas_status.upper()}")
 
-            # Stage 2: Socratic Critique
-            print("  [SOCRATIC] Critique...")
-            h.socratic_critique = self.socratic.critique(h)
-            print(f"  [SOCRATIC] Critique length: {len(h.socratic_critique)} chars")
-
-            # Stage 3: Formalize & Lean Gate
+            # Stage 2: Generate a proof-carrying proposal.
             h.lean_file = self._formalize(h)
             if not h.lean_file:
                 print("  [FORMALIZE] Failed to generate Lean file")
                 continue
 
             print("  [LEAN GATE] Checking...")
-            gate = self.lean_gate.check_file(h.lean_file)
+            gate = self.lean_gate.check_file(
+                h.lean_file,
+                axiom_audit_declarations=h.metadata.get("axiom_audit_declarations"),
+            )
             if not gate.passed:
+                if not gate.candidate_integrity_ok:
+                    print("  [LEAN GATE] Candidate changed during checking; discarding")
+                    continue
                 print(f"  [LEAN GATE] FAILED — attempting repair (max {self.max_repairs})")
                 h.lean_errors = gate.errors
-                repaired = self._repair_loop(h)
-                if not repaired:
+                repaired_gate = self._repair_loop(h)
+                if repaired_gate is None:
                     print("  [REPAIR] Exhausted — discarding")
                     continue
+                gate = repaired_gate
             else:
                 print("  [LEAN GATE] PASSED on first try!")
 
-            # Stage 4: Oracle Referee (for breakthrough candidates)
-            if self._is_breakthrough_candidate(h):
-                print("  [ORACLE] Requesting referee verdict...")
-                h.oracle_verdict = self.oracle.review(h)
-                if "BREAKTHROUGH" not in h.oracle_verdict:
-                    print(f"  [ORACLE] Verdict: {h.oracle_verdict[:80]}... — not a breakthrough")
-                    continue
+            self._record_gate_result(h, gate)
+            print("  [SOCRATIC] Auditing the checked candidate...")
+            h.socratic_critique = self.socratic.critique(h)
+            h.oracle_verdict = "advisory_only"
 
-            # Stage 5: Hive Commit
-            print("  [HIVE] Committing Gold...")
-            h.committed = True
-            self.hive.commit_gold(h)
+            # Stage 5: Archive evidence only. Owner-source promotion is a
+            # separate reviewed action and is intentionally not automated here.
+            print("  [HIVE] Archiving kernel-checked candidate evidence...")
+            current_source_sha = self._source_snapshot_hash(h.source_apex)
+            prompted_source_sha = h.metadata.get("source_snapshot_sha256", "")
+            h.metadata["source_snapshot_current_sha256"] = current_source_sha
+            h.metadata["source_context_changed"] = bool(
+                prompted_source_sha and prompted_source_sha != current_source_sha
+            )
+            h.metadata["source_snapshot_sha256"] = prompted_source_sha or current_source_sha
+            h.metadata["archive_status"] = (
+                "source_context_changed_pending_review"
+                if h.metadata["source_context_changed"]
+                else "lean_checked_pending_review"
+            )
+            h.metadata["toolchain"] = (REPO_ROOT / "lean-toolchain").read_text(encoding="utf-8").strip()
+            h.metadata["lakefile_sha256"] = hashlib.sha256(
+                (REPO_ROOT / "lakefile.lean").read_bytes()
+            ).hexdigest()
+            h.metadata["lake_manifest_sha256"] = hashlib.sha256(
+                (REPO_ROOT / "lake-manifest.json").read_bytes()
+            ).hexdigest()
+            head = subprocess.run(
+                ["git", "rev-parse", "HEAD"], cwd=REPO_ROOT,
+                capture_output=True, text=True, check=False,
+            )
+            h.metadata["git_head"] = head.stdout.strip() if head.returncode == 0 else "unavailable"
+            h.archived = self.hive.archive_candidate(h)
             self.hive.broadcast_to_bees(h)
-            self.gold_count += 1
-            gold.append(h)
-            print(f"  ✅ GOLD #{self.gold_count}: {h.id}")
+            self.candidate_count += 1
+            candidates.append(h)
+            print(f"  ✅ CANDIDATE #{self.candidate_count}: {h.id}")
 
         print(f"\n{'='*60}")
-        print(f"PIPELINE COMPLETE: {self.gold_count} Gold theorems from {len(hypotheses)} hypotheses")
-        return gold
+        print(
+            f"PIPELINE COMPLETE: {self.candidate_count} kernel-checked candidates "
+            f"from {len(hypotheses)} hypotheses; no owner source was promoted"
+        )
+        return candidates
+
+    @staticmethod
+    def _record_gate_result(hypothesis: Hypothesis, gate: GateResult) -> None:
+        hypothesis.metadata["lean_check_returncode"] = gate.lean_returncode
+        hypothesis.metadata["candidate_sha256"] = gate.candidate_sha256
+        hypothesis.metadata["lean_output_sha256"] = gate.lean_output_sha256
+        hypothesis.metadata["semantic_vacuity_returncode"] = gate.semantic_vacuity_returncode
+        hypothesis.metadata["semantic_vacuity_output_sha256"] = gate.semantic_vacuity_output_sha256
+        hypothesis.metadata["semantic_vacuity_status"] = (
+            "passed" if gate.semantic_vacuity_returncode == 0 else "failed"
+        ) if gate.semantic_vacuity_returncode is not None else "not_run"
+        hypothesis.metadata["axiom_audit_status"] = gate.axiom_audit_status
+        hypothesis.metadata["axiom_audit_declarations"] = list(gate.axiom_audit_declarations)
+        hypothesis.metadata["axiom_audit_returncode"] = gate.axiom_audit_returncode
+        hypothesis.metadata["axiom_audit_output"] = gate.axiom_audit_output
+        hypothesis.metadata["axiom_audit_output_sha256"] = gate.axiom_audit_output_sha256
+        hypothesis.metadata["axiom_audit_status"] = gate.axiom_audit_status
+        hypothesis.metadata["axiom_audit_declarations"] = list(gate.axiom_audit_declarations)
+        hypothesis.metadata["axiom_audit_output"] = gate.axiom_audit_output
+        hypothesis.metadata["axiom_audit_output_sha256"] = gate.axiom_audit_output_sha256
+
+    @staticmethod
+    def _owner_module(source_apex: str) -> Path | None:
+        """Resolve the longest module prefix of a qualified owner declaration."""
+        parts = source_apex.split(".")
+        for end in range(len(parts) - 1, 0, -1):
+            owner = (LEAN_ROOT / Path(*parts[:end])).with_suffix(".lean")
+            if owner.is_file():
+                return owner
+        return None
+
+    @classmethod
+    def _owner_context(cls, source_apex: str) -> tuple[str, str]:
+        """Return bounded source evidence, never inferred declarations."""
+        owner_path, context, _ = cls._owner_context_snapshot(source_apex)
+        return owner_path, context
+
+    @classmethod
+    def _owner_context_snapshot(cls, source_apex: str) -> tuple[str, str, str]:
+        """Build prompt context and hash from the same read of the owner bytes."""
+        owner = cls._owner_module(source_apex)
+        if owner is None:
+            return "", "", ""
+        raw = owner.read_bytes()
+        text = raw.decode("utf-8")
+        digest = hashlib.sha256(raw).hexdigest()
+        if len(text) <= 30000:
+            return str(owner.relative_to(REPO_ROOT)), text, digest
+        name = source_apex.split(".")[-1]
+        lines = text.splitlines()
+        match_index = next(
+            (i for i, line in enumerate(lines)
+             if re.search(rf"\b(?:def|abbrev|theorem|lemma|structure|class|inductive)\s+{re.escape(name)}\b", line)),
+            None,
+        )
+        if match_index is None:
+            return str(owner.relative_to(REPO_ROOT)), "", digest
+        imports = [line for line in lines[:match_index] if line.startswith(("import ", "open ", "namespace ", "variable ", "universe "))]
+        excerpt = lines[max(0, match_index - 60):match_index + 100]
+        return str(owner.relative_to(REPO_ROOT)), "\n".join(imports + ["-- Target context excerpt:"] + excerpt), digest
+
+    @classmethod
+    def _source_snapshot_hash(cls, source_apex: str) -> str:
+        """Hash the likely owner module; unresolved names remain unlinked."""
+        owner = cls._owner_module(source_apex)
+        return hashlib.sha256(owner.read_bytes()).hexdigest() if owner else ""
 
     def _formalize(self, hypothesis: Hypothesis) -> Optional[Path]:
-        """Generate a Lean 4 formalization using LLM/Socratic translation."""
+        """Generate an immutable Lean candidate; never write owner source."""
+        owner_path, owner_context, source_digest = self._owner_context_snapshot(hypothesis.source_apex)
+        if owner_context:
+            hypothesis.metadata["source_path"] = owner_path
+            hypothesis.metadata["source_snapshot_sha256"] = source_digest
         prompt = f"""You are Antigravity, a formalization assistant for Lean 4.
 Given the following mathematical hypothesis:
 
@@ -548,41 +711,60 @@ STATEMENT: {hypothesis.statement}
 RATIONALE: {hypothesis.rationale}
 OBJECTS: {', '.join(hypothesis.mathematical_objects)}
 SOURCE APEX: {hypothesis.source_apex}
+OWNER MODULE: {owner_path or 'unresolved'}
+OWNER CONTEXT (source evidence; declarations outside this context are unavailable):
+```lean4
+{owner_context or '[No owner module resolved. Return NO_CANDIDATE rather than guessing declarations.]'}
+```
 
 Translate this mathematical hypothesis and its objects into a formal Lean 4 theorem.
 Your translation should:
-1. Import `Mathlib` and any other relevant modules.
-2. Wrap the definition/theorem in `namespace Automath.Generated`.
-3. Use a realistic type signature mapping the mathematical objects and statement. If the exact mathlib lemma is not known, state the assumptions cleanly as variables.
-4. Close the proof with a `sorry` so it parses and typechecks, but has an honest sorry instead of a fake `True` verification.
-5. Provide ONLY the valid Lean 4 source code block inside ` ```lean ` and ` ``` `. Do not include any other markdown text or explanation.
+1. Reuse only declarations actually present in the supplied owner context.
+2. State only the requested result, with mathematically necessary explicit hypotheses.
+3. Provide a complete Lean 4 candidate with a kernel proof; do not use `sorry`, `admit`, `axiom`, `unsafe`, or a theorem concluding `True`.
+4. Treat the apex label as untrusted. If its owner or required declarations are absent from the supplied context, return `NO_CANDIDATE` rather than guessing or inventing them.
+5. Provide the complete Lean source inside one fenced `lean4` block.
 """
         print(f"  [FORMALIZE] Asking AI to formalize '{hypothesis.id}'...")
+        hypothesis.metadata["run_id"] = hypothesis.metadata.get("run_id", uuid.uuid4().hex)
         try:
-            res = ask_ai(prompt=prompt, queue=True, wait=True)
+            res = ask_ai(prompt=prompt, conversation_id="", queue=True, wait=True)
+            hypothesis.metadata["oracle_conversation_id"] = res.get("conversation_id", "")
+            hypothesis.metadata.setdefault("oracle_exchanges", []).append({
+                "role": "formalizer",
+                "task_id": res["task_id"],
+                "conversation_id": res.get("conversation_id", ""),
+                "prompt_sha256": hashlib.sha256(prompt.encode("utf-8")).hexdigest(),
+                "response_sha256": hashlib.sha256(
+                    str(res.get("content", "")).encode("utf-8")
+                ).hexdigest(),
+            })
             content = res.get("content") or ""
-            match = re.search(r"```(?:lean4|lean)?\s*\n?(.*?)```", content, re.DOTALL)
-            lean_content = match.group(1).strip() if match else content.strip()
+            lean_content = extract_replacement_lean(content)
         except Exception as e:
-            print(f"  [FORMALIZE] ask_ai failed: {e}. Falling back to skeleton.")
-            lean_content = f"""namespace Automath.Generated
-theorem {hypothesis.id.replace('-', '_').replace('.', '_')} : True := by trivial
-end Automath.Generated"""
+            print(f"  [FORMALIZE] ask_ai failed; no candidate produced: {e}")
+            return None
 
-        lean_dir = LEAN_ROOT / "InfoGeometry" / "Automath" / "Generated"
-        lean_dir.mkdir(parents=True, exist_ok=True)
-        lean_file = lean_dir / f"{hypothesis.id.replace('-', '_').replace('.', '_')}.lean"
-        lean_file.write_text(lean_content, encoding="utf-8")
+        if "NO_CANDIDATE" in (res.get("content") or ""):
+            print("  [FORMALIZE] Oracle reported NO_CANDIDATE")
+            return None
+        rejection = reject_unproved_candidate(lean_content)
+        if rejection:
+            print(f"  [FORMALIZE] Candidate rejected before Lean check: {rejection}")
+            return None
+
+        lean_file = candidate_path(hypothesis.id, lean_content)
+        hypothesis.metadata["candidate_sha256"] = hashlib.sha256(lean_file.read_bytes()).hexdigest()
         return lean_file
 
-    def _repair_loop(self, hypothesis: Hypothesis) -> bool:
+    def _repair_loop(self, hypothesis: Hypothesis) -> GateResult | None:
         """Attempt to repair Lean errors via Socratic repair loop."""
         for attempt in range(1, self.max_repairs + 1):
             hypothesis.repair_attempts = attempt
             print(f"  [REPAIR] Attempt {attempt}/{self.max_repairs}")
 
             if not hypothesis.lean_file or not hypothesis.lean_file.exists():
-                return False
+                return None
 
             file_content = hypothesis.lean_file.read_text(encoding="utf-8")
 
@@ -600,43 +782,65 @@ Please provide the COMPLETE, corrected Lean 4 code for this file.
 Your output must:
 1. Fix all the listed compilation errors.
 2. Maintain the same namespace, imports, and theorem name.
-3. Keep the proof closed with `sorry` if it cannot be solved, but fix any syntax, type-checking, or definition mismatch errors.
-4. Output ONLY the valid, complete Lean 4 code inside a single ```lean block. No explanation.
+3. Do not add `sorry`, `admit`, `axiom`, `unsafe`, or weaken the theorem to `True`.
+4. If it cannot be repaired honestly, return `NO_CANDIDATE`.
+5. Output the complete Lean 4 code inside a single `lean4` fence.
 """
             print(f"  [REPAIR] Querying Socratic Verifier for correction...")
             try:
-                res = ask_ai(prompt=repair_prompt, queue=True, wait=True)
+                res = ask_ai(
+                    prompt=repair_prompt,
+                    conversation_id=hypothesis.metadata.get("oracle_conversation_id"),
+                    queue=True,
+                    wait=True,
+                )
+                hypothesis.metadata.setdefault("oracle_exchanges", []).append({
+                    "role": "lean_repair",
+                    "task_id": res["task_id"],
+                    "conversation_id": res.get("conversation_id", ""),
+                    "prompt_sha256": hashlib.sha256(repair_prompt.encode("utf-8")).hexdigest(),
+                    "response_sha256": hashlib.sha256(
+                        str(res.get("content", "")).encode("utf-8")
+                    ).hexdigest(),
+                })
                 content = res.get("content") or ""
-                match = re.search(r"```(?:lean4|lean)?\s*\n?(.*?)```", content, re.DOTALL)
-                corrected_code = match.group(1).strip() if match else content.strip()
+                corrected_code = extract_replacement_lean(content)
 
-                if corrected_code:
-                    print(f"  [REPAIR] Applying patch to {hypothesis.lean_file}...")
-                    hypothesis.lean_file.write_text(corrected_code, encoding="utf-8")
+                if "NO_CANDIDATE" in (res.get("content") or ""):
+                    print("  [REPAIR] Oracle reported NO_CANDIDATE")
+                    return None
+                rejection = reject_unproved_candidate(corrected_code)
+                if not rejection:
+                    hypothesis.lean_file = candidate_path(hypothesis.id, corrected_code)
+                    hypothesis.metadata["candidate_sha256"] = hashlib.sha256(
+                        hypothesis.lean_file.read_bytes()
+                    ).hexdigest()
+                    print(f"  [REPAIR] Wrote immutable candidate {hypothesis.lean_file}")
+                else:
+                    print(f"  [REPAIR] Candidate rejected: {rejection}")
+                    continue
             except Exception as e:
                 print(f"  [REPAIR] Socratic query failed: {e}")
+                continue
 
             # Recheck the file
-            gate = self.lean_gate.check_file(hypothesis.lean_file)
+            gate = self.lean_gate.check_file(
+                hypothesis.lean_file,
+                axiom_audit_declarations=hypothesis.metadata.get("axiom_audit_declarations"),
+            )
             if gate.passed:
                 hypothesis.lean_errors = ""
                 print("  [REPAIR] SUCCESS - file compiled successfully!")
-                return True
+                return gate
+
+            if not gate.candidate_integrity_ok:
+                print("  [REPAIR] Candidate changed during checking; abandoning this repair chain")
+                return None
 
             hypothesis.lean_errors = gate.errors
             print(f"  [REPAIR] Still failing: {gate.errors[:200]}...")
 
-        return False
-
-    def _is_breakthrough_candidate(self, hypothesis: Hypothesis) -> bool:
-        """Evaluate if the hypothesis is a breakthrough candidate based on objects and critique."""
-        if len(hypothesis.mathematical_objects) >= 3 and hypothesis.cas_passed:
-            return True
-        critique = hypothesis.socratic_critique.lower()
-        if "novel" in critique or "breakthrough" in critique or "soundness: true" in critique:
-            return True
-        return False
-
+        return None
 
 def extract_objects_from_text(text: str) -> list[str]:
     """Extract mathematical objects from text using keyword matching."""
@@ -709,9 +913,9 @@ def main():
         return
 
     pipeline = AutomathPipeline(apex=args.apex, max_repairs=args.max_repairs)
-    gold = pipeline.run(hypotheses)
+    candidates = pipeline.run(hypotheses)
 
-    print(f"\nFinal Gold count: {len(gold)}")
+    print(f"\nFinal candidate count: {len(candidates)} (owner source promotion remains manual)")
 
 
 if __name__ == "__main__":

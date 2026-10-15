@@ -1,5 +1,4 @@
 import InfoGeometry.OperatorAlgebra.NoncommutativePowerDerivative
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Exponential
 
 /-!
@@ -85,10 +84,10 @@ theorem exponentialDerivative_apply_of_commute
       NormedSpace.exp a * h := by
   have hLine :
       HasDerivAt (fun s : ℝ => a + (s • h)) h 0 := by
-    convert
-      (hasDerivAt_const (x := (0 : ℝ)) a).add
-        ((hasDerivAt_id (x := (0 : ℝ))).smul_const h) using 1
-    all_goals simp
+    have h1 := (hasDerivAt_const (x := (0 : ℝ)) a).add
+      ((hasDerivAt_id (x := (0 : ℝ))).smul_const h)
+    rw [zero_add, one_smul] at h1
+    exact h1
   have hFrechetAt :
       HasFDerivAt NormedSpace.exp
         (exponentialDerivative (𝕜 := ℝ) a)

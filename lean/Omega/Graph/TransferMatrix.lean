@@ -52,7 +52,7 @@ theorem goldenMeanAdjacency_charpoly :
   simp only [Matrix.charmatrix_apply, goldenMeanAdjacency, Matrix.diagonal_apply,
     Matrix.of_apply, Matrix.cons_val', Matrix.cons_val_zero, Matrix.cons_val_one,
     Polynomial.C_1, Polynomial.C_0]
-  simp (config := { decide := true }) only [if_true, if_false]
+  simp (config := { decide := true }) only [ite_true, ite_false]
   ring
 
 /-! ### Transfer matrix and Fibonacci numbers -/
@@ -476,7 +476,8 @@ theorem goldenMeanAdjacency_pow_symmetric (m : Nat) :
     thm:folding-stable-syntax-fib-fusion-ring -/
 theorem goldenMeanAdjacency_irreducible :
     ∀ i j : Fin 2, 0 < (goldenMeanAdjacency + goldenMeanAdjacency ^ 2) i j := by
-  decide
+  intro i j
+  fin_cases i <;> fin_cases j <;> decide
 
 /-- All entries of A^n are nonneg (they are Fibonacci numbers).
     thm:folding-stable-syntax-fib-fusion-ring -/

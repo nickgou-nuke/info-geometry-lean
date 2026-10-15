@@ -20,6 +20,6 @@ theorem baseCell_hcell (i : Fin 189) (hi : i ∈ orbitCells 0) :
     simpa [orbitCells, flagCells] using hi
   subst i
   refine ⟨1, one_mem _, ?_⟩
-  simpa [smul_eq_mul] using (orbitCellAnchor_quotient_eq 0)
+  simpa [smul_eq_mul, orbitCellAnchor] using (orbitCellAnchor_quotient_eq 0)
 
 end InfoGeometry.Algebra.Zorn.G2OneCellBruhatCertificate

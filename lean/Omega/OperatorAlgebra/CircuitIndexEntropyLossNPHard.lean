@@ -32,9 +32,7 @@ lemma circuit_index_entropy_loss_np_hard_no_collision_subsingleton
   rw [Fintype.card_le_one_iff]
   intro a b
   by_cases hab : a.1 = b.1
-  · cases a
-    cases b
-    simp_all
+  · exact Subtype.ext hab
   · exfalso
     exact hNoCollision ⟨a.1, b.1, hab, a.2.trans b.2.symm⟩
 
@@ -76,7 +74,7 @@ lemma circuit_index_entropy_loss_np_hard_maxfiber_eq_one_of_not_satisfiable
     have hFiber :
         1 ≤ Fintype.card (foldFiber C y0) := by
       let a0 : foldFiber C y0 := ⟨circuitZero (n + 1), rfl⟩
-      simpa using Fintype.card_pos_iff.mpr ⟨a0⟩
+      exact Nat.succ_le_of_lt (Fintype.card_pos_iff.mpr ⟨a0⟩)
     exact le_trans hFiber <|
       Finset.le_sup (s := Finset.univ)
         (f := fun y : BitVec (n + 1) => Fintype.card (foldFiber C y))

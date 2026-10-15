@@ -6,7 +6,7 @@ namespace Omega
 /-- Canonical extension by the final block `01`. -/
 def append01 (u : X n) : X (n + 2) :=
   X.appendTrue (X.appendFalse u) (by
-    simp [X.appendFalse])
+    rw [X.endsInZero_succ_iff, X.appendFalse_val, Omega.last_snoc])
 
 /-- Any section of double restriction whose image is forced into the last-bit-`1` layer must be the
 canonical `u ↦ u01` section. -/
@@ -17,6 +17,8 @@ theorem paper_fold_bin_minsector_lastbit1_section_unique (n : Nat) (ι : X n →
   funext u
   have hLast : Omega.last (ι u).1 = true := by
     simpa [Omega.last] using hlast u
+  have hAppendFalseZero : X.EndsInZero (X.appendFalse u) := by
+    rw [X.endsInZero_succ_iff, X.appendFalse_val, Omega.last_snoc]
   have hRestrictLastFalse : Omega.last (X.restrict (ι u)).1 = false := by
     simpa [X.EndsInZero, Omega.last, Omega.get] using
       (X.restrict_endsInZero_of_last_true (ι u) hLast)
@@ -28,8 +30,7 @@ theorem paper_fold_bin_minsector_lastbit1_section_unique (n : Nat) (ι : X n →
     exact hReconstruct.symm
   have hAppendTrueEq :
       X.appendTrue (X.restrict (ι u)) (X.restrict_endsInZero_of_last_true (ι u) hLast) =
-        X.appendTrue (X.appendFalse u) (by
-          simp [X.appendFalse]) := by
+        X.appendTrue (X.appendFalse u) hAppendFalseZero := by
     apply Subtype.ext
     simp [X.appendTrue_val, X.appendFalse_val, hRestrictEq]
   calc
@@ -38,8 +39,7 @@ theorem paper_fold_bin_minsector_lastbit1_section_unique (n : Nat) (ι : X n →
           symm
           exact
             X.appendTrue_reconstruct (ι u) hLast (X.restrict_endsInZero_of_last_true (ι u) hLast)
-    _ = X.appendTrue (X.appendFalse u) (by
-          simp [X.appendFalse]) := hAppendTrueEq
+    _ = X.appendTrue (X.appendFalse u) hAppendFalseZero := hAppendTrueEq
     _ = append01 u := rfl
 
 end Omega

@@ -1,6 +1,13 @@
 import Lean
 open Lean
 
+def collectAxiomsIn (env : Environment) (name : Name) : IO (Array Name) := do
+  let ctx : Core.Context := {
+    fileName := "axiom_index"
+    fileMap := FileMap.ofString ""
+  }
+  (Lean.collectAxioms name : CoreM (Array Name)).toIO' ctx { env := env }
+
 def showAxioms (path : System.FilePath) : IO Unit := do
   let (mod, _) ← readModuleData path
   let env ← importModules mod.imports {} 0
@@ -8,7 +15,8 @@ def showAxioms (path : System.FilePath) : IO Unit := do
   let mut newC : Std.HashMap Name ConstantInfo := {}
   for (name, ci) in mod.constNames.zip mod.constants do
     newC := newC.insert name ci
-  let env ← env.replay newC
+  let kernelEnv ← env.toKernelEnv.replay newC
+  let env := Environment.ofKernelEnv kernelEnv
   -- Iterate module's own declarations
   for (name, ci) in mod.constNames.zip mod.constants do
     let k : String :=
@@ -26,9 +34,7 @@ def showAxioms (path : System.FilePath) : IO Unit := do
     let isUnsafe := ci.isUnsafe
     let isAxiom := k == "axiom"
     -- Collect axioms via the replayed environment
-    let ((_, CollectAxioms.State.mk _ axs)) :=
-      (ReaderT.run (CollectAxioms.collect name) env).run {}
-    let axioms : Array Name := axs
+    let axioms ← collectAxiomsIn env name
     IO.println s!"DECL:{name}:kind={k}:partial={isPart}:unsafe={isUnsafe}:axiom={isAxiom}:axioms={axioms}"
 
 def main (args : List String) : IO UInt32 := do

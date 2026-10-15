@@ -359,10 +359,23 @@ theorem prefixExchangeOp_apply_grandCanonicalThermofield
           (twinAmplitudeSwapLinear
             (grandCanonicalThermofieldAmplitude
               beta energy mu charge gamma omega coupling time))) := by
-  simpa [prefixGrandCanonicalThermofieldAmplitude,
-    cantorGrandCanonicalThermofieldAmplitude] using
-    (prefixExchangeOp_apply_thermofield w beta
-      (energy - mu * charge) gamma omega coupling time)
+  calc
+    prefixExchangeOp w
+        (prefixGrandCanonicalThermofieldAmplitude
+          w beta energy mu charge gamma omega coupling time) =
+        operatorWord w
+          (branchExchangeOp
+            (cantorGrandCanonicalThermofieldAmplitude
+              beta energy mu charge gamma omega coupling time)) := by
+      exact prefixExchangeOp_apply_prefix w
+        (cantorGrandCanonicalThermofieldAmplitude
+          beta energy mu charge gamma omega coupling time)
+    _ = operatorWord w
+        (twinAmplitudeToCantorLinear
+          (twinAmplitudeSwapLinear
+            (grandCanonicalThermofieldAmplitude
+              beta energy mu charge gamma omega coupling time))) := by
+      rw [branchExchangeOp_cantorGrandCanonicalThermofieldAmplitude]
 
 /-- Particle-hole matching is the existing finite BdG theorem. -/
 theorem finiteBdG_particleHole_pairing

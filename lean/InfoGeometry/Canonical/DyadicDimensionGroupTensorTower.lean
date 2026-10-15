@@ -41,8 +41,8 @@ theorem dyadicStageLinearMap_compat (n : ℕ) :
       dyadicStageLinearMap n := by
   apply LinearMap.ext
   intro z
-  simpa [LinearMap.comp_apply, dyadicDouble] using
-    (dyadicStageMap_succ n z)
+  change dyadicStageMap (n + 1) (dyadicDouble z) = dyadicStageMap n z
+  simpa [dyadicDouble, dyadicBond] using dyadicStageMap_succ n z
 
 theorem dyadicStageLinearMap_iterated_compat (n m : ℕ) :
     (dyadicStageLinearMap (n + m)).comp

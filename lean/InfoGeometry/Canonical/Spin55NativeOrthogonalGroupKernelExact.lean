@@ -18,13 +18,14 @@ theorem spinActionOrthogonalHom_mem_kernel_iff_pm_one
   constructor
   · intro hg
     apply (spinNativeOrthogonalAction_mem_kernel_iff_pm_one g).mp
-    apply MonoidHom.mem_ker.mpr
-    apply DFunLike.ext
+    rw [spinNativeOrthogonalAction_mem_kernel_iff]
     intro v
     have h := congrArg
       (fun e : orthogonalGroup55 => (e : V55 ≃ₗ[ℝ] V55) v)
       (MonoidHom.mem_ker.mp hg)
-    simpa [spinActionOrthogonalHom_apply, spinActionOrthogonal_apply] using h
+    change (spinActionOrthogonalHom g : V55 ≃ₗ[ℝ] V55) v = (1 : V55 ≃ₗ[ℝ] V55) v at h
+    rw [spinActionOrthogonalHom_apply, spinActionOrthogonal_apply] at h
+    exact h
   · intro hg
     apply MonoidHom.mem_ker.mpr
     apply Subtype.ext

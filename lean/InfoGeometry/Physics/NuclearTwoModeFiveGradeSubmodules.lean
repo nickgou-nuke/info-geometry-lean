@@ -93,13 +93,13 @@ theorem named_generators_mem_grade_spaces :
       a1Dag ∈ gradeSpace 1 ∧
       a2Dag ∈ gradeSpace 1 ∧
       pairCreation ∈ gradeSpace 2 := by
-  exact ⟨by simpa [gradeSpace] using pairAnnihilation_grade,
-    by simpa [gradeSpace] using a1_grade,
-    by simpa [gradeSpace] using a2_grade,
-    by simpa [gradeSpace] using mixed_a1_a1Dag_grade_zero,
-    by simpa [gradeSpace] using a1Dag_grade,
-    by simpa [gradeSpace] using a2Dag_grade,
-    by simpa [gradeSpace] using pairCreation_grade⟩
+  exact ⟨(mem_gradeSpace _ _).2 pairAnnihilation_grade,
+    (mem_gradeSpace _ _).2 a1_grade,
+    (mem_gradeSpace _ _).2 a2_grade,
+    (mem_gradeSpace _ _).2 mixed_a1_a1Dag_grade_zero,
+    (mem_gradeSpace _ _).2 a1Dag_grade,
+    (mem_gradeSpace _ _).2 a2Dag_grade,
+    (mem_gradeSpace _ _).2 pairCreation_grade⟩
 
 /-- The concrete five-grade API as bundled submodules plus native bracket
 closure. -/
@@ -110,11 +110,13 @@ theorem bundled_five_grade_packet :
       a1Dag ∈ gradeSpace 1 ∧
       pairCreation ∈ gradeSpace 2 ∧
       ⁅pairCreation, pairAnnihilation⁆ ∈ gradeSpace 0 := by
-  refine ⟨by simpa [gradeSpace] using pairAnnihilation_grade,
-    by simpa [gradeSpace] using a1_grade,
-    by simpa [gradeSpace] using mixed_a1_a1Dag_grade_zero,
-    by simpa [gradeSpace] using a1Dag_grade,
-    by simpa [gradeSpace] using pairCreation_grade, ?_⟩
-  simpa using lie_mem_grade_add pairCreation_grade pairAnnihilation_grade
+  refine ⟨(mem_gradeSpace _ _).2 pairAnnihilation_grade,
+    (mem_gradeSpace _ _).2 a1_grade,
+    (mem_gradeSpace _ _).2 mixed_a1_a1Dag_grade_zero,
+    (mem_gradeSpace _ _).2 a1Dag_grade,
+    (mem_gradeSpace _ _).2 pairCreation_grade, ?_⟩
+  simpa using lie_mem_grade_add
+    ((mem_gradeSpace _ _).2 pairCreation_grade)
+    ((mem_gradeSpace _ _).2 pairAnnihilation_grade)
 
 end InfoGeometry.Physics.NuclearTwoModeFiveGradeSubmodules

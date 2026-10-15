@@ -78,11 +78,19 @@ theorem bregman_potential_zero :
 
 /-- Single-mode 2×2 modular Hamiltonian $x_{\text{mod}} = -\beta \omega N$. -/
 def x_mod_matrix (β ω : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
-  ![![0, 0], ![0, - (β * ω)]]
+  fun i j => match i, j with
+    | 0, 0 => 0
+    | 0, 1 => 0
+    | 1, 0 => 0
+    | 1, 1 => - (β * ω)
 
 /-- Single-mode 2×2 modular operator $\Delta = \exp(x_{\text{mod}})$. -/
 def delta_op_matrix (β ω : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
-  ![![1, 0], ![0, exp (- (β * ω))]]
+  fun i j => match i, j with
+    | 0, 0 => 1
+    | 0, 1 => 0
+    | 1, 0 => 0
+    | 1, 1 => exp (- (β * ω))
 
 /-- Operatorial Araki relative entropy / vacuum shape deformation: $D = \Delta - I - x_{\text{mod}}$. -/
 def araki_relative_entropy_op (β ω : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
@@ -90,9 +98,15 @@ def araki_relative_entropy_op (β ω : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
 
 /-- 🏆 THEOREM: The operatorial Araki deformation evaluates entrywise to the Bregman divergence. -/
 theorem araki_relative_entropy_op_diag (β ω : ℝ) :
-    araki_relative_entropy_op β ω = ![![0, 0], ![0, bregman_potential (- (β * ω))]] := by
+    araki_relative_entropy_op β ω =
+      (fun i j => match i, j with
+        | 0, 0 => 0
+        | 0, 1 => 0
+        | 1, 0 => 0
+        | 1, 1 => bregman_potential (- (β * ω))) := by
   ext i j; fin_cases i <;> fin_cases j <;>
-  { dsimp [araki_relative_entropy_op, delta_op_matrix, x_mod_matrix, bregman_potential]; simp }
+    simp [araki_relative_entropy_op, delta_op_matrix, x_mod_matrix,
+      bregman_potential]
 
 /-- 🏆 THEOREM: At the flat KMS boundary ($\beta = 0$), the operatorial vacuum deformation strictly vanishes. -/
 theorem araki_relative_entropy_vanishes_at_flat_boundary (ω : ℝ) :

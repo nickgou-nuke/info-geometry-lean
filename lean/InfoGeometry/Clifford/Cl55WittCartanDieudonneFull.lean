@@ -105,17 +105,22 @@ theorem quadraticReflectionSubgroup_eq_top :
           rw [hmap i his, hfix₂i, hfix₁i]
   obtain ⟨h, hh, hmap⟩ := hstep Finset.univ
   let fg : orthogonalGroup55 := orthogonalGroup55FromIsometry f
+  have hfg_eq : fg = g := by
+    dsimp [fg, f]
+    exact orthogonalGroup55IsometryEquiv.left_inv g
   let k : orthogonalGroup55 := h * fg
   have hk : k = 1 := by
     apply orthogonalGroup55_eq_one_of_fix_witt_coordinates
     · intro i
       change h.1 (fg.1 (e_pos i)) = e_pos i
-      simpa [fg, f, wittBasis] using
-        hmap (Sum.inl i) (Finset.mem_univ _)
+      rw [hfg_eq]
+      change h.1 (f (wittBasis (Sum.inl i))) = wittBasis (Sum.inl i)
+      exact hmap (Sum.inl i) (Finset.mem_univ _)
     · intro i
       change h.1 (fg.1 (f_neg i)) = f_neg i
-      simpa [fg, f, wittBasis] using
-        hmap (Sum.inr i) (Finset.mem_univ _)
+      rw [hfg_eq]
+      change h.1 (f (wittBasis (Sum.inr i))) = wittBasis (Sum.inr i)
+      exact hmap (Sum.inr i) (Finset.mem_univ _)
   have hfg : fg ∈ quadraticReflectionSubgroup := by
     have hinv : h⁻¹ ∈ quadraticReflectionSubgroup :=
       quadraticReflectionSubgroup.inv_mem hh
@@ -129,6 +134,7 @@ theorem quadraticReflectionSubgroup_eq_top :
         _ = h⁻¹ := by simp
     rw [hfg_eq]
     exact hinv
-  simpa [fg, f] using hfg
+  rw [hfg_eq] at hfg
+  exact hfg
 
 end InfoGeometry.Clifford.Clifford55

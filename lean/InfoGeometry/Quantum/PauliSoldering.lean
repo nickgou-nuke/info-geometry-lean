@@ -125,12 +125,19 @@ theorem inverse_pauli_trace (P_spinor : Matrix (Fin 2) (Fin 2) ℂ) :
     have h11 : σ3 1 1 = (-1 : ℂ) := rfl
     simp [Matrix.mul_apply, h00, h01, h10, h11, sub_eq_add_neg]
   have h := (InfoGeometry.Physics.Section33PauliBiquaternionCompletion.pauli_recompose_eq_self P_spinor).symm
-  simpa [solder, InfoGeometry.Physics.Section33PauliBiquaternionCompletion.pauliRecompose,
+  change (P_spinor : Matrix (Fin 2) (Fin 2) ℂ) = _ at h
+  rw [solder, h0, h1, h2, h3]
+  simpa [InfoGeometry.Physics.Section33PauliBiquaternionCompletion.pauliRecompose,
     InfoGeometry.Physics.Section33PauliBiquaternionCompletion.pauliCoeff0,
     InfoGeometry.Physics.Section33PauliBiquaternionCompletion.pauliCoeff1,
     InfoGeometry.Physics.Section33PauliBiquaternionCompletion.pauliCoeff2,
     InfoGeometry.Physics.Section33PauliBiquaternionCompletion.pauliCoeff3,
-    h0, h1, h2, h3, sub_eq_add_neg, div_mul_eq_mul_div] using h
+    σ0, σ1, σ2, σ3,
+    InfoGeometry.Canonical.UnifiedMatrixQuantumGeometryFinite.σ0,
+    InfoGeometry.Canonical.UnifiedMatrixQuantumGeometryFinite.σ1,
+    InfoGeometry.Canonical.UnifiedMatrixQuantumGeometryFinite.σ2,
+    InfoGeometry.Canonical.UnifiedMatrixQuantumGeometryFinite.σ3,
+    sub_eq_add_neg, div_mul_eq_mul_div] using h
 
 /-! ## 4. Massless twistor factorization -/
 

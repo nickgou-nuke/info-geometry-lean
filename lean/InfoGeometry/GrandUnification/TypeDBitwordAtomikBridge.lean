@@ -96,11 +96,9 @@ a strict mathematical Group Action on the Boolean geometry.
 instance AtomikWeylAction : AddAction (EvenParitySubgroup n) (BitWord n) where
   vadd d s := applyDelta s d.val
   zero_vadd s := by
-    dsimp [applyDelta]
     ext i
     exact add_zero (s i)
   add_vadd d₁ d₂ s := by
-    dsimp [applyDelta]
     ext i
     change s i + (d₁.val i + d₂.val i) = s i + d₂.val i + d₁.val i
     rw [add_assoc, add_comm (d₂.val i) (d₁.val i)]

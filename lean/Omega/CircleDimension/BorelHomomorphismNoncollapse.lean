@@ -24,7 +24,7 @@ theorem paper_cdim_borel_homomorphism_noncollapse (h : BorelHomomorphismNoncolla
   have hker_ge_one : 1 ≤ h.kernelRank := by
     exact le_trans (Nat.succ_le_iff.mpr hgap) h.kernelLowerBound
   have hker_pos : 0 < h.kernelRank := by
-    simpa using hker_ge_one
+    omega
   have hker_zero : h.kernelRank = 0 := h.injectiveImpliesKernelZero hinj
   omega
 

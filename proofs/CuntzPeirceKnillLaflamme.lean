@@ -33,6 +33,6 @@ theorem peirce_knillLaflamme_transport
       (fun a => Φ (firstFactorError F a)) := by
   apply SatisfiesKnillLaflammeIn.map Φ
   simpa [FiniteMatrixKnillLaflamme.SatisfiesKnillLaflamme,
-    Matrix.conjTranspose] using (peirceTensor_knillLaflamme F)
+    Matrix.star_eq_conjTranspose, Matrix.conjTranspose] using (peirceTensor_knillLaflamme F)
 
 end CuntzPeirceKnillLaflamme

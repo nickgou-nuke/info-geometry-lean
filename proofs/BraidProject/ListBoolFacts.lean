@@ -51,7 +51,16 @@ theorem lift_to_map_inj' {a b : FreeMonoid α} {z : Bool} (h1 : FreeMonoid.lift 
     FreeMonoid.lift (fun x ↦ FreeMonoid.of (x, z)) b) :
     List.map (fun x ↦ FreeMonoid.of (x, z)) a = List.map (fun x ↦ FreeMonoid.of (x, z)) b := by
   have hp := lift_to_pair_map h1
-  simpa [List.map_map] using congrArg (List.map (fun p : α × Bool => FreeMonoid.of p)) hp
+  have normalize (l : List α) :
+      List.map (fun p : α × Bool => FreeMonoid.of p)
+          (List.map (fun x => (x, z)) l) =
+        List.map (fun x => FreeMonoid.of (x, z)) l := by
+    induction l with
+    | nil => rfl
+    | cons x xs ih => simp [ih]
+  have h := congrArg (List.map (fun p : α × Bool => FreeMonoid.of p)) hp
+  rw [normalize a, normalize b] at h
+  exact h
 
 theorem lift_to_map_inj {a b : FreeMonoid α} {z : Bool} (h1 : FreeMonoid.lift (fun x ↦ FreeMonoid.of (x, z)) a =
     FreeMonoid.lift (fun x ↦ FreeMonoid.of (x, z)) b) :
@@ -79,6 +88,14 @@ private def tagFalse (xs : List ℕ) : List (ℕ × Bool) :=
 
 private def tagTrue (xs : List ℕ) : List (ℕ × Bool) :=
   xs.map fun x => (x, true)
+
+private theorem toList_lift_tag {α : Type*} (w : FreeMonoid' α) (z : Bool) :
+    FreeMonoid.toList
+        (FreeMonoid'.lift (fun x : α => FreeMonoid.of (x, z)) w) =
+      List.map (fun x => (x, z)) (FreeMonoid'.toList w) := by
+  rw [FreeMonoid'.lift_apply, FreeMonoid.toList_prod]
+  rw [List.map_map]
+  exact list_singleton_flatten z w
 
 private theorem tagFalse_injective : Function.Injective tagFalse := by
   intro xs ys h
@@ -153,22 +170,26 @@ private theorem false_true_blocks {a b c d : List ℕ}
           exact False.elim (Bool.noConfusion (Prod.mk.inj h.1).2)
 
 theorem false_true_true_false {a b c d : FreeMonoid' ℕ}
-    (h : (FreeMonoid.lift fun x ↦ FreeMonoid.of (x, false)) a.reverse *
-    (FreeMonoid.lift fun x ↦ FreeMonoid.of (x, true)) b =
-    (FreeMonoid.lift fun x ↦ FreeMonoid.of (x, true)) d *
-    (FreeMonoid.lift fun x ↦ FreeMonoid.of (x, false)) c.reverse) : (a = 1 ∧ c = 1 ∧ b = d) ∨
+    (h : (FreeMonoid'.lift fun x ↦ FreeMonoid.of (x, false)) a.reverse *
+    (FreeMonoid'.lift fun x ↦ FreeMonoid.of (x, true)) b =
+    (FreeMonoid'.lift fun x ↦ FreeMonoid.of (x, true)) d *
+    (FreeMonoid'.lift fun x ↦ FreeMonoid.of (x, false)) c.reverse) : (a = 1 ∧ c = 1 ∧ b = d) ∨
     (b = 1 ∧ d = 1 ∧ a = c) := by
   have hlist := congrArg FreeMonoid.toList h
-  simp [FreeMonoid.lift_apply, list_singleton_flatten, Function.comp_def] at hlist
+  rw [FreeMonoid.toList_mul, FreeMonoid.toList_mul] at hlist
+  rw [toList_lift_tag, toList_lift_tag, toList_lift_tag, toList_lift_tag] at hlist
   change tagFalse a.reverse ++ tagTrue b = tagTrue d ++ tagFalse c.reverse at hlist
   rcases false_true_blocks hlist with ⟨ha, hc, hb⟩ | ⟨hb, hd, hac⟩
   · left
     refine ⟨?_, ?_, hb⟩
     · have hrev := congrArg FreeMonoid'.reverse ha
-      simpa using hrev
+      change a = []
+      simpa [FreeMonoid'.reverse] using hrev
     · have hrev := congrArg FreeMonoid'.reverse hc
-      simpa using hrev
+      change c = []
+      simpa [FreeMonoid'.reverse] using hrev
   · right
     refine ⟨hb, hd, ?_⟩
     have hrev := congrArg FreeMonoid'.reverse hac
-    simpa using hrev
+    change a = c
+    simpa [FreeMonoid'.reverse] using hrev

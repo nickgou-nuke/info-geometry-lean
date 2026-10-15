@@ -14,7 +14,7 @@ def foldFiberSingleCoordinateAffineDifferenceShift (m k : ℕ) :
   (Nat.fib (k + 1) : ZMod (foldFiberSingleCoordinateAffineDifferenceModulus m))
 
 /-- A concrete single-coordinate state consists of a base residue together with the chosen bit. -/
-def foldFiberSingleCoordinateState (m : ℕ) :=
+abbrev foldFiberSingleCoordinateState (m : ℕ) :=
   ZMod (foldFiberSingleCoordinateAffineDifferenceModulus m) × Bool
 
 instance foldFiberSingleCoordinateAffineDifferenceModulus_neZero (m : ℕ) :
@@ -56,7 +56,9 @@ private noncomputable def foldFiberSingleCoordinateProfileEquivBool (m k : ℕ)
     have hs : s = r - if b then foldFiberSingleCoordinateAffineDifferenceShift m k else 0 := by
       simpa [foldFiberSingleCoordinateResidue] using eq_sub_of_add_eq hx
     apply Subtype.ext
-    simp [hs]
+    apply Prod.ext
+    · exact hs.symm
+    · rfl
   right_inv b := by
     simp
 
@@ -82,7 +84,9 @@ private noncomputable def foldFiberSingleCoordinateOneCountEquivFinOne (m k : �
     have hs : s = r - foldFiberSingleCoordinateAffineDifferenceShift m k := by
       simpa [foldFiberSingleCoordinateResidue] using eq_sub_of_add_eq hr
     apply Subtype.ext
-    simp [hs]
+    apply Prod.ext
+    · exact hs.symm
+    · rfl
   right_inv i := by
     fin_cases i
     rfl

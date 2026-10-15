@@ -44,10 +44,12 @@ theorem paper_group_jg_leyang_ellipse_doubling_shift (r : ℝ) (hr : 1 < r) :
       ring
   have hre : ∀ θ : ℝ, (h θ).re = a * Real.cos θ := by
     intro θ
-    simpa using congrArg Complex.re (hform θ)
+    rw [hform θ]
+    simp [Complex.cos_ofReal_re]
   have him : ∀ θ : ℝ, (h θ).im = b * Real.sin θ := by
     intro θ
-    simpa using congrArg Complex.im (hform θ)
+    rw [hform θ]
+    simp [Complex.sin_ofReal_re]
   have hdouble_eq : ∀ {θ₁ θ₂ : ℝ}, h θ₁ = h θ₂ → h (2 * θ₁) = h (2 * θ₂) := by
     intro θ₁ θ₂ hEq
     have hcos' : a * Real.cos θ₁ = a * Real.cos θ₂ := by
@@ -59,7 +61,7 @@ theorem paper_group_jg_leyang_ellipse_doubling_shift (r : ℝ) (hr : 1 < r) :
     have hsin : Real.sin θ₁ = Real.sin θ₂ := by
       nlinarith [hsin', hb_pos]
     rw [hform (2 * θ₁), hform (2 * θ₂)]
-    apply Complex.ext <;> simp [Real.cos_two_mul, Real.sin_two_mul, hcos, hsin] <;> ring
+    apply Complex.ext <;> simp [Real.cos_two_mul, Real.sin_two_mul, hcos, hsin]
   let T : ℂ → ℂ := fun z =>
     if hz : ∃ θ : ℝ, h θ = z then h (2 * Classical.choose hz) else 0
   refine ⟨T, ?_, rfl⟩

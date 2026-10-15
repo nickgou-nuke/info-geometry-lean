@@ -61,7 +61,6 @@ private theorem exceptionalBinomialKernel_mul_inv (q : Nat) :
   fin_cases i <;> fin_cases j
   · simp [exceptionalBinomialKernel, exceptionalBinomialKernelInv, Matrix.mul_apply]
   · simp [exceptionalBinomialKernel, exceptionalBinomialKernelInv, Matrix.mul_apply]
-    ring
   · simp [exceptionalBinomialKernel, exceptionalBinomialKernelInv, Matrix.mul_apply]
   · simp [exceptionalBinomialKernel, exceptionalBinomialKernelInv, Matrix.mul_apply]
 
@@ -144,7 +143,18 @@ theorem paper_xi_exceptional_binomial_kernel_image_cokernel (q : ℕ) (hq : 2 �
       have hx0_cases : x 0 = 0 ∨ x 0 = 1 := by
         have hclassified : ∀ a : ZMod 2, a = 0 ∨ a = 1 := by
           intro a
-          fin_cases a <;> simp
+          have hval := ZMod.val_lt a
+          have hcases : a.val = 0 ∨ a.val = 1 := by omega
+          rcases hcases with hzero | hone
+          · left
+            apply ZMod.val_injective 2
+            simpa using hzero
+          · right
+            apply ZMod.val_injective 2
+            have hvalOne : (1 : ZMod 2).val = 1 := by
+              rw [ZMod.val_one_eq_one_mod]
+            rw [hvalOne]
+            exact hone
         exact hclassified (x 0)
       rcases hx0_cases with hx0 | hx0
       · left

@@ -17,12 +17,12 @@ def e₁ : CliffordAlgebra q11 := ι q11 (fun i => if i = 1 then 1 else 0)
 theorem e₀_sq : e₀ * e₀ = 1 := by
   calc
     e₀ * e₀ = algebraMap ℚ (CliffordAlgebra q11) (q11 (fun i => if i = 0 then 1 else 0)) := ι_sq_scalar _ _
-    _ = 1 := by simp [q11, proj_apply]
+    _ = 1 := by norm_num [q11, proj_apply]
 
 theorem e₁_sq : e₁ * e₁ = -1 := by
   calc
     e₁ * e₁ = algebraMap ℚ (CliffordAlgebra q11) (q11 (fun i => if i = 1 then 1 else 0)) := ι_sq_scalar _ _
-    _ = -1 := by simp [q11, proj_apply]
+    _ = -1 := by norm_num [q11, proj_apply]
 
 theorem orth : q11.IsOrtho (fun i => if i = 0 then 1 else 0) (fun i => if i = 1 then 1 else 0) := by
   simp [q11, IsOrtho, proj_apply]

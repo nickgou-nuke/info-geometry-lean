@@ -473,56 +473,56 @@ theorem projected_jacobi_minus2_minus2_plus1
     (x y z : FiveGradedCarrier D) :
     fiveJacobiator D (lanePartLinear D .minus2 x)
       (lanePartLinear D .minus2 y) (lanePartLinear D .plus1 z) = 0 := by
-  simpa only [lanePartLinear_apply] using
+  simpa only [lanePartLinear_apply, lanePart, genEminus, injChargePlus] using
     jacobi_extremeMinus_extremeMinus_chargePlus D x.minus2 y.minus2 z.plus1
 
 theorem projected_jacobi_plus2_plus2_minus1
     (x y z : FiveGradedCarrier D) :
     fiveJacobiator D (lanePartLinear D .plus2 x)
       (lanePartLinear D .plus2 y) (lanePartLinear D .minus1 z) = 0 := by
-  simpa only [lanePartLinear_apply] using
+  simpa only [lanePartLinear_apply, lanePart, genEplus, injChargeMinus] using
     jacobi_extremePlus_extremePlus_chargeMinus D x.plus2 y.plus2 z.minus1
 
 theorem projected_jacobi_minus2_minus2_minus2
     (x y z : FiveGradedCarrier D) :
     fiveJacobiator D (lanePartLinear D .minus2 x)
       (lanePartLinear D .minus2 y) (lanePartLinear D .minus2 z) = 0 := by
-  simpa only [lanePartLinear_apply] using
+  simpa only [lanePartLinear_apply, lanePart, genEminus] using
     jacobi_extremeMinus_extremeMinus_extremeMinus D x.minus2 y.minus2 z.minus2
 
 theorem projected_jacobi_plus2_plus2_plus2
     (x y z : FiveGradedCarrier D) :
     fiveJacobiator D (lanePartLinear D .plus2 x)
       (lanePartLinear D .plus2 y) (lanePartLinear D .plus2 z) = 0 := by
-  simpa only [lanePartLinear_apply] using
+  simpa only [lanePartLinear_apply, lanePart, genEplus] using
     jacobi_extremePlus_extremePlus_extremePlus D x.plus2 y.plus2 z.plus2
 
 theorem projected_jacobi_minus1_minus1_minus1
     (x y z : FiveGradedCarrier D) :
     fiveJacobiator D (lanePartLinear D .minus1 x)
       (lanePartLinear D .minus1 y) (lanePartLinear D .minus1 z) = 0 := by
-  simpa only [lanePartLinear_apply] using
+  simpa only [lanePartLinear_apply, lanePart, injChargeMinus] using
     jacobi_chargeMinus_chargeMinus_chargeMinus D x.minus1 y.minus1 z.minus1
 
 theorem projected_jacobi_plus1_plus1_plus1
     (x y z : FiveGradedCarrier D) :
     fiveJacobiator D (lanePartLinear D .plus1 x)
       (lanePartLinear D .plus1 y) (lanePartLinear D .plus1 z) = 0 := by
-  simpa only [lanePartLinear_apply] using
+  simpa only [lanePartLinear_apply, lanePart, injChargePlus] using
     jacobi_chargePlus_chargePlus_chargePlus D x.plus1 y.plus1 z.plus1
 
 theorem projected_jacobi_minus2_minus1_minus1
     (x y z : FiveGradedCarrier D) :
     fiveJacobiator D (lanePartLinear D .minus2 x)
       (lanePartLinear D .minus1 y) (lanePartLinear D .minus1 z) = 0 := by
-  simpa only [lanePartLinear_apply] using
+  simpa only [lanePartLinear_apply, lanePart, genEminus, injChargeMinus] using
     jacobi_extremeMinus_chargeMinus_chargeMinus D x.minus2 y.minus1 z.minus1
 
 theorem projected_jacobi_plus2_plus1_plus1
     (x y z : FiveGradedCarrier D) :
     fiveJacobiator D (lanePartLinear D .plus2 x)
       (lanePartLinear D .plus1 y) (lanePartLinear D .plus1 z) = 0 := by
-  simpa only [lanePartLinear_apply] using
+  simpa only [lanePartLinear_apply, lanePart, genEplus, injChargePlus] using
     jacobi_extremePlus_chargePlus_chargePlus D x.plus2 y.plus1 z.plus1
 
 /-- Cyclic transport for any already-proved projected cell. -/

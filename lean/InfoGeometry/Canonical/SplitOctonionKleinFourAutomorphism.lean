@@ -77,13 +77,26 @@ theorem axisAction_apply (g : V4) (X : SplitOct) :
   rcases g with ⟨a, b⟩
   fin_cases a <;> fin_cases b <;> rfl
 
+lemma zmod2_cases (x : ZMod 2) : x = 0 ∨ x = 1 := by
+  revert x
+  decide
+
 theorem axisAction_mul_apply (g h : V4) (X : SplitOct) :
     axisAction (g + h) X = axisAction g (axisAction h X) := by
   have h11 : (1 : ZMod 2) + 1 = 0 := by decide
   rcases g with ⟨a, b⟩
   rcases h with ⟨c, d⟩
-  fin_cases a <;> fin_cases b <;> fin_cases c <;> fin_cases d <;>
-    simp [h11, axisAction, tau12, tau_tau₂_comm, tau_order_two,
-      tau₂_order_two, tau12_order_two]
+  rcases zmod2_cases a with rfl | rfl <;>
+  rcases zmod2_cases b with rfl | rfl <;>
+  rcases zmod2_cases c with rfl | rfl <;>
+  rcases zmod2_cases d with rfl | rfl
+  all_goals
+    rw [Prod.add_def]
+    try simp_rw [h11]
+    try simp_rw [add_zero]
+    try simp_rw [zero_add]
+    first
+    | rfl
+    | simp [axisAction, tau12, tau_tau₂_comm, tau_order_two, tau₂_order_two]
 
 end InfoGeometry.Canonical.SplitOctonionKleinFourAutomorphism

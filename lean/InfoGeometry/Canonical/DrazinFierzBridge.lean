@@ -1,4 +1,6 @@
 import Mathlib.Tactic
+import Mathlib.MeasureTheory.Measure.MeasureSpaceDef
+import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.SocketTarget
@@ -263,7 +265,11 @@ inductive FierzChannel where
   | phase
   | metric
   | area
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype FierzChannel where
+  elems := {.scalar, .phase, .metric, .area}
+  complete channel := by cases channel <;> decide
 
 /-- Family of expectation states indexed by Fierz channel. -/
 @[rep_depth operator]

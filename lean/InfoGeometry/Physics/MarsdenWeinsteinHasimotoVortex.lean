@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: nickgou-nuke contributors
 -/
 import Mathlib.LinearAlgebra.CrossProduct
-import Mathlib.Data.Complex.Basic
+import Mathlib.Basic.Complex.Basic
 import Mathlib.Analysis.Complex.Trigonometric
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
@@ -49,6 +49,7 @@ open Matrix Complex
 open scoped ComplexConjugate
 
 noncomputable section
+
 
 /-! ### Part I: Frenet–Serret Triad and Vector Cross Kinematics -/
 
@@ -109,7 +110,7 @@ theorem hasDerivAt_hasimotoPath
     (hκ : HasDerivAt kappa kappa' s) (hθ : HasDerivAt theta theta' s) :
     HasDerivAt (hasimotoPath kappa theta)
       ((kappa' : ℂ) * exp ((theta s : ℂ) * I) +
-        (kappa s : ℂ) * (exp ((theta s : ℂ) * I) * ((theta' : ℂ) * I))) s := by
+      (kappa s : ℂ) * (exp ((theta s : ℂ) * I) * ((theta' : ℂ) * I))) s := by
   have hκc : HasDerivAt (fun x : ℝ => (kappa x : ℂ)) (kappa' : ℂ) s :=
     hκ.ofReal_comp
   have hθc : HasDerivAt (fun x : ℝ => (theta x : ℂ)) (theta' : ℂ) s :=
@@ -120,7 +121,8 @@ theorem hasDerivAt_hasimotoPath
       (exp ((theta s : ℂ) * I) * ((theta' : ℂ) * I)) s := by
     exact (Complex.hasDerivAt_exp _).comp s harg
   have hprod := hκc.mul hexp
-  simpa [hasimotoPath] using hprod
+  change HasDerivAt (fun x => (kappa x : ℂ) * exp ((theta x : ℂ) * I)) _ s
+  exact hprod
 
 /-- The product-rule derivative is the Hasimoto jet when the phase derivative
 is denoted by `tau`. -/

@@ -34,7 +34,8 @@ theorem upperNil_ne_zero {u : Vec3} (hu : u ≠ 0) :
   apply hu
   funext i
   have hi := congrArg (fun X : Zorn => X.u i) h
-  simpa [upperNil, InfoGeometry.Physics.ZornScalingFlow.zornZero] using hi
+  simpa [upperNil, InfoGeometry.Physics.ZornScalingFlow.zornZero,
+    InfoGeometry.Physics.SplitOctonionBraidSU3.zornZero] using hi
 
 theorem lowerNil_ne_zero {v : Vec3} (hv : v ≠ 0) :
     lowerNil v ≠ InfoGeometry.Physics.ZornScalingFlow.zornZero := by
@@ -42,7 +43,8 @@ theorem lowerNil_ne_zero {v : Vec3} (hv : v ≠ 0) :
   apply hv
   funext i
   have hi := congrArg (fun X : Zorn => X.v i) h
-  simpa [lowerNil, InfoGeometry.Physics.ZornScalingFlow.zornZero] using hi
+  simpa [lowerNil, InfoGeometry.Physics.ZornScalingFlow.zornZero,
+    InfoGeometry.Physics.SplitOctonionBraidSU3.zornZero] using hi
 
 theorem upperNil_square_zero (u : Vec3) :
     InfoGeometry.Physics.ZornScalingFlow.zornMul (upperNil u) (upperNil u) =

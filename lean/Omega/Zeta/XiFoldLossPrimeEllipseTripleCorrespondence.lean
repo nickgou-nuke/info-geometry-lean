@@ -20,7 +20,10 @@ def xi_fold_loss_prime_ellipse_triple_correspondence_statement : Prop :=
 theorem paper_xi_fold_loss_prime_ellipse_triple_correspondence :
     xi_fold_loss_prime_ellipse_triple_correspondence_statement := by
   intro m
-  simpa [xi_fold_loss_prime_ellipse_triple_correspondence_encoding] using
-    Omega.GroupUnification.paper_group_jg_fold_prime_ellipse_triple m
+  change Function.Injective (fun omega : Omega.GroupUnification.FoldOmega m =>
+    (omega.base, omega.hidden,
+      Omega.GroupUnification.groupJGEllipseAxis
+        (Omega.GroupUnification.foldSquarefreeToPrimeRegister omega.choices)))
+  exact Omega.GroupUnification.paper_group_jg_fold_prime_ellipse_triple m
 
 end Omega.Zeta

@@ -106,9 +106,21 @@ theorem infiniteGenerator_artin (i : ℕ) :
     congrArg (fun f : standardTensorPowerModuleDiagram.obj m ⟶
       StandardTensorPowerColimit => f.hom v) hstage₁
   change (infiniteGeneratorAut i).hom.hom ((infiniteGeneratorAut (i + 1)).hom.hom ((infiniteGeneratorAut i).hom.hom ((stageInclusion m).hom x))) = (infiniteGeneratorAut (i + 1)).hom.hom ((infiniteGeneratorAut i).hom.hom ((infiniteGeneratorAut (i + 1)).hom.hom ((stageInclusion m).hom x)))
-  simp only [hi_apply, hj_apply]
-  simpa only [LinearEquiv.mul_apply] using
-    congrArg (stageInclusion m).hom (congrArg (fun e => e x) hfinite')
+  let A := (infiniteGeneratorAut i).hom.hom
+  let B := (infiniteGeneratorAut (i + 1)).hom.hom
+  let I := (stageInclusion m).hom
+  let U := standardTensorPowerGenerator m ⟨i, by omega⟩
+  let V := standardTensorPowerGenerator m ⟨i + 1, by omega⟩
+  have hA (v : standardTensorPowerModuleDiagram.obj m) : A (I v) = I (U v) := hi_apply v
+  have hB (v : standardTensorPowerModuleDiagram.obj m) : B (I v) = I (V v) := hj_apply v
+  calc
+    A (B (A (I x))) = A (B (I (U x))) := congrArg (fun y => A (B y)) (hA x)
+    _ = A (I (V (U x))) := congrArg A (hB (U x))
+    _ = I (U (V (U x))) := hA (V (U x))
+    _ = I (V (U (V x))) := congrArg (fun e => I (e x)) hfinite'
+    _ = B (I (U (V x))) := (hB (U (V x))).symm
+    _ = B (A (I (V x))) := congrArg B (hA (V x)).symm
+    _ = B (A (B (I x))) := congrArg (fun y => B (A y)) (hB x).symm
 
 /-- Global generators with at least one untouched strand between them commute. -/
 theorem infiniteGenerator_far
@@ -132,7 +144,6 @@ theorem infiniteGenerator_far
   let b : Fin (max n (j + 1) + 1) := ⟨j - 2, by omega⟩
   have hab : a ≤ b := by
     apply Fin.mk_le_mk.mpr
-    dsimp [a, b]
     omega
   have hfinite := standardTensorPower_far (max n (j + 1)) a b hab
   have hinc :=
@@ -178,10 +189,19 @@ theorem infiniteGenerator_far
       (infiniteGeneratorAut (j)).hom.hom ((stageInclusion m).hom v) = (stageInclusion m).hom ((standardTensorPowerGenerator m ⟨j, by omega⟩) v) :=
     congrArg (fun f : standardTensorPowerModuleDiagram.obj m ⟶
       StandardTensorPowerColimit => f.hom v) hstageⱼ
-  change (infiniteGeneratorAut i).hom.hom ((infiniteGeneratorAut (j)).hom.hom ((stageInclusion m).hom x)) = (infiniteGeneratorAut (j)).hom.hom ((infiniteGeneratorAut i).hom.hom ((stageInclusion m).hom x))
-  simp only [hi_apply, hj_apply]
-  simpa only [LinearEquiv.mul_apply] using
-    congrArg (stageInclusion m).hom (congrArg (fun e => e x) hfinite')
+  let A := (infiniteGeneratorAut i).hom.hom
+  let B := (infiniteGeneratorAut j).hom.hom
+  let I := (stageInclusion m).hom
+  let U := standardTensorPowerGenerator m ⟨i, by omega⟩
+  let V := standardTensorPowerGenerator m ⟨j, by omega⟩
+  have hA (v : standardTensorPowerModuleDiagram.obj m) : A (I v) = I (U v) := hi_apply v
+  have hB (v : standardTensorPowerModuleDiagram.obj m) : B (I v) = I (V v) := hj_apply v
+  calc
+    A (B (I x)) = A (I (V x)) := congrArg A (hB x)
+    _ = I (U (V x)) := hA (V x)
+    _ = I (V (U x)) := congrArg (fun e => I (e x)) hfinite'
+    _ = B (I (U x)) := (hB (U x)).symm
+    _ = B (A (I x)) := congrArg B (hA x).symm
 
 /-- Every defining relation of the repository-owned infinite braid group is
 satisfied by the global Hadjiivanov colimit generators. -/
@@ -281,7 +301,12 @@ def finiteStageReadbackSubgroup (n : ℕ) :
             ((stageInclusion n).hom x) =
           (stageInclusion n).hom
             (standardHadjiivanovBraidProjectHom n h x) := by
-      simpa [ModuleCat.comp_apply] using hhx
+      change (hadjiivanovBraidGroupInfHom
+            (finiteToInfiniteGroupHom (n + 1) h)).hom.hom
+            ((stageInclusion n).hom x) =
+          (stageInclusion n).hom
+            (standardHadjiivanovBraidProjectHom n h x) at hhx
+      exact hhx
     have hgx' :
         (hadjiivanovBraidGroupInfHom
             (finiteToInfiniteGroupHom (n + 1) g)).hom.hom
@@ -290,7 +315,14 @@ def finiteStageReadbackSubgroup (n : ℕ) :
           (stageInclusion n).hom
             (standardHadjiivanovBraidProjectHom n g
               (standardHadjiivanovBraidProjectHom n h x)) := by
-      simpa [ModuleCat.comp_apply] using hgx
+      change (hadjiivanovBraidGroupInfHom
+            (finiteToInfiniteGroupHom (n + 1) g)).hom.hom
+            ((stageInclusion n).hom
+              (standardHadjiivanovBraidProjectHom n h x)) =
+          (stageInclusion n).hom
+            (standardHadjiivanovBraidProjectHom n g
+              (standardHadjiivanovBraidProjectHom n h x)) at hgx
+      exact hgx
     calc
       (stageInclusion n ≫
           (hadjiivanovBraidGroupInfHom
@@ -304,8 +336,11 @@ def finiteStageReadbackSubgroup (n : ℕ) :
             ((hadjiivanovBraidGroupInfHom
               (finiteToInfiniteGroupHom (n + 1) h)).hom.hom
               ((stageInclusion n).hom x)) := by
-              simp [map_mul, CategoryTheory.Aut.Aut_mul_def,
-                Iso.trans_hom, ModuleCat.comp_apply]
+              have hfinite : finiteToInfiniteGroupHom (n + 1) (g * h) =
+                  finiteToInfiniteGroupHom (n + 1) g *
+                    finiteToInfiniteGroupHom (n + 1) h := map_mul _ _ _
+              rw [hfinite, map_mul, CategoryTheory.Aut.Aut_mul_def]
+              rfl
       _ = (hadjiivanovBraidGroupInfHom
             (finiteToInfiniteGroupHom (n + 1) g)).hom.hom
             ((stageInclusion n).hom
@@ -317,7 +352,11 @@ def finiteStageReadbackSubgroup (n : ℕ) :
               exact hgx'
       _ = (stageInclusion n).hom
           (standardHadjiivanovBraidProjectHom n (g * h) x) := by
-              simp [map_mul, LinearEquiv.mul_apply]
+              rw [map_mul]
+              exact (congrArg (stageInclusion n).hom
+                (LinearEquiv.mul_apply
+                  (standardHadjiivanovBraidProjectHom n g)
+                  (standardHadjiivanovBraidProjectHom n h) x)).symm
       _ = (ModuleCat.ofHom
           (standardHadjiivanovBraidProjectHom n (g * h)).toLinearMap ≫
             stageInclusion n).hom x := by
@@ -352,14 +391,31 @@ def finiteStageReadbackSubgroup (n : ℕ) :
         (stageInclusion n).hom
           ((standardHadjiivanovBraidProjectHom n g)
             ((standardHadjiivanovBraidProjectHom n g).symm x)) at h
-    rw [LinearEquiv.apply_symm_apply] at h
-    have h' := congrArg
-      (fun y =>
-        (hadjiivanovBraidGroupInfHom
-          (finiteToInfiniteGroupHom (n + 1) g⁻¹)).hom y) h
-    simpa [ModuleCat.comp_apply, map_inv, LinearEquiv.symm_apply_apply,
-      LinearEquiv.apply_symm_apply,
-      CategoryTheory.Aut.Aut_inv_def] using h'.symm
+    have hcancel : (standardHadjiivanovBraidProjectHom n g)
+        ((standardHadjiivanovBraidProjectHom n g).symm x) = x :=
+      LinearEquiv.apply_symm_apply _ x
+    rw [hcancel] at h
+    let G := hadjiivanovBraidGroupInfHom
+      (finiteToInfiniteGroupHom (n + 1) g)
+    have h' := congrArg (fun y => G⁻¹.hom.hom y) h
+    have hcancel' (z : StandardTensorPowerColimit) :
+        G⁻¹.hom.hom (G.hom.hom z) = z := by
+      exact congrArg (fun f : StandardTensorPowerColimit ⟶
+        StandardTensorPowerColimit => f.hom z) (Iso.hom_inv_id G)
+    rw [hcancel'] at h'
+    have hGinv : hadjiivanovBraidGroupInfHom
+        (finiteToInfiniteGroupHom (n + 1) g⁻¹) = G⁻¹ := by
+      calc
+        hadjiivanovBraidGroupInfHom
+            (finiteToInfiniteGroupHom (n + 1) g⁻¹) =
+            hadjiivanovBraidGroupInfHom
+              ((finiteToInfiniteGroupHom (n + 1) g)⁻¹) := by rw [map_inv]
+        _ = G⁻¹ := by rw [map_inv]
+    rw [hGinv, map_inv (standardHadjiivanovBraidProjectHom n) g]
+    change G⁻¹.hom.hom ((stageInclusion n).hom x) =
+      (stageInclusion n).hom
+        ((standardHadjiivanovBraidProjectHom n g)⁻¹ x)
+    exact h'.symm
 
 /-- Arbitrary finite braid-element compatibility with the global `B_∞` action.
 For every `g : B_{n+2}`, its finite tensor-power action agrees, after the

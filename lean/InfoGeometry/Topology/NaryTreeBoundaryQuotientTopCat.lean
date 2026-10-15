@@ -50,7 +50,7 @@ theorem isQuotientMap_of_compactSpace_of_t2
     (f : X → Y) (h_surj : Function.Surjective f)
     (h_cont : Continuous f) :
     Topology.IsQuotientMap f := by
-  exact IsQuotientMap.of_surjective_continuous h_surj h_cont
+  exact Topology.IsQuotientMap.of_surjective_continuous h_surj h_cont
 
 def boundaryQuotientTopCatHom
     (r : Setoid (Boundary (A := A))) :

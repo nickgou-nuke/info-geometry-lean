@@ -120,16 +120,27 @@ theorem topologicalRepresentation_star_intertwines [ContinuousStar B]
   apply TopCat.hom_ext
   apply ContinuousMap.ext
   intro x
+  let x' : Stage i := x
   change topologicalRepresentation Stage sys R hι_comm hcontinuous_ι
       (topologicalStarReadout Stage sys
-        (topologicalInjection Stage sys i x)) =
+        (topologicalInjection Stage sys i x')) =
     star (topologicalRepresentation Stage sys R hι_comm hcontinuous_ι
-      (topologicalInjection Stage sys i x))
-  rw [topologicalStarReadout_stage]
-  rw [topologicalRepresentation_of_stage]
-  rw [topologicalRepresentation_of_stage]
-  change R.ι i (star x) = star (R.ι i x)
-  exact map_star (R.ι i) x
+      (topologicalInjection Stage sys i x'))
+  calc
+    topologicalRepresentation Stage sys R hι_comm hcontinuous_ι
+        (topologicalStarReadout Stage sys
+          (topologicalInjection Stage sys i x')) =
+        topologicalRepresentation Stage sys R hι_comm hcontinuous_ι
+          (topologicalInjection Stage sys i (stageStar Stage i x')) :=
+      congrArg (topologicalRepresentation Stage sys R hι_comm hcontinuous_ι)
+        (topologicalStarReadout_stage Stage sys i x')
+    _ = R.ι i (stageStar Stage i x') :=
+      topologicalRepresentation_of_stage Stage sys R hι_comm hcontinuous_ι i
+        (stageStar Stage i x)
+    _ = star (R.ι i x') := map_star (R.ι i) x'
+    _ = star (topologicalRepresentation Stage sys R hι_comm hcontinuous_ι
+          (topologicalInjection Stage sys i x')) := by
+      rw [topologicalRepresentation_of_stage]
 
 theorem topologicalRepresentation_comp_algebraicToTopological
     (hι_comm : ∀ {i j : I} (hij : i ≤ j),

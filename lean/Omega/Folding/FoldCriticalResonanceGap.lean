@@ -18,11 +18,11 @@ private theorem foldCriticalResonanceReversedCosineProduct_sq_le_one (m : ℕ) :
   have hle :
       foldCriticalResonanceReversedCosineProduct m ≤ 1 := by
     unfold foldCriticalResonanceReversedCosineProduct
-    refine Finset.prod_le_one ?_ ?_
+    refine Finset.prod_le_one₀ ?_ ?_
     · intro j hj
       exact abs_nonneg _
     · intro j hj
-      simpa using Real.abs_cos_le_one (Real.pi * (Nat.fib (m + 1 - j) : ℝ) / Nat.fib (m + 2))
+      exact Real.abs_cos_le_one (Real.pi * (Nat.fib (m + 1 - j) : ℝ) / Nat.fib (m + 2))
   nlinarith
 
 /-- Paper label: `cor:fold-critical-resonance-gap`.

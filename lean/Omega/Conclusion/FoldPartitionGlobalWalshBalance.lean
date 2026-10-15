@@ -80,12 +80,14 @@ lemma conclusion_fold_partition_global_walsh_balance_character_flip_of_mem
     _ = coordSign (conclusion_fold_partition_global_walsh_balance_flip i w) i *
           walshCharacter m (conclusion_fold_partition_global_walsh_balance_flip i w)
             (I.erase i) := by
-            simp [walshCharacter]
+            dsimp [walshCharacter]
+            exact Finset.prod_insert (Finset.notMem_erase i I)
     _ = -(coordSign w i * walshCharacter m w (I.erase i)) := by
             rw [hsign, hrest]
             ring
     _ = -walshCharacter m w (insert i (I.erase i)) := by
-            simp [walshCharacter]
+            dsimp [walshCharacter]
+            rw [Finset.prod_insert (Finset.notMem_erase i I)]
     _ = -walshCharacter m w I := by rw [Finset.insert_erase hi]
 
 lemma conclusion_fold_partition_global_walsh_balance_word_sum_zero
@@ -115,12 +117,15 @@ lemma conclusion_fold_partition_global_walsh_balance_sum_profile_zero
   classical
   have hfiber :
       ∑ x : X m, walshProfile m x I = ∑ w : Word m, walshCharacter m w I := by
-    simpa [walshProfile, X.fiber] using
-      (Finset.sum_fiberwise_eq_sum_filter
-        (s := (Finset.univ : Finset (Word m)))
-        (t := (Finset.univ : Finset (X m)))
-        (g := Fold)
-        (f := fun w : Word m => walshCharacter m w I))
+    have h := Finset.sum_fiberwise_of_maps_to (s := (Finset.univ : Finset (Word m)))
+      (t := (Finset.univ : Finset (X m))) (g := Fold)
+      (h := fun w _ => Finset.mem_univ (Fold w)) (f := fun w => walshCharacter m w I)
+    change (∑ x : X m, ∑ w ∈ X.fiber x, walshCharacter m w I) = _
+    have hfib (x : X m) : X.fiber x = Finset.filter (fun w => Fold w = x) Finset.univ := by
+      ext w
+      simp [X.mem_fiber]
+    simp_rw [hfib]
+    exact h
   rw [hfiber]
   exact conclusion_fold_partition_global_walsh_balance_word_sum_zero hI
 

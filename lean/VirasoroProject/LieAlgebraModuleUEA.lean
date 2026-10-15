@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 -/
 import Mathlib.Algebra.Lie.UniversalEnveloping
+import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.GroupTheory.GroupAction.Ring
 import Mathlib.Order.CompletePartialOrder
 import InfoGeometry.External.Virasoro.LieAlgebraRepresentationOfBasis
+
+attribute [local instance] LieRing.ofAssociativeRing
 
 /-!
 # Modules over the universal enveloping algebra of a Lie algebra
@@ -79,6 +82,7 @@ lemma Algebra.smul_scalar_smul_eq_smul_algebraMap_mul (c : 𝕜) (a : A) :
 variable (V : Type*) [AddCommGroup V] [Module A V]
 
 /-- Any module over an algebra is a module over the scalars. -/
+@[instance_reducible]
 def moduleScalarOfModule : Module 𝕜 V :=
   Module.compHom _ (algebraMap 𝕜 A)
 
@@ -244,16 +248,14 @@ abbrev 𝓤 := UniversalEnvelopingAlgebra
 @[inherit_doc UniversalEnvelopingAlgebra.ι]
 abbrev ιUEA := UniversalEnvelopingAlgebra.ι
 
-lemma UniversalEnvelopingAlgebra.mkAlgHom_range_eq_top :
-    (UniversalEnvelopingAlgebra.mkAlgHom 𝕜 𝓰).range = ⊤ := by
-  simp only [UniversalEnvelopingAlgebra.mkAlgHom, RingQuot.mkAlgHom]
-  rw [AlgHom.range_eq_top]
-  exact RingQuot.mkRingHom_surjective (UniversalEnvelopingAlgebra.Rel 𝕜 𝓰)
-
 variable {𝕜 𝓰} in
 lemma UniversalEnvelopingAlgebra.mkAlgHom_surjective :
-    Function.Surjective (UniversalEnvelopingAlgebra.mkAlgHom 𝕜 𝓰) := by
-  simpa [← AlgHom.range_eq_top] using mkAlgHom_range_eq_top 𝕜 𝓰
+    Function.Surjective (UniversalEnvelopingAlgebra.mkAlgHom 𝕜 𝓰) :=
+  RingCon.mkₐ_surjective (ringCon 𝕜 𝓰)
+
+lemma UniversalEnvelopingAlgebra.mkAlgHom_range_eq_top :
+    (UniversalEnvelopingAlgebra.mkAlgHom 𝕜 𝓰).range = ⊤ := by
+  simpa [AlgHom.range_eq_top] using mkAlgHom_surjective (𝓰 := 𝓰)
 
 lemma UniversalEnvelopingAlgebra.induction
     (C : 𝓤 𝕜 𝓰 → Prop) (hAM : ∀ r, C (algebraMap 𝕜 (𝓤 𝕜 𝓰) r))
@@ -358,6 +360,7 @@ variable (ρ : LieAlgebra.Representation 𝕜 𝕂 𝓰 V)
 
 /-- A representation of a `𝕜`-Lie algebra `𝓰` on a vector space `V` defines a `𝓤 𝕜 𝓰`-module
 structure on `V`. -/
+@[instance_reducible]
 noncomputable def LieAlgebra.Representation.moduleUniversalEnvelopingAlgebra :
     Module (𝓤 𝕜 𝓰) V where
   smul a v := UniversalEnvelopingAlgebra.lift 𝕜 ρ a v

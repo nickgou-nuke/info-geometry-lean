@@ -15,9 +15,8 @@ def window6HiddenOffsets (w : X 6) : Finset Nat :=
 
 private lemma cBinFiberMult_six_ge_two (w : X 6) : 2 ≤ cBinFiberMult 6 w := by
   have hmin : cBinFiberMin 6 ≤ cBinFiberMult 6 w := by
-    simpa [cBinFiberMin] using
-      (Finset.inf'_le (s := (Finset.univ : Finset (X 6))) (f := fun x => cBinFiberMult 6 x)
-        (by simp : w ∈ (Finset.univ : Finset (X 6))))
+    exact Finset.inf'_le (s := (@Finset.univ (X 6) (fintypeX 6)))
+      (f := fun x => cBinFiberMult 6 x) (by simp)
   rwa [cBinFiberMin_six] at hmin
 
 theorem paper_typed_address_biaxial_completion_window6_two_hidden_channels :

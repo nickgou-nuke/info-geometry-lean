@@ -203,8 +203,8 @@ def quadraticPotential (x : ℝ) : ℝ := x ^ (2 : ℕ)
 def quadraticDualFlat : DualFlatStructure ℝ where
   ψ := quadraticPotential
   h_convex := by
-    simpa [quadraticPotential] using
-      (Even.strictConvexOn_pow (n := 2) (by decide : Even 2) (by decide : (2 : ℕ) ≠ 0))
+    change StrictConvexOn ℝ Set.univ (fun x : ℝ => x ^ (2 : ℕ))
+    exact Even.strictConvexOn_pow (n := 2) (by decide) (by decide)
   h_diff := by
     exact differentiable_pow 2
 
@@ -258,7 +258,8 @@ theorem cayleyNegationPythagoreanInvariance
     divergence quadraticDualFlat (-alt) (-prior)
       = divergence quadraticDualFlat (-alt) (-posterior)
       + divergence quadraticDualFlat (-posterior) (-prior) := by
-  simpa only [cayleyNegationBridge, Bridge.toTransport, Bridge.toBounded] using
+  simpa only [cayleyNegationBridge, Bridge.toTransport, Bridge.toBounded,
+    cayleyNegationCompatibleGeometry, Equiv.neg_apply] using
     cayley_pythagorean_invariance
       (T := cayleyNegationBridge.toTransport) (SU := quadraticDualFlat)
       (hT := cayleyNegationCompatibleGeometry)

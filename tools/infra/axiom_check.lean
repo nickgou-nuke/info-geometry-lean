@@ -5,6 +5,13 @@ open Lean
 def ALLOWED : Array Name :=
   #[`propext, `Quot.sound, `Classical.choice]
 
+def collectAxiomsIn (env : Environment) (name : Name) : IO (Array Name) := do
+  let ctx : Core.Context := {
+    fileName := "axiom_check"
+    fileMap := FileMap.ofString ""
+  }
+  (Lean.collectAxioms name : CoreM (Array Name)).toIO' ctx { env := env }
+
 def checkOne (path : System.FilePath) : IO Bool := do
   IO.eprintln s!"Checking {path}"
   let (mod, _) ← readModuleData path
@@ -12,7 +19,8 @@ def checkOne (path : System.FilePath) : IO Bool := do
   let mut newC : Std.HashMap Name ConstantInfo := {}
   for (name, ci) in mod.constNames.zip mod.constants do
     newC := newC.insert name ci
-  let env ← env.replay newC
+  let kernelEnv ← env.toKernelEnv.replay newC
+  let env := Environment.ofKernelEnv kernelEnv
   let mut allClean := true
 
   for (name, ci) in mod.constNames.zip mod.constants do
@@ -24,10 +32,8 @@ def checkOne (path : System.FilePath) : IO Bool := do
     if ci.isUnsafe then
       IO.eprintln s!"  {name}: UNSAFE"
       allClean := false
-    -- Collect axioms through the replayed environment.  In Lean 4.28,
-    -- `Lean.collectAxioms` is monadic (`MonadEnv`) rather than pure IO.
-    let ((_, CollectAxioms.State.mk _ axioms)) :=
-      (ReaderT.run (CollectAxioms.collect name) env).run {}
+    -- Use Lean's public transitive collector in its environment/state monad.
+    let axioms ← collectAxiomsIn env name
     let disallowed := axioms.filter fun a => !(ALLOWED.contains a)
     if !disallowed.isEmpty then
       IO.eprintln s!"  {name}: disallowed axioms {disallowed}"
@@ -35,6 +41,8 @@ def checkOne (path : System.FilePath) : IO Bool := do
 
   if allClean then
     IO.eprintln s!"  ✓ all {mod.constNames.size} declarations clean"
+  let result := if allClean then "PASS" else "FAIL"
+  IO.println s!"MODULE_RESULT:{path}:{result}"
   return allClean
 
 def main (args : List String) : IO UInt32 := do

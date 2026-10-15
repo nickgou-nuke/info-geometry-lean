@@ -11,24 +11,33 @@ def IL_comp : Matrix (Fin 2) (Fin 2) ℝ := ![![0, 1], ![1, 0]] -- il (σ_x)
 
 /-- Теорема 1: Компактното въртене i² = -1 в M₂(ℝ) -/
 theorem I_comp_sq : I_comp * I_comp = -I_2 := by
-  ext i j; fin_cases i <;> fin_cases j <;> 
-  simp [I_2, I_comp, Matrix.mul_apply, Fin.sum_univ_two]
+  ext i j
+  change (∑ k : Fin 2, I_comp i k * I_comp k j) = -(I_2 i j)
+  fin_cases i <;> fin_cases j <;>
+    norm_num [I_2, I_comp, Fin.sum_univ_two]
 
 /-- Теорема 2: Хиперболичният буст (il)² = +1 в M₂(ℝ) -/
 theorem IL_comp_sq : IL_comp * IL_comp = I_2 := by
-  ext i j; fin_cases i <;> fin_cases j <;> 
-  simp [I_2, IL_comp, Matrix.mul_apply, Fin.sum_univ_two]
+  ext i j
+  change (∑ k : Fin 2, IL_comp i k * IL_comp k j) = I_2 i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [I_2, IL_comp, Fin.sum_univ_two]
 
 /-- Теорема 3: Часовниковата ос l² = +1 в M₂(ℝ) -/
 theorem L_2_sq : L_2 * L_2 = I_2 := by
-  ext i j; fin_cases i <;> fin_cases j <;> 
-  simp [I_2, L_2, Matrix.mul_apply, Fin.sum_univ_two]
+  ext i j
+  change (∑ k : Fin 2, L_2 i k * L_2 k j) = I_2 i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [I_2, L_2, Fin.sum_univ_two]
 
 /-- **Теорема 4 (Комутаторното Затваряне)**: [i, il] = -2l в M₂(ℝ). -/
 theorem split_pauli_matrix_commutator :
     I_comp * IL_comp - IL_comp * I_comp = (-2 : ℝ) • L_2 := by
-  ext i j; fin_cases i <;> fin_cases j <;> 
-  simp [L_2, I_comp, IL_comp, Matrix.mul_apply, Matrix.sub_apply, Matrix.smul_apply, Fin.sum_univ_two] <;> ring
+  ext i j
+  change (∑ k : Fin 2, I_comp i k * IL_comp k j) -
+      (∑ k : Fin 2, IL_comp i k * I_comp k j) = -2 * L_2 i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [L_2, I_comp, IL_comp, Fin.sum_univ_two]
 
 /-- **Master Synthesis**: Cl(1,1) ≅ M₂(ℝ) Сплит-Паули Затваряне Synthesis. -/
 theorem master_split_pauli_matrix_relations :

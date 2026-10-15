@@ -37,14 +37,14 @@ def colourR23Linear : ColorTensor3 →ₗ[ℚ] ColorTensor3 where
 noncomputable def colourR12ContinuousLinear :
     ColorTensor3 →L[ℚ] ColorTensor3 :=
   ContinuousLinearMap.mk colourR12Linear
-    (by simpa [colourR12Linear, topologicalR12]
-      using continuous_topologicalR12)
+    (by change Continuous topologicalR12
+        exact continuous_topologicalR12)
 
 noncomputable def colourR23ContinuousLinear :
     ColorTensor3 →L[ℚ] ColorTensor3 :=
   ContinuousLinearMap.mk colourR23Linear
-    (by simpa [colourR23Linear, topologicalR23]
-      using continuous_topologicalR23)
+    (by change Continuous topologicalR23
+        exact continuous_topologicalR23)
 
 @[simp] theorem colourR12ContinuousLinear_apply
     (T : ColorTensor3) :

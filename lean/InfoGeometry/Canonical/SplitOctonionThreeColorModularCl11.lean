@@ -24,7 +24,21 @@ noncomputable section
 
 inductive SplitOctonionColour
   | red | green | blue
-deriving DecidableEq, Fintype
+deriving DecidableEq
+
+private def splitOctonionColourEquiv : Fin 3 ≃ SplitOctonionColour where
+  toFun i := if i.val = 0 then .red else if i.val = 1 then .green else .blue
+  invFun
+    | .red => 0
+    | .green => 1
+    | .blue => 2
+  left_inv i := by
+    fin_cases i <;> rfl
+  right_inv c := by
+    cases c <;> rfl
+
+instance : Fintype SplitOctonionColour :=
+  Fintype.ofEquiv (Fin 3) splitOctonionColourEquiv
 
 open SplitOctonionColour
 

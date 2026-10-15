@@ -22,14 +22,15 @@ theorem paper_xi_defect_entropy_hyperbolic_area_law_4pi {ι : Type} [Fintype ι]
       linarith [hδ i]
     have hσ_ne : σ ≠ 0 := by
       exact ne_of_gt hσ_pos
+    have hσ_coe : (σ : ℝ) = 1 + δ i := rfl
     have hexpr :
         (fun x : ℝ => (m i : ℝ) * (4 * δ i) / (((x - γ i)^2) + (1 + δ i)^2)) =
           fun x : ℝ =>
             (4 * Real.pi * ((m i : ℝ) * (δ i / (1 + δ i)))) *
-              Probability.cauchyPDFReal (γ i) σ x := by
+              ProbabilityTheory.cauchyPDFReal (γ i) σ x := by
       funext x
-      rw [Probability.cauchyPDFReal_def]
-      simp [σ, div_eq_mul_inv]
+      rw [ProbabilityTheory.cauchyPDFReal_def, hσ_coe]
+      simp [div_eq_mul_inv]
       field_simp [Real.pi_ne_zero, (show (1 + δ i) ≠ 0 by linarith [hδ i])]
     calc
       (1 / (4 * Real.pi)) *
@@ -37,14 +38,14 @@ theorem paper_xi_defect_entropy_hyperbolic_area_law_4pi {ι : Type} [Fintype ι]
           (1 / (4 * Real.pi)) *
             ∫ x : ℝ,
               (4 * Real.pi * ((m i : ℝ) * (δ i / (1 + δ i)))) *
-                Probability.cauchyPDFReal (γ i) σ x := by
+                ProbabilityTheory.cauchyPDFReal (γ i) σ x := by
                   rw [hexpr]
       _ = (1 / (4 * Real.pi)) *
             ((4 * Real.pi * ((m i : ℝ) * (δ i / (1 + δ i)))) *
-              ∫ x : ℝ, Probability.cauchyPDFReal (γ i) σ x) := by
+              ∫ x : ℝ, ProbabilityTheory.cauchyPDFReal (γ i) σ x) := by
                 rw [MeasureTheory.integral_const_mul]
       _ = (1 / (4 * Real.pi)) * (4 * Real.pi * ((m i : ℝ) * (δ i / (1 + δ i)))) := by
-            rw [Probability.integral_cauchyPDFReal (x₀ := γ i) hσ_ne, mul_one]
+            rw [ProbabilityTheory.integral_cauchyPDFReal_eq_one (x₀ := γ i) hσ_ne, mul_one]
       _ = (m i : ℝ) * (δ i / (1 + δ i)) := by
             have h4pi_ne : (4 * Real.pi : ℝ) ≠ 0 := by positivity
             field_simp [h4pi_ne]

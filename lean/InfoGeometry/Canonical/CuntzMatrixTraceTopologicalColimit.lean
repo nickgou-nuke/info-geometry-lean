@@ -28,7 +28,7 @@ def continuousTransition (T : Data) {m n : ℕ} (hmn : m ≤ n) :
     continuous_toFun :=
       (map T hmn).toAlgHom.toLinearMap.continuous_of_finiteDimensional }
 
-def topologicalDiagram (T : Data) : ℕ ⥤ TopCat where
+abbrev topologicalDiagram (T : Data) : ℕ ⥤ TopCat where
   obj n := TopCat.of (MatrixStage n)
   map f := TopCat.ofHom (continuousTransition T (leOfHom f))
   map_id n := by
@@ -40,9 +40,9 @@ def topologicalDiagram (T : Data) : ℕ ⥤ TopCat where
     apply TopCat.hom_ext
     apply ContinuousMap.ext
     intro A
-    have h := congrArg (fun e => e A)
-      (map_comp T (leOfHom f) (leOfHom g)).symm
-    simpa [continuousTransition] using h
+    change (map T (le_trans (leOfHom f) (leOfHom g))) A =
+      (map T (leOfHom g)) ((map T (leOfHom f)) A)
+    exact (congrArg (fun e => e A) (map_comp T (leOfHom f) (leOfHom g))).symm
 
 abbrev topologicalColimitObject (T : Data) : TopCat :=
   topologicalDirectColimit (topologicalDiagram T)
@@ -103,8 +103,7 @@ theorem topologicalInclusion_transition
     (T : Data) {m n : ℕ} (hmn : m ≤ n) (A : MatrixStage m) :
     topologicalInclusion T n (map T hmn A) =
       topologicalInclusion T m A := by
-  have h := (colimit.cocone (topologicalDiagram T)).w (homOfLE hmn)
-  simpa [topologicalInclusion, topologicalDiagram, continuousTransition] using
-    congrArg (fun f => f A) h
+  exact topologicalDirectInjection_naturality_apply
+    (topologicalDiagram T) (homOfLE hmn) A
 
 end InfoGeometry.Canonical.CuntzMatrixTraceTopologicalColimit

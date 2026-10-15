@@ -12,14 +12,14 @@ theorem all_ones : grid a b c d → a = 1 → b = 1 → (c = 1 ∧ d = 1) := by
   | adjacent i k _ => exact (of_neq_one _ one).elim
   | separated i j _ => exact (of_neq_one _ one).elim
   | vertical _ _ h1_ih h2_ih =>
-    specialize h1_ih (FreeMonoid.prod_eq_one one).1 two
-    specialize h2_ih (FreeMonoid.prod_eq_one one).2 h1_ih.2
+    specialize h1_ih (FreeMonoid'.mul_eq_one one).1 two
+    specialize h2_ih (FreeMonoid'.mul_eq_one one).2 h1_ih.2
     rw [h2_ih.2, h1_ih.1]
     exact ⟨h2_ih.1, rfl⟩
   | horizontal _ _ h1_ih h2_ih =>
-    rw [one, (FreeMonoid.prod_eq_one two).1] at h1_ih
+    rw [one, (FreeMonoid'.mul_eq_one two).1] at h1_ih
     specialize h1_ih rfl rfl
-    rw [h1_ih.1, (FreeMonoid.prod_eq_one two).2] at h2_ih
+    rw [h1_ih.1, (FreeMonoid'.mul_eq_one two).2] at h2_ih
     specialize h2_ih rfl rfl
     rw [h2_ih.2, h1_ih.2]
     exact ⟨h2_ih.1, rfl⟩
@@ -39,17 +39,17 @@ theorem all_ones_better (h1 : grid 1 1 c d) : c = 1 ∧ d = 1 := all_ones h1 rfl
 --   · exact fun one two => ⟨one, two⟩
 --   · rename_i n o
 --     intro one two
---     rw [(FreeMonoid.prod_eq_one one).1, two] at n
+--     rw [(FreeMonoid'.mul_eq_one one).1, two] at n
 --     specialize n rfl rfl
---     rw [n.2, (FreeMonoid.prod_eq_one one).2] at o
+--     rw [n.2, (FreeMonoid'.mul_eq_one one).2] at o
 --     specialize o rfl rfl
 --     rw [n.1, o.1]
 --     exact ⟨rfl, o.2⟩
 --   rename_i n o
 --   intro one two
---   rw [one, (FreeMonoid.prod_eq_one two).1] at n
+--   rw [one, (FreeMonoid'.mul_eq_one two).1] at n
 --   specialize n rfl rfl
---   rw [n.1, (FreeMonoid.prod_eq_one two).2] at o
+--   rw [n.1, (FreeMonoid'.mul_eq_one two).2] at o
 --   specialize o rfl rfl
 --   rw [o.2, n.2]
 --   exact ⟨o.1, rfl⟩
@@ -67,7 +67,7 @@ theorem i_top_bottom : grid 1 (of i) c d → (c = 1 ∧ d = of i) := by
   | adjacent i k h => exact (of_neq_one _ ha.symm).elim
   | separated i j h => exact (of_neq_one _ ha.symm).elim
   | vertical h1 h2 h1_ih h2_ih =>
-    have h3 := (FreeMonoid.prod_eq_one ha.symm)
+    have h3 := (FreeMonoid'.mul_eq_one ha.symm)
     rw [h3.1, ← hb] at h1
     rw [h3.2] at h2
     specialize h1_ih hb h3.1.symm
@@ -77,7 +77,7 @@ theorem i_top_bottom : grid 1 (of i) c d → (c = 1 ∧ d = of i) := by
     rw [h2_ih.1, h2_ih.2]
     exact ⟨rfl, h1_ih.2⟩
   | horizontal h1 h2 h1_ih h2_ih =>
-    rcases FreeMonoid.prod_eq_of hb.symm with h3 | h4
+    rcases FreeMonoid'.mul_eq_of hb.symm with h3 | h4
     · rw [h3.1, ← ha] at h1
       have H := all_ones_better h1
       specialize h2_ih h3.2.symm H.1.symm
@@ -104,8 +104,8 @@ theorem i_top_bottom : grid 1 (of i) c d → (c = 1 ∧ d = of i) := by
 --   · exact fun _ one two => ⟨one, two⟩
 --   · rename_i o p
 --     intro i one two
---     rw [(FreeMonoid.prod_eq_one one).1, two] at o
---     rw [(FreeMonoid.prod_eq_one one).2] at p
+--     rw [(FreeMonoid'.mul_eq_one one).1, two] at o
+--     rw [(FreeMonoid'.mul_eq_one one).2] at p
   --   specialize o i rfl rfl
   --   rw [o.1]
   --   rw [o.2] at p
@@ -115,7 +115,7 @@ theorem i_top_bottom : grid 1 (of i) c d → (c = 1 ∧ d = of i) := by
   -- rename_i g h j k l m n o p
   -- intro i one two
   -- rw [one] at o
-  -- rcases FreeMonoid.prod_eq_of two
+  -- rcases FreeMonoid'.mul_eq_of two
   -- · rename_i prod_is
   --   rw [prod_is.1] at o
   --   have H : g = 1 ∧ h = 1 := by
@@ -154,7 +154,7 @@ theorem i_side_side : grid a b c d → iss a b c d := by
   · rename_i e f g h j k l m n o p
     intro i one two
     rw [two] at o
-    rcases FreeMonoid.prod_eq_of one
+    rcases FreeMonoid'.mul_eq_of one
     · rename_i prod_is
       rw [prod_is.1] at o
       have H : g = 1 ∧ h = 1 := by
@@ -176,8 +176,8 @@ theorem i_side_side : grid a b c d → iss a b c d := by
     exact ⟨rfl, rfl⟩
   rename_i o p
   intro i one two
-  rw [(FreeMonoid.prod_eq_one two).1, one] at o
-  rw [(FreeMonoid.prod_eq_one two).2] at p
+  rw [(FreeMonoid'.mul_eq_one two).1, one] at o
+  rw [(FreeMonoid'.mul_eq_one two).2] at p
   specialize o i rfl rfl
   rw [o.2]
   rw [o.1] at p
@@ -191,8 +191,8 @@ theorem i_top_left : grid a b c d → itl a b c d := by
   intro h
   induction h with
   | empty => exact fun _ _ _ => ⟨rfl, rfl⟩
-  | top_bottom i => exact fun j h1 => ((FreeMonoid'.of_neq_one j).elim h1.symm).elim
-  | sides i => exact fun j _ h2 => ((FreeMonoid'.of_neq_one j).elim h2.symm).elim
+  | top_bottom i => exact fun j h1 _ => (FreeMonoid'.of_neq_one j h1.symm).elim
+  | sides i => exact fun j _ h2 => (FreeMonoid'.of_neq_one j h2.symm).elim
   | top_left i => exact fun _ _ _ => ⟨rfl, rfl⟩
   | adjacent i k h =>
     intro j h1 h2
@@ -206,7 +206,7 @@ theorem i_top_left : grid a b c d → itl a b c d := by
     intro k ha hb
     rw [hb] at h1
     rw [hb] at h1_ih
-    rcases FreeMonoid.prod_eq_of ha
+    rcases FreeMonoid'.mul_eq_of ha
     · rename_i ua
       rw [ua.1] at h1
       have H_idk := i_top_bottom h1
@@ -225,7 +225,7 @@ theorem i_top_left : grid a b c d → itl a b c d := by
     intro k ha hb
     rw [ha] at h1
     rw [ha] at h1_ih
-    rcases FreeMonoid.prod_eq_of hb
+    rcases FreeMonoid'.mul_eq_of hb
     · rename_i ua
       rw [ua.1] at h1
       have H_idk := i_side_side h1 _ rfl rfl
@@ -286,13 +286,13 @@ theorem i_adjacent : grid a b c d → ia a b c d := by
   induction h with
   | empty =>
     intro i j h1
-    exact ((FreeMonoid'.of_neq_one _).elim h1.symm).elim
+    exact (FreeMonoid'.of_neq_one i h1.symm).elim
   | top_bottom i =>
     intro i j h1
-    exact ((FreeMonoid'.of_neq_one _).elim h1.symm).elim
+    exact (FreeMonoid'.of_neq_one i h1.symm).elim
   | sides i =>
     intro i j _ h2
-    exact ((FreeMonoid'.of_neq_one _).elim h2.symm).elim
+    exact (FreeMonoid'.of_neq_one j h2.symm).elim
   | top_left i =>
     intro i j h1 h2 d
     rw [FreeMonoid'.of_injective h1.symm, FreeMonoid'.of_injective h2] at d
@@ -311,7 +311,7 @@ theorem i_adjacent : grid a b c d → ia a b c d := by
     intro i j ha hb d
     rw [hb] at h1
     rw [hb] at h1_ih
-    rcases FreeMonoid.prod_eq_of ha
+    rcases FreeMonoid'.mul_eq_of ha
     · rename_i ua
       rw [ua.1] at h1
       have u'v' := i_top_bottom h1
@@ -330,7 +330,7 @@ theorem i_adjacent : grid a b c d → ia a b c d := by
     intro i j ha hb d
     rw [ha] at h1
     rw [ha] at h1_ih
-    rcases FreeMonoid.prod_eq_of hb
+    rcases FreeMonoid'.mul_eq_of hb
     · rename_i ua
       rw [ua.1] at h1
       have u'v' := i_side_side h1 _ rfl rfl
@@ -369,7 +369,7 @@ theorem helpier_eq {a b c d : FreeMonoid' ℕ} (h : grid a b c d) : ij_eq a b c 
     linarith [ih]
   · rename_i e f g h i j k l m n o
     intro p eq1 eq2
-    rcases FreeMonoid.prod_eq_of eq1
+    rcases FreeMonoid'.mul_eq_of eq1
     · rename_i ei
       rw [ei.1, eq2] at l
       have gh := i_top_bottom l
@@ -388,7 +388,7 @@ theorem helpier_eq {a b c d : FreeMonoid' ℕ} (h : grid a b c d) : ij_eq a b c 
     exact ⟨rfl, rfl⟩
   rename_i e f g h i j k l m n o
   intro p eq1 eq2
-  rcases FreeMonoid.prod_eq_of eq2
+  rcases FreeMonoid'.mul_eq_of eq2
   · rename_i fi
     rw [eq1, fi.1] at l
     have gh := i_side_side l p rfl rfl
@@ -424,7 +424,7 @@ def ij_close (a b c d : FreeMonoid' ℕ) := ∀ i j, (Nat.dist i j = 1) → a = 
   --   linarith [or_dist_iff.mpr h, h1]
   -- | vertical h1 h2 h1_ih h2_ih =>
   --   rename_i e f g k l m n o
-  --   rcases FreeMonoid.prod_eq_of one.symm with h3 | h4
+  --   rcases FreeMonoid'.mul_eq_of one.symm with h3 | h4
   --   · specialize h2_ih h3.2.symm
   --     rw [h3.1, h3.2, one_mul]
   --     rw [h3.1] at h1
@@ -468,7 +468,7 @@ theorem helpier_close {a b c d : FreeMonoid' ℕ} (h : grid a b c d) : ij_close 
     linarith [gt]
   · rename_i e f g h i j k l m n o
     intro p q dist one two
-    rcases FreeMonoid.prod_eq_of one
+    rcases FreeMonoid'.mul_eq_of one
     · rename_i ih
       rw [ih.1, two] at l
       rw [ih.1] at n
@@ -487,7 +487,7 @@ theorem helpier_close {a b c d : FreeMonoid' ℕ} (h : grid a b c d) : ij_close 
     exact ⟨rfl, rfl⟩
   rename_i e f g h i j k l m n o
   intro p q dist one two
-  rcases FreeMonoid.prod_eq_of two
+  rcases FreeMonoid'.mul_eq_of two
   · rename_i ih
     rw [ih.1, one] at l
     rw [ih.1] at n
@@ -551,7 +551,7 @@ theorem helpier_ij {a b c d : FreeMonoid' ℕ} (h : grid a b c d) : ij_st a b c 
   · rename_i e f g h i j k l m n o
     intro p q or_thing p_is q_is
     rw [q_is] at n
-    rcases FreeMonoid.prod_eq_of p_is
+    rcases FreeMonoid'.mul_eq_of p_is
     · rename_i one_way
       rw [one_way.1] at n
       rw [q_is, one_way.1] at l
@@ -574,7 +574,7 @@ theorem helpier_ij {a b c d : FreeMonoid' ℕ} (h : grid a b c d) : ij_st a b c 
   rename_i e f g h i j k l m n o
   intro p q or_thing p_is q_is
   rw [p_is] at n
-  rcases FreeMonoid.prod_eq_of q_is
+  rcases FreeMonoid'.mul_eq_of q_is
   · rename_i one_way
     rw [one_way.1] at n
     rw [p_is, one_way.1] at l

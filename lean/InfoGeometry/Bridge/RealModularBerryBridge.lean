@@ -192,24 +192,19 @@ def canonicalModularBerry
   { bridgeData := D }
 
 /-- The canonical specialization induced by the bridge data. -/
-def canonicalSpecialization
+theorem canonicalSpecialization
     (D : RealModularBerryBridgeData G X Rotor Bivector) :
     GeometricSpecialization (canonicalModularBerry D) where
   finite_stokes := fun Y => D.finite_stokes Y
   cusp_convergence := by
-    have hmul :
-        Tendsto
-          (fun Y : ℝ =>
-            D.stabilizerProduct * D.cocycle D.cuspGenerator (D.cuspRay Y))
-          atTop
-          (nhds (D.stabilizerProduct * D.cuspAnomaly)) := by
-      exact tendsto_const_nhds.mul D.cusp_tendsto
-    simpa [
-      canonicalModularBerry,
-      ModularBerryCarrier.boundarySymmetryReadout,
-      ModularBerryCarrier.totalBoundaryAnomaly,
-      RealModularBerryBridgeData.boundaryRotor
-    ] using hmul
+    have hfun : (canonicalModularBerry D).boundarySymmetryReadout =
+        fun Y : ℝ => D.stabilizerProduct * D.cocycle D.cuspGenerator (D.cuspRay Y) := by
+      funext Y
+      rfl
+    have htot : (canonicalModularBerry D).totalBoundaryAnomaly =
+        D.stabilizerProduct * D.cuspAnomaly := rfl
+    rw [hfun, htot]
+    exact tendsto_const_nhds.mul D.cusp_tendsto
 
 /-- Canonical bulk-to-boundary limit theorem. -/
 theorem canonical_bulkInvariant_eq_totalAnomaly

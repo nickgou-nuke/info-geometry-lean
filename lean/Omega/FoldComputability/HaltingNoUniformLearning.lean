@@ -70,7 +70,7 @@ theorem paper_fold_computability_halting_no_uniform_learning
       have hweighted' :
           |learner (N0 ε) ε (q e) - target (q e)| * Omega.Folding.dyadicScale (q e) <
             (Omega.Folding.dyadicScale e / 12) * Omega.Folding.dyadicScale (q e) := by
-        simpa [ε, mul_comm, mul_left_comm, mul_assoc] using hweighted
+        simpa [ε, fold_computability_halting_no_uniform_learning_epsilon, mul_comm] using hweighted
       exact lt_of_mul_lt_mul_right
         hweighted'
         hpos.le

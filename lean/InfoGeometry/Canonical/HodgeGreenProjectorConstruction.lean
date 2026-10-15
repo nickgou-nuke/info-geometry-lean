@@ -62,7 +62,9 @@ def decompositionFromGreen :
   have differential_sq : system.d * system.d = 0 := system.d_sq
   have codifferential_sq : system.δ * system.δ = 0 := system.δ_sq
   have reflexive : green * (system.d * system.δ + system.δ * system.d) * green = green := by
-    simpa only [system.Δ_def] using inverse.idempotent
+    have hΔ : system.d * system.δ + system.δ * system.d = system.Δ := system.Δ_def.symm
+    rw [hΔ]
+    exact inverse.idempotent
   have exact_sq : exactProj * exactProj = exactProj :=
     exact_projector_idempotent system.d system.δ green codifferential_sq commutes_cod reflexive
   have coexact_sq : coexactProj * coexactProj = coexactProj :=
@@ -127,7 +129,8 @@ theorem harmonic_projector_range_eq_power_kernel :
     LinearMap.range
       (decompositionFromGreen system green inverse commutes_d commutes_cod).Pharm =
       LinearMap.ker (system.Δ ^ index) := by
-  ext state
+  apply Submodule.ext
+  intro state
   constructor
   · rintro ⟨source, rfl⟩
     exact harmonic_component_mem_power_kernel system green inverse commutes_d commutes_cod source

@@ -179,7 +179,9 @@ theorem finiteGibbsState_nonneg (n : ℕ) (w : BitWord n) :
 theorem finiteGibbsState_sum_one (n : ℕ) :
     (Finset.univ : Finset (BitWord n)).sum
         (finiteGibbsState primes β n) = 1 := by
-  simp only [finiteGibbsState]
+  change (Finset.univ : Finset (BitWord n)).sum
+      (fun w => finiteBoltzmannWeight primes β n w /
+        finitePartitionFunction primes β n) = 1
   calc
     (Finset.univ : Finset (BitWord n)).sum
         (fun w => finiteBoltzmannWeight primes β n w /
@@ -305,8 +307,13 @@ def stageExpectedValueLinear (primes : ℕ → ℕ) (β : ℝ) (n : ℕ) :
     DiagAlg n →ₗ[ℂ] ℂ where
   toFun f := expectedValue primes β n f
   map_add' f g := by
-    dsimp [expectedValue]
-    simp [add_mul, Finset.sum_add_distrib]
+    change (Finset.univ : Finset (BitWord n)).sum
+        (fun w => (f + g) w * (finiteGibbsState primes β n w : ℂ)) =
+      (Finset.univ : Finset (BitWord n)).sum
+        (fun w => f w * (finiteGibbsState primes β n w : ℂ)) +
+      (Finset.univ : Finset (BitWord n)).sum
+        (fun w => g w * (finiteGibbsState primes β n w : ℂ))
+    simp only [Pi.add_apply, add_mul, Finset.sum_add_distrib]
   map_smul' c f := by
     dsimp [expectedValue]
     simp [mul_assoc, Finset.mul_sum]
@@ -319,7 +326,8 @@ def stageExpectedValueLinear (primes : ℕ → ℕ) (β : ℝ) (n : ℕ) :
 theorem stageExpectedValueLinear_one
     (primes : ℕ → ℕ) (β : ℝ) (n : ℕ) :
     stageExpectedValueLinear primes β n (1 : DiagAlg n) = 1 := by
-  dsimp [stageExpectedValueLinear, expectedValue]
+  change (Finset.univ : Finset (BitWord n)).sum
+      (fun w => (1 : ℂ) * (finiteGibbsState primes β n w : ℂ)) = 1
   simp only [one_mul]
   have h := finiteGibbsState_sum_one primes β n
   exact_mod_cast h
@@ -432,6 +440,7 @@ theorem gibbsExpectationColimit_unique
     intro n
     apply ModuleCat.hom_ext
     ext f
+    change DiagAlg n at f
     change F ((colimit.ι primonThermoModuleDiagram n).hom f) =
       gibbsExpectationColimit primes β
         ((colimit.ι primonThermoModuleDiagram n).hom f)

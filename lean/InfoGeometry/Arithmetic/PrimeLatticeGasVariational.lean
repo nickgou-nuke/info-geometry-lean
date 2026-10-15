@@ -101,6 +101,7 @@ theorem grandPartition_eq_closed
     (Finset.prod_one_add
       (s := (Finset.univ : Finset (PrimeSites M)))
       (f := fun _ : PrimeSites M => Z.z)).symm
+  rw [Finset.powerset_univ] at h
   simpa [Finset.card_univ] using h
 
 /-- The same closed form expressed with the concrete prime-site count. -/

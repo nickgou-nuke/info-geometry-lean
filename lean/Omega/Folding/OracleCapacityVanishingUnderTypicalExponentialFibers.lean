@@ -18,13 +18,18 @@ private theorem fold_oracle_capacity_vanishing_under_typical_exponential_fibers_
     {m k : ℕ} (fold : Fin (2 ^ m) → Fin k) (x : Fin k) :
     fold_oracle_capacity_vanishing_under_typical_exponential_fibers_fiber_size fold x =
       Fintype.card {ω : Fin (2 ^ m) // fold ω = x} := by
-  symm
-  simpa [fold_oracle_capacity_vanishing_under_typical_exponential_fibers_fiber_size] using
-    (Fintype.card_ofFinset
-      (s := Finset.univ.filter fun ω : Fin (2 ^ m) => fold ω = x)
-      (H := by
-        intro ω
-        constructor <;> intro h <;> simpa using h))
+  classical
+  let s := Finset.univ.filter fun ω : Fin (2 ^ m) => fold ω = x
+  let e : {ω : Fin (2 ^ m) // fold ω = x} ≃ {ω // ω ∈ s} :=
+    { toFun := fun ω => ⟨ω.1, by simpa [s] using ω.2⟩
+      invFun := fun ω => ⟨ω.1, by
+        have hmem := ω.2
+        change ω.1 ∈ Finset.univ.filter (fun z : Fin (2 ^ m) => fold z = x) at hmem
+        exact (Finset.mem_filter.mp hmem).2⟩
+      left_inv := fun a => Subtype.ext rfl
+      right_inv := fun a => Subtype.ext rfl }
+  change s.card = Fintype.card {ω : Fin (2 ^ m) // fold ω = x}
+  exact (Fintype.card_coe s).symm.trans (Fintype.card_congr e).symm
 
 /-- Expectation under the uniform microstate pushforward of the fiber-size statistic. -/
 def fold_oracle_capacity_vanishing_under_typical_exponential_fibers_pushforward

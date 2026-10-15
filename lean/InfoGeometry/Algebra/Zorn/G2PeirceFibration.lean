@@ -114,11 +114,11 @@ theorem admissibleBasis7_eq_of_prefixes
   fin_cases i
   · simpa [basisPrefix1] using h₁
   · simpa [basisPrefix2] using h₂
-  · simpa [basisPrefix3] using h₃
-  · simpa [basisPrefix4] using h₄
-  · simpa [basisPrefix5] using h₅
-  · simpa [basisPrefix6] using h₆
-  · simpa [basisPrefix7] using h₇
+  · simpa [residualCoordinates, basisPrefix3, basisCoordinates] using h₃
+  · simpa [residualCoordinates, basisPrefix4, basisCoordinates] using h₄
+  · simpa [residualCoordinates, basisPrefix5, basisCoordinates] using h₅
+  · simpa [residualCoordinates, basisPrefix6, basisCoordinates] using h₆
+  · simpa [residualCoordinates, basisPrefix7, basisCoordinates] using h₇
 
 theorem residualCoordinates_injective_on_fiber
     {p : NontrivialIdempotent} {x : PeircePlusFiber p}

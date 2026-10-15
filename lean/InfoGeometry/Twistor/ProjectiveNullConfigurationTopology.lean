@@ -74,13 +74,12 @@ theorem projectivization_map_continuous
       simpa using hz)
   have hqW : Continuous qW := by
     exact continuous_coinduced_rng
-  rw [continuous_coinduced_dom]
   have heq : (Projectivization.map f hf) ∘ qV = qW ∘ h := by
     funext v
     change Projectivization.map f hf (Projectivization.mk K v v.property) = _
     rw [Projectivization.map_mk]
     rfl
-  change Continuous ((Projectivization.map f hf) ∘ qV)
+  apply continuous_coinduced_dom.mpr
   rw [heq]
   exact hqW.comp hh
 

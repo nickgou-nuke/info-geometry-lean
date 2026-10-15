@@ -324,7 +324,7 @@ chosen source anchor.
   have hReadout :=
     comparisonMetricReadout_sourceVortexSeed_eq_of_sourceSectorDegeneracy
       (E := E) P V reference₀ reference₁ comparison hDeg h₀ h₁
-  simpa using
+  simpa [toRelationalInformationDatum] using
     congrArg
       (fun B =>
         B comparison ((channelPhaseAxis (E := E) X) comparison))
@@ -364,7 +364,7 @@ sink anchor.
   have hReadout :=
     comparisonMetricReadout_sinkVortexSeed_eq_of_sinkSectorDegeneracy
       (E := E) P V reference₀ reference₁ comparison hDeg h₀ h₁
-  simpa using
+  simpa [toRelationalInformationDatum] using
     congrArg
       (fun B =>
         B comparison ((channelPhaseAxis (E := E) X) comparison))

@@ -1,5 +1,5 @@
 import Mathlib.Topology.Basic
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.Topology.MetricSpace.Basic
 import Mathlib.Topology.MetricSpace.Isometry
 import Mathlib.Logic.Equiv.Basic
@@ -41,7 +41,8 @@ def dirichletSeries (p : ℕ) : ℕ → ℝ := fun _ => (p : ℝ)
 /-- The constant Dirichlet-series encoding is injective on its natural-number parameter. -/
 theorem dirichlet_series_injectivity {p q : ℕ}
   (h : dirichletSeries p = dirichletSeries q) : p = q := by
-  exact Nat.cast_injective (by simpa [dirichletSeries] using congrFun h 0)
+  have hcast : (p : ℝ) = (q : ℝ) := congrFun h 0
+  exact Nat.cast_injective hcast
 
 /-- Mellin-Shannon Projection -/
 noncomputable def mellinShannonProjection {α β : Type} [MetricSpace α] [MetricSpace β] 

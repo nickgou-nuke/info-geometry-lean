@@ -67,6 +67,11 @@ private theorem bitWord_sum_comp
     (∑ i : BitWord n, g i).comp f = ∑ i : BitWord n, (g i).comp f := by
   exact finset_sum_comp Finset.univ g f
 
+@[simp] private theorem boundedL2Operator_smul_zero (c : ℂ) :
+    c • (0 : BoundedL2Operator) = 0 := by
+  ext ψ
+  simp
+
 theorem bitWordUnit_sandwich_single
     (n : ℕ) (a b u v : BitWord n) (c : ℂ) :
     (operatorWordDag (List.ofFn u)).comp
@@ -78,7 +83,8 @@ theorem bitWordUnit_sandwich_single
   rw [bitWordMatrixLinearRepresentation_single_smul]
   simp only [ContinuousLinearMap.smul_comp, ContinuousLinearMap.comp_smul]
   rw [bitWordUnit_sandwich]
-  by_cases hua : u = a <;> by_cases hbv : b = v <;> simp [hua, hbv]
+  by_cases hua : u = a <;> by_cases hbv : b = v <;>
+    simp [hua, hbv]
 
 theorem bitWordMatrixLinearRepresentation_sandwich
     (n : ℕ) (A : BitWordMatrixStage n) (u v : BitWord n) :
@@ -96,7 +102,7 @@ theorem bitWordMatrixLinearRepresentation_sandwich
   simp_rw [ContinuousLinearMap.comp_smul, ContinuousLinearMap.smul_comp,
     ContinuousLinearMap.comp_assoc]
   simp_rw [bitWordUnit_sandwich]
-  simp [eq_comm]
+  simp [smul_ite, boundedL2Operator_smul_zero, Finset.sum_ite_eq, eq_comm]
 
 theorem bitWordMatrixLinearRepresentation_injective
     (n : ℕ) : Function.Injective (bitWordMatrixLinearRepresentation n) := by

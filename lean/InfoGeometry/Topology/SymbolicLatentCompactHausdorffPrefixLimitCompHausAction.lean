@@ -18,6 +18,7 @@ namespace InfoGeometry.Topology
 
 open CategoryTheory
 open InfoGeometry.Topology.NaryTreeBoundaryCompactHausdorffCoordinatewiseAction
+open InfoGeometry.Topology.NaryTreeBoundaryInverseLimit
 open InfoGeometry.Topology.SymbolicLatentCompactHausdorffPrefixLimitAction
 
 variable {A : Type} [TopologicalSpace A] [CompactSpace A] [T2Space A]
@@ -85,8 +86,16 @@ theorem symbolicBoundaryPrefixLimitCoordinatewiseCompHausIso_refl :
     (symbolicBoundaryPrefixLimitCoordinatewiseCompHausIso (A := A)
       (Homeomorph.refl A)).hom x = x
   rw [symbolicBoundaryPrefixLimitCoordinatewiseCompHausIso_hom_apply]
-  rw [prefixLimitCoordinatewiseHomeomorph_apply]
-  simpa [boundaryCoordinatewiseHomeomorph] using
-    (TopCat.homeoOfIso (prefixBoundaryLimitIso (A := A))).apply_symm_apply x
+  change
+    prefixLimitCoordinatewiseHomeomorph (A := A) (Homeomorph.refl A) x = x
+  rw [prefixLimitCoordinatewiseHomeomorph_apply
+    (γ := Homeomorph.refl A) (x := x)]
+  have hboundary :
+      boundaryCoordinatewiseHomeomorph (Homeomorph.refl A) =
+        Homeomorph.refl (Boundary (A := A)) := by
+    ext z n
+    rfl
+  rw [hboundary]
+  exact (TopCat.homeoOfIso (prefixBoundaryLimitIso (A := A))).apply_symm_apply x
 
 end InfoGeometry.Topology

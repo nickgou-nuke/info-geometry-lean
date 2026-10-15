@@ -84,7 +84,7 @@ private theorem left_distrib (X Y Z : ChiralZornMatrix A) :
           (X.sigma_minus c * Z.n_plus + X.n_minus * Z.sigma_minus c +
             colorCross X.sigma_plus Z.sigma_plus c)
     rw [colorCross_add_right]
-    simp [add_mul, mul_add]
+    simp [mul_add]
     abel
 
 private theorem right_distrib (X Y Z : ChiralZornMatrix A) :
@@ -157,53 +157,43 @@ private theorem zero_mul (X : ChiralZornMatrix A) : 0 * X = 0 := by
     simp [colorCross]
 
 /-- The exact additive/multiplicative contract needed by generic Akivis theory. -/
-def chiralZornNonUnitalNonAssocRing : NonUnitalNonAssocRing (ChiralZornMatrix A) :=
+scoped instance chiralZornNonUnitalNonAssocRing : NonUnitalNonAssocRing (ChiralZornMatrix A) :=
   { left_distrib := left_distrib
     right_distrib := right_distrib
     zero_mul := zero_mul
     mul_zero := mul_zero }
 
 theorem akivis_identity_on_chiral_zorn (x y z : ChiralZornMatrix A) :
-    letI := chiralZornNonUnitalNonAssocRing (A := A)
     InfoGeometry.Algebra.akivisJacobiator x y z =
       _root_.associator x y z + _root_.associator y z x +
         _root_.associator z x y - _root_.associator y x z -
-          _root_.associator z y x - _root_.associator x z y := by
-  letI := chiralZornNonUnitalNonAssocRing (A := A)
-  exact InfoGeometry.Algebra.akivis_identity x y z
+          _root_.associator z y x - _root_.associator x z y :=
+  InfoGeometry.Algebra.akivis_identity x y z
 
 theorem regular_representation_defect_on_chiral_zorn
     (x y z : ChiralZornMatrix A) :
-    letI := chiralZornNonUnitalNonAssocRing (A := A)
     InfoGeometry.Algebra.leftMultiplicationCommutatorDefect x y z =
-      -_root_.associator x y z + _root_.associator y x z := by
-  letI := chiralZornNonUnitalNonAssocRing (A := A)
-  exact InfoGeometry.Algebra.leftMultiplicationCommutatorDefect_eq_associator_difference
+      -_root_.associator x y z + _root_.associator y x z :=
+  InfoGeometry.Algebra.leftMultiplicationCommutatorDefect_eq_associator_difference
     x y z
 
 def chiralZornRightNestedBianchi
     (x y z : ChiralZornMatrix A) : ChiralZornMatrix A :=
-  letI := chiralZornNonUnitalNonAssocRing (A := A)
   InfoGeometry.Algebra.rightNestedJacobiator x y z
 
 theorem chiralZornRightNestedBianchi_eq_neg_jacobiator
     (x y z : ChiralZornMatrix A) :
-    letI := chiralZornNonUnitalNonAssocRing (A := A)
     chiralZornRightNestedBianchi x y z =
-      -InfoGeometry.Algebra.akivisJacobiator x y z := by
-  letI := chiralZornNonUnitalNonAssocRing (A := A)
-  simpa [chiralZornRightNestedBianchi] using
-    (InfoGeometry.Algebra.rightNestedJacobiator_eq_neg x y z)
+      -InfoGeometry.Algebra.akivisJacobiator x y z :=
+  InfoGeometry.Algebra.rightNestedJacobiator_eq_neg x y z
 
 theorem chiralZornRightNestedBianchi_eq_neg_associator_sum
     (x y z : ChiralZornMatrix A) :
-    letI := chiralZornNonUnitalNonAssocRing (A := A)
     chiralZornRightNestedBianchi x y z =
       -(_root_.associator x y z + _root_.associator y z x +
         _root_.associator z x y - _root_.associator y x z -
           _root_.associator z y x - _root_.associator x z y) := by
-  letI := chiralZornNonUnitalNonAssocRing (A := A)
-  rw [chiralZornRightNestedBianchi_eq_neg_jacobiator]
-  rw [InfoGeometry.Algebra.akivis_identity]
+  rw [chiralZornRightNestedBianchi_eq_neg_jacobiator, InfoGeometry.Algebra.akivis_identity]
+  rfl
 
 end InfoGeometry.Canonical.ChiralZorn

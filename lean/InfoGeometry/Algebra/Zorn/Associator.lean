@@ -40,8 +40,6 @@ theorem exists_nonzero_associator_of_not_scalar
       SplitOctonionClassificationCore.ZornMatrix.nonzero_associator_of_not_scalar
         (R := R) x hx with
     ⟨y, z, hz⟩
-  refine ⟨y, z, ?_⟩
-  simpa [associatorDefect,
-    SplitOctonionClassificationCore.ZornMatrix.associator] using hz
+  exact ⟨y, z, hz⟩
 
 end InfoGeometry.Algebra.Zorn

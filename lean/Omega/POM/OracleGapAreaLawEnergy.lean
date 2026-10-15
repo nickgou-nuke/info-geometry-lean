@@ -49,7 +49,7 @@ theorem paper_pom_oracle_gap_area_law_energy :
     filter_upwards with a ha
     ring_nf
   rw [hsplit]
-  rw [intervalIntegral.integral_add intervalIntegral.intervalIntegrable_const hsum]
+  rw [intervalIntegral.integral_add intervalIntegrable_const hsum]
   rw [intervalIntegral.integral_add hlin hsq]
   rw [intervalIntegral.integral_const, intervalIntegral.integral_const_mul, integral_id,
     intervalIntegral.integral_const_mul, integral_pow]

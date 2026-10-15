@@ -39,24 +39,20 @@ theorem braidWindingNumber_eq_sub (word : List (ArtinGenerator N × Bool)) :
     braidWindingNumber word =
       ((word.filter (fun p => p.2 = true)).length : ℤ) -
       ((word.filter (fun p => p.2 = false)).length : ℤ) := by
-  induction' word with p tail ih
-  · simp [braidWindingNumber]
-  · rcases p with ⟨i, b⟩
-    cases b
-    · dsimp [braidWindingNumber] at ih ⊢
-      have h1 : (List.filter (fun p => p.snd = true) ((i, false) :: tail)).length =
-          (List.filter (fun p => p.snd = true) tail).length := rfl
-      have h2 : (List.filter (fun p => p.snd = false) ((i, false) :: tail)).length =
-          (List.filter (fun p => p.snd = false) tail).length + 1 := rfl
-      rw [h1, h2, ih]
-      omega
-    · dsimp [braidWindingNumber] at ih ⊢
-      have h1 : (List.filter (fun p => p.snd = true) ((i, true) :: tail)).length =
-          (List.filter (fun p => p.snd = true) tail).length + 1 := rfl
-      have h2 : (List.filter (fun p => p.snd = false) ((i, true) :: tail)).length =
-          (List.filter (fun p => p.snd = false) tail).length := rfl
-      rw [h1, h2, ih]
-      omega
+  induction word with
+  | nil => simp [braidWindingNumber]
+  | cons p tail ih =>
+      rcases p with ⟨i, b⟩
+      have hpos : tail.filter (fun p => p.2 = true) = tail.filter (fun p => p.2) := by
+        refine List.filter_congr ?_
+        intro q hq
+        cases q.2 <;> simp
+      have hneg : tail.filter (fun p => p.2 = false) = tail.filter (fun p => !p.2) := by
+        refine List.filter_congr ?_
+        intro q hq
+        cases q.2 <;> simp
+      change (if b then (1 : ℤ) else -1) + braidWindingNumber tail = _
+      cases b <;> simp [← hpos, ← hneg] <;> rw [ih] <;> omega
 
 /-- Theorem: For any braid word satisfying the even reflection pairing (Witten cancellation),
     the total topological winding number vanishes. -/

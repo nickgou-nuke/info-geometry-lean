@@ -41,7 +41,12 @@ noncomputable def canonicalMat32StarRepresentation :
   pi_one := nativeContinuous_one
   pi_star := by
     intro a
-    simpa using (nativeContinuous_adjoint_eq_transpose (Matrix.transpose a))
+    have hstar : star a = Matrix.transpose a := by
+      ext i j
+      simp [Matrix.star_apply, Matrix.transpose_apply]
+    rw [nativeContinuous_adjoint_eq_transpose]
+    change nativeContinuous (Matrix.transpose (star a)) = nativeContinuous a
+    rw [hstar, Matrix.transpose_transpose]
 
 structure NativeUnitaryAction (K : Type*) [Group K] where
   U : K → NativeEnd
@@ -84,7 +89,7 @@ noncomputable def identityUnitaryAction (K : Type*) [Group K] :
   U_mul := by intros; rfl
   U_adjoint := by
     intro g
-    simp
+    rw [ContinuousLinearMap.adjoint_id]
 
 noncomputable def identityFiniteCycleDatum (K : Type*) [Group K] :
     RealCl55SO4EquivariantKasparovCycleDatum K Mat32 where

@@ -40,7 +40,8 @@ theorem SL2BoundaryMatrix.mul_onBoundary
       M.onBoundary (N.onBoundary p) := by
   refine Quotient.inductionOn p ?_
   intro q
-  simpa [SL2BoundaryMatrix.onBoundary_mk] using
-    congrArg projectiveBoundaryMk (M.mul_applyPair N q)
+  change projectiveBoundaryMk ((M.mul N).applyPair q) =
+    projectiveBoundaryMk (M.applyPair (N.applyPair q))
+  rw [M.mul_applyPair N q]
 
 end InfoGeometry.Topology

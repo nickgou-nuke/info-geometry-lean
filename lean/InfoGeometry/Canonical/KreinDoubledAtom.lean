@@ -177,7 +177,7 @@ noncomputable def ofAtom
   X.core.toAnticommutingInvolutionCore
 
 /-- Concrete doubled-space realization of the canonical split `Cl(1,1)` atom. -/
-noncomputable def cl11DoubledAtom (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+noncomputable def cl11DoubledAtom (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
     [CompleteSpace E] : KreinDoubledAtom :=
   (InfoGeometry.Quantum.RealMajoranaCategory.cl11DoubledCore E).toAnticommutingInvolutionCore
 

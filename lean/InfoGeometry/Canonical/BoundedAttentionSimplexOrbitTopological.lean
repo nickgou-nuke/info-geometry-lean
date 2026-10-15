@@ -22,10 +22,10 @@ theorem boundedExpertSoftmaxOnModuli_quotientMap_mem_simplexOrbit
   letI : Nonempty (Fin K) := ⟨⟨0, Fact.out⟩⟩
   refine ⟨⟨boundedExpertSoftmaxVector p,
     by
-      simpa [boundedExpertSoftmaxVector] using
-        InfoGeometry.Topology.latentSoftmax_mem_stdSimplex
-          (fun p : BoundedExpertAttentionVector B V K =>
-            fun j => ((p j).1 : ℝ)) p⟩, ?_⟩
+      change InfoGeometry.Topology.latentSoftmax
+        (fun p : BoundedExpertAttentionVector B V K =>
+          fun j => ((p j).1 : ℝ)) p ∈ _
+      exact InfoGeometry.Topology.latentSoftmax_mem_stdSimplex _ _⟩, ?_⟩
   calc
     quotientMap (V := ℝ) (K := K) (boundedExpertSoftmaxVector p)
         = boundedExpertSoftmaxOrbitReadout p := rfl

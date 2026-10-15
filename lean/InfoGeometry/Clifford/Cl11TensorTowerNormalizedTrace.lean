@@ -29,9 +29,12 @@ theorem matStageEmbed_preserves_real_projection
     ext i j
     have h := congrArg (fun M : MatStage n => M i j) hp'
     simpa [Matrix.conjTranspose_apply] using h
-  rw [matStageEmbed, Matrix.star_eq_conjTranspose,
-    Matrix.conjTranspose_kronecker]
-  simpa [hpT]
+  change star (Matrix.kroneckerMap (fun x y : ℝ => x * y) p
+      (1 : Matrix (Fin 2) (Fin 2) ℝ)) =
+    Matrix.kroneckerMap (fun x y : ℝ => x * y) p
+      (1 : Matrix (Fin 2) (Fin 2) ℝ)
+  rw [Matrix.star_eq_conjTranspose, Matrix.conjTranspose_kronecker]
+  simpa only [hp', Matrix.conjTranspose_one]
 
 theorem trace_matStageEmbed_readout (n : ℕ) (A : MatStage n) :
     Matrix.trace (matStageEmbed n A) = 2 * Matrix.trace A :=

@@ -99,8 +99,10 @@ noncomputable def virasoroCocycle :
   toBilin := virasoroCocycleBilin 𝕜
   self' X := by
     apply self_eq_neg.mp
-    simpa only [LinearMap.neg_apply, LinearMap.coe_mk, AddHom.coe_mk]
-      using LinearMap.congr_fun₂ (virasoroCocycleBilin_eq_neg_flip 𝕜) X X
+    have h := LinearMap.congr_fun₂ (virasoroCocycleBilin_eq_neg_flip 𝕜) X X
+    change (virasoroCocycleBilin 𝕜) X X =
+      -((virasoroCocycleBilin 𝕜) X X)
+    simpa only [LinearMap.neg_apply, LinearMap.flip_apply] using h
   leibniz' X Y Z := by
     have key' := LinearMap.congr_fun₂ (virasoroCocycleBracketCyclic_eq_zero 𝕜) X Y
     have key := LinearMap.congr_fun key' Z

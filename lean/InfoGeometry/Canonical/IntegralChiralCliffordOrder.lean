@@ -239,12 +239,16 @@ noncomputable def integerChiralOrder_quotient_equiv :
     fin_cases u <;> fin_cases v
     · refine ⟨!![0, 0; 0, 0], ?_⟩
       simp [parityMap]
+      rfl
     · refine ⟨!![0, 1; 0, 0], ?_⟩
       simp [parityMap]
+      rfl
     · refine ⟨!![1, 0; 0, 0], ?_⟩
       simp [parityMap]
+      rfl
     · refine ⟨!![1, 1; 0, 0], ?_⟩
       simp [parityMap]
+      rfl
   have hrange : parityMap.range = ⊤ := AddMonoidHom.range_eq_top.mpr hsurj
   have hquot :
       M2Z ⧸ integerChiralOrder.toAddSubgroup ≃+ ↥parityMap.range := by

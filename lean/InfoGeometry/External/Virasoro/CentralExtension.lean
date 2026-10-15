@@ -47,8 +47,13 @@ def equivProd : γ.CentralExtension ≃ 𝓰 × 𝓪 where
 instance : AddCommGroup (γ.CentralExtension) :=
   (equivProd (γ := γ)).addCommGroup
 
+def addEquivProd : γ.CentralExtension ≃+ 𝓰 × 𝓪 where
+  toEquiv := equivProd (γ := γ)
+  map_add' Z W := by
+    ext <;> rfl
+
 instance : Module 𝕜 (γ.CentralExtension) :=
-  (equivProd (γ := γ)).module 𝕜
+  (addEquivProd (γ := γ)).module 𝕜
 
 @[simp] lemma coeProd_apply (Z : γ.CentralExtension) :
     coeProd Z = (Z.fst, Z.snd) :=
@@ -61,7 +66,7 @@ lemma add_def (Z₁ Z₂ : γ.CentralExtension) :
 
 lemma smul_def (c : 𝕜) (Z : γ.CentralExtension) :
     c • Z = ⟨c • Z.fst, c • Z.snd⟩ := by
-  change (equivProd (γ := γ)).symm (c • equivProd Z) = _
+  rw [(addEquivProd (γ := γ)).smul_def]
   rfl
 
 @[simp] lemma zero_fst :
@@ -87,6 +92,15 @@ lemma smul_def (c : 𝕜) (Z : γ.CentralExtension) :
 @[simp] lemma smul_snd (c : 𝕜) (Z : γ.CentralExtension) :
     (c • Z).snd = c • Z.snd := by
   rw [smul_def]
+
+lemma neg_def (Z : γ.CentralExtension) :
+    -Z = ⟨-Z.fst, -Z.snd⟩ := rfl
+
+@[simp] lemma neg_fst (Z : γ.CentralExtension) :
+    (-Z).fst = -Z.fst := rfl
+
+@[simp] lemma neg_snd (Z : γ.CentralExtension) :
+    (-Z).snd = -Z.snd := rfl
 
 end CentralExtension
 
@@ -263,25 +277,49 @@ noncomputable def equiv_of_lieTwoCoboundary {γ' : LieTwoCocycle 𝕜 𝓰 𝓪}
       (f := (LieTwoCocycle.CentralExtension.congr obs).toLieHom.comp <| β.bdryHom γ)
       (g := (LieTwoCocycle.CentralExtension.congr obs').toLieHom.comp <| (-β).bdryHom γ')
       (by
-        convert LieTwoCocycle.CentralExtension.hom_of_coboundary_add
-          γ γ' γ β (-β) obs obs'
-        ext1 Z
-        simp only [LieHom.coe_id, id_eq, LieTwoCocycle.CentralExtension.congr,
-          LieOneCochain.bdryHom, add_neg_cancel, LieHom.comp_apply, LieHom.coe_mk]
-        ext
-        · rfl
-        · simp only [left_eq_add]
-          rfl)
+        have hβ : β + -β = 0 := add_neg_cancel β
+        have hbdry0 : (0 : LieOneCochain 𝕜 𝓰 𝓪).bdry = 0 := by
+          ext X Y
+          rfl
+        calc
+          _ = (LieTwoCocycle.CentralExtension.congr
+                (show γ + (β + -β).bdry = γ by
+                  rw [hβ]
+                  rw [hbdry0]
+                  simp)).toLieHom.comp ((β + -β).bdryHom γ) :=
+            LieTwoCocycle.CentralExtension.hom_of_coboundary_add
+              γ γ' γ β (-β) obs obs'
+          _ = LieHom.id := by
+            apply LieHom.ext
+            intro Z
+            ext
+            · rfl
+            · change Z.snd + (β + -β) Z.fst = Z.snd
+              rw [hβ]
+              change Z.snd + (0 : 𝓰 →ₗ[𝕜] 𝓪) Z.fst = Z.snd
+              simp)
       (by
-        convert LieTwoCocycle.CentralExtension.hom_of_coboundary_add
-          γ' γ γ' (-β) β obs' obs
-        ext1 Z
-        simp only [LieHom.coe_id, id_eq, LieTwoCocycle.CentralExtension.congr,
-          LieOneCochain.bdryHom, LieHom.comp_apply, LieHom.coe_mk]
-        ext
-        · rfl
-        · simp only [neg_add_cancel, left_eq_add]
-          rfl)
+        have hβ : -β + β = 0 := neg_add_cancel β
+        have hbdry0 : (0 : LieOneCochain 𝕜 𝓰 𝓪).bdry = 0 := by
+          ext X Y
+          rfl
+        calc
+          _ = (LieTwoCocycle.CentralExtension.congr
+                (show γ' + (-β + β).bdry = γ' by
+                  rw [hβ]
+                  rw [hbdry0]
+                  simp)).toLieHom.comp ((-β + β).bdryHom γ') :=
+            LieTwoCocycle.CentralExtension.hom_of_coboundary_add
+              γ' γ γ' (-β) β obs' obs
+          _ = LieHom.id := by
+            apply LieHom.ext
+            intro Z
+            ext
+            · rfl
+            · change Z.snd + (-β + β) Z.fst = Z.snd
+              rw [hβ]
+              change Z.snd + (0 : 𝓰 →ₗ[𝕜] 𝓪) Z.fst = Z.snd
+              simp)
 
 
 

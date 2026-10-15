@@ -35,9 +35,12 @@ theorem deriv_transportedBasis_at_zero
     (B : ι → EndH) (a : ι) :
     deriv (fun η => transportedBasis V B a η) 0 =
       transportCommutator (E := E) V.connectionGenerator (B a) := by
-  simpa [transportedBasis] using
-    (InfoGeometry.Canonical.deriv_expTransport_at_zero
-      (A := EndH) (X := V.connectionGenerator) (A₀ := B a))
+  change deriv (fun η => InfoGeometry.Canonical.expTransport
+    (A := EndH) V.connectionGenerator (B a) η) 0 =
+      transportCommutator (E := E) V.connectionGenerator (B a)
+  rw [← lieBracket_eq_transportCommutator (E := E)]
+  exact InfoGeometry.Canonical.deriv_expTransport_at_zero
+    (A := EndH) (X := V.connectionGenerator) (A₀ := B a)
 
 /-- The transported basis satisfies the commutator evolution law at every
 rapidity, not only infinitesimally at the origin. -/

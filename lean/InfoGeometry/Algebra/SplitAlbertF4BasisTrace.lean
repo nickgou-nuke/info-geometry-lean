@@ -1,8 +1,8 @@
 import InfoGeometry.Algebra.BaezF4H3Zorn
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.RealAlbertH3ZornCarrierAlignment
 import InfoGeometry.Algebra.SplitAlbertInnerTraceSpan
 import InfoGeometry.Canonical.QutritGellMannBasis
+import Mathlib.Algebra.Lie.OfAssociative
 
 /-!
 # Trace-zero readout for the explicit split-Albert `F₄` basis
@@ -13,7 +13,11 @@ that basis with all of `H3ZornF4Derivations`; that generation theorem remains
 a separate obligation.
 -/
 
+noncomputable section
+
 namespace InfoGeometry.Algebra
+
+attribute [local instance 100] LieRing.ofAssociativeRing LieAlgebra.ofAssociativeAlgebra
 
 open H3Zorn
 

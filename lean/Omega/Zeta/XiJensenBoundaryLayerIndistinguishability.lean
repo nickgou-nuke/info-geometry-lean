@@ -90,9 +90,7 @@ theorem paper_xi_jensen_boundary_layer_indistinguishability
             simp
       have hlog_lt :
           Real.log (r / xi_jensen_boundary_layer_indistinguishability_boundaryRadius η) < η := by
-        rw [xi_jensen_boundary_layer_indistinguishability_boundaryRadius]
-        have := Real.log_lt_log hratio_pos hratio_lt
-        simpa using this
+        simpa only [Real.log_exp] using Real.log_lt_log hratio_pos hratio_lt
       rw [xi_jensen_boundary_layer_indistinguishability_jensenDefect, if_neg hrle,
         abs_of_nonneg hlog_nonneg]
       exact le_trans (le_of_lt hlog_lt) hηε

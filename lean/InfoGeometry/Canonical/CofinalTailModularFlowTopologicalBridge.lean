@@ -112,7 +112,9 @@ theorem cofinalTailFlow_intertwines
         (D.tailFlow t).hom.continuous
     · funext x
       simp only [Function.comp_apply]
-      simpa only [Category.assoc] using
+      simpa only [Category.assoc, ConcreteCategory.comp_apply,
+        tailStageTopCatHom, TopCat.ofHom, TopCat.hom_ofHom,
+        ContinuousMap.coe_mk] using
         (congrArg (fun m => m.hom x.2)
           (D.stage_intertwines t x.1)).symm
   apply ContinuousMap.ext

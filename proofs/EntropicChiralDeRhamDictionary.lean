@@ -28,6 +28,8 @@ without vacuous Prop obfuscation.
 
 noncomputable section
 
+universe uB uFiber
+
 namespace EntropicChiralDeRhamDictionary
 
 open TKKJordanPairData.Legacy
@@ -52,12 +54,12 @@ structure MatrixTile2 where
   deriving DecidableEq, Repr
 
 /-- A genuine, concrete algebra fibration parameter base over a given base space. -/
-structure AlgebraFibrationParameterBase (B : Type*) where
-  algebraFiber : B → Type*
+structure AlgebraFibrationParameterBase (B : Type uB) where
+  algebraFiber : B → Type uFiber
   localMatrixTile : B → MatrixTile2
 
 /-- Genuine structure capturing chiral Dirac--Hodge/Wilson transport without vacuous Prop fields. -/
-structure ChiralDiracHodgeWilsonTransport (B : Type*) (fib : AlgebraFibrationParameterBase B) where
+structure ChiralDiracHodgeWilsonTransport (B : Type uB) (fib : AlgebraFibrationParameterBase B) where
   parallelTransport : B → B → MatrixTile2 → MatrixTile2
   preservesChirality : ∀ x y t, (parallelTransport x y t).chirality = t.chirality
 
@@ -68,10 +70,10 @@ structure EntropicLogQ (R : Type*) [CommRing R] (G : FiveGradedLieAlgebra R) whe
 
 /-- Full dictionary tying the finite algebraic layer to genuine geometric definitions. -/
 structure EntropicChiralDictionary (C : AbstractDeRhamComplex) (R : Type*) [CommRing R]
-    (G : FiveGradedLieAlgebra R) (B : Type*) where
+    (G : FiveGradedLieAlgebra R) (B : Type uB) where
   logQ : EntropicLogQ R G
-  fibration : AlgebraFibrationParameterBase B
-  chiralWilson : ChiralDiracHodgeWilsonTransport B fibration
+  fibration : AlgebraFibrationParameterBase.{uB, uFiber} B
+  chiralWilson : ChiralDiracHodgeWilsonTransport.{uB, uFiber} B fibration
   forbiddenConeClock : ForbiddenConeDeRhamModularClock C R G
   deRhamModularTime : DeRhamModularTimeIdentification C R G
 

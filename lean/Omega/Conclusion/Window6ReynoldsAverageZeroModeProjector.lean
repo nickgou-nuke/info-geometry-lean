@@ -243,6 +243,7 @@ theorem paper_conclusion_window6_reynolds_average_zero_mode_projector :
   · simp [conclusion_window6_reynolds_average_zero_mode_projector_microstate,
       conclusion_window6_reynolds_average_zero_mode_projector_fiber,
       conclusion_window6_reynolds_average_zero_mode_projector_fiberCard]
+    rfl
   · intro f w n
     rfl
   · intro f

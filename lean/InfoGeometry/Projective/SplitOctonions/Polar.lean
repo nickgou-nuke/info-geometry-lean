@@ -279,7 +279,8 @@ theorem incident_symm
     Incident D X Y ↔ Incident D Y X := by
   refine Quotient.inductionOn₂ X Y ?_
   intro X Y
-  simpa [incident_mk_iff (D := D)] using incidentRep_symm (D := D) hSymm X Y
+  change IncidentRep D X Y ↔ IncidentRep D Y X
+  exact incidentRep_symm (D := D) hSymm X Y
 
 /-! ## Polar-incidence stabilizer surface -/
 
@@ -459,7 +460,7 @@ theorem su3cColorStabilizer_incidenceNeighborhood_image_eq
     have hiff := he X (e.symm Y)
     have hstep : Incident D (e X) (e (e.symm Y)) := by
       simpa using hY
-    exact hiff.mp (by simpa using hstep)
+    exact hiff.mp (by simpa [projectivePolarIncidence] using hstep)
 
 /--
 Erlangen incidence-pencil equivariance.
@@ -514,7 +515,7 @@ theorem incidenceRightNeighborhood_image_eq
     have hiff := he (e.symm Y) X
     have hstep : Incident D (e (e.symm Y)) (e X) := by
       simpa using hY
-    exact hiff.mp (by simpa using hstep)
+    exact hiff.mp (by simpa [projectivePolarIncidence] using hstep)
 
 end PolarDatum
 

@@ -29,6 +29,7 @@ example (braid : B3) (state : CanonicalZorn) :
   change ((braidRepresentation braid * braidRepresentation braid⁻¹ :
     (Module.End ℂ CanonicalZorn)ˣ) : Module.End ℂ CanonicalZorn) state = state
   rw [← map_mul, mul_inv_cancel, map_one]
+  rfl
 
 example (state : CanonicalZorn) :
     coordinates.symm (coordinates state) = state :=

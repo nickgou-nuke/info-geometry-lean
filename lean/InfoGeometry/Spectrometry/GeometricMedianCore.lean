@@ -159,15 +159,18 @@ theorem hasFDerivAt_euclideanNorm (point : Space) (point_ne : point ≠ 0) :
   · ext vector
     exact (Real.sqrt_sq (norm_nonneg vector)).symm
   · ext direction
-    simp only [ContinuousLinearMap.smul_apply, smul_eq_mul,
+    simp only [smul_apply, smul_eq_mul,
       Real.sqrt_sq (norm_nonneg point), nsmul_eq_mul]
     ring
 
 theorem hasFDerivAt_distance (observed point : Space) (distinct : point ≠ observed) :
     HasFDerivAt (fun candidate => ‖candidate - observed‖)
       (‖point - observed‖⁻¹ • innerSL ℝ (point - observed)) point := by
-  simpa using (hasFDerivAt_euclideanNorm (point - observed)
+  have derivative := (hasFDerivAt_euclideanNorm (point - observed)
     (sub_ne_zero.mpr distinct)).comp point ((hasFDerivAt_id point).sub_const observed)
+  convert derivative using 1
+  · rfl
+  · rw [ContinuousLinearMap.comp_id]
 
 def inverseDistance (observed : Line → Space) (point : Space) (line : Line) : ℝ :=
   ‖point - observed line‖⁻¹
@@ -188,8 +191,9 @@ theorem hasFDerivAt_distanceObjective
   have derivative := HasFDerivAt.fun_sum (u := Finset.univ)
     (fun line _ => hasFDerivAt_distance (observed line) point (regular line))
   convert derivative using 1
-  ext direction
-  simp [weightedScore, inverseDistance]
+  · rfl
+  · ext direction
+    simp [innerSL_apply_apply, weightedScore, inverseDistance]
 
 theorem geometricMedian_fixed_point [Nonempty Line]
     (observed : Line → Space) (point : Space)

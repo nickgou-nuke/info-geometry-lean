@@ -55,9 +55,12 @@ private theorem xi_terminal_rational_ellipse_two_invariant_completeness_delta2_e
     (A : Matrix (Fin 2) (Fin 2) ℚ) :
     xi_terminal_rational_ellipse_two_invariant_completeness_delta2 A =
       (A 0 0 : ℝ) ^ 2 + (A 0 1 : ℝ) ^ 2 + (A 1 0 : ℝ) ^ 2 + (A 1 1 : ℝ) ^ 2 := by
-  unfold xi_terminal_rational_ellipse_two_invariant_completeness_delta2
-    xi_terminal_rational_ellipse_two_invariant_completeness_realMatrix
-  simp [Matrix.trace_fin_two, Matrix.mul_apply, Fin.sum_univ_two]
+  change Matrix.trace
+    ((xi_terminal_rational_ellipse_two_invariant_completeness_realMatrix A).transpose *
+      xi_terminal_rational_ellipse_two_invariant_completeness_realMatrix A) = _
+  rw [Matrix.trace_fin_two]
+  simp [Matrix.mul_apply, Fin.sum_univ_two,
+    xi_terminal_rational_ellipse_two_invariant_completeness_realMatrix]
   ring
 
 private theorem xi_terminal_rational_ellipse_two_invariant_completeness_delta1_explicit

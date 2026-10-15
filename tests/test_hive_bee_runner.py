@@ -7,6 +7,7 @@ from pathlib import Path
 
 from tools.infra.hive_bee_runner import (
     RunnerError,
+    infer_output_pipeline_state,
     run_task,
     validate_result_contract,
 )
@@ -310,6 +311,30 @@ def test_runner_rejects_invalid_output_before_append(tmp_path: Path) -> None:
     assert [record["id"] for record in read_store(store)] == ["src_input"]
 
 
+def test_runner_batch_append_is_atomic_on_late_id_collision(tmp_path: Path) -> None:
+    store = tmp_path / "packets.jsonl"
+    append_packet(store, source_packet("src_input"))
+    existing = socratic_packet("question_collision")
+    append_packet(store, existing)
+
+    first = socratic_packet("question_first")
+    conflicting = socratic_packet("question_collision")
+    conflicting["question"] = "A different payload under the same packet id?"
+    try:
+        run_task(
+            bee_task(),
+            store_path=store,
+            output_packets=[first, conflicting],
+            worker_id="socratesbee-test",
+        )
+    except Exception as exc:  # noqa: BLE001 - StoreError is the persistence boundary
+        assert "packet id already exists with different hash" in str(exc)
+    else:  # pragma: no cover
+        raise AssertionError("expected packet id collision rejection")
+
+    assert [record["id"] for record in read_store(store)] == ["src_input", "question_collision"]
+
+
 def test_runner_rejects_pipeline_regression_from_checked_to_proposed(tmp_path: Path) -> None:
     store = tmp_path / "packets.jsonl"
     append_packet(store, lean_verification_packet("lv_input", intent_id="src_input"))
@@ -325,6 +350,22 @@ def test_runner_rejects_pipeline_regression_from_checked_to_proposed(tmp_path: P
         assert "checked -> proposed" in str(exc)
     else:  # pragma: no cover
         raise AssertionError("expected checked→proposed transition rejection")
+
+
+def test_output_cannot_forge_promoted_pipeline_state() -> None:
+    proposal = {
+        "id": "candidate_forged",
+        "kind": "TheoremCandidatePacket",
+        "authority": "proposal",
+        "pipeline_state": "promoted",
+    }
+
+    try:
+        infer_output_pipeline_state(proposal)
+    except RunnerError as exc:
+        assert "conflicts with packet-derived state proposed" in str(exc)
+    else:  # pragma: no cover
+        raise AssertionError("proposal packet must not claim promoted pipeline state")
 
 
 def test_runner_allows_blocked_branch_from_idle_via_residue_packet(tmp_path: Path) -> None:

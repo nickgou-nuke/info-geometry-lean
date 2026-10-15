@@ -66,3 +66,5 @@ import InfoGeometry.Epistemology.RiemannianSubmersion
 import InfoGeometry.Epistemology.RiemannianSubmersionAudit
 import InfoGeometry.Canonical.NaturalGradientSubmersionFlow
 import InfoGeometry.Canonical.NaturalGradientSubmersionFlowAudit
+import InfoGeometry.Export.LeanJuliaVerifiedInterop
+import InfoGeometry.Export.LeanJuliaVerifiedInteropAudit

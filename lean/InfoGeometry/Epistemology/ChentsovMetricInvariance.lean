@@ -245,7 +245,6 @@ def idCongruentMarkovKernel (α : Type*) [Fintype α] [DecidableEq α] :
   kernel := {
     T a b := if b = a then 1 else 0
     nonneg a b := by
-      change 0 ≤ (if b = a then (1 : ℝ) else 0)
       split_ifs <;> linarith
     sum_one a := by
       have : ∑ b, (if b = a then (1 : ℝ) else 0) = 1 := by
@@ -346,8 +345,8 @@ theorem chentsov_congruent_metric_invariance {α β : Type*} [Fintype α] [Finty
     rw [congruent_pushforward_at CK P b, congruent_pushforward_tangent_at CK u b,
         congruent_pushforward_tangent_at CK v b]
     by_cases h_zero : CK.kernel.T (CK.fiber b) b = 0
-    · rw [if_pos h_zero, h_zero, mul_zero]
-    · rw [if_neg h_zero]
+    · simp [h_zero]
+    · simp [h_zero]
       calc
         (u (CK.fiber b) * CK.kernel.T (CK.fiber b) b * (v (CK.fiber b) * CK.kernel.T (CK.fiber b) b)) /
         (P.p (CK.fiber b) * CK.kernel.T (CK.fiber b) b)
@@ -452,7 +451,7 @@ structure CongruentPartitionEmbedding (α β : Type*) [Fintype α] [Fintype β] 
   c_pos : ∀ b, 0 < c b
   partition_sum : ∀ a : α, ∑ b ∈ Finset.univ.filter (fun b => π b = a), c b = 1
 
-/-- Identity sufficient statistic partition embedding on a finite type `α`. -/
+/-- Identity partition embedding on a finite type; each singleton fiber has weight one. -/
 def idCongruentPartitionEmbedding (α : Type*) [Fintype α] [DecidableEq α] :
     CongruentPartitionEmbedding α α where
   π := id
@@ -468,6 +467,10 @@ instance {α : Type*} [Fintype α] [DecidableEq α] :
     Inhabited (CongruentPartitionEmbedding α α) :=
   ⟨idCongruentPartitionEmbedding α⟩
 
+/-- A closed nonempty model of the partition embedding structure on the singleton type. -/
+def unitCongruentPartitionEmbedding : CongruentPartitionEmbedding Unit Unit :=
+  idCongruentPartitionEmbedding Unit
+
 /-- Every sufficient statistic partition embedding canonically induces a congruent Markov kernel
 `T(a, b) = c(b) δ_{π(b), a}`. -/
 def partitionEmbeddingToKernel {α β : Type*} [Fintype α] [Fintype β] [DecidableEq α]
@@ -475,12 +478,10 @@ def partitionEmbeddingToKernel {α β : Type*} [Fintype α] [Fintype β] [Decida
   kernel := {
     T a b := if E.π b = a then E.c b else 0
     nonneg a b := by
-      change 0 ≤ (if E.π b = a then E.c b else 0)
       split_ifs
       · exact le_of_lt (E.c_pos b)
       · exact le_refl 0
     sum_one a := by
-      change ∑ b, (if E.π b = a then E.c b else 0) = 1
       rw [← Finset.sum_filter]
       exact E.partition_sum a
   }
@@ -499,7 +500,7 @@ theorem partitionEmbedding_weight_pos {α β : Type*} [Fintype α] [Fintype β] 
     (E : CongruentPartitionEmbedding α β) (b : β) :
     0 < (partitionEmbeddingToKernel E).kernel.T ((partitionEmbeddingToKernel E).fiber b) b := by
   dsimp [partitionEmbeddingToKernel]
-  rw [if_pos rfl]
+  simp
   exact E.c_pos b
 
 /-- **Chentsov's Partition Embedding Fisher Invariance Theorem**:
@@ -529,7 +530,6 @@ def injectiveCongruentKernel {α β : Type*} [Fintype α] [Fintype β] [Decidabl
   kernel := {
     T a b := if b = f a then 1 else 0
     nonneg a b := by
-      change 0 ≤ (if b = f a then (1 : ℝ) else 0)
       split_ifs <;> linarith
     sum_one a := by
       have : ∑ b, (if b = f a then (1 : ℝ) else 0) = 1 := by

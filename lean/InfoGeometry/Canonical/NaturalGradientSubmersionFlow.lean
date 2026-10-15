@@ -10,10 +10,11 @@ import InfoGeometry.Epistemology.RiemannianSubmersion
 import InfoGeometry.Canonical.SuperGrassmannianManifold
 
 /-!
-# Natural Gradient Submersion Flow: Horizontal Geodesics and Confabulation Elimination
+# Abstract Split Projectors and Conditional Metric Identities
 
-This module couples the Riemannian submersion framework (`RiemannianSubmersion.lean`) with
-indefinite para-Kähler super-Grassmannian geometry (`SuperGrassmannianManifold.lean`):
+This module proves finite algebraic identities for abstract linear splittings and a supplied
+symmetric bilinear form, using the para-complex structure API from
+`SuperGrassmannianManifold.lean`. It does not define a gradient flow or metric inverse:
 
 1. `paraComplexSubmersionSplit`: Proves that any para-complex structure $K^2 = \text{id}$ on a real
    vector space canonically induces a `SubmersionSplit` via the spectral projectors

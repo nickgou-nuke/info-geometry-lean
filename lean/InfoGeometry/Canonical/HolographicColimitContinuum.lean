@@ -35,7 +35,7 @@ open CategoryTheory.Limits
 
 /-! ### 1. Discrete Holographic Tower and Sequential Bonding -/
 
-/-- Direct inductive tower of discrete tensor network state spaces. -/
+/-- Direct inductive tower of modules with linear successor maps. -/
 structure HolographicTower {R : Type*} [CommRing R]
     (T : ℕ → Type*) [∀ n, AddCommGroup (T n)] [∀ n, Module R (T n)] where
   iota : ∀ n, T n →ₗ[R] T (n + 1)

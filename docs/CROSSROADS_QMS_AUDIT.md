@@ -78,17 +78,18 @@
   - *Cross-reference*: The non-commutative matrix version of the Moore–Penrose support/kernel projectors (`matrixSupportProj`, `matrixKernelProj`) was subsequently formalized in `DiscreteKreinAndreevGraphEngine.lean` Section 4 (L209–253), and the full matrix KMS trace identity is in `AttentionKMSState.lean` (L195–213), but `MoorePenroseModularCut.lean` itself remains a diagonal/scalar specialization.
 
 ### Module 5: `lean/InfoGeometry/Epistemology/ChentsovMetricInvariance.lean` (563 lines)
-- **Declarations**: 4 `structure` (`ProbInterior`, `TangentVector`, `CongruentMarkovKernel`, `CongruentPartitionEmbedding`), 9 `def`, 19 `theorem`s.
+- **Declarations**: 4 `structure` (`ProbInterior`, `TangentVector`, `CongruentMarkovKernel`, `CongruentPartitionEmbedding`), 10 `def`, 19 `theorem`s.
 - **Forbidden Markers**: None (`0`).
-- **Certificate / Trap T17**: Direct theorem surface culminating in `fisherMetric_eq_zero_iff`, `fisherMetric_pos_of_ne_zero`, `chentsov_congruent_metric_invariance`, `chentsov_congruent_pushforward_fisher_isometry`, `chentsov_partition_embedding_fisher_invariance`, and `injectiveCongruentKernel_fisher_invariance`. All 4 structures have constructive `Inhabited` witnesses (`unitProbInterior`, `zeroTangentVector`, `idCongruentMarkovKernel`, `idCongruentPartitionEmbedding`).
-- **Carrier / Trap T16**: Finite probability distributions (`ProbInterior α`), zero-sum tangent vectors (`TangentVector α`), and Markov transition kernels (`MarkovKernel α β` from `VariationalRG.lean`). Appropriate carrier for classical finite-simplex Fisher geometry.
+- **Scope**: Finite Fisher-sum identities for congruent kernels; the partition-embedding theorem is an isometry between simplex interiors under the stated positive fiber weights. The injective embedding result is a support-masked sum identity, not an interior isometry when the embedding is nonsurjective. This is not Chentsov uniqueness.
+- **Trap T17**: Concrete inhabitants are scoped: `ProbInterior Unit`, `TangentVector α`, `CongruentMarkovKernel α α`, `CongruentPartitionEmbedding α α`, and the closed singleton partition model. These do not establish inhabitants for arbitrary type parameters.
+- **Carrier / Trap T16**: Finite probability distributions (`ProbInterior α`), zero-sum tangent vectors (`TangentVector α`), and Markov transition kernels (`MarkovKernel α β` from `VariationalRG.lean`). Appropriate carrier for the stated finite identities.
 
-### Module 6: `lean/InfoGeometry/Canonical/NaturalGradientSubmersionFlow.lean` (352 lines)
-- **Declarations**: 2 `structure` (`NaturalGradientSubmersionSystem`, `HorizontalInverseFisherOperator`), 9 `def` (`paraProjectorPlus`, `paraProjectorMinus`, `paraComplexSubmersionSplit`, `zeroNaturalGradientSubmersionSystem`, `canonicalHorizontalInverseFisherOperator`, `apexObjective`, `apexGradient`, `criticalRadius`, `invariantApex`), 18 `theorem`s.
+### Module 6: `lean/InfoGeometry/Canonical/NaturalGradientSubmersionFlow.lean` (316 lines)
+- **Declarations**: 1 `structure` (`NaturalGradientSubmersionSystem`), 7 `def`, 16 `theorem`s.
 - **Forbidden Markers**: None (`0`).
-- **Certificate / Trap T17**: Direct theorem surface (no `Prop`-bundling wrapper). `paraComplexSubmersionSplit` constructively witnesses `SubmersionSplit V`, `zeroNaturalGradientSubmersionSystem` witnesses `Inhabited (NaturalGradientSubmersionSystem V)`, and `canonicalHorizontalInverseFisherOperator` witnesses `Inhabited (HorizontalInverseFisherOperator V split)`.
-- **Carrier / Trap T16**: Genuine module and `LinearMap` carrier (`[AddCommGroup V] [Module ℝ V]`, `V →ₗ[ℝ] V`, `V →ₗ[ℝ] V →ₗ[ℝ] ℝ`) coupled to `RiemannianSubmersion` and `SuperGrassmannianManifold`. Fully compliant.
-
+- **Scope**: Abstract finite projector identities, conditional metric identities, and scalar quadratic optimization. `kernel_pinning_vanishing_drift` assumes vertical pinning; it does not derive it from a Fisher metric inverse. No geodesic or gradient flow is defined.
+- **Trap T17**: `NaturalGradientSubmersionSystem` has a zero-metric inhabitant. This is a model of the abstract structure, not a nondegenerate Fisher metric.
+- **Carrier / Trap T16**: `[AddCommGroup V] [Module ℝ V]`, linear projections, and a supplied bilinear form; no specific Fisher metric inverse is constructed.
 ### Module 7: `lean/InfoGeometry/Epistemology/WheelerDeWittModularZeroMode.lean` (432 lines)
 - **Declarations**: 6 `structure` (`WDWConstraintSystem`, `ModularHamiltonianSystem`, `ThermalTimeWDWBridge`, `GravitationalCrossedProduct`, `DeconfabulationBridge`, `WheelerDeWittModularZeroModeCertificate`), 1 `inductive` (`EpistemicArchetype`), 8 `def`, 14 `theorem`s.
 - **Forbidden Markers**: None (`0`).

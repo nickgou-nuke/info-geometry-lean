@@ -1,0 +1,13 @@
+diff --git a/lakefile.lean b/lakefile.lean
+index 431e881bf..3796fd6fd 100644
+--- a/lakefile.lean
++++ b/lakefile.lean
+@@ -1106,3 +1106,8 @@ lean_lib Experimental where
+   globs := #[.andSubmodules `Experimental]
+ 
+ 
++
++@[default_target]
++lean_lib sandbox where
++  srcDir := ".."
++  globs := #[.andSubmodules `sandbox]

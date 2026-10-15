@@ -1,0 +1,12 @@
+diff --git a/lakefile.lean b/lakefile.lean
+index 431e881bf..f227982c5 100644
+--- a/lakefile.lean
++++ b/lakefile.lean
+@@ -952,6 +952,7 @@ lean_lib StandaloneMathematics where
+     `ZornScalingFlow,
+     `ast_export_test,
+     `sandbox.GoldenMeanShift,
++    `sandbox.MathlibColimitBridge_Phase1,
+     `temp_test,
+     `test_fixes2,
+     `test_reflection,

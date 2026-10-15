@@ -1,0 +1,14 @@
+diff --git a/external_refs/atlas-lean/lakefile.lean b/external_refs/atlas-lean/lakefile.lean
+new file mode 100644
+--- /dev/null
++++ b/external_refs/atlas-lean/lakefile.lean
+@@ -0,0 +1,3 @@
++import Lake
++open Lake DSL
++package Atlas
+diff --git a/external_refs/atlas-lean/lakefile.toml b/external_refs/atlas-lean/lakefile.toml
+new file mode 100644
+--- /dev/null
++++ b/external_refs/atlas-lean/lakefile.toml
+@@ -0,0 +1 @@
++name = "Atlas"

@@ -28,7 +28,8 @@ manifolds, and Chentsov's uniqueness theorem for the Fisher information metric:
    - 🏆 **Theorem 3 (Levi-Civita Curvature Concordance $\alpha = 0$)**:
      $$R^{(0)} = R^{(1)}$$
 
-3. **Chentsov's Uniqueness for the Fisher Information Metric**:
+3. **Chentsov Invariance (scalar placeholder; the genuine uniqueness theorem for rational
+   points is `InfoGeometry.Epistemology.ChentsovUniqueness.chentsov_uniqueness_rational`)**:
    - Metric invariance under Markov congruences / stochastic morphisms $T$:
      $$\langle T_* X, T_* Y \rangle_{g_{\text{Fisher}}} = \langle X, Y \rangle_{g_{\text{Fisher}}}$$
    - Monotonicity and contraction of Fisher distance under coarse graining.

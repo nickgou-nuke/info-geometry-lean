@@ -12,7 +12,8 @@ import Mathlib.Tactic
 
 This module formalizes the differential-geometric and information-theoretic spine
 of deep neural networks viewed as a discrete cascade of **Riemannian submersions**
-under Chentsov's unique invariant metric:
+under the Fisher metric (uniqueness of the Fisher metric among congruence-invariant
+metrics is proved, at rational points only, in `Epistemology/ChentsovUniqueness.lean`):
 
 1. **Tangent Space Decomposition & Submersion Projectors**:
    - The total tangent space decomposes into horizontal and vertical components:

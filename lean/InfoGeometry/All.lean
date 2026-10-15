@@ -73,3 +73,7 @@ import InfoGeometry.Export.LeanJuliaVerifiedInterop
 import InfoGeometry.Export.LeanJuliaVerifiedInteropAudit
 import InfoGeometry.Canonical.GrandEpistemicGeometricSynthesis
 import InfoGeometry.Canonical.GrandEpistemicGeometricSynthesisAudit
+import InfoGeometry.Epistemology.ChentsovUniqueness
+import InfoGeometry.Epistemology.ChentsovUniquenessAudit
+import InfoGeometry.Epistemology.SubmersionSplitFinrank
+import InfoGeometry.Epistemology.SubmersionSplitFinrankAudit

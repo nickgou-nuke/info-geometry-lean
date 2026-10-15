@@ -1,0 +1,23 @@
+import InfoGeometry.Epistemology.SubmersionSplitFinrank
+
+#print axioms InfoGeometry.Epistemology.SubmersionSplitFinrank.range_projV_eq_ker_projH
+#print axioms InfoGeometry.Epistemology.SubmersionSplitFinrank.range_projH_eq_ker_projV
+#print axioms InfoGeometry.Epistemology.SubmersionSplitFinrank.projH_of_mem_range
+#print axioms InfoGeometry.Epistemology.SubmersionSplitFinrank.isCompl_range_projH_range_projV
+#print axioms InfoGeometry.Epistemology.SubmersionSplitFinrank.finrank_split
+#print axioms InfoGeometry.Epistemology.SubmersionSplitFinrank.finrank_range_projH_le
+#print axioms InfoGeometry.Epistemology.SubmersionSplitFinrank.cost_horizontal_le
+#print axioms InfoGeometry.Epistemology.SubmersionSplitFinrank.finrank_pos_of_ne_bot
+#print axioms InfoGeometry.Epistemology.SubmersionSplitFinrank.cost_horizontal_lt
+#print axioms InfoGeometry.Epistemology.SubmersionSplitFinrank.cost_binomial_excess
+#print axioms InfoGeometry.Epistemology.SubmersionSplitFinrank.finrank_paraComplex_split
+#print axioms InfoGeometry.Epistemology.SubmersionSplitFinrank.swapK_paraComplex
+#print axioms InfoGeometry.Epistemology.SubmersionSplitFinrank.swapK_plus_e0
+#print axioms InfoGeometry.Epistemology.SubmersionSplitFinrank.swapK_minus_e0
+#print axioms InfoGeometry.Epistemology.SubmersionSplitFinrank.range_ne_bot_of_coord
+#print axioms InfoGeometry.Epistemology.SubmersionSplitFinrank.swap_range_plus_ne_bot
+#print axioms InfoGeometry.Epistemology.SubmersionSplitFinrank.swap_range_minus_ne_bot
+#print axioms InfoGeometry.Epistemology.SubmersionSplitFinrank.swap_cost_horizontal_lt
+#print axioms InfoGeometry.Epistemology.SubmersionSplitFinrank.swap_finrank_sum
+#print axioms InfoGeometry.Epistemology.SubmersionSplitFinrank.swap_finrank_plus_eq_one
+#print axioms InfoGeometry.Epistemology.SubmersionSplitFinrank.swap_cost_one_lt_two

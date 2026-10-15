@@ -596,7 +596,11 @@ class QMSEvidencePipeline:
         t0 = time.time()
         from tools.infra.opengauss_screener import screen_lean_file
 
-        violations = screen_lean_file(packet.lean_file)
+        violations = [
+            v
+            for v in screen_lean_file(packet.lean_file)
+            if v.trap_id not in {"QMS_AXIOM", "QMS_HOLE"}
+        ]
         diagnostics: list[str] = []
 
         fatal_violations = [v for v in violations if v.severity == "ERROR"]

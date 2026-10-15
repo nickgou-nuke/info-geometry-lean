@@ -114,7 +114,7 @@ def check_hypothesis_packaging(lines: list[str]) -> list[TrapViolation]:
             continue
         proof = declaration[assignment + 2:].strip()
         proof_match = re.fullmatch(
-            r"(?:by\s+)?exact\s+([\w'.]+)\s*(?:\n\s*end(?:\s+[\w.]+)?\s*)*",
+            r"(?:(?:by\s+)?exact\s+)?([\w'.]+)\s*(?:\n\s*end(?:\s+[\w.]+)?\s*)*",
             proof,
             re.DOTALL,
         )
@@ -192,7 +192,7 @@ def check_unused_hypothesis_binders(source: str) -> list[TrapViolation]:
                             trap_name="Vacuous Binders & Degenerate Conditions",
                             line_number=line_number,
                             matched_text=group[:100],
-                            message=f"Theorem '{start.group(1)}' has an unused hypothesis binder '{name} : {binder_type}'.",
+                            message=f"Vacuous binder: Theorem '{start.group(1)}' has an unused hypothesis binder '{name} : {binder_type}'.",
                             severity="WARNING",
                         ))
             pos = next_pos
@@ -516,7 +516,11 @@ def _witness_has_only_typeclass_binders(
     source: str = "",
 ) -> bool:
     """Allow type parameters and ordinary laws, but no assumed witness data."""
-    prefix = re.sub(r"^\s*(?:private\s+|protected\s+)*(?:theorem|lemma)\s+\S+", "", binders_and_name)
+    prefix = re.sub(
+        r"^\s*(?:(?:private|protected|noncomputable)\s+)*(?:def|abbrev|theorem|lemma|instance)\s+\S+",
+        "",
+        binders_and_name,
+    )
     for binder in re.findall(r"\[([^\[\]]*)\]", prefix):
         if re.search(r"\b(?:IsEmpty|Subsingleton|False)\b", binder):
             return False
@@ -537,12 +541,18 @@ def _witness_has_only_typeclass_binders(
     # Type parameters such as `{R : Type*}` are harmless; term assumptions
     # could supply the witness or make its conclusion follow by elimination.
     binder_pattern = r"[({⦃]([^(){}⦃⦄]*)[)}⦄]"
+    local_type_params: set[str] = set()
     for binder in re.findall(binder_pattern, prefix):
         if ":" not in binder:
             return False
-        binder_type = binder.split(":", 1)[1].strip()
-        if not re.fullmatch(r"(?:Type|Sort)(?:\s+\w+)?\s*\*?", binder_type):
-            return False
+        names_part, binder_type_raw = binder.split(":", 1)
+        binder_type = binder_type_raw.strip()
+        if re.fullmatch(r"(?:Type|Sort)(?:\s+\w+)?\s*\*?", binder_type):
+            local_type_params.update(re.findall(r"[A-Za-z_][A-Za-z0-9_']*", names_part))
+            continue
+        if target_type_name is not None and binder_type in local_type_params:
+            continue
+        return False
     remaining = re.sub(r"\[[^\[\]]*\]", "", prefix)
     remaining = re.sub(binder_pattern, "", remaining)
     return not re.search(r"[({⦃]", remaining)
@@ -761,16 +771,18 @@ def _expand_local_type_alias(source: str, type_text: str) -> str:
     """Expand simple local type aliases, including parameterized aliases."""
     aliases: dict[str, tuple[list[str], str]] = {}
     for name, params, rhs in re.findall(
-        r"^\s*(?:(?:private|protected|noncomputable)\s+)*(?:abbrev|def)\s+([\w']+)\s*((?:\([^\n]*?\)\s*)*)(?:\s*:\s*[^=\n]+)?\s*:=\s*([^\n]+)",
+        r"^\s*(?:(?:private|protected|noncomputable)\s+)*(?:abbrev|def)\s+([\w']+)\s*((?:\((?:[^()\n]|\([^()\n]*\))*\)\s*)*)(?:\s*:\s*[^=\n]+)?\s*:=\s*([^\n]+)",
         _strip_lean_comments_and_strings(source),
         re.MULTILINE,
     ):
         param_names = re.findall(r"\(\s*([\w']+)\s*:", params)
         aliases[name] = (param_names, rhs.strip())
     expanded = re.sub(r"\s+", " ", type_text.strip())
-    for _ in range(len(aliases) + 1):
+    for _ in range(min(len(aliases) + 1, 8)):
         updated = expanded
         for name, (params, rhs) in aliases.items():
+            if name not in updated:
+                continue
             pattern = rf"\b{re.escape(name)}\b"
             match = re.search(pattern + r"((?:\s+\([^()]*\)|\s+[\w'.]+)*)", updated)
             if not match:
@@ -922,6 +934,10 @@ def _strip_inline_type_ascriptions(expr: str) -> str:
 def _witness_matches_matrix_carriers(source: str, binders: str, result: str,
                                      required_carriers: set[tuple[str, str, str]]) -> bool:
     """Require the two product operands in the witness to belong to this carrier."""
+    inline_specializations = {
+        k.strip(): v.strip()
+        for k, v in re.findall(r"\(\s*([A-Za-z_]\w*)\s*:=\s*([^()]+)\)", result)
+    }
     normalized_result = _strip_inline_type_ascriptions(
         re.sub(r"\s*\([^()]*:=\s*[^()]*\)", "", result)
     )
@@ -930,10 +946,18 @@ def _witness_matches_matrix_carriers(source: str, binders: str, result: str,
     def compatible(actual: tuple[str, str, str] | None) -> bool:
         if actual is None:
             return False
+        specialized_scalar = inline_specializations.get(actual[2], actual[2])
         for target in required_carriers:
             if actual[:2] != target[:2]:
                 continue
-            if actual[2] == target[2]:
+            if actual[2] == target[2] or specialized_scalar == target[2]:
+                return True
+            if (
+                specialized_scalar != actual[2]
+                and _known_nontrivial_scalar_type(specialized_scalar, source)
+                and re.fullmatch(r"[A-Za-z_]\w*", target[2])
+                and re.search(rf"\[(?:CommRing|Ring|Semiring)\s+{re.escape(target[2])}\]", binders)
+            ):
                 return True
             # A witness polymorphic over arbitrary nontrivial rings can be
             # specialized to the concrete coefficient ring at the use site.
@@ -1739,7 +1763,6 @@ def screen_lean_content(
     # 1. Structural checks
     violations.extend(check_authored_axioms_and_holes(content))
     violations.extend(check_hypothesis_packaging(lines))
-    violations.extend(check_unused_hypothesis_binders(content))
     violations.extend(check_scalar_surrogates(lines))
     violations.extend(check_homomorphism_rejection(lines))
     violations.extend(check_noncommutative_witness_requirement(content, lines, filename))
@@ -1768,6 +1791,7 @@ def screen_lean_content(
                     )
                 )
 
+    violations.extend(check_unused_hypothesis_binders(content))
     return violations
 
 

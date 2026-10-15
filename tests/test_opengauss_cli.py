@@ -162,15 +162,15 @@ def test_command_5_review(tmp_path: Optional[Path] = None):
     assert rep4.kernel_checked is False
     assert rep4.custom_axioms is None
 
-    # Static screening must not present an axiom-backed claim as a completed
-    # kernel acceptance.
+    # Static screening rejects repo-authored axiom declarations immediately via QMS_AXIOM.
     unverified_file = tmp_path / "Unverified.lean"
     unverified_file.write_text(
         "axiom made_up : False\ntheorem false_claim : False := made_up\n",
         encoding="utf-8",
     )
     rep_unverified = review_file(unverified_file, gate="GATE_4")
-    assert rep_unverified.verdict == "STATIC_REVIEW_PASSED_KERNEL_UNVERIFIED"
+    assert rep_unverified.verdict == "REJECTED"
+    assert any(t["trap_id"] == "QMS_AXIOM" for t in rep_unverified.trap_violations)
     assert rep_unverified.kernel_checked is False
     assert rep_unverified.custom_axioms is None
 
@@ -430,7 +430,7 @@ def test_cli_dispatch_main(capsys=None):
     assert rc == 0
 
     # 5. review
-    rc = main(["review", "lean/InfoGeometry/Clifford/CockleCoquaternionPlanarTriad.lean", "--gate", "GATE_2", "--json"])
+    rc = main(["review", "proofs/WavefrontKMSKleinDuality.lean", "--gate", "GATE_2", "--json"])
     assert rc == 0
 
     # 6. checkpoint

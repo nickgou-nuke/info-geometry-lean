@@ -392,11 +392,20 @@ def review_file(
         verdict = "REJECT" if gate == "GATE_2" else "REJECTED"
         summary = f"Audit failed: {len(errors)} trap errors, {sorry_count} sorries, {admit_count} admits; kernel verification {verification_status}."
     elif traps or scope_warnings or sorry_count > 0:
-        verdict = "REQUEST_CHANGES" if gate == "GATE_2" else "STATIC_REVIEW_WITH_CAVEATS_KERNEL_UNVERIFIED"
+        if gate == "GATE_2":
+            verdict = "REQUEST_CHANGES"
+        elif verify_kernel and verification_status == "passed":
+            verdict = "ACCEPTED_WITH_CAVEATS"
+        else:
+            verdict = "STATIC_REVIEW_WITH_CAVEATS_KERNEL_UNVERIFIED"
         summary = f"Review passed with caveats: {len(traps)} warnings, {sorry_count} sorries."
     elif gate == "GATE_4":
-        verdict = "STATIC_REVIEW_PASSED_KERNEL_UNVERIFIED"
-        summary = "Static checks passed; Lean compilation and theorem axiom audit were not run."
+        if verify_kernel and verification_status == "passed":
+            verdict = "ACCEPTED"
+            summary = "Gate 4 acceptance passed: 0 sorries, 0 admits, 0 traps, and locked Lean kernel + axiom verification passed."
+        else:
+            verdict = "STATIC_REVIEW_PASSED_KERNEL_UNVERIFIED"
+            summary = "Static checks passed; Lean compilation and theorem axiom audit were not run."
     else:
         verdict = "PASS"
         summary = "Static audit clean: 0 sorries, 0 admits, 0 detected trap violations."

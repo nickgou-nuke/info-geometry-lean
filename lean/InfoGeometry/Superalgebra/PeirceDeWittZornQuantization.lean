@@ -889,3 +889,10 @@ theorem zorn_nonassociative_witness :
 end ZornAlgebra
 
 end InfoGeometry.Superalgebra.PeirceDeWittZornQuantization
+
+namespace InfoGeometry.Superalgebra.PeirceZorn
+
+export InfoGeometry.Superalgebra.PeirceDeWittZornQuantization (ColorVec3 ZornAlgebra)
+
+end InfoGeometry.Superalgebra.PeirceZorn
+

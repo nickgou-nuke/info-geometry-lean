@@ -173,6 +173,53 @@ theorem paraKahler_projMinus_isotropic_two_mul
     (NaturalGradientSubmersionFlow.paraProjectorMinus K v)
     (paraProjectorMinus_in_TMinus K hK v)
 
+/-- Over `ℝ`, every image vector of `paraProjectorPlus K` has strictly zero metric norm
+under a compatible `ParaKahlerStructure`. -/
+theorem paraKahler_projPlus_isotropic
+    {g omega : V →ₗ[ℝ] V →ₗ[ℝ] ℝ} {K : V →ₗ[ℝ] V}
+    (hK : SuperGrassmannianManifold.ParaComplexStructure K)
+    (hPK : SuperGrassmannianManifold.ParaKahlerStructure g omega K) (v : V) :
+    g (NaturalGradientSubmersionFlow.paraProjectorPlus K v)
+      (NaturalGradientSubmersionFlow.paraProjectorPlus K v) = 0 := by
+  have h2 := paraKahler_projPlus_isotropic_two_mul hK hPK v
+  linarith
+
+/-- Over `ℝ`, every image vector of `paraProjectorMinus K` has strictly zero metric norm
+under a compatible `ParaKahlerStructure`. -/
+theorem paraKahler_projMinus_isotropic
+    {g omega : V →ₗ[ℝ] V →ₗ[ℝ] ℝ} {K : V →ₗ[ℝ] V}
+    (hK : SuperGrassmannianManifold.ParaComplexStructure K)
+    (hPK : SuperGrassmannianManifold.ParaKahlerStructure g omega K) (v : V) :
+    g (NaturalGradientSubmersionFlow.paraProjectorMinus K v)
+      (NaturalGradientSubmersionFlow.paraProjectorMinus K v) = 0 := by
+  have h2 := paraKahler_projMinus_isotropic_two_mul hK hPK v
+  linarith
+
+/-- The positive spectral projector `paraProjectorPlus K` satisfies `GrassmannianProjector`. -/
+theorem paraProjectorPlus_isGrassmannianProjector
+    (K : V →ₗ[ℝ] V) (hK : SuperGrassmannianManifold.ParaComplexStructure K) :
+    SuperGrassmannianManifold.GrassmannianProjector
+      (NaturalGradientSubmersionFlow.paraProjectorPlus K) :=
+  ⟨NaturalGradientSubmersionFlow.para_projector_plus_idempotent K hK⟩
+
+/-- The negative spectral projector `paraProjectorMinus K` satisfies `GrassmannianProjector`. -/
+theorem paraProjectorMinus_isGrassmannianProjector
+    (K : V →ₗ[ℝ] V) (hK : SuperGrassmannianManifold.ParaComplexStructure K) :
+    SuperGrassmannianManifold.GrassmannianProjector
+      (NaturalGradientSubmersionFlow.paraProjectorMinus K) :=
+  ⟨NaturalGradientSubmersionFlow.para_projector_minus_idempotent K hK⟩
+
+/-- The algebraic orthogonal complement `LinearMap.id - paraProjectorPlus K` is identically
+`paraProjectorMinus K`. -/
+theorem orthoComplement_paraProjectorPlus_eq_minus (K : V →ₗ[ℝ] V) :
+    SuperGrassmannianManifold.orthoComplement
+      (NaturalGradientSubmersionFlow.paraProjectorPlus K) =
+    NaturalGradientSubmersionFlow.paraProjectorMinus K := by
+  ext v
+  change v - NaturalGradientSubmersionFlow.paraProjectorPlus K v =
+    NaturalGradientSubmersionFlow.paraProjectorMinus K v
+  exact (eq_sub_of_add_eq' (NaturalGradientSubmersionFlow.para_projectors_sum_id K v)).symm
+
 end ParaKahlerSubmersion
 
 /-! ### 3. Archetype III: Holographic Colimit Projector Tower & Stagewise Submersion Split -/
@@ -300,6 +347,44 @@ theorem pinned_submersion_matches_chentsov_invariance
   rw [NaturalGradientSubmersionFlow.kinetic_energy_fiber_collapse sys velocity h_pinned]
   rw [ChentsovMetricInvariance.chentsov_partition_embedding_fisher_invariance E P u u]
 
+/-- Under any `CongruentPartitionEmbedding`, the geodesic critical radius `r* = C / (2 K_P)`
+where `K_P = g_P(u, u)` is invariant under pushforward to the target simplex interior. -/
+theorem chentsov_partition_invariant_criticalRadius
+    {α β : Type*} [Fintype α] [Fintype β] [DecidableEq α]
+    (C : ℝ) (E : ChentsovMetricInvariance.CongruentPartitionEmbedding α β)
+    (P : ChentsovMetricInvariance.ProbInterior α) (u : α → ℝ) :
+    NaturalGradientSubmersionFlow.criticalRadius C
+      (ChentsovMetricInvariance.fisherMetric
+        (ChentsovMetricInvariance.congruentPushforwardInterior
+          (ChentsovMetricInvariance.partitionEmbeddingToKernel E) P
+          (ChentsovMetricInvariance.partitionEmbedding_weight_pos E))
+        (ChentsovMetricInvariance.pushforwardTangentVec
+          (ChentsovMetricInvariance.partitionEmbeddingToKernel E).kernel u)
+        (ChentsovMetricInvariance.pushforwardTangentVec
+          (ChentsovMetricInvariance.partitionEmbeddingToKernel E).kernel u)) =
+    NaturalGradientSubmersionFlow.criticalRadius C
+      (ChentsovMetricInvariance.fisherMetric P u u) := by
+  rw [ChentsovMetricInvariance.chentsov_partition_embedding_fisher_invariance E P u u]
+
+/-- Under any `CongruentPartitionEmbedding`, the geodesic invariant apex `R* = C² / (4 K_P)`
+where `K_P = g_P(u, u)` is invariant under pushforward to the target simplex interior. -/
+theorem chentsov_partition_invariant_apex
+    {α β : Type*} [Fintype α] [Fintype β] [DecidableEq α]
+    (C : ℝ) (E : ChentsovMetricInvariance.CongruentPartitionEmbedding α β)
+    (P : ChentsovMetricInvariance.ProbInterior α) (u : α → ℝ) :
+    NaturalGradientSubmersionFlow.invariantApex C
+      (ChentsovMetricInvariance.fisherMetric
+        (ChentsovMetricInvariance.congruentPushforwardInterior
+          (ChentsovMetricInvariance.partitionEmbeddingToKernel E) P
+          (ChentsovMetricInvariance.partitionEmbedding_weight_pos E))
+        (ChentsovMetricInvariance.pushforwardTangentVec
+          (ChentsovMetricInvariance.partitionEmbeddingToKernel E).kernel u)
+        (ChentsovMetricInvariance.pushforwardTangentVec
+          (ChentsovMetricInvariance.partitionEmbeddingToKernel E).kernel u)) =
+    NaturalGradientSubmersionFlow.invariantApex C
+      (ChentsovMetricInvariance.fisherMetric P u u) := by
+  rw [ChentsovMetricInvariance.chentsov_partition_embedding_fisher_invariance E P u u]
+
 /-- For positive curvature penalty `K > 0`, the critical radius `r* = C / (2K)` is simultaneously
 a stationary point of `apexGradient` and a global maximizer attaining `invariantApex C K`. -/
 theorem apex_stationary_and_maximal (C K r : ℝ) (hK : 0 < K) :
@@ -311,3 +396,4 @@ theorem apex_stationary_and_maximal (C K r : ℝ) (hK : 0 < K) :
    NaturalGradientSubmersionFlow.apexObjective_le_invariantApex C K r hK⟩
 
 end InfoGeometry.Canonical.GrandEpistemicGeometricSynthesis
+

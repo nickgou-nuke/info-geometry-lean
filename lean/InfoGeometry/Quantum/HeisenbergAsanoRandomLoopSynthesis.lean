@@ -2,9 +2,15 @@ import Mathlib.Analysis.Complex.Basic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Tactic
+import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Physics.ChiralPoincareSouriauBridge
+import InfoGeometry.Physics.HestenesCuntzSpacetimeAlgebra
 import InfoGeometry.Analysis.AsanoContractionNative
 import InfoGeometry.Analysis.AsanoUnitDiskContractionBridge
 import InfoGeometry.Analysis.AsanoLeeYangCircleBridge
+import InfoGeometry.Quantum.LeeYangAsanoPoincareContraction
+import InfoGeometry.Canonical.LeeYangAsanoFullReduction
+import InfoGeometry.Canonical.LeeYangAsanoInductiveContraction
 
 /-!
 # Heisenberg–Asano–Tóth Random-Loop Synthesis
@@ -13,11 +19,14 @@ This module formalizes the six canonical mathematical archetypes synthesizing
 quantum spin-$1/2$ Pauli algebra, Tóth's spin-exchange identity and random-loop
 representation of the quantum Heisenberg ferromagnet, Asano–Ruelle polynomial
 contractions, Lee–Yang unit-circle root localization, and macroscopic loop
-spontaneous magnetization bounds:
+spontaneous magnetization bounds, directly reusing and bridging the repository's
+preexisting Pauli, Lee–Yang, and Asano–Ruelle owner modules:
 
 1. **Archetype I (Quantum Spin-$1/2$ Pauli Matrices & Non-Commutativity)**:
-   * `pauliX`, `pauliY`, `pauliZ`
-   * `pauliX_mul_pauliZ_ne_pauliZ_mul_pauliX`, `commutator_pauliX_pauliY`
+   * Reuses `InfoGeometry.Algebra.FiniteSpin.Mat2C` and
+     `InfoGeometry.Physics.ChiralPoincareSouriauBridge.{σ1, σ2, σ3}` (`pauliX`, `pauliY`, `pauliZ`)
+   * `pauliX_sq`, `pauliY_sq`, `pauliZ_sq`, `pauliX_mul_pauliZ_ne_pauliZ_mul_pauliX`,
+     `commutator_pauliX_pauliY`
 2. **Archetype II (Two-Site Swap Operator $P_{12}$ & Tóth's Spin-Exchange Identity)**:
    * `spinSwapMatrix`, `tensor2`
    * `spinSwapMatrix_sq`, `trace_spinSwapMatrix`, `toth_pauli_exchange_identity`
@@ -30,12 +39,15 @@ spontaneous magnetization bounds:
    * `singleLoopFugacityFactor_inv`, `singleLoopFugacityFactor_zero_iff_inv_zero`,
      `singleLoopFugacityFactor_root_norm_eq_one`
    * `configLoopPoly_zero_iff_inv_zero`, `configLoopPoly_root_norm_eq_one`,
-     `configLoopPoly_root_to_critical_line`
-5. **Archetype V (Asano–Ruelle Contraction & Zero-Free Disk Stability)**:
+     `configLoopPoly_hasLeeYangProperty`, `configLoopPoly_inner_ball_zero_free`,
+     `configLoopPoly_outer_ball_zero_free`, `configLoopPoly_root_to_critical_line`
+5. **Archetype V (Asano–Ruelle Contraction & Multiaffine Inductive Zero-Free Stability)**:
    * `ferromagnetic_asanoContract_root_iff`,
      `ferromagnetic_asanoContract_root_on_unitCircle`,
      `ferromagnetic_asanoContract_ne_zero_in_openDisk`,
-     `asano_rankOne_contracted_root_radius_bound`
+     `asano_rankOne_contracted_root_radius_bound`,
+     `asano_full_contraction_root_mem_negProductSet`,
+     `asano_multiaffine_inductive_step_root_mem_forbidden`
 6. **Archetype VI (Macroscopic Loop Fraction & Spontaneous Magnetization Bound $m \ge S/4$)**:
    * `loopMagnetization`
    * `loopMagnetization_ge_quarter_spin`, `loopMagnetization_ge_eighth_of_spin_half`,
@@ -47,28 +59,41 @@ noncomputable section
 namespace InfoGeometry.Quantum.HeisenbergAsanoRandomLoopSynthesis
 
 open scoped BigOperators Matrix
+open InfoGeometry.Algebra.FiniteSpin
+open InfoGeometry.Physics.ChiralPoincareSouriauBridge
+open InfoGeometry.Physics.HestenesCuntzSpacetimeAlgebra
 open InfoGeometry.Analysis.AsanoContractionNative
 open InfoGeometry.Analysis.AsanoUnitDiskContraction
 open InfoGeometry.Analysis.AsanoLeeYangCircle
+open InfoGeometry.Quantum.LeeYangAsanoPoincareContraction
+open InfoGeometry.Canonical.LeeYangAsanoDigest.AsanoInduction
+open InfoGeometry.Canonical.LeeYangAsanoNativeCore
+open InfoGeometry.Canonical.LeeYangAsanoInductiveContraction
 
 /-!
 ## Archetype I & II: Quantum Spin-1/2 Pauli Matrices, Swap Operator & Tóth's Identity
 -/
 
-/-- $2 \times 2$ complex spin-$1/2$ matrices. -/
-abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
-
 /-- Two-site $4 \times 4$ complex spin-$1/2$ matrices indexed by `Fin 2 × Fin 2`. -/
-abbrev Mat4C := Matrix (Fin 2 × Fin 2) (Fin 2 × Fin 2) ℂ
+abbrev TwoSiteMat4C := Matrix (Fin 2 × Fin 2) (Fin 2 × Fin 2) ℂ
 
-/-- Pauli $\sigma_x$ matrix. -/
-def pauliX : Mat2C := !![0, 1; 1, 0]
+/-- Pauli $\sigma_x$ matrix, reusing `ChiralPoincareSouriauBridge.σ1`. -/
+abbrev pauliX : Mat2C := σ1
 
-/-- Pauli $\sigma_y$ matrix. -/
-def pauliY : Mat2C := !![0, -Complex.I; Complex.I, 0]
+/-- Pauli $\sigma_y$ matrix, reusing `ChiralPoincareSouriauBridge.σ2`. -/
+abbrev pauliY : Mat2C := σ2
 
-/-- Pauli $\sigma_z$ matrix. -/
-def pauliZ : Mat2C := !![1, 0; 0, -1]
+/-- Pauli $\sigma_z$ matrix, reusing `ChiralPoincareSouriauBridge.σ3`. -/
+abbrev pauliZ : Mat2C := σ3
+
+/-- Involutivity $\sigma_x^2 = I_2$, reusing `HestenesCuntzSpacetimeAlgebra.pauli_sigma1_sq`. -/
+theorem pauliX_sq : pauliX * pauliX = (1 : Mat2C) := pauli_sigma1_sq
+
+/-- Involutivity $\sigma_y^2 = I_2$, reusing `HestenesCuntzSpacetimeAlgebra.pauli_sigma2_sq`. -/
+theorem pauliY_sq : pauliY * pauliY = (1 : Mat2C) := pauli_sigma2_sq
+
+/-- Involutivity $\sigma_z^2 = I_2$, reusing `HestenesCuntzSpacetimeAlgebra.pauli_sigma3_sq`. -/
+theorem pauliZ_sq : pauliZ * pauliZ = (1 : Mat2C) := pauli_sigma3_sq
 
 /-- Quantum non-commutativity of Pauli spin operators: $\sigma_x \sigma_z \neq \sigma_z \sigma_x$. -/
 theorem pauliX_mul_pauliZ_ne_pauliZ_mul_pauliX :
@@ -77,9 +102,9 @@ theorem pauliX_mul_pauliZ_ne_pauliZ_mul_pauliX :
   have h01 : (pauliX * pauliZ) 0 1 = (pauliZ * pauliX) 0 1 :=
     congr_fun (congr_fun h 0) 1
   have hL : (pauliX * pauliZ) 0 1 = -1 := by
-    simp [pauliX, pauliZ, Matrix.mul_apply, Fin.sum_univ_two]
+    simp [pauliX, pauliZ, σ1, σ3, Matrix.mul_apply, Fin.sum_univ_two]
   have hR : (pauliZ * pauliX) 0 1 = 1 := by
-    simp [pauliX, pauliZ, Matrix.mul_apply, Fin.sum_univ_two]
+    simp [pauliX, pauliZ, σ1, σ3, Matrix.mul_apply, Fin.sum_univ_two]
   rw [hL, hR] at h01
   norm_num at h01
 
@@ -88,10 +113,10 @@ theorem commutator_pauliX_pauliY :
     pauliX * pauliY - pauliY * pauliX = (2 * Complex.I) • pauliZ := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [pauliX, pauliY, pauliZ] <;> ring
+    simp [pauliX, pauliY, pauliZ, σ1, σ2, σ3] <;> ring
 
 /-- Two-site spin permutation (swap) operator $P_{12}$ on $\mathbb{C}^2 \otimes \mathbb{C}^2$. -/
-def spinSwapMatrix : Mat4C :=
+def spinSwapMatrix : TwoSiteMat4C :=
   fun p q => if p.1 = q.2 ∧ p.2 = q.1 then 1 else 0
 
 /-- The two-site spin swap matrix is an involution: $P_{12}^2 = I_4$. -/
@@ -110,18 +135,18 @@ theorem trace_spinSwapMatrix :
   norm_num
 
 /-- Kronecker tensor product $A \otimes B$ of two $2 \times 2$ matrices on `Fin 2 × Fin 2`. -/
-def tensor2 (A B : Mat2C) : Mat4C :=
+def tensor2 (A B : Mat2C) : TwoSiteMat4C :=
   fun p q => A p.1 q.1 * B p.2 q.2
 
 /-- **Tóth's Fundamental Spin-Exchange Identity**:
 $\sigma_x \otimes \sigma_x + \sigma_y \otimes \sigma_y + \sigma_z \otimes \sigma_z + I_4 = 2 P_{12}$,
 expressing the quantum Heisenberg exchange interaction in terms of the permutation swap operator. -/
 theorem toth_pauli_exchange_identity :
-    tensor2 pauliX pauliX + tensor2 pauliY pauliY + tensor2 pauliZ pauliZ + (1 : Mat4C) =
+    tensor2 pauliX pauliX + tensor2 pauliY pauliY + tensor2 pauliZ pauliZ + (1 : TwoSiteMat4C) =
       (2 : ℂ) • spinSwapMatrix := by
   ext ⟨i₁, i₂⟩ ⟨j₁, j₂⟩
   fin_cases i₁ <;> fin_cases i₂ <;> fin_cases j₁ <;> fin_cases j₂ <;>
-    simp [tensor2, pauliX, pauliY, pauliZ, spinSwapMatrix, Complex.I_mul_I] <;>
+    simp [tensor2, pauliX, pauliY, pauliZ, σ1, σ2, σ3, spinSwapMatrix, Complex.I_mul_I] <;>
     ring
 
 /-!
@@ -259,6 +284,27 @@ theorem configLoopPoly_root_norm_eq_one
   rcases hroot with ⟨i, _, hi⟩
   exact singleLoopFugacityFactor_root_norm_eq_one (hL i) hi
 
+/-- The zero set of `configLoopPoly L` ($L_i > 0$) satisfies the repository's canonical
+`HasLeeYangProperty` (`LeeYangAsanoPoincareContraction`). -/
+theorem configLoopPoly_hasLeeYangProperty
+    {ι : Type*} [Fintype ι] (L : ι → ℕ) (hL : ∀ i, 0 < L i) :
+    HasLeeYangProperty {z : ℂ | configLoopPoly L z = 0} :=
+  fun _ hz => configLoopPoly_root_norm_eq_one L hL hz
+
+/-- Inner Poincaré ball zero-freeness for `configLoopPoly L`, deduced from
+`LeeYangAsanoPoincareContraction.inner_ball_zero_free`. -/
+theorem configLoopPoly_inner_ball_zero_free
+    {ι : Type*} [Fintype ι] (L : ι → ℕ) (hL : ∀ i, 0 < L i) :
+    ∀ z ∈ {w : ℂ | configLoopPoly L w = 0}, ¬ (‖z‖ < 1) :=
+  inner_ball_zero_free _ (configLoopPoly_hasLeeYangProperty L hL)
+
+/-- Outer Poincaré ball zero-freeness for `configLoopPoly L`, deduced from
+`LeeYangAsanoPoincareContraction.outer_ball_zero_free`. -/
+theorem configLoopPoly_outer_ball_zero_free
+    {ι : Type*} [Fintype ι] (L : ι → ℕ) (hL : ∀ i, 0 < L i) :
+    ∀ z ∈ {w : ℂ | configLoopPoly L w = 0}, ¬ (1 < ‖z‖) :=
+  outer_ball_zero_free _ (configLoopPoly_hasLeeYangProperty L hL)
+
 /-- Canonical Cayley transport of multi-loop partition roots ($z \neq -1$) to the critical line
 $\operatorname{Re}(s) = 1/2$. -/
 theorem configLoopPoly_root_to_critical_line
@@ -271,7 +317,7 @@ theorem configLoopPoly_root_to_critical_line
     hroot hz_ne
 
 /-!
-## Archetype V: Asano–Ruelle Contraction & Zero-Free Disk Stability
+## Archetype V: Asano–Ruelle Contraction & Multiaffine Inductive Zero-Free Stability
 -/
 
 /-- The ferromagnetic two-site Asano contraction `asanoContract 1 1 z = 1 + z` vanishes if and
@@ -322,6 +368,50 @@ theorem asano_rankOne_contracted_root_radius_bound
     contracted_zero_mem_signedProduct_of_rankOne h0₁ h0₂ hzf hD hdet hzero
   rcases hmem with ⟨u, hu, v, hv, rfl⟩
   exact signedProduct_closedDisks_subset r₁ r₂ hr₁ ⟨u, hK₁ hu, v, hK₂ hv, rfl⟩
+
+/-- **Full Two-Variable Asano–Ruelle Root Localization** (reusing
+`LeeYangAsanoFullReduction.asano_contraction_full_of_topological_combined`):
+For any closed forbidden sets $K_1, K_2 \subseteq \mathbb{C} \setminus \{0\}$ with at least one
+bounded (including all rank-1 and non-degenerate $A D - B C \neq 0$ branches), if
+`asanoPhi A B C D` is zero-free outside $K_1 \times K_2$ and $A + D z = 0$, then
+$z \in - K_1 K_2$ (`negProductSet K₁ K₂`). -/
+theorem asano_full_contraction_root_mem_negProductSet
+    {K₁ K₂ : Set ℂ} {A B C D z : ℂ}
+    (h0K₁ : (0 : ℂ) ∉ K₁)
+    (h0K₂ : (0 : ℂ) ∉ K₂)
+    (hClosed₁ : IsClosed K₁)
+    (hClosed₂ : IsClosed K₂)
+    (hBddOr : Bornology.IsBounded K₁ ∨ Bornology.IsBounded K₂)
+    (hPhi : ∀ z₁ z₂ : ℂ, z₁ ∉ K₁ → z₂ ∉ K₂ → asanoPhi A B C D z₁ z₂ ≠ 0)
+    (hroot : A + D * z = 0) :
+    z ∈ negProductSet K₁ K₂ := by
+  by_contra hzOff
+  exact asano_contraction_full_of_topological_combined
+    h0K₁ h0K₂ hClosed₁ hClosed₂ hBddOr hPhi hzOff hroot
+
+/-- **Multiaffine $N$-Site Inductive Asano Contraction Root Localization** (reusing
+`LeeYangAsanoInductiveContraction.asanoInductiveStep_closed_bounded`):
+For any multiaffine polynomial $P(z_0, z_1, w_1, \dots, w_n)$ zero-free outside
+$K_0 \times K_1 \times \prod_j K_j$, any root $z$ of the contracted polynomial
+`(toTwoVar P w).contract z = 0` must lie in `asanoForbiddenSet (K (Sum.inl 0)) (K (Sum.inl 1))`. -/
+theorem asano_multiaffine_inductive_step_root_mem_forbidden
+    {n : ℕ}
+    (P : MvPolynomial (Fin 2 ⊕ Fin n) ℂ)
+    (hmulti : ∀ m ∈ P.support, ∀ i, (m i : ℕ) ≤ 1)
+    (K : Fin 2 ⊕ Fin n → Set ℂ)
+    (hzero : ∀ i, 0 ∉ K i)
+    (hclosed₀ : IsClosed (K (Sum.inl 0)))
+    (hclosed₁ : IsClosed (K (Sum.inl 1)))
+    (hbdd : Bornology.IsBounded (K (Sum.inl 0)) ∨ Bornology.IsBounded (K (Sum.inl 1)))
+    (hfree : ∀ z : Fin 2 ⊕ Fin n → ℂ, (∀ i, z i ∉ K i) → MvPolynomial.eval z P ≠ 0)
+    (w : Fin n → ℂ)
+    (hw : ∀ j, w j ∉ K (Sum.inr j))
+    {z : ℂ}
+    (hroot : (toTwoVar P w).contract z = 0) :
+    z ∈ asanoForbiddenSet (K (Sum.inl 0)) (K (Sum.inl 1)) := by
+  by_contra hzOff
+  exact asanoInductiveStep_closed_bounded
+    P hmulti K hzero hclosed₀ hclosed₁ hbdd hfree w hw z hzOff hroot
 
 /-!
 ## Archetype VI: Macroscopic Loop Fraction & Spontaneous Magnetization Bound ($m \ge S/4$)

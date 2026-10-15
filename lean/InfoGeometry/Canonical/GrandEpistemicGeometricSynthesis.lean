@@ -4,16 +4,18 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Algebra.HodgeGeometricCalculus
+import InfoGeometry.Algebra.ChakravalaGA
 import InfoGeometry.Canonical.SuperGrassmannianManifold
 import InfoGeometry.Canonical.HolographicColimitContinuum
 import InfoGeometry.Epistemology.ChentsovMetricInvariance
 import InfoGeometry.Canonical.NaturalGradientSubmersionFlow
+import InfoGeometry.Export.LeanJuliaVerifiedInterop
 
 /-!
 # Grand Epistemic Geometric Synthesis
 
-This module provides cross-module bridge theorems connecting the five algebraic
-and information-geometric spine modules:
+This module provides cross-module bridge theorems connecting the algebraic,
+information-geometric, and verified export spine modules:
 1. **Hodge Differential-Codifferential Complex (`HodgeGeometricCalculus`)**:
    - `HodgeDifferentialComplex`: Bundles nilpotent linear differential `d` and
      codifferential `delta` operators on an `ℝ`-algebra carrier `A`.
@@ -43,6 +45,13 @@ and information-geometric spine modules:
    - Unifies vertical-pinned submersion kinetic energy collapse with Chentsov
      partition-embedding Fisher metric invariance, and establishes simultaneous
      stationarity and global optimality at the critical radius `r* = C / (2K)`.
+6. **Canonical TensorTowerColimit Bridge, Sufficient-Statistic Compression &
+   Certified Bitwise Sign Tables (`TensorTowerColimit` ↔ `ChakravalaGA` ↔ `LeanJuliaVerifiedInterop`)**:
+   - Proves direct commutation of stagewise horizontal and vertical submersion
+     projectors with the canonical `TensorTowerColimit.iota_seq` bonding map,
+     bounds cubic polynomial complexity under sufficient-statistic partition
+     embeddings and submersion projection, and bridges exported parity sign
+     tables, `BitWord` mask self-annihilation, and `CliffordAlgebra` polarization.
 -/
 
 namespace InfoGeometry.Canonical.GrandEpistemicGeometricSynthesis
@@ -395,5 +404,94 @@ theorem apex_stationary_and_maximal (C K r : ℝ) (hK : 0 < K) :
   ⟨NaturalGradientSubmersionFlow.apexGradient_zero_at_criticalRadius C K (ne_of_gt hK),
    NaturalGradientSubmersionFlow.apexObjective_le_invariantApex C K r hK⟩
 
-end InfoGeometry.Canonical.GrandEpistemicGeometricSynthesis
+/-! ### 6. Archetype VI: Canonical TensorTowerColimit Bridge, Sufficient-Statistic Compression & Certified Bitwise Sign Tables (`QMS-RAT-GM-2026-OCT-01`) -/
 
+/-- The horizontal stagewise submersion projector `projH` commutes directly with the
+canonical multi-step bonding map `iota_seq` from `TensorTowerColimit`. -/
+theorem colimitStageSubmersionSplit_projH_comm_tensorTowerColimit
+    {T : ℕ → Type*} [∀ n, AddCommGroup (T n)] [∀ n, Module ℝ (T n)]
+    (tower : HolographicColimitContinuum.HolographicTower (R := ℝ) T)
+    (PF : HolographicColimitContinuum.ProjectorFamily (R := ℝ) T)
+    (h_inter : HolographicColimitContinuum.IntertwinesProjector tower PF)
+    (n m : ℕ) (x : T n) :
+    (colimitStageSubmersionSplit PF (n + m)).projH
+        (_root_.iota_seq T tower.iota n m x) =
+      _root_.iota_seq T tower.iota n m
+        ((colimitStageSubmersionSplit PF n).projH x) := by
+  rw [← HolographicColimitContinuum.iotaSeq_eq_tensorTowerColimit_iota_seq tower n m]
+  exact colimitStageSubmersionSplit_projH_comm_iotaSeq tower PF h_inter n m x
+
+/-- The vertical stagewise submersion projector `projV` commutes directly with the
+canonical multi-step bonding map `iota_seq` from `TensorTowerColimit`. -/
+theorem colimitStageSubmersionSplit_projV_comm_tensorTowerColimit
+    {T : ℕ → Type*} [∀ n, AddCommGroup (T n)] [∀ n, Module ℝ (T n)]
+    (tower : HolographicColimitContinuum.HolographicTower (R := ℝ) T)
+    (PF : HolographicColimitContinuum.ProjectorFamily (R := ℝ) T)
+    (h_inter : HolographicColimitContinuum.IntertwinesProjector tower PF)
+    (n m : ℕ) (x : T n) :
+    (colimitStageSubmersionSplit PF (n + m)).projV
+        (_root_.iota_seq T tower.iota n m x) =
+      _root_.iota_seq T tower.iota n m
+        ((colimitStageSubmersionSplit PF n).projV x) := by
+  rw [← HolographicColimitContinuum.iotaSeq_eq_tensorTowerColimit_iota_seq tower n m]
+  exact colimitStageSubmersionSplit_projV_comm_iotaSeq tower PF h_inter n m x
+
+/-- For any sufficient-statistic congruent partition embedding `E` from `α` into `β` with
+`Fintype.card α ≤ Fintype.card β`, the cubic polynomial cost model on the compressed
+space `α` is bounded by that of `β` while preserving the Fisher metric identically. -/
+theorem sufficient_statistic_compression_flop_bound
+    {α β : Type*} [Fintype α] [Fintype β] [DecidableEq α]
+    (E : ChentsovMetricInvariance.CongruentPartitionEmbedding α β)
+    (P : ChentsovMetricInvariance.ProbInterior α) (u v : α → ℝ)
+    (h_card : Fintype.card α ≤ Fintype.card β) :
+    InfoGeometry.Export.LeanJuliaVerifiedInterop.cubicCostModel (Fintype.card α) ≤
+      InfoGeometry.Export.LeanJuliaVerifiedInterop.cubicCostModel (Fintype.card β) ∧
+    ChentsovMetricInvariance.fisherMetric
+      (ChentsovMetricInvariance.congruentPushforwardInterior
+        (ChentsovMetricInvariance.partitionEmbeddingToKernel E) P
+        (ChentsovMetricInvariance.partitionEmbedding_weight_pos E))
+      (ChentsovMetricInvariance.pushforwardTangentVec
+        (ChentsovMetricInvariance.partitionEmbeddingToKernel E).kernel u)
+      (ChentsovMetricInvariance.pushforwardTangentVec
+        (ChentsovMetricInvariance.partitionEmbeddingToKernel E).kernel v) =
+    ChentsovMetricInvariance.fisherMetric P u v :=
+  ⟨InfoGeometry.Export.LeanJuliaVerifiedInterop.cubicCostModel_mono h_card,
+   ChentsovMetricInvariance.chentsov_partition_embedding_fisher_invariance E P u v⟩
+
+/-- For any `NaturalGradientSubmersionSystem` and vertically pinned gradient `projV gradL = 0`,
+its horizontal projection has zero vertical drift, recovers `gradL` identically, and has strictly
+smaller cubic polynomial cost `d_H^3 < (d_H + d_V)^3` whenever `0 < d_H` and `0 < d_V`. -/
+theorem submersion_pruned_natural_gradient_zero_vertical_and_flop_bound
+    {V : Type*} [AddCommGroup V] [Module ℝ V]
+    (sys : NaturalGradientSubmersionFlow.NaturalGradientSubmersionSystem V)
+    (gradL : V) (h_vert_grad : sys.split.projV gradL = 0)
+    (d_H d_V : ℕ) (hH : 0 < d_H) (hV : 0 < d_V) :
+    sys.split.projV (sys.split.projH gradL) = 0 ∧
+    sys.split.projH gradL = gradL ∧
+    InfoGeometry.Export.LeanJuliaVerifiedInterop.cubicCostModel d_H <
+      InfoGeometry.Export.LeanJuliaVerifiedInterop.cubicCostModel (d_H + d_V) :=
+  ⟨InfoGeometry.Export.LeanJuliaVerifiedInterop.horizontal_projection_vertical_zero sys.split gradL,
+   RiemannianSubmersion.horizontal_of_vertical_zero sys.split gradL h_vert_grad,
+   InfoGeometry.Export.LeanJuliaVerifiedInterop.cubicCostModel_strict_add d_H d_V hH hV⟩
+
+/-- Synthesis of the exported Koszul sign parity table, Cantor `BitWord` mask self-annihilation,
+and the native Mathlib `CliffordAlgebra Q` odd-odd superbracket polarization identity. -/
+theorem certified_sign_table_and_clifford_polarization_bridge
+    {R : Type*} [CommRing R] {M : Type*} [AddCommGroup M] [Module R M]
+    (Q : QuadraticForm R M) (v w : M)
+    (p q : ChakravalaGA.Parity) {n : ℕ}
+    (u : UHFInductiveColimitBoundary.BitWord n) :
+    (InfoGeometry.Export.LeanOracle.exportKoszulSign
+        (InfoGeometry.Export.LeanJuliaVerifiedInterop.parityToUInt8 p)
+        (InfoGeometry.Export.LeanJuliaVerifiedInterop.parityToUInt8 q)).toInt =
+      ChakravalaGA.koszulSign (R := ℤ) p q ∧
+    InfoGeometry.Export.LeanJuliaVerifiedInterop.maskXor u u =
+      InfoGeometry.Export.LeanJuliaVerifiedInterop.maskZero n ∧
+    ChakravalaGA.superBracket (R := R) .odd .odd
+        (CliffordAlgebra.ι Q v) (CliffordAlgebra.ι Q w) =
+      algebraMap R (CliffordAlgebra Q) (ChakravalaGA.polar Q v w) :=
+  ⟨InfoGeometry.Export.LeanJuliaVerifiedInterop.exportKoszulSign_eq_koszulSign p q,
+   InfoGeometry.Export.LeanJuliaVerifiedInterop.maskXor_self u,
+   ChakravalaGA.mathlib_cliffordAlgebra_superBracket_odd Q v w⟩
+
+end InfoGeometry.Canonical.GrandEpistemicGeometricSynthesis

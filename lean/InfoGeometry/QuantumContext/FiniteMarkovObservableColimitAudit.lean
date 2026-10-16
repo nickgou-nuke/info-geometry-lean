@@ -1,0 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.QuantumContext.FiniteMarkovObservableColimit
+
+#print axioms InfoGeometry.QuantumContext.FiniteMarkovObservableColimit.pathPrefix_surjective
+#print axioms InfoGeometry.QuantumContext.FiniteMarkovObservableColimit.pathPrefixPullback_injective
+#print axioms InfoGeometry.QuantumContext.FiniteMarkovObservableColimit.finitePathObservableExpectation_prefix
+#print axioms InfoGeometry.QuantumContext.FiniteMarkovObservableColimit.pathObservableColimitExpectation
+#print axioms InfoGeometry.QuantumContext.FiniteMarkovObservableColimit.pathObservableColimitExpectation_stage

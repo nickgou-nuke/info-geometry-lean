@@ -6,6 +6,7 @@ Authors: InfoGeometry Engine Contributors
 import InfoGeometry.QuantumContext.MarkovAttentionGroupInverse
 import InfoGeometry.QuantumContext.FiniteSoftmaxStationaryGreen
 import InfoGeometry.QuantumContext.MarkovAttentionWeightedRange
+import InfoGeometry.QuantumContext.MarkovAttentionKemenySnell
 
 /-!
 # Algebraic Kemeny trace identity for finite Markov group inverses
@@ -146,6 +147,26 @@ theorem weightedGroupInverseReturnAdjustedPotentialSum_eq_trace_add_one
     _ = Matrix.trace G + 1 := by
       rw [weightedGroupInversePotentialSum_eq_trace π G hπ hrows i,
         sum_diagonal_indicator]
+
+/-- The algebraic return-adjusted potential sum equals the matrix trace of the
+stationary-mean-regularized group-inverse shift. This theorem asserts only the
+trace identity; identifying the shift as an inverse of the regularized
+Laplacian requires the additional hypotheses in the separate Kemeny–Snell
+inverse theorems. No probabilistic hitting-time interpretation is used. -/
+theorem weightedGroupInverseReturnAdjustedPotentialSum_eq_regularizedShift_trace
+    (P G : Matrix ι ι ℝ) (π : ι → ℝ)
+    (hP : P ∈ Matrix.rowStochastic ℝ ι)
+    (hπ : ∀ j, π j ≠ 0)
+    (hπsum : ∑ j, π j = 1)
+    (hG : IsGroupInverse (1 - P) G)
+    (i : ι) :
+    ∑ j, π j * groupInverseReturnAdjustedPotential π G i j =
+      Matrix.trace (G + stationaryMeanMatrix π) := by
+  rw [weightedGroupInverseReturnAdjustedPotentialSum_eq_trace_add_one
+    π G hπ (groupInverse_matrix_row_sum_eq_zero P G hP hG) i]
+  rw [Matrix.trace_add]
+  congr 1
+  simp [stationaryMeanMatrix, Matrix.trace, hπsum]
 
 /-- For symmetric finite softmax scores, the explicit partition-function
 stationary weight and any group inverse of the softmax Laplacian satisfy the

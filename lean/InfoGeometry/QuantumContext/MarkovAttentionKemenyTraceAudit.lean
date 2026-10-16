@@ -3,14 +3,14 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
+
 import InfoGeometry.QuantumContext.MarkovAttentionKemenyTrace
 
-#print axioms InfoGeometry.QuantumContext.MarkovDrazin.groupInversePotentialDifference
 #print axioms InfoGeometry.QuantumContext.MarkovDrazin.groupInverse_apply_eq_zero_of_mem_ker
 #print axioms InfoGeometry.QuantumContext.MarkovDrazin.groupInverse_matrix_row_sum_eq_zero
 #print axioms InfoGeometry.QuantumContext.MarkovDrazin.weightedGroupInversePotentialSum_eq_trace
-#print axioms InfoGeometry.QuantumContext.MarkovDrazin.groupInverseReturnAdjustedPotential
 #print axioms InfoGeometry.QuantumContext.MarkovDrazin.weightedGroupInverseReturnAdjustedPotentialSum_eq_trace_add_one
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.weightedGroupInverseReturnAdjustedPotentialSum_eq_regularizedShift_trace
 #print axioms InfoGeometry.QuantumContext.MarkovDrazin.symmetricSoftmax_returnAdjustedPotentialSum_eq_trace_add_one
 #print axioms InfoGeometry.QuantumContext.MarkovDrazin.markovGroupInverse_weightedPotentialSum_eq_trace
 #print axioms InfoGeometry.QuantumContext.MarkovDrazin.groupInversePotentialDifference_laplacian_eq_one_off_target

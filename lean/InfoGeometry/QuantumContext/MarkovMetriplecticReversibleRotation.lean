@@ -6,16 +6,17 @@ Authors: InfoGeometry Engine Contributors
 import Mathlib
 import InfoGeometry.QuantumContext.MarkovMetriplecticEnergyBalance
 import InfoGeometry.QuantumContext.MarkovMetriplecticGroupInverseLift
+import InfoGeometry.QuantumContext.FiniteSoftmaxStationaryGreen
 
 /-!
-# Concrete reversible action paired with the Markov dissipative operator
+# Concrete reversible actions paired with the Markov dissipative operator
 
-On the full noncommutative matrix carrier, left multiplication by a real
-skew matrix acts columnwise as a skew operator for the uniform weighted
-Frobenius pairing. This file supplies a nonzero coordinate generator and
-connects it to the existing Markov metriplectic energy balance. The group
-inverse remains the range inverse for the dissipative operator; it is not
-identified with the reversible generator.
+On the full matrix carrier, left multiplication by a real skew matrix is
+skew for the uniform Frobenius pairing. For arbitrary strictly positive
+weights, rowwise rescaling of a skew matrix gives a weighted-skew action.
+Both actions connect to the existing Markov metriplectic energy balance. The
+group inverse remains the range inverse for the dissipative operator; it is
+not identified with either reversible generator.
 -/
 
 open scoped BigOperators
@@ -69,6 +70,92 @@ theorem weightedMatrixPairing_leftAction_skew
     (matrixColumn X j) (matrixColumn Y j)
   have h' := congrArg (fun z : ℝ => -z) h.symm
   simpa [weightedMarkovPairing, dotProduct] using h'
+
+/-- A matrix-vector action is skew for the stationary-weighted pairing when
+its entries satisfy the corresponding weighted skew-adjointness relation. -/
+theorem weightedMarkovPairing_leftAction_skew
+    (π : ι → ℝ) (A : Matrix ι ι ℝ)
+    (hA : ∀ i k, π i * A i k = -(π k * A k i))
+    (x y : ι → ℝ) :
+    weightedMarkovPairing π x (A.mulVec y) =
+      -weightedMarkovPairing π (A.mulVec x) y := by
+  classical
+  unfold weightedMarkovPairing
+  simp only [Matrix.mulVec, dotProduct, Finset.mul_sum]
+  rw [Finset.sum_comm]
+  rw [← Finset.sum_neg_distrib]
+  apply Finset.sum_congr rfl
+  intro k hk
+  rw [Finset.sum_mul, ← Finset.sum_neg_distrib]
+  apply Finset.sum_congr rfl
+  intro i hi
+  calc
+    π i * x i * (A i k * y k) =
+        (π i * A i k) * (x i * y k) := by ac_rfl
+    _ = (-(π k * A k i)) * (x i * y k) := by rw [hA i k]
+    _ = -(π k * (A k i * x i) * y k) := by
+      rw [neg_mul]
+      congr 1
+      ac_rfl
+
+/-- Weighted-skew left multiplication is skew on the full matrix carrier,
+column by column, for the stationary-weighted Frobenius pairing. -/
+theorem weightedMatrixPairing_leftAction_skew_of_weighted_skew
+    (π : ι → ℝ) (A : Matrix ι ι ℝ)
+    (hA : ∀ i k, π i * A i k = -(π k * A k i))
+    (X Y : Matrix ι ι ℝ) :
+    weightedMatrixPairing π X (mulLeftLinearMap ι ℝ A Y) =
+      -weightedMatrixPairing π (mulLeftLinearMap ι ℝ A X) Y := by
+  unfold weightedMatrixPairing
+  change (∑ j, weightedMarkovPairing π (matrixColumn X j)
+      (matrixColumn (A * Y) j)) =
+    -∑ j, weightedMarkovPairing π (matrixColumn (A * X) j)
+      (matrixColumn Y j)
+  rw [← Finset.sum_neg_distrib]
+  apply Finset.sum_congr rfl
+  intro j hj
+  rw [matrixColumn_leftAction, matrixColumn_leftAction]
+  exact weightedMarkovPairing_leftAction_skew π A hA
+    (matrixColumn X j) (matrixColumn Y j)
+
+/-- A weighted-skew action matrix obtained by dividing a skew matrix rowwise
+by a strictly positive weight. This is not assumed to be a Markov generator
+or a probability-transition operator. -/
+noncomputable def weightedSkewActionMatrix
+    (π : ι → ℝ) (S : Matrix ι ι ℝ) : Matrix ι ι ℝ :=
+  fun i k => S i k / π i
+
+omit [Fintype ι] in
+theorem weightedSkewActionMatrix_weighted_skew
+    (π : ι → ℝ) (S : Matrix ι ι ℝ)
+    (hπ : ∀ i, 0 < π i) (hS : Sᵀ = -S) :
+    ∀ i k, π i * weightedSkewActionMatrix π S i k =
+      -(π k * weightedSkewActionMatrix π S k i) := by
+  intro i k
+  have hSik : S i k = -S k i := by
+    have h := congrArg (fun M : Matrix ι ι ℝ => M i k) hS
+    have h' : S k i = -S i k := by simpa using h
+    simpa using (congrArg (fun z : ℝ => -z) h').symm
+  unfold weightedSkewActionMatrix
+  rw [div_eq_mul_inv, div_eq_mul_inv]
+  have hi : π i ≠ 0 := (ne_of_gt (hπ i))
+  have hk : π k ≠ 0 := (ne_of_gt (hπ k))
+  field_simp [hi, hk]
+  rw [hSik]
+
+/-- The weighted-skew action matrix built from a skew matrix acts skewly
+on the full matrix space, with no uniformity assumption on the weights. -/
+theorem weightedMatrixPairing_weightedSkewActionMatrix_skew
+    (π : ι → ℝ) (S : Matrix ι ι ℝ)
+    (hπ : ∀ i, 0 < π i) (hS : Sᵀ = -S)
+    (X Y : Matrix ι ι ℝ) :
+    weightedMatrixPairing π X
+        (mulLeftLinearMap ι ℝ (weightedSkewActionMatrix π S) Y) =
+      -weightedMatrixPairing π
+        (mulLeftLinearMap ι ℝ (weightedSkewActionMatrix π S) X) Y := by
+  exact weightedMatrixPairing_leftAction_skew_of_weighted_skew π
+    (weightedSkewActionMatrix π S)
+    (weightedSkewActionMatrix_weighted_skew π S hπ hS) X Y
 
 variable [DecidableEq ι]
 /-- The elementary skew generator on two distinct indices. -/
@@ -168,5 +255,149 @@ theorem groupInverse_projection_and_coordinateReversible_balance
   · exact coordinateReversibleAction_ne_zero i j hij
   · exact markovMetriplectic_coordinateReversible_energy_balance
       P hP hDB entropyForce i j
+
+/-- A skew coefficient matrix, divided rowwise by a strictly positive
+stationary weight, gives a concrete reversible action for the nonuniform
+weighted pairing. The resulting total velocity has zero instantaneous
+pairing with the constant energy force. -/
+theorem markovMetriplectic_weightedSkewAction_energy_balance
+    [Nontrivial ι]
+    (P : Matrix ι ι ℝ) (π : ι → ℝ)
+    (hP : P ∈ Matrix.rowStochastic ℝ ι)
+    (hDB : InfoGeometry.Probability.DetailedBalance π P)
+    (hπ : ∀ i, 0 < π i)
+    (entropyForce : Matrix ι ι ℝ)
+    (S : Matrix ι ι ℝ) (hS : Sᵀ = -S) :
+    weightedMatrixPairing π (constantOneMatrix (ι := ι))
+      (mulLeftLinearMap ι ℝ (weightedSkewActionMatrix π S)
+          (constantOneMatrix (ι := ι)) +
+        markovLeftOnsager P entropyForce) = 0 := by
+  apply markovMetriplectic_energyForce_totalVelocity_pairing_eq_zero
+    P π hP hDB hπ entropyForce
+    (mulLeftLinearMap ι ℝ (weightedSkewActionMatrix π S))
+  intro X Y
+  exact weightedMatrixPairing_weightedSkewActionMatrix_skew
+    π S hπ hS X Y
+
+/-- The same full-matrix packet exposes two independent facts: the Drazin
+group inverse recovers the projected dissipative force, while the constructed
+weighted-skew reversible action yields the instantaneous energy pairing law. -/
+theorem groupInverse_projection_and_weightedSkewAction_balance
+    [Nontrivial ι]
+    (P G entropyForce : Matrix ι ι ℝ)
+    (hG : InfoGeometry.Canonical.HartwigSouriauFrameDrazin.IsGroupInverse
+      (1 - P) G)
+    (π : ι → ℝ)
+    (hP : P ∈ Matrix.rowStochastic ℝ ι)
+    (hDB : InfoGeometry.Probability.DetailedBalance π P)
+    (hπ : ∀ i, 0 < π i)
+    (S : Matrix ι ι ℝ) (hS : Sᵀ = -S) :
+    G * markovLeftOnsager P entropyForce =
+        markovRangeIdempotent P G * entropyForce ∧
+      weightedMatrixPairing π (constantOneMatrix (ι := ι))
+        (mulLeftLinearMap ι ℝ (weightedSkewActionMatrix π S)
+            (constantOneMatrix (ι := ι)) +
+          markovLeftOnsager P entropyForce) = 0 := by
+  exact ⟨markovGroupInverse_recovers_projected_entropyForce P G entropyForce hG,
+    markovMetriplectic_weightedSkewAction_energy_balance
+      P π hP hDB hπ entropyForce S hS⟩
+
+/-- For symmetric finite softmax scores, the explicit partition-function
+stationary weight instantiates the nonuniform full-matrix weighted-skew action
+and its energy balance. The score symmetry is essential for detailed balance. -/
+theorem symmetricSoftmax_weightedSkewAction_energy_balance
+    [Nontrivial ι] [Nonempty ι]
+    (scores : ι → ι → ℝ)
+    (hsymm : ∀ i j, scores i j = scores j i)
+    (entropyForce : Matrix ι ι ℝ)
+    (S : Matrix ι ι ℝ) (hS : Sᵀ = -S) :
+    weightedMatrixPairing
+        (InfoGeometry.QuantumContext.FiniteSoftmaxMarkovKernel.softmaxPartitionStationaryWeight scores)
+        (constantOneMatrix (ι := ι))
+      (mulLeftLinearMap ι ℝ
+          (weightedSkewActionMatrix
+            (InfoGeometry.QuantumContext.FiniteSoftmaxMarkovKernel.softmaxPartitionStationaryWeight scores) S)
+          (constantOneMatrix (ι := ι)) +
+        markovLeftOnsager
+          (InfoGeometry.QuantumContext.FiniteSoftmaxMarkovKernel.softmaxAttentionMatrix scores)
+          entropyForce) = 0 := by
+  apply markovMetriplectic_weightedSkewAction_energy_balance
+    (InfoGeometry.QuantumContext.FiniteSoftmaxMarkovKernel.softmaxAttentionMatrix scores)
+    (InfoGeometry.QuantumContext.FiniteSoftmaxMarkovKernel.softmaxPartitionStationaryWeight scores)
+    (InfoGeometry.QuantumContext.FiniteSoftmaxMarkovKernel.softmaxAttentionMatrix_mem_rowStochastic scores)
+    (InfoGeometry.QuantumContext.FiniteSoftmaxMarkovKernel.softmaxPartitionStationaryWeight_detailedBalance scores hsymm)
+    (InfoGeometry.QuantumContext.FiniteSoftmaxMarkovKernel.softmaxPartitionStationaryWeight_pos scores)
+    entropyForce S hS
+
+/-- The symmetric-softmax specialization displays both operators on one full
+matrix carrier: group-inverse projected-force recovery and reversible plus
+dissipative instantaneous energy balance. These are separate conclusions. -/
+theorem symmetricSoftmax_groupInverse_projection_and_weightedSkewAction_balance
+    [Nontrivial ι] [Nonempty ι]
+    (scores : ι → ι → ℝ)
+    (hsymm : ∀ i j, scores i j = scores j i)
+    (G entropyForce : Matrix ι ι ℝ)
+    (hG : InfoGeometry.Canonical.HartwigSouriauFrameDrazin.IsGroupInverse
+      (1 - InfoGeometry.QuantumContext.FiniteSoftmaxMarkovKernel.softmaxAttentionMatrix scores) G)
+    (S : Matrix ι ι ℝ) (hS : Sᵀ = -S) :
+    G * markovLeftOnsager
+        (InfoGeometry.QuantumContext.FiniteSoftmaxMarkovKernel.softmaxAttentionMatrix scores)
+        entropyForce =
+      markovRangeIdempotent
+        (InfoGeometry.QuantumContext.FiniteSoftmaxMarkovKernel.softmaxAttentionMatrix scores) G * entropyForce ∧
+    weightedMatrixPairing
+        (InfoGeometry.QuantumContext.FiniteSoftmaxMarkovKernel.softmaxPartitionStationaryWeight scores)
+        (constantOneMatrix (ι := ι))
+      (mulLeftLinearMap ι ℝ
+          (weightedSkewActionMatrix
+            (InfoGeometry.QuantumContext.FiniteSoftmaxMarkovKernel.softmaxPartitionStationaryWeight scores) S)
+          (constantOneMatrix (ι := ι)) +
+        markovLeftOnsager
+          (InfoGeometry.QuantumContext.FiniteSoftmaxMarkovKernel.softmaxAttentionMatrix scores)
+          entropyForce) = 0 := by
+  apply groupInverse_projection_and_weightedSkewAction_balance
+    (InfoGeometry.QuantumContext.FiniteSoftmaxMarkovKernel.softmaxAttentionMatrix scores)
+    G entropyForce hG
+    (InfoGeometry.QuantumContext.FiniteSoftmaxMarkovKernel.softmaxPartitionStationaryWeight scores)
+    (InfoGeometry.QuantumContext.FiniteSoftmaxMarkovKernel.softmaxAttentionMatrix_mem_rowStochastic scores)
+    (InfoGeometry.QuantumContext.FiniteSoftmaxMarkovKernel.softmaxPartitionStationaryWeight_detailedBalance scores hsymm)
+    (InfoGeometry.QuantumContext.FiniteSoftmaxMarkovKernel.softmaxPartitionStationaryWeight_pos scores)
+    S hS
+
+/-- Symmetric softmax supplies an actual group inverse, so the joint
+projected-force and weighted-skew energy conclusions need no user-supplied
+generalized inverse. -/
+theorem exists_symmetricSoftmax_groupInverse_projection_and_weightedSkewAction_balance
+    [Nontrivial ι] [Nonempty ι]
+    (scores : ι → ι → ℝ)
+    (hsymm : ∀ i j, scores i j = scores j i)
+    (entropyForce : Matrix ι ι ℝ)
+    (S : Matrix ι ι ℝ) (hS : Sᵀ = -S) :
+    ∃ G : Matrix ι ι ℝ,
+      InfoGeometry.Canonical.HartwigSouriauFrameDrazin.IsGroupInverse
+        (1 - InfoGeometry.QuantumContext.FiniteSoftmaxMarkovKernel.softmaxAttentionMatrix scores) G ∧
+      G * markovLeftOnsager
+          (InfoGeometry.QuantumContext.FiniteSoftmaxMarkovKernel.softmaxAttentionMatrix scores)
+          entropyForce =
+        markovRangeIdempotent
+          (InfoGeometry.QuantumContext.FiniteSoftmaxMarkovKernel.softmaxAttentionMatrix scores) G * entropyForce ∧
+      weightedMatrixPairing
+          (InfoGeometry.QuantumContext.FiniteSoftmaxMarkovKernel.softmaxPartitionStationaryWeight scores)
+          (constantOneMatrix (ι := ι))
+        (mulLeftLinearMap ι ℝ
+            (weightedSkewActionMatrix
+              (InfoGeometry.QuantumContext.FiniteSoftmaxMarkovKernel.softmaxPartitionStationaryWeight scores) S)
+            (constantOneMatrix (ι := ι)) +
+          markovLeftOnsager
+            (InfoGeometry.QuantumContext.FiniteSoftmaxMarkovKernel.softmaxAttentionMatrix scores)
+            entropyForce) = 0 := by
+  obtain ⟨G, hG, _hreciprocity⟩ :=
+    InfoGeometry.QuantumContext.FiniteSoftmaxMarkovKernel.exists_softmax_groupInverse_green_reciprocity
+      scores hsymm
+  exact ⟨G, hG,
+    (symmetricSoftmax_groupInverse_projection_and_weightedSkewAction_balance
+      scores hsymm G entropyForce hG S hS).1,
+    (symmetricSoftmax_groupInverse_projection_and_weightedSkewAction_balance
+      scores hsymm G entropyForce hG S hS).2⟩
 
 end InfoGeometry.QuantumContext.MarkovDrazin.ReversibleRotation

@@ -1,0 +1,49 @@
+{
+  "authority": "navigation_only",
+  "carriers_found": [],
+  "dag_context": null,
+  "deduplication_warnings": [],
+  "graph_is_proof_authority": false,
+  "lemmas_found": [
+    {
+      "file": "lean/InfoGeometry/QuantumContext/MarkovGroupInversePetzCorner.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem markovRange_petzRecovery_range_iff_corner (P G Y : Matrix ι ι ℝ) (hG : IsGroupInverse (1 - P) G) : Y ∈ Set.range (fun X : Matrix ι ι ℝ => petzRecovery (markovRangeIdempotent P G) X) ↔ markovRangeIdempotent P G * Y * markovRangeIdempotent P G = Y",
+      "line": 82,
+      "location": "lean/InfoGeometry/QuantumContext/MarkovGroupInversePetzCorner.lean:82",
+      "name": "markovRange_petzRecovery_range_iff_corner",
+      "qualified_name": "InfoGeometry.QuantumContext.markovRange_petzRecovery_range_iff_corner",
+      "source_end_line": 87,
+      "source_sha256": "f9b97c365839013b412ddc20b1f9fd8944b39445a2d996160b4c80c6839ac530"
+    },
+    {
+      "file": "lean/InfoGeometry/QuantumContext/MarkovProjectiveK0Bridge.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem markovProjectiveK0_split (P G : Matrix ι ι ℝ) (hG : IsGroupInverse (1 - P) G) : k0Class ℝ (rangeProjectiveModule (markovRangeEnd P G) (markovRangeEnd_idempotent P G hG)) + k0Class ℝ (rangeProjectiveModule (markovKernelEnd P G) (markovKernelEnd_idempotent P G hG)) = k0Class ℝ (⟨ModuleCat.of ℝ (Observable (ι := ι)), inferInstance, Module.Projective.of_free⟩ : FiniteProjectiveModule ℝ)",
+      "line": 252,
+      "location": "lean/InfoGeometry/QuantumContext/MarkovProjectiveK0Bridge.lean:252",
+      "name": "markovProjectiveK0_split",
+      "qualified_name": "InfoGeometry.QuantumContext.MarkovProjectiveK0Bridge.markovProjectiveK0_split",
+      "source_end_line": 260,
+      "source_sha256": "afd8a4a5057a8c559b6812e7b7cd8688d13060ca41af9b9513b476903ece6334"
+    },
+    {
+      "file": "lean/InfoGeometry/QuantumContext/MarkovProjectiveK0Bridge.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem exists_nontrivial_rowStochastic_markovProjectiveK0_split [Nontrivial ι] (P : Matrix ι ι ℝ) (hP : P ∈ Matrix.rowStochastic ℝ ι) (hP_ne_one : P ≠ 1) : ∃ G : Matrix ι ι ℝ, ∃ hG : IsGroupInverse (1 - P) G, k0Class ℝ (rangeProjectiveModule (markovRangeEnd P G) (markovRangeEnd_idempotent P G hG)) + k0Class ℝ (rangeProjectiveModule (markovKernelEnd P G) (markovKernelEnd_idempotent P G hG)) = k0Class ℝ (⟨ModuleCat.of ℝ (Observable (ι := ι)), inferInstance, Module.Projective.of_free⟩ : FiniteProjectiveModule ℝ) ∧ markovLaplacianEnd P ≠ 0",
+      "line": 299,
+      "location": "lean/InfoGeometry/QuantumContext/MarkovProjectiveK0Bridge.lean:299",
+      "name": "exists_nontrivial_rowStochastic_markovProjectiveK0_split",
+      "qualified_name": "InfoGeometry.QuantumContext.MarkovProjectiveK0Bridge.exists_nontrivial_rowStochastic_markovProjectiveK0_split",
+      "source_end_line": 311,
+      "source_sha256": "afd8a4a5057a8c559b6812e7b7cd8688d13060ca41af9b9513b476903ece6334"
+    }
+  ],
+  "local_dag_context": null,
+  "query": "markovRange_petzRecovery_range_iff_corner markovProjectiveK0_split",
+  "recommended_imports": [
+    "InfoGeometry.QuantumContext.MarkovGroupInversePetzCorner",
+    "InfoGeometry.QuantumContext.MarkovProjectiveK0Bridge"
+  ],
+  "schema": "info_geometry.opengauss.discovery_report.v1"
+}

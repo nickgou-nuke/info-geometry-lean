@@ -21,7 +21,9 @@ continuation.
 Under this hypothesis the rational result extends to every interior distribution, via
 the explicit rational approximation `ratApprox P k` with weights
 `(⌊k P a⌋₊ + 1) / ∑ b, (⌊k P b⌋₊ + 1)`, the (proved) continuity of the Fisher metric,
-and uniqueness of limits.
+and uniqueness of limits. We also establish unique existence (`∃! c : ℝ`) of the
+scale factor `c` and a biconditional characterization reducing global tangent agreement
+with `scaledFisherFamily c` to agreement at the single reference datum on `Bool`.
 -/
 
 namespace InfoGeometry.Epistemology.ChentsovUniquenessContinuous
@@ -173,15 +175,58 @@ theorem chentsov_uniqueness_of_seqContinuous (F : InvariantMetricFamily)
   rw [h_eq] at h_F
   exact tendsto_nhds_unique h_F h_fisher
 
-/-- **Classification under sequential continuity.** Assuming `SeqContinuous F`, the
-family `F` agrees with some `scaledFisherFamily c` on all tangent vectors at all interior
-points. Conversely every `scaledFisherFamily c` is an invariant family satisfying the
-continuity hypothesis (`scaledFisherFamily_seqContinuous`). -/
+/-- **Classification with unique scale under sequential continuity.** Assuming
+`SeqContinuous F`, there exists a **unique** real constant `c` such that `F`
+agrees with `scaledFisherFamily c` on all tangent vectors at all interior
+distributions. Conversely, every `scaledFisherFamily c` is an invariant family
+satisfying the continuity hypothesis (`scaledFisherFamily_seqContinuous`). -/
 theorem chentsov_classification_of_seqContinuous (F : InvariantMetricFamily)
     (hF : SeqContinuous F) :
-    ∃ c : ℝ, ∀ (α : Type) [Fintype α] [DecidableEq α] (P : ProbInterior α) (u v : α → ℝ),
-      ∑ i, u i = 0 → ∑ i, v i = 0 → F.g α P u v = (scaledFisherFamily c).g α P u v :=
-  chentsov_uniqueness_of_seqContinuous F hF
+    ∃! c : ℝ, ∀ (α : Type) [Fintype α] [DecidableEq α] (P : ProbInterior α) (u v : α → ℝ),
+      ∑ i, u i = 0 → ∑ i, v i = 0 → F.g α P u v = (scaledFisherFamily c).g α P u v := by
+  obtain ⟨c, hc⟩ := chentsov_uniqueness_of_seqContinuous F hF
+  refine ⟨c, hc, fun c' hc' => ?_⟩
+  have h1 : c = F.refScale := F.eq_refScale (hc Bool (uniformInterior Bool))
+  have h2 : c' = F.refScale := F.eq_refScale (hc' Bool (uniformInterior Bool))
+  exact h2.trans h1.symm
+
+/-- **Biconditional scale characterization under sequential continuity.** For any
+sequentially continuous `F : InvariantMetricFamily` and `c : ℝ`, `F` agrees with
+`scaledFisherFamily c` on all simplex tangent spaces at all interior distributions
+if and only if `F` agrees with `c • Fisher` at the single reference datum
+`(uniformInterior Bool, fun b => if b then 1 else -1)`. -/
+theorem tangentAgreement_scaledFisher_iff_seqContinuous_and_eq_bool
+    (F : InvariantMetricFamily) (hF : SeqContinuous F) (c : ℝ) :
+    (∀ (α : Type) [Fintype α] [DecidableEq α] (P : ProbInterior α) (u v : α → ℝ),
+      ∑ i, u i = 0 → ∑ i, v i = 0 → F.g α P u v = (scaledFisherFamily c).g α P u v) ↔
+    F.g Bool (uniformInterior Bool)
+      (fun b => if b then 1 else -1) (fun b => if b then 1 else -1) =
+      c * fisherMetric (uniformInterior Bool)
+        (fun b => if b then 1 else -1) (fun b => if b then 1 else -1) := by
+  constructor
+  · intro h_all
+    exact h_all Bool (uniformInterior Bool) InvariantMetricFamily.boolTangent
+      InvariantMetricFamily.boolTangent
+      InvariantMetricFamily.boolTangent_sum InvariantMetricFamily.boolTangent_sum
+  · intro h_bool
+    obtain ⟨c₀, hc₀⟩ := chentsov_uniqueness_of_seqContinuous F hF
+    have h_c₀_bool : F.g Bool (uniformInterior Bool)
+        InvariantMetricFamily.boolTangent InvariantMetricFamily.boolTangent =
+        c₀ * fisherMetric (uniformInterior Bool)
+          InvariantMetricFamily.boolTangent InvariantMetricFamily.boolTangent :=
+      hc₀ Bool (uniformInterior Bool) InvariantMetricFamily.boolTangent
+        InvariantMetricFamily.boolTangent
+        InvariantMetricFamily.boolTangent_sum InvariantMetricFamily.boolTangent_sum
+    have h_mul : c * fisherMetric (uniformInterior Bool)
+        InvariantMetricFamily.boolTangent InvariantMetricFamily.boolTangent =
+        c₀ * fisherMetric (uniformInterior Bool)
+          InvariantMetricFamily.boolTangent InvariantMetricFamily.boolTangent :=
+      h_bool.symm.trans h_c₀_bool
+    have h_c_eq : c = c₀ :=
+      mul_right_cancel₀ InvariantMetricFamily.fisher_boolTangent_ne h_mul
+    intro α _ _ P u v hu hv
+    rw [show (scaledFisherFamily c).g α P u v = c * fisherMetric P u v from rfl, h_c_eq]
+    exact hc₀ α P u v hu hv
 
 /-- A family is positive definite on each simplex tangent space. -/
 def IsPositiveDefiniteOnTangent (F : InvariantMetricFamily) : Prop :=

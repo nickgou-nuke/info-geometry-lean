@@ -15,15 +15,27 @@ cross-mode anticommutator is nonzero (`carAnn0_carAnn1_anticomm_ne_zero`).
 This file inserts the Jordan–Wigner parity strings `σ₃ ⊗ …` and proves the full
 three-mode canonical anticommutation relations on the same carrier `CAR3`:
 
-* `jwAnn_anticomm`     : `{aᵢ, aⱼ} = 0`
-* `jwCre_anticomm`     : `{aᵢ†, aⱼ†} = 0`
+* `jwAnn_anticomm`       : `{aᵢ, aⱼ} = 0`
+* `jwCre_anticomm`       : `{aᵢ†, aⱼ†} = 0`
 * `jwAnn_jwCre_anticomm` : `{aᵢ, aⱼ†} = δᵢⱼ · 1`
 
-It also records how the signed operators relate to the local ones: mode `0` is
-unchanged, and the number operators coincide (`jw_number_eq`), so the existing
-number-projector and vacuum-ideal results apply verbatim.
+It also records how the signed operators relate to the local factor projectors
+and vacuum idempotent at each of the three fixed modes:
+
+* `jw_number_eq_numberOp0/1/2`         : `jwAnn i * jwCre i = numberOp{0,1,2}`
+  ($a_i a_i^\dagger = N_+$ on factor $i$, the vacancy projector for $a_i = \sigma^+$)
+* `jw_excitation_eq_excitationOp0/1/2` : `jwCre i * jwAnn i = excitationOp{0,1,2}`
+  ($a_i^\dagger a_i = N_-$ on factor $i$, the particle excitation projector for
+  $a_i^\dagger = \sigma^-$)
+* `jwAnn_mul_fureyVacuumIdempotent`    : `jwAnn i * fureyVacuumIdempotent = 0`
 
 No physical particle identification is asserted.
+
+The repository also has a real-valued arbitrary-stage Jordan--Wigner tower in
+`InfoGeometry.Clifford.Cl11TensorTower`. This module is the separate complex
+three-factor realization used by the Furey tensor carrier. No theorem here
+identifies those two carriers or their operator families; such an identification
+requires an explicit algebra equivalence and compatibility proof.
 -/
 
 noncomputable section
@@ -46,11 +58,11 @@ def readout01 : CAR3 →ₗ[ℂ] ℂ :=
             (fun a₁ a₂ b => by simp [add_mul])
             (fun r a b => by simp [mul_assoc])
             (fun a b₁ b₂ => by simp [mul_add])
-            (fun r a b => by simp; ring)) x * c 0 0)
+            (fun r a b => by simp only [Matrix.smul_apply, smul_eq_mul]; exact mul_left_comm _ _ _)) x * c 0 0)
       (fun x₁ x₂ c => by simp [add_mul])
       (fun r x c => by simp [mul_assoc])
       (fun x c₁ c₂ => by simp [mul_add])
-      (fun r x c => by simp; ring))
+      (fun r x c => by simp only [Matrix.smul_apply, smul_eq_mul]; exact mul_left_comm _ _ _))
 
 theorem readout01_tmul (a b c : M2C) :
     readout01 (a ⊗ₜ[ℂ] b ⊗ₜ[ℂ] c) = a 0 1 * b 0 1 * c 0 0 := by
@@ -111,10 +123,20 @@ theorem jwAnn_sq (i : Fin 3) : jwAnn i * jwAnn i = 0 := by
 theorem jwCre_sq (i : Fin 3) : jwCre i * jwCre i = 0 := by
   fin_cases i <;> simp [jwCre, Algebra.TensorProduct.tmul_mul_tmul, σMinus_sq]
 
-/-! ## Relation to the existing local number operators -/
+/-! ## Relation to the local factor projectors and vacuum idempotent
 
-/-- The parity strings cancel in `aᵢ aᵢ†`: the Jordan–Wigner number operators
-coincide with the existing `numberOp0/1/2`. -/
+Because `σ₃² = 1`, the Jordan–Wigner parity strings cancel in both quadratic
+combinations on a single mode:
+* `jwAnn i * jwCre i = numberOp{0,1,2}` ($a_i a_i^\dagger = N_+$ on factor $i$,
+  the vacancy projector for $a_i = \sigma^+$)
+* `jwCre i * jwAnn i = excitationOp{0,1,2}` ($a_i^\dagger a_i = N_-$ on factor $i$,
+  the particle excitation projector for $a_i^\dagger = \sigma^-$)
+
+Furthermore, because `σ₃ N₊ = N₊` and `σ⁺ N₊ = 0`, every Jordan–Wigner
+annihilator `jwAnn i` annihilates `fureyVacuumIdempotent = N₊ ⊗ N₊ ⊗ N₊`. -/
+
+/-- The parity strings cancel in `aᵢ aᵢ†`: `jwAnn i * jwCre i` coincides with
+the positive-chiral vacancy projector `numberOp0/1/2`. -/
 theorem jw_number_eq_numberOp0 : jwAnn 0 * jwCre 0 = numberOp0 := rfl
 
 theorem jw_number_eq_numberOp1 : jwAnn 1 * jwCre 1 = numberOp1 := by
@@ -124,5 +146,24 @@ theorem jw_number_eq_numberOp1 : jwAnn 1 * jwCre 1 = numberOp1 := by
 theorem jw_number_eq_numberOp2 : jwAnn 2 * jwCre 2 = numberOp2 := by
   simp [jwAnn, jwCre, numberOp2, carAnn2, carCre2,
     Algebra.TensorProduct.tmul_mul_tmul, σ3c_sq]
+
+/-- The parity strings cancel in `aᵢ† aᵢ`: `jwCre i * jwAnn i` coincides with
+the negative-chiral particle excitation projector `excitationOp0/1/2`. -/
+theorem jw_excitation_eq_excitationOp0 : jwCre 0 * jwAnn 0 = excitationOp0 := rfl
+
+theorem jw_excitation_eq_excitationOp1 : jwCre 1 * jwAnn 1 = excitationOp1 := by
+  simp [jwCre, jwAnn, excitationOp1, carCre1, carAnn1,
+    Algebra.TensorProduct.tmul_mul_tmul, σ3c_sq]
+
+theorem jw_excitation_eq_excitationOp2 : jwCre 2 * jwAnn 2 = excitationOp2 := by
+  simp [jwCre, jwAnn, excitationOp2, carCre2, carAnn2,
+    Algebra.TensorProduct.tmul_mul_tmul, σ3c_sq]
+
+/-- Every Jordan–Wigner annihilator annihilates `fureyVacuumIdempotent`. -/
+theorem jwAnn_mul_fureyVacuumIdempotent (i : Fin 3) :
+    jwAnn i * fureyVacuumIdempotent = 0 := by
+  fin_cases i <;>
+    simp [jwAnn, fureyVacuumIdempotent, Algebra.TensorProduct.tmul_mul_tmul,
+      σPlus_mul_N_plus, σ3c_mul_N_plus]
 
 end InfoGeometry.Physics.ColorCARJordanWigner

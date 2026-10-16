@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Analysis.InnerProductSpace.PiL2
 import InfoGeometry.Clifford.ClNNNeutralChevalleyBridge
 import InfoGeometry.Clifford.NeutralPhaseSpaceDoubledBridge
@@ -42,6 +47,34 @@ theorem rieszEquiv_apply_apply (x y : EucVector n) :
   rw [← dualCoordinates_eval]
   rw [EuclideanSpace.inner_toLp_toLp]
   simp [toEuclidean, dotProduct, mul_comm]
+
+/-- The coordinate algebraic dual, transported through the finite Euclidean
+carrier, is linearly equivalent to that carrier. This is the inverse Riesz
+direction, made explicit for the `Fin n → ℝ` dual used by `ClNN`. -/
+def coordinateDualToEuclidean :
+    Module.Dual ℝ (Vector n) ≃ₗ[ℝ] EucVector n :=
+  ((toEuclidean n).dualMap).symm.trans (rieszEquiv n).symm
+
+/-- The coordinate dual pairing is the Euclidean inner product after the
+explicit dual-to-vector transport. -/
+theorem coordinateDual_eval_eq_inner (x : Vector n)
+    (φ : Module.Dual ℝ (Vector n)) :
+    φ x = @inner ℝ (EucVector n) _ (toEuclidean n x)
+      (coordinateDualToEuclidean n φ) := by
+  let φE : Module.Dual ℝ (EucVector n) := ((toEuclidean n).dualMap).symm φ
+  have hdual : φ x = φE (toEuclidean n x) := by
+    simp [φE, LinearEquiv.dualMap_apply]
+  have hriesz : rieszEquiv n (coordinateDualToEuclidean n φ) = φE := by
+    simp [coordinateDualToEuclidean, φE]
+  rw [hdual, ← hriesz]
+  calc
+    rieszEquiv n (coordinateDualToEuclidean n φ) (toEuclidean n x) =
+        @inner ℝ (EucVector n) _ (coordinateDualToEuclidean n φ)
+          (toEuclidean n x) :=
+      rieszEquiv_apply_apply n (coordinateDualToEuclidean n φ)
+        (toEuclidean n x)
+    _ = @inner ℝ (EucVector n) _ (toEuclidean n x)
+        (coordinateDualToEuclidean n φ) := real_inner_comm _ _
 
 /-- Algebraic neutral phase space transported to the Euclidean phase-space
 owner used by the doubled real Krein construction. -/

@@ -3,6 +3,7 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
+
 import InfoGeometry.Epistemology.ChentsovUniquenessContinuous
 
 #print axioms InfoGeometry.Epistemology.ChentsovUniquenessContinuous.fisherMetric_tendsto
@@ -20,4 +21,5 @@ import InfoGeometry.Epistemology.ChentsovUniquenessContinuous
 #print axioms InfoGeometry.Epistemology.ChentsovUniquenessContinuous.ratApprox_tendsto
 #print axioms InfoGeometry.Epistemology.ChentsovUniquenessContinuous.chentsov_uniqueness_of_seqContinuous
 #print axioms InfoGeometry.Epistemology.ChentsovUniquenessContinuous.chentsov_classification_of_seqContinuous
+#print axioms InfoGeometry.Epistemology.ChentsovUniquenessContinuous.tangentAgreement_scaledFisher_iff_seqContinuous_and_eq_bool
 #print axioms InfoGeometry.Epistemology.ChentsovUniquenessContinuous.chentsov_scale_pos_of_positiveDefinite

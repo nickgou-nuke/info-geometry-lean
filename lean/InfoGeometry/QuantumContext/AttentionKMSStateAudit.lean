@@ -43,7 +43,7 @@ open InfoGeometry.QuantumContext.AttentionKMSState
 #print axioms projectionMatrix_transpose
 #print axioms projectionMatrix_mul_self
 #print axioms pruned_cache_has_nontrivial_null_ideal
-#print axioms sink_anchor_separating
+#print axioms sink_anchor_column_positive
 #print axioms prunedDensityMatrixPinv_mul_eq_projector
 #print axioms prunedDensityMatrixPinv_isMoorePenroseInverse
 #print axioms prunedState_reduced_trace_identity

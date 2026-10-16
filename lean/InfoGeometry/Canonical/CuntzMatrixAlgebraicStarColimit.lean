@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.CuntzMatrixTraceTower
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Colimit.DirectLimit
@@ -33,17 +38,6 @@ instance rawDirectedSystem :
 
 abbrev Carrier : Type :=
   DirectLimit MatrixStage (fun _ _ hij => rawMap hij)
-
-instance carrierAlgebra : Algebra ℂ Carrier :=
-  Algebra.ofModule
-    (by
-      intro c x y
-      induction x, y using DirectLimit.induction₂ with
-      | _ i x y => simp [DirectLimit.smul_def, DirectLimit.mul_def])
-    (by
-      intro c x y
-      induction x, y using DirectLimit.induction₂ with
-      | _ i x y => simp [DirectLimit.smul_def, DirectLimit.mul_def])
 
 instance carrierStar : Star Carrier where
   star :=

@@ -390,8 +390,11 @@ end InvariantMetricFamily
 
 /-! ### 9. Chentsov uniqueness on rational points -/
 
-/-- **Chentsov uniqueness (rational points).** Every invariant metric family is a single
-constant multiple of the Fisher metric at all rational interior distributions. -/
+/-- **Chentsov uniqueness at rational points (ambient-invariance form).** Every
+ambiently invariant metric family (`InvariantMetricFamily`) is a single constant
+multiple of the Fisher metric on the simplex tangent space at all rational
+interior distributions. (For the tangent-only invariance formulation, see
+`InfoGeometry.Epistemology.ChentsovTangentUniqueness`.) -/
 theorem chentsov_uniqueness_rational (F : InvariantMetricFamily) :
     ∃ c : ℝ, ∀ (α : Type) [Fintype α] [DecidableEq α] (P : ProbInterior α),
       (∃ (N : ℕ) (m : α → ℕ), ∀ i, P.p i = m i / N) →

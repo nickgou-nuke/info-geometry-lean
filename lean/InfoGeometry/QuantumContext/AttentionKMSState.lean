@@ -529,12 +529,13 @@ theorem pruned_cache_has_nontrivial_null_ideal [Fintype ι] [DecidableEq ι]
     simp only [Finset.mem_univ, ite_true, hi₀]
 
 /--
-  **The Attention Sink Anchor**:
+  **Anchor-Column Positivity for the Pruned State**:
   If token `anchor` is protected with non-zero weight ($\rho_{\text{anchor}} > 0$), then any operator $A$
   acting non-trivially on the anchor column (i.e. $\exists j, A_{j,\text{anchor}} \ne 0$) satisfies $\omega(A^T A) > 0$.
-  Preserving the initial anchor token keeps the state faithful on the anchor column subspace.
+  This is positivity on the anchor-column-supported operator subspace; it does not assert
+  faithfulness on the full matrix algebra, since other columns may lie in the quadratic null set.
 -/
-theorem sink_anchor_separating [Fintype ι] [DecidableEq ι]
+theorem sink_anchor_column_positive [Fintype ι] [DecidableEq ι]
     (pw : PrunedWeights ι) (anchor : ι) (h_anchor : 0 < pw.weights anchor)
     (A : Matrix ι ι ℝ) (j : ι) (h_nz : A j anchor ≠ 0) :
     0 < prunedState pw (A.transpose * A) := by

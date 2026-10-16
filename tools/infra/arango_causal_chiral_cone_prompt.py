@@ -652,6 +652,7 @@ def render_markdown(packet: dict[str, Any]) -> str:
 def build_packet(args: argparse.Namespace) -> dict[str, Any]:
     repo_root = args.repo_root.resolve()
     target = arango_target(repo_root)
+    generation_record = None
     if args.generation_id:
         published = run_aql(
             target,
@@ -665,6 +666,7 @@ def build_packet(args: argparse.Namespace) -> dict[str, Any]:
         )
         if not published:
             raise RuntimeError(f"declaration generation {args.generation_id!r} is absent or incomplete")
+        generation_record = published[0]
     resolved = resolve_decl(
         target,
         decl=args.decl,
@@ -746,6 +748,8 @@ def build_packet(args: argparse.Namespace) -> dict[str, Any]:
 
     return {
         "schema": SCHEMA,
+        "mode": "single-apex-multi-cone",
+        "status": "ok",
         "apex": {
             "name": args.decl,
             "authority": resolved.get("authority", "raw_info_nodes"),
@@ -770,6 +774,14 @@ def build_packet(args: argparse.Namespace) -> dict[str, Any]:
             "members_per_component": args.members_per_component,
             "source_radius": args.source_radius,
         },
+        "graph_provenance": {
+            "generation_id": args.generation_id,
+            "generation_status": "complete" if generation_record else "unspecified",
+            "freshness": "unknown",
+            "build_fingerprint": (generation_record or {}).get("buildFingerprint"),
+            "authority": resolved.get("authority", "compiler_backed_declarations"),
+        },
+        "graph_is_navigation_not_proof": True,
         "backward_cone": backward,
         "forward_cone": forward,
         "component_ids": component_ids,
@@ -964,6 +976,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--md-out", type=Path)
     args = parser.parse_args(argv)
 
+    if args.backward_depth < 1 or args.forward_depth < 1:
+        parser.error("--backward-depth and --forward-depth must be positive")
+    if args.cone_limit < 1:
+        parser.error("--cone-limit must be positive")
+
     if args.generation_id:
         if len(args.generation_id) > 32 or not all(ch.isalnum() or ch in "_-" for ch in args.generation_id):
             parser.error("--generation-id must be at most 32 letters, digits, '_' or '-'")
@@ -978,6 +995,8 @@ def main(argv: list[str] | None = None) -> int:
         names = [name.strip() for name in args.decl_multi.split(",") if name.strip()]
         if len(names) < 2:
             parser.error("--decl-multi requires at least two declarations")
+        if len(set(names)) != len(names):
+            parser.error("--decl-multi does not accept duplicate declaration apices")
         packet = build_multi_packet(args, names)
     else:
         packet = build_packet(args)

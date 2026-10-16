@@ -897,6 +897,7 @@ class DiscoveryReport:
     lemmas_found: List[Dict[str, Any]] = field(default_factory=list)
     recommended_imports: Set[str] = field(default_factory=set)
     deduplication_warnings: List[str] = field(default_factory=list)
+    local_dag_context: Optional[Dict[str, Any]] = None
     dag_context: Optional[Dict[str, Any]] = None
 
     def to_dict(self) -> Dict[str, Any]:
@@ -906,6 +907,7 @@ class DiscoveryReport:
             "lemmas_found": self.lemmas_found,
             "recommended_imports": sorted(list(self.recommended_imports)),
             "deduplication_warnings": self.deduplication_warnings,
+            "local_dag_context": self.local_dag_context,
             "dag_context": self.dag_context,
         }
 
@@ -928,6 +930,8 @@ def discover_dag_context(
     names = [name.strip() for name in apices if name.strip()]
     if not names:
         raise ValueError("at least one exact declaration apex is required")
+    if len(set(names)) != len(names):
+        raise ValueError("duplicate exact declaration apices are not allowed")
     script = repo_root / "tools" / "infra" / "arango_causal_chiral_cone_prompt.py"
     command = [sys.executable, str(script), "--repo-root", str(repo_root)]
     if len(names) == 1:
@@ -984,6 +988,43 @@ def discover_dag_context(
             "freshness": "unknown",
             "graph_is_proof_authority": False,
         }
+    if packet.get("schema") != "info_geometry.causal_chiral_cone_prompt.v2":
+        packet["status"] = "invalid_packet"
+        packet["validation_error"] = "unexpected_schema"
+        return packet
+    expected_mode = "multi-apex-multi-cone" if len(names) > 1 else "single-apex-multi-cone"
+    resolution_diagnostic = (
+        len(names) > 1
+        and packet.get("mode") == "multi-apex-resolution-diagnostic"
+        and packet.get("status") in {"unindexed", "not_found"}
+    )
+    if packet.get("mode") != expected_mode and not resolution_diagnostic:
+        packet["status"] = "invalid_packet"
+        packet["validation_error"] = "unexpected_mode"
+        return packet
+    if packet.get("status") != "ok" and not resolution_diagnostic:
+        packet["status"] = "invalid_packet"
+        packet["validation_error"] = "unexpected_status"
+        return packet
+    if len(names) == 1:
+        returned_names = [((packet.get("apex") or {}).get("name"))]
+        if packet.get("mode") == "multi-apex-resolution-diagnostic":
+            returned_names = packet.get("requested_names", [])
+    else:
+        if packet.get("mode") == "multi-apex-resolution-diagnostic":
+            returned_names = packet.get("requested_names", [])
+        else:
+            returned_names = [row.get("name") for row in packet.get("apices", []) if isinstance(row, dict)]
+    if returned_names != names:
+        packet["status"] = "invalid_packet"
+        packet["validation_error"] = "requested_apices_mismatch"
+        return packet
+    provenance_in = packet.get("graph_provenance")
+    returned_generation = provenance_in.get("generation_id") if isinstance(provenance_in, dict) else None
+    if generation_id is not None and returned_generation != generation_id:
+        packet["status"] = "invalid_packet"
+        packet["validation_error"] = "requested_generation_mismatch"
+        return packet
     packet["authority"] = "navigation_only"
     packet["graph_is_proof_authority"] = False
     provenance = packet.get("graph_provenance")
@@ -991,6 +1032,94 @@ def discover_dag_context(
         provenance = {}
         packet["graph_provenance"] = provenance
     provenance.setdefault("freshness", "unknown")
+    return packet
+
+
+def discover_local_dag_context(
+    query: str,
+    *,
+    repo_root: Path,
+    depth: int = 1,
+    limit: int = 10,
+) -> Dict[str, Any]:
+    """Run the repository's offline DAG/LeanTrail preflight as navigation only."""
+    script = repo_root / "tools" / "infra" / "arango_causal_memory.py"
+    command = [
+        sys.executable, str(script), "local-preflight", query,
+        "--depth", str(depth), "--limit", str(limit),
+    ]
+    try:
+        result = subprocess.run(
+            command, cwd=repo_root, capture_output=True, text=True,
+            check=False, timeout=30,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        return {
+            "status": "unavailable",
+            "reason": type(exc).__name__,
+            "authority": "navigation_only",
+            "freshness": "unknown",
+            "graph_is_proof_authority": False,
+        }
+    if result.returncode != 0:
+        return {
+            "status": "unavailable",
+            "reason": "local_preflight_failed",
+            "returncode": result.returncode,
+            "diagnostic": (result.stderr or result.stdout).strip()[:1000],
+            "authority": "navigation_only",
+            "freshness": "unknown",
+            "graph_is_proof_authority": False,
+        }
+    try:
+        envelope = json.loads(result.stdout)
+    except json.JSONDecodeError:
+        envelope = None
+    if not isinstance(envelope, dict):
+        return {
+            "status": "invalid_packet",
+            "validation_error": "expected_json_object",
+            "authority": "navigation_only",
+            "freshness": "unknown",
+            "graph_is_proof_authority": False,
+        }
+    if envelope.get("ok") is not True or envelope.get("target") != "local":
+        return {
+            "status": "unavailable",
+            "validation_error": "unexpected_local_preflight_envelope",
+            "authority": "navigation_only",
+            "freshness": "unknown",
+            "graph_is_proof_authority": False,
+        }
+    packet = envelope.get("output")
+    if not isinstance(packet, dict):
+        return {
+            "status": "invalid_packet",
+            "validation_error": "expected_output_object",
+            "authority": "navigation_only",
+            "freshness": "unknown",
+            "graph_is_proof_authority": False,
+        }
+    if packet.get("schema") != "info_geometry.local_dag_attention.v1":
+        return {
+            "status": "invalid_packet",
+            "validation_error": "unexpected_schema",
+            "authority": "navigation_only",
+            "freshness": "unknown",
+            "graph_is_proof_authority": False,
+        }
+    if "local_search" not in packet or "artifacts" not in packet:
+        return {
+            "status": "invalid_packet",
+            "validation_error": "missing_required_fields",
+            "authority": "navigation_only",
+            "freshness": "unknown",
+            "graph_is_proof_authority": False,
+        }
+    packet["status"] = "ok"
+    packet["authority"] = "navigation_only"
+    packet["freshness"] = "unknown"
+    packet["graph_is_proof_authority"] = False
     return packet
 
 
@@ -1604,6 +1733,9 @@ def build_parser() -> argparse.ArgumentParser:
     p_disc.add_argument("--backward-depth", type=int, default=6, help="Maximum prerequisite-cone depth (default: 6)")
     p_disc.add_argument("--forward-depth", type=int, default=6, help="Maximum consequence-cone depth (default: 6)")
     p_disc.add_argument("--cone-limit", type=int, default=250, help="Maximum rows returned per apex and direction (default: 250)")
+    p_disc.add_argument("--local-dag-context", action="store_true", help="Include offline artifacts/dag/index and LeanTrail preflight context")
+    p_disc.add_argument("--local-dag-depth", type=int, default=1, help="Neighborhood depth for offline DAG preflight (default: 1)")
+    p_disc.add_argument("--local-dag-limit", type=int, default=10, help="Hit/neighborhood limit for offline DAG preflight (default: 10)")
     p_disc.add_argument("--json", action="store_true", help="Output JSON")
 
     # 14. quarantine
@@ -1816,9 +1948,18 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             parser.error("--backward-depth and --forward-depth must be non-negative")
         if args.cone_limit < 1:
             parser.error("--cone-limit must be positive")
+        if args.local_dag_depth < 0 or args.local_dag_limit < 1:
+            parser.error("--local-dag-depth must be non-negative and --local-dag-limit must be positive")
         if args.dag_generation_id and not args.dag_apex:
             parser.error("--dag-generation-id requires at least one exact --dag-apex")
         report = discover_declarations(args.query, repo_root=repo_root)
+        if args.local_dag_context:
+            report.local_dag_context = discover_local_dag_context(
+                args.query,
+                repo_root=repo_root,
+                depth=args.local_dag_depth,
+                limit=args.local_dag_limit,
+            )
         if args.dag_apex:
             report.dag_context = discover_dag_context(
                 args.dag_apex,
@@ -1852,7 +1993,14 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             if report.dag_context is not None:
                 print("  Bounded DAG Context (navigation only; freshness may be unknown):")
                 print(json.dumps(report.dag_context, indent=2))
-        if report.dag_context is not None and report.dag_context.get("status") in {"unavailable", "invalid_packet"}:
+            if report.local_dag_context is not None:
+                print("  Offline DAG/LeanTrail Context (navigation only; freshness unknown):")
+                print(json.dumps(report.local_dag_context, indent=2))
+        if any(
+            context is not None
+            and context.get("status") in {"unavailable", "invalid_packet", "unindexed", "not_found"}
+            for context in (report.local_dag_context, report.dag_context)
+        ):
             return 2
         return 0
 

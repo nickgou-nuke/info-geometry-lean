@@ -644,6 +644,7 @@ def local_preflight(
             )
 
     return {
+        "schema": "info_geometry.local_dag_attention.v1",
         "query": query,
         "authority": {
             "level": "dag_leantrail_navigation",

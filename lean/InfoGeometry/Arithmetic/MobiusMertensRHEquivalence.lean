@@ -4,26 +4,19 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import Mathlib.NumberTheory.ArithmeticFunction.Moebius
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Asymptotics.Defs
 import Mathlib.Analysis.SpecificLimits.Normed
 import Mathlib.Analysis.Calculus.Deriv.MeanValue
 import Mathlib.Analysis.PSeries
 import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import InfoGeometry.Arithmetic.PrimeBitLattice
-import InfoGeometry.Arithmetic.PrimeBitMobiusParityBridge
-import InfoGeometry.Arithmetic.RiemannHypothesis
-import InfoGeometry.Meta.Architecture
 
 /-!
-# Möbius and Mertens RH Equivalence Bridge
+# Möbius and Mertens conditional arithmetic estimates
 
-This module establishes the Distance 1 and Distance 2 paths in the RH DAG:
-`graded Primon` ⟶ `1/ζ` ⟶ `μ(n)` ⟶ `M(N)` ⟶ `RH-equivalent square-root cancellation`.
-
-It explicitly typed DAG edges between the discrete finite-prime representations,
-the Möbius coefficients, and the square-root cancellation criteria.
+This owner proves finite Mertens identities and ordered-series convergence from
+explicit Mertens growth bounds. It defines the square-root-cancellation
+proposition but does not prove it or establish an RH equivalence.
 -/
 
 noncomputable section
@@ -468,61 +461,5 @@ theorem mobius_ordered_series_tendsto_of_square_root_cancellation
     ring
   refine ⟨l, ?_⟩
   simpa only [hseq] using hNested
-
-/--
-An OPEN exact-equivalence edge connecting the Mertens cancellation explicitly to the RH property.
-Any actual resolution of this node would constitute a proof of RH.
--/
-structure MertensRHEquivalenceBridge where
-  /-- The forward implication: Mertens cancellation implies the Fredholm/RH nonvanishing claim. -/
-  impliesRH : MertensSquareRootCancellation →
-    ∃ determinant : ℂ → ℂ,
-      InfoGeometry.Arithmetic.RiemannHypothesis.FredholmHalfPlaneProperty determinant
-  /-- The reverse implication: RH property implies Mertens cancellation. -/
-  impliesMertens :
-    (∃ determinant : ℂ → ℂ,
-      InfoGeometry.Arithmetic.RiemannHypothesis.FredholmHalfPlaneProperty determinant) →
-      MertensSquareRootCancellation
-
-open InfoGeometry.Arithmetic.PrimeBitLattice
-
-/--
-A structural edge (`Distance 2`) linking the discrete prime bit lattice states
-(the graded Primon partition) directly to the Möbius coefficients.
-Evaluating the fermionic partition with graded signs exactly yields the `μ` values.
--/
-structure PrimonMobiusBridge (L : PrimeBitLattice) where
-  /-- Every finite prime bit state's product is squarefree. -/
-  state_squarefree : ∀ ε : PrimeBitState L, Squarefree (primeBitInteger L ε)
-  /-- The sign of the state exactly matches the Möbius function of its integer product. -/
-  state_moebius_eq : ∀ ε : PrimeBitState L,
-    (μ (primeBitInteger L ε) : ℤ) = (-1 : ℤ) ^ (PrimeBitState.support L ε).card
-
-/-- The finite prime-bit lattice realizes the representation edge directly. -/
-theorem primeBitLattice_primonMobiusBridge (L : PrimeBitLattice) :
-    PrimonMobiusBridge L := by
-  refine
-    { state_squarefree := ?_
-      state_moebius_eq := ?_ }
-  · intro ε
-    exact PrimeBitMobiusParityBridge.primeBitInteger_squarefree ε
-  · intro ε
-    exact PrimeBitMobiusParityBridge.mobius_primeBitInteger_eq_parity_sign ε
-
-instance (L : PrimeBitLattice) : Inhabited (PrimonMobiusBridge L) where
-  default := primeBitLattice_primonMobiusBridge L
-
-/--
-The combined typed DAG pathway connecting the discrete prime representations
-all the way to the Riemann Hypothesis equivalence.
--/
-structure PrimonMertensRHTopologicalPath (L : PrimeBitLattice) where
-  /-- Distance 2 Edge: Graded Primon to Möbius -/
-  primonToMobius : PrimonMobiusBridge L
-  /-- Distance 1 Edge: Möbius to Mertens sum -/
-  mertensSum : ℕ → ℤ
-  mertensSum_eq : ∀ N, mertensSum N = mertensFunction N
-  /-- Distance 0 Edge: Mertens square-root cancellation to RH Equivalence -/
-  mertensToRH : MertensRHEquivalenceBridge
 
 end InfoGeometry.Arithmetic.MobiusMertensRHEquivalence

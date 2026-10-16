@@ -1,0 +1,64 @@
+{
+  "authority": "navigation_only",
+  "carriers_found": [
+    {
+      "file": "lean/InfoGeometry/QuantumContext/MarkovMatrixFourCornerK0.lean",
+      "kind": "def",
+      "lean_statement": "def cornerEnd (E F : MatrixCarrier (ι := ι)) (c : Corner) : MatrixEnd (ι := ι)",
+      "line": 80,
+      "location": "lean/InfoGeometry/QuantumContext/MarkovMatrixFourCornerK0.lean:80",
+      "name": "cornerEnd",
+      "qualified_name": "InfoGeometry.QuantumContext.MarkovMatrixFourCornerK0.cornerEnd",
+      "source_end_line": 80,
+      "source_sha256": "a4db01002a7657ec05a70d3a3ed42760a1281e82e6dfef6b2923ed9e77589c92"
+    }
+  ],
+  "dag_context": {
+    "authority": "navigation_only",
+    "diagnostic": "Traceback (most recent call last):\n  File \"/home/goutev/repos/info-geometry-lean/tools/infra/arango_causal_chiral_cone_prompt.py\", line 31, in <module>\n    from tools.infra.arango_dag_algorithms import run_aql  # noqa: E402\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/goutev/repos/info-geometry-lean/tools/infra/arango_dag_algorithms.py\", line 29, in <module>\n    import networkx as nx\nModuleNotFoundError: No module named 'networkx'",
+    "freshness": "unknown",
+    "graph_is_proof_authority": false,
+    "reason": "cone_query_failed",
+    "requested_apices": [
+      "InfoGeometry.QuantumContext.MarkovGroupInversePetzCorner.markovRange_petzRecovery_range_iff_corner",
+      "InfoGeometry.QuantumContext.MarkovMatrixFourCornerK0.markovMatrixFourCornerK0_split"
+    ],
+    "returncode": 1,
+    "status": "unavailable"
+  },
+  "deduplication_warnings": [
+    "Query 'markovRange_petzRecovery_range_iff_corner cornerEnd markovMatrixFourCornerK0_split' matches existing fundamental type 'cornerEnd' in lean/InfoGeometry/QuantumContext/MarkovMatrixFourCornerK0.lean; reuse canonical carrier instead of introducing redundant type wrapper."
+  ],
+  "graph_is_proof_authority": false,
+  "lemmas_found": [
+    {
+      "file": "lean/InfoGeometry/QuantumContext/MarkovGroupInversePetzCorner.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem markovRange_petzRecovery_range_iff_corner (P G Y : Matrix ι ι ℝ) (hG : IsGroupInverse (1 - P) G) : Y ∈ Set.range (fun X : Matrix ι ι ℝ => petzRecovery (markovRangeIdempotent P G) X) ↔ markovRangeIdempotent P G * Y * markovRangeIdempotent P G = Y",
+      "line": 82,
+      "location": "lean/InfoGeometry/QuantumContext/MarkovGroupInversePetzCorner.lean:82",
+      "name": "markovRange_petzRecovery_range_iff_corner",
+      "qualified_name": "InfoGeometry.QuantumContext.markovRange_petzRecovery_range_iff_corner",
+      "source_end_line": 87,
+      "source_sha256": "f9b97c365839013b412ddc20b1f9fd8944b39445a2d996160b4c80c6839ac530"
+    },
+    {
+      "file": "lean/InfoGeometry/QuantumContext/MarkovMatrixFourCornerK0.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem markovMatrixFourCornerK0_split [Nontrivial ι] (P G : Matrix ι ι ℝ) (hG : IsGroupInverse (1 - P) G) : k0Class ℝ (cornerRangeModule (markovRangeIdempotent P G) (1 - markovRangeIdempotent P G) .rangeRange (markovRangeIdempotent_idempotent P G hG) (markovRangeComplement_idempotent P G hG)) + k0Class ℝ (cornerRangeModule (markovRangeIdempotent P G) (1 - markovRangeIdempotent P G) .rangeKernel (markovRangeIdempotent_idempotent P G hG) (markovRangeComplement_idempotent P G hG)) + k0Class ℝ (cornerRangeModule (markovRangeIdempotent P G) (1 - markovRangeIdempotent P G) .kernelRange (markovRangeIdempotent_idempotent P G hG) (markovRangeComplement_idempotent P G hG)) + k0Class ℝ (cornerRangeModule (markovRangeIdempotent P G) (1 - markovRangeIdempotent P G) .kernelKernel (markovRangeIdempotent_idempotent P G hG) (markovRangeComplement_idempotent P G hG)) = k0Class ℝ (matrixModule ι)",
+      "line": 323,
+      "location": "lean/InfoGeometry/QuantumContext/MarkovMatrixFourCornerK0.lean:323",
+      "name": "markovMatrixFourCornerK0_split",
+      "qualified_name": "InfoGeometry.QuantumContext.MarkovMatrixFourCornerK0.markovMatrixFourCornerK0_split",
+      "source_end_line": 342,
+      "source_sha256": "a4db01002a7657ec05a70d3a3ed42760a1281e82e6dfef6b2923ed9e77589c92"
+    }
+  ],
+  "local_dag_context": null,
+  "query": "markovRange_petzRecovery_range_iff_corner cornerEnd markovMatrixFourCornerK0_split",
+  "recommended_imports": [
+    "InfoGeometry.QuantumContext.MarkovGroupInversePetzCorner",
+    "InfoGeometry.QuantumContext.MarkovMatrixFourCornerK0"
+  ],
+  "schema": "info_geometry.opengauss.discovery_report.v1"
+}

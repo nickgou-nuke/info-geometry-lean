@@ -57,6 +57,24 @@ theorem matrixColumn_markovLeftOnsager (P X : Matrix ι ι ℝ) (j : ι) :
   simp [matrixColumn, markovLeftOnsager, mulLeftLinearMap,
     Matrix.mul_apply, Matrix.mulVec, dotProduct, mul_comm]
 
+/-- The full-matrix Dirichlet energy is the sum of the reversible edge
+energies of all columns. This transports the finite vector edge formula to
+the actual matrix carrier on which the Markov Onsager map acts. -/
+theorem weightedMatrixPairing_laplacian_eq_half_column_edge_energy
+    (P : Matrix ι ι ℝ) (π : ι → ℝ) (X : Matrix ι ι ℝ)
+    (hP : P ∈ Matrix.rowStochastic ℝ ι)
+    (hDB : InfoGeometry.Probability.DetailedBalance π P) :
+    weightedMatrixPairing π X (markovLeftOnsager P X) =
+      ∑ c, (1 / 2 : ℝ) * ∑ i, ∑ j,
+        π i * P i j * (X i c - X j c) ^ 2 := by
+  unfold weightedMatrixPairing
+  apply Finset.sum_congr rfl
+  intro c hc
+  rw [matrixColumn_markovLeftOnsager]
+  simpa only [Matrix.sub_mulVec, Matrix.one_mulVec, matrixColumn] using
+    (weightedMarkovPairing_laplacian_eq_half_edge_energy P π
+      (matrixColumn X c) hP hDB)
+
 /-- Detailed balance lifts the Markov Laplacian symmetry to the full matrix
 carrier under the weighted Frobenius pairing. -/
 theorem weightedMatrixPairing_laplacian_symmetric

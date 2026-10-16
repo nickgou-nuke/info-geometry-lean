@@ -166,6 +166,15 @@ class GroundTruthContractTests(unittest.TestCase):
         from tools.infra.opengauss_ground_truth_contract import _qualified_declaration_heads
         self.assertEqual(_qualified_declaration_heads(owner.read_text(encoding="utf-8")), {})
 
+    def test_multiline_private_declaration_is_not_claimed_as_public(self) -> None:
+        owner = self.root / "lean" / "Owner.lean"
+        owner.write_text(
+            "namespace Demo\nprivate\n theorem base : True := by trivial\nend Demo\n",
+            encoding="utf-8",
+        )
+        from tools.infra.opengauss_ground_truth_contract import _qualified_declaration_heads
+        self.assertEqual(_qualified_declaration_heads(owner.read_text(encoding="utf-8")), {})
+
     def test_unavailable_graph_is_explicitly_accepted_but_invalid_packet_rejected(self) -> None:
         report = json.loads(self.receipt.read_text(encoding="utf-8"))
         report["local_dag_context"] = {
@@ -205,6 +214,23 @@ class GroundTruthContractTests(unittest.TestCase):
             "target_expression": "True",
         }
         validate_draft_receipt_payload(draft_receipt, repo_root=self.root)
+        false_contract = json.loads(json.dumps(self.contract))
+        false_contract["smallest_gap"]["lean_signature"] = ": False"
+        false_draft = dict(draft_receipt)
+        false_path = self.root / "lean" / "FalseDraft.lean"
+        false_path.write_text(
+            "namespace Demo\ntheorem next : False := by trivial\nend Demo\n",
+            encoding="utf-8",
+        )
+        false_draft.update({
+            "contract": false_contract,
+            "contract_sha256": canonical_digest(false_contract),
+            "source_path": "lean/FalseDraft.lean",
+            "source_sha256": hashlib.sha256(false_path.read_bytes()).hexdigest(),
+            "declaration_signature": "theorem next : False",
+        })
+        with self.assertRaisesRegex(ValueError, "parsed Lean declaration result type"):
+            validate_draft_receipt_payload(false_draft, repo_root=self.root)
         binding = {
             "contract": self.contract,
             "contract_sha256": canonical_digest(self.contract),

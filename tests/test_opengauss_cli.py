@@ -366,6 +366,8 @@ def test_command_15_certify(tmp_path: Optional[Path] = None):
         "namespace InfoGeometry.Test\n\n"
         "theorem alpha_eq : 1 = 1 := rfl\n"
         "private theorem hidden_eq : 1 = 1 := rfl\n"
+        "private\n"
+        "theorem hidden_multiline_eq : 1 = 1 := rfl\n"
         "lemma beta_pos (n : Nat) : n + 0 = n := Nat.add_zero n\n"
         "end InfoGeometry.Test\n"
         "namespace Other\ntheorem gamma_eq : 2 = 2 := rfl\nend Other\n"
@@ -407,6 +409,7 @@ def test_command_15_certify(tmp_path: Optional[Path] = None):
     assert "#print axioms Outer.after_section_eq" in audit.audit_script
     assert "commented_out" not in audit.audit_script
     assert "hidden_eq" not in audit.audit_script
+    assert "hidden_multiline_eq" not in audit.audit_script
     assert Path(audit.audit_file).is_file()
     assert Path(audit.audit_file).read_text(encoding="utf-8") == audit.audit_script
 

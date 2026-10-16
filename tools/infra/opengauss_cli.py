@@ -1570,9 +1570,17 @@ def generate_certification_audit(
         r"((?:(?:private|protected|noncomputable|unsafe)\s+)*)"
         r"(?:theorem|lemma)\s+([A-Za-z_][A-Za-z0-9_']*|«[^»]+»)(?:\b|\s|$)"
     )
+    pending_private = False
     for line in content.splitlines():
+        stripped_line = line.strip()
+        if stripped_line == "private":
+            pending_private = True
+            continue
+        if pending_private and (not stripped_line or stripped_line.startswith("@[") and stripped_line.endswith("]")):
+            continue
         namespace_match = namespace_pattern.match(line)
         if namespace_match:
+            pending_private = False
             scope_stack.extend(
                 ("namespace", component)
                 for component in namespace_match.group(1).split(".")
@@ -1580,10 +1588,12 @@ def generate_certification_audit(
             continue
         section_match = re.match(r"^\s*section(?:\s+([A-Za-z0-9_']+))?\s*$", line)
         if section_match:
+            pending_private = False
             scope_stack.append(("section", section_match.group(1)))
             continue
         end_match = end_pattern.match(line)
         if end_match:
+            pending_private = False
             closing_name = end_match.group(1)
             if closing_name is None:
                 if scope_stack:
@@ -1614,7 +1624,9 @@ def generate_certification_audit(
         theorem_match = theorem_pattern.match(line)
         if theorem_match:
             visibility_modifiers = theorem_match.group(1) or ""
-            if re.search(r"\bprivate\b", visibility_modifiers):
+            is_private = pending_private or bool(re.search(r"\bprivate\b", visibility_modifiers))
+            pending_private = False
+            if is_private:
                 # Private declarations are mangled and cannot be referenced
                 # from the imported companion audit module.
                 continue
@@ -1624,6 +1636,8 @@ def generate_certification_audit(
                 if kind == "namespace" and value is not None
             ]
             theorems.append(".".join([*active_namespace, name]) if active_namespace else name)
+        elif stripped_line:
+            pending_private = False
 
     mod_path = _file_to_module_path(lean_path, repo_root)
 

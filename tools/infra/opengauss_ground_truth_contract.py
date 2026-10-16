@@ -57,20 +57,30 @@ def _qualified_declaration_heads(source: str) -> dict[str, list[dict[str, Any]]]
         r"(?:theorem|lemma|def|abbrev|opaque|structure|class|inductive|namespace|section|end)\b"
     )
     last_top_level_indent: int | None = None
+    pending_private = False
 
     for index, line in enumerate(clean_lines):
+        stripped_line = line.strip()
+        if stripped_line == "private":
+            pending_private = True
+            continue
+        if pending_private and (not stripped_line or stripped_line.startswith("@[") and stripped_line.endswith("]")):
+            continue
         namespace_match = namespace_pattern.match(line)
         if namespace_match:
+            pending_private = False
             scopes.append(("namespace", namespace_match.group(1)))
             last_top_level_indent = None
             continue
         section_match = section_pattern.match(line)
         if section_match:
+            pending_private = False
             scopes.append(("section", section_match.group(1) or ""))
             last_top_level_indent = None
             continue
         end_match = end_pattern.match(line)
         if end_match:
+            pending_private = False
             closing = end_match.group(1)
             if closing is None:
                 if scopes:
@@ -90,6 +100,12 @@ def _qualified_declaration_heads(source: str) -> dict[str, list[dict[str, Any]]]
             continue
         declaration_match = declaration_pattern.match(line)
         if declaration_match is None:
+            if stripped_line:
+                pending_private = False
+            continue
+
+        if pending_private:
+            pending_private = False
             continue
 
         indent = len(line) - len(line.lstrip())
@@ -373,8 +389,20 @@ def validate_draft_receipt_payload(receipt: Any, *, repo_root: Path) -> dict[str
     signature = _nonempty(receipt.get("declaration_signature"), "draft_receipt.declaration_signature")
     declarations = _qualified_declaration_heads(source.read_text(encoding="utf-8")).get(target_name, [])
     normalize = lambda text: " ".join(text.split())
-    if not any(normalize(item["lean_statement"]) == normalize(signature) for item in declarations):
+    declaration = next(
+        (item for item in declarations if normalize(item["lean_statement"]) == normalize(signature)),
+        None,
+    )
+    if declaration is None:
         _fail("draft receipt declaration signature does not match its source snapshot")
+    expected_signature = f"theorem {target_name.split('.')[-1]} {checked['missing_lean_signature']}"
+    if normalize(signature) != normalize(expected_signature):
+        _fail("draft receipt declaration signature differs from the contract Lean signature")
+    from tools.infra.opengauss_screener import _top_level_result_type
+
+    parsed = _top_level_result_type(declaration["lean_statement"])
+    if parsed is None or normalize(parsed[1]) != normalize(target_expression):
+        _fail("draft receipt proposition differs from the parsed Lean declaration result type")
     return {
         "contract": contract,
         "contract_sha256": checked["contract_sha256"],

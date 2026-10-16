@@ -8,4 +8,5 @@ import InfoGeometry.QuantumContext.MarkovFullMatrixGreen
 
 #print axioms InfoGeometry.QuantumContext.MarkovDrazin.matrixColumn_mulVec_left
 #print axioms InfoGeometry.QuantumContext.MarkovDrazin.weightedMatrixPairing_groupInverse_symmetric
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.weightedMatrixPairing_laplacian_eq_groupInverse_greenForm
 #print axioms InfoGeometry.QuantumContext.MarkovDrazin.weightedMatrixPairing_groupInverse_pos_of_ne_on_range

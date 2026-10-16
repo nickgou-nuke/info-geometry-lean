@@ -51,6 +51,61 @@ theorem weightedMatrixPairing_groupInverse_symmetric
   exact weightedMarkovPairing_groupInverse_symmetric
     P G π (matrixColumn X j) (matrixColumn Y j) hπ hDB hG
 
+omit [Nonempty ι] in
+/-- On the full matrix carrier, the detailed-balance weighted pairing of a
+potential with its Markov Laplacian equals the pairing of that Laplacian with
+its group-inverse image. This is a finite-matrix Green-form identity; no
+diagonal restriction is imposed on `X`. -/
+theorem weightedMatrixPairing_laplacian_eq_groupInverse_greenForm
+    (P G : Matrix ι ι ℝ) (π : ι → ℝ) (X : Matrix ι ι ℝ)
+    (hDB : InfoGeometry.Probability.DetailedBalance π P)
+    (hG : IsGroupInverse (1 - P) G) :
+    weightedMatrixPairing π X (markovLeftOnsager P X) =
+      weightedMatrixPairing π (markovLeftOnsager P X)
+        (G * markovLeftOnsager P X) := by
+  let Y : Matrix ι ι ℝ := X - G * markovLeftOnsager P X
+  have hLG : (1 - P) * G * ((1 - P) * X) = (1 - P) * X := by
+    calc
+      (1 - P) * G * ((1 - P) * X) =
+          (1 - P) * (G * ((1 - P) * X)) := by noncomm_ring
+      _ = ((1 - P) * G * (1 - P)) * X := by noncomm_ring
+      _ = (1 - P) * X := by rw [hG.1]
+  have hLG' : (1 - P) * (G * ((1 - P) * X)) = (1 - P) * X := by
+    calc
+      (1 - P) * (G * ((1 - P) * X)) =
+          (1 - P) * G * ((1 - P) * X) := by noncomm_ring
+      _ = (1 - P) * X := hLG
+  have hLY : markovLeftOnsager P Y = 0 := by
+    change (1 - P) * (X - G * ((1 - P) * X)) = 0
+    rw [mul_sub, hLG', sub_self]
+  have horth :
+      weightedMatrixPairing π (markovLeftOnsager P X) Y = 0 := by
+    calc
+      weightedMatrixPairing π (markovLeftOnsager P X) Y =
+          weightedMatrixPairing π Y (markovLeftOnsager P X) :=
+            weightedMatrixPairing_comm π _ _
+      _ = weightedMatrixPairing π (markovLeftOnsager P Y) X := by
+            exact weightedMatrixPairing_laplacian_symmetric P π Y X hDB
+      _ = 0 := by
+        rw [hLY]
+        simp [weightedMatrixPairing, weightedMarkovPairing, matrixColumn]
+  have hsub :
+      weightedMatrixPairing π (markovLeftOnsager P X) Y =
+        weightedMatrixPairing π (markovLeftOnsager P X) X -
+          weightedMatrixPairing π (markovLeftOnsager P X)
+            (G * markovLeftOnsager P X) := by
+    dsimp [Y]
+    simp [weightedMatrixPairing, weightedMarkovPairing, matrixColumn,
+      Matrix.sub_apply, mul_sub, Finset.sum_sub_distrib]
+  calc
+    weightedMatrixPairing π X (markovLeftOnsager P X) =
+        weightedMatrixPairing π (markovLeftOnsager P X) X :=
+          weightedMatrixPairing_comm π _ _
+    _ = weightedMatrixPairing π (markovLeftOnsager P X)
+          (G * markovLeftOnsager P X) := by
+            rw [horth] at hsub
+            exact (sub_eq_zero.mp hsub.symm)
+
 /-- A nonzero full-matrix source in the range of the Markov Laplacian has
 strictly positive stationary-weighted Green pairing with its group-inverse
 image. The proof decomposes the full matrix pairing by columns and applies

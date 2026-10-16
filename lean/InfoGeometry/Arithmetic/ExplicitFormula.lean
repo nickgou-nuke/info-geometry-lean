@@ -4,6 +4,15 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 
+import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
+import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.NumberTheory.LSeries.RiemannZeta
+import Mathlib.Analysis.Complex.Basic
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Analysis.Complex.CauchyIntegral
+
 /-!
 # Explicit Formula for Riemann Zeta Zeros
 
@@ -27,15 +36,6 @@ References:
 - Edwards, "Riemann's Zeta Function", Chapter 3
 - Montgomery-Vaughan, "Multiplicative Number Theory", Chapter 12
 -/
-
-import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
-import InfoGeometry.Algebra.FiniteSpinAlgebra
-import Mathlib.NumberTheory.LSeries.RiemannZeta
-import Mathlib.Analysis.Complex.Basic
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Analysis.Complex.CauchyIntegral
 
 open Complex
 open Real

@@ -7,11 +7,14 @@ import Mathlib.Tactic
 import InfoGeometry.Epistemology.ChentsovMetricInvariance
 
 /-!
-# Uniqueness half of Chentsov's theorem on rational distributions
+# Rational uniqueness for ambiently invariant bilinear families
 
-An `InvariantMetricFamily` is a family of symmetric bilinear forms on the tangent
-spaces of the open simplices `ProbInterior α`, invariant under every sufficient-statistic
-partition embedding `CongruentPartitionEmbedding α β`.
+`InvariantMetricFamily` stores symmetric bilinear forms on the full coordinate
+spaces `α → ℝ`, together with partition-embedding invariance for **all** input
+vectors. This is stronger than the usual tangent-only naturality hypothesis.
+The uniqueness result below concerns the restriction of each form to zero-sum
+tangent vectors; it therefore proves uniqueness for this stronger ambient
+extension class, not the tangent-only form of Chentsov's theorem.
 
 Main result (`chentsov_uniqueness_rational`): there is one real constant `c` such that,
 for every finite type `α`, every rational interior distribution `P` and all tangent
@@ -154,8 +157,9 @@ theorem blockEmbedding_π (m : α → ℕ) (hm : ∀ i, 0 < m i) (b : Σ i, Fin 
 
 /-! ### 4. Invariant metric families -/
 
-/-- A family of symmetric bilinear forms on the simplex interiors, invariant under
-all sufficient-statistic partition embeddings. -/
+/-- Ambient bilinear extensions on simplex interiors, invariant under every
+partition embedding on arbitrary coordinate vectors. This explicit ambient
+naturality is stronger than requiring invariance only for zero-sum tangent vectors. -/
 structure InvariantMetricFamily where
   g : ∀ (α : Type) [Fintype α], ProbInterior α → (α → ℝ) → (α → ℝ) → ℝ
   add_left : ∀ (α : Type) [Fintype α] (P : ProbInterior α) (u v w : α → ℝ),
@@ -401,8 +405,9 @@ theorem chentsov_uniqueness_rational (F : InvariantMetricFamily) :
   exact F.hasScale_of_push _ (InvariantMetricFamily.pushP_block_rational hm)
     (F.hasScale_uniform _) u v hu hv
 
-/-- Converse: every scalar multiple of Fisher is an invariant metric family, so on rational
-points the invariant families are exactly the scalar multiples of Fisher. -/
+/-- Every scalar multiple of Fisher is an ambiently invariant family. Together with
+`chentsov_uniqueness_rational`, this gives the tangent-restriction classification;
+it does not classify the ambient extensions away from zero-sum vectors. -/
 theorem chentsov_rational_classification (c : ℝ) :
     ∃ F : InvariantMetricFamily, ∀ (α : Type) [Fintype α] (P : ProbInterior α) (u v : α → ℝ),
       F.g α P u v = c * fisherMetric P u v :=

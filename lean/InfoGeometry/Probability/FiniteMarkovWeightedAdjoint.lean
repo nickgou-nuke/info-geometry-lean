@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.Matrix.Diagonal
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
@@ -77,6 +82,39 @@ theorem stationaryEdgeCurrent_swap
 noncomputable def weightedAdjoint
     (π : n → ℝ) (L : Matrix n n ℝ) : Matrix n n ℝ :=
   fun i j => (π i)⁻¹ * L j i * π j
+
+omit [DecidableEq n] in
+/-- The weighted adjoint reverses the order of matrix multiplication. -/
+theorem weightedAdjoint_mul
+    (π : n → ℝ) (A B : Matrix n n ℝ) (hπ : ∀ i, π i ≠ 0) :
+    weightedAdjoint π (A * B) = weightedAdjoint π B * weightedAdjoint π A := by
+  classical
+  ext i j
+  simp only [weightedAdjoint, Matrix.mul_apply, Finset.mul_sum]
+  rw [Finset.sum_mul]
+  apply Finset.sum_congr rfl
+  intro k hk
+  field_simp [hπ i, hπ k]
+
+omit [Fintype n] in
+/-- The weighted adjoint fixes the identity matrix. -/
+theorem weightedAdjoint_one (π : n → ℝ) (hπ : ∀ i, π i ≠ 0) :
+    weightedAdjoint π (1 : Matrix n n ℝ) = 1 := by
+  classical
+  ext i j
+  by_cases hij : i = j
+  · subst j
+    simp [weightedAdjoint, hπ i]
+  · have hji : j ≠ i := Ne.symm hij
+    simp [weightedAdjoint, hij, hji]
+
+omit [Fintype n] [DecidableEq n] in
+/-- The weighted adjoint preserves matrix subtraction. -/
+theorem weightedAdjoint_sub (π : n → ℝ) (A B : Matrix n n ℝ) :
+    weightedAdjoint π (A - B) = weightedAdjoint π A - weightedAdjoint π B := by
+  ext i j
+  simp only [weightedAdjoint, Matrix.sub_apply]
+  ring_nf
 
 /-- Detailed balance is self-adjointness for the weighted adjoint. -/
 theorem detailedBalance_iff_weightedAdjoint_eq

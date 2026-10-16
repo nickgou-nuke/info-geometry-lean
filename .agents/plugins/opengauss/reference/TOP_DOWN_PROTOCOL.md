@@ -31,10 +31,14 @@ Whereas upstream `math-inc/opengauss` (`OpenGauss/swarm_manager.py`) spawns flat
 ### II. The Assume-and-Recurse Protocol
 
 1. **Gate 0 — Pre-Flight Discovery (`/discover`)**:
-   - Run `python3 tools/infra/opengauss_cli.py discover --query "<concept>"` and check `docs/CATEGORICAL_INFRASTRUCTURE_MAP.md` to reuse canonical owners rather than inventing duplicate wrappers.
+   - Run `python3 tools/infra/opengauss_cli.py discover --query "<concept>"` and check `docs/CATEGORICAL_INFRASTRUCTURE_MAP.md` to reuse canonical owners rather than inventing duplicate wrappers. `/discover` returns candidates; it is not authoritative proof that a declaration exists, is absent, or means what its name suggests.
    - Load active `TypedObstructionPacket` files from `artifacts/residue_quarantine/` so previously refuted routes are banned upfront.
+   - Before any theorem signature or code proposal, read the cited owner declarations and record a **Ground-Truth Theorem Contract**: exact carrier/operations, exact existing theorem statements and proof/assumption status, relevant imports and consumers, the narrow missing statement, and nearby claims left unproved. Use `docs/REPO_DEEP_SEARCH_PROTOCOL.md` for the search scope. Cite file plus declaration (and line when available); search results, docstrings, user-supplied code, prior agent summaries, and output from another tool are leads only.
+   - The coordinator must reject a proposed claim whose Lean type, assumptions, or carrier do not match the contract. If two owners use different carriers or conventions, establish an explicit proved transport before composing them. A successful build certifies the term at its stated type, not the informal interpretation attached to it.
+   - Organize the translation as two paths meeting at a DAG-emergent archetype: **concept input → candidate symbolic archetype**, and **compiler-backed declarations/dependency edges → AST/AQL fingerprints and hash navigation → forward/backward causal cones and multi-apex cone cross-sections → graph/SCC/topology layers → code-derived archetype candidates**; then descend to **raw owner declarations → formal theorem**. SCCs are one graph layer, not the entire discovery mechanism. Follow `docs/ASTAQLHASH-HOWTO.md` and `docs/ARANGO_DAG_REFRESH_METHODOLOGY.md` to check graph-generation/source provenance, preserve seed/apex provenance, inspect shared cross-section nodes, and verify raw-to-overlay descent. Hash matches, SCC membership, graph proximity, and derived scores are navigation evidence only; inspect exact declaration types and proofs before assigning meaning or equivalence. At every translation, record the invariant preserved, information discarded, and granularity. Treat the ladder as a refinement/filtering workflow, not an assumed categorical functor or equivalence. Distinct granularity levels belong in the causal poset only when their dependency is justified by an owned map or theorem.
 
 2. **Gate 1 — Top-Down Positing & Glue Compilation (`/prove`, `/draft`)**:
+   - Start from the verified gap in the Ground-Truth Contract; do not copy a generated blueprint into the owner before checking every declaration against the live source.
    - Begin with the headline theorem signature.
    - Posit intermediate decomposition lemmas whose types match **exactly what the parent consumer needs**.
    - Immediately prove the parent using the posited lemmas (`by exact h_lemma ...`) to compile the glue before attempting the leaf proofs.
@@ -49,6 +53,7 @@ Whereas upstream `math-inc/opengauss` (`OpenGauss/swarm_manager.py`) spawns flat
    - For every non-trivial leaf node or posited signature, dispatch a concurrent `Refuter` subagent and run `python3 tools/infra/opengauss_cli.py refute <file> --strict`.
    - The refuter's null hypothesis is that the proposition is false, vacuous, or a scalar surrogate (T16/T17).
    - If the refuter finds a counterexample or flags a T1–T17 trap, stop the prover immediately, isolate the failure via `python3 tools/infra/opengauss_cli.py quarantine`, adjust the signature, and re-glue.
+   - The independent auditor must compare the intended mathematical statement with (i) the contract’s source references, (ii) the actual Lean theorem type and hypotheses, and (iii) the consumer. It must reject “compiled, therefore correct” reasoning, stronger prose than the type supports, and assertions copied from summaries without owner-source confirmation.
 
 ---
 
@@ -61,6 +66,7 @@ Whereas upstream `math-inc/opengauss` (`OpenGauss/swarm_manager.py`) spawns flat
      - `python3 tools/infra/opengauss_screener.py <file> --strict` exit code 0 (0 traps across T1–T17).
      - Companion `<Module>Audit.lean` (`python3 tools/infra/opengauss_cli.py certify --file <file> --write-audit`) evaluating `#print axioms` strictly to a subset of `[propext, Classical.choice, Quot.sound]`.
      - Git index staging (`git add`) protecting verified work from accidental loss.
+   - For continued work, inspect the current worktree, staged diff, imports, and owner source again. Re-verify any prior build or commit claim from current process/build output and Git objects/refs; a handoff is not evidence by itself.
 
 2. **The M10 Anti-Compaction Re-Hydration (`/handoff`, `/autoprove`)**:
    - Auto-compaction is a normal operational event during long-running formalizations.

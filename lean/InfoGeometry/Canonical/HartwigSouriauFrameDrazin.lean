@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Drazin
@@ -90,6 +95,13 @@ theorem IsGroupInverse.ofDrazin {a x : R}
     IsGroupInverse a x :=
   groupInverse_iff_drazin_index_one.mpr h
 
+/-- The group inverse is unique: the three group-inverse equations are exactly
+the repository's index-one Drazin equations, whose inverse is unique. -/
+theorem IsGroupInverse.unique {a x y : R}
+    (hx : IsGroupInverse a x) (hy : IsGroupInverse a y) : x = y :=
+  InfoGeometry.Canonical.Drazin.IsDrazinInverse.unique
+    (IsGroupInverse.toDrazin hx) (IsGroupInverse.toDrazin hy)
+
 /-- The regular support `A A#` is idempotent. -/
 theorem regularIdempotent_idempotent {a x : R} (h : IsGroupInverse a x) :
     regularIdempotent a x * regularIdempotent a x = regularIdempotent a x := by
@@ -133,6 +145,77 @@ theorem principalIdempotent_mul_eq_zero {a x : R} (h : IsGroupInverse a x) :
     _ = a - a * x * a := by rw [sub_mul, one_mul]
     _ = 0 := by rw [haxa, sub_self]
 
+/-- The group-inverse shift obtained by adding its zero-root projector. -/
+def groupInverseShift (a x : R) : R :=
+  x + principalIdempotent a x
+
+/-- The inverse candidate, formed from the original operator and the same projector. -/
+def groupInverseShiftInverse (a x : R) : R :=
+  a + principalIdempotent a x
+
+private theorem groupInverse_mul_principalIdempotent_eq_zero {a x : R}
+    (h : IsGroupInverse a x) : x * principalIdempotent a x = 0 := by
+  rcases h with ⟨_, hxax, _⟩
+  change x * (1 - a * x) = 0
+  rw [mul_sub, mul_one, ← mul_assoc, hxax, sub_self]
+
+private theorem principalIdempotent_mul_groupInverse_eq_zero {a x : R}
+    (h : IsGroupInverse a x) : principalIdempotent a x * x = 0 := by
+  rcases h with ⟨_, hxax, hcomm⟩
+  change (1 - a * x) * x = 0
+  rw [sub_mul, one_mul]
+  have hax2 : a * x * x = x := by
+    calc
+      a * x * x = x * a * x := by rw [← hcomm]
+      _ = x := hxax
+  rw [hax2, sub_self]
+
+/-- The shifted group inverse `x + (1 - a*x)` has right inverse `a + (1 - a*x)`.
+
+This is a purely algebraic identity and makes no Markov-chain claim. -/
+theorem groupInverseShift_mul_inverse {a x : R}
+    (h : IsGroupInverse a x) :
+    groupInverseShift a x * groupInverseShiftInverse a x = 1 := by
+  have hE2 := principalIdempotent_idempotent h
+  have hsum : a * x + principalIdempotent a x = 1 := by
+    change a * x + (1 - a * x) = 1
+    noncomm_ring
+  unfold groupInverseShift groupInverseShiftInverse
+  calc
+    (x + principalIdempotent a x) * (a + principalIdempotent a x)
+        = x * a + x * principalIdempotent a x +
+          (principalIdempotent a x * a +
+            principalIdempotent a x * principalIdempotent a x) := by
+              noncomm_ring
+    _ = x * a + principalIdempotent a x := by
+          rw [groupInverse_mul_principalIdempotent_eq_zero h,
+            principalIdempotent_mul_eq_zero h, hE2]
+          simp
+    _ = a * x + principalIdempotent a x := by
+          rw [(h.2.2).symm]
+    _ = 1 := hsum
+
+/-- The shifted group inverse `x + (1 - a*x)` has left inverse `a + (1 - a*x)`. -/
+theorem groupInverseShift_inverse_mul {a x : R}
+    (h : IsGroupInverse a x) :
+    groupInverseShiftInverse a x * groupInverseShift a x = 1 := by
+  have hE2 := principalIdempotent_idempotent h
+  have hsum : a * x + principalIdempotent a x = 1 := by
+    change a * x + (1 - a * x) = 1
+    noncomm_ring
+  unfold groupInverseShift groupInverseShiftInverse
+  calc
+    (a + principalIdempotent a x) * (x + principalIdempotent a x)
+        = a * x + a * principalIdempotent a x +
+          (principalIdempotent a x * x +
+            principalIdempotent a x * principalIdempotent a x) := by
+              noncomm_ring
+    _ = a * x + principalIdempotent a x := by
+          rw [mul_principalIdempotent_eq_zero h,
+            principalIdempotent_mul_groupInverse_eq_zero h, hE2]
+          simp
+    _ = 1 := hsum
+
 /-- Invertible conjugation action. -/
 def unitConj {R : Type*} [Monoid R] (u : Rˣ) (a : R) : R :=
   (u : R) * a * ((u⁻¹ : Rˣ) : R)
@@ -166,6 +249,19 @@ end GroupInverse
 section RationalSouriauFramePacket
 
 /-! ## Exact rational readout of Hartwig's formula (13) -/
+
+/-- Two matrix units used to make the noncommutative `Mat3 ℚ` carrier explicit. -/
+def matrixUnit01 : Mat3 ℚ := !![0, 1, 0; 0, 0, 0; 0, 0, 0]
+
+/-- The transposed matrix unit to `matrixUnit01`. -/
+def matrixUnit10 : Mat3 ℚ := !![0, 0, 0; 1, 0, 0; 0, 0, 0]
+
+/-- These matrix units do not commute: their products are distinct diagonal units. -/
+theorem mat3_noncommutativity_witness :
+    matrixUnit01 * matrixUnit10 ≠ matrixUnit10 * matrixUnit01 := by
+  intro h
+  have h00 := congrArg (fun M : Mat3 ℚ => M 0 0) h
+  norm_num [matrixUnit01, matrixUnit10, Matrix.mul_apply, Fin.sum_univ_succ] at h00
 
 /-- A simple singular matrix with one zero root and regular eigenvalues `2,3`. -/
 def hartwigA : Mat3 ℚ :=

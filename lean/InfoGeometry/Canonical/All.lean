@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.MasterGrandUnificationDictionary
 import InfoGeometry.Canonical.AttentionInformationGeometry
 import InfoGeometry.Canonical.DeterministicArgmaxAttention
@@ -2034,6 +2039,7 @@ import InfoGeometry.Arithmetic.RamanujanDefectTower
 import InfoGeometry.Arithmetic.WittenParityIndex
 import InfoGeometry.Canonical.UHFInductiveColimitBoundary
 import InfoGeometry.Canonical.FiniteBitWordListAddressBridge
+import InfoGeometry.Canonical.BitWordHoppingAddressBridge
 import InfoGeometry.Canonical.UHFInductiveColimitBoundaryTopology
 import InfoGeometry.Canonical.UHFInductiveColimitBoundaryInverseLimit
 import InfoGeometry.Canonical.UHFInductiveLimitBoundary

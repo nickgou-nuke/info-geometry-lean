@@ -68,6 +68,7 @@ Whereas upstream `math-inc/opengauss` provides a TUI wrapper (`gauss`) and PTY `
 
 ### 4. `/draft` (Skeleton Drafter)
 - **Role**: Generates Lean 4 declaration skeletons with explicit leaf `sorry` lemmas and glued parent theorem (`opengauss_cli.py draft`).
+- **Bound handoff**: A contract-bound file draft writes `<output>.opengauss.json`, binding the output source hash, exact declaration signature, and distinct proposition expression. Pass it to `hive_packet_build.py build-theorem-candidate --draft-receipt` together with the contract to produce a Pantograph-consumable source/goal binding. A candidate without that receipt remains unbound to a Pantograph session.
 
 ### 5. `/review` (Independent QMS Read-Only Auditor)
 - **Role**: Non-destructive static preflight audit under `QMS-SOP-IAA-001` (`opengauss_cli.py review <paths> --gate GATE_2|GATE_4`). Note: `GATE_4` static review reports `STATIC_REVIEW_PASSED_KERNEL_UNVERIFIED` until paired with locked Lean compilation and `#print axioms` verification.
@@ -129,6 +130,21 @@ the proof term against the Lean type; Gate 2 must separately check that the
 type and hypotheses express the contracted claim. Rehydrated tasks must inspect
 the current worktree, staged diff, owner files, and imports instead of trusting
 handoff text as current state.
+
+The contract is a machine-readable, source-bound task artifact. Persist a
+versioned `/discover` receipt with `--output`, then author the contract using
+`tools/schema/ground_truth_theorem_contract.schema.json`. Validation recomputes
+current owner-file hashes, checks qualified declaration heads and quoted
+statements against source, and requires cited owners to occur at the same
+qualified name, kind, line range, and parsed header in the discovery receipt.
+The receipt and graph remain navigation evidence; hashes do not prove
+semantic correctness or graph freshness. `/draft` requires
+`--ground-truth-contract`; `--scratch` is only for exploratory output that is
+not eligible for source promotion. Contract-bound Hive candidates embed and
+hash the contract. When supplied the validated draft receipt, they also bind
+the generated source snapshot and exact Pantograph proposition; declaration
+signatures are not treated as goal expressions. Pantograph remains
+replay/navigation evidence, never kernel proof or owner-build evidence.
 
 ### 14. `/quarantine` (Rejected Route & Residue Obstruction Isolator — Pillar II)
 - **Role**: Packages a refuted statement or trap violation into an immutable `TypedObstructionPacket` JSON in `artifacts/residue_quarantine/` (`opengauss_cli.py quarantine --file ... --trap ... --desc ... --counter ... --constraint ...`).

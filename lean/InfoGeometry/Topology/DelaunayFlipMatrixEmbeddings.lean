@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Rat.Defs
 
@@ -57,8 +62,8 @@ theorem embedBlock₂_apply_other (d : ℕ) (block : Matrix (Fin 2) (Fin 2) ℚ)
     embedBlock₂ d block a b i j = if i = j then 1 else 0 := by
   simp [embedBlock₂, hia, hib]
 
-/-- Inserting the 2×2 identity matrix at distinct indices `a ≠ b` yields the `d × d` identity matrix. -/
-theorem embedBlock₂_one (d : ℕ) (a b : Fin d) (hab : a ≠ b) :
+/-- Inserting the 2×2 identity matrix at any two indices yields the `d × d` identity matrix. -/
+theorem embedBlock₂_one (d : ℕ) (a b : Fin d) :
     embedBlock₂ d 1 a b = 1 := by
   ext i j
   dsimp [embedBlock₂]

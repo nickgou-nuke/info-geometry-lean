@@ -1,22 +1,25 @@
-# Research and Chains of Thought for the Remaining 2 Mathematical Gaps
+# Historical Research Notes for Formerly Listed Mathematical Targets
 
 > **Document Status**: Maintained reference memory  
-> **Last Audited**: 2026-07-24  
-> **Total Open Gaps**: Exactly 2 (1 in `GenuineBounds.lean` and 1 in `Pin55KreinConformalBridge.lean`)
+> **Last audited**: 2026-07-24 (historical; current owner-source correction: 2026-10-16)
+> **Scope**: Historical notes only; no current repository-wide gap count is claimed.
 
-This document contains the complete, rigorous mathematical chains of thought and proof sketches for the remaining open stubs in the repository, serving as the blueprint for future formalization efforts. (Note: The 3 sandbox stubs for `GoldenMeanShift.lean` have been resolved/synchronised and are now 100% clean).
+The old status and proof-sketch language below overstated what the checked-in owner files prove. This document preserves the historical topics while recording their current source-level scope. It does not claim hidden reasoning or certify repository-wide completeness.
 
 ---
 
-## 1. Rosser-Schoenfeld Prime Count Bound (`GenuineBounds.lean`)
+## 1. Prime-counting target (`GenuineBounds.lean`)
 
 ### Target
-`rosser_schoenfeld_prime_count_bound (x : ℕ) (hx : x ≥ 55)` in [GenuineBounds.lean](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Arithmetic/GenuineBounds.lean#L209)
+The current owner theorem is `primeCounting_le_add_one (x : ℕ)` in [GenuineBounds.lean](../lean/InfoGeometry/Arithmetic/GenuineBounds.lean). It proves only the elementary bound by the size of the initial segment. The current file does not establish the Rosser–Schoenfeld estimate stated below.
 
-### Mathematical Statement
+### Formerly attributed statement (not proved by the current theorem)
 $$ \left| \pi(x) - \text{li}(x) \right| < \frac{x}{8 \pi \sqrt{x} \log x} \quad \text{for } x \ge 55 $$
 
-### Chain of Thought & Proof Architecture
+### Status
+The following analytic outline is not a Lean proof and should not be treated as an established architecture or result. The explicit estimate remains unformalized in the inspected owner file. The current named scale lemmas prove only denominator positivity/nonnegativity.
+
+### Historical outline (unverified as a formalization plan)
 1. **Explicit Zero-Free Region for $\zeta(s)$**:
    The derivation of explicit (non-asymptotic) error bounds for the prime counting function $\pi(x)$ relies on the explicit zero-free region of the Riemann Zeta function. The classical result of Rosser and Schoenfeld (1962) establishes that $\zeta(s)$ has no zeros in the region:
    $$ \sigma \ge 1 - \frac{1}{R \log |t|} \quad \text{for } |t| \ge 2, \text{ where } R = 9.6459 $$
@@ -39,7 +42,9 @@ $$ \left| \pi(x) - \text{li}(x) \right| < \frac{x}{8 \pi \sqrt{x} \log x} \quad 
 `exists_pin55_krein_conformal_package` in [Pin55KreinConformalBridge.lean](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Lie/Pin55KreinConformalBridge.lean#L250)
 
 ### Mathematical Statement
-There exists a conformal spinor package $(K, B, J, \chi, \varepsilon, \rho)$ such that the following diagram commutes for all imaginary split-octonions $X \in \text{Imaginary}$:
+The current theorem `exists_pin55_krein_conformal_package` is conditional on `Pin55FiniteCarrierCompatibility`; it does not establish that compatibility. The concrete bilinear form is zero, so the current theorem should not be read as proving a nondegenerate Krein representation. The required compatibility and nondegeneracy remain unproved by this declaration.
+
+The intended stronger target was a package $(K, B, J, \chi, \varepsilon, \rho)$ satisfying the following diagram for all imaginary split-octonions $X \in \text{Imaginary}$:
 $$ P_K \circ \rho(\text{incl}_{4\to 5}(\iota(e(X)))) \circ \iota_K = e \circ L_X \circ e^{-1} $$
 where $L_X$ is left multiplication by $X$ on `CanonicalZorn`.
 

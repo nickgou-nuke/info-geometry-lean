@@ -1,0 +1,23 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.QuantumContext.MarkovAttentionGroupInverse
+
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.exists_groupInverse_of_isCompl_ker_range
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.isCompl_ker_range_of_no_length_two_chain
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.exists_stochastic_laplacian_groupInverse
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.exists_stochastic_laplacian_groupInverse_shift_inverse
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.groupInverse_apply_mem_range
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.groupInverse_regularProjector_range
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.apply_groupInverse_eq_of_mem_range
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.groupInverse_solution_unique_on_range
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.stochastic_laplacian_poisson_solution_exists_unique
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.positive_rowStochastic_mulVec_fixed_iff_const
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.positive_rowStochastic_laplacian_solutions_differ_by_const
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.Attention.polarizedPlusAttentionMatrix_pos
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.Attention.polarizedPlusAttention_fixed_mulVec_iff_const
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.Attention.polarizedAttention_poisson_solutions_differ_by_const
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.Attention.polarizedAttention_principalProjector_mem_iff_const
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.Attention.polarizedAttention_principalProjector_transition_invariant

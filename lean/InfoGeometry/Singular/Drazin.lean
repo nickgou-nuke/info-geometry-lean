@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Ring.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.FiniteDimensional.Basic
@@ -493,8 +498,11 @@ theorem exists_drazinInverse_global (A : Module.End K V) :
 
   exact ⟨k, D, IsDrazinInverse.mk hEq1 hEq2 hEq3⟩
 
-/-- 
-The Drazin Index: The smallest k for which the Fitting decomposition stabilizes. 
+/--
+A stabilization exponent chosen from the finite-dimensional Fitting argument.
+
+This definition selects the exponent supplied by `exists_drazinInverse_global`;
+minimality is not part of the specification proved here.
 -/
 noncomputable def drazinIndex (A : Module.End K V) : ℕ :=
   (exists_drazinInverse_global A).choose

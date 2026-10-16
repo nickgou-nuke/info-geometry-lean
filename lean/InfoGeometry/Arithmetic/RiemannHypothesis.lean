@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Analysis.BregmanAnalyticBound
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Analysis.BregmanMonodromyBridge
@@ -94,6 +99,18 @@ theorem hodge_chiral_dirac_anticommutation {n0 n1 n2 : ℕ}
 /-- Property that a candidate Fredholm determinant has no zeros in the open half-plane Re(s) > 1/2. -/
 def FredholmHalfPlaneProperty (determinant : ℂ → ℂ) : Prop :=
   ∀ s : ℂ, (1 / 2 : ℝ) < s.re → determinant s ≠ 0
+
+/-- The bare nonvanishing predicate has the constant-one witness.  This only
+proves that the predicate is satisfiable; it supplies no zeta or operator link. -/
+theorem one_satisfies_fredholmHalfPlaneProperty :
+    FredholmHalfPlaneProperty (fun _ : ℂ => (1 : ℂ)) := by
+  intro s hs
+  change (1 : ℂ) ≠ 0
+  exact one_ne_zero
+
+theorem exists_fredholmHalfPlaneProperty :
+    ∃ determinant, FredholmHalfPlaneProperty determinant :=
+  ⟨fun _ : ℂ => (1 : ℂ), one_satisfies_fredholmHalfPlaneProperty⟩
 
 /--
 Analytic certificate required for the Fredholm half-plane claim.

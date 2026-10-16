@@ -1,0 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.QuantumContext.SoftmaxKMSMarkovBridge
+
+#print axioms InfoGeometry.QuantumContext.SoftmaxKMSMarkovBridge.softmaxAttentionKernel_eq_softmaxWeight_row
+#print axioms InfoGeometry.QuantumContext.SoftmaxKMSMarkovBridge.attentionDensityMatrix_diagonal_eq_softmaxAttentionKernel
+#print axioms InfoGeometry.QuantumContext.SoftmaxKMSMarkovBridge.attentionState_eq_row_kernel_diagonal_expectation
+#print axioms InfoGeometry.QuantumContext.SoftmaxKMSMarkovBridge.polarizedPlusAttentionWeight_eq_softmaxWeight
+#print axioms InfoGeometry.QuantumContext.SoftmaxKMSMarkovBridge.polarizedAttentionState_eq_row_diagonal_expectation
+#print axioms InfoGeometry.QuantumContext.SoftmaxKMSMarkovBridge.polarizedAttentionState_kms

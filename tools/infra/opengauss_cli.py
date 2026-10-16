@@ -42,6 +42,13 @@ if str(_REPO_ROOT) not in sys.path:
 
 from tools.build_lock import acquire_build_lock
 from tools.pathing import repo_root as canonical_repo_root
+from tools.infra.opengauss_ground_truth_contract import (
+    DRAFT_RECEIPT_SCHEMA,
+    _qualified_declaration_heads,
+    canonical_digest,
+    load_and_validate_contract,
+    validate_draft_receipt_payload,
+)
 from tools.quality.proof_proxy_staged_gate import aggregate_prop_constructors
 
 # Import existing screener utilities
@@ -232,6 +239,7 @@ def draft_skeleton(
     sublemmas: List[Dict[str, str]],
     namespace: Optional[str] = None,
     docstring: Optional[str] = None,
+    contract_provenance: Optional[Dict[str, str]] = None,
 ) -> str:
     """Generate Lean 4 declaration skeleton with explicit leaf sorries and glued parent."""
     lines: list[str] = []
@@ -242,6 +250,16 @@ def draft_skeleton(
     lines.append("-/")
     lines.append("import Mathlib.Tactic")
     lines.append("")
+
+    if contract_provenance:
+        lines.append(
+            "/- OpenGauss Ground-Truth Contract: "
+            f"{contract_provenance['contract_id']} "
+            f"(sha256:{contract_provenance['contract_sha256']}); "
+            f"headline target {contract_provenance['target_name']}; human assertion, not proof evidence. "
+            "Generated helper leaves remain unverified sorry obligations. -/"
+        )
+        lines.append("")
 
     if namespace:
         lines.append(f"namespace {namespace}")
@@ -902,6 +920,9 @@ class DiscoveryReport:
 
     def to_dict(self) -> Dict[str, Any]:
         return {
+            "schema": "info_geometry.opengauss.discovery_report.v1",
+            "authority": "navigation_only",
+            "graph_is_proof_authority": False,
             "query": self.query,
             "carriers_found": self.carriers_found,
             "lemmas_found": self.lemmas_found,
@@ -1228,20 +1249,13 @@ def discover_declarations(
 
     candidates_to_scan = candidate_files[:250]
 
-    decl_re = re.compile(
-        r'(?:/--\s*(?P<doc>.*?)\s*-\/\s*)?'
-        r'(?:@\[[^\]]*\]\s*)*'
-        r'(?:protected\s+|private\s+|noncomputable\s+)*'
-        r'(?P<kind>structure|class|inductive|def|theorem|lemma)\s+'
-        r'(?P<name>[A-Za-z0-9_\'\.]+)',
-        re.DOTALL,
-    )
-
     is_split_quat = ("split" in query_tokens and "quaternion" in query_tokens)
 
     for cf in candidates_to_scan:
         try:
-            content = cf.read_text(encoding="utf-8", errors="replace")
+            source_bytes = cf.read_bytes()
+            content = source_bytes.decode("utf-8", errors="replace")
+            source_sha256 = hashlib.sha256(source_bytes).hexdigest()
         except Exception:
             continue
 
@@ -1252,43 +1266,51 @@ def discover_declarations(
 
         file_matches_query = (query_lower in content[:2000].lower()) or (is_split_quat and "coquaternion" in content[:2000].lower())
 
-        for m in decl_re.finditer(content):
-            kind = m.group("kind")
-            name = m.group("name")
-            doc = (m.group("doc") or "").strip()
-            line_num = content[:m.start()].count("\n") + 1
+        raw_lines = content.splitlines()
+        for qualified_name, declarations in _qualified_declaration_heads(content).items():
+            for declaration in declarations:
+                kind = declaration["kind"]
+                name = qualified_name.rsplit(".", 1)[-1]
+                line_num = declaration["source_line"]
+                preceding = "\n".join(raw_lines[:line_num - 1])
+                doc_match = re.search(r"/--\s*(.*?)\s*-/\s*$", preceding, flags=re.DOTALL)
+                doc = (doc_match.group(1) if doc_match else "").strip()
 
-            combined_decl = f"{name} {doc}".lower()
+                combined_decl = f"{qualified_name} {doc}".lower()
 
-            matched = False
-            if query_lower in combined_decl:
-                matched = True
-            elif is_split_quat and "coquaternion" in combined_decl:
-                matched = True
-            elif all(tok in combined_decl for tok in query_tokens):
-                matched = True
-            elif any(tok in name.lower() for tok in query_tokens):
-                matched = True
-            elif file_matches_query and any(tok in combined_decl for tok in query_tokens):
-                matched = True
-            elif file_matches_query and kind in ("structure", "class", "inductive") and ("carrier" in doc.lower() or any(tok in doc.lower() for tok in query_tokens)):
-                matched = True
+                matched = False
+                if query_lower in combined_decl:
+                    matched = True
+                elif is_split_quat and "coquaternion" in combined_decl:
+                    matched = True
+                elif all(tok in combined_decl for tok in query_tokens):
+                    matched = True
+                elif any(tok in name.lower() for tok in query_tokens):
+                    matched = True
+                elif file_matches_query and any(tok in combined_decl for tok in query_tokens):
+                    matched = True
+                elif file_matches_query and kind in ("structure", "class", "inductive") and ("carrier" in doc.lower() or any(tok in doc.lower() for tok in query_tokens)):
+                    matched = True
 
-            if matched:
-                entry = {
-                    "name": name,
-                    "kind": kind,
-                    "file": str(rel_path),
-                    "line": line_num,
-                    "location": f"{rel_path}:{line_num}",
-                }
-                mod_path = _file_to_module_path(cf, repo_root)
-                recommended_imports.add(mod_path)
+                if matched:
+                    entry = {
+                        "name": name,
+                        "qualified_name": qualified_name,
+                        "kind": kind,
+                        "file": str(rel_path),
+                        "source_sha256": source_sha256,
+                        "line": line_num,
+                        "source_end_line": declaration["source_end_line"],
+                        "lean_statement": declaration["lean_statement"],
+                        "location": f"{rel_path}:{line_num}",
+                    }
+                    mod_path = _file_to_module_path(cf, repo_root)
+                    recommended_imports.add(mod_path)
 
-                if kind in ("structure", "class", "inductive") or (kind == "def" and (name[0].isupper() or any(tok in name.lower() for tok in query_tokens))):
-                    carriers.append(entry)
-                elif kind in ("theorem", "lemma"):
-                    lemmas.append(entry)
+                    if kind in ("structure", "class", "inductive") or (kind == "def" and (name[0].isupper() or any(tok in name.lower() for tok in query_tokens))):
+                        carriers.append(entry)
+                    elif kind in ("theorem", "lemma"):
+                        lemmas.append(entry)
 
     # Check mathlib declarations if available and needed
     mathlib_dir = repo_root / ".lake" / "packages" / "mathlib" / "Mathlib"
@@ -1605,7 +1627,16 @@ def generate_certification_audit(
 
     mod_path = _file_to_module_path(lean_path, repo_root)
 
-    lines: List[str] = [f"import {mod_path}", ""]
+    lines: List[str] = [
+        "/-",
+        "Copyright (c) 2026 InfoGeometry Authors. All rights reserved.",
+        "Released under Apache 2.0 license as described in the file LICENSE.",
+        "Authors: InfoGeometry Engine Contributors",
+        "-/",
+        "",
+        f"import {mod_path}",
+        "",
+    ]
     if theorems:
         for thm in theorems:
             lines.append(f"#print axioms {thm}")
@@ -1668,6 +1699,8 @@ def build_parser() -> argparse.ArgumentParser:
     p_draft.add_argument("--sublemmas", default="[]", help="JSON list of child lemmas")
     p_draft.add_argument("--namespace", default=None, help="Optional Lean namespace")
     p_draft.add_argument("--output", default=None, help="Output file path (prints to stdout if omitted)")
+    p_draft.add_argument("--ground-truth-contract", default=None, help="Validated six-part contract JSON; required when writing a draft file")
+    p_draft.add_argument("--scratch", action="store_true", help="Explicitly allow an unbound exploratory draft, not eligible for source promotion")
     p_draft.add_argument("--json", action="store_true", help="Output JSON")
 
     # 5. review
@@ -1736,6 +1769,7 @@ def build_parser() -> argparse.ArgumentParser:
     p_disc.add_argument("--local-dag-context", action="store_true", help="Include offline artifacts/dag/index and LeanTrail preflight context")
     p_disc.add_argument("--local-dag-depth", type=int, default=1, help="Neighborhood depth for offline DAG preflight (default: 1)")
     p_disc.add_argument("--local-dag-limit", type=int, default=10, help="Hit/neighborhood limit for offline DAG preflight (default: 10)")
+    p_disc.add_argument("--output", default=None, help="Persist the versioned discovery receipt as JSON")
     p_disc.add_argument("--json", action="store_true", help="Output JSON")
 
     # 14. quarantine
@@ -1820,9 +1854,62 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
 
     elif cmd == "draft":
         sublemmas = json.loads(args.sublemmas) if isinstance(args.sublemmas, str) else args.sublemmas
-        code = draft_skeleton(args.headline, args.signature, sublemmas, args.namespace)
+        contract_provenance = None
+        if not args.ground_truth_contract and not args.scratch:
+            parser.error("/draft requires --ground-truth-contract; use --scratch only for an unbound exploratory draft")
+        if args.ground_truth_contract and args.scratch:
+            parser.error("--scratch and --ground-truth-contract are mutually exclusive")
+        if args.scratch and args.output:
+            parser.error("--scratch drafts cannot be written to a source path; use stdout/JSON for exploration")
+        if args.ground_truth_contract:
+            contract_path = Path(args.ground_truth_contract)
+            if not contract_path.is_absolute():
+                contract_path = (_REPO_ROOT / contract_path).resolve()
+            try:
+                validated = load_and_validate_contract(contract_path, repo_root=_REPO_ROOT)
+            except ValueError as exc:
+                parser.error(f"invalid --ground-truth-contract: {exc}")
+            qualified_headline = f"{args.namespace}.{args.headline}" if args.namespace else args.headline
+            if qualified_headline != validated["missing_declaration_name"]:
+                parser.error("headline and namespace differ from the contract's smallest_gap.declaration_name")
+            if args.signature.strip() != validated["missing_lean_signature"]:
+                parser.error("--signature differs from the contract's smallest_gap.lean_signature")
+            contract_provenance = {
+                "contract_id": validated["contract_id"],
+                "contract_sha256": validated["contract_sha256"],
+                "target_name": validated["missing_declaration_name"],
+            }
+        code = draft_skeleton(
+            args.headline, args.signature, sublemmas, args.namespace,
+            contract_provenance=contract_provenance,
+        )
         if args.output:
-            Path(args.output).write_text(code, encoding="utf-8")
+            output_path = Path(args.output).resolve()
+            try:
+                source_path = output_path.relative_to(_REPO_ROOT).as_posix()
+            except ValueError:
+                parser.error("contract-bound drafts must be written inside the repository")
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            output_path.write_text(code, encoding="utf-8")
+            if contract_provenance is not None:
+                assert validated is not None
+                source_hash = hashlib.sha256(output_path.read_bytes()).hexdigest()
+                receipt = {
+                    "schema": DRAFT_RECEIPT_SCHEMA,
+                    "contract": validated["contract"],
+                    "contract_sha256": validated["contract_sha256"],
+                    "source_path": source_path,
+                    "source_sha256": source_hash,
+                    "target_name": validated["missing_declaration_name"],
+                    "declaration_signature": f"theorem {args.headline} {args.signature}".strip(),
+                    "target_expression": validated["pantograph_expression"],
+                }
+                try:
+                    validate_draft_receipt_payload(receipt, repo_root=_REPO_ROOT)
+                except ValueError as exc:
+                    parser.error(f"generated draft did not match its contract receipt: {exc}")
+                receipt_path = output_path.with_name(output_path.name + ".opengauss.json")
+                receipt_path.write_text(json.dumps(receipt, indent=2, sort_keys=True) + "\n", encoding="utf-8")
             # Track changes immediately under Continuous Tracking Mandate
             execute_checkpoint(f"Drafted skeleton for {args.headline} into {args.output}")
             print(f"Drafted skeleton written to {args.output}")
@@ -1968,6 +2055,15 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
                 backward_depth=args.backward_depth,
                 forward_depth=args.forward_depth,
                 cone_limit=args.cone_limit,
+            )
+        if args.output:
+            output_path = Path(args.output)
+            if not output_path.is_absolute():
+                output_path = (repo_root / output_path).resolve()
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            output_path.write_text(
+                json.dumps(report.to_dict(), indent=2, ensure_ascii=False, sort_keys=True) + "\n",
+                encoding="utf-8",
             )
         if args.json:
             print(json.dumps(report.to_dict(), indent=2))

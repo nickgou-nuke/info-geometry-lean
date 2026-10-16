@@ -1,0 +1,11 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Epistemology.ChentsovTangentUniquenessContinuous
+
+#print axioms InfoGeometry.Epistemology.ChentsovTangentUniquenessContinuous.scaledFisherTangentFamily_seqContinuous
+#print axioms InfoGeometry.Epistemology.ChentsovTangentUniquenessContinuous.chentsov_uniqueness_of_seqContinuous_tangent
+#print axioms InfoGeometry.Epistemology.ChentsovTangentUniquenessContinuous.chentsov_classification_of_seqContinuous_tangent
+#print axioms InfoGeometry.Epistemology.ChentsovTangentUniquenessContinuous.chentsov_scale_pos_of_positiveDefinite_tangent

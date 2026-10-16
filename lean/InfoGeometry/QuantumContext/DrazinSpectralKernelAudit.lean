@@ -9,8 +9,9 @@ import InfoGeometry.QuantumContext.DrazinSpectralKernel
 # Audit: Drazin Generalized Inverse & Nilpotent Spectral Kernel
 
 Independent audit verifying that:
-1. All theorems bridging the Drazin axioms, spectral projector, kernel projector,
-   Fitting decomposition, and group inverse Markov kernel compile cleanly.
+1. The listed algebraic projector and index-one consequences compile from an
+   assumed Drazin witness. This file does not establish a Fitting decomposition
+   or derive an index-one witness from Markov transition hypotheses.
 2. Every theorem depends strictly on standard Core Lean 4 / Mathlib axioms:
    `[propext, Classical.choice, Quot.sound]`.
 3. Zero `sorry`, zero `admit`, and zero custom axioms are introduced.
@@ -30,7 +31,7 @@ open InfoGeometry.QuantumContext.Drazin
 /- Verification 2: Check axioms of kernel annihilation. -/
 #print axioms index_annihilates_kernel_proj
 
-/- Verification 3: Check axioms of group inverse Markov specialization and model witness. -/
+/- Verification 3: Check axioms of conditional index-one consequences and the unit example. -/
 #print axioms group_inverse_nilpotent_zero
 #print axioms group_inverse_reconstruction
 #print axioms isDrazinInverse_one

@@ -1,0 +1,20 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Epistemology.ChentsovTangentUniqueness
+
+#print axioms InfoGeometry.Epistemology.ChentsovTangentUniqueness.scaledFisherTangentFamily
+#print axioms InfoGeometry.Epistemology.ChentsovTangentUniqueness.instInhabitedTangentInvariantMetricFamily
+#print axioms InfoGeometry.Epistemology.ChentsovTangentUniqueness.scaledFisherTangentFamily_g
+#print axioms InfoGeometry.Epistemology.ChentsovTangentUniqueness.center_sum_zero
+#print axioms InfoGeometry.Epistemology.ChentsovTangentUniqueness.center_eq_self_of_tangent
+#print axioms InfoGeometry.Epistemology.ChentsovTangentUniqueness.center_add
+#print axioms InfoGeometry.Epistemology.ChentsovTangentUniqueness.center_smul
+#print axioms InfoGeometry.Epistemology.ChentsovTangentUniqueness.pushV_sum
+#print axioms InfoGeometry.Epistemology.ChentsovTangentUniqueness.pushV_prob_eq_pushP_prob
+#print axioms InfoGeometry.Epistemology.ChentsovTangentUniqueness.center_pushV
+#print axioms InfoGeometry.Epistemology.ChentsovTangentUniqueness.ambientExtension
+#print axioms InfoGeometry.Epistemology.ChentsovTangentUniqueness.ambientExtension_agrees_on_tangent
+#print axioms InfoGeometry.Epistemology.ChentsovTangentUniqueness.chentsov_uniqueness_rational_tangent

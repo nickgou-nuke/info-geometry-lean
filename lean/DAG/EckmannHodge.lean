@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import DAG.TwoComplex
 import DAG.GraphHodge
 import DAG.LaplacianRank
@@ -55,6 +60,18 @@ lemma rank_mul_transpose_eq_rank {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℚ) :
   have h_eq : (A * Aᵀ).rank = (Aᵀ : Matrix (Fin n) (Fin m) ℚ).rank := by omega
   have h_trans : (Aᵀ : Matrix (Fin n) (Fin m) ℚ).rank = A.rank := Matrix.rank_transpose A
   rw [h_eq, h_trans]
+
+/-! ## L1a: Concrete noncommutativity witness for rational square matrices -/
+
+def matrixE01 : Matrix (Fin 2) (Fin 2) ℚ := Matrix.single 0 1 1
+
+def matrixE10 : Matrix (Fin 2) (Fin 2) ℚ := Matrix.single 1 0 1
+
+lemma matrix_noncommutativity_witness : matrixE01 * matrixE10 ≠ matrixE10 * matrixE01 := by
+  intro h
+  have h01 := congrFun (congrFun h (0 : Fin 2)) (0 : Fin 2)
+  norm_num [matrixE01, matrixE10, Matrix.mul_apply, Fin.sum_univ_two,
+    Matrix.single_apply] at h01
 
 /-! ## L2: Full-rank ⇒ trivial kernel — standard rank-nullity -/
 

@@ -171,6 +171,7 @@ def check_unused_hypothesis_binders(source: str) -> list[TrapViolation]:
         proof = declaration[assignment + 2:] if assignment is not None else ""
         used_text = conclusion + " " + proof
         pos = 0
+        parsed_binders: list[tuple[str, str]] = []
         while pos < len(binders_text):
             if binders_text[pos] not in "({[⦃":
                 pos += 1
@@ -183,19 +184,90 @@ def check_unused_hypothesis_binders(source: str) -> list[TrapViolation]:
             if parsed_binder is not None:
                 names, binder_type = parsed_binder
                 for name in re.findall(r"[\w']+", names):
-                    if not name.startswith("h") or name in {"have", "has", "hypothesis"}:
-                        continue
-                    if not re.search(rf"\b{re.escape(name)}\b", used_text):
-                        line_number = source.count("\n", 0, start.start()) + 1
-                        violations.append(TrapViolation(
-                            trap_id="T4",
-                            trap_name="Vacuous Binders & Degenerate Conditions",
-                            line_number=line_number,
-                            matched_text=group[:100],
-                            message=f"Vacuous binder: Theorem '{start.group(1)}' has an unused hypothesis binder '{name} : {binder_type}'.",
-                            severity="WARNING",
-                        ))
+                    parsed_binders.append((name, binder_type))
             pos = next_pos
+
+        # Lean's `subst x` consumes an equality hypothesis with `x` as a bare
+        # side. The source screen cannot determine which local equality the
+        # tactic selects after the proof has changed its local context. Grant
+        # an implicit-use exemption only when `subst` is the first proof
+        # tactic, the declaration binder is the unique direct-equality
+        # candidate, and the target occurs as a bare side of that equality.
+        subst_consumed: set[str] = set()
+        for subst_match in re.finditer(
+            r"\bsubst\s+([A-Za-z_][A-Za-z0-9_']*)", proof
+        ):
+            target = subst_match.group(1)
+            proof_prefix = proof[:subst_match.start()]
+            # Strip the theorem proof's leading `by`. A preceding completed
+            # `have` is harmless when its declared type does not mention the
+            # substitution target: its proof runs in a nested tactic block and
+            # cannot change the outer local context. Any other outer tactic
+            # may introduce or alter equalities, so the text-only screen must
+            # not guess which hypothesis `subst` consumes.
+            proof_prefix = re.sub(r"^\s*by\b", "", proof_prefix, count=1).strip()
+            prefix_is_safe = True
+            prefix_lines = proof_prefix.splitlines()
+            line_index = 0
+            while line_index < len(prefix_lines):
+                raw_line = prefix_lines[line_index]
+                prefix_line = raw_line.strip()
+                if not prefix_line:
+                    line_index += 1
+                    continue
+                harmless_have = re.fullmatch(
+                    r"have\s+[A-Za-z_][A-Za-z0-9_']*\s*:\s*(.*?)\s*:=\s*(.*)",
+                    prefix_line,
+                )
+                if (
+                    harmless_have is None
+                    or re.search(rf"\b{re.escape(target)}\b", harmless_have.group(1))
+                ):
+                    prefix_is_safe = False
+                    break
+                # If the nested proof starts on the next line, consume only
+                # its more-indented lines. A same-indent outer tactic remains
+                # visible to the loop and therefore rejects the exemption.
+                if harmless_have.group(2).strip() == "by":
+                    have_indent = len(raw_line) - len(raw_line.lstrip())
+                    line_index += 1
+                    while line_index < len(prefix_lines):
+                        nested_line = prefix_lines[line_index]
+                        if nested_line.strip() and len(nested_line) - len(nested_line.lstrip()) <= have_indent:
+                            break
+                        line_index += 1
+                    continue
+                line_index += 1
+            if not prefix_is_safe:
+                continue
+            candidates = [
+                name
+                for name, binder_type in parsed_binders
+                if (
+                    (equality_sides := _top_level_equality_sides(binder_type))
+                    is not None
+                    and (
+                        _bare_identifier(equality_sides[0]) == target
+                        or _bare_identifier(equality_sides[1]) == target
+                    )
+                )
+            ]
+            if len(candidates) == 1:
+                subst_consumed.add(candidates[0])
+
+        for name, binder_type in parsed_binders:
+            if not name.startswith("h") or name in {"have", "has", "hypothesis"}:
+                continue
+            if name not in subst_consumed and not re.search(rf"\b{re.escape(name)}\b", used_text):
+                line_number = source.count("\n", 0, start.start()) + 1
+                violations.append(TrapViolation(
+                    trap_id="T4",
+                    trap_name="Vacuous Binders & Degenerate Conditions",
+                    line_number=line_number,
+                    matched_text=f"({name} : {binder_type})"[:100],
+                    message=f"Vacuous binder: Theorem '{start.group(1)}' has an unused hypothesis binder '{name} : {binder_type}'.",
+                    severity="WARNING",
+                ))
     return violations
 
 
@@ -352,10 +424,7 @@ def check_noncommutative_witness_requirement(
     # Only a product whose operands are typed as matrices activates matrix T16;
     # an unrelated scalar product elsewhere in the file must not do so.
     matrix_carriers = _required_matrix_carriers(content)
-    has_other_operator_product = bool(
-        re.search(r"\b(?:End|CliffordAlgebra|LinearMap)\b", content)
-        and re.search(r"\b[A-Za-z_][A-Za-z0-9_']*\s*\*\s*[A-Za-z_][A-Za-z0-9_']*\b", content)
-    )
+    has_other_operator_product = _has_typed_noncommutative_product(content)
     if not matrix_carriers and not has_other_operator_product:
         return violations
     # A file can contain operator products over several carriers. Require a
@@ -415,6 +484,11 @@ def _top_level_assignment_index(header: str) -> int | None:
         elif char in ")]}⦄" :
             depth = max(0, depth - 1)
         elif depth == 0 and header.startswith(":=", i):
+            if re.search(
+                r"\blet\s+(?:\([^)]*\)|[A-Za-z_][A-Za-z0-9_']*)(?:\s+\([^)]*\))*(?:\s*:\s*[^:=]*)?\s*$",
+                header[:i],
+            ):
+                continue
             return i
     return None
 
@@ -433,6 +507,88 @@ def _top_level_result_type(header: str) -> tuple[str, str] | None:
         elif depth == 0 and char == ":":
             return header[:i], header[i + 1 :].strip()
     return None
+
+
+def _top_level_equality_sides(expression: str) -> tuple[str, str] | None:
+    """Return the two sides of a bare equality outside nested Lean syntax."""
+    expression = expression.strip()
+    # Parenthesized binder types are common, but only peel a pair that encloses
+    # the complete expression. Nested equalities must remain nested.
+    while expression.startswith("("):
+        atom = _balanced_lean_atom(expression, 0)
+        if atom is None or atom[1] != len(expression):
+            break
+        expression = atom[0][1:-1].strip()
+
+    depth = 0
+    equality_positions: list[int] = []
+    for index, char in enumerate(expression):
+        if char in "([{⦃":
+            depth += 1
+        elif char in ")] }⦄".replace(" ", ""):
+            depth = max(0, depth - 1)
+        elif char == "=" and depth == 0:
+            before = expression[index - 1] if index else ""
+            after = expression[index + 1] if index + 1 < len(expression) else ""
+            if before not in ":=<>!" and after not in "=>":
+                equality_positions.append(index)
+    if len(equality_positions) == 1:
+        position = equality_positions[0]
+        return expression[:position].strip(), expression[position + 1 :].strip()
+    # `Eq x y` is the explicit proposition form corresponding to `x = y`.
+    # Read two balanced atoms; callers only credit bare identifiers after
+    # normalization, so applications cannot be mistaken for a direct side.
+    if expression.startswith("Eq") and (len(expression) == 2 or expression[2].isspace()):
+        left = _balanced_lean_atom(expression, 2)
+        if left is not None:
+            right = _balanced_lean_atom(expression, left[1])
+            if right is not None and not expression[right[1] :].strip():
+                return left[0], right[0]
+    return None
+
+
+def _bare_identifier(expression: str) -> str | None:
+    """Recognize an identifier optionally wrapped in redundant parentheses."""
+    expression = expression.strip()
+    while expression.startswith("("):
+        atom = _balanced_lean_atom(expression, 0)
+        if atom is None or atom[1] != len(expression):
+            break
+        expression = atom[0][1:-1].strip()
+    return expression if re.fullmatch(r"[A-Za-z_][A-Za-z0-9_']*", expression) else None
+
+
+def _prior_variable_binders(source: str) -> list[tuple[str, str]]:
+    """Return `(name, type)` pairs from preceding Lean `variable` commands."""
+    clean = _strip_lean_comments_and_strings(source)
+    binders: list[tuple[str, str]] = []
+    active_declarations = _ambient_variable_declarations(clean, len(clean))
+    for block in active_declarations:
+        position = 0
+        while position < len(block):
+            opener = re.search(r"[([{⦃]", block[position:])
+            if opener is None:
+                break
+            start = position + opener.start()
+            atom = _balanced_lean_atom(block, start)
+            if atom is None:
+                position = start + 1
+                continue
+            group, next_position = atom
+            parsed = _top_level_result_type(group[1:-1])
+            if parsed is not None:
+                names, binder_type = parsed
+                binders.extend(
+                    (name, binder_type)
+                    for name in re.findall(r"[A-Za-z_][A-Za-z0-9_']*", names)
+                )
+            position = next_position
+    return binders
+
+
+def _has_prior_variable_binder(source: str, target: str) -> bool:
+    """Detect an ambient `variable` binder that shadows a scalar projection name."""
+    return any(name == target for name, _ in _prior_variable_binders(source))
 
 
 def _strip_lean_comments_and_strings(source: str) -> str:
@@ -513,7 +669,9 @@ def check_authored_axioms_and_holes(source: str) -> list[TrapViolation]:
             "Repository source must prove results with Lean/Mathlib theorems; do not declare axioms.",
             "ERROR",
         ))
-    for match in re.finditer(r"(?:\b(?:sorry|admit|sorryAx)\b|«(?:sorry|admit|sorryAx)»)", clean):
+    for match in re.finditer(
+        r"(?<![.\w'])\b(?:sorry|admit|sorryAx)\b|«(?:sorry|admit|sorryAx)»", clean
+    ):
         line = clean.count("\n", 0, match.start()) + 1
         violations.append(TrapViolation(
             "QMS_HOLE", "Unproved theorem placeholder", line, match.group(0),
@@ -564,6 +722,9 @@ def _witness_has_only_typeclass_binders(
         if re.fullmatch(r"(?:Type|Sort)(?:\s+\w+)?\s*\*?", binder_type):
             local_type_params.update(re.findall(r"[A-Za-z_][A-Za-z0-9_']*", names_part))
             continue
+        if binder_type in {"ℕ", "Nat"}:
+            local_type_params.update(re.findall(r"[A-Za-z_][A-Za-z0-9_']*", names_part))
+            continue
         if target_type_name is not None and binder_type in local_type_params:
             continue
         return False
@@ -585,7 +746,7 @@ def _typeclass_binder_supplies_target(source: str, class_name: str, target: str)
         "CommGroup", "Semiring", "CommSemiring", "Ring", "CommRing",
         "DivisionRing", "Field", "Nontrivial", "Zero", "One", "OfNat",
         "Neg", "Sub", "Pow", "SMul", "Module", "Finite",
-        "DecidableEq", "Decidable", "BEq", "LawfulBEq", "LinearOrder",
+        "DecidableEq", "Decidable", "BEq", "Hashable", "LawfulBEq", "LinearOrder",
         "PartialOrder", "Preorder", "LE", "LT", "LT.lt", "LE.le",
         "Inhabited",
     }
@@ -851,11 +1012,12 @@ def _matrix_operator_carriers(source: str) -> set[tuple[str, str, str]]:
         ])
         variable_carriers = _witness_carrier_map(source, binders)
         products = _operator_product_roots(declaration)
-        used = {
-            variable_carriers[name.split(".", 1)[0]]
-            for pair in products for name in pair
-            if name.split(".", 1)[0] in variable_carriers
-        }
+        used = set()
+        for left, right in products:
+            left_carrier = variable_carriers.get(left.split(".", 1)[0])
+            right_carrier = variable_carriers.get(right.split(".", 1)[0])
+            if left_carrier is not None and left_carrier == right_carrier:
+                used.add(left_carrier)
         if used:
             result.update(carrier for carrier in used if carrier[0] == carrier[1])
         elif re.search(r"\bMatrix\.(?:mul|mul_apply|mulVec)\b", declaration):
@@ -893,6 +1055,74 @@ def _required_matrix_carriers(source: str) -> set[tuple[str, str, str]]:
     witness for an unrelated carrier from satisfying the gate.
     """
     return _matrix_operator_carriers(source)
+
+
+def _has_typed_noncommutative_product(source: str) -> bool:
+    """Check declarations for products of two locally typed operators."""
+    clean = _strip_lean_comments_and_strings(source)
+    starts = list(re.finditer(
+        r"^\s*(?:(?:private|protected|noncomputable|unsafe)\s+)*"
+        r"(?:def|theorem|lemma|instance)\b",
+        clean,
+        re.MULTILINE,
+    ))
+    operator_type = re.compile(
+        r"\b(?:Module\.)?(?:End|CliffordAlgebra|QuaternionAlgebra|LinearMap)\b"
+    )
+    for index, declaration_start in enumerate(starts):
+        end = starts[index + 1].start() if index + 1 < len(starts) else len(clean)
+        declaration = clean[declaration_start.start():end]
+        ambient = "\n".join(
+            _ambient_variable_declarations(clean, declaration_start.start())
+        )
+
+        def typed_names(text: str) -> tuple[set[str], set[str]]:
+            operator_names: set[str] = set()
+            bound_names: set[str] = set()
+            position = 0
+            while position < len(text):
+                opener = re.search(r"[([{⦃]", text[position:])
+                if opener is None:
+                    break
+                start = position + opener.start()
+                atom = _balanced_lean_atom(text, start)
+                if atom is None:
+                    position = start + 1
+                    continue
+                parsed = _top_level_result_type(atom[0][1:-1])
+                if parsed is not None:
+                    names = set(re.findall(
+                        r"[A-Za-z_][A-Za-z0-9_']*", parsed[0]
+                    ))
+                    bound_names.update(names)
+                    if operator_type.search(parsed[1]):
+                        operator_names.update(names)
+                position = atom[1]
+
+            # Support `variable A B : Module.End ...` declarations.
+            for match in re.finditer(
+                r"(?m)^\s*variables?\s+((?:[A-Za-z_][A-Za-z0-9_']*\s+)*"
+                r"[A-Za-z_][A-Za-z0-9_']*)\s*:\s*([^\n]+)",
+                text,
+            ):
+                names = set(match.group(1).split())
+                bound_names.update(names)
+                if operator_type.search(match.group(2)):
+                    operator_names.update(names)
+            return operator_names, bound_names
+
+        ambient_operators, _ = typed_names(ambient)
+        local_operators, local_binders = typed_names(declaration)
+        # A declaration-local binder shadows an ambient section variable even
+        # if the local binder has a scalar type.
+        operator_names = (ambient_operators - local_binders) | local_operators
+
+        if any(
+            left in operator_names and right in operator_names
+            for left, right in _operator_product_roots(declaration)
+        ):
+            return True
+    return False
 
 
 def _witness_carrier_map(source: str, binders: str) -> dict[str, tuple[str, str, str]]:
@@ -1354,7 +1584,7 @@ def check_tactic_misuse_on_operators(lines: list[str]) -> list[TrapViolation]:
             decl_lines = [line_clean]
             j = i + 1
             # Collect declaration header until ':='
-            while j < n and ":=" not in " ".join(decl_lines):
+            while j < n and _top_level_assignment_index(" ".join(decl_lines)) is None:
                 next_l = lines[j].split("--")[0].strip()
                 if (re.match(r"(?:(?:private|protected|noncomputable|unsafe|partial)\s+)*(?:theorem|lemma|def|abbrev|example|instance|structure|class)\b", next_l) or
                     next_l.startswith("end ") or next_l.startswith("namespace ")):
@@ -1383,7 +1613,17 @@ def check_tactic_misuse_on_operators(lines: list[str]) -> list[TrapViolation]:
                         aliases.add(alias)
                         changed = True
             alias_used = any(re.search(rf"\b{re.escape(alias)}\b", full_header) for alias in aliases)
-            has_operator = alias_used or bool(
+            prior_variables = _prior_variable_binders("\n".join(lines[:i]))
+            ambient_operator_names = {
+                name
+                for name, binder_type in prior_variables
+                if re.search(r"\b(?:Matrix|End|CliffordAlgebra|LinearMap)\b", binder_type)
+            }
+            ambient_operator_used = any(
+                re.search(rf"\b{re.escape(name)}\b", full_header)
+                for name in ambient_operator_names
+            )
+            has_operator = alias_used or ambient_operator_used or bool(
                 re.search(
                     r"\b(?:Matrix\s*\(\s*Fin|\bMatrix\b|\bEnd\b|\bCliffordAlgebra\b|\bLinearMap\b)\b",
                     full_header,
@@ -1391,9 +1631,13 @@ def check_tactic_misuse_on_operators(lines: list[str]) -> list[TrapViolation]:
             )
 
             # Check if target conclusion is projected to a scalar
-            parts = full_header.split(":=", 1)
-            header_before_assign = parts[0]
-            after_assign = parts[1].strip() if len(parts) > 1 else ""
+            assignment_index = _top_level_assignment_index(full_header)
+            if assignment_index is None:
+                header_before_assign = full_header
+                after_assign = ""
+            else:
+                header_before_assign = full_header[:assignment_index]
+                after_assign = full_header[assignment_index + 2 :].strip()
 
             # Extract the result type after the first top-level colon. Colons
             # inside binder types (for example `(C : Matrix ...)`) are not the
@@ -1413,19 +1657,47 @@ def check_tactic_misuse_on_operators(lines: list[str]) -> list[TrapViolation]:
                 if result_colon is not None else ""
             )
 
+            matrix_entry_projection = bool(
+                re.search(
+                    r"\)\s*[A-Za-z_][A-Za-z0-9_']*\s+[A-Za-z_][A-Za-z0-9_']*\s*(?:=|≠|≤|≥|<|>)",
+                    conclusion,
+                )
+            )
+            scalar_projection_shadowed = any(
+                re.search(rf"[({{⦃]\s*{name}\s*:", header_before_assign)
+                or _has_prior_variable_binder("\n".join(lines[:i]), name)
+                for name in ("innerProduct", "dotProduct")
+            )
+            scalar_projection = bool(
+                re.search(
+                    r"\b(?:innerProduct|dotProduct)\s+(?:[\w']+|\()",
+                    conclusion,
+                )
+                and not scalar_projection_shadowed
+            )
             # Check if conclusion is projected
             is_projected = bool(
                 re.search(
                     r"\b(?:Matrix\.det|Matrix\.trace|Matrix\.diag|trace|det)\b|"
                     r"\b[A-Za-z0-9_]+\s+(?:[ij]|\d+)\s+(?:[ij]|\d+)\b|"
+                    r"\)\s*[A-Za-z_][A-Za-z0-9_']*\s+[A-Za-z_][A-Za-z0-9_']*\s*(?:=|≠|≤|≥|<|>)|"
                     r"^\s*(?:ℝ|Real|ℂ|Complex|ℕ|ℤ|Bool|[A-Z][A-Za-z0-9_]*)\s*$",
                     conclusion,
                 )
             )
+            is_projected = is_projected or scalar_projection
 
             # A scalar projection in one conjunct does not project a mixed
             # target whose result still contains an operator product.
-            if re.search(r"\b[A-Za-z_][A-Za-z0-9_']*\s*\*\s*[A-Za-z_][A-Za-z0-9_']*\b", conclusion):
+            if (
+                re.search(
+                    r"\b[A-Za-z_][A-Za-z0-9_']*\s*\*\s*[A-Za-z_][A-Za-z0-9_']*\s*"
+                    r"(?:=|≠|!=)\s*(?:[A-Za-z_][A-Za-z0-9_']*\s*\*\s*[A-Za-z_][A-Za-z0-9_']*|"
+                    r"[A-Za-z_][A-Za-z0-9_']*)\b",
+                    conclusion,
+                )
+                and not matrix_entry_projection
+            ):
                 is_projected = False
 
             is_unprojected_operator = has_operator and not is_projected
@@ -1449,11 +1721,40 @@ def check_tactic_misuse_on_operators(lines: list[str]) -> list[TrapViolation]:
                     proof_j += 1
 
                 has_ext = False
+                scalar_helper_indents: list[int] = []
                 for line_num, p_text in proof_items:
+                    raw_item = lines[line_num - 1]
+                    item_indent = len(raw_item) - len(raw_item.lstrip())
+                    while scalar_helper_indents and item_indent <= scalar_helper_indents[-1]:
+                        scalar_helper_indents.pop()
+                    scalar_helper = re.match(
+                        r"have\s+\w+\s*:\s*(.*?)\s*:=\s*by\b", p_text
+                    )
+                    if scalar_helper:
+                        helper_type = scalar_helper.group(1)
+                        direct_operator_eq = re.search(
+                            r"\b\w+\s*\*\s*\w+\s*=\s*\w+\s*\*\s*\w+\b",
+                            helper_type,
+                        )
+                        if (
+                            not direct_operator_eq
+                            and (
+                                not re.search(r"\b(?:Matrix|End|CliffordAlgebra)\b", helper_type)
+                                or re.search(
+                                    r"\b(?:innerProduct|dotProduct)\s+(?:[\w']+|\()",
+                                    helper_type,
+                                ) and not scalar_projection_shadowed
+                            )
+                        ):
+                            scalar_helper_indents.append(item_indent)
                     if re.search(r"\b(?:ext|Matrix\.ext|funext)\b", p_text):
                         has_ext = True
                     m_tactic = re.search(r"\b(ring|linarith|nlinarith)\b", p_text)
-                    if m_tactic and not has_ext:
+                    if (
+                        m_tactic
+                        and not has_ext
+                        and not scalar_helper_indents
+                    ):
                         violations.append(
                             TrapViolation(
                                 trap_id="T16",
@@ -1569,10 +1870,22 @@ def check_model_witnessing(
         # is not an inhabitant. Accept a direct value, or the standard logical
         # wrappers that explicitly assert existence.
         result = declared_type.strip()
-        # These wrappers explicitly assert existence. Other result types must
-        # be a direct structure application, not a product beginning with it.
-        if re.fullmatch(rf"(?:Nonempty|Inhabited)\s+{re.escape(struct_name)}", result):
-            return True
+        wrapper = re.match(r"^(?:Nonempty|Inhabited)\s+", result)
+        if wrapper:
+            result = result[wrapper.end():].strip()
+            if result.startswith("(") and result.endswith(")"):
+                depth = 0
+                outer_application = True
+                for index, char in enumerate(result):
+                    if char == "(":
+                        depth += 1
+                    elif char == ")":
+                        depth -= 1
+                    if depth == 0 and index < len(result) - 1:
+                        outer_application = False
+                        break
+                if outer_application:
+                    result = result[1:-1].strip()
         if not re.match(rf"^{re.escape(struct_name)}(?:\s|$|\(|\{{)", result):
             return False
         # Structure applications may have several explicit arguments, but a

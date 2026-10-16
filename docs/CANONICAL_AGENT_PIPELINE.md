@@ -114,6 +114,46 @@ theorems, and uses. A result scoped to one file must be reported as scoped to
 that file; repository-wide absence requires the multi-lane procedure in
 `docs/REPO_DEEP_SEARCH_PROTOCOL.md`.
 
+Before drafting or editing a Lean owner, write a Ground-Truth Theorem Contract
+in the task record: (1) the precise mathematical claim without metaphor; (2)
+the actual carrier, operations, and conventions; (3) cited owner declarations
+and their exact theorem statements, separating proved facts from assumptions;
+(4) relevant imports and consumers; (5) the smallest source-confirmed gap; and
+(6) adjacent claims not established. Use the archetype ladder to reconcile two
+paths: concept input → candidate symbolic archetype, and compiler-backed Lean
+declarations/dependency edges → AST/AQL fingerprints and hash navigation →
+forward/backward causal cones and multi-apex cone cross-sections →
+graph/SCC/topology layers → code-derived archetype candidates. SCCs are one
+layer of this deeper DAG analysis, not the full discovery mechanism. Follow
+`docs/ASTAQLHASH-HOWTO.md` and `docs/ARANGO_DAG_REFRESH_METHODOLOGY.md` for
+generation/source provenance, cone seed provenance, shared cross-section
+nodes, and raw-to-overlay descent. Then inspect the exact owned declarations
+and prove the formal claim. Hash matches, SCC membership, graph proximity, and
+derived scores reveal candidates and granularity, not semantic equivalence or
+interpretation. Record what each translation preserves or discards. The
+ladder is a refinement/filtering workflow, not an assumed functor or
+equivalence. A carrier change requires an explicit map and proved compatibility
+result. `discover`,
+graph search, user-provided code, agent summaries, and successful compilation
+are not substitutes for reading owner source; compilation validates the proof
+at its Lean type, not the relationship between that type and its prose
+interpretation. Gate 2 must independently check that relationship.
+
+The OpenGauss CLI enforces a file-backed handoff: `/discover --output` writes
+a versioned navigation receipt; a contract conforming to
+`tools/schema/ground_truth_theorem_contract.schema.json` binds that receipt to
+current owner-file hashes, qualified declaration heads, quoted statements,
+and separate declaration-signature and Pantograph-proposition fields. `/draft`
+requires this contract unless `--scratch` is explicitly selected for
+exploratory non-source output. A contract-bound file draft writes a
+source-hashed receipt. The Hive theorem-candidate builder can embed and hash
+the full contract; with a validated draft receipt, it also binds the generated
+source snapshot and proposition to Pantograph. Without that receipt, the
+candidate is not bound to a Pantograph session. Pantograph evidence
+revalidates these bindings and keeps navigation-only authority. These
+fingerprints detect stale or mismatched inputs; they do not
+verify human semantic assertions, Lean typing, proof status, or graph freshness.
+
 ### aiClaw / ChatGPT Oracle
 
 The ChatGPT browser lane is single-flight per platform. Always check it before

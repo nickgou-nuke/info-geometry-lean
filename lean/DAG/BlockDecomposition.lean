@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import DAG.GraphHodge
 
 namespace DAG.BlockDecomposition
@@ -92,6 +97,19 @@ def ofTwoComplex {α : Type} [BEq α] [Hashable α] (tc : TwoComplex α) : Block
     laplacian0 := Δ₀
     laplacian1 := Δ₁
     laplacian2 := Δ₂ }
+
+/-- Empty boundary data induces the zero-dimensional block decomposition. -/
+def emptyModel {α : Type} [BEq α] [Hashable α] : BlockDecomp α :=
+  ofTwoComplex {
+    base := HydratedGraph.empty
+    edges := #[]
+    faces := #[]
+    digons := #[]
+  }
+
+instance instInhabitedBlockDecomp {α : Type} [BEq α] [Hashable α] :
+    Inhabited (BlockDecomp α) :=
+  ⟨emptyModel⟩
 
 /-- The three-layer Dirac operator associated to a `TwoComplex`. -/
 def diracOf {α : Type} [BEq α] [Hashable α] (tc : TwoComplex α) : Array (Array Rat) :=

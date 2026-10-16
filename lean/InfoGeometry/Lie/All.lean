@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Lie.SplitOctonionImaginaryAction
 import InfoGeometry.Lie.KantorTKKFiveGrading
 import InfoGeometry.Algebra.FiniteSpinAlgebra
@@ -15,5 +20,4 @@ import InfoGeometry.Lie.BaezG2SplitOctonion
 import InfoGeometry.Lie.G2RollingBall
 import InfoGeometry.Lie.SagerschnigS2S3Distribution
 import InfoGeometry.Lie.SplitOctonion235Distribution
-import InfoGeometry.Lie.Pin55GenuineSieveBridge
 import InfoGeometry.Lie.ZornPeirceDerivationStabilizer

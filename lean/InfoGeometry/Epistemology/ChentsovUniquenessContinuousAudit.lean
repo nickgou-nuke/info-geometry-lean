@@ -1,0 +1,23 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Epistemology.ChentsovUniquenessContinuous
+
+#print axioms InfoGeometry.Epistemology.ChentsovUniquenessContinuous.fisherMetric_tendsto
+#print axioms InfoGeometry.Epistemology.ChentsovUniquenessContinuous.scaledFisherFamily_seqContinuous
+#print axioms InfoGeometry.Epistemology.ChentsovUniquenessContinuous.fisherFamily_seqContinuous
+#print axioms InfoGeometry.Epistemology.ChentsovUniquenessContinuous.ratCount_pos
+#print axioms InfoGeometry.Epistemology.ChentsovUniquenessContinuous.ratTotal_pos
+#print axioms InfoGeometry.Epistemology.ChentsovUniquenessContinuous.ratTotal_cast
+#print axioms InfoGeometry.Epistemology.ChentsovUniquenessContinuous.ratApprox_rational
+#print axioms InfoGeometry.Epistemology.ChentsovUniquenessContinuous.ratCount_lower
+#print axioms InfoGeometry.Epistemology.ChentsovUniquenessContinuous.ratCount_upper
+#print axioms InfoGeometry.Epistemology.ChentsovUniquenessContinuous.ratCount_div_tendsto
+#print axioms InfoGeometry.Epistemology.ChentsovUniquenessContinuous.ratTotal_div_tendsto
+#print axioms InfoGeometry.Epistemology.ChentsovUniquenessContinuous.ratApprox_apply_tendsto
+#print axioms InfoGeometry.Epistemology.ChentsovUniquenessContinuous.ratApprox_tendsto
+#print axioms InfoGeometry.Epistemology.ChentsovUniquenessContinuous.chentsov_uniqueness_of_seqContinuous
+#print axioms InfoGeometry.Epistemology.ChentsovUniquenessContinuous.chentsov_classification_of_seqContinuous
+#print axioms InfoGeometry.Epistemology.ChentsovUniquenessContinuous.chentsov_scale_pos_of_positiveDefinite

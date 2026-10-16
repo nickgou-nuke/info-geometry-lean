@@ -95,6 +95,24 @@
           },
           "additionalProperties": false
         },
+        "draft_binding": {
+          "type": "object",
+          "required": ["receipt", "receipt_sha256"],
+          "properties": {
+            "receipt": { "type": "object" },
+            "receipt_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+          },
+          "additionalProperties": false
+        },
+        "ground_truth_contract": {
+          "type": "object",
+          "required": ["contract", "contract_sha256"],
+          "properties": {
+            "contract": { "$ref": "GroundTruthTheoremContract.schema.json" },
+            "contract_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+          },
+          "additionalProperties": false
+        },
         "bridge_claim": {
           "type": "string",
           "minLength": 1

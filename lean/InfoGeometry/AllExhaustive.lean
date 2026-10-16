@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.AQFT.Pin55Pullback
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Adelic.NarainTamagawa
@@ -8808,7 +8813,6 @@ import InfoGeometry.Lie.PeirceDoubledComplexStructure
 import InfoGeometry.Lie.PeirceDoubledDIII
 import InfoGeometry.Lie.PeirceExteriorHodgeLinearEquiv
 import InfoGeometry.Lie.PeirceExteriorHodgeTransport
-import InfoGeometry.Lie.Pin55GenuineSieveBridge
 import InfoGeometry.Lie.Pin55KreinConformalBridge
 import InfoGeometry.Lie.Pin55SpinorTowerBridge
 import InfoGeometry.Lie.RealSplitOctonionDerivation

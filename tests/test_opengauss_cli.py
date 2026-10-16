@@ -390,6 +390,13 @@ def test_command_15_certify(tmp_path: Optional[Path] = None):
         "Outer.after_section_eq",
     ]
     assert audit.written is True
+    assert audit.audit_script.startswith(
+        "/-\n"
+        "Copyright (c) 2026 InfoGeometry Authors. All rights reserved.\n"
+        "Released under Apache 2.0 license as described in the file LICENSE.\n"
+        "Authors: InfoGeometry Engine Contributors\n"
+        "-/\n\n"
+    )
     assert "import TestModule" in audit.audit_script
     assert "#print axioms InfoGeometry.Test.alpha_eq" in audit.audit_script
     assert "#print axioms InfoGeometry.Test.beta_pos" in audit.audit_script
@@ -401,6 +408,7 @@ def test_command_15_certify(tmp_path: Optional[Path] = None):
     assert "commented_out" not in audit.audit_script
     assert "hidden_eq" not in audit.audit_script
     assert Path(audit.audit_file).is_file()
+    assert Path(audit.audit_file).read_text(encoding="utf-8") == audit.audit_script
 
     cockle_file = Path("lean/InfoGeometry/Clifford/CockleCoquaternionPlanarTriad.lean")
     if cockle_file.is_file():
@@ -426,9 +434,8 @@ def test_cli_dispatch_main(capsys=None):
     assert rc == 0
 
     # 4. draft
-    rc = main(["draft", "--headline", "t_draft", "--signature", ": True", "--json"])
+    rc = main(["draft", "--headline", "t_draft", "--signature", ": True", "--scratch", "--json"])
     assert rc == 0
-
     # 5. review
     rc = main(["review", "proofs/WavefrontKMSKleinDuality.lean", "--gate", "GATE_2", "--json"])
     assert rc == 0
@@ -483,6 +490,17 @@ def test_cli_dispatch_main(capsys=None):
     # 15. certify
     rc = main(["certify", "--file", "lean/InfoGeometry/Clifford/CockleCoquaternionPlanarTriad.lean", "--json"])
     assert rc == 0
+
+
+def test_scratch_draft_cannot_write_a_source_file():
+    try:
+        main([
+            "draft", "--headline", "t_draft", "--signature", ": True",
+            "--scratch", "--output", "scratch/UnboundDraft.lean",
+        ])
+    except SystemExit:
+        return
+    raise AssertionError("scratch draft unexpectedly accepted a source output path")
 
 
 if __name__ == "__main__":

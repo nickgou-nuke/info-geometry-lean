@@ -48,6 +48,19 @@
 
    The pre-commit proof-proxy gate is repository-owned at
    `.githooks/pre-commit` and runs `tools/quality/proof_proxy_staged_gate.py`.
+   For every staged Lean source blob (added, copied, modified, renamed, or
+   type-changed), the gate requires this exact byte-zero header:
+
+   ```lean
+   /-
+   Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+   Released under Apache 2.0 license as described in the file LICENSE.
+   Authors: InfoGeometry Engine Contributors
+   -/
+   ```
+
+   The gate reads staged index blobs using NUL-delimited Git paths, so the
+   check applies to the staged content rather than an unstaged worktree copy.
    After cloning, install tracked hooks with:
 
    ```bash

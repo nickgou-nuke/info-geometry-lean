@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.Finsupp.LinearCombination
 import Mathlib.LinearAlgebra.Dual.Lemmas
 
@@ -29,6 +34,18 @@ theorem cycle_map_surjective_iff_span
   exact Submodule.span_range_subtype_eq_top_iff hodge
     (fun index => (cycleClass index).property)
 
+theorem cycle_map_surjective_iff_finrank_span
+    [FiniteDimensional ℚ Betti] (cycleClass : Index → Betti) :
+    Function.Surjective (Finsupp.linearCombination ℚ cycleClass) ↔
+      Module.finrank ℚ (Submodule.span ℚ (Set.range cycleClass)) =
+        Module.finrank ℚ Betti := by
+  rw [← span_range_eq_top_iff_surjective_finsuppLinearCombination]
+  constructor
+  · intro h
+    rw [h, finrank_top]
+  · intro h
+    exact Submodule.eq_top_of_finrank_eq h
+
 theorem cycle_map_surjective_iff_dual_detection (cycleClass : Index → Betti) :
     Function.Surjective (Finsupp.linearCombination ℚ cycleClass) ↔
       ∀ functional : Module.Dual ℚ Betti,
@@ -52,6 +69,25 @@ theorem cycle_map_surjective_iff_dual_detection (cycleClass : Index → Betti) :
         (Submodule.subset_span (Set.mem_range_self index))
     rw [detects functional vanishes]
     rfl
+
+/-- Failure of cycle-span surjectivity is witnessed by a nonzero rational
+linear functional that vanishes on every supplied cycle class. -/
+theorem cycle_map_nonsurjective_iff_dual_obstruction (cycleClass : Index → Betti) :
+    ¬ Function.Surjective (Finsupp.linearCombination ℚ cycleClass) ↔
+      ∃ functional : Module.Dual ℚ Betti,
+        functional ≠ 0 ∧ ∀ index, functional (cycleClass index) = 0 := by
+  constructor
+  · intro hnot
+    by_contra hno
+    have detects : ∀ functional : Module.Dual ℚ Betti,
+        (∀ index, functional (cycleClass index) = 0) → functional = 0 := by
+      intro functional vanishes
+      by_contra hnonzero
+      exact hno ⟨functional, hnonzero, vanishes⟩
+    exact hnot ((cycle_map_surjective_iff_dual_detection cycleClass).2 detects)
+  · rintro ⟨functional, hnonzero, vanishes⟩ surjective
+    exact hnonzero ((cycle_map_surjective_iff_dual_detection cycleClass).1
+      surjective functional vanishes)
 
 theorem cycle_combinations_preserve_linear_constraints
     (cycleClass : Index → Betti) (constraint : Betti →ₗ[ℚ] Periods)

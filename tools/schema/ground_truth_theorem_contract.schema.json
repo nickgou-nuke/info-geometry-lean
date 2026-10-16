@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "GroundTruthTheoremContract.schema.json",
+  "title": "OpenGauss Ground-Truth Theorem Contract",
+  "type": "object",
+  "required": [
+    "schema", "contract_id", "semantic_status", "claim", "carrier",
+    "owner_declarations", "imports", "consumers", "smallest_gap",
+    "out_of_scope", "discovery_receipt"
+  ],
+  "properties": {
+    "schema": { "const": "info_geometry.opengauss.ground_truth_theorem_contract.v1" },
+    "contract_id": { "type": "string", "minLength": 1 },
+    "semantic_status": { "const": "human_asserted_not_kernel_verified" },
+    "claim": { "type": "string", "minLength": 1 },
+    "carrier": {
+      "type": "object",
+      "required": ["type", "operations", "conventions"],
+      "properties": {
+        "type": { "type": "string", "minLength": 1 },
+        "operations": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "conventions": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+      },
+      "additionalProperties": false
+    },
+    "owner_declarations": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["qualified_name", "kind", "source_path", "source_sha256", "source_line", "source_end_line", "source_excerpt", "lean_statement", "status_assertion"],
+        "properties": {
+          "qualified_name": { "type": "string", "minLength": 1 },
+          "kind": { "enum": ["theorem", "lemma", "def", "abbrev", "opaque", "structure", "class", "inductive"] },
+          "source_path": { "type": "string", "minLength": 1 },
+          "source_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+          "source_line": { "type": "integer", "minimum": 1 },
+          "source_end_line": { "type": "integer", "minimum": 1 },
+          "source_excerpt": { "type": "string", "minLength": 1 },
+          "lean_statement": { "type": "string", "minLength": 1 },
+          "status_assertion": { "enum": ["asserted_proved", "assumption", "definition", "unverified"] }
+        },
+        "additionalProperties": false
+      }
+    },
+    "imports": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+    "consumers": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+    "smallest_gap": {
+      "type": "object",
+      "required": ["declaration_name", "lean_signature", "pantograph_expression", "description"],
+      "properties": {
+        "declaration_name": { "type": "string", "minLength": 1 },
+        "lean_signature": { "type": "string", "minLength": 1 },
+        "pantograph_expression": { "type": "string", "minLength": 1 },
+        "description": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "out_of_scope": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+    "discovery_receipt": {
+      "type": "object",
+      "required": ["path", "sha256", "query"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "query": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

@@ -29,7 +29,12 @@ from tools.infra.arango_raw_infotree_ingest import (  # noqa: E402
     db_url,
     request_json,
 )
-from tools.infra.hive_packet_validate import SCHEMA_BY_KIND, build_store, validate_packet  # noqa: E402
+from tools.infra.hive_packet_validate import (  # noqa: E402
+    SCHEMA_BY_KIND,
+    build_store,
+    validate_ground_truth_candidate_integrity,
+    validate_packet,
+)
 from tools.infra.pantograph_arango_stream import (  # noqa: E402
     arango_key,
     canonical_json,
@@ -242,6 +247,17 @@ def build_pantograph_evidence_packet(
     """Build a low-authority packet after validating the archived interaction."""
     if candidate.get("kind") != "TheoremCandidatePacket":
         raise ValueError("Pantograph evidence must be linked to a TheoremCandidatePacket")
+    contract_binding = candidate.get("ground_truth_contract")
+    contract_identity: dict[str, str] | None = None
+    if contract_binding is not None:
+        contract_errors = validate_ground_truth_candidate_integrity(candidate)
+        if contract_errors:
+            raise ValueError("candidate Ground-Truth Contract binding is invalid: " + "; ".join(contract_errors))
+        contract = contract_binding["contract"]
+        contract_identity = {
+            "ground_truth_contract_id": str(contract["contract_id"]),
+            "ground_truth_contract_sha256": str(contract_binding["contract_sha256"]),
+        }
     candidate_id = candidate.get("id")
     if not isinstance(candidate_id, str) or not candidate_id:
         raise ValueError("candidate packet has no id")
@@ -354,6 +370,8 @@ def build_pantograph_evidence_packet(
     }
     if evidence["declaration_fingerprint"]:
         packet["declaration_fingerprint"] = evidence["declaration_fingerprint"]
+    if contract_identity is not None:
+        packet.update(contract_identity)
     unsigned = dict(packet)
     packet["packet_hash"] = "sha256:" + hashlib.sha256(canonical_json(unsigned).encode("utf-8")).hexdigest()
     errors = validate_packet(packet, SCHEMA_BY_KIND[packet["kind"]], build_store())

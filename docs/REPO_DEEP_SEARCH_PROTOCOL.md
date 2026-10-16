@@ -50,6 +50,29 @@ When a question asks "what is in the repo", start with `repo-owned`. Then add
 `external-ref` only when the question explicitly asks about installed mirrors,
 libraries, Loogle indexing, or external comparison.
 
+## DAG-Emergent Archetypes and AST/AQL Hash Evidence
+
+When a task concerns recurring archetypes, duplicated structures, causal
+cones, or missing bridges, search both the candidate mathematics and the
+code-derived declaration DAG. Follow `docs/ASTAQLHASH-HOWTO.md` for the
+compiler-backed `decls`/`edges` graph, AST/value/shape fingerprints, AQL/hash
+navigation, forward/backward causal cones, and multi-apex cone cross-sections;
+follow `docs/ARANGO_DAG_REFRESH_METHODOLOGY.md` for SCC overlays and
+raw-to-overlay descent. SCC condensation is one layer of the DAG analysis, not
+the entire archetype discovery mechanism.
+
+The graph can expose recurring shapes, dependency strata, and different
+granularities that suggest candidate archetypes. It cannot assign their
+mathematical meaning or prove equivalence. Check graph-generation/source
+provenance where available, preserve each cone seed/apex provenance, inspect
+shared cross-section nodes, and descend every candidate through its graph
+witnesses to exact Lean declarations. Read the carrier, operations, theorem
+statements, proofs, imports, and consumers before making a formal claim. Hash
+matches, SCC membership, graph proximity, overlays, or retrieval scores are
+navigation evidence only; do not refresh a graph merely to begin a search, and
+do not claim freshness when metadata does not establish it. Lean owner source
+and kernel-checked proofs remain the authority.
+
 ## Current Code-Derived Inventory Snapshot
 
 Regenerate these counts when precision matters. They intentionally overlap

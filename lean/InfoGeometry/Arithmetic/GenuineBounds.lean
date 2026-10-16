@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
@@ -45,7 +50,7 @@ theorem grover_marked_amplitude (M N : ℕ) (hM : M > 0) (hN : N > 0) (hMN : M �
       rw [Real.sin_arcsin] <;> linarith
     have h₆ : Real.sin (Real.arcsin (Real.sqrt ((M : ℝ) / N))) ^ 2 = (Real.sqrt ((M : ℝ) / N)) ^ 2 := by rw [h₅]
     have h₇ : (Real.sqrt ((M : ℝ) / N)) ^ 2 = (M : ℝ) / N := by
-      rw [Real.sq_sqrt] <;> linarith
+      rw [Real.sq_sqrt h₁]
     nlinarith
   · rfl
 
@@ -152,16 +157,18 @@ theorem quantum_counting_chernoff_bound (Q : ℕ) (hQ : Q > 0) (ε : ℝ) (hε :
 
 /-! ## 4. Prime Number Theorem Explicit Error Bounds -/
 
-/-- Rosser-Schoenfeld explicit bound: for `x ≥ 55`, `|π(x) - li(x)| < x / (8π √x log x)`. -/
-theorem rosser_schoenfeld_bound (x : ℝ) (hx : x ≥ 55) :
+/-- The displayed Rosser-scale expression is positive for `x ≥ 55`.
+This is only a denominator-positivity fact, not a prime-counting estimate. -/
+theorem prime_count_error_scale_pos (x : ℝ) (hx : x ≥ 55) :
     0 < x / (8 * Real.pi * Real.sqrt x * Real.log x) := by
   have h_pi : 0 < Real.pi := Real.pi_pos
   have h_sqrt : 0 < Real.sqrt x := Real.sqrt_pos.mpr (by linarith)
   have h_log : 0 < Real.log x := Real.log_pos (by linarith)
   positivity
 
-/-- Chebyshev's `θ(x)` bound: `|θ(x) - x| ≤ 0.006788 x / log x` for `x ≥ 10⁴`. -/
-theorem chebyshev_theta_bound (x : ℝ) (hx : x ≥ 10000) :
+/-- The displayed Chebyshev-scale expression is nonnegative for `x ≥ 10⁴`.
+This does not bound Chebyshev's theta function. -/
+theorem chebyshev_error_scale_nonneg (x : ℝ) (hx : x ≥ 10000) :
     0.006788 * x / Real.log x ≥ 0 := by
   have h_log : 0 < Real.log x := Real.log_pos (by linarith)
   positivity
@@ -236,17 +243,16 @@ theorem GenuineQuantumCountingAccuracy.failureProbability_bound
     2 * Real.exp (-2 * (G.queries : ℝ) * G.ε ^ 2) ≤ G.failure_prob :=
   G.chernoff_bound
 
-/-! ## 7. Logarithmic Integral and Prime Count Bounds -/
+/-! ## 7. Logarithmic Integral and Finite Prime Count -/
 
 /-- Logarithmic integral `li(x)` with explicit error bounds. -/
 noncomputable def li (x : ℝ) : ℝ :=
   ∫ (t : ℝ) in (2 : ℝ)..x, 1 / Real.log t
 
-/-- Finite upper bound on prime counting, expressed as an honest native theorem.
-
-This keeps the theorem name while removing unverified explicit Rosser–Schoenfeld
-analytics: prime counting is bounded by the finite ambient cardinality. -/
-theorem rosser_schoenfeld_prime_count_bound (x : ℕ) (hx : x ≥ 55) :
+/-- The number of primes at most `x` is bounded by the size of the ambient
+initial segment. This elementary cardinality estimate is not a
+Rosser–Schoenfeld estimate and makes no use of a logarithmic integral. -/
+theorem primeCounting_le_add_one (x : ℕ) :
     (Nat.primeCounting x : ℝ) ≤ (x : ℝ) + 1 := by
   have hcard : (x + 1).primesBelow.card ≤ x + 1 := by
     simpa [Nat.primesBelow, Finset.card_range] using

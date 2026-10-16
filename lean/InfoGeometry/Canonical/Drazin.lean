@@ -1,9 +1,14 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Ring.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Star.Basic
 import Mathlib.Algebra.Star.StarProjection
 import Mathlib.Analysis.Normed.Operator.Basic
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Meta.Architecture
@@ -725,6 +730,168 @@ theorem exists_drazinInverse
   exists_drazinInverse_of_fittingDecomposition S.toDrazinFittingDecomposition
 
 end ContinuousDrazinFittingSubmoduleSplit
+
+/-! ### A finite nontrivial model of the Fitting data -/
+
+namespace FiniteFittingModel
+
+noncomputable section
+
+/-- The finite-coordinate carrier for a concrete core/nilpotent split. -/
+abbrev E := Fin 3 → ℝ
+
+/-- Projection onto coordinate `i`. -/
+def coordProj (i : Fin 3) : E →L[ℝ] E :=
+  ContinuousLinearMap.pi fun j =>
+    if j = i then ContinuousLinearMap.proj i else 0
+
+/-- Nonzero invertible-core projection onto coordinate zero. -/
+def C : E →L[ℝ] E := coordProj 0
+
+/-- Nonzero nilpotent block sending coordinate two to coordinate one. -/
+def N : E →L[ℝ] E := ContinuousLinearMap.pi fun j =>
+  if j = 1 then ContinuousLinearMap.proj 2 else 0
+
+/-- Projection onto the complementary two-coordinate subspace. -/
+def Q : E →L[ℝ] E := coordProj 1 + coordProj 2
+
+/-- The modeled operator has both an invertible core and a nilpotent block. -/
+def A : E →L[ℝ] E := C + N
+
+@[simp]
+theorem C_sq : C * C = C := by
+  ext x i
+  fin_cases i <;> simp [C, coordProj]
+
+@[simp]
+theorem C_mul_N : C * N = 0 := by
+  ext x i
+  fin_cases i <;> simp [C, N, coordProj]
+
+@[simp]
+theorem N_mul_C : N * C = 0 := by
+  ext x i
+  fin_cases i <;> simp [C, N, coordProj]
+
+@[simp]
+theorem N_sq : N * N = 0 := by
+  ext x i
+  fin_cases i <;> simp [N]
+
+@[simp]
+theorem C_mul_Q : C * Q = 0 := by
+  ext x i
+  fin_cases i <;> simp [C, Q, coordProj]
+
+@[simp]
+theorem Q_mul_C : Q * C = 0 := by
+  ext x i
+  fin_cases i <;> simp [C, Q, coordProj]
+
+@[simp]
+theorem N_mul_Q : N * Q = N := by
+  ext x i
+  fin_cases i <;> simp [N, Q, coordProj]
+
+@[simp]
+theorem Q_mul_N : Q * N = N := by
+  ext x i
+  fin_cases i <;> simp [N, Q, coordProj]
+
+@[simp]
+theorem C_add_Q : C + Q = 1 := by
+  ext x i
+  fin_cases i <;> simp [C, Q, coordProj]
+
+@[simp]
+theorem A_mul_C : A * C = C := by
+  simp [A, add_mul]
+
+@[simp]
+theorem C_mul_A : C * A = C := by
+  simp [A, mul_add]
+
+@[simp]
+theorem A_mul_Q : A * Q = N := by
+  simp [A, add_mul]
+
+@[simp]
+theorem Q_mul_A : Q * A = N := by
+  simp [A, mul_add]
+
+theorem A_comm_C : A * C = C * A := by
+  rw [A_mul_C, C_mul_A]
+
+theorem A_comm_Q : A * Q = Q * A := by
+  rw [A_mul_Q, Q_mul_A]
+
+theorem core_comm_inverse_law : (A * C) * C = C * (A * C) := by
+  simp [A_mul_C, C_sq]
+
+theorem core_inverse_core_law : (A * C) * C * (A * C) = A * C := by
+  simp [A_mul_C, C_sq]
+
+theorem inverse_core_inverse_law : C * (A * C) * C = C := by
+  simp [A_mul_C, C_sq]
+
+theorem nilpotent_law : (A * Q) ^ (1 + 1) = 0 := by
+  rw [A_mul_Q, pow_two, N_sq]
+
+/-- The concrete projection/submodule split; both summands are nonzero. -/
+def submoduleSplitData : ContinuousDrazinFittingSubmoduleSplit A := {
+  Core := C.range
+  Nil := Q.range
+  Pcore := C
+  Pnil := Q
+  Dcore := C
+  nilpotentIndex := 1
+  Pcore_range := rfl
+  Pnil_range := rfl
+  projections_sum := C_add_Q
+  projections_core_nil := C_mul_Q
+  projections_nil_core := Q_mul_C
+  A_comm_core := A_comm_C
+  A_comm_nil := A_comm_Q
+  core_comm_inverse := core_comm_inverse_law
+  nil_projection_mul_inverse := Q_mul_C
+  inverse_mul_nil_projection := C_mul_Q
+  core_inverse_core := core_inverse_core_law
+  inverse_core_inverse := inverse_core_inverse_law
+  nilpotent := nilpotent_law
+}
+
+/-- The block-data inhabitant is derived from the concrete split projections. -/
+def blockData : ContinuousDrazinFittingBlockData A :=
+  submoduleSplitData.toBlockData
+
+/-- The algebraic Fitting inhabitant is derived from the same concrete split. -/
+def algebraicData : DrazinFittingDecomposition A :=
+  submoduleSplitData.toDrazinFittingDecomposition
+
+/-- The core projection is nonzero, witnessed by its action on coordinate zero. -/
+theorem C_ne_zero : C ≠ 0 := by
+  intro h
+  have hx := congrArg (fun f : E →L[ℝ] E => f (Pi.single 0 (1 : ℝ))) h
+  have h0 := congrFun hx 0
+  norm_num [C, coordProj] at h0
+
+/-- The nilpotent block is nonzero, witnessed by its action on coordinate two. -/
+theorem N_ne_zero : N ≠ 0 := by
+  intro h
+  have hx := congrArg (fun f : E →L[ℝ] E => f (Pi.single 2 (1 : ℝ))) h
+  have h1 := congrFun hx 1
+  norm_num [N] at h1
+
+/-- The nilpotent subspace projection is nonzero on coordinate one. -/
+theorem Q_ne_zero : Q ≠ 0 := by
+  intro h
+  have hx := congrArg (fun f : E →L[ℝ] E => f (Pi.single 1 (1 : ℝ))) h
+  have h1 := congrFun hx 1
+  norm_num [Q, coordProj] at h1
+
+end
+
+end FiniteFittingModel
 
 /-- Lemma `inverse_eq_pow_mul_pow`. -/
 @[rep_depth krein]

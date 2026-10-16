@@ -35,6 +35,8 @@
         "environment_fingerprint": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
         "build_fingerprint": { "type": "string", "minLength": 1 },
         "declaration_fingerprint": { "type": "string", "minLength": 1 },
+        "ground_truth_contract_id": { "type": "string", "minLength": 1 },
+        "ground_truth_contract_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
         "target_expression": { "type": "string", "minLength": 1 },
         "request_count": { "type": "integer", "minimum": 1 },
         "response_count": { "type": "integer", "minimum": 1 },

@@ -1,10 +1,9 @@
 # Open Debt Problems — Exhaustive Deep-Search Audit
 
-> **Deep Search Audit Date**: 2026-07-24  
-> **Status**: Verified against Lean 4 Kernel (`lake build` — clean build)
-> **Active Debt Count**: Exactly 2 open gaps across 2 files
+> **Historical audit date**: 2026-07-24
+> **Current status**: This inventory is stale and must not be used as a current repository-wide sorry count. The specific source claims below were checked against the present owner files during the 2026-10-16 review.
 
-This document records the exact, kernel-checked status of all debt items across `lean/InfoGeometry/`. Recent audits and verification sessions have successfully closed multiple major sectors, including the Gell-Mann basis matrices, SU(3) structure constants, the Cuntz-Fibonacci Five Hypotheses, the 8 Automath generated bridge files, the Grover success probability lower bound, all Golden Mean Shift sandbox stubs, and the complete coordinate-free Chevalley spinor representation machinery.
+This document is a historical debt note, not an exhaustive current audit. Names and status below are corrected only for the inspected owner files; no repository-wide gap count is asserted.
 
 ---
 
@@ -22,24 +21,18 @@ The following sectors have been fully solved, with all stubs and `sorry` keyword
 
 ---
 
-## 2. Exhaustive List of ALL Active Open `sorry` Declarations
+## 2. Corrected Status of the Formerly Listed Targets
 
-Across the entire `lean/InfoGeometry/` directory tree, the following **2 files** contain the only remaining open `sorry` declarations. In accordance with Goutev's Principle and the Constructive Closure Mandate, these are kept as honest, compiler-visible gaps rather than being masked by typeclass wrappers or dummy proofs.
+The former claim that these were two active `sorry` declarations is inaccurate for the current source. The following is limited to these two files and is not a complete audit of `lean/InfoGeometry/`.
 
-### A. [GenuineBounds.lean](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Arithmetic/GenuineBounds.lean) (1 Gap)
-*   **`rosser_schoenfeld_prime_count_bound`** (Line 209)
-    *   *Claim*: Strict explicit bounds for the prime counting function $\pi(x)$ compared to the logarithmic integral $\text{li}(x)$.
-    *   *Blocker*: Mathlib currently lacks non-asymptotic explicit PNT bounds, which would require formalizing explicit zero-free regions of the Riemann Zeta function.
+### A. [GenuineBounds.lean](../lean/InfoGeometry/Arithmetic/GenuineBounds.lean)
+The file contains no `sorry` declaration in the inspected source. `primeCounting_le_add_one` proves only the elementary finite-cardinality inequality `Nat.primeCounting x ≤ x + 1`; it is not a Rosser–Schoenfeld estimate against `li(x)`. The scale lemmas `prime_count_error_scale_pos` and `chebyshev_error_scale_nonneg` prove positivity/nonnegativity of displayed expressions, not prime-counting estimates.
 
-### B. [Pin55KreinConformalBridge.lean](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Lie/Pin55KreinConformalBridge.lean) (1 Gap)
-*   **`exists_pin55_krein_conformal_package`** (Line 250)
-    *   *Claim*: The existence of a $Pin(5,5)$ Krein representation package projectively compatible with the triality/split-octonion Clifford embedding.
-    *   *Blocker*: A complex coordinate index-matching and spinor-retraction diagram chase between the 32D spinor carrier and the 8D split space.
+### B. [Pin55KreinConformalBridge.lean](../lean/InfoGeometry/Lie/Pin55KreinConformalBridge.lean)
+The inspected file has no `sorry` declaration. `exists_pin55_krein_conformal_package` takes `Pin55FiniteCarrierCompatibility` as an explicit hypothesis, so it does not prove that compatibility. Its concrete bilinear form is zero (`B_concrete_zero`), which does not establish a nondegenerate Krein form. Treat the finite-carrier intertwining and any nondegenerate Krein bridge as open mathematical work unless separately supplied by a proved owner theorem.
 
 ---
 
-## 3. The Principle of Epistemic Rigor (The Honest Debt Policy)
+## 3. Audit Scope
 
-The remaining 2 gaps in this repository represent the frontier of the formalization. Rather than employing the **Physical Law Typeclass Pattern** (which replaces local `sorry` keywords with unproven typeclass assumptions), we choose to preserve these as honest, compiler-tracked debt. 
-
-Under the **UTMOST MANDATE** in [GEMINI.md](file:///home/goutev/repos/info-geometry-lean/GEMINI.md), converting a missing proof into a typeclass field or a "witness-gated certificate" is classified as a verbal bypass that hides the analytical limit without providing a kernel-checked derivation. Honest debt is better than fake completeness. These 2 targets are preserved as explicit community bounties.
+This correction is based on current source inspection of the two named owners and their direct references. It does not certify the entire repository's placeholder status or build state. A current global debt inventory requires a fresh exhaustive scan, dependency/taint analysis, and the repository's locked verification pipeline.

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Rank
@@ -27,6 +32,20 @@ attribute [-instance] CStarMatrix.instHMulOfFintypeOfMulOfAddCommMonoid
 
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 variable {K : Type*} [Field K]
+
+/-! ## Concrete noncommutativity witness -/
+
+def matrixE01 : Matrix (Fin 2) (Fin 2) K := Matrix.single 0 1 1
+
+def matrixE10 : Matrix (Fin 2) (Fin 2) K := Matrix.single 1 0 1
+
+lemma matrix_noncommutativity_witness :
+    matrixE01 (K := K) * matrixE10 (K := K) ≠
+      matrixE10 (K := K) * matrixE01 (K := K) := by
+  intro h
+  have h01 := congrFun (congrFun h (0 : Fin 2)) (0 : Fin 2)
+  norm_num [matrixE01, matrixE10, Matrix.mul_apply, Fin.sum_univ_two,
+    Matrix.single_apply] at h01
 
 /-! ## Elementary row operation matrices -/
 

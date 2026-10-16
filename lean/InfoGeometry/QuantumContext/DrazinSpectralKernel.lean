@@ -17,9 +17,10 @@ Hermitian density matrices, the **Drazin inverse** $A^D$ is purely algebraic, me
 and strictly commutes with the operator:
 $$A A^D = A^D A$$
 
-In an autoregressive Transformer, the Softmax transition matrix $P$ is directed and non-symmetric.
-Its Markov generator $L = \mathbf{1} - P$ has index $k = 1$. The Drazin inverse (group inverse $L^\#$)
-isolates the generalized nilpotent kernel from the invertible ergodic core:
+For a finite row-stochastic transition matrix $P$, one may study the Markov generator
+$L = \mathbf{1} - P$. This file does not establish that such an $L$ has Drazin index
+one, nor does it construct its group inverse. It proves algebraic consequences conditional
+on the three Drazin equations below:
 
 1. **The Three Drazin Axioms for Index $k$**:
    - $D A D = D$
@@ -32,7 +33,7 @@ isolates the generalized nilpotent kernel from the invertible ergodic core:
 3. **Fundamental Kernel Annihilation Law**:
    $$A^k \cdot (\mathbf{1} - A D) = 0$$
    The operator $A^k$ is identically annihilated on the complementary subspace.
-4. **Group Inverse Specialization (Index $k = 1$ for Markov Chains)**:
+4. **Conditional Group Inverse Specialization (Index $k = 1$)**:
    - $A \cdot (\mathbf{1} - P) = 0$ (the transient nilpotent error vanishes identically).
    - Clean algebraic reconstruction: $A \cdot P = A$.
 

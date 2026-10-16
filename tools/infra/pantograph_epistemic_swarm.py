@@ -85,7 +85,13 @@ class CandidatePacket:
         formal_target = ""
         ft_obj = data.get("formal_target")
         if isinstance(ft_obj, dict):
-            formal_target = str(ft_obj.get("lean_statement") or ft_obj.get("claim") or ft_obj.get("target") or "")
+            formal_target = str(
+                ft_obj.get("target_expression")
+                or ft_obj.get("lean_statement")
+                or ft_obj.get("claim")
+                or ft_obj.get("target")
+                or ""
+            )
         elif isinstance(ft_obj, str):
             formal_target = ft_obj
         if not formal_target:

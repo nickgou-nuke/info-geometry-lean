@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.AllExhaustive
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitOctonionTwistorDiracKahlerBridge
@@ -75,5 +80,11 @@ import InfoGeometry.Canonical.GrandEpistemicGeometricSynthesis
 import InfoGeometry.Canonical.GrandEpistemicGeometricSynthesisAudit
 import InfoGeometry.Epistemology.ChentsovUniqueness
 import InfoGeometry.Epistemology.ChentsovUniquenessAudit
+import InfoGeometry.Epistemology.ChentsovUniquenessContinuous
+import InfoGeometry.Epistemology.ChentsovUniquenessContinuousAudit
+import InfoGeometry.Epistemology.ChentsovTangentUniqueness
+import InfoGeometry.Epistemology.ChentsovTangentUniquenessAudit
+import InfoGeometry.Epistemology.ChentsovTangentUniquenessContinuous
+import InfoGeometry.Epistemology.ChentsovTangentUniquenessContinuousAudit
 import InfoGeometry.Epistemology.SubmersionSplitFinrank
 import InfoGeometry.Epistemology.SubmersionSplitFinrankAudit

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Matrix.Basic
 import InfoGeometry.Canonical.SplitCliffordDirectLimit
 import InfoGeometry.Clifford.CliffordBott
@@ -44,6 +49,22 @@ namespace DAG.GradedBottInclusion
 open InfoGeometry.Canonical.SplitCliffordDirectLimit
 open InfoGeometry.Canonical.SplitCliffordTensorBridge
 open InfoGeometry.Clifford.CliffordBott
+
+/-! ## Explicit matrix noncommutativity witness -/
+
+noncomputable def matrixE01 {n : ℕ} : Matrix (Fin 2) (Fin 2) (SplitClNNAlg n) :=
+  Matrix.single 0 1 1
+
+noncomputable def matrixE10 {n : ℕ} : Matrix (Fin 2) (Fin 2) (SplitClNNAlg n) :=
+  Matrix.single 1 0 1
+
+theorem matrix_noncommutativity_witness {n : ℕ} :
+    matrixE01 (n := n) * matrixE10 (n := n) ≠
+      matrixE10 (n := n) * matrixE01 (n := n) := by
+  intro h
+  have h00 := congrFun (congrFun h (0 : Fin 2)) (0 : Fin 2)
+  norm_num [matrixE01, matrixE10, Matrix.mul_apply, Fin.sum_univ_two,
+    Matrix.single_apply] at h00
 
 /-! ## The graded inclusions -/
 

@@ -1,7 +1,14 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Lean
 import Std
 
 namespace DAG
+
+universe u
 
 inductive EdgeKind | type | value
   deriving Repr, DecidableEq, BEq, Hashable
@@ -19,6 +26,32 @@ structure HydratedGraph (α) [BEq α] [Hashable α]
   preds : Array (Array Nat)
   topo  : Array Nat
   doms  : Array ByteArray
+
+variable {α : Type u} [BEq α] [Hashable α]
+
+/-- The empty graph is a constructive base value for graph-building pipelines. -/
+def Graph.empty : Graph α where
+  nodes := #[]
+  nodeToIdx := {}
+  forward := #[]
+
+instance : Inhabited (Graph α) where
+  default := Graph.empty
+
+/-- An empty hydrated graph, before any SCC or dominance data is computed. -/
+def HydratedGraph.empty : HydratedGraph α where
+  nodes := #[]
+  nodeToIdx := {}
+  forward := #[]
+  sccs := #[]
+  sccOf := #[]
+  dag := #[]
+  preds := #[]
+  topo := #[]
+  doms := #[]
+
+instance : Inhabited (HydratedGraph α) where
+  default := HydratedGraph.empty
 
 instance [Repr α] [BEq α] [Hashable α] :
   Repr (HydratedGraph α) where
@@ -84,7 +117,7 @@ def buildGraphFromEnv (env : Lean.Environment) (nsPrefix? : Option String := non
     
     let constList : Array Lean.Name := allNames.qsort Lean.Name.lt
 
-    let mut nodeToIdx : Std.HashMap Lean.Name Nat := {}
+    let mut nodeToIdx : Std.HashMap Lean.Name Nat := ({} : Std.HashMap Lean.Name Nat)
     for i in [:constList.size] do
       nodeToIdx := nodeToIdx.insert constList[i]! i
 

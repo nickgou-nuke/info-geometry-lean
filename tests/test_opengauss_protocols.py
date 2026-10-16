@@ -37,6 +37,20 @@ def test_screen_clean_module():
     assert len(errors) == 0
 
 
+def test_t17_dag_basic_graphs_have_constructive_inhabitants():
+    target = Path(__file__).resolve().parents[1] / "lean" / "DAG" / "Basic.lean"
+    violations = screen_lean_file(target)
+    t17 = [v for v in violations if v.trap_id == "T17"]
+    assert t17 == []
+
+
+def test_t17_block_decomposition_has_constructive_empty_model():
+    target = Path(__file__).resolve().parents[1] / "lean" / "DAG" / "BlockDecomposition.lean"
+    violations = screen_lean_file(target)
+    t17 = [v for v in violations if v.trap_id == "T17"]
+    assert t17 == []
+
+
 def test_detect_trap_t4_vacuous_binder():
     """Verify detection of Trap T4 (vacuous binder)."""
     code = """
@@ -83,7 +97,157 @@ def test_t4_warns_on_unused_hypothesis_binder():
     code = "theorem unused_hypothesis (h : P) (x : Nat) : x = x := by rfl"
     t4 = [v for v in screen_lean_content(code) if v.trap_id == "T4"]
     assert len(t4) == 1
+
+
+def test_t4_recognizes_equality_hypothesis_consumed_by_subst():
+    code = """
+    theorem subst_uses_equality {a u n : Nat}
+        (ha : a = u + n) (h_unused : n = n) : a = u + n := by
+      subst a
+      rfl
+    """
+    t4 = [
+        v for v in screen_lean_content(code)
+        if v.trap_id == "T4" and "unused hypothesis binder" in v.message
+    ]
+    assert len(t4) == 1
+    assert "h_unused" in t4[0].message
+
+
+def test_t4_does_not_hide_unused_equality_when_subst_uses_local_equality():
+    code = """
+    theorem subst_uses_local_equality {x : Nat}
+        (h_unused : x = x) (h : x = 0) : x = 0 := by
+      have hx : x = 0 := h
+      subst x
+      rfl
+    """
+    t4 = [
+        v for v in screen_lean_content(code)
+        if v.trap_id == "T4" and "unused hypothesis binder" in v.message
+    ]
+    reported_binders = [v.matched_text.split(":", 1)[0].strip("( ") for v in t4]
+    assert reported_binders == ["h_unused"]
     assert t4[0].severity == "WARNING"
+
+
+def test_t4_keeps_declaration_equality_consumed_after_unrelated_have():
+    code = """
+    theorem subst_after_unrelated_have {x y : Nat} (h : x = y) : x = y := by
+      have hy : y = y := by
+        rfl
+      subst x
+      rfl
+    """
+    t4 = [
+        v for v in screen_lean_content(code)
+        if v.trap_id == "T4" and "unused hypothesis binder" in v.message
+    ]
+    assert t4 == []
+
+
+def test_t4_keeps_subst_after_unrelated_simp_have():
+    code = """
+    theorem subst_after_simp_have {x y : Nat} (h : x = y) : x = y := by
+      have hy : y = y := by simp
+      subst x
+      rfl
+    """
+    t4 = [
+        v for v in screen_lean_content(code)
+        if v.trap_id == "T4" and "unused hypothesis binder" in v.message
+    ]
+    assert t4 == []
+
+
+def test_t4_keeps_subst_after_unrelated_exact_have():
+    code = """
+    theorem subst_after_exact_have {x y : Nat} (h : x = y) : x = y := by
+      have hy : y = y := by exact rfl
+      subst x
+      rfl
+    """
+    t4 = [
+        v for v in screen_lean_content(code)
+        if v.trap_id == "T4" and "unused hypothesis binder" in v.message
+    ]
+    assert t4 == []
+
+
+def test_t4_keeps_subst_after_multiline_unrelated_have():
+    code = """
+    theorem subst_after_multiline_have {x y : Nat} (h : x = y) : x = y := by
+      have hy : y = y := by
+        simp
+      subst x
+      rfl
+    """
+    t4 = [
+        v for v in screen_lean_content(code)
+        if v.trap_id == "T4" and "unused hypothesis binder" in v.message
+    ]
+    assert t4 == []
+
+
+def test_t4_does_not_credit_subst_inside_fallback_branch():
+    code = """
+    theorem subst_failure_fallback {x : Nat} (h_unused : x = x + 1) : True := by
+      first | subst x | trivial
+    """
+    t4 = [
+        v for v in screen_lean_content(code)
+        if v.trap_id == "T4" and "unused hypothesis binder" in v.message
+    ]
+    assert len(t4) == 1
+    assert "h_unused" in t4[0].message
+
+
+def test_t4_does_not_hide_unused_equality_after_intro_before_subst():
+    code = """
+    theorem subst_uses_intro_equality {x y : Nat}
+        (h_unused : x = y) : x = y → x = y := by
+      intro hx
+      subst x
+      rfl
+    """
+    t4 = [
+        v for v in screen_lean_content(code)
+        if v.trap_id == "T4" and "unused hypothesis binder" in v.message
+    ]
+    assert len(t4) == 1
+    assert "h_unused" in t4[0].message
+    assert t4[0].severity == "WARNING"
+
+
+def test_t4_subst_exemption_requires_bare_top_level_equality_side():
+    for binder_type in ("P = (Q = x)", "(x = P) = Q"):
+        code = f"""
+        theorem nested_subst_equality (P Q x : Prop)
+            (h_unused : {binder_type}) : True := by
+          first | subst x | trivial
+        """
+        t4 = [
+            violation for violation in screen_lean_content(code)
+            if violation.trap_id == "T4"
+            and "unused hypothesis binder" in violation.message
+        ]
+        assert len(t4) == 1, (binder_type, t4)
+        assert "h_unused" in t4[0].message
+
+
+def test_t4_subst_recognizes_explicit_eq_and_parenthesized_identifier_sides():
+    for binder_type in ("Eq x y", "Eq (x) y", "(x) = y"):
+        code = f"""
+        theorem subst_equality_syntax (x y : Nat) (h : {binder_type}) : x = y := by
+          subst x
+          rfl
+        """
+        t4 = [
+            violation for violation in screen_lean_content(code)
+            if violation.trap_id == "T4"
+            and "unused hypothesis binder" in violation.message
+        ]
+        assert t4 == [], (binder_type, t4)
 
 
 def test_t10_warns_on_top_smoothness_over_closed_interval():
@@ -797,6 +961,24 @@ def test_t16_cartan_coefficient_matrix_is_not_operator_algebra():
     assert t16 == []
 
 
+def test_t16_accepts_closed_witness_parametrized_by_matrix_dimension():
+    code = """
+    def matrixUnit01 {n : Nat} : Matrix (Fin 2) (Fin 2) (SplitClNNAlg n) :=
+      Matrix.single 0 1 1
+    def matrixUnit10 {n : Nat} : Matrix (Fin 2) (Fin 2) (SplitClNNAlg n) :=
+      Matrix.single 1 0 1
+    def operatorProduct {n : Nat}
+        (A B : Matrix (Fin 2) (Fin 2) (SplitClNNAlg n)) := A * B
+    theorem dimensionwiseWitness {n : Nat} :
+        matrixUnit01 * matrixUnit10 ≠ matrixUnit10 * matrixUnit01 := by
+      intro h
+      have h00 := congrFun (congrFun h (0 : Fin 2)) (0 : Fin 2)
+      norm_num [matrixUnit01, matrixUnit10, Matrix.mul_apply,
+        Fin.sum_univ_two, Matrix.single_apply] at h00
+    """
+    assert _has_closed_noncommutativity_witness(code)
+
+
 def test_t16_resolves_imported_concrete_noncommutativity_witness():
     code = """
     import InfoGeometry.OperatorAlgebra.FiniteMatrixNoncommutativeWitness
@@ -1030,6 +1212,47 @@ def test_t16_block_construction_alone_is_not_operator_product():
     assert t16 == []
 
 
+def test_t16_stationary_weight_scalar_product_is_not_a_matrix_product():
+    code = """
+    theorem stationary_weight (D : Module.End ℝ (Fin 2 → ℝ))
+        (π : Fin 2 → ℝ) (P : Matrix (Fin 2) (Fin 2) ℝ) :
+        (∑ i, π i * P i 0) = 1 := by
+      simp
+    """
+    witness_violations = [
+        violation for violation in screen_lean_content(code)
+        if violation.trap_id == "T16" and "Witness" in violation.trap_name
+    ]
+    assert witness_violations == []
+
+
+def test_t16_does_not_combine_operator_names_from_separate_declarations():
+    code = """
+    def unusedMatrix : Matrix (Fin 2) (Fin 2) ℝ := 0
+    theorem operator_a (A : Module.End ℝ (Fin 2 → ℝ)) : True := trivial
+    theorem operator_b (B : Module.End ℝ (Fin 2 → ℝ)) : True := trivial
+    theorem scalar_commutes (A B : ℝ) : A * B = B * A := mul_comm _ _
+    """
+    witness_violations = [
+        violation for violation in screen_lean_content(code)
+        if violation.trap_id == "T16" and "Witness" in violation.trap_name
+    ]
+    assert witness_violations == []
+
+
+def test_t16_local_scalar_binders_shadow_operator_section_variables():
+    code = """
+    def unusedMatrix : Matrix (Fin 2) (Fin 2) ℝ := 0
+    variable (A B : Module.End ℝ (Fin 2 → ℝ))
+    theorem scalar_commutes (A B : ℝ) : A * B = B * A := mul_comm _ _
+    """
+    witness_violations = [
+        violation for violation in screen_lean_content(code)
+        if violation.trap_id == "T16" and "Witness" in violation.trap_name
+    ]
+    assert witness_violations == []
+
+
 def test_detect_trap_t16_tactic_misuse_on_operators():
     """Verify Trap T16: direct application of scalar/commutative tactics on operator carriers."""
     code_matrix_ring = """
@@ -1106,6 +1329,158 @@ def test_detect_trap_t16_tactic_misuse_on_operators():
     assert any(v.trap_id == "T16" and "Tactic Misuse" in v.trap_name for v in v5)
 
 
+def test_t16_allows_scalar_inner_product_proofs_in_matrix_theorems():
+    code = """
+    theorem quadratic_form_nonneg (A : Matrix (Fin 2) (Fin 2) ℚ) (x : Fin 2 → ℚ) :
+        0 ≤ innerProduct x ((A * Aᵀ).mulVec x) := by
+      have h0 : innerProduct x ((A * Aᵀ).mulVec x) = 0 := by linarith
+      exact h0.le
+    """
+    violations = screen_lean_content(code)
+    misuse = [
+        v for v in violations if v.trap_id == "T16" and "Tactic Misuse" in v.trap_name
+    ]
+    assert misuse == []
+
+
+def test_t16_scalar_projection_name_cannot_shadow_operator_carrier():
+    code = """
+    theorem shadowed_inner_product
+        (innerProduct : Matrix (Fin 2) (Fin 2) ℚ → Matrix (Fin 2) (Fin 2) ℚ → Matrix (Fin 2) (Fin 2) ℚ)
+        (A B : Matrix (Fin 2) (Fin 2) ℚ) : A * B = B * A := by
+      have h : innerProduct A B = A * B := by ring
+      ring
+    """
+    misuse = [
+        violation for violation in screen_lean_content(code)
+        if violation.trap_id == "T16" and "Tactic Misuse" in violation.trap_name
+    ]
+    assert misuse
+
+
+def test_t16_scalar_projection_name_cannot_be_an_implicit_operator_binder():
+    code = """
+    theorem implicit_shadow
+        {innerProduct : Matrix (Fin 2) (Fin 2) ℚ → Matrix (Fin 2) (Fin 2) ℚ → Matrix (Fin 2) (Fin 2) ℚ}
+        (A B : Matrix (Fin 2) (Fin 2) ℚ) : A * B = B * A := by
+      have h : innerProduct A B = A * B := by ring
+      ring
+    """
+    misuse = [
+        violation for violation in screen_lean_content(code)
+        if violation.trap_id == "T16" and "Tactic Misuse" in violation.trap_name
+    ]
+    assert misuse
+
+
+def test_t16_implicit_scalar_name_does_not_hide_matrix_valued_target():
+    code = """
+    theorem implicit_matrix_shadow
+        {innerProduct : Matrix (Fin 2) (Fin 2) ℚ → Matrix (Fin 2) (Fin 2) ℚ → Matrix (Fin 2) (Fin 2) ℚ}
+        (A B C : Matrix (Fin 2) (Fin 2) ℚ) : innerProduct A B = C := by
+      ring
+    """
+    misuse = [
+        violation for violation in screen_lean_content(code)
+        if violation.trap_id == "T16" and "Tactic Misuse" in violation.trap_name
+    ]
+    assert misuse
+
+
+def test_t16_section_variable_cannot_shadow_scalar_projection_name():
+    code = """
+    section
+    variable (innerProduct : Matrix (Fin 2) (Fin 2) ℚ → Matrix (Fin 2) (Fin 2) ℚ → Matrix (Fin 2) (Fin 2) ℚ)
+    variable (A B C : Matrix (Fin 2) (Fin 2) ℚ)
+    theorem section_shadow : innerProduct A B = C := by
+      ring
+    end
+    """
+    misuse = [
+        violation for violation in screen_lean_content(code)
+        if violation.trap_id == "T16" and "Tactic Misuse" in violation.trap_name
+    ]
+    assert misuse
+
+
+def test_t16_closed_section_variable_does_not_shadow_global_scalar_projection():
+    code = """
+    def innerProduct (x y : Fin 2 → ℚ) : ℚ := ∑ i, x i * y i
+    section
+    variable (innerProduct : Matrix (Fin 2) (Fin 2) ℚ → Matrix (Fin 2) (Fin 2) ℚ → Matrix (Fin 2) (Fin 2) ℚ)
+    end
+    theorem scalar_projection_after_section
+        (A : Matrix (Fin 2) (Fin 2) ℚ) (x : Fin 2 → ℚ) :
+        0 ≤ innerProduct x ((A * Aᵀ).mulVec x) := by
+      linarith
+    """
+    misuse = [
+        violation for violation in screen_lean_content(code)
+        if violation.trap_id == "T16" and "Tactic Misuse" in violation.trap_name
+    ]
+    assert misuse == []
+
+
+def test_t16_direct_scalar_goal_may_contain_matrix_product_projection():
+    code = """
+    theorem quadratic_form_nonneg (A : Matrix (Fin 2) (Fin 2) ℚ) (x : Fin 2 → ℚ) :
+        0 ≤ innerProduct x ((A * Aᵀ).mulVec x) := by
+      linarith
+    """
+    violations = screen_lean_content(code)
+    misuse = [
+        violation for violation in violations
+        if violation.trap_id == "T16" and "Tactic Misuse" in violation.trap_name
+    ]
+    assert misuse == []
+
+
+def test_t16_allows_scalar_local_helpers_in_matrix_theorems():
+    code = """
+    theorem matrix_identity (A : Matrix (Fin 2) (Fin 2) ℚ) : A * 1 = A := by
+      have h_coeff : (2 : ℚ) + 3 = 5 := by
+        ring
+      simpa [h_coeff]
+    """
+    violations = screen_lean_content(code)
+    misuse = [
+        v for v in violations if v.trap_id == "T16" and "Tactic Misuse" in v.trap_name
+    ]
+    assert misuse == []
+
+
+def test_t16_allows_scalar_calc_after_matrix_entry_projection():
+    code = """
+    theorem scaled_entry (A : Matrix (Fin 2) (Fin 2) ℚ)
+        (pivotVal : ℚ) (pr j : Fin 2) :
+        (A * 1) pr j = pivotVal * A pr j := by
+      calc
+        (1 + (pivotVal⁻¹ - 1)) * pivotVal = pivotVal⁻¹ * pivotVal := by ring
+        _ = 1 := by rw [inv_mul_cancel (by assumption)]
+    """
+    violations = screen_lean_content(code)
+    misuse = [
+        v for v in violations if v.trap_id == "T16" and "Tactic Misuse" in v.trap_name
+    ]
+    assert misuse == []
+
+
+def test_t16_allows_scalar_calc_in_let_indexed_matrix_result():
+    code = """
+    theorem matrix_entry (A : Matrix (Fin 2) (Fin 2) ℚ) (x : ℚ) :
+        let B : Matrix (Fin 2) (Fin 2) ℚ := A
+        B 0 0 = A 0 0 := by
+      calc
+        (1 + (x - 1)) * 1 = x := by ring
+        _ = x := rfl
+    """
+    violations = screen_lean_content(code)
+    misuse = [
+        v for v in violations if v.trap_id == "T16" and "Tactic Misuse" in v.trap_name
+    ]
+    assert misuse == []
+
+
 def test_t16_valid_ext_with_ring_allowed():
     """Verify that extensionality-projected matrix proofs with ring are allowed."""
     code = """
@@ -1148,6 +1523,16 @@ theorem unfinished : True := by
 '''
     violations = check_authored_axioms_and_holes(code)
     assert [v.trap_id for v in violations] == ["QMS_AXIOM", "QMS_HOLE"]
+
+
+def test_qms_source_gate_ignores_admit_in_trace_class_names():
+    code = """
+    initialize registerTraceClass `DAG.Morphism.admit
+    def record : Unit := by
+      trace[DAG.Morphism.admit] "diagnostic only"
+      exact ()
+    """
+    assert check_authored_axioms_and_holes(code) == []
 
 
 def test_qms_source_gate_ignores_foundational_axiom_names_in_comments():

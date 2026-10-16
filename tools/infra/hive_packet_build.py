@@ -13,8 +13,14 @@ from typing import Any
 
 try:
     from tools.infra.hive_packet_validate import SCHEMA_BY_KIND, build_store, validate_packet
+    from tools.infra.opengauss_ground_truth_contract import (
+        canonical_digest, load_and_validate_contract, validate_draft_receipt_payload,
+    )
 except ImportError:  # pragma: no cover - CLI fallback
     from hive_packet_validate import SCHEMA_BY_KIND, build_store, validate_packet
+    from opengauss_ground_truth_contract import (
+        canonical_digest, load_and_validate_contract, validate_draft_receipt_payload,
+    )
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -825,12 +831,61 @@ def build_theorem_candidate(args: argparse.Namespace) -> dict[str, Any]:
     if not candidate_dependencies:
         raise SystemExit("ERROR: at least one --candidate-dependency is required")
 
+    ground_truth_contract = None
+    if args.ground_truth_contract:
+        if args.packet_hash.strip():
+            raise SystemExit("ERROR: --packet-hash cannot override a source-validated contract candidate hash")
+        contract_path = Path(args.ground_truth_contract)
+        if not contract_path.is_absolute():
+            contract_path = (ROOT / contract_path).resolve()
+        try:
+            validated_contract = load_and_validate_contract(contract_path, repo_root=ROOT)
+        except ValueError as exc:
+            raise SystemExit(f"ERROR: invalid --ground-truth-contract: {exc}") from exc
+        ground_truth_contract = {
+            "contract": validated_contract["contract"],
+            "contract_sha256": validated_contract["contract_sha256"],
+        }
+
     formal_target = {
         "target_kind": require_non_empty("--formal-target-kind", args.formal_target_kind),
         "summary": require_non_empty("--formal-target-summary", args.formal_target_summary),
     }
     if args.formal_target_shape.strip():
         formal_target["candidate_shape"] = args.formal_target_shape.strip()
+    if ground_truth_contract is not None:
+        gap = ground_truth_contract["contract"]["smallest_gap"]
+        formal_target["target_name"] = gap["declaration_name"]
+        formal_target["target_expression"] = gap["pantograph_expression"]
+
+    draft_binding = None
+    if getattr(args, "draft_receipt", ""):
+        if ground_truth_contract is None:
+            raise SystemExit("ERROR: --draft-receipt requires --ground-truth-contract")
+        receipt_path = Path(args.draft_receipt)
+        if not receipt_path.is_absolute():
+            receipt_path = (ROOT / receipt_path).resolve()
+        try:
+            receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+            checked_draft = validate_draft_receipt_payload(receipt, repo_root=ROOT)
+        except (OSError, json.JSONDecodeError, ValueError) as exc:
+            raise SystemExit(f"ERROR: invalid --draft-receipt: {exc}") from exc
+        if checked_draft["contract_sha256"] != ground_truth_contract["contract_sha256"]:
+            raise SystemExit("ERROR: draft receipt and --ground-truth-contract identify different contracts")
+        formal_target.update({
+            "source_path": checked_draft["source_path"],
+            "source_snapshot_sha256": checked_draft["source_sha256"],
+        })
+        packet_binding = {
+            "source_path": checked_draft["source_path"],
+            "source_snapshot_sha256": checked_draft["source_sha256"],
+            "target_expression": checked_draft["target_expression"],
+        }
+        formal_target["target_expression"] = checked_draft["target_expression"]
+        draft_binding = {
+            "receipt": receipt,
+            "receipt_sha256": canonical_digest(receipt),
+        }
 
     novelty_defense = {"summary": require_non_empty("--novelty-summary", args.novelty_summary)}
     if args.duplication_assessment.strip():
@@ -843,6 +898,8 @@ def build_theorem_candidate(args: argparse.Namespace) -> dict[str, Any]:
         "bridge_claim": args.bridge_claim.strip(),
         "origins": combined_origin_refs,
     }
+    if ground_truth_contract is not None:
+        identity_seed["ground_truth_contract"] = ground_truth_contract
     packet = base_envelope(args, "TheoremCandidatePacket", args.status, identity_seed=identity_seed)
     packet.update(
         {
@@ -861,6 +918,11 @@ def build_theorem_candidate(args: argparse.Namespace) -> dict[str, Any]:
             "target_module_candidates": uniq(args.target_module_candidate or []),
         }
     )
+    if ground_truth_contract is not None:
+        packet["ground_truth_contract"] = ground_truth_contract
+    if draft_binding is not None:
+        packet["draft_binding"] = draft_binding
+        packet["pantograph_binding"] = packet_binding
     packet_hash_material = {
         k: packet[k]
         for k in [
@@ -876,6 +938,11 @@ def build_theorem_candidate(args: argparse.Namespace) -> dict[str, Any]:
             "cost_class",
         ]
     }
+    if ground_truth_contract is not None:
+        packet_hash_material["ground_truth_contract"] = ground_truth_contract
+    if draft_binding is not None:
+        packet_hash_material["draft_binding"] = draft_binding
+        packet_hash_material["pantograph_binding"] = packet_binding
     packet["packet_hash"] = args.packet_hash.strip() or f"sha256:{stable_digest(packet_hash_material, size=32)}"
     if not packet["anchor_completeness"]:
         packet.pop("anchor_completeness")
@@ -1198,6 +1265,8 @@ def parse_args() -> argparse.Namespace:
     t.add_argument("--formal-target-kind", default="theorem_family")
     t.add_argument("--formal-target-summary", required=True)
     t.add_argument("--formal-target-shape", default="")
+    t.add_argument("--ground-truth-contract", default="", help="Validated source-bound OpenGauss contract JSON")
+    t.add_argument("--draft-receipt", default="", help="Validated /draft source snapshot receipt; enables Pantograph source binding")
     t.add_argument("--bridge-claim", required=True)
     t.add_argument("--novelty-summary", required=True)
     t.add_argument("--duplication-assessment", default="")

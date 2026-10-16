@@ -1,4 +1,10 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+/-!
 # Explicit Formula for Riemann Zeta Zeros
 
 This module formalizes the explicit formula connecting the zeros of the Riemann zeta function
@@ -21,6 +27,7 @@ References:
 - Edwards, "Riemann's Zeta Function", Chapter 3
 - Montgomery-Vaughan, "Multiplicative Number Theory", Chapter 12
 -/
+
 import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.NumberTheory.LSeries.RiemannZeta
@@ -120,22 +127,6 @@ theorem riemann_von_mangoldt_formula (T : ℝ) (hT : T ≥ 2) :
   rw [N_function]
   simp only [if_neg (not_le.mpr hTpos), sub_self, abs_zero]
   positivity
-
-/-- Zero-free region from Dirichlet series bounds.
-If ζ(s) ≠ 0 for Re(s) = 1, then there exists c > 0 such that
-ζ(s) ≠ 0 for Re(s) ≥ 1 - c/log(|t|+2).
-
-This is the classical Korobov-Vinogradov zero-free region. -/
-theorem zero_free_region_from_dirichlet_bounds :
-  (∀ (t : ℝ), riemannZeta (1 + Complex.I * t) ≠ 0) →
-  (∃ (c : ℝ), c > 0 ∧
-    ∀ (s : ℂ), s.re ≥ 1 - c / Real.log (|s.im| + 2) →
-      s.re < 1 → riemannZeta s ≠ 0) →
-  ∃ (c : ℝ), c > 0 ∧
-    ∀ (s : ℂ), s.re ≥ 1 - c / Real.log (|s.im| + 2) →
-      s.re < 1 → riemannZeta s ≠ 0 := by
-  intro _ hregion
-  exact hregion
 
 /-- The Riemann xi function: ξ(s) = ½ s(s-1) π^(-s/2) Γ(s/2) ζ(s). -/
 noncomputable def xi (s : ℂ) : ℂ :=

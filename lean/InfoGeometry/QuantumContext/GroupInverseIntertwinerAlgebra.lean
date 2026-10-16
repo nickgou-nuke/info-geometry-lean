@@ -13,7 +13,7 @@ import InfoGeometry.Canonical.HartwigSouriauFrameDrazin
 This module isolates the purely algebraic content behind rectangular transport
 of Markov group inverses, independently of any stochastic hypothesis.
 
-Let `LP` and `LQ` be square matrices over a commutative ring, let `LP_sharp`
+Let `LP` and `LQ` be square matrices over a (possibly noncommutative) ring, let `LP_sharp`
 and `LQ_sharp` be group inverses of them in the sense of the canonical
 `InfoGeometry.Canonical.HartwigSouriauFrameDrazin.IsGroupInverse` interface
 applied to the square matrix ring, and let `C` be a rectangular intertwiner.
@@ -70,17 +70,56 @@ open Matrix
 open InfoGeometry.Canonical.HartwigSouriauFrameDrazin
 
 variable {ι κ : Type*} [Fintype ι] [Fintype κ] [DecidableEq ι] [DecidableEq κ]
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
-/-- THE ALGEBRAIC CORE (`LP_sharp * C = C * LQ_sharp`).
+omit [DecidableEq ι] [DecidableEq κ] in
+/-- THE ALGEBRAIC CORE, AT THE LEVEL OF THE INDIVIDUAL GROUP INVERSE LAWS.
 
 A rectangular intertwiner `C` transports group inverses whenever it also
 intertwines the two regular idempotents `LP * LP_sharp` and `LQ * LQ_sharp`.
 No stochastic hypothesis is used.
 
+Only the two absorption laws and the two commutativity laws are consumed. The
+reflexive law `LP * LP_sharp * LP = LP` is **not** assumed and is **not** used,
+which is why this statement is stated over the individual laws rather than over
+the `IsGroupInverse` bundle: see `groupInverse_intertwines_of_rangeProjector`
+for the bundle-level consumer entry point.
+
 The proof runs the absorption law of `LP_sharp` from the left and the
 absorption law of `LQ_sharp` from the right, meeting at the common regular
 idempotent. -/
+theorem groupInverse_intertwines_of_laws
+    (LP LP_sharp : Matrix ι ι R) (LQ LQ_sharp : Matrix κ κ R)
+    (C : Matrix ι κ R)
+    (hP_abs : LP_sharp * LP * LP_sharp = LP_sharp)
+    (hQ_abs : LQ_sharp * LQ * LQ_sharp = LQ_sharp)
+    (hP_comm : LP * LP_sharp = LP_sharp * LP)
+    (hQ_comm : LQ * LQ_sharp = LQ_sharp * LQ)
+    (h_lap : LP * C = C * LQ)
+    (h_range : LP * LP_sharp * C = C * (LQ * LQ_sharp)) :
+    LP_sharp * C = C * LQ_sharp := by
+  calc LP_sharp * C = (LP_sharp * LP * LP_sharp) * C := by rw [hP_abs]
+    _ = LP_sharp * ((LP * LP_sharp) * C) := by simp only [Matrix.mul_assoc]
+    _ = LP_sharp * (C * (LQ * LQ_sharp)) := by rw [h_range]
+    _ = LP_sharp * ((C * LQ) * LQ_sharp) := by simp only [Matrix.mul_assoc]
+    _ = LP_sharp * ((LP * C) * LQ_sharp) := by rw [h_lap]
+    _ = (LP_sharp * (LP * C)) * LQ_sharp := by simp only [Matrix.mul_assoc]
+    _ = (LP_sharp * LP * C) * LQ_sharp := by rw [← Matrix.mul_assoc]
+    _ = (LP * LP_sharp * C) * LQ_sharp := by rw [hP_comm]
+    _ = (C * (LQ * LQ_sharp)) * LQ_sharp := by rw [h_range]
+    _ = (C * (LQ_sharp * LQ)) * LQ_sharp := by rw [hQ_comm]
+    _ = C * ((LQ_sharp * LQ) * LQ_sharp) := by simp only [Matrix.mul_assoc]
+    _ = C * LQ_sharp := by rw [hQ_abs]
+
+/-- THE ALGEBRAIC CORE (`LP_sharp * C = C * LQ_sharp`), at the canonical
+`IsGroupInverse` interface.
+
+A rectangular intertwiner `C` transports group inverses whenever it also
+intertwines the two regular idempotents `LP * LP_sharp` and `LQ * LQ_sharp`.
+No stochastic hypothesis is used.
+
+This is a thin corollary of `groupInverse_intertwines_of_laws`; the reflexive
+group inverse law is available here but is not needed for the conclusion. -/
 theorem groupInverse_intertwines_of_rangeProjector
     (LP LP_sharp : Matrix ι ι R) (LQ LQ_sharp : Matrix κ κ R)
     (C : Matrix ι κ R)
@@ -88,28 +127,19 @@ theorem groupInverse_intertwines_of_rangeProjector
     (hQ : IsGroupInverse LQ LQ_sharp)
     (h_lap : LP * C = C * LQ)
     (h_range : LP * LP_sharp * C = C * (LQ * LQ_sharp)) :
-    LP_sharp * C = C * LQ_sharp := by
-  calc LP_sharp * C = (LP_sharp * LP * LP_sharp) * C := by rw [hP.2.1]
-    _ = LP_sharp * ((LP * LP_sharp) * C) := by simp only [Matrix.mul_assoc]
-    _ = LP_sharp * (C * (LQ * LQ_sharp)) := by rw [h_range]
-    _ = LP_sharp * ((C * LQ) * LQ_sharp) := by simp only [Matrix.mul_assoc]
-    _ = LP_sharp * ((LP * C) * LQ_sharp) := by rw [h_lap]
-    _ = (LP_sharp * (LP * C)) * LQ_sharp := by simp only [Matrix.mul_assoc]
-    _ = (LP_sharp * LP * C) * LQ_sharp := by rw [← Matrix.mul_assoc]
-    _ = (LP * LP_sharp * C) * LQ_sharp := by rw [hP.2.2]
-    _ = (C * (LQ * LQ_sharp)) * LQ_sharp := by rw [h_range]
-    _ = (C * (LQ_sharp * LQ)) * LQ_sharp := by rw [hQ.2.2]
-    _ = C * ((LQ_sharp * LQ) * LQ_sharp) := by simp only [Matrix.mul_assoc]
-    _ = C * LQ_sharp := by rw [hQ.2.1]
+    LP_sharp * C = C * LQ_sharp :=
+  groupInverse_intertwines_of_laws LP LP_sharp LQ LQ_sharp C
+    hP.2.1 hQ.2.1 hP.2.2 hQ.2.2 h_lap h_range
 
 omit [DecidableEq ι] [DecidableEq κ] in
-/-- Poisson Green transport: if the group inverses intertwine, then pushing a
-right-hand side through the intertwiner leaves the group-inverse solution
-operator unchanged. This is an identity of matrix products; it asserts no
-existence or uniqueness of Poisson solutions. -/
-theorem poisson_green_intertwines
+/-- Poisson Green transport for an arbitrary family of right-hand sides: if the
+group inverses intertwine, then pushing any matrix-valued right-hand side
+through the intertwiner leaves the group-inverse solution operator unchanged.
+This is an identity of matrix products; it asserts no existence or uniqueness
+of Poisson solutions. -/
+theorem poisson_green_intertwines {η : Type*}
     (LP_sharp : Matrix ι ι R) (LQ_sharp : Matrix κ κ R)
-    (C : Matrix ι κ R) (b : Matrix κ (Fin 1) R)
+    (C : Matrix ι κ R) (b : Matrix κ η R)
     (h_inter : LP_sharp * C = C * LQ_sharp) :
     LP_sharp * (C * b) = C * (LQ_sharp * b) :=
   calc LP_sharp * (C * b) = (LP_sharp * C) * b := (Matrix.mul_assoc _ _ _).symm

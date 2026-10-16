@@ -1,0 +1,71 @@
+{
+  "authority": "navigation_only",
+  "carriers_found": [],
+  "dag_context": null,
+  "deduplication_warnings": [],
+  "graph_is_proof_authority": false,
+  "lemmas_found": [
+    {
+      "file": "lean/InfoGeometry/QuantumContext/MarkovAttentionGroupInverse.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem groupInverse_solution_unique_on_range (A D : Module.End ℝ V) (hD : IsGroupInverse A D) (x y : V) (hx : x ∈ A.range) (hy : y ∈ A.range) (hxy : A x = A y) : x = y",
+      "line": 229,
+      "location": "lean/InfoGeometry/QuantumContext/MarkovAttentionGroupInverse.lean:229",
+      "name": "groupInverse_solution_unique_on_range",
+      "qualified_name": "InfoGeometry.QuantumContext.MarkovDrazin.groupInverse_solution_unique_on_range",
+      "source_end_line": 233,
+      "source_sha256": "579b621332cdfd7a2a5dd35de5f9c82c63c894483fc99e1167a634001edb0382"
+    },
+    {
+      "file": "lean/InfoGeometry/QuantumContext/MarkovGroupInverseIntertwinerLanes.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem covariantPoisson_fine_solution (P : Matrix ι ι ℝ) (Q : Matrix κ κ ℝ) (C : Matrix ι κ ℝ) (H : Matrix κ κ ℝ) (b : κ → ℝ) (hintertwines : P * C = C * Q) (hcoarse : (1 - Q) *ᵥ (H *ᵥ b) = b) : (1 - P) *ᵥ (C *ᵥ (H *ᵥ b)) = C *ᵥ b",
+      "line": 208,
+      "location": "lean/InfoGeometry/QuantumContext/MarkovGroupInverseIntertwinerLanes.lean:208",
+      "name": "covariantPoisson_fine_solution",
+      "qualified_name": "InfoGeometry.QuantumContext.MarkovDrazin.covariantPoisson_fine_solution",
+      "source_end_line": 213,
+      "source_sha256": "bb310b7ae77f75287138eea7b6e9e2f35cecdbe8c9d4eaa9b33a4fe4f83cfe9a"
+    },
+    {
+      "file": "lean/InfoGeometry/QuantumContext/MarkovGroupInverseIntertwinerLanes.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem covariantPoisson_fine_solution_in_range (P : Matrix ι ι ℝ) (Q : Matrix κ κ ℝ) (C : Matrix ι κ ℝ) (π : ι → ℝ) (μ : κ → ℝ) (hP : P ∈ Matrix.rowStochastic ℝ ι) (hQ : Q ∈ Matrix.rowStochastic ℝ κ) (hPpos : ∀ i j, 0 < P i j) (hQpos : ∀ i j, 0 < Q i j) (hπnonneg : ∀ i, 0 ≤ π i) (hπsum : ∑ i, π i = 1) (hμnonneg : ∀ j, 0 ≤ μ j) (hμsum : ∑ j, μ j = 1) (hπstat : ∀ j, ∑ i, π i * P i j = π j) (hμstat : ∀ j, ∑ j', μ j' * Q j' j = μ j) (hCnonneg : ∀ i j, 0 ≤ C i j) (hCrows : ∀ i, ∑ j, C i j = 1) (hintertwines : P * C = C * Q) (G : Matrix ι ι ℝ) (hG : IsGroupInverse (1 - P) G) (H : Matrix κ κ ℝ) (hH : IsGroupInverse (1 - Q) H) (b : κ → ℝ) : (H *ᵥ b) ∈ LinearMap.range (Matrix.toLin' (1 - P))",
+      "line": 230,
+      "location": "lean/InfoGeometry/QuantumContext/MarkovGroupInverseIntertwinerLanes.lean:230",
+      "name": "covariantPoisson_fine_solution_in_range",
+      "qualified_name": "InfoGeometry.QuantumContext.MarkovDrazin.covariantPoisson_fine_solution_in_range",
+      "source_end_line": 246,
+      "source_sha256": "bb310b7ae77f75287138eea7b6e9e2f35cecdbe8c9d4eaa9b33a4fe4f83cfe9a"
+    },
+    {
+      "file": "lean/InfoGeometry/QuantumContext/MarkovGroupInverseIntertwinerLanes.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem solvable_range_solution_eq_groupInverse_image (P : Matrix ι ι ℝ) (G : Matrix ι ι ℝ) (t : ι → ℝ) (y : ι → ℝ) (hG : IsGroupInverse (1 - P) G) (hy_range : y ∈ LinearMap.range (Matrix.toLin' (1 - P))) (hy_solve : (1 - P) *ᵥ y = t) : y = G *ᵥ t",
+      "line": 266,
+      "location": "lean/InfoGeometry/QuantumContext/MarkovGroupInverseIntertwinerLanes.lean:266",
+      "name": "solvable_range_solution_eq_groupInverse_image",
+      "qualified_name": "InfoGeometry.QuantumContext.MarkovDrazin.solvable_range_solution_eq_groupInverse_image",
+      "source_end_line": 271,
+      "source_sha256": "bb310b7ae77f75287138eea7b6e9e2f35cecdbe8c9d4eaa9b33a4fe4f83cfe9a"
+    },
+    {
+      "file": "lean/InfoGeometry/QuantumContext/MarkovGroupInverseIntertwinerLanes.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem regularizedShift_inverts_transported_regularizedLaplacian (P : Matrix ι ι ℝ) (Q : Matrix κ κ ℝ) (C : Matrix ι κ ℝ) (π : ι → ℝ) (μ : κ → ℝ) (hP : P ∈ Matrix.rowStochastic ℝ ι) (hQ : Q ∈ Matrix.rowStochastic ℝ κ) (hPpos : ∀ i j, 0 < P i j) (hQpos : ∀ i j, 0 < Q i j) (hπnonneg : ∀ i, 0 ≤ π i) (hπsum : ∑ i, π i = 1) (hμnonneg : ∀ j, 0 ≤ μ j) (hμsum : ∑ j, μ j = 1) (hπstat : ∀ j, ∑ i, π i * P i j = π j) (hμstat : ∀ j, ∑ i, μ i * Q i j = μ j) (hCnonneg : ∀ i j, 0 ≤ C i j) (hCrows : ∀ i, ∑ j, C i j = 1) (hintertwines : P * C = C * Q) (G : Matrix ι ι ℝ) (hG : IsGroupInverse (1 - P) G) (H : Matrix κ κ ℝ) (hH : IsGroupInverse (1 - Q) H) : (G + stationaryMeanMatrix π) * (C * ((1 - Q) + stationaryMeanMatrix μ)) = C",
+      "line": 296,
+      "location": "lean/InfoGeometry/QuantumContext/MarkovGroupInverseIntertwinerLanes.lean:296",
+      "name": "regularizedShift_inverts_transported_regularizedLaplacian",
+      "qualified_name": "InfoGeometry.QuantumContext.MarkovDrazin.regularizedShift_inverts_transported_regularizedLaplacian",
+      "source_end_line": 311,
+      "source_sha256": "bb310b7ae77f75287138eea7b6e9e2f35cecdbe8c9d4eaa9b33a4fe4f83cfe9a"
+    }
+  ],
+  "local_dag_context": null,
+  "query": "MarkovDrazin covariantPoisson_fine_solution groupInverse_solution_unique_on_range",
+  "recommended_imports": [
+    "InfoGeometry.QuantumContext.MarkovAttentionGroupInverse",
+    "InfoGeometry.QuantumContext.MarkovGroupInverseIntertwinerLanes"
+  ],
+  "schema": "info_geometry.opengauss.discovery_report.v1"
+}

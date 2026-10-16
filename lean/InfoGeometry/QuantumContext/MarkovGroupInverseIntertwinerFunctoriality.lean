@@ -123,10 +123,10 @@ theorem unitRowSums_alone_do_not_intertwine_stationaryMeanMatrix :
     norm_num at hzero
   exact hne hall'
 
-omit [Nonempty ι] in
 /-- Lifting a matrix-level group inverse of `1 - P` to the canonical endomorphism
-interface `Module.End ℝ (ι → ℝ)`. -/
-private theorem isGroupInverse_toLin'
+interface `Module.End ℝ (ι → ℝ)`. This is the carrier bridge used by every lane
+that reasons about ranges, kernels or unique solutions. -/
+theorem isGroupInverse_toLin'
     {P G : Matrix ι ι ℝ} (hG : IsGroupInverse (1 - P) G) :
     IsGroupInverse (Matrix.toLin' (1 - P)) (Matrix.toLin' G) := by
   constructor
@@ -144,13 +144,13 @@ For strictly positive finite row-stochastic `P` and `Q`, a nonnegative unit-row
 rectangular intertwiner `C` with `P * C = C * Q`, and group inverses `G`, `H` of
 `1 - P` and `1 - Q`, the group-inverse solution operators transport:
 
-`G * (C * b) = C * (H * b)` for every singleton-column matrix
-`b : Matrix κ (Fin 1) ℝ`.
+`G * (C * b) = C * (H * b)` for every matrix-valued right-hand side
+`b : Matrix κ η ℝ`.
 
 This is an identity of matrix products. Solvability and uniqueness of the
 corresponding Poisson equations require the range hypotheses established in
 `MarkovAttentionGroupInverse` and are not restated here. -/
-theorem poissonGreen_transports_of_stationary_compatible
+theorem poissonGreen_transports_of_stationary_compatible {η : Type*}
     (P : Matrix ι ι ℝ) (Q : Matrix κ κ ℝ) (C : Matrix ι κ ℝ)
     (π : ι → ℝ) (μ : κ → ℝ)
     (hP : P ∈ Matrix.rowStochastic ℝ ι)
@@ -165,7 +165,7 @@ theorem poissonGreen_transports_of_stationary_compatible
     (hintertwines : P * C = C * Q)
     (G : Matrix ι ι ℝ) (hG : IsGroupInverse (1 - P) G)
     (H : Matrix κ κ ℝ) (hH : IsGroupInverse (1 - Q) H)
-    (b : Matrix κ (Fin 1) ℝ) :
+    (b : Matrix κ η ℝ) :
     G * (C * b) = C * (H * b) := by
   exact IntertwinerAlgebra.poisson_green_intertwines G H C b
     (groupInverse_intertwines_of_stochastic_compatible

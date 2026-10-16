@@ -6,6 +6,7 @@ Authors: InfoGeometry Engine Contributors
 
 import InfoGeometry.QuantumContext.GroupInverseIntertwinerAlgebra
 
+#print axioms InfoGeometry.QuantumContext.IntertwinerAlgebra.groupInverse_intertwines_of_laws
 #print axioms InfoGeometry.QuantumContext.IntertwinerAlgebra.groupInverse_intertwines_of_rangeProjector
 #print axioms InfoGeometry.QuantumContext.IntertwinerAlgebra.poisson_green_intertwines
 #print axioms InfoGeometry.QuantumContext.IntertwinerAlgebra.regularized_groupInverse_intertwines

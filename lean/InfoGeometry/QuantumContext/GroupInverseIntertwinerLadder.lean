@@ -95,8 +95,9 @@ def Stage.edge : Stage → Stage → Prop
 instance (a b : Stage) : Decidable (Stage.edge a b) := by
   cases a <;> cases b <;> simp [Stage.edge] <;> infer_instance
 
-/-- A strict rank of the dependency relation: a strictly decreasing `ℕ` value
-turns the acyclic development order into a linear order. -/
+/-- A rank function on the dependency relation: every directed edge raises the
+rank, so each edge respects this topological ordering. This does not assert
+that unrelated stages are comparable. -/
 def Stage.rank : Stage → ℕ
   | .core => 0
   | .stationaryProjector => 1
@@ -125,13 +126,13 @@ Each lemma below has a compiled proof; none is an axiom, `sorry`, or a
 restatement of a hypothesis. -/
 
 variable {ι κ : Type*} [Fintype ι] [Fintype κ] [DecidableEq ι] [DecidableEq κ]
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
 omit [DecidableEq ι] [DecidableEq κ] in
 /-- The `poissonGreen` step consumes the conclusion of `core`. -/
-theorem core_conclusion_implies_poissonGreen
+theorem core_conclusion_implies_poissonGreen {η : Type*}
     (LP_sharp : Matrix ι ι R) (LQ_sharp : Matrix κ κ R)
-    (C : Matrix ι κ R) (b : Matrix κ (Fin 1) R)
+    (C : Matrix ι κ R) (b : Matrix κ η R)
     (h : LP_sharp * C = C * LQ_sharp) :
     LP_sharp * (C * b) = C * (LQ_sharp * b) :=
   IntertwinerAlgebra.poisson_green_intertwines LP_sharp LQ_sharp C b h
@@ -162,9 +163,9 @@ omit [DecidableEq ι] [DecidableEq κ] in
 group inverse hypotheses are not repeated here: the algebraic step needs only the
 transported conclusion, and this module does not restate the stochastic
 preconditions. -/
-theorem stochastic_conclusion_implies_markovPoisson
+theorem stochastic_conclusion_implies_markovPoisson {η : Type*}
     (G : Matrix ι ι ℝ) (H : Matrix κ κ ℝ)
-    (C : Matrix ι κ ℝ) (b : Matrix κ (Fin 1) ℝ)
+    (C : Matrix ι κ ℝ) (b : Matrix κ η ℝ)
     (hsharp : G * C = C * H) :
     G * (C * b) = C * (H * b) :=
   IntertwinerAlgebra.poisson_green_intertwines G H C b hsharp

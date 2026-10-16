@@ -205,16 +205,50 @@ class PrePushRefRangeTests(unittest.TestCase):
         self.assertEqual(self.gate_calls(), [])
 
     def test_ignored_lean_source_is_rejected_before_gate(self) -> None:
-        (self.repo / "lean" / "TempInjected.lean").write_text(
+        injected = self.repo / "lean" / "Injected.lean"
+        injected.write_text(
             "-- ignored source that is absent from the pushed tree\n", encoding="utf-8"
         )
+        with (self.repo / ".git" / "info" / "exclude").open("a", encoding="utf-8") as exclude:
+            exclude.write("lean/Injected.lean\n")
         result = self.run_hook(
             f"refs/heads/main {self.head} refs/heads/main {self.middle}\n"
         )
 
         self.assertNotEqual(result.returncode, 0)
-        self.assertIn("ignored Lean sources", result.stderr)
-        self.assertIn("lean/TempInjected.lean", result.stderr)
+        self.assertIn("ignored non-scratch Lean sources", result.stderr)
+        self.assertIn("lean/Injected.lean", result.stderr)
+        self.assertEqual(self.gate_calls(), [])
+
+    def test_repository_ignored_scratch_lean_is_not_treated_as_package_source(self) -> None:
+        (self.repo / "lean" / "TempScratch.lean").write_text(
+            "-- repository-ignored scratch source\n", encoding="utf-8"
+        )
+        result = self.run_hook(
+            f"refs/heads/main {self.head} refs/heads/main {self.middle}\n"
+        )
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(
+            self.gate_calls(),
+            [f"--incremental --base={self.middle} --head={self.head}"],
+        )
+
+    def test_nested_temp_name_ignored_by_local_rule_is_still_rejected(self) -> None:
+        nested = self.repo / "lean" / "InfoGeometry" / "Foo"
+        nested.mkdir(parents=True)
+        source = nested / "TempInjected.lean"
+        source.write_text("-- ignored nested module\n", encoding="utf-8")
+        with (self.repo / ".git" / "info" / "exclude").open("a", encoding="utf-8") as exclude:
+            exclude.write("Temp*.lean\n")
+
+        result = self.run_hook(
+            f"refs/heads/main {self.head} refs/heads/main {self.middle}\n"
+        )
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("ignored non-scratch Lean sources", result.stderr)
+        self.assertIn("lean/InfoGeometry/Foo/TempInjected.lean", result.stderr)
         self.assertEqual(self.gate_calls(), [])
 
     def test_untracked_nested_package_source_is_rejected_before_gate(self) -> None:

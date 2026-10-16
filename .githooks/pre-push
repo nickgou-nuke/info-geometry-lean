@@ -52,12 +52,32 @@ while read -r local_ref local_oid remote_ref remote_oid || [[ -n "${local_ref:-}
         'verification/spinorial-core/**/*.lean' 'lib/InfoGeometryCore/*.lean' \
         'lib/InfoGeometryCore/**/*.lean' ':(exclude)lean/.lake/**' \
         ':(exclude)lean_sandbox/.lake/**' ':(exclude)proofs/.lake/**' \
-        ':(exclude)verification/spinorial-core/.lake/**' ':(exclude)lib/InfoGeometryCore/.lake/**')"
+        ':(exclude)verification/spinorial-core/.lake/**' ':(exclude)lib/InfoGeometryCore/.lake/**' | while IFS= read -r path; do
+            [[ -f "$path" && "$path" == *.lean ]] || continue
+            ignore_match="$(git check-ignore -v -- "$path" || true)"
+            ignore_source="${ignore_match%%:*}"
+            ignore_rule="${ignore_match#*:}"
+            ignore_rule="${ignore_rule#*:}"
+            ignore_rule="${ignore_rule%%$'\t'*}"
+            # Exempt only repository-declared scratch/fixture patterns, and
+            # require the scoped Temp rule to match its exact root location.
+            # A same-named file ignored by a local/global rule can still
+            # shadow a package import and must fail closed.
+            case "$ignore_source:$ignore_rule:$path" in
+                .gitignore:scratch\*.lean:*|.gitignore:temp_trace.lean:*|.gitignore:test.lean:*|.gitignore:test_\*.lean:*|.gitignore:.tmp_\*.lean:*)
+                    continue
+                    ;;
+                .gitignore:lean/Temp\*.lean:lean/Temp*.lean)
+                    continue
+                    ;;
+            esac
+            printf '%s\n' "$path"
+        done)"
     if [[ -n "$untracked_sources" || -n "$ignored_lean_sources" ]]; then
         echo "[pre-push] refusing to certify untracked proof/gate sources:" >&2
         sed 's/^/  /' <<<"$untracked_sources" >&2
         if [[ -n "$ignored_lean_sources" ]]; then
-            echo "[pre-push] ignored Lean sources are also excluded from the pushed tree:" >&2
+            echo "[pre-push] ignored non-scratch Lean sources are also excluded from the pushed tree:" >&2
             sed 's/^/  /' <<<"$ignored_lean_sources" >&2
         fi
         exit 1

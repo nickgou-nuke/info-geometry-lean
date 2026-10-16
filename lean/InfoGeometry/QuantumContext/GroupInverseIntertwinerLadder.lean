@@ -3,54 +3,50 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
-import Mathlib.Data.Finset.Order
 import Mathlib.Tactic
 import InfoGeometry.QuantumContext.MarkovGroupInverseIntertwinerFunctoriality
 import InfoGeometry.QuantumContext.GroupInverseIntertwinerAlgebra
 
 /-!
-# The dependency ladder for rectangular Markov group-inverse intertwining
+# Composition lemmas for the rectangular group-inverse intertwining
 
-This module records the two formalized layers of rectangular group-inverse
-intertwining, the dependency edges between them, and — for every edge — a
-compiled implication showing that the dependency is a real logical consequence
-rather than a label.
+This module records the two composition steps of the ladder, each of which is a
+compiled implication over the actual matrix carriers rather than a label on a
+diagram.
 
-## What is ordered here
-
-`Stage` names the formalized declarations that make up the ladder:
-
-| stage | owning declaration |
+| step | statement |
 | --- | --- |
-| `core` | `IntertwinerAlgebra.groupInverse_intertwines_of_rangeProjector` |
-| `poissonGreen` | `IntertwinerAlgebra.poisson_green_intertwines` |
-| `regularized` | `IntertwinerAlgebra.regularized_groupInverse_intertwines` |
-| `stochastic` | `MarkovDrazin.groupInverse_intertwines_of_stochastic_compatible` |
-| `stationaryProjector` | `MarkovDrazin.stationaryMeanMatrix_intertwines` |
-| `markovPoisson` | `MarkovDrazin.poissonGreen_transports_of_stationary_compatible` |
-| `markovRegularized` | `MarkovDrazin.regularizedShift_intertwines_of_stationary_compatible` |
-| `markovMeanZero` | `MarkovDrazin.liftedSolution_mean_zero_of_stationary_compatible` |
+| Laplacian conversion | `P * C = C * Q → (1 - P) * C = C * (1 - Q)` |
+| Kemeny-type step | `(G + stationaryMeanMatrix π) * C = C * (H + stationaryMeanMatrix μ)` given `G * C = C * H` and `stationaryMeanMatrix π * C = C * stationaryMeanMatrix μ` |
 
-## Scope of the order
+The second step genuinely consumes **two** proof inputs. A rank or ordering
+alone does not record that conjunction or the proof dependencies.
 
-`Stage.edge` is a dependency relation on these names only. It is **not** an
-implication between the stages, and this module asserts no physical, causal or
-temporal causation. It is checked to be irreflexive and to admit a strictly
-decreasing `Stage.rank`, which makes it an acyclic development order.
+## Withdrawn: the `Stage.edge` certificate apparatus
 
-The mathematical content is in the implication lemmas
-`core_conclusion_implies_poissonGreen`,
-`core_conclusion_implies_regularized`,
-`stochastic_conclusion_implies_markovPoisson`,
-`stochastic_conclusion_and_stationaryProjector_imply_markovRegularized` and
-`stochastic_conclusion_implies_markovMeanZero`, and in the refutation
-`unitRowSums_do_not_imply_stationaryProjector`, each of which is a compiled
-theorem over the actual matrix carriers.
+An earlier revision of this file encoded the development order as an inductive
+`Stage` of formalized declaration names, with a hand-written `Stage.edge`
+relation (a `True`/`False` pattern match), a hand-written `Stage.rank` table, and
+three `by decide` theorems asserting irreflexivity, rank monotonicity along
+edges, and that `core` is a root.
 
-The ladder is deliberately not a partial order on the mathematical content: the
-Kemeny-type step genuinely has two inputs (`core` and `stationaryProjector`),
-which no binary order can express. Encoding it as one would misrepresent the
-architecture.
+**That apparatus was withdrawn because it certifies nothing.** `Stage.edge` and
+`Stage.rank` are literals written in the same file as the theorems that "certify"
+them. Deleting every real theorem in the repository would leave all three
+`decide` theorems still true. A kernel check of a hand-written relation is a
+check of the author's transcription, not of the mathematics.
+
+Only the two composition implications above are kept, because each has a real
+proof term over real matrix carriers: `stationary_laplacians_intertwine` is
+proved directly by a `calc` on `Matrix.sub_mul` / `Matrix.mul_sub`, and the
+Kemeny-type step is a genuine instantiation of the `regularized` step at the
+Markov stationary projector.
+
+The `core → poissonGreen` and `core → regularized` steps are deliberately
+**absent**: they were verbatim re-exports of the already-public
+`IntertwinerAlgebra.poisson_green_intertwines` and
+`IntertwinerAlgebra.regularized_groupInverse_intertwines`, and a second copy of a
+public theorem is a duplicate carrier, not a dependency edge.
 -/
 
 noncomputable section
@@ -59,97 +55,12 @@ namespace InfoGeometry.QuantumContext.GroupInverseIntertwinerLadder
 
 open Matrix
 
-/-! ## The dependency relation -/
-
-/-- The formalized declarations of the rectangular intertwining ladder. -/
-inductive Stage where
-  | core
-  | poissonGreen
-  | regularized
-  | stochastic
-  | stationaryProjector
-  | markovPoisson
-  | markovRegularized
-  | markovMeanZero
-  deriving DecidableEq
-
-instance : Fintype Stage where
-  elems := { .core, .poissonGreen, .regularized, .stochastic,
-    .stationaryProjector, .markovPoisson, .markovRegularized, .markovMeanZero }
-  complete := by
-    intro x
-    cases x <;> simp
-
-/-- `b` depends on `a`: the conclusion certified for `a` is an input of the
-proof of the declaration standing for `b`. This relation carries no causal
-meaning. -/
-def Stage.edge : Stage → Stage → Prop
-  | .core, .poissonGreen => True
-  | .core, .regularized => True
-  | .stochastic, .markovPoisson => True
-  | .stochastic, .markovRegularized => True
-  | .stationaryProjector, .markovRegularized => True
-  | .stochastic, .markovMeanZero => True
-  | _, _ => False
-
-instance (a b : Stage) : Decidable (Stage.edge a b) := by
-  cases a <;> cases b <;> simp [Stage.edge] <;> infer_instance
-
-/-- A rank function on the dependency relation: every directed edge raises the
-rank, so each edge respects this topological ordering. This does not assert
-that unrelated stages are comparable. -/
-def Stage.rank : Stage → ℕ
-  | .core => 0
-  | .stationaryProjector => 1
-  | .stochastic => 1
-  | .poissonGreen => 2
-  | .regularized => 2
-  | .markovPoisson => 3
-  | .markovRegularized => 3
-  | .markovMeanZero => 3
-
-/-- The dependency relation is irreflexive: no stage consumes itself. -/
-theorem Stage.edge_irreflexive : ∀ a : Stage, ¬ Stage.edge a a := by decide
-
-/-- Every dependency edge strictly increases `Stage.rank`, so the relation is
-acyclic and the rank is a topological order of the ladder. -/
-theorem Stage.rank_lt_of_edge : ∀ a b : Stage,
-    Stage.edge a b → Stage.rank a < Stage.rank b := by decide
-
-/-- `core` is a root of the ladder: nothing in the ladder feeds into it. -/
-theorem core_has_no_prerequisite : ∀ a : Stage, ¬ Stage.edge a Stage.core := by
-  decide
-
-/-! ## The edges are real implications
-
-Each lemma below has a compiled proof; none is an axiom, `sorry`, or a
-restatement of a hypothesis. -/
-
 variable {ι κ : Type*} [Fintype ι] [Fintype κ] [DecidableEq ι] [DecidableEq κ]
-variable {R : Type*} [Ring R]
 
-omit [DecidableEq ι] [DecidableEq κ] in
-/-- The `poissonGreen` step consumes the conclusion of `core`. -/
-theorem core_conclusion_implies_poissonGreen {η : Type*}
-    (LP_sharp : Matrix ι ι R) (LQ_sharp : Matrix κ κ R)
-    (C : Matrix ι κ R) (b : Matrix κ η R)
-    (h : LP_sharp * C = C * LQ_sharp) :
-    LP_sharp * (C * b) = C * (LQ_sharp * b) :=
-  IntertwinerAlgebra.poisson_green_intertwines LP_sharp LQ_sharp C b h
-
-omit [DecidableEq ι] [DecidableEq κ] in
-/-- The `regularized` step consumes the conclusion of `core` together with the
-intertwining of the regularizing idempotents. -/
-theorem core_conclusion_implies_regularized
-    (LP_sharp EP : Matrix ι ι R) (LQ_sharp EQ : Matrix κ κ R)
-    (C : Matrix ι κ R)
-    (h : LP_sharp * C = C * LQ_sharp) (h' : EP * C = C * EQ) :
-    (LP_sharp + EP) * C = C * (LQ_sharp + EQ) :=
-  IntertwinerAlgebra.regularized_groupInverse_intertwines
-    LP_sharp EP LQ_sharp EQ C h h'
-
-/-- The Markov Laplacians intertwine whenever the transition operators do. This
-is the hypothesis conversion from the `stochastic` layer to the `core` layer. -/
+/-- **Laplacian conversion.** Whenever the transition operators intertwine, the
+Markov Laplacians `1 - P` and `1 - Q` intertwine. This is the conversion from the
+stochastic layer of the ladder down to the algebraic `core` layer, and it is the
+step that lets `IntertwinerAlgebra` be applied to Markov data at all. -/
 theorem stationary_laplacians_intertwine
     (P : Matrix ι ι ℝ) (Q : Matrix κ κ ℝ) (C : Matrix ι κ ℝ)
     (hintertwines : P * C = C * Q) :
@@ -159,21 +70,13 @@ theorem stationary_laplacians_intertwine
     _ = C * (1 - Q) := by rw [Matrix.mul_sub, Matrix.mul_one]
 
 omit [DecidableEq ι] [DecidableEq κ] in
-/-- The `markovPoisson` step consumes the conclusion of `stochastic`. The
-group inverse hypotheses are not repeated here: the algebraic step needs only the
-transported conclusion, and this module does not restate the stochastic
-preconditions. -/
-theorem stochastic_conclusion_implies_markovPoisson {η : Type*}
-    (G : Matrix ι ι ℝ) (H : Matrix κ κ ℝ)
-    (C : Matrix ι κ ℝ) (b : Matrix κ η ℝ)
-    (hsharp : G * C = C * H) :
-    G * (C * b) = C * (H * b) :=
-  IntertwinerAlgebra.poisson_green_intertwines G H C b hsharp
+/-- **The Kemeny-type step.** The regularized group inverse `G + P_stationary`
+intertwines when the group inverse itself intertwines *and* the stationary
+projectors intertwine. This lemma's contract explicitly supplies both
+intertwining equalities.
 
-omit [DecidableEq ι] [DecidableEq κ] in
-/-- The `markovRegularized` step consumes the conclusions of both `stochastic`
-and `stationaryProjector`. This is the reason the ladder is recorded as a
-dependency relation with a two-input node rather than as a binary order. -/
+This is the two-input node of the ladder: it consumes both the `G * C = C * H`
+conclusion and the stationary-projector conclusion. -/
 theorem stochastic_conclusion_and_stationaryProjector_imply_markovRegularized
     (G : Matrix ι ι ℝ) (H : Matrix κ κ ℝ) (C : Matrix ι κ ℝ)
     (π : ι → ℝ) (μ : κ → ℝ)

@@ -17,21 +17,30 @@ intertwining from the canonical owners
 * `InfoGeometry.QuantumContext.MarkovDrazin.groupInverse_intertwines_of_stochastic_compatible`
   for the finite stochastic group-inverse transport.
 
-Four results are obtained.
+Six theorems are declared here.
 
 1. `stationaryMeanMatrix_intertwines`: the rank-one stationary projector
    `stationaryMeanMatrix π` intertwines a rectangular intertwiner whenever the
    intertwiner has unit row sums and transports the stationary row.
-2. `poissonGreen_transports_of_stationary_compatible`: the lifted coarse-space
+2. `unitRowSums_alone_do_not_intertwine_stationaryMeanMatrix`: a witness that
+   hypothesis 1 of the previous theorem is *not* redundant. Unit row sums
+   alone, without transport of the stationary row, do not suffice.
+3. `poissonGreen_transports_of_stationary_compatible`: the lifted coarse-space
    group-inverse solution operator satisfies the fine-space intertwining on
    transported right-hand sides.
-3. `regularizedShift_intertwines_of_stationary_compatible`: the regularized
+4. `regularizedShift_intertwines_of_stationary_compatible`: the regularized
    Markov operators `G + stationaryMeanMatrix π` and `H + stationaryMeanMatrix μ`
    intertwine. `MarkovAttentionKemenySnell` separately proves that each has a
    two-sided inverse; this theorem does not claim that those inverses intertwine.
-4. `liftedSolution_mean_zero_of_stationary_compatible`: the lifted solution has
+5. `liftedSolution_mean_zero_of_stationary_compatible`: the lifted solution has
    zero stationary weighted mean, so it lies in the solvable range of the fine
    Markov Laplacian.
+6. `isGroupInverse_toLin'`: the matrix-level group inverse lifts to the
+   canonical `Module.End` carrier, a reusable bridge rather than a transport
+   result.
+
+Theorem 2 is a *refutation*, not a transport statement: it is listed here
+because it is the negative counterpart of theorem 1 and belongs with it.
 
 ## Scope
 
@@ -52,13 +61,17 @@ that the corollary consumes.
 The rectangular intertwiners `C` quantified here are arbitrary matrices of the
 stated size. They are not assumed to be projections, embeddings, lumping maps,
 Stiefel embeddings or attention pooling operators, and no such interpretation
-is proved. Coarse-graining and Stiefel owners do exist in the repository —
-`InfoGeometry.Canonical.CoarseGraining` (`FiniteCoarseGraining X Y := X → Y`,
-`encoderMarginal`) and `InfoGeometry.QuantumContext.CausalPetzStiefelConservation`
-(`blockIntertwiner : Matrix (Fin 2) (Fin 2) R`, `gram_isometry_iff_stiefel`) —
-but neither mentions `Markov`, `Laplacian` or `IsGroupInverse`, and
-`blockIntertwiner` is square rather than rectangular. Specializing this module
-to either would be new formalization work.
+is proved by this module.
+
+The lumping specialization *is* formalized elsewhere, by
+`InfoGeometry.QuantumContext.MarkovPartitionLumping`
+(`partitionIncidence`, `partitionIntertwining_iff_blockSum`,
+`pushforwardStationaryRow`, `groupInverse_intertwines_of_partitionLumping`),
+which reaches its conclusion through the stochastic owner rather than through
+this module. Stiefel owners exist at
+`InfoGeometry.QuantumContext.CausalPetzStiefelConservation`
+(`blockIntertwiner : Matrix (Fin 2) (Fin 2) R`) and are still unconnected to
+rectangular Markov intertwining.
 -/
 
 noncomputable section
@@ -124,8 +137,14 @@ theorem unitRowSums_alone_do_not_intertwine_stationaryMeanMatrix :
   exact hne hall'
 
 /-- Lifting a matrix-level group inverse of `1 - P` to the canonical endomorphism
-interface `Module.End ℝ (ι → ℝ)`. This is the carrier bridge used by every lane
-that reasons about ranges, kernels or unique solutions. -/
+interface `Module.End ℝ (ι → ℝ)`, so that `apply_groupInverse_eq_of_mem_range`
+can be used to reason about ranges, kernels and unique solutions.
+
+This is a reusable carrier bridge, exported rather than re-derived. As of this
+revision it is consumed only by this module's own `liftedSolution_mean_zero_of_stationary_compatible`
+and by two theorems in `MarkovGroupInverseIntertwinerLanes`; no pre-existing lane
+in the repository used it, and it is offered as a candidate for the existing
+owners that currently reconstruct the same block inline. -/
 theorem isGroupInverse_toLin'
     {P G : Matrix ι ι ℝ} (hG : IsGroupInverse (1 - P) G) :
     IsGroupInverse (Matrix.toLin' (1 - P)) (Matrix.toLin' G) := by

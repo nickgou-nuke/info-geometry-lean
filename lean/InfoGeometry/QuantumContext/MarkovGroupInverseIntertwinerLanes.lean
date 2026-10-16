@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.QuantumContext.MarkovGroupInverseIntertwinerFunctoriality
 import InfoGeometry.QuantumContext.MarkovGroupInverseIntertwining
+import InfoGeometry.QuantumContext.MarkovGroupInverseStationaryReadout
 
 /-!
 # Selected cross-owner consequences for rectangular Markov intertwiners
@@ -103,9 +104,72 @@ theorem groupInverse_rangeIntertwining_iff_stationaryProjector
       _ = C * ((1 - Q) * H) := by rw [← hHproj]
       _ = C * (1 - Q) * H := by rw [Matrix.mul_assoc]
 
+/-- **BRIDGE A--E--C.** The regular idempotent of the Markov Laplacian `1 - P`
+is `1 - stationaryMeanMatrix π`.
+
+This is *not* an independent proof: it is the matrix-level orientation of the
+canonical owner `InfoGeometry.QuantumContext.markovStationaryProjector_eq_stationaryMeanMatrix`
+in `MarkovGroupInverseStationaryReadout`, which reads the same fact on the
+`markovStationaryProjector = 1 - markovRangeIdempotent` carrier. Re-proving it
+here would have been a duplicate carrier, so this corollary only unfolds the
+definitions and cancels. The upstream owner consumes the reflexive law and the
+commutativity law of the group inverse, but not its absorption law. -/
+theorem groupInverse_regularIdempotent_eq_one_sub_stationaryMeanMatrix
+    (P : Matrix ι ι ℝ) (π : ι → ℝ)
+    (hP : P ∈ Matrix.rowStochastic ℝ ι)
+    (hPpos : ∀ i j, 0 < P i j)
+    (hπsum : ∑ i, π i = 1)
+    (hπstat : ∀ j, ∑ i, π i * P i j = π j)
+    (G : Matrix ι ι ℝ)
+    (hG : IsGroupInverse (1 - P) G) :
+    (1 - P) * G = 1 - stationaryMeanMatrix π := by
+  have hsp : 1 - ((1 - P) * G) = stationaryMeanMatrix π := by
+    simpa [markovStationaryProjector, markovRangeIdempotent] using
+      (InfoGeometry.QuantumContext.markovStationaryProjector_eq_stationaryMeanMatrix
+        P π hP hPpos hπsum hπstat G hG)
+  calc (1 - P) * G = 1 - (1 - ((1 - P) * G)) := by rw [sub_sub_cancel]
+    _ = 1 - stationaryMeanMatrix π := by rw [hsp]
+
+/-- **BRIDGE B--C (regular projectors).** Under normalized stationary rows,
+row-sum preservation, and stationary-mean compatibility, the regular
+idempotents of the two Markov Laplacians intertwine.
+
+This exposes the projector-level bridge used by the group-inverse transport
+theorem. It does not restate that transport theorem or claim that either group
+inverse is constructed here. The hypotheses on `C` do not include
+nonnegativity, so `C` is called a row-sum-preserving map rather than a
+stochastic kernel. -/
+theorem regularIdempotents_intertwine_of_stationary_compatible
+    (P : Matrix ι ι ℝ) (Q : Matrix κ κ ℝ) (C : Matrix ι κ ℝ)
+    (π : ι → ℝ) (μ : κ → ℝ)
+    (hP : P ∈ Matrix.rowStochastic ℝ ι)
+    (hQ : Q ∈ Matrix.rowStochastic ℝ κ)
+    (hPpos : ∀ i j, 0 < P i j) (hQpos : ∀ i j, 0 < Q i j)
+    (hπsum : ∑ i, π i = 1) (hμsum : ∑ j, μ j = 1)
+    (hπstat : ∀ j, ∑ i, π i * P i j = π j)
+    (hμstat : ∀ j, ∑ i, μ i * Q i j = μ j)
+    (hCrows : ∀ i, ∑ j, C i j = 1)
+    (hCmean : ∀ j, ∑ i, π i * C i j = μ j)
+    (G : Matrix ι ι ℝ) (hG : IsGroupInverse (1 - P) G)
+    (H : Matrix κ κ ℝ) (hH : IsGroupInverse (1 - Q) H) :
+    (1 - P) * G * C = C * ((1 - Q) * H) := by
+  have hGproj := groupInverse_regularIdempotent_eq_one_sub_stationaryMeanMatrix
+    P π hP hPpos hπsum hπstat G hG
+  have hHproj := groupInverse_regularIdempotent_eq_one_sub_stationaryMeanMatrix
+    Q μ hQ hQpos hμsum hμstat H hH
+  simpa [Matrix.mul_assoc] using
+    (groupInverse_rangeIntertwining_iff_stationaryProjector
+      P Q G H C π μ hGproj hHproj).2
+      (stationaryMeanMatrix_intertwines π μ C hCrows hCmean)
+
 /-- **BRIDGE C--D.** If `b` lies in the range of the coarse Markov Laplacian
-`1 - Q`, then the group inverse is a genuine two-sided Poisson solver there:
+`1 - Q`, then the group inverse *recovers* `b` on the left:
 `(1 - Q) *ᵥ (H *ᵥ b) = b`.
+
+Only the left identity is claimed. It is not asserted here that `H *ᵥ b` is the
+*unique* solution of `(1 - Q) *ᵥ x = b`, nor that `H` also inverts `1 - Q` on
+the left; both would need a further hypothesis. Uniqueness over the full space is
+impossible anyway, since `H` is the inverse only modulo the kernel of `1 - Q`.
 
 The range hypothesis is not optional. In general the group-inverse law gives
 `(1 - Q) *ᵥ (H *ᵥ b) = ((1 - Q) * H) *ᵥ b`; this equals `b` for `b` in the
@@ -131,10 +195,13 @@ hypothesis:
 
 `(1 - P) *ᵥ (C *ᵥ y) = C *ᵥ ((1 - Q) *ᵥ y)`.
 
-This packages `GroupInverseIntertwinerLadder.stationary_laplacians_intertwine`
-at the observable-action level. `covariantPoisson_fine_solution` specializes it
-to `y = H *ᵥ b`. It consumes only the transition intertwining, so it holds for
-any rectangular intertwiner. -/
+This is the observable-action form of the Laplacian conversion
+`(1 - P) * C = C * (1 - Q)`. It is proved here directly by its own `calc`; this
+module does **not** import or call
+`GroupInverseIntertwinerLadder.stationary_laplacians_intertwine`, which proves
+the matrix-level statement independently in that module.
+`covariantPoisson_fine_solution` specializes this to `y = H *ᵥ b`. It consumes
+only the transition intertwining, so it holds for any rectangular intertwiner. -/
 theorem covariantLaplacian_intertwines_on_observables
     (P : Matrix ι ι ℝ) (Q : Matrix κ κ ℝ) (C : Matrix ι κ ℝ)
     (hintertwines : P * C = C * Q)
@@ -164,6 +231,37 @@ theorem covariantPoisson_fine_solution
     (1 - P) *ᵥ (C *ᵥ (H *ᵥ b)) = C *ᵥ b :=
   (covariantLaplacian_intertwines_on_observables P Q C hintertwines (H *ᵥ b)).trans
     (by rw [hcoarse])
+
+/-- **BRIDGE F.** The lifted solution lies in the range of the fine Markov
+Laplacian `1 - P`, hence it satisfies the solvable-range condition of the
+fine-space Poisson equation.
+
+This is `liftedSolution_mean_zero_of_stationary_compatible` transported through
+the owner identity `range (1 - P) = ker (weightedMeanMap π)`. -/
+theorem covariantPoisson_fine_solution_in_range
+    (P : Matrix ι ι ℝ) (Q : Matrix κ κ ℝ) (C : Matrix ι κ ℝ)
+    (π : ι → ℝ) (μ : κ → ℝ)
+    (hP : P ∈ Matrix.rowStochastic ℝ ι)
+    (hQ : Q ∈ Matrix.rowStochastic ℝ κ)
+    (hPpos : ∀ i j, 0 < P i j) (hQpos : ∀ i j, 0 < Q i j)
+    (hπnonneg : ∀ i, 0 ≤ π i) (hπsum : ∑ i, π i = 1)
+    (hμnonneg : ∀ j, 0 ≤ μ j) (hμsum : ∑ j, μ j = 1)
+    (hπstat : ∀ j, ∑ i, π i * P i j = π j)
+    (hμstat : ∀ j, ∑ j', μ j' * Q j' j = μ j)
+    (hCnonneg : ∀ i j, 0 ≤ C i j)
+    (hCrows : ∀ i, ∑ j, C i j = 1)
+    (hintertwines : P * C = C * Q)
+    (G : Matrix ι ι ℝ) (hG : IsGroupInverse (1 - P) G)
+    (H : Matrix κ κ ℝ) (hH : IsGroupInverse (1 - Q) H)
+    (b : κ → ℝ) :
+    C *ᵥ (H *ᵥ b) ∈ LinearMap.range (Matrix.toLin' (1 - P)) := by
+  have hzero := liftedSolution_mean_zero_of_stationary_compatible
+    P Q C π μ hP hQ hPpos hQpos hπnonneg hπsum hμnonneg hμsum hπstat hμstat
+    hCnonneg hCrows hintertwines G hG H hH b
+  have hker : C *ᵥ (H *ᵥ b) ∈ LinearMap.ker (weightedMeanMap π) :=
+    LinearMap.mem_ker.mpr hzero
+  rw [range_laplacian_eq_weightedMean_ker P π hP hPpos hπsum hπstat]
+  exact hker
 
 /-- **BRIDGE C--D.** Uniqueness of the transported Poisson solution on the fine
 solvable range: if `y` lies in `range (1 - P)` and solves the transported

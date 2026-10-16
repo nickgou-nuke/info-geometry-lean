@@ -99,6 +99,51 @@ def test_t4_warns_on_unused_hypothesis_binder():
     assert len(t4) == 1
 
 
+def test_t4_rejects_used_but_reflexive_quantified_hypothesis():
+    code = """
+    theorem reflexive_quantified_hypothesis {X : Type} (f : X → Nat)
+        (h : ∀ x, f x = f x) : ∀ x, f x = f x ∧ True := by
+      intro x
+      exact ⟨h x, trivial⟩
+    """
+    t4 = [v for v in screen_lean_content(code) if v.trap_id == "T4"]
+    assert len(t4) == 1
+    assert "reflexive" in t4[0].message
+
+
+def test_t4_preserves_identifier_boundaries_in_reflexivity_check():
+    code = """
+    theorem distinct_identifiers {X : Type} (f : X → Nat) (fx : Nat)
+        (h : ∀ x, f x = fx) : ∀ x, f x = fx := by
+      exact h
+    """
+    t4 = [v for v in screen_lean_content(code) if v.trap_id == "T4"]
+    assert t4 == []
+
+
+def test_t4_detects_reflexivity_under_grouped_forall_binders():
+    code = """
+    theorem grouped_reflexive_hypothesis {X : Type} (f : X → X → Nat)
+        (h : ∀ x y, f x y = f x y) : ∀ x y, f x y = f x y := by
+      exact h
+    """
+    t4 = [v for v in screen_lean_content(code) if v.trap_id == "T4"]
+    assert len(t4) == 1
+    assert "reflexive" in t4[0].message
+
+
+def test_t4_detects_parenthesized_reflexive_quantified_hypothesis():
+    code = """
+    theorem parenthesized_reflexive_hypothesis {X : Type} (f : X → Nat)
+        (h : ∀ x, f x = (f x)) : ∀ x, f x = f x := by
+      intro x
+      exact h x
+    """
+    t4 = [v for v in screen_lean_content(code) if v.trap_id == "T4"]
+    assert len(t4) == 1
+    assert "reflexive" in t4[0].message
+
+
 def test_t4_recognizes_used_apostrophe_suffixed_hypothesis():
     code = "theorem used_primed_hypothesis {x y : Nat} (h' : x = y) : y = x := by exact h'.symm"
     t4 = [v for v in screen_lean_content(code) if v.trap_id == "T4"]

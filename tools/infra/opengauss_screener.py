@@ -258,6 +258,20 @@ def check_unused_hypothesis_binders(source: str) -> list[TrapViolation]:
         for name, binder_type in parsed_binders:
             if not name.startswith("h") or name in {"have", "has", "hypothesis"}:
                 continue
+            if binder_type.lstrip().startswith("∀") and _is_reflexive_equality_type(binder_type):
+                line_number = source.count("\n", 0, start.start()) + 1
+                violations.append(TrapViolation(
+                    trap_id="T4",
+                    trap_name="Vacuous Binders & Degenerate Conditions",
+                    line_number=line_number,
+                    matched_text=f"({name} : {binder_type})"[:100],
+                    message=(
+                        f"Degenerate reflexive hypothesis: theorem '{start.group(1)}' "
+                        f"assumes '{name} : {binder_type}', which is reflexive for every quantified input."
+                    ),
+                    severity="ERROR",
+                ))
+                continue
             # Lean identifiers may end in apostrophes (`h'`, `h₂'`). Since an
             # apostrophe is not a Python regex word character, `\b` after a
             # primed name is placed at the wrong position and reports a used
@@ -551,6 +565,53 @@ def _top_level_equality_sides(expression: str) -> tuple[str, str] | None:
             if right is not None and not expression[right[1] :].strip():
                 return left[0], right[0]
     return None
+
+
+def _is_reflexive_equality_type(expression: str) -> bool:
+    """Detect a hypothesis type reducing textually to `∀ ..., t = t`.
+
+    This catches reflexive evidence hidden behind quantified binders, such as
+    `(h : ∀ x, f x = f x)`, which an unused-binder scan misses when the proof
+    explicitly consumes `h`.
+    """
+    expression = expression.strip()
+    while expression.startswith("("):
+        atom = _balanced_lean_atom(expression, 0)
+        if atom is None or atom[1] != len(expression):
+            break
+        expression = atom[0][1:-1].strip()
+
+    while expression.startswith("∀"):
+        depth = 0
+        comma = None
+        for index, char in enumerate(expression[1:], start=1):
+            if char in "([{⦃":
+                depth += 1
+            elif char in ")] }⦄".replace(" ", ""):
+                depth = max(0, depth - 1)
+            elif char == "," and depth == 0:
+                comma = index
+                break
+        if comma is None:
+            return False
+        expression = expression[comma + 1 :].strip()
+
+    sides = _top_level_equality_sides(expression)
+    if sides is None:
+        return False
+    def token_signature(term: str) -> tuple[str, ...]:
+        # Ignore redundant parentheses around the whole term, but preserve
+        # token boundaries: deleting whitespace would conflate `f x` with
+        # the distinct identifier `fx`.
+        term = term.strip()
+        while term.startswith("("):
+            atom = _balanced_lean_atom(term, 0)
+            if atom is None or atom[1] != len(term):
+                break
+            term = atom[0][1:-1].strip()
+        return tuple(re.findall(r"[^\W\d]\w*(?:['′]\w*)?|\d+|[^\s]", term))
+
+    return token_signature(sides[0]) == token_signature(sides[1])
 
 
 def _bare_identifier(expression: str) -> str | None:

@@ -27,39 +27,63 @@ Then `LP_sharp * C = C * LQ_sharp`: the group inverses intertwine strictly.
 
 ## Scope of this module
 
-The proof uses associativity of matrix multiplication together with four of the
-group inverse equations: `LP_sharp * LP * LP_sharp = LP_sharp`,
+The proof of `groupInverse_intertwines_of_laws` uses associativity of matrix
+multiplication together with four of the group inverse equations:
+`LP_sharp * LP * LP_sharp = LP_sharp`,
 `LQ_sharp * LQ * LQ_sharp = LQ_sharp`, `LP * LP_sharp = LP_sharp * LP` and
 `LQ * LQ_sharp = LQ_sharp * LQ`. The reflexive law `LP * LP_sharp * LP = LP`
-is available in the hypotheses but is not consumed by the proof, and no
-commutativity of the coefficient ring is used.
+is available in the `IsGroupInverse` entry point but is not consumed by the
+proof.
 
-This module proves no Poisson solvability statement, no mean first passage time
-identity, and no coarse-graining, Stiefel compression or attention-pooling
-interpretation.
+`regularized_groupInverse_intertwines` additionally uses left and right
+distributivity of matrix addition over multiplication, because its conclusion is
+a sum `LP_sharp + EP`. Associativity alone does not discharge it.
 
-## Adjacent owners (checked, not connected)
+The coefficient hypothesis remains `[Ring R]`: the bundled `IsGroupInverse`
+interface is defined over rings, and the additive distributivity used by the
+`regularized` step needs only an additive commutative group. The coefficient
+ring may be noncommutative; no commutativity of `R` is assumed.
+
+This module proves no *solvability* statement — no claim that some vector lies
+in the range of a Laplacian, and no mean first passage time identity. It does
+export `poisson_green_intertwines`, which is a *transport* identity: it carries
+an already-given intertwining `LP_sharp * C = C * LQ_sharp` through a further
+matrix `b`. No module here proves that coarse-grained Laplacian is solvable or
+that any `b` is attained; and none gives a coarse-graining, Stiefel compression
+or attention-pooling interpretation.
+
+## Adjacent owners (checked, and one of them is already connected)
 
 A search over every `lean_lib` root declared in `lakefile.lean`
-(`lean/InfoGeometry/**`, `proofs/**` declared at `lakefile.lean:885`,
-`lib/InfoGeometryCore/**`, `tests/**`, `lean/Experimental/**`, `lean/DAG/**`,
-`lean/Agent/**`, `lean/Omega/**`) shows that coarse-graining and Stiefel
-owners already exist:
+(`lean/InfoGeometry/**`, `proofs/**` declared at `lakefile.lean:885`, plus
+`lean/Experimental/**`, `lean/DAG/**`, `lean/Agent/**`, `lean/Omega/**`,
+`lean/InfoGeometry/LLM/**`, `lean/VirasoroProject/**`) — and, separately, over
+the `require`d package `lib/InfoGeometryCore`, which has its own lakefile and is
+therefore *not* a `lean_lib` root of this repository — shows that
+coarse-graining and Stiefel owners already exist:
 
 * `InfoGeometry.Canonical.CoarseGraining` defines `FiniteCoarseGraining X Y`
-  as `X → Y`, with `fiberWeight` and `encoderMarginal`;
-* `InfoGeometry.Canonical.PartitionHierarchy` and
-  `InfoGeometry.Canonical.RefinementGaloisConnection` refine and coarsen
-  partition and sector structures;
+  as `X → Y`, with `fiberWeight` and `encoderMarginal`. It carries no
+  Markov content of its own;
+* `InfoGeometry.Canonical.PartitionHierarchy` is a finite coarse-grained
+  Boltzmann/Gibbs partition calculus. It contains no reference to `sector` and
+  does not refine or coarsen anything; it carries no Markov content;
+* `InfoGeometry.Canonical.RefinementGaloisConnection` relates refinements and
+  likewise carries no Markov content;
 * `InfoGeometry.QuantumContext.CausalPetzStiefelConservation` defines
   `blockIntertwiner : Matrix (Fin 2) (Fin 2) R`, a *square* two-by-two block
-  operator, with `gram_isometry_iff_stiefel` and `petz_trace_preservation`.
+  operator, with `gram_isometry_iff_stiefel` and `petz_trace_preservation`;
+  it does not mention `Markov`, `Laplacian` or `IsGroupInverse`;
+* `InfoGeometry.QuantumContext.MarkovPartitionLumping` **does** carry the
+  lumping specialization: `partitionIncidence`, the block-sum criterion
+  `partitionIntertwining_iff_blockSum`, the stationary pushforward
+  `pushforwardStationaryRow`, and `groupInverse_intertwines_of_partitionLumping`
+  concluding `Gsharp * partitionIncidence G = partitionIncidence G * Qsharp`.
 
-None of these mentions `Markov`, `Laplacian`, `stationaryMeanMatrix` or
-`IsGroupInverse`, and `blockIntertwiner` is square rather than rectangular. So
-the structures are formalized while their coupling to rectangular Markov
-intertwining is not. Attaching this module to them would be new formalization
-work, not a corollary of anything proved here.
+That last owner reaches its conclusion through the *stochastic* route
+`groupInverse_intertwines_of_stationary_compatible`. This module supplies the
+*abstract* route; the two are related, not competing. The Stiefel owner above
+remains unconnected to rectangular Markov intertwining.
 -/
 
 noncomputable section
@@ -160,6 +184,92 @@ theorem regularized_groupInverse_intertwines
   calc (LP_sharp + EP) * C = LP_sharp * C + EP * C := Matrix.add_mul _ _ _
     _ = (C * LQ_sharp) + (C * EQ) := by rw [h_sharp, h_stat]
     _ = C * (LQ_sharp + EQ) := (Matrix.mul_add _ _ _).symm
+
+/-- The nilpotent exchange matrix `-E₀₁` used as the counterexample carrier in
+`groupInverse_intertwines_of_laws_needs_hQ_comm`. -/
+def nilpotentExchangeUp : Matrix (Fin 2) (Fin 2) ℝ := !![0, -1; 0, 0]
+
+/-- Its transpose-like partner `-E₁₀`, which satisfies the absorption law
+`M * L * M = M` but does not commute with `nilpotentExchangeUp`. -/
+def nilpotentExchangeDown : Matrix (Fin 2) (Fin 2) ℝ := !![0, 0; -1, 0]
+
+/-- **Non-commutativity witness (T16).** `nilpotentExchangeUp` and
+`nilpotentExchangeDown` genuinely fail to commute:
+
+`nilpotentExchangeUp * nilpotentExchangeDown ≠ nilpotentExchangeDown * nilpotentExchangeUp`.
+
+The products differ at entry `(0, 0)`, being `1` and `0`. This shows that the
+matrix algebra in play is genuinely non-commutative, so no commutativity of `R`
+may be assumed in `groupInverse_intertwines_of_laws`.
+
+This witness is a *non-commutativity* certificate, not a *necessity*
+certificate. It does not by itself show that the commutativity law
+`LQ * LQ_sharp = LQ_sharp * LQ` is required. That is a separate claim, proved
+separately by `groupInverse_intertwines_of_laws_needs_hQ_comm` below, with an
+explicit counterexample. -/
+theorem nilpotentExchange_noncommutes :
+    nilpotentExchangeUp * nilpotentExchangeDown
+      ≠ nilpotentExchangeDown * nilpotentExchangeUp := by
+  intro h
+  have h0 := congrFun (congrFun h (0 : Fin 2)) (0 : Fin 2)
+  simp only [nilpotentExchangeUp, nilpotentExchangeDown, Matrix.mul_apply,
+    Matrix.zero_apply] at h0
+  norm_num at h0
+
+omit [DecidableEq ι] [DecidableEq κ] in
+/-- **Counterexample when `hQ_comm` is omitted.**
+
+The other five displayed hypotheses of `groupInverse_intertwines_of_laws` do
+not, by themselves, imply its conclusion. This explicit matrix witness shows
+why the commutativity law is needed by that proof contract.
+
+The witness is the nilpotent exchange pair `LQ = -E₀₁`, `LQ_sharp = -E₁₀` with
+`LP = LP_sharp = 0` and `C = LQ`. All five remaining binders hold, yet
+`LP_sharp * C = 0` while `C * LQ_sharp = E₀₀ ≠ 0`.
+
+This counterexample concerns only the displayed individual laws. It does not
+claim anything about the `IsGroupInverse` bundle statement: the witness
+exploits the individual laws being weaker than that bundle. -/
+theorem groupInverse_intertwines_of_laws_needs_hQ_comm :
+    ¬ (∀ (LP LP_sharp : Matrix (Fin 2) (Fin 2) ℝ) (LQ LQ_sharp : Matrix (Fin 2) (Fin 2) ℝ)
+        (C : Matrix (Fin 2) (Fin 2) ℝ),
+        LP_sharp * LP * LP_sharp = LP_sharp →
+        LQ_sharp * LQ * LQ_sharp = LQ_sharp →
+        LP * LP_sharp = LP_sharp * LP →
+        LP * C = C * LQ →
+        LP * LP_sharp * C = C * (LQ * LQ_sharp) →
+        LP_sharp * C = C * LQ_sharp) := by
+  intro hall
+  set L : Matrix (Fin 2) (Fin 2) ℝ := !![0, -1; 0, 0] with hL
+  set M : Matrix (Fin 2) (Fin 2) ℝ := !![0, 0; -1, 0] with hM
+  have h1 : (0 : Matrix (Fin 2) (Fin 2) ℝ) * (0 : Matrix (Fin 2) (Fin 2) ℝ)
+      * (0 : Matrix (Fin 2) (Fin 2) ℝ) = (0 : Matrix (Fin 2) (Fin 2) ℝ) := by
+        simp
+  have h2 : M * L * M = M := by
+    rw [hM, hL]
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp only [Matrix.mul_apply] <;> norm_num
+  have h3 : (0 : Matrix (Fin 2) (Fin 2) ℝ) * (0 : Matrix (Fin 2) (Fin 2) ℝ)
+      = (0 : Matrix (Fin 2) (Fin 2) ℝ) * (0 : Matrix (Fin 2) (Fin 2) ℝ) := by
+        simp
+  have h4 : (0 : Matrix (Fin 2) (Fin 2) ℝ) * L = L * L := by
+    rw [hL]
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp only [Matrix.mul_apply] <;> norm_num
+  have h5 : (0 : Matrix (Fin 2) (Fin 2) ℝ) * (0 : Matrix (Fin 2) (Fin 2) ℝ) * L
+      = L * (L * M) := by
+    rw [hL, hM]
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp only [Matrix.mul_apply] <;> norm_num
+  have hbad := hall (0 : Matrix (Fin 2) (Fin 2) ℝ) (0 : Matrix (Fin 2) (Fin 2) ℝ)
+    L M L h1 h2 h3 h4 h5
+  rw [hL, hM] at hbad
+  have hbad0 := congrFun (congrFun hbad (0 : Fin 2)) (0 : Fin 2)
+  simp only [Matrix.mul_apply, Matrix.zero_apply] at hbad0
+  exact absurd hbad0 (by norm_num)
 
 end InfoGeometry.QuantumContext.IntertwinerAlgebra
 

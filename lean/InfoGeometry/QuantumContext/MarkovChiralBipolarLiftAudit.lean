@@ -1,0 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.QuantumContext.MarkovChiralBipolarLift
+
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.ChiralBipolarLift.chiralBipolar_baseMajorana_eq
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.ChiralBipolarLift.liftedChiralMajorana_eq_majoranaDifference
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.ChiralBipolarLift.liftedChiralMajorana_skew
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.ChiralBipolarLift.liftedChiralMajorana_ne_zero
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.ChiralBipolarLift.liftedChiralMajorana_anticommutes_globalChirality
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.ChiralBipolarLift.exists_symmetricSoftmax_groupInverse_liftedChiral_balance

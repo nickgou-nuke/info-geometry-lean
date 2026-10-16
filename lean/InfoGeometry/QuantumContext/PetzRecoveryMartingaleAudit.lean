@@ -1,38 +1,28 @@
-import InfoGeometry.QuantumContext.PetzRecoveryMartingale
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.QuantumContext.MarkovGroupInversePetzCorner
 
 /-!
-# Audit Companion: Petz Recovery Map, FlashAttention Martingale Filtration & Jones Subfactor Index
+# Kernel audit for algebraic full-matrix support compression
 
-This module verifies the kernel axiomatic footprint and non-vacuity of
-`InfoGeometry.QuantumContext.PetzMartingale`.
+The generic ring identities are checked alongside their Markov range-projector
+instantiations on the full matrix carrier. This audit makes no probability,
+modular-cocycle, or subfactor-index claim.
 -/
 
 namespace InfoGeometry.QuantumContext.PetzMartingale.Audit
 
-open InfoGeometry.QuantumContext.PetzMartingale
+#check @InfoGeometry.QuantumContext.PetzMartingale.petz_recovery_idempotent
+#check @InfoGeometry.QuantumContext.markovRange_petzRecovery_idempotent
+#check @InfoGeometry.QuantumContext.markovRange_petzRecovery_range_iff_corner
+#check @InfoGeometry.QuantumContext.markovRange_petzRecovery_corner_bimodule
 
-#check @compile_petz_recovery_martingale
-#check @petz_recovery_idempotent
-#check @petz_recovery_exact_on_support
-#check @petz_channel_composition
-#check @eviction_channel_annihilates_Q
-#check @petz_annihilates_eviction_ideal
-#check @martingale_filtration_collapse
-#check @connes_radon_nikodym_support_action
-#check @jones_index_pos
-#check @jones_index_ge_one
-#check @jones_index_eq_mul
-#check @flashattention_jones_index_value
-
-#print axioms compile_petz_recovery_martingale
-#print axioms petz_recovery_idempotent
-#print axioms petz_recovery_exact_on_support
-#print axioms petz_channel_composition
-#print axioms eviction_channel_annihilates_Q
-#print axioms petz_annihilates_eviction_ideal
-#print axioms martingale_filtration_collapse
-#print axioms jones_index_pos
-#print axioms jones_index_ge_one
-#print axioms flashattention_jones_index_value
+#print axioms InfoGeometry.QuantumContext.PetzMartingale.petz_recovery_idempotent
+#print axioms InfoGeometry.QuantumContext.markovRange_petzRecovery_idempotent
+#print axioms InfoGeometry.QuantumContext.markovRange_petzRecovery_range_iff_corner
+#print axioms InfoGeometry.QuantumContext.markovRange_petzRecovery_corner_bimodule
 
 end InfoGeometry.QuantumContext.PetzMartingale.Audit

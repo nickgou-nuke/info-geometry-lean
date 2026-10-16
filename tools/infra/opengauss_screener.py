@@ -258,7 +258,13 @@ def check_unused_hypothesis_binders(source: str) -> list[TrapViolation]:
         for name, binder_type in parsed_binders:
             if not name.startswith("h") or name in {"have", "has", "hypothesis"}:
                 continue
-            if name not in subst_consumed and not re.search(rf"\b{re.escape(name)}\b", used_text):
+            # Lean identifiers may end in apostrophes (`h'`, `h₂'`). Since an
+            # apostrophe is not a Python regex word character, `\b` after a
+            # primed name is placed at the wrong position and reports a used
+            # binder as vacuous. Match Lean's identifier characters on both
+            # sides instead.
+            ident_pattern = rf"(?<![\w']){re.escape(name)}(?![\w'])"
+            if name not in subst_consumed and not re.search(ident_pattern, used_text):
                 line_number = source.count("\n", 0, start.start()) + 1
                 violations.append(TrapViolation(
                     trap_id="T4",

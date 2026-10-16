@@ -99,6 +99,19 @@ def test_t4_warns_on_unused_hypothesis_binder():
     assert len(t4) == 1
 
 
+def test_t4_recognizes_used_apostrophe_suffixed_hypothesis():
+    code = "theorem used_primed_hypothesis {x y : Nat} (h' : x = y) : y = x := by exact h'.symm"
+    t4 = [v for v in screen_lean_content(code) if v.trap_id == "T4"]
+    assert t4 == []
+
+
+def test_t4_still_detects_unused_apostrophe_suffixed_hypothesis():
+    code = "theorem unused_primed_hypothesis (h' : 0 = 0) (n : Nat) : n = n := by rfl"
+    t4 = [v for v in screen_lean_content(code) if v.trap_id == "T4"]
+    assert len(t4) == 1
+    assert "h'" in t4[0].message
+
+
 def test_t4_recognizes_equality_hypothesis_consumed_by_subst():
     code = """
     theorem subst_uses_equality {a u n : Nat}

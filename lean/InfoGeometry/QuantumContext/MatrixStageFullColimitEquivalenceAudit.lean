@@ -1,0 +1,25 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.QuantumContext.MatrixStageFullColimitEquivalence
+
+#print axioms InfoGeometry.QuantumContext.MatrixStageFullColimitEquivalence.carrierStageToQuotient_compatible
+#print axioms InfoGeometry.QuantumContext.MatrixStageFullColimitEquivalence.carrierToQuotientRingHom_stage
+#print axioms InfoGeometry.QuantumContext.MatrixStageFullColimitEquivalence.carrierToQuotient_stage
+#print axioms InfoGeometry.QuantumContext.MatrixStageFullColimitEquivalence.stageToCarrier_compatible
+#print axioms InfoGeometry.QuantumContext.MatrixStageFullColimitEquivalence.carrierToQuotient_quotientToCarrier_stage
+#print axioms InfoGeometry.QuantumContext.MatrixStageFullColimitEquivalence.quotientToCarrier_carrierToQuotient_stage
+#print axioms InfoGeometry.QuantumContext.MatrixStageFullColimitEquivalence.carrierToQuotient_comp_quotientToCarrier
+#print axioms InfoGeometry.QuantumContext.MatrixStageFullColimitEquivalence.quotientToCarrier_comp_carrierToQuotient
+
+-- The constructors are audited as well as the theorem lemmas because the
+-- equivalence itself is the API consumed by downstream carrier transport.
+#print axioms InfoGeometry.QuantumContext.MatrixStageFullColimitEquivalence.carrierStageToQuotient
+#print axioms InfoGeometry.QuantumContext.MatrixStageFullColimitEquivalence.carrierToQuotientRingHom
+#print axioms InfoGeometry.QuantumContext.MatrixStageFullColimitEquivalence.carrierToQuotient
+#print axioms InfoGeometry.QuantumContext.MatrixStageFullColimitEquivalence.stageToCarrier
+#print axioms InfoGeometry.QuantumContext.MatrixStageFullColimitEquivalence.quotientToCarrier
+#print axioms InfoGeometry.QuantumContext.MatrixStageFullColimitEquivalence.carrierStarAlgEquiv

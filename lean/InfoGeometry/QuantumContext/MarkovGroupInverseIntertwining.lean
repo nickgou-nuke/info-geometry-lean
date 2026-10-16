@@ -194,6 +194,125 @@ theorem groupInverse_intertwines_of_stationary_compatible
   simpa [Matrix.mulVec, dotProduct, Matrix.mul_apply, Pi.single_apply,
     Matrix.mulVec_single_one] using hentry
 
+/-! The stochastic compatibility lemmas below remove the externally supplied
+stationary-mean equation from the rectangular intertwining application. -/
+
+omit [DecidableEq ι] [Nonempty ι] in
+/-- A nonnegative rectangular row-sum-one intertwiner transports normalized
+stationary row distributions. The convention is row action on distributions:
+`πᵀ P = πᵀ`, while matrices act on column observables by `mulVec`. -/
+theorem stationaryMean_transport_of_stochastic_intertwiner
+    (P : Matrix ι ι ℝ) (Q : Matrix κ κ ℝ) (C : Matrix ι κ ℝ)
+    (π : ι → ℝ) (μ : κ → ℝ)
+    (hQ : Q ∈ Matrix.rowStochastic ℝ κ)
+    (hQpos : ∀ i j, 0 < Q i j)
+    (hπnonneg : ∀ i, 0 ≤ π i) (hπsum : ∑ i, π i = 1)
+    (hπstat : ∀ j, ∑ i, π i * P i j = π j)
+    (hμnonneg : ∀ j, 0 ≤ μ j) (hμsum : ∑ j, μ j = 1)
+    (hμstat : ∀ j, ∑ j', μ j' * Q j' j = μ j)
+    (hCnonneg : ∀ i j, 0 ≤ C i j)
+    (hCrows : ∀ i, ∑ j, C i j = 1)
+    (hintertwines : P * C = C * Q) :
+    ∀ j, ∑ i, π i * C i j = μ j := by
+  let ν : κ → ℝ := fun j => ∑ i, π i * C i j
+  have hνnonneg (j : κ) : 0 ≤ ν j := by
+    dsimp [ν]
+    exact Finset.sum_nonneg fun i hi => mul_nonneg (hπnonneg i) (hCnonneg i j)
+  have hνsum : ∑ j, ν j = 1 := by
+    dsimp [ν]
+    calc
+      (∑ j, ∑ i, π i * C i j) = ∑ i, π i * ∑ j, C i j := by
+        rw [Finset.sum_comm]
+        apply Finset.sum_congr rfl
+        intro i hi
+        rw [Finset.mul_sum]
+      _ = ∑ i, π i := by
+        apply Finset.sum_congr rfl
+        intro i hi
+        rw [hCrows i, mul_one]
+      _ = 1 := hπsum
+  have hνstat (j : κ) : ∑ k, ν k * Q k j = ν j := by
+    calc
+      (∑ k, ν k * Q k j) =
+          ∑ i, π i * ∑ k, C i k * Q k j := by
+        dsimp [ν]
+        calc
+          (∑ k, (∑ i, π i * C i k) * Q k j) =
+              ∑ k, ∑ i, (π i * C i k) * Q k j := by
+            apply Finset.sum_congr rfl
+            intro k hk
+            rw [Finset.sum_mul]
+          _ = ∑ i, ∑ k, (π i * C i k) * Q k j := by
+            rw [Finset.sum_comm]
+          _ = ∑ i, π i * ∑ k, C i k * Q k j := by
+            apply Finset.sum_congr rfl
+            intro i hi
+            rw [Finset.mul_sum]
+            apply Finset.sum_congr rfl
+            intro k hk
+            ring
+      _ = ∑ i, π i * (C * Q) i j := by simp [Matrix.mul_apply]
+      _ = ∑ i, π i * (P * C) i j := by rw [hintertwines]
+      _ = ∑ i, π i * ∑ k, P i k * C k j := by simp [Matrix.mul_apply]
+      _ = ∑ i, ∑ k, (π i * P i k) * C k j := by
+        apply Finset.sum_congr rfl
+        intro i hi
+        rw [Finset.mul_sum]
+        apply Finset.sum_congr rfl
+        intro k hk
+        ring
+      _ = ∑ k, ∑ i, (π i * P i k) * C k j := by
+        rw [Finset.sum_comm]
+      _ = ∑ k, (∑ i, π i * P i k) * C k j := by
+        apply Finset.sum_congr rfl
+        intro k hk
+        rw [← Finset.sum_mul]
+      _ = ∑ k, π k * C k j := by
+        apply Finset.sum_congr rfl
+        intro k hk
+        rw [hπstat k]
+      _ = ν j := rfl
+  have hνpos : ∀ j, 0 < ν j :=
+    stationaryRowProbability_pos_of_pos_entries Q ν hQpos hνnonneg hνsum hνstat
+  have hμpos : ∀ j, 0 < μ j :=
+    stationaryRowProbability_pos_of_pos_entries Q μ hQpos hμnonneg hμsum hμstat
+  obtain ⟨η, hη, hηunique⟩ :=
+    existsUnique_positive_normalized_stationary_row Q hQ hQpos
+  have hνη : ν = η := hηunique ν ⟨hνpos, hνsum, hνstat⟩
+  have hμη : μ = η := hηunique μ ⟨hμpos, hμsum, hμstat⟩
+  have hνμ : ν = μ := hνη.trans hμη.symm
+  intro j
+  calc
+    (∑ i, π i * C i j) = ν j := rfl
+    _ = μ j := congrFun hνμ j
+
+/-- Rectangular stochastic intertwining transports the finite Markov group
+inverse. The stationary-mean compatibility required by the algebraic
+intertwining theorem is derived from nonnegativity, row sums, and `P*C=C*Q`.
+This theorem is finite and algebraic; it asserts no convergence of iterates. -/
+theorem groupInverse_intertwines_of_stochastic_compatible
+    (P : Matrix ι ι ℝ) (Q : Matrix κ κ ℝ) (C : Matrix ι κ ℝ)
+    (π : ι → ℝ) (μ : κ → ℝ)
+    (hP : P ∈ Matrix.rowStochastic ℝ ι)
+    (hQ : Q ∈ Matrix.rowStochastic ℝ κ)
+    (hPpos : ∀ i j, 0 < P i j) (hQpos : ∀ i j, 0 < Q i j)
+    (hπnonneg : ∀ i, 0 ≤ π i) (hπsum : ∑ i, π i = 1)
+    (hμnonneg : ∀ j, 0 ≤ μ j) (hμsum : ∑ j, μ j = 1)
+    (hπstat : ∀ j, ∑ i, π i * P i j = π j)
+    (hμstat : ∀ j, ∑ j', μ j' * Q j' j = μ j)
+    (hCnonneg : ∀ i j, 0 ≤ C i j)
+    (hCrows : ∀ i, ∑ j, C i j = 1)
+    (hintertwines : P * C = C * Q)
+    (G : Matrix ι ι ℝ) (hG : IsGroupInverse (1 - P) G)
+    (H : Matrix κ κ ℝ) (hH : IsGroupInverse (1 - Q) H) :
+    G * C = C * H := by
+  apply groupInverse_intertwines_of_stationary_compatible
+    P Q C π μ hP hQ hPpos hQpos hπsum hμsum hπstat hμstat hCrows
+    (stationaryMean_transport_of_stochastic_intertwiner
+      P Q C π μ hQ hQpos hπnonneg hπsum hπstat hμnonneg hμsum hμstat
+      hCnonneg hCrows hintertwines)
+    hintertwines G hG H hH
+
 end InfoGeometry.QuantumContext.MarkovDrazin
 
 end

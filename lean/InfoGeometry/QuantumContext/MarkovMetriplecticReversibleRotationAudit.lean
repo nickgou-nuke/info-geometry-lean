@@ -1,0 +1,18 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.QuantumContext.MarkovMetriplecticReversibleRotation
+
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.ReversibleRotation.matrixColumn_leftAction
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.ReversibleRotation.dotProduct_leftAction_skew
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.ReversibleRotation.weightedMatrixPairing_leftAction_skew
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.ReversibleRotation.coordinateSkewMatrix_skew
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.ReversibleRotation.coordinateSkewMatrix_ne_zero
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.ReversibleRotation.weightedMatrixPairing_coordinateReversibleAction_skew
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.ReversibleRotation.coordinateReversibleAction_ne_zero
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.ReversibleRotation.coordinateReversibleAction_nonzero_on_full_matrix
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.ReversibleRotation.markovMetriplectic_coordinateReversible_energy_balance
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.ReversibleRotation.groupInverse_projection_and_coordinateReversible_balance

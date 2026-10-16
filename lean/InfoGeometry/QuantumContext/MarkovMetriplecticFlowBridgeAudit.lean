@@ -1,0 +1,20 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.QuantumContext.MarkovMetriplecticFlowBridge
+
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.weightedMatrixPairing
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.markovLeftOnsager
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.constantOneMatrix
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.markovMetriplecticFlow
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.markovLeftOnsager_apply
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.matrixColumn_markovLeftOnsager
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.weightedMatrixPairing_laplacian_symmetric
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.weightedMatrixPairing_comm
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.weightedMatrixPairing_laplacian_nonneg
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.markovLeftOnsager_ones_eq_zero
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.markovMetriplecticFlow_entropyProduction_nonneg
+#print axioms InfoGeometry.QuantumContext.MarkovDrazin.groupInverse_recovers_matrix_force_of_left_range

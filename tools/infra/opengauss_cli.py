@@ -42,6 +42,7 @@ if str(_REPO_ROOT) not in sys.path:
 
 from tools.build_lock import acquire_build_lock
 from tools.pathing import repo_root as canonical_repo_root
+from tools.infra.causal_cone_cross_sections import directional_cross_section
 from tools.infra.opengauss_ground_truth_contract import (
     DRAFT_RECEIPT_SCHEMA,
     _qualified_declaration_heads,
@@ -933,6 +934,137 @@ class DiscoveryReport:
         }
 
 
+def _multi_apex_cone_validation_error(
+    packet: Dict[str, Any],
+    requested_names: Sequence[str],
+    *,
+    backward_depth: int,
+    forward_depth: int,
+    cone_limit: int,
+) -> Optional[str]:
+    """Validate the internal seed/cone/cross-section claims of a multi-apex packet."""
+    apices = packet.get("apices")
+    if not isinstance(apices, list) or not apices:
+        return "invalid_apices_payload"
+    seed_ids: list[str] = []
+    if len(apices) != len(requested_names):
+        return "apices_do_not_match_request"
+    for apex, requested_name in zip(apices, requested_names):
+        if not isinstance(apex, dict) or apex.get("name") != requested_name:
+            return "apices_do_not_match_request"
+        node = apex.get("node") if isinstance(apex, dict) else None
+        node_id = node.get("_id") if isinstance(node, dict) else None
+        if (
+            not isinstance(node_id, str)
+            or not node_id
+            or node.get("name") != requested_name
+        ):
+            return "invalid_apex_node_id"
+        seed_ids.append(node_id)
+    seeds = packet.get("seeds")
+    if seeds != seed_ids or len(set(seed_ids)) != len(seed_ids):
+        return "seeds_do_not_match_apex_nodes"
+
+    backward = packet.get("backward_cone")
+    forward = packet.get("forward_cone")
+    cone = packet.get("cone")
+    if not all(isinstance(rows, list) for rows in (backward, forward, cone)):
+        return "invalid_cone_rows"
+    parameters = packet.get("parameters")
+    if not isinstance(parameters, dict):
+        return "invalid_cone_parameters"
+    if (
+        type(parameters.get("backward_depth")) is not int
+        or parameters.get("backward_depth") != backward_depth
+        or type(parameters.get("forward_depth")) is not int
+        or parameters.get("forward_depth") != forward_depth
+        or type(parameters.get("per_apex_direction_result_limit")) is not int
+        or parameters.get("per_apex_direction_result_limit") != cone_limit
+    ):
+        return "requested_cone_parameters_mismatch"
+
+    def valid_rows(rows: list[Any], depth_bound: int) -> bool:
+        rows_per_seed: dict[str, int] = {seed: 0 for seed in seed_ids}
+        for row in rows:
+            if not isinstance(row, dict):
+                return False
+            component = row.get("component")
+            if (
+                row.get("seed") not in seed_ids
+                or type(row.get("depth")) is not int
+                or not 1 <= row["depth"] <= depth_bound
+                or not isinstance(component, dict)
+                or not isinstance(component.get("_id"), str)
+                or not component["_id"]
+            ):
+                return False
+            rows_per_seed[row["seed"]] += 1
+        if any(count > cone_limit for count in rows_per_seed.values()):
+            return False
+        return True
+
+    def reached_limit(rows: list[dict[str, Any]]) -> bool:
+        counts = {seed: 0 for seed in seed_ids}
+        for row in rows:
+            counts[row["seed"]] += 1
+        return any(count >= cone_limit for count in counts.values())
+
+    if not valid_rows(backward, backward_depth):
+        return "invalid_backward_cone_row"
+    if not valid_rows(forward, forward_depth):
+        return "invalid_forward_cone_row"
+    if (
+        type(parameters.get("backward_limit_reached")) is not bool
+        or parameters["backward_limit_reached"] != reached_limit(backward)
+        or type(parameters.get("forward_limit_reached")) is not bool
+        or parameters["forward_limit_reached"] != reached_limit(forward)
+    ):
+        return "cone_limit_flags_do_not_match_rows"
+
+    expected_cone = [
+        {**row, "direction": "backward_prerequisite"} for row in backward
+    ] + [
+        {**row, "direction": "forward_consequence"} for row in forward
+    ]
+    if cone != expected_cone:
+        return "combined_cone_does_not_match_directional_rows"
+
+    try:
+        apex_nodes = [{"_id": seed} for seed in seed_ids]
+        _, shared_prerequisites, common_prerequisites = directional_cross_section(
+            apex_nodes, seed_ids, backward
+        )
+        _, shared_consequences, common_consequences = directional_cross_section(
+            apex_nodes, seed_ids, forward
+        )
+    except (KeyError, TypeError, ValueError):
+        return "invalid_cross_section_input"
+
+    expected_shared = [
+        {**row, "direction": "backward_prerequisite"}
+        for row in shared_prerequisites
+    ] + [
+        {**row, "direction": "forward_consequence"}
+        for row in shared_consequences
+    ]
+    if packet.get("shared_prerequisites") != shared_prerequisites:
+        return "shared_prerequisites_do_not_match_cone"
+    if packet.get("common_prerequisites") != common_prerequisites:
+        return "common_prerequisites_do_not_match_cone"
+    if packet.get("shared_consequences") != shared_consequences:
+        return "shared_consequences_do_not_match_cone"
+    if packet.get("common_consequences") != common_consequences:
+        return "common_consequences_do_not_match_cone"
+    if packet.get("shared_nodes") != expected_shared:
+        return "shared_nodes_do_not_match_directional_cross_sections"
+    if (
+        type(packet.get("shared_node_count")) is not int
+        or packet.get("shared_node_count") != len(expected_shared)
+    ):
+        return "shared_node_count_mismatch"
+    return None
+
+
 def discover_dag_context(
     apices: Sequence[str],
     *,
@@ -1046,13 +1178,43 @@ def discover_dag_context(
         packet["status"] = "invalid_packet"
         packet["validation_error"] = "requested_generation_mismatch"
         return packet
+    if packet.get("status") == "ok" and len(names) > 1:
+        validation_error = _multi_apex_cone_validation_error(
+            packet,
+            names,
+            backward_depth=backward_depth,
+            forward_depth=forward_depth,
+            cone_limit=cone_limit,
+        )
+        if validation_error is not None:
+            packet["status"] = "invalid_packet"
+            packet["validation_error"] = validation_error
+            return packet
     packet["authority"] = "navigation_only"
     packet["graph_is_proof_authority"] = False
+    packet["graph_is_navigation_not_proof"] = True
+    if packet.get("status") == "ok" and len(names) > 1:
+        parameters = packet.get("parameters")
+        if not isinstance(parameters, dict):
+            parameters = {}
+            packet["parameters"] = parameters
+        parameters.update({
+            "edge_orientation": "declaration -> dependency",
+            "backward_direction": "OUTBOUND prerequisites/dependencies from each apex",
+            "forward_direction": "INBOUND users/consequences into each apex",
+            "cross_sections_are_bounded_query_results": True,
+        })
+        packet["orientation"] = {
+            "edge_orientation": "declaration -> dependency",
+            "backward_cone": "OUTBOUND prerequisites/dependencies from each apex",
+            "forward_cone": "INBOUND users/consequences into each apex",
+            "graph_is_navigation_not_proof": True,
+        }
     provenance = packet.get("graph_provenance")
     if not isinstance(provenance, dict):
         provenance = {}
         packet["graph_provenance"] = provenance
-    provenance.setdefault("freshness", "unknown")
+    provenance["freshness"] = "unknown"
     return packet
 
 

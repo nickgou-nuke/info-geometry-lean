@@ -405,7 +405,10 @@ def check_homomorphism_rejection(lines: list[str]) -> list[TrapViolation]:
 
 
 def check_noncommutative_witness_requirement(
-    content: str, lines: list[str], filename: str = "<unknown>"
+    content: str,
+    lines: list[str],
+    filename: str = "<unknown>",
+    import_root: Path | None = None,
 ) -> list[TrapViolation]:
     """Detect Trap T16 Non-Commutativity Witness Requirement:
 
@@ -454,14 +457,19 @@ def check_noncommutative_witness_requirement(
         carrier_coverage = all(
             _has_closed_noncommutativity_witness(content, required_carriers={carrier})
             or _has_resolved_import_witness(
-                content, filename, required_carriers={carrier}
+                content,
+                filename,
+                required_carriers={carrier},
+                import_root=import_root,
             )
             for carrier in matrix_carriers
         )
     else:
         carrier_coverage = (
             _has_closed_noncommutativity_witness(content)
-            or _has_resolved_import_witness(content, filename)
+            or _has_resolved_import_witness(
+                content, filename, import_root=import_root
+            )
         )
 
     if not carrier_coverage:
@@ -1509,6 +1517,7 @@ def _has_resolved_import_witness(
     filename: str,
     *,
     required_carriers: set[tuple[str, str, str]] | None = None,
+    import_root: Path | None = None,
 ) -> bool:
     """Inspect direct repo-local imports for a carrier-matched witness.
 
@@ -1520,7 +1529,7 @@ def _has_resolved_import_witness(
     """
     if filename == "<unknown>":
         return False
-    repo_root = Path(__file__).resolve().parents[2]
+    repo_root = import_root or Path(__file__).resolve().parents[2]
     source = _strip_lean_comments_and_strings(source)
     subject_carriers = required_carriers or _required_matrix_carriers(source)
     imported_modules = [
@@ -2167,7 +2176,11 @@ def screen_lean_content(
     violations.extend(check_hypothesis_packaging(lines))
     violations.extend(check_scalar_surrogates(lines))
     violations.extend(check_homomorphism_rejection(lines))
-    violations.extend(check_noncommutative_witness_requirement(content, lines, filename))
+    violations.extend(
+        check_noncommutative_witness_requirement(
+            content, lines, filename, import_root=import_root
+        )
+    )
     violations.extend(check_tactic_misuse_on_operators(lines))
     violations.extend(check_model_witnessing(lines, filename=filename, import_root=import_root))
 

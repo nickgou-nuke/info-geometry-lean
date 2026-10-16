@@ -13,6 +13,57 @@ from tools.infra import opengauss_cli
 from tools.quality.proof_proxy_staged_gate import checker_index_mismatches
 
 
+def valid_multi_apex_packet(
+    *, backward_depth: int = 6, forward_depth: int = 6, cone_limit: int = 250
+) -> dict:
+    seed_a = "decls/a"
+    seed_b = "decls/b"
+    shared = {"_id": "decls/shared", "name": "Shared"}
+    backward = [
+        {"seed": seed_a, "depth": 1, "component": shared},
+        {"seed": seed_b, "depth": 1, "component": shared},
+    ]
+    forward = [{"seed": seed_a, "depth": 2, "component": {"_id": "decls/user"}}]
+    shared_prerequisites = [
+        {"node": shared, "seed_count": 2, "seeds": [seed_a, seed_b]}
+    ]
+    shared_consequences = []
+    return {
+        "schema": "info_geometry.causal_chiral_cone_prompt.v2",
+        "status": "ok",
+        "mode": "multi-apex-multi-cone",
+        "apices": [
+            {"name": "Owner.left", "node": {"_id": seed_a, "name": "Owner.left"}},
+            {"name": "Owner.right", "node": {"_id": seed_b, "name": "Owner.right"}},
+        ],
+        "seeds": [seed_a, seed_b],
+        "backward_cone": backward,
+        "forward_cone": forward,
+        "cone": [
+            {**row, "direction": "backward_prerequisite"} for row in backward
+        ] + [
+            {**row, "direction": "forward_consequence"} for row in forward
+        ],
+        "shared_prerequisites": shared_prerequisites,
+        "common_prerequisites": shared_prerequisites,
+        "shared_consequences": shared_consequences,
+        "common_consequences": [],
+        "shared_nodes": [
+            {**row, "direction": "backward_prerequisite"}
+            for row in shared_prerequisites
+        ],
+        "shared_node_count": 1,
+        "parameters": {
+            "backward_depth": backward_depth,
+            "forward_depth": forward_depth,
+            "per_apex_direction_result_limit": cone_limit,
+            "backward_limit_reached": cone_limit <= 1,
+            "forward_limit_reached": cone_limit <= 1,
+        },
+        "graph_provenance": {"generation_id": "g1", "freshness": "unknown"},
+    }
+
+
 class DirectionalConeCrossSectionTests(unittest.TestCase):
     def test_separates_shared_from_common_nodes(self):
         apex_a = {"_id": "decls/a", "name": "A"}
@@ -165,13 +216,9 @@ class DirectionalConeCrossSectionTests(unittest.TestCase):
             cones.run_aql = original
 
     def test_discover_dag_context_requests_exact_multi_apexes(self):
-        packet = {
-            "schema": "info_geometry.causal_chiral_cone_prompt.v2",
-            "status": "ok",
-            "mode": "multi-apex-multi-cone",
-            "apices": [{"name": "Owner.left"}, {"name": "Owner.right"}],
-            "graph_provenance": {"generation_id": "g1", "freshness": "unknown"},
-        }
+        packet = valid_multi_apex_packet(
+            backward_depth=4, forward_depth=2, cone_limit=30
+        )
         completed = SimpleNamespace(returncode=0, stdout=json.dumps(packet), stderr="")
         with patch.object(opengauss_cli.subprocess, "run", return_value=completed) as run:
             result = opengauss_cli.discover_dag_context(
@@ -189,6 +236,138 @@ class DirectionalConeCrossSectionTests(unittest.TestCase):
         self.assertIn("--backward-depth", command)
         self.assertEqual(result["authority"], "navigation_only")
         self.assertFalse(result["graph_is_proof_authority"])
+        self.assertTrue(result["graph_is_navigation_not_proof"])
+        self.assertEqual(result["graph_provenance"]["freshness"], "unknown")
+
+    def test_discover_dag_context_replaces_forged_orientation_metadata(self):
+        packet = valid_multi_apex_packet()
+        packet["parameters"].update({
+            "edge_orientation": "forged reverse orientation",
+            "backward_direction": "forward users",
+            "forward_direction": "backward prerequisites",
+            "cross_sections_are_bounded_query_results": False,
+        })
+        packet["orientation"] = {
+            "edge_orientation": "forged",
+            "backward_cone": "forged",
+            "forward_cone": "forged",
+            "graph_is_navigation_not_proof": False,
+        }
+        completed = SimpleNamespace(returncode=0, stdout=json.dumps(packet), stderr="")
+        with patch.object(opengauss_cli.subprocess, "run", return_value=completed):
+            result = opengauss_cli.discover_dag_context(
+                ["Owner.left", "Owner.right"], repo_root=Path("/repo")
+            )
+        self.assertEqual(
+            result["parameters"]["edge_orientation"], "declaration -> dependency"
+        )
+        self.assertEqual(
+            result["parameters"]["backward_direction"],
+            "OUTBOUND prerequisites/dependencies from each apex",
+        )
+        self.assertEqual(
+            result["parameters"]["forward_direction"],
+            "INBOUND users/consequences into each apex",
+        )
+        self.assertTrue(result["parameters"]["cross_sections_are_bounded_query_results"])
+        self.assertTrue(result["orientation"]["graph_is_navigation_not_proof"])
+        self.assertTrue(result["graph_is_navigation_not_proof"])
+
+    def test_discover_dag_context_rejects_unknown_cone_seed(self):
+        packet = valid_multi_apex_packet()
+        packet["backward_cone"][0]["seed"] = "decls/forged"
+        completed = SimpleNamespace(returncode=0, stdout=json.dumps(packet), stderr="")
+        with patch.object(opengauss_cli.subprocess, "run", return_value=completed):
+            result = opengauss_cli.discover_dag_context(
+                ["Owner.left", "Owner.right"], repo_root=Path("/repo")
+            )
+        self.assertEqual(result["status"], "invalid_packet")
+        self.assertEqual(result["validation_error"], "invalid_backward_cone_row")
+
+    def test_discover_dag_context_recomputes_claimed_cross_sections(self):
+        packet = valid_multi_apex_packet()
+        packet["common_prerequisites"] = []
+        completed = SimpleNamespace(returncode=0, stdout=json.dumps(packet), stderr="")
+        with patch.object(opengauss_cli.subprocess, "run", return_value=completed):
+            result = opengauss_cli.discover_dag_context(
+                ["Owner.left", "Owner.right"], repo_root=Path("/repo")
+            )
+        self.assertEqual(result["status"], "invalid_packet")
+        self.assertEqual(
+            result["validation_error"], "common_prerequisites_do_not_match_cone"
+        )
+
+    def test_discover_dag_context_rejects_apex_label_for_different_node(self):
+        packet = valid_multi_apex_packet()
+        packet["apices"][0]["node"] = {
+            "_id": "decls/other",
+            "name": "Owner.impostor",
+        }
+        packet["seeds"][0] = "decls/other"
+        packet["backward_cone"][0]["seed"] = "decls/other"
+        packet["cone"][0]["seed"] = "decls/other"
+        completed = SimpleNamespace(returncode=0, stdout=json.dumps(packet), stderr="")
+        with patch.object(opengauss_cli.subprocess, "run", return_value=completed):
+            result = opengauss_cli.discover_dag_context(
+                ["Owner.left", "Owner.right"], repo_root=Path("/repo")
+            )
+        self.assertEqual(result["status"], "invalid_packet")
+        self.assertEqual(result["validation_error"], "invalid_apex_node_id")
+
+    def test_discover_dag_context_rejects_packet_depths_not_requested(self):
+        packet = valid_multi_apex_packet(
+            backward_depth=6, forward_depth=6, cone_limit=250
+        )
+        completed = SimpleNamespace(returncode=0, stdout=json.dumps(packet), stderr="")
+        with patch.object(opengauss_cli.subprocess, "run", return_value=completed):
+            result = opengauss_cli.discover_dag_context(
+                ["Owner.left", "Owner.right"],
+                repo_root=Path("/repo"),
+                backward_depth=1,
+                forward_depth=1,
+                cone_limit=10,
+            )
+        self.assertEqual(result["status"], "invalid_packet")
+        self.assertEqual(
+            result["validation_error"], "requested_cone_parameters_mismatch"
+        )
+
+    def test_discover_dag_context_recomputes_limit_reached_flags(self):
+        packet = valid_multi_apex_packet(
+            backward_depth=6, forward_depth=6, cone_limit=1
+        )
+        packet["parameters"]["backward_limit_reached"] = False
+        completed = SimpleNamespace(returncode=0, stdout=json.dumps(packet), stderr="")
+        with patch.object(opengauss_cli.subprocess, "run", return_value=completed):
+            result = opengauss_cli.discover_dag_context(
+                ["Owner.left", "Owner.right"],
+                repo_root=Path("/repo"),
+                cone_limit=1,
+            )
+        self.assertEqual(result["status"], "invalid_packet")
+        self.assertEqual(
+            result["validation_error"], "cone_limit_flags_do_not_match_rows"
+        )
+
+    def test_discover_dag_context_rejects_boolean_shared_count(self):
+        packet = valid_multi_apex_packet()
+        packet["shared_node_count"] = True
+        completed = SimpleNamespace(returncode=0, stdout=json.dumps(packet), stderr="")
+        with patch.object(opengauss_cli.subprocess, "run", return_value=completed):
+            result = opengauss_cli.discover_dag_context(
+                ["Owner.left", "Owner.right"], repo_root=Path("/repo")
+            )
+        self.assertEqual(result["status"], "invalid_packet")
+        self.assertEqual(result["validation_error"], "shared_node_count_mismatch")
+
+    def test_discover_dag_context_does_not_promote_packet_freshness(self):
+        packet = valid_multi_apex_packet()
+        packet["graph_provenance"]["freshness"] = "fresh"
+        completed = SimpleNamespace(returncode=0, stdout=json.dumps(packet), stderr="")
+        with patch.object(opengauss_cli.subprocess, "run", return_value=completed):
+            result = opengauss_cli.discover_dag_context(
+                ["Owner.left", "Owner.right"], repo_root=Path("/repo")
+            )
         self.assertEqual(result["graph_provenance"]["freshness"], "unknown")
 
     def test_failed_requested_dag_context_is_not_reported_as_empty(self):

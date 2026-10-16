@@ -5,7 +5,7 @@ Verifies all 15 OpenGauss commands natively:
 2.  /check        - Ground-Truthed Counterexample Hunter & Consistency Auditor
 3.  /refute       - Adversarial False-as-Stated Screener (15-Trap Catalog)
 4.  /draft        - Skeleton Drafter
-5.  /review       - Independent QMS Read-Only Auditor (Gate 2 / Gate 4)
+5.  /review       - Automated QMS Source Preflight (Gate 2 / Gate 4)
 6.  /checkpoint   - State Saver & Continuous Tracker
 7.  /refactor     - Proof Refactorer & Redundancy Cleaner
 8.  /golf         - Proof Optimizer
@@ -21,8 +21,12 @@ Verifies all 15 OpenGauss commands natively:
 from __future__ import annotations
 
 import json
+import io
+from contextlib import redirect_stdout
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Optional
+from unittest.mock import patch
 
 from tools.infra.opengauss_cli import (
     analyze_golf_opportunities,
@@ -156,11 +160,15 @@ def test_command_5_review(tmp_path: Optional[Path] = None):
     rep2 = review_file(clean_file, gate="GATE_2")
     assert rep2.verdict == "PASS"
     assert rep2.sorry_count == 0
+    assert rep2.review_authority == "automated_source_preflight"
+    assert rep2.independent_semantic_audit_performed is False
 
     rep4 = review_file(clean_file, gate="GATE_4")
     assert rep4.verdict == "STATIC_REVIEW_PASSED_KERNEL_UNVERIFIED"
     assert rep4.kernel_checked is False
     assert rep4.custom_axioms is None
+    assert rep4.review_authority == "automated_source_preflight"
+    assert rep4.independent_semantic_audit_performed is False
 
     # Static screening rejects repo-authored axiom declarations immediately via QMS_AXIOM.
     unverified_file = tmp_path / "Unverified.lean"
@@ -185,6 +193,25 @@ def test_command_5_review(tmp_path: Optional[Path] = None):
     assert rep_dirty.verdict == "REJECTED"
     assert rep_dirty.sorry_count == 1
     assert len(rep_dirty.scope_inflation_warnings) >= 1
+
+
+def test_review_json_distinguishes_automated_preflight_from_independent_audit(tmp_path: Optional[Path] = None):
+    if tmp_path is None:
+        import tempfile
+        tmp_path = Path(tempfile.mkdtemp())
+    source = tmp_path / "ReviewAuthority.lean"
+    source.write_text("theorem review_authority_test : True := by trivial\n", encoding="utf-8")
+    output = io.StringIO()
+    # Isolate this output-contract test from the caller's staged index. The
+    # staged hook has its own integration coverage.
+    with patch(
+        "tools.infra.opengauss_cli.subprocess.run",
+        return_value=SimpleNamespace(returncode=0, stderr="", stdout=""),
+    ), redirect_stdout(output):
+        assert main(["review", str(source), "--gate", "GATE_2", "--json"]) == 0
+    report = json.loads(output.getvalue())[0]
+    assert report["review_authority"] == "automated_source_preflight"
+    assert report["independent_semantic_audit_performed"] is False
 
 
 def test_command_6_checkpoint():

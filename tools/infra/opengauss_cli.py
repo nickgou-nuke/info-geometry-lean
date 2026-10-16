@@ -6,7 +6,7 @@ Implements all 15 OpenGauss commands natively in Python:
 2.  /check        - Ground-Truthed Counterexample Hunter & Consistency Auditor
 3.  /refute       - Adversarial False-as-Stated Screener (15-Trap Catalog)
 4.  /draft        - Skeleton Drafter
-5.  /review       - Independent QMS Read-Only Auditor (Gate 2 / Gate 4)
+5.  /review       - Automated QMS Source Preflight (Gate 2 / Gate 4)
 6.  /checkpoint   - State Saver & Continuous Tracker (git index protection)
 7.  /refactor     - Proof Refactorer & Redundancy Cleaner
 8.  /golf         - Proof Optimizer
@@ -299,7 +299,7 @@ def draft_skeleton(
 
 
 # ---------------------------------------------------------------------------
-# Command 5: REVIEW (Independent QMS Read-Only Auditor)
+# Command 5: REVIEW (Automated QMS Source Preflight)
 # ---------------------------------------------------------------------------
 
 @dataclass
@@ -315,6 +315,8 @@ class ReviewReport:
     scope_inflation_warnings: List[str]
     summary: str
     verification_status: str = "not_requested"
+    review_authority: str = "automated_source_preflight"
+    independent_semantic_audit_performed: bool = False
 
 
 def review_file(
@@ -1880,7 +1882,10 @@ def build_parser() -> argparse.ArgumentParser:
     p_draft.add_argument("--json", action="store_true", help="Output JSON")
 
     # 5. review
-    p_review = subparsers.add_parser("review", help="Independent QMS Read-Only Auditor")
+    p_review = subparsers.add_parser(
+        "review",
+        help="Automated QMS source preflight (does not replace independent semantic audit)",
+    )
     p_review.add_argument("paths", nargs="+", help="Lean files to audit")
     p_review.add_argument("--gate", default="GATE_2", choices=["GATE_2", "GATE_4"], help="Audit gate")
     p_review.add_argument("--verify-kernel", action="store_true", help="Build each owner and check its #print axioms audit under the shared build lock (GATE_4 only)")

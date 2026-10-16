@@ -304,7 +304,7 @@ The OpenGauss unified command suite provides 15 mathematically grounded, non-des
 | **2** | `/check` | Counterexample Hunter & Consistency Auditor | Expression, candidate hypotheses | Consistency report, counterexample risk rating |
 | **3** | `/refute` | Adversarial Screener (17-Trap Catalog) | Lean source files / directories | Trap violations report (T1–T17 & Gate 2.5), REJECT/PASS verdict |
 | **4** | `/draft` | Skeleton Drafter | Headline name, signature, sublemmas | Lean declaration skeleton with explicit leaf sorries |
-| **5** | `/review` | Independent QMS Auditor (Gate 2 / Gate 4) | Target Lean file, `--gate`, `--verify-kernel` | QMS-SOP-IAA-001 audit report, locked kernel & axiom verdict |
+| **5** | `/review` | Automated QMS Source Preflight (Gate 2 / Gate 4) | Target Lean file, `--gate`, `--verify-kernel` | Machine screening report; optional locked kernel & axiom verdict |
 | **6** | `/checkpoint`| State Saver & Continuous Tracker | Commit message, `--stage-path` | Staged git index (`git add`), CheckpointReceipt JSON |
 | **7** | `/refactor`| Proof Refactorer & Redundancy Cleaner | Lean source file | Monolithic block (>25 lines) extraction plan |
 | **8** | `/golf` | Proof Optimizer | Lean source file | Tactic compression suggestions (`rfl`, `ring`) |
@@ -398,11 +398,12 @@ The OpenGauss unified command suite provides 15 mathematically grounded, non-des
 
 ---
 
-### Command 5: `/review` (Independent QMS Read-Only Auditor)
-* **Objective**: Conduct strict, independent line-by-line code, trap, and scope preflight audits under **QMS-SOP-IAA-001**.
+### Command 5: `/review` (Automated QMS Source Preflight)
+* **Objective**: Run reproducible source, trap, scope, and optional kernel checks. This command is machine preflight; it is not the independent semantic audit required by **QMS-SOP-IAA-001**.
 * **Gate Modes**:
   * `--gate GATE_2`: Adversarial pre-proof audit. Rejects for trap errors; flags `REQUEST_CHANGES` on warnings, sorries, or scope inflation keywords ("proves quantum gravity", "unifies everything").
   * `--gate GATE_4`: Static preflight by default. A clean result is `STATIC_REVIEW_PASSED_KERNEL_UNVERIFIED` (`kernel_checked: false`), not acceptance. Add `--verify-kernel` to build the owner and run its qualified `#print axioms` audit under the shared build lock; disallowed axioms or compile failures produce `REJECTED`.
+* **Authority boundary**: JSON reports include `review_authority: "automated_source_preflight"` and `independent_semantic_audit_performed: false`. A clean preflight, including a kernel-checked result, does not count as A-A or QA-A semantic review. A reviewer who did not author the artifact must separately inspect the exact source and record file/line evidence; the coordinator must not substitute its own preflight report for that review.
 * **Source truth gates**: Both review gates reject repository-authored `axiom`/`postulate`, `sorry`, `admit`, and `sorryAx` tokens after Lean comments and strings are removed. Kernel audit output may include Lean/Mathlib foundational axioms, but those are dependencies of checked proofs and are not permission to declare project axioms. Review also detects theorem constructors that merely assemble a multi-field `Prop` structure from field proofs; the individual owner theorems must be reviewed directly. This structural check does not depend on names such as `Certificate`, `law`, or `witness`, and does not reject a predicate structure that has no aggregate theorem constructor.
 * **Commit-hook parity**: Run `python3 tools/quality/proof_proxy_staged_gate.py` during `/review` or `/checkpoint` before commit. It inspects the staged Lean source and enforces the same no-axiom/no-hole and aggregate-proof-wrapper checks as the pre-commit hook. When Lean paths are staged, it also fails closed if either executed checker differs between the worktree and Git index. It is a static source gate; only `--verify-kernel` establishes compilation and theorem axiom evidence.
 * **CLI Invocation**:
@@ -615,7 +616,8 @@ The OpenGauss workflow operates under strict QMS-SOP-IAA-001 role separation: Dr
   * Enforce **Trap T16 (Anti-Surrogate / Operator-Algebraic Root)**: verify zero scalar proxy structs, zero pre-commutator homomorphism collapses, presence of a closed carrier-matched non-commutativity witness, and zero unprojected scalar tactic misuses (`ring`/`linarith`).
   * Enforce **Gate 2.5 / Trap T17 (Mandatory Model Witnessing & Non-Degeneracy)**: verify that every declared `structure` or `class` has a closed constructive inhabitant or `Inhabited` / `Nonempty` instance free of ambient `section` `variable` dependencies and transitively free of local or imported `axiom`, `opaque`, `sorry`, or `admit` taint.
   * Attempt counterexample models via `/check`.
-  * Perform line-by-line static preflight audit using `/review <file> --gate GATE_2`.
+  * Run machine preflight using `/review <file> --gate GATE_2`.
+  * Separately inspect the exact draft as A-A and record semantic findings with file/line evidence. The `/review` JSON report is not that independent audit and must not be used as its substitute.
 * **Branching Protocol**:
   * **If PASS**: Advance to Gate 3 for leaf proof closure.
   * **If REJECT / OBSTRUCTED**:
@@ -637,7 +639,8 @@ The OpenGauss workflow operates under strict QMS-SOP-IAA-001 role separation: Dr
 ### Gate 4: Independent Acceptance QA & Automated Certification (`/certify`, `/review`)
 * **Agent Role**: Acceptance Quality Agent (**QA-A**) — non-overlapping with G-A and A-A.
 * **Mandatory Action**:
-  * Run `/review <file> --gate GATE_4 --verify-kernel` to perform static checks plus locked kernel compilation and `#print axioms` verification (note: without `--verify-kernel`, `/review --gate GATE_4` returns `STATIC_REVIEW_PASSED_KERNEL_UNVERIFIED`, which is not acceptance).
+  * As QA-A, independently inspect the exact promoted candidate and record acceptance findings with file/line evidence.
+  * Run `/review <file> --gate GATE_4 --verify-kernel` as the automated static and locked-kernel preflight (note: without `--verify-kernel`, `/review --gate GATE_4` returns `STATIC_REVIEW_PASSED_KERNEL_UNVERIFIED`, which is not kernel acceptance). This machine report does not replace the separate QA-A record.
   * Execute `/certify --file <file> --write-audit --verify-kernel` under the shared build lock (`run_locked_lake_build.py`) to generate and kernel-check the companion `<Module>Audit.lean` script.
   * Verify `#print axioms` output for every public declaration is strictly a subset of:
     `[propext, Classical.choice, Quot.sound]`
@@ -654,10 +657,10 @@ The OpenGauss workflow operates under strict QMS-SOP-IAA-001 role separation: Dr
 [ ] STEP 1: Ingest active TypedObstructionPackets from artifacts/residue_quarantine/. Respect bannedSearchDirections.
 [ ] STEP 2: Verify Goutev's Principle: Is the observable relational, projective, or an intertwining map?
 [ ] STEP 3: Write skeleton to scratch/ sandbox using /draft. Compile glue proof immediately.
-[ ] STEP 4: Submit to independent A-A for /refute --strict, /check, and /review --gate GATE_2 against the 17-Trap Catalog (T1-T17), including T16 anti-surrogate gates, Gate 2.5 / T17 model witnessing, and pre-commit proof-proxy rules.
+[ ] STEP 4: A-A independently inspects the draft and records file/line evidence; run /refute --strict, /check, and /review --gate GATE_2 as supporting machine preflight against T1-T17, T16, T17, and pre-commit rules.
 [ ] STEP 5: On failure, invoke /quarantine to preserve Core Gold and log Obstruction Slag in artifacts/residue_quarantine/.
 [ ] STEP 6: Close leaf lemmas via /autoprove. Refactor monolithic blocks (>25 lines) with /refactor and optimize with /golf.
-[ ] STEP 7: Submit to independent QA-A for /review --gate GATE_4 --verify-kernel and /certify --write-audit --verify-kernel.
+[ ] STEP 7: QA-A independently inspects the exact candidate and records file/line evidence; run /review --gate GATE_4 --verify-kernel and /certify --write-audit --verify-kernel as machine checks.
 [ ] STEP 8: Promote to live owner file only after 0 sorry, 0 traps, and standard axioms confirmed by the Lean kernel.
 [ ] STEP 9: Immediately run /checkpoint (--stage-path) to stage verified files into Git.
 ```

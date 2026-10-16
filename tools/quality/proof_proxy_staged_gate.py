@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import os
 import re
 import subprocess
 import sys
@@ -45,19 +46,36 @@ def git(args: list[str]) -> str:
     return subprocess.check_output(["git", *args], text=True)
 
 
+def _main_index_env() -> dict[str, str]:
+    """Environment whose git commands read the repository's main index.
+
+    `git commit --only <paths>` runs hooks with `GIT_INDEX_FILE` pointing at a
+    temporary index built from `HEAD` plus the named paths. Comparing checker
+    sources against that temporary index would report every staged (but not yet
+    committed) checker edit as unstaged. The requirement enforced here is that
+    the executed checker equals what the user has staged, i.e. the main index.
+    """
+    env = dict(os.environ)
+    env.pop("GIT_INDEX_FILE", None)
+    return env
+
+
 def checker_index_mismatches(repo_root: Path | None = None) -> list[str]:
     """Return gate source paths whose worktree contents differ from the index.
 
     The hook executes these files from the worktree while reading Lean payloads
     from stage-0 index blobs. Refuse that mixed snapshot if checker edits have
-    not been staged (or unstaged) consistently.
+    not been staged (or unstaged) consistently. The comparison uses the main
+    index, so partial commits (`git commit --only`) are judged by the same rule.
     """
+    env = _main_index_env()
     result = subprocess.run(
         ["git", "diff", "--quiet", "--", *EXECUTED_GATE_SOURCES],
         cwd=repo_root,
         capture_output=True,
         text=True,
         check=False,
+        env=env,
     )
     if result.returncode == 0:
         return []
@@ -68,6 +86,7 @@ def checker_index_mismatches(repo_root: Path | None = None) -> list[str]:
             capture_output=True,
             text=True,
             check=True,
+            env=env,
         ).stdout
         return [line for line in changed.splitlines() if line]
     detail = result.stderr.strip() or f"git diff exited {result.returncode}"

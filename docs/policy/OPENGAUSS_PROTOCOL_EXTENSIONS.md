@@ -110,6 +110,73 @@ Before any new definition, lemma, or helper theorem is drafted, the agent must e
 3. **Breach Consequences**:
    * Positing a duplicate declaration without an explicit cross-representation bridge is classified as **Structural Duplication Debt** and results in immediate rejection at Gate 2.
 
+### 2.1.1 Gate 0 Ground-Truth Theorem Contract (Anti-Confabulation Law)
+Declaration search is navigation, not evidence that a construction exists, is
+missing, or has the claimed meaning. In particular, `/discover`, graph/RAG
+results, prior agent reports, supplied Lean snippets, and compiler success do
+not establish that a proposed theorem matches the repository mathematics.
+Before drafting or editing an owner, the coordinator must complete a compact
+source-grounded theorem contract in the task record (or review packet):
+
+| Contract field | Required evidence |
+|---|---|
+| **Claim under consideration** | One precise mathematical sentence, separated from motivation or physical interpretation. |
+| **Actual carrier and operations** | Exact Lean declarations and source locations for the carrier, maps, instances, and conventions used by the claim. |
+| **Existing owner results** | Exact theorem names and source locations, with the relevant statements read from their owner files. Mark each as proved, assumed, or merely documented. |
+| **Dependency and consumer trace** | Imports and downstream uses that show where the result belongs and what its actual consumers require. |
+| **Verified gap** | The smallest missing statement, written with the repository’s actual types and hypotheses. “Not found” must be scoped to the searched files/surfaces and must not be inferred from one filename or search result. |
+| **Scope exclusions** | Nearby claims the source does not prove, including assumptions left explicit and any convergence, uniqueness, or interpretation claim not established. |
+
+The coordinator must inspect the declaration bodies and theorem statements,
+not just names or docstrings. When a proposed statement uses a different
+carrier or convention from an existing owner, state and prove the transport
+map before treating the statements as interchangeable. A build proves that
+Lean accepts the term at its type; it does not certify that the type expresses
+the advertised mathematics. Gate 2 must independently compare the contract,
+the Lean theorem type, and the cited owner source. Missing or contradictory
+evidence returns the task to Gate 0; it must not be patched around by renaming,
+rephrasing, or adding stronger hypotheses without a mathematical derivation.
+
+#### The Archetype Ladder: Latent Concepts × DAG-Derived Code Structure
+Use the archetype ladder as a filter between conceptual inputs, symbolic
+mathematical archetypes, and repository code. Reconcile two provenance paths:
+concept input is interpreted into a candidate archetype; separately,
+compiler-backed Lean declarations and dependency edges are analyzed through
+AST/AQL fingerprints and hash navigation, forward/backward causal cones,
+multi-apex cone cross-sections, and graph/topology layers to produce
+code-derived archetype candidates. SCC condensation is one layer in this
+deeper DAG analysis, not the whole discovery mechanism. Follow
+`docs/ASTAQLHASH-HOWTO.md` and `docs/ARANGO_DAG_REFRESH_METHODOLOGY.md` to check
+graph-generation/source provenance, preserve cone seed/apex provenance,
+inspect shared cross-section nodes, and descend overlays back to raw Lean
+declarations. Inspect those declarations before assigning mathematical
+meaning. Hashes, SCC membership, proximity, and derived scores are navigation
+evidence; they do not establish semantic equivalence. This is a
+refinement/filtering workflow, not an assumed functor or adjunction.
+
+| Level | Content | Gate requirement |
+|---|---|---|
+| **A0: Concept input** | Informal or latent-space description supplied by a person, model, paper, or CAS. | Preserve as input only; it carries no proof status. |
+| **A1: Source graph** | Compiler-backed declaration/dependency graph, AST/AQL fingerprints, hash navigation, causal cones/cross-sections, SCC blocks, condensation DAG, and topology overlays. | Check generation/source provenance and descend overlays to raw declarations. Graph layers/hashes are navigation evidence only; membership, order, scores, and hash matches do not prove theorem meaning or equivalence. |
+| **A2: Symbolic archetype** | A named mathematical structure/relation proposed from concept input or abstracted from inspected owner declarations reached through DAG paths, hash candidates, SCC members, or shared multi-cone cross-sections. | Record carrier, operations, hypotheses, invariant, granularity, and provenance; distinguish analogy from identity and candidate grouping from proved equivalence. |
+| **A3: Owned Lean realization** | Exact repo declarations, instances, maps, proved lemmas, and consumers that realize the archetype. | Read statements and proofs; mark each ingredient proved, assumed, or merely documented. Different carriers require explicit maps and proved compatibility. |
+| **A4: Formal claim** | A theorem over owned Lean objects with explicit assumptions and a proof term. | Gate 2 checks both provenance paths and the intended invariant; Gate 4 checks kernel acceptance and axiom footprint. |
+
+Reconcile both provenance paths at A2: a concept-derived archetype is not
+accepted merely because a similar graph/hash pattern exists, and a DAG/SCC
+pattern or shared cone node is not given a conceptual interpretation without
+source evidence. Record what each arrow
+preserves and discards. Granularity levels may refine or aggregate archetypes,
+but a lower-level declaration cannot certify a stronger interpretation by
+naming or analogy alone; such a step requires an explicit map and theorem. If
+a connection is only an analogy, label it and keep it outside the formal claim.
+
+For work continuing after context compaction or a prior session, re-read the
+current owner files, staged diff, and relevant imports before relying on a
+handoff or previous report. Treat every prior “compiled”, “certified”,
+“committed”, and “pushed” statement as unverified until the corresponding
+current source, build output, Git object, or remote ref is inspected.
+
 ### 2.2 Pillar II: The Residue Quarantine Negative Feedback Loop (Newton-Jung-Spire Loop)
 In traditional proof agents, a failed proof attempt produces empty failure or causes the agent to loop hallucinated variations of the same broken strategy. Under the OpenGauss Protocol, **failure is never discarded; failure is diagnostic residue**.
 
@@ -434,6 +501,15 @@ The OpenGauss unified command suite provides 15 mathematically grounded, non-des
   python3 tools/infra/opengauss_cli.py discover \
     --query "split quaternion" \
     --json
+  ```
+  To add bounded DAG navigation context for exact declaration apices, append one or more `--dag-apex Qualified.name` flags. `/discover` queries prerequisite and consequence cones independently; `--backward-depth`, `--forward-depth`, and `--cone-limit` bound each query, while optional `--dag-generation-id` records the expected graph generation. Multi-apex output separates shared nodes in prerequisite cones from shared nodes in consequence cones and records nodes common to all supplied apices. Graph freshness is `unknown` unless the packet can establish a source match. This opt-in path is read-only and never refreshes the graph; it cannot prove declaration existence/absence, theorem meaning, or novelty. An unavailable graph query is reported as unavailable and returns a nonzero status, not as an empty source search.
+
+  ```bash
+  python3 tools/infra/opengauss_cli.py discover \
+    --query "group inverse projector" \
+    --dag-apex InfoGeometry.QuantumContext.MarkovAttentionGroupInverse \
+    --dag-apex InfoGeometry.QuantumContext.MarkovAttentionKemenySnell \
+    --backward-depth 5 --forward-depth 3 --cone-limit 150 --json
   ```
 
 ---

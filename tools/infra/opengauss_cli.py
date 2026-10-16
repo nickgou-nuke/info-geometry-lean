@@ -238,7 +238,7 @@ def draft_skeleton(
     lines.append("/-")
     lines.append("Copyright (c) 2026 InfoGeometry Authors. All rights reserved.")
     lines.append("Released under Apache 2.0 license as described in the file LICENSE.")
-    lines.append("Authors: OpenGauss / TeamAntigravity Skeleton Drafter")
+    lines.append("Authors: InfoGeometry Engine Contributors")
     lines.append("-/")
     lines.append("import Mathlib.Tactic")
     lines.append("")
@@ -306,6 +306,12 @@ def review_file(
     repo_root: Optional[Path] = None,
 ) -> ReviewReport:
     """Run static preflight, optionally followed by locked Gate 4 verification."""
+    if gate == "GATE_4" and verify_kernel:
+        print(
+            f"[OpenGauss Gate 4] Running static preflight for {path}",
+            file=sys.stderr,
+            flush=True,
+        )
     if gate not in {"GATE_2", "GATE_4"}:
         raise ValueError(f"unsupported review gate: {gate}")
     if verify_kernel and gate != "GATE_4":
@@ -380,6 +386,11 @@ def review_file(
     # Static Gate 4 and kernel Gate 4 are distinct. A clean static report never
     # claims kernel acceptance unless the caller requested the locked check.
     if gate == "GATE_4" and verify_kernel and not any(t.severity == "ERROR" for t in traps) and not sorry_count and not admit_count:
+        print(
+            f"[OpenGauss Gate 4] Static preflight passed for {path}; starting kernel verification",
+            file=sys.stderr,
+            flush=True,
+        )
         audit = verify_certification_audit(path, repo_root=repo_root)
         verification_status = audit.verification_status
         kernel_checked = audit.kernel_checked
@@ -886,6 +897,7 @@ class DiscoveryReport:
     lemmas_found: List[Dict[str, Any]] = field(default_factory=list)
     recommended_imports: Set[str] = field(default_factory=set)
     deduplication_warnings: List[str] = field(default_factory=list)
+    dag_context: Optional[Dict[str, Any]] = None
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -894,7 +906,92 @@ class DiscoveryReport:
             "lemmas_found": self.lemmas_found,
             "recommended_imports": sorted(list(self.recommended_imports)),
             "deduplication_warnings": self.deduplication_warnings,
+            "dag_context": self.dag_context,
         }
+
+
+def discover_dag_context(
+    apices: Sequence[str],
+    *,
+    repo_root: Path,
+    generation_id: Optional[str] = None,
+    backward_depth: int = 6,
+    forward_depth: int = 6,
+    cone_limit: int = 250,
+) -> Dict[str, Any]:
+    """Query the existing read-only declaration DAG cone tool for exact apices.
+
+    This returns navigation context only. In particular, an unversioned legacy
+    graph has unknown freshness, and a missing graph result is not evidence that
+    an owner declaration is absent from the repository.
+    """
+    names = [name.strip() for name in apices if name.strip()]
+    if not names:
+        raise ValueError("at least one exact declaration apex is required")
+    script = repo_root / "tools" / "infra" / "arango_causal_chiral_cone_prompt.py"
+    command = [sys.executable, str(script), "--repo-root", str(repo_root)]
+    if len(names) == 1:
+        command.extend(["--decl", names[0]])
+    else:
+        command.extend(["--decl-multi", ",".join(names)])
+    command.extend([
+        "--backward-depth", str(backward_depth),
+        "--forward-depth", str(forward_depth),
+        "--cone-limit", str(cone_limit),
+    ])
+    if generation_id:
+        command.extend(["--generation-id", generation_id])
+    try:
+        result = subprocess.run(
+            command, cwd=repo_root, capture_output=True, text=True,
+            check=False, timeout=90,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        return {
+            "status": "unavailable",
+            "reason": type(exc).__name__,
+            "requested_apices": names,
+            "authority": "navigation_only",
+            "freshness": "unknown",
+            "graph_is_proof_authority": False,
+        }
+    if result.returncode != 0:
+        return {
+            "status": "unavailable",
+            "reason": "cone_query_failed",
+            "returncode": result.returncode,
+            "diagnostic": (result.stderr or result.stdout).strip()[:1000],
+            "requested_apices": names,
+            "authority": "navigation_only",
+            "freshness": "unknown",
+            "graph_is_proof_authority": False,
+        }
+    try:
+        packet = json.loads(result.stdout)
+    except json.JSONDecodeError:
+        return {
+            "status": "invalid_packet",
+            "requested_apices": names,
+            "authority": "navigation_only",
+            "freshness": "unknown",
+            "graph_is_proof_authority": False,
+        }
+    if not isinstance(packet, dict):
+        return {
+            "status": "invalid_packet",
+            "requested_apices": names,
+            "authority": "navigation_only",
+            "freshness": "unknown",
+            "graph_is_proof_authority": False,
+        }
+    packet["authority"] = "navigation_only"
+    packet["graph_is_proof_authority"] = False
+    provenance = packet.get("graph_provenance")
+    if not isinstance(provenance, dict):
+        provenance = {}
+        packet["graph_provenance"] = provenance
+    provenance.setdefault("freshness", "unknown")
+    return packet
 
 
 def _file_to_module_path(path: Path, repo_root: Path) -> str:
@@ -1187,8 +1284,18 @@ def verify_certification_audit(
         flags=re.MULTILINE,
     )
 
+    print(
+        f"[OpenGauss Gate 4] Waiting for shared build lock ({module})",
+        file=sys.stderr,
+        flush=True,
+    )
     lock = acquire_build_lock(None, f"opengauss-certify:{module}", block=True)
     try:
+        print(
+            f"[OpenGauss Gate 4] Build lock acquired; building {module}",
+            file=sys.stderr,
+            flush=True,
+        )
         build = subprocess.run(
             ["lake", "build", module],
             cwd=root,
@@ -1197,6 +1304,11 @@ def verify_certification_audit(
             check=False,
         )
         if build.returncode != 0:
+            print(
+                f"[OpenGauss Gate 4] Owner build failed for {module}",
+                file=sys.stderr,
+                flush=True,
+            )
             result.verification_status = "build_failed"
             result.verification_errors.append(
                 (build.stdout + build.stderr)[-12000:]
@@ -1204,6 +1316,11 @@ def verify_certification_audit(
             return result
 
         if not audit.theorems:
+            print(
+                f"[OpenGauss Gate 4] No theorem declarations found in {module}; finishing source axiom check",
+                file=sys.stderr,
+                flush=True,
+            )
             result.rejected_axioms = sorted(set(source_axioms))
             result.kernel_checked = True
             result.verification_status = "passed" if not result.rejected_axioms else "disallowed_axioms"
@@ -1212,6 +1329,11 @@ def verify_certification_audit(
         with tempfile.TemporaryDirectory(prefix="opengauss-certify-") as temp_dir:
             audit_path = Path(temp_dir) / "AxiomAudit.lean"
             audit_path.write_text(audit.audit_script, encoding="utf-8")
+            print(
+                f"[OpenGauss Gate 4] Owner build passed; compiling generated axiom audit for {module}",
+                file=sys.stderr,
+                flush=True,
+            )
             checked = subprocess.run(
                 ["lake", "env", "lean", str(audit_path)],
                 cwd=root,
@@ -1221,6 +1343,11 @@ def verify_certification_audit(
             )
         output = checked.stdout + checked.stderr
         if checked.returncode != 0:
+            print(
+                f"[OpenGauss Gate 4] Generated axiom audit failed for {module}",
+                file=sys.stderr,
+                flush=True,
+            )
             result.verification_status = "audit_compile_failed"
             result.verification_errors.append(output[-12000:])
             return result
@@ -1247,6 +1374,11 @@ def verify_certification_audit(
         result.rejected_axioms = sorted(all_axioms - _ALLOWED_KERNEL_AXIOMS)
         result.kernel_checked = True
         result.verification_status = "passed" if not result.rejected_axioms else "disallowed_axioms"
+        print(
+            f"[OpenGauss Gate 4] Axiom audit {result.verification_status} for {module}",
+            file=sys.stderr,
+            flush=True,
+        )
         return result
     except OSError as exc:
         result.verification_status = "tool_error"
@@ -1464,6 +1596,14 @@ def build_parser() -> argparse.ArgumentParser:
     # 13. discover
     p_disc = subparsers.add_parser("discover", help="Mathematical Declaration & Carrier Hunter")
     p_disc.add_argument("--query", required=True, help="Search query (e.g. 'split quaternion')")
+    p_disc.add_argument(
+        "--dag-apex", action="append", default=[], metavar="QUALIFIED_NAME",
+        help="Optional exact Lean declaration apex for bounded Arango DAG context; repeat for multi-apex cross-sections",
+    )
+    p_disc.add_argument("--dag-generation-id", default=None, help="Optional expected Arango graph generation identifier")
+    p_disc.add_argument("--backward-depth", type=int, default=6, help="Maximum prerequisite-cone depth (default: 6)")
+    p_disc.add_argument("--forward-depth", type=int, default=6, help="Maximum consequence-cone depth (default: 6)")
+    p_disc.add_argument("--cone-limit", type=int, default=250, help="Maximum rows returned per apex and direction (default: 250)")
     p_disc.add_argument("--json", action="store_true", help="Output JSON")
 
     # 14. quarantine
@@ -1672,7 +1812,22 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
 
     elif cmd == "discover":
         repo_root = Path(__file__).resolve().parent.parent.parent
+        if args.backward_depth < 0 or args.forward_depth < 0:
+            parser.error("--backward-depth and --forward-depth must be non-negative")
+        if args.cone_limit < 1:
+            parser.error("--cone-limit must be positive")
+        if args.dag_generation_id and not args.dag_apex:
+            parser.error("--dag-generation-id requires at least one exact --dag-apex")
         report = discover_declarations(args.query, repo_root=repo_root)
+        if args.dag_apex:
+            report.dag_context = discover_dag_context(
+                args.dag_apex,
+                repo_root=repo_root,
+                generation_id=args.dag_generation_id,
+                backward_depth=args.backward_depth,
+                forward_depth=args.forward_depth,
+                cone_limit=args.cone_limit,
+            )
         if args.json:
             print(json.dumps(report.to_dict(), indent=2))
         else:
@@ -1694,6 +1849,11 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
                 print("  Deduplication Warnings:")
                 for w in report.deduplication_warnings:
                     print(f"    [WARN] {w}")
+            if report.dag_context is not None:
+                print("  Bounded DAG Context (navigation only; freshness may be unknown):")
+                print(json.dumps(report.dag_context, indent=2))
+        if report.dag_context is not None and report.dag_context.get("status") in {"unavailable", "invalid_packet"}:
+            return 2
         return 0
 
     elif cmd == "quarantine":

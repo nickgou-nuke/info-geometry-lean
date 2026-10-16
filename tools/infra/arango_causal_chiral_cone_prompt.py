@@ -172,25 +172,38 @@ def traverse_multi_decl_cone(
     *,
     seed_ids: list[str],
     edge_collection: str,
+    direction: str,
     depth: int,
     limit: int,
 ) -> list[dict[str, Any]]:
-    """Traverse the combined causal cone of several declaration apices."""
+    """Traverse one directed causal cone for each declaration apex.
+
+    Rows retain their originating seed so callers can compute directional
+    cross-sections without conflating prerequisites and consequences.
+    """
+    if direction not in {"OUTBOUND", "INBOUND"}:
+        raise ValueError(f"invalid traversal direction: {direction}")
+    if depth <= 0 or limit <= 0 or not seed_ids:
+        return []
     return run_aql(
         target,
-        """
+        f"""
         FOR seed IN @seeds
-          FOR v, e, p IN 1..@depth ANY seed @@edges
-            OPTIONS { bfs: true, uniqueVertices: "global" }
-            LIMIT @limit
-            RETURN {
-              seed: seed,
-              component: v,
-              edge: e,
-              depth: LENGTH(p.edges),
-              path_keys: p.vertices[*]._key,
-              path_ids: p.vertices[*]._id
-            }
+          LET reached = (
+            FOR v, e, p IN 1..@depth {direction} seed @@edges
+              OPTIONS {{ bfs: true, uniqueVertices: "global" }}
+              LIMIT @limit
+              RETURN {{
+                seed: seed,
+                component: v,
+                edge: e,
+                depth: LENGTH(p.edges),
+                path_keys: p.vertices[*]._key,
+                path_ids: p.vertices[*]._id
+              }}
+          )
+          FOR row IN reached
+            RETURN row
         """,
         {
             "@edges": edge_collection,
@@ -219,6 +232,41 @@ def resolve_authoritative_decls(
         """,
         {"@decls": decls, "names": names},
     )
+
+
+def directional_cross_section(
+    apices: list[dict[str, Any]],
+    seed_ids: list[str],
+    rows: list[dict[str, Any]],
+) -> tuple[dict[str, dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
+    """Return indexed nodes, nodes shared by at least two seeds, and all-seed nodes."""
+    nodes = {str(row["_id"]): row for row in apices}
+    seeds_by_node: dict[str, set[str]] = {}
+    for row in rows:
+        node = row.get("component") or {}
+        node_id = str(node.get("_id"))
+        if node_id:
+            nodes[node_id] = node
+            seeds_by_node.setdefault(node_id, set()).add(str(row.get("seed")))
+
+    shared = [
+        {"node": nodes[node_id], "seed_count": len(seeds), "seeds": sorted(seeds)}
+        for node_id, seeds in seeds_by_node.items()
+        if len(seeds) > 1
+    ]
+    common = [row for row in shared if row["seed_count"] == len(seed_ids)]
+    return nodes, shared, common
+
+
+def any_seed_reached_limit(
+    rows: list[dict[str, Any]], seed_ids: list[str], limit: int,
+) -> bool:
+    counts = {seed: 0 for seed in seed_ids}
+    for row in rows:
+        seed = str(row.get("seed"))
+        if seed in counts:
+            counts[seed] += 1
+    return any(count >= limit for count in counts.values())
 
 
 def resolve_syntax_decls(
@@ -497,14 +545,21 @@ def render_markdown(packet: dict[str, Any]) -> str:
         lines.append("## Multi-apex incidence")
         lines.append("")
         lines.append(
-            f"- Shared nodes: `{packet.get('shared_node_count', 0)}`"
+            f"- Directional shared-node rows: `{packet.get('shared_node_count', 0)}`"
+        )
+        lines.append(
+            f"- Common prerequisites across all apices: `{len(packet.get('common_prerequisites', []))}`"
+        )
+        lines.append(
+            f"- Common consequences across all apices: `{len(packet.get('common_consequences', []))}`"
         )
         for row in packet.get("shared_nodes", [])[:100]:
             node = row.get("node") or {}
             seeds = ", ".join(f"`{seed}`" for seed in row.get("seeds", []))
             lines.append(
                 f"- `{node.get('name') or node.get('_id')}` "
-                f"(shared by {row.get('seed_count', 0)} apices: {seeds})"
+                f"({row.get('direction', 'direction unspecified')}; "
+                f"shared by {row.get('seed_count', 0)} apices: {seeds})"
             )
         if not packet.get("shared_nodes"):
             lines.append("- none")
@@ -520,7 +575,19 @@ def render_markdown(packet: dict[str, Any]) -> str:
     lines.append("")
     lines.append("- DAG orientation: `declaration -> dependency`.")
     if packet.get("mode") == "multi-apex-multi-cone":
-        lines.append("- Multi-apex cone: `ANY` over authoritative declaration edges.")
+        lines.append("- Backward prerequisites: `OUTBOUND`, computed separately for each apex.")
+        lines.append("- Forward consequences: `INBOUND`, computed separately for each apex.")
+        lines.append("- Directional cross-sections report shared prerequisites and consequences separately.")
+        limits = packet.get("parameters", {})
+        lines.append(
+            f"- Bounded result cap reached: backward={limits.get('backward_limit_reached')}, "
+            f"forward={limits.get('forward_limit_reached')}."
+        )
+        provenance = packet.get("graph_provenance", {})
+        lines.append(
+            f"- Graph freshness: `{provenance.get('freshness', 'unknown')}`; "
+            f"generation: `{provenance.get('generation_id') or 'unspecified'}`."
+        )
     else:
         lines.append("- Backward cone: `OUTBOUND` from apex SCC, i.e. prerequisites.")
         lines.append("- Forward cone: `INBOUND` to apex SCC, i.e. users/consequences.")
@@ -528,17 +595,19 @@ def render_markdown(packet: dict[str, Any]) -> str:
     lines.append("- Every mathematical claim must descend back to Lean source.")
     lines.append("")
     if packet.get("mode") == "multi-apex-multi-cone":
-        lines.append("## Combined Cone")
-        lines.append("")
-        for row in packet.get("cone", [])[:100]:
-            component = row.get("component") or {}
-            lines.append(
-                f"- seed `{row.get('seed')}` depth `{row.get('depth')}` "
-                f"node `{component.get('name') or component.get('_key')}`"
-            )
-        if not packet.get("cone"):
-            lines.append("- empty")
-        lines.append("")
+        for label in ["backward_cone", "forward_cone"]:
+            lines.append(f"## {label.replace('_', ' ').title()}")
+            lines.append("")
+            rows = packet.get(label, [])
+            for row in rows[:100]:
+                node = row.get("component") or {}
+                lines.append(
+                    f"- seed `{row.get('seed')}` depth `{row.get('depth')}` "
+                    f"node `{node.get('name') or node.get('_key')}`"
+                )
+            if not rows:
+                lines.append("- empty")
+            lines.append("")
     else:
         for label in ["backward_cone", "forward_cone"]:
             rows = packet[label]
@@ -714,6 +783,7 @@ def build_packet(args: argparse.Namespace) -> dict[str, Any]:
 def build_multi_packet(args: argparse.Namespace, names: list[str]) -> dict[str, Any]:
     repo_root = args.repo_root.resolve()
     target = arango_target(repo_root)
+    generation_record = None
     if args.generation_id:
         published = run_aql(
             target,
@@ -727,6 +797,7 @@ def build_multi_packet(args: argparse.Namespace, names: list[str]) -> dict[str, 
         )
         if not published:
             raise RuntimeError(f"declaration generation {args.generation_id!r} is absent or incomplete")
+        generation_record = published[0]
     apices = resolve_authoritative_decls(
         target, decls=args.decls_collection, names=names
     )
@@ -765,32 +836,47 @@ def build_multi_packet(args: argparse.Namespace, names: list[str]) -> dict[str, 
                 if syntax_found or source_found else
                 "Requested names are absent from both compiler-backed and syntax indexes."
             ),
+            "graph_provenance": {
+                "generation_id": args.generation_id,
+                "generation_status": "complete" if generation_record else "unspecified",
+                "freshness": "unknown",
+                "build_fingerprint": (generation_record or {}).get("buildFingerprint"),
+            },
             "graph_is_navigation_not_proof": True,
         }
     seed_ids = [str(found[name]["_id"]) for name in names]
-    cone = traverse_multi_decl_cone(
+    backward = traverse_multi_decl_cone(
         target, seed_ids=seed_ids, edge_collection=args.edges_collection,
-        depth=max(args.backward_depth, args.forward_depth), limit=args.cone_limit,
+        direction="OUTBOUND", depth=args.backward_depth, limit=args.cone_limit,
     )
-    by_node: dict[str, dict[str, Any]] = {
-        str(row["_id"]): row for row in apices
-    }
-    seeds_by_node: dict[str, set[str]] = {seed: {seed} for seed in seed_ids}
-    for row in cone:
-        node = row.get("component") or {}
-        node_id = str(node.get("_id"))
-        if node_id:
-            by_node[node_id] = node
-            seeds_by_node.setdefault(node_id, set()).add(str(row.get("seed")))
+    forward = traverse_multi_decl_cone(
+        target, seed_ids=seed_ids, edge_collection=args.edges_collection,
+        direction="INBOUND", depth=args.forward_depth, limit=args.cone_limit,
+    )
+
+    backward_nodes, shared_prerequisites, common_prerequisites = directional_cross_section(
+        apices, seed_ids, backward
+    )
+    forward_nodes, shared_consequences, common_consequences = directional_cross_section(
+        apices, seed_ids, forward
+    )
+    # Retain the former aggregate field for consumers, but preserve direction
+    # on every row so it cannot be mistaken for a directional intersection.
     shared = [
-        {"node": node, "seed_count": len(seeds_by_node[node_id]),
-         "seeds": sorted(seeds_by_node[node_id])}
-        for node_id, node in by_node.items()
-        if len(seeds_by_node.get(node_id, set())) > 1
+        {**row, "direction": "backward_prerequisite"}
+        for row in shared_prerequisites
+    ] + [
+        {**row, "direction": "forward_consequence"}
+        for row in shared_consequences
+    ]
+    cone = [
+        {**row, "direction": "backward_prerequisite"} for row in backward
+    ] + [
+        {**row, "direction": "forward_consequence"} for row in forward
     ]
     members = [
         {"component_id": node_id, "members": [{"node": node}]}
-        for node_id, node in by_node.items()
+        for node_id, node in {**backward_nodes, **forward_nodes}.items()
     ]
     excerpts = add_source_excerpts(
         members, repo_root=repo_root, radius=args.source_radius,
@@ -805,8 +891,42 @@ def build_multi_packet(args: argparse.Namespace, names: list[str]) -> dict[str, 
         "cone": cone,
         "shared_nodes": shared,
         "shared_node_count": len(shared),
+        "backward_cone": backward,
+        "forward_cone": forward,
+        "shared_prerequisites": shared_prerequisites,
+        "shared_consequences": shared_consequences,
+        "common_prerequisites": common_prerequisites,
+        "common_consequences": common_consequences,
+        "parameters": {
+            "edge_orientation": "declaration -> dependency",
+            "backward_direction": "OUTBOUND prerequisites/dependencies",
+            "forward_direction": "INBOUND users/consequences",
+            "backward_depth": args.backward_depth,
+            "forward_depth": args.forward_depth,
+            "per_apex_direction_result_limit": args.cone_limit,
+            "backward_limit_reached": any_seed_reached_limit(
+                backward, seed_ids, args.cone_limit
+            ),
+            "forward_limit_reached": any_seed_reached_limit(
+                forward, seed_ids, args.cone_limit
+            ),
+            "cross_sections_are_bounded_query_results": True,
+        },
+        "graph_provenance": {
+            "generation_id": args.generation_id,
+            "generation_status": "complete" if generation_record else "unspecified",
+            "freshness": "unknown",
+            "build_fingerprint": (generation_record or {}).get("buildFingerprint"),
+            "authority": "compiler_backed_decls_edges",
+        },
+        "graph_is_navigation_not_proof": True,
         "source_excerpts": excerpts,
-        "orientation": "ANY over authoritative declaration edges",
+        "orientation": {
+            "edge_orientation": "declaration -> dependency",
+            "backward_cone": "OUTBOUND prerequisites/dependencies from each apex",
+            "forward_cone": "INBOUND users/consequences into each apex",
+            "graph_is_navigation_not_proof": True,
+        },
     }
 
 

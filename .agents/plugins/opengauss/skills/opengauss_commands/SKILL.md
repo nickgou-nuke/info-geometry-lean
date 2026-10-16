@@ -94,7 +94,41 @@ Whereas upstream `math-inc/opengauss` provides a TUI wrapper (`gauss`) and PTY `
 - **Role**: Serializes active targets, verified checkpoints, dead routes, and next actions into an M10 Anti-Compaction handoff markdown (`opengauss_cli.py handoff`).
 
 ### 13. `/discover` (Pre-Flight Declaration & Carrier Hunter — Gate 0)
-- **Role**: Scans `lean/InfoGeometry/` and Mathlib for existing structures, classes, defs, and lemmas matching a query to prevent structural duplication (`opengauss_cli.py discover --query "..."`).
+- **Role**: Produces fuzzy candidate hits from `lean/InfoGeometry/` and available Mathlib sources (`opengauss_cli.py discover --query "..."`). It is navigation only: its bounded/text search is not evidence that a declaration is correct, absent, or novel, and it does not replace reading the owner source.
+- **DAG context**: Optionally pass repeated exact `--dag-apex Qualified.name` arguments to query bounded Arango prerequisite (`OUTBOUND`) and consequence (`INBOUND`) cones separately, including multi-apex shared/common cross-sections. Configure `--backward-depth`, `--forward-depth`, `--cone-limit`, and optionally `--dag-generation-id`. The packet records cone direction, apices, bounds/limit status, generation and freshness provenance where known. Graphs, hashes, SCCs, and Pantograph/replay evidence guide source navigation only; they do not establish theorem truth or declaration absence. `/discover` does not refresh graph data, and Git hooks do not query Arango or launch Pantograph.
+
+### Required Ground-Truth Theorem Contract (before `/draft` or source edits)
+Use the two-path, DAG-emergent archetype ladder: **concept input → candidate
+symbolic archetype**, alongside **compiler-backed declarations/dependency
+edges → AST/AQL fingerprints and hash navigation → forward/backward causal
+cones and multi-apex cone cross-sections → graph/SCC/topology layers →
+code-derived archetype candidates**, then descend to **raw owner declarations
+→ formal theorem**. SCCs are one layer of the DAG analysis, not the complete
+discovery process. Follow `docs/ASTAQLHASH-HOWTO.md` and
+`docs/ARANGO_DAG_REFRESH_METHODOLOGY.md` for graph provenance/freshness,
+causal-cone seed provenance, shared cross-section nodes, and raw-to-overlay
+descent. Hash matches, SCC membership, graph proximity, and derived scores are
+navigation evidence only; inspect exact declaration types and proofs before
+assigning meaning or equivalence. Record what each translation preserves or
+discards and the granularity at each level; do not assume the ladder is a
+functor or equivalence. The coordinator must first inspect repository-owned
+Lean source and record a short contract containing: (1) the exact mathematical claim,
+stripped of metaphor and downstream interpretation; (2) the actual carrier,
+operations, and conventions; (3) exact owner declarations and theorem
+statements, noting which facts are proved and which are hypotheses; (4)
+imports and consumers; (5) the narrow missing statement; and (6) adjacent
+claims that remain outside the proof. Follow
+`docs/REPO_DEEP_SEARCH_PROTOCOL.md`; cite the file and declaration for each
+source-grounded fact. Different carriers require an explicit map and proved
+compatibility theorem.
+
+Never promote a user-provided Lean blueprint, generated report, prior agent
+summary, file name, docstring, static-screen result, or successful build into
+mathematical evidence without checking the relevant owner. Compilation checks
+the proof term against the Lean type; Gate 2 must separately check that the
+type and hypotheses express the contracted claim. Rehydrated tasks must inspect
+the current worktree, staged diff, owner files, and imports instead of trusting
+handoff text as current state.
 
 ### 14. `/quarantine` (Rejected Route & Residue Obstruction Isolator — Pillar II)
 - **Role**: Packages a refuted statement or trap violation into an immutable `TypedObstructionPacket` JSON in `artifacts/residue_quarantine/` (`opengauss_cli.py quarantine --file ... --trap ... --desc ... --counter ... --constraint ...`).

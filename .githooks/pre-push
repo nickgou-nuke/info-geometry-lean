@@ -4,18 +4,103 @@ set -euo pipefail
 repo_root="$(git rev-parse --show-toplevel)"
 cd "$repo_root"
 
-# Read remote ref info from stdin if supplied by git
-base_ref=""
-while read -r local_ref local_oid remote_ref remote_oid; do
-    if [ -n "$remote_oid" ] && [ "$remote_oid" != "0000000000000000000000000000000000000000" ]; then
-        base_ref="$remote_oid"
+zero_oid() {
+    [[ "$1" =~ ^0+$ ]]
+}
+
+current_head="$(git rev-parse --verify HEAD)"
+declare -A checked_bases=()
+has_update=false
+has_code_update=false
+has_new_ref=false
+
+while read -r local_ref local_oid remote_ref remote_oid || [[ -n "${local_ref:-}" ]]; do
+    [[ -z "${local_ref:-}" ]] && continue
+    has_update=true
+
+    # Deleting a remote ref publishes no source tree to verify.
+    if zero_oid "$local_oid"; then
+        echo "[pre-push] skipping deletion of $remote_ref"
+        continue
+    fi
+
+    has_code_update=true
+    if ! local_commit="$(git rev-parse --verify "${local_oid}^{commit}" 2>/dev/null)"; then
+        echo "[pre-push] refusing to certify $local_ref: $local_oid does not resolve to a commit" >&2
+        exit 1
+    fi
+    if [[ "$local_commit" != "$current_head" ]]; then
+        echo "[pre-push] refusing to certify $local_ref at $local_commit: the current worktree is at $current_head" >&2
+        echo "[pre-push] check out the exact commit being pushed before retrying" >&2
+        exit 1
+    fi
+
+    # The gate reads source from the worktree. Do not let uncommitted Lean or
+    # gate changes make that source differ from the commit being pushed.
+    if ! git diff --quiet "$local_commit" -- lean lean_sandbox proofs verification/spinorial-core \
+        lib/InfoGeometryCore lakefile.lean lake-manifest.json \
+        .githooks scripts/quality tools/quality tools/infra; then
+        echo "[pre-push] refusing to certify a worktree with modified proof/gate sources" >&2
+        exit 1
+    fi
+    untracked_sources="$(git ls-files --others --exclude-standard -- lean lean_sandbox proofs verification/spinorial-core \
+        lib/InfoGeometryCore lakefile.lean lake-manifest.json \
+        .githooks scripts/quality tools/quality tools/infra)"
+    ignored_lean_sources="$(git ls-files --others --ignored --exclude-standard -- \
+        'lean/*.lean' 'lean/**/*.lean' 'lean_sandbox/*.lean' 'lean_sandbox/**/*.lean' \
+        'proofs/*.lean' 'proofs/**/*.lean' 'verification/spinorial-core/*.lean' \
+        'verification/spinorial-core/**/*.lean' 'lib/InfoGeometryCore/*.lean' \
+        'lib/InfoGeometryCore/**/*.lean' ':(exclude)lean/.lake/**' \
+        ':(exclude)lean_sandbox/.lake/**' ':(exclude)proofs/.lake/**' \
+        ':(exclude)verification/spinorial-core/.lake/**' ':(exclude)lib/InfoGeometryCore/.lake/**')"
+    if [[ -n "$untracked_sources" || -n "$ignored_lean_sources" ]]; then
+        echo "[pre-push] refusing to certify untracked proof/gate sources:" >&2
+        sed 's/^/  /' <<<"$untracked_sources" >&2
+        if [[ -n "$ignored_lean_sources" ]]; then
+            echo "[pre-push] ignored Lean sources are also excluded from the pushed tree:" >&2
+            sed 's/^/  /' <<<"$ignored_lean_sources" >&2
+        fi
+        exit 1
+    fi
+
+    if zero_oid "$remote_oid"; then
+        has_new_ref=true
+    else
+        checked_bases["$remote_oid"]=1
     fi
 done
 
-echo "[pre-push] running incremental post-build quality gate"
-if [ -n "$base_ref" ]; then
-    bash scripts/quality/post_build_gate.sh --incremental --base="$base_ref"
+if [[ "$has_update" == false ]]; then
+    echo "[pre-push] no ref updates; nothing to certify"
+elif [[ "$has_code_update" == false ]]; then
+    echo "[pre-push] only remote ref deletions; no source tree to certify"
+elif [[ "$has_new_ref" == true ]]; then
+    if git rev-parse --verify upstream/main^{commit} >/dev/null 2>&1; then
+        canonical_base=upstream/main
+    elif git rev-parse --verify origin/main^{commit} >/dev/null 2>&1; then
+        canonical_base=origin/main
+    else
+        echo "[pre-push] cannot certify a new remote ref without a local upstream/main or origin/main comparison base" >&2
+        echo "[pre-push] fetch the canonical branch and retry; no partial full-gate result will be treated as sufficient" >&2
+        exit 1
+    fi
+    if ! merge_base="$(git merge-base "$current_head" "$canonical_base")"; then
+        echo "[pre-push] cannot find a common ancestor with $canonical_base; refusing incomplete new-ref certification" >&2
+        exit 1
+    fi
+    checked_bases["$merge_base"]=1
+    echo "[pre-push] new ref detected; classifying every pushed range and $canonical_base ancestry before full root gate"
+    for base_ref in "${!checked_bases[@]}"; do
+        echo "[pre-push] classifying $base_ref..$current_head"
+        bash scripts/quality/post_build_gate.sh --incremental --base="$base_ref" --head="$current_head"
+    done
+    echo "[pre-push] running full root-package quality gate"
+    bash scripts/quality/post_build_gate.sh
 else
-    bash scripts/quality/post_build_gate.sh --incremental
+    for base_ref in "${!checked_bases[@]}"; do
+        echo "[pre-push] running quality gate for $base_ref..$current_head"
+        bash scripts/quality/post_build_gate.sh --incremental --base="$base_ref" --head="$current_head"
+    done
 fi
+
 echo "[pre-push] quality gate passed"

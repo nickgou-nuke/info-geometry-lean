@@ -346,12 +346,12 @@ def validate_contract_payload(contract: Any, *, repo_root: Path) -> dict[str, An
             isinstance(hit, dict)
             and hit.get("name") == short_name
             and hit.get("qualified_name") == declaration["qualified_name"]
-            and hit.get("kind") == expected_kind
+            and hit.get("kind") == declaration["kind"]
             and Path(str(hit.get("file", ""))).as_posix() == declaration["source_path"]
             and hit.get("source_sha256") == declaration["source_sha256"]
-            and hit.get("line") == source_line
-            and hit.get("source_end_line") == source_end_line
-            and normalize(str(hit.get("lean_statement", ""))) == normalize(matching_head["lean_statement"])
+            and hit.get("line") == declaration["source_line"]
+            and hit.get("source_end_line") == declaration["source_end_line"]
+            and normalize(str(hit.get("lean_statement", ""))) == normalize(declaration["lean_statement"])
             for hit in reported_hits
         )
         if not matching_hit:

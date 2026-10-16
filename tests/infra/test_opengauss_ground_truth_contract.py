@@ -105,6 +105,54 @@ class GroundTruthContractTests(unittest.TestCase):
         self.assertEqual(result["missing_declaration_name"], "Demo.next")
         self.assertEqual(result["contract_sha256"], canonical_digest(self.contract))
 
+    def test_validates_each_owner_declaration_in_mixed_kind_contract(self) -> None:
+        owner = self.root / "lean" / "Owner.lean"
+        source = (
+            "namespace Demo\n"
+            "def carrier : Nat := 1\n"
+            "theorem base : True := by trivial\n"
+            "end Demo\n"
+        )
+        owner.write_text(source, encoding="utf-8")
+        source_hash = hashlib.sha256(owner.read_bytes()).hexdigest()
+        report = json.loads(self.receipt.read_text(encoding="utf-8"))
+        report["carriers_found"] = [{
+            "name": "carrier", "qualified_name": "Demo.carrier", "kind": "def",
+            "file": "lean/Owner.lean", "source_sha256": source_hash,
+            "line": 2, "source_end_line": 2,
+            "lean_statement": "def carrier : Nat",
+        }]
+        report["lemmas_found"] = [{
+            "name": "base", "qualified_name": "Demo.base", "kind": "theorem",
+            "file": "lean/Owner.lean", "source_sha256": source_hash,
+            "line": 3, "source_end_line": 3,
+            "lean_statement": "theorem base : True",
+        }]
+        self.receipt.write_text(json.dumps(report, sort_keys=True), encoding="utf-8")
+        self.contract["owner_declarations"] = [
+            {
+                "qualified_name": "Demo.carrier", "kind": "def",
+                "source_path": "lean/Owner.lean", "source_sha256": source_hash,
+                "source_line": 2, "source_end_line": 2,
+                "source_excerpt": "def carrier : Nat := 1",
+                "lean_statement": "def carrier : Nat", "status_assertion": "definition",
+            },
+            {
+                "qualified_name": "Demo.base", "kind": "theorem",
+                "source_path": "lean/Owner.lean", "source_sha256": source_hash,
+                "source_line": 3, "source_end_line": 3,
+                "source_excerpt": "theorem base : True := by trivial",
+                "lean_statement": "theorem base : True", "status_assertion": "asserted_proved",
+            },
+        ]
+        self.contract["discovery_receipt"]["sha256"] = hashlib.sha256(
+            self.receipt.read_bytes()
+        ).hexdigest()
+
+        result = validate_contract_payload(self.contract, repo_root=self.root)
+
+        self.assertEqual(result["contract_id"], "gtc-demo-1")
+
     def test_rejects_invented_qualified_declaration(self) -> None:
         contract = json.loads(json.dumps(self.contract))
         contract["owner_declarations"][0]["qualified_name"] = "Other.base"

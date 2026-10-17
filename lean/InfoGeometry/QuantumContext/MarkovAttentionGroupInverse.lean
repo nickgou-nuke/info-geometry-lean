@@ -191,6 +191,56 @@ theorem exists_stochastic_laplacian_groupInverse_shift_inverse
   exact ⟨D, hD, groupInverseShift_mul_inverse hD,
     groupInverseShift_inverse_mul hD⟩
 
+/-- The zero-root projector associated to a group inverse, `E₀ = 1 - L L#`.
+This is the same complementary idempotent as Hartwig's `principalIdempotent`. -/
+def markovKernelProj {A : Type*} [Ring A] (L L_sharp : A) : A :=
+  1 - L * L_sharp
+
+/-- The group-inverse kernel projector is idempotent and annihilates the
+operator on both sides. -/
+theorem markovKernelProj_idempotent_and_annihilates
+    {A : Type*} [Ring A] (L L_sharp : A)
+    (hD : IsGroupInverse L L_sharp) :
+    markovKernelProj L L_sharp * markovKernelProj L L_sharp =
+        markovKernelProj L L_sharp ∧
+      L * markovKernelProj L L_sharp = 0 ∧
+      markovKernelProj L L_sharp * L = 0 := by
+  refine ⟨?_, ?_, ?_⟩
+  · simpa [markovKernelProj, principalIdempotent, regularIdempotent] using
+      principalIdempotent_idempotent hD
+  · simpa [markovKernelProj, principalIdempotent, regularIdempotent] using
+      mul_principalIdempotent_eq_zero hD
+  · simpa [markovKernelProj, principalIdempotent, regularIdempotent] using
+      principalIdempotent_mul_eq_zero hD
+
+/-- The Kemeny–Snell-style algebraic shift of a group-invertible operator and
+its group inverse are two-sided inverses on the whole carrier, with
+`E₀ = 1 - L L#`. This statement alone asserts no first-passage interpretation. -/
+theorem kemeny_snell_fundamental_invertible
+    {A : Type*} [Ring A] (L L_sharp : A)
+    (hD : IsGroupInverse L L_sharp) :
+    (L + markovKernelProj L L_sharp) *
+        (L_sharp + markovKernelProj L L_sharp) = 1 ∧
+      (L_sharp + markovKernelProj L L_sharp) *
+        (L + markovKernelProj L L_sharp) = 1 := by
+  constructor
+  · simpa [groupInverseShift, groupInverseShiftInverse,
+      markovKernelProj, principalIdempotent, regularIdempotent] using
+      groupInverseShift_inverse_mul hD
+  · simpa [groupInverseShift, groupInverseShiftInverse,
+      markovKernelProj, principalIdempotent, regularIdempotent] using
+      groupInverseShift_mul_inverse hD
+
+/-- Unit packaging of the algebraic group-inverse shift. Its inverse is the
+shifted group inverse; both inverse equations follow from the canonical
+Hartwig group-inverse shift lemmas. -/
+def kemenySnellUnit {A : Type*} [Ring A] (L L_sharp : A)
+    (hD : IsGroupInverse L L_sharp) : Aˣ where
+  val := L + markovKernelProj L L_sharp
+  inv := L_sharp + markovKernelProj L L_sharp
+  val_inv := (kemeny_snell_fundamental_invertible L L_sharp hD).1
+  inv_val := (kemeny_snell_fundamental_invertible L L_sharp hD).2
+
 /-- A group inverse maps every vector into the range of the original endomorphism. -/
 theorem groupInverse_apply_mem_range
     (A D : Module.End ℝ V) (hD : IsGroupInverse A D) (x : V) :

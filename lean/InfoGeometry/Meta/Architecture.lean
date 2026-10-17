@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Lean
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import DAG.Basic
@@ -253,19 +258,19 @@ the full dependency universe intact and only avoids recomputing direct edges for
 every audited root.
 -/
 def nearestTaggedDescendantsFromDeps
-    (env : Environment) (directDeps : Std.HashMap Name (Array Name)) (root : Name) : NameSet := Id.run do
+    (env : Environment) (directDeps : Std.HashMap Name (Array Name)) (root : Name)
+    (initiallyVisited : NameSet := {}) : NameSet := Id.run do
   let mut nearest : NameSet := {}
-  let mut visited : NameSet := {}
+  let mut visited := initiallyVisited.insert root
   let mut queue : Array Name := directDeps.getD root #[]
   let mut i := 0
   while i < queue.size do
     let curr := queue[i]!
     i := i + 1
-    if visited.contains curr then continue
-    visited := visited.insert curr
     if (repDepth? env curr).isSome then
       nearest := nearest.insert curr
-    else
+    else if !visited.contains curr then
+      visited := visited.insert curr
       for dep in directDeps.getD curr #[] do
         queue := queue.push dep
   return nearest
@@ -273,13 +278,10 @@ def nearestTaggedDescendantsFromDeps
 /--
 Memoized exact version of `nearestTaggedDescendantsFromDeps`.
 
-For an untagged node, the nearest tagged descendants are the union of directly
-tagged dependencies and the nearest tagged descendants of directly untagged
-dependencies.  This computes the same relation as the breadth-first traversal,
-but shares results across audited roots instead of repeatedly walking the same
-subgraph.
+The bounded breadth-first traversal handles cycles with a visited set; the
+cache shares completed root results across audited declarations.
 -/
-partial def nearestTaggedDescendantsMemo
+def nearestTaggedDescendantsMemo
     (env : Environment)
     (directDeps : Std.HashMap Name (Array Name))
     (cacheRef : IO.Ref (Std.HashMap Name NameSet))
@@ -292,15 +294,7 @@ partial def nearestTaggedDescendantsMemo
       if visiting.contains root then
         pure {}
       else
-        let visiting := visiting.insert root
-        let mut nearest : NameSet := {}
-        for dep in directDeps.getD root #[] do
-          if (repDepth? env dep).isSome then
-            nearest := nearest.insert dep
-          else
-            let depNearest ←
-              nearestTaggedDescendantsMemo env directDeps cacheRef dep visiting
-            nearest := nearest.union depNearest
+        let nearest := nearestTaggedDescendantsFromDeps env directDeps root visiting
         cacheRef.modify fun cache => cache.insert root nearest
         pure nearest
 

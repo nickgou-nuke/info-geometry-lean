@@ -579,63 +579,48 @@ end KreinSheets
 
 /-- The Zorn Jordan–Wigner conjugator $P_{\mathrm{JW}}$ maps the vacuum idempotent
 basis state $e_0 = a \leftrightarrow |000\rangle$ to the top Fock basis state
-$e_7 = b \leftrightarrow |111\rangle$. -/
+$e_7 = b \leftrightarrow |111\rangle$.
+
+Derived from `SplitOctonionJordanWignerIntertwiner.zornJWConjugator_mulVec_single` together with
+`SplitOctonionJordanWignerIntertwiner.zornJWFockSwap_zero`; the previous proof was a six-case `norm_num` brute force. -/
 theorem zornJWConjugator_mulVec_vacuum_basis :
     SplitOctonionJordanWignerIntertwiner.zornJWConjugator.mulVec
       (Pi.single (0 : Fin 8) (1 : ℝ)) =
         Pi.single (7 : Fin 8) (1 : ℝ) := by
-  ext i
-  fin_cases i <;>
-    norm_num [SplitOctonionJordanWignerIntertwiner.zornJWConjugator,
-      Matrix.mulVec, dotProduct, Fin.sum_univ_eight, Pi.single_apply]
+  funext i
+  rw [SplitOctonionJordanWignerIntertwiner.zornJWConjugator_mulVec_single]
+  by_cases hi : i = (7 : Fin 8) <;> simp [hi, SplitOctonionJordanWignerIntertwiner.zornJWFockSwap]
 
 /-- The Zorn Jordan–Wigner conjugator $P_{\mathrm{JW}}$ maps the top Fock basis
 state $e_7 = b \leftrightarrow |111\rangle$ back to the vacuum idempotent basis state
-$e_0 = a \leftrightarrow |000\rangle$. -/
+$e_0 = a \leftrightarrow |000\rangle$.
+
+Derived from `SplitOctonionJordanWignerIntertwiner.zornJWConjugator_mulVec_single` together with
+`SplitOctonionJordanWignerIntertwiner.zornJWFockSwap_seven`; the previous proof was a six-case `norm_num` brute force. -/
 theorem zornJWConjugator_mulVec_top_basis :
     SplitOctonionJordanWignerIntertwiner.zornJWConjugator.mulVec
       (Pi.single (7 : Fin 8) (1 : ℝ)) =
         Pi.single (0 : Fin 8) (1 : ℝ) := by
-  ext i
-  fin_cases i <;>
-    norm_num [SplitOctonionJordanWignerIntertwiner.zornJWConjugator,
-      Matrix.mulVec, dotProduct, Fin.sum_univ_eight, Pi.single_apply]
+  funext i
+  rw [SplitOctonionJordanWignerIntertwiner.zornJWConjugator_mulVec_single]
+  by_cases hi : i = (0 : Fin 8) <;> simp [hi, SplitOctonionJordanWignerIntertwiner.zornJWFockSwap]
 
 /-- The Zorn Jordan–Wigner conjugator $P_{\mathrm{JW}}$ pointwise fixes every basis
 vector $e_k$ ($k \in \{1, 2, 3, 4, 5, 6\}$) spanning the $3 \oplus 3$ primal and dual
-vector sheets. -/
+vector sheets.
+
+Derived from `SplitOctonionJordanWignerIntertwiner.zornJWConjugator_mulVec_single` together with
+`SplitOctonionJordanWignerIntertwiner.zornJWFockSwap_middle`; the previous proof was a thirty-line six-fold `norm_num`
+brute force, one copy per middle coordinate. -/
 theorem zornJWConjugator_fixes_primal_and_dual_sheet_basis
     (k : Fin 8) (hk0 : k ≠ 0) (hk7 : k ≠ 7) :
     SplitOctonionJordanWignerIntertwiner.zornJWConjugator.mulVec
       (Pi.single k (1 : ℝ)) =
         Pi.single k (1 : ℝ) := by
-  fin_cases k
-  · exact False.elim (hk0 rfl)
-  · ext i
-    fin_cases i <;>
-      norm_num [SplitOctonionJordanWignerIntertwiner.zornJWConjugator,
-        Matrix.mulVec, dotProduct, Fin.sum_univ_eight, Pi.single_apply]
-  · ext i
-    fin_cases i <;>
-      norm_num [SplitOctonionJordanWignerIntertwiner.zornJWConjugator,
-        Matrix.mulVec, dotProduct, Fin.sum_univ_eight, Pi.single_apply]
-  · ext i
-    fin_cases i <;>
-      norm_num [SplitOctonionJordanWignerIntertwiner.zornJWConjugator,
-        Matrix.mulVec, dotProduct, Fin.sum_univ_eight, Pi.single_apply]
-  · ext i
-    fin_cases i <;>
-      norm_num [SplitOctonionJordanWignerIntertwiner.zornJWConjugator,
-        Matrix.mulVec, dotProduct, Fin.sum_univ_eight, Pi.single_apply]
-  · ext i
-    fin_cases i <;>
-      norm_num [SplitOctonionJordanWignerIntertwiner.zornJWConjugator,
-        Matrix.mulVec, dotProduct, Fin.sum_univ_eight, Pi.single_apply]
-  · ext i
-    fin_cases i <;>
-      norm_num [SplitOctonionJordanWignerIntertwiner.zornJWConjugator,
-        Matrix.mulVec, dotProduct, Fin.sum_univ_eight, Pi.single_apply]
-  · exact False.elim (hk7 rfl)
+  funext i
+  rw [SplitOctonionJordanWignerIntertwiner.zornJWConjugator_mulVec_single]
+  have hk : SplitOctonionJordanWignerIntertwiner.zornJWFockSwap k = k := SplitOctonionJordanWignerIntertwiner.zornJWFockSwap_middle hk0 hk7
+  by_cases hi : i = SplitOctonionJordanWignerIntertwiner.zornJWFockSwap k <;> simp [hi, hk, Pi.single_apply]
 
 set_option maxHeartbeats 0
 
@@ -695,22 +680,24 @@ theorem zornJWConjugator_negates_zornVacuumTopPeirceOperator :
       Fin.sum_univ_eight]
 
 /-- The Zorn–Jordan–Wigner basis-change matrix `zornJWConjugator` is symmetric
-($U^\top = U$). -/
+($U^\top = U$).
+
+This is the owner theorem `SplitOctonionJordanWignerIntertwiner.zornJWConjugator_transpose`, re-exported under the
+synthesis namespace; the duplicated `fin_cases`/`norm_num` proof has been removed. -/
 theorem zornJWConjugator_transpose :
     SplitOctonionJordanWignerIntertwiner.zornJWConjugator.transpose =
-      SplitOctonionJordanWignerIntertwiner.zornJWConjugator := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    norm_num [SplitOctonionJordanWignerIntertwiner.zornJWConjugator,
-      Matrix.transpose_apply]
+      SplitOctonionJordanWignerIntertwiner.zornJWConjugator :=
+  SplitOctonionJordanWignerIntertwiner.zornJWConjugator_transpose
 
 /-- The Zorn–Jordan–Wigner basis-change matrix `zornJWConjugator` is orthogonal
-($U U^\top = I_8$). -/
+($U U^\top = I_8$).
+
+Delegates to the owner theorem `SplitOctonionJordanWignerIntertwiner.zornJWConjugator_is_orthogonal` (which states
+$U^\top U = I_8$); symmetry $U^\top = U$ makes the two statements identical. -/
 theorem zornJWConjugator_mul_transpose :
     SplitOctonionJordanWignerIntertwiner.zornJWConjugator *
       SplitOctonionJordanWignerIntertwiner.zornJWConjugator.transpose = 1 := by
-  rw [zornJWConjugator_transpose]
-  exact SplitOctonionJordanWignerIntertwiner.zornJWConjugator_sq
+  rw [zornJWConjugator_transpose, SplitOctonionJordanWignerIntertwiner.zornJWConjugator_sq]
 
 /-!
 ## Section 6: Layer 6 — Dissipative Laplacian Kernels, Group Inverses, Petz Zero-Leakage Saturation & Log-Cone Monodromy

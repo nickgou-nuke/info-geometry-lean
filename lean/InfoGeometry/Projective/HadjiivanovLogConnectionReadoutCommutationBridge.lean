@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Projective.HadjiivanovLogConnectionReadoutBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -44,6 +50,86 @@ def sectionUnipotentReadout (R : LogResidue V) (p : ℂ) :
     sectionUnipotentReadout R p (f ⊗ₜ[ℂ] v) =
       f ⊗ₜ[ℂ] unipotentResidueReadout R p v := by
   simp [sectionUnipotentReadout]
+
+/-- The lifted unipotent readouts form an additive one-parameter family:
+composition at periods `p` and `q` is the readout at `p + q`. -/
+theorem sectionUnipotentReadout_comp
+    (R : LogResidue V) (p q : ℂ) :
+    (sectionUnipotentReadout R p).comp (sectionUnipotentReadout R q) =
+      sectionUnipotentReadout R (p + q) := by
+  apply LinearMap.ext
+  intro x
+  refine TensorProduct.inductionOn x ?_ ?_
+  · intro f v
+    simp only [LinearMap.comp_apply, sectionUnipotentReadout_tmul]
+    exact congrArg (fun w : V => f ⊗ₜ[ℂ] w)
+      (congrArg (fun L : V →ₗ[ℂ] V => L v)
+        (unipotentResidueReadout_comp R p q))
+  · intro x y hx hy
+    simp [map_add, hx, hy]
+
+/-! ### Additive One-Parameter Group Laws -/
+
+/-- The fiber readout at period zero is the identity. -/
+@[simp] theorem unipotentResidueReadout_zero (R : LogResidue V) (v : V) :
+    unipotentResidueReadout R 0 v = v := by
+  simp [unipotentResidueReadout_apply]
+
+/-- Fiber-level additive law, derived from the operator composition law. -/
+theorem unipotentResidueReadout_add
+    (R : LogResidue V) (p q : ℂ) (v : V) :
+    unipotentResidueReadout R p (unipotentResidueReadout R q v) =
+      unipotentResidueReadout R (p + q) v := by
+  simpa only [LinearMap.comp_apply] using
+    congrArg (fun f : V →ₗ[ℂ] V => f v) (unipotentResidueReadout_comp R p q)
+
+/-- Pure-tensor additive law for the lifted section readout. -/
+theorem sectionUnipotentReadout_add_tmul
+    (R : LogResidue V) (p q : ℂ)
+    (f : HadjiivanovLogConnectionBridge.LaurentRing) (v : V) :
+    sectionUnipotentReadout R p (sectionUnipotentReadout R q (f ⊗ₜ[ℂ] v)) =
+      sectionUnipotentReadout R (p + q) (f ⊗ₜ[ℂ] v) := by
+  simp only [sectionUnipotentReadout_tmul, unipotentResidueReadout_add]
+
+/-- Pointwise additive law on the full Laurent section carrier. -/
+theorem sectionUnipotentReadout_add
+    (R : LogResidue V) (p q : ℂ) (x : LogSection V) :
+    sectionUnipotentReadout R p (sectionUnipotentReadout R q x) =
+      sectionUnipotentReadout R (p + q) x := by
+  change ((sectionUnipotentReadout R p).comp (sectionUnipotentReadout R q)) x = _
+  rw [sectionUnipotentReadout_comp]
+
+/-- The lifted unipotent readout at period zero is the identity. -/
+@[simp] theorem sectionUnipotentReadout_zero (R : LogResidue V) :
+    sectionUnipotentReadout R 0 = LinearMap.id := by
+  apply LinearMap.ext
+  intro x
+  refine TensorProduct.inductionOn x ?_ ?_
+  · intro f v
+    simp [sectionUnipotentReadout_tmul, unipotentResidueReadout]
+  · intro x y hx hy
+    simp [map_add, hx, hy]
+
+/-- Opposite periods give inverse lifted readouts. -/
+theorem sectionUnipotentReadout_comp_neg
+    (R : LogResidue V) (p : ℂ) :
+    (sectionUnipotentReadout R p).comp (sectionUnipotentReadout R (-p)) =
+      LinearMap.id := by
+  rw [sectionUnipotentReadout_comp]
+  convert sectionUnipotentReadout_zero R using 1 <;> simp
+
+/-- The unipotent section readouts are linear equivalences, with the opposite
+parameter as inverse. -/
+def sectionUnipotentReadoutEquiv (R : LogResidue V) (p : ℂ) :
+    LogSection V ≃ₗ[ℂ] LogSection V where
+  toLinearMap := sectionUnipotentReadout R p
+  invFun := sectionUnipotentReadout R (-p)
+  left_inv x := by
+    have h := sectionUnipotentReadout_add R (-p) p x
+    simpa using h
+  right_inv x := by
+    have h := sectionUnipotentReadout_add R p (-p) x
+    simpa using h
 
 /-- Pure-tensor commutation of connection and unipotent readout. -/
 theorem logarithmicConnection_unipotent_tmul

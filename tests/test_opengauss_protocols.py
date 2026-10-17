@@ -1596,3 +1596,18 @@ def test_qms_source_gate_ignores_admit_in_trace_class_names():
 def test_qms_source_gate_ignores_foundational_axiom_names_in_comments():
     code = "-- allowed kernel footprint: propext, Classical.choice, Quot.sound\n"
     assert check_authored_axioms_and_holes(code) == []
+
+
+def test_qms_source_gate_allows_kernel_placeholder_detector_references():
+    code = """
+    def isKernelPlaceholder (n : Name) : Bool := n == ``sorryAx || n == ``admitAx || n == ``Lean.sorryAx
+    theorem finished : True := by trivial
+    """
+    assert check_authored_axioms_and_holes(code) == []
+
+
+def test_qms_source_gate_rejects_kernel_placeholder_proof_terms():
+    for term in ("sorryAx", "_root_.sorryAx", "_root_.admitAx", "Lean.sorryAx", "Lean.admitAx"):
+        code = f"theorem fake : True := ({term} : True)"
+        violations = check_authored_axioms_and_holes(code)
+        assert [v.trap_id for v in violations] == ["QMS_HOLE"]

@@ -744,9 +744,18 @@ def check_authored_axioms_and_holes(source: str) -> list[TrapViolation]:
             "Repository source must prove results with Lean/Mathlib theorems; do not declare axioms.",
             "ERROR",
         ))
+    # `sorryAx` and `admitAx` are kernel-level axiom names. Permit their use
+    # only as quoted names (``sorryAx or ``Lean.sorryAx) so audit code can identify them; an
+    # unquoted occurrence can be a proof term and must fail this source gate.
     for match in re.finditer(
-        r"(?<![.\w'])\b(?:sorry|admit|sorryAx)\b|«(?:sorry|admit|sorryAx)»", clean
+        r"(?<![\w'])(?:[A-Za-z_][\w']*\.)*(sorry|admit|sorryAx|admitAx)\b|«(sorry|admit|sorryAx|admitAx)»",
+        clean,
     ):
+        token = match.group(1) or match.group(2)
+        if token in {"sorryAx", "admitAx"} and clean[max(0, match.start() - 2):match.start()] == "``":
+            continue
+        if token in {"sorry", "admit"} and match.group(2) is None and "." in match.group(0):
+            continue
         line = clean.count("\n", 0, match.start()) + 1
         violations.append(TrapViolation(
             "QMS_HOLE", "Unproved theorem placeholder", line, match.group(0),

@@ -664,6 +664,53 @@ theorem paraKahler_lagrange_coordinate_identity (z₁ z₂ : ParaKahlerVec R) :
   dsimp [paraKahlerMetric, symplecticForm, vec3Dot, vec3Cross]
   ring
 
+/-- **Lagrange's decomposition identity** for the three-dimensional cross product:
+$\langle \mathbf{a}\times\mathbf{b},\; \mathbf{c}\times\mathbf{d}\rangle
+ = \langle \mathbf{a}, \mathbf{c}\rangle\langle \mathbf{b}, \mathbf{d}\rangle
+ - \langle \mathbf{a}, \mathbf{d}\rangle\langle \mathbf{b}, \mathbf{c}\rangle$.
+
+This is the general four-vector statement underlying
+`paraKahler_lagrange_coordinate_identity` and `hodgeCrossPairing_eq_norm_gap`: the Hodge cross
+product is nothing but the Lagrange correction term of the $\mathbb{R}^3$ wedge product. -/
+theorem vec3_lagrange (a b c d : Fin 3 → R) :
+    vec3Dot (vec3Cross a b) (vec3Cross c d)
+      = vec3Dot a c * vec3Dot b d - vec3Dot a d * vec3Dot b c := by
+  simp [vec3Dot, vec3Cross]
+  ring
+
+/-- **The Hodge cross pairing is exactly the norm gap.** The off-diagonal Hodge pairing
+carried by `hodgeCrossVec z₁ z₂` repairs the discrepancy between the $(1,1)$ para-Kähler
+inner-product determinant and the multiplicative self-norm product:
+$$4\,\langle \mathbf{u}_1 \times \mathbf{u}_2,\ \mathbf{v}_1 \times \mathbf{v}_2\rangle
+ = g(z_1,z_1)\,g(z_2,z_2) - \bigl(g(z_1,z_2)^2 - \omega(z_1,z_2)^2\bigr).$$
+Equivalently the metriplectic determinant $g^2-\omega^2$ alone under-counts the norm by
+exactly one Hodge term. This is the "why" behind `paraKahler_lagrange_coordinate_identity`,
+stated as a standalone discrepancy law. -/
+theorem hodgeCrossPairing_eq_norm_gap (z₁ z₂ : ParaKahlerVec R) :
+    4 * vec3Dot (vec3Cross z₁.u z₂.u) (vec3Cross z₁.v z₂.v)
+      = paraKahlerMetric z₁ z₁ * paraKahlerMetric z₂ z₂
+        - (paraKahlerMetric z₁ z₂ ^ 2 - symplecticForm z₁ z₂ ^ 2) := by
+  have h := paraKahler_lagrange_coordinate_identity z₁ z₂
+  linear_combination h
+
+/-- Named form of the Lagrange–Binet–Cauchy identity for the metriplectic norm.
+The coordinate identity is the polynomial statement; this name emphasizes its
+norm-composition role in the para-Kähler carrier. -/
+theorem paraKahler_lagrange_norm_composition (z₁ z₂ : ParaKahlerVec R) :
+    (paraKahlerMetric z₁ z₂) ^ 2 - (symplecticForm z₁ z₂) ^ 2 +
+      4 * vec3Dot (vec3Cross z₁.u z₂.u) (vec3Cross z₁.v z₂.v) =
+      paraKahlerMetric z₁ z₁ * paraKahlerMetric z₂ z₂ :=
+  paraKahler_lagrange_coordinate_identity z₁ z₂
+
+/-- Intrinsic form of the norm law using the Hodge cross vector. -/
+theorem paraKahler_lagrange_norm_via_hodgeCrossVec (z₁ z₂ : ParaKahlerVec R) :
+    (paraKahlerMetric z₁ z₂) ^ 2 - (symplecticForm z₁ z₂) ^ 2 -
+      2 * paraKahlerMetric (hodgeCrossVec z₁ z₂) (hodgeCrossVec z₁ z₂) =
+      paraKahlerMetric z₁ z₁ * paraKahlerMetric z₂ z₂ := by
+  unfold paraKahlerMetric symplecticForm hodgeCrossVec vec3Dot vec3Cross
+  dsimp
+  ring
+
 /-- Left-associated triple product of three primal sheet vectors lands on the lower-right
 Peirce idempotent $e_1$ scaled by the 3D volume $\det(u_1, u_2, u_3)$. -/
 theorem zorn_primal_triple_left_eq_volume_smul_e1 (u₁ u₂ u₃ : Fin 3 → R) :

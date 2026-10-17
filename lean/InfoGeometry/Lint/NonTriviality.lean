@@ -1,7 +1,7 @@
 /-
-Copyright (c) 2024-2026 Nikolay Goutev and Dimitar Tonev.
-Institute for Nuclear Research and Nuclear Energy (INRNE-BAS),
-Bulgarian Academy of Sciences.
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
 -/
 import Lean
 import InfoGeometry.Algebra.FiniteSpinAlgebra
@@ -70,7 +70,7 @@ structure MathfulnessMetric where
   unfoldedLocalWrapperCount : Nat
   hitUnfoldLimit : Bool
   containsSorry : Bool
-deriving Repr
+deriving Inhabited, Repr
 
 def MathfulnessMetric.isGenuine (m : MathfulnessMetric) : Bool :=
   (decide (m.termNodeCount > 5)) &&
@@ -222,7 +222,7 @@ private def isNontrivialExternalConst
     | some info => isProofConst info
     | none => false
 
-partial def auditExprTrivialityDetailed
+def auditExprTrivialityDetailed
     (cfg : AuditConfig)
     (env : Environment)
     (seen : List Name)
@@ -235,7 +235,7 @@ partial def auditExprTrivialityDetailed
       (containsSorry := true)
       (suspiciousConsts := [``sorryAx])
 
-  match e.consumeMData with
+  match e with
   | Expr.app fn arg =>
       let fnAudit ← auditExprTrivialityDetailed cfg env seen depth fn
       let argAudit ← auditExprTrivialityDetailed cfg env seen depth arg
@@ -317,8 +317,18 @@ partial def auditExprTrivialityDetailed
   | Expr.sort _ => return AuditResult.mk (termNodeCount := 1)
   | Expr.lit _ => return AuditResult.mk (termNodeCount := 1)
 
+termination_by (depth, sizeOf e)
+decreasing_by
+  all_goals
+    simp_all [beq_iff_eq]
+    first
+    | exact Prod.Lex.left _ _ (by omega)
+    | apply Prod.Lex.right
+      all_goals simp_wf
+      all_goals omega
+
 /-- Legacy compatibility wrapper used by `InfoGeometry.Lint.Pauli`. -/
-partial def auditExprTriviality (e : Expr) : MetaM Bool := do
+def auditExprTriviality (e : Expr) : MetaM Bool := do
   let env ← getEnv
   let cfg := AuditConfig.default
   let audit ← auditExprTrivialityDetailed cfg env [] (AuditConfig.maxLocalUnfoldDepth cfg) e
@@ -358,7 +368,7 @@ def hitFuelLimit : DependencyScanResult → Bool
 
 end DependencyScanResult
 
-partial def collectTransitiveDeps
+def collectTransitiveDeps
     (env : Environment) (fuel : Nat) (frontier : List Name) (seen : Std.HashSet Name)
     : CoreM DependencyScanResult := do
   match fuel, frontier with
@@ -375,6 +385,9 @@ partial def collectTransitiveDeps
         | some ci =>
             let deps := directDepsOfConstantInfo ci |>.toList
             collectTransitiveDeps env fuel (deps ++ rest) seen
+
+termination_by fuel
+decreasing_by all_goals omega
 
 /-- Product-backed dependency contamination result, avoiding a proof-carrier structure. -/
 abbrev ContaminationResult :=

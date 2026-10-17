@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Lean
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
@@ -16,30 +21,22 @@ structure ASTNode where
   name : String
   type : String
   kind : String
-  deriving ToJson
+  deriving ToJson, Inhabited
 
 structure ASTEdge where
   from_node : String
   to_node   : String
   relation  : String
-  deriving ToJson
+  deriving ToJson, Inhabited
 
 structure ASTGraphData where
   nodes : Array ASTNode
   edges : Array ASTEdge
-  deriving ToJson
+  deriving ToJson, Inhabited
 
-/-- Recursively collects all constant names used within an expression -/
-partial def collectConstants (e : Expr) (acc : NameSet := {}) : NameSet :=
-  match e with
-  | Expr.const n _ => acc.insert n
-  | Expr.app f a   => collectConstants a (collectConstants f acc)
-  | Expr.lam _ d b _ => collectConstants b (collectConstants d acc)
-  | Expr.forallE _ d b _ => collectConstants b (collectConstants d acc)
-  | Expr.letE _ t v b _ => collectConstants b (collectConstants v (collectConstants t acc))
-  | Expr.mdata _ e => collectConstants e acc
-  | Expr.proj _ _ e => collectConstants e acc
-  | _ => acc
+/-- Recursively collects all constant names used within an expression. -/
+def collectConstants (e : Expr) (acc : NameSet := {}) : NameSet :=
+  e.foldConsts (init := acc) fun n names => names.insert n
 
 /-- Command to extract the dependency graph of a specific module prefix -/
 elab "#extract_graph " prefixName:ident : command => do

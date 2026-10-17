@@ -201,6 +201,10 @@ import InfoGeometry.QuantumContext.PolarizedAttentionTrajectoryGreen
 import InfoGeometry.QuantumContext.PolarizedAttentionTrajectoryGreenAudit
 import InfoGeometry.QuantumContext.MarkovAttentionKemenyTrace
 import InfoGeometry.QuantumContext.MarkovAttentionKemenyTraceAudit
+import InfoGeometry.Twistor.SplitSignatureNullRayTwistor
+import InfoGeometry.Twistor.SplitSignatureNullRayTwistorAudit
+import InfoGeometry.Synthesis.SplitTwistorNullRayLoxodromicSynthesis
+import InfoGeometry.Synthesis.SplitTwistorNullRayLoxodromicSynthesisAudit
 
 /-!
 # InfoGeometry

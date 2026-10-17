@@ -6,6 +6,8 @@ Authors: InfoGeometry Engine Contributors
 import InfoGeometry.AllExhaustive
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitOctonionTwistorDiracKahlerBridge
+import InfoGeometry.Canonical.MajoranaUHFJordanWignerInduction
+import InfoGeometry.Canonical.MajoranaUHFJordanWignerInductionAudit
 
 import InfoGeometry.Canonical.KreinSeamEvolution
 import InfoGeometry.Canonical.WeakValueCylinderTransport
@@ -101,6 +103,8 @@ import InfoGeometry.QuantumContext.AttentionGNSBridge
 import InfoGeometry.QuantumContext.AttentionGNSBridgeAudit
 import InfoGeometry.QuantumContext.AttentionStageColimitState
 import InfoGeometry.QuantumContext.AttentionStageColimitStateAudit
+import InfoGeometry.QuantumContext.AttentionColimitStateCoherence
+import InfoGeometry.QuantumContext.AttentionColimitStateCoherenceAudit
 import InfoGeometry.QuantumContext.ColimitAttentionTomitaFlow
 import InfoGeometry.QuantumContext.ColimitAttentionTomitaFlowAudit
 import InfoGeometry.Export.DualEngineCertifiedContracts

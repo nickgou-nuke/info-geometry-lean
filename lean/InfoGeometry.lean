@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 Copyright (c) 2024-2026 Nikolay Goutev and Dimitar Tonev.
 Institute for Nuclear Research and Nuclear Energy (INRNE-BAS),
 Bulgarian Academy of Sciences.
@@ -153,6 +158,21 @@ import InfoGeometry.GrandUnification.KleinDiracRealization
 import InfoGeometry.GrandUnification.MoebiusWittenIndex
 import InfoGeometry.GrandUnification.MoebiusTomitaPacket
 import InfoGeometry.GrandUnification.HorizonCapacitance
+import InfoGeometry.QuantumContext.RotaryAttentionSpiralDynamics
+import InfoGeometry.QuantumContext.LinShuAttentionDensityWave
+import InfoGeometry.Canonical.RadialQuantizationFiveGradedCylinder
+import InfoGeometry.SuperMetriplectic.MajoranaSouriauMetriplecticLoxodromic
+import InfoGeometry.QuantumContext.LinShuKMSPetzRadialSynthesis
+import InfoGeometry.QuantumContext.LinShuMajoranaColimitCapstone
+import InfoGeometry.Canonical.MajoranaEightByEightJW
+import InfoGeometry.Canonical.MajoranaUHFJordanWignerInduction
+import InfoGeometry.Canonical.MajoranaUHFJordanWignerInductionAudit
+import InfoGeometry.Canonical.SuperGrassmannianFiveGradedEightByEight
+import InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge
+import InfoGeometry.Canonical.SplitOctonionParaKahlerNullCone
+import InfoGeometry.Canonical.SplitOctonionClifford33Soldering
+import InfoGeometry.Canonical.SplitOctonionClifford33SolderingAudit
+import InfoGeometry.Synthesis.ThreeTraditionLineageConvergence
 
 /-!
 # InfoGeometry

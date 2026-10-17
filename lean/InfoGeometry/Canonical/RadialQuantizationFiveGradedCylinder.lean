@@ -3,25 +3,33 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
+import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 import InfoGeometry.Convex.RadialLogBarrier
 import InfoGeometry.QuantumContext.RotaryAttentionSpiralDynamics
 import InfoGeometry.Canonical.UnifiedInfoGeometryPetzFockBridge
 import InfoGeometry.Canonical.ConformalFiveGradeInversion
 import InfoGeometry.Canonical.ParaKahlerGradedFockCAR
+import InfoGeometry.OperatorAlgebra.ChiralRetainedWordFiveGradeClosure
+import InfoGeometry.Clifford.Cl55OperatorFiveGradeClosure
 
 /-!
 # Radial Quantization, Log-Generating Scale Invariance, and the 5-Graded Conformal Cylinder
 
-This module formalizes the finite-dimensional radial-quantization dictionary connecting the
-positive radial cone $(0, \infty) \times S^1$ to the translation-invariant cylinder
-$\mathbb{R}_t \times S^1$ across five Causal Poset archetypes:
+This module formalizes the radial-quantization dictionary connecting the positive radial cone
+$(0, \infty) \times S^1$ to the translation-invariant cylinder $\mathbb{R}_t \times S^1$,
+together with its genuine calculus (`HasDerivAt`) derivatives and operator commutator grading
+(`HasOperatorGrade D X k`, $[D, X_k] = k X_k$) across five Causal Poset archetypes:
 
 1. **Archetype I — Radial Quantization Bijection ($t = \ln r \leftrightarrow r = e^t$),
-   Conformal Cone-to-Cylinder Metric Equivalence & Radial Normalization (`sphericalNorm2`)**:
+   Differential Calculus (`HasDerivAt`), Conformal Cone-to-Cylinder Metric Equivalence &
+   Radial Normalization (`sphericalNorm2`)**:
    - Defines `radialTime r = RadialLogBarrier.radialTau r` and `coneRadius t = Real.exp t`,
      proving `radialTime_coneRadius`, the multiplicative-to-additive homomorphism
-     `radialTime_mul_scale`, and the cone-to-cylinder log-barrier and Legendre-dual bridges
-     `radialBarrier_coneRadius_eq_tauBarrier` and `coneRadius_mul_radialDualNorm_eq_tauDual`.
+     `radialTime_mul_scale`, the radial derivatives `hasDerivAt_radialTime` ($dt/dr = r^{-1}$)
+     and `hasDerivAt_coneRadius` ($dr/dt = r$), and the cone-to-cylinder log-barrier and
+     Legendre-dual bridges `radialBarrier_coneRadius_eq_tauBarrier` and
+     `coneRadius_mul_radialDualNorm_eq_tauDual`.
    - Defines `coneLineElement` and `cylinderLineElement`, proving the conformal equivalence
      `coneLineElement r dr dOmega = r ^ 2 * cylinderLineElement (dr / r) dOmega`, its cylinder
      pullback `Real.exp (2 * t) * cylinderLineElement dt dOmega`, and its bridge to
@@ -29,53 +37,71 @@ $\mathbb{R}_t \times S^1$ across five Causal Poset archetypes:
    - Defines the 2D vector radial log-time `vecRadialTime2` and proves that unit radial
      normalization satisfies `sphericalNorm2 1 v = Real.exp (-vecRadialTime2 v) • v`.
 
-2. **Archetype II — Log-Generating Scale-Invariant Potential ($\Phi(\lambda w) = \Phi(w) + \ln \lambda$)
-   & Degree-$0$ Scale Invariance of the Simplex Projection, Chi-Squared Metric, and
-   Amari–Chentsov Cubic Tensor**:
+2. **Archetype II — Log-Generating Scale-Invariant Potential ($\Phi(\lambda w) = \Phi(w) + \ln \lambda$),
+   1st/2nd/3rd `HasDerivAt` Directional Derivatives & Degree-$0$ Scale Invariance of the
+   Simplex Projection, Chi-Squared Metric, and Amari–Chentsov Cubic Tensor**:
    - Defines `conePartitionSum` and `logConePotential`, proving positivity `conePartitionSum_pos`
      and the additive log-shift laws under positive cone rescaling `w ↦ lam • w` and cylinder
      time translation `w ↦ exp dt • w`.
    - Defines the simplex projection `coneNormalizedState` and proves positivity
      `coneNormalizedState_pos` together with exact degree-$0$ scale invariance under
-     `w ↦ lam • w` of `coneNormalizedState`, the chi-squared inner product
-     `chiSquaredInner (coneNormalizedState _)`, and the Amari–Chentsov cubic skewness tensor
+     `w ↦ lam • w` of `coneNormalizedState`, `chiSquaredInner (coneNormalizedState _)`, and
      `(chiSquaredDualManifold (coneNormalizedState _) _).diff_g`, as well as simultaneous
      degree-$1$ homogeneity of `chiSquaredInner` and `chiSquaredCubicSkewness`.
+   - Proves the genuine `HasDerivAt` directional derivative theorems:
+     `hasDerivAt_rayLogPotential_zero`, `hasDerivAt_expRayLogPotential_zero`,
+     `hasDerivAt_componentLog_first`, `hasDerivAt_weightedScore_second` (yielding
+     `-chiSquaredInner w u v`), and `hasDerivAt_weightedFisher_third` (yielding
+     `-2 * chiSquaredCubicSkewness w X Y Z`).
 
-3. **Archetype III — Unfolding the Logarithmic Spiral into a Constant-Pitch Cylinder Helix**:
+3. **Archetype III — Unfolding the Logarithmic Spiral into a Constant-Pitch Cylinder Helix
+   & `HasDerivAt` Helix ODEs**:
    - Defines `cylinderHelixTime`, `cylinderHelixAngle`, and `cylinderToConeMap`, proving that
      pushing a linear cylinder helix forward by `cylinderToConeMap` recovers
      `RotaryAttentionSpiralDynamics.spiralTrajectory`, while pulling `spiralTrajectory` back
      by `vecRadialTime2` yields an exact affine line `radialTime a + b * ω * τ`.
+   - Proves the `HasDerivAt` differential equations `hasDerivAt_cylinderHelixTime`,
+     `hasDerivAt_cylinderHelixAngle`, and `hasDerivAt_coneRadius_cylinderHelixTime`.
 
 4. **Archetype IV — 5-Graded Super-Grassmannian Conformal Weight Representation
-   ($r^{-2}, r^{-1}, r^0, r^{+1}, r^{+2}$)**:
+   ($r^{-2}, r^{-1}, r^0, r^{+1}, r^{+2}$), `HasDerivAt` Eigen-Scaling &
+   $\mathrm{Cl}(5,5)$ `HasOperatorGrade` Closure**:
    - Assigns integer conformal weights `gradeWeight : ConformalGrade → ℤ` (`-2, -1, 0, 1, 2`)
-     compatible with `ConformalGrade.swap` (`gradeWeight_swap`), defines `gradeTimeScale` and
-     `gradeRadialScale`, proves the cone-cylinder weight dictionary, additive group law, and
-     inversion duality, and bridges directly to `FiveGradedConformalInversion`
-     (`fiveGradedInversion_gradeWeight_theta`, `fiveGradedInversion_gradeTimeScale_theta`,
-     `fiveGradedInversion_gradeTimeScale_mul_theta`, and `fiveGradedInversion_centerSet_scale_one`).
+     compatible with `ConformalGrade.swap` (`gradeWeight_swap`) and
+     `InfoGeometry.OperatorAlgebra.FiveGrade.value` (`fiveGrade_value_eq_gradeWeight`), defines
+     `gradeTimeScale` and `gradeRadialScale`, proves `hasDerivAt_gradeTimeScale`
+     ($\frac{d}{dt} e^{kt} = k e^{kt}$), and bridges directly to `FiveGradedConformalInversion`.
+   - Defines `dilatedGradeOperator` and proves that all 5 sectors (`-2, -1, 0, +1, +2`) of
+     `InfoGeometry.Clifford.Clifford55` satisfy `HasOperatorGrade numberOperator55` under
+     cylinder dilatation.
 
-5. **Archetype V — Dilated Para-Kähler Fock CAR Superbracket Invariance & 5-Sector Dilatation Action**:
-   - Defines the oppositely weighted creation and annihilation endomorphisms
-     `dilatedCreateEnd` (grade `+1`, weight $e^{+t}$) and `dilatedAnnihilateEnd` (grade `-1`,
-     weight $e^{-t}$) on `FockExteriorEnvelope K`, proving that their odd-odd $\mathbb{Z}_2$
-     superbracket is strictly invariant under radial cylinder dilatation $t$ and equals the
-     grade-$0$ central pairing $g(\alpha, u) \cdot \mathrm{id}$.
+5. **Archetype V — Para-Kähler Polarization Commutator Grading (`HasOperatorGrade`),
+   Dilated Fock CAR Superbracket Invariance & 5-Sector Dilatation Action**:
+   - Defines the half-polarization generator `halfPolarization K = (1/2) • K` and the four
+     Peirce projector blocks `plusPlusBlock`, `minusMinusBlock`, `plusMinusRaisingBlock`, and
+     `minusPlusLoweringBlock` on `Module.End ℝ V`, proving `HasOperatorGrade` with eigenvalues
+     `0`, `0`, `+1`, and `-1`.
+   - Defines `dilatedCreateEnd` (grade `+1`, weight $e^{+t}$) and `dilatedAnnihilateEnd`
+     (grade `-1`, weight $e^{-t}$) on `FockExteriorEnvelope K`, proving that their odd-odd
+     $\mathbb{Z}_2$ superbracket is strictly invariant under radial cylinder dilatation $t$
+     and equals the grade-$0$ central pairing $g(\alpha, u) \cdot \mathrm{id}$.
    - Defines the 5-graded direct-sum dilatation action `fiveGradedDilatation` and proves its
      one-parameter group law and fixed-point property on the grade-$0$ center.
 
 ## Scope Note
 
 1. `radialTime` (`RadialLogBarrier.radialTau`) and `coneRadius` (`Real.exp`) form a mutually
-   inverse bijection between the positive ray $(0, \infty)$ and $\mathbb{R}$.
-2. `coneNormalizedState`, `chiSquaredInner`, and `chiSquaredCubicSkewness` are finite-dimensional
-   algebraic expressions whose radial scale invariance under $w \mapsto \lambda w$ is proved by
-   homogeneous factor cancellation rather than Fréchet differentiation on a manifold.
-3. The 5-graded dilatation and dilated Para-Kähler CAR superbracket invariance are
-   finite-dimensional module and exterior-algebra theorems, not infinite-dimensional Virasoro
-   CFT operator-product expansions.
+   inverse differentiable bijection between the positive ray $(0, \infty)$ and $\mathbb{R}$,
+   with 1D calculus derivatives established via Mathlib's `HasDerivAt`.
+2. In Archetype II, both homogeneous factor cancellation under $w \mapsto \lambda w$ and
+   genuine 1-parameter `HasDerivAt` directional derivatives at $s = 0$ are proved on finite
+   index types `[Fintype ι]`.
+3. In Archetypes IV and V, operator commutator grading `HasOperatorGrade D X k`
+   ($D X - X D = k \cdot X$) is proved for the para-Kähler polarization generator
+   $D_K = \tfrac{1}{2} K$ on `Module.End ℝ V` and for the $\mathrm{Cl}(5,5)$ CAR number
+   operator `numberOperator55`, while the dilated Fock CAR superbracket invariance is proved on
+   `Module.End ℝ (FockExteriorEnvelope K)`. No infinite-dimensional Virasoro CFT operator-product
+   expansion is claimed.
 -/
 
 noncomputable section
@@ -87,12 +113,18 @@ open InfoGeometry.Convex
 open InfoGeometry.QuantumContext
 open InfoGeometry.Canonical.UnifiedInfoGeometryPetzFockBridge
 open InfoGeometry.Canonical.ConformalFiveGradeInversion
+open InfoGeometry.Canonical.SuperGrassmannianManifold
+open InfoGeometry.Canonical.NaturalGradientSubmersionFlow
+open InfoGeometry.Canonical.GrandEpistemicGeometricSynthesis
+open InfoGeometry.Canonical.ParaKahlerLagrangianDimension
 open InfoGeometry.Canonical.SuperGrassmannianProjectorEnvelope
 open InfoGeometry.Canonical.ParaKahlerGradedFockCAR
+open InfoGeometry.OperatorAlgebra
+open InfoGeometry.Clifford.Clifford55
 
 variable {ι : Type*}
 
-/-! ### Private Scalar Arithmetic Helpers (Trap T16 Safe) -/
+/-! ### Private Scalar Arithmetic & Calculus Helpers (Trap T16 Safe) -/
 
 private lemma exp_sq_eq_exp_two_mul (τ : ℝ) :
     (Real.exp τ) ^ (2 : ℕ) = Real.exp (2 * τ) := by
@@ -187,8 +219,104 @@ private lemma exp_grade_posTwo_eq_zpow (t : ℝ) :
     ring
   rw [h, ← exp_sq_eq_exp_two_mul, zpow_two, sq]
 
+private lemma hasDerivAt_affine_ray (a b s : ℝ) :
+    HasDerivAt (fun x : ℝ => a + x * b) b s := by
+  have h1 : HasDerivAt (fun x : ℝ => x * b) (1 * b) s :=
+    (hasDerivAt_id s).mul_const b
+  rw [one_mul] at h1
+  exact h1.const_add a
+
+private lemma hasDerivAt_affine_left_mul (a b s : ℝ) :
+    HasDerivAt (fun x : ℝ => a + b * x) b s := by
+  have h1 : HasDerivAt (fun x : ℝ => b * x) (b * 1) s :=
+    (hasDerivAt_id s).const_mul b
+  rw [mul_one] at h1
+  exact h1.const_add a
+
+private lemma hasDerivAt_linear_left_mul (b s : ℝ) :
+    HasDerivAt (fun x : ℝ => b * x) b s := by
+  have h1 : HasDerivAt (fun x : ℝ => b * x) (b * 1) s :=
+    (hasDerivAt_id s).const_mul b
+  rwa [mul_one] at h1
+
+private lemma hasDerivAt_log_affine_zero {a : ℝ} (b : ℝ) (ha : a ≠ 0) :
+    HasDerivAt (fun s : ℝ => Real.log (a + s * b)) (b / a) 0 := by
+  have h_aff : HasDerivAt (fun s : ℝ => a + s * b) b 0 := hasDerivAt_affine_ray a b 0
+  have h_nz : a + 0 * b ≠ 0 := by
+    rw [zero_mul, add_zero]
+    exact ha
+  have h_log := h_aff.log h_nz
+  rwa [zero_mul, add_zero] at h_log
+
+private lemma hasDerivAt_weighted_inv_zero {w : ℝ} (u v : ℝ) (hw : w ≠ 0) :
+    HasDerivAt (fun s : ℝ => w * (u / (w + s * v))) (-(u * v / w)) 0 := by
+  have h_aff : HasDerivAt (fun s : ℝ => w + s * v) v 0 := hasDerivAt_affine_ray w v 0
+  have h_nz : w + 0 * v ≠ 0 := by
+    rw [zero_mul, add_zero]
+    exact hw
+  have h_div : HasDerivAt (fun s : ℝ => u / (w + s * v))
+      ((0 * (w + 0 * v) - u * v) / (w + 0 * v) ^ 2) 0 :=
+    (hasDerivAt_const 0 u).div h_aff h_nz
+  have h_mul := h_div.const_mul w
+  have h_simp : w * ((0 * (w + 0 * v) - u * v) / (w + 0 * v) ^ 2) = -(u * v / w) := by
+    have h1 : 0 * (w + 0 * v) - u * v = -(u * v) := by ring
+    have h2 : (w + 0 * v) ^ 2 = w * w := by ring
+    rw [h1, h2]
+    calc
+      w * (-(u * v) / (w * w)) = -(w * (u * v) / (w * w)) := by ring
+      _ = -(u * v / w) := by rw [mul_div_mul_left (u * v) w hw]
+  rwa [h_simp] at h_mul
+
+private lemma hasDerivAt_weighted_inv_sq_zero {w : ℝ} (x y z : ℝ) (hw : w ≠ 0) :
+    HasDerivAt (fun s : ℝ => w * (x * y / (w + s * z) ^ 2))
+      ((-2 : ℝ) * (x * y * z / (w * w))) 0 := by
+  have h_aff : HasDerivAt (fun s : ℝ => w + s * z) z 0 := hasDerivAt_affine_ray w z 0
+  have h_sq : HasDerivAt (fun s : ℝ => (w + s * z) ^ 2)
+      (z * (w + 0 * z) + (w + 0 * z) * z) 0 := by
+    have h_fn : (fun s : ℝ => (w + s * z) ^ 2) =
+        (fun s : ℝ => (w + s * z) * (w + s * z)) := by
+      funext s
+      exact sq (w + s * z)
+    rw [h_fn]
+    exact HasDerivAt.mul h_aff h_aff
+  have h_nz2 : (w + 0 * z) ^ 2 ≠ 0 := by
+    rw [zero_mul, add_zero]
+    exact pow_ne_zero 2 hw
+  have h_div : HasDerivAt (fun s : ℝ => x * y / (w + s * z) ^ 2)
+      ((0 * (w + 0 * z) ^ 2 - x * y * (z * (w + 0 * z) + (w + 0 * z) * z)) /
+        ((w + 0 * z) ^ 2) ^ 2) 0 :=
+    (hasDerivAt_const 0 (x * y)).div h_sq h_nz2
+  have h_mul := h_div.const_mul w
+  have h_simp :
+      w * ((0 * (w + 0 * z) ^ 2 - x * y * (z * (w + 0 * z) + (w + 0 * z) * z)) /
+        ((w + 0 * z) ^ 2) ^ 2) =
+      (-2 : ℝ) * (x * y * z / (w * w)) := by
+    have h_num :
+        w * (0 * (w + 0 * z) ^ 2 - x * y * (z * (w + 0 * z) + (w + 0 * z) * z)) =
+          (w * w) * ((-2 : ℝ) * (x * y * z)) := by ring
+    have h_den : ((w + 0 * z) ^ 2) ^ 2 = (w * w) * (w * w) := by ring
+    have hww : w * w ≠ 0 := mul_ne_zero hw hw
+    rw [← mul_div_assoc, h_num, h_den, mul_div_mul_left _ _ hww, mul_div_assoc]
+  rwa [h_simp] at h_mul
+
+private lemma mul_one_add_mul_eq (w s η : ℝ) :
+    w * (1 + s * η) = w + s * (w * η) := by
+  ring
+
+private lemma div_right_comm_mul (w η Z : ℝ) :
+    (w * η) / Z = (w / Z) * η := by
+  ring
+
+private lemma half_sub_neg_half_eq_one :
+    (1 / 2 : ℝ) - (-(1 / 2 : ℝ)) = ((1 : ℤ) : ℝ) := by
+  norm_num
+
+private lemma neg_half_sub_half_eq_neg_one :
+    (-(1 / 2 : ℝ)) - (1 / 2 : ℝ) = ((-1 : ℤ) : ℝ) := by
+  norm_num
+
 /-!
-### Archetype I — Radial Quantization Bijection ($t = \ln r \leftrightarrow r = e^t$), Conformal Cone-to-Cylinder Metric Equivalence & Radial Normalization (`sphericalNorm2`)
+### Archetype I — Radial Quantization Bijection ($t = \ln r \leftrightarrow r = e^t$), Differential Calculus (`HasDerivAt`), Conformal Cone-to-Cylinder Metric Equivalence & Radial Normalization (`sphericalNorm2`)
 -/
 
 /-- Radial quantization cylinder time $t = \ln r$ (wrapping `RadialLogBarrier.radialTau`). -/
@@ -218,6 +346,19 @@ theorem coneRadius_add (t dt : ℝ) :
     coneRadius (t + dt) = coneRadius dt * coneRadius t := by
   dsimp [coneRadius]
   rw [Real.exp_add, mul_comm]
+
+/-- **Differential of the Radial Quantization Coordinate ($dt / dr = r^{-1}$)**:
+For any $r \ne 0$, `radialTime` has derivative $r^{-1}$ at $r$. -/
+theorem hasDerivAt_radialTime {r : ℝ} (hr : r ≠ 0) :
+    HasDerivAt radialTime r⁻¹ r :=
+  Real.hasDerivAt_log hr
+
+/-- **Euler Radial Dilatation Differential Equation ($dr / dt = r$)**:
+At every cylinder time $t \in \mathbb{R}$, `coneRadius` is its own derivative:
+`HasDerivAt coneRadius (coneRadius t) t`. -/
+theorem hasDerivAt_coneRadius (t : ℝ) :
+    HasDerivAt coneRadius (coneRadius t) t :=
+  Real.hasDerivAt_exp t
 
 /-- **Cone-to-Cylinder Log-Barrier Bridge**:
 Evaluating `RadialLogBarrier.radialBarrier` at `coneRadius τ = exp τ` recovers the
@@ -302,7 +443,7 @@ theorem sphericalNorm2_unit_eq_exp_neg_vecRadialTime2_smul
   rw [Real.exp_neg, ← coneRadius, coneRadius_vecRadialTime2 v hv, one_div]
 
 /-!
-### Archetype II — Log-Generating Scale-Invariant Potential ($\Phi(\lambda w) = \Phi(w) + \ln \lambda$) & Degree-$0$ Scale Invariance of the Simplex Projection, Chi-Squared Metric, and Amari–Chentsov Cubic Tensor
+### Archetype II — Log-Generating Scale-Invariant Potential ($\Phi(\lambda w) = \Phi(w) + \ln \lambda$), 1st/2nd/3rd `HasDerivAt` Directional Derivatives & Degree-$0$ Scale Invariance
 -/
 
 /-- Total unnormalized mass $Z(w) = \sum_i w_i$ on a finite cone carrier. -/
@@ -466,8 +607,104 @@ theorem chiSquaredDualManifold_diff_g_simultaneous_scale
     ← chiSquaredCubicSkewness_eq_dualManifold_diff_g ρ hρ]
   exact chiSquaredCubicSkewness_simultaneous_scale lam (ne_of_gt hlam) ρ X Y Z
 
+/-- 1-parameter affine ray of the log-generating potential:
+$\Phi_{w, u}(s) = \ln(\sum_i (w_i + s u_i))$. -/
+def rayLogPotential [Fintype ι] (w u : ι → ℝ) (s : ℝ) : ℝ :=
+  logConePotential (fun i => w i + s * u i)
+
+/-- Linearity of `conePartitionSum` along an affine ray $w + s u$. -/
+theorem conePartitionSum_ray [Fintype ι] (w u : ι → ℝ) (s : ℝ) :
+    conePartitionSum (fun i => w i + s * u i) =
+      conePartitionSum w + s * ∑ i, u i := by
+  dsimp [conePartitionSum]
+  rw [Finset.sum_add_distrib, ← Finset.mul_sum]
+
+/-- **First Directional Derivative (`HasDerivAt`) of `logConePotential` along an Affine Ray**:
+Differentiating $s \mapsto \Phi(w + s u)$ at $s = 0$ yields $(\sum_i u_i) / Z(w)$. -/
+theorem hasDerivAt_rayLogPotential_zero [Fintype ι]
+    (w u : ι → ℝ) (hw : conePartitionSum w ≠ 0) :
+    HasDerivAt (rayLogPotential w u) ((∑ i, u i) / conePartitionSum w) 0 := by
+  have h_eq : rayLogPotential w u =
+      fun s : ℝ => Real.log (conePartitionSum w + s * ∑ i, u i) := by
+    funext s
+    dsimp [rayLogPotential, logConePotential, radialTime, RadialLogBarrier.radialTau]
+    rw [conePartitionSum_ray]
+  rw [h_eq]
+  exact hasDerivAt_log_affine_zero (∑ i, u i) hw
+
+/-- 1-parameter multiplicative/exponential tangent ray of the log-generating potential:
+$\Phi^{\mathrm{exp}}_{w, \eta}(s) = \ln(\sum_i w_i (1 + s \eta_i))$. -/
+def expRayLogPotential [Fintype ι] (w η : ι → ℝ) (s : ℝ) : ℝ :=
+  logConePotential (fun i => w i * (1 + s * η i))
+
+/-- **First Directional Derivative (`HasDerivAt`) Recovering the `coneNormalizedState` Expectation**:
+Differentiating $s \mapsto \Phi(w \odot (1 + s \eta))$ at $s = 0$ yields the exact expectation
+$\sum_i \rho_i(w) \eta_i$ under the normalized simplex state `coneNormalizedState w`. -/
+theorem hasDerivAt_expRayLogPotential_zero [Fintype ι]
+    (w η : ι → ℝ) (hw : conePartitionSum w ≠ 0) :
+    HasDerivAt (expRayLogPotential w η)
+      (∑ i, coneNormalizedState w i * η i) 0 := by
+  have h_eq : expRayLogPotential w η = rayLogPotential w (fun i => w i * η i) := by
+    funext s
+    dsimp [expRayLogPotential, rayLogPotential]
+    congr 1
+    funext i
+    exact mul_one_add_mul_eq (w i) s (η i)
+  have h_sum : ((∑ i, w i * η i) / conePartitionSum w) =
+      ∑ i, coneNormalizedState w i * η i := by
+    rw [Finset.sum_div]
+    apply Finset.sum_congr rfl
+    intro i _
+    dsimp [coneNormalizedState]
+    exact div_right_comm_mul (w i) (η i) (conePartitionSum w)
+  rw [h_eq, ← h_sum]
+  exact hasDerivAt_rayLogPotential_zero w (fun i => w i * η i) hw
+
+/-- **1st Derivative (`HasDerivAt`) of the Component Log-Weight (Score Function)**:
+At $s = 0$, the derivative of $s \mapsto \ln(w_i + s u_i)$ is the score $u_i / w_i$. -/
+theorem hasDerivAt_componentLog_first {w_i u_i : ℝ} (hw : w_i ≠ 0) :
+    HasDerivAt (fun s : ℝ => Real.log (w_i + s * u_i)) (u_i / w_i) 0 :=
+  hasDerivAt_log_affine_zero u_i hw
+
+/-- **2nd Derivative (`HasDerivAt`) Generating the Chi-Squared / Fisher Metric**:
+Differentiating the $w$-weighted score $s \mapsto \sum_i w_i \frac{u_i}{w_i + s v_i}$ at $s = 0$
+yields `-chiSquaredInner w u v`. -/
+theorem hasDerivAt_weightedScore_second [Fintype ι]
+    (w u v : ι → ℝ) (hw : ∀ i, w i ≠ 0) :
+    HasDerivAt (fun s : ℝ => ∑ i, w i * (u i / (w i + s * v i)))
+      (-chiSquaredInner w u v) 0 := by
+  have h_sum := HasDerivAt.sum (u := (Finset.univ : Finset ι))
+    (A := fun i (s : ℝ) => w i * (u i / (w i + s * v i)))
+    (A' := fun i => -(u i * v i / w i)) (x := (0 : ℝ))
+    (fun i _ => hasDerivAt_weighted_inv_zero (u i) (v i) (hw i))
+  have h_fn : (∑ i ∈ (Finset.univ : Finset ι), fun s : ℝ => w i * (u i / (w i + s * v i))) =
+      (fun s : ℝ => ∑ i, w i * (u i / (w i + s * v i))) := by
+    funext s
+    exact Finset.sum_apply s Finset.univ (fun i s => w i * (u i / (w i + s * v i)))
+  rw [h_fn, Finset.sum_neg_distrib] at h_sum
+  exact h_sum
+
+/-- **3rd Derivative (`HasDerivAt`) Generating the Amari–Chentsov Cubic Skewness Tensor**:
+Differentiating the $w$-weighted quadratic Fisher form
+$s \mapsto \sum_i w_i \frac{X_i Y_i}{(w_i + s Z_i)^2}$ at $s = 0$ yields
+`-2 * chiSquaredCubicSkewness w X Y Z`. -/
+theorem hasDerivAt_weightedFisher_third [Fintype ι]
+    (w X Y Z : ι → ℝ) (hw : ∀ i, w i ≠ 0) :
+    HasDerivAt (fun s : ℝ => ∑ i, w i * (X i * Y i / (w i + s * Z i) ^ 2))
+      ((-2 : ℝ) * chiSquaredCubicSkewness w X Y Z) 0 := by
+  have h_sum := HasDerivAt.sum (u := (Finset.univ : Finset ι))
+    (A := fun i (s : ℝ) => w i * (X i * Y i / (w i + s * Z i) ^ 2))
+    (A' := fun i => (-2 : ℝ) * (X i * Y i * Z i / (w i * w i))) (x := (0 : ℝ))
+    (fun i _ => hasDerivAt_weighted_inv_sq_zero (X i) (Y i) (Z i) (hw i))
+  have h_fn : (∑ i ∈ (Finset.univ : Finset ι), fun s : ℝ => w i * (X i * Y i / (w i + s * Z i) ^ 2)) =
+      (fun s : ℝ => ∑ i, w i * (X i * Y i / (w i + s * Z i) ^ 2)) := by
+    funext s
+    exact Finset.sum_apply s Finset.univ (fun i s => w i * (X i * Y i / (w i + s * Z i) ^ 2))
+  rw [h_fn, ← Finset.mul_sum] at h_sum
+  exact h_sum
+
 /-!
-### Archetype III — Unfolding the Logarithmic Spiral into a Constant-Pitch Cylinder Helix
+### Archetype III — Unfolding the Logarithmic Spiral into a Constant-Pitch Cylinder Helix & `HasDerivAt` Helix ODEs
 -/
 
 /-- Linear radial log-time trajectory on the cylinder: $t(\tau) = t_0 + b \tau$. -/
@@ -482,6 +719,29 @@ def cylinderHelixAngle (ω τ : ℝ) : ℝ :=
 to the 2D punctured cone: $(t, \theta) \mapsto e^t R(\theta) v_0$. -/
 def cylinderToConeMap (t θ : ℝ) (v₀ : Fin 2 → ℝ) : Fin 2 → ℝ :=
   coneRadius t • RotaryAttentionSpiralDynamics.ropeAct θ v₀
+
+/-- **Constant Radial Log-Velocity on the Cylinder ($dt / d\tau = b$)**:
+Along `cylinderHelixTime t₀ b`, the derivative with respect to $\tau$ is the constant rate $b$. -/
+theorem hasDerivAt_cylinderHelixTime (t₀ b τ : ℝ) :
+    HasDerivAt (cylinderHelixTime t₀ b) b τ :=
+  hasDerivAt_affine_left_mul t₀ b τ
+
+/-- **Constant Angular Velocity on the Cylinder ($d\theta / d\tau = \omega$)**:
+Along `cylinderHelixAngle ω`, the derivative with respect to $\tau$ is the constant frequency $\omega$. -/
+theorem hasDerivAt_cylinderHelixAngle (ω τ : ℝ) :
+    HasDerivAt (cylinderHelixAngle ω) ω τ :=
+  hasDerivAt_linear_left_mul ω τ
+
+/-- **Exponential Radial Growth/Decay ODE along the Cylinder Helix ($dr / d\tau = b \cdot r(\tau)$)**:
+Composing `coneRadius` with `cylinderHelixTime t₀ b` satisfies the linear differential equation
+$\frac{d}{d\tau} e^{t_0 + b \tau} = b e^{t_0 + b \tau}$. -/
+theorem hasDerivAt_coneRadius_cylinderHelixTime (t₀ b τ : ℝ) :
+    HasDerivAt (fun s : ℝ => coneRadius (cylinderHelixTime t₀ b s))
+      (b * coneRadius (cylinderHelixTime t₀ b τ)) τ := by
+  have h := (hasDerivAt_coneRadius (cylinderHelixTime t₀ b τ)).comp τ
+    (hasDerivAt_cylinderHelixTime t₀ b τ)
+  rw [mul_comm] at h
+  exact h
 
 /-- **Unfolding the Logarithmic Spiral into a Cylinder Helix**:
 Mapping the constant-pitch cylinder helix `(cylinderHelixTime t₀ (b * ω) τ, cylinderHelixAngle ω τ)`
@@ -530,7 +790,7 @@ theorem coneRadius_cylinderHelixTime_of_angle (t₀ b ω θ : ℝ) :
   exact Real.exp_add t₀ ((b / ω) * θ)
 
 /-!
-### Archetype IV — 5-Graded Super-Grassmannian Conformal Weight Representation ($r^{-2}, r^{-1}, r^0, r^{+1}, r^{+2}$)
+### Archetype IV — 5-Graded Super-Grassmannian Conformal Weight Representation ($r^{-2}, r^{-1}, r^0, r^{+1}, r^{+2}$), `HasDerivAt` Eigen-Scaling & $\mathrm{Cl}(5,5)$ `HasOperatorGrade` Closure
 -/
 
 /-- Integer conformal weight $k \in \{-2, -1, 0, +1, +2\}$ associated with each of the five
@@ -541,6 +801,20 @@ def gradeWeight : ConformalGrade → ℤ
   | .zero => 0
   | .posOne => 1
   | .posTwo => 2
+
+/-- Bijection between `ConformalFiveGradeInversion.ConformalGrade` and
+`OperatorAlgebra.FiveGrade`. -/
+def conformalGradeToFiveGrade : ConformalGrade → FiveGrade
+  | .negTwo => .negTwo
+  | .negOne => .negOne
+  | .zero => .zero
+  | .posOne => .posOne
+  | .posTwo => .posTwo
+
+/-- `gradeWeight` agrees identically with `OperatorAlgebra.FiveGrade.value`. -/
+theorem fiveGrade_value_eq_gradeWeight (g : ConformalGrade) :
+    (conformalGradeToFiveGrade g).value = gradeWeight g := by
+  cases g <;> rfl
 
 /-- The conformal grade inversion `ConformalGrade.swap` negates the integer conformal weight:
 $\mathrm{weight}(\mathrm{swap}(g)) = -\mathrm{weight}(g)$. -/
@@ -555,6 +829,16 @@ def gradeTimeScale (g : ConformalGrade) (t : ℝ) : ℝ :=
 /-- Radial cone power weight $r^k$ (`r ^ gradeWeight g`) of conformal grade $g$ at cone radius $r$. -/
 def gradeRadialScale (g : ConformalGrade) (r : ℝ) : ℝ :=
   r ^ (gradeWeight g)
+
+/-- **Infinitesimal Conformal Weight Differential Equation ($\frac{d}{dt} e^{k t} = k e^{k t}$)**:
+For every conformal grade $g \in \{-2, -1, 0, +1, +2\}$, `gradeTimeScale g` is an eigenfunction
+of $\frac{d}{dt}$ with eigenvalue `gradeWeight g`. -/
+theorem hasDerivAt_gradeTimeScale (g : ConformalGrade) (t : ℝ) :
+    HasDerivAt (gradeTimeScale g) ((gradeWeight g : ℝ) * gradeTimeScale g t) t := by
+  have h := (Real.hasDerivAt_exp ((gradeWeight g : ℝ) * t)).comp t
+    (hasDerivAt_linear_left_mul (gradeWeight g : ℝ) t)
+  rw [mul_comm] at h
+  exact h
 
 /-- **5-Grade Cone-to-Cylinder Conformal Weight Dictionary**:
 For every conformal grade $g \in \{-2, -1, 0, +1, +2\}$, the cylinder exponential weight
@@ -642,11 +926,194 @@ theorem fiveGradedInversion_centerSet_scale_one {L : Type*}
   have h0 : G.grade x = ConformalGrade.zero := hx
   rw [h0, gradeTimeScale_grade_zero]
 
+/-- Cylinder dilatation of an operator $X \in A$ in conformal grade $g$:
+$X(t) = e^{\mathrm{gradeWeight}(g) t} \cdot X$. -/
+def dilatedGradeOperator {A : Type*} [Ring A] [Algebra ℝ A]
+    (g : ConformalGrade) (t : ℝ) (X : A) : A :=
+  gradeTimeScale g t • X
+
+/-- Cylinder dilatation `dilatedGradeOperator g t` preserves the operator commutator grading
+`HasOperatorGrade D X (gradeWeight g)` ($[D, X(t)] = \mathrm{gradeWeight}(g) \cdot X(t)$). -/
+theorem hasOperatorGrade_dilatedGradeOperator {A : Type*} [Ring A] [Algebra ℝ A]
+    {D X : A} (g : ConformalGrade) (t : ℝ)
+    (hX : HasOperatorGrade D X (gradeWeight g)) :
+    HasOperatorGrade D (dilatedGradeOperator g t X) (gradeWeight g) :=
+  grade_smul (gradeTimeScale g t) hX
+
+/-- Grade `-2` ($\mathrm{Cl}(5,5)$ annihilation pair $a_i a_j$, weight $e^{-2t}$):
+satisfies $[N_{5,5}, e^{-2t} a_i a_j] = -2 (e^{-2t} a_i a_j)$. -/
+theorem cl55_dilated_annihilation_pair_grade_negTwo (i j : Fin 5) (t : ℝ) :
+    HasOperatorGrade numberOperator55
+      (dilatedGradeOperator .negTwo t (annihilation55 i * annihilation55 j))
+      (gradeWeight .negTwo) :=
+  hasOperatorGrade_dilatedGradeOperator .negTwo t
+    (annihilation55_mul_annihilation55_mem_grade_neg_two i j)
+
+/-- Grade `-1` ($\mathrm{Cl}(5,5)$ single annihilation mode $a_i$, weight $e^{-t}$):
+satisfies $[N_{5,5}, e^{-t} a_i] = -1 (e^{-t} a_i)$. -/
+theorem cl55_dilated_annihilation_grade_negOne (i : Fin 5) (t : ℝ) :
+    HasOperatorGrade numberOperator55
+      (dilatedGradeOperator .negOne t (annihilation55 i))
+      (gradeWeight .negOne) :=
+  hasOperatorGrade_dilatedGradeOperator .negOne t
+    (annihilation55_mem_grade_neg_one i)
+
+/-- Grade `0` ($\mathrm{Cl}(5,5)$ neutral bilinear $c_i^\dagger a_j$, weight $1$):
+satisfies $[N_{5,5}, c_i^\dagger a_j] = 0$. -/
+theorem cl55_dilated_mixed_grade_zero (i j : Fin 5) (t : ℝ) :
+    HasOperatorGrade numberOperator55
+      (dilatedGradeOperator .zero t (creation55 i * annihilation55 j))
+      (gradeWeight .zero) :=
+  hasOperatorGrade_dilatedGradeOperator .zero t
+    (creation55_mul_annihilation55_mem_grade_zero i j)
+
+/-- Grade `+1` ($\mathrm{Cl}(5,5)$ single creation mode $c_i^\dagger$, weight $e^{+t}$):
+satisfies $[N_{5,5}, e^{+t} c_i^\dagger] = +1 (e^{+t} c_i^\dagger)$. -/
+theorem cl55_dilated_creation_grade_posOne (i : Fin 5) (t : ℝ) :
+    HasOperatorGrade numberOperator55
+      (dilatedGradeOperator .posOne t (creation55 i))
+      (gradeWeight .posOne) :=
+  hasOperatorGrade_dilatedGradeOperator .posOne t
+    (creation55_mem_grade_one i)
+
+/-- Grade `+2` ($\mathrm{Cl}(5,5)$ creation bivector $c_i^\dagger c_j^\dagger$, weight $e^{+2t}$):
+satisfies $[N_{5,5}, e^{+2t} c_i^\dagger c_j^\dagger] = +2 (e^{+2t} c_i^\dagger c_j^\dagger)$. -/
+theorem cl55_dilated_creation_pair_grade_posTwo (i j : Fin 5) (t : ℝ) :
+    HasOperatorGrade numberOperator55
+      (dilatedGradeOperator .posTwo t (creation55 i * creation55 j))
+      (gradeWeight .posTwo) :=
+  hasOperatorGrade_dilatedGradeOperator .posTwo t
+    (creation55_mul_creation55_mem_grade_two i j)
+
 /-!
-### Archetype V — Dilated Para-Kähler Fock CAR Superbracket Invariance & 5-Sector Dilatation Action
+### Archetype V — Para-Kähler Polarization Commutator Grading (`HasOperatorGrade`), Dilated Fock CAR Superbracket Invariance & 5-Sector Dilatation Action
 -/
 
 variable {V : Type*} [AddCommGroup V] [Module ℝ V]
+
+/-- Half-polarization grading operator $D_K = \tfrac{1}{2} K \in \mathrm{End}_{\mathbb{R}}(V)$,
+whose adjoint action $[D_K, -]$ grades endomorphisms of $V = T^+ \oplus T^-$ into weights
+$-1, 0, +1$. -/
+def halfPolarization (K : V →ₗ[ℝ] V) : Module.End ℝ V :=
+  (1 / 2 : ℝ) • K
+
+/-- $+1$ spectral projector $P^+ = \tfrac{1}{2}(\mathrm{id} + K)$ as an element of `Module.End ℝ V`. -/
+def projPlusEnd (K : V →ₗ[ℝ] V) : Module.End ℝ V :=
+  paraProjectorPlus K
+
+/-- $-1$ spectral projector $P^- = \tfrac{1}{2}(\mathrm{id} - K)$ as an element of `Module.End ℝ V`. -/
+def projMinusEnd (K : V →ₗ[ℝ] V) : Module.End ℝ V :=
+  paraProjectorMinus K
+
+/-- Diagonal $+1$ Peirce block $P^+ X P^+ \in \mathrm{End}_{\mathbb{R}}(V)$. -/
+def plusPlusBlock (K : V →ₗ[ℝ] V) (X : Module.End ℝ V) : Module.End ℝ V :=
+  (paraProjectorPlus K).comp (X.comp (paraProjectorPlus K))
+
+/-- Diagonal $-1$ Peirce block $P^- X P^- \in \mathrm{End}_{\mathbb{R}}(V)$. -/
+def minusMinusBlock (K : V →ₗ[ℝ] V) (X : Module.End ℝ V) : Module.End ℝ V :=
+  (paraProjectorMinus K).comp (X.comp (paraProjectorMinus K))
+
+/-- Off-diagonal raising Peirce block $P^+ X P^- : T^- \to T^+$ of conformal weight $+1$. -/
+def plusMinusRaisingBlock (K : V →ₗ[ℝ] V) (X : Module.End ℝ V) : Module.End ℝ V :=
+  (paraProjectorPlus K).comp (X.comp (paraProjectorMinus K))
+
+/-- Off-diagonal lowering Peirce block $P^- X P^+ : T^+ \to T^-$ of conformal weight $-1$. -/
+def minusPlusLoweringBlock (K : V →ₗ[ℝ] V) (X : Module.End ℝ V) : Module.End ℝ V :=
+  (paraProjectorMinus K).comp (X.comp (paraProjectorPlus K))
+
+/-- For any para-complex structure $K^2 = \mathrm{id}$, $K \circ P^+ = P^+$. -/
+theorem paraComplex_comp_projPlus (K : V →ₗ[ℝ] V) (hK : ParaComplexStructure K) :
+    K.comp (paraProjectorPlus K) = paraProjectorPlus K := by
+  ext v
+  exact paraProjectorPlus_in_TPlus K hK v
+
+/-- For any para-complex structure $K^2 = \mathrm{id}$, $P^+ \circ K = P^+$. -/
+theorem projPlus_comp_paraComplex (K : V →ₗ[ℝ] V) (hK : ParaComplexStructure K) :
+    (paraProjectorPlus K).comp K = paraProjectorPlus K := by
+  ext v
+  dsimp [paraProjectorPlus]
+  rw [hK.involutive v, add_comm]
+
+/-- For any para-complex structure $K^2 = \mathrm{id}$, $K \circ P^- = -P^-$. -/
+theorem paraComplex_comp_projMinus (K : V →ₗ[ℝ] V) (hK : ParaComplexStructure K) :
+    K.comp (paraProjectorMinus K) = -paraProjectorMinus K := by
+  ext v
+  exact paraProjectorMinus_in_TMinus K hK v
+
+/-- For any para-complex structure $K^2 = \mathrm{id}$, $P^- \circ K = -P^-$. -/
+theorem projMinus_comp_paraComplex (K : V →ₗ[ℝ] V) (hK : ParaComplexStructure K) :
+    (paraProjectorMinus K).comp K = -paraProjectorMinus K := by
+  ext v
+  dsimp [paraProjectorMinus]
+  rw [hK.involutive v, neg_sub]
+
+/-- **Grade $0$ Commutator Law for the $(+, +)$ Peirce Block**:
+$[D_K, P^+ X P^+] = 0$. -/
+theorem hasOperatorGrade_plusPlusBlock (K : V →ₗ[ℝ] V)
+    (hK : ParaComplexStructure K) (X : Module.End ℝ V) :
+    HasOperatorGrade (halfPolarization K) (plusPlusBlock K X) 0 := by
+  unfold HasOperatorGrade halfPolarization plusPlusBlock
+  have hL : K * ((paraProjectorPlus K).comp (X.comp (paraProjectorPlus K))) =
+      (paraProjectorPlus K).comp (X.comp (paraProjectorPlus K)) := by
+    change (K.comp (paraProjectorPlus K)).comp (X.comp (paraProjectorPlus K)) = _
+    rw [paraComplex_comp_projPlus K hK]
+  have hR : ((paraProjectorPlus K).comp (X.comp (paraProjectorPlus K))) * K =
+      (paraProjectorPlus K).comp (X.comp (paraProjectorPlus K)) := by
+    change (paraProjectorPlus K).comp (X.comp ((paraProjectorPlus K).comp K)) = _
+    rw [projPlus_comp_paraComplex K hK]
+  rw [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, hL, hR, sub_self,
+    Int.cast_zero, zero_smul]
+
+/-- **Grade $0$ Commutator Law for the $(-, -)$ Peirce Block**:
+$[D_K, P^- X P^-] = 0$. -/
+theorem hasOperatorGrade_minusMinusBlock (K : V →ₗ[ℝ] V)
+    (hK : ParaComplexStructure K) (X : Module.End ℝ V) :
+    HasOperatorGrade (halfPolarization K) (minusMinusBlock K X) 0 := by
+  unfold HasOperatorGrade halfPolarization minusMinusBlock
+  have hL : K * ((paraProjectorMinus K).comp (X.comp (paraProjectorMinus K))) =
+      -((paraProjectorMinus K).comp (X.comp (paraProjectorMinus K))) := by
+    change (K.comp (paraProjectorMinus K)).comp (X.comp (paraProjectorMinus K)) = _
+    rw [paraComplex_comp_projMinus K hK, LinearMap.neg_comp]
+  have hR : ((paraProjectorMinus K).comp (X.comp (paraProjectorMinus K))) * K =
+      -((paraProjectorMinus K).comp (X.comp (paraProjectorMinus K))) := by
+    change (paraProjectorMinus K).comp (X.comp ((paraProjectorMinus K).comp K)) = _
+    rw [projMinus_comp_paraComplex K hK, LinearMap.comp_neg, LinearMap.comp_neg]
+  rw [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, hL, hR, sub_self,
+    Int.cast_zero, zero_smul]
+
+/-- **Grade $+1$ Commutator Law for the $(+, -)$ Raising Block**:
+$[D_K, P^+ X P^-] = +1 \cdot (P^+ X P^-)$. -/
+theorem hasOperatorGrade_plusMinusRaisingBlock (K : V →ₗ[ℝ] V)
+    (hK : ParaComplexStructure K) (X : Module.End ℝ V) :
+    HasOperatorGrade (halfPolarization K) (plusMinusRaisingBlock K X) 1 := by
+  unfold HasOperatorGrade halfPolarization
+  have hL : K * plusMinusRaisingBlock K X = plusMinusRaisingBlock K X := by
+    unfold plusMinusRaisingBlock
+    change (K.comp (paraProjectorPlus K)).comp (X.comp (paraProjectorMinus K)) = _
+    rw [paraComplex_comp_projPlus K hK]
+  have hR : plusMinusRaisingBlock K X * K = -plusMinusRaisingBlock K X := by
+    unfold plusMinusRaisingBlock
+    change (paraProjectorPlus K).comp (X.comp ((paraProjectorMinus K).comp K)) = _
+    rw [projMinus_comp_paraComplex K hK, LinearMap.comp_neg, LinearMap.comp_neg]
+  rw [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, hL, hR,
+    smul_neg, ← neg_smul, ← sub_smul, half_sub_neg_half_eq_one]
+
+/-- **Grade $-1$ Commutator Law for the $(-, +)$ Lowering Block**:
+$[D_K, P^- X P^+] = -1 \cdot (P^- X P^+)$. -/
+theorem hasOperatorGrade_minusPlusLoweringBlock (K : V →ₗ[ℝ] V)
+    (hK : ParaComplexStructure K) (X : Module.End ℝ V) :
+    HasOperatorGrade (halfPolarization K) (minusPlusLoweringBlock K X) (-1) := by
+  unfold HasOperatorGrade halfPolarization
+  have hL : K * minusPlusLoweringBlock K X = -minusPlusLoweringBlock K X := by
+    unfold minusPlusLoweringBlock
+    change (K.comp (paraProjectorMinus K)).comp (X.comp (paraProjectorPlus K)) = _
+    rw [paraComplex_comp_projMinus K hK, LinearMap.neg_comp]
+  have hR : minusPlusLoweringBlock K X * K = minusPlusLoweringBlock K X := by
+    unfold minusPlusLoweringBlock
+    change (paraProjectorMinus K).comp (X.comp ((paraProjectorPlus K).comp K)) = _
+    rw [projPlus_comp_paraComplex K hK]
+  rw [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, hL, hR,
+    smul_neg, ← neg_smul, ← sub_smul, neg_half_sub_half_eq_neg_one]
 
 /-- Radially dilated Fock creation endomorphism at cylinder time $t$, carrying outgoing
 conformal grade `.posOne` ($e^{+t}$):

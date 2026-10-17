@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Jordan–Wigner & UHF(2^∞) Colimit Bridge</title>
+  <style>
+    :root { --bg:#0b0f19; --card:#111827; --border:#1f2937; --text:#f3f4f6; --muted:#9ca3af; --accent:#38bdf8; --emerald:#34d399; --gold:#fbbf24; }
+    body { background:var(--bg); color:var(--text); font-family:monospace; padding:20px; display:flex; flex-direction:column; align-items:center; }
+    header { max-width:1200px; text-align:center; margin-bottom:16px; }
+    h1 { color:var(--accent); font-size:1.3rem; }
+    .container { max-width:1200px; display:grid; grid-template-columns:280px 1fr; gap:16px; }
+    .panel { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:16px; }
+    .stage-btn { background:#1f2937; border:1px solid #374151; color:var(--text); padding:6px 10px; border-radius:6px; margin:4px 0; width:100%; text-align:left; cursor:pointer; }
+    .stage-btn.active { background:rgba(56,189,248,.15); border-color:var(--accent); color:var(--accent); }
+    canvas { background:#050811; border:1px solid #1f2937; border-radius:6px; }
+    .readout { font-size:.75rem; color:var(--muted); margin-top:8px; }
+  </style>
+</head>
+<body>
+  <header><h1>Jordan–Wigner &amp; UHF(2^∞) Colimit Bridge</h1></header>
+  <div class="container">
+    <div class="panel">
+      <div>Stage n</div>
+      <button class="stage-btn active" data-n="1">n=1 (M₂, 2×2)</button>
+      <button class="stage-btn" data-n="2">n=2 (M₄, 4×4)</button>
+      <button class="stage-btn" data-n="3">n=3 (M₈, 8×8) Split-Octonion</button>
+      <button class="stage-btn" data-n="4">n→n+1 (Colimit ι_n(A)=A⊗I₂)</button>
+      <div class="readout" id="readout"></div>
+    </div>
+    <div class="panel">
+      <canvas id="canvas" width="800" height="500"></canvas>
+    </div>
+  </div>
+  <script>
+    const ctx=document.getElementById('canvas').getContext('2d');
+    let n=1;
+    function draw(){
+      const w=ctx.canvas.width,h=ctx.canvas.height; ctx.clearRect(0,0,w,h);
+      ctx.fillStyle='#38bdf8'; ctx.font='14px monospace';
+      ctx.fillText(`Stage n=${n}: dim(∧ℝ^n)=2^n, End = M_{2^n}(ℝ)`,20,30);
+      if(n<=3){
+        const size=Math.max(20,120-20*n);
+        for(let i=0;i<(1<<n);i++){ ctx.strokeStyle='#374151'; ctx.strokeRect(50+i*(size+4),80,size,size); }
+      }
+      if(n===4){ ctx.fillText('ι_n(A)=A ⊗ I₂ = blockdiag(A,A)',20,80); }
+      document.getElementById('readout').textContent='CAR preserved, Tomita flow commutes under colimit';
+    }
+    document.querySelectorAll('.stage-btn').forEach(b=>b.addEventListener('click',e=>{document.querySelectorAll('.stage-btn').forEach(x=>x.classList.remove('active'));e.target.classList.add('active');n=parseInt(e.target.dataset.n);draw();}));
+    draw();
+  </script>
+</body>
+</html>

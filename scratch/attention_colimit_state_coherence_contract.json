@@ -1,0 +1,169 @@
+{
+  "schema": "info_geometry.opengauss.ground_truth_theorem_contract.v1",
+  "contract_id": "attention-colimit-state-coherence-20261017",
+  "semantic_status": "human_asserted_not_kernel_verified",
+  "claim": "If two adjacent finite attention densities are related by the actual successor *-algebra embedding on the dyadic matrix tower, then the selected-stage weighted-trace linear functionals they induce on the algebraic direct-limit carrier are equal.",
+  "carrier": {
+    "type": "MatrixStage k = Matrix (Fin (2^k)) (Fin (2^k)) \u2102 and Carrier = DirectLimit MatrixStage rawMap",
+    "operations": [
+      "full complex matrix multiplication and star",
+      "concrete successor embedding A \u21a6 reindex(A \u2297\u2096 1\u2082)",
+      "selected-stage normalized weighted trace extended by the algebraic direct-limit universal map"
+    ],
+    "conventions": [
+      "matrix trace is normalized by 2\u207b\u1d4f",
+      "selectedStageFunctional uses A * D as the weighted trace argument",
+      "attentionStageDensity is scaled by 2\u1d4f",
+      "logits are duplicated along the added Fin 2 coordinate"
+    ]
+  },
+  "owner_declarations": [
+    {
+      "qualified_name": "InfoGeometry.Canonical.CuntzMatrixTowerInstantiation.MatrixStage",
+      "kind": "abbrev",
+      "source_path": "lean/InfoGeometry/Canonical/CuntzMatrixTowerInstantiation.lean",
+      "source_sha256": "d3dfc40d92d9fce983d3622d69804efabc9ff025c5f9957a7930bb37b6331072",
+      "source_line": 29,
+      "source_end_line": 29,
+      "source_excerpt": "abbrev MatrixStage (n : ℕ) : Type := Matrix (Fin (2 ^ n)) (Fin (2 ^ n)) ℂ",
+      "lean_statement": "abbrev MatrixStage (n : ℕ) : Type := Matrix (Fin (2 ^ n)) (Fin (2 ^ n)) ℂ",
+      "status_assertion": "definition"
+    },
+    {
+      "qualified_name": "InfoGeometry.Canonical.CuntzMatrixTraceTower.stageIndexEquiv",
+      "kind": "def",
+      "source_path": "lean/InfoGeometry/Canonical/CuntzMatrixTraceTower.lean",
+      "source_sha256": "6d539c0c93ecb8b8922c4566842ca193b0a58315732b41592f31e5ac40b0e137",
+      "source_line": 37,
+      "source_end_line": 39,
+      "source_excerpt": "noncomputable def stageIndexEquiv (n : ℕ) :\n    (Fin (2 ^ n) × Fin 2) ≃ Fin (2 ^ (n + 1)) :=\n  finProdFinEquiv.trans (finCongr (by simp [pow_succ, Nat.mul_comm]))",
+      "lean_statement": "def stageIndexEquiv (n : ℕ) : (Fin (2 ^ n) × Fin 2) ≃ Fin (2 ^ (n + 1))",
+      "status_assertion": "definition"
+    },
+    {
+      "qualified_name": "InfoGeometry.Canonical.CuntzMatrixTraceTower.concreteStep",
+      "kind": "def",
+      "source_path": "lean/InfoGeometry/Canonical/CuntzMatrixTraceTower.lean",
+      "source_sha256": "6d539c0c93ecb8b8922c4566842ca193b0a58315732b41592f31e5ac40b0e137",
+      "source_line": 41,
+      "source_end_line": 44,
+      "source_excerpt": "noncomputable def concreteStep (n : ℕ) :\n    MatrixStage n →⋆ₐ[ℂ] MatrixStage (n + 1) where\n  toFun A := (Matrix.reindexAlgEquiv ℂ ℂ (stageIndexEquiv n))\n    (A ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℂ))",
+      "lean_statement": "def concreteStep (n : ℕ) : MatrixStage n →⋆ₐ[ℂ] MatrixStage (n + 1)",
+      "status_assertion": "definition"
+    },
+    {
+      "qualified_name": "InfoGeometry.Canonical.CuntzMatrixAlgebraicStarColimit.rawMap",
+      "kind": "def",
+      "source_path": "lean/InfoGeometry/Canonical/CuntzMatrixAlgebraicStarColimit.lean",
+      "source_sha256": "ea0c2084b247ecb6c9b1970cee50353a9c7fd277a9f3d082706a7b3eafbbbb74",
+      "source_line": 24,
+      "source_end_line": 26,
+      "source_excerpt": "def rawMap {i j : ℕ} (hij : i ≤ j) :\n    MatrixStage i →⋆ₐ[ℂ] MatrixStage j :=\n  concreteMap hij",
+      "lean_statement": "def rawMap {i j : ℕ} (hij : i ≤ j) : MatrixStage i →⋆ₐ[ℂ] MatrixStage j",
+      "status_assertion": "definition"
+    },
+    {
+      "qualified_name": "InfoGeometry.Canonical.CuntzMatrixAlgebraicStarColimit.Carrier",
+      "kind": "abbrev",
+      "source_path": "lean/InfoGeometry/Canonical/CuntzMatrixAlgebraicStarColimit.lean",
+      "source_sha256": "ea0c2084b247ecb6c9b1970cee50353a9c7fd277a9f3d082706a7b3eafbbbb74",
+      "source_line": 39,
+      "source_end_line": 40,
+      "source_excerpt": "abbrev Carrier : Type :=\n  DirectLimit MatrixStage (fun _ _ hij => rawMap hij)",
+      "lean_statement": "abbrev Carrier : Type := DirectLimit MatrixStage (fun _ _ hij => rawMap hij)",
+      "status_assertion": "definition"
+    },
+    {
+      "qualified_name": "InfoGeometry.QuantumContext.AttentionColimitStateCoherence.attentionColimitFunctional_lift_compatible",
+      "kind": "theorem",
+      "source_path": "lean/InfoGeometry/QuantumContext/AttentionColimitStateCoherence.lean",
+      "source_sha256": "cbb619b37a56442fa52ff7437482fc51e5a0dee3a1632b071a1320f15b3951ec",
+      "source_line": 143,
+      "source_end_line": 151,
+      "source_excerpt": "theorem attentionColimitFunctional_lift_compatible (k : ℕ)\n    (logits : Fin (2 ^ k) → ℝ) (β : ℝ) :\n    selectedStageColimitFunctional (k + 1)\n        (attentionStageDensity (k + 1) (liftLogits k logits) β) =\n      selectedStageColimitFunctional k (attentionStageDensity k logits β) := by\n  exact selectedStageColimitFunctional_succ_eq k\n    (attentionStageDensity k logits β)\n    (attentionStageDensity (k + 1) (liftLogits k logits) β)\n    (attentionStageDensity_lift_compatible k logits β)",
+      "lean_statement": "theorem attentionColimitFunctional_lift_compatible (k : ℕ) (logits : Fin (2 ^ k) → ℝ) (β : ℝ) : selectedStageColimitFunctional (k + 1) (attentionStageDensity (k + 1) (liftLogits k logits) β) = selectedStageColimitFunctional k (attentionStageDensity k logits β)",
+      "status_assertion": "asserted_proved"
+    },
+    {
+      "qualified_name": "InfoGeometry.QuantumContext.MatrixStageSelectedFunctional.selectedStageFunctional_step",
+      "kind": "theorem",
+      "source_path": "lean/InfoGeometry/QuantumContext/MatrixStageSelectedFunctional.lean",
+      "source_sha256": "dd3fba862f495a50b3f079bb712b0348bf837062aa98a219be6402e1723ac8ce",
+      "source_line": 50,
+      "source_end_line": 53,
+      "source_excerpt": "theorem selectedStageFunctional_step (k : \u2115) (Dk : MatrixStage k)\n    (n : \u2115) (A : MatrixStage n) :\n    selectedStageFunctional k Dk (n + 1) (concreteStep n A) =\n      selectedStageFunctional k Dk n A := by",
+      "lean_statement": "theorem selectedStageFunctional_step (k : \u2115) (Dk : MatrixStage k) (n : \u2115) (A : MatrixStage n) : selectedStageFunctional k Dk (n + 1) (concreteStep n A) = selectedStageFunctional k Dk n A",
+      "status_assertion": "asserted_proved"
+    },
+    {
+      "qualified_name": "InfoGeometry.QuantumContext.MatrixStageSelectedFunctional.selectedStageFunctional_compatible",
+      "kind": "theorem",
+      "source_path": "lean/InfoGeometry/QuantumContext/MatrixStageSelectedFunctional.lean",
+      "source_sha256": "dd3fba862f495a50b3f079bb712b0348bf837062aa98a219be6402e1723ac8ce",
+      "source_line": 124,
+      "source_end_line": 125,
+      "source_excerpt": "theorem selectedStageFunctional_compatible (k : \u2115) (Dk : MatrixStage k) :\n    Compatible (selectedStageFunctional k Dk) := by",
+      "lean_statement": "theorem selectedStageFunctional_compatible (k : \u2115) (Dk : MatrixStage k) : Compatible (selectedStageFunctional k Dk)",
+      "status_assertion": "asserted_proved"
+    },
+    {
+      "qualified_name": "InfoGeometry.QuantumContext.MatrixStageSelectedFunctional.selectedStageColimitFunctional",
+      "kind": "def",
+      "source_path": "lean/InfoGeometry/QuantumContext/MatrixStageSelectedFunctional.lean",
+      "source_sha256": "dd3fba862f495a50b3f079bb712b0348bf837062aa98a219be6402e1723ac8ce",
+      "source_line": 141,
+      "source_end_line": 142,
+      "source_excerpt": "def selectedStageColimitFunctional (k : \u2115) (Dk : MatrixStage k) :\n    InfoGeometry.Canonical.CuntzMatrixAlgebraicStarColimit.Carrier \u2192\u2097[\u2102] \u2102 :=",
+      "lean_statement": "def selectedStageColimitFunctional (k : \u2115) (Dk : MatrixStage k) : InfoGeometry.Canonical.CuntzMatrixAlgebraicStarColimit.Carrier \u2192\u2097[\u2102] \u2102",
+      "status_assertion": "definition"
+    },
+    {
+      "qualified_name": "InfoGeometry.QuantumContext.MatrixStageSelectedFunctional.selectedStageColimitFunctional_stage",
+      "kind": "theorem",
+      "source_path": "lean/InfoGeometry/QuantumContext/MatrixStageSelectedFunctional.lean",
+      "source_sha256": "dd3fba862f495a50b3f079bb712b0348bf837062aa98a219be6402e1723ac8ce",
+      "source_line": 147,
+      "source_end_line": 150,
+      "source_excerpt": "theorem selectedStageColimitFunctional_stage (k : \u2115) (Dk : MatrixStage k)\n    (A : MatrixStage k) :\n    selectedStageColimitFunctional k Dk (stageInjection k A) =\n      matrixTraceFunctional k (A * Dk) := by",
+      "lean_statement": "theorem selectedStageColimitFunctional_stage (k : \u2115) (Dk : MatrixStage k) (A : MatrixStage k) : selectedStageColimitFunctional k Dk (stageInjection k A) = matrixTraceFunctional k (A * Dk)",
+      "status_assertion": "asserted_proved"
+    },
+    {
+      "qualified_name": "InfoGeometry.QuantumContext.AttentionTowerCompatibility.attentionStageDensity_lift_compatible",
+      "kind": "theorem",
+      "source_path": "lean/InfoGeometry/QuantumContext/AttentionTowerCompatibility.lean",
+      "source_sha256": "1fc7106806a18c285d7849f037428f93a0eafc72772c49e42bd86f1d675a9d99",
+      "source_line": 131,
+      "source_end_line": 134,
+      "source_excerpt": "theorem attentionStageDensity_lift_compatible (k : \u2115)\n    (logits : Fin (2 ^ k) \u2192 \u211d) (\u03b2 : \u211d) :\n    attentionStageDensity (k + 1) (liftLogits k logits) \u03b2 =\n      concreteStep k (attentionStageDensity k logits \u03b2) := by",
+      "lean_statement": "theorem attentionStageDensity_lift_compatible (k : \u2115) (logits : Fin (2 ^ k) \u2192 \u211d) (\u03b2 : \u211d) : attentionStageDensity (k + 1) (liftLogits k logits) \u03b2 = concreteStep k (attentionStageDensity k logits \u03b2)",
+      "status_assertion": "asserted_proved"
+    }
+  ],
+  "imports": [
+    "InfoGeometry.QuantumContext.AttentionTowerCompatibility",
+    "InfoGeometry.QuantumContext.MatrixStageSelectedFunctional"
+  ],
+  "consumers": [
+    "InfoGeometry.All (umbrella import)",
+    "InfoGeometry.QuantumContext.AttentionColimitStateCoherenceAudit (axiom audit import)"
+  ],
+  "smallest_gap": {
+    "declaration_name": "attentionColimitFunctional_lift_compatible",
+    "lean_signature": "theorem (k : \u2115) (logits : Fin (2 ^ k) \u2192 \u211d) (\u03b2 : \u211d) : selectedStageColimitFunctional (k + 1) (attentionStageDensity (k + 1) (liftLogits k logits) \u03b2) = selectedStageColimitFunctional k (attentionStageDensity k logits \u03b2)",
+    "pantograph_expression": "selectedStageColimitFunctional (k+1) (attentionStageDensity (k+1) (liftLogits k logits) \u03b2) = selectedStageColimitFunctional k (attentionStageDensity k logits \u03b2)",
+    "description": "Resolved in the current owner snapshot by attentionColimitFunctional_lift_compatible at lean/InfoGeometry/QuantumContext/AttentionColimitStateCoherence.lean:143; this field records the pre-draft gap and its implemented closure. The theorem is limited to duplicated-logit successor transport on the algebraic matrix direct limit."
+  },
+  "out_of_scope": [
+    "A global modular flow induced from arbitrary independent stage logits",
+    "Direct import/use from CarrierInnerModularBoundary, ColimitAttentionTomitaFlow, or AttentionThermalColimitBridge; these are intended downstream modules and are not current direct consumers",
+    "A completed C-star-algebra or topological direct-limit result",
+    "Holomorphic continuation or analytic KMS-strip claims",
+    "Any physical interpretation of the finite attention model beyond the stated linear functionals"
+  ],
+  "discovery_receipt": {
+    "path": "scratch/attention_colimit_state_coherence_discovery_20261017.json",
+    "sha256": "19b7b2740b6b07c9148555b6414ca25e24e85fdb2d87e892d73885d077b9d4c5",
+    "query": "selectedStageColimitFunctional selectedStageFunctional attentionStageDensity_lift_compatible"
+  }
+}

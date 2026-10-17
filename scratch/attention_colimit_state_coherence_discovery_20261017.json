@@ -1,0 +1,165 @@
+{
+  "authority": "navigation_only",
+  "carriers_found": [
+    {
+      "file": "lean/InfoGeometry/QuantumContext/MatrixStageSelectedFunctional.lean",
+      "kind": "def",
+      "lean_statement": "def selectedStageFunctional (k : ℕ) (Dk : MatrixStage k) : StageFunctional",
+      "line": 37,
+      "location": "lean/InfoGeometry/QuantumContext/MatrixStageSelectedFunctional.lean:37",
+      "name": "selectedStageFunctional",
+      "qualified_name": "InfoGeometry.QuantumContext.MatrixStageSelectedFunctional.selectedStageFunctional",
+      "source_end_line": 37,
+      "source_sha256": "dd3fba862f495a50b3f079bb712b0348bf837062aa98a219be6402e1723ac8ce"
+    },
+    {
+      "file": "lean/InfoGeometry/QuantumContext/MatrixStageSelectedFunctional.lean",
+      "kind": "def",
+      "lean_statement": "def selectedStageColimitFunctional (k : ℕ) (Dk : MatrixStage k) : InfoGeometry.Canonical.CuntzMatrixAlgebraicStarColimit.Carrier →ₗ[ℂ] ℂ",
+      "line": 141,
+      "location": "lean/InfoGeometry/QuantumContext/MatrixStageSelectedFunctional.lean:141",
+      "name": "selectedStageColimitFunctional",
+      "qualified_name": "InfoGeometry.QuantumContext.MatrixStageSelectedFunctional.selectedStageColimitFunctional",
+      "source_end_line": 142,
+      "source_sha256": "dd3fba862f495a50b3f079bb712b0348bf837062aa98a219be6402e1723ac8ce"
+    }
+  ],
+  "dag_context": {
+    "authority": "navigation_only",
+    "diagnostic": "Traceback (most recent call last):\n  File \"/home/goutev/repos/info-geometry-lean/tools/infra/arango_causal_chiral_cone_prompt.py\", line 31, in <module>\n    from tools.infra.arango_dag_algorithms import run_aql  # noqa: E402\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/goutev/repos/info-geometry-lean/tools/infra/arango_dag_algorithms.py\", line 29, in <module>\n    import networkx as nx\nModuleNotFoundError: No module named 'networkx'",
+    "freshness": "unknown",
+    "graph_is_proof_authority": false,
+    "reason": "cone_query_failed",
+    "requested_apices": [
+      "InfoGeometry.QuantumContext.MatrixStageSelectedFunctional.selectedStageColimitFunctional",
+      "InfoGeometry.QuantumContext.AttentionTowerCompatibility.attentionStageDensity_lift_compatible"
+    ],
+    "returncode": 1,
+    "status": "unavailable"
+  },
+  "deduplication_warnings": [
+    "Query 'selectedStageColimitFunctional selectedStageFunctional attentionStageDensity_lift_compatible' matches existing fundamental type 'selectedStageFunctional' in lean/InfoGeometry/QuantumContext/MatrixStageSelectedFunctional.lean; reuse canonical carrier instead of introducing redundant type wrapper.",
+    "Query 'selectedStageColimitFunctional selectedStageFunctional attentionStageDensity_lift_compatible' matches existing fundamental type 'selectedStageColimitFunctional' in lean/InfoGeometry/QuantumContext/MatrixStageSelectedFunctional.lean; reuse canonical carrier instead of introducing redundant type wrapper."
+  ],
+  "graph_is_proof_authority": false,
+  "lemmas_found": [
+    {
+      "file": "lean/InfoGeometry/QuantumContext/MatrixStageSelectedMatrixFamilyPositivity.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem selectedStageFunctional_eq_weightedSelectedFamily (k n : ℕ) (Dk : MatrixStage k) (A : MatrixStage n) : selectedStageFunctional k Dk n A = weightedStageFunctional (selectedMatrixFamily k Dk) n A",
+      "line": 281,
+      "location": "lean/InfoGeometry/QuantumContext/MatrixStageSelectedMatrixFamilyPositivity.lean:281",
+      "name": "selectedStageFunctional_eq_weightedSelectedFamily",
+      "qualified_name": "InfoGeometry.QuantumContext.MatrixStageSelectedMatrixFamilyPositivity.selectedStageFunctional_eq_weightedSelectedFamily",
+      "source_end_line": 284,
+      "source_sha256": "f2fd3b7779a3d1eeb88ef84015af978048252a3487ff28cc7bca5e0dc75798fa"
+    },
+    {
+      "file": "lean/InfoGeometry/QuantumContext/MatrixStageSelectedMatrixFamilyPositivity.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem selectedStageFunctional_star_of_hermitian (k n : ℕ) (Dk : MatrixStage k) (hFamily : ∀ n, (selectedMatrixFamily k Dk n).IsHermitian) (A : MatrixStage n) : selectedStageFunctional k Dk n (star A) = star (selectedStageFunctional k Dk n A)",
+      "line": 320,
+      "location": "lean/InfoGeometry/QuantumContext/MatrixStageSelectedMatrixFamilyPositivity.lean:320",
+      "name": "selectedStageFunctional_star_of_hermitian",
+      "qualified_name": "InfoGeometry.QuantumContext.MatrixStageSelectedMatrixFamilyPositivity.selectedStageFunctional_star_of_hermitian",
+      "source_end_line": 325,
+      "source_sha256": "f2fd3b7779a3d1eeb88ef84015af978048252a3487ff28cc7bca5e0dc75798fa"
+    },
+    {
+      "file": "lean/InfoGeometry/QuantumContext/MatrixStageSelectedMatrixFamilyPositivity.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem selectedStageColimitFunctional_star_of_hermitian (k : ℕ) (Dk : MatrixStage k) (hFamily : ∀ n, (selectedMatrixFamily k Dk n).IsHermitian) (x : InfoGeometry.Canonical.CuntzMatrixAlgebraicStarColimit.Carrier) : selectedStageColimitFunctional k Dk (star x) = star (selectedStageColimitFunctional k Dk x)",
+      "line": 331,
+      "location": "lean/InfoGeometry/QuantumContext/MatrixStageSelectedMatrixFamilyPositivity.lean:331",
+      "name": "selectedStageColimitFunctional_star_of_hermitian",
+      "qualified_name": "InfoGeometry.QuantumContext.MatrixStageSelectedMatrixFamilyPositivity.selectedStageColimitFunctional_star_of_hermitian",
+      "source_end_line": 336,
+      "source_sha256": "f2fd3b7779a3d1eeb88ef84015af978048252a3487ff28cc7bca5e0dc75798fa"
+    },
+    {
+      "file": "lean/InfoGeometry/QuantumContext/MatrixStageSelectedMatrixFamilyPositivity.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem selectedStageColimitFunctional_positive (k : ℕ) (Dk : MatrixStage k) (hD : ComplexPositive Dk) (x : InfoGeometry.Canonical.CuntzMatrixAlgebraicStarColimit.Carrier) : 0 ≤ (selectedStageColimitFunctional k Dk (star x * x)).re",
+      "line": 350,
+      "location": "lean/InfoGeometry/QuantumContext/MatrixStageSelectedMatrixFamilyPositivity.lean:350",
+      "name": "selectedStageColimitFunctional_positive",
+      "qualified_name": "InfoGeometry.QuantumContext.MatrixStageSelectedMatrixFamilyPositivity.selectedStageColimitFunctional_positive",
+      "source_end_line": 353,
+      "source_sha256": "f2fd3b7779a3d1eeb88ef84015af978048252a3487ff28cc7bca5e0dc75798fa"
+    },
+    {
+      "file": "lean/InfoGeometry/QuantumContext/MatrixStageSelectedMatrixFamilyPositivity.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem selectedStageColimitFunctional_starSquare_im_zero (k : ℕ) (Dk : MatrixStage k) (hDherm : Dk.IsHermitian) (x : InfoGeometry.Canonical.CuntzMatrixAlgebraicStarColimit.Carrier) : (selectedStageColimitFunctional k Dk (star x * x)).im = 0",
+      "line": 375,
+      "location": "lean/InfoGeometry/QuantumContext/MatrixStageSelectedMatrixFamilyPositivity.lean:375",
+      "name": "selectedStageColimitFunctional_starSquare_im_zero",
+      "qualified_name": "InfoGeometry.QuantumContext.MatrixStageSelectedMatrixFamilyPositivity.selectedStageColimitFunctional_starSquare_im_zero",
+      "source_end_line": 378,
+      "source_sha256": "f2fd3b7779a3d1eeb88ef84015af978048252a3487ff28cc7bca5e0dc75798fa"
+    },
+    {
+      "file": "lean/InfoGeometry/QuantumContext/MatrixStageSelectedFunctional.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem selectedStageFunctional_step (k : ℕ) (Dk : MatrixStage k) (n : ℕ) (A : MatrixStage n) : selectedStageFunctional k Dk (n + 1) (concreteStep n A) = selectedStageFunctional k Dk n A",
+      "line": 50,
+      "location": "lean/InfoGeometry/QuantumContext/MatrixStageSelectedFunctional.lean:50",
+      "name": "selectedStageFunctional_step",
+      "qualified_name": "InfoGeometry.QuantumContext.MatrixStageSelectedFunctional.selectedStageFunctional_step",
+      "source_end_line": 53,
+      "source_sha256": "dd3fba862f495a50b3f079bb712b0348bf837062aa98a219be6402e1723ac8ce"
+    },
+    {
+      "file": "lean/InfoGeometry/QuantumContext/MatrixStageSelectedFunctional.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem selectedStageFunctional_compatible (k : ℕ) (Dk : MatrixStage k) : Compatible (selectedStageFunctional k Dk)",
+      "line": 124,
+      "location": "lean/InfoGeometry/QuantumContext/MatrixStageSelectedFunctional.lean:124",
+      "name": "selectedStageFunctional_compatible",
+      "qualified_name": "InfoGeometry.QuantumContext.MatrixStageSelectedFunctional.selectedStageFunctional_compatible",
+      "source_end_line": 125,
+      "source_sha256": "dd3fba862f495a50b3f079bb712b0348bf837062aa98a219be6402e1723ac8ce"
+    },
+    {
+      "file": "lean/InfoGeometry/QuantumContext/MatrixStageSelectedFunctional.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem selectedStageColimitFunctional_stage (k : ℕ) (Dk : MatrixStage k) (A : MatrixStage k) : selectedStageColimitFunctional k Dk (stageInjection k A) = matrixTraceFunctional k (A * Dk)",
+      "line": 147,
+      "location": "lean/InfoGeometry/QuantumContext/MatrixStageSelectedFunctional.lean:147",
+      "name": "selectedStageColimitFunctional_stage",
+      "qualified_name": "InfoGeometry.QuantumContext.MatrixStageSelectedFunctional.selectedStageColimitFunctional_stage",
+      "source_end_line": 150,
+      "source_sha256": "dd3fba862f495a50b3f079bb712b0348bf837062aa98a219be6402e1723ac8ce"
+    },
+    {
+      "file": "lean/InfoGeometry/QuantumContext/MatrixStageSelectedFunctional.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem selectedStageColimitFunctional_one (k : ℕ) (Dk : MatrixStage k) (hD : matrixTraceFunctional k Dk = 1) : selectedStageColimitFunctional k Dk (1 : InfoGeometry.Canonical.CuntzMatrixAlgebraicStarColimit.Carrier) = 1",
+      "line": 158,
+      "location": "lean/InfoGeometry/QuantumContext/MatrixStageSelectedFunctional.lean:158",
+      "name": "selectedStageColimitFunctional_one",
+      "qualified_name": "InfoGeometry.QuantumContext.MatrixStageSelectedFunctional.selectedStageColimitFunctional_one",
+      "source_end_line": 161,
+      "source_sha256": "dd3fba862f495a50b3f079bb712b0348bf837062aa98a219be6402e1723ac8ce"
+    },
+    {
+      "file": "lean/InfoGeometry/QuantumContext/AttentionTowerCompatibility.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem attentionStageDensity_lift_compatible (k : ℕ) (logits : Fin (2 ^ k) → ℝ) (β : ℝ) : attentionStageDensity (k + 1) (liftLogits k logits) β = concreteStep k (attentionStageDensity k logits β)",
+      "line": 131,
+      "location": "lean/InfoGeometry/QuantumContext/AttentionTowerCompatibility.lean:131",
+      "name": "attentionStageDensity_lift_compatible",
+      "qualified_name": "InfoGeometry.QuantumContext.AttentionTowerCompatibility.attentionStageDensity_lift_compatible",
+      "source_end_line": 134,
+      "source_sha256": "1fc7106806a18c285d7849f037428f93a0eafc72772c49e42bd86f1d675a9d99"
+    }
+  ],
+  "local_dag_context": null,
+  "query": "selectedStageColimitFunctional selectedStageFunctional attentionStageDensity_lift_compatible",
+  "recommended_imports": [
+    "InfoGeometry.QuantumContext.AttentionTowerCompatibility",
+    "InfoGeometry.QuantumContext.MatrixStageSelectedFunctional",
+    "InfoGeometry.QuantumContext.MatrixStageSelectedMatrixFamilyPositivity"
+  ],
+  "schema": "info_geometry.opengauss.discovery_report.v1"
+}

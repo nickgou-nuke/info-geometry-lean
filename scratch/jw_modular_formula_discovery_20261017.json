@@ -1,0 +1,302 @@
+{
+  "authority": "navigation_only",
+  "carriers_found": [],
+  "dag_context": null,
+  "deduplication_warnings": [],
+  "graph_is_proof_authority": false,
+  "lemmas_found": [
+    {
+      "file": "lean/InfoGeometry/QuantumContext/ColimitAttentionTomitaFlow.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem modularFlow_apply_eq_exp_sub [Fintype ι] [DecidableEq ι] (logits : ι → ℝ) (β t : ℝ) (A : Matrix ι ι ℂ) (i j : ι) : modularFlow logits β t A i j = Complex.exp (Complex.I * (t : ℂ) * (β : ℂ) * ((logits i - logits j : ℝ) : ℂ)) * A i j",
+      "line": 278,
+      "location": "lean/InfoGeometry/QuantumContext/ColimitAttentionTomitaFlow.lean:278",
+      "name": "modularFlow_apply_eq_exp_sub",
+      "qualified_name": "InfoGeometry.QuantumContext.ColimitAttentionTomitaFlow.modularFlow_apply_eq_exp_sub",
+      "source_end_line": 282,
+      "source_sha256": "c6b03b51bdde7fcaadad0a1f82ee9874828205db64abdd158588d5ab0f34b49b"
+    },
+    {
+      "file": "lean/InfoGeometry/QuantumContext/ColimitAttentionTomitaFlow.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem modularFlow_zero [Fintype ι] [DecidableEq ι] (logits : ι → ℝ) (β : ℝ) (A : Matrix ι ι ℂ) : modularFlow logits β 0 A = A",
+      "line": 289,
+      "location": "lean/InfoGeometry/QuantumContext/ColimitAttentionTomitaFlow.lean:289",
+      "name": "modularFlow_zero",
+      "qualified_name": "InfoGeometry.QuantumContext.ColimitAttentionTomitaFlow.modularFlow_zero",
+      "source_end_line": 291,
+      "source_sha256": "c6b03b51bdde7fcaadad0a1f82ee9874828205db64abdd158588d5ab0f34b49b"
+    },
+    {
+      "file": "lean/InfoGeometry/QuantumContext/ColimitAttentionTomitaFlow.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem modularFlow_add [Fintype ι] [DecidableEq ι] (logits : ι → ℝ) (β t s : ℝ) (A : Matrix ι ι ℂ) : modularFlow logits β (t + s) A = modularFlow logits β t (modularFlow logits β s A)",
+      "line": 296,
+      "location": "lean/InfoGeometry/QuantumContext/ColimitAttentionTomitaFlow.lean:296",
+      "name": "modularFlow_add",
+      "qualified_name": "InfoGeometry.QuantumContext.ColimitAttentionTomitaFlow.modularFlow_add",
+      "source_end_line": 299,
+      "source_sha256": "c6b03b51bdde7fcaadad0a1f82ee9874828205db64abdd158588d5ab0f34b49b"
+    },
+    {
+      "file": "lean/InfoGeometry/QuantumContext/ColimitAttentionTomitaFlow.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem modularFlow_one [Fintype ι] [DecidableEq ι] (logits : ι → ℝ) (β t : ℝ) : modularFlow logits β t 1 = 1",
+      "line": 307,
+      "location": "lean/InfoGeometry/QuantumContext/ColimitAttentionTomitaFlow.lean:307",
+      "name": "modularFlow_one",
+      "qualified_name": "InfoGeometry.QuantumContext.ColimitAttentionTomitaFlow.modularFlow_one",
+      "source_end_line": 309,
+      "source_sha256": "c6b03b51bdde7fcaadad0a1f82ee9874828205db64abdd158588d5ab0f34b49b"
+    },
+    {
+      "file": "lean/InfoGeometry/QuantumContext/ColimitAttentionTomitaFlow.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem modularFlow_mul [Fintype ι] [DecidableEq ι] (logits : ι → ℝ) (β t : ℝ) (A B : Matrix ι ι ℂ) : modularFlow logits β t (A * B) = modularFlow logits β t A * modularFlow logits β t B",
+      "line": 314,
+      "location": "lean/InfoGeometry/QuantumContext/ColimitAttentionTomitaFlow.lean:314",
+      "name": "modularFlow_mul",
+      "qualified_name": "InfoGeometry.QuantumContext.ColimitAttentionTomitaFlow.modularFlow_mul",
+      "source_end_line": 317,
+      "source_sha256": "c6b03b51bdde7fcaadad0a1f82ee9874828205db64abdd158588d5ab0f34b49b"
+    },
+    {
+      "file": "lean/InfoGeometry/QuantumContext/ColimitAttentionTomitaFlow.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem modularFlow_star [Fintype ι] [DecidableEq ι] (logits : ι → ℝ) (β t : ℝ) (A : Matrix ι ι ℂ) : modularFlow logits β t (star A) = star (modularFlow logits β t A)",
+      "line": 332,
+      "location": "lean/InfoGeometry/QuantumContext/ColimitAttentionTomitaFlow.lean:332",
+      "name": "modularFlow_star",
+      "qualified_name": "InfoGeometry.QuantumContext.ColimitAttentionTomitaFlow.modularFlow_star",
+      "source_end_line": 335,
+      "source_sha256": "c6b03b51bdde7fcaadad0a1f82ee9874828205db64abdd158588d5ab0f34b49b"
+    },
+    {
+      "file": "lean/InfoGeometry/QuantumContext/ColimitAttentionTomitaFlow.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem softmaxWeight_div_eq_exp_sub [Fintype ι] [Nonempty ι] (logits : ι → ℝ) (β : ℝ) (i j : ι) : softmaxWeight logits β i / softmaxWeight logits β j = Real.exp (β * (logits i - logits j))",
+      "line": 354,
+      "location": "lean/InfoGeometry/QuantumContext/ColimitAttentionTomitaFlow.lean:354",
+      "name": "softmaxWeight_div_eq_exp_sub",
+      "qualified_name": "InfoGeometry.QuantumContext.ColimitAttentionTomitaFlow.softmaxWeight_div_eq_exp_sub",
+      "source_end_line": 357,
+      "source_sha256": "c6b03b51bdde7fcaadad0a1f82ee9874828205db64abdd158588d5ab0f34b49b"
+    },
+    {
+      "file": "lean/InfoGeometry/QuantumContext/ColimitAttentionTomitaFlow.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem attentionModularDelta_apply_eq_exp_sub [Fintype ι] [DecidableEq ι] [Nonempty ι] (logits : ι → ℝ) (β : ℝ) (X : Matrix ι ι ℝ) (i j : ι) : attentionModularDelta logits β X i j = Real.exp (β * (logits i - logits j)) * X i j",
+      "line": 367,
+      "location": "lean/InfoGeometry/QuantumContext/ColimitAttentionTomitaFlow.lean:367",
+      "name": "attentionModularDelta_apply_eq_exp_sub",
+      "qualified_name": "InfoGeometry.QuantumContext.ColimitAttentionTomitaFlow.attentionModularDelta_apply_eq_exp_sub",
+      "source_end_line": 370,
+      "source_sha256": "c6b03b51bdde7fcaadad0a1f82ee9874828205db64abdd158588d5ab0f34b49b"
+    },
+    {
+      "file": "lean/InfoGeometry/QuantumContext/ColimitAttentionTomitaFlow.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem diagonal_comm_modularUnitary [Fintype ι] [DecidableEq ι] (d : ι → ℂ) (logits : ι → ℝ) (β t : ℝ) : Matrix.diagonal d * modularUnitary logits β t = modularUnitary logits β t * Matrix.diagonal d",
+      "line": 376,
+      "location": "lean/InfoGeometry/QuantumContext/ColimitAttentionTomitaFlow.lean:376",
+      "name": "diagonal_comm_modularUnitary",
+      "qualified_name": "InfoGeometry.QuantumContext.ColimitAttentionTomitaFlow.diagonal_comm_modularUnitary",
+      "source_end_line": 379,
+      "source_sha256": "c6b03b51bdde7fcaadad0a1f82ee9874828205db64abdd158588d5ab0f34b49b"
+    },
+    {
+      "file": "lean/InfoGeometry/QuantumContext/ColimitAttentionTomitaFlow.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem trace_diagonal_mul_modularFlow [Fintype ι] [DecidableEq ι] (d : ι → ℂ) (logits : ι → ℝ) (β t : ℝ) (A : Matrix ι ι ℂ) : Matrix.trace (Matrix.diagonal d * modularFlow logits β t A) = Matrix.trace (Matrix.diagonal d * A)",
+      "line": 388,
+      "location": "lean/InfoGeometry/QuantumContext/ColimitAttentionTomitaFlow.lean:388",
+      "name": "trace_diagonal_mul_modularFlow",
+      "qualified_name": "InfoGeometry.QuantumContext.ColimitAttentionTomitaFlow.trace_diagonal_mul_modularFlow",
+      "source_end_line": 391,
+      "source_sha256": "c6b03b51bdde7fcaadad0a1f82ee9874828205db64abdd158588d5ab0f34b49b"
+    },
+    {
+      "file": "lean/InfoGeometry/QuantumContext/ColimitAttentionTomitaFlow.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem attentionStageDensity_comm_modularUnitary (k : ℕ) (logits : Fin (2 ^ k) → ℝ) (β t : ℝ) : attentionStageDensity k logits β * modularUnitary logits β t = modularUnitary logits β t * attentionStageDensity k logits β",
+      "line": 416,
+      "location": "lean/InfoGeometry/QuantumContext/ColimitAttentionTomitaFlow.lean:416",
+      "name": "attentionStageDensity_comm_modularUnitary",
+      "qualified_name": "InfoGeometry.QuantumContext.ColimitAttentionTomitaFlow.attentionStageDensity_comm_modularUnitary",
+      "source_end_line": 419,
+      "source_sha256": "c6b03b51bdde7fcaadad0a1f82ee9874828205db64abdd158588d5ab0f34b49b"
+    },
+    {
+      "file": "lean/InfoGeometry/QuantumContext/ColimitAttentionTomitaFlow.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem attentionColimitFunctional_modularFlow_invariant (k : ℕ) (logits : Fin (2 ^ k) → ℝ) (β t : ℝ) (A : MatrixStage k) : selectedStageColimitFunctional k (attentionStageDensity k logits β) (stageInjection k (modularFlow logits β t A)) = selectedStageColimitFunctional k (attentionStageDensity k logits β) (stageInjection k A)",
+      "line": 426,
+      "location": "lean/InfoGeometry/QuantumContext/ColimitAttentionTomitaFlow.lean:426",
+      "name": "attentionColimitFunctional_modularFlow_invariant",
+      "qualified_name": "InfoGeometry.QuantumContext.ColimitAttentionTomitaFlow.attentionColimitFunctional_modularFlow_invariant",
+      "source_end_line": 431,
+      "source_sha256": "c6b03b51bdde7fcaadad0a1f82ee9874828205db64abdd158588d5ab0f34b49b"
+    },
+    {
+      "file": "lean/InfoGeometry/QuantumContext/ColimitAttentionTomitaFlow.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem rawMap_modularFlow {k n : ℕ} (h : k ≤ n) (logits : Fin (2 ^ k) → ℝ) (β t : ℝ) (A : MatrixStage k) : rawMap h (modularFlow logits β t A) = rawMap h (modularUnitary logits β t) * rawMap h A * rawMap h (modularUnitary logits β (-t))",
+      "line": 443,
+      "location": "lean/InfoGeometry/QuantumContext/ColimitAttentionTomitaFlow.lean:443",
+      "name": "rawMap_modularFlow",
+      "qualified_name": "InfoGeometry.QuantumContext.ColimitAttentionTomitaFlow.rawMap_modularFlow",
+      "source_end_line": 448,
+      "source_sha256": "c6b03b51bdde7fcaadad0a1f82ee9874828205db64abdd158588d5ab0f34b49b"
+    },
+    {
+      "file": "lean/InfoGeometry/QuantumContext/ColimitAttentionTomitaFlow.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem attentionColimitFunctional_rawMap_modularFlow_invariant {k n : ℕ} (h : k ≤ n) (logits : Fin (2 ^ k) → ℝ) (β t : ℝ) (A : MatrixStage k) : selectedStageColimitFunctional k (attentionStageDensity k logits β) (stageInjection n (rawMap h (modularFlow logits β t A))) = selectedStageColimitFunctional k (attentionStageDensity k logits β) (stageInjection k A)",
+      "line": 456,
+      "location": "lean/InfoGeometry/QuantumContext/ColimitAttentionTomitaFlow.lean:456",
+      "name": "attentionColimitFunctional_rawMap_modularFlow_invariant",
+      "qualified_name": "InfoGeometry.QuantumContext.ColimitAttentionTomitaFlow.attentionColimitFunctional_rawMap_modularFlow_invariant",
+      "source_end_line": 461,
+      "source_sha256": "c6b03b51bdde7fcaadad0a1f82ee9874828205db64abdd158588d5ab0f34b49b"
+    },
+    {
+      "file": "lean/InfoGeometry/QuantumContext/ColimitAttentionTomitaFlow.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem complexifyRealMatrix_mul [Fintype ι] [DecidableEq ι] (A B : Matrix ι ι ℝ) : complexifyRealMatrix (A * B) = complexifyRealMatrix A * complexifyRealMatrix B",
+      "line": 466,
+      "location": "lean/InfoGeometry/QuantumContext/ColimitAttentionTomitaFlow.lean:466",
+      "name": "complexifyRealMatrix_mul",
+      "qualified_name": "InfoGeometry.QuantumContext.ColimitAttentionTomitaFlow.complexifyRealMatrix_mul",
+      "source_end_line": 469,
+      "source_sha256": "c6b03b51bdde7fcaadad0a1f82ee9874828205db64abdd158588d5ab0f34b49b"
+    },
+    {
+      "file": "lean/InfoGeometry/QuantumContext/ColimitAttentionTomitaFlow.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem attentionColimitFunctional_kms_boundary (k : ℕ) (logits : Fin (2 ^ k) → ℝ) (β : ℝ) (A B : Matrix (Fin (2 ^ k)) (Fin (2 ^ k)) ℝ) : selectedStageColimitFunctional k (attentionStageDensity k logits β) (stageInjection k (complexifyRealMatrix A * complexifyRealMatrix (attentionDensityMatrix logits β * B * attentionDensityMatrixInv logits β))) = selectedStageColimitFunctional k (attentionStageDensity k logits β) (stageInjection k (complexifyRealMatrix (B * A)))",
+      "line": 479,
+      "location": "lean/InfoGeometry/QuantumContext/ColimitAttentionTomitaFlow.lean:479",
+      "name": "attentionColimitFunctional_kms_boundary",
+      "qualified_name": "InfoGeometry.QuantumContext.ColimitAttentionTomitaFlow.attentionColimitFunctional_kms_boundary",
+      "source_end_line": 489,
+      "source_sha256": "c6b03b51bdde7fcaadad0a1f82ee9874828205db64abdd158588d5ab0f34b49b"
+    },
+    {
+      "file": "lean/InfoGeometry/QuantumContext/ColimitAttentionTomitaFlow.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem prunedStageDensity_normalizedTrace (k : ℕ) (pw : PrunedWeights (Fin (2 ^ k))) : matrixTraceFunctional k (prunedStageDensity k pw) = 1",
+      "line": 510,
+      "location": "lean/InfoGeometry/QuantumContext/ColimitAttentionTomitaFlow.lean:510",
+      "name": "prunedStageDensity_normalizedTrace",
+      "qualified_name": "InfoGeometry.QuantumContext.ColimitAttentionTomitaFlow.prunedStageDensity_normalizedTrace",
+      "source_end_line": 512,
+      "source_sha256": "c6b03b51bdde7fcaadad0a1f82ee9874828205db64abdd158588d5ab0f34b49b"
+    },
+    {
+      "file": "lean/InfoGeometry/QuantumContext/ColimitAttentionTomitaFlow.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem prunedColimitFunctional_unital (k : ℕ) (pw : PrunedWeights (Fin (2 ^ k))) : selectedStageColimitFunctional k (prunedStageDensity k pw) (1 : Carrier) = 1",
+      "line": 535,
+      "location": "lean/InfoGeometry/QuantumContext/ColimitAttentionTomitaFlow.lean:535",
+      "name": "prunedColimitFunctional_unital",
+      "qualified_name": "InfoGeometry.QuantumContext.ColimitAttentionTomitaFlow.prunedColimitFunctional_unital",
+      "source_end_line": 538,
+      "source_sha256": "c6b03b51bdde7fcaadad0a1f82ee9874828205db64abdd158588d5ab0f34b49b"
+    },
+    {
+      "file": "lean/InfoGeometry/QuantumContext/ColimitAttentionTomitaFlow.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem prunedColimitFunctional_real_seed_readout (k : ℕ) (pw : PrunedWeights (Fin (2 ^ k))) (A : Matrix (Fin (2 ^ k)) (Fin (2 ^ k)) ℝ) : selectedStageColimitFunctional k (prunedStageDensity k pw) (stageInjection k (complexifyRealMatrix A)) = (prunedState pw A : ℂ)",
+      "line": 544,
+      "location": "lean/InfoGeometry/QuantumContext/ColimitAttentionTomitaFlow.lean:544",
+      "name": "prunedColimitFunctional_real_seed_readout",
+      "qualified_name": "InfoGeometry.QuantumContext.ColimitAttentionTomitaFlow.prunedColimitFunctional_real_seed_readout",
+      "source_end_line": 549,
+      "source_sha256": "c6b03b51bdde7fcaadad0a1f82ee9874828205db64abdd158588d5ab0f34b49b"
+    },
+    {
+      "file": "lean/InfoGeometry/QuantumContext/ColimitAttentionTomitaFlow.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem prunedColimitFunctional_ge_anchor_column_normSq (k : ℕ) (pw : PrunedWeights (Fin (2 ^ k))) (anchor : Fin (2 ^ k)) (A : Matrix (Fin (2 ^ k)) (Fin (2 ^ k)) ℝ) : pw.weights anchor * (∑ j : Fin (2 ^ k), (A j anchor) ^ 2) ≤ (selectedStageColimitFunctional k (prunedStageDensity k pw) (stageInjection k (complexifyRealMatrix (A.transpose * A)))).re",
+      "line": 596,
+      "location": "lean/InfoGeometry/QuantumContext/ColimitAttentionTomitaFlow.lean:596",
+      "name": "prunedColimitFunctional_ge_anchor_column_normSq",
+      "qualified_name": "InfoGeometry.QuantumContext.ColimitAttentionTomitaFlow.prunedColimitFunctional_ge_anchor_column_normSq",
+      "source_end_line": 601,
+      "source_sha256": "c6b03b51bdde7fcaadad0a1f82ee9874828205db64abdd158588d5ab0f34b49b"
+    },
+    {
+      "file": "lean/InfoGeometry/QuantumContext/ColimitAttentionTomitaFlow.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem prunedColimitFunctional_anchor_column_positive (k : ℕ) (pw : PrunedWeights (Fin (2 ^ k))) (anchor j : Fin (2 ^ k)) (h_anchor : 0 < pw.weights anchor) (A : Matrix (Fin (2 ^ k)) (Fin (2 ^ k)) ℝ) (h_nz : A j anchor ≠ 0) : 0 < (selectedStageColimitFunctional k (prunedStageDensity k pw) (stageInjection k (complexifyRealMatrix (A.transpose * A)))).re",
+      "line": 609,
+      "location": "lean/InfoGeometry/QuantumContext/ColimitAttentionTomitaFlow.lean:609",
+      "name": "prunedColimitFunctional_anchor_column_positive",
+      "qualified_name": "InfoGeometry.QuantumContext.ColimitAttentionTomitaFlow.prunedColimitFunctional_anchor_column_positive",
+      "source_end_line": 615,
+      "source_sha256": "c6b03b51bdde7fcaadad0a1f82ee9874828205db64abdd158588d5ab0f34b49b"
+    },
+    {
+      "file": "lean/InfoGeometry/QuantumContext/AttentionLogPartitionModularBridge.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem hamiltonianFlow_add_const (H : ι → ℝ) (c t : ℝ) (A : Matrix ι ι ℂ) : hamiltonianFlow (fun i => H i + c) t A = hamiltonianFlow H t A",
+      "line": 132,
+      "location": "lean/InfoGeometry/QuantumContext/AttentionLogPartitionModularBridge.lean:132",
+      "name": "hamiltonianFlow_add_const",
+      "qualified_name": "InfoGeometry.QuantumContext.AttentionLogPartitionModularBridge.hamiltonianFlow_add_const",
+      "source_end_line": 134,
+      "source_sha256": "66a72f45d08c90b08f19a57d09cda8d4a98adabde430a56ec3d3438574202b54"
+    },
+    {
+      "file": "lean/InfoGeometry/QuantumContext/AttentionLogPartitionModularBridge.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem thermalHamiltonianFlow_eq_centeredEnergyFlow (energy : ι → ℝ) (β t : ℝ) (A : Matrix ι ι ℂ) : hamiltonianFlow (fun i => -modularHamiltonian energy β i) t A = hamiltonianFlow (fun i => -(β * energy i)) t A",
+      "line": 144,
+      "location": "lean/InfoGeometry/QuantumContext/AttentionLogPartitionModularBridge.lean:144",
+      "name": "thermalHamiltonianFlow_eq_centeredEnergyFlow",
+      "qualified_name": "InfoGeometry.QuantumContext.AttentionLogPartitionModularBridge.thermalHamiltonianFlow_eq_centeredEnergyFlow",
+      "source_end_line": 147,
+      "source_sha256": "66a72f45d08c90b08f19a57d09cda8d4a98adabde430a56ec3d3438574202b54"
+    },
+    {
+      "file": "lean/InfoGeometry/QuantumContext/AttentionLogPartitionModularBridge.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem relativeHamiltonianFlow_apply (H₁ H₂ : ι → ℝ) (t : ℝ) (A : Matrix ι ι ℂ) (i j : ι) : relativeHamiltonianFlow H₁ H₂ t A i j = Complex.exp (Complex.I * (t : ℂ) * ((H₁ i - H₂ j : ℝ) : ℂ)) * A i j",
+      "line": 160,
+      "location": "lean/InfoGeometry/QuantumContext/AttentionLogPartitionModularBridge.lean:160",
+      "name": "relativeHamiltonianFlow_apply",
+      "qualified_name": "InfoGeometry.QuantumContext.AttentionLogPartitionModularBridge.relativeHamiltonianFlow_apply",
+      "source_end_line": 163,
+      "source_sha256": "66a72f45d08c90b08f19a57d09cda8d4a98adabde430a56ec3d3438574202b54"
+    },
+    {
+      "file": "lean/InfoGeometry/QuantumContext/AttentionLogPartitionModularBridge.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem relativeHamiltonianFlow_add_constants (H₁ H₂ : ι → ℝ) (c₁ c₂ t : ℝ) (A : Matrix ι ι ℂ) : relativeHamiltonianFlow (fun i => H₁ i + c₁) (fun i => H₂ i + c₂) t A = (Complex.exp (Complex.I * (t : ℂ) * ((c₁ - c₂ : ℝ) : ℂ))) • relativeHamiltonianFlow H₁ H₂ t A",
+      "line": 172,
+      "location": "lean/InfoGeometry/QuantumContext/AttentionLogPartitionModularBridge.lean:172",
+      "name": "relativeHamiltonianFlow_add_constants",
+      "qualified_name": "InfoGeometry.QuantumContext.AttentionLogPartitionModularBridge.relativeHamiltonianFlow_add_constants",
+      "source_end_line": 176,
+      "source_sha256": "66a72f45d08c90b08f19a57d09cda8d4a98adabde430a56ec3d3438574202b54"
+    },
+    {
+      "file": "lean/InfoGeometry/QuantumContext/AttentionLogPartitionModularBridge.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem relativeThermalFlow_partitionPhase (energy₁ energy₂ : ι → ℝ) (β t : ℝ) (A : Matrix ι ι ℂ) : relativeHamiltonianFlow (fun i => -modularHamiltonian energy₁ β i) (fun i => -modularHamiltonian energy₂ β i) t A = (Complex.exp (Complex.I * (t : ℂ) * (((-logPartitionPotential energy₁ β) - (-logPartitionPotential energy₂ β)) : ℂ)) • relativeHamiltonianFlow (fun i => -(β * energy₁ i)) (fun i => -(β * energy₂ i)) t A)",
+      "line": 198,
+      "location": "lean/InfoGeometry/QuantumContext/AttentionLogPartitionModularBridge.lean:198",
+      "name": "relativeThermalFlow_partitionPhase",
+      "qualified_name": "InfoGeometry.QuantumContext.AttentionLogPartitionModularBridge.relativeThermalFlow_partitionPhase",
+      "source_end_line": 206,
+      "source_sha256": "66a72f45d08c90b08f19a57d09cda8d4a98adabde430a56ec3d3438574202b54"
+    }
+  ],
+  "local_dag_context": null,
+  "query": "modularFlow_apply_eq_exp_sub",
+  "recommended_imports": [
+    "InfoGeometry.QuantumContext.AttentionLogPartitionModularBridge",
+    "InfoGeometry.QuantumContext.ColimitAttentionTomitaFlow"
+  ],
+  "schema": "info_geometry.opengauss.discovery_report.v1"
+}

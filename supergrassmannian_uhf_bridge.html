@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>5-Graded Super-Grassmannian & UHF(2^∞) Colimit Bridge</title>
+  <style>
+    :root { --bg:#0b0f19; --card:#111827; --border:#1f2937; --text:#f3f4f6; --muted:#9ca3af; --accent:#38bdf8; --emerald:#34d399; --gold:#fbbf24; }
+    body { background:var(--bg); color:var(--text); font-family:monospace; padding:20px; }
+    header { text-align:center; margin-bottom:20px; }
+    h1 { color:var(--accent); font-size:1.2rem; }
+    .container { display:grid; grid-template-columns:280px 1fr; gap:16px; max-width:1400px; margin:0 auto; }
+    .panel { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:16px; }
+    .btn { background:#1f2937; border:1px solid #374151; color:var(--text); padding:6px 10px; border-radius:6px; width:100%; margin:4px 0; text-align:left; cursor:pointer; }
+    .btn.active { background:rgba(56,189,248,.15); border-color:var(--accent); color:var(--accent); }
+    canvas { background:#050811; border:1px solid #1f2937; border-radius:6px; width:100%; }
+  </style>
+</head>
+<body>
+  <header><h1>5-Graded Super-Grassmannian & UHF(2^∞) Colimit Bridge</h1></header>
+  <div class="container">
+    <div class="panel">
+      <button class="btn active" data-s="1">1. Dimension Matching ∧ℝ^n → M_{2^n}</button>
+      <button class="btn" data-s="2">2. Jordan–Wigner Cl(3,3) Γ_a</button>
+      <button class="btn" data-s="3">3. CAR c_k†, c_k on Fin 8</button>
+      <button class="btn" data-s="4">4. 5-Graded g_{-2}⊕g_{-1}⊕g_0⊕g_{+1}⊕g_{+2}</button>
+      <button class="btn" data-s="5">5. [g_{+1},g_{+1}]=2g_{+2}, Closure</button>
+    </div>
+    <div class="panel">
+      <canvas id="c" height="600"></canvas>
+    </div>
+  </div>
+  <script>
+    const ctx=document.getElementById('c').getContext('2d');
+    let s=1; function draw(){
+      ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
+      ctx.fillStyle='#38bdf8'; ctx.font='14px monospace';
+      if(s===1) ctx.fillText('dim(∧ℝ^n)=2^n = dim(M_{2^n}), Fin 8 basis |000>..|111>',20,40);
+      if(s===2) ctx.fillText('Γ₁^±,Γ₂^±,Γ₃^±: 6 Majorana generators, Cl(3,3)≅M_8',20,40);
+      if(s===3) ctx.fillText('c_k†=(Γ_{2k}^++Γ_{2k}^-)/2, c_k=(Γ_{2k}^+-Γ_{2k}^-)/2, k=0,1,2',20,40);
+      if(s===4) ctx.fillText('g_{±1}=span{c_k,c_k†}, g_{±2}=span{[c_i,c_j]}, g_0 = span{[c_i^†,c_j]}',20,40);
+      if(s===5) ctx.fillText('[g_{+1},g_{+1}]=2g_{+2}, [g_{±1},g_{±2}]=0, (g_{+1})^4=0',20,40);
+    }
+    document.querySelectorAll('.btn').forEach(b=>b.addEventListener('click',e=>{document.querySelectorAll('.btn').forEach(x=>x.classList.remove('active'));e.target.classList.add('active');s=parseInt(e.target.dataset.s);draw();}));
+    draw();
+  </script>
+</body>
+</html>

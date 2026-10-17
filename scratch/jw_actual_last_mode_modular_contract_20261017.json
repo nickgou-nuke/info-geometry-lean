@@ -1,0 +1,112 @@
+{
+  "schema": "info_geometry.opengauss.ground_truth_theorem_contract.v1",
+  "contract_id": "jw-actual-last-mode-modular-eigen-20261017",
+  "semantic_status": "human_asserted_not_kernel_verified",
+  "claim": "For each finite recursive tensor stage k, the modularFlow on Matrix (Idx (k+1)) ℂ scales the complexification of the new Jordan–Wigner creation matrix jw_u_new k by exp(-I*t*β*ε), when occupiedEnergyLift adds ε to appended coordinate 1.",
+  "carrier": {
+    "type": "Matrix (InfoGeometry.Clifford.TowerMatrix.Idx (k + 1)) (InfoGeometry.Clifford.TowerMatrix.Idx (k + 1)) ℂ",
+    "operations": [
+      "complexifyClTensorStage (k + 1) applied to jw_u_new k",
+      "modularFlow on the recursive tensor-index matrix carrier"
+    ],
+    "conventions": [
+      "occupiedEnergyLift adds ε iff the appended Fin 2 coordinate is 1",
+      "jw_u_new k = globalChirality k ⊗ₖ a_dagger_base",
+      "complexifyClTensorStage is entrywise real-to-complex algebraMap",
+      "modularFlow_apply_eq_exp_sub uses row-logit minus column-logit"
+    ]
+  },
+  "owner_declarations": [
+    {
+      "qualified_name": "InfoGeometry.Clifford.JordanWignerBridge.a_dagger_base",
+      "kind": "def",
+      "source_path": "lean/InfoGeometry/Clifford/JordanWignerBridge.lean",
+      "source_sha256": "30d1c1e0213593b210d94a1948e43ecfdd56c7d0c2483ed0b4f236e685990c41",
+      "source_line": 16,
+      "source_end_line": 16,
+      "source_excerpt": "def a_dagger_base : Matrix (Fin 2) (Fin 2) ℝ := !![(0 : ℝ), 1; 0, 0]",
+      "lean_statement": "def a_dagger_base : Matrix (Fin 2) (Fin 2) ℝ",
+      "status_assertion": "definition"
+    },
+    {
+      "qualified_name": "InfoGeometry.Clifford.Cl11TensorTower.globalChirality",
+      "kind": "def",
+      "source_path": "lean/InfoGeometry/Clifford/Cl11TensorTower.lean",
+      "source_sha256": "1e08191d55b0c7827239332bcc9ba68b97d2c2004772d485ab0b19e2c00dc9ea",
+      "source_line": 176,
+      "source_end_line": 176,
+      "source_excerpt": "noncomputable def globalChirality (n : ℕ) : MatStage n :=",
+      "lean_statement": "noncomputable def globalChirality (n : ℕ) : MatStage n",
+      "status_assertion": "definition"
+    },
+    {
+      "qualified_name": "InfoGeometry.Clifford.JordanWignerBridge.jw_u_new",
+      "kind": "def",
+      "source_path": "lean/InfoGeometry/Clifford/JordanWignerBridge.lean",
+      "source_sha256": "30d1c1e0213593b210d94a1948e43ecfdd56c7d0c2483ed0b4f236e685990c41",
+      "source_line": 22,
+      "source_end_line": 22,
+      "source_excerpt": "noncomputable def jw_u_new (k : ℕ) : MatStage (k + 1) :=",
+      "lean_statement": "noncomputable def jw_u_new (k : ℕ) : MatStage (k + 1)",
+      "status_assertion": "definition"
+    },
+    {
+      "qualified_name": "InfoGeometry.Canonical.Cl11CuntzStageComplexificationTopologicalBridge.complexifyClTensorStage",
+      "kind": "def",
+      "source_path": "lean/InfoGeometry/Canonical/Cl11CuntzStageComplexificationTopologicalBridge.lean",
+      "source_sha256": "4fa92145e0849d260ea3adfca1f9c5fb2f6ce6cfadd14f3ae687104d92a73528",
+      "source_line": 49,
+      "source_end_line": 50,
+      "source_excerpt": "noncomputable def complexifyClTensorStage (n : ℕ) :\n    ClStage n →ₐ[ℝ] TensorComplexStage n :=",
+      "lean_statement": "noncomputable def complexifyClTensorStage (n : ℕ) : ClStage n →ₐ[ℝ] TensorComplexStage n",
+      "status_assertion": "definition"
+    },
+    {
+      "qualified_name": "InfoGeometry.Canonical.Cl11CuntzStageComplexificationTopologicalBridge.complexifyClTensorStage_apply",
+      "kind": "theorem",
+      "source_path": "lean/InfoGeometry/Canonical/Cl11CuntzStageComplexificationTopologicalBridge.lean",
+      "source_sha256": "4fa92145e0849d260ea3adfca1f9c5fb2f6ce6cfadd14f3ae687104d92a73528",
+      "source_line": 53,
+      "source_end_line": 54,
+      "source_excerpt": "@[simp] theorem complexifyClTensorStage_apply (n : ℕ) (A : ClStage n) (i j : Idx n) :\n    complexifyClTensorStage n A i j = algebraMap ℝ ℂ (A i j) :=",
+      "lean_statement": "@[simp] theorem complexifyClTensorStage_apply (n : ℕ) (A : ClStage n) (i j : Idx n) : complexifyClTensorStage n A i j = algebraMap ℝ ℂ (A i j)",
+      "status_assertion": "asserted_proved"
+    },
+    {
+      "qualified_name": "InfoGeometry.QuantumContext.ColimitAttentionTomitaFlow.modularFlow_apply_eq_exp_sub",
+      "kind": "theorem",
+      "source_path": "lean/InfoGeometry/QuantumContext/ColimitAttentionTomitaFlow.lean",
+      "source_sha256": "c6b03b51bdde7fcaadad0a1f82ee9874828205db64abdd158588d5ab0f34b49b",
+      "source_line": 278,
+      "source_end_line": 282,
+      "source_excerpt": "theorem modularFlow_apply_eq_exp_sub [Fintype ι] [DecidableEq ι]\n    (logits : ι → ℝ) (β t : ℝ) (A : Matrix ι ι ℂ) (i j : ι) :\n    modularFlow logits β t A i j =\n      Complex.exp (Complex.I * (t : ℂ) * (β : ℂ) * ((logits i - logits j : ℝ) : ℂ)) *\n        A i j := by",
+      "lean_statement": "theorem modularFlow_apply_eq_exp_sub [Fintype ι] [DecidableEq ι] (logits : ι → ℝ) (β t : ℝ) (A : Matrix ι ι ℂ) (i j : ι) : modularFlow logits β t A i j = Complex.exp (Complex.I * (t : ℂ) * (β : ℂ) * ((logits i - logits j : ℝ) : ℂ)) * A i j",
+      "status_assertion": "asserted_proved"
+    }
+  ],
+  "imports": [
+    "InfoGeometry.Clifford.JordanWignerBridge",
+    "InfoGeometry.Canonical.Cl11CuntzStageComplexificationTopologicalBridge",
+    "InfoGeometry.QuantumContext.ColimitAttentionTomitaFlow"
+  ],
+  "consumers": [
+    "InfoGeometry.Canonical.MajoranaUHFJordanWignerInduction (finite Jordan-Wigner successor identities; carrier remains generic block matrices)",
+    "InfoGeometry.QuantumContext.AttentionTowerCompatibility (concrete modularFlow/concreteStep compatibility for duplicated logits)"
+  ],
+  "smallest_gap": {
+    "declaration_name": "InfoGeometry.QuantumContext.AttentionTowerCompatibility.jwNewCreate_occupiedEnergy_eigen",
+    "lean_signature": "(k : ℕ) (logits : InfoGeometry.Clifford.TowerMatrix.Idx k → ℝ) (ε β t : ℝ) : modularFlow (occupiedEnergyLift k logits ε) β t (complexifyClTensorStage (k + 1) (jw_u_new k)) = Complex.exp (-Complex.I * (t : ℂ) * (β : ℂ) * (ε : ℂ)) • complexifyClTensorStage (k + 1) (jw_u_new k)",
+    "pantograph_expression": "modularFlow (occupiedEnergyLift k logits ε) β t (complexifyClTensorStage (k + 1) (jw_u_new k)) = Complex.exp (-Complex.I * (t : ℂ) * (β : ℂ) * (ε : ℂ)) • complexifyClTensorStage (k + 1) (jw_u_new k)",
+    "description": "Prove that the actual complexified last-site Jordan-Wigner creation matrix is an eigenoperator for the finite modular flow after adding ε to the occupied appended coordinate. This is finite-stage tensor-index mathematics; it does not assert an infinite-UHF or analytic KMS result."
+  },
+  "out_of_scope": [
+    "analytic KMS strip continuation or von Neumann algebra modular theory",
+    "modular flow on the infinite UHF colimit",
+    "physical interpretation of arbitrary logits as a Hamiltonian energy beyond the explicitly chosen occupied-coordinate increment"
+  ],
+  "discovery_receipt": {
+    "path": "scratch/jw_last_mode_discovery_grounded.json",
+    "sha256": "3e202e413e07bcf971919fcd2c1568308063afa96eb5f6a9b9eb8416d28f05f6",
+    "query": "jw_u_new globalChirality a_dagger_base complexifyClTensorStage modularFlow_apply_eq_exp_sub"
+  }
+}

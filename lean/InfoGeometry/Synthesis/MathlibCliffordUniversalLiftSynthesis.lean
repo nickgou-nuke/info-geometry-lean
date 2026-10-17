@@ -18,7 +18,7 @@ submodule-quotient layer above `SplitOctonionClifford33Soldering`,
 `SplitOctonionJordanWignerIntertwiner`, and
 `Cl11ChiralVolumeNilpotentQuotientSynthesis`:
 
-1. **Section 1 — Native Mathlib `CliffordAlgebra q11Form` Universal Lift & Surjectivity onto $M_2(\mathbb{R})$**:
+1. **Section 1 — Native Mathlib `CliffordAlgebra q11Form` Universal Lift & `AlgEquiv` with $M_2(\mathbb{R})$**:
    - Constructs the abstract Witt null nilpotents `abstractWittPlus` and
      `abstractWittMinus` and abstract chiral volume `abstractChiralVolume` directly
      inside `CliffordAlgebra q11Form`, proving
@@ -29,8 +29,12 @@ submodule-quotient layer above `SplitOctonionClifford33Soldering`,
      algebra homomorphism
      `cl11MatrixAlgHom : CliffordAlgebra q11Form →ₐ[ℝ] Matrix (Fin 2) (Fin 2) ℝ`,
      proving that it maps the abstract Witt elements to `cl11NilpotentPlus`,
-     `cl11NilpotentMinus`, and `cl11ChiralVolume`, and is **surjective** onto
-     `Matrix (Fin 2) (Fin 2) ℝ` (`cl11MatrixAlgHom_surjective`).
+     `cl11NilpotentMinus`, and `cl11ChiralVolume`, is **surjective** onto
+     `Matrix (Fin 2) (Fin 2) ℝ` (`cl11MatrixAlgHom_surjective`) and **injective**
+     (`cl11MatrixAlgHom_injective`), and upgrades to the native Mathlib algebra
+     isomorphism
+     `cl11MatrixAlgEquiv : CliffordAlgebra q11Form ≃ₐ[ℝ] Matrix (Fin 2) (Fin 2) ℝ`
+     with inverse `matrix2ToCliffordQ11`.
 
 2. **Section 2 — Native Mathlib `CliffordAlgebra cl33PhaseQuadratic` on the 6D Para-Kähler Phase Space**:
    - Defines `cl33PhaseQuadratic : QuadraticForm ℝ ((Fin 3 → ℝ) × (Fin 3 → ℝ))`
@@ -98,7 +102,7 @@ open InfoGeometry.Synthesis.ThreeTraditionLineageConvergence
 open InfoGeometry.SuperGrassmannian
 
 /-!
-## Section 1: Native Mathlib `CliffordAlgebra q11Form` Universal Lift & Surjectivity onto $M_2(\mathbb{R})$
+## Section 1: Native Mathlib `CliffordAlgebra q11Form` Universal Lift & `AlgEquiv` with $M_2(\mathbb{R})$
 -/
 
 /-- The split quadratic form $Q_{1,1}(x, y) = x^2 - y^2$ on $\mathbb{R} \times \mathbb{R}$
@@ -300,6 +304,113 @@ theorem abstractWittPlus_mul_abstractWittMinus_ne_comm :
   revert h_entry
   norm_num [cl11NilpotentPlus, cl11NilpotentMinus, J1, Eminus,
     Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- `q11Form` equals the split quadratic form `InfoGeometry.Clifford.Cl11Matrix.q11`
+on $\mathbb{R} \times \mathbb{R}$. -/
+theorem q11Form_eq_cl11Matrix_q11 :
+    q11Form = InfoGeometry.Clifford.Cl11Matrix.q11 := by
+  apply QuadraticMap.ext
+  intro v
+  rw [q11Form_apply, InfoGeometry.Clifford.Cl11Matrix.q11_apply]
+
+/-- Quadratic-form isometry equivalence between `q11Form` and
+`InfoGeometry.Clifford.Cl11Matrix.q11`. -/
+def q11FormIsometryEquivCl11MatrixQ11 :
+    q11Form.IsometryEquiv InfoGeometry.Clifford.Cl11Matrix.q11 where
+  toLinearEquiv := LinearEquiv.refl ℝ (ℝ × ℝ)
+  map_app' v := by
+    rw [q11Form_eq_cl11Matrix_q11]
+    rfl
+
+/-- Native Mathlib `CliffordAlgebra` equivalence between `CliffordAlgebra q11Form` and
+`CliffordAlgebra InfoGeometry.Clifford.Cl11Matrix.q11`. -/
+def cliffordQ11FormEquivCl11MatrixQ11 :
+    CliffordAlgebra q11Form ≃ₐ[ℝ]
+      CliffordAlgebra InfoGeometry.Clifford.Cl11Matrix.q11 :=
+  CliffordAlgebra.equivOfIsometry q11FormIsometryEquivCl11MatrixQ11
+
+/-- The real vector space dimension of `CliffordAlgebra q11Form` is $4$. -/
+theorem finrank_cliffordAlgebra_q11Form :
+    Module.finrank ℝ (CliffordAlgebra q11Form) = 4 := by
+  rw [LinearEquiv.finrank_eq cliffordQ11FormEquivCl11MatrixQ11.toLinearEquiv,
+    InfoGeometry.Clifford.Cl11Matrix.finrank_cl11]
+
+/-- `CliffordAlgebra q11Form` is finite-dimensional over $\mathbb{R}$. -/
+instance instFiniteDimensionalCliffordAlgebraQ11Form :
+    FiniteDimensional ℝ (CliffordAlgebra q11Form) :=
+  LinearEquiv.finiteDimensional
+    (cliffordQ11FormEquivCl11MatrixQ11.toLinearEquiv.trans
+      InfoGeometry.Clifford.Cl11Matrix.cl11EquivMat.toLinearEquiv).symm
+
+/-- The universal Mathlib representation `cl11MatrixAlgHom` is injective. -/
+theorem cl11MatrixAlgHom_injective :
+    Function.Injective cl11MatrixAlgHom := by
+  have h_rank :
+      Module.finrank ℝ (CliffordAlgebra q11Form) =
+        Module.finrank ℝ (Matrix (Fin 2) (Fin 2) ℝ) := by
+    rw [finrank_cliffordAlgebra_q11Form,
+      InfoGeometry.Clifford.Cl11Matrix.finrank_mat2]
+  have h_surj : Function.Surjective cl11MatrixAlgHom.toLinearMap :=
+    cl11MatrixAlgHom_surjective
+  exact (LinearMap.injective_iff_surjective_of_finrank_eq_finrank h_rank).mpr h_surj
+
+/-- The universal Mathlib representation `cl11MatrixAlgHom` is bijective. -/
+theorem cl11MatrixAlgHom_bijective :
+    Function.Bijective cl11MatrixAlgHom :=
+  ⟨cl11MatrixAlgHom_injective, cl11MatrixAlgHom_surjective⟩
+
+/-- `matrix2ToCliffordQ11` is a left inverse to `cl11MatrixAlgHom` on all
+$x \in \operatorname{CliffordAlgebra}(\text{q11Form})$. -/
+@[simp]
+theorem matrix2ToCliffordQ11_cl11MatrixAlgHom (x : CliffordAlgebra q11Form) :
+    matrix2ToCliffordQ11 (cl11MatrixAlgHom x) = x := by
+  apply cl11MatrixAlgHom_injective
+  exact cl11MatrixAlgHom_matrix2ToCliffordQ11 (cl11MatrixAlgHom x)
+
+/-- **Native Mathlib `AlgEquiv` for $\operatorname{Cl}(1,1) \cong M_2(\mathbb{R})$**:
+Upgrades the universal lift `cl11MatrixAlgHom` to a full $\mathbb{R}$-algebra isomorphism
+`CliffordAlgebra q11Form ≃ₐ[ℝ] Matrix (Fin 2) (Fin 2) ℝ` with explicit inverse
+`matrix2ToCliffordQ11`. -/
+def cl11MatrixAlgEquiv :
+    CliffordAlgebra q11Form ≃ₐ[ℝ] Matrix (Fin 2) (Fin 2) ℝ :=
+  AlgEquiv.ofAlgHom cl11MatrixAlgHom
+    { toFun := matrix2ToCliffordQ11
+      map_one' := by
+        apply cl11MatrixAlgHom_injective
+        rw [cl11MatrixAlgHom_matrix2ToCliffordQ11, map_one]
+      map_mul' := fun M N => by
+        apply cl11MatrixAlgHom_injective
+        rw [cl11MatrixAlgHom_matrix2ToCliffordQ11, map_mul,
+          cl11MatrixAlgHom_matrix2ToCliffordQ11,
+          cl11MatrixAlgHom_matrix2ToCliffordQ11]
+      map_zero' := by
+        apply cl11MatrixAlgHom_injective
+        rw [cl11MatrixAlgHom_matrix2ToCliffordQ11, map_zero]
+      map_add' := fun M N => by
+        apply cl11MatrixAlgHom_injective
+        rw [cl11MatrixAlgHom_matrix2ToCliffordQ11, map_add,
+          cl11MatrixAlgHom_matrix2ToCliffordQ11,
+          cl11MatrixAlgHom_matrix2ToCliffordQ11]
+      commutes' := fun r => by
+        apply cl11MatrixAlgHom_injective
+        rw [cl11MatrixAlgHom_matrix2ToCliffordQ11, AlgHom.commutes] }
+    (AlgHom.ext cl11MatrixAlgHom_matrix2ToCliffordQ11)
+    (AlgHom.ext matrix2ToCliffordQ11_cl11MatrixAlgHom)
+
+@[simp]
+theorem cl11MatrixAlgEquiv_apply (x : CliffordAlgebra q11Form) :
+    cl11MatrixAlgEquiv x = cl11MatrixAlgHom x :=
+  rfl
+
+@[simp]
+theorem cl11MatrixAlgEquiv_symm_apply (M : Matrix (Fin 2) (Fin 2) ℝ) :
+    cl11MatrixAlgEquiv.symm M = matrix2ToCliffordQ11 M :=
+  rfl
+
+@[simp]
+theorem cl11MatrixAlgEquiv_ι (v : ℝ × ℝ) :
+    cl11MatrixAlgEquiv (CliffordAlgebra.ι q11Form v) = cl11MatrixLinear v :=
+  cl11MatrixAlgHom_ι v
 
 /-!
 ## Section 2: Native Mathlib `CliffordAlgebra cl33PhaseQuadratic` on the 6D Para-Kähler Phase Space

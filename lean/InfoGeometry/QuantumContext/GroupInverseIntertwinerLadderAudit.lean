@@ -6,5 +6,10 @@ Authors: InfoGeometry Engine Contributors
 
 import InfoGeometry.QuantumContext.GroupInverseIntertwinerLadder
 
+#print axioms InfoGeometry.QuantumContext.GroupInverseIntertwinerLadder.Stage.edge_irreflexive
+#print axioms InfoGeometry.QuantumContext.GroupInverseIntertwinerLadder.Stage.rank_lt_of_edge
+#print axioms InfoGeometry.QuantumContext.GroupInverseIntertwinerLadder.core_has_no_prerequisite
 #print axioms InfoGeometry.QuantumContext.GroupInverseIntertwinerLadder.stationary_laplacians_intertwine
 #print axioms InfoGeometry.QuantumContext.GroupInverseIntertwinerLadder.stochastic_conclusion_and_stationaryProjector_imply_markovRegularized
+#print axioms InfoGeometry.QuantumContext.GroupInverseIntertwinerLadder.Stage
+#print axioms InfoGeometry.QuantumContext.GroupInverseIntertwinerLadder.instFintypeStage

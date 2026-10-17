@@ -4,6 +4,8 @@
 Promotion is intentionally separate from proof, build, and audit.  This worker
 consumes `audit.semantic` outputs and emits `PromotionDecisionPacket` rows.  It
 does not mutate Lean files and does not treat conditional audits as promotion.
+Worker IDs are configured role labels; they do not authenticate independent
+agent or operator identity.
 """
 
 from __future__ import annotations
@@ -81,13 +83,29 @@ def fetch_audit_packet(config: PromotionBeeConfig, audit_key: str) -> dict[str, 
     )
 
 
-def decide_promotion(audit: dict[str, Any] | None, *, allow_override: bool) -> tuple[str, list[str]]:
+def decide_promotion(
+    audit: dict[str, Any] | None,
+    *,
+    allow_override: bool,
+    promotion_worker_id: str,
+) -> tuple[str, list[str]]:
     if not audit:
         return "reject", ["missing AuditPacket"]
     verdict = str(audit.get("verdict") or "")
     origin = str(audit.get("verification_origin") or "")
     promotion_allowed = bool(audit.get("promotion_allowed"))
     reasons: list[str] = []
+    producer_worker_id = str(audit.get("producer_worker_id") or "")
+    auditor_worker_id = str(audit.get("auditor_worker_id") or "")
+    recorded_audit_worker_id = str(audit.get("worker_id") or "")
+    promotion_worker_id = str(promotion_worker_id or "")
+    role_ids = (producer_worker_id, auditor_worker_id, promotion_worker_id)
+    if not all(role_ids):
+        return "hold", ["promotion requires producer, auditor, and promotion worker IDs"]
+    if recorded_audit_worker_id != auditor_worker_id:
+        return "hold", ["AuditPacket worker_id does not match auditor_worker_id"]
+    if len(set(role_ids)) != len(role_ids):
+        return "hold", ["producer, auditor, and promotion worker IDs must be distinct"]
     if verdict == "fail":
         return "reject", ["audit verdict is fail"]
     if verdict == "conditional_pass":
@@ -98,8 +116,6 @@ def decide_promotion(audit: dict[str, Any] | None, *, allow_override: bool) -> t
         reasons.append("audit packet does not allow promotion")
     if verdict == "pass" and promotion_allowed and (origin != "synthetic_smoke" or allow_override):
         return "promote", ["audit pass and promotion_allowed accepted"]
-    if allow_override and verdict == "pass":
-        return "promote", ["explicit override accepted for audit pass"]
     return "hold", reasons or ["promotion held by conservative policy"]
 
 
@@ -124,6 +140,9 @@ def emit_promotion_packet(
         "audit_verdict": audit.get("verdict"),
         "verification_origin": audit.get("verification_origin"),
         "promotion_allowed_by_audit": bool(audit.get("promotion_allowed")),
+        "producer_worker_id": audit.get("producer_worker_id"),
+        "auditor_worker_id": audit.get("auditor_worker_id"),
+        "promotion_worker_id": config.worker_id,
         "worker_id": config.worker_id,
         "task_key": task.get("_key"),
     }
@@ -145,7 +164,11 @@ def run_one(config: PromotionBeeConfig) -> dict[str, Any]:
 
     audit_key = str(task.get("audit_key") or "")
     audit = fetch_audit_packet(config, audit_key)
-    decision, reasons = decide_promotion(audit, allow_override=bool(task.get("allow_override")))
+    decision, reasons = decide_promotion(
+        audit,
+        allow_override=bool(task.get("allow_override")),
+        promotion_worker_id=config.worker_id,
+    )
     if not audit:
         updated_task = queue_tool.fail_task(
             config.hive_endpoint,

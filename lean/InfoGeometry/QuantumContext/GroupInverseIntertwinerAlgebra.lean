@@ -97,6 +97,22 @@ variable {ι κ : Type*} [Fintype ι] [Fintype κ] [DecidableEq ι] [DecidableEq
 variable {R : Type*} [Ring R]
 
 omit [DecidableEq ι] [DecidableEq κ] in
+/-- **The generic three-factor identity.** For a group inverse pair, `a * x * x = x`.
+
+This is a purely ring-theoretic consequence of the absorption law `x * a * x = x`
+together with commutativity `x * a = a * x`, and it is stated here over `[Ring R]`
+because that is the layer it belongs to — not in any Markov consumer module.
+
+The canonical owner `InfoGeometry.Canonical.HartwigSouriauFrameDrazin` derives
+the same identity inline, privately, at the point of use inside
+`principalIdempotent_mul_groupInverse_eq_zero`. It is recorded here as a public
+lemma so that downstream range arguments have a named owner to cite rather than
+re-deriving it. -/
+theorem groupInverse_mul_mul {a x : R} (h : IsGroupInverse a x) : a * x * x = x := by
+  rw [h.2.2]
+  exact h.2.1
+
+omit [DecidableEq ι] [DecidableEq κ] in
 /-- THE ALGEBRAIC CORE, AT THE LEVEL OF THE INDIVIDUAL GROUP INVERSE LAWS.
 
 A rectangular intertwiner `C` transports group inverses whenever it also

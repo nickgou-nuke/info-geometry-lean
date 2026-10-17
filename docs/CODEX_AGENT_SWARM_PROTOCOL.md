@@ -20,12 +20,15 @@ collapsed into one claimed runtime:
   packet states into role-specific tasks; `hive_arango_queue.py` provides
   leases, worker heartbeats, claims, completion, failure, and requeue; and
   `hive_bee_runner.py` enforces role/task/output authority contracts.
-  `hive_swarm.py` implements a generator → critic → Lean formalizer → auditor
-  loop, while separate build, audit, and promotion workers record later gates.
-  The systemd beehive target and installer provide a configured activation
-  path; source presence alone does not establish that those services are
-  running on this host. This is a repository-owned persistent workflow,
-  distinct from Codex session agents.
+  `hive_swarm.py` runs generator, critic, and Lean formalizer steps in one
+  process. Successful Lean proof capture may be fossilized with QMS acceptance
+  pending; no in-process model response is treated as an audit. Separate build,
+  audit, and promotion workers are workflow roles;
+  their separate process or caller-supplied worker labels alone do not prove
+  distinct QMS agent instances. The systemd beehive target and installer
+  provide a configured activation path; source presence alone does not
+  establish that those services are running on this host. Hive is a
+  repository-owned persistent workflow, distinct from Codex session agents.
 - **Archon/Python theorem queue:** `agent_orchestrator_queue.py` performs its
   local search / optional supplied SymPy / Lean / linter / report steps. It is
   separate from both Hive and Codex collaboration.
@@ -112,10 +115,11 @@ source patch and build.
    against owner files.
 4. **Reviewer / Gate Panel member:** audit one dimension (mathematical scope,
    Lean proof, architecture/dependencies, or QMS honesty) independently. Do not
-   rubber-stamp another agent's conclusion.
+   rubber-stamp another agent's conclusion. The reviewer must be a different
+   agent instance from the artifact author.
 5. **Auditor / Victory Auditor:** inspect the final owner diff and recorded
    evidence after build/gates; distinguish a local check from subsystem or
-   repository-wide closure. Do not edit.
+   repository-wide closure. Do not edit or audit work you authored.
 6. **Archivist:** coordinator records plan state, exact changed paths and
    declarations, rejected routes, source/build/axiom/gate outputs, and
    remaining debt. Do not stage generated debris or unrelated user changes.
@@ -133,6 +137,16 @@ point is the existing Hive task/packet contracts and workers, with an explicit
 Codex execution adapter; do not create a competing queue or imply that
 `spawn_agent` invokes Hive/Archon.
 
+Hive's in-process model “auditor” response is a composite self-review, not an
+independent agent audit. Likewise, Hive's separate worker process and distinct
+`worker_id` labels are not evidence that the QMS non-overlapping G-A, A-A, and
+QA-A roles were filled. Use distinct agent instances/contexts for A-A and QA-A;
+QA-A must differ from both the author and A-A and rerun the decisive checks.
+In `hive_swarm`, “proof fossilized” means the Lean proof capture was stored;
+`qms_review.status = pending_external_audit` means QMS acceptance has not been
+granted. These states are separate, and only the external A-A/QA-A cycle can
+close the latter.
+
 Do not run Hive, Archon, Pi, and manual Codex coordination against the same task
 at once. Select one scheduler for that task. Regardless of scheduler, builds
 remain single-flight through the repository lock.
@@ -140,7 +154,7 @@ remain single-flight through the repository lock.
 ## OpenGauss acceptance sequence
 
 1. Read `AGENTS.md`, `docs/CANONICAL_AGENT_PIPELINE.md`,
-   `docs/HIVE_AGENT_COMMANDMENTS.md`,
+   `docs/HIVE_AGENT_COMMANDMENTS.md`, `docs/INDEPENDENT_AGENT_AUDIT_SOP.md`,
    `.agents/plugins/opengauss/reference/TOP_DOWN_PROTOCOL.md`, the command
    skill, the trap catalog, and relevant owner sources.
 2. Inspect `git status` and preserve unrelated staged and unstaged work.
@@ -150,18 +164,30 @@ remain single-flight through the repository lock.
 4. Make the smallest source edit in the owner layer. Reuse categorical and
    operator owners; do not introduce scalar, diagonal, or commuting proxies for
    a noncommutative carrier.
-5. Before compiling, inspect for active Lean/Lake processes. Run builds
-   sequentially through
+5. Run only preliminary checks needed to make the candidate reviewable; label
+   them preliminary and do not treat them as acceptance evidence. Dispatch A-A
+   to inspect the exact candidate diff read-only. G-A, the artifact author,
+   cannot audit or accept that artifact. Resolve A-A findings and send the
+   revised exact diff back to A-A for closure.
+6. Once A-A closes the final diff, inspect for active Lean/Lake processes.
+   Run builds sequentially through
    `python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock <target>`.
    Never run `lake clean` or remove build caches.
-6. Run the repository's audited OpenGauss screener, strict refute, Gate 4, and
-   semantic-vacuity checks on the changed owner. Read each result; report
-   warnings instead of claiming a clean result when warnings remain.
-7. Run the relevant audit companion and regression target. Check the declared
-   theorem axioms. Stage only task-owned paths when the tree already contains
-   unrelated staged work.
-8. Report exactly what Lean established and any claims still outside the
-   formalized statement.
+7. Run the repository's audited OpenGauss screener, strict refute, Gate 4,
+   semantic-vacuity checks, relevant audit companion, regression target, and
+   declared theorem axiom checks on the A-A-reviewed source. Read each result;
+   report warnings instead of claiming a clean result when warnings remain.
+   Stage only task-owned paths when the tree already contains unrelated staged
+   work.
+8. Dispatch QA-A, distinct from both G-A and A-A, to rerun the decisive checks
+   against the exact A-A-reviewed diff and verify their outputs. QA-A is not
+   permitted to rely on the author's or A-A's check summaries. If QA-A requests
+   changes, return the change to A-A, then repeat final verification and QA-A.
+9. Report exactly what Lean established and any claims still outside the
+    formalized statement, with the separate A-A and QA-A dispositions.
+
+Automated screening, compilation, and the author’s own checks are not
+independent audit or acceptance evidence.
 
 ## Starting an actual Codex team
 
@@ -171,8 +197,10 @@ mathematical definitions, child contract, and explicit read/write limits. Pair
 each nontrivial prover task with a refuter; use separate reviewer/auditor turns
 for the relevant gate. Collect results with `wait_agent`, `send_message`, and
 `followup_task`. Inspect every returned artifact against the checked-out source.
-The coordinator's owner edit, locked Lean build, axiom/QMS gates, and victory
-audit—not an agent message—close the task.
+The coordinator makes the owner edit, runs or coordinates the locked Lean build
+and axiom/QMS gates, and records the distinct A-A and QA-A dispositions. The
+coordinator does not substitute its own review for either role; an agent message
+alone does not close the task.
 
 There is no `codex swarm` shell command in this repository. For queued local
 Researcher/SymPy/Lean/linter/report work, use the separately documented

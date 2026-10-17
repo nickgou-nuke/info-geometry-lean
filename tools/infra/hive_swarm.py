@@ -5,7 +5,9 @@ Roles:
 - generator bee: proposes a tactic from graph-grounded context
 - critic bee: accepts/revises/rejects the proposal before Lean execution
 - formalizer bee: verifies the tactic through Lean and fossilizes success
-- auditor bee: records a structured trust-boundary audit for the run
+
+This process does not perform independent QMS audit or acceptance. Successful
+proof fossils are recorded with external A-A and QA-A review still pending.
 """
 
 from __future__ import annotations
@@ -35,7 +37,6 @@ class SwarmConfig:
     bee: hive_bee.BeeConfig
     generator_override: str | None = None
     critic_override: str | None = None
-    auditor_override: str | None = None
 
 
 @dataclass
@@ -43,13 +44,6 @@ class CriticDecision:
     verdict: str
     tactic: str
     reason: str
-
-
-@dataclass
-class AuditorReport:
-    verdict: str
-    notes: str
-    promotion_allowed: str
 
 
 @dataclass
@@ -62,8 +56,8 @@ class SwarmRun:
     generator_tactic: str
     critic_decision: CriticDecision
     verification: dict[str, Any] | None
-    auditor_report: AuditorReport
     started_at: float
+    fossil_key: str | None = None
 
 
 def role_prompt(role: str, goal: dict[str, Any], proof_state: dict[str, Any], gravity_context: dict[str, Any], tactic: str = "") -> str:
@@ -87,13 +81,6 @@ def role_prompt(role: str, goal: dict[str, Any], proof_state: dict[str, Any], gr
             f"Proposed tactic: {tactic}\n\n"
             + common
         )
-    if role == "auditor":
-        return (
-            "You are the auditor bee. Check trust-boundary fidelity and summarize the run without claiming proof.\n"
-            "Output exactly:\nVERDICT: pass|conditional_pass|fail\nPROMOTION_ALLOWED: yes|no\nNOTES: <two concise sentences>\n\n"
-            f"Generator tactic: {tactic}\n"
-            + common
-        )
     raise ValueError(f"unknown role: {role}")
 
 
@@ -101,7 +88,6 @@ def call_role_model(config: SwarmConfig, role: str, goal: dict[str, Any], proof_
     overrides = {
         "generator": config.generator_override,
         "critic": config.critic_override,
-        "auditor": config.auditor_override,
     }
     if overrides.get(role):
         return str(overrides[role]).strip()
@@ -148,17 +134,6 @@ def parse_critic_decision(text: str) -> CriticDecision:
     return CriticDecision(verdict=verdict, tactic=tactic, reason=reason)
 
 
-def parse_auditor_report(text: str) -> AuditorReport:
-    verdict = parse_keyed_line(text, "VERDICT").lower()
-    if verdict not in {"pass", "conditional_pass", "fail"}:
-        verdict = "fail"
-    notes = parse_keyed_line(text, "NOTES") or text.strip()
-    promotion_allowed = parse_keyed_line(text, "PROMOTION_ALLOWED").lower()
-    if promotion_allowed not in {"yes", "no"}:
-        promotion_allowed = "no"
-    return AuditorReport(verdict=verdict, notes=notes, promotion_allowed=promotion_allowed)
-
-
 def write_artifact(task_key: str, payload: dict[str, Any]) -> Path:
     ARTIFACT_DIR.mkdir(parents=True, exist_ok=True)
     path = ARTIFACT_DIR / f"{task_key}.json"
@@ -166,7 +141,7 @@ def write_artifact(task_key: str, payload: dict[str, Any]) -> Path:
     return path
 
 
-def audit_and_record(run: SwarmRun) -> Path:
+def record_swarm_run(run: SwarmRun) -> Path:
     payload = {
         "schema": "info_geometry.hive_swarm_run.v1",
         "task_key": run.task.get("_key"),
@@ -177,15 +152,23 @@ def audit_and_record(run: SwarmRun) -> Path:
             "tactic": run.critic_decision.tactic,
             "reason": run.critic_decision.reason,
         },
-        "auditor": {
-            "verdict": run.auditor_report.verdict,
-            "notes": run.auditor_report.notes,
-            "promotion_allowed": run.auditor_report.promotion_allowed,
+        "proof_fossil_key": run.fossil_key,
+        "qms_review": {
+            "status": "pending_external_audit" if run.fossil_key else "not_run",
+            "author_process_review": False,
+            "a_a_required": bool(run.fossil_key),
+            "qa_a_required": bool(run.fossil_key),
         },
         "verification": run.verification,
         "gravity_context_path": str(run.gravity_path),
         "elapsed_wall_s": round(time.time() - run.started_at, 6),
-        "state_taxonomy": ["retrieved", "generated", "criticized", "formalized" if run.verification else "rejected", "audited"],
+        "state_taxonomy": [
+            "retrieved",
+            "generated",
+            "criticized",
+            "lean_checked" if run.verification else "critic_rejected",
+            *(["proof_fossilized", "qms_review_pending"] if run.fossil_key else []),
+        ],
     }
     return write_artifact(str(run.task.get("_key")), payload)
 
@@ -245,9 +228,8 @@ def run_one(config: SwarmConfig) -> dict[str, Any]:
     critic_text = call_role_model(config, "critic", goal, proof_state, gravity_context, tactic=generator_tactic)
     critic = parse_critic_decision(critic_text)
     if critic.verdict == "reject" or not critic.tactic:
-        auditor = parse_auditor_report(call_role_model(config, "auditor", goal, proof_state, gravity_context, tactic=generator_tactic))
-        run = SwarmRun(task=task, goal=goal, proof_state=proof_state, gravity_context=gravity_context, gravity_path=gravity_path, generator_tactic=generator_tactic, critic_decision=critic, verification=None, auditor_report=auditor, started_at=started_at)
-        artifact = audit_and_record(run)
+        run = SwarmRun(task=task, goal=goal, proof_state=proof_state, gravity_context=gravity_context, gravity_path=gravity_path, generator_tactic=generator_tactic, critic_decision=critic, verification=None, started_at=started_at)
+        artifact = record_swarm_run(run)
         deadend = hive_bee.build_deadend_doc(
             goal,
             task,
@@ -278,7 +260,7 @@ def run_one(config: SwarmConfig) -> dict[str, Any]:
             status="requeued",
             extra_fields={"bee_state": "critic_rejected", "swarm_artifact": str(artifact), "critic_reason": critic.reason},
         )
-        return {"status": "critic_rejected", "task": task, "goal": goal, "critic": critic.__dict__, "auditor": auditor.__dict__, "artifact": str(artifact)}
+        return {"status": "critic_rejected", "task": task, "goal": goal, "critic": critic.__dict__, "qms_review_status": "not_run", "artifact": str(artifact)}
     queue_tool.update_goal_status(
         config.bee.hive_endpoint,
         config.bee.hive_database,
@@ -297,9 +279,7 @@ def run_one(config: SwarmConfig) -> dict[str, Any]:
         timeout=config.bee.timeout,
     )
     lean_latency = time.time() - lean_start
-    auditor = parse_auditor_report(call_role_model(config, "auditor", goal, proof_state, gravity_context, tactic=critic.tactic))
-    run = SwarmRun(task=task, goal=goal, proof_state=proof_state, gravity_context=gravity_context, gravity_path=gravity_path, generator_tactic=generator_tactic, critic_decision=critic, verification=verification, auditor_report=auditor, started_at=started_at)
-    artifact = audit_and_record(run)
+    run = SwarmRun(task=task, goal=goal, proof_state=proof_state, gravity_context=gravity_context, gravity_path=gravity_path, generator_tactic=generator_tactic, critic_decision=critic, verification=verification, started_at=started_at)
     attempt = hive_bee.BeeAttempt(
         task=task,
         goal=goal,
@@ -311,24 +291,28 @@ def run_one(config: SwarmConfig) -> dict[str, Any]:
         elapsed_wall_s=time.time() - started_at,
         lean_latency_s=lean_latency,
     )
-    auditor_accepts = auditor.verdict == "pass" and auditor.promotion_allowed == "no"
-    if verification.get("status") == "success" and auditor_accepts:
+    if verification.get("status") == "success":
         fossil = hive_bee.fossilize_success(config.bee, attempt)
+        run.fossil_key = str((fossil.get("fossil") or {}).get("_key") or "") or None
+        if not run.fossil_key:
+            raise RuntimeError("fossilize_success returned no fossil key")
+        artifact = record_swarm_run(run)
         queue_tool.update_goal_status(
             config.bee.hive_endpoint,
             config.bee.hive_database,
             config.bee.hive_username,
             config.bee.hive_password,
             goal_key_value=str(goal["_key"]),
-            status="audited",
-            extra_fields={"bee_state": "audited", "swarm_artifact": str(artifact), "auditor_verdict": auditor.verdict, "auditor_notes": auditor.notes},
+            status="closed",
+            extra_fields={
+                "bee_state": "fossilized",
+                "swarm_artifact": str(artifact),
+                "proof_fossil_key": run.fossil_key,
+            },
         )
-        return {"status": "fossilized", "task": fossil.get("task") or task, "goal": fossil.get("goal") or goal, "generator_tactic": generator_tactic, "critic": critic.__dict__, "auditor": auditor.__dict__, "artifact": str(artifact), "fossil": fossil}
-    failure_reason = (
-        "lean_verification_failure"
-        if verification.get("status") != "success"
-        else "auditor_rejected_or_incomplete"
-    )
+        return {"status": "proof_fossilized_qms_pending", "task": fossil.get("task") or task, "goal": fossil.get("goal") or goal, "generator_tactic": generator_tactic, "critic": critic.__dict__, "verification": verification, "qms_review_status": "pending_external_audit", "artifact": str(artifact), "fossil": fossil}
+    artifact = record_swarm_run(run)
+    failure_reason = "lean_verification_failure"
     rejection = hive_bee.record_deadend(config.bee, attempt, failure_reason)
     if int(task.get("claim_count") or 1) < hive_bee.max_attempts(goal):
         queue_tool.requeue_task(
@@ -338,11 +322,7 @@ def run_one(config: SwarmConfig) -> dict[str, Any]:
             config.bee.hive_password,
             task_key_value=str(task["_key"]),
             worker_id=config.bee.worker_id,
-            error_message=(
-                f"formalizer failed after critic approval: {critic.reason}"
-                if verification.get("status") != "success"
-                else f"auditor did not explicitly pass: {auditor.verdict}"
-            ),
+            error_message=f"formalizer failed after critic approval: {critic.reason}",
         )
         queue_tool.update_goal_status(
             config.bee.hive_endpoint,
@@ -351,9 +331,9 @@ def run_one(config: SwarmConfig) -> dict[str, Any]:
             config.bee.hive_password,
             goal_key_value=str(goal["_key"]),
             status="requeued",
-            extra_fields={"bee_state": "audit_rejected", "swarm_artifact": str(artifact), "auditor_verdict": auditor.verdict, "auditor_notes": auditor.notes},
+            extra_fields={"bee_state": "formalizer_failed", "swarm_artifact": str(artifact), "qms_acceptance_status": "not_run"},
         )
-        return {"status": "requeued", "task": task, "goal": goal, "generator_tactic": generator_tactic, "critic": critic.__dict__, "auditor": auditor.__dict__, "artifact": str(artifact), "deadend": rejection}
+        return {"status": "requeued", "task": task, "goal": goal, "generator_tactic": generator_tactic, "critic": critic.__dict__, "qms_review_status": "not_run", "artifact": str(artifact), "deadend": rejection}
     queue_tool.fail_task(
         config.bee.hive_endpoint,
         config.bee.hive_database,
@@ -370,9 +350,9 @@ def run_one(config: SwarmConfig) -> dict[str, Any]:
         config.bee.hive_password,
         goal_key_value=str(goal["_key"]),
         status="deadend",
-        extra_fields={"bee_state": "audit_rejected", "swarm_artifact": str(artifact), "auditor_verdict": auditor.verdict, "auditor_notes": auditor.notes},
+        extra_fields={"bee_state": "formalizer_failed", "swarm_artifact": str(artifact), "qms_acceptance_status": "not_run"},
     )
-    return {"status": "deadend", "task": task, "goal": goal, "generator_tactic": generator_tactic, "critic": critic.__dict__, "auditor": auditor.__dict__, "artifact": str(artifact), "deadend": rejection}
+    return {"status": "deadend", "task": task, "goal": goal, "generator_tactic": generator_tactic, "critic": critic.__dict__, "qms_review_status": "not_run", "artifact": str(artifact), "deadend": rejection}
 
 
 def parse_args() -> argparse.Namespace:
@@ -399,7 +379,6 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--timeout", type=int, default=120)
     parser.add_argument("--generator-override", default=None)
     parser.add_argument("--critic-override", default=None)
-    parser.add_argument("--auditor-override", default=None)
     parser.add_argument("--once", action="store_true")
     parser.add_argument("--poll-interval", type=int, default=15)
     return parser.parse_args()
@@ -433,7 +412,6 @@ def config_from_args(args: argparse.Namespace) -> SwarmConfig:
         bee=bee,
         generator_override=str(args.generator_override).strip() if args.generator_override else None,
         critic_override=str(args.critic_override).strip() if args.critic_override else None,
-        auditor_override=str(args.auditor_override).strip() if args.auditor_override else None,
     )
 
 

@@ -285,6 +285,7 @@ def test_fossilize_success_persists_replay_packet(monkeypatch, tmp_path) -> None
     config = sample_config()
     attempt = sample_attempt()
     imports: list[tuple[str, list[dict]]] = []
+    goal_updates: list[dict] = []
 
     record = {
         "artifact_kind": "DiamondFossil",
@@ -323,7 +324,11 @@ def test_fossilize_success_persists_replay_packet(monkeypatch, tmp_path) -> None
         "import_rows",
         lambda endpoint, database, username, password, collection, rows: imports.append((collection, rows)),
     )
-    monkeypatch.setattr(hive_bee.queue_tool, "update_goal_status", lambda *args, **kwargs: {"status": kwargs["status"]})
+    monkeypatch.setattr(
+        hive_bee.queue_tool,
+        "update_goal_status",
+        lambda *args, **kwargs: goal_updates.append(kwargs) or {"status": kwargs["status"], **kwargs["extra_fields"]},
+    )
     monkeypatch.setattr(hive_bee.queue_tool, "complete_task", lambda *args, **kwargs: {"status": "done"})
 
     result = hive_bee.fossilize_success(config, attempt)
@@ -333,7 +338,70 @@ def test_fossilize_success_persists_replay_packet(monkeypatch, tmp_path) -> None
     assert any(collection == "hive_replay_packets" for collection, _ in imports)
     replay_rows = [rows for collection, rows in imports if collection == "hive_replay_packets"][0]
     assert replay_rows[0]["fossil_key"] == result["fossil"]["_key"]
-    assert "#hive_index_decl hive_Demo_task_123" in replay_rows[0]["theorem_source"]
+    assert len(goal_updates) == 1
+    assert goal_updates[0]["status"] == "closed"
+    assert goal_updates[0]["extra_fields"]["closed_by_fossil_key"] == result["fossil"]["_key"]
+    assert goal_updates[0]["extra_fields"]["qms_acceptance_status"] == "pending_external_audit"
+    assert goal_updates[0]["extra_fields"]["qms_a_a_required"] is True
+    assert goal_updates[0]["extra_fields"]["qms_qa_a_required"] is True
+
+
+def test_fossilize_success_does_not_complete_task_if_pending_state_cannot_persist(monkeypatch, tmp_path) -> None:
+    config = sample_config()
+    attempt = sample_attempt()
+    imports: list[tuple[str, list[dict]]] = []
+    task_completions: list[dict] = []
+    record = {
+        "artifact_kind": "DiamondFossil",
+        "space": "logos",
+        "entity_key": "hive.Demo.task_123",
+        "canonical_shape": "1 = 1",
+        "packet_sha256": "abc",
+        "shape_sha256": "shape",
+        "source": "hive-bee:hive_Demo_task_123",
+        "line_number": 1,
+        "packet_index": 0,
+        "packet": {
+            "artifactKind": "DiamondFossil",
+            "constName": "hive.Demo.task_123",
+            "declarationKind": "theorem",
+            "kernelStatus": "verified",
+            "conclusionPretty": "1 = 1",
+            "fullTypePretty": "1 = 1",
+            "axiomsUsed": [],
+        },
+    }
+    monkeypatch.setattr(
+        hive_bee,
+        "run_generated_theorem_capture",
+        lambda *args, **kwargs: (
+            "hive_Demo_task_123",
+            "theorem hive_Demo_task_123 : 1 = 1 := by\n  rfl\n",
+            'HIVE_JSON {"artifactKind":"DiamondFossil"}',
+            [record],
+        ),
+    )
+    monkeypatch.setattr(hive_bee, "write_replay_packet_artifact", lambda packet: tmp_path / "replay.json")
+    monkeypatch.setattr(
+        hive_bee.queue_tool,
+        "import_rows",
+        lambda endpoint, database, username, password, collection, rows: imports.append((collection, rows)),
+    )
+    monkeypatch.setattr(hive_bee.queue_tool, "update_goal_status", lambda *args, **kwargs: None)
+    monkeypatch.setattr(
+        hive_bee.queue_tool,
+        "complete_task",
+        lambda *args, **kwargs: task_completions.append(kwargs) or {"status": "done"},
+    )
+
+    try:
+        hive_bee.fossilize_success(config, attempt)
+    except RuntimeError as exc:
+        assert "could not persist QMS-pending fossilization state" in str(exc)
+    else:
+        raise AssertionError("fossilization must fail when the QMS-pending goal update is missing")
+
+    assert task_completions == []
 
 
 def test_run_one_success_fossilizes(monkeypatch) -> None:
@@ -351,15 +419,33 @@ def test_run_one_success_fossilizes(monkeypatch) -> None:
     monkeypatch.setattr(hive_bee, "get_proof_state", lambda *args, **kwargs: {"status": "ok", "proof_state": "⊢ 1 = 1"})
     monkeypatch.setattr(hive_bee, "propose_tactic", lambda *args, **kwargs: "rfl")
     monkeypatch.setattr(hive_bee, "apply_tactic", lambda *args, **kwargs: {"status": "success", "lean": {"ok": True, "stdout": "", "stderr": ""}})
-    monkeypatch.setattr(hive_bee, "fossilize_success", lambda cfg, attempt: {"fossil": {"_key": "fossil_1"}})
+    monkeypatch.setattr(
+        hive_bee,
+        "fossilize_success",
+        lambda cfg, attempt: {
+            "fossil": {"_key": "fossil_1"},
+            "goal": {
+                "_key": "goal_123",
+                "status": "closed",
+                "qms_acceptance_status": "pending_external_audit",
+                "qms_a_a_required": True,
+                "qms_qa_a_required": True,
+            },
+        },
+    )
     monkeypatch.setattr(hive_bee.queue_tool, "update_goal_status", lambda *args, **kwargs: events.append(("goal_status", kwargs)) or {"ok": True})
 
     result = hive_bee.run_one(config)
 
-    assert result["status"] == "fossilized"
+    assert result["status"] == "proof_fossilized_qms_pending"
     assert result["tactic"] == "rfl"
+    assert result["goal"]["qms_acceptance_status"] == "pending_external_audit"
     assert any(item[0] == "goal_status" and item[1]["status"] == "retrieved" for item in events)
     assert any(item[0] == "goal_status" and item[1]["status"] == "checked" for item in events)
+    assert not any(
+        item[0] == "goal_status" and item[1].get("extra_fields", {}).get("qms_acceptance_status")
+        for item in events
+    )
 
 
 def test_run_one_failure_requeues_before_max_attempts(monkeypatch) -> None:
@@ -416,9 +502,10 @@ def test_run_one_accepts_usable_proof_state_when_status_is_error(monkeypatch) ->
 
     result = hive_bee.run_one(config)
 
-    assert result["status"] == "fossilized"
+    assert result["status"] == "proof_fossilized_qms_pending"
     assert result["tactic"] == "rfl"
     assert any(item[0] == "goal_status" and item[1]["status"] == "checked" for item in events)
+    assert result["qms_review_status"] == "pending_external_audit"
 
 
 def test_run_retrieval_dispatches_to_leansearch(monkeypatch) -> None:

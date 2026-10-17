@@ -39,6 +39,31 @@ instance rawDirectedSystem :
 abbrev Carrier : Type :=
   DirectLimit MatrixStage (fun _ _ hij => rawMap hij)
 
+/-- The `Algebra.ofModule` construction previously installed as the carrier's
+algebra instance.  It is retained as a comparison object, not an instance,
+so Mathlib's direct-limit universal algebra lift resolves to its canonical
+source algebra. -/
+@[instance_reducible]
+def carrierAlgebraViaModule : Algebra ℂ Carrier :=
+  Algebra.ofModule
+    (by
+      intro c x y
+      induction x, y using DirectLimit.induction₂ with
+      | _ i x y => simp [DirectLimit.smul_def, DirectLimit.mul_def])
+    (by
+      intro c x y
+      induction x, y using DirectLimit.induction₂ with
+      | _ i x y => simp [DirectLimit.smul_def, DirectLimit.mul_def])
+
+/-- The former module-based algebra structure has exactly the same scalar
+algebra map as Mathlib's canonical algebra structure on this direct limit. -/
+theorem carrierAlgebraViaModule_eq_canonical :
+    carrierAlgebraViaModule = (inferInstance : Algebra ℂ Carrier) := by
+  apply Algebra.algebra_ext _ _
+  intro c
+  change c • (1 : Carrier) = algebraMap ℂ Carrier c
+  rw [Algebra.algebraMap_eq_smul_one]
+
 instance carrierStar : Star Carrier where
   star :=
     DirectLimit.map

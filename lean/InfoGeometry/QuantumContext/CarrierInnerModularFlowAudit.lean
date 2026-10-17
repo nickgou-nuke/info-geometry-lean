@@ -1,0 +1,26 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.QuantumContext.CarrierInnerModularFlow
+
+#print axioms InfoGeometry.QuantumContext.CarrierInnerModularFlow.carrierModularUnitary
+#print axioms InfoGeometry.QuantumContext.CarrierInnerModularFlow.carrierModularUnitary_add
+#print axioms InfoGeometry.QuantumContext.CarrierInnerModularFlow.carrierModularUnitary_zero
+#print axioms InfoGeometry.QuantumContext.CarrierInnerModularFlow.carrierModularUnitary_mul_neg
+#print axioms InfoGeometry.QuantumContext.CarrierInnerModularFlow.carrierModularUnitary_neg_mul
+#print axioms InfoGeometry.QuantumContext.CarrierInnerModularFlow.star_carrierModularUnitary
+#print axioms InfoGeometry.QuantumContext.CarrierInnerModularFlow.carrierModularFlow
+#print axioms InfoGeometry.QuantumContext.CarrierInnerModularFlow.carrierModularFlow_zero
+#print axioms InfoGeometry.QuantumContext.CarrierInnerModularFlow.carrierModularFlow_one
+#print axioms InfoGeometry.QuantumContext.CarrierInnerModularFlow.carrierModularFlow_add
+#print axioms InfoGeometry.QuantumContext.CarrierInnerModularFlow.carrierModularFlow_mul
+#print axioms InfoGeometry.QuantumContext.CarrierInnerModularFlow.carrierModularFlow_add_arg
+#print axioms InfoGeometry.QuantumContext.CarrierInnerModularFlow.carrierModularFlow_star
+#print axioms InfoGeometry.QuantumContext.CarrierInnerModularFlow.carrierModularFlow_inverse
+#print axioms InfoGeometry.QuantumContext.CarrierInnerModularFlow.carrierModularFlow_stage
+#print axioms InfoGeometry.QuantumContext.CarrierInnerModularFlow.stageOneE01
+#print axioms InfoGeometry.QuantumContext.CarrierInnerModularFlow.stageOneE10
+#print axioms InfoGeometry.QuantumContext.CarrierInnerModularFlow.carrier_noncommuting_matrix_units

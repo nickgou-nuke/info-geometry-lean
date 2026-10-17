@@ -1206,8 +1206,21 @@ def fossilize_success(config: BeeConfig, attempt: BeeAttempt) -> dict[str, Any]:
             "last_verified_tactic": attempt.proposed_tactic,
             "generated_theorem_name": theorem_name,
             "bee_state": "fossilized",
+            "qms_acceptance_status": "pending_external_audit",
+            "qms_a_a_required": True,
+            "qms_qa_a_required": True,
         },
     )
+    if (
+        updated_goal is None
+        or updated_goal.get("status") != "closed"
+        or updated_goal.get("qms_acceptance_status") != "pending_external_audit"
+        or updated_goal.get("qms_a_a_required") is not True
+        or updated_goal.get("qms_qa_a_required") is not True
+    ):
+        raise RuntimeError(
+            f"could not persist QMS-pending fossilization state for goal {attempt.goal['_key']}"
+        )
     updated_task = queue_tool.complete_task(
         config.hive_endpoint,
         config.hive_database,
@@ -1534,11 +1547,15 @@ def run_one(config: BeeConfig) -> dict[str, Any]:
     )
     if verification.get("status") == "success":
         fossil = fossilize_success(config, attempt)
+        fossil_key = str((fossil.get("fossil") or {}).get("_key") or "")
+        if not fossil_key:
+            raise RuntimeError("fossilize_success returned no fossil key")
         return {
-            "status": "fossilized",
+            "status": "proof_fossilized_qms_pending",
             "task": fossil.get("task") or task,
             "goal": fossil.get("goal") or goal,
             "tactic": tactic,
+            "qms_review_status": "pending_external_audit",
             "fossil": fossil,
         }
     rejection = record_deadend(config, attempt, "lean_verification_failure")

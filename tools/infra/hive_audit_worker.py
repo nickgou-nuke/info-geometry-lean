@@ -3,7 +3,9 @@
 
 AuditBee is an authority gate, not a promotion worker.  It consumes a completed
 BuildPacket, checks conservative semantic hygiene around the build result and
-its verification anchor, emits an AuditPacket, and stops there.
+its verification anchor, emits an AuditPacket, and stops there. Worker IDs are
+configured role labels; they do not authenticate independent agent or operator
+identity.
 """
 
 from __future__ import annotations
@@ -137,6 +139,8 @@ def is_hard_audit_finding(finding: str) -> bool:
         return False
     if finding.startswith("transport review:"):
         return False
+    if finding.startswith("lineage limitation:"):
+        return False
     return True
 
 
@@ -144,6 +148,8 @@ def audit_build(
     build: dict[str, Any] | None,
     verification: dict[str, Any] | None,
     provenance: dict[str, Any] | None = None,
+    *,
+    auditor_worker_id: str | None = None,
 ) -> tuple[str, list[str]]:
     findings: list[str] = []
     if not build:
@@ -154,6 +160,14 @@ def audit_build(
         findings.append(f"BuildPacket state is {build.get('state')!r}, not 'passed'")
     if str(build.get("representation_class") or "") == "shadow":
         findings.append("BuildPacket is shadow representation")
+    producer_worker_id = str(build.get("worker_id") or "")
+    auditor_worker_id = str(auditor_worker_id or "")
+    if not producer_worker_id:
+        findings.append("BuildPacket has no worker_id for producer separation")
+    if not auditor_worker_id:
+        findings.append("AuditBee has no worker_id for reviewer separation")
+    if producer_worker_id and auditor_worker_id and producer_worker_id == auditor_worker_id:
+        findings.append("BuildBee and AuditBee worker_id must be distinct")
     if not verification:
         findings.append("referenced VerificationPacket is missing")
     elif verification.get("authority") != "lean_checked":
@@ -178,14 +192,18 @@ def audit_build(
         if str(proposal.get("representation_class") or "") == "shadow" and not proposal.get("bridge_packet_key"):
             findings.append("owner/shadow conflict: upstream shadow proposal has no explicit bridge packet")
     else:
-        findings.append("observation: no upstream ProposalPacket found in build lineage")
+        findings.append("lineage limitation: no upstream ProposalPacket found in build lineage")
 
     hard_failures = [item for item in findings if is_hard_audit_finding(item)]
     if hard_failures:
         return "fail", findings
-    if findings:
+    conditional_findings = [
+        item for item in findings
+        if not item.startswith("observation:")
+    ]
+    if conditional_findings:
         return "conditional_pass", findings
-    return "pass", ["build packet passed conservative audit checks"]
+    return "pass", findings or ["build packet passed conservative audit checks"]
 
 
 def emit_audit_packet(
@@ -210,6 +228,8 @@ def emit_audit_packet(
         "build_key": build["packet_key"],
         "verdict": verdict,
         "findings": findings,
+        "producer_worker_id": build.get("worker_id"),
+        "auditor_worker_id": config.worker_id,
         "verification_key": build.get("verification_key"),
         "verification_origin": verification_origin,
         "upstream_backend_kind": proposal.get("backend_kind"),
@@ -244,7 +264,12 @@ def run_one(config: AuditBeeConfig) -> dict[str, Any]:
         verification_key = str(build.get("verification_key") or "")
         verification = fetch_verification_packet(config, verification_key)
         provenance = fetch_upstream_provenance(config, build_key)
-    verdict, findings = audit_build(build, verification, provenance)
+    verdict, findings = audit_build(
+        build,
+        verification,
+        provenance,
+        auditor_worker_id=config.worker_id,
+    )
 
     if not build:
         updated_task = queue_tool.fail_task(

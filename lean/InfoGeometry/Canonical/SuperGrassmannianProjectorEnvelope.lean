@@ -512,6 +512,59 @@ theorem fockVacuumContract_apply (g : V →ₗ[ℝ] V →ₗ[ℝ] ℝ) (K : V �
   dsimp [fockVacuumContract, fockVacuum]
   exact (Algebra.algebraMap_eq_smul_one (R := ℝ) (A := FockExteriorEnvelope K) (g α.1 u.1)).symm
 
+/-- Creation as an endomorphism of the full exterior Fock space over `T⁺`. -/
+noncomputable def fockCreateEnd {K : V →ₗ[ℝ] V} (u : primalSheet K) :
+    Module.End ℝ (FockExteriorEnvelope K) :=
+  InfoGeometry.Clifford.FockSpaceCAR.creationOperator u
+
+/-- Contraction by the covector on `T⁺` induced by the cross-sheet pairing.
+This acts on every exterior degree through Mathlib's zero-form Clifford
+contraction. -/
+noncomputable def fockContractEnd (g : V →ₗ[ℝ] V →ₗ[ℝ] ℝ) {K : V →ₗ[ℝ] V}
+    (α : covectorVacuumSheet K) : Module.End ℝ (FockExteriorEnvelope K) :=
+  InfoGeometry.Clifford.FockSpaceCAR.annihilationOperator
+    (hyperbolicPairingMinusToDualPlus g K α)
+
+/-- Two primal-sheet creation endomorphisms have zero odd--odd
+superbracket on the full exterior Fock space. -/
+theorem fockCreate_fockCreate_superBracket {K : V →ₗ[ℝ] V}
+    (u w : primalSheet K) :
+    ChakravalaGA.superBracket (R := ℝ) .odd .odd
+        (fockCreateEnd u) (fockCreateEnd w) = 0 := by
+  change ChakravalaGA.superBracket (R := ℝ) .odd .odd
+      (InfoGeometry.Clifford.FockSpaceCAR.creationOperator u)
+      (InfoGeometry.Clifford.FockSpaceCAR.creationOperator w) = 0
+  exact InfoGeometry.Clifford.FockSpaceCAR.creation_creation_superBracket u w
+
+/-- Two covector-sheet contraction endomorphisms have zero odd--odd
+superbracket on the full exterior Fock space. -/
+theorem fockContract_fockContract_superBracket
+    (g : V →ₗ[ℝ] V →ₗ[ℝ] ℝ) {K : V →ₗ[ℝ] V}
+    (α β : covectorVacuumSheet K) :
+    ChakravalaGA.superBracket (R := ℝ) .odd .odd
+        (fockContractEnd g α) (fockContractEnd g β) = 0 := by
+  change ChakravalaGA.superBracket (R := ℝ) .odd .odd
+      (InfoGeometry.Clifford.FockSpaceCAR.annihilationOperator
+        (hyperbolicPairingMinusToDualPlus g K α))
+      (InfoGeometry.Clifford.FockSpaceCAR.annihilationOperator
+        (hyperbolicPairingMinusToDualPlus g K β)) = 0
+  exact InfoGeometry.Clifford.FockSpaceCAR.annihilation_annihilation_superBracket _ _
+
+/-- The full-degree creation--contraction superbracket is the cross-sheet
+pairing times the identity endomorphism. The assertion is pointwise on every
+Fock vector, and does not rely on restricting to the vacuum sector. -/
+theorem fockCreateContract_superBracket (g : V →ₗ[ℝ] V →ₗ[ℝ] ℝ)
+    {K : V →ₗ[ℝ] V} (α : covectorVacuumSheet K) (u : primalSheet K) :
+    ChakravalaGA.superBracket (R := ℝ) .odd .odd
+        (fockCreateEnd u) (fockContractEnd g α) =
+      (g α.1 u.1) • (1 : Module.End ℝ (FockExteriorEnvelope K)) := by
+  change ChakravalaGA.superBracket (R := ℝ) .odd .odd
+      (InfoGeometry.Clifford.FockSpaceCAR.creationOperator u)
+      (InfoGeometry.Clifford.FockSpaceCAR.annihilationOperator
+        (hyperbolicPairingMinusToDualPlus g K α)) = _
+  rw [InfoGeometry.Clifford.FockSpaceCAR.creation_annihilation_superBracket]
+  simp [hyperbolicPairingMinusToDualPlus_apply]
+
 end FockExteriorEnvelope
 
 section SwapWitness

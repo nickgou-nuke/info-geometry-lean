@@ -823,6 +823,15 @@ def validate_packet_invariants(packet: dict[str, Any]) -> dict[str, Any]:
         verdict = str(packet.get("verdict") or "")
         if verdict not in {"pass", "conditional_pass", "fail"}:
             raise ValueError(f"AuditPacket has invalid verdict: {verdict!r}")
+        if verdict == "pass":
+            producer_worker_id = str(packet.get("producer_worker_id") or "")
+            auditor_worker_id = str(packet.get("auditor_worker_id") or "")
+            if not producer_worker_id or not auditor_worker_id:
+                raise ValueError("passing AuditPacket requires producer_worker_id and auditor_worker_id")
+            if str(packet.get("worker_id") or "") != auditor_worker_id:
+                raise ValueError("passing AuditPacket worker_id must match auditor_worker_id")
+            if producer_worker_id == auditor_worker_id:
+                raise ValueError("passing AuditPacket requires distinct producer and auditor worker IDs")
     elif schema == "hive.packet.theorem_candidate.v1":
         if authority != "semantic":
             raise ValueError("TheoremCandidatePacket must have authority 'semantic'")
@@ -852,6 +861,16 @@ def validate_packet_invariants(packet: dict[str, Any]) -> dict[str, Any]:
         metaphor_claims = packet.get("metaphor_claims")
         if isinstance(metaphor_claims, list) and metaphor_claims and decision == "promote":
             raise ValueError("PromotionDecisionPacket with metaphor_claims must not decision=promote")
+        if decision == "promote":
+            role_ids = tuple(str(packet.get(field) or "") for field in (
+                "producer_worker_id", "auditor_worker_id", "promotion_worker_id"
+            ))
+            if not all(role_ids):
+                raise ValueError("promotion requires producer, auditor, and promotion worker IDs")
+            if str(packet.get("worker_id") or "") != role_ids[2]:
+                raise ValueError("PromotionDecisionPacket worker_id must match promotion_worker_id")
+            if len(set(role_ids)) != len(role_ids):
+                raise ValueError("producer, auditor, and promotion worker IDs must be distinct")
     elif schema == "info_geometry.hive_replay_packet.v1":
         if authority_rank(authority) < authority_rank("lean_checked"):
             raise ValueError("Replay packets must have authority at least 'lean_checked'")
@@ -1050,6 +1069,12 @@ def validate_packet_database_invariants(
             raise ValueError(f"AuditPacket references missing BuildPacket: {build_key}")
         if build.get("authority") != "build_checked":
             raise ValueError("AuditPacket requires referenced BuildPacket authority 'build_checked'")
+        producer_worker_id = str(packet.get("producer_worker_id") or "")
+        build_worker_id = str(build.get("worker_id") or "")
+        if producer_worker_id and producer_worker_id != build_worker_id:
+            raise ValueError("AuditPacket producer_worker_id does not match referenced BuildPacket worker_id")
+        if packet.get("verdict") == "pass" and not build_worker_id:
+            raise ValueError("passing AuditPacket requires referenced BuildPacket worker_id")
     elif schema == "hive.packet.promotion_decision.v1":
         audit_key = str(packet.get("audit_key") or "")
         audit = fetch_packet_by_key(
@@ -1069,6 +1094,21 @@ def validate_packet_database_invariants(
                 raise ValueError("PromotionDecisionPacket cannot promote unless AuditPacket verdict is 'pass'")
             if not audit.get("promotion_allowed"):
                 raise ValueError("PromotionDecisionPacket cannot promote unless AuditPacket promotion_allowed is true")
+            producer_worker_id = str(audit.get("producer_worker_id") or "")
+            auditor_worker_id = str(audit.get("auditor_worker_id") or "")
+            promotion_worker_id = str(packet.get("promotion_worker_id") or "")
+            if not all((producer_worker_id, auditor_worker_id, promotion_worker_id)):
+                raise ValueError("promotion requires producer, auditor, and promotion worker IDs")
+            if str(audit.get("worker_id") or "") != auditor_worker_id:
+                raise ValueError("AuditPacket worker_id does not match auditor_worker_id")
+            if str(packet.get("worker_id") or "") != promotion_worker_id:
+                raise ValueError("PromotionDecisionPacket worker_id does not match promotion_worker_id")
+            if str(packet.get("producer_worker_id") or "") != producer_worker_id:
+                raise ValueError("PromotionDecisionPacket producer_worker_id does not match referenced AuditPacket")
+            if str(packet.get("auditor_worker_id") or "") != auditor_worker_id:
+                raise ValueError("PromotionDecisionPacket auditor_worker_id does not match referenced AuditPacket")
+            if len({producer_worker_id, auditor_worker_id, promotion_worker_id}) != 3:
+                raise ValueError("promotion requires distinct producer, auditor, and promotion worker IDs")
 
 
 def packet_doc_key(packet: dict[str, Any]) -> str:

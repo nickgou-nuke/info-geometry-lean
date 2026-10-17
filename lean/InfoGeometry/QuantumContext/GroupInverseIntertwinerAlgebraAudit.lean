@@ -14,3 +14,4 @@ import InfoGeometry.QuantumContext.GroupInverseIntertwinerAlgebra
 #print axioms InfoGeometry.QuantumContext.IntertwinerAlgebra.groupInverse_intertwines_of_laws_needs_hQ_comm
 #print axioms InfoGeometry.QuantumContext.IntertwinerAlgebra.nilpotentExchangeUp
 #print axioms InfoGeometry.QuantumContext.IntertwinerAlgebra.nilpotentExchangeDown
+#print axioms InfoGeometry.QuantumContext.IntertwinerAlgebra.groupInverse_mul_mul

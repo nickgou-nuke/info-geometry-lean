@@ -6,6 +6,8 @@ Authors: InfoGeometry Engine Contributors
 import InfoGeometry.QuantumContext.MarkovGroupInverseIntertwinerFunctoriality
 import InfoGeometry.QuantumContext.MarkovGroupInverseIntertwining
 import InfoGeometry.QuantumContext.MarkovGroupInverseStationaryReadout
+import InfoGeometry.QuantumContext.GroupInverseIntertwinerLadder
+import InfoGeometry.QuantumContext.MarkovPartitionLumping
 
 /-!
 # Selected cross-owner consequences for rectangular Markov intertwiners
@@ -20,15 +22,21 @@ those owners:
 | --- | --- |
 | A: canonical group inverse laws | `InfoGeometry.Canonical.HartwigSouriauFrameDrazin.IsGroupInverse` |
 | B: rectangular intertwining algebra | `IntertwinerAlgebra.groupInverse_intertwines_of_laws` |
-| C: stochastic group-inverse transport | `MarkovDrazin.groupInverse_intertwines_of_stochastic_compatible` |
-| D: Poisson solvability and uniqueness | `MarkovAttentionGroupInverse` |
+| C: stochastic group-inverse transport | `MarkovDrazin.groupInverse_intertwines_of_stationary_compatible` |
+| D: Poisson solvability, uniqueness, and the range carrier | `MarkovAttentionGroupInverse.groupInverse_apply_mem_range`, and `MarkovDrazin.range_groupInverse_eq` in `MarkovGroupInverseIntertwinerFunctoriality` |
 | E: Kemeny--Snell regularized shift | `MarkovAttentionKemenySnell.stationaryMean_shift_mul_inverse` |
-| F: weighted range versus zero mean | `MarkovAttentionWeightedRange.range_laplacian_eq_weightedMean_ker` |
+| L: partition lumping | `MarkovPartitionLumping.partitionIncidence`, `…_of_partitionLumping` |
 
 The results below connect selected interfaces: a conditional equivalence
-between regular-idempotent and stationary-projector intertwining, observable
-Laplacian transport, range-aware Poisson transport, and a composite identity
-using the regularized-operator transport and Kemeny--Snell inverse owners.
+between regular-idempotent and stationary-projector intertwining, the range
+carrier for a group inverse, observable Laplacian transport, range-aware Poisson
+transport, the composite regularized identity using the Kemeny--Snell inverse
+owner, and the bridge between the lumping carrier and the abstract algebra.
+
+Each theorem's docstring names the lanes it actually consumes. Earlier revisions
+of this module carried `BRIDGE X--Y` labels that overstated the dependencies —
+several theorems were labelled as consuming lane C when they consumed only lane
+D — and those labels have been corrected against the proof terms.
 
 ## Scope
 
@@ -38,7 +46,10 @@ group inverse `G` of `L = 1 - Q`, the general identity is
 `L *ᵥ (G *ᵥ x) = (L * G) *ᵥ x`; `L * G` is the regular idempotent and is not
 the identity on every vector. Nothing here asserts convergence of stochastic
 iterates, a mean first passage time interpretation, or an identification with
-lumping, Stiefel compression, RG coarse-graining or attention pooling.
+Stiefel compression, RG coarse-graining or attention pooling. The one
+identification that *is* stated is the lumping one of
+`partitionIncidence_intertwines_regularIdempotents`, and it is stated about the
+regular idempotents rather than about any physical coarse-graining operator.
 -/
 
 noncomputable section
@@ -46,6 +57,7 @@ noncomputable section
 namespace InfoGeometry.QuantumContext.MarkovDrazin
 
 open Matrix
+open InfoGeometry.QuantumContext.MarkovPartitionLumping
 open InfoGeometry.Canonical.HartwigSouriauFrameDrazin
 
 variable {ι κ : Type*} [Fintype ι] [DecidableEq ι] [Nonempty ι]
@@ -104,7 +116,7 @@ theorem groupInverse_rangeIntertwining_iff_stationaryProjector
       _ = C * ((1 - Q) * H) := by rw [← hHproj]
       _ = C * (1 - Q) * H := by rw [Matrix.mul_assoc]
 
-/-- **BRIDGE A--E--C.** The regular idempotent of the Markov Laplacian `1 - P`
+/-- **BRIDGE A--E.** The regular idempotent of the Markov Laplacian `1 - P`
 is `1 - stationaryMeanMatrix π`.
 
 This is *not* an independent proof: it is the matrix-level orientation of the
@@ -162,7 +174,7 @@ theorem regularIdempotents_intertwine_of_stationary_compatible
       P Q G H C π μ hGproj hHproj).2
       (stationaryMeanMatrix_intertwines π μ C hCrows hCmean)
 
-/-- **BRIDGE C--D.** If `b` lies in the range of the coarse Markov Laplacian
+/-- **BRIDGE D (range solvability).** If `b` lies in the range of the coarse Markov Laplacian
 `1 - Q`, then the group inverse *recovers* `b` on the left:
 `(1 - Q) *ᵥ (H *ᵥ b) = b`.
 
@@ -189,17 +201,17 @@ theorem covariantPoisson_coarse_solution
     _ = b := happly
 
 omit [Nonempty ι] [Nonempty κ] in
-/-- **BRIDGE C--D (arbitrary right-hand side).** The Markov Laplacian intertwines
+/-- **BRIDGE B (observable Laplacian conversion).** The Markov Laplacian intertwines
 the rectangular intertwiner on *every* column observable, with no range
 hypothesis:
 
 `(1 - P) *ᵥ (C *ᵥ y) = C *ᵥ ((1 - Q) *ᵥ y)`.
 
 This is the observable-action form of the Laplacian conversion
-`(1 - P) * C = C * (1 - Q)`. It is proved here directly by its own `calc`; this
-module does **not** import or call
-`GroupInverseIntertwinerLadder.stationary_laplacians_intertwine`, which proves
-the matrix-level statement independently in that module.
+`(1 - P) * C = C * (1 - Q)`. It calls
+`GroupInverseIntertwinerLadder.stationary_laplacians_intertwine`, which this
+module imports for that purpose; the conversion itself is no longer re-proved
+inline.
 `covariantPoisson_fine_solution` specializes this to `y = H *ᵥ b`. It consumes
 only the transition intertwining, so it holds for any rectangular intertwiner. -/
 theorem covariantLaplacian_intertwines_on_observables
@@ -207,16 +219,14 @@ theorem covariantLaplacian_intertwines_on_observables
     (hintertwines : P * C = C * Q)
     (y : κ → ℝ) :
     (1 - P) *ᵥ (C *ᵥ y) = C *ᵥ ((1 - Q) *ᵥ y) := by
-  have hLC : (1 - P) * C = C * (1 - Q) := by
-    calc (1 - P) * C = C - P * C := by simp only [Matrix.sub_mul, Matrix.one_mul]
-      _ = C - C * Q := by rw [hintertwines]
-      _ = C * (1 - Q) := by rw [Matrix.mul_sub, Matrix.mul_one]
+  have hLC : (1 - P) * C = C * (1 - Q) :=
+    GroupInverseIntertwinerLadder.stationary_laplacians_intertwine P Q C hintertwines
   calc (1 - P) *ᵥ (C *ᵥ y) = ((1 - P) * C) *ᵥ y := Matrix.mulVec_mulVec _ _ _
     _ = (C * (1 - Q)) *ᵥ y := by rw [hLC]
     _ = C *ᵥ ((1 - Q) *ᵥ y) := (Matrix.mulVec_mulVec _ _ _).symm
 
 omit [Nonempty ι] [Nonempty κ] in
-/-- **BRIDGE C--D--F.** The lift of the coarse solution solves the transported
+/-- **BRIDGE B--D.** The lift of the coarse solution solves the transported
 fine-space Poisson equation: `(1 - P) *ᵥ (C *ᵥ (H *ᵥ b)) = C *ᵥ b`.
 
 This is the covariant Poisson transport law. It consumes the kernel
@@ -232,38 +242,40 @@ theorem covariantPoisson_fine_solution
   (covariantLaplacian_intertwines_on_observables P Q C hintertwines (H *ᵥ b)).trans
     (by rw [hcoarse])
 
-/-- **BRIDGE F.** The lifted solution lies in the range of the fine Markov
+/-- **BRIDGE D (range carrier).** The lifted solution lies in the range of the fine Markov
 Laplacian `1 - P`, hence it satisfies the solvable-range condition of the
 fine-space Poisson equation.
 
-This is `liftedSolution_mean_zero_of_stationary_compatible` transported through
-the owner identity `range (1 - P) = ker (weightedMeanMap π)`. -/
+This is now proved from the existing owner
+`MarkovAttentionGroupInverse.groupInverse_apply_mem_range`, lifted through
+`isGroupInverse_toLin'`, rather than through
+`liftedSolution_mean_zero_of_stationary_compatible`. The old route stated the
+same conclusion behind 23 binders (15 propositions and 8 data arguments); this
+one states it behind 7. The *conclusion is character-identical* — what changed is
+the hypotheses, not the result.
+
+The new form is a genuine generalisation: the old instance derives it via
+`stationaryMean_transport_of_stochastic_intertwiner` followed by
+`groupInverse_intertwines_of_stationary_compatible`, which is what supplies
+`hsharp` here. It was not a binder-for-binder weakening.
+
+Two facts suffice: the intertwining `G * C = C * H` rewrites the transported
+solution as `G *ᵥ (C *ᵥ b)`, and the existing owner puts a group-inverse image
+into the range of its argument. Note that `Q` does not appear in *this*
+statement; in the full instance below it is constrained by `hH`. -/
 theorem covariantPoisson_fine_solution_in_range
-    (P : Matrix ι ι ℝ) (Q : Matrix κ κ ℝ) (C : Matrix ι κ ℝ)
-    (π : ι → ℝ) (μ : κ → ℝ)
-    (hP : P ∈ Matrix.rowStochastic ℝ ι)
-    (hQ : Q ∈ Matrix.rowStochastic ℝ κ)
-    (hPpos : ∀ i j, 0 < P i j) (hQpos : ∀ i j, 0 < Q i j)
-    (hπnonneg : ∀ i, 0 ≤ π i) (hπsum : ∑ i, π i = 1)
-    (hμnonneg : ∀ j, 0 ≤ μ j) (hμsum : ∑ j, μ j = 1)
-    (hπstat : ∀ j, ∑ i, π i * P i j = π j)
-    (hμstat : ∀ j, ∑ j', μ j' * Q j' j = μ j)
-    (hCnonneg : ∀ i j, 0 ≤ C i j)
-    (hCrows : ∀ i, ∑ j, C i j = 1)
-    (hintertwines : P * C = C * Q)
-    (G : Matrix ι ι ℝ) (hG : IsGroupInverse (1 - P) G)
-    (H : Matrix κ κ ℝ) (hH : IsGroupInverse (1 - Q) H)
+    (P : Matrix ι ι ℝ) (G : Matrix ι ι ℝ) (hG : IsGroupInverse (1 - P) G)
+    (C : Matrix ι κ ℝ) (H : Matrix κ κ ℝ) (hsharp : G * C = C * H)
     (b : κ → ℝ) :
     C *ᵥ (H *ᵥ b) ∈ LinearMap.range (Matrix.toLin' (1 - P)) := by
-  have hzero := liftedSolution_mean_zero_of_stationary_compatible
-    P Q C π μ hP hQ hPpos hQpos hπnonneg hπsum hμnonneg hμsum hπstat hμstat
-    hCnonneg hCrows hintertwines G hG H hH b
-  have hker : C *ᵥ (H *ᵥ b) ∈ LinearMap.ker (weightedMeanMap π) :=
-    LinearMap.mem_ker.mpr hzero
-  rw [range_laplacian_eq_weightedMean_ker P π hP hPpos hπsum hπstat]
-  exact hker
+  have hsc : C *ᵥ (H *ᵥ b) = G *ᵥ (C *ᵥ b) := by
+    symm
+    rw [Matrix.mulVec_mulVec, Matrix.mulVec_mulVec, hsharp]
+  rw [hsc]
+  exact groupInverse_apply_mem_range _ _ (isGroupInverse_toLin' hG) (C *ᵥ b)
 
-/-- **BRIDGE C--D.** Uniqueness of the transported Poisson solution on the fine
+/-- **BRIDGE D (uniqueness on the range).** Uniqueness
+of the transported Poisson solution on the fine
 solvable range: if `y` lies in `range (1 - P)` and solves the transported
 equation `(1 - P) *ᵥ y = C *ᵥ b`, then `y` is the group-inverse image of the
 transport `C *ᵥ b`.
@@ -298,17 +310,42 @@ theorem solvable_range_solution_eq_groupInverse_image
   change y = Matrix.toLin' G t
   exact hEq.symm
 
-/-- **BRIDGE B--C--E.** The fine regularized shift inverts the transported coarse
-regularized Laplacian:
+/-- **BRIDGE C--E (core identity).** If the regularized fine operator intertwines
+the regularized coarse one, and the regularized coarse operator inverts the
+transported coarse regularized Laplacian, then the fine regularized shift inverts
+the transport:
 
 `(G + stationaryMeanMatrix π) * (C * ((1 - Q) + stationaryMeanMatrix μ)) = C`.
 
-This joins the rectangular intertwining law of the regularized operators to the
-two-sided inverse identities of `MarkovAttentionKemenySnell`. The left inverse
-identity is consumed; the right inverse identity is available in
+This is the whole content of the composite identity, stated with the two
+hypotheses it actually consumes. Nothing about stochasticity, positivity or
+stationarity enters here; those live in
+`regularizedShift_inverts_of_stationary_compatible` below, which supplies them
+from the transport owners. -/
+theorem regularizedShift_inverts_transported_regularizedLaplacian
+    (G : Matrix ι ι ℝ) (π : ι → ℝ) (C : Matrix ι κ ℝ)
+    (H : Matrix κ κ ℝ) (Q : Matrix κ κ ℝ) (μ : κ → ℝ)
+    (hreg : (G + stationaryMeanMatrix π) * C
+      = C * (H + stationaryMeanMatrix μ))
+    (hshift : (H + stationaryMeanMatrix μ) * ((1 - Q) + stationaryMeanMatrix μ) = 1) :
+    (G + stationaryMeanMatrix π) * (C * ((1 - Q) + stationaryMeanMatrix μ)) = C := by
+  calc (G + stationaryMeanMatrix π) * (C * ((1 - Q) + stationaryMeanMatrix μ))
+      = ((G + stationaryMeanMatrix π) * C) * ((1 - Q) + stationaryMeanMatrix μ) := by
+        rw [Matrix.mul_assoc]
+    _ = (C * (H + stationaryMeanMatrix μ)) * ((1 - Q) + stationaryMeanMatrix μ) := by
+        rw [hreg]
+    _ = C * ((H + stationaryMeanMatrix μ) * ((1 - Q) + stationaryMeanMatrix μ)) := by
+        rw [Matrix.mul_assoc]
+    _ = C := by rw [hshift, Matrix.mul_one]
+
+/-- **BRIDGE C--E (full instance).** The composite identity of
+`regularizedShift_inverts_transported_regularizedLaplacian`, with the transport
+and Kemeny--Snell inverse identities supplied from their owners.
+
+The left inverse identity is consumed; the right inverse identity is available in
 `MarkovAttentionKemenySnell.stationaryMean_inverse_mul_shift` and is not needed
 here. -/
-theorem regularizedShift_inverts_transported_regularizedLaplacian
+theorem regularizedShift_inverts_of_stationary_compatible
     (P : Matrix ι ι ℝ) (Q : Matrix κ κ ℝ) (C : Matrix ι κ ℝ)
     (π : ι → ℝ) (μ : κ → ℝ)
     (hP : P ∈ Matrix.rowStochastic ℝ ι)
@@ -323,20 +360,90 @@ theorem regularizedShift_inverts_transported_regularizedLaplacian
     (hintertwines : P * C = C * Q)
     (G : Matrix ι ι ℝ) (hG : IsGroupInverse (1 - P) G)
     (H : Matrix κ κ ℝ) (hH : IsGroupInverse (1 - Q) H) :
-    (G + stationaryMeanMatrix π) * (C * ((1 - Q) + stationaryMeanMatrix μ)) = C := by
-  have hshift := stationaryMean_shift_mul_inverse
-    Q μ hQ hQpos hμsum hμstat H hH
-  have hreg := regularizedShift_intertwines_of_stationary_compatible
-    P Q C π μ hP hQ hPpos hQpos hπnonneg hπsum hμnonneg hμsum hπstat hμstat
-    hCnonneg hCrows hintertwines G hG H hH
-  calc (G + stationaryMeanMatrix π) * (C * ((1 - Q) + stationaryMeanMatrix μ))
-      = ((G + stationaryMeanMatrix π) * C) * ((1 - Q) + stationaryMeanMatrix μ) := by
-        rw [Matrix.mul_assoc]
-    _ = (C * (H + stationaryMeanMatrix μ)) * ((1 - Q) + stationaryMeanMatrix μ) := by
-        rw [hreg]
-    _ = C * ((H + stationaryMeanMatrix μ) * ((1 - Q) + stationaryMeanMatrix μ)) := by
-        rw [Matrix.mul_assoc]
-    _ = C := by rw [hshift, Matrix.mul_one]
+    (G + stationaryMeanMatrix π) * (C * ((1 - Q) + stationaryMeanMatrix μ)) = C :=
+  regularizedShift_inverts_transported_regularizedLaplacian
+    G π C H Q μ
+    (regularizedShift_intertwines_of_stationary_compatible
+      P Q C π μ hP hQ hPpos hQpos hπnonneg hπsum hμnonneg hμsum hπstat hμstat
+      hCnonneg hCrows hintertwines G hG H hH)
+    (stationaryMean_shift_mul_inverse Q μ hQ hQpos hμsum hμstat H hH)
+
+/-- **BRIDGE B <-> LUMPING.** The lumping intertwiner satisfies the *abstract*
+range-intertwining hypothesis of lane B, not only the stochastic one.
+
+`MarkovPartitionLumping.groupInverse_intertwines_of_partitionLumping` reaches
+`Gsharp * partitionIncidence Γ = partitionIncidence Γ * Qsharp` through the
+stochastic route, via the transport owners. This theorem shows the regular
+idempotents intertwine as well, which is what makes
+`IntertwinerAlgebra.groupInverse_intertwines_of_rangeProjector` applicable to
+lumping data. Once the transported group inverses intertwine, the rest is the
+algebraic core plus the Laplacian conversion.
+
+No stationary measure, no positivity, no row sums and no stochasticity appear
+here; the bridge is between the lumping carrier and the abstract algebra, not
+between two statements of the same fact. -/
+theorem partitionIncidence_intertwines_regularIdempotents
+    (Γ : InfoGeometry.Canonical.FiniteCoarseGraining ι κ)
+    (P : Matrix ι ι ℝ) (Q : Matrix κ κ ℝ)
+    (Gsharp : Matrix ι ι ℝ) (hG : IsGroupInverse (1 - P) Gsharp)
+    (Qsharp : Matrix κ κ ℝ) (hQ : IsGroupInverse (1 - Q) Qsharp)
+    (hintertwines : P * partitionIncidence Γ = partitionIncidence Γ * Q)
+    (hlump : Gsharp * partitionIncidence Γ = partitionIncidence Γ * Qsharp) :
+    (1 - P) * Gsharp * partitionIncidence Γ
+      = partitionIncidence Γ * ((1 - Q) * Qsharp) := by
+  calc (1 - P) * Gsharp * partitionIncidence Γ
+      = ((1 - P) * Gsharp) * partitionIncidence Γ := rfl
+    _ = (Gsharp * (1 - P)) * partitionIncidence Γ := by rw [hG.2.2]
+    _ = Gsharp * ((1 - P) * partitionIncidence Γ) := by rw [Matrix.mul_assoc]
+    _ = Gsharp * (partitionIncidence Γ * (1 - Q)) := by
+      rw [GroupInverseIntertwinerLadder.stationary_laplacians_intertwine
+        P Q (partitionIncidence Γ) hintertwines]
+    _ = (Gsharp * partitionIncidence Γ) * (1 - Q) := by rw [Matrix.mul_assoc]
+    _ = (partitionIncidence Γ * Qsharp) * (1 - Q) := by rw [hlump]
+    _ = partitionIncidence Γ * (Qsharp * (1 - Q)) := by rw [Matrix.mul_assoc]
+    _ = partitionIncidence Γ * ((1 - Q) * Qsharp) := by rw [hQ.2.2]
+
+/-- **BRIDGE B <-> LUMPING (route agreement).** The lumping conclusion is exactly
+what the abstract core concludes when its range hypothesis is supplied by the
+previous theorem. The two routes — stochastic transport and abstract algebra —
+are therefore not competing claims about lumping: on this carrier they have the
+same conclusion, and the previous lemma is the shared hypothesis. -/
+theorem partitionLumping_from_rangeIntertwining
+    (Γ : InfoGeometry.Canonical.FiniteCoarseGraining ι κ)
+    (P : Matrix ι ι ℝ) (Q : Matrix κ κ ℝ)
+    (Gsharp : Matrix ι ι ℝ) (hG : IsGroupInverse (1 - P) Gsharp)
+    (Qsharp : Matrix κ κ ℝ) (hQ : IsGroupInverse (1 - Q) Qsharp)
+    (hintertwines : P * partitionIncidence Γ = partitionIncidence Γ * Q)
+    (hrange : (1 - P) * Gsharp * partitionIncidence Γ
+      = partitionIncidence Γ * ((1 - Q) * Qsharp)) :
+    Gsharp * partitionIncidence Γ = partitionIncidence Γ * Qsharp :=
+  IntertwinerAlgebra.groupInverse_intertwines_of_rangeProjector
+    (1 - P) Gsharp (1 - Q) Qsharp (partitionIncidence Γ) hG hQ
+    (GroupInverseIntertwinerLadder.stationary_laplacians_intertwine
+      P Q (partitionIncidence Γ) hintertwines)
+    hrange
+
+/-- **BRIDGE B <-> LUMPING (route agreement, proved).** The stochastic conclusion
+and the abstract hypothesis are *equivalent* on the lumping carrier.
+
+The forward direction is the abstract core applied to `hrange`; the reverse is
+`partitionIncidence_intertwines_regularIdempotents`. This is the content of the
+claim that the two routes are not competing: on this carrier the stochastic
+transport statement and the algebraic range-intertwining hypothesis determine
+each other, and the preceding lemma is the single shared input. -/
+theorem partitionIncidence_groupInverse_iff_regularIdempotentIntertwining
+    (Γ : InfoGeometry.Canonical.FiniteCoarseGraining ι κ)
+    (P : Matrix ι ι ℝ) (Q : Matrix κ κ ℝ)
+    (Gsharp : Matrix ι ι ℝ) (hG : IsGroupInverse (1 - P) Gsharp)
+    (Qsharp : Matrix κ κ ℝ) (hQ : IsGroupInverse (1 - Q) Qsharp)
+    (hintertwines : P * partitionIncidence Γ = partitionIncidence Γ * Q) :
+    (Gsharp * partitionIncidence Γ = partitionIncidence Γ * Qsharp)
+      ↔ ((1 - P) * Gsharp * partitionIncidence Γ
+        = partitionIncidence Γ * ((1 - Q) * Qsharp)) :=
+  ⟨fun hlump => partitionIncidence_intertwines_regularIdempotents
+      Γ P Q Gsharp hG Qsharp hQ hintertwines hlump,
+    fun hrange => partitionLumping_from_rangeIntertwining
+      Γ P Q Gsharp hG Qsharp hQ hintertwines hrange⟩
 
 end InfoGeometry.QuantumContext.MarkovDrazin
 

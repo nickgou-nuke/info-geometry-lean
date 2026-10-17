@@ -1,0 +1,16 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.QuantumContext.CarrierInnerModularBoundary
+
+#print axioms InfoGeometry.QuantumContext.CarrierInnerModularBoundary.complexModularPhase
+#print axioms InfoGeometry.QuantumContext.CarrierInnerModularBoundary.complexModularExponential
+#print axioms InfoGeometry.QuantumContext.CarrierInnerModularBoundary.carrierComplexModularFlow
+#print axioms InfoGeometry.QuantumContext.CarrierInnerModularBoundary.complexAttentionPartition
+#print axioms InfoGeometry.QuantumContext.CarrierInnerModularBoundary.boundaryNormalization
+#print axioms InfoGeometry.QuantumContext.CarrierInnerModularBoundary.complexModularExponential_real
+#print axioms InfoGeometry.QuantumContext.CarrierInnerModularBoundary.carrierComplexModularFlow_real
+#print axioms InfoGeometry.QuantumContext.CarrierInnerModularBoundary.carrierComplexModularFlow_neg_I
+#print axioms InfoGeometry.QuantumContext.CarrierInnerModularBoundary.attentionColimitFunctional_complexFlow_kms_boundary

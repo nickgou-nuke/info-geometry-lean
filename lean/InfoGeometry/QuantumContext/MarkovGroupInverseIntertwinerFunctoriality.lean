@@ -17,7 +17,7 @@ intertwining from the canonical owners
 * `InfoGeometry.QuantumContext.MarkovDrazin.groupInverse_intertwines_of_stochastic_compatible`
   for the finite stochastic group-inverse transport.
 
-Six theorems are declared here.
+Eight theorems are declared here.
 
 1. `stationaryMeanMatrix_intertwines`: the rank-one stationary projector
    `stationaryMeanMatrix π` intertwines a rectangular intertwiner whenever the
@@ -136,26 +136,83 @@ theorem unitRowSums_alone_do_not_intertwine_stationaryMeanMatrix :
     norm_num at hzero
   exact hne hall'
 
+/-- **The general carrier lift.** A group inverse pair lifts to the canonical
+`Module.End` interface at any pair of matrices, not only at `1 - P`.
+
+The previously-existing `isGroupInverse_toLin'` was stated only for the Markov
+shape `IsGroupInverse (1 - P) G`, which made it unusable for the range argument:
+the image equality is a statement about arbitrary `A` and `D`. This is the same
+three-step `congrArg Matrix.toLin'` block, with the shape hypothesis removed. -/
+theorem isGroupInverse_toLin'_of {A D : Matrix ι ι ℝ} (hD : IsGroupInverse A D) :
+    IsGroupInverse (Matrix.toLin' A) (Matrix.toLin' D) := by
+  constructor
+  · have h := congrArg Matrix.toLin' hD.1
+    simpa [Matrix.toLin'_mul, Module.End.mul_eq_comp] using h
+  constructor
+  · have h := congrArg Matrix.toLin' hD.2.1
+    simpa [Matrix.toLin'_mul, Module.End.mul_eq_comp] using h
+  · have h := congrArg Matrix.toLin' hD.2.2
+    simpa [Matrix.toLin'_mul, Module.End.mul_eq_comp] using h
+
 /-- Lifting a matrix-level group inverse of `1 - P` to the canonical endomorphism
 interface `Module.End ℝ (ι → ℝ)`, so that `apply_groupInverse_eq_of_mem_range`
 can be used to reason about ranges, kernels and unique solutions.
 
-This is a reusable carrier bridge, exported rather than re-derived. As of this
-revision it is consumed only by this module's own `liftedSolution_mean_zero_of_stationary_compatible`
-and by two theorems in `MarkovGroupInverseIntertwinerLanes`; no pre-existing lane
-in the repository used it, and it is offered as a candidate for the existing
-owners that currently reconstruct the same block inline. -/
+This is the Markov-shaped specialisation of `isGroupInverse_toLin'_of`. -/
 theorem isGroupInverse_toLin'
     {P G : Matrix ι ι ℝ} (hG : IsGroupInverse (1 - P) G) :
-    IsGroupInverse (Matrix.toLin' (1 - P)) (Matrix.toLin' G) := by
+    IsGroupInverse (Matrix.toLin' (1 - P)) (Matrix.toLin' G) :=
+  isGroupInverse_toLin'_of hG
+
+/-! ### The range carrier for a group inverse
+
+**Novelty correction.** An earlier revision of this section claimed that "nothing
+stated that a group inverse and its argument have the same image as a linear
+map", and introduced `mulVec_mem_range_of_groupInverse` on that basis. That claim
+was false. `MarkovAttentionGroupInverse.groupInverse_apply_mem_range` already
+states `D x ∈ A.range` for `Module.End`, it is in this module's import
+closure, and its own proof already uses the double application `A (D (D x))`. The
+new lemma was a re-derivation of an existing owner and has been removed, as has
+`groupInverse_right_three`, which is a ring-generic identity now owned by
+`IntertwinerAlgebra.groupInverse_mul_mul`.
+
+What remains genuinely new is the *converse* direction and the resulting equality
+of images. `groupInverse_apply_mem_range` says only that `D x` lands in
+`range A`; nothing in the repository said that `A x` lands in `range D`, nor
+that the two images are equal. -/
+
+/-- **The converse inclusion `range A ⊆ range D`.** Here the projector
+`P = A * D = D * A` is the tool: `P` acts as the identity on `range A`, because
+`P * A = A`. So `A *ᵥ x` is fixed by `P`, and `P * D = D` puts it in
+`range D`.
+
+The preimage is `A *ᵥ (A *ᵥ x)`, not `A *ᵥ x`. The shorter form is
+wrong: at `A = diag(2, 0)`, `D = diag(1/2, 0)`, `x = (1, 1)` one has
+`A *ᵥ x = (2, 0)` but `D *ᵥ (A *ᵥ x) = (1, 0)`, so `A *ᵥ x` is not in
+`range D`. Symmetrically, `D` need not be idempotent: `D * D = diag(1/4, 0) ≠ D`
+at that same point. -/
+theorem mulVec_mem_range_of_groupInverse' (A D : Matrix ι ι ℝ)
+    (hD : IsGroupInverse A D) (x : ι → ℝ) :
+    A *ᵥ x ∈ LinearMap.range (Matrix.toLin' D) := by
+  refine ⟨A *ᵥ (A *ᵥ x), ?_⟩
+  show Matrix.mulVec D (A *ᵥ (A *ᵥ x)) = A *ᵥ x
+  rw [Matrix.mulVec_mulVec, Matrix.mulVec_mulVec, ← hD.2.2, hD.1]
+
+set_option maxHeartbeats 400000 in
+/-- **A group inverse and its argument have the same image as a linear map.**
+
+The inclusion `range D ⊆ range A` is `groupInverse_apply_mem_range`, lifted
+through `isGroupInverse_toLin'`; only the converse is proved here. -/
+theorem range_groupInverse_eq (A D : Matrix ι ι ℝ) (hD : IsGroupInverse A D) :
+    LinearMap.range (Matrix.toLin' A) = LinearMap.range (Matrix.toLin' D) := by
+  ext y
   constructor
-  · have h := congrArg Matrix.toLin' hG.1
-    simpa [Matrix.toLin'_mul, Module.End.mul_eq_comp] using h
-  constructor
-  · have h := congrArg Matrix.toLin' hG.2.1
-    simpa [Matrix.toLin'_mul, Module.End.mul_eq_comp] using h
-  · have h := congrArg Matrix.toLin' hG.2.2
-    simpa [Matrix.toLin'_mul, Module.End.mul_eq_comp] using h
+  · rintro ⟨x, hx⟩
+    rw [← hx]
+    exact mulVec_mem_range_of_groupInverse' A D hD x
+  · rintro ⟨x, hx⟩
+    rw [← hx]
+    exact groupInverse_apply_mem_range _ _ (isGroupInverse_toLin'_of hD) x
 
 /-- **POISSON GREEN TRANSPORT.**
 

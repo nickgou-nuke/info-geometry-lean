@@ -19,11 +19,17 @@ For explicit multi-agent work, follow:
 - `.agents/plugins/opengauss/reference/TOP_DOWN_PROTOCOL.md` (3-Tier Leader → Orchestrator → Sandbox Worker Swarm & Assume-and-Recurse loop)
 - `.agents/plugins/opengauss/reference/TRAP_CATALOG.md` (17-Trap Catalog `T1–T17`, including `T16` Anti-Surrogate and Gate 2.5 / `T17` Model Witnessing)
 - `docs/policy/OPENGAUSS_PROTOCOL_EXTENSIONS.md` (`QMS-POL-OGP-002`, Gate 0 through Gate 4 lifecycle)
+- `docs/INDEPENDENT_AGENT_AUDIT_SOP.md` (mandatory non-overlapping G-A, A-A, and QA-A roles)
 
-The coordinating agent owns existing-file edits and all final Lean/QMS checks.
+The coordinating agent owns existing-file edits, coordinates checks, and
+records their evidence; it does not replace the distinct A-A or QA-A roles.
 This session-level team is distinct from the repository's Hive workers,
 vendored Antigravity SDK, and Archon/Python queue; choose one scheduler per
-theorem task.
+theorem task. Hive worker labels and separate Hive processes do not, by
+themselves, establish distinct QMS agent instances. In particular, a model
+prompt called an “auditor” inside the authoring process is self-review and
+cannot satisfy A-A or QA-A. A-A and QA-A each require a different agent/context;
+QA-A must be distinct from both G-A and A-A and rerun the decisive checks.
 
 ## Workflow selection (15 Native Commands via `tools/infra/opengauss_cli.py`)
 
@@ -38,7 +44,7 @@ deliverable is materially ambiguous:
 - **autoprove / handoff (`opengauss_cli.py autoprove` / `handoff`)**: Track open `sorry` leaves across waves, ingest banned routes from `artifacts/residue_quarantine/`, and serialize M10 anti-compaction state to `PLAN.md`.
 - **refactor / golf (`opengauss_cli.py refactor` / `golf`)**: Identify monolithic proof blocks (>25 lines) for helper extraction and compress redundant tactic sequences (`simp; ring`, `by exact rfl`) while preserving semantics.
 - **formalize / autoformalize (`opengauss_cli.py formalize` / `autoformalize`)**: Align mathematical statements or CAS identities with canonical categorical owners into narrowly scoped candidate Lean declarations (`verified: false` until kernel-checked).
-- **review / certify (`opengauss_cli.py review <paths> --gate GATE_2|GATE_4 [--verify-kernel]` / `certify --file <file> [--write-audit] [--verify-kernel]`)**: Independent QMS audit and companion `<Module>Audit.lean` `#print axioms` certification. Note: `--gate GATE_4` without `--verify-kernel` returns `STATIC_REVIEW_PASSED_KERNEL_UNVERIFIED`; full Gate 4 acceptance requires `--verify-kernel` under the shared build lock.
+- **review / certify (`opengauss_cli.py review <paths> --gate GATE_2|GATE_4 [--verify-kernel]` / `certify --file <file> [--write-audit] [--verify-kernel]`)**: Automated source preflight and optional companion `<Module>Audit.lean` `#print axioms` kernel certification. These commands do not perform an independent semantic audit. `--gate GATE_4` without `--verify-kernel` returns `STATIC_REVIEW_PASSED_KERNEL_UNVERIFIED`; full kernel verification requires `--verify-kernel` under the shared build lock, and still does not replace independent A-A/QA-A review.
 - Review also runs source checks for repository-authored axioms and proof holes, and rejects a theorem that merely constructs a multi-field proposition bundle from other field proofs. The pre-commit rule is name-independent; a predicate structure such as an `Is...` relation remains valid when it defines a mathematical property and is not used as an aggregate theorem receipt. Before committing, `/review` and `/checkpoint` must run `python3 tools/quality/proof_proxy_staged_gate.py` against the staged Lean sources. Foundational axioms reported as dependencies by Lean are distinct from authored `axiom` declarations; authored axioms are prohibited.
 - The staged proof-proxy gate fails closed when either checker source differs between the Git index and worktree, because the hook executes checker code from the worktree while screening Lean blobs from the index.
 - **checkpoint (`opengauss_cli.py checkpoint -m "..." --stage-path <file>`)**: Summarize current evidence and stage verified paths (`git add`) under the Continuous Tracking Mandate.
@@ -50,8 +56,10 @@ deliverable is materially ambiguous:
 3. **Preflight** — read `AGENTS.md`, `docs/CANONICAL_AGENT_PIPELINE.md`, and `docs/HIVE_AGENT_COMMANDMENTS.md`; inspect the working tree and preserve all pre-existing changes. On resumed/compacted work, re-read live owners and diffs and verify prior build/Git claims from current evidence.
 4. **Analyze & Plan (Gate 1)** — state the minimal causal repair or consumer-minimal decomposition from the contract. Separate actual compiler errors from warnings or slow tactics. CAS/SymPy/GAP output may suggest a finite witness, but is never proof evidence by itself.
 5. **Sandbox Edit & Gate 2 / 2.5 Screen** — candidate subagents write proposals strictly to new sandbox files (`scratch/`); only the coordinating agent edits live owner files. Run `python3 tools/infra/opengauss_screener.py <file> --strict` (0 traps across `T1–T17`, enforcing `T16` non-commutativity witnesses, Gate 2.5 / `T17` model witnesses, and pre-commit proof-proxy field/debt rules). A separate auditor must check the theorem’s mathematical meaning against the Ground-Truth Contract and owner statements; static screening and kernel compilation cannot perform that semantic comparison. Never replace proof debt with `sorry`, `axiom`, `admit`, `unsafe`, scalar surrogates, renamed claims, or vacuous propositions.
-6. **Verify & Gate 4 Certify** — before compilation, inspect active compiler/build processes. Run builds sequentially through `python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock <target>`, and run Gate 4 verification via `python3 tools/infra/opengauss_cli.py review <file> --gate GATE_4 --verify-kernel` and `python3 tools/infra/opengauss_cli.py certify --file <file> --write-audit --verify-kernel`. Do not run cache-destructive commands or kill builds without explicit authorization.
-7. **Report & Checkpoint** — distinguish source changes, commands actually run, observed diagnostics, and remaining uncertainty. Stage verified changes immediately via `opengauss_cli.py checkpoint` (`git add`). Never report an unverified or static-only check as kernel-accepted, and never let a compiled theorem inherit a stronger interpretation than its Lean type and hypotheses support.
+6. **Independent Audit** — the code author is G-A and must not audit its own artifact. Dispatch an A-A that did not author the patch to review the exact diff and relevant owners; the A-A is read-only. Revise only in response to specific findings, then send the corrected diff back for A-A review. Read `docs/INDEPENDENT_AGENT_AUDIT_SOP.md`; an automated CLI review, compiler, or author self-check cannot substitute for A-A.
+7. **Verify & Gate 4 Certify** — before compilation, inspect active compiler/build processes. Run builds sequentially through `python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock <target>`, and run kernel verification via `python3 tools/infra/opengauss_cli.py review <file> --gate GATE_4 --verify-kernel` and `python3 tools/infra/opengauss_cli.py certify --file <file> --write-audit --verify-kernel`. Do not run cache-destructive commands or kill builds without explicit authorization.
+8. **Independent Acceptance** — after the final edits and decisive checks, dispatch a QA-A distinct from both G-A and A-A to rerun those checks and confirm scope. The author cannot accept the artifact. If QA-A requests changes, return to the A-A review and verification steps before acceptance.
+9. **Report & Checkpoint** — distinguish source changes, commands actually run, observed diagnostics, A-A and QA-A dispositions, and remaining uncertainty. Stage verified changes immediately via `opengauss_cli.py checkpoint` (`git add`). Never report an unverified or static-only check as kernel-accepted, and never let a compiled theorem inherit a stronger interpretation than its Lean type and hypotheses support.
 
 ## Existing project queue
 

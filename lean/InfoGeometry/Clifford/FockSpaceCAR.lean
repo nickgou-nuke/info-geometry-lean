@@ -1,6 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Clifford.ChevalleySpinorBlueprint
 import InfoGeometry.Clifford.ClNNNeutralChevalleyBridge
 import InfoGeometry.Clifford.ClNNToDoubledKreinTransport
+import InfoGeometry.Algebra.ChakravalaGA
 
 /-!
 # Exterior Fock space and its canonical CAR action
@@ -207,6 +213,36 @@ def annihilationOperator : Dual L →ₗ[ℝ] Module.End ℝ (FockSpace L) where
   map_smul' c f := by
     ext ψ
     simp [annihilation, intAction, map_smul, LinearMap.smul_apply]
+
+/-- The odd--odd superbracket of two creation operators vanishes as an
+endomorphism, on every exterior degree. -/
+theorem creation_creation_superBracket (u v : L) :
+    ChakravalaGA.superBracket (R := ℝ) .odd .odd
+        (creationOperator u) (creationOperator v) = 0 := by
+  rw [ChakravalaGA.superBracket_fermionic]
+  ext ψ
+  exact creation_anticommute u v ψ
+
+/-- The odd--odd superbracket of two contraction operators vanishes as an
+endomorphism, on every exterior degree. -/
+theorem annihilation_annihilation_superBracket (f g : Dual L) :
+    ChakravalaGA.superBracket (R := ℝ) .odd .odd
+        (annihilationOperator f) (annihilationOperator g) = 0 := by
+  rw [ChakravalaGA.superBracket_fermionic]
+  ext ψ
+  exact annihilation_anticommute f g ψ
+
+/-- The full odd--odd Chakravala superbracket of creation and annihilation is
+the evaluation scalar times the identity endomorphism. This is the operator
+form of the CAR, valid on every exterior degree, not only on the vacuum and
+one-particle sectors. -/
+theorem creation_annihilation_superBracket (u : L) (f : Dual L) :
+    ChakravalaGA.superBracket (R := ℝ) .odd .odd
+        (creationOperator u) (annihilationOperator f) =
+      (f u) • (1 : Module.End ℝ (FockSpace L)) := by
+  rw [ChakravalaGA.superBracket_fermionic]
+  ext ψ
+  exact creation_annihilation_CAR u f ψ
 
 /-- Annihilation of a one-particle state evaluates its covector. -/
 theorem annihilation_creation_vacuum (f : Dual L) (u : L) :

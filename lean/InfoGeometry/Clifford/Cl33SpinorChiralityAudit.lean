@@ -1,0 +1,25 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.Clifford.Cl33SpinorChirality
+
+#print axioms InfoGeometry.Clifford.Cl33SpinorChirality.gradingMatrix33_sq
+#print axioms InfoGeometry.Clifford.Cl33SpinorChirality.orderedVolume_eq_neg_pairedVolume
+#print axioms InfoGeometry.Clifford.Cl33SpinorChirality.pairedVolumeMatrix33_eq_gradingMatrix33
+#print axioms InfoGeometry.Clifford.Cl33SpinorChirality.volumeMatrix33_eq_neg_gradingMatrix33
+#print axioms InfoGeometry.Clifford.Cl33SpinorChirality.volumeMatrix33_sq
+#print axioms InfoGeometry.Clifford.Cl33SpinorChirality.gradingPlusProjector33_idempotent
+#print axioms InfoGeometry.Clifford.Cl33SpinorChirality.gradingMinusProjector33_idempotent
+#print axioms InfoGeometry.Clifford.Cl33SpinorChirality.gradingProjectors33_complementary
+#print axioms InfoGeometry.Clifford.Cl33SpinorChirality.gradingProjectors33_orthogonal
+#print axioms InfoGeometry.Clifford.Cl33SpinorChirality.gradingProjectors33_orthogonal_rev
+#print axioms InfoGeometry.Clifford.Cl33SpinorChirality.volumePlusProjector33_idempotent
+#print axioms InfoGeometry.Clifford.Cl33SpinorChirality.volumeMinusProjector33_idempotent
+#print axioms InfoGeometry.Clifford.Cl33SpinorChirality.volumeProjectors33_complementary
+#print axioms InfoGeometry.Clifford.Cl33SpinorChirality.volumeProjectors33_orthogonal
+#print axioms InfoGeometry.Clifford.Cl33SpinorChirality.volumeProjectors33_orthogonal_rev
+#print axioms InfoGeometry.Clifford.Cl33SpinorChirality.volumePlusProjector33_eq_gradingMinusProjector33
+#print axioms InfoGeometry.Clifford.Cl33SpinorChirality.volumeMinusProjector33_eq_gradingPlusProjector33

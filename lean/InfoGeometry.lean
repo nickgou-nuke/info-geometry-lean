@@ -180,16 +180,6 @@ import InfoGeometry.Synthesis.Cl11ChiralVolumeNilpotentQuotientSynthesis
 import InfoGeometry.Synthesis.Cl11ChiralVolumeNilpotentQuotientSynthesisAudit
 import InfoGeometry.Synthesis.MathlibCliffordUniversalLiftSynthesis
 import InfoGeometry.Synthesis.MathlibCliffordUniversalLiftSynthesisAudit
-
-/-!
-## Layer 6 spine: dissipative Laplacian group inverses, Kemeny–Snell fundamental
-matrix invertibility, causal Petz recovery, and the polarized-attention return chain.
-
-These eight modules (with their `#print axioms` audit companions) were previously
-reachable only by naming them explicitly on the command line, so no root build
-exercised them. They are wired in here so that `lake build InfoGeometry` compiles
-and axiom-checks them.
--/
 import InfoGeometry.QuantumContext.MarkovAttentionKemenySnell
 import InfoGeometry.QuantumContext.MarkovAttentionKemenySnellAudit
 import InfoGeometry.QuantumContext.MarkovGroupInverseIntertwining
@@ -216,6 +206,15 @@ The repository intent is that all repo-owned Lean modules build and are
 available through the root project surface.  `InfoGeometry.All` is the explicit
 whole-project umbrella; `InfoGeometry.Library` is only a compatibility umbrella
 for the canonical subset.
+
+# Layer 6 spine: dissipative Laplacian group inverses, Kemeny–Snell
+# fundamental-matrix invertibility, causal Petz recovery, and the
+# polarized-attention return chain.
+
+The eight modules imported immediately above (with their `#print axioms` audit
+companions) were previously reachable only by naming them explicitly on the
+command line, so no root build exercised them.  They are wired into the root so
+that `lake build InfoGeometry` compiles and axiom-checks them.
 
 # Recovered Architecture Integrations
 Re-integrating the Cuntz Colimit GPU Split Algebra architecture that was

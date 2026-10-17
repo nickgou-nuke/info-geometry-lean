@@ -39,13 +39,14 @@ Zorn vector-matrix split-octonion algebra `ZornSplitOctonion R` imported from
      and symplectic form $\omega(z_1, z_2) = \langle u_1, v_2 \rangle - \langle v_1, u_2 \rangle
      = g(K z_1, z_2)$.
 
-3. **Clifford–Zorn Anticommutator, Isotropic Null Cone & Maximal Lagrangian Sheets**:
+3. **Clifford–Zorn Anticommutator, Isotropic Null Cone & Isotropic Sheets**:
    - Anticommutator identity $z_1 z_2 + z_2 z_1 = g(z_1, z_2) \cdot 1_{\text{Zorn}}$ and
      square identity $z^2 = -N(z) \cdot 1_{\text{Zorn}}$.
    - Equivalence of the $\operatorname{Cl}(3,3)$ null-cone condition $N(z) = 0$, nilpotency
      $z^2 = 0$, and orthogonality $\langle u, v \rangle = 0$.
-   - Proof that both polarization sheets $T^+$ and $T^-$ lie in the null cone and are
-     simultaneously $g$-isotropic and $\omega$-Lagrangian.
+   - Proof that both polarization sheets $T^+$ and $T^-$ lie in the null cone and the
+     restrictions of $g$ and $\omega$ to each sheet vanish. Maximality is not asserted
+     over the arbitrary commutative-ring carrier used here.
 
 4. **Zorn Commutator Decomposition & Full Metriplectic Product over `ℝ`**:
    - Commutator identity $[z_1, z_2] = \omega(z_1, z_2) I_{\text{para}} + 2 (z_1 \times_H z_2)$
@@ -55,28 +56,33 @@ Zorn vector-matrix split-octonion algebra `ZornSplitOctonion R` imported from
      $$z_1 z_2 = \tfrac{1}{2} g(z_1, z_2) 1_{\text{Zorn}}
        + \tfrac{1}{2} \omega(z_1, z_2) I_{\text{para}} + z_1 \times_H z_2.$$
 
-5. **Para-Kähler Grading Derivation, Lagrange Norm Law & Chiral Volume Associator**:
-   - Inner-derivation realization $[I_{\text{para}}, z] = 2 K(z)$
+5. **Para-Kähler Grading Action, Lagrange Identity & Chiral Volume Associator**:
+   - Commutator action $[I_{\text{para}}, z] = 2 K(z)$ on embedded phase-space vectors
      (`zorn_paraGrading_commutator_embedVec`) and anticommutation $\{I_{\text{para}}, z\} = 0$
      (`zorn_paraGrading_anticommutator_embedVec`).
-   - Lagrange–Binet–Cauchy norm composition law
+   - Lagrange–Binet–Cauchy coordinate identity
      $g(z_1, z_2)^2 - \omega(z_1, z_2)^2 + 4 \langle u_1 \times u_2, v_1 \times v_2 \rangle
-     = g(z_1, z_1) g(z_2, z_2)$ (`paraKahler_lagrange_norm_composition`).
+     = g(z_1, z_1) g(z_2, z_2)$ (`paraKahler_lagrange_coordinate_identity`), compatible with the
+     separate Zorn norm composition theorem `ZornSplitOctonionFin8Bridge.zornNorm_mul`.
    - Left and right primal triple-product projections onto the Peirce idempotents $e_1, e_0$
      scaled by $\det(u_1, u_2, u_3)$ (`zorn_primal_triple_left_eq_volume_smul_e1`,
-     `zorn_primal_triple_right_eq_volume_smul_e0`), symmetric singlet identity along
-     $1_{\text{Zorn}}$ (`zorn_primal_triple_baryon_singlet`), and chiral volume associator
+     `zorn_primal_triple_right_eq_volume_smul_e0`), the sum of these two bracketings as a
+     scalar multiple of $1_{\text{Zorn}}$ (`zorn_primal_triple_bracketing_sum_eq_volume_smul_one`),
+     and chiral volume associator
      identity $[u_1, u_2, u_3] = -\det(u_1, u_2, u_3) I_{\text{para}}$
      (`zorn_primal_triple_associator_eq_volume_paraGrading`).
 
 ## Scope Note
 
-All algebraic identities in Sections 1–5 and Section 7 are proved over an arbitrary
-commutative ring `CommRing R` (with the finite Fock spinor bridge theorems
+The non-Fock algebraic identities in Sections 1–5 and the para-complex, norm, and
+triple-product identities in Section 7 are proved over an arbitrary commutative ring
+`CommRing R`. The finite Fock spinor bridge theorems
 `fin8ToZorn_gPlus1_vac_eq_embedVec_primalSheet` and
-`fin8ToZorn_gPlus2Hodge_vac_eq_embedVec_dualSheet` certified over `ℤ`), while the
-half-integer metriplectic synthesis `zornMul_embedVec_metriplectic_decomp` in Section 6
-is stated over `ℝ` where `1 / 2` is available.
+`fin8ToZorn_gPlus2Hodge_vac_eq_embedVec_dualSheet` are certified over `ℤ`. The explicit
+nonzero-associator witness and the resulting obstruction to injective multiplicative maps
+into associative semigroups are stated over `ℝ`. The half-integer metriplectic synthesis
+`zornMul_embedVec_metriplectic_decomp` in Section 6 is also stated over `ℝ`, where `1 / 2`
+is available.
 -/
 
 namespace InfoGeometry.Canonical.SplitOctonionParaKahlerNullCone
@@ -332,7 +338,7 @@ theorem zorn_vec_sq_eq_neg_norm_smul_one (z : ParaKahlerVec R) :
     ring
 
 /-!
-## Section 4: The $\operatorname{Cl}(3,3)$ Isotropic Null Cone & Maximal Lagrangian Sheets $T^+, T^-$
+## Section 4: The $\operatorname{Cl}(3,3)$ Isotropic Null Cone & Isotropic Sheets $T^+, T^-$
 -/
 
 /-- The Zorn norm of an embedded vector $z = (u, v)$ is $-\langle u, v \rangle$. -/
@@ -384,7 +390,8 @@ theorem primalSheet_paraKahlerMetric_zero (u₁ u₂ : Fin 3 → R) :
   dsimp [paraKahlerMetric, primalSheet, vec3Dot]
   ring
 
-/-- The primal sheet $T^+$ is $\omega$-Lagrangian: $\omega((u_1, 0), (u_2, 0)) = 0$. -/
+/-- The restriction of $\omega$ to the primal sheet vanishes:
+$\omega((u_1, 0), (u_2, 0)) = 0$. Maximality is not claimed here. -/
 theorem primalSheet_symplecticForm_zero (u₁ u₂ : Fin 3 → R) :
     symplecticForm (primalSheet u₁) (primalSheet u₂) = 0 := by
   dsimp [symplecticForm, primalSheet, vec3Dot]
@@ -403,7 +410,8 @@ theorem dualSheet_paraKahlerMetric_zero (v₁ v₂ : Fin 3 → R) :
   dsimp [paraKahlerMetric, dualSheet, vec3Dot]
   ring
 
-/-- The dual sheet $T^-$ is $\omega$-Lagrangian: $\omega((0, v_1), (0, v_2)) = 0$. -/
+/-- The restriction of $\omega$ to the dual sheet vanishes:
+$\omega((0, v_1), (0, v_2)) = 0$. Maximality is not claimed here. -/
 theorem dualSheet_symplecticForm_zero (v₁ v₂ : Fin 3 → R) :
     symplecticForm (dualSheet v₁) (dualSheet v₂) = 0 := by
   dsimp [symplecticForm, dualSheet, vec3Dot]
@@ -549,7 +557,7 @@ theorem zornMul_embedVec_metriplectic_decomp (z₁ z₂ : ParaKahlerVec ℝ) :
     ring
 
 /-!
-## Section 7: Para-Kähler Grading Derivation, Lagrange Norm Law & Chiral Volume Associator
+## Section 7: Para-Kähler Grading Action, Lagrange Coordinate Identity & Chiral Volume Associator
 -/
 
 section GradingAndAssociator
@@ -584,9 +592,10 @@ def zornAssociator (x y z : ZornSplitOctonion R) : ZornSplitOctonion R :=
 def vec3TripleProduct (u₁ u₂ u₃ : Fin 3 → R) : R :=
   vec3Dot (vec3Cross u₁ u₂) u₃
 
-/-- **Inner Derivation of the Para-Complex Operator $K$**:
+/-- **Commutator Action of the Para-Complex Operator $K$**:
 The commutator with the diagonal para-grading element $I_{\text{para}} = \operatorname{diag}(1, -1)$
-acts on embedded phase-space vectors as $2 K$:
+acts on embedded phase-space vectors as $2 K$; no derivation law on the full Zorn algebra is
+asserted:
 $[I_{\text{para}}, z] = 2 K(z)$. -/
 theorem zorn_paraGrading_commutator_embedVec (z : ParaKahlerVec R) :
     zornCommutator zornParaGrading (embedVec z) =
@@ -627,11 +636,13 @@ theorem zorn_paraGrading_anticommutator_embedVec (z : ParaKahlerVec R) :
   · dsimp [zornAnticommutator, zornAdd, zornMul, zornParaGrading, embedVec, zornZero, vec3Dot]
     ring
 
-/-- **Para-Kähler Lagrange–Binet–Cauchy Norm Composition Identity**:
+/-- **Para-Kähler Lagrange–Binet–Cauchy Coordinate Identity**:
 The difference of squares of the para-Kähler metric $g(z_1, z_2)$ and symplectic form
 $\omega(z_1, z_2)$ combines with the cross-product pairing $4 \langle u_1 \times u_2, v_1 \times v_2 \rangle$
-to yield the product of self-metrics $g(z_1, z_1) g(z_2, z_2)$. -/
-theorem paraKahler_lagrange_norm_composition (z₁ z₂ : ParaKahlerVec R) :
+to yield the product of self-metrics $g(z_1, z_1) g(z_2, z_2)$. The Zorn norm composition law
+itself is stated separately as `ZornSplitOctonionFin8Bridge.zornNorm_mul`; this lemma records its
+coordinate Lagrange identity on embedded para-Kähler vectors. -/
+theorem paraKahler_lagrange_coordinate_identity (z₁ z₂ : ParaKahlerVec R) :
     (paraKahlerMetric z₁ z₂) ^ 2 - (symplecticForm z₁ z₂) ^ 2 +
       4 * vec3Dot (vec3Cross z₁.u z₂.u) (vec3Cross z₁.v z₂.v) =
       paraKahlerMetric z₁ z₁ * paraKahlerMetric z₂ z₂ := by
@@ -678,11 +689,12 @@ theorem zorn_primal_triple_right_eq_volume_smul_e0 (u₁ u₂ u₃ : Fin 3 → R
   · dsimp [zornMul, embedVec, primalSheet, zornSmul, zornE0, vec3TripleProduct, vec3Dot, vec3Cross]
     ring
 
-/-- **Symmetric Primal Triple Singlet Identity**:
-The symmetrized triple product $(u_1 u_2) u_3 + u_1 (u_2 u_3)$ of three primal vectors is
-proportional to the identity element $1_{\text{Zorn}} = e_0 + e_1$ with coefficient equal to
-the 3D volume $\det(u_1, u_2, u_3)$. -/
-theorem zorn_primal_triple_baryon_singlet (u₁ u₂ u₃ : Fin 3 → R) :
+/-- **Primal Triple Bracketing-Sum Identity**:
+The sum of the left- and right-associated triple products $(u_1 u_2) u_3 + u_1 (u_2 u_3)$
+of three primal vectors is proportional to the identity element $1_{\text{Zorn}} = e_0 + e_1$
+with coefficient equal to the oriented 3D volume $\det(u_1, u_2, u_3)$. This is a sum over
+the two bracketings; no permutation symmetry of the inputs is asserted. -/
+theorem zorn_primal_triple_bracketing_sum_eq_volume_smul_one (u₁ u₂ u₃ : Fin 3 → R) :
     zornAdd
       (zornMul (zornMul (embedVec (primalSheet u₁)) (embedVec (primalSheet u₂)))
         (embedVec (primalSheet u₃)))
@@ -732,6 +744,50 @@ theorem zorn_primal_triple_associator_eq_volume_paraGrading (u₁ u₂ u₃ : Fi
   · dsimp [zornAssociator, zornSub, zornMul, embedVec, primalSheet, zornSmul,
       zornParaGrading, vec3TripleProduct, vec3Dot, vec3Cross]
     ring
+
+/-- The standard primal basis triple has a nonzero associator in the Zorn product.
+This witness makes explicit that the `Fin 8` Fock-state carrier equivalence is not
+a multiplicative identification with ordinary associative matrix multiplication. -/
+theorem zorn_primal_basis_associator_ne_zero :
+    zornAssociator
+      (embedVec (primalSheet (![1, 0, 0] : Fin 3 → ℝ)))
+      (embedVec (primalSheet (![0, 1, 0] : Fin 3 → ℝ)))
+      (embedVec (primalSheet (![0, 0, 1] : Fin 3 → ℝ))) ≠ zornZero := by
+  rw [zorn_primal_triple_associator_eq_volume_paraGrading]
+  norm_num [vec3TripleProduct, vec3Dot, vec3Cross, zornSmul,
+    zornParaGrading, zornZero]
+
+/-- No injective multiplicative representation of this Zorn product can land in
+an associative semigroup. In particular, the `Fin 8` carrier equivalence cannot
+be upgraded to an injective homomorphism into the Fock matrix algebra with its
+ordinary associative product. -/
+theorem no_injective_zornMul_map_to_associative_semigroup
+    {A : Type*} [Semigroup A] :
+    ¬ ∃ φ : ZornSplitOctonion ℝ → A,
+        Function.Injective φ ∧
+          (∀ x y : ZornSplitOctonion ℝ, φ (zornMul x y) = φ x * φ y) := by
+  rintro ⟨φ, hinj, hmul⟩
+  let x : ZornSplitOctonion ℝ :=
+    embedVec (primalSheet (![1, 0, 0] : Fin 3 → ℝ))
+  let y : ZornSplitOctonion ℝ :=
+    embedVec (primalSheet (![0, 1, 0] : Fin 3 → ℝ))
+  let z : ZornSplitOctonion ℝ :=
+    embedVec (primalSheet (![0, 0, 1] : Fin 3 → ℝ))
+  have hdefect : zornMul (zornMul x y) z ≠ zornMul x (zornMul y z) := by
+    intro h
+    have hassocZero := congrArg
+      (fun q : ZornSplitOctonion ℝ => zornSub q (zornMul x (zornMul y z))) h
+    have hassoc : zornAssociator x y z = zornZero := by
+      simpa [zornAssociator, zornSub, zornZero] using hassocZero
+    exact zorn_primal_basis_associator_ne_zero (by simpa [x, y, z] using hassoc)
+  apply hdefect
+  apply hinj
+  calc
+    φ (zornMul (zornMul x y) z) = φ (zornMul x y) * φ z := hmul _ _
+    _ = (φ x * φ y) * φ z := by rw [hmul]
+    _ = φ x * (φ y * φ z) := mul_assoc _ _ _
+    _ = φ x * φ (zornMul y z) := by rw [hmul]
+    _ = φ (zornMul x (zornMul y z)) := (hmul _ _).symm
 
 end GradingAndAssociator
 

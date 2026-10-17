@@ -512,4 +512,116 @@ theorem zornJWConjugator_eq_of_intertwiner (p : Fin 8 ≃ Fin 8)
   · exact hmiddle 6 (by decide) (by decide)
   · simpa [zornJWFockSwap] using h7
 
+
+/-!
+### Section 6 — Existence, and the Intertwiner as a Named Predicate
+
+Section 5 proved that an intertwiner preserving the fermionic sector *is* the vacuum/top
+swap, but it never proved that such an intertwiner **exists**: non-vacuity was established
+only by hand. This section supplies the converse (`zornJWFockSwap_intertwines`) and packages
+the hypothesis as the named predicate `IsZornJWIntertwiner`, so the two hypotheses of
+`zornJWConjugator_swap_forced` are inhabited by an explicit object.
+
+Combined, Sections 5 and 6 give existence and uniqueness among permutations satisfying
+`IsZornJWIntertwiner` and preserving the fermionic sector. Uniqueness among *all* `8!`
+intertwiners is still not asserted.
+-/
+
+/-- A permutation `p` of the Fock basis is a **Zorn–Jordan–Wigner intertwiner** when it
+conjugates all six Jordan–Wigner generators to the six Zorn Majorana left actions. With
+`P_p i r = [r = p i]` this is exactly `Lₐ = P_p Γₐ P_p⁻¹`. -/
+def IsZornJWIntertwiner (p : Fin 8 ≃ Fin 8) : Prop :=
+  ∀ (a : Fin 6) (i j : Fin 8),
+    zornLeftActMatrix (embedVec (zornMajoranaVec a)) i j = majoranaGenR a (p i) (p.symm j)
+
+/-- Row-collapse against the permutation matrix: row `i` of `zornJWConjugator` selects
+index `zornJWFockSwap i`. -/
+private theorem zornJWConjugator_row (i : Fin 8) (y : Fin 8 → ℝ) :
+    ∑ r, zornJWConjugator i r * y r = y (zornJWFockSwap i) := by
+  simp only [zornJWConjugator_entries]
+  rw [Finset.sum_eq_single (zornJWFockSwap i)]
+  · simp
+  · intro b _ hb
+    have hn : ¬ (b = zornJWFockSwap i) := fun h => hb (h ▸ rfl)
+    simp [hn]
+  · simp
+
+/-- Column-collapse against the permutation matrix: column `j` selects index
+`zornJWFockSwap j`. -/
+private theorem zornJWConjugator_col (j : Fin 8) (x : Fin 8 → ℝ) :
+    ∑ r, x r * zornJWConjugator r j = x (zornJWFockSwap j) := by
+  simp only [zornJWConjugator_entries]
+  rw [Finset.sum_eq_single (zornJWFockSwap j)]
+  · simp [zornJWFockSwap_involutive]
+  · intro b _ hb
+    have hn : ¬ (j = zornJWFockSwap b) :=
+      fun h => hb (by rw [← zornJWFockSwap_involutive b, ← h])
+    simp [hn]
+  · simp
+
+/-- **The vacuum/top Fock swap really is an intertwiner** — the converse of
+`zornJWConjugator_swap_forced`, and the fact that makes that theorem non-vacuous.
+
+`zornJWFockSwap` is an involution, so `p.symm = p`; and `zornJWConjugator` is exactly its
+permutation matrix by `zornJWConjugator_entries`. The matrix identity
+`zornLeftActMatrix_majorana_eq_conjugate` therefore transports to permutation-matrix form:
+each side of the conjugation picks out exactly one summand. -/
+theorem zornJWFockSwap_intertwines (a : Fin 6) (i j : Fin 8) :
+    zornLeftActMatrix (embedVec (zornMajoranaVec a)) i j
+      = majoranaGenR a (zornJWFockSwap i) (zornJWFockSwap j) := by
+  rw [zornLeftActMatrix_majorana_eq_conjugate a, Matrix.mul_assoc, Matrix.mul_apply]
+  calc (∑ j_1, zornJWConjugator i j_1 * (majoranaGenR a * zornJWConjugator) j_1 j)
+      = (majoranaGenR a * zornJWConjugator) (zornJWFockSwap i) j :=
+        zornJWConjugator_row i _
+    _ = majoranaGenR a (zornJWFockSwap i) (zornJWFockSwap j) := by
+      simp only [Matrix.mul_apply]
+      exact zornJWConjugator_col j _
+
+theorem zornJWFockSwap_surjective (y : Fin 8) : ∃ x, zornJWFockSwap x = y :=
+  ⟨zornJWFockSwap y, zornJWFockSwap_involutive y⟩
+
+theorem zornJWFockSwap_bijective : Function.Bijective zornJWFockSwap :=
+  ⟨zornJWFockSwap_injective, zornJWFockSwap_surjective⟩
+
+/-- The Fock swap packaged as an `Equiv` of the eight basis kets. -/
+noncomputable def zornJWPerm : Fin 8 ≃ Fin 8 :=
+  Equiv.ofBijective zornJWFockSwap zornJWFockSwap_bijective
+
+/-- The Fock swap is its own inverse, so its `Equiv` inverse is itself. -/
+@[simp] theorem zornJWPerm_apply (j : Fin 8) : zornJWPerm j = zornJWFockSwap j := rfl
+
+@[simp] theorem zornJWPerm_symm_apply (j : Fin 8) : zornJWPerm.symm j = zornJWFockSwap j := by
+  calc zornJWPerm.symm j
+      = zornJWPerm.symm (zornJWFockSwap (zornJWFockSwap j)) := by
+        rw [zornJWFockSwap_involutive]
+    _ = zornJWFockSwap j := zornJWPerm.symm_apply_apply (zornJWFockSwap j)
+
+/-- `zornJWPerm` is an intertwiner: the hypothesis of `zornJWConjugator_swap_forced` is
+inhabited, so `zornJWConjugator_eq_of_intertwiner` pins down a genuinely existing object
+rather than a vacuous one. -/
+theorem zornJWPerm_isZornJWIntertwiner : IsZornJWIntertwiner zornJWPerm := by
+  intro a i j
+  rw [zornJWPerm_apply, zornJWPerm_symm_apply]
+  exact zornJWFockSwap_intertwines a i j
+
+/-- `zornJWPerm` fixes the six fermionic kets, supplying the second hypothesis of
+`zornJWConjugator_eq_of_intertwiner`. -/
+theorem zornJWPerm_fixes_middle {j : Fin 8} (hj0 : j ≠ 0) (hj7 : j ≠ 7) :
+    zornJWPerm j = j := by
+  show zornJWFockSwap j = j
+  exact zornJWFockSwap_middle hj0 hj7
+
+/-- **Existence and uniqueness, packaged.** There is exactly one intertwiner of the Fock
+basis that preserves the fermionic sector, and it is the vacuum/top swap.
+
+Existence: `zornJWPerm_isZornJWIntertwiner` and `zornJWPerm_fixes_middle`.
+Uniqueness (given fermionic-sector preservation): `zornJWConjugator_eq_of_intertwiner`.
+
+Uniqueness among *all* `8!` intertwiners is still **not** asserted: dropping `hmiddle`
+remains open. -/
+theorem zornJWConjugator_unique_of_fixes_middle :
+    ∀ p : Fin 8 ≃ Fin 8, IsZornJWIntertwiner p →
+      (∀ j : Fin 8, j ≠ 0 → j ≠ 7 → p j = j) → ∀ j : Fin 8, p j = zornJWFockSwap j :=
+  fun p hp hm => zornJWConjugator_eq_of_intertwiner p hm hp
+
 end InfoGeometry.Canonical.SplitOctonionJordanWignerIntertwiner

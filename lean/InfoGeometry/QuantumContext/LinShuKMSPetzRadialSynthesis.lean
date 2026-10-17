@@ -90,6 +90,25 @@ Para-Kähler Fock CAR superbracket (`UnifiedInfoGeometryPetzFockBridge`):
      $\omega J_2 x$, together with the time-eliminated logarithmic spiral identity
      `logSpiral_from_loxodromic_time` and `dissipativeRadius_eq_spiralRadius`.
 
+7. **Archetype VII — Complex KMS Strip Wick-Rotated Dilatation ($\tau \in \{0, 1/2, 1, -2\}$), Oort Constants ($A, B, \kappa^2 = -4B\Omega$), and Mestel Disk Scale-Invariant Toomre $Q$**:
+   - Defines `softmaxPartitionZ`, `softmaxLogPartitionPhi`, `kmsStripFactor`, `kmsStripDilatation`,
+     and `petzSpinorState`, proving `softmaxPartitionZ_pos`, `coneRadius_softmaxLogPartitionPhi`,
+     the complex KMS strip factorization `kmsStripFactor_eq_phase_mul_dilatation`
+     ($e^{-i(s - i\tau)\Phi} = e^{-is\Phi} e^{-\tau\Phi}$), the canonical $\tau$-slice evaluations
+     `kmsStripDilatation_at_zero`, `kmsStripDilatation_at_half_sq`, `kmsStripDilatation_at_one`,
+     and `kmsStripDilatation_at_neg_two`, and the unit-sphere normalization
+     `petzSpinorState_unit_sphere` of the $\tau = 1/2$ Petz spinor state.
+   - Defines the classical Oort constants `oortA` and `oortB` and `powerLawShearRate`, proving
+     `oortA_sub_oortB_eq_omega`, `oortA_add_oortB_eq_neg_shear_add_omega`,
+     `powerLawEpicyclicFreqSq_eq_neg_four_oortB_mul_omega` ($\kappa^2 = -4 B \Omega$), and the
+     flat-rotation-curve identities `oortA_flatRotationCurve`, `oortB_flatRotationCurve`, and
+     `oortA_add_oortB_flatRotationCurve_zero` ($A + B = 0$ at $\alpha = 1$).
+   - Defines the self-similar Mestel surface density
+     `mestelSurfaceDensity v_sink G r = v_sink ^ 2 / (2 * Real.pi * G * r)` and proves exact
+     radial scale invariance `toomreQ_mestelDisk_scale_invariant`
+     ($Q = 2\sqrt{2} c_s / v_{\mathrm{sink}}$, independent of $r$) and the stability threshold
+     equivalence `mestelDisk_toomreQ_gt_one_iff` ($Q > 1 \iff c_s > v_{\mathrm{sink}} / (2\sqrt{2})$).
+
 ## Scope Note
 
 1. The wave-branch factorization `lindblad_wave_branches_iff` and thermal Toomre stability
@@ -103,6 +122,10 @@ Para-Kähler Fock CAR superbracket (`UnifiedInfoGeometryPetzFockBridge`):
    types `[Fintype ι] [Fintype κ_idx]` and algebraic exterior Fock modules `FockExteriorEnvelope K`.
 4. The multi-head RoPE interference identities in Archetype VI hold for any finite head index type
    `[Fintype H]` on `Fin 2 → ℝ`.
+5. In Archetype VII, `kmsStripFactor_eq_phase_mul_dilatation` formalizes the scalar complex
+   exponential factorization $e^{-i(s - i\tau)\Phi} = e^{-is\Phi} e^{-\tau\Phi}$ on `ℂ`, while
+   `toomreQ_mestelDisk_scale_invariant` establishes algebraic cancellation of the radius $r \ne 0$
+   in `toomreQ` for the Mestel surface-density profile.
 -/
 
 noncomputable section
@@ -218,6 +241,72 @@ private theorem metriplectic_orthog_scalar (lam ω x₀ x₁ : ℝ) :
 private theorem logSpiral_time_elim_scalar (lam ω t : ℝ) (hω : ω ≠ 0) :
     (-lam / ω) * (0 + ω * t) = -lam * t := by
   rw [zero_add, ← mul_assoc, div_mul_cancel₀ (-lam) hω]
+
+private theorem kms_strip_exponent_split (Φ s τ : ℝ) :
+    -Complex.I * ((s : ℂ) - Complex.I * (τ : ℂ)) * (Φ : ℂ) =
+      -Complex.I * (s : ℂ) * (Φ : ℂ) + (((-τ * Φ : ℝ) : ℂ)) := by
+  push_cast
+  calc
+    -Complex.I * ((s : ℂ) - Complex.I * (τ : ℂ)) * (Φ : ℂ) =
+        -Complex.I * (s : ℂ) * (Φ : ℂ) +
+          (Complex.I * Complex.I) * (τ : ℂ) * (Φ : ℂ) := by ring
+    _ = -Complex.I * (s : ℂ) * (Φ : ℂ) + (-1 : ℂ) * (τ : ℂ) * (Φ : ℂ) := by
+        rw [Complex.I_mul_I]
+    _ = -Complex.I * (s : ℂ) * (Φ : ℂ) + (-(τ : ℂ) * (Φ : ℂ)) := by ring
+
+private theorem neg_half_add_neg_half_mul (Φ : ℝ) :
+    -(1 / 2 : ℝ) * Φ + -(1 / 2 : ℝ) * Φ = -1 * Φ := by
+  ring
+
+private theorem neg_neg_two_mul_eq_add (Φ : ℝ) :
+    -(-2 : ℝ) * Φ = Φ + Φ := by
+  ring
+
+private theorem mestel_toomreQ_scalar (s2 v c G r : ℝ)
+    (hv : v ≠ 0) (hG : G ≠ 0) (hr : r ≠ 0) :
+    ((s2 * (v / r)) * c) / (Real.pi * G * (v ^ 2 / (2 * Real.pi * G * r))) =
+      (2 * s2 * c) / v := by
+  have hpi : Real.pi ≠ 0 := ne_of_gt Real.pi_pos
+  have h_den :
+      Real.pi * G * (v ^ 2 / (2 * Real.pi * G * r)) =
+        v * v * 2⁻¹ * r⁻¹ := by
+    rw [div_eq_mul_inv, mul_inv, mul_inv, mul_inv]
+    calc
+      Real.pi * G * (v ^ 2 * (2⁻¹ * Real.pi⁻¹ * G⁻¹ * r⁻¹)) =
+          (Real.pi * Real.pi⁻¹) * (G * G⁻¹) * (v * v * 2⁻¹ * r⁻¹) := by ring
+      _ = 1 * 1 * (v * v * 2⁻¹ * r⁻¹) := by
+          rw [mul_inv_cancel₀ hpi, mul_inv_cancel₀ hG]
+      _ = v * v * 2⁻¹ * r⁻¹ := by ring
+  rw [h_den, div_eq_mul_inv, div_eq_mul_inv, div_eq_mul_inv]
+  rw [mul_inv, mul_inv, mul_inv, inv_inv, inv_inv]
+  calc
+    s2 * (v * r⁻¹) * c * (v⁻¹ * v⁻¹ * 2 * r) =
+        (r * r⁻¹) * (v * v⁻¹) * (2 * s2 * c * v⁻¹) := by ring
+    _ = 1 * 1 * (2 * s2 * c * v⁻¹) := by
+        rw [mul_inv_cancel₀ hr, mul_inv_cancel₀ hv]
+    _ = 2 * s2 * c * v⁻¹ := by ring
+
+private theorem one_lt_two_sqrt_two_mul_div_iff (v c : ℝ) (hv : 0 < v) :
+    1 < (2 * Real.sqrt 2 * c) / v ↔ v / (2 * Real.sqrt 2) < c := by
+  have hs2_pos : 0 < Real.sqrt 2 := Real.sqrt_pos.mpr zero_lt_two
+  have h2s2_pos : 0 < 2 * Real.sqrt 2 := mul_pos zero_lt_two hs2_pos
+  have h2s2_ne : 2 * Real.sqrt 2 ≠ 0 := ne_of_gt h2s2_pos
+  have hv_ne : v ≠ 0 := ne_of_gt hv
+  constructor
+  · intro h
+    have h1 : 1 * v < ((2 * Real.sqrt 2 * c) / v) * v :=
+      mul_lt_mul_of_pos_right h hv
+    rw [one_mul, div_mul_cancel₀ _ hv_ne] at h1
+    have h2 : v / (2 * Real.sqrt 2) < (2 * Real.sqrt 2 * c) / (2 * Real.sqrt 2) :=
+      div_lt_div_of_pos_right h1 h2s2_pos
+    rwa [mul_div_cancel_left₀ c h2s2_ne] at h2
+  · intro h
+    have h1 : (v / (2 * Real.sqrt 2)) * (2 * Real.sqrt 2) < c * (2 * Real.sqrt 2) :=
+      mul_lt_mul_of_pos_right h h2s2_pos
+    rw [div_mul_cancel₀ v h2s2_ne, mul_comm c (2 * Real.sqrt 2)] at h1
+    have h2 : v / v < (2 * Real.sqrt 2 * c) / v :=
+      div_lt_div_of_pos_right h1 hv
+    rwa [div_self hv_ne] at h2
 
 /-!
 ### Archetype I — Lindblad Resonance Wave-Branch Factorization (Long-Wave $k_r = 0$ vs. Short-Wave Acoustic Branch $|k_r| = 2 k_{\mathrm{crit}}$)
@@ -919,6 +1008,218 @@ theorem logSpiral_from_loxodromic_time (r₀ lam ω t : ℝ) (hω : ω ≠ 0) :
       dissipativeRadius r₀ lam t := by
   dsimp [logSpiralRadius, spiralAngle, dissipativeRadius]
   rw [logSpiral_time_elim_scalar lam ω t hω]
+
+/-!
+### Archetype VII — Complex KMS Strip Wick-Rotated Dilatation ($\tau \in \{0, 1/2, 1, -2\}$), Oort Constants ($A, B, \kappa^2 = -4B\Omega$), and Mestel Disk Scale-Invariant Toomre $Q$
+-/
+
+/-- Softmax partition function $Z(\ell, \beta) = \sum_j e^{\beta \ell_j}$. -/
+noncomputable def softmaxPartitionZ {ι : Type*} [Fintype ι]
+    (logits : ι → ℝ) (β : ℝ) : ℝ :=
+  ∑ j, Real.exp (β * logits j)
+
+/-- Log-partition free-energy / radial-quantization coordinate
+$\Phi(\ell, \beta) = \ln Z(\ell, \beta) = \mathrm{radialTime}(Z(\ell, \beta))$. -/
+noncomputable def softmaxLogPartitionPhi {ι : Type*} [Fintype ι]
+    (logits : ι → ℝ) (β : ℝ) : ℝ :=
+  RadialQuantizationFiveGradedCylinder.radialTime (softmaxPartitionZ logits β)
+
+/-- On any nonempty finite token context, `softmaxPartitionZ logits β` is strictly positive. -/
+theorem softmaxPartitionZ_pos {ι : Type*} [Fintype ι] [Nonempty ι]
+    (logits : ι → ℝ) (β : ℝ) :
+    0 < softmaxPartitionZ logits β := by
+  dsimp [softmaxPartitionZ]
+  apply Finset.sum_pos'
+  · intro j _
+    exact le_of_lt (Real.exp_pos _)
+  · exact ⟨Classical.arbitrary ι, Finset.mem_univ _, Real.exp_pos _⟩
+
+/-- For any $0 < r$, exponentiating `radialTime r` via `coneRadius` recovers $r$. -/
+theorem coneRadius_radialTime_of_pos {r : ℝ} (hr : 0 < r) :
+    RadialQuantizationFiveGradedCylinder.coneRadius
+      (RadialQuantizationFiveGradedCylinder.radialTime r) = r :=
+  InfoGeometry.Convex.RadialLogBarrier.exp_radialTau hr
+
+/-- Exponentiating `softmaxLogPartitionPhi logits β` via `coneRadius` recovers the partition
+function `softmaxPartitionZ logits β`. -/
+theorem coneRadius_softmaxLogPartitionPhi {ι : Type*} [Fintype ι] [Nonempty ι]
+    (logits : ι → ℝ) (β : ℝ) :
+    RadialQuantizationFiveGradedCylinder.coneRadius
+      (softmaxLogPartitionPhi logits β) =
+      softmaxPartitionZ logits β :=
+  coneRadius_radialTime_of_pos (softmaxPartitionZ_pos logits β)
+
+/-- Complex KMS strip evolution factor $e^{-i(s - i\tau)\Phi}$ at real modular time $s$ and
+Wick-rotated imaginary strip depth $\tau$. -/
+noncomputable def kmsStripFactor (Φ s τ : ℝ) : ℂ :=
+  Complex.exp (-Complex.I * ((s : ℂ) - Complex.I * (τ : ℂ)) * (Φ : ℂ))
+
+/-- **Wick-Rotated KMS Strip Factorization ($e^{-i(s - i\tau)\Phi} = e^{-is\Phi} \cdot e^{-\tau\Phi}$)**:
+Analytic continuation from real modular time $s$ into the complex KMS strip $z = s - i\tau$
+factors into the unitary phase $e^{-is\Phi}$ times the real radial dilatation weight
+$e^{-\tau\Phi}$. -/
+theorem kmsStripFactor_eq_phase_mul_dilatation (Φ s τ : ℝ) :
+    kmsStripFactor Φ s τ =
+      Complex.exp (-Complex.I * (s : ℂ) * (Φ : ℂ)) *
+        (Real.exp (-τ * Φ) : ℂ) := by
+  dsimp [kmsStripFactor]
+  rw [kms_strip_exponent_split, Complex.exp_add, Complex.ofReal_exp]
+
+/-- Real radial dilatation factor $e^{-\tau \Phi}$ along the imaginary KMS strip axis $\tau$. -/
+noncomputable def kmsStripDilatation (Φ τ : ℝ) : ℝ :=
+  Real.exp (-τ * Φ)
+
+/-- At the $\tau = 0$ real boundary of the KMS strip, the radial dilatation weight is `1`. -/
+theorem kmsStripDilatation_at_zero (Φ : ℝ) :
+    kmsStripDilatation Φ 0 = 1 := by
+  dsimp [kmsStripDilatation]
+  rw [neg_zero, zero_mul, Real.exp_zero]
+
+/-- Squaring the $\tau = 1/2$ Petz spinor midpoint dilatation factor recovers the $\tau = 1$
+simplex normalization factor: $(e^{-\Phi/2})^2 = e^{-\Phi}$. -/
+theorem kmsStripDilatation_at_half_sq (Φ : ℝ) :
+    (kmsStripDilatation Φ (1 / 2 : ℝ)) ^ 2 = kmsStripDilatation Φ 1 := by
+  dsimp [kmsStripDilatation]
+  rw [sq, ← Real.exp_add, neg_half_add_neg_half_mul]
+
+/-- At the $\tau = 1$ thermal KMS boundary, `kmsStripDilatation (softmaxLogPartitionPhi logits β) 1`
+equals the inverse partition function $Z(\ell, \beta)^{-1}$. -/
+theorem kmsStripDilatation_at_one {ι : Type*} [Fintype ι] [Nonempty ι]
+    (logits : ι → ℝ) (β : ℝ) :
+    kmsStripDilatation (softmaxLogPartitionPhi logits β) 1 =
+      (softmaxPartitionZ logits β)⁻¹ := by
+  dsimp [kmsStripDilatation]
+  rw [neg_one_mul, Real.exp_neg]
+  exact congrArg Inv.inv (coneRadius_softmaxLogPartitionPhi logits β)
+
+/-- At $\tau = -2$, `kmsStripDilatation (softmaxLogPartitionPhi logits β) (-2)` equals the
+squared partition scale $Z(\ell, \beta)^2$. -/
+theorem kmsStripDilatation_at_neg_two {ι : Type*} [Fintype ι] [Nonempty ι]
+    (logits : ι → ℝ) (β : ℝ) :
+    kmsStripDilatation (softmaxLogPartitionPhi logits β) (-2) =
+      (softmaxPartitionZ logits β) ^ 2 := by
+  dsimp [kmsStripDilatation]
+  rw [neg_neg_two_mul_eq_add, Real.exp_add, ← sq]
+  exact congrArg (fun x : ℝ => x ^ 2) (coneRadius_softmaxLogPartitionPhi logits β)
+
+/-- The $\tau = 1/2$ Petz / Tomita half-density spinor amplitude
+$\psi_i = \sqrt{\rho_i} = \sqrt{\mathrm{softmaxWeight}(\ell, \beta)_i}$. -/
+noncomputable def petzSpinorState {ι : Type*} [Fintype ι]
+    (logits : ι → ℝ) (β : ℝ) (i : ι) : ℝ :=
+  Real.sqrt (AttentionKMSState.softmaxWeight logits β i)
+
+/-- Squaring each component of `petzSpinorState` recovers the thermal probability
+`AttentionKMSState.softmaxWeight logits β i`. -/
+theorem petzSpinorState_sq_eq_softmaxWeight {ι : Type*} [Fintype ι] [Nonempty ι]
+    (logits : ι → ℝ) (β : ℝ) (i : ι) :
+    (petzSpinorState logits β i) ^ 2 =
+      AttentionKMSState.softmaxWeight logits β i := by
+  dsimp [petzSpinorState]
+  exact Real.sq_sqrt (le_of_lt (AttentionKMSState.softmaxWeight_pos logits β i))
+
+/-- **Unit-Sphere Normalization of the $\tau = 1/2$ Petz Spinor State**:
+The $\tau = 1/2$ half-density spinor `petzSpinorState logits β` lies on the unit sphere
+$\sum_i \psi_i^2 = 1$. -/
+theorem petzSpinorState_unit_sphere {ι : Type*} [Fintype ι] [Nonempty ι]
+    (logits : ι → ℝ) (β : ℝ) :
+    (∑ i : ι, (petzSpinorState logits β i) ^ 2) = 1 := by
+  have h_congr :
+      (∑ i : ι, (petzSpinorState logits β i) ^ 2) =
+        ∑ i : ι, AttentionKMSState.softmaxWeight logits β i := by
+    refine Finset.sum_congr rfl (fun i _ => ?_)
+    exact petzSpinorState_sq_eq_softmaxWeight logits β i
+  rw [h_congr]
+  exact AttentionKMSState.softmaxWeight_sum_one logits β
+
+/-- First Oort constant $A = -\frac{1}{2} r \frac{d\Omega}{dr}$ measuring local azimuthal shear. -/
+noncomputable def oortA (r_dOmega_dr : ℝ) : ℝ :=
+  -(1 / 2 : ℝ) * r_dOmega_dr
+
+/-- Second Oort constant $B = -\frac{1}{2} r \frac{d\Omega}{dr} - \Omega$ measuring local
+vorticity. -/
+noncomputable def oortB (Ω r_dOmega_dr : ℝ) : ℝ :=
+  -(1 / 2 : ℝ) * r_dOmega_dr - Ω
+
+/-- First Oort identity: $A - B = \Omega$. -/
+theorem oortA_sub_oortB_eq_omega (Ω r_dOmega_dr : ℝ) :
+    oortA r_dOmega_dr - oortB Ω r_dOmega_dr = Ω := by
+  dsimp [oortA, oortB]
+  ring
+
+/-- Second Oort identity: $A + B = -(r \frac{d\Omega}{dr} + \Omega) = -\frac{dv_c}{dr}$. -/
+theorem oortA_add_oortB_eq_neg_shear_add_omega (Ω r_dOmega_dr : ℝ) :
+    oortA r_dOmega_dr + oortB Ω r_dOmega_dr = -(r_dOmega_dr + Ω) := by
+  dsimp [oortA, oortB]
+  ring
+
+/-- Logarithmic shear rate $r \frac{d\Omega}{dr} = -\alpha \Omega(r)$ of the power-law rotation
+profile `powerLawOmega Ω₀ α r`. -/
+noncomputable def powerLawShearRate (Ω₀ α r : ℝ) : ℝ :=
+  -α * powerLawOmega Ω₀ α r
+
+/-- **Classical Oort Epicyclic Identity ($\kappa^2 = -4 B \Omega$)**:
+For any power-law rotation profile, `powerLawEpicyclicFreqSq` equals $-4 B \Omega$. -/
+theorem powerLawEpicyclicFreqSq_eq_neg_four_oortB_mul_omega (Ω₀ α r : ℝ) :
+    powerLawEpicyclicFreqSq Ω₀ α r =
+      -4 * oortB (powerLawOmega Ω₀ α r) (powerLawShearRate Ω₀ α r) *
+        powerLawOmega Ω₀ α r := by
+  dsimp [powerLawEpicyclicFreqSq, oortB, powerLawShearRate]
+  ring
+
+/-- For a flat rotation curve ($\alpha = 1$), the first Oort constant is
+$A = +\frac{1}{2}\Omega(r)$. -/
+theorem oortA_flatRotationCurve (Ω₀ r : ℝ) :
+    oortA (powerLawShearRate Ω₀ 1 r) = (1 / 2 : ℝ) * powerLawOmega Ω₀ 1 r := by
+  dsimp [oortA, powerLawShearRate]
+  ring
+
+/-- For a flat rotation curve ($\alpha = 1$), the second Oort constant is
+$B = -\frac{1}{2}\Omega(r)$. -/
+theorem oortB_flatRotationCurve (Ω₀ r : ℝ) :
+    oortB (powerLawOmega Ω₀ 1 r) (powerLawShearRate Ω₀ 1 r) =
+      -(1 / 2 : ℝ) * powerLawOmega Ω₀ 1 r := by
+  dsimp [oortB, powerLawShearRate]
+  ring
+
+/-- For a flat rotation curve ($\alpha = 1$), $A + B = 0$ identically ($dv_c / dr = 0$). -/
+theorem oortA_add_oortB_flatRotationCurve_zero (Ω₀ r : ℝ) :
+    oortA (powerLawShearRate Ω₀ 1 r) +
+      oortB (powerLawOmega Ω₀ 1 r) (powerLawShearRate Ω₀ 1 r) = 0 := by
+  rw [oortA_flatRotationCurve, oortB_flatRotationCurve]
+  ring
+
+/-- Self-similar Mestel disk surface density $\Sigma_0(r) = \frac{v_{\mathrm{sink}}^2}{2\pi G r}$
+associated with a flat rotation curve of circular speed $v_{\mathrm{sink}}$. -/
+noncomputable def mestelSurfaceDensity (v_sink G r : ℝ) : ℝ :=
+  v_sink ^ 2 / (2 * Real.pi * G * r)
+
+/-- **Exact Radial Scale Invariance of Toomre's $Q$ on the Mestel Disk**:
+In a flat-rotation-curve Mestel disk ($\kappa(r) = \sqrt{2}\Omega(r) = \sqrt{2} v_{\mathrm{sink}}/r$
+and $\Sigma_0(r) = \frac{v_{\mathrm{sink}}^2}{2\pi G r}$), the radial coordinate $r \ne 0$ cancels
+identically from `toomreQ`, leaving the scale-invariant ratio
+$Q = \frac{2\sqrt{2} c_s}{v_{\mathrm{sink}}}$. -/
+theorem toomreQ_mestelDisk_scale_invariant (v_sink c_s G r : ℝ)
+    (hv : v_sink ≠ 0) (hG : G ≠ 0) (hr : r ≠ 0) :
+    LinShuAttentionDensityWave.toomreQ
+      (Real.sqrt 2 * powerLawOmega v_sink 1 r) c_s G
+      (mestelSurfaceDensity v_sink G r) =
+      (2 * Real.sqrt 2 * c_s) / v_sink := by
+  dsimp [LinShuAttentionDensityWave.toomreQ, mestelSurfaceDensity]
+  rw [powerLawOmega_one_eq_div]
+  exact mestel_toomreQ_scalar (Real.sqrt 2) v_sink c_s G r hv hG hr
+
+/-- **Radius-Independent Toomre Stability Threshold of the Mestel Disk**:
+For $v_{\mathrm{sink}} > 0$, $G \ne 0$, and $r \ne 0$, the Mestel disk satisfies $Q > 1$ at
+radius $r$ if and only if the thermal sound speed exceeds the global threshold
+$c_s > \frac{v_{\mathrm{sink}}}{2\sqrt{2}}$. -/
+theorem mestelDisk_toomreQ_gt_one_iff (v_sink c_s G r : ℝ)
+    (hv : 0 < v_sink) (hG : G ≠ 0) (hr : r ≠ 0) :
+    1 < LinShuAttentionDensityWave.toomreQ
+      (Real.sqrt 2 * powerLawOmega v_sink 1 r) c_s G
+      (mestelSurfaceDensity v_sink G r) ↔
+      v_sink / (2 * Real.sqrt 2) < c_s := by
+  rw [toomreQ_mestelDisk_scale_invariant v_sink c_s G r (ne_of_gt hv) hG hr]
+  exact one_lt_two_sqrt_two_mul_div_iff v_sink c_s hv
 
 end InfoGeometry.QuantumContext.LinShuKMSPetzRadialSynthesis
 

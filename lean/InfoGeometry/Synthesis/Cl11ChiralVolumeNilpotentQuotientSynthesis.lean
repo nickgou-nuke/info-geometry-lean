@@ -15,22 +15,29 @@ import InfoGeometry.Canonical.SplitOctonionParaKahlerNullCone
 import InfoGeometry.Canonical.SplitOctonionClifford33Soldering
 import InfoGeometry.Canonical.SplitOctonionJordanWignerIntertwiner
 import InfoGeometry.Synthesis.ThreeTraditionLineageConvergence
+import InfoGeometry.QuantumContext.MarkovAttentionGroupInverse
+import InfoGeometry.QuantumContext.PetzDataProcessingMonotonicity
+import InfoGeometry.Projective.HadjiivanovLogConnectionReadoutCommutationBridge
 
 /-!
-# Krein–$\operatorname{Cl}(1,1)$ Nilpotent-Kernel and Möbius-Quotient Synthesis
+# Krein–$\operatorname{Cl}(1,1)$ Nilpotent-Kernel and Möbius-Quotient Synthesis (6-Layer Master Spine)
 
-This module unifies the atomic $\operatorname{Cl}(1,1)$ matrix model, the inductive
+This module unifies the 6 layers of the Krein–$\operatorname{Cl}(1,1)$ architecture:
+the atomic $\operatorname{Cl}(1,1)$ matrix cell, the inductive
 $\operatorname{Cl}(1,1)^{\otimes n}$ Jordan–Wigner CAR tensor tower, the Krein
 para-complex sheet projectors and off-diagonal quadratic pairing on
 `ModularCPT.DoubledCarrier E`, the unoriented Möbius $\mathbb{Z}_2$ quotient
-identifying primal and dual covector sheets, and finite $8 \times 8$ Zorn/Jordan–Wigner
-matrix identities. The quotient is by the explicit Möbius twist, and the final
-diagonal matrix is the vacuum-minus-top Peirce operator; neither is identified
-here with a quotient by, or the full chiral-volume operator of, $\operatorname{Cl}(3,3)$.
+identifying primal and dual covector sheets, the finite $8 \times 8$ Zorn/Jordan–Wigner
+orthogonal intertwiner and vacuum–top Peirce identities, and the dissipative
+Markov Laplacian group inverse, Petz zero-leakage kernel saturation, KMS–Chentsov
+softmax readout, and logarithmic cone-apex unipotent monodromy commutation.
+The quotient is by the explicit Möbius twist, and the $8 \times 8$ diagonal matrix
+in Section 5 is the vacuum-minus-top Peirce operator; neither is identified here
+with a quotient by, or the full chiral-volume operator of, $\operatorname{Cl}(3,3)$.
 
 ## Main Results
 
-1. **Section 1 ($\operatorname{Cl}(1,1)$ Atomic $2 \times 2$ Cell)**:
+1. **Section 1 (Layer 1 — $\operatorname{Cl}(1,1)$ Atomic $2 \times 2$ Cell)**:
    - `cl11NilpotentPlus`, `cl11NilpotentMinus`, `cl11ChiralVolume`,
      `cl11VacProj`, and `cl11OccProj`.
    - Nilpotency (`cl11NilpotentPlus_sq_zero`, `cl11NilpotentMinus_sq_zero`),
@@ -43,13 +50,13 @@ here with a quotient by, or the full chiral-volume operator of, $\operatorname{C
      `cl11VacProj_sub_cl11OccProj_eq_neg_chiralVolume`,
      `cl11NilpotentPlus_mul_cl11VacProj_zero`,
      `cl11NilpotentMinus_mul_cl11OccProj_zero`).
-2. **Section 2 ($\operatorname{Cl}(1,1)^{\otimes n}$ Tensor Tower of Null Nilpotents)**:
+2. **Section 2 (Layer 2 — $\operatorname{Cl}(1,1)^{\otimes n}$ Tensor Tower of Null Nilpotents)**:
    - Stage-uniform nilpotency (`jwCreation_sq_zero_all`, `jwAnnihilation_sq_zero_all`),
      uniform same-type anticommutativity (`jwCreation_anticomm_all`,
      `jwAnnihilation_anticomm_all`), and chiral parity conjugation negating every
      Jordan–Wigner ladder operator (`globalChirality_conj_jwCreation`,
      `globalChirality_conj_jwAnnihilation`).
-3. **Section 3 (Krein Indefinite Metric & Para-Complex Kernel Sheets)**:
+3. **Section 3 (Layer 3 — Krein Indefinite Metric & Para-Complex Kernel Sheets)**:
    - Isotropic vanishing on the spectral projectors and eigen-submodules
      (`kreinForm_paraProjectorPlus_self_zero`,
      `kreinForm_paraProjectorMinus_self_zero`,
@@ -57,32 +64,47 @@ here with a quotient by, or the full chiral-volume operator of, $\operatorname{C
      `kreinForm_self_eq_zero_of_mem_covectorVacuumSheet`), and off-diagonal
      cross-sheet quadratic evaluation (`kreinForm_eq_offDiagonal_sheet_pairing_sum`,
      `kreinForm_eq_two_mul_offDiagonal_sheet_pairing`).
-4. **Section 4 (Unoriented Möbius $\mathbb{Z}_2$ Quotient)**:
+4. **Section 4 (Layer 4/5 — Unoriented Möbius $\mathbb{Z}_2$ Quotient)**:
    - `mobiusOrbitRel`, `chiralMobiusSetoid`, `UnorientedMobiusQuotient`,
      well-definedness of `quotientKreinQuadratic`, and the sheet identification
      `primal_eq_covectorVacuum_in_unorientedMobiusQuotient`.
-5. **Section 5 (Finite Zorn/Jordan–Wigner Vacuum–Top Matrix Identities)**:
-   - Explicit action of `zornJWConjugator` swapping the vacuum and top Fock lines
-     while fixing the $3 \oplus 3$ primal and dual vector sheets, the half-sum
+5. **Section 5 (Layer 3/5 — Finite Zorn/Jordan–Wigner Orthogonal Intertwiner & Vacuum–Top Peirce Identities)**:
+   - Symmetry and orthogonality of `zornJWConjugator` (`zornJWConjugator_transpose`,
+     `zornJWConjugator_mul_transpose`), explicit action swapping the vacuum and top Fock
+     lines while fixing the $3 \oplus 3$ primal and dual vector sheets, the half-sum
      realization `zornVacuumTopPeirceOperator_eq_half_left_add_right`, and its
      sign reversal `zornJWConjugator_negates_zornVacuumTopPeirceOperator`.
+6. **Section 6 (Layer 6 — Dissipative Laplacian Kernels, Group Inverses, Petz Zero-Leakage Saturation & Log-Cone Monodromy)**:
+   - Consensus kernel identification `rowStochastic_laplacian_mem_ker_iff_const`
+     ($\ker(I - P) = \mathbb{R}\mathbf{1}$) and unique range-constrained Poisson
+     solvability via the group inverse `stochastic_laplacian_poisson_unique_groupInverse_solution`.
+   - Petz Stiefel trace preservation and zero-leakage kernel saturation
+     `petz_stiefel_zero_leakage_iff_exact_saturation` ($L = 0 \iff \rho_{\mathrm{rec}} = \sigma_{\mathrm{causal}}$).
+   - KMS colimit modular readout and sequential Chentsov uniqueness at the softmax
+     interior `kms_colimit_readout_matches_softmax_and_chentsov_seqContinuous`.
+   - Nilpotent cone-apex residue commutation with the full algebraic logarithmic
+     connection `hadjiivanov_logConnection_commutes_with_unipotent_and_monodromy_readout`
+     ($N^2 = 0 \implies [\nabla_{\log}, I + pN] = 0$).
 
 ## Scope Note
 
 This file proves finite-dimensional and inductive matrix-stage algebraic identities,
-linear-algebraic Krein sheet decompositions, and the setoid quotient on
-`ModularCPT.DoubledCarrier E`. It does not claim analytic continuum limits or
-infinite-dimensional operator-norm convergence beyond the inductive algebraic tower.
+linear-algebraic Krein sheet decompositions, the setoid quotient on
+`ModularCPT.DoubledCarrier E`, and finite/algebraic operator-kernel bridges. It does
+not claim analytic continuum limits or infinite-dimensional operator-norm convergence
+beyond the inductive algebraic tower.
 -/
 
 set_option autoImplicit false
 
 namespace InfoGeometry.Synthesis.Cl11ChiralVolumeNilpotentQuotientSynthesis
 
-open scoped Matrix Kronecker
+open scoped Matrix Kronecker BigOperators
 open Matrix
 open InfoGeometry.Clifford
 open InfoGeometry.Canonical
+open InfoGeometry.QuantumContext
+open InfoGeometry.Epistemology
 open InfoGeometry.SuperGrassmannian
 
 /-!
@@ -672,4 +694,123 @@ theorem zornJWConjugator_negates_zornVacuumTopPeirceOperator :
       zornVacuumTopPeirceOperator, Matrix.mul_apply,
       Fin.sum_univ_eight]
 
+/-- The Zorn–Jordan–Wigner basis-change matrix `zornJWConjugator` is symmetric
+($U^\top = U$). -/
+theorem zornJWConjugator_transpose :
+    SplitOctonionJordanWignerIntertwiner.zornJWConjugator.transpose =
+      SplitOctonionJordanWignerIntertwiner.zornJWConjugator := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [SplitOctonionJordanWignerIntertwiner.zornJWConjugator,
+      Matrix.transpose_apply]
+
+/-- The Zorn–Jordan–Wigner basis-change matrix `zornJWConjugator` is orthogonal
+($U U^\top = I_8$). -/
+theorem zornJWConjugator_mul_transpose :
+    SplitOctonionJordanWignerIntertwiner.zornJWConjugator *
+      SplitOctonionJordanWignerIntertwiner.zornJWConjugator.transpose = 1 := by
+  rw [zornJWConjugator_transpose]
+  exact SplitOctonionJordanWignerIntertwiner.zornJWConjugator_sq
+
+/-!
+## Section 6: Layer 6 — Dissipative Laplacian Kernels, Group Inverses, Petz Zero-Leakage Saturation & Log-Cone Monodromy
+-/
+
+/-- **Markov Laplacian Consensus Kernel ($\ker(I - P) = \mathbb{R}\mathbf{1}$)**:
+For any strictly positive row-stochastic matrix $P$, a column observable $x$ lies in
+the kernel of the Markov Laplacian $\operatorname{toLin}'(I - P)$ if and only if $x$
+is a constant consensus vector. -/
+theorem rowStochastic_laplacian_mem_ker_iff_const
+    {ι : Type*} [Fintype ι] [DecidableEq ι] [Nonempty ι]
+    (P : Matrix ι ι ℝ) (hP : P ∈ Matrix.rowStochastic ℝ ι)
+    (hpos : ∀ i j, 0 < P i j) (x : ι → ℝ) :
+    x ∈ (Matrix.toLin' (1 - P)).ker ↔ ∃ c : ℝ, ∀ i, x i = c := by
+  rw [LinearMap.mem_ker]
+  change (1 - P) *ᵥ x = 0 ↔ ∃ c : ℝ, ∀ i, x i = c
+  rw [Matrix.sub_mulVec, Matrix.one_mulVec, sub_eq_zero, eq_comm]
+  exact InfoGeometry.QuantumContext.MarkovDrazin.positive_rowStochastic_mulVec_fixed_iff_const
+    P hP hpos x
+
+/-- **Markov Laplacian Group Inverse & Unique Range-Constrained Poisson Solution**:
+For any finite row-stochastic matrix $P$ and any right-hand side $b \in \operatorname{im}(I - P)$,
+there exists a group inverse $D = (I - P)^\#$ of the Markov Laplacian such that $D b$
+is the unique solution in $\operatorname{im}(I - P)$ to the discrete Poisson equation
+$(I - P)x = b$. -/
+theorem stochastic_laplacian_poisson_unique_groupInverse_solution
+    {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (P : Matrix ι ι ℝ) (hP : P ∈ Matrix.rowStochastic ℝ ι)
+    (b : ι → ℝ) (hb : b ∈ (Matrix.toLin' (1 - P)).range) :
+    ∃ D : Module.End ℝ (ι → ℝ),
+      InfoGeometry.Canonical.HartwigSouriauFrameDrazin.IsGroupInverse
+        (Matrix.toLin' (1 - P)) D ∧
+      Matrix.toLin' (1 - P) (D b) = b ∧
+      D b ∈ (Matrix.toLin' (1 - P)).range ∧
+      ∀ x : ι → ℝ, x ∈ (Matrix.toLin' (1 - P)).range →
+        Matrix.toLin' (1 - P) x = b → x = D b :=
+  InfoGeometry.QuantumContext.MarkovDrazin.stochastic_laplacian_poisson_solution_exists_unique
+    P hP b hb
+
+/-- **Petz Stiefel Trace Conservation & Zero-Leakage Saturation ($L = 0 \iff \rho_{\mathrm{rec}} = \sigma_{\mathrm{causal}}$)**:
+Under the Stiefel isometry condition $K^2 + L^2 = 1$ with non-zero retained weight $s \ne 0$,
+the 2-block Petz reconstruction $\rho_{\mathrm{rec}}(K, L, s)$ preserves total trace
+$\operatorname{Tr}(\rho_{\mathrm{rec}}(K, L, s)) = s$ and exactly recovers the compressed
+past state $\sigma_{\mathrm{causal}}(s)$ if and only if the future-sheet leakage parameter
+lies in the kernel $L = 0$. -/
+theorem petz_stiefel_zero_leakage_iff_exact_saturation
+    (K L s : ℝ) (h_stiefel : K ^ 2 + L ^ 2 = 1) (hs : s ≠ 0) :
+    Matrix.trace (InfoGeometry.QuantumContext.reconstructState K L s) = s ∧
+      (InfoGeometry.QuantumContext.reconstructState K L s =
+        InfoGeometry.QuantumContext.compressedState s ↔ L = 0) :=
+  ⟨InfoGeometry.QuantumContext.petz_stiefel_trace_preservation K L s h_stiefel,
+   InfoGeometry.QuantumContext.petz_stiefel_saturation_iff_zero_future K L s h_stiefel hs⟩
+
+/-- **Logarithmic Cone-Apex Unipotent & Monodromy Commutation ($N^2 = 0 \implies [\nabla_{\log}, \mathcal{U}_p] = 0$)**:
+Because the residue nilpotent $N$ of `R : LogResidue V` satisfies $N^2 = 0$, the full
+algebraic logarithmic connection $\nabla_{\log}$ commutes identically with both the
+unipotent residue shear `sectionUnipotentReadout R p` ($I + pN$) and the phase-decorated
+Hadjiivanov monodromy readout `sectionMonodromyReadout R`. -/
+theorem hadjiivanov_logConnection_commutes_with_unipotent_and_monodromy_readout
+    {V : Type*} [AddCommGroup V] [Module ℂ V]
+    (R : InfoGeometry.Projective.HadjiivanovLogConnectionBridge.LogResidue V) (p : ℂ) :
+    (InfoGeometry.Projective.HadjiivanovLogConnectionBridge.logarithmicConnection R).comp
+        (InfoGeometry.Projective.HadjiivanovLogConnectionReadoutCommutationBridge.sectionUnipotentReadout R p) =
+      (InfoGeometry.Projective.HadjiivanovLogConnectionReadoutCommutationBridge.sectionUnipotentReadout R p).comp
+        (InfoGeometry.Projective.HadjiivanovLogConnectionBridge.logarithmicConnection R) ∧
+    (InfoGeometry.Projective.HadjiivanovLogConnectionBridge.logarithmicConnection R).comp
+        (InfoGeometry.Projective.HadjiivanovLogConnectionReadoutCommutationBridge.sectionMonodromyReadout R) =
+      (InfoGeometry.Projective.HadjiivanovLogConnectionReadoutCommutationBridge.sectionMonodromyReadout R).comp
+        (InfoGeometry.Projective.HadjiivanovLogConnectionBridge.logarithmicConnection R) :=
+  ⟨InfoGeometry.Projective.HadjiivanovLogConnectionReadoutCommutationBridge.logarithmicConnection_unipotent_comp R p,
+   InfoGeometry.Projective.HadjiivanovLogConnectionReadoutCommutationBridge.logarithmicConnection_monodromyReadout_comp R⟩
+
+/-- **KMS Colimit Modular Readout & Chentsov Softmax Interior Synthesis**:
+Across any stage $k \le n$ of the Cuntz $2^k \times 2^k$ matrix tower, the selected-stage
+colimit readout of a modular-flow-evolved observable equals the finite `softmaxProbInterior`
+expectation, and any sequentially continuous Markov-invariant metric family is uniquely
+proportional to the Fisher–Rao metric at `softmaxProbInterior logits β`. -/
+theorem kms_colimit_readout_matches_softmax_and_chentsov_seqContinuous
+    {k n : ℕ} (h : k ≤ n) (logits : Fin (2 ^ k) → ℝ) (β t : ℝ)
+    (A : Matrix (Fin (2 ^ k)) (Fin (2 ^ k)) ℝ)
+    (F : Epistemology.ChentsovUniqueness.InvariantMetricFamily)
+    (hF : Epistemology.ChentsovUniquenessContinuous.SeqContinuous F) :
+    MatrixStageSelectedFunctional.selectedStageColimitFunctional k
+        (QuantumContext.AttentionStageColimitState.attentionStageDensity k logits β)
+        (CuntzMatrixAlgebraicStarColimit.stageInjection n
+          (CuntzMatrixAlgebraicStarColimit.rawMap h
+            (QuantumContext.ColimitAttentionTomitaFlow.modularFlow logits β t
+              (QuantumContext.AttentionStageColimitState.complexifyRealMatrix A)))) =
+      ((∑ i : Fin (2 ^ k),
+          (ThreeTraditionLineageConvergence.softmaxProbInterior logits β).p i * A i i : ℝ) : ℂ) ∧
+    ∃ c : ℝ, ∀ (u v : Fin (2 ^ k) → ℝ),
+      ∑ i, u i = 0 → ∑ i, v i = 0 →
+        F.g (Fin (2 ^ k)) (ThreeTraditionLineageConvergence.softmaxProbInterior logits β) u v =
+          c * ∑ i : Fin (2 ^ k), (u i * v i) /
+            QuantumContext.AttentionKMSState.softmaxWeight logits β i := by
+  refine ⟨ThreeTraditionLineageConvergence.kms_colimit_modularFlow_readout_eq_softmaxProbInterior_sum
+    h logits β t A, ?_⟩
+  obtain ⟨c, hc⟩ :=
+    ThreeTraditionLineageConvergence.chentsov_seqContinuous_at_softmax_interior F hF
+  exact ⟨c, fun u v hu hv => hc (Fin (2 ^ k)) logits β u v hu hv⟩
+
 end InfoGeometry.Synthesis.Cl11ChiralVolumeNilpotentQuotientSynthesis
+

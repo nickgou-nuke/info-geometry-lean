@@ -4,28 +4,22 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import Mathlib.Tactic
-import Mathlib.Tactic.NoncommRing
-import InfoGeometry.QuantumContext.MarkovJordanWignerMetriplecticBridge
-import InfoGeometry.QuantumContext.MarkovGroupInversePetzSupport
+import InfoGeometry.Clifford.JordanWignerBridge
 import InfoGeometry.QuantumContext.FiniteSoftmaxMarkovKernel
-import InfoGeometry.Canonical.Cl11LeftRightDoubleBridge
+import InfoGeometry.QuantumContext.MarkovGroupInversePetzSupport
 
 /-!
-# Gate-2 obstruction: a Markov range axis need not commute with a Majorana axis
+# A concrete Markov--Majorana noncommutation witness
 
-This candidate uses the actual first Clifford matrix stage `MatStage 1` (whose
-index is `Idx 1 = Idx 0 × Fin 2`), the repository's row-softmax constructor,
-and `majoranaDifference 0` from the Jordan--Wigner owner. The score matrix has
-diagonal `log 3` and off-diagonal `0`, so its transition is the symmetric,
-strictly positive two-state kernel with diagonal `3/4` and off-diagonal `1/4`.
-The displayed group inverse is checked against the owner definition; it is not
-an assumed inverse. The resulting involution `2E - 1`, where `E = (1-P)G`,
-anticommutes with the genuine Majorana matrix. Thus the two proposed axes do
-not automatically form commuting loxodromic axes on this carrier.
+This finite example uses the repository's row-softmax constructor and its
+Jordan--Wigner creation/annihilation matrices on the same full `2 × 2` matrix
+algebra. For uniform two-state logits, the Markov Laplacian has a concrete
+group inverse. Its range involution anticommutes with the repository's
+Majorana difference, so these two axes do not automatically commute.
 
-This is only a concrete same-carrier algebraic obstruction. It does not
-identify token indices with occupation-basis labels, nor does it identify a
-Transformer trajectory with a Lorentzian or hyperbolic loxodrome.
+This proves a finite matrix obstruction only. It does not identify tokens
+with physical particles, establish a sink potential, or prove any disk,
+continuum, stability, or density-wave claim.
 -/
 
 noncomputable section
@@ -33,160 +27,91 @@ noncomputable section
 namespace InfoGeometry.QuantumContext.MarkovMajoranaLoxodromicObstruction
 
 open Matrix
-open InfoGeometry.Clifford.Cl11TensorTower
-open InfoGeometry.Clifford.TowerMatrix
 open InfoGeometry.Clifford.JordanWignerBridge
-open InfoGeometry.Canonical.Cl11LeftRightDoubleBridge
-open InfoGeometry.QuantumContext.MarkovDrazin
-open InfoGeometry.QuantumContext.MarkovDrazin.JordanWigner
 open InfoGeometry.QuantumContext.FiniteSoftmaxMarkovKernel
 open InfoGeometry.Canonical.HartwigSouriauFrameDrazin
+open InfoGeometry.QuantumContext
 
-abbrev StageOne := MatStage 1
+abbrev Operator := Matrix (Fin 2) (Fin 2) ℝ
 
-@[simp] theorem stageOneIndexEquiv_symm_apply (i : Fin 2) :
-    stageOneIndexEquiv.symm i = ((0 : Fin 1), i) := rfl
+/-- Uniform scores on the two-state carrier. -/
+def uniformScores (_i _j : Fin 2) : ℝ := 0
 
-/-- The recursive first-stage matrix index is canonically the two-element
-index; this equivalence makes its finite sums computationally transparent. -/
-@[simp] theorem sum_idxOne (f : Idx 1 → ℝ) :
-    (∑ i, f i) = f ((0 : Fin 1), (0 : Fin 2)) +
-      f ((0 : Fin 1), (1 : Fin 2)) := by
-  rw [← Equiv.sum_comp stageOneIndexEquiv.symm f]
-  simp only [Fin.sum_univ_two, stageOneIndexEquiv_symm_apply]
-  rfl
+/-- The actual row-softmax transition matrix for `uniformScores`. -/
+def uniformTransition : Operator := softmaxAttentionMatrix uniformScores
 
-/-- Symmetric score logits: `log 3` on the diagonal and zero off diagonal. -/
-def twoModeScores (i j : Idx 1) : ℝ :=
-  if i.2 = j.2 then Real.log 3 else 0
+@[simp] theorem uniformTransition_apply (i j : Fin 2) :
+    uniformTransition i j = (1 : ℝ) / 2 := by
+  simp [uniformTransition, uniformScores, softmaxAttentionMatrix,
+    softmaxAttentionKernel, queryPartitionFunction, gibbsCouplingWeight,
+    Fin.sum_univ_two, Real.exp_zero]
 
-/-- The transition matrix produced by the repository's softmax owner. -/
-def twoModeTransition : Matrix (Idx 1) (Idx 1) ℝ :=
-  softmaxAttentionMatrix twoModeScores
+/-- The Markov Laplacian at the uniform softmax point. -/
+def uniformLaplacian : Operator := 1 - uniformTransition
 
-/-- Explicit group inverse for the Laplacian of `twoModeTransition`. -/
-def twoModeGroupInverse : Matrix (Idx 1) (Idx 1) ℝ :=
-  fun i j => if i.2 = j.2 then 1 else -1
+/-- The displayed group inverse is the same full matrix operator at this
+idempotent Laplacian. -/
+def uniformGroupInverse : Operator := uniformLaplacian
 
-/-- Entrywise readout of the source-defined softmax matrix. -/
-theorem twoModeTransition_apply (i j : Idx 1) :
-    twoModeTransition i j = if i.2 = j.2 then (3 : ℝ) / 4 else 1 / 4 := by
-  fin_cases i <;> fin_cases j <;>
-    norm_num [twoModeTransition, twoModeScores, softmaxAttentionMatrix,
-      softmaxAttentionKernel, queryPartitionFunction, gibbsCouplingWeight,
-      InfoGeometry.Clifford.TowerMatrix.Idx, Fintype.sum_prod_type,
-      Fin.sum_univ_one, Fin.sum_univ_two, stageOneIndexEquiv,
-      Real.exp_log]
-
-/-- The concrete matrix is a genuine group inverse of its softmax Laplacian. -/
-theorem twoModeGroupInverse_spec :
-    IsGroupInverse (1 - twoModeTransition) twoModeGroupInverse := by
-  unfold IsGroupInverse
-  constructor
-  · ext i j
-    fin_cases i <;> fin_cases j <;>
-      norm_num [twoModeTransition_apply, twoModeGroupInverse,
-        Matrix.mul_apply, InfoGeometry.Clifford.TowerMatrix.Idx,
-        Fintype.sum_prod_type, Fin.sum_univ_one, Fin.sum_univ_two,
-        Matrix.one_apply]
-  constructor
-  · ext i j
-    fin_cases i <;> fin_cases j <;>
-      norm_num [twoModeTransition_apply, twoModeGroupInverse,
-        Matrix.mul_apply, InfoGeometry.Clifford.TowerMatrix.Idx,
-        Fintype.sum_prod_type, Fin.sum_univ_one, Fin.sum_univ_two,
-        Matrix.one_apply]
-  · ext i j
-    fin_cases i <;> fin_cases j <;>
-      norm_num [twoModeTransition_apply, twoModeGroupInverse,
-        Matrix.mul_apply, InfoGeometry.Clifford.TowerMatrix.Idx,
-        Fintype.sum_prod_type, Fin.sum_univ_one, Fin.sum_univ_two,
-        Matrix.one_apply]
-
-/-- The actual Markov range involution on the first Clifford stage. -/
-def markovRangeInvolution : StageOne :=
-  (2 : ℝ) • markovRangeIdempotent twoModeTransition twoModeGroupInverse -
-    (1 : StageOne)
-
-/-- The source-defined Majorana matrix at the site introduced at stage one. -/
-def firstMajorana : StageOne := majoranaDifference 0
-
-/-- The range involution and actual Majorana direction anticommute. -/
-theorem rangeInvolution_majorana_anticommute :
-    markovRangeInvolution * firstMajorana =
-      -(firstMajorana * markovRangeInvolution) := by
+theorem uniformLaplacian_idempotent :
+    uniformLaplacian * uniformLaplacian = uniformLaplacian := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    norm_num [markovRangeInvolution, firstMajorana, markovRangeIdempotent,
-      twoModeTransition_apply, twoModeGroupInverse, majoranaDifference,
-      jw_u_new, jw_v_new, globalChirality, kronPow,
-      InfoGeometry.Clifford.JordanWignerBridge.a_dagger_base,
-      InfoGeometry.Clifford.JordanWignerBridge.a_base,
-      Matrix.mul_apply, Matrix.kronecker_apply,
-      InfoGeometry.Clifford.TowerMatrix.Idx, Fintype.sum_prod_type,
-      Fin.sum_univ_one, Fin.sum_univ_two, Matrix.one_apply]
+    norm_num [uniformLaplacian, uniformTransition_apply,
+      Matrix.mul_apply, Fin.sum_univ_two, Matrix.sub_apply, Matrix.one_apply]
 
-/-- The range involution squares to one, hence is nonzero. -/
-theorem rangeInvolution_sq : markovRangeInvolution * markovRangeInvolution = 1 := by
-  have hG := twoModeGroupInverse_spec
-  have hE := markovRangeIdempotent_idempotent
-    twoModeTransition twoModeGroupInverse hG
-  change markovRangeIdempotent twoModeTransition twoModeGroupInverse *
-      markovRangeIdempotent twoModeTransition twoModeGroupInverse =
-    markovRangeIdempotent twoModeTransition twoModeGroupInverse at hE
-  dsimp [markovRangeInvolution]
-  noncomm_ring [hE]
+/-- A genuine group inverse certificate for `I - P` in the nontrivial matrix
+algebra, proved from the explicit softmax entries. -/
+theorem uniformGroupInverse_spec :
+    IsGroupInverse uniformLaplacian uniformGroupInverse := by
+  unfold IsGroupInverse uniformGroupInverse
+  have hsq := uniformLaplacian_idempotent
+  constructor
+  · calc
+      uniformLaplacian * uniformLaplacian * uniformLaplacian =
+          uniformLaplacian * uniformLaplacian := by
+            exact congrArg (fun X : Operator => X * uniformLaplacian) hsq
+      _ = uniformLaplacian := hsq
+  constructor
+  · calc
+      uniformLaplacian * uniformLaplacian * uniformLaplacian =
+          uniformLaplacian * uniformLaplacian := by
+            exact congrArg (fun X : Operator => X * uniformLaplacian) hsq
+      _ = uniformLaplacian := hsq
+  · rfl
 
-/-- The Majorana direction is nonzero by the source owner theorem. -/
-theorem firstMajorana_ne_zero : firstMajorana ≠ 0 := by
-  exact majoranaDifference_ne_zero 0
+/-- The range involution `(2E - I)` determined by the Markov group inverse. -/
+def rangeInvolution : Operator :=
+  (2 : ℝ) • markovRangeIdempotent uniformTransition uniformGroupInverse - 1
 
-/-- The anti-commutation is a genuine noncommutation witness. -/
+/-- The actual repository Jordan--Wigner Majorana direction on the base
+two-dimensional matrix carrier. -/
+def firstMajorana : Operator := a_dagger_base - a_base
+
+theorem rangeInvolution_explicit :
+    rangeInvolution = !![(0 : ℝ), -1; -1, 0] := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [rangeInvolution, markovRangeIdempotent, uniformGroupInverse,
+      uniformLaplacian, uniformTransition_apply, Matrix.mul_apply,
+      Fin.sum_univ_two, Matrix.sub_apply, Matrix.one_apply]
+
+theorem firstMajorana_explicit :
+    firstMajorana = !![(0 : ℝ), 1; -1, 0] := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [firstMajorana, a_dagger_base, a_base]
+
+/-- The Markov range involution anticommutes with a source-defined Majorana
+operator; in particular, it fails to commute with that operator. -/
+theorem rangeInvolution_majorana_anticommute :
+    rangeInvolution * firstMajorana = -(firstMajorana * rangeInvolution) := by
+  rw [rangeInvolution_explicit, firstMajorana_explicit]
+  norm_num [Matrix.mul_apply, Fin.sum_univ_two]
+
 theorem rangeInvolution_majorana_noncommute :
-    markovRangeInvolution * firstMajorana ≠
-      firstMajorana * markovRangeInvolution := by
-  intro hcomm
-  have hanti := rangeInvolution_majorana_anticommute
-  have hsum : markovRangeInvolution * firstMajorana +
-      markovRangeInvolution * firstMajorana = 0 := by
-    have hprod_neg : markovRangeInvolution * firstMajorana =
-        -(markovRangeInvolution * firstMajorana) := by
-      calc
-        markovRangeInvolution * firstMajorana =
-            -(firstMajorana * markovRangeInvolution) := hanti
-        _ = -(markovRangeInvolution * firstMajorana) :=
-          congrArg Neg.neg hcomm.symm
-    calc
-      markovRangeInvolution * firstMajorana +
-          markovRangeInvolution * firstMajorana =
-        markovRangeInvolution * firstMajorana +
-          -(markovRangeInvolution * firstMajorana) := by
-            exact congrArg
-              (fun z : StageOne => markovRangeInvolution * firstMajorana + z)
-              hprod_neg
-      _ = 0 := add_neg_cancel _
-  have hprod : markovRangeInvolution * firstMajorana = 0 := by
-    have hscalar : (2 : ℝ) •
-        (markovRangeInvolution * firstMajorana) = 0 := by
-      simpa [two_smul] using hsum
-    exact (smul_eq_zero.mp hscalar).resolve_left (by norm_num)
-  have hprodJ := congrArg (fun X : StageOne => X * firstMajorana) hprod
-  have hprodJ' : markovRangeInvolution *
-      (firstMajorana * firstMajorana) = 0 := by
-    calc
-      markovRangeInvolution * (firstMajorana * firstMajorana) =
-          (markovRangeInvolution * firstMajorana) * firstMajorana := by
-        rw [mul_assoc]
-      _ = 0 := by simpa using hprodJ
-  change markovRangeInvolution *
-      (majoranaDifference 0 * majoranaDifference 0) = 0 at hprodJ'
-  rw [majoranaDifference_sq] at hprodJ'
-  have hHzero : markovRangeInvolution = 0 := by
-    have hneg : -markovRangeInvolution = 0 := by
-      simpa using hprodJ'
-    exact neg_eq_zero.mp hneg
-  have hunit := congrArg (fun X : StageOne => X * markovRangeInvolution) hHzero
-  rw [rangeInvolution_sq] at hunit
-  simpa using hunit
+    rangeInvolution * firstMajorana ≠ firstMajorana * rangeInvolution := by
+  rw [rangeInvolution_explicit, firstMajorana_explicit]
+  norm_num [Matrix.mul_apply, Fin.sum_univ_two]
 
 end InfoGeometry.QuantumContext.MarkovMajoranaLoxodromicObstruction

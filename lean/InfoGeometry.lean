@@ -178,6 +178,34 @@ import InfoGeometry.Synthesis.ThreeTraditionLineageConvergence
 import InfoGeometry.Synthesis.ThreeTraditionLineageConvergenceAudit
 import InfoGeometry.Synthesis.Cl11ChiralVolumeNilpotentQuotientSynthesis
 import InfoGeometry.Synthesis.Cl11ChiralVolumeNilpotentQuotientSynthesisAudit
+import InfoGeometry.Synthesis.MathlibCliffordUniversalLiftSynthesis
+import InfoGeometry.Synthesis.MathlibCliffordUniversalLiftSynthesisAudit
+
+/-!
+## Layer 6 spine: dissipative Laplacian group inverses, Kemeny–Snell fundamental
+matrix invertibility, causal Petz recovery, and the polarized-attention return chain.
+
+These eight modules (with their `#print axioms` audit companions) were previously
+reachable only by naming them explicitly on the command line, so no root build
+exercised them. They are wired in here so that `lake build InfoGeometry` compiles
+and axiom-checks them.
+-/
+import InfoGeometry.QuantumContext.MarkovAttentionKemenySnell
+import InfoGeometry.QuantumContext.MarkovAttentionKemenySnellAudit
+import InfoGeometry.QuantumContext.MarkovGroupInverseIntertwining
+import InfoGeometry.QuantumContext.MarkovGroupInverseIntertwiningAudit
+import InfoGeometry.QuantumContext.CausalPetzDeconfabulationPoset
+import InfoGeometry.QuantumContext.CausalPetzDeconfabulationPosetAudit
+import InfoGeometry.QuantumContext.ArakiPetzEntropyMonotonicity
+import InfoGeometry.QuantumContext.ArakiPetzEntropyMonotonicityAudit
+import InfoGeometry.QuantumContext.PetzMatrixStageLimit
+import InfoGeometry.QuantumContext.PetzMatrixStageLimitAudit
+import InfoGeometry.QuantumContext.MarkovGroupInverseIntertwinerFunctoriality
+import InfoGeometry.QuantumContext.MarkovGroupInverseIntertwinerFunctorialityAudit
+import InfoGeometry.QuantumContext.PolarizedAttentionTrajectoryGreen
+import InfoGeometry.QuantumContext.PolarizedAttentionTrajectoryGreenAudit
+import InfoGeometry.QuantumContext.MarkovAttentionKemenyTrace
+import InfoGeometry.QuantumContext.MarkovAttentionKemenyTraceAudit
 
 /-!
 # InfoGeometry

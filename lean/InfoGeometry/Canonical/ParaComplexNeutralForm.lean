@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.ParaComplexConnectionBridge
 
 namespace InfoGeometry.Canonical.ParaComplexNeutralForm
@@ -25,7 +30,8 @@ theorem plus_isotropic (h : AntiCompatible PCS B) {u v : V}
   have hv' := (mem_plusEigenspace_iff PCS v).1 hv
   have hh := h u v
   rw [hu', hv'] at hh
-  linarith
+  have htwo : (2 : ℝ) • B u v = 0 := by simpa [two_smul] using hh
+  exact (smul_eq_zero.mp htwo).resolve_left (by norm_num)
 
 theorem minus_isotropic (h : AntiCompatible PCS B) {u v : V}
     (hu : u ∈ minusEigenspace PCS) (hv : v ∈ minusEigenspace PCS) : B u v = 0 := by
@@ -35,8 +41,9 @@ theorem minus_isotropic (h : AntiCompatible PCS B) {u v : V}
   rw [hu', hv'] at hh
   simp only [map_neg] at hh
   change -(B u v) + -(B u v) = 0 at hh
-  have hval : B u v = 0 := by linarith [hh]
-  exact hval
+  have htwo : (2 : ℝ) • -(B u v) = 0 := by simpa [two_smul] using hh
+  have hneg : -(B u v) = 0 := (smul_eq_zero.mp htwo).resolve_left (by norm_num)
+  simpa using hneg
 
 /-- The two Peirce eigenspaces have trivial intersection under a genuine involution. -/
 theorem plus_projector_isotropic (h : AntiCompatible PCS B) (x y : V) :
@@ -48,6 +55,47 @@ theorem minus_projector_isotropic (h : AntiCompatible PCS B) (x y : V) :
     B (peirceMinus PCS x) (peirceMinus PCS y) = 0 :=
   minus_isotropic PCS B h (peirceMinus_mem_minusEigenspace PCS x)
     (peirceMinus_mem_minusEigenspace PCS y)
+
+/-- The anti-isometry condition implies the mixed para-Hermitian compatibility
+condition when the para-complex map is involutive. -/
+theorem antiCompatible_of_anti_isometry (D : Datum PCS) :
+    AntiCompatible PCS D.form := by
+  intro x y
+  have h := D.anti_isometry x (PCS.tau y)
+  rw [PCS.tau_sq] at h
+  exact (eq_neg_iff_add_eq_zero).mp h
+
+/-- The quadratic value of a neutral form is the sum of its two cross-sheet
+pairings; the same-sheet terms vanish by isotropy. -/
+theorem form_self_eq_cross_pairing_sum (h : AntiCompatible PCS B) (x : V) :
+    B x x = B (peircePlus PCS x) (peirceMinus PCS x) +
+      B (peirceMinus PCS x) (peircePlus PCS x) := by
+  let p := peircePlus PCS x
+  let m := peirceMinus PCS x
+  have hdecomp : x = p + m := (peirce_sum_id PCS x).symm
+  have hp : B p p = 0 := by
+    dsimp [p]
+    exact plus_projector_isotropic PCS B h x x
+  have hm : B m m = 0 := by
+    dsimp [m]
+    exact minus_projector_isotropic PCS B h x x
+  calc
+    B x x = B (p + m) (p + m) := by rw [hdecomp]
+    _ = B p m + B m p := by
+      simp only [map_add, LinearMap.add_apply]
+      rw [hp, hm]
+      abel
+    _ = B (peircePlus PCS x) (peirceMinus PCS x) +
+        B (peirceMinus PCS x) (peircePlus PCS x) := rfl
+
+/-- For a symmetric neutral form, its value on a vector is twice the pairing
+between its positive and negative Peirce projections. -/
+theorem form_self_eq_two_mul_cross_pairing (D : Datum PCS) (x : V) :
+    D.form x x = 2 * D.form (peircePlus PCS x) (peirceMinus PCS x) := by
+  rw [form_self_eq_cross_pairing_sum PCS D.form
+    (antiCompatible_of_anti_isometry PCS D) x]
+  rw [D.symmetric]
+  ring
 
 theorem eigenspaces_disjoint {u : V}
     (hu : u ∈ plusEigenspace PCS) (hv : u ∈ minusEigenspace PCS) : u = 0 := by
@@ -102,7 +150,7 @@ theorem plus_annihilator_eq (D : NondegenerateDatum PCS) :
         exact (peirce_sum_id PCS x).symm
       rw [hdecomp] at hzero
       simp only [map_add, LinearMap.add_apply] at hzero
-      linarith
+      simpa [xp, hxp] using hzero
     have hxm0 : xm = 0 := D.plus_cross_nondegenerate xm hxm hcross
     have hxplus : x ∈ plusEigenspace PCS := by
       rw [show x = xp + xm by exact (peirce_sum_id PCS x).symm, hxm0, add_zero]
@@ -129,7 +177,7 @@ theorem minus_annihilator_eq (D : NondegenerateDatum PCS) :
         exact (peirce_sum_id PCS x).symm
       rw [hdecomp] at hzero
       simp only [map_add, LinearMap.add_apply] at hzero
-      linarith
+      simpa [xm, hxm] using hzero
     have hxp0 : xp = 0 := D.minus_cross_nondegenerate xp hxp hcross
     rw [show x = xp + xm by exact (peirce_sum_id PCS x).symm, hxp0, zero_add]
     exact peirceMinus_mem_minusEigenspace PCS x
@@ -201,7 +249,6 @@ variable (PCS : ParaComplexStructure V)
 /-- In finite dimension, a supplied cross equivalence identifies the total rank
 with twice the rank of either Peirce leaf. -/
 theorem finrank_v_eq_two_mul_plus_of_cross_equiv [FiniteDimensional ℝ V]
-    (D : NondegenerateDatum PCS)
     (e : plusEigenspace PCS ≃ₗ[ℝ] minusEigenspace PCS) :
     Module.finrank ℝ V = 2 * Module.finrank ℝ (plusEigenspace PCS) := by
   rw [finrank_peirce_sum PCS]

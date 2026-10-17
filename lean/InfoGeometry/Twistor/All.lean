@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Twistor.FiveGradedIncidence
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.CliffordBridge
@@ -65,6 +70,10 @@ import InfoGeometry.Twistor.ProjectiveNullUnorderedConfiguration
 import InfoGeometry.Twistor.PenroseTwistor
 import InfoGeometry.Twistor.PenroseRealDoubledPeirceSoldering
 import InfoGeometry.Twistor.PenroseIncidence
+import InfoGeometry.Twistor.SplitSignatureNullRayTwistor
+import InfoGeometry.Twistor.SplitSignatureNullRayTwistorAudit
+import InfoGeometry.Twistor.SplitSignatureConformalChart
+import InfoGeometry.Twistor.SplitSignatureConformalChartAudit
 import InfoGeometry.Twistor.FiniteAmbitwistorParaKahlerAll
 import InfoGeometry.Twistor.FunctorialAmbitwistorRepresentation
 import InfoGeometry.Twistor.Cl55CelestialOrderedExchangePureBraidMonodromy

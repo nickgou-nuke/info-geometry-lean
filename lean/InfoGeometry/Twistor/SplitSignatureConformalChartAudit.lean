@@ -1,0 +1,31 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Twistor.SplitSignatureConformalChart
+
+#print axioms InfoGeometry.Twistor.SplitSignatureConformalChart.spacetimeQuadratic
+#print axioms InfoGeometry.Twistor.SplitSignatureConformalChart.splitQuadraticFun
+#print axioms InfoGeometry.Twistor.SplitSignatureConformalChart.splitQuadratic
+#print axioms InfoGeometry.Twistor.SplitSignatureConformalChart.splitQuadratic_apply
+#print axioms InfoGeometry.Twistor.SplitSignatureConformalChart.splitDiagonalCoordinates
+#print axioms InfoGeometry.Twistor.SplitSignatureConformalChart.splitQuadratic_diagonal
+#print axioms InfoGeometry.Twistor.SplitSignatureConformalChart.splitChart_scalar_null
+#print axioms InfoGeometry.Twistor.SplitSignatureConformalChart.splitChart_scalar_normalized
+#print axioms InfoGeometry.Twistor.SplitSignatureConformalChart.conformalChart
+#print axioms InfoGeometry.Twistor.SplitSignatureConformalChart.conformalChart_apply_zero
+#print axioms InfoGeometry.Twistor.SplitSignatureConformalChart.conformalChart_apply_one
+#print axioms InfoGeometry.Twistor.SplitSignatureConformalChart.conformalChart_apply_two
+#print axioms InfoGeometry.Twistor.SplitSignatureConformalChart.conformalChart_apply_three
+#print axioms InfoGeometry.Twistor.SplitSignatureConformalChart.conformalChart_normalized
+#print axioms InfoGeometry.Twistor.SplitSignatureConformalChart.conformalChart_isNull
+#print axioms InfoGeometry.Twistor.SplitSignatureConformalChart.conformalChart_ne_zero
+#print axioms InfoGeometry.Twistor.SplitSignatureConformalChart.conformalChartPoint
+#print axioms InfoGeometry.Twistor.SplitSignatureConformalChart.conformalChartPoint_injective
+#print axioms InfoGeometry.Twistor.SplitSignatureConformalChart.spacetimeFromSplit
+#print axioms InfoGeometry.Twistor.SplitSignatureConformalChart.conformalChart_surjective_on_normalized_null
+#print axioms InfoGeometry.Twistor.SplitSignatureConformalChart.incidenceResidual
+#print axioms InfoGeometry.Twistor.SplitSignatureConformalChart.incidenceResidual_eq_zero_iff
+#print axioms InfoGeometry.Twistor.SplitSignatureConformalChart.incidenceResidualLMap
+#print axioms InfoGeometry.Twistor.SplitSignatureConformalChart.incidenceResidualLMap_mem_ker_iff

@@ -82,7 +82,7 @@ Zorn vector-matrix split-octonion algebra `ZornSplitOctonion R` imported from
      `paraUnipotentShear`, `paraUnipotentShear_zero`, `paraUnipotentShear_add`,
      `paraUnipotentShear_neg_cancel`, `paraKahlerMetric_paraUnipotentShear_self`,
      `isOnNullCone_paraUnipotentShear_dualSheet`, `symplecticForm_primal_paraUnipotentShear`),
-     exact $\mathfrak{so}(3,3)$-skew-symmetric nilpotent flow (`paraSkewNilpotent`,
+     metric-skew nilpotent flow (`paraSkewNilpotent`,
      `paraSkewNilpotent_sq_zero`, `paraKahlerMetric_paraSkewNilpotent_skew`,
      `paraSkewUnipotentFlow`, `paraSkewUnipotentFlow_add`,
      `paraKahlerMetric_paraSkewUnipotentFlow_invariant`,
@@ -668,17 +668,16 @@ theorem zorn_paraGrading_anticommutator_embedVec (z : ParaKahlerVec R) :
   · dsimp [zornAnticommutator, zornAdd, zornMul, zornParaGrading, embedVec, zornZero, vec3Dot]
     ring
 
-/-- **Para-Kähler Lagrange–Binet–Cauchy Coordinate Identity**:
-The difference of squares of the para-Kähler metric $g(z_1, z_2)$ and symplectic form
-$\omega(z_1, z_2)$ combines with the cross-product pairing $4 \langle u_1 \times u_2, v_1 \times v_2 \rangle$
-to yield the product of self-metrics $g(z_1, z_1) g(z_2, z_2)$. The Zorn norm composition law
-itself is stated separately as `ZornSplitOctonionFin8Bridge.zornNorm_mul`; this lemma records its
-coordinate Lagrange identity on embedded para-Kähler vectors. -/
-theorem paraKahler_lagrange_coordinate_identity (z₁ z₂ : ParaKahlerVec R) :
+/-- **Lagrange–Binet–Cauchy Metriplectic Norm Composition Law**:
+The para-Kähler metric/symplectic difference of squares `g(z₁, z₂)² - ω(z₁, z₂)²`
+plus `4 ⟨u₁ × u₂, v₁ × v₂⟩` equals the product of the individual para-Kähler norms
+`g(z₁, z₁) * g(z₂, z₂)`. The Zorn norm composition law itself is `ZornSplitOctonionFin8Bridge.zornNorm_mul`; its coordinate form on embedded para-Kähler vectors is `zornNorm_embedVec_mul_eq_metriplectic_lagrange`. -/
+theorem paraKahler_lagrange_norm_composition (z₁ z₂ : ParaKahlerVec R) :
     (paraKahlerMetric z₁ z₂) ^ 2 - (symplecticForm z₁ z₂) ^ 2 +
       4 * vec3Dot (vec3Cross z₁.u z₂.u) (vec3Cross z₁.v z₂.v) =
       paraKahlerMetric z₁ z₁ * paraKahlerMetric z₂ z₂ := by
-  dsimp [paraKahlerMetric, symplecticForm, vec3Dot, vec3Cross]
+  unfold paraKahlerMetric symplecticForm vec3Dot vec3Cross
+  dsimp
   ring
 
 /-- **Lagrange's decomposition identity** for the three-dimensional cross product:
@@ -687,7 +686,7 @@ $\langle \mathbf{a}\times\mathbf{b},\; \mathbf{c}\times\mathbf{d}\rangle
  - \langle \mathbf{a}, \mathbf{d}\rangle\langle \mathbf{b}, \mathbf{c}\rangle$.
 
 This is the general four-vector statement underlying
-`paraKahler_lagrange_coordinate_identity` and `hodgeCrossPairing_eq_norm_gap`: the Hodge cross
+`paraKahler_lagrange_norm_composition` and `hodgeCrossPairing_eq_norm_gap`: the Hodge cross
 product is nothing but the Lagrange correction term of the $\mathbb{R}^3$ wedge product. -/
 theorem vec3_lagrange (a b c d : Fin 3 → R) :
     vec3Dot (vec3Cross a b) (vec3Cross c d)
@@ -701,13 +700,13 @@ inner-product determinant and the multiplicative self-norm product:
 $$4\,\langle \mathbf{u}_1 \times \mathbf{u}_2,\ \mathbf{v}_1 \times \mathbf{v}_2\rangle
  = g(z_1,z_1)\,g(z_2,z_2) - \bigl(g(z_1,z_2)^2 - \omega(z_1,z_2)^2\bigr).$$
 Equivalently the metriplectic determinant $g^2-\omega^2$ alone under-counts the norm by
-exactly one Hodge term. This is the "why" behind `paraKahler_lagrange_coordinate_identity`,
+exactly one Hodge term. This is the "why" behind `paraKahler_lagrange_norm_composition`,
 stated as a standalone discrepancy law. -/
 theorem hodgeCrossPairing_eq_norm_gap (z₁ z₂ : ParaKahlerVec R) :
     4 * vec3Dot (vec3Cross z₁.u z₂.u) (vec3Cross z₁.v z₂.v)
       = paraKahlerMetric z₁ z₁ * paraKahlerMetric z₂ z₂
         - (paraKahlerMetric z₁ z₂ ^ 2 - symplecticForm z₁ z₂ ^ 2) := by
-  have h := paraKahler_lagrange_coordinate_identity z₁ z₂
+  have h := paraKahler_lagrange_norm_composition z₁ z₂
   linear_combination h
 
 /-- **Self-Metric of the Hodge Cross-Product Vector**:
@@ -726,18 +725,6 @@ theorem zornNorm_embedVec_hodgeCrossVec (z₁ z₂ : ParaKahlerVec R) :
     zornNorm (embedVec (hodgeCrossVec z₁ z₂)) =
       vec3Dot (vec3Cross z₁.u z₂.u) (vec3Cross z₁.v z₂.v) := by
   dsimp [zornNorm, embedVec, hodgeCrossVec, vec3Dot, vec3Cross]
-  ring
-
-/-- **Lagrange–Binet–Cauchy Metriplectic Norm Composition Law**:
-The para-Kähler metric/symplectic difference of squares `g(z₁, z₂)² - ω(z₁, z₂)²`
-plus `4 ⟨u₁ × u₂, v₁ × v₂⟩` equals the product of the individual para-Kähler norms
-`g(z₁, z₁) * g(z₂, z₂)`. -/
-theorem paraKahler_lagrange_norm_composition (z₁ z₂ : ParaKahlerVec R) :
-    (paraKahlerMetric z₁ z₂) ^ 2 - (symplecticForm z₁ z₂) ^ 2 +
-      4 * vec3Dot (vec3Cross z₁.u z₂.u) (vec3Cross z₁.v z₂.v) =
-      paraKahlerMetric z₁ z₁ * paraKahlerMetric z₂ z₂ := by
-  unfold paraKahlerMetric symplecticForm vec3Dot vec3Cross
-  dsimp
   ring
 
 /-- **Intrinsic Form of the Lagrange Norm Law via `hodgeCrossVec`**:
@@ -918,10 +905,13 @@ theorem no_injective_zornMul_map_to_associative_semigroup
 ### Chiral Lightcone Null-Ray Scaling & Unipotent Shear Transport along $T^+ / T^-$
 -/
 
-/-- Lower-case alias for the $\operatorname{Cl}(3,3)$ null-cone predicate, defined by
-the vanishing of the para-Kähler self-metric $g(z, z) = 0$. -/
+/-- Lower-case spelling of the canonical Zorn-norm null-cone predicate.
+
+This deliberately reuses `IsOnNullCone`: over an arbitrary `CommRing`, the condition
+`paraKahlerMetric z z = 0` is only `2 * vec3Dot z.u z.v = 0` and need not be equivalent
+to Zorn-norm nullity in characteristic two. -/
 def isOnNullCone (z : ParaKahlerVec R) : Prop :=
-  paraKahlerMetric z z = 0
+  IsOnNullCone z
 
 /-- Scalar dilation $\lambda_t(u, v) = (t u, t v)$ along rays in the 6D para-Kähler phase space. -/
 def paraKahlerScale (t : R) (z : ParaKahlerVec R) : ParaKahlerVec R :=
@@ -946,8 +936,15 @@ theorem symplecticForm_scale (t s : R) (z₁ z₂ : ParaKahlerVec R) :
 (`isOnNullCone z`), then every scaled point $\lambda_t z$ along the ray also lies on the null cone. -/
 theorem isOnNullCone_scale (t : R) {z : ParaKahlerVec R} (hz : isOnNullCone z) :
     isOnNullCone (paraKahlerScale t z) := by
-  unfold isOnNullCone at hz ⊢
-  rw [paraKahlerMetric_scale, hz, mul_zero]
+  change IsOnNullCone z at hz
+  change IsOnNullCone (paraKahlerScale t z)
+  rw [isOnNullCone_iff_vec3Dot_zero] at hz ⊢
+  calc
+    vec3Dot (paraKahlerScale t z).u (paraKahlerScale t z).v =
+        t ^ 2 * vec3Dot z.u z.v := by
+          dsimp [paraKahlerScale, vec3Dot]
+          ring
+    _ = 0 := by rw [hz]; ring
 
 /-- Collinear vectors along the same phase-space ray have a vanishing 5-graded Hodge
 cross-product vector: $(\lambda_t z) \times_H z = 0$. -/
@@ -968,7 +965,7 @@ $T^+$ into the dual sheet $T^-$ and annihilating $T^-$. -/
 def paraNilpotentMinus (z : ParaKahlerVec R) : ParaKahlerVec R :=
   ⟨fun _ => 0, z.u⟩
 
-/-- The sheet-lowering operator $N_-$ is strictly nilpotent of index 2: $N_-^2 = 0$. -/
+/-- The sheet-lowering operator $N_-$ is square-zero: $N_-^2 = 0$. -/
 theorem paraNilpotentMinus_sq_zero (z : ParaKahlerVec R) :
     paraNilpotentMinus (paraNilpotentMinus z) = ⟨fun _ => 0, fun _ => 0⟩ := by
   ext k <;> rfl
@@ -1013,8 +1010,9 @@ theorem paraKahlerMetric_paraUnipotentShear_self (p : R) (z : ParaKahlerVec R) :
 the chiral lightcone identically for all $p$. -/
 theorem isOnNullCone_paraUnipotentShear_dualSheet (p : R) (v : Fin 3 → R) :
     isOnNullCone (paraUnipotentShear p (dualSheet v)) := by
-  unfold isOnNullCone
-  dsimp [paraKahlerMetric, paraUnipotentShear, dualSheet, vec3Dot]
+  change IsOnNullCone (paraUnipotentShear p (dualSheet v))
+  rw [isOnNullCone_iff_vec3Dot_zero]
+  dsimp [paraUnipotentShear, dualSheet, vec3Dot]
   ring
 
 /-- The symplectic pairing between a primal sheet vector $(u, 0) \in T^+$ and its $p$-sheared
@@ -1030,7 +1028,7 @@ associated with a 3D generator vector $a \in R^3$. -/
 def paraSkewNilpotent (a : Fin 3 → R) (z : ParaKahlerVec R) : ParaKahlerVec R :=
   ⟨fun _ => 0, vec3Cross a z.u⟩
 
-/-- The $\mathfrak{so}(3,3)$ operator $N_a$ is strictly nilpotent of index 2: $N_a^2 = 0$. -/
+/-- The operator $N_a$ is square-zero: $N_a^2 = 0$. -/
 theorem paraSkewNilpotent_sq_zero (a : Fin 3 → R) (z : ParaKahlerVec R) :
     paraSkewNilpotent a (paraSkewNilpotent a z) = ⟨fun _ => 0, fun _ => 0⟩ := by
   ext k
@@ -1048,12 +1046,12 @@ theorem paraKahlerMetric_paraSkewNilpotent_skew (a : Fin 3 → R) (z₁ z₂ : P
   dsimp [paraKahlerMetric, paraSkewNilpotent, vec3Dot, vec3Cross]
   ring
 
-/-- Exact $\operatorname{SO}(3,3)$ unipotent flow $\mathcal{U}_{p, a} = I + p N_a$:
+/-- Unipotent flow generated by the para-Kähler-skew nilpotent $N_a$:
 $\mathcal{U}_{p, a}(u, v) = (u, v + p (a \times u))$. -/
 def paraSkewUnipotentFlow (p : R) (a : Fin 3 → R) (z : ParaKahlerVec R) : ParaKahlerVec R :=
   ⟨z.u, fun k => z.v k + p * vec3Cross a z.u k⟩
 
-/-- Additive 1-parameter group law for the $\operatorname{SO}(3,3)$ unipotent flow:
+/-- Additive 1-parameter group law for the para-Kähler-skew unipotent flow:
 $\mathcal{U}_{p_1, a} \circ \mathcal{U}_{p_2, a} = \mathcal{U}_{p_1 + p_2, a}$. -/
 theorem paraSkewUnipotentFlow_add (p₁ p₂ : R) (a : Fin 3 → R) (z : ParaKahlerVec R) :
     paraSkewUnipotentFlow p₁ a (paraSkewUnipotentFlow p₂ a z) =
@@ -1063,7 +1061,7 @@ theorem paraSkewUnipotentFlow_add (p₁ p₂ : R) (a : Fin 3 → R) (z : ParaKah
   · dsimp [paraSkewUnipotentFlow]
     ring
 
-/-- Exact metric invariance of the $\operatorname{SO}(3,3)$ unipotent flow:
+/-- Exact metric invariance of the para-Kähler-skew unipotent flow:
 $g(\mathcal{U}_{p, a} z_1, \mathcal{U}_{p, a} z_2) = g(z_1, z_2)$. -/
 theorem paraKahlerMetric_paraSkewUnipotentFlow_invariant (p : R) (a : Fin 3 → R)
     (z₁ z₂ : ParaKahlerVec R) :
@@ -1072,24 +1070,36 @@ theorem paraKahlerMetric_paraSkewUnipotentFlow_invariant (p : R) (a : Fin 3 → 
   dsimp [paraKahlerMetric, paraSkewUnipotentFlow, vec3Dot, vec3Cross]
   ring
 
-/-- The $\operatorname{SO}(3,3)$ unipotent flow preserves the full 6D chiral lightcone
+/-- The para-Kähler-skew unipotent flow preserves the full 6D Zorn-norm null cone
 identically for all $p$ and $a$: $\mathcal{U}_{p, a} z$ is null if and only if $z$ is null. -/
 theorem isOnNullCone_paraSkewUnipotentFlow_iff (p : R) (a : Fin 3 → R) (z : ParaKahlerVec R) :
     isOnNullCone (paraSkewUnipotentFlow p a z) ↔ isOnNullCone z := by
-  unfold isOnNullCone
-  rw [paraKahlerMetric_paraSkewUnipotentFlow_invariant]
+  change IsOnNullCone (paraSkewUnipotentFlow p a z) ↔ IsOnNullCone z
+  rw [isOnNullCone_iff_vec3Dot_zero, isOnNullCone_iff_vec3Dot_zero]
+  have hpair :
+      vec3Dot (paraSkewUnipotentFlow p a z).u (paraSkewUnipotentFlow p a z).v =
+        vec3Dot z.u z.v := by
+    dsimp [paraSkewUnipotentFlow, vec3Dot, vec3Cross]
+    ring
+  rw [hpair]
 
 /-- **Null-Cone Metriplectic Reduction to Hodge Cross Self-Metric**:
-Whenever $z_1$ lies on the null cone (`isOnNullCone z₁`, i.e., $g(z_1, z_1) = 0$),
+Whenever $z_1$ lies on the Zorn-norm null cone (`isOnNullCone z₁`),
 the metriplectic difference of squares $g(z_1, z_2)^2 - \omega(z_1, z_2)^2$ equals twice the
 para-Kähler self-metric of the Hodge cross-product vector $z_1 \times_H z_2$. -/
 theorem nullCone_metriplectic_eq_two_mul_hodgeCrossVec_self
     {z₁ z₂ : ParaKahlerVec R} (hz₁ : isOnNullCone z₁) :
     (paraKahlerMetric z₁ z₂) ^ 2 - (symplecticForm z₁ z₂) ^ 2 =
       2 * paraKahlerMetric (hodgeCrossVec z₁ z₂) (hodgeCrossVec z₁ z₂) := by
-  unfold isOnNullCone at hz₁
+  change IsOnNullCone z₁ at hz₁
+  have hdot : vec3Dot z₁.u z₁.v = 0 :=
+    (isOnNullCone_iff_vec3Dot_zero z₁).mp hz₁
+  have hself : paraKahlerMetric z₁ z₁ = 0 := by
+    unfold paraKahlerMetric vec3Dot
+    dsimp [vec3Dot] at hdot
+    linear_combination 2 * hdot
   have hlag := paraKahler_lagrange_norm_via_hodgeCrossVec z₁ z₂
-  rw [hz₁, zero_mul] at hlag
+  rw [hself, zero_mul] at hlag
   linear_combination hlag
 
 end GradingAndAssociator

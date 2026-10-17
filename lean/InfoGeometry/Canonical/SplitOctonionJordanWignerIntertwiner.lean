@@ -161,8 +161,8 @@ Also note these vectors are **not** on the `Cl(3,3)` null cone: `⟨u, v⟩ = η
 precisely what allows a generator to square to `±I₈`.
 -/
 
-/-- The six non-pure phase-space vectors whose Zorn left actions generate `Cl(3,3)`, indexed so
-that index `a` matches the Jordan–Wigner generator index `a`:
+/-- The six non-pure phase-space vectors whose Zorn left actions **satisfy the `Cl(3,3)`
+relations** (surjectivity onto `Cl(3,3)` is not asserted here), indexed so
 `zornMajoranaVec (modeEvenIdx k) = zornMajoranaPlusVector k` and
 `zornMajoranaVec (modeOddIdx k) = zornMajoranaMinusVector k`. -/
 def zornMajoranaVec : Fin 6 → ParaKahlerVec ℝ
@@ -180,6 +180,17 @@ theorem zornMajoranaVec_modeEvenIdx (k : Fin 3) :
 theorem zornMajoranaVec_modeOddIdx (k : Fin 3) :
     zornMajoranaVec (modeOddIdx k) = zornMajoranaMinusVector k := by
   fin_cases k <;> rfl
+
+/-- **The six Zorn Majorana vectors are not on the `Cl(3,3)` null cone.**
+`q(zₐ) = ⟨u, v⟩ = majoranaSignatureR a ≠ 0`, which is exactly what allows a generator
+to square to `±I₈` rather than to be nilpotent. This formalizes the null-cone remark in
+the docstring of `paraKahlerMetric_zornMajoranaVec` below. -/
+theorem zornMajoranaVec_not_isOnNullCone (a : Fin 6) :
+    ¬ IsOnNullCone (zornMajoranaVec a) := by
+  rw [isOnNullCone_iff_vec3Dot_zero]
+  fin_cases a <;>
+    simp [zornMajoranaVec, zornMajoranaPlusVector, zornMajoranaMinusVector, vec3Dot,
+      majoranaSignatureR, majoranaSignatureZ]
 
 /-- **Signature match.** The para-Kähler metric restricted to the six Zorn Majorana vectors is
 `2η`, where `η` is the Jordan–Wigner split signature:
@@ -277,10 +288,5 @@ theorem zornLeftActMatrix_majorana_sq_eq_metric (a : Fin 6) :
 theorem zornLeftActMatrix_majorana_sq_eq_majoranaGenR (a : Fin 6) :
     zornLeftActMatrix (embedVec (zornMajoranaVec a)) ^ 2 = majoranaGenR a ^ 2 := by
   rw [zornLeftActMatrix_majorana_sq, pow_two, majoranaGenR_sq]
-
-end InfoGeometry.Canonical.SplitOctonionJordanWignerIntertwiner
-namespace InfoGeometry.Canonical.SplitOctonionJordanWignerIntertwiner
-open InfoGeometry.Canonical.MajoranaEightByEightJW
-open scoped Matrix
 
 end InfoGeometry.Canonical.SplitOctonionJordanWignerIntertwiner

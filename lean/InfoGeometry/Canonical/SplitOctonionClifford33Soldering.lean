@@ -11,7 +11,7 @@ import Mathlib.Tactic.Ring
 import InfoGeometry.Canonical.SplitOctonionParaKahlerNullCone
 
 /-!
-# The Cl(3,3) Soldering Form and the Peirce Ket-Bra Ideal Projectors on the Zorn Carrier
+# The Cl(3,3) Soldering Form and Peirce Coordinate Sectors on the Zorn Carrier
 
 This module realises the "soldering form" of the split-octonion vector-matrix carrier
 $\mathbb{O}_s$ over the owner carriers of
@@ -50,13 +50,13 @@ $\mathbb{O}_s$ over the owner carriers of
    - `zorn_rightAct_clifford33_soldering` and `zorn_rightMul_clifford33_soldering`: the
      analogous right-action laws.
    - `zorn_leftActFin8_clifford33`, `zorn_rightActFin8_clifford33`,
-     `zorn_leftActMatrix_clifford33`, `zorn_rightActMatrix_clifford33`: the same law on the
-     $\mathbb{R}^8$ operator carrier and on genuine real `8 × 8` matrices.
+     `zorn_leftActMatrix_clifford33`, `zorn_rightActMatrix_clifford33`: composition of the
+     generator actions satisfies the Clifford anticommutator law on `ℝ⁸` and its matrices.
    - `zorn_leftAct_comp_ne_leftAct_mul` and `zorn_rightAct_comp_ne_rightAct_mul`: explicit
      witnesses that non-associativity keeps $L_x \circ L_z \neq L_{x \star z}$ and
      $R_x \circ R_z \neq R_{z \star x}$.
 
-4. **Peirce ket-bra ideal projectors** (Section 4):
+4. **Peirce coordinate-sector maps** (Section 4):
    `peirceKetBra00`, `peirceKetBra01`, `peirceKetBra10`, `peirceKetBra11` and the theorems
    `peirce_ketbra_00`, `peirce_ketbra_01`, `peirce_ketbra_10`, `peirce_ketbra_11` evaluate
    $\Pi_{ij}(y) = e_i \star (y \star e_j) = L_{e_i} R_{e_j} y$ on the four exterior Fock
@@ -324,12 +324,12 @@ def zornRightActFin8 (x : ZornSplitOctonion ℝ) : (Fin 8 → ℝ) →ₗ[ℝ] (
 /-- The genuine `8 × 8` real matrix of the left multiplication `L_x`, in the standard
 coordinate basis `Pi.single j 1` of `ℝ⁸`. -/
 def zornLeftActMatrix (x : ZornSplitOctonion ℝ) : Matrix (Fin 8) (Fin 8) ℝ :=
-  fun i j => zornLeftActFin8 x (Pi.single j 1) i
+  LinearMap.toMatrixAlgEquiv (Pi.basisFun ℝ (Fin 8)) (zornLeftActFin8 x)
 
 /-- The genuine `8 × 8` real matrix of the right multiplication `R_x`, in the standard
 coordinate basis `Pi.single j 1` of `ℝ⁸`. -/
 def zornRightActMatrix (x : ZornSplitOctonion ℝ) : Matrix (Fin 8) (Fin 8) ℝ :=
-  fun i j => zornRightActFin8 x (Pi.single j 1) i
+  LinearMap.toMatrixAlgEquiv (Pi.basisFun ℝ (Fin 8)) (zornRightActFin8 x)
 
 /-- `zornLeftActFin8` turns `zornAdd` into operator addition. -/
 theorem zornLeftActFin8_add (x y : ZornSplitOctonion ℝ) :
@@ -369,15 +369,11 @@ theorem zornRightActFin8_zornOne :
 
 /-- The `8 × 8` real matrix of `L_1` is the `8 × 8` identity matrix. -/
 theorem zornLeftActMatrix_zornOne : zornLeftActMatrix (zornOne : ZornSplitOctonion ℝ) = 1 := by
-  funext i j
-  simp [zornLeftActMatrix, zornLeftActFin8_zornOne, LinearMap.id_apply, Pi.single_apply,
-    Matrix.one_apply]
+  simp [zornLeftActMatrix, zornLeftActFin8_zornOne, LinearMap.toMatrix_id]
 
 /-- The `8 × 8` real matrix of `R_1` is the `8 × 8` identity matrix. -/
 theorem zornRightActMatrix_zornOne : zornRightActMatrix (zornOne : ZornSplitOctonion ℝ) = 1 := by
-  funext i j
-  simp [zornRightActMatrix, zornRightActFin8_zornOne, LinearMap.id_apply, Pi.single_apply,
-    Matrix.one_apply]
+  simp [zornRightActMatrix, zornRightActFin8_zornOne, LinearMap.toMatrix_id]
 
 end RealOperator
 
@@ -451,62 +447,58 @@ theorem zorn_rightMul_clifford33_soldering (z₁ z₂ : ParaKahlerVec R) (y : Zo
     zornMul_smul_right, zornMul_zornOne]
 
 /-- **Theorem 15' (Cl(3,3) Soldering Law on the `ℝ⁸` operator carrier, left action).**
-The sum of the `ℝ⁸`-linear *operators* `L_{ι(z₁)⋆ι(z₂)}` and `L_{ι(z₂)⋆ι(z₁)}` acting on
-the Fock ket space is `g(z₁, z₂) • I₈`. -/
+The compositions `L_{ι(z₁)} ∘ L_{ι(z₂)}` and `L_{ι(z₂)} ∘ L_{ι(z₁)}` satisfy the Clifford
+anticommutator law on the Fock ket space. -/
 theorem zorn_leftActFin8_clifford33 (z₁ z₂ : ParaKahlerVec ℝ) :
-    zornLeftActFin8 (zornMul (embedVec z₁) (embedVec z₂))
-        + zornLeftActFin8 (zornMul (embedVec z₂) (embedVec z₁))
+    (zornLeftActFin8 (embedVec z₁)).comp (zornLeftActFin8 (embedVec z₂))
+        + (zornLeftActFin8 (embedVec z₂)).comp (zornLeftActFin8 (embedVec z₁))
       = (paraKahlerMetric z₁ z₂ : ℝ) • LinearMap.id := by
-  have h := congrArg zornLeftActFin8
-    (zorn_leftAct_clifford33_soldering z₁ z₂ (zornOne : ZornSplitOctonion ℝ))
-  rw [zornLeftActFin8_add, zornMul_zornOne, zornMul_zornOne, zornLeftActFin8_smul,
-    zornLeftActFin8_zornOne] at h
-  exact h
+  apply LinearMap.ext
+  intro ψ
+  funext i
+  have h := zorn_leftAct_clifford33_soldering z₁ z₂ (fin8ToZorn ψ)
+  have h' := congrArg zornToFin8 h
+  rw [zornToFin8_zornAdd, zornToFin8_zornSmul] at h'
+  simpa [zornLeftActFin8, LinearMap.comp_apply, fin8ToZorn_right_inv] using congrFun h' i
 
-/-- **Theorem 16' (Cl(3,3) Soldering Law on the `ℝ⁸` operator carrier, right action).** -/
+/-- **Theorem 16' (Cl(3,3) Soldering Law on the `ℝ⁸` operator carrier, right action).**
+The compositions of right actions satisfy the Clifford anticommutator law on the Fock ket
+space. -/
 theorem zorn_rightActFin8_clifford33 (z₁ z₂ : ParaKahlerVec ℝ) :
-    zornRightActFin8 (zornMul (embedVec z₁) (embedVec z₂))
-        + zornRightActFin8 (zornMul (embedVec z₂) (embedVec z₁))
+    (zornRightActFin8 (embedVec z₂)).comp (zornRightActFin8 (embedVec z₁))
+        + (zornRightActFin8 (embedVec z₁)).comp (zornRightActFin8 (embedVec z₂))
       = (paraKahlerMetric z₁ z₂ : ℝ) • LinearMap.id := by
-  have h := congrArg zornRightActFin8
-    (zorn_rightAct_clifford33_soldering z₁ z₂ (zornOne : ZornSplitOctonion ℝ))
-  rw [zornRightActFin8_add, zornOne_mul, zornOne_mul, zornRightActFin8_smul,
-    zornRightActFin8_zornOne] at h
-  exact h
+  apply LinearMap.ext
+  intro ψ
+  funext i
+  have h := zorn_rightAct_clifford33_soldering z₁ z₂ (fin8ToZorn ψ)
+  have h' := congrArg zornToFin8 h
+  rw [zornToFin8_zornAdd, zornToFin8_zornSmul] at h'
+  simpa [zornRightActFin8, LinearMap.comp_apply, fin8ToZorn_right_inv] using congrFun h' i
 
 /-- **Theorem 15'' (Cl(3,3) Soldering Law on genuine real `8 × 8` matrices, left action).**
 The sum of the `8 × 8` real *matrices* of `L_{ι(z₁)⋆ι(z₂)}` and `L_{ι(z₂)⋆ι(z₁)}` is
 `g(z₁, z₂) • I₈`. -/
 theorem zorn_leftActMatrix_clifford33 (z₁ z₂ : ParaKahlerVec ℝ) :
-    zornLeftActMatrix (zornMul (embedVec z₁) (embedVec z₂))
-        + zornLeftActMatrix (zornMul (embedVec z₂) (embedVec z₁))
+    zornLeftActMatrix (embedVec z₁) * zornLeftActMatrix (embedVec z₂)
+        + zornLeftActMatrix (embedVec z₂) * zornLeftActMatrix (embedVec z₁)
       = paraKahlerMetric z₁ z₂ • (1 : Matrix (Fin 8) (Fin 8) ℝ) := by
-  funext i j
-  have h := congrArg (fun F : (Fin 8 → ℝ) →ₗ[ℝ] (Fin 8 → ℝ) => F (Pi.single j 1) i)
+  let b := Pi.basisFun ℝ (Fin 8)
+  have h := congrArg (LinearMap.toMatrixAlgEquiv b)
     (zorn_leftActFin8_clifford33 z₁ z₂)
-  rw [LinearMap.add_apply, LinearMap.smul_apply, LinearMap.id_apply] at h
-  simp only [zornLeftActMatrix, Matrix.add_apply, Matrix.smul_apply, Matrix.one_apply]
-  by_cases hij : i = j
-  · simp [hij] at h ⊢
-    exact h
-  · simp [hij] at h ⊢
-    exact h
+  simpa [zornLeftActMatrix, LinearMap.toMatrix_comp b b b,
+    Module.End.mul_eq_comp] using h
 
 /-- **Theorem 16'' (Cl(3,3) Soldering Law on genuine real `8 × 8` matrices, right action).** -/
 theorem zorn_rightActMatrix_clifford33 (z₁ z₂ : ParaKahlerVec ℝ) :
-    zornRightActMatrix (zornMul (embedVec z₁) (embedVec z₂))
-        + zornRightActMatrix (zornMul (embedVec z₂) (embedVec z₁))
+    zornRightActMatrix (embedVec z₂) * zornRightActMatrix (embedVec z₁)
+        + zornRightActMatrix (embedVec z₁) * zornRightActMatrix (embedVec z₂)
       = paraKahlerMetric z₁ z₂ • (1 : Matrix (Fin 8) (Fin 8) ℝ) := by
-  funext i j
-  have h := congrArg (fun F : (Fin 8 → ℝ) →ₗ[ℝ] (Fin 8 → ℝ) => F (Pi.single j 1) i)
+  let b := Pi.basisFun ℝ (Fin 8)
+  have h := congrArg (LinearMap.toMatrixAlgEquiv b)
     (zorn_rightActFin8_clifford33 z₁ z₂)
-  rw [LinearMap.add_apply, LinearMap.smul_apply, LinearMap.id_apply] at h
-  simp only [zornRightActMatrix, Matrix.add_apply, Matrix.smul_apply, Matrix.one_apply]
-  by_cases hij : i = j
-  · simp [hij] at h ⊢
-    exact h
-  · simp [hij] at h ⊢
-    exact h
+  simpa [zornRightActMatrix, LinearMap.toMatrix_comp b b b,
+    Module.End.mul_eq_comp] using h
 
 /-- **Non-associativity defect (composition is not multiplication of operators, left
 action).** On an explicit witness, `L_{ι(z₁)} ∘ L_{ι(z₂)}` differs from

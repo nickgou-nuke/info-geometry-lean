@@ -13,15 +13,15 @@ import InfoGeometry.QuantumContext.AttentionKMSState
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 
 /-!
-# Rotary Attention Spiral Dynamics: Directed Softmax Coupling, RoPE Phase Clock, Spherical LayerNorm Limit Cycles, and Metriplectic Decay
+# Finite Softmax, RoPE, Radial Normalization, and Metriplectic Identities
 
-This module bridges the repository's planar rotation, discrete RoPE, Clifford torus,
-transformer softmax attention, KMS attention sink, and Markov metriplectic owners
+This module collects finite identities from the repository's planar rotation, discrete RoPE,
+Clifford torus, transformer softmax attention, KMS attention state, and Markov metriplectic owners
 (`PlanarRotation`, `DiscreteRoPERepresentation`, `CliffordRoPETorus`,
 `TransformerLatentSpace`, `AttentionKMSState`, `MarkovMetriplecticReversibleRotation`,
-`MarkovMetriplecticQuadraticDecay`) into a five-stage dynamical synthesis:
+`MarkovMetriplecticQuadraticDecay`):
 
-1. **Archetype I — $N$-Body Softmax Attention Coupling ($A_{ij}$), Row-Stochasticity, Directed Asymmetry ($A_{ij} \neq A_{ji}$), and Sink Attractor Contraction**:
+1. **Archetype I — Finite Softmax Attention Coupling, Row-Stochasticity, Directed Asymmetry, and Anchor-Column Positivity**:
    - Defines `attentionCouplingMatrix scores β` via `AttentionKMSState.softmaxWeight`,
      proves strict positivity, row normalization, membership in `Matrix.rowStochastic`,
      and identifies `β = 1` on `Fin 2` with `TransformerLatentSpace.softmaxAttention`.
@@ -30,9 +30,8 @@ transformer softmax attention, KMS attention sink, and Markov metriplectic owner
    - Constructs the explicit 2-token directed asymmetry witness `asymmetricScores`
      proving `attentionCouplingMatrix asymmetricScores β 0 1 ≠ attentionCouplingMatrix asymmetricScores β 1 0`
      for all `β ≠ 0` (and `∃ scores, softmaxAttention scores 0 1 ≠ softmaxAttention scores 1 0`),
-     together with strict positivity of the pruned anchor state on `attentionCouplingMatrix`.
-   - Formalizes the sink-anchored token contraction step `sinkAttractorStep` and proves
-     strict pairwise distance contraction for `0 < α ≤ 1`.
+     together with positivity of the pruned state energy on an anchor column of
+     `attentionCouplingMatrix`.
 
 2. **Archetype II — Rotary Position Embeddings (RoPE) as an $\mathrm{SO}(2)$ Phase Clock & Clifford Bivector Torus**:
    - Bridges `PlanarRotation.rotation`, `PlanarRotation.ellipticGenerator`, and
@@ -45,17 +44,19 @@ transformer softmax attention, KMS attention sink, and Markov metriplectic owner
      the inner product of RoPE-rotated query $q$ at position $m$ and key $k$ at position $n$
      depends purely on $n - m$.
 
-3. **Archetype III — Spherical LayerNorm / RMSNorm Projection onto $S^1(\gamma)$ & Exact RoPE Equivariance**:
-   - Defines `sphericalNorm2 γ v`, proves the exact hyperspherical constraint
+3. **Archetype III — Radial Normalization onto $S^1(\gamma)$ & Exact RoPE Equivariance**:
+   - Defines `sphericalNorm2 γ v`, a radial normalization map (not the full Transformer
+     LayerNorm or RMSNorm operation), and proves the exact circle constraint
      `vecNormSq2 (sphericalNorm2 γ v) = γ ^ 2` for `0 < vecNormSq2 v`, positive radial scale
      invariance `sphericalNorm2_smul_pos`, and exact commutation with RoPE rotations
      `ropeAct_sphericalNorm2_comm`.
 
-4. **Archetype IV — Logarithmic Spiral Trajectories & Collapse to Circular Limit Cycles**:
-   - Formalizes the logarithmic spiral `spiralTrajectory a b θ t v₀ = spiralRadius a b θ t • ropeAct (θ * t) v₀`,
+4. **Archetype IV — A Defined Logarithmic-Spiral Ansatz & Its Radial-Normalization Identity**:
+   - Defines the vector path `spiralTrajectory a b θ t v₀ = spiralRadius a b θ t • ropeAct (θ * t) v₀`,
      proving the exact radial norm envelope, strict dissipative radial contraction for `b < 0`,
-     the additive dynamical flow group law, and the exact collapse under `sphericalNorm2`
-     to the circular limit-cycle orbit on $S^1(\gamma)$.
+     the additive flow law, and its image under `sphericalNorm2`. This path is a separate
+     algebraic definition; it is not derived from softmax attention, a sink force, or a
+     Transformer layer update.
 
 5. **Archetype V — Orbital Resonance, Periodic Limit Cycles & Metriplectic Quadratic Decay Bridge**:
    - Proves $2\pi$-periodicity of `PlanarRotation.rotation` and resonant $p$-step periodicity
@@ -77,7 +78,9 @@ This module formalizes finite-dimensional matrix and vector dynamics on `Fin 2 �
 2. The logarithmic spiral `spiralTrajectory` and its normalization `sphericalNorm2` model
    2D RoPE sub-plane trajectories and radial projection directly; they do not claim global
    convergence of arbitrary deep multi-layer nonlinear transformer networks.
-3. The metriplectic decay theorems (`ellipticGenerator_markovOnsager_quadratic_decay_eq`,
+3. The spiral and split-rotation constructions are independent finite-dimensional models;
+   no theorem identifies them with a Transformer trajectory or a sink-generated potential.
+4. The metriplectic decay theorems (`ellipticGenerator_markovOnsager_quadratic_decay_eq`,
    `ellipticGenerator_markovOnsager_quadratic_decay_nonpos`, and
    `stationaryAttentionCoupling_ellipticGenerator_quadratic_decay_nonpos`) establish
    instantaneous algebraic quadratic nonpositivity on the full matrix carrier.
@@ -135,14 +138,6 @@ private theorem half_ne_exp_div_exp_add_one (β : ℝ) (hβ : β ≠ 0) :
     linarith
   rw [Real.exp_eq_one_iff] at hexp
   exact hβ hexp
-
-private theorem sink_sub_scalar (α s x : ℝ) :
-    ((1 - α) * x + α * s) - s = (1 - α) * (x - s) := by
-  ring
-
-private theorem sink_pairwise_sub_scalar (α s x y : ℝ) :
-    ((1 - α) * x + α * s) - ((1 - α) * y + α * s) = (1 - α) * (x - y) := by
-  ring
 
 private theorem add_neg_mul_eq_sub (a b c d : ℝ) :
     a * b + -c * d = a * b - c * d := by
@@ -211,13 +206,13 @@ private theorem poincare_scale_scalar (c σ dσ dθ : ℝ) (hc : c ≠ 0) :
   have hden : (c * σ) ^ 2 = c ^ 2 * σ ^ 2 := by ring
   rw [hnum, hden, mul_div_mul_left _ _ hc2]
 
-private theorem poincare_loxodromic_scalar (σ b ω : ℝ) (hσ : σ ≠ 0) :
+private theorem poincare_scaled_velocity_algebra (σ b ω : ℝ) (hσ : σ ≠ 0) :
     ((b * σ) ^ 2 + (ω * σ) ^ 2) / (σ ^ 2) = b ^ 2 + ω ^ 2 := by
   have hσ2 : σ ^ 2 ≠ 0 := pow_ne_zero 2 hσ
   have hnum : (b * σ) ^ 2 + (ω * σ) ^ 2 = (b ^ 2 + ω ^ 2) * σ ^ 2 := by ring
   rw [hnum, mul_div_cancel_right₀ _ hσ2]
 
-/-! ### Archetype I: $N$-Body Softmax Attention Coupling ($A_{ij}$), Row-Stochasticity, Directed Asymmetry, and Sink Contraction -/
+/-! ### Archetype I: Finite Softmax Attention Coupling, Directed Asymmetry, and Anchor-Column Positivity -/
 
 /-- Pairwise $N$-body softmax attention coupling matrix on a finite token context `ι`:
 `A_{i,j} = softmaxWeight (scores i) β j`. -/
@@ -348,42 +343,6 @@ theorem exists_softmaxAttention_asymmetric :
       TransformerLatentSpace.softmaxAttention scores 0 1 ≠
         TransformerLatentSpace.softmaxAttention scores 1 0 :=
   ⟨asymmetricScores, softmaxAttention_asymmetricScores_ne⟩
-
-/-- Sink-anchored convex update step pulling token coordinates `x : ι → ℝ` toward sink
-coordinate `s : ℝ` with attraction strength `α : ℝ`. -/
-def sinkAttractorStep (α s : ℝ) (x : ι → ℝ) : ι → ℝ :=
-  fun i => (1 - α) * x i + α * s
-
-/-- Distance to the sink coordinate `s` scales by `1 - α` after one sink-attractor step. -/
-theorem sinkAttractorStep_sub_sink (α s : ℝ) (x : ι → ℝ) (i : ι) :
-    sinkAttractorStep α s x i - s = (1 - α) * (x i - s) :=
-  sink_sub_scalar α s (x i)
-
-/-- Pairwise token displacement scales by `1 - α` as the common sink term `α * s` cancels. -/
-theorem sinkAttractorStep_pairwise_sub (α s : ℝ) (x : ι → ℝ) (i j : ι) :
-    sinkAttractorStep α s x i - sinkAttractorStep α s x j =
-      (1 - α) * (x i - x j) :=
-  sink_pairwise_sub_scalar α s (x i) (x j)
-
-/-- For `α ≤ 1`, the pairwise absolute token distance scales by `1 - α`. -/
-theorem sinkAttractorStep_pairwise_abs_eq (α s : ℝ) (hα : α ≤ 1)
-    (x : ι → ℝ) (i j : ι) :
-    |sinkAttractorStep α s x i - sinkAttractorStep α s x j| =
-      (1 - α) * |x i - x j| := by
-  rw [sinkAttractorStep_pairwise_sub, abs_mul, abs_of_nonneg (sub_nonneg.mpr hα)]
-
-/-- **Strict Sink Gravitational Contraction**:
-For `0 < α ≤ 1` and distinct token coordinates `x i ≠ x j`, pulling both tokens toward
-the sink attractor strictly contracts their pairwise distance. -/
-theorem sinkAttractorStep_pairwise_strict_contract (α s : ℝ)
-    (hα0 : 0 < α) (hα1 : α ≤ 1) (x : ι → ℝ) (i j : ι) (hne : x i ≠ x j) :
-    |sinkAttractorStep α s x i - sinkAttractorStep α s x j| < |x i - x j| := by
-  rw [sinkAttractorStep_pairwise_abs_eq α s hα1 x i j]
-  have habs : 0 < |x i - x j| := abs_pos.mpr (sub_ne_zero.mpr hne)
-  have hlt : 1 - α < 1 := sub_lt_self 1 hα0
-  calc
-    (1 - α) * |x i - x j| < 1 * |x i - x j| := mul_lt_mul_of_pos_right hlt habs
-    _ = |x i - x j| := one_mul _
 
 /-! ### Archetype II: RoPE $\mathrm{SO}(2)$ Phase Clock, Clifford Bivector Torus & Relative Position Invariance -/
 
@@ -526,7 +485,7 @@ theorem rope_dotProduct_relative_invariance (θ : ℝ) (m n : ℤ) (q k : Fin 2 
     ropeRotor_transpose, Matrix.dotProduct_mulVec, Matrix.vecMul_vecMul,
     DiscreteRoPERepresentation.ropeRotor_relative, ← Matrix.dotProduct_mulVec]
 
-/-! ### Archetype III: Spherical LayerNorm / RMSNorm Projection onto $S^1(\gamma)$ & RoPE Equivariance -/
+/-! ### Archetype III: Radial Normalization onto $S^1(\gamma)$ & RoPE Equivariance -/
 
 /-- Squared Euclidean norm on `Fin 2 → ℝ` is always non-negative. -/
 theorem vecNormSq2_nonneg (v : Fin 2 → ℝ) : 0 ≤ vecNormSq2 v := by
@@ -539,8 +498,9 @@ theorem vecNormSq2_smul (c : ℝ) (v : Fin 2 → ℝ) :
   rw [vecNormSq2_eq_add, vecNormSq2_eq_add]
   exact normSq2_scale_scalar c (v 0) (v 1)
 
-/-- 2D spherical LayerNorm / RMSNorm projection onto the circle $S^1(\gamma)$ of radius `γ`:
-`sphericalNorm2 γ v = (γ / √‖v‖²) • v`. -/
+/-- 2D radial normalization onto the circle $S^1(\gamma)$:
+`sphericalNorm2 γ v = (γ / √‖v‖²) • v`. This definition omits the centering,
+coordinatewise gain, and epsilon used by Transformer LayerNorm/RMSNorm. -/
 noncomputable def sphericalNorm2 (γ : ℝ) (v : Fin 2 → ℝ) : Fin 2 → ℝ :=
   (γ / Real.sqrt (vecNormSq2 v)) • v
 
@@ -568,7 +528,7 @@ theorem sphericalNorm2_smul_pos (γ c : ℝ) (hc : 0 < c) (v : Fin 2 → ℝ) :
   rw [vecNormSq2_smul, Real.sqrt_mul (sq_nonneg c), Real.sqrt_sq (le_of_lt hc)]
   exact div_mul_scale_cancel γ c (Real.sqrt (vecNormSq2 v)) (v a) (ne_of_gt hc)
 
-/-- **Exact Commutation of RoPE and Spherical LayerNorm**:
+/-- **Exact Commutation of RoPE and Radial Normalization**:
 Rotating by `ropeAct φ` and projecting onto the hypersphere via `sphericalNorm2 γ`
 commute identically. -/
 theorem ropeAct_sphericalNorm2_comm (γ φ : ℝ) (v : Fin 2 → ℝ) :
@@ -671,9 +631,9 @@ theorem ropeAct_periodic (φ : ℝ) (v : Fin 2 → ℝ) :
   dsimp [ropeAct]
   rw [rotation_periodic]
 
-/-- **Resonant $p$-Token Limit Cycle Periodicity**:
+/-- **Resonant $p$-Step Periodicity of the Defined Orbit**:
 When the angular frequency `θ` and period `p` satisfy the orbital resonance condition
-`p * θ = 2 * Real.pi`, advancing the LayerNorm-projected spiral trajectory by `p` steps
+`p * θ = 2 * Real.pi`, advancing the radially normalized spiral trajectory by `p` steps
 returns the representation to its exact state at step `m`. -/
 theorem sphericalNorm2_spiralTrajectory_resonant_periodic
     (a b θ γ : ℝ) (ha : 0 < a) (m p : ℝ) (h_res : p * θ = 2 * Real.pi)
@@ -746,7 +706,7 @@ theorem stationaryAttentionCoupling_ellipticGenerator_quadratic_decay_nonpos
     (stationaryAttentionCoupling_detailedBalance logits β)
     γ hγ X
 
-/-! ### Archetype VI: Unified Hyperbolic Timespace — Null Lightcone Coordinates, `splitRotation` Boost Scaling & Poincaré Hyperbolic Fisher Metric -/
+/-! ### Archetype VI: Independent Split-Boost and Quadratic-Form Identities -/
 
 /-- Forward null lightcone coordinate $u = t + x$ on `Fin 2 → ℝ`. -/
 def nullPlusCoord (x : Fin 2 → ℝ) : ℝ :=
@@ -814,7 +774,7 @@ theorem lorentzInterval_splitRotation_invariant (b : ℝ) (x : Fin 2 → ℝ) :
     nullPlusCoord_splitRotation, nullMinusCoord_splitRotation]
   exact mul_exp_mul_exp_neg_scalar b (nullPlusCoord x) (nullMinusCoord x)
 
-/-- Poincaré upper half-plane Fisher–Rao quadratic line element
+/-- Upper half-plane quadratic line element
 $ds^2 = (d\sigma^2 + d\theta^2) / \sigma^2$. -/
 def poincareHalfPlaneMetric (σ dσ dθ : ℝ) : ℝ :=
   (dσ ^ 2 + dθ ^ 2) / (σ ^ 2)
@@ -823,13 +783,13 @@ def poincareHalfPlaneMetric (σ dσ dθ : ℝ) : ℝ :=
 def poincareDiskConformalFactor (r : ℝ) : ℝ :=
   4 / ((1 - r ^ 2) ^ 2)
 
-/-- The Poincaré half-plane Fisher–Rao metric is non-negative everywhere. -/
+/-- The displayed quadratic-form expression is non-negative for all inputs. -/
 theorem poincareHalfPlaneMetric_nonneg (σ dσ dθ : ℝ) :
     0 ≤ poincareHalfPlaneMetric σ dσ dθ := by
   dsimp [poincareHalfPlaneMetric]
   exact div_nonneg (add_nonneg (sq_nonneg dσ) (sq_nonneg dθ)) (sq_nonneg σ)
 
-/-- **Hyperbolic Scale Invariance of the Poincaré Fisher–Rao Metric**:
+/-- **Scale Invariance of the Upper Half-Plane Quadratic Expression**:
 Simultaneous rescaling `(σ, dσ, dθ) ↦ (c * σ, c * dσ, c * dθ)` for `c ≠ 0` leaves
 `poincareHalfPlaneMetric` invariant. -/
 theorem poincareHalfPlaneMetric_scale_invariant (c σ dσ dθ : ℝ) (hc : c ≠ 0) :
@@ -837,12 +797,12 @@ theorem poincareHalfPlaneMetric_scale_invariant (c σ dσ dθ : ℝ) (hc : c ≠
       poincareHalfPlaneMetric σ dσ dθ :=
   poincare_scale_scalar c σ dσ dθ hc
 
-/-- **Constant Hyperbolic Speed of Logarithmic Spiral Trajectories**:
-A logarithmic spiral with radial velocity `dσ = b * σ` and proportional angular velocity
-`dθ = ω * σ` has constant Poincaré Fisher–Rao speed `b ^ 2 + ω ^ 2` independent of scale `σ ≠ 0`. -/
-theorem poincareHalfPlaneMetric_loxodromic_const_speed (σ b ω : ℝ) (hσ : σ ≠ 0) :
+/-- Algebraic evaluation of the quadratic line element on the prescribed tangent components
+`dσ = b * σ` and `dθ = ω * σ`. This substitution identity does not assert that these
+components are the derivative of `spiralTrajectory` or of a Transformer trajectory. -/
+theorem poincareHalfPlaneMetric_scaled_velocity_identity (σ b ω : ℝ) (hσ : σ ≠ 0) :
     poincareHalfPlaneMetric σ (b * σ) (ω * σ) = b ^ 2 + ω ^ 2 :=
-  poincare_loxodromic_scalar σ b ω hσ
+  poincare_scaled_velocity_algebra σ b ω hσ
 
 /-- Inside the open unit disk `r ^ 2 < 1`, the Poincaré disk conformal factor is strictly positive. -/
 theorem poincareDiskConformalFactor_pos (r : ℝ) (hr : r ^ 2 < 1) :

@@ -1221,6 +1221,95 @@ theorem mestelDisk_toomreQ_gt_one_iff (v_sink c_s G r : ℝ)
   rw [toomreQ_mestelDisk_scale_invariant v_sink c_s G r (ne_of_gt hv) hG hr]
   exact one_lt_two_sqrt_two_mul_div_iff v_sink c_s hv
 
+/-- **Two-Point Radial Invariance of Toomre's $Q$ on the Mestel Disk**:
+For any two non-zero radii $r_1 \ne 0$ and $r_2 \ne 0$, the Mestel disk Toomre stability
+parameter takes the exact same value at $r_1$ and $r_2$. -/
+theorem toomreQ_mestelDisk_radial_invariance
+    (v_sink c_s G r₁ r₂ : ℝ) (hv : v_sink ≠ 0) (hG : G ≠ 0)
+    (hr₁ : r₁ ≠ 0) (hr₂ : r₂ ≠ 0) :
+    LinShuAttentionDensityWave.toomreQ
+      (Real.sqrt 2 * powerLawOmega v_sink 1 r₁) c_s G
+      (mestelSurfaceDensity v_sink G r₁) =
+    LinShuAttentionDensityWave.toomreQ
+      (Real.sqrt 2 * powerLawOmega v_sink 1 r₂) c_s G
+      (mestelSurfaceDensity v_sink G r₂) := by
+  rw [toomreQ_mestelDisk_scale_invariant v_sink c_s G r₁ hv hG hr₁,
+    toomreQ_mestelDisk_scale_invariant v_sink c_s G r₂ hv hG hr₂]
+
+/-- For $v_{\mathrm{sink}} > 0$ and $c_s > 0$, the Mestel disk Toomre parameter is strictly
+positive at every radius $r \ne 0$. -/
+theorem toomreQ_mestelDisk_pos
+    (v_sink c_s G r : ℝ) (hv : 0 < v_sink) (hc : 0 < c_s) (hG : G ≠ 0) (hr : r ≠ 0) :
+    0 < LinShuAttentionDensityWave.toomreQ
+      (Real.sqrt 2 * powerLawOmega v_sink 1 r) c_s G
+      (mestelSurfaceDensity v_sink G r) := by
+  rw [toomreQ_mestelDisk_scale_invariant v_sink c_s G r (ne_of_gt hv) hG hr]
+  have hs2_pos : 0 < Real.sqrt 2 := Real.sqrt_pos.mpr zero_lt_two
+  exact div_pos (mul_pos (mul_pos zero_lt_two hs2_pos) hc) hv
+
+/-- **Sink-Generated Mestel Disk Strict Toomre Stability ($Q > 1$ for all $r \ne 0$)**:
+Whenever $A_{i,0} > 0$, $\sigma_0 > 0$, and $c_s > \sqrt{A_{i,0}\sigma_0^2} / (2\sqrt{2})$,
+the sink-generated Mestel disk satisfies $Q > 1$ at every non-zero radius $r \ne 0$. -/
+theorem sink_mestelDisk_toomreQ_gt_one
+    {n : ℕ} (A_row : Fin (n + 1) → ℝ) (σ₀ c_s G r : ℝ)
+    (hA₀ : 0 < A_row 0) (hσ₀ : 0 < σ₀) (hG : G ≠ 0) (hr : r ≠ 0)
+    (hc_s : Real.sqrt (sinkCircularVelSq A_row σ₀) / (2 * Real.sqrt 2) < c_s) :
+    1 < LinShuAttentionDensityWave.toomreQ
+      (Real.sqrt 2 * powerLawOmega (Real.sqrt (sinkCircularVelSq A_row σ₀)) 1 r)
+      c_s G
+      (mestelSurfaceDensity (Real.sqrt (sinkCircularVelSq A_row σ₀)) G r) := by
+  have hv_pos : 0 < Real.sqrt (sinkCircularVelSq A_row σ₀) :=
+    Real.sqrt_pos.mpr (mul_pos hA₀ (sq_pos_of_pos hσ₀))
+  exact (mestelDisk_toomreQ_gt_one_iff
+    (Real.sqrt (sinkCircularVelSq A_row σ₀)) c_s G r hv_pos hG hr).mpr hc_s
+
+/-- **Universal Radial-and-Wavenumber WKBJ Dispersion Positivity for KMS Softmax Mestel Disks**:
+For any KMS softmax state `AttentionKMSState.softmaxWeight logits β` on `Fin (n + 1)` with
+$\sigma_0 > 0$, $G > 0$, and thermal sound speed exceeding the scale-invariant threshold
+$\sqrt{\rho_0 \sigma_0^2} / (2\sqrt{2})$, the Lin–Shu WKBJ dispersion RHS is strictly positive
+at every radius $r > 0$ and every radial wavenumber $k_r \in \mathbb{R}$. -/
+theorem kmsSoftmaxSink_mestelDisk_universal_dispersion_pos
+    {n : ℕ} (logits : Fin (n + 1) → ℝ) (β σ₀ c_s G r k_r : ℝ)
+    (hσ₀ : 0 < σ₀) (hG : 0 < G) (hr : 0 < r)
+    (hc_s : Real.sqrt (sinkCircularVelSq (AttentionKMSState.softmaxWeight logits β) σ₀) /
+      (2 * Real.sqrt 2) < c_s) :
+    0 < LinShuAttentionDensityWave.linShuDispersionRHS
+      (Real.sqrt 2 *
+        powerLawOmega
+          (Real.sqrt (sinkCircularVelSq (AttentionKMSState.softmaxWeight logits β) σ₀)) 1 r)
+      G
+      (mestelSurfaceDensity
+        (Real.sqrt (sinkCircularVelSq (AttentionKMSState.softmaxWeight logits β) σ₀)) G r)
+      c_s k_r := by
+  have hA₀ : 0 < AttentionKMSState.softmaxWeight logits β 0 :=
+    AttentionKMSState.softmaxWeight_pos logits β 0
+  have hv_pos : 0 < Real.sqrt (sinkCircularVelSq (AttentionKMSState.softmaxWeight logits β) σ₀) :=
+    Real.sqrt_pos.mpr (mul_pos hA₀ (sq_pos_of_pos hσ₀))
+  have hs2_pos : 0 < Real.sqrt 2 := Real.sqrt_pos.mpr zero_lt_two
+  have h_thresh_pos :
+      0 < Real.sqrt (sinkCircularVelSq (AttentionKMSState.softmaxWeight logits β) σ₀) /
+        (2 * Real.sqrt 2) :=
+    div_pos hv_pos (mul_pos zero_lt_two hs2_pos)
+  have hcs_pos : 0 < c_s := lt_trans h_thresh_pos hc_s
+  have h_mestel_pos :
+      0 < mestelSurfaceDensity
+        (Real.sqrt (sinkCircularVelSq (AttentionKMSState.softmaxWeight logits β) σ₀)) G r := by
+    dsimp [mestelSurfaceDensity]
+    exact div_pos (sq_pos_of_pos hv_pos)
+      (mul_pos (mul_pos (mul_pos zero_lt_two Real.pi_pos) hG) hr)
+  have hQ :
+      1 < LinShuAttentionDensityWave.toomreQ
+        (Real.sqrt 2 *
+          powerLawOmega
+            (Real.sqrt (sinkCircularVelSq (AttentionKMSState.softmaxWeight logits β) σ₀)) 1 r)
+        c_s G
+        (mestelSurfaceDensity
+          (Real.sqrt (sinkCircularVelSq (AttentionKMSState.softmaxWeight logits β) σ₀)) G r) :=
+    sink_mestelDisk_toomreQ_gt_one (AttentionKMSState.softmaxWeight logits β) σ₀ c_s G r
+      hA₀ hσ₀ (ne_of_gt hG) (ne_of_gt hr) hc_s
+  exact LinShuAttentionDensityWave.toomre_stability_pos_of_Q_gt_one
+    _ G _ c_s k_r (ne_of_gt hG) (ne_of_gt h_mestel_pos) (ne_of_gt hcs_pos) hQ
+
 end InfoGeometry.QuantumContext.LinShuKMSPetzRadialSynthesis
 
 end

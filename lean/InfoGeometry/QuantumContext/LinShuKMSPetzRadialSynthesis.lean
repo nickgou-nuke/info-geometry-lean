@@ -37,13 +37,21 @@ Para-Kähler Fock CAR superbracket (`UnifiedInfoGeometryPetzFockBridge`):
 3. **Archetype III — Logarithmic Potential ($\alpha = 1$ Flat Rotation Curve) $\longleftrightarrow$ Radial Quantization Time $t = \ln r$**:
    - Defines the power-law angular velocity profile `powerLawOmega Ω₀ α r = Ω₀ * r ^ (-α)`,
      its epicyclic frequency squared `powerLawEpicyclicFreqSq Ω₀ α r = 2 * (2 - α) * (powerLawOmega Ω₀ α r) ^ 2`
-     (bridged to `epicyclicFreqSqFromShear`), and the circular orbital speed `circularOrbitalSpeed`.
+     (bridged to `epicyclicFreqSqFromShear`), the circular orbital speed `circularOrbitalSpeed`,
+     and the KMS sink circular velocity squared `sinkCircularVelSq A_row σ₀ = A_row 0 * σ₀ ^ 2`.
    - Proves `circularOrbitalSpeed_flatRotationCurve_const` ($v_c(r) = \Omega_0$ for all $r > 0$ at
      $\alpha = 1$), defines the logarithmic central monopole potential
-     `logMonopolePotential v_c r = v_c ^ 2 * radialTime r`, proves the genuine calculus derivative
-     `hasDerivAt_logMonopolePotential` ($\Phi_0'(r) = v_c^2 / r$), and proves that along the radial
-     cone $r = \mathrm{coneRadius}(t) = e^t$, `powerLawEpicyclicFreqSq Ω₀ 1 (coneRadius t)` scales
-     with conformal grade `.negTwo` ($2 \Omega_0^2 e^{-2t}$).
+     `logMonopolePotential v_c r = v_c ^ 2 * radialTime r`, proves the genuine calculus derivatives
+     `hasDerivAt_logMonopolePotential` and `deriv_logMonopolePotential` ($\Phi_0'(r) = v_c^2 / r$),
+     and proves `kmsSinkLogPotential_generates_alpha_one_flatRotationCurve`
+     ($\Phi_0'(r) = r \Omega(r)^2$), `kmsSink_flatRotationCurve_epicyclicFreqSq`
+     ($\kappa(r)^2 = \frac{2}{r} \Phi_0'(r)$), and Rayleigh epicyclic positivity
+     `kmsSink_pos_implies_rayleigh_epicyclic_pos` and
+     `kmsSoftmaxSink_pos_implies_rayleigh_epicyclic_pos` ($\kappa(r)^2 > 0$ unconditionally for any
+     KMS softmax state).
+   - Proves that along the radial cone $r = \mathrm{coneRadius}(t) = e^t$,
+     `powerLawEpicyclicFreqSq Ω₀ 1 (coneRadius t)` scales with conformal grade `.negTwo`
+     ($2 \Omega_0^2 e^{-2t}$).
 
 4. **Archetype IV — Thermal Acoustic Dispersion ($c_s^2 = \tau_0 / \beta$) & Inverse-Temperature Toomre Stability Threshold $\beta_{\mathrm{crit}}$**:
    - Defines `thermalSoundSpeed τ₀ β = Real.sqrt (τ₀ / β)` and
@@ -67,8 +75,11 @@ Para-Kähler Fock CAR superbracket (`UnifiedInfoGeometryPetzFockBridge`):
 
 6. **Archetype VI — Multi-Head RoPE Constructive Interference Envelope, Pairwise Relative-Phase Norm Identity & Metriplectic Velocity Orthogonality**:
    - Defines `spiralWavePhase`, `ropeHeadArmWave`, and `multiHeadSpiralWave`, proving the
-     constructive crest identity `multiHeadSpiralWave_constructive_interference` and global upper
-     envelope bound `multiHeadSpiralWave_le_constructive_crest`.
+     `DiscreteRoPERepresentation.ropeRotor` bridges `ropeRotor_one_eq_rotation`,
+     `ropeRotor_one_apply_zero_zero`, `multiHeadSpiralWave_eq_sum_ropeRotor`, and
+     `ropeHeadArmWave_constructive_interference`, as well as the constructive crest identity
+     `multiHeadSpiralWave_constructive_interference` and global upper envelope bound
+     `multiHeadSpiralWave_le_constructive_crest`.
    - Defines the 2D head rotor vector `headRotorAxisVec` and multi-head superposition
      `multiHeadRotorVec`, proving the pairwise relative-phase cosine dot product
      `headRotorAxisVec_dot_eq_cos_sub`, the double-sum interference norm identity
@@ -84,9 +95,10 @@ Para-Kähler Fock CAR superbracket (`UnifiedInfoGeometryPetzFockBridge`):
 1. The wave-branch factorization `lindblad_wave_branches_iff` and thermal Toomre stability
    thresholds `thermal_toomre_stable_of_beta_le_crit` operate on the algebraic WKBJ dispersion
    polynomial `linShuDispersionRHS` over `ℝ`.
-2. The logarithmic monopole potential `logMonopolePotential` and its `HasDerivAt` centrifugal-force
-   identity `hasDerivAt_logMonopolePotential` are 1D real calculus theorems on $r \ne 0$ (and
-   $r > 0$ for the power-law rotation curve $r^{-\alpha}$).
+2. The logarithmic monopole potential `logMonopolePotential` and its `HasDerivAt` / `deriv`
+   centrifugal-force identities `hasDerivAt_logMonopolePotential` and
+   `kmsSinkLogPotential_generates_alpha_one_flatRotationCurve` are 1D real calculus theorems on
+   $r \ne 0$ (and $r > 0$ for the power-law rotation curve $r^{-\alpha}$).
 3. The Petz recovery and dilated Fock CAR synthesis theorems in Archetype V hold on finite index
    types `[Fintype ι] [Fintype κ_idx]` and algebraic exterior Fock modules `FockExteriorEnvelope K`.
 4. The multi-head RoPE interference identities in Archetype VI hold for any finite head index type
@@ -100,6 +112,7 @@ namespace InfoGeometry.QuantumContext.LinShuKMSPetzRadialSynthesis
 open BigOperators Matrix
 open InfoGeometry.Routing
 open InfoGeometry.Routing.PlanarRotation
+open InfoGeometry.Routing.DiscreteRoPERepresentation
 open InfoGeometry.QuantumContext
 open InfoGeometry.QuantumContext.AttentionKMSState
 open InfoGeometry.QuantumContext.RotaryAttentionSpiralDynamics
@@ -158,6 +171,15 @@ private theorem exp_neg_sq_eq_exp_neg_two_mul (t : ℝ) :
   congr 1
   push_cast
   ring
+
+private theorem div_eq_mul_div_sq_scalar (v r : ℝ) (hr : r ≠ 0) :
+    v ^ 2 / r = r * (v / r) ^ 2 := by
+  rw [div_pow, sq r, ← mul_div_assoc, mul_comm r (v ^ 2), mul_div_mul_right (v ^ 2) r hr]
+
+private theorem two_mul_eq_two_mul_r_div_r (r x : ℝ) (hr : r ≠ 0) :
+    2 * x = 2 * (r * x) / r := by
+  have h : 2 * (r * x) = (2 * x) * r := by ring
+  rw [h, mul_div_cancel_right₀ (2 * x) hr]
 
 private theorem one_le_div_of_le_of_pos (a b : ℝ) (hb : 0 < b) (h : b ≤ a) :
     1 ≤ a / b := by
@@ -398,6 +420,74 @@ theorem hasDerivAt_logMonopolePotential (v_c : ℝ) {r : ℝ} (hr : r ≠ 0) :
   rw [div_eq_mul_inv]
   exact (RadialQuantizationFiveGradedCylinder.hasDerivAt_radialTime hr).const_mul (v_c ^ 2)
 
+/-- Effective squared circular velocity $v_{\mathrm{sink}}^2 = A_{i,0} \sigma_0^2$ induced by the
+attention sink weight $A_{i,0}$ and radial scale $\sigma_0$. -/
+def sinkCircularVelSq {n : ℕ} (A_row : Fin (n + 1) → ℝ) (σ₀ : ℝ) : ℝ :=
+  A_row 0 * σ₀ ^ 2
+
+/-- Scalar `deriv` form of `hasDerivAt_logMonopolePotential`:
+$\frac{d}{dr}(v_c^2 \ln r) = \frac{v_c^2}{r}$ for $r \ne 0$. -/
+theorem deriv_logMonopolePotential (v_c r : ℝ) (hr : r ≠ 0) :
+    deriv (logMonopolePotential v_c) r = v_c ^ 2 / r :=
+  (hasDerivAt_logMonopolePotential v_c hr).deriv
+
+/-- At shear exponent $\alpha = 1$, `powerLawOmega v_sink 1 r` simplifies to $v_{\mathrm{sink}} / r$. -/
+theorem powerLawOmega_one_eq_div (v_sink r : ℝ) :
+    powerLawOmega v_sink 1 r = v_sink / r := by
+  unfold powerLawOmega
+  rw [Real.rpow_neg_one, div_eq_mul_inv]
+
+/-- **KMS Sink Logarithmic Potential Generates the $\alpha = 1$ Flat Rotation Curve**:
+For any $r \ne 0$, the radial restoring gradient $\frac{d\Phi_0}{dr}$ of `logMonopolePotential v_sink`
+equals the exact centrifugal acceleration $r \Omega(r)^2$ of the $\alpha = 1$ flat rotation curve
+`powerLawOmega v_sink 1 r`. -/
+theorem kmsSinkLogPotential_generates_alpha_one_flatRotationCurve
+    (v_sink r : ℝ) (hr : r ≠ 0) :
+    deriv (logMonopolePotential v_sink) r =
+      r * (powerLawOmega v_sink 1 r) ^ 2 := by
+  rw [deriv_logMonopolePotential v_sink r hr, powerLawOmega_one_eq_div]
+  exact div_eq_mul_div_sq_scalar v_sink r hr
+
+/-- **Flat-Rotation-Curve Epicyclic Frequency from the Logarithmic Potential Gradient**:
+For $r \ne 0$, the epicyclic frequency squared `powerLawEpicyclicFreqSq v_sink 1 r` equals
+$\frac{2}{r} \frac{d\Phi_0}{dr}$. -/
+theorem kmsSink_flatRotationCurve_epicyclicFreqSq
+    (v_sink r : ℝ) (hr : r ≠ 0) :
+    powerLawEpicyclicFreqSq v_sink 1 r =
+      2 * (deriv (logMonopolePotential v_sink) r) / r := by
+  rw [epicyclicFreqSq_flatRotationCurve,
+    kmsSinkLogPotential_generates_alpha_one_flatRotationCurve v_sink r hr]
+  exact two_mul_eq_two_mul_r_div_r r ((powerLawOmega v_sink 1 r) ^ 2) hr
+
+/-- **Rayleigh Epicyclic Stability from Positive Sink Weight ($A_{i,0} > 0 \implies \kappa(r)^2 > 0$)**:
+Whenever the anchor sink weight $A_{i,0} > 0$, $\sigma_0 > 0$, and $r > 0$, the induced
+flat-rotation-curve epicyclic frequency squared is strictly positive. -/
+theorem kmsSink_pos_implies_rayleigh_epicyclic_pos {n : ℕ}
+    (A_row : Fin (n + 1) → ℝ) (σ₀ r : ℝ)
+    (hA₀ : 0 < A_row 0) (hσ₀ : 0 < σ₀) (hr : 0 < r) :
+    0 < powerLawEpicyclicFreqSq (Real.sqrt (sinkCircularVelSq A_row σ₀)) 1 r := by
+  rw [epicyclicFreqSq_flatRotationCurve, powerLawOmega_one_eq_div]
+  have h_vel_pos : 0 < sinkCircularVelSq A_row σ₀ :=
+    mul_pos hA₀ (sq_pos_of_pos hσ₀)
+  have h_sqrt_pos : 0 < Real.sqrt (sinkCircularVelSq A_row σ₀) :=
+    Real.sqrt_pos.mpr h_vel_pos
+  have h_omega_pos : 0 < Real.sqrt (sinkCircularVelSq A_row σ₀) / r :=
+    div_pos h_sqrt_pos hr
+  exact mul_pos zero_lt_two (sq_pos_of_pos h_omega_pos)
+
+/-- **Unconditional Rayleigh Epicyclic Stability of KMS Softmax Sink States**:
+Because `AttentionKMSState.softmaxWeight logits β 0 > 0` for every logit vector `logits` and
+inverse temperature `β`, the KMS softmax sink state unconditionally generates a strictly
+positive epicyclic restoring frequency $\kappa(r)^2 > 0$ for all $\sigma_0 > 0$ and $r > 0$. -/
+theorem kmsSoftmaxSink_pos_implies_rayleigh_epicyclic_pos {n : ℕ}
+    (logits : Fin (n + 1) → ℝ) (β σ₀ r : ℝ)
+    (hσ₀ : 0 < σ₀) (hr : 0 < r) :
+    0 < powerLawEpicyclicFreqSq
+      (Real.sqrt (sinkCircularVelSq (AttentionKMSState.softmaxWeight logits β) σ₀)) 1 r :=
+  kmsSink_pos_implies_rayleigh_epicyclic_pos
+    (AttentionKMSState.softmaxWeight logits β) σ₀ r
+    (AttentionKMSState.softmaxWeight_pos logits β 0) hσ₀ hr
+
 /-- **Conformal Grade `-2` Scaling of the Flat-Rotation-Curve Epicyclic Frequency**:
 Along the radial cone $r = \mathrm{coneRadius}(t) = e^t$, the flat-rotation-curve ($\alpha = 1$)
 epicyclic frequency squared transforms with conformal weight `-2`
@@ -635,6 +725,28 @@ theorem rotation_zero_zero_apply (φ : ℝ) :
     PlanarRotation.rotation φ 0 0 = Real.cos φ :=
   rfl
 
+/-- At unit position index $m = 1$, `DiscreteRoPERepresentation.ropeRotor φ 1` equals
+`PlanarRotation.rotation φ`. -/
+theorem ropeRotor_one_eq_rotation (φ : ℝ) :
+    DiscreteRoPERepresentation.ropeRotor φ 1 = PlanarRotation.rotation φ := by
+  dsimp [DiscreteRoPERepresentation.ropeRotor]
+  rw [Int.cast_one, one_mul]
+
+/-- The `(0, 0)` entry of `DiscreteRoPERepresentation.ropeRotor φ 1` equals `Real.cos φ`. -/
+theorem ropeRotor_one_apply_zero_zero (φ : ℝ) :
+    DiscreteRoPERepresentation.ropeRotor φ 1 0 0 = Real.cos φ := by
+  rw [ropeRotor_one_eq_rotation, rotation_zero_zero_apply]
+
+/-- `multiHeadSpiralWave` expressed directly via the `(0, 0)` entry of
+`DiscreteRoPERepresentation.ropeRotor (Φ h) 1`. -/
+theorem multiHeadSpiralWave_eq_sum_ropeRotor {H : Type*} [Fintype H]
+    (A Φ : H → ℝ) :
+    multiHeadSpiralWave A Φ =
+      ∑ h : H, A h * (DiscreteRoPERepresentation.ropeRotor (Φ h) 1 0 0) := by
+  dsimp [multiHeadSpiralWave]
+  refine Finset.sum_congr rfl (fun h _ => ?_)
+  rw [ropeRotor_one_eq_rotation]
+
 /-- Evaluating `multiHeadSpiralWave` on the headwise `spiralWavePhase` family equals the sum of
 `ropeHeadArmWave` across all heads $h \in H$. -/
 theorem multiHeadSpiralWave_eq_sum_ropeHeadArmWave {H : Type*} [Fintype H]
@@ -653,6 +765,15 @@ theorem multiHeadSpiralWave_constructive_interference {H : Type*} [Fintype H]
   dsimp [multiHeadSpiralWave]
   refine Finset.sum_congr rfl (fun h _ => ?_)
   rw [h_crest h, rotation_zero_zero_apply, Real.cos_zero, mul_one]
+
+/-- Constructive interference identity phrased directly in terms of
+`DiscreteRoPERepresentation.ropeRotor (Φ h) 1 0 0`. -/
+theorem ropeHeadArmWave_constructive_interference {H : Type*} [Fintype H]
+    (A Φ : H → ℝ) (hLock : ∀ h : H, Φ h = 0) :
+    (∑ h : H, A h * (DiscreteRoPERepresentation.ropeRotor (Φ h) 1 0 0)) =
+      ∑ h : H, A h := by
+  rw [← multiHeadSpiralWave_eq_sum_ropeRotor]
+  exact multiHeadSpiralWave_constructive_interference A Φ hLock
 
 /-- **Global Constructive Crest Envelope Bound**:
 For non-negative head amplitudes $0 \le A_h$, `multiHeadSpiralWave A Φ` is bounded above by the

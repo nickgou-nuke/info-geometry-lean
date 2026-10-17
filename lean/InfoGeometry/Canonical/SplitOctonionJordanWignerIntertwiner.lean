@@ -189,8 +189,7 @@ theorem zornMajoranaVec_not_isOnNullCone (a : Fin 6) :
     ¬ IsOnNullCone (zornMajoranaVec a) := by
   rw [isOnNullCone_iff_vec3Dot_zero]
   fin_cases a <;>
-    simp [zornMajoranaVec, zornMajoranaPlusVector, zornMajoranaMinusVector, vec3Dot,
-      majoranaSignatureR, majoranaSignatureZ]
+    simp [zornMajoranaVec, zornMajoranaPlusVector, zornMajoranaMinusVector, vec3Dot]
 
 /-- **Signature match.** The para-Kähler metric restricted to the six Zorn Majorana vectors is
 `2η`, where `η` is the Jordan–Wigner split signature:

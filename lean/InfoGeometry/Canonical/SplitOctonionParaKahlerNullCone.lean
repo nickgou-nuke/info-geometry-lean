@@ -810,15 +810,15 @@ section CliffordSoldering
 
 variable {R : Type*} [CommRing R]
 
-/-- Left multiplication operator `L_x(y) = x ⋆ y` viewed as an endomorphism of the 8D ket space `𝕆_s`. -/
+/-- Left multiplication operation `L_x(y) = x ⋆ y` on the Zorn carrier `𝕆_s`. -/
 def zornLeftAct (x y : ZornSplitOctonion R) : ZornSplitOctonion R :=
   zornMul x y
 
-/-- Right multiplication operator `R_x(y) = y ⋆ x` viewed as an endomorphism of the 8D ket space `𝕆_s`. -/
+/-- Right multiplication operation `R_x(y) = y ⋆ x` on the Zorn carrier `𝕆_s`. -/
 def zornRightAct (x y : ZornSplitOctonion R) : ZornSplitOctonion R :=
   zornMul y x
 
-/-- The two Peircian vacuum idempotents `e₀ = |000⟩⟨000|` and `e₁ = |111⟩⟨111|` in `𝕆_s`. -/
+/-- The two Peirce diagonal idempotent values `e₀` and `e₁` in the Zorn carrier `𝕆_s`. -/
 def zornIdemE0 : ZornSplitOctonion R := zornE0
 
 def zornIdemE1 : ZornSplitOctonion R := zornE1

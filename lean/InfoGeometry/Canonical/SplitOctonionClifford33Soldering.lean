@@ -41,29 +41,44 @@ $\mathbb{O}_s$ over the owner carriers of
    that the matrix of $L_1$ (resp. $R_1$) is the `8 × 8` identity matrix `I₈`.
 
 3. **The Cl(3,3) Soldering Law** (Section 3):
-   - `zorn_leftAct_clifford33_soldering`: the composed left-multiplication operators
+   - `zorn_left_clifford33_soldering`: the composed left-multiplication operators
      satisfy $\iota(z_1) \star (\iota(z_2) \star y) + \iota(z_2) \star (\iota(z_1) \star y)
      = g(z_1, z_2) \bullet y$.
    - `zorn_leftMul_clifford33_soldering`: the map-valued reading
      $(\iota(z_1) \star \iota(z_2)) \star y + (\iota(z_2) \star \iota(z_1)) \star y
      = g(z_1, z_2) \bullet y$.
-   - `zorn_rightAct_clifford33_soldering` and `zorn_rightMul_clifford33_soldering`: the
+   - `zorn_right_clifford33_soldering` and `zorn_rightMul_clifford33_soldering`: the
      analogous right-action laws.
    - `zorn_leftActFin8_clifford33`, `zorn_rightActFin8_clifford33`,
      `zorn_leftActMatrix_clifford33`, `zorn_rightActMatrix_clifford33`: composition of the
      generator actions satisfies the Clifford anticommutator law on `ℝ⁸` and its matrices.
    - `zorn_leftAct_comp_ne_leftAct_mul` and `zorn_rightAct_comp_ne_rightAct_mul`: explicit
      witnesses that non-associativity keeps $L_x \circ L_z \neq L_{x \star z}$ and
-     $R_x \circ R_z \neq R_{z \star x}$.
+     $R_x \circ R_z \neq R_{z \star x}$. These are two *different* associator instances,
+     respectively $[x_1, x_2, y]$ and $[y, x_2, x_1]$; they are not the same fact twice.
 
 4. **Peirce coordinate-sector maps** (Section 4):
    `peirceKetBra00`, `peirceKetBra01`, `peirceKetBra10`, `peirceKetBra11` and the theorems
-   `peirce_ketbra_00`, `peirce_ketbra_01`, `peirce_ketbra_10`, `peirce_ketbra_11` evaluate
+   `peirceKetBra00_eq`, `peirceKetBra01_eq`, `peirceKetBra10_eq`, `peirceKetBra11_eq` evaluate
    $\Pi_{ij}(y) = e_i \star (y \star e_j)$ on the four displayed Zorn coordinates.
    `peirce_ketbra_completeness` proves that these coordinate-sector values sum to `y`.
    The names retain historical `ketbra` terminology, but no ideal or bra/operator
    realization is asserted. The correspondence with exterior grades is an interpretation
    through the separate `Fin 8` vector-space chart, not an exterior-algebra theorem here.
+   The four coordinate evaluations are stated as **four separate theorems** rather than as
+   one four-way conjunction, because the repository pre-commit rule rejects a theorem that
+   only bundles other fields' proofs into a single multi-field proposition.
+
+## Single-Owner Note
+
+This module is the single owner of the Cl(3,3) soldering law and of the Peirce
+coordinate-sector evaluations on `ZornSplitOctonion R`. They were previously also present
+as "Section 8" of `SplitOctonionParaKahlerNullCone`; that duplicate surface has been removed
+so that the short names `zornLeftAct`, `zornRightAct`, `peirceKetBra00` … `peirceKetBra11`,
+`zorn_left_clifford33_soldering`, `zorn_right_clifford33_soldering` and
+`peirce_ketbra_completeness` resolve uniquely. The superseded Section 8 also carried the
+forwarding aliases `zornIdemE0 := zornE0` and `zornIdemE1 := zornE1`; this module reuses
+`zornE0`/`zornE1` directly and declares no such aliases.
 
 ## Scope Note
 
@@ -73,8 +88,11 @@ which is where the `Matrix (Fin 8) (Fin 8) ℝ` carrier and the `Fin 8` Fock cha
 available. This module asserts the **Cl(3,3) anticommutator** for the multiplication
 operators; it does **not** assert an isomorphism $\mathrm{Cl}(3,3) \cong M_8(\mathbb{R})$,
 does not identify $L_{\iota(z)}$ with the Jordan–Wigner Majorana Kronecker strings of
-`InfoGeometry.Clifford.Cl33FiniteJWMajoranaMatrix` (no proved map is given here), and does
-not claim that the isotropy sheets are maximal. The `Fin 8` Fock carrier equivalence is
+`InfoGeometry.Clifford.Cl33FiniteJWMajoranaMatrix` (no proved map is given here). The sibling
+module `SplitOctonionJordanWignerIntertwiner` discharges a *conjugacy* of `zornLeftActMatrix`
+by a single explicit Jordan–Wigner conjugator `S` with `det S = -1`; that is conjugacy, not an
+identification with a Clifford algebra, and it is stated there, not here. This module also
+does not claim that the isotropy sheets are maximal. The `Fin 8` Fock carrier equivalence is
 purely an equivalence of vector spaces: `zorn_leftAct_comp_ne_leftAct_mul` and
 `zorn_rightAct_comp_ne_rightAct_mul` record that the Zorn product is not associative and
 hence cannot be transferred to that carrier as an associative product.
@@ -398,7 +416,7 @@ Composing the left-multiplication operators `L_x(y) = x ⋆ y` as functions,
 `ι(z₁) ⋆ (ι(z₂) ⋆ y)`. For any two pure phase-space vectors
 `z₁, z₂ ∈ V = T⁺ ⊕ T⁻` and every ket `y ∈ 𝕆_s`:
 `ι(z₁) ⋆ (ι(z₂) ⋆ y) + ι(z₂) ⋆ (ι(z₁) ⋆ y) = g(z₁, z₂) • y`. -/
-theorem zorn_leftAct_clifford33_soldering (z₁ z₂ : ParaKahlerVec R) (y : ZornSplitOctonion R) :
+theorem zorn_left_clifford33_soldering (z₁ z₂ : ParaKahlerVec R) (y : ZornSplitOctonion R) :
     zornAdd (zornMul (embedVec z₁) (zornMul (embedVec z₂) y))
             (zornMul (embedVec z₂) (zornMul (embedVec z₁) y)) =
       zornSmul (paraKahlerMetric z₁ z₂) y := by
@@ -429,7 +447,7 @@ Composing the right-multiplication operators `R_x(y) = y ⋆ x` as functions,
 `R_{ι(z₁)} ∘ R_{ι(z₂)}` acts on the ket by the left-nested product
 `(y ⋆ ι(z₁)) ⋆ ι(z₂)`, and
 `(y ⋆ ι(z₁)) ⋆ ι(z₂) + (y ⋆ ι(z₂)) ⋆ ι(z₁) = g(z₁, z₂) • y`. -/
-theorem zorn_rightAct_clifford33_soldering (z₁ z₂ : ParaKahlerVec R) (y : ZornSplitOctonion R) :
+theorem zorn_right_clifford33_soldering (z₁ z₂ : ParaKahlerVec R) (y : ZornSplitOctonion R) :
     zornAdd (zornMul (zornMul y (embedVec z₁)) (embedVec z₂))
             (zornMul (zornMul y (embedVec z₂)) (embedVec z₁)) =
       zornSmul (paraKahlerMetric z₁ z₂) y := by
@@ -463,7 +481,7 @@ theorem zorn_leftActFin8_clifford33 (z₁ z₂ : ParaKahlerVec ℝ) :
   apply LinearMap.ext
   intro ψ
   funext i
-  have h := zorn_leftAct_clifford33_soldering z₁ z₂ (fin8ToZorn ψ)
+  have h := zorn_left_clifford33_soldering z₁ z₂ (fin8ToZorn ψ)
   have h' := congrArg zornToFin8 h
   rw [zornToFin8_zornAdd, zornToFin8_zornSmul] at h'
   simpa [zornLeftActFin8, LinearMap.comp_apply, fin8ToZorn_left_inv,
@@ -479,7 +497,7 @@ theorem zorn_rightActFin8_clifford33 (z₁ z₂ : ParaKahlerVec ℝ) :
   apply LinearMap.ext
   intro ψ
   funext i
-  have h := zorn_rightAct_clifford33_soldering z₁ z₂ (fin8ToZorn ψ)
+  have h := zorn_right_clifford33_soldering z₁ z₂ (fin8ToZorn ψ)
   have h' := congrArg zornToFin8 h
   rw [zornToFin8_zornAdd, zornToFin8_zornSmul] at h'
   simpa [zornRightActFin8, LinearMap.comp_apply, fin8ToZorn_left_inv,
@@ -526,9 +544,9 @@ theorem zorn_rightActMatrix_clifford33 (z₁ z₂ : ParaKahlerVec ℝ) :
 
 /-- **Non-associativity defect (composition is not multiplication of operators, left
 action).** On an explicit witness, `L_{ι(z₁)} ∘ L_{ι(z₂)}` differs from
-`L_{ι(z₁) ⋆ ι(z₂)}`. Non-associativity of `zornMul` means the operators `L_x` do **not**
-form a representation of the Zorn algebra, even though their anticommutator is exactly the
-Cl(3,3) law. -/
+`L_{ι(z₁) ⋆ ι(z₂)}`. (Consequence, not formalized here: non-associativity of `zornMul` means
+the operators `L_x` do not form a representation of the Zorn algebra, even though their
+anticommutator is exactly the Cl(3,3) law.) -/
 theorem zorn_leftAct_comp_ne_leftAct_mul :
     zornLeftAct (embedVec (primalSheet (![1, 0, 0] : Fin 3 → ℝ)))
         (zornLeftAct (embedVec (dualSheet (![1, 0, 0] : Fin 3 → ℝ)))
@@ -579,9 +597,9 @@ def peirceKetBra10 (y : ZornSplitOctonion R) : ZornSplitOctonion R :=
 def peirceKetBra11 (y : ZornSplitOctonion R) : ZornSplitOctonion R :=
   zornMul zornE1 (zornMul y zornE1)
 
-/-- **Theorem 17a (vacuum coordinate sector; `Λ⁰` in the `Fin 8` chart).** `Π₀₀`
+/-- **Theorem 17a (vacuum coordinate sector).** `Π₀₀`
 extracts the scalar coordinate `a • e₀`. -/
-theorem peirce_ketbra_00 (y : ZornSplitOctonion R) :
+theorem peirceKetBra00_eq (y : ZornSplitOctonion R) :
     peirceKetBra00 y = zornSmul y.a zornE0 := by
   ext k
   · dsimp [peirceKetBra00, zornE0, zornSmul, zornMul, vec3Dot]
@@ -591,9 +609,9 @@ theorem peirce_ketbra_00 (y : ZornSplitOctonion R) :
   · dsimp [peirceKetBra00, zornE0, zornSmul, zornMul, vec3Dot]
     ring
 
-/-- **Theorem 17b (primal coordinate sector; `Λ¹` in the `Fin 8` chart).** `Π₀₁`
+/-- **Theorem 17b (primal coordinate sector).** `Π₀₁`
 extracts `ι(u, 0)`. -/
-theorem peirce_ketbra_01 (y : ZornSplitOctonion R) :
+theorem peirceKetBra01_eq (y : ZornSplitOctonion R) :
     peirceKetBra01 y = embedVec (primalSheet y.u) := by
   ext k
   · dsimp [peirceKetBra01, zornE0, zornE1, embedVec, primalSheet, zornMul, vec3Dot]
@@ -607,9 +625,9 @@ theorem peirce_ketbra_01 (y : ZornSplitOctonion R) :
   · dsimp [peirceKetBra01, zornE0, zornE1, embedVec, primalSheet, zornMul, vec3Dot]
     ring
 
-/-- **Theorem 17c (dual coordinate sector; `Λ²` in the `Fin 8` chart).** `Π₁₀`
+/-- **Theorem 17c (dual coordinate sector).** `Π₁₀`
 extracts `ι(0, v)`. -/
-theorem peirce_ketbra_10 (y : ZornSplitOctonion R) :
+theorem peirceKetBra10_eq (y : ZornSplitOctonion R) :
     peirceKetBra10 y = embedVec (dualSheet y.v) := by
   ext k
   · dsimp [peirceKetBra10, zornE0, zornE1, embedVec, dualSheet, zornMul, vec3Dot]
@@ -623,9 +641,9 @@ theorem peirce_ketbra_10 (y : ZornSplitOctonion R) :
   · dsimp [peirceKetBra10, zornE0, zornE1, embedVec, dualSheet, zornMul, vec3Dot]
     ring
 
-/-- **Theorem 17d (top coordinate sector; `Λ³` in the `Fin 8` chart).** `Π₁₁`
+/-- **Theorem 17d (top coordinate sector).** `Π₁₁`
 extracts the scalar coordinate `b • e₁`. -/
-theorem peirce_ketbra_11 (y : ZornSplitOctonion R) :
+theorem peirceKetBra11_eq (y : ZornSplitOctonion R) :
     peirceKetBra11 y = zornSmul y.b zornE1 := by
   ext k
   · dsimp [peirceKetBra11, zornE1, zornSmul, zornMul, vec3Dot]
@@ -641,7 +659,7 @@ above. The exterior-grade interpretation uses the separate `Fin 8` vector-space 
 theorem peirce_ketbra_completeness (y : ZornSplitOctonion R) :
     zornAdd (zornAdd (peirceKetBra00 y) (peirceKetBra01 y))
             (zornAdd (peirceKetBra10 y) (peirceKetBra11 y)) = y := by
-  rw [peirce_ketbra_00, peirce_ketbra_01, peirce_ketbra_10, peirce_ketbra_11]
+  rw [peirceKetBra00_eq, peirceKetBra01_eq, peirceKetBra10_eq, peirceKetBra11_eq]
   ext k
   · dsimp [zornE0, zornE1, embedVec, primalSheet, dualSheet, zornAdd, zornSmul]
     ring

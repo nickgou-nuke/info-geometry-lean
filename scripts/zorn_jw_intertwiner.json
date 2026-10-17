@@ -1,0 +1,131 @@
+{
+  "object": "zorn_left_action_jordan_wigner_intertwiner",
+  "lean_owners": [
+    "InfoGeometry.Canonical.SplitOctonionParaKahlerNullCone",
+    "InfoGeometry.Canonical.SplitOctonionClifford33Soldering",
+    "InfoGeometry.Canonical.MajoranaEightByEightJW"
+  ],
+  "carrier": "Fin 8 -> ZornSplitOctonion Z; integer coordinate matrices indexed by Fin 8",
+  "basis_order": [
+    "000",
+    "001",
+    "010",
+    "011",
+    "100",
+    "101",
+    "110",
+    "111"
+  ],
+  "fock_chart": "(a,u0,u1,u2,v0,v1,v2,b)=(psi0,psi4,psi2,psi1,psi3,-psi5,psi6,psi7)",
+  "generator_order": [
+    "mode0+",
+    "mode0-",
+    "mode1+",
+    "mode1-",
+    "mode2+",
+    "mode2-"
+  ],
+  "multiplication_convention": "owner zornMul; column action y -> x star y",
+  "matrix_convention": "column coordinates; Matrix row i, column j is output coordinate i on input basis vector j",
+  "intertwiner": "S swaps Fin 8 coordinates 0 and 7, and fixes 1,...,6",
+  "identity_checked": "L_k * S = S * Gamma_k for all six generators; S^2=I",
+  "round_trip_verified": true,
+  "round_trip_element": [
+    2,
+    -3,
+    5,
+    7,
+    11,
+    -13,
+    17,
+    19
+  ],
+  "round_trip_generator": "mode1+",
+  "kernel_dimension_of_intertwiner_space": 1,
+  "kernel_computation_field": "QQ",
+  "determinant_S": -1,
+  "checked": true,
+  "scope_limit": "Exact finite matrix equivalence only; no universal Clifford algebra isomorphism is certified by this CAS artifact.",
+  "S_rows": [
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1
+    ],
+    [
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0
+    ],
+    [
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  ]
+}

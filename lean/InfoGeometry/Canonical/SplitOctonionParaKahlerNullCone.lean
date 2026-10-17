@@ -72,11 +72,22 @@ Zorn vector-matrix split-octonion algebra `ZornSplitOctonion R` imported from
      identity $[u_1, u_2, u_3] = -\det(u_1, u_2, u_3) I_{\text{para}}$
      (`zorn_primal_triple_associator_eq_volume_paraGrading`).
 
+6. **Pointwise Clifford Relations & Peirce Coordinate Sectors on $\mathbb{O}_s$**:
+   - Proves pointwise left and right multiplication anticommutator identities
+     `zorn_left_clifford33_soldering` and `zorn_right_clifford33_soldering` on the eight-coordinate
+     carrier `ZornSplitOctonion R`. These are identities for the explicit Zorn product; this section
+     does not bundle them as `Module.End` operators or construct a Clifford algebra homomorphism.
+   - Evaluates the four nested Peirce coordinate maps $\Pi_{00}, \Pi_{01}, \Pi_{10}, \Pi_{11}$
+     into scalar/vector coordinate sectors and proves their completeness. Rank, ideal-closure,
+     and ket-bra operator claims are not asserted here.
+
 ## Scope Note
 
-The non-Fock algebraic identities in Sections 1–5 and the para-complex, norm, and
-triple-product identities in Section 7 are proved over an arbitrary commutative ring
-`CommRing R`. The finite Fock spinor bridge theorems
+The pointwise identities in Section 8 are not themselves a proof of an algebra isomorphism from
+a Clifford algebra to `Matrix (Fin 8) (Fin 8) R`; `fin8ZornEquiv` is only a type equivalence here.
+
+The non-Fock algebraic identities in Sections 1–5, 7, and 8 are proved over an arbitrary
+commutative ring `CommRing R`. The finite Fock spinor bridge theorems
 `fin8ToZorn_gPlus1_vac_eq_embedVec_primalSheet` and
 `fin8ToZorn_gPlus2Hodge_vac_eq_embedVec_dualSheet` are certified over `ℤ`. The explicit
 nonzero-associator witness and the resulting obstruction to injective multiplicative maps
@@ -790,5 +801,150 @@ theorem no_injective_zornMul_map_to_associative_semigroup
     _ = φ (zornMul x (zornMul y z)) := (hmul _ _).symm
 
 end GradingAndAssociator
+
+/-!
+## Section 8: Pointwise Clifford Relations & Peirce Coordinate Sectors on `𝕆_s`
+-/
+
+section CliffordSoldering
+
+variable {R : Type*} [CommRing R]
+
+/-- Left multiplication operator `L_x(y) = x ⋆ y` viewed as an endomorphism of the 8D ket space `𝕆_s`. -/
+def zornLeftAct (x y : ZornSplitOctonion R) : ZornSplitOctonion R :=
+  zornMul x y
+
+/-- Right multiplication operator `R_x(y) = y ⋆ x` viewed as an endomorphism of the 8D ket space `𝕆_s`. -/
+def zornRightAct (x y : ZornSplitOctonion R) : ZornSplitOctonion R :=
+  zornMul y x
+
+/-- The two Peircian vacuum idempotents `e₀ = |000⟩⟨000|` and `e₁ = |111⟩⟨111|` in `𝕆_s`. -/
+def zornIdemE0 : ZornSplitOctonion R := zornE0
+
+def zornIdemE1 : ZornSplitOctonion R := zornE1
+
+/-- The four two-sided Peirce coordinate maps `Π_{ij}(y) = e_i ⋆ (y ⋆ e_j)`.
+    Their coordinate formulas and completeness are proved below; no rank or ideal-closure claim
+    is part of this definition. -/
+def peirceKetBra00 (y : ZornSplitOctonion R) : ZornSplitOctonion R :=
+  zornMul zornIdemE0 (zornMul y zornIdemE0)
+
+def peirceKetBra01 (y : ZornSplitOctonion R) : ZornSplitOctonion R :=
+  zornMul zornIdemE0 (zornMul y zornIdemE1)
+
+def peirceKetBra10 (y : ZornSplitOctonion R) : ZornSplitOctonion R :=
+  zornMul zornIdemE1 (zornMul y zornIdemE0)
+
+def peirceKetBra11 (y : ZornSplitOctonion R) : ZornSplitOctonion R :=
+  zornMul zornIdemE1 (zornMul y zornIdemE1)
+
+/-- **Theorem 15 (Pointwise Left-Multiplication Anticommutator Identity):**
+    The explicit Zorn left-multiplication maps for pure para-Kähler vectors satisfy the
+    Clifford anticommutator identity on every carrier element `y : ZornSplitOctonion R`:
+    `L_{ι(z₁)}(L_{ι(z₂)}(y)) + L_{ι(z₂)}(L_{ι(z₁)}(y)) = g(z₁, z₂) • y`! -/
+theorem zorn_left_clifford33_soldering (z₁ z₂ : ParaKahlerVec R) (y : ZornSplitOctonion R) :
+    zornAdd (zornLeftAct (embedVec z₁) (zornLeftAct (embedVec z₂) y))
+            (zornLeftAct (embedVec z₂) (zornLeftAct (embedVec z₁) y)) =
+      zornSmul (paraKahlerMetric z₁ z₂) y := by
+  refine ZornSplitOctonion.ext ?_ (funext fun k => ?_) (funext fun k => ?_) ?_
+  · unfold zornAdd zornLeftAct zornMul embedVec zornSmul
+      paraKahlerMetric vec3Dot vec3Cross
+    dsimp; ring
+  · fin_cases k <;>
+      (unfold zornAdd zornLeftAct zornMul embedVec zornSmul
+        paraKahlerMetric vec3Dot vec3Cross; dsimp; ring)
+  · fin_cases k <;>
+      (unfold zornAdd zornLeftAct zornMul embedVec zornSmul
+        paraKahlerMetric vec3Dot vec3Cross; dsimp; ring)
+  · unfold zornAdd zornLeftAct zornMul embedVec zornSmul
+      paraKahlerMetric vec3Dot vec3Cross
+    dsimp; ring
+
+/-- **Theorem 16 (Pointwise Right-Multiplication Anticommutator Identity):**
+    The explicit Zorn right-multiplication maps for pure para-Kähler vectors satisfy the
+    Clifford anticommutator identity on every carrier element `y : ZornSplitOctonion R`:
+    `R_{ι(z₁)}(R_{ι(z₂)}(y)) + R_{ι(z₂)}(R_{ι(z₁)}(y)) = g(z₁, z₂) • y`! -/
+theorem zorn_right_clifford33_soldering (z₁ z₂ : ParaKahlerVec R) (y : ZornSplitOctonion R) :
+    zornAdd (zornRightAct (embedVec z₂) (zornRightAct (embedVec z₁) y))
+            (zornRightAct (embedVec z₁) (zornRightAct (embedVec z₂) y)) =
+      zornSmul (paraKahlerMetric z₁ z₂) y := by
+  refine ZornSplitOctonion.ext ?_ (funext fun k => ?_) (funext fun k => ?_) ?_
+  · unfold zornAdd zornRightAct zornMul embedVec zornSmul
+      paraKahlerMetric vec3Dot vec3Cross
+    dsimp; ring
+  · fin_cases k <;>
+      (unfold zornAdd zornRightAct zornMul embedVec zornSmul
+        paraKahlerMetric vec3Dot vec3Cross; dsimp; ring)
+  · fin_cases k <;>
+      (unfold zornAdd zornRightAct zornMul embedVec zornSmul
+        paraKahlerMetric vec3Dot vec3Cross; dsimp; ring)
+  · unfold zornAdd zornRightAct zornMul embedVec zornSmul
+      paraKahlerMetric vec3Dot vec3Cross
+    dsimp; ring
+
+/-- **Theorem 17A (Peirce 00 Coordinate Formula):**
+    `Π₀₀(y) = e₀ ⋆ (y ⋆ e₀) = y.a • e₀`. -/
+theorem peirceKetBra00_eq (y : ZornSplitOctonion R) :
+    peirceKetBra00 y = zornSmul y.a zornE0 := by
+  refine ZornSplitOctonion.ext ?_ (funext fun k => ?_) (funext fun k => ?_) ?_
+  · unfold peirceKetBra00 zornMul zornIdemE0 zornE0 zornSmul vec3Dot; dsimp; ring
+  · fin_cases k <;> (unfold peirceKetBra00 zornMul zornIdemE0 zornE0 zornSmul vec3Cross; dsimp; ring)
+  · fin_cases k <;> (unfold peirceKetBra00 zornMul zornIdemE0 zornE0 zornSmul vec3Cross; dsimp; ring)
+  · unfold peirceKetBra00 zornMul zornIdemE0 zornE0 zornSmul vec3Dot; dsimp; ring
+
+/-- **Theorem 17B (Peirce 01 Coordinate Formula):**
+    `Π₀₁(y) = e₀ ⋆ (y ⋆ e₁) = ι(y.u, 0)`. -/
+theorem peirceKetBra01_eq (y : ZornSplitOctonion R) :
+    peirceKetBra01 y = embedVec (primalSheet y.u) := by
+  refine ZornSplitOctonion.ext ?_ (funext fun k => ?_) (funext fun k => ?_) ?_
+  · unfold peirceKetBra01 zornMul zornIdemE0 zornE0 zornIdemE1 zornE1 embedVec primalSheet vec3Dot; dsimp; ring
+  · fin_cases k <;> (unfold peirceKetBra01 zornMul zornIdemE0 zornE0 zornIdemE1 zornE1 embedVec primalSheet vec3Cross; dsimp; ring)
+  · fin_cases k <;> (unfold peirceKetBra01 zornMul zornIdemE0 zornE0 zornIdemE1 zornE1 embedVec primalSheet vec3Cross; dsimp; ring)
+  · unfold peirceKetBra01 zornMul zornIdemE0 zornE0 zornIdemE1 zornE1 embedVec primalSheet vec3Dot; dsimp; ring
+
+/-- **Theorem 17C (Peirce 10 Coordinate Formula):**
+    `Π₁₀(y) = e₁ ⋆ (y ⋆ e₀) = ι(0, y.v)`. -/
+theorem peirceKetBra10_eq (y : ZornSplitOctonion R) :
+    peirceKetBra10 y = embedVec (dualSheet y.v) := by
+  refine ZornSplitOctonion.ext ?_ (funext fun k => ?_) (funext fun k => ?_) ?_
+  · unfold peirceKetBra10 zornMul zornIdemE0 zornE0 zornIdemE1 zornE1 embedVec dualSheet vec3Dot; dsimp; ring
+  · fin_cases k <;> (unfold peirceKetBra10 zornMul zornIdemE0 zornE0 zornIdemE1 zornE1 embedVec dualSheet vec3Cross; dsimp; ring)
+  · fin_cases k <;> (unfold peirceKetBra10 zornMul zornIdemE0 zornE0 zornIdemE1 zornE1 embedVec dualSheet vec3Cross; dsimp; ring)
+  · unfold peirceKetBra10 zornMul zornIdemE0 zornE0 zornIdemE1 zornE1 embedVec dualSheet vec3Dot; dsimp; ring
+
+/-- **Theorem 17D (Peirce 11 Coordinate Formula):**
+    `Π₁₁(y) = e₁ ⋆ (y ⋆ e₁) = y.b • e₁`. -/
+theorem peirceKetBra11_eq (y : ZornSplitOctonion R) :
+    peirceKetBra11 y = zornSmul y.b zornE1 := by
+  refine ZornSplitOctonion.ext ?_ (funext fun k => ?_) (funext fun k => ?_) ?_
+  · unfold peirceKetBra11 zornMul zornIdemE1 zornE1 zornSmul vec3Dot; dsimp; ring
+  · fin_cases k <;> (unfold peirceKetBra11 zornMul zornIdemE1 zornE1 zornSmul vec3Cross; dsimp; ring)
+  · fin_cases k <;> (unfold peirceKetBra11 zornMul zornIdemE1 zornE1 zornSmul vec3Cross; dsimp; ring)
+  · unfold peirceKetBra11 zornMul zornIdemE1 zornE1 zornSmul vec3Dot; dsimp; ring
+
+/-- **Theorem 17 (Evaluation of the Four Peirce Coordinate Maps):**
+    The nested formulas `Π_{ij}(y) = e_i ⋆ (y ⋆ e_j)` return the indicated scalar and vector
+    coordinate sectors. This theorem does not assert dimensions or ideal closure. -/
+theorem peirce_ketbra_sector_projections (y : ZornSplitOctonion R) :
+    peirceKetBra00 y = zornSmul y.a zornIdemE0 ∧
+    peirceKetBra01 y = embedVec (primalSheet y.u) ∧
+    peirceKetBra10 y = embedVec (dualSheet y.v) ∧
+    peirceKetBra11 y = zornSmul y.b zornIdemE1 :=
+  ⟨peirceKetBra00_eq y, peirceKetBra01_eq y, peirceKetBra10_eq y, peirceKetBra11_eq y⟩
+
+/-- **Theorem 18 (Completeness of the Four Peirce Coordinate Maps):**
+    Every carrier element is the exact sum of its four Peirce coordinate images:
+    `y = Π₀₀(y) + Π₀₁(y) + Π₁₀(y) + Π₁₁(y)`. -/
+theorem peirce_ketbra_completeness (y : ZornSplitOctonion R) :
+    zornAdd (zornAdd (peirceKetBra00 y) (peirceKetBra01 y))
+            (zornAdd (peirceKetBra10 y) (peirceKetBra11 y)) = y := by
+  rw [peirceKetBra00_eq, peirceKetBra01_eq, peirceKetBra10_eq, peirceKetBra11_eq]
+  refine ZornSplitOctonion.ext ?_ (funext fun k => ?_) (funext fun k => ?_) ?_
+  · unfold zornAdd zornSmul zornE0 zornE1 embedVec primalSheet dualSheet; dsimp; ring
+  · fin_cases k <;> (unfold zornAdd zornSmul zornE0 zornE1 embedVec primalSheet dualSheet; dsimp; ring)
+  · fin_cases k <;> (unfold zornAdd zornSmul zornE0 zornE1 embedVec primalSheet dualSheet; dsimp; ring)
+  · unfold zornAdd zornSmul zornE0 zornE1 embedVec primalSheet dualSheet; dsimp; ring
+
+end CliffordSoldering
 
 end InfoGeometry.Canonical.SplitOctonionParaKahlerNullCone

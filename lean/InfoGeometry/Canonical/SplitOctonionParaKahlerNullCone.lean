@@ -62,12 +62,11 @@ Zorn vector-matrix split-octonion algebra `ZornSplitOctonion R` imported from
      (`zorn_paraGrading_anticommutator_embedVec`).
    - Lagrange–Binet–Cauchy coordinate identity
      $g(z_1, z_2)^2 - \omega(z_1, z_2)^2 + 4 \langle u_1 \times u_2, v_1 \times v_2 \rangle
-     = g(z_1, z_1) g(z_2, z_2)$ (`paraKahler_lagrange_coordinate_identity`), together with the
+     = g(z_1, z_1) g(z_2, z_2)$ (`paraKahler_lagrange_norm_composition`), together with the
      self-metric and Zorn-norm identities for `hodgeCrossVec z₁ z₂`
      (`paraKahlerMetric_hodgeCrossVec_self`, `zornNorm_embedVec_hodgeCrossVec`) and the direct
      synthesis with `ZornSplitOctonionFin8Bridge.zornNorm_mul`
-     (`paraKahler_lagrange_norm_composition`,
-     `zornNorm_embedVec_mul_eq_metriplectic_lagrange`,
+     (`zornNorm_embedVec_mul_eq_metriplectic_lagrange`,
      `paraKahler_lagrange_eq_four_mul_zornNorm_mul`).
    - Left and right primal triple-product projections onto the Peirce idempotents $e_1, e_0$
      scaled by $\det(u_1, u_2, u_3)$ (`zorn_primal_triple_left_eq_volume_smul_e1`,
@@ -82,12 +81,21 @@ Zorn vector-matrix split-octonion algebra `ZornSplitOctonion R` imported from
      `paraUnipotentShear`, `paraUnipotentShear_zero`, `paraUnipotentShear_add`,
      `paraUnipotentShear_neg_cancel`, `paraKahlerMetric_paraUnipotentShear_self`,
      `isOnNullCone_paraUnipotentShear_dualSheet`, `symplecticForm_primal_paraUnipotentShear`),
-     metric-skew nilpotent flow (`paraSkewNilpotent`,
-     `paraSkewNilpotent_sq_zero`, `paraKahlerMetric_paraSkewNilpotent_skew`,
-     `paraSkewUnipotentFlow`, `paraSkewUnipotentFlow_add`,
+     metric-skew nilpotent flow and its `Module` / `LinearMap` / `LinearEquiv` realization
+     (`paraSkewNilpotent`, `paraSkewNilpotent_sq_zero`, `paraKahlerMetric_paraSkewNilpotent_skew`,
+     `paraKahlerMetric_paraSkewNilpotent_self_right`,
+     `paraKahlerMetric_paraSkewNilpotent_self_left`,
+     `paraKahlerMetric_paraSkewNilpotent_quad_zero`,
+     `paraSkewNilpotentLinear`, `paraSkewNilpotentLinear_comp_self`,
+     `paraSkewUnipotentFlow`, `paraSkewUnipotentFlow_zero`, `paraSkewUnipotentFlow_add`,
+     `paraSkewUnipotentFlow_neg_cancel`, `paraSkewUnipotentFlow_cancel_neg`,
+     `paraSkewUnipotentFlowEquiv`, `paraSkewUnipotentFlowLinearMap`,
+     `paraSkewUnipotentFlowLinearEquiv`, `paraKahlerMetric_paraSkewUnipotentFlow_expand`,
      `paraKahlerMetric_paraSkewUnipotentFlow_invariant`,
+     `paraKahlerMetric_paraSkewUnipotentFlowLinearEquiv_invariant`,
      `isOnNullCone_paraSkewUnipotentFlow_iff`), and the null-cone metriplectic reduction
-     (`nullCone_metriplectic_eq_two_mul_hodgeCrossVec_self`).
+     (`nullCone_metriplectic_eq_two_mul_hodgeCrossVec_self`,
+     `nullCone_paraSkewUnipotentFlow_metriplectic_hodge_balance`).
 
 6. **Pointwise Clifford Relations & Peirce Coordinate Sectors on $\mathbb{O}_s$**:
    Moved to the dedicated owner `InfoGeometry.Canonical.SplitOctonionClifford33Soldering`.
@@ -1023,7 +1031,7 @@ theorem symplecticForm_primal_paraUnipotentShear (p : R) (u : Fin 3 → R) :
   dsimp [symplecticForm, primalSheet, paraUnipotentShear, vec3Dot]
   ring
 
-/-- The $\mathfrak{so}(3,3)$-skew-symmetric nilpotent operator $N_a(u, v) = (0, a \times u)$
+/-- The para-Kähler-metric-skew nilpotent operator $N_a(u, v) = (0, a \times u)$
 associated with a 3D generator vector $a \in R^3$. -/
 def paraSkewNilpotent (a : Fin 3 → R) (z : ParaKahlerVec R) : ParaKahlerVec R :=
   ⟨fun _ => 0, vec3Cross a z.u⟩
@@ -1038,7 +1046,7 @@ theorem paraSkewNilpotent_sq_zero (a : Fin 3 → R) (z : ParaKahlerVec R) :
       ring
     }
 
-/-- Infinitesimal $\mathfrak{so}(3,3)$ skew-symmetry of $N_a$ with respect to the para-Kähler
+/-- Infinitesimal metric-skew-symmetry of $N_a$ with respect to the para-Kähler
 metric $g$: $g(N_a z_1, z_2) + g(z_1, N_a z_2) = 0$. -/
 theorem paraKahlerMetric_paraSkewNilpotent_skew (a : Fin 3 → R) (z₁ z₂ : ParaKahlerVec R) :
     paraKahlerMetric (paraSkewNilpotent a z₁) z₂ +
@@ -1046,10 +1054,45 @@ theorem paraKahlerMetric_paraSkewNilpotent_skew (a : Fin 3 → R) (z₁ z₂ : P
   dsimp [paraKahlerMetric, paraSkewNilpotent, vec3Dot, vec3Cross]
   ring
 
+/-- **Step 1a of the Unipotent Invariance Decomposition**:
+On the diagonal $z_1 = z_2 = z$, the right infinitesimal generator pairing
+$g(z, N_a z) = \langle u, a \times u \rangle$ vanishes identically over any commutative ring. -/
+theorem paraKahlerMetric_paraSkewNilpotent_self_right (a : Fin 3 → R) (z : ParaKahlerVec R) :
+    paraKahlerMetric z (paraSkewNilpotent a z) = 0 := by
+  dsimp [paraKahlerMetric, paraSkewNilpotent, vec3Dot, vec3Cross]
+  ring
+
+/-- **Step 1b of the Unipotent Invariance Decomposition**:
+On the diagonal $z_1 = z_2 = z$, the left infinitesimal generator pairing
+$g(N_a z, z) = \langle a \times u, u \rangle$ vanishes identically over any commutative ring. -/
+theorem paraKahlerMetric_paraSkewNilpotent_self_left (a : Fin 3 → R) (z : ParaKahlerVec R) :
+    paraKahlerMetric (paraSkewNilpotent a z) z = 0 := by
+  dsimp [paraKahlerMetric, paraSkewNilpotent, vec3Dot, vec3Cross]
+  ring
+
+/-- **Step 2 of the Unipotent Invariance Decomposition**:
+Because $N_a$ maps every phase-space vector into the $g$-isotropic dual sheet $T^-$
+(and is square-zero, $N_a^2 = 0$), the quadratic $p^2$-term $g(N_a z_1, N_a z_2)$ vanishes
+identically for all $z_1, z_2$. -/
+theorem paraKahlerMetric_paraSkewNilpotent_quad_zero (a : Fin 3 → R)
+    (z₁ z₂ : ParaKahlerVec R) :
+    paraKahlerMetric (paraSkewNilpotent a z₁) (paraSkewNilpotent a z₂) = 0 := by
+  dsimp [paraKahlerMetric, paraSkewNilpotent, vec3Dot, vec3Cross]
+  ring
+
 /-- Unipotent flow generated by the para-Kähler-skew nilpotent $N_a$:
 $\mathcal{U}_{p, a}(u, v) = (u, v + p (a \times u))$. -/
 def paraSkewUnipotentFlow (p : R) (a : Fin 3 → R) (z : ParaKahlerVec R) : ParaKahlerVec R :=
   ⟨z.u, fun k => z.v k + p * vec3Cross a z.u k⟩
+
+/-- At flow parameter $p = 0$, the unipotent flow $\mathcal{U}_{0, a}$ is the identity. -/
+@[simp]
+theorem paraSkewUnipotentFlow_zero (a : Fin 3 → R) (z : ParaKahlerVec R) :
+    paraSkewUnipotentFlow 0 a z = z := by
+  ext k
+  · rfl
+  · dsimp [paraSkewUnipotentFlow]
+    ring
 
 /-- Additive 1-parameter group law for the para-Kähler-skew unipotent flow:
 $\mathcal{U}_{p_1, a} \circ \mathcal{U}_{p_2, a} = \mathcal{U}_{p_1 + p_2, a}$. -/
@@ -1061,6 +1104,233 @@ theorem paraSkewUnipotentFlow_add (p₁ p₂ : R) (a : Fin 3 → R) (z : ParaKah
   · dsimp [paraSkewUnipotentFlow]
     ring
 
+/-- Left-inverse law for the 1-parameter unipotent flow $\mathcal{U}_{p, a}$:
+$\mathcal{U}_{-p, a}(\mathcal{U}_{p, a}(z)) = z$. -/
+@[simp]
+theorem paraSkewUnipotentFlow_neg_cancel (p : R) (a : Fin 3 → R) (z : ParaKahlerVec R) :
+    paraSkewUnipotentFlow (-p) a (paraSkewUnipotentFlow p a z) = z := by
+  rw [paraSkewUnipotentFlow_add (-p) p a z, neg_add_cancel, paraSkewUnipotentFlow_zero a z]
+
+/-- Right-inverse law for the 1-parameter unipotent flow $\mathcal{U}_{p, a}$:
+$\mathcal{U}_{p, a}(\mathcal{U}_{-p, a}(z)) = z$. -/
+@[simp]
+theorem paraSkewUnipotentFlow_cancel_neg (p : R) (a : Fin 3 → R) (z : ParaKahlerVec R) :
+    paraSkewUnipotentFlow p a (paraSkewUnipotentFlow (-p) a z) = z := by
+  rw [paraSkewUnipotentFlow_add p (-p) a z, add_neg_cancel, paraSkewUnipotentFlow_zero a z]
+
+/-- The 1-parameter unipotent flow $\mathcal{U}_{p, a}$ packaged as a bijective equivalence
+on the 6D para-Kähler phase space `ParaKahlerVec R`, with inverse $\mathcal{U}_{-p, a}$. -/
+def paraSkewUnipotentFlowEquiv (p : R) (a : Fin 3 → R) :
+    ParaKahlerVec R ≃ ParaKahlerVec R where
+  toFun := paraSkewUnipotentFlow p a
+  invFun := paraSkewUnipotentFlow (-p) a
+  left_inv z := paraSkewUnipotentFlow_neg_cancel p a z
+  right_inv z := paraSkewUnipotentFlow_cancel_neg p a z
+
+@[simp]
+theorem paraSkewUnipotentFlowEquiv_apply (p : R) (a : Fin 3 → R) (z : ParaKahlerVec R) :
+    paraSkewUnipotentFlowEquiv p a z = paraSkewUnipotentFlow p a z :=
+  rfl
+
+@[simp]
+theorem paraSkewUnipotentFlowEquiv_symm_apply (p : R) (a : Fin 3 → R) (z : ParaKahlerVec R) :
+    (paraSkewUnipotentFlowEquiv p a).symm z = paraSkewUnipotentFlow (-p) a z :=
+  rfl
+
+/-!
+### `AddCommGroup`, `Module`, `LinearMap`, and `LinearEquiv` Realization on `ParaKahlerVec R`
+-/
+
+instance instAddParaKahlerVec : Add (ParaKahlerVec R) :=
+  ⟨fun z₁ z₂ => ⟨z₁.u + z₂.u, z₁.v + z₂.v⟩⟩
+
+instance instZeroParaKahlerVec : Zero (ParaKahlerVec R) :=
+  ⟨⟨0, 0⟩⟩
+
+instance instNegParaKahlerVec : Neg (ParaKahlerVec R) :=
+  ⟨fun z => ⟨-z.u, -z.v⟩⟩
+
+instance instSubParaKahlerVec : Sub (ParaKahlerVec R) :=
+  ⟨fun z₁ z₂ => ⟨z₁.u - z₂.u, z₁.v - z₂.v⟩⟩
+
+instance instSMulParaKahlerVec {S : Type*} [SMul S R] : SMul S (ParaKahlerVec R) :=
+  ⟨fun r z => ⟨r • z.u, r • z.v⟩⟩
+
+@[simp]
+theorem ParaKahlerVec.add_u (z₁ z₂ : ParaKahlerVec R) : (z₁ + z₂).u = z₁.u + z₂.u :=
+  rfl
+
+@[simp]
+theorem ParaKahlerVec.add_v (z₁ z₂ : ParaKahlerVec R) : (z₁ + z₂).v = z₁.v + z₂.v :=
+  rfl
+
+@[simp]
+theorem ParaKahlerVec.zero_u : (0 : ParaKahlerVec R).u = 0 :=
+  rfl
+
+@[simp]
+theorem ParaKahlerVec.zero_v : (0 : ParaKahlerVec R).v = 0 :=
+  rfl
+
+@[simp]
+theorem ParaKahlerVec.neg_u (z : ParaKahlerVec R) : (-z).u = -z.u :=
+  rfl
+
+@[simp]
+theorem ParaKahlerVec.neg_v (z : ParaKahlerVec R) : (-z).v = -z.v :=
+  rfl
+
+@[simp]
+theorem ParaKahlerVec.sub_u (z₁ z₂ : ParaKahlerVec R) : (z₁ - z₂).u = z₁.u - z₂.u :=
+  rfl
+
+@[simp]
+theorem ParaKahlerVec.sub_v (z₁ z₂ : ParaKahlerVec R) : (z₁ - z₂).v = z₁.v - z₂.v :=
+  rfl
+
+omit [CommRing R] in
+@[simp]
+theorem ParaKahlerVec.smul_u {S : Type*} [SMul S R] (r : S) (z : ParaKahlerVec R) :
+    (r • z).u = r • z.u :=
+  rfl
+
+omit [CommRing R] in
+@[simp]
+theorem ParaKahlerVec.smul_v {S : Type*} [SMul S R] (r : S) (z : ParaKahlerVec R) :
+    (r • z).v = r • z.v :=
+  rfl
+
+instance instAddCommGroupParaKahlerVec : AddCommGroup (ParaKahlerVec R) where
+  add := (· + ·)
+  add_assoc a b c := by ext k <;> exact add_assoc _ _ _
+  zero := 0
+  zero_add a := by ext k <;> exact zero_add _
+  add_zero a := by ext k <;> exact add_zero _
+  nsmul n z := n • z
+  nsmul_zero z := by ext k <;> exact zero_smul ℕ _
+  nsmul_succ n z := by ext k <;> exact succ_nsmul _ n
+  neg := Neg.neg
+  sub := Sub.sub
+  sub_eq_add_neg a b := by ext k <;> exact sub_eq_add_neg _ _
+  zsmul n z := n • z
+  zsmul_zero' z := by ext k <;> exact zero_smul ℤ _
+  zsmul_succ' n z := by ext k <;> exact SubNegMonoid.zsmul_succ' n _
+  zsmul_neg' n z := by ext k <;> exact SubNegMonoid.zsmul_neg' n _
+  neg_add_cancel a := by ext k <;> exact neg_add_cancel _
+  add_comm a b := by ext k <;> exact add_comm _ _
+
+instance instModuleParaKahlerVec : Module R (ParaKahlerVec R) where
+  smul := (· • ·)
+  one_smul z := by ext k <;> exact one_smul R _
+  mul_smul r s z := by ext k <;> exact mul_smul r s _
+  smul_zero r := by ext k <;> exact smul_zero r
+  smul_add r z₁ z₂ := by ext k <;> exact smul_add r _ _
+  add_smul r s z := by ext k <;> exact add_smul r s _
+  zero_smul z := by ext k <;> exact zero_smul R _
+
+/-- Additivity of the metric-skew square-zero generator $N_a$. -/
+theorem paraSkewNilpotent_add (a : Fin 3 → R) (z₁ z₂ : ParaKahlerVec R) :
+    paraSkewNilpotent a (z₁ + z₂) = paraSkewNilpotent a z₁ + paraSkewNilpotent a z₂ := by
+  ext k
+  · simp [paraSkewNilpotent]
+  · fin_cases k
+    · dsimp [ParaKahlerVec.add_v, paraSkewNilpotent, vec3Cross, ParaKahlerVec.add_u]; ring
+    · dsimp [ParaKahlerVec.add_v, paraSkewNilpotent, vec3Cross, ParaKahlerVec.add_u]; ring
+    · dsimp [ParaKahlerVec.add_v, paraSkewNilpotent, vec3Cross, ParaKahlerVec.add_u]; ring
+
+/-- Scalar-multiplication compatibility of the metric-skew square-zero generator $N_a$. -/
+theorem paraSkewNilpotent_smul (a : Fin 3 → R) (r : R) (z : ParaKahlerVec R) :
+    paraSkewNilpotent a (r • z) = r • paraSkewNilpotent a z := by
+  ext k
+  · simp [paraSkewNilpotent]
+  · fin_cases k
+    · dsimp [ParaKahlerVec.smul_v, paraSkewNilpotent, vec3Cross, ParaKahlerVec.smul_u,
+        smul_eq_mul]; ring
+    · dsimp [ParaKahlerVec.smul_v, paraSkewNilpotent, vec3Cross, ParaKahlerVec.smul_u,
+        smul_eq_mul]; ring
+    · dsimp [ParaKahlerVec.smul_v, paraSkewNilpotent, vec3Cross, ParaKahlerVec.smul_u,
+        smul_eq_mul]; ring
+
+/-- The metric-skew square-zero operator $N_a(u, v) = (0, a \times u)$ packaged as an
+$R$-linear endomorphism of `ParaKahlerVec R`. -/
+def paraSkewNilpotentLinear (a : Fin 3 → R) : ParaKahlerVec R →ₗ[R] ParaKahlerVec R where
+  toFun := paraSkewNilpotent a
+  map_add' := paraSkewNilpotent_add a
+  map_smul' := paraSkewNilpotent_smul a
+
+@[simp]
+theorem paraSkewNilpotentLinear_apply (a : Fin 3 → R) (z : ParaKahlerVec R) :
+    paraSkewNilpotentLinear a z = paraSkewNilpotent a z :=
+  rfl
+
+/-- The linear operator `paraSkewNilpotentLinear a` is square-zero:
+$N_a \circ N_a = 0$ in `ParaKahlerVec R →ₗ[R] ParaKahlerVec R`. -/
+theorem paraSkewNilpotentLinear_comp_self (a : Fin 3 → R) :
+    (paraSkewNilpotentLinear a).comp (paraSkewNilpotentLinear a) = 0 :=
+  LinearMap.ext fun z => paraSkewNilpotent_sq_zero a z
+
+/-- Infinitesimal metric skew-symmetry of `paraSkewNilpotentLinear a` with respect to the
+para-Kähler metric $g$. -/
+theorem paraKahlerMetric_paraSkewNilpotentLinear_skew (a : Fin 3 → R)
+    (z₁ z₂ : ParaKahlerVec R) :
+    paraKahlerMetric (paraSkewNilpotentLinear a z₁) z₂ +
+      paraKahlerMetric z₁ (paraSkewNilpotentLinear a z₂) = 0 :=
+  paraKahlerMetric_paraSkewNilpotent_skew a z₁ z₂
+
+/-- The unipotent flow $\mathcal{U}_{p, a} = I + p N_a$ as a linear map on `ParaKahlerVec R`. -/
+def paraSkewUnipotentFlowLinearMap (p : R) (a : Fin 3 → R) :
+    ParaKahlerVec R →ₗ[R] ParaKahlerVec R :=
+  LinearMap.id + p • paraSkewNilpotentLinear a
+
+@[simp]
+theorem paraSkewUnipotentFlowLinearMap_apply (p : R) (a : Fin 3 → R) (z : ParaKahlerVec R) :
+    paraSkewUnipotentFlowLinearMap p a z = paraSkewUnipotentFlow p a z := by
+  ext k
+  · change z.u k + p * 0 = z.u k
+    rw [mul_zero, add_zero]
+  · rfl
+
+/-- The 1-parameter unipotent flow $\mathcal{U}_{p, a} = I + p N_a$ packaged as an
+$R$-linear automorphism (`LinearEquiv`) of `ParaKahlerVec R`, with inverse
+$\mathcal{U}_{-p, a} = I - p N_a$. -/
+def paraSkewUnipotentFlowLinearEquiv (p : R) (a : Fin 3 → R) :
+    ParaKahlerVec R ≃ₗ[R] ParaKahlerVec R where
+  toLinearMap := paraSkewUnipotentFlowLinearMap p a
+  invFun := paraSkewUnipotentFlowLinearMap (-p) a
+  left_inv z := by
+    change paraSkewUnipotentFlowLinearMap (-p) a (paraSkewUnipotentFlowLinearMap p a z) = z
+    rw [paraSkewUnipotentFlowLinearMap_apply, paraSkewUnipotentFlowLinearMap_apply,
+      paraSkewUnipotentFlow_neg_cancel p a z]
+  right_inv z := by
+    change paraSkewUnipotentFlowLinearMap p a (paraSkewUnipotentFlowLinearMap (-p) a z) = z
+    rw [paraSkewUnipotentFlowLinearMap_apply, paraSkewUnipotentFlowLinearMap_apply,
+      paraSkewUnipotentFlow_cancel_neg p a z]
+
+@[simp]
+theorem paraSkewUnipotentFlowLinearEquiv_apply (p : R) (a : Fin 3 → R) (z : ParaKahlerVec R) :
+    paraSkewUnipotentFlowLinearEquiv p a z = paraSkewUnipotentFlow p a z :=
+  paraSkewUnipotentFlowLinearMap_apply p a z
+
+@[simp]
+theorem paraSkewUnipotentFlowLinearEquiv_symm_apply (p : R) (a : Fin 3 → R) (z : ParaKahlerVec R) :
+    (paraSkewUnipotentFlowLinearEquiv p a).symm z = paraSkewUnipotentFlow (-p) a z :=
+  paraSkewUnipotentFlowLinearMap_apply (-p) a z
+
+/-- **Step 3 of the Unipotent Invariance Decomposition (Quadratic Taylor Expansion in $p$)**:
+For $\mathcal{U}_{p, a} = I + p N_a$, the evolved para-Kähler metric expands into its
+zeroth-order base metric $g(z_1, z_2)$, its linear $p$-coefficient
+$g(N_a z_1, z_2) + g(z_1, N_a z_2)$ (which vanishes by metric skew-symmetry),
+and its quadratic $p^2$-coefficient $g(N_a z_1, N_a z_2)$ (which vanishes by $T^-$ isotropy). -/
+theorem paraKahlerMetric_paraSkewUnipotentFlow_expand (p : R) (a : Fin 3 → R)
+    (z₁ z₂ : ParaKahlerVec R) :
+    paraKahlerMetric (paraSkewUnipotentFlow p a z₁) (paraSkewUnipotentFlow p a z₂) =
+      paraKahlerMetric z₁ z₂ +
+        p * (paraKahlerMetric (paraSkewNilpotent a z₁) z₂ +
+          paraKahlerMetric z₁ (paraSkewNilpotent a z₂)) +
+        p ^ 2 * paraKahlerMetric (paraSkewNilpotent a z₁) (paraSkewNilpotent a z₂) := by
+  dsimp [paraKahlerMetric, paraSkewUnipotentFlow, paraSkewNilpotent, vec3Dot, vec3Cross]
+  ring
+
 /-- Exact metric invariance of the para-Kähler-skew unipotent flow:
 $g(\mathcal{U}_{p, a} z_1, \mathcal{U}_{p, a} z_2) = g(z_1, z_2)$. -/
 theorem paraKahlerMetric_paraSkewUnipotentFlow_invariant (p : R) (a : Fin 3 → R)
@@ -1069,6 +1339,15 @@ theorem paraKahlerMetric_paraSkewUnipotentFlow_invariant (p : R) (a : Fin 3 → 
       paraKahlerMetric z₁ z₂ := by
   dsimp [paraKahlerMetric, paraSkewUnipotentFlow, vec3Dot, vec3Cross]
   ring
+
+/-- Exact metric invariance of the linear automorphism `paraSkewUnipotentFlowLinearEquiv p a`. -/
+theorem paraKahlerMetric_paraSkewUnipotentFlowLinearEquiv_invariant (p : R) (a : Fin 3 → R)
+    (z₁ z₂ : ParaKahlerVec R) :
+    paraKahlerMetric (paraSkewUnipotentFlowLinearEquiv p a z₁)
+      (paraSkewUnipotentFlowLinearEquiv p a z₂) =
+      paraKahlerMetric z₁ z₂ := by
+  rw [paraSkewUnipotentFlowLinearEquiv_apply, paraSkewUnipotentFlowLinearEquiv_apply,
+    paraKahlerMetric_paraSkewUnipotentFlow_invariant p a z₁ z₂]
 
 /-- The para-Kähler-skew unipotent flow preserves the full 6D Zorn-norm null cone
 identically for all $p$ and $a$: $\mathcal{U}_{p, a} z$ is null if and only if $z$ is null. -/
@@ -1101,6 +1380,25 @@ theorem nullCone_metriplectic_eq_two_mul_hodgeCrossVec_self
   have hlag := paraKahler_lagrange_norm_via_hodgeCrossVec z₁ z₂
   rw [hself, zero_mul] at hlag
   linear_combination hlag
+
+/-- **Dynamic Chiral Lightcone Metriplectic–Hodge Lock for All Flow Times $p$**:
+Because the metric-skew unipotent flow $\mathcal{U}_{p, a}$ preserves the Zorn-norm null cone
+identically (`isOnNullCone_paraSkewUnipotentFlow_iff`), any null-cone state $z_1$ paired with an
+arbitrary state $z_2$ obeys the exact metriplectic–Hodge balance along the entire unipotent
+trajectory $p \mapsto \mathcal{U}_{p, a} z_i$:
+$$g(\mathcal{U}_{p, a} z_1, \mathcal{U}_{p, a} z_2)^2
+  - \omega(\mathcal{U}_{p, a} z_1, \mathcal{U}_{p, a} z_2)^2
+  = 2\, g(\mathcal{U}_{p, a} z_1 \times_H \mathcal{U}_{p, a} z_2,\;
+          \mathcal{U}_{p, a} z_1 \times_H \mathcal{U}_{p, a} z_2).$$ -/
+theorem nullCone_paraSkewUnipotentFlow_metriplectic_hodge_balance
+    (p : R) (a : Fin 3 → R) {z₁ z₂ : ParaKahlerVec R} (hz₁ : isOnNullCone z₁) :
+    (paraKahlerMetric (paraSkewUnipotentFlow p a z₁) (paraSkewUnipotentFlow p a z₂)) ^ 2 -
+      (symplecticForm (paraSkewUnipotentFlow p a z₁) (paraSkewUnipotentFlow p a z₂)) ^ 2 =
+      2 * paraKahlerMetric
+        (hodgeCrossVec (paraSkewUnipotentFlow p a z₁) (paraSkewUnipotentFlow p a z₂))
+        (hodgeCrossVec (paraSkewUnipotentFlow p a z₁) (paraSkewUnipotentFlow p a z₂)) :=
+  nullCone_metriplectic_eq_two_mul_hodgeCrossVec_self
+    ((isOnNullCone_paraSkewUnipotentFlow_iff p a z₁).mpr hz₁)
 
 end GradingAndAssociator
 

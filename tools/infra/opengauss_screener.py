@@ -744,9 +744,13 @@ def check_authored_axioms_and_holes(source: str) -> list[TrapViolation]:
             "Repository source must prove results with Lean/Mathlib theorems; do not declare axioms.",
             "ERROR",
         ))
-    # `sorryAx` and `admitAx` are kernel-level axiom names. Permit their use
-    # only as quoted names (``sorryAx or ``Lean.sorryAx) so audit code can identify them; an
-    # unquoted occurrence can be a proof term and must fail this source gate.
+    # `sorryAx` and `admitAx` are kernel-level axiom names. An audit companion has to be able
+    # to *mention* them (e.g. `grep`ing a `.trace` for `sorryAx`), so a backtick-quoted
+    # occurrence is permitted; any other occurrence fails this source gate. Note the escape
+    # below is deliberately narrower than this comment might suggest: it only exempts the
+    # *words* `sorry`/`admit` when they appear as the tail of a dotted Lean path (e.g.
+    # `Lean.sorry`), so `Lean.sorryAx` unquoted is still rejected. That is fail-closed and
+    # intentional \u2014 a real `sorryAx` proof term can never reach a build through this path.
     for match in re.finditer(
         r"(?<![\w'])(?:[A-Za-z_][\w']*\.)*(sorry|admit|sorryAx|admitAx)\b|«(sorry|admit|sorryAx|admitAx)»",
         clean,

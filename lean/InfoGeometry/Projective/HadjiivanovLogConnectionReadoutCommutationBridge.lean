@@ -83,6 +83,48 @@ theorem unipotentResidueReadout_add
   simpa only [LinearMap.comp_apply] using
     congrArg (fun f : V →ₗ[ℂ] V => f v) (unipotentResidueReadout_comp R p q)
 
+/-- Opposite periods give right-inverse fiber readouts. -/
+theorem unipotentResidueReadout_comp_neg
+    (R : LogResidue V) (p : ℂ) :
+    (unipotentResidueReadout R p).comp (unipotentResidueReadout R (-p)) =
+      LinearMap.id := by
+  rw [unipotentResidueReadout_comp, add_neg_cancel]
+  ext v
+  simp
+
+/-- Opposite periods give left-inverse fiber readouts. -/
+theorem unipotentResidueReadout_neg_comp
+    (R : LogResidue V) (p : ℂ) :
+    (unipotentResidueReadout R (-p)).comp (unipotentResidueReadout R p) =
+      LinearMap.id := by
+  rw [unipotentResidueReadout_comp, neg_add_cancel]
+  ext v
+  simp
+
+/-- The unipotent fiber readouts are linear equivalences, with the opposite
+parameter as inverse. -/
+def unipotentResidueReadoutEquiv (R : LogResidue V) (p : ℂ) :
+    V ≃ₗ[ℂ] V where
+  toLinearMap := unipotentResidueReadout R p
+  invFun := unipotentResidueReadout R (-p)
+  left_inv v := by
+    have h := unipotentResidueReadout_add R (-p) p v
+    simpa using h
+  right_inv v := by
+    have h := unipotentResidueReadout_add R p (-p) v
+    simpa using h
+
+@[simp] theorem unipotentResidueReadoutEquiv_apply
+    (R : LogResidue V) (p : ℂ) (v : V) :
+    unipotentResidueReadoutEquiv R p v = unipotentResidueReadout R p v :=
+  rfl
+
+@[simp] theorem unipotentResidueReadoutEquiv_symm_apply
+    (R : LogResidue V) (p : ℂ) (v : V) :
+    (unipotentResidueReadoutEquiv R p).symm v =
+      unipotentResidueReadout R (-p) v :=
+  rfl
+
 /-- Pure-tensor additive law for the lifted section readout. -/
 theorem sectionUnipotentReadout_add_tmul
     (R : LogResidue V) (p q : ℂ)
@@ -115,8 +157,14 @@ theorem sectionUnipotentReadout_comp_neg
     (R : LogResidue V) (p : ℂ) :
     (sectionUnipotentReadout R p).comp (sectionUnipotentReadout R (-p)) =
       LinearMap.id := by
-  rw [sectionUnipotentReadout_comp]
-  convert sectionUnipotentReadout_zero R using 1 <;> simp
+  rw [sectionUnipotentReadout_comp, add_neg_cancel, sectionUnipotentReadout_zero]
+
+/-- Opposite periods also give left-inverse lifted readouts. -/
+theorem sectionUnipotentReadout_neg_comp
+    (R : LogResidue V) (p : ℂ) :
+    (sectionUnipotentReadout R (-p)).comp (sectionUnipotentReadout R p) =
+      LinearMap.id := by
+  rw [sectionUnipotentReadout_comp, neg_add_cancel, sectionUnipotentReadout_zero]
 
 /-- The unipotent section readouts are linear equivalences, with the opposite
 parameter as inverse. -/
@@ -130,6 +178,17 @@ def sectionUnipotentReadoutEquiv (R : LogResidue V) (p : ℂ) :
   right_inv x := by
     have h := sectionUnipotentReadout_add R p (-p) x
     simpa using h
+
+@[simp] theorem sectionUnipotentReadoutEquiv_apply
+    (R : LogResidue V) (p : ℂ) (x : LogSection V) :
+    sectionUnipotentReadoutEquiv R p x = sectionUnipotentReadout R p x :=
+  rfl
+
+@[simp] theorem sectionUnipotentReadoutEquiv_symm_apply
+    (R : LogResidue V) (p : ℂ) (x : LogSection V) :
+    (sectionUnipotentReadoutEquiv R p).symm x =
+      sectionUnipotentReadout R (-p) x :=
+  rfl
 
 /-- Pure-tensor commutation of connection and unipotent readout. -/
 theorem logarithmicConnection_unipotent_tmul
@@ -161,6 +220,28 @@ theorem logarithmicConnection_unipotent_comp
   apply LinearMap.ext
   intro x
   exact logarithmicConnection_unipotent R p x
+
+/-- Conjugating the algebraic logarithmic connection by the unipotent section
+readout equivalence leaves the connection invariant. -/
+theorem logarithmicConnection_conj_unipotentEquiv
+    (R : LogResidue V) (p : ℂ) (x : LogSection V) :
+    (sectionUnipotentReadoutEquiv R p).symm
+        (logarithmicConnection R (sectionUnipotentReadoutEquiv R p x)) =
+      logarithmicConnection R x := by
+  rw [sectionUnipotentReadoutEquiv_apply, logarithmicConnection_unipotent,
+    ← sectionUnipotentReadoutEquiv_apply, LinearEquiv.symm_apply_apply]
+
+/-- Operator-level conjugation invariance of the algebraic logarithmic
+connection under the unipotent section readout equivalence. -/
+theorem logarithmicConnection_conj_unipotentEquiv_comp
+    (R : LogResidue V) (p : ℂ) :
+    (sectionUnipotentReadoutEquiv R p).symm.toLinearMap.comp
+        ((logarithmicConnection R).comp
+          (sectionUnipotentReadoutEquiv R p).toLinearMap) =
+      logarithmicConnection R := by
+  apply LinearMap.ext
+  intro x
+  exact logarithmicConnection_conj_unipotentEquiv R p x
 
 /-- Phase-decorated Hadjiivanov readout lifted to Laurent sections. -/
 def sectionMonodromyReadout (R : LogResidue V) :
@@ -203,6 +284,59 @@ theorem logarithmicConnection_monodromyReadout_comp (R : LogResidue V) :
   apply LinearMap.ext
   intro x
   exact logarithmicConnection_monodromyReadout R x
+
+/-! ### Bilinear Metric Skew-Adjointness and Null-Cone Invariance -/
+
+/-- A logarithmic residue is skew-adjoint with respect to a bilinear pairing `g`
+when its nilpotent operator satisfies `g (N v) w + g v (N w) = 0`. -/
+def IsSkewLogResidue (g : V →ₗ[ℂ] V →ₗ[ℂ] ℂ) (R : LogResidue V) : Prop :=
+  ∀ v w : V, g (R.nilpotent v) w + g v (R.nilpotent w) = 0
+
+/-- For a skew-adjoint square-zero residue, the quadratic nilpotent pairing term
+`g (N v) (N w)` vanishes identically. -/
+theorem isSkewLogResidue_nilpotent_quad_zero
+    (g : V →ₗ[ℂ] V →ₗ[ℂ] ℂ) (R : LogResidue V)
+    (h_skew : IsSkewLogResidue g R) (v w : V) :
+    g (R.nilpotent v) (R.nilpotent w) = 0 := by
+  have h := h_skew v (R.nilpotent w)
+  rw [nilpotent_apply_twice, map_zero, add_zero] at h
+  exact h
+
+private theorem complex_bilinear_expand_scalar (a b c d p : ℂ) :
+    a + p * c + p * (b + p * d) = a + p * (c + b) + p ^ 2 * d := by
+  ring
+
+/-- Polynomial expansion in `p` of a bilinear pairing under the unipotent
+residue readout `I + pN`. -/
+theorem unipotentResidueReadout_bilinear_expand
+    (g : V →ₗ[ℂ] V →ₗ[ℂ] ℂ) (R : LogResidue V) (p : ℂ) (v w : V) :
+    g (unipotentResidueReadout R p v) (unipotentResidueReadout R p w) =
+      g v w + p * (g (R.nilpotent v) w + g v (R.nilpotent w)) +
+        p ^ 2 * g (R.nilpotent v) (R.nilpotent w) := by
+  simp only [unipotentResidueReadout_apply, map_add, map_smul,
+    LinearMap.add_apply, LinearMap.smul_apply, smul_eq_mul]
+  exact complex_bilinear_expand_scalar (g v w) (g v (R.nilpotent w))
+    (g (R.nilpotent v) w) (g (R.nilpotent v) (R.nilpotent w)) p
+
+/-- Any skew-adjoint square-zero logarithmic residue generates a one-parameter
+unipotent shear family that preserves the bilinear pairing `g` identically. -/
+theorem unipotentResidueReadout_preserves_bilinear
+    (g : V →ₗ[ℂ] V →ₗ[ℂ] ℂ) (R : LogResidue V)
+    (h_skew : IsSkewLogResidue g R) (p : ℂ) (v w : V) :
+    g (unipotentResidueReadout R p v) (unipotentResidueReadout R p w) =
+      g v w := by
+  rw [unipotentResidueReadout_bilinear_expand, h_skew v w,
+    isSkewLogResidue_nilpotent_quad_zero g R h_skew v w,
+    mul_zero, mul_zero, add_zero, add_zero]
+
+/-- Invariance of the quadratic null cone `{v | g v v = 0}` under the
+one-parameter unipotent residue readout of a skew-adjoint residue. -/
+theorem unipotentResidueReadout_preserves_nullCone
+    (g : V →ₗ[ℂ] V →ₗ[ℂ] ℂ) (R : LogResidue V)
+    (h_skew : IsSkewLogResidue g R) (p : ℂ) (v : V) :
+    g (unipotentResidueReadout R p v) (unipotentResidueReadout R p v) = 0 ↔
+      g v v = 0 := by
+  rw [unipotentResidueReadout_preserves_bilinear g R h_skew p v v]
 
 end
 

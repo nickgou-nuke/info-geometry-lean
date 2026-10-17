@@ -191,6 +191,104 @@ theorem exists_stochastic_laplacian_groupInverse_shift_inverse
   exact ⟨D, hD, groupInverseShift_mul_inverse hD,
     groupInverseShift_inverse_mul hD⟩
 
+/-- The invertible group-inverse shift packaged as a linear equivalence on `V`. -/
+def groupInverseShiftLinearEquiv {A D : Module.End ℝ V}
+    (hD : IsGroupInverse A D) : V ≃ₗ[ℝ] V :=
+  LinearEquiv.ofLinear
+    (groupInverseShift A D)
+    (groupInverseShiftInverse A D)
+    (groupInverseShift_mul_inverse hD)
+    (groupInverseShift_inverse_mul hD)
+
+@[simp]
+theorem groupInverseShiftLinearEquiv_apply {A D : Module.End ℝ V}
+    (hD : IsGroupInverse A D) (x : V) :
+    groupInverseShiftLinearEquiv hD x = groupInverseShift A D x :=
+  rfl
+
+@[simp]
+theorem groupInverseShiftLinearEquiv_symm_apply {A D : Module.End ℝ V}
+    (hD : IsGroupInverse A D) (x : V) :
+    (groupInverseShiftLinearEquiv hD).symm x = groupInverseShiftInverse A D x :=
+  rfl
+
+/-- On `ker A`, the group-inverse shift linear equivalence acts as the identity. -/
+theorem groupInverseShiftLinearEquiv_apply_of_mem_ker
+    {A D : Module.End ℝ V} (hD : IsGroupInverse A D)
+    {x : V} (hx : x ∈ LinearMap.ker A) :
+    groupInverseShiftLinearEquiv hD x = x := by
+  have hAx : A x = 0 := LinearMap.mem_ker.mp hx
+  have hADx : (A * D) x = 0 := by
+    have hcomm : (A * D) x = D (A x) :=
+      congrArg (fun f : Module.End ℝ V => f x) hD.2.2
+    rw [hcomm, hAx, map_zero]
+  have hDx : D x = 0 := by
+    have hDAD : D ((A * D) x) = D x := by
+      simpa [mul_assoc] using congrArg (fun f : Module.End ℝ V => f x) hD.2.1
+    rw [← hDAD, hADx, map_zero]
+  have hEx : principalIdempotent A D x = x := by
+    change x - (A * D) x = x
+    rw [hADx, sub_zero]
+  change D x + principalIdempotent A D x = x
+  rw [hDx, hEx, zero_add]
+
+/-- On `ker A`, the inverse of the group-inverse shift linear equivalence acts
+as the identity. -/
+theorem groupInverseShiftLinearEquiv_symm_apply_of_mem_ker
+    {A D : Module.End ℝ V} (hD : IsGroupInverse A D)
+    {x : V} (hx : x ∈ LinearMap.ker A) :
+    (groupInverseShiftLinearEquiv hD).symm x = x := by
+  have hAx : A x = 0 := LinearMap.mem_ker.mp hx
+  have hADx : (A * D) x = 0 := by
+    have hcomm : (A * D) x = D (A x) :=
+      congrArg (fun f : Module.End ℝ V => f x) hD.2.2
+    rw [hcomm, hAx, map_zero]
+  have hEx : principalIdempotent A D x = x := by
+    change x - (A * D) x = x
+    rw [hADx, sub_zero]
+  change A x + principalIdempotent A D x = x
+  rw [hAx, hEx, zero_add]
+
+/-- On `range A`, the group-inverse shift linear equivalence agrees with the
+group inverse `D`. -/
+theorem groupInverseShiftLinearEquiv_apply_of_mem_range
+    {A D : Module.End ℝ V} (hD : IsGroupInverse A D)
+    {x : V} (hx : x ∈ LinearMap.range A) :
+    groupInverseShiftLinearEquiv hD x = D x := by
+  have hEx : principalIdempotent A D x = 0 := by
+    obtain ⟨y, hy⟩ := LinearMap.mem_range.mp hx
+    rw [← hy]
+    exact congrArg (fun f : Module.End ℝ V => f y)
+      (principalIdempotent_mul_eq_zero hD)
+  change D x + principalIdempotent A D x = D x
+  rw [hEx, add_zero]
+
+/-- On `range A`, the inverse of the group-inverse shift linear equivalence
+agrees with the original operator `A`. -/
+theorem groupInverseShiftLinearEquiv_symm_apply_of_mem_range
+    {A D : Module.End ℝ V} (hD : IsGroupInverse A D)
+    {x : V} (hx : x ∈ LinearMap.range A) :
+    (groupInverseShiftLinearEquiv hD).symm x = A x := by
+  have hEx : principalIdempotent A D x = 0 := by
+    obtain ⟨y, hy⟩ := LinearMap.mem_range.mp hx
+    rw [← hy]
+    exact congrArg (fun f : Module.End ℝ V => f y)
+      (principalIdempotent_mul_eq_zero hD)
+  change A x + principalIdempotent A D x = A x
+  rw [hEx, add_zero]
+
+/-- Every finite row-stochastic Markov Laplacian admits a Kemeny–Snell linear
+equivalence formed from its group-inverse shift and complementary projector. -/
+theorem exists_stochastic_laplacian_kemenySnell_linearEquiv
+    {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (P : Matrix ι ι ℝ) (hP : P ∈ Matrix.rowStochastic ℝ ι) :
+    ∃ (D : Module.End ℝ (ι → ℝ)) (e : (ι → ℝ) ≃ₗ[ℝ] (ι → ℝ)),
+      IsGroupInverse (Matrix.toLin' (1 - P)) D ∧
+      e.toLinearMap = groupInverseShift (Matrix.toLin' (1 - P)) D ∧
+      e.symm.toLinearMap = groupInverseShiftInverse (Matrix.toLin' (1 - P)) D := by
+  obtain ⟨D, hD⟩ := exists_stochastic_laplacian_groupInverse P hP
+  exact ⟨D, groupInverseShiftLinearEquiv hD, hD, rfl, rfl⟩
+
 /-- The zero-root projector associated to a group inverse, `E₀ = 1 - L L#`.
 This is the same complementary idempotent as Hartwig's `principalIdempotent`. -/
 def markovKernelProj {A : Type*} [Ring A] (L L_sharp : A) : A :=
@@ -434,6 +532,27 @@ theorem exists_polarizedAttention_laplacian_groupInverse_shift_inverse
             (Matrix.toLin' (1 - polarizedPlusAttentionMatrix
               (E := E) (V := V) queries ctx β)) D = 1 := by
   exact exists_stochastic_laplacian_groupInverse_shift_inverse
+    (polarizedPlusAttentionMatrix (E := E) (V := V) queries ctx β)
+    (polarizedPlusAttentionMatrix_mem_rowStochastic
+      (E := E) (V := V) queries ctx β)
+
+/-- The unmasked finite polarized-attention Laplacian admits a Kemeny–Snell
+linear equivalence on observable space `Fin n → ℝ`. -/
+theorem exists_polarizedAttention_kemenySnell_linearEquiv
+    (queries : Fin n → E) (ctx : ContextWindow n E V) (β : ℝ) :
+    ∃ (D : Module.End ℝ (Fin n → ℝ)) (e : (Fin n → ℝ) ≃ₗ[ℝ] (Fin n → ℝ)),
+      IsGroupInverse
+        (Matrix.toLin' (1 - polarizedPlusAttentionMatrix
+          (E := E) (V := V) queries ctx β)) D ∧
+      e.toLinearMap =
+        groupInverseShift
+          (Matrix.toLin' (1 - polarizedPlusAttentionMatrix
+            (E := E) (V := V) queries ctx β)) D ∧
+      e.symm.toLinearMap =
+        groupInverseShiftInverse
+          (Matrix.toLin' (1 - polarizedPlusAttentionMatrix
+            (E := E) (V := V) queries ctx β)) D := by
+  exact exists_stochastic_laplacian_kemenySnell_linearEquiv
     (polarizedPlusAttentionMatrix (E := E) (V := V) queries ctx β)
     (polarizedPlusAttentionMatrix_mem_rowStochastic
       (E := E) (V := V) queries ctx β)

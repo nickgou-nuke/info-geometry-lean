@@ -271,7 +271,7 @@ def matrix2ToCliffordQ11 (M : Matrix (Fin 2) (Fin 2) ℝ) : CliffordAlgebra q11F
     ((M 0 1 + M 1 0) / 2) • CliffordAlgebra.ι q11Form (1, 0) +
     ((M 0 1 - M 1 0) / 2) • CliffordAlgebra.ι q11Form (0, 1)
 
-/-- `cl11MatrixAlgHom` is a right inverse to `matrix2ToCliffordQ11` on all
+/-- `cl11MatrixAlgHom` is a left inverse to `matrix2ToCliffordQ11` on all
 $M \in M_2(\mathbb{R})$. -/
 theorem cl11MatrixAlgHom_matrix2ToCliffordQ11 (M : Matrix (Fin 2) (Fin 2) ℝ) :
     cl11MatrixAlgHom (matrix2ToCliffordQ11 M) = M := by

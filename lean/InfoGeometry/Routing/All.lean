@@ -3,6 +3,7 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Routing.Cl55SoftConjugation
 import InfoGeometry.Routing.CliffordRoPETorus
 import InfoGeometry.Routing.DiscreteRoPERepresentation
+import InfoGeometry.Routing.OperatorValuedRoPEMarkov
 import InfoGeometry.Routing.FiniteMatrixMixture
 import InfoGeometry.Routing.FiniteRoutingSymmetry
 import InfoGeometry.Routing.FiniteSoftmax

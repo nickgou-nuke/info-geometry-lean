@@ -111,3 +111,5 @@ import InfoGeometry.Canonical.ParaKahlerGradedFockCAR
 import InfoGeometry.Canonical.ParaKahlerGradedFockCARAudit
 import InfoGeometry.QuantumContext.AttentionKMSPetzRecoveryBridge
 import InfoGeometry.QuantumContext.AttentionKMSPetzRecoveryBridgeAudit
+import InfoGeometry.Canonical.UnifiedInfoGeometryPetzFockBridge
+import InfoGeometry.Canonical.UnifiedInfoGeometryPetzFockBridgeAudit

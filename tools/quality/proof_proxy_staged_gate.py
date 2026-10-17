@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import os
 import re
+import hashlib
 import subprocess
 import sys
 import tempfile
@@ -41,6 +42,97 @@ EXECUTED_GATE_SOURCES = (
     "tools/quality/proof_proxy_staged_gate.py",
     "tools/infra/opengauss_screener.py",
 )
+
+
+class ActiveIndexCache:
+    """Memoize imported-file Git reads for one stable staged-index scan."""
+
+    def __init__(self, repo_root: Path):
+        self.repo_root = repo_root
+        self._index_signature = self._read_index_signature()
+        self._tracked: dict[str, bool] = {}
+        self._matches: dict[str, bool] = {}
+        self._blobs: dict[str, tuple[int, bytes, str]] = {}
+        self._imports: dict[str, list[str]] = {}
+
+    def _read_index_signature(self) -> tuple[str, int, int, int, int, int, str] | None:
+        configured = os.environ.get("GIT_INDEX_FILE")
+        if configured:
+            index_path = Path(configured)
+            if not index_path.is_absolute():
+                index_path = self.repo_root / index_path
+        else:
+            result = subprocess.run(
+                ["git", "rev-parse", "--git-path", "index"],
+                cwd=self.repo_root,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            index_path = Path(result.stdout.strip())
+            if not index_path.is_absolute():
+                index_path = self.repo_root / index_path
+        try:
+            stat = index_path.stat()
+            digest = hashlib.sha256(index_path.read_bytes()).hexdigest()
+        except OSError:
+            return None
+        return (str(index_path), stat.st_dev, stat.st_ino, stat.st_size,
+                stat.st_mtime_ns, stat.st_ctime_ns, digest)
+
+    def still_current(self) -> bool:
+        """Fail closed if index-backed reads crossed an active-index update."""
+        return self._index_signature is not None and self._index_signature == self._read_index_signature()
+
+    def tracked(self, relative_path: str) -> bool:
+        if relative_path not in self._tracked:
+            result = subprocess.run(
+                ["git", "ls-files", "--error-unmatch", "--", relative_path],
+                cwd=self.repo_root,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self._tracked[relative_path] = result.returncode == 0
+        return self._tracked[relative_path]
+
+    def matches_worktree(self, relative_path: str) -> bool:
+        if relative_path not in self._matches:
+            result = subprocess.run(
+                ["git", "diff", "--quiet", "--", relative_path],
+                cwd=self.repo_root,
+                capture_output=True,
+                check=False,
+            )
+            self._matches[relative_path] = result.returncode == 0
+        return self._matches[relative_path]
+
+    def blob(self, relative_path: str) -> tuple[int, bytes, str]:
+        if relative_path not in self._blobs:
+            result = subprocess.run(
+                ["git", "show", f":{relative_path}"],
+                cwd=self.repo_root,
+                capture_output=True,
+                check=False,
+            )
+            detail = result.stderr.decode("utf-8", errors="replace").strip()
+            self._blobs[relative_path] = (result.returncode, result.stdout, detail)
+        return self._blobs[relative_path]
+
+    def imports(self, source: str) -> list[str]:
+        if source not in self._imports:
+            try:
+                from tools.infra.opengauss_screener import _strip_lean_comments_and_strings
+            except ImportError:
+                return []
+            import_pattern = re.compile(r"^\s*import\s+([A-Za-z0-9_. ]+)\s*$", re.MULTILINE)
+            clean = _strip_lean_comments_and_strings(source)
+            self._imports[source] = [
+                module for line in import_pattern.findall(clean) for module in line.split()
+            ]
+        # Callers consume their pending worklists with ``pop``. Return a copy
+        # so one traversal cannot empty the memoized imports for another.
+        return list(self._imports[source])
 
 
 def git(args: list[str]) -> str:
@@ -95,7 +187,8 @@ def checker_index_mismatches(repo_root: Path | None = None) -> list[str]:
 
 
 def imported_source_index_mismatches(
-    source: str, repo_root: Path = _REPO_ROOT
+    source: str, repo_root: Path = _REPO_ROOT,
+    index_cache: ActiveIndexCache | None = None,
 ) -> list[str]:
     """Require repo-local imports read by the screener to match the active index.
 
@@ -108,10 +201,11 @@ def imported_source_index_mismatches(
     except ImportError:
         return ["cannot load canonical QMS comment stripper for import consistency check"]
 
-    import_pattern = re.compile(r"^\s*import\s+([A-Za-z0-9_. ]+)\s*$", re.MULTILINE)
-
     def imports_of(text: str) -> list[str]:
+        if index_cache is not None:
+            return index_cache.imports(text)
         clean = _strip_lean_comments_and_strings(text)
+        import_pattern = re.compile(r"^\s*import\s+([A-Za-z0-9_. ]+)\s*$", re.MULTILINE)
         return [module for line in import_pattern.findall(clean) for module in line.split()]
 
     pending = imports_of(source)
@@ -131,14 +225,10 @@ def imported_source_index_mismatches(
                 candidate = path
                 break
             relative_path = path.relative_to(repo_root).as_posix()
-            indexed = subprocess.run(
+            if (index_cache.tracked(relative_path) if index_cache else subprocess.run(
                 ["git", "ls-files", "--error-unmatch", "--", relative_path],
-                cwd=repo_root,
-                capture_output=True,
-                text=True,
-                check=False,
-            )
-            if indexed.returncode == 0:
+                cwd=repo_root, capture_output=True, text=True, check=False,
+            ).returncode == 0):
                 mismatches.add(
                     f"{relative_path} (present in active index but missing from worktree)"
                 )
@@ -151,23 +241,18 @@ def imported_source_index_mismatches(
         if candidate.is_symlink():
             mismatches.add(f"{relative_path} (repo-local Lean imports may not be symlinks)")
             continue
-        tracked = subprocess.run(
+        is_tracked = index_cache.tracked(relative_path) if index_cache else subprocess.run(
             ["git", "ls-files", "--error-unmatch", "--", relative_path],
-            cwd=repo_root,
-            capture_output=True,
-            text=True,
-            check=False,
-        )
-        if tracked.returncode != 0:
+            cwd=repo_root, capture_output=True, text=True, check=False,
+        ).returncode == 0
+        if not is_tracked:
             mismatches.add(f"{relative_path} (not present in active index)")
             continue
-        same_as_index = subprocess.run(
+        matches_worktree = index_cache.matches_worktree(relative_path) if index_cache else subprocess.run(
             ["git", "diff", "--quiet", "--", relative_path],
-            cwd=repo_root,
-            capture_output=True,
-            check=False,
-        )
-        if same_as_index.returncode != 0:
+            cwd=repo_root, capture_output=True, check=False,
+        ).returncode == 0
+        if not matches_worktree:
             mismatches.add(f"{relative_path} (worktree differs from active index)")
             continue
         try:
@@ -178,7 +263,8 @@ def imported_source_index_mismatches(
 
 
 def materialize_indexed_imports(
-    source: str, repo_root: Path, snapshot_root: Path
+    source: str, repo_root: Path, snapshot_root: Path,
+    index_cache: ActiveIndexCache | None = None,
 ) -> list[str]:
     """Materialize the transitive repo-local import closure from the active index."""
     try:
@@ -186,10 +272,11 @@ def materialize_indexed_imports(
     except ImportError:
         return ["cannot load canonical QMS comment stripper for indexed import snapshot"]
 
-    import_pattern = re.compile(r"^\s*import\s+([A-Za-z0-9_. ]+)\s*$", re.MULTILINE)
-
     def imports_of(text: str) -> list[str]:
+        if index_cache is not None:
+            return index_cache.imports(text)
         clean = _strip_lean_comments_and_strings(text)
+        import_pattern = re.compile(r"^\s*import\s+([A-Za-z0-9_. ]+)\s*$", re.MULTILINE)
         return [module for line in import_pattern.findall(clean) for module in line.split()]
 
     pending = imports_of(source)
@@ -206,37 +293,42 @@ def materialize_indexed_imports(
         indexed_path = None
         for candidate in candidates:
             relative_path = candidate.as_posix()
-            tracked = subprocess.run(
+            tracked = index_cache.tracked(relative_path) if index_cache else subprocess.run(
                 ["git", "ls-files", "--error-unmatch", "--", relative_path],
                 cwd=repo_root,
                 capture_output=True,
                 text=True,
                 check=False,
-            )
-            if tracked.returncode == 0:
+            ).returncode == 0
+            if tracked:
                 indexed_path = relative_path
                 break
         if indexed_path is None or indexed_path in seen:
             continue
         seen.add(indexed_path)
-        blob = subprocess.run(
-            ["git", "show", f":{indexed_path}"],
-            cwd=repo_root,
-            capture_output=True,
-            check=False,
-        )
-        if blob.returncode != 0:
+        if index_cache is not None:
+            blob_returncode, blob_stdout, detail = index_cache.blob(indexed_path)
+        else:
+            blob = subprocess.run(
+                ["git", "show", f":{indexed_path}"],
+                cwd=repo_root,
+                capture_output=True,
+                check=False,
+            )
+            blob_returncode, blob_stdout = blob.returncode, blob.stdout
             detail = blob.stderr.decode("utf-8", errors="replace").strip()
+        if blob_returncode != 0:
             errors.append(f"{indexed_path} (cannot read active-index blob: {detail})")
             continue
         destination = snapshot_root / indexed_path
         destination.parent.mkdir(parents=True, exist_ok=True)
         try:
-            destination.write_bytes(blob.stdout)
+            if not destination.exists():
+                destination.write_bytes(blob_stdout)
         except OSError as exc:
             errors.append(f"{indexed_path} (cannot materialize active-index blob: {exc})")
             continue
-        pending.extend(imports_of(blob.stdout.decode("utf-8", errors="replace")))
+        pending.extend(imports_of(blob_stdout.decode("utf-8", errors="replace")))
     return errors
 
 
@@ -299,7 +391,9 @@ def aggregate_prop_constructors(source: str) -> list[tuple[str, str]]:
 
 
 def check_text(
-    lean_path: str, source: str, repo_root: Path = _REPO_ROOT
+    lean_path: str, source: str, repo_root: Path = _REPO_ROOT,
+    index_cache: ActiveIndexCache | None = None,
+    snapshot_root: Path | None = None,
 ) -> list[str]:
     """Check staged Lean source with the canonical OpenGauss source screener."""
     failures: list[str] = []
@@ -307,22 +401,19 @@ def check_text(
         failures.append(
             f"{lean_path}: missing or malformed required InfoGeometry copyright and license header"
         )
-    for mismatch in imported_source_index_mismatches(source, repo_root):
+    for mismatch in imported_source_index_mismatches(source, repo_root, index_cache):
         failures.append(
             f"{lean_path}: imported Lean source is not a consistent active-index snapshot: {mismatch}"
         )
     try:
         from tools.infra.opengauss_screener import screen_lean_content
-        with tempfile.TemporaryDirectory(prefix="opengauss-index-imports-") as temp_dir:
-            snapshot_root = Path(temp_dir)
-            for mismatch in materialize_indexed_imports(
-                source, repo_root, snapshot_root
-            ):
+        def screen_with_snapshot(root: Path) -> None:
+            for mismatch in materialize_indexed_imports(source, repo_root, root, index_cache):
                 failures.append(
                     f"{lean_path}: cannot build active-index import snapshot: {mismatch}"
                 )
             for violation in screen_lean_content(
-                source, filename=lean_path, import_root=snapshot_root
+                source, filename=lean_path, import_root=root
             ):
                 # The pre-commit gate enforces the screener's blocking findings.
                 # Warnings remain advisory, matching the screener's severity model.
@@ -331,6 +422,11 @@ def check_text(
                         f"{lean_path}:{violation.line_number}: OpenGauss {violation.trap_id} "
                         f"{violation.trap_name}: {violation.message} ({violation.matched_text})"
                     )
+        if snapshot_root is not None:
+            screen_with_snapshot(snapshot_root)
+        else:
+            with tempfile.TemporaryDirectory(prefix="opengauss-index-imports-") as temp_dir:
+                screen_with_snapshot(Path(temp_dir))
     except ImportError:
         failures.append(
             f"{lean_path}: cannot load the canonical QMS source checker; refusing to certify this staged Lean file"
@@ -344,6 +440,7 @@ def check_text(
 
 def main() -> int:
     repo_root = Path(git(["rev-parse", "--show-toplevel"]).strip())
+    index_cache = ActiveIndexCache(repo_root)
     out = git(["diff", "--cached", "--unified=0", "--", "*.lean"])
     failures: list[str] = []
     path = ""
@@ -421,18 +518,28 @@ def main() -> int:
         check=True,
     ).stdout
     cursor = 0
-    for raw_path, _blob in paths_and_blobs:
-        header_end = blob_data.index(b"\n", cursor)
-        header = blob_data[cursor:header_end].split()
-        size = int(header[2])
-        start = header_end + 1
-        source = blob_data[start:start + size].decode("utf-8", errors="replace")
-        cursor = start + size + 1
-        lean_path = raw_path.decode("utf-8", errors="replace")
-        failures.extend(check_text(lean_path, source, repo_root))
+    with tempfile.TemporaryDirectory(prefix="opengauss-index-imports-") as temp_dir:
+        snapshot_root = Path(temp_dir)
+        for raw_path, _blob in paths_and_blobs:
+            header_end = blob_data.index(b"\n", cursor)
+            header = blob_data[cursor:header_end].split()
+            size = int(header[2])
+            start = header_end + 1
+            source = blob_data[start:start + size].decode("utf-8", errors="replace")
+            cursor = start + size + 1
+            lean_path = raw_path.decode("utf-8", errors="replace")
+            failures.extend(check_text(
+                lean_path, source, repo_root,
+                index_cache=index_cache, snapshot_root=snapshot_root,
+            ))
     for buried in sorted(removed_decl_files & debt_comment_files):
         failures.append(
             f"{buried}: staged deletion of Lean declarations with natural-language debt comments; keep open debt compiler-visible instead of burying it in prose"
+        )
+
+    if not index_cache.still_current():
+        failures.append(
+            "active Git index changed during staged proof-proxy scan; refusing mixed-snapshot certification"
         )
 
     if failures:

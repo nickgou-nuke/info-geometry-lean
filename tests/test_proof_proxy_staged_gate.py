@@ -2,6 +2,7 @@ import os
 import subprocess
 
 from tools.quality.proof_proxy_staged_gate import (
+    ActiveIndexCache,
     REQUIRED_LEAN_COPYRIGHT_HEADER,
     aggregate_prop_constructors,
     check_text,
@@ -57,6 +58,45 @@ def _init_hook_repo(tmp_path, monkeypatch):
     git("commit", "-qm", "baseline")
     monkeypatch.chdir(tmp_path)
     return git
+
+
+def test_active_index_cache_detects_index_mutation(tmp_path, monkeypatch):
+    git = _init_hook_repo(tmp_path, monkeypatch)
+    cache = ActiveIndexCache(tmp_path)
+    assert cache.still_current()
+
+    tracked = tmp_path / "baseline.txt"
+    tracked.write_text("updated baseline\n")
+    git("add", "baseline.txt")
+
+    assert not cache.still_current()
+
+
+def test_active_index_cache_rejects_unavailable_index(tmp_path, monkeypatch):
+    _init_hook_repo(tmp_path, monkeypatch)
+    monkeypatch.setenv("GIT_INDEX_FILE", str(tmp_path / "missing-index"))
+    cache = ActiveIndexCache(tmp_path)
+    assert not cache.still_current()
+
+
+def test_active_index_import_cache_survives_both_import_traversals(
+    tmp_path, monkeypatch
+):
+    git = _init_hook_repo(tmp_path, monkeypatch)
+    imported = tmp_path / "lean" / "Fixture" / "Imported.lean"
+    imported.parent.mkdir(parents=True)
+    imported.write_text("theorem imported_owner : True := trivial\n")
+    git("add", "lean/Fixture/Imported.lean")
+    git("commit", "-qm", "add imported owner")
+
+    source = "import Fixture.Imported\ntheorem local_owner : True := trivial\n"
+    cache = ActiveIndexCache(tmp_path)
+    assert imported_source_index_mismatches(source, tmp_path, cache) == []
+    snapshot = tmp_path / "snapshot"
+    assert materialize_indexed_imports(source, tmp_path, snapshot, cache) == []
+    assert (snapshot / "lean" / "Fixture" / "Imported.lean").read_text() == (
+        "theorem imported_owner : True := trivial\n"
+    )
 
 
 def test_precommit_gate_rejects_renamed_vacuous_prop_from_staged_blob(

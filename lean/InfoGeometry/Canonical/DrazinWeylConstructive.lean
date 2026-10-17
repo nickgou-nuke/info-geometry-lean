@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Quantum.TriadicWeylBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -63,13 +68,19 @@ structure ConstructiveRieszLocalWeylSymmetryData (T : EndH) where
   projector_commutes_spectralEpsilon :
     riesz.P.comp (spectral_epsilon (E := E))
       = (spectral_epsilon (E := E)).comp riesz.P
-  regular_inverse_unique :
-    ∀ S' : EndH,
-      S' * T = riesz.P →
-      T * S' = riesz.P →
-      S' * riesz.P = S' →
-      riesz.P * S' = S' →
-        S' = riesz.S
+
+/-- The regular inverse in constructive Riesz data is unique from its defining
+right-inverse and support equations; callers need not supply uniqueness as data. -/
+theorem constructiveRiesz_regular_inverse_unique
+    {T : EndH} (R : ConstructiveRieszDecompositionAtZero (𝕂 := ℝ) T)
+    (S' : EndH) (hRight : T * S' = R.P) (hSupported : R.P * S' = S') :
+    S' = R.S := by
+  calc
+    S' = R.P * S' := hSupported.symm
+    _ = (R.S * T) * S' := by rw [R.left_inverse_on_regular]
+    _ = R.S * (T * S') := by rw [mul_assoc]
+    _ = R.S * R.P := by rw [hRight]
+    _ = R.S := R.S_supported_on_regular_left
 
 /--
 WeylCompatibility package for the broad infinite Drazin lane: keep the owned infinite
@@ -234,7 +245,7 @@ theorem spectralEpsilon_conj_constructiveDrazinCandidate_eq
       _ = ε * D.riesz.S * ε := by rw [D.riesz.S_supported_on_regular_right]
       _ = Sε := by rfl
   simpa [constructiveDrazinCandidate, Sε, ε] using
-    D.regular_inverse_unique Sε hSε_left hSε_right hSε_support_left hSε_support_right
+    constructiveRiesz_regular_inverse_unique D.riesz Sε hSε_right hSε_support_right
 
 /--
 Local Weyl symmetry of the constructive Riesz problem forces the extracted
@@ -324,10 +335,6 @@ noncomputable def constructiveRieszLocalWeylSymmetryData_of_classicalRieszLocalW
   projector_commutes_spectralEpsilon := by
     simpa [constructiveRieszDecompositionAtZero_of_hasClassicalRieszDecompositionAtZero]
       using W.projector_commutes_spectralEpsilon
-  regular_inverse_unique := by
-    intro S' hLeft hRight hSupportLeft hSupportRight
-    simpa [constructiveRieszDecompositionAtZero_of_hasClassicalRieszDecompositionAtZero]
-      using W.regular_inverse_unique S' hLeft hRight hSupportLeft hSupportRight
 
 /--
 Classical local-Weyl-symmetry route into the constructive Weyl bridge structure.
@@ -383,10 +390,6 @@ noncomputable def constructiveRieszLocalWeylSymmetryData_of_drazinInfiniteLocalW
   projector_commutes_spectralEpsilon := by
     simpa [constructiveRieszDecompositionAtZero_of_hasClassicalRieszDecompositionAtZero]
       using W.projector_commutes_spectralEpsilon
-  regular_inverse_unique := by
-    intro S' hLeft hRight hSupportLeft hSupportRight
-    simpa [constructiveRieszDecompositionAtZero_of_hasClassicalRieszDecompositionAtZero]
-      using W.regular_inverse_unique S' hLeft hRight hSupportLeft hSupportRight
 
 /--
 Convert the broad infinite local-Weyl-symmetry package into the older infinite

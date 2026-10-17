@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.Matrix.Block
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
@@ -348,9 +353,11 @@ theorem pfaffian_sq_eq_det_of_det_nonneg
   exact Real.sq_sqrt hdet
 
 /--
-Formal Pfaffian-Berezinian entropy expression.
-The macro-entropy S of the universe is governed by the exact duality between
-topological complexity (Pfaffian) and statistical dissipation (Berezinian).
+A scalar entropy functional built from the determinant-square-root proxy above
+and the conditional Schur-complement Berezinian. This definition alone does
+not establish a Pfaffian/Berezinian identity for a `Cl(4,4)` operator; in
+particular, finiteness requires positivity assumptions on both logarithm
+arguments.
 -/
 
 @[rep_depth transport]

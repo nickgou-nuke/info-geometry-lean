@@ -17,15 +17,16 @@ import InfoGeometry.Canonical.SplitOctonionJordanWignerIntertwiner
 import InfoGeometry.Synthesis.ThreeTraditionLineageConvergence
 
 /-!
-# Krein–$\operatorname{Cl}(1,1)$ Nilpotent-Kernel-Chiral-Quotient Synthesis
+# Krein–$\operatorname{Cl}(1,1)$ Nilpotent-Kernel and Möbius-Quotient Synthesis
 
 This module unifies the atomic $\operatorname{Cl}(1,1)$ matrix model, the inductive
 $\operatorname{Cl}(1,1)^{\otimes n}$ Jordan–Wigner CAR tensor tower, the Krein
 para-complex sheet projectors and off-diagonal quadratic pairing on
 `ModularCPT.DoubledCarrier E`, the unoriented Möbius $\mathbb{Z}_2$ quotient
-identifying primal and dual covector sheets, and the concrete $8 \times 8$ Zorn
-$\operatorname{Cl}(3,3) \cong \operatorname{Cl}(1,1)^{\otimes 3}$ chiral volume
-reflection under `zornJWConjugator`.
+identifying primal and dual covector sheets, and finite $8 \times 8$ Zorn/Jordan–Wigner
+matrix identities. The quotient is by the explicit Möbius twist, and the final
+diagonal matrix is the vacuum-minus-top Peirce operator; neither is identified
+here with a quotient by, or the full chiral-volume operator of, $\operatorname{Cl}(3,3)$.
 
 ## Main Results
 
@@ -60,11 +61,11 @@ reflection under `zornJWConjugator`.
    - `mobiusOrbitRel`, `chiralMobiusSetoid`, `UnorientedMobiusQuotient`,
      well-definedness of `quotientKreinQuadratic`, and the sheet identification
      `primal_eq_covectorVacuum_in_unorientedMobiusQuotient`.
-5. **Section 5 (Zorn $\operatorname{Cl}(3,3) \cong \operatorname{Cl}(1,1)^{\otimes 3}$ Chiral Volume Flip)**:
+5. **Section 5 (Finite Zorn/Jordan–Wigner Vacuum–Top Matrix Identities)**:
    - Explicit action of `zornJWConjugator` swapping the vacuum and top Fock lines
      while fixing the $3 \oplus 3$ primal and dual vector sheets, the half-sum
-     realization `zornChiralGradingMatrix_eq_half_left_add_right`, and the chiral
-     volume reflection `zornJWConjugator_negates_zornChiralGradingMatrix`.
+     realization `zornVacuumTopPeirceOperator_eq_half_left_add_right`, and its
+     sign reversal `zornJWConjugator_negates_zornVacuumTopPeirceOperator`.
 
 ## Scope Note
 
@@ -536,15 +537,6 @@ def quotientKreinQuadratic
   Quotient.lift (fun z => ModularCPT.kreinForm pairing z z)
     (fun _ _ hzw => kreinForm_self_eq_of_mobiusOrbitRel pairing hzw)
 
-/-- Evaluating `quotientKreinQuadratic` on the quotient class of `z` recovers
-`ModularCPT.kreinForm pairing z z`. -/
-@[simp]
-theorem quotientKreinQuadratic_mk
-    (pairing : E →ₗ[ℝ] E →ₗ[ℝ] ℝ) (z : ModularCPT.DoubledCarrier E) :
-    quotientKreinQuadratic pairing (Quotient.mk (chiralMobiusSetoid E) z) =
-      ModularCPT.kreinForm pairing z z :=
-  rfl
-
 /-- In `UnorientedMobiusQuotient E`, every pure primal state `(v, 0)` in
 `primalSheet K_op` is identified with the pure covector vacuum state `(0, -v)` in
 `covectorVacuumSheet K_op`. -/
@@ -560,7 +552,7 @@ theorem primal_eq_covectorVacuum_in_unorientedMobiusQuotient (v : E) :
 end KreinSheets
 
 /-!
-## Section 5: Zorn $\operatorname{Cl}(3,3) \cong \operatorname{Cl}(1,1)^{\otimes 3}$ Chiral Volume Flip
+## Section 5: Finite Zorn/Jordan–Wigner Vacuum–Top Peirce Identities
 -/
 
 /-- The Zorn Jordan–Wigner conjugator $P_{\mathrm{JW}}$ maps the vacuum idempotent
@@ -625,11 +617,12 @@ theorem zornJWConjugator_fixes_primal_and_dual_sheet_basis
 
 set_option maxHeartbeats 0
 
-/-- The $8 \times 8$ diagonal chiral grading matrix
+/-- The $8 \times 8$ vacuum-minus-top Peirce operator
 $\operatorname{diag}(1, 0, 0, 0, 0, 0, 0, -1)$ on the 8D Fock ket space, separating
-the $+1$ vacuum idempotent line $e_0$ and the $-1$ top Fock line $e_7$ from the
-$3 \oplus 3$ primal and dual vector sheets. -/
-def zornChiralGradingMatrix : Matrix (Fin 8) (Fin 8) ℝ :=
+the vacuum idempotent line $e_0$ and top Fock line $e_7$ from the
+$3 \oplus 3$ primal and dual vector sheets. It is not the full chiral-volume
+operator on the eight-dimensional spinor space. -/
+def zornVacuumTopPeirceOperator : Matrix (Fin 8) (Fin 8) ℝ :=
   !![1, 0, 0, 0, 0, 0, 0,  0;
      0, 0, 0, 0, 0, 0, 0,  0;
      0, 0, 0, 0, 0, 0, 0,  0;
@@ -639,19 +632,19 @@ def zornChiralGradingMatrix : Matrix (Fin 8) (Fin 8) ℝ :=
      0, 0, 0, 0, 0, 0, 0,  0;
      0, 0, 0, 0, 0, 0, 0, -1]
 
-/-- The half-sum $\tfrac{1}{2}(L_{I_{\text{para}}} + R_{I_{\text{para}}})$ of the left
+/-- The half-sum $\tfrac{1}{2}(L_K + R_K)$ of the left
 and right multiplication matrices of `SplitOctonionParaKahlerNullCone.zornParaGrading`
-equals `zornChiralGradingMatrix`. -/
-theorem zornChiralGradingMatrix_eq_half_left_add_right :
+equals `zornVacuumTopPeirceOperator`. -/
+theorem zornVacuumTopPeirceOperator_eq_half_left_add_right :
     (1 / 2 : ℝ) •
       (SplitOctonionClifford33Soldering.zornLeftActMatrix
           (SplitOctonionParaKahlerNullCone.zornParaGrading (R := ℝ)) +
         SplitOctonionClifford33Soldering.zornRightActMatrix
           (SplitOctonionParaKahlerNullCone.zornParaGrading (R := ℝ))) =
-      zornChiralGradingMatrix := by
+      zornVacuumTopPeirceOperator := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    norm_num [zornChiralGradingMatrix,
+    norm_num [zornVacuumTopPeirceOperator,
       SplitOctonionClifford33Soldering.zornLeftActMatrix,
       SplitOctonionClifford33Soldering.zornLeftActFin8,
       SplitOctonionClifford33Soldering.zornRightActMatrix,
@@ -665,18 +658,18 @@ theorem zornChiralGradingMatrix_eq_half_left_add_right :
       LinearMap.toMatrix_apply, Pi.basisFun_apply,
       Pi.basisFun_repr, Pi.single_apply]
 
-/-- Conjugating `zornChiralGradingMatrix = diag(1, 0, 0, 0, 0, 0, 0, -1)` by
-`zornJWConjugator` negates it, witnessing the chiral volume reflection between the
-vacuum and top Fock lines. -/
-theorem zornJWConjugator_negates_zornChiralGradingMatrix :
+/-- Conjugating `zornVacuumTopPeirceOperator = diag(1, 0, 0, 0, 0, 0, 0, -1)` by
+`zornJWConjugator` negates it, witnessing the exchange of the vacuum and top Fock
+lines. This is not a statement about full $\operatorname{Cl}(3,3)$ chirality. -/
+theorem zornJWConjugator_negates_zornVacuumTopPeirceOperator :
     SplitOctonionJordanWignerIntertwiner.zornJWConjugator *
-      zornChiralGradingMatrix *
+      zornVacuumTopPeirceOperator *
       SplitOctonionJordanWignerIntertwiner.zornJWConjugator =
-        -zornChiralGradingMatrix := by
+        -zornVacuumTopPeirceOperator := by
   ext i j
   fin_cases i <;> fin_cases j <;>
     norm_num [SplitOctonionJordanWignerIntertwiner.zornJWConjugator,
-      zornChiralGradingMatrix, Matrix.mul_apply,
+      zornVacuumTopPeirceOperator, Matrix.mul_apply,
       Fin.sum_univ_eight]
 
 end InfoGeometry.Synthesis.Cl11ChiralVolumeNilpotentQuotientSynthesis

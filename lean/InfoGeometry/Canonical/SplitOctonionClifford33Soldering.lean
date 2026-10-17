@@ -32,7 +32,7 @@ $\mathbb{O}_s$ over the owner carriers of
 
 2. **Honest `8 \times 8` real matrices for `L_x` and `R_x`**:
    `fin8ToZorn_add`/`fin8ToZorn_smul` and `zornToFin8_zornAdd`/`zornToFin8_zornSmul` make
-   the Fock chart `fin8ZornEquiv` compatible with the Zorn algebra structure, so
+   the Fock chart `fin8ZornEquiv` compatible with addition and scalar multiplication, so
    `zornLeftActFin8` and `zornRightActFin8` are genuine
    $\mathbb{R}$-linear endomorphisms of $\mathbb{R}^8 = \mathrm{Fin}\ 8 \to \mathbb{R}$, and
    `zornLeftActMatrix`/`zornRightActMatrix` are the corresponding real
@@ -59,10 +59,11 @@ $\mathbb{O}_s$ over the owner carriers of
 4. **Peirce coordinate-sector maps** (Section 4):
    `peirceKetBra00`, `peirceKetBra01`, `peirceKetBra10`, `peirceKetBra11` and the theorems
    `peirce_ketbra_00`, `peirce_ketbra_01`, `peirce_ketbra_10`, `peirce_ketbra_11` evaluate
-   $\Pi_{ij}(y) = e_i \star (y \star e_j) = L_{e_i} R_{e_j} y$ on the four exterior Fock
-   grades, and `peirce_ketbra_completeness` proves the
-   $8 = 1 \oplus 3 \oplus 3 \oplus 1 = \Lambda^0 \oplus \Lambda^1 \oplus \Lambda^2 \oplus \Lambda^3$
-   resolution.
+   $\Pi_{ij}(y) = e_i \star (y \star e_j)$ on the four displayed Zorn coordinates.
+   `peirce_ketbra_completeness` proves that these coordinate-sector values sum to `y`.
+   The names retain historical `ketbra` terminology, but no ideal or bra/operator
+   realization is asserted. The correspondence with exterior grades is an interpretation
+   through the separate `Fin 8` vector-space chart, not an exterior-algebra theorem here.
 
 ## Scope Note
 
@@ -74,7 +75,7 @@ operators; it does **not** assert an isomorphism $\mathrm{Cl}(3,3) \cong M_8(\ma
 does not identify $L_{\iota(z)}$ with the Jordan–Wigner Majorana Kronecker strings of
 `InfoGeometry.Clifford.Cl33FiniteJWMajoranaMatrix` (no proved map is given here), and does
 not claim that the isotropy sheets are maximal. The `Fin 8` Fock carrier equivalence is
-purely an equivalence of vector spaces: `zornLeftAct_comp_ne_leftAct_mul` and
+purely an equivalence of vector spaces: `zorn_leftAct_comp_ne_leftAct_mul` and
 `zorn_rightAct_comp_ne_rightAct_mul` record that the Zorn product is not associative and
 hence cannot be transferred to that carrier as an associative product.
 -/
@@ -485,8 +486,9 @@ theorem zorn_rightActFin8_clifford33 (z₁ z₂ : ParaKahlerVec ℝ) :
     fin8ToZorn_right_inv] using congrFun h' i
 
 /-- **Theorem 15'' (Cl(3,3) Soldering Law on genuine real `8 × 8` matrices, left action).**
-The sum of the `8 × 8` real *matrices* of `L_{ι(z₁)⋆ι(z₂)}` and `L_{ι(z₂)⋆ι(z₁)}` is
-`g(z₁, z₂) • I₈`. -/
+The matrix products representing `L_{ι(z₁)} ∘ L_{ι(z₂)}` and
+`L_{ι(z₂)} ∘ L_{ι(z₁)}` sum to `g(z₁, z₂) • I₈`. This is a relation between
+composed linear actions, not the left action of a Zorn product. -/
 theorem zorn_leftActMatrix_clifford33 (z₁ z₂ : ParaKahlerVec ℝ) :
     zornLeftActMatrix (embedVec z₁) * zornLeftActMatrix (embedVec z₂)
         + zornLeftActMatrix (embedVec z₂) * zornLeftActMatrix (embedVec z₁)
@@ -554,31 +556,31 @@ theorem zorn_rightAct_comp_ne_rightAct_mul :
 end CliffordSoldering
 
 /-!
-## Section 4: Peirce Ket-Bra Ideal Projectors `Π_{ij} = e_i ⋆ (y ⋆ e_j)`
+## Section 4: Peirce Coordinate-Sector Maps `Π_{ij}(y) = e_i ⋆ (y ⋆ e_j)`
 -/
 
 section PeirceProjectors
 
 variable {R : Type*} [CommRing R]
 
-/-- Vacuum ket-bra sector projector `Π₀₀(y) = e₀ ⋆ (y ⋆ e₀) = L_{e₀} R_{e₀} y`. -/
+/-- Vacuum coordinate-sector map `Π₀₀(y) = e₀ ⋆ (y ⋆ e₀)`. -/
 def peirceKetBra00 (y : ZornSplitOctonion R) : ZornSplitOctonion R :=
   zornMul zornE0 (zornMul y zornE0)
 
-/-- Primal-sheet ket-bra sector projector `Π₀₁(y) = e₀ ⋆ (y ⋆ e₁) = L_{e₀} R_{e₁} y`. -/
+/-- Primal-sheet coordinate-sector map `Π₀₁(y) = e₀ ⋆ (y ⋆ e₁)`. -/
 def peirceKetBra01 (y : ZornSplitOctonion R) : ZornSplitOctonion R :=
   zornMul zornE0 (zornMul y zornE1)
 
-/-- Dual-sheet ket-bra sector projector `Π₁₀(y) = e₁ ⋆ (y ⋆ e₀) = L_{e₁} R_{e₀} y`. -/
+/-- Dual-sheet coordinate-sector map `Π₁₀(y) = e₁ ⋆ (y ⋆ e₀)`. -/
 def peirceKetBra10 (y : ZornSplitOctonion R) : ZornSplitOctonion R :=
   zornMul zornE1 (zornMul y zornE0)
 
-/-- Top-state ket-bra sector projector `Π₁₁(y) = e₁ ⋆ (y ⋆ e₁) = L_{e₁} R_{e₁} y`. -/
+/-- Top-state coordinate-sector map `Π₁₁(y) = e₁ ⋆ (y ⋆ e₁)`. -/
 def peirceKetBra11 (y : ZornSplitOctonion R) : ZornSplitOctonion R :=
   zornMul zornE1 (zornMul y zornE1)
 
-/-- **Theorem 17a (vacuum sector `Λ⁰ ≅ ℝ`).** `Π₀₀` extracts the `|000⟩⟨000|` scalar
-`a • e₀`. -/
+/-- **Theorem 17a (vacuum coordinate sector; `Λ⁰` in the `Fin 8` chart).** `Π₀₀`
+extracts the scalar coordinate `a • e₀`. -/
 theorem peirce_ketbra_00 (y : ZornSplitOctonion R) :
     peirceKetBra00 y = zornSmul y.a zornE0 := by
   ext k
@@ -589,8 +591,8 @@ theorem peirce_ketbra_00 (y : ZornSplitOctonion R) :
   · dsimp [peirceKetBra00, zornE0, zornSmul, zornMul, vec3Dot]
     ring
 
-/-- **Theorem 17b (primal sheet `T⁺ ≅ Λ¹`).** `Π₀₁` extracts the 1-particle sector
-`ι(u, 0)`. -/
+/-- **Theorem 17b (primal coordinate sector; `Λ¹` in the `Fin 8` chart).** `Π₀₁`
+extracts `ι(u, 0)`. -/
 theorem peirce_ketbra_01 (y : ZornSplitOctonion R) :
     peirceKetBra01 y = embedVec (primalSheet y.u) := by
   ext k
@@ -605,8 +607,8 @@ theorem peirce_ketbra_01 (y : ZornSplitOctonion R) :
   · dsimp [peirceKetBra01, zornE0, zornE1, embedVec, primalSheet, zornMul, vec3Dot]
     ring
 
-/-- **Theorem 17c (dual sheet `T⁻ ≅ Λ²`).** `Π₁₀` extracts the 2-particle Hodge-dual
-sector `ι(0, v)`. -/
+/-- **Theorem 17c (dual coordinate sector; `Λ²` in the `Fin 8` chart).** `Π₁₀`
+extracts `ι(0, v)`. -/
 theorem peirce_ketbra_10 (y : ZornSplitOctonion R) :
     peirceKetBra10 y = embedVec (dualSheet y.v) := by
   ext k
@@ -621,8 +623,8 @@ theorem peirce_ketbra_10 (y : ZornSplitOctonion R) :
   · dsimp [peirceKetBra10, zornE0, zornE1, embedVec, dualSheet, zornMul, vec3Dot]
     ring
 
-/-- **Theorem 17d (top state `Λ³ ≅ ℝ`).** `Π₁₁` extracts the `|111⟩⟨111|` scalar
-`b • e₁`. -/
+/-- **Theorem 17d (top coordinate sector; `Λ³` in the `Fin 8` chart).** `Π₁₁`
+extracts the scalar coordinate `b • e₁`. -/
 theorem peirce_ketbra_11 (y : ZornSplitOctonion R) :
     peirceKetBra11 y = zornSmul y.b zornE1 := by
   ext k
@@ -633,9 +635,9 @@ theorem peirce_ketbra_11 (y : ZornSplitOctonion R) :
   · dsimp [peirceKetBra11, zornE1, zornSmul, zornMul, vec3Dot]
     ring
 
-/-- **Theorem 18 (completeness of the `8 = 1 ⊕ 3 ⊕ 3 ⊕ 1` ket-bra resolution).**
-Every ket `y ∈ 𝕆_s ≅ Λ⁰ ⊕ Λ¹ ⊕ Λ² ⊕ Λ³` is the exact sum of its four Peirce ket-bra
-ideal projections. -/
+/-- **Theorem 18 (completeness of the `1 ⊕ 3 ⊕ 3 ⊕ 1` coordinate-sector decomposition).**
+Every Zorn carrier element is the sum of the four values given by the coordinate formulas
+above. The exterior-grade interpretation uses the separate `Fin 8` vector-space chart. -/
 theorem peirce_ketbra_completeness (y : ZornSplitOctonion R) :
     zornAdd (zornAdd (peirceKetBra00 y) (peirceKetBra01 y))
             (zornAdd (peirceKetBra10 y) (peirceKetBra11 y)) = y := by

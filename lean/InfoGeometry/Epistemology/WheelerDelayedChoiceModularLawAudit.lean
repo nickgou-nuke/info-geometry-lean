@@ -48,3 +48,10 @@ theorem test_certificate_compiles (V : Type*) [AddCommGroup V] [Module ℝ V]
 #print axioms proof_boundary_is_nilpotent
 
 end InfoGeometry.Epistemology.WheelerDelayedChoiceModularLawAudit
+#print axioms InfoGeometry.Epistemology.WheelerDelayedChoiceModularLaw.primalSheetOf_polarizationK
+#print axioms InfoGeometry.Epistemology.WheelerDelayedChoiceModularLaw.covectorSheetOf_polarizationK
+#print axioms InfoGeometry.Epistemology.WheelerDelayedChoiceModularLaw.mobiusTwist_primal_to_dual
+#print axioms InfoGeometry.Epistemology.WheelerDelayedChoiceModularLaw.mobiusTwist_dual_to_primal
+#print axioms InfoGeometry.Epistemology.WheelerDelayedChoiceModularLaw.mobiusTwist_primal_mem_dual
+#print axioms InfoGeometry.Epistemology.WheelerDelayedChoiceModularLaw.mobiusTwist_dual_mem_primal
+#print axioms InfoGeometry.Epistemology.WheelerDelayedChoiceModularLaw.mobiusTwist_primal_to_antifixed

@@ -47,8 +47,9 @@ This module formalizes Wheeler's two deepest physical and epistemological princi
    - Forward query / generative intuition on $T^+$.
    - Backward foundational kernel context / inductive keys on $T^-$.
    - The nilpotent boundary operator $d^2 = 0$: a proof certificate is an exact cocycle $d(p) = 0$.
-   - The Möbius crosscap $M \circ K = -(K \circ M)$ identifies the prover with the verifier
-     across an orientation-reversing $2\pi$ loop.
+   - The linear maps satisfy the Möbius anticommutation identity
+     $M \circ K = -(K \circ M)$; this algebraic identity alone does not construct a quotient
+     or a topological loop.
 
 4. **The Ultimate Kleinian Invariant**:
    - 4-fold Erlangen synthesis: Chentsov (Fisher–Rao), Causal Hyperbolicity ($\mathrm{Cl}(1,1)$),
@@ -354,9 +355,10 @@ def polarizationK : ProofSpace E →ₗ[ℝ] ProofSpace E :=
 @[simp] theorem polarizationK_apply (z : ProofSpace E) : polarizationK z = (z.1, -z.2) := rfl
 
 /--
-**Crosscap Anticommuntation**:
+**Möbius Anticommutation Identity**:
 $$M \circ K = -(K \circ M)$$
-Traversing the Möbius loop swaps the prover perspective with the verifier perspective.
+The identity is an algebraic statement about the defined linear maps; it does not assert
+the existence of a topological Möbius loop.
 -/
 theorem mobius_anticommutes_polarization (z : ProofSpace E) :
     mobiusTwist (polarizationK z) = - (polarizationK (mobiusTwist z)) := by
@@ -433,6 +435,75 @@ theorem compile_wheeler_delayed_choice_modular_law (V : Type*) [AddCommGroup V] 
   mobius_anticomm := fun z => mobius_anticommutes_polarization z
   typechecker_nilpotent := fun tc p => proof_boundary_is_nilpotent tc p
 
+/-!
+### The Möbius twist exchanges two coordinate eigen-sheets
+
+`polarizationK (u, α) = (u, -α)` fixes vectors of the form `(u, 0)` and negates vectors
+of the form `(0, α)`. The crosscap twist
+`mobiusTwist (u, α) = (-α, -u)` is a concrete map that satisfies
+`mobius_anticommutes_polarization`. The theorems below compute its action on these two sheets.
+Anticommutation alone does not select this map, nor does the calculation construct a quotient
+or a loop topology. Here `ProofSpace E` is `E × E`: the second coordinate is another copy of
+`E`, and no dual space or evaluation pairing is part of these results.
+
+This is the "$M(T^+) \subseteq T^-$" step, and it is a statement about the carrier
+`ProofSpace E`, with no appeal to any quotient construction.
+-/
+
+section SheetExchange
+
+variable {E : Type*} [AddCommGroup E] [Module ℝ E]
+
+/-- The primal coordinate sheet, fixed by the polarization: `{(u, 0)}`. -/
+def primalSheetOf (u : E) : ProofSpace E := (u, 0)
+
+/-- The second-coordinate sheet, negated by the polarization: `{(0, α)}`. -/
+def covectorSheetOf (α : E) : ProofSpace E := (0, α)
+
+@[simp] theorem primalSheetOf_polarizationK (u : E) :
+    polarizationK (primalSheetOf u) = primalSheetOf u := by
+  ext <;> simp [polarizationK_apply, primalSheetOf]
+
+@[simp] theorem covectorSheetOf_polarizationK (α : E) :
+    polarizationK (covectorSheetOf α) = -covectorSheetOf α := by
+  ext <;> simp [polarizationK_apply, covectorSheetOf]
+
+/-- **The twist sends the primal sheet into the covector sheet:** $M(T^+) \subseteq T^-$. -/
+theorem mobiusTwist_primal_to_dual (u : E) :
+    mobiusTwist (primalSheetOf u) = covectorSheetOf (-u) := by
+  ext <;> simp [mobiusTwist_apply, primalSheetOf, covectorSheetOf]
+
+/-- **... and the covector sheet back into the primal sheet:** $M(T^-) \subseteq T^+$. -/
+theorem mobiusTwist_dual_to_primal (α : E) :
+    mobiusTwist (covectorSheetOf α) = primalSheetOf (-α) := by
+  ext <;> simp [mobiusTwist_apply, primalSheetOf, covectorSheetOf]
+
+/-- **$M(T^+) \subseteq T^-$**: the twist sends every primal-sheet vector into the dual
+sheet, witnessed explicitly. -/
+theorem mobiusTwist_primal_mem_dual (u : E) :
+    ∃ α : E, mobiusTwist (primalSheetOf u) = covectorSheetOf α :=
+  ⟨-u, mobiusTwist_primal_to_dual u⟩
+
+/-- **$M(T^-) \subseteq T^+$**: the twist sends every covector-sheet vector into the primal
+sheet. Together with `mobiusTwist_involutive` this is an exchange of the two eigenspaces.
+
+Note that the two sheets are eigenspaces of `polarizationK` inside `ProofSpace E`; they are
+*not* a partition of it, since a general `(u, α)` lies in neither when both parts are nonzero. -/
+theorem mobiusTwist_dual_mem_primal (α : E) :
+    ∃ u : E, mobiusTwist (covectorSheetOf α) = primalSheetOf u :=
+  ⟨-α, mobiusTwist_dual_to_primal α⟩
+
+/-- **The twist maps the `+1` eigenspace into the `-1` eigenspace.** A primal-sheet vector is
+fixed by `polarizationK`; its image under the twist is *anti*-fixed. This is the precise sense in
+which $M$ exchanges the two sheets: not by negating a `+1` vector, but by landing in the other
+eigenspace. Together with `mobiusTwist_dual_to_primal` and `mobiusTwist_involutive` this makes
+the exchange explicit in both directions. -/
+theorem mobiusTwist_primal_to_antifixed (u : E) :
+    polarizationK (mobiusTwist (primalSheetOf u)) = -mobiusTwist (primalSheetOf u) := by
+  rw [mobiusTwist_primal_to_dual]
+  ext <;> simp [covectorSheetOf]
+
+end SheetExchange
 end
 
 end InfoGeometry.Epistemology.WheelerDelayedChoiceModularLaw

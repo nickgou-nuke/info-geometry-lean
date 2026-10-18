@@ -148,7 +148,7 @@ def collect_gaps(root: Path) -> list[Gap]:
     gaps: list[Gap] = []
     files = sorted(root.rglob("*.lean"))
     for f in files:
-        if not f.exists():
+        if not f.is_file():
             continue
         rel = f.relative_to(root.parent)
         lines = [

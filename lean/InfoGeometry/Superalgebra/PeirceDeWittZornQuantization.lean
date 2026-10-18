@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Algebra.ZornVectorMatrix
 import Mathlib.Tactic.Ring
 
@@ -39,7 +44,7 @@ structure ColorVec3 (R : Type*) where
   c₁ : R
   c₂ : R
   c₃ : R
-  deriving DecidableEq, Repr
+  deriving DecidableEq, Repr, Inhabited
 
 namespace ColorVec3
 
@@ -68,8 +73,6 @@ def sub (u v : ColorVec3 R) : ColorVec3 R :=
 @[simp]
 def smul (k : R) (u : ColorVec3 R) : ColorVec3 R :=
   ⟨k * u.c₁, k * u.c₂, k * u.c₃⟩
-
-instance : Inhabited (ColorVec3 R) := ⟨zero⟩
 
 private def nsmulVec : ℕ → ColorVec3 R → ColorVec3 R
   | 0, _ => zero
@@ -152,14 +155,14 @@ def e_g : ColorVec3 R := ⟨0, 1, 0⟩
 /-- Blue basis color vector `e_b = (0, 0, 1)`. -/
 def e_b : ColorVec3 R := ⟨0, 0, 1⟩
 
-/-- Non-degeneracy witness: the red basis color vector over `ℤ` is non-zero. -/
+/-- Non-degeneracy over `ℤ`: the red basis color vector is non-zero. -/
 theorem e_r_ne_zero : (e_r : ColorVec3 ℤ) ≠ zero := by
   intro h
   have h1 : (e_r : ColorVec3 ℤ).c₁ = (zero : ColorVec3 ℤ).c₁ := congrArg ColorVec3.c₁ h
   revert h1
   decide
 
-/-- Non-degeneracy witness: distinct color basis vectors over `ℤ` are distinct. -/
+/-- Non-degeneracy over `ℤ`: distinct color basis vectors are distinct. -/
 theorem e_r_ne_e_g : (e_r : ColorVec3 ℤ) ≠ e_g := by
   intro h
   have h1 : (e_r : ColorVec3 ℤ).c₁ = (e_g : ColorVec3 ℤ).c₁ := congrArg ColorVec3.c₁ h
@@ -273,7 +276,7 @@ structure ZornAlgebra (R : Type*) where
   u : ColorVec3 R
   v : ColorVec3 R
   b : R
-  deriving DecidableEq, Repr
+  deriving DecidableEq, Repr, Inhabited
 
 namespace ZornAlgebra
 
@@ -304,7 +307,6 @@ def smul (k : R) (X : ZornAlgebra R) : ZornAlgebra R :=
   ⟨k * X.a, ColorVec3.smul k X.u, ColorVec3.smul k X.v, k * X.b⟩
 
 instance : One (ZornAlgebra R) := ⟨one⟩
-instance : Inhabited (ZornAlgebra R) := ⟨zero⟩
 
 private def nsmulZornAlg : ℕ → ZornAlgebra R → ZornAlgebra R
   | 0, _ => zero
@@ -856,9 +858,9 @@ theorem rgb_baryon_singlet_unit :
   ext <;> dsimp [smul, one, ColorVec3.baryonDet, ColorVec3.dot, ColorVec3.cross,
     ColorVec3.e_r, ColorVec3.e_g, ColorVec3.e_b, ColorVec3.smul, ColorVec3.zero] <;> ring
 
-/-- **Theorem 4a (Non-Commutative Witness over `ℤ`)**:
-    The Zorn algebra is non-commutative: `[e₁, U(e_r)] = U(e_r) ≠ 0`. -/
-theorem zorn_noncommutative_witness :
+/-- Non-commutativity of the Zorn algebra over `ℤ`:
+    `[e₁, U(e_r)] = U(e_r) ≠ 0`. -/
+theorem zorn_noncommutative :
     commutator (e₁ : ZornAlgebra ℤ) (quarkU ColorVec3.e_r) ≠ zero := by
   intro h
   have h1 : (commutator (e₁ : ZornAlgebra ℤ) (quarkU ColorVec3.e_r)).u.c₁ =
@@ -867,10 +869,9 @@ theorem zorn_noncommutative_witness :
   revert h1
   decide
 
-/-- **Theorem 4b (Non-Associative Octonionic Witness over `ℤ`)**:
-    The Zorn split-octonion algebra is genuinely non-associative:
+/-- Non-associativity of the Zorn split-octonion algebra over `ℤ`:
     `(U(e_r) · U(e_g)) · V(e_r) - U(e_r) · (U(e_g) · V(e_r)) ≠ 0`. -/
-theorem zorn_nonassociative_witness :
+theorem zorn_nonassociative :
     associator
       (quarkU (ColorVec3.e_r : ColorVec3 ℤ))
       (quarkU ColorVec3.e_g)

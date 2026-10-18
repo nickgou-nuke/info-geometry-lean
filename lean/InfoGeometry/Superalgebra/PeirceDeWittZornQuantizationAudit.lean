@@ -1,4 +1,44 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Superalgebra.PeirceDeWittZornQuantization
+
+/-!
+# Concrete Integer Instantiation & Axiom Audit for Section 115: Peirce–DeWitt Zorn Quantization
+Target: `InfoGeometry/Superalgebra/PeirceDeWittZornQuantizationAudit.lean`
+
+Verifies over `ℤ` (`decide`) the Penrose chiral zig-zag mass norm, CAR anticommutation,
+diquark cross-product fusion `3 ⊗ 3 → 3̄`, baryon singlet closure `3 ⊗ 3 ⊗ 3 → 1`,
+and Hurwitz–Zorn quadratic norm composition.
+-/
+
+namespace InfoGeometry.Superalgebra.PeirceDeWittZornQuantizationAudit
+
+open InfoGeometry.Superalgebra.PeirceDeWittZornQuantization
+open InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ColorVec3
+open InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra
+
+/-- Concrete verification over `ℤ` (`decide`) of Penrose zig-zag mass generation,
+CAR anticommutation `{U(u), V(v)} = (u · v) I`, diquark fusion `U(e_r) · U(e_g) = V(e_b)`,
+and RGB baryon singlet closure `{U(e_b), U(e_r) · U(e_g)} = I`. -/
+theorem sample_peirce_dewitt_zorn_quantization_int :
+    ZornAlgebra.norm (ZornAlgebra.add (ZornAlgebra.smul (3 : ℤ) ZornAlgebra.e₁)
+      (ZornAlgebra.smul (5 : ℤ) ZornAlgebra.e₂)) = 15 ∧
+    ZornAlgebra.anticommutator
+      (ZornAlgebra.quarkU (⟨2, 3, 4⟩ : ColorVec3 ℤ))
+      (ZornAlgebra.antiquarkV (⟨5, 6, 7⟩ : ColorVec3 ℤ)) =
+      ZornAlgebra.smul (56 : ℤ) ZornAlgebra.one ∧
+    ZornAlgebra.mul (ZornAlgebra.quarkU (ColorVec3.e_r : ColorVec3 ℤ))
+      (ZornAlgebra.quarkU (ColorVec3.e_g : ColorVec3 ℤ)) =
+      ZornAlgebra.antiquarkV (ColorVec3.e_b : ColorVec3 ℤ) ∧
+    ZornAlgebra.anticommutator
+      (ZornAlgebra.quarkU (ColorVec3.e_b : ColorVec3 ℤ))
+      (ZornAlgebra.mul (ZornAlgebra.quarkU (ColorVec3.e_r : ColorVec3 ℤ))
+        (ZornAlgebra.quarkU (ColorVec3.e_g : ColorVec3 ℤ))) =
+      (ZornAlgebra.one : ZornAlgebra ℤ) := by
+  decide
 
 #print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ColorVec3.add_assoc_vec
 #print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ColorVec3.zero_add_vec
@@ -68,8 +108,8 @@ import InfoGeometry.Superalgebra.PeirceDeWittZornQuantization
 #print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.supercolor_antidiquark_fusion
 #print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.supercolor_baryon_singlet_closure
 #print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.rgb_baryon_singlet_unit
-#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.zorn_noncommutative_witness
-#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.zorn_nonassociative_witness
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.zorn_noncommutative
+#print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.zorn_nonassociative
 #print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.e₁_idempotent
 #print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.e₂_idempotent
 #print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.e₁_mul_e₂_zero
@@ -84,4 +124,6 @@ import InfoGeometry.Superalgebra.PeirceDeWittZornQuantization
 #print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.antiquarkV_mul_e₁
 #print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.e₁_mul_antiquarkV
 #print axioms InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.antiquarkV_mul_e₂
+#print axioms sample_peirce_dewitt_zorn_quantization_int
 
+end InfoGeometry.Superalgebra.PeirceDeWittZornQuantizationAudit

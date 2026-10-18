@@ -25,8 +25,10 @@ noncomputable section
 namespace InfoGeometry.Synthesis.SedenionG2EndomorphismLieRepresentation
 
 open InfoGeometry.Canonical.SplitOctonionParaKahlerNullCone
+open InfoGeometry.Cl44IdempotentIdeal
 open InfoGeometry.Lie.CanonicalZornDerivationDimension
 open InfoGeometry.Synthesis.Cl44LeftIdealSplitSedenionSynthesis
+open InfoGeometry.Synthesis.Cl44MinimalIdealSplitSedenionEquivBridge
 open InfoGeometry.Synthesis.Cl44MinimalIdealInducedSedenionProductBridge
 open InfoGeometry.Synthesis.G2SplitSedenionDerivationBridge
 open InfoGeometry.Synthesis.SedenionG2ParameterBracket
@@ -38,6 +40,18 @@ local instance : LieRing (Module.End ℝ (SplitSedenion ℝ)) :=
   LieRing.ofAssociativeRing
 
 local instance : LieAlgebra ℝ (Module.End ℝ (SplitSedenion ℝ)) :=
+  LieAlgebra.ofAssociativeAlgebra
+
+local instance : LieRing (Module.End ℝ (Fin 16 → ℝ)) :=
+  LieRing.ofAssociativeRing
+
+local instance : LieAlgebra ℝ (Module.End ℝ (Fin 16 → ℝ)) :=
+  LieAlgebra.ofAssociativeAlgebra
+
+local instance : LieRing (Module.End ℝ (LeftIdeal primIdem)) :=
+  LieRing.ofAssociativeRing
+
+local instance : LieAlgebra ℝ (Module.End ℝ (LeftIdeal primIdem)) :=
   LieAlgebra.ofAssociativeAlgebra
 
 private theorem sedenionSub_eq_sub (x y : SplitSedenion ℝ) :
@@ -84,6 +98,13 @@ noncomputable def sedenionG2DerivationLieHom :
     rw [← hpar, sedenionG2EndomorphismFamily_parameterBracket,
       LieRing.of_associative_ring_bracket]
 
+/-- Evaluation of the native Lie representation is the parameterized
+split-sedenion derivation selected by `parameterLinearEquiv`. -/
+@[simp] theorem sedenionG2DerivationLieHom_apply
+    (D : VDer) (X : SplitSedenion ℝ) :
+    sedenionG2DerivationLieHom D X =
+      sedenionG2Derivation (parameterLinearEquiv.symm D) X := rfl
+
 /-- The Lie representation is faithful on the native fourteen-dimensional derivation algebra. -/
 theorem sedenionG2DerivationLieHom_injective :
     Function.Injective sedenionG2DerivationLieHom := by
@@ -115,7 +136,8 @@ theorem sedenionG2EndomorphismFamily_range_eq_sedenionDerivations :
         IsSedenionDerivation
           (T : SplitSedenion ℝ → SplitSedenion ℝ)} := by
   ext T
-  rw [LinearMap.mem_range]
+  change (∃ p, sedenionG2EndomorphismFamily p = T) ↔
+    IsSedenionDerivation (T : SplitSedenion ℝ → SplitSedenion ℝ)
   constructor
   · rintro ⟨p, hp⟩
     have hpFun : sedenionG2Derivation p =
@@ -137,5 +159,102 @@ theorem sedenionG2EndomorphismFamily_range_eq_sedenionDerivations :
     change T X = sedenionG2Derivation p X at hX
     change sedenionG2Derivation p X = T X
     exact hX.symm
+
+/-- The carrier set of the native-derivation LieHom range is exactly the
+real-linear endomorphisms whose underlying maps satisfy the concrete
+split-sedenion Leibniz predicate. This is the family range theorem transported
+through `parameterLinearEquiv`; it adds no further classification claim. -/
+theorem sedenionG2DerivationLieHom_range_eq_sedenionDerivations :
+    (sedenionG2DerivationLieHom.range : Set (Module.End ℝ (SplitSedenion ℝ))) =
+      {T : Module.End ℝ (SplitSedenion ℝ) |
+        IsSedenionDerivation (T : SplitSedenion ℝ → SplitSedenion ℝ)} := by
+  ext T
+  change (∃ D, sedenionG2DerivationLieHom D = T) ↔
+    IsSedenionDerivation (T : SplitSedenion ℝ → SplitSedenion ℝ)
+  have hFamilyRange :
+      (T ∈ LinearMap.range sedenionG2EndomorphismFamily) ↔
+        IsSedenionDerivation (T : SplitSedenion ℝ → SplitSedenion ℝ) :=
+    Iff.of_eq <| congrArg
+      (fun S : Set (Module.End ℝ (SplitSedenion ℝ)) => T ∈ S)
+      sedenionG2EndomorphismFamily_range_eq_sedenionDerivations
+  constructor
+  · rintro ⟨D, hD⟩
+    have hFamily :
+        sedenionG2EndomorphismFamily (parameterLinearEquiv.symm D) = T := by
+      change sedenionG2DerivationLieHom D = T at hD
+      exact hD
+    have hMem : T ∈ LinearMap.range sedenionG2EndomorphismFamily :=
+      ⟨parameterLinearEquiv.symm D, hFamily⟩
+    exact hFamilyRange.mp hMem
+  · intro hT
+    have hMem : T ∈ LinearMap.range sedenionG2EndomorphismFamily :=
+      hFamilyRange.mpr hT
+    obtain ⟨p, hp⟩ := LinearMap.mem_range.mp hMem
+    refine ⟨parameterLinearEquiv p, ?_⟩
+    change sedenionG2EndomorphismFamily
+      (parameterLinearEquiv.symm (parameterLinearEquiv p)) = T
+    rw [parameterLinearEquiv.symm_apply_apply]
+    exact hp
+
+/-- Transport the native split-sedenion derivation representation to the
+spinor-coordinate carrier. The induced product is the product transported
+from split sedenions, not ordinary matrix multiplication. -/
+noncomputable def spinor16G2DerivationLieHom :
+    VDer →ₗ⁅ℝ⁆ Module.End ℝ (Fin 16 → ℝ) :=
+  (spinor16SplitSedenionLinearEquiv.symm.lieConj).toLieHom.comp
+    sedenionG2DerivationLieHom
+
+/-- Transport the native split-sedenion derivation representation to the
+minimal left ideal carrier, using the product transported from split
+sedenions. -/
+noncomputable def cl44LeftIdealG2DerivationLieHom :
+    VDer →ₗ⁅ℝ⁆ Module.End ℝ (LeftIdeal primIdem) :=
+  (leftIdealEquiv.symm.lieConj).toLieHom.comp
+    spinor16G2DerivationLieHom
+
+/-- The transported spinor Lie action agrees pointwise with the existing
+parameter action under the native derivation parameter equivalence. -/
+@[simp] theorem spinor16G2DerivationLieHom_apply
+    (D : VDer) (v : Fin 16 → ℝ) :
+    spinor16G2DerivationLieHom D v =
+      spinor16G2Derivation (parameterLinearEquiv.symm D) v := by
+  apply spinor16SplitSedenionEquiv.injective
+  change spinor16SplitSedenionEquiv
+      (spinor16SplitSedenionLinearEquiv.symm.conj
+        (sedenionG2DerivationLieHom D) v) =
+    spinor16SplitSedenionEquiv
+      (spinor16SplitSedenionEquiv.symm
+        (sedenionG2Derivation (parameterLinearEquiv.symm D)
+          (spinor16SplitSedenionEquiv v)))
+  rw [LinearEquiv.conj_apply_apply]
+  simp [spinor16SplitSedenionLinearEquiv,
+    spinor16SplitSedenionEquiv, sedenionG2EndomorphismFamily,
+    sedenionG2DerivationLinear]
+
+/-- The transported left-ideal Lie action agrees pointwise with the existing
+parameter action under the native derivation parameter equivalence. -/
+@[simp] theorem cl44LeftIdealG2DerivationLieHom_apply
+    (D : VDer) (A : LeftIdeal primIdem) :
+    cl44LeftIdealG2DerivationLieHom D A =
+      cl44LeftIdealG2Derivation (parameterLinearEquiv.symm D) A := by
+  apply leftIdealEquiv.injective
+  change leftIdealEquiv
+      (leftIdealEquiv.symm.conj (spinor16G2DerivationLieHom D) A) =
+    leftIdealEquiv (cl44LeftIdealG2Derivation (parameterLinearEquiv.symm D) A)
+  rw [LinearEquiv.conj_apply_apply]
+  rw [spinor16G2DerivationLieHom_apply]
+  exact leftIdealEquiv_intertwines_g2Derivation
+    (parameterLinearEquiv.symm D) A
+
+/-- The transported spinor and left-ideal actions intertwine through the
+existing carrier equivalence. -/
+theorem leftIdealEquiv_intertwines_G2LieActions
+    (D : VDer) (A : LeftIdeal primIdem) :
+    leftIdealEquiv (cl44LeftIdealG2DerivationLieHom D A) =
+      spinor16G2DerivationLieHom D (leftIdealEquiv A) := by
+  rw [cl44LeftIdealG2DerivationLieHom_apply,
+    spinor16G2DerivationLieHom_apply]
+  exact leftIdealEquiv_intertwines_g2Derivation
+    (parameterLinearEquiv.symm D) A
 
 end InfoGeometry.Synthesis.SedenionG2EndomorphismLieRepresentation

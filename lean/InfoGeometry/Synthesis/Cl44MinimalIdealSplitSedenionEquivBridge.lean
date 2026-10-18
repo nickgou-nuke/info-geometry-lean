@@ -1,0 +1,249 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Synthesis.Cl44PrimitiveIdempotentIdeal
+import InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge
+import InfoGeometry.Canonical.SplitOctonionClifford33Soldering
+import InfoGeometry.Synthesis.Cl44LeftIdealSplitSedenionSynthesis
+
+/-!
+# $\mathrm{Cl}(4,4)$ Minimal Left Ideal to Split-Sedenion Carrier Equivalence Bridge
+
+This module constructs the explicit 16-dimensional carrier equivalence between the minimal left
+ideal $\mathcal{S}_L = \mathrm{Cl}(4,4) \cdot f$ of `InfoGeometry.Synthesis.Cl44PrimitiveIdempotentIdeal`
+and the Cayley–Dickson/Zorn split-sedenion pair carrier `SplitSedenion ℝ = ZornSplitOctonion ℝ × ZornSplitOctonion ℝ`
+of `InfoGeometry.Synthesis.Cl44LeftIdealSplitSedenionSynthesis`, aligning the even/odd occupation-parity
+chiral semi-spinor subspaces `SemiSpinorPlus` and `SemiSpinorMinus` with the first and second
+`ZornSplitOctonion ℝ` components.
+
+1. **Section 1 — Explicit Even/Odd Occupation-Parity Enumeration of `Fin 16`**:
+   - Defines `evenStateIndex : Fin 8 → Fin 16` (`![0, 3, 5, 6, 9, 10, 12, 15]`),
+     `oddStateIndex : Fin 8 → Fin 16` (`![1, 2, 4, 7, 8, 11, 13, 14]`), and the chiral-half
+     index projection `fin16ToChiralHalfIndex : Fin 16 → Fin 8`.
+   - Certifies `stateParity_evenStateIndex`, `stateParity_oddStateIndex`, and the mutual inverse
+     identities on the even and odd occupation-parity sectors.
+
+2. **Section 2 — Explicit 16D Bijection `(Fin 16 → ℝ) ≃ SplitSedenion ℝ` Aligning `SemiSpinorPlus` and `SemiSpinorMinus`**:
+   - Defines `spinor16ToSplitSedenion`, `splitSedenionToSpinor16`, and `spinor16SplitSedenionEquiv`.
+   - Proves additivity `spinor16ToSplitSedenion_add` and exact chiral semi-spinor sector alignment
+     `mem_semiSpinorPlus_iff_snd_zero` and `mem_semiSpinorMinus_iff_fst_zero`.
+
+3. **Section 3 — Composite Equivalence `LeftIdeal primIdem ≃ SplitSedenion ℝ`**:
+   - Defines `cl44MinimalLeftIdealSplitSedenionEquiv` composing `leftIdealEquiv` with
+     `spinor16SplitSedenionEquiv`, and proves `cl44MinimalLeftIdealSplitSedenionEquiv_add`.
+-/
+
+set_option autoImplicit false
+noncomputable section
+
+namespace InfoGeometry.Synthesis.Cl44MinimalIdealSplitSedenionEquivBridge
+
+open InfoGeometry.Cl44IdempotentIdeal
+open InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge
+open InfoGeometry.Canonical.SplitOctonionParaKahlerNullCone
+open InfoGeometry.Canonical.SplitOctonionClifford33Soldering
+open InfoGeometry.Synthesis.Cl44LeftIdealSplitSedenionSynthesis
+
+/-!
+## Section 1: Explicit Even/Odd Occupation-Parity Enumeration of `Fin 16`
+-/
+
+/-- Enumeration of the 8 even-occupation-parity Fock basis indices in `Fin 16`. -/
+def evenStateIndex : Fin 8 → Fin 16 :=
+  ![0, 3, 5, 6, 9, 10, 12, 15]
+
+/-- Enumeration of the 8 odd-occupation-parity Fock basis indices in `Fin 16`. -/
+def oddStateIndex : Fin 8 → Fin 16 :=
+  ![1, 2, 4, 7, 8, 11, 13, 14]
+
+/-- Every index in `evenStateIndex` has even fermionic occupation parity (`stateParity = 0`). -/
+theorem stateParity_evenStateIndex (k : Fin 8) :
+    stateParity (evenStateIndex k) = 0 := by
+  revert k
+  decide
+
+/-- Every index in `oddStateIndex` has odd fermionic occupation parity (`stateParity = 1`). -/
+theorem stateParity_oddStateIndex (k : Fin 8) :
+    stateParity (oddStateIndex k) = 1 := by
+  revert k
+  decide
+
+/-- Projection from a 4-mode state index `i : Fin 16` to its chiral-half index `k : Fin 8`. -/
+def fin16ToChiralHalfIndex : Fin 16 → Fin 8 :=
+  ![0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7]
+
+/-- `fin16ToChiralHalfIndex` is a left inverse to `evenStateIndex`. -/
+theorem fin16ToChiralHalfIndex_evenStateIndex (k : Fin 8) :
+    fin16ToChiralHalfIndex (evenStateIndex k) = k := by
+  revert k
+  decide
+
+/-- `fin16ToChiralHalfIndex` is a left inverse to `oddStateIndex`. -/
+theorem fin16ToChiralHalfIndex_oddStateIndex (k : Fin 8) :
+    fin16ToChiralHalfIndex (oddStateIndex k) = k := by
+  revert k
+  decide
+
+/-- On even-occupation-parity indices (`stateParity i = 0`), `evenStateIndex` is a right inverse
+to `fin16ToChiralHalfIndex`. -/
+theorem evenStateIndex_fin16ToChiralHalfIndex (i : Fin 16) (hi : stateParity i = 0) :
+    evenStateIndex (fin16ToChiralHalfIndex i) = i := by
+  revert hi
+  revert i
+  decide
+
+/-- On odd-occupation-parity indices (`stateParity i = 1`), `oddStateIndex` is a right inverse
+to `fin16ToChiralHalfIndex`. -/
+theorem oddStateIndex_fin16ToChiralHalfIndex (i : Fin 16) (hi : stateParity i = 1) :
+    oddStateIndex (fin16ToChiralHalfIndex i) = i := by
+  revert hi
+  revert i
+  decide
+
+/-!
+## Section 2: Explicit 16D Bijection `(Fin 16 → ℝ) ≃ SplitSedenion ℝ` Aligning `SemiSpinorPlus` and `SemiSpinorMinus`
+-/
+
+/-- Maps a 16-component Fock spinor `v : Fin 16 → ℝ` to a split-sedenion pair in `SplitSedenion ℝ`
+by packaging the 8 even-occupation components and 8 odd-occupation components via `fin8ToZorn`. -/
+def spinor16ToSplitSedenion (v : Fin 16 → ℝ) : SplitSedenion ℝ :=
+  (fin8ToZorn (fun k => v (evenStateIndex k)), fin8ToZorn (fun k => v (oddStateIndex k)))
+
+/-- Inverse map reconstructing a 16-component Fock spinor `Fin 16 → ℝ` from a `SplitSedenion ℝ`
+pair along the even/odd occupation-parity decomposition. -/
+def splitSedenionToSpinor16 (X : SplitSedenion ℝ) : Fin 16 → ℝ :=
+  fun i =>
+    if stateParity i = 0 then
+      zornToFin8 X.1 (fin16ToChiralHalfIndex i)
+    else
+      zornToFin8 X.2 (fin16ToChiralHalfIndex i)
+
+/-- `splitSedenionToSpinor16` is a right inverse to `spinor16ToSplitSedenion`. -/
+theorem spinor16ToSplitSedenion_splitSedenionToSpinor16 (X : SplitSedenion ℝ) :
+    spinor16ToSplitSedenion (splitSedenionToSpinor16 X) = X := by
+  have heven : (fun k : Fin 8 => splitSedenionToSpinor16 X (evenStateIndex k)) = zornToFin8 X.1 := by
+    funext k
+    dsimp [splitSedenionToSpinor16]
+    rw [stateParity_evenStateIndex k, if_pos rfl, fin16ToChiralHalfIndex_evenStateIndex k]
+  have hodd : (fun k : Fin 8 => splitSedenionToSpinor16 X (oddStateIndex k)) = zornToFin8 X.2 := by
+    funext k
+    dsimp [splitSedenionToSpinor16]
+    have hp : stateParity (oddStateIndex k) ≠ 0 := by
+      rw [stateParity_oddStateIndex k]
+      decide
+    rw [if_neg hp, fin16ToChiralHalfIndex_oddStateIndex k]
+  apply Prod.ext
+  · dsimp [spinor16ToSplitSedenion]
+    rw [heven, fin8ToZorn_right_inv]
+  · dsimp [spinor16ToSplitSedenion]
+    rw [hodd, fin8ToZorn_right_inv]
+
+/-- `splitSedenionToSpinor16` is a left inverse to `spinor16ToSplitSedenion`. -/
+theorem splitSedenionToSpinor16_spinor16ToSplitSedenion (v : Fin 16 → ℝ) :
+    splitSedenionToSpinor16 (spinor16ToSplitSedenion v) = v := by
+  funext i
+  dsimp [splitSedenionToSpinor16, spinor16ToSplitSedenion]
+  rcases stateParity_eq_zero_or_one i with hp0 | hp1
+  · rw [if_pos hp0]
+    have hl := congrFun (fin8ToZorn_left_inv (fun k : Fin 8 => v (evenStateIndex k)))
+      (fin16ToChiralHalfIndex i)
+    rw [hl, evenStateIndex_fin16ToChiralHalfIndex i hp0]
+  · have hp_ne : stateParity i ≠ 0 := by
+      rw [hp1]
+      decide
+    rw [if_neg hp_ne]
+    have hl := congrFun (fin8ToZorn_left_inv (fun k : Fin 8 => v (oddStateIndex k)))
+      (fin16ToChiralHalfIndex i)
+    rw [hl, oddStateIndex_fin16ToChiralHalfIndex i hp1]
+
+/-- Canonical 16-dimensional equivalence `(Fin 16 → ℝ) ≃ SplitSedenion ℝ` identifying the
+16-component Fock spinor space with the split-sedenion pair carrier. -/
+def spinor16SplitSedenionEquiv : (Fin 16 → ℝ) ≃ SplitSedenion ℝ where
+  toFun := spinor16ToSplitSedenion
+  invFun := splitSedenionToSpinor16
+  left_inv := splitSedenionToSpinor16_spinor16ToSplitSedenion
+  right_inv := spinor16ToSplitSedenion_splitSedenionToSpinor16
+
+/-- `spinor16ToSplitSedenion` preserves componentwise addition (`sedenionAdd`). -/
+theorem spinor16ToSplitSedenion_add (u v : Fin 16 → ℝ) :
+    spinor16ToSplitSedenion (u + v) =
+      sedenionAdd (spinor16ToSplitSedenion u) (spinor16ToSplitSedenion v) := by
+  apply Prod.ext
+  · exact fin8ToZorn_add (fun k => u (evenStateIndex k)) (fun k => v (evenStateIndex k))
+  · exact fin8ToZorn_add (fun k => u (oddStateIndex k)) (fun k => v (oddStateIndex k))
+
+/-- `zornToFin8` maps `zornZero` to `0` at every coordinate `k : Fin 8`. -/
+theorem zornToFin8_zornZero (k : Fin 8) :
+    zornToFin8 (zornZero : ZornSplitOctonion ℝ) k = 0 := by
+  fin_cases k <;> simp [zornToFin8, zornZero]
+
+/-- **Positive Chiral Semi-Spinor Alignment (`S⁺ ↔ X.2 = 0`)**:
+A 16-component spinor `v : Fin 16 → ℝ` lies in `SemiSpinorPlus` if and only if the second
+(odd-parity) split-octonion component of `spinor16ToSplitSedenion v` vanishes. -/
+theorem mem_semiSpinorPlus_iff_snd_zero (v : Fin 16 → ℝ) :
+    v ∈ SemiSpinorPlus ↔ (spinor16ToSplitSedenion v).2 = zornZero := by
+  constructor
+  · intro hv
+    have hodd : ∀ k : Fin 8, v (oddStateIndex k) = 0 :=
+      fun k => hv (oddStateIndex k) (stateParity_oddStateIndex k)
+    ext j
+    · exact hodd 0
+    · fin_cases j <;> simp [spinor16ToSplitSedenion, fin8ToZorn, zornZero, hodd]
+    · fin_cases j <;> simp [spinor16ToSplitSedenion, fin8ToZorn, zornZero, hodd]
+    · exact hodd 7
+  · intro hz i hi
+    have hidx := oddStateIndex_fin16ToChiralHalfIndex i hi
+    have hl := congrFun (fin8ToZorn_left_inv (fun k : Fin 8 => v (oddStateIndex k)))
+      (fin16ToChiralHalfIndex i)
+    rw [← hidx, ← hl]
+    change zornToFin8 (spinor16ToSplitSedenion v).2 (fin16ToChiralHalfIndex i) = 0
+    rw [hz]
+    exact zornToFin8_zornZero (fin16ToChiralHalfIndex i)
+
+/-- **Negative Chiral Semi-Spinor Alignment (`S⁻ ↔ X.1 = 0`)**:
+A 16-component spinor `v : Fin 16 → ℝ` lies in `SemiSpinorMinus` if and only if the first
+(even-parity) split-octonion component of `spinor16ToSplitSedenion v` vanishes. -/
+theorem mem_semiSpinorMinus_iff_fst_zero (v : Fin 16 → ℝ) :
+    v ∈ SemiSpinorMinus ↔ (spinor16ToSplitSedenion v).1 = zornZero := by
+  constructor
+  · intro hv
+    have heven : ∀ k : Fin 8, v (evenStateIndex k) = 0 :=
+      fun k => hv (evenStateIndex k) (stateParity_evenStateIndex k)
+    ext j
+    · exact heven 0
+    · fin_cases j <;> simp [spinor16ToSplitSedenion, fin8ToZorn, zornZero, heven]
+    · fin_cases j <;> simp [spinor16ToSplitSedenion, fin8ToZorn, zornZero, heven]
+    · exact heven 7
+  · intro hz i hi
+    have hidx := evenStateIndex_fin16ToChiralHalfIndex i hi
+    have hl := congrFun (fin8ToZorn_left_inv (fun k : Fin 8 => v (evenStateIndex k)))
+      (fin16ToChiralHalfIndex i)
+    rw [← hidx, ← hl]
+    change zornToFin8 (spinor16ToSplitSedenion v).1 (fin16ToChiralHalfIndex i) = 0
+    rw [hz]
+    exact zornToFin8_zornZero (fin16ToChiralHalfIndex i)
+
+/-!
+## Section 3: Composite Equivalence `LeftIdeal primIdem ≃ SplitSedenion ℝ`
+-/
+
+/-- Composite 16-dimensional carrier equivalence between the minimal left ideal
+`LeftIdeal primIdem` of $\mathrm{Cl}(4,4)$ and the split-sedenion pair carrier `SplitSedenion ℝ`. -/
+def cl44MinimalLeftIdealSplitSedenionEquiv : LeftIdeal primIdem ≃ SplitSedenion ℝ :=
+  leftIdealEquiv.toEquiv.trans spinor16SplitSedenionEquiv
+
+/-- `cl44MinimalLeftIdealSplitSedenionEquiv` transports submodule addition on `LeftIdeal primIdem`
+to `sedenionAdd` on `SplitSedenion ℝ`. -/
+theorem cl44MinimalLeftIdealSplitSedenionEquiv_add (A B : LeftIdeal primIdem) :
+    cl44MinimalLeftIdealSplitSedenionEquiv (A + B) =
+      sedenionAdd (cl44MinimalLeftIdealSplitSedenionEquiv A)
+        (cl44MinimalLeftIdealSplitSedenionEquiv B) := by
+  change spinor16ToSplitSedenion (leftIdealEquiv (A + B)) =
+    sedenionAdd (spinor16ToSplitSedenion (leftIdealEquiv A))
+      (spinor16ToSplitSedenion (leftIdealEquiv B))
+  rw [leftIdealEquiv.map_add A B]
+  exact spinor16ToSplitSedenion_add (leftIdealEquiv A) (leftIdealEquiv B)
+
+end InfoGeometry.Synthesis.Cl44MinimalIdealSplitSedenionEquivBridge

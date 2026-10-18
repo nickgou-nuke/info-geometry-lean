@@ -1,0 +1,32 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.Lie.CanonicalZornPeirceSL3Bridge
+
+#print axioms InfoGeometry.Lie.CanonicalZornPeirceSL3Bridge.Matrix3
+#print axioms InfoGeometry.Lie.CanonicalZornPeirceSL3Bridge.SL3
+#print axioms InfoGeometry.Lie.CanonicalZornPeirceSL3Bridge.parameterMatrix
+#print axioms InfoGeometry.Lie.CanonicalZornPeirceSL3Bridge.parameterMatrix_trace_zero
+#print axioms InfoGeometry.Lie.CanonicalZornPeirceSL3Bridge.stabilizerMatrix
+#print axioms InfoGeometry.Lie.CanonicalZornPeirceSL3Bridge.stabilizerMatrixSL3
+#print axioms InfoGeometry.Lie.CanonicalZornPeirceSL3Bridge.sl3Parameters
+#print axioms InfoGeometry.Lie.CanonicalZornPeirceSL3Bridge.parameterMatrix_sl3Parameters
+#print axioms InfoGeometry.Lie.CanonicalZornPeirceSL3Bridge.sl3StabilizerCandidate
+#print axioms InfoGeometry.Lie.CanonicalZornPeirceSL3Bridge.sl3StabilizerCandidate_fixes_plus
+#print axioms InfoGeometry.Lie.CanonicalZornPeirceSL3Bridge.sl3StabilizerCandidate_fixes_minus
+#print axioms InfoGeometry.Lie.CanonicalZornPeirceSL3Bridge.sl3ToPeirceStabilizer
+#print axioms InfoGeometry.Lie.CanonicalZornPeirceSL3Bridge.stabilizerMatrixSL3_value
+#print axioms InfoGeometry.Lie.CanonicalZornPeirceSL3Bridge.stabilizerMatrixSL3_sl3ToPeirceStabilizer
+#print axioms InfoGeometry.Lie.CanonicalZornPeirceSL3Bridge.sl3Parameters_add
+#print axioms InfoGeometry.Lie.CanonicalZornPeirceSL3Bridge.sl3Parameters_smul
+#print axioms InfoGeometry.Lie.CanonicalZornPeirceSL3Bridge.sl3ToPeirceStabilizer_add
+#print axioms InfoGeometry.Lie.CanonicalZornPeirceSL3Bridge.sl3ToPeirceStabilizer_smul
+#print axioms InfoGeometry.Lie.CanonicalZornPeirceSL3Bridge.sl3Parameters_parameterAction
+#print axioms InfoGeometry.Lie.CanonicalZornPeirceSL3Bridge.sl3ToPeirceStabilizer_restrictOffDiagonal_apply
+#print axioms InfoGeometry.Lie.CanonicalZornPeirceSL3Bridge.sl3ToPeirceStabilizer_injective
+#print axioms InfoGeometry.Lie.CanonicalZornPeirceSL3Bridge.sl3ToPeirceStabilizer_stabilizerMatrixSL3
+#print axioms InfoGeometry.Lie.CanonicalZornPeirceSL3Bridge.peirceStabilizerEquivSL3
+#print axioms InfoGeometry.Lie.CanonicalZornPeirceSL3Bridge.stabilizerMatrixSL3_lie

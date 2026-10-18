@@ -10,10 +10,10 @@ import InfoGeometry.Physics.SplitG2SL3Concrete
 /-!
 # The real `SL₃` readout of the canonical Peirce stabilizer
 
-This module contains the coordinate-level part of the stabilizer bridge.  The
-matrix readout is trace-zero by construction.  The remaining theorem that the
-readout is a Lie equivalence with the full Peirce stabilizer is intentionally
-separate from this finite coordinate calibration.
+This module proves a coordinate equivalence between the native Peirce
+stabilizer and trace-zero real `3 × 3` matrices, together with a separate
+theorem that the readout preserves brackets against the explicit matrix
+commutator. The matrix carrier is not bundled here as a Lie algebra.
 -/
 
 noncomputable section
@@ -231,6 +231,138 @@ theorem sl3ToPeirceStabilizer_injective :
   rw [stabilizerMatrixSL3_sl3ToPeirceStabilizer,
     stabilizerMatrixSL3_sl3ToPeirceStabilizer] at hread
   exact hread
+
+/-- A Peirce-stabilizing derivation is recovered from its trace-zero matrix
+readout. This is the converse coordinate statement to
+`stabilizerMatrixSL3_sl3ToPeirceStabilizer`. -/
+theorem sl3ToPeirceStabilizer_stabilizerMatrixSL3
+    (D : peirceStabilizer) :
+    sl3ToPeirceStabilizer (stabilizerMatrixSL3 D) = D := by
+  apply Subtype.ext
+  let p := derivationParameters (canonicalToVectorDerivation D.1)
+  have hpAction : parameterAction p E11 = 0 := by
+    change parameterDerivation p E11 = 0
+    have hparam :
+        parameterDerivation (derivationParameters
+          (canonicalToVectorDerivation D.1)) =
+          canonicalToVectorDerivation D.1 :=
+      parameterLinearEquiv.right_inv _
+    change parameterDerivation
+      (derivationParameters (canonicalToVectorDerivation D.1)) E11 = 0
+    rw [hparam]
+    have hplus := D.2.1
+    have hE : canonicalVectorEquiv peircePlus = E11 := by
+      rfl
+    have hzero : canonicalToVectorDerivation D.1 E11 = 0 := by
+      rw [← hE]
+      exact congrArg canonicalVectorEquiv hplus
+    exact hzero
+  have hp0 : p 0 = 0 := by
+    have h := congrArg (fun Z : InfoGeometry.Algebra.ZornVectorMatrix ℝ => Z.w 0) hpAction
+    simpa [parameterAction, E11] using h
+  have hp3 : p 3 = 0 := by
+    have h := congrArg (fun Z : InfoGeometry.Algebra.ZornVectorMatrix ℝ => Z.w 1) hpAction
+    simpa [parameterAction, E11] using h
+  have hp4 : p 4 = 0 := by
+    have h := congrArg (fun Z : InfoGeometry.Algebra.ZornVectorMatrix ℝ => Z.v 2) hpAction
+    simpa [parameterAction, E11] using h
+  have hp8 : p 8 = 0 := by
+    have h := congrArg (fun Z : InfoGeometry.Algebra.ZornVectorMatrix ℝ => Z.w 2) hpAction
+    simpa [parameterAction, E11] using h
+  have hp9 : p 9 = 0 := by
+    have h := congrArg (fun Z : InfoGeometry.Algebra.ZornVectorMatrix ℝ => Z.v 1) hpAction
+    simpa [parameterAction, E11] using h
+  have hp10 : p 10 = 0 := by
+    have h := congrArg (fun Z : InfoGeometry.Algebra.ZornVectorMatrix ℝ => Z.v 0) hpAction
+    simpa [parameterAction, E11] using h
+  have hpRead : sl3Parameters (stabilizerMatrixSL3 D) = p := by
+    funext i
+    fin_cases i <;>
+      simp [sl3Parameters, stabilizerMatrixSL3, stabilizerMatrix,
+        parameterMatrix, p, hp0, hp3, hp4, hp8, hp9, hp10]
+  change canonicalParameterLinearEquiv
+      (sl3Parameters (stabilizerMatrixSL3 D)) = D.1
+  rw [hpRead]
+  exact canonicalParameterLinearEquiv.right_inv D.1
+
+/-- The native Peirce stabilizer and the trace-zero matrix carrier are in
+bijective coordinate correspondence. Bracket compatibility is certified
+separately by `stabilizerMatrixSL3_lie`; this remains an ordinary equivalence
+because `SL3` is not bundled here with a Lie algebra structure. -/
+noncomputable def peirceStabilizerEquivSL3 :
+    peirceStabilizer ≃ SL3 where
+  toFun := stabilizerMatrixSL3
+  invFun := sl3ToPeirceStabilizer
+  left_inv := sl3ToPeirceStabilizer_stabilizerMatrixSL3
+  right_inv := stabilizerMatrixSL3_sl3ToPeirceStabilizer
+
+private abbrev UpperVector (v : Fin 3 → ℝ) :
+    InfoGeometry.Algebra.ZornVectorMatrix ℝ := ⟨0, v, 0, 0⟩
+
+/-- On the upper off-diagonal coordinate, every Peirce-stabilizing derivation
+acts by its trace-zero matrix readout. -/
+private theorem stabilizer_readout_apply_upper (D : peirceStabilizer)
+    (v : Fin 3 → ℝ) :
+    canonicalToVectorDerivation D.1 (UpperVector v) =
+      UpperVector ((stabilizerMatrixSL3 D).1.mulVec v) := by
+  have hsection := congrArg (fun F : peirceStabilizer => F.1)
+    (sl3ToPeirceStabilizer_stabilizerMatrixSL3 D)
+  rw [← hsection]
+  change parameterAction (sl3Parameters (stabilizerMatrixSL3 D))
+    (UpperVector v) = _
+  simpa [UpperVector, Matrix.mulVec, dotProduct] using
+    sl3Parameters_parameterAction (stabilizerMatrixSL3 D) (UpperVector v)
+
+/-- The trace-zero readout preserves the native Lie bracket: the readout of a
+bracket is the matrix commutator. -/
+theorem stabilizerMatrixSL3_lie
+    (D E : peirceStabilizer) :
+    stabilizerMatrixSL3 ⁅D, E⁆ =
+      InfoGeometry.Physics.SplitG2SL3Concrete.commutator
+        (stabilizerMatrixSL3 D) (stabilizerMatrixSL3 E) := by
+  let M := stabilizerMatrixSL3 D
+  let N := stabilizerMatrixSL3 E
+  let B := stabilizerMatrixSL3 ⁅D, E⁆
+  apply Subtype.ext
+  ext i j
+  let v : Fin 3 → ℝ := InfoGeometry.Algebra.ZornVec3.basis j
+  have hmap :
+      canonicalToVectorDerivation (⁅D.1, E.1⁆) =
+        ⁅canonicalToVectorDerivation D.1, canonicalToVectorDerivation E.1⁆ :=
+    vectorCanonicalLieEquiv.symm.map_lie D.1 E.1
+  have hact := congrArg
+    (fun F : CanonicalZornDerivation.VDer => F (UpperVector v)) hmap
+  change canonicalToVectorDerivation (⁅D.1, E.1⁆) (UpperVector v) =
+      InfoGeometry.Algebra.ZornVectorMatrix.Derivation.bracket
+        (canonicalToVectorDerivation D.1)
+        (canonicalToVectorDerivation E.1) (UpperVector v) at hact
+  have hED : canonicalToVectorDerivation E.1
+      (canonicalToVectorDerivation D.1 (UpperVector v)) =
+        UpperVector (N.1.mulVec (M.1.mulVec v)) := by
+    rw [stabilizer_readout_apply_upper D v]
+    exact stabilizer_readout_apply_upper E _
+  have hDE : canonicalToVectorDerivation D.1
+      (canonicalToVectorDerivation E.1 (UpperVector v)) =
+        UpperVector (M.1.mulVec (N.1.mulVec v)) := by
+    rw [stabilizer_readout_apply_upper E v]
+    exact stabilizer_readout_apply_upper D _
+  rw [InfoGeometry.Algebra.ZornVectorMatrix.Derivation.bracket_apply,
+    hED, hDE] at hact
+  have hB := stabilizer_readout_apply_upper (⁅D, E⁆) v
+  have hcoord := congrArg
+    (fun X : InfoGeometry.Algebra.ZornVectorMatrix ℝ => X.v i)
+      (hB.symm.trans hact)
+  have hentry :
+      (B.1.mulVec v) i =
+        (M.1.mulVec (N.1.mulVec v) -
+          N.1.mulVec (M.1.mulVec v)) i := by
+    simpa [UpperVector, InfoGeometry.Algebra.ZornVectorMatrix.sub,
+      InfoGeometry.Algebra.ZornVectorMatrix.neg,
+      Matrix.mulVec_sub, B, _root_.sub_eq_add_neg] using hcoord
+  simpa [v, M, N, B, Matrix.mulVec, dotProduct, Matrix.mul_apply,
+    InfoGeometry.Algebra.ZornVec3.basis, Fin.sum_univ_three,
+    InfoGeometry.Physics.SplitG2SL3Concrete.commutator_val,
+    Matrix.sub_apply] using hentry
 
 end InfoGeometry.Lie.CanonicalZornPeirceSL3Bridge
 

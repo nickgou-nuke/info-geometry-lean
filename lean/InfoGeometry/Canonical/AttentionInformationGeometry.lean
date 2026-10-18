@@ -172,6 +172,45 @@ theorem logPartitionAlong_smul_directional_deriv
     _ = c * ∑ i : Fin M, softmaxProb s i * v i := by
       rw [Finset.mul_sum]
 
+/-- Scaling a logit direction scales the second directional derivative by the
+square of the same factor. -/
+theorem logPartitionAlong_smul_secondDeriv
+    (s v : Fin M → ℝ) (c : ℝ) :
+    deriv (fun t => deriv (logPartitionAlong s (fun i => c * v i)) t) 0 =
+      c ^ 2 * deriv (fun t => deriv (logPartitionAlong s v) t) 0 := by
+  calc
+    _ = ∑ i : Fin M, softmaxProb s i *
+        (c * v i - ∑ j : Fin M, softmaxProb s j * (c * v j)) ^ (2 : ℕ) :=
+      logPartitionAlong_secondDeriv_eq_variance s (fun i => c * v i)
+    _ = c ^ 2 * ∑ i : Fin M, softmaxProb s i *
+        (v i - ∑ j : Fin M, softmaxProb s j * v j) ^ (2 : ℕ) := by
+      have hmean :
+          ∑ j : Fin M, softmaxProb s j * (c * v j) =
+            c * ∑ j : Fin M, softmaxProb s j * v j := by
+        calc
+          ∑ j : Fin M, softmaxProb s j * (c * v j) =
+              ∑ j : Fin M, c * (softmaxProb s j * v j) := by
+            apply Finset.sum_congr rfl
+            intro j hj
+            ring
+          _ = c * ∑ j : Fin M, softmaxProb s j * v j := by
+            rw [Finset.mul_sum]
+      rw [hmean]
+      calc
+        ∑ i : Fin M, softmaxProb s i *
+            (c * v i - c * ∑ j : Fin M, softmaxProb s j * v j) ^ (2 : ℕ) =
+          ∑ i : Fin M, c ^ 2 * (softmaxProb s i *
+            (v i - ∑ j : Fin M, softmaxProb s j * v j) ^ (2 : ℕ)) := by
+          apply Finset.sum_congr rfl
+          intro i hi
+          ring
+        _ = c ^ 2 * ∑ i : Fin M, softmaxProb s i *
+            (v i - ∑ j : Fin M, softmaxProb s j * v j) ^ (2 : ℕ) := by
+          rw [Finset.mul_sum]
+    _ = c ^ 2 * deriv (fun t => deriv (logPartitionAlong s v) t) 0 := by
+      congr 1
+      exact (logPartitionAlong_secondDeriv_eq_variance s v).symm
+
 /-- The covariance-form matrix associated to the log-partition potential.
 Its quadratic form is proved below to equal the actual second directional
 derivative of log-partition. -/

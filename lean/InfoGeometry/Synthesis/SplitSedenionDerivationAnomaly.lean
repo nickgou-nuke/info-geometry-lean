@@ -387,12 +387,12 @@ theorem trace_free_matrix_eta_adjoint_sector_decomposition
     (A : Matrix (Fin 3) (Fin 3) ℝ) (htrace : Matrix.trace A = 0) :
     ∃ K S : Matrix (Fin 3) (Fin 3) ℝ,
       A = K + S ∧ so21EtaSkewAdjoint K ∧ so21EtaSelfAdjoint S ∧
-      Matrix.trace S = 0 := by
+      Matrix.trace K = 0 ∧ Matrix.trace S = 0 := by
   let K : Matrix (Fin 3) (Fin 3) ℝ :=
     (1 / 2 : ℝ) • (A - eta21 * Aᵀ * eta21)
   let S : Matrix (Fin 3) (Fin 3) ℝ :=
     (1 / 2 : ℝ) • (A + eta21 * Aᵀ * eta21)
-  refine ⟨K, S, ?_, ?_, ?_, ?_⟩
+  refine ⟨K, S, ?_, ?_, ?_, ?_, ?_⟩
   · dsimp [K, S]
     ext i j
     fin_cases i <;> fin_cases j <;>
@@ -407,6 +407,22 @@ theorem trace_free_matrix_eta_adjoint_sector_decomposition
     fin_cases i <;> fin_cases j <;>
       simp [eta21, Matrix.mul_apply, Matrix.vecMul_apply_eq_sum,
         Fin.sum_univ_three] <;> ring
+  · dsimp [K]
+    rw [Matrix.trace_smul, Matrix.trace_sub]
+    have hconj : Matrix.trace (eta21 * Aᵀ * eta21) = Matrix.trace A := by
+      have heta : eta21 * eta21 = (1 : Matrix (Fin 3) (Fin 3) ℝ) := by
+        ext i j
+        fin_cases i <;> fin_cases j <;>
+          simp [eta21, Matrix.mul_apply, Fin.sum_univ_three]
+      calc
+        Matrix.trace (eta21 * Aᵀ * eta21) =
+            Matrix.trace (eta21 * (eta21 * Aᵀ)) := by
+          exact Matrix.trace_mul_comm (eta21 * Aᵀ) eta21
+        _ = Matrix.trace ((eta21 * eta21) * Aᵀ) := by rw [← Matrix.mul_assoc]
+        _ = Matrix.trace Aᵀ := by rw [heta, one_mul]
+        _ = Matrix.trace A := Matrix.trace_transpose A
+    rw [hconj, htrace]
+    norm_num
   · dsimp [S]
     rw [Matrix.trace_smul, Matrix.trace_add]
     have hconj : Matrix.trace (eta21 * Aᵀ * eta21) = Matrix.trace A := by

@@ -61,7 +61,7 @@ theorem doubleStarSheetCarrier_card : Fintype.card DoubleStarSheetCarrier = 24 :
 /-- Enumeration of the actual root-index/sheet carrier by 24 finite labels.
 The equivalence preserves only finite carrier cardinality; no operator action is transported. -/
 noncomputable def doubleStarSheetCarrierEquivFin24 : DoubleStarSheetCarrier ≃ Fin 24 :=
-  (Fintype.equivFinOfCardEq doubleStarSheetCarrier_card).symm
+  Fintype.equivFinOfCardEq doubleStarSheetCarrier_card
 
 /-! ## Section 2: Endomorphism Cyclotomic Reduction `Φ₂₄(T) = Φ₁₂(T²)` and Sheet-Swap Lift -/
 

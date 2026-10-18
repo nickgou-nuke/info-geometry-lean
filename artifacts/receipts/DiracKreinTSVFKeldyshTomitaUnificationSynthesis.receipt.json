@@ -1,0 +1,60 @@
+{
+  "artifact": {
+    "path": "lean/InfoGeometry/Synthesis/DiracKreinTSVFKeldyshTomitaUnificationSynthesis.lean",
+    "sha256": "876d635f4d2d9c8d0d0d06e33501367447aa76d3c2523d415c122baaf2bcef6a"
+  },
+  "auditModule": "",
+  "authority": "candidate_observation_not_proof_authority",
+  "checks": {
+    "axiomAudit": {
+      "declarations": [],
+      "output": "",
+      "outputSha256": "",
+      "returncode": null,
+      "status": "not_requested"
+    },
+    "leanProcess": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "lean/InfoGeometry/Synthesis/DiracKreinTSVFKeldyshTomitaUnificationSynthesis.lean"
+      ],
+      "outputSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "returncode": 0,
+      "status": "passed"
+    },
+    "semanticVacuityGate": {
+      "outputSha256": "da24a3001f923012b558f2e0f6382b5b83c820f06324b90f38b064300cb119fc",
+      "returncode": 0,
+      "status": "passed"
+    }
+  },
+  "environment": {
+    "gitHead": "fdda29d1e13525b26ea2d74ba2f5b9e28d13e7b9",
+    "lakeManifestSha256": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lakefileSha256": "5372c9a95ed8f6488bc0ce257c906c83658449668db4627259d72d542c77d9f7",
+    "toolchain": "leanprover/lean4:v4.34.1"
+  },
+  "module": "InfoGeometry.Synthesis.DiracKreinTSVFKeldyshTomitaUnificationSynthesis",
+  "receiptSha256": "16219d51c713840699584e4721ceb1a8f4f6abad1fe70dfd59e6816f026c1e76",
+  "releaseTag": "",
+  "review": {
+    "promotionAllowed": false,
+    "status": "kernel_checked_pending_owner_review"
+  },
+  "schema": "info_geometry.proof_artifact_receipt.v1",
+  "score": {
+    "defect": 0.0,
+    "meaning": "scheduling metadata only; not probability or proof authority",
+    "policyVersion": "opengauss-gate7-v4.2",
+    "status": "policy_estimate",
+    "value": 1.0
+  },
+  "source": {
+    "changedSincePrompt": false,
+    "currentSnapshotSha256": "876d635f4d2d9c8d0d0d06e33501367447aa76d3c2523d415c122baaf2bcef6a",
+    "path": "lean/InfoGeometry/Synthesis/DiracKreinTSVFKeldyshTomitaUnificationSynthesis.lean",
+    "snapshotSha256": "876d635f4d2d9c8d0d0d06e33501367447aa76d3c2523d415c122baaf2bcef6a"
+  }
+}

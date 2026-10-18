@@ -1,6 +1,7 @@
 import InfoGeometry.Clifford.Cl55SpinGroupChiralSectorBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl55SpinorVolumeOddTransport
+import InfoGeometry.Clifford.Cl55ChiralSectorFlipContract
 
 /-!
 # Predicate readback for the matrix chiral sectors
@@ -128,5 +129,63 @@ noncomputable def cl55OddGeneratorMinusToPlus (a : V55) :
     change Matrix.mulVec (cl55SpinorAlgEquiv (ι55 a)) (c • v.1) =
       c • Matrix.mulVec (cl55SpinorAlgEquiv (ι55 a)) v.1
     rw [Matrix.mulVec_smul]
+
+/-- The positive orthogonal generator `e₀` acts invertibly and exchanges the
+two real chirality sectors. Its inverse is the same Clifford action because
+the generator squares to `1`. -/
+theorem cl55_positive_generator_sector_exchange_bijective :
+    Function.Bijective
+      (cl55OddGeneratorPlusToMinus (wittBasis (Sum.inl 0))) := by
+  let a : V55 := wittBasis (Sum.inl 0)
+  let A : SpinorMatrix 5 := cl55SpinorAlgEquiv (ι55 a)
+  have ha : Q55 a = 1 := by
+    change Q55 (wittBasis (Sum.inl 0)) = 1
+    rw [wittBasis_left, Q55_e_pos]
+  have hι : ι55 a * ι55 a = (Q55 a) • (1 : Cl55) := by
+    rw [CliffordAlgebra.ι_sq_scalar, Algebra.algebraMap_eq_smul_one]
+  have hA : A * A = 1 := by
+    dsimp [A]
+    calc
+      cl55SpinorAlgEquiv (ι55 a) * cl55SpinorAlgEquiv (ι55 a) =
+          cl55SpinorAlgEquiv (ι55 a * ι55 a) := (map_mul _ _ _).symm
+      _ = cl55SpinorAlgEquiv ((Q55 a) • (1 : Cl55)) := by rw [hι]
+      _ = 1 := by rw [map_smul, ha]; simp
+  have hround (x : SpinorSpace 5) :
+      Matrix.mulVec A (Matrix.mulVec A x) = x := by
+    calc
+      Matrix.mulVec A (Matrix.mulVec A x) = Matrix.mulVec (A * A) x :=
+        Matrix.mulVec_mulVec x A A
+      _ = Matrix.mulVec (1 : SpinorMatrix 5) x := by rw [hA]
+      _ = x := by simp
+  have hleft (x : chiralPlusSector) :
+      cl55OddGeneratorMinusToPlus a
+          (cl55OddGeneratorPlusToMinus a x) = x := by
+    apply Subtype.ext
+    exact hround x.1
+  have hright (x : chiralMinusSector) :
+      cl55OddGeneratorPlusToMinus a
+          (cl55OddGeneratorMinusToPlus a x) = x := by
+    apply Subtype.ext
+    exact hround x.1
+  constructor
+  · intro x y hxy
+    calc
+      x = cl55OddGeneratorMinusToPlus a
+            (cl55OddGeneratorPlusToMinus a x) := (hleft x).symm
+      _ = cl55OddGeneratorMinusToPlus a
+            (cl55OddGeneratorPlusToMinus a y) := congrArg
+              (cl55OddGeneratorMinusToPlus a) hxy
+      _ = y := hleft y
+  · intro y
+    exact ⟨cl55OddGeneratorMinusToPlus a y, hright y⟩
+
+/-- The two real eigenspaces of the native `Cl(5,5)` volume on the 32-real
+dimensional spinor carrier each have dimension sixteen. -/
+theorem cl55_real_chiral_spinor_sectors_finrank :
+    Module.finrank ℝ chiralPlusSector = 16 ∧
+      Module.finrank ℝ chiralMinusSector = 16 := by
+  exact chiralSector_finrank_each_eq_16_of_bijective
+    (cl55OddGeneratorPlusToMinus (wittBasis (Sum.inl 0)))
+    cl55_positive_generator_sector_exchange_bijective
 
 end InfoGeometry.Clifford.Cl55SpinGroupChiralSectorBridge

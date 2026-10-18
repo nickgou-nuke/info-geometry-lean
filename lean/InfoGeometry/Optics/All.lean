@@ -9,6 +9,7 @@ import InfoGeometry.Optics.FiniteJonesBregman
 import InfoGeometry.Optics.FiniteJonesStinespring
 import InfoGeometry.Optics.FiniteJonesStinespringConstructive
 import InfoGeometry.Optics.FiniteJonesKasparovBoundary
+import InfoGeometry.Optics.DerivationBackedMaurerCartanFrame
 
 namespace InfoGeometry.Optics
 

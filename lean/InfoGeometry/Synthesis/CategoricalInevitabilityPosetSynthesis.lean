@@ -6,6 +6,7 @@ Authors: InfoGeometry Engine Contributors
 import InfoGeometry.Epistemology.ChentsovUniquenessContinuous
 import InfoGeometry.Epistemology.FisherNaturalGradientSteepest
 import InfoGeometry.Synthesis.MathlibCliffordUniversalLiftSynthesis
+import InfoGeometry.Synthesis.Cl11ChiralVolumeNilpotentQuotientSynthesis
 import InfoGeometry.Canonical.ParaKahlerLagrangianDimension
 import InfoGeometry.QuantumContext.ColimitAttentionTomitaFlow
 
@@ -14,7 +15,8 @@ import InfoGeometry.QuantumContext.ColimitAttentionTomitaFlow
 
 This module formalizes the five-stage causal poset of mathematical inevitability
 connecting statistical distinguishability, split Clifford cells, para-Kähler
-null sheets, Möbius sheet-swapping twists, and the UHF colimit modular flow:
+null sheets, Möbius sheet-swapping twists and their $\mathbb{Z}_2$ quotient, and
+the UHF colimit Jordan–Wigner CAR and KMS modular flow:
 
 1. **Archetype I — Metric Inevitability (`ChentsovUniquenessContinuous` ↔ `FisherNaturalGradientSteepest`)**:
    - Proves left scalar homogeneity `fisherMetric_smul_left` of the Fisher metric and
@@ -27,14 +29,14 @@ null sheets, Möbius sheet-swapping twists, and the UHF colimit modular flow:
 
 2. **Archetype II — Cell Inevitability (`MathlibCliffordUniversalLiftSynthesis`)**:
    - Defines the universal lightcone nilpotent ladder generators `abstractNullPlus` and
-     `abstractNullMinus` in `CliffordAlgebra q11Form`.
-   - Computes their images under the algebra isomorphism
-     `cl11MatrixAlgEquiv : CliffordAlgebra q11Form ≃ₐ[ℝ] Matrix (Fin 2) (Fin 2) ℝ`
-     and proves in `CliffordAlgebra q11Form` via `cl11MatrixAlgEquiv.injective` that
+     `abstractNullMinus` and the chiral idempotents `abstractVacProj` and `abstractOccProj`
+     in `CliffordAlgebra q11Form`.
+   - Proves in `CliffordAlgebra q11Form` via `cl11MatrixAlgEquiv.injective` that
      `abstractNullPlus * abstractNullPlus = 0`, `abstractNullMinus * abstractNullMinus = 0`,
      `abstractNullPlus * abstractNullMinus + abstractNullMinus * abstractNullPlus = 1`,
-     and that their sum and difference recover the split Clifford generators
-     `CliffordAlgebra.ι q11Form (1, 0)` and `CliffordAlgebra.ι q11Form (0, 1)`.
+     that `abstractChiralVolume` anticommutes with `abstractNullPlus` and `abstractNullMinus`
+     and satisfies `abstractOccProj - abstractVacProj = abstractChiralVolume`, and that
+     `abstractVacProj` and `abstractOccProj` form orthogonal idempotents summing to `1`.
 
 3. **Archetype III — Null Sheet Inevitability (`ParaKahlerLagrangianDimension`)**:
    - Proves that for any para-Kähler structure `(g, omega, K)`, the diagonal pairings on
@@ -44,21 +46,27 @@ null sheets, Möbius sheet-swapping twists, and the UHF colimit modular flow:
      `paraKahler_metric_eq_offDiagonal_pairing` and the symplectic form `omega` reduces to
      the antisymmetric cross-sheet pairing `paraKahler_symplectic_eq_offDiagonal_pairing`.
 
-4. **Archetype IV — Möbius Twist & Induced Complex Structure (`IsMobiusTwist`, `inducedComplexStructure`)**:
+4. **Archetype IV — Möbius Twist, Induced Complex Structure & Coordinate-Free $\mathbb{Z}_2$ Quotient**:
    - Defines `IsMobiusTwist K M` (`M.comp K = -(K.comp M)`) and proves that any Möbius
      twist swaps the eigen-sheets `InTPlus K` and `InTMinus K` and intertwines the
      spectral projectors `paraProjectorPlus K` and `paraProjectorMinus K`.
    - For any sheet-swapping involution `C` (`IsSheetSwapInvolution K C`), proves that
      `J = inducedComplexStructure C K = C.comp K` satisfies `J.comp J = -LinearMap.id`,
      flips the sign of the para-Kähler metric (`g (J v) (J w) = -g v w`), and preserves
-     the symplectic form (`omega (J v) (J w) = omega v w`), with an explicit non-vacuity
-     witness `swapSheetInvolution` on `Fin 2 → ℝ`.
+     the symplectic form (`omega (J v) (J w) = omega v w`).
+   - Constructs the coordinate-free unoriented $\mathbb{Z}_2$ quotient
+     `MobiusInvolutionQuotient hC`, proves the cross-sheet quotient identification
+     `paraProjectorPlus_eq_paraProjectorMinus_in_mobiusQuotient`, and descends the quadratic
+     form to `mobiusQuotientQuadratic`.
 
-5. **Archetype V — Rising Sea Colimit Synthesis (`ColimitAttentionTomitaFlow`)**:
-   - Unifies stage-`k` modular flow state invariance and the algebraic KMS boundary
-     trace-cycling identity inside the UHF `TensorTowerColimit.Carrier` via
-     `risingSea_colimit_modular_kms_synthesis` and its cross-stage bonding-map
-     lifting `risingSea_tower_propagation_modular_kms_synthesis`.
+5. **Archetype V — Rising Sea Colimit Synthesis (`Cl11ChiralVolumeNilpotentQuotientSynthesis` ↔ `ColimitAttentionTomitaFlow`)**:
+   - Embeds the stage-`k` $\operatorname{Cl}(1,1)^{\otimes k}$ Jordan–Wigner creation,
+     annihilation, and global chirality operators into the UHF direct-limit algebra
+     `Carrier` (`colimitJWCreation`, `colimitJWAnnihilation`, `colimitGlobalChirality`),
+     proving nilpotency, CAR anticommutation, and chiral parity negation inside `Carrier`.
+   - Unifies colimit Jordan–Wigner chiral parity, the coordinate-free Möbius sheet
+     quotient, and cross-stage Tomita modular-KMS trace cycling in
+     `risingSea_three_arrow_colimit_mobius_kms`.
 -/
 
 set_option autoImplicit false
@@ -80,6 +88,7 @@ open InfoGeometry.Canonical.NaturalGradientSubmersionFlow
 open InfoGeometry.Canonical.GrandEpistemicGeometricSynthesis
 open InfoGeometry.Canonical.ParaKahlerLagrangianDimension
 open InfoGeometry.Synthesis.MathlibCliffordUniversalLiftSynthesis
+open InfoGeometry.Synthesis.Cl11ChiralVolumeNilpotentQuotientSynthesis
 open InfoGeometry.Canonical.CuntzMatrixTowerInstantiation
 open InfoGeometry.Canonical.CuntzMatrixAlgebraicStarColimit
 open InfoGeometry.QuantumContext.AttentionKMSState
@@ -162,7 +171,7 @@ theorem chentsov_unique_scale_and_steepest_ascent
 end MetricInevitability
 
 /-!
-## Archetype II: Cell Inevitability — Universal $\operatorname{Cl}(1,1)$ Nilpotent Lightcone Generators
+## Archetype II: Cell Inevitability — Universal $\operatorname{Cl}(1,1)$ Nilpotent Lightcone Generators & Chiral Idempotents
 -/
 
 section CellInevitability
@@ -217,6 +226,15 @@ theorem cl11MatrixAlgEquiv_abstractNullMinus :
   fin_cases i <;> fin_cases j <;>
     norm_num [cl11MatrixLinear, J1, Eminus]
 
+/-- Image of `abstractChiralVolume` under `cl11MatrixAlgEquiv` is the diagonal chiral grading
+matrix `!![-1, 0; 0, 1]`. -/
+theorem cl11MatrixAlgEquiv_chiralVolume :
+    cl11MatrixAlgEquiv abstractChiralVolume = !![(-1 : ℝ), 0; 0, 1] := by
+  rw [cl11MatrixAlgEquiv_apply, cl11MatrixAlgHom_abstractChiralVolume]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [cl11ChiralVolume, J1, Eminus, Matrix.mul_apply, Fin.sum_univ_two]
+
 /-- `abstractNullPlus` is nilpotent of order 2 in `CliffordAlgebra q11Form`: `n₊² = 0`. -/
 theorem abstractNullPlus_sq_zero :
     abstractNullPlus * abstractNullPlus = 0 := by
@@ -264,6 +282,132 @@ theorem abstractNullPlus_add_abstractNullMinus_eq_ι_ePlus :
   ext i j
   fin_cases i <;> fin_cases j <;>
     norm_num [cl11MatrixLinear, J1, Eminus]
+
+/-- Left chiral grading absorption on `abstractNullPlus`: `ω * n₊ = -n₊`. -/
+theorem abstractChiralVolume_mul_abstractNullPlus :
+    abstractChiralVolume * abstractNullPlus = -abstractNullPlus := by
+  apply cl11MatrixAlgEquiv.injective
+  rw [map_mul, map_neg, cl11MatrixAlgEquiv_chiralVolume,
+    cl11MatrixAlgEquiv_abstractNullPlus]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- Right chiral grading absorption on `abstractNullPlus`: `n₊ * ω = n₊`. -/
+theorem abstractNullPlus_mul_abstractChiralVolume :
+    abstractNullPlus * abstractChiralVolume = abstractNullPlus := by
+  apply cl11MatrixAlgEquiv.injective
+  rw [map_mul, cl11MatrixAlgEquiv_abstractNullPlus,
+    cl11MatrixAlgEquiv_chiralVolume]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- Left chiral grading absorption on `abstractNullMinus`: `ω * n₋ = n₋`. -/
+theorem abstractChiralVolume_mul_abstractNullMinus :
+    abstractChiralVolume * abstractNullMinus = abstractNullMinus := by
+  apply cl11MatrixAlgEquiv.injective
+  rw [map_mul, cl11MatrixAlgEquiv_chiralVolume,
+    cl11MatrixAlgEquiv_abstractNullMinus]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- Right chiral grading absorption on `abstractNullMinus`: `n₋ * ω = -n₋`. -/
+theorem abstractNullMinus_mul_abstractChiralVolume :
+    abstractNullMinus * abstractChiralVolume = -abstractNullMinus := by
+  apply cl11MatrixAlgEquiv.injective
+  rw [map_mul, map_neg, cl11MatrixAlgEquiv_abstractNullMinus,
+    cl11MatrixAlgEquiv_chiralVolume]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- Universal chiral volume anticommutation with `abstractNullPlus`:
+`ω * n₊ + n₊ * ω = 0`. -/
+theorem abstractChiralVolume_anticomm_abstractNullPlus :
+    abstractChiralVolume * abstractNullPlus +
+      abstractNullPlus * abstractChiralVolume = 0 := by
+  rw [abstractChiralVolume_mul_abstractNullPlus,
+    abstractNullPlus_mul_abstractChiralVolume, neg_add_cancel]
+
+/-- Universal chiral volume anticommutation with `abstractNullMinus`:
+`ω * n₋ + n₋ * ω = 0`. -/
+theorem abstractChiralVolume_anticomm_abstractNullMinus :
+    abstractChiralVolume * abstractNullMinus +
+      abstractNullMinus * abstractChiralVolume = 0 := by
+  rw [abstractChiralVolume_mul_abstractNullMinus,
+    abstractNullMinus_mul_abstractChiralVolume, add_neg_cancel]
+
+/-- Universal vacuum projector `P₊ = n₊ * n₋` in `CliffordAlgebra q11Form`. -/
+noncomputable def abstractVacProj : CliffordAlgebra q11Form :=
+  abstractNullPlus * abstractNullMinus
+
+/-- Universal occupied projector `P₋ = n₋ * n₊` in `CliffordAlgebra q11Form`. -/
+noncomputable def abstractOccProj : CliffordAlgebra q11Form :=
+  abstractNullMinus * abstractNullPlus
+
+/-- `abstractVacProj` is idempotent in `CliffordAlgebra q11Form`: `P₊ * P₊ = P₊`. -/
+theorem abstractVacProj_idempotent :
+    abstractVacProj * abstractVacProj = abstractVacProj := by
+  unfold abstractVacProj
+  apply cl11MatrixAlgEquiv.injective
+  rw [map_mul, map_mul, cl11MatrixAlgEquiv_abstractNullPlus,
+    cl11MatrixAlgEquiv_abstractNullMinus]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- `abstractOccProj` is idempotent in `CliffordAlgebra q11Form`: `P₋ * P₋ = P₋`. -/
+theorem abstractOccProj_idempotent :
+    abstractOccProj * abstractOccProj = abstractOccProj := by
+  unfold abstractOccProj
+  apply cl11MatrixAlgEquiv.injective
+  rw [map_mul, map_mul, cl11MatrixAlgEquiv_abstractNullPlus,
+    cl11MatrixAlgEquiv_abstractNullMinus]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- Mutual orthogonality `P₊ * P₋ = 0` in `CliffordAlgebra q11Form`. -/
+theorem abstractVacProj_mul_abstractOccProj_zero :
+    abstractVacProj * abstractOccProj = 0 := by
+  unfold abstractVacProj abstractOccProj
+  apply cl11MatrixAlgEquiv.injective
+  rw [map_mul, map_mul, map_mul, map_zero,
+    cl11MatrixAlgEquiv_abstractNullPlus, cl11MatrixAlgEquiv_abstractNullMinus]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- Mutual orthogonality `P₋ * P₊ = 0` in `CliffordAlgebra q11Form`. -/
+theorem abstractOccProj_mul_abstractVacProj_zero :
+    abstractOccProj * abstractVacProj = 0 := by
+  unfold abstractVacProj abstractOccProj
+  apply cl11MatrixAlgEquiv.injective
+  rw [map_mul, map_mul, map_mul, map_zero,
+    cl11MatrixAlgEquiv_abstractNullPlus, cl11MatrixAlgEquiv_abstractNullMinus]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- Resolution of the identity `P₊ + P₋ = 1` in `CliffordAlgebra q11Form`. -/
+theorem abstractVacProj_add_abstractOccProj_eq_one :
+    abstractVacProj + abstractOccProj = 1 :=
+  abstractNullPlus_anticomm_abstractNullMinus
+
+/-- Spectral decomposition of the universal chiral volume element:
+`P₋ - P₊ = abstractChiralVolume` in `CliffordAlgebra q11Form`. -/
+theorem abstractOccProj_sub_abstractVacProj_eq_chiralVolume :
+    abstractOccProj - abstractVacProj = abstractChiralVolume := by
+  unfold abstractVacProj abstractOccProj
+  apply cl11MatrixAlgEquiv.injective
+  rw [map_sub, map_mul, map_mul,
+    cl11MatrixAlgEquiv_abstractNullPlus, cl11MatrixAlgEquiv_abstractNullMinus,
+    cl11MatrixAlgEquiv_chiralVolume]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [Matrix.mul_apply, Fin.sum_univ_two]
 
 end CellInevitability
 
@@ -359,7 +503,7 @@ theorem paraKahler_symplectic_eq_offDiagonal_pairing
 end NullSheetInevitability
 
 /-!
-## Archetype IV: Inevitability of the Möbius Twist $M \circ K = - (K \circ M)$ and Induced Complex Structure $J = C \circ K$
+## Archetype IV: Inevitability of the Möbius Twist $M \circ K = - (K \circ M)$, Induced Complex Structure $J = C \circ K$, and Coordinate-Free $\mathbb{Z}_2$ Quotient
 -/
 
 section MobiusTwistInevitability
@@ -473,6 +617,88 @@ theorem inducedComplexStructure_symplectic_invariant
   rw [mobiusTwist_apply_comm K C hC.2 (K w), hK.involutive w,
     map_neg, hC_iso (K v) w, h_anti, neg_neg]
 
+/-! ### Coordinate-Free Unoriented Möbius $\mathbb{Z}_2$ Quotient on `V` -/
+
+/-- The $\mathbb{Z}_2$ orbit equivalence relation generated by a sheet-swapping involution `C`:
+`u ~ w` if and only if `u = w` or `w = C u`. -/
+def mobiusInvolutionRel (C : V →ₗ[ℝ] V) (u w : V) : Prop :=
+  u = w ∨ w = C u
+
+/-- Reflexivity of `mobiusInvolutionRel`. -/
+theorem mobiusInvolutionRel_refl (C : V →ₗ[ℝ] V) (u : V) :
+    mobiusInvolutionRel C u u :=
+  Or.inl rfl
+
+/-- Symmetry of `mobiusInvolutionRel` for any sheet-swapping involution `C`. -/
+theorem mobiusInvolutionRel_symm {K C : V →ₗ[ℝ] V}
+    (hC : IsSheetSwapInvolution K C) {u w : V}
+    (huw : mobiusInvolutionRel C u w) :
+    mobiusInvolutionRel C w u := by
+  rcases huw with rfl | rfl
+  · exact Or.inl rfl
+  · exact Or.inr (sheetSwapInvolution_apply_sq K C hC u).symm
+
+/-- Transitivity of `mobiusInvolutionRel` for any sheet-swapping involution `C`. -/
+theorem mobiusInvolutionRel_trans {K C : V →ₗ[ℝ] V}
+    (hC : IsSheetSwapInvolution K C) {u v w : V}
+    (huv : mobiusInvolutionRel C u v) (hvw : mobiusInvolutionRel C v w) :
+    mobiusInvolutionRel C u w := by
+  rcases huv with rfl | rfl <;> rcases hvw with rfl | rfl
+  · exact Or.inl rfl
+  · exact Or.inr rfl
+  · exact Or.inr rfl
+  · exact Or.inl (sheetSwapInvolution_apply_sq K C hC u).symm
+
+/-- The $\mathbb{Z}_2$ setoid on `V` associated to a sheet-swapping involution `hC`. -/
+def mobiusInvolutionSetoid {K C : V →ₗ[ℝ] V}
+    (hC : IsSheetSwapInvolution K C) : Setoid V where
+  r := mobiusInvolutionRel C
+  iseqv := ⟨mobiusInvolutionRel_refl C, mobiusInvolutionRel_symm hC, mobiusInvolutionRel_trans hC⟩
+
+/-- The coordinate-free unoriented Möbius quotient `V / ⟨C⟩` identifying each state `u`
+with its sheet-swapped partner `C u`. -/
+abbrev MobiusInvolutionQuotient {K C : V →ₗ[ℝ] V}
+    (hC : IsSheetSwapInvolution K C) : Type _ :=
+  Quotient (mobiusInvolutionSetoid hC)
+
+/-- **Coordinate-Free Möbius Quotient Sheet Identification**:
+In `MobiusInvolutionQuotient hC`, the positive sheet projection `P⁺ v` of any state `v` is
+identified with the negative sheet projection `P⁻ (C v)` of its twisted partner `C v`. -/
+theorem paraProjectorPlus_eq_paraProjectorMinus_in_mobiusQuotient
+    {K C : V →ₗ[ℝ] V} (hC : IsSheetSwapInvolution K C) (v : V) :
+    (Quotient.mk (mobiusInvolutionSetoid hC) (paraProjectorPlus K v) :
+        MobiusInvolutionQuotient hC) =
+      Quotient.mk (mobiusInvolutionSetoid hC) (paraProjectorMinus K (C v)) := by
+  apply Quotient.sound
+  exact Or.inr (mobiusTwist_intertwines_paraProjectorPlus K C hC.2 v)
+
+/-- Any `C`-invariant bilinear form `g` has constant quadratic values `g u u = g w w` on
+`mobiusInvolutionRel C` orbits. -/
+theorem metric_self_eq_of_mobiusInvolutionRel
+    (g : V →ₗ[ℝ] V →ₗ[ℝ] ℝ) {C : V →ₗ[ℝ] V}
+    (hC_iso : ∀ u w, g (C u) (C w) = g u w) {u w : V}
+    (huw : mobiusInvolutionRel C u w) :
+    g u u = g w w := by
+  rcases huw with rfl | rfl
+  · rfl
+  · exact (hC_iso u u).symm
+
+/-- Well-defined descent of the quadratic form `v ↦ g v v` to `MobiusInvolutionQuotient hC`. -/
+def mobiusQuotientQuadratic
+    (g : V →ₗ[ℝ] V →ₗ[ℝ] ℝ) {K C : V →ₗ[ℝ] V}
+    (hC : IsSheetSwapInvolution K C) (hC_iso : ∀ u w, g (C u) (C w) = g u w) :
+    MobiusInvolutionQuotient hC → ℝ :=
+  Quotient.lift (fun v => g v v)
+    (fun _ _ huw => metric_self_eq_of_mobiusInvolutionRel g hC_iso huw)
+
+@[simp]
+theorem mobiusQuotientQuadratic_mk
+    (g : V →ₗ[ℝ] V →ₗ[ℝ] ℝ) {K C : V →ₗ[ℝ] V}
+    (hC : IsSheetSwapInvolution K C) (hC_iso : ∀ u w, g (C u) (C w) = g u w) (v : V) :
+    mobiusQuotientQuadratic g hC hC_iso
+      (Quotient.mk (mobiusInvolutionSetoid hC) v) = g v v :=
+  rfl
+
 /-! ### Concrete Non-Vacuity Witness on `Fin 2 → ℝ` -/
 
 /-- The canonical sheet-swapping reflection `v ↦ (v₀, -v₁)` on `Fin 2 → ℝ` relative to
@@ -532,10 +758,121 @@ theorem swapInducedComplex_symplectic_invariant (v w : Fin 2 → ℝ) :
 end MobiusTwistInevitability
 
 /-!
-## Archetype V: The Rising Sea Colimit Synthesis — Stage-$k$ Modular Flow & KMS Context Readout
+## Archetype V: The Rising Sea Colimit Synthesis — $\operatorname{Cl}(1,1)^{\otimes k}$ Jordan–Wigner Colimit Lift & KMS Modular Context Readout
 -/
 
 section RisingSeaColimitSynthesis
+
+/-- Entrywise complexification preserves the zero matrix. -/
+theorem complexifyRealMatrix_zero {ι : Type*} [Fintype ι] [DecidableEq ι] :
+    complexifyRealMatrix (0 : Matrix ι ι ℝ) = 0 := by
+  ext i j
+  simp [complexifyRealMatrix]
+
+/-- Entrywise complexification preserves the identity matrix. -/
+theorem complexifyRealMatrix_one {ι : Type*} [Fintype ι] [DecidableEq ι] :
+    complexifyRealMatrix (1 : Matrix ι ι ℝ) = 1 := by
+  ext i j
+  by_cases hij : i = j <;> simp [complexifyRealMatrix, Matrix.one_apply, hij]
+
+/-- Entrywise complexification preserves matrix addition. -/
+theorem complexifyRealMatrix_add {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (A B : Matrix ι ι ℝ) :
+    complexifyRealMatrix (A + B) =
+      complexifyRealMatrix A + complexifyRealMatrix B := by
+  ext i j
+  simp [complexifyRealMatrix]
+
+/-- Entrywise complexification preserves matrix negation. -/
+theorem complexifyRealMatrix_neg {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (A : Matrix ι ι ℝ) :
+    complexifyRealMatrix (-A) = -complexifyRealMatrix A := by
+  ext i j
+  simp [complexifyRealMatrix]
+
+/-- Stage-`k` Jordan–Wigner creation operator $a_i^\dagger$ injected into the direct-limit
+UHF algebra `Carrier` via the spinor reindexing isomorphism `matEquivFinPowTwo k`. -/
+noncomputable def colimitJWCreation (k : ℕ) (i : Fin k) : Carrier :=
+  stageInjection k
+    (complexifyRealMatrix
+      (InfoGeometry.Clifford.TowerMatrix.matEquivFinPowTwo k
+        (InfoGeometry.Clifford.Cl11TensorTower.jwCreation k i)))
+
+/-- Stage-`k` Jordan–Wigner annihilation operator $a_i$ injected into the direct-limit
+UHF algebra `Carrier` via the spinor reindexing isomorphism `matEquivFinPowTwo k`. -/
+noncomputable def colimitJWAnnihilation (k : ℕ) (i : Fin k) : Carrier :=
+  stageInjection k
+    (complexifyRealMatrix
+      (InfoGeometry.Clifford.TowerMatrix.matEquivFinPowTwo k
+        (InfoGeometry.Clifford.Cl11TensorTower.jwAnnihilation k i)))
+
+/-- Stage-`k` global chiral volume operator $\Gamma_k = \gamma_{\mathrm{chiral}}^{\otimes k}$
+injected into the direct-limit UHF algebra `Carrier`. -/
+noncomputable def colimitGlobalChirality (k : ℕ) : Carrier :=
+  stageInjection k
+    (complexifyRealMatrix
+      (InfoGeometry.Clifford.TowerMatrix.matEquivFinPowTwo k
+        (InfoGeometry.Clifford.Cl11TensorTower.globalChirality k)))
+
+/-- Every colimit Jordan–Wigner creation operator is nilpotent of order 2 in `Carrier`:
+$(a_i^\dagger)^2 = 0$. -/
+theorem colimitJWCreation_sq_zero (k : ℕ) (i : Fin k) :
+    colimitJWCreation k i * colimitJWCreation k i = 0 := by
+  unfold colimitJWCreation
+  rw [← stageInjection_mul, ← complexifyRealMatrix_mul, ← map_mul,
+    jwCreation_sq_zero_all k i, map_zero, complexifyRealMatrix_zero, map_zero]
+
+/-- Every colimit Jordan–Wigner annihilation operator is nilpotent of order 2 in `Carrier`:
+$a_i^2 = 0$. -/
+theorem colimitJWAnnihilation_sq_zero (k : ℕ) (i : Fin k) :
+    colimitJWAnnihilation k i * colimitJWAnnihilation k i = 0 := by
+  unfold colimitJWAnnihilation
+  rw [← stageInjection_mul, ← complexifyRealMatrix_mul, ← map_mul,
+    jwAnnihilation_sq_zero_all k i, map_zero, complexifyRealMatrix_zero, map_zero]
+
+/-- Same-site canonical anticommutation relation $\{a_i^\dagger, a_i\} = 1$ in `Carrier`. -/
+theorem colimitJW_car_same_site (k : ℕ) (i : Fin k) :
+    colimitJWCreation k i * colimitJWAnnihilation k i +
+      colimitJWAnnihilation k i * colimitJWCreation k i = 1 := by
+  unfold colimitJWCreation colimitJWAnnihilation
+  rw [← stageInjection_mul, ← stageInjection_mul, ← stageInjection_add,
+    ← complexifyRealMatrix_mul, ← complexifyRealMatrix_mul, ← complexifyRealMatrix_add,
+    ← map_mul, ← map_mul, ← map_add, add_comm,
+    InfoGeometry.Clifford.Cl11JordanWignerCARBridge.jw_same_site_car k i,
+    map_one, complexifyRealMatrix_one, map_one]
+
+/-- The colimit global chiral volume operator $\Gamma_k$ is an involution in `Carrier`:
+$\Gamma_k^2 = 1$. -/
+theorem colimitGlobalChirality_sq_one (k : ℕ) :
+    colimitGlobalChirality k * colimitGlobalChirality k = 1 := by
+  unfold colimitGlobalChirality
+  rw [← stageInjection_mul, ← complexifyRealMatrix_mul, ← map_mul,
+    InfoGeometry.Clifford.JordanWignerCAR.globalChirality_sq k,
+    map_one, complexifyRealMatrix_one, map_one]
+
+/-- Conjugating `colimitJWCreation k i` by `colimitGlobalChirality k` in `Carrier` negates it:
+$\Gamma_k a_i^\dagger \Gamma_k = -a_i^\dagger$. -/
+theorem colimitGlobalChirality_conj_jwCreation (k : ℕ) (i : Fin k) :
+    colimitGlobalChirality k * colimitJWCreation k i * colimitGlobalChirality k =
+      -colimitJWCreation k i := by
+  unfold colimitGlobalChirality colimitJWCreation
+  rw [← stageInjection_mul, ← stageInjection_mul,
+    ← complexifyRealMatrix_mul, ← complexifyRealMatrix_mul,
+    ← map_mul, ← map_mul,
+    globalChirality_conj_jwCreation k i,
+    map_neg, complexifyRealMatrix_neg, map_neg]
+
+/-- Conjugating `colimitJWAnnihilation k i` by `colimitGlobalChirality k` in `Carrier` negates it:
+$\Gamma_k a_i \Gamma_k = -a_i$. -/
+theorem colimitGlobalChirality_conj_jwAnnihilation (k : ℕ) (i : Fin k) :
+    colimitGlobalChirality k * colimitJWAnnihilation k i * colimitGlobalChirality k =
+      -colimitJWAnnihilation k i := by
+  unfold colimitGlobalChirality colimitJWAnnihilation
+  rw [← stageInjection_mul, ← stageInjection_mul,
+    ← complexifyRealMatrix_mul, ← complexifyRealMatrix_mul,
+    ← map_mul, ← map_mul,
+    globalChirality_conj_jwAnnihilation k i,
+    map_neg, complexifyRealMatrix_neg, map_neg]
 
 /-- **Stage-`k` Colimit Modular Flow Real-Seed Readout**:
 Injecting a real stage-`k` observable `A` evolved under the Tomita modular flow
@@ -589,6 +926,42 @@ theorem risingSea_tower_propagation_modular_kms_synthesis
         (stageInjection k (complexifyRealMatrix (B * A))) := by
   rw [attentionColimitFunctional_rawMap_modularFlow_invariant h]
   exact attentionColimitFunctional_kms_boundary k logits β A B
+
+/-- **Rising Sea Three-Arrow Synthesis (`risingSea_three_arrow_colimit_mobius_kms`)**:
+Simultaneously establishes:
+1. **Arrow 1 (Inductive $\operatorname{Cl}(1,1)^{\otimes k}$ Jordan–Wigner Colimit Lift)**:
+   chiral volume negation $\Gamma_k a_i^\dagger \Gamma_k = -a_i^\dagger$ and CAR
+   $\{a_i^\dagger, a_i\} = 1$ in `Carrier`;
+2. **Arrow 2 (Coordinate-Free Unoriented Möbius $\mathbb{Z}_2$ Quotient)**:
+   identification of `[P⁺ v]` and `[P⁻ (C v)]` in `MobiusInvolutionQuotient hC`; and
+3. **Arrow 3 (Cross-Stage KMS Modular Context Readout)**:
+   bonding-map invariance of the modular-evolved KMS trace-cycled expectation in `Carrier`. -/
+theorem risingSea_three_arrow_colimit_mobius_kms
+    {V : Type*} [AddCommGroup V] [Module ℝ V]
+    {K C : V →ₗ[ℝ] V} (hC : IsSheetSwapInvolution K C) (v : V)
+    {k n : ℕ} (h : k ≤ n) (i : Fin k)
+    (logits : Fin (2 ^ k) → ℝ) (β t : ℝ)
+    (A B : Matrix (Fin (2 ^ k)) (Fin (2 ^ k)) ℝ) :
+    (colimitGlobalChirality k * colimitJWCreation k i * colimitGlobalChirality k =
+        -colimitJWCreation k i ∧
+      colimitJWCreation k i * colimitJWAnnihilation k i +
+        colimitJWAnnihilation k i * colimitJWCreation k i = 1) ∧
+    (Quotient.mk (mobiusInvolutionSetoid hC) (paraProjectorPlus K v) :
+        MobiusInvolutionQuotient hC) =
+      Quotient.mk (mobiusInvolutionSetoid hC) (paraProjectorMinus K (C v)) ∧
+    selectedStageColimitFunctional k (attentionStageDensity k logits β)
+        (stageInjection n
+          (rawMap h
+            (modularFlow logits β t
+              (complexifyRealMatrix A *
+                complexifyRealMatrix
+                  (attentionDensityMatrix logits β * B *
+                    attentionDensityMatrixInv logits β))))) =
+      selectedStageColimitFunctional k (attentionStageDensity k logits β)
+        (stageInjection k (complexifyRealMatrix (B * A))) :=
+  ⟨⟨colimitGlobalChirality_conj_jwCreation k i, colimitJW_car_same_site k i⟩,
+   paraProjectorPlus_eq_paraProjectorMinus_in_mobiusQuotient hC v,
+   risingSea_tower_propagation_modular_kms_synthesis h logits β t A B⟩
 
 end RisingSeaColimitSynthesis
 

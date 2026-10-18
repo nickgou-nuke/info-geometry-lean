@@ -1283,6 +1283,42 @@ def paraSkewNilpotentLinear (a : Fin 3 → R) : ParaKahlerVec R →ₗ[R] ParaKa
   map_add' := paraSkewNilpotent_add a
   map_smul' := paraSkewNilpotent_smul a
 
+/-- The para-complex involution packaged as an `R`-linear endomorphism of the
+finite phase-space carrier. -/
+def paraComplexKLinear : ParaKahlerVec R →ₗ[R] ParaKahlerVec R where
+  toFun := paraComplexK
+  map_add' z₁ z₂ := by
+    ext k <;> simp [paraComplexK] <;> abel
+  map_smul' r z := by
+    ext k <;> simp [paraComplexK]
+
+@[simp]
+theorem paraComplexKLinear_apply (z : ParaKahlerVec R) :
+    paraComplexKLinear z = paraComplexK z :=
+  rfl
+
+/-- The linear para-complex endomorphism is an involution. -/
+theorem paraComplexKLinear_comp_self :
+    paraComplexKLinear.comp paraComplexKLinear =
+      (LinearMap.id : ParaKahlerVec R →ₗ[R] ParaKahlerVec R) := by
+  apply LinearMap.ext
+  intro z
+  exact paraComplexK_sq_id z
+
+/-- Operator-level form of sheet exchange: the nilpotent skew generator
+anticommutes with the para-complex involution, `K ∘ Nₐ = - Nₐ ∘ K`. -/
+theorem paraComplexKLinear_comp_paraSkewNilpotentLinear
+    (a : Fin 3 → R) :
+    paraComplexKLinear.comp (paraSkewNilpotentLinear a) =
+      -((paraSkewNilpotentLinear a).comp paraComplexKLinear) := by
+  apply LinearMap.ext
+  intro z
+  ext k
+  · simp [LinearMap.comp_apply, paraComplexKLinear, paraSkewNilpotentLinear,
+      paraComplexK, paraSkewNilpotent]
+  · simp [LinearMap.comp_apply, paraComplexKLinear, paraSkewNilpotentLinear,
+      paraComplexK, paraSkewNilpotent]
+
 @[simp]
 theorem paraSkewNilpotentLinear_apply (a : Fin 3 → R) (z : ParaKahlerVec R) :
     paraSkewNilpotentLinear a z = paraSkewNilpotent a z :=

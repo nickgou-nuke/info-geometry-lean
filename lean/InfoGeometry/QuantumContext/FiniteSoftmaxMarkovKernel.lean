@@ -7,6 +7,7 @@ import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.LinearAlgebra.Matrix.Stochastic
 import Mathlib.Tactic
 import InfoGeometry.QuantumContext.MarkovAttentionGroupInverse
+import InfoGeometry.Probability.FiniteWeightedSplitKreinAdjoint
 
 /-!
 # Finite Softmax Markov Kernels
@@ -139,6 +140,106 @@ theorem softmaxAttention_poisson_solutions_differ_by_const
       exact softmaxAttentionKernel_pos scores i j)
     x y
   simpa only [Matrix.toLin'_apply] using hxy
+
+/-! ### Causal masked softmax -/
+
+The ordinary `softmaxAttentionMatrix` above normalizes over every key. The
+following finite kernel instead masks future positions before normalization, so
+each row remains stochastic while its support is causal. -/
+
+/-- Unnormalized Gibbs weight, zero outside the autoregressive support `j ≤ i`. -/
+def causalGibbsWeight {n : ℕ} (scores : Fin n → Fin n → ℝ)
+    (i j : Fin n) : ℝ :=
+  if j ≤ i then Real.exp (scores i j) else 0
+
+/-- Row partition function over the present and past positions. -/
+def causalPartitionFunction {n : ℕ} (scores : Fin n → Fin n → ℝ)
+    (i : Fin n) : ℝ :=
+  ∑ j, causalGibbsWeight scores i j
+
+theorem causalPartitionFunction_pos {n : ℕ} (scores : Fin n → Fin n → ℝ)
+    (i : Fin n) : 0 < causalPartitionFunction scores i := by
+  unfold causalPartitionFunction
+  apply Finset.sum_pos'
+  · intro j hj
+    by_cases hji : j ≤ i
+    · simpa [causalGibbsWeight, hji] using
+        le_of_lt (Real.exp_pos (scores i j))
+    · simp [causalGibbsWeight, hji]
+  · refine ⟨i, Finset.mem_univ _, ?_⟩
+    simpa [causalGibbsWeight] using Real.exp_pos (scores i i)
+
+/-- Row-normalized softmax restricted to causal keys `j ≤ i`. -/
+def causalSoftmaxKernel {n : ℕ} (scores : Fin n → Fin n → ℝ)
+    (i j : Fin n) : ℝ :=
+  causalGibbsWeight scores i j / causalPartitionFunction scores i
+
+theorem causalSoftmaxKernel_nonneg {n : ℕ} (scores : Fin n → Fin n → ℝ)
+    (i j : Fin n) : 0 ≤ causalSoftmaxKernel scores i j := by
+  by_cases hji : j ≤ i
+  · unfold causalSoftmaxKernel causalGibbsWeight
+    simp [hji]
+    exact div_nonneg (le_of_lt (Real.exp_pos (scores i j)))
+      (le_of_lt (causalPartitionFunction_pos scores i))
+  · simp [causalSoftmaxKernel, causalGibbsWeight, hji]
+
+theorem causalSoftmaxKernel_pos_of_allowed {n : ℕ}
+    (scores : Fin n → Fin n → ℝ) (i j : Fin n) (hji : j ≤ i) :
+    0 < causalSoftmaxKernel scores i j := by
+  unfold causalSoftmaxKernel causalGibbsWeight
+  simp [hji]
+  exact div_pos (Real.exp_pos (scores i j)) (causalPartitionFunction_pos scores i)
+
+theorem causalSoftmaxKernel_eq_zero_of_forbidden {n : ℕ}
+    (scores : Fin n → Fin n → ℝ) (i j : Fin n) (hij : i < j) :
+    causalSoftmaxKernel scores i j = 0 := by
+  have hnot : ¬ j ≤ i := not_le_of_gt hij
+  simp [causalSoftmaxKernel, causalGibbsWeight, hnot]
+
+theorem causalSoftmaxKernel_row_sum {n : ℕ}
+    (scores : Fin n → Fin n → ℝ) (i : Fin n) :
+    ∑ j, causalSoftmaxKernel scores i j = 1 := by
+  unfold causalSoftmaxKernel
+  have hne : causalPartitionFunction scores i ≠ 0 :=
+    ne_of_gt (causalPartitionFunction_pos scores i)
+  simp_rw [div_eq_mul_inv]
+  rw [← Finset.sum_mul]
+  rw [← div_eq_mul_inv]
+  unfold causalPartitionFunction
+  exact div_self hne
+
+/-- Matrix form of the finite autoregressive softmax attention kernel. -/
+def causalSoftmaxMatrix {n : ℕ} (scores : Fin n → Fin n → ℝ) :
+    Matrix (Fin n) (Fin n) ℝ :=
+  fun i j => causalSoftmaxKernel scores i j
+
+@[simp] theorem causalSoftmaxMatrix_apply {n : ℕ}
+    (scores : Fin n → Fin n → ℝ) (i j : Fin n) :
+    causalSoftmaxMatrix scores i j = causalSoftmaxKernel scores i j := rfl
+
+theorem causalSoftmaxMatrix_mem_rowStochastic {n : ℕ}
+    (scores : Fin n → Fin n → ℝ) :
+    causalSoftmaxMatrix scores ∈ Matrix.rowStochastic ℝ (Fin n) := by
+  rw [Matrix.mem_rowStochastic_iff_sum]
+  refine ⟨?_, ?_⟩
+  · intro i j
+    exact causalSoftmaxKernel_nonneg scores i j
+  · intro i
+    exact causalSoftmaxKernel_row_sum scores i
+
+theorem causalSoftmaxMatrix_forbidden_entry_zero {n : ℕ}
+    (scores : Fin n → Fin n → ℝ) (i j : Fin n) (hij : i < j) :
+    causalSoftmaxMatrix scores i j = 0 :=
+  causalSoftmaxKernel_eq_zero_of_forbidden scores i j hij
+
+/-- The weighted adjoint of causal softmax has reverse, upper-triangular support. -/
+theorem causalSoftmax_weightedAdjoint_forbidden_entry_zero {n : ℕ}
+    (π : Fin n → ℝ) (scores : Fin n → Fin n → ℝ) :
+    ∀ i j, j < i →
+      InfoGeometry.Probability.weightedAdjoint π (causalSoftmaxMatrix scores) i j = 0 := by
+  apply InfoGeometry.Probability.weightedAdjoint_lowerTriangular_entry_zero
+  intro i j hij
+  exact causalSoftmaxMatrix_forbidden_entry_zero scores i j hij
 
 end
 

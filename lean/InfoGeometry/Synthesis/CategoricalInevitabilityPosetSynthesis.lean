@@ -11,14 +11,17 @@ import InfoGeometry.Canonical.ParaKahlerLagrangianDimension
 import InfoGeometry.QuantumContext.ColimitAttentionTomitaFlow
 
 /-!
-# Categorical Inevitability Poset Synthesis
+# Categorical Synthesis: Five Theorem Corridors
 
-This module formalizes the five-stage causal poset of mathematical inevitability
-connecting statistical distinguishability, split Clifford cells, para-Kähler
-null sheets, Möbius sheet-swapping twists and their $\mathbb{Z}_2$ quotient, and
-the UHF colimit Jordan–Wigner CAR and KMS modular flow:
+This module gathers results from five mathematical areas: Chentsov classification under
+explicit repository hypotheses, the universal algebra `CliffordAlgebra q11Form`,
+para-Kähler null-sheet identities, linear sheet-swap algebra and its set-level orbit
+quotient, and finite-stage Jordan–Wigner/KMS readouts on an algebraic UHF carrier.
+The sections are an organizational synthesis, not a formally defined causal poset or a
+proof that the five carriers are connected by maps. In particular, the final conjunction
+has independent carrier data and establishes no quotient-to-KMS compatibility.
 
-1. **Archetype I — Metric Inevitability (`ChentsovUniquenessContinuous` ↔ `FisherNaturalGradientSteepest`)**:
+1. **Archetype I — Chentsov Scale and Natural-Gradient Representation (`ChentsovUniquenessContinuous` ↔ `FisherNaturalGradientSteepest`)**:
    - Proves left scalar homogeneity `fisherMetric_smul_left` of the Fisher metric and
      establishes the exact covector representation equivalence
      `scaledFisher_represents_covector_iff`: for any nonzero Chentsov scale `c ≠ 0`, a
@@ -27,7 +30,7 @@ the UHF colimit Jordan–Wigner CAR and KMS modular flow:
    - Combines `chentsov_classification_of_seqContinuous` with scaled natural gradient
      representation in `chentsov_unique_scale_and_steepest_ascent`.
 
-2. **Archetype II — Cell Inevitability (`MathlibCliffordUniversalLiftSynthesis`)**:
+2. **Archetype II — Universal `CliffordAlgebra q11Form` Nilpotent Ladder** (`MathlibCliffordUniversalLiftSynthesis`):
    - Defines the universal lightcone nilpotent ladder generators `abstractNullPlus` and
      `abstractNullMinus` and the chiral idempotents `abstractVacProj` and `abstractOccProj`
      in `CliffordAlgebra q11Form`.
@@ -38,7 +41,7 @@ the UHF colimit Jordan–Wigner CAR and KMS modular flow:
      and satisfies `abstractOccProj - abstractVacProj = abstractChiralVolume`, and that
      `abstractVacProj` and `abstractOccProj` form orthogonal idempotents summing to `1`.
 
-3. **Archetype III — Null Sheet Inevitability (`ParaKahlerLagrangianDimension`)**:
+3. **Archetype III — Para-Kähler Null-Sheet Identities** (`ParaKahlerLagrangianDimension`):
    - Proves that for any para-Kähler structure `(g, omega, K)`, the diagonal pairings on
      the projected eigen-sheets vanish (`paraKahler_projPlus_projPlus_zero`,
      `paraKahler_projMinus_projMinus_zero`), so the pseudo-Riemannian metric `g` reduces
@@ -46,29 +49,30 @@ the UHF colimit Jordan–Wigner CAR and KMS modular flow:
      `paraKahler_metric_eq_offDiagonal_pairing` and the symplectic form `omega` reduces to
      the antisymmetric cross-sheet pairing `paraKahler_symplectic_eq_offDiagonal_pairing`.
 
-4. **Archetype IV — Möbius Twist, Induced Complex Structure & Coordinate-Free $\mathbb{Z}_2$ Quotient**:
+4. **Archetype IV — Linear Sheet-Swap Identities and Set-Level Z₂ Orbit Quotient**:
    - Defines `IsMobiusTwist K M` (`M.comp K = -(K.comp M)`) and proves that any Möbius
      twist swaps the eigen-sheets `InTPlus K` and `InTMinus K` and intertwines the
      spectral projectors `paraProjectorPlus K` and `paraProjectorMinus K`.
    - For any sheet-swapping involution `C` (`IsSheetSwapInvolution K C`), proves that
-     `J = inducedComplexStructure C K = C.comp K` satisfies `J.comp J = -LinearMap.id`,
-     flips the sign of the para-Kähler metric (`g (J v) (J w) = -g v w`), and preserves
-     the symplectic form (`omega (J v) (J w) = omega v w`).
-   - Constructs the coordinate-free unoriented $\mathbb{Z}_2$ quotient
-     `MobiusInvolutionQuotient hC`, proves the cross-sheet quotient identification
+     `J = inducedComplexStructure C K = C.comp K` is an almost-complex linear endomorphism
+     (`J.comp J = -LinearMap.id`). The metric sign-flip and symplectic-preservation
+     identities additionally assume that `C` preserves `g`.
+   - Forms the set-level orbit quotient `MobiusInvolutionQuotient hC` for the involution
+     `C`, proves the cross-sheet quotient identification
      `paraProjectorPlus_eq_paraProjectorMinus_in_mobiusQuotient`, and descends the quadratic
-     form to `mobiusQuotientQuadratic`.
+     form to `mobiusQuotientQuadratic`. No topology or orientation structure is defined.
 
-5. **Archetype V — Rising Sea Colimit Synthesis (`Cl11ChiralVolumeNilpotentQuotientSynthesis` ↔ `ColimitAttentionTomitaFlow`)**:
-   - Embeds the stage-`k` $\operatorname{Cl}(1,1)^{\otimes k}$ Jordan–Wigner creation,
-     annihilation, and global chirality operators into the UHF direct-limit algebra
-     `Carrier` (`colimitJWCreation`, `colimitJWAnnihilation`, `colimitGlobalChirality`),
-     proving nilpotency, same-site CAR, and chiral parity negation inside `Carrier`.
-   - Bundles colimit Jordan–Wigner chiral parity, a coordinate-free Möbius quotient
-     identity, and cross-stage Tomita modular-KMS trace cycling in
+5. **Archetype V — Finite Jordan–Wigner Carrier and Stage-Selected Modular-KMS Readout** (`Cl11ChiralVolumeNilpotentQuotientSynthesis` ↔ `ColimitAttentionTomitaFlow`):
+   - Injects finite stage-`k` Jordan–Wigner matrix operators and global chirality into the
+     algebraic UHF direct-limit carrier `Carrier` (`colimitJWCreation`,
+     `colimitJWAnnihilation`, `colimitGlobalChirality`), proving nilpotency, same-site CAR,
+     and chiral parity negation. This is not an algebra equivalence from a general
+     `Cl(k,k)` tensor tower to `Carrier`.
+   - Bundles colimit Jordan–Wigner chiral parity, a set-level involution-quotient identity,
+     and a cross-stage trace-cycling identity for a stage-selected functional in
      `risingSea_three_arrow_colimit_mobius_kms`. These are simultaneous facts with
-     independent carriers and parameters; this theorem does not construct a map from
-     the quotient to the UHF carrier or prove a quotient-to-KMS compatibility law.
+     independent carriers and parameters; no quotient-to-KMS compatibility or global
+     analytic modular flow on `Carrier` is established.
 -/
 
 set_option autoImplicit false
@@ -100,7 +104,7 @@ open InfoGeometry.QuantumContext.MatrixStageSelectedFunctional
 open InfoGeometry.QuantumContext.ColimitAttentionTomitaFlow
 
 /-!
-## Archetype I: Metric Inevitability — Chentsov Scale Uniqueness & Scaled Natural Gradient Representation
+## Archetype I: Chentsov Scale Classification and Scaled Natural-Gradient Representation
 -/
 
 section MetricInevitability

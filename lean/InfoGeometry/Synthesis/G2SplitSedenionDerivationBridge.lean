@@ -18,6 +18,10 @@ This module bridges the 14-parameter Zorn derivation family `parameterAction` fr
 Cayley–Dickson doubled split-sedenion carrier `SplitSedenion ℝ`
 (`InfoGeometry.Synthesis.Cl44LeftIdealSplitSedenionSynthesis`):
 
+The conclusions concern this transported family and its diagonal lift. This file does not classify
+all derivations of the split-sedenion algebra or prove a Lie-algebra isomorphism for the lifted
+parameter family.
+
 1. **Section 1 — Explicit Carrier Equivalence `ZornVectorMatrix ℝ ≃ ZornSplitOctonion ℝ`**:
    - Defines `zornVectorMatrixToSplitOctonion`, `splitOctonionToZornVectorMatrix`, and the
      equivalence `zornVectorMatrixEquiv : ZornVectorMatrix ℝ ≃ ZornSplitOctonion ℝ`.

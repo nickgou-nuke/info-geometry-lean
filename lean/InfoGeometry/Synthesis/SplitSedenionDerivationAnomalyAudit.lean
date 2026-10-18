@@ -3,27 +3,38 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
+
 import InfoGeometry.Synthesis.SplitSedenionDerivationAnomaly
 
-/-!
-# Audit Companion: SplitSedenionDerivationAnomaly
-
-Verifies that all public theorems in `InfoGeometry.Synthesis.SplitSedenionDerivationAnomaly`
-type-check cleanly and depend only on standard Lean 4 axioms (`propext`, `Classical.choice`,
-`Quot.sound`).
--/
-
-namespace InfoGeometry.Synthesis.SplitSedenionDerivationAnomalyAudit
-
-open InfoGeometry.Synthesis.SplitSedenionDerivationAnomaly
-
-#check @split_sedenion_derivation_dimension_synthesis
-#check @cdLift_is_cayleyDickson_star_derivation
-#check @cdLift_commutator_hom
-#check @sl2_so21_doubling_generators_synthesis
-#check @g2_sl2_bimodule_actions_commute
-#check @derivation_preserves_zero_divisor_tangent
-#check @split_cayleyDickson_nilpotent_zero_divisor
-#check @sl2_so21_doubling_witness_int
-
-end InfoGeometry.Synthesis.SplitSedenionDerivationAnomalyAudit
+#print axioms InfoGeometry.Synthesis.SplitSedenionDerivationAnomaly.split_sedenion_dimension_arithmetic_packet
+#print axioms InfoGeometry.Synthesis.SplitSedenionDerivationAnomaly.cdMul
+#print axioms InfoGeometry.Synthesis.SplitSedenionDerivationAnomaly.cdConj
+#print axioms InfoGeometry.Synthesis.SplitSedenionDerivationAnomaly.cdLift
+#print axioms InfoGeometry.Synthesis.SplitSedenionDerivationAnomaly.IsStarDerivation
+#print axioms InfoGeometry.Synthesis.SplitSedenionDerivationAnomaly.cdLift_is_cayleyDickson_star_derivation
+#print axioms InfoGeometry.Synthesis.SplitSedenionDerivationAnomaly.cdLift_pointwise_commutator_identity
+#print axioms InfoGeometry.Synthesis.SplitSedenionDerivationAnomaly.eta21
+#print axioms InfoGeometry.Synthesis.SplitSedenionDerivationAnomaly.sl2GenJ12
+#print axioms InfoGeometry.Synthesis.SplitSedenionDerivationAnomaly.sl2GenK13
+#print axioms InfoGeometry.Synthesis.SplitSedenionDerivationAnomaly.sl2GenK23
+#print axioms InfoGeometry.Synthesis.SplitSedenionDerivationAnomaly.matBracket
+#print axioms InfoGeometry.Synthesis.SplitSedenionDerivationAnomaly.so21_matrix_generator_relations
+#print axioms InfoGeometry.Synthesis.SplitSedenionDerivationAnomaly.so21BilinearForm
+#print axioms InfoGeometry.Synthesis.SplitSedenionDerivationAnomaly.sl2_so21_generators_metric_invariance
+#print axioms InfoGeometry.Synthesis.SplitSedenionDerivationAnomaly.so21QuadraticMatrixExpression
+#print axioms InfoGeometry.Synthesis.SplitSedenionDerivationAnomaly.so21_quadratic_matrix_expression_eq_two_smul_identity_and_central
+#print axioms InfoGeometry.Synthesis.SplitSedenionDerivationAnomaly.so21AdjointQuadraticAction
+#print axioms InfoGeometry.Synthesis.SplitSedenionDerivationAnomaly.so21_adjoint_quadratic_action_on_generators
+#print axioms InfoGeometry.Synthesis.SplitSedenionDerivationAnomaly.matBracket_trace_eq_zero
+#print axioms InfoGeometry.Synthesis.SplitSedenionDerivationAnomaly.matrix_left_right_actions_commute
+#print axioms InfoGeometry.Synthesis.SplitSedenionDerivationAnomaly.derivation_preserves_zero_divisor_tangent
+#print axioms InfoGeometry.Synthesis.SplitSedenionDerivationAnomaly.split_cayleyDickson_square_zero
+#print axioms InfoGeometry.Synthesis.SplitSedenionDerivationAnomaly.sl2_so21_doubling_witness_int
+#print axioms InfoGeometry.Synthesis.SplitSedenionDerivationAnomaly.associator
+#print axioms InfoGeometry.Synthesis.SplitSedenionDerivationAnomaly.associator_eq_zero_of_ring
+#print axioms InfoGeometry.Synthesis.SplitSedenionDerivationAnomaly.so21CrossProduct
+#print axioms InfoGeometry.Synthesis.SplitSedenionDerivationAnomaly.socleDoublingMul
+#print axioms InfoGeometry.Synthesis.SplitSedenionDerivationAnomaly.socleDerivation
+#print axioms InfoGeometry.Synthesis.SplitSedenionDerivationAnomaly.so21_generators_leibniz_crossProduct
+#print axioms InfoGeometry.Synthesis.SplitSedenionDerivationAnomaly.so21_socleDerivation_leibniz_test
+#print axioms InfoGeometry.Synthesis.SplitSedenionDerivationAnomaly.generic_matrix_left_right_scalar_identity

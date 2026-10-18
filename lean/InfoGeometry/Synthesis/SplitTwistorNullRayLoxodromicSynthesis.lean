@@ -29,12 +29,11 @@ $\operatorname{Cl}(3,3)$:
      and proves `spacetimeNorm_add_conformalCoords_eq_zero`.
 
 2. **Section 2 — Lightcone Null Foliation & Loxodromic Worldline Conservation Laws**:
-   - Defines the loxodromic flow `loxodromicSpacetimeFlow b ω τ` combining a hyperbolic boost in $(u, v)$
-     with an elliptic rotation in $(w, \tilde{w})$.
+   - Defines the split loxodromic flow `loxodromicSpacetimeFlow b ω τ` by commuting boosts
+     on the two null coordinate pairs $(u,v)$ and $(w,\tilde w)$.
    - Proves the one-parameter group laws (`loxodromicSpacetimeFlow_zero`, `loxodromicSpacetimeFlow_add`)
-     and the exact conservation of both longitudinal boost product `u * v`
-     (`loxodromicSpacetimeFlow_uv_invariant`) and transverse radius squared `w^2 + w_tilde^2`
-     (`loxodromicSpacetimeFlow_transverse_radius_sq`).
+     and exact preservation of the split determinant norm and null cone
+     (`spacetimeNorm_loxodromicSpacetimeFlow`, `isOnNullCone_loxodromicSpacetimeFlow_iff`).
 
 3. **Section 3 — Real Twistor Incidence Relation $\omega^A = x^{AA'} \pi_{A'}$ and Invariance Along Token Null Rays**:
    - Defines `RealTwistor R`, symplectic spinor index raising `raiseSpinor`, its self-contraction
@@ -45,12 +44,12 @@ $\operatorname{Cl}(3,3)$:
      `isTwistorIncident_tokenNullRay_iff`) and bridges pairs of incident twistors to the Klein quadric
      via `incidentTwistorPairMatrix_isKleinNull`.
 
-4. **Section 4 — $\operatorname{Cl}(3,3)$ Loxodromic Cartan Subalgebra $[K, J] = 0$ and Commuting Boost/RoPE Generators**:
+4. **Section 4 — Finite Clifford-Matrix and $4\times4$ Boost/Rotation Identities**:
    - Constructs the hyperbolic boost bivector $K = \gamma_0^+ \gamma_0^-$ (`boostBivectorK`) and
      elliptic RoPE rotation bivector $J = \gamma_1^+ \gamma_2^+$ (`ropeBivectorJ`) inside the $8 \times 8$
      Jordan–Wigner Majorana representation `Matrix8`, and proves $K^2 = +1$, $J^2 = -1$, and $K J = J K$.
-   - Defines the $4 \times 4$ real twistor block generators `twistorBoostGenK` and `twistorRopeGenJ`
-     and proves their involutive/complex-structure squares and commutation.
+   - Defines the $4 \times 4$ real matrices `twistorBoostGenK` and `twistorRopeGenJ` and proves
+     their squares and commutation independently of the $8 \times 8$ identities.
 
 ## Scope Note
 
@@ -59,6 +58,16 @@ All algebraic identities in Sections 1 and 3 hold over an arbitrary commutative 
 into the isotropic null cone rather than a projective manifold compactification topology; `RealTwistor R`
 formalizes affine 4-component spinor pairs $(\omega^A, \pi_{A'})$; and Section 4 formalizes the concrete
 $8 \times 8$ and $4 \times 4$ real matrix generators of the commuting boost and rotation bivectors.
+The two matrix carriers are not connected by a proved intertwiner or a group representation
+theorem here. In particular, `twistorPropagator2x2` and
+`spacetimeMatrixLoxodromicCongruence` are separate matrix constructions: no theorem identifies
+their action with `loxodromicSpacetimeFlow`. The incidence covariance theorem in Section 5 is
+an identity for the stated matrix products, not such an identification. The function
+`logarithmicSpiralRadius` stipulates a radius formula; its step theorem verifies the resulting
+exponential algebra but does not derive a trajectory from the propagator. This module does not establish a half-spinor decomposition, the
+$\operatorname{Spin}_0(3,3)\cong\operatorname{SL}(4,\mathbb{R})$ identification, or a global
+conformal compactification. Incidence constancy is along a chosen affine null line and does not
+classify all null lines represented by a projective twistor.
 -/
 
 open scoped Matrix
@@ -89,7 +98,7 @@ structure SplitSpacetime22 (R : Type*) where
   w_tilde : R
   deriving DecidableEq, Repr
 
-instance {S : Type*} [Zero S] : Inhabited (SplitSpacetime22 S) :=
+instance instInhabitedSplitSpacetime22 {S : Type*} [Zero S] : Inhabited (SplitSpacetime22 S) :=
   ⟨⟨0, 0, 0, 0⟩⟩
 
 /-- Concrete non-zero integer witness for `SplitSpacetime22` (Gate 2.5 / Trap T17). -/
@@ -194,57 +203,24 @@ end ConformalNullConeEmbedding
 
 section LoxodromicWorldlineFlow
 
-/-- One-parameter loxodromic flow on $\mathbb{R}^{2,2}$ combining a hyperbolic boost with rate $b$
-in the longitudinal $(u, v)$ plane and an elliptic RoPE rotation with frequency $\omega$ in the
-transverse $(w, \tilde{w})$ plane:
-$$u(\tau) = e^{b\tau} u_0, \quad v(\tau) = e^{-b\tau} v_0, \quad
-  w(\tau) = \cos(\omega\tau) w_0 - \sin(\omega\tau) \tilde{w}_0, \quad
-  \tilde{w}(\tau) = \sin(\omega\tau) w_0 + \cos(\omega\tau) \tilde{w}_0.$$ -/
+/-- Split-signature loxodromic flow. It acts by independent boosts on the two null coordinate
+pairs: `(u,v) ↦ (e^(bτ)u,e^(-bτ)v)` and `(w,w_tilde) ↦ (e^(ωτ)w,e^(-ωτ)w_tilde)`.
+These are the natural one-parameter isometries of the split products `u*v` and `w*w_tilde`. -/
 noncomputable def loxodromicSpacetimeFlow (b ω τ : ℝ) (x : SplitSpacetime22 ℝ) :
     SplitSpacetime22 ℝ where
   u := Real.exp (b * τ) * x.u
   v := Real.exp (-b * τ) * x.v
-  w := Real.cos (ω * τ) * x.w - Real.sin (ω * τ) * x.w_tilde
-  w_tilde := Real.sin (ω * τ) * x.w + Real.cos (ω * τ) * x.w_tilde
+  w := Real.exp (ω * τ) * x.w
+  w_tilde := Real.exp (-ω * τ) * x.w_tilde
 
 /-- At proper parameter $\tau = 0$, the loxodromic flow is the identity map. -/
 theorem loxodromicSpacetimeFlow_zero (b ω : ℝ) (x : SplitSpacetime22 ℝ) :
     loxodromicSpacetimeFlow b ω 0 x = x := by
   ext <;> simp [loxodromicSpacetimeFlow]
 
-/-- **Longitudinal Boost Product Invariance**:
-Along any loxodromic trajectory, the longitudinal product $u(\tau) v(\tau) = u_0 v_0$ is strictly
-conserved because $e^{b\tau} e^{-b\tau} = 1$. -/
-theorem loxodromicSpacetimeFlow_uv_invariant (b ω τ : ℝ) (x : SplitSpacetime22 ℝ) :
-    (loxodromicSpacetimeFlow b ω τ x).u * (loxodromicSpacetimeFlow b ω τ x).v = x.u * x.v := by
-  dsimp [loxodromicSpacetimeFlow]
-  have hexp : Real.exp (b * τ) * Real.exp (-b * τ) = 1 := by
-    rw [← Real.exp_add]
-    have hz : b * τ + -b * τ = 0 := by ring
-    rw [hz, Real.exp_zero]
-  calc
-    (Real.exp (b * τ) * x.u) * (Real.exp (-b * τ) * x.v)
-      = (Real.exp (b * τ) * Real.exp (-b * τ)) * (x.u * x.v) := by ring
-    _ = 1 * (x.u * x.v) := by rw [hexp]
-    _ = x.u * x.v := by ring
-
-/-- **Transverse Euclidean Radius Invariance**:
-Along any loxodromic trajectory, the transverse squared radius
-$w(\tau)^2 + \tilde{w}(\tau)^2 = w_0^2 + \tilde{w}_0^2$ is strictly conserved. -/
-theorem loxodromicSpacetimeFlow_transverse_radius_sq (b ω τ : ℝ) (x : SplitSpacetime22 ℝ) :
-    (loxodromicSpacetimeFlow b ω τ x).w ^ 2 + (loxodromicSpacetimeFlow b ω τ x).w_tilde ^ 2 =
-      x.w ^ 2 + x.w_tilde ^ 2 := by
-  dsimp [loxodromicSpacetimeFlow]
-  calc
-    (Real.cos (ω * τ) * x.w - Real.sin (ω * τ) * x.w_tilde) ^ 2 +
-        (Real.sin (ω * τ) * x.w + Real.cos (ω * τ) * x.w_tilde) ^ 2
-      = (Real.sin (ω * τ) ^ 2 + Real.cos (ω * τ) ^ 2) * (x.w ^ 2 + x.w_tilde ^ 2) := by ring
-    _ = 1 * (x.w ^ 2 + x.w_tilde ^ 2) := by rw [Real.sin_sq_add_cos_sq]
-    _ = x.w ^ 2 + x.w_tilde ^ 2 := by ring
-
 /-- **One-Parameter Group Law for Loxodromic Evolution**:
 Flowing for parameter $\tau_1 + \tau_2$ equals flowing for $\tau_2$ followed by $\tau_1$ because the
-hyperbolic boost and transverse rotation act on orthogonal planes and commute. -/
+two split boosts act on separate null-coordinate pairs and commute. -/
 theorem loxodromicSpacetimeFlow_add (b ω τ₁ τ₂ : ℝ) (x : SplitSpacetime22 ℝ) :
     loxodromicSpacetimeFlow b ω (τ₁ + τ₂) x =
       loxodromicSpacetimeFlow b ω τ₁ (loxodromicSpacetimeFlow b ω τ₂ x) := by
@@ -259,23 +235,57 @@ theorem loxodromicSpacetimeFlow_add (b ω τ₁ τ₂ : ℝ) (x : SplitSpacetime
     ring
   · dsimp [loxodromicSpacetimeFlow]
     have hω : ω * (τ₁ + τ₂) = ω * τ₁ + ω * τ₂ := by ring
-    rw [hω, Real.cos_add, Real.sin_add]
+    rw [hω, Real.exp_add]
     ring
   · dsimp [loxodromicSpacetimeFlow]
-    have hω : ω * (τ₁ + τ₂) = ω * τ₁ + ω * τ₂ := by ring
-    rw [hω, Real.sin_add, Real.cos_add]
+    have hω : -ω * (τ₁ + τ₂) = -ω * τ₁ + -ω * τ₂ := by ring
+    rw [hω, Real.exp_add]
     ring
 
+/-- The first null-coordinate product is invariant under its split boost. -/
+theorem loxodromicSpacetimeFlow_uv_invariant (b ω τ : ℝ) (x : SplitSpacetime22 ℝ) :
+    (loxodromicSpacetimeFlow b ω τ x).u * (loxodromicSpacetimeFlow b ω τ x).v = x.u * x.v := by
+  dsimp [loxodromicSpacetimeFlow]
+  have hexp : Real.exp (b * τ) * Real.exp (-b * τ) = 1 := by
+    rw [← Real.exp_add]
+    simp
+  calc
+    (Real.exp (b * τ) * x.u) * (Real.exp (-b * τ) * x.v)
+      = (Real.exp (b * τ) * Real.exp (-b * τ)) * (x.u * x.v) := by ring
+    _ = 1 * (x.u * x.v) := by rw [hexp]
+    _ = x.u * x.v := by ring
+
+/-- The second null-coordinate product is invariant under its split boost. -/
+theorem loxodromicSpacetimeFlow_w_wtilde_invariant (b ω τ : ℝ) (x : SplitSpacetime22 ℝ) :
+    (loxodromicSpacetimeFlow b ω τ x).w * (loxodromicSpacetimeFlow b ω τ x).w_tilde =
+      x.w * x.w_tilde := by
+  dsimp [loxodromicSpacetimeFlow]
+  have hexp : Real.exp (ω * τ) * Real.exp (-ω * τ) = 1 := by
+    rw [← Real.exp_add]
+    simp
+  calc
+    (Real.exp (ω * τ) * x.w) * (Real.exp (-ω * τ) * x.w_tilde)
+      = (Real.exp (ω * τ) * Real.exp (-ω * τ)) * (x.w * x.w_tilde) := by ring
+    _ = 1 * (x.w * x.w_tilde) := by rw [hexp]
+    _ = x.w * x.w_tilde := by ring
+
+/-- The split quadratic norm is invariant under the loxodromic flow. -/
+theorem spacetimeNorm_loxodromicSpacetimeFlow (b ω τ : ℝ) (x : SplitSpacetime22 ℝ) :
+    spacetimeNorm (loxodromicSpacetimeFlow b ω τ x) = spacetimeNorm x := by
+  rw [spacetimeNorm, spacetimeNorm]
+  rw [loxodromicSpacetimeFlow_uv_invariant, loxodromicSpacetimeFlow_w_wtilde_invariant]
+
+/-- The flow preserves the null cone in both directions. -/
+theorem isOnNullCone_loxodromicSpacetimeFlow_iff (b ω τ : ℝ) (x : SplitSpacetime22 ℝ) :
+    spacetimeNorm (loxodromicSpacetimeFlow b ω τ x) = 0 ↔ spacetimeNorm x = 0 := by
+  rw [spacetimeNorm_loxodromicSpacetimeFlow]
+
 /-- **Pure-Boost Split-Spacetime Norm Invariance ($\omega = 0$)**:
-When the transverse rotation frequency vanishes ($\omega = 0$), the hyperbolic boost preserves the
-full split-signature norm `spacetimeNorm x = u * v - w * w_tilde`. -/
+When the second split-boost parameter vanishes, the longitudinal boost preserves the full
+split-signature norm `spacetimeNorm x = u * v - w * w_tilde`. -/
 theorem spacetimeNorm_loxodromicSpacetimeFlow_zero_freq (b τ : ℝ) (x : SplitSpacetime22 ℝ) :
     spacetimeNorm (loxodromicSpacetimeFlow b 0 τ x) = spacetimeNorm x := by
-  have huv := loxodromicSpacetimeFlow_uv_invariant b 0 τ x
-  dsimp [spacetimeNorm] at huv ⊢
-  rw [huv]
-  dsimp [loxodromicSpacetimeFlow]
-  simp [Real.cos_zero, Real.sin_zero]
+  exact spacetimeNorm_loxodromicSpacetimeFlow b 0 τ x
 
 end LoxodromicWorldlineFlow
 
@@ -296,7 +306,7 @@ structure RealTwistor (R : Type*) where
   pi1 : R
   deriving DecidableEq, Repr
 
-instance {S : Type*} [Zero S] : Inhabited (RealTwistor S) :=
+instance instInhabitedRealTwistor {S : Type*} [Zero S] : Inhabited (RealTwistor S) :=
   ⟨⟨0, 0, 0, 0⟩⟩
 
 /-- Concrete non-zero integer witness for `RealTwistor` (Gate 2.5 / Trap T17). -/
@@ -697,5 +707,193 @@ theorem twistorBoostGenK_anticomm_twistorIncidenceShiftGen :
     norm_num [twistorBoostGenK, twistorIncidenceShiftGen, Matrix.mul_apply, Fin.sum_univ_four]
 
 end LoxodromicCartanSubalgebra
+
+/-!
+## Section 5: Action of the Loxodromic Generator $\mathcal{Z} = b K + \omega J$, Propagator Group Law, Twistor-Spacetime Congruence, and Logarithmic Spiral
+-/
+
+section LoxodromicPropagatorAndSpiral
+
+/-- Scalar cosine-addition identity for the diagonal entries of the $2 \times 2$ loxodromic
+propagator product. -/
+theorem exp_cos_add_entry (b ω t₁ t₂ : ℝ) :
+    Real.exp (b * (t₁ + t₂)) * Real.cos (ω * (t₁ + t₂)) =
+      Real.exp (b * t₁) * Real.cos (ω * t₁) * (Real.exp (b * t₂) * Real.cos (ω * t₂)) +
+        (-Real.exp (b * t₁) * Real.sin (ω * t₁)) * (Real.exp (b * t₂) * Real.sin (ω * t₂)) := by
+  have hb : b * (t₁ + t₂) = b * t₁ + b * t₂ := by ring
+  have hω : ω * (t₁ + t₂) = ω * t₁ + ω * t₂ := by ring
+  rw [hb, hω, Real.exp_add, Real.cos_add]
+  ring
+
+/-- Commuted scalar cosine-addition identity for the $(1, 1)$ entry of the $2 \times 2$ loxodromic
+propagator product. -/
+theorem exp_cos_add_entry_swap (b ω t₁ t₂ : ℝ) :
+    Real.exp (b * (t₁ + t₂)) * Real.cos (ω * (t₁ + t₂)) =
+      Real.exp (b * t₁) * Real.sin (ω * t₁) * (-Real.exp (b * t₂) * Real.sin (ω * t₂)) +
+        Real.exp (b * t₁) * Real.cos (ω * t₁) * (Real.exp (b * t₂) * Real.cos (ω * t₂)) := by
+  have h := exp_cos_add_entry b ω t₁ t₂
+  linear_combination h
+
+/-- Scalar sine-addition identity for the $(1, 0)$ entry of the $2 \times 2$ loxodromic
+propagator product. -/
+theorem exp_sin_add_entry (b ω t₁ t₂ : ℝ) :
+    Real.exp (b * (t₁ + t₂)) * Real.sin (ω * (t₁ + t₂)) =
+      Real.exp (b * t₁) * Real.sin (ω * t₁) * (Real.exp (b * t₂) * Real.cos (ω * t₂)) +
+        Real.exp (b * t₁) * Real.cos (ω * t₁) * (Real.exp (b * t₂) * Real.sin (ω * t₂)) := by
+  have hb : b * (t₁ + t₂) = b * t₁ + b * t₂ := by ring
+  have hω : ω * (t₁ + t₂) = ω * t₁ + ω * t₂ := by ring
+  rw [hb, hω, Real.exp_add, Real.sin_add]
+  ring
+
+/-- Negated scalar sine-addition identity for the $(0, 1)$ entry of the $2 \times 2$ loxodromic
+propagator product. -/
+theorem neg_exp_sin_add_entry (b ω t₁ t₂ : ℝ) :
+    -Real.exp (b * (t₁ + t₂)) * Real.sin (ω * (t₁ + t₂)) =
+      Real.exp (b * t₁) * Real.cos (ω * t₁) * (-Real.exp (b * t₂) * Real.sin (ω * t₂)) +
+        (-Real.exp (b * t₁) * Real.sin (ω * t₁)) * (Real.exp (b * t₂) * Real.cos (ω * t₂)) := by
+  have h := exp_sin_add_entry b ω t₁ t₂
+  linear_combination -h
+
+/-- Scalar Pythagorean-exponential identity for the $2 \times 2$ loxodromic propagator. -/
+theorem exp_cos_sin_pythagorean_identity (b ω t : ℝ) :
+    Real.exp (b * t) * Real.cos (ω * t) * (Real.exp (b * t) * Real.cos (ω * t)) -
+      (-Real.exp (b * t) * Real.sin (ω * t)) * (Real.exp (b * t) * Real.sin (ω * t)) =
+      Real.exp (2 * b * t) := by
+  have h2 : 2 * b * t = b * t + b * t := by rw [two_mul, add_mul]
+  rw [h2, Real.exp_add]
+  have htrig : Real.cos (ω * t) ^ 2 + Real.sin (ω * t) ^ 2 = 1 :=
+    Real.cos_sq_add_sin_sq (ω * t)
+  linear_combination (Real.exp (b * t)) ^ 2 * htrig
+
+/-- The $2 \times 2$ loxodromic spinor propagator
+$$M(b, \omega, t) = e^{b t} \begin{pmatrix} \cos(\omega t) & -\sin(\omega t) \\
+\sin(\omega t) & \cos(\omega t) \end{pmatrix}$$
+combining radial dilation $e^{b t}$ and planar RoPE rotation by $\omega t$. -/
+noncomputable def twistorPropagator2x2 (b ω t : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
+  !![Real.exp (b * t) * Real.cos (ω * t), -Real.exp (b * t) * Real.sin (ω * t);
+     Real.exp (b * t) * Real.sin (ω * t),  Real.exp (b * t) * Real.cos (ω * t)]
+
+/-- At $t = 0$, the $2 \times 2$ loxodromic spinor propagator is the identity matrix $I_2$. -/
+theorem twistorPropagator2x2_zero (b ω : ℝ) :
+    twistorPropagator2x2 b ω 0 = 1 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [twistorPropagator2x2]
+
+/-- **One-Parameter Group Law for the $2 \times 2$ Loxodromic Spinor Propagator**:
+$M(b, \omega, t_1 + t_2) = M(b, \omega, t_1) M(b, \omega, t_2)$. -/
+theorem twistorPropagator2x2_add (b ω t₁ t₂ : ℝ) :
+    twistorPropagator2x2 b ω (t₁ + t₂) =
+      twistorPropagator2x2 b ω t₁ * twistorPropagator2x2 b ω t₂ := by
+  ext i j
+  fin_cases i <;> fin_cases j
+  · dsimp [twistorPropagator2x2, Matrix.mul_apply]
+    rw [Fin.sum_univ_two]
+    exact exp_cos_add_entry b ω t₁ t₂
+  · dsimp [twistorPropagator2x2, Matrix.mul_apply]
+    rw [Fin.sum_univ_two]
+    exact neg_exp_sin_add_entry b ω t₁ t₂
+  · dsimp [twistorPropagator2x2, Matrix.mul_apply]
+    rw [Fin.sum_univ_two]
+    exact exp_sin_add_entry b ω t₁ t₂
+  · dsimp [twistorPropagator2x2, Matrix.mul_apply]
+    rw [Fin.sum_univ_two]
+    exact exp_cos_add_entry_swap b ω t₁ t₂
+
+/-- Reversing the boost and frequency signs in `twistorPropagator2x2` is equivalent to negating
+the evolution parameter $t$. -/
+theorem twistorPropagator2x2_neg_params (b ω t : ℝ) :
+    twistorPropagator2x2 (-b) (-ω) t = twistorPropagator2x2 b ω (-t) := by
+  dsimp [twistorPropagator2x2]
+  have hb : -b * t = b * -t := by ring
+  have hω : -ω * t = ω * -t := by ring
+  rw [hb, hω]
+
+/-- Right inverse identity for the $2 \times 2$ loxodromic propagator:
+$M(b, \omega, t) M(-b, -\omega, t) = I_2$. -/
+theorem twistorPropagator2x2_mul_neg (b ω t : ℝ) :
+    twistorPropagator2x2 b ω t * twistorPropagator2x2 (-b) (-ω) t = 1 := by
+  rw [twistorPropagator2x2_neg_params, ← twistorPropagator2x2_add, add_neg_cancel,
+    twistorPropagator2x2_zero]
+
+/-- Left inverse identity for the $2 \times 2$ loxodromic propagator:
+$M(-b, -\omega, t) M(b, \omega, t) = I_2$. -/
+theorem twistorPropagator2x2_neg_mul (b ω t : ℝ) :
+    twistorPropagator2x2 (-b) (-ω) t * twistorPropagator2x2 b ω t = 1 := by
+  rw [twistorPropagator2x2_neg_params, ← twistorPropagator2x2_add, neg_add_cancel,
+    twistorPropagator2x2_zero]
+
+/-- **Determinant Scaling of the $2 \times 2$ Loxodromic Spinor Propagator**:
+$\det M(b, \omega, t) = e^{2 b t}$. -/
+theorem det_twistorPropagator2x2 (b ω t : ℝ) :
+    Matrix.det (twistorPropagator2x2 b ω t) = Real.exp (2 * b * t) := by
+  rw [twistorPropagator2x2, Matrix.det_fin_two_of]
+  exact exp_cos_sin_pythagorean_identity b ω t
+
+/-- The $4 \times 4$ loxodromic twistor generator $\mathcal{Z}_{\text{tw}} = b K_{\text{tw}} + \omega J_{\text{tw}}$
+combining the hyperbolic boost generator and the elliptic RoPE rotation generator. -/
+def twistorLoxodromicGen (b ω : ℝ) : Matrix (Fin 4) (Fin 4) ℝ :=
+  b • twistorBoostGenK + ω • twistorRopeGenJ
+
+/-- **Shifted Quadratic Polynomial Identity for the $4 \times 4$ Loxodromic Generator**:
+$(\mathcal{Z}_{\text{tw}} - b I_4)(\mathcal{Z}_{\text{tw}} + b I_4)$ on each $2 \times 2$ spinor block
+annihilates the boost component, and in fact $\mathcal{Z}_{\text{tw}}$ satisfies the commuting
+block-quadratic relation $(\mathcal{Z}_{\text{tw}} - b K_{\text{tw}})^2 = -\omega^2 I_4$. -/
+theorem twistorLoxodromicGen_sub_boost_sq (b ω : ℝ) :
+    (twistorLoxodromicGen b ω - b • twistorBoostGenK) *
+      (twistorLoxodromicGen b ω - b • twistorBoostGenK) =
+      -(ω ^ 2) • (1 : Matrix (Fin 4) (Fin 4) ℝ) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [twistorLoxodromicGen, twistorBoostGenK, twistorRopeGenJ, Matrix.mul_apply,
+      Fin.sum_univ_four] <;>
+    (try ring)
+
+/-- **Matrix Congruence Identity for the Twistor Incidence Data**:
+A $2 \times 2$ matrix transforms by the stipulated congruence
+$X(t) = M(-b, -\omega, t) X_0 M(-b, -\omega, t)$ so that the twistor incidence relation
+$\omega^A(t) = X(t)^{AA'} \pi_{A'}(t)$ is preserved under opposite loxodromic evolution of
+$\omega^A$ and $\pi_{A'}$. -/
+noncomputable def spacetimeMatrixLoxodromicCongruence (b ω t : ℝ)
+    (X : Matrix (Fin 2) (Fin 2) ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
+  twistorPropagator2x2 (-b) (-ω) t * X * twistorPropagator2x2 (-b) (-ω) t
+
+/-- **Twistor Incidence Covariance Under Loxodromic Spinor Evolution**:
+If $\pi(t) = M(b, \omega, t) \pi_0$ and $X(t) = M(-b, -\omega, t) X_0 M(-b, -\omega, t)$, then
+$X(t) \pi(t) = M(-b, -\omega, t) (X_0 \pi_0)$, proving that the incidence image $\omega(t) = X(t)\pi(t)$
+co-evolves with the inverse boost parameter $-b$ and opposite RoPE angle $-\omega t$. -/
+theorem spacetimeMatrixLoxodromicCongruence_mulVec_propagator (b ω t : ℝ)
+    (X : Matrix (Fin 2) (Fin 2) ℝ) (pi : Fin 2 → ℝ) :
+    (spacetimeMatrixLoxodromicCongruence b ω t X).mulVec
+      ((twistorPropagator2x2 b ω t).mulVec pi) =
+      (twistorPropagator2x2 (-b) (-ω) t).mulVec (X.mulVec pi) := by
+  have hmul :
+      spacetimeMatrixLoxodromicCongruence b ω t X * twistorPropagator2x2 b ω t =
+        twistorPropagator2x2 (-b) (-ω) t * X := by
+    dsimp [spacetimeMatrixLoxodromicCongruence]
+    rw [Matrix.mul_assoc (twistorPropagator2x2 (-b) (-ω) t * X),
+      twistorPropagator2x2_neg_mul, Matrix.mul_one]
+  rw [Matrix.mulVec_mulVec, hmul, ← Matrix.mulVec_mulVec]
+
+/-- Candidate radial function $r(\theta) = r_0 \exp((b/\omega)(\theta - \theta_0))`.
+This definition does not assert that the function is induced by `twistorPropagator2x2`. -/
+noncomputable def logarithmicSpiralRadius (r₀ b ω θ₀ θ : ℝ) : ℝ :=
+  r₀ * Real.exp ((b / ω) * (θ - θ₀))
+
+/-- At the initial angle $\theta = \theta_0$, the logarithmic spiral radius equals $r_0$. -/
+theorem logarithmicSpiralRadius_at_initial (r₀ b ω θ₀ : ℝ) :
+    logarithmicSpiralRadius r₀ b ω θ₀ θ₀ = r₀ := by
+  dsimp [logarithmicSpiralRadius]
+  simp
+
+/-- The defined radial function scales by `exp ((b / ω) * Δθ)` when its angle argument is
+increased by `Δθ`. This is an algebraic identity about the definition above. -/
+theorem logarithmicSpiralRadius_step (r₀ b ω θ₀ θ Δθ : ℝ) :
+    logarithmicSpiralRadius r₀ b ω θ₀ (θ + Δθ) =
+      logarithmicSpiralRadius r₀ b ω θ₀ θ * Real.exp ((b / ω) * Δθ) := by
+  dsimp [logarithmicSpiralRadius]
+  have hθ : (b / ω) * (θ + Δθ - θ₀) = (b / ω) * (θ - θ₀) + (b / ω) * Δθ := by ring
+  rw [hθ, Real.exp_add, mul_assoc]
+
+end LoxodromicPropagatorAndSpiral
 
 end InfoGeometry.Synthesis.SplitTwistorNullRayLoxodromicSynthesis

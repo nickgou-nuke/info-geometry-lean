@@ -90,7 +90,7 @@ Para-Kähler Fock CAR superbracket (`UnifiedInfoGeometryPetzFockBridge`):
      $\omega J_2 x$, together with the time-eliminated logarithmic spiral identity
      `logSpiral_from_loxodromic_time` and `dissipativeRadius_eq_spiralRadius`.
 
-7. **Archetype VII — Complex KMS Strip Wick-Rotated Dilatation ($\tau \in \{0, 1/2, 1, -2\}$), Oort Constants ($A, B, \kappa^2 = -4B\Omega$), and Mestel Disk Scale-Invariant Toomre $Q$**:
+7. **Archetype VII — Complex KMS Strip Wick-Rotated Dilatation ($\tau \in \{0, 1/2, 1, -2\}$), Oort Constants ($A, B, \kappa^2 = -4B\Omega$), and Algebraic Mestel-Profile Toomre $Q$**:
    - Defines `softmaxPartitionZ`, `softmaxLogPartitionPhi`, `kmsStripFactor`, `kmsStripDilatation`,
      and `petzSpinorState`, proving `softmaxPartitionZ_pos`, `coneRadius_softmaxLogPartitionPhi`,
      the complex KMS strip factorization `kmsStripFactor_eq_phase_mul_dilatation`
@@ -126,6 +126,9 @@ Para-Kähler Fock CAR superbracket (`UnifiedInfoGeometryPetzFockBridge`):
    exponential factorization $e^{-i(s - i\tau)\Phi} = e^{-is\Phi} e^{-\tau\Phi}$ on `ℂ`, while
    `toomreQ_mestelDisk_scale_invariant` establishes algebraic cancellation of the radius $r \ne 0$
    in `toomreQ` for the Mestel surface-density profile.
+6. The logarithmic radial potential and the Mestel surface-density profile are separate model
+   definitions. Reusing `v_sink` as a parameter does not assert a Poisson equation, a source
+   decomposition, or that the sink potential generates that disk density.
 -/
 
 noncomputable section
@@ -1010,7 +1013,7 @@ theorem logSpiral_from_loxodromic_time (r₀ lam ω t : ℝ) (hω : ω ≠ 0) :
   rw [logSpiral_time_elim_scalar lam ω t hω]
 
 /-!
-### Archetype VII — Complex KMS Strip Wick-Rotated Dilatation ($\tau \in \{0, 1/2, 1, -2\}$), Oort Constants ($A, B, \kappa^2 = -4B\Omega$), and Mestel Disk Scale-Invariant Toomre $Q$
+### Archetype VII — Complex KMS Strip Wick-Rotated Dilatation ($\tau \in \{0, 1/2, 1, -2\}$), Oort Constants ($A, B, \kappa^2 = -4B\Omega$), and Algebraic Mestel-Profile Toomre $Q$
 -/
 
 /-- Softmax partition function $Z(\ell, \beta) = \sum_j e^{\beta \ell_j}$. -/
@@ -1188,15 +1191,18 @@ theorem oortA_add_oortB_flatRotationCurve_zero (Ω₀ r : ℝ) :
   rw [oortA_flatRotationCurve, oortB_flatRotationCurve]
   ring
 
-/-- Self-similar Mestel disk surface density $\Sigma_0(r) = \frac{v_{\mathrm{sink}}^2}{2\pi G r}$
-associated with a flat rotation curve of circular speed $v_{\mathrm{sink}}$. -/
+/-- Algebraic Mestel-profile expression $v_{\mathrm{sink}}^2/(2\pi G r)$.
+This definition accepts arbitrary real inputs. Interpreting it as a physical
+surface density requires positive radius and gravitational coupling, plus a
+specified embedded-space field equation; no Poisson equation is part of this
+definition. -/
 noncomputable def mestelSurfaceDensity (v_sink G r : ℝ) : ℝ :=
   v_sink ^ 2 / (2 * Real.pi * G * r)
 
-/-- **Exact Radial Scale Invariance of Toomre's $Q$ on the Mestel Disk**:
-In a flat-rotation-curve Mestel disk ($\kappa(r) = \sqrt{2}\Omega(r) = \sqrt{2} v_{\mathrm{sink}}/r$
-and $\Sigma_0(r) = \frac{v_{\mathrm{sink}}^2}{2\pi G r}$), the radial coordinate $r \ne 0$ cancels
-identically from `toomreQ`, leaving the scale-invariant ratio
+/-- **Exact Radial Scale Invariance for the Algebraic Mestel Profile**:
+For the stipulated flat-rotation-curve expression and algebraic profile
+`mestelSurfaceDensity`, the nonzero radial coordinate cancels identically from
+`toomreQ`, leaving the scale-invariant ratio
 $Q = \frac{2\sqrt{2} c_s}{v_{\mathrm{sink}}}$. -/
 theorem toomreQ_mestelDisk_scale_invariant (v_sink c_s G r : ℝ)
     (hv : v_sink ≠ 0) (hG : G ≠ 0) (hr : r ≠ 0) :
@@ -1208,9 +1214,9 @@ theorem toomreQ_mestelDisk_scale_invariant (v_sink c_s G r : ℝ)
   rw [powerLawOmega_one_eq_div]
   exact mestel_toomreQ_scalar (Real.sqrt 2) v_sink c_s G r hv hG hr
 
-/-- **Radius-Independent Toomre Stability Threshold of the Mestel Disk**:
-For $v_{\mathrm{sink}} > 0$, $G \ne 0$, and $r \ne 0$, the Mestel disk satisfies $Q > 1$ at
-radius $r$ if and only if the thermal sound speed exceeds the global threshold
+/-- **Radius-Independent Threshold for the Algebraic Mestel Profile**:
+For $v_{\mathrm{sink}} > 0$, $G \ne 0$, and $r \ne 0$, the algebraically defined
+profile has `Q > 1` at radius `r` iff the sound-speed parameter exceeds the threshold
 $c_s > \frac{v_{\mathrm{sink}}}{2\sqrt{2}}$. -/
 theorem mestelDisk_toomreQ_gt_one_iff (v_sink c_s G r : ℝ)
     (hv : 0 < v_sink) (hG : G ≠ 0) (hr : r ≠ 0) :
@@ -1221,9 +1227,9 @@ theorem mestelDisk_toomreQ_gt_one_iff (v_sink c_s G r : ℝ)
   rw [toomreQ_mestelDisk_scale_invariant v_sink c_s G r (ne_of_gt hv) hG hr]
   exact one_lt_two_sqrt_two_mul_div_iff v_sink c_s hv
 
-/-- **Two-Point Radial Invariance of Toomre's $Q$ on the Mestel Disk**:
-For any two non-zero radii $r_1 \ne 0$ and $r_2 \ne 0$, the Mestel disk Toomre stability
-parameter takes the exact same value at $r_1$ and $r_2$. -/
+/-- **Two-Point Radial Invariance for the Algebraic Mestel Profile**:
+For any two nonzero real inputs, the algebraically defined Toomre expression
+takes the exact same value. -/
 theorem toomreQ_mestelDisk_radial_invariance
     (v_sink c_s G r₁ r₂ : ℝ) (hv : v_sink ≠ 0) (hG : G ≠ 0)
     (hr₁ : r₁ ≠ 0) (hr₂ : r₂ ≠ 0) :
@@ -1236,8 +1242,8 @@ theorem toomreQ_mestelDisk_radial_invariance
   rw [toomreQ_mestelDisk_scale_invariant v_sink c_s G r₁ hv hG hr₁,
     toomreQ_mestelDisk_scale_invariant v_sink c_s G r₂ hv hG hr₂]
 
-/-- For $v_{\mathrm{sink}} > 0$ and $c_s > 0$, the Mestel disk Toomre parameter is strictly
-positive at every radius $r \ne 0$. -/
+/-- For positive `v_sink` and `c_s`, the algebraic Mestel-profile Toomre
+expression is positive at every nonzero real radius input. -/
 theorem toomreQ_mestelDisk_pos
     (v_sink c_s G r : ℝ) (hv : 0 < v_sink) (hc : 0 < c_s) (hG : G ≠ 0) (hr : r ≠ 0) :
     0 < LinShuAttentionDensityWave.toomreQ
@@ -1247,9 +1253,11 @@ theorem toomreQ_mestelDisk_pos
   have hs2_pos : 0 < Real.sqrt 2 := Real.sqrt_pos.mpr zero_lt_two
   exact div_pos (mul_pos (mul_pos zero_lt_two hs2_pos) hc) hv
 
-/-- **Sink-Generated Mestel Disk Strict Toomre Stability ($Q > 1$ for all $r \ne 0$)**:
-Whenever $A_{i,0} > 0$, $\sigma_0 > 0$, and $c_s > \sqrt{A_{i,0}\sigma_0^2} / (2\sqrt{2})$,
-the sink-generated Mestel disk satisfies $Q > 1$ at every non-zero radius $r \ne 0$. -/
+/-- **Sink-Parameterized Algebraic Profile Threshold ($Q > 1$ for all nonzero $r$)**:
+The sink-derived speed is used as a parameter of the Mestel profile. Whenever
+$A_{i,0} > 0$, $\sigma_0 > 0$, and $c_s > \sqrt{A_{i,0}\sigma_0^2} / (2\sqrt{2})$,
+the resulting parametrized profile satisfies $Q > 1$ at every non-zero radius. This theorem
+does not identify the source of the logarithmic potential with the disk density. -/
 theorem sink_mestelDisk_toomreQ_gt_one
     {n : ℕ} (A_row : Fin (n + 1) → ℝ) (σ₀ c_s G r : ℝ)
     (hA₀ : 0 < A_row 0) (hσ₀ : 0 < σ₀) (hG : G ≠ 0) (hr : r ≠ 0)
@@ -1263,7 +1271,7 @@ theorem sink_mestelDisk_toomreQ_gt_one
   exact (mestelDisk_toomreQ_gt_one_iff
     (Real.sqrt (sinkCircularVelSq A_row σ₀)) c_s G r hv_pos hG hr).mpr hc_s
 
-/-- **Universal Radial-and-Wavenumber WKBJ Dispersion Positivity for KMS Softmax Mestel Disks**:
+/-- **Universal Radial-and-Wavenumber WKBJ Positivity for the KMS-Parameterized Algebraic Profile**:
 For any KMS softmax state `AttentionKMSState.softmaxWeight logits β` on `Fin (n + 1)` with
 $\sigma_0 > 0$, $G > 0$, and thermal sound speed exceeding the scale-invariant threshold
 $\sqrt{\rho_0 \sigma_0^2} / (2\sqrt{2})$, the Lin–Shu WKBJ dispersion RHS is strictly positive

@@ -45,6 +45,7 @@ from tools.infra.opengauss_cli import (
     review_file,
     run_autoprove_cycle,
     run_formalize,
+    verify_certification_audit,
 )
 
 
@@ -381,7 +382,7 @@ def test_command_14_quarantine(tmp_path: Optional[Path] = None):
 
 
 def test_command_15_certify(tmp_path: Optional[Path] = None):
-    """Verify /certify extracts all theorems and emits companion #print axioms script."""
+    """Verify /certify audits public constants across declaration kinds."""
     if tmp_path is None:
         import tempfile
         tmp_path = Path(tempfile.mkdtemp())
@@ -391,6 +392,11 @@ def test_command_15_certify(tmp_path: Optional[Path] = None):
         "-- theorem commented_out : False := by sorry\n"
         "/- namespace AlsoFake -/\n"
         "namespace InfoGeometry.Test\n\n"
+        "def publicValue : Nat := 1\n"
+        "partial def publicPartial : Nat := 1\n"
+        "abbrev PublicAlias := Nat\n"
+        "inductive PublicChoice where\n  | left\n  | right\n"
+        "instance testInhabitedPublicChoice : Inhabited PublicChoice := ⟨.left⟩\n"
         "theorem alpha_eq : 1 = 1 := rfl\n"
         "private theorem hidden_eq : 1 = 1 := rfl\n"
         "private\n"
@@ -402,6 +408,7 @@ def test_command_15_certify(tmp_path: Optional[Path] = None):
         "namespace Dotted.Scope\ntheorem dotted_eq : 4 = 4 := rfl\nend Dotted.Scope\n"
         "namespace Outer\nsection Outer\n"
         "theorem scoped_eq : 5 = 5 := rfl\nend Outer\n"
+        "scoped instance scopedInhabited : Inhabited Nat := ⟨0⟩\n"
         "theorem after_section_eq : 6 = 6 := rfl\nend Outer\n",
         encoding="utf-8",
     )
@@ -409,13 +416,19 @@ def test_command_15_certify(tmp_path: Optional[Path] = None):
     audit = generate_certification_audit(mock_lean, write_audit=True, repo_root=tmp_path)
     assert audit.source_file == str(mock_lean)
     assert audit.audit_file == str(tmp_path / "TestModuleAudit.lean")
-    assert audit.theorems == [
+    assert audit.declarations == [
+        "InfoGeometry.Test.publicValue",
+        "InfoGeometry.Test.publicPartial",
+        "InfoGeometry.Test.PublicAlias",
+        "InfoGeometry.Test.PublicChoice",
+        "InfoGeometry.Test.testInhabitedPublicChoice",
         "InfoGeometry.Test.alpha_eq",
         "InfoGeometry.Test.beta_pos",
         "Other.gamma_eq",
         "InfoGeometry.Test.reopened_eq",
         "Dotted.Scope.dotted_eq",
         "Outer.scoped_eq",
+        "Outer.scopedInhabited",
         "Outer.after_section_eq",
     ]
     assert audit.written is True
@@ -427,12 +440,18 @@ def test_command_15_certify(tmp_path: Optional[Path] = None):
         "-/\n\n"
     )
     assert "import TestModule" in audit.audit_script
+    assert "#print axioms InfoGeometry.Test.publicValue" in audit.audit_script
+    assert "#print axioms InfoGeometry.Test.publicPartial" in audit.audit_script
+    assert "#print axioms InfoGeometry.Test.PublicAlias" in audit.audit_script
+    assert "#print axioms InfoGeometry.Test.PublicChoice" in audit.audit_script
+    assert "#print axioms InfoGeometry.Test.testInhabitedPublicChoice" in audit.audit_script
     assert "#print axioms InfoGeometry.Test.alpha_eq" in audit.audit_script
     assert "#print axioms InfoGeometry.Test.beta_pos" in audit.audit_script
     assert "#print axioms Other.gamma_eq" in audit.audit_script
     assert "#print axioms InfoGeometry.Test.reopened_eq" in audit.audit_script
     assert "#print axioms Dotted.Scope.dotted_eq" in audit.audit_script
     assert "#print axioms Outer.scoped_eq" in audit.audit_script
+    assert "#print axioms Outer.scopedInhabited" in audit.audit_script
     assert "#print axioms Outer.after_section_eq" in audit.audit_script
     assert "commented_out" not in audit.audit_script
     assert "hidden_eq" not in audit.audit_script
@@ -443,10 +462,141 @@ def test_command_15_certify(tmp_path: Optional[Path] = None):
     cockle_file = Path("lean/InfoGeometry/Clifford/CockleCoquaternionPlanarTriad.lean")
     if cockle_file.is_file():
         audit_cockle = generate_certification_audit(cockle_file, write_audit=False)
-        assert len(audit_cockle.theorems) >= 10
-        assert "InfoGeometry.Clifford.Coquaternion.Coquaternion.planar_triad_coexistence" in audit_cockle.theorems
+        assert len(audit_cockle.declarations) >= 10
+        assert "InfoGeometry.Clifford.Coquaternion.Coquaternion.planar_triad_coexistence" in audit_cockle.declarations
         assert "#print axioms InfoGeometry.Clifford.Coquaternion.Coquaternion.planar_triad_coexistence" in audit_cockle.audit_script
         assert audit_cockle.written is False
+
+
+def test_certification_audit_unicode_and_unparsed_fail_closed(tmp_path):
+    """Unicode Lean names are retained and malformed theorem lines block Gate 4."""
+    source_dir = tmp_path / "lean"
+    source_dir.mkdir()
+    owner = source_dir / "UnicodeAudit.lean"
+    owner.write_text(
+        "namespace Test\n"
+        "theorem abstractNullPlus_sub_abstractNullMinus_eq_ι_eMinus : True := by trivial\n"
+        "theorem «name with spaces» : True := by trivial\n"
+        "theorem : True := by trivial\n"
+        "end Test\n",
+        encoding="utf-8",
+    )
+
+    audit = generate_certification_audit(owner, write_audit=False, repo_root=tmp_path)
+    assert audit.declarations == [
+        "Test.abstractNullPlus_sub_abstractNullMinus_eq_ι_eMinus",
+        "Test.«name with spaces»",
+    ]
+    assert audit.unparsed_declarations == ["theorem : True := by trivial"]
+    assert "#print axioms Test.«name with spaces»" in audit.audit_script
+
+    # Gate 4 performs the owner build, then must stop before compiling a partial
+    # generated audit. The single mocked process call represents only that build.
+    with patch(
+        "tools.infra.opengauss_cli.acquire_build_lock",
+        return_value=SimpleNamespace(release=lambda: None),
+    ), patch(
+        "tools.infra.opengauss_cli.subprocess.run",
+        return_value=SimpleNamespace(returncode=0, stdout="", stderr=""),
+    ) as run:
+        verified = verify_certification_audit(owner, repo_root=tmp_path)
+
+    assert verified.verification_status == "audit_parse_incomplete"
+    assert verified.unparsed_declarations == ["theorem : True := by trivial"]
+    assert run.call_count == 1
+
+
+def test_certification_audit_fails_closed_with_no_parsed_declarations(tmp_path):
+    """Malformed input must fail closed before the empty-audit success branch."""
+    owner = tmp_path / "lean" / "EmptyAudit.lean"
+    owner.parent.mkdir()
+    owner.write_text("theorem : True := by trivial\n", encoding="utf-8")
+    with patch(
+        "tools.infra.opengauss_cli.acquire_build_lock",
+        return_value=SimpleNamespace(release=lambda: None),
+    ), patch(
+        "tools.infra.opengauss_cli.subprocess.run",
+        return_value=SimpleNamespace(returncode=0, stdout="", stderr=""),
+    ) as run:
+        verified = verify_certification_audit(owner, repo_root=tmp_path)
+    assert verified.verification_status == "audit_parse_incomplete"
+    assert verified.declarations == []
+    assert verified.unparsed_declarations == ["theorem : True := by trivial"]
+    assert run.call_count == 1
+
+
+def test_certification_audit_ignores_scope_words_in_comments(tmp_path):
+    """Documentation containing Lean command words is not mistaken for code."""
+    owner = tmp_path / "lean" / "CommentScopeAudit.lean"
+    owner.parent.mkdir()
+    owner.write_text(
+        "/- This section adds a matrix note: \\end{pmatrix}. -/\n"
+        "namespace N\n"
+        "theorem documented : True := by trivial\n"
+        "end N\n",
+        encoding="utf-8",
+    )
+    audit = generate_certification_audit(owner, write_audit=False, repo_root=tmp_path)
+    assert audit.declarations == ["N.documented"]
+    assert audit.unparsed_declarations == []
+
+
+def test_certification_audit_fails_closed_on_same_line_declarations(tmp_path):
+    """Same-line command sequences must not produce a partial axiom audit."""
+    owner = tmp_path / "lean" / "SameLineAudit.lean"
+    owner.parent.mkdir()
+    cases = [
+        "theorem first : True := by trivial theorem second : True := by trivial",
+        "namespace N theorem nested : True := by trivial end N",
+        "namespace Outer namespace Inner",
+        "namespace Outer section Inner",
+        "open N theorem afterOpen : True := by trivial",
+        "theorem scoped : True := by trivial end N",
+    ]
+    for index, source in enumerate(cases):
+        owner.write_text(source + "\n", encoding="utf-8")
+        audit = generate_certification_audit(owner, write_audit=False, repo_root=tmp_path)
+        assert audit.declarations == [], (index, audit.declarations)
+        assert audit.unparsed_declarations == [source], (index, audit.unparsed_declarations)
+
+        with patch(
+            "tools.infra.opengauss_cli.acquire_build_lock",
+            return_value=SimpleNamespace(release=lambda: None),
+        ), patch(
+            "tools.infra.opengauss_cli.subprocess.run",
+            return_value=SimpleNamespace(returncode=0, stdout="", stderr=""),
+        ) as run:
+            verified = verify_certification_audit(owner, repo_root=tmp_path)
+        assert verified.verification_status == "audit_parse_incomplete"
+        assert verified.unparsed_declarations == audit.unparsed_declarations
+        assert run.call_count == 1
+
+
+def test_gate4_rejects_unicode_custom_axiom_name(tmp_path):
+    """Gate 4 source scanning must include Unicode-named custom axioms."""
+    owner = tmp_path / "lean" / "UnicodeAxiom.lean"
+    owner.parent.mkdir()
+    owner.write_text(
+        "namespace Test\n"
+        "axiom λWitness : True\n"
+        "theorem owner_theorem : True := by trivial\n"
+        "end Test\n",
+        encoding="utf-8",
+    )
+    audit_output = (
+        "'Test.λWitness' depends on axioms: [Test.λWitness]\n"
+        "'Test.owner_theorem' depends on axioms: [propext]\n"
+    )
+    with patch(
+        "tools.infra.opengauss_cli.acquire_build_lock",
+        return_value=SimpleNamespace(release=lambda: None),
+    ), patch(
+        "tools.infra.opengauss_cli.subprocess.run",
+        return_value=SimpleNamespace(returncode=0, stdout=audit_output, stderr=""),
+    ):
+        verified = verify_certification_audit(owner, repo_root=tmp_path)
+    assert verified.verification_status == "disallowed_axioms"
+    assert "λWitness" in verified.rejected_axioms
 
 
 def test_cli_dispatch_main(capsys=None):

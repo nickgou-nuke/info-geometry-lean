@@ -1,0 +1,15 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.Probability.FiniteWeightedSplitKreinMatrixStage
+
+#print axioms InfoGeometry.Probability.FiniteWeightedSplitKreinMatrixStage.splitWeightedBlock
+#print axioms InfoGeometry.Probability.FiniteWeightedSplitKreinMatrixStage.splitCarrierVector
+#print axioms InfoGeometry.Probability.FiniteWeightedSplitKreinMatrixStage.splitCarrierVectorStage
+#print axioms InfoGeometry.Probability.FiniteWeightedSplitKreinMatrixStage.splitWeightedBlockStage
+#print axioms InfoGeometry.Probability.FiniteWeightedSplitKreinMatrixStage.splitWeightedBlock_mulVec
+#print axioms InfoGeometry.Probability.FiniteWeightedSplitKreinMatrixStage.splitWeightedBlockStage_mulVec
+#print axioms InfoGeometry.Probability.FiniteWeightedSplitKreinMatrixStage.splitWeightedBlockCuntzColimit

@@ -1,0 +1,117 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Synthesis.CanonicalPureMathPoset
+
+/-!
+# Axiom-Footprint Audit for `InfoGeometry.Synthesis.CanonicalPureMathPoset`
+
+Verifies that every public definition and theorem in
+`InfoGeometry.Synthesis.CanonicalPureMathPoset` depends only on the
+standard Lean 4 axioms (`propext`, `Classical.choice`, `Quot.sound`).
+-/
+
+namespace InfoGeometry.Synthesis.CanonicalPureMathPosetAudit
+
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.fisherWeightedInner
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.rieszNaturalGradient
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.rieszNaturalGradient_sum_zero
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.scaled_fisher_riesz_representation
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.markovPush
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.petzAdjointMap
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.petzAdjointMap_fisher_adjoint
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.wittPlus
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.wittMinus
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.vacProj
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.occProj
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.chiralGrading
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.wittPlus_mul_wittMinus_ne_comm
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.cl11_witt_peircian_algebra
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.ParaKahlerData
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.projPlus
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.projMinus
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.K_projPlus
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.K_projMinus
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.projPlus_add_projMinus
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.paraKahler_isotropic_and_offDiagonal
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.IsometricSheetSwap
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.inducedJ
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.trueHermitianMetric
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.K_comp_C
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.norden_vs_true_hermitian_under_J
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.sheetSwap_krein_selfAdjoint
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.trueHermitianMetric_symm
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.paraComplex_krein_skewAdjoint
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.paraComplex_trueHermitianMetric_selfAdjoint
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.inducedJ_krein_selfAdjoint
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.inducedJ_trueHermitianMetric_skewAdjoint
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.krein_adjoint_of_trueHermitianMetric_adjoint
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.mobiusOrbitSetoid
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.quotientQuadratic
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.innerPi
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.gPi
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.gPi_symm
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.primal_sheet_isotropic
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.dual_sheet_isotropic
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.matMul
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.markovDual
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.matMul_markovDual_adjoint
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.kreinOp
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.kreinOp_self_adjoint
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.IsCausal
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.IsAntiCausal
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.causal_dual_is_antiCausal
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.exists_nontrivial_causal_krein_operator
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.ZornOct
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.canonicalZornOct
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.canonicalZornOct_a_ne_zero
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.dot3
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.cross3
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.zMul
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.zAdd
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.zSmul
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.pureVec
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.zorn_leftMul_cl33_clifford_identity
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.zZero
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.zSub
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.zNeg
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.zSiteParity0
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.zSiteParity1
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.zSiteParity2
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.zSiteParity_involutive
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.zSiteParity_commute
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.jwString0
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.jwString1
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.jwString2
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.jwString_involutive
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.localLower0
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.localRaise0
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.localLower1
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.localRaise1
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.localLower2
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.localRaise2
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.local_ladder_commute_all
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.jwAnnihilate0
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.jwCreate0
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.jwAnnihilate1
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.jwCreate1
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.jwAnnihilate2
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.jwCreate2
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.jw_nilpotent
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.jw_same_site_car
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.jw_cross_anticommute
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.jwNumber0
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.jwNumber1
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.jwNumber2
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.jw_parity_eq_id_sub_two_number
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.zGlobalChirality
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.zGlobalChirality_eq
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.zGlobalChirality_properties
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.zorn_jordan_wigner_master
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.uhfStep
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.kms_trace_cycling_and_uhfStep
+#print axioms InfoGeometry.Synthesis.CanonicalPureMathPoset.quadratic_dispersion_nonneg_of_toomre
+
+end InfoGeometry.Synthesis.CanonicalPureMathPosetAudit

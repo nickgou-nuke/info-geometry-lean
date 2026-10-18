@@ -1,0 +1,63 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint
+
+/-!
+# Axiom-Footprint Audit for `InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint`
+
+Verifies that every public definition and theorem in
+`InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint` depends only on the
+standard Lean 4 axioms (`propext`, `Classical.choice`, `Quot.sound`).
+-/
+
+namespace InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjointAudit
+
+#print axioms InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint.l2PiInner
+#print axioms InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint.l2PiInner_symm
+#print axioms InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint.matVec
+#print axioms InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint.piAdjoint
+#print axioms InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint.IsCausalLowerTriangular
+#print axioms InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint.IsAntiCausalUpperTriangular
+#print axioms InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint.piAdjoint_involutive
+#print axioms InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint.piAdjoint_upperTriangular_of_causal
+#print axioms InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint.krein_dual_scalar_identity
+#print axioms InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint.l2PiInner_matVec_piAdjoint
+#print axioms InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint.DoubleKreinSpace
+#print axioms InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint.primalKreinSheet
+#print axioms InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint.dualKreinSheet
+#print axioms InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint.kreinMetricPi
+#print axioms InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint.kreinSymplecticPi
+#print axioms InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint.kreinPolarizationK
+#print axioms InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint.kreinMobiusSwap
+#print axioms InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint.doubleKreinOp
+#print axioms InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint.matVec_zero
+#print axioms InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint.matVec_neg
+#print axioms InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint.doubleKreinOp_preserves_primal_and_dual_null_sheets
+#print axioms InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint.doubleKreinOp_krein_selfAdjoint
+#print axioms InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint.doubleKreinOp_commutes_with_K_and_symplectic_selfAdjoint
+#print axioms InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint.mobiusSwap_intertwines_causal_and_retrodictive
+#print axioms InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint.kmsSymmetrized
+#print axioms InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint.doubleKreinOp_diagonal_shadow_eq_kmsSymmetrized
+#print axioms InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint.causalWitnessP
+#print axioms InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint.uniformPi2
+#print axioms InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint.causalWitnessP_nonVacuous_krein_selfAdjoint
+#print axioms InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint.isCausalLowerTriangular_mul
+#print axioms InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint.piAdjoint_mul_term_identity
+#print axioms InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint.piAdjoint_mul
+#print axioms InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint.pureSinkAbsorber
+#print axioms InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint.pureSinkAbsorber_mul_self
+#print axioms InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint.kreinMobiusSwap_involutive
+#print axioms InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint.andreevReflect
+#print axioms InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint.andreevReflect_eq_mobiusSwap_primal
+#print axioms InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint.andreev_rays_are_null
+#print axioms InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint.andreev_cross_pairing_eq_norm
+#print axioms InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint.kreinMetricPi_mobiusSwap_invariant
+#print axioms InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint.distributedAndreevOp
+#print axioms InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint.l2PiInner_add_smul_left
+#print axioms InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint.l2PiInner_add_smul_right
+#print axioms InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjoint.distributedAndreevOp_krein_selfAdjoint
+
+end InfoGeometry.Synthesis.DoubleKreinCausalSelfAdjointAudit

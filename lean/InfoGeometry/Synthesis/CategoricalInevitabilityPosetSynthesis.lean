@@ -7,6 +7,7 @@ import InfoGeometry.Epistemology.ChentsovUniquenessContinuous
 import InfoGeometry.Epistemology.FisherNaturalGradientSteepest
 import InfoGeometry.Synthesis.MathlibCliffordUniversalLiftSynthesis
 import InfoGeometry.Synthesis.Cl11ChiralVolumeNilpotentQuotientSynthesis
+import InfoGeometry.Clifford.Cl11JordanWignerCARBridge
 import InfoGeometry.Canonical.ParaKahlerLagrangianDimension
 import InfoGeometry.QuantumContext.ColimitAttentionTomitaFlow
 
@@ -943,7 +944,7 @@ theorem risingSea_tower_propagation_modular_kms_synthesis
 /-- **Rising Sea Bundle of Colimit, Quotient, and KMS Facts**:
 Simultaneously bundles three results whose carriers and parameters remain independent:
 1. **Jordan–Wigner Colimit Fact**:
-   chiral volume negation $\Gamma_k a_i^\dagger \Gamma_k = -a_i^\dagger$ and the same-site
+   chiral volume negation $\Gamma_k a_i^\dagger \Gamma_k = -a_i^\dagger$ and same-site
    CAR relation $\{a_i^\dagger, a_i\} = 1$ in `Carrier`;
 2. **Coordinate-Free Unoriented Möbius $\mathbb{Z}_2$ Quotient Fact**:
    identification of `[P⁺ v]` and `[P⁻ (C v)]` in `MobiusInvolutionQuotient hC`; and
@@ -980,6 +981,872 @@ theorem risingSea_three_arrow_colimit_mobius_kms
    risingSea_tower_propagation_modular_kms_synthesis h logits β t A B⟩
 
 end RisingSeaColimitSynthesis
+
+/-!
+## 6. Cross-Corridor Bridges, Scaled Steepest Ascent, and Section Index (`InevitabilityStage`)
+
+This section adds:
+1. **Scaled Fisher Variance Rate, Steepest Ascent & Petz Adjoint Duality (`ScaledFisherSteepestAscent`)**:
+   `covectorVariance`, `fisherNaturalGradient_norm_sq_eq_covectorVariance`,
+   `scaledFisher_self_smul_inv_naturalGradient`,
+   `scaledFisher_naturalGradient_rate_eq_inv_mul_variance`,
+   `scaledFisher_steepest_ascent_of_pos`, `fisherWeightedInner`, `markovPush`,
+   `petzAdjointMap`, and `petzAdjointMap_fisher_adjoint`.
+2. **Explicit `CliffordAlgebra q11Form` Matrix Action Bridges (`CliffordParaKahlerMobiusWelding`)**:
+   `abstractOccProj_eq_half_one_add_chiralVolume`,
+   `abstractVacProj_eq_half_one_sub_chiralVolume`,
+   `cl11MatrixAlgEquiv_nullSum_mulVec_eq_swapK`,
+   `cl11MatrixAlgEquiv_chiralVolume_mulVec_eq_neg_swapSheetInvolution`,
+   `cl11MatrixAlgEquiv_nullDiff_mulVec_eq_inducedComplexStructure`,
+   `cl11MatrixAlgEquiv_abstractNullPlus_eq_wittCreationBase`,
+   `cl11MatrixAlgEquiv_abstractNullMinus_eq_wittAnnihilationBase`,
+   `cl11MatrixAlgEquiv_chiralVolume_eq_gamma_chiral_base`,
+   `cl11MatrixAlgEquiv_abstractVacProj_eq_cl11VacProj`, and
+   `cl11MatrixAlgEquiv_abstractOccProj_eq_cl11OccProj`.
+3. **Set-Level Orbit Descent of the Cross-Sheet Pairing, Norden vs. True `J`-Hermitian Metric & Krein Adjoint Duality (`MobiusCrossSheetDescent`)**:
+   `crossSheetPairing_sheetSwap_invariant`, `crossSheetPairing_eq_of_mobiusInvolutionRel`,
+   `mobiusQuotientCrossSheetPairing`, `mobiusQuotientCrossSheetPairing_mk`,
+   `mobiusQuotientQuadratic_eq_two_mul_crossSheetPairing`, `trueHermitianMetric`,
+   `inducedComplexStructure_apply_sq`, `trueHermitianMetric_inducedComplexStructure_invariant`,
+   `norden_vs_true_hermitian_under_J`, `sheetSwap_krein_selfAdjoint`,
+   `trueHermitianMetric_symm`, `sheetSwap_trueHermitianMetric_selfAdjoint`,
+   `paraComplex_krein_skewAdjoint`, `paraComplex_trueHermitianMetric_selfAdjoint`,
+   `projPlus_krein_adjoint_projMinus`, `projMinus_krein_adjoint_projPlus`,
+   `projPlus_trueHermitianMetric_selfAdjoint`, `projMinus_trueHermitianMetric_selfAdjoint`,
+   `projPlus_projMinus_trueHermitianMetric_orthogonal`,
+   `inducedComplexStructure_krein_selfAdjoint`,
+   `inducedComplexStructure_trueHermitianMetric_skewAdjoint`, and
+   `krein_adjoint_of_trueHermitianMetric_adjoint`.
+4. **Direct `Cl(3,3)` Left-Multiplication Clifford Identity on `ZornSplitOctonion R` (`ZornPolarizedLeftAlternativeCl33`)**:
+   `zorn_leftMul_cl33_clifford_identity`.
+5. **Full Cross-Site Colimit CAR, Pruned Modular Sink Bound, UHF Trace Doubling & Toomre Stability (`StageVCrossSiteAndPrunedSink`)**:
+   `colimitJW_anticomm_creation_all`, `colimitJW_anticomm_annihilation_all`,
+   `colimitJW_annihilation_creation_anticomm_all`,
+   `prunedColimitFunctional_modularFlow_invariant`,
+   `risingSea_pruned_tower_modularFlow_anchor_lower_bound`, `uhfStep`,
+   `kms_trace_cycling_and_uhfStep`, and `quadratic_dispersion_nonneg_of_toomre`.
+6. **Explicit 5-Element Section Index (`InevitabilityPosetOrder`)**:
+   `InevitabilityStage` is equivalent to `Fin 5` for stable enumeration only. This
+   index carries no causal or prerequisite order; evidence-supported bridge
+   reachability is defined separately in `CategoricalInevitabilityCausalPoset`.
+-/
+
+section ScaledFisherSteepestAscent
+
+variable {α : Type} [Fintype α]
+
+/-- The `P`-variance of a covector `ℓ` on the probability simplex interior:
+`Var_P(ℓ) = ∑ a, P.p a * ℓ a ^ 2 - (∑ a, P.p a * ℓ a) ^ 2`. -/
+def covectorVariance (P : ProbInterior α) (ℓ : α → ℝ) : ℝ :=
+  ∑ a, P.p a * ℓ a ^ 2 - (∑ a, P.p a * ℓ a) ^ 2
+
+/-- The squared Fisher length of the natural gradient equals `covectorVariance P ℓ`. -/
+theorem fisherNaturalGradient_norm_sq_eq_covectorVariance (P : ProbInterior α) (ℓ : α → ℝ) :
+    fisherMetric P (fisherNaturalGradient P ℓ) (fisherNaturalGradient P ℓ) =
+      covectorVariance P ℓ := by
+  rw [← fisherNaturalGradient_rate_eq_norm_sq, fisherNaturalGradient_rate_eq_variance]
+  rfl
+
+/-- The squared `scaledFisherFamily c` norm of the scaled natural gradient
+`c⁻¹ • fisherNaturalGradient P ℓ` equals `c⁻¹ * covectorVariance P ℓ`. -/
+theorem scaledFisher_self_smul_inv_naturalGradient
+    (P : ProbInterior α) (ℓ : α → ℝ) {c : ℝ} (hc : c ≠ 0) :
+    (scaledFisherFamily c).g α P
+        (c⁻¹ • fisherNaturalGradient P ℓ) (c⁻¹ • fisherNaturalGradient P ℓ) =
+      c⁻¹ * covectorVariance P ℓ := by
+  change c * fisherMetric P (c⁻¹ • fisherNaturalGradient P ℓ) (c⁻¹ • fisherNaturalGradient P ℓ) =
+    c⁻¹ * covectorVariance P ℓ
+  rw [fisherMetric_smul_left,
+    fisherMetric_symm,
+    fisherMetric_smul_left,
+    fisherNaturalGradient_norm_sq_eq_covectorVariance,
+    mul_inv_cancel_left₀ hc]
+
+/-- The first-order ascent rate of a covector `ℓ` along the scaled natural gradient
+`c⁻¹ • fisherNaturalGradient P ℓ` equals `c⁻¹ * covectorVariance P ℓ`. -/
+theorem scaledFisher_naturalGradient_rate_eq_inv_mul_variance
+    (P : ProbInterior α) (ℓ : α → ℝ) (c : ℝ) :
+    ∑ a, ℓ a * (c⁻¹ • fisherNaturalGradient P ℓ) a =
+      c⁻¹ * covectorVariance P ℓ := by
+  have hterm : ∀ a : α, ℓ a * (c⁻¹ • fisherNaturalGradient P ℓ) a =
+      c⁻¹ * (ℓ a * fisherNaturalGradient P ℓ a) := by
+    intro a
+    simp only [Pi.smul_apply, smul_eq_mul]
+    ring
+  simp only [hterm, ← Finset.mul_sum]
+  rw [fisherNaturalGradient_rate_eq_variance]
+  rfl
+
+/-- **Scaled Fisher Steepest Ascent on the `g_P^(c)`-Ball**:
+For any positive Chentsov scale `0 < c`, the scaled natural gradient
+`c⁻¹ • fisherNaturalGradient P ℓ` maximizes the first-order covector rate `∑ a, ℓ a * w a`
+among all tangent vectors `w` (`∑ a, w a = 0`) whose `scaledFisherFamily c` norm does not
+exceed that of `c⁻¹ • fisherNaturalGradient P ℓ`. -/
+theorem scaledFisher_steepest_ascent_of_pos
+    (P : ProbInterior α) (ℓ w : α → ℝ) (hw : ∑ a, w a = 0) {c : ℝ} (hc : 0 < c)
+    (h_norm : (scaledFisherFamily c).g α P w w ≤
+      (scaledFisherFamily c).g α P
+        (c⁻¹ • fisherNaturalGradient P ℓ) (c⁻¹ • fisherNaturalGradient P ℓ)) :
+    ∑ a, ℓ a * w a ≤ c⁻¹ * ∑ a, ℓ a * fisherNaturalGradient P ℓ a := by
+  have hc_ne : c ≠ 0 := ne_of_gt hc
+  have hu_tan : ∑ a, (c • w) a = 0 := by
+    simp only [Pi.smul_apply, smul_eq_mul, ← Finset.mul_sum, hw, mul_zero]
+  have h_lhs : fisherMetric P (c • w) (c • w) = c * (scaledFisherFamily c).g α P w w := by
+    change fisherMetric P (c • w) (c • w) = c * (c * fisherMetric P w w)
+    rw [fisherMetric_smul_left,
+      fisherMetric_symm,
+      fisherMetric_smul_left]
+  have h_rhs :
+      c * (scaledFisherFamily c).g α P
+        (c⁻¹ • fisherNaturalGradient P ℓ) (c⁻¹ • fisherNaturalGradient P ℓ) =
+      fisherMetric P (fisherNaturalGradient P ℓ) (fisherNaturalGradient P ℓ) := by
+    change c * (c * fisherMetric P
+      (c⁻¹ • fisherNaturalGradient P ℓ) (c⁻¹ • fisherNaturalGradient P ℓ)) = _
+    rw [fisherMetric_smul_left,
+      fisherMetric_symm,
+      fisherMetric_smul_left,
+      mul_inv_cancel_left₀ hc_ne, mul_inv_cancel_left₀ hc_ne]
+  have hu_len :
+      fisherMetric P (c • w) (c • w) ≤
+        fisherMetric P (fisherNaturalGradient P ℓ) (fisherNaturalGradient P ℓ) := by
+    rw [h_lhs, ← h_rhs]
+    exact mul_le_mul_of_nonneg_left h_norm (le_of_lt hc)
+  have h_asc := fisherNaturalGradient_steepest_ascent P ℓ (c • w) hu_tan hu_len
+  have h_rate_smul : ∑ a, ℓ a * (c • w) a = c * ∑ a, ℓ a * w a := by
+    have hterm : ∀ a : α, ℓ a * (c • w) a = c * (ℓ a * w a) := by
+      intro a
+      simp only [Pi.smul_apply, smul_eq_mul]
+      ring
+    simp only [hterm, ← Finset.mul_sum]
+  rw [h_rate_smul] at h_asc
+  have h_inv_pos : 0 ≤ c⁻¹ := inv_nonneg.mpr (le_of_lt hc)
+  have h_scaled := mul_le_mul_of_nonneg_left h_asc h_inv_pos
+  rwa [inv_mul_cancel_left₀ hc_ne] at h_scaled
+
+/-- Weighted Fisher inner product `⟨u, v⟩_ρ = ∑ i, (u i * v i) / ρ i` on `n → ℝ`. -/
+def fisherWeightedInner {n : Type*} [Fintype n] (ρ u v : n → ℝ) : ℝ :=
+  ∑ i : n, (u i * v i) / ρ i
+
+/-- Markov transition pushforward `(T_* x) j = ∑ i, T j i * x i`. -/
+def markovPush {n m : Type*} [Fintype n] (T : Matrix m n ℝ) (x : n → ℝ) (j : m) : ℝ :=
+  ∑ i : n, T j i * x i
+
+/-- Petz recovery adjoint `(T^*_ρ y) i = ρ i * ∑ j, T j i * (y j / (T_* ρ) j)`. -/
+def petzAdjointMap {n m : Type*} [Fintype n] [Fintype m]
+    (ρ : n → ℝ) (T : Matrix m n ℝ) (y : m → ℝ) (i : n) : ℝ :=
+  ρ i * ∑ j : m, T j i * (y j / markovPush T ρ j)
+
+private lemma petz_term_rearrange (a b c d : ℝ) :
+    a * (b / c) * d = (b * (a * d)) / c := by
+  ring
+
+/-- **Petz Adjoint Duality for the Weighted Fisher Inner Product**:
+For any strictly nonzero reference density `hρ : ∀ i, ρ i ≠ 0` and transition matrix `T`,
+`petzAdjointMap ρ T` is the exact adjoint of `markovPush T` with respect to
+`fisherWeightedInner`:
+`⟨petzAdjointMap ρ T y, x⟩_ρ = ⟨y, markovPush T x⟩_{markovPush T ρ}`. -/
+theorem petzAdjointMap_fisher_adjoint {n m : Type*} [Fintype n] [Fintype m]
+    (ρ x : n → ℝ) (T : Matrix m n ℝ) (y : m → ℝ) (hρ : ∀ i : n, ρ i ≠ 0) :
+    fisherWeightedInner ρ (petzAdjointMap ρ T y) x =
+      fisherWeightedInner (markovPush T ρ) y (markovPush T x) := by
+  unfold fisherWeightedInner petzAdjointMap
+  calc
+    ∑ i : n, (ρ i * (∑ j : m, T j i * (y j / markovPush T ρ j)) * x i) / ρ i
+      = ∑ i : n, ((∑ j : m, T j i * (y j / markovPush T ρ j)) * x i) := by
+          refine Finset.sum_congr rfl (fun i _ => ?_)
+          rw [mul_assoc, mul_div_cancel_left₀ _ (hρ i)]
+    _ = ∑ i : n, ∑ j : m, (T j i * (y j / markovPush T ρ j) * x i) := by
+          refine Finset.sum_congr rfl (fun i _ => ?_)
+          rw [Finset.sum_mul]
+    _ = ∑ j : m, ∑ i : n, (T j i * (y j / markovPush T ρ j) * x i) := by
+          rw [Finset.sum_comm]
+    _ = ∑ j : m, (y j * markovPush T x j) / markovPush T ρ j := by
+          refine Finset.sum_congr rfl (fun j _ => ?_)
+          have h_push : markovPush T x j = ∑ i : n, T j i * x i := rfl
+          rw [h_push, Finset.mul_sum, Finset.sum_div]
+          refine Finset.sum_congr rfl (fun i _ => ?_)
+          exact petz_term_rearrange (T j i) (y j) (markovPush T ρ j) (x i)
+
+end ScaledFisherSteepestAscent
+
+section CliffordParaKahlerMobiusWelding
+
+/-- Universal occupied projector spectral decomposition in `CliffordAlgebra q11Form`:
+`abstractOccProj = (1 / 2) • (1 + abstractChiralVolume)`. -/
+theorem abstractOccProj_eq_half_one_add_chiralVolume :
+    abstractOccProj =
+      (1 / 2 : ℝ) • ((1 : CliffordAlgebra q11Form) + abstractChiralVolume) := by
+  unfold abstractOccProj
+  apply cl11MatrixAlgEquiv.injective
+  rw [map_mul, map_smul, map_add, map_one,
+    cl11MatrixAlgEquiv_abstractNullMinus, cl11MatrixAlgEquiv_abstractNullPlus,
+    cl11MatrixAlgEquiv_chiralVolume]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [Matrix.mul_apply, Fin.sum_univ_two, Matrix.one_apply]
+
+/-- Universal vacuum projector spectral decomposition in `CliffordAlgebra q11Form`:
+`abstractVacProj = (1 / 2) • (1 - abstractChiralVolume)`. -/
+theorem abstractVacProj_eq_half_one_sub_chiralVolume :
+    abstractVacProj =
+      (1 / 2 : ℝ) • ((1 : CliffordAlgebra q11Form) - abstractChiralVolume) := by
+  unfold abstractVacProj
+  apply cl11MatrixAlgEquiv.injective
+  rw [map_mul, map_smul, map_sub, map_one,
+    cl11MatrixAlgEquiv_abstractNullPlus, cl11MatrixAlgEquiv_abstractNullMinus,
+    cl11MatrixAlgEquiv_chiralVolume]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [Matrix.mul_apply, Fin.sum_univ_two, Matrix.one_apply]
+
+/-- **Matrix Action of `abstractNullPlus + abstractNullMinus` Equals `swapK`**:
+The matrix image of the positive-square generator `abstractNullPlus + abstractNullMinus`
+(`= ι(1, 0)`) in `CliffordAlgebra q11Form` acts on `Fin 2 → ℝ` by `Matrix.mulVec`
+identically as the coordinate-swap involution `swapK`. -/
+theorem cl11MatrixAlgEquiv_nullSum_mulVec_eq_swapK (v : Fin 2 → ℝ) :
+    (cl11MatrixAlgEquiv (abstractNullPlus + abstractNullMinus)).mulVec v = swapK v := by
+  rw [map_add, cl11MatrixAlgEquiv_abstractNullPlus, cl11MatrixAlgEquiv_abstractNullMinus]
+  ext i
+  fin_cases i
+  · simp [Matrix.mulVec, dotProduct, Fin.sum_univ_two, swapK_apply_zero]
+  · simp [Matrix.mulVec, dotProduct, Fin.sum_univ_two, swapK_apply_one]
+
+/-- **Matrix Action of `abstractChiralVolume` Equals `-swapSheetInvolution`**:
+The matrix image of the universal chiral volume element `abstractChiralVolume` in
+`CliffordAlgebra q11Form` acts on `Fin 2 → ℝ` by `Matrix.mulVec` as the negation of the
+sheet-swapping involution `swapSheetInvolution`. -/
+theorem cl11MatrixAlgEquiv_chiralVolume_mulVec_eq_neg_swapSheetInvolution (v : Fin 2 → ℝ) :
+    (cl11MatrixAlgEquiv abstractChiralVolume).mulVec v = -swapSheetInvolution v := by
+  rw [cl11MatrixAlgEquiv_chiralVolume]
+  ext i
+  fin_cases i
+  · simp [Matrix.mulVec, dotProduct, Fin.sum_univ_two]
+  · simp [Matrix.mulVec, dotProduct, Fin.sum_univ_two]
+
+/-- **Matrix Action of `abstractNullPlus - abstractNullMinus` Equals `inducedComplexStructure swapSheetInvolution swapK`**:
+The matrix image of the negative-square Clifford generator `abstractNullPlus - abstractNullMinus`
+(`= ι(0, 1)`) in `CliffordAlgebra q11Form` acts on `Fin 2 → ℝ` by `Matrix.mulVec` identically
+as the induced complex structure `J = inducedComplexStructure swapSheetInvolution swapK`. -/
+theorem cl11MatrixAlgEquiv_nullDiff_mulVec_eq_inducedComplexStructure (v : Fin 2 → ℝ) :
+    (cl11MatrixAlgEquiv (abstractNullPlus - abstractNullMinus)).mulVec v =
+      inducedComplexStructure swapSheetInvolution swapK v := by
+  rw [map_sub, cl11MatrixAlgEquiv_abstractNullPlus, cl11MatrixAlgEquiv_abstractNullMinus]
+  ext i
+  fin_cases i
+  · simp [Matrix.mulVec, dotProduct, Fin.sum_univ_two,
+      inducedComplexStructure, swapK_apply_zero]
+  · simp [Matrix.mulVec, dotProduct, Fin.sum_univ_two,
+      inducedComplexStructure, swapK_apply_one]
+
+/-- The matrix image of `abstractNullPlus` under `cl11MatrixAlgEquiv` equals the
+Jordan–Wigner base creation matrix `wittCreationBase`. -/
+theorem cl11MatrixAlgEquiv_abstractNullPlus_eq_wittCreationBase :
+    cl11MatrixAlgEquiv abstractNullPlus =
+      InfoGeometry.Clifford.Cl11TensorTower.wittCreationBase := by
+  rw [cl11MatrixAlgEquiv_abstractNullPlus, ← cl11NilpotentPlus_eq_wittCreationBase]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [cl11NilpotentPlus, J1, Eminus]
+
+/-- The matrix image of `abstractNullMinus` under `cl11MatrixAlgEquiv` equals the
+Jordan–Wigner base annihilation matrix `wittAnnihilationBase`. -/
+theorem cl11MatrixAlgEquiv_abstractNullMinus_eq_wittAnnihilationBase :
+    cl11MatrixAlgEquiv abstractNullMinus =
+      InfoGeometry.Clifford.Cl11TensorTower.wittAnnihilationBase := by
+  rw [cl11MatrixAlgEquiv_abstractNullMinus, ← cl11NilpotentMinus_eq_wittAnnihilationBase]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [cl11NilpotentMinus, J1, Eminus]
+
+/-- The matrix image of `abstractChiralVolume` under `cl11MatrixAlgEquiv` equals the
+Jordan–Wigner base chiral grading matrix `gamma_chiral_base`. -/
+theorem cl11MatrixAlgEquiv_chiralVolume_eq_gamma_chiral_base :
+    cl11MatrixAlgEquiv abstractChiralVolume =
+      InfoGeometry.Clifford.Cl11TensorTower.gamma_chiral_base := by
+  rw [cl11MatrixAlgEquiv_apply, cl11MatrixAlgHom_abstractChiralVolume,
+    cl11ChiralVolume_eq_gamma_chiral_base]
+
+/-- The matrix image of `abstractVacProj` under `cl11MatrixAlgEquiv` equals the
+atomic vacuum projector `cl11VacProj`. -/
+theorem cl11MatrixAlgEquiv_abstractVacProj_eq_cl11VacProj :
+    cl11MatrixAlgEquiv abstractVacProj = cl11VacProj := by
+  unfold abstractVacProj cl11VacProj
+  rw [map_mul, cl11MatrixAlgEquiv_abstractNullPlus_eq_wittCreationBase,
+    cl11MatrixAlgEquiv_abstractNullMinus_eq_wittAnnihilationBase,
+    cl11NilpotentPlus_eq_wittCreationBase, cl11NilpotentMinus_eq_wittAnnihilationBase]
+
+/-- The matrix image of `abstractOccProj` under `cl11MatrixAlgEquiv` equals the
+atomic occupied projector `cl11OccProj`. -/
+theorem cl11MatrixAlgEquiv_abstractOccProj_eq_cl11OccProj :
+    cl11MatrixAlgEquiv abstractOccProj = cl11OccProj := by
+  unfold abstractOccProj cl11OccProj
+  rw [map_mul, cl11MatrixAlgEquiv_abstractNullMinus_eq_wittAnnihilationBase,
+    cl11MatrixAlgEquiv_abstractNullPlus_eq_wittCreationBase,
+    cl11NilpotentMinus_eq_wittAnnihilationBase, cl11NilpotentPlus_eq_wittCreationBase]
+
+end CliffordParaKahlerMobiusWelding
+
+section MobiusCrossSheetDescent
+
+variable {V : Type*} [AddCommGroup V] [Module ℝ V]
+
+/-- **Sheet-Swap Invariance of the Off-Diagonal Cross-Sheet Pairing**:
+For any para-Kähler structure `(g, omega, K)` and `g`-isometric sheet-swapping involution `C`
+(`IsSheetSwapInvolution K C`), the cross-sheet pairing `g (P⁺ v) (P⁻ v)` is invariant under
+`v ↦ C v`. -/
+theorem crossSheetPairing_sheetSwap_invariant
+    (g omega : V →ₗ[ℝ] V →ₗ[ℝ] ℝ) (K C : V →ₗ[ℝ] V)
+    (hPK : ParaKahlerStructure g omega K)
+    (hC : IsSheetSwapInvolution K C)
+    (hC_iso : ∀ u w, g (C u) (C w) = g u w) (v : V) :
+    g (paraProjectorPlus K (C v)) (paraProjectorMinus K (C v)) =
+      g (paraProjectorPlus K v) (paraProjectorMinus K v) := by
+  have _ := hPK.compatibility v v
+  rw [mobiusTwist_intertwines_paraProjectorMinus K C hC.2 v,
+    mobiusTwist_intertwines_paraProjectorPlus K C hC.2 v,
+    hC_iso (paraProjectorMinus K v) (paraProjectorPlus K v),
+    hPK.g_symm (paraProjectorMinus K v) (paraProjectorPlus K v)]
+
+/-- The off-diagonal cross-sheet pairing `g (P⁺ u) (P⁻ u)` is constant along every
+`mobiusInvolutionRel C` orbit. -/
+theorem crossSheetPairing_eq_of_mobiusInvolutionRel
+    (g omega : V →ₗ[ℝ] V →ₗ[ℝ] ℝ) (K C : V →ₗ[ℝ] V)
+    (hPK : ParaKahlerStructure g omega K)
+    (hC : IsSheetSwapInvolution K C)
+    (hC_iso : ∀ u w, g (C u) (C w) = g u w) {u w : V}
+    (huw : mobiusInvolutionRel C u w) :
+    g (paraProjectorPlus K u) (paraProjectorMinus K u) =
+      g (paraProjectorPlus K w) (paraProjectorMinus K w) := by
+  rcases huw with rfl | rfl
+  · rfl
+  · exact (crossSheetPairing_sheetSwap_invariant g omega K C hPK hC hC_iso u).symm
+
+/-- Well-defined descent of the cross-sheet pairing `v ↦ g (P⁺ v) (P⁻ v)` to the
+set-level $\mathbb{Z}_2$ orbit quotient `MobiusInvolutionQuotient hC`. -/
+def mobiusQuotientCrossSheetPairing
+    (g omega : V →ₗ[ℝ] V →ₗ[ℝ] ℝ) {K C : V →ₗ[ℝ] V}
+    (hPK : ParaKahlerStructure g omega K)
+    (hC : IsSheetSwapInvolution K C)
+    (hC_iso : ∀ u w, g (C u) (C w) = g u w) :
+    MobiusInvolutionQuotient hC → ℝ :=
+  Quotient.lift (fun v => g (paraProjectorPlus K v) (paraProjectorMinus K v))
+    (fun _ _ huw => crossSheetPairing_eq_of_mobiusInvolutionRel g omega K C hPK hC hC_iso huw)
+
+@[simp]
+theorem mobiusQuotientCrossSheetPairing_mk
+    (g omega : V →ₗ[ℝ] V →ₗ[ℝ] ℝ) {K C : V →ₗ[ℝ] V}
+    (hPK : ParaKahlerStructure g omega K)
+    (hC : IsSheetSwapInvolution K C)
+    (hC_iso : ∀ u w, g (C u) (C w) = g u w) (v : V) :
+    mobiusQuotientCrossSheetPairing g omega hPK hC hC_iso
+      (Quotient.mk (mobiusInvolutionSetoid hC) v) =
+      g (paraProjectorPlus K v) (paraProjectorMinus K v) :=
+  rfl
+
+/-- **Quotient Cross-Sheet Quadratic Identity**:
+On the set-level $\mathbb{Z}_2$ orbit quotient `MobiusInvolutionQuotient hC`, the descended
+quadratic form `mobiusQuotientQuadratic` equals twice the descended off-diagonal cross-sheet
+pairing `mobiusQuotientCrossSheetPairing`. -/
+theorem mobiusQuotientQuadratic_eq_two_mul_crossSheetPairing
+    (g omega : V →ₗ[ℝ] V →ₗ[ℝ] ℝ) {K C : V →ₗ[ℝ] V}
+    (hK : ParaComplexStructure K) (hPK : ParaKahlerStructure g omega K)
+    (hC : IsSheetSwapInvolution K C)
+    (hC_iso : ∀ u w, g (C u) (C w) = g u w)
+    (q : MobiusInvolutionQuotient hC) :
+    mobiusQuotientQuadratic g hC hC_iso q =
+      2 * mobiusQuotientCrossSheetPairing g omega hPK hC hC_iso q :=
+  Quotient.inductionOn q (fun v => paraKahler_self_metric_eq_two_mul_cross_sheet hK hPK v)
+
+/-- The true $J$-Hermitian bilinear pairing $g_C(u, v) = g(u, C v)$ twisted by the
+sheet-swapping involution `C`. -/
+def trueHermitianMetric (g : V →ₗ[ℝ] V →ₗ[ℝ] ℝ) (C : V →ₗ[ℝ] V) (u v : V) : ℝ :=
+  g u (C v)
+
+/-- Pointwise elliptic square identity `J (J v) = -v` for `J = inducedComplexStructure C K`. -/
+theorem inducedComplexStructure_apply_sq
+    (K C : V →ₗ[ℝ] V) (hK : ParaComplexStructure K) (hC : IsSheetSwapInvolution K C) (v : V) :
+    inducedComplexStructure C K (inducedComplexStructure C K v) = -v := by
+  have h := congrArg (fun f : V →ₗ[ℝ] V => f v) (inducedComplexStructure_sq_eq_neg_id K C hK hC)
+  simpa only [LinearMap.comp_apply, LinearMap.neg_apply, LinearMap.id_apply] using h
+
+/-- The twisted pairing `trueHermitianMetric g C` is strictly $J$-Hermitian (invariant)
+under `J = inducedComplexStructure C K`. -/
+theorem trueHermitianMetric_inducedComplexStructure_invariant
+    (g omega : V →ₗ[ℝ] V →ₗ[ℝ] ℝ) (K C : V →ₗ[ℝ] V)
+    (hK : ParaComplexStructure K) (hPK : ParaKahlerStructure g omega K)
+    (hC : IsSheetSwapInvolution K C)
+    (hC_iso : ∀ u v : V, g (C u) (C v) = g u v) (u v : V) :
+    trueHermitianMetric g C (inducedComplexStructure C K u) (inducedComplexStructure C K v) =
+      trueHermitianMetric g C u v := by
+  dsimp [trueHermitianMetric, inducedComplexStructure]
+  have h_comm : C (K v) = -K (C v) := by
+    rw [mobiusTwist_apply_comm K C hC.2 v, neg_neg]
+  rw [hC_iso (K u) (C (K v)), h_comm, map_neg,
+    metric_anti_invariance g omega K hK hPK u (C v), neg_neg]
+
+/-- **Norden Anti-Invariance of `g` vs. True `J`-Hermitian Invariance of `trueHermitianMetric g C`**:
+For any para-Kähler structure `(g, omega, K)` and `g`-isometric sheet-swapping involution `C`:
+1. `J (J v) = -v` for `J = inducedComplexStructure C K`,
+2. `g (J u) (J v) = -g u v` (Norden anti-invariance of the neutral metric `g`),
+3. `omega (J u) (J v) = omega u v` (symplectic invariance of `omega`), and
+4. `trueHermitianMetric g C (J u) (J v) = trueHermitianMetric g C u v` (true $J$-Hermitian
+   invariance of the `C`-twisted metric $g_C(u, v) = g(u, C v)$). -/
+theorem norden_vs_true_hermitian_under_J
+    (g omega : V →ₗ[ℝ] V →ₗ[ℝ] ℝ) (K C : V →ₗ[ℝ] V)
+    (hK : ParaComplexStructure K) (hPK : ParaKahlerStructure g omega K)
+    (hC : IsSheetSwapInvolution K C)
+    (hC_iso : ∀ u v : V, g (C u) (C v) = g u v) (u v : V) :
+    inducedComplexStructure C K (inducedComplexStructure C K v) = -v ∧
+      g (inducedComplexStructure C K u) (inducedComplexStructure C K v) = -g u v ∧
+      omega (inducedComplexStructure C K u) (inducedComplexStructure C K v) = omega u v ∧
+      trueHermitianMetric g C (inducedComplexStructure C K u) (inducedComplexStructure C K v) =
+        trueHermitianMetric g C u v :=
+  ⟨inducedComplexStructure_apply_sq K C hK hC v,
+   inducedComplexStructure_metric_neg g omega K C hK hPK hC_iso u v,
+   inducedComplexStructure_symplectic_invariant g omega K C hK hPK hC hC_iso u v,
+   trueHermitianMetric_inducedComplexStructure_invariant g omega K C hK hPK hC hC_iso u v⟩
+
+/-- **Fundamental Symmetry Krein Self-Adjointness of `C`**:
+Because `C` is a `g`-isometric involution (`C (C u) = u`), `C` is self-adjoint with respect to
+the indefinite Krein metric `g`: `g (C u) v = g u (C v) = trueHermitianMetric g C u v`. -/
+theorem sheetSwap_krein_selfAdjoint
+    (g : V →ₗ[ℝ] V →ₗ[ℝ] ℝ) (K C : V →ₗ[ℝ] V)
+    (hC : IsSheetSwapInvolution K C)
+    (hC_iso : ∀ u v : V, g (C u) (C v) = g u v) (u v : V) :
+    g (C u) v = g u (C v) := by
+  calc
+    g (C u) v = g (C (C u)) (C v) := (hC_iso (C u) v).symm
+    _ = g u (C v) := by rw [sheetSwapInvolution_apply_sq K C hC u]
+
+/-- Symmetry of the `C`-twisted pairing `trueHermitianMetric g C`:
+`trueHermitianMetric g C u v = trueHermitianMetric g C v u`. -/
+theorem trueHermitianMetric_symm
+    (g omega : V →ₗ[ℝ] V →ₗ[ℝ] ℝ) (K C : V →ₗ[ℝ] V)
+    (hPK : ParaKahlerStructure g omega K)
+    (hC : IsSheetSwapInvolution K C)
+    (hC_iso : ∀ u v : V, g (C u) (C v) = g u v) (u v : V) :
+    trueHermitianMetric g C u v = trueHermitianMetric g C v u := by
+  dsimp [trueHermitianMetric]
+  calc
+    g u (C v) = g (C u) v := (sheetSwap_krein_selfAdjoint g K C hC hC_iso u v).symm
+    _ = g v (C u) := hPK.g_symm (C u) v
+
+/-- **Krein Skew-Adjointness of the Paracomplex Grading `K`**:
+With respect to the indefinite neutral metric `g`, `K` is skew-adjoint (`g (K u) v = -g u (K v)`). -/
+theorem paraComplex_krein_skewAdjoint
+    (g omega : V →ₗ[ℝ] V →ₗ[ℝ] ℝ) (K : V →ₗ[ℝ] V)
+    (hK : ParaComplexStructure K) (hPK : ParaKahlerStructure g omega K) (u v : V) :
+    g (K u) v = -g u (K v) := by
+  have h_kv : K (K v) = v := hK.involutive v
+  calc
+    g (K u) v = g (K u) (K (K v)) := by rw [h_kv]
+    _ = -g u (K v) := metric_anti_invariance g omega K hK hPK u (K v)
+
+/-- **`trueHermitianMetric` Self-Adjointness of the Paracomplex Grading `K`**:
+Because `K` is `g`-skew-adjoint and anticommutes with `C`, `K` is **self-adjoint** with respect
+to the twisted metric `trueHermitianMetric g C`:
+`trueHermitianMetric g C (K u) v = trueHermitianMetric g C u (K v)`. -/
+theorem paraComplex_trueHermitianMetric_selfAdjoint
+    (g omega : V →ₗ[ℝ] V →ₗ[ℝ] ℝ) (K C : V →ₗ[ℝ] V)
+    (hK : ParaComplexStructure K) (hPK : ParaKahlerStructure g omega K)
+    (hC : IsSheetSwapInvolution K C) (u v : V) :
+    trueHermitianMetric g C (K u) v = trueHermitianMetric g C u (K v) := by
+  dsimp [trueHermitianMetric]
+  calc
+    g (K u) (C v) = -g u (K (C v)) :=
+      paraComplex_krein_skewAdjoint g omega K hK hPK u (C v)
+    _ = -g u (-(C (K v))) := by rw [mobiusTwist_apply_comm K C hC.2 v]
+    _ = g u (C (K v)) := by rw [map_neg, neg_neg]
+
+/-- **Krein Self-Adjointness of the Induced Complex Structure `J = C ∘ K`**:
+With respect to the indefinite Krein metric `g`, `J = inducedComplexStructure C K` is
+**Krein self-adjoint** (`g (J u) v = +g u (J v)`), whereas with respect to `trueHermitianMetric g C`
+it is skew-adjoint. -/
+theorem inducedComplexStructure_krein_selfAdjoint
+    (g omega : V →ₗ[ℝ] V →ₗ[ℝ] ℝ) (K C : V →ₗ[ℝ] V)
+    (hK : ParaComplexStructure K) (hPK : ParaKahlerStructure g omega K)
+    (hC : IsSheetSwapInvolution K C)
+    (hC_iso : ∀ u v : V, g (C u) (C v) = g u v) (u v : V) :
+    g (inducedComplexStructure C K u) v = g u (inducedComplexStructure C K v) := by
+  dsimp [inducedComplexStructure]
+  calc
+    g (C (K u)) v = g (K u) (C v) :=
+      sheetSwap_krein_selfAdjoint g K C hC hC_iso (K u) v
+    _ = g u (C (K v)) :=
+      paraComplex_trueHermitianMetric_selfAdjoint g omega K C hK hPK hC u v
+
+/-- **Skew-Adjointness of `J = C ∘ K` under `trueHermitianMetric g C`**:
+`trueHermitianMetric g C (J u) v = -trueHermitianMetric g C u (J v)`. -/
+theorem inducedComplexStructure_trueHermitianMetric_skewAdjoint
+    (g omega : V →ₗ[ℝ] V →ₗ[ℝ] ℝ) (K C : V →ₗ[ℝ] V)
+    (hK : ParaComplexStructure K) (hPK : ParaKahlerStructure g omega K)
+    (hC : IsSheetSwapInvolution K C)
+    (hC_iso : ∀ u v : V, g (C u) (C v) = g u v) (u v : V) :
+    trueHermitianMetric g C (inducedComplexStructure C K u) v =
+      -trueHermitianMetric g C u (inducedComplexStructure C K v) := by
+  calc
+    trueHermitianMetric g C (inducedComplexStructure C K u) v
+      = -trueHermitianMetric g C (inducedComplexStructure C K u)
+          (inducedComplexStructure C K (inducedComplexStructure C K v)) := by
+          dsimp [trueHermitianMetric]
+          rw [inducedComplexStructure_apply_sq K C hK hC v, map_neg, map_neg, neg_neg]
+    _ = -trueHermitianMetric g C u (inducedComplexStructure C K v) := by
+          rw [trueHermitianMetric_inducedComplexStructure_invariant g omega K C hK hPK hC hC_iso
+            u (inducedComplexStructure C K v)]
+
+/-- **General Krein Adjoint Formula ($A^{[*]_g} = C \circ A^{*_{g_C}} \circ C$)**:
+If `A_adj` is the adjoint of `A` with respect to `trueHermitianMetric g C`, then
+`C ∘ A_adj ∘ C` is the Krein adjoint of `A` with respect to `g`:
+`g (A u) v = g u (C (A_adj (C v)))`. -/
+theorem krein_adjoint_of_trueHermitianMetric_adjoint
+    (g : V →ₗ[ℝ] V →ₗ[ℝ] ℝ) (K C A A_adj : V →ₗ[ℝ] V)
+    (hC : IsSheetSwapInvolution K C)
+    (h_adj : ∀ x y : V, trueHermitianMetric g C (A x) y = trueHermitianMetric g C x (A_adj y))
+    (u v : V) :
+    g (A u) v = g u (C (A_adj (C v))) := by
+  calc
+    g (A u) v = g (A u) (C (C v)) := by rw [sheetSwapInvolution_apply_sq K C hC v]
+    _ = trueHermitianMetric g C (A u) (C v) := rfl
+    _ = trueHermitianMetric g C u (A_adj (C v)) := h_adj u (C v)
+    _ = g u (C (A_adj (C v))) := rfl
+
+/-- Weighted inner product $\langle u, v \rangle_\pi = \sum_i \pi_i u_i v_i$ on a finite index type. -/
+def innerPi {ι : Type*} [Fintype ι] (π u v : ι → ℝ) : ℝ :=
+  ∑ i : ι, π i * u i * v i
+
+/-- Off-diagonal neutral Krein pairing
+$g_\pi((u_+, u_-), (v_+, v_-)) = \langle u_+, v_- \rangle_\pi + \langle u_-, v_+ \rangle_\pi$
+on the Double Real Krein Space $\mathcal{K}_\iota = (\iota \to \mathbb{R}) \times (\iota \to \mathbb{R})$. -/
+def gPi {ι : Type*} [Fintype ι] (π : ι → ℝ) (u v : (ι → ℝ) × (ι → ℝ)) : ℝ :=
+  innerPi π u.1 v.2 + innerPi π u.2 v.1
+
+/-- Matrix-vector action $(P v)_i = \sum_j P_{ij} v_j$. -/
+def matMul {ι : Type*} [Fintype ι] (P : ι → ι → ℝ) (v : ι → ℝ) : ι → ℝ :=
+  fun i => ∑ j : ι, P i j * v j
+
+/-- The $\pi$-dual operator $(P^{\#_\pi})_{ij} = (\pi_j / \pi_i) P_{ji}$ acting on the dual null sheet $T^-$. -/
+noncomputable def markovDual {ι : Type*} (π : ι → ℝ) (P : ι → ι → ℝ) : ι → ι → ℝ :=
+  fun i j => (π j / π i) * P j i
+
+/-- Cross-sheet $\pi$-adjoint duality $\langle P u, v \rangle_\pi = \langle u, P^{\#_\pi} v \rangle_\pi$. -/
+theorem matMul_markovDual_adjoint {ι : Type*} [Fintype ι]
+    (π : ι → ℝ) (hπ : ∀ i : ι, π i ≠ 0) (P : ι → ι → ℝ) (u v : ι → ℝ) :
+    innerPi π (matMul P u) v = innerPi π u (matMul (markovDual π P) v) := by
+  unfold innerPi matMul markovDual
+  simp_rw [Finset.mul_sum, Finset.sum_mul]
+  rw [Finset.sum_comm]
+  refine Finset.sum_congr rfl (fun j _ => Finset.sum_congr rfl (fun i _ => ?_))
+  have hπi : π i ≠ 0 := hπ i
+  have hπj : π j ≠ 0 := hπ j
+  calc
+    π i * (P i j * u j) * v i = π i * P i j * u j * v i := by ring
+    _ = π j * ((π i / π j) * P i j) * u j * v i := by
+        field_simp [hπi, hπj]
+    _ = π j * u j * (((π i / π j) * P i j) * v i) := by ring
+
+/-- The block-diagonal Double Real Krein Operator $\mathcal{T}_P(u_+, u_-) = (P u_+, P^{\#_\pi} u_-)$. -/
+noncomputable def kreinOp {ι : Type*} [Fintype ι]
+    (π : ι → ℝ) (P : ι → ι → ℝ) (w : (ι → ℝ) × (ι → ℝ)) : (ι → ℝ) × (ι → ℝ) :=
+  (matMul P w.1, matMul (markovDual π P) w.2)
+
+/-- **Universal Double Real Krein Self-Adjointness**:
+For EVERY matrix $P$ (causal or non-causal), $\mathcal{T}_P(u_+, u_-) = (P u_+, P^{\#_\pi} u_-)$
+is strictly self-adjoint with respect to the neutral Krein pairing $g_\pi$:
+$g_\pi(\mathcal{T}_P u, v) = g_\pi(u, \mathcal{T}_P v)$. -/
+theorem kreinOp_self_adjoint {ι : Type*} [Fintype ι]
+    (π : ι → ℝ) (hπ : ∀ i : ι, π i ≠ 0)
+    (P : ι → ι → ℝ) (u v : (ι → ℝ) × (ι → ℝ)) :
+    gPi π (kreinOp π P u) v = gPi π u (kreinOp π P v) := by
+  unfold gPi kreinOp
+  dsimp
+  rw [matMul_markovDual_adjoint π hπ P u.1 v.2]
+  have h2 : innerPi π (matMul (markovDual π P) u.2) v.1 = innerPi π u.2 (matMul P v.1) := by
+    have h_symm := matMul_markovDual_adjoint π hπ (markovDual π P) u.2 v.1
+    have h_inv : markovDual π (markovDual π P) = P := by
+      unfold markovDual
+      ext i j
+      have hπi : π i ≠ 0 := hπ i
+      have hπj : π j ≠ 0 := hπ j
+      field_simp [hπi, hπj]
+    rw [h_inv] at h_symm
+    exact h_symm
+  rw [h2]
+
+/-- Strictly causal (lower-triangular) predicate: $P_{ij} = 0$ whenever $i < j$. -/
+def IsCausal {ι : Type*} [LinearOrder ι] (P : ι → ι → ℝ) : Prop :=
+  ∀ i j : ι, i < j → P i j = 0
+
+/-- Anti-causal (upper-triangular) predicate: $Q_{ij} = 0$ whenever $j < i$. -/
+def IsAntiCausal {ι : Type*} [LinearOrder ι] (Q : ι → ι → ℝ) : Prop :=
+  ∀ i j : ι, j < i → Q i j = 0
+
+/-- **Causal-to-Anti-Causal Dualization**:
+If $P$ is causal (lower-triangular) on $T^+$, then its $\pi$-dual $P^{\#_\pi}$ is strictly
+anti-causal (upper-triangular) on $T^-$. -/
+theorem causal_dual_is_antiCausal {ι : Type*} [LinearOrder ι]
+    (π : ι → ℝ) (P : ι → ι → ℝ) (h_causal : IsCausal P) :
+    IsAntiCausal (markovDual π P) := by
+  intro i j hji
+  dsimp [markovDual]
+  rw [h_causal j i hji, mul_zero]
+
+/-- **Resolution of the Causal Triviality Paradox on $\mathcal{K}_2$**:
+There exists a strictly non-trivial causal operator ($P \neq I$) on `Fin 2` that is
+Krein self-adjoint on $\mathcal{K}_2 = (\operatorname{Fin} 2 \to \mathbb{R}) \times (\operatorname{Fin} 2 \to \mathbb{R})$. -/
+theorem exists_nontrivial_causal_krein_operator :
+    ∃ (π : Fin 2 → ℝ) (P : Fin 2 → Fin 2 → ℝ),
+      (∀ i : Fin 2, 0 < π i) ∧
+      IsCausal P ∧
+      P ≠ (fun i j => if i = j then 1 else 0) ∧
+      (∀ u v : (Fin 2 → ℝ) × (Fin 2 → ℝ),
+        gPi π (kreinOp π P u) v = gPi π u (kreinOp π P v)) := by
+  let π : Fin 2 → ℝ := fun _ => 1
+  let P : Fin 2 → Fin 2 → ℝ := fun i j =>
+    if i = 0 ∧ j = 0 then 1
+    else if i = 1 ∧ j = 0 then 1
+    else if i = 1 ∧ j = 1 then 1
+    else 0
+  have hπ_pos : ∀ i : Fin 2, 0 < π i := fun _ => one_pos
+  have hπ_ne : ∀ i : Fin 2, π i ≠ 0 := fun i => ne_of_gt (hπ_pos i)
+  have h_causal : IsCausal P := by
+    intro i j hij
+    fin_cases i <;> fin_cases j
+    · exact False.elim (lt_irrefl 0 hij)
+    · rfl
+    · exact False.elim (not_lt_of_gt Fin.zero_lt_one hij)
+    · exact False.elim (lt_irrefl 1 hij)
+  have h_ne_id : P ≠ (fun i j => if i = j then 1 else 0) := by
+    intro h_eq
+    have h_entry := congr_fun (congr_fun h_eq 1) 0
+    dsimp [P] at h_entry
+    norm_num at h_entry
+  exact ⟨π, P, hπ_pos, h_causal, h_ne_id, kreinOp_self_adjoint π hπ_ne P⟩
+
+end MobiusCrossSheetDescent
+
+section ZornPolarizedLeftAlternativeCl33
+
+open InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge
+open InfoGeometry.Canonical.SplitOctonionParaKahlerNullCone
+open InfoGeometry.Canonical.SplitOctonionClifford33Soldering
+
+/-- **Direct $\operatorname{Cl}(3,3)$ Left-Multiplication Clifford Identity on `ZornSplitOctonion R`**:
+By polarized left-alternativity of Zorn's split-octonion vector-matrix algebra, the
+left-multiplication operators $L_{\iota(z)}(w) = \operatorname{zornMul}(\operatorname{embedVec} z, w)$
+of embedded para-Kähler phase-space vectors $z_1, z_2 \in T^+ \oplus T^-$ satisfy the exact
+Clifford anticommutator law on every ket $w \in \operatorname{ZornSplitOctonion} R$:
+`L_{z₁}(L_{z₂}(w)) + L_{z₂}(L_{z₁}(w)) = g(z₁, z₂) • w`. -/
+theorem zorn_leftMul_cl33_clifford_identity
+    {R : Type*} [CommRing R] (z₁ z₂ : ParaKahlerVec R) (w : ZornSplitOctonion R) :
+    zornAdd (zornMul (embedVec z₁) (zornMul (embedVec z₂) w))
+      (zornMul (embedVec z₂) (zornMul (embedVec z₁) w)) =
+      zornSmul (paraKahlerMetric z₁ z₂) w :=
+  zorn_left_clifford33_soldering z₁ z₂ w
+
+end ZornPolarizedLeftAlternativeCl33
+
+section StageVCrossSiteAndPrunedSink
+
+/-- Uniform creation-creation anticommutativity $\{a_i^\dagger, a_j^\dagger\} = 0$ in the
+algebraic UHF colimit `Carrier` for all sites $i, j \in \operatorname{Fin} k$ (both same-site
+and cross-site). -/
+theorem colimitJW_anticomm_creation_all (k : ℕ) (i j : Fin k) :
+    colimitJWCreation k i * colimitJWCreation k j +
+      colimitJWCreation k j * colimitJWCreation k i = 0 := by
+  unfold colimitJWCreation
+  rw [← stageInjection_mul, ← stageInjection_mul, ← stageInjection_add,
+    ← complexifyRealMatrix_mul, ← complexifyRealMatrix_mul, ← complexifyRealMatrix_add,
+    ← map_mul, ← map_mul, ← map_add,
+    jwCreation_anticomm_all k i j,
+    map_zero, complexifyRealMatrix_zero, map_zero]
+
+/-- Uniform annihilation-annihilation anticommutativity $\{a_i, a_j\} = 0$ in the
+algebraic UHF colimit `Carrier` for all sites $i, j \in \operatorname{Fin} k$ (both same-site
+and cross-site). -/
+theorem colimitJW_anticomm_annihilation_all (k : ℕ) (i j : Fin k) :
+    colimitJWAnnihilation k i * colimitJWAnnihilation k j +
+      colimitJWAnnihilation k j * colimitJWAnnihilation k i = 0 := by
+  unfold colimitJWAnnihilation
+  rw [← stageInjection_mul, ← stageInjection_mul, ← stageInjection_add,
+    ← complexifyRealMatrix_mul, ← complexifyRealMatrix_mul, ← complexifyRealMatrix_add,
+    ← map_mul, ← map_mul, ← map_add,
+    jwAnnihilation_anticomm_all k i j,
+    map_zero, complexifyRealMatrix_zero, map_zero]
+
+/-- Mixed creation-annihilation canonical anticommutation relation in `Carrier`,
+including both the diagonal CAR value and the off-diagonal zero relation. -/
+theorem colimitJW_annihilation_creation_anticomm_all (k : ℕ) (i j : Fin k) :
+    colimitJWAnnihilation k i * colimitJWCreation k j +
+      colimitJWCreation k j * colimitJWAnnihilation k i =
+        if i = j then 1 else 0 := by
+  unfold colimitJWAnnihilation colimitJWCreation
+  rw [← stageInjection_mul, ← stageInjection_mul, ← stageInjection_add,
+    ← complexifyRealMatrix_mul, ← complexifyRealMatrix_mul, ← complexifyRealMatrix_add,
+    ← map_mul, ← map_mul, ← map_add,
+    InfoGeometry.Clifford.Cl11JordanWignerCARBridge.jwAnnihilation_creation_anticommutator]
+  rcases eq_or_ne i j with rfl | hij
+  · simp only [↓reduceIte, map_one, complexifyRealMatrix_one]
+  · simp only [hij, ↓reduceIte, map_zero, complexifyRealMatrix_zero]
+
+/-- **Pruned Colimit Functional Modular Flow Invariance**:
+Because `prunedStageDensity k pw` is diagonal, the stage-`k`-selected pruned colimit functional
+is invariant under the real-time Tomita modular automorphism group `modularFlow logits β t`. -/
+theorem prunedColimitFunctional_modularFlow_invariant
+    (k : ℕ) (pw : PrunedWeights (Fin (2 ^ k)))
+    (logits : Fin (2 ^ k) → ℝ) (β t : ℝ) (A : MatrixStage k) :
+    selectedStageColimitFunctional k (prunedStageDensity k pw)
+        (stageInjection k (modularFlow logits β t A)) =
+      selectedStageColimitFunctional k (prunedStageDensity k pw)
+        (stageInjection k A) := by
+  rw [selectedStageColimitFunctional_stage, selectedStageColimitFunctional_stage,
+    matrixTraceFunctional_apply, matrixTraceFunctional_apply]
+  congr 1
+  rw [Matrix.trace_mul_comm (modularFlow logits β t A),
+    Matrix.trace_mul_comm A]
+  dsimp [prunedStageDensity]
+  exact trace_diagonal_mul_modularFlow (fun i => (2 ^ k : ℂ) * (pw.weights i : ℂ)) logits β t A
+
+/-- **Cross-Stage Pruned Modular-Evolved Colimit Attention Sink Lower Bound (`k ≤ n`)**:
+For any positive-semidefinite observable `Aᵀ A` evolved under the real-time modular flow
+`modularFlow logits β t` at stage `k` and pushed through the Cuntz-tower bonding homomorphism
+`rawMap h` to stage `n` (`k ≤ n`), the real part of the stage-`k`-selected pruned colimit
+functional in `Carrier` is bounded below by `w_anchor * ∑ j, (A_{j,anchor})²`. -/
+theorem risingSea_pruned_tower_modularFlow_anchor_lower_bound
+    {k n : ℕ} (h : k ≤ n) (pw : PrunedWeights (Fin (2 ^ k)))
+    (logits : Fin (2 ^ k) → ℝ) (β t : ℝ) (anchor : Fin (2 ^ k))
+    (A : Matrix (Fin (2 ^ k)) (Fin (2 ^ k)) ℝ) :
+    pw.weights anchor * (∑ j : Fin (2 ^ k), (A j anchor) ^ 2) ≤
+      (selectedStageColimitFunctional k (prunedStageDensity k pw)
+        (stageInjection n
+          (rawMap h
+            (modularFlow logits β t
+              (complexifyRealMatrix (A.transpose * A)))))).re := by
+  rw [stageInjection_transition h,
+    prunedColimitFunctional_modularFlow_invariant k pw logits β t
+      (complexifyRealMatrix (A.transpose * A))]
+  exact prunedColimitFunctional_ge_anchor_column_normSq k pw anchor A
+
+/-- Block-diagonal doubling embedding $A \mapsto \operatorname{diag}(A, A)$ of a matrix into the
+next UHF stage $M_{m \oplus m}(\mathbb{R})$. -/
+def uhfStep {m : Type*} (A : Matrix m m ℝ) : Matrix (m ⊕ m) (m ⊕ m) ℝ :=
+  Matrix.fromBlocks A 0 0 A
+
+/-- **Algebraic KMS Trace Cycling and UHF Doubling Trace Law**:
+For any invertible density matrix (`hρ : ρ_inv * ρ = 1`), the KMS-conjugated correlator
+$\operatorname{Tr}(\rho (A (\rho B \rho^{-1})))$ equals the swapped correlator
+$\operatorname{Tr}(\rho (B A))$, and the block-diagonal UHF doubling `uhfStep` scales the
+trace by `2`. -/
+theorem kms_trace_cycling_and_uhfStep {m : Type*} [Fintype m] [DecidableEq m]
+    (ρ ρ_inv A B : Matrix m m ℝ) (hρ : ρ_inv * ρ = 1) :
+    Matrix.trace (ρ * (A * (ρ * B * ρ_inv))) = Matrix.trace (ρ * (B * A)) ∧
+      Matrix.trace (uhfStep (ρ * (B * A))) = 2 * Matrix.trace (ρ * (B * A)) := by
+  constructor
+  · calc
+      Matrix.trace (ρ * (A * (ρ * B * ρ_inv)))
+        = Matrix.trace ((ρ * A * ρ * B) * ρ_inv) := by
+            simp only [Matrix.mul_assoc]
+      _ = Matrix.trace (ρ_inv * (ρ * A * ρ * B)) :=
+            Matrix.trace_mul_comm (ρ * A * ρ * B) ρ_inv
+      _ = Matrix.trace ((ρ_inv * ρ) * (A * ρ * B)) := by
+            simp only [Matrix.mul_assoc]
+      _ = Matrix.trace (1 * (A * ρ * B)) := by
+            rw [hρ]
+      _ = Matrix.trace (A * (ρ * B)) := by
+            simp only [Matrix.one_mul, Matrix.mul_assoc]
+      _ = Matrix.trace ((ρ * B) * A) :=
+            Matrix.trace_mul_comm A (ρ * B)
+      _ = Matrix.trace (ρ * (B * A)) := by
+            rw [Matrix.mul_assoc]
+  · unfold uhfStep
+    simp only [Matrix.trace, Matrix.diag, Fintype.sum_sum_type,
+      Matrix.fromBlocks_apply₁₁, Matrix.fromBlocks_apply₂₂, ← two_mul]
+
+/-- **Completed-Square Toomre Dispersion Stability**:
+Whenever the epicyclic frequency $\kappa$, self-gravity coefficient $b$, and sound speed
+$c_s \neq 0$ satisfy the Toomre stability bound $b^2 \le c_s^2 \kappa^2$, the quadratic
+dispersion relation $\omega^2(k) = \kappa^2 - 2 b k + c_s^2 k^2$ is nonnegative for all
+wavenumbers $k \in \mathbb{R}$. -/
+theorem quadratic_dispersion_nonneg_of_toomre (κ b c_s k : ℝ)
+    (hcs : c_s ≠ 0) (hQ : b ^ 2 ≤ c_s ^ 2 * κ ^ 2) :
+    0 ≤ κ ^ 2 - 2 * b * k + c_s ^ 2 * k ^ 2 := by
+  have h_ident :
+      κ ^ 2 - 2 * b * k + c_s ^ 2 * k ^ 2 =
+        (c_s * k - b / c_s) ^ 2 + (c_s ^ 2 * κ ^ 2 - b ^ 2) / c_s ^ 2 := by
+    field_simp [hcs]
+    ring
+  rw [h_ident]
+  have h1 : 0 ≤ (c_s * k - b / c_s) ^ 2 := sq_nonneg (c_s * k - b / c_s)
+  have h2 : 0 ≤ (c_s ^ 2 * κ ^ 2 - b ^ 2) / c_s ^ 2 :=
+    div_nonneg (sub_nonneg.mpr hQ) (sq_nonneg c_s)
+  exact add_nonneg h1 h2
+
+end StageVCrossSiteAndPrunedSink
+
+section InevitabilityPosetOrder
+
+/-- Explicit 5-element type indexing the five sections of this module.
+Its constructor order is only an enumeration, not a causal precedence claim. -/
+inductive InevitabilityStage : Type
+  | metric
+  | cell
+  | nullSheet
+  | mobiusCPT
+  | risingSeaColimit
+  deriving DecidableEq, Repr
+
+instance instInhabitedInevitabilityStage : Inhabited InevitabilityStage :=
+  ⟨.metric⟩
+
+/-- Non-default canonical witness for `InevitabilityStage`. -/
+def canonicalInevitabilityStage : InevitabilityStage :=
+  .risingSeaColimit
+
+/-- Non-degeneracy witness for `InevitabilityStage`: the top stage `.risingSeaColimit` is
+distinct from the base stage `.metric`. -/
+theorem canonicalInevitabilityStage_ne_metric :
+    canonicalInevitabilityStage ≠ .metric := by
+  decide
+
+/-- Enumeration of each `InevitabilityStage` by an element of `Fin 5`.
+This is not an order embedding: `InevitabilityStage` has no order structure. -/
+def inevitabilityStageRank : InevitabilityStage → Fin 5
+  | .metric => 0
+  | .cell => 1
+  | .nullSheet => 2
+  | .mobiusCPT => 3
+  | .risingSeaColimit => 4
+
+/-- Explicit inverse of `inevitabilityStageRank`. -/
+def inevitabilityStageOfRank : Fin 5 → InevitabilityStage
+  | ⟨0, _⟩ => .metric
+  | ⟨1, _⟩ => .cell
+  | ⟨2, _⟩ => .nullSheet
+  | ⟨3, _⟩ => .mobiusCPT
+  | ⟨_ + 4, _⟩ => .risingSeaColimit
+
+@[simp]
+theorem inevitabilityStageOfRank_rank (s : InevitabilityStage) :
+    inevitabilityStageOfRank (inevitabilityStageRank s) = s := by
+  cases s <;> rfl
+
+@[simp]
+theorem inevitabilityStageRank_ofRank (r : Fin 5) :
+    inevitabilityStageRank (inevitabilityStageOfRank r) = r := by
+  fin_cases r <;> rfl
+
+/-- `inevitabilityStageRank` is injective. -/
+theorem inevitabilityStageRank_injective :
+    Function.Injective inevitabilityStageRank :=
+  Function.LeftInverse.injective inevitabilityStageOfRank_rank
+
+/-- Explicit equivalence `InevitabilityStage ≃ Fin 5`. -/
+def inevitabilityStageEquivFin5 : InevitabilityStage ≃ Fin 5 where
+  toFun := inevitabilityStageRank
+  invFun := inevitabilityStageOfRank
+  left_inv := inevitabilityStageOfRank_rank
+  right_inv := inevitabilityStageRank_ofRank
+
+end InevitabilityPosetOrder
 
 end InfoGeometry.Synthesis.CategoricalInevitabilityPosetSynthesis
 

@@ -30,6 +30,7 @@ import re
 import subprocess
 import sys
 import tempfile
+import time
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Set, Tuple
@@ -388,16 +389,48 @@ def review_file(
         ))
         trap_dicts.append(asdict(traps[-1]))
     hook_root = Path(repo_root) if repo_root is not None else canonical_repo_root()
-    hook_check = subprocess.run(
-        [sys.executable, "tools/quality/proof_proxy_staged_gate.py"],
-        cwd=hook_root, capture_output=True, text=True, check=False,
-    )
+    # The staged hook REFUSES to certify when the Git index mutates mid-scan and
+    # exits non-zero. That refusal is not a finding about the file under review:
+    # it means concurrent staging made the snapshot untrustworthy. Treating it
+    # as a QMS_STAGED_HOOK ERROR made every Gate 4 run reject whenever another
+    # agent staged concurrently, which is common in this repository and which
+    # hid genuine, independently-passing results. Retry the transient case, and
+    # only surface a trap once the hook has actually reported a finding (or
+    # churn has outlived the retries).
+    _CHURN_MARKER = "active Git index changed"
+    hook_detail = ""
+    hook_churned = True
+    for _attempt in range(3):
+        hook_check = subprocess.run(
+            [sys.executable, "tools/quality/proof_proxy_staged_gate.py"],
+            cwd=hook_root, capture_output=True, text=True, check=False,
+        )
+        hook_detail = (hook_check.stderr or hook_check.stdout).strip()
+        if not hook_check.returncode:
+            hook_churned = False
+            break
+        if _CHURN_MARKER not in hook_detail:
+            hook_churned = False
+            break
+        time.sleep(3.0)
     if hook_check.returncode:
-        detail = (hook_check.stderr or hook_check.stdout).strip()
-        traps.append(TrapViolation(
-            "QMS_STAGED_HOOK", "Staged pre-commit quality gate", 0, detail[:500],
-            "The staged Lean changes fail the repository pre-commit proof/QMS gate.", "ERROR",
-        ))
+        if hook_churned:
+            # Still churning after every retry. This is an infrastructure state,
+            # not a verdict on the file: report it as a warning and let the
+            # caller decide, rather than manufacturing a hard rejection.
+            traps.append(TrapViolation(
+                "QMS_STAGED_HOOK_RACY", "Staged pre-commit quality gate (snapshot churn)",
+                0, hook_detail[:500],
+                "The Git index kept changing during the staged scan; the hook declined "
+                "to certify a mixed snapshot. This is a concurrency artefact, not a "
+                "finding about this file. Re-run once the working set is quiet.",
+                "WARNING",
+            ))
+        else:
+            traps.append(TrapViolation(
+                "QMS_STAGED_HOOK", "Staged pre-commit quality gate", 0, hook_detail[:500],
+                "The staged Lean changes fail the repository pre-commit proof/QMS gate.", "ERROR",
+            ))
         trap_dicts.append(asdict(traps[-1]))
 
     verification_status = "not_requested"
@@ -1562,17 +1595,29 @@ def quarantine_obstruction(
 class CertificationAudit:
     source_file: str
     audit_file: Optional[str]
-    theorems: List[str]
+    declarations: List[str]
     audit_script: str
     written: bool = False
     kernel_checked: bool = False
     verification_status: str = "not_requested"
-    theorem_axioms: Dict[str, List[str]] = field(default_factory=dict)
+    declaration_axioms: Dict[str, List[str]] = field(default_factory=dict)
     rejected_axioms: List[str] = field(default_factory=list)
     verification_errors: List[str] = field(default_factory=list)
+    unparsed_declarations: List[str] = field(default_factory=list)
 
 
 _ALLOWED_KERNEL_AXIOMS = {"propext", "Classical.choice", "Quot.sound"}
+
+# Lean identifiers are not ASCII-only: they may contain Unicode letters (for
+# example the Greek iota in `abstractNullPlus_sub_abstractNullMinus_eq_ι_eMinus`),
+# Unicode subscripts, `'`, `!` and `?`. An ASCII-only character class does not
+# merely truncate such a name -- it makes the surrounding regex fail to match at
+# all, so the declaration is silently DROPPED from the axiom audit. Because the
+# generated audit still compiles, the declaration/report count check still
+# balances and Gate 4 reports success: the gate fails OPEN, certifying
+# fewer declarations than the file actually declares. Match up to the first
+# character that cannot belong to an identifier instead.
+_LEAN_IDENT = r"(?:«[^»]+»|[^\s(){}\[\],;:=«»]+)"
 
 
 def verify_certification_audit(
@@ -1587,14 +1632,14 @@ def verify_certification_audit(
     result = CertificationAudit(
         source_file=audit.source_file,
         audit_file=None,
-        theorems=audit.theorems,
+        declarations=audit.declarations,
         audit_script=audit.audit_script,
     )
     source_code = _strip_lean_comments_and_strings(
         Path(lean_file).read_text(encoding="utf-8", errors="replace")
     )
     source_axioms = re.findall(
-        r"^\s*(?:(?:private|protected)\s+)*axiom\s+([A-Za-z_][A-Za-z0-9_']*)\b",
+        rf"^\s*(?:(?:private|protected)\s+)*axiom\s+({_LEAN_IDENT})(?=\s|:|$)",
         source_code,
         flags=re.MULTILINE,
     )
@@ -1630,9 +1675,27 @@ def verify_certification_audit(
             )
             return result
 
-        if not audit.theorems:
+        if audit.unparsed_declarations:
+            # Fail closed before every successful fast path, including owners
+            # with no parsed declarations. Otherwise malformed declaration
+            # syntax could be mistaken for an empty, successfully audited file.
             print(
-                f"[OpenGauss Gate 4] No theorem declarations found in {module}; finishing source axiom check",
+                f"[OpenGauss Gate 4] Refusing to certify {module}: "
+                f"{len(audit.unparsed_declarations)} declaration(s) could not be parsed",
+                file=sys.stderr,
+                flush=True,
+            )
+            result.verification_status = "audit_parse_incomplete"
+            result.unparsed_declarations = list(audit.unparsed_declarations)
+            result.verification_errors.append(
+                "Unparsed declarations:\n  "
+                + "\n  ".join(audit.unparsed_declarations)
+            )
+            return result
+
+        if not audit.declarations:
+            print(
+                f"[OpenGauss Gate 4] No public declarations found in {module}; finishing source axiom check",
                 file=sys.stderr,
                 flush=True,
             )
@@ -1672,19 +1735,19 @@ def verify_certification_audit(
             output,
             flags=re.DOTALL,
         ))
-        if len(axiom_reports) != len(audit.theorems):
+        if len(axiom_reports) != len(audit.declarations):
             result.verification_status = "axiom_output_incomplete"
             result.verification_errors.append(
-                f"Expected {len(audit.theorems)} axiom reports; found {len(axiom_reports)}."
+                f"Expected {len(audit.declarations)} axiom reports; found {len(axiom_reports)}."
             )
             result.verification_errors.append(output[-12000:])
             return result
 
         all_axioms: set[str] = set(source_axioms)
-        for theorem, report in zip(audit.theorems, axiom_reports):
+        for declaration, report in zip(audit.declarations, axiom_reports):
             raw_axioms = report.group(1) or ""
             axioms = [name.strip() for name in raw_axioms.split(",") if name.strip()]
-            result.theorem_axioms[theorem] = axioms
+            result.declaration_axioms[declaration] = axioms
             all_axioms.update(axioms)
         result.rejected_axioms = sorted(all_axioms - _ALLOWED_KERNEL_AXIOMS)
         result.kernel_checked = True
@@ -1708,7 +1771,7 @@ def generate_certification_audit(
     write_audit: bool = False,
     repo_root: Optional[Path] = None,
 ) -> CertificationAudit:
-    """Extracts all theorems from target .lean file and emits a companion audit script with #print axioms."""
+    """Extract public declarations from a Lean file and emit `#print axioms` checks."""
     if repo_root is None:
         repo_root = Path(__file__).resolve().parent.parent.parent
 
@@ -1726,15 +1789,30 @@ def generate_certification_audit(
     # the active path at each declaration instead. Dotted namespace syntax is
     # expanded into components so `end B` closes the innermost `B` scope.
     scope_stack: list[tuple[str, Optional[str]]] = []
-    theorems: list[str] = []
-    namespace_pattern = re.compile(r"^\s*namespace\s+([A-Za-z0-9_'.]+)\s*$")
-    end_pattern = re.compile(r"^\s*end(?:\s+([A-Za-z0-9_'.]+))?\s*(?:--.*)?$")
-    theorem_pattern = re.compile(
+    declarations: list[str] = []
+    namespace_pattern = re.compile(rf"^\s*namespace\s+({_LEAN_IDENT})\s*$")
+    end_pattern = re.compile(rf"^\s*end(?:\s+({_LEAN_IDENT}))?\s*(?:--.*)?$")
+    modifiers = r"(?:private|protected|noncomputable|unsafe|scoped|partial)"
+    declaration_pattern = re.compile(
         r"^\s*(?:(?:@\[[^\]]*\]\s*)*)"
-        r"((?:(?:private|protected|noncomputable|unsafe)\s+)*)"
-        r"(?:theorem|lemma)\s+([A-Za-z_][A-Za-z0-9_']*|«[^»]+»)(?:\b|\s|$)"
+        rf"((?:{modifiers}\s+)*)"
+        rf"(theorem|lemma|def|abbrev|opaque|inductive|structure|class|instance|axiom)\s+({_LEAN_IDENT})"
+    )
+    declaration_head_pattern = re.compile(
+        rf"(?:^|\s)(?:(?:{modifiers}\s+)*)"
+        rf"(?:theorem|lemma|def|abbrev|opaque|inductive|structure|class|instance|axiom)\s+({_LEAN_IDENT})(?=\s|:|$)"
+    )
+    scope_command_head_pattern = re.compile(
+        rf"(?:^|\s)(?:namespace|section|end)\b(?:\s+{_LEAN_IDENT})?"
+    )
+    # Fail-closed net: any declaration-looking line that the pattern above
+    # declines to match is recorded, so Gate 4 cannot certify a subset.
+    unparsed_pattern = re.compile(
+        rf"^\s*(?:@\[[^\]]*\]\s*)*(?:{modifiers}\s+)*"
+        r"(?:theorem|lemma|def|abbrev|opaque|inductive|structure|class|instance|axiom)\b"
     )
     pending_private = False
+    unparsed: list[str] = []
     for line in content.splitlines():
         stripped_line = line.strip()
         if stripped_line == "private":
@@ -1750,7 +1828,13 @@ def generate_certification_audit(
                 for component in namespace_match.group(1).split(".")
             )
             continue
-        section_match = re.match(r"^\s*section(?:\s+([A-Za-z0-9_']+))?\s*$", line)
+        # Lean permits `noncomputable section` as a scoped command. Treat it
+        # like `section`; otherwise the fail-closed command scan mistakes the
+        # modifier for an unparsed declaration and refuses a valid owner file.
+        section_match = re.match(
+            rf"^\s*(?:noncomputable\s+)?section(?:\s+({_LEAN_IDENT}))?\s*$",
+            line,
+        )
         if section_match:
             pending_private = False
             scope_stack.append(("section", section_match.group(1)))
@@ -1785,23 +1869,54 @@ def generate_certification_audit(
                 elif last_named_scope is not None:
                     del scope_stack[last_named_scope:]
             continue
-        theorem_match = theorem_pattern.match(line)
-        if theorem_match:
-            visibility_modifiers = theorem_match.group(1) or ""
+        declaration_match = declaration_pattern.match(line)
+        if declaration_match:
+            visibility_modifiers = declaration_match.group(1) or ""
             is_private = pending_private or bool(re.search(r"\bprivate\b", visibility_modifiers))
             pending_private = False
+            name = declaration_match.group(3)
+            # Self-validating delimiter check: an identifier must be followed by
+            # a delimiter. If the name pattern ever truncates a non-ASCII
+            # identifier again (the original defect), the leftover characters are
+            # caught here instead of producing a silently wrong `#print axioms`.
+            remainder = line[declaration_match.end():]
+            if remainder[:1] not in ("", " ", "\t", "(", "[", "{", ":"):
+                unparsed.append(stripped_line)
+                continue
+            if declaration_head_pattern.search(remainder) or scope_command_head_pattern.search(remainder):
+                # The scanner models one top-level command per physical line.
+                # Lean can accept adjacent declarations and trailing scope
+                # commands, so refuse to certify a partial or misqualified audit.
+                unparsed.append(stripped_line)
+                continue
             if is_private:
                 # Private declarations are mangled and cannot be referenced
                 # from the imported companion audit module.
                 continue
-            name = theorem_match.group(2)
             active_namespace = [
                 value for kind, value in scope_stack
                 if kind == "namespace" and value is not None
             ]
-            theorems.append(".".join([*active_namespace, name]) if active_namespace else name)
+            declarations.append(".".join([*active_namespace, name]) if active_namespace else name)
         elif stripped_line:
             pending_private = False
+            # Record declaration-looking lines the declaration pattern could not
+            # parse (except genuinely private ones, which are excluded by
+            # design). Also scan the entire line: command sequences can legally
+            # put `namespace N`, `open N`, or another command before a declaration
+            # on the same physical line. An empty list is the only acceptable
+            # certification input.
+            has_declaration_head = declaration_head_pattern.search(line) is not None
+            has_scope_command_head = scope_command_head_pattern.search(line) is not None
+            starts_private = re.match(
+                r"^\s*(?:@\[[^\]]*\]\s*)*private\b", line
+            ) is not None
+            if (
+                unparsed_pattern.match(line)
+                or has_declaration_head
+                or has_scope_command_head
+            ) and not starts_private:
+                unparsed.append(stripped_line)
 
     mod_path = _file_to_module_path(lean_path, repo_root)
 
@@ -1815,11 +1930,11 @@ def generate_certification_audit(
         f"import {mod_path}",
         "",
     ]
-    if theorems:
-        for thm in theorems:
-            lines.append(f"#print axioms {thm}")
+    if declarations:
+        for declaration in declarations:
+            lines.append(f"#print axioms {declaration}")
     else:
-        lines.append("-- No theorems found in source file for axiom certification audit.")
+        lines.append("-- No public declarations found in source file for axiom certification audit.")
     lines.append("")
 
     audit_script = "\n".join(lines)
@@ -1833,9 +1948,10 @@ def generate_certification_audit(
     return CertificationAudit(
         source_file=str(lean_path),
         audit_file=str(audit_file_path),
-        theorems=theorems,
+        declarations=declarations,
         audit_script=audit_script,
         written=written,
+        unparsed_declarations=unparsed,
     )
 
 
@@ -2309,16 +2425,17 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             verified = verify_certification_audit(p, repo_root=repo_root)
             audit.kernel_checked = verified.kernel_checked
             audit.verification_status = verified.verification_status
-            audit.theorem_axioms = verified.theorem_axioms
+            audit.declaration_axioms = verified.declaration_axioms
             audit.rejected_axioms = verified.rejected_axioms
             audit.verification_errors = verified.verification_errors
+            audit.unparsed_declarations = verified.unparsed_declarations
         if args.json:
             print(json.dumps(asdict(audit), indent=2))
         else:
             if audit.written:
-                print(f"✓ Certification audit written to {audit.audit_file} ({len(audit.theorems)} theorems)")
+                print(f"✓ Certification audit written to {audit.audit_file} ({len(audit.declarations)} declarations)")
             else:
-                print(f"Certification audit for {audit.source_file} ({len(audit.theorems)} theorems):")
+                print(f"Certification audit for {audit.source_file} ({len(audit.declarations)} declarations):")
                 print(audit.audit_script)
             if args.verify_kernel:
                 print(f"Kernel verification: {audit.verification_status}")

@@ -12,9 +12,10 @@ Real twistor space $\mathbb{T}_{\mathbb{R}} \cong \mathbb{R}^2 \oplus \mathbb{R}
 incidence relation of $\mathbb{R}^{2,2}$: a twistor $(\omega^A, \pi_{A'})$ is incident with a
 spacetime matrix $x^{AA'}$ iff $\omega^A = \sum_{A'} x^{AA'}\pi_{A'}$.
 
-This module proves the algebraic core of the classical statement that **a single projective
-twistor is incident with an entire causal null ray**: the incidence relation does not move
-along the ray.
+This module proves an algebraic constancy statement: for a fixed primed spinor and a chosen
+null direction built from its alternatingly raised spinor, incidence at the initial point is
+equivalent to incidence at every point of that affine null line. This does not classify all
+null rays incident with a projective twistor or identify a unique ray from a projective point.
 
 The one ingredient is the self-annihilation of a `2`-spinor under the *alternating*
 self-contraction,
@@ -85,10 +86,10 @@ index with the symmetric $2\times 2$ delta). -/
 def incident (x : Fin 2 → Fin 2 → F) (pi : Fin 2 → F) (A : Fin 2) : F :=
   ∑ A', x A A' * pi A'
 
-/-- **Constancy of the incident twistor along a null ray.** The derivative of the incidence
+/-- **Constancy of incidence along a chosen null ray.** The change in the incidence
 relation is $p^{AA'}\pi_{A'} = lam^A\pi^{A'}\pi_{A'} = lam^A\cdot 0$, so $\omega^A$ depends
-only on $x_0$, not on $\tau$. Hence a single projective twistor $[Z^\alpha]$ is incident with
-every point of a null ray. -/
+only on $x_0$, not on $\tau$. This proves incidence constancy along the selected line; it does
+not assert that the projective twistor determines a unique null line. -/
 theorem incident_const_along_nullRay (x₀ : Fin 2 → Fin 2 → F) (lam pi : Fin 2 → F) (tau : F)
     (A : Fin 2) :
     incident (nullRay x₀ lam (epsLift pi) tau) pi A = incident x₀ pi A := by

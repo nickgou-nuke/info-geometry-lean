@@ -18,6 +18,9 @@ derivative, circular-balance, and epicyclic identities.
 The radial logarithmic potential remains a separately chosen model in
 `LinShuKMSPetzRadialSynthesis`: these results do not derive it from the vector-valued
 attention sink potential in `LinShuAttentionDensityWave`.
+
+The positive partition sum used here is an input radius for that radial model. It is not the
+Poincaré-disk coordinate `tanh (β / 2)`; no thermodynamic-to-hyperbolic-distance map is asserted.
 -/
 
 noncomputable section

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Lie.CanonicalZornPeirceStabilizer
 import InfoGeometry.Lie.CanonicalZornDerivationDimension
 import InfoGeometry.Physics.SplitG2SL3Concrete
@@ -108,6 +113,25 @@ level. -/
 theorem stabilizerMatrixSL3_value (M : SL3) :
     parameterMatrix (sl3Parameters M) = M.1 :=
   parameterMatrix_sl3Parameters M
+
+/-- The selected derivation reads back to its source matrix under the full
+stabilizer map, not just under the raw parameter-matrix calculation. -/
+theorem stabilizerMatrixSL3_sl3ToPeirceStabilizer (M : SL3) :
+    stabilizerMatrixSL3 (sl3ToPeirceStabilizer M) = M := by
+  apply Subtype.ext
+  change parameterMatrix
+    (derivationParameters
+      (canonicalToVectorDerivation
+        (canonicalParameterLinearEquiv (sl3Parameters M)))) = M.1
+  have hparam :
+      derivationParameters
+        (canonicalToVectorDerivation
+          (canonicalParameterLinearEquiv (sl3Parameters M))) =
+        sl3Parameters M := by
+    change parameterLinearEquiv.symm
+      (parameterLinearEquiv (sl3Parameters M)) = _
+    exact parameterLinearEquiv.left_inv _
+  rw [hparam, parameterMatrix_sl3Parameters]
 
 end InfoGeometry.Lie.CanonicalZornPeirceSL3Bridge
 

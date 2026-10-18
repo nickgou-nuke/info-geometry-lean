@@ -658,6 +658,21 @@ theorem zorn_paraGrading_commutator_embedVec (z : ParaKahlerVec R) :
       zornSmul, paraComplexK, vec3Dot]
     ring
 
+/-- The diagonal para-grading element is not central whenever `2` is nonzero:
+its commutator with a concrete primal basis vector is nonzero. -/
+theorem zornParaGrading_not_central (h_two : (2 : R) ≠ 0) :
+    ∃ x : ZornSplitOctonion R,
+      zornCommutator zornParaGrading x ≠ zornZero := by
+  let witness : ParaKahlerVec R :=
+    ⟨fun i => if i = 0 then 1 else 0, fun _ => 0⟩
+  refine ⟨embedVec witness, ?_⟩
+  rw [zorn_paraGrading_commutator_embedVec]
+  intro h
+  have hu := congrArg (fun x : ZornSplitOctonion R => x.u 0) h
+  have h_zero : (2 : R) = 0 := by
+    simpa [witness, zornSmul, embedVec, paraComplexK, zornZero] using hu
+  exact h_two h_zero
+
 /-- The diagonal para-grading element $I_{\text{para}}$ anticommutes with every embedded
 phase-space vector $z \in V$: $\{I_{\text{para}}, z\} = 0$. -/
 theorem zorn_paraGrading_anticommutator_embedVec (z : ParaKahlerVec R) :

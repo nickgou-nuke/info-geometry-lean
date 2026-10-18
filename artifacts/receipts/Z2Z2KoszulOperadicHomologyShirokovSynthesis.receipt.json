@@ -1,0 +1,68 @@
+{
+  "artifact": {
+    "path": "lean/InfoGeometry/Synthesis/Z2Z2KoszulOperadicHomologyShirokovSynthesis.lean",
+    "sha256": "be013cfbfaec675c517eb9782e85f0e94eb4fd521ae0f50d1d2ed887677476d0"
+  },
+  "auditModule": "InfoGeometry.Synthesis.Z2Z2KoszulOperadicHomologyShirokovSynthesisAudit",
+  "authority": "candidate_observation_not_proof_authority",
+  "checks": {
+    "axiomAudit": {
+      "declarations": [
+        "koszul_cl11_mat2_noncomm",
+        "koszul_peirce_mat3_noncomm",
+        "koszulDualGrade_invariance_and_duality",
+        "z2z2_koszul_operadic_bracket_and_differential_laws",
+        "homological_context_supertrace_invariance",
+        "cl11ShirokovTrace_smul_one",
+        "shirokov_matrix_free_superBerezinian_horizon_synthesis"
+      ],
+      "output": "'koszul_cl11_mat2_noncomm' depends on axioms: [propext, Classical.choice, Quot.sound]\n'koszul_peirce_mat3_noncomm' depends on axioms: [propext, Classical.choice, Quot.sound]\n'koszulDualGrade_invariance_and_duality' depends on axioms: [propext, Classical.choice, Quot.sound]\n'z2z2_koszul_operadic_bracket_and_differential_laws' depends on axioms: [propext, Classical.choice, Quot.sound]\n'homological_context_supertrace_invariance' depends on axioms: [propext, Classical.choice, Quot.sound]\n'cl11ShirokovTrace_smul_one' depends on axioms: [propext, Classical.choice, Quot.sound]\n'shirokov_matrix_free_superBerezinian_horizon_synthesis' depends on axioms: [propext, Classical.choice, Quot.sound]",
+      "outputSha256": "7be0684faa0c016615373a7cb7815e70a8dcd879d610d41ed4ed848da338355e",
+      "returncode": 0,
+      "status": "collected"
+    },
+    "leanProcess": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "lean/InfoGeometry/Synthesis/Z2Z2KoszulOperadicHomologyShirokovSynthesis.lean"
+      ],
+      "outputSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "returncode": 0,
+      "status": "passed"
+    },
+    "semanticVacuityGate": {
+      "outputSha256": "da24a3001f923012b558f2e0f6382b5b83c820f06324b90f38b064300cb119fc",
+      "returncode": 0,
+      "status": "passed"
+    }
+  },
+  "environment": {
+    "gitHead": "112c131be2a2d10519cde1080e88eb23304282cd",
+    "lakeManifestSha256": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lakefileSha256": "5372c9a95ed8f6488bc0ce257c906c83658449668db4627259d72d542c77d9f7",
+    "toolchain": "leanprover/lean4:v4.34.1"
+  },
+  "module": "InfoGeometry.Synthesis.Z2Z2KoszulOperadicHomologyShirokovSynthesis",
+  "receiptSha256": "3c169e451686a0b10323f9c0b4f86a2abbe25d892d512431b198fe82c7f8f768",
+  "releaseTag": "v4.2.1-hadjiivanov-braid-monodromy",
+  "review": {
+    "promotionAllowed": false,
+    "status": "kernel_checked_pending_owner_review"
+  },
+  "schema": "info_geometry.proof_artifact_receipt.v1",
+  "score": {
+    "defect": 0.0,
+    "meaning": "scheduling metadata only; not probability or proof authority",
+    "policyVersion": "opengauss-gate7-v4.2",
+    "status": "policy_estimate",
+    "value": 1.0
+  },
+  "source": {
+    "changedSincePrompt": false,
+    "currentSnapshotSha256": "be013cfbfaec675c517eb9782e85f0e94eb4fd521ae0f50d1d2ed887677476d0",
+    "path": "lean/InfoGeometry/Synthesis/Z2Z2KoszulOperadicHomologyShirokovSynthesis.lean",
+    "snapshotSha256": "be013cfbfaec675c517eb9782e85f0e94eb4fd521ae0f50d1d2ed887677476d0"
+  }
+}

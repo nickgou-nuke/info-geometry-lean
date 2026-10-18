@@ -20,6 +20,7 @@ open InfoGeometry.Synthesis.HestenesStokesAlgebraicBoundarySynthesis
 #check @fiveGrading_colimit_cone_bracket_transport
 #check @five_graded_maurer_cartan_equations_and_koszul_supertrace_laws
 #check @dikin_colimit_hessian_isometry_and_ellipsoid_inclusion
+#check @drazin_attention_projector_and_colimit_dikin_preservation
 #check @planarCliffordE1_mul_planarCliffordE2_ne_comm
 #check @planarClifford_bivector_relations
 #check @hestenesVectorDeriv_apply_00
@@ -37,11 +38,13 @@ open InfoGeometry.Synthesis.HestenesStokesAlgebraicBoundarySynthesis
 #check @jordan_exact_algebraic_readout
 #check @jordan_hadjiivanov_algebraic_residue_and_shirokov_det_laws
 #check @souriau_massieu_stokes_surprisal_and_chentsov_cumulant_laws
+#check @fisher_souriau_laplacian_gauge_kernel_and_const_iff
 
 #print axioms fiveGradingComap
 #print axioms fiveGrading_colimit_cone_bracket_transport
 #print axioms five_graded_maurer_cartan_equations_and_koszul_supertrace_laws
 #print axioms dikin_colimit_hessian_isometry_and_ellipsoid_inclusion
+#print axioms drazin_attention_projector_and_colimit_dikin_preservation
 #print axioms planarCliffordE1_mul_planarCliffordE2_ne_comm
 #print axioms planarClifford_bivector_relations
 #print axioms hestenesVectorDeriv_apply_00
@@ -59,5 +62,6 @@ open InfoGeometry.Synthesis.HestenesStokesAlgebraicBoundarySynthesis
 #print axioms jordan_exact_algebraic_readout
 #print axioms jordan_hadjiivanov_algebraic_residue_and_shirokov_det_laws
 #print axioms souriau_massieu_stokes_surprisal_and_chentsov_cumulant_laws
+#print axioms fisher_souriau_laplacian_gauge_kernel_and_const_iff
 
 end InfoGeometry.Synthesis.HestenesStokesAlgebraicBoundarySynthesisAudit

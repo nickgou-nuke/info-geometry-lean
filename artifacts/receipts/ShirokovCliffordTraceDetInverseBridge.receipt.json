@@ -1,0 +1,19 @@
+{
+  "schema": "opengauss.gate7.receipt.v1",
+  "module": "InfoGeometry.Synthesis.ShirokovCliffordTraceDetInverseBridge",
+  "source_path": "lean/InfoGeometry/Synthesis/ShirokovCliffordTraceDetInverseBridge.lean",
+  "source_sha256": "03d0125f2bb3b5ae9ecd8621587a8a7a824b903a89f5d49fbb9c51c1e9a5fe75",
+  "olean_path": ".lake/build/lib/lean/InfoGeometry/Synthesis/ShirokovCliffordTraceDetInverseBridge.olean",
+  "olean_sha256": "13bd8cab46fa8ce7325b8eeee7dd9359e99c0095981df26f4c9e3d61ad262637",
+  "axioms": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "sorry_count": 0,
+  "admit_count": 0,
+  "screener_traps": 0,
+  "claim_linter_findings": 0,
+  "build_jobs": 26914,
+  "timestamp_utc": "2026-10-18T18:17:09Z"
+}

@@ -1,0 +1,19 @@
+{
+  "schema": "opengauss.gate7.receipt.v1",
+  "module": "InfoGeometry.Synthesis.G2SplitSedenionDerivationBridgeAudit",
+  "source_path": "lean/InfoGeometry/Synthesis/G2SplitSedenionDerivationBridgeAudit.lean",
+  "source_sha256": "c9087f71314fe1fb1c2ba59d7c7c01674f73bebb78917d31186764eba56469e1",
+  "olean_path": ".lake/build/lib/lean/InfoGeometry/Synthesis/G2SplitSedenionDerivationBridgeAudit.olean",
+  "olean_sha256": "49c72e01f75d50a2020dccea5c8b4d5a9431096e149f152f9c304ddf63e39704",
+  "axioms": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "sorry_count": 0,
+  "admit_count": 0,
+  "screener_traps": 0,
+  "claim_linter_findings": 0,
+  "build_jobs": 26914,
+  "timestamp_utc": "2026-10-18T18:17:09Z"
+}

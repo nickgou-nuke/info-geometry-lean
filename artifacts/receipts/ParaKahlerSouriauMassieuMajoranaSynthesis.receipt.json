@@ -1,0 +1,72 @@
+{
+  "artifact": {
+    "path": "lean/InfoGeometry/Synthesis/ParaKahlerSouriauMassieuMajoranaSynthesis.lean",
+    "sha256": "d662784c43f1a4dbfbd90fc33b508d75c027e29073cad62f3d81138827acd1cd"
+  },
+  "auditModule": "InfoGeometry.Synthesis.ParaKahlerSouriauMassieuMajoranaSynthesisAudit",
+  "authority": "candidate_observation_not_proof_authority",
+  "checks": {
+    "axiomAudit": {
+      "declarations": [
+        "paraKahlerCompatibility_and_involution",
+        "paraKahlerMixedVariation_gauge_invariant_and_bregman_pairing",
+        "majorana_kleinQuadric_projective_ray_invariance",
+        "gibbsPartitionSum_pos",
+        "souriauAttentionWeight_pos",
+        "massieu_free_entropy_legendre_identity",
+        "souriauMassieu_shift_and_attention_scale_invariance",
+        "hasDerivAt_gibbsPartitionSum_coord",
+        "hasDerivAt_souriauMassieuPotential_coord",
+        "hasDerivAt_souriauAttentionWeight_diag",
+        "fisherSouriau_quadratic_eq_variance_and_nonneg"
+      ],
+      "output": "'paraKahlerCompatibility_and_involution' depends on axioms: [propext, Classical.choice, Quot.sound]\n'paraKahlerMixedVariation_gauge_invariant_and_bregman_pairing' depends on axioms: [propext, Classical.choice, Quot.sound]\n'majorana_kleinQuadric_projective_ray_invariance' depends on axioms: [propext, Classical.choice, Quot.sound]\n'gibbsPartitionSum_pos' depends on axioms: [propext, Classical.choice, Quot.sound]\n'souriauAttentionWeight_pos' depends on axioms: [propext, Classical.choice, Quot.sound]\n'massieu_free_entropy_legendre_identity' depends on axioms: [propext, Classical.choice, Quot.sound]\n'souriauMassieu_shift_and_attention_scale_invariance' depends on axioms: [propext, Classical.choice, Quot.sound]\n'hasDerivAt_gibbsPartitionSum_coord' depends on axioms: [propext, Classical.choice, Quot.sound]\n'hasDerivAt_souriauMassieuPotential_coord' depends on axioms: [propext, Classical.choice, Quot.sound]\n'hasDerivAt_souriauAttentionWeight_diag' depends on axioms: [propext, Classical.choice, Quot.sound]\n'fisherSouriau_quadratic_eq_variance_and_nonneg' depends on axioms: [propext, Classical.choice, Quot.sound]",
+      "outputSha256": "eeaefc55688158b36167faf3800b84e4176b8762394b692d8320e04fcdfeec60",
+      "returncode": 0,
+      "status": "collected"
+    },
+    "leanProcess": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "lean/InfoGeometry/Synthesis/ParaKahlerSouriauMassieuMajoranaSynthesis.lean"
+      ],
+      "outputSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "returncode": 0,
+      "status": "passed"
+    },
+    "semanticVacuityGate": {
+      "outputSha256": "da24a3001f923012b558f2e0f6382b5b83c820f06324b90f38b064300cb119fc",
+      "returncode": 0,
+      "status": "passed"
+    }
+  },
+  "environment": {
+    "gitHead": "112c131be2a2d10519cde1080e88eb23304282cd",
+    "lakeManifestSha256": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lakefileSha256": "5372c9a95ed8f6488bc0ce257c906c83658449668db4627259d72d542c77d9f7",
+    "toolchain": "leanprover/lean4:v4.34.1"
+  },
+  "module": "InfoGeometry.Synthesis.ParaKahlerSouriauMassieuMajoranaSynthesis",
+  "receiptSha256": "dbea3ec8466bd0352dcf25cd42dbf9e9b801dd8882a02388974d4f64cdd2155d",
+  "releaseTag": "v4.2.1-hadjiivanov-braid-monodromy",
+  "review": {
+    "promotionAllowed": false,
+    "status": "kernel_checked_pending_owner_review"
+  },
+  "schema": "info_geometry.proof_artifact_receipt.v1",
+  "score": {
+    "defect": 0.0,
+    "meaning": "scheduling metadata only; not probability or proof authority",
+    "policyVersion": "opengauss-gate7-v4.2",
+    "status": "policy_estimate",
+    "value": 1.0
+  },
+  "source": {
+    "changedSincePrompt": false,
+    "currentSnapshotSha256": "d662784c43f1a4dbfbd90fc33b508d75c027e29073cad62f3d81138827acd1cd",
+    "path": "lean/InfoGeometry/Synthesis/ParaKahlerSouriauMassieuMajoranaSynthesis.lean",
+    "snapshotSha256": "d662784c43f1a4dbfbd90fc33b508d75c027e29073cad62f3d81138827acd1cd"
+  }
+}

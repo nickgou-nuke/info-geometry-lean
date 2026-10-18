@@ -1,0 +1,19 @@
+{
+  "schema": "opengauss.gate7.receipt.v1",
+  "module": "InfoGeometry.Synthesis.ShirokovTernaryCliffordUnitarySU3Synthesis",
+  "source_path": "lean/InfoGeometry/Synthesis/ShirokovTernaryCliffordUnitarySU3Synthesis.lean",
+  "source_sha256": "443ee319547ec424b3dbb95906229e1340688ace2f80f1362b2174ddb0e27a23",
+  "olean_path": ".lake/build/lib/lean/InfoGeometry/Synthesis/ShirokovTernaryCliffordUnitarySU3Synthesis.olean",
+  "olean_sha256": "9d90a6a64235b7dfc3ac23e32aee87c503f47e0e41f646b48b13a34124555167",
+  "axioms": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "sorry_count": 0,
+  "admit_count": 0,
+  "screener_traps": 0,
+  "claim_linter_findings": 0,
+  "build_jobs": 26914,
+  "timestamp_utc": "2026-10-18T18:17:09Z"
+}

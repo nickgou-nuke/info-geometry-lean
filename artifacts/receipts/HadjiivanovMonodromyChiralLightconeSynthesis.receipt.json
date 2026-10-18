@@ -1,0 +1,65 @@
+{
+  "artifact": {
+    "path": "lean/InfoGeometry/Synthesis/HadjiivanovMonodromyChiralLightconeSynthesis.lean",
+    "sha256": "39dee7f5f9e8be6dd69ac9a176aaa758ddfa231c7976b665d2b67e00be4d6b06"
+  },
+  "auditModule": "InfoGeometry.Synthesis.HadjiivanovMonodromyChiralLightconeSynthesisAudit",
+  "authority": "candidate_observation_not_proof_authority",
+  "checks": {
+    "axiomAudit": {
+      "declarations": [
+        "chiral_ladder_matrix_unit_resolution",
+        "unipotentChiralShear_mul_and_det",
+        "unipotentChiralShear_double_ne_one",
+        "rankTwo_unipotentResidueReadout_double_ne_id"
+      ],
+      "output": "'chiral_ladder_matrix_unit_resolution' depends on axioms: [propext, Classical.choice, Quot.sound]\n'unipotentChiralShear_mul_and_det' depends on axioms: [propext, Classical.choice, Quot.sound]\n'unipotentChiralShear_double_ne_one' depends on axioms: [propext, Classical.choice, Quot.sound]\n'rankTwo_unipotentResidueReadout_double_ne_id' depends on axioms: [propext, Classical.choice, Quot.sound]",
+      "outputSha256": "a7134c3476e5b93aa90533e17efe31e06d0af8ace16806f66cd9d595847de962",
+      "returncode": 0,
+      "status": "collected"
+    },
+    "leanProcess": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "lean/InfoGeometry/Synthesis/HadjiivanovMonodromyChiralLightconeSynthesis.lean"
+      ],
+      "outputSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "returncode": 0,
+      "status": "passed"
+    },
+    "semanticVacuityGate": {
+      "outputSha256": "da24a3001f923012b558f2e0f6382b5b83c820f06324b90f38b064300cb119fc",
+      "returncode": 0,
+      "status": "passed"
+    }
+  },
+  "environment": {
+    "gitHead": "112c131be2a2d10519cde1080e88eb23304282cd",
+    "lakeManifestSha256": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lakefileSha256": "5372c9a95ed8f6488bc0ce257c906c83658449668db4627259d72d542c77d9f7",
+    "toolchain": "leanprover/lean4:v4.34.1"
+  },
+  "module": "InfoGeometry.Synthesis.HadjiivanovMonodromyChiralLightconeSynthesis",
+  "receiptSha256": "ed1e5030921f08842c93d3dbeb3b177b7522bdd8b171de6c8553051710255b07",
+  "releaseTag": "v4.2.1-hadjiivanov-braid-monodromy",
+  "review": {
+    "promotionAllowed": false,
+    "status": "kernel_checked_pending_owner_review"
+  },
+  "schema": "info_geometry.proof_artifact_receipt.v1",
+  "score": {
+    "defect": 0.0,
+    "meaning": "scheduling metadata only; not probability or proof authority",
+    "policyVersion": "opengauss-gate7-v4.2",
+    "status": "policy_estimate",
+    "value": 1.0
+  },
+  "source": {
+    "changedSincePrompt": false,
+    "currentSnapshotSha256": "39dee7f5f9e8be6dd69ac9a176aaa758ddfa231c7976b665d2b67e00be4d6b06",
+    "path": "lean/InfoGeometry/Synthesis/HadjiivanovMonodromyChiralLightconeSynthesis.lean",
+    "snapshotSha256": "39dee7f5f9e8be6dd69ac9a176aaa758ddfa231c7976b665d2b67e00be4d6b06"
+  }
+}

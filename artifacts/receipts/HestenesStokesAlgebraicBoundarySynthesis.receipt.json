@@ -1,0 +1,19 @@
+{
+  "schema": "opengauss.gate7.receipt.v1",
+  "module": "InfoGeometry.Synthesis.HestenesStokesAlgebraicBoundarySynthesis",
+  "source_path": "lean/InfoGeometry/Synthesis/HestenesStokesAlgebraicBoundarySynthesis.lean",
+  "source_sha256": "e865369c6122d72f87d1c11cfc65c648df84481cdc85ab739c70746f290a4a4e",
+  "olean_path": ".lake/build/lib/lean/InfoGeometry/Synthesis/HestenesStokesAlgebraicBoundarySynthesis.olean",
+  "olean_sha256": "b41d06343417fc389c2683926688672c94403e7fff6aba5c33051ed373b7ee63",
+  "axioms": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "sorry_count": 0,
+  "admit_count": 0,
+  "screener_traps": 0,
+  "claim_linter_findings": 0,
+  "build_jobs": 26914,
+  "timestamp_utc": "2026-10-18T18:17:09Z"
+}

@@ -1,0 +1,19 @@
+{
+  "schema": "opengauss.gate7.receipt.v1",
+  "module": "InfoGeometry.Synthesis.Cl44MinimalIdealSplitSedenionEquivBridge",
+  "source_path": "lean/InfoGeometry/Synthesis/Cl44MinimalIdealSplitSedenionEquivBridge.lean",
+  "source_sha256": "892006eed5794a266911125f3a9bc5e10cb7d4595d80ad247c4bfcde12d8851f",
+  "olean_path": ".lake/build/lib/lean/InfoGeometry/Synthesis/Cl44MinimalIdealSplitSedenionEquivBridge.olean",
+  "olean_sha256": "ecb6f7c28854063fd94552eda71c9b70577360025a521a358b324bddb10df3e4",
+  "axioms": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "sorry_count": 0,
+  "admit_count": 0,
+  "screener_traps": 0,
+  "claim_linter_findings": 0,
+  "build_jobs": 26914,
+  "timestamp_utc": "2026-10-18T18:17:09Z"
+}

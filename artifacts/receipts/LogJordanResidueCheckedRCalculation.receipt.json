@@ -1,0 +1,70 @@
+{
+  "artifact": {
+    "path": "lean/InfoGeometry/Categorical/LogJordanResidueCheckedRCalculation.lean",
+    "sha256": "9eacce634321636468cf1efca470790f16c06e90de4ac757bed4b55cd9533968"
+  },
+  "auditModule": "InfoGeometry.Categorical.LogJordanResidueCheckedRCalculationAudit",
+  "authority": "candidate_observation_not_proof_authority",
+  "checks": {
+    "axiomAudit": {
+      "declarations": [
+        "InfoGeometry.Categorical.LogJordanResidueCheckedRCalculation.residueCheckedR",
+        "InfoGeometry.Categorical.LogJordanResidueCheckedRCalculation.residueCheckedR_tmul",
+        "InfoGeometry.Categorical.LogJordanResidueCheckedRCalculation.residueCheckedR_double_tmul",
+        "InfoGeometry.Categorical.LogJordanResidueCheckedRCalculation.residueCheckedR_double_ne_id_of",
+        "InfoGeometry.Categorical.LogJordanResidueCheckedRCalculation.standardJordanObject_N_e1_tmul_N_e1",
+        "InfoGeometry.Categorical.LogJordanResidueCheckedRCalculation.standardJordanObject_N_e1_tmul_N_e1_ne_zero",
+        "InfoGeometry.Categorical.LogJordanResidueCheckedRCalculation.residueCheckedR_double_ne_id",
+        "InfoGeometry.Categorical.LogJordanResidueCheckedRCalculation.residueCheckedR_double_eq_id_iff",
+        "InfoGeometry.Categorical.LogJordanResidueCheckedRCalculation.residueCheckedR_logShearBase_double_ne_id"
+      ],
+      "output": "'InfoGeometry.Categorical.LogJordanResidueCheckedRCalculation.residueCheckedR' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Categorical.LogJordanResidueCheckedRCalculation.residueCheckedR_tmul' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Categorical.LogJordanResidueCheckedRCalculation.residueCheckedR_double_tmul' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Categorical.LogJordanResidueCheckedRCalculation.residueCheckedR_double_ne_id_of' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Categorical.LogJordanResidueCheckedRCalculation.standardJordanObject_N_e1_tmul_N_e1' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Categorical.LogJordanResidueCheckedRCalculation.standardJordanObject_N_e1_tmul_N_e1_ne_zero' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Categorical.LogJordanResidueCheckedRCalculation.residueCheckedR_double_ne_id' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Categorical.LogJordanResidueCheckedRCalculation.residueCheckedR_double_eq_id_iff' depends on axioms: [propext, Classical.choice, Quot.sound]\n'InfoGeometry.Categorical.LogJordanResidueCheckedRCalculation.residueCheckedR_logShearBase_double_ne_id' depends on axioms: [propext, Classical.choice, Quot.sound]",
+      "outputSha256": "a02329109667d3d6042d0525b977e38196a4cb31ebd4161307e0596ef9314164",
+      "returncode": 0,
+      "status": "collected"
+    },
+    "leanProcess": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "lean/InfoGeometry/Categorical/LogJordanResidueCheckedRCalculation.lean"
+      ],
+      "outputSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "returncode": 0,
+      "status": "passed"
+    },
+    "semanticVacuityGate": {
+      "outputSha256": "da24a3001f923012b558f2e0f6382b5b83c820f06324b90f38b064300cb119fc",
+      "returncode": 0,
+      "status": "passed"
+    }
+  },
+  "environment": {
+    "gitHead": "112c131be2a2d10519cde1080e88eb23304282cd",
+    "lakeManifestSha256": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lakefileSha256": "5372c9a95ed8f6488bc0ce257c906c83658449668db4627259d72d542c77d9f7",
+    "toolchain": "leanprover/lean4:v4.34.1"
+  },
+  "module": "InfoGeometry.Categorical.LogJordanResidueCheckedRCalculation",
+  "receiptSha256": "12a8a6ffca420f62698262e31551f01a88afe55f5b69814488dc8d10e197e11b",
+  "releaseTag": "v4.2.1-hadjiivanov-braid-monodromy",
+  "review": {
+    "promotionAllowed": false,
+    "status": "kernel_checked_pending_owner_review"
+  },
+  "schema": "info_geometry.proof_artifact_receipt.v1",
+  "score": {
+    "defect": 0.0,
+    "meaning": "scheduling metadata only; not probability or proof authority",
+    "policyVersion": "opengauss-gate7-v4.2",
+    "status": "policy_estimate",
+    "value": 1.0
+  },
+  "source": {
+    "changedSincePrompt": false,
+    "currentSnapshotSha256": "9eacce634321636468cf1efca470790f16c06e90de4ac757bed4b55cd9533968",
+    "path": "lean/InfoGeometry/Categorical/LogJordanResidueCheckedRCalculation.lean",
+    "snapshotSha256": "9eacce634321636468cf1efca470790f16c06e90de4ac757bed4b55cd9533968"
+  }
+}

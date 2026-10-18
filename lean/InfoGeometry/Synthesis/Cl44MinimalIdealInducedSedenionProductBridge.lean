@@ -485,6 +485,31 @@ def idealG2Derivation (p : Params) (A : LeftIdeal primIdem) : LeftIdeal primIdem
   cl44MatrixLeftIdealSplitSedenionEquiv.symm
     (sedenionG2Derivation p (cl44MatrixLeftIdealSplitSedenionEquiv A))
 
+/-- The fixed-parameter split-sedenion `G₂` derivation, viewed as a real-linear
+endomorphism of the standard module on `SplitSedenion ℝ`. -/
+def sedenionG2DerivationLinear (p : Params) :
+    SplitSedenion ℝ →ₗ[ℝ] SplitSedenion ℝ where
+  toFun := sedenionG2Derivation p
+  map_add' X Y := by
+    change sedenionG2Derivation p (sedenionAdd X Y) =
+      sedenionAdd (sedenionG2Derivation p X) (sedenionG2Derivation p Y)
+    exact sedenionG2Derivation_add p X Y
+  map_smul' r X := by
+    have hz (x : ZornSplitOctonion ℝ) : zornSmul r x = r • x := by
+      ext <;> simp [zornSmul]
+    rcases X with ⟨x, y⟩
+    change (zornG2Derivation p (r • x), zornG2Derivation p (r • y)) =
+      (r • zornG2Derivation p x, r • zornG2Derivation p y)
+    apply Prod.ext
+    · calc
+        zornG2Derivation p (r • x) = zornG2Derivation p (zornSmul r x) := by rw [hz]
+        _ = zornSmul r (zornG2Derivation p x) := zornG2Derivation_smul p r x
+        _ = r • zornG2Derivation p x := hz _
+    · calc
+        zornG2Derivation p (r • y) = zornG2Derivation p (zornSmul r y) := by rw [hz]
+        _ = zornSmul r (zornG2Derivation p y) := zornG2Derivation_smul p r y
+        _ = r • zornG2Derivation p y := hz _
+
 /-- `idealG2Derivation p` satisfies the Leibniz derivation law for `idealSedenionMul` and
 submodule addition `+` on `LeftIdeal primIdem`. -/
 theorem idealG2Derivation_leibniz (p : Params) (A B : LeftIdeal primIdem) :

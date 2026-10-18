@@ -1,0 +1,70 @@
+{
+  "artifact": {
+    "path": "lean/InfoGeometry/Synthesis/WavefrontKMSKleinDualityBridge.lean",
+    "sha256": "a5e31631c250ad78e1480712bb97d846296b8ee94f0006c9afc9384e2736f196"
+  },
+  "auditModule": "InfoGeometry.Synthesis.WavefrontKMSKleinDualityBridgeAudit",
+  "authority": "candidate_observation_not_proof_authority",
+  "checks": {
+    "axiomAudit": {
+      "declarations": [
+        "colorGen_mul_ne_comm",
+        "zorn_gunaydin_gursey_direct_sum_decomposition",
+        "zorn_quark_color_ray_norm_zero",
+        "zornNorm_eq_lepton_sub_colorSingletPairing",
+        "sedenionG2Derivation_commutes_oppositeWeylScale",
+        "realPeirce_color_weyl_fock_spine",
+        "hadjiivanov_cyclotomic_w24_monodromy_spine",
+        "wavefront_kms_klein_duality_master_spine",
+        "celestial_null_quadric_and_doubleStar_root_sheet_spine"
+      ],
+      "output": "'colorGen_mul_ne_comm' depends on axioms: [propext, Classical.choice, Quot.sound]\n'zorn_gunaydin_gursey_direct_sum_decomposition' depends on axioms: [propext, Classical.choice, Quot.sound]\n'zorn_quark_color_ray_norm_zero' depends on axioms: [propext, Classical.choice, Quot.sound]\n'zornNorm_eq_lepton_sub_colorSingletPairing' depends on axioms: [propext, Classical.choice, Quot.sound]\n'sedenionG2Derivation_commutes_oppositeWeylScale' depends on axioms: [propext, Classical.choice, Quot.sound]\n'realPeirce_color_weyl_fock_spine' depends on axioms: [propext, Classical.choice, Quot.sound]\n'hadjiivanov_cyclotomic_w24_monodromy_spine' depends on axioms: [propext, Classical.choice, Quot.sound]\n'wavefront_kms_klein_duality_master_spine' depends on axioms: [propext, Classical.choice, Quot.sound]\n'celestial_null_quadric_and_doubleStar_root_sheet_spine' depends on axioms: [propext, Classical.choice, Quot.sound]",
+      "outputSha256": "9faafcaf3e92976507ae06ce5ea95df59414045564856c51bab48057648b2bcf",
+      "returncode": 0,
+      "status": "collected"
+    },
+    "leanProcess": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "lean/InfoGeometry/Synthesis/WavefrontKMSKleinDualityBridge.lean"
+      ],
+      "outputSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "returncode": 0,
+      "status": "passed"
+    },
+    "semanticVacuityGate": {
+      "outputSha256": "da24a3001f923012b558f2e0f6382b5b83c820f06324b90f38b064300cb119fc",
+      "returncode": 0,
+      "status": "passed"
+    }
+  },
+  "environment": {
+    "gitHead": "112c131be2a2d10519cde1080e88eb23304282cd",
+    "lakeManifestSha256": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lakefileSha256": "5372c9a95ed8f6488bc0ce257c906c83658449668db4627259d72d542c77d9f7",
+    "toolchain": "leanprover/lean4:v4.34.1"
+  },
+  "module": "InfoGeometry.Synthesis.WavefrontKMSKleinDualityBridge",
+  "receiptSha256": "33bb4af3803b7ccc485244d619fdac4c0f1a1ae802ad31b2338fd873691b8f51",
+  "releaseTag": "v4.2.1-hadjiivanov-braid-monodromy",
+  "review": {
+    "promotionAllowed": false,
+    "status": "kernel_checked_pending_owner_review"
+  },
+  "schema": "info_geometry.proof_artifact_receipt.v1",
+  "score": {
+    "defect": 0.0,
+    "meaning": "scheduling metadata only; not probability or proof authority",
+    "policyVersion": "opengauss-gate7-v4.2",
+    "status": "policy_estimate",
+    "value": 1.0
+  },
+  "source": {
+    "changedSincePrompt": false,
+    "currentSnapshotSha256": "a5e31631c250ad78e1480712bb97d846296b8ee94f0006c9afc9384e2736f196",
+    "path": "lean/InfoGeometry/Synthesis/WavefrontKMSKleinDualityBridge.lean",
+    "snapshotSha256": "a5e31631c250ad78e1480712bb97d846296b8ee94f0006c9afc9384e2736f196"
+  }
+}

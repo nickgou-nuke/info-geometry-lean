@@ -46,7 +46,16 @@ open InfoGeometry.Synthesis.SedenionSocleDirectSumSeparationBridge
 #check @socleDerivationLift_leibniz_rhs
 #check @socleDerivationLift_leibniz_lhs_ne_zero
 #check @socleDerivationLift_not_leibniz
+#check @sedenionMul_lambda1Probe_mul_10
+#check @sedenionMul_lambda1Probe_mul_21
+#check @sedenionMul_lambda1Probe_mul_02
+#check @socleDerivationLift_leibniz_forces_basis_zero
+#check @socleDerivationLift_leibniz_iff_eq_zero
+#print axioms socleDerivationLift_leibniz_iff_eq_zero
 #check @sedenionSocleDirectSum
+#check @sedenionAdd_left_cancel
+#check @sedenionSocleDirectSum_K13_not_leibniz
+#print axioms sedenionSocleDirectSum_K13_not_leibniz
 #check @g2Probe
 #check @readSedenionG2Params_socleDerivationLift
 #check @readSedenionG2Params_sedenionSocleDirectSum

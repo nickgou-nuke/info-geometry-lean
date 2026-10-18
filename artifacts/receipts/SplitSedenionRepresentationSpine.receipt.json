@@ -1,0 +1,19 @@
+{
+  "schema": "opengauss.gate7.receipt.v1",
+  "module": "InfoGeometry.Synthesis.SplitSedenionRepresentationSpine",
+  "source_path": "lean/InfoGeometry/Synthesis/SplitSedenionRepresentationSpine.lean",
+  "source_sha256": "e4a59914e645bff5a19a5e0f6f6db3c4ac3a58779bfb93b17cc36bad62b2d7c8",
+  "olean_path": ".lake/build/lib/lean/InfoGeometry/Synthesis/SplitSedenionRepresentationSpine.olean",
+  "olean_sha256": "85cebb1027c6a14447d0773c188b768541af94c29bf3e1d75e46998d11fcb588",
+  "axioms": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "sorry_count": 0,
+  "admit_count": 0,
+  "screener_traps": 0,
+  "claim_linter_findings": 0,
+  "build_jobs": 26914,
+  "timestamp_utc": "2026-10-18T18:17:09Z"
+}

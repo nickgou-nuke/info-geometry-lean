@@ -465,6 +465,45 @@ theorem sedenionAdd_comm (A B : SplitSedenion ℝ) : sedenionAdd A B = sedenionA
   · exact zornAdd_comm A.1 B.1
   · exact zornAdd_comm A.2 B.2
 
+/-- Componentwise addition on split sedenions is left cancellative. -/
+theorem sedenionAdd_left_cancel (A B C : SplitSedenion ℝ)
+    (h : sedenionAdd A B = sedenionAdd A C) : B = C := by
+  have h₁ : zornAdd A.1 B.1 = zornAdd A.1 C.1 := by
+    simpa [sedenionAdd] using congrArg Prod.fst h
+  have h₂ : zornAdd A.2 B.2 = zornAdd A.2 C.2 := by
+    simpa [sedenionAdd] using congrArg Prod.snd h
+  apply Prod.ext
+  · apply ZornSplitOctonion.ext
+    · have h := congrArg (fun X => X.a) h₁
+      change A.1.a + B.1.a = A.1.a + C.1.a at h
+      exact add_left_cancel (a := A.1.a) h
+    · funext i
+      have h := congrArg (fun X => X.u i) h₁
+      change A.1.u i + B.1.u i = A.1.u i + C.1.u i at h
+      exact add_left_cancel (a := A.1.u i) h
+    · funext i
+      have h := congrArg (fun X => X.v i) h₁
+      change A.1.v i + B.1.v i = A.1.v i + C.1.v i at h
+      exact add_left_cancel (a := A.1.v i) h
+    · have h := congrArg (fun X => X.b) h₁
+      change A.1.b + B.1.b = A.1.b + C.1.b at h
+      exact add_left_cancel (a := A.1.b) h
+  · apply ZornSplitOctonion.ext
+    · have h := congrArg (fun X => X.a) h₂
+      change A.2.a + B.2.a = A.2.a + C.2.a at h
+      exact add_left_cancel (a := A.2.a) h
+    · funext i
+      have h := congrArg (fun X => X.u i) h₂
+      change A.2.u i + B.2.u i = A.2.u i + C.2.u i at h
+      exact add_left_cancel (a := A.2.u i) h
+    · funext i
+      have h := congrArg (fun X => X.v i) h₂
+      change A.2.v i + B.2.v i = A.2.v i + C.2.v i at h
+      exact add_left_cancel (a := A.2.v i) h
+    · have h := congrArg (fun X => X.b) h₂
+      change A.2.b + B.2.b = A.2.b + C.2.b at h
+      exact add_left_cancel (a := A.2.b) h
+
 /-- Left identity law for `zornZero` under `zornAdd`. -/
 theorem zornAdd_zornZero (x : ZornSplitOctonion ℝ) : zornAdd zornZero x = x := by
   ext k
@@ -536,6 +575,82 @@ the second Zorn factor via the cross product $e_1 \times e_0 = -e_2$. -/
 theorem sedenionMul_lambda1Probe_mul :
     sedenionMul (lambda1Probe 0, zornZero) (zornZero, lambda1Probe 1) =
       (zornZero, ⟨0, ![0, 0, 0], ![0, 0, -1], 0⟩) := by
+  apply Prod.ext
+  · apply ZornSplitOctonion.ext
+    · simp [sedenionMul, zornMul, zornConj, vec3Dot, lambda1Probe, zornZero, zornAdd_a]
+    · funext k
+      fin_cases k <;>
+        simp [sedenionMul, zornMul, zornConj, vec3Cross, lambda1Probe, zornZero, zornAdd_u]
+    · funext k
+      fin_cases k <;>
+        simp [sedenionMul, zornMul, zornConj, vec3Cross, lambda1Probe, zornZero, zornAdd_v]
+    · simp [sedenionMul, zornMul, zornConj, vec3Dot, lambda1Probe, zornZero, zornAdd_b]
+
+  · apply ZornSplitOctonion.ext
+    · simp [sedenionMul, zornMul, zornConj, vec3Dot, lambda1Probe, zornZero, zornAdd_a]
+    · funext k
+      fin_cases k <;>
+        simp [sedenionMul, zornMul, zornConj, vec3Cross, lambda1Probe, zornZero, zornAdd_u]
+    · funext k
+      fin_cases k <;>
+        simp [sedenionMul, zornMul, zornConj, vec3Cross, lambda1Probe, zornZero, zornAdd_v]
+    · simp [sedenionMul, zornMul, zornConj, vec3Dot, lambda1Probe, zornZero, zornAdd_b]
+
+/-- The cyclic probe pair with indices `(1, 0)` lands in the second factor's
+`v` slot along the third standard basis vector. -/
+theorem sedenionMul_lambda1Probe_mul_10 :
+    sedenionMul (lambda1Probe 1, zornZero) (zornZero, lambda1Probe 0) =
+      (zornZero, ⟨0, ![0, 0, 0], ![0, 0, 1], 0⟩) := by
+  apply Prod.ext
+  · apply ZornSplitOctonion.ext
+    · simp [sedenionMul, zornMul, zornConj, vec3Dot, lambda1Probe, zornZero, zornAdd_a]
+    · funext k
+      fin_cases k <;>
+        simp [sedenionMul, zornMul, zornConj, vec3Cross, lambda1Probe, zornZero, zornAdd_u]
+    · funext k
+      fin_cases k <;>
+        simp [sedenionMul, zornMul, zornConj, vec3Cross, lambda1Probe, zornZero, zornAdd_v]
+    · simp [sedenionMul, zornMul, zornConj, vec3Dot, lambda1Probe, zornZero, zornAdd_b]
+  · apply ZornSplitOctonion.ext
+    · simp [sedenionMul, zornMul, zornConj, vec3Dot, lambda1Probe, zornZero, zornAdd_a]
+    · funext k
+      fin_cases k <;>
+        simp [sedenionMul, zornMul, zornConj, vec3Cross, lambda1Probe, zornZero, zornAdd_u]
+    · funext k
+      fin_cases k <;>
+        simp [sedenionMul, zornMul, zornConj, vec3Cross, lambda1Probe, zornZero, zornAdd_v]
+    · simp [sedenionMul, zornMul, zornConj, vec3Dot, lambda1Probe, zornZero, zornAdd_b]
+
+/-- The cyclic probe pair with indices `(2, 1)` lands in the second factor's
+`v` slot along the first standard basis vector. -/
+theorem sedenionMul_lambda1Probe_mul_21 :
+    sedenionMul (lambda1Probe 2, zornZero) (zornZero, lambda1Probe 1) =
+      (zornZero, ⟨0, ![0, 0, 0], ![1, 0, 0], 0⟩) := by
+  apply Prod.ext
+  · apply ZornSplitOctonion.ext
+    · simp [sedenionMul, zornMul, zornConj, vec3Dot, lambda1Probe, zornZero, zornAdd_a]
+    · funext k
+      fin_cases k <;>
+        simp [sedenionMul, zornMul, zornConj, vec3Cross, lambda1Probe, zornZero, zornAdd_u]
+    · funext k
+      fin_cases k <;>
+        simp [sedenionMul, zornMul, zornConj, vec3Cross, lambda1Probe, zornZero, zornAdd_v]
+    · simp [sedenionMul, zornMul, zornConj, vec3Dot, lambda1Probe, zornZero, zornAdd_b]
+  · apply ZornSplitOctonion.ext
+    · simp [sedenionMul, zornMul, zornConj, vec3Dot, lambda1Probe, zornZero, zornAdd_a]
+    · funext k
+      fin_cases k <;>
+        simp [sedenionMul, zornMul, zornConj, vec3Cross, lambda1Probe, zornZero, zornAdd_u]
+    · funext k
+      fin_cases k <;>
+        simp [sedenionMul, zornMul, zornConj, vec3Cross, lambda1Probe, zornZero, zornAdd_v]
+    · simp [sedenionMul, zornMul, zornConj, vec3Dot, lambda1Probe, zornZero, zornAdd_b]
+
+/-- The cyclic probe pair with indices `(0, 2)` lands in the second factor's
+`v` slot along the second standard basis vector. -/
+theorem sedenionMul_lambda1Probe_mul_02 :
+    sedenionMul (lambda1Probe 0, zornZero) (zornZero, lambda1Probe 2) =
+      (zornZero, ⟨0, ![0, 0, 0], ![0, 1, 0], 0⟩) := by
   apply Prod.ext
   · apply ZornSplitOctonion.ext
     · simp [sedenionMul, zornMul, zornConj, vec3Dot, lambda1Probe, zornZero, zornAdd_a]
@@ -664,6 +779,26 @@ def sedenionSocleDirectSum (p : Params) (M : Matrix (Fin 3) (Fin 3) ℝ) :
     SplitSedenion ℝ → SplitSedenion ℝ :=
   fun Y => sedenionAdd (sedenionG2Derivation p Y) (socleDerivationLift M Y)
 
+/-- Adding any member of the verified diagonal $G_2$ family cannot repair the
+`K13` socle lift's failure of the Leibniz rule for the actual split-sedenion
+product. The claim is witnessed by the same pair used in
+`socleDerivationLift_not_leibniz`. -/
+theorem sedenionSocleDirectSum_K13_not_leibniz (p : Params) :
+    ¬ ∀ X Y : SplitSedenion ℝ,
+      sedenionSocleDirectSum p (sl2GenK13 (R := ℝ)) (sedenionMul X Y) =
+        sedenionAdd
+          (sedenionMul (sedenionSocleDirectSum p (sl2GenK13 (R := ℝ)) X) Y)
+          (sedenionMul X (sedenionSocleDirectSum p (sl2GenK13 (R := ℝ)) Y)) := by
+  intro h
+  let X : SplitSedenion ℝ := (lambda1Probe 0, zornZero)
+  let Y : SplitSedenion ℝ := (zornZero, lambda1Probe 1)
+  have hxy := h X Y
+  dsimp [sedenionSocleDirectSum] at hxy
+  rw [sedenionMul_add_left, sedenionMul_add_right, sedenionAdd_rearrange,
+    sedenionG2Derivation_leibniz] at hxy
+  apply socleDerivationLift_not_leibniz
+  exact sedenionAdd_left_cancel _ _ _ hxy
+
 /-- Second-slot probe embedding `Q : ZornVectorMatrix ℝ` into `(zornZero, zornVectorMatrixEquiv Q)`. -/
 def g2Probe (Q : ZornVectorMatrix ℝ) : SplitSedenion ℝ :=
   (zornZero, zornVectorMatrixEquiv Q)
@@ -726,6 +861,111 @@ theorem mulVec_three_basis_eq_zero (X : Matrix (Fin 3) (Fin 3) ℝ)
   have h := congrFun (key j) i
   simp only [mulVec_basis] at h
   exact h
+
+/-- A Leibniz socle lift must annihilate a basis vector whenever a probe product
+places that vector in the acted-on second-factor `v` slot. -/
+theorem socleDerivationLift_leibniz_forces_basis_zero
+    (M : Matrix (Fin 3) (Fin 3) ℝ)
+    (hLeibniz : ∀ X Y : SplitSedenion ℝ,
+      socleDerivationLift M (sedenionMul X Y) =
+        sedenionAdd (sedenionMul (socleDerivationLift M X) Y)
+          (sedenionMul X (socleDerivationLift M Y)))
+    (i j k : Fin 3) (W : ZornSplitOctonion ℝ)
+    (hProduct : sedenionMul (lambda1Probe i, zornZero) (zornZero, lambda1Probe j) =
+      (zornZero, W)) (hW : W.v = ZornVec3.basis k) :
+    M.mulVec (ZornVec3.basis k) = fun _ => 0 := by
+  let X : SplitSedenion ℝ := (lambda1Probe i, zornZero)
+  let Y : SplitSedenion ℝ := (zornZero, lambda1Probe j)
+  have hX : socleDerivationLift M X = sedenionZero := by
+    rw [socleDerivationLift_apply]
+    apply Prod.ext
+    · rfl
+    · apply ZornSplitOctonion.ext
+      · rfl
+      · funext q
+        rfl
+      · funext q
+        simp [X, sedenionZero, zornZero, Matrix.mulVec, dotProduct]
+      · rfl
+  have hY : socleDerivationLift M Y = sedenionZero := by
+    rw [socleDerivationLift_apply]
+    apply Prod.ext
+    · rfl
+    · apply ZornSplitOctonion.ext
+      · rfl
+      · funext q
+        rfl
+      · funext q
+        simp [Y, sedenionZero, zornZero, lambda1Probe, Matrix.mulVec, dotProduct]
+      · rfl
+  have h := hLeibniz X Y
+  rw [hProduct, hX, hY] at h
+  have hV := congrArg (fun T : SplitSedenion ℝ => T.2.v) h
+  have hWzero : M.mulVec W.v = fun _ => 0 := by
+    ext q
+    have hq := congrFun hV q
+    fin_cases q <;>
+      simpa [socleDerivationLift_apply, X, Y, sedenionZero, sedenionAdd,
+        sedenionMul, zornMul, zornConj, vec3Dot, vec3Cross, zornZero,
+        lambda1Probe, zornAdd] using hq
+  rw [hW] at hWzero
+  exact hWzero
+
+/-- For the actual Cayley–Dickson split-sedenion product, the matrix-parameter
+lift acting only on the second factor's `v` slot satisfies the Leibniz rule
+exactly when its parameter matrix is zero. This classifies this lift family;
+it is not a classification of all derivations of `SplitSedenion ℝ`. -/
+theorem socleDerivationLift_leibniz_iff_eq_zero (M : Matrix (Fin 3) (Fin 3) ℝ) :
+    (∀ X Y : SplitSedenion ℝ,
+      socleDerivationLift M (sedenionMul X Y) =
+        sedenionAdd (sedenionMul (socleDerivationLift M X) Y)
+          (sedenionMul X (socleDerivationLift M Y))) ↔ M = 0 := by
+  constructor
+  · intro h
+    have h₂ := socleDerivationLift_leibniz_forces_basis_zero M h 1 0 2 _
+      sedenionMul_lambda1Probe_mul_10 (by
+        funext q
+        fin_cases q <;> simp [ZornVec3.basis])
+    have h₀ := socleDerivationLift_leibniz_forces_basis_zero M h 2 1 0 _
+      sedenionMul_lambda1Probe_mul_21 (by
+        funext q
+        fin_cases q <;> simp [ZornVec3.basis])
+    have h₁ := socleDerivationLift_leibniz_forces_basis_zero M h 0 2 1 _
+      sedenionMul_lambda1Probe_mul_02 (by
+        funext q
+        fin_cases q <;> simp [ZornVec3.basis])
+    exact mulVec_three_basis_eq_zero M h₀ h₁ h₂
+  · intro h
+    subst M
+    intro X Y
+    rw [socleDerivationLift_zero, socleDerivationLift_zero]
+    apply Prod.ext
+    · apply ZornSplitOctonion.ext
+      · simp [sedenionMul, sedenionAdd, sedenionZero, zornMul, zornConj,
+          vec3Dot, vec3Cross, zornZero, zornAdd]
+      · funext q
+        fin_cases q <;>
+          simp [sedenionMul, sedenionAdd, sedenionZero, zornMul, zornConj,
+            vec3Dot, vec3Cross, zornZero, zornAdd]
+      · funext q
+        fin_cases q <;>
+          simp [sedenionMul, sedenionAdd, sedenionZero, zornMul, zornConj,
+            vec3Dot, vec3Cross, zornZero, zornAdd]
+      · simp [sedenionMul, sedenionAdd, sedenionZero, zornMul, zornConj,
+          vec3Dot, vec3Cross, zornZero, zornAdd]
+    · apply ZornSplitOctonion.ext
+      · simp [sedenionMul, sedenionAdd, sedenionZero, zornMul, zornConj,
+          vec3Dot, vec3Cross, zornZero, zornAdd]
+      · funext q
+        fin_cases q <;>
+          simp [sedenionMul, sedenionAdd, sedenionZero, zornMul, zornConj,
+            vec3Dot, vec3Cross, zornZero, zornAdd]
+      · funext q
+        fin_cases q <;>
+          simp [sedenionMul, sedenionAdd, sedenionZero, zornMul, zornConj,
+            vec3Dot, vec3Cross, zornZero, zornAdd]
+      · simp [sedenionMul, sedenionAdd, sedenionZero, zornMul, zornConj,
+          vec3Dot, vec3Cross, zornZero, zornAdd]
 
 /-- `zornG2Derivation 0` is identically `zornZero`. -/
 theorem zornG2Derivation_zero (z : ZornSplitOctonion ℝ) :

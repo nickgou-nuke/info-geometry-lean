@@ -1,0 +1,64 @@
+{
+  "artifact": {
+    "path": "lean/InfoGeometry/Synthesis/RealPeirceG2ColorActionBridge.lean",
+    "sha256": "ca83ef5589499fe0d7d9d78d636589753428aa9502f676e9d8d85763e3ac98b1"
+  },
+  "auditModule": "InfoGeometry.Synthesis.RealPeirceG2ColorActionBridgeAudit",
+  "authority": "candidate_observation_not_proof_authority",
+  "checks": {
+    "axiomAudit": {
+      "declarations": [
+        "zornG2Derivation_realColor_action",
+        "peirceAlignedZornGGEquiv_intertwines_realColor",
+        "sedenionG2Derivation_realColor_action"
+      ],
+      "output": "'zornG2Derivation_realColor_action' depends on axioms: [propext, Classical.choice, Quot.sound]\n'peirceAlignedZornGGEquiv_intertwines_realColor' depends on axioms: [propext, Classical.choice, Quot.sound]\n'sedenionG2Derivation_realColor_action' depends on axioms: [propext, Classical.choice, Quot.sound]",
+      "outputSha256": "2e6ab2c01bb9566f5707790900e053699b6ec3b0d4ed3f40c72704045c41afdb",
+      "returncode": 0,
+      "status": "collected"
+    },
+    "leanProcess": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "lean/InfoGeometry/Synthesis/RealPeirceG2ColorActionBridge.lean"
+      ],
+      "outputSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "returncode": 0,
+      "status": "passed"
+    },
+    "semanticVacuityGate": {
+      "outputSha256": "da24a3001f923012b558f2e0f6382b5b83c820f06324b90f38b064300cb119fc",
+      "returncode": 0,
+      "status": "passed"
+    }
+  },
+  "environment": {
+    "gitHead": "112c131be2a2d10519cde1080e88eb23304282cd",
+    "lakeManifestSha256": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lakefileSha256": "5372c9a95ed8f6488bc0ce257c906c83658449668db4627259d72d542c77d9f7",
+    "toolchain": "leanprover/lean4:v4.34.1"
+  },
+  "module": "InfoGeometry.Synthesis.RealPeirceG2ColorActionBridge",
+  "receiptSha256": "5418dffa7f7fbad07c88dfe440254f7cdc1fa434075a802177557a3e02881f79",
+  "releaseTag": "v4.2.1-hadjiivanov-braid-monodromy",
+  "review": {
+    "promotionAllowed": false,
+    "status": "kernel_checked_pending_owner_review"
+  },
+  "schema": "info_geometry.proof_artifact_receipt.v1",
+  "score": {
+    "defect": 0.0,
+    "meaning": "scheduling metadata only; not probability or proof authority",
+    "policyVersion": "opengauss-gate7-v4.2",
+    "status": "policy_estimate",
+    "value": 1.0
+  },
+  "source": {
+    "changedSincePrompt": false,
+    "currentSnapshotSha256": "ca83ef5589499fe0d7d9d78d636589753428aa9502f676e9d8d85763e3ac98b1",
+    "path": "lean/InfoGeometry/Synthesis/RealPeirceG2ColorActionBridge.lean",
+    "snapshotSha256": "ca83ef5589499fe0d7d9d78d636589753428aa9502f676e9d8d85763e3ac98b1"
+  }
+}

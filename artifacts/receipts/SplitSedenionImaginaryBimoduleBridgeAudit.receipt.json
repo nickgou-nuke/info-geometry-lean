@@ -1,0 +1,19 @@
+{
+  "schema": "opengauss.gate7.receipt.v1",
+  "module": "InfoGeometry.Synthesis.SplitSedenionImaginaryBimoduleBridgeAudit",
+  "source_path": "lean/InfoGeometry/Synthesis/SplitSedenionImaginaryBimoduleBridgeAudit.lean",
+  "source_sha256": "185137a57e6dbaebd6e8fe2bcc767a7175bbdf807151ed2672fb3e00debe8bb2",
+  "olean_path": ".lake/build/lib/lean/InfoGeometry/Synthesis/SplitSedenionImaginaryBimoduleBridgeAudit.olean",
+  "olean_sha256": "602ded344fcc7d7d70f8339e5e471e664f9aaa8fdd395189ab18d0105855b203",
+  "axioms": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "sorry_count": 0,
+  "admit_count": 0,
+  "screener_traps": 0,
+  "claim_linter_findings": 0,
+  "build_jobs": 26914,
+  "timestamp_utc": "2026-10-18T18:17:09Z"
+}

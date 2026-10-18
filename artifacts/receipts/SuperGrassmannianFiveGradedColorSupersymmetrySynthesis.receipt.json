@@ -1,0 +1,68 @@
+{
+  "artifact": {
+    "path": "lean/InfoGeometry/Synthesis/SuperGrassmannianFiveGradedColorSupersymmetrySynthesis.lean",
+    "sha256": "03b596afa1743b50cc5a47502ab471cb37d10faac3465b1ba05b0745b206ba97"
+  },
+  "auditModule": "InfoGeometry.Synthesis.SuperGrassmannianFiveGradedColorSupersymmetrySynthesisAudit",
+  "authority": "candidate_observation_not_proof_authority",
+  "checks": {
+    "axiomAudit": {
+      "declarations": [
+        "z2z2_color_supersymmetry_sign_laws",
+        "quarkAntiquarkTracelessSL3_trace_zero",
+        "gunaydin_gursey_g1_gm1_superbracket_closure",
+        "zorn_quark_diquark_to_antiquark_and_lepton_baryon_closure",
+        "oddSupercolorFull_sq_closes_on_even_bosonic_socle",
+        "super_berezinian_gauge_invariance",
+        "superSouriauMassieu_uv_cancellation_and_moment_readout"
+      ],
+      "output": "'z2z2_color_supersymmetry_sign_laws' depends on axioms: [propext, Classical.choice, Quot.sound]\n'quarkAntiquarkTracelessSL3_trace_zero' depends on axioms: [propext, Classical.choice, Quot.sound]\n'gunaydin_gursey_g1_gm1_superbracket_closure' depends on axioms: [propext, Classical.choice, Quot.sound]\n'zorn_quark_diquark_to_antiquark_and_lepton_baryon_closure' depends on axioms: [propext, Classical.choice, Quot.sound]\n'oddSupercolorFull_sq_closes_on_even_bosonic_socle' depends on axioms: [propext, Classical.choice, Quot.sound]\n'super_berezinian_gauge_invariance' depends on axioms: [propext, Classical.choice, Quot.sound]\n'superSouriauMassieu_uv_cancellation_and_moment_readout' depends on axioms: [propext, Classical.choice, Quot.sound]",
+      "outputSha256": "2eb8e8af30cc87ff83f2f9d122598c40c6d359e39493a4b9bf2b6cb64eafd448",
+      "returncode": 0,
+      "status": "collected"
+    },
+    "leanProcess": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "lean/InfoGeometry/Synthesis/SuperGrassmannianFiveGradedColorSupersymmetrySynthesis.lean"
+      ],
+      "outputSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "returncode": 0,
+      "status": "passed"
+    },
+    "semanticVacuityGate": {
+      "outputSha256": "da24a3001f923012b558f2e0f6382b5b83c820f06324b90f38b064300cb119fc",
+      "returncode": 0,
+      "status": "passed"
+    }
+  },
+  "environment": {
+    "gitHead": "112c131be2a2d10519cde1080e88eb23304282cd",
+    "lakeManifestSha256": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lakefileSha256": "5372c9a95ed8f6488bc0ce257c906c83658449668db4627259d72d542c77d9f7",
+    "toolchain": "leanprover/lean4:v4.34.1"
+  },
+  "module": "InfoGeometry.Synthesis.SuperGrassmannianFiveGradedColorSupersymmetrySynthesis",
+  "receiptSha256": "f524aa1713c712ee07e4cc2eb1f9ec0bec9f4a83e52b6d4f815dcbee5c3582a9",
+  "releaseTag": "v4.2.1-hadjiivanov-braid-monodromy",
+  "review": {
+    "promotionAllowed": false,
+    "status": "kernel_checked_pending_owner_review"
+  },
+  "schema": "info_geometry.proof_artifact_receipt.v1",
+  "score": {
+    "defect": 0.0,
+    "meaning": "scheduling metadata only; not probability or proof authority",
+    "policyVersion": "opengauss-gate7-v4.2",
+    "status": "policy_estimate",
+    "value": 1.0
+  },
+  "source": {
+    "changedSincePrompt": false,
+    "currentSnapshotSha256": "03b596afa1743b50cc5a47502ab471cb37d10faac3465b1ba05b0745b206ba97",
+    "path": "lean/InfoGeometry/Synthesis/SuperGrassmannianFiveGradedColorSupersymmetrySynthesis.lean",
+    "snapshotSha256": "03b596afa1743b50cc5a47502ab471cb37d10faac3465b1ba05b0745b206ba97"
+  }
+}

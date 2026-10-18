@@ -1,0 +1,19 @@
+{
+  "schema": "opengauss.gate7.receipt.v1",
+  "module": "InfoGeometry.Synthesis.Cl55FiveGradedDrazinDikinUnificationAudit",
+  "source_path": "lean/InfoGeometry/Synthesis/Cl55FiveGradedDrazinDikinUnificationAudit.lean",
+  "source_sha256": "0ac40f8a985272199cf4993f4d38abb4df2095c0aebc1cf180ca375962507973",
+  "olean_path": ".lake/build/lib/lean/InfoGeometry/Synthesis/Cl55FiveGradedDrazinDikinUnificationAudit.olean",
+  "olean_sha256": "058e998ae8a902340ef9e7a07b06bb9c8e1b7138cf2d393de3fe59a6a2be4543",
+  "axioms": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "sorry_count": 0,
+  "admit_count": 0,
+  "screener_traps": 0,
+  "claim_linter_findings": 0,
+  "build_jobs": 26914,
+  "timestamp_utc": "2026-10-18T18:17:09Z"
+}

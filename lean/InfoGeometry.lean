@@ -249,6 +249,8 @@ import InfoGeometry.Synthesis.Cl44PrimitiveIdempotentIdeal
 import InfoGeometry.Synthesis.Cl44PrimitiveIdempotentIdealAudit
 import InfoGeometry.Synthesis.Cl44LeftIdealSplitSedenionSynthesis
 import InfoGeometry.Synthesis.Cl44LeftIdealSplitSedenionSynthesisAudit
+import InfoGeometry.Synthesis.G2DoubleStarSedenionW24Bridge
+import InfoGeometry.Synthesis.G2DoubleStarSedenionW24BridgeAudit
 
 /-!
 # InfoGeometry

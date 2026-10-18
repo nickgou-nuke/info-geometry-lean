@@ -7,7 +7,10 @@ import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Nat.Choose.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.LinearAlgebra.Matrix.Trace
+import Mathlib.Basic.Real.Basic
 import Mathlib.Tactic.Abel
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.FinCases
 
@@ -214,6 +217,30 @@ theorem so21_matrix_generator_relations (R : Type*) [CommRing R] :
   · ext i j; fin_cases i <;> fin_cases j <;>
       simp [matBracket, sl2GenJ12, sl2GenK13, sl2GenK23]
 
+/-- For every nontrivial coefficient ring, the displayed matrix generators do
+not commute. This supplies a concrete operator witness for the generic matrix
+carrier in this file. -/
+theorem sl2_generator_products_noncommute {R : Type*} [CommRing R] [Nontrivial R] :
+    sl2GenJ12 (R := R) * sl2GenK13 (R := R) ≠
+      sl2GenK13 (R := R) * sl2GenJ12 (R := R) := by
+  intro h
+  have hzero : matBracket (sl2GenJ12 (R := R)) (sl2GenK13 (R := R)) = 0 := by
+    unfold matBracket
+    rw [h]
+    simp
+  rw [(so21_matrix_generator_relations R).2.2.1] at hzero
+  have hentry := congrFun (congrFun hzero 1) 2
+  simp [sl2GenK23] at hentry
+
+/-- The concrete generators exhibit noncommutativity in this matrix algebra:
+the commutator of `J₁₂` and `K₁₃` is the nonzero matrix `K₂₃`. -/
+theorem sl2_generator_commutator_nonzero :
+    matBracket (sl2GenJ12 (R := ℝ)) (sl2GenK13 (R := ℝ)) ≠ 0 := by
+  rw [(so21_matrix_generator_relations ℝ).2.2.1]
+  intro h
+  have h12 := congrFun (congrFun h 1) 2
+  norm_num [sl2GenK23] at h12
+
 /-- The symmetric bilinear form of signature `(2,1)` on the coefficient space
 of the three displayed doubling generators. -/
 def so21BilinearForm {R : Type*} [CommRing R]
@@ -289,6 +316,114 @@ theorem so21_adjoint_quadratic_action_on_generators (R : Type*) [CommRing R] :
       simp [so21AdjointQuadraticAction, matBracket,
         sl2GenJ12, sl2GenK13, sl2GenK23] <;> ring
 
+/-! ### The quadratic adjoint action on trace-free endomorphisms
+
+The trace-free endomorphisms of the three-dimensional `(2,1)` carrier are not all
+the adjoint representation.  Relative to `eta21`, they split into an eta-skew
+part and an eta-self-adjoint trace-free part.  The quadratic
+operator below has different eigenvalues on those two parts.  These are statements
+about `3 × 3` matrices only; they do not identify either part with a summand of a
+split-sedenion derivation algebra. -/
+
+/-- Skew-adjointness with respect to the displayed `(2,1)` form. -/
+def so21EtaSkewAdjoint {R : Type*} [CommRing R]
+    (A : Matrix (Fin 3) (Fin 3) R) : Prop :=
+  Aᵀ * eta21 + eta21 * A = 0
+
+/-- Self-adjointness with respect to the displayed `(2,1)` form. -/
+def so21EtaSelfAdjoint {R : Type*} [CommRing R]
+    (A : Matrix (Fin 3) (Fin 3) R) : Prop :=
+  Aᵀ * eta21 - eta21 * A = 0
+
+/-- On the eta-skew subspace, the quadratic commutator action has eigenvalue `2`.
+This is the adjoint sector. -/
+theorem so21_adjoint_quadratic_action_eq_two_of_eta_skew
+    (A : Matrix (Fin 3) (Fin 3) ℝ)
+    (hA : so21EtaSkewAdjoint A) :
+    so21AdjointQuadraticAction A = (2 : ℝ) • A := by
+  change Aᵀ * eta21 + eta21 * A = 0 at hA
+  have h00 := congrFun (congrFun hA 0) 0
+  have h11 := congrFun (congrFun hA 1) 1
+  have h22 := congrFun (congrFun hA 2) 2
+  have h01 := congrFun (congrFun hA 0) 1
+  have h02 := congrFun (congrFun hA 0) 2
+  have h12 := congrFun (congrFun hA 1) 2
+  simp [eta21, Matrix.mul_apply, Matrix.vecMul_apply_eq_sum,
+    Fin.sum_univ_three]
+    at h00 h11 h22 h01 h02 h12
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [so21AdjointQuadraticAction, matBracket,
+      sl2GenJ12, sl2GenK13, sl2GenK23, Matrix.mul_apply,
+      Matrix.vecMul_apply_eq_sum, Fin.sum_univ_three] <;>
+    linarith
+
+/-- On the eta-self-adjoint trace-free subspace, the quadratic commutator action
+has eigenvalue `6`. -/
+theorem so21_adjoint_quadratic_action_eq_six_of_eta_selfAdjoint_trace_free
+    (A : Matrix (Fin 3) (Fin 3) ℝ)
+    (hA : so21EtaSelfAdjoint A) (htrace : Matrix.trace A = 0) :
+    so21AdjointQuadraticAction A = (6 : ℝ) • A := by
+  change Aᵀ * eta21 - eta21 * A = 0 at hA
+  have h01 := congrFun (congrFun hA 0) 1
+  have h02 := congrFun (congrFun hA 0) 2
+  have h12 := congrFun (congrFun hA 1) 2
+  simp [eta21, Matrix.mul_apply, Matrix.vecMul_apply_eq_sum,
+    Fin.sum_univ_three]
+    at h01 h02 h12
+  have htr := htrace
+  simp [Matrix.trace, Matrix.diag, Fin.sum_univ_three] at htr
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [so21AdjointQuadraticAction, matBracket,
+      sl2GenJ12, sl2GenK13, sl2GenK23, Matrix.mul_apply,
+      Matrix.vecMul_apply_eq_sum, Fin.sum_univ_three] <;>
+    linarith
+
+/-- Every trace-free matrix admits an eta-skew plus eta-self-adjoint trace-free
+decomposition. The components are explicitly constructed; this theorem asserts
+existence and does not assert uniqueness. -/
+theorem trace_free_matrix_eta_adjoint_sector_decomposition
+    (A : Matrix (Fin 3) (Fin 3) ℝ) (htrace : Matrix.trace A = 0) :
+    ∃ K S : Matrix (Fin 3) (Fin 3) ℝ,
+      A = K + S ∧ so21EtaSkewAdjoint K ∧ so21EtaSelfAdjoint S ∧
+      Matrix.trace S = 0 := by
+  let K : Matrix (Fin 3) (Fin 3) ℝ :=
+    (1 / 2 : ℝ) • (A - eta21 * Aᵀ * eta21)
+  let S : Matrix (Fin 3) (Fin 3) ℝ :=
+    (1 / 2 : ℝ) • (A + eta21 * Aᵀ * eta21)
+  refine ⟨K, S, ?_, ?_, ?_, ?_⟩
+  · dsimp [K, S]
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [eta21] <;> ring
+  · dsimp [so21EtaSkewAdjoint, K]
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [eta21, Matrix.mul_apply, Matrix.vecMul_apply_eq_sum,
+        Fin.sum_univ_three] <;> ring
+  · dsimp [so21EtaSelfAdjoint, S]
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [eta21, Matrix.mul_apply, Matrix.vecMul_apply_eq_sum,
+        Fin.sum_univ_three] <;> ring
+  · dsimp [S]
+    rw [Matrix.trace_smul, Matrix.trace_add]
+    have hconj : Matrix.trace (eta21 * Aᵀ * eta21) = Matrix.trace A := by
+      have heta : eta21 * eta21 = (1 : Matrix (Fin 3) (Fin 3) ℝ) := by
+        ext i j
+        fin_cases i <;> fin_cases j <;>
+          simp [eta21, Matrix.mul_apply, Fin.sum_univ_three]
+      calc
+        Matrix.trace (eta21 * Aᵀ * eta21) =
+            Matrix.trace (eta21 * (eta21 * Aᵀ)) := by
+          exact Matrix.trace_mul_comm (eta21 * Aᵀ) eta21
+        _ = Matrix.trace ((eta21 * eta21) * Aᵀ) := by rw [← Matrix.mul_assoc]
+        _ = Matrix.trace Aᵀ := by rw [heta, one_mul]
+        _ = Matrix.trace A := Matrix.trace_transpose A
+    rw [hconj, htrace]
+    norm_num
+
 /-- Generic left and right matrix multiplications commute on rectangular matrices.
 This identity alone does not define representations of $\mathfrak{g}_{2(2)}$ or
 $\mathfrak{sl}(2,R)$ on a split-sedenion carrier:
@@ -333,17 +468,6 @@ theorem split_cayleyDickson_square_zero
     rw [h_u_sq, h_star_one, mul_one, neg_one_smul, add_neg_cancel]
   · dsimp [cdMul]
     rw [one_mul, h_u_star, one_mul, add_neg_cancel]
-
-/-- Concrete $3 \times 3$ integer witness that the first two displayed generator matrices do not
-commute. This is a matrix fact only. -/
-theorem sl2_so21_doubling_witness_int :
-    sl2GenJ12 (R := ℤ) * sl2GenK13 (R := ℤ) ≠ sl2GenK13 (R := ℤ) * sl2GenJ12 (R := ℤ) := by
-  intro h
-  have h12 : (sl2GenJ12 (R := ℤ) * sl2GenK13 (R := ℤ)) 1 2 =
-      (sl2GenK13 (R := ℤ) * sl2GenJ12 (R := ℤ)) 1 2 := by
-    rw [h]
-  revert h12
-  decide
 
 /-! ## Section 5: Coordinate-algebra derivation identities -/
 

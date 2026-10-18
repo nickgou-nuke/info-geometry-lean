@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Topology.PureBraidRepresentation
 import InfoGeometry.Topology.AmplituhedronCanonicalFormDensity
 import InfoGeometry.Topology.AmplituhedronBCFW
@@ -13,6 +18,8 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.AmplituhedronBoundary
 import InfoGeometry.Topology.AmplituhedronBoundaryExternalDeRhamBridge
 import InfoGeometry.Topology.AmplituhedronBoundaryExternalRankBridge
+import InfoGeometry.Topology.PositiveGrassmannianAmplituhedronOrientationBridge
+import InfoGeometry.Topology.PositiveGrassmannianAmplituhedronOrientationBridgeAudit
 import InfoGeometry.Topology.AmplituhedronBoundaryRank32
 import InfoGeometry.Topology.ArtinBraidRep
 import InfoGeometry.Topology.ArtinBraidS3Quotient

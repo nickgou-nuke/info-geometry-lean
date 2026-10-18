@@ -1,5 +1,6 @@
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Canonical.OperatorSurgery
 
 /-!
 # Dikin / Drazin Bridge
@@ -97,5 +98,54 @@ theorem dikin_metric_stability_in_core
     sys.core_positive_definite x h_nonzero
 
 end DikinDrazinSystem
+
+/-! ## Finite attention-Laplacian projector algebra
+
+The following statements are conditional on an actual Drazin inverse witness
+and, for annihilation of the harmonic complement, the index-one law.  They do
+not assert existence of a Drazin inverse for an arbitrary attention operator.
+-/
+
+namespace AttentionLaplacian
+
+variable {V : Type*} [AddCommGroup V] [Module ℝ V]
+
+local notation "EndV" => V →ₗ[ℝ] V
+
+/-- The dynamic projector associated with a Laplacian `L` and a chosen
+    Drazin Green operator `G`. -/
+def dynamicProjector (L G : EndV) : EndV := L * G
+
+/-- The complementary harmonic projector. -/
+def harmonicProjector (L G : EndV) : EndV := 1 - dynamicProjector L G
+
+/-- The Drazin dynamic projector is idempotent by the outer-inverse law. -/
+theorem dynamicProjector_idempotent
+    {L G : EndV} (hD : OperatorSurgery.IsDrazinInverse L G) :
+    dynamicProjector L G * dynamicProjector L G = dynamicProjector L G := by
+  exact OperatorSurgery.drazin_indexOne_projector_idempotent_ring hD.1
+
+/-- Dynamic and harmonic projectors partition the identity. -/
+theorem projectors_partition (L G : EndV) :
+    dynamicProjector L G + harmonicProjector L G = 1 := by
+  simp [dynamicProjector, harmonicProjector]
+
+/-- The two projectors have zero product, under the Drazin outer-inverse law. -/
+theorem dynamic_harmonic_disjoint
+    {L G : EndV} (hD : OperatorSurgery.IsDrazinInverse L G) :
+    dynamicProjector L G * harmonicProjector L G = 0 := by
+  rw [harmonicProjector, mul_sub, mul_one,
+    dynamicProjector_idempotent hD]
+  exact sub_self _
+
+/-- Under the index-one law, the Laplacian annihilates the harmonic projector. -/
+theorem laplacian_annihilates_harmonic
+    {L G : EndV} (hD : OperatorSurgery.IsDrazinInverse L G)
+    (hIndexOne : L * G * L = L) :
+    L * harmonicProjector L G = 0 := by
+  exact OperatorSurgery.drazin_indexOne_annihilates_right_defect_ring
+    hIndexOne hD.2.1
+
+end AttentionLaplacian
 
 end InfoGeometry.Canonical.DikinDrazinBridge

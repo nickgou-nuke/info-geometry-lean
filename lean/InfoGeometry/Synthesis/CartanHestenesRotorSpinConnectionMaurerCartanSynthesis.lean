@@ -3,6 +3,8 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
+import Mathlib.Analysis.Calculus.Deriv.Prod
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 import InfoGeometry.Synthesis.MajoranaParaKahlerMaurerCartanSupercolorSynthesis
 
 /-!
@@ -118,6 +120,40 @@ def hyperbolicRotorReverse (θ : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
 of the hyperbolic spin rotor with respect to the boost parameter $\theta$. -/
 def hyperbolicRotorDeriv (θ : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
   Matrix.of ![![Real.sinh θ + Real.cosh θ, 0], ![0, Real.sinh θ - Real.cosh θ]]
+
+/-- The explicit matrix `hyperbolicRotorDeriv θ` is the derivative of the
+hyperbolic rotor map at `θ`. The proof reduces the matrix-valued derivative to
+its finitely many entries. -/
+theorem hyperbolicRotor_hasDerivAt (θ : ℝ) :
+    HasDerivAt hyperbolicRotor (hyperbolicRotorDeriv θ) θ := by
+  change HasDerivAt
+    (fun t : ℝ => fun i : Fin 2 => fun j : Fin 2 => hyperbolicRotor t i j)
+    (fun i : Fin 2 => fun j : Fin 2 => hyperbolicRotorDeriv θ i j) θ
+  rw [hasDerivAt_pi]
+  intro i
+  rw [hasDerivAt_pi]
+  intro j
+  fin_cases i <;> fin_cases j
+  · convert (Real.hasDerivAt_cosh θ).add (Real.hasDerivAt_sinh θ) using 1
+    all_goals
+      first
+      | (funext x; simp [hyperbolicRotor, Pi.add_apply])
+      | rfl
+  · convert (hasDerivAt_const θ (0 : ℝ)) using 1
+    all_goals
+      first
+      | (funext x; simp [hyperbolicRotor])
+      | rfl
+  · convert (hasDerivAt_const θ (0 : ℝ)) using 1
+    all_goals
+      first
+      | (funext x; simp [hyperbolicRotor])
+      | rfl
+  · convert (Real.hasDerivAt_cosh θ).sub (Real.hasDerivAt_sinh θ) using 1
+    all_goals
+      first
+      | (funext x; simp [hyperbolicRotor, Pi.sub_apply])
+      | rfl
 
 /-- Scalar helper identity $(\cosh\theta + \sinh\theta)(\cosh\theta - \sinh\theta) = 1$. -/
 lemma cosh_add_sinh_mul_cosh_sub_sinh (θ : ℝ) :

@@ -1,0 +1,63 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Synthesis.HestenesStokesAlgebraicBoundarySynthesis
+
+/-!
+# Audit Companion for `HestenesStokesAlgebraicBoundarySynthesis` (Frontier 111 / Wave 15)
+
+Verifies the kernel signatures and foundational axiom footprints of all exported theorems in
+`InfoGeometry.Synthesis.HestenesStokesAlgebraicBoundarySynthesis`.
+-/
+
+namespace InfoGeometry.Synthesis.HestenesStokesAlgebraicBoundarySynthesisAudit
+
+open InfoGeometry.Synthesis.HestenesStokesAlgebraicBoundarySynthesis
+
+#check @fiveGradingComap
+#check @fiveGrading_colimit_cone_bracket_transport
+#check @five_graded_maurer_cartan_equations_and_koszul_supertrace_laws
+#check @dikin_colimit_hessian_isometry_and_ellipsoid_inclusion
+#check @planarCliffordE1_mul_planarCliffordE2_ne_comm
+#check @planarClifford_bivector_relations
+#check @hestenesVectorDeriv_apply_00
+#check @hestenesVectorDeriv_apply_01
+#check @hestenes_monogenic_factorization_and_cauchy_riemann
+#check @real_boundary_coboundary_pairing
+#check @boundary_zero_of_bulk_zero
+#check @boundaryJump_self
+#check @boundaryJump_antisymm
+#check @boundaryJump_add
+#check @krein_two_sheeted_boundary_discontinuity_laws
+#check @nilpotentExpTrunc_mul_of_sq_zero
+#check @jordan_shear_composition
+#check @jordan_double_winding
+#check @jordan_exact_algebraic_readout
+#check @jordan_hadjiivanov_algebraic_residue_and_shirokov_det_laws
+#check @souriau_massieu_stokes_surprisal_and_chentsov_cumulant_laws
+
+#print axioms fiveGradingComap
+#print axioms fiveGrading_colimit_cone_bracket_transport
+#print axioms five_graded_maurer_cartan_equations_and_koszul_supertrace_laws
+#print axioms dikin_colimit_hessian_isometry_and_ellipsoid_inclusion
+#print axioms planarCliffordE1_mul_planarCliffordE2_ne_comm
+#print axioms planarClifford_bivector_relations
+#print axioms hestenesVectorDeriv_apply_00
+#print axioms hestenesVectorDeriv_apply_01
+#print axioms hestenes_monogenic_factorization_and_cauchy_riemann
+#print axioms real_boundary_coboundary_pairing
+#print axioms boundary_zero_of_bulk_zero
+#print axioms boundaryJump_self
+#print axioms boundaryJump_antisymm
+#print axioms boundaryJump_add
+#print axioms krein_two_sheeted_boundary_discontinuity_laws
+#print axioms nilpotentExpTrunc_mul_of_sq_zero
+#print axioms jordan_shear_composition
+#print axioms jordan_double_winding
+#print axioms jordan_exact_algebraic_readout
+#print axioms jordan_hadjiivanov_algebraic_residue_and_shirokov_det_laws
+#print axioms souriau_massieu_stokes_surprisal_and_chentsov_cumulant_laws
+
+end InfoGeometry.Synthesis.HestenesStokesAlgebraicBoundarySynthesisAudit

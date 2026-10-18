@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Synthesis.SuperGrassmannianFiveGradedColorSupersymmetrySynthesis
 import InfoGeometry.Synthesis.ShirokovCliffordTraceDetInverseBridge
+import InfoGeometry.Canonical.BraidedCartanAnomaly
 
 /-!
 # Frontier 104: $\mathbb{Z}_2 \times \mathbb{Z}_2$ Koszul Operadic Duality, Homological Context-Space Invariants, and Shirokov Matrix-Free Super-Berezinian Synthesis

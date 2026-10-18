@@ -3,6 +3,7 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FilteredHestenesKreinColimit
 import InfoGeometry.Canonical.FilteredHestenesIteratedTransport
 import InfoGeometry.Canonical.SelfConcordantZetaBarrier
+import InfoGeometry.Geometry.LegendreDifferential
 
 /-!
 # Itakura--Saito barrier transport on the Hestenes--Krein colimit
@@ -21,6 +22,137 @@ open InfoGeometry.Canonical.FilteredHestenesKreinColimit
 open InfoGeometry.Canonical.FilteredInductiveHestenesAnalyticity
 open InfoGeometry.Canonical.SelfConcordantZetaBarrier
 open InfoGeometry.Krein
+open InfoGeometry.Geometry.LegendreDifferential
+
+/-- The Hessian quadratic form of a real potential.  This is the positive
+    local form used for Dikin geometry; it is distinct from the indefinite
+    Hestenes--Krein pairing. -/
+noncomputable def hessianQuadratic
+    {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+    (potential : E → ℝ) (x v : E) : ℝ :=
+  hessianMap potential x v v
+
+/-- The Hessian seminorm used to define a Dikin ellipsoid.  Positive
+    definiteness is a separate property of the chosen barrier. -/
+noncomputable def dikinHessianNorm
+    {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+    (potential : E → ℝ) (x v : E) : ℝ :=
+  Real.sqrt (hessianQuadratic potential x v)
+
+/-- Open unit Dikin ellipsoid at `x`, defined by the barrier Hessian. -/
+def dikinEllipsoid
+    {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+    (potential : E → ℝ) (x : E) : Set E :=
+  {y | hessianQuadratic potential x (y - x) < 1}
+
+/-- A linear map preserving the Hessian bilinear form preserves its diagonal
+    quadratic form, hence its Dikin Hessian seminorm. -/
+theorem hessianCompatible_dikinNorm_eq
+    {E F : Type*}
+    [NormedAddCommGroup E] [NormedSpace ℝ E]
+    [NormedAddCommGroup F] [NormedSpace ℝ F]
+    (potentialE : E → ℝ) (potentialF : F → ℝ)
+    (T : E →L[ℝ] F) (x v : E)
+    (hHessian : ∀ u w : E,
+      hessianMap potentialF (T x) (T u) (T w) =
+        hessianMap potentialE x u w) :
+    dikinHessianNorm potentialF (T x) (T v) =
+      dikinHessianNorm potentialE x v := by
+  unfold dikinHessianNorm hessianQuadratic
+  rw [hHessian v v]
+
+/-- Hessian-compatible linear maps send the source Dikin ellipsoid into the
+    target Dikin ellipsoid.  No assertion about boundary traces is involved. -/
+theorem hessianCompatible_maps_dikinEllipsoid
+    {E F : Type*}
+    [NormedAddCommGroup E] [NormedSpace ℝ E]
+    [NormedAddCommGroup F] [NormedSpace ℝ F]
+    (potentialE : E → ℝ) (potentialF : F → ℝ)
+    (T : E →L[ℝ] F) (x : E)
+    (hHessian : ∀ u w : E,
+      hessianMap potentialF (T x) (T u) (T w) =
+        hessianMap potentialE x u w) :
+    T '' dikinEllipsoid potentialE x ⊆ dikinEllipsoid potentialF (T x) := by
+  rintro y ⟨z, hz, rfl⟩
+  change hessianQuadratic potentialF (T x) (T z - T x) < 1
+  rw [show T z - T x = T (z - x) by exact (map_sub T z x).symm]
+  unfold hessianQuadratic
+  rw [hHessian (z - x) (z - x)]
+  exact hz
+
+/-- The Drazin--Dikin quadratic form: forcing is first sent through the
+    generalized Green operator, then measured by the barrier Hessian. -/
+noncomputable def drazinDikinQuadratic
+    {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+    (potential : E → ℝ) (x : E) (green : E →L[ℝ] E) (v : E) : ℝ :=
+  hessianQuadratic potential x (green v)
+
+/-- The transport-admissible forcing ellipsoid, defined by the Drazin--Dikin
+    quadratic form.  This is a sublevel set of forcing vectors; the barrier
+    containment applies to their Green responses. -/
+def drazinDikinEllipsoid
+    {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+    (potential : E → ℝ) (x : E) (green : E →L[ℝ] E) : Set E :=
+  {v | drazinDikinQuadratic potential x green v < 1}
+
+/-- Intertwining Laplacians and their chosen Drazin Green operators intertwines
+    the dynamic projectors `L G`.  The inverse intertwining is a separate
+    premise: it is not inferred from Laplacian intertwining alone. -/
+theorem drazinDynamicProjector_intertwines
+    {E F : Type*}
+    [AddCommGroup E] [Module ℝ E]
+    [AddCommGroup F] [Module ℝ F]
+    (Lₙ Gₙ : E →ₗ[ℝ] E) (Lₘ Gₘ : F →ₗ[ℝ] F)
+    (T : E →ₗ[ℝ] F)
+    (hL : T.comp Lₙ = Lₘ.comp T)
+    (hG : T.comp Gₙ = Gₘ.comp T) :
+    T.comp (Lₙ.comp Gₙ) = (Lₘ.comp Gₘ).comp T := by
+  calc
+    T.comp (Lₙ.comp Gₙ) = (T.comp Lₙ).comp Gₙ := by
+      rw [LinearMap.comp_assoc]
+    _ = (Lₘ.comp T).comp Gₙ := by rw [hL]
+    _ = Lₘ.comp (T.comp Gₙ) := by rw [LinearMap.comp_assoc]
+    _ = Lₘ.comp (Gₘ.comp T) := by rw [hG]
+    _ = (Lₘ.comp Gₘ).comp T := by rw [LinearMap.comp_assoc]
+
+/-- Hessian compatibility and Green-operator intertwining preserve the
+    Drazin--Dikin quadratic form under a linear transition map. -/
+theorem drazinDikinQuadratic_intertwines
+    {E F : Type*}
+    [NormedAddCommGroup E] [NormedSpace ℝ E]
+    [NormedAddCommGroup F] [NormedSpace ℝ F]
+    (potentialE : E → ℝ) (potentialF : F → ℝ)
+    (T : E →L[ℝ] F) (x v : E)
+    (greenE : E →L[ℝ] E) (greenF : F →L[ℝ] F)
+    (hGreen : ∀ w : E, T (greenE w) = greenF (T w))
+    (hHessian : ∀ u w : E,
+      hessianMap potentialF (T x) (T u) (T w) =
+        hessianMap potentialE x u w) :
+    drazinDikinQuadratic potentialF (T x) greenF (T v) =
+      drazinDikinQuadratic potentialE x greenE v := by
+  unfold drazinDikinQuadratic hessianQuadratic
+  rw [← hGreen v, hHessian (greenE v) (greenE v)]
+
+/-- The corresponding filtered transport carries every source admissible
+    forcing to a target admissible forcing. -/
+theorem drazinDikinEllipsoid_maps
+    {E F : Type*}
+    [NormedAddCommGroup E] [NormedSpace ℝ E]
+    [NormedAddCommGroup F] [NormedSpace ℝ F]
+    (potentialE : E → ℝ) (potentialF : F → ℝ)
+    (T : E →L[ℝ] F) (x : E)
+    (greenE : E →L[ℝ] E) (greenF : F →L[ℝ] F)
+    (hGreen : ∀ w : E, T (greenE w) = greenF (T w))
+    (hHessian : ∀ u w : E,
+      hessianMap potentialF (T x) (T u) (T w) =
+        hessianMap potentialE x u w) :
+    T '' drazinDikinEllipsoid potentialE x greenE ⊆
+      drazinDikinEllipsoid potentialF (T x) greenF := by
+  rintro y ⟨v, hv, rfl⟩
+  change drazinDikinQuadratic potentialF (T x) greenF (T v) < 1
+  rw [drazinDikinQuadratic_intertwines potentialE potentialF T x v
+    greenE greenF hGreen hHessian]
+  exact hv
 
 def stageBarrier
     {C : HestenesKreinCone}

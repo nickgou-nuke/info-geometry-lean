@@ -6,6 +6,7 @@ MODULE = ROOT / "lean" / "InfoGeometry" / "Clifford" / "HestenesDirac.lean"
 CR_MODULE = ROOT / "lean" / "InfoGeometry" / "Clifford" / "HestenesCauchyRiemann.lean"
 SQ_FLOW_MODULE = ROOT / "lean" / "InfoGeometry" / "Clifford" / "SplitQuaternionNilpotentFlow.lean"
 CLIFFORD_ALL = ROOT / "lean" / "InfoGeometry" / "Clifford" / "All.lean"
+CARTAN_ROTOR_MODULE = ROOT / "lean" / "InfoGeometry" / "Synthesis" / "CartanHestenesRotorSpinConnectionMaurerCartanSynthesis.lean"
 
 
 def test_hestenes_dirac_module_declares_real_bivector_phase_not_complex_i():
@@ -52,7 +53,8 @@ def test_hestenes_dirac_finite_tilt_shell_declares_current_density_readout():
 
 def test_hestenes_dirac_finite_tilt_shell_bridge_declares_current_density_reexport():
     text = ROOT.joinpath("lean", "InfoGeometry", "Clifford", "FiniteTiltDiracShellBridge.lean").read_text()
-    assert "theorem finiteTiltDiracShellBridge_properties" in text
+    assert "theorem finiteTiltDiracShellBridgeOwnerTarget" in text
+    assert "finiteTiltDiracShellBridge_current_density_eq" in text
     assert "finiteTiltCurrentDensity_eq_boundaryCurrent" in text
 
 
@@ -295,3 +297,10 @@ def test_split_quaternion_nilpotent_flow_module_builds():
         timeout=240,
     )
     assert result.returncode == 0, result.stdout
+
+
+def test_cartan_hyperbolic_rotor_derivative_is_a_real_matrix_derivative():
+    text = CARTAN_ROTOR_MODULE.read_text()
+    assert "theorem hyperbolicRotor_hasDerivAt" in text
+    assert "HasDerivAt hyperbolicRotor (hyperbolicRotorDeriv θ) θ" in text
+

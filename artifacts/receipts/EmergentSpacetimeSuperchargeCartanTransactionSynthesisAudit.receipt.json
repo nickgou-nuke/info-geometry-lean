@@ -1,0 +1,19 @@
+{
+  "schema": "opengauss.gate7.receipt.v1",
+  "module": "InfoGeometry.Synthesis.EmergentSpacetimeSuperchargeCartanTransactionSynthesisAudit",
+  "source_path": "lean/InfoGeometry/Synthesis/EmergentSpacetimeSuperchargeCartanTransactionSynthesisAudit.lean",
+  "source_sha256": "a33e1513d79f805c479ada1cd464bb0272299a10b6bfbab71b139052c73b6334",
+  "olean_path": ".lake/build/lib/lean/InfoGeometry/Synthesis/EmergentSpacetimeSuperchargeCartanTransactionSynthesisAudit.olean",
+  "olean_sha256": "49c867d58f59fc8db781c427a48ade164e46037e06969b408af280355ec2a74f",
+  "axioms": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "sorry_count": 0,
+  "admit_count": 0,
+  "screener_traps": 0,
+  "claim_linter_findings": 0,
+  "build_jobs": 26896,
+  "timestamp_utc": "2026-10-18T16:15:07Z"
+}

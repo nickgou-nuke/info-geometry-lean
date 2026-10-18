@@ -8,6 +8,8 @@ import InfoGeometry.Synthesis.ParaKahlerSouriauMassieuMajoranaSynthesis
 import InfoGeometry.Canonical.SplitOctonionClifford33Soldering
 import InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge
 import InfoGeometry.Clifford.Cl55ChiralSectorPredicateBridge
+import InfoGeometry.Clifford.Cl55MasterOperatorEnvelopeBridge
+import InfoGeometry.Canonical.Cl55MasterParityOddnessBridge
 
 /-!
 ## Finite matrix examples and native Cl(5,5) null-spinor facts
@@ -40,6 +42,11 @@ open InfoGeometry.Clifford.Clifford55
 open InfoGeometry.Clifford.Cl55SpinGroupChiralSectorBridge
 open InfoGeometry.Clifford.Cl55SpinorChirality
 open InfoGeometry.Clifford.SpinorRep
+open InfoGeometry.Clifford.Cl55MasterOperatorEnvelopeBridge
+open InfoGeometry.Canonical.Cl55MasterParityOddnessBridge
+open InfoGeometry.Clifford.Cl11TensorTower
+open InfoGeometry.Canonical.Cl11TensorTowerGlobalParity
+open InfoGeometry.Canonical.Cl55WittCAR
 
 /-!
 ## Section 1: finite grading labels and Koszul sign calculations
@@ -127,20 +134,18 @@ theorem canonicalQuarkKoszulGrading_ne_default :
 def koszulSign (g₁ g₂ : KoszulGrading) : ℝ :=
   (-1 : ℝ) ^ ((g₁.deg_e.val * g₂.deg_e.val + g₁.deg_c.val * g₂.deg_c.val) % 2)
 
-/-- **Theorem 1.1 (`superKKT_ladder_and_koszul_parastatistics_laws`)**:
-1. **Super-KKT Reflection Duality**:
+/-- **Finite grading, sign, and cross-product identities**:
+1. **Dual-weight reflection**:
    `superKKTDual` is an involution (`superKKTDual (superKKTDual d) = d`) that negates the
    dilation weight (`superKKTTwiceWeight (superKKTDual d) = -superKKTTwiceWeight d`).
-2. **Lepton–Quark Anticommutation & Quark–Quark Parastatistical Commutation**:
-   - A lepton chiral supercharge $(1, 0)$ and a quark chiral supercharge $(1, 1)$ anticommute:
-     `koszulSign canonicalLeptonKoszulGrading canonicalQuarkKoszulGrading = -1`.
-   - Two quark chiral supercharges $(1, 1)$ commute parastatistically:
-     `koszulSign canonicalQuarkKoszulGrading canonicalQuarkKoszulGrading = 1`.
-3. **Diquark Vector Cross-Product Closure ($\mathbf{3} \times \mathbf{3} \to \bar{\mathbf{3}}$)**:
-   For any quark triplet vectors $u, v \in \mathbb{R}^3$, their Zorn cross product is
-   antisymmetric (`vec3Cross u v = -vec3Cross v u`) and orthogonal to each factor
-   (`vec3Dot u (vec3Cross u v) = 0`), closing symmetrically into the anti-quark sector $\bar{\mathbf{3}}$. -/
-theorem superKKT_ladder_and_koszul_parastatistics_laws
+2. **Koszul sign evaluations**:
+   - The sign factor for the specified lepton and quark grades evaluates to $-1$.
+   - The sign factor for two copies of the specified quark grade evaluates to $1$.
+   These are scalar sign computations; no operator (anti)commutation relation is asserted.
+3. **`Fin 3` cross-product identities**:
+   `vec3Cross` is antisymmetric and `vec3Dot u (vec3Cross u v) = 0`.
+   No representation-theoretic sector identification is asserted. -/
+theorem superKKTDual_koszulSign_and_vec3Cross_laws
     (d : SuperKKTDegree) (u v : Fin 3 → ℝ) :
     (superKKTDual (superKKTDual d) = d ∧
      superKKTTwiceWeight (superKKTDual d) = -superKKTTwiceWeight d) ∧
@@ -165,13 +170,15 @@ theorem superKKT_ladder_and_koszul_parastatistics_laws
 ## Section 2: finite matrix-unit witnesses and block permutation
 -/
 
-/-- Positive Majorana–Weyl half-spinor index embedding $\mathrm{Fin}\, 16 \hookrightarrow \mathrm{Fin}\, 32$
-mapping $\alpha \in \{0, \dots, 15\}$ to the forward chiral block $S^+ \subset \mathbb{R}^{32}$. -/
+/-- Index embedding for the first abstract 16-coordinate block of the finite
+32-dimensional matrix model. No identification with the native `Cl(5,5)`
+volume eigenspaces is asserted here. -/
 def chiralPlusIdx (α : Fin 16) : Fin 32 :=
   ⟨α.val, Nat.lt_trans α.isLt (by decide)⟩
 
-/-- Negative Majorana–Weyl half-spinor index embedding $\mathrm{Fin}\, 16 \hookrightarrow \mathrm{Fin}\, 32$
-mapping $\alpha \in \{0, \dots, 15\}$ to the backward chiral block $S^- \subset \mathbb{R}^{32}$. -/
+/-- Index embedding for the second abstract 16-coordinate block of the finite
+32-dimensional matrix model. No identification with the native `Cl(5,5)`
+volume eigenspaces is asserted here. -/
 def chiralMinusIdx (α : Fin 16) : Fin 32 :=
   ⟨α.val + 16, Nat.add_lt_add_right α.isLt 16⟩
 
@@ -185,8 +192,9 @@ lemma chiralPlusIdx_ne_chiralMinusIdx (α β : Fin 16) :
     Nat.lt_of_lt_of_le α.isLt (Nat.le_add_left 16 β.val)
   exact Nat.ne_of_lt hlt hval
 
-/-- Chiral sheet-swap involution on $\mathrm{Fin}\, 32$ exchanging the positive half-spinor block
-$0..15$ ($S^+$) and the negative half-spinor block $16..31$ ($S^-$). -/
+/-- Finite index involution exchanging the two contiguous 16-coordinate blocks
+of `Fin 32`. It is a matrix-model permutation, with no native Clifford rotor
+interpretation proved here. -/
 def superAndreevSwap (i : Fin 32) : Fin 32 :=
   if h : i.val < 16 then
     ⟨i.val + 16, Nat.add_lt_add_right h 16⟩
@@ -274,11 +282,13 @@ lemma singleEntry32_mul_symm_offdiag (p q : Fin 32) (hne : p ≠ q) :
   dsimp [singleEntry32, Matrix.mul_apply]
   simp only [ite_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ↓reduceIte, hne]
 
-/-- First $32 \times 32$ real chiral supercharge generator witness $Q_0^+ \in M_{32}(\mathbb{R})$ (`T16`). -/
+/-- First $32 \times 32$ matrix-unit transition witness on the abstract pair of
+16-coordinate blocks. It is not identified with a native Clifford supercharge. -/
 def superchargeWitnessPlus0 : Matrix (Fin 32) (Fin 32) ℝ :=
   realSuperchargePlus 0
 
-/-- Second $32 \times 32$ real chiral supercharge generator witness $Q_0^- \in M_{32}(\mathbb{R})$ (`T16`). -/
+/-- Reverse $32 \times 32$ matrix-unit transition witness on the abstract pair
+of 16-coordinate blocks. It is not identified with a native Clifford supercharge. -/
 def superchargeWitnessMinus0 : Matrix (Fin 32) (Fin 32) ℝ :=
   realSuperchargeMinus 0
 
@@ -334,7 +344,7 @@ def splitConformalQuadratic10 (k_plus k_minus : Fin 5 → ℝ) : ℝ :=
 scalar multiples remain square-zero, and the supplied null equation implies equality of
 the two quadratic sums. The null equation is not used to derive matrix nilpotence or a
 gamma-contracted supercharge relation. -/
-theorem supercharge_nilpotent_on_lightcone
+theorem finiteMatrixWitnesses_squareZero_and_lightcone_norm_identity
     (k_plus k_minus : Fin 5 → ℝ)
     (hk : splitConformalQuadratic10 k_plus k_minus = 0)
     (α : Fin 16) (c : ℝ) :
@@ -366,15 +376,15 @@ def brstCoboundary32 (Q M : Matrix (Fin 32) (Fin 32) ℝ) :
     Matrix (Fin 32) (Fin 32) ℝ :=
   Q * M - M * Q
 
-/-- BRST-deformed Souriau–Massieu log-partition (free entropy) potential
-$$\Phi_{\text{BRST}}(s, B) = \ln \left(\sum_{j=0}^{m-1} \exp\bigl(s_j + \operatorname{Tr}(B)\bigr)\right)$$
-perturbed by a 32-dimensional spinor-space operator fluctuation $B \in M_{32}(\mathbb{R})$. -/
+/-- Trace-shifted Souriau–Massieu log-partition potential
+$$\Phi_{\mathrm{tr}}(s, B) = \ln \left(\sum_{j=0}^{m-1} \exp\bigl(s_j + \operatorname{Tr}(B)\bigr)\right)$$
+for a matrix $B \in M_{32}(\mathbb{R})$. -/
 def brstDeformedSouriauPotential {m : ℕ} (s : Fin m → ℝ)
     (B : Matrix (Fin 32) (Fin 32) ℝ) : ℝ :=
   Real.log (∑ j : Fin m, Real.exp (s j + B.trace))
 
-/-- BRST-deformed Boltzmann–Gibbs attention weight
-$$A_{\text{BRST}, i}(s, B) = \frac{\exp(s_i + \operatorname{Tr}(B))}{\sum_j \exp(s_j + \operatorname{Tr}(B))}.$$ -/
+/-- Trace-shifted Boltzmann–Gibbs attention weight
+$$A_{\mathrm{tr}, i}(s, B) = \frac{\exp(s_i + \operatorname{Tr}(B))}{\sum_j \exp(s_j + \operatorname{Tr}(B))}.$$ -/
 def brstDeformedSouriauWeight {m : ℕ} (s : Fin m → ℝ)
     (B : Matrix (Fin 32) (Fin 32) ℝ) (i : Fin m) : ℝ :=
   Real.exp (s i + B.trace) / ∑ j : Fin m, Real.exp (s j + B.trace)
@@ -384,7 +394,7 @@ anticommutator expression `Q * X + X * Q`; matrix commutators have trace zero;
 and a common scalar shift of all logits leaves the Souriau potential, weights,
 and moment map unchanged. These statements do not establish a BRST complex or
 cohomology invariance. -/
-theorem koszul_brst_cohomology_souriau_massieu_invariance
+theorem finiteMatrixTrace_and_souriauShift_invariance
     {m : ℕ} (s v : Fin m → ℝ) (i : Fin m)
     (α : Fin 16) (Q M X : Matrix (Fin 32) (Fin 32) ℝ) :
     let B := brstCoboundary32 Q M
@@ -473,5 +483,96 @@ theorem nativeCl55WittAction_nilpotent_and_odd
       chiralMinus (Matrix.mulVec (nativeCl55VectorAction (n_pair i)) v) :=
   ⟨nativeCl55WittAction_sq_zero i,
     nativeCl55VectorAction_maps_plus_to_minus (n_pair i) v hv⟩
+
+/-! ## Master CAR charges and the Fock parity grading
+
+These statements concern the explicit `MatStage 5` Fock operators from the
+master operator envelope. They do not identify that tensor-indexed matrix
+representation with `chiralityMatrix` in the separately indexed recursive
+Cl(5,5) spinor representation.
+-/
+
+/-- The `creation 3 + annihilation 4` master charge is odd for the master
+Jordan--Wigner parity `globalChirality 5`. -/
+theorem masterSuperchargeQ_odd_for_masterParity :
+    MasterChirality * superchargeQ + superchargeQ * MasterChirality = 0 := by
+  dsimp [MasterChirality, superchargeQ, eps, iota]
+  calc
+    globalChirality 5 * (creation 3 + annihilation 4) +
+        (creation 3 + annihilation 4) * globalChirality 5 =
+      (globalChirality 5 * creation 3 + creation 3 * globalChirality 5) +
+        (globalChirality 5 * annihilation 4 + annihilation 4 * globalChirality 5) := by
+          noncomm_ring
+    _ = 0 := by
+      rw [globalChirality_anticomm_jwCreation 5 3,
+        globalChirality_anticomm_jwAnnihilation 5 4]
+      simp
+
+/-- The `creation 4 + annihilation 3` partner is odd for the same master
+Jordan--Wigner parity. -/
+theorem masterSuperchargeQBar_odd_for_masterParity :
+    MasterChirality * superchargeQBar +
+      superchargeQBar * MasterChirality = 0 := by
+  dsimp [MasterChirality, superchargeQBar, eps, iota]
+  calc
+    globalChirality 5 * (creation 4 + annihilation 3) +
+        (creation 4 + annihilation 3) * globalChirality 5 =
+      (globalChirality 5 * creation 4 + creation 4 * globalChirality 5) +
+        (globalChirality 5 * annihilation 3 + annihilation 3 * globalChirality 5) := by
+          noncomm_ring
+    _ = 0 := by
+      rw [globalChirality_anticomm_jwCreation 5 4,
+        globalChirality_anticomm_jwAnnihilation 5 3]
+      simp
+
+/-- The mixed anticommutator of the two operators odd for master parity
+commutes with that parity. Its separate scalar closure as `2 I` is proved by
+`supercharge_anticomm_momentum` in the master operator envelope. -/
+theorem masterSupercharge_anticommutator_even_for_masterParity :
+    MasterChirality * (superchargeQ * superchargeQBar +
+        superchargeQBar * superchargeQ) =
+      (superchargeQ * superchargeQBar +
+        superchargeQBar * superchargeQ) * MasterChirality := by
+  have hq := masterSuperchargeQ_odd_for_masterParity
+  have hqbar := masterSuperchargeQBar_odd_for_masterParity
+  have hq' : MasterChirality * superchargeQ =
+      -(superchargeQ * MasterChirality) := eq_neg_of_add_eq_zero_left hq
+  have hqbar' : MasterChirality * superchargeQBar =
+      -(superchargeQBar * MasterChirality) :=
+    eq_neg_of_add_eq_zero_left hqbar
+  have hfirst :
+      -(superchargeQ * MasterChirality) * superchargeQBar =
+        superchargeQ * superchargeQBar * MasterChirality := by
+    calc
+      -(superchargeQ * MasterChirality) * superchargeQBar =
+          -(superchargeQ * (MasterChirality * superchargeQBar)) := by
+            noncomm_ring
+      _ = -(superchargeQ * (-(superchargeQBar * MasterChirality))) := by
+            rw [hqbar']
+      _ = superchargeQ * superchargeQBar * MasterChirality := by
+            noncomm_ring
+  have hsecond :
+      -(superchargeQBar * MasterChirality) * superchargeQ =
+        superchargeQBar * superchargeQ * MasterChirality := by
+    calc
+      -(superchargeQBar * MasterChirality) * superchargeQ =
+          -(superchargeQBar * (MasterChirality * superchargeQ)) := by
+            noncomm_ring
+      _ = -(superchargeQBar * (-(superchargeQ * MasterChirality))) := by
+            rw [hq']
+      _ = superchargeQBar * superchargeQ * MasterChirality := by
+            noncomm_ring
+  calc
+    MasterChirality * (superchargeQ * superchargeQBar +
+        superchargeQBar * superchargeQ) =
+      (MasterChirality * superchargeQ) * superchargeQBar +
+        (MasterChirality * superchargeQBar) * superchargeQ := by
+          noncomm_ring
+    _ = (-(superchargeQ * MasterChirality)) * superchargeQBar +
+        (-(superchargeQBar * MasterChirality)) * superchargeQ := by
+          rw [hq', hqbar']
+    _ = (superchargeQ * superchargeQBar +
+        superchargeQBar * superchargeQ) * MasterChirality := by
+      rw [hfirst, hsecond, add_mul]
 
 end InfoGeometry.Synthesis.RealChiralSuperchargeBridge

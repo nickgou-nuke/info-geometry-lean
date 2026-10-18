@@ -1,0 +1,19 @@
+{
+  "schema": "opengauss.gate7.receipt.v1",
+  "module": "InfoGeometry.Projective.HadjiivanovRankTwoBraidFrameAudit",
+  "source_path": "lean/InfoGeometry/Projective/HadjiivanovRankTwoBraidFrameAudit.lean",
+  "source_sha256": "b7bfcfe61cacb4fafbaab51347c6ea5b65ec7747a6924354f845712cfe56db61",
+  "olean_path": ".lake/build/lib/lean/InfoGeometry/Projective/HadjiivanovRankTwoBraidFrameAudit.olean",
+  "olean_sha256": "4fdb0024bc63fa5a9d92bad47f0fa56081fc0d3b00c193e40be6df88eab97120",
+  "axioms": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "sorry_count": 0,
+  "admit_count": 0,
+  "screener_traps": 0,
+  "claim_linter_findings": 0,
+  "build_jobs": 26896,
+  "timestamp_utc": "2026-10-18T16:15:07Z"
+}

@@ -4,6 +4,8 @@ import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Real.Basic
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.NormNum
 import Mathlib.Tactic.Ring
 
 /-!
@@ -198,6 +200,54 @@ lemma boltzmannEntropy_eq_Phi_sub_expect_parameter
   unfold boltzmannEntropy surprisal
   rw [expect_sub (θ := θ) (fun _ : ι => Phi θ) θ]
   rw [expect_const (θ := θ) (hZ := hZ)]
+
+/--
+On the two-state finite Cartan family, entropy change is not generally the
+Massieu-potential change.  This exact counterexample keeps the two readouts
+separate: at `θ = (log 3, 0)`, the Gibbs weights are `(3/4, 1/4)`.
+-/
+theorem boltzmannEntropy_delta_ne_massieu_delta_fin_two :
+    boltzmannEntropy (![Real.log 3, 0] : Fin 2 → ℝ) -
+        boltzmannEntropy (fun _ : Fin 2 => (0 : ℝ)) ≠
+      Phi (![Real.log 3, 0] : Fin 2 → ℝ) -
+        Phi (fun _ : Fin 2 => (0 : ℝ)) := by
+  let θ0 : Fin 2 → ℝ := fun _ => 0
+  let θ1 : Fin 2 → ℝ := ![Real.log 3, 0]
+  have hZ0 : Z θ0 = 2 := by
+    simp [Z, θ0]
+  have hZ1 : Z θ1 = 4 := by
+    norm_num [Z, θ1, Real.exp_log (by norm_num : (0 : ℝ) < 3)]
+  have hPhi0 : Phi θ0 = Real.log 2 := by
+    simp [Phi, hZ0]
+  have hPhi1 : Phi θ1 = Real.log 4 := by
+    simp [Phi, hZ1]
+  have hmean0 : expect θ0 θ0 = 0 := by
+    simp [expect, prob, Z, θ0]
+  have hmean1 : expect θ1 θ1 = (3 / 4 : ℝ) * Real.log 3 := by
+    unfold expect
+    rw [Fin.sum_univ_two]
+    have hp0 : prob θ1 0 = (3 / 4 : ℝ) := by
+      unfold prob
+      rw [hZ1]
+      simp [θ1, Real.exp_log (by norm_num : (0 : ℝ) < 3)]
+    have hp1 : prob θ1 1 = (1 / 4 : ℝ) := by
+      unfold prob
+      rw [hZ1]
+      simp [θ1]
+    rw [hp0, hp1]
+    simp [θ1]
+  have hH0 : boltzmannEntropy θ0 = Real.log 2 := by
+    rw [boltzmannEntropy_eq_Phi_sub_expect_parameter θ0 (Z_pos θ0)]
+    rw [hPhi0, hmean0]
+    ring
+  have hH1 : boltzmannEntropy θ1 =
+      Real.log 4 - (3 / 4 : ℝ) * Real.log 3 := by
+    rw [boltzmannEntropy_eq_Phi_sub_expect_parameter θ1 (Z_pos θ1)]
+    rw [hPhi1, hmean1]
+  rw [hH1, hH0, hPhi1, hPhi0]
+  intro h
+  have hlog : 0 < Real.log 3 := Real.log_pos (by norm_num)
+  linarith
 
 theorem kl_eq_bregmanPhi [Nonempty ι] (θ η : ι → ℝ) (hZ : 0 < Z θ) :
     kl θ η = bregmanPhi θ η := by

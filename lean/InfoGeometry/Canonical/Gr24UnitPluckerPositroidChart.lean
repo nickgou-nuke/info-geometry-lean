@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib
 import InfoGeometry.Topology.Gr24PositroidCanonicalForm
 
@@ -38,6 +44,12 @@ structure ChartCoordinates where
   p12_nonneg : 0 ≤ p12
   p13_nonneg : 0 ≤ p13
   p23_nonneg : 0 ≤ p02 * p13 - p03 * p12
+
+/-- The origin is a concrete point of the closed affine chart. -/
+def chartCoordinatesOrigin : ChartCoordinates :=
+  ⟨0, 0, 0, 0, le_rfl, le_rfl, le_rfl, le_rfl, by norm_num⟩
+
+instance : Inhabited ChartCoordinates := ⟨chartCoordinatesOrigin⟩
 
 /-- The six Plücker coordinates, in order `01, 02, 03, 12, 13, 23`.
 The last coordinate is determined by the Klein equation. -/
@@ -205,6 +217,89 @@ theorem networkChartCoordinates_full_support (t : PositiveTopCoordinates) :
     trivial
   · intro _
     exact topCellPlucker_pos t i
+
+/-! ## Identifying the full-support chart with the unit top-cell carrier -/
+
+/-- The full-support locus of the closed affine Plücker chart. -/
+abbrev FullSupportChartCoordinates :=
+  {x : ChartCoordinates // chartSupport x = Finset.univ}
+
+/-- Full support makes every Plücker coordinate strictly positive. -/
+theorem fullSupport_plucker_pos (x : FullSupportChartCoordinates)
+    (i : Fin 6) : 0 < plucker x.1 i := by
+  have hi : i ∈ chartSupport x.1 := by
+    rw [x.2]
+    exact Finset.mem_univ i
+  exact (Finset.mem_filter.mp hi).2
+
+/-- Read a full-support closed-chart point as the existing unit-gauge
+Plücker carrier. -/
+def chartToUnitTopCellPoint (x : FullSupportChartCoordinates) :
+    UnitTopCellPoint :=
+  ⟨plucker x.1, by simp [plucker], fullSupport_plucker_pos x,
+    by simp [plucker]⟩
+
+/-- The unit-gauge Klein relation determines the final Plücker coordinate. -/
+theorem unitTopCellPoint_lastCoordinate (P : UnitTopCellPoint) :
+    P.coord 1 * P.coord 4 - P.coord 2 * P.coord 3 = P.coord 5 := by
+  have h := P.klein
+  rw [P.coord01] at h
+  linarith
+
+/-- Recover the closed-chart coordinates from a unit-gauge top-cell point. -/
+noncomputable def unitTopCellPointToChart (P : UnitTopCellPoint) :
+    FullSupportChartCoordinates := by
+  have hlast := unitTopCellPoint_lastCoordinate P
+  let y : ChartCoordinates :=
+    ⟨P.coord 1, P.coord 2, P.coord 3, P.coord 4,
+      le_of_lt (P.coord_pos 1), le_of_lt (P.coord_pos 2),
+      le_of_lt (P.coord_pos 3), le_of_lt (P.coord_pos 4), by
+        rw [hlast]
+        exact le_of_lt (P.coord_pos 5)⟩
+  refine ⟨y, ?_⟩
+  have hread : plucker y = P.coord := by
+    funext i
+    fin_cases i <;> simp [y, plucker, hlast, P.coord01]
+  ext i
+  simpa [chartSupport, hread] using P.coord_pos i
+
+/-- Plücker readout of the inverse chart map recovers all six coordinates. -/
+theorem unitTopCellPointToChart_plucker (P : UnitTopCellPoint) :
+    plucker (unitTopCellPointToChart P).1 = P.coord := by
+  have hlast := unitTopCellPoint_lastCoordinate P
+  funext i
+  fin_cases i
+  · simpa [unitTopCellPointToChart, plucker] using P.coord01.symm
+  · rfl
+  · rfl
+  · rfl
+  · rfl
+  · simpa [unitTopCellPointToChart, plucker] using hlast
+
+/-- The full-support part of the closed chart is equivalent to the existing
+unit-gauge positive top-cell Plücker carrier. -/
+noncomputable def fullSupportChartEquivUnitTopCell :
+    FullSupportChartCoordinates ≃ UnitTopCellPoint where
+  toFun := chartToUnitTopCellPoint
+  invFun := unitTopCellPointToChart
+  left_inv := by
+    intro x
+    apply Subtype.ext
+    apply ChartCoordinates.ext <;> rfl
+  right_inv := by
+    intro P
+    apply UnitTopCellPoint.ext
+    exact unitTopCellPointToChart_plucker P
+
+/-- The network chart followed by the closed-chart adapter agrees with the
+existing positive-parameter top-cell equivalence. -/
+theorem chartToUnitTopCellPoint_networkChartCoordinates
+    (t : PositiveTopCoordinates) :
+    chartToUnitTopCellPoint
+      ⟨networkChartCoordinates t, networkChartCoordinates_full_support t⟩ =
+        topCellChartEquiv t := by
+  apply UnitTopCellPoint.ext
+  exact networkChartCoordinates_readout t
 
 /-- The embedded full-support cell carries the positive canonical form from
 the existing network-coordinate owner. -/

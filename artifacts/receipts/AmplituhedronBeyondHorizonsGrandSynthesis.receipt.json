@@ -1,0 +1,19 @@
+{
+  "schema": "opengauss.gate7.receipt.v1",
+  "module": "InfoGeometry.Synthesis.AmplituhedronBeyondHorizonsGrandSynthesis",
+  "source_path": "lean/InfoGeometry/Synthesis/AmplituhedronBeyondHorizonsGrandSynthesis.lean",
+  "source_sha256": "1373867bd6f67d1945b8bc00ccde9e8a7a0cdc520d6383d6ffaa39db43af0634",
+  "olean_path": ".lake/build/lib/lean/InfoGeometry/Synthesis/AmplituhedronBeyondHorizonsGrandSynthesis.olean",
+  "olean_sha256": "6354a3766cd4125161035e9978c21299ea86c615b892303d05a3673fa1e4b237",
+  "axioms": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "sorry_count": 0,
+  "admit_count": 0,
+  "screener_traps": 0,
+  "claim_linter_findings": 0,
+  "build_jobs": 26900,
+  "timestamp_utc": "2026-10-18T16:24:23Z"
+}

@@ -133,6 +133,105 @@ theorem stabilizerMatrixSL3_sl3ToPeirceStabilizer (M : SL3) :
     exact parameterLinearEquiv.left_inv _
   rw [hparam, parameterMatrix_sl3Parameters]
 
+@[simp] theorem sl3Parameters_add (M N : SL3) :
+    sl3Parameters (M + N) = sl3Parameters M + sl3Parameters N := by
+  funext i
+  fin_cases i <;> simp [sl3Parameters] <;> ring
+
+@[simp] theorem sl3Parameters_smul (r : ℝ) (M : SL3) :
+    sl3Parameters (r • M) = r • sl3Parameters M := by
+  funext i
+  fin_cases i <;> simp [sl3Parameters]
+
+/-- The selected Peirce-stabilizing derivation depends additively on its
+trace-zero matrix parameter. -/
+theorem sl3ToPeirceStabilizer_add (M N : SL3) :
+    sl3ToPeirceStabilizer (M + N) =
+      sl3ToPeirceStabilizer M + sl3ToPeirceStabilizer N := by
+  apply Subtype.ext
+  change canonicalParameterLinearEquiv (sl3Parameters (M + N)) = _
+  rw [sl3Parameters_add]
+  exact map_add canonicalParameterLinearEquiv _ _
+
+/-- The selected Peirce-stabilizing derivation respects real scalar action. -/
+theorem sl3ToPeirceStabilizer_smul (r : ℝ) (M : SL3) :
+    sl3ToPeirceStabilizer (r • M) =
+      r • sl3ToPeirceStabilizer M := by
+  apply Subtype.ext
+  change canonicalParameterLinearEquiv (sl3Parameters (r • M)) = _
+  rw [sl3Parameters_smul]
+  exact map_smul canonicalParameterLinearEquiv r _
+
+/-- The selected trace-zero parameters act on the vector-Zorn carrier by the
+standard representation on the upper slot and the contragredient representation
+on the lower slot. -/
+theorem sl3Parameters_parameterAction (M : SL3)
+    (X : InfoGeometry.Algebra.ZornVectorMatrix ℝ) :
+    parameterAction (sl3Parameters M) X =
+      ⟨0, M.1.mulVec X.v, (-Matrix.transpose M.1).mulVec X.w, 0⟩ := by
+  have hdiag : M.1 0 0 = -M.1 1 1 - M.1 2 2 := by
+    have ht := M.2
+    simp [Matrix.trace, Fin.sum_univ_three] at ht
+    linarith
+  apply InfoGeometry.Algebra.ZornVectorMatrix.ext
+  · simp [parameterAction, sl3Parameters]
+  · funext i
+    fin_cases i
+    all_goals simp_all [parameterAction, sl3Parameters,
+      Matrix.mulVec, dotProduct, Fin.sum_univ_three]
+    all_goals ring_nf
+    all_goals simp
+  · funext i
+    fin_cases i
+    all_goals simp_all [parameterAction, sl3Parameters,
+      Matrix.mulVec, dotProduct, Fin.sum_univ_three, Matrix.transpose_apply]
+    all_goals ring_nf
+  · simp [parameterAction, sl3Parameters]
+
+/-- On the native Peirce off-diagonal carrier, the selected derivation has the
+same standard/contragredient action in the native coordinate chart. -/
+theorem sl3ToPeirceStabilizer_restrictOffDiagonal_apply
+    (M : SL3) (X : offDiagonal) :
+    offDiagonalLinearEquiv
+        (restrictOffDiagonal (sl3ToPeirceStabilizer M) X) =
+      (M.1.mulVec (offDiagonalLinearEquiv X).1,
+        (-Matrix.transpose M.1).mulVec (offDiagonalLinearEquiv X).2) := by
+  have hAction :
+      canonicalToVectorDerivation (sl3StabilizerCandidate M)
+          (canonicalVectorEquiv X.1) =
+        ⟨0, M.1.mulVec X.1.x, (-Matrix.transpose M.1).mulVec X.1.y, 0⟩ := by
+    change parameterAction (sl3Parameters M) (canonicalVectorEquiv X.1) = _
+    exact sl3Parameters_parameterAction M (canonicalVectorEquiv X.1)
+  have hNative := canonicalToVectorDerivation_apply
+      (sl3StabilizerCandidate M) (canonicalVectorEquiv X.1)
+  rw [hAction] at hNative
+  change ((restrictOffDiagonal (sl3ToPeirceStabilizer M) X).1.x,
+      (restrictOffDiagonal (sl3ToPeirceStabilizer M) X).1.y) = _
+  change (((sl3ToPeirceStabilizer M).1.1 X.1).x,
+      ((sl3ToPeirceStabilizer M).1.1 X.1).y) = _
+  have hx := congrArg
+    (fun Z : InfoGeometry.Algebra.ZornVectorMatrix ℝ => Z.v) hNative
+  have hy := congrArg
+    (fun Z : InfoGeometry.Algebra.ZornVectorMatrix ℝ => Z.w) hNative
+  have hx' :
+      ((sl3StabilizerCandidate M).1 X.1).x = M.1.mulVec X.1.x := by
+    simpa [canonicalVectorEquiv] using hx.symm
+  have hy' :
+      ((sl3StabilizerCandidate M).1 X.1).y =
+        (-(Matrix.transpose M.1)).mulVec X.1.y := by
+    simpa [canonicalVectorEquiv] using hy.symm
+  exact Prod.ext hx' hy'
+
+/-- The selected Peirce-stabilizer section is injective, since its matrix
+readout is a left inverse. -/
+theorem sl3ToPeirceStabilizer_injective :
+    Function.Injective sl3ToPeirceStabilizer := by
+  intro M N h
+  have hread := congrArg stabilizerMatrixSL3 h
+  rw [stabilizerMatrixSL3_sl3ToPeirceStabilizer,
+    stabilizerMatrixSL3_sl3ToPeirceStabilizer] at hread
+  exact hread
+
 end InfoGeometry.Lie.CanonicalZornPeirceSL3Bridge
 
 end

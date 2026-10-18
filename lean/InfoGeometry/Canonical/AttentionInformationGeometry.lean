@@ -138,6 +138,40 @@ theorem logPartition_coordinate_deriv (s : Fin M → ℝ) (j : Fin M) :
   simp_rw [hweight]
   exact expectation_tokenObservable s j
 
+/-- The directional derivative of the log-partition is the softmax expectation
+of its direction. -/
+theorem logPartitionAlong_directional_deriv_eq_expectation
+    (s v : Fin M → ℝ) :
+    deriv (logPartitionAlong s v) 0 = expectation s v := by
+  let w : Fin M → ℝ := fun m => Real.exp (s m)
+  have hw : ∀ m, 0 < w m := fun m => Real.exp_pos (s m)
+  have hweight (m : Fin M) :
+      InfoGeometry.Analytic.logSumExpWeight w v 0 m = softmaxProb s m := by
+    simp [InfoGeometry.Analytic.logSumExpWeight,
+      InfoGeometry.Analytic.logSumExpPartition, softmaxProb, partitionZ, w]
+  change deriv (InfoGeometry.Analytic.logSumExp w v) 0 = _
+  rw [InfoGeometry.Analytic.logSumExp_deriv_eq_mean w v hw 0]
+  rw [InfoGeometry.Analytic.logSumExpMean_eq_weighted_sum w v hw 0]
+  simp_rw [hweight]
+  rfl
+
+/-- Scaling a logit direction scales the log-partition derivative by the same
+factor, exposing the attention temperature factor. -/
+theorem logPartitionAlong_smul_directional_deriv
+    (s v : Fin M → ℝ) (c : ℝ) :
+    deriv (logPartitionAlong s (fun i => c * v i)) 0 =
+      c * expectation s v := by
+  rw [logPartitionAlong_directional_deriv_eq_expectation]
+  unfold expectation
+  calc
+    ∑ i : Fin M, softmaxProb s i * (c * v i) =
+        ∑ i : Fin M, c * (softmaxProb s i * v i) := by
+      apply Finset.sum_congr rfl
+      intro i hi
+      ring
+    _ = c * ∑ i : Fin M, softmaxProb s i * v i := by
+      rw [Finset.mul_sum]
+
 /-- The covariance-form matrix associated to the log-partition potential.
 Its quadratic form is proved below to equal the actual second directional
 derivative of log-partition. -/
@@ -163,6 +197,13 @@ theorem hessianLogZ_uniform_shift
       softmaxProb (fun m => s m + c) j * softmaxProb (fun m => s m + c) k =
     (if j = k then softmaxProb s j else 0) - softmaxProb s j * softmaxProb s k
   rw [softmaxProb_uniform_shift s c j, softmaxProb_uniform_shift s c k]
+
+omit [NeZero M] in
+/-- Concrete failure of logit-scale invariance, unlike the additive-shift gauge. -/
+theorem softmaxProb_not_invariant_under_logit_scaling :
+    softmaxProb (fun i : Fin 2 => 2 * (i : ℝ)) 0 ≠
+      softmaxProb (fun i : Fin 2 => (i : ℝ)) 0 := by
+  simp [softmaxProb, partitionZ, Fin.sum_univ_two]
 
 /-- The derivative of softmax coordinate `j` along logit coordinate `k` is
 the `(j,k)` entry of the covariance-form Hessian. -/

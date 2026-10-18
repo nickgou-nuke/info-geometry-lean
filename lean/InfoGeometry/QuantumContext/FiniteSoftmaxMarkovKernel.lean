@@ -141,7 +141,7 @@ theorem softmaxAttention_poisson_solutions_differ_by_const
     x y
   simpa only [Matrix.toLin'_apply] using hxy
 
-/-! ### Causal masked softmax -/
+/-! ### Causal masked softmax
 
 The ordinary `softmaxAttentionMatrix` above normalizes over every key. The
 following finite kernel instead masks future positions before normalization, so

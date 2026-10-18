@@ -219,6 +219,17 @@ instance instInhabitedParaKahlerData (V : Type*) [AddCommGroup V] [Module ℝ V]
 
 variable {V : Type*} [AddCommGroup V] [Module ℝ V]
 
+/-- The form induced by `D` is skew-symmetric. This uses only the displayed
+para-Kähler-type laws; it does not require `g` to be nondegenerate. -/
+theorem paraKahler_omega_skew (D : ParaKahlerData V) (u v : V) :
+    D.omega u v = -D.omega v u := by
+  rw [D.omega_def, D.omega_def]
+  have h := D.g_anti u (D.K v)
+  rw [D.K_sq] at h
+  calc
+    D.g (D.K u) v = -D.g u (D.K v) := h
+    _ = -D.g (D.K v) u := by rw [D.g_symm]
+
 /-- Spectral projector `P⁺(v) = (1/2) • (v + K v)` onto `T⁺ = ker(K - id)`. -/
 def projPlus (D : ParaKahlerData V) : V →ₗ[ℝ] V :=
   (1 / 2 : ℝ) • (LinearMap.id + D.K)

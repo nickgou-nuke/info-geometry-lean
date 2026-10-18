@@ -1,0 +1,14 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.Synthesis.SedenionG2EndomorphismLieRepresentation
+
+#print axioms InfoGeometry.Synthesis.SedenionG2EndomorphismLieRepresentation.sedenionG2EndomorphismFamily_parameterBracket
+#print axioms InfoGeometry.Synthesis.SedenionG2EndomorphismLieRepresentation.sedenionG2DerivationLieHom
+#print axioms InfoGeometry.Synthesis.SedenionG2EndomorphismLieRepresentation.sedenionG2DerivationLieHom_injective
+#print axioms InfoGeometry.Synthesis.SedenionG2EndomorphismLieRepresentation.sedenionG2DerivationLieEquiv
+#print axioms InfoGeometry.Synthesis.SedenionG2EndomorphismLieRepresentation.sedenionG2DerivationLieHom_range_finrank
+#print axioms InfoGeometry.Synthesis.SedenionG2EndomorphismLieRepresentation.sedenionG2EndomorphismFamily_range_eq_sedenionDerivations

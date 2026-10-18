@@ -1,4 +1,8 @@
-/- SPDX-License-Identifier: Apache-2.0 -/
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 
 import Mathlib.Data.Real.Basic
 import Mathlib.Data.Matrix.Basic
@@ -23,7 +27,7 @@ $$\boxed{
 \begin{aligned}
 &1.\ \textbf{Topological Boundary (Klein Glide Seam): } \text{Fixed locus } t = 0 \text{ under } \tau^2 = +1 \text{ with period } L \text{ translation } (T_a)^2\cr
 &2.\ \textbf{Spacetime Geometry (Penrose Twistor Sheets): } Z \in \mathbb{T}^4 \text{ splits into chiral Peirce sectors } Z = \omega \oplus \pi\cr
-&3.\ \textbf{Quantum Transport (Transformer Colimit): } \iota_n : \mathcal{B}_{2^n} \hookrightarrow \mathcal{B}_{2^{n+1}} \text{ preserving doubly stochasticity \& KMS trace}\cr
+&3.\ \textbf{Quantum Transport (Birkhoff-Constrained Colimit): } \iota_n : \mathcal{B}_{2^n} \hookrightarrow \mathcal{B}_{2^{n+1}} \text{ preserves supplied double stochasticity \& KMS trace}\cr
 &4.\ \textbf{Arithmetic Spectrum (Bost-Connes Primon Weyl): } \text{Spectral gap bound } \Delta E(p, q) \ge \frac{q-p}{q} \text{ and Weyl gauge dilation}
 \end{aligned}}
 $$
@@ -50,7 +54,9 @@ namespace InfoGeometry.Canonical.GrandUnification
     Synthesizes the four foundational pillars into a single coherent configuration:
     1. Klein seam coordinate z on the t = 0 locus.
     2. Penrose twistor Z decomposed into chiral Peirce sheets.
-    3. Quantum transformer doubly stochastic attention matrix P at stage n.
+    3. Sinkhorn/Birkhoff-constrained stage matrix P at stage n; its
+       doubly-stochastic property is supplied as input data. This capstone does
+       not model generic row-stochastic causal attention or an attention sink.
     4. Bost-Connes primon energy pair (p, q) with p < q. -/
 structure GrandUnificationState (n : ℕ) where
   seamCoord : ParaComplex
@@ -64,10 +70,38 @@ structure GrandUnificationState (n : ℕ) where
   hq_pos : 0 < primon_q
   hpq_lt : primon_p < primon_q
 
+/-- A canonical constructive inhabitant of the capstone state at every finite
+stage: zero seam coordinate and twistor, identity Birkhoff matrix, and the
+ordered positive primon pair `(1, 2)`. -/
+noncomputable def canonicalGrandUnificationState (n : ℕ) : GrandUnificationState n where
+  seamCoord := ⟨0, 0⟩
+  h_seam := by simp [IsOnRealSeam, ParaComplex.conj]
+  twistorState := 0
+  attentionMatrix := 1
+  h_birkhoff := by
+    refine ⟨?_, ?_, ?_⟩
+    · intro i j
+      change 0 ≤ (if i = j then (1 : ℝ) else 0)
+      split_ifs <;> norm_num
+    · intro i
+      simp [rowSum, Matrix.one_apply]
+    · intro j
+      simp [colSum, Matrix.one_apply]
+  primon_p := 1
+  primon_q := 2
+  hp_pos := by norm_num
+  hq_pos := by norm_num
+  hpq_lt := by norm_num
+
+noncomputable instance canonicalGrandUnificationStateInhabited (n : ℕ) :
+    Inhabited (GrandUnificationState n) :=
+  ⟨canonicalGrandUnificationState n⟩
+
 /-- 🏆 THEOREM 1: Simultaneous Exact Preservation of Master Invariants across the 4 Pillars.
     (1) Klein glide reflection preserves the real seam fixed locus (t = 0).
     (2) Twistor state decomposes faithfully into chiral Peirce sheets: Z = plus(ω) + minus(π).
-    (3) Quantum transformer attention matrix embeds into the UHF colimit preserving doubly stochasticity.
+    (3) A supplied Sinkhorn/Birkhoff-balanced stage matrix embeds into the UHF
+        colimit preserving its supplied doubly-stochastic property.
     (4) Bost-Connes primon spectral gap satisfies the non-perturbative geometric dilation bound. -/
 theorem master_grand_unification_invariants
     (n : ℕ) (S : GrandUnificationState n) (L : ℝ) (α : ℝ) (hα : 0 ≤ α) :
@@ -75,7 +109,7 @@ theorem master_grand_unification_invariants
     IsOnRealSeam (glideZ L S.seamCoord) ∧
     -- Pillar 2: Faithful twistor sheet decomposition
     plusInclusion S.twistorState.1 + minusInclusion S.twistorState.2 = S.twistorState ∧
-    -- Pillar 3: Dyadic UHF colimit Birkhoff preservation
+    -- Pillar 3: Dyadic UHF colimit preservation of the supplied Birkhoff constraint
     IsDoublyStochastic (attentionStageEmbedding n S.attentionMatrix) ∧
     -- Pillar 4: Bost-Connes Primon Weyl spectral gap and dilation bounds
     (((S.primon_q - S.primon_p : ℕ) : ℝ) / (S.primon_q : ℝ) ≤ primonEnergyGap S.primon_p S.primon_q) ∧
@@ -89,7 +123,9 @@ theorem master_grand_unification_invariants
 
 /-- 🏆 THEOREM 2: Klein Periodicity and Normalized KMS Trace Preservation.
     (1) Klein double-glide reflection recovers the exact spatial translation by period L: (T_a)²(z) = z + L.
-    (2) The dyadic UHF embedding preserves the normalized KMS trace functional: τ_{n+1}(ι_n(P)) = τ_n(P). -/
+    (2) The dyadic UHF embedding preserves the normalized KMS trace functional:
+        τ_{n+1}(ι_n(P)) = τ_n(P). This statement is independent of stochastic
+        normalization of P. -/
 theorem master_grand_unification_periodicity_and_trace
     (n : ℕ) (S : GrandUnificationState n) (L : ℝ) :
     glideZ L (glideZ L S.seamCoord) = addReal S.seamCoord L ∧

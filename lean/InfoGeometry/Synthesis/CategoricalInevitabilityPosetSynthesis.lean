@@ -63,10 +63,12 @@ the UHF colimit Jordan–Wigner CAR and KMS modular flow:
    - Embeds the stage-`k` $\operatorname{Cl}(1,1)^{\otimes k}$ Jordan–Wigner creation,
      annihilation, and global chirality operators into the UHF direct-limit algebra
      `Carrier` (`colimitJWCreation`, `colimitJWAnnihilation`, `colimitGlobalChirality`),
-     proving nilpotency, CAR anticommutation, and chiral parity negation inside `Carrier`.
-   - Unifies colimit Jordan–Wigner chiral parity, the coordinate-free Möbius sheet
-     quotient, and cross-stage Tomita modular-KMS trace cycling in
-     `risingSea_three_arrow_colimit_mobius_kms`.
+     proving nilpotency, same-site CAR, and chiral parity negation inside `Carrier`.
+   - Bundles colimit Jordan–Wigner chiral parity, a coordinate-free Möbius quotient
+     identity, and cross-stage Tomita modular-KMS trace cycling in
+     `risingSea_three_arrow_colimit_mobius_kms`. These are simultaneous facts with
+     independent carriers and parameters; this theorem does not construct a map from
+     the quotient to the UHF carrier or prove a quotient-to-KMS compatibility law.
 -/
 
 set_option autoImplicit false
@@ -927,15 +929,18 @@ theorem risingSea_tower_propagation_modular_kms_synthesis
   rw [attentionColimitFunctional_rawMap_modularFlow_invariant h]
   exact attentionColimitFunctional_kms_boundary k logits β A B
 
-/-- **Rising Sea Three-Arrow Synthesis (`risingSea_three_arrow_colimit_mobius_kms`)**:
-Simultaneously establishes:
-1. **Arrow 1 (Inductive $\operatorname{Cl}(1,1)^{\otimes k}$ Jordan–Wigner Colimit Lift)**:
-   chiral volume negation $\Gamma_k a_i^\dagger \Gamma_k = -a_i^\dagger$ and CAR
-   $\{a_i^\dagger, a_i\} = 1$ in `Carrier`;
-2. **Arrow 2 (Coordinate-Free Unoriented Möbius $\mathbb{Z}_2$ Quotient)**:
+/-- **Rising Sea Bundle of Colimit, Quotient, and KMS Facts**:
+Simultaneously bundles three results whose carriers and parameters remain independent:
+1. **Jordan–Wigner Colimit Fact**:
+   chiral volume negation $\Gamma_k a_i^\dagger \Gamma_k = -a_i^\dagger$ and the same-site
+   CAR relation $\{a_i^\dagger, a_i\} = 1$ in `Carrier`;
+2. **Coordinate-Free Unoriented Möbius $\mathbb{Z}_2$ Quotient Fact**:
    identification of `[P⁺ v]` and `[P⁻ (C v)]` in `MobiusInvolutionQuotient hC`; and
-3. **Arrow 3 (Cross-Stage KMS Modular Context Readout)**:
-   bonding-map invariance of the modular-evolved KMS trace-cycled expectation in `Carrier`. -/
+3. **Cross-Stage KMS Modular Context Readout Fact**:
+   bonding-map invariance of the modular-evolved KMS trace-cycled expectation in `Carrier`.
+
+The conjunction makes these theorems available together; it does not assert a causal map or
+compatibility from the quotient in item 2 to the KMS readout in item 3. -/
 theorem risingSea_three_arrow_colimit_mobius_kms
     {V : Type*} [AddCommGroup V] [Module ℝ V]
     {K C : V →ₗ[ℝ] V} (hC : IsSheetSwapInvolution K C) (v : V)

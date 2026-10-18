@@ -485,6 +485,25 @@ theorem split_cayleyDickson_square_zero
   · dsimp [cdMul]
     rw [one_mul, h_u_star, one_mul, add_neg_cancel]
 
+/-- **Sign check for the other Cayley--Dickson convention**:
+With the same hypotheses `u² = 1` and `u⋆ = -u`, but parameter `+1`,
+the square of `(u, 1)` is `(2 • 1, 0)`.  Thus the square-zero
+calculation above specifically uses the `-1` doubling parameter. -/
+theorem split_cayleyDickson_plus_parameter_square
+    {A : Type*} [NonAssocRing A] [Module ℝ A]
+    (starA : A → A) (u : A)
+    (h_star_one : starA 1 = 1)
+    (h_u_sq : u * u = 1)
+    (h_u_star : starA u = -u) :
+    cdMul starA (1 : ℝ) (u, (1 : A)) (u, (1 : A)) = (2 • (1 : A), 0) := by
+  ext
+  · dsimp [cdMul]
+    rw [h_u_sq, h_star_one, mul_one]
+    simp [two_smul]
+  · dsimp [cdMul]
+    rw [one_mul, h_u_star, one_mul]
+    simp
+
 /-! ## Section 5: Coordinate-algebra derivation identities -/
 
 /-- The associator $[a, b, c] = (a b) c - a (b c)$ in a non-associative ring $B$. -/

@@ -1046,6 +1046,31 @@ theorem paraSkewNilpotent_sq_zero (a : Fin 3 → R) (z : ParaKahlerVec R) :
       ring
     }
 
+/-- The nilpotent `Nₐ` anticommutes with the para-complex involution `K`:
+`K ∘ Nₐ = - Nₐ ∘ K`. In particular, this flow generator exchanges the two
+`K`-eigenspaces instead of preserving them as a connection coefficient would. -/
+theorem paraSkewNilpotent_anticommutes_paraComplexK
+    (a : Fin 3 → R) (z : ParaKahlerVec R) :
+    ∀ k, (paraComplexK (paraSkewNilpotent a z)).u k = 0 ∧
+      (paraComplexK (paraSkewNilpotent a z)).v k +
+        (paraSkewNilpotent a (paraComplexK z)).v k = 0 := by
+  intro k
+  constructor
+  · rfl
+  · dsimp [paraComplexK, paraSkewNilpotent]
+    ring
+
+/-- If `z` lies in the primal `+1` eigenspace of `K`, then `Nₐ z` lies in
+the dual `-1` eigenspace. This makes the sheet exchange explicit. -/
+theorem paraSkewNilpotent_maps_primal_eigen_to_dual
+    (a : Fin 3 → R) (z : ParaKahlerVec R)
+    (hz : paraComplexK z = z) :
+    ∀ k, (paraComplexK (paraSkewNilpotent a z)).v k +
+      (paraSkewNilpotent a z).v k = 0 := by
+  intro k
+  rw [← hz]
+  exact (paraSkewNilpotent_anticommutes_paraComplexK a z k).2
+
 /-- Infinitesimal metric-skew-symmetry of $N_a$ with respect to the para-Kähler
 metric $g$: $g(N_a z_1, z_2) + g(z_1, N_a z_2) = 0$. -/
 theorem paraKahlerMetric_paraSkewNilpotent_skew (a : Fin 3 → R) (z₁ z₂ : ParaKahlerVec R) :

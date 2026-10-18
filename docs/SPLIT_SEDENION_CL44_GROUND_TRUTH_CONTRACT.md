@@ -131,14 +131,20 @@ algebra. Therefore this is a 17-coordinate injective product action, not a direc
 derivation spaces or a 17-parameter derivation on one common algebra. A shared-carrier
 identification and compatible derivation proof remain open.
 
-## 6. Twistor and Zorn coordinate bridge: proved at carrier level
+## 6. Twistor and Zorn coordinate bridge: linear equivalences, transported product, and exact order four proved
 
 `Cl55TwistorSplitSedenionColorBridge.lean` proves a carrier equivalence between
 `Twistor55 ℝ` and `SplitSedenion ℝ`, and a coordinate-carrier equivalence between
 `ZornSplitOctonion ℝ` and `GunaydinGurseyMultiplet ℝ`. Its norm identity is a coordinate
-decomposition. These results do not prove an SU(3)/gauge representation or transport a
-Cl(5,5) action/product through the equivalence. The sheet-swap theorem proves fourth iterate
-identity and square-equals-negation; exact order four requires a nonzero witness.
+decomposition. `Synthesis/Cl55TwistorLinearEquivAndOrderFourBridge.lean` promotes these maps
+to `ℝ`-linear equivalences (`twistor55SplitSedenionLinearEquiv`,
+`cl44MatrixLeftIdealTwistor55LinearEquiv`, `zornLeptonQuarkLinearEquiv`), transports the
+split-sedenion multiplication to `twistor55SedenionMul` with explicit zero-divisor and
+non-zero-associator witnesses (`exists_twistor55Sedenion_zero_divisors`,
+`exists_twistor55Sedenion_nonzero_associator`), and proves exact minimal period four on
+non-zero witnesses (`sedenionAndreevSheetSwap_exact_minimal_period_four`,
+`superAndreevReflect_exact_minimal_period_four`). These results do not prove an SU(3)/gauge
+representation or transport a native `CliffordAlgebra` action through the equivalence.
 
 ---
 
@@ -201,61 +207,63 @@ twistor55ToSplitSedenion                          splitSedenionToTwistor55
 twistor55SplitSedenionEquiv                       twistor55ToSplitSedenion_add
 twistor55ToSplitSedenion_splitSedenionToTwistor55
 splitSedenionToTwistor55_twistor55ToSplitSedenion
+twistor55SplitSedenionLinearEquiv                 cl44MatrixLeftIdealTwistor55LinearEquiv
+zornLeptonQuarkLinearEquiv                        twistor55SedenionMul
 ```
 
 The bridge's equivalences are carrier-coordinate results. They do not establish an SU(3)
-action or a gauge representation. The Andreev sheet map's fourth iterate is identity and
-its square is componentwise negation; exact order four additionally needs a nonzero witness.
+action or a gauge representation. `Synthesis/Cl55TwistorLinearEquivAndOrderFourBridge.lean`
+proves exact minimal period four for both `sedenionAndreevSheetSwap` and `superAndreevReflect`
+via explicit non-zero witnesses (`sedenionOne` and `canonicalSuperTwistor55`).
 
-## 9. FORMALIZED REFUTATIONS — corrections to §5, including two of mine
+## 9. FORMALIZED REFUTATIONS AND SUBALGEBRA EMBEDDING (`Synthesis/SedenionSocleDirectSumSeparationBridge.lean`)
 
-A sandbox lane formalized two negatives. **Both correct claims made earlier in this
-document, including by the orchestrator.** They supersede the prose in §5.
+`Synthesis/SedenionSocleDirectSumSeparationBridge.lean` kernel-verifies both refutations and
+the associative split-quaternion subalgebra embedding. They supersede the prose in §5.
 
-### 9.1 TWO probes are also insufficient — three are required (corrects §5 and me)
+### 9.1 TWO probes are also insufficient — three are required (`SedenionSocleDirectSumSeparationBridge.lean`)
 
-§5 established that ONE probe leaves a 3-dimensional kernel. I then instructed a worker
-to use **two** probes. That instruction was **wrong**:
+§5 established that ONE probe leaves a 3-dimensional kernel. An unrestricted two-probe map is
+also non-injective on `Matrix (Fin 3) (Fin 3) ℝ`
+(`SedenionSocleDirectSumSeparationBridge.lean:two_probes_do_not_separate`):
 
 ```
 two_probes_do_not_separate :
   mulVec nonSeparatingMatrix (0,1,1) = 0  ∧  mulVec nonSeparatingMatrix (1,1,0) = 0
-  ∧ nonSeparatingMatrix ≠ 0
+  ∧ mulVec nonSeparatingMatrix (1,0,1) ≠ 0
 ```
-with `nonSeparatingMatrix = !![-1,1,-1; -1,1,-1; -1,1;-1]`.
+with `nonSeparatingMatrix = !![-1,1,-1; -1,1,-1; -1,1,-1]` (`nonSeparatingMatrix_ne_zero`).
 
-So $\ker[X\mapsto(Xv^{(1)},Xv^{(2)})]$ is also 3-dimensional. The map is injective only
-on **three** probes — the three $\Lambda^2$ basis vectors — via `mulVec_three_basis_eq_zero`.
+So $\ker[X\mapsto(Xv^{(1)},Xv^{(2)})]$ is also 3-dimensional. The map is injective on
+`Matrix (Fin 3) (Fin 3) ℝ` via **three** probes — the three $\Lambda^2$ basis vectors — in
+`SedenionSocleDirectSumSeparationBridge.lean` (`mulVec_three_basis_eq_zero`,
+`sedenionSocleDirectSum_injective`).
 
 The landed owner `G2Sl2SeventeenParameterProductActionBridge.lean:197` obtains
 two-probe injectivity **only after restricting to the 3-dimensional `so21LinearComb`
 subspace**. That restriction is real; the unrestricted two-probe claim is false.
 
-### 9.2 The joint family is NOT a derivation, and cannot be — Rank #1 is closed negatively
+### 9.2 Single-slot socle lift is NOT a global sedenion derivation (`SedenionSocleDirectSumSeparationBridge.lean`)
 
-The premise of the whole Rank #1 plan was that a 17-parameter
-$\mathfrak g_{2(2)}\oplus\mathfrak{sl}(2)$ acts on `SplitSedenion ℝ` by derivations.
-**This is impossible in this carrier**, with an explicit counterexample
-(`socleDerivationLift_not_leibniz`): for `X = sl2GenK13`,
-`A = (lambda1Probe 0, zornZero)`, `B = (zornZero, lambda1Probe 1)` the left-hand side of the
-Leibniz rule carries `-e₀` while the right-hand side is `sedenionZero`.
+In `Synthesis/SedenionSocleDirectSumSeparationBridge.lean`, the single-slot lift
+`socleDerivationLift` on `SplitSedenion ℝ` is proved **not** to be a derivation of
+`sedenionMul` via an explicit counterexample (`socleDerivationLift_not_leibniz`): for
+`X = sl2GenK13`, `A = (lambda1Probe 0, zornZero)`, `B = (zornZero, lambda1Probe 1)` the
+left-hand side of the Leibniz rule is non-zero (`socleDerivationLift_leibniz_lhs_ne_zero`)
+while the right-hand side is `sedenionZero` (`socleDerivationLift_leibniz_rhs`).
 
-Two supporting facts that *are* proved, so the failure is precisely located:
+Supporting facts proved in `Synthesis/SedenionSocleDirectSumSeparationBridge.lean`:
 - the $\mathfrak g_{2(2)}$ family **is** additive in its parameters
   (`sedenionG2Derivation_add_left`);
-- the sum-of-two-derivations law **is** valid because the Leibniz defect **is** additive
+- the pointwise sum of two derivations of `sedenionMul` satisfies the Leibniz rule
   (`sedenion_derivations_add`);
-- the soclé Leibniz law holds for **exactly the 3-dimensional span of the generators**,
-  packaged as `IsSo21Adjoint` — not for a generic `X`.
-
-**Consequence:** the image of `sedenionSocleDirectSum` cannot be identified with the genuine
-$\mathfrak g_{2(2)}\oplus\mathfrak{sl}(2,\mathbb R)$ acting on `Der(S⁻)`, because the soclé
-summand is not a derivation at all. Closing that would require embedding the 4-dimensional
-$(2,1)$-signature algebra ($\cong \mathrm{Cl}(1,2)$) into `ZornSplitOctonion` as a
-**derivation-preserving subalgebra** — a separate, larger construction.
-
-The 17-coordinate *injectivity* survives as a coordinate statement (§5), but the
-"derivations acting on the algebra" reading is **refuted**.
+- the 4D socle Leibniz law holds if and only if `IsSo21Adjoint X` holds
+  (`socleDerivation_leibniz_iff_isSo21Adjoint`);
+- flipping the scalar bilinear sign in `socleDoublingMul` gives the strictly associative
+  split-quaternion multiplication `splitQuatSocleMul` (`splitQuatSocleMul_assoc`), which is
+  preserved by `IsSo21Adjoint` (`socleDerivation_leibniz_splitQuatSocleMul_of_isSo21Adjoint`)
+  and embeds multiplicatively into `ZornSplitOctonion R` via `embedSplitQuatToZorn`
+  (`embedSplitQuatToZorn_one`, `embedSplitQuatToZorn_mul`).
 
 ## 10. Not established anywhere in Lean (asserted in prose only)
 

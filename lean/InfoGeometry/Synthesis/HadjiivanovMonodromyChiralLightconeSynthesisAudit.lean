@@ -23,8 +23,13 @@ open InfoGeometry.Synthesis.HadjiivanovMonodromyChiralLightconeSynthesis
 #check @chiral_ladder_matrix_unit_resolution
 #check @unipotentChiralShear
 #check @unipotentChiralShear_mul_and_det
+#check @unipotentChiralShear_double_ne_one
+#check @rankTwo_unipotentResidueReadout_double_ne_id
 
 #print axioms chiral_ladder_matrix_unit_resolution
 #print axioms unipotentChiralShear_mul_and_det
+#print axioms unipotentChiralShear_double_ne_one
+#print axioms rankTwo_unipotentResidueReadout_double_ne_id
 
 end InfoGeometry.Synthesis.HadjiivanovMonodromyChiralLightconeSynthesisAudit
+

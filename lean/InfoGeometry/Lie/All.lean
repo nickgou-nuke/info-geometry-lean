@@ -21,3 +21,6 @@ import InfoGeometry.Lie.G2RollingBall
 import InfoGeometry.Lie.SagerschnigS2S3Distribution
 import InfoGeometry.Lie.SplitOctonion235Distribution
 import InfoGeometry.Lie.ZornPeirceDerivationStabilizer
+import InfoGeometry.Lie.CanonicalZornPeirceSL3Bridge
+import InfoGeometry.Lie.CanonicalZornPeirceSL3BridgeAudit
+

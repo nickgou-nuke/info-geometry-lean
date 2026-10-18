@@ -158,6 +158,43 @@ theorem unipotentChiralShear_mul_and_det
       simp [unipotentResidueReadout, rankTwoLogResidue, nativeNilpotentEnd,
         unipotentChiralShear, Splus, jordanNilpotent, Matrix.mulVec, dotProduct, Fin.sum_univ_two]
 
+/-- For any nonzero shear parameter `p ≠ 0`, the double action of `unipotentChiralShear p`
+equals `unipotentChiralShear (2 * p)` and is strictly non-identity (`≠ 1`). -/
+theorem unipotentChiralShear_double_ne_one (p : ℂ) (hp : p ≠ 0) :
+    unipotentChiralShear p * unipotentChiralShear p = unipotentChiralShear (2 * p) ∧
+    unipotentChiralShear p * unipotentChiralShear p ≠ (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  have h_double : unipotentChiralShear p * unipotentChiralShear p = unipotentChiralShear (2 * p) := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [unipotentChiralShear, Splus, Matrix.mul_apply, Fin.sum_univ_two] <;> ring
+  refine ⟨h_double, ?_⟩
+  intro h_id
+  rw [h_double] at h_id
+  have h01 : unipotentChiralShear (2 * p) 0 1 = (1 : Matrix (Fin 2) (Fin 2) ℂ) 0 1 :=
+    congrFun (congrFun h_id 0) 1
+  have h2p : (2 * p : ℂ) = 0 := by
+    simpa [unipotentChiralShear, Splus] using h01
+  exact mul_ne_zero (by norm_num) hp h2p
+
+/-- For any conformal weight `h : ℂ` and nonzero shear parameter `p ≠ 0`, the double action
+of the rank-two unipotent residue readout `unipotentResidueReadout (rankTwoLogResidue h) p`
+is strictly non-identity (`≠ LinearMap.id`). -/
+theorem rankTwo_unipotentResidueReadout_double_ne_id (h p : ℂ) (hp : p ≠ 0) :
+    (unipotentResidueReadout (rankTwoLogResidue h) p).comp
+      (unipotentResidueReadout (rankTwoLogResidue h) p) ≠ LinearMap.id := by
+  rw [unipotentResidueReadout_comp]
+  intro h_id
+  have heval : unipotentResidueReadout (rankTwoLogResidue h) (p + p) ![0, 1] 0 =
+      (LinearMap.id : RankTwoFiber →ₗ[ℂ] RankTwoFiber) ![0, 1] 0 :=
+    congrFun (LinearMap.congr_fun h_id ![0, 1]) 0
+  have hpp : p + p = 0 := by
+    simpa [unipotentResidueReadout, rankTwoLogResidue, nativeNilpotentEnd,
+      jordanNilpotent, Matrix.mulVec, dotProduct, Fin.sum_univ_two] using heval
+  have h2p : (2 * p : ℂ) = 0 := by
+    calc (2 * p : ℂ) = p + p := two_mul p
+    _ = 0 := hpp
+  exact mul_ne_zero (by norm_num) hp h2p
+
 /-!
 The imported projective owner retains its own braid statement, conditional on a
 `LogResidueBraidFrame`, and the winding owner retains its integer pole-winding
@@ -167,3 +204,4 @@ equivalence.
 -/
 
 end InfoGeometry.Synthesis.HadjiivanovMonodromyChiralLightconeSynthesis
+

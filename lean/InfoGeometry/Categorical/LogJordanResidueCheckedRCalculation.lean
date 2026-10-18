@@ -98,4 +98,60 @@ theorem residueCheckedR_double_ne_id_of (p : ℂ) (hp : p ≠ 0)
   · exact hp2 hcoeff
   · exact hxy htensor
 
+@[simp]
+theorem standardJordanObject_N_e1_tmul_N_e1 :
+    standardJordanObject.N (e1 : JordanCarrier ℂ) ⊗ₜ[ℂ]
+      standardJordanObject.N (e1 : JordanCarrier ℂ) =
+    ((e0 : JordanCarrier ℂ) ⊗ₜ[ℂ] (e0 : JordanCarrier ℂ) :
+      standardJordanObject ⊗[ℂ] standardJordanObject) := by
+  rw [standardJordanObject_N_e1]
+
+theorem standardJordanObject_N_e1_tmul_N_e1_ne_zero :
+    standardJordanObject.N (e1 : JordanCarrier ℂ) ⊗ₜ[ℂ]
+      standardJordanObject.N (e1 : JordanCarrier ℂ) ≠ 0 := by
+  rw [standardJordanObject_N_e1_tmul_N_e1]
+  exact e0_tmul_e0_ne_zero (𝕜 := ℂ)
+
+/-- For any nonzero residue parameter `p ≠ 0`, the double action of
+`residueCheckedR p` on `standardJordanObject ⊗[ℂ] standardJordanObject` is
+strictly non-identity (detected on the logarithmic partner state `e₁ ⊗ e₁`). -/
+theorem residueCheckedR_double_ne_id (p : ℂ) (hp : p ≠ 0) :
+    ((residueCheckedR p).trans (residueCheckedR p)).toLinearMap ≠
+      LinearMap.id :=
+  residueCheckedR_double_ne_id_of p hp
+    (e1 : JordanCarrier ℂ) (e1 : JordanCarrier ℂ)
+    standardJordanObject_N_e1_tmul_N_e1_ne_zero
+
+/-- Complete characterization of when the double action of `residueCheckedR p`
+equals the identity on `standardJordanObject ⊗[ℂ] standardJordanObject`:
+it is the identity if and only if `p = 0`. -/
+theorem residueCheckedR_double_eq_id_iff (p : ℂ) :
+    ((residueCheckedR p).trans (residueCheckedR p)).toLinearMap =
+      LinearMap.id ↔ p = 0 := by
+  constructor
+  · intro hid
+    by_contra hp
+    exact residueCheckedR_double_ne_id p hp hid
+  · intro hp
+    subst hp
+    apply LinearMap.ext
+    intro t
+    refine TensorProduct.inductionOn t ?_ ?_
+    · intro x y
+      change ((residueCheckedR 0).trans (residueCheckedR 0)) (x ⊗ₜ[ℂ] y) = x ⊗ₜ[ℂ] y
+      rw [residueCheckedR_double_tmul]
+      simp
+    · intro a b ha hb
+      simpa only [map_add] using congrArg₂ (fun u v => u + v) ha hb
+
+/-- At the Hadjiivanov logarithmic shear base `logShearBase = -2πi`, the double
+action of `residueCheckedR logShearBase` is strictly non-identity. -/
+theorem residueCheckedR_logShearBase_double_ne_id :
+    ((residueCheckedR InfoGeometry.Clifford.LogCftMonodromy.logShearBase).trans
+      (residueCheckedR InfoGeometry.Clifford.LogCftMonodromy.logShearBase)).toLinearMap ≠
+      LinearMap.id :=
+  residueCheckedR_double_ne_id
+    InfoGeometry.Clifford.LogCftMonodromy.logShearBase
+    InfoGeometry.Categorical.LogJordanCheckedRBraidBridge.logShearBase_ne_zero
+
 end InfoGeometry.Categorical.LogJordanResidueCheckedRCalculation

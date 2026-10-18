@@ -17,3 +17,6 @@ import InfoGeometry.Categorical.FibonacciUniversalB3Bridge
 import InfoGeometry.Categorical.TypedCategoryArchetype
 import InfoGeometry.Categorical.TypedCategoryArchetypeInstances
 import InfoGeometry.Categorical.TypedPeirceArchetype
+import InfoGeometry.Categorical.LogJordanResidueCheckedRCalculation
+import InfoGeometry.Categorical.LogJordanResidueCheckedRCalculationAudit
+

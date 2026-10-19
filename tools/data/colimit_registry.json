@@ -30,9 +30,10 @@
         "directLimitRingInjection",
         "descendDirectLimitRing",
         "directLimitRing_desc_commutes",
-        "descendDirectLimitRing_unique"
+        "descendDirectLimitRing_unique",
+        "descendDirectLimit_unique"
       ],
-      "notes": "Generic category-filtered owner. The ModuleCat lane exposes carrier, injections, descent and stage commutativity, but no module uniqueness theorem; the RingCat lane has descendDirectLimitRing_unique. The module uniqueness theorem currently lives in the SequentialModule specialization."
+      "notes": "Generic category-filtered owner. The ModuleCat lane exposes carrier, injections, descent, stage commutativity and descendDirectLimit_unique; the RingCat lane has descendDirectLimitRing_unique. SequentialModule remains a narrower N-indexed specialization."
     },
     {
       "id": "spectral.sequential-module",
@@ -501,6 +502,33 @@
         "omegaAutomath_expansion_apex"
       ],
       "notes": "Resolves colimit inheritance of invariants from an explicit ambient algebra and global embedding; the ambient data is supplied."
+    },
+    {
+      "id": "canonical.cuntz-matrix-algebraic-trace-transport",
+      "title": "Normalized trace transport across full-matrix colimit presentations",
+      "file": "lean/InfoGeometry/Canonical/CuntzMatrixAlgebraicTraceTransport.lean",
+      "role": "transport",
+      "genuineness": "transport",
+      "category": "full matrix algebraic colimits",
+      "diagram": "finite matrix stages and direct-limit carrier",
+      "decls": [
+        "limitTrace_carrierToQuotient_eq_traceFunctional",
+        "limitTrace_carrierToQuotient_stage"
+      ],
+      "notes": "Kernel-checked normalized-trace compatibility between existing quotient and categorical full-matrix colimit presentations; no new carrier or completion is introduced."
+    },
+    {
+      "id": "supergrassmannian.sato-fock-representation-closure",
+      "title": "Split-Clifford Fock action closure on the direct-limit carrier",
+      "file": "lean/InfoGeometry/SuperGrassmannian/SatoFockRepresentationClosure.lean",
+      "role": "transport",
+      "genuineness": "transport",
+      "category": "SplitCliffordInfinity action on FockInfinity",
+      "diagram": "split Clifford and Fock direct-limit stages",
+      "decls": [
+        "splitCliffordFockAction_mul_assoc"
+      ],
+      "notes": "Associativity of the descended Fock action with direct-limit Clifford multiplication; this is a representation closure theorem, not a new colimit construction."
     }
   ],
   "comparisons": [
@@ -591,11 +619,12 @@
   "gaps": [
     {
       "id": "gap.module-descent-uniqueness",
-      "status": "open_candidate",
-      "description": "The generic ModuleCat lane of FilteredDirectLimitOwner exposes descendDirectLimit and stage commutativity but no uniqueness theorem; descend_unique exists only in the N-indexed SequentialModule specialization. One canonical module-lane uniqueness lemma should be exposed (or the specialization theorem re-derived from the generic owner) so downstream consumers do not depend on the narrower interface.",
+      "status": "resolved_in_source",
+      "description": "Resolved by the generic ModuleCat uniqueness theorem `descendDirectLimit_unique` in FilteredDirectLimitOwner; the narrower SequentialModule theorem remains a specialization.",
       "entries": ["categorical.filtered-direct-limit-owner", "spectral.sequential-module"],
       "probe": ["descend.*unique", "descend_unique"],
-      "suggested_next": "Prove `f = descendDirectLimit R F t` from `colimit.hom_ext` for filtered ModuleCat diagrams in FilteredDirectLimitOwner, then re-export SequentialModule.descend_unique as the N-indexed specialization."
+      "resolution_decls": ["descendDirectLimit_unique"],
+      "suggested_next": "Keep the registry and generated ledger synchronized; pursue the separate sequential-filtered interface comparison next."
     },
     {
       "id": "gap.sequential-filtered-reexport",

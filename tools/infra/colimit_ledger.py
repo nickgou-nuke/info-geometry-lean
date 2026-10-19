@@ -58,6 +58,11 @@ COLIMIT_TOKEN = re.compile(
     r"direct[_\s]?system|dirlimit)\b"
 )
 
+COLIMIT_IMPORT_TOKEN = re.compile(
+    r"(?i)(colimit|directlimit|direct[_\s]?limit|inductivelimit|"
+    r"inductive[_\s]?limit|inverse[_\s]?limit|direct[_\s]?system)"
+)
+
 HEADER_RE = re.compile(
     r"^(?P<indent>[ ]{0,4})"
     r"(?P<prefix>(?:@\[[^\]]*\]\s*)?"
@@ -405,13 +410,15 @@ def candidate_summary(parsed_files: dict[str, dict], registered: set[str]) -> li
             for d in data["decls"]
             if COLIMIT_TOKEN.search(d["name"]) or COLIMIT_TOKEN.search(d["signature"])
         ]
-        if not hits:
+        import_hits = [imp for imp in data["imports"] if COLIMIT_IMPORT_TOKEN.search(imp)]
+        if not hits and not import_hits:
             continue
         out.append(
             {
                 "file": rel,
                 "module": data["module"],
                 "matching_declarations": len(hits),
+                "matching_imports": import_hits,
                 "kinds": sorted({d["kind"] for d in hits}),
                 "representative_decls": [
                     {
@@ -447,13 +454,24 @@ def probe_gaps(gaps: list[dict], parsed_files: dict[str, dict]) -> list[dict]:
                             break
                 if len(matches) >= 25:
                     break
+        resolution_names = set(gap.get("resolution_decls", []))
+        resolved = any(m["name"] in resolution_names for m in matches)
+        status = "resolved_in_source" if resolved else gap.get("status", "open_candidate")
         out.append(
             {
                 **gap,
+                "status": status,
                 "possible_existing": matches[:25],
                 "possible_existing_count": len(matches),
+                "resolution_check": {
+                    "required": sorted(resolution_names),
+                    "matched": sorted({m["name"] for m in matches if m["name"] in resolution_names}),
+                    "resolved": resolved,
+                },
                 "probe_note": (
-                    "name/signature regex matches across the scanned corpus; "
+                    "registered resolution declaration found in source; gap is closed"
+                    if resolved
+                    else "name/signature regex matches across the scanned corpus; "
                     "navigation evidence only, requires owner-level review"
                 ),
             }

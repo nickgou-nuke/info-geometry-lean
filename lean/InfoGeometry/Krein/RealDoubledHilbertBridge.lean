@@ -94,6 +94,21 @@ theorem conjugateDoubledEnd_modular_j_hilbertSwap :
       (hilbertSwapCLM x)
   exact (toDoubled_hilbertSwapCLM_apply (E := E) x).symm
 
+/- The spectral sign on the doubled carrier transports to the Hilbert
+   carrier's Krein fundamental symmetry.  This is kept separate from the
+   independent `KreinGradedModule.gradeCLM`. -/
+theorem conjugateDoubledEnd_spectral_epsilon_jCLM :
+    conjugateDoubledEnd (E := E) (spectral_epsilon (E := E)) =
+      KreinSpace.jCLM (H := HilbertDoubled E) := by
+  apply ContinuousLinearMap.ext
+  intro x
+  apply (HilbertDoubled.toDoubledContinuousLinearEquiv (E := E)).injective
+  change spectral_epsilon (E := E)
+      ((HilbertDoubled.toDoubledContinuousLinearEquiv (E := E)) x) =
+    (HilbertDoubled.toDoubledContinuousLinearEquiv (E := E))
+      (KreinSpace.jCLM (H := HilbertDoubled E) x)
+  exact (toDoubled_jCLM_apply (E := E) x).symm
+
 @[simp] theorem hilbertDoubledCl11Action_K_sq :
     (hilbertDoubledCl11Action (E := E)).K.comp
         (hilbertDoubledCl11Action (E := E)).K =

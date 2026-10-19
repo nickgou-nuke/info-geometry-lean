@@ -1,0 +1,668 @@
+{
+  "schema": "info_geometry.colimit_registry.v1",
+  "description": "Curated colimit owner / comparison registry. Every declaration reference is validated against the current Lean source by tools/infra/colimit_ledger.py. A canonical_equiv claim may only exist as a named Lean declaration.",
+  "status_vocabulary": {
+    "canonical_owner": "designated owner for a category-specific realization",
+    "specialization": "narrower interface over the same Mathlib universal construction",
+    "supplied_cocone": "carrier and maps are data; no universal property is asserted",
+    "quotient_realization": "explicit quotient presentation with a proved lift/universal property",
+    "inverse_system": "dual/inverse system of functionals or projections",
+    "completion": "analytic completion of an algebraic direct limit",
+    "categorical_preservation": "Mathlib preservation comparison, not a new carrier",
+    "apex_uniqueness": "generic theorem identifying two colimiting cocones over one diagram",
+    "transport": "readout/transport between existing carriers"
+  },
+  "entries": [
+    {
+      "id": "categorical.filtered-direct-limit-owner",
+      "title": "Filtered direct-limit owner (ModuleCat, RingCat)",
+      "file": "lean/InfoGeometry/Categorical/FilteredDirectLimitOwner.lean",
+      "role": "canonical_owner",
+      "genuineness": "genuine_colimit",
+      "category": "ModuleCat R; RingCat",
+      "diagram": "filtered small J-indexed diagrams",
+      "decls": [
+        "DirectLimitModule",
+        "directLimitInjection",
+        "descendDirectLimit",
+        "directLimit_desc_commutes",
+        "DirectLimitRing",
+        "directLimitRingInjection",
+        "descendDirectLimitRing",
+        "directLimitRing_desc_commutes",
+        "descendDirectLimitRing_unique"
+      ],
+      "notes": "Generic category-filtered owner. The ModuleCat lane exposes carrier, injections, descent and stage commutativity, but no module uniqueness theorem; the RingCat lane has descendDirectLimitRing_unique. The module uniqueness theorem currently lives in the SequentialModule specialization."
+    },
+    {
+      "id": "spectral.sequential-module",
+      "title": "Sequential ModuleCat colimit interface",
+      "file": "lean/InfoGeometry/Spectral/Colimit/SequentialModule.lean",
+      "role": "specialization",
+      "genuineness": "genuine_colimit",
+      "category": "ModuleCat R",
+      "diagram": "N-indexed diagrams",
+      "decls": [
+        "Diagram",
+        "Cocone",
+        "Carrier",
+        "inclusion",
+        "inclusion_naturality",
+        "descend",
+        "descend_fac",
+        "descend_unique"
+      ],
+      "notes": "Carrier is exactly Mathlib `colimit F`; the header states no second quotient implementation is introduced. descend_unique is the module-lane uniqueness theorem that the generic filtered owner lacks."
+    },
+    {
+      "id": "categorical.tensor-colimit",
+      "title": "Tensor product preserves ModuleCat colimits",
+      "file": "lean/InfoGeometry/Categorical/TensorColimit.lean",
+      "role": "categorical_preservation",
+      "genuineness": "genuine_colimit",
+      "category": "ModuleCat R",
+      "diagram": "arbitrary J-indexed ModuleCat diagrams",
+      "decls": [
+        "tensorRightPreservesColimits",
+        "tensorColimitIso",
+        "tensorColimitIso_ι"
+      ],
+      "notes": "Reusable preservation family; tensorColimitIso_ι is the stage-injection coherence theorem."
+    },
+    {
+      "id": "categorical.filtered-colimit-exactness",
+      "title": "Filtered colimits of abelian groups commute with finite (co)limits",
+      "file": "lean/InfoGeometry/Categorical/FilteredColimitExactness.lean",
+      "role": "categorical_preservation",
+      "genuineness": "genuine_colimit",
+      "category": "AddCommGrpCat",
+      "diagram": "filtered J-indexed diagrams",
+      "decls": [
+        "filteredColimitKernelIso",
+        "filteredColimitCokernelIso",
+        "filteredColimitHomologyIso"
+      ],
+      "notes": "Uses Mathlib `colim` and PreservesKernel/PreservesCokernel; no new carrier."
+    },
+    {
+      "id": "categorical.operator-algebra-colimit",
+      "title": "Infinite observable algebra as a RingCat colimit",
+      "file": "lean/InfoGeometry/Categorical/OperatorAlgebraColimit.lean",
+      "role": "canonical_owner",
+      "genuineness": "genuine_colimit",
+      "category": "RingCat",
+      "diagram": "filtered finite sub-region diagrams",
+      "decls": ["infiniteObservableAlgebra", "tomita_takesaki_colimit"],
+      "notes": "tomita_takesaki_colimit is conditional on a supplied natural isomorphism `F ≅ F_commutant`; it transports an existing stage-wise isomorphism along HasColimit.isoOfNatIso."
+    },
+    {
+      "id": "categorical.apex-uniqueness",
+      "title": "Generic apex uniqueness for two colimiting cocones",
+      "file": "lean/InfoGeometry/Categorical/TypedCategoryArchetype.lean",
+      "role": "apex_uniqueness",
+      "genuineness": "genuine_colimit",
+      "category": "any category C",
+      "diagram": "a single diagram with two supplied IsColimit witnesses",
+      "decls": ["ColimitCoconePairDatum", "colimitCoconePairDatum_apex_inversePair"],
+      "notes": "This is the existing generic comparison theorem the proposed ColimitFusion interface would re-export; the underlying owner is InfoGeometry.Canonical.CategoryTheoryConeUniqueness.colimitCocone_apex_inversePair. It requires two actual IsColimit witnesses and does not manufacture a colimit."
+    },
+    {
+      "id": "canonical.uhf-inductive-boundary",
+      "title": "UHF bitword/diagonal boundary cylinder colimit",
+      "file": "lean/InfoGeometry/Canonical/UHFInductiveColimitBoundary.lean",
+      "role": "canonical_owner",
+      "genuineness": "algebraic_direct_limit",
+      "category": "function space on CantorBoundary (DiagAlg cylinders)",
+      "diagram": "N-indexed diagonal algebra embeddings",
+      "decls": [
+        "BitWord",
+        "DiagAlg",
+        "CantorBoundary",
+        "diagEmbedSucc",
+        "diagEmbedSucc_mul",
+        "diagEmbedSucc_injective",
+        "cylinder",
+        "cylinder_compatible_succ",
+        "cylinder_mul",
+        "CylinderColimit",
+        "cylinder_mem_colimit",
+        "diagonal_uhf_colimit_synthesis"
+      ],
+      "notes": "CylinderColimit is a set of functions, not a completed operator algebra. DiagAlg is a commutative diagonal (MASA-like) stage, not a full matrix stage; do not identify it with a matrix/UHF limit."
+    },
+    {
+      "id": "canonical.matrix-stage-inductive-limit",
+      "title": "Quotient presentation of the finite matrix stage inductive limit",
+      "file": "lean/InfoGeometry/Canonical/MatrixStageInductiveLimit.lean",
+      "role": "quotient_realization",
+      "genuineness": "quotient_realization_with_universal_property",
+      "category": "star C-algebra (complex matrices)",
+      "diagram": "N-indexed full matrix stages with stageMor-phisms",
+      "decls": [
+        "stageMorphism_apply_comp",
+        "Element",
+        "LimitRel",
+        "MatrixStageLimit",
+        "toLimit",
+        "toLimit_stageMorphism",
+        "canonicalStageHom",
+        "canonicalStageHom_comp",
+        "canonicalStageHom_injective",
+        "liftFun",
+        "liftStarAlgHom",
+        "liftStarAlgHom_comp",
+        "liftStarAlgHom_unique",
+        "limitTrace",
+        "limitNormalizedTrace",
+        "inductiveLimitTrace_comp_stage"
+      ],
+      "notes": "Explicit quotient of the disjoint union of stages with liftStarAlgHom and liftStarAlgHom_unique as the star-algebra universal property. Retained as a proven matrix-tower presentation; compare with CuntzMatrixAlgebraicStarColimit and with the BitWord presentation through MatrixStageFullColimitEquivalence."
+    },
+    {
+      "id": "qc.matrix-stage-full-colimit-equivalence",
+      "title": "Equivalence of BitWord-indexed quotient and matrix direct-limit presentations",
+      "file": "lean/InfoGeometry/QuantumContext/MatrixStageFullColimitEquivalence.lean",
+      "role": "transport",
+      "genuineness": "comparison_isomorphism",
+      "category": "star C-algebra",
+      "diagram": "comparison between two presentations of one finite matrix tower",
+      "decls": [
+        "carrierStageToQuotient",
+        "carrierStageToQuotient_compatible",
+        "carrierToQuotientRingHom",
+        "carrierToQuotient",
+        "stageToCarrier",
+        "stageToCarrier_compatible",
+        "quotientToCarrier",
+        "carrierToQuotient_quotientToCarrier_stage",
+        "quotientToCarrier_carrierToQuotient_stage",
+        "carrierToQuotient_comp_quotientToCarrier",
+        "quotientToCarrier_comp_carrierToQuotient",
+        "carrierStarAlgEquiv"
+      ],
+      "notes": "Proved star-algebra equivalence with both round-trip theorems and stage laws. Header states it identifies only the two algebraic colimit presentations, not completions or functionals. This is the model comparison for other algebraic lanes."
+    },
+    {
+      "id": "canonical.cuntz-matrix-algebraic-star-colimit",
+      "title": "Cuntz matrix algebraic star colimit (direct-limit carrier)",
+      "file": "lean/InfoGeometry/Canonical/CuntzMatrixAlgebraicStarColimit.lean",
+      "role": "canonical_owner",
+      "genuineness": "algebraic_direct_limit",
+      "category": "star C-algebra",
+      "diagram": "N-indexed matrix stages, Mathlib DirectLimit",
+      "decls": [
+        "rawMap",
+        "rawDirectedSystem",
+        "Carrier",
+        "carrierAlgebraViaModule",
+        "carrierAlgebraViaModule_eq_canonical",
+        "carrierStar",
+        "carrierStarRing",
+        "stageInjection",
+        "stageInjection_transition",
+        "stageInjection_concrete_transition"
+      ],
+      "notes": "Carrier is the Mathlib DirectLimit-based finite matrix stage tower with transported algebra/star structure."
+    },
+    {
+      "id": "canonical.uhf-categorical-colimit",
+      "title": "UHF categorical colimit (Ring.DirectLimit of DiagAlg)",
+      "file": "lean/InfoGeometry/Canonical/UHFCategoricalColimit.lean",
+      "role": "canonical_owner",
+      "genuineness": "algebraic_direct_limit",
+      "category": "RingCat",
+      "diagram": "N-indexed diagonal algebra embeddings",
+      "decls": [
+        "UHFColimitRing",
+        "stageInjection",
+        "continuumIdentity",
+        "continuumIdentity_is_unit"
+      ],
+      "notes": "Ring.DirectLimit carrier. Relation to the finite matrix tower and to the cylinder boundary representation is a separate comparison obligation."
+    },
+    {
+      "id": "canonical.filtered-star-algebra-direct-limit",
+      "title": "Filtered star-algebra direct limit",
+      "file": "lean/InfoGeometry/Canonical/FilteredStarAlgebraDirectLimit.lean",
+      "role": "canonical_owner",
+      "genuineness": "algebraic_direct_limit",
+      "category": "star C-algebra",
+      "diagram": "filtered directed I-indexed star-algebra systems",
+      "decls": [
+        "starTransition",
+        "starTransitionDirectedSystem",
+        "AlgebraicStarDirectLimit",
+        "algebraicStarDirectLimitAlgebra",
+        "algebraicStarDirectLimitStar",
+        "algebraicStarDirectLimitStarRing",
+        "algebraicStarDirectLimitOf",
+        "algebraicStarDirectLimitOf_transition",
+        "liftStarAlgHom",
+        "liftStarAlgHom_unique"
+      ],
+      "notes": "Canonical noncommutative algebraic star-algebra owner with stage maps and universal lift."
+    },
+    {
+      "id": "clifford.cl11-tensor-tower-limit",
+      "title": "Cl(1,1) tensor tower limit",
+      "file": "lean/InfoGeometry/Clifford/Cl11TensorTowerLimit.lean",
+      "role": "canonical_owner",
+      "genuineness": "algebraic_direct_limit",
+      "category": "star R-algebra",
+      "diagram": "N-indexed Cl(1,1) tensor stages",
+      "decls": [
+        "Stage",
+        "stageBond",
+        "Limit",
+        "ofStage",
+        "realAlgebraMap",
+        "stageStarMap",
+        "stageStarMap_compat",
+        "bondMap_star",
+        "limitStar",
+        "limitStarRing",
+        "ofStage_apply_bond",
+        "ofStage_mul",
+        "limit_square_zero",
+        "limit_idempotent",
+        "limit_involution",
+        "finite_sequence_constant_in_limit"
+      ],
+      "notes": "Limit is built from Mathlib DirectLimit; star structure and algebra operations are transported from stages with explicit compatibility theorems."
+    },
+    {
+      "id": "canonical.cl11-tensor-inductive-limit",
+      "title": "Cl(1,1) tensor inductive limit package",
+      "file": "lean/InfoGeometry/Canonical/Cl11TensorInductiveLimit.lean",
+      "role": "canonical_owner",
+      "genuineness": "algebraic_direct_limit",
+      "category": "star R-algebra",
+      "diagram": "N-indexed tensor stages, aliasing the Clifford owner limit",
+      "decls": [
+        "Stage",
+        "Limit",
+        "ofStageAlgHom",
+        "cl11TensorInductiveLimit",
+        "cl11_limit_functional_recovers_trace",
+        "cl11_limit_functional_recovers_normalized_trace"
+      ],
+      "notes": "Thin packaging over InfoGeometry.Clifford.Cl11TensorTowerLimit.Limit; no second carrier introduced."
+    },
+    {
+      "id": "canonical.filtered-direct-inverse-colimit",
+      "title": "Elementary direct and inverse colimit interface",
+      "file": "lean/InfoGeometry/Canonical/FilteredDirectInverseColimit.lean",
+      "role": "inverse_system",
+      "genuineness": "genuine_colimit",
+      "category": "Module R direct systems; dual inverse systems; ModuleCat",
+      "diagram": "preorder-indexed direct systems with compatible cocones",
+      "decls": [
+        "DirectInductiveSystem",
+        "InductiveCocone",
+        "cocone_eval_comm",
+        "colimit_functional_trace_comm",
+        "dualInverseTransition",
+        "dual_inverse_comp",
+        "colimit_duality_pairing",
+        "moduleDiagram",
+        "moduleCocone",
+        "descendModuleCocone",
+        "moduleColimit_desc_stage",
+        "projectiveModuleLimit",
+        "projectiveLimitProjection",
+        "liftProjectiveModuleLimit",
+        "lift_projectiveLimit_projection",
+        "filteredColimitFiniteLimitIso"
+      ],
+      "notes": "Owns the elementary DirectInductiveSystem/InductiveCocone presentation, its native ModuleCat readout, and the dual inverse transition. Global functionals are compared with compatible finite-stage dual families."
+    },
+    {
+      "id": "canonical.cl11-filtered-inductive-inverse-bridge",
+      "title": "Native filtered/inverse readouts for the Cl(1,1) tower",
+      "file": "lean/InfoGeometry/Canonical/Cl11FilteredInductiveInverseColimitBridge.lean",
+      "role": "transport",
+      "genuineness": "genuine_colimit",
+      "category": "ModuleCat R",
+      "diagram": "Cl(1,1) finite matrix stages with stageEmbedMap",
+      "decls": [
+        "Stage",
+        "Limit",
+        "directSystem",
+        "colimitCocone",
+        "colimitCocone_eval",
+        "traceCocone",
+        "traceCocone_eval",
+        "nativeModuleColimit",
+        "limitReadout",
+        "limitReadout_stage",
+        "limitReadout_stage_apply",
+        "traceReadout",
+        "traceReadout_stage",
+        "traceReadout_stage_apply",
+        "dualTraceTransition",
+        "dualTraceTransition_apply",
+        "normalizedTrace_dual_compatibility"
+      ],
+      "notes": "Packages the existing finite matrix tower into the ModuleCat filtered interface. limitReadout is a module map from the native colimit to the Cl11 DirectLimit carrier; it is not yet a ring/star isomorphism. Header states no second colimit carrier is introduced."
+    },
+    {
+      "id": "canonical.tensor-colimit-expectation",
+      "title": "Tensor colimit expectations and compatible functional families",
+      "file": "lean/InfoGeometry/Canonical/TensorColimitExpectation.lean",
+      "role": "supplied_cocone",
+      "genuineness": "supplied_cocone",
+      "category": "R-algebras (algebraic tuple only)",
+      "diagram": "N-indexed tensor towers with supplied carrier and injections",
+      "decls": [
+        "CompatibleFunctionalFamily",
+        "TensorInductiveLimit",
+        "LimitFunctional",
+        "ExtendsFamily",
+        "limit_functional_recovers_stage",
+        "extending_limit_functional_implies_compatible",
+        "ConditionalExpectation",
+        "projection_apply",
+        "maps_one",
+        "bimodule_property",
+        "state_compatibility"
+      ],
+      "notes": "TensorInductiveLimit is supplied carrier data with compatible injections. The header explicitly refrains from asserting a C-completion or universal property. Must not be promoted to a universally characterized colimit without a new owner theorem."
+    },
+    {
+      "id": "canonical.filtered-iso-hilbert-completion",
+      "title": "Filtered isometric Hilbert completion (generic)",
+      "file": "lean/InfoGeometry/Canonical/FilteredIsometricHilbertCompletion.lean",
+      "role": "completion",
+      "genuineness": "completion",
+      "category": "Hilbert spaces",
+      "diagram": "filtered isometric direct systems",
+      "decls": [
+        "directLimitInnerProductCore",
+        "stageToDirectLimitLinearMap",
+        "stageToDirectLimitLinearIsometry",
+        "stageToDirectLimitLinearMap_transition",
+        "HilbertDirectLimit",
+        "directLimitToCompletion",
+        "directLimitToCompletion_isometry",
+        "directLimitToCompletion_denseRange",
+        "directLimitToCompletionLinearIsometry",
+        "hilbertDirectLimit_complete",
+        "stageToHilbertDirectLimit",
+        "stageToHilbertDirectLimit_transition",
+        "dense_iUnion_range_stageToHilbertDirectLimit"
+      ],
+      "notes": "Generic analytic owner: algebraic direct limit, completion map, isometry, dense range, completeness."
+    },
+    {
+      "id": "canonical.filtered-gns-hilbert-colimit",
+      "title": "Filtered GNS Hilbert colimit",
+      "file": "lean/InfoGeometry/Canonical/FilteredGNSHilbertColimit.lean",
+      "role": "completion",
+      "genuineness": "completion",
+      "category": "Hilbert spaces",
+      "diagram": "compatible filtered family of noncommutative states",
+      "decls": [
+        "GNSStage",
+        "filteredGNSIsometricDirectSystem",
+        "AlgebraicGNSHilbertColimit",
+        "GNSHilbertColimit",
+        "gnsStageToHilbertColimit",
+        "dense_iUnion_range_gnsStageToHilbertColimit",
+        "gnsHilbertColimit_complete",
+        "continuousLinearMap_eq_of_gnsStage_eq"
+      ],
+      "notes": "Instantiates the generic isometric Hilbert owner; stage images generate densely. Identification with another completed representation needs a compatible isometry plus dense-image/surjectivity proof."
+    },
+    {
+      "id": "spectral.native-module-colimit",
+      "title": "Native ModuleCat cocone for the split Clifford tower",
+      "file": "lean/InfoGeometry/Spectral/Colimit/NativeModuleColimit.lean",
+      "role": "canonical_owner",
+      "genuineness": "genuine_colimit",
+      "category": "ModuleCat R",
+      "diagram": "split Clifford linear direct system",
+      "decls": [
+        "splitCliffordLinearMap",
+        "splitCliffordLinearDirectedSystem",
+        "SplitCliffordModuleCocone",
+        "splitCliffordModuleCoconeIsColimit"
+      ],
+      "notes": "Presents the tower via ModuleCat.directLimitCocone with an IsColimit proof; the Spectral/Colimit/Basic.lean header names this file the colimit owner."
+    },
+    {
+      "id": "ncg.categorical-inductive-colimit-kms",
+      "title": "Inductive colimit KMS/GNS bridge",
+      "file": "lean/InfoGeometry/NCG/CategoricalInductiveColimitKMSBridge.lean",
+      "role": "transport",
+      "genuineness": "genuine_colimit",
+      "category": "Module R systems; GNS inner product; modular flow",
+      "diagram": "preorder-indexed inductive systems with compatible states",
+      "decls": [
+        "InductiveSystem",
+        "InductiveCocone",
+        "eval_comm",
+        "ModularFlow",
+        "modular_flow_intertwine",
+        "state_eval_comm",
+        "state_modular_invariant",
+        "gnsInnerColimit",
+        "gnsInnerColimit_trans_compat",
+        "kms_colimit_descent",
+        "StarAlgebraCocone"
+      ],
+      "notes": "Colimit descent of modular flow and KMS boundary states; checked algebraically over supplied cocones."
+    },
+    {
+      "id": "ncg.categorical-colimit-kms-state-lift-capstone",
+      "title": "KMS state lift capstone over a colimit boundary",
+      "file": "lean/InfoGeometry/NCG/CategoricalColimitKMSStateLiftCapstone.lean",
+      "role": "transport",
+      "genuineness": "genuine_colimit",
+      "category": "state functionals on a module colimit boundary",
+      "diagram": "compatible stage states",
+      "decls": [
+        "CompatibleStageStates",
+        "colimit_lift_evaluation",
+        "colimit_modular_flow_invariance",
+        "colimit_kms_boundary_descent"
+      ],
+      "notes": "Uses the bridge owner definitions; capstone packaging only."
+    },
+    {
+      "id": "canonical.tensor-tower-colimit",
+      "title": "Tensor tower colimit compatibility (finite chain/cone)",
+      "file": "lean/InfoGeometry/Canonical/TensorTowerColimit.lean",
+      "role": "canonical_owner",
+      "genuineness": "chain_cone_compatibility",
+      "category": "Module R chains",
+      "diagram": "N-indexed modules with iota and psi cone data",
+      "decls": [
+        "iota_seq",
+        "psi_comp_iota_seq",
+        "colimit_trace_comm",
+        "IsTopologicallyProtected",
+        "protected_states_survive_colimit"
+      ],
+      "notes": "The file itself states no theorem asserts a universal-property, topological, or analytic colimit result; it is a chain/cone compatibility owner."
+    },
+    {
+      "id": "canonical.erlangen-colimit-resolution",
+      "title": "Erlangen colimit invariant resolution",
+      "file": "lean/InfoGeometry/Canonical/ErlangenColimitResolution.lean",
+      "role": "transport",
+      "genuineness": "chain_cone_compatibility",
+      "category": "rings with causal preorder",
+      "diagram": "N-indexed ring chains with bonding intertwiners",
+      "decls": [
+        "CausalPreorder",
+        "CausalBondingIntertwiner",
+        "resolveColimitInheritsInvariants_of_ambient",
+        "CausalLimitStabilization",
+        "omegaAutomath_expansion_apex"
+      ],
+      "notes": "Resolves colimit inheritance of invariants from an explicit ambient algebra and global embedding; the ambient data is supplied."
+    }
+  ],
+  "comparisons": [
+    {
+      "id": "cmp.matrix-stage-full",
+      "kind": "star_alg_equiv",
+      "status": "proved_in_source",
+      "between": [
+        "qc.matrix-stage-full-colimit-equivalence",
+        "canonical.matrix-stage-inductive-limit",
+        "canonical.cuntz-matrix-algebraic-star-colimit"
+      ],
+      "decls": [
+        "qc.matrix-stage-full-colimit-equivalence::carrierStarAlgEquiv",
+        "qc.matrix-stage-full-colimit-equivalence::carrierToQuotient_comp_quotientToCarrier",
+        "qc.matrix-stage-full-colimit-equivalence::quotientToCarrier_comp_carrierToQuotient"
+      ],
+      "notes": "Round-trip star-algebra equivalence between the two full-matrix presentations, with stage compatibility lemmas. Treat as the worked model for other algebraic comparisons; do not rebuild."
+    },
+    {
+      "id": "cmp.cl11-native-readout",
+      "kind": "module_readout",
+      "status": "proved_in_source",
+      "between": [
+        "canonical.cl11-filtered-inductive-inverse-bridge",
+        "clifford.cl11-tensor-tower-limit",
+        "canonical.cl11-tensor-inductive-limit"
+      ],
+      "decls": [
+        "canonical.cl11-filtered-inductive-inverse-bridge::limitReadout_stage_apply",
+        "canonical.cl11-filtered-inductive-inverse-bridge::traceReadout_stage_apply"
+      ],
+      "notes": "Module-level readout from the native ModuleCat colimit into the Cl11 DirectLimit carrier, plus normalized-trace readout. Multiplication/star/grading coherence of this readout is a separate open obligation."
+    },
+    {
+      "id": "cmp.tensor-preservation",
+      "kind": "preservation_iso",
+      "status": "proved_in_source",
+      "between": ["categorical.tensor-colimit"],
+      "decls": ["categorical.tensor-colimit::tensorColimitIso_ι"],
+      "notes": "Mathlib preservation comparison with stage coherence."
+    },
+    {
+      "id": "cmp.gns-dense-generation",
+      "kind": "completion_dense_range",
+      "status": "proved_in_source",
+      "between": [
+        "canonical.filtered-gns-hilbert-colimit",
+        "canonical.filtered-iso-hilbert-completion"
+      ],
+      "decls": [
+        "canonical.filtered-gns-hilbert-colimit::dense_iUnion_range_gnsStageToHilbertColimit",
+        "canonical.filtered-iso-hilbert-completion::directLimitToCompletion_denseRange"
+      ],
+      "notes": "Dense generation of the completed GNS Hilbert colimit by stage images; completeness is also proved. This is a completion relation, not an equivalence with an arbitrary ambient representation."
+    },
+    {
+      "id": "cmp.sequential-filtered-reexport",
+      "kind": "interface_overlap",
+      "status": "structural_overlap",
+      "between": ["spectral.sequential-module", "categorical.filtered-direct-limit-owner"],
+      "decls": [],
+      "notes": "Both expose Mathlib `colimit` on ModuleCat diagrams; for N-indexed diagrams the carriers are the same construction. Canonicalization action is a thin re-export/unification, not a new carrier or a new universal property."
+    },
+    {
+      "id": "cmp.kms-colimit-descent",
+      "kind": "state_descent",
+      "status": "proved_in_source",
+      "between": [
+        "ncg.categorical-inductive-colimit-kms",
+        "ncg.categorical-colimit-kms-state-lift-capstone"
+      ],
+      "decls": [
+        "ncg.categorical-inductive-colimit-kms::kms_colimit_descent",
+        "ncg.categorical-colimit-kms-state-lift-capstone::colimit_kms_boundary_descent"
+      ],
+      "notes": "KMS/modular-flow descent on the colimit boundary; checked over the bridge owner definitions."
+    },
+    {
+      "id": "cmp.uhf-diagonal-cylinder",
+      "kind": "transport",
+      "status": "proved_in_source",
+      "between": ["canonical.uhf-inductive-boundary"],
+      "decls": ["canonical.uhf-inductive-boundary::diagonal_uhf_colimit_synthesis"],
+      "notes": "Finite diagonal observables pass to compatible cylinder families on the Cantor boundary. This is a function-space readout, not an algebra completion or a matrix-tower equivalence."
+    }
+  ],
+  "gaps": [
+    {
+      "id": "gap.module-descent-uniqueness",
+      "status": "open_candidate",
+      "description": "The generic ModuleCat lane of FilteredDirectLimitOwner exposes descendDirectLimit and stage commutativity but no uniqueness theorem; descend_unique exists only in the N-indexed SequentialModule specialization. One canonical module-lane uniqueness lemma should be exposed (or the specialization theorem re-derived from the generic owner) so downstream consumers do not depend on the narrower interface.",
+      "entries": ["categorical.filtered-direct-limit-owner", "spectral.sequential-module"],
+      "probe": ["descend.*unique", "descend_unique"],
+      "suggested_next": "Prove `f = descendDirectLimit R F t` from `colimit.hom_ext` for filtered ModuleCat diagrams in FilteredDirectLimitOwner, then re-export SequentialModule.descend_unique as the N-indexed specialization."
+    },
+    {
+      "id": "gap.sequential-filtered-reexport",
+      "status": "open_candidate",
+      "description": "SequentialModule and FilteredDirectLimitOwner both wrap the same Mathlib colimit for ModuleCat diagrams. Make one the canonical surface and expose the other as a compatibility alias with a named declaration; avoid two competing public interfaces without a comparison.",
+      "entries": ["spectral.sequential-module", "categorical.filtered-direct-limit-owner"],
+      "probe": ["carrierIso", "carrierEquiv", "directLimit.*Iso"],
+      "suggested_next": "Add a re-export theorem/abbrev (e.g. SequentialModule.Carrier = FilteredDirectLimitOwner.DirectLimitModule for N-indexed diagrams) with a source-level identity proof, or mark one interface as the compatibility alias in its header."
+    },
+    {
+      "id": "gap.cl11-ring-star-coherence",
+      "status": "open_candidate",
+      "description": "The Cl(1,1) lane has a native ModuleCat colimit (Cl11FilteredInductiveInverseColimitBridge.nativeModuleColimit) and a DirectLimit carrier with transported multiplication/star (Cl11TensorTowerLimit.Limit). limitReadout is only a module map; no source-level theorem in the registered owners states that it preserves multiplication, star, or grading, and no inverse/iso is registered.",
+      "entries": [
+        "canonical.cl11-filtered-inductive-inverse-bridge",
+        "clifford.cl11-tensor-tower-limit",
+        "canonical.cl11-tensor-inductive-limit"
+      ],
+      "probe": ["[Cc]l11.*(Iso|Equiv)", "tensorTower.*(Iso|Equiv)"],
+      "suggested_next": "State the comparison goal as a star-algebra homomorphism (or equivalence, if an inverse exists) from the ModuleCat colimit carrier to Limit, with a stage law; prove multiplication and star compatibility from ofStage_apply_bond and the transported instances."
+    },
+    {
+      "id": "gap.tensor-expectation-universal-promotion",
+      "status": "open_candidate",
+      "description": "TensorColimitExpectation.TensorInductiveLimit is explicitly supplied carrier data without a universal property. Any downstream use that treats it as the universal tensor colimit is a categorical conflation until an owner proves the universal property (or a comparison to a genuine colimit).",
+      "entries": ["canonical.tensor-colimit-expectation"],
+      "probe": ["TensorInductiveLimit.*(IsColimit|hom_ext|desc|unique)"],
+      "suggested_next": "Either prove the universal property for a concrete tensor tower instance, or add an explicit compatibility theorem mapping the supplied carrier to the genuine colimit owner (TowerColimit/FilteredDirectLimitOwner)."
+    },
+    {
+      "id": "gap.gns-completed-identification",
+      "status": "open_candidate",
+      "description": "FilteredGNSHilbertColimit is a completed Hilbert colimit with dense stage images. Identification with any other completed GNS representation requires a compatible isometry and a dense-image (or surjectivity) proof; no such comparison is registered.",
+      "entries": ["canonical.filtered-gns-hilbert-colimit", "canonical.filtered-iso-hilbert-completion"],
+      "probe": ["GNSHilbertColimit.*(Iso|Equiv)", "FilteredGNSCofinalTail.*(Iso|Equiv)"],
+      "suggested_next": "If a second completed representation exists for the same state family, state the isometry and prove dense range from the existing dense_iUnion_range lemma and stage naturality."
+    },
+    {
+      "id": "gap.uhf-ring-vs-cylinder",
+      "status": "open_candidate",
+      "description": "UHFCategoricalColimit uses Ring.DirectLimit of DiagAlg, while UHFInductiveColimitBoundary realizes the diagonal observables as cylinder functions on CantorBoundary. The registered owners contain a transport (diagonal_uhf_colimit_synthesis) but no registered algebra isomorphism between these two carrier presentations; any identification needs a named comparison theorem preserving multiplication.",
+      "entries": [
+        "canonical.uhf-categorical-colimit",
+        "canonical.uhf-inductive-boundary"
+      ],
+      "probe": ["UHFColimitRing.*(Iso|Equiv|Cylinder)", "CylinderColimit.*(Ring|Iso|Equiv)"],
+      "suggested_next": "Search consumers first; if needed, construct the evaluation map from Ring.DirectLimit to cylinder functions and prove it is a ring homomorphism with the expected stage law, or record the one-way morphism explicitly."
+    },
+    {
+      "id": "gap.clifford-direct-vs-cl11",
+      "status": "open_candidate",
+      "description": "Spectral.Colimit.NativeModuleColimit provides the Mathlib directLimitCocone/IsColimit owner for the split Clifford tower, while Cl11 owners use a DirectLimit carrier. The relationship between these two presentations for the overlapping tower is not registered as a comparison theorem.",
+      "entries": [
+        "spectral.native-module-colimit",
+        "clifford.cl11-tensor-tower-limit"
+      ],
+      "probe": ["splitClifford.*(Iso|Equiv)", "Cl11.*splitClifford.*(Iso|Equiv)"],
+      "suggested_next": "Check whether these towers are the same diagram; if yes, state the comparison through the two universal properties rather than unfolding carriers."
+    }
+  ],
+  "guardrails": [
+    "APEX UNIQUENESS: TypedCategoryArchetype.colimitCoconePairDatum_apex_inversePair requires two actual IsColimit witnesses over one diagram; it identifies cocone apexes and does not construct a colimit.",
+    "SUPPLIED COCARE: TensorColimitExpectation.TensorInductiveLimit and ErlangenColimitResolution ambient data are supplied structures; they must not be cited as universal colimits.",
+    "DIAGONAL VS FULL MATRIX: UHFInductiveColimitBoundary.DiagAlg is a commutative diagonal algebra; MatrixStageInductiveLimit/CuntzMatrixAlgebraicStarColimit are full matrix towers. Their relationship is inclusion/expectation, not equivalence unless a named theorem proves it.",
+    "CYLINDER SET: UHFInductiveColimitBoundary.CylinderColimit is a set of functions on CantorBoundary, not a completed C-algebra or a topological colimit.",
+    "TENSOR TOWER FILE SCOPE: Canonical.TensorTowerColimit asserts chain/cone compatibility only; its own header denies universal-property, topological, or analytic colimit claims.",
+    "NO NEW GENERIC OWNER: the generic comparison interface proposed in the audit already exists as TypedCategoryArchetype.apex uniqueness plus Mathlib colimit API; it should be re-exported, not rebuilt.",
+    "CANONICAL_EQUIV EDGES: this registry must not gain a `canonical_equiv` comparison without a named Lean declaration reference; semantic similarity is not an equivalence proof."
+  ]
+}

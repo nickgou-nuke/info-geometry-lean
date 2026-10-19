@@ -6,6 +6,7 @@ Authors: InfoGeometry Engine Contributors
 
 import Mathlib.Basic.Real.Basic
 import Mathlib.Topology.Constructions
+import Mathlib.Topology.Instances.Real.Lemmas
 
 noncomputable section
 namespace InfoGeometry.Topology.CompactMappingTorus
@@ -23,6 +24,10 @@ def endpointSetoid {F : Type*} (f : F → F) : Setoid (Base × F) where
 
 abbrev Carrier {F : Type*} (f : F → F) :=
   @Quotient (Base × F) (endpointSetoid f)
+
+instance carrierTopologicalSpace {F : Type*} [TopologicalSpace F] (f : F → F) :
+    TopologicalSpace (Carrier f) :=
+  @instTopologicalSpaceQuotient (Base × F) (endpointSetoid f) inferInstance
 
 def project {F : Type*} (f : F → F) : Base × F → Carrier f :=
   @Quotient.mk (Base × F) (endpointSetoid f)
@@ -104,19 +109,21 @@ def homeomorphOfConjugacy
     (hconj : ∀ x, e (f x) = g (e x)) : Carrier f ≃ₜ Carrier g where
   toEquiv := equivOfConjugacy e.toEquiv hconj
   continuous_toFun := by
-    apply Continuous.quotient_lift
-    · apply continuous_quotient_mk'.comp
-      exact continuous_fst.prodMk (e.continuous.comp continuous_snd)
-    · intro p q h
-      exact Quotient.sound (endpointEqvGen_respects e.toEquiv hconj h)
+    exact Continuous.quotient_lift
+      (continuous_quotient_mk'.comp
+        (continuous_fst.prodMk (e.continuous.comp continuous_snd)))
+      (by
+        intro p q h
+        exact Quotient.sound (endpointEqvGen_respects e.toEquiv hconj h))
   continuous_invFun := by
-    apply Continuous.quotient_lift
-    · apply continuous_quotient_mk'.comp
-      exact continuous_fst.prodMk (e.continuous_inv.comp continuous_snd)
-    · intro p q h
-      exact Quotient.sound (endpointEqvGen_respects e.symm.toEquiv (fun x => by
-        apply e.injective
-        simpa using (hconj (e.symm x)).symm) h)
+    exact Continuous.quotient_lift
+      (continuous_quotient_mk'.comp
+        (continuous_fst.prodMk (e.symm.continuous.comp continuous_snd)))
+      (by
+        intro p q h
+        exact Quotient.sound (endpointEqvGen_respects e.symm.toEquiv (fun x => by
+          apply e.injective
+          simpa using (hconj (e.symm x)).symm) h))
 
 end InfoGeometry.Topology.CompactMappingTorus
 end noncomputable section

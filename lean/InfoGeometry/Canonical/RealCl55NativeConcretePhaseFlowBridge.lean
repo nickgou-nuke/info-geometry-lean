@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RealCl55NativeConcreteEmbeddingBridge
@@ -237,5 +243,31 @@ theorem nativeConcretePhaseFlowOnImage_intertwines_laplacian
       (concreteLaplacian3 v φ (concreteHestenesPhaseFlow t x))
   simpa only [LinearMap.comp_apply, Module.End.mul_apply] using
     congrArg nativeConcreteHestenesEmbedding h
+
+theorem nativeConcretePhaseFlowOnImage_comp_dirac
+    (t : ℝ) (v : V3) (φ : Module.Dual ℝ V3) :
+    (nativeConcretePhaseFlowOnImage t).comp
+        (nativeConcreteDiracActionOnImage v φ) =
+      (nativeConcreteDiracActionOnImage v φ).comp
+        (nativeConcretePhaseFlowOnImage t) := by
+  apply LinearMap.ext
+  intro z
+  rw [← nativeConcreteHestenesEmbeddingEquiv.apply_symm_apply z]
+  simp only [LinearMap.comp_apply]
+  exact nativeConcretePhaseFlowOnImage_intertwines_dirac t v φ
+    (nativeConcreteHestenesEmbeddingEquiv.symm z)
+
+theorem nativeConcretePhaseFlowOnImage_comp_laplacian
+    (t : ℝ) (v : V3) (φ : Module.Dual ℝ V3) :
+    (nativeConcretePhaseFlowOnImage t).comp
+        (nativeConcreteLaplacianActionOnImage v φ) =
+      (nativeConcreteLaplacianActionOnImage v φ).comp
+        (nativeConcretePhaseFlowOnImage t) := by
+  apply LinearMap.ext
+  intro z
+  rw [← nativeConcreteHestenesEmbeddingEquiv.apply_symm_apply z]
+  simp only [LinearMap.comp_apply]
+  exact nativeConcretePhaseFlowOnImage_intertwines_laplacian t v φ
+    (nativeConcreteHestenesEmbeddingEquiv.symm z)
 
 end InfoGeometry.Canonical.RealCl55NativeConcretePhaseFlowBridge

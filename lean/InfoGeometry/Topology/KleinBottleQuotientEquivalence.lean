@@ -44,10 +44,6 @@ def glideGeneratedSetoid : Setoid BrillouinTorus where
   r := Relation.EqvGen glideStep
   iseqv := Relation.EqvGen.is_equivalence glideStep
 
-private theorem glideStep_iff_glideSetoid (x y : BrillouinTorus) :
-    glideStep x y ↔ glideSetoid.r x y := by
-  rfl
-
 private theorem glideGenerated_iff_glide (x y : BrillouinTorus) :
     @Setoid.r BrillouinTorus glideGeneratedSetoid x y ↔
       glideSetoid.r x y := by
@@ -86,7 +82,7 @@ def generatedToOrbit :
     (by
       intro x y h
       apply Quotient.sound
-      exact Relation.EqvGen.rel _ _ ((glideStep_iff_glideSetoid x y).mpr h))
+      exact Relation.EqvGen.rel _ _ h)
   left_inv := by
     intro q
     refine Quotient.inductionOn q ?_
@@ -97,17 +93,6 @@ def generatedToOrbit :
     refine Quotient.inductionOn q ?_
     intro x
     rfl
-
-@[simp] theorem generatedToOrbit_apply (x : BrillouinTorus) :
-    generatedToOrbit (@Quotient.mk BrillouinTorus glideGeneratedSetoid x) = quotientMap x :=
-  rfl
-
-/-- The comparison is exactly compatible with the canonical projection maps. -/
-theorem generatedToOrbit_comp_mk :
-    generatedToOrbit ∘ (@Quotient.mk BrillouinTorus glideGeneratedSetoid) =
-      quotientMap := by
-  funext x
-  rfl
 
 end KleinBottleOrbitQuotient
 

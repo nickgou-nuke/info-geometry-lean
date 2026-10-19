@@ -337,6 +337,23 @@ theorem nativeChiralDiracMinusArrow_bijective :
     exact ⟨nativeChiralDiracMinusInverseArrow y,
       nativeChiralDiracMinusArrow_comp_minusInverseArrow y⟩
 
+theorem normalizedPlusArrow_surjective :
+    Function.Surjective normalizedPlusArrow := by
+  intro y
+  refine ⟨(Real.sqrt 3 : ℝ) • nativeChiralDiracPlusInverseArrow y, ?_⟩
+  change (1 / Real.sqrt 3 : ℝ) •
+      nativeChiralDiracPlusArrow
+        ((Real.sqrt 3 : ℝ) • nativeChiralDiracPlusInverseArrow y) = y
+  rw [map_smul, smul_smul]
+  have hs : (1 / Real.sqrt 3 : ℝ) * Real.sqrt 3 = 1 := by
+    field_simp
+  rw [hs, one_smul, nativeChiralDiracPlusArrow_comp_plusInverseArrow]
+
+noncomputable def normalizedPlusArrowEquiv :
+    nativePlusSector ≃ₛₗᵢ[RingHom.id ℝ] nativeMinusSector :=
+  LinearIsometryEquiv.ofSurjective normalizedPlusArrowIsometry
+    normalizedPlusArrow_surjective
+
 noncomputable def nativeChiralDiracPlusEquiv :
     nativePlusSector ≃ₗ[ℝ] nativeMinusSector :=
   LinearEquiv.ofBijective nativeChiralDiracPlusArrow

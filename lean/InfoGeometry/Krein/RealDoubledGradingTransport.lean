@@ -25,9 +25,6 @@ universe u
 variable {E : Type u} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
   [CompleteSpace E] [KreinGradedModule (DoubledSpace E)]
 
-local notation "Γ₀" => KreinGradedModule.gradeCLM (H := DoubledSpace E)
-local notation "Γ₁" => KreinGradedModule.gradeCLM (H := HilbertDoubled E)
-
 /-!
 The source-to-target grading equation is the required soldering datum.  It is
 kept as a hypothesis because the repository does not identify the canonical
@@ -36,10 +33,13 @@ source grading with either doubled-space Cl(1,1) generator by default.
 
 theorem conjugateDoubledEnd_gradeCLM
     (hΓ :
-      (HilbertDoubled.ofDoubledContinuousLinearEquiv (E := E)).toContinuousLinearMap.comp Γ₀ =
-        Γ₁.comp
+      (HilbertDoubled.ofDoubledContinuousLinearEquiv (E := E)).toContinuousLinearMap.comp
+          (KreinGradedModule.gradeCLM (H := DoubledSpace E)) =
+        (KreinGradedModule.gradeCLM (H := HilbertDoubled E)).comp
           (HilbertDoubled.ofDoubledContinuousLinearEquiv (E := E)).toContinuousLinearMap) :
-    conjugateDoubledEnd (E := E) Γ₀ = Γ₁ := by
+    conjugateDoubledEnd (E := E)
+        (KreinGradedModule.gradeCLM (H := DoubledSpace E)) =
+      KreinGradedModule.gradeCLM (H := HilbertDoubled E) := by
   apply ContinuousLinearMap.ext
   intro x
   have h := congrArg (fun f : DoubledSpace E →L[ℝ] HilbertDoubled E =>
@@ -48,8 +48,9 @@ theorem conjugateDoubledEnd_gradeCLM
 
 theorem conjugateDoubledEnd_gradeConj
     (hΓ :
-      (HilbertDoubled.ofDoubledContinuousLinearEquiv (E := E)).toContinuousLinearMap.comp Γ₀ =
-        Γ₁.comp
+      (HilbertDoubled.ofDoubledContinuousLinearEquiv (E := E)).toContinuousLinearMap.comp
+          (KreinGradedModule.gradeCLM (H := DoubledSpace E)) =
+        (KreinGradedModule.gradeCLM (H := HilbertDoubled E)).comp
           (HilbertDoubled.ofDoubledContinuousLinearEquiv (E := E)).toContinuousLinearMap)
     (T : DoubledSpace E →L[ℝ] DoubledSpace E) :
     KreinGradedModule.gradeConj (H := HilbertDoubled E)
@@ -57,15 +58,18 @@ theorem conjugateDoubledEnd_gradeConj
       conjugateDoubledEnd (E := E)
         (KreinGradedModule.gradeConj (H := DoubledSpace E) T) := by
   unfold KreinGradedModule.gradeConj
-  have hconj : conjugateDoubledEnd (E := E) Γ₀ = Γ₁ :=
+  have hconj : conjugateDoubledEnd (E := E)
+      (KreinGradedModule.gradeCLM (H := DoubledSpace E)) =
+        KreinGradedModule.gradeCLM (H := HilbertDoubled E) :=
     conjugateDoubledEnd_gradeCLM (E := E) hΓ
   rw [← hconj]
   rw [← conjugateDoubledEnd_comp, ← conjugateDoubledEnd_comp]
 
 theorem conjugateDoubledEnd_isEven
     (hΓ :
-      (HilbertDoubled.ofDoubledContinuousLinearEquiv (E := E)).toContinuousLinearMap.comp Γ₀ =
-        Γ₁.comp
+      (HilbertDoubled.ofDoubledContinuousLinearEquiv (E := E)).toContinuousLinearMap.comp
+          (KreinGradedModule.gradeCLM (H := DoubledSpace E)) =
+        (KreinGradedModule.gradeCLM (H := HilbertDoubled E)).comp
           (HilbertDoubled.ofDoubledContinuousLinearEquiv (E := E)).toContinuousLinearMap)
     (T : DoubledSpace E →L[ℝ] DoubledSpace E)
     (hT : KreinGradedModule.IsEven (H := DoubledSpace E) T) :
@@ -77,8 +81,9 @@ theorem conjugateDoubledEnd_isEven
 
 theorem conjugateDoubledEnd_isOdd
     (hΓ :
-      (HilbertDoubled.ofDoubledContinuousLinearEquiv (E := E)).toContinuousLinearMap.comp Γ₀ =
-        Γ₁.comp
+      (HilbertDoubled.ofDoubledContinuousLinearEquiv (E := E)).toContinuousLinearMap.comp
+          (KreinGradedModule.gradeCLM (H := DoubledSpace E)) =
+        (KreinGradedModule.gradeCLM (H := HilbertDoubled E)).comp
           (HilbertDoubled.ofDoubledContinuousLinearEquiv (E := E)).toContinuousLinearMap)
     (T : DoubledSpace E →L[ℝ] DoubledSpace E)
     (hT : KreinGradedModule.IsOdd (H := DoubledSpace E) T) :

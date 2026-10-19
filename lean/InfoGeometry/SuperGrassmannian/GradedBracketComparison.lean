@@ -34,12 +34,11 @@ def matrixUnit01 : Matrix (Fin 3) (Fin 3) R := E 0 1
 def matrixUnit12 : Matrix (Fin 3) (Fin 3) R := E 1 2
 
 theorem matrixUnit01_mul_matrixUnit12_ne_reverse :
-    matrixUnit01 * matrixUnit12 ≠ matrixUnit12 * matrixUnit01 := by
+    (matrixUnit01 : Matrix (Fin 3) (Fin 3) R) * matrixUnit12 ≠
+      matrixUnit12 * matrixUnit01 := by
   intro h
   have h02 := congrArg (fun M : Matrix (Fin 3) (Fin 3) R => M 0 2) h
-  have h10 : (1 : R) = 0 := by
-    simpa [matrixUnit01, matrixUnit12, E, Matrix.mul_apply] using h02
-  exact one_ne_zero h10
+  simp [matrixUnit01, matrixUnit12, E, Matrix.mul_apply] at h02
 
 end GenericWitness
 
@@ -75,7 +74,6 @@ theorem contact_generators_noncommute [Nontrivial R] :
   intro h
   have h02 := congrArg (fun M : Matrix (Fin 3) (Fin 3) R => M 0 2) h
   simp [E, Matrix.mul_apply] at h02
-  exact one_ne_zero h02
 
 private theorem reverse_contact_product_zero :
     (E 1 2 : Matrix (Fin 3) (Fin 3) R) * E 0 1 = 0 := by

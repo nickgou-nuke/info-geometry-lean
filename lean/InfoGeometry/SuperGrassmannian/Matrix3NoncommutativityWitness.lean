@@ -8,13 +8,15 @@ import Mathlib
 
 namespace InfoGeometry.SuperGrassmannian.Matrix3NoncommutativityWitness
 
-abbrev NativeMat3 := Matrix (Fin 3) (Fin 3) ℤ
+variable {R : Type*} [CommRing R] [Nontrivial R]
+
+abbrev NativeMat3 := Matrix (Fin 3) (Fin 3) R
 
 def matrixUnit01 : NativeMat3 :=
-  !![0, 1, 0; 0, 0, 0; 0, 0, 0]
+  !![(0 : R), 1, 0; 0, 0, 0; 0, 0, 0]
 
 def matrixUnit12 : NativeMat3 :=
-  !![0, 0, 0; 0, 0, 1; 0, 0, 0]
+  !![(0 : R), 0, 0; 0, 0, 1; 0, 0, 0]
 
 theorem matrixUnit01_mul_matrixUnit12_ne_reverse :
     matrixUnit01 * matrixUnit12 ≠ matrixUnit12 * matrixUnit01 := by

@@ -26,10 +26,6 @@ local instance : Fact (0 < 2 * Real.pi) := ⟨by positivity⟩
 
 def fibreNeg : MomentumCircle → MomentumCircle := Neg.neg
 
-theorem fibreNeg_involutive (x : MomentumCircle) :
-    fibreNeg (fibreNeg x) = x := by
-  simp [fibreNeg]
-
 abbrev CanonicalKleinBottle : Type :=
   Carrier fibreNeg
 
@@ -81,14 +77,14 @@ def canonicalFibreFlip : CanonicalKleinBottle ≃ CanonicalKleinBottle where
     intro p
     change @Quotient.mk (Base × MomentumCircle) (endpointSetoid fibreNeg)
       (p.1, fibreNeg (fibreNeg p.2)) = @Quotient.mk _ _ p
-    rw [fibreNeg_involutive]
+    simp [fibreNeg]
   right_inv := by
     intro q
     refine Quotient.inductionOn q ?_
     intro p
     change @Quotient.mk (Base × MomentumCircle) (endpointSetoid fibreNeg)
       (p.1, fibreNeg (fibreNeg p.2)) = @Quotient.mk _ _ p
-    rw [fibreNeg_involutive]
+    simp [fibreNeg]
 
 @[simp] theorem canonicalFibreFlip_apply (p : Base × MomentumCircle) :
     canonicalFibreFlip (canonicalMk p) = canonicalMk (p.1, fibreNeg p.2) := by

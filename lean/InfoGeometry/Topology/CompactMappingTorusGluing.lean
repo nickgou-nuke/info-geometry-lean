@@ -95,25 +95,5 @@ def equivOfConjugacy
       (p.1, e (e.symm p.2)) = @Quotient.mk _ _ p
     rw [e.apply_symm_apply]
 
-@[simp] theorem equivOfConjugacy_project
-    {F G : Type*} {f : F → F} {g : G → G} (e : F ≃ G)
-    (hconj : ∀ x, e (f x) = g (e x)) (p : Base × F) :
-    equivOfConjugacy e hconj (project f p) = project g (p.1, e p.2) := by
-  rfl
-
-def lift {F Y : Type*} {f : F → F} (g : Base × F → Y)
-    (hg : ∀ {p q : Base × F},
-      @Setoid.r (Base × F) (endpointSetoid f) p q → g p = g q) :
-    Carrier f → Y :=
-  @Quotient.lift (Base × F) Y (endpointSetoid f) g (by
-    intro p q h
-    exact hg h)
-
-@[simp] theorem lift_project {F Y : Type*} {f : F → F} (g : Base × F → Y)
-    (hg : ∀ {p q : Base × F},
-      @Setoid.r (Base × F) (endpointSetoid f) p q → g p = g q) (p : Base × F) :
-    lift g hg (project f p) = g p := by
-  rfl
-
 end InfoGeometry.Topology.CompactMappingTorus
 end noncomputable section

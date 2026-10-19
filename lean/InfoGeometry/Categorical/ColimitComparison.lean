@@ -74,4 +74,54 @@ theorem hom_eq_of_fac
     f = g := by
   exact h.hom_ext w
 
+/-! ### Coherence of the canonical comparisons -/
+
+/-- The canonical comparison is the identity when both presentations are the
+    same colimit cocone. -/
+theorem isoOfIsColimit_self_hom
+    {t : Cocone F} (h : IsColimit t) :
+    (isoOfIsColimit h h).hom = 𝟙 t.pt := by
+  apply h.hom_ext
+  intro j
+  simp [isoOfIsColimit]
+
+/-- Canonical comparisons compose without path dependence. -/
+theorem isoOfIsColimit_hom_trans
+    {t₁ t₂ t₃ : Cocone F}
+    (h₁ : IsColimit t₁) (h₂ : IsColimit t₂) (h₃ : IsColimit t₃) :
+    (isoOfIsColimit h₁ h₂).hom ≫ (isoOfIsColimit h₂ h₃).hom =
+      (isoOfIsColimit h₁ h₃).hom := by
+  apply h₁.hom_ext
+  intro j
+  calc
+    t₁.ι.app j ≫ (isoOfIsColimit h₁ h₂).hom ≫
+        (isoOfIsColimit h₂ h₃).hom =
+        (t₁.ι.app j ≫ (isoOfIsColimit h₁ h₂).hom) ≫
+          (isoOfIsColimit h₂ h₃).hom := by rw [Category.assoc]
+    _ = t₂.ι.app j ≫ (isoOfIsColimit h₂ h₃).hom := by
+      rw [isoOfIsColimit_hom_fac]
+    _ = t₃.ι.app j := isoOfIsColimit_hom_fac h₂ h₃ j
+    _ = t₁.ι.app j ≫ (isoOfIsColimit h₁ h₃).hom :=
+      (isoOfIsColimit_hom_fac h₁ h₃ j).symm
+
+/-- The inverse comparisons satisfy the corresponding contravariant
+    composition law. -/
+theorem isoOfIsColimit_inv_trans
+    {t₁ t₂ t₃ : Cocone F}
+    (h₁ : IsColimit t₁) (h₂ : IsColimit t₂) (h₃ : IsColimit t₃) :
+    (isoOfIsColimit h₂ h₃).inv ≫ (isoOfIsColimit h₁ h₂).inv =
+      (isoOfIsColimit h₁ h₃).inv := by
+  apply h₃.hom_ext
+  intro j
+  calc
+    t₃.ι.app j ≫ (isoOfIsColimit h₂ h₃).inv ≫
+        (isoOfIsColimit h₁ h₂).inv =
+        (t₃.ι.app j ≫ (isoOfIsColimit h₂ h₃).inv) ≫
+          (isoOfIsColimit h₁ h₂).inv := by rw [Category.assoc]
+    _ = t₂.ι.app j ≫ (isoOfIsColimit h₁ h₂).inv := by
+      rw [isoOfIsColimit_inv_fac]
+    _ = t₁.ι.app j := isoOfIsColimit_inv_fac h₁ h₂ j
+    _ = t₃.ι.app j ≫ (isoOfIsColimit h₁ h₃).inv :=
+      (isoOfIsColimit_inv_fac h₁ h₃ j).symm
+
 end InfoGeometry.Categorical.ColimitComparison

@@ -57,6 +57,19 @@ theorem colimitEnd_exchange
   simpa [colimitEnd, Module.End.mul_eq_comp] using
     congrArg ModuleCat.Hom.hom hmap
 
+/-- Commuting stage endomorphisms remain commuting after passage to the
+    filtered ModuleCat colimit. -/
+theorem colimitEnd_commutes
+    (s t : F ⟶ F)
+    (hcomm : s ≫ t = t ≫ s) :
+    colimitEnd s * colimitEnd t = colimitEnd t * colimitEnd s := by
+  have hmap :
+      colim.map s ≫ colim.map t = colim.map t ≫ colim.map s := by
+    rw [← colim.map_comp, ← colim.map_comp]
+    exact congrArg colim.map hcomm
+  simpa [colimitEnd, Module.End.mul_eq_comp] using
+    (congrArg ModuleCat.Hom.hom hmap).symm
+
 /-- Stage readback for the descended sheet exchange. -/
 theorem colimitEnd_exchange_on_stage
     (eta fplus fminus : F ⟶ F)

@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RealCl55NativeChiralSectorBridge
@@ -48,6 +54,50 @@ theorem nativeChiralDiracPlusArrow_comp_minusArrow_apply
     (3 : ℝ) • nativeChiralProjectorMinus x.1 at h
   rw [x.2] at h
   exact h
+
+noncomputable def plusArrowCLM :
+    nativePlusSector →L[ℝ] nativeMinusSector :=
+  LinearMap.toContinuousLinearMap nativeChiralDiracPlusArrow
+
+noncomputable def minusArrowCLM :
+    nativeMinusSector →L[ℝ] nativePlusSector :=
+  LinearMap.toContinuousLinearMap nativeChiralDiracMinusArrow
+
+theorem nativeChiralDiracPlusArrow_hilbert_adjoint :
+    ContinuousLinearMap.adjoint plusArrowCLM = minusArrowCLM := by
+  apply ContinuousLinearMap.ext
+  intro y
+  apply ext_inner_right ℝ
+  intro x
+  have hA :=
+    ContinuousLinearMap.adjoint_inner_left plusArrowCLM x y
+  have hfull :=
+    ContinuousLinearMap.adjoint_inner_left
+      nativeChiralDiracPlus x.1 y.1
+  rw [nativeChiralDiracPlus_hilbert_adjoint] at hfull
+  exact hA.trans hfull.symm
+
+theorem nativeChiralDiracPlusArrow_inner_smul
+    (x y : nativePlusSector) :
+    inner ℝ (nativeChiralDiracPlusArrow x).1
+      (nativeChiralDiracPlusArrow y).1 =
+      (3 : ℝ) * inner ℝ x.1 y.1 := by
+  change inner ℝ (nativeChiralDiracPlus x.1)
+      (nativeChiralDiracPlus y.1) =
+    (3 : ℝ) * inner ℝ x.1 y.1
+  rw [← ContinuousLinearMap.adjoint_inner_right]
+  rw [nativeChiralDiracPlus_hilbert_adjoint]
+  change inner ℝ x.1
+      (nativeChiralDiracMinus (nativeChiralDiracPlus y.1)) =
+    (3 : ℝ) * inner ℝ x.1 y.1
+  have h := congrArg Subtype.val
+    (nativeChiralDiracMinusArrow_comp_plusArrow_apply y)
+  change inner ℝ x.1
+      (nativeChiralDiracMinusArrow (nativeChiralDiracPlusArrow y)).1 =
+    (3 : ℝ) * inner ℝ x.1 y.1
+  rw [h]
+  change inner ℝ x.1 ((3 : ℝ) • y.1) = _
+  rw [real_inner_smul_right]
 
 noncomputable def nativeChiralDiracPlusInverseArrow :
     nativeMinusSector →ₗ[ℝ] nativePlusSector where

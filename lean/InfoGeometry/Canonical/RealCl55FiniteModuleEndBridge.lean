@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RealSplitKreinHilbertizationBridge
@@ -328,6 +334,7 @@ def nativeChiralDiracPlus : NativeSpinorCLM :=
 
 def nativeChiralDiracMinus : NativeSpinorCLM :=
   nativeContinuous masterChiralDiracMinus
+
 
 def nativeG2Action (g : G2SpinorRepresentation) : NativeSpinorCLM :=
   nativeContinuous g.rho
@@ -1240,6 +1247,20 @@ theorem masterChiralProjectorPlus_transpose :
 theorem masterChiralProjectorMinus_transpose :
     masterChiralProjectorMinusᵀ = masterChiralProjectorMinus := by
   simp [masterChiralProjectorMinus, masterChirality_transpose]
+
+/-- The two chiral Hodge--Dirac arrows are Hilbert adjoints of one another. -/
+theorem nativeChiralDiracPlus_hilbert_adjoint :
+    ContinuousLinearMap.adjoint nativeChiralDiracPlus =
+      nativeChiralDiracMinus := by
+  unfold nativeChiralDiracPlus nativeChiralDiracMinus
+  rw [nativeContinuous_adjoint_eq_transpose]
+  apply congrArg nativeContinuous
+  unfold masterChiralDiracPlus masterChiralDiracMinus
+  rw [Matrix.transpose_mul, Matrix.transpose_mul,
+    masterChiralProjectorPlus_transpose,
+    masterChiralProjectorMinus_transpose,
+    embeddedSplitOctonionHodgeDirac_transpose,
+    Matrix.mul_assoc]
 
 theorem nativeChiralProjectorPlus_hilbert_self_adjoint :
     ContinuousLinearMap.adjoint nativeChiralProjectorPlus =

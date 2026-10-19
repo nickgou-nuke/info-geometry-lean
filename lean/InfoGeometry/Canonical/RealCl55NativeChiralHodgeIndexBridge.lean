@@ -371,6 +371,48 @@ noncomputable def normalizedMinusArrowEquiv :
   LinearIsometryEquiv.ofSurjective normalizedMinusArrowIsometry
     normalizedMinusArrow_surjective
 
+theorem normalizedPlusArrow_intertwines
+    (act : G2IntegratedAction G) (g : G) :
+    (nativeMinusSectorAction act g).comp normalizedPlusArrow =
+      normalizedPlusArrow.comp (nativePlusSectorAction act g) := by
+  apply LinearMap.ext
+  intro x
+  apply Subtype.ext
+  change nativeMinusSectorAction act g
+      ((1 / Real.sqrt 3 : ℝ) • (nativeChiralDiracPlusArrow x).1) =
+    (1 / Real.sqrt 3 : ℝ) •
+      (nativeChiralDiracPlusArrow (nativePlusSectorAction act g x)).1
+  rw [map_smul]
+  have h := congrArg
+    (fun T : nativePlusSector →ₗ[ℝ] nativeMinusSector => T x)
+    (nativePlusSectorAction_intertwines_chiralDiracPlus act g)
+  have h' : nativeMinusSectorAction act g
+      (nativeChiralDiracPlusArrow x) =
+      nativeChiralDiracPlusArrow (nativePlusSectorAction act g x) := by
+    simpa [ContinuousLinearMap.comp_apply] using h
+  rw [h']
+
+theorem normalizedMinusArrow_intertwines
+    (act : G2IntegratedAction G) (g : G) :
+    (nativePlusSectorAction act g).comp normalizedMinusArrow =
+      normalizedMinusArrow.comp (nativeMinusSectorAction act g) := by
+  apply LinearMap.ext
+  intro x
+  apply Subtype.ext
+  change nativePlusSectorAction act g
+      ((1 / Real.sqrt 3 : ℝ) • (nativeChiralDiracMinusArrow x).1) =
+    (1 / Real.sqrt 3 : ℝ) •
+      (nativeChiralDiracMinusArrow (nativeMinusSectorAction act g x)).1
+  rw [map_smul]
+  have h := congrArg
+    (fun T : nativeMinusSector →ₗ[ℝ] nativePlusSector => T x)
+    (nativeMinusSectorAction_intertwines_chiralDiracMinus act g)
+  have h' : nativePlusSectorAction act g
+      (nativeChiralDiracMinusArrow x) =
+      nativeChiralDiracMinusArrow (nativeMinusSectorAction act g x) := by
+    simpa [ContinuousLinearMap.comp_apply] using h
+  rw [h']
+
 noncomputable def nativeChiralDiracPlusEquiv :
     nativePlusSector ≃ₗ[ℝ] nativeMinusSector :=
   LinearEquiv.ofBijective nativeChiralDiracPlusArrow

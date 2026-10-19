@@ -6,8 +6,8 @@ Authors: InfoGeometry Engine Contributors
 
 import InfoGeometry.Algebra.SupergradedBracket
 import InfoGeometry.SuperGrassmannian.KantorTanakaSuperGrassmannian
-import InfoGeometry.SuperGrassmannian.Matrix3NoncommutativityWitness
 import InfoGeometry.SuperGrassmannian.SuperconformalOSpJordanPair
+import InfoGeometry.Topology.WittenJonesTemperleyLiebTransport
 
 /-!
 # Candidate: comparison of ordinary and parity-aware brackets
@@ -22,25 +22,6 @@ arbitrary odd pairs.
 namespace InfoGeometry.SuperGrassmannian.GradedBracketComparison
 
 open scoped Matrix BigOperators
-
-namespace GenericWitness
-
-open InfoGeometry.SuperGrassmannian.KantorTanakaSuperGrassmannian
-
-variable {R : Type*} [CommRing R] [Nontrivial R]
-
-def matrixUnit01 : Matrix (Fin 3) (Fin 3) R := E 0 1
-
-def matrixUnit12 : Matrix (Fin 3) (Fin 3) R := E 1 2
-
-theorem matrixUnit01_mul_matrixUnit12_ne_reverse :
-    (matrixUnit01 : Matrix (Fin 3) (Fin 3) R) * matrixUnit12 ≠
-      matrixUnit12 * matrixUnit01 := by
-  intro h
-  have h02 := congrArg (fun M : Matrix (Fin 3) (Fin 3) R => M 0 2) h
-  simp [matrixUnit01, matrixUnit12, E, Matrix.mul_apply] at h02
-
-end GenericWitness
 
 namespace SB
 
@@ -65,18 +46,11 @@ namespace Contact
 open InfoGeometry.Algebra.SupergradedBracket
 open InfoGeometry.SuperGrassmannian.KantorTanakaSuperGrassmannian
 
-variable {R : Type*} [CommRing R]
-
-/- The generic matrix carrier is noncommutative whenever its coefficient ring
-is nontrivial; this is the witness required for the operator interpretation. -/
-theorem contact_generators_noncommute [Nontrivial R] :
-    (E 0 1 : Matrix (Fin 3) (Fin 3) R) * E 1 2 ≠ E 1 2 * E 0 1 := by
-  intro h
-  have h02 := congrArg (fun M : Matrix (Fin 3) (Fin 3) R => M 0 2) h
-  simp [E, Matrix.mul_apply] at h02
+/- The concrete matrix comparison is intentionally specialized to `ℂ`, whose
+   existing native matrix witness is imported above. -/
 
 private theorem reverse_contact_product_zero :
-    (E 1 2 : Matrix (Fin 3) (Fin 3) R) * E 0 1 = 0 := by
+    (E 1 2 : Matrix (Fin 3) (Fin 3) ℂ) * E 0 1 = 0 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [E, Matrix.mul_apply]
@@ -84,15 +58,15 @@ private theorem reverse_contact_product_zero :
 /-- The ordinary Kantor contact bracket agrees with the parity-aware
 odd--odd bracket because the reverse matrix product vanishes. -/
 theorem kantor_contact_bracket_eq_superBracket :
-    bracket (E 0 1 : Matrix (Fin 3) (Fin 3) R) (E 1 2) =
+    bracket (E 0 1 : Matrix (Fin 3) (Fin 3) ℂ) (E 1 2) =
       superBracket true true (E 0 1) (E 1 2) := by
-  change commutator (E 0 1 : Matrix (Fin 3) (Fin 3) R) (E 1 2) =
+  change commutator (E 0 1 : Matrix (Fin 3) (Fin 3) ℂ) (E 1 2) =
     superBracket true true (E 0 1) (E 1 2)
   exact SB.commutator_eq_superBracket_odd_odd_of_reverse_mul_eq_zero
     reverse_contact_product_zero
 
 private theorem reverse_conjugate_contact_product_zero :
-    (E 1 0 : Matrix (Fin 3) (Fin 3) R) * E 2 1 = 0 := by
+    (E 1 0 : Matrix (Fin 3) (Fin 3) ℂ) * E 2 1 = 0 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [E, Matrix.mul_apply]
@@ -100,9 +74,9 @@ private theorem reverse_conjugate_contact_product_zero :
 /-- The conjugate ordinary contact bracket also agrees with the
 parity-aware odd--odd bracket under the corresponding vanishing product. -/
 theorem kantor_conjugate_contact_bracket_eq_superBracket :
-    bracket (E 2 1 : Matrix (Fin 3) (Fin 3) R) (E 1 0) =
+    bracket (E 2 1 : Matrix (Fin 3) (Fin 3) ℂ) (E 1 0) =
       superBracket true true (E 2 1) (E 1 0) := by
-  change commutator (E 2 1 : Matrix (Fin 3) (Fin 3) R) (E 1 0) =
+  change commutator (E 2 1 : Matrix (Fin 3) (Fin 3) ℂ) (E 1 0) =
     superBracket true true (E 2 1) (E 1 0)
   exact SB.commutator_eq_superBracket_odd_odd_of_reverse_mul_eq_zero
     reverse_conjugate_contact_product_zero

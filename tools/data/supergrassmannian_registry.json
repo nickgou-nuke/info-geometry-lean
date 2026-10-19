@@ -1,0 +1,763 @@
+{
+  "schema": "info_geometry.supergrassmannian_registry.v1",
+  "description": "Curated Super-Grassmannian ownership / comparison registry. Every declaration reference is validated against the current Lean source by tools/infra/supergrassmannian_ledger.py. A comparison claim may only exist as a named Lean declaration. Classification protocol: docs/COLIMIT_LEDGER_PROTOCOL.md.",
+  "status_vocabulary": {
+    "canonical_owner": "designated owner for a mathematical lane; other files in the lane are consumers",
+    "closure": "proves the remaining algebra/representation laws for an existing owner carrier",
+    "application": "uses an owner's carriers/theorems for a physical or geometric readout; may locally redeclare structures",
+    "invariants_only": "proves parity/sign invariants on a combinatorial model; no bundle or geometric space constructed",
+    "dimension_arithmetic": "dimension/shift arithmetic only; explicitly not a constructed colimit (per file header)",
+    "algebraic_carrier": "defines an algebraic carrier (structures/laws); no manifold or topology asserted",
+    "representation_bridge": "explicit map between two lanes with proved compatibility",
+    "transport": "carries data/actions/forms across an existing map or involution",
+    "partial_comparison": "limited comparison proved under explicit hypotheses; no general identification of the compared notions asserted"
+  },
+  "entries": [
+    {
+      "id": "sg.graded-matrix-foundation",
+      "title": "Scalar 1|1 supermatrix foundation",
+      "file": "lean/InfoGeometry/SuperGrassmannian/RealSuperGrassmannianModule.lean",
+      "role": "canonical_owner",
+      "genuineness": "genuine_finite_graded_algebra",
+      "category": "Z/2-graded matrix algebra",
+      "scope": "scalar 1|1 carrier: parity, Koszul signs, block operations",
+      "decls": [
+        "Parity",
+        "SuperMatrix",
+        "realScalarIdentityModel",
+        "sign",
+        "even_add",
+        "odd_add_even",
+        "odd_add_odd",
+        "zero_A",
+        "mul_A"
+      ],
+      "notes": "Scalar model retained per audit SS5.1; the general p|q owner is `sg.general-supercarrier`. The general-to-scalar specialization is proved in `sg.general-scalar-closure`."
+    },
+    {
+      "id": "sg.general-supercarrier",
+      "title": "General block supercarrier owner",
+      "file": "lean/InfoGeometry/SuperGrassmannian/GeneralSupercarrierDeformation.lean",
+      "role": "canonical_owner",
+      "genuineness": "genuine_finite_graded_algebra",
+      "category": "p|q block matrices",
+      "scope": "general block supertrace, deformation modes, chiral-square laws",
+      "decls": [
+        "superTrace",
+        "superTrace_add",
+        "superTrace_smul",
+        "superTrace_neg",
+        "superTrace_scaleMode",
+        "superTrace_scale_balanced",
+        "superTrace_chiralMode",
+        "superTrace_volumeMode",
+        "total_deformation_superTrace",
+        "chiral_mode_mul",
+        "superTrace_chiral_square",
+        "scale_chiral_commutator"
+      ],
+      "notes": "Designated owner for the block supertrace (audit SS3/SS5.2). The nuclear and graph-Dirac lanes redeclare `superTrace`; specialization theorems are the open obligation (gap `supertrace-specialization`)."
+    },
+    {
+      "id": "sg.general-scalar-closure",
+      "title": "General-to-scalar supertrace bridge",
+      "file": "lean/InfoGeometry/SuperGrassmannian/GeneralScalarClosure.lean",
+      "role": "representation_bridge",
+      "genuineness": "representation_bridge",
+      "category": "block matrices -> scalar 1|1 matrices",
+      "scope": "multiplication-preserving representation Fin 1 (+) Fin 1",
+      "decls": [
+        "scalarRepresentation",
+        "scalarRepresentation_mul",
+        "general_superTrace_scalarRepresentation",
+        "scalar_odd_square_from_general"
+      ],
+      "notes": "Explicit representation of the scalar carrier into one-point block matrices; proves the general supertrace specializes to the scalar supertrace and transports the chiral-square law. Discharges the scalar direction requested in audit SS5.2."
+    },
+    {
+      "id": "sg.chiral-projector-closure",
+      "title": "Generic chiral projector closure",
+      "file": "lean/InfoGeometry/SuperGrassmannian/ChiralProjectorClosure.lean",
+      "role": "closure",
+      "genuineness": "closure",
+      "category": "real vector space with involutive grading",
+      "scope": "LinearChiralGrading: projector idempotence and orthogonality",
+      "decls": [
+        "projPlus_idempotent_closure",
+        "projMinus_idempotent_closure",
+        "projPlus_projMinus_closure",
+        "projMinus_projPlus_closure"
+      ],
+      "notes": "Closes the projector pair laws for the generic `LinearChiralGrading` carrier from `sg.module-colimit-sato` (audit SS3 overlap of projector definitions)."
+    },
+    {
+      "id": "sg.fock-representation-closure",
+      "title": "Fock direct-limit action closure",
+      "file": "lean/InfoGeometry/SuperGrassmannian/SatoFockRepresentationClosure.lean",
+      "role": "closure",
+      "genuineness": "closure",
+      "category": "SplitCliffordInfinity / FockInfinity (true algebraic colimits)",
+      "scope": "associativity of the descended Fock action",
+      "decls": [
+        "splitCliffordFockAction_mul_assoc"
+      ],
+      "notes": "The descended Fock action is associative with the direct-limit Clifford multiplication on the actual colimit carriers. Complements `native_splitClifford_fock_grade_action_compatible` (grade equivariance) registered under `sg.module-colimit-sato`."
+    },
+    {
+      "id": "sg.grade-closure",
+      "title": "Grade additivity closure (FiveGraded x KantorTanaka)",
+      "file": "lean/InfoGeometry/SuperGrassmannian/GradeClosure.lean",
+      "role": "closure",
+      "genuineness": "closure",
+      "category": "3x3 contact-graded matrix model",
+      "scope": "adH grade-one assignment and grade-additive contact bracket",
+      "decls": [
+        "adH_E01_grade_one",
+        "adH_E12_grade_one",
+        "adH_odd_contact_grade_add",
+        "adH_odd_contact_derivation"
+      ],
+      "notes": "Bridges the FiveGraded Cartan action `adH` to the KantorTanaka odd contact bracket. Note: this is the ordinary commutator bracket; the graded-bracket convention comparison remains a gap."
+    },
+    {
+      "id": "sg.projector-bridge",
+      "title": "Para-projector / sheet geometry owner",
+      "file": "lean/InfoGeometry/SuperGrassmannian/SuperGrassmannianProjectorBridge.lean",
+      "role": "canonical_owner",
+      "genuineness": "genuine_finite_operator_realization",
+      "category": "involutive operator on a real inner-product space",
+      "scope": "complementary projectors, primal/vacuum sheets, isotropy",
+      "decls": [
+        "paraProjectorPlus",
+        "paraProjectorMinus",
+        "paraProjectorPlus_idempotent",
+        "paraProjectorMinus_idempotent",
+        "paraProjectors_sum_id",
+        "paraProjectorPlus_mul_minus",
+        "paraProjectorMinus_mul_plus",
+        "covectorVacuumSheet_eq_range_projectorMinus",
+        "primalSheet_eq_range_projectorPlus",
+        "covector_vacuum_sheet_is_isotropic",
+        "primal_sheet_is_isotropic",
+        "cl_nn_vacuum_sheet_quadratic_null"
+      ],
+      "notes": "Owner for the para-Kaehler sheet/projector realization. The range identifications relate projector formulas to explicit sheet predicates; no manifold structure is asserted here."
+    },
+    {
+      "id": "sg.five-graded-model",
+      "title": "Five-graded matrix model (Kantor-Tanaka nucleus)",
+      "file": "lean/InfoGeometry/SuperGrassmannian/FiveGradedLieSuperalgebra.lean",
+      "role": "canonical_owner",
+      "genuineness": "genuine_finite_algebraic_model",
+      "category": "3x3 matrix units over a comm ring",
+      "scope": "H = diag(1,0,-1), adjoint action, quintic identity, grade roots",
+      "decls": [
+        "H_grading",
+        "adH",
+        "adH_quintic_identity",
+        "quintic_polynomial_factorization",
+        "five_grade_roots_expansion",
+        "isBosonicSubspace",
+        "isFermionicSubspace",
+        "three_grade_bosonic_roots",
+        "odd_fermionic_roots"
+      ],
+      "notes": "Finite nucleus of the five-grading; D^5 - 5D^3 + 4D = 0 for D = adH. Grade facts are transported to the contact bracket in `sg.grade-closure`."
+    },
+    {
+      "id": "sg.kantor-tanaka",
+      "title": "Kantor-Tanaka contact bracket owner",
+      "file": "lean/InfoGeometry/SuperGrassmannian/KantorTanakaSuperGrassmannian.lean",
+      "role": "canonical_owner",
+      "genuineness": "genuine_finite_algebraic_model",
+      "category": "3x3 contact-graded matrices",
+      "scope": "bracket, Jacobi, spinor bilinears, grade truncation, J-involution",
+      "decls": [
+        "E",
+        "H",
+        "bracket",
+        "bracket_skew",
+        "jacobi_identity",
+        "derivation_identity",
+        "odd_contact_bracket",
+        "spinor_bilinear_sum_eq_H",
+        "grade_truncation_2_1a",
+        "J",
+        "J_involutive",
+        "J_lie_automorphism",
+        "supertrace",
+        "supertrace_H"
+      ],
+      "notes": "Explicit bracket architecture with ordinary matrix commutator; the Jacobi identity and derivation law are proved. Compare `sg.osp-jordan-pair` for the graded-bracket convention; no general comparison theorem exists yet (gap `graded-bracket-comparison`)."
+    },
+    {
+      "id": "sg.osp-jordan-pair",
+      "title": "OSp graded brackets and Jordan pair",
+      "file": "lean/InfoGeometry/SuperGrassmannian/SuperconformalOSpJordanPair.lean",
+      "role": "canonical_owner",
+      "genuineness": "genuine_finite_algebraic_model",
+      "category": "osp(1|2)-style generators and relations",
+      "scope": "graded superBracket, commutation/anticommutation, Jordan pair",
+      "decls": [
+        "H_gen",
+        "E_gen",
+        "F_gen",
+        "Q_plus",
+        "Q_minus",
+        "commutator",
+        "anticommutator",
+        "osp_sl2_H_E",
+        "osp_sl2_E_F",
+        "osp_anticomm_plus_plus",
+        "osp_grad_H_Q_plus",
+        "osp_ladder_E_Q_minus",
+        "superBracket_Qplus_Qminus",
+        "jordanPairPlus",
+        "jordanPairMinus",
+        "contactTriplePlus",
+        "contactJordanPair"
+      ],
+      "notes": "Carries the graded (super) bracket convention and Jordan-pair interfaces; the general comparison to the KantorTanaka ordinary bracket remains open (audit SS2/SS5.4)."
+    },
+    {
+      "id": "sg.majorana-car",
+      "title": "Majorana CAR superalgebra owner",
+      "file": "lean/InfoGeometry/SuperGrassmannian/MajoranaCARSuperalgebra.lean",
+      "role": "canonical_owner",
+      "genuineness": "genuine_finite_algebraic_model",
+      "category": "split-Clifford cell and CAR operators",
+      "scope": "a, a*, Gamma, number operator, ladder brackets",
+      "decls": [
+        "SplitCliffordCell",
+        "e_sq_one",
+        "f_sq_neg_one",
+        "ef_anticomm_zero",
+        "a",
+        "a_star",
+        "Gamma",
+        "N",
+        "car_anticommutator",
+        "Gamma_mul_Gamma",
+        "Gamma_anticomm_a",
+        "N_eq_half_one_add_Gamma",
+        "ladder_bracket_N_a"
+      ],
+      "notes": "Finite CAR/parity carrier feeding the Sato/Fock lanes; concrete matrix model in `sg.split-clifford-matrix-witness`."
+    },
+    {
+      "id": "sg.sato-fock-readouts",
+      "title": "Sato/Fock cyclic readout owner",
+      "file": "lean/InfoGeometry/SuperGrassmannian/SatoColimitTriality.lean",
+      "role": "canonical_owner",
+      "genuineness": "genuine_finite_algebraic_model",
+      "category": "Fock cell with cyclic functional",
+      "scope": "projectors, number operator, normalized cyclic traces",
+      "decls": [
+        "SplitCliffordCell",
+        "gamma",
+        "a",
+        "a_star",
+        "numberOp",
+        "vacProj",
+        "projPlus",
+        "projMinus",
+        "gamma_sq_one",
+        "N_mul_a",
+        "ladder_lower",
+        "ladder_raise",
+        "proj_sum_one",
+        "proj_sub_gamma",
+        "NormalizedCyclicFunctional",
+        "tracial_commutator_zero",
+        "cyclicFunctionalCompression"
+      ],
+      "notes": "Stage-local readouts (trace/index) used by the Sato and Grothendieck bridges. Header notes matrix-stage limit readouts; the restricted Fredholm Sato geometry is outside this owner (gap `restricted-sato-fredholm`)."
+    },
+    {
+      "id": "sg.module-colimit-sato",
+      "title": "Graded bonding compatibility owner (Sato colimit lane)",
+      "file": "lean/InfoGeometry/SuperGrassmannian/CategoricalModuleColimitSato.lean",
+      "role": "canonical_owner",
+      "genuineness": "genuine_graded_compatibility",
+      "category": "graded inductive sequences and module action systems",
+      "scope": "grade/action intertwining chains; concrete split-Clifford/Fock compat",
+      "decls": [
+        "GradedSpace",
+        "gamma_comp_self",
+        "GradedInductiveSequence",
+        "grade_intertwining_comp",
+        "iotaChain",
+        "grade_intertwining_chain",
+        "LinearChiralGrading",
+        "projPlus",
+        "projMinus",
+        "grade_intertwining_projectors",
+        "GradedModuleActionSystem",
+        "modIotaChain",
+        "action_intertwining_chain",
+        "SatoBondingChain",
+        "sato_virtual_index_chain_invariant",
+        "ModuleBondingChain",
+        "colimit_module_trace_chain_invariant",
+        "native_splitClifford_fock_grade_action_compatible"
+      ],
+      "notes": "Home of the chain-level compatibility theorems answering the audit's target: grade intertwining (Gamma_{n+k} iota = iota Gamma_n), action intertwining, projector intertwining, and the concrete split-Clifford/Fock grade-action compatibility on the true colimit carriers."
+    },
+    {
+      "id": "sg.split-clifford-dimensions",
+      "title": "Split-Clifford dimension arithmetic",
+      "file": "lean/InfoGeometry/SuperGrassmannian/SplitCliffordSuperGrassmannianColimit.lean",
+      "role": "dimension_arithmetic",
+      "genuineness": "dimension_arithmetic_only",
+      "category": "combinatorial dimension model",
+      "scope": "vector/spinor/chiral-half dimensions and equal-shift arithmetic",
+      "decls": [
+        "vectorDim",
+        "cliffordDim",
+        "spinorDim",
+        "chiralHalfDim",
+        "clifford_dim_eq_two_pow_two_n",
+        "spinor_sq_eq_clifford",
+        "chiral_split_sum",
+        "stage_four_dimension_formula_agreement",
+        "equal_shift_preserves_dimension_difference"
+      ],
+      "notes": "Header explicitly states the results are dimension formulas and equal-shift arithmetic, NOT a constructed inductive colimit (audit SS3). Must not be cited as a colimit construction."
+    },
+    {
+      "id": "sg.berezinian-parity",
+      "title": "Berezinian/Stiefel-Whitney parity invariants",
+      "file": "lean/InfoGeometry/SuperGrassmannian/BerezinianSheafStiefelWhitney.lean",
+      "role": "invariants_only",
+      "genuineness": "invariants_only",
+      "category": "Cech-cocycle sign model",
+      "scope": "parity signs, orientability criterion, first SW invariant model",
+      "decls": [
+        "gradedParity",
+        "cechCocycleSign",
+        "stiefelWhitneyW1",
+        "IsOrientableBerezinianSheaf",
+        "nat_sq_parity",
+        "berezinian_parity_square_law",
+        "stiefelWhitney_eq_zero_iff",
+        "orientable_iff_even_mismatch",
+        "non_orientable_iff_odd_mismatch",
+        "orientable_iff_cocycle_one"
+      ],
+      "notes": "Implements parity/sign invariants on a combinatorial cocycle model; no Berezinian line bundle, sheaf cohomology, or geometric Stiefel-Whitney class is constructed (audit SS4)."
+    },
+    {
+      "id": "sg.nuclear-quasiphonon",
+      "title": "Nuclear quasiphonon application carrier",
+      "file": "lean/InfoGeometry/SuperGrassmannian/NuclearQuasiphononSuperGrassmannian.lean",
+      "role": "application",
+      "genuineness": "application_with_redeclared_structure",
+      "category": "block SUSY Hamiltonian model",
+      "scope": "SUSY generators, supertrace cancellation, Berezinian homothety",
+      "decls": [
+        "superTrace",
+        "superTrace_add",
+        "susyQ",
+        "susyQ_sq",
+        "susyQ_dag_sq",
+        "susyH_eq",
+        "superTrace_susyH",
+        "berezinian_homothety_balance",
+        "unbalanced_homothety_berezinian_factor"
+      ],
+      "notes": "Redeclares its own `superTrace` and mode structure; candidate to become a specialization of `sg.general-supercarrier` (audit SS3)."
+    },
+    {
+      "id": "sg.graph-dirac-embedding",
+      "title": "Graph-Dirac supercarrier application",
+      "file": "lean/InfoGeometry/SuperGrassmannian/GraphDiracSupercarrierEmbedding.lean",
+      "role": "application",
+      "genuineness": "application_with_redeclared_structure",
+      "category": "graph-Dirac block model",
+      "scope": "Hodge-Dirac chirality, Berezinian invariants, mode supertraces",
+      "decls": [
+        "superTrace",
+        "hodgeDiracChiral",
+        "superTrace_hodgeDiracChiral",
+        "chiralParity",
+        "hodgeDirac_anticomm_parity",
+        "isBerezinianInvariant",
+        "hodgeDiracChiral_isBerezinianInvariant",
+        "balanced_berezinian_homothety"
+      ],
+      "notes": "Second redeclared `superTrace`; shares scale/chiral/volume mode structure with the general owner. Specialization bridge is the open obligation (audit SS3)."
+    },
+    {
+      "id": "sg.manifold-carrier",
+      "title": "Algebraic para-Kaehler carrier ('manifold' name)",
+      "file": "lean/InfoGeometry/Canonical/SuperGrassmannianManifold.lean",
+      "role": "algebraic_carrier",
+      "genuineness": "algebraic_carrier_only",
+      "category": "real inner-product space",
+      "scope": "pseudo-Riemannian metric, para-complex structure, projector/orthocomplement",
+      "decls": [
+        "PseudoRiemannianMetric",
+        "ParaComplexStructure",
+        "ParaKahlerStructure",
+        "metric_anti_invariance",
+        "InTPlus",
+        "InTMinus",
+        "tplus_isotropic_two_mul",
+        "GrassmannianProjector",
+        "idGrassmannianProjector",
+        "orthoComplement",
+        "orthoComplement_idempotent",
+        "projector_add_orthoComplement"
+      ],
+      "notes": "Despite the file name, this is an algebraic para-Kaehler carrier with projector/orthocomplement laws; no charts, atlases, smooth or supermanifold structure (audit SS4; gap `supermanifold-structure`)."
+    },
+    {
+      "id": "sg.moebius-quotient",
+      "title": "Moebius reflection / polarization owner",
+      "file": "lean/InfoGeometry/SuperGrassmannian/SuperGrassmannianMoebiusQuotient.lean",
+      "role": "canonical_owner",
+      "genuineness": "genuine_finite_operator_realization",
+      "category": "4x4 reflection data",
+      "scope": "Mobius involution, polarization anticommutation, metric isometry",
+      "decls": [
+        "K_mat",
+        "M_mat",
+        "K_sq_id",
+        "M_sq_id",
+        "moebius_anticommutes_polarization",
+        "moebius_comm_polarization_neg",
+        "moebius_maps_positive_eigenspace_to_negative",
+        "moebius_metric_isometry",
+        "moebius_symplectic_anti_invariance",
+        "nat_sq_parity_iff"
+      ],
+      "notes": "Algebraic reflection model underlying the crosscap/CPT lanes."
+    },
+    {
+      "id": "sg.unoriented-cpt",
+      "title": "Unoriented CPT/Krein form transport",
+      "file": "lean/InfoGeometry/SuperGrassmannian/UnorientedSuperGrassmannianCPT.lean",
+      "role": "transport",
+      "genuineness": "transport",
+      "category": "doubled carrier",
+      "scope": "P/C/T/K operators, sheet swap, Krein/symplectic form invariance",
+      "decls": [
+        "DoubledCarrier",
+        "P_op",
+        "C_op",
+        "T_op",
+        "CPT_op",
+        "CPT_sq_neg",
+        "charge_conjugation_swaps_sheets",
+        "kreinForm",
+        "symplecticForm",
+        "kreinForm_cpt_anti_invariant",
+        "symplecticForm_cpt_invariant",
+        "kreinForm_charge_conjugation_invariant"
+      ],
+      "notes": "Transport layer for forms and involutions; asserts operator identities on an explicit doubled carrier, not spacetime symmetry."
+    },
+    {
+      "id": "sg.real-majorana-chiral-ideal",
+      "title": "Real Majorana chiral ideal (SUSY supercharge)",
+      "file": "lean/InfoGeometry/SuperGrassmannian/RealMajoranaChiralIdeal.lean",
+      "role": "canonical_owner",
+      "genuineness": "genuine_finite_algebraic_model",
+      "category": "real chiral substrate with supercharges",
+      "scope": "PL/PR projectors, Peirce decomposition, Q/Qdag nilpotency, SUSY H",
+      "decls": [
+        "PL",
+        "PR",
+        "PL_sq",
+        "PR_sq",
+        "PL_mul_PR",
+        "J_mul_J",
+        "JΓ_eq_neg_ΓJ",
+        "K",
+        "K_sq",
+        "K_anticomm_Γ",
+        "peirce_decomp",
+        "is_transverse",
+        "superchargeQ",
+        "Q_sq",
+        "susyH_comm_Q"
+      ],
+      "notes": "Finite real model of the chiral ideal with SUSY algebra relations; companion audit file registers non-vacuity witnesses."
+    },
+    {
+      "id": "sg.grothendieck-sato-motive",
+      "title": "Grothendieck/Sato motive bridge",
+      "file": "lean/InfoGeometry/SuperGrassmannian/GrothendieckSatoMotiveBridge.lean",
+      "role": "transport",
+      "genuineness": "trace_descent",
+      "category": "chiral idempotents and K0 classes",
+      "scope": "motive decomposition, virtual index = gamma, trace descent to limit",
+      "decls": [
+        "chiralIdem_orthogonal",
+        "grothendieck_chiral_motive_decomposition",
+        "motivic_sato_virtual_index_eq_gamma",
+        "limitGrothendieckClass",
+        "stageToLimitGrothendieckHom_mul",
+        "limitTrace_commutator_zero"
+      ],
+      "notes": "Stage-to-limit Grothendieck transport with a commutator-vanishing trace descent; connects the Fock readouts to K0-style classes (algebraic level)."
+    },
+    {
+      "id": "sg.sato-gns-subfactor",
+      "title": "Sato/GNS pre-Hilbert subfactor bridge",
+      "file": "lean/InfoGeometry/SuperGrassmannian/SatoGNSPreHilbertSubfactorBridge.lean",
+      "role": "transport",
+      "genuineness": "pre_hilbert_readout",
+      "category": "pre-Hilbert inner product on stage matrices",
+      "scope": "GNS inner product, dimension ratio, noncommutativity at the limit",
+      "decls": [
+        "gnsInner",
+        "gnsInner_conj_symm",
+        "gns_adjoint_left",
+        "subfactor_stage_dimension_ratio",
+        "A1_mul_B1_w0_w0",
+        "A1_mul_B1_ne",
+        "matrix_stage_limit_noncommutative"
+      ],
+      "notes": "Pre-Hilbert (algebraic) GNS readout on matrix stages; no completion or topological subfactor structure asserted (see colimit ledger's completion lanes for the analytic side)."
+    },
+    {
+      "id": "sg.split-clifford-matrix-witness",
+      "title": "Split-Clifford matrix witness",
+      "file": "lean/InfoGeometry/SuperGrassmannian/SplitCliffordCellMatrixWitness.lean",
+      "role": "representation_bridge",
+      "genuineness": "concrete_matrix_realization",
+      "category": "2x2 real matrices",
+      "scope": "concrete matrix model of the split-Clifford cell and Majorana CAR",
+      "decls": [
+        "WitnessMat2R",
+        "matrixSplitCliffordCell",
+        "matrixSplitCliffordCell_generators_noncommute",
+        "matrix_model_majorana_car",
+        "matrix_model_lightcone_nilpotent"
+      ],
+      "notes": "Explicit 2x2 real realization witnessing non-vacuity of the split-Clifford/Majorana relations (audit SS5.6-type concrete bridge)."
+    },
+    {
+      "id": "sg.graded-bracket-comparison",
+      "title": "Contact bracket vs parity-aware superbracket (partial)",
+      "file": "lean/InfoGeometry/SuperGrassmannian/GradedBracketComparison.lean",
+      "role": "closure",
+      "genuineness": "partial_comparison",
+      "category": "ordinary commutator vs parity-aware bracket",
+      "scope": "shared SupergradedBracket owner; contact-generator specialization",
+      "decls": [
+        "commutator_eq_superBracket_odd_odd_of_reverse_mul_eq_zero",
+        "kantor_contact_bracket_eq_superBracket",
+        "kantor_conjugate_contact_bracket_eq_superBracket"
+      ],
+      "notes": "Compares the ordinary Kantor-Tanaka contact bracket to the shared parity-aware `superBracket` only where the reverse product vanishes (hypothesis discharged by matrix computation for both contact generators). Explicitly does NOT identify the two bracket conventions for arbitrary odd pairs. Partially closes `graded-bracket-comparison`."
+    }
+  ],
+  "comparisons": [
+    {
+      "id": "cmp.general-supertrace-to-scalar",
+      "kind": "representation_bridge",
+      "status": "proved",
+      "between": [
+        "sg.general-supercarrier",
+        "sg.graded-matrix-foundation"
+      ],
+      "decls": [
+        "sg.general-scalar-closure::general_superTrace_scalarRepresentation",
+        "sg.general-scalar-closure::scalarRepresentation_mul"
+      ],
+      "notes": "The general block supertrace specializes to the scalar model via an explicit multiplication-preserving matrix representation."
+    },
+    {
+      "id": "cmp.fock-action-grade-equivariance",
+      "kind": "colimit_carrier_action_compatibility",
+      "status": "proved",
+      "between": [
+        "sg.module-colimit-sato",
+        "Sato-Fock split-Clifford colimit lane"
+      ],
+      "decls": [
+        "sg.module-colimit-sato::native_splitClifford_fock_grade_action_compatible",
+        "sg.fock-representation-closure::splitCliffordFockAction_mul_assoc"
+      ],
+      "notes": "On the true algebraic colimit carriers (SplitCliffordInfinity, FockInfinity): grade equivariance plus action associativity with the direct-limit multiplication."
+    },
+    {
+      "id": "cmp.grade-chain-intertwining",
+      "kind": "bonding_map_compatibility",
+      "status": "proved",
+      "between": [
+        "sg.module-colimit-sato",
+        "stage chains"
+      ],
+      "decls": [
+        "sg.module-colimit-sato::grade_intertwining_chain",
+        "sg.module-colimit-sato::action_intertwining_chain",
+        "sg.module-colimit-sato::grade_intertwining_projectors"
+      ],
+      "notes": "Chain-level form of the audit's target: Gamma_{n+k} iota_{n,n+k} = iota_{n,n+k} Gamma_n, action intertwining, and projector intertwining under linear bonding."
+    },
+    {
+      "id": "cmp.projector-sheet-range",
+      "kind": "range_identification",
+      "status": "proved",
+      "between": [
+        "sg.projector-bridge self-comparison"
+      ],
+      "decls": [
+        "sg.projector-bridge::primalSheet_eq_range_projectorPlus",
+        "sg.projector-bridge::covectorVacuumSheet_eq_range_projectorMinus"
+      ],
+      "notes": "The named sheets equal the ranges of the explicit projectors; relates the formula presentation to the predicate presentation."
+    },
+    {
+      "id": "cmp.krein-cpt-forms",
+      "kind": "form_transport",
+      "status": "proved",
+      "between": [
+        "sg.unoriented-cpt self-comparison"
+      ],
+      "decls": [
+        "sg.unoriented-cpt::kreinForm_cpt_anti_invariant",
+        "sg.unoriented-cpt::symplecticForm_cpt_invariant",
+        "sg.unoriented-cpt::charge_conjugation_swaps_sheets"
+      ],
+      "notes": "Form (anti-)invariance and sheet exchange under the CPT/charge operators on the doubled carrier."
+    },
+    {
+      "id": "cmp.grade-derivation-bridge",
+      "kind": "cross_owner_law_bridge",
+      "status": "proved",
+      "between": [
+        "sg.five-graded-model",
+        "sg.kantor-tanaka"
+      ],
+      "decls": [
+        "sg.grade-closure::adH_odd_contact_grade_add",
+        "sg.grade-closure::adH_odd_contact_derivation"
+      ],
+      "notes": "FiveGraded adH acting on the KantorTanaka contact bracket: grade-one assignment, grade additivity, derivation law."
+    },
+    {
+      "id": "cmp.matrix-model-majorana",
+      "kind": "concrete_matrix_realization",
+      "status": "proved",
+      "between": [
+        "sg.majorana-car",
+        "2x2 real matrices"
+      ],
+      "decls": [
+        "sg.split-clifford-matrix-witness::matrix_model_majorana_car",
+        "sg.split-clifford-matrix-witness::matrixSplitCliffordCell_generators_noncommute"
+      ],
+      "notes": "Explicit matrix witness for the CAR relations; shows the carrier is non-degenerate."
+    },
+    {
+      "id": "cmp.trace-descent-grothendieck",
+      "kind": "trace_descent",
+      "status": "proved",
+      "between": [
+        "sg.grothendieck-sato-motive",
+        "stage chains"
+      ],
+      "decls": [
+        "sg.grothendieck-sato-motive::stageToLimitGrothendieckHom_mul",
+        "sg.grothendieck-sato-motive::limitTrace_commutator_zero"
+      ],
+      "notes": "Stage-to-limit multiplicative transport with vanishing trace on commutators (algebraic trace descent)."
+    },
+    {
+      "id": "cmp.contact-bracket-partial",
+      "kind": "partial_bracket_comparison",
+      "status": "proved_under_hypotheses",
+      "between": [
+        "sg.kantor-tanaka",
+        "InfoGeometry.Algebra.SupergradedBracket"
+      ],
+      "decls": [
+        "sg.graded-bracket-comparison::kantor_contact_bracket_eq_superBracket",
+        "sg.graded-bracket-comparison::kantor_conjugate_contact_bracket_eq_superBracket"
+      ],
+      "notes": "Two concrete contact-generator comparisons; the reverse-product vanishing hypotheses are discharged by matrix computation."
+    }
+  ],
+  "gaps": [
+    {
+      "id": "supertrace-specialization",
+      "status": "open",
+      "description": "Four independent `superTrace`-family definitions exist (GeneralSupercarrierDeformation, NuclearQuasiphononSuperGrassmannian, GraphDiracSupercarrierEmbedding, KantorTanakaSuperGrassmannian). The general owner is designated; the scalar direction is discharged by `sg.general-scalar-closure`. Remaining: specialization theorems for the nuclear, graph-Dirac, and Kantor-Tanaka variants.",
+      "probe": [
+        "^superTrace$"
+      ],
+      "suggested_next": "Prove carrier maps from the nuclear/graph/Kantor-Tanaka models into the general block carrier and derive their supertrace theorems from `GeneralSupercarrierDeformation.superTrace`."
+    },
+    {
+      "id": "graded-bracket-comparison",
+      "status": "partially_closed",
+      "description": "KantorTanaka's `bracket` is the ordinary matrix commutator; SuperconformalOSpJordanPair develops `superBracket` with explicit even/odd cases. `GradedBracketComparison` now proves the two concrete contact-generator comparisons under a vanishing reverse-product hypothesis, plus the general criterion `commutator_eq_superBracket_odd_odd_of_reverse_mul_eq_zero`; this is the exact scope where the conventions provably agree. The general identification for arbitrary odd pairs remains open and is explicitly disclaimed by the file.",
+      "probe": [
+        "superBracket",
+        "gradedBracket"
+      ],
+      "suggested_next": "Extend the comparison to further odd pairs only with discharged hypotheses; keep the general-pair identification as a separate theorem if it ever holds."
+    },
+    {
+      "id": "fock-action-descent",
+      "status": "partially_closed",
+      "description": "Chain-level action intertwining and the concrete split-Clifford/Fock grade-action compatibility are proved. Remaining: a uniform descent statement for the generic `GradedModuleActionSystem`, i.e. a bundled linear action on the colimit carrier commuting with the colimit injections, with uniqueness.",
+      "probe": [
+        "action_intertwining",
+        "splitCliffordFockAction"
+      ],
+      "suggested_next": "Mirror the colimit ledger's `descendDirectLimit_unique` pattern: define the descended action on the filtered colimit of the GradedModuleActionSystem diagram and prove its stage laws and uniqueness."
+    },
+    {
+      "id": "projector-cross-lane-bridge",
+      "status": "open",
+      "description": "Projectors occur in three presentations: para-model (SuperGrassmannianProjectorBridge), Fock `projPlus`/`projMinus` (SatoColimitTriality), and the generic `LinearChiralGrading` closure (ChiralProjectorClosure). No proved map relates the Fock projectors to the para model through the actual involutions (audit SS3: do not identify because formulas look alike).",
+      "probe": [
+        "projPlus",
+        "paraProjector"
+      ],
+      "suggested_next": "Define the involution-commuting map from the Fock carrier to the para carrier and prove projector compatibility."
+    },
+    {
+      "id": "berezinian-bundle",
+      "status": "open",
+      "description": "BerezinianSheafStiefelWhitney proves parity/sign invariants on a Cech-cocycle model. A Berezinian line bundle, sheaf cohomology, and a geometric Stiefel-Whitney class are NOT constructed (audit SS4).",
+      "probe": [
+        "BerezinianBundle",
+        "berezinianSheaf"
+      ],
+      "suggested_next": "Define the Berezinian transition data as an actual line bundle over the base and prove the parity class equals the first SW class of a constructed bundle."
+    },
+    {
+      "id": "supermanifold-structure",
+      "status": "open",
+      "description": "SuperGrassmannianManifold provides an algebraic para-Kaehler carrier with projector laws; there are no charts, atlases, smooth structure, or supermanifold/superscheme structure (audit SS4).",
+      "probe": [
+        "supermanifold",
+        "Superscheme"
+      ],
+      "suggested_next": "Separate the algebraic carrier from a genuine supermanifold construction; if pursued, define local models and gluing data with explicit transition functions."
+    },
+    {
+      "id": "restricted-sato-fredholm",
+      "status": "open",
+      "description": "The Sato/GNS lanes are algebraic/pre-Hilbert (stage chains, GNS pairing). The restricted-subspace (Fredholm) Sato Grassmannian with its topology is explicitly outside the current owners (audit SS4).",
+      "probe": [
+        "Fredholm"
+      ],
+      "suggested_next": "If the restricted Sato geometry is pursued, add the Fredholm condition and topology layer as a new owner rather than extending the algebraic chains in place."
+    }
+  ],
+  "guardrails": [
+    "A comparison/equivalence claim requires a named Lean declaration in the registered owner file; semantic or formula similarity must not create comparison edges (e.g. the three projector presentations).",
+    "Redeclared structures (e.g. `superTrace` in the nuclear and graph-Dirac files) are not unified until a specialization theorem exists; the bridge is registered only when it lands.",
+    "Dimension/equal-shift arithmetic (`SplitCliffordSuperGrassmannianColimit`) must not be cited as a constructed inductive colimit.",
+    "Parity/sign invariants (`BerezinianSheafStiefelWhitney`) must not be cited as a Berezinian bundle, sheaf cohomology, or geometric Stiefel-Whitney class.",
+    "The algebraic para-Kaehler carrier (file named 'Manifold') does not assert a manifold or supermanifold; keep the algebraic and geometric scopes separate.",
+    "This ledger is navigation evidence only; Lean owner source and kernel-checked declarations (via the locked build or Pantograph) decide truth."
+  ]
+}

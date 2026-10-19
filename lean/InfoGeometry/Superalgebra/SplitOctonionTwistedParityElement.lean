@@ -8,6 +8,7 @@ import Mathlib.Tactic.Ring
 import Mathlib.Tactic.LinearCombination
 import Mathlib.Tactic.Linarith
 import Mathlib.Data.Real.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import InfoGeometry.Superalgebra.MadelungNonassociativeVortexSmoothness
 
 /-!
@@ -90,5 +91,25 @@ theorem diagonalParityReadout_parityElement (c s : R) (u v : ColorVec3 R) :
     SplitOctonion.quark, SplitOctonion.antiquark, SplitOctonion.sub,
     SplitOctonion.scale, ColorVec3.zero, ColorVec3.sub, ColorVec3.smul]
   ring
+
+/-! ## Angular periodicity on the existing parity element -/
+
+/-- With the standard angular parametrization, the parity element is
+antiperiodic under a half-turn.  This is the algebraic statement that remains
+valid before passing to any projective quotient. -/
+theorem parityElement_antiperiodic (θ : ℝ) (u v : ColorVec3 ℝ) :
+    parityElement (Real.cos (θ + Real.pi)) (Real.sin (θ + Real.pi)) u v =
+      SplitOctonion.scale (-1)
+        (parityElement (Real.cos θ) (Real.sin θ) u v) := by
+  rw [Real.cos_add_pi, Real.sin_add_pi]
+  dsimp [parityElement, SplitOctonion.paraSymplecticK0,
+    SplitOctonion.quark, SplitOctonion.antiquark, SplitOctonion.sub,
+    SplitOctonion.scale, SplitOctonion.one, ColorVec3.zero,
+    ColorVec3.sub, ColorVec3.smul]
+  apply SplitOctonion.ext
+  · ring
+  · apply ColorVec3.ext <;> ring
+  · apply ColorVec3.ext <;> ring
+  · ring
 
 end InfoGeometry.Superalgebra.WittenMoebiusParity

@@ -67,18 +67,6 @@ theorem cellularEulerPoincare_balance :
   exact_mod_cast (show (Module.finrank ℝ EvenCells : ℤ) =
     (Module.finrank ℝ OddCells : ℤ) by omega)
 
-@[simp] theorem evenToOdd_apply (x : EvenCells) (i : Fin 2) :
-    evenToOdd x i = 0 := by
-  rfl
-
-@[simp] theorem oddToEven_zero_apply (x : OddCells) :
-    oddToEven x 0 = 0 := by
-  rfl
-
-@[simp] theorem oddToEven_one_apply (x : OddCells) :
-    oddToEven x 1 = 2 * x 0 := by
-  rfl
-
 theorem oddToEven_nonzero : oddToEven ≠ 0 := by
   intro h
   let x : OddCells := fun i => if i = 0 then 1 else 0

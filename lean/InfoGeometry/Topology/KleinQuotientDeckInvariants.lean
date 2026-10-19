@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Data.Real.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
@@ -215,6 +221,36 @@ theorem deckA_det_pos : det deckA_diff = (1 : ℝ) := by
 /-- `deckB` reverses orientation. -/
 theorem deckB_det_neg : det deckB_diff = (-1 : ℝ) := by
   simp [deckB_diff, Matrix.det_fin_two]
+
+/-! The linear part of every deck transformation.  This is the derivative of
+`deckAction g` and makes the orientation character of the whole deck group
+explicit, rather than recording it only on the generator `b`. -/
+def deckLinearDiff (g : KleinDeckGroup) : Matrix (Fin 2) (Fin 2) ℝ :=
+  fun i j => match i, j with
+  | 0, 0 => signR g.n
+  | 0, 1 => 0
+  | 1, 0 => 0
+  | 1, 1 => 1
+
+theorem deckLinearDiff_det (g : KleinDeckGroup) :
+    det (deckLinearDiff g) = signR g.n := by
+  simp [deckLinearDiff, Matrix.det_fin_two]
+
+theorem deckLinearDiff_mul (g h : KleinDeckGroup) :
+    det (deckLinearDiff (KleinDeckGroup.mul g h)) =
+      det (deckLinearDiff g) * det (deckLinearDiff h) := by
+  rw [deckLinearDiff_det, deckLinearDiff_det, deckLinearDiff_det]
+  change signR (g.n + h.n) = signR g.n * signR h.n
+  exact signR_add g.n h.n
+
+theorem deck_orientation_character (g : KleinDeckGroup) :
+    det (deckLinearDiff g) = 1 ∨ det (deckLinearDiff g) = -1 := by
+  rw [deckLinearDiff_det]
+  unfold signR signZ
+  by_cases h : g.n % 2 = 0
+  · simp [h]
+  · have h' : g.n % 2 = 1 := by omega
+    simp [h, h']
 
 /-! ## Freeness and proper discontinuity -/
 

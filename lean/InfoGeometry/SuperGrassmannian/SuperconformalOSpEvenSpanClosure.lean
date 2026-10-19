@@ -11,8 +11,8 @@ open InfoGeometry.SuperGrassmannian.SuperconformalOSpJordanPair
 
 variable {R : Type*} [CommRing R]
 
-/-- The concrete graded even span lies in the kernel of the OSp supertrace.
-This packages the vanishing on the three structure generators as a closure
+/-- The concrete `M₃(R)` graded even span lies in the kernel of the
+concrete supertrace. This packages the vanishing on the three structure generators as a closure
 statement for arbitrary finite linear combinations. -/
 theorem evenSpan_supertrace_zero {x : M R} (hx : x ∈ evenSpan) :
     supertrace x = 0 := by

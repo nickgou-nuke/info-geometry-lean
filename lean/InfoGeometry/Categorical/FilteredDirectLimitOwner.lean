@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.CategoryTheory.Limits.Filtered
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.CategoryTheory.Limits.HasLimits
@@ -58,6 +64,17 @@ The descended map $\overline{t}$ commutes with every stage injection $\iota_j$.
 theorem directLimit_desc_commutes (F : J ⥤ ModuleCat.{u} R) (t : Cocone F) (j : J) :
     directLimitInjection R F j ≫ descendDirectLimit R F t = t.ι.app j :=
   colimit.ι_desc t j
+
+/-- The `ModuleCat` colimit descent is unique among maps with the same stage laws. -/
+theorem descendDirectLimit_unique
+    (F : J ⥤ ModuleCat.{u} R) (t : Cocone F)
+    (f : DirectLimitModule R F ⟶ t.pt)
+    (h : ∀ j : J,
+      directLimitInjection R F j ≫ f = t.ι.app j) :
+    f = descendDirectLimit R F t := by
+  apply colimit.hom_ext
+  intro j
+  exact (h j).trans (directLimit_desc_commutes R F t j).symm
 
 /-- The category-filtered direct limit of a ring diagram $F : J \to \mathbf{Ring}$. -/
 noncomputable def DirectLimitRing (F_ring : J ⥤ RingCat.{u}) [HasColimit F_ring] : RingCat.{u} :=

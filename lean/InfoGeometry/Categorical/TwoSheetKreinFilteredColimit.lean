@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Algebra.Category.ModuleCat.FilteredColimits
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.CategoryTheory.Limits.Filtered
@@ -69,6 +75,20 @@ theorem colimitEnd_commutes
     exact congrArg colim.map hcomm
   simpa [colimitEnd, Module.End.mul_eq_comp] using
     (congrArg ModuleCat.Hom.hom hmap).symm
+
+@[simp] theorem colimitEnd_id :
+    colimitEnd (𝟙 F) = LinearMap.id := by
+  have hmap : colim.map (𝟙 F : F ⟶ F) = 𝟙 (colimit F) := by
+    exact colim.map_id F
+  simpa [colimitEnd] using congrArg ModuleCat.Hom.hom hmap
+
+theorem colimitEnd_comp (s t : F ⟶ F) :
+    colimitEnd (s ≫ t) = colimitEnd t * colimitEnd s := by
+  have hmap :
+      colim.map (s ≫ t) = colim.map s ≫ colim.map t := by
+    exact colim.map_comp s t
+  simpa [colimitEnd, Module.End.mul_eq_comp] using
+    congrArg ModuleCat.Hom.hom hmap
 
 /-- Stage readback for the descended sheet exchange. -/
 theorem colimitEnd_exchange_on_stage

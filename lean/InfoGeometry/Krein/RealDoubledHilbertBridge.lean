@@ -1,0 +1,73 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.Krein.HilbertBridge
+import InfoGeometry.Quantum.RealSplitClifford
+
+/-!
+# Real doubled Hilbert/Krein transport
+
+This module is the first executable slice of the real-first reconciliation
+plan.  It transports the canonical doubled real `Cl(1,1)` action through the
+existing `ULift` Hilbert carrier without changing scalars or identifying the
+sheet swap with the Krein fundamental symmetry.
+-/
+
+namespace InfoGeometry.Krein
+
+open scoped InnerProductSpace
+
+universe u
+
+variable {E : Type u} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+
+/-- The existing `DoubledSpace`/`HilbertDoubled` equivalence as a Krein isometry. -/
+noncomputable def doubledToHilbertKreinEquiv :
+    KreinEquiv (DoubledSpace E) (HilbertDoubled E) where
+  toContinuousLinearEquiv := HilbertDoubled.ofDoubledContinuousLinearEquiv (E := E)
+  isometric := by
+    intro u v
+    rfl
+
+/-- Transport of the canonical real split action to the `ULift` carrier. -/
+noncomputable def hilbertDoubledCl11Action :
+    Quantum.RealSplitCl11Action (HilbertDoubled E) :=
+  Quantum.RealSplitCl11Action.ofContinuousLinearEquiv
+    (HilbertDoubled.ofDoubledContinuousLinearEquiv (E := E))
+    (Quantum.doubledSpaceCl11Action (E := E))
+
+/-- Conjugation of a bounded real operator through the existing carrier equivalence. -/
+noncomputable def conjugateDoubledEnd (T : DoubledSpace E →L[ℝ] DoubledSpace E) :
+    HilbertDoubled E →L[ℝ] HilbertDoubled E :=
+  (HilbertDoubled.ofDoubledContinuousLinearEquiv (E := E)).toContinuousLinearMap.comp
+    (T.comp
+      (HilbertDoubled.toDoubledContinuousLinearEquiv (E := E)).toContinuousLinearMap)
+
+theorem conjugateDoubledEnd_comp
+    (S T : DoubledSpace E →L[ℝ] DoubledSpace E) :
+    conjugateDoubledEnd (E := E) (S.comp T) =
+      (conjugateDoubledEnd (E := E) S).comp
+        (conjugateDoubledEnd (E := E) T) := by
+  apply ContinuousLinearMap.ext
+  intro x
+  simp [conjugateDoubledEnd, ContinuousLinearMap.comp_apply]
+
+theorem conjugateDoubledEnd_id :
+    conjugateDoubledEnd (E := E) (ContinuousLinearMap.id ℝ (DoubledSpace E)) =
+      ContinuousLinearMap.id ℝ (HilbertDoubled E) := by
+  apply ContinuousLinearMap.ext
+  intro x
+  simp [conjugateDoubledEnd, ContinuousLinearMap.comp_apply]
+
+@[simp] theorem hilbertDoubledCl11Action_K_sq :
+    (hilbertDoubledCl11Action (E := E)).K.comp
+        (hilbertDoubledCl11Action (E := E)).K =
+      -(ContinuousLinearMap.id ℝ (HilbertDoubled E)) := by
+  simpa using
+    (Quantum.RealSplitCl11Action.K_sq
+      (hilbertDoubledCl11Action (E := E)))
+
+end InfoGeometry.Krein

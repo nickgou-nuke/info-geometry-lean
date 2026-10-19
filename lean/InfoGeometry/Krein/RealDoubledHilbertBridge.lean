@@ -6,6 +6,7 @@ Authors: InfoGeometry Engine Contributors
 
 import InfoGeometry.Krein.HilbertBridge
 import InfoGeometry.Quantum.RealSplitClifford
+import InfoGeometry.Krein.Clifford
 
 /-!
 # Real doubled Hilbert/Krein transport
@@ -79,6 +80,19 @@ theorem conjugateDoubledEnd_J :
   apply ContinuousLinearMap.ext
   intro x
   rfl
+
+/-- The canonical doubled grading transports to the concrete Hilbert swap. -/
+theorem conjugateDoubledEnd_modular_j_hilbertSwap :
+    conjugateDoubledEnd (E := E) (modular_j (E := E)) =
+      hilbertSwapCLM := by
+  apply ContinuousLinearMap.ext
+  intro x
+  apply (HilbertDoubled.toDoubledContinuousLinearEquiv (E := E)).injective
+  change modular_j (E := E)
+      ((HilbertDoubled.toDoubledContinuousLinearEquiv (E := E)) x) =
+    (HilbertDoubled.toDoubledContinuousLinearEquiv (E := E))
+      (hilbertSwapCLM x)
+  exact (toDoubled_hilbertSwapCLM_apply (E := E) x).symm
 
 @[simp] theorem hilbertDoubledCl11Action_K_sq :
     (hilbertDoubledCl11Action (E := E)).K.comp

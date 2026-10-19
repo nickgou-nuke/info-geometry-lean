@@ -10,19 +10,24 @@ namespace InfoGeometry.SuperGrassmannian.Matrix3NoncommutativityWitness
 
 variable {R : Type*} [CommRing R] [Nontrivial R]
 
-abbrev NativeMat3 := Matrix (Fin 3) (Fin 3) R
-
-def matrixUnit01 : NativeMat3 :=
+def matrixUnit01 (R : Type*) [CommRing R] : Matrix (Fin 3) (Fin 3) R :=
   !![(0 : R), 1, 0; 0, 0, 0; 0, 0, 0]
 
-def matrixUnit12 : NativeMat3 :=
+def matrixUnit12 (R : Type*) [CommRing R] : Matrix (Fin 3) (Fin 3) R :=
   !![(0 : R), 0, 0; 0, 0, 1; 0, 0, 0]
 
 theorem matrixUnit01_mul_matrixUnit12_ne_reverse :
-    matrixUnit01 * matrixUnit12 ≠ matrixUnit12 * matrixUnit01 := by
+    matrixUnit01 R * matrixUnit12 R ≠ matrixUnit12 R * matrixUnit01 R := by
   intro h
-  have h02 := congrArg (fun M : NativeMat3 => M 0 2) h
+  have h02 := congrArg (fun M : Matrix (Fin 3) (Fin 3) R => M 0 2) h
   norm_num [matrixUnit01, matrixUnit12, Matrix.mul_apply,
     Fin.sum_univ_succ] at h02
+
+abbrev matI : Matrix (Fin 3) (Fin 3) R := matrixUnit01 R
+abbrev matJ : Matrix (Fin 3) (Fin 3) R := matrixUnit12 R
+
+theorem matI_mul_matJ_ne_reverse :
+    matI * matJ ≠ matJ * matI := by
+  exact matrixUnit01_mul_matrixUnit12_ne_reverse
 
 end InfoGeometry.SuperGrassmannian.Matrix3NoncommutativityWitness

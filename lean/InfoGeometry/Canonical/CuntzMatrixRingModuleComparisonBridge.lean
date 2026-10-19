@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Algebra.Category.Ring.FilteredColimits
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.CategoryTheory.Limits.HasLimits
@@ -212,6 +218,32 @@ instance ringColimitStarRing : StarRing RingColimit where
     intro x y
     unfold transportedRingColimitStar
     simp only [map_add, star_add]
+
+@[simp] theorem ringColimit_star_inclusion
+    (n : ℕ) (A : MatrixStage n) :
+    star (ringColimitInclusion n A) =
+      ringColimitInclusion n (star A) := by
+  rw [show star (ringColimitInclusion n A) =
+      transportedRingColimitStar (ringColimitInclusion n A) by rfl]
+  unfold transportedRingColimitStar
+  rw [algebraicCarrierRingEquiv_symm_stage]
+  rfl
+
+/-- The two native algebraic matrix colimits are equivalent as star rings.
+The underlying ring equivalence is the existing universal comparison; the
+star law is checked on finite-stage representatives and then extended by the
+direct-limit induction principle. -/
+noncomputable def algebraicCarrierStarRingEquiv :
+    AlgebraicCarrier ≃⋆+* RingColimit :=
+  StarRingEquiv.mk algebraicCarrierRingEquiv (by
+    intro x
+    induction x using DirectLimit.induction with
+    | _ n A =>
+      change algebraicCarrierRingEquiv (stageInjection n (star A)) =
+        star (algebraicCarrierRingEquiv (stageInjection n A))
+      rw [algebraicCarrierRingEquiv_stage n (star A),
+        algebraicCarrierRingEquiv_stage n A,
+        ringColimit_star_inclusion])
 
 def ringColimitTraceReadout (x : RingColimit) : ℂ :=
   traceFunctional (algebraicCarrierRingEquiv.symm x)

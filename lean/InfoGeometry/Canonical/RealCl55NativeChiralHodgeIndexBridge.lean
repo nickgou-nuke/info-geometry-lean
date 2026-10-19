@@ -354,6 +354,23 @@ noncomputable def normalizedPlusArrowEquiv :
   LinearIsometryEquiv.ofSurjective normalizedPlusArrowIsometry
     normalizedPlusArrow_surjective
 
+theorem normalizedMinusArrow_surjective :
+    Function.Surjective normalizedMinusArrow := by
+  intro y
+  refine ⟨(Real.sqrt 3 : ℝ) • nativeChiralDiracMinusInverseArrow y, ?_⟩
+  change (1 / Real.sqrt 3 : ℝ) •
+      nativeChiralDiracMinusArrow
+        ((Real.sqrt 3 : ℝ) • nativeChiralDiracMinusInverseArrow y) = y
+  rw [map_smul, smul_smul]
+  have hs : (1 / Real.sqrt 3 : ℝ) * Real.sqrt 3 = 1 := by
+    field_simp
+  rw [hs, one_smul, nativeChiralDiracMinusArrow_comp_minusInverseArrow]
+
+noncomputable def normalizedMinusArrowEquiv :
+    nativeMinusSector ≃ₛₗᵢ[RingHom.id ℝ] nativePlusSector :=
+  LinearIsometryEquiv.ofSurjective normalizedMinusArrowIsometry
+    normalizedMinusArrow_surjective
+
 noncomputable def nativeChiralDiracPlusEquiv :
     nativePlusSector ≃ₗ[ℝ] nativeMinusSector :=
   LinearEquiv.ofBijective nativeChiralDiracPlusArrow

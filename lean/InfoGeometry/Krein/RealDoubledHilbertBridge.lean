@@ -62,6 +62,24 @@ theorem conjugateDoubledEnd_id :
   intro x
   simp [conjugateDoubledEnd]
 
+/-- The transported `ε` generator is exactly conjugation of the doubled-space one. -/
+theorem conjugateDoubledEnd_eps :
+    conjugateDoubledEnd (E := E)
+        (Quantum.doubledSpaceCl11Action (E := E)).eps =
+      (hilbertDoubledCl11Action (E := E)).eps := by
+  apply ContinuousLinearMap.ext
+  intro x
+  rfl
+
+/-- The transported modular `J` generator is exactly conjugation of the doubled-space one. -/
+theorem conjugateDoubledEnd_J :
+    conjugateDoubledEnd (E := E)
+        (Quantum.doubledSpaceCl11Action (E := E)).J =
+      (hilbertDoubledCl11Action (E := E)).J := by
+  apply ContinuousLinearMap.ext
+  intro x
+  rfl
+
 @[simp] theorem hilbertDoubledCl11Action_K_sq :
     (hilbertDoubledCl11Action (E := E)).K.comp
         (hilbertDoubledCl11Action (E := E)).K =

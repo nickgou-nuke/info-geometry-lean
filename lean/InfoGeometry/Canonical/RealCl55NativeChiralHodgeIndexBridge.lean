@@ -99,6 +99,42 @@ theorem nativeChiralDiracPlusArrow_inner_smul
   change inner ℝ x.1 ((3 : ℝ) • y.1) = _
   rw [real_inner_smul_right]
 
+theorem nativeChiralDiracMinusArrow_hilbert_adjoint :
+    ContinuousLinearMap.adjoint minusArrowCLM = plusArrowCLM := by
+  apply ContinuousLinearMap.ext
+  intro y
+  apply ext_inner_right ℝ
+  intro x
+  have hA :=
+    ContinuousLinearMap.adjoint_inner_left minusArrowCLM x y
+  have hfull :=
+    ContinuousLinearMap.adjoint_inner_left
+      nativeChiralDiracMinus x.1 y.1
+  rw [nativeChiralDiracMinus_hilbert_adjoint] at hfull
+  exact hA.trans hfull.symm
+
+theorem nativeChiralDiracMinusArrow_inner_smul
+    (x y : nativeMinusSector) :
+    inner ℝ (nativeChiralDiracMinusArrow x).1
+      (nativeChiralDiracMinusArrow y).1 =
+      (3 : ℝ) * inner ℝ x.1 y.1 := by
+  change inner ℝ (nativeChiralDiracMinus x.1)
+      (nativeChiralDiracMinus y.1) =
+    (3 : ℝ) * inner ℝ x.1 y.1
+  rw [← ContinuousLinearMap.adjoint_inner_right]
+  rw [nativeChiralDiracMinus_hilbert_adjoint]
+  change inner ℝ x.1
+      (nativeChiralDiracPlus (nativeChiralDiracMinus y.1)) =
+    (3 : ℝ) * inner ℝ x.1 y.1
+  have h := congrArg Subtype.val
+    (nativeChiralDiracPlusArrow_comp_minusArrow_apply y)
+  change inner ℝ x.1
+      (nativeChiralDiracPlusArrow (nativeChiralDiracMinusArrow y)).1 =
+    (3 : ℝ) * inner ℝ x.1 y.1
+  rw [h]
+  change inner ℝ x.1 ((3 : ℝ) • y.1) = _
+  rw [real_inner_smul_right]
+
 noncomputable def nativeChiralDiracPlusInverseArrow :
     nativeMinusSector →ₗ[ℝ] nativePlusSector where
   toFun x :=

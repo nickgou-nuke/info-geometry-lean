@@ -70,4 +70,18 @@ theorem conjugateDoubledEnd_id :
     (Quantum.RealSplitCl11Action.K_sq
       (hilbertDoubledCl11Action (E := E)))
 
+/** The derived square-minus-one axis anticommutes with the transported
+    pseudoscalar generator.  This is the operator-level `Cl(1,1)` relation
+    needed by later graded and Krein-cycle transport. */
+theorem hilbertDoubledCl11Action_K_eps_anticommute :
+    (hilbertDoubledCl11Action (E := E)).K.comp
+        (hilbertDoubledCl11Action (E := E)).eps =
+      -((hilbertDoubledCl11Action (E := E)).eps.comp
+        (hilbertDoubledCl11Action (E := E)).K) := by
+  have h := congrArg (fun T : HilbertDoubled E →L[ℝ] HilbertDoubled E =>
+    T.comp (hilbertDoubledCl11Action (E := E)).eps)
+    (hilbertDoubledCl11Action (E := E)).J_eps_anti
+  simpa [Quantum.RealSplitCl11Action.K, ContinuousLinearMap.comp_assoc,
+    (hilbertDoubledCl11Action (E := E)).eps_sq] using h
+
 end InfoGeometry.Krein

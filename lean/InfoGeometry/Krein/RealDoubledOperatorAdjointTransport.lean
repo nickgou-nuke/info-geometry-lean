@@ -57,4 +57,15 @@ theorem kreinSelfAdjoint_conjugation
     (doubledHilbertIsometry (E := E)).conjStarAlgEquiv.toStarAlgHom
     (Or.inl (metric_conjugation_eq (E := E))) A hA
 
+theorem kreinSkewAdjoint_conjugation
+    (A : DoubledSpace E →L[ℝ] DoubledSpace E)
+    (hA : KreinSpace.IsKreinSkewAdjoint A) :
+    KreinSpace.IsKreinSkewAdjoint
+      ((doubledHilbertIsometry (E := E)).conjStarAlgEquiv A) := by
+  change KreinSpace.kreinAdjoint
+      ((doubledHilbertIsometry (E := E)).conjStarAlgEquiv A) =
+    -((doubledHilbertIsometry (E := E)).conjStarAlgEquiv A)
+  rw [← kreinAdjoint_conjugation (E := E) A]
+  exact congrArg (doubledHilbertIsometry (E := E)).conjStarAlgEquiv hA
+
 end InfoGeometry.Krein.RealDoubledOperatorAdjointTransport

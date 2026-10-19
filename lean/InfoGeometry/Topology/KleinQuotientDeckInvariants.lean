@@ -250,7 +250,39 @@ theorem deck_orientation_character (g : KleinDeckGroup) :
   by_cases h : g.n % 2 = 0
   · simp [h]
   · have h' : g.n % 2 = 1 := by omega
-    simp [h, h']
+    simp [h']
+
+/-- The orientation character is exactly the parity of the transverse deck
+    coordinate.  This is the converse form of `deck_orientation_character` and
+    is useful when identifying the orientation-preserving subgroup. -/
+theorem deck_orientation_preserving_iff_even (g : KleinDeckGroup) :
+    det (deckLinearDiff g) = 1 ↔ g.n % 2 = 0 := by
+  rw [deckLinearDiff_det]
+  unfold signR signZ
+  constructor
+  · intro hdet
+    by_cases h : g.n % 2 = 0
+    · exact h
+    · have h' : g.n % 2 = 1 := by omega
+      have hbad : (-1 : ℝ) = 1 := by simpa [h, h'] using hdet
+      norm_num at hbad
+  · intro h
+    simp [h]
+
+/-- The orientation-reversing coset is exactly the odd transverse parity. -/
+theorem deck_orientation_reversing_iff_odd (g : KleinDeckGroup) :
+    det (deckLinearDiff g) = -1 ↔ g.n % 2 = 1 := by
+  rw [deckLinearDiff_det]
+  unfold signR signZ
+  constructor
+  · intro hdet
+    by_cases h : g.n % 2 = 0
+    · have hbad : (1 : ℝ) = -1 := by simpa [h] using hdet
+      norm_num at hbad
+    · have h' : g.n % 2 = 1 := by omega
+      exact h'
+  · intro h
+    simp [h]
 
 /-! ## Freeness and proper discontinuity -/
 

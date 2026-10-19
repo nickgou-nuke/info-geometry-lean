@@ -116,6 +116,15 @@ theorem stageToCarrier_compatible {m n : ℕ} (h : m ≤ n) :
 noncomputable def quotientToCarrier : MatrixStageLimit →⋆ₐ[ℂ] Carrier :=
   liftStarAlgHom stageToCarrier (fun _ _ h => stageToCarrier_compatible h)
 
+/-- The forward comparison is exactly the prescribed finite-stage map on every
+    quotient inclusion. -/
+@[simp] theorem quotientToCarrier_toLimit_stage (n : ℕ) (A : Stage n) :
+    quotientToCarrier (toLimit n A) =
+      stageInjection n (stageStarAlgEquiv n A) := by
+  have h := liftStarAlgHom_comp stageToCarrier
+    (fun _ _ h => stageToCarrier_compatible h) n
+  exact congrArg (fun f : Stage n →⋆ₐ[ℂ] Carrier => f A) h
+
 /-- The maps are inverse on each quotient-stage inclusion. -/
 theorem carrierToQuotient_quotientToCarrier_stage (n : ℕ) (A : Stage n) :
     carrierToQuotient (quotientToCarrier (toLimit n A)) = toLimit n A := by

@@ -25,6 +25,8 @@ import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Krein.DoubledRootLemmas
 import InfoGeometry.Krein.DoubledAdjoint
 import InfoGeometry.Krein.HilbertBridge
+import InfoGeometry.Krein.RealDoubledHilbertBridge
+import InfoGeometry.Krein.RealDoubledOperatorAdjointTransport
 import InfoGeometry.Krein.Metric
 import InfoGeometry.Krein.SplitQuadratic
 import InfoGeometry.Krein.SplitComplex

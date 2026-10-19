@@ -378,8 +378,8 @@ theorem normalizedPlusArrow_intertwines
   apply LinearMap.ext
   intro x
   apply Subtype.ext
-  change nativeMinusSectorAction act g
-      ((1 / Real.sqrt 3 : ℝ) • (nativeChiralDiracPlusArrow x).1) =
+  change (nativeMinusSectorAction act g
+      ((1 / Real.sqrt 3 : ℝ) • nativeChiralDiracPlusArrow x)).1 =
     (1 / Real.sqrt 3 : ℝ) •
       (nativeChiralDiracPlusArrow (nativePlusSectorAction act g x)).1
   rw [map_smul]
@@ -391,6 +391,7 @@ theorem normalizedPlusArrow_intertwines
       nativeChiralDiracPlusArrow (nativePlusSectorAction act g x) := by
     simpa [ContinuousLinearMap.comp_apply] using h
   rw [h']
+  rfl
 
 theorem normalizedMinusArrow_intertwines
     (act : G2IntegratedAction G) (g : G) :
@@ -399,8 +400,8 @@ theorem normalizedMinusArrow_intertwines
   apply LinearMap.ext
   intro x
   apply Subtype.ext
-  change nativePlusSectorAction act g
-      ((1 / Real.sqrt 3 : ℝ) • (nativeChiralDiracMinusArrow x).1) =
+  change (nativePlusSectorAction act g
+      ((1 / Real.sqrt 3 : ℝ) • nativeChiralDiracMinusArrow x)).1 =
     (1 / Real.sqrt 3 : ℝ) •
       (nativeChiralDiracMinusArrow (nativeMinusSectorAction act g x)).1
   rw [map_smul]
@@ -412,6 +413,7 @@ theorem normalizedMinusArrow_intertwines
       nativeChiralDiracMinusArrow (nativeMinusSectorAction act g x) := by
     simpa [ContinuousLinearMap.comp_apply] using h
   rw [h']
+  rfl
 
 noncomputable def nativeChiralDiracPlusEquiv :
     nativePlusSector ≃ₗ[ℝ] nativeMinusSector :=

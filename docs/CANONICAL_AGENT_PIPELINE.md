@@ -139,6 +139,33 @@ are not substitutes for reading owner source; compilation validates the proof
 at its Lean type, not the relationship between that type and its prose
 interpretation. Gate 2 must independently check that relationship.
 
+### Epistemic Compilation Gate
+
+When intake contains generated prose, metaphor, physical interpretation, or
+confabulated code, agents must first apply
+`skills/epistemic-compilation/SKILL.md` and
+`docs/ALCHEMICAL_QMS_SOP.md`:
+
+```text
+preserve provenance
+→ extract atomic claims
+→ classify theorem / conditional / evidence / open debt
+→ search and read repository owners
+→ write the ground-truth theorem contract
+→ order only proved dependencies in a causal DAG
+→ choose the smallest owner-aligned statement
+→ prove it with native Lean and Mathlib
+→ run kernel, build, vacuity, placeholder, and axiom gates
+→ report the exact proved scope and remaining debt
+```
+
+Narrative similarity, graph proximity, CAS output, successful compilation, and
+agent summaries are not semantic equivalence. A finite algebraic identity does
+not become a topology, quotient, colimit, completion, physical law, or
+classification theorem without the corresponding carrier and proof. An
+overstrong claim must be downgraded or rejected rather than hidden behind a
+wrapper, witness, `True` theorem, alias, or conditional structure field.
+
 The OpenGauss CLI enforces a file-backed handoff: `/discover --output` writes
 a versioned navigation receipt; a contract conforming to
 `tools/schema/ground_truth_theorem_contract.schema.json` binds that receipt to

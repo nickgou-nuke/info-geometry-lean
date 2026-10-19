@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Canonical.FilteredDirectInverseColimit
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.Cl11MarkovJonesTopologicalColimit
@@ -21,6 +27,7 @@ namespace InfoGeometry.Canonical.Cl11FilteredInductiveInverseColimitBridge
 open CategoryTheory CategoryTheory.Limits
 open FilteredColimit
 open FilteredColimit.Native
+open InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
 open InfoGeometry.Clifford.Cl11TensorTower
 open InfoGeometry.Clifford.Cl11TensorTowerLimit
 open InfoGeometry.Canonical.Cl11MarkovJonesTopologicalColimit
@@ -129,5 +136,21 @@ theorem normalizedTrace_dual_compatibility
         (InfoGeometry.Clifford.Cl11MarkovJonesEngine.normalizedTraceLinear n) x =
       InfoGeometry.Clifford.Cl11MarkovJonesEngine.normalizedTraceLinear m x := by
   exact normalizedTrace_stageEmbedMap h x
+
+theorem bondMap_smul
+    {m n : ℕ} (h : m ≤ n) (c : ℝ) (x : Stage m) :
+    bondMap stageBond m n h (c • x) =
+      c • bondMap stageBond m n h x := by
+  induction n, h using Nat.le_induction with
+  | base =>
+      simp [bondMap_refl]
+  | succ n h ih =>
+      rw [bondMap_succ]
+      change stageBond n (bondMap stageBond m n h (c • x)) =
+        c • stageBond n (bondMap stageBond m n h x)
+      rw [ih]
+      change stageEmbed n (c • bondMap stageBond m n h x) =
+        c • stageEmbed n (bondMap stageBond m n h x)
+      simp only [Algebra.smul_def, map_mul, (stageEmbed n).commutes]
 
 end InfoGeometry.Canonical.Cl11FilteredInductiveInverseColimitBridge

@@ -73,6 +73,12 @@ theorem klein_deck_orientation_reverses :
     Matrix.det deckB_diff = (-1 : ℝ) :=
   deckB_det_neg
 
+/-- The distinguished deck generator has a nontrivial orientation character. -/
+theorem klein_deck_generator_is_orientation_reversing :
+    Matrix.det (deckLinearDiff KleinDeckGroup.b) = (-1 : ℝ) := by
+  rw [deckLinearDiff_det]
+  norm_num [KleinDeckGroup.b, signR, signZ]
+
 /-- The induced top exterior form changes sign under the deck glide. -/
 theorem klein_deck_top_form_sign_change :
     glideExterior (ExteriorAlgebra.ι ℝ firstAxis *

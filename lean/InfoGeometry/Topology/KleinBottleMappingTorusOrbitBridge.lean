@@ -20,6 +20,14 @@ def stripToOrbitRepresentative (p : Base × MomentumCircle) :
     BrillouinTorus :=
   (((Real.pi * p.1.1 : ℝ) : MomentumCircle), p.2)
 
+theorem stripToOrbitRepresentative_continuous :
+    Continuous stripToOrbitRepresentative := by
+  apply Continuous.prodMk
+  · apply (AddCircle.continuous_mk' (2 * Real.pi)).comp
+    exact continuous_const.mul
+      (continuous_subtype_val.comp continuous_fst)
+  · exact continuous_snd
+
 theorem stripToOrbitRepresentative_endpointStep
     {p q : Base × MomentumCircle}
     (h : endpointStep fibreNeg p q) :
@@ -54,6 +62,18 @@ def canonicalToOrbit : CanonicalKleinBottle → KleinBrillouinQuotient :=
       | refl p => rfl
       | symm p q _ ih => exact ih.symm
       | trans p q r _ _ ih₁ ih₂ => exact ih₁.trans ih₂)
+
+theorem canonicalToOrbit_continuous :
+    Continuous canonicalToOrbit := by
+  exact continuous_quot_lift
+    (by
+      intro p q hpq
+      induction hpq with
+      | rel p q h => exact stripToOrbitRepresentative_endpointStep h
+      | refl p => rfl
+      | symm p q _ ih => exact ih.symm
+      | trans p q r _ _ ih₁ ih₂ => exact ih₁.trans ih₂)
+    (quotientMap_continuous.comp stripToOrbitRepresentative_continuous)
 
 theorem canonicalToOrbit_endpoint (x : MomentumCircle) :
     canonicalToOrbit (canonicalMk (⟨0, by constructor <;> norm_num⟩, x)) =

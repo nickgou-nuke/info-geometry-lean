@@ -88,4 +88,18 @@ theorem kreinSkewAdjoint_conjugation
   rw [← kreinAdjoint_conjugation (E := E) A]
   exact congrArg (doubledHilbertIsometry (E := E)).conjStarAlgEquiv hA
 
+theorem kreinSelfAdjoint_conjugateDoubledEnd
+    (A : DoubledSpace E →L[ℝ] DoubledSpace E)
+    (hA : KreinSpace.IsKreinSelfAdjoint A) :
+    KreinSpace.IsKreinSelfAdjoint (conjugateDoubledEnd (E := E) A) := by
+  rw [← conjStarAlgEquiv_eq_conjugateDoubledEnd (E := E) A]
+  exact kreinSelfAdjoint_conjugation (E := E) A hA
+
+theorem kreinSkewAdjoint_conjugateDoubledEnd
+    (A : DoubledSpace E →L[ℝ] DoubledSpace E)
+    (hA : KreinSpace.IsKreinSkewAdjoint A) :
+    KreinSpace.IsKreinSkewAdjoint (conjugateDoubledEnd (E := E) A) := by
+  rw [← conjStarAlgEquiv_eq_conjugateDoubledEnd (E := E) A]
+  exact kreinSkewAdjoint_conjugation (E := E) A hA
+
 end InfoGeometry.Krein.RealDoubledOperatorAdjointTransport

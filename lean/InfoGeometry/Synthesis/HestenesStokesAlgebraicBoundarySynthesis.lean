@@ -33,11 +33,15 @@ This module formalizes the real-geometric boundary and attention calculus in cau
    - Proves `five_graded_maurer_cartan_equations_and_koszul_supertrace_laws`, establishing all five
      homogeneous components of the Maurer–Cartan flatness equation $d\Omega + \frac{1}{2}[\Omega \wedge \Omega] = 0$
      together with Freudenthal homogeneous Jacobi closure and Koszul coboundary supertrace invariance.
-2. **Filtered Hestenes–Krein Colimit, Drazin–Dikin Ellipsoids, & Self-Concordant Barrier Control (`Section 2`)**:
+2. **Hestenes–Krein Cone Readouts, Hessian-Compatible Dikin Sets, & Conditional KMS Remainders (`Section 2`)**:
    - Connects `FilteredHestenesKreinColimit.lean`, `HestenesKreinSelfConcordantBarrierColimit.lean`,
      `KMSInteriorPoint.lean`, and `DikinDrazinBridge.lean`.
-   - Proves `dikin_colimit_hessian_isometry_and_ellipsoid_inclusion` and
-     `drazin_attention_projector_and_colimit_dikin_preservation`: index-one Drazin dynamic/harmonic
+   - Proves `dikin_hessian_compatible_cone_transport` and
+     `drazin_attention_projector_and_colimit_dikin_preservation`: under the stated Hessian equalities,
+     the finite-stage Hessian sublevel sets transport along the supplied compatible maps; the
+     separate Hestenes–Krein cone readout is compatible. These statements do not construct a
+     categorical colimit or prove self-concordant barrier containment. The Drazin result gives
+     index-one dynamic/harmonic
      projectors satisfy $P_{\mathrm{dyn}}^2 = P_{\mathrm{dyn}}$, $P_{\mathrm{dyn}} + P_{\mathrm{harm}} = 1$,
      $P_{\mathrm{dyn}} P_{\mathrm{harm}} = 0$, $L P_{\mathrm{harm}} = 0$, and whenever a bonding map
      $\iota_{nm}$ intertwines the Drazin Green operator ($\iota_{nm} L_n^D = L_m^D \iota_{nm}$) and
@@ -291,11 +295,11 @@ theorem five_graded_maurer_cartan_equations_and_koszul_supertrace_laws
     ⟨h_str.2.1, h_str.2.2⟩⟩
 
 /-!
-## Section 2: Filtered Hestenes–Krein Colimit, Drazin–Dikin Ellipsoids, & Self-Concordant Barrier Control
+## Section 2: Hestenes–Krein Readout, Hessian-Compatible Dikin Transport, & Conditional KMS Remainders
 -/
 
-/-- **Dikin-Controlled Colimit Transport & Self-Concordant Barrier Theorem**:
-Given stages $E_n, E_m$ and a colimit carrier $E_\infty$ equipped with barrier potentials
+/-- **Hessian-compatible Dikin-set transport and conditional remainder estimate**:
+Given spaces $E_n, E_m, E_\infty$ equipped with potentials
 $\Phi_n, \Phi_m, \Phi_\infty$ and continuous linear maps $\iota_{nm} : E_n \toL[\mathbb{R}] E_m$,
 $\iota_n : E_n \toL[\mathbb{R}] E_\infty$, $\iota_m : E_m \toL[\mathbb{R}] E_\infty$ satisfying
 $\iota_m \circ \iota_{nm} = \iota_n$ and Hessian compatibility:
@@ -306,11 +310,15 @@ $\iota_m \circ \iota_{nm} = \iota_n$ and Hessian compatibility:
    `ι_nm '' dikinEllipsoid Φ_n x ⊆ dikinEllipsoid Φ_m (ι_nm x)` and for every $y \in E_n(x)$,
    its two-stage image $\iota_m(\iota_{nm} y) = \iota_n y$ lies in the colimit Dikin ellipsoid
    `dikinEllipsoid Φ_inf (ι_n x)`.
-3. **Filtered Hestenes–Krein Colimit Barrier & KMS Quadratic Dikin Bound**:
+3. **Filtered Hestenes–Krein Colimit Readout & Conditional KMS Remainder Bound**:
    On any `C : HestenesKreinCone`, compatible stage readouts satisfy
-   `stageBarrier readout k z = limitBarrier limitReadout (C.ι k z)`, and any normalized KMS
-   generator `‖K‖ = 1` satisfies `‖expOp (ε • K) - 1 - ε • K‖ ≤ ε ^ 2` for $\varepsilon \le 1$. -/
-theorem dikin_colimit_hessian_isometry_and_ellipsoid_inclusion
+   `stageBarrier readout k z = limitBarrier limitReadout (C.ι k z)`, and a supplied exponential
+   satisfying `HasBregmanQuadraticBound` obeys `‖expOp (ε • K) - 1 - ε • K‖ ≤ ε ^ 2` when
+   `‖K‖ = 1` and `|ε| ≤ 1`. The ellipsoid results are Hessian-sublevel transport statements;
+   they do not assert self-concordance, positive definiteness, or containment in a feasible
+   domain. The last component remains conditional on the supplied bound and does not construct
+   `expOp`. -/
+theorem dikin_hessian_compatible_cone_transport
     {En Em Einf : Type*}
     [NormedAddCommGroup En] [NormedSpace ℝ En]
     [NormedAddCommGroup Em] [NormedSpace ℝ Em]
@@ -334,7 +342,7 @@ theorem dikin_colimit_hessian_isometry_and_ellipsoid_inclusion
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
     (expOp : ExpOp H) (K : H →L[ℝ] H)
     (hquad : HasBregmanQuadraticBound expOp K) (hK_norm : ‖K‖ = 1)
-    (ε : ℝ) (hε : ε ≤ 1) :
+    (ε : ℝ) (hε : |ε| ≤ 1) :
     (dikinHessianNorm Φm (ι_nm x) (ι_nm v) = dikinHessianNorm Φn x v ∧
      dikinHessianNorm Φinf (ι_n x) (ι_n v) = dikinHessianNorm Φn x v) ∧
     (ι_nm '' dikinEllipsoid Φn x ⊆ dikinEllipsoid Φm (ι_nm x) ∧
@@ -356,7 +364,7 @@ theorem dikin_colimit_hessian_isometry_and_ellipsoid_inclusion
   exact ⟨⟨h_norm_nm, h_norm_n⟩,
     ⟨h_ell_nm, hy_inf⟩,
     ⟨stageBarrier_eq_limitBarrier readout limitReadout hreadout k z,
-     dikin_bounded_of_bregman_bound expOp K hquad hK_norm ε hε⟩⟩
+     bregman_remainder_bounded_of_quadratic_bound expOp K hquad hK_norm ε hε⟩⟩
 
 /-- Transport-constrained Drazin–Dikin attention quadratic form
 $Q(v) = D^2\Phi(x)[G v, G v] = \operatorname{hessianQuadratic}\Phi(x, G v)$ evaluated on the

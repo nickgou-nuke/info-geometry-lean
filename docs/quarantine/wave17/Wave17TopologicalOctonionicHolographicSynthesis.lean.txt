@@ -1,0 +1,239 @@
+/-
+Copyright (c) 2026 InfoGeometry Contributors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Contributors
+-/
+import InfoGeometry.Synthesis.SplitSedenionDerivationRepresentationSynthesis
+import InfoGeometry.Synthesis.SplitSedenionRepresentationSpine
+import InfoGeometry.Canonical.DonaldsonWittenSeibergWitten4ManifoldCapstone
+import InfoGeometry.Superalgebra.DonaldsonWittenSeibergMonopole
+import InfoGeometry.Superalgebra.MaurerCartanAssociatorAnomalySuperGrassmannian
+import InfoGeometry.QuantumGravity.MaldacenaHolographicCondensate
+import InfoGeometry.Topology.WittenJonesChernSimonsKnots
+
+/-!
+# Wave 17 Master Synthesis: Topological-Octonionic-Holographic Unification & Commuting Representation Square
+Target: `InfoGeometry/Synthesis/Wave17TopologicalOctonionicHolographicSynthesis.lean`
+
+This module unifies the Wave 17 topological, non-associative octonionic/sedenionic, and holographic
+subsystems into a single kernel-checked representation spine:
+
+1. **Commuting Bulk-to-Boundary Representation Square ($\operatorname{Der}(\mathbb{S}_s) \to \operatorname{End}(V_{\mathrm{spin}}) \to \operatorname{End}(V_{\mathrm{boundary}})$)**:
+   - Defines the chiral boundary projection `sedenionChiralBoundaryProj` on `SplitSedenion ℝ` and its
+     transported 16-spinor counterpart `spinor16ChiralBoundaryProj` on `Fin 16 → ℝ`.
+   - Proves `sedenionChiralBoundaryProj_intertwines_g2Derivation` and
+     `spinor16ChiralBoundaryProj_intertwines_g2Derivation`, establishing that the 14-parameter
+     $G_2$ derivation representation commutes strictly with chiral boundary projection.
+
+2. **Akivis–Malcev Nonassociative Jacobiator Anomaly vs. Derivation Lie Bracket Closure**:
+   - Contrasts the non-vanishing internal Maurer–Cartan Jacobiator anomaly of three split-octonion
+     quark operators (`J(U(u₁), U(u₂), U(u₃)) = 6 [U(u₁), U(u₂), U(u₃)] = -6 det(u₁, u₂, u₃) • K₀`)
+     with the strict Lie commutator closure `isSedenionStarDerivation_commutator` of the external
+     $G_2$ derivation operators on `SplitSedenion ℝ`.
+
+3. **Master Wave 17 Synthesis (`wave17_topological_octonionic_holographic_master_synthesis`)**:
+   - Combines the commuting $\operatorname{Der}(\mathbb{S}_s)$ bulk-to-boundary representation square,
+     the Donaldson–Witten equivariant BRST relation $Q^2 = -\delta_\phi$, the Seiberg–Witten
+     quadratic curvature factorization, the Akivis–Malcev associator anomaly, the Temperley–Lieb
+     Jones cubic & Yang–Baxter braid relations, and the Maldacena bulk-to-boundary intertwiner.
+-/
+
+set_option autoImplicit false
+noncomputable section
+
+namespace InfoGeometry.Synthesis.Wave17TopologicalOctonionicHolographicSynthesis
+
+open InfoGeometry.Lie.CanonicalZornDerivationDimension
+open InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge
+open InfoGeometry.Canonical.SplitOctonionParaKahlerNullCone
+open InfoGeometry.Canonical.SplitOctonionClifford33Soldering
+open InfoGeometry.Cl44IdempotentIdeal
+open InfoGeometry.Synthesis.Cl44LeftIdealSplitSedenionSynthesis
+open InfoGeometry.Synthesis.SplitSedenionDerivationAnomaly
+open InfoGeometry.Synthesis.G2SplitSedenionDerivationBridge
+open InfoGeometry.Synthesis.Cl44MinimalIdealSplitSedenionEquivBridge
+open InfoGeometry.Synthesis.SplitSedenionDerivationRepresentationSynthesis
+open InfoGeometry.Synthesis.SplitSedenionRepresentationSpine
+
+alias DW := InfoGeometry.Superalgebra.DonaldsonWitten
+alias MC := InfoGeometry.Superalgebra.MaurerCartanSuperGrassmannian
+alias Holo := InfoGeometry.QuantumGravity.Holography
+alias WJ := InfoGeometry.Topology.WittenJonesKnots
+
+/-!
+## Section 1: Commuting Bulk-to-Boundary Representation Square for $\operatorname{Der}(\mathbb{S}_s)$
+-/
+
+/--
+Chiral boundary projection on `SplitSedenion ℝ`, projecting a 16D split-sedenion pair `(X.1, X.2)`
+onto its positive chiral split-octonion boundary sector `(X.1, zornZero)`.
+-/
+def sedenionChiralBoundaryProj (X : SplitSedenion ℝ) : SplitSedenion ℝ :=
+  (X.1, zornZero)
+
+/--
+Chiral boundary projection transported across `spinor16SplitSedenionEquiv` to the 16-component
+spinor carrier `Fin 16 → ℝ`.
+-/
+def spinor16ChiralBoundaryProj (v : Fin 16 → ℝ) : Fin 16 → ℝ :=
+  spinor16SplitSedenionEquiv.symm (sedenionChiralBoundaryProj (spinor16SplitSedenionEquiv v))
+
+/--
+`sedenionChiralBoundaryProj` is idempotent on `SplitSedenion ℝ`.
+-/
+theorem sedenionChiralBoundaryProj_idem (X : SplitSedenion ℝ) :
+    sedenionChiralBoundaryProj (sedenionChiralBoundaryProj X) = sedenionChiralBoundaryProj X := by
+  have _ := X
+  rfl
+
+/--
+**Split-Sedenion Bulk-to-Boundary Intertwining Theorem**:
+Every 14-parameter $G_2$ derivation `sedenionG2Derivation p` commutes strictly with the chiral
+boundary projection `sedenionChiralBoundaryProj`.
+-/
+theorem sedenionChiralBoundaryProj_intertwines_g2Derivation
+    (p : Params) (X : SplitSedenion ℝ) :
+    sedenionChiralBoundaryProj (sedenionG2Derivation p X) =
+      sedenionG2Derivation p (sedenionChiralBoundaryProj X) := by
+  apply Prod.ext
+  · rfl
+  · dsimp [sedenionChiralBoundaryProj, sedenionG2Derivation, cdLift]
+    exact (zornG2Derivation_zornZero p).symm
+
+/--
+**Spinor-16 Bulk-to-Boundary Commuting Representation Square**:
+On the 16-component spinor space `Fin 16 → ℝ`, the transported $G_2$ derivation representation
+`spinor16G2Derivation p` commutes with the chiral boundary projection `spinor16ChiralBoundaryProj`.
+-/
+theorem spinor16ChiralBoundaryProj_intertwines_g2Derivation
+    (p : Params) (v : Fin 16 → ℝ) :
+    spinor16ChiralBoundaryProj (spinor16G2Derivation p v) =
+      spinor16G2Derivation p (spinor16ChiralBoundaryProj v) := by
+  unfold spinor16ChiralBoundaryProj spinor16G2Derivation
+  rw [spinor16SplitSedenionEquiv.apply_symm_apply,
+      spinor16SplitSedenionEquiv.apply_symm_apply,
+      sedenionChiralBoundaryProj_intertwines_g2Derivation p (spinor16SplitSedenionEquiv v)]
+
+/--
+Every projected spinor `spinor16ChiralBoundaryProj v` lies in the positive chiral semi-spinor
+boundary subspace `SemiSpinorPlus`.
+-/
+theorem spinor16ChiralBoundaryProj_mem_semiSpinorPlus (v : Fin 16 → ℝ) :
+    spinor16ChiralBoundaryProj v ∈ SemiSpinorPlus := by
+  rw [mem_semiSpinorPlus_iff_snd_zero]
+  change (spinor16SplitSedenionEquiv (spinor16ChiralBoundaryProj v)).2 = zornZero
+  unfold spinor16ChiralBoundaryProj
+  rw [spinor16SplitSedenionEquiv.apply_symm_apply]
+  rfl
+
+/-!
+## Section 2: Akivis–Malcev Nonassociative Jacobiator Anomaly vs. Derivation Lie Closure
+-/
+
+/--
+**Akivis–Malcev Associator Anomaly vs. Derivation Lie Bracket Closure**:
+While the internal commutator of three quark elements in `SplitOctonion R` has a non-vanishing
+Jacobiator equal to $6$ times their associator (`-6 det(u₁, u₂, u₃) • K₀`), the commutator
+`sedenionDerivationCommutator` of any two 14-parameter $G_2$ $\star$-derivations on `SplitSedenion ℝ`
+is again a genuine $\star$-derivation.
+-/
+theorem akivis_malcev_vs_derivation_lie_closure
+    {R : Type*} [CommRing R]
+    (p₁ p₂ : Params)
+    (u₁ u₂ u₃ : MC.ColorVec3 R) :
+    IsSedenionStarDerivation
+      (sedenionDerivationCommutator (sedenionG2Derivation p₁) (sedenionG2Derivation p₂)) ∧
+    MC.SplitOctonion.jacobiator
+      (MC.SplitOctonion.quark u₁) (MC.SplitOctonion.quark u₂) (MC.SplitOctonion.quark u₃) =
+      MC.SplitOctonion.scale 6
+        (MC.SplitOctonion.associator
+          (MC.SplitOctonion.quark u₁) (MC.SplitOctonion.quark u₂) (MC.SplitOctonion.quark u₃)) ∧
+    MC.SplitOctonion.jacobiator
+      (MC.SplitOctonion.quark u₁) (MC.SplitOctonion.quark u₂) (MC.SplitOctonion.quark u₃) =
+      MC.SplitOctonion.scale (- 6 * MC.ColorVec3.det3 u₁ u₂ u₃)
+        MC.SplitOctonion.paraSymplecticK0 :=
+  ⟨isSedenionStarDerivation_commutator
+     (sedenionG2Derivation p₁) (sedenionG2Derivation p₂)
+     (sedenionG2Derivation_isStarDerivation p₁)
+     (sedenionG2Derivation_isStarDerivation p₂),
+   (MC.SplitOctonion.akivis_malcev_maurer_cartan_anomaly_theorem u₁ u₂ u₃).1,
+   (MC.SplitOctonion.akivis_malcev_maurer_cartan_anomaly_theorem u₁ u₂ u₃).2⟩
+
+/-!
+## Section 3: Concrete Non-Commutativity Certifiers
+-/
+
+/-- Concrete integer non-commutativity of the $3 \times 3$ Temperley-Lieb generators in `WJ.Mat3 ℤ`. -/
+theorem wave17_mat3_temperley_lieb_noncommutative :
+    ∃ A B : WJ.Mat3 ℤ, WJ.Mat3.mul A B ≠ WJ.Mat3.mul B A :=
+  WJ.mat3_mul_noncommutative
+
+/-!
+## Section 4: Master Wave 17 Synthesis Theorem
+-/
+
+/--
+**Master Wave 17 Topological-Octonionic-Holographic Synthesis Theorem**:
+Unifies in one theorem:
+1. The split-sedenion and 16-spinor bulk-to-boundary commuting representation square
+   (`sedenionChiralBoundaryProj_intertwines_g2Derivation` and
+   `spinor16ChiralBoundaryProj_intertwines_g2Derivation`).
+2. Commutator Lie bracket closure of $\star$-derivations (`isSedenionStarDerivation_commutator`).
+3. The Donaldson–Witten equivariant BRST cohomology identity $Q^2 = -\delta_\phi$ on
+   `DW.BRSTFieldMultiplet` (`donaldson_witten_brst_sq_eq_neg_gauge_var`).
+4. The Seiberg–Witten quadratic spinor norm factorization (`swQuadraticMap_norm_sq_factorization`).
+5. The Akivis–Malcev Maurer–Cartan Jacobiator-associator anomaly (`akivis_malcev_maurer_cartan_anomaly_theorem`).
+6. The Temperley–Lieb Jones cubic identity (`tlGen_jones_cubic_121`) and the Yang–Baxter braid
+   relation (`kauffmanBraid_yang_baxter_121_eq_212`).
+7. The Maldacena bulk-to-boundary color-derivation intertwiner (`bulkToBoundary_intertwines_colorAction`)
+   and boundary source-response scalar vacuum pairing (`boundarySourceResponsePairing_eq_scalar_vacuum`).
+-/
+theorem wave17_topological_octonionic_holographic_master_synthesis
+    {R : Type*} [CommRing R]
+    (p₁ p₂ : Params) (X_sed : SplitSedenion ℝ) (v_spin : Fin 16 → ℝ)
+    (F_brst : DW.BRSTFieldMultiplet (DW.SplitOctonion R))
+    (ψ₁ ψ₂ barψ₁ barψ₂ : R)
+    (u₁ u₂ u₃ : MC.ColorVec3 R)
+    (CS : WJ.ChernSimonsPhase R) (h_inv : CS.A * CS.A_inv = 1)
+    (c1 c2 c3 : R) (X_bulk : Holo.SplitOctonion R)
+    (J_source O_condensate : Holo.ColorVec3 R) :
+    (sedenionChiralBoundaryProj (sedenionG2Derivation p₁ X_sed) =
+       sedenionG2Derivation p₁ (sedenionChiralBoundaryProj X_sed) ∧
+     spinor16ChiralBoundaryProj (spinor16G2Derivation p₁ v_spin) =
+       spinor16G2Derivation p₁ (spinor16ChiralBoundaryProj v_spin)) ∧
+    IsSedenionStarDerivation
+      (sedenionDerivationCommutator (sedenionG2Derivation p₁) (sedenionG2Derivation p₂)) ∧
+    DW.brstQ (DW.brstQ F_brst) =
+      ⟨DW.SplitOctonion.neg (DW.gaugeVarPhi F_brst).A,
+       DW.SplitOctonion.zero, DW.SplitOctonion.zero, DW.SplitOctonion.zero⟩ ∧
+    (ψ₁ * barψ₁ - ψ₂ * barψ₂)^2 + (2 * ψ₁ * barψ₂) * (2 * ψ₂ * barψ₁) =
+      (ψ₁ * barψ₁ + ψ₂ * barψ₂)^2 ∧
+    MC.SplitOctonion.jacobiator
+      (MC.SplitOctonion.quark u₁) (MC.SplitOctonion.quark u₂) (MC.SplitOctonion.quark u₃) =
+      MC.SplitOctonion.scale (- 6 * MC.ColorVec3.det3 u₁ u₂ u₃)
+        MC.SplitOctonion.paraSymplecticK0 ∧
+    (WJ.Mat3.mul
+       (WJ.Mat3.mul (WJ.tlGenE1 (WJ.unknotVacuumLoop CS)) (WJ.tlGenE2 (WJ.unknotVacuumLoop CS)))
+       (WJ.tlGenE1 (WJ.unknotVacuumLoop CS)) =
+     WJ.tlGenE1 (WJ.unknotVacuumLoop CS) ∧
+     WJ.Mat3.mul (WJ.Mat3.mul (WJ.kauffmanBraidR1 CS) (WJ.kauffmanBraidR2 CS)) (WJ.kauffmanBraidR1 CS) =
+       WJ.Mat3.mul (WJ.Mat3.mul (WJ.kauffmanBraidR2 CS) (WJ.kauffmanBraidR1 CS)) (WJ.kauffmanBraidR2 CS)) ∧
+    (Holo.bulkToBoundaryChiralMap (Holo.bulkColorAction c1 c2 c3 X_bulk) =
+       Holo.bulkColorAction c1 c2 c3 (Holo.bulkToBoundaryChiralMap X_bulk) ∧
+     Holo.boundarySourceResponsePairing J_source O_condensate =
+       Holo.SplitOctonion.scale (Holo.ColorVec3.dot J_source O_condensate) Holo.SplitOctonion.one) :=
+  ⟨⟨sedenionChiralBoundaryProj_intertwines_g2Derivation p₁ X_sed,
+    spinor16ChiralBoundaryProj_intertwines_g2Derivation p₁ v_spin⟩,
+   isSedenionStarDerivation_commutator
+     (sedenionG2Derivation p₁) (sedenionG2Derivation p₂)
+     (sedenionG2Derivation_isStarDerivation p₁)
+     (sedenionG2Derivation_isStarDerivation p₂),
+   DW.donaldson_witten_brst_sq_eq_neg_gauge_var F_brst,
+   DW.swQuadraticMap_norm_sq_factorization ψ₁ ψ₂ barψ₁ barψ₂,
+   (MC.SplitOctonion.akivis_malcev_maurer_cartan_anomaly_theorem u₁ u₂ u₃).2,
+   ⟨WJ.tlGen_jones_cubic_121 (WJ.unknotVacuumLoop CS),
+    WJ.kauffmanBraid_yang_baxter_121_eq_212 CS h_inv⟩,
+   ⟨Holo.bulkToBoundary_intertwines_colorAction c1 c2 c3 X_bulk,
+    Holo.boundarySourceResponsePairing_eq_scalar_vacuum J_source O_condensate⟩⟩
+
+end InfoGeometry.Synthesis.Wave17TopologicalOctonionicHolographicSynthesis

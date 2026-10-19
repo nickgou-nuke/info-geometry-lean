@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.LLM.TrialityMoE
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.WindingOrbitClosure
@@ -910,6 +916,132 @@ theorem hMass
 
 end RowCountMassNormalizedWitness
 
+/-! ### Successor-step mass witnesses -/
+
+/-- Native existential statement that column counts are positive and have total mass `n`. -/
+def ColCountMassNormalizedWitness
+    {n : Nat}
+    [Nonempty (Fin n)]
+    (M : SinkhornMatrix n) : Prop :=
+  ∃ hcol : HasPositiveColSums n M,
+    countMass (colSumCounts n M) (colSumCounts_pos hcol) = n
+
+namespace ColCountMassNormalizedWitness
+
+/-- Positive-column component selected from the native existential statement. -/
+theorem hcol
+    {n : Nat}
+    [Nonempty (Fin n)]
+    {M : SinkhornMatrix n}
+    (W : ColCountMassNormalizedWitness (M := M)) :
+    HasPositiveColSums n M :=
+  Classical.choose W
+
+/-- Mass-normalization theorem selected from the native existential statement. -/
+theorem hMass
+    {n : Nat}
+    [Nonempty (Fin n)]
+    {M : SinkhornMatrix n}
+    (W : ColCountMassNormalizedWitness (M := M)) :
+    countMass (colSumCounts n M) (colSumCounts_pos W.hcol) = n :=
+  Classical.choose_spec W
+
+end ColCountMassNormalizedWitness
+
+/-- The alternating phase toggles after every row step. -/
+theorem phaseAt_succ_eq_col_of_row
+    (k : Nat) (hk : phaseAt k = SinkhornPhase.row) :
+    phaseAt (k + 1) = SinkhornPhase.col := by
+  unfold phaseAt at hk ⊢
+  have hcases : k % 2 = 0 ∨ k % 2 = 1 := by
+    omega
+  rcases hcases with h0 | h1
+  · simp [h0, Nat.add_mod]
+  · simp [h1] at hk
+
+/-- The alternating phase toggles after every column step. -/
+theorem phaseAt_succ_eq_row_of_col
+    (k : Nat) (hk : phaseAt k = SinkhornPhase.col) :
+    phaseAt (k + 1) = SinkhornPhase.row := by
+  unfold phaseAt at hk ⊢
+  have hcases : k % 2 = 0 ∨ k % 2 = 1 := by
+    omega
+  rcases hcases with h0 | h1
+  · simp [h0] at hk
+  · simp [h1, Nat.add_mod]
+
+/-- A row-normalized successor has a mass-normalized row-count witness. -/
+theorem rowCountMassNormalizedWitness_of_row_step
+    {n : Nat} [Nonempty (Fin n)]
+    (T : SinkhornTrajectory n) (k : Nat)
+    (hk : phaseAt k = SinkhornPhase.row) :
+    RowCountMassNormalizedWitness (M := T.state (k + 1)) := by
+  have hstep : SinkhornStep n SinkhornPhase.row (T.state k) (T.state (k + 1)) := by
+    simpa [hk] using T.step k
+  rcases hstep with ⟨hrow, hstate⟩
+  have hpos' : HasPositiveRowSums n (rowNormalize n (T.state k) hrow) := by
+    intro i
+    rw [rowSum_rowNormalize (n := n) (T.state k) hrow i]
+    norm_num
+  have hpos : HasPositiveRowSums n (T.state (k + 1)) := by
+    rw [hstate]
+    exact hpos'
+  refine ⟨hpos, ?_⟩
+  have hmass' : countMass (rowSumCounts n (rowNormalize n (T.state k) hrow))
+      (rowSumCounts_pos hpos') = n := by
+    have hunit : countMass (unitCounts n) (unitCounts_pos n) = n :=
+      countMass_unitCounts n
+    have hcounts : rowSumCounts n (rowNormalize n (T.state k) hrow) = unitCounts n := by
+      funext i
+      simp [rowSumCounts, unitCounts,
+        rowSum_rowNormalize (n := n) (T.state k) hrow]
+    have hpm :
+        positiveMeasureOfCounts (rowSumCounts n (rowNormalize n (T.state k) hrow))
+            (rowSumCounts_pos hpos') =
+          positiveMeasureOfCounts (unitCounts n) (unitCounts_pos n) := by
+      ext i
+      simp [hcounts]
+    unfold countMass at *
+    rw [hpm]
+    exact hunit
+  simpa [hstate] using hmass'
+
+/-- A column-normalized successor has a mass-normalized column-count witness. -/
+theorem colCountMassNormalizedWitness_of_col_step
+    {n : Nat} [Nonempty (Fin n)]
+    (T : SinkhornTrajectory n) (k : Nat)
+    (hk : phaseAt k = SinkhornPhase.col) :
+    ColCountMassNormalizedWitness (M := T.state (k + 1)) := by
+  have hstep : SinkhornStep n SinkhornPhase.col (T.state k) (T.state (k + 1)) := by
+    simpa [hk] using T.step k
+  rcases hstep with ⟨hcol, hstate⟩
+  have hpos' : HasPositiveColSums n (colNormalize n (T.state k) hcol) := by
+    intro j
+    rw [colSum_colNormalize (n := n) (T.state k) hcol j]
+    norm_num
+  have hpos : HasPositiveColSums n (T.state (k + 1)) := by
+    rw [hstate]
+    exact hpos'
+  refine ⟨hpos, ?_⟩
+  have hmass' : countMass (colSumCounts n (colNormalize n (T.state k) hcol))
+      (colSumCounts_pos hpos') = n := by
+    have hunit : countMass (unitCounts n) (unitCounts_pos n) = n :=
+      countMass_unitCounts n
+    have hcounts : colSumCounts n (colNormalize n (T.state k) hcol) = unitCounts n := by
+      funext j
+      simp [colSumCounts, unitCounts,
+        colSum_colNormalize (n := n) (T.state k) hcol]
+    have hpm :
+        positiveMeasureOfCounts (colSumCounts n (colNormalize n (T.state k) hcol))
+            (colSumCounts_pos hpos') =
+          positiveMeasureOfCounts (unitCounts n) (unitCounts_pos n) := by
+      ext j
+      simp [hcounts]
+    unfold countMass at *
+    rw [hpm]
+    exact hunit
+  simpa [hstate] using hmass'
+
 /--
 Construct the row RN-barrier profile lift from positive observed row counts
 once the raw count profile has the expected carrier mass `n`.
@@ -1116,6 +1248,20 @@ noncomputable def SinkhornRNBarrierProfileLift.ofRowCountMassNormalizedWitness
         (RowRNBarrierCountProfileLift.ofMassNormalized
           (n := n) (M := T.state k) W.hrow W.hMass))
 
+/-! Successor-step constructors consume the normalization witnesses proved above
+    and expose them through the trajectory-local profile API. -/
+
+noncomputable def SinkhornRNBarrierProfileLift.ofRowStepMassNormalized
+    {n : Nat}
+    [Nonempty (Fin n)]
+    (T : SinkhornTrajectory n) (k : Nat)
+    (hk : phaseAt k = SinkhornPhase.row) :
+    SinkhornRNBarrierProfileLift n T (k + 1) :=
+  SinkhornRNBarrierProfileLift.ofRowCountMassNormalizedWitness
+    (T := T) (k := k + 1)
+    (phaseAt_succ_eq_col_of_row k hk)
+    (rowCountMassNormalizedWitness_of_row_step T k hk)
+
 /--
 If the current Sinkhorn phase is row-normalization, then a mass-normalized
 column-count lift produces the trajectory-local RN-barrier profile lift
@@ -1136,6 +1282,37 @@ noncomputable def SinkhornRNBarrierProfileLift.ofMassNormalizedColCounts
       PhaseRNBarrierProfileLift.ofColCounts
         (ColRNBarrierCountProfileLift.ofMassNormalized
           (n := n) (M := T.state k) hcol hMass))
+
+/--
+Witness-routed column-count constructor for the trajectory-local profile
+lift.  This is the column analogue of
+`ofRowCountMassNormalizedWitness`.
+-/
+noncomputable def SinkhornRNBarrierProfileLift.ofColCountMassNormalizedWitness
+    {n : Nat}
+    [Nonempty (Fin n)]
+    {T : SinkhornTrajectory n}
+    {k : Nat}
+    (hk : phaseAt k = SinkhornPhase.row)
+    (W : ColCountMassNormalizedWitness (M := T.state k)) :
+    SinkhornRNBarrierProfileLift n T k :=
+  SinkhornRNBarrierProfileLift.ofPhase
+    (T := T) (k := k)
+    (hk.symm ▸
+      PhaseRNBarrierProfileLift.ofColCounts
+        (ColRNBarrierCountProfileLift.ofMassNormalized
+          (n := n) (M := T.state k) W.hcol W.hMass))
+
+noncomputable def SinkhornRNBarrierProfileLift.ofColStepMassNormalized
+    {n : Nat}
+    [Nonempty (Fin n)]
+    (T : SinkhornTrajectory n) (k : Nat)
+    (hk : phaseAt k = SinkhornPhase.col) :
+    SinkhornRNBarrierProfileLift n T (k + 1) :=
+  SinkhornRNBarrierProfileLift.ofColCountMassNormalizedWitness
+    (T := T) (k := k + 1)
+    (phaseAt_succ_eq_row_of_col k hk)
+    (colCountMassNormalizedWitness_of_col_step T k hk)
 
 /--
 If the remaining profile lift is supplied, the RN-barrier budget becomes a

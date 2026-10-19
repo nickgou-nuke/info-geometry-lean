@@ -1,0 +1,308 @@
+/-
+Copyright (c) 2026 InfoGeometry Contributors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Contributors
+-/
+import Mathlib.Algebra.Ring.Basic
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.LinearCombination
+import InfoGeometry.Synthesis.OctonionBraidSoldering
+
+/-!
+# Раздел 145b: Възли на Чърн–Саймънс, Алгебра на Темперли–Лийб, Уравнение на Янг–Бакстер и Октонионна Спояваща Сплитка
+Target: `InfoGeometry/Topological/ChernSimonsTemperleyLiebYangBaxterBraid.lean`
+Ref: `QMS-AUD-WAVE17-CHERN-SIMONS-TEMPERLEY-LIEB-YANG-BAXTER-2026-OCT-19`
+
+Формализира (Съгласно Директива Вълна 17 - Partition P3):
+1. Абстрактно и матрично (`Mat3 R`) представяне на алгебрата на Темперли–Лийб `TL₃(δ)`:
+   `U₁² = δ • U₁`, `U₂² = δ • U₂`, `U₁ U₂ U₁ = U₁`, `U₂ U₁ U₂ = U₂`.
+2. Скейн-операторите на Кауфман `B_i = A • 𝟙 + A_inv • U_i` за сплитката в Чърн–Саймънс.
+3. Теорема 1 (Точна Факторизация на Дефекта на Янг–Бакстер):
+   За всяка тройка оператори, удовлетворяваща релациите на Темперли–Лийб,
+   разликата `B₁ B₂ B₁ - B₂ B₁ B₂` се факторизира строго до
+   `(A³ + A · A_inv² · δ + A · A_inv⁴) • (U₁ - U₂)`
+   (при `A · A_inv = 1`, коефициентът е `A · (A² + δ + A_inv²)`)!
+4. Теорема 2 (Топологична Необходимост на Аномалията на Рамкирането за Янг–Бакстер):
+   Когато контурният фактор удовлетворява `δ = -A² - A_inv²` (и `A · A_inv = 1`),
+   уравнението на Янг–Бакстер `B₁ B₂ B₁ = B₂ B₁ B₂` е изпълнено тъждествено!
+5. Теорема 3 (Конкретна Некомутативна 3×3 Матрична Реализация на Темперли–Лийб и Янг–Бакстер).
+6. Теорема 4 (Октонионно Спояване на Сплитката на Артин `B₃` чрез `OctonionBraidSoldering`):
+   Връзка с фоковото представяне на Майорана `fockBraid` и регулярното октонионно представяне `braidUnit`.
+-/
+
+namespace InfoGeometry.Topological.ChernSimonsTemperleyLieb
+
+open InfoGeometry.Synthesis.OctonionBraidSoldering
+open InfoGeometry.Canonical.SplitOctonionRightRegularBraid
+open InfoGeometry.Canonical.SplitOctonionExteriorRightRegularBdGIntertwiner
+
+variable {R : Type*} [CommRing R]
+
+/-! ### 1. Некомутативна 3×3 Матрична Алгебра `Mat3 R` за `TL₃(δ)` и `B₃` -/
+
+/-- Некомутативна 3×3 матрица над комутативен пръстен `R`. -/
+@[ext]
+structure Mat3 (R : Type*) where
+  m11 : R
+  m12 : R
+  m13 : R
+  m21 : R
+  m22 : R
+  m23 : R
+  m31 : R
+  m32 : R
+  m33 : R
+  deriving DecidableEq, Repr, Inhabited
+
+namespace Mat3
+
+variable {R : Type*} [CommRing R]
+
+def zero : Mat3 R := ⟨0, 0, 0, 0, 0, 0, 0, 0, 0⟩
+def one  : Mat3 R := ⟨1, 0, 0, 0, 1, 0, 0, 0, 1⟩
+
+def add (X Y : Mat3 R) : Mat3 R where
+  m11 := X.m11 + Y.m11
+  m12 := X.m12 + Y.m12
+  m13 := X.m13 + Y.m13
+  m21 := X.m21 + Y.m21
+  m22 := X.m22 + Y.m22
+  m23 := X.m23 + Y.m23
+  m31 := X.m31 + Y.m31
+  m32 := X.m32 + Y.m32
+  m33 := X.m33 + Y.m33
+
+def sub (X Y : Mat3 R) : Mat3 R where
+  m11 := X.m11 - Y.m11
+  m12 := X.m12 - Y.m12
+  m13 := X.m13 - Y.m13
+  m21 := X.m21 - Y.m21
+  m22 := X.m22 - Y.m22
+  m23 := X.m23 - Y.m23
+  m31 := X.m31 - Y.m31
+  m32 := X.m32 - Y.m32
+  m33 := X.m33 - Y.m33
+
+def scale (c : R) (X : Mat3 R) : Mat3 R where
+  m11 := c * X.m11
+  m12 := c * X.m12
+  m13 := c * X.m13
+  m21 := c * X.m21
+  m22 := c * X.m22
+  m23 := c * X.m23
+  m31 := c * X.m31
+  m32 := c * X.m32
+  m33 := c * X.m33
+
+def mul (X Y : Mat3 R) : Mat3 R where
+  m11 := X.m11 * Y.m11 + X.m12 * Y.m21 + X.m13 * Y.m31
+  m12 := X.m11 * Y.m12 + X.m12 * Y.m22 + X.m13 * Y.m32
+  m13 := X.m11 * Y.m13 + X.m12 * Y.m23 + X.m13 * Y.m33
+  m21 := X.m21 * Y.m11 + X.m22 * Y.m21 + X.m23 * Y.m31
+  m22 := X.m21 * Y.m12 + X.m22 * Y.m22 + X.m23 * Y.m32
+  m23 := X.m21 * Y.m13 + X.m22 * Y.m23 + X.m23 * Y.m33
+  m31 := X.m31 * Y.m11 + X.m32 * Y.m21 + X.m33 * Y.m31
+  m32 := X.m31 * Y.m12 + X.m32 * Y.m22 + X.m33 * Y.m32
+  m33 := X.m31 * Y.m13 + X.m32 * Y.m23 + X.m33 * Y.m33
+
+def trace (X : Mat3 R) : R :=
+  X.m11 + X.m22 + X.m33
+
+def canonicalMat3Int : Mat3 ℤ := ⟨1, 2, 0, 0, 1, 3, 0, 0, 1⟩
+
+theorem canonicalMat3Int_nondegenerate :
+    canonicalMat3Int ≠ default := by decide
+
+theorem mul_noncommutative_int :
+    ∃ X Y : Mat3 ℤ, mul X Y ≠ mul Y X :=
+  ⟨⟨0, 1, 0, 0, 0, 0, 0, 0, 0⟩, ⟨0, 0, 0, 1, 0, 0, 0, 0, 0⟩, by decide⟩
+
+/-! ### 2. Абстрактна Дедукция на Уравнението на Янг–Бакстер от Релациите на Темперли–Лийб -/
+
+/-- Предикат за два генератора `U₁, U₂ : Mat3 R` на алгебрата на Темперли–Лийб `TL₃(δ)`. -/
+def IsTemperleyLiebPair (delta : R) (U₁ U₂ : Mat3 R) : Prop :=
+  mul U₁ U₁ = scale delta U₁ ∧
+  mul U₂ U₂ = scale delta U₂ ∧
+  mul (mul U₁ U₂) U₁ = U₁ ∧
+  mul (mul U₂ U₁) U₂ = U₂
+
+/-- Скейн-оператор на Кауфман `B(A, A_inv, U) = A • 𝟙 + A_inv • U`. -/
+def kauffmanBraidGen (A A_inv : R) (U : Mat3 R) : Mat3 R :=
+  add (scale A one) (scale A_inv U)
+
+/--
+Теорема 1 (Пълно Разлагане на Произведението `B₁ · B₂ · B₁` върху Генератори на Темперли–Лийб):
+За произволна двойка `(U₁, U₂)` в `TL₃(δ)`:
+`B₁ B₂ B₁ = A³ • 𝟙 + (2 A² A_inv + A A_inv² δ) • U₁ + A² A_inv • U₂ + A A_inv² • (U₁ U₂ + U₂ U₁) + A_inv³ • U₁`.
+-/
+theorem kauffman_triple_product_expansion (A A_inv delta : R) (U₁ U₂ : Mat3 R)
+    (hTL : IsTemperleyLiebPair delta U₁ U₂) :
+    mul (mul (kauffmanBraidGen A A_inv U₁) (kauffmanBraidGen A A_inv U₂))
+        (kauffmanBraidGen A A_inv U₁) =
+      add
+        (add (scale (A^3) one)
+             (scale (2 * A^2 * A_inv + A * A_inv^2 * delta + A_inv^3) U₁))
+        (add (scale (A^2 * A_inv) U₂)
+             (scale (A * A_inv^2) (add (mul U₁ U₂) (mul U₂ U₁)))) := by
+  rcases hTL with ⟨hU1_sq, _, hU121, _⟩
+  have h_distrib :
+      mul (mul (kauffmanBraidGen A A_inv U₁) (kauffmanBraidGen A A_inv U₂))
+          (kauffmanBraidGen A A_inv U₁) =
+        add
+          (add (scale (A^3) one)
+               (add (scale (2 * A^2 * A_inv) U₁) (scale (A * A_inv^2) (mul U₁ U₁))))
+          (add (add (scale (A^2 * A_inv) U₂)
+                    (scale (A * A_inv^2) (add (mul U₁ U₂) (mul U₂ U₁))))
+               (scale (A_inv^3) (mul (mul U₁ U₂) U₁))) := by
+    dsimp [kauffmanBraidGen, mul, add, scale, one]
+    ext <;> ring
+  rw [h_distrib, hU1_sq, hU121]
+  dsimp [add, scale]
+  ext <;> ring
+
+/--
+Теорема 2a (Точна Факторизация на Дефекта на Янг–Бакстер чрез Аномалията на Рамкирането):
+За всяка двойка `(U₁, U₂)` от алгебрата на Темперли–Лийб `TL₃(δ)`,
+дефектът на уравнението на сплитката `B₁ B₂ B₁ - B₂ B₁ B₂` се свива точно до:
+`(A² · A_inv + A · A_inv² · δ + A_inv³) • (U₁ - U₂)`!
+-/
+theorem yang_baxter_defect_factorization (A A_inv delta : R) (U₁ U₂ : Mat3 R)
+    (hTL : IsTemperleyLiebPair delta U₁ U₂) :
+    sub
+      (mul (mul (kauffmanBraidGen A A_inv U₁) (kauffmanBraidGen A A_inv U₂))
+           (kauffmanBraidGen A A_inv U₁))
+      (mul (mul (kauffmanBraidGen A A_inv U₂) (kauffmanBraidGen A A_inv U₁))
+           (kauffmanBraidGen A A_inv U₂)) =
+      scale (A^2 * A_inv + A * A_inv^2 * delta + A_inv^3) (sub U₁ U₂) := by
+  have hTL_swap : IsTemperleyLiebPair delta U₂ U₁ :=
+    ⟨hTL.2.1, hTL.1, hTL.2.2.2, hTL.2.2.1⟩
+  rw [kauffman_triple_product_expansion A A_inv delta U₁ U₂ hTL,
+      kauffman_triple_product_expansion A A_inv delta U₂ U₁ hTL_swap]
+  dsimp [add, sub, scale]
+  ext <;> ring
+
+/--
+Теорема 2b (Топологична Необходимост на Контурния Фактор на Кауфман `δ = -A² - A⁻²`):
+При `A · A_inv = 1` и `δ = -A² - A_inv²`, коефициентът пред `U₁ - U₂` се анулира тъждествено
+и операторите на Кауфман удовлетворяват точното уравнение на Янг–Бакстер `B₁ B₂ B₁ = B₂ B₁ B₂`!
+-/
+theorem yang_baxter_from_temperley_lieb_and_framing_anomaly
+    (A A_inv delta : R) (U₁ U₂ : Mat3 R)
+    (hTL : IsTemperleyLiebPair delta U₁ U₂)
+    (h_inv : A * A_inv = 1)
+    (h_delta : delta = -A^2 - A_inv^2) :
+    mul (mul (kauffmanBraidGen A A_inv U₁) (kauffmanBraidGen A A_inv U₂))
+        (kauffmanBraidGen A A_inv U₁) =
+    mul (mul (kauffmanBraidGen A A_inv U₂) (kauffmanBraidGen A A_inv U₁))
+        (kauffmanBraidGen A A_inv U₂) := by
+  have h_coeff : A^2 * A_inv + A * A_inv^2 * delta + A_inv^3 = 0 := by
+    rw [h_delta]
+    linear_combination (A - A_inv) * h_inv
+  have h_defect := yang_baxter_defect_factorization A A_inv delta U₁ U₂ hTL
+  rw [h_coeff] at h_defect
+  dsimp [sub, scale] at h_defect
+  ext
+  · have h := congrArg Mat3.m11 h_defect; dsimp at h; linear_combination h
+  · have h := congrArg Mat3.m12 h_defect; dsimp at h; linear_combination h
+  · have h := congrArg Mat3.m13 h_defect; dsimp at h; linear_combination h
+  · have h := congrArg Mat3.m21 h_defect; dsimp at h; linear_combination h
+  · have h := congrArg Mat3.m22 h_defect; dsimp at h; linear_combination h
+  · have h := congrArg Mat3.m23 h_defect; dsimp at h; linear_combination h
+  · have h := congrArg Mat3.m31 h_defect; dsimp at h; linear_combination h
+  · have h := congrArg Mat3.m32 h_defect; dsimp at h; linear_combination h
+  · have h := congrArg Mat3.m33 h_defect; dsimp at h; linear_combination h
+
+/-! ### 3. Конкретна Некомутативна 3×3 Матрична Реализация на `TL₃(δ)` -/
+
+/-- Първият генератор на Темперли–Лийб `U₁(t)` в `Mat3 R` с контурен параметър `δ = -t - t_inv`. -/
+def tlGen1 (t t_inv : R) : Mat3 R :=
+  ⟨-t, 1, 0,
+   1, -t_inv, 0,
+   0, 0, 0⟩
+
+/-- Вторият генератор на Темперли–Лийб `U₂(t)` в `Mat3 R`. -/
+def tlGen2 (t t_inv : R) : Mat3 R :=
+  ⟨0, 0, 0,
+   0, -t, 1,
+   0, 1, -t_inv⟩
+
+theorem tlGen1_tlGen2_noncommutative :
+    ∃ t t_inv : ℤ, mul (tlGen1 t t_inv) (tlGen2 t t_inv) ≠ mul (tlGen2 t t_inv) (tlGen1 t t_inv) :=
+  ⟨1, 1, by decide⟩
+
+/--
+Теорема 3 (Сертификация на `tlGen1` и `tlGen2` като Истинско Представяне на `TL₃(-t - t⁻¹)`):
+При `t · t_inv = 1`, матриците `tlGen1 t t_inv` и `tlGen2 t t_inv` удовлетворяват всички
+аксиоми на `IsTemperleyLiebPair (-t - t_inv)`.
+-/
+theorem tlGen_isTemperleyLiebPair (t t_inv : R) (h_t : t * t_inv = 1) :
+    IsTemperleyLiebPair (-t - t_inv) (tlGen1 t t_inv) (tlGen2 t t_inv) := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · ext <;> ring_nf <;> (try rw [h_t]; rfl)
+  · ext <;> ring_nf <;> (try rw [h_t]; rfl)
+  · ext <;> ring_nf <;> (try rw [h_t]; rfl)
+  · ext <;> ring_nf <;> (try rw [h_t]; rfl)
+
+end Mat3
+
+/-! ### 4. Теорема 4: Октонионна Спояваща Сплитка (`OctonionBraidSoldering`) -/
+
+/--
+Теорема 4 (Октонионно Спояване на Групата на Сплитките на Артин `B₃`):
+1. Фоковите оператори на сплитката `fockBraid index` върху външната алгебра `Exterior3`
+   се вплитат точно с регулярните сплит-октонионни оператори `braidUnit index` чрез `fockBdGEquiv`.
+2. Действието на `braidConjugation` върху сандвич-билинейната форма удовлетворява
+   съотношението на Артин `σ₀ σ₁ σ₀ = σ₁ σ₀ σ₁` (`represented_artin_on_sandwich`).
+-/
+theorem octonionic_artin_braid_soldering_bridge
+    (index : Fin 2)
+    (state : InfoGeometry.Canonical.SplitOctonionExterior3HodgeDiracBridge.Exterior3)
+    (metric left right : InfoGeometry.Lie.SplitOctonionChiralOperatorSupergrading.EndCZ) :
+    fockBdGEquiv (fockBraid index state) = (braidUnit index : InfoGeometry.Lie.SplitOctonionChiralOperatorSupergrading.EndCZ) (fockBdGEquiv state) ∧
+    braidConjugation
+        (PresentedGroup.of (0 : Fin 2) * PresentedGroup.of (1 : Fin 2) *
+          PresentedGroup.of (0 : Fin 2))
+        (sandwich metric left right) =
+      braidConjugation
+        (PresentedGroup.of (1 : Fin 2) * PresentedGroup.of (0 : Fin 2) *
+          PresentedGroup.of (1 : Fin 2))
+        (sandwich metric left right) :=
+  ⟨fock_braid_intertwines index state,
+   represented_artin_on_sandwich metric left right⟩
+
+/-! ### 5. Главен Синтез на Раздел 145b (Partition P3) -/
+
+theorem chern_simons_temperley_lieb_yang_baxter_synthesis
+    (A A_inv : R) (h_inv : A * A_inv = 1)
+    (index : Fin 2)
+    (state : InfoGeometry.Canonical.SplitOctonionExterior3HodgeDiracBridge.Exterior3)
+    (metric left right : InfoGeometry.Lie.SplitOctonionChiralOperatorSupergrading.EndCZ) :
+    let delta := -A^2 - A_inv^2
+    let U₁ := Mat3.tlGen1 (A^2) (A_inv^2)
+    let U₂ := Mat3.tlGen2 (A^2) (A_inv^2)
+    Mat3.IsTemperleyLiebPair delta U₁ U₂ ∧
+    Mat3.mul (Mat3.mul (Mat3.kauffmanBraidGen A A_inv U₁) (Mat3.kauffmanBraidGen A A_inv U₂))
+             (Mat3.kauffmanBraidGen A A_inv U₁) =
+      Mat3.mul (Mat3.mul (Mat3.kauffmanBraidGen A A_inv U₂) (Mat3.kauffmanBraidGen A A_inv U₁))
+               (Mat3.kauffmanBraidGen A A_inv U₂) ∧
+    fockBdGEquiv (fockBraid index state) = (braidUnit index : InfoGeometry.Lie.SplitOctonionChiralOperatorSupergrading.EndCZ) (fockBdGEquiv state) ∧
+    braidConjugation
+        (PresentedGroup.of (0 : Fin 2) * PresentedGroup.of (1 : Fin 2) *
+          PresentedGroup.of (0 : Fin 2))
+        (sandwich metric left right) =
+      braidConjugation
+        (PresentedGroup.of (1 : Fin 2) * PresentedGroup.of (0 : Fin 2) *
+          PresentedGroup.of (1 : Fin 2))
+        (sandwich metric left right) := by
+  intro delta U₁ U₂
+  have h_sq : A^2 * A_inv^2 = 1 := by
+    calc A^2 * A_inv^2 = (A * A_inv)^2 := by ring
+      _ = 1^2 := by rw [h_inv]
+      _ = 1 := by ring
+  have hTL : Mat3.IsTemperleyLiebPair delta U₁ U₂ :=
+    Mat3.tlGen_isTemperleyLiebPair (A^2) (A_inv^2) h_sq
+  refine ⟨hTL, ?_, fock_braid_intertwines index state,
+          represented_artin_on_sandwich metric left right⟩
+  exact Mat3.yang_baxter_from_temperley_lieb_and_framing_anomaly A A_inv delta U₁ U₂ hTL h_inv rfl
+
+end InfoGeometry.Topological.ChernSimonsTemperleyLieb

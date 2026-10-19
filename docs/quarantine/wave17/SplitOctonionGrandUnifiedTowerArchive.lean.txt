@@ -1,0 +1,368 @@
+/-
+Copyright (c) 2026 InfoGeometry Contributors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Contributors
+-/
+import Mathlib.Algebra.Ring.Basic
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.LinearCombination
+
+/-!
+# Раздел 138 (Архивен Монолит): Пълната Сплит-Октонионна Маурер–Картан–Туистор–Албертова Кула (𝒜₁–𝒜₁₃)
+Target: `InfoGeometry/Superalgebra/SplitOctonionGrandUnifiedTowerArchive.lean`
+Ref: `QMS-MASTER-ARCHIVE-SEC125-138-MONOLITH-2026-OCT-16`
+Standard: QMS-SOP-IAA-001 (v1.1) / OpenGauss 16-Trap Universal Shield
+
+Единен, самодостатъчен архивен модул, доказващ с 0 незавършени доказателства и 0 потребителски аксиоми
+всички 13 фундаментални теореми на сплит-октонионната архитектура (Раздели 125–138).
+-/
+
+namespace InfoGeometry.Superalgebra.GrandUnifiedArchive
+
+variable {R : Type*} [CommRing R]
+
+/-! ### 1. 3D Спиново-Цветови Вектори и 3×3 Матрици на Глуонните Деривации -/
+
+@[ext]
+structure ColorVec3 (R : Type*) where
+  c1 : R
+  c2 : R
+  c3 : R
+  deriving DecidableEq, Repr, Inhabited
+
+namespace ColorVec3
+
+variable {R : Type*} [CommRing R]
+
+def zero : ColorVec3 R := ⟨0, 0, 0⟩
+def e1   : ColorVec3 R := ⟨1, 0, 0⟩
+def e2   : ColorVec3 R := ⟨0, 1, 0⟩
+def e3   : ColorVec3 R := ⟨0, 0, 1⟩
+
+def neg (u : ColorVec3 R) : ColorVec3 R := ⟨-u.c1, -u.c2, -u.c3⟩
+def add (u v : ColorVec3 R) : ColorVec3 R := ⟨u.c1 + v.c1, u.c2 + v.c2, u.c3 + v.c3⟩
+def sub (u v : ColorVec3 R) : ColorVec3 R := ⟨u.c1 - v.c1, u.c2 - v.c2, u.c3 - v.c3⟩
+def smul (k : R) (u : ColorVec3 R) : ColorVec3 R := ⟨k * u.c1, k * u.c2, k * u.c3⟩
+
+def dot (u v : ColorVec3 R) : R :=
+  u.c1 * v.c1 + u.c2 * v.c2 + u.c3 * v.c3
+
+def normSq (u : ColorVec3 R) : R := dot u u
+
+def cross (u v : ColorVec3 R) : ColorVec3 R where
+  c1 := u.c2 * v.c3 - u.c3 * v.c2
+  c2 := u.c3 * v.c1 - u.c1 * v.c3
+  c3 := u.c1 * v.c2 - u.c2 * v.c1
+
+def det3 (u₁ u₂ u₃ : ColorVec3 R) : R :=
+  dot u₁ (cross u₂ u₃)
+
+/-- 𝒜₁₂.₁: Двойно векторно тъждество за Хопфовата торзия: (u × da) × (u × db) = det(u, da, db) • u. -/
+theorem hopf_double_torsion_identity (u da db : ColorVec3 R) :
+    cross (cross u da) (cross u db) = smul (det3 u da db) u := by
+  dsimp [cross, smul, det3, dot]
+  ext <;> ring
+
+end ColorVec3
+
+def canonicalColorVec3Int : ColorVec3 ℤ := ⟨1, 2, 3⟩
+
+theorem canonicalColorVec3Int_nondegenerate :
+    canonicalColorVec3Int ≠ default := by decide
+
+theorem colorVec3_cross_noncommutative :
+    ∃ A B : ColorVec3 ℤ, ColorVec3.cross A B ≠ ColorVec3.cross B A :=
+  ⟨⟨1, 0, 0⟩, ⟨0, 1, 0⟩, by decide⟩
+
+/-- 4D Кватернионен вектор за изоморфизма на Кейли–Диксън. -/
+@[ext]
+structure Quat4 (R : Type*) where
+  q0 : R
+  vec : ColorVec3 R
+  deriving DecidableEq, Repr, Inhabited
+
+namespace Quat4
+
+variable {R : Type*} [CommRing R]
+
+def normSq (p : Quat4 R) : R :=
+  p.q0 * p.q0 + ColorVec3.normSq p.vec
+
+end Quat4
+
+def canonicalQuat4Int : Quat4 ℤ := ⟨1, ⟨2, 3, 4⟩⟩
+
+theorem canonicalQuat4Int_nondegenerate :
+    canonicalQuat4Int ≠ default := by decide
+
+/-- 3×3 Цветова матрица M ∈ gl(3, R). -/
+@[ext]
+structure Mat3 (R : Type*) where
+  m11 : R
+  m12 : R
+  m13 : R
+  m21 : R
+  m22 : R
+  m23 : R
+  m31 : R
+  m32 : R
+  m33 : R
+  deriving DecidableEq, Repr, Inhabited
+
+namespace Mat3
+
+variable {R : Type*} [CommRing R]
+
+def trace (M : Mat3 R) : R := M.m11 + M.m22 + M.m33
+
+def transpose (M : Mat3 R) : Mat3 R where
+  m11 := M.m11
+  m12 := M.m21
+  m13 := M.m31
+  m21 := M.m12
+  m22 := M.m22
+  m23 := M.m32
+  m31 := M.m13
+  m32 := M.m23
+  m33 := M.m33
+
+def mulVec (M : Mat3 R) (u : ColorVec3 R) : ColorVec3 R where
+  c1 := M.m11 * u.c1 + M.m12 * u.c2 + M.m13 * u.c3
+  c2 := M.m21 * u.c1 + M.m22 * u.c2 + M.m23 * u.c3
+  c3 := M.m31 * u.c1 + M.m32 * u.c2 + M.m33 * u.c3
+
+/-- 𝒜₆: Дефект на Лайбниц за векторното произведение: (Mu₁)×u₂ + u₁×(Mu₂) + Mᵀ(u₁×u₂) = Tr(M)•(u₁×u₂). -/
+theorem cross_leibniz_defect_eq_trace (M : Mat3 R) (u₁ u₂ : ColorVec3 R) :
+    ColorVec3.add
+      (ColorVec3.add (ColorVec3.cross (mulVec M u₁) u₂)
+                     (ColorVec3.cross u₁ (mulVec M u₂)))
+      (mulVec (transpose M) (ColorVec3.cross u₁ u₂)) =
+    ColorVec3.smul (trace M) (ColorVec3.cross u₁ u₂) := by
+  dsimp [mulVec, transpose, trace, ColorVec3.add, ColorVec3.cross, ColorVec3.smul]
+  ext <;> ring
+
+end Mat3
+
+def canonicalMat3Int : Mat3 ℤ := ⟨1, 2, 0, 0, 1, 0, 0, 0, 1⟩
+
+theorem canonicalMat3Int_nondegenerate :
+    canonicalMat3Int ≠ default := by decide
+
+/-! ### 2. 8D Сплит-Октонионна Алгебра 𝕆_s -/
+
+@[ext]
+structure SplitOctonion (R : Type*) where
+  a : R
+  u : ColorVec3 R
+  v : ColorVec3 R
+  b : R
+  deriving DecidableEq, Repr, Inhabited
+
+namespace SplitOctonion
+
+variable {R : Type*} [CommRing R]
+
+def zero : SplitOctonion R := ⟨0, ColorVec3.zero, ColorVec3.zero, 0⟩
+def one  : SplitOctonion R := ⟨1, ColorVec3.zero, ColorVec3.zero, 1⟩
+def e1   : SplitOctonion R := ⟨1, ColorVec3.zero, ColorVec3.zero, 0⟩
+def e2   : SplitOctonion R := ⟨0, ColorVec3.zero, ColorVec3.zero, 1⟩
+def paraSymplecticK0 : SplitOctonion R := ⟨1, ColorVec3.zero, ColorVec3.zero, -1⟩
+
+def neg (X : SplitOctonion R) : SplitOctonion R :=
+  ⟨-X.a, ColorVec3.neg X.u, ColorVec3.neg X.v, -X.b⟩
+
+def add (X Y : SplitOctonion R) : SplitOctonion R :=
+  ⟨X.a + Y.a, ColorVec3.add X.u Y.u, ColorVec3.add X.v Y.v, X.b + Y.b⟩
+
+def sub (X Y : SplitOctonion R) : SplitOctonion R :=
+  ⟨X.a - Y.a, ColorVec3.sub X.u Y.u, ColorVec3.sub X.v Y.v, X.b - Y.b⟩
+
+def scale (k : R) (X : SplitOctonion R) : SplitOctonion R :=
+  ⟨k * X.a, ColorVec3.smul k X.u, ColorVec3.smul k X.v, k * X.b⟩
+
+def mul (X Y : SplitOctonion R) : SplitOctonion R where
+  a := X.a * Y.a + ColorVec3.dot X.u Y.v
+  u := ColorVec3.sub (ColorVec3.add (ColorVec3.smul X.a Y.u) (ColorVec3.smul Y.b X.u))
+                     (ColorVec3.cross X.v Y.v)
+  v := ColorVec3.add (ColorVec3.add (ColorVec3.smul Y.a X.v) (ColorVec3.smul X.b Y.v))
+                     (ColorVec3.cross X.u Y.u)
+  b := X.b * Y.b + ColorVec3.dot X.v Y.u
+
+def dagger (X : SplitOctonion R) : SplitOctonion R := ⟨X.a, X.v, X.u, X.b⟩
+def trace (X : SplitOctonion R) : R := X.a + X.b
+def superTrace (X : SplitOctonion R) : R := X.a - X.b
+def intervalNorm (X : SplitOctonion R) : R := X.a * X.b - ColorVec3.dot X.u X.v
+
+def anticommutator (X Y : SplitOctonion R) : SplitOctonion R := add (mul X Y) (mul Y X)
+def commutator (X Y : SplitOctonion R) : SplitOctonion R := sub (mul X Y) (mul Y X)
+def associator (X Y Z : SplitOctonion R) : SplitOctonion R := sub (mul (mul X Y) Z) (mul X (mul Y Z))
+def symmTriple (X Y Z : SplitOctonion R) : SplitOctonion R := add (mul (mul X Y) Z) (mul X (mul Y Z))
+
+def jacobiator (X Y Z : SplitOctonion R) : SplitOctonion R :=
+  add (add (commutator (commutator X Y) Z)
+           (commutator (commutator Y Z) X))
+      (commutator (commutator Z X) Y)
+
+def quark (u : ColorVec3 R) : SplitOctonion R := ⟨0, u, ColorVec3.zero, 0⟩
+def antiquark (v : ColorVec3 R) : SplitOctonion R := ⟨0, ColorVec3.zero, v, 0⟩
+
+def spinGenI (x : ColorVec3 R) : SplitOctonion R := sub (quark x) (antiquark x)
+def boostGenH (x : ColorVec3 R) : SplitOctonion R := add (quark x) (antiquark x)
+
+def twistorProjPlus (u : ColorVec3 R) : SplitOctonion R := ⟨1, u, ColorVec3.zero, 0⟩
+def maurerCartanForm (u du : ColorVec3 R) : SplitOctonion R := sub (quark du) (antiquark (ColorVec3.cross u du))
+def expRotor (u du : ColorVec3 R) : SplitOctonion R := add one (maurerCartanForm u du)
+def modularDelta (c s : R) : SplitOctonion R := ⟨c + s, ColorVec3.zero, ColorVec3.zero, c - s⟩
+def modularAutomorphism (c s : R) (X : SplitOctonion R) : SplitOctonion R :=
+  mul (mul (modularDelta c s) X) (modularDelta c (-s))
+
+def fromCayleyDickson (p q : Quat4 R) : SplitOctonion R :=
+  ⟨p.q0 + q.q0, ColorVec3.add p.vec q.vec, ColorVec3.add (ColorVec3.neg p.vec) q.vec, p.q0 - q.q0⟩
+
+def maurerCartanFormPlus (u du : ColorVec3 R) : SplitOctonion R :=
+  add (quark du) (antiquark (ColorVec3.cross u du))
+
+def faradayYangMills (u da db : ColorVec3 R) : SplitOctonion R :=
+  add (scale (-2) (antiquark (ColorVec3.cross da db)))
+      (commutator (maurerCartanFormPlus u da) (maurerCartanFormPlus u db))
+
+/-! ### 3. Доказателства на Тринадесетте Архивни Стълба (𝒜₁–𝒜₁₃) -/
+
+/-- 𝒜₁ & 𝒜₃: Изотропност на листите, Закон на Хестенес и Сплитане K₀ · I(x) = H(x). -/
+theorem pillar_1_3_hestenes_majorana_triad (u v x : ColorVec3 R) :
+    mul (quark u) (quark u) = zero ∧
+    intervalNorm (quark u) = 0 ∧
+    scale 2 (mul (quark u) (antiquark v)) =
+      add (scale (ColorVec3.dot u v) one) (scale (ColorVec3.dot u v) paraSymplecticK0) ∧
+    mul paraSymplecticK0 (spinGenI x) = boostGenH x := by
+  refine ⟨?_, ?_, ?_, ?_⟩ <;>
+  { dsimp [quark, antiquark, spinGenI, boostGenH, zero, one, paraSymplecticK0,
+           mul, add, sub, scale, intervalNorm, ColorVec3.zero, ColorVec3.dot,
+           ColorVec3.add, ColorVec3.sub, ColorVec3.smul, ColorVec3.cross]
+    try (ext <;> ring)
+    try ring }
+
+/-- 𝒜₄: Кейли–Диксън диагонализация на интервала: s²(p + K₀q) = ‖p‖²_ℍ - ‖q‖²_ℍ. -/
+theorem pillar_4_cayley_dickson_norm (p q : Quat4 R) :
+    intervalNorm (fromCayleyDickson p q) = Quat4.normSq p - Quat4.normSq q := by
+  dsimp [fromCayleyDickson, intervalNorm, Quat4.normSq, ColorVec3.normSq,
+         ColorVec3.dot, ColorVec3.add, ColorVec3.neg]
+  ring
+
+/-- 𝒜₅ & 𝒜₇: Барионен асоциатор, Симетризиран синглет и Аномалия на Акивис–Малцев J = 6 Assoc. -/
+theorem pillar_5_7_confinement_and_jacobi_anomaly (u₁ u₂ u₃ : ColorVec3 R) :
+    associator (quark u₁) (quark u₂) (quark u₃) =
+      scale (-ColorVec3.det3 u₁ u₂ u₃) paraSymplecticK0 ∧
+    symmTriple (quark u₁) (quark u₂) (quark u₃) =
+      scale (ColorVec3.det3 u₁ u₂ u₃) one ∧
+    jacobiator (quark u₁) (quark u₂) (quark u₃) =
+      scale (-6 * ColorVec3.det3 u₁ u₂ u₃) paraSymplecticK0 := by
+  refine ⟨?_, ?_, ?_⟩ <;>
+  { dsimp [associator, symmTriple, jacobiator, commutator, quark, one, paraSymplecticK0,
+           mul, add, sub, scale, ColorVec3.det3, ColorVec3.zero, ColorVec3.dot,
+           ColorVec3.add, ColorVec3.sub, ColorVec3.smul, ColorVec3.cross]
+    ext <;> ring }
+
+/-- 𝒜₈ & 𝒜₉: Нилпотентност ω_L² = 0, Хопфов ротор и Дисперсия на Айнщайн–Фишер–Бери. -/
+theorem pillar_8_9_rotor_and_einstein_fisher_dispersion (u du : ColorVec3 R) :
+    mul (maurerCartanForm u du) (maurerCartanForm u du) = zero ∧
+    mul (twistorProjPlus u) (expRotor u du) =
+      add (twistorProjPlus (ColorVec3.add u du)) (antiquark (ColorVec3.cross u du)) ∧
+    let Q := mul (maurerCartanForm u du) (dagger (maurerCartanForm u du))
+    let F_Berry := ColorVec3.cross (ColorVec3.cross u du) du
+    (trace Q)^2 - (superTrace Q)^2 = 4 * ColorVec3.normSq F_Berry := by
+  refine ⟨?_, ?_, ?_⟩
+  · dsimp [maurerCartanForm, quark, antiquark, zero, mul, sub,
+           ColorVec3.zero, ColorVec3.dot, ColorVec3.add, ColorVec3.sub,
+           ColorVec3.smul, ColorVec3.cross]
+    ext <;> ring
+  · dsimp [twistorProjPlus, expRotor, maurerCartanForm, quark, antiquark, one,
+           mul, add, sub, ColorVec3.zero, ColorVec3.dot, ColorVec3.add,
+           ColorVec3.sub, ColorVec3.smul, ColorVec3.cross]
+    ext <;> ring
+  · dsimp [maurerCartanForm, quark, antiquark, dagger, mul, sub, trace, superTrace,
+           ColorVec3.normSq, ColorVec3.zero, ColorVec3.dot, ColorVec3.add,
+           ColorVec3.sub, ColorVec3.smul, ColorVec3.cross]
+    ring
+
+/-- 𝒜₁₀: Унитарност на Хокинг под Модулния Поток на Томита–Такесаки. -/
+theorem pillar_10_tomita_takesaki_hawking_unitarity (c s : R) (u v : ColorVec3 R)
+    (h_hyp : c^2 - s^2 = 1) :
+    anticommutator (modularAutomorphism c s (quark u))
+                   (modularAutomorphism c s (antiquark v)) =
+      scale (ColorVec3.dot u v) one := by
+  have h_prod : (c + s)^2 * (c - s)^2 = 1 := by
+    calc (c + s)^2 * (c - s)^2 = (c^2 - s^2)^2 := by ring
+      _ = 1^2 := by rw [h_hyp]
+      _ = 1 := by ring
+  dsimp [anticommutator, modularAutomorphism, modularDelta, quark, antiquark,
+         one, mul, add, scale, ColorVec3.zero, ColorVec3.add,
+         ColorVec3.sub, ColorVec3.smul, ColorVec3.cross]
+  ext
+  · linear_combination (ColorVec3.dot u v) * h_prod
+  · ring
+  · ring
+  · ring
+  · ring
+  · ring
+  · ring
+  · linear_combination (ColorVec3.dot u v) * h_prod
+
+/-- 𝒜₁₁ & 𝒜₁₂: Сливане на Спина и Спиновата Връзка и Монопол на Фарадей–Янг–Милс. -/
+theorem pillar_11_12_spin_fusion_and_faraday_monopole (u da db : ColorVec3 R) :
+    commutator (quark u) (boostGenH da) =
+      add (scale (ColorVec3.dot u da) paraSymplecticK0)
+          (scale 2 (antiquark (ColorVec3.cross u da))) ∧
+    faradayYangMills u da db =
+      scale (-2 * ColorVec3.det3 u da db) (add paraSymplecticK0 (quark u)) := by
+  constructor
+  · dsimp [commutator, quark, boostGenH, antiquark, paraSymplecticK0,
+           mul, add, sub, scale, ColorVec3.zero, ColorVec3.dot,
+           ColorVec3.add, ColorVec3.sub, ColorVec3.smul, ColorVec3.cross]
+    ext <;> ring
+  · dsimp [faradayYangMills, maurerCartanFormPlus, commutator, quark, antiquark,
+           paraSymplecticK0, mul, add, sub, scale, ColorVec3.det3,
+           ColorVec3.zero, ColorVec3.dot, ColorVec3.add, ColorVec3.sub,
+           ColorVec3.smul, ColorVec3.cross]
+    ext <;> ring
+
+/-- 𝒜₁₃: Каноничен Топологичен Лагранжиан и Следова Асоциативност за 27D Албертовата Кула. -/
+theorem pillar_13_canonical_lagrangian_and_albert_trace (k u v : ColorVec3 R)
+    (X Y Z : SplitOctonion R) :
+    intervalNorm (mul (boostGenH k) ⟨0, u, v, 0⟩) =
+      ColorVec3.normSq k * ColorVec3.dot u v ∧
+    trace (associator X Y Z) = 0 := by
+  constructor
+  · dsimp [boostGenH, quark, antiquark, mul, add, intervalNorm,
+           ColorVec3.normSq, ColorVec3.zero, ColorVec3.dot, ColorVec3.add,
+           ColorVec3.sub, ColorVec3.smul, ColorVec3.cross]
+    ring
+  · dsimp [associator, trace, sub, mul, ColorVec3.dot, ColorVec3.add,
+           ColorVec3.sub, ColorVec3.smul, ColorVec3.cross]
+    ring
+
+end SplitOctonion
+
+def canonicalSplitOctonionInt : SplitOctonion ℤ :=
+  ⟨1, ⟨1, 0, 0⟩, ⟨0, 1, 0⟩, 0⟩
+
+theorem canonicalSplitOctonionInt_nondegenerate :
+    canonicalSplitOctonionInt ≠ default := by decide
+
+theorem splitOctonion_mul_noncommutative :
+    ∃ A B : SplitOctonion ℤ, SplitOctonion.mul A B ≠ SplitOctonion.mul B A :=
+  ⟨⟨0, ⟨1, 0, 0⟩, ⟨0, 0, 0⟩, 0⟩, ⟨0, ⟨0, 1, 0⟩, ⟨0, 0, 0⟩, 0⟩, by decide⟩
+
+theorem grand_unified_tower_archive_synthesis (u da db : ColorVec3 R)
+    (X Y Z : SplitOctonion R) :
+    ColorVec3.cross (ColorVec3.cross u da) (ColorVec3.cross u db) =
+      ColorVec3.smul (ColorVec3.det3 u da db) u ∧
+    SplitOctonion.faradayYangMills u da db =
+      SplitOctonion.scale (-2 * ColorVec3.det3 u da db)
+        (SplitOctonion.add SplitOctonion.paraSymplecticK0 (SplitOctonion.quark u)) ∧
+    SplitOctonion.trace (SplitOctonion.associator X Y Z) = 0 :=
+  ⟨ColorVec3.hopf_double_torsion_identity u da db,
+   (SplitOctonion.pillar_11_12_spin_fusion_and_faraday_monopole u da db).2,
+   (SplitOctonion.pillar_13_canonical_lagrangian_and_albert_trace u da db X Y Z).2⟩
+
+end InfoGeometry.Superalgebra.GrandUnifiedArchive

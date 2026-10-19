@@ -255,24 +255,4 @@ theorem metric_energy_preservation_manifold (sys : MetriplecticSystem R)
 
 end MetriplecticSystem
 
-/-- Bundles the finite matrix reconstruction, spinor hyper-component action homomorphism,
-    skew-form self-nullity, and restricted nullity identities. -/
-theorem metriplectic_cl11_master_synthesis [Invertible (2 : R)] :
-    (∀ A : Cl11Matrix R, Cl11Matrix.add (Cl11Matrix.toSymmetric A) (Cl11Matrix.toSkew A) = A) ∧
-    (∀ (A B : Cl11Matrix R) (ψ : Cl11Matrix.MajoranaSpinor R),
-      (Cl11Matrix.action (Cl11Matrix.mul A B) ψ).hyper_left =
-        (Cl11Matrix.action A (Cl11Matrix.action B ψ)).hyper_left) ∧
-    (∀ H : Cl11Matrix R, MetriplecticSystem.poissonBracket H H = 0) ∧
-    (∀ sys : MetriplecticSystem R,
-      sys.Hamiltonian.m12 = sys.Hamiltonian.m21 →
-      (sys.Hamiltonian.m11 = 0 ∧ sys.Hamiltonian.m22 = 0) →
-      (sys.Entropy.m12 = 0 ∧ sys.Entropy.m21 = 0) →
-      MetriplecticSystem.metricBracket sys.Hamiltonian sys.Hamiltonian = 0 ∧
-      MetriplecticSystem.metricBracket sys.Hamiltonian sys.Entropy = 0 ∧
-      MetriplecticSystem.poissonBracket sys.Hamiltonian sys.Entropy = 0) := by
-  refine ⟨fun A => Cl11Matrix.yin_yang_reconstruction A,
-    fun A B ψ => (Cl11Matrix.action_hyper_mul_and_singlet_trace A B ψ).1,
-    MetriplecticSystem.poisson_self_null,
-    MetriplecticSystem.metric_energy_preservation_manifold⟩
-
 end InfoGeometry.QuantumContext.MetriplecticCl11

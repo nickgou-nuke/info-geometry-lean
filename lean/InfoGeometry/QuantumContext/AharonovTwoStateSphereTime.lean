@@ -3,6 +3,8 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
+import InfoGeometry.External.Auto.SarsModularWeakValue
+import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Basic.Real.Basic
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Algebra.Order.Ring.Defs
@@ -10,7 +12,7 @@ import Mathlib.Tactic.Ring
 import Mathlib.Tactic.Linarith
 
 /-!
-# Section 116: $S^3$ Radial Dilatation Time, Aharonov Two-State Vectors, and Negative Weak Dwell Times
+# Section 116: $S^3$ Radial Dilatation Time and a Finite Two-Slit Weak-Value Model
 
 This module formalizes:
 1. **Concentric $S^3$ Shells in $\mathbb{R}^4$ (`Sphere4D R`)**: Squared radius
@@ -19,12 +21,12 @@ This module formalizes:
    $(r_0 e^\tau)(r_0 e^{-\tau}) = r_0^2$.
 2. **Aharonov–Bergmann–Lebowitz Two-State Vector Formalism (`SlitState2D R`)**: Two-slit
    interference space equipped with slit projectors $\hat{P}_1, \hat{P}_2$, single-vector Born
-   positivity ($0 \le \langle \psi | \hat{P}_1 | \psi \rangle$), and the two-state weak partition
+   positivity ($0 \le \langle \psi | \hat{P}_1 | \psi \rangle$), and the two-state transition-amplitude partition
    of unity $\langle \phi | \hat{P}_1 \psi \rangle + \langle \phi | \hat{P}_2 \psi \rangle = \langle \phi | \psi \rangle$.
-3. **Anomalous Negative Weak Dwell Time**: Constructive proof that for pre-selected forward state
-   $\psi = (1, 1)$ and post-selected backward state $\phi = (1, -2)$ near a destructive
-   interference fringe, the normalized weak value on Slit 1 is strictly negative ($W(\hat{P}_1) = -1 < 0$)
-   while $W(\hat{P}_2) = 2$ and total weak probability is conserved ($W(\hat{P}_1) + W(\hat{P}_2) = 1$).
+3. **Finite two-slit weak values**: a field-valued option quotient is defined when the
+   bilinear post/pre overlap is nonzero. The selected rational pair has weak values $-1$ and $2$.
+   Their rational subcarrier is explicitly compared with the existing finite complex weak-value
+   owner; no physical dwell-time or measurement-process theorem is claimed.
 -/
 
 namespace InfoGeometry.QuantumContext.AharonovTime
@@ -91,6 +93,14 @@ theorem twin_shell_horizon_lock (r₀ exp_pos exp_neg : R)
     _ = r₀ ^ 2 * (exp_pos * exp_neg) := by ring
     _ = r₀ ^ 2 * 1 := by rw [h_inv]
     _ = r₀ ^ 2 := by ring
+
+/-- Specialization to the actual real exponential pair `exp(τ), exp(-τ)`. -/
+theorem twin_shell_horizon_lock_real_exp (r₀ τ : ℝ) :
+    (r₀ * Real.exp τ) * (r₀ * Real.exp (-τ)) = r₀ ^ 2 := by
+  calc
+    _ = r₀ ^ 2 * (Real.exp τ * Real.exp (-τ)) := by ring
+    _ = r₀ ^ 2 * Real.exp (τ + -τ) := by rw [← Real.exp_add]
+    _ = r₀ ^ 2 := by simp
 
 end Sphere4D
 
@@ -170,16 +180,16 @@ theorem standard_qm_slit2_nonneg [LinearOrder R] [IsStrictOrderedRing R] (ψ : S
   rw [h_eq]
   exact sq_nonneg ψ.s₂
 
-/-- **Aharonov Two-State Weak Partition of Unity**:
+/-- **Aharonov Two-State Transition-Amplitude Partition**:
     For any pre-selected state $|\psi\rangle$ and post-selected state $\langle \phi|$, the sum
     of the two-state transition amplitudes across Slit 1 and Slit 2 equals the total overlap
     $\langle \phi | \psi \rangle$. -/
-theorem two_state_weak_partition (ϕ ψ : SlitState2D R) :
+theorem two_state_transition_amplitude_partition (ϕ ψ : SlitState2D R) :
     bracket ϕ (projSlit1 ψ) + bracket ϕ (projSlit2 ψ) = bracket ϕ ψ := by
   dsimp [bracket, projSlit1, projSlit2]
   ring
 
-/-! ## Section 3: Anomalous Negative Weak Dwell Time in Destructive Interference -/
+/-! ## Section 3: Negative Transition Amplitudes and Guarded Weak Values -/
 
 /-- Pre-selected forward state $|\psi_{\mathrm{fwd}}\rangle = (1, 1)$ illuminating both slits symmetrically. -/
 def forwardPreSelected : SlitState2D ℤ := ⟨1, 1⟩
@@ -194,50 +204,207 @@ theorem forwardPreSelected_ne_zero : forwardPreSelected ≠ (zero : SlitState2D 
   revert h1
   decide
 
-/-- Normalized weak value $W(\hat{P}_1) = -\langle \phi | \hat{P}_1 | \psi \rangle$ for unit-negative
-    overlap $\langle \phi | \psi \rangle = -1$. -/
-def normalizedWeakValue1 (ϕ ψ : SlitState2D R) : R :=
-  - bracket ϕ (projSlit1 ψ)
+/-- Transition numerator through slit 1. -/
+def transitionAmplitude1 (ϕ ψ : SlitState2D R) : R :=
+  bracket ϕ (projSlit1 ψ)
 
-/-- Normalized weak value $W(\hat{P}_2) = -\langle \phi | \hat{P}_2 | \psi \rangle$ for unit-negative
-    overlap $\langle \phi | \psi \rangle = -1$. -/
-def normalizedWeakValue2 (ϕ ψ : SlitState2D R) : R :=
-  - bracket ϕ (projSlit2 ψ)
+/-- Transition numerator through slit 2. -/
+def transitionAmplitude2 (ϕ ψ : SlitState2D R) : R :=
+  bracket ϕ (projSlit2 ψ)
 
-/-- **Anomalous Negative Weak Dwell Time in the Double-Slit Experiment**:
+/-- **Selected two-slit transition-numerator example**:
     For pre-selected $\psi = (1, 1)$ and post-selected $\phi = (1, -2)$:
     1. The two-state overlap is $\langle \phi | \psi \rangle = -1$.
-    2. The normalized weak value (dwell time) in Slit 1 is strictly negative ($W(\hat{P}_1) = -1 < 0$).
-    3. The normalized weak value in Slit 2 exceeds unity ($W(\hat{P}_2) = 2$).
-    4. Total normalized weak probability is conserved ($W(\hat{P}_1) + W(\hat{P}_2) = 1$). -/
-theorem double_slit_registers_negative_weak_time :
+    2. The unnormalized transition numerators are `1` and `-2`.
+    Their sum is the overlap, by the general partition theorem. -/
+theorem double_slit_transition_numerators :
     bracket backwardPostSelected forwardPreSelected = -1 ∧
-    normalizedWeakValue1 backwardPostSelected forwardPreSelected = -1 ∧
-    normalizedWeakValue1 backwardPostSelected forwardPreSelected < 0 ∧
-    normalizedWeakValue2 backwardPostSelected forwardPreSelected = 2 ∧
-    normalizedWeakValue1 backwardPostSelected forwardPreSelected +
-      normalizedWeakValue2 backwardPostSelected forwardPreSelected = 1 := by
+    transitionAmplitude1 backwardPostSelected forwardPreSelected = 1 ∧
+    transitionAmplitude2 backwardPostSelected forwardPreSelected = -2 ∧
+    transitionAmplitude1 backwardPostSelected forwardPreSelected +
+      transitionAmplitude2 backwardPostSelected forwardPreSelected = -1 := by
   dsimp [forwardPreSelected, backwardPostSelected, bracket,
-    normalizedWeakValue1, normalizedWeakValue2, projSlit1, projSlit2]
-  refine ⟨by decide, by decide, by decide, by decide, by decide⟩
+    transitionAmplitude1, transitionAmplitude2, projSlit1, projSlit2]
+  refine ⟨by decide, by decide, by decide, by decide⟩
 
 end SlitState2D
 
-/-- **Section 116 Master Synthesis**:
-    Combines $S^3$ radial dilatation scaling, twin-shell horizon locking, single-vector Born
-    positivity, two-state weak partition of unity, and anomalous negative weak dwell time. -/
-theorem aharonov_sphere_time_master_synthesis [LinearOrder R] [IsStrictOrderedRing R] :
-    (∀ (s : R) (X : Sphere4D R),
-      Sphere4D.radiusSq (Sphere4D.dilate s X) = s ^ 2 * Sphere4D.radiusSq X) ∧
-    (∀ (r₀ ep en : R), ep * en = 1 → (r₀ * ep) * (r₀ * en) = r₀ ^ 2) ∧
-    (∀ ψ : SlitState2D R, 0 ≤ SlitState2D.bracket ψ (SlitState2D.projSlit1 ψ)) ∧
-    (∀ ϕ ψ : SlitState2D R,
-      SlitState2D.bracket ϕ (SlitState2D.projSlit1 ψ) +
-        SlitState2D.bracket ϕ (SlitState2D.projSlit2 ψ) = SlitState2D.bracket ϕ ψ) ∧
-    SlitState2D.normalizedWeakValue1
-      SlitState2D.backwardPostSelected SlitState2D.forwardPreSelected < 0 := by
-  refine ⟨Sphere4D.radiusSq_dilate, Sphere4D.twin_shell_horizon_lock,
-    SlitState2D.standard_qm_slit1_nonneg, SlitState2D.two_state_weak_partition,
-    SlitState2D.double_slit_registers_negative_weak_time.2.2.1⟩
+/-! ### Field-valued weak values for the finite bilinear carrier
+
+The `bracket` above is bilinear and has no conjugation. The option quotient
+makes the normalization domain explicit by returning `none` when the overlap
+vanishes. The rational subcarrier is explicitly embedded into the repository's
+finite complex weak-value owner below; no physical dwell-time interpretation is
+claimed.
+-/
+
+namespace SlitWeakValue
+
+variable {R : Type*} [Field R]
+
+/-- The two coordinate projectors are the only observables admitted by this
+    finite weak-value API. -/
+inductive SlitProjector
+  | slit1
+  | slit2
+  deriving DecidableEq, Repr
+
+/-- Action of one of the two slit projectors. -/
+def SlitProjector.act (P : SlitProjector) (ψ : SlitState2D R) : SlitState2D R :=
+  match P with
+  | .slit1 => SlitState2D.projSlit1 ψ
+  | .slit2 => SlitState2D.projSlit2 ψ
+
+/-- Weak value of an observable action on a two-slit state. Zero overlap is
+    represented by `none`; division is used only on the nonzero branch. The
+    observable is restricted to the two coordinate slit projectors. -/
+noncomputable def weakValue? (ϕ ψ : SlitState2D R)
+    (P : SlitProjector) : Option R :=
+  by
+    classical
+    exact if h : SlitState2D.bracket ϕ ψ = 0 then none
+      else some (SlitState2D.bracket ϕ (P.act ψ) / SlitState2D.bracket ϕ ψ)
+
+/-- On a regular pair, the option-valued weak value is the transition
+    numerator divided by the overlap. -/
+theorem weakValue?_eq_quotient_of_overlap_ne_zero
+    (ϕ ψ : SlitState2D R) (P : SlitProjector)
+    (h : SlitState2D.bracket ϕ ψ ≠ 0) :
+    weakValue? ϕ ψ P =
+      some (SlitState2D.bracket ϕ (P.act ψ) / SlitState2D.bracket ϕ ψ) := by
+  simp [weakValue?, h]
+
+/-- A vanishing post/pre overlap makes the weak value undefined. -/
+theorem weakValue?_eq_none_of_overlap_eq_zero
+    (ϕ ψ : SlitState2D R) (P : SlitProjector)
+    (h : SlitState2D.bracket ϕ ψ = 0) :
+    weakValue? ϕ ψ P = none := by
+  simp [weakValue?, h]
+
+/-- The two projector weak values sum to one whenever both are defined. -/
+theorem slit_projector_weak_values_partition
+    (ϕ ψ : SlitState2D R) (h : SlitState2D.bracket ϕ ψ ≠ 0) :
+    ∃ w₁ w₂ : R,
+      weakValue? ϕ ψ .slit1 = some w₁ ∧
+      weakValue? ϕ ψ .slit2 = some w₂ ∧
+      w₁ + w₂ = 1 := by
+  refine ⟨SlitState2D.bracket ϕ (SlitState2D.projSlit1 ψ) /
+      SlitState2D.bracket ϕ ψ,
+    SlitState2D.bracket ϕ (SlitState2D.projSlit2 ψ) /
+      SlitState2D.bracket ϕ ψ, ?_, ?_, ?_⟩
+  · simpa [SlitProjector.act] using
+      weakValue?_eq_quotient_of_overlap_ne_zero ϕ ψ .slit1 h
+  · simpa [SlitProjector.act] using
+      weakValue?_eq_quotient_of_overlap_ne_zero ϕ ψ .slit2 h
+  · rw [← add_div, SlitState2D.two_state_transition_amplitude_partition, div_self h]
+
+/-- Rational specialization of the selected pre-state. -/
+def rationalForwardPreSelected : SlitState2D ℚ := ⟨1, 1⟩
+
+/-- Rational specialization of the selected post-state. -/
+def rationalBackwardPostSelected : SlitState2D ℚ := ⟨1, -2⟩
+
+theorem rational_selected_overlap :
+    SlitState2D.bracket rationalBackwardPostSelected rationalForwardPreSelected = -1 := by
+  norm_num [rationalBackwardPostSelected, rationalForwardPreSelected,
+    SlitState2D.bracket]
+
+theorem rational_selected_projector_weak_values :
+    weakValue? rationalBackwardPostSelected rationalForwardPreSelected
+        .slit1 = some (-1) ∧
+    weakValue? rationalBackwardPostSelected rationalForwardPreSelected
+        .slit2 = some 2 := by
+  have h : SlitState2D.bracket rationalBackwardPostSelected
+      rationalForwardPreSelected ≠ 0 := by
+    rw [rational_selected_overlap]
+    norm_num
+  constructor
+  · rw [weakValue?_eq_quotient_of_overlap_ne_zero _ _ .slit1 h]
+    norm_num [rationalBackwardPostSelected, rationalForwardPreSelected,
+      SlitState2D.bracket, SlitProjector.act, SlitState2D.projSlit1]
+  · rw [weakValue?_eq_quotient_of_overlap_ne_zero _ _ .slit2 h]
+    norm_num [rationalBackwardPostSelected, rationalForwardPreSelected,
+      SlitState2D.bracket, SlitProjector.act, SlitState2D.projSlit2]
+
+theorem orthogonal_pair_weak_value_is_none :
+    weakValue? (⟨1, 0⟩ : SlitState2D ℚ) (⟨0, 1⟩ : SlitState2D ℚ)
+      .slit1 = none := by
+  apply weakValue?_eq_none_of_overlap_eq_zero
+  norm_num [SlitState2D.bracket]
+
+/-- A rational two-slit vector viewed as a complex two-level state. -/
+def rationalStateToComplex (ψ : SlitState2D ℚ) :
+    SarsModularWeakValue.State2 :=
+  fun i => if i = 0 then (ψ.s₁ : ℂ) else (ψ.s₂ : ℂ)
+
+/-- The two coordinate projectors as actual complex `2 × 2` matrices. -/
+def complexSlitProjector : SlitProjector → SarsModularWeakValue.M2C
+  | .slit1 => fun i j => if i = 0 then (if j = 0 then 1 else 0) else 0
+  | .slit2 => fun i j => if i = 1 then (if j = 1 then 1 else 0) else 0
+
+/-- On real rational coordinates, the repository's complex inner product is
+the cast of the finite bilinear pairing. -/
+theorem complexPairing_eq_cast (ϕ ψ : SlitState2D ℚ) :
+    SarsModularWeakValue.cinner (rationalStateToComplex ϕ)
+      (rationalStateToComplex ψ) =
+      ((SlitState2D.bracket ϕ ψ : ℚ) : ℂ) := by
+  simp [SarsModularWeakValue.cinner, rationalStateToComplex,
+    SlitState2D.bracket]
+
+/-- The complex coordinate-matrix projector action agrees with the rational
+coordinate projector after embedding states. -/
+theorem complexProjector_action (P : SlitProjector) (ψ : SlitState2D ℚ) :
+    SarsModularWeakValue.matVec (complexSlitProjector P)
+      (rationalStateToComplex ψ) =
+      rationalStateToComplex (P.act ψ) := by
+  cases P <;> funext i <;> fin_cases i <;>
+    simp [complexSlitProjector, SarsModularWeakValue.matVec,
+      rationalStateToComplex, SlitProjector.act,
+      SlitState2D.projSlit1, SlitState2D.projSlit2]
+
+/-- The complex weak-value numerator is the complex cast of the rational
+transition amplitude. -/
+theorem complexWeakNumerator_eq_cast
+    (ϕ ψ : SlitState2D ℚ) (P : SlitProjector) :
+    SarsModularWeakValue.weakNumerator (complexSlitProjector P)
+      (rationalStateToComplex ψ) (rationalStateToComplex ϕ) =
+      ((SlitState2D.bracket ϕ (P.act ψ) : ℚ) : ℂ) := by
+  simpa [SarsModularWeakValue.weakNumerator, complexProjector_action] using
+    complexPairing_eq_cast ϕ (P.act ψ)
+
+/-- The complex weak-value denominator is the complex cast of the rational
+overlap. -/
+theorem complexWeakDenominator_eq_cast (ϕ ψ : SlitState2D ℚ) :
+    SarsModularWeakValue.weakDenominator
+      (rationalStateToComplex ψ) (rationalStateToComplex ϕ) =
+      ((SlitState2D.bracket ϕ ψ : ℚ) : ℂ) := by
+  simpa [SarsModularWeakValue.weakDenominator] using complexPairing_eq_cast ϕ ψ
+
+/-- The guarded rational weak-value function agrees, after the canonical cast
+`ℚ → ℂ`, with the existing sesquilinear complex weak-value owner. -/
+theorem rational_weakValue_complex_compatibility
+    (ϕ ψ : SlitState2D ℚ) (P : SlitProjector) :
+    Option.map (fun q : ℚ => (q : ℂ)) (weakValue? ϕ ψ P) =
+      SarsModularWeakValue.weakValue? (complexSlitProjector P)
+        (rationalStateToComplex ψ) (rationalStateToComplex ϕ) := by
+  by_cases h : SlitState2D.bracket ϕ ψ = 0
+  · have hc : SarsModularWeakValue.weakDenominator
+        (rationalStateToComplex ψ) (rationalStateToComplex ϕ) = 0 := by
+      rw [complexWeakDenominator_eq_cast]
+      simp [h]
+    simp [weakValue?, SarsModularWeakValue.weakValue?, h, hc]
+  · have hc : SarsModularWeakValue.weakDenominator
+        (rationalStateToComplex ψ) (rationalStateToComplex ϕ) ≠ 0 := by
+      rw [complexWeakDenominator_eq_cast]
+      exact_mod_cast h
+    rw [weakValue?_eq_quotient_of_overlap_ne_zero ϕ ψ P h]
+    rw [SarsModularWeakValue.weak_value_some_of_nonorthogonal
+      (complexSlitProjector P) (rationalStateToComplex ψ)
+      (rationalStateToComplex ϕ) hc]
+    simp only [Option.map_some]
+    congr 1
+    simp [complexWeakNumerator_eq_cast, complexWeakDenominator_eq_cast]
+
+end SlitWeakValue
 
 end InfoGeometry.QuantumContext.AharonovTime

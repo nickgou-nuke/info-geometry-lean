@@ -1,0 +1,50 @@
+/-
+Copyright (c) 2026 InfoGeometry Contributors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Contributors
+-/
+import InfoGeometry.Superalgebra.TomitaTakesakiModularSpinHawkingUnitarity
+
+/-!
+# Audit: Раздел 133 — Модулен Автоморфизъм на Томита–Такесаки и Унитарност на Хокинг
+Concrete `ℤ` checks for `InfoGeometry.Superalgebra.TomitaTakesakiHawking`.
+-/
+
+namespace InfoGeometry.Superalgebra.TomitaTakesakiHawkingAudit
+
+open InfoGeometry.Superalgebra.TomitaTakesakiHawking
+
+def sampleX : ColorVec3 ℤ := ⟨2, -3, 1⟩
+def sampleU : ColorVec3 ℤ := ⟨1, 2, 3⟩
+def sampleV : ColorVec3 ℤ := ⟨4, -1, 2⟩
+
+theorem audit_modular_delta_composition_int :
+    SplitOctonion.mul (SplitOctonion.modularDelta (2 : ℤ) 1)
+                      (SplitOctonion.modularDelta (3 : ℤ) 2) =
+      SplitOctonion.modularDelta 8 7 := by decide
+
+theorem audit_bogoliubov_spin_boost_int :
+    SplitOctonion.mul (SplitOctonion.modularDelta (3 : ℤ) 2) (SplitOctonion.spinGenI sampleX) =
+      SplitOctonion.add (SplitOctonion.scale 3 (SplitOctonion.spinGenI sampleX))
+                        (SplitOctonion.scale 2 (SplitOctonion.boostGenH sampleX)) := by decide
+
+theorem audit_pell_hyperbola_fisher_interval_int :
+    -- Using Pell solution (c, s) = (3, 0) or (1, 0) on Z, and general scaling identity:
+    SplitOctonion.intervalNorm
+      (SplitOctonion.mul (SplitOctonion.modularDelta (3 : ℤ) 2)
+                         (SplitOctonion.spinGenI sampleX)) =
+      (3^2 - 2^2) * ColorVec3.normSq sampleX ∧
+    ColorVec3.normSq sampleX = 14 := by decide
+
+theorem audit_hawking_horizon_correlators_int :
+    SplitOctonion.anticommutator
+      (SplitOctonion.modularAutomorphism (1 : ℤ) 0 (SplitOctonion.quark sampleU))
+      (SplitOctonion.modularAutomorphism (1 : ℤ) 0 (SplitOctonion.antiquark sampleV)) =
+      SplitOctonion.scale (ColorVec3.dot sampleU sampleV) SplitOctonion.one ∧
+    SplitOctonion.commutator
+      (SplitOctonion.modularAutomorphism (1 : ℤ) 0 (SplitOctonion.quark sampleU))
+      (SplitOctonion.modularAutomorphism (1 : ℤ) 0 (SplitOctonion.antiquark sampleV)) =
+      SplitOctonion.scale (ColorVec3.dot sampleU sampleV) SplitOctonion.paraSymplecticK0 ∧
+    ColorVec3.dot sampleU sampleV = 8 := by decide
+
+end InfoGeometry.Superalgebra.TomitaTakesakiHawkingAudit

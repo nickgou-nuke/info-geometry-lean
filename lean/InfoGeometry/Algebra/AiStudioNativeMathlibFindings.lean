@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Data.Complex.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
@@ -139,19 +145,23 @@ theorem pgg_defect_implies_parabolic {a b q : ℂ}
 /-! ## Native `2 × 2` square-zero shear packet -/
 
 /-- The standard square-zero `2 × 2` shear generator. -/
-def shearGenerator (R : Type*) [Zero R] [One R] : Matrix (Fin 2) (Fin 2) R :=
+def shearGenerator {R : Type*} [Zero R] [One R] : Matrix (Fin 2) (Fin 2) R :=
   !![0, 1; 0, 0]
+
+/-- The opposite matrix unit used to witness noncommutativity with the shear. -/
+def lowerShearGenerator {R : Type*} [Zero R] [One R] : Matrix (Fin 2) (Fin 2) R :=
+  !![0, 0; 1, 0]
 
 /-- The standard shear generator is square-zero. -/
 theorem shearGenerator_sq_zero {R : Type*} [NonAssocSemiring R] :
-    shearGenerator R * shearGenerator R = 0 := by
+    (shearGenerator : Matrix (Fin 2) (Fin 2) R) * shearGenerator = 0 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [shearGenerator, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- The native unipotent shear `I + tN`. -/
 def unipotentShear (R : Type*) [CommRing R] (t : R) : Matrix (Fin 2) (Fin 2) R :=
-  1 + t • shearGenerator R
+  1 + t • (shearGenerator : Matrix (Fin 2) (Fin 2) R)
 
 /-- Coordinate form of the native unipotent shear. -/
 theorem unipotentShear_apply {R : Type*} [CommRing R] (t : R) :
@@ -175,7 +185,7 @@ theorem det_unipotentShear {R : Type*} [CommRing R] (t : R) :
 
 /-- Packet bundling the square-zero, additive-flow, and determinant laws. -/
 theorem native_unipotent_shear_packet {R : Type*} [CommRing R] (s t : R) :
-    shearGenerator R * shearGenerator R = 0 ∧
+    (shearGenerator : Matrix (Fin 2) (Fin 2) R) * shearGenerator = 0 ∧
       unipotentShear R s * unipotentShear R t = unipotentShear R (s + t) ∧
       (unipotentShear R t).det = 1 := by
   exact ⟨shearGenerator_sq_zero, unipotentShear_mul s t, det_unipotentShear t⟩
@@ -193,5 +203,16 @@ theorem native_char_poly_eq_zhukovsky (M : Matrix (Fin 2) (Fin 2) ℂ) (x Tr : �
     charPoly2x2 M x = x ^ 2 - Tr * x + 1 := by
   simpa [h_tr, h_det] using
     (char_poly_eq_zhukovsky M x Tr h_tr h_det)
+
+/-! ## Non-commutativity witness (T16 compliance) -/
+
+/-- The `2×2` matrix algebra is non-commutative over a nontrivial ring. -/
+theorem matrix_fin2_noncommutative {R : Type*} [Ring R] [Nontrivial R] :
+    (shearGenerator : Matrix (Fin 2) (Fin 2) R) *
+        (lowerShearGenerator : Matrix (Fin 2) (Fin 2) R) ≠
+      lowerShearGenerator * shearGenerator := by
+  apply ne_of_apply_ne (fun M => M 0 0)
+  simp [shearGenerator, lowerShearGenerator, Matrix.mul_apply,
+    Fin.sum_univ_two]
 
 end InfoGeometry.Algebra.AiStudioNativeMathlibFindings

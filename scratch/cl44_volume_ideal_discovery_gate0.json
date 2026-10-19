@@ -1,0 +1,144 @@
+{
+  "authority": "navigation_only",
+  "carriers_found": [
+    {
+      "file": "lean/InfoGeometry/Synthesis/Cl44LeftIdealSplitSedenionSynthesis.lean",
+      "kind": "def",
+      "lean_statement": "def cl44VacuumIdempotent : Cl44",
+      "line": 95,
+      "location": "lean/InfoGeometry/Synthesis/Cl44LeftIdealSplitSedenionSynthesis.lean:95",
+      "name": "cl44VacuumIdempotent",
+      "qualified_name": "InfoGeometry.Synthesis.Cl44LeftIdealSplitSedenionSynthesis.cl44VacuumIdempotent",
+      "source_end_line": 95,
+      "source_sha256": "861b18a9d2cfc7b0d802cb5817dd328a4633eb4dad9ade592717c91482504a48"
+    }
+  ],
+  "dag_context": null,
+  "deduplication_warnings": [
+    "Query 'volumeElement_sq cl44VacuumIdempotent cl44LeftIdealSubmodule cl44_left_right_spinor_ideal_corner_synthesis' matches existing fundamental type 'cl44VacuumIdempotent' in lean/InfoGeometry/Synthesis/Cl44LeftIdealSplitSedenionSynthesis.lean; reuse canonical carrier instead of introducing redundant type wrapper."
+  ],
+  "graph_is_proof_authority": false,
+  "lemmas_found": [
+    {
+      "file": "lean/InfoGeometry/Synthesis/Cl44LeftIdealSplitSedenionSynthesis.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem cl44VacuumIdempotent_idempotent : cl44VacuumIdempotent * cl44VacuumIdempotent = cl44VacuumIdempotent",
+      "line": 149,
+      "location": "lean/InfoGeometry/Synthesis/Cl44LeftIdealSplitSedenionSynthesis.lean:149",
+      "name": "cl44VacuumIdempotent_idempotent",
+      "qualified_name": "InfoGeometry.Synthesis.Cl44LeftIdealSplitSedenionSynthesis.cl44VacuumIdempotent_idempotent",
+      "source_end_line": 150,
+      "source_sha256": "861b18a9d2cfc7b0d802cb5817dd328a4633eb4dad9ade592717c91482504a48"
+    },
+    {
+      "file": "lean/InfoGeometry/Synthesis/Cl44LeftIdealSplitSedenionSynthesis.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem cl44VacuumIdempotent_annihilated (i : Fin 4) : a i * cl44VacuumIdempotent = 0",
+      "line": 204,
+      "location": "lean/InfoGeometry/Synthesis/Cl44LeftIdealSplitSedenionSynthesis.lean:204",
+      "name": "cl44VacuumIdempotent_annihilated",
+      "qualified_name": "InfoGeometry.Synthesis.Cl44LeftIdealSplitSedenionSynthesis.cl44VacuumIdempotent_annihilated",
+      "source_end_line": 205,
+      "source_sha256": "861b18a9d2cfc7b0d802cb5817dd328a4633eb4dad9ade592717c91482504a48"
+    },
+    {
+      "file": "lean/InfoGeometry/Synthesis/Cl44LeftIdealSplitSedenionSynthesis.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem cl44LeftIdealSubmodule_mem_iff (x : Cl44) : x ∈ cl44LeftIdealSubmodule ↔ x ∈ cl44LeftPrincipalIdeal",
+      "line": 316,
+      "location": "lean/InfoGeometry/Synthesis/Cl44LeftIdealSplitSedenionSynthesis.lean:316",
+      "name": "cl44LeftIdealSubmodule_mem_iff",
+      "qualified_name": "InfoGeometry.Synthesis.Cl44LeftIdealSplitSedenionSynthesis.cl44LeftIdealSubmodule_mem_iff",
+      "source_end_line": 317,
+      "source_sha256": "861b18a9d2cfc7b0d802cb5817dd328a4633eb4dad9ade592717c91482504a48"
+    },
+    {
+      "file": "lean/InfoGeometry/Synthesis/Cl44LeftIdealSplitSedenionSynthesis.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem cl44LeftIdealSubmodule_fixed (x : Cl44) (hx : x ∈ cl44LeftIdealSubmodule) : LinearMap.mulRight ℝ cl44VacuumIdempotent x = x",
+      "line": 362,
+      "location": "lean/InfoGeometry/Synthesis/Cl44LeftIdealSplitSedenionSynthesis.lean:362",
+      "name": "cl44LeftIdealSubmodule_fixed",
+      "qualified_name": "InfoGeometry.Synthesis.Cl44LeftIdealSplitSedenionSynthesis.cl44LeftIdealSubmodule_fixed",
+      "source_end_line": 364,
+      "source_sha256": "861b18a9d2cfc7b0d802cb5817dd328a4633eb4dad9ade592717c91482504a48"
+    },
+    {
+      "file": "lean/InfoGeometry/Synthesis/Cl44LeftIdealSplitSedenionSynthesis.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem cl44_left_right_spinor_ideal_corner_synthesis : (∀ (A Ψ : Cl44), Ψ ∈ cl44LeftPrincipalIdeal → A * Ψ ∈ cl44LeftPrincipalIdeal) ∧ (∀ (A Φ : Cl44), Φ ∈ cl44RightPrincipalIdeal → Φ * A ∈ cl44RightPrincipalIdeal) ∧ (∀ {Φ Ψ : Cl44}, Φ ∈ cl44RightPrincipalIdeal → Ψ ∈ cl44LeftPrincipalIdeal → ∃ c : Cl44, Φ * Ψ = cl44VacuumIdempotent * c * cl44VacuumIdempotent)",
+      "line": 393,
+      "location": "lean/InfoGeometry/Synthesis/Cl44LeftIdealSplitSedenionSynthesis.lean:393",
+      "name": "cl44_left_right_spinor_ideal_corner_synthesis",
+      "qualified_name": "InfoGeometry.Synthesis.Cl44LeftIdealSplitSedenionSynthesis.cl44_left_right_spinor_ideal_corner_synthesis",
+      "source_end_line": 397,
+      "source_sha256": "861b18a9d2cfc7b0d802cb5817dd328a4633eb4dad9ade592717c91482504a48"
+    },
+    {
+      "file": "lean/InfoGeometry/Synthesis/SplitSedenionRepresentationSpine.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem cl44VacuumIdempotent_right_annihilated (k : Fin 4) : cl44VacuumIdempotent * adag k = 0",
+      "line": 274,
+      "location": "lean/InfoGeometry/Synthesis/SplitSedenionRepresentationSpine.lean:274",
+      "name": "cl44VacuumIdempotent_right_annihilated",
+      "qualified_name": "InfoGeometry.Synthesis.SplitSedenionRepresentationSpine.cl44VacuumIdempotent_right_annihilated",
+      "source_end_line": 275,
+      "source_sha256": "e4a59914e645bff5a19a5e0f6f6db3c4ac3a58779bfb93b17cc36bad62b2d7c8"
+    },
+    {
+      "file": "lean/InfoGeometry/Clifford/KoszulFoundation.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem cliffordVolumeElement_sq_of_pairwise (vectors : List M) (h : vectors.Pairwise (fun v w => Q.IsOrtho v w)) : cliffordVolumeElement Q vectors * cliffordVolumeElement Q vectors = algebraMap R (CliffordAlgebra Q) (cliffordVolumeSquareScalar Q vectors)",
+      "line": 188,
+      "location": "lean/InfoGeometry/Clifford/KoszulFoundation.lean:188",
+      "name": "cliffordVolumeElement_sq_of_pairwise",
+      "qualified_name": "InfoGeometry.Clifford.KoszulFoundation.cliffordVolumeElement_sq_of_pairwise",
+      "source_end_line": 191,
+      "source_sha256": "9eb2bb79e6070616da86fdc373d7992d8e5379f8f635837be2db14c4ff7b6c5d"
+    },
+    {
+      "file": "lean/InfoGeometry/Clifford/Cl11GeometricCompass.lean",
+      "kind": "theorem",
+      "lean_statement": "@[simp] theorem volumeElement_sq : volumeElement * volumeElement = (1 : Matrix (Fin 2) (Fin 2) ℝ)",
+      "line": 66,
+      "location": "lean/InfoGeometry/Clifford/Cl11GeometricCompass.lean:66",
+      "name": "volumeElement_sq",
+      "qualified_name": "InfoGeometry.Clifford.Cl11GeometricCompass.volumeElement_sq",
+      "source_end_line": 67,
+      "source_sha256": "84f5ec3d27f2afaccc0b3ebb5e14093f19f979e836d610f43a25a8ffdc283568"
+    },
+    {
+      "file": "lean/InfoGeometry/Clifford/Cl44VolumeElement.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem volumeElement_sq : volumeElement * volumeElement = 1",
+      "line": 54,
+      "location": "lean/InfoGeometry/Clifford/Cl44VolumeElement.lean:54",
+      "name": "volumeElement_sq",
+      "qualified_name": "InfoGeometry.Clifford.Cl44VolumeElement.volumeElement_sq",
+      "source_end_line": 54,
+      "source_sha256": "9f430d30f93e208a12ea5416358b564e21bd9be4ea336095cf2ccffa7629ea7a"
+    },
+    {
+      "file": "lean/InfoGeometry/Clifford/Cl44Spinors.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem volumeElement_sq : volumeElement * volumeElement = 1",
+      "line": 55,
+      "location": "lean/InfoGeometry/Clifford/Cl44Spinors.lean:55",
+      "name": "volumeElement_sq",
+      "qualified_name": "InfoGeometry.Clifford.Cl44Spinors.volumeElement_sq",
+      "source_end_line": 55,
+      "source_sha256": "ceaa4da94d4dcac925745eeb66c5b8bc095751addb9aa5dbdd27be390793d5ee"
+    }
+  ],
+  "local_dag_context": null,
+  "query": "volumeElement_sq cl44VacuumIdempotent cl44LeftIdealSubmodule cl44_left_right_spinor_ideal_corner_synthesis",
+  "recommended_imports": [
+    "InfoGeometry.Clifford.Cl11GeometricCompass",
+    "InfoGeometry.Clifford.Cl44Spinors",
+    "InfoGeometry.Clifford.Cl44VolumeElement",
+    "InfoGeometry.Clifford.KoszulFoundation",
+    "InfoGeometry.Synthesis.Cl44LeftIdealSplitSedenionSynthesis",
+    "InfoGeometry.Synthesis.SplitSedenionRepresentationSpine"
+  ],
+  "schema": "info_geometry.opengauss.discovery_report.v1"
+}

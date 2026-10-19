@@ -1,0 +1,42 @@
+/-
+Copyright (c) 2026 InfoGeometry Contributors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Contributors
+-/
+import InfoGeometry.Topological.ChernSimonsTemperleyLiebYangBaxterBraid
+
+/-!
+# Audit: Раздел 145b — Възли на Чърн–Саймънс, Алгебра на Темперли–Лийб и Уравнение на Янг–Бакстер
+Concrete `ℤ` checks for `InfoGeometry.Topological.ChernSimonsTemperleyLieb`.
+-/
+
+namespace InfoGeometry.Topological.ChernSimonsTemperleyLiebAudit
+
+open InfoGeometry.Topological.ChernSimonsTemperleyLieb
+
+def sampleU1Int : Mat3 ℤ := Mat3.tlGen1 1 1
+def sampleU2Int : Mat3 ℤ := Mat3.tlGen2 1 1
+
+theorem audit_tl_generators_noncommutative_int :
+    Mat3.mul sampleU1Int sampleU2Int ≠ Mat3.mul sampleU2Int sampleU1Int := by decide
+
+theorem audit_temperley_lieb_relations_int :
+    Mat3.mul sampleU1Int sampleU1Int = Mat3.scale (-2 : ℤ) sampleU1Int ∧
+    Mat3.mul sampleU2Int sampleU2Int = Mat3.scale (-2 : ℤ) sampleU2Int ∧
+    Mat3.mul (Mat3.mul sampleU1Int sampleU2Int) sampleU1Int = sampleU1Int ∧
+    Mat3.mul (Mat3.mul sampleU2Int sampleU1Int) sampleU2Int = sampleU2Int := by decide
+
+theorem audit_yang_baxter_equation_at_unit_phase_int :
+    let B₁ := Mat3.kauffmanBraidGen (1 : ℤ) 1 sampleU1Int
+    let B₂ := Mat3.kauffmanBraidGen (1 : ℤ) 1 sampleU2Int
+    Mat3.mul (Mat3.mul B₁ B₂) B₁ = Mat3.mul (Mat3.mul B₂ B₁) B₂ ∧
+    Mat3.mul B₁ B₂ ≠ Mat3.mul B₂ B₁ := by decide
+
+theorem audit_yang_baxter_defect_factorization_general_int :
+    let B₁ := Mat3.kauffmanBraidGen (2 : ℤ) 3 sampleU1Int
+    let B₂ := Mat3.kauffmanBraidGen (2 : ℤ) 3 sampleU2Int
+    Mat3.sub (Mat3.mul (Mat3.mul B₁ B₂) B₁) (Mat3.mul (Mat3.mul B₂ B₁) B₂) =
+      Mat3.scale (2^2 * 3 + 2 * 3^2 * (-2) + 3^3 : ℤ) (Mat3.sub sampleU1Int sampleU2Int) := by
+  decide
+
+end InfoGeometry.Topological.ChernSimonsTemperleyLiebAudit

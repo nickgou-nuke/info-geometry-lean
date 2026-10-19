@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Clifford.Cl55VacuumIdealSpinorBridge
 import InfoGeometry.Clifford.SplitClifford55ExteriorSpinor
 import InfoGeometry.OperatorAlgebra.SuperTKK
@@ -303,6 +309,42 @@ theorem doubled_modular_conjugation_reverses_tkk :
     Cl11Dictionary.canonical_J_to_doubled, WithLp.add_fst,
     WithLp.add_snd, WithLp.smul_fst, WithLp.smul_snd] <;>
     ext i <;> by_cases hi : i = 0 <;> simp [hi, Pi.single_apply] <;> ring
+
+/-- The transported modular conjugation is an involution on the vacuum-ideal
+endomorphism algebra. -/
+theorem idealModularConjugation_sq :
+    idealModularConjugation * idealModularConjugation = 1 := by
+  let e := idealKreinEquiv.conjAlgEquiv ℝ
+  let J := (Cl11Dictionary.canonical (E := KreinBase)).J
+  apply e.injective
+  simp only [map_mul, map_one, idealModularConjugation, e,
+    AlgEquiv.apply_symm_apply]
+  apply LinearMap.ext
+  intro u
+  change J (J u) = u
+  exact congrArg (fun f : KreinDouble →L[ℝ] KreinDouble => f u)
+    Cl11Dictionary.canonical_J_sq
+
+/-- The transported modular conjugation reverses the concrete TKK grading
+element on the vacuum ideal. -/
+theorem idealModularConjugation_conjugates_tkkGradingElement :
+    idealModularConjugation * tkkGradingElement * idealModularConjugation =
+      -tkkGradingElement := by
+  let e := idealKreinEquiv.conjAlgEquiv ℝ
+  have hJ : e idealModularConjugation = doubledJ := by
+    simp [e, idealModularConjugation]
+  have hP : e tkkGradingElement = doubledTKKGrading :=
+    tkkGradingElement_kreinDouble
+  apply e.injective
+  calc
+    e (idealModularConjugation * tkkGradingElement *
+        idealModularConjugation) =
+      (e idealModularConjugation) * (e tkkGradingElement) *
+        (e idealModularConjugation) := by simp only [map_mul]
+    _ = -(e tkkGradingElement) := by
+      rw [hJ, hP]
+      exact doubled_modular_conjugation_reverses_tkk
+    _ = e (-tkkGradingElement) := (map_neg e tkkGradingElement).symm
 
 /-- The fundamental sign symmetry preserves the signed TKK grading operator. -/
 theorem doubled_fundamental_symmetry_preserves_tkk :

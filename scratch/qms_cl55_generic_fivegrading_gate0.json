@@ -1,0 +1,127 @@
+{
+  "schema": "info_geometry.opengauss.ground_truth_theorem_contract.v1",
+  "contract_id": "cl55-tkk-generic-fivegrading-reversal-packaging-v1",
+  "semantic_status": "human_asserted_not_kernel_verified",
+  "claim": "The existing concrete Cl(5,5) TKK commutator and its modular grade-reversing action can be supplied as inhabitants of the repository's existing selected-law FiveGrading and GradeReversal structures on EndV, with the grade submodules tkkGrade (-2), tkkGrade (-1), tkkGrade 0, tkkGrade 1, and tkkGrade 2. The packaging preserves those exact carriers and does not claim a full indexed Lie-color structure or construct a categorical colimit.",
+  "carrier": {
+    "type": "InfoGeometry.Clifford.Cl55SuperTKK.EndV := Module.End \u211d cl55VacuumIdeal",
+    "operations": [
+      "real-linear structure and associative endomorphism composition on EndV",
+      "tkkBracket X Y := X * Y - Y * X",
+      "tkkGrade k := eigenspace of tkkAdjointLinear at real eigenvalue k",
+      "idealModularConjugationAction : EndV \u2192\u2097[\u211d] EndV"
+    ],
+    "conventions": [
+      "The five labels are ordered -2, -1, 0, 1, 2 and indexed by Fin 5 via i \u21a6 i.val - 2.",
+      "The target FiveGrading interface records its five submodules, nested-product coordinate equivalence, sum reconstruction, and seven selected bracket laws; it is not a complete indexed graded-Lie interface.",
+      "Grade reversal means the supplied linear action sends each named grade to its opposite and preserves the bracket; involutivity remains a separately proved concrete property."
+    ]
+  },
+  "owner_declarations": [
+    {
+      "qualified_name": "InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure.FiveGrading",
+      "kind": "structure",
+      "source_path": "lean/InfoGeometry/OperatorAlgebra/SuperTKKConformalClosure.lean",
+      "source_sha256": "d26baa60bf0f7d71c47d66b8dd2c9a978989f860ceaef8ab931ccf55162ff7fe",
+      "source_line": 52,
+      "source_end_line": 98,
+      "source_excerpt": "structure FiveGrading (L : Type*) [AddCommGroup L] [Module \u211d L] [LieRing L] [LieAlgebra \u211d L] where; five submodules; decomposition : L \u2243\u2097[\u211d] nested product; decomposition_symm_apply; seven selected bracket closure fields.",
+      "lean_statement": "structure FiveGrading (L : Type*) [AddCommGroup L] [Module \u211d L] [LieRing L] [LieAlgebra \u211d L]",
+      "status_assertion": "definition"
+    },
+    {
+      "qualified_name": "InfoGeometry.Physics.Cl55FiveGradeDualityBridge.GradeReversal",
+      "kind": "structure",
+      "source_path": "lean/InfoGeometry/Physics/Cl55FiveGradeDualityBridge.lean",
+      "source_sha256": "634db3bbb98fb8ba1f66f0a068e696f4368e0f2fdbf524781281e19135404930",
+      "source_line": 25,
+      "source_end_line": 32,
+      "source_excerpt": "structure GradeReversal (G : FiveGrading L) where; theta : L \u2192\u2097[\u211d] L; grade maps for \u00b11, \u00b12, 0; map_bracket : \u2200 x y, theta \u2045x,y\u2046 = \u2045theta x,theta y\u2046.",
+      "lean_statement": "structure GradeReversal (G : FiveGrading L)",
+      "status_assertion": "definition"
+    },
+    {
+      "qualified_name": "InfoGeometry.Clifford.Cl55SuperTKK.tkkGrade",
+      "kind": "def",
+      "source_path": "lean/InfoGeometry/Clifford/Cl55SuperTKK.lean",
+      "source_sha256": "55cd219583ae4d07caec1847154c3bafb83f6125df4e8ddaf0e87efe67b331b8",
+      "source_line": 386,
+      "source_end_line": 399,
+      "source_excerpt": "def tkkGrade (k : \u2124) : Submodule \u211d EndV where carrier := {X | tkkAdjoint X = (k : \u211d) \u2022 X}.",
+      "lean_statement": "def tkkGrade (k : \u2124) : Submodule \u211d EndV",
+      "status_assertion": "definition"
+    },
+    {
+      "qualified_name": "InfoGeometry.Clifford.Cl55SuperTKK.tkk_bracket_grade_add",
+      "kind": "theorem",
+      "source_path": "lean/InfoGeometry/Clifford/Cl55SuperTKK.lean",
+      "source_sha256": "55cd219583ae4d07caec1847154c3bafb83f6125df4e8ddaf0e87efe67b331b8",
+      "source_line": 426,
+      "source_end_line": 434,
+      "source_excerpt": "theorem tkk_bracket_grade_add {i j k : \u2124} (hij : i + j = k) {X Y : EndV} (hX : X \u2208 tkkGrade i) (hY : Y \u2208 tkkGrade j) : tkkBracket X Y \u2208 tkkGrade k.",
+      "lean_statement": "theorem tkk_bracket_grade_add {i j k : \u2124} (hij : i + j = k) {X Y : EndV} (hX : X \u2208 tkkGrade i) (hY : Y \u2208 tkkGrade j) : tkkBracket X Y \u2208 tkkGrade k",
+      "status_assertion": "asserted_proved"
+    },
+    {
+      "qualified_name": "InfoGeometry.Clifford.Cl55SuperTKK.tkkFiveGradeDirectSumEquiv",
+      "kind": "def",
+      "source_path": "lean/InfoGeometry/Clifford/Cl55TKKGradeDirectSumInternal.lean",
+      "source_sha256": "4bef7986d2ad014b81a1cd7c3bf46ba5a7c4b74b40f940df70de8fbf48666f1b",
+      "source_line": 123,
+      "source_end_line": 126,
+      "source_excerpt": "noncomputable def tkkFiveGradeDirectSumEquiv : (\u2a01 i : Fin 5, tkkFiveGradeSubmodule i) \u2243\u2097[\u211d] EndV := LinearEquiv.ofBijective (DirectSum.coeLinearMap tkkFiveGradeSubmodule) tkkFiveGrade_directSum_isInternal.",
+      "lean_statement": "noncomputable def tkkFiveGradeDirectSumEquiv : (\u2a01 i : Fin 5, tkkFiveGradeSubmodule i) \u2243\u2097[\u211d] EndV",
+      "status_assertion": "asserted_proved"
+    },
+    {
+      "qualified_name": "InfoGeometry.Clifford.Cl55SuperTKK.idealModularConjugationAction_preserves_tkkBracket",
+      "kind": "theorem",
+      "source_path": "lean/InfoGeometry/Clifford/Cl55TKKAdjointGradeReversal.lean",
+      "source_sha256": "98e83c8987692e3183b733b12d2e3b83cd63a7fd117f93d396a54d302a7f0f6a",
+      "source_line": 71,
+      "source_end_line": 75,
+      "source_excerpt": "theorem idealModularConjugationAction_preserves_tkkBracket (X Y : EndV) : idealModularConjugationAction (tkkBracket X Y) = tkkBracket (idealModularConjugationAction X) (idealModularConjugationAction Y).",
+      "lean_statement": "theorem idealModularConjugationAction_preserves_tkkBracket (X Y : EndV) : idealModularConjugationAction (tkkBracket X Y) = tkkBracket (idealModularConjugationAction X) (idealModularConjugationAction Y)",
+      "status_assertion": "asserted_proved"
+    },
+    {
+      "qualified_name": "InfoGeometry.Clifford.Cl55SuperTKK.idealModularConjugationAction_maps_grade_neg",
+      "kind": "theorem",
+      "source_path": "lean/InfoGeometry/Clifford/Cl55TKKAdjointGradeReversal.lean",
+      "source_sha256": "98e83c8987692e3183b733b12d2e3b83cd63a7fd117f93d396a54d302a7f0f6a",
+      "source_line": 169,
+      "source_end_line": 176,
+      "source_excerpt": "theorem idealModularConjugationAction_maps_grade_neg (k : \u2124) {X : EndV} (hX : X \u2208 tkkGrade k) : idealModularConjugationAction X \u2208 tkkGrade (-k).",
+      "lean_statement": "theorem idealModularConjugationAction_maps_grade_neg (k : \u2124) {X : EndV} (hX : X \u2208 tkkGrade k) : idealModularConjugationAction X \u2208 tkkGrade (-k)",
+      "status_assertion": "asserted_proved"
+    }
+  ],
+  "imports": [
+    "Mathlib",
+    "InfoGeometry.Clifford.Cl55TKKGradeDirectSumInternal",
+    "InfoGeometry.Clifford.Cl55TKKAdjointGradeReversal",
+    "InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure",
+    "InfoGeometry.Physics.Cl55FiveGradeDualityBridge"
+  ],
+  "consumers": [
+    "InfoGeometry.Synthesis.Cl55FiveGradedDrazinDikinUnification.gradeReversal_colimit_full_channel_intertwining consumes the generic FiveGrading and GradeReversal interfaces under explicit cone and intertwining hypotheses.",
+    "The current concrete TKK direct-sum and reversal owners prove those maps and laws separately; the candidate packaging would make the EndV realization available to the generic interface."
+  ],
+  "smallest_gap": {
+    "declaration_name": "cl55TkkFiveGrading_and_cl55TkkGradeReversal",
+    "lean_signature": "noncomputable def cl55TkkFiveGrading : InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure.FiveGrading EndV; noncomputable def cl55TkkGradeReversal : InfoGeometry.Physics.Cl55FiveGradeDualityBridge.GradeReversal cl55TkkFiveGrading",
+    "pantograph_expression": "Construct the FiveGrading on EndV using a local LieRing EndV := LieRing.ofAssociativeRing and LieAlgebra \u211d EndV := LieAlgebra.ofAssociativeAlgebra, explicitly identifying its bracket notation with tkkBracket. Set the five submodules to tkkGrade (-2), (-1), 0, 1, 2. Build the nested-product coordinate equivalence by composing the existing tkkFiveGradeDirectSumEquiv.symm, DirectSum.linearEquivFunOnFintype, and a proved Fin 5 Pi-to-nested-product linear equivalence; prove reconstruction is the ordered sum. Derive the seven selected bracket fields from tkk_bracket_grade_add and outside-range grade vanishing. Then package idealModularConjugationAction as GradeReversal using the existing grade-negation and bracket-preservation theorems. This is only an adapter; no new TKK closure or colimit theorem.",
+    "description": "The definitions must use the existing EndV, tkkBracket, tkkGrade, direct-sum equivalence, and modular conjugation. The nested-product coordinate equivalence is only a repackaging of the existing unique five-component decomposition. The generic GradeReversal target does not assert involutivity; if a direct-sum comparison is included, it must be stated as an explicit intertwining equality. The adapter must declare local associative-endomorphism Lie instances and show that their commutator is exactly the owner tkkBracket; coordinate equivalence must be constructed explicitly from the internal direct-sum equivalence rather than inferred from an existential decomposition theorem."
+  },
+  "out_of_scope": [
+    "A full indexed Z-graded or Z2\u00d7Z2 Lie-color algebra instance beyond the selected laws stored in FiveGrading.",
+    "A categorical colimit object or its universal property; the current generic transport theorem is conditional on supplied maps and cone equations.",
+    "New TKK bracket closure mathematics beyond the already established concrete grade-add and reversal lemmas.",
+    "Physical identification of this finite endomorphism carrier with spacetime, a propagator, or an information-geometric attention process."
+  ],
+  "discovery_receipt": {
+    "path": "scratch/cl55_generic_grading_discovery_gate0.json",
+    "sha256": "bea6b44f4cb29965ba9645dcafbc5db4543a925d32ba4385d3cac81e3125ad3f",
+    "query": "Concrete Cl55 TKK eigenspace five-grade direct sum package as generic FiveGrading and GradeReversal; locate existing decomposition and bracket laws"
+  }
+}

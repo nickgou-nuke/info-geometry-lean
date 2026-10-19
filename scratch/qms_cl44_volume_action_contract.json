@@ -1,0 +1,89 @@
+{
+  "schema": "info_geometry.opengauss.ground_truth_theorem_contract.v1",
+  "contract_id": "cl44-native-volume-left-ideal-involution-20261019",
+  "semantic_status": "human_asserted_not_kernel_verified",
+  "claim": "The already-proved set-level closure of the native four-mode left ideal extends to a real-linear endomorphism given by left multiplication by the ordered volume element, and that endomorphism is an involution.",
+  "carrier": {
+    "type": "Cl44 = CliffordAlgebra splitQ44 and cl44LeftIdealSubmodule = range (LinearMap.mulRight ℝ cl44VacuumIdempotent)",
+    "operations": [
+      "Native associative Clifford multiplication on Cl44",
+      "Four-mode vacuum idempotent cl44VacuumIdempotent = (a 0 * adag 0) * (a 1 * adag 1) * (a 2 * adag 2) * (a 3 * adag 3)",
+      "Left multiplication by Cl44VolumeElement.volumeElement"
+    ],
+    "conventions": [
+      "The left ideal is the product range {y * cl44VacuumIdempotent}.",
+      "The ordered volume is built from (e₀,e₁,e₂,e₃,f₀,f₁,f₂,f₃) in the native quadratic carrier.",
+      "No identification with the separate Matrix (Fin 16) (Fin 16) ℝ model is assumed."
+    ]
+  },
+  "owner_declarations": [
+    {
+      "qualified_name": "InfoGeometry.Clifford.Cl44VolumeElement.volumeElement_sq",
+      "kind": "theorem",
+      "source_path": "lean/InfoGeometry/Clifford/Cl44VolumeElement.lean",
+      "source_sha256": "9f430d30f93e208a12ea5416358b564e21bd9be4ea336095cf2ccffa7629ea7a",
+      "source_line": 54,
+      "source_end_line": 54,
+      "source_excerpt": "theorem volumeElement_sq : volumeElement * volumeElement = 1 := by",
+      "lean_statement": "theorem volumeElement_sq : volumeElement * volumeElement = 1",
+      "status_assertion": "unverified"
+    },
+    {
+      "qualified_name": "InfoGeometry.Synthesis.Cl44LeftIdealSplitSedenionSynthesis.cl44VacuumIdempotent",
+      "kind": "def",
+      "source_path": "lean/InfoGeometry/Synthesis/Cl44LeftIdealSplitSedenionSynthesis.lean",
+      "source_sha256": "861b18a9d2cfc7b0d802cb5817dd328a4633eb4dad9ade592717c91482504a48",
+      "source_line": 95,
+      "source_end_line": 95,
+      "source_excerpt": "def cl44VacuumIdempotent : Cl44 :=",
+      "lean_statement": "def cl44VacuumIdempotent : Cl44",
+      "status_assertion": "unverified"
+    },
+    {
+      "qualified_name": "InfoGeometry.Synthesis.Cl44LeftIdealSplitSedenionSynthesis.cl44LeftIdealSubmodule_mem_iff",
+      "kind": "theorem",
+      "source_path": "lean/InfoGeometry/Synthesis/Cl44LeftIdealSplitSedenionSynthesis.lean",
+      "source_sha256": "861b18a9d2cfc7b0d802cb5817dd328a4633eb4dad9ade592717c91482504a48",
+      "source_line": 316,
+      "source_end_line": 317,
+      "source_excerpt": "theorem cl44LeftIdealSubmodule_mem_iff (x : Cl44) :\n    x ∈ cl44LeftIdealSubmodule ↔ x ∈ cl44LeftPrincipalIdeal := by",
+      "lean_statement": "theorem cl44LeftIdealSubmodule_mem_iff (x : Cl44) : x ∈ cl44LeftIdealSubmodule ↔ x ∈ cl44LeftPrincipalIdeal",
+      "status_assertion": "unverified"
+    },
+    {
+      "qualified_name": "InfoGeometry.Synthesis.Cl44LeftIdealSplitSedenionSynthesis.cl44_left_right_spinor_ideal_corner_synthesis",
+      "kind": "theorem",
+      "source_path": "lean/InfoGeometry/Synthesis/Cl44LeftIdealSplitSedenionSynthesis.lean",
+      "source_sha256": "861b18a9d2cfc7b0d802cb5817dd328a4633eb4dad9ade592717c91482504a48",
+      "source_line": 393,
+      "source_end_line": 397,
+      "source_excerpt": "theorem cl44_left_right_spinor_ideal_corner_synthesis :\n    (∀ (A Ψ : Cl44), Ψ ∈ cl44LeftPrincipalIdeal → A * Ψ ∈ cl44LeftPrincipalIdeal) ∧\n    (∀ (A Φ : Cl44), Φ ∈ cl44RightPrincipalIdeal → Φ * A ∈ cl44RightPrincipalIdeal) ∧\n    (∀ {Φ Ψ : Cl44}, Φ ∈ cl44RightPrincipalIdeal → Ψ ∈ cl44LeftPrincipalIdeal →\n      ∃ c : Cl44, Φ * Ψ = cl44VacuumIdempotent * c * cl44VacuumIdempotent) := by",
+      "lean_statement": "theorem cl44_left_right_spinor_ideal_corner_synthesis : (∀ (A Ψ : Cl44), Ψ ∈ cl44LeftPrincipalIdeal → A * Ψ ∈ cl44LeftPrincipalIdeal) ∧ (∀ (A Φ : Cl44), Φ ∈ cl44RightPrincipalIdeal → Φ * A ∈ cl44RightPrincipalIdeal) ∧ (∀ {Φ Ψ : Cl44}, Φ ∈ cl44RightPrincipalIdeal → Ψ ∈ cl44LeftPrincipalIdeal → ∃ c : Cl44, Φ * Ψ = cl44VacuumIdempotent * c * cl44VacuumIdempotent)",
+      "status_assertion": "unverified"
+    }
+  ],
+  "imports": [
+    "InfoGeometry.Clifford.Cl44VolumeElement",
+    "InfoGeometry.Synthesis.Cl44LeftIdealSplitSedenionSynthesis"
+  ],
+  "consumers": [
+    "Proposed future consumer: a native volume-action component in a Cl(4,4) ideal representation. No current downstream consumer is asserted."
+  ],
+  "smallest_gap": {
+    "declaration_name": "InfoGeometry.Synthesis.Cl44NativeVolumeIdealAction.volumeLeftAction_involutive",
+    "lean_signature": "(x : cl44LeftIdealSubmodule) : volumeLeftAction (volumeLeftAction x) = x",
+    "pantograph_expression": "volumeLeftAction (volumeLeftAction x) = x",
+    "description": "The owner already proves closure of the generated left ideal under arbitrary left multiplication at the set level. The missing increment is to package native volume multiplication as a real-linear endomorphism of the range submodule and prove its square is identity using volumeElement_sq."
+  },
+  "out_of_scope": [
+    "Dimension or minimality of the native ideal",
+    "An explicit 16-state Fock basis or occupation-number model",
+    "An intertwiner with the separate matrix Cl(4,4) model or its SemiSpinorPlus/SemiSpinorMinus submodules",
+    "A split-sedenion derivation action or physical interpretation"
+  ],
+  "discovery_receipt": {
+    "path": "scratch/cl44_volume_ideal_discovery_gate0.json",
+    "sha256": "b3e342b8c5e1b6ba7299eec5c1aabbfa210695f728cbba50982ea816b6fe2162",
+    "query": "volumeElement_sq cl44VacuumIdempotent cl44LeftIdealSubmodule cl44_left_right_spinor_ideal_corner_synthesis"
+  }
+}

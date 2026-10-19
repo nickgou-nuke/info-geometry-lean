@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Clifford.BottPeriodicity
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.OpSignatureBridge
@@ -104,6 +110,8 @@ import InfoGeometry.Clifford.Cl44GenerationRotation
 import InfoGeometry.Clifford.Cl44C8Comparison
 import InfoGeometry.Clifford.Cl44QuaternionSplit
 import InfoGeometry.Clifford.Cl44SignatureResidue
+import InfoGeometry.Clifford.Cl44S3CopyModel
+import InfoGeometry.Clifford.Cl44S3CopyModelAudit
 import InfoGeometry.Clifford.QuadraticPolarAnticommutator
 import InfoGeometry.Krein.Superphysics
 import InfoGeometry.Clifford.Tower
@@ -140,6 +148,9 @@ import InfoGeometry.Clifford.FoundationalInvolutionsBridge
 import InfoGeometry.Clifford.Cl55FockSupergradedRepresentation
 import InfoGeometry.Clifford.Cl55PositiveGrassmannianFockBridge
 import InfoGeometry.Clifford.Cl55SuperTKK
+import InfoGeometry.Clifford.Cl55TKKAdjointGradeReversal
+import InfoGeometry.Clifford.Cl55TKKGradeDirectSumInternal
+import InfoGeometry.Clifford.Cl55TKKGradeReversalDirectSum
 import InfoGeometry.Clifford.Cl55ContactTKKVacuumIdeal
 import InfoGeometry.Clifford.Cl55ContactTKKKreinBridge
 import InfoGeometry.Clifford.Cl55RightIdealSupertrace

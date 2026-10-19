@@ -1,0 +1,19 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.Clifford.Cl55TKKDirectSumBracket
+
+#print axioms InfoGeometry.Clifford.Cl55SuperTKK.tkkFiveGradeDirectSumBracket
+#print axioms InfoGeometry.Clifford.Cl55SuperTKK.tkkFiveGradeDirectSumBracket_lof
+#print axioms InfoGeometry.Clifford.Cl55SuperTKK.tkkFiveGradeDirectSumBracket_lof_grade
+#print axioms InfoGeometry.Clifford.Cl55SuperTKK.tkkFiveGradeDirectSumBracket_lof_grade_add
+#print axioms InfoGeometry.Clifford.Cl55SuperTKK.tkkFiveGradeDirectSumBracket_lof_eq_zero_of_grade_sum_outside
+#print axioms InfoGeometry.Clifford.Cl55SuperTKK.tkkFiveGradeDirectSumReverseAction_preserves_bracket
+#print axioms InfoGeometry.Clifford.Cl55SuperTKK.tkkFiveGradeDirectSumBracket_jacobi
+#print axioms InfoGeometry.Clifford.Cl55SuperTKK.tkkFiveGradeDirectSumLieRing
+#print axioms InfoGeometry.Clifford.Cl55SuperTKK.tkkFiveGradeDirectSumLieRing_bracket
+#print axioms InfoGeometry.Clifford.Cl55SuperTKK.tkkFiveGradeDirectSumLieAlgebra
+#print axioms InfoGeometry.Clifford.Cl55SuperTKK.tkkFiveGradeDirectSumEquiv_map_bracket

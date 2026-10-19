@@ -1,0 +1,46 @@
+/-
+Copyright (c) 2026 InfoGeometry Contributors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Contributors
+-/
+import InfoGeometry.Superalgebra.SplitOctonionGrandUnifiedTowerArchive
+
+/-!
+# Audit: SplitOctonionGrandUnifiedTowerArchive
+Concrete integer checks for Section 138 grand unified split-octonion tower.
+-/
+
+namespace InfoGeometry.Superalgebra.GrandUnifiedArchiveAudit
+
+open InfoGeometry.Superalgebra.GrandUnifiedArchive
+
+theorem audit_hopf_double_torsion_int :
+    let u : ColorVec3 ℤ := ⟨1, 2, 1⟩
+    let da : ColorVec3 ℤ := ⟨1, 0, -1⟩
+    let db : ColorVec3 ℤ := ⟨0, 1, 2⟩
+    ColorVec3.cross (ColorVec3.cross u da) (ColorVec3.cross u db) =
+      ColorVec3.smul (ColorVec3.det3 u da db) u := by decide
+
+theorem audit_baryon_associator_int :
+    let u1 : ColorVec3 ℤ := ⟨1, 0, 0⟩
+    let u2 : ColorVec3 ℤ := ⟨0, 1, 0⟩
+    let u3 : ColorVec3 ℤ := ⟨0, 0, 1⟩
+    SplitOctonion.associator (SplitOctonion.quark u1) (SplitOctonion.quark u2) (SplitOctonion.quark u3) =
+      SplitOctonion.scale (-ColorVec3.det3 u1 u2 u3) SplitOctonion.paraSymplecticK0 := by decide
+
+theorem audit_jacobiator_anomaly_int :
+    let u1 : ColorVec3 ℤ := ⟨1, 0, 0⟩
+    let u2 : ColorVec3 ℤ := ⟨0, 1, 0⟩
+    let u3 : ColorVec3 ℤ := ⟨0, 0, 1⟩
+    SplitOctonion.jacobiator (SplitOctonion.quark u1) (SplitOctonion.quark u2) (SplitOctonion.quark u3) =
+      SplitOctonion.scale (-6) SplitOctonion.paraSymplecticK0 := by decide
+
+theorem audit_faraday_monopole_int :
+    let u : ColorVec3 ℤ := ⟨0, 0, 1⟩
+    let da : ColorVec3 ℤ := ⟨1, 0, 0⟩
+    let db : ColorVec3 ℤ := ⟨0, 1, 0⟩
+    SplitOctonion.faradayYangMills u da db =
+      SplitOctonion.scale (-2 * ColorVec3.det3 u da db)
+        (SplitOctonion.add SplitOctonion.paraSymplecticK0 (SplitOctonion.quark u)) := by decide
+
+end InfoGeometry.Superalgebra.GrandUnifiedArchiveAudit

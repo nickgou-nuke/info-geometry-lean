@@ -1,0 +1,56 @@
+/-
+Copyright (c) 2026 InfoGeometry Contributors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Contributors
+-/
+import InfoGeometry.Synthesis.Wave17TopologicalOctonionicHolographicSynthesis
+
+/-!
+# Audit Module for Wave 17 Topological-Octonionic-Holographic Synthesis
+Target: `InfoGeometry/Synthesis/Wave17TopologicalOctonionicHolographicSynthesisAudit.lean`
+
+Provides concrete integer (`ℤ`) evaluations and checks by `decide` across all Wave 17 subsystems.
+-/
+
+namespace InfoGeometry.Synthesis.Wave17TopologicalOctonionicHolographicSynthesisAudit
+
+open InfoGeometry.Synthesis.Wave17TopologicalOctonionicHolographicSynthesis
+
+/-- Concrete integer audit of the Donaldson-Witten equivariant BRST square relation `Q² = -δ_ϕ`. -/
+theorem audit_wave17_donaldson_witten_brst_sq_int :
+    let F : DW.BRSTFieldMultiplet (DW.SplitOctonion ℤ) :=
+      ⟨DW.canonicalSplitOctonionInt, DW.SplitOctonion.one, DW.canonicalSplitOctonionInt, DW.SplitOctonion.zero⟩
+    DW.brstQ (DW.brstQ F) =
+      ⟨DW.SplitOctonion.neg (DW.gaugeVarPhi F).A,
+       DW.SplitOctonion.zero, DW.SplitOctonion.zero, DW.SplitOctonion.zero⟩ := by
+  decide
+
+/-- Concrete integer audit of the Akivis-Malcev Jacobiator-Associator identity on standard basis quarks. -/
+theorem audit_wave17_akivis_malcev_jacobiator_int :
+    MC.SplitOctonion.jacobiator
+      (MC.SplitOctonion.quark MC.ColorVec3.e1)
+      (MC.SplitOctonion.quark MC.ColorVec3.e2)
+      (MC.SplitOctonion.quark MC.ColorVec3.e3) =
+    MC.SplitOctonion.scale (-6 : ℤ) MC.SplitOctonion.paraSymplecticK0 := by
+  decide
+
+/-- Concrete integer audit of the Temperley-Lieb Jones cubic and Kauffman Yang-Baxter braid relations. -/
+theorem audit_wave17_jones_yang_baxter_int :
+    let CS := WJ.canonicalChernSimonsPhaseInt
+    WJ.Mat3.mul
+      (WJ.Mat3.mul (WJ.tlGenE1 (WJ.unknotVacuumLoop CS)) (WJ.tlGenE2 (WJ.unknotVacuumLoop CS)))
+      (WJ.tlGenE1 (WJ.unknotVacuumLoop CS)) =
+      WJ.tlGenE1 (WJ.unknotVacuumLoop CS) ∧
+    WJ.Mat3.mul (WJ.Mat3.mul (WJ.kauffmanBraidR1 CS) (WJ.kauffmanBraidR2 CS)) (WJ.kauffmanBraidR1 CS) =
+      WJ.Mat3.mul (WJ.Mat3.mul (WJ.kauffmanBraidR2 CS) (WJ.kauffmanBraidR1 CS)) (WJ.kauffmanBraidR2 CS) := by
+  decide
+
+/-- Concrete integer audit of the Maldacena bulk-to-boundary intertwiner and non-zero condensate pairing. -/
+theorem audit_wave17_maldacena_intertwiner_and_condensate_int :
+    Holo.bulkToBoundaryChiralMap (Holo.bulkColorAction (2 : ℤ) (-3 : ℤ) (5 : ℤ) Holo.canonicalSplitOctonionInt) =
+      Holo.bulkColorAction (2 : ℤ) (-3 : ℤ) (5 : ℤ) (Holo.bulkToBoundaryChiralMap Holo.canonicalSplitOctonionInt) ∧
+    Holo.boundarySourceResponsePairing Holo.canonicalColorVec3Int Holo.canonicalColorVec3Int ≠
+      Holo.SplitOctonion.zero := by
+  decide
+
+end InfoGeometry.Synthesis.Wave17TopologicalOctonionicHolographicSynthesisAudit

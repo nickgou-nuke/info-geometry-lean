@@ -1,0 +1,33 @@
+{
+  "concept_id": "double-real-krein-majorana-kernel-projector-bridge",
+  "source_text": "Identify the canonical split-null CAR creation and annihilation kernels with fixed spaces of the KKT-core zero/cozero projectors on the doubled real carrier.",
+  "intake_classification": "theorem-bearing",
+  "target_status": "theorem-backed",
+  "risk_level": "R2",
+  "allowed_imports": [
+    "InfoGeometry.Krein.MajoranaSheetConnectors",
+    "InfoGeometry.Canonical.KreinMajoranaZeroModeBlock",
+    "InfoGeometry.Quantum.RealSplitClifford"
+  ],
+  "formal_objects": [
+    "DoubledSpace E",
+    "spectral_epsilon",
+    "plusSheet",
+    "minusSheet",
+    "doubledSpaceCl11Action",
+    "zeroModeProjector",
+    "cozeroModeProjector",
+    "concreteCARCreation",
+    "concreteCARAnnihilation"
+  ],
+  "acceptance_theorems": [
+    "zeroModeProjector_fixed_iff_plusSheet",
+    "cozeroModeProjector_fixed_iff_minusSheet",
+    "creation_kernel_iff_zeroModeProjector_fixed",
+    "annihilation_kernel_iff_cozeroModeProjector_fixed"
+  ],
+  "non_theorem_claims": [
+    "No Hamiltonian spectral zero-mode theorem",
+    "No boundary localization or topological-protection theorem"
+  ]
+}

@@ -910,6 +910,42 @@ def test_detect_trap_t16_missing_noncommutative_witness():
     assert not _has_closed_noncommutativity_witness(false_elimination)
 
 
+def test_t16_accepts_nested_matrix_type_ascriptions_in_closed_witness():
+    code = """
+    def upperUnit {R : Type*} [Zero R] [One R] : Matrix (Fin 2) (Fin 2) R :=
+      !![0, 1; 0, 0]
+    def lowerUnit {R : Type*} [Zero R] [One R] : Matrix (Fin 2) (Fin 2) R :=
+      !![0, 0; 1, 0]
+    def operatorProduct {R : Type*} [Ring R]
+        (A B : Matrix (Fin 2) (Fin 2) R) := A * B
+    theorem matrix_units_noncommute {R : Type*} [Ring R] [Nontrivial R] :
+        (upperUnit : Matrix (Fin 2) (Fin 2) R) *
+            (lowerUnit : Matrix (Fin 2) (Fin 2) R) ≠
+          (lowerUnit : Matrix (Fin 2) (Fin 2) R) *
+            (upperUnit : Matrix (Fin 2) (Fin 2) R) := by
+      intro h
+      have h00 := congrArg (fun M : Matrix (Fin 2) (Fin 2) R => M 0 0) h
+      norm_num [upperUnit, lowerUnit, Matrix.mul_apply,
+        Fin.sum_univ_two] at h00
+    """
+    assert _has_closed_noncommutativity_witness(code)
+    t16 = [
+        violation for violation in screen_lean_content(code)
+        if violation.trap_id == "T16" and "Witness" in violation.trap_name
+    ]
+    assert t16 == []
+
+
+def test_t16_nested_type_ascription_parser_preserves_named_arguments():
+    from tools.infra.opengauss_screener import _strip_inline_type_ascriptions
+
+    assert _strip_inline_type_ascriptions("(x : Matrix (Fin 2) (Fin 2) R)") == "x"
+    assert _strip_inline_type_ascriptions("(x := Matrix (Fin 2) (Fin 2) R)") == (
+        "(x := Matrix (Fin 2) (Fin 2) R)"
+    )
+    assert _strip_inline_type_ascriptions("(x : )") == "(x : )"
+
+
 def test_t16_tracks_ambient_matrix_binders_and_local_type_aliases():
     ambient = """
     variable (A B : Matrix (Fin 2) (Fin 2) ℝ)

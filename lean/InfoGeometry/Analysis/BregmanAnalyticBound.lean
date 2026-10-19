@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Analysis.Normed.Algebra.MatrixExponential
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
@@ -497,6 +503,16 @@ theorem closedFormPhaseAxisRemainder_entryMax_bound {ε : ℝ}
     (max_le
       (closedFormPhaseAxisRemainder_entry_bound hε 1 0)
       (closedFormPhaseAxisRemainder_entry_bound hε 1 1))
+
+/-! ## Concrete phase-axis norm -/
+
+/-- The chosen operator norm of the concrete phase axis is one. -/
+theorem phaseAxis_norm_eq_one :
+    ‖(InfoGeometry.Canonical.BregmanDeformation.phaseAxis : MatrixEnd 2)‖ = 1 := by
+  rw [Matrix.linfty_opNorm_def]
+  rw [show (Finset.univ : Finset (Fin 2)) = {0, 1} by decide]
+  norm_num [InfoGeometry.Canonical.BregmanDeformation.phaseAxis,
+    Matrix.linfty_opNorm_def, Finset.sup_insert, Fin.sum_univ_two]
 
 /-! ## Conditional quadratic Bregman bound -/
 

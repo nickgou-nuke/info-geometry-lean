@@ -19,7 +19,7 @@ open InfoGeometry.Synthesis.HestenesStokesAlgebraicBoundarySynthesis
 #check @fiveGradingComap
 #check @fiveGrading_colimit_cone_bracket_transport
 #check @five_graded_maurer_cartan_equations_and_koszul_supertrace_laws
-#check @dikin_colimit_hessian_isometry_and_ellipsoid_inclusion
+#check @dikin_hessian_compatible_cone_transport
 #check @drazin_attention_projector_and_colimit_dikin_preservation
 #check @planarCliffordE1_mul_planarCliffordE2_ne_comm
 #check @planarClifford_bivector_relations
@@ -43,7 +43,7 @@ open InfoGeometry.Synthesis.HestenesStokesAlgebraicBoundarySynthesis
 #print axioms fiveGradingComap
 #print axioms fiveGrading_colimit_cone_bracket_transport
 #print axioms five_graded_maurer_cartan_equations_and_koszul_supertrace_laws
-#print axioms dikin_colimit_hessian_isometry_and_ellipsoid_inclusion
+#print axioms dikin_hessian_compatible_cone_transport
 #print axioms drazin_attention_projector_and_colimit_dikin_preservation
 #print axioms planarCliffordE1_mul_planarCliffordE2_ne_comm
 #print axioms planarClifford_bivector_relations

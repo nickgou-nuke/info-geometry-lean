@@ -1,0 +1,10 @@
+{
+  "packet_id": "obs_20261019_015056_624ac000",
+  "timestamp": "2026-10-19T01:50:56.733552+00:00",
+  "source_file": "lean/InfoGeometry/Clifford/Cl44S3Family.lean",
+  "trap_id": "T17",
+  "description": "Historical T17 obstruction packet: the datum is generic and has no inhabitant for every V. The owner now supplies a source-local witness for CoordinateS3Carrier = Fin 3 → ℝ, and Cl44S3CopyModel supplies a separate three-copy SemiSpinorPlus witness. The current strict screen is clean; this packet records only the counterexample to universal existence.",
+  "counterexample": "Take V to be the zero module. Every candidate family vector is zero, so a linearly independent family indexed by Fin 3 cannot exist.",
+  "negative_constraint": "Keep existence carrier-specific; do not infer a uniform inhabitant or a physical SU(3)/U(1) three-generation model from the generic structure.",
+  "disposition": "Closed for the concrete source-local carrier witness; retained as a counterexample to universal existence."
+}

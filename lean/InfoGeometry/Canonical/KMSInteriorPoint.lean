@@ -1,22 +1,25 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
-# KMS Interior Point — Self-Concordant Barrier
+# KMS Interior Point — Conditional Remainder Interfaces
 
-The KMS flow toward the Zorn-maximal Cantor boundary is isomorphic to a
-primal-dual interior point method.  The regularizer exp(εK) - I - εK
-satisfies the self-concordant bound ‖exp(εK) - I - εK‖ ≤ ε² for small ε
-when ‖K‖ = 1.
-
-This bounds the local metric deformation (Dikin ellipsoid) and forces
-the shift operator S_left to be uniformly continuous on the ℓ² completion.
+This file records conditional bounds for a supplied operator exponential on
+the real continuous-linear endomorphisms of `H`. It does not construct an
+operator exponential, a self-concordant barrier, or a Dikin-feasibility result.
+Those remain separate proof obligations.
 
 #### BUCKET 1: CLOSED FINITE THEOREMS
 None in this file.
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
-* `dikin_bounded_of_bregman_bound`
+* `bregman_remainder_bounded_of_quadratic_bound`
 * `flow_uniformly_continuous_of_lipschitz_step`
 
 #### BUCKET 3: OPEN CLOSURE DEBT
@@ -34,14 +37,17 @@ abbrev ExpOp (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H] :=
   (H →L[ℝ] H) → (H →L[ℝ] H)
 
 /--
-The self-concordant barrier bound:
+The conditional quadratic remainder bound for a supplied operator exponential:
 
-  ‖exp(εK) - I - εK‖ ≤ ε²·‖K‖²   for ε·‖K‖ ≤ 1
+  ‖exp(εK) - I - εK‖ ≤ ε²·‖K‖²   for ‖εK‖ ≤ 1.
+
+The exponential is an explicit argument; this predicate does not construct it
+or assert that it is self-concordant.
 -/
 def HasBregmanQuadraticBound
     (expOp : ExpOp H)
     (K : H →L[ℝ] H) : Prop :=
-  ∀ ε : ℝ, ε * ‖K‖ ≤ 1 →
+  ∀ ε : ℝ, ‖ε • K‖ ≤ 1 →
     ‖expOp (ε • K) - (1 : H →L[ℝ] H) - (ε • K)‖ ≤ ε ^ 2 * ‖K‖ ^ 2
 
 /--
@@ -51,36 +57,55 @@ def HasLocalFlowLipschitz
     (expOp : ExpOp H)
     (K : H →L[ℝ] H)
     (ε : ℝ) : Prop :=
-  ∀ δε : ℝ, |δε| < 1 →
-    ∃ C : ℝ, ‖expOp ((ε + δε) • K) - expOp (ε • K)‖ ≤ C * |δε|
+  ∃ C : ℝ, 0 ≤ C ∧
+    ∀ δ₁ δ₂ : ℝ, |δ₁| < 1 → |δ₂| < 1 →
+      ‖expOp ((ε + δ₁) • K) - expOp ((ε + δ₂) • K)‖ ≤ C * |δ₁ - δ₂|
 
-/--
-The Dikin ellipsoid bound: when ‖K‖ = 1, the local deformation is ≤ ε².
--/
-theorem dikin_bounded_of_bregman_bound
+/-- The supplied quadratic remainder bound specializes to `ε^2` for a
+    unit-norm generator and a sign-symmetric step `|ε| ≤ 1`. -/
+theorem bregman_remainder_bounded_of_quadratic_bound
     (expOp : ExpOp H)
     (K : H →L[ℝ] H)
     (hquad : HasBregmanQuadraticBound expOp K)
     (hK_norm : ‖K‖ = 1)
     (ε : ℝ)
-    (hε : ε ≤ 1) :
+    (hε : |ε| ≤ 1) :
     ‖expOp (ε • K) - (1 : H →L[ℝ] H) - (ε • K)‖ ≤ ε ^ 2 := by
-  have hε' : ε * ‖K‖ ≤ 1 := by
-    rw [hK_norm, mul_one]
+  have hstep : ‖ε • K‖ ≤ 1 := by
+    rw [norm_smul, Real.norm_eq_abs, hK_norm, mul_one]
     exact hε
-  have h := hquad ε hε'
+  have h := hquad ε hstep
   rw [hK_norm] at h
   simpa [sq, mul_one] using h
 
-/--
-Uniform continuity of the diagonal action: the difference of two
-exponential steps is bounded by C·|δε|.
--/
+/-- A common pairwise Lipschitz bound on the unit step interval implies
+uniform continuity of the exponential flow on that interval. -/
 theorem flow_uniformly_continuous_of_lipschitz_step
     (expOp : ExpOp H)
     (K : H →L[ℝ] H)
-    (ε δε : ℝ)
-    (hlip : HasLocalFlowLipschitz expOp K ε)
-    (h_small : |δε| < 1) :
-    ∃ C : ℝ, ‖expOp ((ε + δε) • K) - expOp (ε • K)‖ ≤ C * |δε| :=
-  hlip δε h_small
+    (ε : ℝ)
+    (hlip : HasLocalFlowLipschitz expOp K ε) :
+    UniformContinuousOn (fun δ : ℝ => expOp ((ε + δ) • K))
+      {δ : ℝ | |δ| < 1} := by
+  rcases hlip with ⟨C, hC, hbound⟩
+  rw [Metric.uniformContinuousOn_iff]
+  intro η hη
+  refine ⟨η / (C + 1), div_pos hη (by linarith), ?_⟩
+  intro δ₁ hδ₁ δ₂ hδ₂ hdist
+  have hstep : |δ₁ - δ₂| < η / (C + 1) := by
+    simpa [Real.dist_eq] using hdist
+  have hscaled : C * (η / (C + 1)) < η := by
+    have hden : 0 < C + 1 := by linarith
+    calc
+      C * (η / (C + 1)) = (C * η) / (C + 1) := by ring
+      _ < η := (div_lt_iff₀ hden).2 (by nlinarith)
+  have hnorm := hbound δ₁ δ₂ hδ₁ hδ₂
+  have hnorm' :
+      ‖expOp ((ε + δ₁) • K) - expOp ((ε + δ₂) • K)‖ < η := by
+    calc
+      ‖expOp ((ε + δ₁) • K) - expOp ((ε + δ₂) • K)‖
+          ≤ C * |δ₁ - δ₂| := hnorm
+      _ ≤ C * (η / (C + 1)) :=
+        mul_le_mul_of_nonneg_left hstep.le hC
+      _ < η := hscaled
+  simpa [dist_eq_norm] using hnorm'

@@ -1259,8 +1259,32 @@ def _witness_carrier_map(source: str, binders: str) -> dict[str, tuple[str, str,
 
 
 def _strip_inline_type_ascriptions(expr: str) -> str:
-    """Replace `(x : T)` with `x` so typed constants match operand patterns."""
-    return re.sub(r"\(\s*([A-Za-z_][A-Za-z0-9_']*)\s*:\s*[^():=]+\)", r"\1", expr)
+    """Replace a parenthesized `(x : T)` atom by `x`.
+
+    Walk balanced Lean atoms instead of using a flat type regex: matrix types
+    contain nested applications such as `Matrix (Fin 2) (Fin 2) R`. Only a
+    simple identifier followed by a type-ascription colon is stripped, so a
+    named argument `(x := value)` remains untouched.
+    """
+    pieces: list[str] = []
+    position = 0
+    while position < len(expr):
+        if expr[position] == "(":
+            atom = _balanced_lean_atom(expr, position)
+            if atom is not None:
+                parenthesized, end = atom
+                inner = parenthesized[1:-1]
+                match = re.match(
+                    r"\s*([A-Za-z_][A-Za-z0-9_']*)\s*:(?![=])(?=\s*\S)",
+                    inner,
+                )
+                if match is not None:
+                    pieces.append(match.group(1))
+                    position = end
+                    continue
+        pieces.append(expr[position])
+        position += 1
+    return "".join(pieces)
 
 
 def _witness_matches_matrix_carriers(source: str, binders: str, result: str,

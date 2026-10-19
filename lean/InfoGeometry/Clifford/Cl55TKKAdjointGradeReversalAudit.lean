@@ -1,0 +1,18 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.Clifford.Cl55TKKAdjointGradeReversal
+
+#print axioms InfoGeometry.Clifford.Cl55SuperTKK.conjugation_mul_of_sq_one
+#print axioms InfoGeometry.Clifford.Cl55SuperTKK.conjugation_preserves_commutator
+#print axioms InfoGeometry.Clifford.Cl55SuperTKK.idealModularConjugationAction
+#print axioms InfoGeometry.Clifford.Cl55SuperTKK.conjugation_anticommutes_commutator
+#print axioms InfoGeometry.Clifford.Cl55SuperTKK.idealModularConjugationAction_anticommutes_tkkAdjoint
+#print axioms InfoGeometry.Clifford.Cl55SuperTKK.idealEndV_noncommutative_witness
+#print axioms InfoGeometry.Clifford.Cl55SuperTKK.linearMap_anti_commuting_with_tkk_adjoint_reverses_grade
+#print axioms InfoGeometry.Clifford.Cl55SuperTKK.idealModularConjugationAction_maps_grade_neg
+#print axioms InfoGeometry.Clifford.Cl55SuperTKK.idealModularConjugationAction_mul
+#print axioms InfoGeometry.Clifford.Cl55SuperTKK.idealModularConjugationAction_preserves_tkkBracket

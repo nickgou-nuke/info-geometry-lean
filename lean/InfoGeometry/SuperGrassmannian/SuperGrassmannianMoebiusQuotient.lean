@@ -11,38 +11,16 @@ import Mathlib.Tactic.FinCases
 set_option linter.deprecated false
 
 /-!
-# The Möbius ℤ₂ Quotient on the Para-Kähler Super-Grassmannian
+# Finite Möbius/Polarization Matrix Identities
 
-This module formalizes the global differential topology and algebraic structure
-of the unoriented super-Grassmannian crosscap:
+This module proves identities for four explicit `2 × 2` matrices over a
+commutative ring: two involutions, their anticommutation, and the induced metric
+and symplectic-form transformations. It also proves an integer parity identity
+and a conditional algebraic consequence of a first-order product equation.
 
-1. **Ambient Carrier Algebra**:
-   - Polarization operator $K = \operatorname{diag}(1, -1)$.
-   - Möbius sheet-swapping involution $M = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}$.
-   - Neutral Krein metric $g = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}$.
-   - Symplectic form $\omega = \begin{pmatrix} 0 & 1 \\ -1 & 0 \end{pmatrix}$.
-
-2. **Involutions and Anti-Commutation**:
-   - $K^2 = \mathbf{1}, M^2 = \mathbf{1}$.
-   - Anti-commutation: $\{M, K\} = M K + K M = 0 \iff M K = - K M$.
-
-3. **Metric Isometry and Symplectic Reflection**:
-   - Metric invariance: $M^T g M = g$.
-   - Symplectic anti-invariance (phase space reflection): $M^T \omega M = -\omega$.
-
-4. **The Topological Berezinian Parity Theorem**:
-   - Parity preservation: $\operatorname{Even}(k^2) \iff \operatorname{Even}(k)$.
-   - Berezinian parity sign formula:
-     $$\operatorname{Ber}(d\Phi_M)\big\vert_{T = \mathbf{1}} = (-1)^{k^2} = (-1)^k$$
-   - Non-orientability ($w_1 \neq 0$) is governed strictly by the graded dimension mismatch $k \pmod 2$.
-
-5. **First-Order Differential of Affine Matrix Inversion**:
-   - For any ring $A$, variation $\delta$ of $T \cdot T^{-1} = 1$ under $T \to T + H$ satisfies:
-     $$T \cdot \delta + H \cdot T^{-1} = 0 \implies \delta = - T^{-1} H T^{-1}$$
-   - Algebraically formalizes $d\Phi_M(H) = - T^{-1} H T^{-1}$.
-
-All proofs are 100% native Mathlib 4, strictly constructive, with zero `sorry`s,
-zero `admit`s, and zero custom axioms.
+It does not construct a super-vector space, super-Grassmannian, quotient
+manifold/sheaf, Berezinian Jacobian, or Stiefel–Whitney class. Those geometric
+interpretations are not established by these finite matrix calculations.
 -/
 
 namespace InfoGeometry.SuperGrassmannian.MoebiusQuotient
@@ -101,6 +79,23 @@ theorem moebius_comm_polarization_neg :
   rw [← add_eq_zero_iff_eq_neg]
   exact moebius_anticommutes_polarization
 
+/-- Anticommutation sends every `+1` eigenvector of `K_mat` to a `-1`
+eigenvector under `M_mat`. -/
+theorem moebius_maps_positive_eigenspace_to_negative (v : Fin 2 → R)
+    (hv : K_mat (R := R) *ᵥ v = v) :
+    K_mat (R := R) *ᵥ (M_mat *ᵥ v) = -(M_mat *ᵥ v) := by
+  have hKM : K_mat (R := R) * M_mat = -(M_mat * K_mat) := by
+    have hsum : K_mat (R := R) * M_mat + M_mat * K_mat = 0 := by
+      simpa [add_comm] using moebius_anticommutes_polarization (R := R)
+    exact add_eq_zero_iff_eq_neg.mp hsum
+  calc
+    K_mat (R := R) *ᵥ (M_mat *ᵥ v) = (K_mat * M_mat) *ᵥ v :=
+      Matrix.mulVec_mulVec v K_mat M_mat
+    _ = (-(M_mat * K_mat)) *ᵥ v := by rw [hKM]
+    _ = -((M_mat * K_mat) *ᵥ v) := Matrix.neg_mulVec v (M_mat * K_mat)
+    _ = -(M_mat *ᵥ (K_mat *ᵥ v)) := by rw [Matrix.mulVec_mulVec]
+    _ = -(M_mat *ᵥ v) := by rw [hv]
+
 /-! --------------------------------------------------------------------------
     Section 3: Metric Isometry and Symplectic Reflection
     -------------------------------------------------------------------------- -/
@@ -124,21 +119,16 @@ theorem moebius_symplectic_anti_invariance :
   ext i j; fin_cases i <;> fin_cases j <;> simp [M_mat, omega_mat, Matrix.mul_apply, Matrix.transpose_apply, Fin.sum_univ_two]
 
 /-! --------------------------------------------------------------------------
-    Section 4: The Berezinian Topological Obstruction Theorem
+    Section 4: Integer Parity Identity
     -------------------------------------------------------------------------- -/
 
-/-- Parity identity: an integer has the same parity as its square. -/
+/-- A natural number and its square have the same parity. -/
 lemma nat_sq_parity_iff (k : ℕ) : Even (k ^ 2) ↔ Even k := by
   simp [Nat.even_pow]
 
-/--
-Topological Berezinian Parity Identity:
-For any graded dimension mismatch k = n - q (as a natural number),
-the sign of the Berezinian inversion differential satisfies:
-(-1)^{k²} = (-1)^k.
-This proves that the topological obstruction w₁ ≠ 0 is governed strictly by k mod 2.
--/
-theorem berezinian_parity_sign (k : ℕ) :
+/-- `(-1)^k` depends only on the parity of the natural exponent; this theorem
+makes no claim about a Berezinian, Jacobian, or orientation class. -/
+theorem neg_one_pow_square_eq_self (k : ℕ) :
     (-1 : ℤ) ^ (k ^ 2) = (-1 : ℤ) ^ k := by
   by_cases h : Even k
   · have h_sq : Even (k ^ 2) := (nat_sq_parity_iff k).mpr h
@@ -152,22 +142,17 @@ theorem berezinian_parity_sign (k : ℕ) :
     rw [h_sq_odd.neg_one_pow, h.neg_one_pow]
 
 /-! --------------------------------------------------------------------------
-    Section 5: The Differential of Affine Matrix Inversion
+    Section 5: Conditional Inverse-Product Variation Identity
     -------------------------------------------------------------------------- -/
 
 variable {A : Type*} [Ring A]
 
-/--
-First-Order Inversion Differential Identity:
-For invertible elements T with inverse T_inv in any ring A,
-the variation δ of T · T⁻¹ = 1 satisfies:
-T · δ + H · T⁻¹ = 0  ⟶  δ = - T⁻¹ · H · T⁻¹.
-This algebraically formalizes dΦ_M(H) = - T⁻¹ H T⁻¹.
--/
-theorem matrix_inversion_differential_identity
+/-- If `T_inv * T = 1` and `T * δ + H * T_inv = 0`, then the supplied
+variation satisfies `δ = -T_inv * H * T_inv`. This is a conditional ring identity,
+not a formal derivative theorem. -/
+theorem inverse_product_variation_algebraic_identity
     (T T_inv H δ : A)
     (h_left : T_inv * T = 1)
-    (_h_right : T * T_inv = 1)
     (h_var : T * δ + H * T_inv = 0) :
     δ = - (T_inv * H * T_inv) := by
   have h_eq : T_inv * (T * δ + H * T_inv) = 0 := by rw [h_var, mul_zero]
@@ -177,44 +162,5 @@ theorem matrix_inversion_differential_identity
     _ = 0 := h_eq
   rw [add_eq_zero_iff_eq_neg] at h_solve
   exact h_solve
-
-/-! --------------------------------------------------------------------------
-    Section 6: Master Certificate & Compilation Constructor
-    -------------------------------------------------------------------------- -/
-
-/--
-Master Certificate for the Super-Grassmannian Möbius Quotient:
-1. K and M involutions: $K^2 = 1, M^2 = 1$.
-2. Anticommutation: $\{M, K\} = 0$.
-3. Metric isometry: $M^T g M = g$.
-4. Symplectic reflection: $M^T \omega M = -\omega$.
-5. Berezinian parity theorem: $(-1)^{k^2} = (-1)^k$.
-6. Matrix inversion differential: $\delta = - T^{-1} H T^{-1}$.
--/
-structure SuperGrassmannianMoebiusQuotientCertificate
-    (R : Type*) [CommRing R] (A : Type*) [Ring A] : Prop where
-  k_sq : K_mat (R := R) * K_mat = 1
-  m_sq : M_mat (R := R) * M_mat = 1
-  anticomm : M_mat (R := R) * K_mat + K_mat * M_mat = 0
-  metric_iso : (M_mat (R := R)).transpose * g_mat * M_mat = g_mat
-  sympl_refl : (M_mat (R := R)).transpose * omega_mat * M_mat = - omega_mat
-  berezinian_sign : ∀ (k : ℕ), (-1 : ℤ) ^ (k ^ 2) = (-1 : ℤ) ^ k
-  inv_diff : ∀ (T T_inv H δ : A) (_h_left : T_inv * T = 1) (_h_right : T * T_inv = 1)
-    (_h_var : T * δ + H * T_inv = 0), δ = - (T_inv * H * T_inv)
-
-/--
-Master compilation constructor verifying that the Möbius quotient on the
-para-Kähler super-Grassmannian is 100% mathematically closed in Lean 4 without custom axioms.
--/
-theorem compile_super_grassmannian_moebius_quotient
-    (R : Type*) [CommRing R] (A : Type*) [Ring A] :
-    SuperGrassmannianMoebiusQuotientCertificate R A where
-  k_sq := K_sq_id
-  m_sq := M_sq_id
-  anticomm := moebius_anticommutes_polarization
-  metric_iso := moebius_metric_isometry
-  sympl_refl := moebius_symplectic_anti_invariance
-  berezinian_sign := berezinian_parity_sign
-  inv_diff := matrix_inversion_differential_identity
 
 end InfoGeometry.SuperGrassmannian.MoebiusQuotient

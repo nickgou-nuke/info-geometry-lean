@@ -10,17 +10,14 @@ import Mathlib.Tactic.Ring
 import Mathlib.Tactic.LinearCombination
 
 /-!
-# Section 113: Riemann Sphere Light Shells, `CP¹` Twistor Factorization, and Modular Time
-Target: `InfoGeometry/Spacetime/RiemannSphereTwistorShells.lean`
+# Section 113: Algebraic Light-Shell Determinant Identities
 
-Formalizes:
-1. 3D spatial vector `(x, y, z)` and relativistic radius `r² = x² + y² + z²`.
-2. Light shell condition `t² - (x² + y² + z²) = 0` over full 3D space (`Space3D R`).
-3. Van der Waerden bispinor representation `X = t·σ₀ + x·σ₁ + y·σ₂ + z·σ₃`.
-4. Twistor factorization theorem: on the light shell (`t² = r²`), the bispinor determinant
-   vanishes (`det X = 0`), factoring into the Riemann sphere `CP¹`.
-5. Interior time-cone positivity (`0 < det X` for `r² < t²`), providing the positive density
-   determinant for the Tomita–Takesaki modular logarithm `K_mod = -ln(X)`.
+This file proves polynomial identities for scalar coordinates `(t, x, y, z)` and
+an explicit parameter `I` satisfying `I * I = -1`. The determinant is represented
+by a scalar formula; no matrix-valued spinor, projective `CP¹` map, twistor
+factorization, Tomita operator, or modular logarithm is constructed here. The
+proved scope is the quadratic identity `det = t² - r²`, its vanishing on the
+defined light-shell predicate, and an ordered-ring positivity implication.
 -/
 
 namespace InfoGeometry.Spacetime.RiemannShells
@@ -57,27 +54,24 @@ def isLightShell (t : R) (v : Space3D R) : Prop :=
 
 /-! ### 2. Bispinor Representation and Quantum Imaginary Unit -/
 
-/-- Determinant of a `2×2` matrix. -/
+/-- Scalar formula for a `2 × 2` determinant. -/
 def det2 (a b c d : R) : R :=
   a * d - b * c
 
 /--
-Van der Waerden bispinor determinant `det(X)` for `X = t·σ₀ + x·σ₁ + y·σ₂ + z·σ₃`,
-where `X = ((t + z, x - I y), (x + I y, t - z))` for an imaginary unit `I`.
+Scalar polynomial corresponding to the determinant formula for entries
+`((t + z, x - I y), (x + I y, t - z))`. This definition does not construct a
+matrix-valued bispinor or representation.
 -/
 def bispinorDet (I t : R) (v : Space3D R) : R :=
   det2 (t + v.z) (v.x - I * v.y)
        (v.x + I * v.y) (t - v.z)
 
-/--
-Real-algebraic Hermitian bispinor determinant `det_H(X) = (t + z)(t - z) - (x² + y²)`,
-where the Hermitian off-diagonal norm `(x - i y)(x + i y) = x² + y²` is evaluated directly in `R`
-without requiring a square root of `-1` inside the base ring `R`.
--/
+/-- Scalar polynomial corresponding to `(t + z)(t - z) - (x² + y²)`. -/
 def hermitianBispinorDet (t : R) (v : Space3D R) : R :=
   det2 (t + v.z) v.x v.x (t - v.z) - v.y^2
 
-/-! ### 3. Main Theorem: Determinant Collapse on the Riemann Sphere -/
+/-! ### 3. Scalar Determinant and Minkowski-Polynomial Identity -/
 
 /--
 In any commutative ring `R` containing an element `I` with `I * I = -1`, `bispinorDet I t v`
@@ -120,9 +114,9 @@ theorem light_shell_hermitianBispinorDet_zero (t : R) (v : Space3D R)
   exact sub_self (radiusSq v)
 
 /--
-Light-shell determinant collapse:
-On the light shell (`isLightShell t v`), the bispinor determinant vanishes (`bispinorDet I t v = 0`),
-so the rank-1 bispinor factors through the Penrose twistor Riemann sphere `CP¹`.
+Scalar light-shell vanishing:
+Under `isLightShell t v`, the defined scalar polynomial `bispinorDet I t v` is zero.
+This is a determinant identity only; it does not construct a rank-one matrix or a `CP¹` factorization.
 -/
 theorem light_shell_bispinor_det_zero (I t : R) (v : Space3D R)
     (hI : I * I = -1) (h_shell : isLightShell t v) :
@@ -130,7 +124,7 @@ theorem light_shell_bispinor_det_zero (I t : R) (v : Space3D R)
   rw [bispinor_det_eq_hermitianBispinorDet I t v hI]
   exact light_shell_hermitianBispinorDet_zero t v h_shell
 
-/-! ### 4. Modular Thermal Time Inside the Light Shell (`t² > r²`) -/
+/-! ### 4. Ordered-Ring Time-Cone Positivity -/
 
 /-- Predicate for the interior of the causal time cone (`r² < t²`). -/
 def isInsideTimeCone [LT R] (t : R) (v : Space3D R) : Prop :=
@@ -148,70 +142,4 @@ theorem time_cone_det_strictly_positive {K : Type*} [CommRing K] [LinearOrder K]
   rw [hermitianBispinorDet_is_minkowski t v]
   exact sub_pos.mpr h_inside
 
-/-! ### 5. Master Synthesis of `RiemannShells` -/
-
-theorem riemann_sphere_twistor_master_synthesis (I : R) (hI : I * I = -1) :
-    (∀ (t : R) (v : Space3D R), hermitianBispinorDet t v = t^2 - radiusSq v) ∧
-    (∀ (t : R) (v : Space3D R), bispinorDet I t v = t^2 - radiusSq v) ∧
-    (∀ (t : R) (v : Space3D R), isLightShell t v → bispinorDet I t v = 0) :=
-  ⟨fun t v => hermitianBispinorDet_is_minkowski t v,
-   fun t v => bispinor_det_is_minkowski I t v hI,
-   fun t v h => light_shell_bispinor_det_zero I t v hI h⟩
-
 end InfoGeometry.Spacetime.RiemannShells
-
-namespace InfoGeometry.Spacetime.TimeShells
-
-variable {R : Type*} [CommRing R]
-
-/-- Configuration of a 3D light-shell inside the doubled Riemann sphere (`t² = x² + y² + z²`). -/
-@[ext]
-structure RiemannTimeShell (R : Type*) [CommRing R] where
-  t : R
-  x : R
-  y : R
-  z : R
-  deriving DecidableEq, Repr, Inhabited
-
-def zeroTimeShell : RiemannTimeShell R := ⟨0, 0, 0, 0⟩
-
-def sampleRiemannTimeShellInt : RiemannTimeShell ℤ := ⟨13, 3, 4, 12⟩
-
-theorem sampleRiemannTimeShellInt_ne_zero :
-    sampleRiemannTimeShellInt ≠ zeroTimeShell := by
-  decide
-
-/-- Squared 3D spatial radius `r² = x² + y² + z²`. -/
-def rSq (S : RiemannTimeShell R) : R :=
-  S.x^2 + S.y^2 + S.z^2
-
-/-- External null-interval time on the shell: `t_shell = t² - (x² + y² + z²)`. -/
-def shellTimeZero (S : RiemannTimeShell R) : R :=
-  S.t^2 - rSq S
-
-/-- On the light cone (`t² = x² + y² + z²`), the external shell interval vanishes (`shellTimeZero S = 0`). -/
-theorem shell_time_is_strictly_zero (S : RiemannTimeShell R)
-    (h_cone : S.t^2 = rSq S) :
-    shellTimeZero S = 0 := by
-  dsimp [shellTimeZero]
-  rw [h_cone]
-  exact sub_self (rSq S)
-
-/--
-Infinitesimal variation of the internal modular time as the logarithmic radial scale `δr · r⁻¹`.
--/
-def logScaleRadiusVariation (r dr inv_r : R) : R :=
-  r * inv_r * dr
-
-/-- At unit radial inverse (`r * inv_r = 1`), the logarithmic radial variation equals `dr`. -/
-theorem log_scale_unit_normalization (r dr inv_r : R) (h_inv : r * inv_r = 1) :
-    logScaleRadiusVariation r dr inv_r = dr := by
-  dsimp [logScaleRadiusVariation]
-  rw [h_inv, one_mul]
-
-/-- At stationary radius (`dr = 0`), the internal modular variation vanishes. -/
-theorem log_scale_stationary_at_rest (r inv_r : R) (h_inv : r * inv_r = 1) :
-    logScaleRadiusVariation r 0 inv_r = 0 := by
-  rw [log_scale_unit_normalization r 0 inv_r h_inv]
-
-end InfoGeometry.Spacetime.TimeShells

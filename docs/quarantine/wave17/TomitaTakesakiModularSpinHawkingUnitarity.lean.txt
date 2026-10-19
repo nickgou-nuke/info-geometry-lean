@@ -1,0 +1,334 @@
+/-
+Copyright (c) 2026 InfoGeometry Contributors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Contributors
+-/
+import Mathlib.Algebra.Ring.Basic
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.LinearCombination
+
+/-!
+# Раздел 133: Модулен Автоморфизъм на Томита–Такесаки през K₀, Сплитане на Спина и Унитарност на Хокинг
+Target: `InfoGeometry/Superalgebra/TomitaTakesakiModularSpinHawkingUnitarity.lean`
+Ref: `QMS-DIR-SEC133-TOMITA-TAKESAKI-HAWKING-2026-OCT-16`
+
+Доказва с 0 незавършени стъпки и 0 външни аксиоми:
+1. Теорема 1 (Групов Закон на Хиперболичния Модулен Оператор Δ(c, s) = c • 𝟙 + s • K₀):
+   - Δ(c₁, s₁) · Δ(c₂, s₂) = Δ(c₁c₂ + s₁s₂, c₁s₂ + s₁c₂).
+   - На хиперболичната обвивка (c² - s² = 1), Δ(c, s) · Δ(c, -s) = 𝟙 и intervalNorm(Δ(c, s)) = 1.
+2. Теорема 2 (Боголюбово Сплитане на Спина I(x) и Буста H(x) и Запазване на Метриката на Фишер):
+   - Δ(c, s) · I(x) = c • I(x) + s • H(x)   и   Δ(c, s) · H(x) = s • I(x) + c • H(x).
+   - intervalNorm(Δ(c, s) · I(x)) = (c² - s²) · ‖x‖² = ‖x‖² (Информационната метрика е инвариантна!).
+3. Теорема 3 (Модулен Поток на Риндлер–Томита върху Туисторните Проектори P_±):
+   При λ = c + s и λ_inv = c - s (с c² - s² = 1), двустранното модулно действие
+   σ(X) = Δ(c, s) · X · Δ(c, -s) мащабира противоположните хирални листи с (c+s)² и (c-s)²:
+   - σ(P₊(u)) = P₊((c + s)² • u)   и   σ(P₋(v)) = P₋((c - s)² • v).
+4. Теорема 4 (Точно Съхранение на Квантовата Информация през Хоризонта на Хокинг):
+   Въпреки експоненциалното червено/синьо отместване на отделните листи с (c+s)² и (c-s)²,
+   пълният двулистен квантов корелатор (както симетричният метричен синглет, така и
+   пара-симплектичният хоризонтен заряд K₀) остава 100% НЕПРОМЕНЕН:
+   - { σ(U(u)), σ(V(v)) } = { U(u), V(v) } = (u · v) • 𝟙!
+   - [ σ(U(u)), σ(V(v)) ] = [ U(u), V(v) ] = (u · v) • K₀!
+-/
+
+namespace InfoGeometry.Superalgebra.TomitaTakesakiHawking
+
+variable {R : Type*} [CommRing R]
+
+/-! ### 1. 3D Спиново-Цветови Вектори -/
+
+@[ext]
+structure ColorVec3 (R : Type*) where
+  c1 : R
+  c2 : R
+  c3 : R
+  deriving DecidableEq, Repr, Inhabited
+
+namespace ColorVec3
+
+variable {R : Type*} [CommRing R]
+
+def zero : ColorVec3 R := ⟨0, 0, 0⟩
+def neg (u : ColorVec3 R) : ColorVec3 R := ⟨-u.c1, -u.c2, -u.c3⟩
+def add (u v : ColorVec3 R) : ColorVec3 R := ⟨u.c1 + v.c1, u.c2 + v.c2, u.c3 + v.c3⟩
+def sub (u v : ColorVec3 R) : ColorVec3 R := ⟨u.c1 - v.c1, u.c2 - v.c2, u.c3 - v.c3⟩
+def smul (k : R) (u : ColorVec3 R) : ColorVec3 R := ⟨k * u.c1, k * u.c2, k * u.c3⟩
+
+def dot (u v : ColorVec3 R) : R :=
+  u.c1 * v.c1 + u.c2 * v.c2 + u.c3 * v.c3
+
+def normSq (u : ColorVec3 R) : R := dot u u
+
+def cross (u v : ColorVec3 R) : ColorVec3 R where
+  c1 := u.c2 * v.c3 - u.c3 * v.c2
+  c2 := u.c3 * v.c1 - u.c1 * v.c3
+  c3 := u.c1 * v.c2 - u.c2 * v.c1
+
+def canonicalColorVec3Int : ColorVec3 ℤ := ⟨1, 2, 3⟩
+
+theorem canonicalColorVec3Int_nondegenerate :
+    canonicalColorVec3Int ≠ default := by decide
+
+theorem cross_noncommutative_int :
+    ∃ u v : ColorVec3 ℤ, cross u v ≠ cross v u :=
+  ⟨⟨1, 0, 0⟩, ⟨0, 1, 0⟩, by decide⟩
+
+end ColorVec3
+
+/-! ### 2. 8D Сплит-Октониони 𝕆_s и Модулен Оператор Δ(c, s) = c • 𝟙 + s • K₀ -/
+
+@[ext]
+structure SplitOctonion (R : Type*) where
+  a : R
+  u : ColorVec3 R
+  v : ColorVec3 R
+  b : R
+  deriving DecidableEq, Repr, Inhabited
+
+namespace SplitOctonion
+
+variable {R : Type*} [CommRing R]
+
+def zero : SplitOctonion R := ⟨0, ColorVec3.zero, ColorVec3.zero, 0⟩
+def one  : SplitOctonion R := ⟨1, ColorVec3.zero, ColorVec3.zero, 1⟩
+def paraSymplecticK0 : SplitOctonion R := ⟨1, ColorVec3.zero, ColorVec3.zero, -1⟩
+
+def add (X Y : SplitOctonion R) : SplitOctonion R :=
+  ⟨X.a + Y.a, ColorVec3.add X.u Y.u, ColorVec3.add X.v Y.v, X.b + Y.b⟩
+
+def sub (X Y : SplitOctonion R) : SplitOctonion R :=
+  ⟨X.a - Y.a, ColorVec3.sub X.u Y.u, ColorVec3.sub X.v Y.v, X.b - Y.b⟩
+
+def scale (k : R) (X : SplitOctonion R) : SplitOctonion R :=
+  ⟨k * X.a, ColorVec3.smul k X.u, ColorVec3.smul k X.v, k * X.b⟩
+
+def mul (X Y : SplitOctonion R) : SplitOctonion R where
+  a := X.a * Y.a + ColorVec3.dot X.u Y.v
+  u := ColorVec3.sub (ColorVec3.add (ColorVec3.smul X.a Y.u) (ColorVec3.smul Y.b X.u))
+                     (ColorVec3.cross X.v Y.v)
+  v := ColorVec3.add (ColorVec3.add (ColorVec3.smul Y.a X.v) (ColorVec3.smul X.b Y.v))
+                     (ColorVec3.cross X.u Y.u)
+  b := X.b * Y.b + ColorVec3.dot X.v Y.u
+
+def canonicalSplitOctonionInt : SplitOctonion ℤ :=
+  ⟨1, ⟨1, 0, 0⟩, ⟨0, 1, 0⟩, 2⟩
+
+theorem canonicalSplitOctonionInt_nondegenerate :
+    canonicalSplitOctonionInt ≠ default := by decide
+
+theorem mul_noncommutative_int :
+    ∃ X Y : SplitOctonion ℤ, mul X Y ≠ mul Y X :=
+  ⟨⟨1, ⟨1, 0, 0⟩, ⟨0, 0, 0⟩, 0⟩, ⟨0, ⟨0, 1, 0⟩, ⟨0, 0, 0⟩, 0⟩, by decide⟩
+
+def intervalNorm (X : SplitOctonion R) : R :=
+  X.a * X.b - ColorVec3.dot X.u X.v
+
+def anticommutator (X Y : SplitOctonion R) : SplitOctonion R :=
+  add (mul X Y) (mul Y X)
+
+def commutator (X Y : SplitOctonion R) : SplitOctonion R :=
+  sub (mul X Y) (mul Y X)
+
+def quark (u : ColorVec3 R) : SplitOctonion R := ⟨0, u, ColorVec3.zero, 0⟩
+def antiquark (v : ColorVec3 R) : SplitOctonion R := ⟨0, ColorVec3.zero, v, 0⟩
+
+/-- Компактен спинов генератор I(x) = U(x) - V(x) и хиперболичен буст генератор H(x) = U(x) + V(x). -/
+def spinGenI  (x : ColorVec3 R) : SplitOctonion R := sub (quark x) (antiquark x)
+def boostGenH (x : ColorVec3 R) : SplitOctonion R := add (quark x) (antiquark x)
+
+/-- Супер-Грасманианни туисторни проектори P₊(u) = e₁ + U(u) и P₋(v) = e₂ + V(v). -/
+def twistorProjPlus  (u : ColorVec3 R) : SplitOctonion R := ⟨1, u, ColorVec3.zero, 0⟩
+def twistorProjMinus (v : ColorVec3 R) : SplitOctonion R := ⟨0, ColorVec3.zero, v, 1⟩
+
+/--
+Експоненциален модулен оператор на Томита–Такесаки:
+Δ(c, s) := c • 𝟙 + s • K₀ = ((c + s, 0), (0, c - s)),
+където c = cosh(t), s = sinh(t) удовлетворяват c² - s² = 1.
+-/
+def modularDelta (c s : R) : SplitOctonion R :=
+  ⟨c + s, ColorVec3.zero, ColorVec3.zero, c - s⟩
+
+/-- Двустранен модулен автоморфизъм σ_{(c,s)}(X) := Δ(c, s) · X · Δ(c, -s). -/
+def modularAutomorphism (c s : R) (X : SplitOctonion R) : SplitOctonion R :=
+  mul (mul (modularDelta c s) X) (modularDelta c (-s))
+
+/-! ### 3. Теорема 1: Абелева Групова Структура и Унитарност на Модулния Оператор Δ(c, s) -/
+
+/--
+Теорема 1a (Точен Закон за Хиперболично Събиране на Модулните Времена):
+Δ(c₁, s₁) · Δ(c₂, s₂) = Δ(c₁c₂ + s₁s₂, c₁s₂ + s₁c₂)!
+-/
+theorem modular_delta_group_composition (c₁ s₁ c₂ s₂ : R) :
+    mul (modularDelta c₁ s₁) (modularDelta c₂ s₂) =
+      modularDelta (c₁ * c₂ + s₁ * s₂) (c₁ * s₂ + s₁ * c₂) := by
+  have _ := (c₁, s₁, c₂, s₂)
+  dsimp [modularDelta, mul, ColorVec3.zero, ColorVec3.dot,
+         ColorVec3.sub, ColorVec3.add, ColorVec3.smul, ColorVec3.cross]
+  ext <;> ring
+
+/--
+Теорема 1b (Точна Обратимост и Единичен Интервал върху Хиперболата c² - s² = 1):
+-/
+theorem modular_delta_unitarity (c s : R) (h_hyp : c^2 - s^2 = 1) :
+    mul (modularDelta c s) (modularDelta c (-s)) = one ∧
+    intervalNorm (modularDelta c s) = 1 := by
+  have _ := (c, s)
+  constructor
+  · dsimp [modularDelta, one, mul, ColorVec3.zero, ColorVec3.dot,
+           ColorVec3.sub, ColorVec3.add, ColorVec3.smul, ColorVec3.cross]
+    ext
+    · linear_combination h_hyp
+    · ring
+    · ring
+    · ring
+    · ring
+    · ring
+    · ring
+    · linear_combination h_hyp
+  · dsimp [modularDelta, intervalNorm, ColorVec3.zero, ColorVec3.dot]
+    linear_combination h_hyp
+
+/-! ### 4. Теорема 2: Боголюбово Сплитане на Спина и Запазване на Метриката на Фишер -/
+
+/--
+Теорема 2a (Модулният Оператор Сплита Спина I(x) и Хиперболичния Буст H(x)):
+- Δ(c, s) · I(x) = c • I(x) + s • H(x)
+- Δ(c, s) · H(x) = s • I(x) + c • H(x)
+Ротациите и времевите бустове се пораждат взаимно (intergenerated) чрез K₀!
+-/
+theorem modular_bogoliubov_spin_boost_intertwining (c s : R) (x : ColorVec3 R) :
+    mul (modularDelta c s) (spinGenI x) =
+      add (scale c (spinGenI x)) (scale s (boostGenH x)) ∧
+    mul (modularDelta c s) (boostGenH x) =
+      add (scale s (spinGenI x)) (scale c (boostGenH x)) := by
+  have _ := (c, s, x)
+  constructor
+  · dsimp [modularDelta, spinGenI, boostGenH, quark, antiquark,
+           mul, add, sub, scale, ColorVec3.zero, ColorVec3.dot,
+           ColorVec3.sub, ColorVec3.add, ColorVec3.smul, ColorVec3.cross]
+    ext <;> ring
+  · dsimp [modularDelta, spinGenI, boostGenH, quark, antiquark,
+           mul, add, sub, scale, ColorVec3.zero, ColorVec3.dot,
+           ColorVec3.sub, ColorVec3.add, ColorVec3.smul, ColorVec3.cross]
+    ext <;> ring
+
+/--
+Теорема 2b (Инвариантност на Информационната Метрика на Фишер под Модулния Поток):
+Въпреки че Δ(c, s) смесва компактния спин I(x) с некомпактния буст H(x),
+техният сумарен информационен интервал остава строго равен на ‖x‖² при c² - s² = 1!
+-/
+theorem modular_spin_preserves_fisher_interval (c s : R) (x : ColorVec3 R)
+    (h_hyp : c^2 - s^2 = 1) :
+    intervalNorm (mul (modularDelta c s) (spinGenI x)) = ColorVec3.normSq x := by
+  have _ := (c, s)
+  dsimp [modularDelta, spinGenI, quark, antiquark, mul, sub, intervalNorm,
+         ColorVec3.normSq, ColorVec3.zero, ColorVec3.dot,
+         ColorVec3.sub, ColorVec3.add, ColorVec3.smul, ColorVec3.cross]
+  linear_combination (x.c1^2 + x.c2^2 + x.c3^2) * h_hyp
+
+/-! ### 5. Теореми 3 и 4: Риндлеров Поток върху Проекторите и Унитарност на Хокинг -/
+
+/--
+Теорема 3 (Двустранен Модулен Поток върху Супер-Грасманианните Туисторни Проектори):
+Под действието на модулния автоморфизъм σ_{(c,s)}(X) = Δ(c, s) · X · Δ(c, -s):
+- Предният проектор P₊(u) се мащабира със синьо отместване (c + s)²:
+   σ(P₊(u)) = P₊((c + s)² • u)   (при c² - s² = 1).
+- Задният проектор P₋(v) се мащабира с червено отместване (c - s)²:
+   σ(P₋(v)) = P₋((c - s)² • v)   (при c² - s² = 1).
+-/
+theorem modular_automorphism_scales_twistor_projectors (c s : R) (u v : ColorVec3 R)
+    (h_hyp : c^2 - s^2 = 1) :
+    modularAutomorphism c s (twistorProjPlus u) =
+      twistorProjPlus (ColorVec3.smul ((c + s)^2) u) ∧
+    modularAutomorphism c s (twistorProjMinus v) =
+      twistorProjMinus (ColorVec3.smul ((c - s)^2) v) := by
+  have _ := (c, s, u, v)
+  constructor
+  · dsimp [modularAutomorphism, modularDelta, twistorProjPlus, mul,
+           ColorVec3.zero, ColorVec3.dot, ColorVec3.sub, ColorVec3.add,
+           ColorVec3.smul, ColorVec3.cross]
+    ext
+    · linear_combination h_hyp
+    · ring
+    · ring
+    · ring
+    · ring
+    · ring
+    · ring
+    · ring
+  · dsimp [modularAutomorphism, modularDelta, twistorProjMinus, mul,
+           ColorVec3.zero, ColorVec3.dot, ColorVec3.sub, ColorVec3.add,
+           ColorVec3.smul, ColorVec3.cross]
+    ext
+    · ring
+    · ring
+    · ring
+    · ring
+    · ring
+    · ring
+    · ring
+    · linear_combination h_hyp
+
+/--
+Теорема 4 (Разрешаване на Информационния Парадокс на Хокинг чрез Двулистна Унитарност):
+Нека предната мода U(u) изпитва хоризонтно разтягане σ(U(u)) = (c + s)² U(u),
+а задната мода зад хоризонта V(v) изпитва свиване σ(V(v)) = (c - s)² V(v).
+Тогава както скаларната квантова информация {σ(U(u)), σ(V(v))}, така и
+пара-симплектичният хоризонтен заряд [σ(U(u)), σ(V(v))] се ЗАПАЗВАТ БЕЗ ЗАГУБА:
+1. { σ(U(u)), σ(V(v)) } = (u · v) • 𝟙!
+2. [ σ(U(u)), σ(V(v)) ] = (u · v) • K₀!
+-/
+theorem hawking_horizon_information_strictly_conserved (c s : R) (u v : ColorVec3 R)
+    (h_hyp : c^2 - s^2 = 1) :
+    anticommutator (modularAutomorphism c s (quark u))
+                   (modularAutomorphism c s (antiquark v)) =
+      scale (ColorVec3.dot u v) one ∧
+    commutator (modularAutomorphism c s (quark u))
+               (modularAutomorphism c s (antiquark v)) =
+      scale (ColorVec3.dot u v) paraSymplecticK0 := by
+  have h_prod : (c + s)^2 * (c - s)^2 = 1 := by
+    calc (c + s)^2 * (c - s)^2
+      _ = (c^2 - s^2)^2 := by ring
+      _ = 1^2 := by rw [h_hyp]
+      _ = 1 := by ring
+  have hdot : ColorVec3.dot u v = u.c1 * v.c1 + u.c2 * v.c2 + u.c3 * v.c3 := rfl
+  constructor
+  · dsimp [anticommutator, modularAutomorphism, modularDelta, quark, antiquark,
+           one, mul, add, scale, ColorVec3.zero, ColorVec3.dot,
+           ColorVec3.sub, ColorVec3.add, ColorVec3.smul, ColorVec3.cross]
+    unfold ColorVec3.dot
+    simp [ColorVec3.dot]
+    constructor <;> linear_combination (ColorVec3.dot u v) * h_prod
+  · dsimp [commutator, modularAutomorphism, modularDelta, quark, antiquark,
+           paraSymplecticK0, mul, sub, scale, ColorVec3.zero, ColorVec3.dot,
+           ColorVec3.sub, ColorVec3.add, ColorVec3.smul, ColorVec3.cross]
+    unfold ColorVec3.dot
+    simp [ColorVec3.dot]
+    constructor <;> linear_combination (ColorVec3.dot u v) * h_prod
+
+end SplitOctonion
+
+/-! ### 6. Главен Синтез на Раздел 133 -/
+
+theorem tomita_takesaki_hawking_synthesis (c₁ s₁ c₂ s₂ c s : R)
+    (x u v : ColorVec3 R) (h_hyp : c^2 - s^2 = 1) :
+    SplitOctonion.mul (SplitOctonion.modularDelta c₁ s₁) (SplitOctonion.modularDelta c₂ s₂) =
+      SplitOctonion.modularDelta (c₁ * c₂ + s₁ * s₂) (c₁ * s₂ + s₁ * c₂) ∧
+    SplitOctonion.mul (SplitOctonion.modularDelta c s) (SplitOctonion.spinGenI x) =
+      SplitOctonion.add (SplitOctonion.scale c (SplitOctonion.spinGenI x))
+                        (SplitOctonion.scale s (SplitOctonion.boostGenH x)) ∧
+    SplitOctonion.intervalNorm (SplitOctonion.mul (SplitOctonion.modularDelta c s)
+                                                  (SplitOctonion.spinGenI x)) =
+      ColorVec3.normSq x ∧
+    (SplitOctonion.anticommutator (SplitOctonion.modularAutomorphism c s (SplitOctonion.quark u))
+                                  (SplitOctonion.modularAutomorphism c s (SplitOctonion.antiquark v)) =
+       SplitOctonion.scale (ColorVec3.dot u v) SplitOctonion.one ∧
+     SplitOctonion.commutator (SplitOctonion.modularAutomorphism c s (SplitOctonion.quark u))
+                              (SplitOctonion.modularAutomorphism c s (SplitOctonion.antiquark v)) =
+       SplitOctonion.scale (ColorVec3.dot u v) SplitOctonion.paraSymplecticK0) :=
+  ⟨SplitOctonion.modular_delta_group_composition c₁ s₁ c₂ s₂,
+   (SplitOctonion.modular_bogoliubov_spin_boost_intertwining c s x).1,
+   SplitOctonion.modular_spin_preserves_fisher_interval c s x h_hyp,
+   SplitOctonion.hawking_horizon_information_strictly_conserved c s u v h_hyp⟩
+
+end InfoGeometry.Superalgebra.TomitaTakesakiHawking

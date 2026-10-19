@@ -54,6 +54,5 @@ theorem sample_metriplectic_brackets_int :
 #print axioms InfoGeometry.QuantumContext.MetriplecticCl11.MetriplecticSystem.metricBracket_not_positiveSemidefinite
 #print axioms InfoGeometry.QuantumContext.MetriplecticCl11.MetriplecticSystem.poisson_self_null
 #print axioms InfoGeometry.QuantumContext.MetriplecticCl11.MetriplecticSystem.metric_energy_preservation_manifold
-#print axioms InfoGeometry.QuantumContext.MetriplecticCl11.metriplectic_cl11_master_synthesis
 
 end InfoGeometry.QuantumContext.MetriplecticCl11Audit

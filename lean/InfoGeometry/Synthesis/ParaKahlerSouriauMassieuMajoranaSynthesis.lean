@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+import InfoGeometry.Analytic.LogSumExp
 import InfoGeometry.Synthesis.TransactionalQueryKeyRoPEPhaseSpaceBridge
 
 /-!
@@ -47,11 +48,19 @@ thermodynamic potential of causal attention:
      (`hasDerivAt_souriauMassieuPotential_coord`), so the directional derivative along value
      vectors $v$ equals the Souriau moment map readout $M(s, v) = \sum_j A_j(s) v_j$.
    - Defines the Fisher–Souriau Hessian tensor $g^S_{jk}(s) = A_j(s)\delta_{jk} - A_j(s)A_k(s)$,
-     proves that its diagonal entry is the coordinate derivative $\partial A_j / \partial s_j$
-     (`hasDerivAt_souriauAttentionWeight_diag`), and proves that its quadratic form on any
+     proves the full coordinate Jacobian $\partial A_j/\partial s_k = g^S_{jk}(s)$
+     (`hasDerivAt_souriauAttentionWeight_coord`, whose diagonal specialization is
+     `hasDerivAt_souriauAttentionWeight_diag`), and its directional derivative is
+     `A_j(s) (v_j - M(s,v))`
+     (`deriv_souriauAttentionWeight_directional`). The quadratic form on any
      perturbation $\delta s$ equals the non-negative Fisher–Souriau variance
      $\sum_j A_j(s)(\delta s_j - M(s, \delta s))^2 \ge 0$
-     (`fisherSouriau_quadratic_eq_variance_and_nonneg`).
+     (`fisherSouriau_quadratic_eq_variance_and_nonneg`). The second directional
+     derivative of $\Phi$ at every point along a score line equals the
+     Fisher–Souriau Hessian quadratic form
+     (`souriauMassieu_directionalSecondDeriv_eq_fisherSouriauHessian_at`). It is
+     strictly positive exactly in nonconstant score directions
+     (`souriauMassieu_directionalSecondDeriv_pos_iff_nonconstant`).
 -/
 
 set_option autoImplicit false
@@ -312,6 +321,32 @@ theorem souriauMassieu_shift_and_attention_scale_invariance
     rw [hZ_shift, Real.exp_add (s j) c]
     exact mul_div_mul_right (Real.exp (s j)) (gibbsPartitionSum s) hexp_ne
 
+/-- The fiber of the finite softmax map consists exactly of uniform score shifts.
+This is the finite algebraic gauge orbit, not a natural-gradient dynamical theorem. -/
+theorem souriauAttentionWeights_eq_iff_additive_constant
+    {m : ℕ} [Nonempty (Fin m)] (s t : Fin m → ℝ) :
+    (∀ j : Fin m, souriauAttentionWeight s j = souriauAttentionWeight t j) ↔
+      ∃ c : ℝ, ∀ j : Fin m, t j = s j + c := by
+  constructor
+  · intro h
+    refine ⟨souriauMassieuPotential t - souriauMassieuPotential s, ?_⟩
+    intro j
+    have hs := (massieu_free_entropy_legendre_identity s j).2.1
+    have ht := (massieu_free_entropy_legendre_identity t j).2.1
+    have hsurp :
+        -Real.log (souriauAttentionWeight s j) =
+          -Real.log (souriauAttentionWeight t j) :=
+      congrArg (fun x : ℝ => -Real.log x) (h j)
+    rw [hs, ht] at hsurp
+    linarith
+  · rintro ⟨c, hc⟩ j
+    have hshift : t = fun k : Fin m => s k + c := by
+      funext k
+      exact hc k
+    rw [hshift]
+    exact
+      (souriauMassieu_shift_and_attention_scale_invariance s c j).2.symm
+
 /-!
 ## Section 4: Souriau Moment Map (First Gradient) & Fisher–Souriau Information Metric (Second Hessian)
 -/
@@ -359,6 +394,45 @@ theorem hasDerivAt_souriauMassieuPotential_coord {m : ℕ} [Nonempty (Fin m)]
   have h_log := HasDerivAt.log h_part (by simpa [h_upd] using hZ_ne)
   simpa [souriauMassieuPotential, souriauAttentionWeight, h_upd] using h_log
 
+/-- The directional derivative of the finite Massieu potential along a score
+vector is the softmax-weighted moment of that vector. -/
+theorem hasDerivAt_souriauMassieuPotential_directional {m : ℕ}
+    [Nonempty (Fin m)] (s v : Fin m → ℝ) :
+    HasDerivAt
+      (fun t : ℝ => souriauMassieuPotential (fun i => s i + t * v i))
+      (souriauMomentMap s v) 0 := by
+  have hterm (i : Fin m) :
+      HasDerivAt (fun t : ℝ => Real.exp (s i + t * v i))
+        (Real.exp (s i) * v i) 0 := by
+    have hlinear :
+        HasDerivAt (fun t : ℝ => s i + t * v i) (v i) 0 :=
+      (hasDerivAt_mul_const (v i)).const_add (s i)
+    simpa using HasDerivAt.exp hlinear
+  have hsum :
+      HasDerivAt
+        (fun t : ℝ => ∑ i : Fin m, Real.exp (s i + t * v i))
+        (∑ i : Fin m, Real.exp (s i) * v i) 0 := by
+    exact HasDerivAt.fun_sum (u := Finset.univ) (fun i hi => hterm i)
+  have hZ_ne : gibbsPartitionSum s ≠ 0 :=
+    ne_of_gt (gibbsPartitionSum_pos s)
+  have hphi :
+      HasDerivAt
+        (fun t : ℝ => souriauMassieuPotential (fun i => s i + t * v i))
+        ((∑ i : Fin m, Real.exp (s i) * v i) / gibbsPartitionSum s) 0 := by
+    have hlog := HasDerivAt.log hsum (by
+      simpa [gibbsPartitionSum] using hZ_ne)
+    simpa [souriauMassieuPotential, gibbsPartitionSum] using hlog
+  have hratio :
+      (∑ i : Fin m, Real.exp (s i) * v i) / gibbsPartitionSum s =
+        souriauMomentMap s v := by
+    unfold souriauMomentMap souriauAttentionWeight
+    rw [Finset.sum_div]
+    apply Finset.sum_congr rfl
+    intro i hi
+    field_simp [hZ_ne]
+  rw [hratio] at hphi
+  exact hphi
+
 /-- Diagonal Second Derivative (Fisher–Souriau Diagonal Susceptibility): differentiating the
 attention weight $A_j$ with respect to $s_j$ yields the diagonal Fisher–Souriau Hessian entry
 $g^S_{jj}(s) = A_j(s)(1 - A_j(s)) = A_j(s) - A_j(s)^2$. -/
@@ -392,6 +466,100 @@ theorem hasDerivAt_souriauAttentionWeight_diag {m : ℕ} [Nonempty (Fin m)]
     field_simp [hZ_ne]
   rw [h_alg] at h_quot
   exact h_quot
+
+/-- Varying any one finite score coordinate differentiates every attention
+weight by the corresponding Fisher–Souriau Hessian entry. -/
+theorem hasDerivAt_souriauAttentionWeight_coord {m : ℕ} [Nonempty (Fin m)]
+    (s : Fin m → ℝ) (j k : Fin m) :
+    HasDerivAt
+      (fun t : ℝ => souriauAttentionWeight (Function.update s k t) j)
+      (fisherSouriauHessian s j k) (s k) := by
+  by_cases hjk : j = k
+  · subst k
+    simpa using hasDerivAt_souriauAttentionWeight_diag s j
+  · have hZ_ne : gibbsPartitionSum s ≠ 0 :=
+      ne_of_gt (gibbsPartitionSum_pos s)
+    have h_upd : Function.update s k (s k) = s :=
+      Function.update_eq_self k s
+    have h_num_fun :
+        (fun t : ℝ => Real.exp (Function.update s k t j)) =
+          fun _ => Real.exp (s j) := by
+      funext t
+      simp [Function.update_of_ne hjk]
+    have h_num :
+        HasDerivAt (fun t : ℝ => Real.exp (Function.update s k t j))
+          0 (s k) := by
+      rw [h_num_fun]
+      exact hasDerivAt_const (s k) (Real.exp (s j))
+    have h_den := hasDerivAt_gibbsPartitionSum_coord s k
+    have h_quot :
+        HasDerivAt
+          (fun t : ℝ =>
+            Real.exp (Function.update s k t j) /
+              gibbsPartitionSum (Function.update s k t))
+          ((0 * gibbsPartitionSum (Function.update s k (s k)) -
+              Real.exp (Function.update s k (s k) j) * Real.exp (s k)) /
+            gibbsPartitionSum (Function.update s k (s k)) ^ 2)
+          (s k) :=
+      HasDerivAt.div h_num h_den (by simpa [h_upd] using hZ_ne)
+    have h_alg :
+        (0 * gibbsPartitionSum (Function.update s k (s k)) -
+            Real.exp (Function.update s k (s k) j) * Real.exp (s k)) /
+          gibbsPartitionSum (Function.update s k (s k)) ^ 2 =
+          fisherSouriauHessian s j k := by
+      rw [h_upd]
+      dsimp [fisherSouriauHessian, souriauAttentionWeight]
+      simp only [if_neg hjk]
+      field_simp [hZ_ne]
+      <;> ring
+    rw [h_alg] at h_quot
+    exact h_quot
+
+/-- The derivative of a finite softmax weight along a score direction is its
+weighted centered score response. -/
+theorem deriv_souriauAttentionWeight_directional {m : ℕ}
+    [Nonempty (Fin m)] (s v : Fin m → ℝ) (j : Fin m) :
+    deriv (fun t : ℝ => souriauAttentionWeight (fun i => s i + t * v i) j) 0 =
+      souriauAttentionWeight s j * (v j - souriauMomentMap s v) := by
+  let w : Fin m → ℝ := fun i => Real.exp (s i)
+  have hw : ∀ i : Fin m, 0 < w i := fun i => Real.exp_pos (s i)
+  have hpartition (t : ℝ) :
+      gibbsPartitionSum (fun i => s i + t * v i) =
+        InfoGeometry.Analytic.logSumExpPartition w v t := by
+    unfold gibbsPartitionSum InfoGeometry.Analytic.logSumExpPartition w
+    apply Finset.sum_congr rfl
+    intro i hi
+    rw [Real.exp_add]
+  have hweight (t : ℝ) (i : Fin m) :
+      souriauAttentionWeight (fun k => s k + t * v k) i =
+        InfoGeometry.Analytic.logSumExpWeight w v t i := by
+    unfold souriauAttentionWeight InfoGeometry.Analytic.logSumExpWeight
+    rw [Real.exp_add, hpartition t]
+  have hweight0 : ∀ i : Fin m,
+      InfoGeometry.Analytic.logSumExpWeight w v 0 i =
+        souriauAttentionWeight s i := by
+    intro i
+    simpa using (hweight 0 i).symm
+  have hmean : InfoGeometry.Analytic.logSumExpMean w v 0 = souriauMomentMap s v := by
+    rw [InfoGeometry.Analytic.logSumExpMean_eq_weighted_sum w v hw 0]
+    unfold souriauMomentMap
+    apply Finset.sum_congr rfl
+    intro i hi
+    rw [hweight0 i]
+  have hfun :
+      (fun t : ℝ => souriauAttentionWeight (fun i => s i + t * v i) j) =
+        fun t => InfoGeometry.Analytic.logSumExpWeight w v t j := by
+    funext t
+    exact hweight t j
+  calc
+    deriv (fun t : ℝ => souriauAttentionWeight (fun i => s i + t * v i) j) 0 =
+        deriv (fun t => InfoGeometry.Analytic.logSumExpWeight w v t j) 0 := by
+          rw [hfun]
+    _ = InfoGeometry.Analytic.logSumExpWeight w v 0 j *
+          (v j - InfoGeometry.Analytic.logSumExpMean w v 0) :=
+      InfoGeometry.Analytic.logSumExpWeight_deriv w v hw 0 j
+    _ = souriauAttentionWeight s j * (v j - souriauMomentMap s v) := by
+      rw [hweight0 j, hmean]
 
 /-- Fisher–Souriau Metric Covariance Identity and Positive Semi-Definiteness:
 For any score fluctuation $\delta s : \operatorname{Fin} m \to \mathbb{R}$,
@@ -461,6 +629,152 @@ theorem fisherSouriau_quadratic_eq_variance_and_nonneg {m : ℕ} [Nonempty (Fin 
   rw [h_eq]
   refine Finset.sum_nonneg (fun j _ => ?_)
   exact mul_nonneg (le_of_lt (souriauAttentionWeight_pos s j)) (sq_nonneg _)
+
+/-- On a nonempty finite score space, the Fisher–Souriau quadratic form
+vanishes exactly on constant-score gauge directions. This is an algebraic
+kernel statement, not a natural-gradient dynamical or complexity theorem. -/
+theorem fisherSouriau_quadratic_eq_zero_iff_constant {m : ℕ}
+    [Nonempty (Fin m)] (s v : Fin m → ℝ) :
+    (∑ j : Fin m, ∑ k : Fin m,
+      v j * fisherSouriauHessian s j k * v k) = 0 ↔
+      ∃ c : ℝ, ∀ j : Fin m, v j = c := by
+  rw [(fisherSouriau_quadratic_eq_variance_and_nonneg s v).1]
+  constructor
+  · intro hzero
+    have h_nonneg : ∀ j ∈ (Finset.univ : Finset (Fin m)),
+        0 ≤ souriauAttentionWeight s j *
+          (v j - souriauMomentMap s v) ^ 2 := by
+      intro j hj
+      exact mul_nonneg
+        (le_of_lt (souriauAttentionWeight_pos s j))
+        (sq_nonneg _)
+    have h_terms := (Finset.sum_eq_zero_iff_of_nonneg h_nonneg).mp hzero
+    refine ⟨souriauMomentMap s v, ?_⟩
+    intro j
+    have hz := h_terms j (Finset.mem_univ j)
+    have hsq : (v j - souriauMomentMap s v) ^ 2 = 0 :=
+      (mul_eq_zero.mp hz).resolve_left
+        (ne_of_gt (souriauAttentionWeight_pos s j))
+    have hcenter : v j - souriauMomentMap s v = 0 :=
+      (sq_eq_zero_iff.mp hsq)
+    linarith
+  · rintro ⟨c, hc⟩
+    have hnorm : ∑ j : Fin m, souriauAttentionWeight s j = 1 :=
+      (massieu_free_entropy_legendre_identity s
+        (Classical.choice ‹Nonempty (Fin m)›)).1
+    have hmean : souriauMomentMap s v = c := by
+      unfold souriauMomentMap
+      calc
+        (∑ j : Fin m, souriauAttentionWeight s j * v j) =
+            ∑ j : Fin m, souriauAttentionWeight s j * c := by
+          apply Finset.sum_congr rfl
+          intro j hj
+          rw [hc j]
+        _ = (∑ j : Fin m, souriauAttentionWeight s j) * c := by
+          rw [Finset.sum_mul]
+        _ = c := by rw [hnorm]; ring
+    rw [hmean]
+    apply Finset.sum_eq_zero
+    intro j hj
+    rw [hc j]
+    simp
+
+
+/-- Along an affine score line, the second derivative of the finite Massieu
+    potential at parameter `t` is the Fisher–Souriau Hessian quadratic form
+    evaluated at the score `s + t v`. -/
+theorem souriauMassieu_directionalSecondDeriv_eq_fisherSouriauHessian_at
+    {m : ℕ} [Nonempty (Fin m)] (s v : Fin m → ℝ) (t : ℝ) :
+    deriv (fun τ : ℝ => deriv
+      (fun τ' => souriauMassieuPotential (fun i => s i + τ' * v i)) τ) t =
+      ∑ j : Fin m, ∑ k : Fin m,
+        v j * fisherSouriauHessian (fun i => s i + t * v i) j k * v k := by
+  let w : Fin m → ℝ := fun i => Real.exp (s i)
+  have hw : ∀ i : Fin m, 0 < w i := fun i => Real.exp_pos (s i)
+  have hpartition (τ : ℝ) :
+      gibbsPartitionSum (fun i => s i + τ * v i) =
+        InfoGeometry.Analytic.logSumExpPartition w v τ := by
+    unfold gibbsPartitionSum InfoGeometry.Analytic.logSumExpPartition w
+    apply Finset.sum_congr rfl
+    intro i hi
+    rw [Real.exp_add]
+  have hline :
+      (fun τ : ℝ => souriauMassieuPotential (fun i => s i + τ * v i)) =
+        fun τ => InfoGeometry.Analytic.logSumExp w v τ := by
+    funext τ
+    unfold souriauMassieuPotential InfoGeometry.Analytic.logSumExp
+    rw [hpartition τ]
+  have hweight (τ : ℝ) (i : Fin m) :
+      souriauAttentionWeight (fun k => s k + τ * v k) i =
+        InfoGeometry.Analytic.logSumExpWeight w v τ i := by
+    unfold souriauAttentionWeight InfoGeometry.Analytic.logSumExpWeight
+    rw [Real.exp_add, hpartition τ]
+  have hweightAt : ∀ i : Fin m,
+      InfoGeometry.Analytic.logSumExpWeight w v t i =
+        souriauAttentionWeight (fun k => s k + t * v k) i := by
+    intro i
+    simpa using (hweight t i).symm
+  have hmean :
+      InfoGeometry.Analytic.logSumExpMean w v t =
+        souriauMomentMap (fun i => s i + t * v i) v := by
+    rw [InfoGeometry.Analytic.logSumExpMean_eq_weighted_sum w v hw t]
+    unfold souriauMomentMap
+    apply Finset.sum_congr rfl
+    intro i hi
+    rw [hweightAt i]
+  have hmoment :
+      (∑ j : Fin m, InfoGeometry.Analytic.logSumExpWeight w v t j * v j) =
+        souriauMomentMap (fun i => s i + t * v i) v := by
+    rw [← InfoGeometry.Analytic.logSumExpMean_eq_weighted_sum w v hw t, hmean]
+  have hcenter :
+      (∑ i : Fin m, InfoGeometry.Analytic.logSumExpWeight w v t i *
+        (v i - ∑ j : Fin m, InfoGeometry.Analytic.logSumExpWeight w v t j * v j) ^ 2) =
+      ∑ i : Fin m, souriauAttentionWeight (fun k => s k + t * v k) i *
+        (v i - souriauMomentMap (fun k => s k + t * v k) v) ^ 2 := by
+    apply Finset.sum_congr rfl
+    intro i hi
+    rw [hweightAt i, hmoment]
+  rw [hline]
+  rw [InfoGeometry.Analytic.logSumExp_secondDeriv_eq_variance w v hw t]
+  rw [InfoGeometry.Analytic.logSumExpVariance_eq_centered w v hw t]
+  rw [hcenter]
+  exact (fisherSouriau_quadratic_eq_variance_and_nonneg
+    (fun i => s i + t * v i) v).1.symm
+
+/-- The second derivative at parameter zero is the Fisher–Souriau Hessian
+    quadratic form at the initial score. -/
+theorem souriauMassieu_directionalSecondDeriv_eq_fisherSouriauHessian
+    {m : ℕ} [Nonempty (Fin m)] (s v : Fin m → ℝ) :
+    deriv (fun t : ℝ => deriv
+      (fun t' => souriauMassieuPotential (fun i => s i + t' * v i)) t) 0 =
+      ∑ j : Fin m, ∑ k : Fin m,
+        v j * fisherSouriauHessian s j k * v k := by
+  simpa using souriauMassieu_directionalSecondDeriv_eq_fisherSouriauHessian_at s v 0
+
+/-- At any point of a score line, the Massieu curvature is positive exactly
+    when the direction is not an additive-constant gauge direction. -/
+theorem souriauMassieu_directionalSecondDeriv_pos_iff_nonconstant
+    {m : ℕ} [Nonempty (Fin m)] (s v : Fin m → ℝ) (t : ℝ) :
+    0 < deriv (fun τ : ℝ => deriv
+      (fun τ' => souriauMassieuPotential (fun i => s i + τ' * v i)) τ) t ↔
+      ¬ ∃ c : ℝ, ∀ j : Fin m, v j = c := by
+  rw [souriauMassieu_directionalSecondDeriv_eq_fisherSouriauHessian_at s v t]
+  constructor
+  · intro hpos hconstant
+    have hzero := (fisherSouriau_quadratic_eq_zero_iff_constant
+      (fun i => s i + t * v i) v).2 hconstant
+    linarith
+  · intro hnonconstant
+    have hnonneg := (fisherSouriau_quadratic_eq_variance_and_nonneg
+      (fun i => s i + t * v i) v).2
+    have hne :
+        (∑ j : Fin m, ∑ k : Fin m,
+          v j * fisherSouriauHessian (fun i => s i + t * v i) j k * v k) ≠ 0 := by
+      intro hzero
+      exact hnonconstant ((fisherSouriau_quadratic_eq_zero_iff_constant
+        (fun i => s i + t * v i) v).1 hzero)
+    exact lt_of_le_of_ne hnonneg (Ne.symm hne)
+
 
 end
 

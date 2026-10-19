@@ -193,22 +193,4 @@ theorem steinberg_negative_dwell_time_from_positive_delays :
   dsimp [weakDwellTimeNumerator]
   refine ⟨by decide, by decide, by decide, by decide, by decide⟩
 
-/-- **Section 117a Master Synthesis**:
-    Combines the Fujikawa anomaly factor of two, the Poynting–Fujikawa Lagrange energy partition,
-    chiral eikonal frequency splitting and dispersion product, and Steinberg–Aharonov negative
-    weak dwell time. -/
-theorem fujikawa_birefringence_master_synthesis :
-    (∀ (α : R) (M : ChiralZeroModes R),
-      fujikawaMeasureExponent α M = - 2 * α * atiyahSingerIndex M) ∧
-    (∀ E B : Vec3 R,
-      poyntingSq E B + (pontryaginSource E B) ^ 2 = Vec3.sq E * Vec3.sq B) ∧
-    (∀ k b₀ : R,
-      eikonalOmegaPlus k b₀ - eikonalOmegaMinus k b₀ = 2 * b₀) ∧
-    (∀ k b₀ : R,
-      eikonalOmegaPlus k b₀ * eikonalOmegaMinus k b₀ = k ^ 2 - b₀ ^ 2) ∧
-    weakDwellTimeNumerator (3 : ℤ) (-2 : ℤ) (1 : ℤ) (2 : ℤ) < 0 := by
-  refine ⟨fujikawa_anomaly_factor_two, poynting_fujikawa_energy_partition,
-    chiral_birefringence_frequency_split, chiral_eikonal_dispersion_product,
-    steinberg_negative_dwell_time_from_positive_delays.2.2.2.2⟩
-
 end InfoGeometry.QuantumContext.FujikawaBirefringence

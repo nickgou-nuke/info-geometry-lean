@@ -9,16 +9,13 @@ import Mathlib.Tactic.Ring
 import Mathlib.Tactic.LinearCombination
 
 /-!
-# Section 114: Bitwistors, Forward/Backward Riemann Spheres, and the Genesis of Rest Mass
-Target: `InfoGeometry/Spacetime/BitwistorForwardBackwardSpheres.lean`
+# Section 114: Polarization of a Scalar Quadratic Form
 
-Formalizes:
-1. Two null Riemann spheres: Forward (`(t_fwd, v_fwd)`) and Backward (`(t_bwd, v_bwd)`).
-2. Their individual masslessness: `bispinorDet t_fwd v_fwd = 0` and `bispinorDet t_bwd v_bwd = 0`.
-3. The bitwistor as the superposition of the two spheres: `X_mass = X_fwd + X_bwd`.
-4. Mass genesis theorem (`bitwistor_mass_genesis`):
-   `bispinorDet (t_fwd + t_bwd) (v_fwd + v_bwd) = 2 * (t_fwd * t_bwd - v_fwd · v_bwd)`.
-   Rest mass squared arises strictly from the relativistic cross inner product of the two null cones.
+This module defines a three-coordinate record and the scalar quadratic form
+`q(t, v) = t² - (x² + y² + z²)`. It proves its polarization identity and the
+resulting identities for sums of two inputs when each input has `q = 0`.
+No bispinor matrix, Riemann sphere, spinor representation, or physical mass/energy
+object is constructed; those interpretations remain outside this theorem surface.
 -/
 
 namespace InfoGeometry.Spacetime.Bitwistor
@@ -54,83 +51,58 @@ def sq (u : Space3D R) : R :=
 
 end Space3D
 
-/-! ### 2. Van der Waerden Bispinor Determinant and Null Cone Condition -/
+/-! ### 2. Scalar Quadratic Form and Its Null Predicate -/
 
-/-- Relativistic Minkowski interval (bispinor determinant): `det X = t² - r²`. -/
-def bispinorDet (t : R) (v : Space3D R) : R :=
+/-- Scalar quadratic form `t² - (x² + y² + z²)` on the coordinate record. -/
+def minkowskiQuadraticCoord (t : R) (v : Space3D R) : R :=
   t^2 - Space3D.sq v
 
-/--
-Light-ray predicate (Riemann sphere `CP¹`):
-The bispinor determinant vanishes (`bispinorDet t v = 0`, massless field).
--/
-def isLightRay (t : R) (v : Space3D R) : Prop :=
-  bispinorDet t v = 0
+/-- Predicate that the defined scalar quadratic form vanishes. -/
+def isNullQuadraticCoord (t : R) (v : Space3D R) : Prop :=
+  minkowskiQuadraticCoord t v = 0
 
-/-! ### 3. Bitwistor Superposition (Forward + Backward Spheres) -/
+/-! ### 3. Coordinatewise Sums -/
 
-/-- Time component of the bitwistor (sum of forward and backward energies). -/
-def bitwistorTime (t_fwd t_bwd : R) : R :=
+/-- Sum of two scalar time coordinates. -/
+def sumTimeCoord (t_fwd t_bwd : R) : R :=
   t_fwd + t_bwd
 
-/-- Spatial momentum component of the bitwistor (sum of forward and backward 3-momenta). -/
-def bitwistorSpace (v_fwd v_bwd : Space3D R) : Space3D R :=
+/-- Coordinatewise sum of two three-coordinate records. -/
+def sumSpaceCoord (v_fwd v_bwd : Space3D R) : Space3D R :=
   ⟨v_fwd.x + v_bwd.x, v_fwd.y + v_bwd.y, v_fwd.z + v_bwd.z⟩
 
-/-! ### 4. Main Theorem: Genesis of Rest Mass from Two Null Spheres -/
+/-! ### 4. Polarization and Null-Pair Identities -/
 
-/--
-General polarization identity for the bitwistor determinant prior to imposing nullity:
-`det(X_fwd + X_bwd) = det(X_fwd) + det(X_bwd) + 2 (t_fwd t_bwd - v_fwd · v_bwd)`.
--/
-theorem bitwistor_det_polarization (t_fwd t_bwd : R) (v_fwd v_bwd : Space3D R) :
-    bispinorDet (bitwistorTime t_fwd t_bwd) (bitwistorSpace v_fwd v_bwd) =
-      bispinorDet t_fwd v_fwd + bispinorDet t_bwd v_bwd +
+/-- Polarization identity for the scalar quadratic form under coordinatewise addition. -/
+theorem quadratic_sum_polarization (t_fwd t_bwd : R) (v_fwd v_bwd : Space3D R) :
+    minkowskiQuadraticCoord (sumTimeCoord t_fwd t_bwd) (sumSpaceCoord v_fwd v_bwd) =
+      minkowskiQuadraticCoord t_fwd v_fwd + minkowskiQuadraticCoord t_bwd v_bwd +
       2 * (t_fwd * t_bwd - Space3D.dot v_fwd v_bwd) := by
-  dsimp [bispinorDet, bitwistorTime, bitwistorSpace, Space3D.sq, Space3D.dot]
+  dsimp [minkowskiQuadraticCoord, sumTimeCoord, sumSpaceCoord, Space3D.sq, Space3D.dot]
   ring
 
-/--
-Bitwistor mass genesis theorem (Section 114):
-When a forward null ray (`bispinorDet t_fwd v_fwd = 0`) and a backward null ray
-(`bispinorDet t_bwd v_bwd = 0`) are superposed, the invariant rest mass squared of the
-composite bitwistor is generated strictly by their relativistic cross inner product:
-`m² = det(X_fwd + X_bwd) = 2 * (t_fwd * t_bwd - v_fwd · v_bwd)`.
--/
-theorem bitwistor_mass_genesis
+/-- If both inputs satisfy the scalar null predicate, the quadratic form of their
+coordinatewise sum is the displayed cross term. -/
+theorem null_pair_cross_term_identity
     (t_fwd t_bwd : R) (v_fwd v_bwd : Space3D R)
-    (h_fwd_null : isLightRay t_fwd v_fwd)
-    (h_bwd_null : isLightRay t_bwd v_bwd) :
-    bispinorDet (bitwistorTime t_fwd t_bwd) (bitwistorSpace v_fwd v_bwd) =
+    (h_fwd_null : isNullQuadraticCoord t_fwd v_fwd)
+    (h_bwd_null : isNullQuadraticCoord t_bwd v_bwd) :
+    minkowskiQuadraticCoord (sumTimeCoord t_fwd t_bwd) (sumSpaceCoord v_fwd v_bwd) =
     2 * (t_fwd * t_bwd - Space3D.dot v_fwd v_bwd) := by
-  dsimp [isLightRay] at h_fwd_null h_bwd_null
-  rw [bitwistor_det_polarization, h_fwd_null, h_bwd_null]
+  dsimp [isNullQuadraticCoord] at h_fwd_null h_bwd_null
+  rw [quadratic_sum_polarization, h_fwd_null, h_bwd_null]
   ring
 
-/--
-Head-on counter-propagating null spheres (`v_bwd = -v_fwd`, `t_bwd = t_fwd = E`)
-generate a rest-frame massive particle with `v_tot = 0` and rest mass squared `m² = 4 E²`.
--/
-theorem counter_propagating_null_spheres_rest_mass
-    (E : R) (v : Space3D R) (h_null : isLightRay E v) :
-    bispinorDet (bitwistorTime E E) (bitwistorSpace v ⟨-v.x, -v.y, -v.z⟩) = 4 * E^2 := by
-  have h_bwd_null : isLightRay E ⟨-v.x, -v.y, -v.z⟩ := by
-    dsimp [isLightRay, bispinorDet, Space3D.sq, Space3D.dot] at h_null ⊢
+/-- For equal scalar time coordinates and opposite spatial coordinates, the sum's
+quadratic value is `4 * E²`, assuming the original pair has zero quadratic value. -/
+theorem opposite_spatial_sum_quadratic
+    (E : R) (v : Space3D R) (h_null : isNullQuadraticCoord E v) :
+    minkowskiQuadraticCoord (sumTimeCoord E E) (sumSpaceCoord v ⟨-v.x, -v.y, -v.z⟩) = 4 * E^2 := by
+  have h_bwd_null : isNullQuadraticCoord E ⟨-v.x, -v.y, -v.z⟩ := by
+    dsimp [isNullQuadraticCoord, minkowskiQuadraticCoord, Space3D.sq, Space3D.dot] at h_null ⊢
     linear_combination h_null
-  rw [bitwistor_mass_genesis E E v ⟨-v.x, -v.y, -v.z⟩ h_null h_bwd_null]
-  dsimp [isLightRay, bispinorDet, Space3D.sq, Space3D.dot] at h_null ⊢
+  rw [null_pair_cross_term_identity E E v ⟨-v.x, -v.y, -v.z⟩ h_null h_bwd_null]
+  dsimp [isNullQuadraticCoord, minkowskiQuadraticCoord, Space3D.sq, Space3D.dot] at h_null ⊢
   linear_combination -2 * h_null
-
-/-! ### 5. Master Synthesis of Section 114 -/
-
-theorem bitwistor_mass_genesis_master_synthesis :
-    (∀ (t_fwd t_bwd : R) (v_fwd v_bwd : Space3D R),
-      isLightRay t_fwd v_fwd → isLightRay t_bwd v_bwd →
-      bispinorDet (bitwistorTime t_fwd t_bwd) (bitwistorSpace v_fwd v_bwd) =
-        2 * (t_fwd * t_bwd - Space3D.dot v_fwd v_bwd)) ∧
-    (∀ (E : R) (v : Space3D R),
-      isLightRay E v →
-      bispinorDet (bitwistorTime E E) (bitwistorSpace v ⟨-v.x, -v.y, -v.z⟩) = 4 * E^2) :=
-  ⟨bitwistor_mass_genesis, counter_propagating_null_spheres_rest_mass⟩
 
 end InfoGeometry.Spacetime.Bitwistor

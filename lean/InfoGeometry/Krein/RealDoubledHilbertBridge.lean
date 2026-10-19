@@ -53,14 +53,14 @@ theorem conjugateDoubledEnd_comp
         (conjugateDoubledEnd (E := E) T) := by
   apply ContinuousLinearMap.ext
   intro x
-  simp [conjugateDoubledEnd, ContinuousLinearMap.comp_apply]
+  simp [conjugateDoubledEnd]
 
 theorem conjugateDoubledEnd_id :
     conjugateDoubledEnd (E := E) (ContinuousLinearMap.id ℝ (DoubledSpace E)) =
       ContinuousLinearMap.id ℝ (HilbertDoubled E) := by
   apply ContinuousLinearMap.ext
   intro x
-  simp [conjugateDoubledEnd, ContinuousLinearMap.comp_apply]
+  simp [conjugateDoubledEnd]
 
 @[simp] theorem hilbertDoubledCl11Action_K_sq :
     (hilbertDoubledCl11Action (E := E)).K.comp

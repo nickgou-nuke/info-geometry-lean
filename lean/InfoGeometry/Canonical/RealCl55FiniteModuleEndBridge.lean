@@ -1262,6 +1262,13 @@ theorem nativeChiralDiracPlus_hilbert_adjoint :
     embeddedSplitOctonionHodgeDirac_transpose,
     Matrix.mul_assoc]
 
+/-- Conversely, the minus chiral arrow has the plus arrow as its Hilbert adjoint. -/
+theorem nativeChiralDiracMinus_hilbert_adjoint :
+    ContinuousLinearMap.adjoint nativeChiralDiracMinus =
+      nativeChiralDiracPlus := by
+  rw [← nativeChiralDiracPlus_hilbert_adjoint]
+  exact ContinuousLinearMap.adjoint_adjoint _
+
 theorem nativeChiralProjectorPlus_hilbert_self_adjoint :
     ContinuousLinearMap.adjoint nativeChiralProjectorPlus =
       nativeChiralProjectorPlus := by

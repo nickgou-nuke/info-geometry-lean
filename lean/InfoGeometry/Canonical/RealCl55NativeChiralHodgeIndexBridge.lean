@@ -135,6 +135,44 @@ theorem nativeChiralDiracMinusArrow_inner_smul
   change inner ℝ x.1 ((3 : ℝ) • y.1) = _
   rw [real_inner_smul_right]
 
+noncomputable def normalizedPlusArrow :
+    nativePlusSector →ₗ[ℝ] nativeMinusSector :=
+  (1 / Real.sqrt 3 : ℝ) • nativeChiralDiracPlusArrow
+
+theorem normalizedPlusArrow_norm (x : nativePlusSector) :
+    ‖normalizedPlusArrow x‖ = ‖x‖ := by
+  have hinner : inner ℝ (normalizedPlusArrow x)
+      (normalizedPlusArrow x) = inner ℝ x x := by
+    change inner ℝ ((1 / Real.sqrt 3 : ℝ) •
+        (nativeChiralDiracPlusArrow x).1)
+      ((1 / Real.sqrt 3 : ℝ) •
+        (nativeChiralDiracPlusArrow x).1) = _
+    rw [real_inner_smul_left, real_inner_smul_right]
+    rw [nativeChiralDiracPlusArrow_inner_smul]
+    have h3 : (Real.sqrt 3 : ℝ) * (Real.sqrt 3 : ℝ) = 3 :=
+      Real.mul_self_sqrt (by norm_num)
+    have hs : (1 / Real.sqrt 3 : ℝ) *
+        (1 / Real.sqrt 3 : ℝ) * 3 = 1 := by
+      calc
+        (1 / Real.sqrt 3 : ℝ) * (1 / Real.sqrt 3 : ℝ) * 3 =
+            (1 / (Real.sqrt 3 * Real.sqrt 3)) * 3 := by ring
+        _ = (1 / 3) * 3 := by rw [h3]
+        _ = 1 := by norm_num
+    calc
+      (1 / Real.sqrt 3 : ℝ) * ((1 / Real.sqrt 3) *
+          (3 * inner ℝ x.1 x.1)) =
+          ((1 / Real.sqrt 3 : ℝ) * (1 / Real.sqrt 3) * 3) *
+            inner ℝ x.1 x.1 := by ring
+      _ = inner ℝ x.1 x.1 := by rw [hs, one_mul]
+  have hsq : ‖normalizedPlusArrow x‖ ^ 2 = ‖x‖ ^ 2 := by
+    rw [← real_inner_self_eq_norm_sq, ← real_inner_self_eq_norm_sq]
+    exact hinner
+  nlinarith [norm_nonneg (normalizedPlusArrow x), norm_nonneg x]
+
+noncomputable def normalizedPlusArrowIsometry :
+    nativePlusSector →ₗᵢ[ℝ] nativeMinusSector :=
+  LinearIsometry.mk normalizedPlusArrow normalizedPlusArrow_norm
+
 noncomputable def nativeChiralDiracPlusInverseArrow :
     nativeMinusSector →ₗ[ℝ] nativePlusSector where
   toFun x :=

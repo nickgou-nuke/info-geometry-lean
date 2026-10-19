@@ -51,7 +51,7 @@ private theorem endpointStep_respects
   · right
     exact ⟨h.1, h.2.1, by rw [h.2.2, hconj]⟩
 
-private theorem endpointEqvGen_respects
+theorem endpointEqvGen_respects
     {F G : Type*} {f : F → F} {g : G → G} (e : F ≃ G)
     (hconj : ∀ x, e (f x) = g (e x)) : ∀ {p q : Base × F},
     Relation.EqvGen (endpointStep f) p q →

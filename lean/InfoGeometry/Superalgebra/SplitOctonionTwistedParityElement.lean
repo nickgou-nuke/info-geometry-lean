@@ -112,4 +112,10 @@ theorem parityElement_antiperiodic (θ : ℝ) (u v : ColorVec3 ℝ) :
   · apply ColorVec3.ext <;> ring
   · ring
 
+/-- A full turn is periodic on the same split-octonion carrier. -/
+theorem parityElement_period_two_pi (θ : ℝ) (u v : ColorVec3 ℝ) :
+    parityElement (Real.cos (θ + 2 * Real.pi)) (Real.sin (θ + 2 * Real.pi)) u v =
+      parityElement (Real.cos θ) (Real.sin θ) u v := by
+  rw [Real.cos_add_two_pi, Real.sin_add_two_pi]
+
 end InfoGeometry.Superalgebra.WittenMoebiusParity

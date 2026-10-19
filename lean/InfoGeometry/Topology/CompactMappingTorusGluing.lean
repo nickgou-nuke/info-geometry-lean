@@ -95,5 +95,27 @@ def equivOfConjugacy
       (p.1, e (e.symm p.2)) = @Quotient.mk _ _ p
     rw [e.apply_symm_apply]
 
+
+/-- A fibre homeomorphism conjugating the gluing maps induces a homeomorphism
+of the compact mapping-torus quotients. -/
+def homeomorphOfConjugacy
+    {F G : Type*} {f : F → F} {g : G → G} (e : F ≃ₜ G)
+    (hconj : ∀ x, e (f x) = g (e x)) : Carrier f ≃ₜ Carrier g where
+  toEquiv := equivOfConjugacy e.toEquiv hconj
+  continuous_toFun := by
+    apply Continuous.quotient_lift
+    · apply continuous_quotient_mk'.comp
+      exact continuous_fst.prodMk (e.continuous.comp continuous_snd)
+    · intro p q h
+      exact Quotient.sound (endpointEqvGen_respects e.toEquiv hconj h)
+  continuous_invFun := by
+    apply Continuous.quotient_lift
+    · apply continuous_quotient_mk'.comp
+      exact continuous_fst.prodMk (e.continuous_inv.comp continuous_snd)
+    · intro p q h
+      exact Quotient.sound (endpointEqvGen_respects e.symm.toEquiv (fun x => by
+        apply e.injective
+        simpa using (hconj (e.symm x)).symm) h)
+
 end InfoGeometry.Topology.CompactMappingTorus
 end noncomputable section

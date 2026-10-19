@@ -30,6 +30,17 @@ noncomputable abbrev doubledHilbertIsometry :
     DoubledSpace E ≃ₗᵢ[ℝ] HilbertDoubled E :=
   HilbertDoubled.ofDoubledLIE (E := E)
 
+/- The existing star-algebra transport and the carrier-level conjugation are
+   the same operator map.  This is the soldering equation between the two
+   APIs. -/
+theorem conjStarAlgEquiv_eq_conjugateDoubledEnd
+    (A : DoubledSpace E →L[ℝ] DoubledSpace E) :
+    (doubledHilbertIsometry (E := E)).conjStarAlgEquiv A =
+      conjugateDoubledEnd (E := E) A := by
+  apply ContinuousLinearMap.ext
+  intro x
+  rfl
+
 theorem metric_conjugation_eq
     : (doubledHilbertIsometry (E := E)).conjStarAlgEquiv
         (KreinSpace.jCLM (H := DoubledSpace E)) =
@@ -47,6 +58,15 @@ theorem kreinAdjoint_conjugation (A : DoubledSpace E →L[ℝ] DoubledSpace E) :
   exact StarHomAdjointTransport.map_bounded_kreinAdjoint
     (doubledHilbertIsometry (E := E)).conjStarAlgEquiv.toStarAlgHom
     (Or.inl (metric_conjugation_eq (E := E))) A
+
+theorem kreinAdjoint_conjugateDoubledEnd
+    (A : DoubledSpace E →L[ℝ] DoubledSpace E) :
+    KreinSpace.kreinAdjoint (conjugateDoubledEnd (E := E) A) =
+      conjugateDoubledEnd (E := E) (KreinSpace.kreinAdjoint A) := by
+  rw [← conjStarAlgEquiv_eq_conjugateDoubledEnd (E := E) A]
+  rw [← conjStarAlgEquiv_eq_conjugateDoubledEnd (E := E)
+    (KreinSpace.kreinAdjoint A)]
+  exact (kreinAdjoint_conjugation (E := E) A).symm
 
 theorem kreinSelfAdjoint_conjugation
     (A : DoubledSpace E →L[ℝ] DoubledSpace E)

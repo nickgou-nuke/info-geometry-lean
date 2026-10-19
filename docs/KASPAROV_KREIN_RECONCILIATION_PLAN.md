@@ -30,6 +30,14 @@ adjointness, and the projector layer.
 provides `modular_j`, `spectral_epsilon`, `complex_i`, `clockAxis`, and the
 `doubledCarrier` package.
 
+There are two distinct symmetry packages here.  The `KreinSpace` instance used
+by the doubled Hilbert carrier has its own fundamental symmetry (the sheet sign
+flip), while `DoubledSpace.doubledCarrier` is an
+`InvolutiveSelfDualCarrier` with `J := modular_j` (sheet swap) and
+`ε := spectral_epsilon`.  They are not definitionally the same object.  Every
+transport theorem must name which symmetry it uses and prove compatibility;
+`doubledCarrier` must not be silently treated as a `KreinSpace` instance.
+
 Theorems to reuse rather than duplicate include:
 
 - `KreinSpace.jCLM_comp_self`
@@ -63,6 +71,17 @@ not be made into a second independent cycle structure.
 The current source explicitly qualifies this as a primitive bounded
 real-split-Krein carrier, not a complete standard Kasparov `B`-module.
 
+The adjacent canonical index path is:
+
+```text
+KK/DiracFredholmModule.lean
+  → KK/DiracFredholmIndex.lean
+  → KK/KasparovCycle.lean
+```
+
+These files must remain in the owner graph rather than being bypassed by a new
+index wrapper.
+
 ## 2. Mathlib boundary
 
 Use Mathlib as the implementation substrate, not as a parallel owner:
@@ -82,6 +101,12 @@ structure.  Do not introduce a second `KreinSpace` class merely to imitate a
 Mathlib name.  Likewise, do not claim that Mathlib supplies a standard
 Kasparov-cycle or KK-product implementation unless an actual imported Mathlib
 declaration is found and checked.
+
+The concrete doubled carrier also needs the existing
+`Krein/HilbertBridge.lean` and `Krein/Clifford.lean` infrastructure.  The
+grading instance is not automatically interchangeable between plain
+`DoubledSpace E` and the lifted `HilbertDoubled E` carrier.  That conversion
+requires an explicit proved equivalence.
 
 ## 3. Canonical dependency graph
 
@@ -125,6 +150,11 @@ explicit stage maps; it must not be inferred from a finite matrix instance.
 New modules must import the owner and prove an instance theorem.  They must not
 redeclare the carrier, adjoint, grading, or cycle structures.
 
+Phase 0 must classify independent or legacy `KreinSpace`-like structures found
+in physics, projective, experimental, generated, and external namespaces.  A
+filename containing “Krein” is not evidence that the declaration is a canonical
+owner.
+
 ### Rule B — every carrier change needs a map
 
 For each concrete representation, provide an explicit map or equivalence:
@@ -151,6 +181,12 @@ Then prove the transported operations, at minimum:
 
 No theorem may be called an “isomorphism”, “soldering form”, or “equivalence”
 unless the corresponding inverse or universal property is present and proved.
+
+For cycle transport, a carrier isometry alone is insufficient.  The transport
+packet must also specify compatibility for both Krein symmetries, grading,
+`RealSplitCl11Action`, representations `π` and `ρ`, conjugation of `F`, compact
+defects, and the finite index.  No `transportCycle` declaration currently
+exists; it must not appear in a theorem contract as if already implemented.
 
 ### Rule C — finite data stay finite
 
@@ -185,9 +221,11 @@ Stabilize the small reusable API in `KreinSpace` and `DoubledSpace`:
 
 1. prove the involution and adjoint laws once;
 2. expose canonical projector and grading lemmas;
-3. provide explicit finite-dimensional instances for the principal concrete
-   carriers;
-4. ensure every matrix representation is connected by a proved linear or
+3. reconcile plain `DoubledSpace` with the `HilbertDoubled` carrier used by the
+   grading instance through an explicit continuous-linear equivalence;
+4. provide explicit finite-dimensional instances only for named finite carriers
+   under exact hypotheses such as `[FiniteDimensional ℝ E]`;
+5. ensure every matrix representation is connected by a proved linear or
    continuous-linear equivalence.
 
 No Kasparov terminology is needed in this phase.
@@ -205,21 +243,31 @@ Keep `RealSplitKreinKasparovCycle` as the single bounded-cycle structure.
 5. Add honest predicates for the missing standard Kasparov module laws rather
    than silently assuming them.
 
-Target theorem contracts:
+Target theorem contracts are schematic until their types are declared:
 
 ```lean
-theorem krein_cycle_transport
-    (eH : H₁ ≃ₗᵢ[ℝ] H₂) ... :
-    transportCycle eH X₁ = X₂
+theorem transported_cycle_fields
+    (eH : H₁ ≃ₗᵢ[ℝ] H₂)
+    (hJ : ...)
+    (hgrade : ...)
+    (hcl11 : ...)
+    (hπ : ...)
+    (hρ : ...)
+    (hF : ...) :
+    IsTransportedCycle eH X₁ X₂
 ```
 
 ```lean
 theorem finite_index_transport
-    (eH : H₁ ≃ₗ[ℝ] H₂) ... :
-    transportedIndex X₁ = transportedIndex X₂
+    (eH : H₁ ≃ₗ[ℝ] H₂)
+    (hgrade : ...)
+    (hF : ...) :
+    finiteAnalyticalIndex X₁ = finiteAnalyticalIndex X₂
 ```
 
-These are accepted only after all compatibility hypotheses are proved.
+The ellipses are planning placeholders only. Before implementation, replace
+them with exact typed hypotheses and an owner definition for
+`IsTransportedCycle`.
 
 ### Phase 3 — resolvent and bounded-transform integration
 
@@ -366,3 +414,94 @@ The reconciliation is complete only when:
 Until these conditions hold, the repository should describe the system as a
 canonical real split-Krein Fredholm/Kasparov-style infrastructure, not as a
 fully formalized standard KK-theory implementation.
+
+## 10. Adversarial review corrections
+
+The following constraints supersede any illustrative shorthand earlier in this
+document.
+
+### 10.1 Symmetry and grading alignment
+
+The doubled carrier has a real symmetry distinction that must be preserved:
+
+- the `KreinSpace` instance uses the doubled sheet sign flip as its fundamental
+  symmetry;
+- `DoubledSpace.doubledCarrier` uses `modular_j` as `J` and
+  `spectral_epsilon` as `ε` in an `InvolutiveSelfDualCarrier`.
+
+The plan must not identify these packages by name alone.  The missing
+`DoubledSpace`/`HilbertDoubled` compatibility map belongs in
+`Krein/HilbertBridge.lean` and `Krein/Clifford.lean`, with proved laws for
+composition, grading, `Cl(1,1)`, pairing, adjoint, and compactness transport.
+
+### 10.2 Exact transport contract
+
+The illustrative `transportCycle` expression above is not an existing
+declaration and is not a sufficient theorem type.  The implementation must
+first define a transported-cycle structure or constructor whose data include:
+
+1. the carrier equivalence and both inverse laws;
+2. compatibility of the selected Krein symmetries;
+3. grading and `RealSplitCl11Action` intertwining;
+4. conjugation laws for `π`, `ρ`, and `F`;
+5. preservation of oddness, Krein-skew-adjointness, and compact defects;
+6. finite-dimensional index preservation under the grading/phase hypotheses.
+
+Only after those fields exist may a theorem state equality or equivalence of
+cycles.  Replace all planning ellipses with exact typed hypotheses before
+implementation.
+
+### 10.3 Finite Clifford owner split
+
+There are two similarly named finite files:
+
+- `lean/InfoGeometry/Canonical/RealCl55KasparovCycleBridge.lean`;
+- `lean/InfoGeometry/KK/RealCl55KasparovCycleBridge.lean`.
+
+They package different matrix-level finite data.  Neither currently constructs
+`RealSplitKreinKasparovCycle A B H`.  Phase 4 must choose one finite datum owner,
+document the other as a compatibility consumer, and add the missing coefficient
+representations, Krein carrier, grading, and compact-defect proofs before
+claiming a genuine primitive cycle.
+
+Likewise, `Canonical/RealCl55SO4EquivariantKasparovCycleBridge.lean` is a finite
+certificate surface until it imports and instantiates the primitive cycle.  The
+G2 path in `KK/G2IntegratedKasparovEquivarianceBridge.lean` is a separate
+equivariance surface and must not be conflated with the generic operator-level
+equivariance bridge.
+
+### 10.4 DAG scope correction
+
+The exact path is `lean/DAG/TwoComplexKasparov.lean`.  Its current
+`toKasparovCycle` returns only `TargetEnd`, an endomorphism of `DoubledSpace ℝ`,
+and is definitionally the identity.  It is therefore an identity-valued
+endomorphism placeholder, not a Kasparov-cycle functor.  The surrounding prose
+about analytic completion, colimits, and `F² = 1` must be treated as planned
+work until separate finite, functorial, colimit, and analytic theorems exist.
+
+The implementation sequence is: finite cell carrier; boundary-derived Dirac
+operator; grading anticommutation; bounded/Fredholm data; primitive-cycle
+constructor; then functoriality and colimit compatibility.
+
+### 10.5 Bounded-transform and product limits
+
+`RealSplitKreinBoundedTransform` currently takes the compact resolvent as the
+phase and stores oddness, Krein-skew-adjointness, and compact square defect as
+fields.  The derived compactness lemmas are therefore primitive-cycle
+consequences, not a proof of the analytic functional-calculus phase
+`D (1 + D²)^(-1/2)`.
+
+`KK/Product.lean` and `KK/Examples.lean` provide product-shaped scaffolding,
+not a standard Kasparov product.  A finite composition API must first prove
+well-definedness, grading/adjoint compatibility, compact-defect preservation,
+associativity, and identity laws before any Kasparov-product terminology is
+used.
+
+### 10.6 Machine-checkable non-vacuity
+
+An instance is substantive only if its proofs use the supplied carrier,
+representation, grading, and phase data.  Identity actions or identity phases
+may be retained as explicitly labelled inhabitation scaffolds, but they do not
+count as nontrivial equivariant or geometric realizations.  Every release
+candidate must include a source-linked declaration inventory and a narrow Lean
+check for each promoted theorem.

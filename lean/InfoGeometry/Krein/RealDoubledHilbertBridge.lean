@@ -109,6 +109,20 @@ theorem conjugateDoubledEnd_spectral_epsilon_jCLM :
       (KreinSpace.jCLM (H := HilbertDoubled E) x)
   exact (toDoubled_jCLM_apply (E := E) x).symm
 
+/- The derived real complex structure `complex_i = modular_j ∘ spectral_epsilon`
+   also transports to the concrete Hilbert carrier. -/
+theorem conjugateDoubledEnd_complex_i_hilbertComplexI :
+    conjugateDoubledEnd (E := E) (complex_i (E := E)) =
+      hilbertComplexI (E := E) := by
+  apply ContinuousLinearMap.ext
+  intro x
+  apply (HilbertDoubled.toDoubledContinuousLinearEquiv (E := E)).injective
+  change complex_i (E := E)
+      ((HilbertDoubled.toDoubledContinuousLinearEquiv (E := E)) x) =
+    (HilbertDoubled.toDoubledContinuousLinearEquiv (E := E))
+      (hilbertComplexI (E := E) x)
+  exact (toDoubled_hilbertComplexI_apply (E := E) x).symm
+
 @[simp] theorem hilbertDoubledCl11Action_K_sq :
     (hilbertDoubledCl11Action (E := E)).K.comp
         (hilbertDoubledCl11Action (E := E)).K =

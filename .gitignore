@@ -283,3 +283,4 @@ reports/**
 !**/CMakeLists.txt
 !**/requirements*.txt
 sandbox/swarm/oracle/
+lean/InfoGeometry/Topological/ChernSimonsTemperleyLiebYangBaxterBraid.lean

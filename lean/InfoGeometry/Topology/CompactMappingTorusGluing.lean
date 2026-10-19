@@ -99,7 +99,8 @@ def equivOfConjugacy
 /-- A fibre homeomorphism conjugating the gluing maps induces a homeomorphism
 of the compact mapping-torus quotients. -/
 def homeomorphOfConjugacy
-    {F G : Type*} {f : F → F} {g : G → G} (e : F ≃ₜ G)
+    {F G : Type*} [TopologicalSpace F] [TopologicalSpace G]
+    {f : F → F} {g : G → G} (e : F ≃ₜ G)
     (hconj : ∀ x, e (f x) = g (e x)) : Carrier f ≃ₜ Carrier g where
   toEquiv := equivOfConjugacy e.toEquiv hconj
   continuous_toFun := by

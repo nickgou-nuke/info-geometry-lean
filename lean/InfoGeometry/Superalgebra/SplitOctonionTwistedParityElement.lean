@@ -118,4 +118,90 @@ theorem parityElement_period_two_pi (θ : ℝ) (u v : ColorVec3 ℝ) :
       parityElement (Real.cos θ) (Real.sin θ) u v := by
   rw [Real.cos_add_two_pi, Real.sin_add_two_pi]
 
+/-! The projective parity carrier identifies an element with its central sign. -/
+
+def parityProjectiveSetoid : Setoid (SplitOctonion ℝ) where
+  r x y := y = x ∨ y = SplitOctonion.scale (-1) x
+  iseqv := by
+    constructor
+    · intro x
+      exact Or.inl rfl
+    · intro x y h
+      rcases h with h | h
+      · exact Or.inl h.symm
+      · right
+        calc
+          x = SplitOctonion.scale (-1) (SplitOctonion.scale (-1) x) := by
+            apply SplitOctonion.ext
+            · dsimp [SplitOctonion.scale]
+              ring
+            · apply ColorVec3.ext <;> dsimp [SplitOctonion.scale, ColorVec3.smul] <;> ring
+            · apply ColorVec3.ext <;> dsimp [SplitOctonion.scale, ColorVec3.smul] <;> ring
+            · dsimp [SplitOctonion.scale]
+              ring
+          _ = SplitOctonion.scale (-1) y := by rw [h]
+    · intro x y z hxy hyz
+      rcases hxy with hxy | hxy
+      · simpa [hxy] using hyz
+      · rcases hyz with hyz | hyz
+        · right
+          simpa [hyz, hxy] using rfl
+        · left
+          calc
+            z = SplitOctonion.scale (-1) y := hyz
+            _ = SplitOctonion.scale (-1) (SplitOctonion.scale (-1) x) := by rw [hxy]
+            _ = x := by
+              apply SplitOctonion.ext
+              · dsimp [SplitOctonion.scale]
+                ring
+              · apply ColorVec3.ext <;> dsimp [SplitOctonion.scale, ColorVec3.smul] <;> ring
+              · apply ColorVec3.ext <;> dsimp [SplitOctonion.scale, ColorVec3.smul] <;> ring
+              · dsimp [SplitOctonion.scale]
+                ring
+
+theorem parityElement_scale_neg_one (X : SplitOctonion ℝ) :
+    SplitOctonion.scale (-1) X =
+      SplitOctonion.sub SplitOctonion.zero X := by
+  apply SplitOctonion.ext
+  · dsimp [SplitOctonion.scale, SplitOctonion.sub, SplitOctonion.zero]
+    ring
+  · apply ColorVec3.ext <;>
+      dsimp [SplitOctonion.scale, SplitOctonion.sub, SplitOctonion.zero,
+        ColorVec3.smul, ColorVec3.sub, ColorVec3.zero] <;> ring
+  · apply ColorVec3.ext <;>
+      dsimp [SplitOctonion.scale, SplitOctonion.sub, SplitOctonion.zero,
+        ColorVec3.smul, ColorVec3.sub, ColorVec3.zero] <;> ring
+  · dsimp [SplitOctonion.scale, SplitOctonion.sub, SplitOctonion.zero]
+    ring
+
+theorem parityElement_projective_pi_periodic (θ : ℝ) (u v : ColorVec3 ℝ) :
+    Quotient.mk' (s := parityProjectiveSetoid)
+        (parityElement (Real.cos (θ + Real.pi)) (Real.sin (θ + Real.pi)) u v) =
+      Quotient.mk' (s := parityProjectiveSetoid)
+        (parityElement (Real.cos θ) (Real.sin θ) u v) := by
+  apply Quotient.sound
+  right
+  calc
+    parityElement (Real.cos θ) (Real.sin θ) u v =
+        SplitOctonion.scale (-1)
+          (SplitOctonion.scale (-1)
+            (parityElement (Real.cos θ) (Real.sin θ) u v)) := by
+      apply SplitOctonion.ext
+      · dsimp [SplitOctonion.scale]
+        ring
+      · apply ColorVec3.ext <;> dsimp [SplitOctonion.scale, ColorVec3.smul] <;> ring
+      · apply ColorVec3.ext <;> dsimp [SplitOctonion.scale, ColorVec3.smul] <;> ring
+      · dsimp [SplitOctonion.scale]
+        ring
+    _ = SplitOctonion.scale (-1)
+          (parityElement (Real.cos (θ + Real.pi)) (Real.sin (θ + Real.pi)) u v) := by
+      rw [parityElement_antiperiodic]
+
+theorem parityElement_projective_two_pi_periodic (θ : ℝ) (u v : ColorVec3 ℝ) :
+    Quotient.mk' (s := parityProjectiveSetoid)
+        (parityElement (Real.cos (θ + 2 * Real.pi)) (Real.sin (θ + 2 * Real.pi)) u v) =
+      Quotient.mk' (s := parityProjectiveSetoid)
+        (parityElement (Real.cos θ) (Real.sin θ) u v) := by
+  rw [parityElement_period_two_pi]
+
 end InfoGeometry.Superalgebra.WittenMoebiusParity

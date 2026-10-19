@@ -6,7 +6,6 @@ Authors: InfoGeometry Engine Contributors
 
 import InfoGeometry.Algebra.SupergradedBracket
 import InfoGeometry.SuperGrassmannian.KantorTanakaSuperGrassmannian
-import InfoGeometry.SuperGrassmannian.Matrix3NoncommutativityWitness
 import InfoGeometry.SuperGrassmannian.SuperconformalOSpJordanPair
 
 /-!

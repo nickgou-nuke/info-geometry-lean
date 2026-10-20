@@ -1,0 +1,25 @@
+{
+  "orchestrator": "deepseek/deepseek-v4-flash",
+  "queue": [
+    {
+      "id": "plabic-krein-directed-path-transport-gate0",
+      "title": "Plabic Krein directed path transport PresentedPathPresentation ChiralDigraphHomWithCells mapClass",
+      "status": "done",
+      "sympy_witness": false,
+      "lean_proof": false,
+      "external_ref": null,
+      "last_report": "artifacts/agent_orchestrator/20261020T175959Z_plabic-krein-directed-path-transport-gate0.json"
+    },
+    {
+      "id": "plabic-krein-presented-path-map",
+      "title": "PresentedPathHomotopy PresentedPathClass mapClass mapPath_append",
+      "status": "failed",
+      "sympy_witness": false,
+      "lean_proof": true,
+      "external_ref": null,
+      "lean_path": "proofs/plabic-krein-presented-path-map.lean",
+      "last_report": "artifacts/agent_orchestrator/20261020T180350Z_plabic-krein-presented-path-map.json"
+    }
+  ],
+  "agents": {}
+}

@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic
 import Mathlib.Data.Matrix.Mul
 import InfoGeometry.Algebra.FiniteSpinAlgebra
@@ -109,6 +115,24 @@ theorem sqI_mul_sqK :
   ext i j
   all_goals fin_cases i <;> fin_cases j <;>
     norm_num [sqI, sqJ, sqK, Matrix.mul_apply, Fin.sum_univ_two]
+
+/-! The distinct split-quaternion generators satisfy the Clifford
+anticommutation relations. -/
+
+theorem sqI_sqJ_anticomm :
+    sqI * sqJ + sqJ * sqI = (0 : M2R) := by
+  rw [sqI_mul_sqJ, sqJ_mul_sqI]
+  simp
+
+theorem sqJ_sqK_anticomm :
+    sqJ * sqK + sqK * sqJ = (0 : M2R) := by
+  rw [sqJ_mul_sqK, sqK_mul_sqJ]
+  simp
+
+theorem sqK_sqI_anticomm :
+    sqK * sqI + sqI * sqK = (0 : M2R) := by
+  rw [sqK_mul_sqI, sqI_mul_sqK]
+  simp
 
 /-- Positive split idempotent `(1+j)/2`. -/
 noncomputable def Pplus : M2R :=

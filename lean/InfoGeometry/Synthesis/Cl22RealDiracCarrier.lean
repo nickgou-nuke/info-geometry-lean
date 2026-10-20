@@ -50,8 +50,10 @@ spacetime Clifford algebra $\mathrm{Cl}(1,1)$ across the primal causal sheet $T^
 4. **Section 4 (Andreev Reflection as a Continuous Gauge Rotor in $\mathrm{Spin}_0(2,2)$)**:
    - Defines the continuous cross-sheet rotor `andreevRotor c s = c • 1 + s • J_geom`
      and its reverse `andreevRotorRev c s = c • 1 - s • J_geom`.
-   - Proves spin normalization `andreevRotor_mul_rev_eq_one`
-     ($R(c, s)\widetilde{R}(c, s) = (c^2 + s^2) I$), continuous planar sheet rotation
+   - Proves the forward spin normalization as the first conjunct of
+     `andreevRotor_planar_sheet_rotation`
+     ($R(c, s)\widetilde{R}(c, s) = (c^2 + s^2) I$); the reverse-order normalization
+     is proved in `Cl22ReverseRotor`
      `andreevRotor_planar_sheet_rotation`
      ($\widetilde{R}(c, s) \, e_0 \, R(c, s) = (c^2 - s^2) e_0 + 2 c s \, e_2$),
      and exact $\theta = \pi / 2$ Andreev sheet transmutation

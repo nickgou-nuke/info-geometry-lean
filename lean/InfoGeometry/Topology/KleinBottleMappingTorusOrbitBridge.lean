@@ -395,5 +395,19 @@ def canonicalToOrbitHomeomorph :
   rw [hcomp]
   exact continuous_id
 
+/-! The canonical mapping-torus carrier inherits the separation and
+compactness properties of the literal orbit quotient through the proved
+homeomorphism above.  These instances are used by later finite-dimensional
+topological arguments; they do not identify the carrier with a different
+quotient presentation. -/
+
+instance canonicalKleinBottle_t2Space [Fact (0 < 2 * Real.pi)] :
+    T2Space CanonicalKleinBottle :=
+  canonicalToOrbitHomeomorph.symm.t2Space
+
+instance canonicalKleinBottle_compactSpace [Fact (0 < 2 * Real.pi)] :
+    CompactSpace CanonicalKleinBottle :=
+  canonicalToOrbitHomeomorph.symm.compactSpace
+
 end InfoGeometry.Topology.KleinBottleMappingTorusOrbitBridge
 end noncomputable section

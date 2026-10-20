@@ -118,12 +118,14 @@ theorem mulVec_gram_eigenvector_preimage {m n : Type*} [Fintype m] [Fintype n]
       _ = eigenvalue • (eigenvalue⁻¹ • A.conjTranspose.mulVec w) := by
         simp [smul_smul, mul_comm]
   · dsimp [v]
+    have hmul : A.mulVec (A.conjTranspose.mulVec w) = eigenvalue • w := by
+      simpa only [Matrix.mulVec_mulVec] using h
     calc
       A.mulVec (eigenvalue⁻¹ • A.conjTranspose.mulVec w) =
           eigenvalue⁻¹ • A.mulVec (A.conjTranspose.mulVec w) := by
         rw [Matrix.mulVec_smul]
       _ = eigenvalue⁻¹ • (eigenvalue • w) := by
-        rw [← Matrix.mulVec_mulVec, h]
+        rw [hmul]
       _ = w := by simp [smul_smul, hEigenvalue_ne_zero]
 
 /-- The abstract transport theorem applies to the signed Plabic edge-sum

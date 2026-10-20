@@ -46,6 +46,10 @@ instance : Monoid (Cl11Op R) where
 def toMatrix (A : Cl11Op R) : Matrix (Fin 2) (Fin 2) R :=
   !![A.m11, A.m12; A.m21, A.m22]
 
+/-- Coordinate inverse for the matrix representation. -/
+def ofMatrix (M : Matrix (Fin 2) (Fin 2) R) : Cl11Op R :=
+  ⟨M 0 0, M 0 1, M 1 0, M 1 1⟩
+
 omit [CommRing R] in
 theorem toMatrix_injective :
     Function.Injective (toMatrix : Cl11Op R → Matrix (Fin 2) (Fin 2) R) := by
@@ -55,6 +59,21 @@ theorem toMatrix_injective :
   · simpa [toMatrix] using congrFun (congrFun h 0) 1
   · simpa [toMatrix] using congrFun (congrFun h 1) 0
   · simpa [toMatrix] using congrFun (congrFun h 1) 1
+
+theorem ofMatrix_toMatrix (A : Cl11Op R) : ofMatrix (toMatrix A) = A := by
+  ext <;> rfl
+
+theorem toMatrix_ofMatrix (M : Matrix (Fin 2) (Fin 2) R) :
+    toMatrix (ofMatrix M) = M := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> rfl
+
+/-- The local `Cl11Op` carrier and its `2 × 2` matrix carrier are equivalent. -/
+def toMatrixEquiv : Cl11Op R ≃ Matrix (Fin 2) (Fin 2) R where
+  toFun := toMatrix
+  invFun := ofMatrix
+  left_inv := ofMatrix_toMatrix
+  right_inv := toMatrix_ofMatrix
 
 theorem toMatrix_zero : toMatrix (zero : Cl11Op R) = 0 := by
   ext i j
@@ -91,6 +110,10 @@ theorem toMatrix_mul (A B : Cl11Op R) :
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [toMatrix, mul, Matrix.mul_apply, Fin.sum_univ_two]
+
+theorem toMatrixEquiv_map_mul (A B : Cl11Op R) :
+    toMatrixEquiv (mul A B) = toMatrixEquiv A * toMatrixEquiv B :=
+  toMatrix_mul A B
 
 theorem toMatrix_mutationRotor (w : R) :
     toMatrix (mutationRotor w) = 1 + toMatrix (edgeTwist w) := by

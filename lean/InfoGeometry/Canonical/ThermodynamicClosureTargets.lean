@@ -218,6 +218,15 @@ def anomaly_in_oddSector_target
     (CIK : CertifiedInverseKernel H₂) : Prop :=
   isOdd (E := E) CIK.GammaS (projectorMismatchAnomaly (E := E) CIK)
 
+/-- The Moore--Penrose projector anomaly is odd for the certified spectral grading. -/
+theorem anomaly_in_oddSector
+    (CIK : CertifiedInverseKernel H₂) :
+    anomaly_in_oddSector_target (E := E) CIK := by
+  change CIK.rightChiralAnomaly * CIK.GammaS =
+    -(CIK.GammaS * CIK.rightChiralAnomaly)
+  simpa [projectorMismatchAnomaly] using
+    (CIK.rightChiralAnomaly_anticommutes_GammaS)
+
 /--
 Target surface: phase-axis commutators are Cartan-odd.
 -/
@@ -225,6 +234,15 @@ Target surface: phase-axis commutators are Cartan-odd.
 def phase_commutator_in_odd_target
     (Γ K I : EndH) : Prop :=
   isOdd (E := E) Γ (DrazinSupercharge.commutator K I)
+
+omit [CompleteSpace E] in
+/-- An even--odd commutator is odd for the same Cartan grading. -/
+theorem phase_commutator_in_odd_of_even_odd
+    (Γ K I : EndH)
+    (hK : isEven (E := E) Γ K)
+    (hI : isOdd (E := E) Γ I) :
+    phase_commutator_in_odd_target (E := E) Γ K I := by
+  exact (commutator_preserves_cartan (E := E) Γ).2.1 hK hI
 
 /--
 Target surface: router residual is uniformly bounded by the defect-central

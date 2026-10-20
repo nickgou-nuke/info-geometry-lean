@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Analysis.Normed.Lp.PiLp
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Normed.Lp.lpSpace
@@ -280,6 +285,61 @@ def S_left_lp (ψ : H_lp E) : H_lp E :=
     have h3 := (memℓp_gen_iff zero_lt_two).mp h2
     rw [h1] at h3
     exact summable_S_left_raw ψ h3⟩
+
+/-- The native `lp` branch preserves the `L²` norm on the boundary carrier. -/
+lemma S_left_lp_norm_eq (ψ : H_lp E) :
+    ‖S_left_lp (E := E) ψ‖ = ‖ψ‖ := by
+  have hp : 0 < (2 : ENNReal).toReal := by norm_num
+  have hψ : Summable (fun x : BinaryCantorBoundary => ‖ψ x‖ ^ (2 : ℝ)) :=
+    (lp.memℓp ψ).summable hp
+  have hf : Summable (fun x : BinaryCantorBoundary =>
+      ‖S_left_raw ψ x‖ ^ (2 : ℝ)) :=
+    summable_S_left_raw ψ hψ
+  have hsplit := hf.tsum_subtype_add_tsum_subtype_compl
+    {x : BinaryCantorBoundary | headBoundary x = BinarySector.plus}
+  have hplus : (∑' y : {x : BinaryCantorBoundary // headBoundary x = BinarySector.plus},
+      ‖S_left_raw ψ y.1‖ ^ (2 : ℝ)) =
+      ∑' x : BinaryCantorBoundary, ‖ψ x‖ ^ (2 : ℝ) := by
+    have heq : (fun (y : {x : BinaryCantorBoundary // headBoundary x = BinarySector.plus}) =>
+        ‖S_left_raw ψ y.1‖ ^ (2 : ℝ)) =
+        (fun x : BinaryCantorBoundary => ‖ψ x‖ ^ (2 : ℝ)) ∘ plusEquiv.symm := by
+      ext y
+      dsimp [plusEquiv]
+      rw [S_left_raw_norm]
+      rw [if_pos y.2]
+    rw [heq]
+    exact (plusEquiv.symm).tsum_eq (fun x => ‖ψ x‖ ^ (2 : ℝ))
+  have hminus : (∑' y : {x : BinaryCantorBoundary // x ∉ {x : BinaryCantorBoundary |
+      headBoundary x = BinarySector.plus}}, ‖S_left_raw ψ y.1‖ ^ (2 : ℝ)) = 0 := by
+    have heq_zero : (fun (y : {x : BinaryCantorBoundary // x ∉ {x : BinaryCantorBoundary |
+        headBoundary x = BinarySector.plus}}) =>
+        ‖S_left_raw ψ y.1‖ ^ (2 : ℝ)) = 0 := by
+      ext y
+      have hy : headBoundary y.1 ≠ BinarySector.plus := y.2
+      simp [S_left_raw_norm, hy]
+    rw [heq_zero]
+    exact tsum_zero
+  have htsum : (∑' x : BinaryCantorBoundary, ‖S_left_raw ψ x‖ ^ (2 : ℝ)) =
+      ∑' x : BinaryCantorBoundary, ‖ψ x‖ ^ (2 : ℝ) := by
+    calc
+      (∑' x : BinaryCantorBoundary, ‖S_left_raw ψ x‖ ^ (2 : ℝ)) =
+          (∑' x : {x : BinaryCantorBoundary // headBoundary x = BinarySector.plus},
+            ‖S_left_raw ψ x.1‖ ^ (2 : ℝ)) +
+          (∑' x : {x : BinaryCantorBoundary // x ∉ {x : BinaryCantorBoundary |
+            headBoundary x = BinarySector.plus}}, ‖S_left_raw ψ x.1‖ ^ (2 : ℝ)) := hsplit.symm
+      _ = ∑' x : BinaryCantorBoundary, ‖ψ x‖ ^ (2 : ℝ) := by rw [hplus, hminus, add_zero]
+  have hpowS : ‖S_left_lp (E := E) ψ‖ ^ (2 : ℝ) =
+      ∑' x : BinaryCantorBoundary, ‖S_left_lp (E := E) ψ x‖ ^ (2 : ℝ) := by
+    simpa only [show (2 : ENNReal).toReal = (2 : ℝ) by rfl] using
+      (lp.norm_rpow_eq_tsum hp (S_left_lp (E := E) ψ))
+  have hpowψ : ‖ψ‖ ^ (2 : ℝ) =
+      ∑' x : BinaryCantorBoundary, ‖ψ x‖ ^ (2 : ℝ) := by
+    simpa only [show (2 : ENNReal).toReal = (2 : ℝ) by rfl] using
+      (lp.norm_rpow_eq_tsum hp ψ)
+  have hpow : ‖S_left_lp (E := E) ψ‖ ^ (2 : ℝ) = ‖ψ‖ ^ (2 : ℝ) := by
+    rw [hpowS, hpowψ]
+    exact htsum
+  exact (Real.rpow_left_inj (lp.norm_nonneg' _) (lp.norm_nonneg' _) (by norm_num)).mp hpow
 
 def K_raw (ψ : BinaryCantorBoundary → DoubledSpace E) (x : BinaryCantorBoundary) : DoubledSpace E :=
   clockAxis (E := E) (ψ x)

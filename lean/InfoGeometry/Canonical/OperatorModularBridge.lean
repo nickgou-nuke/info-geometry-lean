@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.YangMillsContinuum
@@ -51,6 +57,13 @@ theorem deriv_modularAutomorphismGroup_zero_eq_operatorAdK
     deriv (fun τ : ℝ => M.modularAutomorphismGroup τ A) 0
       = operatorAdK M.modularHamiltonian A :=
   YangMillsContinuum.ModularRadonNikodymData.deriv_modularAutomorphismGroup_zero_eq_commutator M A
+
+/-- Additivity of the infinitesimal modular generator in its operator argument. -/
+theorem operatorAdK_add (K A B : YangMillsContinuum.EndH E) :
+    operatorAdK K (A + B) = operatorAdK K A + operatorAdK K B := by
+  dsimp [operatorAdK, YangMillsContinuum.ModularRadonNikodymData.commutator]
+  rw [mul_add, add_mul]
+  abel
 
 /-- 
   🏆 THEOREM 3: Product rule for the infinitesimal modular generator on `EndH E`:

@@ -204,10 +204,12 @@ Physical database defaults:
 | `aiclaw_auto_rag` on `http://127.0.0.1:8540` | `tools/infra/aiclaw_auto_arango.py`, root Pi tools | isolated natural-language/proof-memory RAG |
 | `infogeometry` on `http://127.0.0.1:8530` | `src/igf/config/env_aliases.py` | repo DAG, InfoTree, graph overlays, scheduling sidecars |
 | `alexandria` | `tools/alexandria/arango_ingest.py`, `tools/alexandria/automathtext_arango_ingest.py` | literature and AutoMathText ingestion |
-| `hive_live` | `tools/infra/hive_arango_queue.py` and Hive workers | live Hive queue/packet memory |
+| `hive_live` on `http://127.0.0.1:8540` | `tools/infra/hive_arango_queue.py` and Hive workers | live Hive queue/packet memory, separate from the AST/AQL DAG |
 
 Important caveat: `arango_database(default)` returns `ARANGO_DATABASE` when it
-is set, even if a script passes a different default such as `hive_live`.
+is set, even if a script passes a different legacy default. Hive workers use
+the explicit `HIVE_ARANGO_*` lane and must not be inferred from the AST/AQL
+`ARANGO_*` lane.
 Agents must report the resolved database from the run, not assume the default.
 
 Logical schema families:

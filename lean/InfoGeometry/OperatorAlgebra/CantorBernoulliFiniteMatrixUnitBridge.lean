@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Canonical.UHFInductiveColimitBoundary
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorKMSState
@@ -75,6 +81,24 @@ theorem bitWordMatrixTraceFunctional_single_eq_gaugeState
       intro h
       exact huv (List.ofFn_injective h)
     simp [huv, hlist]
+
+theorem bitWordMatrixTraceFunctional_eq_gauge_diagonal
+    (n : ℕ) (A : BitWordMatrixStage n) :
+    bitWordMatrixTraceFunctional n A =
+      ∑ u : BitWord n,
+        A u u * canonicalGaugeState (List.ofFn u) (List.ofFn u) := by
+  classical
+  have hcard : Fintype.card (BitWord n) = 2 ^ n := by
+    rw [Fintype.card_fun, Fintype.card_fin, Fintype.card_bool]
+  rw [bitWordMatrixTraceFunctional_apply, Matrix.trace]
+  simp_rw [canonicalGaugeState_proj, List.length_ofFn]
+  rw [hcard]
+  simp only [Matrix.diag]
+  rw [Finset.mul_sum]
+  simp_rw [mul_comm (A _ _) ((1 / 2 : ℂ) ^ n)]
+  congr 1
+  rw [div_pow]
+  norm_num
 
 theorem bitWordUnit_star (n : ℕ) (u v : BitWord n) :
     star (bitWordUnit n u v) = bitWordUnit n v u := by

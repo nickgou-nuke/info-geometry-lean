@@ -348,13 +348,31 @@ shared build lock, and optionally runs the locked Lake module build. Every
 stage is emitted as a replayable JSON artifact.
 
 Independent A-A and QA-A evidence may be supplied with `--audit-evidence` and
-`--qa-evidence`. Each file must contain an accepting verdict, the current
-contract/candidate/run/snapshot hashes, a nonempty context hash, and distinct
-agent, session, and origin-run identifiers. The runner records `hold` unless all Lean, build, A-A, and QA-A gates
-pass and `--allow-promotion` is explicitly supplied. A `promote` result is a
-recorded decision only; it does not mutate source or enqueue a production
+`--qa-evidence`. Each file must validate against a repository Hive packet
+schema and contain an accepting verdict, the current contract/candidate/run/
+snapshot hashes, a nonempty context hash, and distinct agent, session, and
+origin-run identifiers. The runner also compiles a generated `#print axioms`
+audit and rejects any axiom outside `propext`, `Classical.choice`, and
+`Quot.sound`.
+
+The runner records `hold` unless all Lean, explicit-axiom, build, A-A, and QA-A
+gates pass and `--allow-promotion` is explicitly supplied. A `promote` result
+is a recorded decision only; it does not mutate source or enqueue a production
 packet. Pantograph evidence remains navigation evidence and cannot satisfy the
 Lean, build, A-A, or QA-A gates.
+
+The operational path is opt-in and isolated by a unique queue name:
+
+```bash
+python3 tools/infra/opengauss_hive_pilot.py ... --hive-smoke
+```
+
+This performs a real worker heartbeat, task enqueue, one-second lease claim,
+lease expiry/reap, second-worker reclaim, and completion. The resulting
+`07_hive_smoke.json` records the task key and command responses. Failures emit
+`rejection_manifest.json`; subprocess timeouts additionally emit
+`timeout_manifest.json`. No Hive mutation occurs unless `--hive-smoke` is
+explicitly requested.
 
 ## Deep Socratic questions
 

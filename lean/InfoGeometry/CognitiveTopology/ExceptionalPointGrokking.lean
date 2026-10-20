@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.KANWallpaperIsomorphism
@@ -56,6 +62,18 @@ theorem exceptionalPoint_nilpotent_part_square_zero (A N : H →L[ℂ] H)
     (h_ep : IsExceptionalPoint A N) :
     N ∘L N = 0 :=
   h_ep.2
+
+/-- The nilpotent part is unique for the fixed affine decomposition `A = id + N`.
+
+This is additive cancellation; the square-zero hypotheses in the two
+`IsExceptionalPoint` premises are not needed for the uniqueness itself. -/
+theorem exceptionalPoint_nilpotent_part_unique
+    (A N M : H →L[ℂ] H)
+    (hN : IsExceptionalPoint A N)
+    (hM : IsExceptionalPoint A M) :
+    N = M := by
+  apply add_left_cancel (b := N) (c := M)
+  exact hN.1.symm.trans hM.1
 
 /--
 Compatibility name for the finite/operator grokking socket.

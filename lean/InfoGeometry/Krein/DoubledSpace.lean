@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Krein.KreinSpace
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.InvolutiveSelfDualCarrier
@@ -119,15 +124,13 @@ noncomputable def doubledHilbertBilin : LinearMap.BilinForm ℝ (DoubledSpace E)
       simp [inner_add_left])
     (by
       intro c u v
-      simp [real_inner_smul_left]
-      ring)
+      simp [real_inner_smul_left, mul_add])
     (by
       intro u v₁ v₂
       simp [inner_add_right])
     (by
       intro c u v
-      simp [real_inner_smul_right]
-      ring)
+      simp [real_inner_smul_right, mul_add])
 
 /--
 Canonical substrate packaging of the doubled lane as an involutive self-dual carrier.
@@ -203,6 +206,22 @@ omit [CompleteSpace E] in
     clockAxis u = WithLp.toLp (2 : ENNReal) (-WithLp.snd u, WithLp.fst u) := by
   rw [clockAxis]
   exact complex_i_apply (E := E) u
+
+omit [CompleteSpace E] in
+lemma complex_i_norm (u : DoubledSpace E) :
+    ‖complex_i (E := E) u‖ = ‖u‖ := by
+  have hnn : ‖complex_i (E := E) u‖₊ = ‖u‖₊ := by
+    have htop : (2 : ENNReal) ≠ ⊤ := by norm_num
+    rw [WithLp.prod_nnnorm_eq_add (p := (2 : ENNReal)) htop]
+    rw [WithLp.prod_nnnorm_eq_add (p := (2 : ENNReal)) htop]
+    simp [complex_i_apply, add_comm]
+  exact congrArg (fun x : NNReal => (x : ℝ)) hnn
+
+omit [CompleteSpace E] in
+lemma clockAxis_norm (u : DoubledSpace E) :
+    ‖clockAxis (E := E) u‖ = ‖u‖ := by
+  rw [clockAxis_eq_complex_i]
+  exact complex_i_norm u
 
 omit [CompleteSpace E] in
 @[simp] lemma complex_i_to_doubled (x ξ : E) :

@@ -56,6 +56,49 @@ theorem mulVec_gram_eigenvector_ne_zero {m n : Type*} [Fintype m] [Fintype n]
   · exact (hEigenvalue_ne_zero heigenvalue).elim
   · exact hv'
 
+/-- For a nonzero eigenvalue, the Gram-eigenvector transport is injective on
+the corresponding eigenspace. -/
+theorem mulVec_gram_eigenvector_injective {m n : Type*} [Fintype m] [Fintype n]
+    (A : Matrix m n ℂ) (eigenvalue : ℂ) (hEigenvalue_ne_zero : eigenvalue ≠ 0)
+    {v₁ v₂ : n → ℂ}
+    (h₁ : (A.conjTranspose * A).mulVec v₁ = eigenvalue • v₁)
+    (h₂ : (A.conjTranspose * A).mulVec v₂ = eigenvalue • v₂)
+    (hEq : A.mulVec v₁ = A.mulVec v₂) :
+    v₁ = v₂ := by
+  have hmul : eigenvalue • v₁ = eigenvalue • v₂ := by
+    calc
+      eigenvalue • v₁ = (A.conjTranspose * A).mulVec v₁ := h₁.symm
+      _ = A.conjTranspose.mulVec (A.mulVec v₁) := by
+        rw [Matrix.mulVec_mulVec]
+      _ = A.conjTranspose.mulVec (A.mulVec v₂) := by rw [hEq]
+      _ = (A.conjTranspose * A).mulVec v₂ := by
+        rw [Matrix.mulVec_mulVec]
+      _ = eigenvalue • v₂ := h₂
+  have hdiff : eigenvalue • (v₁ - v₂) = 0 := by
+    rw [smul_sub, hmul, sub_self]
+  rcases smul_eq_zero.mp hdiff with hzero | hv
+  · exact (hEigenvalue_ne_zero hzero).elim
+  · exact sub_eq_zero.mp hv
+
+/-- The matrix transport is injective when restricted to eigenvectors of
+`A.conjTranspose * A` at a fixed nonzero eigenvalue. This strengthens the
+pointwise non-annihilation result without claiming a multiplicity theorem. -/
+theorem mulVec_gram_eigenvector_injective {m n : Type*} [Fintype m] [Fintype n]
+    (A : Matrix m n ℂ) (eigenvalue : ℂ) (hEigenvalue_ne_zero : eigenvalue ≠ 0)
+    (v w : n → ℂ)
+    (hv : (A.conjTranspose * A).mulVec v = eigenvalue • v)
+    (hw : (A.conjTranspose * A).mulVec w = eigenvalue • w)
+    (hAv : A.mulVec v = A.mulVec w) : v = w := by
+  by_contra hne
+  have hdiff : A.mulVec (v - w) = 0 := by
+    rw [Matrix.mulVec_sub, hAv]
+    simp
+  have hEigen : (A.conjTranspose * A).mulVec (v - w) =
+      eigenvalue • (v - w) := by
+    rw [Matrix.mulVec_sub, hv, hw, sub_smul]
+  exact (mulVec_gram_eigenvector_ne_zero A eigenvalue (v - w)
+    hEigenvalue_ne_zero hne hEigen) hdiff
+
 /-- The reverse transport, using `A.conjTranspose`, gives the corresponding
 eigenvector statement from `A * A.conjTranspose` back to the other Gram matrix. -/
 theorem conjTranspose_mulVec_gram_eigenvector {m n : Type*}
@@ -95,5 +138,22 @@ theorem edgeSumMatrix_mulVec_gram_eigenvector_ne_zero
     (edgeSumMatrix S weight).mulVec v ≠ 0 := by
   exact mulVec_gram_eigenvector_ne_zero (edgeSumMatrix S weight) eigenvalue v
     hEigenvalue_ne_zero hv h
+
+/- The same nonzero-eigenvalue hypothesis gives injectivity on the
+   eigenspace for the concrete Plabic edge-sum matrix. -/
+theorem edgeSumMatrix_mulVec_gram_eigenvector_injective
+    {G : FinitePlabicGraph} {R : Type*} [CommRing R] [StarRing R]
+    (S : KasteleynSigning G) (weight : G.Edge → ℂ) (eigenvalue : ℂ)
+    (hEigenvalue_ne_zero : eigenvalue ≠ 0)
+    {v₁ v₂ : G.Black → ℂ}
+    (h₁ : ((edgeSumMatrix S weight).conjTranspose * edgeSumMatrix S weight).mulVec v₁ =
+      eigenvalue • v₁)
+    (h₂ : ((edgeSumMatrix S weight).conjTranspose * edgeSumMatrix S weight).mulVec v₂ =
+      eigenvalue • v₂)
+    (hEq : (edgeSumMatrix S weight).mulVec v₁ =
+      (edgeSumMatrix S weight).mulVec v₂) :
+    v₁ = v₂ := by
+  exact mulVec_gram_eigenvector_injective (edgeSumMatrix S weight) eigenvalue
+    hEigenvalue_ne_zero h₁ h₂ hEq
 
 end InfoGeometry.Canonical.PlabicGramEigenvectorTransport

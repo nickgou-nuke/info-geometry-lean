@@ -53,8 +53,10 @@ grep -q "\baxiom\b" "$TARGET_FILE" && {
     exit 1
 }
 
-echo "--- [REPLAY] Phase 0: Build verification (ordinary Lake build) ---"
-lake build
+echo "--- [REPLAY] Phase 0: Build verification (explicit full Lake default-target gate) ---"
+# Replay is an isolated release-style gate.  Keep the broad build intentional
+# and explicit; development callers use the incremental changed-owner wrapper.
+python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock --all-default-targets
 echo "--- [REPLAY] Phase 1: Semantic audit ---"
 python3 tools/infra/semantic_audit.py --task "$MANIFEST"
 

@@ -18,4 +18,4 @@ if [ "$#" -eq 0 ]; then
 fi
 
 echo "[stable-build] Building targets: $* --wfail"
-exec python3 tools/run_locked_lake_build.py "$@" --wfail
+exec python3 tools/infra/run_locked_lake_build.py "$@" --wfail

@@ -59,7 +59,7 @@ finite transport results are called out separately below.
 | A7 | Chiral grading and Dirac anticommutation | `kreinSignature` and `diracDHK_anticommutes_chirality` prove the stated finite matrix identity. |
 | A8 | Block-square / Gram decomposition | `diracDHK_sq` and `edgeSumDirac_sq` identify the two Gram blocks. |
 | A9 | Krein-skew-adjoint identity | `diracDHK_krein_skew` proves `ηD†η = -D` under the owner’s ring/star assumptions; not a Hilbert spectral theorem. |
-| A10 | Correspondence between nonzero eigenvectors of `A†A` and `AA†` | `Canonical.PlabicGramEigenvectorTransport` proves vector transport in each direction and non-annihilation for nonzero eigenvalue/vector. This does **not** yet prove characteristic-polynomial equality, multiplicities, or SVD. |
+| A10 | Correspondence between nonzero eigenvectors of `A†A` and `AA†` | `Canonical.PlabicGramEigenvectorTransport` proves vector transport in each direction, non-annihilation, and injectivity on each nonzero eigenspace. This does **not** yet prove characteristic-polynomial equality, multiplicities, or SVD. |
 | A11 | Nilpotent local off-diagonal `Cl11Op` edge | `Gamma_sq_zero` proves the local square-zero identity; no general graph-edge operator follows. |
 | A12 | Truncated unipotent local transport | `mutationRotor`, its inverse, and two-sided inverse identities; “unitary” here means invertible in the local ring, not star-unitary. |
 | A13 | Local conjugation readout | `cluster_mutation_is_exponential_adjoint` proves the displayed local conjugation computation only. |
@@ -98,7 +98,7 @@ A8 -> A10 (finite vector-level transport; multiplicities still open)
 A11 -> A12 -> A13
 A14 -> A15; A16 -> its rational mutation identities
 A17 -> A18 -> A19 -> A20; A19 -> A21 -> A22 (conditional socket only)
-A23 requires a new differentiable carrier; A24 -> conditional A25
+A23 now has a finite two-stage differentiable carrier theorem; A24 -> conditional A25
 A26 -> A27 diagnostic
 
 Selected A5/A10 local transports do not close global C17.

@@ -27,7 +27,7 @@ the owner source; a chat transcript is never proof authority.
 | A7 | chiral grading | `η = [[I,0],[0,-I]]` on `Black ⊕ White`; `D η + η D = 0`. | `kreinSignature` and `diracDHK_anticommutes_chirality`; owner theorem surface. |
 | A8 | Gram/block-square decomposition | `D² = diag(K†K, KK†)`. | `diracDHK_sq` and `edgeSumDirac_sq`; owner theorem surface. |
 | A9 | Krein-skew adjoint | `η D† η = -D` under the source's `CommRing`/`StarRing` matrix assumptions. | `diracDHK_krein_skew`; this is the exact formal claim, not a general Hilbert-space spectral theorem. |
-| A10 | spectral correspondence of the two Gram blocks | Over a suitable field/star-compatible finite-dimensional setting, `K†K` and `KK†` have the same nonzero spectral data, with multiplicities interpreted precisely. | This is mathematically standard but is not supplied by the cited owner file. It is a separate candidate theorem, not an existing consequence of `diracDHK_sq`. |
+| A10 | spectral correspondence of the two Gram blocks | For a complex rectangular matrix, nonzero eigenvectors transport in both directions; the transport is non-annihilating and injective on each nonzero eigenspace. | `Canonical.PlabicGramEigenvectorTransport` proves this finite vector-level theorem. Characteristic-polynomial equality, multiplicities, and SVD remain separate. |
 
 **Correction:** the chat's phrase “same nonzero singular-value information” is
 not promoted. The block-square identity is formalized; a singular-value theorem
@@ -68,7 +68,7 @@ path law. It is not a general stochastic-process or path-integral theorem.
 
 | ID | Genuine archetype | Carrier and invariant | Repository scope |
 |---|---|---|---|
-| A23 | reverse-mode adjoint transport | For differentiable stage maps `fₙ ∘ … ∘ f₁`, forward differentials compose in forward order and reverse covectors compose by adjoints in reverse order. | Correct mathematical archetype, but the cited `NeuralOperatorCore` does not formalize differentiability or backpropagation. Candidate/open. |
+| A23 | reverse-mode adjoint transport | For two differentiable Hilbert-space stage maps, forward differentials compose in forward order and reverse covectors compose by adjoints in reverse order. | `Canonical.DifferentialAdjointChainRule.reverse_mode_chain_rule` proves this finite two-stage theorem; it does not assert training or optimizer results. |
 | A24 | function-to-function operator contract | `NeuralOperator X Y Z := (X → Y) → (X → Z)` with a shape/scale cost and a pointwise cost bound. | `Canonical/NeuralOperatorCore.lean`; owner theorem surface. |
 | A25 | modular-velocity specialization | A field bundle `Tok → AlgebraEnd E` is mapped to a velocity-field bundle through `modularVelocity`; approximation and readout bounds are conditional on a contract. | `Canonical/NavierStokesNeuralOperatorBridge.lean`; conditional owner bridge. No PDE or neural-training theorem follows. |
 | A26 | doubled-sheet directed transfers | `upward` and `downward` are continuous linear maps; same-direction compositions vanish, mixed compositions retain different Peirce corners, and each transfer is injective. | `Canonical/NavierStokesPolarizedTransfers.lean`; linear-operator theorem surface. |
@@ -93,7 +93,7 @@ finite graph data A0
 signed incidence matrix A2
   └─→ block Dirac A6 ─→ block square A8
                          └─→ with grading A7: anticommutation/Krein-skew
-A8 + finite star-compatible carrier ─→ spectral correspondence A10 [new theorem contract]
+A8 + finite star-compatible carrier ─→ spectral correspondence A10 [finite vector theorem]
 
 local Cl11 operator carrier
   └─→ nilpotent edge A11 ─→ truncated transport A12 ─→ local conjugation A13
@@ -110,7 +110,7 @@ thermodynamic graph A17
        └─→ finite MaxCal law A21 ─→ optimizer socket A22 [assumption-bearing]
 
 differentiable stage maps [missing carrier]
-  └─→ reverse-mode adjoint transport A23 [open]
+  └─→ reverse-mode adjoint transport A23 [finite theorem]
 
 function-to-function operator A24
   └─→ modular-velocity specialization A25 [conditional]
@@ -126,7 +126,7 @@ It is a new maximal node with the following prerequisites:
 (A3 + A5)  path transport with a fixed ordering convention
 (A6 + A7)  chiral block operator and grading
 (A17 + A19) finite thermodynamic path readout
-(A23)      adjoint transport, only if differentiability is supplied
+(A23)      finite adjoint transport under explicit differentiability hypotheses
 (A24)      function-to-function cost contract, if approximation is intended
 + explicit maps and commuting laws between the chosen carriers
 → typed finite comparison theorem [open debt]

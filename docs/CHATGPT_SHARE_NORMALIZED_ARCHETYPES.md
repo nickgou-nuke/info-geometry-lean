@@ -248,6 +248,16 @@ now proves `map_contextualPathRewrite`, constructs
 under the explicit cell-preservation hypothesis. These are typed local edges;
 they do not close the remaining cross-carrier equivalences.
 
+**Closed finite algebraic corrections.**
+`InfoGeometry.Synthesis.Cl22RealDiracCarrier.andreevRotor_mul` proves the
+native `Cl(2,2)` cross-sheet rotor multiplication law. It is a multiplication
+theorem only; it does not by itself construct a rotor group.
+`SouriauOnsagerBKM.FaithfulDensityOperator.bkmRealBilinForm_no_antiInvariant`
+proves that strict positivity of the finite BKM form contradicts a global
+anti-invariance equation on any explicitly nonzero input. This rules out an
+unqualified identification of that positive form with a neutral para-Kähler
+metric on the same carrier.
+
 ## 2. Causal prerequisite poset
 
 The following order contains only dependencies justified by the mathematical

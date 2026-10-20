@@ -345,7 +345,9 @@ The candidate must be under `scratch/` or `tmp/`; the runner never edits an
 owner file. It validates the Ground-Truth Contract, hashes the candidate
 snapshot, runs strict OpenGauss refutation, runs `lake env lean` under the
 shared build lock, and optionally runs the locked Lake module build. Every
-stage is emitted as a replayable JSON artifact.
+stage is emitted as a replayable JSON artifact. The candidate must contain the
+contract's qualified declaration with a result type matching the contract's
+target expression; unrelated or empty candidates are rejected.
 
 Independent A-A and QA-A evidence may be supplied with `--audit-evidence` and
 `--qa-evidence`. Each file must validate against a repository Hive packet
@@ -373,6 +375,24 @@ lease expiry/reap, second-worker reclaim, and completion. The resulting
 `rejection_manifest.json`; subprocess timeouts additionally emit
 `timeout_manifest.json`. No Hive mutation occurs unless `--hive-smoke` is
 explicitly requested.
+
+Packet lineage is a separate opt-in check, because queue leasing does not prove
+packet dependency edges:
+
+```bash
+python3 tools/infra/opengauss_hive_pilot.py ... \
+  --packet-lineage-smoke \
+  --packet-lineage-packet candidate.json \
+  --packet-lineage-packet lean-verification.json \
+  --packet-lineage-packet build.json \
+  --packet-lineage-packet audit.json \
+  --packet-lineage-packet promotion.json
+```
+
+Promotion additionally requires `--promotion-evidence` containing a distinct,
+schema-valid promotion-worker record. The runner's zero exit code means only
+that the pilot completed and produced a manifest; `qms_acceptance=accepted`
+appears only for an explicit, fully evidenced promotion decision.
 
 ## Deep Socratic questions
 

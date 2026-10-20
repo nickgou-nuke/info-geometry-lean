@@ -166,6 +166,12 @@ def load_independent_evidence(
     schema_errors = validate_packet(value, schema_path, build_store())
     if schema_errors:
         raise ValueError(f"{role} evidence failed {schema_path.name}: " + "; ".join(schema_errors))
+    if role in {"A-A", "QA-A"} and kind != "AuditPacket":
+        raise ValueError(f"{role} evidence must use the repository AuditPacket schema")
+    if role == "promotion" and kind != "PromotionDecisionPacket":
+        raise ValueError("promotion evidence must use the repository PromotionDecisionPacket schema")
+    if value.get("review_role") != role:
+        raise ValueError(f"{role} evidence must declare review_role={role!r}")
     agent_id = value.get("agent_id") or value.get("worker_id")
     if not isinstance(agent_id, str) or not agent_id.strip():
         raise ValueError(f"{role} evidence requires a non-empty agent_id")
@@ -388,25 +394,27 @@ def packet_lineage_smoke(paths: list[Path], *, contract_hash: str, candidate_has
     if candidate.get("ground_truth_contract", {}).get("contract_sha256") != contract_hash:
         raise ValueError("candidate packet contract hash does not match pilot")
     for packet in packets:
-        hashes = packet.get("source_hashes") or []
-        if not isinstance(hashes, list) or not hashes:
-            raise ValueError(f"{packet['kind']} is missing source_hashes for candidate binding")
-        if not any(candidate_hash in str(item) for item in hashes):
-            raise ValueError(f"{packet['kind']} does not carry the candidate snapshot hash")
+        if packet.get("contract_sha256") != contract_hash:
+            raise ValueError(f"{packet['kind']} does not carry the complete contract hash")
+        if packet.get("source_snapshot_sha256") != candidate_hash:
+            raise ValueError(f"{packet['kind']} does not carry the exact source snapshot hash")
     ids = [str(packet.get("id") or "") for packet in packets]
     if any(not item for item in ids) or len(set(ids)) != len(ids):
         raise ValueError("packet lineage IDs must be non-empty and distinct")
-    def refs(packet: dict[str, Any]) -> set[str]:
-        values: set[str] = set()
-        for field in ("parent_refs", "evidence_refs", "execution_intent_ref", "lean_verification_ref", "build_ref", "audit_ref"):
-            raw = packet.get(field)
-            refs_for_field = raw if isinstance(raw, list) else ([raw] if raw is not None else [])
-            for ref in refs_for_field:
-                values.add(str(ref.get("ref") if isinstance(ref, dict) else ref).split("|")[0])
-        return values
-    for previous, current in zip(packets, packets[1:]):
-        if previous["id"] not in refs(current) and previous.get("packet_hash") not in refs(current):
-            raise ValueError(f"{current['kind']} does not reference {previous['id']}")
+    def refs(packet: dict[str, Any], field: str) -> list[dict[str, Any]]:
+        raw = packet.get(field)
+        refs_for_field = raw if isinstance(raw, list) else ([raw] if raw is not None else [])
+        return [ref if isinstance(ref, dict) else {"ref": str(ref)} for ref in refs_for_field]
+
+    def require_ref(packet: dict[str, Any], field: str, target: str, role: str) -> None:
+        if not any(ref.get("ref") == target and ref.get("role") == role for ref in refs(packet, field)):
+            raise ValueError(f"{packet['kind']} lacks exact {field} reference {target} role={role}")
+
+    require_ref(verification, "parent_refs", candidate["id"], "candidate_under_review")
+    require_ref(build, "lean_verification_ref", verification["id"], "verification")
+    require_ref(audit, "build_ref", build["id"], "build")
+    require_ref(promotion, "audit_ref", audit["id"], "audit")
+    require_ref(promotion, "evidence_refs", qa["id"], "qa")
     return {
         "stage": "packet_lineage_smoke",
         "status": "passed",
@@ -669,6 +677,12 @@ def main() -> int:
             "hive_queue": hive_stage.get("queue") if args.hive_smoke else None,
             "hive_task_key": hive_stage.get("task_key") if args.hive_smoke else None,
             "packet_lineage": packet_stage.get("packet_ids") if args.packet_lineage_smoke else None,
+            "open_debt": [
+                "A-A/QA-A independence is declared metadata; fresh process context is not independently proven.",
+                *([] if args.hive_smoke else ["Hive lease/heartbeat/requeue smoke was not run."]),
+                *([] if args.packet_lineage_smoke else ["Packet lineage smoke was not run."]),
+                "The pilot never integrates owner source or certifies mathematical promotion.",
+            ],
             "artifacts": [str(path.relative_to(ROOT)) for path in sorted(run_dir.glob("*.json"))],
         }
         stages = [refutation, lean, axioms, build, audit, qa]
@@ -706,8 +720,15 @@ def main() -> int:
         try:
             rejection_dir = require_output_dir(args.output_dir)
             rejection_dir.mkdir(parents=True, exist_ok=True)
+            contract_file_hash = ""
+            try:
+                contract_file = Path(args.contract).resolve()
+                if contract_file.is_file():
+                    contract_file_hash = sha256_file(contract_file)
+            except OSError:
+                contract_file_hash = ""
             rejection_fingerprint = sha256_bytes(
-                f"{args.contract}:{args.candidate}:{os.getpid()}:{exc}".encode("utf-8")
+                f"{args.contract}:{args.candidate}:{contract_file_hash}:{os.getpid()}:{exc}".encode("utf-8")
             )[:24]
             write_json(
                 rejection_dir / (
@@ -719,6 +740,8 @@ def main() -> int:
                     "schema": "info_geometry.opengauss.hive_pilot.rejection.v1",
                     "decision": "reject",
                     "reason": str(exc),
+                    "contract_file_sha256": contract_file_hash,
+                    "rejection_fingerprint": rejection_fingerprint,
                     "created_at": now(),
                 },
             )

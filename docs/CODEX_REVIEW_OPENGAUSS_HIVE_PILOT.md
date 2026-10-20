@@ -124,6 +124,60 @@ The first successful pilot should remain finite, serial, and replayable. No
 full swarm or toolchain upgrade is justified until the candidate-to-contract
 binding and packet-lineage gaps are closed.
 
+## Follow-up review after implementation response
+
+The implementation closes most of the earlier gaps and is suitable for a
+bounded non-promoting pilot. Three correctness issues remain open.
+
+### 1. Early rejection identity must include content
+
+The early rejection fingerprint currently includes paths, process identity,
+and the exception. It must also include the raw contract-file hash whenever
+the contract file exists. A path-only identity does not prove which contract
+was rejected.
+
+### 2. Evidence schemas must be role-specific
+
+Generic repository schema validation is not sufficient for every role. Require
+at least:
+
+```text
+A-A          -> AuditPacket
+QA-A         -> a dedicated QA schema, or an explicitly documented
+                AuditPacket QA role
+promotion    -> PromotionDecisionPacket
+```
+
+A valid packet of the wrong semantic kind must not satisfy an audit, QA, or
+promotion gate.
+
+### 3. Packet lineage checks must be exact
+
+The lineage smoke should require:
+
+- the complete contract hash on every packet;
+- exact source-snapshot hash equality rather than substring containment;
+- exact parent/evidence reference roles;
+- promotion references to both audit and QA evidence;
+- build references to the corresponding Lean verification packet.
+
+Any remaining limitation should be recorded as explicit `open_debt`, not
+silently omitted.
+
+## Safe next tests
+
+Run these in order:
+
+```text
+stale-contract rejection
+→ synthetic packet-lineage smoke
+→ queue claim/heartbeat/requeue smoke only with explicit Hive authorization
+```
+
+The runner is not yet a promotion authority. Real theorem promotion remains
+blocked until the three issues above are closed and the complete replayable
+chain is independently inspected.
+
 ## Implementation response
 
 The reviewed gaps are now addressed in
@@ -163,3 +217,20 @@ No Hive mutation or full Lake build was performed in this pass. Both remain
 explicit opt-in operations. A stale contract was previously rejected and
 produced a collision-resistant rejection manifest, confirming the fail-closed
 early-error path.
+
+## Follow-up implementation status
+
+The remaining review controls are now fail-closed in the runner:
+
+- early rejection fingerprints include the raw contract-file SHA-256;
+- A-A and QA-A both require `AuditPacket`, with `review_role` set to `A-A` or
+  `QA-A`; promotion requires `PromotionDecisionPacket` and
+  `review_role=promotion`;
+- packet-lineage smoke requires complete top-level contract hashes, exact
+  source-snapshot equality, and role-exact references for candidate,
+  verification, build, audit, and QA packets;
+- every run manifest exposes an explicit `open_debt` list.
+
+The safe test order remains stale-contract rejection, synthetic packet-lineage
+validation, and only then the explicitly authorized Hive lease smoke. These
+checks still do not promote theorem source.

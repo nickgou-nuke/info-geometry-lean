@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Lie.SplitOctonionEllClosedFlow
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionErlangenInvariant
@@ -49,5 +55,35 @@ theorem ellFlowPhiQuadraticIsometry_preserves_det
         InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3 X := by
   simpa [ellFlowPhiQuadraticIsometry_apply] using
     (ellFlowPhi_preserves_det t X)
+
+theorem isometryEquiv_ext
+    {f g : canonicalDetQuadratic.IsometryEquiv canonicalDetQuadratic}
+    (h : f.toLinearEquiv = g.toLinearEquiv) : f = g := by
+  cases f with
+  | mk f hf =>
+    cases g with
+    | mk g hg =>
+      dsimp at h
+      cases h
+      rfl
+
+theorem ellFlowPhiQuadraticIsometry_trans (s t : ℝ) :
+    (ellFlowPhiQuadraticIsometry s).trans (ellFlowPhiQuadraticIsometry t) =
+      ellFlowPhiQuadraticIsometry (s + t) := by
+  apply isometryEquiv_ext
+  apply LinearEquiv.ext
+  intro X
+  change ellFlowPhi t (ellFlowPhi s X) = ellFlowPhi (s + t) X
+  rw [← Module.End.mul_apply, ← ellFlowPhi_add]
+  rw [add_comm]
+
+theorem ellFlowPhiQuadraticIsometry_symm (t : ℝ) :
+    (ellFlowPhiQuadraticIsometry t).symm =
+      ellFlowPhiQuadraticIsometry (-t) := by
+  apply isometryEquiv_ext
+  apply LinearEquiv.ext
+  intro X
+  change ellFlowPhi (-t) X = ellFlowPhi (-t) X
+  rfl
 
 end InfoGeometry.Lie.SplitOctonionEllQuadraticIsometry

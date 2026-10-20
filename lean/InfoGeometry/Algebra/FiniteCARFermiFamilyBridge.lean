@@ -61,4 +61,22 @@ theorem one_mode_gibbs_occupied_plus_vacant_eq_one
   field_simp [hden]
   ring
 
+/-! The normalized two-state Gibbs weights also expose their signed
+polarization directly in the native Fermi family. -/
+
+/-- The occupied-minus-vacant Gibbs polarization is the affine Fermi
+    simplex contrast. -/
+theorem one_mode_gibbs_polarization_eq_two_occupation_FD_sub_one
+    (β ε : ℝ) :
+    Real.exp (-β * ε) /
+        (∑ occ : OneModeState,
+          Real.exp (-β * (if occ then ε else 0))) -
+      1 /
+        (∑ occ : OneModeState,
+          Real.exp (-β * (if occ then ε else 0))) =
+      2 * occupation .FD (-(β * ε)) - 1 := by
+  have h_occ := one_mode_gibbs_occupied_weight_eq_occupation_FD β ε
+  have h_norm := one_mode_gibbs_occupied_plus_vacant_eq_one β ε
+  linarith
+
 end InfoGeometry.Algebra.FiniteSingleModeCAR

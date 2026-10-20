@@ -140,4 +140,51 @@ theorem mobiusComp_sub_ne_zero
     (mul_ne_zero T.det_ne_zero (labels.nonzero_den hik))
     (mul_ne_zero hgi hgk)
 
+omit [DecidableEq ι] in
+/-- The local flip block transforms covariantly under a nondegenerate Möbius relabeling.
+
+Each entry is obtained from the determinant-over-gauges difference formula; the four
+diagonal gauge factors therefore cancel exactly in the affine chart. -/
+theorem flipBlock_mobius_gauge_covariant
+    (T : MobiusMap ℚ)
+    (hgi : leftGauge T (labels.ζ i) ≠ 0)
+    (hgk : leftGauge T (labels.ζ k) ≠ 0)
+    (hgj : leftGauge T (labels.ζ j) ≠ 0)
+    (hgl : leftGauge T (labels.ζ l) ≠ 0) :
+    let ζ' : ι → ℚ := mobiusComp T labels.ζ
+    let A' := !![(ζ' i - ζ' l) / (ζ' i - ζ' k), (ζ' i - ζ' j) / (ζ' i - ζ' k);
+                 (ζ' l - ζ' k) / (ζ' i - ζ' k), (ζ' j - ζ' k) / (ζ' i - ζ' k)]
+    A' = !![leftGauge T (labels.ζ k), 0; 0, leftGauge T (labels.ζ i)] *
+         flipBlock labels i k j l hik *
+         !![(leftGauge T (labels.ζ l))⁻¹, 0; 0, (leftGauge T (labels.ζ j))⁻¹] := by
+  dsimp
+  have h_ik' := mobiusComp_sub_ne_zero labels i k hik T hgi hgk
+  have hgi' : T.γ * labels.ζ i + T.δ ≠ 0 := hgi
+  have hgk' : T.γ * labels.ζ k + T.δ ≠ 0 := hgk
+  have hgj' : T.γ * labels.ζ j + T.δ ≠ 0 := hgj
+  have hgl' : T.γ * labels.ζ l + T.δ ≠ 0 := hgl
+  simp only [mobiusComp]
+  ext a b
+  fin_cases a <;> fin_cases b
+  · simp only [Matrix.mul_apply, Fin.sum_univ_two]
+    rw [projectiveAction_sub T (labels.ζ i) (labels.ζ l) hgi hgl,
+      projectiveAction_sub T (labels.ζ i) (labels.ζ k) hgi hgk]
+    simp [flipBlock, leftGauge]
+    field_simp [T.det_ne_zero, hgi', hgk', hgl', labels.nonzero_den hik]
+  · simp only [Matrix.mul_apply, Fin.sum_univ_two]
+    rw [projectiveAction_sub T (labels.ζ i) (labels.ζ j) hgi hgj,
+      projectiveAction_sub T (labels.ζ i) (labels.ζ k) hgi hgk]
+    simp [flipBlock, leftGauge]
+    field_simp [T.det_ne_zero, hgi', hgk', hgj', labels.nonzero_den hik]
+  · simp only [Matrix.mul_apply, Fin.sum_univ_two]
+    rw [projectiveAction_sub T (labels.ζ l) (labels.ζ k) hgl hgk,
+      projectiveAction_sub T (labels.ζ i) (labels.ζ k) hgi hgk]
+    simp [flipBlock, leftGauge]
+    field_simp [T.det_ne_zero, hgi', hgk', hgl', labels.nonzero_den hik]
+  · simp only [Matrix.mul_apply, Fin.sum_univ_two]
+    rw [projectiveAction_sub T (labels.ζ j) (labels.ζ k) hgj hgk,
+      projectiveAction_sub T (labels.ζ i) (labels.ζ k) hgi hgk]
+    simp [flipBlock, leftGauge]
+    field_simp [T.det_ne_zero, hgi', hgk', hgj', labels.nonzero_den hik]
+
 end InfoGeometry.Topology.Delaunay

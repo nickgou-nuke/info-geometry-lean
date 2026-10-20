@@ -159,6 +159,29 @@ theorem colimitEnd_fac
     t.ι.app j ≫ colimitEnd η h = η.app j ≫ t.ι.app j :=
   h.fac (coconeMap η t) j
 
+/- Composition of natural stage endomorphisms is preserved by colimit descent. -/
+theorem colimitEnd_comp
+    (η μ : F ⟶ F) {t : Cocone F} (h : IsColimit t) :
+    colimitEnd η h ≫ colimitEnd μ h = colimitEnd (η ≫ μ) h := by
+  apply h.hom_ext
+  intro j
+  calc
+    t.ι.app j ≫ colimitEnd η h ≫ colimitEnd μ h =
+        (t.ι.app j ≫ colimitEnd η h) ≫ colimitEnd μ h := by
+          rw [Category.assoc]
+    _ = (η.app j ≫ t.ι.app j) ≫ colimitEnd μ h := by
+          rw [colimitEnd_fac]
+    _ = η.app j ≫ (t.ι.app j ≫ colimitEnd μ h) := by
+          rw [Category.assoc]
+    _ = η.app j ≫ (μ.app j ≫ t.ι.app j) := by
+          rw [colimitEnd_fac]
+    _ = (η.app j ≫ μ.app j) ≫ t.ι.app j := by
+          rw [Category.assoc]
+    _ = (η ≫ μ).app j ≫ t.ι.app j := by
+          rfl
+    _ = t.ι.app j ≫ colimitEnd (η ≫ μ) h := by
+          rw [colimitEnd_fac]
+
 /-- Canonical colimit comparisons intertwine the endomorphisms induced by a
     single natural endomorphism of the stage diagram. -/
 theorem isoOfIsColimit_hom_intertwines

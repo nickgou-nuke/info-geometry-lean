@@ -172,6 +172,16 @@ theorem ellipticFlowIK_mul_neg (θ : ℂ) :
     simpa [pow_two, sub_eq_add_neg] using Complex.cos_sq_add_sin_sq θ
   · ring
 
+theorem ellipticFlowIK_neg_mul (θ : ℂ) :
+    ellipticFlowIK (-θ) * ellipticFlowIK θ = scalar 1 := by
+  rw [ellipticFlowIK_coords, ellipticFlowIK_coords]
+  change mul _ _ = _
+  ext <;> simp [scalar, mul, Complex.cos_neg, Complex.sin_neg]
+  · ring_nf
+    rw [Complex.I_sq]
+    simpa [pow_two, sub_eq_add_neg] using Complex.cos_sq_add_sin_sq θ
+  · ring
+
 theorem hyperbolicFlowK_mul_neg (η : ℂ) :
     hyperbolicFlowK η * hyperbolicFlowK (-η) = scalar 1 := by
   rw [hyperbolicFlowK_coords, hyperbolicFlowK_coords]

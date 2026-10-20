@@ -112,6 +112,9 @@ theorem mobiusFlip_involutive (x : MobiusInterval) :
 
 abbrev MobiusBand := Carrier mobiusFlip
 
+instance mobiusBand_compactSpace : CompactSpace MobiusBand :=
+  Quotient.compactSpace
+
 def mobiusBandMk : Base × MobiusInterval → MobiusBand :=
   project mobiusFlip
 
@@ -131,6 +134,9 @@ theorem boundaryFlip_involutive (b : MobiusBoundaryBit) :
   cases b <;> rfl
 
 abbrev MobiusBoundary := Carrier boundaryFlip
+
+instance mobiusBoundary_compactSpace : CompactSpace MobiusBoundary :=
+  Quotient.compactSpace
 
 def boundaryEndpoint : MobiusBoundaryBit → MobiusInterval
   | false => ⟨0, by constructor <;> norm_num⟩

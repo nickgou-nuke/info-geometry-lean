@@ -369,6 +369,10 @@ def finiteGlideToLiteralHomeomorph :
 instance literalQuotient_t2 : T2Space KleinBrillouinQuotient :=
   finiteGlideToLiteralHomeomorph.t2Space
 
+instance literalQuotient_compactSpace [Fact (0 < 2 * Real.pi)] :
+    CompactSpace KleinBrillouinQuotient :=
+  Quotient.compactSpace
+
 theorem canonicalToOrbit_isQuotientMap :
     Topology.IsQuotientMap canonicalToOrbit :=
   Topology.IsQuotientMap.of_surjective_continuous

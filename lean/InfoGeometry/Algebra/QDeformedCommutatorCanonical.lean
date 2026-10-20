@@ -39,4 +39,16 @@ theorem comm_anti_relation_of_qCommutes (q X Y : A) (h : QCommutes q X Y) :
   rw [comm_eq_of_qCommutes q X Y h, anti_eq_of_qCommutes q X Y h]
   noncomm_ring
 
+/-- The commutator vanishes in the commuting endpoint `q = 1`. -/
+theorem comm_eq_zero_of_qCommutes_one (X Y : A) (h : QCommutes 1 X Y) :
+    comm X Y = 0 := by
+  rw [comm_eq_of_qCommutes 1 X Y h]
+  noncomm_ring
+
+/-- The anticommutator vanishes in the anticommuting endpoint `q = -1`. -/
+theorem anti_eq_zero_of_qCommutes_neg_one (X Y : A) (h : QCommutes (-1) X Y) :
+    anti X Y = 0 := by
+  rw [anti_eq_of_qCommutes (-1) X Y h]
+  noncomm_ring
+
 end InfoGeometry.Algebra.QDeformedCommutatorCanonical

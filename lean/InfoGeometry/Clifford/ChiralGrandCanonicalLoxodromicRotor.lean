@@ -360,4 +360,17 @@ theorem loxodromicRotor_commute (η ξ θ φ : ℝ) :
     _ = loxodromicRotor ξ φ * loxodromicRotor η θ :=
       loxodromicRotor_add ξ η φ θ
 
+theorem loxodromicConjugation_add (η ξ θ φ : ℝ) (ψ : Operator) :
+    loxodromicConjugation (η + ξ) (θ + φ) ψ =
+      loxodromicConjugation η θ (loxodromicConjugation ξ φ ψ) := by
+  have hInv :
+      loxodromicRotor (-(η + ξ)) (-(θ + φ)) =
+        loxodromicRotor (-ξ) (-φ) * loxodromicRotor (-η) (-θ) := by
+    rw [show -(η + ξ) = (-ξ) + (-η) by ring,
+      show -(θ + φ) = (-φ) + (-θ) by ring,
+      loxodromicRotor_add]
+  unfold loxodromicConjugation
+  rw [loxodromicRotor_add, hInv]
+  simp only [Matrix.mul_assoc]
+
 end InfoGeometry.Clifford.ChiralGrandCanonicalLoxodromicRotor

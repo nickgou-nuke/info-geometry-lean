@@ -335,6 +335,18 @@ theorem modularJ_comp_fromBlocks_eq_fromBlocks_comp_modularJ
     abel
 
 omit [CompleteSpace E] in
+/-- Conjugation by the modular swap exchanges the diagonal and off-diagonal blocks. -/
+theorem modularJ_conjugate_fromBlocks
+    (A11 A12 A21 A22 : E →L[𝕜] E) :
+    ((modularJ (𝕜 := 𝕜) (E := E)).comp
+        (fromBlocks A11 A12 A21 A22)).comp
+        (modularJ (𝕜 := 𝕜) (E := E)) =
+      fromBlocks A22 A21 A12 A11 := by
+  rw [modularJ_comp_fromBlocks_eq_fromBlocks_comp_modularJ]
+  rw [ContinuousLinearMap.comp_assoc, modularJ_involutive]
+  exact ContinuousLinearMap.comp_id _
+
+omit [CompleteSpace E] in
 /-- The identity operator on E × E in 2x2 block form. -/
 theorem fromBlocks_one :
     (1 : (E × E) →L[𝕜] (E × E)) = fromBlocks 1 0 0 1 := by

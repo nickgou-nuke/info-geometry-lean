@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import Mathlib
@@ -750,6 +756,75 @@ theorem comp_assoc {G : ChiralDigraph}
   intro r'
   change mk ((p'.append q').append r') = mk (p'.append (q'.append r'))
   rw [DirectedPath.append_assoc]
+
+end PresentedPathClass
+
+/-! ### Transport across presentation-preserving graph maps -/
+
+theorem map_contextualPathRewrite
+    {G H : ChiralDigraph} (F : ChiralDigraphHom G H)
+    (P : DirectedPathPresentation G) (Q : DirectedPathPresentation H)
+    (hcell : ∀ {u v : G.Vertex} {p q : DirectedPath G u v},
+      P.cell p q →
+        Q.cell (ChiralDigraphHom.mapPath F p) (ChiralDigraphHom.mapPath F q))
+    {u v : G.Vertex} {p q : DirectedPath G u v}
+    (h : ContextualPathRewrite P p q) :
+    ContextualPathRewrite Q
+      (ChiralDigraphHom.mapPath F p) (ChiralDigraphHom.mapPath F q) := by
+  induction h with
+  | generator h => exact .generator (hcell h)
+  | appendRight h r ih =>
+      simpa [ChiralDigraphHom.mapPath_append] using
+        (ContextualPathRewrite.appendRight ih (ChiralDigraphHom.mapPath F r))
+  | appendLeft p h ih =>
+      simpa [ChiralDigraphHom.mapPath_append] using
+        (ContextualPathRewrite.appendLeft (ChiralDigraphHom.mapPath F p) ih)
+
+namespace PresentedPathClass
+
+/-- A presentation-preserving graph map descends to the presented path
+quotients. -/
+def mapClass
+    {G H : ChiralDigraph} (F : ChiralDigraphHom G H)
+    (P : DirectedPathPresentation G) (Q : DirectedPathPresentation H)
+    (hcell : ∀ {u v : G.Vertex} {p q : DirectedPath G u v},
+      P.cell p q →
+        Q.cell (ChiralDigraphHom.mapPath F p) (ChiralDigraphHom.mapPath F q))
+    {u v : G.Vertex} :
+    PresentedPathClass P u v →
+      PresentedPathClass Q (F.mapVertex u) (F.mapVertex v) := by
+  refine Quot.lift
+    (fun p => PresentedPathClass.mk (ChiralDigraphHom.mapPath F p)) ?_
+  intro p q h
+  induction h with
+  | rel p q h =>
+      exact Quot.sound (Relation.EqvGen.rel _ _
+        (map_contextualPathRewrite F P Q hcell h))
+  | refl p => exact rfl
+  | symm p q h ih => exact ih.symm
+  | trans p q r h₁ h₂ ih₁ ih₂ => exact ih₁.trans ih₂
+
+/-- The descended map preserves path composition. -/
+theorem mapClass_comp
+    {G H : ChiralDigraph} (F : ChiralDigraphHom G H)
+    (P : DirectedPathPresentation G) (Q : DirectedPathPresentation H)
+    (hcell : ∀ {u v : G.Vertex} {p q : DirectedPath G u v},
+      P.cell p q →
+        Q.cell (ChiralDigraphHom.mapPath F p) (ChiralDigraphHom.mapPath F q))
+    {u v w : G.Vertex} (p : PresentedPathClass P u v)
+    (q : PresentedPathClass P v w) :
+    mapClass F P Q hcell (PresentedPathClass.comp P p q) =
+      PresentedPathClass.comp Q
+        (mapClass F P Q hcell p) (mapClass F P Q hcell q) := by
+  refine Quot.inductionOn p ?_
+  intro p'
+  refine Quot.inductionOn q ?_
+  intro q'
+  change PresentedPathClass.mk (ChiralDigraphHom.mapPath F (p'.append q')) =
+    PresentedPathClass.mk
+      ((ChiralDigraphHom.mapPath F p').append
+        (ChiralDigraphHom.mapPath F q'))
+  rw [ChiralDigraphHom.mapPath_append]
 
 end PresentedPathClass
 

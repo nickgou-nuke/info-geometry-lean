@@ -1,6 +1,6 @@
 ---
 name: opengauss
-description: Run OpenGauss-style project workflows natively in Codex CLI or Antigravity for this Lean repository: prove, check, refute, draft, review, checkpoint, refactor, golf, autoprove, formalize, autoformalize, handoff, discover, quarantine, or certify using the repository's 17-Trap Catalog, Gate 0-4 pipeline, and locked verification rules.
+description: "Run OpenGauss-style project workflows natively in Codex CLI or Antigravity for this Lean repository: prove, check, refute, draft, review, checkpoint, refactor, golf, autoprove, formalize, autoformalize, handoff, discover, quarantine, or certify using the repository's 17-Trap Catalog, Gate 0-4 pipeline, and locked verification rules."
 ---
 
 # OpenGauss workflow for Codex CLI & TeamAntigravity

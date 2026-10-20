@@ -103,6 +103,22 @@ theorem ellipticFlowI_mul_add (θ φ : ℂ) :
       ⟨Complex.cos φ, Complex.sin φ, 0, 0⟩ = _
   ext <;> simp [mul, Complex.cos_add, Complex.sin_add] <;> ring
 
+theorem ellipticFlowI_mul_neg (θ : ℂ) :
+    ellipticFlowI θ * ellipticFlowI (-θ) = scalar 1 := by
+  rw [ellipticFlowI_coords, ellipticFlowI_coords]
+  change mul _ _ = _
+  ext <;> simp [scalar, mul, Complex.cos_neg, Complex.sin_neg]
+  · simpa [pow_two, sub_eq_add_neg] using Complex.cos_sq_add_sin_sq θ
+  · ring
+
+theorem ellipticFlowI_neg_mul (θ : ℂ) :
+    ellipticFlowI (-θ) * ellipticFlowI θ = scalar 1 := by
+  rw [ellipticFlowI_coords, ellipticFlowI_coords]
+  change mul _ _ = _
+  ext <;> simp [scalar, mul, Complex.cos_neg, Complex.sin_neg]
+  · simpa [pow_two, sub_eq_add_neg] using Complex.cos_sq_add_sin_sq θ
+  · ring
+
 /-- Hyperbolic packets compose according to addition of their parameters. -/
 theorem hyperbolicFlowJ_mul_add (η ξ : ℂ) :
     hyperbolicFlowJ η * hyperbolicFlowJ ξ = hyperbolicFlowJ (η + ξ) := by
@@ -110,6 +126,22 @@ theorem hyperbolicFlowJ_mul_add (η ξ : ℂ) :
   change mul ⟨Complex.cosh η, 0, Complex.sinh η, 0⟩
       ⟨Complex.cosh ξ, 0, Complex.sinh ξ, 0⟩ = _
   ext <;> simp [mul, Complex.cosh_add, Complex.sinh_add] <;> ring
+
+theorem hyperbolicFlowJ_mul_neg (η : ℂ) :
+    hyperbolicFlowJ η * hyperbolicFlowJ (-η) = scalar 1 := by
+  rw [hyperbolicFlowJ_coords, hyperbolicFlowJ_coords]
+  change mul _ _ = _
+  ext <;> simp [scalar, mul, Complex.cosh_neg, Complex.sinh_neg]
+  · simpa [pow_two, sub_eq_add_neg] using Complex.cosh_sq_sub_sinh_sq η
+  · ring
+
+theorem hyperbolicFlowJ_neg_mul (η : ℂ) :
+    hyperbolicFlowJ (-η) * hyperbolicFlowJ η = scalar 1 := by
+  rw [hyperbolicFlowJ_coords, hyperbolicFlowJ_coords]
+  change mul _ _ = _
+  ext <;> simp [scalar, mul, Complex.cosh_neg, Complex.sinh_neg]
+  · simpa [pow_two, sub_eq_add_neg] using Complex.cosh_sq_sub_sinh_sq η
+  · ring
 
 /- The second square-plus generator has the same additive flow law. -/
 theorem hyperbolicFlowK_mul_add (η ξ : ℂ) :

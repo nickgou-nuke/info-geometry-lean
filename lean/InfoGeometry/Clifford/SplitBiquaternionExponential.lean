@@ -119,6 +119,22 @@ theorem hyperbolicFlowK_mul_add (η ξ : ℂ) :
       ⟨Complex.cosh ξ, 0, 0, Complex.sinh ξ⟩ = _
   ext <;> simp [mul, Complex.cosh_add, Complex.sinh_add] <;> ring
 
+theorem hyperbolicFlowK_mul_neg (η : ℂ) :
+    hyperbolicFlowK η * hyperbolicFlowK (-η) = scalar 1 := by
+  rw [hyperbolicFlowK_coords, hyperbolicFlowK_coords]
+  change mul _ _ = _
+  ext <;> simp [scalar, mul, Complex.cosh_neg, Complex.sinh_neg]
+  · simpa [pow_two, sub_eq_add_neg] using Complex.cosh_sq_sub_sinh_sq η
+  · ring
+
+theorem hyperbolicFlowK_neg_mul (η : ℂ) :
+    hyperbolicFlowK (-η) * hyperbolicFlowK η = scalar 1 := by
+  rw [hyperbolicFlowK_coords, hyperbolicFlowK_coords]
+  change mul _ _ = _
+  ext <;> simp [scalar, mul, Complex.cosh_neg, Complex.sinh_neg]
+  · simpa [pow_two, sub_eq_add_neg] using Complex.cosh_sq_sub_sinh_sq η
+  · ring
+
 theorem norm_ellipticFlowIK (θ : ℂ) :
     norm (ellipticFlowIK θ) = 1 := by
   rw [ellipticFlowIK_coords]

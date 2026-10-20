@@ -15,6 +15,8 @@ open KleinBottleCanonicalCarrier
 open KleinBottleOrbitQuotient
 open CompactMappingTorus
 
+local instance : Fact (0 < 2 * Real.pi) := ⟨by positivity⟩
+
 /-- The strip-to-torus representative map before quotienting. -/
 def stripToOrbitRepresentative (p : Base × MomentumCircle) :
     BrillouinTorus :=
@@ -74,6 +76,52 @@ theorem canonicalToOrbit_continuous :
       | symm p q _ ih => exact ih.symm
       | trans p q r _ _ ih₁ ih₂ => exact ih₁.trans ih₂)
     (quotientMap_continuous.comp stripToOrbitRepresentative_continuous)
+
+theorem canonicalToOrbit_surjective :
+    Function.Surjective canonicalToOrbit := by
+  intro q
+  refine Quotient.inductionOn q ?_
+  rintro ⟨a, b⟩
+  let r : ℝ := (AddCircle.equivIco (2 * Real.pi) 0 a).1
+  have hr : r ∈ Set.Ico (0 : ℝ) (2 * Real.pi) :=
+    by simpa [r] using (AddCircle.equivIco (2 * Real.pi) 0 a).2
+  have hcoe : (r : MomentumCircle) = a :=
+    AddCircle.coe_equivIco
+  by_cases h : r ≤ Real.pi
+  · let t : Base := ⟨r / Real.pi, by
+      constructor
+      · have hpi : 0 < Real.pi := Real.pi_pos
+        have hr0 : 0 ≤ r := hr.1
+        exact div_nonneg hr0 (le_of_lt hpi)
+      · have hpi : 0 < Real.pi := Real.pi_pos
+        exact (div_le_one hpi).2 h⟩
+    refine ⟨canonicalMk (t, b), ?_⟩
+    change quotientMap
+      ((((Real.pi * (r / Real.pi) : ℝ) : MomentumCircle), b)) = quotientMap (a, b)
+    have hreal : Real.pi * (r / Real.pi) = r := by
+      field_simp
+    rw [hreal, hcoe]
+  · have hpi : Real.pi < r := lt_of_not_ge h
+    let t : Base := ⟨(r - Real.pi) / Real.pi, by
+      constructor
+      · exact div_nonneg (by linarith [hpi]) (le_of_lt Real.pi_pos)
+      · apply (div_le_one Real.pi_pos).2
+        linarith [hr.2]
+      ⟩
+    refine ⟨canonicalMk (t, -b), ?_⟩
+    change quotientMap (stripToOrbitRepresentative (t, -b)) = quotientMap (a, b)
+    rw [← quotientMap_glide (a, b)]
+    congr 1
+    apply Prod.ext
+    · dsimp [stripToOrbitRepresentative, t, torusGlide]
+      have hreal : Real.pi * ((r - Real.pi) / Real.pi) = r - Real.pi := by
+        field_simp
+      rw [hreal, AddCircle.coe_add, AddCircle.coe_neg]
+      rw [hcoe]
+      have hpi0 : (Real.pi : MomentumCircle) + Real.pi = 0 :=
+        pi_add_pi_eq_zero
+      simp [sub_eq_add_neg, add_assoc, hpi0]
+    · rfl
 
 theorem canonicalToOrbit_endpoint (x : MomentumCircle) :
     canonicalToOrbit (canonicalMk (⟨0, by constructor <;> norm_num⟩, x)) =

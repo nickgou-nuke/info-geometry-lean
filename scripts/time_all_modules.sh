@@ -14,7 +14,9 @@ for FILE in $MODULES; do
     
     # We run lake build for this single target
     # Time output goes to a temporary file, build log goes to logs/
-    /usr/bin/time -f "%e" lake build "$TARGET" > "logs/$TARGET.log" 2> "logs/${TARGET}_time.tmp"
+    /usr/bin/time -f "%e" \
+        python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock "$TARGET" \
+        > "logs/$TARGET.log" 2> "logs/${TARGET}_time.tmp"
     
     # Check if the build completely failed (i.e. error)
     if [ ${PIPESTATUS[0]} -ne 0 ]; then

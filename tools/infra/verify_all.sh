@@ -4,7 +4,8 @@ set -e
 # Unified Multi-Engine Verification Pipeline
 
 echo "=== [1/8] Verifying Lean 4 Formalization ==="
-lake build InfoGeometry.Physics.ZornNuclearState InfoGeometry.Canonical.CliffordColimitDynamics
+python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock \
+  InfoGeometry.Physics.ZornNuclearState InfoGeometry.Canonical.CliffordColimitDynamics
 
 echo "=== [2/8] Running SageMath spinor stabilizers & metrics ==="
 sage tools/sage/tkk_d4.sage

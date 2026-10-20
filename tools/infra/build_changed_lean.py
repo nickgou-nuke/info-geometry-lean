@@ -160,6 +160,11 @@ def parse_args() -> argparse.Namespace:
         action="store_false",
         help="Fail fast if the build lock is held.",
     )
+    parser.add_argument(
+        "--wfail",
+        action="store_true",
+        help="Pass --wfail to Lake for the selected changed-owner modules.",
+    )
     return parser.parse_args()
 
 
@@ -186,7 +191,11 @@ def main() -> int:
         print("[build-changed-lean] dry-run only; no build executed", flush=True)
         return 0
 
-    return run_locked_lake_build(modules, wait_for_lock=args.wait_for_build_lock)
+    return run_locked_lake_build(
+        modules,
+        wait_for_lock=args.wait_for_build_lock,
+        wfail=args.wfail,
+    )
 
 
 if __name__ == "__main__":

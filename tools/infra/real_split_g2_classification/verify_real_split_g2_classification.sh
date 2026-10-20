@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
-~/.elan/bin/lake build InfoGeometry.Lie.RealSplitOctonionG2Classification InfoGeometry.Canonical.SplitOctonionAutomorphism
+python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock \
+  InfoGeometry.Lie.RealSplitOctonionG2Classification InfoGeometry.Canonical.SplitOctonionAutomorphism
 ~/.elan/bin/lake env lean lean/InfoGeometry/All.lean
 python3 tools/sympy/split_octonion_derivation_classification.py
 python3 tools/infra/real_split_g2_classification/real_split_g2_exact_ca.py

@@ -5,10 +5,12 @@ if ! command -v lake >/dev/null 2>&1; then
   echo 'ERROR: lake is not installed or not on PATH; no Lean elaboration executed.' >&2
   exit 127
 fi
-lake build InfoGeometry.Streaming.StreamingBoundaryPristineChain
+python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock \
+  InfoGeometry.Streaming.StreamingBoundaryPristineChain
 log=$(mktemp)
 trap 'rm -f "$log"' EXIT
-lake env lean lean/InfoGeometry/Streaming/StreamingBoundaryAudit.lean | tee "$log"
+python3 tools/infra/run_locked_lean.py --wait-for-build-lock \
+  lean/InfoGeometry/Streaming/StreamingBoundaryAudit.lean | tee "$log"
 python3 - "$log" <<'PY'
 from pathlib import Path
 import re,sys

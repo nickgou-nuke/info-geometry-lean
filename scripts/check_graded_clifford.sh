@@ -7,8 +7,10 @@ if ! command -v lake >/dev/null 2>&1; then
   printf '%s\n' 'NOT KERNEL CHECKED: lake is not installed or not on PATH.' | tee "$OUT/lean-attempt.log"
   exit 127
 fi
-lake build InfoGeometry.Canonical.GradedCliffordPeirceReconstruction 2>&1 | tee "$OUT/build.log"
-lake env lean lean/InfoGeometry/Canonical/GradedCliffordPeirceAudit.lean 2>&1 | tee "$OUT/axioms.log"
+python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock \
+  InfoGeometry.Canonical.GradedCliffordPeirceReconstruction 2>&1 | tee "$OUT/build.log"
+python3 tools/infra/run_locked_lean.py --wait-for-build-lock \
+  lean/InfoGeometry/Canonical/GradedCliffordPeirceAudit.lean 2>&1 | tee "$OUT/axioms.log"
 python3 - "$OUT/axioms.log" <<'PY'
 import re,sys
 from pathlib import Path

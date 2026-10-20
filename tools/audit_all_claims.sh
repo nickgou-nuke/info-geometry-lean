@@ -52,7 +52,8 @@ fi
 
 # Try to build primary KMS file
 if [ -f lean/InfoGeometry/Algebra/CuntzKMSState.lean ]; then
-    if timeout 120 lake build InfoGeometry.Algebra.CuntzKMSState >/dev/null 2>&1; then
+    if timeout 120 python3 tools/infra/run_locked_lake_build.py \
+        --wait-for-build-lock InfoGeometry.Algebra.CuntzKMSState >/dev/null 2>&1; then
         echo "  ✓ Builds successfully"
         FIXES_APPLIED=$((FIXES_APPLIED + 1))
     else

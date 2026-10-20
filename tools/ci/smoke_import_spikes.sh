@@ -5,10 +5,10 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT"
 
 echo "[smoke] building InfoGeometry.Projective.All"
-lake build InfoGeometry.Projective.All
+python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock InfoGeometry.Projective.All
 
 echo "[smoke] building InfoGeometry.Topology.All"
-lake build InfoGeometry.Topology.All
+python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock InfoGeometry.Topology.All
 
 if [[ "${STRICT_PROOF_SURFACE:-0}" == "1" ]]; then
   echo "[smoke] strict proof-surface scan"

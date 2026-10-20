@@ -11,7 +11,8 @@ python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock InfoGeometry.
 
 log=$(mktemp)
 trap 'rm -f "$log"' EXIT
-lake env lean lean/InfoGeometry/Streaming/TwoBoundaryWeakAudit.lean | tee "$log"
+python3 tools/infra/run_locked_lean.py --wait-for-build-lock \
+  lean/InfoGeometry/Streaming/TwoBoundaryWeakAudit.lean | tee "$log"
 
 python3 - "$log" <<'PY'
 from pathlib import Path

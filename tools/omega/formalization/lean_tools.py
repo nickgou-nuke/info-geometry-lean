@@ -44,11 +44,21 @@ class LeanTools:
     
     async def build(self, module: str) -> LeanResult:
         """Build a Lean 4 module with timeout"""
-        return await self._run_command(["lake", "build", module], self.config.lake_timeout_seconds)
+        return await self._run_command(
+            ["python3", "tools/infra/run_locked_lake_build.py", "--wait-for-build-lock", module],
+            self.config.lake_timeout_seconds,
+        )
     
     async def build_all(self) -> LeanResult:
-        """Build entire project"""
-        return await self._run_command(["lake", "build"], self.config.lake_timeout_seconds)
+        """Build changed owner modules incrementally.
+
+        A repository-wide build is an explicit release operation and is not
+        the default for the Omega development loop.
+        """
+        return await self._run_command(
+            ["python3", "tools/infra/build_changed_lean.py", "--wait-for-build-lock"],
+            self.config.lake_timeout_seconds,
+        )
     
     async def check_file(self, file_path: str) -> LeanResult:
         """Type-check a single Lean file"""
@@ -57,7 +67,7 @@ class LeanTools:
             return LeanResult(False, "", [f"File not found: {file_path}"], [], 0.0)
         
         return await self._run_command(
-            ["lake", "env", "lean", str(full_path)],
+            ["python3", "tools/infra/run_locked_lean.py", "--wait-for-build-lock", str(full_path)],
             self.config.lean_timeout_seconds
         )
     
@@ -123,7 +133,10 @@ class LeanTools:
     
     async def get_compilation_stats(self) -> Dict[str, Any]:
         """Get compilation statistics"""
-        result = await self._run_command(["lake", "build"], self.config.lake_timeout_seconds)
+        result = await self._run_command(
+            ["python3", "tools/infra/build_changed_lean.py", "--wait-for-build-lock"],
+            self.config.lake_timeout_seconds,
+        )
         
         stats = {
             "success": result.success,

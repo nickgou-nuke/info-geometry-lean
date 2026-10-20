@@ -109,7 +109,8 @@ echo ""
 if command -v lake &> /dev/null; then
     echo "Building Lean 4 formalization..."
     cd ../../  # Go to repo root
-    lake build InfoGeometry.Canonical.BostConnesLiouvilleModularComm
+    python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock \
+      InfoGeometry.Canonical.BostConnesLiouvilleModularComm
     echo "✅ Lean 4: BUILD COMPLETE"
     cd tools/bost_connes
 else

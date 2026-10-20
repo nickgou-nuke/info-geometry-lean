@@ -52,10 +52,10 @@ python3 tools/run_locked_lake_build.py --wait-for-build-lock InfoGeometryCanonic
 python3 tools/run_locked_lake_build.py --wait-for-build-lock InfoGeometryLLM
 
 echo "[strict-check] elaborating InfoGeometry/Library.lean"
-lake env lean lean/InfoGeometry/Library.lean
+python3 tools/infra/run_locked_lean.py --wait-for-build-lock lean/InfoGeometry/Library.lean
 
 echo "[strict-check] elaborating canonical root InfoGeometry.lean"
-lake env lean lean/InfoGeometry.lean
+python3 tools/infra/run_locked_lean.py --wait-for-build-lock lean/InfoGeometry.lean
 
 INFOGEOMETRY_PATHS=(lean/InfoGeometry.lean lean/InfoGeometry/Library.lean lean/InfoGeometry)
 CANONICAL_PATHS=(lean/InfoGeometry.lean lean/InfoGeometry/Library.lean lean/InfoGeometry/Canonical)
@@ -215,8 +215,8 @@ CLOSURE_DEBT_BUILD_TARGETS=(
 
 echo "[strict-check] strict-building closure-debt target trunks"
 for target in "${CLOSURE_DEBT_BUILD_TARGETS[@]}"; do
-  echo "  - lake build ${target}"
-  lake build "${target}"
+  echo "  - locked incremental build ${target}"
+  python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock "${target}"
 done
 
 echo "[strict-check] enforcing Pauli seal directives (I-XI) on all InfoGeometry modules"

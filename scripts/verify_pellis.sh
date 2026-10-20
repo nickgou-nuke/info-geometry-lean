@@ -17,7 +17,8 @@ PASSED=0
 
 # 1. Lean4 build
 echo "[1/8] Lean4 formalization..."
-if ~/.elan/bin/lake build InfoGeometry.Physics.PellisFineStructure 2>&1 | grep -q "completed"; then
+if python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock \
+    InfoGeometry.Physics.PellisFineStructure 2>&1 | grep -q "completed"; then
     echo "  ✓ Lean4: PASSED"
     ((PASSED++))
 else

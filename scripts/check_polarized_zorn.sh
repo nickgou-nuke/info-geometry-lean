@@ -8,7 +8,8 @@ if ! command -v lake >/dev/null 2>&1; then
   exit 127
 fi
 python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock InfoGeometry.Canonical.PolarizedZornReconstruction
-lake env lean lean/InfoGeometry/Canonical/PolarizedZornReconstructionAudit.lean 2>&1 | tee "$OUT/axioms.log"
+python3 tools/infra/run_locked_lean.py --wait-for-build-lock \
+  lean/InfoGeometry/Canonical/PolarizedZornReconstructionAudit.lean 2>&1 | tee "$OUT/axioms.log"
 python3 - "$OUT/axioms.log" <<'PY'
 import re,sys
 from pathlib import Path

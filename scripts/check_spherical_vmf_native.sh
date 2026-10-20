@@ -34,12 +34,13 @@ if bad:
     raise SystemExit("Custom primitive declarations found:\n" + "\n".join(bad))
 PY
 
-lake build InfoGeometry.LLM
+python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock InfoGeometry.LLM
 
 log=$(mktemp)
 trap 'rm -f "$log"' EXIT
 
-lake env lean lean/InfoGeometry/LLM/SphericalVMFNativeAudit.lean | tee "$log"
+python3 tools/infra/run_locked_lean.py --wait-for-build-lock \
+  lean/InfoGeometry/LLM/SphericalVMFNativeAudit.lean | tee "$log"
 
 python3 - "$log" <<'PY'
 from pathlib import Path

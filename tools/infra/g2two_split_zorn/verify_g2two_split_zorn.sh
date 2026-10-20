@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
-~/.elan/bin/lake build InfoGeometry.Algebra.Zorn.G2TwoSplitZorn
-~/.elan/bin/lake build InfoGeometry.Algebra.Zorn.RealSplitOctonionG2Classification
+python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock \
+  InfoGeometry.Algebra.Zorn.G2TwoSplitZorn
+python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock \
+  InfoGeometry.Algebra.Zorn.RealSplitOctonionG2Classification
 ~/.elan/bin/lake env lean lean/InfoGeometry/Algebra/All.lean
 ~/.elan/bin/lake env lean lean/InfoGeometry/OperatorAlgebra/G2TwoAutomorphismTheorem.lean
 ~/.elan/bin/lake env lean lean/InfoGeometry/OperatorAlgebra/SplitOctonionG2TypeGenerators.lean

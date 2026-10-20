@@ -76,7 +76,7 @@ def main() -> int:
     if args.changed and args.targets:
         print("--changed cannot be combined with positional targets", file=sys.stderr)
         return 2
-    targets = [] if args.all_default_targets else (args.targets or ["InfoGeometry.All"])
+    targets = [] if args.all_default_targets else args.targets
     # No-target invocations are development builds: resolve changed owners
     # instead of silently expanding to the repository umbrella target.
     if args.changed or (not args.targets and not args.all_default_targets):
@@ -86,8 +86,10 @@ def main() -> int:
         if args.wait_for_build_lock:
             cmd.append("--wait-for-build-lock")
         if args.lake_args:
-            print("--changed does not accept Lake options; pass them to a concrete owner build", file=sys.stderr)
+            print("--changed does not accept positional Lake options; use wrapper flags", file=sys.stderr)
             return 2
+        if args.wfail:
+            cmd.append("--wfail")
         return subprocess.run(cmd, cwd=Path(__file__).resolve().parents[2]).returncode
     return run_locked_lake_build(
         [*targets, *args.lake_args],

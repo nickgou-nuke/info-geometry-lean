@@ -8,7 +8,8 @@ fi
 python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock InfoGeometry.Canonical.PolarizedBoundary55PristineChain
 log=$(mktemp)
 trap 'rm -f "$log"' EXIT
-lake env lean lean/InfoGeometry/Canonical/PolarizedBoundary55Audit.lean | tee "$log"
+python3 tools/infra/run_locked_lean.py --wait-for-build-lock \
+  lean/InfoGeometry/Canonical/PolarizedBoundary55Audit.lean | tee "$log"
 python3 - "$log" <<'PY'
 import re,sys
 from pathlib import Path

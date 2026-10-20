@@ -86,6 +86,17 @@ class LockedLakeBuildTests(unittest.TestCase):
             with self.assertRaises(SystemExit):
                 parse_args(["--wait-for-build-lok"])
 
+    def test_no_target_mode_is_incremental_and_preserves_wfail(self):
+        args = parse_args(["--wait-for-build-lock", "--wfail"])
+        self.assertEqual(args.targets, [])
+        self.assertTrue(args.wfail)
+        self.assertFalse(args.all_default_targets)
+
+    def test_explicit_default_targets_mode_is_distinct(self):
+        args = parse_args(["--wait-for-build-lock", "--all-default-targets"])
+        self.assertTrue(args.all_default_targets)
+        self.assertEqual(args.targets, [])
+
     def test_busy_lock_does_not_launch_lake(self):
         busy = build.BuildLockBusyError(Path("/tmp/test-build.lock"), {"pid": 12})
         with (

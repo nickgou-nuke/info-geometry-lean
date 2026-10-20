@@ -101,7 +101,11 @@ def changed_lean_files(root: Path, *, include_untracked: bool) -> list[Path]:
 
 def run_file_gate(root: Path, path: Path) -> int:
     rel = path.resolve().relative_to(root.resolve())
-    completed = subprocess.run(["lake", "env", "lean", str(rel)], cwd=root, check=False)
+    completed = subprocess.run(
+        [sys.executable, "tools/infra/run_locked_lean.py", "--wait-for-build-lock", str(rel)],
+        cwd=root,
+        check=False,
+    )
     return completed.returncode
 
 
@@ -143,7 +147,7 @@ def main() -> int:
         if not args.skip_file_gates:
             for path in files:
                 rel = path.relative_to(root)
-                print(f"[changed-verify] would run: lake env lean {rel}", flush=True)
+            print(f"[changed-verify] would run locked Lean elaboration: {rel}", flush=True)
         if not args.skip_owner_build and modules:
             print("[changed-verify] would run locked owner build", flush=True)
         if umbrella:
@@ -156,7 +160,7 @@ def main() -> int:
     if not args.skip_file_gates:
         for path in files:
             rel = path.relative_to(root)
-            print(f"[changed-verify] file gate: lake env lean {rel}", flush=True)
+            print(f"[changed-verify] file gate (locked): {rel}", flush=True)
             code = run_file_gate(root, path)
             if code != 0:
                 return code

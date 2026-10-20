@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Notation
@@ -47,10 +53,42 @@ def affineChart (zi zk x : K) : K :=
 def projectiveCrossRatio (a b c d : K) : K :=
   ((a - b) * (c - d)) / ((a - c) * (b - d))
 
+/-- Affine changes of coordinate leave the projective cross-ratio unchanged.
+
+The two nonzero hypotheses are exactly the denominator conditions for the
+chosen cross-ratio chart; the transformed denominators are nonzero because
+the scale factor is nonzero. -/
+theorem projectiveCrossRatio_affine_invariant
+    (a b c d r t : K)
+    (hr : r ≠ 0)
+    (hac : a - c ≠ 0)
+    (hbd : b - d ≠ 0) :
+    projectiveCrossRatio (r * a + t) (r * b + t) (r * c + t) (r * d + t) =
+      projectiveCrossRatio a b c d := by
+  unfold projectiveCrossRatio
+  have hab : (r * a + t) - (r * b + t) = r * (a - b) := by ring
+  have hcd : (r * c + t) - (r * d + t) = r * (c - d) := by ring
+  have hac' : (r * a + t) - (r * c + t) = r * (a - c) := by ring
+  have hbd' : (r * b + t) - (r * d + t) = r * (b - d) := by ring
+  rw [hab, hcd, hac', hbd']
+  field_simp [hr, hac, hbd]
+
 /-- The local `2 × 2` Rohozhkin flip block for `ik → jl`. -/
 def rohozhkinFlipBlock (zi zk zj zl : K) : Matrix (Fin 2) (Fin 2) K :=
   !![(zi - zl) / (zi - zk), (zi - zj) / (zi - zk);
     (zl - zk) / (zi - zk), (zj - zk) / (zi - zk)]
+
+/-- The matrix carrier used by the flip block is genuinely noncommutative. -/
+def matrixE01 : Matrix (Fin 2) (Fin 2) K := !![0, 1; 0, 0]
+
+def matrixE10 : Matrix (Fin 2) (Fin 2) K := !![0, 0; 1, 0]
+
+theorem matrixE01_mul_E10_ne_mul_E10_E01 :
+    matrixE01 (K := K) * matrixE10 (K := K) ≠
+      matrixE10 (K := K) * matrixE01 (K := K) := by
+  intro h
+  have h00 := congrArg (fun M : Matrix (Fin 2) (Fin 2) K => M 0 0) h
+  norm_num [matrixE01, matrixE10, Matrix.mul_apply, Fin.sum_univ_two] at h00
 
 lemma one_sub_affineChart (zi zk x : K) (h : zi - zk ≠ 0) :
     1 - affineChart zi zk x = (zi - x) / (zi - zk) := by

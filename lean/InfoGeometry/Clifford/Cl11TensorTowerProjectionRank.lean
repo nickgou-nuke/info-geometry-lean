@@ -1,6 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Canonical.RealProjectionRank
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl11TensorTower
+import InfoGeometry.Clifford.Cl11TensorTowerKroneckerRangeRank
 
 /-!
 # Finite-stage projection-rank data for the real Clifford tower
@@ -46,6 +53,17 @@ noncomputable def normalizedMatrixRank
     (n : ℕ) (A : MatStage n) : ℚ :=
   (matrixRangeRank n A : ℚ) / (2 : ℚ) ^ n
 
+theorem matrixRangeRank_embed (n : ℕ) (A : MatStage n) :
+    matrixRangeRank (n + 1) (stageEmbed n A) =
+      2 * matrixRangeRank n A := by
+  unfold matrixRangeRank
+  change Module.finrank ℝ (LinearMap.range (Matrix.toLin' (stageEmbed n A))) =
+    2 * Module.finrank ℝ (LinearMap.range (Matrix.toLin' A))
+  rw [Matrix.toLin'_apply', Matrix.toLin'_apply']
+  change Module.finrank ℝ (LinearMap.range (stageLinearMap (n + 1) (matStageEmbed n A))) =
+    2 * Module.finrank ℝ (LinearMap.range (stageLinearMap n A))
+  exact stageRank_embed n A
+
 theorem normalizedMatrixRank_embed_of_rank_transition
     (n : ℕ) (A : MatStage n)
     (h_rank : matrixRangeRank (n + 1) (stageEmbed n A) =
@@ -57,5 +75,11 @@ theorem normalizedMatrixRank_embed_of_rank_transition
   field_simp
   norm_num [Nat.cast_mul]
   ring
+
+@[simp] theorem normalizedMatrixRank_embed (n : ℕ) (A : MatStage n) :
+    normalizedMatrixRank (n + 1) (stageEmbed n A) =
+      normalizedMatrixRank n A := by
+  exact normalizedMatrixRank_embed_of_rank_transition n A
+    (matrixRangeRank_embed n A)
 
 end InfoGeometry.Clifford.Cl11TensorTower

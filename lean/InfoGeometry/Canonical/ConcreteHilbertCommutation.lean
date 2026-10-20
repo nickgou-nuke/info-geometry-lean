@@ -376,6 +376,30 @@ def K_lp (ψ : H_lp E) : H_lp E :=
     rw [h1] at h3
     exact summable_K_raw ψ h3⟩
 
+/-- The native `lp` phase-axis operator preserves the `L²` norm. -/
+lemma K_lp_norm_eq (ψ : H_lp E) :
+    ‖K_lp (E := E) ψ‖ = ‖ψ‖ := by
+  have hp : 0 < (2 : ENNReal).toReal := by norm_num
+  have hpoint : (fun x : BinaryCantorBoundary =>
+      ‖K_raw ψ x‖ ^ (2 : ℝ)) =
+      (fun x : BinaryCantorBoundary => ‖ψ x‖ ^ (2 : ℝ)) := by
+    ext x
+    dsimp [K_raw]
+    rw [complex_i_norm]
+  have hpowK : ‖K_lp (E := E) ψ‖ ^ (2 : ℝ) =
+      ∑' x : BinaryCantorBoundary, ‖K_lp (E := E) ψ x‖ ^ (2 : ℝ) := by
+    simpa only [show (2 : ENNReal).toReal = (2 : ℝ) by rfl] using
+      (lp.norm_rpow_eq_tsum hp (K_lp (E := E) ψ))
+  have hpowψ : ‖ψ‖ ^ (2 : ℝ) =
+      ∑' x : BinaryCantorBoundary, ‖ψ x‖ ^ (2 : ℝ) := by
+    simpa only [show (2 : ENNReal).toReal = (2 : ℝ) by rfl] using
+      (lp.norm_rpow_eq_tsum hp ψ)
+  have hpow : ‖K_lp (E := E) ψ‖ ^ (2 : ℝ) = ‖ψ‖ ^ (2 : ℝ) := by
+    rw [hpowK, hpowψ]
+    have htsum := congrArg (fun f : BinaryCantorBoundary → ℝ => ∑' x, f x) hpoint
+    simpa only [K_lp, K_raw] using htsum
+  exact (Real.rpow_left_inj (lp.norm_nonneg' _) (lp.norm_nonneg' _) (by norm_num)).mp hpow
+
 /--
 Lift the pointwise commutation here from the `PiLp` carrier to equality of
 continuous linear maps on the Hilbert completion.

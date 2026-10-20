@@ -386,6 +386,14 @@ def S_left_lp_clm : H_lp E →L[ℝ] H_lp E :=
     rw [S_left_lp_norm_eq]
     simp)
 
+/-- The continuous-linear branch is an isometry of the completed boundary carrier. -/
+theorem S_left_lp_clm_isometry :
+    Isometry (S_left_lp_clm (E := E)) := by
+  intro ψ φ
+  have hnorm := S_left_lp_norm_eq (E := E) (ψ - φ)
+  rw [edist_dist, edist_dist, dist_eq_norm, dist_eq_norm, ← map_sub]
+  exact congrArg ENNReal.ofReal hnorm
+
 def K_raw (ψ : BinaryCantorBoundary → DoubledSpace E) (x : BinaryCantorBoundary) : DoubledSpace E :=
   clockAxis (E := E) (ψ x)
 

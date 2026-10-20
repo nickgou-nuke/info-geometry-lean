@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.CategoryTheory.Limits.FilteredColimitCommutesFiniteLimit
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.CategoryTheory.Limits.Shapes.FiniteLimits
@@ -133,6 +139,16 @@ theorem lift_stageProjection
     (G : K₁ ⥤ ModuleCat.{u} R) (t : Cone G) (k : K₁) :
     liftProjectiveLimit R G t ≫ stageProjection R G k = t.π.app k := by
   exact limit.lift_π t k
+
+theorem liftProjectiveLimit_unique
+    (G : K₁ ⥤ ModuleCat.{u} R) (t : Cone G)
+    (f : t.pt ⟶ ModuleProjectiveLimit R G)
+    (h : ∀ k : K₁,
+      f ≫ stageProjection R G k = t.π.app k) :
+    f = liftProjectiveLimit R G t := by
+  apply limit.hom_ext
+  intro k
+  exact (h k).trans (lift_stageProjection R G t k).symm
 
 end ModuleDiagramLimits
 

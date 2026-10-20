@@ -37,4 +37,33 @@ theorem reverse_mode_chain_rule
   · exact hg.comp x hf
   · exact ContinuousLinearMap.adjoint_comp g' f'
 
+/-- Reverse-mode differentiation for a real-valued loss: the gradient of the
+composite is the adjoint of the stage derivative applied to the loss gradient.
+This is a local differential statement, not a result about training or
+optimization. -/
+theorem gradient_comp_reverse_mode
+    {E F : Type*} [NormedAddCommGroup E] [NormedAddCommGroup F]
+    [InnerProductSpace ℝ E] [InnerProductSpace ℝ F]
+    [CompleteSpace E] [CompleteSpace F]
+    {f : E → F} {loss : F → ℝ} {x : E}
+    {Df : E →L[ℝ] F} {gradLoss : F}
+    (hf : HasFDerivAt f Df x)
+    (hloss : HasGradientAt loss gradLoss (f x)) :
+    HasGradientAt (loss ∘ f)
+      (ContinuousLinearMap.adjoint Df gradLoss) x := by
+  have hchain := hloss.hasFDerivAt.comp x hf
+  have hdual : InnerProductSpace.toDual ℝ E
+        (ContinuousLinearMap.adjoint Df gradLoss) =
+      (InnerProductSpace.toDual ℝ F gradLoss).comp Df := by
+    ext v
+    simpa only [InnerProductSpace.toDual_apply_apply,
+      ContinuousLinearMap.comp_apply] using
+      (ContinuousLinearMap.adjoint_inner_left Df v gradLoss)
+  have hresult : HasFDerivAt (loss ∘ f)
+      (InnerProductSpace.toDual ℝ E
+        (ContinuousLinearMap.adjoint Df gradLoss)) x := by
+    rw [hdual]
+    exact hchain
+  simpa only [LinearIsometryEquiv.symm_apply_apply] using hresult.hasGradientAt
+
 end InfoGeometry.Canonical.DifferentialAdjointChainRule

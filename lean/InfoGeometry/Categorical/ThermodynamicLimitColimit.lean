@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.CategoryTheory.Category.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.CategoryTheory.Limits.HasLimits
@@ -36,5 +42,13 @@ The universal property of the thermodynamic limit: it is the initial cocone.
 -/
 noncomputable def ThermodynamicLimitIsColimit : IsColimit (ThermodynamicLimitCocone F) :=
   colimit.isColimit F
+
+theorem thermodynamicLimit_desc_unique
+    (t : Cocone F)
+    (f : ThermodynamicLimit F ⟶ t.pt)
+    (h : ∀ j,
+      (ThermodynamicLimitCocone F).ι.app j ≫ f = t.ι.app j) :
+    f = (ThermodynamicLimitIsColimit F).desc t := by
+  exact (ThermodynamicLimitIsColimit F).uniq t f h
 
 end InfoGeometry.Categorical

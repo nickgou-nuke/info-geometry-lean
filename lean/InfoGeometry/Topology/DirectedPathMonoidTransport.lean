@@ -102,6 +102,30 @@ theorem product_comp
   change DirectedPath.product edgeWeight (p'.append q') = _
   exact DirectedPath.product_append edgeWeight p' q'
 
+ /-- The ordered product is preserved by a presentation-preserving graph map
+    when the target edge labels pull back to the source labels. -/
+theorem product_mapClass
+    {G H : ChiralDigraph} (F : ChiralDigraphHom G H)
+    (P : DirectedPathPresentation G) (Q : DirectedPathPresentation H)
+    (hcell : ∀ {u v : G.Vertex} {p q : DirectedPath G u v},
+      P.cell p q →
+        Q.cell (ChiralDigraphHom.mapPath F p) (ChiralDigraphHom.mapPath F q))
+    (sourceWeight : ∀ u v : G.Vertex, G.edge u v → M)
+    (targetWeight : ∀ u v : H.Vertex, H.edge u v → M)
+    (hweight : ∀ {u v : G.Vertex} (e : G.edge u v),
+      targetWeight (F.mapVertex u) (F.mapVertex v) (F.mapEdge e) =
+        sourceWeight u v e)
+    (hsource : ProductCompatible P sourceWeight)
+    (htarget : ProductCompatible Q targetWeight)
+    {u v : G.Vertex} (p : PresentedPathClass P u v) :
+    product Q targetWeight htarget (mapClass F P Q hcell p) =
+      product P sourceWeight hsource p := by
+  refine Quot.inductionOn p ?_
+  intro p'
+  change DirectedPath.product targetWeight (ChiralDigraphHom.mapPath F p') =
+    DirectedPath.product sourceWeight p'
+  exact DirectedPath.product_mapPath F sourceWeight targetWeight hweight p'
+
 end PresentedPathClass
 
 end InfoGeometry.Topology

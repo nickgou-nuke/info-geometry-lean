@@ -174,6 +174,15 @@ theorem gram_eigenspace_finrank_eq {m n : Type*} [Fintype m] [Fintype n]
   · exact forward.finrank_le_finrank_of_injective hforward
   · exact backward.finrank_le_finrank_of_injective hbackward
 
+/- The two Gram matrices have identical characteristic polynomials in the
+    square case.  The rectangular case only has the nonzero-eigenvalue
+    transport and finite-eigenspace result above. -/
+theorem gram_charpoly_eq_of_square {n : Type*} [Fintype n] [DecidableEq n]
+    (A : Matrix n n ℂ) :
+    Matrix.charpoly (A.conjTranspose * A) =
+      Matrix.charpoly (A * A.conjTranspose) := by
+  exact Matrix.charpoly_mul_comm A.conjTranspose A
+
 /-- The abstract transport theorem applies to the signed Plabic edge-sum
 matrix with its owner-prescribed `White × Black` orientation. -/
 theorem edgeSumMatrix_mulVec_gram_eigenvector
@@ -215,5 +224,19 @@ theorem edgeSumMatrix_mulVec_gram_eigenvector_injective
     v₁ = v₂ := by
   exact mulVec_gram_eigenvector_injective (edgeSumMatrix S weight) eigenvalue
     hEigenvalue_ne_zero h₁ h₂ hEq
+
+/-- The concrete signed Plabic edge-sum matrix has the same geometric
+multiplicity on its two Gram blocks at nonzero eigenvalues. -/
+theorem edgeSumMatrix_gram_eigenspace_finrank_eq
+    {G : FinitePlabicGraph} (S : KasteleynSigning G)
+    (weight : G.Edge → ℂ) (eigenvalue : ℂ) (hEigenvalue_ne_zero : eigenvalue ≠ 0) :
+    Module.finrank ℂ (Module.End.eigenspace
+        (((edgeSumMatrix S weight).conjTranspose * edgeSumMatrix S weight).mulVecLin)
+        eigenvalue) =
+      Module.finrank ℂ (Module.End.eigenspace
+        (((edgeSumMatrix S weight) * (edgeSumMatrix S weight).conjTranspose).mulVecLin)
+        eigenvalue) := by
+  exact gram_eigenspace_finrank_eq (edgeSumMatrix S weight) eigenvalue
+    hEigenvalue_ne_zero
 
 end InfoGeometry.Canonical.PlabicGramEigenvectorTransport

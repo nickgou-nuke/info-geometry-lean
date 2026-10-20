@@ -27,7 +27,7 @@ the owner source; a chat transcript is never proof authority.
 | A7 | chiral grading | `η = [[I,0],[0,-I]]` on `Black ⊕ White`; `D η + η D = 0`. | `kreinSignature` and `diracDHK_anticommutes_chirality`; owner theorem surface. |
 | A8 | Gram/block-square decomposition | `D² = diag(K†K, KK†)`. | `diracDHK_sq` and `edgeSumDirac_sq`; owner theorem surface. |
 | A9 | Krein-skew adjoint | `η D† η = -D` under the source's `CommRing`/`StarRing` matrix assumptions. | `diracDHK_krein_skew`; this is the exact formal claim, not a general Hilbert-space spectral theorem. |
-| A10 | spectral correspondence of the two Gram blocks | For a complex rectangular matrix, nonzero eigenvectors transport in both directions, with explicit preimages and equal finite eigenspace dimensions. | `Canonical.PlabicGramEigenvectorTransport.gram_eigenspace_finrank_eq` proves geometric multiplicity equality. Characteristic-polynomial equality and SVD remain separate. |
+| A10 | spectral correspondence of the two Gram blocks | For a complex rectangular matrix, nonzero eigenvectors transport in both directions, with explicit preimages and equal finite eigenspace dimensions. In the square case the characteristic polynomials also agree. | `Canonical.PlabicGramEigenvectorTransport.gram_eigenspace_finrank_eq` and `gram_charpoly_eq_of_square` are proved. Rectangular characteristic-polynomial normalization and SVD remain separate. |
 
 **Correction:** the chat's phrase “same nonzero singular-value information” is
 not promoted. The block-square identity is formalized; a singular-value theorem

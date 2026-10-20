@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Canonical.CuntzStageModularFlowTopologicalColimit
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -87,6 +93,38 @@ theorem exchangeTopologicalColimitMap_involution
     topologicalInjection Stage (system Stage T) n a
   rw [exchangeTopologicalColimitMap_inclusion,
     exchangeTopologicalColimitMap_inclusion, hsq]
+
+/-- Stagewise commuting continuous endomorphisms remain commuting after
+descent to the native topological colimit carrier. -/
+theorem exchangeTopologicalColimitMap_commutes
+    (Θ Ψ : ∀ n, ContinuousMap (Stage n) (Stage n))
+    (hΘ :
+      ∀ {m n : ℕ} (hmn : m ≤ n) (a : Stage m),
+        T.map hmn (Θ m a) = Θ n (T.map hmn a))
+    (hΨ :
+      ∀ {m n : ℕ} (hmn : m ≤ n) (a : Stage m),
+        T.map hmn (Ψ m a) = Ψ n (T.map hmn a))
+    (hcomm : ∀ (n : ℕ) (a : Stage n),
+      Θ n (Ψ n a) = Ψ n (Θ n a)) :
+    exchangeTopologicalColimitMap Stage T Θ hΘ ≫
+        exchangeTopologicalColimitMap Stage T Ψ hΨ =
+      exchangeTopologicalColimitMap Stage T Ψ hΨ ≫
+        exchangeTopologicalColimitMap Stage T Θ hΘ := by
+  change colim.map (exchangeTopCatNatTrans Stage T Θ hΘ) ≫
+      colim.map (exchangeTopCatNatTrans Stage T Ψ hΨ) =
+    colim.map (exchangeTopCatNatTrans Stage T Ψ hΨ) ≫
+      colim.map (exchangeTopCatNatTrans Stage T Θ hΘ)
+  rw [← colim.map_comp, ← colim.map_comp]
+  congr 1
+  apply NatTrans.ext
+  funext n
+  rw [CategoryTheory.NatTrans.comp_app, CategoryTheory.NatTrans.comp_app]
+  apply TopCat.hom_ext
+  apply ContinuousMap.ext
+  intro a
+  rw [TopCat.comp_app, TopCat.comp_app]
+  change Ψ n (Θ n a) = Θ n (Ψ n a)
+  exact (hcomm n a).symm
 
 def exchangeTopologicalColimitIso
     (Θ : ∀ n, ContinuousMap (Stage n) (Stage n))

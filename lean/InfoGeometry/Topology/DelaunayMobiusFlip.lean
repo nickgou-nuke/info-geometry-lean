@@ -23,14 +23,15 @@ projective-gauge structure.
   rational projective quantities.
 - The induced ratio coordinate action is the corresponding fractional linear
   expression.
+- `flipBlock_mobius_gauge_covariant` proves the finite Möbius gauge covariance
+  under explicit nonzero gauge hypotheses.
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
 None.
 
 #### BUCKET 3: OPEN CLOSURE DEBT
-- Full `PGL₂` gauge covariance under an arbitrary Möbius relabeling.  That
-  theorem needs explicit nonzero denominator hypotheses for each transformed
-  label and for the source/target gauge factors.
+- Geometric Delaunay admissibility and global analytic projective geometry remain
+  outside this finite matrix owner.
 -/
 
 namespace InfoGeometry.Topology.Delaunay
@@ -109,22 +110,6 @@ theorem flipBlock_crossRatio (a b c d : ℚ) (A : Matrix (Fin 2) (Fin 2) ℚ) (h
   dsimp [flipBlock]
   have hden : labels.ζ i - labels.ζ k ≠ 0 := labels.nonzero_den hik
   field_simp [hden]
-
-/--
-Open theorem target for the full gauge covariance formula.
-
-This is intentionally a proposition, not a theorem.  The closed file above
-proves the affine chart identities; the general Möbius relabeling theorem must
-add the required nonzero gauge and transformed-denominator hypotheses before it
-can be promoted.
--/
-def flipBlock_mobius_gauge_covariant_target (T : MobiusMap ℚ) : Prop :=
-    let ζ' : ι → ℚ := mobiusComp T labels.ζ
-    let A' := !![(ζ' i - ζ' l) / (ζ' i - ζ' k), (ζ' i - ζ' j) / (ζ' i - ζ' k);
-                 (ζ' l - ζ' k) / (ζ' i - ζ' k), (ζ' j - ζ' k) / (ζ' i - ζ' k)]
-    A' = !![leftGauge T (labels.ζ k), 0; 0, leftGauge T (labels.ζ i)] *
-         flipBlock labels i k j l hik *
-         !![(leftGauge T (labels.ζ l))⁻¹, 0; 0, (leftGauge T (labels.ζ j))⁻¹]
 
 omit [DecidableEq ι] in
 /-- A nondegenerate source chart remains nondegenerate after a Möbius relabeling. -/

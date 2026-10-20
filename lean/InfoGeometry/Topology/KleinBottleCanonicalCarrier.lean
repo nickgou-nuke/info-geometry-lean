@@ -6,6 +6,7 @@ Authors: InfoGeometry Engine Contributors
 
 import InfoGeometry.Topology.CompactMappingTorusGluing
 import InfoGeometry.Topology.KleinBrillouinBase
+import Mathlib.Topology.Category.TopCat.Basic
 
 /-!
 # Canonical compact mapping-torus carrier for the Klein gluing
@@ -21,6 +22,7 @@ namespace InfoGeometry.Topology.KleinBottleCanonicalCarrier
 
 open KleinBrillouinBase
 open InfoGeometry.Topology.CompactMappingTorus
+open CategoryTheory CategoryTheory.Limits
 
 local instance : Fact (0 < 2 * Real.pi) := ⟨by positivity⟩
 
@@ -94,6 +96,126 @@ def canonicalFibreFlip : CanonicalKleinBottle ≃ CanonicalKleinBottle where
  theorem canonicalFibreFlip_involutive (q : CanonicalKleinBottle) :
     canonicalFibreFlip (canonicalFibreFlip q) = q := by
   exact canonicalFibreFlip.left_inv q
+
+/-! ## A genuine Möbius-band carrier and its boundary pushout -/
+
+abbrev MobiusInterval := Set.Icc (0 : ℝ) 1
+
+def mobiusFlip (x : MobiusInterval) : MobiusInterval :=
+  ⟨1 - x.1, by constructor <;> linarith [x.2.1, x.2.2]⟩
+
+theorem mobiusFlip_involutive (x : MobiusInterval) :
+    mobiusFlip (mobiusFlip x) = x := by
+  apply Subtype.ext
+  dsimp [mobiusFlip]
+  ring
+
+abbrev MobiusBand := Carrier mobiusFlip
+
+def mobiusBandMk : Base × MobiusInterval → MobiusBand :=
+  project mobiusFlip
+
+theorem mobiusBand_endpoint (x : MobiusInterval) :
+    mobiusBandMk (⟨0, by constructor <;> norm_num⟩, x) =
+      mobiusBandMk (⟨1, by constructor <;> norm_num⟩, mobiusFlip x) := by
+  exact project_endpoint mobiusFlip x
+
+abbrev MobiusBoundaryBit := Bool
+
+def boundaryFlip : MobiusBoundaryBit → MobiusBoundaryBit
+  | false => true
+  | true => false
+
+theorem boundaryFlip_involutive (b : MobiusBoundaryBit) :
+    boundaryFlip (boundaryFlip b) = b := by
+  cases b <;> rfl
+
+abbrev MobiusBoundary := Carrier boundaryFlip
+
+def boundaryEndpoint : MobiusBoundaryBit → MobiusInterval
+  | false => ⟨0, by constructor <;> norm_num⟩
+  | true => ⟨1, by constructor <;> norm_num⟩
+
+theorem boundaryEndpoint_flip (b : MobiusBoundaryBit) :
+    boundaryEndpoint (boundaryFlip b) = mobiusFlip (boundaryEndpoint b) := by
+  cases b <;> apply Subtype.ext <;>
+    simp [boundaryEndpoint, boundaryFlip, mobiusFlip]
+
+private theorem boundaryToBand_respects {p q : Base × MobiusBoundaryBit}
+    (hpq : Relation.EqvGen (endpointStep boundaryFlip) p q) :
+    mobiusBandMk (p.1, boundaryEndpoint p.2) =
+      mobiusBandMk (q.1, boundaryEndpoint q.2) := by
+  induction hpq with
+  | rel p q h =>
+      rcases h with h | h
+      · apply Quotient.sound
+        exact Relation.EqvGen.rel _ _ (Or.inl ⟨h.1, h.2.1, by
+          rw [h.2.2]
+          exact boundaryEndpoint_flip p.2⟩)
+      · apply Quotient.sound
+        exact Relation.EqvGen.rel _ _ (Or.inr ⟨h.1, h.2.1, by
+          rw [h.2.2]
+          exact boundaryEndpoint_flip q.2⟩)
+  | refl p => rfl
+  | symm p q _ ih => exact ih.symm
+  | trans p q r _ _ ih₁ ih₂ => exact ih₁.trans ih₂
+
+def boundaryToBand : MobiusBoundary → MobiusBand :=
+  @Quotient.lift (Base × MobiusBoundaryBit) MobiusBand
+    (endpointSetoid boundaryFlip)
+    (fun p => mobiusBandMk (p.1, boundaryEndpoint p.2))
+    (by intro p q hpq; exact boundaryToBand_respects hpq)
+
+theorem boundaryToBand_continuous : Continuous boundaryToBand := by
+  apply Continuous.quotient_lift
+  · have hboundary : Continuous boundaryEndpoint := continuous_of_discreteTopology
+    exact continuous_quotient_mk'.comp
+      (continuous_fst.prodMk (hboundary.comp continuous_snd))
+
+abbrev MobiusBandObj : TopCat := TopCat.of MobiusBand
+abbrev MobiusBoundaryObj : TopCat := TopCat.of MobiusBoundary
+
+def boundaryToBandHom : MobiusBoundaryObj ⟶ MobiusBandObj :=
+  TopCat.ofHom ⟨boundaryToBand, boundaryToBand_continuous⟩
+
+/-! The double is the native TopCat pushout of the two identical boundary maps. -/
+
+abbrev MobiusGluedObj : TopCat :=
+  pushout boundaryToBandHom boundaryToBandHom
+
+abbrev MobiusGlued := MobiusGluedObj.carrier
+
+def mobiusGluedInl : MobiusBandObj ⟶ MobiusGluedObj :=
+  pushout.inl boundaryToBandHom boundaryToBandHom
+
+def mobiusGluedInr : MobiusBandObj ⟶ MobiusGluedObj :=
+  pushout.inr boundaryToBandHom boundaryToBandHom
+
+theorem mobiusGlued_boundary_condition :
+    boundaryToBandHom ≫ mobiusGluedInl =
+      boundaryToBandHom ≫ mobiusGluedInr := by
+  exact pushout.condition
+
+theorem mobiusGlued_hom_ext {Y : TopCat}
+    (f g : MobiusGluedObj ⟶ Y)
+    (h₁ : mobiusGluedInl ≫ f = mobiusGluedInl ≫ g)
+    (h₂ : mobiusGluedInr ≫ f = mobiusGluedInr ≫ g) :
+    f = g := by
+  exact pushout.hom_ext h₁ h₂
+
+theorem mobiusGlued_desc
+    {Y : TopCat}
+    (left right : MobiusBandObj ⟶ Y)
+    (h : boundaryToBandHom ≫ left = boundaryToBandHom ≫ right) :
+    mobiusGluedInl ≫ (pushout.desc left right h) = left := by
+  exact pushout.inl_desc left right h
+
+theorem mobiusGlued_desc_right
+    {Y : TopCat}
+    (left right : MobiusBandObj ⟶ Y)
+    (h : boundaryToBandHom ≫ left = boundaryToBandHom ≫ right) :
+    mobiusGluedInr ≫ (pushout.desc left right h) = right := by
+  exact pushout.inr_desc left right h
 
 end InfoGeometry.Topology.KleinBottleCanonicalCarrier
 

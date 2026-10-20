@@ -71,7 +71,7 @@ finite transport results are called out separately below.
 | A19 | Wilson/path product and log readouts | Finite path ratio/product and additive log/exponential relation under positivity assumptions. |
 | A20 | Detailed-balance cycle condition | The owner’s positive-rate cycle equivalences between Wilson loop one and zero log-curvature. |
 | A21 | Finite MaxCal path law | `GraphMaxCalPathLaw` stores a path map and assumes the ratio law; it is not a derivation of a variational principle. |
-| A22 | MaxCal optimizer socket | Feasibility/maximality are fields; existence and uniqueness remain unproved by the socket. |
+| A22 | MaxCal optimizer socket | `Optimization.FiniteMaxCalExistence` proves existence on a finite candidate carrier with a nonempty decidable feasible subset; the general socket still does not prove analytic existence or uniqueness. |
 | A23 | Reverse-mode adjoint transport | `Canonical.DifferentialAdjointChainRule` proves the two-stage Fréchet derivative chain rule and reverse adjoint composition for complete inner-product spaces; this remains a finite analytic transport theorem, not a training or optimizer result. |
 | A24 | Function-to-function operator contract | `NeuralOperator` and cost/error contract theorems prove their encoded inequalities only. |
 | A25 | Modular-velocity specialization | Conditional bridge through `modularVelocity`; no PDE solution or training result. |
@@ -97,7 +97,7 @@ A2 -> A6 -> A8; A7 -> A9
 A8 -> A10 (finite vector-level transport; multiplicities still open)
 A11 -> A12 -> A13
 A14 -> A15; A16 -> its rational mutation identities
-A17 -> A18 -> A19 -> A20; A19 -> A21 -> A22 (conditional socket only)
+A17 -> A18 -> A19 -> A20; A19 -> A21 -> A22 (finite existence theorem; general socket remains conditional)
 A23 now has a finite two-stage differentiable carrier theorem; A24 -> conditional A25
 A26 -> A27 diagnostic
 

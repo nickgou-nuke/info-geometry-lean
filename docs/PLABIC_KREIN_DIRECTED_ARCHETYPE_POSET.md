@@ -58,7 +58,7 @@ matrix family is not identified with a particular planar network.
 | A19 | Wilson/path holonomy | A finite path has multiplicative ratio `∏(k⁺/k⁻)` and additive log readout `Σ log(k⁺/k⁻)`. Under positive ratios, the product is the exponential of the sum. | `pathForwardBackwardRatio_eq_exp_pathEntropyProduction` and `wilsonLoop_eq_exp_cycleCurvatureLog`. |
 | A20 | detailed-balance cycle condition | For the supplied positive-rate cycle law, Wilson loop `= 1` iff additive log-curvature `= 0`. | `logWilsonCycleLaw_of_pos` and related theorems. |
 | A21 | finite MaxCal path law | A `GraphMaxCalPathLaw` stores a path-edge map and assumes `P⁺/P⁻ = exp(pathEntropy)`. | `Canonical/MaximumCaliberPath.lean`; conditional structure. It does not derive a variational optimizer. |
-| A22 | finite MaxCal optimizer socket | A structure explicitly contains feasibility and maximality of an optimizer. | `MaximumCaliberOptimizer`; existence and uniqueness are not proved. |
+| A22 | finite MaxCal optimizer socket | A finite candidate carrier with a nonempty decidable feasible subset has a caliber maximizer. | `Optimization.FiniteMaxCalExistence.exists_maximizer_on_finite_feasible`; analytic existence and uniqueness for the general socket remain open. |
 
 **Correction:** the ratio law is a finite algebraic/readout theorem when its
 positivity hypotheses are present, or a structure field when packaged as a
@@ -107,7 +107,7 @@ cluster face weights A16
 thermodynamic graph A17
   └─→ affinities/currents A18 ─→ Wilson/path log readouts A19
        ├─→ detailed balance A20
-       └─→ finite MaxCal law A21 ─→ optimizer socket A22 [assumption-bearing]
+       └─→ finite MaxCal law A21 ─→ finite optimizer existence A22 [finite theorem]
 
 differentiable stage maps [missing carrier]
   └─→ reverse-mode adjoint transport A23 [finite theorem]

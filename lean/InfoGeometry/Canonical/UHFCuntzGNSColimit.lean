@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CuntzStarInductiveSystem
@@ -99,6 +105,17 @@ noncomputable def cuntzGNS_topologicalColimitToHilbert :
       (cuntzGNS_topologicalCocone Stage T ω).ι.app n := by
   exact gnsTopologicalColimitToHilbert_stage
     Stage (cuntzSystem Stage T) ω n
+
+theorem cuntzGNS_topologicalColimitToHilbert_unique
+    (f :
+      topologicalDirectColimit (cuntzGNS_topologicalDiagram Stage T ω) ⟶
+        (cuntzGNS_topologicalCocone Stage T ω).pt)
+    (h : ∀ n : ℕ,
+      topologicalDirectInjection (cuntzGNS_topologicalDiagram Stage T ω) n ≫ f =
+        (cuntzGNS_topologicalCocone Stage T ω).ι.app n) :
+    f = cuntzGNS_topologicalColimitToHilbert Stage T ω := by
+  exact gnsTopologicalColimitToHilbert_unique
+    Stage (cuntzSystem Stage T) ω f h
 
 /-! ### Concrete Cuntz specialization of the tail operator TopCat API -/
 

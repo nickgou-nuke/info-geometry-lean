@@ -503,4 +503,28 @@ theorem S_left_commutes_K_lp (ψ : H_lp E) :
   · rfl
   · exact (map_zero (clockAxis (E := E))).symm
 
+theorem S_left_lp_clm_commutes_K_lp_clm :
+    (S_left_lp_clm (E := E)).comp (K_lp_clm (E := E)) =
+      (K_lp_clm (E := E)).comp (S_left_lp_clm (E := E)) := by
+  apply ContinuousLinearMap.ext
+  intro ψ
+  exact S_left_commutes_K_lp (E := E) ψ
+
+lemma K_lp_comp_self (ψ : H_lp E) :
+    K_lp (E := E) (K_lp (E := E) ψ) = -ψ := by
+  apply Subtype.ext
+  funext x
+  change ((clockAxis (E := E)).comp (clockAxis (E := E))) (ψ x) =
+    (-(ContinuousLinearMap.id ℝ (DoubledSpace E))) (ψ x)
+  exact congrArg
+    (fun T : DoubledSpace E →L[ℝ] DoubledSpace E => T (ψ x))
+    (clockAxis_sq E)
+
+theorem K_lp_clm_comp_self :
+    (K_lp_clm (E := E)).comp (K_lp_clm (E := E)) =
+      -(ContinuousLinearMap.id ℝ (H_lp E)) := by
+  apply ContinuousLinearMap.ext
+  intro ψ
+  exact K_lp_comp_self (E := E) ψ
+
 end InfoGeometry.Canonical.ConcreteHilbertCommutation

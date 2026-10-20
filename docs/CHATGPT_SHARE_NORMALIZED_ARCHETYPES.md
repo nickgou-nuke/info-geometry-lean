@@ -240,6 +240,14 @@ naturality, an inverse or universal-property uniqueness proof, and transport
 laws for each claimed operation. A supplied isomorphism field alone is not a
 proof of canonical equivalence.
 
+**Closed local comparisons.** `InfoGeometry.Categorical.ColimitComparison`
+proves universal-property comparison and stagewise endomorphism transport for
+categorical colimits. `InfoGeometry.Topology.ChiralDirectedGraphHomotopy`
+now proves `map_contextualPathRewrite`, constructs
+`PresentedPathClass.mapClass`, and proves `PresentedPathClass.mapClass_comp`
+under the explicit cell-preservation hypothesis. These are typed local edges;
+they do not close the remaining cross-carrier equivalences.
+
 ## 2. Causal prerequisite poset
 
 The following order contains only dependencies justified by the mathematical
@@ -305,25 +313,29 @@ all proposed cross-domain arrows
 
 These are genuine targets, not asserted results.
 
-1. **Plabic path transport.** Choose one finite graph, define an
+1. **Plabic path transport.** **Closed at the presented-path level:** the
+owner maps contextual rewrites and preserves quotient composition under
+`hcell`. A concrete Plabic graph instantiation and invariant readout remain
+open.
+2. **Plabic path readout.** Choose one finite graph, define an
    endpoint-preserving edge map into a fixed operator category, define ordered
    path transport, and prove identity and append composition. Then prove one
    invariant readout commutes with transport.
-2. **Dirac spectral correspondence.** Fix a field/star-compatible finite
+3. **Dirac spectral correspondence.** Fix a field/star-compatible finite
    inner-product carrier and prove the precise nonzero spectral correspondence
    of `K†K` and `KK†`, including multiplicities if claimed.
-3. **Cluster/conjugation comparison.** Provide a typed map from the local
+4. **Cluster/conjugation comparison.** Provide a typed map from the local
    `Cl11Op` carrier to the face-weight carrier and prove that the map sends the
    local conjugation readout to the declared mutation formula. Do not infer it
    from matching symbols.
-4. **BKM/para-Kähler comparison.** Specify one shared finite tangent carrier,
+5. **BKM/para-Kähler comparison.** Specify one shared finite tangent carrier,
    both bilinear forms, and prove equality or a stated pullback relation with
    all positivity and nondegeneracy hypotheses explicit.
-5. **Colimit comparison.** For a fixed diagram and category, construct the
+6. **Colimit comparison.** For a fixed diagram and category, construct the
    comparison morphisms from independently proved universal properties and
    prove stage triangles and inverse identities. Do not use a supplied witness
    packet as canonicality evidence.
-6. **Adjoint path transport.** Add a differentiable finite-stage carrier,
+7. **Adjoint path transport.** Add a differentiable finite-stage carrier,
    define the differential and adjoint maps, and prove reverse-order
    composition. The current neural operator contract does not supply this.
 

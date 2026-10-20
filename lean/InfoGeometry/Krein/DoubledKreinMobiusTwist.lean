@@ -313,7 +313,25 @@ theorem fromBlocks_comp (A11 A12 A21 A22 B11 B12 B21 B22 : E →L[𝕜] E) :
   ext
   · simp only [ContinuousLinearMap.comp_apply, fromBlocks_apply, map_add, add_apply]
     abel
+
   · simp only [ContinuousLinearMap.comp_apply, fromBlocks_apply, map_add, add_apply]
+    abel
+
+omit [CompleteSpace E] in
+/-- The modular swap exchanges the rows and columns of a block operator. -/
+theorem modularJ_comp_fromBlocks_eq_fromBlocks_comp_modularJ
+    (A11 A12 A21 A22 : E →L[𝕜] E) :
+    (modularJ (𝕜 := 𝕜) (E := E)).comp (fromBlocks A11 A12 A21 A22) =
+      (fromBlocks A22 A21 A12 A11).comp
+        (modularJ (𝕜 := 𝕜) (E := E)) := by
+  apply ContinuousLinearMap.ext
+  intro p
+  ext
+  · simp only [ContinuousLinearMap.comp_apply, modularJ_apply, fromBlocks_apply,
+      Prod.fst, Prod.snd, map_add]
+    abel
+  · simp only [ContinuousLinearMap.comp_apply, modularJ_apply, fromBlocks_apply,
+      Prod.fst, Prod.snd, map_add]
     abel
 
 omit [CompleteSpace E] in

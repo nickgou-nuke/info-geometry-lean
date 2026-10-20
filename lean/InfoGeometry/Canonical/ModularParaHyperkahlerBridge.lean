@@ -45,19 +45,19 @@ theorem nullBoost_add (η ξ : ℝ) (x : R2) :
 
 theorem nullBoost_inverse (η : ℝ) (x : R2) :
     nullBoost (-η) (nullBoost η x) = x := by
-  simpa using (nullBoost_add (-η) η x).trans
-    (by simpa using nullBoost_zero x)
+  have h := nullBoost_add (-η) η x
+  simpa using h
 
 theorem omegaK_nullBoost_invariant (η : ℝ) (x y : R2) :
     omegaK (nullBoost η x) (nullBoost η y) = omegaK x y := by
   rw [omegaK_eq_split, omegaK_eq_split]
-  simp only [nullBoost, Fin.isValue]
   have h := reciprocal_scales η
   have h' : scaleMinus η * scalePlus η = 1 := by
-    rw [mul_comm]
-    exact h
-  simp only [show (0 : Fin 2) = 0 from rfl, ↓reduceIte,
-    show (1 : Fin 2) ≠ 0 by decide, ite_false]
+    simpa [mul_comm] using h
+  change
+    (scalePlus η * x 0) * (scaleMinus η * y 1) +
+        (scaleMinus η * x 1) * (scalePlus η * y 0) =
+      x 0 * y 1 + x 1 * y 0
   calc
     (scalePlus η * x 0) * (scaleMinus η * y 1) +
         (scaleMinus η * x 1) * (scalePlus η * y 0) =

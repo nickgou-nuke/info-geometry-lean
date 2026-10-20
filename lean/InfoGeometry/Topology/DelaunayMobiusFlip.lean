@@ -172,4 +172,27 @@ theorem flipBlock_mobius_gauge_covariant
     simp [flipBlock, leftGauge]
     field_simp [T.det_ne_zero, hgi', hgk', hgj', labels.nonzero_den hik]
 
+section MobiusCrossRatio
+
+variable {K : Type} [Field K]
+
+/-- A nondegenerate Möbius transformation preserves the projective cross-ratio. -/
+theorem projectiveCrossRatio_mobius_invariant
+    (T : MobiusMap K) (a b c d : K)
+    (ha : leftGauge T a ≠ 0) (hb : leftGauge T b ≠ 0)
+    (hc : leftGauge T c ≠ 0) (hd : leftGauge T d ≠ 0)
+    (hac : a - c ≠ 0) (hbd : b - d ≠ 0) :
+    projectiveCrossRatio
+        (projectiveAction T a) (projectiveAction T b)
+        (projectiveAction T c) (projectiveAction T d) =
+      projectiveCrossRatio a b c d := by
+  unfold projectiveCrossRatio
+  rw [projectiveAction_sub T a b ha hb,
+      projectiveAction_sub T c d hc hd,
+      projectiveAction_sub T a c ha hc,
+      projectiveAction_sub T b d hb hd]
+  field_simp [T.det_ne_zero, ha, hb, hc, hd, hac, hbd]
+
+end MobiusCrossRatio
+
 end InfoGeometry.Topology.Delaunay

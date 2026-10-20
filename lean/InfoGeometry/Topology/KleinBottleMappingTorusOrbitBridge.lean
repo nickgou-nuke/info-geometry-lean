@@ -121,7 +121,7 @@ theorem canonicalToOrbit_surjective :
       have hpi0 : (Real.pi : MomentumCircle) + Real.pi = 0 :=
         pi_add_pi_eq_zero
       have hneg : (-Real.pi : MomentumCircle) = Real.pi :=
-        eq_neg_of_add_eq_zero_left hpi0
+        (eq_neg_of_add_eq_zero_left hpi0).symm
       simp [hneg, add_assoc, hpi0]
     · rfl
 

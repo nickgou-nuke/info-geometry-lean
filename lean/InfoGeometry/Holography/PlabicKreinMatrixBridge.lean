@@ -147,6 +147,24 @@ theorem toMatrix_pathProduct
       change toMatrix (Cl11Op.mul _ _) = _
       rw [toMatrix_mul, ih]
 
+/-- The matrix representation commutes with descent of compatible path
+products through the presented path quotient. -/
+theorem toMatrix_presentedPathProduct
+    {G : ChiralDigraph} (P : DirectedPathPresentation G)
+    (edgeWeight : ∀ u v : G.Vertex, G.edge u v → Cl11Op R)
+    (hcompat : ProductCompatible P edgeWeight)
+    {u v : G.Vertex} (p : PresentedPathClass P u v) :
+    toMatrix (PresentedPathClass.product P edgeWeight hcompat p) =
+      PresentedPathClass.product
+        P (fun a b h => toMatrix (edgeWeight a b h))
+        (by
+          intro a b p q h
+          simpa only [toMatrix_pathProduct edgeWeight p,
+            toMatrix_pathProduct edgeWeight q] using congrArg toMatrix (hcompat h)) p := by
+  refine Quot.inductionOn p ?_
+  intro p'
+  exact toMatrix_pathProduct edgeWeight p'
+
 end Cl11Op
 
 end InfoGeometry.Holography.PlabicKrein

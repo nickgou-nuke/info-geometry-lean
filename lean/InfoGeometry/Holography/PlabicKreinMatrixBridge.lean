@@ -60,9 +60,11 @@ theorem toMatrix_injective :
   · simpa [toMatrix] using congrFun (congrFun h 1) 0
   · simpa [toMatrix] using congrFun (congrFun h 1) 1
 
+omit [CommRing R] in
 theorem ofMatrix_toMatrix (A : Cl11Op R) : ofMatrix (toMatrix A) = A := by
   ext <;> rfl
 
+omit [CommRing R] in
 theorem toMatrix_ofMatrix (M : Matrix (Fin 2) (Fin 2) R) :
     toMatrix (ofMatrix M) = M := by
   ext i j

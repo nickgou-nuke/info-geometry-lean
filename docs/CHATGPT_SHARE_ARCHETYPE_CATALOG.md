@@ -39,7 +39,7 @@ reproducibility manifest remain the provenance references below.
 | C14 | Function-to-function neural/operator approximation contract | `Canonical.NeuralOperatorCore`; `Canonical.NavierStokesNeuralOperatorBridge` | Contract-bound costs/error inequalities; no training, differentiability, or backpropagation theorem in that contract. |
 | C15 | Plabic/Kasteleyn/Dirac/Krein/cluster/path family | `Canonical.FinitePlabicKasteleyn`; `Canonical.PlabicDiracKrein`; `Holography.PlabicKreinTwistedClusterMutation`; `Topology.PlabicBoundaryMeasurement`; `Topology.PlabicCluster`; directed-path owners | Multiple local carriers and results; graph-to-operator, spectral multiplicity, general square-move/gauge, and wider comparison claims require explicit bridges. |
 | C16 | Thermodynamic directed paths, Wilson readouts, and MaxCal sockets | `Canonical.ThermodynamicChiralGraphCalculus`; `Canonical.MaximumCaliberPath`; `Topology.MaximumCaliberPath` | Finite ratio/log readouts and conditional sockets; optimizer existence/uniqueness is not thereby established. |
-| C17 | Typed cross-representation comparison | `Topology.ChiralDirectedGraphHomotopy`; `Epistemology.ArchetypeHomotopyFramework`; `Meta.EpistemicCompiler` | Global comparison remains open: requires explicit common carriers, maps, composition laws, and commuting readout diagrams. |
+| C17 | Typed cross-representation comparison | `Holography.PlabicKreinMatrixBridge` now supplies the finite `Cl11Op ≃ Matrix (Fin 2) (Fin 2)` carrier equivalence and multiplicative commuting square; global comparison remains open. |
 
 ## A-level atom map
 
@@ -101,7 +101,7 @@ A17 -> A18 -> A19 -> A20; A19 -> A21 -> A22 (conditional socket only)
 A23 now has a finite two-stage differentiable carrier theorem; A24 -> conditional A25
 A26 -> A27 diagnostic
 
-Selected A5/A10 local transports do not close global C17.
+Selected A5/A10 local transports and the finite `Cl11Op`/matrix equivalence do not close global C17.
 C17 requires chosen source/target carriers, explicit maps, composition laws,
 and proved commuting readouts for each proposed comparison.
 ```

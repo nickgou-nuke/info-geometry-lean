@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Algebra.Category.ModuleCat.FilteredColimits
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.CategoryTheory.Limits.Filtered
@@ -59,6 +65,17 @@ theorem colimitOperator_id :
     colimitOperator s ((colimit.ι F n).hom x) =
       (colimit.ι F n).hom ((s.app n).hom x) := by
   exact congrArg (fun f => f x) (colimit.ι_map s n)
+
+theorem colimitOperator_unique
+    (s : StageOperator F)
+    (f : Carrier F ⟶ Carrier F)
+    (h : ∀ n : ℕ,
+      colimit.ι F n ≫ f =
+        (s.app n) ≫ colimit.ι F n) :
+    f = colim.map s := by
+  apply colimit.hom_ext
+  intro n
+  exact (h n).trans (colimit.ι_map s n).symm
 
 /-! ## Artin transport -/
 

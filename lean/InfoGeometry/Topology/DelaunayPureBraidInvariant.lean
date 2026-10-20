@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Data.Matrix.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Categorical.BraidPermutationQuotient
@@ -23,8 +29,10 @@ chronological convention `γₗ ... γ₁(f) = f Aₗ ... A₁`, a chronological
 - `rohozhkin_invariant_under_witnessed_move`: `rohozhkinMatrix` is invariant
   under the generated one-step move relation.
 
-#### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
-None.
+#### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT ALGEBRAIC HYPOTHESES
+- `rohozhkinMatrix_isUnit_of_admissible`: an admissible word evaluates to a
+  unit matrix.  The hypothesis is the explicit algebraic predicate
+  `DelaunayFlipWord.admissible`; it is not geometric Delaunay admissibility.
 
 #### BUCKET 3: OPEN CLOSURE DEBT
 - Defining a genuine generating family and presentation for the canonical pure
@@ -141,6 +149,25 @@ theorem rohozhkinMatrix_cons {n : ℕ}
       F.matrix *
         rohozhkinMatrix ({ flips := tail } : DelaunayFlipWord n) := by
   rfl
+
+/-- An admissible flip word evaluates to a unit matrix. -/
+theorem rohozhkinMatrix_isUnit_of_admissible
+    {n : ℕ} (W : DelaunayFlipWord n)
+    (hW : W.admissible) :
+    IsUnit (rohozhkinMatrix W) := by
+  rcases W with ⟨flips⟩
+  induction flips with
+  | nil =>
+      simpa [rohozhkinMatrix, rohozhkinMatrixList] using
+        (isUnit_one :
+          IsUnit
+            (1 : Matrix (Fin (rohozhkinDim n)) (Fin (rohozhkinDim n)) ℚ))
+  | cons A tail ih =>
+      apply IsUnit.mul
+      · exact hW A (by simp)
+      · apply ih
+        intro F hF
+        exact hW F (by simp [hF])
 
 /-- Concrete presentation-level move relation for Delaunay flip sequences. -/
 inductive DelaunayMoveList {n : ℕ} : DelaunayMoveKind → List (DelaunayFlipContext n) → List (DelaunayFlipContext n) → Prop

@@ -122,6 +122,25 @@ theorem index_annihilates_kernel_proj (hD : IsDrazinInverse A D k) :
     _ = A ^ k - A ^ k := by rw [h_idx]
     _ = 0 := sub_self (A ^ k)
 
+/-- The complementary projector is also annihilated on the left by the active
+power.  This follows from the Drazin commutation relation. -/
+theorem kernel_proj_mul_index_power (hD : IsDrazinInverse A D k) :
+    kernelProj A D * A ^ k = 0 := by
+  have hQ : kernelProj A D * A = A * kernelProj A D := by
+    dsimp [kernelProj, spectralProj]
+    calc
+      (1 - A * D) * A = A - (A * D) * A := by
+        rw [sub_mul, one_mul]
+      _ = A - A * (A * D) := by
+        rw [mul_assoc, ← hD.comm]
+      _ = A * (1 - A * D) := by
+        rw [mul_sub, mul_one]
+  have hcomm : Commute (kernelProj A D) A := hQ
+  calc
+    kernelProj A D * A ^ k = A ^ k * kernelProj A D :=
+      (hcomm.pow_right k).eq
+    _ = 0 := index_annihilates_kernel_proj hD
+
 /-! --------------------------------------------------------------------------
     Section 4: Group Inverse Specialization (Index k = 1 for Markov Chains)
     -------------------------------------------------------------------------- -/
@@ -132,6 +151,23 @@ theorem group_inverse_nilpotent_zero (h1 : IsDrazinInverse A D 1) :
   have h := index_annihilates_kernel_proj h1
   rw [pow_one] at h
   exact h
+
+/- The index-one kernel projector is also annihilated on the left.  This is
+   a consequence of the Drazin commutation law, not an additional hypothesis. -/
+theorem group_inverse_kernel_proj_zero_left (h1 : IsDrazinInverse A D 1) :
+    kernelProj A D * A = 0 := by
+  simpa [pow_one] using kernel_proj_mul_index_power h1
+
+/- The active projector reconstructs A from either side in the index-one case. -/
+theorem group_inverse_reconstruction_left (h1 : IsDrazinInverse A D 1) :
+    spectralProj A D * A = A := by
+  have h := group_inverse_kernel_proj_zero_left h1
+  calc
+    spectralProj A D * A = spectralProj A D * A + 0 := by rw [add_zero]
+    _ = spectralProj A D * A + kernelProj A D * A := by rw [h]
+    _ = (spectralProj A D + kernelProj A D) * A := by rw [add_mul]
+    _ = 1 * A := by rw [spectral_add_kernel]
+    _ = A := one_mul A
 
 /-- For index 1, A decomposes cleanly into A = A · P. -/
 theorem group_inverse_reconstruction (h1 : IsDrazinInverse A D 1) :

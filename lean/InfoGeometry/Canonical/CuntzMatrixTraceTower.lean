@@ -1,3 +1,11 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+/- SPDX-License-Identifier: Apache-2.0 -/
+
 import InfoGeometry.Canonical.CuntzMatrixTowerInstantiation
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Star.StarAlgHom
@@ -236,5 +244,26 @@ theorem traceColimitInclusion_transition
       traceColimitInclusion T m A := by
   have h := (colimit.cocone (moduleDiagram T)).w (homOfLE hmn)
   exact congrArg (fun f => f A) h
+
+/-- A linear functional on the colimit is uniquely determined by its values on
+the canonical matrix-stage inclusions. -/
+theorem traceColimitFunctional_unique
+    (T : Data) (f : traceColimit T →ₗ[ℂ] ℂ)
+    (hf : ∀ n A,
+      f (traceColimitInclusion T n A) = matrixTraceFunctional n A) :
+    f = traceColimitFunctional T := by
+  let f' : ModuleCat.of ℂ (traceColimit T) ⟶ ModuleCat.of ℂ ℂ := ModuleCat.ofHom f
+  let g' : ModuleCat.of ℂ (traceColimit T) ⟶ ModuleCat.of ℂ ℂ :=
+    ModuleCat.ofHom (traceColimitFunctional T)
+  have hfg : f' = g' := by
+    apply colimit.hom_ext
+    intro n
+    apply ModuleCat.hom_ext
+    ext A
+    change f (traceColimitInclusion T n (A : MatrixStage n)) =
+      traceColimitFunctional T (traceColimitInclusion T n (A : MatrixStage n))
+    exact (hf n (A : MatrixStage n)).trans
+      (traceColimitFunctional_inclusion T n (A : MatrixStage n)).symm
+  exact LinearMap.ext fun x => congrArg (fun k => k.hom x) hfg
 
 end InfoGeometry.Canonical.CuntzMatrixTraceTower

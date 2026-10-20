@@ -80,25 +80,6 @@ theorem mulVec_gram_eigenvector_injective {m n : Type*} [Fintype m] [Fintype n]
   · exact (hEigenvalue_ne_zero hzero).elim
   · exact sub_eq_zero.mp hv
 
-/-- The matrix transport is injective when restricted to eigenvectors of
-`A.conjTranspose * A` at a fixed nonzero eigenvalue. This strengthens the
-pointwise non-annihilation result without claiming a multiplicity theorem. -/
-theorem mulVec_gram_eigenvector_injective {m n : Type*} [Fintype m] [Fintype n]
-    (A : Matrix m n ℂ) (eigenvalue : ℂ) (hEigenvalue_ne_zero : eigenvalue ≠ 0)
-    (v w : n → ℂ)
-    (hv : (A.conjTranspose * A).mulVec v = eigenvalue • v)
-    (hw : (A.conjTranspose * A).mulVec w = eigenvalue • w)
-    (hAv : A.mulVec v = A.mulVec w) : v = w := by
-  by_contra hne
-  have hdiff : A.mulVec (v - w) = 0 := by
-    rw [Matrix.mulVec_sub, hAv]
-    simp
-  have hEigen : (A.conjTranspose * A).mulVec (v - w) =
-      eigenvalue • (v - w) := by
-    rw [Matrix.mulVec_sub, hv, hw, sub_smul]
-  exact (mulVec_gram_eigenvector_ne_zero A eigenvalue (v - w)
-    hEigenvalue_ne_zero hne hEigen) hdiff
-
 /-- The reverse transport, using `A.conjTranspose`, gives the corresponding
 eigenvector statement from `A * A.conjTranspose` back to the other Gram matrix. -/
 theorem conjTranspose_mulVec_gram_eigenvector {m n : Type*}

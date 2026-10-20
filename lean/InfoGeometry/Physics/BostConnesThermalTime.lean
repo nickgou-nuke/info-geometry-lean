@@ -136,6 +136,16 @@ theorem modularFlowCl11_inverse (t : ThermalTime) (q : Cl11) :
   have h := modularFlowCl11_group_property (-t) t q
   simpa using h.symm
 
+/-- The modular rotation preserves the quadratic norm of the transverse
+    `e₂` and `e₁₂` coordinates. -/
+theorem modularFlowCl11_transverse_norm_sq (t : ThermalTime) (q : Cl11) :
+    (modularFlowCl11 t q).e2 ^ 2 + (modularFlowCl11 t q).e12 ^ 2 =
+      q.e2 ^ 2 + q.e12 ^ 2 := by
+  simp only [modularFlowCl11]
+  have htrig : Real.sin (2 * t) ^ 2 + Real.cos (2 * t) ^ 2 = 1 :=
+    Real.sin_sq_add_cos_sq (2 * t)
+  nlinarith
+
 /-!
 ## 2. Modular Flow on Zorn Matrices
 -/

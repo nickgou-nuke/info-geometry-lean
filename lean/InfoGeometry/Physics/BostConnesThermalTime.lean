@@ -146,6 +146,14 @@ theorem modularFlowCl11_transverse_norm_sq (t : ThermalTime) (q : Cl11) :
     Real.sin_sq_add_cos_sq (2 * t)
   nlinarith
 
+/-- The finite Cl(1,1) modular flow has period `π`, because its transverse
+    rotation uses the angle `2 * t`. -/
+theorem modularFlowCl11_period_pi (t : ThermalTime) (q : Cl11) :
+    modularFlowCl11 (t + Real.pi) q = modularFlowCl11 t q := by
+  have hangle : 2 * (t + Real.pi) = (2 * t) + 2 * Real.pi := by ring
+  ext <;> simp [modularFlowCl11, hangle, Real.sin_add_two_pi,
+    Real.cos_add_two_pi]
+
 /-!
 ## 2. Modular Flow on Zorn Matrices
 -/

@@ -39,7 +39,7 @@ reproducibility manifest remain the provenance references below.
 | C14 | Function-to-function neural/operator approximation contract | `Canonical.NeuralOperatorCore`; `Canonical.NavierStokesNeuralOperatorBridge` | Contract-bound costs/error inequalities; no training, differentiability, or backpropagation theorem in that contract. |
 | C15 | Plabic/Kasteleyn/Dirac/Krein/cluster/path family | `Canonical.FinitePlabicKasteleyn`; `Canonical.PlabicDiracKrein`; `Holography.PlabicKreinTwistedClusterMutation`; `Topology.PlabicBoundaryMeasurement`; `Topology.PlabicCluster`; directed-path owners | Multiple local carriers and results; graph-to-operator, spectral multiplicity, general square-move/gauge, and wider comparison claims require explicit bridges. |
 | C16 | Thermodynamic directed paths, Wilson readouts, and MaxCal sockets | `Canonical.ThermodynamicChiralGraphCalculus`; `Canonical.MaximumCaliberPath`; `Topology.MaximumCaliberPath` | Finite ratio/log readouts and conditional sockets; optimizer existence/uniqueness is not thereby established. |
-| C17 | Typed cross-representation comparison | `Holography.PlabicKreinMatrixBridge` now supplies the finite `Cl11Op ≃ Matrix (Fin 2) (Fin 2)` carrier equivalence and multiplicative commuting square; global comparison remains open. |
+| C17 | Typed cross-representation comparison | `Holography.PlabicKreinMatrixBridge` supplies the finite `Cl11Op ≃ Matrix (Fin 2) (Fin 2)` carrier equivalence, multiplicative square, and presented-path product descent square; global comparison remains open. |
 
 ## A-level atom map
 

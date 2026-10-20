@@ -7,6 +7,7 @@ Authors: InfoGeometry Engine Contributors
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Tactic
 import InfoGeometry.Holography.PlabicKreinTwistedClusterMutation
+import InfoGeometry.Topology.DirectedPathMonoidTransport
 
 /-!
 # Matrix representation of the local Plabic/Krein carrier
@@ -19,9 +20,27 @@ general plabic square move with a matrix conjugation.
 
 namespace InfoGeometry.Holography.PlabicKrein
 
+open InfoGeometry.Topology
+
 namespace Cl11Op
 
 variable {R : Type*} [CommRing R]
+
+instance : Monoid (Cl11Op R) where
+  one := one
+  mul := mul
+  one_mul := by
+    intro A
+    change Cl11Op.mul Cl11Op.one A = A
+    ext <;> simp [Cl11Op.one, Cl11Op.mul]
+  mul_one := by
+    intro A
+    change Cl11Op.mul A Cl11Op.one = A
+    ext <;> simp [Cl11Op.one, Cl11Op.mul]
+  mul_assoc := by
+    intro A B C
+    change Cl11Op.mul (Cl11Op.mul A B) C = Cl11Op.mul A (Cl11Op.mul B C)
+    ext <;> simp [Cl11Op.mul] <;> ring
 
 /-- The canonical matrix representation of a local `Cl11Op`. -/
 def toMatrix (A : Cl11Op R) : Matrix (Fin 2) (Fin 2) R :=
@@ -59,9 +78,8 @@ theorem matrixBlack_mul_edge_ne [Nontrivial R] :
       matrixEdge (R := R) * matrixBlack (R := R) := by
   intro h
   have hentry := congrFun (congrFun h 0) 1
-  simpa [matrixBlack, matrixEdge, toMatrix, mul, nodeBlack, edgeTwist,
-    Matrix.mul_apply,
-    Fin.sum_univ_two] using hentry
+  simp [matrixBlack, matrixEdge, toMatrix, nodeBlack, edgeTwist,
+    Matrix.mul_apply, Fin.sum_univ_two] at hentry
 
 theorem toMatrix_add (A B : Cl11Op R) :
     toMatrix (add A B) = toMatrix A + toMatrix B := by
@@ -90,6 +108,19 @@ theorem matrix_cluster_mutation_is_exponential_adjoint (x w : R) :
     toMatrix (mul (mul (mutationRotor w) (nodeBlack x)) (mutationRotorInv w)) =
       toMatrix ⟨x, -(x * w), 0, 0⟩ := by
   rw [cluster_mutation_is_exponential_adjoint]
+
+theorem toMatrix_pathProduct
+    {G : ChiralDigraph}
+    (edgeWeight : ∀ u v : G.Vertex, G.edge u v → Cl11Op R)
+    {u v : G.Vertex} (p : DirectedPath G u v) :
+    toMatrix (DirectedPath.product edgeWeight p) =
+      DirectedPath.product (fun a b h => toMatrix (edgeWeight a b h)) p := by
+  induction p with
+  | refl => exact toMatrix_one
+  | cons h p ih =>
+      simp only [DirectedPath.product]
+      change toMatrix (Cl11Op.mul _ _) = _
+      rw [toMatrix_mul, ih]
 
 end Cl11Op
 

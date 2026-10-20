@@ -68,7 +68,8 @@ The repo’s current operational vocabulary spans these configured roles.
 | Goedel prover/auditor | conservative local audit lane | `nemoclaw_config.yaml`, `tools/infra/hermes_config.yaml` |
 | Lean kernel / Lake | proof and build authority | `README.md`, `LOCAL_TOOLCHAIN_ARCHITECTURE.md` |
 | Arango DAG 8529 | theorem/proof graph retrieval lane | `LOCAL_TOOLCHAIN_ARCHITECTURE.md` |
-| Alexandria Arango 8530 | semantic/literature/Hive memory lane | `docs/alexandria/README.md`, `docs/hive_greenfield_architecture.md` |
+| Repo DAG `infogeometry` (default :8530; deployment may override) | AST/AQL declaration graph and InfoTree | `docs/ASTAQLHASH-HOWTO.md`, `docs/dag-about.md` |
+| Hive queue `hive_live` (default :8540) | packet motion, worker leases, replay/deadends | `docs/HiveArchitectureBlueprint.md`, `tools/infra/hive_arango_queue.py` |
 | MotherBee / Hive workers | queue, packet motion, replay, deadend capture | `HiveArchitectureBlueprint.md`, `hive_greenfield_architecture.md` |
 
 Gemini outputs are proposal-only until Codex reproduces and validates them.

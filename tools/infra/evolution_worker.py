@@ -30,7 +30,7 @@ _REPO = _HERE.parents[1]
 sys.path.insert(0, str(_REPO))
 
 from tools.infra.arango_env import (
-    arango_database, arango_endpoint, arango_password,
+    hive_arango_database, hive_arango_endpoint, arango_password,
     arango_username, load_repo_arango_env,
 )
 from tools.infra.hive_arango_queue import (
@@ -52,8 +52,8 @@ def ensure_evolution_queue() -> None:
     from tools.infra.hive_arango_queue import ensure_collection, CollectionSpec, ensure_index, IndexSpec
 
     load_repo_arango_env(_REPO)
-    ep = arango_endpoint()
-    db = arango_database("hive_live")
+    ep = hive_arango_endpoint()
+    db = hive_arango_database("hive_live")
     usr = arango_username()
     pwd = arango_password("alexandria_root")
 
@@ -70,8 +70,8 @@ def enqueue_evolution_task(
 ) -> dict[str, Any]:
     """Enqueue a skill evolution task in ArangoDB."""
     load_repo_arango_env(_REPO)
-    ep = arango_endpoint()
-    db = arango_database("hive_live")
+    ep = hive_arango_endpoint()
+    db = hive_arango_database("hive_live")
     usr = arango_username()
     pwd = arango_password("alexandria_root")
 
@@ -180,8 +180,8 @@ def run_evolution_cycle(skill_name: str, generations: int = 10) -> float:
 
     # Get per-task results with a FRESH evaluator (not the GEPA-corrupted one)
     load_repo_arango_env(_REPO)
-    ep = arango_endpoint()
-    db = arango_database("hive_live")
+    ep = hive_arango_endpoint()
+    db = hive_arango_database("hive_live")
     usr = arango_username()
     pwd = arango_password("alexandria_root")
     fresh = RealEvaluator(tasks=eval_tasks, hermes_model="deepseek-v4-flash",
@@ -447,8 +447,8 @@ def _save_evolution_record(
 ) -> None:
     """Persist an evolution cycle record to ArangoDB."""
     load_repo_arango_env(_REPO)
-    ep = arango_endpoint()
-    db = arango_database("hive_live")
+    ep = hive_arango_endpoint()
+    db = hive_arango_database("hive_live")
     usr = arango_username()
     pwd = arango_password("alexandria_root")
 
@@ -472,8 +472,8 @@ def poll_loop(once: bool = False) -> None:
     while True:
         try:
             load_repo_arango_env(_REPO)
-            ep = arango_endpoint()
-            db = arango_database("hive_live")
+            ep = hive_arango_endpoint()
+            db = hive_arango_database("hive_live")
             usr = arango_username()
             pwd = arango_password("alexandria_root")
 
@@ -578,8 +578,8 @@ if __name__ == "__main__":
 # Auto-enqueue next evolution cycle (called after poll_loop exits or task completes)
 def _maybe_enqueue_next():
     load_repo_arango_env(_REPO)
-    ep = arango_endpoint()
-    db = arango_database("hive_live")
+    ep = hive_arango_endpoint()
+    db = hive_arango_database("hive_live")
     usr = arango_username()
     pwd = arango_password("alexandria_root")
     pending = aql(ep, db, usr, pwd,

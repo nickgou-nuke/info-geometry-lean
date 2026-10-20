@@ -75,7 +75,7 @@ def run(once: bool = False):
     while True:
         try:
             load_repo_arango_env(_REPO)
-            ep, db = arango_endpoint(), arango_database("hive_live")
+            ep, db = hive_arango_endpoint(), hive_arango_database("hive_live")
             usr, pwd = arango_username(), arango_password("alexandria_root")
 
             task = claim_next_task(ep, db, usr, pwd,

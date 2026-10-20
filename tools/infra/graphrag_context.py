@@ -6,11 +6,17 @@ def gather_context(repo_root: Path, file_path: str, line: int, max_decls: int = 
     """Gather DAG context: related declarations, dependencies, neighbors."""
     import sys
     sys.path.insert(0, str(repo_root))
-    from tools.infra.arango_env import *
+    from tools.infra.arango_env import (
+        arango_database,
+        arango_endpoint,
+        arango_password,
+        arango_username,
+        load_repo_arango_env,
+    )
     from tools.infra.hive_arango_queue import aql
     load_repo_arango_env(repo_root)
     ep = arango_endpoint()
-    db = arango_database("hive_live")
+    db = arango_database()
     usr = arango_username()
     pwd = arango_password("alexandria_root")
 

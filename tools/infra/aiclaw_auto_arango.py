@@ -28,7 +28,9 @@ DEFAULT_DB = "aiclaw_auto_rag"
 DEFAULT_USER = "root"
 DEFAULT_PASSWORD = "password"
 DEFAULT_KB = Path("knowledge_base.json")
-SHARED_DAG_DATABASES = {"infogeometry", "hive_live"}
+# Only the declaration/InfoTree database is the shared DAG.  `hive_live` is
+# the separate worker queue and must not be treated as the agent-memory brain.
+SHARED_DAG_DATABASES = {"infogeometry"}
 LOOPBACK_HOSTS = {"127.0.0.1", "localhost", "::1", "0:0:0:0:0:0:0:1"}
 
 

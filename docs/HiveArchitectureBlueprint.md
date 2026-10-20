@@ -235,7 +235,7 @@ Slice 5: CI lane
 ## 8) Immediate next command set (operator runbook)
 
 1. Validate queue schema status
-- `python3 tools/infra/hive_arango_queue.py status --endpoint http://127.0.0.1:8530 --database hive_live`
+- `python3 tools/infra/hive_arango_queue.py status --endpoint http://127.0.0.1:8540 --database hive_live`
 
 2. Run single swarm tick
 - `python3 tools/infra/hive_swarm.py --once`

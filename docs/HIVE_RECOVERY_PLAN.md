@@ -12,12 +12,17 @@ multi-worker beehive.
 - Hive queue and worker implementations exist under `tools/infra/hive_*.py`.
 - The configured local Arango environment is
   `configs/local/hive_arango.env`.
-- The configured endpoint is `http://127.0.0.1:8530`, database `infogeometry`.
-- Direct execution of `hive_arango_queue.py` lacks the repository import path;
-  `PYTHONPATH=.` allows the CLI to load.
-- Host-side connectivity is currently verified: `hive_ping.sh`, schema
-  initialization, `status`, and `queue-stats` all succeed against the configured
-  local endpoint. The separate `localhost:8540` endpoint is not running.
+- The AST/AQL DAG endpoint is `http://127.0.0.1:8530`, database
+  `infogeometry`, while the Hive queue defaults to
+  `http://127.0.0.1:8540`, database `hive_live`.
+- Agent memory is a separate logical lane (for example `hive_memory` or
+  `aiclaw_auto_rag`) and must not be conflated with either queue or DAG.
+- The maintained Hive launcher exports both the repository root and `src/` on
+  `PYTHONPATH`, so direct queue execution uses the same import path as workers.
+- Host-side connectivity evidence is environment-specific. Run the queue
+  checks against the resolved `HIVE_ARANGO_*` endpoint/database; run AST/AQL
+  checks against the resolved `ARANGO_*` endpoint/database. Do not infer one
+  lane's reachability from the other.
 - No Hive worker processes are currently running.
 - The Archon queue is separate and currently reports one completed and one
   failed task.

@@ -47,21 +47,21 @@ def _resolve_file(task: dict) -> Path | None:
 def _claim(queue: str, kind: str, worker: str) -> dict | None:
     load_repo_arango_env(_REPO)
     return claim_next_task(
-        arango_endpoint(), arango_database("hive_live"),
+        hive_arango_endpoint(), hive_arango_database("hive_live"),
         arango_username(), arango_password("alexandria_root"),
         worker_id=worker, queue_name=queue, lease_seconds=LEASE, task_kind=kind)
 
 def _save(task: dict, queue: str, kind: str, worker: str, extra: dict):
     load_repo_arango_env(_REPO)
     update_task_status(
-        arango_endpoint(), arango_database("hive_live"),
+        hive_arango_endpoint(), hive_arango_database("hive_live"),
         arango_username(), arango_password("alexandria_root"),
         task_key_value=task["_key"], worker_id=worker, status="pending",
         extra_fields={"queue_name": queue, "task_kind": kind, "runtime_goal_packet": extra})
 
 def _pending(queue: str) -> int:
     load_repo_arango_env(_REPO)
-    r = aql(arango_endpoint(), arango_database("hive_live"),
+    r = aql(hive_arango_endpoint(), hive_arango_database("hive_live"),
             arango_username(), arango_password("alexandria_root"),
             f"FOR t IN hive_tasks FILTER t.queue_name == '{queue}' FILTER t.status == 'pending' COLLECT WITH COUNT INTO n RETURN n", {})
     return r[0] if r else 0

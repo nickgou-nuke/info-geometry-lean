@@ -22,8 +22,8 @@ _REPO = _HERE.parents[1]
 sys.path.insert(0, str(_REPO))
 
 from tools.infra.arango_env import (
-    arango_database,
-    arango_endpoint,
+    hive_arango_database,
+    hive_arango_endpoint,
     arango_password,
     arango_username,
     load_repo_arango_env,
@@ -127,8 +127,8 @@ def main() -> None:
     args = parser.parse_args()
 
     load_repo_arango_env(_REPO)
-    ep = arango_endpoint()
-    db = arango_database("hive_live")
+    ep = hive_arango_endpoint()
+    db = hive_arango_database("hive_live")
     usr = arango_username()
     pwd = arango_password("alexandria_root")
 

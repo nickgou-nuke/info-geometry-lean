@@ -476,14 +476,14 @@ def main() -> None:
 
     # Load tasks from ArangoDB
     from tools.infra.arango_env import (
-        arango_database, arango_endpoint, arango_password,
+        hive_arango_database, hive_arango_endpoint, arango_password,
         arango_username, load_repo_arango_env,
     )
     from tools.infra.hive_arango_queue import aql
 
     load_repo_arango_env(_REPO)
-    ep = arango_endpoint()
-    db = arango_database("hive_live")
+    ep = hive_arango_endpoint()
+    db = hive_arango_database("hive_live")
     usr = arango_username()
     pwd = arango_password("alexandria_root")
 

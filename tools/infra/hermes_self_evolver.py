@@ -47,8 +47,8 @@ from tools.infra.hive_arango_queue import (
     request_json,
 )
 from tools.infra.arango_env import (
-    arango_database,
-    arango_endpoint,
+    hive_arango_database,
+    hive_arango_endpoint,
     arango_password,
     arango_username,
     load_repo_arango_env,
@@ -204,8 +204,8 @@ class HermesSelfEvolver:
         resume_from: Path | None = None,
     ) -> None:
         load_repo_arango_env(_REPO)
-        self._ep = arango_endpoint()
-        self._db = arango_database("hive_live")
+        self._ep = hive_arango_endpoint()
+        self._db = hive_arango_database("hive_live")
         self._usr = arango_username()
         self._pwd = arango_password("alexandria_root")
         self._skill_name = skill_name

@@ -32,6 +32,15 @@ Important boundary:
   loader and the read-only-by-default query interface below; record the exact
   tool and source revision used.
 
+The `ARANGO_*` lane documented here is for AST/AQL, declaration-graph, and
+InfoTree work: the repository default is `http://127.0.0.1:8530` with database
+`infogeometry`. It is not the Hive queue or agent-memory lane. Hive workers use
+the separate `HIVE_ARANGO_*` settings, defaulting to `http://127.0.0.1:8540`
+and database `hive_live`; agent-memory stores such as `hive_memory` or
+`aiclaw_auto_rag` are separate logical databases. If a deployment exposes the
+AST/AQL DAG on port `8030`, set `ARANGO_ENDPOINT` in its environment; no `8030`
+default is encoded in the checked-out repository.
+
 ### Typed semantic-edge metadata
 
 Declaration owners may optionally carry `@[edge_kind <identifier>]`. Supported

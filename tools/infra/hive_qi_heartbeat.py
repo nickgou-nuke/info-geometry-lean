@@ -16,8 +16,8 @@ from typing import Any
 
 try:
     from tools.infra.arango_env import (
-        arango_database,
-        arango_endpoint,
+        hive_arango_database,
+        hive_arango_endpoint,
         arango_password,
         arango_username,
         load_repo_arango_env,
@@ -25,8 +25,8 @@ try:
     from tools.infra import hive_arango_queue as queue
 except ImportError:  # pragma: no cover
     from arango_env import (
-        arango_database,
-        arango_endpoint,
+        hive_arango_database,
+        hive_arango_endpoint,
         arango_password,
         arango_username,
         load_repo_arango_env,
@@ -402,8 +402,8 @@ def main() -> None:
     ap.add_argument("--emit-summary", action="store_true")
     ap.add_argument("--print-json", action="store_true")
     ap.add_argument("--dry-run", action="store_true")
-    ap.add_argument("--endpoint", default=arango_endpoint())
-    ap.add_argument("--database", default=arango_database("hive_live"))
+    ap.add_argument("--endpoint", default=hive_arango_endpoint())
+    ap.add_argument("--database", default=hive_arango_database("hive_live"))
     ap.add_argument("--username", default=arango_username())
     ap.add_argument("--password", default=arango_password())
     ap.add_argument("--identity-packets-json", default="")

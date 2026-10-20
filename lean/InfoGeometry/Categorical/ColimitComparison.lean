@@ -124,4 +124,67 @@ theorem isoOfIsColimit_inv_trans
     _ = t₃.ι.app j ≫ (isoOfIsColimit h₁ h₃).inv :=
       (isoOfIsColimit_inv_fac h₁ h₃ j).symm
 
+/-! ### Transport of stagewise endomorphisms -/
+
+/-- The cocone obtained by applying a natural endomorphism to the legs of a
+    cocone. -/
+def coconeMap (η : F ⟶ F) (t : Cocone F) : Cocone F where
+  pt := t.pt
+  ι :=
+    { app := fun j => η.app j ≫ t.ι.app j
+      naturality := by
+        intro i j f
+        calc
+          F.map f ≫ η.app j ≫ t.ι.app j =
+              (F.map f ≫ η.app j) ≫ t.ι.app j := by
+                rw [Category.assoc]
+          _ = (η.app i ≫ F.map f) ≫ t.ι.app j := by
+                rw [η.naturality]
+          _ = η.app i ≫ (F.map f ≫ t.ι.app j) := by
+                rw [Category.assoc]
+          _ = η.app i ≫ (t.ι.app i ≫ ((Functor.const J).obj t.pt).map f) := by
+                rw [t.ι.naturality]
+          _ = (η.app i ≫ t.ι.app i) ≫ ((Functor.const J).obj t.pt).map f := by
+                rw [Category.assoc] }
+
+/-- The endomorphism of a colimit presentation induced by a natural
+    endomorphism of the underlying diagram. -/
+noncomputable def colimitEnd
+    (η : F ⟶ F) {t : Cocone F} (h : IsColimit t) : t.pt ⟶ t.pt :=
+  h.desc (coconeMap η t)
+
+@[simp]
+theorem colimitEnd_fac
+    (η : F ⟶ F) {t : Cocone F} (h : IsColimit t) (j : J) :
+    t.ι.app j ≫ colimitEnd η h = η.app j ≫ t.ι.app j :=
+  h.fac (coconeMap η t) j
+
+/-- Canonical colimit comparisons intertwine the endomorphisms induced by a
+    single natural endomorphism of the stage diagram. -/
+theorem isoOfIsColimit_hom_intertwines
+    (η : F ⟶ F)
+    {t₁ t₂ : Cocone F} (h₁ : IsColimit t₁) (h₂ : IsColimit t₂) :
+    (isoOfIsColimit h₁ h₂).hom ≫ colimitEnd η h₂ =
+      colimitEnd η h₁ ≫ (isoOfIsColimit h₁ h₂).hom := by
+  apply h₁.hom_ext
+  intro j
+  calc
+    t₁.ι.app j ≫ (isoOfIsColimit h₁ h₂).hom ≫ colimitEnd η h₂ =
+        (t₁.ι.app j ≫ (isoOfIsColimit h₁ h₂).hom) ≫ colimitEnd η h₂ := by
+          simp only [Category.assoc]
+    _ = t₂.ι.app j ≫ colimitEnd η h₂ := by
+          rw [isoOfIsColimit_hom_fac]
+    _ = η.app j ≫ t₂.ι.app j := colimitEnd_fac η h₂ j
+    _ = η.app j ≫ (t₁.ι.app j ≫ (isoOfIsColimit h₁ h₂).hom) := by
+          rw [isoOfIsColimit_hom_fac]
+    _ = (η.app j ≫ t₁.ι.app j) ≫
+          (isoOfIsColimit h₁ h₂).hom := by
+          rw [Category.assoc]
+    _ = (t₁.ι.app j ≫ colimitEnd η h₁) ≫
+          (isoOfIsColimit h₁ h₂).hom := by
+          rw [colimitEnd_fac η h₁ j]
+    _ = t₁.ι.app j ≫ colimitEnd η h₁ ≫
+          (isoOfIsColimit h₁ h₂).hom := by
+          rw [Category.assoc]
+
 end InfoGeometry.Categorical.ColimitComparison

@@ -44,7 +44,7 @@ theorem reciprocal_cross_pairing
   have hba : b * a = 1 := by simpa [mul_comm] using hab
   simp only [map_add, map_smul, LinearMap.add_apply,
     LinearMap.smul_apply, smul_eq_mul]
-  rw [hpp, hmm]
+  simp only [hpp, hmm, mul_zero, add_zero, zero_add]
   calc
     (a * (b * g x₊ y₋) + b * (a * g x₋ y₊)) =
       (a * b) * g x₊ y₋ + (b * a) * g x₋ y₊ := by ring
@@ -94,8 +94,56 @@ theorem finiteBKMDissipation_eq_onsager (energies : ι → ℝ)
       -(Matrix.trace (star X *
         InfoGeometry.Canonical.BKMOnsagerMobilityBridge.bkmOnsager energies X)).re := by
   rw [InfoGeometry.Canonical.BKMOnsagerMobilityBridge.trace_star_bkmOnsager]
-  rfl
 
 end FiniteBKM
+
+
+section BoostDissipationCompatibility
+
+variable {V : Type*} [AddCommGroup V] [Module ℝ V]
+variable {g omega : V →ₗ[ℝ] V →ₗ[ℝ] ℝ}
+variable {K : V →ₗ[ℝ] V}
+variable {ι : Type*} [Fintype ι] [DecidableEq ι]
+
+/-- The neutral para-pairing is boost-invariant, while the finite BKM
+dissipation retains its concrete Onsager realization and its sign. -/
+theorem boost_dissipation_onsager_compatibility
+    (hK : ParaComplexStructure K)
+    (hPK : ParaKahlerStructure g omega K)
+    {x₊ x₋ y₊ y₋ : V}
+    (hx₊ : InTPlus K x₊) (hx₋ : InTMinus K x₋)
+    (hy₊ : InTPlus K y₊) (hy₋ : InTMinus K y₋)
+    (energies : ι → ℝ) (X₊ X₋ : Matrix ι ι ℂ)
+    (a b : ℝ) (hab : a * b = 1) :
+    let X_boost := (a : ℂ) • X₊ + (b : ℂ) • X₋
+    g (a • x₊ + b • x₋) (a • y₊ + b • y₋) = g (x₊ + x₋) (y₊ + y₋) ∧
+      finiteBKMDissipation energies X_boost =
+        -(Matrix.trace (star X_boost *
+          InfoGeometry.Canonical.BKMOnsagerMobilityBridge.bkmOnsager energies X_boost)).re ∧
+      finiteBKMDissipation energies X_boost ≤ 0 := by
+  refine ⟨reciprocal_cross_pairing hK hPK hx₊ hx₋ hy₊ hy₋ a b hab, ?_, ?_⟩
+  · exact finiteBKMDissipation_eq_onsager energies _
+  · exact finiteBKMDissipation_nonpos energies _
+
+/-- Modular rapidity specializes reciprocal boost/dissipation compatibility. -/
+theorem exponential_boost_dissipation_compatibility
+    (hK : ParaComplexStructure K)
+    (hPK : ParaKahlerStructure g omega K)
+    {x₊ x₋ y₊ y₋ : V}
+    (hx₊ : InTPlus K x₊) (hx₋ : InTMinus K x₋)
+    (hy₊ : InTPlus K y₊) (hy₋ : InTMinus K y₋)
+    (energies : ι → ℝ) (X₊ X₋ : Matrix ι ι ℂ) (η : ℝ) :
+    let X_boost := (Real.exp η : ℂ) • X₊ + (Real.exp (-η) : ℂ) • X₋
+    g (Real.exp η • x₊ + Real.exp (-η) • x₋)
+        (Real.exp η • y₊ + Real.exp (-η) • y₋) = g (x₊ + x₋) (y₊ + y₋) ∧
+      finiteBKMDissipation energies X_boost =
+        -(Matrix.trace (star X_boost *
+          InfoGeometry.Canonical.BKMOnsagerMobilityBridge.bkmOnsager energies X_boost)).re ∧
+      finiteBKMDissipation energies X_boost ≤ 0 := by
+  apply boost_dissipation_onsager_compatibility hK hPK hx₊ hx₋ hy₊ hy₋ energies X₊ X₋
+  rw [← Real.exp_add]
+  simp
+
+end BoostDissipationCompatibility
 
 end InfoGeometry.Canonical.ModularParaBKMIntegration

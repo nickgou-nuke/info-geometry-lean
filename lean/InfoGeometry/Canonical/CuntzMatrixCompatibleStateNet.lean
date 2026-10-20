@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Canonical.CuntzMatrixAlgebraicTraceFunctional
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FiniteMatrixGibbsFunctional
@@ -417,6 +423,22 @@ theorem gibbsColimitFunctional_stage
     gibbsColimitFunctional H hH β hCompat (stageInjection n x) =
       gibbsFunctional (H n) (hH n) β x := by
   exact colimitFunctional_stage (gibbsStageFunctional H hH β) hCompat n x
+
+theorem gibbsColimitFunctional_unique
+    (H : ∀ n, MatrixStage n)
+    (hH : ∀ n, (H n).IsHermitian) (β : ℝ)
+    (hCompat : Compatible (gibbsStageFunctional H hH β))
+    (F : Carrier →ₗ[ℂ] ℂ)
+    (hF : ∀ (n : ℕ) (x : MatrixStage n),
+      F (stageInjection n x) = gibbsFunctional (H n) (hH n) β x) :
+    F = gibbsColimitFunctional H hH β hCompat := by
+  apply LinearMap.ext
+  intro y
+  induction y using DirectLimit.induction with
+  | _ n x =>
+      change F (stageInjection n x) =
+        gibbsColimitFunctional H hH β hCompat (stageInjection n x)
+      rw [hF n x, gibbsColimitFunctional_stage]
 
 theorem gibbsColimitFunctional_one
     (H : ∀ n, MatrixStage n)

@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Analysis.InnerProductSpace.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Dual.Defs
@@ -335,6 +341,47 @@ theorem ε_eq_Pplus_sub_Pminus : X.ε = X.Pplus - X.Pminus := by
     simpa [ContinuousLinearMap.add_comp, Pplus_idempotent (X := X), add_comm, add_left_comm,
       add_assoc] using h
   exact add_left_cancel h'
+
+theorem Pplus_apply_add_Pminus_apply (x : X.H) :
+    X.Pplus x + X.Pminus x = x := by
+  have h := congrArg (fun T : X.H →L[ℝ] X.H => T x) X.Pplus_add_Pminus
+  simpa only [add_apply, ContinuousLinearMap.id_apply] using h
+
+theorem Pplus_apply_eq_self_iff (x : X.H) :
+    X.Pplus x = x ↔ X.ε x = x := by
+  constructor
+  · intro h
+    have hzero : X.Pminus x = 0 := by
+      have hcomp := congrArg (fun T : X.H →L[ℝ] X.H => T x) X.Pminus_comp_Pplus
+      have hcomp' : X.Pminus (X.Pplus x) = 0 := by
+        simpa only [ContinuousLinearMap.comp_apply, zero_apply] using hcomp
+      rw [h] at hcomp'
+      exact hcomp'
+    have hdiff := congrArg (fun T : X.H →L[ℝ] X.H => T x) X.ε_eq_Pplus_sub_Pminus
+    have hdiff' : X.ε x = X.Pplus x - X.Pminus x := by
+      simpa only [sub_apply] using hdiff
+    simpa [h, hzero] using hdiff'
+  · intro h
+    rw [show X.Pplus x = (2 : ℝ)⁻¹ • (x + X.ε x) by rfl, h]
+    module
+
+theorem Pminus_apply_eq_self_iff (x : X.H) :
+    X.Pminus x = x ↔ X.ε x = -x := by
+  constructor
+  · intro h
+    have hzero : X.Pplus x = 0 := by
+      have hcomp := congrArg (fun T : X.H →L[ℝ] X.H => T x) X.Pplus_comp_Pminus
+      have hcomp' : X.Pplus (X.Pminus x) = 0 := by
+        simpa only [ContinuousLinearMap.comp_apply, zero_apply] using hcomp
+      rw [h] at hcomp'
+      exact hcomp'
+    have hdiff := congrArg (fun T : X.H →L[ℝ] X.H => T x) X.ε_eq_Pplus_sub_Pminus
+    have hdiff' : X.ε x = X.Pplus x - X.Pminus x := by
+      simpa only [sub_apply] using hdiff
+    simpa [h, hzero] using hdiff'
+  · intro h
+    rw [show X.Pminus x = (2 : ℝ)⁻¹ • (x - X.ε x) by rfl, h]
+    module
 
 end Algebra
 

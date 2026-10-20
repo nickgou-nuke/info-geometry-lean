@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Cartan.Involution
@@ -186,6 +192,23 @@ lemma spectral_decomposition (v : DoubledSpace E) :
   rw [← ContinuousLinearMap.add_apply]
   rw [spectralProj_sum (E := E)]
   rfl
+
+/-- The signed difference of the spectral projectors recovers the fundamental
+    grading operator. -/
+lemma spectral_signed_decomposition (v : DoubledSpace E) :
+    spectralPlusProj (E := E) v - spectralMinusProj (E := E) v =
+      spectral_epsilon (E := E) v := by
+  change ((⅟ (2 : ℝ)) • (v + spectral_epsilon (E := E) v)) -
+      ((⅟ (2 : ℝ)) • (v - spectral_epsilon (E := E) v)) = _
+  simp only [smul_add, smul_sub, smul_neg]
+  abel
+  rw [two_smul]
+  rw [← add_smul]
+  have hsum : ⅟ (2 : ℝ) + ⅟ (2 : ℝ) = 1 := by
+    calc
+      ⅟ (2 : ℝ) + ⅟ (2 : ℝ) = ⅟ (2 : ℝ) * 2 := by ring
+      _ = 1 := invOf_mul_self 2
+  rw [hsum, one_smul]
 
 /-- Canonical Krein-facing alias for pointwise spectral decomposition. -/
 lemma krein_projector_decomposition (v : DoubledSpace E) :

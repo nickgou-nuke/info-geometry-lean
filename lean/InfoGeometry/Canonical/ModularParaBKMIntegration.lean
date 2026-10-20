@@ -2,6 +2,7 @@ import Mathlib.Tactic
 import InfoGeometry.Canonical.ParaKahlerLagrangianDimension
 import InfoGeometry.SuperGrassmannian.SuperGrassmannianProjectorTransportClosure
 import InfoGeometry.Canonical.BKMOnsagerMobilityBridge
+import InfoGeometry.Canonical.ModularParaHyperkahlerBridge
 
 /-!
 # Constructive para-polarization and finite BKM dissipation
@@ -21,6 +22,7 @@ namespace InfoGeometry.Canonical.ModularParaBKMIntegration
 open InfoGeometry.Canonical.SuperGrassmannianManifold
 open InfoGeometry.Canonical.ParaKahlerLagrangianDimension
 open InfoGeometry.InformationGeometry.BKM
+open InfoGeometry.Canonical.BKMOnsagerMobilityBridge
 
 section ParaPolarization
 
@@ -97,6 +99,68 @@ theorem finiteBKMDissipation_eq_onsager (energies : ι → ℝ)
 
 end FiniteBKM
 
+
+section BKMBoostAnomaly
+
+variable {ι : Type*} [Fintype ι] [DecidableEq ι]
+
+/-- Reciprocal rescaling preserves the cross-sheet Onsager pairing. -/
+theorem bkmOnsager_reciprocal_cross_pairing
+    (energies : ι → ℝ) (X₊ X₋ Y₊ Y₋ : Matrix ι ι ℂ)
+    (a b : ℝ) (hab : a * b = 1) :
+    Matrix.trace (star ((a : ℂ) • X₊) * bkmOnsager energies ((b : ℂ) • Y₋) +
+        star ((b : ℂ) • X₋) * bkmOnsager energies ((a : ℂ) • Y₊)) =
+      Matrix.trace (star X₊ * bkmOnsager energies Y₋ +
+        star X₋ * bkmOnsager energies Y₊) := by
+  have habℂ : (a : ℂ) * (b : ℂ) = 1 := by exact_mod_cast hab
+  have hbaℂ : (b : ℂ) * (a : ℂ) = 1 := by rw [mul_comm, habℂ]
+  simp only [star_smul, Complex.star_def, Complex.conj_ofReal, map_smul,
+    smul_mul_assoc, mul_smul_comm, smul_smul, habℂ, hbaℂ, one_smul]
+
+/-- The BKM boost anomaly is entirely in the two self-dissipation sectors. -/
+theorem finiteBKMDissipation_reciprocal_anomaly
+    (energies : ι → ℝ) (X₊ X₋ : Matrix ι ι ℂ)
+    (a b : ℝ) (hab : a * b = 1) :
+    finiteBKMDissipation energies ((a : ℂ) • X₊ + (b : ℂ) • X₋) -
+      finiteBKMDissipation energies (X₊ + X₋) =
+    (a ^ 2 - 1) * finiteBKMDissipation energies X₊ +
+      (b ^ 2 - 1) * finiteBKMDissipation energies X₋ := by
+  have habℂ : (a : ℂ) * (b : ℂ) = 1 := by exact_mod_cast hab
+  have hbaℂ : (b : ℂ) * (a : ℂ) = 1 := by rw [mul_comm, habℂ]
+  simp only [finiteBKMDissipation, ← trace_star_bkmOnsager]
+  simp only [star_add, star_smul, Complex.star_def, Complex.conj_ofReal,
+    map_add, map_smul, add_mul, mul_add, smul_mul_assoc, mul_smul_comm,
+    smul_smul, habℂ, hbaℂ, one_smul, Matrix.trace_add, Matrix.trace_smul,
+    smul_eq_mul, Complex.add_re, Complex.mul_re, Complex.mul_im,
+    Complex.ofReal_re, Complex.ofReal_im]
+  ring
+
+/-- Rapidities specialize the general reciprocal BKM anomaly. -/
+theorem finiteBKMDissipation_exponential_anomaly
+    (energies : ι → ℝ) (X₊ X₋ : Matrix ι ι ℂ) (η : ℝ) :
+    finiteBKMDissipation energies
+        ((Real.exp η : ℂ) • X₊ + (Real.exp (-η) : ℂ) • X₋) -
+      finiteBKMDissipation energies (X₊ + X₋) =
+    (Real.exp (2 * η) - 1) * finiteBKMDissipation energies X₊ +
+      (Real.exp (-2 * η) - 1) * finiteBKMDissipation energies X₋ := by
+  have h := finiteBKMDissipation_reciprocal_anomaly energies X₊ X₋
+    (Real.exp η) (Real.exp (-η)) (by rw [← Real.exp_add]; simp)
+  have hexp_pos : Real.exp η ^ 2 = Real.exp (2 * η) := by
+    rw [sq, ← Real.exp_add, two_mul]
+  have hexp_neg : Real.exp (-η) ^ 2 = Real.exp (-2 * η) := by
+    rw [sq, ← Real.exp_add]
+    congr 1
+    ring
+  rw [hexp_pos, hexp_neg] at h
+  exact h
+
+/-- Every boosted finite perturbation remains BKM-dissipative. -/
+theorem finiteBKMDissipation_boost_nonpos
+    (energies : ι → ℝ) (X₊ X₋ : Matrix ι ι ℂ) (a b : ℝ) :
+    finiteBKMDissipation energies ((a : ℂ) • X₊ + (b : ℂ) • X₋) ≤ 0 :=
+  finiteBKMDissipation_nonpos energies _
+
+end BKMBoostAnomaly
 
 section BoostDissipationCompatibility
 

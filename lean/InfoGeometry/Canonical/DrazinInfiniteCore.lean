@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Analysis.Normed.Operator.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Normed.Algebra.Spectrum
@@ -758,6 +764,21 @@ theorem complementaryProjector_mul_projector_of_riesz
   rw [h.hP]
   unfold complementaryProjector
   exact InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection_mul_projection h.hIsDrazin
+
+/-- The complementary Riesz projector is annihilated by the Drazin index power
+on both sides. -/
+@[rep_depth operator]
+theorem drazin_complementaryProjector_annihilates_index_power
+    (h : RieszDrazinData T) :
+    T ^ h.k * complementaryProjector h = 0 ∧
+      complementaryProjector h * T ^ h.k = 0 := by
+  constructor
+  · unfold complementaryProjector
+    exact InfoGeometry.Canonical.Drazin.IsDrazinInverse.power_mul_complementaryProjection_eq_zero
+      h.hIsDrazin
+  · unfold complementaryProjector
+    exact InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection_mul_power_eq_zero
+      h.hIsDrazin
 
 end RieszData
 

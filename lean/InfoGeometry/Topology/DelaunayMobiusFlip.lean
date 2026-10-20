@@ -126,6 +126,7 @@ def flipBlock_mobius_gauge_covariant_target (T : MobiusMap ℚ) : Prop :=
          flipBlock labels i k j l hik *
          !![(leftGauge T (labels.ζ l))⁻¹, 0; 0, (leftGauge T (labels.ζ j))⁻¹]
 
+omit [DecidableEq ι] in
 /-- A nondegenerate source chart remains nondegenerate after a Möbius relabeling. -/
 theorem mobiusComp_sub_ne_zero
     (hik : i ≠ k)

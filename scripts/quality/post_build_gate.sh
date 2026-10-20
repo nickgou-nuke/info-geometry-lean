@@ -7,7 +7,7 @@ cd "$ROOT"
 mkdir -p artifacts
 
 # Parse mode and flags
-MODE="full"
+MODE="incremental"
 BASE_REF=""
 HEAD_REF="HEAD"
 EXPLICIT_HEAD=false
@@ -16,6 +16,9 @@ for arg in "$@"; do
     case "$arg" in
         --incremental|-i|incremental)
             MODE="incremental"
+            ;;
+        --full|full)
+            MODE="full"
             ;;
         --base=*)
             BASE_REF="${arg#*=}"

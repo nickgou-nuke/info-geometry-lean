@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
@@ -123,6 +129,12 @@ theorem modularFlowCl11_group_property (t s : ThermalTime) (q : Cl11) :
     modularFlowCl11 (t + s) q = modularFlowCl11 t (modularFlowCl11 s q) := by
   have hangle : 2 * (t + s) = 2 * t + 2 * s := by ring
   ext <;> simp [modularFlowCl11, hangle, Real.cos_add, Real.sin_add] <;> ring
+
+/-- The finite modular flow has an explicit inverse at the opposite time. -/
+theorem modularFlowCl11_inverse (t : ThermalTime) (q : Cl11) :
+    modularFlowCl11 (-t) (modularFlowCl11 t q) = q := by
+  have h := modularFlowCl11_group_property (-t) t q
+  simpa using h.symm
 
 /-!
 ## 2. Modular Flow on Zorn Matrices

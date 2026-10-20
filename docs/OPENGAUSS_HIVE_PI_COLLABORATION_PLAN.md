@@ -295,6 +295,67 @@ between intake, Lean checking, build, and audit. Integration is a separate
 coordinator action after all gates; no worker or provider may edit an owner file
 implicitly.
 
+## Archon scheduler and lease boundary
+
+Archon is the deterministic scheduler and lease/orchestration layer for the
+pilot. It orders fixed stages and records task state, source and contract
+hashes, retries, leases, and artifacts. OpenGauss validators enforce packet
+contracts and trap checks; they do not synthesize theorem truth.
+
+The deterministic Archon state machine is:
+
+```text
+contract
+  → hash-bound candidate
+  → optional Pantograph evidence
+  → sandbox proposal
+  → independent refutation
+  → Lean verification
+  → locked build
+  → independent audit
+  → independent QA
+  → promote or hold
+```
+
+Archon must not rewrite owner files, synthesize mathematical truth, or promote
+provider output. Pantograph remains exploratory evidence. Lean kernel checking
+and serial locked Lake builds remain mathematical authority. Authoring,
+A-A audit, and QA-A contexts must be distinct, and promotion is a final
+explicit decision only after the evidence chain is replayable from the contract
+and source snapshots.
+
+Archon should schedule the pilot and advance its task state from the emitted
+artifacts. Every transition must be locally validated, append an auditable
+artifact, and remain replayable without trusting scheduler prose or provider
+responses.
+
+### Bounded pilot implementation
+
+The repository-owned deterministic gate runner is:
+
+```bash
+python3 tools/infra/opengauss_hive_pilot.py \\
+  --contract scratch/<validated-contract>.json \\
+  --candidate scratch/<candidate>.lean \\
+  --output-dir tmp/opengauss_hive_pilot \\
+  --build-target InfoGeometry.<Owner.Module>
+```
+
+The candidate must be under `scratch/` or `tmp/`; the runner never edits an
+owner file. It validates the Ground-Truth Contract, hashes the candidate
+snapshot, runs strict OpenGauss refutation, runs `lake env lean` under the
+shared build lock, and optionally runs the locked Lake module build. Every
+stage is emitted as a replayable JSON artifact.
+
+Independent A-A and QA-A evidence may be supplied with `--audit-evidence` and
+`--qa-evidence`. Each file must contain an accepting verdict, the current
+contract/candidate/run/snapshot hashes, a nonempty context hash, and distinct
+agent, session, and origin-run identifiers. The runner records `hold` unless all Lean, build, A-A, and QA-A gates
+pass and `--allow-promotion` is explicitly supplied. A `promote` result is a
+recorded decision only; it does not mutate source or enqueue a production
+packet. Pantograph evidence remains navigation evidence and cannot satisfy the
+Lean, build, A-A, or QA-A gates.
+
 ## Deep Socratic questions
 
 1. What is the immutable root of lineage: contract, goal, or task?

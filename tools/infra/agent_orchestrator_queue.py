@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import argparse
 import concurrent.futures
+import hashlib
 import json
 import os
 import re
@@ -31,6 +32,11 @@ from typing import Any
 
 
 ROOT = Path.cwd()
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+SRC_DIR = ROOT / "src"
+if SRC_DIR.is_dir() and str(SRC_DIR) not in sys.path:
+    sys.path.insert(0, str(SRC_DIR))
 QUEUE_PATH = ROOT / "task_queue.json"
 PROOF_DIR = ROOT / "proofs"
 ARTIFACT_DIR = ROOT / "artifacts" / "agent_orchestrator"
@@ -47,8 +53,17 @@ def rel(path: Path) -> str:
         return str(path)
 
 
+def file_sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as source:
+        for chunk in iter(lambda: source.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
 # [lossless-compact] now_iso folded into igf.common.time_utils.now_iso
 from igf.common.time_utils import now_iso
+from tools.build_lock import acquire_build_lock
 
 
 def load_queue() -> dict[str, Any]:
@@ -62,7 +77,18 @@ def load_queue() -> dict[str, Any]:
 
 
 def save_queue(queue: dict[str, Any]) -> None:
-    QUEUE_PATH.write_text(json.dumps(queue, indent=2, ensure_ascii=False))
+    temporary = QUEUE_PATH.with_name(
+        f".{QUEUE_PATH.name}.{os.getpid()}-{time.time_ns()}.tmp"
+    )
+    try:
+        with temporary.open("w", encoding="utf-8") as target:
+            target.write(json.dumps(queue, indent=2, ensure_ascii=False))
+            target.write("\n")
+            target.flush()
+            os.fsync(target.fileno())
+        os.replace(temporary, QUEUE_PATH)
+    finally:
+        temporary.unlink(missing_ok=True)
 
 
 def task_lean_path(task: dict[str, Any]) -> Path:
@@ -210,9 +236,24 @@ def run_algebraist(task: dict[str, Any]) -> dict[str, Any]:
     )
 
 
+def _formal_snapshot_path(task: dict[str, Any]) -> Path:
+    snapshot_dir = ROOT / ".runtime" / "agent_orchestrator" / "snapshots"
+    snapshot_dir.mkdir(parents=True, exist_ok=True)
+    existing = task.get("_formal_snapshot_path")
+    if existing:
+        return Path(existing)
+    snapshot_path = snapshot_dir / (
+        f"{safe_id(task['id'])}-{os.getpid()}-{time.time_ns()}.lean"
+    )
+    task["_formal_snapshot_path"] = str(snapshot_path)
+    return snapshot_path
+
+
 def run_formalist(task: dict[str, Any]) -> dict[str, Any]:
     lean_path = task_lean_path(task)
-    if not lean_path.exists():
+    snapshot_path = _formal_snapshot_path(task)
+    snapshot_path.unlink(missing_ok=True)
+    if not lean_path.is_file():
         if task.get("lean_proof"):
             return {
                 "stage": "formalist",
@@ -223,17 +264,71 @@ def run_formalist(task: dict[str, Any]) -> dict[str, Any]:
             }
         return stage_skip("formalist", "No Lean proof requested.")
 
-    return run_command(
-        "formalist",
-        ["lake", "env", "lean", str(lean_path)],
-        timeout=120,
-        path_for_report=lean_path,
-    )
+    try:
+        shutil.copy2(lean_path, snapshot_path)
+    except OSError as exc:
+        return {
+            "stage": "formalist",
+            "ok": False,
+            "path": rel(lean_path),
+            "elapsed_ms": 0,
+            "error": f"Could not snapshot Lean proof {rel(lean_path)}: {exc}",
+        }
+
+    source_hash = file_sha256(lean_path)
+    snapshot_hash = file_sha256(snapshot_path)
+    if source_hash != snapshot_hash:
+        return {
+            "stage": "formalist",
+            "ok": False,
+            "path": rel(lean_path),
+            "elapsed_ms": 0,
+            "error": "Source and formalist snapshot hashes differ.",
+            "source_path": rel(lean_path),
+            "snapshot_path": rel(snapshot_path),
+            "source_sha256": source_hash,
+            "snapshot_sha256": snapshot_hash,
+        }
+
+    try:
+        with acquire_build_lock(
+            None,
+            f"agent-orchestrator-formalist:{task['id']}:{os.getpid()}",
+            block=True,
+        ):
+            result = run_command(
+                "formalist",
+                ["lake", "env", "lean", str(snapshot_path)],
+                timeout=120,
+                path_for_report=snapshot_path,
+            )
+    except Exception as exc:
+        return {
+            "stage": "formalist",
+            "ok": False,
+            "path": rel(lean_path),
+            "elapsed_ms": 0,
+            "error": f"Could not acquire the shared build lock: {exc}",
+        }
+    result["source_path"] = rel(lean_path)
+    result["snapshot_path"] = rel(snapshot_path)
+    result["source_sha256"] = source_hash
+    result["snapshot_sha256"] = snapshot_hash
+    final_source_hash = file_sha256(lean_path)
+    final_snapshot_hash = file_sha256(snapshot_path)
+    result["final_source_sha256"] = final_source_hash
+    result["final_snapshot_sha256"] = final_snapshot_hash
+    if final_source_hash != final_snapshot_hash:
+        result["ok"] = False
+        result["error"] = "Source changed while the formalist was running."
+    return result
 
 
 def run_critic(task: dict[str, Any]) -> dict[str, Any]:
-    lean_path = task_lean_path(task)
-    if not lean_path.exists():
+    lean_path = _formal_snapshot_path(task)
+    if not lean_path.is_file():
+        lean_path = task_lean_path(task)
+    if not lean_path.is_file():
         return stage_skip("critic", "No Lean file to lint.")
 
     linter = ROOT / "tools" / "scripts" / "vacuity-linter.py"
@@ -242,12 +337,38 @@ def run_critic(task: dict[str, Any]) -> dict[str, Any]:
     if not linter.exists():
         return stage_skip("critic", "No vacuity linter found.")
 
-    return run_command(
+    source_path = task_lean_path(task)
+    if source_path.is_file() and lean_path != source_path:
+        source_hash = file_sha256(source_path)
+        snapshot_hash = file_sha256(lean_path)
+        if source_hash != snapshot_hash:
+            return {
+                "stage": "critic",
+                "ok": False,
+                "path": rel(lean_path),
+                "elapsed_ms": 0,
+                "error": "Source and critic snapshot hashes differ.",
+                "source_path": rel(source_path),
+                "snapshot_path": rel(lean_path),
+                "source_sha256": source_hash,
+                "snapshot_sha256": snapshot_hash,
+            }
+
+    result = run_command(
         "critic",
         ["python3", str(linter), "--json", str(lean_path)],
         timeout=30,
         path_for_report=lean_path,
     )
+    if source_path.is_file() and lean_path != source_path:
+        final_source_hash = file_sha256(source_path)
+        final_snapshot_hash = file_sha256(lean_path)
+        result["final_source_sha256"] = final_source_hash
+        result["final_snapshot_sha256"] = final_snapshot_hash
+        if final_source_hash != final_snapshot_hash:
+            result["ok"] = False
+            result["error"] = "Source changed while the critic was running."
+    return result
 
 
 def write_report(report: dict[str, Any]) -> Path:
@@ -276,7 +397,7 @@ def summarize(report: dict[str, Any], report_path: Path) -> str:
     return "\n".join(lines)
 
 
-def add_task(args: argparse.Namespace) -> int:
+def _add_task_locked(args: argparse.Namespace) -> int:
     queue = load_queue()
     if any(t["id"] == args.theorem_id for t in queue["queue"]):
         print(f"[ERROR]: Theorem {args.theorem_id} already exists in queue.", file=sys.stderr)
@@ -315,6 +436,16 @@ def add_task(args: argparse.Namespace) -> int:
     return 0
 
 
+def add_task(args: argparse.Namespace) -> int:
+    queue_lock = Path("/tmp/info-geometry-agent-queue.lock")
+    with acquire_build_lock(
+        queue_lock,
+        f"agent-orchestrator-add:{os.getpid()}",
+        block=True,
+    ):
+        return _add_task_locked(args)
+
+
 def status() -> int:
     queue = load_queue()
     counts: dict[str, int] = {}
@@ -324,7 +455,7 @@ def status() -> int:
     return 0
 
 
-def run_next() -> int:
+def _run_next_locked() -> int:
     queue = load_queue()
     task = next((t for t in queue["queue"] if t["status"] == "pending"), None)
     if task is None:
@@ -368,6 +499,16 @@ def run_next() -> int:
 
     print(summarize(report, report_path))
     return 0 if ok else 1
+
+
+def run_next() -> int:
+    queue_lock = Path("/tmp/info-geometry-agent-queue.lock")
+    with acquire_build_lock(
+        queue_lock,
+        f"agent-orchestrator-queue:{os.getpid()}",
+        block=True,
+    ):
+        return _run_next_locked()
 
 
 def main() -> int:

@@ -23,6 +23,8 @@ export ARCHON_PI_MODEL="${ARCHON_PI_MODEL:-deepseek/deepseek-v4-flash}"
 export TITLE_GENERATION_MODEL="${TITLE_GENERATION_MODEL:-$ARCHON_PI_MODEL}"
 export ARCHON_SKIP_TITLE_GENERATION="${ARCHON_SKIP_TITLE_GENERATION:-true}"
 
+export PYTHONPATH="$REPO_ROOT/src${PYTHONPATH:+:$PYTHONPATH}"
+
 cd "$ARCHON_ROOT"
 exec env HOME="$PI_RUNTIME_HOME" \
   bun run cli workflow run agent-orchestrator-definite-sequence \

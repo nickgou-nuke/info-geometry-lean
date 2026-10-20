@@ -1,3 +1,11 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+/- SPDX-License-Identifier: Apache-2.0 -/
+
 import InfoGeometry.Canonical.RealBdG
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.CategoryTheory.Category.Basic
@@ -304,6 +312,35 @@ noncomputable def chiralityPolarization : KPolarization (S := S) M where
 
 @[simp] lemma chiralityPolarization_minus :
     (M.chiralityPolarization).minus = M.weylMinus := rfl
+
+/- The square-minus-one internal axis gives a linear equivalence between the
+   two Weyl sectors; its inverse is the negative of the same axis. -/
+noncomputable def weylPlusKEquiv :
+    M.weylPlus ≃ₗ[ℝ] M.weylMinus where
+  toFun x :=
+    ⟨M.K x, KPolarization.K_maps_plus_to_minus
+      (P0 := M.chiralityPolarization) x
+      (by simpa only [RealMajoranaDatum.chiralityPolarization_plus] using x.property)⟩
+  invFun y :=
+    ⟨-M.K y, by
+      apply M.weylPlus.neg_mem
+      exact KPolarization.K_maps_minus_to_plus
+        (P0 := M.chiralityPolarization) y
+        (by simpa only [RealMajoranaDatum.chiralityPolarization_minus] using y.property)⟩
+  left_inv x := by
+    apply Subtype.ext
+    have hK := congrArg (fun f : EndS (S := S) => f x.1) M.K_sq
+    simpa [ContinuousLinearMap.comp_apply] using congrArg Neg.neg hK
+  right_inv y := by
+    apply Subtype.ext
+    have hK := congrArg (fun f : EndS (S := S) => f y.1) M.K_sq
+    simpa [ContinuousLinearMap.comp_apply] using congrArg Neg.neg hK
+  map_add' x y := by
+    apply Subtype.ext
+    simp
+  map_smul' r x := by
+    apply Subtype.ext
+    simp
 
 end RealMajoranaDatum
 

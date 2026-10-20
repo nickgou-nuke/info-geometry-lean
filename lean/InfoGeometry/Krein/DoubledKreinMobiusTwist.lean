@@ -591,6 +591,14 @@ theorem toMoebius_twist (K : C) (cpt_twist : K ≅ K) [HasColimit (moebiusDiagra
   rw [Category.id_comp] at h_left
   exact h.trans h_left.symm
 
+/-- The inverse twist is also identified with the identity after quotienting. -/
+theorem toMoebius_twist_inv (K : C) (cpt_twist : K ≅ K)
+    [HasColimit (moebiusDiagram K cpt_twist)] :
+    cpt_twist.inv ≫ toMoebius K cpt_twist = toMoebius K cpt_twist := by
+  have h := toMoebius_twist K cpt_twist
+  have h' := congrArg (fun f => cpt_twist.inv ≫ f) h
+  simpa [Category.assoc] using h'.symm
+
 end MoebiusTwist
 
 end InfoGeometry.Krein

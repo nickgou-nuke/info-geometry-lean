@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
@@ -62,6 +68,15 @@ theorem A_pow_mul_DrazinResidueProjector_eq_zero
     A ^ k * DrazinResidueProjector A D = 0 := by
   simpa [DrazinResidueProjector] using
     IsDrazinInverse.power_mul_complementaryProjection_eq_zero h
+
+/-- The Drazin residue is also killed on the right by the Drazin index power. -/
+@[rep_depth operator]
+theorem DrazinResidueProjector_mul_A_pow_eq_zero
+    {A D : R} {k : ℕ}
+    (h : IsDrazinInverse A D k) :
+    DrazinResidueProjector A D * A ^ k = 0 := by
+  simpa [DrazinResidueProjector] using
+    IsDrazinInverse.complementaryProjection_mul_power_eq_zero h
 
 /--
 If the source has no Drazin residue, then the Drazin Green operator gives an

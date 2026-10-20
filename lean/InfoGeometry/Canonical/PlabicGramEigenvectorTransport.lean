@@ -95,6 +95,37 @@ theorem conjTranspose_mulVec_gram_eigenvector {m n : Type*}
     mulVec_gram_eigenvector (A := A.conjTranspose) eigenvalue w hA
   simpa only [Matrix.conjTranspose_conjTranspose] using htransport
 
+/-- At a nonzero eigenvalue, every eigenvector of `A * Aᴴ` has a preimage in
+the `Aᴴ * A` eigenspace. The preimage is obtained by applying `Aᴴ` and
+scaling by the inverse eigenvalue. -/
+theorem mulVec_gram_eigenvector_preimage {m n : Type*} [Fintype m] [Fintype n]
+    (A : Matrix m n ℂ) (eigenvalue : ℂ) (hEigenvalue_ne_zero : eigenvalue ≠ 0)
+    (w : m → ℂ)
+    (h : (A * A.conjTranspose).mulVec w = eigenvalue • w) :
+    ∃ v : n → ℂ,
+      (A.conjTranspose * A).mulVec v = eigenvalue • v ∧ A.mulVec v = w := by
+  let v := eigenvalue⁻¹ • A.conjTranspose.mulVec w
+  have hEigen := conjTranspose_mulVec_gram_eigenvector A eigenvalue w h
+  refine ⟨v, ?_, ?_⟩
+  · dsimp [v]
+    calc
+      (A.conjTranspose * A).mulVec
+          (eigenvalue⁻¹ • A.conjTranspose.mulVec w) =
+          eigenvalue⁻¹ • (A.conjTranspose * A).mulVec
+            (A.conjTranspose.mulVec w) := by rw [Matrix.mulVec_smul]
+      _ = eigenvalue⁻¹ • (eigenvalue • A.conjTranspose.mulVec w) := by
+        rw [hEigen]
+      _ = eigenvalue • (eigenvalue⁻¹ • A.conjTranspose.mulVec w) := by
+        simp [smul_smul, mul_comm]
+  · dsimp [v]
+    calc
+      A.mulVec (eigenvalue⁻¹ • A.conjTranspose.mulVec w) =
+          eigenvalue⁻¹ • A.mulVec (A.conjTranspose.mulVec w) := by
+        rw [Matrix.mulVec_smul]
+      _ = eigenvalue⁻¹ • (eigenvalue • w) := by
+        rw [← Matrix.mulVec_mulVec, h]
+      _ = w := by simp [smul_smul, hEigenvalue_ne_zero]
+
 /-- The abstract transport theorem applies to the signed Plabic edge-sum
 matrix with its owner-prescribed `White × Black` orientation. -/
 theorem edgeSumMatrix_mulVec_gram_eigenvector

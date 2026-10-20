@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Analysis.SpecialFunctions.Exp
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Real.Basic
@@ -269,6 +275,39 @@ theorem hypercube_expert_orthogonal_pp_pm (csp : CommutingSplitPair A) :
   have h_final : peircePlus csp.K1 * peircePlus csp.K2 * peirceMinus csp.K2 =
                  peircePlus csp.K1 * (peircePlus csp.K2 * peirceMinus csp.K2) := by noncomm_ring
   rw [h_final, peirce_orthogonal_pm csp.K2, mul_zero]
+
+theorem hypercube_expert_orthogonal_pp_mp (csp : CommutingSplitPair A) :
+    expertPlusPlus csp * expertMinusPlus csp = 0 := by
+  dsimp [expertPlusPlus, expertMinusPlus]
+  have h_assoc : peircePlus csp.K1 * peircePlus csp.K2 *
+      (peirceMinus csp.K1 * peircePlus csp.K2) =
+      peircePlus csp.K1 * (peircePlus csp.K2 * peirceMinus csp.K1) *
+        peircePlus csp.K2 := by
+    noncomm_ring
+  rw [h_assoc]
+  have h_comm : peircePlus csp.K2 * peirceMinus csp.K1 =
+      peirceMinus csp.K1 * peircePlus csp.K2 := by
+    dsimp [peircePlus, peirceMinus]
+    rw [Algebra.smul_mul_assoc, Algebra.mul_smul_comm,
+      Algebra.smul_mul_assoc, Algebra.mul_smul_comm, smul_smul, smul_smul]
+    have h_prod : (1 + csp.K2.K) * (1 - csp.K1.K) =
+        (1 - csp.K1.K) * (1 + csp.K2.K) := by
+      calc
+        (1 + csp.K2.K) * (1 - csp.K1.K) =
+            1 - csp.K1.K + csp.K2.K - csp.K2.K * csp.K1.K := by
+              noncomm_ring
+        _ = 1 - csp.K1.K + csp.K2.K - csp.K1.K * csp.K2.K := by
+              rw [csp.comm]
+        _ = (1 - csp.K1.K) * (1 + csp.K2.K) := by
+              noncomm_ring
+    rw [h_prod]
+  rw [h_comm]
+  have h_final : peircePlus csp.K1 *
+      (peirceMinus csp.K1 * peircePlus csp.K2) * peircePlus csp.K2 =
+      (peircePlus csp.K1 * peirceMinus csp.K1) *
+        (peircePlus csp.K2 * peircePlus csp.K2) := by
+    noncomm_ring
+  rw [h_final, peirce_orthogonal_pm csp.K1, zero_mul]
 
 /-! ### 5. Grand Synthesis: Clifford-MoE Hypercube Routing -/
 

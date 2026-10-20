@@ -378,9 +378,6 @@ def S_left_lp_clm : H_lp E →L[ℝ] H_lp E :=
     rw [S_left_lp_norm_eq]
     simp)
 
-@[simp] theorem S_left_lp_clm_apply (ψ : H_lp E) :
-    S_left_lp_clm (E := E) ψ = S_left_lp ψ := rfl
-
 @[simp] theorem S_left_lp_clm_norm_le :
     ‖S_left_lp_clm (E := E)‖ ≤ 1 := by
   exact LinearMap.mkContinuous_norm_le (S_left_lp_linear (E := E)) (by norm_num) (by
@@ -471,6 +468,26 @@ lemma K_lp_smul (a : ℝ) (ψ : H_lp E) :
   change clockAxis (E := E) ((a • ψ) x) = a • clockAxis (E := E) (ψ x)
   rw [lp.coeFn_smul]
   exact (clockAxis (E := E)).map_smul a _
+
+def K_lp_linear : H_lp E →ₗ[ℝ] H_lp E where
+  toFun := K_lp
+  map_add' := K_lp_add
+  map_smul' := K_lp_smul
+
+def K_lp_clm : H_lp E →L[ℝ] H_lp E :=
+  (K_lp_linear (E := E)).mkContinuous 1 (by
+    intro ψ
+    change ‖K_lp ψ‖ ≤ 1 * ‖ψ‖
+    rw [K_lp_norm_eq]
+    simp)
+
+@[simp] theorem K_lp_clm_norm_le :
+    ‖K_lp_clm (E := E)‖ ≤ 1 := by
+  exact LinearMap.mkContinuous_norm_le (K_lp_linear (E := E)) (by norm_num) (by
+    intro ψ
+    change ‖K_lp ψ‖ ≤ 1 * ‖ψ‖
+    rw [K_lp_norm_eq]
+    simp)
 
 /--
 Lift the pointwise commutation here from the `PiLp` carrier to equality of

@@ -27,7 +27,7 @@ the owner source; a chat transcript is never proof authority.
 | A7 | chiral grading | `η = [[I,0],[0,-I]]` on `Black ⊕ White`; `D η + η D = 0`. | `kreinSignature` and `diracDHK_anticommutes_chirality`; owner theorem surface. |
 | A8 | Gram/block-square decomposition | `D² = diag(K†K, KK†)`. | `diracDHK_sq` and `edgeSumDirac_sq`; owner theorem surface. |
 | A9 | Krein-skew adjoint | `η D† η = -D` under the source's `CommRing`/`StarRing` matrix assumptions. | `diracDHK_krein_skew`; this is the exact formal claim, not a general Hilbert-space spectral theorem. |
-| A10 | spectral correspondence of the two Gram blocks | For a complex rectangular matrix, nonzero eigenvectors transport in both directions; the transport is non-annihilating and injective on each nonzero eigenspace. | `Canonical.PlabicGramEigenvectorTransport` proves this finite vector-level theorem. Characteristic-polynomial equality, multiplicities, and SVD remain separate. |
+| A10 | spectral correspondence of the two Gram blocks | For a complex rectangular matrix, nonzero eigenvectors transport in both directions, with explicit preimages and equal finite eigenspace dimensions. | `Canonical.PlabicGramEigenvectorTransport.gram_eigenspace_finrank_eq` proves geometric multiplicity equality. Characteristic-polynomial equality and SVD remain separate. |
 
 **Correction:** the chat's phrase “same nonzero singular-value information” is
 not promoted. The block-square identity is formalized; a singular-value theorem
@@ -93,7 +93,7 @@ finite graph data A0
 signed incidence matrix A2
   └─→ block Dirac A6 ─→ block square A8
                          └─→ with grading A7: anticommutation/Krein-skew
-A8 + finite star-compatible carrier ─→ spectral correspondence A10 [finite vector theorem]
+A8 + finite star-compatible carrier ─→ spectral correspondence A10 [finite eigenspace theorem]
 
 local Cl11 operator carrier
   └─→ nilpotent edge A11 ─→ truncated transport A12 ─→ local conjugation A13

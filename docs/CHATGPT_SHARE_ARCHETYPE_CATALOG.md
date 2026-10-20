@@ -59,7 +59,7 @@ finite transport results are called out separately below.
 | A7 | Chiral grading and Dirac anticommutation | `kreinSignature` and `diracDHK_anticommutes_chirality` prove the stated finite matrix identity. |
 | A8 | Block-square / Gram decomposition | `diracDHK_sq` and `edgeSumDirac_sq` identify the two Gram blocks. |
 | A9 | Krein-skew-adjoint identity | `diracDHK_krein_skew` proves `ηD†η = -D` under the owner’s ring/star assumptions; not a Hilbert spectral theorem. |
-| A10 | Correspondence between nonzero eigenvectors of `A†A` and `AA†` | `Canonical.PlabicGramEigenvectorTransport` proves vector transport in each direction, non-annihilation, and injectivity on each nonzero eigenspace. This does **not** yet prove characteristic-polynomial equality, multiplicities, or SVD. |
+| A10 | Correspondence between nonzero eigenvectors of `A†A` and `AA†` | `Canonical.PlabicGramEigenvectorTransport` proves transport, preimages, injectivity, and equality of finite eigenspace dimensions for every nonzero eigenvalue. Characteristic-polynomial equality and SVD remain separate. |
 | A11 | Nilpotent local off-diagonal `Cl11Op` edge | `Gamma_sq_zero` proves the local square-zero identity; no general graph-edge operator follows. |
 | A12 | Truncated unipotent local transport | `mutationRotor`, its inverse, and two-sided inverse identities; “unitary” here means invertible in the local ring, not star-unitary. |
 | A13 | Local conjugation readout | `cluster_mutation_is_exponential_adjoint` proves the displayed local conjugation computation only. |
@@ -118,7 +118,7 @@ The extraction does not prove any of these identifications:
 - MaxCal optimizer fields = existence or uniqueness of an optimizer;
 - all C/A carriers = one common representation;
 - local Cl11 conjugation = every plabic square move;
-- equality of nonzero Gram eigenvalue multiplicities (A10 remains vector-level here).
+- characteristic-polynomial equality and SVD for the Gram operators (A10 now proves geometric eigenspace-dimension equality).
 
 ## Source files and evidence boundary
 

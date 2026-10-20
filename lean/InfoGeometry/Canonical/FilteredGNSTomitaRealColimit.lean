@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Canonical.FilteredGNSTomitaDomainColimit
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -298,5 +304,21 @@ theorem closedTomitaRealColimitOperator_inclusion
         colimit (gnsRealDiagram Stage sys ω) =>
       f x)
     hι
+
+/-- The real colimit Tomita operator is uniquely determined by its stage maps. -/
+theorem closedTomitaRealColimitOperator_unique
+    (f :
+      colimit (closedTomitaDomainRealDiagram Stage sys ω) ⟶
+        colimit (gnsRealDiagram Stage sys ω))
+    (h : ∀ i : I,
+      colimit.ι (closedTomitaDomainRealDiagram Stage sys ω) i ≫ f =
+        (closedTomitaOperatorNatTrans Stage sys ω hclos).app i ≫
+          colimit.ι (gnsRealDiagram Stage sys ω) i) :
+    f = colim.map (closedTomitaOperatorNatTrans Stage sys ω hclos) := by
+  apply colimit.hom_ext
+  intro i
+  exact (h i).trans
+    (colimit.ι_map
+      (closedTomitaOperatorNatTrans Stage sys ω hclos) i).symm
 
 end CStarStateColimit.Native.FilteredGNSTomitaRealColimit

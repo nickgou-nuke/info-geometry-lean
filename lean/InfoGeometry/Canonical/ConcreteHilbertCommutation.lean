@@ -366,6 +366,29 @@ lemma S_left_lp_smul (a : ℝ) (ψ : H_lp E) :
   dsimp [S_left_raw]
   split_ifs <;> simp
 
+def S_left_lp_linear : H_lp E →ₗ[ℝ] H_lp E where
+  toFun := S_left_lp
+  map_add' := S_left_lp_add
+  map_smul' := S_left_lp_smul
+
+def S_left_lp_clm : H_lp E →L[ℝ] H_lp E :=
+  (S_left_lp_linear (E := E)).mkContinuous 1 (by
+    intro ψ
+    change ‖S_left_lp ψ‖ ≤ 1 * ‖ψ‖
+    rw [S_left_lp_norm_eq]
+    simp)
+
+@[simp] theorem S_left_lp_clm_apply (ψ : H_lp E) :
+    S_left_lp_clm (E := E) ψ = S_left_lp ψ := rfl
+
+@[simp] theorem S_left_lp_clm_norm_le :
+    ‖S_left_lp_clm (E := E)‖ ≤ 1 := by
+  exact LinearMap.mkContinuous_norm_le (S_left_lp_linear (E := E)) (by norm_num) (by
+    intro ψ
+    change ‖S_left_lp ψ‖ ≤ 1 * ‖ψ‖
+    rw [S_left_lp_norm_eq]
+    simp)
+
 def K_raw (ψ : BinaryCantorBoundary → DoubledSpace E) (x : BinaryCantorBoundary) : DoubledSpace E :=
   clockAxis (E := E) (ψ x)
 

@@ -38,7 +38,7 @@ theorem reciprocal_scales (η : ℝ) :
 def nullBoost (η : ℝ) (x : R2) : R2 :=
   fun i => if i = 0 then scalePlus η * x i else scaleMinus η * x i
 
-@[simp] theorem nullBoost_zero (η : ℝ) (x : R2) :
+@[simp] theorem nullBoost_zero (x : R2) :
     nullBoost 0 x = x := by
   funext i
   fin_cases i <;> simp [nullBoost, scalePlus, scaleMinus]
@@ -47,7 +47,7 @@ theorem nullBoost_add (η ξ : ℝ) (x : R2) :
     nullBoost η (nullBoost ξ x) = nullBoost (η + ξ) x := by
   funext i
   fin_cases i <;>
-    simp [nullBoost, scalePlus, scaleMinus, Real.exp_add] <;> ring
+    simp [nullBoost, scalePlus, scaleMinus, neg_add, Real.exp_add] <;> ring
 
 theorem nullBoost_inverse (η : ℝ) (x : R2) :
     nullBoost (-η) (nullBoost η x) = x := by
@@ -75,6 +75,21 @@ theorem omegaK_nullBoost_invariant (η : ℝ) (x y : R2) :
 theorem omegaI_nonnegative (x : R2) : 0 ≤ omegaI x x := by
   rw [omegaI_eq_dot]
   nlinarith [sq_nonneg (x 0), sq_nonneg (x 1)]
+
+/-- Reciprocal null scaling preserves the split pairing, not the Euclidean norm.
+The positive companion acquires an exact diagonal anomaly. -/
+theorem omegaI_nullBoost_anomaly (η : ℝ) (x : R2) :
+    omegaI (nullBoost η x) (nullBoost η x) - omegaI x x =
+      (scalePlus η ^ 2 - 1) * (x 0) ^ 2 +
+        (scaleMinus η ^ 2 - 1) * (x 1) ^ 2 := by
+  rw [omegaI_eq_dot, omegaI_eq_dot]
+  change
+    (scalePlus η * x 0) * (scalePlus η * x 0) +
+        (scaleMinus η * x 1) * (scaleMinus η * x 1) -
+      (x 0 * x 0 + x 1 * x 1) =
+    (scalePlus η ^ 2 - 1) * (x 0) ^ 2 +
+      (scaleMinus η ^ 2 - 1) * (x 1) ^ 2
+  ring
 
 /-- The modular grading has opposite weights on the two nilpotent channels. -/
 theorem modular_null_weights :

@@ -1,3 +1,11 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+/- SPDX-License-Identifier: Apache-2.0 -/
+
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.MassSpectrometry.ChemicalGraph
@@ -26,7 +34,7 @@ noncomputable section
 
 namespace InfoGeometry.MassSpectrometry
 
-open CategoryTheory
+open CategoryTheory CategoryTheory.Limits
 
 /-- Coherent finite molecular fragments indexed by a fragmentation DAG. -/
 structure MolecularFragmentDiagram {n : ℕ} (D : FragmentationDAG n) where
@@ -113,6 +121,25 @@ theorem bonded_of_stage_bond (M : MolecularFragmentDiagram D)
     (h : (M.graph u).Adj i j) :
     M.Bonded (M.ι u i) (M.ι u j) := by
   exact ⟨u, i, j, rfl, rfl, h⟩
+
+/-- A map out of the molecular vertex colimit is uniquely determined by its
+values on the canonical fragment injections. -/
+theorem vertex_map_ext (M : MolecularFragmentDiagram D) {X : Type}
+    (f g : M.VertexColimit → X)
+    (h : ∀ (u : Fin n) (x : Fin (M.vertexCount u)),
+      f (M.ι u x) = g (M.ι u x)) :
+    f = g := by
+  letI : Preorder (Fin n) := D.reachPreorder
+  let f' : M.VertexColimit ⟶ X := ↾f
+  let g' : M.VertexColimit ⟶ X := ↾g
+  have hfg : f' = g' := by
+    apply colimit.hom_ext
+    intro u
+    apply ConcreteCategory.hom_ext
+    intro x
+    exact h u x
+  apply_fun (TypeCat.homEquiv : (M.VertexColimit ⟶ X) ≃ (M.VertexColimit → X)) at hfg
+  exact hfg
 
 end MolecularFragmentDiagram
 

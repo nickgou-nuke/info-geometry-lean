@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Clifford.SplitQuaternionNilpotentFlow
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
@@ -75,6 +81,27 @@ theorem norm_nilpotent_exp (T : ℝ) :
     norm (_root_.InfoGeometry.Clifford.SplitQuaternionNilpotentFlow.sq_nilpotent_exp T) = 1 := by
   rw [← parabolicFlow_eq_nilpotent_exp]
   exact norm_parabolicFlow T
+
+/-- The elliptic coordinate curve is an additive one-parameter subgroup. -/
+theorem ellipticFlow_mul_add (θ φ : ℝ) :
+    ellipticFlow θ * ellipticFlow φ = ellipticFlow (θ + φ) := by
+  unfold ellipticFlow
+  change sqMul _ _ = _
+  ext <;> simp [sqMul, Real.cos_add, Real.sin_add] <;> ring
+
+/-- The hyperbolic coordinate curve is an additive one-parameter subgroup. -/
+theorem hyperbolicFlow_mul_add (η ξ : ℝ) :
+    hyperbolicFlow η * hyperbolicFlow ξ = hyperbolicFlow (η + ξ) := by
+  unfold hyperbolicFlow
+  change sqMul _ _ = _
+  ext <;> simp [sqMul, Real.cosh_add, Real.sinh_add] <;> ring
+
+/-- The parabolic coordinate curve is an additive one-parameter subgroup. -/
+theorem parabolicFlow_mul_add (S T : ℝ) :
+    parabolicFlow S * parabolicFlow T = parabolicFlow (S + T) := by
+  unfold parabolicFlow
+  change sqMul _ _ = _
+  ext <;> simp [sqMul] <;> ring
 
 /--
 The three coordinate norm computations above are not a proof of an exhaustive

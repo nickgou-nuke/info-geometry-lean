@@ -119,6 +119,27 @@ theorem hyperbolicFlowK_mul_add (η ξ : ℂ) :
       ⟨Complex.cosh ξ, 0, 0, Complex.sinh ξ⟩ = _
   ext <;> simp [mul, Complex.cosh_add, Complex.sinh_add] <;> ring
 
+/-- The complexified square-minus packet composes by addition of parameters. -/
+theorem ellipticFlowIK_mul_add (θ φ : ℂ) :
+    ellipticFlowIK θ * ellipticFlowIK φ = ellipticFlowIK (θ + φ) := by
+  rw [ellipticFlowIK_coords, ellipticFlowIK_coords, ellipticFlowIK_coords]
+  change mul ⟨Complex.cos θ, 0, 0, Complex.I * Complex.sin θ⟩
+      ⟨Complex.cos φ, 0, 0, Complex.I * Complex.sin φ⟩ = _
+  ext <;> simp [mul, Complex.cos_add, Complex.sin_add] <;> ring_nf
+  · rw [Complex.I_sq]
+    ring
+
+/-- The complexified square-minus packet has the opposite parameter as inverse. -/
+theorem ellipticFlowIK_mul_neg (θ : ℂ) :
+    ellipticFlowIK θ * ellipticFlowIK (-θ) = scalar 1 := by
+  rw [ellipticFlowIK_coords, ellipticFlowIK_coords]
+  change mul _ _ = _
+  ext <;> simp [scalar, mul, Complex.cos_neg, Complex.sin_neg]
+  · ring_nf
+    rw [Complex.I_sq]
+    simpa [pow_two, sub_eq_add_neg] using Complex.cos_sq_add_sin_sq θ
+  · ring
+
 theorem hyperbolicFlowK_mul_neg (η : ℂ) :
     hyperbolicFlowK η * hyperbolicFlowK (-η) = scalar 1 := by
   rw [hyperbolicFlowK_coords, hyperbolicFlowK_coords]

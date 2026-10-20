@@ -23,6 +23,8 @@ if [[ ! -x "$HIVE_PYTHON_BIN" ]]; then
   HIVE_PYTHON_BIN="python3"
 fi
 
+export PYTHONPATH="$ROOT_DIR:$ROOT_DIR/src${PYTHONPATH:+:$PYTHONPATH}"
+
 exec "$HIVE_PYTHON_BIN" "$ROOT_DIR/tools/infra/hive_arango_queue.py" \
   --endpoint "$ARANGO_ENDPOINT" \
   --database "$ARANGO_DATABASE" \

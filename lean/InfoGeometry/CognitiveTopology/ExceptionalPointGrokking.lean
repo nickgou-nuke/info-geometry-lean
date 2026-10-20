@@ -75,6 +75,19 @@ theorem exceptionalPoint_nilpotent_part_unique
   apply add_left_cancel (b := N) (c := M)
   exact hN.1.symm.trans hM.1
 
+/-- The observable deviation from the identity inherits square-zero nilpotence. -/
+theorem exceptionalPoint_deviation_square_zero
+    (A N : H →L[ℂ] H)
+    (h_ep : IsExceptionalPoint A N) :
+    (A - ContinuousLinearMap.id ℂ H) ∘L
+        (A - ContinuousLinearMap.id ℂ H) = 0 := by
+  have hdev : A - ContinuousLinearMap.id ℂ H = N := by
+    rw [h_ep.1]
+    ext x
+    simp [sub_eq_add_neg]
+  rw [hdev]
+  exact h_ep.2
+
 /--
 Compatibility name for the finite/operator grokking socket.
 

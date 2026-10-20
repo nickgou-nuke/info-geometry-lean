@@ -6,6 +6,7 @@ Authors: InfoGeometry Engine Contributors
 
 import InfoGeometry.Topology.KleinBottleCanonicalCarrier
 import InfoGeometry.Topology.KleinBottleOrbitQuotient
+import Mathlib.Topology.Instances.AddCircle.Real
 
 noncomputable section
 namespace InfoGeometry.Topology.KleinBottleMappingTorusOrbitBridge
@@ -215,6 +216,180 @@ theorem canonicalToOrbit_endpoint (x : MomentumCircle) :
       (⟨1, by constructor <;> norm_num⟩, fibreNeg x))
   apply stripToOrbitRepresentative_endpointStep
   exact Or.inl ⟨rfl, rfl, rfl⟩
+
+/-! The literal glide quotient is also a finite-group orbit quotient.  This
+identification supplies the separation theorem needed to upgrade the
+continuous bijection above to a homeomorphism. -/
+
+abbrev finiteGlideGroup := Multiplicative (ZMod 2)
+
+theorem finiteGlideGroup_cases (g : finiteGlideGroup) :
+    g = 1 ∨ g = Multiplicative.ofAdd 1 := by
+  have hv : (Multiplicative.toAdd g).val < 2 := (Multiplicative.toAdd g).isLt
+  have hz : (Multiplicative.toAdd g).val = 0 ∨ (Multiplicative.toAdd g).val = 1 := by omega
+  rcases hz with hz | hz
+  · left
+    apply (Multiplicative.toAdd).injective
+    apply (ZMod.val_eq_zero _).mp
+    exact hz
+  · right
+    apply (Multiplicative.toAdd).injective
+    apply ((ZMod.val_eq_one (by decide) _)).mp
+    omega
+
+theorem finiteGlideGroup_one_ne_nontrivial :
+    (1 : finiteGlideGroup) ≠ Multiplicative.ofAdd 1 := by
+  intro h
+  have h' := congrArg Multiplicative.toAdd h
+  norm_num at h'
+
+theorem finiteGlideGroup_nontrivial_mul_nontrivial :
+    Multiplicative.ofAdd 1 * Multiplicative.ofAdd 1 = (1 : finiteGlideGroup) := by
+  apply (Multiplicative.toAdd).injective
+  decide
+
+def finiteGlideAction : finiteGlideGroup → BrillouinTorus → BrillouinTorus := fun g x =>
+  if g = Multiplicative.ofAdd 1 then torusGlide x else x
+
+instance : SMul finiteGlideGroup BrillouinTorus := ⟨finiteGlideAction⟩
+
+instance : MulAction finiteGlideGroup BrillouinTorus where
+  one_smul x := by
+    change finiteGlideAction (1 : finiteGlideGroup) x = x
+    simp [finiteGlideAction, finiteGlideGroup_one_ne_nontrivial]
+  mul_smul a b x := by
+    change finiteGlideAction (a * b) x = finiteGlideAction a (finiteGlideAction b x)
+    rcases finiteGlideGroup_cases a with rfl | rfl <;>
+      rcases finiteGlideGroup_cases b with rfl | rfl
+    · simp [finiteGlideAction, finiteGlideGroup_one_ne_nontrivial]
+    · simp [finiteGlideAction, finiteGlideGroup_one_ne_nontrivial]
+    · simp [finiteGlideAction, finiteGlideGroup_one_ne_nontrivial]
+    · rw [finiteGlideGroup_nontrivial_mul_nontrivial]
+      simp [finiteGlideAction, finiteGlideGroup_one_ne_nontrivial]
+      rw [torusGlide_involutive]
+
+instance : ContinuousConstSMul finiteGlideGroup BrillouinTorus where
+  continuous_const_smul g := by
+    rcases finiteGlideGroup_cases g with rfl | rfl
+    · change Continuous (fun x : BrillouinTorus => x)
+      exact continuous_id
+    · change Continuous torusGlide
+      exact torusGlide_continuous
+
+abbrev finiteGlideQuotient :=
+  Quotient (MulAction.orbitRel finiteGlideGroup BrillouinTorus)
+
+theorem finiteGlideOrbitRel_iff (x y : BrillouinTorus) :
+    (MulAction.orbitRel finiteGlideGroup BrillouinTorus) x y ↔ glideSetoid x y := by
+  rw [MulAction.orbitRel_apply, MulAction.mem_orbit_iff]
+  constructor
+  · rintro ⟨g, hg⟩
+    rcases finiteGlideGroup_cases g with rfl | rfl
+    · left
+      change finiteGlideAction (1 : finiteGlideGroup) y = x at hg
+      simpa [finiteGlideAction, finiteGlideGroup_one_ne_nontrivial] using hg
+    · right
+      change finiteGlideAction (Multiplicative.ofAdd 1) y = x at hg
+      rw [finiteGlideAction, if_pos rfl] at hg
+      have h' := congrArg torusGlide hg
+      calc
+        y = torusGlide (torusGlide y) := (torusGlide_involutive y).symm
+        _ = torusGlide x := h'
+  · intro h
+    rcases h with h | h
+    · exact ⟨1, by
+        change finiteGlideAction (1 : finiteGlideGroup) y = x
+        simpa [finiteGlideAction, finiteGlideGroup_one_ne_nontrivial] using h⟩
+    · exact ⟨Multiplicative.ofAdd 1, by
+        change finiteGlideAction (Multiplicative.ofAdd 1) y = x
+        rw [finiteGlideAction, if_pos rfl]
+        have h' := congrArg torusGlide h
+        calc
+          torusGlide y = torusGlide (torusGlide x) := h'
+          _ = x := torusGlide_involutive x⟩
+
+def finiteGlideOrbitMap (x : BrillouinTorus) : finiteGlideQuotient :=
+  @Quotient.mk' BrillouinTorus
+    (MulAction.orbitRel finiteGlideGroup BrillouinTorus) x
+
+theorem finiteGlideOrbitMap_continuous :
+    Continuous finiteGlideOrbitMap := by
+  change Continuous (@Quotient.mk' BrillouinTorus
+    (MulAction.orbitRel finiteGlideGroup BrillouinTorus))
+  exact continuous_quot_mk
+
+def finiteGlideToLiteral : finiteGlideQuotient → KleinBrillouinQuotient :=
+  Quotient.lift quotientMap (by
+    intro x y hxy
+    exact Quotient.sound ((finiteGlideOrbitRel_iff x y).mp hxy))
+
+theorem finiteGlideToLiteral_continuous :
+    Continuous finiteGlideToLiteral := by
+  exact continuous_quot_lift
+    (fun x y hxy => Quotient.sound ((finiteGlideOrbitRel_iff x y).mp hxy))
+    quotientMap_continuous
+
+def literalToFiniteGlide : KleinBrillouinQuotient → finiteGlideQuotient :=
+  Quotient.lift finiteGlideOrbitMap (by
+    intro x y hxy
+    exact Quotient.sound ((finiteGlideOrbitRel_iff x y).mpr hxy))
+
+theorem literalToFiniteGlide_continuous :
+    Continuous literalToFiniteGlide := by
+  exact continuous_quot_lift
+    (fun x y hxy => Quotient.sound ((finiteGlideOrbitRel_iff x y).mpr hxy))
+    finiteGlideOrbitMap_continuous
+
+theorem finiteGlideToLiteral_leftInverse :
+    Function.LeftInverse literalToFiniteGlide finiteGlideToLiteral := by
+  intro q
+  refine Quotient.inductionOn q ?_
+  intro x
+  change finiteGlideOrbitMap x = finiteGlideOrbitMap x
+  rfl
+
+theorem finiteGlideToLiteral_rightInverse :
+    Function.RightInverse literalToFiniteGlide finiteGlideToLiteral := by
+  intro q
+  refine Quotient.inductionOn q ?_
+  intro x
+  change quotientMap x = quotientMap x
+  rfl
+
+def finiteGlideToLiteralHomeomorph :
+    finiteGlideQuotient ≃ₜ KleinBrillouinQuotient :=
+  { toEquiv :=
+      { toFun := finiteGlideToLiteral
+        invFun := literalToFiniteGlide
+        left_inv := finiteGlideToLiteral_leftInverse
+        right_inv := finiteGlideToLiteral_rightInverse }
+    continuous_toFun := finiteGlideToLiteral_continuous
+    continuous_invFun := literalToFiniteGlide_continuous }
+
+instance literalQuotient_t2 : T2Space KleinBrillouinQuotient :=
+  finiteGlideToLiteralHomeomorph.t2Space
+
+theorem canonicalToOrbit_isQuotientMap :
+    Topology.IsQuotientMap canonicalToOrbit :=
+  Topology.IsQuotientMap.of_surjective_continuous
+    canonicalToOrbit_surjective canonicalToOrbit_continuous
+
+def canonicalToOrbitHomeomorph :
+    CanonicalKleinBottle ≃ₜ KleinBrillouinQuotient := by
+  let e : CanonicalKleinBottle ≃ KleinBrillouinQuotient :=
+    Equiv.ofBijective canonicalToOrbit
+      ⟨canonicalToOrbit_injective, canonicalToOrbit_surjective⟩
+  have hcomp : e.symm ∘ canonicalToOrbit = fun x => x := by
+    funext x
+    exact e.left_inv x
+  refine
+    { toEquiv := e
+      continuous_toFun := canonicalToOrbit_continuous
+      continuous_invFun := ?_ }
+  apply (canonicalToOrbit_isQuotientMap.continuous_iff).2
+  change Continuous (e.symm ∘ canonicalToOrbit)
+  rw [hcomp]
+  exact continuous_id
 
 end InfoGeometry.Topology.KleinBottleMappingTorusOrbitBridge
 end noncomputable section

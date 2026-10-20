@@ -1,0 +1,47 @@
+{
+  "schema": "qms-chatgpt-share-extraction/v1",
+  "share_url": "https://chatgpt.com/share/6ad7a6e8-cf08-83eb-9d07-48cba614b860",
+  "title_recovered": "Алгебрична формализация Plabic Krein",
+  "extraction_status": "partially_reproducible",
+  "extraction_date": "2026-10-20",
+  "repository_commit": "a7b027ffc924f61a2468dc0bb278d37a94db2558",
+  "local_artifacts": {
+    "transcript_extraction": "docs/CHATGPT_SHARE_PLABIC_KREIN_FULL_EXTRACTION.md",
+    "archetype_poset": "docs/PLABIC_KREIN_DIRECTED_ARCHETYPE_POSET.md",
+    "lean_readout": "lean/InfoGeometry/Topology/KleinRealOperatorDescentGlideReadout.lean",
+    "validator": "tools/infra/validate_chatgpt_share_extraction.py",
+    "owner_ledger": "docs/PLABIC_KREIN_OWNER_LEDGER.md"
+  },
+  "decoded_content_counts": {
+    "prompt_windows": {"count": 44, "labels": "P00-P43"},
+    "archetype_rows": {"count": 18, "labels": "C0-C17"},
+    "directed_archetype_rows": {"count": 28, "labels": "A0-A27"},
+    "mapping_nodes_reported": 3501,
+    "nonempty_user_assistant_records_reported": 703,
+    "nonempty_assistant_records_reported": 659
+  },
+  "raw_payload": {
+    "path": null,
+    "sha256": null,
+    "decoder": null,
+    "status": "unavailable_in_checkout"
+  },
+  "live_url_verification": {
+    "status": "not_completed",
+    "method": "browser-harness",
+    "failure": "browser-harness daemon socket was unavailable during the audit",
+    "consequence": "Counts and text are validated against the checked-out extraction documents only; raw share payload is not claimed reproduced."
+  },
+  "source_hashes": {
+    "docs/CHATGPT_SHARE_PLABIC_KREIN_FULL_EXTRACTION.md": "aa381d5208eb700ba1fc7e3943239e906bc09f5591bf307ad45522d1e609579b",
+    "docs/PLABIC_KREIN_DIRECTED_ARCHETYPE_POSET.md": "9f9759130642f807c0097256bb02def9a13ade2eba3d1fe2a3530a3ed0989714",
+    "lean/InfoGeometry/Topology/KleinRealOperatorDescentGlideReadout.lean": "ca924cde2fb1ddb8f6ea164339f7e9ba237fc88eb9902d85fca663e50454ff26"
+  },
+  "validation_policy": {
+    "prompt_labels_must_be_contiguous": true,
+    "archetype_labels_must_be_contiguous": true,
+    "owner_declarations_must_be_source_qualified": true,
+    "assistant_text_is_provenance_only": true,
+    "raw_payload_unavailable_must_not_be_promoted_to_verified": true
+  }
+}

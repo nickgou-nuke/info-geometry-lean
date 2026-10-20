@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import InfoGeometry.Topology.KleinQuotientDeckInvariants
 
@@ -75,5 +81,20 @@ theorem glideExterior_involutive :
   apply ExteriorAlgebra.hom_ext
   ext v
   simp [glideExterior, glideLinear_involutive]
+
+/-- The orientation-reversing lift is not the identity automorphism.  The
+first tangent generator is sent to its negative, and injectivity of the
+exterior-algebra inclusion rules out equality with the identity map. -/
+theorem glideExterior_ne_id :
+    glideExterior ≠ AlgHom.id ℝ (ExteriorAlgebra ℝ PlaneVector) := by
+  intro h
+  have hg := congrArg
+    (fun f : ExteriorAlgebra ℝ PlaneVector →ₐ[ℝ] ExteriorAlgebra ℝ PlaneVector =>
+      f (ExteriorAlgebra.ι ℝ firstAxis)) h
+  rw [glideExterior_generator, glideLinear_firstAxis] at hg
+  have hv : firstAxis = -firstAxis :=
+    (ExteriorAlgebra.ι_inj ℝ _ _).mp (by simpa using hg.symm)
+  have hc := congrFun hv 0
+  norm_num [firstAxis] at hc
 
 end InfoGeometry.Topology.KleinBottleExteriorOrientationBridge

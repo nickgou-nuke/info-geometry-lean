@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimeCantorTiltFockNilpotents
@@ -132,6 +137,21 @@ The remaining closure obligation is stated over the canonical direct-limit
 carrier. The carrier, ring structure, injections, and transition law are
 derived from Mathlib's quotient direct limit rather than supplied as fields.
 -/
+theorem limit_closure_stable_of_stage_images
+    (C : InductiveOperatorChain) (Q0 Qsharp0 : C.Stage 0)
+    (hClosure : ∀ n, SupergradedClosureAt (R := C.Stage n)
+      (C.iterMap n Q0) (C.iterMap n Qsharp0)) :
+    ∀ n, SupergradedClosureAt (R := LimitStage C)
+      (limitEmbed C n (C.iterMap n Q0))
+      (limitEmbed C n (C.iterMap n Qsharp0)) := by
+  intro n
+  rcases hClosure n with ⟨h1, h2, h3, h4⟩
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · simpa only [map_add, map_mul] using congrArg (limitEmbed C n) h1
+  · simpa only [map_add, map_mul] using congrArg (limitEmbed C n) h2
+  · simpa only [map_add, map_mul] using congrArg (limitEmbed C n) h3
+  · simpa only [map_add, map_mul] using congrArg (limitEmbed C n) h4
+
 structure LimitPassageSocket (C : InductiveOperatorChain) where
   /-- The core limit closure passage for the canonical algebraic colimit. -/
   limit_closure_stable : ∀ (Q0 Qsharp0 : C.Stage 0),

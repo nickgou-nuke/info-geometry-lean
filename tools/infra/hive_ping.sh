@@ -13,20 +13,22 @@ fi
 # shellcheck disable=SC1090
 set -a; source "$ENV_FILE"; set +a
 
-ARANGO_USER="${ARANGO_USER:-${ARANGO_USERNAME:-}}"
-ARANGO_PASS="${ARANGO_PASS:-${ARANGO_PASSWORD:-}}"
+HIVE_ENDPOINT="${HIVE_ARANGO_ENDPOINT:-${HIVE_ENDPOINT:-}}"
+HIVE_DATABASE="${HIVE_ARANGO_DATABASE:-${HIVE_DATABASE:-}}"
+HIVE_USER="${HIVE_ARANGO_USER:-${HIVE_ARANGO_USERNAME:-${HIVE_USER:-}}}"
+HIVE_PASS="${HIVE_ARANGO_PASS:-${HIVE_ARANGO_PASSWORD:-${HIVE_PASS:-}}}"
 
-: "${ARANGO_ENDPOINT:?ARANGO_ENDPOINT missing}"
-: "${ARANGO_DATABASE:?ARANGO_DATABASE missing}"
-: "${ARANGO_USER:?ARANGO_USER missing}"
-: "${ARANGO_PASS:?ARANGO_PASS missing}"
+: "${HIVE_ENDPOINT:?HIVE_ARANGO_ENDPOINT or HIVE_ENDPOINT missing}"
+: "${HIVE_DATABASE:?HIVE_ARANGO_DATABASE or HIVE_DATABASE missing}"
+: "${HIVE_USER:?HIVE_ARANGO_USER or HIVE_USER missing}"
+: "${HIVE_PASS:?HIVE_ARANGO_PASS or HIVE_PASS missing}"
 
-if [[ "$ARANGO_PASS" == "CHANGE_ME" ]]; then
-  echo "ARANGO_PASS is still CHANGE_ME in: $ENV_FILE" >&2
+if [[ "$HIVE_PASS" == "CHANGE_ME" ]]; then
+  echo "HIVE_ARANGO_PASS is still CHANGE_ME in: $ENV_FILE" >&2
   exit 2
 fi
 
-export ARANGO_ENDPOINT ARANGO_DATABASE ARANGO_USER ARANGO_PASS
+export HIVE_ENDPOINT HIVE_DATABASE HIVE_USER HIVE_PASS
 
 python3 - <<'PY'
 import json
@@ -38,10 +40,10 @@ import urllib.parse
 import urllib.request
 
 
-endpoint = os.environ["ARANGO_ENDPOINT"].rstrip("/")
-database = os.environ["ARANGO_DATABASE"]
-username = os.environ["ARANGO_USER"]
-password = os.environ["ARANGO_PASS"]
+endpoint = os.environ["HIVE_ENDPOINT"].rstrip("/")
+database = os.environ["HIVE_DATABASE"]
+username = os.environ["HIVE_USER"]
+password = os.environ["HIVE_PASS"]
 
 db_path = urllib.parse.quote(database, safe="")
 url = f"{endpoint}/_db/{db_path}/_api/cursor"

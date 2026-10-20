@@ -326,6 +326,24 @@ def andreevRotor (c s : ℝ) : Matrix (Fin 4) (Fin 4) ℝ :=
 def andreevRotorRev (c s : ℝ) : Matrix (Fin 4) (Fin 4) ℝ :=
   c • (1 : Matrix (Fin 4) (Fin 4) ℝ) - s • J_geom
 
+/-- The cross-sheet rotor multiplication law is the complex multiplication law
+on its two real coefficients. -/
+theorem andreevRotor_mul
+    (c s c' s' : ℝ) :
+    andreevRotor c s * andreevRotor c' s' =
+      andreevRotor (c * c' - s * s') (c * s' + s * c') := by
+  unfold andreevRotor
+  rw [add_mul, mul_add, mul_add,
+    smul_mul_smul_comm, mul_one,
+    smul_mul_smul_comm, smul_mul_smul_comm,
+    mul_one, smul_mul_smul_comm,
+    cl22_hypercomplex_and_geometric_i.2.2.1,
+    smul_neg]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [J_geom, e0, e2, Matrix.mul_apply, Fin.sum_univ_four] <;>
+    ring
+
 /-- Action of the cross-sheet complex structure $J_{\mathrm{geom}} = e_0 e_2$ on the
 timelike generators $e_0$ and $e_2$:
 $$e_0 J_{\mathrm{geom}} = e_2, \quad J_{\mathrm{geom}} e_0 = -e_2, \quad

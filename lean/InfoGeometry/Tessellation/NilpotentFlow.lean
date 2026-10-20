@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Tessellation.Corner
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
@@ -104,6 +110,44 @@ theorem majoranaBraid_mul_inv
   calc
     (1 + a) * (1 - a) = 1 - a * a := by noncomm_ring
     _ = 1 := by rw [ha, sub_zero]
+
+/-- Equal nilpotent Majorana braid coordinates compose by addition of their
+    real parameters. -/
+theorem majoranaBraid_mul_add
+    {A : Type*} [Ring A] [Algebra ℝ A]
+    (N₁ N₂ : A)
+    (h₁ : N₁ * N₁ = 0) (h₂ : N₂ * N₂ = 0)
+    (h₁₂ : N₁ * N₂ + N₂ * N₁ = 0) (s t : ℝ) :
+    majoranaBraid s N₁ N₂ * majoranaBraid t N₁ N₂ =
+      majoranaBraid (s + t) N₁ N₂ := by
+  unfold majoranaBraid
+  let P : A := N₁ * N₂
+  have hP : P * P = 0 := by
+    dsimp [P]
+    exact majoranaBivector_nilpotent N₁ N₂ h₁ h₂ h₁₂
+  have hst :
+      ((algebraMap ℝ A s) * P) * ((algebraMap ℝ A t) * P) = 0 := by
+    calc
+      ((algebraMap ℝ A s) * P) * ((algebraMap ℝ A t) * P) =
+          (algebraMap ℝ A s) * (algebraMap ℝ A t) * (P * P) := by
+            calc
+              ((algebraMap ℝ A s) * P) * ((algebraMap ℝ A t) * P) =
+                  (algebraMap ℝ A s) * (P * (algebraMap ℝ A t)) * P := by
+                    simp only [mul_assoc]
+              _ = (algebraMap ℝ A s) * ((algebraMap ℝ A t) * P) * P := by
+                    rw [← Algebra.commutes t P]
+              _ = (algebraMap ℝ A s) * (algebraMap ℝ A t) * (P * P) := by
+                    simp only [mul_assoc]
+      _ = 0 := by rw [hP, mul_zero]
+  calc
+    (1 + (algebraMap ℝ A s) * P) * (1 + (algebraMap ℝ A t) * P) =
+        1 + (algebraMap ℝ A s) * P + (algebraMap ℝ A t) * P +
+          ((algebraMap ℝ A s) * P) * ((algebraMap ℝ A t) * P) := by
+            noncomm_ring
+    _ = 1 + ((algebraMap ℝ A s + algebraMap ℝ A t) * P) := by
+          rw [hst, add_zero, add_assoc, ← add_mul]
+    _ = 1 + (algebraMap ℝ A (s + t)) * P := by
+          rw [map_add]
 
 /-- Left-inverse law for the finite nilpotent Majorana braid coordinate. -/
 theorem majoranaBraid_inv_mul

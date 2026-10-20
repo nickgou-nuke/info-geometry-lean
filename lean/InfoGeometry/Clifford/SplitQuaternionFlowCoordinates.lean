@@ -103,6 +103,27 @@ theorem parabolicFlow_mul_add (S T : ℝ) :
   change sqMul _ _ = _
   ext <;> simp [sqMul] <;> ring
 
+/-- The elliptic flow has inverse parameter `-θ`. -/
+theorem ellipticFlow_mul_neg (θ : ℝ) :
+    ellipticFlow θ * ellipticFlow (-θ) = (1 : SplitQuaternion) := by
+  rw [ellipticFlow_mul_add]
+  simpa using (show ellipticFlow (θ + -θ) = (1 : SplitQuaternion) by
+    simp [ellipticFlow, sqOne])
+
+/-- The hyperbolic flow has inverse parameter `-η`. -/
+theorem hyperbolicFlow_mul_neg (η : ℝ) :
+    hyperbolicFlow η * hyperbolicFlow (-η) = (1 : SplitQuaternion) := by
+  rw [hyperbolicFlow_mul_add]
+  simpa using (show hyperbolicFlow (η + -η) = (1 : SplitQuaternion) by
+    simp [hyperbolicFlow, sqOne])
+
+/-- The parabolic flow has inverse parameter `-T`. -/
+theorem parabolicFlow_mul_neg (T : ℝ) :
+    parabolicFlow T * parabolicFlow (-T) = (1 : SplitQuaternion) := by
+  rw [parabolicFlow_mul_add]
+  simpa using (show parabolicFlow (T + -T) = (1 : SplitQuaternion) by
+    simp [parabolicFlow, sqOne])
+
 /--
 The three coordinate norm computations above are not a proof of an exhaustive
 subgroup classification or a global causal/conformal theorem.

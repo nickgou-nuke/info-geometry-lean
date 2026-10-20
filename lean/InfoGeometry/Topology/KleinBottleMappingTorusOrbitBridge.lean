@@ -116,11 +116,13 @@ theorem canonicalToOrbit_surjective :
     · dsimp [stripToOrbitRepresentative, t, torusGlide]
       have hreal : Real.pi * ((r - Real.pi) / Real.pi) = r - Real.pi := by
         field_simp
-      rw [hreal, AddCircle.coe_add, AddCircle.coe_neg]
+      rw [hreal, sub_eq_add_neg, AddCircle.coe_add, AddCircle.coe_neg]
       rw [hcoe]
       have hpi0 : (Real.pi : MomentumCircle) + Real.pi = 0 :=
         pi_add_pi_eq_zero
-      simp [sub_eq_add_neg, add_assoc, hpi0]
+      have hneg : (-Real.pi : MomentumCircle) = Real.pi :=
+        eq_neg_of_add_eq_zero_left hpi0
+      simp [hneg, add_assoc, hpi0]
     · rfl
 
 theorem canonicalToOrbit_endpoint (x : MomentumCircle) :

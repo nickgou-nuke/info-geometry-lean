@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Algebra.BigOperators.Field
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Exp
@@ -435,6 +441,15 @@ theorem covariance_kernel_independent_of_beta
       v a * chargeCovariance F β₂ a b * v b = 0) := by
   rw [covariance_quadratic_eq_zero_iff_charge_differences,
     covariance_quadratic_eq_zero_iff_charge_differences]
+
+theorem chargeCovarianceMatrix_kernel_independent_of_beta
+    (F : Family ι) (β₁ β₂ v : Fin 2 → ℝ) :
+    (∑ a : Fin 2, ∑ b : Fin 2,
+      v a * chargeCovarianceMatrix F β₁ a b * v b = 0) ↔
+    (∑ a : Fin 2, ∑ b : Fin 2,
+      v a * chargeCovarianceMatrix F β₂ a b * v b = 0) := by
+  simpa [chargeCovarianceMatrix] using
+    covariance_kernel_independent_of_beta F β₁ β₂ v
 
 theorem chargeCovariance_posSemidefinite
     (F : Family ι) (β v : Fin 2 → ℝ) :

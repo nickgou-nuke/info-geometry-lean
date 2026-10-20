@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Topology.DelaunayFlipMatrix
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.RohozhkinProjectiveCrossRatio
@@ -119,5 +125,18 @@ def flipBlock_mobius_gauge_covariant_target (T : MobiusMap ℚ) : Prop :=
     A' = !![leftGauge T (labels.ζ k), 0; 0, leftGauge T (labels.ζ i)] *
          flipBlock labels i k j l hik *
          !![(leftGauge T (labels.ζ l))⁻¹, 0; 0, (leftGauge T (labels.ζ j))⁻¹]
+
+/-- A nondegenerate source chart remains nondegenerate after a Möbius relabeling. -/
+theorem mobiusComp_sub_ne_zero
+    (hik : i ≠ k)
+    (T : MobiusMap ℚ)
+    (hgi : leftGauge T (labels.ζ i) ≠ 0)
+    (hgk : leftGauge T (labels.ζ k) ≠ 0) :
+    mobiusComp T labels.ζ i - mobiusComp T labels.ζ k ≠ 0 := by
+  change projectiveAction T (labels.ζ i) - projectiveAction T (labels.ζ k) ≠ 0
+  rw [projectiveAction_sub T (labels.ζ i) (labels.ζ k) hgi hgk]
+  exact div_ne_zero
+    (mul_ne_zero T.det_ne_zero (labels.nonzero_den hik))
+    (mul_ne_zero hgi hgk)
 
 end InfoGeometry.Topology.Delaunay

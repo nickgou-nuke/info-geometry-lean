@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Krein.CarrierTransport
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -49,6 +54,24 @@ def IsOdd : Prop := X.J.comp G.generator = -(G.generator.comp X.J)
 
 /-- The generator is 'even' (Bosonic) relative to the J-grading. -/
 def IsEven : Prop := X.J.comp G.generator = G.generator.comp X.J
+
+theorem odd_square_isEven (hG : G.IsOdd) :
+    (CarrierWithGenerator.mk (G.generator.comp G.generator)).IsEven := by
+  change X.J.comp G.generator = -(G.generator.comp X.J) at hG
+  change X.J.comp (G.generator.comp G.generator) =
+    (G.generator.comp G.generator).comp X.J
+  calc
+    X.J.comp (G.generator.comp G.generator) =
+        (X.J.comp G.generator).comp G.generator := by
+          rw [ContinuousLinearMap.comp_assoc]
+    _ = (-(G.generator.comp X.J)).comp G.generator := by rw [hG]
+    _ = -(G.generator.comp (X.J.comp G.generator)) := by
+          rw [ContinuousLinearMap.neg_comp, ← ContinuousLinearMap.comp_assoc]
+    _ = -(G.generator.comp (-(G.generator.comp X.J))) := by rw [hG]
+    _ = (G.generator.comp G.generator).comp X.J := by
+          rw [ContinuousLinearMap.comp_neg]
+          simp only [neg_neg]
+          rw [ContinuousLinearMap.comp_assoc]
 
 end CarrierWithGenerator
 

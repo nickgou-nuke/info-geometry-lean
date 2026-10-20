@@ -4,13 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 
-/-!
-# QCCR commutator–anticommutator closure
-
-The inhomogeneous Kronecker correction is retained explicitly in the native
-q-CCR operator owner.
--/
-
 import InfoGeometry.OperatorAlgebra.QCCRCuntzToeplitz
 
 namespace InfoGeometry.OperatorAlgebra.QCCRCuntzToeplitzClosure

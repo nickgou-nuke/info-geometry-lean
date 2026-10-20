@@ -182,6 +182,24 @@ theorem P_minus_comp_J : kp.P_minus.comp kp.J = -kp.P_minus := by
     _ = 0 - kp.P_minus := by rw [kp.orthog, kp.p_minus_proj]
     _ = -kp.P_minus := by rw [zero_sub]
 
+theorem J_comp_P_plus : kp.J.comp kp.P_plus = kp.P_plus := by
+  dsimp [J]
+  calc
+    (kp.P_plus - kp.P_minus).comp kp.P_plus =
+        kp.P_plus.comp kp.P_plus - kp.P_minus.comp kp.P_plus := by
+          rw [sub_comp]
+    _ = kp.P_plus - 0 := by rw [kp.p_plus_proj, kp.orthog]
+    _ = kp.P_plus := by rw [sub_zero]
+
+theorem J_comp_P_minus : kp.J.comp kp.P_minus = -kp.P_minus := by
+  dsimp [J]
+  calc
+    (kp.P_plus - kp.P_minus).comp kp.P_minus =
+        kp.P_plus.comp kp.P_minus - kp.P_minus.comp kp.P_minus := by
+          rw [sub_comp]
+    _ = 0 - kp.P_minus := by rw [kp.orthog_symm, kp.p_minus_proj]
+    _ = -kp.P_minus := by rw [zero_sub]
+
 /-- Fundamental Theorem of Krein-Bogoliubov Subspace Geometry:
     If T is a Krein isometry on the positive cone (P+ T♯ T P+ = P+),
     then Φ*Φ - Ψ*Ψ = P+. -/

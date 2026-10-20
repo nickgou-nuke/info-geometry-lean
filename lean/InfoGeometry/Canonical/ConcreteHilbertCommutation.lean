@@ -341,6 +341,31 @@ lemma S_left_lp_norm_eq (ψ : H_lp E) :
     exact htsum
   exact (Real.rpow_left_inj (lp.norm_nonneg' _) (lp.norm_nonneg' _) (by norm_num)).mp hpow
 
+lemma S_left_lp_zero :
+    S_left_lp (E := E) (0 : H_lp E) = 0 := by
+  apply Subtype.ext
+  funext x
+  dsimp [S_left_lp, S_left_raw]
+  split_ifs <;> rfl
+
+lemma S_left_lp_add (ψ φ : H_lp E) :
+    S_left_lp (E := E) (ψ + φ) = S_left_lp ψ + S_left_lp φ := by
+  apply Subtype.ext
+  funext x
+  change S_left_raw (↑(ψ + φ)) x = (S_left_raw (↑ψ) + S_left_raw (↑φ)) x
+  rw [lp.coeFn_add]
+  dsimp [S_left_raw]
+  split_ifs <;> simp
+
+lemma S_left_lp_smul (a : ℝ) (ψ : H_lp E) :
+    S_left_lp (E := E) (a • ψ) = a • S_left_lp ψ := by
+  apply Subtype.ext
+  funext x
+  change S_left_raw (↑(a • ψ)) x = (a • S_left_raw (↑ψ)) x
+  rw [lp.coeFn_smul]
+  dsimp [S_left_raw]
+  split_ifs <;> simp
+
 def K_raw (ψ : BinaryCantorBoundary → DoubledSpace E) (x : BinaryCantorBoundary) : DoubledSpace E :=
   clockAxis (E := E) (ψ x)
 
@@ -399,6 +424,30 @@ lemma K_lp_norm_eq (ψ : H_lp E) :
     have htsum := congrArg (fun f : BinaryCantorBoundary → ℝ => ∑' x, f x) hpoint
     simpa only [K_lp, K_raw] using htsum
   exact (Real.rpow_left_inj (lp.norm_nonneg' _) (lp.norm_nonneg' _) (by norm_num)).mp hpow
+
+lemma K_lp_zero :
+    K_lp (E := E) (0 : H_lp E) = 0 := by
+  apply Subtype.ext
+  funext x
+  change clockAxis (E := E) ((0 : H_lp E) x) = 0
+  simp
+
+lemma K_lp_add (ψ φ : H_lp E) :
+    K_lp (E := E) (ψ + φ) = K_lp ψ + K_lp φ := by
+  apply Subtype.ext
+  funext x
+  change clockAxis (E := E) ((ψ + φ) x) =
+    clockAxis (E := E) (ψ x) + clockAxis (E := E) (φ x)
+  rw [lp.coeFn_add]
+  exact (clockAxis (E := E)).map_add _ _
+
+lemma K_lp_smul (a : ℝ) (ψ : H_lp E) :
+    K_lp (E := E) (a • ψ) = a • K_lp ψ := by
+  apply Subtype.ext
+  funext x
+  change clockAxis (E := E) ((a • ψ) x) = a • clockAxis (E := E) (ψ x)
+  rw [lp.coeFn_smul]
+  exact (clockAxis (E := E)).map_smul a _
 
 /--
 Lift the pointwise commutation here from the `PiLp` carrier to equality of

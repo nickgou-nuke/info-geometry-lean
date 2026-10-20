@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Clifford.SplitBiquaternion
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
@@ -88,6 +94,22 @@ theorem norm_hyperbolicFlowK (η : ℂ) :
     norm (hyperbolicFlowK η) = 1 := by
   rw [hyperbolicFlowK_coords]
   simpa [norm, pow_two] using Complex.cosh_sq_sub_sinh_sq η
+
+/-- Elliptic packets compose according to addition of their parameters. -/
+theorem ellipticFlowI_mul_add (θ φ : ℂ) :
+    ellipticFlowI θ * ellipticFlowI φ = ellipticFlowI (θ + φ) := by
+  rw [ellipticFlowI_coords, ellipticFlowI_coords, ellipticFlowI_coords]
+  change mul ⟨Complex.cos θ, Complex.sin θ, 0, 0⟩
+      ⟨Complex.cos φ, Complex.sin φ, 0, 0⟩ = _
+  ext <;> simp [mul, Complex.cos_add, Complex.sin_add] <;> ring
+
+/-- Hyperbolic packets compose according to addition of their parameters. -/
+theorem hyperbolicFlowJ_mul_add (η ξ : ℂ) :
+    hyperbolicFlowJ η * hyperbolicFlowJ ξ = hyperbolicFlowJ (η + ξ) := by
+  rw [hyperbolicFlowJ_coords, hyperbolicFlowJ_coords, hyperbolicFlowJ_coords]
+  change mul ⟨Complex.cosh η, 0, Complex.sinh η, 0⟩
+      ⟨Complex.cosh ξ, 0, Complex.sinh ξ, 0⟩ = _
+  ext <;> simp [mul, Complex.cosh_add, Complex.sinh_add] <;> ring
 
 theorem norm_ellipticFlowIK (θ : ℂ) :
     norm (ellipticFlowIK θ) = 1 := by

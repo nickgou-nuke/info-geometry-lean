@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Canonical.DrazinSupercharge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RelativeModularScaleShapeSplit
@@ -170,13 +176,39 @@ language.
 @[rep_depth krein]
 def commutator_preserves_cartan_target (Γ : EndH) : Prop :=
   (∀ {X Y : EndH}, isEven (E := E) Γ X → isEven (E := E) Γ Y →
-      isEven (E := E) Γ (DrazinSupercharge.commutator X Y))
-    ∧
+      isEven (E := E) Γ (DrazinSupercharge.commutator X Y)) ∧
   (∀ {X Y : EndH}, isEven (E := E) Γ X → isOdd (E := E) Γ Y →
-      isOdd (E := E) Γ (DrazinSupercharge.commutator X Y))
-    ∧
+      isOdd (E := E) Γ (DrazinSupercharge.commutator X Y)) ∧
   (∀ {X Y : EndH}, isOdd (E := E) Γ X → isOdd (E := E) Γ Y →
       isEven (E := E) Γ (DrazinSupercharge.commutator X Y))
+
+omit [CompleteSpace E] in
+/-- The ordinary commutator preserves the even/odd Cartan grading. -/
+theorem commutator_preserves_cartan (Γ : EndH) :
+    commutator_preserves_cartan_target (E := E) Γ := by
+  refine ⟨?_, ?_, ?_⟩
+  · intro X Y hX hY
+    unfold isEven at hX hY ⊢
+    unfold DrazinSupercharge.commutator
+    rw [sub_mul, mul_assoc X Y Γ, mul_assoc Y X Γ, hY, hX,
+      ← mul_assoc X Γ Y, ← mul_assoc Y Γ X, hX, hY]
+    noncomm_ring
+  · intro X Y hX hY
+    unfold isEven at hX
+    unfold isOdd at hY ⊢
+    unfold DrazinSupercharge.commutator
+    rw [sub_mul, mul_assoc X Y Γ, mul_assoc Y X Γ, hY, hX]
+    simp only [mul_neg]
+    rw [← mul_assoc X Γ Y, ← mul_assoc Y Γ X, hX, hY]
+    noncomm_ring
+  · intro X Y hX hY
+    unfold isOdd at hX hY
+    unfold isEven
+    unfold DrazinSupercharge.commutator
+    rw [sub_mul, mul_assoc X Y Γ, mul_assoc Y X Γ, hY, hX]
+    simp only [mul_neg]
+    rw [← mul_assoc X Γ Y, ← mul_assoc Y Γ X, hX, hY]
+    noncomm_ring
 
 /--
 Target surface: the projector mismatch anomaly lies in the Cartan-odd sector.

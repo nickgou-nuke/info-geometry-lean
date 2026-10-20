@@ -40,6 +40,15 @@ from tools.infra.hive_packet_validate import (  # noqa: E402
     build_store,
     validate_packet,
 )
+from tools.infra.arango_env import (  # noqa: E402
+    hive_arango_database,
+    hive_arango_endpoint,
+    hive_arango_password,
+    hive_arango_username,
+    load_repo_arango_env,
+)
+
+load_repo_arango_env(ROOT)
 
 
 def now() -> str:
@@ -68,9 +77,16 @@ def run_command(
     command: list[str], *, cwd: Path, lock: bool = False, timeout_seconds: float = 120.0,
 ) -> dict[str, Any]:
     def execute() -> subprocess.CompletedProcess[str]:
+        environment = os.environ.copy()
+        repo_paths = os.pathsep.join((str(ROOT), str(SRC)))
+        existing_pythonpath = environment.get("PYTHONPATH")
+        environment["PYTHONPATH"] = (
+            repo_paths + os.pathsep + existing_pythonpath
+            if existing_pythonpath else repo_paths
+        )
         return subprocess.run(
-            command, cwd=cwd, text=True, capture_output=True, check=False,
-            timeout=timeout_seconds,
+            command, cwd=cwd, env=environment, text=True,
+            capture_output=True, check=False, timeout=timeout_seconds,
         )
 
     if lock:
@@ -211,7 +227,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--contract", type=Path, required=True)
     parser.add_argument("--candidate", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, default=ROOT / "tmp" / "opengauss_hive_pilot")
-    parser.add_argument("--build-target", help="Optional Lake module target for the locked build gate.")
+    parser.add_argument(
+        "--build-target", default=None,
+        help="Optional Lake module target for the locked build gate; use InfoGeometry.All for the full authoritative target.",
+    )
     parser.add_argument("--audit-evidence", type=Path, help="Independent A-A JSON evidence.")
     parser.add_argument("--qa-evidence", type=Path, help="Independent QA-A JSON evidence.")
     parser.add_argument("--promotion-evidence", type=Path, help="Schema-valid promotion-worker evidence required for promotion.")
@@ -219,6 +238,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--skip-refutation", action="store_true", help="Only for environment diagnosis; never promotable.")
     parser.add_argument("--timeout-seconds", type=float, default=120.0)
     parser.add_argument("--hive-smoke", action="store_true", help="Run an opt-in Hive claim/heartbeat/requeue smoke test.")
+    parser.add_argument("--hive-endpoint", default=hive_arango_endpoint(), help="Explicit Hive Arango endpoint (lane-specific; never inferred from ARANGO_ENDPOINT).")
+    parser.add_argument("--hive-database", default=hive_arango_database(), help="Explicit Hive Arango database.")
+    parser.add_argument("--hive-username", default=hive_arango_username(), help="Hive Arango username.")
+    parser.add_argument("--hive-password", default=hive_arango_password(), help="Hive Arango password.")
     parser.add_argument(
         "--packet-lineage-packet", action="append", default=[],
         help="Packet JSON path for --packet-lineage-smoke; repeat in causal order.",
@@ -310,22 +333,30 @@ def candidate_contract_binding(candidate_path: Path, checked_contract: dict[str,
     }
 
 
-def parse_cli_json(result: dict[str, Any]) -> dict[str, Any]:
+def parse_cli_json(result: dict[str, Any]) -> Any:
     if not result.get("success"):
         raise RuntimeError(result.get("output") or "Hive CLI command failed")
     try:
         value = json.loads(str(result.get("output") or ""))
     except json.JSONDecodeError as exc:
         raise RuntimeError("Hive CLI did not return JSON") from exc
-    if not isinstance(value, dict):
-        raise RuntimeError("Hive CLI JSON result is not an object")
+    if not isinstance(value, (dict, list)):
+        raise RuntimeError("Hive CLI JSON result is neither an object nor an array")
     return value
 
 
-def hive_smoke(*, run_id: str, contract_hash: str, candidate_hash: str, timeout_seconds: float) -> dict[str, Any]:
+def hive_smoke(
+    *, run_id: str, contract_hash: str, candidate_hash: str,
+    endpoint: str, database: str, username: str, password: str,
+    timeout_seconds: float,
+) -> dict[str, Any]:
     """Exercise one isolated queue through heartbeat, claim, expiry, requeue, and completion."""
     queue = f"pilot-{run_id[-16:]}"
-    cli = [sys.executable, "tools/infra/hive_arango_queue.py"]
+    cli = [
+        sys.executable, "tools/infra/hive_arango_queue.py",
+        "--endpoint", endpoint, "--database", database,
+        "--username", username, "--password", password,
+    ]
     worker_a = f"pilot-worker-a-{run_id[-8:]}"
     worker_b = f"pilot-worker-b-{run_id[-8:]}"
     records: list[dict[str, Any]] = []
@@ -631,7 +662,10 @@ def main() -> int:
             try:
                 hive_stage = hive_smoke(
                     run_id=run_id, contract_hash=contract_hash,
-                    candidate_hash=candidate_hash, timeout_seconds=args.timeout_seconds,
+                    candidate_hash=candidate_hash,
+                    endpoint=args.hive_endpoint, database=args.hive_database,
+                    username=args.hive_username, password=args.hive_password,
+                    timeout_seconds=args.timeout_seconds,
                 )
             except Exception as exc:
                 hive_stage = {"stage": "hive_smoke", "status": "failed", "reason": str(exc)}

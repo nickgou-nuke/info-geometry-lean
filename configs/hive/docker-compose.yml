@@ -1,0 +1,16 @@
+services:
+  arango_hive:
+    image: arangodb:3.12
+    container_name: arango_hive
+    restart: unless-stopped
+    environment:
+      ARANGO_ROOT_PASSWORD: ${HIVE_ARANGO_ROOT_PASSWORD:-hive_live_root}
+    ports:
+      - "${HIVE_ARANGO_PORT:-8540}:8529"
+    volumes:
+      - hive_arango_data:/var/lib/arangodb3
+      - hive_arango_apps:/var/lib/arangodb3-apps
+
+volumes:
+  hive_arango_data:
+  hive_arango_apps:

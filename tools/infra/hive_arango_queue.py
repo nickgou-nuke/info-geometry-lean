@@ -339,7 +339,23 @@ def db_url(endpoint: str, database: str, path: str) -> str:
 
 
 def ensure_database(endpoint: str, database: str, username: str, password: str) -> None:
-    dbs = request_json("GET", sys_url(endpoint, "/_api/database"), username=username, password=password)
+    try:
+        dbs = request_json("GET", sys_url(endpoint, "/_api/database"), username=username, password=password)
+    except RuntimeError as exc:
+        # Arango restricts the server-wide database listing to administrative
+        # users.  A scoped Hive worker must still be able to run `init` after
+        # the database has been provisioned, so verify the requested database
+        # directly instead of requiring root credentials on every run.
+        message = str(exc)
+        if "HTTP 401" not in message and "HTTP 403" not in message:
+            raise
+        request_json(
+            "GET",
+            db_url(endpoint, database, "/_api/collection"),
+            username=username,
+            password=password,
+        )
+        return
     if database in dbs.get("result", []):
         return
     request_json(

@@ -366,7 +366,11 @@ Lean, build, A-A, or QA-A gates.
 The operational path is opt-in and isolated by a unique queue name:
 
 ```bash
-python3 tools/infra/opengauss_hive_pilot.py ... --hive-smoke
+python3 tools/infra/opengauss_hive_pilot.py ... --hive-smoke \
+  --hive-endpoint "$HIVE_ARANGO_ENDPOINT" \
+  --hive-database "$HIVE_ARANGO_DATABASE" \
+  --hive-username "$HIVE_ARANGO_USER" \
+  --hive-password "$HIVE_ARANGO_PASS"
 ```
 
 This performs a real worker heartbeat, task enqueue, one-second lease claim,
@@ -375,6 +379,11 @@ lease expiry/reap, second-worker reclaim, and completion. The resulting
 `rejection_manifest.json`; subprocess timeouts additionally emit
 `timeout_manifest.json`. No Hive mutation occurs unless `--hive-smoke` is
 explicitly requested.
+
+The full repository gate uses the explicit authoritative target
+`InfoGeometry.All`. Running the locked Lake wrapper with no target now selects
+the changed Lean owner modules incrementally; use `--all-default-targets` or
+the explicit `InfoGeometry.All` target only for a deliberate full gate.
 
 Packet lineage is a separate opt-in check, because queue leasing does not prove
 packet dependency edges:

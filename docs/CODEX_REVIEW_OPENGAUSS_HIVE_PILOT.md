@@ -234,3 +234,43 @@ The remaining review controls are now fail-closed in the runner:
 The safe test order remains stale-contract rejection, synthetic packet-lineage
 validation, and only then the explicitly authorized Hive lease smoke. These
 checks still do not promote theorem source.
+
+## Forensic verification update
+
+The repository-side build failure was isolated to an unqualified locked-build
+invocation. The root Lake file had a stale default `scripts` library pointing
+at the absent `lean/scripts` tree. The locked wrapper now treats an unqualified
+development invocation as an incremental changed-owner build; the authoritative
+`InfoGeometry.All` target is explicit.
+
+Evidence from the current worktree:
+
+- `python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock InfoGeometry.All`
+  completed successfully with 25,943 jobs.
+- The incremental owner target
+  `InfoGeometry.Synthesis.Cl44LeftIdealSplitSedenionSynthesis` completed
+  successfully with 3,119 jobs.
+- Python compilation and staged-diff checks pass for the pilot and build
+  wrapper.
+- The pilot now takes explicit Hive endpoint/database/credential arguments;
+  it never infers the Hive lane from the DAG `ARANGO_*` endpoint.
+
+The remaining live blocker is environmental: port 8540 must have the separate
+Hive Arango service running. The repository includes
+`configs/hive/docker-compose.yml` for that service, but no Hive service was
+available during this verification. QMS promotion therefore remains held.
+
+The live service was subsequently started from the repository compose file and
+the bounded pilot was rerun with explicit `8540/hive_live` credentials. Run
+`pilot_934dfa54ab198bed002807c5` produced:
+
+- contract binding, strict refutation, Lean verification, explicit axiom audit,
+  and the incremental owner build: **passed**;
+- Hive worker heartbeat, one-second lease expiry, requeue, second-worker claim,
+  and completion: **passed**;
+- A-A/QA-A packets and packet-lineage smoke: **not supplied**;
+- final decision: **hold**, with `qms_acceptance=held`.
+
+This is the intended fail-closed result: the operational pipeline works end to
+end through Hive recovery, while theorem promotion remains blocked until
+independent review evidence is available.

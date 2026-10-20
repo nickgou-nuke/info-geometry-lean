@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -33,6 +39,15 @@ abbrev M2Q := InfoGeometry.Algebra.FiniteSpin.Mat2Q
 /-- Projective equality modulo the central sign `{I, -I}`. -/
 def ProjectivelyEqual (A B : M2Q) : Prop :=
   A = B ∨ A = -B
+
+/-- Projective equality is preserved by multiplying on both sides. -/
+theorem projectivelyEqual_mul_left_right
+    (A B C D : M2Q)
+    (h : ProjectivelyEqual A B) :
+    ProjectivelyEqual (C * A * D) (C * B * D) := by
+  rcases h with h | h
+  · exact Or.inl (by rw [h])
+  · exact Or.inr (by rw [h]; noncomm_ring)
 
 /-- Identity matrix in the finite projective chart. -/
 def I2 : M2Q := 1

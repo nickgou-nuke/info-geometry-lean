@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Categorical.ZornUHFColimit
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CanonicalZornBraidTransport
@@ -16,6 +22,64 @@ open CategoryTheory CategoryTheory.Limits
 open InfoGeometry.Canonical.UHFInductiveColimitBoundary
 open InfoGeometry.Physics.YangBaxterZornBridge
 open InfoGeometry.Physics.B3PresentedGroup (B3)
+
+theorem finiteSpin_noncommutativity :
+    InfoGeometry.Algebra.FiniteSpin.comm
+        InfoGeometry.Algebra.FiniteSpin.J_zero
+        InfoGeometry.Algebra.FiniteSpin.J_plus ≠
+      InfoGeometry.Algebra.FiniteSpin.comm
+        InfoGeometry.Algebra.FiniteSpin.J_plus
+        InfoGeometry.Algebra.FiniteSpin.J_zero := by
+  intro h
+  have hentry := congrArg (fun M => M (0 : Fin 2) (1 : Fin 2)) h
+  norm_num [InfoGeometry.Algebra.FiniteSpin.comm,
+    InfoGeometry.Algebra.FiniteSpin.J_zero,
+    InfoGeometry.Algebra.FiniteSpin.J_plus,
+    Matrix.mul_apply, Fin.sum_univ_two] at hentry
+
+def zornWitnessA : Matrix (Fin 8) (Fin 8) ℂ := LeftMulQ 0
+
+def zornWitnessB : Matrix (Fin 8) (Fin 8) ℂ := LeftMulQ 1
+
+theorem zorn_leftMulQ_noncommutative :
+    zornWitnessA * zornWitnessB ≠ zornWitnessB * zornWitnessA := by
+  change LeftMulQ 0 * LeftMulQ 1 ≠ LeftMulQ 1 * LeftMulQ 0
+  intro h
+  have hanti := leftMulQ_anticommute 0 1 (by decide)
+  have hneg : LeftMulQ 0 * LeftMulQ 1 = -(LeftMulQ 0 * LeftMulQ 1) := by
+    calc
+      LeftMulQ 0 * LeftMulQ 1 = -(LeftMulQ 1 * LeftMulQ 0) := hanti
+      _ = -(LeftMulQ 0 * LeftMulQ 1) := by rw [h]
+  have hzero : LeftMulQ 0 * LeftMulQ 1 = 0 := by
+    ext r c
+    change (LeftMulQ 0 * LeftMulQ 1) r c = (0 : ℂ)
+    have hrc := congrArg (fun M => M r c) hneg
+    have hrc' : (LeftMulQ 0 * LeftMulQ 1) r c =
+        -((LeftMulQ 0 * LeftMulQ 1) r c) := by
+      simpa using hrc
+    have hsum := eq_neg_iff_add_eq_zero.mp hrc'
+    linear_combination (1 / 2 : ℂ) * hsum
+  have hanti' : LeftMulQ 1 * LeftMulQ 0 =
+      -(LeftMulQ 0 * LeftMulQ 1) := by
+    calc
+      LeftMulQ 1 * LeftMulQ 0 = -(-(LeftMulQ 1 * LeftMulQ 0)) := by simp
+      _ = -(LeftMulQ 0 * LeftMulQ 1) := by rw [hanti]
+  have hsq := congrArg (fun M => M * M) hzero
+  have hunit : (LeftMulQ 0 * LeftMulQ 1) * (LeftMulQ 0 * LeftMulQ 1) =
+      -(1 : Matrix (Fin 8) (Fin 8) ℂ) := by
+    calc
+      (LeftMulQ 0 * LeftMulQ 1) * (LeftMulQ 0 * LeftMulQ 1) =
+          LeftMulQ 0 * (LeftMulQ 1 * LeftMulQ 0) * LeftMulQ 1 := by
+            noncomm_ring
+      _ = LeftMulQ 0 * (-(LeftMulQ 0 * LeftMulQ 1)) * LeftMulQ 1 := by
+            rw [hanti']
+      _ = -((LeftMulQ 0 * LeftMulQ 0) * (LeftMulQ 1 * LeftMulQ 1)) := by
+            noncomm_ring
+      _ = -(1 : Matrix (Fin 8) (Fin 8) ℂ) := by
+            rw [leftMulQ_sq, leftMulQ_sq]
+            simp [Id8]
+  rw [hunit] at hsq
+  simp at hsq
 
 /-- The endomorphism of the concrete Zorn colimit induced by a compatible
 stagewise linear transformation. -/
@@ -76,6 +140,17 @@ theorem zornStagePointwiseNatTrans_comp
     zornColimitEnd s ((colimit.ι zornStageFunctor n).hom x) =
       (colimit.ι zornStageFunctor n).hom ((s.app n).hom x) := by
   exact congrArg (fun f => f x) (colimit.ι_map s n)
+
+theorem zornColimitEnd_unique
+    (s : zornStageFunctor ⟶ zornStageFunctor)
+    (f : ZornColimit ⟶ ZornColimit)
+    (h : ∀ n : ℕ,
+      colimit.ι zornStageFunctor n ≫ f =
+        (s.app n) ≫ colimit.ι zornStageFunctor n) :
+    f = colim.map s := by
+  apply colimit.hom_ext
+  intro n
+  exact (h n).trans (colimit.ι_map s n).symm
 
 /-! The two concrete Yang--Baxter/Zorn generators now act on every stage. -/
 

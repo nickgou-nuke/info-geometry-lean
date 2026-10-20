@@ -20,4 +20,12 @@ theorem doubledCarrier_projector_decomposition (u : DoubledSpace E) :
     (spectralProj_sum (E := E))
   simpa only [add_apply, ContinuousLinearMap.id_apply] using h
 
+theorem doubledCarrier_signed_projector_decomposition (u : DoubledSpace E) :
+    (doubledCarrier (E := E)).Pplus u -
+        (doubledCarrier (E := E)).Pminus u =
+      (doubledCarrier (E := E)).ε u := by
+  change spectralPlusProj (E := E) u - spectralMinusProj (E := E) u =
+    spectral_epsilon (E := E) u
+  exact spectral_signed_decomposition (E := E) u
+
 end InfoGeometry.Krein

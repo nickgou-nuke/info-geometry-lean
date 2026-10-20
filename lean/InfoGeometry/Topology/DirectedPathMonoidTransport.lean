@@ -58,4 +58,50 @@ theorem DirectedPath.product_eq_of_presentedHomotopy
   | symm p q _ ih => exact ih.symm
   | trans p q r _ _ ih₁ ih₂ => exact ih₁.trans ih₂
 
+theorem DirectedPath.product_mapPath
+    {G H : ChiralDigraph} (F : ChiralDigraphHom G H)
+    (sourceWeight : ∀ u v : G.Vertex, G.edge u v → M)
+    (targetWeight : ∀ u v : H.Vertex, H.edge u v → M)
+    (hweight : ∀ {u v : G.Vertex} (e : G.edge u v),
+      targetWeight (F.mapVertex u) (F.mapVertex v) (F.mapEdge e) =
+        sourceWeight u v e)
+    {u v : G.Vertex} (p : DirectedPath G u v) :
+    DirectedPath.product targetWeight (F.mapPath p) =
+      DirectedPath.product sourceWeight p := by
+  induction p with
+  | refl => rfl
+  | cons h p ih =>
+      simp only [ChiralDigraphHom.mapPath, DirectedPath.product]
+      rw [hweight h, ih]
+
+namespace PresentedPathClass
+
+/-- The ordered product descends to a presented path quotient when every
+generating contextual rewrite preserves it. -/
+def product
+    (P : DirectedPathPresentation G)
+    (edgeWeight : ∀ u v : G.Vertex, G.edge u v → M)
+    (hcompat : ProductCompatible P edgeWeight)
+    {u v : G.Vertex} : PresentedPathClass P u v → M :=
+  Quot.lift (DirectedPath.product edgeWeight)
+    (fun _p _q h => DirectedPath.product_eq_of_presentedHomotopy
+      P edgeWeight hcompat h)
+
+theorem product_comp
+    (P : DirectedPathPresentation G)
+    (edgeWeight : ∀ u v : G.Vertex, G.edge u v → M)
+    (hcompat : ProductCompatible P edgeWeight)
+    {u v w : G.Vertex} (p : PresentedPathClass P u v)
+    (q : PresentedPathClass P v w) :
+    product P edgeWeight hcompat (comp P p q) =
+      product P edgeWeight hcompat p * product P edgeWeight hcompat q := by
+  refine Quot.inductionOn p ?_
+  intro p'
+  refine Quot.inductionOn q ?_
+  intro q'
+  change DirectedPath.product edgeWeight (p'.append q') = _
+  exact DirectedPath.product_append edgeWeight p' q'
+
+end PresentedPathClass
+
 end InfoGeometry.Topology

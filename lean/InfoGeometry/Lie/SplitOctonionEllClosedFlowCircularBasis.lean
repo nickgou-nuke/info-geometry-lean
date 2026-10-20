@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Lie.SplitOctonionEllClosedFlow
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionQuaternionCircularBasis
@@ -118,6 +124,18 @@ theorem trace_ellFlowPhi (t : ℝ) :
     _ = 2 + 3 * Real.exp t + 3 * Real.exp (-t) := by
       simp [Fin.sum_univ_succ]
       ring
+
+/-- The named activity partition is the actual trace of the closed ell flow. -/
+theorem trace_ellFlowPhi_eq_activityPartitionTrace (t : ℝ) :
+    LinearMap.trace ℝ CZ (ellFlowPhi t : EndCZ) = activityPartitionTrace t := by
+  rw [trace_ellFlowPhi]
+  rfl
+
+/-- The closed-flow trace has the equivalent hyperbolic-cosh expression. -/
+theorem trace_ellFlowPhi_eq_cosh_form (t : ℝ) :
+    LinearMap.trace ℝ CZ (ellFlowPhi t : EndCZ) = 2 + 6 * Real.cosh t := by
+  rw [trace_ellFlowPhi_eq_activityPartitionTrace]
+  exact activityPartitionTrace_eq_cosh_form t
 
 theorem trace_exp_neg_beta_Q (β : ℝ) :
     LinearMap.trace ℝ CZ ((Real.exp (-β) : ℝ) • ellQ : EndCZ) =

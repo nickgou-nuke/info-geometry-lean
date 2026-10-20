@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HorizonZitterModes
@@ -74,6 +80,16 @@ theorem P_harm_idempotent :
   rw [G.P_harm_def, G.P_reg_def]
   simpa [IsDrazinInverse.complementaryProjection, IsDrazinInverse.projection] using
     IsDrazinInverse.complementaryProjection_is_idempotent G.hDrazin
+
+/-- The harmonic/generalized-zero projector is annihilated by the Drazin
+index power of the frequency operator. -/
+@[rep_depth operator]
+theorem P_harm_mul_L_pow_eq_zero :
+    G.P_harm * G.L ^ G.index = 0 := by
+  rw [G.P_harm_def, G.P_reg_def]
+  simpa [IsDrazinInverse.complementaryProjection,
+    IsDrazinInverse.projection] using
+    IsDrazinInverse.complementaryProjection_mul_power_eq_zero G.hDrazin
 
 /-- The Drazin Green operator commutes with the frequency operator on the core. -/
 @[rep_depth operator]

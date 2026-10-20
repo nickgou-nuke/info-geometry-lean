@@ -147,7 +147,7 @@ def main() -> int:
         if not args.skip_file_gates:
             for path in files:
                 rel = path.relative_to(root)
-            print(f"[changed-verify] would run locked Lean elaboration: {rel}", flush=True)
+                print(f"[changed-verify] would run locked Lean elaboration: {rel}", flush=True)
         if not args.skip_owner_build and modules:
             print("[changed-verify] would run locked owner build", flush=True)
         if umbrella:

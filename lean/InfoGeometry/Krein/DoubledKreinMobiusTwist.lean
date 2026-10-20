@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
@@ -339,6 +344,41 @@ theorem blockKreinAdjoint_eq (A11 A12 A21 A22 : E →L[𝕜] E) :
     abel
   · simp only [blockKreinAdjoint, ContinuousLinearMap.comp_apply, modularJ_apply, blockAdjoint, fromBlocks_apply]
     abel
+
+/-- The block Krein adjoint reverses composition on the native doubled-space
+    operator algebra. -/
+theorem blockKreinAdjoint_comp
+    (A11 A12 A21 A22 B11 B12 B21 B22 : E →L[𝕜] E) :
+    blockKreinAdjoint
+        (A11.comp B11 + A12.comp B21)
+        (A11.comp B12 + A12.comp B22)
+        (A21.comp B11 + A22.comp B21)
+        (A21.comp B12 + A22.comp B22) =
+      (blockKreinAdjoint B11 B12 B21 B22).comp
+        (blockKreinAdjoint A11 A12 A21 A22) := by
+  have h_add (S T : E →L[𝕜] E) : adjoint (S + T) = adjoint S + adjoint T := by
+    rw [← star_eq_adjoint, star_add, star_eq_adjoint, star_eq_adjoint]
+  rw [blockKreinAdjoint_eq, blockKreinAdjoint_eq, blockKreinAdjoint_eq,
+    fromBlocks_comp]
+  apply ContinuousLinearMap.ext
+  intro p
+  ext
+  · simp only [ContinuousLinearMap.comp_apply, fromBlocks_apply,
+      h_add, ContinuousLinearMap.adjoint_comp]
+    abel
+  · simp only [ContinuousLinearMap.comp_apply, fromBlocks_apply,
+      h_add, ContinuousLinearMap.adjoint_comp]
+    abel
+
+/-- The block Krein adjoint is involutive on the native doubled-space
+    operator algebra. -/
+theorem blockKreinAdjoint_involutive
+    (A11 A12 A21 A22 : E →L[𝕜] E) :
+    blockKreinAdjoint
+        (adjoint A22) (adjoint A12) (adjoint A21) (adjoint A11) =
+      fromBlocks A11 A12 A21 A22 := by
+  rw [blockKreinAdjoint_eq]
+  simp only [ContinuousLinearMap.adjoint_adjoint]
 
 /-- Krein-Dirac self-adjointness equivalence:
     A block operator is Krein-self-adjoint iff the diagonal blocks are adjoint reflections

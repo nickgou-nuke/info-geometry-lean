@@ -12,4 +12,7 @@ if ! command -v lake >/dev/null 2>&1; then
 fi
 
 python3 tools/infra/assert_single_mathlib_source.py
+if [ "$#" -eq 0 ]; then
+  exec python3 tools/infra/build_changed_lean.py --wait-for-build-lock
+fi
 exec python3 tools/infra/run_locked_lake_build.py "$@"

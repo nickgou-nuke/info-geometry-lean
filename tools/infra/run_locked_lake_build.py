@@ -42,7 +42,27 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
         action="store_true",
         help="Pass `--wfail` to `lake build` so warnings are treated as errors.",
     )
-    parser.add_argument("targets", nargs="*", help="Lake build targets.")
+    parser.add_argument(
+        "--all-default-targets",
+        action="store_true",
+        help="Run Lake with no positional target, compiling every @[default_target].",
+    )
+    parser.add_argument(
+        "--changed",
+        action="store_true",
+        help=(
+            "Build only changed Lean owner modules via build_changed_lean.py. "
+            "This is the safe default for development scripts."
+        ),
+    )
+    parser.add_argument(
+        "targets", nargs="*",
+        help=(
+            "Lake build targets. With no target, changed Lean owner modules are "
+            "built incrementally; use --all-default-targets for an explicit "
+            "Lake default-target build."
+        ),
+    )
     args = parser.parse_args(wrapper_argv)
     args.lake_args = lake_argv
     return args
@@ -50,8 +70,27 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
+    if args.all_default_targets and (args.targets or args.changed):
+        print("--all-default-targets cannot be combined with targets or --changed", file=sys.stderr)
+        return 2
+    if args.changed and args.targets:
+        print("--changed cannot be combined with positional targets", file=sys.stderr)
+        return 2
+    targets = [] if args.all_default_targets else (args.targets or ["InfoGeometry.All"])
+    # No-target invocations are development builds: resolve changed owners
+    # instead of silently expanding to the repository umbrella target.
+    if args.changed or (not args.targets and not args.all_default_targets):
+        import subprocess
+        changed = Path(__file__).with_name("build_changed_lean.py")
+        cmd = [sys.executable, str(changed)]
+        if args.wait_for_build_lock:
+            cmd.append("--wait-for-build-lock")
+        if args.lake_args:
+            print("--changed does not accept Lake options; pass them to a concrete owner build", file=sys.stderr)
+            return 2
+        return subprocess.run(cmd, cwd=Path(__file__).resolve().parents[2]).returncode
     return run_locked_lake_build(
-        [*args.targets, *args.lake_args],
+        [*targets, *args.lake_args],
         wait_for_lock=args.wait_for_build_lock,
         wfail=args.wfail,
     )

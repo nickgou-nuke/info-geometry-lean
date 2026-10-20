@@ -5,11 +5,10 @@ set -e
 
 LOG=profile-build-$(date +%Y%m%d-%H%M%S).log
 
-# Clean previous build
-lake clean
-
-# Build with verbose output and profile enabled
-L4_PROFILE=1 python3 tools/run_locked_lake_build.py -v 2>&1 | tee "$LOG"
+# Build changed owner modules incrementally with profiling enabled.  The
+# repository build cache is intentionally preserved; use an explicit owner
+# target when profiling a dependency or umbrella target.
+L4_PROFILE=1 python3 tools/infra/build_changed_lean.py --wait-for-build-lock 2>&1 | tee "$LOG"
 
 echo "\nBuild log with timing saved to $LOG"
 echo "To analyze slowest files, search for '[profile]' and 'elapsed' in the log."

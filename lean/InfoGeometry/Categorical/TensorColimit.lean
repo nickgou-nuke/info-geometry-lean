@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Algebra.Category.ModuleCat.Monoidal.Closed
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.CategoryTheory.Limits.Preserves.Limits
@@ -64,5 +70,20 @@ theorem tensorColimitIso_ι
         (colimit.ι F j) :=
   ι_preservesColimitIso_inv
     ((tensoringRight (ModuleCat R)).obj M) F j
+
+theorem tensorColimitIso_inv_ι
+    {R : Type*} [CommRing R]
+    {J : Type*} [Category J]
+    (F : J ⥤ ModuleCat R) (M : ModuleCat R)
+    [HasColimit F]
+    [PreservesColimit F ((tensoringRight (ModuleCat R)).obj M)]
+    [HasColimit (F ⋙ (tensoringRight (ModuleCat R)).obj M)]
+    (j : J) :
+    ((tensoringRight (ModuleCat R)).obj M).map
+        (colimit.ι F j) ≫
+      (tensorColimitIso F M).inv =
+    colimit.ι (F ⋙ (tensoringRight (ModuleCat R)).obj M) j := by
+  rw [← tensorColimitIso_ι F M j]
+  simp [Category.assoc]
 
 end InfoGeometry.Categorical

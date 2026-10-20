@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Analysis.InnerProductSpace.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.PositiveRayCore
@@ -30,6 +36,17 @@ theorem modularFlowProjection_eq_commutatorExpectation (K X : EndD H) (ψ : H) :
     modularFlowProjection K X ψ =
       ⟪(commutator K X) ψ, ψ⟫_ℝ :=
   rfl
+
+theorem modularFlowProjection_eq_zero_of_commute
+    (K X : EndD H) (ψ : H) (h : Commute K X) :
+    modularFlowProjection K X ψ = 0 := by
+  have hcomp : K.comp X = X.comp K := h.eq
+  have hzero : commutator K X = 0 := by
+    unfold commutator
+    exact sub_eq_zero.mpr hcomp
+  unfold modularFlowProjection operatorExpectation
+  rw [hzero]
+  simp
 
 theorem coordinateObservable_isBounded (X : EndD H) : Continuous X :=
   X.continuous

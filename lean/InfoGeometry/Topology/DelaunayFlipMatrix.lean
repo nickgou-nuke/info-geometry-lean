@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Data.Matrix.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Rat.Defs
@@ -56,6 +62,17 @@ theorem flip_inverse_identity (i k j l : ι) (hik : i ≠ k) (hjl : j ≠ l) :
   fin_cases a <;> fin_cases b <;>
     simp [flipBlock, Fin.sum_univ_two] <;>
     field_simp [labels.nonzero_den hik, labels.nonzero_den hjl] <;> ring
+
+omit [DecidableEq ι] in
+/-- Every local rational flip block is invertible, with inverse given by the
+reversed flip block. -/
+theorem flipBlock_isUnit
+    (i k j l : ι) (hik : i ≠ k) (hjl : j ≠ l) :
+    IsUnit (flipBlock labels i k j l hik) := by
+  apply isUnit_iff_exists.mpr
+  refine ⟨flipBlock labels j l i k hjl, ?_, ?_⟩
+  · exact flip_inverse_identity labels i k j l hik hjl
+  · exact flip_inverse_identity labels j l i k hjl hik
 
 /-- Embed a local `2 × 2` flip block in the upper-left slot of a `4 × 4` matrix. -/
 def upperLeftEmbed2 (A : Matrix (Fin 2) (Fin 2) ℚ) : Matrix (Fin 4) (Fin 4) ℚ :=

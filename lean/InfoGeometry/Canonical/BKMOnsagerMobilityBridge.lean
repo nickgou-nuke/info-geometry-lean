@@ -53,7 +53,6 @@ theorem trace_star_bkmOnsager (energies : ι → ℝ) (X Y : Mat) :
   intro i _
   apply Finset.sum_congr rfl
   intro j _
-  rw [bkmWeightScalar_symm]
   ring
 
 /-- Positivity is inherited from the constructive BKM logarithmic mean. -/

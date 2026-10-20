@@ -44,4 +44,34 @@ theorem isCompactOperator_conjugateDoubledEnd
     (IsCompactOperator.clm_comp (hf := h_inner)
       (g := (HilbertDoubled.ofDoubledContinuousLinearEquiv (E := E)).toContinuousLinearMap))
 
+theorem isCompactOperator_of_conjugateDoubledEnd
+    (T : DoubledSpace E →L[ℝ] DoubledSpace E)
+    (hT : IsCompactOperator
+      (conjugateDoubledEnd (E := E) T : HilbertDoubled E → HilbertDoubled E)) :
+    IsCompactOperator (T : DoubledSpace E → DoubledSpace E) := by
+  have h_inner : IsCompactOperator
+      ((conjugateDoubledEnd (E := E) T).comp
+        (HilbertDoubled.ofDoubledContinuousLinearEquiv (E := E)).toContinuousLinearMap :
+        DoubledSpace E → HilbertDoubled E) := by
+    simpa [ContinuousLinearMap.coe_comp] using
+      (IsCompactOperator.comp_clm (hf := hT)
+        (g := (HilbertDoubled.ofDoubledContinuousLinearEquiv (E := E)).toContinuousLinearMap))
+  have h_outer : IsCompactOperator
+      ((HilbertDoubled.toDoubledContinuousLinearEquiv (E := E)).toContinuousLinearMap.comp
+        ((conjugateDoubledEnd (E := E) T).comp
+          (HilbertDoubled.ofDoubledContinuousLinearEquiv (E := E)).toContinuousLinearMap) :
+        DoubledSpace E → DoubledSpace E) := by
+    simpa [ContinuousLinearMap.coe_comp] using
+      (IsCompactOperator.clm_comp (hf := h_inner)
+        (g := (HilbertDoubled.toDoubledContinuousLinearEquiv (E := E)).toContinuousLinearMap))
+  have h_eq :
+      (HilbertDoubled.toDoubledContinuousLinearEquiv (E := E)).toContinuousLinearMap.comp
+        ((conjugateDoubledEnd (E := E) T).comp
+          (HilbertDoubled.ofDoubledContinuousLinearEquiv (E := E)).toContinuousLinearMap) = T := by
+    apply ContinuousLinearMap.ext
+    intro x
+    simp [conjugateDoubledEnd, ContinuousLinearMap.comp_apply]
+  rw [h_eq] at h_outer
+  exact h_outer
+
 end InfoGeometry.Krein

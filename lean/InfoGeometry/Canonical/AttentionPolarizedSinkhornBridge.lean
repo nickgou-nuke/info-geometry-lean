@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Routing.BirkhoffVonNeumann
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.AttentionPolarizedGibbsBridge
@@ -101,6 +107,22 @@ theorem polarizedPlusAttentionMatrix_mem_doublyStochastic
     exact polarizedPlusAttentionMatrix_row_sum_one (E := E) (V := V) queries ctx β i
   · intro j
     exact hcol j
+
+-- theorem-class: closure
+/-- The uniform row vector is fixed by a column-balanced attention matrix. -/
+theorem polarizedPlusAttentionMatrix_uniform_left_fixed
+    (queries : Fin n → E) (ctx : ContextWindow n E V) (β : ℝ)
+    (hcol : ∀ j : Fin n,
+      ∑ i : Fin n,
+        polarizedPlusAttentionMatrix (E := E) (V := V) queries ctx β i j = 1) :
+    Matrix.vecMul (1 : Fin n → ℝ)
+      (polarizedPlusAttentionMatrix (E := E) (V := V) queries ctx β) = 1 := by
+  apply Matrix.one_vecMul_of_mem_colStochastic
+  rw [Matrix.mem_colStochastic_iff_sum]
+  refine ⟨?_, hcol⟩
+  intro i j
+  exact polarizedPlusAttentionMatrix_nonneg
+    (E := E) (V := V) queries ctx β i j
 
 -- theorem-class: closure
 /--

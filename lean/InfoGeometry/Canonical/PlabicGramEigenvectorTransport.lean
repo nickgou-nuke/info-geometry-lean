@@ -128,6 +128,52 @@ theorem mulVec_gram_eigenvector_preimage {m n : Type*} [Fintype m] [Fintype n]
         rw [hmul]
       _ = w := by simp [smul_smul, hEigenvalue_ne_zero]
 
+/-- The two Gram operators have eigenspaces of equal finite dimension at every
+nonzero eigenvalue. This is geometric multiplicity equality; it makes no
+claim about generalized eigenspaces or characteristic polynomials. -/
+theorem gram_eigenspace_finrank_eq {m n : Type*} [Fintype m] [Fintype n]
+    (A : Matrix m n ℂ) (eigenvalue : ℂ) (hEigenvalue_ne_zero : eigenvalue ≠ 0) :
+    Module.finrank ℂ
+        (Module.End.eigenspace (A.conjTranspose * A).mulVecLin eigenvalue) =
+      Module.finrank ℂ
+        (Module.End.eigenspace (A * A.conjTranspose).mulVecLin eigenvalue) := by
+  let source := Module.End.eigenspace (A.conjTranspose * A).mulVecLin eigenvalue
+  let target := Module.End.eigenspace (A * A.conjTranspose).mulVecLin eigenvalue
+  let forward : source →ₗ[ℂ] target :=
+    ((A.mulVecLin).comp source.subtype).codRestrict target (by
+      intro v
+      rw [Module.End.mem_eigenspace_iff]
+      exact mulVec_gram_eigenvector A eigenvalue v.1
+        (Module.End.mem_eigenspace_iff.mp v.2))
+  let backward : target →ₗ[ℂ] source :=
+    ((A.conjTranspose.mulVecLin).comp target.subtype).codRestrict source (by
+      intro w
+      rw [Module.End.mem_eigenspace_iff]
+      exact conjTranspose_mulVec_gram_eigenvector A eigenvalue w.1
+        (Module.End.mem_eigenspace_iff.mp w.2))
+  have hforward : Function.Injective forward := by
+    intro v₁ v₂ h
+    apply Subtype.ext
+    apply mulVec_gram_eigenvector_injective A eigenvalue hEigenvalue_ne_zero
+      (Module.End.mem_eigenspace_iff.mp v₁.2)
+      (Module.End.mem_eigenspace_iff.mp v₂.2)
+    have hval := congrArg Subtype.val h
+    simpa [forward] using hval
+  have hbackward : Function.Injective backward := by
+    intro w₁ w₂ h
+    apply Subtype.ext
+    apply mulVec_gram_eigenvector_injective A.conjTranspose eigenvalue
+      hEigenvalue_ne_zero
+      (by simpa only [Matrix.mulVecLin_apply, Matrix.conjTranspose_conjTranspose] using
+        Module.End.mem_eigenspace_iff.mp w₁.2)
+      (by simpa only [Matrix.mulVecLin_apply, Matrix.conjTranspose_conjTranspose] using
+        Module.End.mem_eigenspace_iff.mp w₂.2)
+    have hval := congrArg Subtype.val h
+    simpa [backward] using hval
+  apply le_antisymm
+  · exact forward.finrank_le_finrank_of_injective hforward
+  · exact backward.finrank_le_finrank_of_injective hbackward
+
 /-- The abstract transport theorem applies to the signed Plabic edge-sum
 matrix with its owner-prescribed `White × Black` orientation. -/
 theorem edgeSumMatrix_mulVec_gram_eigenvector

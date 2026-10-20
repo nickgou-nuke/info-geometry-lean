@@ -33,6 +33,7 @@ from tools.build_lock import acquire_build_lock  # noqa: E402
 from tools.infra.opengauss_ground_truth_contract import (  # noqa: E402
     canonical_digest,
     load_and_validate_contract,
+    _qualified_declaration_heads,
 )
 from tools.infra.hive_packet_validate import (  # noqa: E402
     SCHEMA_BY_KIND,
@@ -168,9 +169,14 @@ def load_independent_evidence(
     agent_id = value.get("agent_id") or value.get("worker_id")
     if not isinstance(agent_id, str) or not agent_id.strip():
         raise ValueError(f"{role} evidence requires a non-empty agent_id")
-    for field in ("session_id", "origin_run_id", "context_sha256"):
+    for field in (
+        "session_id", "origin_run_id", "context_sha256", "environment_fingerprint",
+        "tool_invocation", "review_output_sha256",
+    ):
         if not isinstance(value.get(field), str) or not value[field].strip():
             raise ValueError(f"{role} evidence requires a non-empty {field}")
+    if value.get("fresh_context") is not True:
+        raise ValueError(f"{role} evidence must declare fresh_context=true")
     verdict = (
         value.get("verdict") or value.get("outcome") or value.get("audit_outcome")
         or value.get("audit_decision") or value.get("decision")
@@ -180,12 +186,13 @@ def load_independent_evidence(
     for field, expected in (
         ("contract_sha256", contract_hash),
         ("candidate_sha256", candidate_hash),
+        ("input_packet_sha256", candidate_hash),
         ("run_id", run_id),
         ("source_snapshot_sha256", snapshot_hash),
     ):
         if value.get(field) != expected:
             raise ValueError(f"{role} evidence {field} does not match this pilot")
-    expected_stage = "audit" if role == "A-A" else "qa"
+    expected_stage = {"A-A": "audit", "QA-A": "qa", "promotion": "promotion"}[role]
     if value.get("stage") != expected_stage:
         raise ValueError(f"{role} evidence must declare stage={expected_stage!r}")
     value["evidence_sha256"] = sha256_file(path)
@@ -201,10 +208,16 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--build-target", help="Optional Lake module target for the locked build gate.")
     parser.add_argument("--audit-evidence", type=Path, help="Independent A-A JSON evidence.")
     parser.add_argument("--qa-evidence", type=Path, help="Independent QA-A JSON evidence.")
+    parser.add_argument("--promotion-evidence", type=Path, help="Schema-valid promotion-worker evidence required for promotion.")
     parser.add_argument("--allow-promotion", action="store_true")
     parser.add_argument("--skip-refutation", action="store_true", help="Only for environment diagnosis; never promotable.")
     parser.add_argument("--timeout-seconds", type=float, default=120.0)
     parser.add_argument("--hive-smoke", action="store_true", help="Run an opt-in Hive claim/heartbeat/requeue smoke test.")
+    parser.add_argument(
+        "--packet-lineage-packet", action="append", default=[],
+        help="Packet JSON path for --packet-lineage-smoke; repeat in causal order.",
+    )
+    parser.add_argument("--packet-lineage-smoke", action="store_true")
     return parser.parse_args()
 
 
@@ -258,6 +271,39 @@ def axiom_evidence(candidate_path: Path, *, timeout_seconds: float) -> dict[str,
     return checked
 
 
+def candidate_contract_binding(candidate_path: Path, checked_contract: dict[str, Any]) -> dict[str, Any]:
+    """Require the candidate's own declaration and result type to match the contract gap."""
+    from tools.infra.opengauss_cli import generate_certification_audit
+    from tools.infra.opengauss_screener import _top_level_result_type
+
+    audit = generate_certification_audit(candidate_path, write_audit=False, repo_root=ROOT)
+    expected_name = str(checked_contract["missing_declaration_name"])
+    expected_expression = " ".join(str(checked_contract["pantograph_expression"]).split())
+    heads = _qualified_declaration_heads(candidate_path.read_text(encoding="utf-8"))
+    matching = heads.get(expected_name, [])
+    candidates: list[dict[str, Any]] = []
+    for head in matching:
+        parsed = _top_level_result_type(str(head.get("lean_statement") or ""))
+        if parsed is None:
+            continue
+        result_type = " ".join(parsed[1].split())
+        candidates.append({
+            "kind": head.get("kind"),
+            "source_line": head.get("source_line"),
+            "source_end_line": head.get("source_end_line"),
+            "lean_statement": head.get("lean_statement"),
+            "result_type": result_type,
+            "expression_matches": result_type == expected_expression,
+        })
+    return {
+        "expected_declaration": expected_name,
+        "expected_expression": expected_expression,
+        "candidate_declarations": audit.declarations,
+        "matching_declarations": candidates,
+        "status": "passed" if any(item["expression_matches"] for item in candidates) else "failed",
+    }
+
+
 def parse_cli_json(result: dict[str, Any]) -> dict[str, Any]:
     if not result.get("success"):
         raise RuntimeError(result.get("output") or "Hive CLI command failed")
@@ -287,8 +333,8 @@ def hive_smoke(*, run_id: str, contract_hash: str, candidate_hash: str, timeout_
     call(["heartbeat-worker", "--worker-id", worker_a, "--capability", "pilot", "--queue", queue])
     enqueued = call([
         "enqueue-goal", "--queue-name", queue,
-        "--goal-hash-shape", contract_hash[:32],
-        "--canonical-shape", candidate_hash[:32],
+        "--goal-hash-shape", contract_hash,
+        "--canonical-shape", candidate_hash,
         "--target-pretty", "bounded OpenGauss Hive pilot",
         "--module", "PilotCandidate", "--goal-index", "0", "--priority", "1.0",
     ])
@@ -317,6 +363,56 @@ def hive_smoke(*, run_id: str, contract_hash: str, candidate_hash: str, timeout_
         "reaped": reaped,
         "completed": completed,
         "command_results": records,
+    }
+
+
+def packet_lineage_smoke(paths: list[Path], *, contract_hash: str, candidate_hash: str) -> dict[str, Any]:
+    """Validate a supplied candidate→Lean→build→audit→promotion packet chain."""
+    if len(paths) != 5:
+        raise ValueError("packet-lineage smoke requires exactly five packets in causal order")
+    expected_kinds = [
+        "TheoremCandidatePacket", "LeanVerificationPacket", "BuildPacket",
+        "AuditPacket", "PromotionDecisionPacket",
+    ]
+    packets: list[dict[str, Any]] = []
+    for path, expected_kind in zip(paths, expected_kinds):
+        path = require_repo_relative(path, label="packet lineage")
+        packet = json.loads(path.read_text(encoding="utf-8"))
+        if not isinstance(packet, dict) or packet.get("kind") != expected_kind:
+            raise ValueError(f"packet {path} is not {expected_kind}")
+        errors = validate_packet(packet, SCHEMA_BY_KIND[expected_kind], build_store())
+        if errors:
+            raise ValueError(f"packet {path} failed schema validation: " + "; ".join(errors))
+        packets.append(packet)
+    candidate, verification, build, audit, promotion = packets
+    if candidate.get("ground_truth_contract", {}).get("contract_sha256") != contract_hash:
+        raise ValueError("candidate packet contract hash does not match pilot")
+    for packet in packets:
+        hashes = packet.get("source_hashes") or []
+        if not isinstance(hashes, list) or not hashes:
+            raise ValueError(f"{packet['kind']} is missing source_hashes for candidate binding")
+        if not any(candidate_hash in str(item) for item in hashes):
+            raise ValueError(f"{packet['kind']} does not carry the candidate snapshot hash")
+    ids = [str(packet.get("id") or "") for packet in packets]
+    if any(not item for item in ids) or len(set(ids)) != len(ids):
+        raise ValueError("packet lineage IDs must be non-empty and distinct")
+    def refs(packet: dict[str, Any]) -> set[str]:
+        values: set[str] = set()
+        for field in ("parent_refs", "evidence_refs", "execution_intent_ref", "lean_verification_ref", "build_ref", "audit_ref"):
+            raw = packet.get(field)
+            refs_for_field = raw if isinstance(raw, list) else ([raw] if raw is not None else [])
+            for ref in refs_for_field:
+                values.add(str(ref.get("ref") if isinstance(ref, dict) else ref).split("|")[0])
+        return values
+    for previous, current in zip(packets, packets[1:]):
+        if previous["id"] not in refs(current) and previous.get("packet_hash") not in refs(current):
+            raise ValueError(f"{current['kind']} does not reference {previous['id']}")
+    return {
+        "stage": "packet_lineage_smoke",
+        "status": "passed",
+        "packet_ids": ids,
+        "packet_kinds": expected_kinds,
+        "packet_hashes": [packet.get("packet_hash") for packet in packets],
     }
 
 
@@ -356,13 +452,22 @@ def main() -> int:
             "created_at": run_started,
         })
 
-        write_json(run_dir / "candidate_binding.json", {
+        declaration_binding = candidate_contract_binding(snapshot_path, checked_contract)
+        candidate_binding = {
             "candidate_path": str(candidate_path.relative_to(ROOT)),
             "candidate_sha256": candidate_hash,
             "contract_sha256": contract_hash,
             "source_snapshot": str(snapshot_path.relative_to(ROOT)),
             "source_snapshot_sha256": snapshot_hash,
-        })
+            "input_packet_sha256": candidate_hash,
+            "declaration_binding": declaration_binding,
+        }
+        write_json(run_dir / "candidate_binding.json", candidate_binding)
+        if declaration_binding["status"] != "passed":
+            raise ValueError(
+                "candidate declaration does not match the Ground-Truth Contract: "
+                + json.dumps(declaration_binding, ensure_ascii=False, sort_keys=True)
+            )
 
         def assert_snapshot_unchanged() -> None:
             if sha256_file(snapshot_path) != candidate_hash:
@@ -439,6 +544,7 @@ def main() -> int:
         qa = {"stage": "qa", "status": "deferred", "authority": "audit_checked"}
         audit_evidence = None
         qa_evidence = None
+        promotion_evidence = None
         if args.audit_evidence:
             audit_evidence = load_independent_evidence(
                 require_repo_relative(args.audit_evidence, label="audit evidence"), role="A-A",
@@ -453,6 +559,12 @@ def main() -> int:
                 run_id=run_id, snapshot_hash=snapshot_hash,
             )
             qa = {"stage": "qa", "status": "passed", "authority": "audit_checked", **qa_evidence}
+        if args.promotion_evidence:
+            promotion_evidence = load_independent_evidence(
+                require_repo_relative(args.promotion_evidence, label="promotion evidence"), role="promotion",
+                contract_hash=contract_hash, candidate_hash=candidate_hash,
+                run_id=run_id, snapshot_hash=snapshot_hash,
+            )
         write_json(run_dir / "04_audit.json", audit)
         write_json(run_dir / "05_qa.json", qa)
 
@@ -460,6 +572,7 @@ def main() -> int:
             "producer": "pilot-producer",
             "auditor": (audit_evidence or {}).get("agent_id", ""),
             "qa": (qa_evidence or {}).get("agent_id", ""),
+            "promotion": (promotion_evidence or {}).get("agent_id", ""),
         }
         sessions = {
             (audit_evidence or {}).get("session_id", ""),
@@ -481,12 +594,13 @@ def main() -> int:
         independent = bool(
             ids["auditor"]
             and ids["qa"]
-            and len({ids["producer"], ids["auditor"], ids["qa"]}) == 3
+            and (not args.allow_promotion or ids["promotion"])
+            and len({ids["producer"], ids["auditor"], ids["qa"], ids["promotion"]} - {""}) == (4 if args.allow_promotion else 3)
             and len(sessions) == 2
             and len(origins) == 2
             and len(contexts) == 2
         )
-        decision = "promote" if args.allow_promotion and gates_passed and independent else "hold"
+        decision = "promote" if args.allow_promotion and promotion_evidence and gates_passed and independent else "hold"
         promotion = {
             "stage": "promotion",
             "authority": "promoted" if decision == "promote" else "held",
@@ -498,6 +612,7 @@ def main() -> int:
                 "promotion held; complete Lean/build/audit/QA evidence and explicit allowance are required"
             ),
             "worker_ids": ids,
+            "promotion_evidence_sha256": (promotion_evidence or {}).get("evidence_sha256", ""),
             "contract_sha256": contract_hash,
             "candidate_sha256": candidate_hash,
         }
@@ -521,6 +636,24 @@ def main() -> int:
                 promotion["reason"] = "Hive claim/heartbeat/requeue smoke did not pass"
                 write_json(run_dir / "06_promotion.json", promotion)
 
+        packet_stage = {"stage": "packet_lineage_smoke", "status": "deferred"}
+        if args.packet_lineage_smoke:
+            try:
+                packet_stage = packet_lineage_smoke(
+                    [Path(item) for item in args.packet_lineage_packet],
+                    contract_hash=contract_hash, candidate_hash=candidate_hash,
+                )
+            except Exception as exc:
+                packet_stage = {"stage": "packet_lineage_smoke", "status": "failed", "reason": str(exc)}
+            write_json(run_dir / "08_packet_lineage_smoke.json", packet_stage)
+            if packet_stage.get("status") != "passed" and decision == "promote":
+                decision = "hold"
+                promotion["authority"] = "held"
+                promotion["decision"] = decision
+                promotion["promotion_allowed"] = False
+                promotion["reason"] = "Packet lineage smoke did not pass"
+                write_json(run_dir / "06_promotion.json", promotion)
+
         manifest = {
             "schema": "info_geometry.opengauss.hive_pilot.v1",
             "run_id": run_id,
@@ -531,11 +664,18 @@ def main() -> int:
             "contract_sha256": contract_hash,
             "candidate_sha256": candidate_hash,
             "decision": decision,
+            "qms_acceptance": "accepted" if decision == "promote" else "held",
+            "process_exit_code": 0,
             "hive_queue": hive_stage.get("queue") if args.hive_smoke else None,
             "hive_task_key": hive_stage.get("task_key") if args.hive_smoke else None,
+            "packet_lineage": packet_stage.get("packet_ids") if args.packet_lineage_smoke else None,
             "artifacts": [str(path.relative_to(ROOT)) for path in sorted(run_dir.glob("*.json"))],
         }
-        stages = (refutation, lean, axioms, build, audit, qa, hive_stage) if args.hive_smoke else (refutation, lean, axioms, build, audit, qa)
+        stages = [refutation, lean, axioms, build, audit, qa]
+        if args.hive_smoke:
+            stages.append(hive_stage)
+        if args.packet_lineage_smoke:
+            stages.append(packet_stage)
         rejected_stages = [stage["stage"] for stage in stages if stage.get("status") != "passed"]
         timed_out_stages = [stage["stage"] for stage in stages if stage.get("timed_out")]
         if rejected_stages:
@@ -566,8 +706,15 @@ def main() -> int:
         try:
             rejection_dir = require_output_dir(args.output_dir)
             rejection_dir.mkdir(parents=True, exist_ok=True)
+            rejection_fingerprint = sha256_bytes(
+                f"{args.contract}:{args.candidate}:{os.getpid()}:{exc}".encode("utf-8")
+            )[:24]
             write_json(
-                rejection_dir / f"rejected_{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}.json",
+                rejection_dir / (
+                    "rejected_"
+                    + datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
+                    + "_" + rejection_fingerprint + ".json"
+                ),
                 {
                     "schema": "info_geometry.opengauss.hive_pilot.rejection.v1",
                     "decision": "reject",

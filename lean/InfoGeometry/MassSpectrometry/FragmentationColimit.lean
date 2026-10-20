@@ -122,6 +122,28 @@ theorem descend_ι (V : FragmentVertexDiagram D)
   ext x
   exact congrArg (fun f : V.carrier u ⟶ X => f x) (colimit.ι_desc t u)
 
+/-- A map out of the fragmentation colimit is uniquely determined by its
+values on all canonical fragment injections. -/
+theorem descend_unique (V : FragmentVertexDiagram D)
+    {X : Type} (k : ∀ u, V.carrier u → X)
+    (hk : ∀ {u v} (h : D.Reach u v),
+      (k v) ∘ V.map h = k u)
+    (f : V.carrierColimit → X)
+    (hf : ∀ u, f ∘ V.ι u = k u) :
+    f = V.descend k hk := by
+  letI : Preorder (Fin n) := D.reachPreorder
+  let f' : V.carrierColimit ⟶ X := ↾f
+  let d' : V.carrierColimit ⟶ X := ↾(V.descend k hk)
+  have hfd : f' = d' := by
+    apply colimit.hom_ext
+    intro u
+    apply ConcreteCategory.hom_ext
+    intro x
+    exact congrFun ((hf u).trans ((V.descend_ι k hk u).symm)) x
+  apply_fun (TypeCat.homEquiv :
+    (V.carrierColimit ⟶ X) ≃ (V.carrierColimit → X)) at hfd
+  exact hfd
+
 end FragmentVertexDiagram
 
 end InfoGeometry.MassSpectrometry

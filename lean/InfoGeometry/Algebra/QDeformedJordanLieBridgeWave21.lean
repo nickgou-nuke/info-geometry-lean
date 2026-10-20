@@ -25,6 +25,16 @@ variable {A : Type*} [Ring A] [Algebra ℝ A]
 def ScalarQCommutes (q : ℝ) (X Y : A) : Prop :=
   X * Y = q • (Y * X)
 
+/-- Scalar q-exchange is exactly the canonical algebra-coefficient relation
+after transporting the scalar through the algebra structure. -/
+theorem scalarQCommutes_iff_canonical (q : ℝ) (X Y : A) :
+    ScalarQCommutes q X Y ↔
+      InfoGeometry.Algebra.QDeformedCommutatorCanonical.QCommutes
+        (algebraMap ℝ A q) X Y := by
+  unfold ScalarQCommutes
+  unfold InfoGeometry.Algebra.QDeformedCommutatorCanonical.QCommutes
+  simp only [Algebra.smul_def]
+
 /-- The q-exchange relation gives the division-free Jordan--Lie balance. -/
 theorem jordan_lie_balance_of_scalarQCommutes (q : ℝ) (X Y : A)
     (h : ScalarQCommutes q X Y) :

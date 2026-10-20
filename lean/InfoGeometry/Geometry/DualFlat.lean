@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Analysis.Calculus.FDeriv.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Convex.Deriv
@@ -8,6 +14,7 @@ import Mathlib.Tactic.Abel
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Ring
 import InfoGeometry.Convex.Bregman
+import InfoGeometry.Convex.Duality
 import InfoGeometry.Projective.Rays
 import InfoGeometry.MaxEnt.Core
 
@@ -411,6 +418,14 @@ lemma divergence_eq_bregmanDiv_real
     (H := toHessianGeometry SR) (x := y) (y := x - y)]
   rw [dualCoord_apply_sub_eq_deriv_mul (SR := SR) (x := x) (y := y)]
   simp [toHessianGeometry]
+
+/-- Strict convexity and differentiability make the scalar dual-flat
+divergence nonnegative. -/
+theorem divergence_nonneg (S : DualFlatStructure ℝ) (x y : ℝ) :
+    0 ≤ divergence S x y := by
+  rw [divergence_eq_bregmanDiv_real]
+  exact InfoGeometry.ConvexDuality.bregman_nonneg_of_convex
+    S.h_convex.convexOn S.h_diff x y
 
 end RealBridge
 

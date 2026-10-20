@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Analysis.InnerProductSpace.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.InnerProductSpace.Adjoint
@@ -133,18 +139,18 @@ noncomputable def ofState (ψ : H) (_hψ : ψ ≠ 0) : ProjectiveQGT H where
       rfl)
   berry := LinearMap.mk₂ ℝ
     (fun A B => -(⟪A ψ, B ψ⟫_ℂ).im / (‖ψ‖ ^ 2))
-    (by intro A₁ A₂ B; simp [add_apply, inner_add_left]; ring)
+    (by intro A₁ A₂ B; simp [add_apply, inner_add_left]; ring_nf)
     (by
       intro c A B
       simp only [smul_apply, inner_smul_left_eq_smul, Complex.real_smul,
         Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im, zero_mul, add_zero, smul_eq_mul]
-      ring)
-    (by intro A B₁ B₂; simp [add_apply, inner_add_right]; ring)
+      ring_nf)
+    (by intro A B₁ B₂; simp [add_apply, inner_add_right]; ring_nf)
     (by
       intro c A B
       simp only [smul_apply, inner_smul_right_eq_smul, Complex.real_smul,
         Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im, zero_mul, add_zero, smul_eq_mul]
-      ring)
+      ring_nf)
   metric_symm := ⟨fun A B => by
     dsimp
     rw [← inner_conj_symm (A ψ) (B ψ), Complex.conj_re]⟩
@@ -169,6 +175,11 @@ theorem ofState_metric_self_nonneg (ψ : H) (hψ : ψ ≠ 0) (A : EndH H) :
   apply div_nonneg
   · exact @inner_self_nonneg ℂ H _ _ _ (A ψ)
   · positivity
+
+theorem ofState_berry_skew (ψ : H) (hψ : ψ ≠ 0) (A B : EndH H) :
+    (ofState ψ hψ).berry A B = -(ofState ψ hψ).berry B A := by
+  have h := LinearMap.IsAlt.neg (ofState ψ hψ).berry_alt A B
+  linarith
 
 end ProjectiveQGT
 

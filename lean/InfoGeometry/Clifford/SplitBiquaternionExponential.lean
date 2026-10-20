@@ -111,6 +111,14 @@ theorem hyperbolicFlowJ_mul_add (η ξ : ℂ) :
       ⟨Complex.cosh ξ, 0, Complex.sinh ξ, 0⟩ = _
   ext <;> simp [mul, Complex.cosh_add, Complex.sinh_add] <;> ring
 
+/- The second square-plus generator has the same additive flow law. -/
+theorem hyperbolicFlowK_mul_add (η ξ : ℂ) :
+    hyperbolicFlowK η * hyperbolicFlowK ξ = hyperbolicFlowK (η + ξ) := by
+  rw [hyperbolicFlowK_coords, hyperbolicFlowK_coords, hyperbolicFlowK_coords]
+  change mul ⟨Complex.cosh η, 0, 0, Complex.sinh η⟩
+      ⟨Complex.cosh ξ, 0, 0, Complex.sinh ξ⟩ = _
+  ext <;> simp [mul, Complex.cosh_add, Complex.sinh_add] <;> ring
+
 theorem norm_ellipticFlowIK (θ : ℂ) :
     norm (ellipticFlowIK θ) = 1 := by
   rw [ellipticFlowIK_coords]

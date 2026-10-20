@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Clifford.STAOperators
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
@@ -307,5 +312,52 @@ theorem loxodromicConjugation_inverse (η θ : ℝ) (ψ : Operator) :
     (loxodromicRotor η θ)]
   rw [loxodromicRotor_neg_mul, loxodromicRotor_mul_neg]
   simp only [one_mul, mul_one]
+
+theorem boostRotor_add (η ξ : ℝ) :
+    boostRotor (η + ξ) = boostRotor η * boostRotor ξ := by
+  unfold boostRotor
+  rw [Real.cosh_add, Real.sinh_add]
+  simp only [add_mul, mul_add, smul_add, smul_mul_assoc, mul_smul_comm,
+    one_mul, mul_one, boostAxis_sq]
+  module
+
+theorem phaseRotor_add (θ φ : ℝ) :
+    phaseRotor (θ + φ) = phaseRotor θ * phaseRotor φ := by
+  unfold phaseRotor
+  rw [Real.cos_add, Real.sin_add]
+  simp only [add_mul, mul_add, smul_add, smul_mul_assoc, mul_smul_comm,
+    one_mul, mul_one, phaseAxis_sq]
+  module
+
+theorem loxodromicRotor_add (η ξ θ φ : ℝ) :
+    loxodromicRotor (η + ξ) (θ + φ) =
+      loxodromicRotor η θ * loxodromicRotor ξ φ := by
+  unfold loxodromicRotor
+  rw [boostRotor_add, phaseRotor_add]
+  calc
+    boostRotor η * boostRotor ξ * (phaseRotor θ * phaseRotor φ) =
+        boostRotor η * phaseRotor θ * (boostRotor ξ * phaseRotor φ) := by
+          calc
+            boostRotor η * boostRotor ξ * (phaseRotor θ * phaseRotor φ) =
+                boostRotor η * (boostRotor ξ * phaseRotor θ) * phaseRotor φ := by
+                  simp only [Matrix.mul_assoc]
+            _ = boostRotor η * (phaseRotor θ * boostRotor ξ) * phaseRotor φ := by
+                  rw [boostRotor_phaseRotor_commute ξ θ]
+            _ = boostRotor η * phaseRotor θ * (boostRotor ξ * phaseRotor φ) := by
+                  simp only [Matrix.mul_assoc]
+    _ = (boostRotor η * phaseRotor θ) * (boostRotor ξ * phaseRotor φ) := by
+          simp only [Matrix.mul_assoc]
+
+theorem loxodromicRotor_commute (η ξ θ φ : ℝ) :
+    loxodromicRotor η θ * loxodromicRotor ξ φ =
+      loxodromicRotor ξ φ * loxodromicRotor η θ := by
+  calc
+    loxodromicRotor η θ * loxodromicRotor ξ φ =
+        loxodromicRotor (η + ξ) (θ + φ) :=
+      (loxodromicRotor_add η ξ θ φ).symm
+    _ = loxodromicRotor (ξ + η) (φ + θ) := by
+      rw [add_comm η ξ, add_comm θ φ]
+    _ = loxodromicRotor ξ φ * loxodromicRotor η θ :=
+      loxodromicRotor_add ξ η φ θ
 
 end InfoGeometry.Clifford.ChiralGrandCanonicalLoxodromicRotor

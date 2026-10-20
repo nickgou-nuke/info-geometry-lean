@@ -27,6 +27,15 @@ section Core
 def hestenesReadout (v : HestenesVector) : DoubledSpace ℝ :=
   to_doubled v.x v.y
 
+/-- The same readout as a genuine real-linear map on coordinate pairs. -/
+noncomputable def hestenesReadoutLinear : (ℝ × ℝ) →ₗ[ℝ] DoubledSpace ℝ where
+  toFun p := WithLp.toLp (2 : ENNReal) p
+  map_add' p q := by
+    simp only [WithLp.toLp_add]
+  map_smul' c p := by
+    simpa only [RingHom.id_apply] using
+      (WithLp.toLp_smul (p := (2 : ENNReal)) (c := c) (x := p))
+
 /-- The coordinate sheet swap corresponding to `modular_j`. -/
 def hestenesSheetSwap (v : HestenesVector) : HestenesVector :=
   ⟨v.y, v.x⟩
@@ -45,14 +54,38 @@ theorem modular_j_hestenesReadout (v : HestenesVector) :
   apply DoubledSpace.ext <;> simp [hestenesReadout, hestenesSheetSwap]
 
 @[simp]
+theorem modular_j_hestenesReadoutLinear (p : ℝ × ℝ) :
+    modular_j (hestenesReadoutLinear p) =
+      hestenesReadoutLinear (p.2, p.1) := by
+  rcases p with ⟨x, y⟩
+  change modular_j (to_doubled x y) = to_doubled y x
+  exact modular_j_to_doubled (E := ℝ) x y
+
+@[simp]
 theorem spectral_epsilon_hestenesReadout (v : HestenesVector) :
     spectral_epsilon (hestenesReadout v) = hestenesReadout (hestenesGrading v) := by
   apply DoubledSpace.ext <;> simp [hestenesReadout, hestenesGrading]
 
 @[simp]
+theorem spectral_epsilon_hestenesReadoutLinear (p : ℝ × ℝ) :
+    spectral_epsilon (hestenesReadoutLinear p) =
+      hestenesReadoutLinear (p.1, -p.2) := by
+  rcases p with ⟨x, y⟩
+  change spectral_epsilon (to_doubled x y) = to_doubled x (-y)
+  exact spectral_epsilon_to_doubled (E := ℝ) x y
+
+@[simp]
 theorem complex_i_hestenesReadout (v : HestenesVector) :
     complex_i (hestenesReadout v) = hestenesReadout (hestenesQuarterTurn v) := by
   apply DoubledSpace.ext <;> simp [hestenesReadout, hestenesQuarterTurn]
+
+@[simp]
+theorem complex_i_hestenesReadoutLinear (p : ℝ × ℝ) :
+    complex_i (hestenesReadoutLinear p) =
+      hestenesReadoutLinear (-p.2, p.1) := by
+  rcases p with ⟨x, y⟩
+  change complex_i (to_doubled x y) = to_doubled (-y) x
+  exact complex_i_apply (E := ℝ) (to_doubled x y : DoubledSpace ℝ)
 
 theorem hestenesSheetSwap_involutive (v : HestenesVector) :
     hestenesSheetSwap (hestenesSheetSwap v) = v := by

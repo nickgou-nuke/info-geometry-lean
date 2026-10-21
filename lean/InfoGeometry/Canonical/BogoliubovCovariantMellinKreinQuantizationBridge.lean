@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
@@ -144,6 +150,16 @@ theorem squeezingMatrix_mul_inv (r : ℝ) :
     ring
   · simp [squeezingMatrix, Matrix.mul_apply, Fin.sum_univ_two, h_cosh_neg, h_sinh_neg]
     linear_combination h_id
+
+/-! The squeezing matrices form the additive one-parameter subgroup encoded
+by the hyperbolic addition laws.  This is a finite matrix theorem; it does
+not assert the existence of a CCR/Fock implementer. -/
+theorem squeezingMatrix_add (r s : ℝ) :
+    squeezingMatrix (r + s) = squeezingMatrix r * squeezingMatrix s := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [squeezingMatrix, Matrix.mul_apply, Fin.sum_univ_two,
+      Complex.cosh_add, Complex.sinh_add] <;> ring
 
 /-! ## 5. Matrix fixed-point locus (u = 0 ↔ B_sq = I) -/
 

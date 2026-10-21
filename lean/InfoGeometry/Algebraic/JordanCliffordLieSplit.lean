@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Real.Basic
@@ -43,5 +49,16 @@ theorem jordan_lie_split (a b : A) :
   simp [smul_add, sub_eq_add_neg, add_assoc, add_comm, add_left_comm]
   rw [← add_smul]
   norm_num
+
+/-- The affine Jordan--Lie interpolation obtained by weighting both product
+orders with complementary scalar coefficients. -/
+def weightedProduct (q : ℝ) (a b : A) : A :=
+  ((1 + q) / 2 : ℝ) • (a * b) + ((1 - q) / 2 : ℝ) • (b * a)
+
+/-- The weighted product is the Jordan product plus `q` times the Lie part. -/
+theorem weightedProduct_eq_jordan_add_lie (q : ℝ) (a b : A) :
+    weightedProduct q a b = jordanProduct a b + q • lieBracket a b := by
+  unfold weightedProduct jordanProduct lieBracket
+  module
 
 end InfoGeometry.Algebraic

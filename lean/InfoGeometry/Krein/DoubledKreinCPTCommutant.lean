@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Basic.Complex.Basic
@@ -77,6 +83,34 @@ theorem J_sq : (J : Mat4 R) * J = -1 := by
 @[simp]
 theorem J_transpose : (J : Mat4 R)ᵀ = -J := by
   ext i j; fin_cases i <;> fin_cases j <;> simp [J]
+
+/-! The ambient matrix algebras are genuinely noncommutative. -/
+def matrixUnit01R : Mat4 R :=
+  !![0, 1, 0, 0;
+     0, 0, 0, 0;
+     0, 0, 0, 0;
+     0, 0, 0, 0]
+
+theorem J_mul_matrixUnit01_ne_matrixUnit01_mul_J
+    {R : Type*} [CommRing R] [Nontrivial R] :
+    (J : Mat4 R) * matrixUnit01R (R := R) ≠ matrixUnit01R (R := R) * J := by
+  intro h
+  have h21 := congrArg (fun M : Mat4 R => M 2 1) h
+  simp [J, matrixUnit01R, Matrix.mul_apply, Fin.sum_univ_four] at h21
+
+def matrixUnit01_2R : Mat2 R :=
+  !![0, 1; 0, 0]
+
+def matrixUnit10_2R : Mat2 R :=
+  !![0, 0; 1, 0]
+
+theorem matrixUnit01_2_mul_matrixUnit10_2_ne_matrixUnit10_2_mul_matrixUnit01_2
+    {R : Type*} [CommRing R] [Nontrivial R] :
+    matrixUnit01_2R (R := R) * matrixUnit10_2R (R := R) ≠
+      matrixUnit10_2R (R := R) * matrixUnit01_2R (R := R) := by
+  intro h
+  have h00 := congrArg (fun M : Mat2 R => M 0 0) h
+  simp [matrixUnit01_2R, matrixUnit10_2R, Matrix.mul_apply, Fin.sum_univ_two] at h00
 
 /-! ### Section 2: The Commutant Subalgebra 𝒵(J) -/
 
@@ -250,6 +284,14 @@ theorem modular_ad_J (A B : Mat2 R) :
 def toPauli (A B : Mat2 ℝ) : Matrix (Fin 2) (Fin 2) ℂ :=
   fun i j => Complex.mk (A i j) (B i j)
 
+/- The Pauli representation carries real block transpose to complex
+conjugate transpose. -/
+theorem toPauli_conjTranspose (A B : Mat2 ℝ) :
+    toPauli Aᵀ (-Bᵀ) = (toPauli A B)ᴴ := by
+  ext i j
+  apply Complex.ext <;>
+    simp [toPauli, Matrix.conjTranspose_apply, Matrix.transpose_apply]
+
 /-- The zero matrix maps to zero. -/
 @[simp]
 theorem toPauli_zero : toPauli 0 0 = 0 := by
@@ -294,41 +336,5 @@ theorem toPauli_mul (A1 B1 A2 B2 : Mat2 ℝ) :
     · simp [toPauli, Matrix.mul_apply, Matrix.add_apply, Fin.sum_univ_two, Complex.add_im, Complex.mul_im]
       ring
   }
-
-/-! ### Section 4: Master Verification Certificate -/
-
-/-- Master verification certificate for the Doubled Krein CPT Commutant construction. -/
-structure DoubledKreinCPTCommutantCertificate : Prop where
-  j_sq_neg_one : ∀ (R : Type) [CommRing R], (J : Mat4 R) * J = -1
-  j_transpose_skew : ∀ (R : Type) [CommRing R], (J : Mat4 R)ᵀ = -J
-  cpt_commutes : ∀ (R : Type) [CommRing R] (A B : Mat2 R), commutesWithJ (cptMatrix A B)
-  commutes_iff_block : ∀ (R : Type) [CommRing R] (M : Mat4 R),
-    commutesWithJ M ↔ ∃ A B : Mat2 R, M = cptMatrix A B
-  cpt_mul : ∀ (R : Type) [CommRing R] (A1 B1 A2 B2 : Mat2 R),
-    cptMatrix A1 B1 * cptMatrix A2 B2 = cptMatrix (A1 * A2 - B1 * B2) (A1 * B2 + B1 * A2)
-  cpt_transpose : ∀ (R : Type) [CommRing R] (A B : Mat2 R),
-    (cptMatrix A B)ᵀ = cptMatrix Aᵀ (-Bᵀ)
-  j_action_complex_mult : ∀ (R : Type) [CommRing R] (A B : Mat2 R),
-    (J : Mat4 R) * cptMatrix A B = cptMatrix (-B) A
-  modular_reflection_invariant : ∀ (R : Type) [CommRing R] (A B : Mat2 R),
-    - (J : Mat4 R) * cptMatrix A B * J = cptMatrix A B
-  pauli_homomorphism : ∀ (A1 B1 A2 B2 : Mat2 ℝ),
-    toPauli (A1 * A2 - B1 * B2) (A1 * B2 + B1 * A2) = toPauli A1 B1 * toPauli A2 B2
-  pauli_identity : toPauli 1 0 = 1
-  pauli_j_eq_i : toPauli 0 1 = Complex.I • 1
-
-/-- Universal compilation theorem proving that the certificate holds unconditionally. -/
-theorem compile_doubled_krein_cpt_commutant : DoubledKreinCPTCommutantCertificate where
-  j_sq_neg_one := fun _ _ => J_sq
-  j_transpose_skew := fun _ _ => J_transpose
-  cpt_commutes := fun _ _ A B => cptMatrix_commutes A B
-  commutes_iff_block := fun _ _ M => commutes_iff_cptMatrix M
-  cpt_mul := fun _ _ A1 B1 A2 B2 => cptMatrix_mul A1 B1 A2 B2
-  cpt_transpose := fun _ _ A B => cptMatrix_transpose A B
-  j_action_complex_mult := fun _ _ A B => J_mul_cptMatrix A B
-  modular_reflection_invariant := fun _ _ A B => modular_ad_J A B
-  pauli_homomorphism := toPauli_mul
-  pauli_identity := toPauli_one
-  pauli_j_eq_i := toPauli_J
 
 end InfoGeometry.Krein.DoubledCPT

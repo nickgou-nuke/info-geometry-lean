@@ -132,6 +132,12 @@ noncomputable def doubledHilbertBilin : LinearMap.BilinForm ℝ (DoubledSpace E)
       intro c u v
       simp [real_inner_smul_right, mul_add])
 
+/-! Coordinate readback for the doubled Hilbert pairing. -/
+lemma doubledHilbertBilin_to_doubled (x ξ y η : E) :
+    doubledHilbertBilin (to_doubled x ξ) (to_doubled y η) =
+      inner ℝ x y + inner ℝ ξ η := by
+  simp [doubledHilbertBilin, to_doubled, WithLp.prod_inner_apply]
+
 /--
 Canonical substrate packaging of the doubled lane as an involutive self-dual carrier.
 This is used to rebase doubled identities onto owner-level root lemmas.

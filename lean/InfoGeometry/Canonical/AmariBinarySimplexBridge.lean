@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Exp
@@ -157,6 +163,24 @@ theorem deriv2_massieu (θ : ℝ) :
     exact deriv_massieu x
   rw [hderiv]
   exact deriv_logistic θ
+
+/-- The binary logistic probability is the positive-sector weight with
+polarization `tanh (θ / 2)`. -/
+theorem logistic_eq_half_add_tanh_half (θ : ℝ) :
+    logistic θ = (1 + Real.tanh (θ / 2)) / 2 := by
+  have hE : Real.exp (θ / 2) ≠ 0 := Real.exp_ne_zero _
+  have hE2 : Real.exp (θ / 2) ^ 2 = Real.exp θ := by
+    calc
+      Real.exp (θ / 2) ^ 2 = Real.exp (θ / 2) * Real.exp (θ / 2) := by ring
+      _ = Real.exp (θ / 2 + θ / 2) := by rw [← Real.exp_add]
+      _ = Real.exp θ := by congr 1; ring
+  have hneg : Real.exp (-(θ / 2)) = (Real.exp (θ / 2))⁻¹ := by
+    rw [Real.exp_neg]
+  rw [Real.tanh_eq, hneg]
+  unfold logistic
+  rw [← hE2]
+  field_simp [hE]
+  ring
 
 theorem fisherExp_pos (θ : ℝ) : 0 < fisherExp θ := by
   unfold fisherExp

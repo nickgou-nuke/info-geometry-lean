@@ -1,0 +1,17 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.Canonical.CantorBernoulliFiniteDiagonalTraceEnergy
+import InfoGeometry.Thermo.CantorGibbsModularBridge
+
+#print axioms InfoGeometry.Canonical.AmariBinarySimplexBridge.logistic_eq_half_add_tanh_half
+#print axioms InfoGeometry.Thermo.CantorGibbsModularBridge.localWeightPlus_eq_thermalWeightPlus
+#print axioms InfoGeometry.Thermo.CantorGibbsModularBridge.localWeightMinus_eq_thermalWeightMinus
+#print axioms InfoGeometry.Thermo.CantorGibbsModularBridge.localWeight_variance_eq_thermal_susceptibility
+
+#print axioms InfoGeometry.Canonical.CantorBernoulliFiniteDiagonalTraceEnergy.bitWordMatrixTraceFunctional_diagonal
+#print axioms InfoGeometry.Canonical.CantorBernoulliFiniteDiagonalTraceEnergy.bitWordMatrixTraceFunctional_star_mul_self_re_eq
+#print axioms InfoGeometry.Canonical.CantorBernoulliFiniteDiagonalTraceEnergy.diagonalCylinderL2_norm_sq_le_traceEnergy

@@ -1,8 +1,15 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Canonical.CantorKMSState
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorLocalCl11HopParity
 import InfoGeometry.Thermo.FiniteDiagonal
 import InfoGeometry.Canonical.AmariBinarySimplexBridge
+import InfoGeometry.Krein.TomitaMatrixAtom
 
 /-!
 # Cantor Gibbs deformation and local modular eigenmodes
@@ -104,6 +111,38 @@ theorem localWeight_variance_eq_fisherExp (β ε : ℝ) :
   rw [localWeightPlus_eq_logistic,
     localWeightMinus_eq_one_sub_logistic]
   rfl
+
+/-- The zero-energy Gibbs probability is the positive Krein-sector weight at
+the thermal polarization `tanh (β ε / 2)`. -/
+theorem localWeightPlus_eq_thermalWeightPlus (β ε : ℝ) :
+    localWeightPlus β ε =
+      InfoGeometry.Krein.TomitaMatrixAtom.thermalWeightPlus
+        (Real.tanh (β * ε / 2)) := by
+  rw [localWeightPlus_eq_logistic,
+    InfoGeometry.Canonical.AmariBinarySimplexBridge.logistic_eq_half_add_tanh_half]
+  rfl
+
+/-- The complementary Gibbs probability is the negative Krein-sector weight
+at the same thermal polarization. -/
+theorem localWeightMinus_eq_thermalWeightMinus (β ε : ℝ) :
+    localWeightMinus β ε =
+      InfoGeometry.Krein.TomitaMatrixAtom.thermalWeightMinus
+        (Real.tanh (β * ε / 2)) := by
+  rw [localWeightMinus_eq_one_sub_logistic,
+    InfoGeometry.Canonical.AmariBinarySimplexBridge.logistic_eq_half_add_tanh_half]
+  unfold InfoGeometry.Krein.TomitaMatrixAtom.thermalWeightMinus
+  ring
+
+/-- The one-site Gibbs variance is the binary Fisher susceptibility at the
+thermal polarization coordinate. -/
+theorem localWeight_variance_eq_thermal_susceptibility (β ε : ℝ) :
+    localWeightPlus β ε * localWeightMinus β ε =
+      (1 - Real.tanh (β * ε / 2) ^ 2) / 4 := by
+  rw [localWeightPlus_eq_thermalWeightPlus,
+    localWeightMinus_eq_thermalWeightMinus]
+  unfold InfoGeometry.Krein.TomitaMatrixAtom.thermalWeightPlus
+    InfoGeometry.Krein.TomitaMatrixAtom.thermalWeightMinus
+  ring
 
 /-- The one-site Gibbs fluctuation is the squared coherence of the native
 finite covariance/Majorana block at the same logistic coordinate. -/

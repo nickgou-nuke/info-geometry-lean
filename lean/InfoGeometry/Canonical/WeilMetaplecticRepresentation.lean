@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Data.Matrix.Basic
 import InfoGeometry.Canonical.SylvesterIwasawaKAN
 
@@ -116,5 +122,47 @@ theorem egorov_orderedMonomial
     _ = (U * X * Uinv) ^ u * (U * Z * Uinv) ^ v := by
       rw [conjugate_pow U Uinv X hleft hright u,
         conjugate_pow U Uinv Z hleft hright v]
+
+/-! ### Modular periodicity under explicit finite-order hypotheses
+
+The exponent convention in `displacementWord` is natural-valued.  The two
+periodicity lemmas below are the exact algebraic conditions needed before the
+word can descend to residue-class indices.  No modular or representation
+structure is inferred beyond these stated finite-order hypotheses.
+-/
+
+theorem displacementWord_periodic_left
+    (ω : R) (X Z : Matrix n n R) (inv2 N u v : ℕ)
+    (hω : ω ^ N = 1) (hX : X ^ N = 1) :
+    displacementWord ω X Z inv2 (u + N) v =
+      displacementWord ω X Z inv2 u v := by
+  unfold displacementWord
+  have hphase : ω ^ (inv2 * (u + N) * v) = ω ^ (inv2 * u * v) := by
+    rw [show inv2 * (u + N) * v = inv2 * u * v + N * (inv2 * v) by ring]
+    rw [pow_add]
+    have hperiod : ω ^ (N * (inv2 * v)) = 1 := by
+      rw [pow_mul, hω]
+      simp
+    rw [hperiod, mul_one]
+  have hpower : X ^ (u + N) = X ^ u := by
+    rw [pow_add, hX, mul_one]
+  rw [hphase, hpower]
+
+theorem displacementWord_periodic_right
+    (ω : R) (X Z : Matrix n n R) (inv2 N u v : ℕ)
+    (hω : ω ^ N = 1) (hZ : Z ^ N = 1) :
+    displacementWord ω X Z inv2 u (v + N) =
+      displacementWord ω X Z inv2 u v := by
+  unfold displacementWord
+  have hphase : ω ^ (inv2 * u * (v + N)) = ω ^ (inv2 * u * v) := by
+    rw [show inv2 * u * (v + N) = inv2 * u * v + N * (inv2 * u) by ring]
+    rw [pow_add]
+    have hperiod : ω ^ (N * (inv2 * u)) = 1 := by
+      rw [pow_mul, hω]
+      simp
+    rw [hperiod, mul_one]
+  have hpower : Z ^ (v + N) = Z ^ v := by
+    rw [pow_add, hZ, mul_one]
+  rw [hphase, hpower]
 
 end InfoGeometry.Canonical.WeilMetaplecticRepresentation

@@ -30,6 +30,8 @@ Krein space is asserted here; this is the closed algebraic projector layer.
   - `K_plus_idempotent`, `K_minus_idempotent`: projector idempotence.
   - `K_plus_comp_K_minus`, `K_minus_comp_K_plus`: complementary-sector
     composition vanishes pointwise.
+  - `K_plus_comp_K_minus_eq_zero`, `K_minus_comp_K_plus_eq_zero`: the same
+    orthogonality as equalities of linear maps.
   - `indef_inner_neg_right`: right negation for a symmetric left-linear
     pairing.
   - `K_plus_K_minus_orthogonal`: orthogonality of positive and negative
@@ -142,6 +144,24 @@ theorem K_minus_comp_K_plus
     K_minus half J (K_plus half J x) = 0 := by
   rw [K_minus_apply, J_K_plus J hJ2 half x]
   simp
+
+/-- The positive and negative eigensector projectors compose to the zero map. -/
+theorem K_plus_comp_K_minus_eq_zero
+    (J : V →ₗ[ℝ] V)
+    (hJ2 : J.comp J = LinearMap.id)
+    (half : ℝ) :
+    (K_plus half J).comp (K_minus half J) = 0 := by
+  ext x
+  exact K_plus_comp_K_minus J hJ2 half x
+
+/-- The negative and positive eigensector projectors compose to the zero map. -/
+theorem K_minus_comp_K_plus_eq_zero
+    (J : V →ₗ[ℝ] V)
+    (hJ2 : J.comp J = LinearMap.id)
+    (half : ℝ) :
+    (K_minus half J).comp (K_plus half J) = 0 := by
+  ext x
+  exact K_minus_comp_K_plus J hJ2 half x
 
 /-- Right negation exits a symmetric left-linear indefinite pairing. -/
 theorem indef_inner_neg_right

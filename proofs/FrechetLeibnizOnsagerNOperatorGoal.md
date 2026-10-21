@@ -221,10 +221,11 @@ evidence.
   `Optics/OperatorDerivationForms.lean`; the CE degree-zero differential and
   its evaluation theorem are in
   `OperatorAlgebra/DerivationDifferentialForms.lean`.
-- **Smallest gap:** No generic identity-action lane on the full derivation
-  subalgebra, nor an adapter from the Fréchet derivation carrier to it, was
-  found in the recursive Lean search. The older `NCDerivation` adapter is
-  integer-linear and does not fill this real-linear lane.
+- **Gap status:** The recursive search originally found no generic
+  identity-action lane or Fréchet adapter. This change closes that narrow gap
+  by constructing the identity-action lane and the real-linear Fréchet map,
+  with commutator compatibility. The older `NCDerivation` adapter remains a
+  separate integer-linear route and is not used as a substitute here.
 - **Not established:** This does not make the CE lane continuous-only, prove
   surjectivity, identify arbitrary `NOperatorForm`s with CE cochains, or connect
   the CE calculus to Gibbs/BKM/Onsager response. In particular, unrestricted

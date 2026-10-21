@@ -92,6 +92,20 @@ theorem K_plus_add_K_minus_eq_id
   ext x
   exact K_plus_add_K_minus J half hhalf x
 
+/-- The signed difference of the two projectors recovers the fundamental symmetry. -/
+theorem K_plus_sub_K_minus_eq_J
+    (J : V →ₗ[ℝ] V)
+    (half : ℝ)
+    (hhalf : half + half = 1) :
+    K_plus half J - K_minus half J = J := by
+  ext x
+  rw [K_plus_apply, K_minus_apply]
+  rw [smul_add, smul_sub]
+  have hcombine :
+      (half • x + half • J x) - (half • x - half • J x) = half • J x + half • J x := by
+    abel
+  rw [hcombine, ← add_smul, hhalf, one_smul]
+
 /-- `K_plus` lands in the `+1` eigensector of the fundamental symmetry. -/
 theorem J_K_plus
     (J : V →ₗ[ℝ] V)

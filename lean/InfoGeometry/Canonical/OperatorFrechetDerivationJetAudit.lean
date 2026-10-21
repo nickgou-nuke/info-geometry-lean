@@ -6,6 +6,10 @@ Authors: InfoGeometry Engine Contributors
 
 import InfoGeometry.Canonical.OperatorFrechetDerivationJet
 
+#print axioms InfoGeometry.Canonical.OperatorFrechetDerivationJet.realDerivationsLane
+#print axioms InfoGeometry.Canonical.OperatorFrechetDerivationJet.FrechetBridge.toRealDerivation
+#print axioms InfoGeometry.Canonical.OperatorFrechetDerivationJet.FrechetBridge.toRealDerivation_commutator
+#print axioms InfoGeometry.Canonical.OperatorFrechetDerivationJet.FrechetBridge.exteriorDerivativeZero_toRealDerivation_apply
 #print axioms InfoGeometry.Canonical.OperatorFrechetDerivationJet.operatorFrechetJet_one_apply
 #print axioms InfoGeometry.Canonical.OperatorFrechetDerivationJet.operatorFrechetJet_one_mul
 #print axioms InfoGeometry.Canonical.OperatorFrechetDerivationJet.restrictScalarsReal

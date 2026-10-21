@@ -53,12 +53,16 @@ theorem toRealDerivation_commutator
     (D E : FrechetOperatorDerivation ℝ A) :
     toRealDerivation (FrechetOperatorDerivation.commutator D E) =
       ⁅toRealDerivation D, toRealDerivation E⁆ := by
-  change (FrechetBridge.toRealDerivation (FrechetOperatorDerivation.commutator D E) :
+  show (FrechetBridge.toRealDerivation (FrechetOperatorDerivation.commutator D E) :
     NonAssocDerivation.derivations ℝ A) = _
   apply Subtype.ext
   ext a
-  simp [toRealDerivation, FrechetOperatorDerivation.commutator_apply,
-    NonAssocDerivation.lie_apply]
+  change (FrechetOperatorDerivation.commutator D E) a =
+    ((⁅(toRealDerivation D : NonAssocDerivation.derivations ℝ A),
+        toRealDerivation E⁆ : NonAssocDerivation.derivations ℝ A) :
+      Module.End ℝ A) a
+  rw [InfoGeometry.Algebra.NonAssocDerivation.lie_apply]
+  rfl
 
 /-- The CE degree-zero differential on the identity-action derivation lane,
 evaluated at a Fréchet derivation, is its original operator action. -/

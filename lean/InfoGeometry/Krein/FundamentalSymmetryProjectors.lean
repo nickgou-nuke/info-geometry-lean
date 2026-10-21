@@ -99,6 +99,7 @@ theorem K_plus_sub_K_minus_eq_J
     (hhalf : half + half = 1) :
     K_plus half J - K_minus half J = J := by
   ext x
+  simp only [LinearMap.sub_apply]
   rw [K_plus_apply, K_minus_apply]
   rw [smul_add, smul_sub]
   have hcombine :

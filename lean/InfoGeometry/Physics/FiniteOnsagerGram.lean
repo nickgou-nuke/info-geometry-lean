@@ -37,10 +37,27 @@ theorem dot_transpose_mulVec (R : Matrix m n ℝ) (x : n → ℝ) (y : m → ℝ
   intro j _
   ring
 
+/-- The bilinear form induced by `A - Aᵀ` is alternating. -/
+theorem skew_matrix_contraction_swap
+    (A : Matrix n n ℝ) (x y : n → ℝ) :
+    dotProduct x ((A - Aᵀ) *ᵥ y) = -dotProduct y ((A - Aᵀ) *ᵥ x) := by
+  let K : Matrix n n ℝ := A - Aᵀ
+  have htranspose : Kᵀ = -K := by
+    dsimp [K]
+    simp [Matrix.transpose_sub, Matrix.transpose_transpose]
+  change dotProduct x (K *ᵥ y) = -dotProduct y (K *ᵥ x)
+  calc
+    dotProduct x (K *ᵥ y) = dotProduct (Kᵀ *ᵥ x) y := by
+      rw [← dot_transpose_mulVec Kᵀ x y]
+      simp
+    _ = dotProduct (-K *ᵥ x) y := by rw [htranspose]
+    _ = -dotProduct y (K *ᵥ x) := by
+      rw [Matrix.neg_mulVec, neg_dotProduct, dotProduct_comm]
+
 /-- The exact quadratic form of the Gram operator. -/
 theorem gram_contraction (R : Matrix m n ℝ) (x : n → ℝ) :
     dotProduct x (Rᵀ *ᵥ (R *ᵥ x)) = ∑ i : m, ((R *ᵥ x) i) ^ 2 := by
-  rw [dot_transpose_mulVec]
+  rw [dot_transpose_mulVec R x (R *ᵥ x)]
   simp only [dotProduct, pow_two]
 
 theorem gram_contraction_nonnegative (R : Matrix m n ℝ) (x : n → ℝ) :
@@ -51,15 +68,8 @@ theorem gram_contraction_nonnegative (R : Matrix m n ℝ) (x : n → ℝ) :
 /-- The reversible skew part contributes no quadratic production. -/
 theorem skew_contraction_zero (A : Matrix n n ℝ) (x : n → ℝ) :
     dotProduct x ((A - Aᵀ) *ᵥ x) = 0 := by
-  have hsub : (A - Aᵀ) *ᵥ x = A *ᵥ x - Aᵀ *ᵥ x := by
-    ext i
-    simp [Matrix.mulVec, dotProduct, sub_mul, Finset.sum_sub_distrib]
-  rw [hsub]
-  have hdot : dotProduct x (A *ᵥ x - Aᵀ *ᵥ x) =
-      dotProduct x (A *ᵥ x) - dotProduct x (Aᵀ *ᵥ x) := by
-    simp [dotProduct, mul_sub, Finset.sum_sub_distrib]
-  rw [hdot, dot_transpose_mulVec]
-  simp [dotProduct, mul_comm]
+  have h := skew_matrix_contraction_swap A x x
+  linarith
 
 /-- A concrete symmetric-skew generator with production proved nonnegative. -/
 theorem onsager_production (A : Matrix n n ℝ) (R : Matrix m n ℝ) (x : n → ℝ) :
@@ -75,6 +85,58 @@ theorem onsager_production_nonnegative
     0 ≤ dotProduct x ((A - Aᵀ) *ᵥ x + Rᵀ *ᵥ (R *ᵥ x)) := by
   rw [onsager_production]
   exact Finset.sum_nonneg fun i _ => sq_nonneg _
+
+/-- The symmetric part of the finite response is exactly the Gram pairing
+of the dissipative factor. -/
+theorem onsager_response_symmetric_part
+    (A : Matrix n n ℝ) (R : Matrix m n ℝ) (x y : n → ℝ) :
+    (1 / 2 : ℝ) *
+        (dotProduct x ((A - Aᵀ) *ᵥ y + Rᵀ *ᵥ (R *ᵥ y)) +
+          dotProduct y ((A - Aᵀ) *ᵥ x + Rᵀ *ᵥ (R *ᵥ x))) =
+      dotProduct (R *ᵥ x) (R *ᵥ y) := by
+  have hskew := skew_matrix_contraction_swap A x y
+  have hskew' : dotProduct y ((A - Aᵀ) *ᵥ x) =
+      -dotProduct x ((A - Aᵀ) *ᵥ y) := by
+    linarith [hskew]
+  have hresponse (u v : n → ℝ) :
+      dotProduct u ((A - Aᵀ) *ᵥ v + Rᵀ *ᵥ (R *ᵥ v)) =
+        dotProduct u ((A - Aᵀ) *ᵥ v) + dotProduct (R *ᵥ u) (R *ᵥ v) := by
+    calc
+      _ = dotProduct u ((A - Aᵀ) *ᵥ v) +
+          dotProduct u (Rᵀ *ᵥ (R *ᵥ v)) := by
+        simp [dotProduct, mul_add, Finset.sum_add_distrib]
+      _ = _ := by
+        exact congrArg (fun z : ℝ =>
+          dotProduct u ((A - Aᵀ) *ᵥ v) + z)
+          (dot_transpose_mulVec R u (R *ᵥ v))
+  rw [hresponse x y, hresponse y x, dotProduct_comm (R *ᵥ y) (R *ᵥ x), hskew']
+  ring
+
+/-- The skew part of the finite response is exactly the reversible matrix
+contraction; the Gram contribution cancels from antisymmetrization. -/
+theorem onsager_response_skew_part
+    (A : Matrix n n ℝ) (R : Matrix m n ℝ) (x y : n → ℝ) :
+    (1 / 2 : ℝ) *
+        (dotProduct x ((A - Aᵀ) *ᵥ y + Rᵀ *ᵥ (R *ᵥ y)) -
+          dotProduct y ((A - Aᵀ) *ᵥ x + Rᵀ *ᵥ (R *ᵥ x))) =
+      dotProduct x ((A - Aᵀ) *ᵥ y) := by
+  have hskew := skew_matrix_contraction_swap A x y
+  have hskew' : dotProduct y ((A - Aᵀ) *ᵥ x) =
+      -dotProduct x ((A - Aᵀ) *ᵥ y) := by
+    linarith [hskew]
+  have hresponse (u v : n → ℝ) :
+      dotProduct u ((A - Aᵀ) *ᵥ v + Rᵀ *ᵥ (R *ᵥ v)) =
+        dotProduct u ((A - Aᵀ) *ᵥ v) + dotProduct (R *ᵥ u) (R *ᵥ v) := by
+    calc
+      _ = dotProduct u ((A - Aᵀ) *ᵥ v) +
+          dotProduct u (Rᵀ *ᵥ (R *ᵥ v)) := by
+        simp [dotProduct, mul_add, Finset.sum_add_distrib]
+      _ = _ := by
+        exact congrArg (fun z : ℝ =>
+          dotProduct u ((A - Aᵀ) *ᵥ v) + z)
+          (dot_transpose_mulVec R u (R *ᵥ v))
+  rw [hresponse x y, hresponse y x, dotProduct_comm (R *ᵥ y) (R *ᵥ x), hskew']
+  ring
 
 /-- Zero production is precisely the kernel of the chosen dissipative factor. -/
 theorem gram_contraction_eq_zero_iff (R : Matrix m n ℝ) (x : n → ℝ) :

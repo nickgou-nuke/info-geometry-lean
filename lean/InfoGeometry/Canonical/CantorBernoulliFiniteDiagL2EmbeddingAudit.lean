@@ -1,0 +1,17 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.Canonical.CantorBernoulliFiniteDiagL2Embedding
+
+#print axioms InfoGeometry.Canonical.CantorBernoulliFiniteDiagL2Embedding.Boundary
+#print axioms InfoGeometry.Canonical.CantorBernoulliFiniteDiagL2Embedding.μC
+#print axioms InfoGeometry.Canonical.CantorBernoulliFiniteDiagL2Embedding.L2Boundary
+#print axioms InfoGeometry.Canonical.CantorBernoulliFiniteDiagL2Embedding.cylinder_memLp
+#print axioms InfoGeometry.Canonical.CantorBernoulliFiniteDiagL2Embedding.diagonalCylinderL2
+#print axioms InfoGeometry.Canonical.CantorBernoulliFiniteDiagL2Embedding.diagonalCylinderL2_coeFn
+#print axioms InfoGeometry.Canonical.CantorBernoulliFiniteDiagL2Embedding.boundaryPrefix_preimage_singleton
+#print axioms InfoGeometry.Canonical.CantorBernoulliFiniteDiagL2Embedding.boundaryPrefix_map_singleton
+#print axioms InfoGeometry.Canonical.CantorBernoulliFiniteDiagL2Embedding.diagonalCylinderL2_inner

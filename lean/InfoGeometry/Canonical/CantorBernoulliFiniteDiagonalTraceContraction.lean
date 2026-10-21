@@ -12,10 +12,10 @@ import InfoGeometry.Canonical.BitWordComplexCStarTowerNaturalityBridge
 # The finite diagonal map into Bernoulli boundary `L²`
 
 This owner starts the full-matrix-to-boundary bridge at the exact finite
-BitWord matrix carrier.  It proves the diagonal square-sum contraction and
+BitWord matrix carrier. It proves the finite trace-energy contraction and
 compatibility with the existing dyadic matrix and diagonal successor maps.
-It does not yet identify the matrix square-sum with a completed GNS vector or
-extend the map to the filtered GNS colimit.
+It does not yet identify the finite trace energy with a completed GNS vector
+or extend the map to the filtered GNS colimit.
 -/
 
 noncomputable section

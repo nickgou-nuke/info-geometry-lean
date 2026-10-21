@@ -66,14 +66,14 @@ LET classical = (
 )
 FOR q IN quantum
   LET qdeps = (
-    FOR v, e, p IN 1..@depth OUTBOUND q @@edge_collection
+    FOR v, e, p IN 1..@depth OUTBOUND q._id @@edge_collection
       OPTIONS {bfs: true, uniqueVertices: "global"}
       LIMIT @cone_limit
       RETURN v._id
   )
   FOR c IN classical
     LET cdeps = (
-      FOR v, e, p IN 1..@depth OUTBOUND c @@edge_collection
+      FOR v, e, p IN 1..@depth OUTBOUND c._id @@edge_collection
         OPTIONS {bfs: true, uniqueVertices: "global"}
         LIMIT @cone_limit
         RETURN v._id

@@ -252,10 +252,24 @@ review. A distinct QA-A reran the strict screen, locked module build, and
 kernel-backed axiom certification, and returned `ACCEPTED_WITH_LIMITED_SCOPE`.
 QA-A did not regenerate the companion audit file; the recorded Gate 4 run above
 did. These checks do not close the full objective. Remaining work includes
-a proved `NOperatorForm`/linear one-form carrier map, a concrete
-Fréchet-derivation-to-CE route with its bracket compatibility, and an explicit
+a proved `NOperatorForm`/linear one-form carrier map and an explicit
 CE-to-finite-Gibbs/BKM/Onsager map with proved compatibility and concrete
-dissipative/reversible conclusions. Source scouting found that the proposed
-CE-cochain Onsager construction still requires a real-linear derivation Lie
-lane on the finite operator carrier, plus a map feeding Fréchet/`NOperatorForm`
-data into that lane; no such connection was established by the scout.
+dissipative/reversible conclusions.
+
+### Subsequent Fréchet-to-CE bridge progress
+
+`OperatorFrechetDerivationJet.lean` now also defines the identity-action lane
+on the full real-linear Leibniz Lie subalgebra and maps each continuous real
+Fréchet derivation into its direction carrier. The module proves preservation
+of the commutator and that the CE degree-zero differential evaluated at the
+mapped direction returns the original derivation's action. This is a concrete
+Fréchet-to-CE evaluation route, but it does not restrict the lane to continuous
+derivations or build an equivalence of CE complexes.
+
+For this updated source, the locked module build completed successfully and
+`opengauss_cli certify --write-audit --verify-kernel` passed the generated
+axiom audit. The strict T1–T17 screener reported zero traps, the no-hypothesis
+gate passed, and semantic-vacuity screening found only the pre-existing
+`restrictScalarsReal_apply` `rfl` accessor warning. Independent A-A review of
+the new bridge is pending; a distinct QA-A rerun has not yet occurred. This
+partial result does not close the overall goal.

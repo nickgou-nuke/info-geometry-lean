@@ -1,0 +1,77 @@
+{
+  "schema": "info_geometry.opengauss.ground_truth_theorem_contract.v1",
+  "contract_id": "cantor-finite-cylinder-colimit-to-l2-dense-v1",
+  "semantic_status": "human_asserted_not_kernel_verified",
+  "claim": "Compose the existing complex-linear embedding of the finite-cylinder star subalgebra into C(CantorBoundary, ℂ) with the canonical ContinuousMap.toLp map for the fair Bernoulli measure. The resulting linear map into L2Boundary has dense range, and on each finite cylinder it agrees with diagonalCylinderL2.",
+  "carrier": {
+    "type": "cylinderColimitStarSubalgebra := finite-cylinder star subalgebra of (CantorBoundary → ℂ); L2Boundary := Lp ℂ 2 fractalMeasure",
+    "operations": [
+      "cylinderColimitToContinuousMapStarAlgHom sends each finite-cylinder function to the same continuous boundary function.",
+      "ContinuousMap.toLp sends a continuous function to its equivalence class in Lp ℂ 2 fractalMeasure.",
+      "The linear composition is required to agree with diagonalCylinderL2 n on every stage-n observable."
+    ],
+    "conventions": [
+      "The source is the existing finite-cylinder star subalgebra, not the full continuous-function space and not a matrix GNS stage.",
+      "Density uses the previously proved Stone-Weierstrass density into C(CantorBoundary, ℂ) and Mathlib's continuous-map-to-Lp density for finite Borel measure on compact Cantor boundary.",
+      "The theorem identifies the Hilbert-space closure of the diagonal cylinder system with all of L2Boundary, but does not identify the full-matrix GNS colimit or any Cuntz-algebra representation with that space."
+    ]
+  },
+  "owner_declarations": [
+    {
+      "qualified_name": "InfoGeometry.Canonical.UHFInductiveColimitBoundaryTopology.cylinderColimitToContinuousMapStarAlgHom_denseRange",
+      "kind": "theorem",
+      "source_path": "lean/InfoGeometry/Canonical/UHFInductiveColimitBoundaryTopology.lean",
+      "source_sha256": "595a634a1709f1fdee75f47a1e9879019e28ad66bf408e1dba00c2ed8636bcdb",
+      "source_line": 543,
+      "source_end_line": 545,
+      "source_excerpt": "theorem cylinderColimitToContinuousMapStarAlgHom_denseRange :\n    DenseRange (cylinderColimitToContinuousMapStarAlgHom :\n      cylinderColimitStarSubalgebra → C(CantorBoundary, ℂ)) := by",
+      "lean_statement": "theorem cylinderColimitToContinuousMapStarAlgHom_denseRange : DenseRange (cylinderColimitToContinuousMapStarAlgHom : cylinderColimitStarSubalgebra → C(CantorBoundary, ℂ))",
+      "status_assertion": "asserted_proved"
+    },
+    {
+      "qualified_name": "InfoGeometry.Canonical.CantorBernoulliFiniteDiagL2Embedding.diagonalCylinderL2",
+      "kind": "def",
+      "source_path": "lean/InfoGeometry/Canonical/CantorBernoulliFiniteDiagL2Embedding.lean",
+      "source_sha256": "1e34dc499280e1819717f33ecf11731180d80e2770f7c6109458045e931ca6a2",
+      "source_line": 50,
+      "source_end_line": 51,
+      "source_excerpt": "noncomputable def diagonalCylinderL2 (n : ℕ) : DiagAlg n →ₗ[ℂ] L2Boundary where\n  toFun f := (cylinder_memLp n f).toLp",
+      "lean_statement": "noncomputable def diagonalCylinderL2 (n : ℕ) : DiagAlg n →ₗ[ℂ] L2Boundary where toFun f",
+      "status_assertion": "definition"
+    },
+    {
+      "qualified_name": "InfoGeometry.Canonical.CantorBernoulliFiniteDiagL2Embedding.diagonalCylinderL2_compatible_succ",
+      "kind": "theorem",
+      "source_path": "lean/InfoGeometry/Canonical/CantorBernoulliFiniteDiagL2Embedding.lean",
+      "source_sha256": "1e34dc499280e1819717f33ecf11731180d80e2770f7c6109458045e931ca6a2",
+      "source_line": 71,
+      "source_end_line": 73,
+      "source_excerpt": "theorem diagonalCylinderL2_compatible_succ (n : ℕ) (f : DiagAlg n) :\n    diagonalCylinderL2 (n + 1) (diagEmbedSucc n f) =\n      diagonalCylinderL2 n f := by",
+      "lean_statement": "theorem diagonalCylinderL2_compatible_succ (n : ℕ) (f : DiagAlg n) : diagonalCylinderL2 (n + 1) (diagEmbedSucc n f) = diagonalCylinderL2 n f",
+      "status_assertion": "asserted_proved"
+    }
+  ],
+  "imports": [
+    "InfoGeometry.Canonical.CantorBernoulliFiniteDiagL2Embedding",
+    "InfoGeometry.Canonical.UHFInductiveColimitBoundaryTopology"
+  ],
+  "consumers": [
+    "This is the dense-range limit of the finite-stage diagonal maps already proved inner-product preserving and successor compatible."
+  ],
+  "smallest_gap": {
+    "declaration_name": "InfoGeometry.Canonical.CantorBernoulliCylinderColimitL2.cylinderColimitToL2_denseRange",
+    "lean_signature": ": DenseRange cylinderColimitToL2",
+    "pantograph_expression": "DenseRange cylinderColimitToL2",
+    "description": "Define the composition as a genuine ℂ-linear map, prove that it agrees with each finite-stage L2 map, and transport the two existing dense-range results through the continuous ContinuousMap.toLp operator."
+  },
+  "out_of_scope": [
+    "No unitary identification with the full finite-matrix GNS Hilbert colimit.",
+    "No identification with the older GNSState carrier without a separate quotient and completion construction.",
+    "No KMS theorem for the concrete spatial vector state or universal Cuntz C-star completion."
+  ],
+  "discovery_receipt": {
+    "path": "proofs/cantor_cylinder_colimit_l2_discovery.json",
+    "sha256": "e1791cda8428abe24c0a873152a1a61ae0260e95c99ffd8b22e65a4c70deaf75",
+    "query": "cylinderColimitToContinuousMapStarAlgHom_denseRange diagonalCylinderL2_compatible_succ diagonalCylinderL2 cylinder_memLp fractalMeasure_isProbabilityMeasure"
+  }
+}

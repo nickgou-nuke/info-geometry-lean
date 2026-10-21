@@ -1,8 +1,22 @@
 {
   "authority": "navigation_only",
-  "carriers_found": [],
+  "carriers_found": [
+    {
+      "file": "lean/InfoGeometry/Canonical/CantorBernoulliFiniteDiagL2Embedding.lean",
+      "kind": "def",
+      "lean_statement": "noncomputable def diagonalCylinderL2 (n : ℕ) : DiagAlg n →ₗ[ℂ] L2Boundary where toFun f",
+      "line": 50,
+      "location": "lean/InfoGeometry/Canonical/CantorBernoulliFiniteDiagL2Embedding.lean:50",
+      "name": "diagonalCylinderL2",
+      "qualified_name": "InfoGeometry.Canonical.CantorBernoulliFiniteDiagL2Embedding.diagonalCylinderL2",
+      "source_end_line": 51,
+      "source_sha256": "1e34dc499280e1819717f33ecf11731180d80e2770f7c6109458045e931ca6a2"
+    }
+  ],
   "dag_context": null,
-  "deduplication_warnings": [],
+  "deduplication_warnings": [
+    "Query 'cylinderColimitToContinuousMapStarAlgHom_denseRange diagonalCylinderL2_compatible_succ diagonalCylinderL2 cylinder_memLp fractalMeasure_isProbabilityMeasure' matches existing fundamental type 'diagonalCylinderL2' in lean/InfoGeometry/Canonical/CantorBernoulliFiniteDiagL2Embedding.lean; reuse canonical carrier instead of introducing redundant type wrapper."
+  ],
   "graph_is_proof_authority": false,
   "lemmas_found": [
     {
@@ -30,6 +44,17 @@
     {
       "file": "lean/InfoGeometry/Canonical/CantorBernoulliFiniteDiagL2Embedding.lean",
       "kind": "theorem",
+      "lean_statement": "@[simp] theorem diagonalCylinderL2_coeFn (n : ℕ) (f : DiagAlg n) : ((diagonalCylinderL2 n f : L2Boundary) : Boundary → ℂ) =ᵐ[μC] cylinder n f",
+      "line": 65,
+      "location": "lean/InfoGeometry/Canonical/CantorBernoulliFiniteDiagL2Embedding.lean:65",
+      "name": "diagonalCylinderL2_coeFn",
+      "qualified_name": "InfoGeometry.Canonical.CantorBernoulliFiniteDiagL2Embedding.diagonalCylinderL2_coeFn",
+      "source_end_line": 67,
+      "source_sha256": "1e34dc499280e1819717f33ecf11731180d80e2770f7c6109458045e931ca6a2"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/CantorBernoulliFiniteDiagL2Embedding.lean",
+      "kind": "theorem",
       "lean_statement": "theorem diagonalCylinderL2_compatible_succ (n : ℕ) (f : DiagAlg n) : diagonalCylinderL2 (n + 1) (diagEmbedSucc n f) = diagonalCylinderL2 n f",
       "line": 71,
       "location": "lean/InfoGeometry/Canonical/CantorBernoulliFiniteDiagL2Embedding.lean:71",
@@ -37,10 +62,21 @@
       "qualified_name": "InfoGeometry.Canonical.CantorBernoulliFiniteDiagL2Embedding.diagonalCylinderL2_compatible_succ",
       "source_end_line": 73,
       "source_sha256": "1e34dc499280e1819717f33ecf11731180d80e2770f7c6109458045e931ca6a2"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/CantorBernoulliFiniteDiagL2Embedding.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem diagonalCylinderL2_inner (n : ℕ) (f g : DiagAlg n) : inner ℂ (diagonalCylinderL2 n f) (diagonalCylinderL2 n g) = DiagTrace n (fun w => star (f w) * g w)",
+      "line": 117,
+      "location": "lean/InfoGeometry/Canonical/CantorBernoulliFiniteDiagL2Embedding.lean:117",
+      "name": "diagonalCylinderL2_inner",
+      "qualified_name": "InfoGeometry.Canonical.CantorBernoulliFiniteDiagL2Embedding.diagonalCylinderL2_inner",
+      "source_end_line": 119,
+      "source_sha256": "1e34dc499280e1819717f33ecf11731180d80e2770f7c6109458045e931ca6a2"
     }
   ],
   "local_dag_context": null,
-  "query": "cylinderColimitToContinuousMapStarAlgHom_denseRange diagonalCylinderL2_compatible_succ cylinder_memLp",
+  "query": "cylinderColimitToContinuousMapStarAlgHom_denseRange diagonalCylinderL2_compatible_succ diagonalCylinderL2 cylinder_memLp fractalMeasure_isProbabilityMeasure",
   "recommended_imports": [
     "InfoGeometry.Canonical.CantorBernoulliFiniteDiagL2Embedding",
     "InfoGeometry.Canonical.UHFInductiveColimitBoundaryTopology"

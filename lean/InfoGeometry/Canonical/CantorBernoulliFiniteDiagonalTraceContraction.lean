@@ -7,7 +7,6 @@ Authors: InfoGeometry Engine Contributors
 import InfoGeometry.Canonical.CantorBernoulliFiniteDiagL2Embedding
 import InfoGeometry.OperatorAlgebra.CantorBernoulliFiniteMatrixUnitBridge
 import InfoGeometry.Canonical.BitWordComplexCStarTowerNaturalityBridge
-import InfoGeometry.Canonical.CuntzMatrixFiniteTraceFaithfulness
 
 /-!
 # The finite diagonal map into Bernoulli boundary `L²`
@@ -29,9 +28,6 @@ open InfoGeometry.Canonical.UHFInductiveColimitBoundary
 open InfoGeometry.Canonical.CantorKMSState
 open InfoGeometry.Canonical.CantorBernoulliFiniteDiagL2Embedding
 open InfoGeometry.OperatorAlgebra.CantorBernoulliFiniteMatrixUnitBridge
-open InfoGeometry.Canonical.CuntzMatrixTowerInstantiation
-open InfoGeometry.Canonical.CuntzMatrixFiniteTraceFaithfulness
-open InfoGeometry.Canonical.BitWordComplexCStarTowerNaturalityBridge
 
 /-- The algebraic diagonal of a finite bit-word matrix, in the existing
 diagonal stage. -/
@@ -81,42 +77,6 @@ theorem diagonalCylinderL2_inner_diagonalPart
       (diagonalCylinderL2 n (diagonalPart n A)) =
         DiagTrace n (fun u => star (A u u) * A u u) := by
   exact diagonalCylinderL2_inner n (diagonalPart n A) (diagonalPart n A)
-
-/-- The squared boundary `L²` norm of the finite diagonal is its normalized
-finite matrix trace energy. -/
-theorem diagonalCylinderL2_norm_sq_eq_matrixTrace
-    (n : ℕ) (A : BitWordMatrixStage n) :
-    ‖diagonalCylinderL2 n (diagonalPart n A)‖ ^ 2 =
-      (matrixTraceState n
-        (star (stageStarAlgEquiv n A) * stageStarAlgEquiv n A)).re := by
-  have hinner := diagonalCylinderL2_inner_diagonalPart n A
-  have hnorm :
-      (inner ℂ (diagonalCylinderL2 n (diagonalPart n A))
-        (diagonalCylinderL2 n (diagonalPart n A))).re =
-        ‖diagonalCylinderL2 n (diagonalPart n A)‖ ^ 2 := by
-    rw [inner_self_eq_norm_sq]
-    simp
-  rw [← hnorm, hinner]
-  rw [show DiagTrace n (fun u => star (A u u) * A u u) =
-      normalizedTrace n (star A * A) by
-    unfold DiagTrace normalizedTrace
-    simp [Matrix.trace, Matrix.diag, Matrix.star_apply,
-      Complex.star_def, Complex.mul_conj, Finset.mul_sum,
-      Finset.sum_comm]
-    rw [card_BitWord]
-    norm_num [div_pow]]
-  rw [stageStarAlgEquiv_normalizedTrace]
-  congr 1
-  simp only [map_mul, map_star]
-
-/-- The finite boundary diagonal map is contractive for the normalized
-matrix-trace GNS quadratic form. -/
-theorem diagonalCylinderL2_norm_sq_le_matrixTrace
-    (n : ℕ) (A : BitWordMatrixStage n) :
-    ‖diagonalCylinderL2 n (diagonalPart n A)‖ ^ 2 ≤
-      (matrixTraceState n
-        (star (stageStarAlgEquiv n A) * stageStarAlgEquiv n A)).re := by
-  rw [diagonalCylinderL2_norm_sq_eq_matrixTrace]
 
 end InfoGeometry.Canonical.CantorBernoulliFiniteDiagonalTraceContraction
 

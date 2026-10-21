@@ -1,0 +1,92 @@
+{
+  "schema": "info_geometry.opengauss.ground_truth_theorem_contract.v1",
+  "contract_id": "cantor-projective-bernoulli-stage-trace-integral-v1",
+  "semantic_status": "human_asserted_not_kernel_verified",
+  "claim": "For every finite binary prefix stage n and every complex-valued diagonal observable f on BitWord n, integrating the pullback of f along the projective-limit projection π n against projectiveLimitMeasure equals the normalized finite diagonal trace DiagTrace n f.",
+  "carrier": {
+    "type": "BitWord n := Fin n → Bool; DiagAlg n := BitWord n → ℂ; PrefixProjectiveLimit is the type of coherent finite binary prefixes",
+    "operations": [
+      "DiagTrace n f := (2 : ℂ)⁻¹ ^ n * ∑ w : BitWord n, f w",
+      "π n : PrefixProjectiveLimit → BitWord n",
+      "projectiveLimitMeasure : Measure PrefixProjectiveLimit"
+    ],
+    "conventions": [
+      "The projective-limit measure is the pushforward of the fair binary product measure along PrefixProjectiveLimit.ofCantor.",
+      "Each fiber {q | π n q = w} has mass (1 / 2 : ℝ≥0∞)^n.",
+      "The target integral is the complex Bochner integral of q ↦ f (π n q)."
+    ]
+  },
+  "owner_declarations": [
+    {
+      "qualified_name": "InfoGeometry.Canonical.CantorKMSState.DiagTrace",
+      "kind": "def",
+      "source_path": "lean/InfoGeometry/Canonical/CantorKMSState.lean",
+      "source_sha256": "d183897a39ba47db66dc8a17ef8de55a3624fa0fe947ab265bbd70e2bd5c7525",
+      "source_line": 55,
+      "source_end_line": 55,
+      "source_excerpt": "def DiagTrace (n : ℕ) (f : DiagAlg n) : ℂ :=",
+      "lean_statement": "def DiagTrace (n : ℕ) (f : DiagAlg n) : ℂ",
+      "status_assertion": "definition"
+    },
+    {
+      "qualified_name": "InfoGeometry.Canonical.CantorProjectiveBernoulliMeasure.projectiveLimitMeasure",
+      "kind": "def",
+      "source_path": "lean/InfoGeometry/Canonical/CantorProjectiveBernoulliMeasure.lean",
+      "source_sha256": "19da4fc1a34e167541308bbf850bcf0f4ec8452bfa1fa64582ba07769d001f6f",
+      "source_line": 34,
+      "source_end_line": 34,
+      "source_excerpt": "def projectiveLimitMeasure : Measure PrefixProjectiveLimit :=",
+      "lean_statement": "def projectiveLimitMeasure : Measure PrefixProjectiveLimit",
+      "status_assertion": "definition"
+    },
+    {
+      "qualified_name": "InfoGeometry.Canonical.CantorProjectiveBernoulliMeasure.projectiveLimitMeasure_apply_prefix_fiber",
+      "kind": "theorem",
+      "source_path": "lean/InfoGeometry/Canonical/CantorProjectiveBernoulliMeasure.lean",
+      "source_sha256": "19da4fc1a34e167541308bbf850bcf0f4ec8452bfa1fa64582ba07769d001f6f",
+      "source_line": 42,
+      "source_end_line": 45,
+      "source_excerpt": "theorem projectiveLimitMeasure_apply_prefix_fiber\n    (N : ℕ) (b : BitWord N) :\n    projectiveLimitMeasure {q : PrefixProjectiveLimit | q.π N = b} =\n      (1 / 2 : ℝ≥0∞) ^ N := by",
+      "lean_statement": "theorem projectiveLimitMeasure_apply_prefix_fiber (N : ℕ) (b : BitWord N) : projectiveLimitMeasure {q : PrefixProjectiveLimit | q.π N = b} = (1 / 2 : ℝ≥0∞) ^ N",
+      "status_assertion": "asserted_proved"
+    },
+    {
+      "qualified_name": "InfoGeometry.Canonical.CantorBernoulliDiagTraceBridge.diagTrace_cylinderIndicator_eq_projectivePrefixFiber_toReal",
+      "kind": "theorem",
+      "source_path": "lean/InfoGeometry/Canonical/CantorBernoulliDiagTraceBridge.lean",
+      "source_sha256": "6c0f4622db638c1990a7a03a550965867c003fe6fb88850e5364a8e178257dc7",
+      "source_line": 29,
+      "source_end_line": 34,
+      "source_excerpt": "theorem diagTrace_cylinderIndicator_eq_projectivePrefixFiber_toReal\n    (n : ℕ) (w : BitWord n) :\n    DiagTrace n (cylinderIndicator n w) =\n      ((projectiveLimitMeasure\n          {q : PrefixProjectiveLimit |\n            π n q = w}).toReal : ℂ) := by",
+      "lean_statement": "theorem diagTrace_cylinderIndicator_eq_projectivePrefixFiber_toReal (n : ℕ) (w : BitWord n) : DiagTrace n (cylinderIndicator n w) = ((projectiveLimitMeasure {q : PrefixProjectiveLimit | π n q = w}).toReal : ℂ)",
+      "status_assertion": "asserted_proved"
+    }
+  ],
+  "imports": [
+    "InfoGeometry.Canonical.CantorKMSState",
+    "InfoGeometry.Canonical.CantorProjectiveBernoulliMeasure",
+    "InfoGeometry.Canonical.CantorProjectiveLimit",
+    "InfoGeometry.Canonical.CantorBernoulliDiagTraceBridge"
+  ],
+  "consumers": [
+    "InfoGeometry.OperatorAlgebra.CantorBernoulliFiniteMatrixUnitBridge.bitWordUnit_diag_eq_diagTrace_cylinder uses the finite-stage DiagTrace on diagonal matrix-unit readouts.",
+    "The new theorem would identify that finite-stage trace functional with integration against the projective-limit Bernoulli measure for every stage observable, extending the existing prefix-indicator identity without claiming a completed C*-algebra state."
+  ],
+  "smallest_gap": {
+    "declaration_name": "InfoGeometry.Canonical.CantorBernoulliDiagTraceBridge.projectiveLimitMeasure_integral_prefix_eq_DiagTrace",
+    "lean_signature": "(n : ℕ) (f : DiagAlg n) : (∫ q, f (π n q) ∂projectiveLimitMeasure) = DiagTrace n f",
+    "pantograph_expression": "∀ n : ℕ, ∀ f : DiagAlg n, (∫ q, f (π n q) ∂projectiveLimitMeasure) = DiagTrace n f",
+    "description": "Prove the finite-prefix pushforward integral identity from the existing projective prefix-fiber mass theorem and the explicit normalized finite diagonal trace; no additional state, carrier, or hypothesis is introduced."
+  },
+  "out_of_scope": [
+    "No C*-completion or extension of the finite trace to a completed UHF or Cuntz algebra.",
+    "No unitary identification of the filtered finite-stage GNS colimit with the concrete Cantor L2 space.",
+    "No KMS theorem for the full binary Cuntz C*-algebra or relation to the distinct O3/O4 carriers.",
+    "No claim that a source-only GNS declaration absent from the current decls graph is absent from the repository."
+  ],
+  "discovery_receipt": {
+    "path": "proofs/cantor_bernoulli_trace_discovery.json",
+    "sha256": "69cc0ccc94715b17ed32a90a37c8d8029b2a463a682af9008d9a4cff4a003162",
+    "query": "DiagTrace projectiveLimitMeasure projectiveLimitMeasure_apply_prefix_fiber diagTrace_cylinderIndicator_eq_projectivePrefixFiber_toReal"
+  }
+}

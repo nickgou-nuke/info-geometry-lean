@@ -1,0 +1,156 @@
+{
+  "authority": "navigation_only",
+  "carriers_found": [
+    {
+      "file": "lean/InfoGeometry/Canonical/CantorKMSState.lean",
+      "kind": "def",
+      "lean_statement": "def DiagTrace (n : ℕ) (f : DiagAlg n) : ℂ",
+      "line": 55,
+      "location": "lean/InfoGeometry/Canonical/CantorKMSState.lean:55",
+      "name": "DiagTrace",
+      "qualified_name": "InfoGeometry.Canonical.CantorKMSState.DiagTrace",
+      "source_end_line": 55,
+      "source_sha256": "d183897a39ba47db66dc8a17ef8de55a3624fa0fe947ab265bbd70e2bd5c7525"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/CantorKMSState.lean",
+      "kind": "def",
+      "lean_statement": "def DiagTrace_addMonoidHom (n : ℕ) : DiagAlg n →+ ℂ where toFun",
+      "line": 73,
+      "location": "lean/InfoGeometry/Canonical/CantorKMSState.lean:73",
+      "name": "DiagTrace_addMonoidHom",
+      "qualified_name": "InfoGeometry.Canonical.CantorKMSState.DiagTrace_addMonoidHom",
+      "source_end_line": 74,
+      "source_sha256": "d183897a39ba47db66dc8a17ef8de55a3624fa0fe947ab265bbd70e2bd5c7525"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/CantorKMSState.lean",
+      "kind": "def",
+      "lean_statement": "def DiagTrace_state (n : ℕ) : BostConnesSuperalgebra.AlgebraicState (DiagAlg n) where val",
+      "line": 98,
+      "location": "lean/InfoGeometry/Canonical/CantorKMSState.lean:98",
+      "name": "DiagTrace_state",
+      "qualified_name": "InfoGeometry.Canonical.CantorKMSState.DiagTrace_state",
+      "source_end_line": 99,
+      "source_sha256": "d183897a39ba47db66dc8a17ef8de55a3624fa0fe947ab265bbd70e2bd5c7525"
+    }
+  ],
+  "dag_context": null,
+  "deduplication_warnings": [
+    "Query 'projectiveLimitMeasure_integral_prefix_eq_DiagTrace DiagTrace projectiveLimitMeasure_apply_prefix_fiber' matches existing fundamental type 'DiagTrace' in lean/InfoGeometry/Canonical/CantorKMSState.lean; reuse canonical carrier instead of introducing redundant type wrapper.",
+    "Query 'projectiveLimitMeasure_integral_prefix_eq_DiagTrace DiagTrace projectiveLimitMeasure_apply_prefix_fiber' matches existing fundamental type 'DiagTrace_addMonoidHom' in lean/InfoGeometry/Canonical/CantorKMSState.lean; reuse canonical carrier instead of introducing redundant type wrapper.",
+    "Query 'projectiveLimitMeasure_integral_prefix_eq_DiagTrace DiagTrace projectiveLimitMeasure_apply_prefix_fiber' matches existing fundamental type 'DiagTrace_state' in lean/InfoGeometry/Canonical/CantorKMSState.lean; reuse canonical carrier instead of introducing redundant type wrapper."
+  ],
+  "graph_is_proof_authority": false,
+  "lemmas_found": [
+    {
+      "file": "lean/InfoGeometry/OperatorAlgebra/CantorBernoulliFiniteMatrixUnitBridge.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem bitWordUnit_diag_eq_diagTrace_cylinder (n : ℕ) (u : BitWord n) : canonicalGaugeState (List.ofFn u) (List.ofFn u) = DiagTrace n (InfoGeometry.Canonical.CantorKMSState.cylinderIndicator n u)",
+      "line": 179,
+      "location": "lean/InfoGeometry/OperatorAlgebra/CantorBernoulliFiniteMatrixUnitBridge.lean:179",
+      "name": "bitWordUnit_diag_eq_diagTrace_cylinder",
+      "qualified_name": "InfoGeometry.OperatorAlgebra.CantorBernoulliFiniteMatrixUnitBridge.bitWordUnit_diag_eq_diagTrace_cylinder",
+      "source_end_line": 181,
+      "source_sha256": "574ea9f128c3a6eeb44b67381c09e0dfbed8c11339667bd47e1a786622e8f489"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/CantorProjectiveBernoulliMeasure.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem projectiveLimitMeasure_apply_prefix_fiber (N : ℕ) (b : BitWord N) : projectiveLimitMeasure {q : PrefixProjectiveLimit | q.π N = b} = (1 / 2 : ℝ≥0∞) ^ N",
+      "line": 42,
+      "location": "lean/InfoGeometry/Canonical/CantorProjectiveBernoulliMeasure.lean:42",
+      "name": "projectiveLimitMeasure_apply_prefix_fiber",
+      "qualified_name": "InfoGeometry.Canonical.CantorProjectiveBernoulliMeasure.projectiveLimitMeasure_apply_prefix_fiber",
+      "source_end_line": 45,
+      "source_sha256": "19da4fc1a34e167541308bbf850bcf0f4ec8452bfa1fa64582ba07769d001f6f"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/CantorBernoulliDiagTraceBridge.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem diagTrace_cylinderIndicator_eq_projectivePrefixFiber_toReal (n : ℕ) (w : BitWord n) : DiagTrace n (cylinderIndicator n w) = ((projectiveLimitMeasure {q : PrefixProjectiveLimit | π n q = w}).toReal : ℂ)",
+      "line": 38,
+      "location": "lean/InfoGeometry/Canonical/CantorBernoulliDiagTraceBridge.lean:38",
+      "name": "diagTrace_cylinderIndicator_eq_projectivePrefixFiber_toReal",
+      "qualified_name": "InfoGeometry.Canonical.CantorBernoulliDiagTraceBridge.diagTrace_cylinderIndicator_eq_projectivePrefixFiber_toReal",
+      "source_end_line": 43,
+      "source_sha256": "ea36d8b591d6b528c8bf27963c501006d3ba075ef8fda9a8e4a380c321991697"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/CantorBernoulliDiagTraceBridge.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem projectiveLimitMeasure_integral_prefix_eq_DiagTrace (n : ℕ) (f : DiagAlg n) : ∫ q, f (π n q) ∂projectiveLimitMeasure = DiagTrace n f",
+      "line": 50,
+      "location": "lean/InfoGeometry/Canonical/CantorBernoulliDiagTraceBridge.lean:50",
+      "name": "projectiveLimitMeasure_integral_prefix_eq_DiagTrace",
+      "qualified_name": "InfoGeometry.Canonical.CantorBernoulliDiagTraceBridge.projectiveLimitMeasure_integral_prefix_eq_DiagTrace",
+      "source_end_line": 52,
+      "source_sha256": "ea36d8b591d6b528c8bf27963c501006d3ba075ef8fda9a8e4a380c321991697"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/CantorKMSState.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem DiagTrace_cylinderIndicator (n : ℕ) (w : BitWord n) : DiagTrace n (cylinderIndicator n w) = (2 : ℂ)⁻¹ ^ n",
+      "line": 62,
+      "location": "lean/InfoGeometry/Canonical/CantorKMSState.lean:62",
+      "name": "DiagTrace_cylinderIndicator",
+      "qualified_name": "InfoGeometry.Canonical.CantorKMSState.DiagTrace_cylinderIndicator",
+      "source_end_line": 64,
+      "source_sha256": "d183897a39ba47db66dc8a17ef8de55a3624fa0fe947ab265bbd70e2bd5c7525"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/CantorKMSState.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem DiagTrace_one (n : ℕ) : DiagTrace n 1 = 1",
+      "line": 85,
+      "location": "lean/InfoGeometry/Canonical/CantorKMSState.lean:85",
+      "name": "DiagTrace_one",
+      "qualified_name": "InfoGeometry.Canonical.CantorKMSState.DiagTrace_one",
+      "source_end_line": 85,
+      "source_sha256": "d183897a39ba47db66dc8a17ef8de55a3624fa0fe947ab265bbd70e2bd5c7525"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/CantorKMSState.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem DiagTrace_compat (n : ℕ) (f : DiagAlg n) : DiagTrace (n + 1) (diagEmbedSucc n f) = DiagTrace n f",
+      "line": 103,
+      "location": "lean/InfoGeometry/Canonical/CantorKMSState.lean:103",
+      "name": "DiagTrace_compat",
+      "qualified_name": "InfoGeometry.Canonical.CantorKMSState.DiagTrace_compat",
+      "source_end_line": 104,
+      "source_sha256": "d183897a39ba47db66dc8a17ef8de55a3624fa0fe947ab265bbd70e2bd5c7525"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/CantorKMSFiniteTomitaBridge.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem DiagTrace_complement_invariant (n : ℕ) (f : DiagAlg n) : DiagTrace n (complementPullback f) = DiagTrace n f",
+      "line": 49,
+      "location": "lean/InfoGeometry/Canonical/CantorKMSFiniteTomitaBridge.lean:49",
+      "name": "DiagTrace_complement_invariant",
+      "qualified_name": "InfoGeometry.Canonical.CantorKMSFiniteTomitaBridge.DiagTrace_complement_invariant",
+      "source_end_line": 50,
+      "source_sha256": "108bf4f33d2de20fc48e61d93dc95cc0f4e1fd8934130077670c5eadcb467ae5"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/CantorKMSFiniteTomitaBridge.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem DiagTrace_state_complement_invariant (n : ℕ) (f : DiagAlg n) : (DiagTrace_state n).val (complementPullback f) = (DiagTrace_state n).val f",
+      "line": 58,
+      "location": "lean/InfoGeometry/Canonical/CantorKMSFiniteTomitaBridge.lean:58",
+      "name": "DiagTrace_state_complement_invariant",
+      "qualified_name": "InfoGeometry.Canonical.CantorKMSFiniteTomitaBridge.DiagTrace_state_complement_invariant",
+      "source_end_line": 60,
+      "source_sha256": "108bf4f33d2de20fc48e61d93dc95cc0f4e1fd8934130077670c5eadcb467ae5"
+    }
+  ],
+  "local_dag_context": null,
+  "query": "projectiveLimitMeasure_integral_prefix_eq_DiagTrace DiagTrace projectiveLimitMeasure_apply_prefix_fiber",
+  "recommended_imports": [
+    "InfoGeometry.Canonical.CantorBernoulliDiagTraceBridge",
+    "InfoGeometry.Canonical.CantorKMSFiniteTomitaBridge",
+    "InfoGeometry.Canonical.CantorKMSState",
+    "InfoGeometry.Canonical.CantorProjectiveBernoulliMeasure",
+    "InfoGeometry.OperatorAlgebra.CantorBernoulliFiniteMatrixUnitBridge"
+  ],
+  "schema": "info_geometry.opengauss.discovery_report.v1"
+}

@@ -1,20 +1,7 @@
 {
   "authority": "navigation_only",
   "carriers_found": [],
-  "dag_context": {
-    "authority": "navigation_only",
-    "diagnostic": "Traceback (most recent call last):\n  File \"/home/goutev/repos/info-geometry-lean/tools/infra/arango_raw_infotree_ingest.py\", line 146, in request_json\n    with urlopen(req) as resp:\n         ^^^^^^^^^^^^\n  File \"/home/goutev/miniforge3/envs/sage/lib/python3.12/urllib/request.py\", line 215, in urlopen\n    return opener.open(url, data, timeout)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/goutev/miniforge3/envs/sage/lib/python3.12/urllib/request.py\", line 521, in open\n    response = meth(req, response)\n               ^^^^^^^^^^^^^^^^^^^\n  File \"/home/goutev/miniforge3/envs/sage/lib/python3.12/urllib/request.py\", line 630, in http_response\n    response = self.parent.error(\n               ^^^^^^^^^^^^^^^^^^\n  File \"/home/goutev/miniforge3/envs/sage/lib/python3.12/urllib/request.py\", line 559, in error\n    return self._call_chain(*args)\n           ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/goutev/miniforge3/envs/sage/lib/python3.12/urllib/request.py\", line 492, in _call_chain\n    res",
-    "freshness": "unknown",
-    "graph_is_proof_authority": false,
-    "reason": "cone_query_failed",
-    "requested_apices": [
-      "InfoGeometry.Canonical.UHFInductiveColimitBoundaryTopology.cylinderColimitToContinuousMapStarAlgHom_denseRange",
-      "InfoGeometry.Canonical.CantorBernoulliFiniteDiagL2Embedding.diagonalCylinderL2_compatible_succ",
-      "InfoGeometry.Canonical.CantorBernoulliDiagTraceBridge.projectiveLimitMeasure_integral_prefix_eq_DiagTrace"
-    ],
-    "returncode": 1,
-    "status": "unavailable"
-  },
+  "dag_context": null,
   "deduplication_warnings": [],
   "graph_is_proof_authority": false,
   "lemmas_found": [
@@ -32,6 +19,17 @@
     {
       "file": "lean/InfoGeometry/Canonical/CantorBernoulliFiniteDiagL2Embedding.lean",
       "kind": "theorem",
+      "lean_statement": "theorem cylinder_memLp (n : ℕ) (f : DiagAlg n) : MemLp (cylinder n f) 2 μC",
+      "line": 40,
+      "location": "lean/InfoGeometry/Canonical/CantorBernoulliFiniteDiagL2Embedding.lean:40",
+      "name": "cylinder_memLp",
+      "qualified_name": "InfoGeometry.Canonical.CantorBernoulliFiniteDiagL2Embedding.cylinder_memLp",
+      "source_end_line": 41,
+      "source_sha256": "1e34dc499280e1819717f33ecf11731180d80e2770f7c6109458045e931ca6a2"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/CantorBernoulliFiniteDiagL2Embedding.lean",
+      "kind": "theorem",
       "lean_statement": "theorem diagonalCylinderL2_compatible_succ (n : ℕ) (f : DiagAlg n) : diagonalCylinderL2 (n + 1) (diagEmbedSucc n f) = diagonalCylinderL2 n f",
       "line": 71,
       "location": "lean/InfoGeometry/Canonical/CantorBernoulliFiniteDiagL2Embedding.lean:71",
@@ -39,23 +37,11 @@
       "qualified_name": "InfoGeometry.Canonical.CantorBernoulliFiniteDiagL2Embedding.diagonalCylinderL2_compatible_succ",
       "source_end_line": 73,
       "source_sha256": "1e34dc499280e1819717f33ecf11731180d80e2770f7c6109458045e931ca6a2"
-    },
-    {
-      "file": "lean/InfoGeometry/Canonical/CantorBernoulliDiagTraceBridge.lean",
-      "kind": "theorem",
-      "lean_statement": "theorem projectiveLimitMeasure_integral_prefix_eq_DiagTrace (n : ℕ) (f : DiagAlg n) : ∫ q, f (π n q) ∂projectiveLimitMeasure = DiagTrace n f",
-      "line": 50,
-      "location": "lean/InfoGeometry/Canonical/CantorBernoulliDiagTraceBridge.lean:50",
-      "name": "projectiveLimitMeasure_integral_prefix_eq_DiagTrace",
-      "qualified_name": "InfoGeometry.Canonical.CantorBernoulliDiagTraceBridge.projectiveLimitMeasure_integral_prefix_eq_DiagTrace",
-      "source_end_line": 52,
-      "source_sha256": "6c0f4622db638c1990a7a03a550965867c003fe6fb88850e5364a8e178257dc7"
     }
   ],
   "local_dag_context": null,
-  "query": "cylinderColimitToContinuousMapStarAlgHom_denseRange diagonalCylinderL2_compatible_succ projectiveLimitMeasure_integral_prefix_eq_DiagTrace",
+  "query": "cylinderColimitToContinuousMapStarAlgHom_denseRange diagonalCylinderL2_compatible_succ cylinder_memLp",
   "recommended_imports": [
-    "InfoGeometry.Canonical.CantorBernoulliDiagTraceBridge",
     "InfoGeometry.Canonical.CantorBernoulliFiniteDiagL2Embedding",
     "InfoGeometry.Canonical.UHFInductiveColimitBoundaryTopology"
   ],

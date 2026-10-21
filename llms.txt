@@ -1,0 +1,133 @@
+# InfoGeometry-Lean
+
+> Lean 4 formalization repository with supporting graph, RAG, and automation tools. The repository is much larger than its theorem-owner source: tracked-file counts include tools, archives, external material, and generated artifacts.
+
+## Authority and required reading
+
+- [Agent instructions](AGENTS.md)
+- [Canonical pipeline](docs/CANONICAL_AGENT_PIPELINE.md)
+- [Repository deep-search protocol](docs/REPO_DEEP_SEARCH_PROTOCOL.md)
+- [AST/AQL hash guide](docs/ASTAQLHASH-HOWTO.md)
+- [Hive commandments](docs/HIVE_AGENT_COMMANDMENTS.md)
+
+This file only routes agents. It does not override those documents. Lean owner source and kernel-checked proofs/builds are the authority; graph, hash, RAG, CAS, and oracle results are navigation or review evidence only.
+
+## Source-first workflow
+
+1. Search repo-owned source recursively, including `lean/`, `proofs/`, `tools/`, `scripts/`, `src/`, and relevant root entrypoints; do not start from graph results alone.
+2. Use local DAG/Arango queries to locate declarations, dependencies, dependents, and candidate connections.
+3. Read the actual owner definitions, theorem statements, imports, assumptions, and dependents. Confirm carrier types and conventions.
+4. Verify the exact Lean statement with the kernel and the repository's sequential, locked build workflow.
+
+Do not claim repository-wide absence from a single file or search. Do not add `sorry`, `admit`, custom axioms, wrappers, aliases, proxy claims, vacuous hypotheses, or hidden assumptions. A theorem promotion requires applicable kernel/build and repository gates; retrieval or compilation of a different proposition is not evidence for the intended claim. Never run `lake clean` or delete `.lake` build/package caches. Before builds or tests, inspect active compiler processes and use the locked build workflow; concurrent builds are forbidden.
+
+## Declaration DAG: schema and limits
+
+The compiler-backed declaration graph is emitted from Lean's imported environment by `lean/DAG/Indexer.lean`. The canonical refresh uses import root `InfoGeometry.All` and namespace filter `InfoGeometry`; it does not represent every repository file, proof, tool, external reference, or runtime artifact. The graph uses vertex collection `decls` and edge collection `edges` (AST/AQL DAG lane; normally database `infogeometry`, endpoint `127.0.0.1:8530`). A declaration record includes fields such as `name`, `kind`, `module`, `file`, `line`, `typeFingerprint`, optional `valueFingerprint`, `shapeHash`, `canonicalTypeHash`, optional `canonicalValueHash`, and `dagShapeHash`. Dependency edges are oriented declaration → dependency; edge `kind` is `type` or `value`. Thus `OUTBOUND` finds prerequisites and `INBOUND` finds dependents.
+
+Fingerprints are structural navigation keys, not declaration IDs, mathematical identities, or equivalence proofs. `shapeHash` comes from a normalized structural projection; `dagShapeHash` is explicitly a coarse template hash. Resolve declarations by exact `name` and `_id`, not by hash. Graph freshness is established only when generation metadata ties the queried graph to the relevant source/toolchain/olean state. Report freshness as unknown when that provenance is unavailable or does not match. Do not confuse this DAG with Raw InfoTree collections, SCC/topology overlays, Hive (`hive_live`), or agent-memory databases.
+
+Causal-cone queries are bounded by depth and result limits. A capped cone is incomplete; report its bounds and whether a cap was reached. `uniqueVertices: "global"` prioritizes reachability and can suppress alternate paths; a traversal is not automatically a complete path inventory or shortest-path result. A path or shared node is a candidate for source inspection, not a proved semantic bridge.
+
+## Read-only AQL templates
+
+Use the repo query tool, which rejects write AQL unless explicitly permitted:
+
+```sh
+python3 tools/infra/arango_causal_memory.py query '<AQL>' --bind-vars '<JSON object containing the query variables>'
+```
+
+Find a declaration by exact name:
+
+```aql
+FOR d IN decls
+  FILTER d.name == @name
+  LIMIT 1
+  RETURN {id: d._id, name: d.name, kind: d.kind, module: d.module, file: d.file}
+```
+
+Bounded prerequisite cone (set explicit `depth` and `limit` bind variables):
+
+```aql
+LET anchor = FIRST(
+  FOR d IN decls FILTER d.name == @name LIMIT 1 RETURN d
+)
+LET cone = anchor == null ? [] : (
+  FOR v, e, p IN 1..@depth OUTBOUND anchor edges
+    OPTIONS {bfs: true, uniqueVertices: "global"}
+    LIMIT @limit
+    RETURN {id: v._id, name: v.name, kind: v.kind,
+            edge_kind: e.kind, depth: LENGTH(p.edges)}
+)
+RETURN {anchor: anchor == null ? null : anchor.name,
+        depth: @depth, limit: @limit, cone: cone}
+```
+
+Bounded dependent cone (replace `OUTBOUND` with `INBOUND`):
+
+```aql
+LET anchor = FIRST(
+  FOR d IN decls FILTER d.name == @name LIMIT 1 RETURN d
+)
+LET cone = anchor == null ? [] : (
+  FOR v, e, p IN 1..@depth INBOUND anchor edges
+    OPTIONS {bfs: true, uniqueVertices: "global"}
+    LIMIT @limit
+    RETURN {id: v._id, name: v.name, kind: v.kind,
+            edge_kind: e.kind, depth: LENGTH(p.edges)}
+)
+RETURN {anchor: anchor == null ? null : anchor.name,
+        depth: @depth, limit: @limit, cone: cone}
+```
+
+Keep queries read-only; never enable `--allow-write` for exploration. A graph refresh can replace/truncate live collections: do not run refresh, ingest, or graph-write operations without explicit authorization and the documented recovery procedure.
+
+## Source map
+
+- `lean/InfoGeometry/`: formalization owners; follow imports and consumers to determine scope.
+- `lean/DAG/`: declaration indexing, fingerprints, and graph infrastructure.
+- `proofs/`: task proofs/candidates; inspect the local `AGENTS.md` and do not assume each file is a promoted owner theorem.
+- `tools/`, `scripts/`, `src/`, and maintained root entrypoints: executable tooling; inspect current implementations.
+- `external_refs/`, archives, generated artifacts, and runtime state are separate context/evidence surfaces, not repo-owned proof authority.
+- `docs/`: workflow and subsystem guides linked above.
+
+Use the actual repository tree and owner source; do not infer paths or declarations from this summary.
+
+## Service separation
+
+The AST/AQL lane normally uses endpoint `http://127.0.0.1:8530` and database
+`infogeometry`. Hive workers normally use endpoint `http://127.0.0.1:8540` and
+database `hive_live`; agent-memory databases are separate logical stores. An
+AST/AQL deployment on port `8030` is an explicit environment override, not the
+repository default. Never copy credentials or collection names between these
+lanes.
+
+## Investigation contract
+
+For a nontrivial claim, preserve the exact owner file, imports, carrier,
+operations, hypotheses, source snapshot, graph generation/freshness, and
+verification command. A graph path, fingerprint collision, SCC membership,
+successful retrieval, or successful compilation of another proposition does
+not establish the intended mathematical relationship. When a comparison is
+needed, define the map between carriers and prove its compatibility in Lean.
+
+The minimum evidence sequence is:
+
+```text
+recursive source search
+→ read-only graph navigation
+→ owner/import/dependent inspection
+→ ground-truth theorem contract
+→ native Lean proof
+→ kernel and locked sequential build checks
+→ exact scope and open-debt report
+```
+
+## Maintenance boundary
+
+Do not refresh or ingest live declaration collections during ordinary search.
+The legacy graph refresh path may truncate `decls` and `edges`; immutable
+generation mode and its provenance requirements are described in
+`docs/ASTAQLHASH-HOWTO.md`. Generated transcripts, external snapshots, and
+oracle responses are not source-edit authority. Only the coding agent applies
+source patches after inspecting the relevant owner and build diagnostics.

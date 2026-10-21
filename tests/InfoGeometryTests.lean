@@ -1,3 +1,11 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+/- SPDX-License-Identifier: Apache-2.0 -/
+
 import InfoGeometry
 import InfoGeometry.Canonical.CasiniBekensteinBound
 import InfoGeometry.Canonical.KleinDeckFiveGradeAction
@@ -161,11 +169,14 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.SuperGrassmannian.CartanTrialityZorn.zornCarrierEquiv
 #check InfoGeometry.SuperGrassmannian.CartanTrialityZorn.ZornMatrix.toCanonical_mul
 #check InfoGeometry.SuperGrassmannian.CartanTrialityZorn.ZornMatrix.toCanonical_det
-#check InfoGeometry.Krein.DoubledCPT.compile_doubled_krein_cpt_commutant
+#check InfoGeometry.Krein.DoubledCPT.J_sq
+#check InfoGeometry.Krein.DoubledCPT.commutes_iff_cptMatrix
+#check InfoGeometry.Krein.DoubledCPT.toPauli_mul
 #check InfoGeometry.Clifford.Coquaternion.Coquaternion.compile_cockle_coquaternion_planar_triad
 #check InfoGeometry.Clifford.GeometricBiquaternion.Biquat.compile_cl11_geometric_biquaternion_bridge
 #check InfoGeometry.Clifford.SouriauLoxodromicCelestial.compile_souriau_loxodromic_celestial_bridge
-#check InfoGeometry.Clifford.SolderingIsotropic.compile_soldering_isotropic_souriau_sheet_bridge
+#check InfoGeometry.Clifford.SolderingIsotropic.det2_solderingMatrix
+#check InfoGeometry.Clifford.SolderingIsotropic.souriau_chiral_sum_unimodular
 #check InfoGeometry.Clifford.ConformalBoundary.compile_conformal_projective_boundary_casimir_bridge
 #check InfoGeometry.Algebra.h3zorn_jordan_mul_adjoint_eq_norm_one
 #check InfoGeometry.Algebra.RealAlbertMatrix.mul_adjointQuad_eq_norm_smul_unit

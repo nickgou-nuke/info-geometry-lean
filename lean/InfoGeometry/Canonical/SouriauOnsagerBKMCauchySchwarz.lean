@@ -1,14 +1,23 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+/- SPDX-License-Identifier: Apache-2.0 -/
+
 import InfoGeometry.Canonical.SouriauOnsagerBKMRealForm
+import InfoGeometry.Canonical.SouriauOnsagerBKMStrictPositivity
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Cauchy--Schwarz for the finite noncommutative BKM response
 
-The finite Kubo--Mori owner supplies a symmetric real bilinear form, while
-positivity is intentionally still a model theorem rather than an owner
-field.  This file proves the exact algebraic consequence needed downstream:
-once diagonal positivity is supplied, the real BKM pairing satisfies the
-Cauchy--Schwarz inequality.
+The finite Kubo--Mori owner supplies a symmetric real bilinear form.  The
+positivity owner supplies its nonnegative and strict diagonal readouts.  This
+file proves the exact algebraic consequence needed downstream: the real BKM
+pairing satisfies the Cauchy--Schwarz inequality under the native continuity
+hypothesis on the functional-calculus power.
 
 No new metric or Cramér--Rao statement is introduced.
 -/
@@ -55,5 +64,22 @@ theorem FaithfulDensityOperator.kuboMoriPairing_real_cauchySchwarz
       nlinarith
     change (G A B) ^ 2 ≤ G A A * G B B
     linarith
+
+/-! The finite positivity owners discharge the diagonal hypotheses for the
+    native BKM pairing, so downstream users need only continuity of the
+    functional-calculus power. -/
+
+theorem FaithfulDensityOperator.kuboMoriPairing_real_cauchySchwarz_of_continuous_rpow
+    (D : FaithfulDensityOperator n)
+    (hpow : Continuous D.rpow)
+    (A B : FiniteOperatorAlgebra n) :
+    (D.kuboMoriPairing A B).re ^ 2 ≤
+      (D.kuboMoriPairing A A).re *
+        (D.kuboMoriPairing B B).re := by
+  apply D.kuboMoriPairing_real_cauchySchwarz hpow
+  · intro X
+    exact D.kuboMoriPairing_self_re_nonneg X hpow
+  · intro X hX
+    exact D.kuboMoriPairing_self_pos X hpow hX
 
 end SouriauOnsagerBKM

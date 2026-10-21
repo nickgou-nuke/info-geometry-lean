@@ -1,0 +1,69 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Canonical.OperatorFrechetForms
+import InfoGeometry.Optics.OperatorDerivationForms
+
+/-!
+# First Fréchet jets of continuous operator derivations
+
+These lemmas connect the generic iterated Fréchet-jet carrier to the
+continuous noncommutative derivation carrier.  They concern the first jet only;
+they do not assert that higher jets satisfy a first-order Leibniz rule.
+-/
+
+namespace InfoGeometry.Canonical.OperatorFrechetDerivationJet
+
+open InfoGeometry.Canonical.OperatorFrechetForms
+open InfoGeometry.Optics.OperatorDerivationForms
+
+variable {A : Type*} [NormedRing A] [NormedAlgebra ℂ A]
+
+/-- Evaluation of the first iterated Fréchet jet of a continuous operator
+derivation is its continuous linear representative applied to the direction. -/
+theorem operatorFrechetJet_one_apply
+    (D : FrechetOperatorDerivation ℂ A) (x v : A) :
+    operatorFrechetJet 1 (D : A → A) x (fun _ : Fin 1 => v) =
+      D.toContinuousLinearMap v := by
+  rw [operatorFrechetJet, iteratedFDeriv_one_apply]
+  exact congrArg (fun L => L v) (D.hasFDerivAt x).fderiv
+
+/-- The first Fréchet jet of a continuous operator derivation obeys the
+noncommutative product rule on the product direction, by the derivation's
+Leibniz law. -/
+theorem operatorFrechetJet_one_mul
+    (D : FrechetOperatorDerivation ℂ A) (x a b : A) :
+    operatorFrechetJet 1 (D : A → A) x (fun _ : Fin 1 => a * b) =
+      D.toContinuousLinearMap a * b + a * D.toContinuousLinearMap b := by
+  rw [operatorFrechetJet_one_apply]
+  exact D.leibniz a b
+
+/-- Restricting the scalars of a complex continuous operator derivation to
+`ℝ` preserves its operator Leibniz law. -/
+noncomputable def restrictScalarsReal
+    (D : FrechetOperatorDerivation ℂ A) :
+    FrechetOperatorDerivation ℝ A where
+  toContinuousLinearMap := D.toContinuousLinearMap.restrictScalars ℝ
+  leibniz := by
+    intro a b
+    exact D.leibniz a b
+
+@[simp] theorem restrictScalarsReal_apply
+    (D : FrechetOperatorDerivation ℂ A) (a : A) :
+    restrictScalarsReal D a = D.toContinuousLinearMap a :=
+  rfl
+
+/-- The complex first-jet readout agrees with the coefficient readout of the
+real `NCDerivation` obtained from the existing scalar-forgetting adapter. This
+coefficient identity alone does not construct a Lie action or CE differential. -/
+theorem operatorFrechetJet_one_apply_eq_toNCDerivation
+    (D : FrechetOperatorDerivation ℂ A) (x v : A) :
+    operatorFrechetJet 1 (D : A → A) x (fun _ : Fin 1 => v) =
+      FrechetOperatorDerivation.toNCDerivation
+        (restrictScalarsReal D) v := by
+  rw [operatorFrechetJet_one_apply]
+  rfl
+
+end InfoGeometry.Canonical.OperatorFrechetDerivationJet

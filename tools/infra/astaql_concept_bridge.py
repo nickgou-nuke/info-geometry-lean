@@ -50,24 +50,38 @@ def _pattern(terms: tuple[str, ...]) -> str:
 
 def build_query() -> str:
     return """
-LET quantumMatches = (
+LET quantumMatchedCount = LENGTH(
+  FOR d IN @@decl_collection
+    FILTER REGEX_TEST(LOWER(d.name), @quantum_pattern)
+    FILTER @quantum_module_prefix == "" OR
+      STARTS_WITH(LOWER(d.module), LOWER(@quantum_module_prefix))
+    RETURN 1
+)
+LET classicalMatchedCount = LENGTH(
+  FOR d IN @@decl_collection
+    FILTER REGEX_TEST(LOWER(d.name), @classical_pattern)
+    FILTER @classical_module_prefix == "" OR
+      STARTS_WITH(LOWER(d.module), LOWER(@classical_module_prefix))
+    RETURN 1
+)
+LET quantum = (
   FOR d IN @@decl_collection
     FILTER REGEX_TEST(LOWER(d.name), @quantum_pattern)
     FILTER @quantum_module_prefix == "" OR
       STARTS_WITH(LOWER(d.module), LOWER(@quantum_module_prefix))
     SORT d.module, d.name
+    LIMIT @seed_limit
     RETURN d
 )
-LET classicalMatches = (
+LET classical = (
   FOR d IN @@decl_collection
     FILTER REGEX_TEST(LOWER(d.name), @classical_pattern)
     FILTER @classical_module_prefix == "" OR
       STARTS_WITH(LOWER(d.module), LOWER(@classical_module_prefix))
     SORT d.module, d.name
+    LIMIT @seed_limit
     RETURN d
 )
-LET quantum = SLICE(quantumMatches, 0, @seed_limit)
-LET classical = SLICE(classicalMatches, 0, @seed_limit)
 LET matches = (
   FOR q IN quantum
     LET qdeps = (
@@ -126,8 +140,8 @@ LET matches = (
       }
 )
 RETURN {
-  quantumMatchedCount: LENGTH(quantumMatches),
-  classicalMatchedCount: LENGTH(classicalMatches),
+  quantumMatchedCount: quantumMatchedCount,
+  classicalMatchedCount: classicalMatchedCount,
   quantumSelected: quantum[* RETURN {
     id: CURRENT._id, name: CURRENT.name, module: CURRENT.module,
     dagShapeHash: CURRENT.dagShapeHash,

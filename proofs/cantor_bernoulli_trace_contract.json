@@ -55,14 +55,27 @@
       "kind": "theorem",
       "source_path": "lean/InfoGeometry/Canonical/CantorBernoulliDiagTraceBridge.lean",
       "source_sha256": "6c0f4622db638c1990a7a03a550965867c003fe6fb88850e5364a8e178257dc7",
-      "source_line": 29,
-      "source_end_line": 34,
+      "source_line": 38,
+      "source_end_line": 43,
       "source_excerpt": "theorem diagTrace_cylinderIndicator_eq_projectivePrefixFiber_toReal\n    (n : ℕ) (w : BitWord n) :\n    DiagTrace n (cylinderIndicator n w) =\n      ((projectiveLimitMeasure\n          {q : PrefixProjectiveLimit |\n            π n q = w}).toReal : ℂ) := by",
       "lean_statement": "theorem diagTrace_cylinderIndicator_eq_projectivePrefixFiber_toReal (n : ℕ) (w : BitWord n) : DiagTrace n (cylinderIndicator n w) = ((projectiveLimitMeasure {q : PrefixProjectiveLimit | π n q = w}).toReal : ℂ)",
+      "status_assertion": "asserted_proved"
+    },
+    {
+      "qualified_name": "InfoGeometry.Canonical.CantorBernoulliDiagTraceBridge.projectiveLimitMeasure_integral_prefix_eq_DiagTrace",
+      "kind": "theorem",
+      "source_path": "lean/InfoGeometry/Canonical/CantorBernoulliDiagTraceBridge.lean",
+      "source_sha256": "6c0f4622db638c1990a7a03a550965867c003fe6fb88850e5364a8e178257dc7",
+      "source_line": 50,
+      "source_end_line": 52,
+      "source_excerpt": "theorem projectiveLimitMeasure_integral_prefix_eq_DiagTrace\n    (n : ℕ) (f : DiagAlg n) :\n    ∫ q, f (π n q) ∂projectiveLimitMeasure = DiagTrace n f := by",
+      "lean_statement": "theorem projectiveLimitMeasure_integral_prefix_eq_DiagTrace (n : ℕ) (f : DiagAlg n) : ∫ q, f (π n q) ∂projectiveLimitMeasure = DiagTrace n f",
       "status_assertion": "asserted_proved"
     }
   ],
   "imports": [
+    "Mathlib.MeasureTheory.Integral.Bochner.Basic",
+    "Mathlib.MeasureTheory.Integral.Bochner.SumMeasure",
     "InfoGeometry.Canonical.CantorKMSState",
     "InfoGeometry.Canonical.CantorProjectiveBernoulliMeasure",
     "InfoGeometry.Canonical.CantorProjectiveLimit",
@@ -70,7 +83,7 @@
   ],
   "consumers": [
     "InfoGeometry.OperatorAlgebra.CantorBernoulliFiniteMatrixUnitBridge.bitWordUnit_diag_eq_diagTrace_cylinder uses the finite-stage DiagTrace on diagonal matrix-unit readouts.",
-    "The new theorem would identify that finite-stage trace functional with integration against the projective-limit Bernoulli measure for every stage observable, extending the existing prefix-indicator identity without claiming a completed C*-algebra state."
+    "projectiveLimitMeasure_integral_prefix_eq_DiagTrace identifies the finite-stage trace with integration against the projective-limit Bernoulli measure for every stage observable, extending the prefix-indicator identity without claiming a completed C*-algebra state."
   ],
   "smallest_gap": {
     "declaration_name": "InfoGeometry.Canonical.CantorBernoulliDiagTraceBridge.projectiveLimitMeasure_integral_prefix_eq_DiagTrace",
@@ -85,8 +98,8 @@
     "No claim that a source-only GNS declaration absent from the current decls graph is absent from the repository."
   ],
   "discovery_receipt": {
-    "path": "proofs/cantor_bernoulli_trace_discovery.json",
-    "sha256": "69cc0ccc94715b17ed32a90a37c8d8029b2a463a682af9008d9a4cff4a003162",
-    "query": "DiagTrace projectiveLimitMeasure projectiveLimitMeasure_apply_prefix_fiber diagTrace_cylinderIndicator_eq_projectivePrefixFiber_toReal"
+    "path": "proofs/cantor_bernoulli_trace_final_discovery.json",
+    "sha256": "5e52a1dbf66b0371702bc0ec64974243c651df47e232c5313e04117c8ef3f42c",
+    "query": "DiagTrace diagTrace_cylinderIndicator_eq_projectivePrefixFiber_toReal projectiveLimitMeasure projectiveLimitMeasure_apply_prefix_fiber projectiveLimitMeasure_integral_prefix_eq_DiagTrace"
   }
 }

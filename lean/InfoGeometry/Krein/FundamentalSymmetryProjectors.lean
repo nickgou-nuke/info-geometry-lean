@@ -83,6 +83,15 @@ theorem K_plus_add_K_minus
     abel
   rw [hcombine, ← add_smul, hhalf, one_smul]
 
+/-- The two Krein eigensector projectors sum to the identity linear map. -/
+theorem K_plus_add_K_minus_eq_id
+    (J : V →ₗ[ℝ] V)
+    (half : ℝ)
+    (hhalf : half + half = 1) :
+    K_plus half J + K_minus half J = LinearMap.id := by
+  ext x
+  exact K_plus_add_K_minus J half hhalf x
+
 /-- `K_plus` lands in the `+1` eigensector of the fundamental symmetry. -/
 theorem J_K_plus
     (J : V →ₗ[ℝ] V)

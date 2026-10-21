@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic.Ring
@@ -222,50 +228,5 @@ theorem souriau_chiral_sum_unimodular (Λ : Mat2 R) (hΛ : det2 Λ = 1) :
     simp only [Matrix.mul_add, Matrix.add_mul]
   rw [h_add, P_L_add_P_R, Matrix.mul_one, det2_mul, det2_transpose, hΛ]
   ring
-
-/-! ### 6. Master Certificate: Frontier 96 Integration -/
-
-/-- Master certificate verifying the algebraic and geometric consistency
-    of the Soldering Isotropic Souriau Sheet Bridge. -/
-structure SolderingIsotropicSouriauSheetCertificate (R : Type*) [CommRing R] where
-  det_soldering : ∀ (t x y z : R),
-    det2 (solderingMatrix t x y z) = t ^ 2 - x ^ 2 + y ^ 2 - z ^ 2
-  lorentz_invariance : ∀ (Λ X : Mat2 R),
-    det2 Λ = 1 → det2 (Λ * X * Λᵀ) = det2 X
-  soldering_invariant : ∀ (Λ : Mat2 R) (t x y z : R),
-    det2 Λ = 1 → det2 (Λ * solderingMatrix t x y z * Λᵀ) = t ^ 2 - x ^ 2 + y ^ 2 - z ^ 2
-  p_l_idem : P_L * (P_L : Mat2 R) = P_L
-  p_r_idem : P_R * (P_R : Mat2 R) = P_R
-  p_l_p_r_ortho : P_L * (P_R : Mat2 R) = 0
-  p_r_p_l_ortho : P_R * (P_L : Mat2 R) = 0
-  p_l_add_p_r : P_L + (P_R : Mat2 R) = 1
-  det_p_l_zero : det2 (P_L : Mat2 R) = 0
-  det_p_r_zero : det2 (P_R : Mat2 R) = 0
-  spinor_dyad_null : ∀ (l0 l1 lt0 lt1 : R),
-    det2 (spinorDyad l0 l1 lt0 lt1) = 0
-  sheet_l_isotropic : ∀ (Λ : Mat2 R),
-    det2 (souriauOrbitPoint Λ P_L) = 0
-  sheet_r_isotropic : ∀ (Λ : Mat2 R),
-    det2 (souriauOrbitPoint Λ P_R) = 0
-  chiral_sum_unimodular : ∀ (Λ : Mat2 R),
-    det2 Λ = 1 → det2 (souriauOrbitPoint Λ P_L + souriauOrbitPoint Λ P_R) = 1
-
-/-- Master compilation theorem proving that the certificate holds unconditionally. -/
-theorem compile_soldering_isotropic_souriau_sheet_bridge (R : Type*) [CommRing R] :
-    SolderingIsotropicSouriauSheetCertificate R where
-  det_soldering := det2_solderingMatrix
-  lorentz_invariance := lorentz_invariance_minkowski
-  soldering_invariant := soldering_lorentz_invariant
-  p_l_idem := P_L_sq
-  p_r_idem := P_R_sq
-  p_l_p_r_ortho := P_L_mul_P_R
-  p_r_p_l_ortho := P_R_mul_P_L
-  p_l_add_p_r := P_L_add_P_R
-  det_p_l_zero := det2_P_L
-  det_p_r_zero := det2_P_R
-  spinor_dyad_null := det2_spinorDyad
-  sheet_l_isotropic := souriau_sheet_L_isotropic
-  sheet_r_isotropic := souriau_sheet_R_isotropic
-  chiral_sum_unimodular := souriau_chiral_sum_unimodular
 
 end InfoGeometry.Clifford.SolderingIsotropic

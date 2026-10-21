@@ -1,9 +1,16 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Clifford.SolderingIsotropicSouriauSheetBridge
 
 /-!
 # Audit File: SolderingIsotropicSouriauSheetBridgeAudit
 
-This file audits the axiomatic footprint of `compile_soldering_isotropic_souriau_sheet_bridge`
+This file audits the axiomatic footprint of the genuine owner lemmas in
+`SolderingIsotropicSouriauSheetBridge`.
 to ensure 0 sorry, 0 admit, and strictly standard foundational Lean 4 axioms.
 -/
 
@@ -27,6 +34,4 @@ open InfoGeometry.Clifford.SolderingIsotropic
 #print axioms souriau_sheet_L_isotropic
 #print axioms souriau_sheet_R_isotropic
 #print axioms souriau_chiral_sum_unimodular
-#print axioms compile_soldering_isotropic_souriau_sheet_bridge
-
 end InfoGeometry.Clifford.SolderingIsotropic.Audit

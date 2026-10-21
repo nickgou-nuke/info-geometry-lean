@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 
 import InfoGeometry.Canonical.CantorBernoulliFiniteDiagonalTraceEnergy
+import InfoGeometry.Canonical.CantorBernoulliFiniteDiagonalGNSBridge
 import InfoGeometry.Thermo.CantorGibbsModularBridge
 
 #print axioms InfoGeometry.Canonical.AmariBinarySimplexBridge.logistic_eq_half_add_tanh_half
@@ -15,3 +16,6 @@ import InfoGeometry.Thermo.CantorGibbsModularBridge
 #print axioms InfoGeometry.Canonical.CantorBernoulliFiniteDiagonalTraceEnergy.bitWordMatrixTraceFunctional_diagonal
 #print axioms InfoGeometry.Canonical.CantorBernoulliFiniteDiagonalTraceEnergy.bitWordMatrixTraceFunctional_star_mul_self_re_eq
 #print axioms InfoGeometry.Canonical.CantorBernoulliFiniteDiagonalTraceEnergy.diagonalCylinderL2_norm_sq_le_traceEnergy
+#print axioms InfoGeometry.Canonical.CantorBernoulliFiniteDiagonalGNSBridge.gaugeDiagonalPreGNS_norm_le
+#print axioms InfoGeometry.Canonical.CantorBernoulliFiniteDiagonalGNSBridge.gaugeDiagonalPreGNSCLM
+#print axioms InfoGeometry.Canonical.CantorBernoulliFiniteDiagonalGNSBridge.gaugeDiagonalGNSMap_toPreGNS

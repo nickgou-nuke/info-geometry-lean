@@ -120,10 +120,8 @@ theorem mobiusComp_sub_ne_zero
     (hgk : leftGauge T (labels.ζ k) ≠ 0) :
     mobiusComp T labels.ζ i - mobiusComp T labels.ζ k ≠ 0 := by
   change projectiveAction T (labels.ζ i) - projectiveAction T (labels.ζ k) ≠ 0
-  rw [projectiveAction_sub T (labels.ζ i) (labels.ζ k) hgi hgk]
-  exact div_ne_zero
-    (mul_ne_zero T.det_ne_zero (labels.nonzero_den hik))
-    (mul_ne_zero hgi hgk)
+  exact projectiveAction_sub_ne_zero T (labels.ζ i) (labels.ζ k)
+    hgi hgk (labels.nonzero_den hik)
 
 omit [DecidableEq ι] in
 /-- The local flip block transforms covariantly under a nondegenerate Möbius relabeling.

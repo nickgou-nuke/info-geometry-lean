@@ -57,6 +57,17 @@ theorem projectiveAction_sub
   field_simp [hx', hy', hx'', hy'', hxy, hxy'']
   ring_nf
 
+/-- A nondegenerate fractional-linear action preserves separated affine points. -/
+theorem projectiveAction_sub_ne_zero
+    {K : Type*} [Field K] (T : MobiusMap K) (x y : K)
+    (hx : leftGauge T x ≠ 0) (hy : leftGauge T y ≠ 0)
+    (hxy : x - y ≠ 0) :
+    projectiveAction T x - projectiveAction T y ≠ 0 := by
+  rw [projectiveAction_sub T x y hx hy]
+  exact div_ne_zero
+    (mul_ne_zero T.det_ne_zero hxy)
+    (mul_ne_zero hx hy)
+
 /-- The composition of Möbius action with a label map `ζ`. -/
 def mobiusComp {K ι : Type*} [Field K] (T : MobiusMap K) (ζ : ι → K) : ι → K :=
   fun i => projectiveAction T (ζ i)

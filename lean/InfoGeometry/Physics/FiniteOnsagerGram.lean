@@ -138,21 +138,6 @@ theorem onsager_response_skew_part
   rw [hresponse x y, hresponse y x, dotProduct_comm (R *ᵥ y) (R *ᵥ x), hskew']
   ring
 
-/-- Zero production is precisely the kernel of the chosen dissipative factor. -/
-theorem gram_contraction_eq_zero_iff (R : Matrix m n ℝ) (x : n → ℝ) :
-    dotProduct x (Rᵀ *ᵥ (R *ᵥ x)) = 0 ↔ R *ᵥ x = 0 := by
-  rw [gram_contraction]
-  constructor
-  · intro h
-    funext i
-    have hle : ((R *ᵥ x) i) ^ 2 ≤ ∑ j : m, ((R *ᵥ x) j) ^ 2 :=
-      Finset.single_le_sum (fun j _ => sq_nonneg _) (Finset.mem_univ i)
-    have hz : ((R *ᵥ x) i) ^ 2 = 0 :=
-      le_antisymm (by simpa only [h] using hle) (sq_nonneg _)
-    exact sq_eq_zero_iff.mp hz
-  · intro h
-    simp [h]
-
 open InfoGeometry.SuperMetriplectic
 
 /-- The Gram operator induced by `R`, acting on the finite force space `n → ℝ`.
@@ -184,17 +169,5 @@ def gramOnsagerMetricData (R : Matrix m n ℝ) : OnsagerMetricData (n → ℝ) w
   pairing_zero_right := by
     intro x
     simp
-
-theorem gramOnsagerMetricData_quadratic_nonnegative
-    (R : Matrix m n ℝ) (x : n → ℝ) :
-    0 ≤ (gramOnsagerMetricData R).quadratic x := by
-  change 0 ≤ dotProduct x (Rᵀ *ᵥ (R *ᵥ x))
-  exact gram_contraction_nonnegative R x
-
-theorem gramOnsagerMetricData_quadratic_eq_zero_iff
-    (R : Matrix m n ℝ) (x : n → ℝ) :
-    (gramOnsagerMetricData R).quadratic x = 0 ↔ R *ᵥ x = 0 := by
-  change dotProduct x (Rᵀ *ᵥ (R *ᵥ x)) = 0 ↔ R *ᵥ x = 0
-  exact gram_contraction_eq_zero_iff R x
 
 end InfoGeometry.Physics.FiniteOnsagerGram

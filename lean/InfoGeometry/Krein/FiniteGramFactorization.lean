@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Matrix.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
@@ -93,5 +98,40 @@ theorem gramMatrix_quadratic_eq_zero_of_kernel
     (∑ i, ∑ j, x i * gramMatrix B i j * x j) = 0 := by
   rw [gramMatrix_quadratic_eq_sum_sq B x]
   simp [h]
+
+/-- The Gram quadratic vanishes exactly on the kernel of the transpose map. -/
+theorem gramMatrix_quadratic_eq_zero_iff_transpose_mulVec_eq_zero
+    {n m : Type*} [Fintype n] [Fintype m] [DecidableEq m]
+    (B : Matrix n m ℝ) (x : n → ℝ) :
+    (∑ i, ∑ j, x i * gramMatrix B i j * x j) = 0 ↔
+      Bᵀ *ᵥ x = 0 := by
+  rw [gramMatrix_quadratic_eq_sum_sq B x]
+  have hcolumn (k : m) :
+      (Bᵀ *ᵥ x) k = ∑ i, x i * B i k := by
+    simp only [Matrix.mulVec, Matrix.transpose_apply]
+    apply Finset.sum_congr rfl
+    intro i hi
+    exact mul_comm _ _
+  constructor
+  · intro h
+    have hterms : ∀ k : m, (∑ i, x i * B i k) ^ 2 = 0 := by
+      intro k
+      have hzero :=
+        (Finset.sum_eq_zero_iff_of_nonneg
+          (s := Finset.univ)
+          (f := fun j => (∑ i, x i * B i j) ^ 2)
+          (fun j _ => sq_nonneg _)).mp h
+      exact hzero k (Finset.mem_univ k)
+    funext k
+    rw [hcolumn k]
+    exact sq_eq_zero_iff.mp (hterms k)
+  · intro h
+    apply Finset.sum_eq_zero
+    intro k hk
+    have hcolumn_zero : ∑ i, x i * B i k = 0 := by
+      calc
+        ∑ i, x i * B i k = (Bᵀ *ᵥ x) k := (hcolumn k).symm
+        _ = 0 := congrFun h k
+    simp [hcolumn_zero]
 
 end InfoGeometry.Krein.FiniteGramFactorization

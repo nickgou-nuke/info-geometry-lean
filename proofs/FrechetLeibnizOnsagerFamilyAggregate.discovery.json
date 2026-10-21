@@ -1,0 +1,65 @@
+{
+  "authority": "navigation_only",
+  "carriers_found": [
+    {
+      "file": "lean/InfoGeometry/Canonical/CEOneFormNOperatorBridge.lean",
+      "kind": "def",
+      "lean_statement": "noncomputable def finiteCEOperatorForm (n : ℕ) (a : GibbsOperator n) : Op1Form ℝ (realDerivationsLane (GibbsOperator n)).L (GibbsOperator n)",
+      "line": 93,
+      "location": "lean/InfoGeometry/Canonical/CEOneFormNOperatorBridge.lean:93",
+      "name": "finiteCEOperatorForm",
+      "qualified_name": "InfoGeometry.Canonical.CEOneFormNOperatorBridge.finiteCEOperatorForm",
+      "source_end_line": 95,
+      "source_sha256": "ac163a28e26eb8814593a3528aaeaa620a49d2d5a70f2e214330bd603cebe401"
+    }
+  ],
+  "dag_context": null,
+  "deduplication_warnings": [
+    "Query 'finiteCEOperatorForm centeredCEBKMForm_nonneg centeredBKMRealCovariance_self finiteGibbsCEFamily_pairwise_hessian_eq_centeredBKM finiteGibbsCEFamily_aggregateBKM_quadratic_nonneg' matches existing fundamental type 'finiteCEOperatorForm' in lean/InfoGeometry/Canonical/CEOneFormNOperatorBridge.lean; reuse canonical carrier instead of introducing redundant type wrapper."
+  ],
+  "graph_is_proof_authority": false,
+  "lemmas_found": [
+    {
+      "file": "lean/InfoGeometry/Canonical/CEBKMOnsagerGibbsIntegration.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem finiteGibbsCEFamily_pairwise_hessian_eq_centeredBKM {m n : ℕ} (H : GibbsOperator n) (a : Fin m → GibbsOperator n) (hH : IsSelfAdjoint H) (hZ : 0 < gibbsPartitionReal H) (D E : FrechetOperatorDerivation ℂ (GibbsOperator n)) (i j : Fin m) (hD : IsSelfAdjoint (component (K := realDerivationsLane (GibbsOperator n)) m (fun k => exteriorDerivativeZero (realDerivationsLane (GibbsOperator n)) (a k)) i (finiteCEFrechetDirection D))) : (secondFDerivLogPartitionReadout H (component (K := realDerivationsLane (GibbsOperator n)) m (fun k => exteriorDerivativeZero (realDerivationsLane (GibbsOperator n)) (a k)) i (finiteCEFrechetDirection D)) (component (K := realDerivationsLane (GibbsOperator n)) m (fun k => exteriorDerivativeZero (realDerivationsLane (GibbsOperator n)) (a k)) j (finiteCEFrechetDirection E))).re = centeredBKMOperatorBilinForm (faithfulGibbsDensity H hH hZ) (continuous_faithfulGibbsDensity_rpow H hH hZ) (component (K := realDerivationsLane (GibbsOperator n)) m (fun k => exteriorDerivativeZero (realDerivationsLane (GibbsOperator n)) (a k)) i) (component (K := realDerivationsLane (GibbsOperator n)) m (fun k => exteriorDerivativeZero (realDerivationsLane (GibbsOperator n)) (a k)) j) (finiteCEFrechetDirection D) (finiteCEFrechetDirection E)",
+      "line": 65,
+      "location": "lean/InfoGeometry/Canonical/CEBKMOnsagerGibbsIntegration.lean:65",
+      "name": "finiteGibbsCEFamily_pairwise_hessian_eq_centeredBKM",
+      "qualified_name": "InfoGeometry.Canonical.CEBKMOnsagerGibbsIntegration.finiteGibbsCEFamily_pairwise_hessian_eq_centeredBKM",
+      "source_end_line": 93,
+      "source_sha256": "c9ab1ffa78d637f18fd927414aeecdc99f8d95b8192cdb6f9595496c81493815"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/CEBKMOnsagerSystem.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem centeredCEBKMForm_nonneg (D : SouriauOnsagerBKM.FaithfulDensityOperator n) (hpow : Continuous D.rpow) (a : GibbsOperator n) (x : Carrier n) : 0 ≤ centeredCEBKMForm D hpow a x x",
+      "line": 74,
+      "location": "lean/InfoGeometry/Canonical/CEBKMOnsagerSystem.lean:74",
+      "name": "centeredCEBKMForm_nonneg",
+      "qualified_name": "InfoGeometry.Canonical.CEBKMOnsagerSystem.centeredCEBKMForm_nonneg",
+      "source_end_line": 77,
+      "source_sha256": "92c3d6844a5b9c630d65e1a601ea8a5712ba4487bc4ce9884a18fd6f44da6758"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/NoncommutativeGibbsCenteredBKMCovariance.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem centeredBKMRealCovariance_self {n : ℕ} (D : FaithfulDensityOperator n) (hpow : Continuous D.rpow) (A : Operator n) : centeredBKMRealCovariance D hpow A A = D.bkmRealBilinForm hpow (centeredStatistic D A) (centeredStatistic D A)",
+      "line": 158,
+      "location": "lean/InfoGeometry/Canonical/NoncommutativeGibbsCenteredBKMCovariance.lean:158",
+      "name": "centeredBKMRealCovariance_self",
+      "qualified_name": "InfoGeometry.Canonical.NoncommutativeGibbsCenteredBKMCovariance.centeredBKMRealCovariance_self",
+      "source_end_line": 162,
+      "source_sha256": "75ade7e755a60c612103b3bcf4efe9e56e671ae0bd812cce49bbfa918ec7ec49"
+    }
+  ],
+  "local_dag_context": null,
+  "query": "finiteCEOperatorForm centeredCEBKMForm_nonneg centeredBKMRealCovariance_self finiteGibbsCEFamily_pairwise_hessian_eq_centeredBKM finiteGibbsCEFamily_aggregateBKM_quadratic_nonneg",
+  "recommended_imports": [
+    "InfoGeometry.Canonical.CEBKMOnsagerGibbsIntegration",
+    "InfoGeometry.Canonical.CEBKMOnsagerSystem",
+    "InfoGeometry.Canonical.CEOneFormNOperatorBridge",
+    "InfoGeometry.Canonical.NoncommutativeGibbsCenteredBKMCovariance"
+  ],
+  "schema": "info_geometry.opengauss.discovery_report.v1"
+}

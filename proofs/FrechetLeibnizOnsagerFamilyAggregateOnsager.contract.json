@@ -1,0 +1,80 @@
+{
+  "schema": "info_geometry.opengauss.ground_truth_theorem_contract.v1",
+  "contract_id": "frechet-leibniz-onsager-family-aggregate-onsager-v1",
+  "semantic_status": "human_asserted_not_kernel_verified",
+  "claim": "For a finite Gibbs CE family, real coefficients, and one Fréchet-induced direction, the coefficient-weighted pairwise centered-BKM quadratic equals both the dissipative form of the finite Gibbs CE Onsager system for the weighted aggregate observable and, under self-adjointness of that aggregate CE readout, its real Gibbs log-partition Hessian. The same quadratic is nonnegative.",
+  "carrier": {
+    "type": "Finite family Fin m → GibbsOperator n, actual CE one-form readouts on Carrier n = (realDerivationsLane (GibbsOperator n)).L, and the existing finite Gibbs CE OnsagerCasimirSystem",
+    "operations": [
+      "real coefficient-weighted sum of Gibbs observables and CE readouts",
+      "pairwise centered finite BKM covariance quadratic",
+      "finite Gibbs CE Onsager dissipative bilinear form",
+      "real second Fréchet variation of the additive Gibbs log-partition"
+    ],
+    "conventions": [
+      "the aggregate observable is ∑ i, c i • a i",
+      "the pairwise quadratic uses ∑ i, c i • ∑ j, c j • Cov_BKM(a_i(D), a_j(D))",
+      "the self-adjointness assumption is on the actual aggregate CE readout at the chosen direction",
+      "this is finite-dimensional and makes no cross-index single-observable identification beyond the proved weighted aggregate"
+    ]
+  },
+  "owner_declarations": [
+    {
+      "qualified_name": "InfoGeometry.Canonical.CEBKMOnsagerGibbsIntegration.finiteGibbsCEFamily_pairwise_quadratic_eq_aggregateBKM",
+      "kind": "theorem",
+      "source_path": "lean/InfoGeometry/Canonical/CEBKMOnsagerGibbsIntegration.lean",
+      "source_sha256": "19a61676e09fa3e939587eef8c0c93d0547297a7a10b65ead03a1312a1e475d3",
+      "source_line": 260,
+      "source_end_line": 279,
+      "source_excerpt": "theorem finiteGibbsCEFamily_pairwise_quadratic_eq_aggregateBKM\n    {m n : ℕ} (H : GibbsOperator n) (a : Fin m → GibbsOperator n)\n    (c : Fin m → ℝ) (D : FrechetOperatorDerivation ℂ (GibbsOperator n))\n    (hH : IsSelfAdjoint H) (hZ : 0 < gibbsPartitionReal H) :\n    (∑ i, c i • ∑ j, c j •\n      centeredBKMRealCovariance (faithfulGibbsDensity H hH hZ)\n        (continuous_faithfulGibbsDensity_rpow H hH hZ)\n        (finiteCEOperatorForm n (a i) (finiteCEFrechetDirection D))\n        (finiteCEOperatorForm n (a j) (finiteCEFrechetDirection D))) =\n      centeredBKMRealCovariance (faithfulGibbsDensity H hH hZ)\n        (continuous_faithfulGibbsDensity_rpow H hH hZ)\n        (∑ i, c i • finiteCEOperatorForm n (a i)\n          (finiteCEFrechetDirection D))\n        (∑ i, c i • finiteCEOperatorForm n (a i)\n          (finiteCEFrechetDirection D)) ∧\n    0 ≤ ∑ i, c i • ∑ j, c j •\n      centeredBKMRealCovariance (faithfulGibbsDensity H hH hZ)\n        (continuous_faithfulGibbsDensity_rpow H hH hZ)\n        (finiteCEOperatorForm n (a i) (finiteCEFrechetDirection D))\n        (finiteCEOperatorForm n (a j) (finiteCEFrechetDirection D)) := by",
+      "lean_statement": "theorem finiteGibbsCEFamily_pairwise_quadratic_eq_aggregateBKM {m n : ℕ} (H : GibbsOperator n) (a : Fin m → GibbsOperator n) (c : Fin m → ℝ) (D : FrechetOperatorDerivation ℂ (GibbsOperator n)) (hH : IsSelfAdjoint H) (hZ : 0 < gibbsPartitionReal H) : (∑ i, c i • ∑ j, c j • centeredBKMRealCovariance (faithfulGibbsDensity H hH hZ) (continuous_faithfulGibbsDensity_rpow H hH hZ) (finiteCEOperatorForm n (a i) (finiteCEFrechetDirection D)) (finiteCEOperatorForm n (a j) (finiteCEFrechetDirection D))) = centeredBKMRealCovariance (faithfulGibbsDensity H hH hZ) (continuous_faithfulGibbsDensity_rpow H hH hZ) (∑ i, c i • finiteCEOperatorForm n (a i) (finiteCEFrechetDirection D)) (∑ i, c i • finiteCEOperatorForm n (a i) (finiteCEFrechetDirection D)) ∧ 0 ≤ ∑ i, c i • ∑ j, c j • centeredBKMRealCovariance (faithfulGibbsDensity H hH hZ) (continuous_faithfulGibbsDensity_rpow H hH hZ) (finiteCEOperatorForm n (a i) (finiteCEFrechetDirection D)) (finiteCEOperatorForm n (a j) (finiteCEFrechetDirection D))",
+      "status_assertion": "asserted_proved"
+    },
+    {
+      "qualified_name": "InfoGeometry.Canonical.CEBKMOnsagerGibbsIntegration.finiteGibbsCEOnsagerSystem",
+      "kind": "def",
+      "source_path": "lean/InfoGeometry/Canonical/CEBKMOnsagerGibbsIntegration.lean",
+      "source_sha256": "19a61676e09fa3e939587eef8c0c93d0547297a7a10b65ead03a1312a1e475d3",
+      "source_line": 363,
+      "source_end_line": 366,
+      "source_excerpt": "def finiteGibbsCEOnsagerSystem\n    (H : GibbsOperator n) (hH : IsSelfAdjoint H)\n    (hZ : 0 < gibbsPartitionReal H) (a Q : GibbsOperator n) :\n    OnsagerCasimirSystem (Carrier n) :=",
+      "lean_statement": "def finiteGibbsCEOnsagerSystem (H : GibbsOperator n) (hH : IsSelfAdjoint H) (hZ : 0 < gibbsPartitionReal H) (a Q : GibbsOperator n) : OnsagerCasimirSystem (Carrier n)",
+      "status_assertion": "definition"
+    },
+    {
+      "qualified_name": "InfoGeometry.Canonical.CEBKMOnsagerGibbsIntegration.finiteGibbsCEOnsagerSystem_dissipative_eq_logPartitionHessian",
+      "kind": "theorem",
+      "source_path": "lean/InfoGeometry/Canonical/CEBKMOnsagerGibbsIntegration.lean",
+      "source_sha256": "19a61676e09fa3e939587eef8c0c93d0547297a7a10b65ead03a1312a1e475d3",
+      "source_line": 374,
+      "source_end_line": 384,
+      "source_excerpt": "theorem finiteGibbsCEOnsagerSystem_dissipative_eq_logPartitionHessian\n    (H a Q : GibbsOperator n) (hH : IsSelfAdjoint H)\n    (hZ : 0 < gibbsPartitionReal H)\n    (D E : FrechetOperatorDerivation ℂ (GibbsOperator n))\n    (hD : IsSelfAdjoint\n      (finiteCEOperatorForm n a (finiteCEFrechetDirection D))) :\n    (secondFDerivLogPartitionReadout H\n      (finiteCEOperatorForm n a (finiteCEFrechetDirection D))\n      (finiteCEOperatorForm n a (finiteCEFrechetDirection E))).re =\n    (finiteGibbsCEOnsagerSystem H hH hZ a Q).dissipative\n      (finiteCEFrechetDirection D) (finiteCEFrechetDirection E) := by",
+      "lean_statement": "theorem finiteGibbsCEOnsagerSystem_dissipative_eq_logPartitionHessian (H a Q : GibbsOperator n) (hH : IsSelfAdjoint H) (hZ : 0 < gibbsPartitionReal H) (D E : FrechetOperatorDerivation ℂ (GibbsOperator n)) (hD : IsSelfAdjoint (finiteCEOperatorForm n a (finiteCEFrechetDirection D))) : (secondFDerivLogPartitionReadout H (finiteCEOperatorForm n a (finiteCEFrechetDirection D)) (finiteCEOperatorForm n a (finiteCEFrechetDirection E))).re = (finiteGibbsCEOnsagerSystem H hH hZ a Q).dissipative (finiteCEFrechetDirection D) (finiteCEFrechetDirection E)",
+      "status_assertion": "asserted_proved"
+    }
+  ],
+  "imports": [
+    "InfoGeometry.Canonical.CEBKMOnsagerGibbsIntegration",
+    "InfoGeometry.Canonical.CEBKMOnsagerSystem",
+    "InfoGeometry.Canonical.CEOneFormNOperatorBridge"
+  ],
+  "consumers": [
+    "finiteGibbsCEFamily_pairwise_quadratic_eq_aggregateOnsagerDissipation_hessian"
+  ],
+  "smallest_gap": {
+    "declaration_name": "finiteGibbsCEFamily_pairwise_quadratic_eq_aggregateOnsagerDissipation_hessian",
+    "lean_signature": "{m n : ℕ} (H : GibbsOperator n) (a : Fin m → GibbsOperator n) (c : Fin m → ℝ) (Q : GibbsOperator n) (D : FrechetOperatorDerivation ℂ (GibbsOperator n)) (hH : IsSelfAdjoint H) (hZ : 0 < gibbsPartitionReal H) (hD : IsSelfAdjoint (finiteCEOperatorForm n (∑ i, c i • a i) (finiteCEFrechetDirection D))) : (∑ i, c i • ∑ j, c j • centeredBKMRealCovariance (faithfulGibbsDensity H hH hZ) (continuous_faithfulGibbsDensity_rpow H hH hZ) (finiteCEOperatorForm n (a i) (finiteCEFrechetDirection D)) (finiteCEOperatorForm n (a j) (finiteCEFrechetDirection D)) = (finiteGibbsCEOnsagerSystem H hH hZ (∑ i, c i • a i) Q).dissipative (finiteCEFrechetDirection D) (finiteCEFrechetDirection D)) ∧ (∑ i, c i • ∑ j, c j • centeredBKMRealCovariance (faithfulGibbsDensity H hH hZ) (continuous_faithfulGibbsDensity_rpow H hH hZ) (finiteCEOperatorForm n (a i) (finiteCEFrechetDirection D)) (finiteCEOperatorForm n (a j) (finiteCEFrechetDirection D)) = (secondFDerivLogPartitionReadout H (finiteCEOperatorForm n (∑ i, c i • a i) (finiteCEFrechetDirection D)) (finiteCEOperatorForm n (∑ i, c i • a i) (finiteCEFrechetDirection D))).re) ∧ 0 ≤ ∑ i, c i • ∑ j, c j • centeredBKMRealCovariance (faithfulGibbsDensity H hH hZ) (continuous_faithfulGibbsDensity_rpow H hH hZ) (finiteCEOperatorForm n (a i) (finiteCEFrechetDirection D)) (finiteCEOperatorForm n (a j) (finiteCEFrechetDirection D))",
+    "pantograph_expression": "(pairwise quadratic = aggregate Gibbs CE Onsager dissipation) ∧ (pairwise quadratic = aggregate Gibbs log-partition Hessian) ∧ (0 ≤ pairwise quadratic)",
+    "description": "Reuse the proved pairwise BKM expansion, identify the aggregate readout with the CE differential of the weighted observable by a full finite-sum linearity theorem, and apply the existing Gibbs Onsager/Hessian identity under self-adjointness of that aggregate readout."
+  },
+  "out_of_scope": [
+    "Off-diagonal family-index Hessian identification with a single-observable Onsager system",
+    "Time-reversal parity reciprocity or nonvanishing curvature",
+    "Infinite-dimensional or universal colimit Gibbs/Onsager results"
+  ],
+  "discovery_receipt": {
+    "path": "proofs/FrechetLeibnizOnsagerFamilyAggregateOnsager.discovery.json",
+    "sha256": "1f3f497fa2ab27fba49759fb6d7d107905211274188ac92e63e86f21d425780d",
+    "query": "finiteCEOperatorForm exteriorDerivativeZero centeredCEBKMForm_apply finiteGibbsCEFamily_pairwise_quadratic_eq_aggregateBKM finiteGibbsCEOnsagerSystem finiteGibbsCEOnsagerSystem_dissipative_eq_logPartitionHessian finiteGibbsCEFamily_pairwise_quadratic_eq_aggregateOnsagerDissipation_hessian"
+  }
+}

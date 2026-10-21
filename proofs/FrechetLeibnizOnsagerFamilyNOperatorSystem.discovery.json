@@ -1,0 +1,97 @@
+{
+  "authority": "navigation_only",
+  "carriers_found": [
+    {
+      "file": "lean/InfoGeometry/Canonical/CEOneFormNOperatorBridge.lean",
+      "kind": "def",
+      "lean_statement": "def ofCEFamily (n : ℕ) (ω : Fin n → OneForm K) : NOperatorForm n (Point := Unit) (Tangent := K.L) (Value := A)",
+      "line": 41,
+      "location": "lean/InfoGeometry/Canonical/CEOneFormNOperatorBridge.lean:41",
+      "name": "ofCEFamily",
+      "qualified_name": "InfoGeometry.Canonical.CEOneFormNOperatorBridge.ofCEFamily",
+      "source_end_line": 42,
+      "source_sha256": "ac163a28e26eb8814593a3528aaeaa620a49d2d5a70f2e214330bd603cebe401"
+    }
+  ],
+  "dag_context": null,
+  "deduplication_warnings": [
+    "Query 'ofCEFamily finiteGibbsCEFamily_weightedReadout_eq finiteGibbsCEFamily_pairwise_quadratic_eq_aggregateBKM secondFDeriv_logPartition_apply_eq_centeredBKM' matches existing fundamental type 'ofCEFamily' in lean/InfoGeometry/Canonical/CEOneFormNOperatorBridge.lean; reuse canonical carrier instead of introducing redundant type wrapper."
+  ],
+  "graph_is_proof_authority": false,
+  "lemmas_found": [
+    {
+      "file": "lean/InfoGeometry/Canonical/NoncommutativeGibbsBKMHessianBridge.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem secondFDeriv_logPartition_apply_eq_centeredBKM {n : ℕ} (H : Operator n) (hH : IsSelfAdjoint H) (hZ : 0 < gibbsPartitionReal H) (A B : Operator n) (hA : IsSelfAdjoint A) : (secondFDerivLogPartitionReadout H A B).re = centeredBKMRealCovariance (faithfulGibbsDensity H hH hZ) (continuous_faithfulGibbsDensity_rpow H hH hZ) A B",
+      "line": 146,
+      "location": "lean/InfoGeometry/Canonical/NoncommutativeGibbsBKMHessianBridge.lean:146",
+      "name": "secondFDeriv_logPartition_apply_eq_centeredBKM",
+      "qualified_name": "InfoGeometry.Canonical.NoncommutativeGibbsBKMHessianBridge.secondFDeriv_logPartition_apply_eq_centeredBKM",
+      "source_end_line": 154,
+      "source_sha256": "f959a9ea6848796a85e1e97c0e344864f115397f1e9532c5a8b9beb5ffd0087e"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/CEBKMOnsagerGibbsIntegration.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem finiteGibbsCEFamily_weightedReadout_eq {m n : ℕ} (a : Fin m → GibbsOperator n) (c : Fin m → ℝ) (D : FrechetOperatorDerivation ℂ (GibbsOperator n)) : (∑ i, c i • finiteCEOperatorForm n (a i) (finiteCEFrechetDirection D)) = finiteCEOperatorForm n (∑ i, c i • a i) (finiteCEFrechetDirection D)",
+      "line": 216,
+      "location": "lean/InfoGeometry/Canonical/CEBKMOnsagerGibbsIntegration.lean:216",
+      "name": "finiteGibbsCEFamily_weightedReadout_eq",
+      "qualified_name": "InfoGeometry.Canonical.CEBKMOnsagerGibbsIntegration.finiteGibbsCEFamily_weightedReadout_eq",
+      "source_end_line": 222,
+      "source_sha256": "19a61676e09fa3e939587eef8c0c93d0547297a7a10b65ead03a1312a1e475d3"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/CEBKMOnsagerGibbsIntegration.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem finiteGibbsCEFamily_pairwise_quadratic_eq_aggregateBKM {m n : ℕ} (H : GibbsOperator n) (a : Fin m → GibbsOperator n) (c : Fin m → ℝ) (D : FrechetOperatorDerivation ℂ (GibbsOperator n)) (hH : IsSelfAdjoint H) (hZ : 0 < gibbsPartitionReal H) : (∑ i, c i • ∑ j, c j • centeredBKMRealCovariance (faithfulGibbsDensity H hH hZ) (continuous_faithfulGibbsDensity_rpow H hH hZ) (finiteCEOperatorForm n (a i) (finiteCEFrechetDirection D)) (finiteCEOperatorForm n (a j) (finiteCEFrechetDirection D))) = centeredBKMRealCovariance (faithfulGibbsDensity H hH hZ) (continuous_faithfulGibbsDensity_rpow H hH hZ) (∑ i, c i • finiteCEOperatorForm n (a i) (finiteCEFrechetDirection D)) (∑ i, c i • finiteCEOperatorForm n (a i) (finiteCEFrechetDirection D)) ∧ 0 ≤ ∑ i, c i • ∑ j, c j • centeredBKMRealCovariance (faithfulGibbsDensity H hH hZ) (continuous_faithfulGibbsDensity_rpow H hH hZ) (finiteCEOperatorForm n (a i) (finiteCEFrechetDirection D)) (finiteCEOperatorForm n (a j) (finiteCEFrechetDirection D))",
+      "line": 260,
+      "location": "lean/InfoGeometry/Canonical/CEBKMOnsagerGibbsIntegration.lean:260",
+      "name": "finiteGibbsCEFamily_pairwise_quadratic_eq_aggregateBKM",
+      "qualified_name": "InfoGeometry.Canonical.CEBKMOnsagerGibbsIntegration.finiteGibbsCEFamily_pairwise_quadratic_eq_aggregateBKM",
+      "source_end_line": 279,
+      "source_sha256": "19a61676e09fa3e939587eef8c0c93d0547297a7a10b65ead03a1312a1e475d3"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/CEBKMOnsagerGibbsIntegration.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem finiteGibbsCEOnsagerSystem_diagonal_eq_logPartitionHessian (H a Q : GibbsOperator n) (hH : IsSelfAdjoint H) (hZ : 0 < gibbsPartitionReal H) (D : FrechetOperatorDerivation ℂ (GibbsOperator n)) (hD : IsSelfAdjoint (finiteCEOperatorForm n a (finiteCEFrechetDirection D))) : (finiteGibbsCEOnsagerSystem H hH hZ a Q).totalGenerator (finiteCEFrechetDirection D) (finiteCEFrechetDirection D) = (secondFDerivLogPartitionReadout H (finiteCEOperatorForm n a (finiteCEFrechetDirection D)) (finiteCEOperatorForm n a (finiteCEFrechetDirection D))).re",
+      "line": 401,
+      "location": "lean/InfoGeometry/Canonical/CEBKMOnsagerGibbsIntegration.lean:401",
+      "name": "finiteGibbsCEOnsagerSystem_diagonal_eq_logPartitionHessian",
+      "qualified_name": "InfoGeometry.Canonical.CEBKMOnsagerGibbsIntegration.finiteGibbsCEOnsagerSystem_diagonal_eq_logPartitionHessian",
+      "source_end_line": 411,
+      "source_sha256": "19a61676e09fa3e939587eef8c0c93d0547297a7a10b65ead03a1312a1e475d3"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/CEBKMOnsagerGibbsIntegration.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem finiteGibbsCEOnsagerSystem_diagonal_logPartitionHessian_nonneg (H a Q : GibbsOperator n) (hH : IsSelfAdjoint H) (hZ : 0 < gibbsPartitionReal H) (D : FrechetOperatorDerivation ℂ (GibbsOperator n)) (hD : IsSelfAdjoint (finiteCEOperatorForm n a (finiteCEFrechetDirection D))) : 0 ≤ (secondFDerivLogPartitionReadout H (finiteCEOperatorForm n a (finiteCEFrechetDirection D)) (finiteCEOperatorForm n a (finiteCEFrechetDirection D))).re",
+      "line": 418,
+      "location": "lean/InfoGeometry/Canonical/CEBKMOnsagerGibbsIntegration.lean:418",
+      "name": "finiteGibbsCEOnsagerSystem_diagonal_logPartitionHessian_nonneg",
+      "qualified_name": "InfoGeometry.Canonical.CEBKMOnsagerGibbsIntegration.finiteGibbsCEOnsagerSystem_diagonal_logPartitionHessian_nonneg",
+      "source_end_line": 426,
+      "source_sha256": "19a61676e09fa3e939587eef8c0c93d0547297a7a10b65ead03a1312a1e475d3"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/CEBKMOnsagerGibbsIntegration.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem finiteGibbsCEFamily_pairwise_quadratic_eq_aggregateOnsagerDissipation_hessian {m n : ℕ} (H : GibbsOperator n) (a : Fin m → GibbsOperator n) (c : Fin m → ℝ) (Q : GibbsOperator n) (D : FrechetOperatorDerivation ℂ (GibbsOperator n)) (hH : IsSelfAdjoint H) (hZ : 0 < gibbsPartitionReal H) (hD : IsSelfAdjoint (finiteCEOperatorForm n (∑ i, c i • a i) (finiteCEFrechetDirection D))) : (∑ i, c i • ∑ j, c j • centeredBKMRealCovariance (faithfulGibbsDensity H hH hZ) (continuous_faithfulGibbsDensity_rpow H hH hZ) (finiteCEOperatorForm n (a i) (finiteCEFrechetDirection D)) (finiteCEOperatorForm n (a j) (finiteCEFrechetDirection D))) = (finiteGibbsCEOnsagerSystem H hH hZ (∑ i, c i • a i) Q).dissipative (finiteCEFrechetDirection D) (finiteCEFrechetDirection D) ∧ (∑ i, c i • ∑ j, c j • centeredBKMRealCovariance (faithfulGibbsDensity H hH hZ) (continuous_faithfulGibbsDensity_rpow H hH hZ) (finiteCEOperatorForm n (a i) (finiteCEFrechetDirection D)) (finiteCEOperatorForm n (a j) (finiteCEFrechetDirection D))) = (secondFDerivLogPartitionReadout H (finiteCEOperatorForm n (∑ i, c i • a i) (finiteCEFrechetDirection D)) (finiteCEOperatorForm n (∑ i, c i • a i) (finiteCEFrechetDirection D))).re ∧ 0 ≤ ∑ i, c i • ∑ j, c j • centeredBKMRealCovariance (faithfulGibbsDensity H hH hZ) (continuous_faithfulGibbsDensity_rpow H hH hZ) (finiteCEOperatorForm n (a i) (finiteCEFrechetDirection D)) (finiteCEOperatorForm n (a j) (finiteCEFrechetDirection D))",
+      "line": 436,
+      "location": "lean/InfoGeometry/Canonical/CEBKMOnsagerGibbsIntegration.lean:436",
+      "name": "finiteGibbsCEFamily_pairwise_quadratic_eq_aggregateOnsagerDissipation_hessian",
+      "qualified_name": "InfoGeometry.Canonical.CEBKMOnsagerGibbsIntegration.finiteGibbsCEFamily_pairwise_quadratic_eq_aggregateOnsagerDissipation_hessian",
+      "source_end_line": 465,
+      "source_sha256": "19a61676e09fa3e939587eef8c0c93d0547297a7a10b65ead03a1312a1e475d3"
+    }
+  ],
+  "local_dag_context": null,
+  "query": "ofCEFamily finiteGibbsCEFamily_weightedReadout_eq finiteGibbsCEFamily_pairwise_quadratic_eq_aggregateBKM secondFDeriv_logPartition_apply_eq_centeredBKM",
+  "recommended_imports": [
+    "InfoGeometry.Canonical.CEBKMOnsagerGibbsIntegration",
+    "InfoGeometry.Canonical.CEOneFormNOperatorBridge",
+    "InfoGeometry.Canonical.NoncommutativeGibbsBKMHessianBridge"
+  ],
+  "schema": "info_geometry.opengauss.discovery_report.v1"
+}

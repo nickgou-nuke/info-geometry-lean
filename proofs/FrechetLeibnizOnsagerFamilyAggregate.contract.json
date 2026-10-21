@@ -1,0 +1,68 @@
+{
+  "schema": "info_geometry.opengauss.ground_truth_theorem_contract.v1",
+  "contract_id": "frechet-leibniz-onsager-family-aggregate-v1",
+  "semantic_status": "human_asserted_not_kernel_verified",
+  "claim": "For a finite family of Gibbs operators and real coefficients, the centered finite BKM self-covariance of the weighted sum of the family CE one-form readouts, evaluated on one Fréchet-induced derivation direction, is nonnegative under the finite Gibbs normalization hypotheses.",
+  "carrier": {
+    "type": "FiniteOperatorAlgebra n and Carrier n = (realDerivationsLane (GibbsOperator n)).L; the family is Fin m → GibbsOperator n and each CE readout is the existing Op1Form ℝ Carrier (GibbsOperator n)",
+    "operations": [
+      "finite real linear combination of operator-valued CE one-form readouts",
+      "centered finite BKM covariance",
+      "Fréchet derivation direction induced by the existing derivation-to-CE map"
+    ],
+    "conventions": [
+      "the weighted observable is the operator sum ∑ i, c i • finiteCEOperatorForm n (a i) (finiteCEFrechetDirection D)",
+      "the conclusion is the real centered BKM quadratic form of that exact summed operator",
+      "no identification with an off-diagonal single-observable Onsager system is asserted",
+      "no infinite-dimensional or universal colimit claim is asserted"
+    ]
+  },
+  "owner_declarations": [
+    {
+      "qualified_name": "InfoGeometry.Canonical.CEOneFormNOperatorBridge.finiteCEOperatorForm",
+      "kind": "def",
+      "source_path": "lean/InfoGeometry/Canonical/CEOneFormNOperatorBridge.lean",
+      "source_sha256": "ac163a28e26eb8814593a3528aaeaa620a49d2d5a70f2e214330bd603cebe401",
+      "source_line": 93,
+      "source_end_line": 95,
+      "source_excerpt": "noncomputable def finiteCEOperatorForm (n : ℕ) (a : GibbsOperator n) :\n    Op1Form ℝ (realDerivationsLane (GibbsOperator n)).L\n      (GibbsOperator n) :=",
+      "lean_statement": "noncomputable def finiteCEOperatorForm (n : ℕ) (a : GibbsOperator n) : Op1Form ℝ (realDerivationsLane (GibbsOperator n)).L (GibbsOperator n)",
+      "status_assertion": "definition"
+    },
+    {
+      "qualified_name": "InfoGeometry.Canonical.CEBKMOnsagerSystem.centeredCEBKMForm_nonneg",
+      "kind": "theorem",
+      "source_path": "lean/InfoGeometry/Canonical/CEBKMOnsagerSystem.lean",
+      "source_sha256": "92c3d6844a5b9c630d65e1a601ea8a5712ba4487bc4ce9884a18fd6f44da6758",
+      "source_line": 74,
+      "source_end_line": 77,
+      "source_excerpt": "theorem centeredCEBKMForm_nonneg\n    (D : SouriauOnsagerBKM.FaithfulDensityOperator n)\n    (hpow : Continuous D.rpow) (a : GibbsOperator n) (x : Carrier n) :\n    0 ≤ centeredCEBKMForm D hpow a x x := by",
+      "lean_statement": "theorem centeredCEBKMForm_nonneg (D : SouriauOnsagerBKM.FaithfulDensityOperator n) (hpow : Continuous D.rpow) (a : GibbsOperator n) (x : Carrier n) : 0 ≤ centeredCEBKMForm D hpow a x x",
+      "status_assertion": "asserted_proved"
+    }
+  ],
+  "imports": [
+    "InfoGeometry.Canonical.CEOneFormNOperatorBridge",
+    "InfoGeometry.Canonical.CEBKMOnsagerSystem"
+  ],
+  "consumers": [
+    "finiteGibbsCEFamily_aggregateBKM_quadratic_nonneg"
+  ],
+  "smallest_gap": {
+    "declaration_name": "finiteGibbsCEFamily_aggregateBKM_quadratic_nonneg",
+    "lean_signature": "{m n : ℕ} (H : GibbsOperator n) (a : Fin m → GibbsOperator n) (c : Fin m → ℝ) (D : FrechetOperatorDerivation ℂ (GibbsOperator n)) (hH : IsSelfAdjoint H) (hZ : 0 < gibbsPartitionReal H) : 0 ≤ centeredBKMRealCovariance (faithfulGibbsDensity H hH hZ) (continuous_faithfulGibbsDensity_rpow H hH hZ) (∑ i, c i • finiteCEOperatorForm n (a i) (finiteCEFrechetDirection D)) (∑ i, c i • finiteCEOperatorForm n (a i) (finiteCEFrechetDirection D))",
+    "pantograph_expression": "0 ≤ centeredBKMRealCovariance (faithfulGibbsDensity H hH hZ) (continuous_faithfulGibbsDensity_rpow H hH hZ) (∑ i, c i • finiteCEOperatorForm n (a i) (finiteCEFrechetDirection D)) (∑ i, c i • finiteCEOperatorForm n (a i) (finiteCEFrechetDirection D))",
+    "description": "Apply the already proved finite BKM positivity to the actual operator obtained by summing the weighted CE one-form readouts. This closes positivity of the aggregate quadratic response without asserting a new Onsager-system identification."
+  },
+  "out_of_scope": [
+    "Expansion into an explicit double sum of pairwise family Hessians",
+    "Identification of off-diagonal family response with a single-observable Onsager system",
+    "Infinite-dimensional Gibbs/Onsager results",
+    "Construction of a universal colimit functional"
+  ],
+  "discovery_receipt": {
+    "path": "proofs/FrechetLeibnizOnsagerFamilyAggregate.discovery.json",
+    "sha256": "0fb9229b6281be1d57998399c7a5ef0e1885fcbeda00782d0b91367593def0fb",
+    "query": "finiteCEOperatorForm centeredCEBKMForm_nonneg centeredBKMRealCovariance_self finiteGibbsCEFamily_pairwise_hessian_eq_centeredBKM finiteGibbsCEFamily_aggregateBKM_quadratic_nonneg"
+  }
+}

@@ -52,21 +52,27 @@ def build_query() -> str:
     return """
 LET quantumMatchedCount = LENGTH(
   FOR d IN @@decl_collection
-    FILTER REGEX_TEST(LOWER(d.name), @quantum_pattern)
+    FILTER (LENGTH(@quantum_names) > 0 AND d.name IN @quantum_names) OR
+      (LENGTH(@quantum_names) == 0 AND
+        REGEX_TEST(LOWER(d.name), @quantum_pattern))
     FILTER @quantum_module_prefix == "" OR
       STARTS_WITH(LOWER(d.module), LOWER(@quantum_module_prefix))
     RETURN 1
 )
 LET classicalMatchedCount = LENGTH(
   FOR d IN @@decl_collection
-    FILTER REGEX_TEST(LOWER(d.name), @classical_pattern)
+    FILTER (LENGTH(@classical_names) > 0 AND d.name IN @classical_names) OR
+      (LENGTH(@classical_names) == 0 AND
+        REGEX_TEST(LOWER(d.name), @classical_pattern))
     FILTER @classical_module_prefix == "" OR
       STARTS_WITH(LOWER(d.module), LOWER(@classical_module_prefix))
     RETURN 1
 )
 LET quantum = (
   FOR d IN @@decl_collection
-    FILTER REGEX_TEST(LOWER(d.name), @quantum_pattern)
+    FILTER (LENGTH(@quantum_names) > 0 AND d.name IN @quantum_names) OR
+      (LENGTH(@quantum_names) == 0 AND
+        REGEX_TEST(LOWER(d.name), @quantum_pattern))
     FILTER @quantum_module_prefix == "" OR
       STARTS_WITH(LOWER(d.module), LOWER(@quantum_module_prefix))
     SORT d.module, d.name
@@ -75,7 +81,9 @@ LET quantum = (
 )
 LET classical = (
   FOR d IN @@decl_collection
-    FILTER REGEX_TEST(LOWER(d.name), @classical_pattern)
+    FILTER (LENGTH(@classical_names) > 0 AND d.name IN @classical_names) OR
+      (LENGTH(@classical_names) == 0 AND
+        REGEX_TEST(LOWER(d.name), @classical_pattern))
     FILTER @classical_module_prefix == "" OR
       STARTS_WITH(LOWER(d.module), LOWER(@classical_module_prefix))
     SORT d.module, d.name
@@ -86,8 +94,8 @@ LET matches = (
   FOR q IN quantum
     LET qdeps = (
       FOR v, e, p IN 1..@depth OUTBOUND q._id @@edge_collection
-        OPTIONS {bfs: true, uniqueVertices: "global"}
         PRUNE e.kind NOT IN ["type", "value"]
+        OPTIONS {bfs: true, uniqueVertices: "global"}
         FILTER e.kind IN ["type", "value"]
         LIMIT @cone_limit
         RETURN {id: v._id, depth: LENGTH(p.edges),
@@ -96,15 +104,34 @@ LET matches = (
     FOR c IN classical
       LET cdeps = (
         FOR v, e, p IN 1..@depth OUTBOUND c._id @@edge_collection
-          OPTIONS {bfs: true, uniqueVertices: "global"}
           PRUNE e.kind NOT IN ["type", "value"]
+          OPTIONS {bfs: true, uniqueVertices: "global"}
           FILTER e.kind IN ["type", "value"]
           LIMIT @cone_limit
           RETURN {id: v._id, depth: LENGTH(p.edges),
                   path: p.vertices[*]._id, edgeKinds: p.edges[*].kind}
       )
+      LET quantumToClassicalPaths = (
+        FOR v, e, p IN 1..@depth OUTBOUND q._id @@edge_collection
+          PRUNE e.kind NOT IN ["type", "value"]
+          OPTIONS {bfs: true, uniqueVertices: "path"}
+          FILTER e.kind IN ["type", "value"] AND v._id == c._id
+          LIMIT 1
+          RETURN {path: p.vertices[*]._id, edgeIds: p.edges[*]._id,
+                  edgeKinds: p.edges[*].kind}
+      )
+      LET classicalToQuantumPaths = (
+        FOR v, e, p IN 1..@depth OUTBOUND c._id @@edge_collection
+          PRUNE e.kind NOT IN ["type", "value"]
+          OPTIONS {bfs: true, uniqueVertices: "path"}
+          FILTER e.kind IN ["type", "value"] AND v._id == q._id
+          LIMIT 1
+          RETURN {path: p.vertices[*]._id, edgeIds: p.edges[*]._id,
+                  edgeKinds: p.edges[*].kind}
+      )
       LET shared = INTERSECTION(qdeps[*].id, cdeps[*].id)
-      FILTER LENGTH(shared) > 0
+      FILTER LENGTH(shared) > 0 OR LENGTH(quantumToClassicalPaths) > 0 OR
+        LENGTH(classicalToQuantumPaths) > 0
       LIMIT @pair_limit
       RETURN {
         quantum: {id: q._id, name: q.name, kind: q.kind,
@@ -120,6 +147,8 @@ LET matches = (
                     valueShapeHash: c.valueFingerprint == null ? null :
                       c.valueFingerprint.shapeHash},
         sharedCount: LENGTH(shared),
+        quantumToClassicalPaths: quantumToClassicalPaths,
+        classicalToQuantumPaths: classicalToQuantumPaths,
         sharedNodes: (
           FOR id IN shared
             LET d = DOCUMENT(id)
@@ -167,6 +196,8 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--quantum-term", action="append", dest="quantum_terms")
     parser.add_argument("--classical-term", action="append", dest="classical_terms")
+    parser.add_argument("--quantum-name", action="append", dest="quantum_names")
+    parser.add_argument("--classical-name", action="append", dest="classical_names")
     parser.add_argument("--quantum-module-prefix", default="")
     parser.add_argument("--classical-module-prefix", default="")
     parser.add_argument("--depth", type=lambda v: _positive(v, "--depth"), default=3)
@@ -184,12 +215,16 @@ def main() -> int:
     args = parse_args()
     quantum = tuple(args.quantum_terms or DEFAULT_QUANTUM)
     classical = tuple(args.classical_terms or DEFAULT_CLASSICAL)
+    quantum_names = tuple(args.quantum_names or ())
+    classical_names = tuple(args.classical_names or ())
     query = build_query()
     bind_vars: dict[str, Any] = {
         "@decl_collection": args.decl_collection,
         "@edge_collection": args.edge_collection,
         "quantum_pattern": _pattern(quantum),
         "classical_pattern": _pattern(classical),
+        "quantum_names": list(quantum_names),
+        "classical_names": list(classical_names),
         "quantum_module_prefix": args.quantum_module_prefix,
         "classical_module_prefix": args.classical_module_prefix,
         "depth": args.depth,
@@ -219,6 +254,8 @@ def main() -> int:
         "edgeCollection": args.edge_collection,
         "quantumTerms": list(quantum),
         "classicalTerms": list(classical),
+        "quantumNames": list(quantum_names),
+        "classicalNames": list(classical_names),
         "modulePrefixes": {
             "quantum": args.quantum_module_prefix,
             "classical": args.classical_module_prefix,
@@ -239,15 +276,16 @@ def main() -> int:
             "emptyResultInterpretation": (
                 "No declarations matched the filters."
                 if matched_quantum == 0 or matched_classical == 0
-                else "No shared type/value prerequisites were found within the configured bounds."
+                else "No direct dependency path or shared type/value prerequisite was found within the configured bounds."
             ) if not query_summary.get("matches") else None,
         },
         "result": query_summary.get("matches", []),
         "stats": response.get("extra", {}).get("stats", {}),
         "semanticWarning": (
-            "Paths list compiler dependency edges only (type/value). Shared "
-            "prerequisites and structural hashes are navigation evidence; they "
-            "do not prove semantic relations or graph completeness. Inspect owner "
+            "Paths list compiler dependency edges only (type/value). Direct "
+            "dependency paths, shared prerequisites, and structural hashes are "
+            "navigation evidence; they do not prove semantic relations or graph "
+            "completeness. Inspect owner "
             "source and prove any claimed bridge in Lean."
         ),
     }

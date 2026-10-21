@@ -1,0 +1,91 @@
+{
+  "schema": "info_geometry.opengauss.ground_truth_theorem_contract.v1",
+  "contract_id": "frechet-leibniz-onsager-family-pairwise-quadratic-v1",
+  "semantic_status": "human_asserted_not_kernel_verified",
+  "claim": "For a finite Gibbs CE family and one Fréchet-induced direction, the centered BKM covariance of the coefficient-weighted sum of CE readouts equals the nested coefficient-weighted sum of all pairwise centered BKM responses; this quadratic is nonnegative.",
+  "carrier": {
+    "type": "The existing scalar-gauge quotient Operator n ⧸ scalarGauge n with quotientBKMForm, applied to actual finiteCEOperatorForm readouts on Carrier n = (realDerivationsLane (GibbsOperator n)).L",
+    "operations": [
+      "finite real linear combinations in the scalar-gauge quotient",
+      "the existing bilinear quotient BKM form",
+      "the existing finite CE-derived operator one-forms",
+      "the proved aggregate centered BKM quadratic nonnegativity theorem"
+    ],
+    "conventions": [
+      "the (i,j) entry is centeredBKMRealCovariance of the i and j CE readouts at the same direction",
+      "the quadratic is ∑ i, c i • ∑ j, c j • entry(i,j)",
+      "the equality identifies this pairwise quadratic with the actual covariance of the summed operator readouts",
+      "no off-diagonal single-observable Onsager identification is implied"
+    ]
+  },
+  "owner_declarations": [
+    {
+      "qualified_name": "InfoGeometry.Canonical.BKMScalarGaugeQuotient.quotientBKMForm",
+      "kind": "def",
+      "source_path": "lean/InfoGeometry/Canonical/BKMScalarGaugeQuotient.lean",
+      "source_sha256": "e9161c72bf898082aef44c6ee13f4c5065ae2e38c903f0f573886544b5854677",
+      "source_line": 123,
+      "source_end_line": 125,
+      "source_excerpt": "def quotientBKMForm (density : FaithfulDensityOperator n)\n    (continuous_powers : Continuous density.rpow) :\n    LinearMap.BilinForm ℝ (Operator n ⧸ scalarGauge n) :=",
+      "lean_statement": "def quotientBKMForm (density : FaithfulDensityOperator n) (continuous_powers : Continuous density.rpow) : LinearMap.BilinForm ℝ (Operator n ⧸ scalarGauge n)",
+      "status_assertion": "definition"
+    },
+    {
+      "qualified_name": "InfoGeometry.Canonical.BKMScalarGaugeQuotient.quotientBKMForm_mk",
+      "kind": "theorem",
+      "source_path": "lean/InfoGeometry/Canonical/BKMScalarGaugeQuotient.lean",
+      "source_sha256": "e9161c72bf898082aef44c6ee13f4c5065ae2e38c903f0f573886544b5854677",
+      "source_line": 130,
+      "source_end_line": 134,
+      "source_excerpt": "@[simp] theorem quotientBKMForm_mk (density : FaithfulDensityOperator n)\n    (continuous_powers : Continuous density.rpow) (left right : Operator n) :\n    quotientBKMForm density continuous_powers\n      (Submodule.Quotient.mk left) (Submodule.Quotient.mk right) =\n        centeredBKMRealCovariance density continuous_powers left right := by",
+      "lean_statement": "@[simp] theorem quotientBKMForm_mk (density : FaithfulDensityOperator n) (continuous_powers : Continuous density.rpow) (left right : Operator n) : quotientBKMForm density continuous_powers (Submodule.Quotient.mk left) (Submodule.Quotient.mk right) = centeredBKMRealCovariance density continuous_powers left right",
+      "status_assertion": "asserted_proved"
+    },
+    {
+      "qualified_name": "InfoGeometry.Canonical.CEOneFormNOperatorBridge.finiteCEOperatorForm",
+      "kind": "def",
+      "source_path": "lean/InfoGeometry/Canonical/CEOneFormNOperatorBridge.lean",
+      "source_sha256": "ac163a28e26eb8814593a3528aaeaa620a49d2d5a70f2e214330bd603cebe401",
+      "source_line": 93,
+      "source_end_line": 95,
+      "source_excerpt": "noncomputable def finiteCEOperatorForm (n : ℕ) (a : GibbsOperator n) :\n    Op1Form ℝ (realDerivationsLane (GibbsOperator n)).L\n      (GibbsOperator n) :=",
+      "lean_statement": "noncomputable def finiteCEOperatorForm (n : ℕ) (a : GibbsOperator n) : Op1Form ℝ (realDerivationsLane (GibbsOperator n)).L (GibbsOperator n)",
+      "status_assertion": "definition"
+    },
+    {
+      "qualified_name": "InfoGeometry.Canonical.CEBKMOnsagerGibbsIntegration.finiteGibbsCEFamily_aggregateBKM_quadratic_nonneg",
+      "kind": "theorem",
+      "source_path": "lean/InfoGeometry/Canonical/CEBKMOnsagerGibbsIntegration.lean",
+      "source_sha256": "19a61676e09fa3e939587eef8c0c93d0547297a7a10b65ead03a1312a1e475d3",
+      "source_line": 235,
+      "source_end_line": 244,
+      "source_excerpt": "theorem finiteGibbsCEFamily_aggregateBKM_quadratic_nonneg\n    {m n : ℕ} (H : GibbsOperator n) (a : Fin m → GibbsOperator n)\n    (c : Fin m → ℝ) (D : FrechetOperatorDerivation ℂ (GibbsOperator n))\n    (hH : IsSelfAdjoint H) (hZ : 0 < gibbsPartitionReal H) :\n    0 ≤ centeredBKMRealCovariance (faithfulGibbsDensity H hH hZ)\n      (continuous_faithfulGibbsDensity_rpow H hH hZ)\n      (∑ i, c i • finiteCEOperatorForm n (a i)\n        (finiteCEFrechetDirection D))\n      (∑ i, c i • finiteCEOperatorForm n (a i)\n        (finiteCEFrechetDirection D)) := by",
+      "lean_statement": "theorem finiteGibbsCEFamily_aggregateBKM_quadratic_nonneg {m n : ℕ} (H : GibbsOperator n) (a : Fin m → GibbsOperator n) (c : Fin m → ℝ) (D : FrechetOperatorDerivation ℂ (GibbsOperator n)) (hH : IsSelfAdjoint H) (hZ : 0 < gibbsPartitionReal H) : 0 ≤ centeredBKMRealCovariance (faithfulGibbsDensity H hH hZ) (continuous_faithfulGibbsDensity_rpow H hH hZ) (∑ i, c i • finiteCEOperatorForm n (a i) (finiteCEFrechetDirection D)) (∑ i, c i • finiteCEOperatorForm n (a i) (finiteCEFrechetDirection D))",
+      "status_assertion": "asserted_proved"
+    }
+  ],
+  "imports": [
+    "InfoGeometry.Canonical.BKMScalarGaugeQuotient",
+    "InfoGeometry.Canonical.CEBKMOnsagerGibbsIntegration",
+    "InfoGeometry.Canonical.CEOneFormNOperatorBridge"
+  ],
+  "consumers": [
+    "finiteGibbsCEFamily_pairwise_quadratic_eq_aggregateBKM"
+  ],
+  "smallest_gap": {
+    "declaration_name": "finiteGibbsCEFamily_pairwise_quadratic_eq_aggregateBKM",
+    "lean_signature": "{m n : ℕ} (H : GibbsOperator n) (a : Fin m → GibbsOperator n) (c : Fin m → ℝ) (D : FrechetOperatorDerivation ℂ (GibbsOperator n)) (hH : IsSelfAdjoint H) (hZ : 0 < gibbsPartitionReal H) : (∑ i, c i • ∑ j, c j • centeredBKMRealCovariance (faithfulGibbsDensity H hH hZ) (continuous_faithfulGibbsDensity_rpow H hH hZ) (finiteCEOperatorForm n (a i) (finiteCEFrechetDirection D)) (finiteCEOperatorForm n (a j) (finiteCEFrechetDirection D)) = centeredBKMRealCovariance (faithfulGibbsDensity H hH hZ) (continuous_faithfulGibbsDensity_rpow H hH hZ) (∑ i, c i • finiteCEOperatorForm n (a i) (finiteCEFrechetDirection D)) (∑ i, c i • finiteCEOperatorForm n (a i) (finiteCEFrechetDirection D))) ∧ 0 ≤ ∑ i, c i • ∑ j, c j • centeredBKMRealCovariance (faithfulGibbsDensity H hH hZ) (continuous_faithfulGibbsDensity_rpow H hH hZ) (finiteCEOperatorForm n (a i) (finiteCEFrechetDirection D)) (finiteCEOperatorForm n (a j) (finiteCEFrechetDirection D))",
+    "pantograph_expression": "(∑ i, c i • ∑ j, c j • centeredBKMRealCovariance (faithfulGibbsDensity H hH hZ) (continuous_faithfulGibbsDensity_rpow H hH hZ) (finiteCEOperatorForm n (a i) (finiteCEFrechetDirection D)) (finiteCEOperatorForm n (a j) (finiteCEFrechetDirection D)) = centeredBKMRealCovariance (faithfulGibbsDensity H hH hZ) (continuous_faithfulGibbsDensity_rpow H hH hZ) (∑ i, c i • finiteCEOperatorForm n (a i) (finiteCEFrechetDirection D)) (∑ i, c i • finiteCEOperatorForm n (a i) (finiteCEFrechetDirection D))) ∧ 0 ≤ ∑ i, c i • ∑ j, c j • centeredBKMRealCovariance (faithfulGibbsDensity H hH hZ) (continuous_faithfulGibbsDensity_rpow H hH hZ) (finiteCEOperatorForm n (a i) (finiteCEFrechetDirection D)) (finiteCEOperatorForm n (a j) (finiteCEFrechetDirection D))",
+    "description": "Use the native scalar-gauge quotient and its existing bilinear quotient BKM form to expand the aggregate quadratic exactly into all pairwise family response entries. The equality is followed by nonnegativity from the already proved aggregate BKM theorem."
+  },
+  "out_of_scope": [
+    "Identification of cross-index Hessians with one single-observable Onsager system",
+    "Time-reversal parity reciprocity or a nonvanishing curvature example",
+    "Infinite-dimensional Gibbs/Onsager or universal colimit-functional results"
+  ],
+  "discovery_receipt": {
+    "path": "proofs/FrechetLeibnizOnsagerFamilyPairwiseQuadratic.discovery.json",
+    "sha256": "ea24af1484f3ae13c9ad34b8e1402e7ff2e1fbde66b0e80997d3ff605f4308c8",
+    "query": "quotientBKMForm quotientBKMForm_mk finiteCEOperatorForm finiteGibbsCEFamily_aggregateBKM_quadratic_nonneg finiteGibbsCEFamily_pairwise_quadratic_eq_aggregateBKM"
+  }
+}

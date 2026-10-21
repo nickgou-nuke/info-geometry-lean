@@ -1,0 +1,118 @@
+{
+  "schema": "info_geometry.opengauss.ground_truth_theorem_contract.v1",
+  "contract_id": "frechet-leibniz-onsager-family-system-v1",
+  "semantic_status": "human_asserted_not_kernel_verified",
+  "claim": "For each component i of a finite family a : Fin m → GibbsOperator n, under the existing self-adjoint Gibbs Hamiltonian, positive partition, continuous derivations D and E, and self-adjointness of the first component readout, the real mixed Gibbs log-partition Hessian on that component equals the dissipative bilinear form of finiteGibbsCEOnsagerSystem specialized to a i.",
+  "carrier": {
+    "type": "Fin m family of GibbsOperator n values, encoded through the existing CE one-cochain family into NOperatorForm m, with each selected component extracted as Op1Form ℝ (realDerivationsLane (GibbsOperator n)).L (GibbsOperator n)",
+    "operations": [
+      "CE degree-zero differential exteriorDerivativeZero",
+      "component evaluation of the existing NOperatorForm embedding",
+      "real derivation direction induced by a continuous complex Fréchet derivation",
+      "finite real centered BKM covariance",
+      "finite Gibbs CE Onsager dissipative bilinear form"
+    ],
+    "conventions": [
+      "the system is specialized separately to the observable a i at the same family index in both dissipative slots",
+      "the two derivation directions D and E are independent",
+      "self-adjointness is required only for the first CE readout, as in the Gibbs Hessian owner",
+      "this is a diagonal family-index result and does not identify cross-index response with a single-observable Onsager system"
+    ]
+  },
+  "owner_declarations": [
+    {
+      "qualified_name": "InfoGeometry.Canonical.CEOneFormNOperatorBridge.component_apply",
+      "kind": "theorem",
+      "source_path": "lean/InfoGeometry/Canonical/CEOneFormNOperatorBridge.lean",
+      "source_sha256": "ac163a28e26eb8814593a3528aaeaa620a49d2d5a70f2e214330bd603cebe401",
+      "source_line": 60,
+      "source_end_line": 62,
+      "source_excerpt": "@[simp] theorem component_apply (n : ℕ) (ω : Fin n → OneForm K)\n    (i : Fin n) (x : K.L) :\n    component K n ω i x = ω i x := rfl",
+      "lean_statement": "@[simp] theorem component_apply (n : ℕ) (ω : Fin n → OneForm K) (i : Fin n) (x : K.L) : component K n ω i x = ω i x",
+      "status_assertion": "asserted_proved"
+    },
+    {
+      "qualified_name": "InfoGeometry.Canonical.CEOneFormNOperatorBridge.finiteCEOperatorForm",
+      "kind": "def",
+      "source_path": "lean/InfoGeometry/Canonical/CEOneFormNOperatorBridge.lean",
+      "source_sha256": "ac163a28e26eb8814593a3528aaeaa620a49d2d5a70f2e214330bd603cebe401",
+      "source_line": 93,
+      "source_end_line": 95,
+      "source_excerpt": "noncomputable def finiteCEOperatorForm (n : ℕ) (a : GibbsOperator n) :\n    Op1Form ℝ (realDerivationsLane (GibbsOperator n)).L\n      (GibbsOperator n) :=",
+      "lean_statement": "noncomputable def finiteCEOperatorForm (n : ℕ) (a : GibbsOperator n) : Op1Form ℝ (realDerivationsLane (GibbsOperator n)).L (GibbsOperator n)",
+      "status_assertion": "definition"
+    },
+    {
+      "qualified_name": "InfoGeometry.Canonical.CEBKMOnsagerGibbsIntegration.finiteGibbsCEOnsagerSystem_dissipative_eq_logPartitionHessian",
+      "kind": "theorem",
+      "source_path": "lean/InfoGeometry/Canonical/CEBKMOnsagerGibbsIntegration.lean",
+      "source_sha256": "19a61676e09fa3e939587eef8c0c93d0547297a7a10b65ead03a1312a1e475d3",
+      "source_line": 374,
+      "source_end_line": 384,
+      "source_excerpt": "theorem finiteGibbsCEOnsagerSystem_dissipative_eq_logPartitionHessian\n    (H a Q : GibbsOperator n) (hH : IsSelfAdjoint H)\n    (hZ : 0 < gibbsPartitionReal H)\n    (D E : FrechetOperatorDerivation ℂ (GibbsOperator n))\n    (hD : IsSelfAdjoint\n      (finiteCEOperatorForm n a (finiteCEFrechetDirection D))) :\n    (secondFDerivLogPartitionReadout H\n      (finiteCEOperatorForm n a (finiteCEFrechetDirection D))\n      (finiteCEOperatorForm n a (finiteCEFrechetDirection E))).re =\n    (finiteGibbsCEOnsagerSystem H hH hZ a Q).dissipative\n      (finiteCEFrechetDirection D) (finiteCEFrechetDirection E) := by",
+      "lean_statement": "theorem finiteGibbsCEOnsagerSystem_dissipative_eq_logPartitionHessian (H a Q : GibbsOperator n) (hH : IsSelfAdjoint H) (hZ : 0 < gibbsPartitionReal H) (D E : FrechetOperatorDerivation ℂ (GibbsOperator n)) (hD : IsSelfAdjoint (finiteCEOperatorForm n a (finiteCEFrechetDirection D))) : (secondFDerivLogPartitionReadout H (finiteCEOperatorForm n a (finiteCEFrechetDirection D)) (finiteCEOperatorForm n a (finiteCEFrechetDirection E))).re = (finiteGibbsCEOnsagerSystem H hH hZ a Q).dissipative (finiteCEFrechetDirection D) (finiteCEFrechetDirection E)",
+      "status_assertion": "asserted_proved"
+    },
+    {
+      "qualified_name": "InfoGeometry.Canonical.CEBKMOnsagerGibbsIntegration.finiteGibbsCEFamily_diagonal_eq_onsagerDissipation",
+      "kind": "theorem",
+      "source_path": "lean/InfoGeometry/Canonical/CEBKMOnsagerGibbsIntegration.lean",
+      "source_sha256": "19a61676e09fa3e939587eef8c0c93d0547297a7a10b65ead03a1312a1e475d3",
+      "source_line": 107,
+      "source_end_line": 129,
+      "source_excerpt": "theorem finiteGibbsCEFamily_diagonal_eq_onsagerDissipation\n    {m n : ℕ} (H : GibbsOperator n) (a : Fin m → GibbsOperator n)\n    (Q : GibbsOperator n) (hH : IsSelfAdjoint H)\n    (hZ : 0 < gibbsPartitionReal H)\n    (D E : FrechetOperatorDerivation ℂ (GibbsOperator n))\n    (i : Fin m)\n    (hD : IsSelfAdjoint\n      (component (K := realDerivationsLane (GibbsOperator n)) m\n        (fun k => exteriorDerivativeZero\n          (realDerivationsLane (GibbsOperator n)) (a k)) i\n        (finiteCEFrechetDirection D))) :\n    (secondFDerivLogPartitionReadout H\n      (component (K := realDerivationsLane (GibbsOperator n)) m\n        (fun k => exteriorDerivativeZero\n          (realDerivationsLane (GibbsOperator n)) (a k)) i\n        (finiteCEFrechetDirection D))\n      (component (K := realDerivationsLane (GibbsOperator n)) m\n        (fun k => exteriorDerivativeZero\n          (realDerivationsLane (GibbsOperator n)) (a k)) i\n        (finiteCEFrechetDirection E))).re =\n    (finiteCEOnsagerSystem (faithfulGibbsDensity H hH hZ)\n      (continuous_faithfulGibbsDensity_rpow H hH hZ) (a i) Q).dissipative\n      (finiteCEFrechetDirection D) (finiteCEFrechetDirection E) := by",
+      "lean_statement": "theorem finiteGibbsCEFamily_diagonal_eq_onsagerDissipation {m n : ℕ} (H : GibbsOperator n) (a : Fin m → GibbsOperator n) (Q : GibbsOperator n) (hH : IsSelfAdjoint H) (hZ : 0 < gibbsPartitionReal H) (D E : FrechetOperatorDerivation ℂ (GibbsOperator n)) (i : Fin m) (hD : IsSelfAdjoint (component (K := realDerivationsLane (GibbsOperator n)) m (fun k => exteriorDerivativeZero (realDerivationsLane (GibbsOperator n)) (a k)) i (finiteCEFrechetDirection D))) : (secondFDerivLogPartitionReadout H (component (K := realDerivationsLane (GibbsOperator n)) m (fun k => exteriorDerivativeZero (realDerivationsLane (GibbsOperator n)) (a k)) i (finiteCEFrechetDirection D)) (component (K := realDerivationsLane (GibbsOperator n)) m (fun k => exteriorDerivativeZero (realDerivationsLane (GibbsOperator n)) (a k)) i (finiteCEFrechetDirection E))).re = (finiteCEOnsagerSystem (faithfulGibbsDensity H hH hZ) (continuous_faithfulGibbsDensity_rpow H hH hZ) (a i) Q).dissipative (finiteCEFrechetDirection D) (finiteCEFrechetDirection E)",
+      "status_assertion": "asserted_proved"
+    },
+    {
+      "qualified_name": "InfoGeometry.Canonical.CEBKMOnsagerGibbsIntegration.finiteGibbsCEFamily_diagonal_eq_totalGenerator",
+      "kind": "theorem",
+      "source_path": "lean/InfoGeometry/Canonical/CEBKMOnsagerGibbsIntegration.lean",
+      "source_sha256": "19a61676e09fa3e939587eef8c0c93d0547297a7a10b65ead03a1312a1e475d3",
+      "source_line": 137,
+      "source_end_line": 159,
+      "source_excerpt": "theorem finiteGibbsCEFamily_diagonal_eq_totalGenerator\n    {m n : ℕ} (H : GibbsOperator n) (a : Fin m → GibbsOperator n)\n    (Q : GibbsOperator n) (hH : IsSelfAdjoint H)\n    (hZ : 0 < gibbsPartitionReal H)\n    (D : FrechetOperatorDerivation ℂ (GibbsOperator n))\n    (i : Fin m)\n    (hD : IsSelfAdjoint\n      (component (K := realDerivationsLane (GibbsOperator n)) m\n        (fun k => exteriorDerivativeZero\n          (realDerivationsLane (GibbsOperator n)) (a k)) i\n        (finiteCEFrechetDirection D))) :\n    (finiteCEOnsagerSystem (faithfulGibbsDensity H hH hZ)\n      (continuous_faithfulGibbsDensity_rpow H hH hZ) (a i) Q).totalGenerator\n        (finiteCEFrechetDirection D) (finiteCEFrechetDirection D) =\n      (secondFDerivLogPartitionReadout H\n        (component (K := realDerivationsLane (GibbsOperator n)) m\n          (fun k => exteriorDerivativeZero\n            (realDerivationsLane (GibbsOperator n)) (a k)) i\n          (finiteCEFrechetDirection D))\n        (component (K := realDerivationsLane (GibbsOperator n)) m\n          (fun k => exteriorDerivativeZero\n            (realDerivationsLane (GibbsOperator n)) (a k)) i\n          (finiteCEFrechetDirection D))).re := by",
+      "lean_statement": "theorem finiteGibbsCEFamily_diagonal_eq_totalGenerator {m n : ℕ} (H : GibbsOperator n) (a : Fin m → GibbsOperator n) (Q : GibbsOperator n) (hH : IsSelfAdjoint H) (hZ : 0 < gibbsPartitionReal H) (D : FrechetOperatorDerivation ℂ (GibbsOperator n)) (i : Fin m) (hD : IsSelfAdjoint (component (K := realDerivationsLane (GibbsOperator n)) m (fun k => exteriorDerivativeZero (realDerivationsLane (GibbsOperator n)) (a k)) i (finiteCEFrechetDirection D))) : (finiteCEOnsagerSystem (faithfulGibbsDensity H hH hZ) (continuous_faithfulGibbsDensity_rpow H hH hZ) (a i) Q).totalGenerator (finiteCEFrechetDirection D) (finiteCEFrechetDirection D) = (secondFDerivLogPartitionReadout H (component (K := realDerivationsLane (GibbsOperator n)) m (fun k => exteriorDerivativeZero (realDerivationsLane (GibbsOperator n)) (a k)) i (finiteCEFrechetDirection D)) (component (K := realDerivationsLane (GibbsOperator n)) m (fun k => exteriorDerivativeZero (realDerivationsLane (GibbsOperator n)) (a k)) i (finiteCEFrechetDirection D))).re",
+      "status_assertion": "asserted_proved"
+    },
+    {
+      "qualified_name": "InfoGeometry.Canonical.CEBKMOnsagerGibbsIntegration.finiteGibbsCEFamily_diagonal_hessian_nonneg",
+      "kind": "theorem",
+      "source_path": "lean/InfoGeometry/Canonical/CEBKMOnsagerGibbsIntegration.lean",
+      "source_sha256": "19a61676e09fa3e939587eef8c0c93d0547297a7a10b65ead03a1312a1e475d3",
+      "source_line": 188,
+      "source_end_line": 207,
+      "source_excerpt": "theorem finiteGibbsCEFamily_diagonal_hessian_nonneg\n    {m n : ℕ} (H : GibbsOperator n) (a : Fin m → GibbsOperator n)\n    (Q : GibbsOperator n) (hH : IsSelfAdjoint H)\n    (hZ : 0 < gibbsPartitionReal H)\n    (D : FrechetOperatorDerivation ℂ (GibbsOperator n))\n    (i : Fin m)\n    (hD : IsSelfAdjoint\n      (component (K := realDerivationsLane (GibbsOperator n)) m\n        (fun k => exteriorDerivativeZero\n          (realDerivationsLane (GibbsOperator n)) (a k)) i\n        (finiteCEFrechetDirection D))) :\n    0 ≤ (secondFDerivLogPartitionReadout H\n      (component (K := realDerivationsLane (GibbsOperator n)) m\n        (fun k => exteriorDerivativeZero\n          (realDerivationsLane (GibbsOperator n)) (a k)) i\n        (finiteCEFrechetDirection D))\n      (component (K := realDerivationsLane (GibbsOperator n)) m\n        (fun k => exteriorDerivativeZero\n          (realDerivationsLane (GibbsOperator n)) (a k)) i\n        (finiteCEFrechetDirection D))).re := by",
+      "lean_statement": "theorem finiteGibbsCEFamily_diagonal_hessian_nonneg {m n : ℕ} (H : GibbsOperator n) (a : Fin m → GibbsOperator n) (Q : GibbsOperator n) (hH : IsSelfAdjoint H) (hZ : 0 < gibbsPartitionReal H) (D : FrechetOperatorDerivation ℂ (GibbsOperator n)) (i : Fin m) (hD : IsSelfAdjoint (component (K := realDerivationsLane (GibbsOperator n)) m (fun k => exteriorDerivativeZero (realDerivationsLane (GibbsOperator n)) (a k)) i (finiteCEFrechetDirection D))) : 0 ≤ (secondFDerivLogPartitionReadout H (component (K := realDerivationsLane (GibbsOperator n)) m (fun k => exteriorDerivativeZero (realDerivationsLane (GibbsOperator n)) (a k)) i (finiteCEFrechetDirection D)) (component (K := realDerivationsLane (GibbsOperator n)) m (fun k => exteriorDerivativeZero (realDerivationsLane (GibbsOperator n)) (a k)) i (finiteCEFrechetDirection D))).re",
+      "status_assertion": "asserted_proved"
+    }
+  ],
+  "imports": [
+    "InfoGeometry.Canonical.CEOneFormNOperatorBridge",
+    "InfoGeometry.Canonical.CEBKMOnsagerGibbsIntegration",
+    "InfoGeometry.Canonical.CEBKMOnsagerSystem",
+    "InfoGeometry.Thermo.OnsagerOperatorClosure"
+  ],
+  "consumers": [
+    "finiteGibbsCEFamily_diagonal_eq_onsagerDissipation",
+    "finiteGibbsCEFamily_diagonal_eq_totalGenerator",
+    "finiteGibbsCEFamily_diagonal_hessian_nonneg"
+  ],
+  "smallest_gap": {
+    "declaration_name": "finiteGibbsCEFamily_aggregateBKM_quadratic_nonneg",
+    "lean_signature": "{m n : ℕ} (H : GibbsOperator n) (a : Fin m → GibbsOperator n) (c : Fin m → ℝ) (D : FrechetOperatorDerivation ℂ (GibbsOperator n)) (hH : IsSelfAdjoint H) (hZ : 0 < gibbsPartitionReal H) : 0 ≤ centeredBKMRealCovariance (faithfulGibbsDensity H hH hZ) (continuous_faithfulGibbsDensity_rpow H hH hZ) (∑ i, c i • finiteCEOperatorForm n (a i) (finiteCEFrechetDirection D)) (∑ i, c i • finiteCEOperatorForm n (a i) (finiteCEFrechetDirection D))",
+    "pantograph_expression": "0 ≤ centeredBKMRealCovariance (faithfulGibbsDensity H hH hZ) (continuous_faithfulGibbsDensity_rpow H hH hZ) (∑ i, c i • finiteCEOperatorForm n (a i) (finiteCEFrechetDirection D)) (∑ i, c i • finiteCEOperatorForm n (a i) (finiteCEFrechetDirection D))",
+    "description": "Construct an actual finite coefficient-weighted family observable by summing the component CE readouts, then prove nonnegativity of its centered BKM self-covariance from finite BKM positivity. This is the quadratic form of the pairwise family response and does not assert cross-index equality with one single-observable Onsager system."
+  },
+  "out_of_scope": [
+    "Identification of an off-diagonal family-indexed Hessian with one single-observable Onsager system",
+    "Identification of the cross-index family Hessian with one single-observable Onsager system",
+    "Any infinite-dimensional Gibbs/Onsager theorem",
+    "Time-reversal parity reciprocity or nonvanishing of the reversible curvature readout"
+  ],
+  "discovery_receipt": {
+    "path": "proofs/FrechetLeibnizOnsagerFamilySystem.discovery.json",
+    "sha256": "aed7a28eb70d3d7cba6b29bf780df6355f0be46362178502588384617bd86b82",
+    "query": "component_apply finiteCEOperatorForm centeredCEBKMForm_apply finiteCEOnsagerSystem_entropy finiteGibbsCEFamily_pairwise_hessian_eq_centeredBKM finiteGibbsCEFamily_diagonal_eq_onsagerDissipation finiteGibbsCEFamily_diagonal_eq_totalGenerator finiteGibbsCEFamily_diagonal_hessian_nonneg finiteGibbsCEOnsagerSystem_dissipative_eq_logPartitionHessian"
+  }
+}

@@ -253,10 +253,12 @@ The initial Lean source and its progress-ledger revision passed source-only
 A-A review. A distinct QA-A reran the strict screen, locked module build, and
 kernel-backed axiom certification for that earlier version, returning
 `ACCEPTED_WITH_LIMITED_SCOPE`. QA-A did not regenerate the companion audit
-file; the recorded Gate 4 run above did. These checks do not close the full objective. Remaining work includes
-a proved `NOperatorForm`/linear one-form carrier map and an explicit
-CE-to-finite-Gibbs/BKM/Onsager map with proved compatibility and concrete
-dissipative/reversible conclusions.
+file; the recorded Gate 4 run above did. These checks do not close the full
+objective. The later `CEOneFormNOperatorBridge` sections record the proved
+`NOperatorForm`/linear one-form carrier map and the CE-to-finite-Gibbs/BKM
+Hessian junction. Remaining work is concrete Onsager symmetry and positivity
+on this CE-derived carrier, together with a curvature-derived reversible
+term and its compatibility/nontriviality results.
 
 ### Subsequent Fréchet-to-CE bridge progress
 
@@ -275,5 +277,315 @@ reported zero traps, the no-hypothesis gate passed, and semantic-vacuity
 screening found only the pre-existing `restrictScalarsReal_apply` `rfl`
 accessor warning. The independent A-A requested that the trivial standalone
 CE evaluation readback be replaced by a theorem combining it with the first
-jet. That correction is now made; its final A-A and QA-A gates remain pending.
-This partial result does not close the overall goal.
+jet. That correction was made and the final A-A returned `PASS`. A distinct
+QA-A reran the strict screener, no-hypothesis gate, semantic-vacuity scan,
+locked module build, Gate 4 kernel review, and axiom certification, returning
+`ACCEPTED_WITH_LIMITED_SCOPE`. The QA-A scan reported only the same
+`restrictScalarsReal_apply` accessor warning. This partial result does not
+close the overall goal.
+
+### Implemented theorem contract: finite CE families in the `NOperatorForm` carrier
+
+This bridge is restricted to CE one-cochains, whose native carrier supplies
+real linearity. For a real derivation lane `K` acting on a real algebra `A`,
+and a family `ω : Fin n → OneForm K`, `ofCEFamily` constructs an
+`NOperatorForm n` with point carrier `Unit`, tangent carrier `K.L`, and value
+carrier `A`. `component` proves the value at `()` is an actual
+`Op1Form ℝ K.L A` by deriving additivity and real homogeneity from the CE
+cochain. The first-jet compatibility theorem uses the normed complex-algebra
+assumptions required by the existing Fréchet owner; no finite-dimensionality
+claim is part of this generic family encoding. There is no total conversion
+from arbitrary `NOperatorForm`s:
+those are unrestricted functions, so linearity is absent.
+
+The Fréchet/CE compatibility theorem for a singleton CE family identifies
+evaluation of its extracted `Op1Form` at the real derivation direction with
+`operatorFrechetJet_one_apply`; the existing combined
+jet-to-`exteriorDerivativeZero` theorem supplies the mathematical equality.
+`singletonCE_gibbsHessian_chain` extends this chain to the finite Gibbs/BKM
+readout, preserving the existing one-sided self-adjointness hypothesis on
+the first perturbation. The bridge does not assert swapped-direction
+symmetry, a constitutive law, Onsager positivity, or a reversible curvature
+contribution; those require separately proved results.
+
+`Canonical/CEOneFormNOperatorBridge.lean` now implements this carrier step:
+`ofCEFamily` embeds a finite CE family into `NOperatorForm`, and `component`
+constructs an `Op1Form` by evaluating that encoded function and proving its
+additivity and real homogeneity from the CE cochain. The singleton first-jet
+theorem states the explicit chain from evaluation of `ofCEFamily`, through
+evaluation of the extracted `Op1Form`, to the first Fréchet jet at the
+real-restricted derivation direction. Its Fréchet-specific assumptions are
+the normed complex-algebra assumptions of the existing Fréchet owner; no
+finite-dimensionality is asserted here. The target module build and Gate 4
+kernel/axiom audit passed for the final theorem-statement revision. A distinct
+QA-A reran the strict staged screen, no-hypothesis gate, semantic-vacuity
+gate, target locked build, and staged diff check. A-A and QA-A accepted the
+revised chain. Strict screening and the no-hypothesis gate passed;
+semantic-vacuity screening flags the single `component_apply` `rfl` readout
+theorem as a trivial-surface warning. Earlier independent reviews caught and
+prompted correction of a bypass in the singleton conclusion; both the
+current A-A and QA-A accept the revised conjunction. The goal scope was
+corrected to avoid claiming finite-dimensionality for the generic family
+map. The finite Gibbs/BKM theorem and its verification status are recorded
+below; the full Onsager goal remains open.
+
+### Implemented theorem: CE-derived finite Gibbs/BKM response
+
+The implementation specializes the above CE family to
+`A := NoncommutativeGibbsBKMHessianBridge.Operator n`. For `a : A`, set the
+singleton CE family to `exteriorDerivativeZero K a`, where
+`K := realDerivationsLane A`; use `component` to obtain the genuine
+`Op1Form ℝ K.L A`. For continuous complex Fréchet derivations `D` and `E`,
+the two Gibbs Hessian perturbations are the values of this same CE-derived
+one-form at `FrechetBridge.toRealDerivation (restrictScalarsReal D)` and the
+corresponding direction from `E`.
+
+`singletonCE_gibbsHessian_chain` states the chain (i) encoded `NOperatorForm`
+readout equals extracted `Op1Form` readout for `D`, (ii) that readout is the
+first Fréchet jet, and (iii) the real additive Gibbs log-partition Hessian
+on the two CE readouts equals
+`centeredBKMOperatorBilinForm` on the extracted CE one-forms and the two
+independent directions. It retains exactly the Gibbs hypotheses of the
+owner (`IsSelfAdjoint H`, positive real partition) and the owner’s
+one-sided `IsSelfAdjoint` condition on the first CE readout. This theorem
+does not assert swapped-direction symmetry or a constitutive law; those need
+their own proved hypotheses/results. The target owner already proves the
+two-vector Hessian pullback, and exact-name recursive search found no prior
+direct CE-family consumer in the current tracked Lean source. The bridge
+applies that owner theorem to close the finite CE/BKM junction under its
+stated self-adjointness hypothesis.
+
+### Implemented theorem: curvature-derived finite CE Onsager system
+
+`Canonical/CEBKMOnsagerSystem.lean` defines the finite carrier `K.L`, with
+`K := realDerivationsLane (GibbsOperator n)`, and constructs the dissipative
+form by pulling back the real BKM form after the proved `centeringLinearMap`.
+Its readout is the centered BKM covariance on the CE one-form values.
+Symmetry follows from `centeredBKMRealCovariance_symm`; diagonal
+nonnegativity follows from finite Kubo–Mori self-pairing nonnegativity.
+The density operator and its continuous power are inputs; this owner does not
+identify that density with a Gibbs state or prove a log-partition Hessian
+identity for this system. Its finite BKM covariance is a real bilinear form
+for arbitrary operator inputs; no physical covariance interpretation for
+non-self-adjoint observables is asserted.
+
+The reversible form fixes `Q` in the second BKM argument and applies the
+first argument to the actual CE curvature
+`connectionCurvature K (exteriorDerivativeZero K a) x y`. Its bilinearity is
+proved by transporting the CE two-cochain's linearity through the fixed-probe
+BKM linear map, and skewness follows from `twoCochain_skew`. These forms
+populate the actual `OnsagerCasimirSystem`; the entropy theorem proves the
+total-generator diagonal equals the centered covariance and is nonnegative.
+The reversible readout is not defined as zero. No non-vanishing example or
+time-reversal parity reciprocity is claimed.
+
+Verification for this owner: locked target build passed (9,216 jobs); OpenGauss
+Gate 2 static review passed with zero sorries/admit/trap violations; strict
+T1–T17 screen passed with zero traps; no-hypothesis gate passed; Gate 4 wrote
+and kernel-verified an 11-declaration axiom audit. Semantic-vacuity screening
+reported one trivial-surface warning for the `rfl` readout theorem
+`ceCurvatureBKMProbeForm_apply`. Independent source-only A-A returned PASS
+with the scope correction above; distinct QA-A returned
+`ACCEPTED_WITH_LIMITED_SCOPE` after rerunning the strict screen,
+no-hypothesis gate, semantic-vacuity scan, and staged diff check. QA-A did not
+rerun the build or Gate 4; those results are the recorded G-A checks above.
+
+### Implemented theorem: Gibbs Hessian equals CE Onsager dissipation
+
+`Canonical/CEBKMOnsagerGibbsIntegration.lean` specializes the concrete CE
+Onsager system to `faithfulGibbsDensity H hH hZ` and its proved continuous
+real-power path—the same density and path used by the log-partition Hessian
+owner. For two continuous complex Fréchet derivations `D` and `E`, the mixed
+real Hessian on the corresponding `finiteCEOperatorForm` values equals the
+system's dissipative component. The first CE perturbation alone carries the
+existing self-adjointness hypothesis. On the diagonal, the system's actual
+total-generator production equals the Gibbs Hessian and is nonnegative. No
+off-diagonal total-generator/Hessian equality is asserted; the reversible
+term remains curvature-derived and is removed only on the diagonal by its
+proved skewness.
+
+The source-bound contract and navigation receipt are
+`proofs/FrechetLeibnizOnsagerGibbsIntegration.contract.json` and
+`proofs/FrechetLeibnizOnsagerGibbsIntegration.discovery.json`. Contract
+validation passed. The target locked build and Gate 4 kernel/axiom audit
+passed. Strict T1–T17 screening, Gate 2, semantic-vacuity (zero findings),
+staged proof-proxy, and diff checks passed. The repo-wide no-hypothesis scan
+cannot currently traverse `.changes/.agents/challenger_2_m1/test_f4.lean`
+because that path is a directory; its scoped scan of the target canonical
+directory passes. Independent A-A returned PASS. QA-A's checks passed but it
+withheld package acceptance until this ledger and the contract distinguished
+the now-proved pairwise family results from the still-open family-to-system
+identification and aggregate positivity. The original system identity is
+finite and for a single CE observable; nonvanishing curvature and
+time-reversal parity are not thereby established.
+
+### Next theorem contract: concrete `Fin m` Fréchet/CE family
+
+The finite `Fin m` componentwise bridge is now in
+`CEBKMOnsagerGibbsIntegration.lean`: each existing `ofCEFamily` readout equals
+the corresponding first Fréchet jet, and each pairwise Hessian equals the
+centered BKM form on the extracted `Op1Form`s. It reuses `ofCEFamily` and
+`component`; no second `NOperatorForm` or BKM carrier was introduced. The
+componentwise first-jet and pairwise family response are established. The
+diagonal component Hessian-to-Onsager identifications and the weighted
+finite-family quadratic positivity theorem are now proved below. Still open
+here is the explicit pairwise double-sum expansion of that aggregate quadratic
+in terms of the family response entries; no aggregate matrix representation
+or entrywise matrix theorem is claimed.
+
+A separate non-vanishing theorem for the reversible readout is optional only
+after a concrete finite derivation pair and BKM probe yield a proof; it cannot
+be inferred from skewness. Time-reversal parity reciprocity remains outside
+scope unless an actual parity action and its compatibility are constructed.
+
+### Implemented theorem: weighted finite-family BKM quadratic positivity
+
+The owner now proves
+`finiteGibbsCEFamily_aggregateBKM_quadratic_nonneg`. For every finite family
+`a : Fin m → GibbsOperator n`, real coefficients `c`, and Fréchet-induced
+derivation direction, it identifies the operator sum of the weighted CE
+readouts with the CE readout of the weighted sum of the original operators.
+The equality follows from linearity of the actual derivation action and the
+degree-zero CE differential. Applying `centeredCEBKMForm_nonneg` then gives
+nonnegativity of the centered BKM covariance of that concrete summed
+operator. This is a finite-family quadratic positivity theorem, not a
+property-bearing data structure and not an identification of the cross-index
+Hessian with one single-observable Onsager system.
+
+Its ground-truth contract and discovery receipt are
+`proofs/FrechetLeibnizOnsagerFamilyAggregate.contract.json` and
+`proofs/FrechetLeibnizOnsagerFamilyAggregate.discovery.json`; contract
+validation passed before the source edit. The target locked build passed after
+the final proof correction. The target has existing dependency warnings; the
+build is not a warning-free full-repository closure. A-A returned PASS after
+correcting stale out-of-scope claims; distinct QA-A returned
+`ACCEPTED_WITH_LIMITED_SCOPE`. QA-A independently reran both contracts,
+Gate 2, strict T1–T17 screening (zero traps), semantic-vacuity (zero
+findings), the scoped no-hypothesis scan, cached diff check, locked target
+build, and `certify --verify-kernel` against the existing 10-declaration audit
+(no rejected axioms, only standard foundational axioms). Remaining
+family-level work was the explicit pairwise double-sum expansion, now recorded
+below. The end-to-end objective also still requires completing the exact
+Fréchet/Leibniz, `NOperatorForm`, CE, and concrete finite Onsager chain under
+its stated domains, plus independent acceptance of each new theorem slice.
+
+### Implemented theorem: pairwise family BKM quadratic expansion
+
+The owner now proves
+`finiteGibbsCEFamily_pairwise_quadratic_eq_aggregateBKM`. Its first
+conclusion expands the coefficient-weighted aggregate covariance as
+`∑ i, c i • ∑ j, c j • Cov_BKM(aᵢ(D), aⱼ(D))`; its second proves that this
+pairwise quadratic is nonnegative. The proof uses the already-owned
+`quotientBKMForm` on the scalar-gauge quotient, proves the finite quotient-map
+sum compatibility needed for the actual CE readouts, expands the bilinear
+form in each argument, and returns each quotient entry to the native
+`centeredBKMRealCovariance` using `quotientBKMForm_mk`. It reuses the existing
+quotient and family carriers; it introduces no response-matrix data wrapper.
+
+The theorem contract and fresh navigation receipt are
+`proofs/FrechetLeibnizOnsagerFamilyPairwiseQuadratic.contract.json` and
+`proofs/FrechetLeibnizOnsagerFamilyPairwiseQuadratic.discovery.json`.
+Contract validation, Gate 2, strict T1–T17 screening, semantic-vacuity,
+scoped no-hypothesis, target locked build, and Gate 4 kernel/axiom audit have
+passed. The generated audit now covers 11 declarations. A-A returned PASS.
+An independent QA-A reran all technical gates, including the locked target
+build and kernel verification of the existing audit, then returned
+`ACCEPTED_WITH_LIMITED_SCOPE` after a procedural ledger mismatch was corrected.
+The
+pairwise entries are centered BKM responses;
+the already-proved pairwise Hessian theorem identifies them with Gibbs
+Hessian entries only under its stated first-perturbation self-adjointness
+hypothesis. This result does not identify off-diagonal Hessians with one
+single-observable Onsager system or establish infinite-dimensional claims.
+
+### Implemented theorem: pairwise family quadratic equals aggregate Gibbs Onsager response
+
+The owner additionally proves
+`finiteGibbsCEFamily_weightedReadout_eq`, the exact finite linearity identity
+for the CE readout of a weighted observable sum, and
+`finiteGibbsCEFamily_pairwise_quadratic_eq_aggregateOnsagerDissipation_hessian`.
+The latter identifies the already-expanded pairwise centered-BKM quadratic
+with the dissipative bilinear form of `finiteGibbsCEOnsagerSystem` evaluated
+at the weighted aggregate observable. Under self-adjointness of that actual
+aggregate CE readout, the same quadratic equals the real second derivative
+of the finite Gibbs log-partition; its nonnegativity is proved from the
+finite BKM positivity owner. This is one aggregate observable and one
+Fréchet-induced direction, not an off-diagonal family-index Onsager theorem.
+
+The source-bound contract and regenerated local discovery receipt are
+`proofs/FrechetLeibnizOnsagerFamilyAggregateOnsager.contract.json` and
+`proofs/FrechetLeibnizOnsagerFamilyAggregateOnsager.discovery.json`.
+Contract validation, target build, Gate 4 kernel/axiom audit (13 declarations,
+only standard foundational axioms), strict T1–T17 screening, semantic-vacuity,
+scoped no-hypothesis, staged proof-proxy, and cached diff checks pass. The
+independent source-level QMS review passed, and a distinct QA-A returned
+`ACCEPTED_WITH_LIMITED_SCOPE` after independently rerunning the locked target
+build and all listed gates. The audit output contains only standard
+foundational axioms. The build emits unrelated dependency/style/deprecation
+warnings, so this is not a warning-free full-repository closure. Source hashes
+and line ranges in the affected family contracts and their local discovery
+receipts were refreshed after the shared owner edit.
+
+### Implemented theorem: independent-direction `NOperatorForm` Gibbs Onsager system
+
+`Canonical/CEBKMOnsagerGibbsNOperatorFamily.lean` closes the product-family
+seam with actual operators and full Lean proofs. For `a : Fin m →
+GibbsOperator n`, it constructs the CE family using the existing
+`ofCEFamily` carrier and extracts each component as an `Op1Form`. The theorem
+`finiteGibbsCEFamilyNOperatorComponent_eq_firstFrechetJet` proves the encoded
+component readout equals that extracted linear form and the order-one
+Fréchet-jet value for each independent component derivation.
+
+The explicit map `finiteGibbsCEFamilyNOperatorReadoutLinear` sends a product
+of CE directions to the real weighted sum of component readouts. The
+dissipative bilinear form is the centered finite BKM covariance pulled back
+along this map. The reversible bilinear form is the weighted sum of the
+existing fixed-probe readouts of each component's native CE curvature. The
+definition does not assert that the curvature sum equals curvature of the
+weighted observable. The concrete `OnsagerCasimirSystem` proves symmetry,
+skewness, and nonnegative total diagonal production; the entropy theorem
+identifies that production with the BKM covariance of the actual aggregate
+readout.
+
+For independent families `D E : Fin m → FrechetOperatorDerivation ℂ ...`,
+`finiteGibbsCEFamilyNOperatorPairwiseBKMResponse_eq_aggregateBKM` expands the
+weighted pairwise covariance by bilinearity on the scalar-gauge quotient.
+`finiteGibbsCEFamilyNOperatorSystem_pairwise_eq_dissipation_hessian` then
+identifies it with the product-carrier Onsager dissipation and the real mixed
+Gibbs log-partition Hessian. Its only perturbation-side hypothesis is
+self-adjointness of the first aggregate readout, exactly as required by the
+general finite Hessian owner. This is finite-dimensional and does not claim
+parity reciprocity, nonzero reversible response, or a universal
+infinite-dimensional/colimit theorem.
+
+The source-bound contract and exact-symbol discovery receipt are
+`proofs/FrechetLeibnizOnsagerFamilyNOperatorSystem.contract.json` and
+`proofs/FrechetLeibnizOnsagerFamilyNOperatorSystem.discovery.json`. Contract
+validation, Gate 2, strict T1–T17 screening, scoped no-hypothesis,
+semantic-vacuity (one advisory trivial-readout warning), staged proof-proxy,
+and cached diff checks passed. The owner compiled through the shared locked
+build (9,218 jobs), and Gate 4 review plus certification kernel-checked all 20
+declarations with only `propext`, `Classical.choice`, and `Quot.sound`; no
+custom axioms, `sorry`, or `admit` were reported. A-A passed on the exact
+staged source after the final proof edits. A distinct QA-A independently
+reran contract/receipt validation, strict screens, no-hypothesis and staged
+gates, target build, Gate 4, and certification, returning PASS. Existing
+LeanCopilot/LeanArchitect local-change warnings remain; this is not a claim
+of a warning-free full-repository build.
+
+### Completion audit
+
+The five source-confirmed requirements at the start of this goal are now
+covered by kernel-checked owners: the order-one Fréchet-jet/Leibniz and
+Fréchet-to-CE adapter remains in `OperatorFrechetDerivationJet.lean`; the
+actual `NOperatorForm` to CE-one-form extraction and first-jet compatibility
+is used by the new family owner; the independent product-direction family is
+mapped to the CE carrier componentwise; the finite quotient-BKM expansion
+and general Gibbs Hessian owner are applied on their actual operator
+carriers; and the family Onsager dissipation and reversible curvature forms
+are constructed with symmetry, skewness, and nonnegative entropy production
+proved, not supplied as fields. No symmetric Hessian is identified with an
+alternating CE form. The OpenGauss A-A and QA-A gates for the final family
+owner passed. This completion statement is limited to the explicit finite
+Gibbs, real-coefficient, Fréchet-induced carrier and hypotheses above; the
+out-of-scope analytic and parity claims remain unproved.

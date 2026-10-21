@@ -1,0 +1,1204 @@
+{
+  "authority": "navigation_only",
+  "carriers_found": [
+    {
+      "file": "lean/InfoGeometry/Canonical/BKMScalarGaugeQuotient.lean",
+      "kind": "def",
+      "lean_statement": "def quotientBKMForm (density : FaithfulDensityOperator n) (continuous_powers : Continuous density.rpow) : LinearMap.BilinForm ℝ (Operator n ⧸ scalarGauge n)",
+      "line": 123,
+      "location": "lean/InfoGeometry/Canonical/BKMScalarGaugeQuotient.lean:123",
+      "name": "quotientBKMForm",
+      "qualified_name": "InfoGeometry.Canonical.BKMScalarGaugeQuotient.quotientBKMForm",
+      "source_end_line": 125,
+      "source_sha256": "e9161c72bf898082aef44c6ee13f4c5065ae2e38c903f0f573886544b5854677"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/CEBKMOnsagerGibbsIntegration.lean",
+      "kind": "def",
+      "lean_statement": "def finiteGibbsCEOnsagerSystem (H : GibbsOperator n) (hH : IsSelfAdjoint H) (hZ : 0 < gibbsPartitionReal H) (a Q : GibbsOperator n) : OnsagerCasimirSystem (Carrier n)",
+      "line": 363,
+      "location": "lean/InfoGeometry/Canonical/CEBKMOnsagerGibbsIntegration.lean:363",
+      "name": "finiteGibbsCEOnsagerSystem",
+      "qualified_name": "InfoGeometry.Canonical.CEBKMOnsagerGibbsIntegration.finiteGibbsCEOnsagerSystem",
+      "source_end_line": 366,
+      "source_sha256": "19a61676e09fa3e939587eef8c0c93d0547297a7a10b65ead03a1312a1e475d3"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/CEOneFormNOperatorBridge.lean",
+      "kind": "def",
+      "lean_statement": "def ofCEFamily (n : ℕ) (ω : Fin n → OneForm K) : NOperatorForm n (Point := Unit) (Tangent := K.L) (Value := A)",
+      "line": 41,
+      "location": "lean/InfoGeometry/Canonical/CEOneFormNOperatorBridge.lean:41",
+      "name": "ofCEFamily",
+      "qualified_name": "InfoGeometry.Canonical.CEOneFormNOperatorBridge.ofCEFamily",
+      "source_end_line": 42,
+      "source_sha256": "ac163a28e26eb8814593a3528aaeaa620a49d2d5a70f2e214330bd603cebe401"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/CEOneFormNOperatorBridge.lean",
+      "kind": "def",
+      "lean_statement": "noncomputable def finiteCEOperatorForm (n : ℕ) (a : GibbsOperator n) : Op1Form ℝ (realDerivationsLane (GibbsOperator n)).L (GibbsOperator n)",
+      "line": 93,
+      "location": "lean/InfoGeometry/Canonical/CEOneFormNOperatorBridge.lean:93",
+      "name": "finiteCEOperatorForm",
+      "qualified_name": "InfoGeometry.Canonical.CEOneFormNOperatorBridge.finiteCEOperatorForm",
+      "source_end_line": 95,
+      "source_sha256": "ac163a28e26eb8814593a3528aaeaa620a49d2d5a70f2e214330bd603cebe401"
+    }
+  ],
+  "dag_context": null,
+  "deduplication_warnings": [
+    "Query 'ofCEFamily component_apply finiteCEOperatorForm finiteGibbsCEFamily_weightedReadout_eq finiteGibbsCEFamily_pairwise_quadratic_eq_aggregateBKM finiteGibbsCEOnsagerSystem quotientBKMForm quotientBKMForm_mk finiteGibbsCEOnsagerSystem_dissipative_eq_logPartitionHessian' matches existing fundamental type 'quotientBKMForm' in lean/InfoGeometry/Canonical/BKMScalarGaugeQuotient.lean; reuse canonical carrier instead of introducing redundant type wrapper.",
+    "Query 'ofCEFamily component_apply finiteCEOperatorForm finiteGibbsCEFamily_weightedReadout_eq finiteGibbsCEFamily_pairwise_quadratic_eq_aggregateBKM finiteGibbsCEOnsagerSystem quotientBKMForm quotientBKMForm_mk finiteGibbsCEOnsagerSystem_dissipative_eq_logPartitionHessian' matches existing fundamental type 'finiteGibbsCEOnsagerSystem' in lean/InfoGeometry/Canonical/CEBKMOnsagerGibbsIntegration.lean; reuse canonical carrier instead of introducing redundant type wrapper.",
+    "Query 'ofCEFamily component_apply finiteCEOperatorForm finiteGibbsCEFamily_weightedReadout_eq finiteGibbsCEFamily_pairwise_quadratic_eq_aggregateBKM finiteGibbsCEOnsagerSystem quotientBKMForm quotientBKMForm_mk finiteGibbsCEOnsagerSystem_dissipative_eq_logPartitionHessian' matches existing fundamental type 'ofCEFamily' in lean/InfoGeometry/Canonical/CEOneFormNOperatorBridge.lean; reuse canonical carrier instead of introducing redundant type wrapper.",
+    "Query 'ofCEFamily component_apply finiteCEOperatorForm finiteGibbsCEFamily_weightedReadout_eq finiteGibbsCEFamily_pairwise_quadratic_eq_aggregateBKM finiteGibbsCEOnsagerSystem quotientBKMForm quotientBKMForm_mk finiteGibbsCEOnsagerSystem_dissipative_eq_logPartitionHessian' matches existing fundamental type 'finiteCEOperatorForm' in lean/InfoGeometry/Canonical/CEOneFormNOperatorBridge.lean; reuse canonical carrier instead of introducing redundant type wrapper."
+  ],
+  "graph_is_proof_authority": false,
+  "lemmas_found": [
+    {
+      "file": "lean/InfoGeometry/Canonical/BKMScalarGaugeQuotient.lean",
+      "kind": "theorem",
+      "lean_statement": "@[simp] theorem quotientBKMForm_mk (density : FaithfulDensityOperator n) (continuous_powers : Continuous density.rpow) (left right : Operator n) : quotientBKMForm density continuous_powers (Submodule.Quotient.mk left) (Submodule.Quotient.mk right) = centeredBKMRealCovariance density continuous_powers left right",
+      "line": 130,
+      "location": "lean/InfoGeometry/Canonical/BKMScalarGaugeQuotient.lean:130",
+      "name": "quotientBKMForm_mk",
+      "qualified_name": "InfoGeometry.Canonical.BKMScalarGaugeQuotient.quotientBKMForm_mk",
+      "source_end_line": 134,
+      "source_sha256": "e9161c72bf898082aef44c6ee13f4c5065ae2e38c903f0f573886544b5854677"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/BKMScalarGaugeQuotient.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem quotientBKMForm_symm (density : FaithfulDensityOperator n) (continuous_powers : Continuous density.rpow) (left right : Operator n ⧸ scalarGauge n) : quotientBKMForm density continuous_powers left right = quotientBKMForm density continuous_powers right left",
+      "line": 139,
+      "location": "lean/InfoGeometry/Canonical/BKMScalarGaugeQuotient.lean:139",
+      "name": "quotientBKMForm_symm",
+      "qualified_name": "InfoGeometry.Canonical.BKMScalarGaugeQuotient.quotientBKMForm_symm",
+      "source_end_line": 143,
+      "source_sha256": "e9161c72bf898082aef44c6ee13f4c5065ae2e38c903f0f573886544b5854677"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/BKMScalarGaugeQuotient.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem quotientBKMForm_pos (density : FaithfulDensityOperator n) (continuous_powers : Continuous density.rpow) (direction : Operator n ⧸ scalarGauge n) (nonzero : direction ≠ 0) : 0 < quotientBKMForm density continuous_powers direction direction",
+      "line": 146,
+      "location": "lean/InfoGeometry/Canonical/BKMScalarGaugeQuotient.lean:146",
+      "name": "quotientBKMForm_pos",
+      "qualified_name": "InfoGeometry.Canonical.BKMScalarGaugeQuotient.quotientBKMForm_pos",
+      "source_end_line": 149,
+      "source_sha256": "e9161c72bf898082aef44c6ee13f4c5065ae2e38c903f0f573886544b5854677"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/GibbsHessianScalarGaugeBridge.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem secondFDeriv_logPartition_eq_quotientBKMForm (exponent left right : FiniteOperatorAlgebra n) (self_adjoint : IsSelfAdjoint exponent) (positive_partition : 0 < gibbsPartitionReal exponent) (left_self_adjoint : IsSelfAdjoint left) : (secondFDerivLogPartitionReadout exponent left right).re = quotientBKMForm (faithfulGibbsDensity exponent self_adjoint positive_partition) (continuous_faithfulGibbsDensity_rpow exponent self_adjoint positive_partition) (Submodule.Quotient.mk left) (Submodule.Quotient.mk right)",
+      "line": 25,
+      "location": "lean/InfoGeometry/Canonical/GibbsHessianScalarGaugeBridge.lean:25",
+      "name": "secondFDeriv_logPartition_eq_quotientBKMForm",
+      "qualified_name": "InfoGeometry.Canonical.GibbsHessianScalarGaugeBridge.secondFDeriv_logPartition_eq_quotientBKMForm",
+      "source_end_line": 33,
+      "source_sha256": "42432761826fff5d57acaeb503a9d1b007e8cba37c62413a5ade83c8bb2ddcdb"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/CEBKMOnsagerGibbsIntegration.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem finiteGibbsCEFamily_weightedReadout_eq {m n : ℕ} (a : Fin m → GibbsOperator n) (c : Fin m → ℝ) (D : FrechetOperatorDerivation ℂ (GibbsOperator n)) : (∑ i, c i • finiteCEOperatorForm n (a i) (finiteCEFrechetDirection D)) = finiteCEOperatorForm n (∑ i, c i • a i) (finiteCEFrechetDirection D)",
+      "line": 216,
+      "location": "lean/InfoGeometry/Canonical/CEBKMOnsagerGibbsIntegration.lean:216",
+      "name": "finiteGibbsCEFamily_weightedReadout_eq",
+      "qualified_name": "InfoGeometry.Canonical.CEBKMOnsagerGibbsIntegration.finiteGibbsCEFamily_weightedReadout_eq",
+      "source_end_line": 222,
+      "source_sha256": "19a61676e09fa3e939587eef8c0c93d0547297a7a10b65ead03a1312a1e475d3"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/CEBKMOnsagerGibbsIntegration.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem finiteGibbsCEFamily_pairwise_quadratic_eq_aggregateBKM {m n : ℕ} (H : GibbsOperator n) (a : Fin m → GibbsOperator n) (c : Fin m → ℝ) (D : FrechetOperatorDerivation ℂ (GibbsOperator n)) (hH : IsSelfAdjoint H) (hZ : 0 < gibbsPartitionReal H) : (∑ i, c i • ∑ j, c j • centeredBKMRealCovariance (faithfulGibbsDensity H hH hZ) (continuous_faithfulGibbsDensity_rpow H hH hZ) (finiteCEOperatorForm n (a i) (finiteCEFrechetDirection D)) (finiteCEOperatorForm n (a j) (finiteCEFrechetDirection D))) = centeredBKMRealCovariance (faithfulGibbsDensity H hH hZ) (continuous_faithfulGibbsDensity_rpow H hH hZ) (∑ i, c i • finiteCEOperatorForm n (a i) (finiteCEFrechetDirection D)) (∑ i, c i • finiteCEOperatorForm n (a i) (finiteCEFrechetDirection D)) ∧ 0 ≤ ∑ i, c i • ∑ j, c j • centeredBKMRealCovariance (faithfulGibbsDensity H hH hZ) (continuous_faithfulGibbsDensity_rpow H hH hZ) (finiteCEOperatorForm n (a i) (finiteCEFrechetDirection D)) (finiteCEOperatorForm n (a j) (finiteCEFrechetDirection D))",
+      "line": 260,
+      "location": "lean/InfoGeometry/Canonical/CEBKMOnsagerGibbsIntegration.lean:260",
+      "name": "finiteGibbsCEFamily_pairwise_quadratic_eq_aggregateBKM",
+      "qualified_name": "InfoGeometry.Canonical.CEBKMOnsagerGibbsIntegration.finiteGibbsCEFamily_pairwise_quadratic_eq_aggregateBKM",
+      "source_end_line": 279,
+      "source_sha256": "19a61676e09fa3e939587eef8c0c93d0547297a7a10b65ead03a1312a1e475d3"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/CEBKMOnsagerGibbsIntegration.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem finiteGibbsCEOnsagerSystem_dissipative_eq_logPartitionHessian (H a Q : GibbsOperator n) (hH : IsSelfAdjoint H) (hZ : 0 < gibbsPartitionReal H) (D E : FrechetOperatorDerivation ℂ (GibbsOperator n)) (hD : IsSelfAdjoint (finiteCEOperatorForm n a (finiteCEFrechetDirection D))) : (secondFDerivLogPartitionReadout H (finiteCEOperatorForm n a (finiteCEFrechetDirection D)) (finiteCEOperatorForm n a (finiteCEFrechetDirection E))).re = (finiteGibbsCEOnsagerSystem H hH hZ a Q).dissipative (finiteCEFrechetDirection D) (finiteCEFrechetDirection E)",
+      "line": 374,
+      "location": "lean/InfoGeometry/Canonical/CEBKMOnsagerGibbsIntegration.lean:374",
+      "name": "finiteGibbsCEOnsagerSystem_dissipative_eq_logPartitionHessian",
+      "qualified_name": "InfoGeometry.Canonical.CEBKMOnsagerGibbsIntegration.finiteGibbsCEOnsagerSystem_dissipative_eq_logPartitionHessian",
+      "source_end_line": 384,
+      "source_sha256": "19a61676e09fa3e939587eef8c0c93d0547297a7a10b65ead03a1312a1e475d3"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/CEBKMOnsagerGibbsIntegration.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem finiteGibbsCEOnsagerSystem_diagonal_eq_logPartitionHessian (H a Q : GibbsOperator n) (hH : IsSelfAdjoint H) (hZ : 0 < gibbsPartitionReal H) (D : FrechetOperatorDerivation ℂ (GibbsOperator n)) (hD : IsSelfAdjoint (finiteCEOperatorForm n a (finiteCEFrechetDirection D))) : (finiteGibbsCEOnsagerSystem H hH hZ a Q).totalGenerator (finiteCEFrechetDirection D) (finiteCEFrechetDirection D) = (secondFDerivLogPartitionReadout H (finiteCEOperatorForm n a (finiteCEFrechetDirection D)) (finiteCEOperatorForm n a (finiteCEFrechetDirection D))).re",
+      "line": 401,
+      "location": "lean/InfoGeometry/Canonical/CEBKMOnsagerGibbsIntegration.lean:401",
+      "name": "finiteGibbsCEOnsagerSystem_diagonal_eq_logPartitionHessian",
+      "qualified_name": "InfoGeometry.Canonical.CEBKMOnsagerGibbsIntegration.finiteGibbsCEOnsagerSystem_diagonal_eq_logPartitionHessian",
+      "source_end_line": 411,
+      "source_sha256": "19a61676e09fa3e939587eef8c0c93d0547297a7a10b65ead03a1312a1e475d3"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/CEBKMOnsagerGibbsIntegration.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem finiteGibbsCEOnsagerSystem_diagonal_logPartitionHessian_nonneg (H a Q : GibbsOperator n) (hH : IsSelfAdjoint H) (hZ : 0 < gibbsPartitionReal H) (D : FrechetOperatorDerivation ℂ (GibbsOperator n)) (hD : IsSelfAdjoint (finiteCEOperatorForm n a (finiteCEFrechetDirection D))) : 0 ≤ (secondFDerivLogPartitionReadout H (finiteCEOperatorForm n a (finiteCEFrechetDirection D)) (finiteCEOperatorForm n a (finiteCEFrechetDirection D))).re",
+      "line": 418,
+      "location": "lean/InfoGeometry/Canonical/CEBKMOnsagerGibbsIntegration.lean:418",
+      "name": "finiteGibbsCEOnsagerSystem_diagonal_logPartitionHessian_nonneg",
+      "qualified_name": "InfoGeometry.Canonical.CEBKMOnsagerGibbsIntegration.finiteGibbsCEOnsagerSystem_diagonal_logPartitionHessian_nonneg",
+      "source_end_line": 426,
+      "source_sha256": "19a61676e09fa3e939587eef8c0c93d0547297a7a10b65ead03a1312a1e475d3"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/CEBKMOnsagerGibbsIntegration.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem finiteGibbsCEFamily_pairwise_quadratic_eq_aggregateOnsagerDissipation_hessian {m n : ℕ} (H : GibbsOperator n) (a : Fin m → GibbsOperator n) (c : Fin m → ℝ) (Q : GibbsOperator n) (D : FrechetOperatorDerivation ℂ (GibbsOperator n)) (hH : IsSelfAdjoint H) (hZ : 0 < gibbsPartitionReal H) (hD : IsSelfAdjoint (finiteCEOperatorForm n (∑ i, c i • a i) (finiteCEFrechetDirection D))) : (∑ i, c i • ∑ j, c j • centeredBKMRealCovariance (faithfulGibbsDensity H hH hZ) (continuous_faithfulGibbsDensity_rpow H hH hZ) (finiteCEOperatorForm n (a i) (finiteCEFrechetDirection D)) (finiteCEOperatorForm n (a j) (finiteCEFrechetDirection D))) = (finiteGibbsCEOnsagerSystem H hH hZ (∑ i, c i • a i) Q).dissipative (finiteCEFrechetDirection D) (finiteCEFrechetDirection D) ∧ (∑ i, c i • ∑ j, c j • centeredBKMRealCovariance (faithfulGibbsDensity H hH hZ) (continuous_faithfulGibbsDensity_rpow H hH hZ) (finiteCEOperatorForm n (a i) (finiteCEFrechetDirection D)) (finiteCEOperatorForm n (a j) (finiteCEFrechetDirection D))) = (secondFDerivLogPartitionReadout H (finiteCEOperatorForm n (∑ i, c i • a i) (finiteCEFrechetDirection D)) (finiteCEOperatorForm n (∑ i, c i • a i) (finiteCEFrechetDirection D))).re ∧ 0 ≤ ∑ i, c i • ∑ j, c j • centeredBKMRealCovariance (faithfulGibbsDensity H hH hZ) (continuous_faithfulGibbsDensity_rpow H hH hZ) (finiteCEOperatorForm n (a i) (finiteCEFrechetDirection D)) (finiteCEOperatorForm n (a j) (finiteCEFrechetDirection D))",
+      "line": 436,
+      "location": "lean/InfoGeometry/Canonical/CEBKMOnsagerGibbsIntegration.lean:436",
+      "name": "finiteGibbsCEFamily_pairwise_quadratic_eq_aggregateOnsagerDissipation_hessian",
+      "qualified_name": "InfoGeometry.Canonical.CEBKMOnsagerGibbsIntegration.finiteGibbsCEFamily_pairwise_quadratic_eq_aggregateOnsagerDissipation_hessian",
+      "source_end_line": 465,
+      "source_sha256": "19a61676e09fa3e939587eef8c0c93d0547297a7a10b65ead03a1312a1e475d3"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/CEOneFormNOperatorBridge.lean",
+      "kind": "theorem",
+      "lean_statement": "@[simp] theorem component_apply (n : ℕ) (ω : Fin n → OneForm K) (i : Fin n) (x : K.L) : component K n ω i x = ω i x",
+      "line": 60,
+      "location": "lean/InfoGeometry/Canonical/CEOneFormNOperatorBridge.lean:60",
+      "name": "component_apply",
+      "qualified_name": "InfoGeometry.Canonical.CEOneFormNOperatorBridge.component_apply",
+      "source_end_line": 62,
+      "source_sha256": "ac163a28e26eb8814593a3528aaeaa620a49d2d5a70f2e214330bd603cebe401"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/EinsteinCartanQuarkBasisBridge.lean",
+      "kind": "theorem",
+      "lean_statement": "@[simp] theorem exteriorComponent_apply (Q : QuarkTetradMap (R := R) (V := V)) (x : ZornVectorMatrix R) : exteriorComponent Q x = ExteriorAlgebra.ι R (Q.toVector x)",
+      "line": 57,
+      "location": "lean/InfoGeometry/Canonical/EinsteinCartanQuarkBasisBridge.lean:57",
+      "name": "exteriorComponent_apply",
+      "qualified_name": "InfoGeometry.Canonical.EinsteinCartanQuarkBasis.exteriorComponent_apply",
+      "source_end_line": 59,
+      "source_sha256": "9e3e09e52630d81c8d97d482267189c823fff60a051ab8a0d78f9bcec99c8695"
+    },
+    {
+      "file": "lean/InfoGeometry/Clifford/Cl55ExteriorContractionGrading.lean",
+      "kind": "theorem",
+      "lean_statement": "@[simp] theorem differentialComponent_apply (φ : Module.Dual ℝ V) (n : ℕ) (x : ⋀[ℝ]^(n + 1) V) : ((differentialComponent φ n x : ⋀[ℝ]^n V) : Spinor) = differential φ x",
+      "line": 122,
+      "location": "lean/InfoGeometry/Clifford/Cl55ExteriorContractionGrading.lean:122",
+      "name": "differentialComponent_apply",
+      "qualified_name": "InfoGeometry.Clifford.Cl55ExteriorContractionGrading.differentialComponent_apply",
+      "source_end_line": 125,
+      "source_sha256": "66baae0eaf9f2dd364f8dfe6d6ce614ca93e390a289639061dc1f0d5a2c3f996"
+    },
+    {
+      "file": "lean/InfoGeometry/Clifford/Cl55ExteriorContractionGrading.lean",
+      "kind": "theorem",
+      "lean_statement": "@[simp] theorem wedgeComponent_apply (v : V) (n : ℕ) (x : ⋀[ℝ]^n V) : ((wedgeComponent v n x : ⋀[ℝ]^(n + 1) V) : Spinor) = ExteriorAlgebra.ι ℝ v * x",
+      "line": 143,
+      "location": "lean/InfoGeometry/Clifford/Cl55ExteriorContractionGrading.lean:143",
+      "name": "wedgeComponent_apply",
+      "qualified_name": "InfoGeometry.Clifford.Cl55ExteriorContractionGrading.wedgeComponent_apply",
+      "source_end_line": 146,
+      "source_sha256": "66baae0eaf9f2dd364f8dfe6d6ce614ca93e390a289639061dc1f0d5a2c3f996"
+    }
+  ],
+  "local_dag_context": {
+    "artifacts": {
+      "dag": {
+        "decls": {
+          "bytes": 46954812,
+          "exists": true,
+          "mtime_unix": 1791635627,
+          "path": "/home/goutev/repos/info-geometry-lean/artifacts/dag/index/decls.jsonl"
+        },
+        "edges": {
+          "bytes": 43932629,
+          "exists": true,
+          "mtime_unix": 1791635630,
+          "path": "/home/goutev/repos/info-geometry-lean/artifacts/dag/index/edges.jsonl"
+        }
+      },
+      "leansearch_local": {
+        "bytes": 119466123,
+        "exists": true,
+        "mtime_unix": 1781443840,
+        "path": "/home/goutev/repos/info-geometry-lean/artifacts/leansearch_local/records.jsonl"
+      },
+      "leantrail": {
+        "edges": {
+          "bytes": 429081486,
+          "exists": true,
+          "mtime_unix": 1784872734,
+          "path": "/home/goutev/repos/info-geometry-lean/artifacts/leantrail/arango/ig_edges.jsonl"
+        },
+        "metadata": {
+          "exists": false,
+          "path": "/home/goutev/repos/info-geometry-lean/artifacts/leantrail/arango/metadata.json"
+        },
+        "nodes": {
+          "bytes": 99300250,
+          "exists": true,
+          "mtime_unix": 1784872732,
+          "path": "/home/goutev/repos/info-geometry-lean/artifacts/leantrail/arango/ig_nodes.jsonl"
+        },
+        "snapshot": {
+          "bytes": 428169809,
+          "exists": true,
+          "mtime_unix": 1781727239,
+          "path": "/home/goutev/repos/info-geometry-lean/artifacts/leantrail/graph_snapshot.json"
+        }
+      }
+    },
+    "authority": "navigation_only",
+    "freshness": "unknown",
+    "graph_is_proof_authority": false,
+    "local_attention": {
+      "authority": "artifacts/dag/index navigation; Lean owner files decide truth",
+      "hits": [
+        {
+          "file": "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Probability/FiniteGibbsDeformationReadout.lean",
+          "kind": "theorem",
+          "line": 147,
+          "matchedTokens": [
+            "finite",
+            "form",
+            "gibbs",
+            "readout",
+            "eq",
+            "log",
+            "partition"
+          ],
+          "module": "InfoGeometry.Probability.FiniteGibbsDeformationReadout",
+          "name": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsFreeEnergy_eq_neg_logPartition",
+          "neighborhood": {
+            "edges": [
+              {
+                "dst": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsFreeEnergy",
+                "kind": "type",
+                "src": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsFreeEnergy_eq_neg_logPartition"
+              },
+              {
+                "dst": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsPartition",
+                "kind": "type",
+                "src": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsFreeEnergy_eq_neg_logPartition"
+              },
+              {
+                "dst": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsEntropy_eq",
+                "kind": "value",
+                "src": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsFreeEnergy_eq_neg_logPartition"
+              },
+              {
+                "dst": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsEntropy",
+                "kind": "value",
+                "src": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsFreeEnergy_eq_neg_logPartition"
+              },
+              {
+                "dst": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsFreeEnergy",
+                "kind": "value",
+                "src": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsFreeEnergy_eq_neg_logPartition"
+              },
+              {
+                "dst": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsPartition",
+                "kind": "value",
+                "src": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsFreeEnergy_eq_neg_logPartition"
+              },
+              {
+                "dst": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.meanEnergy",
+                "kind": "value",
+                "src": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsFreeEnergy_eq_neg_logPartition"
+              },
+              {
+                "dst": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsFreeEnergy_eq_neg_logPartition",
+                "kind": "value",
+                "src": "InfoGeometry.Probability.FiniteGibbsVariational.finite_gibbs_variational_identity"
+              }
+            ],
+            "node_count_seen": 7,
+            "query": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsFreeEnergy_eq_neg_logPartition",
+            "resolved": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsFreeEnergy_eq_neg_logPartition",
+            "root": {
+              "file": "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Probability/FiniteGibbsDeformationReadout.lean",
+              "kind": "theorem",
+              "line": 147,
+              "module": "InfoGeometry.Probability.FiniteGibbsDeformationReadout",
+              "name": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsFreeEnergy_eq_neg_logPartition"
+            }
+          },
+          "rank": 1,
+          "score": 50.0
+        },
+        {
+          "file": "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Probability/FiniteDeformationEntropyReadout.lean",
+          "kind": "theorem",
+          "line": 73,
+          "matchedTokens": [
+            "of",
+            "finite",
+            "form",
+            "readout",
+            "eq",
+            "log",
+            "partition"
+          ],
+          "module": "InfoGeometry.Probability.FiniteDeformationEntropyReadout",
+          "name": "InfoGeometry.Probability.FiniteDeformationEntropyReadout.normalizedEntropy_eq_expected_add_logPartition",
+          "neighborhood": {
+            "edges": [
+              {
+                "dst": "InfoGeometry.Probability.FiniteDeformationEntropyReadout.normalizedEntropy_eq_expected_add_logPartition",
+                "kind": "value",
+                "src": "InfoGeometry.Probability.FiniteDeformationEntropyReadout.finite_shannon_entropy_decomposition"
+              },
+              {
+                "dst": "InfoGeometry.Probability.FiniteDeformationEntropyReadout.expectedUnnormalizedSurprisal",
+                "kind": "type",
+                "src": "InfoGeometry.Probability.FiniteDeformationEntropyReadout.normalizedEntropy_eq_expected_add_logPartition"
+              },
+              {
+                "dst": "InfoGeometry.Probability.FiniteDeformationEntropyReadout.partitionFunction",
+                "kind": "type",
+                "src": "InfoGeometry.Probability.FiniteDeformationEntropyReadout.normalizedEntropy_eq_expected_add_logPartition"
+              },
+              {
+                "dst": "InfoGeometry.Probability.FiniteDeformationEntropyReadout.normalizedEntropy",
+                "kind": "type",
+                "src": "InfoGeometry.Probability.FiniteDeformationEntropyReadout.normalizedEntropy_eq_expected_add_logPartition"
+              },
+              {
+                "dst": "InfoGeometry.Probability.FiniteDeformationEntropyReadout.expectedUnnormalizedSurprisal",
+                "kind": "value",
+                "src": "InfoGeometry.Probability.FiniteDeformationEntropyReadout.normalizedEntropy_eq_expected_add_logPartition"
+              },
+              {
+                "dst": "InfoGeometry.Analysis.DeformationNormalizationGauge.normalizedSurprisal",
+                "kind": "value",
+                "src": "InfoGeometry.Probability.FiniteDeformationEntropyReadout.normalizedEntropy_eq_expected_add_logPartition"
+              },
+              {
+                "dst": "InfoGeometry.Analysis.DeformationNormalizationGauge.unnormalizedSurprisal",
+                "kind": "value",
+                "src": "InfoGeometry.Probability.FiniteDeformationEntropyReadout.normalizedEntropy_eq_expected_add_logPartition"
+              },
+              {
+                "dst": "InfoGeometry.Analysis.DeformationNormalizationGauge.normalizedSurprisal_eq_unnormalized_add_log_of_pos",
+                "kind": "value",
+                "src": "InfoGeometry.Probability.FiniteDeformationEntropyReadout.normalizedEntropy_eq_expected_add_logPartition"
+              },
+              {
+                "dst": "InfoGeometry.Probability.FiniteDeformationEntropyReadout.normalizedDistribution",
+                "kind": "value",
+                "src": "InfoGeometry.Probability.FiniteDeformationEntropyReadout.normalizedEntropy_eq_expected_add_logPartition"
+              },
+              {
+                "dst": "InfoGeometry.Probability.FiniteDeformationEntropyReadout.partitionFunction_pos",
+                "kind": "value",
+                "src": "InfoGeometry.Probability.FiniteDeformationEntropyReadout.normalizedEntropy_eq_expected_add_logPartition"
+              },
+              {
+                "dst": "InfoGeometry.Probability.FiniteDeformationEntropyReadout.partitionFunction",
+                "kind": "value",
+                "src": "InfoGeometry.Probability.FiniteDeformationEntropyReadout.normalizedEntropy_eq_expected_add_logPartition"
+              },
+              {
+                "dst": "InfoGeometry.Probability.FiniteDeformationEntropyReadout.sum_normalizedDistribution",
+                "kind": "value",
+                "src": "InfoGeometry.Probability.FiniteDeformationEntropyReadout.normalizedEntropy_eq_expected_add_logPartition"
+              },
+              {
+                "dst": "InfoGeometry.Probability.FiniteDeformationEntropyReadout.normalizedEntropy",
+                "kind": "value",
+                "src": "InfoGeometry.Probability.FiniteDeformationEntropyReadout.normalizedEntropy_eq_expected_add_logPartition"
+              }
+            ],
+            "node_count_seen": 11,
+            "query": "InfoGeometry.Probability.FiniteDeformationEntropyReadout.normalizedEntropy_eq_expected_add_logPartition",
+            "resolved": "InfoGeometry.Probability.FiniteDeformationEntropyReadout.normalizedEntropy_eq_expected_add_logPartition",
+            "root": {
+              "file": "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Probability/FiniteDeformationEntropyReadout.lean",
+              "kind": "theorem",
+              "line": 73,
+              "module": "InfoGeometry.Probability.FiniteDeformationEntropyReadout",
+              "name": "InfoGeometry.Probability.FiniteDeformationEntropyReadout.normalizedEntropy_eq_expected_add_logPartition"
+            }
+          },
+          "rank": 2,
+          "score": 43.0
+        },
+        {
+          "file": "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Probability/FiniteGibbsDeformationReadout.lean",
+          "kind": "theorem",
+          "line": 115,
+          "matchedTokens": [
+            "finite",
+            "form",
+            "gibbs",
+            "readout",
+            "eq",
+            "log"
+          ],
+          "module": "InfoGeometry.Probability.FiniteGibbsDeformationReadout",
+          "name": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsEntropy_eq",
+          "neighborhood": {
+            "edges": [
+              {
+                "dst": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsEntropy",
+                "kind": "type",
+                "src": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsEntropy_eq"
+              },
+              {
+                "dst": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsPartition",
+                "kind": "type",
+                "src": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsEntropy_eq"
+              },
+              {
+                "dst": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.meanEnergy",
+                "kind": "type",
+                "src": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsEntropy_eq"
+              },
+              {
+                "dst": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsDistribution",
+                "kind": "value",
+                "src": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsEntropy_eq"
+              },
+              {
+                "dst": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbs_normalizedSurprisal",
+                "kind": "value",
+                "src": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsEntropy_eq"
+              },
+              {
+                "dst": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsEntropy",
+                "kind": "value",
+                "src": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsEntropy_eq"
+              },
+              {
+                "dst": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.sum_gibbsDistribution",
+                "kind": "value",
+                "src": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsEntropy_eq"
+              },
+              {
+                "dst": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsPartition",
+                "kind": "value",
+                "src": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsEntropy_eq"
+              },
+              {
+                "dst": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.meanEnergy",
+                "kind": "value",
+                "src": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsEntropy_eq"
+              },
+              {
+                "dst": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsEntropy_eq",
+                "kind": "value",
+                "src": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsFreeEnergy_eq_neg_logPartition"
+              }
+            ],
+            "node_count_seen": 8,
+            "query": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsEntropy_eq",
+            "resolved": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsEntropy_eq",
+            "root": {
+              "file": "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Probability/FiniteGibbsDeformationReadout.lean",
+              "kind": "theorem",
+              "line": 115,
+              "module": "InfoGeometry.Probability.FiniteGibbsDeformationReadout",
+              "name": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsEntropy_eq"
+            }
+          },
+          "rank": 3,
+          "score": 39.0
+        },
+        {
+          "file": "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/OperatorialHessianBridge.lean",
+          "kind": "theorem",
+          "line": 239,
+          "matchedTokens": [
+            "of",
+            "form",
+            "readout",
+            "eq",
+            "log",
+            "hessian"
+          ],
+          "module": "InfoGeometry.Canonical.OperatorialHessianBridge",
+          "name": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_operatorInformationHessian_of_stationary",
+          "neighborhood": {
+            "edges": [
+              {
+                "dst": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_operatorInformationHessian_of_stationary",
+                "kind": "value",
+                "src": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_modularLieHessian_of_stationary"
+              },
+              {
+                "dst": "InfoGeometry.Canonical.RelationalInformationDynamics.operatorInformationFirstVariation",
+                "kind": "type",
+                "src": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_operatorInformationHessian_of_stationary"
+              },
+              {
+                "dst": "InfoGeometry.Canonical.OperatorialHessianBridge.scalarTransportReadout",
+                "kind": "type",
+                "src": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_operatorInformationHessian_of_stationary"
+              },
+              {
+                "dst": "InfoGeometry.Canonical.RelationalInformationDynamics.operatorInformationHessian",
+                "kind": "type",
+                "src": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_operatorInformationHessian_of_stationary"
+              },
+              {
+                "dst": "InfoGeometry.Canonical.OperatorialHessianBridge.scalarLogReadout",
+                "kind": "type",
+                "src": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_operatorInformationHessian_of_stationary"
+              },
+              {
+                "dst": "InfoGeometry.Krein.DoubledSpace",
+                "kind": "type",
+                "src": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_operatorInformationHessian_of_stationary"
+              },
+              {
+                "dst": "InfoGeometry.Canonical.OperatorialHessianBridge.instNormedRingContinuousLinearMapRealIdDoubledSpace",
+                "kind": "value",
+                "src": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_operatorInformationHessian_of_stationary"
+              },
+              {
+                "dst": "InfoGeometry.Krein.instL2NormedGroup",
+                "kind": "value",
+                "src": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_operatorInformationHessian_of_stationary"
+              },
+              {
+                "dst": "InfoGeometry.Canonical.RelationalInformationDynamics.operatorInformationFirstVariation",
+                "kind": "value",
+                "src": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_operatorInformationHessian_of_stationary"
+              },
+              {
+                "dst": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero",
+                "kind": "value",
+                "src": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_operatorInformationHessian_of_stationary"
+              },
+              {
+                "dst": "InfoGeometry.Canonical.OperatorialHessianBridge.scalarTransportReadout",
+                "kind": "value",
+                "src": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_operatorInformationHessian_of_stationary"
+              },
+              {
+                "dst": "InfoGeometry.Canonical.RelationalInformationDynamics.instNormedAlgebraRealContinuousLinearMapIdDoubledSpace",
+                "kind": "value",
+                "src": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_operatorInformationHessian_of_stationary"
+              },
+              {
+                "dst": "InfoGeometry.Canonical.RelationalInformationDynamics.operatorInformationHessian",
+                "kind": "value",
+                "src": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_operatorInformationHessian_of_stationary"
+              },
+              {
+                "dst": "InfoGeometry.Canonical.RelationalInformationDynamics.transportedObservable",
+                "kind": "value",
+                "src": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_operatorInformationHessian_of_stationary"
+              },
+              {
+                "dst": "InfoGeometry.Canonical.OperatorialHessianBridge.scalarLogReadout",
+                "kind": "value",
+                "src": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_operatorInformationHessian_of_stationary"
+              },
+              {
+                "dst": "InfoGeometry.Canonical.RelationalInformationDynamics.instNormedRingContinuousLinearMapRealIdDoubledSpace",
+                "kind": "value",
+                "src": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_operatorInformationHessian_of_stationary"
+              },
+              {
+                "dst": "InfoGeometry.Krein.DoubledSpace",
+                "kind": "value",
+                "src": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_operatorInformationHessian_of_stationary"
+              }
+            ],
+            "node_count_seen": 13,
+            "query": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_operatorInformationHessian_of_stationary",
+            "resolved": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_operatorInformationHessian_of_stationary",
+            "root": {
+              "file": "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/OperatorialHessianBridge.lean",
+              "kind": "theorem",
+              "line": 239,
+              "module": "InfoGeometry.Canonical.OperatorialHessianBridge",
+              "name": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_operatorInformationHessian_of_stationary"
+            }
+          },
+          "rank": 4,
+          "score": 38.0
+        },
+        {
+          "file": "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Probability/FiniteGibbsDeformationReadout.lean",
+          "kind": "def",
+          "line": 21,
+          "matchedTokens": [
+            "finite",
+            "form",
+            "gibbs",
+            "readout",
+            "partition"
+          ],
+          "module": "InfoGeometry.Probability.FiniteGibbsDeformationReadout",
+          "name": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsPartition",
+          "neighborhood": {
+            "edges": [
+              {
+                "dst": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsPartition",
+                "kind": "type",
+                "src": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsEntropy_eq"
+              },
+              {
+                "dst": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsPartition",
+                "kind": "value",
+                "src": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsEntropy_eq"
+              },
+              {
+                "dst": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsPartition",
+                "kind": "type",
+                "src": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsFreeEnergy_eq_neg_logPartition"
+              },
+              {
+                "dst": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsPartition",
+                "kind": "value",
+                "src": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsFreeEnergy_eq_neg_logPartition"
+              },
+              {
+                "dst": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsWeight",
+                "kind": "value",
+                "src": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsPartition"
+              },
+              {
+                "dst": "InfoGeometry.Probability.FiniteDeformationEntropyReadout.partitionFunction",
+                "kind": "value",
+                "src": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsPartition"
+              },
+              {
+                "dst": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsPartition",
+                "kind": "type",
+                "src": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsPartition_pos"
+              },
+              {
+                "dst": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsPartition",
+                "kind": "type",
+                "src": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbs_normalizedSurprisal"
+              },
+              {
+                "dst": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsPartition",
+                "kind": "value",
+                "src": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbs_normalizedSurprisal"
+              },
+              {
+                "dst": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsPartition",
+                "kind": "type",
+                "src": "InfoGeometry.Probability.FiniteGibbsVariational.finiteRelativeEntropy_gibbs_eq"
+              },
+              {
+                "dst": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsPartition",
+                "kind": "value",
+                "src": "InfoGeometry.Probability.FiniteGibbsVariational.finiteRelativeEntropy_gibbs_eq"
+              },
+              {
+                "dst": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsPartition",
+                "kind": "value",
+                "src": "InfoGeometry.Probability.FiniteGibbsVariational.finite_gibbs_variational_identity"
+              },
+              {
+                "dst": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsPartition",
+                "kind": "type",
+                "src": "InfoGeometry.Probability.FiniteGibbsVariational.log_ratio_gibbsDistribution"
+              },
+              {
+                "dst": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsPartition",
+                "kind": "value",
+                "src": "InfoGeometry.Probability.FiniteGibbsVariational.log_ratio_gibbsDistribution"
+              }
+            ],
+            "node_count_seen": 10,
+            "query": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsPartition",
+            "resolved": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsPartition",
+            "root": {
+              "file": "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Probability/FiniteGibbsDeformationReadout.lean",
+              "kind": "def",
+              "line": 21,
+              "module": "InfoGeometry.Probability.FiniteGibbsDeformationReadout",
+              "name": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsPartition"
+            }
+          },
+          "rank": 5,
+          "score": 38.0
+        },
+        {
+          "file": "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Probability/FiniteGibbsDeformationReadout.lean",
+          "kind": "theorem",
+          "line": 60,
+          "matchedTokens": [
+            "finite",
+            "form",
+            "gibbs",
+            "readout",
+            "partition"
+          ],
+          "module": "InfoGeometry.Probability.FiniteGibbsDeformationReadout",
+          "name": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsPartition_pos",
+          "neighborhood": {
+            "edges": [
+              {
+                "dst": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsPartition",
+                "kind": "type",
+                "src": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsPartition_pos"
+              },
+              {
+                "dst": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsWeight",
+                "kind": "value",
+                "src": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsPartition_pos"
+              },
+              {
+                "dst": "InfoGeometry.Probability.FiniteDeformationEntropyReadout.partitionFunction_pos",
+                "kind": "value",
+                "src": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsPartition_pos"
+              },
+              {
+                "dst": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsWeight_pos",
+                "kind": "value",
+                "src": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsPartition_pos"
+              },
+              {
+                "dst": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsPartition_pos",
+                "kind": "value",
+                "src": "InfoGeometry.Probability.FiniteGibbsVariational.finiteRelativeEntropy_gibbs_eq_zero_iff"
+              },
+              {
+                "dst": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsPartition_pos",
+                "kind": "value",
+                "src": "InfoGeometry.Probability.FiniteGibbsVariational.gibbsFreeEnergy_le"
+              },
+              {
+                "dst": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsPartition_pos",
+                "kind": "value",
+                "src": "InfoGeometry.Probability.FiniteGibbsVariational.log_ratio_gibbsDistribution"
+              }
+            ],
+            "node_count_seen": 8,
+            "query": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsPartition_pos",
+            "resolved": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsPartition_pos",
+            "root": {
+              "file": "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Probability/FiniteGibbsDeformationReadout.lean",
+              "kind": "theorem",
+              "line": 60,
+              "module": "InfoGeometry.Probability.FiniteGibbsDeformationReadout",
+              "name": "InfoGeometry.Probability.FiniteGibbsDeformationReadout.gibbsPartition_pos"
+            }
+          },
+          "rank": 6,
+          "score": 38.0
+        },
+        {
+          "file": "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/SouriauCoadjointOrbitMetriplecticTheorem.lean",
+          "kind": "theorem",
+          "line": 857,
+          "matchedTokens": [
+            "of",
+            "finite",
+            "gibbs",
+            "eq",
+            "log",
+            "partition",
+            "hessian"
+          ],
+          "module": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplecticTheorem",
+          "name": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitHessianContext.GibbsSouriauGramAnalyticWitness.massieu_eq_log_partition",
+          "neighborhood": {
+            "edges": [
+              {
+                "dst": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitHessianContext.GibbsSouriauGramAnalyticWitness.massieu_eq_log_partition",
+                "kind": "value",
+                "src": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitHessianContext.GibbsSouriauGramAnalyticWitness.integral_covariance_gram_legendre_packet"
+              },
+              {
+                "dst": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitHessianContext.GibbsSouriauGramAnalyticWitness.partitionFunction",
+                "kind": "type",
+                "src": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitHessianContext.GibbsSouriauGramAnalyticWitness.massieu_eq_log_partition"
+              },
+              {
+                "dst": "InfoGeometry.Geometry.HessianGeometry.ψ",
+                "kind": "type",
+                "src": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitHessianContext.GibbsSouriauGramAnalyticWitness.massieu_eq_log_partition"
+              },
+              {
+                "dst": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitHessianContext.GibbsSouriauGramAnalyticWitness.massieu",
+                "kind": "type",
+                "src": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitHessianContext.GibbsSouriauGramAnalyticWitness.massieu_eq_log_partition"
+              },
+              {
+                "dst": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitHessianContext.GibbsSouriauGramAnalyticWitness",
+                "kind": "type",
+                "src": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitHessianContext.GibbsSouriauGramAnalyticWitness.massieu_eq_log_partition"
+              },
+              {
+                "dst": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitHessianContext.GibbsSouriauGramAnalyticWitness",
+                "kind": "value",
+                "src": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitHessianContext.GibbsSouriauGramAnalyticWitness.massieu_eq_log_partition"
+              },
+              {
+                "dst": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitHessianContext.GibbsSouriauGramAnalyticWitness.massieu_eq_log_partition",
+                "kind": "value",
+                "src": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.gibbs_souriau_integral_covariance_to_metriplectic_packet"
+              }
+            ],
+            "node_count_seen": 7,
+            "query": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitHessianContext.GibbsSouriauGramAnalyticWitness.massieu_eq_log_partition",
+            "resolved": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitHessianContext.GibbsSouriauGramAnalyticWitness.massieu_eq_log_partition",
+            "root": {
+              "file": "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/SouriauCoadjointOrbitMetriplecticTheorem.lean",
+              "kind": "theorem",
+              "line": 857,
+              "module": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplecticTheorem",
+              "name": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitHessianContext.GibbsSouriauGramAnalyticWitness.massieu_eq_log_partition"
+            }
+          },
+          "rank": 7,
+          "score": 37.0
+        },
+        {
+          "file": "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/SouriauCoadjointOrbitMetriplecticTheorem.lean",
+          "kind": "theorem",
+          "line": 0,
+          "matchedTokens": [
+            "of",
+            "finite",
+            "mk",
+            "log",
+            "partition",
+            "hessian"
+          ],
+          "module": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplecticTheorem",
+          "name": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitHessianContext.LogPartitionFisherCovarianceOwner.mk.sizeOf_spec",
+          "neighborhood": {
+            "edges": [
+              {
+                "dst": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitHessianContext",
+                "kind": "type",
+                "src": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitHessianContext.LogPartitionFisherCovarianceOwner.mk.sizeOf_spec"
+              },
+              {
+                "dst": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitHessianContext.LogPartitionFisherCovarianceOwner",
+                "kind": "type",
+                "src": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitHessianContext.LogPartitionFisherCovarianceOwner.mk.sizeOf_spec"
+              },
+              {
+                "dst": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitHessianContext.partitionFunction",
+                "kind": "type",
+                "src": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitHessianContext.LogPartitionFisherCovarianceOwner.mk.sizeOf_spec"
+              },
+              {
+                "dst": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitHessianContext.LogPartitionFisherCovarianceOwner.mk",
+                "kind": "type",
+                "src": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitHessianContext.LogPartitionFisherCovarianceOwner.mk.sizeOf_spec"
+              },
+              {
+                "dst": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitHessianContext.fisherHessian",
+                "kind": "type",
+                "src": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitHessianContext.LogPartitionFisherCovarianceOwner.mk.sizeOf_spec"
+              },
+              {
+                "dst": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitHessianContext.momentCovariance",
+                "kind": "type",
+                "src": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitHessianContext.LogPartitionFisherCovarianceOwner.mk.sizeOf_spec"
+              },
+              {
+                "dst": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitHessianContext",
+                "kind": "value",
+                "src": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitHessianContext.LogPartitionFisherCovarianceOwner.mk.sizeOf_spec"
+              },
+              {
+                "dst": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitHessianContext.partitionFunction",
+                "kind": "value",
+                "src": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitHessianContext.LogPartitionFisherCovarianceOwner.mk.sizeOf_spec"
+              },
+              {
+                "dst": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitHessianContext.fisherHessian",
+                "kind": "value",
+                "src": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitHessianContext.LogPartitionFisherCovarianceOwner.mk.sizeOf_spec"
+              },
+              {
+                "dst": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitHessianContext.momentCovariance",
+                "kind": "value",
+                "src": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitHessianContext.LogPartitionFisherCovarianceOwner.mk.sizeOf_spec"
+              }
+            ],
+            "node_count_seen": 7,
+            "query": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitHessianContext.LogPartitionFisherCovarianceOwner.mk.sizeOf_spec",
+            "resolved": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitHessianContext.LogPartitionFisherCovarianceOwner.mk.sizeOf_spec",
+            "root": {
+              "file": "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/SouriauCoadjointOrbitMetriplecticTheorem.lean",
+              "kind": "theorem",
+              "line": 0,
+              "module": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplecticTheorem",
+              "name": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitHessianContext.LogPartitionFisherCovarianceOwner.mk.sizeOf_spec"
+            }
+          },
+          "rank": 8,
+          "score": 36.0
+        },
+        {
+          "file": "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/OperatorialHessianBridge.lean",
+          "kind": "theorem",
+          "line": 263,
+          "matchedTokens": [
+            "of",
+            "finite",
+            "form",
+            "readout",
+            "eq",
+            "log",
+            "hessian"
+          ],
+          "module": "InfoGeometry.Canonical.OperatorialHessianBridge",
+          "name": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_modularLieHessian_of_stationary",
+          "neighborhood": {
+            "edges": [
+              {
+                "dst": "InfoGeometry.Krein.instL2NormedGroup",
+                "kind": "type",
+                "src": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_modularLieHessian_of_stationary"
+              },
+              {
+                "dst": "InfoGeometry.Canonical.RelationalInformationDynamics.operatorInformationFirstVariation",
+                "kind": "type",
+                "src": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_modularLieHessian_of_stationary"
+              },
+              {
+                "dst": "InfoGeometry.Canonical.OperatorialHessianBridge.scalarTransportReadout",
+                "kind": "type",
+                "src": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_modularLieHessian_of_stationary"
+              },
+              {
+                "dst": "InfoGeometry.Krein.instL2InnerProduct",
+                "kind": "type",
+                "src": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_modularLieHessian_of_stationary"
+              },
+              {
+                "dst": "InfoGeometry.Krein.instL2Complete",
+                "kind": "type",
+                "src": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_modularLieHessian_of_stationary"
+              },
+              {
+                "dst": "InfoGeometry.Canonical.CertifiedModularReduction.modularLieHessian",
+                "kind": "type",
+                "src": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_modularLieHessian_of_stationary"
+              },
+              {
+                "dst": "InfoGeometry.Canonical.CertifiedModularReduction.Kambient",
+                "kind": "type",
+                "src": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_modularLieHessian_of_stationary"
+              },
+              {
+                "dst": "InfoGeometry.Canonical.CertifiedModularReduction",
+                "kind": "type",
+                "src": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_modularLieHessian_of_stationary"
+              },
+              {
+                "dst": "InfoGeometry.Canonical.OperatorialHessianBridge.scalarLogReadout",
+                "kind": "type",
+                "src": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_modularLieHessian_of_stationary"
+              },
+              {
+                "dst": "InfoGeometry.Krein.DoubledSpace",
+                "kind": "type",
+                "src": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_modularLieHessian_of_stationary"
+              },
+              {
+                "dst": "InfoGeometry.Krein.instL2NormedGroup",
+                "kind": "value",
+                "src": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_modularLieHessian_of_stationary"
+              },
+              {
+                "dst": "InfoGeometry.Canonical.RelationalInformationDynamics.operatorInformationFirstVariation",
+                "kind": "value",
+                "src": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_modularLieHessian_of_stationary"
+              },
+              {
+                "dst": "InfoGeometry.Canonical.OperatorialHessianBridge.scalarTransportReadout",
+                "kind": "value",
+                "src": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_modularLieHessian_of_stationary"
+              },
+              {
+                "dst": "InfoGeometry.Krein.instL2InnerProduct",
+                "kind": "value",
+                "src": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_modularLieHessian_of_stationary"
+              },
+              {
+                "dst": "InfoGeometry.Krein.instL2Complete",
+                "kind": "value",
+                "src": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_modularLieHessian_of_stationary"
+              },
+              {
+                "dst": "InfoGeometry.Canonical.CertifiedModularReduction.modularLieHessian",
+                "kind": "value",
+                "src": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_modularLieHessian_of_stationary"
+              },
+              {
+                "dst": "InfoGeometry.Canonical.CertifiedModularReduction.modularLieHessian_eq_nested_commutator",
+                "kind": "value",
+                "src": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_modularLieHessian_of_stationary"
+              },
+              {
+                "dst": "InfoGeometry.Canonical.CertifiedModularReduction.Kambient",
+                "kind": "value",
+                "src": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_modularLieHessian_of_stationary"
+              },
+              {
+                "dst": "InfoGeometry.Canonical.BogoliubovTransport.lieBracket_eq_transportCommutator",
+                "kind": "value",
+                "src": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_modularLieHessian_of_stationary"
+              },
+              {
+                "dst": "InfoGeometry.Canonical.RelationalInformationDynamics.operatorInformationHessian",
+                "kind": "value",
+                "src": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_modularLieHessian_of_stationary"
+              },
+              {
+                "dst": "InfoGeometry.Canonical.BogoliubovTransport.transportCommutator",
+                "kind": "value",
+                "src": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_modularLieHessian_of_stationary"
+              },
+              {
+                "dst": "InfoGeometry.Canonical.CertifiedModularReduction",
+                "kind": "value",
+                "src": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_modularLieHessian_of_stationary"
+              },
+              {
+                "dst": "InfoGeometry.Canonical.RelationalInformationDynamics.operatorInformationHessian_eq_double_transportCommutator",
+                "kind": "value",
+                "src": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_modularLieHessian_of_stationary"
+              },
+              {
+                "dst": "InfoGeometry.Canonical.OperatorialHessianBridge.scalarLogReadout",
+                "kind": "value",
+                "src": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_modularLieHessian_of_stationary"
+              },
+              {
+                "dst": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_operatorInformationHessian_of_stationary",
+                "kind": "value",
+                "src": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_modularLieHessian_of_stationary"
+              },
+              {
+                "dst": "InfoGeometry.Krein.DoubledSpace",
+                "kind": "value",
+                "src": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_modularLieHessian_of_stationary"
+              }
+            ],
+            "node_count_seen": 17,
+            "query": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_modularLieHessian_of_stationary",
+            "resolved": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_modularLieHessian_of_stationary",
+            "root": {
+              "file": "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/OperatorialHessianBridge.lean",
+              "kind": "theorem",
+              "line": 263,
+              "module": "InfoGeometry.Canonical.OperatorialHessianBridge",
+              "name": "InfoGeometry.Canonical.OperatorialHessianBridge.deriv2_scalarLogReadout_zero_eq_probe_modularLieHessian_of_stationary"
+            }
+          },
+          "rank": 9,
+          "score": 34.0
+        },
+        {
+          "file": "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Thermodynamics/FiniteGibbsRelative.lean",
+          "kind": "theorem",
+          "line": 179,
+          "matchedTokens": [
+            "of",
+            "finite",
+            "form",
+            "gibbs",
+            "eq"
+          ],
+          "module": "InfoGeometry.Thermodynamics.FiniteGibbsRelative",
+          "name": "InfoGeometry.Thermodynamics.FiniteGibbsRelative.fisherMetric_zero_eq_average_trace_form_of_centered",
+          "neighborhood": {
+            "edges": [
+              {
+                "dst": "InfoGeometry.Algebraic.CartanExponentialFamily.centered",
+                "kind": "type",
+                "src": "InfoGeometry.Thermodynamics.FiniteGibbsRelative.fisherMetric_zero_eq_average_trace_form_of_centered"
+              },
+              {
+                "dst": "InfoGeometry.Thermodynamics.FiniteGibbsRelative.fisherMetric",
+                "kind": "type",
+                "src": "InfoGeometry.Thermodynamics.FiniteGibbsRelative.fisherMetric_zero_eq_average_trace_form_of_centered"
+              },
+              {
+                "dst": "InfoGeometry.Algebraic.CartanExponentialFamily.centered",
+                "kind": "value",
+                "src": "InfoGeometry.Thermodynamics.FiniteGibbsRelative.fisherMetric_zero_eq_average_trace_form_of_centered"
+              },
+              {
+                "dst": "InfoGeometry.Algebraic.CartanExponentialFamily.fisherCov_zero_eq_average_trace_form_of_centered",
+                "kind": "value",
+                "src": "InfoGeometry.Thermodynamics.FiniteGibbsRelative.fisherMetric_zero_eq_average_trace_form_of_centered"
+              }
+            ],
+            "node_count_seen": 4,
+            "query": "InfoGeometry.Thermodynamics.FiniteGibbsRelative.fisherMetric_zero_eq_average_trace_form_of_centered",
+            "resolved": "InfoGeometry.Thermodynamics.FiniteGibbsRelative.fisherMetric_zero_eq_average_trace_form_of_centered",
+            "root": {
+              "file": "/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Thermodynamics/FiniteGibbsRelative.lean",
+              "kind": "theorem",
+              "line": 179,
+              "module": "InfoGeometry.Thermodynamics.FiniteGibbsRelative",
+              "name": "InfoGeometry.Thermodynamics.FiniteGibbsRelative.fisherMetric_zero_eq_average_trace_form_of_centered"
+            }
+          },
+          "rank": 10,
+          "score": 34.0
+        }
+      ],
+      "query": "ofCEFamily component_apply finiteCEOperatorForm finiteGibbsCEFamily_weightedReadout_eq finiteGibbsCEFamily_pairwise_quadratic_eq_aggregateBKM finiteGibbsCEOnsagerSystem quotientBKMForm quotientBKMForm_mk finiteGibbsCEOnsagerSystem_dissipative_eq_logPartitionHessian",
+      "queryTokens": [
+        "of",
+        "cefamily",
+        "component",
+        "apply",
+        "finite",
+        "ceoperator",
+        "form",
+        "gibbs",
+        "weighted",
+        "readout",
+        "eq",
+        "pairwise",
+        "quadratic",
+        "aggregate",
+        "bkm",
+        "ceonsager",
+        "system",
+        "quotient",
+        "bkmform",
+        "mk",
+        "dissipative",
+        "log",
+        "partition",
+        "hessian"
+      ],
+      "schema": "info_geometry.local_dag_attention.v1",
+      "source": "artifacts/dag/index/{decls,edges}.jsonl"
+    },
+    "local_neighborhood": null,
+    "local_search": [],
+    "query": "ofCEFamily component_apply finiteCEOperatorForm finiteGibbsCEFamily_weightedReadout_eq finiteGibbsCEFamily_pairwise_quadratic_eq_aggregateBKM finiteGibbsCEOnsagerSystem quotientBKMForm quotientBKMForm_mk finiteGibbsCEOnsagerSystem_dissipative_eq_logPartitionHessian",
+    "schema": "info_geometry.local_dag_attention.v1",
+    "status": "ok"
+  },
+  "query": "ofCEFamily component_apply finiteCEOperatorForm finiteGibbsCEFamily_weightedReadout_eq finiteGibbsCEFamily_pairwise_quadratic_eq_aggregateBKM finiteGibbsCEOnsagerSystem quotientBKMForm quotientBKMForm_mk finiteGibbsCEOnsagerSystem_dissipative_eq_logPartitionHessian",
+  "recommended_imports": [
+    "InfoGeometry.Canonical.BKMScalarGaugeQuotient",
+    "InfoGeometry.Canonical.CEBKMOnsagerGibbsIntegration",
+    "InfoGeometry.Canonical.CEOneFormNOperatorBridge",
+    "InfoGeometry.Canonical.EinsteinCartanQuarkBasisBridge",
+    "InfoGeometry.Canonical.GibbsHessianScalarGaugeBridge",
+    "InfoGeometry.Clifford.Cl55ExteriorContractionGrading"
+  ],
+  "schema": "info_geometry.opengauss.discovery_report.v1"
+}

@@ -114,7 +114,12 @@ collections.
 
 The reusable bounded cross-concept query is implemented by
 `tools/infra/astaql_concept_bridge.py` and documented in
-`skills/astaqlhash-concept-bridge/SKILL.md`. Its smoke output records
-`authority`, bounds, query SHA-256, query statistics, and `writesExecuted = 0`.
-An empty intersection is a bounded search result, not evidence that a semantic
-bridge is absent; increase bounds only for navigation, then inspect owners.
+`skills/astaqlhash-concept-bridge/SKILL.md`. It reports total/selected seed
+counts, declaration fingerprints, direct bounded type/value paths between
+selected declarations, and paths to shared prerequisites. Exact fully qualified seed names are supported for
+reproducible theorem-to-theorem probes; optional module-prefix filters narrow
+pattern searches. Non-compiler edge kinds are excluded. Its
+smoke output records `authority`, bounds, query SHA-256, query statistics, and
+`writesExecuted = 0`. An empty intersection is a bounded search result, not
+evidence that a semantic bridge is absent; inspect seed diagnostics, then
+inspect owner files.

@@ -24,10 +24,16 @@ class AstaqlConceptBridgeTests(unittest.TestCase):
         self.assertIn('FILTER e.kind IN ["type", "value"]', query)
         self.assertIn("quantumPath: qpath.path", query)
         self.assertIn("classicalPath: cpath.path", query)
+        self.assertIn("quantumToClassicalPaths", query)
+        self.assertIn("classicalToQuantumPaths", query)
         self.assertIn("typeShapeHash", query)
         self.assertIn("valueShapeHash", query)
         self.assertIn("quantumMatchedCount", query)
         self.assertIn("classicalMatchedCount", query)
+        self.assertIn("@quantum_names", query)
+        self.assertIn("@classical_names", query)
+        self.assertIn("d.name IN @quantum_names", query)
+        self.assertIn("d.name IN @classical_names", query)
 
     def test_query_supports_module_scopes(self):
         query = build_query()

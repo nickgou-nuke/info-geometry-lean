@@ -231,15 +231,16 @@ evidence.
   pointwise `OperatorOneForm`s still need actual linearity proofs before any
   linear-form conversion.
 
-`lean/InfoGeometry/Canonical/OperatorFrechetDerivationJet.lean` now proves
+The initial `lean/InfoGeometry/Canonical/OperatorFrechetDerivationJet.lean`
+change proved
 `operatorFrechetJet_one_apply` and `operatorFrechetJet_one_mul`. These identify
 the evaluated first iterated Fréchet jet of a complex continuous operator
 derivation with its continuous linear representative, and derive the product
 specialization from the derivation's Leibniz law. The module also restricts a
 complex derivation to the real scalars and proves that its first-jet value is
-the coefficient readout of the resulting `NCDerivation`. This is only a
-coefficient-level identification: it does not construct a Lie-indexed action,
-bracket compatibility, or a CE differential. All jet claims are order one.
+the coefficient readout of the resulting `NCDerivation`. At that initial
+stage, this was only a coefficient-level identification; the later bridge
+below adds the Lie-indexed CE connection. All jet claims are order one.
 
 Observed verification for this partial change:
 
@@ -247,11 +248,11 @@ Observed verification for this partial change:
 - `python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock InfoGeometry.Canonical.OperatorFrechetDerivationJet` exited 0 and reported `Build completed successfully (9177 jobs)`.
 - `python3 tools/infra/opengauss_cli.py certify --file lean/InfoGeometry/Canonical/OperatorFrechetDerivationJet.lean --write-audit --verify-kernel` exited 0, wrote the companion audit for five declarations, and reported `Kernel verification: passed` and `Axiom audit passed`.
 
-The Lean source and this progress-ledger revision passed source-only A-A
-review. A distinct QA-A reran the strict screen, locked module build, and
-kernel-backed axiom certification, and returned `ACCEPTED_WITH_LIMITED_SCOPE`.
-QA-A did not regenerate the companion audit file; the recorded Gate 4 run above
-did. These checks do not close the full objective. Remaining work includes
+The initial Lean source and its progress-ledger revision passed source-only
+A-A review. A distinct QA-A reran the strict screen, locked module build, and
+kernel-backed axiom certification for that earlier version, returning
+`ACCEPTED_WITH_LIMITED_SCOPE`. QA-A did not regenerate the companion audit
+file; the recorded Gate 4 run above did. These checks do not close the full objective. Remaining work includes
 a proved `NOperatorForm`/linear one-form carrier map and an explicit
 CE-to-finite-Gibbs/BKM/Onsager map with proved compatibility and concrete
 dissipative/reversible conclusions.
@@ -261,15 +262,17 @@ dissipative/reversible conclusions.
 `OperatorFrechetDerivationJet.lean` now also defines the identity-action lane
 on the full real-linear Leibniz Lie subalgebra and maps each continuous real
 Fréchet derivation into its direction carrier. The module proves preservation
-of the commutator and that the CE degree-zero differential evaluated at the
-mapped direction returns the original derivation's action. This is a concrete
-Fréchet-to-CE evaluation route, but it does not restrict the lane to continuous
-derivations or build an equivalence of CE complexes.
+of the commutator. It further identifies the evaluated first Fréchet jet of a
+complex derivation with the CE degree-zero differential evaluated on the
+real-restricted derivation direction. This is an explicit first-jet-to-CE
+evaluation theorem, not an equivalence of CE complexes; the lane still
+contains all algebraic derivations, not only continuous ones.
 
-For this updated source, the locked module build completed successfully and
-`opengauss_cli certify --write-audit --verify-kernel` passed the generated
-axiom audit. The strict T1–T17 screener reported zero traps, the no-hypothesis
-gate passed, and semantic-vacuity screening found only the pre-existing
-`restrictScalarsReal_apply` `rfl` accessor warning. Independent A-A review of
-the new bridge is pending; a distinct QA-A rerun has not yet occurred. This
-partial result does not close the overall goal.
+For the bridge revision before the combined first-jet theorem, the locked
+module build and generated axiom audit passed. The strict T1–T17 screener
+reported zero traps, the no-hypothesis gate passed, and semantic-vacuity
+screening found only the pre-existing `restrictScalarsReal_apply` `rfl`
+accessor warning. The independent A-A requested that the trivial standalone
+CE evaluation readback be replaced by a theorem combining it with the first
+jet. That correction is now made; its final A-A and QA-A gates remain pending.
+This partial result does not close the overall goal.

@@ -64,7 +64,7 @@ theorem toRealDerivation_commutator
   rw [DerivationLieLane.operatorAction_map_lie]
   rfl
 
-/-- The CE degree-zero differential on the identity-action derivation lane,
+/- The CE degree-zero differential on the identity-action derivation lane,
 evaluated at a Fréchet derivation, is its original operator action. -/
 @[simp] theorem exteriorDerivativeZero_toRealDerivation_apply
     (D : FrechetOperatorDerivation ℝ A) (a : A) :
@@ -117,6 +117,18 @@ theorem operatorFrechetJet_one_apply_eq_toNCDerivation
       FrechetOperatorDerivation.toNCDerivation
         (restrictScalarsReal D) v := by
   rw [operatorFrechetJet_one_apply]
+  rfl
+
+/-- The first Fréchet jet of a complex continuous derivation equals the
+degree-zero CE differential evaluated on its real derivation direction.
+This is the explicit jet-to-CE evaluation map; it makes no claim that the
+full algebraic derivation lane consists only of continuous derivations. -/
+theorem operatorFrechetJet_one_apply_eq_exteriorDerivativeZero
+    (D : FrechetOperatorDerivation ℂ A) (x v : A) :
+    operatorFrechetJet 1 (D : A → A) x (fun _ : Fin 1 => v) =
+      exteriorDerivativeZero (realDerivationsLane A) v
+        (FrechetBridge.toRealDerivation (restrictScalarsReal D)) := by
+  rw [operatorFrechetJet_one_apply, exteriorDerivativeZero_apply]
   rfl
 
 end InfoGeometry.Canonical.OperatorFrechetDerivationJet

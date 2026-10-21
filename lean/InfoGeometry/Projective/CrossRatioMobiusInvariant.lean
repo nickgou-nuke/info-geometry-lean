@@ -26,24 +26,10 @@ theorem crossRatio_projectiveAction_invariant
         (projectiveAction T c) (projectiveAction T d) =
       crossRatio a b c d := by
   unfold crossRatio
-  have hga : T.γ * a + T.δ ≠ 0 := by simpa [leftGauge] using ha
-  have hgb : T.γ * b + T.δ ≠ 0 := by simpa [leftGauge] using hb
-  have hgc : T.γ * c + T.δ ≠ 0 := by simpa [leftGauge] using hc
-  have hgd : T.γ * d + T.δ ≠ 0 := by simpa [leftGauge] using hd
-  have hdiff (x y : K) (hx : T.γ * x + T.δ ≠ 0)
-      (hy : T.γ * y + T.δ ≠ 0) :
-      projectiveAction T x - projectiveAction T y =
-        (T.α * T.δ - T.β * T.γ) * (x - y) /
-          ((T.γ * x + T.δ) * (T.γ * y + T.δ)) := by
-    unfold projectiveAction
-    have hxy : (T.γ * x + T.δ) * (T.γ * y + T.δ) ≠ 0 :=
-      mul_ne_zero hx hy
-    have hx' : x * T.γ + T.δ ≠ 0 := by simpa [mul_comm] using hx
-    have hy' : y * T.γ + T.δ ≠ 0 := by simpa [mul_comm] using hy
-    field_simp [hx, hy, hxy, hx', hy']
-    ring
-  rw [hdiff a b hga hgb, hdiff c d hgc hgd,
-    hdiff a c hga hgc, hdiff b d hgb hgd]
+  rw [projectiveAction_sub T a b ha hb,
+    projectiveAction_sub T c d hc hd,
+    projectiveAction_sub T a c ha hc,
+    projectiveAction_sub T b d hb hd]
   field_simp [hac, hbd, T.det_ne_zero]
 
 end InfoGeometry.Projective

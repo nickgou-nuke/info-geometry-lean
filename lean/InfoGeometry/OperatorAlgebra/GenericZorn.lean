@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ZornSpinor
@@ -307,6 +313,14 @@ theorem integralEmbedding_injective :
       cases h
       rfl
 
+/-- The integral embedding intertwines native Zorn conjugation with the
+coordinate conjugation on the integer split-octonion carrier. -/
+theorem integralEmbedding_conjZ (x : SplitOct) :
+    conjugate (integralEmbedding x) =
+      integralEmbedding (conjZ x) := by
+  cases x
+  rfl
+
 def integralLattice : Set (ZornSplitOctonion ℚ) :=
   Set.range integralEmbedding
 
@@ -330,6 +344,14 @@ theorem integral_lattice_mul_closed
   rcases hx with ⟨x, rfl⟩
   rcases hy with ⟨y, rfl⟩
   exact ⟨mulZ x y, (integral_mul_embedding x y).symm⟩
+
+/-- The integral lattice is closed under the native Zorn conjugation. -/
+theorem integral_lattice_conjugate_closed
+    {x : ZornSplitOctonion ℚ}
+    (hx : x ∈ integralLattice) :
+    conjugate x ∈ integralLattice := by
+  rcases hx with ⟨x, rfl⟩
+  exact ⟨conjZ x, (integralEmbedding_conjZ x).symm⟩
 
 /-- A concrete rational Cartan coordinate. -/
 abbrev cartanCharge (x : ZornSplitOctonion ℚ) : ℚ := x.a

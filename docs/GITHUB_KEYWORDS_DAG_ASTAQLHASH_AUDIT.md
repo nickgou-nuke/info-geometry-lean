@@ -59,37 +59,31 @@ The declaration counts above are index counts, not theorem-quality scores.
 Generated constructors, instances, and recursors are included in the raw
 counts; owner inspection remains necessary before making mathematical claims.
 
-## Recommended GitHub topics
+## Selected primary GitHub topics
 
-GitHub topics are short discovery labels. The following twenty are the best
-current balance between repository depth and mathematical specificity:
+This is the selected 14-topic set for the repository page:
 
 ```text
 lean4
 mathlib
 formalized-mathematics
 information-geometry
+fisher-information
+category-theory
+colimits
 clifford-algebra
 krein-space
 modular-theory
 tomita-takesaki
 kms-states
-souriau-thermodynamics
-cuntz-algebra
-car-algebra
-zorn-matrices
-split-octonions
-category-theory
-colimits
-fisher-information
-bogoliubov-transformations
-metriplectic-systems
 onsager-reciprocity
 ```
 
-If the GitHub page allows additional descriptive keywords, add:
+Optional secondary discovery keywords, if more topics are desired:
 
 ```text
+souriau-thermodynamics, cuntz-algebra, car-algebra, zorn-matrices,
+split-octonions, bogoliubov-transformations, metriplectic-systems,
 jordan-lie-algebra, entropy, thermodynamic-potentials, gns-construction,
 triality, hestenes-geometric-algebra, direct-limits, tensor-towers
 ```

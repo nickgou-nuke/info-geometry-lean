@@ -41,15 +41,9 @@ theorem molecular_observation_eq_iff {atoms peaks : ℕ}
   · intro h e
     exact congrFun (congrArg MultiEnergyObservation.spectrumAt h) e
   · intro h
-    cases molecularMultiEnergyObservation F G with
-    | mk x =>
-      cases molecularMultiEnergyObservation F H with
-      | mk y =>
-        have hxy : x = y := by
-          funext e
-          exact h e
-        cases hxy
-        rfl
+    apply MultiEnergyObservation.mk.injEq.mpr
+    funext e
+    exact h e
 
 /-- Any molecular equivalence respected by the simulator admits a quotient
 signature; it is injective precisely when the forward model identifies

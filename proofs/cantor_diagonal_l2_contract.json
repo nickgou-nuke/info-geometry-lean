@@ -1,0 +1,90 @@
+{
+  "schema": "info_geometry.opengauss.ground_truth_theorem_contract.v1",
+  "contract_id": "cantor-diagonal-stage-l2-inner-product-v1",
+  "semantic_status": "human_asserted_not_kernel_verified",
+  "claim": "For every finite binary stage n, the complex-linear map diagonalCylinderL2 sends a diagonal observable to the L2 equivalence class of its Cantor cylinder function and preserves the finite Bernoulli inner product: the L2 inner product of the images of f and g equals DiagTrace n (fun w => star (f w) * g w).",
+  "carrier": {
+    "type": "DiagAlg n := (Fin n → Bool) → ℂ; Boundary := ℕ → Bool; L2Boundary := Lp ℂ 2 fractalMeasure",
+    "operations": [
+      "cylinder n f x := f (boundaryPrefix n x)",
+      "DiagTrace n h := (2 : ℂ)⁻¹ ^ n * ∑ w : Fin n → Bool, h w",
+      "The target inner product is the Mathlib complex L2 inner product, conjugate-linear in the first argument."
+    ],
+    "conventions": [
+      "fractalMeasure is the countable product of fair Boolean probability measures.",
+      "Each length-n cylinder has measure (1 / 2 : ℝ≥0∞)^n.",
+      "The finite quadratic form cylinderKMSQuadratic n f is 2⁻ⁿ times the sum of squared pointwise norms over BitWord n."
+    ]
+  },
+  "owner_declarations": [
+    {
+      "qualified_name": "InfoGeometry.Canonical.CantorKMSState.DiagTrace",
+      "kind": "def",
+      "source_path": "lean/InfoGeometry/Canonical/CantorKMSState.lean",
+      "source_sha256": "d183897a39ba47db66dc8a17ef8de55a3624fa0fe947ab265bbd70e2bd5c7525",
+      "source_line": 55,
+      "source_end_line": 55,
+      "source_excerpt": "def DiagTrace (n : ℕ) (f : DiagAlg n) : ℂ :=",
+      "lean_statement": "def DiagTrace (n : ℕ) (f : DiagAlg n) : ℂ",
+      "status_assertion": "definition"
+    },
+    {
+      "qualified_name": "InfoGeometry.Canonical.UHFInductiveColimitBoundaryTopology.continuous_cylinder",
+      "kind": "theorem",
+      "source_path": "lean/InfoGeometry/Canonical/UHFInductiveColimitBoundaryTopology.lean",
+      "source_sha256": "595a634a1709f1fdee75f47a1e9879019e28ad66bf408e1dba00c2ed8636bcdb",
+      "source_line": 36,
+      "source_end_line": 37,
+      "source_excerpt": "theorem continuous_cylinder (n : ℕ) (f : DiagAlg n) :\n    Continuous (cylinder n f) := by",
+      "lean_statement": "theorem continuous_cylinder (n : ℕ) (f : DiagAlg n) : Continuous (cylinder n f)",
+      "status_assertion": "asserted_proved"
+    },
+    {
+      "qualified_name": "InfoGeometry.Canonical.CantorKMSCylinderState.cylinderKMSFiniteWeightedToPiLp_norm_sq",
+      "kind": "theorem",
+      "source_path": "lean/InfoGeometry/Canonical/CantorKMSCylinderFinitePiLp.lean",
+      "source_sha256": "dd56653fd11bde74818db49183a89f7cb81012206431bdc6f4d862cc72794de1",
+      "source_line": 153,
+      "source_end_line": 156,
+      "source_excerpt": "theorem cylinderKMSFiniteWeightedToPiLp_norm_sq (n : ℕ)\n    (f : (Fin n → Bool) → ℂ) :\n    ‖cylinderKMSFiniteWeightedToPiLp n f‖ ^ 2 =\n      cylinderKMSQuadratic n f := by",
+      "lean_statement": "theorem cylinderKMSFiniteWeightedToPiLp_norm_sq (n : ℕ) (f : (Fin n → Bool) → ℂ) : ‖cylinderKMSFiniteWeightedToPiLp n f‖ ^ 2 = cylinderKMSQuadratic n f",
+      "status_assertion": "asserted_proved"
+    },
+    {
+      "qualified_name": "InfoGeometry.Canonical.CantorBernoulliDiagTraceBridge.projectiveLimitMeasure_integral_prefix_eq_DiagTrace",
+      "kind": "theorem",
+      "source_path": "lean/InfoGeometry/Canonical/CantorBernoulliDiagTraceBridge.lean",
+      "source_sha256": "6c0f4622db638c1990a7a03a550965867c003fe6fb88850e5364a8e178257dc7",
+      "source_line": 50,
+      "source_end_line": 52,
+      "source_excerpt": "theorem projectiveLimitMeasure_integral_prefix_eq_DiagTrace\n    (n : ℕ) (f : DiagAlg n) :\n    ∫ q, f (π n q) ∂projectiveLimitMeasure = DiagTrace n f := by",
+      "lean_statement": "theorem projectiveLimitMeasure_integral_prefix_eq_DiagTrace (n : ℕ) (f : DiagAlg n) : ∫ q, f (π n q) ∂projectiveLimitMeasure = DiagTrace n f",
+      "status_assertion": "asserted_proved"
+    }
+  ],
+  "imports": [
+    "InfoGeometry.Canonical.CantorBernoulliL2OperatorTransport",
+    "InfoGeometry.Canonical.CantorBernoulliDiagTraceBridge"
+  ],
+  "consumers": [
+    "The existing finite PiLp realization of cylinderKMSQuadratic is to be matched with the same finite stage represented inside the concrete Cantor-boundary L2 space.",
+    "The result is a stagewise diagonal embedding only; it does not identify the full finite-matrix GNS stages or their filtered colimit with all of L2Boundary."
+  ],
+  "smallest_gap": {
+    "declaration_name": "InfoGeometry.Canonical.CantorBernoulliFiniteDiagL2Embedding.diagonalCylinderL2_inner",
+    "lean_signature": "(n : ℕ) (f g : DiagAlg n) : ⟪diagonalCylinderL2 n f, diagonalCylinderL2 n g⟫_ℂ = DiagTrace n (fun w => star (f w) * g w)",
+    "pantograph_expression": "∀ n : ℕ, ∀ f g : DiagAlg n, ⟪diagonalCylinderL2 n f, diagonalCylinderL2 n g⟫_ℂ = DiagTrace n (fun w => star (f w) * g w)",
+    "description": "Construct the stagewise complex-linear map by sending f to the L2 class of the existing cylinder n f, and prove its inner-product identity using the fair product measure and finite-prefix trace formula."
+  },
+  "out_of_scope": [
+    "No density or closure theorem for the union of finite cylinder stages in L2Boundary.",
+    "No identification of the full finite-matrix GNS stages or filtered GNS colimit with L2Boundary.",
+    "No completion or representation theorem for the universal Cuntz C-star algebra.",
+    "No KMS theorem for the concrete spatial vector state."
+  ],
+  "discovery_receipt": {
+    "path": "proofs/cantor_diagonal_l2_discovery.json",
+    "sha256": "a591f71b5c149faed6b91bd60a1550deffccb457c9a561a13b2d87afc12d63db",
+    "query": "measure_cylinderSet continuous_cylinder cylinderKMSFiniteWeightedToPiLp_norm_sq DiagTrace"
+  }
+}

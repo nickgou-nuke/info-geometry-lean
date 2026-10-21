@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.MeasureTheory.Function.LpSpace.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.MeasureTheory.Function.L2Space
@@ -1097,6 +1103,36 @@ theorem normalizedPrependBitLpAdjoint_comp_cross_eq_zero
         (normalizedPrependBitLpContinuousLinearMap c f) g
     _ = 0 := normalizedPrependBitLpContinuousLinearMap_inner_zero hbc.symm f g
     _ = inner ℂ (0 : L2Boundary) g := by simp
+
+/-- The adjoint-composed branch map is the orthogonal projection onto that
+branch's range. -/
+theorem normalizedPrependBitLp_range_projection_idempotent (b : Bool) :
+    let T := normalizedPrependBitLpContinuousLinearMap b
+    let Tstar := normalizedPrependBitLpAdjoint b
+    (T.comp Tstar).comp (T.comp Tstar) = T.comp Tstar := by
+  dsimp
+  change normalizedPrependBitLpContinuousLinearMap b ∘SL
+      ((normalizedPrependBitLpAdjoint b ∘SL
+        normalizedPrependBitLpContinuousLinearMap b) ∘SL
+          normalizedPrependBitLpAdjoint b) = _
+  rw [normalizedPrependBitLpAdjoint_comp_self]
+  simp
+
+/-- The two branch range projections are orthogonal. -/
+theorem normalizedPrependBitLp_range_projection_cross_eq_zero
+    {b c : Bool} (hbc : b ≠ c) :
+    let Tb := normalizedPrependBitLpContinuousLinearMap b
+    let Tc := normalizedPrependBitLpContinuousLinearMap c
+    let Tbstar := normalizedPrependBitLpAdjoint b
+    let Tcstar := normalizedPrependBitLpAdjoint c
+    (Tb.comp Tbstar).comp (Tc.comp Tcstar) = 0 := by
+  dsimp
+  change normalizedPrependBitLpContinuousLinearMap b ∘SL
+      ((normalizedPrependBitLpAdjoint b ∘SL
+        normalizedPrependBitLpContinuousLinearMap c) ∘SL
+          normalizedPrependBitLpAdjoint c) = 0
+  rw [normalizedPrependBitLpAdjoint_comp_cross_eq_zero hbc]
+  simp
 
 def prependBitFunction (b : Bool) (f : L2Boundary) : Boundary → ℂ :=
   fun x => f (prependBit b x)

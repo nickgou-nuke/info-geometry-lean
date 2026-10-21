@@ -1,5 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+
+noncomputable section
 
 /-!
 # InfoGeometry.Krein.TomitaMatrixAtom
@@ -291,5 +299,80 @@ theorem diracHodgeAtom_mul_Pminus :
   ext i j; fin_cases i <;> fin_cases j <;>
     norm_num [diracHodgeAtom, ellPlus, ellMinus, Pplus, Pminus,
       Matrix.mul_apply, Fin.sum_univ_two]
+
+/-! ### Finite two-sector thermal polarization
+
+The grading stays fixed while the scalar parameter changes the weights of its
+two eigensectors.  These are matrix identities in the existing `M2R` owner;
+they do not assert positivity or a trace-class interpretation outside this
+finite carrier.
+-/
+
+/-- The normalized two-sector polarization attached to a real parameter. -/
+def thermalPolarization (q : ℝ) : M2R :=
+  ((1 / 2 : ℝ) • ((1 : M2R) + q • eps))
+
+/-- The scalar weights of the positive and negative sectors. -/
+def thermalWeightPlus (q : ℝ) : ℝ := (1 + q) / 2
+
+def thermalWeightMinus (q : ℝ) : ℝ := (1 - q) / 2
+
+@[simp]
+theorem thermalWeights_add (q : ℝ) :
+    thermalWeightPlus q + thermalWeightMinus q = 1 := by
+  unfold thermalWeightPlus thermalWeightMinus
+  ring
+
+@[simp]
+theorem thermalWeights_sub (q : ℝ) :
+    thermalWeightPlus q - thermalWeightMinus q = q := by
+  unfold thermalWeightPlus thermalWeightMinus
+  ring
+
+/-- The thermal polarization is the weighted sum of the two projectors. -/
+theorem thermalPolarization_eq_weighted_projectors (q : ℝ) :
+    thermalPolarization q =
+      thermalWeightPlus q • Pplus + thermalWeightMinus q • Pminus := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [thermalPolarization, thermalWeightPlus, thermalWeightMinus,
+      Pplus, Pminus, eps] <;>
+    ring
+
+/-- The polarization is the affine expression `½ (1 + q ε)`. -/
+theorem thermalPolarization_eq_affine (q : ℝ) :
+    thermalPolarization q =
+      ((1 / 2 : ℝ) • (1 : M2R)) + (q / 2) • eps := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [thermalPolarization, eps] <;>
+    ring
+
+/-- Squaring the polarization gives the exact scalar defect from idempotence. -/
+theorem thermalPolarization_sq_sub_self (q : ℝ) :
+    thermalPolarization q * thermalPolarization q - thermalPolarization q =
+      ((q ^ 2 - 1) / 4 : ℝ) • (1 : M2R) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [thermalPolarization, eps, Matrix.mul_apply, Fin.sum_univ_two]
+  <;> ring
+
+/-- At zero polarization, both sectors have equal weight. -/
+theorem thermalPolarization_zero :
+    thermalPolarization 0 = ((1 / 2 : ℝ) • (1 : M2R)) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [thermalPolarization, eps]
+
+/-- The two extremal parameters recover the sector projectors. -/
+theorem thermalPolarization_one :
+    thermalPolarization 1 = Pplus := by
+  rw [thermalPolarization_eq_weighted_projectors]
+  norm_num [thermalWeightPlus, thermalWeightMinus]
+
+theorem thermalPolarization_neg_one :
+    thermalPolarization (-1) = Pminus := by
+  rw [thermalPolarization_eq_weighted_projectors]
+  norm_num [thermalWeightPlus, thermalWeightMinus]
 
 end InfoGeometry.Krein.TomitaMatrixAtom

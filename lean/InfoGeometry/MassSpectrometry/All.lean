@@ -30,3 +30,6 @@ import InfoGeometry.MassSpectrometry.MolecularFragmentColimit
 import InfoGeometry.MassSpectrometry.MolecularGraphCategory
 import InfoGeometry.MassSpectrometry.LinearBSplineKAN
 import InfoGeometry.MassSpectrometry.LogosMap
+
+import InfoGeometry.MassSpectrometry.MultiEnergyIdentifiability
+import InfoGeometry.MassSpectrometry.MolecularIdentifiabilityBridge

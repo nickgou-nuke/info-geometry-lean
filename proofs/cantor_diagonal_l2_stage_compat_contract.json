@@ -1,0 +1,65 @@
+{
+  "schema": "info_geometry.opengauss.ground_truth_theorem_contract.v1",
+  "contract_id": "cantor-diagonal-l2-successor-compatibility-v1",
+  "semantic_status": "human_asserted_not_kernel_verified",
+  "claim": "The finite diagonal successor embedding induces the same Cantor-boundary L2 element: representing diagEmbedSucc n f at stage n+1 equals representing f at stage n.",
+  "carrier": {
+    "type": "DiagAlg n := (Fin n → Bool) → ℂ; L2Boundary := Lp ℂ 2 fractalMeasure",
+    "operations": [
+      "diagEmbedSucc n extends a finite observable by ignoring the last bit.",
+      "diagonalCylinderL2 n sends f to the L2 class of cylinder n f.",
+      "cylinder_compatible_succ n f identifies the two underlying boundary functions."
+    ],
+    "conventions": [
+      "Equality is equality in the quotient Lp carrier, not merely equality of selected representatives.",
+      "This is successor-stage compatibility only; it does not assert a colimit completion or density result."
+    ]
+  },
+  "owner_declarations": [
+    {
+      "qualified_name": "InfoGeometry.Canonical.CantorBernoulliFiniteDiagL2Embedding.diagonalCylinderL2",
+      "kind": "def",
+      "source_path": "lean/InfoGeometry/Canonical/CantorBernoulliFiniteDiagL2Embedding.lean",
+      "source_sha256": "1e34dc499280e1819717f33ecf11731180d80e2770f7c6109458045e931ca6a2",
+      "source_line": 50,
+      "source_end_line": 51,
+      "source_excerpt": "noncomputable def diagonalCylinderL2 (n : ℕ) : DiagAlg n →ₗ[ℂ] L2Boundary where\n  toFun f := (cylinder_memLp n f).toLp",
+      "lean_statement": "noncomputable def diagonalCylinderL2 (n : ℕ) : DiagAlg n →ₗ[ℂ] L2Boundary where toFun f",
+      "status_assertion": "definition"
+    },
+    {
+      "qualified_name": "InfoGeometry.Canonical.UHFInductiveColimitBoundary.cylinder_compatible_succ",
+      "kind": "theorem",
+      "source_path": "lean/InfoGeometry/Canonical/UHFInductiveColimitBoundary.lean",
+      "source_sha256": "58f4197543ae6410a338123256d1eed456811da127ec557593c530e2e7bd1d6d",
+      "source_line": 111,
+      "source_end_line": 112,
+      "source_excerpt": "theorem cylinder_compatible_succ (n : ℕ) (f : DiagAlg n) :\n    cylinder (n + 1) (diagEmbedSucc n f) = cylinder n f := by",
+      "lean_statement": "theorem cylinder_compatible_succ (n : ℕ) (f : DiagAlg n) : cylinder (n + 1) (diagEmbedSucc n f) = cylinder n f",
+      "status_assertion": "asserted_proved"
+    }
+  ],
+  "imports": [
+    "InfoGeometry.Canonical.CantorBernoulliFiniteDiagL2Embedding",
+    "InfoGeometry.Canonical.UHFInductiveColimitBoundary"
+  ],
+  "consumers": [
+    "This is the compatibility equation needed for the finite-stage L2 maps to descend along the existing diagonal successor system."
+  ],
+  "smallest_gap": {
+    "declaration_name": "InfoGeometry.Canonical.CantorBernoulliFiniteDiagL2Embedding.diagonalCylinderL2_compatible_succ",
+    "lean_signature": "(n : ℕ) (f : DiagAlg n) : diagonalCylinderL2 (n + 1) (diagEmbedSucc n f) = diagonalCylinderL2 n f",
+    "pantograph_expression": "∀ n : ℕ, ∀ f : DiagAlg n, diagonalCylinderL2 (n + 1) (diagEmbedSucc n f) = diagonalCylinderL2 n f",
+    "description": "Transport the already-proved equality of successor-compatible cylinder functions through MemLp.toLp to equality in the concrete boundary L2 space."
+  },
+  "out_of_scope": [
+    "No full filtered-colimit or Hilbert completion identification.",
+    "No density theorem for finite cylinder functions in the whole boundary L2 space.",
+    "No identification with the full finite-matrix GNS colimit or a concrete Cuntz KMS theorem."
+  ],
+  "discovery_receipt": {
+    "path": "proofs/cantor_diagonal_l2_stage_compat_discovery.json",
+    "sha256": "736884d2a258ee5b3c778e7851b9360192cce24a83bc4648008b254b2193e7f5",
+    "query": "cylinder_compatible_succ diagonalCylinderL2 DiagTrace_compat"
+  }
+}

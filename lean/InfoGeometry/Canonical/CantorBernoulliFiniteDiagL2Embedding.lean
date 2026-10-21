@@ -67,6 +67,18 @@ noncomputable def diagonalCylinderL2 (n : ℕ) : DiagAlg n →ₗ[ℂ] L2Boundar
       cylinder n f :=
   MemLp.coeFn_toLp (cylinder_memLp n f)
 
+/-- The boundary `L²` representations respect the canonical successor maps. -/
+theorem diagonalCylinderL2_compatible_succ (n : ℕ) (f : DiagAlg n) :
+    diagonalCylinderL2 (n + 1) (diagEmbedSucc n f) =
+      diagonalCylinderL2 n f := by
+  change
+    (cylinder_memLp (n + 1) (diagEmbedSucc n f)).toLp
+        (cylinder (n + 1) (diagEmbedSucc n f)) =
+      (cylinder_memLp n f).toLp (cylinder n f)
+  apply MemLp.toLp_congr
+  exact Filter.Eventually.of_forall fun x =>
+    congrFun (cylinder_compatible_succ n f) x
+
 theorem boundaryPrefix_preimage_singleton (n : ℕ) (w : BitWord n) :
     boundaryPrefix n ⁻¹' ({w} : Set (BitWord n)) =
       InfoGeometry.Canonical.UHFInductiveColimitBoundaryTopology.cylinderSet n

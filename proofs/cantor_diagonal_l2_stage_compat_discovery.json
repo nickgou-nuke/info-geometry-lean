@@ -1,0 +1,110 @@
+{
+  "authority": "navigation_only",
+  "carriers_found": [
+    {
+      "file": "lean/InfoGeometry/Canonical/CantorBernoulliFiniteDiagL2Embedding.lean",
+      "kind": "def",
+      "lean_statement": "noncomputable def diagonalCylinderL2 (n : ℕ) : DiagAlg n →ₗ[ℂ] L2Boundary where toFun f",
+      "line": 50,
+      "location": "lean/InfoGeometry/Canonical/CantorBernoulliFiniteDiagL2Embedding.lean:50",
+      "name": "diagonalCylinderL2",
+      "qualified_name": "InfoGeometry.Canonical.CantorBernoulliFiniteDiagL2Embedding.diagonalCylinderL2",
+      "source_end_line": 51,
+      "source_sha256": "1e34dc499280e1819717f33ecf11731180d80e2770f7c6109458045e931ca6a2"
+    }
+  ],
+  "dag_context": null,
+  "deduplication_warnings": [
+    "Query 'cylinder_compatible_succ diagonalCylinderL2 DiagTrace_compat' matches existing fundamental type 'diagonalCylinderL2' in lean/InfoGeometry/Canonical/CantorBernoulliFiniteDiagL2Embedding.lean; reuse canonical carrier instead of introducing redundant type wrapper."
+  ],
+  "graph_is_proof_authority": false,
+  "lemmas_found": [
+    {
+      "file": "lean/InfoGeometry/External/Auto/FockUHFBridge.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem cylinder_compatible_succ (n : ℕ) (f : DiagAlg n) : cylinder (n + 1) (diagEmbedSucc n f) = cylinder n f",
+      "line": 58,
+      "location": "lean/InfoGeometry/External/Auto/FockUHFBridge.lean:58",
+      "name": "cylinder_compatible_succ",
+      "qualified_name": "FockUHFBridge.cylinder_compatible_succ",
+      "source_end_line": 59,
+      "source_sha256": "c46edb4604ac39fa834ced2127f4f1b138ca061b1f9a2344b618f24301849f88"
+    },
+    {
+      "file": "lean/InfoGeometry/External/Auto/UHFInductiveColimit.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem cylinder_compatible_succ (n : ℕ) (f : DiagAlg n) : cylinder (n + 1) (diagEmbedSucc n f) = cylinder n f",
+      "line": 103,
+      "location": "lean/InfoGeometry/External/Auto/UHFInductiveColimit.lean:103",
+      "name": "cylinder_compatible_succ",
+      "qualified_name": "UHFInductiveColimit.cylinder_compatible_succ",
+      "source_end_line": 104,
+      "source_sha256": "c4c07984b316939cc10644e37deff6ca681cbf14c2cb176c8ec788463739e477"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/CantorBernoulliFiniteDiagL2Embedding.lean",
+      "kind": "theorem",
+      "lean_statement": "@[simp] theorem diagonalCylinderL2_coeFn (n : ℕ) (f : DiagAlg n) : ((diagonalCylinderL2 n f : L2Boundary) : Boundary → ℂ) =ᵐ[μC] cylinder n f",
+      "line": 65,
+      "location": "lean/InfoGeometry/Canonical/CantorBernoulliFiniteDiagL2Embedding.lean:65",
+      "name": "diagonalCylinderL2_coeFn",
+      "qualified_name": "InfoGeometry.Canonical.CantorBernoulliFiniteDiagL2Embedding.diagonalCylinderL2_coeFn",
+      "source_end_line": 67,
+      "source_sha256": "1e34dc499280e1819717f33ecf11731180d80e2770f7c6109458045e931ca6a2"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/CantorBernoulliFiniteDiagL2Embedding.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem diagonalCylinderL2_compatible_succ (n : ℕ) (f : DiagAlg n) : diagonalCylinderL2 (n + 1) (diagEmbedSucc n f) = diagonalCylinderL2 n f",
+      "line": 71,
+      "location": "lean/InfoGeometry/Canonical/CantorBernoulliFiniteDiagL2Embedding.lean:71",
+      "name": "diagonalCylinderL2_compatible_succ",
+      "qualified_name": "InfoGeometry.Canonical.CantorBernoulliFiniteDiagL2Embedding.diagonalCylinderL2_compatible_succ",
+      "source_end_line": 73,
+      "source_sha256": "1e34dc499280e1819717f33ecf11731180d80e2770f7c6109458045e931ca6a2"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/CantorBernoulliFiniteDiagL2Embedding.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem diagonalCylinderL2_inner (n : ℕ) (f g : DiagAlg n) : inner ℂ (diagonalCylinderL2 n f) (diagonalCylinderL2 n g) = DiagTrace n (fun w => star (f w) * g w)",
+      "line": 117,
+      "location": "lean/InfoGeometry/Canonical/CantorBernoulliFiniteDiagL2Embedding.lean:117",
+      "name": "diagonalCylinderL2_inner",
+      "qualified_name": "InfoGeometry.Canonical.CantorBernoulliFiniteDiagL2Embedding.diagonalCylinderL2_inner",
+      "source_end_line": 119,
+      "source_sha256": "1e34dc499280e1819717f33ecf11731180d80e2770f7c6109458045e931ca6a2"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/CantorKMSState.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem DiagTrace_compat (n : ℕ) (f : DiagAlg n) : DiagTrace (n + 1) (diagEmbedSucc n f) = DiagTrace n f",
+      "line": 103,
+      "location": "lean/InfoGeometry/Canonical/CantorKMSState.lean:103",
+      "name": "DiagTrace_compat",
+      "qualified_name": "InfoGeometry.Canonical.CantorKMSState.DiagTrace_compat",
+      "source_end_line": 104,
+      "source_sha256": "d183897a39ba47db66dc8a17ef8de55a3624fa0fe947ab265bbd70e2bd5c7525"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/UHFInductiveColimitBoundary.lean",
+      "kind": "theorem",
+      "lean_statement": "theorem cylinder_compatible_succ (n : ℕ) (f : DiagAlg n) : cylinder (n + 1) (diagEmbedSucc n f) = cylinder n f",
+      "line": 111,
+      "location": "lean/InfoGeometry/Canonical/UHFInductiveColimitBoundary.lean:111",
+      "name": "cylinder_compatible_succ",
+      "qualified_name": "InfoGeometry.Canonical.UHFInductiveColimitBoundary.cylinder_compatible_succ",
+      "source_end_line": 112,
+      "source_sha256": "58f4197543ae6410a338123256d1eed456811da127ec557593c530e2e7bd1d6d"
+    }
+  ],
+  "local_dag_context": null,
+  "query": "cylinder_compatible_succ diagonalCylinderL2 DiagTrace_compat",
+  "recommended_imports": [
+    "InfoGeometry.Canonical.CantorBernoulliFiniteDiagL2Embedding",
+    "InfoGeometry.Canonical.CantorKMSState",
+    "InfoGeometry.Canonical.UHFInductiveColimitBoundary",
+    "InfoGeometry.External.Auto.FockUHFBridge",
+    "InfoGeometry.External.Auto.UHFInductiveColimit"
+  ],
+  "schema": "info_geometry.opengauss.discovery_report.v1"
+}

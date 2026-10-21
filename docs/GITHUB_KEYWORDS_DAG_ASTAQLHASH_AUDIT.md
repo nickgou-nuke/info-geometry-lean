@@ -111,3 +111,10 @@ the graph read-only. Record the exact source scope, graph generation or
 freshness status, query, limits, and owner files. Do not refresh live `decls`
 or `edges` merely to obtain keywords: the legacy refresh path can truncate the
 collections.
+
+The reusable bounded cross-concept query is implemented by
+`tools/infra/astaql_concept_bridge.py` and documented in
+`skills/astaqlhash-concept-bridge/SKILL.md`. Its smoke output records
+`authority`, bounds, query SHA-256, query statistics, and `writesExecuted = 0`.
+An empty intersection is a bounded search result, not evidence that a semantic
+bridge is absent; increase bounds only for navigation, then inspect owners.

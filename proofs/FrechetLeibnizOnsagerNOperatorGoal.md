@@ -200,6 +200,37 @@ evidence.
 
 ## Implementation progress (partial; goal remains open)
 
+### Ground-truth contract: Fréchet derivations into the algebraic CE lane
+
+- **Claim:** For a normed real algebra `A`, each `FrechetOperatorDerivation ℝ A`
+  determines an element of the existing Lie subalgebra of real-linear Leibniz
+  endomorphisms. The map preserves the existing commutator, and evaluation of
+  the CE degree-zero differential of the identity-action lane at that image
+  equals evaluation of the original Fréchet derivation.
+- **Carriers:** Source is the structure
+  `FrechetOperatorDerivation ℝ A` (continuous linear map plus Leibniz law).
+  Target is `NonAssocDerivation.derivations ℝ A`; the lane direction type is
+  that same subalgebra, and the CE one-form is Mathlib's linear one-cochain on
+  those directions. The lane includes all algebraic real-linear derivations;
+  the Fréchet map is not claimed surjective and no CE equivalence is claimed.
+- **Existing owners:** `NonAssocDerivation.derivations` is the Lie subalgebra
+  with its inherited commutator (`Algebra/NonAssocDerivation.lean`);
+  `DerivationLieLane` requires a Lie hom action into it and a proof of
+  faithfulness (`Algebra/DerivationLieLane.lean`);
+  `FrechetOperatorDerivation` and its continuous commutator are in
+  `Optics/OperatorDerivationForms.lean`; the CE degree-zero differential and
+  its evaluation theorem are in
+  `OperatorAlgebra/DerivationDifferentialForms.lean`.
+- **Smallest gap:** No generic identity-action lane on the full derivation
+  subalgebra, nor an adapter from the Fréchet derivation carrier to it, was
+  found in the recursive Lean search. The older `NCDerivation` adapter is
+  integer-linear and does not fill this real-linear lane.
+- **Not established:** This does not make the CE lane continuous-only, prove
+  surjectivity, identify arbitrary `NOperatorForm`s with CE cochains, or connect
+  the CE calculus to Gibbs/BKM/Onsager response. In particular, unrestricted
+  pointwise `OperatorOneForm`s still need actual linearity proofs before any
+  linear-form conversion.
+
 `lean/InfoGeometry/Canonical/OperatorFrechetDerivationJet.lean` now proves
 `operatorFrechetJet_one_apply` and `operatorFrechetJet_one_mul`. These identify
 the evaluated first iterated Fréchet jet of a complex continuous operator

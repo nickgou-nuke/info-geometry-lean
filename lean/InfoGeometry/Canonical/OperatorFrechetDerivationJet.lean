@@ -5,6 +5,8 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Canonical.OperatorFrechetForms
 import InfoGeometry.Optics.OperatorDerivationForms
+import InfoGeometry.Algebra.DerivationLieLane
+import InfoGeometry.OperatorAlgebra.DerivationDifferentialForms
 
 /-!
 # First Fréchet jets of continuous operator derivations
@@ -18,8 +20,55 @@ namespace InfoGeometry.Canonical.OperatorFrechetDerivationJet
 
 open InfoGeometry.Canonical.OperatorFrechetForms
 open InfoGeometry.Optics.OperatorDerivationForms
+open InfoGeometry.Algebra
+open InfoGeometry.Algebra.DerivationLieLane
+open InfoGeometry.OperatorAlgebra.DerivationDifferentialForms
 
 variable {A : Type*} [NormedRing A] [NormedAlgebra ℂ A]
+
+/-- The full real-linear Leibniz derivation Lie algebra acting on its
+coefficient algebra by evaluation. -/
+noncomputable def realDerivationsLane (A : Type*)
+    [NormedRing A] [NormedAlgebra ℝ A] : DerivationLieLane ℝ A where
+  L := NonAssocDerivation.derivations ℝ A
+  lieRing := inferInstance
+  lieAlgebra := inferInstance
+  act := (LieHom.id : NonAssocDerivation.derivations ℝ A →ₗ⁅ℝ⁆
+    NonAssocDerivation.derivations ℝ A)
+  faithful := fun _ _ h => h
+
+namespace FrechetBridge
+
+variable {A : Type*} [NormedRing A] [NormedAlgebra ℝ A]
+
+/-- A continuous real Fréchet derivation, with continuity forgotten, is a
+real-linear Leibniz endomorphism in the native derivation Lie algebra. -/
+noncomputable def toRealDerivation
+    (D : FrechetOperatorDerivation ℝ A) :
+    (realDerivationsLane A).L :=
+  ⟨D.toContinuousLinearMap.toLinearMap, D.leibniz⟩
+
+/-- The Fréchet commutator adapter preserves the native derivation bracket. -/
+theorem toRealDerivation_commutator
+    (D E : FrechetOperatorDerivation ℝ A) :
+    toRealDerivation (FrechetOperatorDerivation.commutator D E) =
+      ⁅toRealDerivation D, toRealDerivation E⁆ := by
+  change (FrechetBridge.toRealDerivation (FrechetOperatorDerivation.commutator D E) :
+    NonAssocDerivation.derivations ℝ A) = _
+  apply Subtype.ext
+  ext a
+  simp [toRealDerivation, FrechetOperatorDerivation.commutator_apply,
+    NonAssocDerivation.lie_apply]
+
+/-- The CE degree-zero differential on the identity-action derivation lane,
+evaluated at a Fréchet derivation, is its original operator action. -/
+@[simp] theorem exteriorDerivativeZero_toRealDerivation_apply
+    (D : FrechetOperatorDerivation ℝ A) (a : A) :
+    exteriorDerivativeZero (realDerivationsLane A) a (toRealDerivation D) = D a := by
+  change (realDerivationsLane A).operatorAction (toRealDerivation D) a = D a
+  rfl
+
+end FrechetBridge
 
 /-- Evaluation of the first iterated Fréchet jet of a continuous operator
 derivation is its continuous linear representative applied to the direction. -/

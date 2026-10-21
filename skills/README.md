@@ -45,6 +45,10 @@ All castes are strictly bound by the top-priority mandate:
 
 ## Policy Skills
 
+- [`astaqlhash-concept-bridge`](astaqlhash-concept-bridge/SKILL.md): bounded,
+  read-only cross-concept navigation over the compiler-backed `decls`/`edges`
+  DAG. It never treats graph proximity or fingerprints as proof.
+
 - [`epistemic-compilation`](epistemic-compilation/SKILL.md): normalize
   speculative or confabulated intake into owner-aligned theorem contracts and
   kernel-checked Lean results, with explicit scope and open-debt labels.

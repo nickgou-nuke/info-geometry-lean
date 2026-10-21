@@ -130,6 +130,19 @@ theorem modularFlowCl11_group_property (t s : ThermalTime) (q : Cl11) :
   have hangle : 2 * (t + s) = 2 * t + 2 * s := by ring
   ext <;> simp [modularFlowCl11, hangle, Real.cos_add, Real.sin_add] <;> ring
 
+theorem modularFlowCl11_add (t : ThermalTime) (q r : Cl11) :
+    modularFlowCl11 t (q + r) = modularFlowCl11 t q + modularFlowCl11 t r := by
+  change modularFlowCl11 t (InfoGeometry.Clifford.Cl11CoordinateAlgebra.add q r) =
+    InfoGeometry.Clifford.Cl11CoordinateAlgebra.add
+      (modularFlowCl11 t q) (modularFlowCl11 t r)
+  ext <;> simp [modularFlowCl11, InfoGeometry.Clifford.Cl11CoordinateAlgebra.add] <;> ring
+
+theorem modularFlowCl11_smul (t : ThermalTime) (c : ℝ) (q : Cl11) :
+    modularFlowCl11 t (c • q) = c • modularFlowCl11 t q := by
+  change modularFlowCl11 t (InfoGeometry.Clifford.Cl11CoordinateAlgebra.smul c q) =
+    InfoGeometry.Clifford.Cl11CoordinateAlgebra.smul c (modularFlowCl11 t q)
+  ext <;> simp [modularFlowCl11, InfoGeometry.Clifford.Cl11CoordinateAlgebra.smul] <;> ring
+
 /-- The finite modular flow has an explicit inverse at the opposite time. -/
 theorem modularFlowCl11_inverse (t : ThermalTime) (q : Cl11) :
     modularFlowCl11 (-t) (modularFlowCl11 t q) = q := by

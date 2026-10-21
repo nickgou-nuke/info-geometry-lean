@@ -72,6 +72,23 @@ This repository is not a sanitized textbook. It is the raw, authentic record of 
    - Clone and develop your own extensions
    - The blueprint layer and declaration graph help track coverage
 
+### Read-only concept-bridge navigation
+
+For a bounded comparison of concept corridors in the compiler-backed
+declaration DAG, use:
+
+```bash
+python3 tools/infra/astaql_concept_bridge.py \
+  --quantum-term tomita --quantum-term kms \
+  --classical-term fisher --classical-term onsager \
+  --depth 3 --json-out /tmp/astaql_concept_bridge.json
+```
+
+This queries `decls` and `edges` read-only. Shared prerequisites are
+navigation evidence only. Read owner source and prove every claimed
+comparison in Lean; do not infer semantic edges such as `INHERITS_FROM` or
+`HAS_PROPERTY` from graph proximity.
+
 ---
 
 ### Citation

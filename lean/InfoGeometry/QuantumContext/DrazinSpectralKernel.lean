@@ -102,6 +102,16 @@ theorem spectral_mul_kernel (hD : IsDrazinInverse A D k) :
   have hP := spectralProj_idempotent hD
   rw [mul_sub, mul_one, hP, sub_self]
 
+/-- Orthogonality in the opposite order: the kernel projector also vanishes
+when composed on the left with the active spectral projector. -/
+theorem kernel_mul_spectral (hD : IsDrazinInverse A D k) :
+    kernelProj A D * spectralProj A D = 0 := by
+  dsimp [kernelProj, spectralProj]
+  have hP := spectralProj_idempotent hD
+  rw [sub_mul, one_mul]
+  change spectralProj A D - spectralProj A D * spectralProj A D = 0
+  rw [hP, sub_self]
+
 /-! --------------------------------------------------------------------------
     Section 3: Kernel Annihilation Theorems
     -------------------------------------------------------------------------- -/

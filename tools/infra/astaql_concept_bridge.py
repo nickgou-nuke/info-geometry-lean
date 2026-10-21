@@ -50,52 +50,100 @@ def _pattern(terms: tuple[str, ...]) -> str:
 
 def build_query() -> str:
     return """
-LET quantum = (
+LET quantumMatches = (
   FOR d IN @@decl_collection
     FILTER REGEX_TEST(LOWER(d.name), @quantum_pattern)
-    SORT d.name
-    LIMIT @seed_limit
+    FILTER @quantum_module_prefix == "" OR
+      STARTS_WITH(LOWER(d.module), LOWER(@quantum_module_prefix))
+    SORT d.module, d.name
     RETURN d
 )
-LET classical = (
+LET classicalMatches = (
   FOR d IN @@decl_collection
     FILTER REGEX_TEST(LOWER(d.name), @classical_pattern)
-    SORT d.name
-    LIMIT @seed_limit
+    FILTER @classical_module_prefix == "" OR
+      STARTS_WITH(LOWER(d.module), LOWER(@classical_module_prefix))
+    SORT d.module, d.name
     RETURN d
 )
-FOR q IN quantum
-  LET qdeps = (
-    FOR v, e, p IN 1..@depth OUTBOUND q._id @@edge_collection
-      OPTIONS {bfs: true, uniqueVertices: "global"}
-      LIMIT @cone_limit
-      RETURN v._id
-  )
-  FOR c IN classical
-    LET cdeps = (
-      FOR v, e, p IN 1..@depth OUTBOUND c._id @@edge_collection
+LET quantum = SLICE(quantumMatches, 0, @seed_limit)
+LET classical = SLICE(classicalMatches, 0, @seed_limit)
+LET matches = (
+  FOR q IN quantum
+    LET qdeps = (
+      FOR v, e, p IN 1..@depth OUTBOUND q._id @@edge_collection
         OPTIONS {bfs: true, uniqueVertices: "global"}
+        PRUNE e.kind NOT IN ["type", "value"]
+        FILTER e.kind IN ["type", "value"]
         LIMIT @cone_limit
-        RETURN v._id
+        RETURN {id: v._id, depth: LENGTH(p.edges),
+                path: p.vertices[*]._id, edgeKinds: p.edges[*].kind}
     )
-    LET shared = INTERSECTION(qdeps, cdeps)
-    FILTER LENGTH(shared) > 0
-    LIMIT @pair_limit
-    RETURN {
-      quantum: {id: q._id, name: q.name, kind: q.kind,
-                module: q.module, file: q.file, line: q.line},
-      classical: {id: c._id, name: c.name, kind: c.kind,
-                  module: c.module, file: c.file, line: c.line},
-      sharedCount: LENGTH(shared),
-      sharedNodes: (
-        FOR d IN @@decl_collection
-          FILTER d._id IN shared
-          SORT d.name
-          LIMIT @shared_limit
-          RETURN {id: d._id, name: d.name, kind: d.kind,
-                  module: d.module, file: d.file, line: d.line}
+    FOR c IN classical
+      LET cdeps = (
+        FOR v, e, p IN 1..@depth OUTBOUND c._id @@edge_collection
+          OPTIONS {bfs: true, uniqueVertices: "global"}
+          PRUNE e.kind NOT IN ["type", "value"]
+          FILTER e.kind IN ["type", "value"]
+          LIMIT @cone_limit
+          RETURN {id: v._id, depth: LENGTH(p.edges),
+                  path: p.vertices[*]._id, edgeKinds: p.edges[*].kind}
       )
-    }
+      LET shared = INTERSECTION(qdeps[*].id, cdeps[*].id)
+      FILTER LENGTH(shared) > 0
+      LIMIT @pair_limit
+      RETURN {
+        quantum: {id: q._id, name: q.name, kind: q.kind,
+                  module: q.module, file: q.file, line: q.line,
+                  dagShapeHash: q.dagShapeHash,
+                  typeShapeHash: q.typeFingerprint.shapeHash,
+                  valueShapeHash: q.valueFingerprint == null ? null :
+                    q.valueFingerprint.shapeHash},
+        classical: {id: c._id, name: c.name, kind: c.kind,
+                    module: c.module, file: c.file, line: c.line,
+                    dagShapeHash: c.dagShapeHash,
+                    typeShapeHash: c.typeFingerprint.shapeHash,
+                    valueShapeHash: c.valueFingerprint == null ? null :
+                      c.valueFingerprint.shapeHash},
+        sharedCount: LENGTH(shared),
+        sharedNodes: (
+          FOR id IN shared
+            LET d = DOCUMENT(id)
+            LET qpath = FIRST(FOR dep IN qdeps FILTER dep.id == id RETURN dep)
+            LET cpath = FIRST(FOR dep IN cdeps FILTER dep.id == id RETURN dep)
+            SORT d.name
+            LIMIT @shared_limit
+            RETURN {
+              id: d._id, name: d.name, kind: d.kind, module: d.module,
+              file: d.file, line: d.line, dagShapeHash: d.dagShapeHash,
+              typeShapeHash: d.typeFingerprint.shapeHash,
+              valueShapeHash: d.valueFingerprint == null ? null :
+                d.valueFingerprint.shapeHash,
+              quantumPath: qpath.path, quantumEdgeKinds: qpath.edgeKinds,
+              classicalPath: cpath.path, classicalEdgeKinds: cpath.edgeKinds
+            }
+        )
+      }
+)
+RETURN {
+  quantumMatchedCount: LENGTH(quantumMatches),
+  classicalMatchedCount: LENGTH(classicalMatches),
+  quantumSelected: quantum[* RETURN {
+    id: CURRENT._id, name: CURRENT.name, module: CURRENT.module,
+    dagShapeHash: CURRENT.dagShapeHash,
+    typeShapeHash: CURRENT.typeFingerprint.shapeHash,
+    valueShapeHash: CURRENT.valueFingerprint == null ? null :
+      CURRENT.valueFingerprint.shapeHash
+  }],
+  classicalSelected: classical[* RETURN {
+    id: CURRENT._id, name: CURRENT.name, module: CURRENT.module,
+    dagShapeHash: CURRENT.dagShapeHash,
+    typeShapeHash: CURRENT.typeFingerprint.shapeHash,
+    valueShapeHash: CURRENT.valueFingerprint == null ? null :
+      CURRENT.valueFingerprint.shapeHash
+  }],
+  matches: matches
+}
 """.strip()
 
 
@@ -105,6 +153,8 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--quantum-term", action="append", dest="quantum_terms")
     parser.add_argument("--classical-term", action="append", dest="classical_terms")
+    parser.add_argument("--quantum-module-prefix", default="")
+    parser.add_argument("--classical-module-prefix", default="")
     parser.add_argument("--depth", type=lambda v: _positive(v, "--depth"), default=3)
     parser.add_argument("--seed-limit", type=lambda v: _positive(v, "--seed-limit"), default=20)
     parser.add_argument("--cone-limit", type=lambda v: _positive(v, "--cone-limit"), default=200)
@@ -126,6 +176,8 @@ def main() -> int:
         "@edge_collection": args.edge_collection,
         "quantum_pattern": _pattern(quantum),
         "classical_pattern": _pattern(classical),
+        "quantum_module_prefix": args.quantum_module_prefix,
+        "classical_module_prefix": args.classical_module_prefix,
         "depth": args.depth,
         "seed_limit": args.seed_limit,
         "cone_limit": args.cone_limit,
@@ -141,6 +193,9 @@ def main() -> int:
         print(f"astaql-concept-bridge: {exc}", file=sys.stderr)
         return 2
 
+    query_summary = next(iter(response.get("result", [])), {})
+    matched_quantum = query_summary.get("quantumMatchedCount", 0)
+    matched_classical = query_summary.get("classicalMatchedCount", 0)
     payload = {
         "authority": "compiler_backed_decls_edges",
         "readOnly": True,
@@ -150,6 +205,10 @@ def main() -> int:
         "edgeCollection": args.edge_collection,
         "quantumTerms": list(quantum),
         "classicalTerms": list(classical),
+        "modulePrefixes": {
+            "quantum": args.quantum_module_prefix,
+            "classical": args.classical_module_prefix,
+        },
         "bounds": {
             "depth": args.depth,
             "seedLimit": args.seed_limit,
@@ -158,11 +217,24 @@ def main() -> int:
             "sharedLimit": args.shared_limit,
         },
         "querySha256": hashlib.sha256(query.encode("utf-8")).hexdigest(),
-        "result": response.get("result", []),
+        "diagnostics": {
+            "quantumMatchedCount": matched_quantum,
+            "classicalMatchedCount": matched_classical,
+            "quantumSelected": query_summary.get("quantumSelected", []),
+            "classicalSelected": query_summary.get("classicalSelected", []),
+            "emptyResultInterpretation": (
+                "No declarations matched the filters."
+                if matched_quantum == 0 or matched_classical == 0
+                else "No shared type/value prerequisites were found within the configured bounds."
+            ) if not query_summary.get("matches") else None,
+        },
+        "result": query_summary.get("matches", []),
         "stats": response.get("extra", {}).get("stats", {}),
         "semanticWarning": (
-            "Shared graph prerequisites are navigation evidence; inspect owner "
-            "source and prove any claimed semantic comparison in Lean."
+            "Paths list compiler dependency edges only (type/value). Shared "
+            "prerequisites and structural hashes are navigation evidence; they "
+            "do not prove semantic relations or graph completeness. Inspect owner "
+            "source and prove any claimed bridge in Lean."
         ),
     }
     rendered = json.dumps(payload, ensure_ascii=False, indent=2)

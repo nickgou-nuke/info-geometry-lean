@@ -57,11 +57,11 @@ theorem toRealDerivation_commutator
     NonAssocDerivation.derivations ℝ A) = _
   apply Subtype.ext
   ext a
-  change (FrechetOperatorDerivation.commutator D E) a =
-    ((⁅(toRealDerivation D : NonAssocDerivation.derivations ℝ A),
-        toRealDerivation E⁆ : NonAssocDerivation.derivations ℝ A) :
-      Module.End ℝ A) a
-  rw [InfoGeometry.Algebra.NonAssocDerivation.lie_apply]
+  change (realDerivationsLane A).operatorAction
+      (toRealDerivation (FrechetOperatorDerivation.commutator D E)) a =
+    (realDerivationsLane A).operatorAction
+      ⁅toRealDerivation D, toRealDerivation E⁆ a
+  rw [DerivationLieLane.operatorAction_map_lie]
   rfl
 
 /-- The CE degree-zero differential on the identity-action derivation lane,

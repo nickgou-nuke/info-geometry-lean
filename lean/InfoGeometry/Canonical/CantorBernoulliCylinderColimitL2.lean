@@ -69,4 +69,4 @@ theorem cylinderColimitToL2_denseRange :
 
 end InfoGeometry.Canonical.CantorBernoulliCylinderColimitL2
 
-end noncomputable section
+end

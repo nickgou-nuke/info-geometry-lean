@@ -149,6 +149,24 @@ theorem modularFlowCl11_inverse (t : ThermalTime) (q : Cl11) :
   have h := modularFlowCl11_group_property (-t) t q
   simpa using h.symm
 
+/-!
+The finite flow is not merely pointwise invertible: its additive and scalar
+laws make each time slice a genuine linear automorphism of the coordinate
+carrier.  We expose the additive equivalence here so downstream constructions
+can transport subgroups and additive invariants without re-proving the inverse
+calculation.
+-/
+
+/-- The modular flow at a fixed time is an additive equivalence. -/
+noncomputable def modularFlowCl11AddEquiv (t : ThermalTime) : Cl11 ≃+ Cl11 where
+  toFun := modularFlowCl11 t
+  invFun := modularFlowCl11 (-t)
+  left_inv q := modularFlowCl11_inverse t q
+  right_inv q := by
+    have h := modularFlowCl11_inverse (-t) q
+    simpa [neg_neg] using h
+  map_add' q r := modularFlowCl11_add t q r
+
 /-- The modular rotation preserves the quadratic norm of the transverse
     `e₂` and `e₁₂` coordinates. -/
 theorem modularFlowCl11_transverse_norm_sq (t : ThermalTime) (q : Cl11) :

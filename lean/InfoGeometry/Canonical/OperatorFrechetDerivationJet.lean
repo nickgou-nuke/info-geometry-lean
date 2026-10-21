@@ -64,14 +64,6 @@ theorem toRealDerivation_commutator
   rw [DerivationLieLane.operatorAction_map_lie]
   rfl
 
-/-- The CE degree-zero differential on the identity-action derivation lane,
-evaluated at a Fréchet derivation, is its original operator action. -/
-@[simp] theorem exteriorDerivativeZero_toRealDerivation_apply
-    (D : FrechetOperatorDerivation ℝ A) (a : A) :
-    exteriorDerivativeZero (realDerivationsLane A) a (toRealDerivation D) = D a := by
-  change (realDerivationsLane A).operatorAction (toRealDerivation D) a = D a
-  rfl
-
 end FrechetBridge
 
 /-- Evaluation of the first iterated Fréchet jet of a continuous operator

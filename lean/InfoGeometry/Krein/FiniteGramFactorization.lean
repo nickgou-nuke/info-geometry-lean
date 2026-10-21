@@ -89,16 +89,6 @@ theorem gramMatrix_quadratic_nonneg
   rw [gramMatrix_quadratic_eq_sum_sq B x]
   exact Finset.sum_nonneg (fun k hk => sq_nonneg _)
 
-/-! The quadratic form vanishes on the transpose-side kernel. -/
-
-theorem gramMatrix_quadratic_eq_zero_of_kernel
-    {n m : Type*} [Fintype n] [Fintype m] [DecidableEq m]
-    (B : Matrix n m ℝ) (x : n → ℝ)
-    (h : ∀ k, ∑ i, x i * B i k = 0) :
-    (∑ i, ∑ j, x i * gramMatrix B i j * x j) = 0 := by
-  rw [gramMatrix_quadratic_eq_sum_sq B x]
-  simp [h]
-
 /-- The Gram quadratic vanishes exactly on the kernel of the transpose map. -/
 theorem gramMatrix_quadratic_eq_zero_iff_transpose_mulVec_eq_zero
     {n m : Type*} [Fintype n] [Fintype m] [DecidableEq m]

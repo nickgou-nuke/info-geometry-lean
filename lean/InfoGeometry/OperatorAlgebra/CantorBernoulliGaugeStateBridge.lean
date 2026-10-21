@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Analysis.InnerProductSpace.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.InnerProductSpace.Adjoint
@@ -176,16 +182,5 @@ theorem wordPair_scalar_twisted_identity
       simp [if_neg h_uy, if_neg h_yu]
   · have h_xv : x ≠ v := ne_comm.mp h_vx
     simp [if_neg h_vx, if_neg h_xv]
-
-/-- Equal-depth compatibility wrapper for the scalar identity.
-    The length hypotheses record the intended matrix-unit sector; the scalar
-    proof itself is independent of them.  This is not an algebraic KMS
-    theorem without separate product and dynamics bridge lemmas. -/
-theorem wordPairExpectation_eq_twisted
-    (u v x y : List Bool)
-    (_h_inner : v.length = x.length)
-    (_h_outer : y.length = u.length) :
-    wordPairExpectation u v x y = wordPairTwistedExpectation u v x y := by
-  exact wordPair_scalar_twisted_identity u v x y
 
 end InfoGeometry.OperatorAlgebra.CantorBernoulliGaugeStateBridge

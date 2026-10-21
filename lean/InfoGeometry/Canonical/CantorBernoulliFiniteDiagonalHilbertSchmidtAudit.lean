@@ -1,0 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.Canonical.CantorBernoulliFiniteDiagonalHilbertSchmidt
+
+#print axioms InfoGeometry.Canonical.CantorBernoulliFiniteDiagonalHilbertSchmidt.diagonalPart
+#print axioms InfoGeometry.Canonical.CantorBernoulliFiniteDiagonalHilbertSchmidt.diagonal_normSq_sum_le_hs_normSq_sum
+#print axioms InfoGeometry.Canonical.CantorBernoulliFiniteDiagonalHilbertSchmidt.normalized_diagonal_normSq_sum_le_hs_normSq_sum
+#print axioms InfoGeometry.Canonical.CantorBernoulliFiniteDiagonalHilbertSchmidt.diagonalPart_bond_compatible
+#print axioms InfoGeometry.Canonical.CantorBernoulliFiniteDiagonalHilbertSchmidt.diagonalCylinderL2_inner_diagonalPart

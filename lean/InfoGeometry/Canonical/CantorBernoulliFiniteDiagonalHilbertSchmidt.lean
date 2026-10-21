@@ -9,20 +9,20 @@ import InfoGeometry.OperatorAlgebra.CantorBernoulliFiniteMatrixUnitBridge
 import InfoGeometry.Canonical.BitWordComplexCStarTowerNaturalityBridge
 
 /-!
-# The finite diagonal map into Bernoulli boundary `L²`
+# Finite Hilbert--Schmidt diagonal and Bernoulli `L²` readout
 
-This owner starts the full-matrix-to-boundary bridge at the exact finite
-BitWord matrix carrier. It proves the finite trace-energy contraction and
-compatibility with the existing dyadic matrix and diagonal successor maps.
-It does not yet identify the finite trace energy with a completed GNS vector
-or extend the map to the filtered GNS colimit.
+This owner proves the finite coefficient-square contraction for diagonal
+extraction, its compatibility with the dyadic matrix and diagonal successor
+maps, and the existing Bernoulli boundary `L²` inner-product readout. It does
+not identify the finite Hilbert--Schmidt expression with a trace-GNS vector
+norm, and does not extend a map to the filtered GNS colimit.
 -/
 
 noncomputable section
 
 open scoped InnerProductSpace
 
-namespace InfoGeometry.Canonical.CantorBernoulliFiniteDiagonalTraceContraction
+namespace InfoGeometry.Canonical.CantorBernoulliFiniteDiagonalHilbertSchmidt
 
 open InfoGeometry.Canonical.UHFInductiveColimitBoundary
 open InfoGeometry.Canonical.CantorKMSState
@@ -34,8 +34,8 @@ diagonal stage. -/
 def diagonalPart (n : ℕ) (A : BitWordMatrixStage n) : DiagAlg n :=
   Matrix.diag A
 
-/-- The diagonal square-sum is bounded by the full finite
-Hilbert--Schmidt square-sum. -/
+/-- The diagonal coefficient square-sum is bounded by the full finite
+Hilbert--Schmidt coefficient square-sum. -/
 theorem diagonal_normSq_sum_le_hs_normSq_sum
     (n : ℕ) (A : BitWordMatrixStage n) :
     (∑ u : BitWord n, Complex.normSq (A u u)) ≤
@@ -78,6 +78,6 @@ theorem diagonalCylinderL2_inner_diagonalPart
         DiagTrace n (fun u => star (A u u) * A u u) := by
   exact diagonalCylinderL2_inner n (diagonalPart n A) (diagonalPart n A)
 
-end InfoGeometry.Canonical.CantorBernoulliFiniteDiagonalTraceContraction
+end InfoGeometry.Canonical.CantorBernoulliFiniteDiagonalHilbertSchmidt
 
 end

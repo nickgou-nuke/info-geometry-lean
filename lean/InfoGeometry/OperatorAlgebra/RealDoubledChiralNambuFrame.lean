@@ -8,6 +8,7 @@ import InfoGeometry.OperatorAlgebra.RealDoubledChiralKreinReal
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.RealDoubledChiralKreinComplements
 import InfoGeometry.Canonical.SuperchargeCARCCRBridge
+import InfoGeometry.Canonical.TomitaKreinNilpotentAtom
 
 /-!
 # Nambu-style frame on the doubled real chiral carrier
@@ -27,6 +28,7 @@ open InfoGeometry.OperatorAlgebra.RealDoubledChiralKrein
 open InfoGeometry.OperatorAlgebra.RealDoubledChiralKreinComplements
 open InfoGeometry.Canonical.BogoliubovFockSuper
 open InfoGeometry.Canonical.SuperchargeCARCCRBridge
+open InfoGeometry.Canonical.TomitaKreinNilpotentAtom
 
 variable {E : Type*}
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
@@ -225,6 +227,34 @@ theorem concreteCARAnnihilation_eq_nambuProjectorMinus_comp_nambuSheetFlip :
       etaChiral, gamma5, spectral_epsilon, modular_j, one_div,
       concreteCARAnnihilation,
       cliffordConcreteAnnihilation_apply_to_doubled] <;> module
+
+theorem nambuCreation_square_zero :
+    ((nambuProjectorPlus (E := E)).comp (nambuSheetFlip (E := E))).comp
+        ((nambuProjectorPlus (E := E)).comp (nambuSheetFlip (E := E))) = 0 := by
+  rw [← concreteCARCreation_eq_nambuProjectorPlus_comp_nambuSheetFlip (E := E)]
+  exact concrete_creation_square_zero (E := E)
+
+theorem nambuAnnihilation_square_zero :
+    ((nambuProjectorMinus (E := E)).comp (nambuSheetFlip (E := E))).comp
+        ((nambuProjectorMinus (E := E)).comp (nambuSheetFlip (E := E))) = 0 := by
+  rw [← concreteCARAnnihilation_eq_nambuProjectorMinus_comp_nambuSheetFlip (E := E)]
+  exact concrete_annihilation_square_zero (E := E)
+
+theorem nambuCreation_comp_nambuAnnihilation_eq_spectralPlusProj :
+    ((nambuProjectorPlus (E := E)).comp (nambuSheetFlip (E := E))).comp
+        ((nambuProjectorMinus (E := E)).comp (nambuSheetFlip (E := E))) =
+      spectralPlusProj (E := E) := by
+  rw [← concreteCARCreation_eq_nambuProjectorPlus_comp_nambuSheetFlip (E := E),
+    ← concreteCARAnnihilation_eq_nambuProjectorMinus_comp_nambuSheetFlip (E := E)]
+  exact concrete_creation_comp_annihilation_eq_spectralPlusProj (E := E)
+
+theorem nambuAnnihilation_comp_nambuCreation_eq_spectralMinusProj :
+    ((nambuProjectorMinus (E := E)).comp (nambuSheetFlip (E := E))).comp
+        ((nambuProjectorPlus (E := E)).comp (nambuSheetFlip (E := E))) =
+      spectralMinusProj (E := E) := by
+  rw [← concreteCARAnnihilation_eq_nambuProjectorMinus_comp_nambuSheetFlip (E := E),
+    ← concreteCARCreation_eq_nambuProjectorPlus_comp_nambuSheetFlip (E := E)]
+  exact concrete_annihilation_comp_creation_eq_spectralMinusProj (E := E)
 
 end CanonicalCAR
 

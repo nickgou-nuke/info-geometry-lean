@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.ChiralCausalCone
@@ -312,7 +318,7 @@ theorem comm_Kx_Ky : commM Kx Ky = -Complex.I • Jz := by
   all_goals rw [hI_cube]
   all_goals ring_nf
 
-/-- Proposition form of the imported Fierz completeness theorem. -/
+/- The imported Fierz completeness proposition on the concrete chiral carrier. -/
 def chiralFierzStatement : Prop :=
     (1/2 : ℂ) • (Matrix.kroneckerMap (fun (a b : ℂ) => a * b)
         (1 : Matrix (Fin 2) (Fin 2) ℂ) (1 : Matrix (Fin 2) (Fin 2) ℂ) +
@@ -322,6 +328,10 @@ def chiralFierzStatement : Prop :=
       ChiralCausalCone.σPlus ChiralCausalCone.σMinus +
     Matrix.kroneckerMap (fun (a b : ℂ) => a * b)
       ChiralCausalCone.σMinus ChiralCausalCone.σPlus = FierzIdentities.Swap
+
+/- The concrete chiral Fierz proposition is proved by the imported owner theorem. -/
+theorem chiralFierzStatement_proof : chiralFierzStatement := by
+  exact FierzIdentities.chiral_fierz_identity
 
 /-- The finite Lorentz/chiral/Cuntz synthesis theorem. -/
 theorem lorentz_chiral_cuntz_synthesis (g h : SL2C) (P : FourMomentum)
@@ -351,7 +361,7 @@ theorem lorentz_chiral_cuntz_synthesis (g h : SL2C) (P : FourMomentum)
   constructor
   · simpa using comm_Kx_Ky
   constructor
-  · exact FierzIdentities.chiral_fierz_identity
+  · exact chiralFierzStatement_proof
   · simpa using CuntzDeformedSuperPoincare.cuntzDeformed_odd_odd_lie_jordan_split β x y
 
 /-- Full finite synthesis: Lorentz action on chiral matrices, soldered vector action,
@@ -383,7 +393,7 @@ theorem lorentz_chiral_poincare_cuntz_synthesis
   constructor
   · simpa using spinLorentzAction_preserves_minkowskiSq g P
   constructor
-  · exact FierzIdentities.chiral_fierz_identity
+  · exact chiralFierzStatement_proof
   constructor
   · simpa using sl2c_transportedRelation_holds g S
   · simpa using CuntzDeformedSuperPoincare.cuntzDeformed_odd_odd_lie_jordan_split β x y

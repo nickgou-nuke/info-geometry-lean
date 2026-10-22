@@ -16,3 +16,4 @@ import InfoGeometry.Routing.PermutationPerfectMatching
 import InfoGeometry.Routing.PlanarRotation
 import InfoGeometry.Routing.TypedProofRealization
 import InfoGeometry.Routing.AttentionPolytopeSoftmax
+import InfoGeometry.Routing.AttentionValueCompression

@@ -284,6 +284,32 @@ theorem modular_ad_J (A B : Mat2 R) :
 def toPauli (A B : Mat2 ℝ) : Matrix (Fin 2) (Fin 2) ℂ :=
   fun i j => Complex.mk (A i j) (B i j)
 
+theorem toPauli_injective {A₁ B₁ A₂ B₂ : Mat2 ℝ}
+    (h : toPauli A₁ B₁ = toPauli A₂ B₂) :
+    A₁ = A₂ ∧ B₁ = B₂ := by
+  constructor <;> ext i j
+  · have hentry := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℂ => M i j) h
+    exact congrArg Complex.re hentry
+  · have hentry := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℂ => M i j) h
+    exact congrArg Complex.im hentry
+
+theorem toPauli_surjective (M : Matrix (Fin 2) (Fin 2) ℂ) :
+    ∃ A B : Mat2 ℝ, toPauli A B = M := by
+  let A : Mat2 ℝ := fun i j => (M i j).re
+  let B : Mat2 ℝ := fun i j => (M i j).im
+  refine ⟨A, B, ?_⟩
+  ext i j
+  apply Complex.ext <;> rfl
+
+theorem toPauli_bijective : Function.Bijective (fun p : Mat2 ℝ × Mat2 ℝ =>
+    toPauli p.1 p.2) := by
+  constructor
+  · intro p q h
+    exact Prod.ext_iff.mpr (toPauli_injective h)
+  · intro M
+    rcases toPauli_surjective M with ⟨A, B, h⟩
+    exact ⟨(A, B), h⟩
+
 /- The Pauli representation carries real block transpose to complex
 conjugate transpose. -/
 theorem toPauli_conjTranspose (A B : Mat2 ℝ) :

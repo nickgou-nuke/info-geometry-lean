@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib
 
 /-!
@@ -19,6 +25,11 @@ universe u v w
 structure MultiEnergyForwardModel (M : Type u) (Energy : Type v)
     (Observation : Type w) where
   observe : Energy → M → Observation
+
+/- A constructive baseline model for an inhabited observation carrier. -/
+def constantModel [Inhabited Observation] :
+    MultiEnergyForwardModel M Energy Observation where
+  observe := fun _ _ => default
 
 namespace MultiEnergyForwardModel
 
@@ -50,9 +61,15 @@ theorem observationallyEquivalent_trans {a b c : M}
 /-- The equivalence relation induced by the complete experiment family. -/
 def observationalSetoid : Setoid M where
   r := F.ObservationallyEquivalent
-  iseqv := ⟨F.observationallyEquivalent_refl,
-    fun _ _ => F.observationallyEquivalent_symm,
-    fun _ _ _ => F.observationallyEquivalent_trans⟩
+  iseqv := {
+    refl := F.observationallyEquivalent_refl
+    symm := by
+      intro a b h
+      exact F.observationallyEquivalent_symm h
+    trans := by
+      intro a b c hab hbc
+      exact F.observationallyEquivalent_trans hab hbc
+  }
 
 /-- Candidates modulo all observational indistinguishabilities. -/
 abbrev IdentifiableStates := Quotient F.observationalSetoid
@@ -95,7 +112,7 @@ theorem separatesCandidates_iff_injective :
     exact he (congrFun hab e)
   · intro h a b hab
     by_contra hno
-    push_neg at hno
+    push Not at hno
     apply hab
     apply h
     funext e

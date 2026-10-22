@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.MassSpectrometry.MultiEnergyIdentifiability
 import InfoGeometry.MassSpectrometry.ChemicalGraph
 import InfoGeometry.MassSpectrometry.VerifiedInferenceArchitecture
@@ -41,19 +47,10 @@ theorem molecular_observation_eq_iff {atoms peaks : ℕ}
   · intro h e
     exact congrFun (congrArg MultiEnergyObservation.spectrumAt h) e
   · intro h
-    apply MultiEnergyObservation.mk.injEq.mpr
-    funext e
-    exact h e
-
-/-- Any molecular equivalence respected by the simulator admits a quotient
-signature; it is injective precisely when the forward model identifies
-molecules up to that equivalence. -/
-theorem molecular_quotient_identifiability {atoms peaks : ℕ}
-    (F : MolecularSpectralForwardModel atoms peaks)
-    (chemical : Setoid (MolecularGraph atoms))
-    (invariant : ∀ G H, chemical.r G H → F.signature G = F.signature H) :
-    F.IdentifiableUpTo chemical ↔
-      Function.Injective (F.chemicalSignature chemical invariant) :=
-  F.identifiableUpTo_iff_chemicalSignature_injective chemical invariant
+    change MultiEnergyObservation.mk (fun e => F.observe e G) =
+      MultiEnergyObservation.mk (fun e => F.observe e H)
+    exact congrArg MultiEnergyObservation.mk (by
+      funext e
+      exact h e)
 
 end InfoGeometry.MassSpectrometry

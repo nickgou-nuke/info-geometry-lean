@@ -50,6 +50,18 @@ theorem adjugate_mul_pauliMatrix_eq_q_smul_one (v : Minkowski4) :
       ((v.q : ℝ) : ℂ) • (1 : PauliMat) := by
   rw [Matrix.adjugate_mul, det_pauliMatrix]
 
+theorem pauliMatrix_mul_paravectorConjugate_eq_q_smul_one (v : Minkowski4) :
+    pauliMatrix v * paravectorConjugateMatrix v =
+      ((v.q : ℝ) : ℂ) • (1 : PauliMat) := by
+  rw [← adjugate_pauliMatrix_eq_paravectorConjugateMatrix]
+  exact pauliMatrix_mul_adjugate_eq_q_smul_one v
+
+theorem paravectorConjugate_mul_pauliMatrix_eq_q_smul_one (v : Minkowski4) :
+    paravectorConjugateMatrix v * pauliMatrix v =
+      ((v.q : ℝ) : ℂ) • (1 : PauliMat) := by
+  rw [← adjugate_pauliMatrix_eq_paravectorConjugateMatrix]
+  exact adjugate_mul_pauliMatrix_eq_q_smul_one v
+
 theorem pauliMatrix_mul_adjugate_eq_zero_of_null
     {v : Minkowski4} (hv : v.IsNull) :
     pauliMatrix v * Matrix.adjugate (pauliMatrix v) = 0 := by
@@ -60,6 +72,18 @@ theorem adjugate_mul_pauliMatrix_eq_zero_of_null
     {v : Minkowski4} (hv : v.IsNull) :
     Matrix.adjugate (pauliMatrix v) * pauliMatrix v = 0 := by
   rw [adjugate_mul_pauliMatrix_eq_q_smul_one, hv]
+  simp
+
+theorem pauliMatrix_mul_paravectorConjugate_eq_zero_of_null
+    {v : Minkowski4} (hv : v.IsNull) :
+    pauliMatrix v * paravectorConjugateMatrix v = 0 := by
+  rw [pauliMatrix_mul_paravectorConjugate_eq_q_smul_one, hv]
+  simp
+
+theorem paravectorConjugate_mul_pauliMatrix_eq_zero_of_null
+    {v : Minkowski4} (hv : v.IsNull) :
+    paravectorConjugateMatrix v * pauliMatrix v = 0 := by
+  rw [paravectorConjugate_mul_pauliMatrix_eq_q_smul_one, hv]
   simp
 
 end InfoGeometry.Canonical.PauliParavectorAdjugateBridge

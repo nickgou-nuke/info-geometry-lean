@@ -83,6 +83,10 @@ def stageRestrict (n : ℕ) : MatStage (n + 1) →ₗ[ℝ] MatStage n where
   ext i j
   rfl
 
+@[simp] theorem stageRestrict_one (n : ℕ) :
+    stageRestrict n (1 : MatStage (n + 1)) = 1 := by
+  simpa using stageRestrict_stageEmbed n (1 : MatStage n)
+
 /-- Trace readback of the diagonal-block restriction. -/
 theorem trace_stageRestrict (n : ℕ) (X : MatStage (n + 1)) :
     Matrix.trace (stageRestrict n X) = Matrix.trace X / 2 := by

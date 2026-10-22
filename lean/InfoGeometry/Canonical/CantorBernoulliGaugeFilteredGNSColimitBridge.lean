@@ -167,6 +167,21 @@ noncomputable def gaugeGNSVacuum (n : ℕ) : gaugeGNSStage n :=
   InfoGeometry.OperatorAlgebra.PositiveLinearMapGNSVacuum.gnsVacuum
     (gaugeStateFamily.state n).functional
 
+/-- The normalized cyclic vectors are preserved by every transition in the
+filtered GNS system.  Thus the finite-stage vacua determine one vector in the
+native Hilbert colimit, rather than merely a family of unrelated stage
+vectors. -/
+theorem gaugeGNSVacuum_transition
+    {m n : ℕ} (hmn : m ≤ n) :
+    filteredGNSMap gaugeStage gaugeSystem gaugeStateFamily hmn
+        (gaugeGNSVacuum m) =
+      gaugeGNSVacuum n := by
+  change filteredGNSMap gaugeStage gaugeSystem gaugeStateFamily hmn
+      ((gaugeStateFamily.state m).functional.toPreGNS 1 : gaugeGNSStage m) =
+    ((gaugeStateFamily.state n).functional.toPreGNS 1 : gaugeGNSStage n)
+  rw [filteredGNSMap_toPreGNS]
+  simp
+
 /-- The finite-stage GNS vacuum recovers the native normalized matrix trace for
 every observable, not only for the binary matrix-unit generators. -/
 theorem gaugeGNSStage_matrix_expectation

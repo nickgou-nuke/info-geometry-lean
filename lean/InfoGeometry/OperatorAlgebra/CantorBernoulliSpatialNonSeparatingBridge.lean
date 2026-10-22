@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Analysis.InnerProductSpace.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.InnerProductSpace.Adjoint
@@ -38,6 +43,7 @@ open ContinuousLinearMap
 open MeasureTheory
 open InfoGeometry.Canonical.CantorBernoulliL2OperatorTransport
 open InfoGeometry.OperatorAlgebra.CantorBernoulliCuntzCStarRealization
+open InfoGeometry.OperatorAlgebra.CantorBernoulliGaugeStateBridge
 open InfoGeometry.OperatorAlgebra.CantorBernoulliKMSStateBridge
 open InfoGeometry.OperatorAlgebra.CantorBernoulliSpatialNativeStateBridge
 open InfoGeometry.OperatorAlgebra.CantorBernoulliCylinderMultiplicationBridge
@@ -133,5 +139,43 @@ theorem spatialState_not_faithful_witness :
     spatialAnnihilator ≠ 0 ∧
     spatialPositiveFunctional (star spatialAnnihilator * spatialAnnihilator) = 0 :=
   ⟨spatialAnnihilator_ne_zero, spatialState_star_annihilator_mul_self_eq_zero⟩
+
+/-- The two branch-adjoint vacuum vectors coincide, so the spatial vector
+expectation of their product is the branch projector weight. -/
+theorem spatialState_offDiagonal_generator :
+    cantorVacuumState (vLeft * star vRight) = (1 / 2 : ℂ) := by
+  have h_ann : star vLeft vacuumL2 = star vRight vacuumL2 := by
+    have h := spatialAnnihilator_vacuum_eq_zero
+    dsimp [spatialAnnihilator] at h
+    exact sub_eq_zero.mp h
+  have h_adj (x : L2Boundary) :
+      inner ℂ (star vLeft vacuumL2) x =
+        inner ℂ vacuumL2 (vLeft x) := by
+    simpa [ContinuousLinearMap.star_eq_adjoint] using
+      (ContinuousLinearMap.adjoint_inner_left vLeft x vacuumL2)
+  dsimp [cantorVacuumState]
+  calc
+    inner ℂ vacuumL2 ((vLeft * star vRight) vacuumL2) =
+        inner ℂ vacuumL2 (vLeft (star vRight vacuumL2)) := rfl
+    _ = inner ℂ (star vLeft vacuumL2) (star vRight vacuumL2) :=
+      (h_adj (star vRight vacuumL2)).symm
+    _ = inner ℂ (star vLeft vacuumL2) (star vLeft vacuumL2) := by
+      rw [h_ann]
+    _ = inner ℂ vacuumL2 (vLeft (star vLeft vacuumL2)) :=
+      h_adj (star vLeft vacuumL2)
+    _ = cantorVacuumState (P false) := by
+      dsimp [cantorVacuumState, P, vLeft]
+      rfl
+    _ = (1 / 2 : ℂ) := cantorVacuumState_proj false
+
+/-- The spatial state and the gauge word kernel differ on the concrete
+operator `vLeft * star vRight`; this value comparison is not a claim that
+the two states define the same GNS representation. -/
+theorem spatialState_ne_gaugeWord_offDiagonal :
+    cantorVacuumState (vLeft * star vRight) ≠
+      canonicalGaugeState [false] [true] := by
+  rw [spatialState_offDiagonal_generator,
+    canonicalGaugeState_cross (by decide : [false] ≠ [true])]
+  norm_num
 
 end InfoGeometry.OperatorAlgebra.CantorBernoulliSpatialNonSeparatingBridge

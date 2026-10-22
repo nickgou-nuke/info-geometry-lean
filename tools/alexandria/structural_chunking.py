@@ -556,6 +556,52 @@ def chunk_section_lines(lines: Iterable[str]) -> list[str]:
     return [block for block in blocks if block]
 
 
+def split_section_spans(text: str) -> list[tuple[int, str, int, list[str]]]:
+    """Like :func:`split_sections`, plus the 1-based line of each body's first line."""
+    spans: list[tuple[int, str, int, list[str]]] = []
+    current_title = "Front Matter"
+    current_level = 1
+    current_start = 1
+    current_lines: list[str] = []
+    for lineno, line in enumerate(text.splitlines(), start=1):
+        match = HEADER_RE.match(line)
+        if match:
+            if current_lines or not spans:
+                spans.append((current_level, current_title, current_start, current_lines))
+            current_level = len(match.group(1))
+            current_title = match.group(2).strip()
+            current_start = lineno + 1
+            current_lines = []
+        else:
+            current_lines.append(line)
+    spans.append((current_level, current_title, current_start, current_lines))
+    return [span for span in spans if span[3] or span[1]]
+
+
+def chunk_section_line_spans(lines: list[str], first_line: int) -> list[tuple[str, int, int]]:
+    """Blocks identical to :func:`chunk_section_lines`, with 1-based line ranges."""
+    blocks: list[tuple[str, int, int]] = []
+    current: list[str] = []
+    start = first_line
+    for offset, line in enumerate(lines):
+        lineno = first_line + offset
+        if not line.strip():
+            if current:
+                block = "\n".join(current).strip()
+                if block:
+                    blocks.append((block, start, lineno - 1))
+                current = []
+            continue
+        if not current:
+            start = lineno
+        current.append(line)
+    if current:
+        block = "\n".join(current).strip()
+        if block:
+            blocks.append((block, start, first_line + len(lines) - 1))
+    return blocks
+
+
 def classify_markdown_chunk(title: str, text: str) -> str:
     blob = f"{title}\n{text}".lower()
     if any(word in blob for word in ["theorem", "lemma", "proposition", "corollary"]):
@@ -585,7 +631,7 @@ def chunk_markdown_blocks(
     adjacent_edges: list[dict] = []
     prev_chunk_key: str | None = None
     chunk_ordinal = 0
-    for section_ordinal, (level, title, lines) in enumerate(split_sections(text), start=1):
+    for section_ordinal, (level, title, first_line, lines) in enumerate(split_section_spans(text), start=1):
         section = StructuralSection(
             key=stable_key("section", document_key, section_ordinal, title),
             documentKey=document_key,
@@ -594,10 +640,14 @@ def chunk_markdown_blocks(
             ordinal=section_ordinal,
         )
         sections.append(section)
-        for block_index, block in enumerate(chunk_section_lines(lines), start=1):
+        for block_index, (block, line_start, line_end) in enumerate(
+            chunk_section_line_spans(lines, first_line), start=1
+        ):
             chunk_ordinal += 1
             provenance = base_provenance(path, resolved, document, title, chunk_ordinal, domain, source_format)
             provenance["chunkingStrategy"] = "markdown_blocks"
+            provenance["lineStart"] = line_start
+            provenance["lineEnd"] = line_end
             chunk = StructuralChunk(
                 key=stable_key("chunk", section.key, block_index, block[:80]),
                 documentKey=document_key,
@@ -615,3 +665,255 @@ def chunk_markdown_blocks(
                 adjacent_edges.append(adjacent_edge(prev_chunk_key, chunk.key))
             prev_chunk_key = chunk.key
     return ChunkingResult(sections, chunks, adjacent_edges)
+
+
+# ---------------------------------------------------------------------------
+# Raw Lean source, JSONL records, and suffix dispatch
+# ---------------------------------------------------------------------------
+
+LEAN_DECL_RE = re.compile(
+    r"^\s*(?:@\[[^\]]*\]\s*)*"
+    r"(?:(?:private|protected|noncomputable|partial|unsafe|nonrec|scoped|local)\s+)*"
+    r"(theorem|lemma|def|abbrev|instance|structure|class|inductive|example|opaque|axiom)\b"
+    r"(?:\s+([^\s:({\[⦃]+))?"
+)
+LEAN_NAMESPACE_RE = re.compile(r"^\s*namespace\s+(\S+)")
+LEAN_SECTION_RE = re.compile(r"^\s*(?:noncomputable\s+)?section\b\s*(\S+)?")
+LEAN_END_RE = re.compile(r"^\s*end\b\s*(\S+)?\s*$")
+LEAN_ATTR_LINE_RE = re.compile(r"^\s*@\[[^\]]*\]\s*$")
+IDENT_RE = re.compile(r"[A-Za-z][A-Za-z0-9_'.]*")
+CAMEL_RE = re.compile(r"[A-Z]+(?=[A-Z][a-z])|[A-Z]?[a-z]+|[A-Z]+|[0-9]+")
+LEAN_DECL_KIND = {
+    "theorem": "theorem",
+    "lemma": "theorem",
+    "example": "proof",
+    "axiom": "hypothesis",
+}
+JSONL_TEXT_FIELDS = ("content", "thinking", "text", "message", "prompt", "response")
+JSONL_TITLE_FIELDS = ("type", "step_index", "source", "role")
+
+
+def ident_terms(text: str) -> list[str]:
+    """Identifier pieces for lexical search.
+
+    ``MeasureTheory.Measure.map_apply`` yields the whole lowercase name plus
+    ``measuretheory``, ``measure``, ``theory``, ``map`` and ``apply``, so a
+    search index matches both full names and their parts. :func:`tokenize`
+    is left unchanged for existing consumers.
+    """
+    out: set[str] = set()
+    for ident in IDENT_RE.findall(text):
+        ident = ident.strip(".'")
+        if len(ident) < 2:
+            continue
+        out.add(ident.lower())
+        for part in re.split(r"[._']+", ident):
+            if len(part) < 2:
+                continue
+            out.add(part.lower())
+            out.update(piece.lower() for piece in CAMEL_RE.findall(part) if len(piece) >= 2)
+    return sorted(out)
+
+
+def _lean_doc_start(lines: list[str], decl_idx: int) -> int:
+    """Include attribute lines and a directly preceding ``/-- ... -/`` doc comment."""
+    i = decl_idx
+    while i > 0 and LEAN_ATTR_LINE_RE.match(lines[i - 1]):
+        i -= 1
+    if i == 0 or not lines[i - 1].rstrip().endswith("-/"):
+        return i
+    for j in range(i - 1, max(-1, i - 400), -1):
+        if "/-" in lines[j]:
+            return j if "/--" in lines[j] else i
+    return i
+
+
+def _lean_qualify(stack: list[tuple[str, str | None]], name: str) -> str:
+    if name.startswith("_root_."):
+        return name[len("_root_."):]
+    namespaces = [n for kind, n in stack if kind == "namespace" and n]
+    return ".".join([*namespaces, name]) if namespaces else name
+
+
+def lean_declaration_spans(text: str) -> list[tuple[int, int, str, str | None]]:
+    """Return ``(start_idx, end_idx, decl_keyword, qualified_name)`` per declaration.
+
+    Indices are 0-based line indices, ``end_idx`` exclusive. Namespaces are
+    tracked so names match the declaration graph's full names where the
+    source uses plain ``namespace``/``section``/``end`` structure.
+    """
+    lines = text.splitlines()
+    stack: list[tuple[str, str | None]] = []
+    starts: list[tuple[int, str, str | None]] = []
+    for idx, line in enumerate(lines):
+        if match := LEAN_NAMESPACE_RE.match(line):
+            stack.extend(("namespace", part) for part in match.group(1).split("."))
+        elif match := LEAN_SECTION_RE.match(line):
+            stack.append(("section", match.group(1)))
+        elif match := LEAN_END_RE.match(line):
+            for _ in (match.group(1) or "_").split("."):
+                if stack:
+                    stack.pop()
+        elif match := LEAN_DECL_RE.match(line):
+            keyword, name = match.group(1), match.group(2)
+            starts.append((_lean_doc_start(lines, idx), keyword, _lean_qualify(stack, name) if name else None))
+    spans: list[tuple[int, int, str, str | None]] = []
+    for pos, (start, keyword, name) in enumerate(starts):
+        end = starts[pos + 1][0] if pos + 1 < len(starts) else len(lines)
+        if end > start:
+            spans.append((start, end, keyword, name))
+    return spans
+
+
+def chunk_lean_source(
+    path: Path,
+    text: str,
+    document: Mapping[str, object],
+    resolved: Path,
+    domain: str,
+) -> ChunkingResult:
+    """One chunk per declaration of a raw ``.lean`` file, with line ranges.
+
+    Complements :func:`chunk_lean_ast`, which needs a pre-exported AST.
+    """
+    document_key = str(document["_key"])
+    section = StructuralSection(
+        key=stable_key("section", document_key, 1, "Lean source"),
+        documentKey=document_key,
+        title="Lean source",
+        level=1,
+        ordinal=1,
+    )
+    lines = text.splitlines()
+    spans = lean_declaration_spans(text)
+    header_end = spans[0][0] if spans else len(lines)
+    packets: list[tuple[int, int, str, str | None]] = []
+    if header_end > 0 and "\n".join(lines[:header_end]).strip():
+        packets.append((0, header_end, "header", None))
+    packets.extend(spans)
+
+    chunks: list[StructuralChunk] = []
+    for ordinal, (start, end, keyword, name) in enumerate(packets, start=1):
+        block = "\n".join(lines[start:end]).strip()
+        if not block:
+            continue
+        title = f"Lean {keyword} {name}" if name else f"Lean {keyword}"
+        provenance = base_provenance(path, resolved, document, section.title, ordinal, domain, "lean_source")
+        provenance.update(
+            {
+                "chunkingStrategy": "lean_source_declaration",
+                "lineStart": start + 1,
+                "lineEnd": end,
+                "declKeyword": keyword,
+                "declName": name,
+            }
+        )
+        chunks.append(
+            StructuralChunk(
+                key=stable_key("chunk", section.key, ordinal, title, block[:80]),
+                documentKey=document_key,
+                sectionKey=section.key,
+                ordinal=len(chunks) + 1,
+                chunkKind=LEAN_DECL_KIND.get(keyword, "definition" if name else "lean_command"),
+                chunkingStrategy="lean_source_declaration",
+                title=title,
+                text=block,
+                tokens=tokenize(block),
+                provenance=provenance,
+            )
+        )
+    return ChunkingResult([section], chunks, rebuild_adjacent_edges(chunks))
+
+
+def _jsonl_record_text(row: Any) -> tuple[str, str]:
+    if not isinstance(row, dict):
+        return str(row), ""
+    parts = [row[k] for k in JSONL_TEXT_FIELDS if isinstance(row.get(k), str) and row[k].strip()]
+    title = " ".join(str(row[k]) for k in JSONL_TITLE_FIELDS if row.get(k) is not None)
+    return "\n".join(parts), title
+
+
+def chunk_jsonl_records(
+    path: Path,
+    text: str,
+    document: Mapping[str, object],
+    resolved: Path,
+    domain: str,
+    *,
+    max_chars: int = DEFAULT_CAST_MAX_CHARS * 4,
+) -> ChunkingResult:
+    """One chunk per JSONL record (agent transcripts, logs).
+
+    Prose fields (``content``, ``thinking``, ...) are indexed; records with no
+    prose are skipped rather than indexed as raw JSON noise.
+    """
+    import json
+
+    document_key = str(document["_key"])
+    section = StructuralSection(
+        key=stable_key("section", document_key, 1, "JSONL records"),
+        documentKey=document_key,
+        title="JSONL records",
+        level=1,
+        ordinal=1,
+    )
+    chunks: list[StructuralChunk] = []
+    for lineno, line in enumerate(text.splitlines(), start=1):
+        if not line.strip():
+            continue
+        try:
+            body, title = _jsonl_record_text(json.loads(line))
+        except json.JSONDecodeError:
+            body, title = line, ""
+        body = body.strip()[:max_chars]
+        if not body:
+            continue
+        title = title or f"record {lineno}"
+        provenance = base_provenance(path, resolved, document, section.title, len(chunks) + 1, domain, "jsonl")
+        provenance.update({"chunkingStrategy": "jsonl_record", "lineStart": lineno, "lineEnd": lineno})
+        chunks.append(
+            StructuralChunk(
+                key=stable_key("chunk", section.key, lineno, body[:80]),
+                documentKey=document_key,
+                sectionKey=section.key,
+                ordinal=len(chunks) + 1,
+                chunkKind="record",
+                chunkingStrategy="jsonl_record",
+                title=title,
+                text=body,
+                tokens=tokenize(body),
+                provenance=provenance,
+            )
+        )
+    return ChunkingResult([section], chunks, rebuild_adjacent_edges(chunks))
+
+
+def chunk_source_text(
+    path: Path,
+    text: str,
+    document: Mapping[str, object],
+    resolved: Path,
+    domain: str,
+) -> ChunkingResult:
+    """Pick the structural chunker for ``path`` by suffix.
+
+    ``.lean`` -> declarations, ``.tex`` -> LaTeX environments (falls back to
+    blocks when none are found), ``.py`` -> Python AST (falls back on syntax
+    errors), ``.jsonl`` -> records, anything else -> Markdown blocks.
+    """
+    suffix = path.suffix.lower()
+    if suffix == ".lean":
+        return chunk_lean_source(path, text, document, resolved, domain)
+    if suffix == ".jsonl":
+        return chunk_jsonl_records(path, text, document, resolved, domain)
+    if suffix == ".tex":
+        result = chunk_latex(path, text, document, resolved, domain)
+        if result.chunks:
+            return result
+        return chunk_markdown_blocks(path, text, document, resolved, domain, "latex")
+    if suffix == ".py":
+        try:
+            return chunk_python_ast(path, text, document, resolved, domain)
+        except SyntaxError:
+            return chunk_markdown_blocks(path, text, document, resolved, domain, "python")
+    return chunk_markdown_blocks(path, text, document, resolved, domain, suffix.lstrip(".") or "text")

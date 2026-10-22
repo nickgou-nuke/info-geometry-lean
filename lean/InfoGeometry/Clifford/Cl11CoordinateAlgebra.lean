@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Basic.Real.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.Ring
@@ -253,9 +259,28 @@ def reverse (q : Cl11) : Cl11 :=
 def gradeInvolution (q : Cl11) : Cl11 :=
   ⟨q.s, -q.e1, -q.e2, q.e12⟩
 
+/-- Reversion reverses the coordinate Clifford product. -/
+theorem reverse_mul (q r : Cl11) :
+    reverse (q * r) = reverse r * reverse q := by
+  change reverse (mul q r) = mul (reverse r) (reverse q)
+  ext <;> simp [reverse, mul] <;> ring
+
+/-- Grade involution preserves the coordinate Clifford product. -/
+theorem gradeInvolution_mul (q r : Cl11) :
+    gradeInvolution (q * r) = gradeInvolution q * gradeInvolution r := by
+  change gradeInvolution (mul q r) = mul (gradeInvolution q) (gradeInvolution r)
+  ext <;> simp [gradeInvolution, mul] <;> ring
+
 /-- Clifford conjugation: grade involution followed by reversion. -/
 def cliffordConjugate (q : Cl11) : Cl11 :=
   ⟨q.s, -q.e1, -q.e2, -q.e12⟩
+
+/-- Clifford conjugation is anti-multiplicative on the coordinate algebra. -/
+theorem cliffordConjugate_mul (q r : Cl11) :
+    cliffordConjugate (q * r) = cliffordConjugate r * cliffordConjugate q := by
+  change cliffordConjugate (mul q r) =
+    mul (cliffordConjugate r) (cliffordConjugate q)
+  ext <;> simp [cliffordConjugate, mul] <;> ring
 
 /-- The scalar embedding of the real coefficient line. -/
 def scalarEmbed (a : ℝ) : Cl11 := ⟨a, 0, 0, 0⟩

@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -73,6 +79,20 @@ def eps [Zero R] [One R] : Carrier R :=
     (x * y).re = x.re * y.re + x.im * y.im := rfl
 @[simp] theorem mul_im [Add R] [Mul R] (x y : Carrier R) :
     (x * y).im = x.re * y.im + x.im * y.re := rfl
+
+theorem mul_assoc_carrier [CommRing R] (x y z : Carrier R) :
+    (x * y) * z = x * (y * z) := by
+  ext <;> simp only [mul_re, mul_im]
+  · ring
+  · ring
+
+theorem mul_one_carrier [CommRing R] (x : Carrier R) :
+    x * (1 : Carrier R) = x := by
+  ext <;> simp
+
+theorem one_mul_carrier [CommRing R] (x : Carrier R) :
+    (1 : Carrier R) * x = x := by
+  ext <;> simp
 
 /-- The split generator squares to `1`. -/
 theorem eps_sq [CommRing R] :

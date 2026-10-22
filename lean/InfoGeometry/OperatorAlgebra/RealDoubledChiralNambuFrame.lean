@@ -141,7 +141,9 @@ theorem operator_comp_operator_expansion (F : ChiralNambuFrame (E := E)) :
     F.operator.comp F.operator =
       F.normal.comp F.normal + F.normal.comp F.pairing +
         F.pairing.comp F.normal + F.pairing.comp F.pairing := by
-  simp [operator, add_assoc, add_left_comm, add_comm]
+  change (F.normal + F.pairing).comp (F.normal + F.pairing) = _
+  simp only [ContinuousLinearMap.add_comp, ContinuousLinearMap.comp_add]
+  abel
 
 end ChiralNambuFrame
 

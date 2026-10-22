@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Analysis.InnerProductSpace.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -43,6 +49,11 @@ noncomputable def hurwitz_inner (x y : HurwitzSpace) : ℝ :=
 /-- The Hurwitz product operator $\bullet$. -/
 noncomputable def hurwitz_mul (x y : HurwitzSpace) : HurwitzSpace :=
   (x.1 * y.1 - x.2 * y.2, x.1 * y.2 + x.2 * y.1)
+
+/-- The concrete Hurwitz product is associative on its native carrier. -/
+theorem hurwitz_mul_assoc (x y z : HurwitzSpace) :
+    hurwitz_mul (hurwitz_mul x y) z = hurwitz_mul x (hurwitz_mul y z) := by
+  ext <;> dsimp [hurwitz_mul] <;> ring
 
 /--
 HONEST THEOREM DEBT:

@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.OperatorAlgebra.RealDoubledChiralKrein
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.RealDoubledChiralKreinAdjoint
@@ -70,6 +76,16 @@ theorem etaChiral_comp_leftChiralProjector_comp_etaChiral :
     (etaChiral (E := E)).comp
         ((leftChiralProjector (E := E)).comp (etaChiral (E := E))) =
       rightChiralProjector (E := E) := by
+  apply ContinuousLinearMap.ext
+  intro u
+  apply DoubledSpace.ext <;>
+    simp [etaChiral, leftChiralProjector, rightChiralProjector, gamma5,
+      modular_j, spectral_epsilon, one_div, sub_eq_add_neg] <;> module
+
+theorem etaChiral_comp_rightChiralProjector_comp_etaChiral :
+    (etaChiral (E := E)).comp
+        ((rightChiralProjector (E := E)).comp (etaChiral (E := E))) =
+      leftChiralProjector (E := E) := by
   apply ContinuousLinearMap.ext
   intro u
   apply DoubledSpace.ext <;>

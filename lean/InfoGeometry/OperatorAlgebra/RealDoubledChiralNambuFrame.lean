@@ -86,6 +86,12 @@ theorem nambuSheetFlip_conjugates_projectorPlus :
       nambuProjectorMinus (E := E) :=
   etaChiral_comp_leftChiralProjector_comp_etaChiral (E := E)
 
+theorem nambuSheetFlip_conjugates_projectorMinus :
+    (nambuSheetFlip (E := E)).comp
+        ((nambuProjectorMinus (E := E)).comp (nambuSheetFlip (E := E))) =
+      nambuProjectorPlus (E := E) :=
+  etaChiral_comp_rightChiralProjector_comp_etaChiral (E := E)
+
 theorem nambuProjectors_complementary :
     nambuProjectorPlus (E := E) + nambuProjectorMinus (E := E) =
       ContinuousLinearMap.id ℝ (DoubledSpace E) := by

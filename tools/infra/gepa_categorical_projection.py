@@ -207,7 +207,7 @@ Output ONLY the proof block (no markdown, no commentary)."""
             for r in responses]
 
 
-# ── CPU-parallel fitness evaluation ────────────────────────────────────────
+# ── Serialized fitness evaluation on the shared Lean lane ─────────────────
 
 BUILD_TARGET = DEFAULT_BUILD_TARGET or "InfoGeometry.Quantum.RealKCategory"
 

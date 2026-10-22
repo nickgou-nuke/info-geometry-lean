@@ -151,6 +151,13 @@ theorem card_odd_general {n : ℕ} (hn : 0 < n) :
   rw [← even_odd_card_equal_general hn]
   exact card_even_general hn
 
+/-- The finite Witten index vanishes for every positive number of modes. -/
+theorem witten_index_general {n : ℕ} (hn : 0 < n) :
+    ((Fintype.card {w : Occupation n // Even (fermionNumber w)} : ℤ) -
+      Fintype.card {w : Occupation n // ¬ Even (fermionNumber w)}) = 0 := by
+  rw [card_even_general hn, card_odd_general hn]
+  norm_num
+
 /-! ### n = 0 — trivial vacuum -/
 
 theorem n0_total : Fintype.card (Occupation 0) = 1 := by

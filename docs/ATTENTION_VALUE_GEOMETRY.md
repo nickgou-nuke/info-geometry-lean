@@ -39,13 +39,46 @@ Weights are unique once this independent simplex is fixed. No unique simplex
 or shared subset for all queries is asserted. The universal operator barrier
 is proved separately: agreement on every value signal implies matrix equality.
 
-## Scope and validation
+The homogeneous decoder is a native linear map. Its kernel is characterized
+by zero mass and zero value readout. Nonzero mass proves that the homogeneous
+representative is nonzero, and projective_normalization proves equality in
+native Mathlib Projectivization. The dehomogenization function itself is total
+in Lean; the geometric affine chart is restricted to nonzero mass. Strict
+positivity of the finite nonempty softmax partition supplies that restriction.
 
-The two new Lean sources are candidates until the scoped workflow succeeds.
-The workflow compiles unmodified source dependencies against the exact
-repository Mathlib commit and Lean toolchain, then prints the axiom footprint
-of every new theorem. This is not a full-repository or Routing.All build.
-No root dependency pins are changed.
+## Verified source and scope
+
+Verified Lean source commit: `34997f4eea950850014ea190dc73e6c26d407e80`.
+Successful workflow: https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/39845024355
+Job: `120055932073`; completed on 2026-10-22.
+
+The two new modules and all eight existing repository modules in their
+transitive import closure compiled with Lean 4.34.1 and the exact pinned
+Mathlib revision `d13f23b723b8a846827a245b89c10fc7d3f11612`.
+The workflow inspected all 22 new theorem declarations (15 homogeneous-coordinate
+lemmas and 7 compression/attention results) using #print axioms. Every result
+reported only `[propext, Classical.choice, Quot.sound]`.
+The new source scan found no sorry, admit, custom axiom, unsafe or native_decide.
+
+Nonfatal warnings in the new compression file concern letI style and unused
+Fintype section assumptions. Existing dependencies retain their own linter
+and deprecation warnings. Checkout cleanup reports the pre-existing missing
+submodule URL for sandbox/Grassmann.jl; the scoped job still completed successfully.
+
+The workflow compiles unmodified source dependencies in an isolated checkout
+of the pinned Mathlib; no root dependency pins or existing owner definitions
+are changed. This is not a full-repository or Routing.All umbrella build.
 
 The Caratheodory witness uses classical choice and is noncomputable. This
 change does not implement a fast token-selection algorithm or modify Autograd.
+The attachment's explicit square-diagonal counterexample and interactive
+explorer were not ported in this extension; no new proof of subset uniqueness
+or a universal shared sparse subset is claimed.
+
+Canonical full-checkout command:
+
+```bash
+python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock \
+  InfoGeometry.Projective.AttentionValueCoordinates \
+  InfoGeometry.Routing.AttentionValueCompression
+```

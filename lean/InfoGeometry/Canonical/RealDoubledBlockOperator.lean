@@ -79,7 +79,7 @@ theorem realDoubledBlockOperator_comp
   obtain ⟨x, ξ⟩ := z
   simp only [ContinuousLinearMap.comp_apply,
     realDoubledBlockOperator_apply]
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.comp_apply,
+  simp only [add_apply, ContinuousLinearMap.comp_apply,
     map_add]
   apply congrArg₂ to_doubled <;> abel
 

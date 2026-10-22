@@ -82,4 +82,34 @@ theorem normalizedMatrixRank_embed_of_rank_transition
   exact normalizedMatrixRank_embed_of_rank_transition n A
     (matrixRangeRank_embed n A)
 
+/-! ## Iterated tower transport -/
+
+/-- The canonical iterated matrix-stage embedding obtained by composing the
+successor embeddings.  The target index is written as `n + k` so that the
+stage shift is explicit in rank-transport statements. -/
+noncomputable def stageEmbedIter : (n k : ℕ) → MatStage n → MatStage (n + k)
+  | n, 0, A => A
+  | n, k + 1, A => stageEmbed (n + k) (stageEmbedIter n k A)
+
+/- The normalized range rank is invariant under every finite number of tower
+embeddings, by iterating the already-proved one-step theorem. -/
+@[simp] theorem normalizedMatrixRank_embedIter (n k : ℕ) (A : MatStage n) :
+    normalizedMatrixRank (n + k) (stageEmbedIter n k A) =
+      normalizedMatrixRank n A := by
+  induction k with
+  | zero => rfl
+  | succ k ih =>
+      change normalizedMatrixRank (n + (k + 1))
+        (stageEmbed (n + k) (stageEmbedIter n k A)) =
+          normalizedMatrixRank n A
+      calc
+        normalizedMatrixRank (n + (k + 1))
+            (stageEmbed (n + k) (stageEmbedIter n k A)) =
+            normalizedMatrixRank ((n + k) + 1)
+              (stageEmbed (n + k) (stageEmbedIter n k A)) := by
+                rfl
+        _ = normalizedMatrixRank (n + k) (stageEmbedIter n k A) := by
+              exact normalizedMatrixRank_embed (n + k) (stageEmbedIter n k A)
+        _ = normalizedMatrixRank n A := ih
+
 end InfoGeometry.Clifford.Cl11TensorTower

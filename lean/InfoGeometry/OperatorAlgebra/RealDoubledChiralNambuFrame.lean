@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.OperatorAlgebra.RealDoubledChiralKreinReal
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.RealDoubledChiralKreinComplements
@@ -119,6 +125,23 @@ theorem pairing_isOffBlock (F : ChiralNambuFrame (E := E)) :
 theorem square_pairing_isBlock (F : ChiralNambuFrame (E := E)) :
     F.pairing.comp F.pairing ∈ blockDiagonalSubmodule (E := E) :=
   offSubmodule_comp_off F.pairing_off_block F.pairing_off_block
+
+/-- A normal block followed by a pairing block remains off-diagonal. -/
+theorem normal_comp_pairing_isOffBlock (F : ChiralNambuFrame (E := E)) :
+    F.normal.comp F.pairing ∈ offBlockSubmodule (E := E) :=
+  blockSubmodule_comp_off F.normal_block F.pairing_off_block
+
+/-- A pairing block followed by a normal block remains off-diagonal. -/
+theorem pairing_comp_normal_isOffBlock (F : ChiralNambuFrame (E := E)) :
+    F.pairing.comp F.normal ∈ offBlockSubmodule (E := E) :=
+  offSubmodule_comp_block F.pairing_off_block F.normal_block
+
+/-- The square of a Nambu frame is the four-term block expansion. -/
+theorem operator_comp_operator_expansion (F : ChiralNambuFrame (E := E)) :
+    F.operator.comp F.operator =
+      F.normal.comp F.normal + F.normal.comp F.pairing +
+        F.pairing.comp F.normal + F.pairing.comp F.pairing := by
+  simp [operator, add_assoc, add_left_comm, add_comm]
 
 end ChiralNambuFrame
 

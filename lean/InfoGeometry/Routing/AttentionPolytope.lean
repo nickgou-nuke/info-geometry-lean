@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Canonical.DeterministicArgmaxAttention
 import Mathlib.Analysis.Convex.Combination
+import Mathlib.Analysis.Convex.Extreme
 import Mathlib.LinearAlgebra.Matrix.Stochastic
 
 /-!
@@ -52,7 +53,7 @@ theorem routeWeight_sum_one (A : Matrix (Fin n) (Fin m) ℝ)
     (hrow : ∀ i, ∑ j, A i j = 1) :
     ∑ f : Fin n → Fin m, routeWeight A f = 1 := by
   unfold routeWeight
-  rw [← Fintype.prod_sum]
+  rw [← Fintype.prod_sum (fun (i : Fin n) (j : Fin m) => A i j)]
   simp_rw [hrow]
   simp
 
@@ -77,7 +78,8 @@ theorem routeWeight_marginal (A : Matrix (Fin n) (Fin m) ℝ)
       simp
     · simp [h, hrow r]
   simp_rw [factor]
-  rw [← Fintype.prod_sum]
+  rw [← Fintype.prod_sum (fun (r : Fin n) (c : Fin m) =>
+    A r c * (if r = i then (if j = c then (1 : ℝ) else 0) else 1))]
   simp_rw [row_factor]
   simp
 
@@ -103,7 +105,7 @@ lemma convex_attentionPolytope : Convex ℝ (attentionPolytope n m) := by
     change 0 ≤ a * A i j + b * B i j
     exact add_nonneg (mul_nonneg ha (hA.1 i j)) (mul_nonneg hb (hB.1 i j))
   · intro i
-    change (∑ j, a * A i j + b * B i j) = 1
+    change (∑ j, (a * A i j + b * B i j)) = 1
     rw [Finset.sum_add_distrib, ← Finset.mul_sum, ← Finset.mul_sum,
       hA.2 i, hB.2 i, mul_one, mul_one]
     exact hab
@@ -160,7 +162,7 @@ theorem deterministic_convex_rigidity (f : Fin n → Fin m)
       B i j = 0 ∧ C i j = 0 := by
     have he := congrArg (fun M : Matrix (Fin n) (Fin m) ℝ => M i j) hmix
     change a * B i j + b * C i j = deterministicAttention f i j at he
-    simp only [deterministicAttention, if_neg hj] at he
+    simp only [deterministicAttention, ite_eq_right hj] at he
     have hBn := hB.1 i j
     have hCn := hC.1 i j
     have hBa := mul_nonneg ha.le hBn
@@ -169,12 +171,35 @@ theorem deterministic_convex_rigidity (f : Fin n → Fin m)
   exact ⟨eq_deterministic_of_off_route_zero B hB.2 f (fun i j hj => (off i j hj).1),
     eq_deterministic_of_off_route_zero C hC.2 f (fun i j hj => (off i j hj).2)⟩
 
+/-- The deterministic routes are native Mathlib extreme points. -/
+theorem deterministic_mem_extremePoints (f : Fin n → Fin m) :
+    deterministicAttention f ∈ (attentionPolytope n m).extremePoints ℝ := by
+  rw [mem_extremePoints]
+  refine ⟨deterministic_mem f, ?_⟩
+  intro B hB C hC hsegment
+  rcases hsegment with ⟨a, b, ha, hb, _hab, hmix⟩
+  exact deterministic_convex_rigidity f hB hC ha hb hmix
+
+/-- Full vertex classification: no further extreme points exist. -/
+theorem extremePoints_eq_deterministic :
+    (attentionPolytope n m).extremePoints ℝ =
+      Set.range (deterministicAttention (N := n) (M := m)) := by
+  apply Set.Subset.antisymm
+  · rw [← convexHull_deterministic_eq]
+    exact extremePoints_convexHull_subset
+  · rintro _ ⟨f, rfl⟩
+    exact deterministic_mem_extremePoints f
+
 /-- Routing composition is contravariant in the token-to-key functions. -/
 theorem deterministic_mul (f : Fin n → Fin m) (g : Fin m → Fin k) :
     deterministicAttention f * deterministicAttention g =
       deterministicAttention (g ∘ f) := by
   ext i j
-  simp [Matrix.mul_apply, deterministicAttention, ite_mul]
+  rw [Matrix.mul_apply, Finset.sum_eq_single (f i)]
+  · simp [deterministicAttention, Function.comp_def]
+  · intro c _ hc
+    simp [deterministicAttention, hc]
+  · simp
 
 section Values
 
@@ -230,8 +255,8 @@ theorem matrix_readout_decomposition (A : Matrix (Fin n) (Fin m) ℝ)
         routeWeight A f • deterministicAttention f) * V := by
       rw [reconstruct A hrow]
     _ = _ := by
-      rw [Finset.sum_mul]
-      simp only [smul_mul_assoc]
+      rw [Matrix.sum_mul]
+      simp only [Matrix.smul_mul]
 
 /-- Every route that crosses a forbidden entry has zero coefficient. -/
 theorem routeWeight_zero_of_forbidden (A : Matrix (Fin n) (Fin m) ℝ)

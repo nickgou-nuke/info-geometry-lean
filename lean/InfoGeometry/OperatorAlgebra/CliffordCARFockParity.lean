@@ -20,11 +20,8 @@ index Tr((-1)^F) = 2^(n-1) - 2^(n-1) = 0.
 - n=4: 16 states, 8 even + 8 odd. Witten index = 8 - 8 = 0.
   (The physical Cl(4,4) case.)
 
-## Open debt (BUCKET 4)
-- Prove the general combinatorial identity: for all n ≥ 1,
-  |{w : Fin n → Bool | even_card(w)}| = 2^(n-1).
-  This follows by induction: each additional mode doubles both even
-  and odd sectors.
+The general combinatorial identity is proved below by an explicit involution
+that toggles the first mode and exchanges the even and odd sectors.
 -/
 
 open Finset

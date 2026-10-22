@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Data.Real.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
@@ -47,6 +53,34 @@ def rindler_boost (X : RealSpacetime4x4) (η : ℝ) : RealSpacetime4x4 :=
     X.x,
     X.y,
     X.z * Real.cosh η + X.t * Real.sinh η⟩
+
+/-- Rindler boosts compose by addition of rapidities. -/
+theorem rindler_boost_add (X : RealSpacetime4x4) (η ξ : ℝ) :
+    rindler_boost (rindler_boost X η) ξ = rindler_boost X (η + ξ) := by
+  cases X with
+  | mk t x y z =>
+    simp only [rindler_boost]
+    congr 1
+    · rw [Real.cosh_add, Real.sinh_add]
+      ring
+    · rw [Real.cosh_add, Real.sinh_add]
+      ring
+
+/-- The inverse Rindler boost is obtained by negating the rapidity. -/
+theorem rindler_boost_inverse (X : RealSpacetime4x4) (η : ℝ) :
+    rindler_boost (rindler_boost X η) (-η) = X := by
+  cases X with
+  | mk t x y z =>
+    simp only [rindler_boost]
+    congr 1
+    · have h := Real.cosh_sq_sub_sinh_sq η
+      rw [Real.cosh_neg, Real.sinh_neg]
+      ring_nf
+      rw [← mul_sub, h, mul_one]
+    · have h := Real.cosh_sq_sub_sinh_sq η
+      rw [Real.cosh_neg, Real.sinh_neg]
+      ring_nf
+      rw [← mul_sub, h, mul_one]
 
 /-- Weyl gauge scaling by `exp λ`. -/
 def weyl_gauge_scale (X : RealSpacetime4x4) (l : ℝ) : RealSpacetime4x4 :=
@@ -176,6 +210,26 @@ def J4 : Matrix (Fin 4) (Fin 4) ℝ :=
     1,  0, 0, 0;
     0,  0, 0, -1;
     0,  0, 1,  0]
+
+/-! A concrete non-commutativity witness for the matrix carrier. -/
+def matrixUnit01_4 : Matrix (Fin 4) (Fin 4) ℝ :=
+  !![0, 1, 0, 0;
+    0, 0, 0, 0;
+    0, 0, 0, 0;
+    0, 0, 0, 0]
+
+def matrixUnit10_4 : Matrix (Fin 4) (Fin 4) ℝ :=
+  !![0, 0, 0, 0;
+    1, 0, 0, 0;
+    0, 0, 0, 0;
+    0, 0, 0, 0]
+
+theorem matrixUnit01_4_mul_ne_matrixUnit10_4_mul :
+    matrixUnit01_4 * matrixUnit10_4 ≠ matrixUnit10_4 * matrixUnit01_4 := by
+  intro h
+  have h00 := congrArg (fun M : Matrix (Fin 4) (Fin 4) ℝ => M 0 0) h
+  norm_num [matrixUnit01_4, matrixUnit10_4, Matrix.mul_apply,
+    Fin.sum_univ_four] at h00
 
 /-- Explicit real `4×4` representative of the Hermitian Pauli packet. -/
 def toMatrix (X : RealSpacetime4x4) : Matrix (Fin 4) (Fin 4) ℝ :=

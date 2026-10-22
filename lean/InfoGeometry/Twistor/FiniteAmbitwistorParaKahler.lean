@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Twistor.PenroseIncidence
 import InfoGeometry.Projective.Twistor.Incidence
 import InfoGeometry.Algebra.FiniteSpinAlgebra
@@ -260,28 +266,32 @@ theorem traceFour_ambitwistorRankOne (Z W : AmbitwistorVector) :
       exact False.elim (hi (Finset.mem_univ i))
   simp_rw [h]
 
-theorem isAmbitwistor_rankOne_nilpotent (Z W : AmbitwistorVector)
-    (h : ∑ i : Fin 4, W i * Z i = 0) :
-    (ambitwistorRankOne Z W).comp (ambitwistorRankOne Z W) = 0 := by
+theorem ambitwistorRankOne_comp (Z W : AmbitwistorVector) :
+    (ambitwistorRankOne Z W).comp (ambitwistorRankOne Z W) =
+      (∑ i : Fin 4, W i * Z i) • ambitwistorRankOne Z W := by
   apply LinearMap.ext
   intro y
   funext i
   dsimp [ambitwistorRankOne]
-  have hinner :
-      (∑ j : Fin 4, W j * ((∑ k : Fin 4, W k * y k) * Z j)) = 0 := by
+  have hsum :
+      (∑ j : Fin 4, W j * ((∑ k : Fin 4, W k * y k) * Z j)) =
+        (∑ k : Fin 4, W k * y k) * (∑ j : Fin 4, W j * Z j) := by
     calc
       (∑ j : Fin 4, W j * ((∑ k : Fin 4, W k * y k) * Z j)) =
-          (∑ k : Fin 4, W k * y k) * (∑ j : Fin 4, W j * Z j) := by
-            calc
-              (∑ j : Fin 4, W j * ((∑ k : Fin 4, W k * y k) * Z j)) =
-                  ∑ j : Fin 4, (∑ k : Fin 4, W k * y k) * (W j * Z j) := by
-                    apply Finset.sum_congr rfl
-                    intro j hj
-                    ring
-              _ = (∑ k : Fin 4, W k * y k) * (∑ j : Fin 4, W j * Z j) := by
-                    rw [Finset.mul_sum]
-      _ = 0 := by rw [h, mul_zero]
-  simp [hinner]
+          ∑ j : Fin 4, (∑ k : Fin 4, W k * y k) * (W j * Z j) := by
+            apply Finset.sum_congr rfl
+            intro j hj
+            ring
+      _ = (∑ k : Fin 4, W k * y k) * (∑ j : Fin 4, W j * Z j) := by
+            rw [Finset.mul_sum]
+  rw [hsum]
+  simp [smul_eq_mul, mul_assoc, mul_comm, mul_left_comm]
+
+theorem isAmbitwistor_rankOne_nilpotent (Z W : AmbitwistorVector)
+    (h : ∑ i : Fin 4, W i * Z i = 0) :
+    (ambitwistorRankOne Z W).comp (ambitwistorRankOne Z W) = 0 := by
+  rw [ambitwistorRankOne_comp, h]
+  simp
 
 /-! The Aharonov readout is reused verbatim on the finite four-component
 twistor operator space. -/

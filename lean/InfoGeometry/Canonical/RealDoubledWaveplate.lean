@@ -187,6 +187,30 @@ theorem phaseFlow_conj_spectral_epsilon_reverse (θ : ℝ) :
   rw [hneg] at h
   simpa [neg_neg, sub_eq_add_neg, add_comm, add_left_comm, add_assoc] using h
 
+/-- At the geometric 45° angle, active conjugation sends the spectral grading
+to the negative doubled swap. -/
+theorem phaseFlow_conj_spectral_epsilon_pi_div_four :
+    phaseFlow (E := E) (-(Real.pi / 4)) * spectral_epsilon (E := E) *
+        phaseFlow (E := E) (Real.pi / 4) =
+      -(modular_j (E := E)) := by
+  rw [phaseFlow_conj_spectral_epsilon]
+  have harg : 2 * (Real.pi / 4) = Real.pi / 2 := by ring
+  rw [harg, Real.cos_pi_div_two, Real.sin_pi_div_two]
+  simp
+  module
+
+/-- At the geometric 45° angle, reverse active conjugation sends the spectral
+grading to the positive doubled swap. -/
+theorem phaseFlow_conj_spectral_epsilon_reverse_pi_div_four :
+    phaseFlow (E := E) (Real.pi / 4) * spectral_epsilon (E := E) *
+        phaseFlow (E := E) (-(Real.pi / 4)) =
+      modular_j (E := E) := by
+  rw [phaseFlow_conj_spectral_epsilon_reverse]
+  have harg : 2 * (Real.pi / 4) = Real.pi / 2 := by ring
+  rw [harg, Real.cos_pi_div_two, Real.sin_pi_div_two]
+  simp
+  module
+
 theorem phaseFlow_spectral_epsilon_intertwining (θ : ℝ) :
     (spectral_epsilon (E := E)).comp (phaseFlow (E := E) θ) =
       (phaseFlow (E := E) (-θ)).comp (spectral_epsilon (E := E)) := by

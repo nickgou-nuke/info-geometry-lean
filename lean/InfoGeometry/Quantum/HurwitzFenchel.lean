@@ -55,6 +55,16 @@ theorem hurwitz_mul_assoc (x y z : HurwitzSpace) :
     hurwitz_mul (hurwitz_mul x y) z = hurwitz_mul x (hurwitz_mul y z) := by
   ext <;> dsimp [hurwitz_mul] <;> ring
 
+/-- Multiplying by the conjugate recovers the scalar quadratic norm. -/
+theorem hurwitz_mul_conj_self (x : HurwitzSpace) :
+    hurwitz_mul x (hurwitz_conj x) = (hurwitz_norm x, 0) := by
+  ext <;> dsimp [hurwitz_mul, hurwitz_conj, hurwitz_norm] <;> ring
+
+/-- The conjugate product gives the same scalar norm in the reverse order. -/
+theorem hurwitz_conj_mul_self (x : HurwitzSpace) :
+    hurwitz_mul (hurwitz_conj x) x = (hurwitz_norm x, 0) := by
+  ext <;> dsimp [hurwitz_mul, hurwitz_conj, hurwitz_norm] <;> ring
+
 /--
 HONEST THEOREM DEBT:
 The exact Fenchel coordinate equality.

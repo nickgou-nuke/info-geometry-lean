@@ -143,6 +143,58 @@ theorem modularFlowCl11_smul (t : ThermalTime) (c : ℝ) (q : Cl11) :
     InfoGeometry.Clifford.Cl11CoordinateAlgebra.smul c (modularFlowCl11 t q)
   ext <;> simp [modularFlowCl11, InfoGeometry.Clifford.Cl11CoordinateAlgebra.smul] <;> ring
 
+/-- The circular `cos/sin` flow is not multiplicative for the split Clifford
+coordinate model. At `t = π/4`, it sends `e₂` to `e₁₂`, so it sends
+`e₂² = -1` to `-1` while the square of the image is `e₁₂² = +1`. -/
+theorem modularFlowCl11_not_mul_at_pi_div_four :
+    modularFlowCl11 (Real.pi / 4)
+        (InfoGeometry.Clifford.Cl11CoordinateAlgebra.e2Basis *
+          InfoGeometry.Clifford.Cl11CoordinateAlgebra.e2Basis) ≠
+      modularFlowCl11 (Real.pi / 4)
+          InfoGeometry.Clifford.Cl11CoordinateAlgebra.e2Basis *
+        modularFlowCl11 (Real.pi / 4)
+          InfoGeometry.Clifford.Cl11CoordinateAlgebra.e2Basis := by
+  intro h
+  have hangle : 2 * (Real.pi / 4) = Real.pi / 2 := by ring
+  have hsquare :
+      modularFlowCl11 (Real.pi / 4)
+          (InfoGeometry.Clifford.Cl11CoordinateAlgebra.e2Basis *
+            InfoGeometry.Clifford.Cl11CoordinateAlgebra.e2Basis) =
+        -(1 : Cl11) := by
+    rw [InfoGeometry.Clifford.Cl11CoordinateAlgebra.e2_sq]
+    change modularFlowCl11 (Real.pi / 4)
+        (InfoGeometry.Clifford.Cl11CoordinateAlgebra.neg
+          InfoGeometry.Clifford.Cl11CoordinateAlgebra.one) =
+      InfoGeometry.Clifford.Cl11CoordinateAlgebra.neg
+        InfoGeometry.Clifford.Cl11CoordinateAlgebra.one
+    unfold modularFlowCl11 InfoGeometry.Clifford.Cl11CoordinateAlgebra.neg
+      InfoGeometry.Clifford.Cl11CoordinateAlgebra.one
+    ext <;>
+      norm_num [hangle]
+  have himage :
+      modularFlowCl11 (Real.pi / 4)
+          InfoGeometry.Clifford.Cl11CoordinateAlgebra.e2Basis =
+        InfoGeometry.Clifford.Cl11CoordinateAlgebra.e12Basis := by
+    unfold modularFlowCl11 InfoGeometry.Clifford.Cl11CoordinateAlgebra.e2Basis
+      InfoGeometry.Clifford.Cl11CoordinateAlgebra.e12Basis
+    ext <;> norm_num [hangle]
+  have hbad : (-(1 : Cl11)) = (1 : Cl11) := by
+    calc
+      (-(1 : Cl11)) =
+          modularFlowCl11 (Real.pi / 4)
+            (InfoGeometry.Clifford.Cl11CoordinateAlgebra.e2Basis *
+              InfoGeometry.Clifford.Cl11CoordinateAlgebra.e2Basis) := hsquare.symm
+      _ = modularFlowCl11 (Real.pi / 4)
+            InfoGeometry.Clifford.Cl11CoordinateAlgebra.e2Basis *
+          modularFlowCl11 (Real.pi / 4)
+            InfoGeometry.Clifford.Cl11CoordinateAlgebra.e2Basis := h
+      _ = InfoGeometry.Clifford.Cl11CoordinateAlgebra.e12Basis *
+          InfoGeometry.Clifford.Cl11CoordinateAlgebra.e12Basis := by rw [himage]
+      _ = 1 := InfoGeometry.Clifford.Cl11CoordinateAlgebra.e12_sq
+  have hcoord := congrArg (fun x : Cl11 => x.s) hbad
+  change (-1 : ℝ) = 1 at hcoord
+  linarith
+
 /-- The finite modular flow has an explicit inverse at the opposite time. -/
 theorem modularFlowCl11_inverse (t : ThermalTime) (q : Cl11) :
     modularFlowCl11 (-t) (modularFlowCl11 t q) = q := by

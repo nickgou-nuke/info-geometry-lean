@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Data.Complex.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
@@ -18,6 +24,36 @@ abbrev Carrier := Plane × Plane
 def causalForm (x y : Carrier) : ℝ :=
   -(x.1 0) * (y.1 0) + (x.1 1) * (y.1 1) -
     (x.2 0) * (y.2 0) + (x.2 1) * (y.2 1)
+
+theorem causalForm_add_left (x y z : Carrier) :
+    causalForm (x + y) z = causalForm x z + causalForm y z := by
+  simp [causalForm, add_mul]
+  ring
+
+theorem causalForm_add_right (x y z : Carrier) :
+    causalForm x (y + z) = causalForm x y + causalForm x z := by
+  simp [causalForm, mul_add]
+  ring
+
+theorem causalForm_smul_left (a : ℝ) (x y : Carrier) :
+    causalForm (a • x) y = a * causalForm x y := by
+  simp [causalForm, smul_eq_mul]
+  ring
+
+theorem causalForm_smul_right (a : ℝ) (x y : Carrier) :
+    causalForm x (a • y) = a * causalForm x y := by
+  simp [causalForm, smul_eq_mul]
+  ring
+
+theorem causalForm_symm (x y : Carrier) :
+    causalForm x y = causalForm y x := by
+  simp [causalForm]
+  ring
+
+theorem causalForm_null_smul {x : Carrier} (hx : causalForm x x = 0) (a : ℝ) :
+    causalForm (a • x) (a • x) = 0 := by
+  rw [causalForm_smul_left, causalForm_smul_right, hx]
+  ring
 
 def transverseJ : Plane →ₗ[ℝ] Plane :=
   { toFun := fun x => ![-x 1, x 0]

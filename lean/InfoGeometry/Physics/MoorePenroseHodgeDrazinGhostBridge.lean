@@ -52,6 +52,7 @@ theorem operator_ghost_commutator
     _ = A * A_plus - A_plus * A - A * A_D + A * A_D := by rw [h_comm]
     _ = A * A_plus - A_plus * A := by abel
 
+omit [StarRing R] in
 /-- Under the Drazin commutation law, vanishing of the ghost commutator is
     equivalent to commutation of the Moore–Penrose candidate itself. -/
 theorem ghost_commutator_eq_zero_iff

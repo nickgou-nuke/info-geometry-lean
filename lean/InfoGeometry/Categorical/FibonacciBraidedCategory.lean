@@ -491,13 +491,12 @@ noncomputable def fibTensorBifunctor : FibCat ⥤ (FibCat ⥤ FibCat) where
 ## Remaining closure debt
 
 This file is verified scaffolding only; no `MonoidalCategory`/`BraidedCategory`
-instance is declared.
-
-Exact kernel-checked lemmas still owed before full monoidal closure:
-- TODO: associator unit/tau block lemmas from `MTC_FusionMatrix`
-- TODO: pentagon/triangle proofs as `FibHom.ext` calc chains
-- TODO: braiding naturality `right/left` as `FibHom.ext` simp calc
-- TODO: hexagon forward/reverse as `FibHom.ext` block calc
+instance is declared.  The object-level associativity and unit equations,
+the skeletal pentagon and triangle, equality-transport braiding naturality,
+and both hexagon paths are proved above.  The remaining debt is the genuine
+arbitrary-morphism naturality needed to install the full Mathlib
+`MonoidalCategory` instance, followed by a separate comparison with the
+nontrivial Fibonacci `F`/`R` data.  No such comparison is asserted here.
 -/
 
 end InfoGeometry.Categorical.FibonacciBraidedCategory

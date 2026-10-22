@@ -125,6 +125,17 @@ theorem chiral_projector_decomposition (v : SpinorSpace 5) :
 def spinGroupAction (g : Spin55) : SpinorSpace 5 →ₗ[ℝ] SpinorSpace 5 :=
   Matrix.toLin' (cl55SpinorAlgEquiv (g : Cl55))
 
+/-- The native spinor action is multiplicative in the spin-group element. -/
+theorem spinGroupAction_mul (g h : Spin55) :
+    spinGroupAction (g * h) =
+      (spinGroupAction g).comp (spinGroupAction h) := by
+  apply LinearMap.ext
+  intro v
+  change Matrix.mulVec (cl55SpinorAlgEquiv ((g * h : Spin55) : Cl55)) v = _
+  simp only [spinGroupAction, Matrix.toLin'_apply, LinearMap.comp_apply]
+  rw [show ((g * h : Spin55) : Cl55) = (g : Cl55) * (h : Cl55) by rfl]
+  rw [map_mul, Matrix.mulVec_mulVec]
+
 /-- The spin-group action restricted to the positive chiral sector. -/
 def spinGroupActionPlus (g : Spin55) :
     chiralPlusSector →ₗ[ℝ] chiralPlusSector :=

@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Algebra.Ring.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Star.Basic
@@ -29,6 +35,22 @@ def nambuGorkovConjugation (M : OperatorZornMatrix A) : OperatorZornMatrix A whe
     (M : OperatorZornMatrix A) :
     nambuGorkovConjugation (nambuGorkovConjugation M) = M := by
   cases M; simp [nambuGorkovConjugation]
+
+/-- A fixed point of the Nambu--Gor'kov conjugation is exactly a
+componentwise Majorana relation on the four entries. -/
+theorem nambuGorkovConjugation_eq_self_iff (M : OperatorZornMatrix A) :
+    nambuGorkovConjugation M = M ↔
+      M.n_plus_op = -star M.n_minus_op ∧
+        M.n_minus_op = -star M.n_plus_op ∧
+        M.sigma_plus_op = star M.sigma_minus_op ∧
+        M.sigma_minus_op = star M.sigma_plus_op := by
+  cases M
+  simp only [nambuGorkovConjugation, OperatorZornMatrix.mk.injEq]
+  constructor
+  · rintro ⟨h₁, h₂, h₃, h₄⟩
+    exact ⟨h₁.symm, h₂.symm, h₃.symm, h₄.symm⟩
+  · rintro ⟨h₁, h₂, h₃, h₄⟩
+    exact ⟨h₁.symm, h₂.symm, h₃.symm, h₄.symm⟩
 
 /-- The involution is packaged as an equivalence of the four-entry carrier. -/
 def nambuGorkovEquiv : OperatorZornMatrix A ≃ OperatorZornMatrix A where

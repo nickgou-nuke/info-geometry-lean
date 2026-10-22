@@ -22,6 +22,7 @@ they are not asserted to remain in the BdG kernel.
 -/
 
 open scoped InnerProductSpace
+open Matrix
 
 namespace InfoGeometry.Krein.MajoranaBdGSheetBridge
 
@@ -325,6 +326,42 @@ theorem rightMode_CAR_connector_crosses_sheets :
 /-- The sweet-spot BdG operator conjugated to the doubled carrier. -/
 noncomputable def transportedSweetSpot (t : ℝ) : H4 → H4 := fun z =>
   nambuDoubledEquiv ((kitaevSweetSpot8 t).mulVec (nambuDoubledEquiv.symm z))
+
+private theorem sweet_particle_hole_symmetry (t : ℝ) :
+    particleHole8 * (kitaevSweetSpot8 t).transpose * particleHole8 =
+      -kitaevSweetSpot8 t := by
+  have hEq : kitaevSweetSpot8 t = kitaevBdG8 0 t t := by
+    ext i j
+    fin_cases i <;> fin_cases j <;> simp [kitaevSweetSpot8, kitaevBdG8]
+  rw [hEq]
+  exact kitaevBdG8_particle_hole_symmetry 0 t t
+
+/-- The particle-hole symmetry of the finite BdG matrix transports to the
+doubled real Krein carrier as modular-sheet conjugation. -/
+theorem transportedSweetSpot_particle_hole_symmetry (t : ℝ) (z : H4) :
+    InfoGeometry.Krein.modular_j (E := E4)
+        (transportedSweetSpot t
+          (InfoGeometry.Krein.modular_j (E := E4) z)) =
+      -transportedSweetSpot t z := by
+  obtain ⟨v, rfl⟩ := nambuDoubledEquiv.surjective z
+  rw [transportedSweetSpot, transportedSweetSpot,
+    nambuDoubledEquiv.symm_apply_apply]
+  rw [← particleHole8_intertwines_modular_j]
+  rw [← particleHole8_intertwines_modular_j]
+  simp only [nambuDoubledEquiv.symm_apply_apply]
+  have hmat := sweet_particle_hole_symmetry t
+  have htranspose : (kitaevSweetSpot8 t).transpose = kitaevSweetSpot8 t := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [kitaevSweetSpot8, transpose_apply]
+  rw [htranspose] at hmat
+  have htarget :
+      particleHole8.mulVec ((kitaevSweetSpot8 t).mulVec (particleHole8.mulVec v)) =
+        (particleHole8 * kitaevSweetSpot8 t * particleHole8).mulVec v := by
+    rw [Matrix.mulVec_mulVec, Matrix.mulVec_mulVec]
+  rw [htarget, hmat]
+  simpa only [Matrix.neg_mulVec, LinearEquiv.coe_toLinearMap] using
+    nambuDoubledEquiv.map_neg ((kitaevSweetSpot8 t).mulVec v)
 
 /-- The transported left BdG boundary vector remains in the transported kernel. -/
 theorem transported_leftMode_is_zero (t : ℝ) :

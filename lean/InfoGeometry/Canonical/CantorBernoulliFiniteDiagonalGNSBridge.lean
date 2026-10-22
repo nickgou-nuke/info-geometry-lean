@@ -111,6 +111,21 @@ theorem gaugeStateFamily_diagonal_projective_integral
     _ = ∫ q, f (π n q) ∂projectiveLimitMeasure :=
       (projectiveLimitMeasure_integral_prefix_eq_stageTrace n f).symm
 
+/-- The common vacuum in the native filtered GNS Hilbert colimit evaluates
+every finite UHF diagonal observable as its projective-limit Bernoulli
+integral. This is a diagonal-sector readout; it does not identify the full
+noncommutative GNS colimit with the boundary `L²` space. -/
+theorem gaugeGNSColimitVacuum_diagonal_projective_integral
+    (n : ℕ) (f : DiagAlg n) :
+    ⟪gaugeGNSColimitVacuum,
+      CStarStateColimit.Native.FilteredGNSGlobalStageRepresentation.globalStageRepresentationStarAlgHom
+        gaugeStage gaugeSystem gaugeStateFamily n
+        ((cstarStageToBitWordStage n).symm (Matrix.diagonal f))
+        gaugeGNSColimitVacuum⟫_ℂ =
+      ∫ q, f (π n q) ∂projectiveLimitMeasure := by
+  rw [gaugeGNSColimitVacuum_stage_expectation]
+  exact gaugeStateFamily_diagonal_projective_integral n f
+
 /-- The spatial Bernoulli vector state after the finite Cuntz-boundary
 representation agrees with the projective-limit integral on every finite
 diagonal observable. -/

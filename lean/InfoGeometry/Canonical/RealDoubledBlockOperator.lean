@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Canonical.MongeAmpereDualSheetBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -59,6 +65,23 @@ omit [CompleteSpace E] in
   ext x
   simp [minusToPlusBlockMap, realDoubledBlockOperator,
     ContinuousLinearMap.comp_apply]
+
+omit [CompleteSpace E] in
+theorem realDoubledBlockOperator_comp
+    (A B C D A' B' C' D' : E →L[ℝ] E) :
+    (realDoubledBlockOperator A B C D).comp
+        (realDoubledBlockOperator A' B' C' D') =
+      realDoubledBlockOperator
+        (A.comp A' + B.comp C') (A.comp B' + B.comp D')
+        (C.comp A' + D.comp C') (C.comp B' + D.comp D') := by
+  apply ContinuousLinearMap.ext
+  intro z
+  obtain ⟨x, ξ⟩ := z
+  simp only [ContinuousLinearMap.comp_apply,
+    realDoubledBlockOperator_apply]
+  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.comp_apply,
+    map_add]
+  apply congrArg₂ to_doubled <;> abel
 
 end
 end InfoGeometry.Canonical.RealDoubledBlockOperator

@@ -145,6 +145,23 @@ At q = e^{πi/5}: [2]_q = q + q⁻¹ = φ = (1+√5)/2.
 def qNumber (q : ℂ) (n : ℤ) (hq_sq_ne_one : q ^ 2 ≠ 1) : ℂ :=
   (q ^ n - q ^ (-n)) / (q - q⁻¹)
 
+/-- The first quantum integer is one whenever the deformation parameter is
+    nonzero and the defining denominator is nonvanishing. -/
+theorem qNumber_one (q : ℂ) (hq_ne_zero : q ≠ 0)
+    (hq_sq_ne_one : q ^ 2 ≠ 1) :
+    qNumber q 1 hq_sq_ne_one = 1 := by
+  unfold qNumber
+  rw [zpow_one, _root_.zpow_neg]
+  have hden : q - q⁻¹ ≠ 0 := by
+    intro h
+    apply hq_sq_ne_one
+    have hqi : q = q⁻¹ := sub_eq_zero.mp h
+    calc
+      q ^ 2 = q * q := by ring
+      _ = q * q⁻¹ := congrArg (fun z => q * z) hqi
+      _ = 1 := by simp [hq_ne_zero]
+  field_simp [hden, hq_ne_zero]
+
 /-- The second quantum integer is the symmetric Laurent polynomial `q + q⁻¹`.
 
 This is the finite algebraic identity used by the Fibonacci specialization; it

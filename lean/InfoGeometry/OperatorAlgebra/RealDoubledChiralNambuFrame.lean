@@ -7,6 +7,7 @@ Authors: InfoGeometry Engine Contributors
 import InfoGeometry.OperatorAlgebra.RealDoubledChiralKreinReal
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.RealDoubledChiralKreinComplements
+import InfoGeometry.Canonical.SuperchargeCARCCRBridge
 
 /-!
 # Nambu-style frame on the doubled real chiral carrier
@@ -24,6 +25,8 @@ namespace InfoGeometry.OperatorAlgebra.RealDoubledChiralNambuFrame
 open InfoGeometry.Krein
 open InfoGeometry.OperatorAlgebra.RealDoubledChiralKrein
 open InfoGeometry.OperatorAlgebra.RealDoubledChiralKreinComplements
+open InfoGeometry.Canonical.BogoliubovFockSuper
+open InfoGeometry.Canonical.SuperchargeCARCCRBridge
 
 variable {E : Type*}
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
@@ -180,5 +183,49 @@ theorem operator_comp_operator_off_part_isOffBlock
   · exact IsOffBlockDiagonal.comp_block F.pairing_off_block F.normal_block
 
 end ChiralNambuFrame
+
+/-! ## Canonical CAR ladder compatibility
+
+The generic Nambu frame is defined on arbitrary universes.  The concrete
+split-CAR ladders live on the canonical `Type 0` doubled carrier, so this
+bridge is stated at exactly that owner-aligned universe rather than silently
+coercing between carriers. -/
+
+section CanonicalCAR
+
+variable {E : Type}
+  [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+
+theorem concreteCARCreation_eq_nambuProjectorPlus_comp_nambuSheetFlip :
+    concreteCARCreation (E := E) =
+      (nambuProjectorPlus (E := E)).comp
+        (nambuSheetFlip (E := E)) := by
+  apply ContinuousLinearMap.ext
+  intro u
+  have hu : (to_doubled (WithLp.fst u) (WithLp.snd u) : DoubledSpace E) = u := by
+    exact DoubledSpace.ext rfl rfl
+  rw [← hu]
+  apply DoubledSpace.ext <;>
+    simp [nambuProjectorPlus, nambuSheetFlip, leftChiralProjector,
+      etaChiral, gamma5, spectral_epsilon, modular_j, one_div,
+      concreteCARCreation,
+      cliffordConcreteCreation_apply_to_doubled] <;> module
+
+theorem concreteCARAnnihilation_eq_nambuProjectorMinus_comp_nambuSheetFlip :
+    concreteCARAnnihilation (E := E) =
+      (nambuProjectorMinus (E := E)).comp
+        (nambuSheetFlip (E := E)) := by
+  apply ContinuousLinearMap.ext
+  intro u
+  have hu : (to_doubled (WithLp.fst u) (WithLp.snd u) : DoubledSpace E) = u := by
+    exact DoubledSpace.ext rfl rfl
+  rw [← hu]
+  apply DoubledSpace.ext <;>
+    simp [nambuProjectorMinus, nambuSheetFlip, rightChiralProjector,
+      etaChiral, gamma5, spectral_epsilon, modular_j, one_div,
+      concreteCARAnnihilation,
+      cliffordConcreteAnnihilation_apply_to_doubled] <;> module
+
+end CanonicalCAR
 
 end InfoGeometry.OperatorAlgebra.RealDoubledChiralNambuFrame

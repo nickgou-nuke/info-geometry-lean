@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Data.Real.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ZornSpinor
@@ -21,7 +27,6 @@ Closed here:
 * real readback theorems showing every group element preserves `1` and product.
 
 Open debt, deliberately not hidden in structure fields:
-* determinant preservation for every algebra automorphism;
 * derivation/Lie-algebra identification with split real `𝔤₂`;
 * future group-level target: identify this automorphism group with the split real
   form `G_{2(2)}` after the Lie/derivation layer is constructed.

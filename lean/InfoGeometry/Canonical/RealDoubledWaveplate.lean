@@ -75,6 +75,25 @@ theorem phaseFlow_preserves_inner (θ : ℝ) (u v : H₂) :
   rw [phaseFlow_eq_KRotation (E := E)]
   exact KRotation_preserves_inner (E := E) θ u v
 
+/- The Hilbert adjoint of the phase flow is its inverse flow. -/
+theorem phaseFlow_adjoint (θ : ℝ) :
+    ContinuousLinearMap.adjoint (phaseFlow (E := E) θ) =
+      phaseFlow (E := E) (-θ) := by
+  symm
+  refine (ContinuousLinearMap.eq_adjoint_iff
+    (A := phaseFlow (E := E) (-θ))
+    (B := phaseFlow (E := E) θ)).2 ?_
+  intro u v
+  have hpres := phaseFlow_preserves_inner (E := E) (-θ) u
+    (phaseFlow (E := E) θ v)
+  have hcomp : phaseFlow (E := E) (-θ)
+      (phaseFlow (E := E) θ v) = v := by
+    have h := congrArg (fun T : EndH => T v)
+      (phaseFlow_left_inverse (E := E) θ)
+    simpa [ContinuousLinearMap.mul_apply] using h
+  rw [hcomp] at hpres
+  exact hpres
+
 theorem phaseFlow_operator_intertwines_of_phaseLinear
     (A : EndH)
     (hA : A.comp (clockAxis (E := E)) = (clockAxis (E := E)).comp A)

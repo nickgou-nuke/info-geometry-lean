@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Physics.MoorePenroseHodgeDrazinGhostBridge
 
 /-!
@@ -14,7 +20,7 @@ This audit previously listed thirteen `#print axioms` targets
 
 None of those thirteen declarations exist. The owner module
 `InfoGeometry.Physics.MoorePenroseHodgeDrazinGhostBridge` contains only the
-five declarations audited below, and the file previously failed to compile with
+six declarations audited below, and the file previously failed to compile with
 thirteen `Unknown constant` errors, which broke the whole `InfoGeometry.All`
 surface.
 
@@ -43,6 +49,10 @@ written down.
 - `certified_mp_hodge_drazin_ghost_synthesis` — the intended capstone synthesis.
 
 ## Audit of the declarations that actually exist
+
+The owner also proves the exact equivalence
+`ghost_commutator_eq_zero_iff`, reducing vanishing of the defect commutator to
+commutation of the Moore--Penrose candidate under the Drazin commutation law.
 -/
 
 open InfoGeometry.Physics.MoorePenroseHodgeDrazinGhostBridge
@@ -52,3 +62,4 @@ open InfoGeometry.Physics.MoorePenroseHodgeDrazinGhostBridge
 #print axioms defect_ghost
 #print axioms zero_ghost_implies_metric_commutation
 #print axioms operator_ghost_commutator
+#print axioms ghost_commutator_eq_zero_iff

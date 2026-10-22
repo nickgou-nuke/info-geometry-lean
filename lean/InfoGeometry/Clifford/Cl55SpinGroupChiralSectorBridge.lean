@@ -12,9 +12,9 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 The preceding owner proves the projector commutation identities.  This file
 packages their immediate representation-theoretic consequence as genuine
-finite-dimensional `Submodule`s.  It does not yet construct restricted
-monoid homomorphisms or identify these sectors with an independently defined
-native carrier.
+finite-dimensional `Submodule`s and proves the identity, multiplication, and
+inverse laws of the restricted maps.  It does not identify these sectors with
+an independently defined native carrier.
 -/
 
 noncomputable section

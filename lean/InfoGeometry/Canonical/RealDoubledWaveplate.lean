@@ -95,6 +95,22 @@ theorem phaseFlow_operator_intertwines_of_phaseAntilinear
   exact comp_KRotation_eq_KRotation_neg_comp_of_IsPhaseAntilinear
     (E := E) (A := A) hA θ
 
+/- The corresponding expectation value is invariant under the same phase
+flow when the observable is phase-linear. -/
+theorem phaseFlow_expectation_intertwines_of_phaseLinear
+    (A : EndH)
+    (hA : A.comp (clockAxis (E := E)) = (clockAxis (E := E)).comp A)
+    (θ : ℝ) (u v : H₂) :
+    ⟪phaseFlow (E := E) θ u,
+      A (phaseFlow (E := E) θ v)⟫_ℝ = ⟪u, A v⟫_ℝ := by
+  have hcomm := phaseFlow_operator_intertwines_of_phaseLinear
+    (E := E) A hA θ
+  have hAv : A (phaseFlow (E := E) θ v) =
+      phaseFlow (E := E) θ (A v) := by
+    exact congrArg (fun T : EndH => T v) hcomm
+  rw [hAv]
+  exact phaseFlow_preserves_inner (E := E) θ u (A v)
+
 theorem phaseFlow_plus_projector_transport (θ : ℝ) :
     (spectralPlusProj (E := E)).comp (phaseFlow (E := E) θ) =
       Real.cos θ • (spectralPlusProj (E := E)) +

@@ -91,7 +91,7 @@ theorem phaseFlow_operator_intertwines_of_phaseAntilinear
     (θ : ℝ) :
     A.comp (phaseFlow (E := E) θ) =
       (phaseFlow (E := E) (-θ)).comp A := by
-  rw [phaseFlow_eq_KRotation (E := E), phaseFlow_eq_KRotation (E := E)]
+  simp only [phaseFlow_eq_KRotation]
   exact comp_KRotation_eq_KRotation_neg_comp_of_IsPhaseAntilinear
     (E := E) (A := A) hA θ
 
@@ -151,6 +151,25 @@ theorem phaseFlow_conj_spectral_epsilon_reverse (θ : ℝ) :
     module
   rw [hneg] at h
   simpa [neg_neg, sub_eq_add_neg, add_comm, add_left_comm, add_assoc] using h
+
+theorem phaseFlow_spectral_epsilon_intertwining (θ : ℝ) :
+    (spectral_epsilon (E := E)).comp (phaseFlow (E := E) θ) =
+      (phaseFlow (E := E) (-θ)).comp (spectral_epsilon (E := E)) := by
+  rw [phaseFlow_eq_KRotation (E := E), phaseFlow_eq_KRotation (E := E)]
+  exact spectral_epsilon_comp_KRotation (E := E) θ
+
+theorem phaseFlow_kreinMetricOfOperator_invariant
+    (A : EndH)
+    (hAnti : IsPhaseAntilinear (E := E) A)
+    (θ : ℝ) :
+    ∀ u v : H₂,
+      kreinMetricOfOperator A
+          (phaseFlow (E := E) θ u)
+          (phaseFlow (E := E) θ v) =
+        kreinMetricOfOperator A u v := by
+  simp only [phaseFlow_eq_KRotation]
+  exact kreinMetricOfOperator_KRotation_eq_of_IsPhaseAntilinear
+    (E := E) A hAnti θ
 
 theorem phaseFlow_transportGamma_car
     {M : RealMajoranaDatum (S := H₂)} (θ : ℝ) (u v : H₂) :

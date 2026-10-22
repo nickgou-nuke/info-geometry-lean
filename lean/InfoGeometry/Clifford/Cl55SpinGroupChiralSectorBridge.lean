@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Clifford.Cl55SpinGroupChiralityBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -112,6 +118,50 @@ theorem chiral_projector_decomposition (v : SpinorSpace 5) :
         Matrix.mulVec chiralMinusProjector v = v := by
   rw [← Matrix.add_mulVec, chiralProjectors_complementary]
   exact Matrix.one_mulVec v
+
+/-! ### Restricted spin-group actions -/
+
+/-- The native matrix action of a spin-group element on the real spinor carrier. -/
+def spinGroupAction (g : Spin55) : SpinorSpace 5 →ₗ[ℝ] SpinorSpace 5 :=
+  Matrix.toLin' (cl55SpinorAlgEquiv (g : Cl55))
+
+/-- The spin-group action restricted to the positive chiral sector. -/
+def spinGroupActionPlus (g : Spin55) :
+    chiralPlusSector →ₗ[ℝ] chiralPlusSector :=
+  LinearMap.codRestrict chiralPlusSector
+    ((spinGroupAction g).comp chiralPlusSector.subtype) (by
+    intro v
+    change Matrix.mulVec chiralPlusProjector
+        (Matrix.mulVec (cl55SpinorAlgEquiv (g : Cl55)) v) =
+      Matrix.mulVec (cl55SpinorAlgEquiv (g : Cl55)) v
+    exact spinGroup_matrix_preserves_chiralPlus_vector g (v : SpinorSpace 5) v.2)
+
+/-- The spin-group action restricted to the negative chiral sector. -/
+def spinGroupActionMinus (g : Spin55) :
+    chiralMinusSector →ₗ[ℝ] chiralMinusSector :=
+  LinearMap.codRestrict chiralMinusSector
+    ((spinGroupAction g).comp chiralMinusSector.subtype) (by
+    intro v
+    change Matrix.mulVec chiralMinusProjector
+        (Matrix.mulVec (cl55SpinorAlgEquiv (g : Cl55)) v) =
+      Matrix.mulVec (cl55SpinorAlgEquiv (g : Cl55)) v
+    exact spinGroup_matrix_preserves_chiralMinus_vector g (v : SpinorSpace 5) v.2)
+
+@[simp] theorem spinGroupActionPlus_apply (g : Spin55)
+    (v : chiralPlusSector) :
+    (spinGroupActionPlus g v : SpinorSpace 5) =
+      Matrix.mulVec (cl55SpinorAlgEquiv (g : Cl55)) v := by
+  change ((spinGroupAction g).comp chiralPlusSector.subtype) v = _
+  rw [LinearMap.comp_apply, spinGroupAction, Matrix.toLin'_apply]
+  rfl
+
+@[simp] theorem spinGroupActionMinus_apply (g : Spin55)
+    (v : chiralMinusSector) :
+    (spinGroupActionMinus g v : SpinorSpace 5) =
+      Matrix.mulVec (cl55SpinorAlgEquiv (g : Cl55)) v := by
+  change ((spinGroupAction g).comp chiralMinusSector.subtype) v = _
+  rw [LinearMap.comp_apply, spinGroupAction, Matrix.toLin'_apply]
+  rfl
 
 theorem chiralPlusProjector_mem_chiralPlusSector (v : SpinorSpace 5) :
     Matrix.mulVec chiralPlusProjector v ∈ chiralPlusSector := by

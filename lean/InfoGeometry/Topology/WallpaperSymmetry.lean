@@ -141,6 +141,42 @@ theorem pg_glide_iterate_y_inverse
       rw [ih]
       rw [Function.iterate_succ_apply']
 
+/-- The glide conjugation law extends from natural iterates to all integer
+powers of the transverse translation.  This is the group-action form of the
+Klein-bottle relation, using the inverse-iterate theorem for negative powers.
+-/
+theorem pg_glide_zpow_y
+    (pg : WallpaperGroupPG) (n : ℤ) (p : Lattice2D) :
+    pg.G (((pg.T_y : Lattice2D ≃ Lattice2D) ^ n) p) =
+      (((pg.T_y.symm) ^ n) (pg.G p)) := by
+  revert p
+  induction n using Int.induction_on with
+  | zero =>
+      intro p
+      simp
+  | succ n ih =>
+      intro p
+      rw [zpow_add_one, zpow_add_one]
+      simp only [Equiv.Perm.mul_apply]
+      have ih' := ih (pg.T_y p)
+      rw [ih']
+      rw [pg.h_commutation]
+  | pred n ih =>
+      intro p
+      rw [zpow_sub_one, zpow_sub_one]
+      simp only [Equiv.Perm.mul_apply]
+      have hinv (x : Lattice2D) :
+          pg.G (pg.T_y.symm x) = pg.T_y (pg.G x) := by
+        have h := pg.h_commutation (pg.T_y.symm x)
+        have h' := congrArg pg.T_y h
+        simpa using h'.symm
+      have hp : pg.T_y⁻¹ p = pg.T_y.symm p := rfl
+      rw [hp]
+      have ih' := ih (pg.T_y.symm p)
+      rw [ih']
+      rw [hinv]
+      rfl
+
 end InfoGeometry.Topology.Wallpaper
 
 end noncomputable section

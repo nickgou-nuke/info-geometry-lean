@@ -145,6 +145,26 @@ theorem operator_comp_operator_expansion (F : ChiralNambuFrame (E := E)) :
   simp only [ContinuousLinearMap.add_comp, ContinuousLinearMap.comp_add]
   abel
 
+/-- The diagonal terms in the square of a Nambu frame preserve the two
+chiral sheets. -/
+theorem operator_comp_operator_block_part_isBlock
+    (F : ChiralNambuFrame (E := E)) :
+    IsBlockDiagonal
+      (F.normal.comp F.normal + F.pairing.comp F.pairing) := by
+  apply IsBlockDiagonal.add
+  · exact IsBlockDiagonal.comp F.normal_block F.normal_block
+  · exact IsOffBlockDiagonal.comp F.pairing_off_block F.pairing_off_block
+
+/-- The mixed terms in the square of a Nambu frame exchange the two chiral
+sheets. -/
+theorem operator_comp_operator_off_part_isOffBlock
+    (F : ChiralNambuFrame (E := E)) :
+    IsOffBlockDiagonal
+      (F.normal.comp F.pairing + F.pairing.comp F.normal) := by
+  apply IsOffBlockDiagonal.add
+  · exact IsBlockDiagonal.comp_off F.normal_block F.pairing_off_block
+  · exact IsOffBlockDiagonal.comp_block F.pairing_off_block F.normal_block
+
 end ChiralNambuFrame
 
 end InfoGeometry.OperatorAlgebra.RealDoubledChiralNambuFrame

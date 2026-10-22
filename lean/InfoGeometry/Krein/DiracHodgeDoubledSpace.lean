@@ -159,6 +159,20 @@ theorem hodgeConjugate_involutive
       simp [hodgeConjugate, ContinuousLinearMap.comp_assoc]
     _ = S := by rw [J_involution E]; simp
 
+/-- Hodge conjugation preserves composition. -/
+theorem hodgeConjugate_comp
+    (S T : DoubledSpace E →L[ℝ] DoubledSpace E) :
+    hodgeConjugate (S.comp T) = (hodgeConjugate S).comp (hodgeConjugate T) := by
+  apply ContinuousLinearMap.ext
+  intro x
+  change modular_j (S (T (modular_j x))) =
+    modular_j (S (modular_j (modular_j (T (modular_j x)))))
+  have hJ (y : DoubledSpace E) : modular_j (E := E) (modular_j y) = y := by
+    change ((modular_j (E := E)).comp modular_j) y = y
+    rw [J_involution E]
+    simp
+  rw [hJ]
+
 /-- Hodge conjugation preserves and reflects the isometry property. -/
 theorem isometry_hodgeConjugate_iff
     (S : DoubledSpace E →L[ℝ] DoubledSpace E) :

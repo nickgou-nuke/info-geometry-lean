@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.LLM.SpectralToken
@@ -56,6 +62,13 @@ theorem gramOperator_transpose
     (Z : Matrix (Fin n) (Fin d) ℝ) :
     (gramOperator Z).transpose = gramOperator Z := by
   simp [gramOperator, Matrix.transpose_mul]
+
+/-- A finite real auto-Gramian is positive semidefinite. -/
+theorem gramOperator_posSemidef
+    (Z : Matrix (Fin n) (Fin d) ℝ) :
+    (gramOperator Z).PosSemidef := by
+  simpa [gramOperator] using
+    (Matrix.posSemidef_self_mul_conjTranspose Z)
 
 /-- A genuine real Gram operator has no oriented/antisymmetric component. -/
 theorem antisymmetricPart_gramOperator_eq_zero

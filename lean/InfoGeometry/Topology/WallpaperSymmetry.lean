@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -100,6 +106,23 @@ theorem concrete_pg_generates_klein_bottle_relation (p : Lattice2D) :
 theorem concrete_pg_conjugates_y_translation_to_inverse (p : Lattice2D) :
     concretePG.G (concretePG.T_y (concretePG.G.symm p)) = concretePG.T_y.symm p := by
   exact pg_conjugates_y_translation_to_inverse concretePG p
+
+/-- Iterating the transverse translation preserves the glide conjugation law.
+
+This is the natural finite orbit consequence of the one-step `pg` relation:
+the glide carries every natural iterate of `T_y` to the corresponding iterate
+of the inverse translation. -/
+theorem pg_glide_iterate_y
+    (pg : WallpaperGroupPG) (n : ℕ) (p : Lattice2D) :
+    pg.G ((pg.T_y : Lattice2D ≃ Lattice2D)^[n] p) =
+      (pg.T_y.symm^[n]) (pg.G p) := by
+  induction n with
+  | zero => simp
+  | succ n ih =>
+      rw [Function.iterate_succ_apply']
+      rw [pg.h_commutation]
+      rw [ih]
+      rw [Function.iterate_succ_apply']
 
 end InfoGeometry.Topology.Wallpaper
 

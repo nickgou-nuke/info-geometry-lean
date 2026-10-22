@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Data.Finsupp.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.CategoryTheory.Monoidal.Braided.Basic
@@ -250,6 +256,48 @@ theorem fibTensorHom_id (X Y : FibCat) :
     simp [fibTensorHom, FibHom.id, fibTensorObj]
     exact reindex_cast_cast_one _ _
   exact FibHom.ext h_unit h_tau
+
+/-! ## Equality-transport braiding
+
+The formal multiplicity object is commutative.  This gives a canonical
+equality-transport braiding in the skeletal carrier.  It is a genuine
+morphism-level construction; it does not assert the missing full
+`BraidedCategory` instance or identify the finite `R`-matrix with this
+equality transport.
+-/
+
+theorem fibTensorObj_comm (X Y : FibCat) :
+    fibTensorObj X Y = fibTensorObj Y X := by
+  ext s
+  cases s <;> simp [fibTensorObj] <;> ring
+
+noncomputable def fibBraiding (X Y : FibCat) :
+    fibTensorObj X Y ≅ fibTensorObj Y X :=
+  CategoryTheory.eqToIso (fibTensorObj_comm X Y)
+
+theorem fibBraiding_hom_inv_id (X Y : FibCat) :
+    (fibBraiding X Y).hom ≫ (fibBraiding Y X).hom = 𝟙 _ := by
+  simpa only [fibBraiding, CategoryTheory.eqToIso, CategoryTheory.eqToHom_trans,
+    CategoryTheory.eqToHom_refl]
+
+theorem fibBraiding_naturality_eqToHom
+    {X₁ X₂ Y₁ Y₂ : FibCat}
+    (hX : X₁ = X₂) (hY : Y₁ = Y₂) :
+    FibHom.comp
+      (fibTensorHom (CategoryTheory.eqToHom hX) (CategoryTheory.eqToHom hY))
+      (fibBraiding X₂ Y₂).hom =
+    FibHom.comp
+      (fibBraiding X₁ Y₁).hom
+      (fibTensorHom (CategoryTheory.eqToHom hY) (CategoryTheory.eqToHom hX)) := by
+  cases hX
+  cases hY
+  simp only [CategoryTheory.eqToHom_refl]
+  change FibHom.comp (fibTensorHom (FibHom.id X₁) (FibHom.id Y₁))
+      (fibBraiding X₁ Y₁).hom =
+    FibHom.comp (fibBraiding X₁ Y₁).hom
+      (fibTensorHom (FibHom.id Y₁) (FibHom.id X₁))
+  rw [fibTensorHom_id, fibTensorHom_id]
+  simp [fibBraiding, FibHom.comp, FibHom.id]
 
 @[simp]
 theorem fibTensorHom_comp

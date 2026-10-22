@@ -3,7 +3,6 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
-
 import Mathlib
 
 /-!
@@ -30,7 +29,6 @@ structure MultiEnergyForwardModel (M : Type u) (Energy : Type v)
 def constantModel [Inhabited Observation] :
     MultiEnergyForwardModel M Energy Observation where
   observe := fun _ _ => default
-
 namespace MultiEnergyForwardModel
 
 variable {M : Type u} {Energy : Type v} {Observation : Type w}

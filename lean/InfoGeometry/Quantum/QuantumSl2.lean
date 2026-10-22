@@ -166,13 +166,9 @@ theorem qNumber_two (q : ℂ) (hq_sq_ne_one : q ^ 2 ≠ 1) :
   field_simp [hden, hq_ne_zero]
   ring
 
-/--
-The Fibonacci golden ratio φ = (1+√5)/2.
--/
-noncomputable abbrev phi := phiC
-
 theorem q_plus_qinv_equals_phi_at_fibonacci :
-    (Complex.exp (Real.pi * Complex.I / 5) + Complex.exp (-Real.pi * Complex.I / 5)) = phi := by
+    (Complex.exp (Real.pi * Complex.I / 5) + Complex.exp (-Real.pi * Complex.I / 5)) =
+      InfoGeometryCore.phiC := by
   set θ := (Real.pi : ℂ) / 5 with hθ
   have hpos : Complex.exp (Real.pi * Complex.I / 5) = Complex.exp (θ * Complex.I) := by
     dsimp [θ]; ring_nf
@@ -195,7 +191,7 @@ theorem q_plus_qinv_equals_phi_at_fibonacci :
   unfold θ
   rw [hcos]
   -- 2 * ((1 + √5)/4) = (1 + √5)/2 = φ
-  unfold phi InfoGeometryCore.phiC
+  unfold InfoGeometryCore.phiC
   push_cast
   ring
 
@@ -210,8 +206,9 @@ fusion ring is the Fibonacci anyon model.
 **Open debt**: prove the Clebsch-Gordan truncation
 V_{1/2} ⊗ V_{1/2} ≅ V₀ ⊕ V_{1/2} in the semisimple quotient.
 Status: requires quantum-group representation theory formalization. -/
-theorem fibonacci_fusion_from_quantum_group : phi * phi = phi + 1 := by
-  unfold phi InfoGeometryCore.phiC
+theorem fibonacci_fusion_from_quantum_group :
+    InfoGeometryCore.phiC * InfoGeometryCore.phiC = InfoGeometryCore.phiC + 1 := by
+  unfold InfoGeometryCore.phiC
   have h5sq : (Real.sqrt 5 : ℂ) ^ 2 = (5 : ℂ) := by
     norm_cast
     exact Real.sq_sqrt (show 0 ≤ 5 by norm_num)

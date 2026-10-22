@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -57,6 +63,21 @@ private lemma matrix_mul_fin_two_apply
   fin_cases i <;> fin_cases j <;>
     rw [matrix_mul_fin_two_apply, Matrix.neg_apply] <;>
     simp [splitJ, splitI, splitK]
+
+/-- The split-quaternion generators are noncommutative. -/
+theorem splitJ_mul_splitI_ne_splitI_mul_splitJ :
+    (splitJ * splitI : Matrix (Fin 2) (Fin 2) ℝ) ≠ splitI * splitJ := by
+  intro h
+  rw [splitJ_mul_splitI, splitI_mul_splitJ] at h
+  have h' := congrArg (fun M => M 0 0) h
+  change (-1 : ℝ) = 1 at h'
+  norm_num at h'
+
+/-- The generator anticommutator is zero. -/
+theorem splitJ_splitI_anticommutator_zero :
+    splitJ * splitI + splitI * splitJ = 0 := by
+  rw [splitJ_mul_splitI, splitI_mul_splitJ]
+  exact neg_add_cancel splitK
 
 @[simp] lemma splitJ_mul_splitK : splitJ * splitK = -splitI := by
   ext i j

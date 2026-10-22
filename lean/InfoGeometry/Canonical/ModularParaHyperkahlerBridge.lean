@@ -9,11 +9,13 @@ import InfoGeometry.Canonical.ModularLorentzBoost
 import InfoGeometry.Canonical.ParaHyperkahlerPresymplecticBridge
 
 /-!
-# Modular Clifford boost and para-hypercomplex cross-pairing
+# Finite reciprocal scaling and para-hypercomplex cross-pairing
 
-This finite-dimensional comparison reuses the repository-owned split quaternion
-forms and modular Clifford grading; it does not claim a supermanifold, a
-Tomita--Takesaki KMS state, or a dissipative flow.
+This finite-dimensional owner reuses the repository-owned split quaternion
+forms and imported matrix commutator identities. It does not identify the
+coordinate scaling below with a modular flow or a Clifford representation, and
+it does not claim a supermanifold, a Tomita--Takesaki KMS state, or a
+dissipative flow.
 
 The neutral cross-pairing is invariant under reciprocal null scaling, while
 the companion Euclidean form is positive. The two facts must not be conflated.
@@ -92,15 +94,22 @@ theorem omegaI_nullBoost_anomaly (η : ℝ) (x : R2) :
   ring
 
 /-- The modular grading has opposite weights on the two nilpotent channels. -/
-theorem modular_null_weights :
-    K * N - N * K = (2 : ℝ) • N ∧
-    K * Nt - Nt * K = (-2 : ℝ) • Nt :=
-  ⟨modular_commutator_N, modular_commutator_Nt⟩
+theorem null_channel_weights :
+    InfoGeometry.Canonical.ModularLorentzBoost.K *
+        InfoGeometry.Algebra.HypercomplexTriad.N -
+      InfoGeometry.Algebra.HypercomplexTriad.N *
+        InfoGeometry.Canonical.ModularLorentzBoost.K =
+      (2 : ℝ) • InfoGeometry.Algebra.HypercomplexTriad.N ∧
+    InfoGeometry.Canonical.ModularLorentzBoost.K * Nt -
+        Nt * InfoGeometry.Canonical.ModularLorentzBoost.K =
+      (-2 : ℝ) • Nt :=
+  ⟨InfoGeometry.Canonical.ModularLorentzBoost.modular_commutator_N,
+    InfoGeometry.Canonical.ModularLorentzBoost.modular_commutator_Nt⟩
 
 /-- Finite theorem packet: a single reciprocal logarithmic polarization
 preserves the neutral para-pairing, while its companion Euclidean metric
 remains positive. -/
-theorem modular_para_polarization_packet (η : ℝ) (x y : R2) :
+theorem para_polarization_packet (η : ℝ) (x y : R2) :
     scalePlus η * scaleMinus η = 1 ∧
     omegaK (nullBoost η x) (nullBoost η y) = omegaK x y ∧
     0 ≤ omegaI x x :=

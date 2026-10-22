@@ -1,7 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic
 import InfoGeometry.Canonical.ParaKahlerLagrangianDimension
 import InfoGeometry.SuperGrassmannian.SuperGrassmannianProjectorTransportClosure
-import InfoGeometry.Canonical.BKMOnsagerMobilityBridge
+import InfoGeometry.Canonical.BKMEntrywiseOnsagerMobility
 import InfoGeometry.Canonical.ModularParaHyperkahlerBridge
 
 /-!
@@ -22,7 +28,7 @@ namespace InfoGeometry.Canonical.ModularParaBKMIntegration
 open InfoGeometry.Canonical.SuperGrassmannianManifold
 open InfoGeometry.Canonical.ParaKahlerLagrangianDimension
 open InfoGeometry.InformationGeometry.BKM
-open InfoGeometry.Canonical.BKMOnsagerMobilityBridge
+open InfoGeometry.Canonical.EntrywiseBKMOnsagerMobility
 
 section ParaPolarization
 
@@ -35,35 +41,35 @@ isotropic para-Kahler eigensheets. -/
 theorem reciprocal_cross_pairing
     (hK : ParaComplexStructure K)
     (hPK : ParaKahlerStructure g omega K)
-    {x₊ x₋ y₊ y₋ : V}
-    (hx₊ : InTPlus K x₊) (hx₋ : InTMinus K x₋)
-    (hy₊ : InTPlus K y₊) (hy₋ : InTMinus K y₋)
+    {xPlus xMinus yPlus yMinus : V}
+    (hxPlus : InTPlus K xPlus) (hxMinus : InTMinus K xMinus)
+    (hyPlus : InTPlus K yPlus) (hyMinus : InTMinus K yMinus)
     (a b : ℝ) (hab : a * b = 1) :
-    g (a • x₊ + b • x₋) (a • y₊ + b • y₋) =
-      g (x₊ + x₋) (y₊ + y₋) := by
-  have hpp := tplus_isotropic hK hPK hx₊ hy₊
-  have hmm := tminus_isotropic hK hPK hx₋ hy₋
+    g (a • xPlus + b • xMinus) (a • yPlus + b • yMinus) =
+      g (xPlus + xMinus) (yPlus + yMinus) := by
+  have hpp := tplus_isotropic hK hPK hxPlus hyPlus
+  have hmm := tminus_isotropic hK hPK hxMinus hyMinus
   have hba : b * a = 1 := by simpa [mul_comm] using hab
   simp only [map_add, map_smul, LinearMap.add_apply,
     LinearMap.smul_apply, smul_eq_mul]
   simp only [hpp, hmm, mul_zero, add_zero, zero_add]
   calc
-    (a * (b * g x₊ y₋) + b * (a * g x₋ y₊)) =
-      (a * b) * g x₊ y₋ + (b * a) * g x₋ y₊ := by ring
-    _ = g x₊ y₋ + g x₋ y₊ := by rw [hab, hba]; ring
+    (a * (b * g xMinus yPlus) + b * (a * g xPlus yMinus)) =
+      (a * b) * g xMinus yPlus + (b * a) * g xPlus yMinus := by ring
+    _ = g xMinus yPlus + g xPlus yMinus := by rw [hab, hba]; ring
 
 /-- Specialize the generic neutral-metric invariance to a modular rapidity. -/
 theorem exponential_cross_pairing
     (hK : ParaComplexStructure K)
     (hPK : ParaKahlerStructure g omega K)
-    {x₊ x₋ y₊ y₋ : V}
-    (hx₊ : InTPlus K x₊) (hx₋ : InTMinus K x₋)
-    (hy₊ : InTPlus K y₊) (hy₋ : InTMinus K y₋)
+    {xPlus xMinus yPlus yMinus : V}
+    (hxPlus : InTPlus K xPlus) (hxMinus : InTMinus K xMinus)
+    (hyPlus : InTPlus K yPlus) (hyMinus : InTMinus K yMinus)
     (η : ℝ) :
-    g (Real.exp η • x₊ + Real.exp (-η) • x₋)
-        (Real.exp η • y₊ + Real.exp (-η) • y₋) =
-      g (x₊ + x₋) (y₊ + y₋) := by
-  apply reciprocal_cross_pairing hK hPK hx₊ hx₋ hy₊ hy₋
+    g (Real.exp η • xPlus + Real.exp (-η) • xMinus)
+        (Real.exp η • yPlus + Real.exp (-η) • yMinus) =
+      g (xPlus + xMinus) (yPlus + yMinus) := by
+  apply reciprocal_cross_pairing hK hPK hxPlus hxMinus hyPlus hyMinus
   rw [← Real.exp_add]
   simp
 
@@ -94,8 +100,9 @@ theorem finiteBKMDissipation_eq_onsager (energies : ι → ℝ)
     (X : Matrix ι ι ℂ) :
     finiteBKMDissipation energies X =
       -(Matrix.trace (star X *
-        InfoGeometry.Canonical.BKMOnsagerMobilityBridge.bkmOnsager energies X)).re := by
-  rw [InfoGeometry.Canonical.BKMOnsagerMobilityBridge.trace_star_bkmOnsager]
+        InfoGeometry.Canonical.EntrywiseBKMOnsagerMobility.bkmOnsager energies X)).re := by
+  simp only [finiteBKMDissipation]
+  rw [InfoGeometry.Canonical.EntrywiseBKMOnsagerMobility.trace_star_bkmOnsager]
 
 end FiniteBKM
 
@@ -106,12 +113,12 @@ variable {ι : Type*} [Fintype ι] [DecidableEq ι]
 
 /-- Reciprocal rescaling preserves the cross-sheet Onsager pairing. -/
 theorem bkmOnsager_reciprocal_cross_pairing
-    (energies : ι → ℝ) (X₊ X₋ Y₊ Y₋ : Matrix ι ι ℂ)
+    (energies : ι → ℝ) (XPlus XMinus YPlus YMinus : Matrix ι ι ℂ)
     (a b : ℝ) (hab : a * b = 1) :
-    Matrix.trace (star ((a : ℂ) • X₊) * bkmOnsager energies ((b : ℂ) • Y₋) +
-        star ((b : ℂ) • X₋) * bkmOnsager energies ((a : ℂ) • Y₊)) =
-      Matrix.trace (star X₊ * bkmOnsager energies Y₋ +
-        star X₋ * bkmOnsager energies Y₊) := by
+    Matrix.trace (star ((a : ℂ) • XPlus) * bkmOnsager energies ((b : ℂ) • YMinus) +
+        star ((b : ℂ) • XMinus) * bkmOnsager energies ((a : ℂ) • YPlus)) =
+      Matrix.trace (star XPlus * bkmOnsager energies YMinus +
+        star XMinus * bkmOnsager energies YPlus) := by
   have habℂ : (a : ℂ) * (b : ℂ) = 1 := by exact_mod_cast hab
   have hbaℂ : (b : ℂ) * (a : ℂ) = 1 := by rw [mul_comm, habℂ]
   simp only [star_smul, Complex.star_def, Complex.conj_ofReal, map_smul,
@@ -119,12 +126,12 @@ theorem bkmOnsager_reciprocal_cross_pairing
 
 /-- The BKM boost anomaly is entirely in the two self-dissipation sectors. -/
 theorem finiteBKMDissipation_reciprocal_anomaly
-    (energies : ι → ℝ) (X₊ X₋ : Matrix ι ι ℂ)
+    (energies : ι → ℝ) (XPlus XMinus : Matrix ι ι ℂ)
     (a b : ℝ) (hab : a * b = 1) :
-    finiteBKMDissipation energies ((a : ℂ) • X₊ + (b : ℂ) • X₋) -
-      finiteBKMDissipation energies (X₊ + X₋) =
-    (a ^ 2 - 1) * finiteBKMDissipation energies X₊ +
-      (b ^ 2 - 1) * finiteBKMDissipation energies X₋ := by
+    finiteBKMDissipation energies ((a : ℂ) • XPlus + (b : ℂ) • XMinus) -
+      finiteBKMDissipation energies (XPlus + XMinus) =
+    (a ^ 2 - 1) * finiteBKMDissipation energies XPlus +
+      (b ^ 2 - 1) * finiteBKMDissipation energies XMinus := by
   have habℂ : (a : ℂ) * (b : ℂ) = 1 := by exact_mod_cast hab
   have hbaℂ : (b : ℂ) * (a : ℂ) = 1 := by rw [mul_comm, habℂ]
   simp only [finiteBKMDissipation, ← trace_star_bkmOnsager]
@@ -133,17 +140,19 @@ theorem finiteBKMDissipation_reciprocal_anomaly
     smul_smul, habℂ, hbaℂ, one_smul, Matrix.trace_add, Matrix.trace_smul,
     smul_eq_mul, Complex.add_re, Complex.mul_re, Complex.mul_im,
     Complex.ofReal_re, Complex.ofReal_im]
-  ring
+  ring_nf
+  rw [hab]
+  ring_nf
 
 /-- Rapidities specialize the general reciprocal BKM anomaly. -/
 theorem finiteBKMDissipation_exponential_anomaly
-    (energies : ι → ℝ) (X₊ X₋ : Matrix ι ι ℂ) (η : ℝ) :
+    (energies : ι → ℝ) (XPlus XMinus : Matrix ι ι ℂ) (η : ℝ) :
     finiteBKMDissipation energies
-        ((Real.exp η : ℂ) • X₊ + (Real.exp (-η) : ℂ) • X₋) -
-      finiteBKMDissipation energies (X₊ + X₋) =
-    (Real.exp (2 * η) - 1) * finiteBKMDissipation energies X₊ +
-      (Real.exp (-2 * η) - 1) * finiteBKMDissipation energies X₋ := by
-  have h := finiteBKMDissipation_reciprocal_anomaly energies X₊ X₋
+        ((Real.exp η : ℂ) • XPlus + (Real.exp (-η) : ℂ) • XMinus) -
+      finiteBKMDissipation energies (XPlus + XMinus) =
+    (Real.exp (2 * η) - 1) * finiteBKMDissipation energies XPlus +
+      (Real.exp (-2 * η) - 1) * finiteBKMDissipation energies XMinus := by
+  have h := finiteBKMDissipation_reciprocal_anomaly energies XPlus XMinus
     (Real.exp η) (Real.exp (-η)) (by rw [← Real.exp_add]; simp)
   have hexp_pos : Real.exp η ^ 2 = Real.exp (2 * η) := by
     rw [sq, ← Real.exp_add, two_mul]
@@ -155,59 +164,12 @@ theorem finiteBKMDissipation_exponential_anomaly
   exact h
 
 /-- Every boosted finite perturbation remains BKM-dissipative. -/
-theorem finiteBKMDissipation_boost_nonpos
-    (energies : ι → ℝ) (X₊ X₋ : Matrix ι ι ℂ) (a b : ℝ) :
-    finiteBKMDissipation energies ((a : ℂ) • X₊ + (b : ℂ) • X₋) ≤ 0 :=
+theorem finiteBKMDissipation_nonpos_scaled
+    (energies : ι → ℝ) (XPlus XMinus : Matrix ι ι ℂ) (a b : ℝ) :
+    finiteBKMDissipation energies ((a : ℂ) • XPlus + (b : ℂ) • XMinus) ≤ 0 :=
   finiteBKMDissipation_nonpos energies _
 
 end BKMBoostAnomaly
 
-section BoostDissipationCompatibility
-
-variable {V : Type*} [AddCommGroup V] [Module ℝ V]
-variable {g omega : V →ₗ[ℝ] V →ₗ[ℝ] ℝ}
-variable {K : V →ₗ[ℝ] V}
-variable {ι : Type*} [Fintype ι] [DecidableEq ι]
-
-/-- The neutral para-pairing is boost-invariant, while the finite BKM
-dissipation retains its concrete Onsager realization and its sign. -/
-theorem boost_dissipation_onsager_compatibility
-    (hK : ParaComplexStructure K)
-    (hPK : ParaKahlerStructure g omega K)
-    {x₊ x₋ y₊ y₋ : V}
-    (hx₊ : InTPlus K x₊) (hx₋ : InTMinus K x₋)
-    (hy₊ : InTPlus K y₊) (hy₋ : InTMinus K y₋)
-    (energies : ι → ℝ) (X₊ X₋ : Matrix ι ι ℂ)
-    (a b : ℝ) (hab : a * b = 1) :
-    let X_boost := (a : ℂ) • X₊ + (b : ℂ) • X₋
-    g (a • x₊ + b • x₋) (a • y₊ + b • y₋) = g (x₊ + x₋) (y₊ + y₋) ∧
-      finiteBKMDissipation energies X_boost =
-        -(Matrix.trace (star X_boost *
-          InfoGeometry.Canonical.BKMOnsagerMobilityBridge.bkmOnsager energies X_boost)).re ∧
-      finiteBKMDissipation energies X_boost ≤ 0 := by
-  refine ⟨reciprocal_cross_pairing hK hPK hx₊ hx₋ hy₊ hy₋ a b hab, ?_, ?_⟩
-  · exact finiteBKMDissipation_eq_onsager energies _
-  · exact finiteBKMDissipation_nonpos energies _
-
-/-- Modular rapidity specializes reciprocal boost/dissipation compatibility. -/
-theorem exponential_boost_dissipation_compatibility
-    (hK : ParaComplexStructure K)
-    (hPK : ParaKahlerStructure g omega K)
-    {x₊ x₋ y₊ y₋ : V}
-    (hx₊ : InTPlus K x₊) (hx₋ : InTMinus K x₋)
-    (hy₊ : InTPlus K y₊) (hy₋ : InTMinus K y₋)
-    (energies : ι → ℝ) (X₊ X₋ : Matrix ι ι ℂ) (η : ℝ) :
-    let X_boost := (Real.exp η : ℂ) • X₊ + (Real.exp (-η) : ℂ) • X₋
-    g (Real.exp η • x₊ + Real.exp (-η) • x₋)
-        (Real.exp η • y₊ + Real.exp (-η) • y₋) = g (x₊ + x₋) (y₊ + y₋) ∧
-      finiteBKMDissipation energies X_boost =
-        -(Matrix.trace (star X_boost *
-          InfoGeometry.Canonical.BKMOnsagerMobilityBridge.bkmOnsager energies X_boost)).re ∧
-      finiteBKMDissipation energies X_boost ≤ 0 := by
-  apply boost_dissipation_onsager_compatibility hK hPK hx₊ hx₋ hy₊ hy₋ energies X₊ X₋
-  rw [← Real.exp_add]
-  simp
-
-end BoostDissipationCompatibility
 
 end InfoGeometry.Canonical.ModularParaBKMIntegration

@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Data.Real.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.Ring
@@ -99,6 +105,22 @@ def fromSplitQuaternion (q : SplitQuaternion) : RealPauliOp :=
 /-- Non-commutative multiplication via the split-quaternion model. -/
 def RealPauliOp_mul (A B : RealPauliOp) : RealPauliOp :=
   fromSplitQuaternion (toSplitQuaternion A * toSplitQuaternion B)
+
+@[simp] theorem fromSplitQuaternion_toSplitQuaternion (X : RealPauliOp) :
+    fromSplitQuaternion (toSplitQuaternion X) = X := by
+  rfl
+
+@[simp] theorem toSplitQuaternion_fromSplitQuaternion
+    (q : SplitQuaternion) :
+    toSplitQuaternion (fromSplitQuaternion q) = q := by
+  rfl
+
+theorem RealPauliOp_mul_assoc (A B C : RealPauliOp) :
+    RealPauliOp_mul (RealPauliOp_mul A B) C =
+      RealPauliOp_mul A (RealPauliOp_mul B C) := by
+  unfold RealPauliOp_mul
+  simp only [toSplitQuaternion_fromSplitQuaternion]
+  rw [InfoGeometry.Clifford.mul_assoc]
 
 lemma det_eq_norm (X : RealPauliOp) : det X = InfoGeometry.Clifford.norm (toSplitQuaternion X) := by
   change X.t ^ 2 - X.x ^ 2 + X.y ^ 2 - X.z ^ 2 =

@@ -75,6 +75,19 @@ theorem phaseFlow_preserves_inner (θ : ℝ) (u v : H₂) :
   rw [phaseFlow_eq_KRotation (E := E)]
   exact KRotation_preserves_inner (E := E) θ u v
 
+/-- The phase flow has the explicit equal-weight real coordinate readout at
+45 degrees on the existing doubled carrier. -/
+theorem phaseFlow_pi_div_four_to_doubled (x y : E) :
+    phaseFlow (E := E) (Real.pi / 4)
+        (to_doubled x y : H₂) =
+      to_doubled ((Real.sqrt 2 / 2) • x - (Real.sqrt 2 / 2) • y)
+        ((Real.sqrt 2 / 2) • y + (Real.sqrt 2 / 2) • x) := by
+  rw [phaseFlow_eq_KRotation, KRotation_apply]
+  apply DoubledSpace.ext <;>
+    simp [to_doubled, clockAxis_apply, Real.cos_pi_div_four,
+      Real.sin_pi_div_four] <;>
+    module
+
 /- The Hilbert adjoint of the phase flow is its inverse flow. -/
 theorem phaseFlow_adjoint (θ : ℝ) :
     ContinuousLinearMap.adjoint (phaseFlow (E := E) θ) =

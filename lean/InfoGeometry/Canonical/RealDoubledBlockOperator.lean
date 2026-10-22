@@ -83,5 +83,17 @@ theorem realDoubledBlockOperator_comp
     map_add]
   apply congrArg₂ to_doubled <;> abel
 
+omit [CompleteSpace E] in
+@[simp] theorem realDoubledBlockOperator_identity :
+    realDoubledBlockOperator
+        (1 : E →L[ℝ] E) 0 0 (1 : E →L[ℝ] E) =
+      (1 : DoubledSpace E →L[ℝ] DoubledSpace E) := by
+  apply ContinuousLinearMap.ext
+  intro z
+  obtain ⟨x, ξ⟩ := z
+  simp only [realDoubledBlockOperator_apply, zero_apply,
+    add_zero, zero_add]
+  rfl
+
 end
 end InfoGeometry.Canonical.RealDoubledBlockOperator

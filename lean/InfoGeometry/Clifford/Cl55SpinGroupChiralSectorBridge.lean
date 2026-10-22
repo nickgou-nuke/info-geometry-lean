@@ -195,6 +195,42 @@ theorem spinGroupActionMinus_mul (g h : Spin55) :
   rw [spinGroupAction_mul]
   rfl
 
+@[simp] theorem spinGroupActionPlus_one :
+    spinGroupActionPlus (1 : Spin55) = LinearMap.id := by
+  apply LinearMap.ext
+  intro v
+  apply Subtype.ext
+  change spinGroupAction (1 : Spin55) (v : SpinorSpace 5) =
+    (v : SpinorSpace 5)
+  rw [spinGroupAction_one]
+  rfl
+
+@[simp] theorem spinGroupActionMinus_one :
+    spinGroupActionMinus (1 : Spin55) = LinearMap.id := by
+  apply LinearMap.ext
+  intro v
+  apply Subtype.ext
+  change spinGroupAction (1 : Spin55) (v : SpinorSpace 5) =
+    (v : SpinorSpace 5)
+  rw [spinGroupAction_one]
+  rfl
+
+theorem spinGroupActionPlus_inv_comp (g : Spin55) :
+    (spinGroupActionPlus g⁻¹).comp (spinGroupActionPlus g) = LinearMap.id := by
+  rw [← spinGroupActionPlus_mul, inv_mul_cancel, spinGroupActionPlus_one]
+
+theorem spinGroupActionPlus_comp_inv (g : Spin55) :
+    (spinGroupActionPlus g).comp (spinGroupActionPlus g⁻¹) = LinearMap.id := by
+  rw [← spinGroupActionPlus_mul, mul_inv_cancel, spinGroupActionPlus_one]
+
+theorem spinGroupActionMinus_inv_comp (g : Spin55) :
+    (spinGroupActionMinus g⁻¹).comp (spinGroupActionMinus g) = LinearMap.id := by
+  rw [← spinGroupActionMinus_mul, inv_mul_cancel, spinGroupActionMinus_one]
+
+theorem spinGroupActionMinus_comp_inv (g : Spin55) :
+    (spinGroupActionMinus g).comp (spinGroupActionMinus g⁻¹) = LinearMap.id := by
+  rw [← spinGroupActionMinus_mul, mul_inv_cancel, spinGroupActionMinus_one]
+
 @[simp] theorem spinGroupActionPlus_apply (g : Spin55)
     (v : chiralPlusSector) :
     (spinGroupActionPlus g v : SpinorSpace 5) =

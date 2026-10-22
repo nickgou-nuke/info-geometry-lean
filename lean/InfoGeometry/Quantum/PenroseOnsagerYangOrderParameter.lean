@@ -96,6 +96,13 @@ theorem rankOneKernel_mul_rankOneKernel (ψ : Mode ι) :
             rw [hsum]
             ring
 
+/-- A null finite mode produces a square-zero rank-one kernel. -/
+theorem rankOneKernel_sq_zero_of_modeNormSq_eq_zero
+    {ψ : Mode ι} (hψ : modeNormSq ψ = 0) :
+    rankOneKernel ψ * rankOneKernel ψ = 0 := by
+  rw [rankOneKernel_mul_rankOneKernel, hψ]
+  simp
+
 /-- Pointwise multiplication of a mode by one complex scalar. -/
 def scalarAction (u : ℂ) (ψ : Mode ι) : Mode ι :=
   fun i => u * ψ i

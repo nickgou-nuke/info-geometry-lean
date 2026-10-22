@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Krein.TomitaMatrixAtom
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -29,27 +35,25 @@ that any Riemann Hypothesis consequence follows from this representation.
 namespace InfoGeometry.Canonical.HaugManiYinYangBridge
 
 open InfoGeometry.Krein.TomitaMatrixAtom
+open InfoGeometry.Algebra.FiniteSpin
 
 set_option linter.unnecessarySeqFocus false
 
-/-- Concrete real `2 × 2` carrier for the doubled sign/phase atom. -/
-abbrev RealDoubledMatrix := M2R
-
 /-- Positive/physical sector idempotent. -/
-abbrev physicalSector : RealDoubledMatrix := Pplus
+abbrev physicalSector : Mat2R := Pplus
 
 /-- Negative/ghost sector idempotent. -/
-abbrev ghostSector : RealDoubledMatrix := Pminus
+abbrev ghostSector : Mat2R := Pminus
 
 /-- The sheet-mixing involution. -/
-abbrev mixedSector : RealDoubledMatrix := J
+abbrev mixedSector : Mat2R := J
 
 /-- Derived real phase axis, replacing primitive scalar `i` in this finite model. -/
-def phaseAxis : RealDoubledMatrix := J * eps
+def phaseAxis : Mat2R := J * eps
 
 /-- Real doubled scalar readback: `a + b i` is represented as `a * I + b * K`. -/
-def realDoubledScalar (a b : ℝ) : RealDoubledMatrix :=
-  a • (1 : RealDoubledMatrix) + b • phaseAxis
+def realDoubledScalar (a b : ℝ) : Mat2R :=
+  a • (1 : Mat2R) + b • phaseAxis
 
 @[simp]
 theorem physicalSector_idempotent :
@@ -73,7 +77,7 @@ theorem ghost_physical_orthogonal :
 
 @[simp]
 theorem physical_add_ghost :
-    physicalSector + ghostSector = (1 : RealDoubledMatrix) :=
+    physicalSector + ghostSector = (1 : Mat2R) :=
   Pplus_add_Pminus
 
 /-- The mixed sector swaps positive and negative projectors by conjugation. -/
@@ -95,7 +99,7 @@ theorem phaseAxis_eq_J_mul_eps :
 
 /-- The phase axis squares to `-1`, so the complex unit is derived from real data. -/
 theorem phaseAxis_sq :
-    phaseAxis * phaseAxis = -(1 : RealDoubledMatrix) := by
+    phaseAxis * phaseAxis = -(1 : Mat2R) := by
   simpa [phaseAxis] using J_eps_sq
 
 /-- Modular/sheet reflection flips the derived phase axis. -/
@@ -111,7 +115,7 @@ theorem realDoubledScalar_zero :
 
 @[simp]
 theorem realDoubledScalar_one :
-    realDoubledScalar 1 0 = (1 : RealDoubledMatrix) := by
+    realDoubledScalar 1 0 = (1 : Mat2R) := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
     norm_num [realDoubledScalar, phaseAxis, J, eps, Matrix.mul_apply, Fin.sum_univ_two]
 
@@ -123,7 +127,7 @@ theorem realDoubledScalar_I :
 /-- The embedded finite scalar `i` squares to `-1`. -/
 theorem realDoubledScalar_I_sq :
     realDoubledScalar 0 1 * realDoubledScalar 0 1 =
-      -(1 : RealDoubledMatrix) := by
+      -(1 : Mat2R) := by
   simpa using phaseAxis_sq
 
 /--
@@ -178,11 +182,11 @@ theorem haug_mani_real_doubled_capstone :
     ghostSector * ghostSector = ghostSector ∧
     physicalSector * ghostSector = 0 ∧
     ghostSector * physicalSector = 0 ∧
-    physicalSector + ghostSector = (1 : RealDoubledMatrix) ∧
+    physicalSector + ghostSector = (1 : Mat2R) ∧
     mixedSector * physicalSector * mixedSector = ghostSector ∧
     mixedSector * ghostSector * mixedSector = physicalSector ∧
     phaseAxis = J * eps ∧
-    phaseAxis * phaseAxis = -(1 : RealDoubledMatrix) ∧
+    phaseAxis * phaseAxis = -(1 : Mat2R) ∧
     mixedSector * phaseAxis * mixedSector = -phaseAxis :=
   ⟨physicalSector_idempotent, ghostSector_idempotent,
     physical_ghost_orthogonal, ghost_physical_orthogonal,

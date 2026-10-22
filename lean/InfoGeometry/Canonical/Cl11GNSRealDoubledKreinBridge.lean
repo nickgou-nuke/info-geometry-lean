@@ -119,6 +119,8 @@ private theorem realPartMatrix_mul
   simp only [Complex.reCLM_apply, Complex.mul_re, Matrix.mul_apply,
     Matrix.sub_apply]
   rw [Finset.sum_sub_distrib]
+  simp only [Fin.sum_univ_two]
+  simp only [realPartMatrix, imagPartMatrix]
 
 /-- The entrywise imaginary part of a matrix product is the sum of the two
 cross real matrix products. Imaginary-part transport through the finite sum
@@ -134,7 +136,9 @@ private theorem imagPartMatrix_mul
   rw [← Complex.imCLM_apply, map_sum]
   simp only [Complex.imCLM_apply, Complex.mul_im, Matrix.mul_apply,
     Matrix.add_apply]
-  rw [Finset.sum_add_distrib]
+  simp only [Fin.sum_univ_two]
+  simp only [realPartMatrix, imagPartMatrix]
+  abel
 
 /-- Readout in the matrix coordinates induced by `realHSMatrixEquiv`. -/
 private theorem realDoubledReadout_components
@@ -201,6 +205,32 @@ def realDoubledRightAction
     realMatrixRightAction A x = realHSMatrixEquiv.symm
       (realHSMatrixEquiv x * A) := by
   rfl
+
+private theorem realMatrixLeftAction_readout
+    (A : Matrix (Fin 2) (Fin 2) ℝ) (x : RealHS) :
+    realHSMatrixEquiv (realMatrixLeftAction A x) =
+      A * realHSMatrixEquiv x := by
+  rw [realMatrixLeftAction_apply]
+  exact realHSMatrixEquiv.apply_symm_apply _
+
+private theorem realMatrixRightAction_readout
+    (A : Matrix (Fin 2) (Fin 2) ℝ) (x : RealHS) :
+    realHSMatrixEquiv (realMatrixRightAction A x) =
+      realHSMatrixEquiv x * A := by
+  rw [realMatrixRightAction_apply]
+  exact realHSMatrixEquiv.apply_symm_apply _
+
+private theorem realMatrixLeftAction_neg_readout
+    (A : Matrix (Fin 2) (Fin 2) ℝ) (x : RealHS) :
+    realHSMatrixEquiv ((-realMatrixLeftAction A) x) =
+      -(A * realHSMatrixEquiv x) := by
+  simp
+
+private theorem realMatrixRightAction_neg_readout
+    (A : Matrix (Fin 2) (Fin 2) ℝ) (x : RealHS) :
+    realHSMatrixEquiv ((-realMatrixRightAction A) x) =
+      -(realHSMatrixEquiv x * A) := by
+  simp
 
 @[simp] private theorem realHSMatrixEquiv_toLp
     (x : Fin 2 × Fin 2 → ℝ) :
@@ -394,17 +424,17 @@ theorem realDoubledLeftAction_readout
     (A X : FiniteHestenesHilbertSchmidtStandardForm.HS2) :
     realDoubledLeftAction A (realDoubledReadout X) =
       realDoubledReadout (leftActionLinear A X) := by
-  simp only [realDoubledReadout_components, realDoubledLeftAction,
-    realDoubledBlockOperator_apply]
+  rw [realDoubledReadout_components, realDoubledReadout_components]
+  simp only [realDoubledLeftAction, realDoubledBlockOperator_apply]
   apply DoubledSpace.ext
   · apply realHSMatrixEquiv.injective
-    simp only [realMatrixLeftAction_apply, realHSMatrixEquiv.apply_symm_apply,
-      map_add, map_neg, leftActionLinear_apply]
-    rw [realPartMatrix_mul]
-    simp [sub_eq_add_neg]
+    simp only [fst_to_doubled, map_add, realHSMatrixEquiv.apply_symm_apply,
+      realMatrixLeftAction_readout, realMatrixLeftAction_neg_readout,
+      leftActionLinear_apply]
+    exact (realPartMatrix_mul A X).symm
   · apply realHSMatrixEquiv.injective
-    simp only [realMatrixLeftAction_apply, realHSMatrixEquiv.apply_symm_apply,
-      map_add, leftActionLinear_apply]
+    simp only [snd_to_doubled, map_add, realHSMatrixEquiv.apply_symm_apply,
+      realMatrixLeftAction_readout, leftActionLinear_apply]
     rw [imagPartMatrix_mul]
     abel
 
@@ -414,19 +444,18 @@ theorem realDoubledRightAction_readout
     (B X : FiniteHestenesHilbertSchmidtStandardForm.HS2) :
     realDoubledRightAction B (realDoubledReadout X) =
       realDoubledReadout (rightActionLinear B X) := by
-  simp only [realDoubledReadout_components, realDoubledRightAction,
-    realDoubledBlockOperator_apply]
+  rw [realDoubledReadout_components, realDoubledReadout_components]
+  simp only [realDoubledRightAction, realDoubledBlockOperator_apply]
   apply DoubledSpace.ext
   · apply realHSMatrixEquiv.injective
-    simp only [realMatrixRightAction_apply, realHSMatrixEquiv.apply_symm_apply,
-      map_add, map_neg, rightActionLinear_apply]
-    rw [realPartMatrix_mul]
-    simp [sub_eq_add_neg]
+    simp only [fst_to_doubled, map_add, realHSMatrixEquiv.apply_symm_apply,
+      realMatrixRightAction_readout, realMatrixRightAction_neg_readout,
+      rightActionLinear_apply]
+    exact (realPartMatrix_mul X B).symm
   · apply realHSMatrixEquiv.injective
-    simp only [realMatrixRightAction_apply, realHSMatrixEquiv.apply_symm_apply,
-      map_add, rightActionLinear_apply]
+    simp only [snd_to_doubled, map_add, realHSMatrixEquiv.apply_symm_apply,
+      realMatrixRightAction_readout, rightActionLinear_apply]
     rw [imagPartMatrix_mul]
-    abel
 
 /-- The doubled real action of the standard-form left/right pair commutes,
 because it is conjugate to the commuting Hilbert--Schmidt regular actions. -/

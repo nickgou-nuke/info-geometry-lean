@@ -86,7 +86,11 @@ theorem modular_j_kreinSkewAdjoint :
     apply ContinuousLinearMap.ext
     intro u
     apply DoubledSpace.ext <;> rfl
-  rw [hε, doubledAdjoint_modular_j]
+  rw [hε]
+  have hJadj : ContinuousLinearMap.adjoint (modular_j (E := E)) =
+      modular_j (E := E) := by
+    simpa [doubledAdjoint] using doubledAdjoint_modular_j (E := E)
+  rw [hJadj]
   apply ContinuousLinearMap.ext
   intro u
   apply DoubledSpace.ext <;> simp [modular_j, spectral_epsilon]

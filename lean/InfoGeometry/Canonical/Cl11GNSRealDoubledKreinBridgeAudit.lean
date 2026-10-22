@@ -5,6 +5,8 @@ Authors: InfoGeometry Engine Contributors
 -/
 
 import InfoGeometry.Canonical.Cl11GNSRealDoubledKreinBridge
+import InfoGeometry.Canonical.HaugManiYinYangBridge
+import InfoGeometry.Krein.DoubledAdjoint
 
 #print axioms InfoGeometry.Canonical.Cl11GNSRealDoubledKreinBridge.realDoubledReadout
 #print axioms InfoGeometry.Canonical.Cl11GNSRealDoubledKreinBridge.realDoubledTranspose
@@ -20,3 +22,8 @@ import InfoGeometry.Canonical.Cl11GNSRealDoubledKreinBridge
 #print axioms InfoGeometry.Canonical.Cl11GNSRealDoubledKreinBridge.realDoubledReadout_preGNS_tomita_glide
 #print axioms InfoGeometry.Canonical.Cl11GNSRealDoubledKreinBridge.realDoubledReadout_preGNS_glide_left_right
 #print axioms InfoGeometry.Canonical.Cl11GNSRealDoubledKreinBridge.realDoubledReadout_preGNS_glide_tomita_sheet_sign
+#print axioms InfoGeometry.Canonical.Cl11GNSRealDoubledKreinBridge.realDoubledLeftAction_readout
+#print axioms InfoGeometry.Canonical.Cl11GNSRealDoubledKreinBridge.realDoubledRightAction_readout
+#print axioms InfoGeometry.Canonical.Cl11GNSRealDoubledKreinBridge.realDoubledLeftRightAction_commute
+#print axioms InfoGeometry.Canonical.HaugManiYinYangBridge.haug_mani_real_doubled_capstone
+#print axioms InfoGeometry.Krein.modular_j_kreinSkewAdjoint

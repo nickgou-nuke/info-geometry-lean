@@ -180,7 +180,9 @@ if [ "$MODE" = "incremental" ]; then
     if [ -n "$TEST_LEAN_FILES" ]; then
         while IFS= read -r test_file; do
             [ -n "$test_file" ] || continue
-            run_check "Kernel check ($test_file)" lake env lean "$test_file"
+            run_check "Kernel check ($test_file)" \
+                python3 tools/infra/run_locked_lean.py \
+                  --wait-for-build-lock "$test_file"
         done <<<"$TEST_LEAN_FILES"
     fi
 

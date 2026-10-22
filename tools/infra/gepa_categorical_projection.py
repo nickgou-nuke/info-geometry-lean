@@ -2,8 +2,9 @@
 """
 GEPA adapter for categorical-infrastructure-projection skill.
 
-Leverages CPU multiprocessing (parallel lake build) and GPU batch inference
-(DSPy/LLM proof generation) on multiprocessor GPU systems.
+Uses serialized locked Lean evaluation and optional GPU batch inference
+(DSPy/LLM proof generation). Lean/Lake commands share one incremental cache
+and therefore cannot be run concurrently.
 
 Genome:
     - carrier, matrix, functor, bilingual_key
@@ -16,14 +17,13 @@ Usage:
         --task yang_baxter_braid_relation \
         --target-file lean/InfoGeometry/Canonical/YangBaxterProof.lean
 
-    # CPU-parallel evaluation (default)
-    python3 tools/infra/gepa_categorical_projection.py --evolve --generations 10 --workers 8
+    # Serialized incremental evaluation (default)
+    python3 tools/infra/gepa_categorical_projection.py --evolve --generations 10
 
     # GPU batch inference (requires DSPy + CUDA)
     python3 tools/infra/gepa_categorical_projection.py --evolve --gpu --generations 20
 """
 
-import concurrent.futures
 import json
 import os
 import random
@@ -217,8 +217,14 @@ def _target_command(
     build_target: str | None = None,
 ) -> list[str]:
     if target_file:
-        return [LAKE, "env", "lean", str(target_file)]
-    return [LAKE, "build", build_target or BUILD_TARGET]
+        return [sys.executable, "tools/infra/run_locked_lean.py",
+                "--wait-for-build-lock", str(target_file)]
+    command = [sys.executable, "tools/infra/run_locked_lake_build.py",
+               "--wait-for-build-lock"]
+    target = build_target or BUILD_TARGET
+    if target:
+        command.append(target)
+    return command
 
 
 def _error_excerpt(stderr: str, max_lines: int = 20) -> str:
@@ -256,30 +262,26 @@ def _eval_one(genome: dict[str, Any], timeout_s: int = 120) -> dict[str, Any]:
 
 
 def evaluate_population_parallel(genomes: list[dict],
-                                  workers: int = N_CPU) -> list[dict]:
-    """Evaluate all genomes in parallel using CPU multiprocessing."""
-    with concurrent.futures.ProcessPoolExecutor(max_workers=workers) as pool:
-        fut_to_idx = {}
-        for i, g in enumerate(genomes):
-            fut = pool.submit(_eval_one, g)
-            fut_to_idx[fut] = i
-
-        for fut in concurrent.futures.as_completed(fut_to_idx):
-            i = fut_to_idx[fut]
-            try:
-                outcome = fut.result()
-            except Exception as e:
-                print(f"  {genomes[i]['task_id']}: worker error {e}", file=sys.stderr)
-                outcome = {"fitness": -1.0, "elapsed_s": 0.0, "error_excerpt": str(e)}
-            score = float(outcome.get("fitness", -1.0))
-            genomes[i]["fitness"] = score
-            genomes[i]["last_eval"] = outcome
-            if score >= 1.0:
-                genomes[i]["status"] = "builds"
-            elif score < 0:
-                genomes[i]["status"] = "fails"
-            else:
-                genomes[i]["status"] = "open"
+                                  workers: int = 1) -> list[dict]:
+    """Evaluate Lean genomes serially on the shared locked build lane."""
+    if workers != 1:
+        raise ValueError("Lean evaluation is serialized; use --workers 1")
+    for i, genome in enumerate(genomes):
+        try:
+            outcome = _eval_one(genome)
+        except Exception as e:
+            print(f"  {genome['task_id']}: worker error {e}", file=sys.stderr)
+            outcome = {"fitness": -1.0, "elapsed_s": 0.0,
+                       "error_excerpt": str(e)}
+        score = float(outcome.get("fitness", -1.0))
+        genomes[i]["fitness"] = score
+        genomes[i]["last_eval"] = outcome
+        if score >= 1.0:
+            genomes[i]["status"] = "builds"
+        elif score < 0:
+            genomes[i]["status"] = "fails"
+        else:
+            genomes[i]["status"] = "open"
     return genomes
 
 
@@ -299,7 +301,7 @@ def mutate_strategy(original: str) -> str:
 
 def evolve(generations: int = 10,
            population: list[dict] | None = None,
-           workers: int = N_CPU,
+           workers: int = 1,
            use_gpu: bool = False) -> list[dict]:
     pop = population or [dict(g) for g in GENOMES]
 
@@ -307,7 +309,7 @@ def evolve(generations: int = 10,
         t_gen = time.time()
         print(f"\n=== Generation {gen} ===", file=sys.stderr)
 
-        # Parallel fitness evaluation across all CPU cores
+        # Serialized fitness evaluation on the shared Lean build lane
         pop = evaluate_population_parallel(pop, workers=workers)
 
         # Optionally use GPU batch inference to generate new candidates
@@ -351,11 +353,11 @@ def main():
     import shutil
 
     parser = argparse.ArgumentParser(
-        description="GEPA adapter (CPU-parallel + GPU batch)")
+        description="GEPA adapter (serialized Lean + optional GPU batch)")
     parser.add_argument("--evolve", action="store_true")
     parser.add_argument("--generations", type=int, default=10)
-    parser.add_argument("--workers", type=int, default=N_CPU // 2,
-                        help="Parallel CPU workers for lake build")
+    parser.add_argument("--workers", type=int, default=1,
+                        help="Must remain 1: Lean evaluation uses the shared lock")
     parser.add_argument("--gpu", action="store_true",
                         help="Enable GPU batch inference for proof generation")
     parser.add_argument("--task", action="append", default=[],

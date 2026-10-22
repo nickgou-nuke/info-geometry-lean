@@ -325,6 +325,21 @@ theorem fibTensorHom_right_eqToHom
   change fibTensorHom (FibHom.id X) (FibHom.id Y₁) = FibHom.id (fibTensorObj X Y₁)
   exact fibTensorHom_id X Y₁
 
+/-! Equality transport is respected simultaneously in both tensor variables.
+This is the canonical transport lemma needed before arbitrary-morphism
+naturality of the skeletal associator and unitors can be installed. -/
+
+theorem fibTensorHom_eqToHom
+    {X₁ X₂ Y₁ Y₂ : FibCat}
+    (hX : X₁ = X₂) (hY : Y₁ = Y₂) :
+    fibTensorHom (CategoryTheory.eqToHom hX) (CategoryTheory.eqToHom hY) =
+      CategoryTheory.eqToHom (congrArg₂ fibTensorObj hX hY) := by
+  cases hX
+  cases hY
+  change fibTensorHom (FibHom.id X₁) (FibHom.id Y₁) =
+    FibHom.id (fibTensorObj X₁ Y₁)
+  exact fibTensorHom_id X₁ Y₁
+
 theorem fibAssociator_pentagon (W X Y Z : FibCat) :
     (fibAssociator (fibTensorObj W X) Y Z).hom ≫
         (fibAssociator W X (fibTensorObj Y Z)).hom =

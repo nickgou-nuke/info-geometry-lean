@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Clifford.Cl11MarkovJonesEngine
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RelativeModularCenteredFunctional
@@ -71,6 +77,11 @@ def stageRestrict (n : ℕ) : MatStage (n + 1) →ₗ[ℝ] MatStage n where
   change ((matStageEmbed n A) (i, 0) (j, 0) +
       (matStageEmbed n A) (i, 1) (j, 1)) / 2 = A i j
   simp [matStageEmbed, Matrix.kroneckerMap_apply]
+
+@[simp] theorem stageRestrict_transpose (n : ℕ) (X : MatStage (n + 1)) :
+    stageRestrict n Xᵀ = (stageRestrict n X)ᵀ := by
+  ext i j
+  rfl
 
 /-- Trace readback of the diagonal-block restriction. -/
 theorem trace_stageRestrict (n : ℕ) (X : MatStage (n + 1)) :

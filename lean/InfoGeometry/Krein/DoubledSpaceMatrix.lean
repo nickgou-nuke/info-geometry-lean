@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
@@ -48,5 +54,32 @@ variable {E : Type*}
     simp [toDoubledColumn, ofDoubledColumn]
 
 end MatrixViewLemmas
+
+section LinearEquivView
+
+variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+
+/-- The doubled-space coordinate map as a genuine linear equivalence.
+
+The two entries of a `2 × 1` column are exactly the physical and ghost
+components of `DoubledSpace E`; this equivalence packages the existing
+coordinate readbacks without introducing a second doubled-space carrier.
+-/
+noncomputable def doubledColumnLinearEquiv :
+    DoubledSpace E ≃ₗ[ℝ] DoubledColumn E where
+  toFun := toDoubledColumn
+  invFun := ofDoubledColumn
+  left_inv := ofDoubledColumn_toDoubledColumn
+  right_inv := toDoubledColumn_ofDoubledColumn
+  map_add' u v := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [toDoubledColumn, WithLp.add_fst, WithLp.add_snd]
+  map_smul' c u := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [toDoubledColumn, WithLp.smul_fst, WithLp.smul_snd]
+
+end LinearEquivView
 
 end InfoGeometry.Krein

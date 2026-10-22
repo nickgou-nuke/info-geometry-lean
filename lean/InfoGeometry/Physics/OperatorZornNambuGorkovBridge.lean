@@ -52,6 +52,24 @@ theorem nambuGorkovConjugation_eq_self_iff (M : OperatorZornMatrix A) :
   · rintro ⟨h₁, h₂, h₃, h₄⟩
     exact ⟨h₁.symm, h₂.symm, h₃.symm, h₄.symm⟩
 
+/-- The two independent Majorana equations determine the other two by
+involutivity of `star`. -/
+theorem nambuGorkovConjugation_eq_self_iff_independent (M : OperatorZornMatrix A) :
+    nambuGorkovConjugation M = M ↔
+      M.n_plus_op = -star M.n_minus_op ∧
+        M.sigma_plus_op = star M.sigma_minus_op := by
+  constructor
+  · intro h
+    rcases (nambuGorkovConjugation_eq_self_iff M).1 h with ⟨h₁, h₂, h₃, h₄⟩
+    exact ⟨h₁, h₃⟩
+  · rintro ⟨hplus, hsigma⟩
+    apply (nambuGorkovConjugation_eq_self_iff M).2
+    refine ⟨hplus, ?_, hsigma, ?_⟩
+    · rw [hplus]
+      simp
+    · rw [hsigma]
+      simp
+
 /-- The involution is packaged as an equivalence of the four-entry carrier. -/
 def nambuGorkovEquiv : OperatorZornMatrix A ≃ OperatorZornMatrix A where
   toFun := nambuGorkovConjugation

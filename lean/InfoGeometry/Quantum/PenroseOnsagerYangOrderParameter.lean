@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Quantum.PenroseOnsagerYangOccupationSpectrum
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib
@@ -64,6 +70,31 @@ theorem trace_rankOneKernel_eq_modeNormSq (ψ : Mode ι) :
     Matrix.trace (rankOneKernel ψ) = (modeNormSq ψ : ℂ) := by
   classical
   simp [Matrix.trace, rankOneKernel, modeNormSq, Complex.mul_conj]
+
+/- The rank-one kernel obeys the expected composition law. -/
+theorem rankOneKernel_mul_rankOneKernel (ψ : Mode ι) :
+    rankOneKernel ψ * rankOneKernel ψ =
+      (modeNormSq ψ : ℂ) • rankOneKernel ψ := by
+  classical
+  ext i j
+  simp only [Matrix.mul_apply, rankOneKernel, Matrix.smul_apply]
+  calc
+    (∑ k, (ψ i * starRingEnd ℂ (ψ k)) *
+        (ψ k * starRingEnd ℂ (ψ j)))
+        = ψ i * (∑ k, (ψ k * starRingEnd ℂ (ψ k))) *
+            starRingEnd ℂ (ψ j) := by
+            simp only [Finset.mul_sum, Finset.sum_mul]
+            apply Finset.sum_congr rfl
+            intro k hk
+            ring
+    _ = (modeNormSq ψ : ℂ) *
+          (ψ i * starRingEnd ℂ (ψ j)) := by
+            have hsum :
+                (∑ k, ψ k * starRingEnd ℂ (ψ k)) =
+                  (modeNormSq ψ : ℂ) := by
+              simp [modeNormSq, Complex.mul_conj]
+            rw [hsum]
+            ring
 
 /-- Pointwise multiplication of a mode by one complex scalar. -/
 def scalarAction (u : ℂ) (ψ : Mode ι) : Mode ι :=

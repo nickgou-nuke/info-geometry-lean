@@ -10,6 +10,8 @@ import InfoGeometry.Canonical.CantorBernoulliFiniteMatrixGaugeTraceBridge
 import InfoGeometry.Canonical.CuntzMatrixTowerInstantiation
 import InfoGeometry.Canonical.FilteredGNSHilbertColimit
 import InfoGeometry.Canonical.FilteredGNSColimitRepresentation
+import InfoGeometry.Canonical.FilteredGNSGlobalStageRepresentation
+import InfoGeometry.Canonical.FilteredGNSTailRepresentation
 import InfoGeometry.OperatorAlgebra.CantorBernoulliFiniteMatrixStageTransportBridge
 import InfoGeometry.OperatorAlgebra.CantorBernoulliFiniteMatrixRepresentationBridge
 import InfoGeometry.OperatorAlgebra.CantorBernoulliGaugeStateBridge
@@ -39,6 +41,8 @@ namespace InfoGeometry.Canonical.CantorBernoulliGaugeFilteredGNSColimitBridge
 open CStarStateColimit.Native
 open CStarStateColimit.Native.FilteredGNS
 open CStarStateColimit.Native.FilteredGNSHilbertColimit
+open CStarStateColimit.Native.FilteredGNSGlobalStageRepresentation
+open CStarStateColimit.Native.FilteredGNSTailRepresentation
 open InfoGeometry.Canonical.CantorBernoulliCStarMatrixTraceState
 open InfoGeometry.Canonical.CantorBernoulliFiniteMatrixGaugeTraceBridge
 open InfoGeometry.Canonical.CuntzMatrixTowerInstantiation
@@ -181,6 +185,66 @@ theorem gaugeGNSVacuum_transition
     ((gaugeStateFamily.state n).functional.toPreGNS 1 : gaugeGNSStage n)
   rw [filteredGNSMap_toPreGNS]
   simp
+
+/-- The coherent finite-stage cyclic vector in the native Hilbert colimit. -/
+noncomputable def gaugeGNSColimitVacuum : gaugeGNSHilbertColimit :=
+  gaugeGNSStageToColimit 0 (gaugeGNSVacuum 0)
+
+/-- Every finite-stage vacuum has the same image in the native Hilbert
+colimit. -/
+theorem gaugeGNSColimitVacuum_eq_stage (n : ℕ) :
+    gaugeGNSColimitVacuum =
+      gaugeGNSStageToColimit n (gaugeGNSVacuum n) := by
+  rw [gaugeGNSColimitVacuum]
+  let h : 0 ≤ n := Nat.zero_le n
+  calc
+    gaugeGNSStageToColimit 0 (gaugeGNSVacuum 0) =
+        gaugeGNSStageToColimit n
+          (filteredGNSMap gaugeStage gaugeSystem gaugeStateFamily h
+            (gaugeGNSVacuum 0)) :=
+      (gaugeGNSStageToColimit_transition h (gaugeGNSVacuum 0)).symm
+    _ = gaugeGNSStageToColimit n (gaugeGNSVacuum n) := by
+      rw [gaugeGNSVacuum_transition h]
+
+/-- The colimit vacuum reproduces the normalized finite matrix trace on every
+stage observable represented on the native Hilbert colimit. -/
+theorem gaugeGNSColimitVacuum_stage_expectation
+    (n : ℕ) (A : CStarMatrixStage n) :
+    ⟪gaugeGNSColimitVacuum,
+      globalStageRepresentationStarAlgHom
+        gaugeStage gaugeSystem gaugeStateFamily n A
+        (gaugeGNSColimitVacuum)⟫_ℂ =
+      (gaugeStateFamily.state n).functional A := by
+  let j : UpperIndex n := ⟨n, le_rfl⟩
+  have hobs : tailObservable gaugeStage gaugeSystem A j = A := by
+    change gaugeSystem.map (le_rfl : n ≤ n) A = A
+    simpa using congrArg (fun f => f A) (gaugeSystem.map_id n)
+  calc
+    ⟪gaugeGNSColimitVacuum,
+      globalStageRepresentationStarAlgHom
+        gaugeStage gaugeSystem gaugeStateFamily n A
+        gaugeGNSColimitVacuum⟫_ℂ =
+      ⟪gaugeGNSStageToColimit n (gaugeGNSVacuum n),
+        globalStageRepresentationStarAlgHom
+          gaugeStage gaugeSystem gaugeStateFamily n A
+          (gaugeGNSStageToColimit n (gaugeGNSVacuum n))⟫_ℂ := by
+      simp only [gaugeGNSColimitVacuum_eq_stage n]
+    _ = ⟪gaugeGNSStageToColimit n (gaugeGNSVacuum n),
+        gaugeGNSStageToColimit n
+          (tailGNSOperator gaugeStage gaugeSystem gaugeStateFamily A j
+            (gaugeGNSVacuum n))⟫_ℂ := by
+      have hrep := globalStageRepresentation_stage
+        gaugeStage gaugeSystem gaugeStateFamily A j (gaugeGNSVacuum n)
+      simpa only [j, gaugeGNSStageToColimit] using congrArg
+        (fun z => ⟪gaugeGNSStageToColimit n (gaugeGNSVacuum n), z⟫_ℂ) hrep
+    _ = ⟪gaugeGNSVacuum n,
+        (gaugeStateFamily.state n).functional.gnsStarAlgHom A
+          (gaugeGNSVacuum n)⟫_ℂ := by
+      rw [(gaugeGNSStageToColimit n).inner_map_map]
+      simp [j, tailGNSOperator, hobs]
+    _ = (gaugeStateFamily.state n).functional A := by
+      exact gns_state_expectation_recovery
+        (gaugeStateFamily.state n).functional A
 
 /-- The finite-stage GNS vacuum recovers the native normalized matrix trace for
 every observable, not only for the binary matrix-unit generators. -/

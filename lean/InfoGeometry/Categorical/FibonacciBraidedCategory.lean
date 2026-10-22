@@ -443,6 +443,30 @@ theorem fibTensor_interchange
         (fibTensorHom (FibHom.id X₂) g) :=
       fibTensorHom_comp f (FibHom.id X₂) (FibHom.id Y₁) g
 
+/-! The equality-transport braiding also satisfies the two hexagon paths.
+These are coherence lemmas for the skeletal carrier; they do not promote the
+finite `F`-matrix data to a `BraidedCategory` instance. -/
+
+theorem fibBraiding_hexagon_forward (X Y Z : FibCat) :
+    (fibAssociator X Y Z).hom ≫
+        (fibBraiding X (fibTensorObj Y Z)).hom ≫
+        (fibAssociator Y Z X).hom =
+      (fibWhiskerRight (fibBraiding X Y).hom Z) ≫
+        (fibAssociator Y X Z).hom ≫
+        (fibWhiskerLeft Y (fibBraiding X Z).hom) := by
+  simp [fibAssociator, fibBraiding, fibWhiskerLeft, fibWhiskerRight,
+    fibTensorHom_left_eqToHom, fibTensorHom_right_eqToHom, FibHom.comp]
+
+theorem fibBraiding_hexagon_reverse (X Y Z : FibCat) :
+    (fibAssociator X Y Z).inv ≫
+        (fibBraiding (fibTensorObj X Y) Z).hom ≫
+        (fibAssociator Z X Y).inv =
+      (fibWhiskerLeft X (fibBraiding Y Z).hom) ≫
+        (fibAssociator X Z Y).inv ≫
+        (fibWhiskerRight (fibBraiding X Z).hom Y) := by
+  simp [fibAssociator, fibBraiding, fibWhiskerLeft, fibWhiskerRight,
+    fibTensorHom_left_eqToHom, fibTensorHom_right_eqToHom, FibHom.comp]
+
 /-- A morphism in the first variable induces a natural transformation between
 the corresponding left-tensoring functors. -/
 noncomputable def fibTensorNatTrans

@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.HypercomplexTriad
@@ -49,6 +55,13 @@ theorem modular_commutator_N_transpose :
 
 /-- Finite modular flow (diagonal boost scaling). -/
 noncomputable def modularFlow (u : ℝ) : M2R := !![u, 0; 0, u⁻¹]
+
+/-- The finite diagonal modular flows form a multiplicative one-parameter law. -/
+theorem modularFlow_mul (u v : ℝ) :
+    modularFlow (u * v) = modularFlow u * modularFlow v := by
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    simp [modularFlow, Matrix.mul_apply, Fin.sum_univ_two,
+      _root_.mul_inv_rev, mul_comm]
 
 /-- Finite modular flow scales `N` by `u²`. -/
 theorem finite_modular_flow_N (u : ℝ) :

@@ -83,6 +83,12 @@ def stageRestrict (n : ℕ) : MatStage (n + 1) →ₗ[ℝ] MatStage n where
   ext i j
   rfl
 
+@[simp] theorem stageRestrict_star (n : ℕ) (X : MatStage (n + 1)) :
+    stageRestrict n (star X) = star (stageRestrict n X) := by
+  rw [star_eq_conjTranspose, Matrix.conjTranspose_eq_transpose_of_trivial]
+  rw [star_eq_conjTranspose, Matrix.conjTranspose_eq_transpose_of_trivial]
+  exact stageRestrict_transpose n X
+
 @[simp] theorem stageRestrict_one (n : ℕ) :
     stageRestrict n (1 : MatStage (n + 1)) = 1 := by
   simpa using stageRestrict_stageEmbed n (1 : MatStage n)

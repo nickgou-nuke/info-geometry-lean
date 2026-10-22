@@ -41,7 +41,7 @@ def affineLift (v : D → ℝ) : Option D → ℝ
 theorem affineLift_ne_zero (v : D → ℝ) : affineLift v ≠ 0 := by
   intro h
   have hn := congrFun h none
-  simpa using hn
+  simp at hn
 
 /-- One linear map records both total mass and the value readout. -/
 def homogeneousDecoder [Fintype J] (V : J → D → ℝ) :
@@ -104,7 +104,7 @@ theorem dehomogenize_homogeneousDecoder [Fintype J]
   funext d
   simp only [dehomogenize, homogeneousDecoder_some, homogeneousDecoder_none,
     Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
-  rw [← Finset.sum_div]
+  rw [Finset.sum_div]
   apply Finset.sum_congr rfl
   intro j _
   ring
@@ -143,7 +143,7 @@ theorem projective_normalization [Fintype J]
 theorem affineIndependent_iff_linearIndependent_lift (V : J → D → ℝ) :
     AffineIndependent ℝ V ↔ LinearIndependent ℝ (fun j => affineLift (V j)) := by
   classical
-  rw [affineIndependent_iff, linearIndependent_iff]
+  rw [affineIndependent_iff, linearIndependent_iff']
   constructor
   · intro ha s w hw
     have hm : ∑ j ∈ s, w j = 0 := by

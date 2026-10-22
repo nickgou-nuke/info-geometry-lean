@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib
 
 namespace InfoGeometry.Algebra.AnticommutingBalance
@@ -60,3 +66,32 @@ theorem balanced_square_ne_zero (first second : Carrier)
   exact smul_ne_zero (by norm_num) squareNonzero
 
 end InfoGeometry.Algebra.AnticommutingBalance
+
+namespace InfoGeometry.Algebra.QHeisenberg
+
+variable {Carrier : Type*} [Ring Carrier]
+
+/-- The commutator readout of a left-scaled exchange relation. -/
+theorem q_commutator_readout (q X Y : Carrier)
+    (h : X * Y = q * (Y * X)) :
+    X * Y - Y * X = (q - 1) * (Y * X) := by
+  rw [h]
+  noncomm_ring
+
+/-- The anticommutator readout of a left-scaled exchange relation. -/
+theorem q_anticommutator_readout (q X Y : Carrier)
+    (h : X * Y = q * (Y * X)) :
+    X * Y + Y * X = (q + 1) * (Y * X) := by
+  rw [h]
+  noncomm_ring
+
+/-- The division-free commutator--anticommutator identity induced by
+`X * Y = q * (Y * X)`. -/
+theorem q_commutator_anticommutator_relation (q X Y : Carrier)
+    (h : X * Y = q * (Y * X)) :
+    (q + 1) * (X * Y - Y * X) =
+      (q - 1) * (X * Y + Y * X) := by
+  rw [h]
+  noncomm_ring
+
+end InfoGeometry.Algebra.QHeisenberg

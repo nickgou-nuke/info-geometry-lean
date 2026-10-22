@@ -9,6 +9,23 @@ namespace InfoGeometry.Analysis
 
 open scoped BigOperators
 
+/-- Composition of a rank-one operator with itself is controlled by its
+    contraction coefficient.  In particular, a null contraction gives a
+    genuinely nilpotent rank-one operator, while nonzero factors can still
+    produce a nonzero operator. -/
+theorem rankOne_comp_rankOne
+    {H : Type*}
+    [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+    (x y : H) :
+    (InnerProductSpace.rankOne ℝ x y).comp
+        (InnerProductSpace.rankOne ℝ x y) =
+      (inner (𝕜 := ℝ) (E := H) y x) •
+        InnerProductSpace.rankOne ℝ x y := by
+  ext z
+  simp [InnerProductSpace.rankOne, real_inner_comm]
+  rw [smul_smul, smul_smul]
+  module
+
 /-- The trace of a rank-one operator equals the corresponding inner product. -/
 theorem trace_rankOne_eq_inner
     {H : Type*}

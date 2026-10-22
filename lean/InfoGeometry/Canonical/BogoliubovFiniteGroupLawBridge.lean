@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Canonical.BogoliubovCovariantMellinKreinQuantizationBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -18,13 +24,28 @@ namespace InfoGeometry.Canonical.BogoliubovFiniteGroupLawBridge
 
 open InfoGeometry.Canonical.BogoliubovMellinKrein
 
+theorem phaseRotorMatrix_add (theta phi : ℝ) :
+    phaseRotorMatrix (theta + phi) =
+      phaseRotorMatrix theta * phaseRotorMatrix phi := by
+  ext i j
+  fin_cases i <;> fin_cases j
+  · simp [phaseRotorMatrix, Matrix.mul_apply, Fin.sum_univ_two]
+    rw [← Complex.exp_add]
+    congr 1
+    ring
+  · simp [phaseRotorMatrix, Matrix.mul_apply, Fin.sum_univ_two]
+  · simp [phaseRotorMatrix, Matrix.mul_apply, Fin.sum_univ_two]
+  · simp [phaseRotorMatrix, Matrix.mul_apply, Fin.sum_univ_two]
+    rw [← Complex.exp_add]
+    congr 1
+    ring
+
 theorem phaseRotorMatrix_neg_mul (theta : ℝ) :
     phaseRotorMatrix (-theta) * phaseRotorMatrix theta = 1 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [phaseRotorMatrix, Matrix.mul_apply, Fin.sum_univ_two,
-      ← Complex.exp_add] <;>
-    congr 1 <;> ring
+      ← Complex.exp_add]
 
 theorem bogoliubovMatrix_inverse_factorization
     (u t log_n : ℝ) :

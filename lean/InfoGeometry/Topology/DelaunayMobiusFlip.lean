@@ -84,6 +84,15 @@ theorem flipBlock_det :
   exact rohozhkinFlipBlock_det (labels.ζ i) (labels.ζ k) (labels.ζ j) (labels.ζ l) hd
 
 omit [DecidableEq ι] in
+/- The local flip is nondegenerate whenever both source and target pairs are
+   distinct in the labelled affine chart. -/
+theorem flipBlock_det_ne_zero
+    (hjl : j ≠ l) :
+    Matrix.det (flipBlock labels i k j l hik) ≠ 0 := by
+  rw [flipBlock_det labels i k j l hik]
+  exact div_ne_zero (labels.nonzero_den hjl) (labels.nonzero_den hik)
+
+omit [DecidableEq ι] in
 /-- The projective action of the flip block aligns perfectly with the Möbius evaluation. -/
 theorem flipBlock_projective_action (r : ℚ) :
     let A := flipBlock labels i k j l hik

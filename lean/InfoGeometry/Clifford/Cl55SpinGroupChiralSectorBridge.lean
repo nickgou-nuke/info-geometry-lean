@@ -136,6 +136,21 @@ theorem spinGroupAction_mul (g h : Spin55) :
   rw [show ((g * h : Spin55) : Cl55) = (g : Cl55) * (h : Cl55) by rfl]
   rw [map_mul, Matrix.mulVec_mulVec]
 
+@[simp] theorem spinGroupAction_one :
+    spinGroupAction (1 : Spin55) = LinearMap.id := by
+  apply LinearMap.ext
+  intro v
+  change Matrix.mulVec (cl55SpinorAlgEquiv ((1 : Spin55) : Cl55)) v = v
+  simp [spinGroupAction, Matrix.toLin'_apply]
+
+theorem spinGroupAction_inv_comp (g : Spin55) :
+    (spinGroupAction g⁻¹).comp (spinGroupAction g) = LinearMap.id := by
+  rw [← spinGroupAction_mul, inv_mul_cancel, spinGroupAction_one]
+
+theorem spinGroupAction_comp_inv (g : Spin55) :
+    (spinGroupAction g).comp (spinGroupAction g⁻¹) = LinearMap.id := by
+  rw [← spinGroupAction_mul, mul_inv_cancel, spinGroupAction_one]
+
 /-- The spin-group action restricted to the positive chiral sector. -/
 def spinGroupActionPlus (g : Spin55) :
     chiralPlusSector →ₗ[ℝ] chiralPlusSector :=

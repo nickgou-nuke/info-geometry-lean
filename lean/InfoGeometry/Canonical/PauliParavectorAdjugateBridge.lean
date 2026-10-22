@@ -35,4 +35,10 @@ theorem pauliMatrix_mul_adjugate_eq_zero_of_null
   rw [pauliMatrix_mul_adjugate_eq_q_smul_one, hv]
   simp
 
+theorem adjugate_mul_pauliMatrix_eq_zero_of_null
+    {v : Minkowski4} (hv : v.IsNull) :
+    Matrix.adjugate (pauliMatrix v) * pauliMatrix v = 0 := by
+  rw [adjugate_mul_pauliMatrix_eq_q_smul_one, hv]
+  simp
+
 end InfoGeometry.Canonical.PauliParavectorAdjugateBridge

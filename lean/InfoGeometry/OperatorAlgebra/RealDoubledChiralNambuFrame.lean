@@ -284,6 +284,33 @@ theorem nambuAnnihilation_range_iff_minusSheet (u : DoubledSpace E) :
   rw [← concreteCARAnnihilation_eq_nambuProjectorMinus_comp_nambuSheetFlip (E := E)]
   exact InfoGeometry.Krein.MajoranaSheetConnectors.annihilation_range_iff_minusSheet u
 
+theorem nambuMajoranaSwap_eq_modular_j :
+    (nambuProjectorPlus (E := E)).comp (nambuSheetFlip (E := E)) +
+        (nambuProjectorMinus (E := E)).comp (nambuSheetFlip (E := E)) =
+      modular_j (E := E) := by
+  rw [← concreteCARCreation_eq_nambuProjectorPlus_comp_nambuSheetFlip (E := E),
+    ← concreteCARAnnihilation_eq_nambuProjectorMinus_comp_nambuSheetFlip (E := E)]
+  exact InfoGeometry.Canonical.MajoranaPHSZeroMode.concrete_majorana_swap_eq_modular_j
+    (E := E)
+
+theorem nambuMajoranaCreation_tomita_swap :
+    tomitaConjOp (E := E)
+        ((nambuProjectorPlus (E := E)).comp (nambuSheetFlip (E := E))) =
+      (nambuProjectorMinus (E := E)).comp (nambuSheetFlip (E := E)) := by
+  rw [← concreteCARCreation_eq_nambuProjectorPlus_comp_nambuSheetFlip (E := E),
+    ← concreteCARAnnihilation_eq_nambuProjectorMinus_comp_nambuSheetFlip (E := E)]
+  exact InfoGeometry.Canonical.MajoranaPHSZeroMode.concrete_majorana_creation_swap
+    (E := E)
+
+theorem nambuMajoranaAnnihilation_tomita_swap :
+    tomitaConjOp (E := E)
+        ((nambuProjectorMinus (E := E)).comp (nambuSheetFlip (E := E))) =
+      (nambuProjectorPlus (E := E)).comp (nambuSheetFlip (E := E)) := by
+  rw [← concreteCARAnnihilation_eq_nambuProjectorMinus_comp_nambuSheetFlip (E := E),
+    ← concreteCARCreation_eq_nambuProjectorPlus_comp_nambuSheetFlip (E := E)]
+  exact InfoGeometry.Canonical.MajoranaPHSZeroMode.concrete_majorana_annihilation_swap
+    (E := E)
+
 end CanonicalCAR
 
 end InfoGeometry.OperatorAlgebra.RealDoubledChiralNambuFrame

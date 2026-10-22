@@ -229,6 +229,44 @@ theorem modularFlowCl11_transverse_norm_sq (t : ThermalTime) (q : Cl11) :
     Real.sin_sq_add_cos_sq (2 * t)
   nlinarith
 
+/-- The finite flow acts on the transverse Clifford generator by the displayed
+    rotation in the canonical coordinate basis. -/
+theorem modularFlowCl11_e2Basis (t : ThermalTime) :
+    modularFlowCl11 t InfoGeometry.Clifford.Cl11CoordinateAlgebra.e2Basis =
+      Real.cos (2 * t) • InfoGeometry.Clifford.Cl11CoordinateAlgebra.e2Basis +
+        Real.sin (2 * t) • InfoGeometry.Clifford.Cl11CoordinateAlgebra.e12Basis := by
+  change
+    ⟨0, 0, Real.cos (2 * t) * 1 - Real.sin (2 * t) * 0,
+        Real.sin (2 * t) * 1 + Real.cos (2 * t) * 0⟩ =
+      InfoGeometry.Clifford.Cl11CoordinateAlgebra.add
+        (InfoGeometry.Clifford.Cl11CoordinateAlgebra.smul
+          (Real.cos (2 * t)) InfoGeometry.Clifford.Cl11CoordinateAlgebra.e2Basis)
+        (InfoGeometry.Clifford.Cl11CoordinateAlgebra.smul
+          (Real.sin (2 * t)) InfoGeometry.Clifford.Cl11CoordinateAlgebra.e12Basis)
+  ext <;> simp [InfoGeometry.Clifford.Cl11CoordinateAlgebra.smul,
+    InfoGeometry.Clifford.Cl11CoordinateAlgebra.add,
+    InfoGeometry.Clifford.Cl11CoordinateAlgebra.e2Basis,
+    InfoGeometry.Clifford.Cl11CoordinateAlgebra.e12Basis]
+
+/-- The finite flow acts on the bivector generator by the complementary
+    displayed rotation in the canonical coordinate basis. -/
+theorem modularFlowCl11_e12Basis (t : ThermalTime) :
+    modularFlowCl11 t InfoGeometry.Clifford.Cl11CoordinateAlgebra.e12Basis =
+      -Real.sin (2 * t) • InfoGeometry.Clifford.Cl11CoordinateAlgebra.e2Basis +
+        Real.cos (2 * t) • InfoGeometry.Clifford.Cl11CoordinateAlgebra.e12Basis := by
+  change
+    ⟨0, 0, Real.cos (2 * t) * 0 - Real.sin (2 * t) * 1,
+        Real.sin (2 * t) * 0 + Real.cos (2 * t) * 1⟩ =
+      InfoGeometry.Clifford.Cl11CoordinateAlgebra.add
+        (InfoGeometry.Clifford.Cl11CoordinateAlgebra.smul
+          (-Real.sin (2 * t)) InfoGeometry.Clifford.Cl11CoordinateAlgebra.e2Basis)
+        (InfoGeometry.Clifford.Cl11CoordinateAlgebra.smul
+          (Real.cos (2 * t)) InfoGeometry.Clifford.Cl11CoordinateAlgebra.e12Basis)
+  ext <;> simp [InfoGeometry.Clifford.Cl11CoordinateAlgebra.smul,
+    InfoGeometry.Clifford.Cl11CoordinateAlgebra.add,
+    InfoGeometry.Clifford.Cl11CoordinateAlgebra.e2Basis,
+    InfoGeometry.Clifford.Cl11CoordinateAlgebra.e12Basis]
+
 /-- The finite Cl(1,1) modular flow has period `π`, because its transverse
     rotation uses the angle `2 * t`. -/
 theorem modularFlowCl11_period_pi (t : ThermalTime) (q : Cl11) :

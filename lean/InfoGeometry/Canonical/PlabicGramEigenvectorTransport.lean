@@ -14,13 +14,16 @@ import InfoGeometry.Canonical.FinitePlabicKasteleyn
 
 For a complex rectangular matrix, multiplication by the matrix transports a
 nonzero-eigenvalue eigenvector of `Aᴴ A` to one of `A Aᴴ`.  This is the
-vector-level finite statement; it does not assert equality of characteristic
-polynomials, multiplicities, or a singular-value decomposition.
+vector-level finite statement.  The rectangular characteristic polynomials
+are related after retaining the powers of `X` that account for the dimension
+difference.  Consequently their algebraic root multiplicities agree away
+from zero.  No singular-value decomposition is asserted.
 -/
 
 namespace InfoGeometry.Canonical.PlabicGramEigenvectorTransport
 
 open InfoGeometry.Canonical.FinitePlabicKasteleyn
+open scoped ComplexOrder
 
 /-- Applying a rectangular matrix transports an eigenvector of
 `A.conjTranspose * A` to one of `A * A.conjTranspose` with the same eigenvalue. -/
@@ -79,6 +82,25 @@ theorem mulVec_gram_eigenvector_injective {m n : Type*} [Fintype m] [Fintype n]
   rcases smul_eq_zero.mp hdiff with hzero | hv
   · exact (hEigenvalue_ne_zero hzero).elim
   · exact sub_eq_zero.mp hv
+
+/-- The null space of the right Gram operator is exactly the null space of
+the matrix. The forward implication uses positivity of the standard complex
+inner product; the reverse implication is the matrix multiplication law. -/
+theorem mulVec_gram_eq_zero_iff {m n : Type*} [Fintype m] [Fintype n]
+    (A : Matrix m n ℂ) (v : n → ℂ) :
+    (A.conjTranspose * A).mulVec v = 0 ↔ A.mulVec v = 0 := by
+  constructor
+  · intro h
+    apply dotProduct_star_self_eq_zero.mp
+    calc
+      star (A.mulVec v) ⬝ᵥ A.mulVec v =
+          star v ⬝ᵥ ((A.conjTranspose * A).mulVec v) := by
+            simp only [Matrix.star_mulVec, Matrix.dotProduct_mulVec,
+              Matrix.vecMul_vecMul]
+      _ = 0 := by rw [h]; simp
+  · intro h
+    rw [← Matrix.mulVec_mulVec, h]
+    simp
 
 /-- The reverse transport, using `A.conjTranspose`, gives the corresponding
 eigenvector statement from `A * A.conjTranspose` back to the other Gram matrix. -/
@@ -174,14 +196,61 @@ theorem gram_eigenspace_finrank_eq {m n : Type*} [Fintype m] [Fintype n]
   · exact forward.finrank_le_finrank_of_injective hforward
   · exact backward.finrank_le_finrank_of_injective hbackward
 
-/- The two Gram matrices have identical characteristic polynomials in the
-    square case.  The rectangular case only has the nonzero-eigenvalue
-    transport and finite-eigenspace result above. -/
+/-- The two Gram matrices have identical characteristic polynomials in the
+square case. -/
 theorem gram_charpoly_eq_of_square {n : Type*} [Fintype n] [DecidableEq n]
     (A : Matrix n n ℂ) :
     Matrix.charpoly (A.conjTranspose * A) =
       Matrix.charpoly (A * A.conjTranspose) := by
   exact Matrix.charpoly_mul_comm A.conjTranspose A
+
+/-- The two rectangular Gram operators' characteristic polynomials have equal
+root multiplicity at every nonzero complex number.  The powers of `X` in the
+rectangular Sylvester identity affect only the zero root, so they disappear
+from this nonzero-root multiplicity comparison. -/
+theorem gram_charpoly_rootMultiplicity_eq_of_ne_zero {m n : Type*}
+    [Fintype m] [DecidableEq m] [Fintype n] [DecidableEq n]
+    (A : Matrix m n ℂ) {z : ℂ} (hz : z ≠ 0) :
+    (Matrix.charpoly (A.conjTranspose * A)).rootMultiplicity z =
+      (Matrix.charpoly (A * A.conjTranspose)).rootMultiplicity z := by
+  let p : Polynomial ℂ := Matrix.charpoly (A.conjTranspose * A)
+  let q : Polynomial ℂ := Matrix.charpoly (A * A.conjTranspose)
+  have hpoly :
+      Polynomial.X ^ Fintype.card m * p =
+        Polynomial.X ^ Fintype.card n * q := by
+    exact Matrix.charpoly_mul_comm' A.conjTranspose A
+  have hrootX_m :
+      (Polynomial.X ^ Fintype.card m).rootMultiplicity z = 0 := by
+    apply Polynomial.rootMultiplicity_eq_zero
+    intro hroot
+    apply hz
+    have heval := hroot
+    simp only [Polynomial.IsRoot, Polynomial.eval_pow, Polynomial.eval_X] at heval
+    exact eq_zero_of_pow_eq_zero heval
+  have hrootX_n :
+      (Polynomial.X ^ Fintype.card n).rootMultiplicity z = 0 := by
+    apply Polynomial.rootMultiplicity_eq_zero
+    intro hroot
+    apply hz
+    have heval := hroot
+    simp only [Polynomial.IsRoot, Polynomial.eval_pow, Polynomial.eval_X] at heval
+    exact eq_zero_of_pow_eq_zero heval
+  have hp : p ≠ 0 := (Matrix.charpoly_monic _).ne_zero
+  have hq : q ≠ 0 := (Matrix.charpoly_monic _).ne_zero
+  have hX : (Polynomial.X : Polynomial ℂ) ≠ 0 := Polynomial.X_ne_zero
+  have hX_m :
+      (Polynomial.X ^ Fintype.card m : Polynomial ℂ) ≠ 0 := by
+    exact pow_ne_zero (Fintype.card m) hX
+  have hX_n :
+      (Polynomial.X ^ Fintype.card n : Polynomial ℂ) ≠ 0 := by
+    exact pow_ne_zero (Fintype.card n) hX
+  have hmul_m : Polynomial.X ^ Fintype.card m * p ≠ 0 := mul_ne_zero hX_m hp
+  have hmul_n : Polynomial.X ^ Fintype.card n * q ≠ 0 := mul_ne_zero hX_n hq
+  have hmult := congrArg (fun r : Polynomial ℂ => r.rootMultiplicity z) hpoly
+  rw [Polynomial.rootMultiplicity_mul hmul_m,
+    Polynomial.rootMultiplicity_mul hmul_n,
+    hrootX_m, hrootX_n] at hmult
+  simpa [p, q] using hmult
 
 /-- The abstract transport theorem applies to the signed Plabic edge-sum
 matrix with its owner-prescribed `White × Black` orientation. -/

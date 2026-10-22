@@ -27,7 +27,7 @@ the owner source; a chat transcript is never proof authority.
 | A7 | chiral grading | `η = [[I,0],[0,-I]]` on `Black ⊕ White`; `D η + η D = 0`. | `kreinSignature` and `diracDHK_anticommutes_chirality`; owner theorem surface. |
 | A8 | Gram/block-square decomposition | `D² = diag(K†K, KK†)`. | `diracDHK_sq` and `edgeSumDirac_sq`; owner theorem surface. |
 | A9 | Krein-skew adjoint | `η D† η = -D` under the source's `CommRing`/`StarRing` matrix assumptions. | `diracDHK_krein_skew`; this is the exact formal claim, not a general Hilbert-space spectral theorem. |
-| A10 | spectral correspondence of the two Gram blocks | For a complex rectangular matrix, nonzero eigenvectors transport in both directions, with explicit preimages and equal finite eigenspace dimensions. In the square case the characteristic polynomials also agree. | `Canonical.PlabicGramEigenvectorTransport.gram_eigenspace_finrank_eq` and `gram_charpoly_eq_of_square` are proved. Rectangular characteristic-polynomial normalization and SVD remain separate. |
+| A10 | spectral correspondence of the two Gram blocks | For a complex rectangular matrix, nonzero eigenvectors transport in both directions, with explicit preimages and equal finite eigenspace dimensions. In the square case the characteristic polynomials agree; in the rectangular case their algebraic root multiplicities agree at every nonzero complex value. | `Canonical.PlabicGramEigenvectorTransport.gram_eigenspace_finrank_eq`, `gram_charpoly_eq_of_square`, and `gram_charpoly_rootMultiplicity_eq_of_ne_zero` are proved. Singular-value decomposition remains separate. |
 
 **Correction:** the chat's phrase “same nonzero singular-value information” is
 not promoted. The block-square identity is formalized; a singular-value theorem
@@ -38,9 +38,9 @@ and an actual theorem.
 
 | ID | Genuine archetype | Carrier and invariant | Repository scope |
 |---|---|---|---|
-| A11 | nilpotent off-diagonal edge | In the local `Cl11Op` algebra, `Y(w) = [[0,w],[0,0]]` and `Y(w)² = 0`. | `Holography/PlabicKreinTwistedClusterMutation.lean`; proved in the local algebra. It is not yet a general graph-edge operator. |
-| A12 | truncated unipotent transport | `T(w) = I + Y(w)`, `T⁻¹(w) = I - Y(w)`, and both products are `I`. | `mutation_rotor_unitary`, `Gamma_sq_zero`, and related identities. “Unitary” here means two-sided inverse in this local ring; no star-unitarity is asserted. |
-| A13 | local conjugation readout | `T(w) X T⁻¹(w)` has the explicitly computed `Cl11Op` value `⟨x, -(xw), 0, 0⟩`. | `cluster_mutation_is_exponential_adjoint`; this is a local conjugation identity. |
+| A11 | nilpotent off-diagonal matrix | In `Cl11Op`, `edgeTwist w = [[0,w],[0,0]]` and its square is zero. | `Cl11Op.edgeTwist_sq_zero`; this does not construct a graph-edge operator. |
+| A12 | truncated unipotent local transport | `edgeTransport w = 1 + edgeTwist w` and `edgeTransportInv w = 1 - edgeTwist w`; both products are the identity. | `Cl11Op.edgeTransport_mul_inv` and `Cl11Op.edgeTransportInv_mul`. No star operation or star-unitarity is defined. |
+| A13 | local conjugation readout | `edgeTransport w * nodeBlack x * edgeTransportInv w` has value `⟨x, -(xw), 0, 0⟩`. | `Cl11Op.edgeTransport_conjugation_nodeBlack`; this is a local matrix identity, not a cluster mutation theorem. |
 | A14 | boundary bridge/minor calculus | `addBridge` changes one matrix column; minors disjoint from the target are invariant and target minors obey a linear expansion. | `Topology/PlabicBoundaryMeasurement.lean`; owner theorem surface. |
 | A15 | positive Plücker carrier | The explicit `2 × 4` real matrix family has computed minors, the three-term Plücker relation, and strict positivity under positive parameters. | `boundaryMeasurementMatrix` and its theorems. No graph boundary-measurement map is constructed. |
 | A16 | cluster face mutation | A five-face field-valued weight tuple is mutated by inversion and rational factors; opposite-pair products and the reversed mutation are proved under nonzero denominator hypotheses. | `Topology/PlabicCluster.lean`; owner theorem surface. |
@@ -48,6 +48,11 @@ and an actual theorem.
 **Correction:** A11–A13 do not prove that every Postnikov square move is a
 conjugation by `I + Y`. A16 is the actual face-weight mutation owner. A15's
 matrix family is not identified with a particular planar network.
+
+The matrix owner additionally proves
+`matrix_edgeTransport_charpoly_invariant` for every represented `Cl11Op`.
+This is finite characteristic-polynomial invariance under the explicit
+similarity; it does not identify the conjugation with a graph square move.
 
 ### D. Thermodynamic graph and finite path readouts
 

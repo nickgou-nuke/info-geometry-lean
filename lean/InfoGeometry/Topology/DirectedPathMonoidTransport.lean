@@ -37,6 +37,24 @@ theorem DirectedPath.product_append
   | cons h p ih =>
       simp [DirectedPath.append, DirectedPath.product, ih, mul_assoc]
 
+/-- If `u` and `v` are inverse elements of a monoid, conjugating every edge
+label by `u` and `v` conjugates the ordered product of the entire path. -/
+theorem DirectedPath.product_conjugate
+    (u v : M) (huv : u * v = 1) (hvu : v * u = 1)
+    (edgeWeight : ∀ a b : G.Vertex, G.edge a b → M)
+    {a b : G.Vertex} (p : DirectedPath G a b) :
+    DirectedPath.product (fun x y h => u * edgeWeight x y h * v) p =
+      u * DirectedPath.product edgeWeight p * v := by
+  induction p with
+  | refl => simp [DirectedPath.product, huv]
+  | cons h p ih =>
+      simp only [DirectedPath.product]
+      rw [ih]
+      simp only [mul_assoc]
+      rw [← mul_assoc v u (DirectedPath.product edgeWeight p * v)]
+      rw [hvu]
+      simp only [one_mul]
+
 /-- A presented rewrite system is product-compatible when each contextual
 rewrite preserves the ordered edge product. -/
 def ProductCompatible (P : DirectedPathPresentation G)

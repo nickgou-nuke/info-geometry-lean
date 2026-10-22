@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.AmariBinarySimplexBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Probability.SimplexQuadraticResponse
@@ -112,6 +117,53 @@ theorem hasDerivAt_trajectory (v ξ₀ t : ℝ) :
     dsimp [trajectory]
     ring
   exact h.congr_deriv hderiv_eq
+
+/-- The square-root amplitudes of the logistic curve have squared speed
+equal to the Fisher susceptibility in its scaled logit coordinate. -/
+theorem logistic_curve_amplitude_speed (slope t : ℝ) :
+    4 * ((deriv (fun s : ℝ => Real.sqrt (logistic (slope * s))) t) ^ 2 +
+      (deriv (fun s : ℝ => Real.sqrt (1 - logistic (slope * s))) t) ^ 2) =
+      slope ^ 2 * fisherExp (slope * t) := by
+  let p : ℝ → ℝ := fun s => trajectory (slope / 2) 0 s
+  let θ := slope * t
+  have htrajectory : trajectory (slope / 2) 0 t = logistic θ := by
+    dsimp [trajectory, θ]
+    congr 1
+    ring
+  have hpt : p t = logistic θ := by
+    exact htrajectory
+  have hd : HasDerivAt p (slope * fisherExp θ) t := by
+    have h := hasDerivAt_trajectory (slope / 2) 0 t
+    have hvalue :
+        2 * (slope / 2) * trajectory (slope / 2) 0 t *
+            (1 - trajectory (slope / 2) 0 t) = slope * fisherExp θ := by
+      rw [htrajectory, fisherExp_eq_logistic_mul_complement]
+      ring
+    simpa [p] using h.congr_deriv hvalue
+  have hp : p t ∈ Set.Ioo (0 : ℝ) 1 := by
+    simpa [p] using trajectory_mem_Ioo (slope / 2) 0 t
+  have hamplitude := binary_amplitude_speed p (slope * fisherExp θ) t hd hp
+  have hfun : p = fun s : ℝ => logistic (slope * s) := by
+    funext s
+    dsimp [p, trajectory]
+    congr 1
+    ring
+  rw [hfun] at hamplitude
+  have hrecip : fisherMix (logistic θ) * fisherExp θ = 1 := by
+    calc
+      _ = fisherMix (logistic θ) * fisherExp (logit (logistic θ)) := by
+        rw [logit_logistic]
+      _ = 1 := fisherMix_mul_fisherExp_logit (logistic_mem_Ioo θ)
+  have hscale :
+      fisherMix (logistic θ) * (slope * fisherExp θ) ^ 2 =
+        slope ^ 2 * fisherExp θ := by
+    calc
+      _ = slope ^ 2 * fisherExp θ *
+          (fisherMix (logistic θ) * fisherExp θ) := by ring
+      _ = slope ^ 2 * fisherExp θ := by rw [hrecip]; ring
+  calc
+    _ = fisherMix (logistic θ) * (slope * fisherExp θ) ^ 2 := hamplitude
+    _ = slope ^ 2 * fisherExp θ := hscale
 
 theorem trajectory_acceleration (v ξ₀ t : ℝ) :
     deriv (deriv (trajectory v ξ₀)) t =

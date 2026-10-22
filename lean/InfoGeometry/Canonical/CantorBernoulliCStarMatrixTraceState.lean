@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Analysis.CStarAlgebra.CStarMatrix
 import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Instances
 import Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.Rpow.Basic
@@ -6,6 +12,7 @@ import InfoGeometry.Canonical.CuntzMatrixFiniteTraceFaithfulness
 import InfoGeometry.Canonical.CuntzMatrixTraceTower
 import InfoGeometry.Canonical.FilteredStarAlgebraTopologicalColimit
 import InfoGeometry.Canonical.CompatibleStateContinuousReadout
+import InfoGeometry.Canonical.FiniteHestenesHilbertSchmidtStandardForm
 
 /-!
 # Native finite C⋆-matrix trace state
@@ -80,6 +87,14 @@ def cstarConcreteMap {i j : ℕ} (hij : i ≤ j) :
   (matrixEquivStarAlgHom j).comp
     ((concreteMap hij).comp (matrixEquivSymmStarAlgHom i))
 
+/-- Reading a native C⋆-matrix transition back in the finite matrix carrier
+recovers the concrete matrix-tower transition. -/
+theorem cstarConcreteMap_toMatrixStage {i j : ℕ} (hij : i ≤ j)
+    (A : CStarMatrixStage i) :
+    (CStarMatrix.ofMatrixStarAlgEquiv).symm (cstarConcreteMap hij A) =
+      concreteMap hij ((CStarMatrix.ofMatrixStarAlgEquiv).symm A) := by
+  rfl
+
 def cstarMatrixInductiveSystem :
     CStarStateColimit.Native.ContinuousStarInductiveSystem CStarMatrixStage where
   map := fun {i j} hij => cstarConcreteMap hij
@@ -141,6 +156,27 @@ def cstarMatrixPositiveTraceFunctional (n : ℕ) :
     cstarMatrixPositiveTraceFunctional n A =
       matrixTraceState n ((matrixEquiv n).symm A) :=
   rfl
+
+/-- The normalized trace state on the first complex C⋆ matrix stage is one
+half of the Hilbert--Schmidt pairing after the canonical matrix readout. -/
+theorem cstarMatrixTraceState_stageOne_hilbertSchmidt
+    (A B : CStarMatrixStage 1) :
+    cstarMatrixPositiveTraceFunctional 1 (star A * B) =
+      (1 / 2 : ℂ) *
+        FiniteHestenesHilbertSchmidtStandardForm.hilbertSchmidtInner
+          ((CStarMatrix.ofMatrixStarAlgEquiv).symm A)
+          ((CStarMatrix.ofMatrixStarAlgEquiv).symm B) := by
+  rw [cstarMatrixPositiveTraceFunctional_apply, matrixTraceState_apply]
+  have hmul : (matrixEquiv 1).symm (star A * B) =
+      (matrixEquiv 1).symm (star A) * (matrixEquiv 1).symm B :=
+    (matrixEquiv 1).symm.map_mul _ _
+  have hstar : (matrixEquiv 1).symm (star A) =
+      star ((matrixEquiv 1).symm A) := by rfl
+  rw [hmul, hstar]
+  simp [matrixEquiv,
+    FiniteHestenesHilbertSchmidtStandardForm.hilbertSchmidtInner,
+    Matrix.trace, Matrix.mul_apply, Matrix.star_apply, Fin.sum_univ_two]
+  ring_nf
 
 theorem cstarMatrixPositiveTraceFunctional_one (n : ℕ) :
     cstarMatrixPositiveTraceFunctional n (1 : CStarMatrixStage n) = 1 := by

@@ -1,0 +1,22 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.Canonical.Cl11GNSRealDoubledKreinBridge
+
+#print axioms InfoGeometry.Canonical.Cl11GNSRealDoubledKreinBridge.realDoubledReadout
+#print axioms InfoGeometry.Canonical.Cl11GNSRealDoubledKreinBridge.realDoubledTranspose
+#print axioms InfoGeometry.Canonical.Cl11GNSRealDoubledKreinBridge.realDoubledReadout_add
+#print axioms InfoGeometry.Canonical.Cl11GNSRealDoubledKreinBridge.realDoubledReadout_real_smul
+#print axioms InfoGeometry.Canonical.Cl11GNSRealDoubledKreinBridge.realDoubledReadout_complexI
+#print axioms InfoGeometry.Canonical.Cl11GNSRealDoubledKreinBridge.realDoubledReadout_injective
+#print axioms InfoGeometry.Canonical.Cl11GNSRealDoubledKreinBridge.realDoubledReadout_surjective
+#print axioms InfoGeometry.Canonical.Cl11GNSRealDoubledKreinBridge.realDoubledReadout_matrixTomita
+#print axioms InfoGeometry.Canonical.Cl11GNSRealDoubledKreinBridge.realPart_hilbertSchmidtInner_eq_doubledHilbertBilin
+#print axioms InfoGeometry.Canonical.Cl11GNSRealDoubledKreinBridge.preGNS_realPart_inner_eq_doubledHilbertBilin
+#print axioms InfoGeometry.Canonical.Cl11GNSRealDoubledKreinBridge.realDoubledReadout_preGNS_tomita
+#print axioms InfoGeometry.Canonical.Cl11GNSRealDoubledKreinBridge.realDoubledReadout_preGNS_tomita_glide
+#print axioms InfoGeometry.Canonical.Cl11GNSRealDoubledKreinBridge.realDoubledReadout_preGNS_glide_left_right
+#print axioms InfoGeometry.Canonical.Cl11GNSRealDoubledKreinBridge.realDoubledReadout_preGNS_glide_tomita_sheet_sign

@@ -137,17 +137,38 @@ DECL_RE_TEMPLATE = (
 )
 
 
-def recursive_owner_scan(names: list[str]) -> dict[str, list[dict[str, object]]]:
-    needles = {}
+def _owner_scan_needles(names: list[str]) -> tuple[dict[str, str], dict[str, str]]:
+    """Return qualified-name and unambiguous-short-name lookup tables.
+
+    Several Lean namespaces routinely define declarations with the same short
+    name.  A short-name dictionary silently overwrites one of them, so only
+    expose short names when they identify exactly one indexed declaration.
+    Qualified references remain searchable regardless of short-name clashes.
+    """
+    qualified: dict[str, str] = {}
+    by_short: dict[str, set[str]] = defaultdict(set)
     for name in names:
         if not name.startswith("InfoGeometry."):
             continue
         short_name = name.split(".")[-1]
         if not re.match(r"^[A-Za-z_][A-Za-z0-9_']*$", short_name):
             continue
-        needles[short_name] = name
+        qualified[name] = name
+        by_short[short_name].add(name)
+    unambiguous_short = {
+        short: next(iter(full_names))
+        for short, full_names in by_short.items()
+        if len(full_names) == 1
+    }
+    return qualified, unambiguous_short
+
+
+def recursive_owner_scan(
+    names: list[str], lean_root: Path = LEAN_ROOT
+) -> dict[str, list[dict[str, object]]]:
+    qualified, unambiguous_short = _owner_scan_needles(names)
     owners: dict[str, list[dict[str, object]]] = {}
-    for path in LEAN_ROOT.rglob("*.lean"):
+    for path in lean_root.rglob("*.lean"):
         text = path.read_text(errors="ignore")
         source_lines = text.splitlines()
         code_lines = strip_lean_comments_preserve_lines(text).splitlines()
@@ -155,21 +176,27 @@ def recursive_owner_scan(names: list[str]) -> dict[str, list[dict[str, object]]]
         for i, code_line in enumerate(code_lines, start=1):
             stripped = code_line.strip()
             source = source_lines[i - 1].strip() if i <= len(source_lines) else stripped
-            for short_name, full_name in needles.items():
+            found: set[tuple[str, str]] = set()
+            for full_name in qualified:
+                if re.search(rf"(?<![A-Za-z0-9_'.]){re.escape(full_name)}(?![A-Za-z0-9_'])", code_line):
+                    found.add((full_name.split(".")[-1], full_name))
+            for short_name, full_name in unambiguous_short.items():
                 if re.search(rf"\b{re.escape(short_name)}\b", code_line):
-                    kind = "use"
-                    decl_re = DECL_RE_TEMPLATE.format(name=re.escape(short_name))
-                    if re.match(decl_re, stripped):
-                        kind = "declaration"
-                    local_hits.append(
-                        {
-                            "line": i,
-                            "kind": kind,
-                            "name": full_name,
-                            "short_name": short_name,
-                            "source": source,
-                        }
-                    )
+                    found.add((short_name, full_name))
+            for short_name, full_name in sorted(found):
+                kind = "use"
+                decl_re = DECL_RE_TEMPLATE.format(name=re.escape(short_name))
+                if re.match(decl_re, stripped):
+                    kind = "declaration"
+                local_hits.append(
+                    {
+                        "line": i,
+                        "kind": kind,
+                        "name": full_name,
+                        "short_name": short_name,
+                        "source": source,
+                    }
+                )
         if local_hits:
             owners[str(path.relative_to(REPO))] = local_hits
     return owners
@@ -239,7 +266,7 @@ def main() -> int:
         "owner_map": owners,
         "file_summary": summarize_owner_map(owners),
         "external_code_users": declaration_users(owners),
-        "source_policy": "Lean comments and docstrings excluded",
+        "source_policy": "Lean comments and docstrings excluded; ambiguous short names omitted",
     }
     print(json.dumps(result, indent=2, sort_keys=True))
     return 0

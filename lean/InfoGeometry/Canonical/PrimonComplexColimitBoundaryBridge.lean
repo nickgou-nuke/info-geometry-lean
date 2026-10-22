@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Algebra.PrimonColimitAlgebra
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ComplexMatrixStage
@@ -100,6 +106,25 @@ def complexDiagonalCylinderOnInverseLimit (n : ℕ)
     (z : ↑(limit prefixDiagram)) :
     complexDiagonalCylinderOnInverseLimit n A z =
       complexDiagonalCylinder n A (prefixBoundaryLimitIso.inv z) := rfl
+
+/-- The finite diagonal observable on the categorical Cantor prefix limit is
+read directly from the `n`th projective coordinate. -/
+theorem complexDiagonalCylinderOnInverseLimit_projection
+    (n : ℕ) (A : ComplexMatrixStage.Stage n)
+    (z : ↑(limit prefixDiagram)) :
+    complexDiagonalCylinderOnInverseLimit n A z =
+      A ((limit.π prefixDiagram (Opposite.op n)).hom z)
+        ((limit.π prefixDiagram (Opposite.op n)).hom z) := by
+  rw [complexDiagonalCylinderOnInverseLimit_apply,
+    complexDiagonalCylinder_apply]
+  have hprojection :
+      (limit.π prefixDiagram (Opposite.op n)).hom z =
+        boundaryPrefix n (prefixBoundaryLimitIso.inv z) := by
+    funext i
+    have hread := prefixBoundaryLimitIso_hom_apply n
+      (prefixBoundaryLimitIso.inv z) i
+    simpa [boundaryPrefix] using hread
+  rw [hprojection]
 
 theorem complexDiagonalCylinderOnInverseLimit_bond_compatible
     (n : ℕ) (A : ComplexMatrixStage.Stage n) :

@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.HilbertBridge
@@ -59,5 +65,42 @@ noncomputable def doubledKreinAdjoint (A : DoubledEnd E) : DoubledEnd E :=
 @[simp] lemma doubledKreinAdjoint_apply (A : DoubledEnd E) (x : DoubledSpace E) :
     doubledKreinAdjoint (E := E) A x =
       (spectral_epsilon (E := E)) ((doubledAdjoint (E := E) A) ((spectral_epsilon (E := E)) x)) := rfl
+
+/-- The Hilbert adjoint fixes the real doubled-space sheet swap. -/
+lemma doubledAdjoint_modular_j :
+    doubledAdjoint (E := E) (modular_j (E := E)) = modular_j (E := E) := by
+  symm
+  refine (ContinuousLinearMap.eq_adjoint_iff
+    (A := modular_j (E := E)) (B := modular_j (E := E))).2 ?_
+  intro u v
+  simp [modular_j, WithLp.prod_inner_apply, add_comm]
+
+/-- On the canonical doubled carrier, the sheet swap is skew-adjoint for the
+Krein metric defined by `spectral_epsilon`. -/
+theorem modular_j_kreinSkewAdjoint :
+    KreinSpace.IsKreinSkewAdjoint (H := DoubledSpace E) (modular_j (E := E)) := by
+  change KreinSpace.kreinAdjoint (H := DoubledSpace E) (modular_j (E := E)) =
+    -(modular_j (E := E))
+  rw [KreinSpace.kreinAdjoint]
+  have hε : KreinSpace.jCLM (H := DoubledSpace E) = spectral_epsilon (E := E) := by
+    apply ContinuousLinearMap.ext
+    intro u
+    apply DoubledSpace.ext <;> rfl
+  rw [hε, doubledAdjoint_modular_j]
+  apply ContinuousLinearMap.ext
+  intro u
+  apply DoubledSpace.ext <;> simp [modular_j, spectral_epsilon]
+
+/-- Conjugation of doubled operators by the modular sheet swap commutes with
+the Krein adjoint.  The result is a statement about actual operators on the
+real doubled carrier, not merely about the two spectral projectors. -/
+theorem kreinAdjoint_modular_j_sandwich (A : DoubledEnd E) :
+    KreinSpace.kreinAdjoint (H := DoubledSpace E)
+        ((modular_j (E := E)).comp (A.comp (modular_j (E := E)))) =
+      (modular_j (E := E)).comp
+        ((KreinSpace.kreinAdjoint (H := DoubledSpace E) A).comp
+          (modular_j (E := E))) := by
+  exact KreinSpace.kreinAdjoint_sandwich_of_skewAdjoint
+    (modular_j (E := E)) A modular_j_kreinSkewAdjoint
 
 end InfoGeometry.Krein

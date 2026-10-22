@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Lean
 import Std
 
@@ -7,12 +12,13 @@ namespace DAG
 
 /-- Spectral fingerprint of a Lean expression.
 
-    Captures structural and de Bruijn binding information for
-    alpha-equivalence clustering and incidence graph analysis.
+    Captures structural and de Bruijn binding information for candidate
+    clustering and incidence graph analysis. A finite hash is a search key,
+    not an identity or equivalence certificate.
 -/
 structure ExprFingerprint where
-  /-- Version of the content-preserving canonical fingerprint algorithm. -/
-  algorithmVersion : String := "lean-expr-canonical-v2"
+  /-- Version of the expression-hash algorithm used for this record. -/
+  algorithmVersion : String := "lean-expr-structural-v3"
   /-- Histogram of De Bruijn depths encountered in the expression. -/
   depthHistogram : Array Nat
   /-- Total count of unique sub-expressions (DAG size). -/
@@ -29,21 +35,26 @@ structure ExprFingerprint where
   mvarCount      : Nat
   /-- Simple count of unique syntactic redexes. -/
   redexCount     : Nat
-  /-- Hash of the expression's structural shape. -/
+  /-- Legacy-named 64-bit structural fingerprint; collisions remain possible. -/
   shapeHash      : UInt64
-  /-- SHA-256 of the de Bruijn incidence pattern (computed in post-processing). -/
+  /-- Optional de Bruijn incidence digest; not computed by `computeFingerprint`. -/
   deBruijnIncidenceHash : String := ""
-  /-- Alpha-local hash: structural hash invariant under alpha-renaming. -/
+  /-- Optional alpha-local digest supplied by a separate postprocessor. -/
   alphaLocalHash : String := ""
 deriving ToJson, FromJson, Repr, Inhabited
 
-/-- Efficiently compute the ExprFingerprint for a given expression.
-    Uses an iterative worklist and sharing-aware hashing to avoid timeouts. -/
+/- Compute expression statistics and a constructor-aware 64-bit structural hash.
+
+The hash includes constructor tags, ordered child hashes, and relevant
+constructor payloads. It does not use Lean's cached `Expr.hash`, which is only 32 effective
+bits in the pinned toolchain. `ExprStructEq` ensures that a hash collision does
+not merge distinct nodes in the memo table. The result itself is still a
+finite hash and is only a search key, never an identity certificate. Metadata
+payloads (`Expr.mdata`) are intentionally erased; the constructor and body
+remain represented. -/
 def computeFingerprint (e : Expr) : ExprFingerprint := Id.run do
-  let mut visited : Std.HashSet UInt64 := {}
-  let mut stack : List Expr := [e]
-  
-  let mut h : UInt64 := 0
+  let mut computed : Std.HashMap ExprStructEq UInt64 := {}
+  let mut stack : List (Expr × Bool) := [(e, false)]
   let mut hist : Array Nat := #[]
   let mut nc := 0
   let mut ac := 0
@@ -54,74 +65,83 @@ def computeFingerprint (e : Expr) : ExprFingerprint := Id.run do
   let mut rc := 0
 
   while !stack.isEmpty do
-    let curr := stack.head!
+    let (curr, expanded) := stack.head!
     stack := stack.tail!
-    
-    let eh := curr.hash
-    if visited.contains eh then continue
-    visited := visited.insert eh
-    
+
+    let key : ExprStructEq := ⟨curr⟩
+    if !expanded then
+      if computed.contains key then continue
+      stack := (curr, true) :: stack
+      match curr with
+      | .app f a => stack := (f, false) :: (a, false) :: stack
+      | .lam _ ty body _ => stack := (ty, false) :: (body, false) :: stack
+      | .forallE _ ty body _ => stack := (ty, false) :: (body, false) :: stack
+      | .letE _ ty val body _ =>
+          stack := (ty, false) :: (val, false) :: (body, false) :: stack
+      | .mdata _ body => stack := (body, false) :: stack
+      | .proj _ _ body => stack := (body, false) :: stack
+      | _ => pure ()
+      continue
+
+    if computed.contains key then continue
     nc := nc + 1
-    
+    let childHash := fun child : Expr =>
+      computed.getD (⟨child⟩ : ExprStructEq) 0
+    let mut h := 0
     match curr with
     | .bvar n =>
-        h := mixHash h (hash n)
+        h := mixHash (hash (0 : Nat)) (hash n)
         if n < hist.size then
           hist := hist.modify n (· + 1)
         else
           let extra := Array.replicate (n - hist.size + 1) 0
           hist := (hist ++ extra).modify n (· + 1)
-    | .fvar id =>
-        h := mixHash h (hash (1 : Nat))
-        h := mixHash h (hash id)
+    | .fvar id => h := mixHash (hash (1 : Nat)) (hash id)
     | .mvar id =>
-        h := mixHash h (hash (2 : Nat))
-        h := mixHash h (hash id)
+        h := mixHash (hash (2 : Nat)) (hash id)
         mc := mc + 1
-    | .sort level =>
-        h := mixHash h (hash (3 : Nat))
-        h := mixHash h (hash level)
+    | .sort level => h := mixHash (hash (3 : Nat)) (hash level)
     | .const name levels =>
-        h := mixHash h (hash (4 : Nat))
-        h := mixHash h (hash name)
-        for level in levels do
-          h := mixHash h (hash level)
+        h := mixHash (hash (4 : Nat)) (hash name)
+        h := mixHash h (hash levels)
         cc := cc + 1
     | .app f a =>
-        h := mixHash h (hash (5 : Nat))
+        h := mixHash (hash (5 : Nat)) (childHash f)
+        h := mixHash h (childHash a)
         ac := ac + 1
         if f.isLambda then rc := rc + 1
-        stack := f :: a :: stack
-    | .lam _ ty body binderInfo =>
-        h := mixHash h (hash (6 : Nat))
+    | .lam name ty body binderInfo =>
+        h := mixHash (hash (6 : Nat)) (hash name)
         h := mixHash h (hash binderInfo)
+        h := mixHash h (childHash ty)
+        h := mixHash h (childHash body)
         lc := lc + 1
-        stack := ty :: body :: stack
-    | .forallE _ ty body binderInfo =>
-        h := mixHash h (hash (7 : Nat))
+    | .forallE name ty body binderInfo =>
+        h := mixHash (hash (7 : Nat)) (hash name)
         h := mixHash h (hash binderInfo)
+        h := mixHash h (childHash ty)
+        h := mixHash h (childHash body)
         fc := fc + 1
-        stack := ty :: body :: stack
-    | .letE _ ty val body binderInfo =>
-        h := mixHash h (hash (8 : Nat))
+    | .letE name ty val body binderInfo =>
+        h := mixHash (hash (8 : Nat)) (hash name)
         h := mixHash h (hash binderInfo)
-        stack := ty :: val :: body :: stack
-    | .lit literal =>
-        h := mixHash h (hash (9 : Nat))
-        h := mixHash h (hash literal)
-    | .mdata data body =>
-        h := mixHash h (hash (10 : Nat))
-        h := mixHash h (hash (toString data))
-        stack := body :: stack
+        h := mixHash h (childHash ty)
+        h := mixHash h (childHash val)
+        h := mixHash h (childHash body)
+    | .lit literal => h := mixHash (hash (9 : Nat)) (hash literal)
+    | .mdata _ body =>
+        h := mixHash (hash (10 : Nat)) (childHash body)
     | .proj structureName index body =>
-        h := mixHash h (hash (11 : Nat))
-        h := mixHash h (hash structureName)
+        h := mixHash (hash (11 : Nat)) (hash structureName)
         h := mixHash h (hash index)
-        stack := body :: stack
+        h := mixHash h (childHash body)
+    computed := computed.insert key h
+
+  let rootHash := computed.getD (⟨e⟩ : ExprStructEq) 0
 
   return {
-    algorithmVersion := "lean-expr-canonical-v2"
-    shapeHash      := h
+    algorithmVersion := "lean-expr-structural-v3"
+    shapeHash      := rootHash
     depthHistogram := hist
     nodeCount      := nc
     appCount       := ac

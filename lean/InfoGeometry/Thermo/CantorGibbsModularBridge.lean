@@ -10,6 +10,7 @@ import InfoGeometry.Canonical.CantorLocalCl11HopParity
 import InfoGeometry.Thermo.FiniteDiagonal
 import InfoGeometry.Canonical.AmariBinarySimplexBridge
 import InfoGeometry.Krein.TomitaMatrixAtom
+import InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry
 
 /-!
 # Cantor Gibbs deformation and local modular eigenmodes
@@ -33,8 +34,8 @@ open InfoGeometry.Canonical.SplitCliffordCantorFock
 open InfoGeometry.Canonical.CantorLocalCl11HopParity
 open InfoGeometry.Thermo.FiniteDiagonal
 open InfoGeometry.Canonical.AmariBinarySimplexBridge
-
-abbrev LocalMat := M2R
+open InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry
+open InfoGeometry.Algebra.FiniteSpin
 
 /-- The empty/occupied one-site energies, with the occupied state at ε. -/
 def localEnergy (ε : ℝ) : Fin 2 → ℝ := ![0, ε]
@@ -133,6 +134,22 @@ theorem localWeightMinus_eq_thermalWeightMinus (β ε : ℝ) :
   unfold InfoGeometry.Krein.TomitaMatrixAtom.thermalWeightMinus
   ring
 
+/-- The zero-energy one-site Gibbs weight is the plus-sector probability in
+the chiral thermal model at the same rapidity. -/
+theorem localWeightPlus_eq_chiralThermalProbabilityPlus (β ε : ℝ) :
+    localWeightPlus β ε = chiralThermalProbabilityPlus (β * ε / 2) := by
+  rw [localWeightPlus_eq_thermalWeightPlus,
+    chiralThermalProbabilityPlus_eq_half_add_tanh]
+  rfl
+
+/-- The occupied one-site Gibbs weight is the minus-sector probability in the
+chiral thermal model at the same rapidity. -/
+theorem localWeightMinus_eq_chiralThermalProbabilityMinus (β ε : ℝ) :
+    localWeightMinus β ε = chiralThermalProbabilityMinus (β * ε / 2) := by
+  rw [localWeightMinus_eq_thermalWeightMinus,
+    chiralThermalProbabilityMinus_eq_half_sub_tanh]
+  rfl
+
 /-- The one-site Gibbs variance is the binary Fisher susceptibility at the
 thermal polarization coordinate. -/
 theorem localWeight_variance_eq_thermal_susceptibility (β ε : ℝ) :
@@ -143,6 +160,45 @@ theorem localWeight_variance_eq_thermal_susceptibility (β ε : ℝ) :
   unfold InfoGeometry.Krein.TomitaMatrixAtom.thermalWeightPlus
     InfoGeometry.Krein.TomitaMatrixAtom.thermalWeightMinus
   ring
+
+/-- The one-site Gibbs density matrix is the existing two-sector Krein
+thermal polarization at contrast `tanh (β ε / 2)`. -/
+theorem localGibbsDensity_eq_thermalPolarization (β ε : ℝ) :
+    FiniteDiagonal.gibbsDensity (localEnergy ε) β =
+      InfoGeometry.Krein.TomitaMatrixAtom.thermalPolarization
+        (Real.tanh (β * ε / 2)) := by
+  ext i j
+  fin_cases i <;> fin_cases j
+  · convert localWeightPlus_eq_thermalWeightPlus β ε using 1 <;>
+      simp [FiniteDiagonal.gibbsDensity, localWeightPlus, localEnergy,
+        InfoGeometry.Krein.TomitaMatrixAtom.thermalPolarization,
+        InfoGeometry.Krein.TomitaMatrixAtom.eps,
+        InfoGeometry.Krein.TomitaMatrixAtom.thermalWeightPlus] <;> ring
+  · simp [FiniteDiagonal.gibbsDensity,
+      InfoGeometry.Krein.TomitaMatrixAtom.thermalPolarization,
+      InfoGeometry.Krein.TomitaMatrixAtom.eps]
+  · simp [FiniteDiagonal.gibbsDensity,
+      InfoGeometry.Krein.TomitaMatrixAtom.thermalPolarization,
+      InfoGeometry.Krein.TomitaMatrixAtom.eps]
+  · convert localWeightMinus_eq_thermalWeightMinus β ε using 1 <;>
+      simp [FiniteDiagonal.gibbsDensity, localWeightMinus, localEnergy,
+        InfoGeometry.Krein.TomitaMatrixAtom.thermalPolarization,
+        InfoGeometry.Krein.TomitaMatrixAtom.eps,
+        InfoGeometry.Krein.TomitaMatrixAtom.thermalWeightMinus] <;> ring
+
+/-- The negative logarithm of the finite Gibbs density is the log-partition
+scalar plus the occupied-sector energy. This is an identity for the existing
+diagonal matrix logarithm, not a functional-calculus claim. -/
+theorem localSurprisalOp_eq_logPartition_add_occupiedEnergy (β ε : ℝ) :
+    -FiniteDiagonal.logDensityOp (localEnergy ε) β =
+      Real.log (FiniteDiagonal.partition (localEnergy ε) β) • (1 : Mat2R) +
+        (β * ε) • localMinusProjection := by
+  rw [localMinusProjection_eq_localOccupiedProjection]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [FiniteDiagonal.logDensityOp, FiniteDiagonal.logDensityEntry,
+      localEnergy, localOccupiedProjection, a_op, aDag_op,
+      Matrix.smul_apply, Matrix.add_apply]
 
 /-- The one-site Gibbs fluctuation is the squared coherence of the native
 finite covariance/Majorana block at the same logistic coordinate. -/
@@ -170,7 +226,7 @@ theorem localWeight_transport (β ε : ℝ) :
     norm_num [localEnergy]
 
 /-- The real finite-dimensional modular shift at one site. -/
-noncomputable def localModularShift (ε t : ℝ) (A : LocalMat) : LocalMat :=
+noncomputable def localModularShift (ε t : ℝ) (A : Mat2R) : Mat2R :=
   modularShift (localEnergy ε) t A
 
 theorem localModularShift_plus_fixed (ε t : ℝ) :
@@ -209,11 +265,11 @@ theorem localModularShift_creation_eigenmode (ε t : ℝ) :
     simp [modularShift, localEnergy, aDag_op, Matrix.smul_apply,
       Matrix.mul_apply, Fin.sum_univ_two]
 
-theorem localModularShift_zero (ε : ℝ) (A : LocalMat) :
+theorem localModularShift_zero (ε : ℝ) (A : Mat2R) :
     localModularShift ε 0 A = A := by
   exact modularShift_zero (H := localEnergy ε) A
 
-theorem localModularShift_add (ε s t : ℝ) (A : LocalMat) :
+theorem localModularShift_add (ε s t : ℝ) (A : Mat2R) :
     localModularShift ε (s + t) A =
       localModularShift ε s (localModularShift ε t A) := by
   exact modularShift_add (H := localEnergy ε) s t A

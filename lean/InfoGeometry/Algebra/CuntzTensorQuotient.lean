@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.TensorAlgebra.Basic
@@ -211,6 +216,99 @@ theorem cuntz_isometry (n : ℕ) (i : Fin n) :
 theorem cuntz_distinct_orthogonal (n : ℕ) {i j : Fin n} (hij : i ≠ j) :
     cuntzSdag n i * cuntzS n j = 0 := by
   simpa [hij] using cuntz_orthogonality n i j
+
+/-! ## Algebraic universal property -/
+
+variable {A : Type*} [Semiring A] [Algebra ℂ A]
+
+/-- Evaluate the free Cuntz generators at a proposed pair of families. -/
+def evalGen (n : ℕ) (s t : Fin n → A) : CuntzFree n →ₗ[ℂ] A :=
+  Finsupp.linearCombination ℂ (fun g : CuntzGen n =>
+    match g with
+    | (i, false) => s i
+    | (i, true) => t i)
+
+/-- The tensor-algebra evaluation respects both defining Cuntz relations. -/
+theorem liftCondition (n : ℕ) (s t : Fin n → A)
+    (h_orth : ∀ i j, t i * s j = if i = j then 1 else 0)
+    (h_partition : (∑ i : Fin n, s i * t i) = 1) :
+    ∀ ⦃x y : CuntzTensor n⦄, CuntzRel n x y →
+      (TensorAlgebra.lift ℂ (evalGen n s t)) x =
+        (TensorAlgebra.lift ℂ (evalGen n s t)) y := by
+  intro x y h
+  cases h with
+  | orth i j =>
+      simp [Sdag, S, gen, evalGen, h_orth]
+  | ranges_sum_one =>
+      simpa [Sdag, S, gen, evalGen] using h_partition
+
+/-- Every algebraic Cuntz family satisfying the defining relations receives
+an algebra homomorphism from the tensor-algebra quotient. -/
+def lift (n : ℕ) (s t : Fin n → A)
+    (h_orth : ∀ i j, t i * s j = if i = j then 1 else 0)
+    (h_partition : (∑ i : Fin n, s i * t i) = 1) :
+    CuntzAlg n →ₐ[ℂ] A :=
+  RingQuot.liftAlgHom ℂ
+    ⟨TensorAlgebra.lift ℂ (evalGen n s t), liftCondition n s t h_orth h_partition⟩
+
+/-- The quotient lift sends each isometry generator to its prescribed image. -/
+@[simp] theorem lift_cuntzS (n : ℕ) (s t : Fin n → A)
+    (h_orth : ∀ i j, t i * s j = if i = j then 1 else 0)
+    (h_partition : (∑ i : Fin n, s i * t i) = 1) (i : Fin n) :
+    lift n s t h_orth h_partition (cuntzS n i) = s i := by
+  change (RingQuot.liftAlgHom ℂ
+      ⟨TensorAlgebra.lift ℂ (evalGen n s t),
+        liftCondition n s t h_orth h_partition⟩)
+      ((RingQuot.mkAlgHom ℂ (CuntzRel n)) (S n i)) = s i
+  rw [RingQuot.liftAlgHom_mkAlgHom_apply]
+  simp [S, gen, evalGen]
+
+/-- The quotient lift sends each formal adjoint generator to its prescribed
+image. -/
+@[simp] theorem lift_cuntzSdag (n : ℕ) (s t : Fin n → A)
+    (h_orth : ∀ i j, t i * s j = if i = j then 1 else 0)
+    (h_partition : (∑ i : Fin n, s i * t i) = 1) (i : Fin n) :
+    lift n s t h_orth h_partition (cuntzSdag n i) = t i := by
+  change (RingQuot.liftAlgHom ℂ
+      ⟨TensorAlgebra.lift ℂ (evalGen n s t),
+        liftCondition n s t h_orth h_partition⟩)
+      ((RingQuot.mkAlgHom ℂ (CuntzRel n)) (Sdag n i)) = t i
+  rw [RingQuot.liftAlgHom_mkAlgHom_apply]
+  simp [Sdag, gen, evalGen]
+
+/-- Any algebra homomorphism with the same generator images is the descended
+map. This is the uniqueness half of the algebraic universal property. -/
+theorem lift_unique (n : ℕ) (s t : Fin n → A)
+    (h_orth : ∀ i j, t i * s j = if i = j then 1 else 0)
+    (h_partition : (∑ i : Fin n, s i * t i) = 1)
+    (f : CuntzAlg n →ₐ[ℂ] A)
+    (hs : ∀ i, f (cuntzS n i) = s i)
+    (ht : ∀ i, f (cuntzSdag n i) = t i) :
+    f = lift n s t h_orth h_partition := by
+  apply RingQuot.ringQuot_ext'
+  apply TensorAlgebra.hom_ext
+  apply Finsupp.lhom_ext
+  intro a c
+  rcases a with ⟨i, b⟩
+  cases b
+  · have hsingle : Finsupp.single (i, false) c =
+        c • Finsupp.single (i, false) (1 : ℂ) := by
+      ext g
+      simp
+    rw [hsingle]
+    simp only [map_smul, LinearMap.comp_apply]
+    change c • f (cuntzS n i) =
+      c • lift n s t h_orth h_partition (cuntzS n i)
+    rw [hs i, lift_cuntzS]
+  · have hsingle : Finsupp.single (i, true) c =
+        c • Finsupp.single (i, true) (1 : ℂ) := by
+      ext g
+      simp
+    rw [hsingle]
+    simp only [map_smul, LinearMap.comp_apply]
+    change c • f (cuntzSdag n i) =
+      c • lift n s t h_orth h_partition (cuntzSdag n i)
+    rw [ht i, lift_cuntzSdag]
 
 /-! ## Dagger descends through the Cuntz relations -/
 

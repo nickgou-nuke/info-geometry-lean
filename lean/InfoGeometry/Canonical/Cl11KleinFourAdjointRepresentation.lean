@@ -1,4 +1,10 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Clifford.Cl11Matrix
+import InfoGeometry.Clifford.Cl11CliffordMapIsometryBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.KleinFourTagRootNormalization
 
@@ -40,6 +46,35 @@ theorem adjointAlgEquiv_apply (u : Mat2ˣ) (A : Mat2) :
 theorem gammaUnit_value : (gammaUnit : Mat2) = Eplus := by rfl
 theorem bivectorUnit_value : (bivectorUnit : Mat2) = J1 := by rfl
 theorem causalUnit_value : (causalUnit : Mat2) = Eminus := by rfl
+
+/-- The Clifford lift of the negative-coordinate reflection is the matrix
+adjoint action of the positive Clifford generator in the canonical
+`Cl(1,1) ≃ M₂(ℝ)` representation. The identification with the Klein glide
+derivative is supplied separately by the topology-to-Clifford owner. -/
+theorem cl11EquivMat_splitReflectionCliffordAuto (a : CliffordAlgebra q11) :
+    cl11EquivMat (splitReflectionCliffordAuto a) =
+      adjointAlgEquiv gammaUnit (cl11EquivMat a) := by
+  have hmaps :
+      cl11EquivMat.toAlgHom.comp splitReflectionCliffordAuto.toAlgHom =
+        (adjointAlgEquiv gammaUnit).toAlgHom.comp cl11EquivMat.toAlgHom := by
+    apply CliffordAlgebra.hom_ext
+    apply LinearMap.ext
+    intro v
+    rcases v with ⟨x, y⟩
+    have hginv : (↑(gammaUnit⁻¹) : Mat2) = Eplus := by rfl
+    dsimp only [LinearMap.comp_apply, AlgHom.toLinearMap_apply,
+      AlgHom.comp_apply]
+    change cl11EquivMat (splitReflectionCliffordAuto
+        (CliffordAlgebra.ι q11 (x, y))) =
+      adjointAlgEquiv gammaUnit
+        (cl11EquivMat (CliffordAlgebra.ι q11 (x, y)))
+    rw [splitReflectionCliffordAuto_ι, adjointAlgEquiv_apply,
+      gammaUnit_value, hginv]
+    simp only [cl11EquivMat, cl11ToMat, gen, splitReflection]
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [Eplus, Eminus, Matrix.mul_apply, Fin.sum_univ_two]
+  exact DFunLike.congr_fun hmaps a
 
 theorem gammaUnit_sq : gammaUnit * gammaUnit = (1 : Mat2ˣ) := by
   apply Units.ext

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Algebra.Opposite
@@ -194,6 +199,41 @@ theorem lift_T (s t : ι → A)
         (T₀ (R := R) i)
     _ = t i := by
       simp [T₀]
+
+/-- The algebra homomorphism descended from a Cuntz family is unique once its
+values on the quotient generators are fixed. -/
+theorem lift_unique (s t : ι → A)
+    (h_ortho : ∀ i j, t i * s j = if i = j then 1 else 0)
+    (h_partition : (∑ i : ι, s i * t i) = 1)
+    (f : CuntzAlg R ι →ₐ[R] A)
+    (hS : ∀ i, f (S (R := R) i) = s i)
+    (hT : ∀ i, f (T (R := R) i) = t i) :
+    f = lift (R := R) s t h_ortho h_partition := by
+  apply RingQuot.ringQuot_ext'
+  apply TensorAlgebra.hom_ext
+  apply Finsupp.lhom_ext
+  intro a c
+  cases a with
+  | s i =>
+      have hsingle : Finsupp.single (CuntzLetter.s i) c =
+          c • Finsupp.single (CuntzLetter.s i) (1 : R) := by
+        ext a
+        simp
+      rw [hsingle]
+      simp only [LinearMap.comp_apply, map_smul]
+      change c • f (S (R := R) i) =
+        c • lift (R := R) s t h_ortho h_partition (S (R := R) i)
+      rw [hS i, lift_S]
+  | t i =>
+      have hsingle : Finsupp.single (CuntzLetter.t i) c =
+          c • Finsupp.single (CuntzLetter.t i) (1 : R) := by
+        ext a
+        simp
+      rw [hsingle]
+      simp only [LinearMap.comp_apply, map_smul]
+      change c • f (T (R := R) i) =
+        c • lift (R := R) s t h_ortho h_partition (T (R := R) i)
+      rw [hT i, lift_T]
 
 section Star
 

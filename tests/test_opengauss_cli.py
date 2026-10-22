@@ -78,13 +78,20 @@ def test_command_2_check():
     assert not res_bad.consistent
     assert res_bad.counterexample_risk == "HIGH"
 
-    # Krein space positive-definite signature clash (Trap T13)
+    # Positive definiteness of the Krein form is a signature clash (Trap T13).
     res_krein = check_consistency(
-        expression="KreinSpace V ∧ PositiveDefinite (inner : V → V → ℝ)",
+        expression="PositiveDefinite (KreinSpace.kreinInner : V → V → ℝ)",
     )
     assert not res_krein.consistent
     assert res_krein.counterexample_risk == "HIGH"
     assert any("Trap T13" in w for w in res_krein.warnings)
+
+    # The auxiliary Hilbert inner product used as a Krein majorant is positive.
+    res_majorant = check_consistency(
+        expression="KreinSpace V ∧ InnerProductSpace ℝ V",
+    )
+    assert res_majorant.consistent
+    assert res_majorant.counterexample_risk == "NONE"
 
     # Clean statement
     res_clean = check_consistency(

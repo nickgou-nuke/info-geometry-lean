@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Star.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Ring.Basic
@@ -95,5 +100,47 @@ theorem matrixUnit_mul (c : CuntzIsometries n A) (α β γ δ : List (Fin n))
       _ = wordS c α * (wordSStar c β * wordS c γ) * wordSStar c δ := by simp [mul_assoc]
       _ = wordS c α * 0 * wordSStar c δ := by rw [word_reduction_ne_of_length c β γ hlen h_eq]
       _ = 0 := by rw [mul_zero, zero_mul]
+
+/-- Unrestricted matrix-unit multiplication is governed by prefix cancellation,
+not by a Kronecker delta on equal-length words. -/
+theorem matrixUnit_mul_prefix_cases
+    (c : CuntzIsometries n A) (α β γ δ : List (Fin n)) :
+    (∃ t, γ = β ++ t ∧
+      matrixUnit c α β * matrixUnit c γ δ =
+        matrixUnit c (α ++ t) δ) ∨
+    (∃ t, β = γ ++ t ∧
+      matrixUnit c α β * matrixUnit c γ δ =
+        matrixUnit c α (δ ++ t)) ∨
+    ((¬ ∃ t, γ = β ++ t) ∧ (¬ ∃ t, β = γ ++ t) ∧
+      matrixUnit c α β * matrixUnit c γ δ = 0) := by
+  have hfactor :
+      matrixUnit c α β * matrixUnit c γ δ =
+        wordS c α * (wordSStar c β * wordS c γ) * wordSStar c δ := by
+    simp [matrixUnit, mul_assoc]
+  rcases word_reduction_prefix_cases c β γ with hright | hleft | hzero
+  · rcases hright with ⟨t, hγ, hred⟩
+    left
+    refine ⟨t, hγ, ?_⟩
+    calc
+      matrixUnit c α β * matrixUnit c γ δ =
+          wordS c α * (wordSStar c β * wordS c γ) * wordSStar c δ := hfactor
+      _ = wordS c α * wordS c t * wordSStar c δ := by rw [hred]
+      _ = matrixUnit c (α ++ t) δ := by
+        rw [← wordS_append]
+        rfl
+  · rcases hleft with ⟨t, hβ, hred⟩
+    right
+    left
+    refine ⟨t, hβ, ?_⟩
+    calc
+      matrixUnit c α β * matrixUnit c γ δ =
+          wordS c α * (wordSStar c β * wordS c γ) * wordSStar c δ := hfactor
+      _ = wordS c α * wordSStar c t * wordSStar c δ := by rw [hred]
+      _ = matrixUnit c α (δ ++ t) := by
+        rw [mul_assoc, ← wordSStar_append]
+        rfl
+  · right
+    right
+    exact ⟨hzero.1, hzero.2.1, hfactor.trans (by rw [hzero.2.2]; simp)⟩
 
 end CuntzAlgebra

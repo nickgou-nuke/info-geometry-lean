@@ -6,10 +6,12 @@ This HOWTO is grounded against the live repository implementation, not against
 prose memory of the toolchain.  The authoritative implementation surfaces are:
 
 - `lean/DAG/Indexer.lean`: emits `DeclNode` / `StreamDecl` records with
-  `typeFingerprint`, `valueFingerprint`, and `shapeHash`, plus stream edges
+  `typeFingerprint`, `valueFingerprint`, `shapeHash`, and the explicit
+  `canonicalTypeHash` / `canonicalValueHash` / `dagShapeHash` fields, plus edges
   with `src`, `dst`, and `kind`.
 - `lean/DAG/ExprFingerprint.lean`: defines `ExprFingerprint` and
-  `computeFingerprint`; `shapeHash` is a `UInt64` field inside this structure.
+  `computeFingerprint`; `shapeHash` is a legacy-named `UInt64` search field
+  whose meaning is versioned by `algorithmVersion`.
 - `lean/DAG/SearchByHash.lean`: native Lean-side hash search over imported
   modules.
 - `tools/infra/refresh_decl_graph.py`: supports `--stream`, `--arango-db`,
@@ -56,7 +58,9 @@ The streaming declaration records preserve `edge_kind:<kind>` in `attrs`.
 `edge_kind`/`edge_kinds` and onto dependency edges as
 `semantic_kind`/`semantic_kinds`, while retaining AST/value/shape hashes.
 Thus AQL/hash queries can filter semantic role and still resolve the owner by
-`valueFingerprint.shapeHash`; Lean source and kernel checking remain authority.
+`canonicalValueHash` together with the nested fingerprint's `algorithmVersion`;
+Lean source and kernel checking remain authority. The legacy `shapeHash` field
+name is not a declaration identity.
 
 ## Authoritative causal-cone graph path
 
@@ -64,7 +68,28 @@ The compiler-backed declaration graph is the primary graph authority for causal-
 
 - `decls`: Lean declaration vertices emitted by the current declaration stream;
 - `edges`: typed declaration dependency edges emitted by the same stream;
-- `valueFingerprint.shapeHash`: AST/value structural hash carried by each declaration vertex.
+- `canonicalTypeHash` / `canonicalValueHash`: versioned 64-bit structural
+  fingerprints; matches are candidates, not identity or proof.
+- `dagShapeHash`: deliberately coarse mapped-template fingerprint; use only to
+  locate broad candidates. It erases constant names/universe levels, free- and
+  metavariable IDs, literal payloads, and sort levels, and maps every bound
+  variable index to zero. It preserves binder names/annotations and projection
+  names/indices; `Expr.mdata` payloads are ignored by the hash. It is not
+  alpha-invariant.
+
+The current declaration fingerprint versions are `lean-expr-structural-v3`
+for structural expression fingerprints (with metadata payloads erased) and `lean-expr-shape-v2` for
+the deliberately coarse mapped template. The structural hash is computed
+bottom-up from constructor tags, ordered child hashes, and relevant payloads;
+it intentionally erases `Expr.mdata` payloads. The memo table uses Lean
+structural expression equality. It is a 64-bit candidate key and collisions
+remain possible. Lean's `ToJson UInt64` encodes these values as decimal JSON
+strings, and the declaration-graph importer parses and forwards those strings;
+this avoids JSON/Arango double-precision loss. The old `ExprFingerprint.shapeHash`
+member is retained for serialized compatibility, but `canonicalTypeHash` and
+`canonicalValueHash` are the preferred AQL fields. Existing Arango rows are not
+updated by a source change: filter by `algorithmVersion`, and refresh only via
+the separately authorized generation/refresh procedure.
 
 `tools/infra/arango_causal_chiral_cone_prompt.py` resolves declarations from
 `decls` first and traverses `edges` directly. It uses `raw_info_nodes` and SCC
@@ -104,7 +129,7 @@ prerequisites and missing connecting declarations.
 
 ## Strict execution order: source search, read-only query, optional refresh
 
-For ASTAQLHASH clone or sorry-equivalence work, freshness matters, but a graph
+For ASTAQLHASH clone or hash-candidate investigation, freshness matters, but a graph
 refresh is destructive and is not a prerequisite for beginning investigation.
 Run the stages in this order and stop when a prerequisite fails:
 
@@ -178,28 +203,36 @@ python3 tools/infra/refresh_decl_graph.py \\
   --arango-db infogeometry
 ```
 
-Canonical AQL wrapper query for candidate sorry-equivalence classes:
+Canonical AQL wrapper query for declarations with matching candidate value
+fingerprints (not equivalence classes):
 
 ```bash
 python3 tools/infra/arango_causal_memory.py query '
 FOR d IN decls
   FILTER d.valueFingerprint != null
+  FILTER d.valueFingerprint.algorithmVersion == "lean-expr-structural-v3"
   FILTER d.name LIKE "%sorry%"
       OR d.name LIKE "%_True%"
       OR d.name LIKE "%_certificate%"
       OR d.name LIKE "%_witness%"
-  COLLECT hash = d.valueFingerprint.shapeHash INTO members
+  COLLECT hash = d.canonicalValueHash INTO targets
   FILTER hash != null
   RETURN {
-    valueShapeHash: hash,
-    declarations: members[*].d.name
+    canonicalValueHash: hash,
+    targetDeclarations: targets[*].d.name,
+    matchingDeclarations: (
+      FOR peer IN decls
+        FILTER peer.valueFingerprint != null
+        FILTER peer.valueFingerprint.algorithmVersion == "lean-expr-structural-v3"
+        FILTER peer.canonicalValueHash == hash
+        RETURN peer.name
+    )
   }
 '
 ```
 
-The returned classes are navigation evidence only. A class is not a proof of
-vacuity, equivalence, or unsoundness until the cited owner declarations are
-read and kernel-audited.
+The returned groups are navigation candidates only. A hash match is not proof
+of structural identity, theorem equivalence, vacuity, or unsoundness.
 
 ### Append-only generation mode
 
@@ -388,7 +421,8 @@ db = client.db(arango_database(), username=arango_username(), password=arango_pa
 # structural identity. Inspect the JSON type emitted by this graph generation.
 q = '''
 FOR d IN decls
-  COLLECT hash = d.shapeHash.shapeHash WITH COUNT INTO c
+  FILTER d.shapeHash.algorithmVersion == "lean-expr-shape-v2"
+  COLLECT hash = d.dagShapeHash WITH COUNT INTO c
   FILTER c > 1
   SORT c DESC
   LIMIT 20
@@ -402,7 +436,8 @@ for row in db.aql.execute(q):
 target_hash = "<hash returned by the query>"
 q2 = '''
 FOR d IN decls
-  FILTER d.shapeHash.shapeHash == @targetHash
+  FILTER d.shapeHash.algorithmVersion == "lean-expr-shape-v2"
+  FILTER d.dagShapeHash == @targetHash
   RETURN {{name: d.name, kind: d.kind, module: d.module, attrs: d.attrs}}
 '''
 for doc in db.aql.execute(q2, bind_vars={"targetHash": target_hash}):
@@ -417,7 +452,8 @@ for doc in db.aql.execute(q2, bind_vars={"targetHash": target_hash}):
 q = '''
 FOR d IN decls
   FILTER d.valueFingerprint != null
-  COLLECT hash = d.valueFingerprint.shapeHash WITH COUNT INTO c
+  FILTER d.valueFingerprint.algorithmVersion == "lean-expr-structural-v3"
+  COLLECT hash = d.canonicalValueHash WITH COUNT INTO c
   FILTER c > 1
   SORT c DESC
   LIMIT 20
@@ -431,7 +467,8 @@ target_value_hash = "<hash returned by the query>"
 q2 = '''
 FOR d IN decls
   FILTER d.valueFingerprint != null
-  FILTER d.valueFingerprint.shapeHash == @targetHash
+  FILTER d.valueFingerprint.algorithmVersion == "lean-expr-structural-v3"
+  FILTER d.canonicalValueHash == @targetHash
   RETURN {name: d.name, kind: d.kind, module: d.module, attrs: d.attrs}
 '''
 for doc in db.aql.execute(q2, bind_vars={"targetHash": target_value_hash}):
@@ -639,7 +676,8 @@ print(f"Edges: {db.collection('edges').count()}")
 print("\n=== TOP 10 COARSE SHAPE-FINGERPRINT GROUPS (CANDIDATES) ===")
 for row in db.aql.execute('''
   FOR d IN decls
-    COLLECT hash = d.shapeHash.shapeHash WITH COUNT INTO c
+    FILTER d.shapeHash.algorithmVersion == "lean-expr-shape-v2"
+    COLLECT hash = d.dagShapeHash WITH COUNT INTO c
     FILTER c > 1
     SORT c DESC
     LIMIT 10
@@ -651,7 +689,8 @@ print("\n=== TOP 10 VALUE-FINGERPRINT GROUPS (CANDIDATES) ===")
 for row in db.aql.execute('''
   FOR d IN decls
     FILTER d.valueFingerprint != null
-    COLLECT hash = d.valueFingerprint.shapeHash WITH COUNT INTO c
+    FILTER d.valueFingerprint.algorithmVersion == "lean-expr-structural-v3"
+    COLLECT hash = d.canonicalValueHash WITH COUNT INTO c
     FILTER c > 1
     SORT c DESC
     LIMIT 10
@@ -752,8 +791,8 @@ jobs:
 
 | Search Type | AQL Pattern |
 |-------------|-------------|
-| ShapeHash equivalence | `COLLECT hash = d.shapeHash.shapeHash WITH COUNT INTO c` |
-| ValueFingerprint equivalence | `COLLECT hash = d.valueFingerprint.shapeHash WITH COUNT INTO c` |
+| Coarse shape candidate group | `COLLECT hash = d.dagShapeHash WITH COUNT INTO c` |
+| Structural value-hash candidate group | `COLLECT hash = d.canonicalValueHash WITH COUNT INTO c` |
 | Attribute filter | `FILTER d.attrs != [] AND POSITION(d.attrs, "tag") != null` |
 | Module filter | `FILTER d.module == "InfoGeometry.Core"` |
 | Kind filter | `FILTER d.kind == "theorem"` |
@@ -761,7 +800,7 @@ jobs:
 | Edge traversal (callees) | `FOR e IN edges FILTER e._from == "decls/key" LET dst = DOCUMENT(e._to) RETURN dst` |
 | Edge validation | `LET from_doc = DOCUMENT(e._from) LET to_doc = DOCUMENT(e._to) FILTER from_doc != null AND to_doc != null` |
 | Document lookup | `DOCUMENT("decls/key")` |
-| ShapeHash filter | `FILTER d.shapeHash.shapeHash == "3892707284033108221"` |
+| Legacy shape-hash filter | `FILTER d.shapeHash.shapeHash == "3892707284033108221"` (coarse; inspect algorithmVersion) |
 
 ---
 
@@ -828,8 +867,9 @@ python3 tools/infra/check_hollow_theorems.py
 Note that `axiom_audit.py` counts `sorry`/`admit`/`axiom` **declarations**. It does
 not detect the separate failure mode where a theorem is stated as a field of a
 `structure` and then "proved" by `rw [thatField]` — that is an assumption, not a gap,
-and it is invisible to a token count. For that, group by
-`valueFingerprint.shapeHash` per the strict execution order above and read the owner
+and it is invisible to a token count. For that, query matching
+`canonicalValueHash` values only within one `algorithmVersion` per the strict
+execution order above, then read each owner
 files.
 
 ### Historical record (2026-07-04 checkout)

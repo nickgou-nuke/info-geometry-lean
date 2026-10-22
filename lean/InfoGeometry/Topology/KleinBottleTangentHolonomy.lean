@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Topology.KleinBrillouinBase
 import Mathlib.Analysis.Calculus.FDeriv.Basic
 import Mathlib.Analysis.Calculus.FDeriv.Prod
@@ -9,7 +15,9 @@ import Mathlib.LinearAlgebra.Determinant
 import Mathlib.LinearAlgebra.Matrix.ToLin
 import Mathlib.Data.Matrix.Basic
 import InfoGeometry.Topology.KleinBottleExteriorOrientationBridge
+import InfoGeometry.Topology.KleinBottleOrbitQuotient
 import InfoGeometry.Canonical.MasterSplitCayleyDicksonKleinDiracBridge
+import InfoGeometry.Superalgebra.SplitOctonionTwistedParityElement
 
 /-!
 # Genuine Tangent Holonomy of the Klein Bottle
@@ -25,6 +33,7 @@ asserting a smooth quotient-manifold structure.
 -/
 
 open KleinBrillouinBase
+open KleinBottleOrbitQuotient
 open InfoGeometry.Topology.KleinBottleExteriorOrientationBridge
 open InfoGeometry.Canonical.MasterSplitCayleyDicksonKleinDirac
 
@@ -135,6 +144,197 @@ theorem glideTangent_conjugate_exterior (f : Fin 2 → ℝ) :
       dotProduct, glideLinear,
       InfoGeometry.Topology.KleinQuotientDeckInvariants.deckB_diff,
       Matrix.mulVecLin]
+
+/-! ## The lifted glide action on the existing split-octonion parity family -/
+
+open InfoGeometry.Superalgebra.MadelungNonassociativeVortex
+open InfoGeometry.Superalgebra.WittenMoebiusParity
+
+/-- The existing Witten--Möbius parity family evaluated along the actual
+universal-cover coordinate used by the Klein glide. -/
+def glideParityReadout (u v : ColorVec3 ℝ) (k : Cover) : SplitOctonion ℝ :=
+  parityElement (Real.cos k.1) (Real.sin k.1) u v
+
+/-- The affine Klein glide acts on this readout by the central sign of the
+split-octonion carrier. -/
+theorem glideParityReadout_antipodal (u v : ColorVec3 ℝ) (k : Cover) :
+    glideParityReadout u v (glide k) =
+      SplitOctonion.scale (-1) (glideParityReadout u v k) := by
+  simpa [glideParityReadout, glide] using
+    parityElement_antiperiodic k.1 u v
+
+/-- The projective class of the parity readout is invariant under the actual
+affine Klein glide. -/
+def glideParityReadoutProjective (u v : ColorVec3 ℝ) (k : Cover) :
+    Quotient parityProjectiveSetoid :=
+  Quotient.mk' (s := parityProjectiveSetoid) (glideParityReadout u v k)
+
+theorem glideParityReadoutProjective_invariant (u v : ColorVec3 ℝ)
+    (k : Cover) :
+    glideParityReadoutProjective u v (glide k) =
+      glideParityReadoutProjective u v k := by
+  simpa [glideParityReadoutProjective, glideParityReadout, glide] using
+    parityElement_projective_pi_periodic k.1 u v
+
+/-! ## Descent to the actual torus orbit quotient
+
+The cover-level invariance above can be strengthened to an actual map out of
+the orbit quotient. First the projective parity readout is descended through
+the `2π` circle coordinate, then its `π`-periodicity makes it invariant under
+the torus glide.
+-/
+
+local instance : Fact (0 < 2 * Real.pi) := ⟨by positivity⟩
+
+/-- Projective parity at a real angular coordinate. -/
+private def projectiveParityAngle (u v : ColorVec3 ℝ) (θ : ℝ) :
+    Quotient parityProjectiveSetoid :=
+  Quotient.mk' (s := parityProjectiveSetoid)
+    (parityElement (Real.cos θ) (Real.sin θ) u v)
+
+/-- The projective parity angle has period `π`, using the sign identification
+already defining `parityProjectiveSetoid`. -/
+private theorem projectiveParityAngle_add_pi (u v : ColorVec3 ℝ) (θ : ℝ) :
+    projectiveParityAngle u v (θ + Real.pi) = projectiveParityAngle u v θ := by
+  exact parityElement_projective_pi_periodic θ u v
+
+/-- The parity angle descends from the real line to the momentum circle. -/
+noncomputable def projectiveParityOnMomentumCircle (u v : ColorVec3 ℝ)
+    (θ : MomentumCircle) : Quotient parityProjectiveSetoid :=
+  AddCircle.liftIco (2 * Real.pi) 0 (projectiveParityAngle u v) θ
+
+private theorem projectiveParityOnMomentumCircle_coe
+    (u v : ColorVec3 ℝ) {θ : ℝ}
+    (hθ : θ ∈ Set.Ico (0 : ℝ) (2 * Real.pi)) :
+    projectiveParityOnMomentumCircle u v θ = projectiveParityAngle u v θ := by
+  exact AddCircle.liftIco_zero_coe_apply hθ
+
+/-- Readback of the circle descent at every real lift. Periodicity of sine
+and cosine by integer multiples of `2π` makes this independent of the chosen
+representative in `[0, 2π)`. -/
+theorem projectiveParityOnMomentumCircle_coe_any
+    (u v : ColorVec3 ℝ) (θ : ℝ) :
+    projectiveParityOnMomentumCircle u v θ = projectiveParityAngle u v θ := by
+  let r : ℝ := (AddCircle.equivIco (2 * Real.pi) 0
+    (θ : MomentumCircle)).1
+  have hr : r ∈ Set.Ico (0 : ℝ) (2 * Real.pi) := by
+    simpa [r] using
+      (AddCircle.equivIco (2 * Real.pi) 0
+        (θ : MomentumCircle)).2
+  have hrθ : (r : MomentumCircle) = (θ : MomentumCircle) :=
+    AddCircle.coe_equivIco
+  have hperiodic : ((θ - r : ℝ) : MomentumCircle) = 0 := by
+    rw [AddCircle.coe_sub, ← hrθ]
+    simp
+  obtain ⟨n, hn⟩ := (AddCircle.coe_eq_zero_iff (p := 2 * Real.pi)).mp hperiodic
+  have hn' : (n : ℝ) * (2 * Real.pi) = θ - r := by
+    simpa only [zsmul_eq_mul] using hn
+  have hθ : θ = r + n * (2 * Real.pi) := by
+    linarith
+  rw [← hrθ, projectiveParityOnMomentumCircle_coe u v hr]
+  change projectiveParityAngle u v r = projectiveParityAngle u v θ
+  rw [hθ]
+  unfold projectiveParityAngle
+  rw [Real.cos_add_int_mul_two_pi, Real.sin_add_int_mul_two_pi]
+
+/-- Adding the half-period leaves the circle-valued projective readout
+unchanged. The proof compares canonical representatives in `[0, 2π)` and
+uses the actual `π`-periodicity of the projective parity class. -/
+theorem projectiveParityOnMomentumCircle_add_pi (u v : ColorVec3 ℝ)
+    (θ : MomentumCircle) :
+    projectiveParityOnMomentumCircle u v (θ + (Real.pi : MomentumCircle)) =
+      projectiveParityOnMomentumCircle u v θ := by
+  let r : ℝ := (AddCircle.equivIco (2 * Real.pi) 0 θ).1
+  let s : ℝ := (AddCircle.equivIco (2 * Real.pi) 0
+    (θ + (Real.pi : MomentumCircle))).1
+  have hr : r ∈ Set.Ico (0 : ℝ) (2 * Real.pi) := by
+    simpa [r] using (AddCircle.equivIco (2 * Real.pi) 0 θ).2
+  have hs : s ∈ Set.Ico (0 : ℝ) (2 * Real.pi) := by
+    simpa [s] using
+      (AddCircle.equivIco (2 * Real.pi) 0
+        (θ + (Real.pi : MomentumCircle))).2
+  have hrθ : (r : MomentumCircle) = θ := AddCircle.coe_equivIco
+  have hsθ : (s : MomentumCircle) = θ + (Real.pi : MomentumCircle) :=
+    AddCircle.coe_equivIco
+  have hrs : (s : MomentumCircle) = ((r + Real.pi : ℝ) : MomentumCircle) := by
+    calc
+      (s : MomentumCircle) = θ + (Real.pi : MomentumCircle) := hsθ
+      _ = (r : MomentumCircle) + Real.pi := by rw [← hrθ]
+      _ = ((r + Real.pi : ℝ) : MomentumCircle) := by rw [AddCircle.coe_add]
+  rw [← hsθ, ← hrθ]
+  rw [projectiveParityOnMomentumCircle_coe u v hs,
+    projectiveParityOnMomentumCircle_coe u v hr]
+  by_cases h : r < Real.pi
+  · have ht : r + Real.pi ∈ Set.Ico (0 : ℝ) (2 * Real.pi) := by
+      constructor
+      · linarith [hr.1, Real.pi_pos]
+      · linarith [hr.1, Real.pi_pos]
+    have hrs' : s = r + Real.pi := by
+      exact (AddCircle.coe_eq_coe_iff_of_mem_Ico
+        (p := 2 * Real.pi) (a := (0 : ℝ))
+        (by simpa only [zero_add] using hs)
+        (by simpa only [zero_add] using ht)).mp hrs
+    rw [hrs', projectiveParityAngle_add_pi]
+  · have hpi : Real.pi ≤ r := le_of_not_gt h
+    let t : ℝ := r - Real.pi
+    have ht : t ∈ Set.Ico (0 : ℝ) (2 * Real.pi) := by
+      constructor
+      · dsimp [t]
+        linarith [hpi]
+      · dsimp [t]
+        linarith [hr.2, Real.pi_pos]
+    have hshift : t + 2 * Real.pi = r + Real.pi := by
+      dsimp [t]
+      ring
+    have hrt : (r + Real.pi : ℝ) = t + 2 * Real.pi := hshift.symm
+    have hrs' : s = t := by
+      apply (AddCircle.coe_eq_coe_iff_of_mem_Ico
+        (p := 2 * Real.pi) (a := (0 : ℝ))
+        (by simpa only [zero_add] using hs)
+        (by simpa only [zero_add] using ht)).mp
+      calc
+        (s : MomentumCircle) = ((r + Real.pi : ℝ) : MomentumCircle) := hrs
+        _ = ((t + 2 * Real.pi : ℝ) : MomentumCircle) := by rw [hrt]
+        _ = (t : MomentumCircle) := AddCircle.coe_add_period (2 * Real.pi) t
+    rw [hrs']
+    have htpi : t + Real.pi = r := by
+      dsimp [t]
+      ring
+    rw [← htpi]
+    exact (projectiveParityAngle_add_pi u v t).symm
+
+/-- The parity class on the torus is invariant under its Klein glide. -/
+def projectiveParityOnTorus (u v : ColorVec3 ℝ) (k : BrillouinTorus) :
+    Quotient parityProjectiveSetoid :=
+  projectiveParityOnMomentumCircle u v k.1
+
+theorem projectiveParityOnTorus_glide (u v : ColorVec3 ℝ)
+    (k : BrillouinTorus) :
+    projectiveParityOnTorus u v (torusGlide k) =
+      projectiveParityOnTorus u v k := by
+  exact projectiveParityOnMomentumCircle_add_pi u v k.1
+
+/-- The projective parity readout descends to the literal Klein orbit
+quotient. This is a map on the quotient carrier itself, not only a
+glide-invariance statement on the universal cover. -/
+def descendedProjectiveParity (u v : ColorVec3 ℝ) :
+    KleinBrillouinQuotient → Quotient parityProjectiveSetoid :=
+  Quotient.lift (s := glideSetoid) (projectiveParityOnTorus u v)
+    (by
+      intro x y hxy
+      rcases hxy with hxy | hxy
+      · simpa [hxy]
+      · rw [hxy]
+        exact (projectiveParityOnTorus_glide u v x).symm)
+
+/-- The quotient-valued map reads back to the original projective parity
+family on the universal cover after the cover-to-torus projection. -/
+theorem descendedProjectiveParity_cover_readout
+    (u v : ColorVec3 ℝ) (k : Cover) :
+    descendedProjectiveParity u v (quotientMap (coverToTorus k)) =
+      glideParityReadoutProjective u v k := by
+  change projectiveParityOnMomentumCircle u v (k.1 : MomentumCircle) = _
+  exact projectiveParityOnMomentumCircle_coe_any u v k.1
 
 end InfoGeometry.Topology.KleinBottleTangentHolonomy
 end noncomputable section

@@ -72,6 +72,18 @@ def test_active_index_cache_detects_index_mutation(tmp_path, monkeypatch):
     assert not cache.still_current()
 
 
+def test_active_index_cache_ignores_metadata_only_index_refresh(tmp_path, monkeypatch):
+    git = _init_hook_repo(tmp_path, monkeypatch)
+    cache = ActiveIndexCache(tmp_path)
+    index_path = tmp_path / git("rev-parse", "--git-path", "index").strip()
+    before = index_path.stat()
+
+    # Git's stat cache can be refreshed without changing staged entries.
+    os.utime(index_path, ns=(before.st_atime_ns, before.st_mtime_ns + 1_000_000))
+
+    assert cache.still_current()
+
+
 def test_active_index_cache_rejects_unavailable_index(tmp_path, monkeypatch):
     _init_hook_repo(tmp_path, monkeypatch)
     monkeypatch.setenv("GIT_INDEX_FILE", str(tmp_path / "missing-index"))

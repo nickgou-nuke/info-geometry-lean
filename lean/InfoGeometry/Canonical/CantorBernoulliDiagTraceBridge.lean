@@ -9,6 +9,7 @@ import Mathlib.MeasureTheory.Integral.Bochner.Basic
 import Mathlib.MeasureTheory.Integral.Bochner.SumMeasure
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorKMSState
+import InfoGeometry.Canonical.UHFInductiveLimitBoundary
 import InfoGeometry.Canonical.UHFInductiveColimitBoundaryTopology
 import InfoGeometry.Canonical.CantorProjectiveBernoulliMeasure
 
@@ -34,6 +35,12 @@ open InfoGeometry.Canonical.CantorProjectiveBernoulliMeasure
 open InfoGeometry.Canonical.CantorProjectiveLimit
 open InfoGeometry.Canonical.CantorProjectiveLimit.PrefixProjectiveLimit
 open InfoGeometry.Analysis.FractalMeasure.Basic
+
+theorem stageTrace_eq_DiagTrace (n : ℕ) (f : DiagAlg n) :
+    InfoGeometry.Canonical.UHFInductiveLimitBoundary.stageTrace n f =
+      DiagTrace n f := by
+  unfold InfoGeometry.Canonical.UHFInductiveLimitBoundary.stageTrace DiagTrace
+  rw [← inv_pow]
 
 theorem diagTrace_cylinderIndicator_eq_projectivePrefixFiber_toReal
     (n : ℕ) (w : BitWord n) :
@@ -69,5 +76,14 @@ theorem projectiveLimitMeasure_integral_prefix_eq_DiagTrace
   simp_rw [ν, Measure.real_def, Measure.map_apply (continuous_π n).measurable
     (measurableSet_singleton _), hmass]
   norm_num [Finset.mul_sum]
+
+/-- The projective-limit Bernoulli integral is the normalized trace owned by
+the UHF diagonal tower, not merely its duplicate finite-stage trace notation. -/
+theorem projectiveLimitMeasure_integral_prefix_eq_stageTrace
+    (n : ℕ) (f : DiagAlg n) :
+    ∫ q, f (π n q) ∂projectiveLimitMeasure =
+      InfoGeometry.Canonical.UHFInductiveLimitBoundary.stageTrace n f := by
+  rw [projectiveLimitMeasure_integral_prefix_eq_DiagTrace,
+    ← stageTrace_eq_DiagTrace]
 
 end InfoGeometry.Canonical.CantorBernoulliDiagTraceBridge

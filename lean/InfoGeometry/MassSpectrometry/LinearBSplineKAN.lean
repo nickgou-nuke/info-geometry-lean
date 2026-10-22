@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.MassSpectrometry.CausalCrossGramian
@@ -123,6 +128,136 @@ theorem continuous_raw
   have hc : Continuous (fun p : ℝ × ℝ => D.childInner k p.2) :=
     (D.continuous_childInner k).comp continuous_snd
   exact (houter k).comp (hp.add hc)
+
+/-- The hard causal mask is continuous at every point strictly inside the
+forward log-mass cone, where it agrees locally with the unmasked potential. -/
+theorem continuousAt_causal_of_strict_cone
+    {q : ℕ} (D : LinearBSplineKANData q)
+    (houter : ∀ k, Continuous (D.outer k))
+    {τParent τChild : ℝ} (hcone : τChild < τParent) :
+    ContinuousAt
+      (fun p : ℝ × ℝ =>
+        D.toFiniteKANCausalKernel.causal p.1 p.2)
+      (τParent, τChild) := by
+  have hraw : Continuous
+      (fun p : ℝ × ℝ =>
+        D.toFiniteKANCausalKernel.raw p.1 p.2) :=
+    D.continuous_raw houter
+  have hopen : {p : ℝ × ℝ | p.2 < p.1} ∈ nhds (τParent, τChild) :=
+    (isOpen_lt continuous_snd continuous_fst).mem_nhds hcone
+  have heq :
+      (fun p : ℝ × ℝ =>
+        D.toFiniteKANCausalKernel.causal p.1 p.2) =ᶠ[nhds (τParent, τChild)]
+      (fun p : ℝ × ℝ =>
+        D.toFiniteKANCausalKernel.raw p.1 p.2) := by
+    filter_upwards [hopen] with p hp
+    simp [FiniteKANCausalKernel.causal, InForwardLogMassCone,
+      le_of_lt hp]
+  exact (hraw.continuousAt).congr heq.symm
+
+/-- Strictly outside the forward log-mass cone, the hard causal mask is
+locally zero and therefore continuous. -/
+theorem continuousAt_causal_of_strictly_outside_cone
+    {q : ℕ} (D : LinearBSplineKANData q)
+    {τParent τChild : ℝ} (hout : τParent < τChild) :
+    ContinuousAt
+      (fun p : ℝ × ℝ =>
+        D.toFiniteKANCausalKernel.causal p.1 p.2)
+      (τParent, τChild) := by
+  have hopen : {p : ℝ × ℝ | p.1 < p.2} ∈ nhds (τParent, τChild) :=
+    (isOpen_lt continuous_fst continuous_snd).mem_nhds hout
+  have heq :
+      (fun p : ℝ × ℝ =>
+        (0 : ℝ)) =ᶠ[nhds (τParent, τChild)]
+      (fun p : ℝ × ℝ =>
+        D.toFiniteKANCausalKernel.causal p.1 p.2) := by
+    filter_upwards [hopen] with p hp
+    simp [FiniteKANCausalKernel.causal, InForwardLogMassCone,
+      not_le_of_gt hp]
+  exact continuousAt_const.congr heq
+
+/-- At a boundary point where the raw potential vanishes, the hard causal
+mask is continuous.  The raw continuity hypothesis controls values on the
+causal side, while the mask is exactly zero on the other side. -/
+theorem continuousAt_causal_on_boundary_of_raw_eq_zero
+    {q : ℕ} (D : LinearBSplineKANData q)
+    (houter : ∀ k, Continuous (D.outer k))
+    (τ : ℝ)
+    (hzero : D.toFiniteKANCausalKernel.raw τ τ = 0) :
+    ContinuousAt
+      (fun p : ℝ × ℝ => D.toFiniteKANCausalKernel.causal p.1 p.2)
+      (τ, τ) := by
+  have hraw : ContinuousAt
+      (fun p : ℝ × ℝ => D.toFiniteKANCausalKernel.raw p.1 p.2) (τ, τ) :=
+    (D.continuous_raw houter).continuousAt
+  rw [Metric.continuousAt_iff']
+  intro ε hε
+  have hraw_eventually := (Metric.continuousAt_iff'.1 hraw) ε hε
+  filter_upwards [hraw_eventually] with p hp
+  have hp' :
+      dist (D.toFiniteKANCausalKernel.raw p.1 p.2) 0 < ε := by
+    simpa [hzero] using hp
+  by_cases hcone : p.2 ≤ p.1
+  · simpa [FiniteKANCausalKernel.causal, InForwardLogMassCone, hcone,
+      hzero] using hp'
+  · simpa [FiniteKANCausalKernel.causal, InForwardLogMassCone, hcone,
+      hzero] using hε
+
+/-- Continuity of the hard-masked kernel at a boundary point forces the raw
+potential to vanish there.  The proof approaches from the strict exterior,
+where the masked kernel is identically zero. -/
+theorem raw_eq_zero_of_continuousAt_causal_on_boundary
+    {q : ℕ} (D : LinearBSplineKANData q) (τ : ℝ)
+    (hcont : ContinuousAt
+      (fun p : ℝ × ℝ => D.toFiniteKANCausalKernel.causal p.1 p.2) (τ, τ)) :
+    D.toFiniteKANCausalKernel.raw τ τ = 0 := by
+  let x : ℕ → ℝ × ℝ := fun n =>
+    (τ, τ + 1 / ((n : ℝ) + 1))
+  let g : ℝ × ℝ → ℝ := fun p =>
+    D.toFiniteKANCausalKernel.causal p.1 p.2
+  have hx : Filter.Tendsto x Filter.atTop (nhds (τ, τ)) := by
+    have hfirst :
+        Filter.Tendsto (fun _ : ℕ => τ) Filter.atTop (nhds τ) :=
+      tendsto_const_nhds
+    have hdelta :
+        Filter.Tendsto (fun n : ℕ => 1 / ((n : ℝ) + 1))
+          Filter.atTop (nhds 0) :=
+      tendsto_one_div_add_atTop_nhds_zero_nat (𝕜 := ℝ)
+    have hsecond :
+        Filter.Tendsto (fun n : ℕ => τ + 1 / ((n : ℝ) + 1))
+          Filter.atTop (nhds τ) := by
+      simpa using hfirst.add hdelta
+    simpa [x, nhds_prod_eq] using hfirst.prodMk hsecond
+  have hlimit : Filter.Tendsto (g ∘ x) Filter.atTop (nhds (g (τ, τ))) := by
+    exact hcont.tendsto.comp hx
+  have hzero : ∀ n, g (x n) = 0 := by
+    intro n
+    apply FiniteKANCausalKernel.causal_eq_zero_of_not_cone
+    dsimp [g, x, InForwardLogMassCone]
+    apply not_le_of_gt
+    apply lt_add_of_pos_right
+    positivity
+  have hlimit_zero : Filter.Tendsto (g ∘ x) Filter.atTop (nhds 0) := by
+    have hfun : g ∘ x = fun _ : ℕ => (0 : ℝ) := by
+      funext n
+      exact hzero n
+    rw [hfun]
+    exact tendsto_const_nhds
+  have hvalue : g (τ, τ) = 0 := tendsto_nhds_unique hlimit hlimit_zero
+  simpa [g, FiniteKANCausalKernel.causal, InForwardLogMassCone] using hvalue
+
+/-- At a boundary point, the hard-masked B-spline KAN potential is continuous
+exactly when its raw value is zero, provided the raw potential is continuous. -/
+theorem continuousAt_causal_on_boundary_iff_raw_eq_zero
+    {q : ℕ} (D : LinearBSplineKANData q)
+    (houter : ∀ k, Continuous (D.outer k)) (τ : ℝ) :
+    ContinuousAt
+        (fun p : ℝ × ℝ => D.toFiniteKANCausalKernel.causal p.1 p.2)
+        (τ, τ) ↔
+      D.toFiniteKANCausalKernel.raw τ τ = 0 := by
+  constructor
+  · exact D.raw_eq_zero_of_continuousAt_causal_on_boundary τ
+  · exact D.continuousAt_causal_on_boundary_of_raw_eq_zero houter τ
 
 /-- Parent channel support is compact in the elementary sense that the channel
 vanishes once the center-distance is at least its positive width. -/

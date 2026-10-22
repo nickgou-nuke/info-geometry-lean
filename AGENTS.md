@@ -131,6 +131,13 @@ The AI agent has its own persistent "Hive Memory" ArangoDB container running on 
 - **Function**: Contains the complete JSONL transcript DAG of all past agent thoughts, generated code, and reasoning steps.
 - **Action**: When starting a new session or encountering a forgotten concept, the agent should connect to this ArangoDB instance using `python-arango` or write AQL queries to retrieve its old memories and code from previous transcripts. The memory population script is at `scratch/populate_arangodb.py`.
 
+## Pi Agent Teams Operational Safety
+When using `@codexstar/pi-agent-teams`, follow `docs/PI_AGENT_TEAMS_OPERATIONS.md`.
+A task assignment, queued message, or tool response is not proof that a worker
+started: confirm the live panel/task state before reporting progress. Do not
+broadcast shutdowns while workers are needed; unassign pending work from stopped
+agents and reconcile conflicting state before retrying or spawning.
+
 ## Continuous Tracking Mandate
 **CRITICAL**: To prevent destructive data loss from rogue `git restore` operations, all agents MUST proactively track their work.
 - **Action**: Whenever an agent creates or modifies a file, they MUST immediately run `git add -A` to stage the changes into the Git index. Uncommitted work that is staged is protected from `git restore`. Do not wait until the end of a session to stage files.

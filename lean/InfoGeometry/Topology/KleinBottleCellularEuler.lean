@@ -5,17 +5,23 @@ Authors: InfoGeometry Engine Contributors
 -/
 
 import InfoGeometry.OperatorAlgebra.FiniteParityEulerPoincare
+import InfoGeometry.Topology.KleinBottleCWChain
 
 /-!
-# A finite cellular Euler calculation for the Klein-bottle cell counts
+# A finite parity Euler calculation for the Klein-bottle polygon chain model
 
-The standard one-vertex, two-edge, one-face cell count has even and odd
-cellular ranks two and two.  This file proves the resulting Euler--Poincaré
-identity using the repository's native finite-dimensional complex API.
+The standard one-vertex, two-edge, one-face polygon presentation has chain
+carriers of ranks one, two, and one. This file groups those algebraic carriers
+by parity and proves Euler--Poincaré using the repository's native
+finite-dimensional complex API.
 
-The carrier below is a cellular rank model.  It is deliberately not asserted
-to be the quotient `KleinBrillouinQuotient`; that identification requires a
-separate cellular equivalence theorem.
+The two-periodic carrier is the parity grouping
+`(C₀ ⊕ C₂, C₁)` of the degree-resolved algebraic chain model.  Its positive
+differential is the modeled algebraic map `∂₂ : C₂ → C₁` and its negative
+differential is `∂₁ : C₁ → C₀`, with zero `C₀`-component in the even carrier.
+The degree-two map is derived from the relator exponent sums; this file does
+not construct a CW attachment. Identifying the chain model with the orbit
+quotient still requires a topological cellular comparison theorem.
 -/
 
 noncomputable section
@@ -23,58 +29,76 @@ noncomputable section
 namespace InfoGeometry.Topology.KleinBottleCellularEuler
 
 open InfoGeometry.OperatorAlgebra.FiniteParityComplex
+open InfoGeometry.Topology.KleinBottleCWChain
 
-abbrev EvenCells := Fin 2 → ℝ
-abbrev OddCells := Fin 2 → ℝ
+abbrev EvenCells := C0 × C2
 
-/- The cellular boundary of the two one-cells is zero.  We retain two
-   coordinates on the odd carrier so that the first is the one-cell and the
-   second is the attaching-circle coordinate of the two-cell. -/
-def evenToOdd : EvenCells →ₗ[ℝ] OddCells := 0
+/- The even-to-odd differential is the degree-two algebraic boundary from the
+   relator exponent-sum model, after grouping degrees zero and two. -/
+def evenToOdd : EvenCells →ₗ[ℝ] C1 where
+  toFun x := boundary₂ x.2
+  map_add' x y := by simp
+  map_smul' c x := by simp
 
-/- The two-cell attaches by the word `aba⁻¹b⁻¹` in the usual polygon model;
-   after abelianisation its boundary is twice the `b`-edge.  The map below is
-   the corresponding real cellular boundary. -/
-def oddToEven : OddCells →ₗ[ℝ] EvenCells where
-  toFun x := fun i => if i = 0 then 0 else 2 * x 0
-  map_add' x y := by
-    funext i
-    by_cases hi : i = 0
-    · simp [hi]
-    · simp [hi]
-      ring
-  map_smul' c x := by
-    funext i
-    by_cases hi : i = 0
-    · simp [hi]
-    · simp [hi]
-      ring
+/- The odd-to-even differential is the degree-one algebraic boundary into
+   `C₀`; the `C₂` component is zero. -/
+def oddToEven : C1 →ₗ[ℝ] EvenCells where
+  toFun x := (boundary₁ x, 0)
+  map_add' x y := by simp
+  map_smul' c x := by simp
 
-def cellularComplex : TwoPeriodicComplex EvenCells OddCells where
+def polygonParityComplex : TwoPeriodicComplex EvenCells C1 where
   dPlus := evenToOdd
   dMinus := oddToEven
-  dMinus_comp_dPlus := by simp [evenToOdd, oddToEven]
-  dPlus_comp_dMinus := by simp [evenToOdd, oddToEven]
+  dMinus_comp_dPlus := by
+    apply LinearMap.ext
+    intro x
+    change (boundary₁ (boundary₂ x.2), (0 : C2)) = 0
+    apply Prod.ext
+    · have h := congrArg (fun f : C2 →ₗ[ℝ] C0 => f x.2)
+        boundary₁_comp_boundary₂
+      simpa [LinearMap.comp_apply, evenToOdd, oddToEven] using h
+    · rfl
+  dPlus_comp_dMinus := by
+    apply LinearMap.ext
+    intro x
+    change boundary₂ 0 = 0
+    simp
 
-theorem cellularEulerCharacteristic_zero :
-    (Module.finrank ℝ EvenCells : ℤ) - Module.finrank ℝ OddCells = 0 := by
-  have h := TwoPeriodicComplex.eulerCharacteristic_eq cellularComplex
-  simpa [EvenCells, OddCells] using h
+/-- Euler–Poincaré equality for the actual two-periodic complex: the alternating
+carrier-rank sum equals the alternating cohomology-rank sum. -/
+theorem polygonEulerPoincare :
+    (Module.finrank ℝ EvenCells : ℤ) - Module.finrank ℝ C1 =
+      Module.finrank ℝ polygonParityComplex.PositiveCohomology -
+        Module.finrank ℝ polygonParityComplex.NegativeCohomology := by
+  exact TwoPeriodicComplex.eulerCharacteristic_eq polygonParityComplex
 
-theorem cellularEulerPoincare_balance :
-    Module.finrank ℝ EvenCells = Module.finrank ℝ OddCells := by
-  have h := cellularEulerCharacteristic_zero
-  exact_mod_cast (show (Module.finrank ℝ EvenCells : ℤ) =
-    (Module.finrank ℝ OddCells : ℤ) by omega)
+/-- The alternating cohomology-rank sum vanishes, by Euler–Poincaré and the
+explicit rank calculation for the algebraic polygon chain model. -/
+theorem polygonCohomologyEuler_zero :
+    (Module.finrank ℝ polygonParityComplex.PositiveCohomology : ℤ) -
+      Module.finrank ℝ polygonParityComplex.NegativeCohomology = 0 := by
+  rw [← polygonEulerPoincare]
+  norm_num [EvenCells, C0, C1, C2]
 
-theorem oddToEven_nonzero : oddToEven ≠ 0 := by
+theorem evenToOdd_nonzero : evenToOdd ≠ 0 := by
   intro h
-  let x : OddCells := fun i => if i = 0 then 1 else 0
-  have hz := congrArg (fun f : OddCells →ₗ[ℝ] EvenCells => f x 1) h
-  simp [x, oddToEven] at hz
+  let x : EvenCells := (0, fun _ => 1)
+  have hz := congrArg (fun f : EvenCells →ₗ[ℝ] C1 => f x 1) h
+  simp [x, evenToOdd, boundary₂] at hz
 
-theorem cellular_boundary_squared_zero :
+theorem evenToOdd_range_eq_polygonBoundary₂ :
+    LinearMap.range evenToOdd = LinearMap.range boundary₂ := by
+  ext y
+  constructor
+  · rintro ⟨x, rfl⟩
+    exact ⟨x.2, rfl⟩
+  · rintro ⟨x, rfl⟩
+    exact ⟨(0, x), by simp [evenToOdd]⟩
+
+theorem polygonBoundarySquared_zero :
     oddToEven.comp evenToOdd = 0 ∧ evenToOdd.comp oddToEven = 0 := by
-  exact ⟨cellularComplex.dMinus_comp_dPlus, cellularComplex.dPlus_comp_dMinus⟩
+  exact ⟨polygonParityComplex.dMinus_comp_dPlus,
+    polygonParityComplex.dPlus_comp_dMinus⟩
 
 end InfoGeometry.Topology.KleinBottleCellularEuler

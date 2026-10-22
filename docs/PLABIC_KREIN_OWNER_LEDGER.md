@@ -18,9 +18,9 @@ and chat summaries do not create edges.
 | A7 chiral grading | `kreinSignature`, `diracDHK_anticommutes_chirality` | `lean/InfoGeometry/Canonical/PlabicDiracKrein.lean:15,42` |
 | A8 block square | `diracDHK_sq`, `edgeSumDirac_sq` | `lean/InfoGeometry/Canonical/PlabicDiracKrein.lean:32`; `lean/InfoGeometry/Canonical/FinitePlabicKasteleyn.lean:118` |
 | A9 Krein skew relation | `diracDHK_krein_skew` | `lean/InfoGeometry/Canonical/PlabicDiracKrein.lean:49` |
-| A11 nilpotent local edge | `Cl11Op.edgeTwist`, `Gamma_sq_zero` | `lean/InfoGeometry/Holography/PlabicKreinTwistedClusterMutation.lean:62,156` |
-| A12 unipotent transport | `mutationRotor`, `mutationRotorInv`, `mutation_rotor_unitary` | `lean/InfoGeometry/Holography/PlabicKreinTwistedClusterMutation.lean:68,72,109` |
-| A13 local conjugation | `cluster_mutation_is_exponential_adjoint` | `lean/InfoGeometry/Holography/PlabicKreinTwistedClusterMutation.lean:98` |
+| A11 nilpotent local matrix | `Cl11Op.edgeTwist`, `edgeTwist_sq_zero` | `lean/InfoGeometry/Holography/PlabicKreinTwistedClusterMutation.lean` |
+| A12 unipotent transport | `edgeTransport`, `edgeTransportInv`, `edgeTransport_mul_inv`, `edgeTransportInv_mul` | `lean/InfoGeometry/Holography/PlabicKreinTwistedClusterMutation.lean` |
+| A13 local conjugation / characteristic polynomial | `edgeTransport_conjugation_nodeBlack`, `matrix_edgeTransport_charpoly_invariant` | `lean/InfoGeometry/Holography/PlabicKreinTwistedClusterMutation.lean`; `lean/InfoGeometry/Holography/PlabicKreinMatrixBridge.lean` |
 | A14 bridge/minor calculus | `addBridge`, `minor2_addBridge_right`, `minor2_addBridge_left` | `lean/InfoGeometry/Topology/PlabicBoundaryMeasurement.lean:21,34,43` |
 | A15 Plücker carrier | `boundaryMeasurementMatrix`, `boundaryMeasurement_plucker_relation`, `boundaryMeasurement_totally_positive` | `lean/InfoGeometry/Topology/PlabicBoundaryMeasurement.lean:70,108,122` |
 | A16 face mutation | `mutateF`, `mutateF_rev`, `cluster_mutation_involution`, `ptolemy_face_weight_add_one` | `lean/InfoGeometry/Topology/PlabicCluster.lean:28,41,146,185` |

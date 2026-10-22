@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Star.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Ring.Basic
@@ -64,6 +69,17 @@ theorem word_reduction_prefix_right (c : CuntzIsometries n A) (w v : List (Fin n
     rw [word_reduction_head_match]
     exact ih
 
+/-- The adjoint word reverses concatenation order. -/
+theorem wordSStar_append (c : CuntzIsometries n A) (w v : List (Fin n)) :
+    wordSStar c (w ++ v) = wordSStar c v * wordSStar c w := by
+  induction w with
+  | nil => simp [wordSStar]
+  | cons i w ih =>
+      rw [List.cons_append]
+      simp only [wordSStar]
+      rw [ih]
+      simp [mul_assoc]
+
 /-- 🏆 THEOREM 4: Left Prefix Reduction (S_(w ++ v)* S_w = S_v*) -/
 theorem word_reduction_prefix_left (c : CuntzIsometries n A) (w v : List (Fin n)) :
     wordSStar c (w ++ v) * wordS c w = wordSStar c v := by
@@ -76,6 +92,64 @@ theorem word_reduction_prefix_left (c : CuntzIsometries n A) (w v : List (Fin n)
     rw [h_app]
     rw [word_reduction_head_match]
     exact ih
+
+/-- Incomparable words have orthogonal initial spaces: after their first
+mismatching letter, the Cuntz relations force the product to vanish. -/
+theorem word_reduction_zero_of_prefix_incomparable
+    (c : CuntzIsometries n A) (v x : List (Fin n))
+    (hvx : ¬ ∃ t, x = v ++ t) (hxv : ¬ ∃ t, v = x ++ t) :
+    wordSStar c v * wordS c x = 0 := by
+  revert hvx hxv
+  induction v generalizing x with
+  | nil =>
+      intro hvx hxv
+      exact (hvx ⟨x, by simp⟩).elim
+  | cons i v ih =>
+      cases x with
+      | nil =>
+          intro hvx hxv
+          exact (hxv ⟨i :: v, by simp⟩).elim
+      | cons j x =>
+          intro hvx hxv
+          by_cases hij : i = j
+          · subst j
+            have hvx' : ¬ ∃ t, x = v ++ t := by
+              intro h
+              rcases h with ⟨t, ht⟩
+              exact hvx ⟨t, by simp [ht]⟩
+            have hxv' : ¬ ∃ t, v = x ++ t := by
+              intro h
+              rcases h with ⟨t, ht⟩
+              exact hxv ⟨t, by simp [ht]⟩
+            rw [word_reduction_head_match]
+            exact ih x hvx' hxv'
+          · exact word_reduction_head_mismatch c hij v x
+
+/-- Complete prefix-cancellation law for two Cuntz words.  If one word is a
+prefix of the other, the unmatched suffix survives; if neither is a prefix,
+the product is zero. -/
+theorem word_reduction_prefix_cases
+    (c : CuntzIsometries n A) (v x : List (Fin n)) :
+    (∃ t, x = v ++ t ∧
+      wordSStar c v * wordS c x = wordS c t) ∨
+    (∃ t, v = x ++ t ∧
+      wordSStar c v * wordS c x = wordSStar c t) ∨
+    ((¬ ∃ t, x = v ++ t) ∧ (¬ ∃ t, v = x ++ t) ∧
+      wordSStar c v * wordS c x = 0) := by
+  classical
+  by_cases hvx : ∃ t, x = v ++ t
+  · rcases hvx with ⟨t, rfl⟩
+    left
+    exact ⟨t, rfl, word_reduction_prefix_right c v t⟩
+  · by_cases hxv : ∃ t, v = x ++ t
+    · rcases hxv with ⟨t, rfl⟩
+      right
+      left
+      exact ⟨t, rfl, word_reduction_prefix_left c x t⟩
+    · right
+      right
+      exact ⟨hvx, hxv,
+        word_reduction_zero_of_prefix_incomparable c v x hvx hxv⟩
 
 /-- 🏆 THEOREM 5: Exact Word Isometry (S_w* S_w = 1) -/
 theorem word_reduction_exact (c : CuntzIsometries n A) (w : List (Fin n)) :

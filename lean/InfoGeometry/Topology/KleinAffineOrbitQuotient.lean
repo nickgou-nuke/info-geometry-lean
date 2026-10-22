@@ -111,6 +111,46 @@ theorem quotientMap_isQuotient : Topology.IsQuotientMap quotientMap :=
         rw [show g⁻¹ * g = 1 by exact KleinDeckGroup.mul_left_inv g]
         exact deckAct_one p⟩
 
+/-- No continuous nowhere-zero real readout on the covering plane can
+transform by the Klein deck orientation character. The orientation-reversing
+generator changes its sign between `(0,0)` and `(0,1)`, so the intermediate
+value theorem forces a zero along the vertical segment. This is the precise
+cover-level obstruction; it does not assume smooth quotient charts. -/
+theorem no_continuous_nonvanishing_orientation_character_readout
+    (f : Plane → ℝ) (hf : Continuous f)
+    (hnz : ∀ p, f p ≠ 0)
+    (hchar : ∀ (g : Deck) (p : Plane),
+      f (deckAct g p) = Matrix.det (deckLinearDiff g) * f p) : False := by
+  let path : ℝ → ℝ := fun t => f (0, t)
+  have hpath : Continuous path := by
+    apply hf.comp
+    exact continuous_const.prodMk continuous_id
+  have hflip : path 1 = -path 0 := by
+    have h := hchar KleinDeckGroup.b (0, 0)
+    rw [deckLinearDiff_det] at h
+    simpa [path, deckAct, deckAction, KleinDeckGroup.b,
+      signR, signZ] using h
+  have hpathOn : ContinuousOn path (Set.Icc (0 : ℝ) 1) :=
+    hpath.continuousOn
+  have hzero : (0 : ℝ) ∈ path '' Set.Icc (0 : ℝ) 1 := by
+    by_cases hpos : 0 < path 0
+    · have hleft : path 1 ≤ 0 := by rw [hflip]; linarith
+      have hmem : (0 : ℝ) ∈ Set.Icc (path 1) (path 0) :=
+        ⟨hleft, le_of_lt hpos⟩
+      exact (intermediate_value_Icc' (show (0 : ℝ) ≤ 1 by norm_num)
+        hpathOn) hmem
+    · have hneg : path 0 < 0 := by
+        rcases lt_or_eq_of_le (le_of_not_gt hpos) with h | h
+        · exact h
+        · exact False.elim (hnz (0, 0) (by simpa [path] using h))
+      have hright : 0 ≤ path 1 := by rw [hflip]; linarith
+      have hmem : (0 : ℝ) ∈ Set.Icc (path 0) (path 1) :=
+        ⟨le_of_lt hneg, hright⟩
+      exact (intermediate_value_Icc (show (0 : ℝ) ≤ 1 by norm_num)
+        hpathOn) hmem
+  rcases hzero with ⟨t, ht, hft⟩
+  exact hnz (0, t) (by simpa [path] using hft)
+
 /-- Equality in the quotient is exactly membership in one affine orbit. -/
 theorem quotientMap_eq_iff (p q : Plane) :
     quotientMap p = quotientMap q ↔

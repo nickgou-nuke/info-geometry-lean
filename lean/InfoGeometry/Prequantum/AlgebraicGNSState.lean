@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Data.Real.Star
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Algebra.Basic
@@ -246,6 +252,77 @@ def gnsSetoid (F : RealAlgebraicState A) : Setoid A where
 /-- The algebraic GNS quotient carrier.  This is not a completed Hilbert space. -/
 abbrev GNSQuotient (F : RealAlgebraicState A) : Type _ :=
   Quotient (F.gnsSetoid)
+
+/-- Pull a real algebraic state back along a real algebra equivalence that
+preserves the involution. -/
+def statePullback (F : RealAlgebraicState A) (e : A ≃ₐ[ℝ] A)
+    (he : ∀ x, e (star x) = star (e x)) : RealAlgebraicState A where
+  toLinearMap := F.toLinearMap.comp e.toLinearMap
+  normalized := by
+    change F.toLinearMap (e 1) = 1
+    rw [map_one]
+    exact F.normalized
+  positive := by
+    intro x
+    change 0 ≤ F.toLinearMap (e (star x * x))
+    rw [map_mul, he]
+    exact F.positive (e x)
+  symmetric := by
+    intro x y
+    have h₁ : e (star y * x) = star (e y) * e x := by
+      rw [map_mul, he]
+    have h₂ : e (star x * y) = star (e x) * e y := by
+      rw [map_mul, he]
+    change F.toLinearMap (e (star y * x)) =
+      F.toLinearMap (e (star x * y))
+    rw [h₁, h₂]
+    exact F.symmetric (e x) (e y)
+
+/-- A star-preserving algebra equivalence identifies the GNS equivalence
+relations for the pulled-back and original states. -/
+theorem statePullback_gnsEquiv_iff (F : RealAlgebraicState A)
+    (e : A ≃ₐ[ℝ] A) (he : ∀ x, e (star x) = star (e x)) (x y : A) :
+    (statePullback F e he).gnsEquiv x y ↔ F.gnsEquiv (e x) (e y) := by
+  change F.eval (e (star (x - y) * (x - y))) = 0 ↔
+    F.eval (star (e x - e y) * (e x - e y)) = 0
+  have hquad : e (star (x - y) * (x - y)) =
+      star (e x - e y) * (e x - e y) := by
+    rw [map_mul, map_sub, he, map_sub]
+  rw [hquad]
+
+/-- An involution-preserving algebra equivalence induces an equivalence of the
+algebraic GNS quotient for its pulled-back state with the original quotient.
+This is an algebraic quotient result; it makes no completion or KMS claim. -/
+noncomputable def gnsQuotientEquiv (F : RealAlgebraicState A)
+    (e : A ≃ₐ[ℝ] A) (he : ∀ x, e (star x) = star (e x)) :
+    (statePullback F e he).GNSQuotient ≃ F.GNSQuotient := by
+  exact
+    { toFun := Quotient.map
+          (sa := (statePullback F e he).gnsSetoid)
+          (sb := F.gnsSetoid) e (by
+        intro x y h
+        change (statePullback F e he).gnsEquiv x y at h
+        exact (statePullback_gnsEquiv_iff F e he x y).mp h)
+      invFun := Quotient.map
+          (sa := F.gnsSetoid)
+          (sb := (statePullback F e he).gnsSetoid) e.symm (by
+        intro x y h
+        change F.gnsEquiv x y at h
+        have h' : F.gnsEquiv (e (e.symm x)) (e (e.symm y)) := by
+          simpa only [e.apply_symm_apply] using h
+        exact (statePullback_gnsEquiv_iff F e he (e.symm x) (e.symm y)).mpr h')
+      left_inv := by
+        intro q
+        refine Quotient.inductionOn q ?_
+        intro x
+        change Quotient.mk _ (e.symm (e x)) = Quotient.mk _ x
+        rw [e.symm_apply_apply]
+      right_inv := by
+        intro q
+        refine Quotient.inductionOn q ?_
+        intro x
+        change Quotient.mk _ (e (e.symm x)) = Quotient.mk _ x
+        rw [e.apply_symm_apply] }
 
 end RealAlgebraicState
 

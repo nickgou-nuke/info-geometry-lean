@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.InnerProductSpace.ProdL2
@@ -218,6 +224,22 @@ def IsKreinSelfAdjoint (A : H →L[ℝ] H) : Prop := kreinAdjoint A = A
 
 /-- `A` is **Krein-skew-adjoint** if `A♯ = -A`. -/
 def IsKreinSkewAdjoint (A : H →L[ℝ] H) : Prop := kreinAdjoint A = -A
+
+/-- The Krein adjoint commutes with sandwiching by a Krein-skew-adjoint
+operator: the two minus signs from the outer factors cancel. -/
+theorem kreinAdjoint_sandwich_of_skewAdjoint
+    (U A : H →L[ℝ] H) (hU : IsKreinSkewAdjoint U) :
+    kreinAdjoint (U.comp (A.comp U)) =
+      U.comp ((kreinAdjoint A).comp U) := by
+  calc
+    kreinAdjoint (U.comp (A.comp U)) =
+        (kreinAdjoint U).comp ((kreinAdjoint A).comp (kreinAdjoint U)) := by
+          simp only [kreinAdjoint_comp, ContinuousLinearMap.comp_assoc]
+    _ = U.comp ((kreinAdjoint A).comp U) := by
+      have hU' : kreinAdjoint U = -U := hU
+      rw [hU']
+      ext x
+      simp
 
 /-- `A` is Krein-self-adjoint iff `A† = J A J`. -/
 lemma isKreinSelfAdjoint_iff_adjoint_eq_j_conj (A : H →L[ℝ] H) :

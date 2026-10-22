@@ -313,9 +313,14 @@ def test_t10_warns_on_top_smoothness_over_closed_interval():
     assert any(v.trap_id == "T10" for v in screen_lean_content(code))
 
 
-def test_t13_rejects_positive_definite_krein_signature_mix():
-    code = "variable [KreinSpace V] [InnerProductSpace ℝ V]"
+def test_t13_rejects_positive_definite_krein_form():
+    code = "def bad : Prop := PositiveDefinite (KreinSpace.kreinInner (H := V))"
     assert any(v.trap_id == "T13" for v in screen_lean_content(code))
+
+
+def test_t13_accepts_positive_hilbert_majorant_for_krein_space():
+    code = "variable [KreinSpace V] [InnerProductSpace ℝ V]"
+    assert not any(v.trap_id == "T13" for v in screen_lean_content(code))
 
 
 def test_t17_accepts_multiline_typed_model_witness():

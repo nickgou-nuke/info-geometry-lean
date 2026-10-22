@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.MaxEnt.Finite
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -246,6 +252,48 @@ lemma thermalState_eq_diagonalMass_density_mul_diag
     H.thermalState β A = diagonalMass (n := n) (Matrix.diagonal (H.gibbsWeight β) * A.toMatrix) := by
   unfold thermalState diagonalMass DiagonalObservable.toMatrix
   simp
+
+/-! The diagonal carrier is commutative, so its Gibbs boundary identity has a
+genuine analytic-strip realization: the two-point correlation is constant in
+complex time.  This is a finite commutative result, not an analytic KMS theorem
+for the full noncommutative matrix algebra or its filtered GNS completion. -/
+
+/-- Complex-time correlation for the finite diagonal Gibbs state.  The identity
+modular shift on diagonal observables makes this correlation constant. -/
+noncomputable def complexThermalCorrelation
+    (H : Hamiltonian n) (β : ℝ)
+    (A B : DiagonalObservable n) : ℂ → ℂ :=
+  fun _ => (H.thermalState β (A * B) : ℂ)
+
+/-- The finite diagonal Gibbs correlation is holomorphic on every open strip. -/
+theorem complexThermalCorrelation_differentiableOn_openStrip
+    (H : Hamiltonian n) (β : ℝ) (_hβ : 0 < β)
+    (A B : DiagonalObservable n) :
+    DifferentiableOn ℂ (H.complexThermalCorrelation β A B)
+      {z : ℂ | 0 < z.im ∧ z.im < β} := by
+  change DifferentiableOn ℂ
+    (fun _ : ℂ => (H.thermalState β (A * B) : ℂ)) _
+  exact differentiableOn_const _
+
+/-- Lower KMS boundary equation for the finite diagonal Gibbs correlation and
+the identity modular shift. -/
+theorem complexThermalCorrelation_lower_boundary
+    (H : Hamiltonian n) (β t : ℝ) (_hβ : 0 < β)
+    (A B : DiagonalObservable n) :
+    H.complexThermalCorrelation β A B (t : ℂ) =
+      (H.thermalState β (A * H.modularShift t B) : ℂ) := by
+  simp [complexThermalCorrelation, modularShift]
+
+/-- Upper KMS boundary equation for the finite diagonal Gibbs correlation.
+The reversed product agrees because diagonal observables commute. -/
+theorem complexThermalCorrelation_upper_boundary
+    (H : Hamiltonian n) (β t : ℝ) (_hβ : 0 < β)
+    (A B : DiagonalObservable n) :
+    H.complexThermalCorrelation β A B ((t : ℂ) + (β : ℂ) * Complex.I) =
+      (H.thermalState β (H.modularShift t B * A) : ℂ) := by
+  have hcomm := H.satisfiesDiagonalKMS β A B
+  simpa [complexThermalCorrelation, modularShift] using
+    congrArg (fun x : ℝ => (x : ℂ)) hcomm
 
 end Hamiltonian
 end FiniteThermal

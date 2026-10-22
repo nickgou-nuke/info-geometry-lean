@@ -59,10 +59,10 @@ finite transport results are called out separately below.
 | A7 | Chiral grading and Dirac anticommutation | `kreinSignature` and `diracDHK_anticommutes_chirality` prove the stated finite matrix identity. |
 | A8 | Block-square / Gram decomposition | `diracDHK_sq` and `edgeSumDirac_sq` identify the two Gram blocks. |
 | A9 | Krein-skew-adjoint identity | `diracDHK_krein_skew` proves `ηD†η = -D` under the owner’s ring/star assumptions; not a Hilbert spectral theorem. |
-| A10 | Correspondence between nonzero eigenvectors of `A†A` and `AA†` | `Canonical.PlabicGramEigenvectorTransport` proves transport, preimages, injectivity, equality of finite eigenspace dimensions for every nonzero eigenvalue, and square-case characteristic-polynomial equality. Rectangular normalization and SVD remain separate. |
-| A11 | Nilpotent local off-diagonal `Cl11Op` edge | `Gamma_sq_zero` proves the local square-zero identity; no general graph-edge operator follows. |
-| A12 | Truncated unipotent local transport | `mutationRotor`, its inverse, and two-sided inverse identities; “unitary” here means invertible in the local ring, not star-unitary. |
-| A13 | Local conjugation readout | `cluster_mutation_is_exponential_adjoint` proves the displayed local conjugation computation only. |
+| A10 | Correspondence between nonzero eigenvectors of `A†A` and `AA†` | `Canonical.PlabicGramEigenvectorTransport` proves transport, preimages, injectivity, equality of finite eigenspace dimensions for every nonzero eigenvalue, square-case characteristic-polynomial equality, and equality of algebraic root multiplicities at every nonzero complex value for rectangular matrices. SVD remains separate. |
+| A11 | Nilpotent local off-diagonal matrix | `Cl11Op.edgeTwist_sq_zero` proves `edgeTwist w * edgeTwist w = 0` in the explicit four-coordinate algebra. |
+| A12 | Truncated unipotent local transport | `edgeTransport` and `edgeTransportInv` have separate left- and right-inverse theorems; no star operation or star-unitarity is defined. |
+| A13 | Local conjugation readout | `edgeTransport_conjugation_nodeBlack` proves the stated finite matrix product identity only. |
 | A14 | Boundary bridge/minor calculus | `addBridge` column operation and minor expansion/invariance results in `Topology.PlabicBoundaryMeasurement`. |
 | A15 | Explicit positive Plücker carrier | The declared `2 × 4` real matrix family has minors, Plücker relation, and positivity under stated parameters; it is not a general planar-network boundary map. |
 | A16 | Five-face cluster mutation | Rational mutation, opposite-pair identities, and involution under denominator hypotheses in `Topology.PlabicCluster`; not identified with local conjugation. |
@@ -94,7 +94,7 @@ C16 finite thermodynamic paths
 
 A0 -> A1 + A2; A0 -> A3 -> A4
 A2 -> A6 -> A8; A7 -> A9
-A8 -> A10 (finite vector-level transport; square characteristic polynomial now closed)
+A8 -> A10 (finite vector-level transport; square characteristic polynomials and rectangular nonzero-root algebraic multiplicities now closed)
 A11 -> A12 -> A13
 A14 -> A15; A16 -> its rational mutation identities
 A17 -> A18 -> A19 -> A20; A19 -> A21 -> A22 (finite existence theorem; general socket remains conditional)
@@ -118,7 +118,7 @@ The extraction does not prove any of these identifications:
 - MaxCal optimizer fields = existence or uniqueness of an optimizer;
 - all C/A carriers = one common representation;
 - local Cl11 conjugation = every plabic square move;
-- rectangular characteristic-polynomial normalization and SVD for the Gram operators (A10 now proves geometric eigenspace-dimension equality and square-case characteristic-polynomial equality).
+- a full singular-value decomposition for the Gram operators (A10 now proves geometric eigenspace-dimension equality at nonzero eigenvalues, square-case characteristic-polynomial equality, and rectangular algebraic root-multiplicity equality away from zero).
 
 ## Source files and evidence boundary
 

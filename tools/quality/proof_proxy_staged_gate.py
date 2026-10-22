@@ -45,7 +45,13 @@ EXECUTED_GATE_SOURCES = (
 
 
 class ActiveIndexCache:
-    """Memoize imported-file Git reads for one stable staged-index scan."""
+    """Memoize imported-file reads for one stable staged-entry snapshot.
+
+    Git may refresh stat-cache data in `.git/index` without changing any staged
+    path, mode, stage, or blob.  Those physical index updates do not alter the
+    source snapshot being certified, so stability is measured from Git's
+    canonical stage-entry listing rather than index-file metadata.
+    """
 
     def __init__(self, repo_root: Path):
         self.repo_root = repo_root
@@ -55,30 +61,36 @@ class ActiveIndexCache:
         self._blobs: dict[str, tuple[int, bytes, str]] = {}
         self._imports: dict[str, list[str]] = {}
 
-    def _read_index_signature(self) -> tuple[str, int, int, int, int, int, str] | None:
+    def _read_index_signature(self) -> str | None:
         configured = os.environ.get("GIT_INDEX_FILE")
         if configured:
             index_path = Path(configured)
             if not index_path.is_absolute():
                 index_path = self.repo_root / index_path
         else:
-            result = subprocess.run(
+            path_result = subprocess.run(
                 ["git", "rev-parse", "--git-path", "index"],
                 cwd=self.repo_root,
                 capture_output=True,
                 text=True,
-                check=True,
+                check=False,
             )
-            index_path = Path(result.stdout.strip())
+            if path_result.returncode != 0:
+                return None
+            index_path = Path(path_result.stdout.strip())
             if not index_path.is_absolute():
                 index_path = self.repo_root / index_path
-        try:
-            stat = index_path.stat()
-            digest = hashlib.sha256(index_path.read_bytes()).hexdigest()
-        except OSError:
+        if not index_path.is_file():
             return None
-        return (str(index_path), stat.st_dev, stat.st_ino, stat.st_size,
-                stat.st_mtime_ns, stat.st_ctime_ns, digest)
+        result = subprocess.run(
+            ["git", "ls-files", "--stage", "-z"],
+            cwd=self.repo_root,
+            capture_output=True,
+            check=False,
+        )
+        if result.returncode != 0:
+            return None
+        return hashlib.sha256(result.stdout).hexdigest()
 
     def still_current(self) -> bool:
         """Fail closed if index-backed reads crossed an active-index update."""

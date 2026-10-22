@@ -12,8 +12,8 @@ For the canonical expression-level dedup, use:
   - generate_translation_dedup_report.py   (read-only audit report)
 
 This legacy tool is kept for infotree-level analysis only.
-Its SCCs are declaration-pattern equivalence candidates induced by exact hash
-buckets over the derived feature representation. They are dedup/audit candidates,
+Its SCCs are declaration-pattern candidates induced by hash buckets over the
+derived feature representation. They are dedup/audit candidates,
 NOT proof-level equivalence classes.
 
 Uses the exact dual feature space to:
@@ -114,7 +114,7 @@ def build_translation_sccs(
     Build derived-pattern translation edges and compute SCC candidate classes.
 
     Strategy:
-    1. Group declarations by shapeHash (exact structural match)
+    1. Group declarations by shapeHash (hash-match candidates; not structural proof)
     2. Group declarations by translationHash (translation-invariant match)
     3. For each group, check candidates share the same kind and dep pattern
     4. Add derived bidirectional edges within each group
@@ -134,7 +134,8 @@ def build_translation_sccs(
         if sub_name and feat_key:
             subprogram_features[sub_name].add(feat_key)
 
-    # Group by shapeHash (exact structural match)
+    # Group by shapeHash as navigation candidates only. Hash agreement is not
+    # verified structural equality or Lean-level theorem equivalence.
     shape_groups: dict[str, list[str]] = defaultdict(list)
     for fp in fingerprints:
         shape_hash = fp.get("shapeHash", "")
@@ -168,7 +169,7 @@ def build_translation_sccs(
                 "safeForAutoRewrite": False,
             })
 
-    # Stage 1: shapeHash groups (exact structural match)
+    # Stage 1: shapeHash candidate groups
     shape_edge_count = 0
     for shape_hash, members in shape_groups.items():
         if len(members) < 2:
@@ -184,8 +185,8 @@ def build_translation_sccs(
         # Add bidirectional edges
         for i in range(len(members)):
             for j in range(i + 1, len(members)):
-                add_verified_edge(members[i], members[j], "exact_shape", f"shapeHash={shape_hash[:16]}")
-                add_verified_edge(members[j], members[i], "exact_shape", f"shapeHash={shape_hash[:16]}")
+                add_verified_edge(members[i], members[j], "shape_hash_candidate", f"shapeHash={shape_hash[:16]}")
+                add_verified_edge(members[j], members[i], "shape_hash_candidate", f"shapeHash={shape_hash[:16]}")
                 shape_edge_count += 2
 
     # Stage 2: translationHash groups (translation-invariant match)

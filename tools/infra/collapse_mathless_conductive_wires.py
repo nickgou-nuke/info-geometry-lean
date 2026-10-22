@@ -46,6 +46,7 @@ def scan_and_collapse_conductive_wires(target: ArangoTarget) -> dict[str, Any]:
     mathless_query = """
     FOR d IN decls
       FILTER d.valueFingerprint != null
+         AND d.valueFingerprint.algorithmVersion == "lean-expr-structural-v3"
          AND d.valueFingerprint.nodeCount != null
          AND d.valueFingerprint.nodeCount < 10
       LET in_edges = (FOR e IN edges FILTER e._to == d._id RETURN e._from)
@@ -58,7 +59,7 @@ def scan_and_collapse_conductive_wires(target: ArangoTarget) -> dict[str, Any]:
         kind: d.kind,
         module: d.module,
         astNodeCount: d.valueFingerprint.nodeCount,
-        shapeHash: d.valueFingerprint.shapeHash,
+        canonicalValueHash: d.canonicalValueHash,
         callers: in_edges,
         targets: out_edges
       }
@@ -70,13 +71,15 @@ def scan_and_collapse_conductive_wires(target: ArangoTarget) -> dict[str, Any]:
     # 2. Group Conductive Paths by Shape-Hash Signatures to find overlapping wires
     overlapping_wires_query = """
     FOR d IN decls
-      FILTER d.valueFingerprint != null AND d.valueFingerprint.shapeHash != null
-      COLLECT hash = d.valueFingerprint.shapeHash INTO members
+      FILTER d.valueFingerprint != null
+      FILTER d.valueFingerprint.algorithmVersion == "lean-expr-structural-v3"
+      FILTER d.canonicalValueHash != null
+      COLLECT hash = d.canonicalValueHash INTO members
       FILTER LENGTH(members) > 1
       SORT LENGTH(members) DESC
       LIMIT 20
       RETURN {
-        shapeHash: hash,
+        canonicalValueHash: hash,
         wireCount: LENGTH(members),
         overlappingNodes: members[*].d.name
       }
@@ -92,7 +95,7 @@ def scan_and_collapse_conductive_wires(target: ArangoTarget) -> dict[str, Any]:
                     "bypassed_mathless_node": node["name"],
                     "direct_source": caller,
                     "direct_target": tgt,
-                    "bypassed_shape_hash": node["shapeHash"]
+                    "bypassed_canonical_value_hash": node["canonicalValueHash"]
                 })
 
     report = {

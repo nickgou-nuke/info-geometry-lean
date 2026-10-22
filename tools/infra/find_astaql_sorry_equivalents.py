@@ -69,15 +69,15 @@ def main():
     print(f"Found {len(sorry_decls)} declarations with sorry in the source code.")
     
     report_lines = []
-    report_lines.append("# Detailed sorry-equivalent structural audit report\n")
-    report_lines.append("This report lists all declarations containing `sorry` in the source code, resolves their `valueFingerprint.shapeHash`, and identifies all other declarations in the codebase that share the same shape hash (sorry-equivalents).\n\n")
+    report_lines.append("# Candidate value-fingerprint matches for source declarations containing sorry\n")
+    report_lines.append("Matching finite hashes are navigation candidates only. They do not establish structural identity, theorem equivalence, or shared proof debt.\n\n")
     
     audited_hashes = set()
     
     for decl_name in sorry_decls:
-        # Query the shape hash for this declaration
-        q = f'FOR d IN decls FILTER d.name == "{decl_name}" RETURN d'
-        res = list(db.aql.execute(q))
+        # Resolve the versioned value hash for this declaration.
+        q = 'FOR d IN decls FILTER d.name == @name RETURN d'
+        res = list(db.aql.execute(q, bind_vars={"name": decl_name}))
         if not res:
             continue
         
@@ -86,33 +86,36 @@ def main():
         if not val_fp:
             continue
         
-        shape_hash = val_fp.get("shapeHash")
-        if not shape_hash or shape_hash in audited_hashes:
+        if val_fp.get("algorithmVersion") != "lean-expr-structural-v3":
+            continue
+        shape_hash = doc.get("canonicalValueHash")
+        if shape_hash is None or shape_hash in audited_hashes:
             continue
         
         audited_hashes.add(shape_hash)
         
-        # Query all other declarations sharing this value shape hash
-        q_equiv = f'''
+        # Find every declaration sharing the same versioned candidate hash.
+        q_equiv = '''
         FOR d IN decls
-          FILTER d.valueFingerprint.shapeHash == "{shape_hash}"
-          RETURN {{name: d.name, module: d.module}}
+          FILTER d.valueFingerprint.algorithmVersion == "lean-expr-structural-v3"
+          FILTER d.canonicalValueHash == @hash
+          RETURN {name: d.name, module: d.module}
         '''
-        equivalents = list(db.aql.execute(q_equiv))
+        matches = list(db.aql.execute(q_equiv, bind_vars={"hash": shape_hash}))
         
-        report_lines.append(f"### Source Sorry: `{decl_name}`\n")
-        report_lines.append(f"- **Value Shape Hash**: `{shape_hash}`\n")
-        report_lines.append(f"- **Total Equivalents**: {len(equivalents)}\n\n")
-        report_lines.append("Sharing declarations:\n")
-        for eq in equivalents:
-            report_lines.append(f"  - `{eq['name']}` ({eq['module']})\n")
+        report_lines.append(f"### Source declaration: `{decl_name}`\n")
+        report_lines.append(f"- **Candidate value hash**: `{shape_hash}`\n")
+        report_lines.append(f"- **Matching declarations**: {len(matches)}\n\n")
+        report_lines.append("Declarations sharing this hash (inspect source individually):\n")
+        for match in matches:
+            report_lines.append(f"  - `{match['name']}` ({match['module']})\n")
         report_lines.append("\n---\n\n")
         
     report_path = Path("astaqlhash_sorry_equivalents_detailed.md")
     with open(report_path, "w") as out:
         out.writelines(report_lines)
         
-    print(f"Detailed sorry equivalence report written to: {report_path}")
+    print(f"Detailed candidate-match report written to: {report_path}")
 
 if __name__ == "__main__":
     main()

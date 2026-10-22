@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Canonical.CantorBernoulliCStarMatrixTraceState
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorBernoulliFiniteMatrixGaugeTraceBridge
@@ -105,6 +111,20 @@ theorem gaugeStateFamily_faithful
     (n : ℕ) (A : CStarMatrixStage n) :
     (gaugeStateFamily.state n).functional (star A * A) = 0 ↔ A = 0 :=
   cstarMatrixTraceState_faithful n A
+
+/-- The canonical finite-stage trace-GNS vectors have the normalized matrix
+trace pairing on the full matrix carrier. This is the noncommutative
+Hilbert--Schmidt pairing before restricting to the diagonal sector. -/
+theorem gaugeGNSStageVector_inner_trace
+    (n : ℕ) (A B : CStarMatrixStage n) :
+    inner ℂ
+        ((gaugeStateFamily.state n).functional.toPreGNS A : gaugeGNSStage n)
+        ((gaugeStateFamily.state n).functional.toPreGNS B : gaugeGNSStage n) =
+      cstarMatrixTraceFunctional n (star A * B) := by
+  simp only [UniformSpace.Completion.inner_coe,
+    PositiveLinearMap.preGNS_inner_def,
+    PositiveLinearMap.ofPreGNS_toPreGNS]
+  exact gaugeStateFamily_readout n (star A * B)
 
 /-! The finite matrix/GNS state family has the canonical word-kernel readout.
 This is the concrete wire from the filtered C⋆-GNS stages to the binary-word

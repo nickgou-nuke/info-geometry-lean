@@ -119,16 +119,17 @@ def compute_root_leaf_topology(target: ArangoTarget, sample_limit: int = 100) ->
             "leaf_name": sample_leaf["name"],
         })
 
-    # Find Top Value-Shape-Hash Equivalence Classes (Conductive Wires)
+    # Find frequent value-hash candidate groups (not equivalence classes).
     wires_query = """
     FOR d IN decls
       FILTER d.valueFingerprint != null
-      COLLECT hash = d.valueFingerprint.shapeHash INTO members
+      FILTER d.valueFingerprint.algorithmVersion == "lean-expr-structural-v3"
+      COLLECT hash = d.canonicalValueHash INTO members
       FILTER hash != null AND LENGTH(members) > 1
       SORT LENGTH(members) DESC
       LIMIT 20
       RETURN {
-        shapeHash: hash,
+        canonicalValueHash: hash,
         count: LENGTH(members),
         declarations: members[*].d.name
       }

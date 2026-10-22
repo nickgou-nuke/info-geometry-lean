@@ -45,6 +45,7 @@ def identify_all_mathless_conductive_wires(target: ArangoTarget) -> dict[str, An
     mathless_wire_query = """
     FOR d IN decls
       FILTER d.valueFingerprint != null
+         AND d.valueFingerprint.algorithmVersion == "lean-expr-structural-v3"
          AND d.valueFingerprint.nodeCount != null
          AND d.valueFingerprint.nodeCount < 10
       LET callers = (
@@ -65,7 +66,7 @@ def identify_all_mathless_conductive_wires(target: ArangoTarget) -> dict[str, An
         kind: d.kind,
         module: d.module,
         astNodeCount: d.valueFingerprint.nodeCount,
-        shapeHash: d.valueFingerprint.shapeHash,
+        canonicalValueHash: d.canonicalValueHash,
         callerCount: LENGTH(callers),
         targetCount: LENGTH(targets),
         callers: callers[*].name,

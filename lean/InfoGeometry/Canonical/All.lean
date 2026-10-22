@@ -434,6 +434,7 @@ import InfoGeometry.Canonical.Cuntz2Isometries
 import InfoGeometry.Canonical.CuntzNIsometries
 import InfoGeometry.Canonical.CuntzWordReduction
 import InfoGeometry.Canonical.MatrixAlgebraCuntzEmbedding
+import InfoGeometry.Canonical.CuntzQuotientWordReductionBridge
 import InfoGeometry.Canonical.BostConnesGalois
 import InfoGeometry.Canonical.BostConnesSymmetryBreaking
 import InfoGeometry.Canonical.BostConnesProjectiveGeometry

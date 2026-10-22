@@ -151,13 +151,14 @@ are added.
 **Carrier.** The local `Cl11Op` carrier owned by
 `InfoGeometry.Holography.PlabicKreinTwistedClusterMutation`.
 
-**Proved owner surface.** `Gamma_sq_zero`, `mutation_rotor_unitary`, and
-`cluster_mutation_is_exponential_adjoint` establish the nilpotent square,
-two-sided inverse, and the stated local conjugation computation.
+**Proved owner surface.** `edgeTwist_sq_zero`, the separate two-sided inverse
+lemmas, and `edgeTransport_conjugation_nodeBlack` establish the local matrix
+identities. This owner does not construct a graph mutation, a Krein form, or a
+Majorana connection.
 
-**Valid interpretation.** “Unitary” in this owner means a two-sided inverse in
-the local ring.  It does not mean star-unitarity.  The result does not identify
-all square moves with conjugation.
+**Valid interpretation.** The owner defines no star operation, Krein form,
+graph mutation, or Majorana connection. The result does not identify square
+moves with conjugation.
 
 ### I. Boundary bridge and Plücker readouts
 

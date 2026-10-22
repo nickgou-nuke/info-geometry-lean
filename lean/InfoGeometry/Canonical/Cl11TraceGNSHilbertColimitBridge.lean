@@ -1,7 +1,17 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Canonical.Cl11TraceGNSColimitBridge
 import InfoGeometry.Canonical.CantorBernoulliCStarMatrixTraceState
 import InfoGeometry.Canonical.CuntzGNSFilteredSystem
 import InfoGeometry.Canonical.FilteredGNSGlobalStageRepresentation
+import InfoGeometry.Canonical.FilteredGNSTomitaCore
+import InfoGeometry.Canonical.FiniteHestenesHilbertSchmidtStandardForm
+import InfoGeometry.Canonical.Cl11KleinFourAdjointRepresentation
+import InfoGeometry.Topology.KleinBottleCliffordGlide
 import Mathlib.Analysis.CStarAlgebra.CStarMatrix
 import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Instances
 
@@ -27,11 +37,13 @@ set_option maxHeartbeats 1200000
 open CStarStateColimit.Native.FilteredGNSHilbertColimit
 open CStarStateColimit.Native.FilteredGNSGlobalStageRepresentation
 open InfoGeometry.Clifford.Cl11TensorTower
+open InfoGeometry.Clifford.Cl11Matrix
 open InfoGeometry.Cosmology.Cl11ParabolicVacuumQuotientBridge
 open InfoGeometry.Canonical.CantorBernoulliCStarMatrixTraceState
 open InfoGeometry.Canonical.CuntzMatrixTowerInstantiation
 open InfoGeometry.Canonical.Cl11CuntzCoherentIndexTopologicalBridge
 open InfoGeometry.Canonical.Cl11TraceGNSColimitBridge
+open InfoGeometry.Canonical.Cl11KleinFourAdjointRepresentation
 open InfoGeometry.Canonical.Cl11FiniteTraceGNSAction
 open InfoGeometry.Prequantum.GNSBridge.AbstractGNSState
 open InfoGeometry.Projective.SplitQuaternionRankOneProjective
@@ -55,9 +67,6 @@ Mathlib matrix-to-`CStarMatrix` equivalence. -/
 def cl11StageOneToCStarMatrixRingHom : MatStage 1 →+* CStarMatrixStage 1 :=
   (CStarMatrix.ofMatrixStarAlgEquiv.toRingEquiv.toRingHom).comp
     (coherentComplexifyClStage 1).toRingHom
-
-@[simp] theorem cl11StageOneToCStarMatrixRingHom_apply (X : MatStage 1) :
-    cl11StageOneToCStarMatrixRingHom X = cl11StageOneToCStarMatrix X := rfl
 
 /-- The native C⋆ matrix state restricts along coherent complexification to
 the complexification of the real normalized Clifford trace. -/
@@ -116,7 +125,7 @@ theorem cl11StageOneCStarGNSVector_injective :
   have hmap : cl11StageOneToCStarMatrix X =
       cl11StageOneToCStarMatrix Y := by
     exact sub_eq_zero.mp hmatrix'
-  apply coherentComplexifyClStage_injective
+  apply coherentComplexifyClStage_injective 1
   exact (CStarMatrix.ofMatrixStarAlgEquiv).injective hmap
 
 /-- The Hilbert colimit of the concrete normalized-trace C⋆ matrix tower. -/
@@ -188,6 +197,330 @@ theorem cl11StageOneCStarGNSVector_inner_unit (X : MatStage 1) :
         cl11StageOneToCStarMatrix X) = _
   simp only [cl11StageOneToCStarMatrix, map_one, star_one, one_mul]
   exact cstarTraceState_cl11StageOne X
+
+/-- The full Hilbert pairing of two stage-one GNS vectors is the normalized
+matrix trace pairing.  This is the finite-stage Hilbert--Schmidt readout;
+unlike the unit-vector specialization above, it records both matrix inputs. -/
+theorem cl11StageOneCStarGNSVector_inner (X Y : MatStage 1) :
+    inner ℂ (cl11StageOneCStarGNSVector X)
+      (cl11StageOneCStarGNSVector Y) =
+        matrixTraceState 1
+          (star (coherentComplexifyClStage 1 X) *
+            coherentComplexifyClStage 1 Y) := by
+  simp only [cl11StageOneCStarGNSVector,
+    UniformSpace.Completion.inner_coe,
+    PositiveLinearMap.preGNS_inner_def,
+    PositiveLinearMap.ofPreGNS_toPreGNS]
+  change cstarMatrixPositiveTraceFunctional 1
+    (star (cl11StageOneToCStarMatrix X) *
+      cl11StageOneToCStarMatrix Y) = _
+  rw [cstarMatrixPositiveTraceFunctional_apply]
+  change matrixTraceState 1
+    ((CStarMatrix.ofMatrixStarAlgEquiv).symm
+      (star (cl11StageOneToCStarMatrix X) *
+        cl11StageOneToCStarMatrix Y)) = _
+  rw [map_mul, map_star]
+  change matrixTraceState 1
+    (star ((CStarMatrix.ofMatrixStarAlgEquiv).symm
+        (cl11StageOneToCStarMatrix X)) *
+      (CStarMatrix.ofMatrixStarAlgEquiv).symm
+        (cl11StageOneToCStarMatrix Y)) = _
+  simp [cl11StageOneToCStarMatrix]
+
+/-- The normalized trace pairing on the full complex stage-one matrix algebra
+is one half of its Hilbert--Schmidt pairing.  This is the matrix identity
+underlying the GNS-to-standard-form isometry, without restricting the inputs
+to the real Clifford subalgebra. -/
+theorem matrixTraceState_stageOne_star_mul_eq_hilbertSchmidt
+    (X Y : FiniteHestenesHilbertSchmidtStandardForm.HS2) :
+    matrixTraceState 1 (star X * Y) =
+      (1 / 2 : ℂ) *
+        FiniteHestenesHilbertSchmidtStandardForm.hilbertSchmidtInner X Y := by
+  simp [matrixTraceState_apply,
+    FiniteHestenesHilbertSchmidtStandardForm.hilbertSchmidtInner,
+    Matrix.trace, Matrix.mul_apply, Matrix.star_apply, Fin.sum_univ_two]
+  ring
+
+/-- In the common matrix carrier, the stage-one C⋆ GNS inner product is the
+Hilbert--Schmidt pairing scaled by the normalized-trace factor `1/2`.  This
+identifies the finite GNS metric with the standard-form metric, including its
+normalization. -/
+theorem cl11StageOneCStarGNSVector_inner_eq_hilbertSchmidt
+    (X Y : MatStage 1) :
+    inner ℂ (cl11StageOneCStarGNSVector X)
+        (cl11StageOneCStarGNSVector Y) =
+      (1 / 2 : ℂ) *
+        FiniteHestenesHilbertSchmidtStandardForm.hilbertSchmidtInner
+          (coherentComplexifyClStage 1 X) (coherentComplexifyClStage 1 Y) := by
+  rw [cl11StageOneCStarGNSVector_inner,
+    matrixTraceState_stageOne_star_mul_eq_hilbertSchmidt]
+
+/-- The scalar converting the normalized trace norm on `M₂(ℂ)` to the
+unnormalized Hilbert--Schmidt norm. -/
+noncomputable def stageOneTraceHilbertSchmidtScale : ℂ :=
+  (Real.sqrt 2 : ℂ) * (1 / 2 : ℂ)
+
+theorem stageOneTraceHilbertSchmidtScale_star_mul_self :
+    star stageOneTraceHilbertSchmidtScale *
+      stageOneTraceHilbertSchmidtScale = (1 / 2 : ℂ) := by
+  have hsqrt : (Real.sqrt 2 : ℂ) ^ 2 = 2 := by
+    exact_mod_cast (Real.sq_sqrt (show (0 : ℝ) ≤ 2 by norm_num))
+  have hstar : star (Real.sqrt 2 : ℂ) = (Real.sqrt 2 : ℂ) := by
+    simp
+  rw [stageOneTraceHilbertSchmidtScale, star_mul, hstar]
+  have hhalf : star (1 / 2 : ℂ) = (1 / 2 : ℂ) := by simp
+  rw [hhalf]
+  calc
+    (1 / 2 : ℂ) * (Real.sqrt 2 : ℂ) *
+        ((Real.sqrt 2 : ℂ) * (1 / 2 : ℂ)) =
+        (Real.sqrt 2 : ℂ) ^ 2 * (1 / 2 : ℂ) ^ 2 := by ring
+    _ = (1 / 2 : ℂ) := by rw [hsqrt]; norm_num
+
+/-- Read a stage-one pre-GNS vector as a matrix in the Hilbert--Schmidt
+standard form, with the positive real normalization dictated by normalized
+trace. -/
+def stageOnePreGNSHilbertSchmidtReadout :
+    (cstarMatrixTraceState 1).functional.PreGNS →ₗ[ℂ]
+      FiniteHestenesHilbertSchmidtStandardForm.HS2 where
+  toFun x := stageOneTraceHilbertSchmidtScale •
+    (CStarMatrix.ofMatrixStarAlgEquiv).symm
+      ((cstarMatrixTraceState 1).functional.ofPreGNS x)
+  map_add' x y := by simp
+  map_smul' z x := by
+    simp only [map_smul, smul_smul, RingHom.id_apply]
+    rw [mul_comm z stageOneTraceHilbertSchmidtScale]
+
+/-- The stage-one pre-GNS readout preserves the full complex inner product.
+This is the finite-dimensional isometric core of the standard-form
+identification. -/
+theorem stageOnePreGNSHilbertSchmidtReadout_inner
+    (x y : (cstarMatrixTraceState 1).functional.PreGNS) :
+    FiniteHestenesHilbertSchmidtStandardForm.hilbertSchmidtInner
+        (stageOnePreGNSHilbertSchmidtReadout x)
+        (stageOnePreGNSHilbertSchmidtReadout y) = inner ℂ x y := by
+  let f := (cstarMatrixTraceState 1).functional
+  obtain ⟨A, rfl⟩ := f.toPreGNS.surjective x
+  obtain ⟨B, rfl⟩ := f.toPreGNS.surjective y
+  change FiniteHestenesHilbertSchmidtStandardForm.hilbertSchmidtInner
+      (stageOneTraceHilbertSchmidtScale •
+        (CStarMatrix.ofMatrixStarAlgEquiv).symm A)
+      (stageOneTraceHilbertSchmidtScale •
+        (CStarMatrix.ofMatrixStarAlgEquiv).symm B) = _
+  rw [FiniteHestenesHilbertSchmidtStandardForm.hilbertSchmidtInner_smul_left,
+    FiniteHestenesHilbertSchmidtStandardForm.hilbertSchmidtInner_smul_right]
+  rw [← mul_assoc]
+  rw [PositiveLinearMap.preGNS_inner_def]
+  simp only [PositiveLinearMap.ofPreGNS_toPreGNS]
+  rw [stageOneTraceHilbertSchmidtScale_star_mul_self]
+  change (1 / 2 : ℂ) *
+      FiniteHestenesHilbertSchmidtStandardForm.hilbertSchmidtInner
+        ((CStarMatrix.ofMatrixStarAlgEquiv).symm A)
+        ((CStarMatrix.ofMatrixStarAlgEquiv).symm B) =
+    cstarMatrixPositiveTraceFunctional 1 (star A * B)
+  exact (cstarMatrixTraceState_stageOne_hilbertSchmidt A B).symm
+
+/-- The stage-one pre-GNS readout carries Mathlib's algebraic left action to
+the left regular matrix action in the Hilbert--Schmidt standard form. -/
+theorem stageOnePreGNSHilbertSchmidtReadout_leftAction
+    (A : CStarMatrixStage 1)
+    (x : (cstarMatrixTraceState 1).functional.PreGNS) :
+    stageOnePreGNSHilbertSchmidtReadout
+        ((cstarMatrixTraceState 1).functional.leftMulMapPreGNS A x) =
+      FiniteHestenesHilbertSchmidtStandardForm.leftActionLinear
+        ((CStarMatrix.ofMatrixStarAlgEquiv).symm A)
+        (stageOnePreGNSHilbertSchmidtReadout x) := by
+  let f := (cstarMatrixTraceState 1).functional
+  obtain ⟨B, rfl⟩ := f.toPreGNS.surjective x
+  simp [stageOnePreGNSHilbertSchmidtReadout,
+    PositiveLinearMap.leftMulMapPreGNS,
+    FiniteHestenesHilbertSchmidtStandardForm.leftActionLinear,
+    map_mul]
+
+/-- The same readout carries the native algebraic GNS Tomita core to matrix
+adjunction on the Hilbert--Schmidt standard form. -/
+theorem stageOnePreGNSHilbertSchmidtReadout_tomita
+    (x : (cstarMatrixTraceState 1).functional.PreGNS) :
+    FiniteHestenesTomitaBridge.matrixTomita
+        (stageOnePreGNSHilbertSchmidtReadout x) =
+      stageOnePreGNSHilbertSchmidtReadout
+        (CStarStateColimit.Native.FilteredGNSTomitaCore.tomitaCore
+          (cstarMatrixTraceState 1) x) := by
+  let f := (cstarMatrixTraceState 1).functional
+  obtain ⟨A, rfl⟩ := f.toPreGNS.surjective x
+  have hscale : star stageOneTraceHilbertSchmidtScale =
+      stageOneTraceHilbertSchmidtScale := by
+    simp [stageOneTraceHilbertSchmidtScale]
+  change Matrix.conjTranspose
+      (stageOneTraceHilbertSchmidtScale •
+        (CStarMatrix.ofMatrixStarAlgEquiv).symm A) =
+    stageOneTraceHilbertSchmidtScale •
+      (CStarMatrix.ofMatrixStarAlgEquiv).symm (star A)
+  rw [Matrix.conjTranspose_smul, hscale, ← Matrix.star_eq_conjTranspose]
+  simp only [map_star]
+
+/-- The canonical Clifford fibre, represented by the established real matrix
+equivalence, then by the coherent stage-one complexification in the native
+C⋆ matrix carrier. -/
+noncomputable def cl11FiberToCStarStageOne (
+    a : CliffordAlgebra InfoGeometry.Clifford.Cl11Matrix.q11) :
+    CStarMatrixStage 1 :=
+  cl11StageOneToCStarMatrix
+    (matrixToCl11StageOne (cl11EquivMat a))
+
+/-- The image of the positive-signature Clifford generator is the finite-stage
+implementer of the reflection in the chosen matrix representation. This is
+not a positivity assertion for the C⋆ order. -/
+noncomputable def cl11GlideImplementer : CStarMatrixStage 1 :=
+  cl11FiberToCStarStageOne
+    (CliffordAlgebra.ι _root_.InfoGeometry.Clifford.Cl11Matrix.q11 (1, 0))
+
+/-- The implemented glide generator is self-adjoint in the native C⋆ matrix
+stage.  This is proved from its concrete diagonal real-matrix value, through
+the stage reindexing, coherent complexification, and Mathlib's matrix
+`CStarMatrix` equivalence. -/
+theorem cl11GlideImplementer_selfAdjoint :
+    star cl11GlideImplementer = cl11GlideImplementer := by
+  let m : MatStage 1 := matrixToCl11StageOne Eplus
+  have hm : star m = m := by
+    change Matrix.transpose (matrixToCl11StageOne Eplus) = _
+    simp only [matrixToCl11StageOne,
+      InfoGeometry.Clifford.TowerMatrix.matEquivFinPowTwo,
+      Matrix.symm_reindexAlgEquiv, Matrix.coe_reindexAlgEquiv]
+    rw [Matrix.transpose_reindex]
+    rw [show Matrix.transpose (Eplus : Matrix (Fin 2) (Fin 2) ℝ) = Eplus by
+      ext i j
+      fin_cases i <;> fin_cases j <;> simp [Eplus]]
+    rfl
+  have hcomplex :
+      star (coherentComplexifyClStage 1 m) = coherentComplexifyClStage 1 m := by
+    calc
+      star (coherentComplexifyClStage 1 m) =
+          coherentComplexifyClStage 1 (star m) :=
+        (coherentComplexifyClStage_star 1 m).symm
+      _ = coherentComplexifyClStage 1 m := congrArg _ hm
+  unfold cl11GlideImplementer cl11FiberToCStarStageOne
+    cl11StageOneToCStarMatrix
+  simp only [cl11EquivMat_iota_pos]
+  change star (CStarMatrix.ofMatrixStarAlgEquiv
+      (coherentComplexifyClStage 1
+        (matrixToCl11StageOne Eplus))) =
+    CStarMatrix.ofMatrixStarAlgEquiv
+      (coherentComplexifyClStage 1
+        (matrixToCl11StageOne Eplus))
+  calc
+    star (CStarMatrix.ofMatrixStarAlgEquiv
+        (coherentComplexifyClStage 1
+          (matrixToCl11StageOne Eplus))) =
+        CStarMatrix.ofMatrixStarAlgEquiv
+          (star (coherentComplexifyClStage 1
+            (matrixToCl11StageOne Eplus))) :=
+      (map_star CStarMatrix.ofMatrixStarAlgEquiv
+        (coherentComplexifyClStage 1
+          (matrixToCl11StageOne Eplus))).symm
+    _ = CStarMatrix.ofMatrixStarAlgEquiv
+        (coherentComplexifyClStage 1
+          (matrixToCl11StageOne Eplus)) :=
+      congrArg CStarMatrix.ofMatrixStarAlgEquiv (by simpa [m] using hcomplex)
+
+/-- On the full algebraic stage-one GNS core, matrix Tomita commutes with the
+two-sided action of the represented Klein-glide generator.  The result is
+finite-stage and algebraic: it makes no assertion about the affine base
+translation or a completed modular operator. -/
+theorem stageOnePreGNSHilbertSchmidtReadout_tomita_glide
+    (A : CStarMatrixStage 1) :
+    FiniteHestenesTomitaBridge.matrixTomita
+        (stageOnePreGNSHilbertSchmidtReadout
+          ((cstarMatrixTraceState 1).functional.toPreGNS
+            (cl11GlideImplementer * A * cl11GlideImplementer))) =
+      stageOnePreGNSHilbertSchmidtReadout
+        ((cstarMatrixTraceState 1).functional.toPreGNS
+          (cl11GlideImplementer * star A * cl11GlideImplementer)) := by
+  rw [stageOnePreGNSHilbertSchmidtReadout_tomita,
+    CStarStateColimit.Native.FilteredGNSTomitaCore.tomitaCore_toPreGNS]
+  simp [star_mul, cl11GlideImplementer_selfAdjoint, mul_assoc]
+
+/-- On the represented finite Clifford algebra, the glide-induced fibre
+automorphism is conjugation by its positive-generator image. This is the
+stage-one transport of `cl11EquivMat_splitReflectionCliffordAuto`. -/
+theorem cl11FiberToCStarStageOne_glide (a :
+    CliffordAlgebra InfoGeometry.Clifford.Cl11Matrix.q11) :
+    cl11FiberToCStarStageOne
+        (InfoGeometry.Clifford.Cl11Matrix.splitReflectionCliffordAuto a) =
+      cl11GlideImplementer * cl11FiberToCStarStageOne a *
+        cl11GlideImplementer := by
+  change cl11StageOneToCStarMatrixRingHom
+      (matrixToCl11StageOne
+        (cl11EquivMat
+          (InfoGeometry.Clifford.Cl11Matrix.splitReflectionCliffordAuto a))) =
+    cl11StageOneToCStarMatrixRingHom
+        (matrixToCl11StageOne
+          (cl11EquivMat
+            (CliffordAlgebra.ι _root_.InfoGeometry.Clifford.Cl11Matrix.q11 (1, 0)))) *
+      cl11StageOneToCStarMatrixRingHom
+        (matrixToCl11StageOne (cl11EquivMat a)) *
+      cl11StageOneToCStarMatrixRingHom
+        (matrixToCl11StageOne
+          (cl11EquivMat
+            (CliffordAlgebra.ι _root_.InfoGeometry.Clifford.Cl11Matrix.q11 (1, 0))))
+  rw [cl11EquivMat_splitReflectionCliffordAuto, adjointAlgEquiv_apply]
+  have hginv : (↑(gammaUnit⁻¹) : InfoGeometry.Clifford.Cl11Matrix.Mat2) =
+      (gammaUnit : InfoGeometry.Clifford.Cl11Matrix.Mat2) := rfl
+  rw [hginv, map_mul, map_mul]
+  simp only [cl11EquivMat_iota_pos, gammaUnit_value, map_mul]
+
+/-- On Clifford generators, the transported fibre reflection is exactly the
+linear part of the affine Klein glide, by the existing topology-to-Clifford
+generator theorem. -/
+theorem cl11FiberToCStarStageOne_glide_generator (v : Vec11) :
+    cl11FiberToCStarStageOne
+        (splitReflectionCliffordAuto (CliffordAlgebra.ι q11 v)) =
+      cl11FiberToCStarStageOne
+        (CliffordAlgebra.ι q11
+          (InfoGeometry.Topology.KleinBottleTangentHolonomy.glideLinearPart v)) := by
+  rw [InfoGeometry.Topology.KleinBottleCliffordGlide.kleinGlide_clifford_generator_action]
+
+/-- The finite standard-form readout carries a two-sided matrix sandwich to
+the commuting left and right regular actions on the Hilbert--Schmidt carrier. -/
+theorem stageOnePreGNSHilbertSchmidtReadout_sandwich
+    (U A : CStarMatrixStage 1) :
+    stageOnePreGNSHilbertSchmidtReadout
+        ((cstarMatrixTraceState 1).functional.toPreGNS (U * A * U)) =
+      FiniteHestenesHilbertSchmidtStandardForm.leftActionLinear
+          ((CStarMatrix.ofMatrixStarAlgEquiv).symm U)
+        (FiniteHestenesHilbertSchmidtStandardForm.rightActionLinear
+          ((CStarMatrix.ofMatrixStarAlgEquiv).symm U)
+          (stageOnePreGNSHilbertSchmidtReadout
+            ((cstarMatrixTraceState 1).functional.toPreGNS A))) := by
+  rw [FiniteHestenesHilbertSchmidtStandardForm.leftActionLinear_apply,
+    FiniteHestenesHilbertSchmidtStandardForm.rightActionLinear_apply]
+  simp only [stageOnePreGNSHilbertSchmidtReadout,
+    LinearMap.coe_mk, AddHom.coe_mk,
+    PositiveLinearMap.ofPreGNS_toPreGNS]
+  rw [map_mul, map_mul]
+  simp only [Matrix.smul_mul, Matrix.mul_smul]
+  rw [Matrix.mul_assoc]
+
+/-- Under the finite standard-form readout, the glide reflection of a
+Clifford element is the simultaneous left and right action of the positive
+generator. The right factor is the Hilbert--Schmidt commutant action. This is
+a stage-one/pre-GNS theorem; it includes no affine translation or
+completion-level modular statement. -/
+theorem stageOnePreGNSHilbertSchmidtReadout_glide
+    (a : CliffordAlgebra InfoGeometry.Clifford.Cl11Matrix.q11) :
+    stageOnePreGNSHilbertSchmidtReadout
+        ((cstarMatrixTraceState 1).functional.toPreGNS
+          (cl11FiberToCStarStageOne
+            (InfoGeometry.Clifford.Cl11Matrix.splitReflectionCliffordAuto a))) =
+      FiniteHestenesHilbertSchmidtStandardForm.leftActionLinear
+          ((CStarMatrix.ofMatrixStarAlgEquiv).symm cl11GlideImplementer)
+        (FiniteHestenesHilbertSchmidtStandardForm.rightActionLinear
+          ((CStarMatrix.ofMatrixStarAlgEquiv).symm cl11GlideImplementer)
+          (stageOnePreGNSHilbertSchmidtReadout
+            ((cstarMatrixTraceState 1).functional.toPreGNS
+              (cl11FiberToCStarStageOne a)))) := by
+  rw [cl11FiberToCStarStageOne_glide]
+  exact stageOnePreGNSHilbertSchmidtReadout_sandwich
+    cl11GlideImplementer (cl11FiberToCStarStageOne a)
 
 /-- The quotient-level finite Clifford action is carried to the ordinary
 left GNS representation action at the complex C⋆ matrix stage. -/

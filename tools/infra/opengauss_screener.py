@@ -75,8 +75,12 @@ _TRAP_PATTERNS = [
     (
         "T13",
         "Krein / Positive-Definite Signature Clash",
-        re.compile(r"\bKreinSpace\b[^\n]*(?:PositiveDefinite|InnerProductSpace)|(?:PositiveDefinite|InnerProductSpace)[^\n]*\bKreinSpace\b"),
-        "Positive-definite inner-product structure is combined with a Krein-space carrier; verify the intended indefinite signature and separate structures.",
+        re.compile(
+            r"(?:\bKreinSpace\b[^\n]*(?:kreinInner|KreinInner)[^\n]*"
+            r"(?:PositiveDefinite|IsPositiveDefinite)|"
+            r"(?:PositiveDefinite|IsPositiveDefinite)[^\n]*(?:kreinInner|KreinInner))"
+        ),
+        "Positive definiteness is asserted for the Krein form itself; distinguish it from the auxiliary Hilbert majorant.",
         "ERROR",
     ),
     (

@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Analysis.Complex.Basic
 import InfoGeometry.CliffordWeyl.CircularPauliPeirceBridge
@@ -25,6 +31,15 @@ abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
 def sigma1 : Mat2C := !![(0 : ℂ), 1; 1, 0]
 def sigma2 : Mat2C := !![(0 : ℂ), -Complex.I; Complex.I, 0]
 def sigma3 : Mat2C := !![(1 : ℂ), 0; 0, -1]
+
+/-- The Pauli matrices `σ₁` and `σ₂` do not commute in the concrete carrier
+`Mat2C`; this prevents the matrix model from being reduced to a scalar proxy. -/
+theorem sigma1_mul_sigma2_ne_sigma2_mul_sigma1 :
+    sigma1 * sigma2 ≠ sigma2 * sigma1 := by
+  intro h
+  have h00 := congrArg (fun M : Mat2C => M 0 0) h
+  have him := congrArg Complex.im h00
+  norm_num [sigma1, sigma2, Matrix.mul_apply, Fin.sum_univ_two] at him
 
 def s2 : ℂ := (Real.sqrt 2 : ℂ) * (1 / 2 : ℂ)
 
@@ -89,6 +104,54 @@ theorem Pright_to_counterclockwise :
   all_goals rw [s2_sq]
   all_goals (try rw [show Complex.I ^ 2 = (-1 : ℂ) by rw [pow_two, Complex.I_mul_I]])
   all_goals ring
+
+/-! ## Jones-vector readout
+
+The matrix identities above identify the two projector bases.  The following
+readout records the corresponding action on a linearly polarized input: an
+input along the first Peirce axis is sent to two equal-amplitude components
+whose relative phase is a quarter turn.  This is the finite Jones-vector
+content of a quarter-wave plate at 45 degrees; the real 45-degree coordinate
+change on a doubled Krein carrier is a different map.
+-/
+
+/-- Unit horizontal Jones vector. -/
+def horizontalJones : Fin 2 → ℂ := ![1, 0]
+
+/-- The horizontal Jones vector after the repository's quarter-wave plate. -/
+def qwpHorizontalJones : Fin 2 → ℂ := Uqwp *ᵥ horizontalJones
+
+/-- Exact coordinate readout of the quarter-wave plate on horizontal input. -/
+theorem Uqwp_horizontalJones_apply :
+    qwpHorizontalJones = ![s2, -Complex.I * s2] := by
+  funext i
+  fin_cases i <;>
+    simp [qwpHorizontalJones, horizontalJones, Uqwp, Matrix.mulVec]
+
+/-- The two output components have equal magnitude. -/
+theorem Uqwp_horizontalJones_equal_component_norms :
+    ‖qwpHorizontalJones 0‖ = ‖qwpHorizontalJones 1‖ := by
+  rw [Uqwp_horizontalJones_apply]
+  simp
+
+/-- The output components differ by a relative phase of `-π/2`. -/
+theorem Uqwp_horizontalJones_quarter_phase :
+    qwpHorizontalJones 1 = -Complex.I * qwpHorizontalJones 0 := by
+  rw [Uqwp_horizontalJones_apply]
+  simp
+
+/-- The output is nonzero, so the equal-amplitude quadrature relation is not
+the zero-vector case. -/
+theorem Uqwp_horizontalJones_ne_zero : qwpHorizontalJones ≠ 0 := by
+  intro h
+  have h0 := congrFun h 0
+  rw [Uqwp_horizontalJones_apply] at h0
+  have hs2 : s2 ≠ 0 := by
+    intro hs
+    have hsSq := congrArg (fun z : ℂ => z ^ 2) hs
+    rw [s2_sq] at hsSq
+    norm_num at hsSq
+  exact hs2 (by simpa using h0)
 
 end InfoGeometry.CliffordWeyl.PeirceCircularQwpBridge
 

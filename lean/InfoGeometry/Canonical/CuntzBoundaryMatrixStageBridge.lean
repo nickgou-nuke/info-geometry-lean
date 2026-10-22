@@ -1,4 +1,11 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.OperatorAlgebra.CantorBernoulliFiniteMatrixRepresentationRefinementBridge
+import InfoGeometry.OperatorAlgebra.CantorBernoulliSpatialCylinderStateBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
@@ -15,9 +22,12 @@ namespace InfoGeometry.Canonical.CuntzBoundaryMatrixStageBridge
 
 open InfoGeometry.Canonical.UHFInductiveColimitBoundary
 open InfoGeometry.OperatorAlgebra.CantorBernoulliFiniteMatrixUnitBridge
+open InfoGeometry.OperatorAlgebra.CantorBernoulliCuntzOperatorTreeBridge
 open InfoGeometry.OperatorAlgebra.CantorBernoulliFiniteMatrixRepresentationBridge
 open InfoGeometry.OperatorAlgebra.CantorBernoulliFiniteMatrixStarRepresentationBridge
 open InfoGeometry.OperatorAlgebra.CantorBernoulliFiniteMatrixRepresentationRefinementBridge
+open InfoGeometry.OperatorAlgebra.CantorBernoulliSpatialCylinderStateBridge
+open InfoGeometry.OperatorAlgebra.CantorBernoulliSpatialNativeStateBridge
 
 abbrev Stage (n : ℕ) := BitWordMatrixStage n
 
@@ -33,6 +43,44 @@ def correspondingCuntzWord (n : ℕ) (i j : BitWord n) : BoundaryOperator :=
 theorem matrixUnit_generator_transport (n : ℕ) (i j : BitWord n) :
     boundaryRep n (Matrix.single i j 1) = correspondingCuntzWord n i j := by
   exact bitWordMatrixStarRepresentation_apply_single n i j
+
+/-- The finite matrix representation sends every diagonal matrix to the
+corresponding finite linear combination of Cuntz cylinder projections. -/
+theorem boundaryRep_diagonal (n : ℕ) (f : BitWord n → ℂ) :
+    boundaryRep n (Matrix.diagonal f) =
+      ∑ u : BitWord n, f u • operatorCylinderProjection (List.ofFn u) := by
+  rw [show Matrix.diagonal f =
+      ∑ u : BitWord n, Matrix.single u u (f u) by
+        rw [← Matrix.sum_single_eq_diagonal f]]
+  simp only [map_sum]
+  apply Finset.sum_congr rfl
+  intro u hu
+  rw [show Matrix.single u u (f u) =
+      f u • Matrix.single u u (1 : ℂ) by
+        ext i j
+        simp [Matrix.single]]
+  simp only [map_smul, matrixUnit_generator_transport,
+    correspondingCuntzWord, bitWordUnit_diag_eq_projection]
+
+/-- The spatial Bernoulli vector state restricted to the represented finite
+diagonal matrix stage is the normalized matrix trace. -/
+theorem spatialState_boundaryRep_diagonal_eq_matrixTrace
+    (n : ℕ) (f : BitWord n → ℂ) :
+    spatialState.functional (boundaryRep n (Matrix.diagonal f)) =
+      bitWordMatrixTraceFunctional n (Matrix.diagonal f) := by
+  calc
+    spatialState.functional (boundaryRep n (Matrix.diagonal f)) =
+        bitWordMatrixGaugeReadout n (Matrix.diagonal f) := by
+      rw [boundaryRep_diagonal]
+      change spatialState.functional
+          (∑ u : BitWord n,
+            f u • operatorCylinderProjection (List.ofFn u)) = _
+      rw [map_sum]
+      simp_rw [map_smul,
+        spatialState_eq_canonicalGaugeState_on_projection]
+      simp [bitWordMatrixGaugeReadout, Matrix.diagonal]
+    _ = bitWordMatrixTraceFunctional n (Matrix.diagonal f) :=
+      bitWordMatrixGaugeReadout_eq_trace n (Matrix.diagonal f)
 
 theorem boundaryRep_bond_compatible (n : ℕ) (A : Stage n) :
     boundaryRep n A = boundaryRep (n + 1) (dyadicMatrixEmbedding n A) := by

@@ -174,7 +174,9 @@ def check_consistency(
 
     # Metric signature clash (Trap T13)
     expr_lower = expression.lower()
-    if "krein" in expr_lower and ("positive definite" in expr_lower or "positivedefinite" in expr_lower):
+    if (
+        "kreininner" in expr_lower or "krein inner product" in expr_lower
+    ) and ("positive definite" in expr_lower or "positivedefinite" in expr_lower):
         warnings.append("Metric signature clash (Trap T13): Krein spaces are indefinite; asserting positive definiteness is false.")
         risk = "HIGH"
 

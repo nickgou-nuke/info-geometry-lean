@@ -45,7 +45,8 @@ def audit_astaql_conductive_wires(target: ArangoTarget) -> dict[str, Any]:
     # AQL Query based on query_astaql_sorry_equivalents.py & forwarding alias classification
     query = """
     FOR d IN decls
-      FILTER d.valueFingerprint != null AND d.valueFingerprint.shapeHash != null
+      FILTER d.valueFingerprint != null
+      FILTER d.valueFingerprint.algorithmVersion == "lean-expr-structural-v3"
       LET name_lower = LOWER(d.name)
       LET is_vacuous_placeholder = (
         name_lower LIKE "%sorry%" OR
@@ -70,7 +71,7 @@ def audit_astaql_conductive_wires(target: ArangoTarget) -> dict[str, Any]:
         name: d.name,
         kind: d.kind,
         module: d.module,
-        shapeHash: d.valueFingerprint.shapeHash,
+        canonicalValueHash: d.canonicalValueHash,
         callerCount: LENGTH(callers),
         targetCount: LENGTH(targets),
         callers: callers,
@@ -87,7 +88,7 @@ def audit_astaql_conductive_wires(target: ArangoTarget) -> dict[str, Any]:
             "vacuousNode": item['name'],
             "kind": item['kind'],
             "module": item['module'],
-            "shapeHash": item['shapeHash'],
+            "canonicalValueHash": item['canonicalValueHash'],
             "vacuityClassification": vacuity_type,
             "callerImpactCount": item['callerCount'],
             "downstreamTargets": item['targets'][:5],

@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Prequantum.GNSBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
@@ -31,6 +37,22 @@ structure RepresentationState (A : Type*) [Ring A] [Algebra ℝ A] [StarRing A] 
 namespace RepresentationState
 
 variable (S : RepresentationState A)
+
+/-- Pull back the state and its left-ideal GNS action along a real algebra
+equivalence preserving the involution. -/
+def pullback (e : A ≃ₐ[ℝ] A) (he : ∀ x, e (star x) = star (e x)) :
+    RepresentationState A where
+  state := ⟨RealAlgebraicState.statePullback S.state.state e he⟩
+  null_left_ideal := by
+    intro a x hx
+    change S.state.state.eval (e (star x * x)) = 0 at hx
+    have hx' : (e x) ∈ S.state.gnsNullSet := by
+      change S.state.state.eval (star (e x) * e x) = 0
+      simpa only [map_mul, he] using hx
+    have hmul := S.null_left_ideal (e a) (e x) hx'
+    change S.state.state.eval (star (e a * e x) * (e a * e x)) = 0 at hmul
+    change S.state.state.eval (e (star (a * x) * (a * x))) = 0
+    simpa only [map_mul, he] using hmul
 
 /-- The GNS quotient action respects equivalence. -/
 theorem gnsEquiv_mul_right (a x y : A) (h_equiv : S.state.gnsEquiv x y) :
@@ -73,6 +95,33 @@ def vacuum : AbstractGNSState.gnsQuotient S.state :=
 @[simp] theorem act_vacuum (a : A) :
     S.act a S.vacuum = Quotient.mk (AbstractGNSState.gnsSetoid S.state) a := by
   simp [vacuum, mul_one]
+
+/-- The algebraic GNS quotient equivalence intertwines the left actions of an
+algebra element and its transported image. -/
+theorem gnsQuotientEquiv_intertwines
+    (e : A ≃ₐ[ℝ] A) (he : ∀ x, e (star x) = star (e x)) (a : A)
+    (q : AbstractGNSState.gnsQuotient (S.pullback e he).state) :
+    RealAlgebraicState.gnsQuotientEquiv S.state.state e he
+        ((S.pullback e he).act a q) =
+      S.act (e a)
+        (RealAlgebraicState.gnsQuotientEquiv S.state.state e he q) := by
+  induction q using Quotient.inductionOn with
+  | _ x =>
+      simp only [RepresentationState.act_mk]
+      dsimp only [RealAlgebraicState.gnsQuotientEquiv]
+      change Quotient.mk _ (e (a * x)) = Quotient.mk _ (e a * e x)
+      rw [map_mul]
+
+/-- The GNS vacuum is preserved by the quotient equivalence induced by the
+state pullback. -/
+theorem gnsQuotientEquiv_vacuum
+    (e : A ≃ₐ[ℝ] A) (he : ∀ x, e (star x) = star (e x)) :
+    RealAlgebraicState.gnsQuotientEquiv S.state.state e he
+        ((S.pullback e he).vacuum) = S.vacuum := by
+  dsimp only [RepresentationState.vacuum,
+    RealAlgebraicState.gnsQuotientEquiv]
+  change Quotient.mk _ (e 1) = Quotient.mk _ 1
+  rw [map_one]
 
 end RepresentationState
 

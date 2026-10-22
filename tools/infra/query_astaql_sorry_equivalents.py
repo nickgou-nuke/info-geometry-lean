@@ -20,24 +20,30 @@ def main():
     client = ArangoClient(hosts=arango_endpoint())
     db = client.db(arango_database(), username=arango_username(), password=arango_password())
 
-    print("=== ASTAQLHASH Sorry-Equivalence Audit ===")
+    print("=== ASTAQLHASH Matching-Value-Fingerprint Candidates ===")
 
-    # 2. Define the targeted AQL query
-    # We group declarations by their valueFingerprint shapeHash and look for those that contain sorry, true, or trivial
+    # 2. Define the targeted AQL query. Matching finite hashes produce review
+    # candidates only; they are not proof-equivalence classes.
     q = '''
     FOR d IN decls
       FILTER d.valueFingerprint != null
+      FILTER d.valueFingerprint.algorithmVersion == "lean-expr-structural-v3"
       LET name_lower = LOWER(d.name)
       FILTER name_lower LIKE "%sorry%"
           OR name_lower LIKE "%_true%"
           OR name_lower LIKE "%trivial%"
-      COLLECT hash = d.valueFingerprint.shapeHash INTO members
+      COLLECT hash = d.canonicalValueHash INTO targets
       FILTER hash != null
-      SORT LENGTH(members) DESC
       RETURN {
-        valueShapeHash: hash,
-        count: LENGTH(members),
-        declarations: members[*].d.name
+        canonicalValueHash: hash,
+        targetDeclarations: targets[*].d.name,
+        matchingDeclarations: (
+          FOR peer IN decls
+            FILTER peer.valueFingerprint != null
+            FILTER peer.valueFingerprint.algorithmVersion == "lean-expr-structural-v3"
+            FILTER peer.canonicalValueHash == hash
+            RETURN peer.name
+        )
       }
     '''
 
@@ -46,17 +52,18 @@ def main():
     # 3. Write results to markdown artifact
     report_path = Path("astaqlhash_sorry_equivalents_report.md")
     with open(report_path, "w") as f:
-        f.write("# ASTAQLHASH Sorry-Equivalence Audit Report\n\n")
-        f.write("This report maps structural shape equivalence classes in ArangoDB matching `sorry`, `true`/`_True`, or `trivial` keywords, identifying their corresponding `valueShapeHash` signatures.\n\n")
+        f.write("# ASTAQLHASH Value-Fingerprint Candidate Report\n\n")
+        f.write("This report groups declarations with matching finite value fingerprints. A hash match is a navigation candidate only; it does not establish structural identity, theorem equivalence, or shared proof debt.\n\n")
         
-        f.write("## Identified Sorry/Trivial/True ValueShapeHash Signatures\n\n")
+        f.write("## Matching Value-Fingerprint Candidates\n\n")
         for row in results:
-            hash_val = row["valueShapeHash"]
-            count = row["count"]
-            f.write(f"### Signature Hash: `{hash_val}` (Total: {count} declarations)\n")
-            f.write("Classified as: **Open Debt Sorry-Equivalent**\n\n")
-            f.write("Declarations in this equivalence class:\n")
-            for decl in row["declarations"]:
+            hash_val = row["canonicalValueHash"]
+            f.write(f"### Candidate Hash: `{hash_val}`\n\n")
+            f.write("Target declarations:\n")
+            for decl in row["targetDeclarations"]:
+                f.write(f"- `{decl}`\n")
+            f.write("\nAll declarations sharing this finite hash (source review required):\n")
+            for decl in row["matchingDeclarations"]:
                 f.write(f"- `{decl}`\n")
             f.write("\n---\n\n")
 

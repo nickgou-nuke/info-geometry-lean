@@ -5,6 +5,8 @@ Authors: InfoGeometry Engine Contributors
 -/
 
 import Mathlib.Tactic
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.LinearAlgebra.Matrix.PosDef
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
@@ -50,52 +52,51 @@ or analytic Dirac-Hodge interpretation.
 namespace InfoGeometry.Krein.TomitaMatrixAtom
 
 open Matrix
-
-abbrev M2R := InfoGeometry.Algebra.FiniteSpin.Mat2R
+open InfoGeometry.Algebra.FiniteSpin
 
 /-- Tomita/Krein reflection: swaps the two real components. -/
-def J : M2R :=
+def J : Mat2R :=
   !![0, 1;
      1, 0]
 
 /-- Krein sign/chirality involution. -/
-def eps : M2R :=
+def eps : Mat2R :=
   !![1, 0;
      0, -1]
 
 /-- Positive sector projector. -/
-def Pplus : M2R :=
+def Pplus : Mat2R :=
   !![1, 0;
      0, 0]
 
 /-- Negative sector projector. -/
-def Pminus : M2R :=
+def Pminus : Mat2R :=
   !![0, 0;
      0, 1]
 
 /-- Transition from negative sector to positive sector. -/
-def ellPlus : M2R :=
+def ellPlus : Mat2R :=
   !![0, 1;
      0, 0]
 
 /-- Transition from positive sector to negative sector. -/
-def ellMinus : M2R :=
+def ellMinus : Mat2R :=
   !![0, 0;
      1, 0]
 
 /-- Finite Dirac-Hodge atom: the sum of both sheet transitions. -/
-def diracHodgeAtom : M2R :=
+def diracHodgeAtom : Mat2R :=
   ellPlus + ellMinus
 
 @[simp]
 theorem J_sq :
-    J * J = (1 : M2R) := by
+    J * J = (1 : Mat2R) := by
   ext i j; fin_cases i <;> fin_cases j <;>
     norm_num [J, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp]
 theorem eps_sq :
-    eps * eps = (1 : M2R) := by
+    eps * eps = (1 : Mat2R) := by
   ext i j; fin_cases i <;> fin_cases j <;>
     norm_num [eps, Matrix.mul_apply, Fin.sum_univ_two]
 
@@ -107,7 +108,7 @@ theorem J_mul_eps_eq_neg_eps_mul_J :
 
 /-- The internal complex axis squares to `-1`. -/
 theorem J_eps_sq :
-    (J * eps) * (J * eps) = (-1 : M2R) := by
+    (J * eps) * (J * eps) = (-1 : Mat2R) := by
   ext i j; fin_cases i <;> fin_cases j <;>
     norm_num [J, eps, Matrix.mul_apply, Fin.sum_univ_two]
 
@@ -137,7 +138,7 @@ theorem Pminus_mul_Pplus :
 
 @[simp]
 theorem Pplus_add_Pminus :
-    Pplus + Pminus = (1 : M2R) := by
+    Pplus + Pminus = (1 : Mat2R) := by
   ext i j; fin_cases i <;> fin_cases j <;>
     norm_num [Pplus, Pminus]
 
@@ -149,13 +150,13 @@ theorem Pplus_sub_Pminus :
 
 /-- `P₊ = (1 + ε)/2`. -/
 theorem Pplus_eq_half_one_add_eps :
-    Pplus = ((1 / 2 : ℝ) • ((1 : M2R) + eps)) := by
+    Pplus = ((1 / 2 : ℝ) • ((1 : Mat2R) + eps)) := by
   ext i j; fin_cases i <;> fin_cases j <;>
     norm_num [Pplus, eps]
 
 /-- `P₋ = (1 - ε)/2`. -/
 theorem Pminus_eq_half_one_sub_eps :
-    Pminus = ((1 / 2 : ℝ) • ((1 : M2R) - eps)) := by
+    Pminus = ((1 / 2 : ℝ) • ((1 : Mat2R) - eps)) := by
   ext i j; fin_cases i <;> fin_cases j <;>
     norm_num [Pminus, eps]
 
@@ -189,7 +190,7 @@ theorem ellMinus_mul_ellPlus :
 
 /-- The transition anticommutator is the identity. -/
 theorem ell_anticommutator :
-    ellPlus * ellMinus + ellMinus * ellPlus = (1 : M2R) := by
+    ellPlus * ellMinus + ellMinus * ellPlus = (1 : Mat2R) := by
   rw [ellPlus_mul_ellMinus, ellMinus_mul_ellPlus, Pplus_add_Pminus]
 
 /-- The transition commutator is the Krein sign. -/
@@ -257,7 +258,7 @@ theorem diracHodgeAtom_eq_J :
 
 /-- The finite Dirac-Hodge atom is an involution. -/
 theorem diracHodgeAtom_sq :
-    diracHodgeAtom * diracHodgeAtom = (1 : M2R) := by
+    diracHodgeAtom * diracHodgeAtom = (1 : Mat2R) := by
   rw [diracHodgeAtom_eq_J, J_sq]
 
 /-- The finite Dirac-Hodge atom anticommutes with the Krein sign grading. -/
@@ -303,14 +304,14 @@ theorem diracHodgeAtom_mul_Pminus :
 /-! ### Finite two-sector thermal polarization
 
 The grading stays fixed while the scalar parameter changes the weights of its
-two eigensectors.  These are matrix identities in the existing `M2R` owner;
+two eigensectors.  These are matrix identities in the existing `Mat2R` owner;
 they do not assert positivity or a trace-class interpretation outside this
 finite carrier.
 -/
 
 /-- The normalized two-sector polarization attached to a real parameter. -/
-def thermalPolarization (q : ℝ) : M2R :=
-  ((1 / 2 : ℝ) • ((1 : M2R) + q • eps))
+def thermalPolarization (q : ℝ) : Mat2R :=
+  ((1 / 2 : ℝ) • ((1 : Mat2R) + q • eps))
 
 /-- The scalar weights of the positive and negative sectors. -/
 def thermalWeightPlus (q : ℝ) : ℝ := (1 + q) / 2
@@ -342,16 +343,55 @@ theorem thermalPolarization_eq_weighted_projectors (q : ℝ) :
 /-- The polarization is the affine expression `½ (1 + q ε)`. -/
 theorem thermalPolarization_eq_affine (q : ℝ) :
     thermalPolarization q =
-      ((1 / 2 : ℝ) • (1 : M2R)) + (q / 2) • eps := by
+      ((1 / 2 : ℝ) • (1 : Mat2R)) + (q / 2) • eps := by
   ext i j
   fin_cases i <;> fin_cases j <;>
     norm_num [thermalPolarization, eps] <;>
     ring
 
+/-- The finite two-sector polarization has trace one for every real contrast. -/
+theorem thermalPolarization_trace (q : ℝ) :
+    Matrix.trace (thermalPolarization q) = 1 := by
+  rw [thermalPolarization_eq_affine]
+  simp [Matrix.trace, eps]
+  ring
+
+/-- The signed expectation of the fixed Krein grading in the finite thermal
+polarization is its contrast parameter. -/
+theorem thermalPolarization_grading_expectation (q : ℝ) :
+    Matrix.trace (thermalPolarization q * eps) = q := by
+  rw [thermalPolarization_eq_affine]
+  simp [Matrix.trace, Matrix.mul_apply, eps, Fin.sum_univ_two]
+  ring
+
+/-- The two-sector polarization is positive semidefinite exactly when both
+sector weights are nonnegative, equivalently when its contrast lies in
+`[-1, 1]`. -/
+theorem thermalPolarization_posSemidef_iff (q : ℝ) :
+    Matrix.PosSemidef (thermalPolarization q) ↔ -1 ≤ q ∧ q ≤ 1 := by
+  have hdiag : thermalPolarization q =
+      Matrix.diagonal ![(1 + q) / 2, (1 - q) / 2] := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [thermalPolarization, eps, Matrix.diagonal] <;>
+      ring
+  rw [hdiag, Matrix.posSemidef_diagonal_iff]
+  constructor
+  · intro h
+    constructor
+    · have h₀ := h 0
+      norm_num at h₀
+      linarith
+    · have h₁ := h 1
+      norm_num at h₁
+      linarith
+  · rintro ⟨hq_lower, hq_upper⟩ i
+    fin_cases i <;> simp <;> linarith
+
 /-- Squaring the polarization gives the exact scalar defect from idempotence. -/
 theorem thermalPolarization_sq_sub_self (q : ℝ) :
     thermalPolarization q * thermalPolarization q - thermalPolarization q =
-      ((q ^ 2 - 1) / 4 : ℝ) • (1 : M2R) := by
+      ((q ^ 2 - 1) / 4 : ℝ) • (1 : Mat2R) := by
   ext i j
   fin_cases i <;> fin_cases j <;>
     norm_num [thermalPolarization, eps, Matrix.mul_apply, Fin.sum_univ_two]
@@ -359,7 +399,7 @@ theorem thermalPolarization_sq_sub_self (q : ℝ) :
 
 /-- At zero polarization, both sectors have equal weight. -/
 theorem thermalPolarization_zero :
-    thermalPolarization 0 = ((1 / 2 : ℝ) • (1 : M2R)) := by
+    thermalPolarization 0 = ((1 / 2 : ℝ) • (1 : Mat2R)) := by
   ext i j
   fin_cases i <;> fin_cases j <;>
     norm_num [thermalPolarization, eps]

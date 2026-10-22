@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 -- scripts/Indexer.lean
 -- patched: (1) robust MetaM/IO handling
 --          (2) fixed property projections and mappings
@@ -38,7 +43,7 @@ def mapToShape (e : Expr) : Expr :=
 
 def shapeFingerprint (e : Expr) : ExprFingerprint :=
   { (DAG.computeFingerprint (mapToShape e)) with
-    algorithmVersion := "lean-expr-shape-v1" }
+    algorithmVersion := "lean-expr-shape-v2" }
 
 /- Data Structures for Category-Theoretic Shards -/
 
@@ -54,9 +59,9 @@ structure DeclNode where
   typeFingerprint  : ExprFingerprint
   valueFingerprint : Option ExprFingerprint
   shapeHash        : ExprFingerprint
-  /-- Explicit content-preserving hash of the elaborated declaration type. -/
+  /-- Versioned structural fingerprint of the elaborated declaration type. -/
   canonicalTypeHash : UInt64
-  /-- Explicit content-preserving hash of the elaborated declaration value. -/
+  /-- Versioned structural fingerprint of the elaborated declaration value. -/
   canonicalValueHash : Option UInt64
   /-- Explicitly coarse template hash; never an identity key. -/
   dagShapeHash : UInt64

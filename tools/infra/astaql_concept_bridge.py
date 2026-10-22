@@ -138,14 +138,16 @@ LET matches = (
                   module: q.module, file: q.file, line: q.line,
                   dagShapeHash: q.dagShapeHash,
                   typeShapeHash: q.typeFingerprint.shapeHash,
-                  valueShapeHash: q.valueFingerprint == null ? null :
-                    q.valueFingerprint.shapeHash},
+                  valueAlgorithmVersion: q.valueFingerprint == null ? null :
+                    q.valueFingerprint.algorithmVersion,
+                  canonicalValueHash: q.canonicalValueHash},
         classical: {id: c._id, name: c.name, kind: c.kind,
                     module: c.module, file: c.file, line: c.line,
                     dagShapeHash: c.dagShapeHash,
                     typeShapeHash: c.typeFingerprint.shapeHash,
-                    valueShapeHash: c.valueFingerprint == null ? null :
-                      c.valueFingerprint.shapeHash},
+                    valueAlgorithmVersion: c.valueFingerprint == null ? null :
+                      c.valueFingerprint.algorithmVersion,
+                    canonicalValueHash: c.canonicalValueHash},
         sharedCount: LENGTH(shared),
         quantumToClassicalPaths: quantumToClassicalPaths,
         classicalToQuantumPaths: classicalToQuantumPaths,
@@ -160,8 +162,9 @@ LET matches = (
               id: d._id, name: d.name, kind: d.kind, module: d.module,
               file: d.file, line: d.line, dagShapeHash: d.dagShapeHash,
               typeShapeHash: d.typeFingerprint.shapeHash,
-              valueShapeHash: d.valueFingerprint == null ? null :
-                d.valueFingerprint.shapeHash,
+              valueAlgorithmVersion: d.valueFingerprint == null ? null :
+                d.valueFingerprint.algorithmVersion,
+              canonicalValueHash: d.canonicalValueHash,
               quantumPath: qpath.path, quantumEdgeKinds: qpath.edgeKinds,
               classicalPath: cpath.path, classicalEdgeKinds: cpath.edgeKinds
             }
@@ -175,15 +178,17 @@ RETURN {
     id: CURRENT._id, name: CURRENT.name, module: CURRENT.module,
     dagShapeHash: CURRENT.dagShapeHash,
     typeShapeHash: CURRENT.typeFingerprint.shapeHash,
-    valueShapeHash: CURRENT.valueFingerprint == null ? null :
-      CURRENT.valueFingerprint.shapeHash
+    valueAlgorithmVersion: CURRENT.valueFingerprint == null ? null :
+      CURRENT.valueFingerprint.algorithmVersion,
+    canonicalValueHash: CURRENT.canonicalValueHash
   }],
   classicalSelected: classical[* RETURN {
     id: CURRENT._id, name: CURRENT.name, module: CURRENT.module,
     dagShapeHash: CURRENT.dagShapeHash,
     typeShapeHash: CURRENT.typeFingerprint.shapeHash,
-    valueShapeHash: CURRENT.valueFingerprint == null ? null :
-      CURRENT.valueFingerprint.shapeHash
+    valueAlgorithmVersion: CURRENT.valueFingerprint == null ? null :
+      CURRENT.valueFingerprint.algorithmVersion,
+    canonicalValueHash: CURRENT.canonicalValueHash
   }],
   matches: matches
 }

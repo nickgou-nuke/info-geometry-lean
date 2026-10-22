@@ -1,4 +1,10 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
+import InfoGeometry.OperatorAlgebra.FiniteMatrixNoncommutativeWitness
 import InfoGeometry.MassSpectrometry.DirectedOperatorDoubling
 import InfoGeometry.MassSpectrometry.MellinMassEncoding
 import InfoGeometry.MassSpectrometry.ValuedFragmentationDAG
@@ -44,6 +50,20 @@ theorem crossGramOperator_self_eq_gramOperator {n d : ℕ}
     crossGramOperator Z Z = gramOperator Z := by
   rfl
 
+/-- The square of a cross-Gram entry is bounded by the product of the two
+corresponding auto-Gram diagonal entries. This is the finite real
+Cauchy--Schwarz inequality for the two feature rows. -/
+theorem crossGramOperator_entry_sq_le_gram_diagonal {n₁ n₂ d : ℕ}
+    (Z₁ : Matrix (Fin n₁) (Fin d) ℝ)
+    (Z₂ : Matrix (Fin n₂) (Fin d) ℝ) (i : Fin n₁) (j : Fin n₂) :
+    (crossGramOperator Z₁ Z₂ i j) ^ 2 ≤
+      gramOperator Z₁ i i * gramOperator Z₂ j j := by
+  change (Z₁ * Z₂.transpose) i j ^ 2 ≤
+    ((Z₁ * Z₁.transpose) i i) * ((Z₂ * Z₂.transpose) j j)
+  simpa [Matrix.mul_apply, Matrix.transpose_apply, pow_two] using
+    (Finset.sum_mul_sq_le_sq_mul_sq Finset.univ
+      (fun k : Fin d => Z₁ i k) (fun k => Z₂ j k))
+
 /-- Hence the cross-Gramian reduces to the already-proved symmetric Gram owner
 when both feature slices coincide. -/
 theorem antisymmetricPart_crossGram_self_eq_zero {n d : ℕ}
@@ -67,6 +87,25 @@ theorem crossGram_can_have_nonzero_antisymmetricPart :
   repeat rw [Matrix.transpose_apply] at hij
   dsimp [Z₁, Z₂] at hij
   norm_num at hij
+
+/-- The square factors in the cross-Gram construction can fail to commute:
+the witness takes both feature blocks to be `E₀₁`, so the second factor is
+`E₀₁ᵀ = E₁₀`. The noncommutativity proof reuses the canonical real matrix-unit
+theorem. -/
+theorem crossGram_factors_do_not_commute :
+    ∃ Z₁ Z₂ : Matrix (Fin 2) (Fin 2) ℝ,
+      Z₁ * Z₂.transpose ≠ Z₂.transpose * Z₁ := by
+  let E01 := InfoGeometry.OperatorAlgebra.FiniteMatrixNoncommutativeWitness.matrixUnit01
+  let E10 := InfoGeometry.OperatorAlgebra.FiniteMatrixNoncommutativeWitness.matrixUnit10
+  refine ⟨E01, E01, ?_⟩
+  have htranspose : E01.transpose = E10 := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [E01, E10,
+        InfoGeometry.OperatorAlgebra.FiniteMatrixNoncommutativeWitness.matrixUnit01,
+        InfoGeometry.OperatorAlgebra.FiniteMatrixNoncommutativeWitness.matrixUnit10]
+  rw [htranspose]
+  exact InfoGeometry.OperatorAlgebra.FiniteMatrixNoncommutativeWitness.matrix_units_noncommute
 
 /-! ## Log-mass causal cone -/
 
@@ -117,6 +156,18 @@ namespace FiniteKANCausalKernel
 def raw {q : ℕ} (Φ : FiniteKANCausalKernel q)
     (τParent τChild : ℝ) : ℝ :=
   ∑ k, Φ.outer k (Φ.parentInner k τParent + Φ.childInner k τChild)
+
+/-- A one-channel identity kernel provides a concrete finite model of the
+parameterization. -/
+def identityUnit : FiniteKANCausalKernel 1 where
+  parentInner := fun _ x => x
+  childInner := fun _ x => x
+  outer := fun _ x => x
+
+/-- The identity model has a nonzero raw pair potential at `(1, 1)`. -/
+theorem identityUnit_raw_one_one :
+    identityUnit.raw 1 1 = 2 := by
+  norm_num [raw, identityUnit]
 
 /-- Cone-restricted finite KAN-style causal potential. -/
 def causal {q : ℕ} (Φ : FiniteKANCausalKernel q)

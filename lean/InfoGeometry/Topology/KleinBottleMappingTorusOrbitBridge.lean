@@ -409,5 +409,16 @@ instance canonicalKleinBottle_compactSpace [Fact (0 < 2 * Real.pi)] :
     CompactSpace CanonicalKleinBottle :=
   canonicalToOrbitHomeomorph.symm.compactSpace
 
+/-- Gluing two Möbius bands along their boundary by the native `TopCat`
+pushout gives the canonical mapping-torus Klein bottle. -/
+noncomputable def mobiusGluedToCanonicalHomeomorph [Fact (0 < 2 * Real.pi)] :
+    MobiusGluedObj ≃ₜ CanonicalKleinBottle := by
+  letI : CompactSpace MobiusGluedObj := mobiusGlued_compactSpace
+  have h : IsHomeomorph mobiusGluedToCanonical.hom :=
+    (isHomeomorph_iff_continuous_bijective).2
+      ⟨mobiusGluedToCanonical.hom.continuous,
+        ⟨mobiusGluedToCanonical_injective, mobiusGluedToCanonical_surjective⟩⟩
+  exact h.homeomorph mobiusGluedToCanonical.hom
+
 end InfoGeometry.Topology.KleinBottleMappingTorusOrbitBridge
 end noncomputable section

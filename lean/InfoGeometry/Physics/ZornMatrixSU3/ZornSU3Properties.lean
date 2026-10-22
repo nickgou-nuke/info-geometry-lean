@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Physics.ZornMatrixSU3.ZornMatrixCore
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.ZornVectorMatrix
@@ -238,11 +244,13 @@ theorem eigenspace_decomposition (M : ZornMatrix) :
 -/
 
 /-- 
-Associate Cl(n,n) tower levels with Mersenne primes:
-- n=1: M₂ = 3 (dimension of color space)
-- n=2: ???
-- n=3: M₃ = 7 (dimension of imaginary octonions)
-- n=7: M₇ = 127 (??? )
+The arithmetic values of `mersenneDimension` are:
+- n=2: M₂ = 3
+- n=3: M₃ = 7
+- n=7: M₇ = 127
+
+The index is the exponent in `2^n - 1`; therefore `M₂` corresponds to
+`n = 2`, not `n = 1`.
 
 This connects the discrete arithmetic hierarchy to the continuous
 geometric representation structure.
@@ -250,9 +258,23 @@ geometric representation structure.
 def mersenneDimension (n : ℕ) : ℕ :=
   2^n - 1
 
--- TODO: Prove connections between mersenneDimension and:
--- - dim(SU(3)) = 8
--- - dim(G₂) = 14
--- - 137 = 3 + 7 + 127 decomposition
+@[simp] theorem mersenneDimension_two :
+    mersenneDimension 2 = 3 := by
+  norm_num [mersenneDimension]
+
+@[simp] theorem mersenneDimension_three :
+    mersenneDimension 3 = 7 := by
+  norm_num [mersenneDimension]
+
+@[simp] theorem mersenneDimension_seven :
+    mersenneDimension 7 = 127 := by
+  norm_num [mersenneDimension]
+
+theorem mersenne_137_decomposition :
+    137 = mersenneDimension 2 + mersenneDimension 3 + mersenneDimension 7 := by
+  norm_num [mersenneDimension]
+
+/- The dimensions of `SU(3)` and `G₂` require separate Lie-algebra carriers;
+   the arithmetic identities above do not assert those identifications. -/
 
 end InfoGeometry.Physics.ZornMatrixSU3

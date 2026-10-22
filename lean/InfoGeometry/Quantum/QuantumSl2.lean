@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometryCore.Basic
@@ -89,6 +95,12 @@ theorem K_F_Kinv_eq_qinv_sq_F (q : ℂ) (hq : q ≠ 0) : K q * F * Kinv q = ((q�
 theorem comm_EF : E * F - F * E = !![(1 : ℂ), 0; 0, -1] := by
   ext i j; fin_cases i <;> fin_cases j <;> simp [E, F, Matrix.mul_apply]
 
+/-- The raising and lowering matrices form a genuinely noncommutative pair. -/
+theorem raising_lowering_noncommute : E * F ≠ F * E := by
+  intro h
+  have h00 := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℂ => M 0 0) h
+  norm_num [E, F, Matrix.mul_apply] at h00
+
 /-- (K - K⁻¹)/(q - q⁻¹) = diag(1, -1) when q ≠ q⁻¹ (i.e., q² ≠ 1). -/
 theorem K_minus_Kinv_div_q_minus_qinv_eq_diag (q : ℂ) (hq : q ≠ 0) (hq_sq_ne_one : q ^ 2 ≠ 1) :
     ((q - q⁻¹)⁻¹ • (K q - Kinv q)) = !![(1 : ℂ), 0; 0, -1] := by
@@ -132,6 +144,27 @@ At q = e^{πi/5}: [2]_q = q + q⁻¹ = φ = (1+√5)/2.
 -/
 def qNumber (q : ℂ) (n : ℤ) (hq_sq_ne_one : q ^ 2 ≠ 1) : ℂ :=
   (q ^ n - q ^ (-n)) / (q - q⁻¹)
+
+/-- The second quantum integer is the symmetric Laurent polynomial `q + q⁻¹`.
+
+This is the finite algebraic identity used by the Fibonacci specialization; it
+does not assert any representation-theoretic truncation. -/
+theorem qNumber_two (q : ℂ) (hq_sq_ne_one : q ^ 2 ≠ 1) :
+    qNumber q 2 hq_sq_ne_one = q + q⁻¹ := by
+  unfold qNumber
+  by_cases hq_ne_zero : q = 0
+  · simp [hq_ne_zero]
+  have hden : q - q⁻¹ ≠ 0 := by
+    intro h
+    apply hq_sq_ne_one
+    have hqi : q = q⁻¹ := sub_eq_zero.mp h
+    calc
+      q ^ 2 = q * q := by ring
+      _ = q * q⁻¹ := congrArg (fun z : ℂ => q * z) hqi
+      _ = 1 := by simp [hq_ne_zero]
+  rw [zpow_ofNat, _root_.zpow_neg]
+  field_simp [hden, hq_ne_zero]
+  ring
 
 /--
 The Fibonacci golden ratio φ = (1+√5)/2.

@@ -398,6 +398,26 @@ local instance : LieRing (H₂ →L[ℝ] H₂) := LieRing.ofAssociativeRing
 noncomputable def hessian_indefinite_form (u v : H₂) : ℝ :=
   KreinSpace.kreinInner (H := H₂) u v
 
+/-- The signed doubled pairing is the Hilbert pairing after the sheet grading.
+
+This is the canonical relation between the positive auxiliary pairing carried by
+`doubledCarrier` and the indefinite Krein form: the fundamental symmetry is
+`spectral_epsilon`, so no second doubled carrier is needed.
+-/
+lemma hessian_indefinite_form_eq_doubledHilbertBilin_spectral_epsilon
+    (u v : H₂) :
+    hessian_indefinite_form u v =
+      doubledHilbertBilin u (spectral_epsilon (E := E) v) := by
+  have hε : KreinSpace.jCLM (H := H₂) = spectral_epsilon (E := E) := by
+    apply ContinuousLinearMap.ext
+    intro w
+    apply DoubledSpace.ext <;> rfl
+  change inner ℝ ((KreinSpace.jCLM (H := H₂)) u) v =
+    doubledHilbertBilin u (spectral_epsilon (E := E) v)
+  rw [hε]
+  simp [doubledHilbertBilin, spectral_epsilon,
+    WithLp.prod_inner_apply]
+
 /-- Characterization of Krein skew-adjointness. -/
 def is_krein_skew_adjoint (A : H₂ →L[ℝ] H₂) : Prop :=
   KreinSpace.IsKreinSkewAdjoint (H := H₂) A

@@ -1,0 +1,96 @@
+name: Attention polytope (pinned, scoped)
+
+on:
+  push:
+    branches: [feat/attention-polytope-decomposition]
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Routing/AttentionPolytope*.lean'
+      - 'tools/attention_polytope.py'
+      - 'tests/test_attention_polytope.py'
+      - '.github/workflows/attention-polytope.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: attention-polytope-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  scoped-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install the repository's exact Lean toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < lean-toolchain)"
+      - name: Compile unchanged owner closure against the pinned Mathlib revision
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import fcntl, json, os, pathlib, re, shutil, subprocess
+          repo = pathlib.Path.cwd()
+          lock = open('/tmp/info-geometry-build.lock', 'a')
+          fcntl.flock(lock, fcntl.LOCK_EX)
+          subprocess.run(['ps', '-eo', 'pid,comm,args'], check=True)
+          manifest = json.loads((repo / 'lake-manifest.json').read_text())
+          pin = next(p for p in manifest['packages'] if p['name'] == 'mathlib')
+          work = pathlib.Path(os.environ['RUNNER_TEMP']) / 'attention-polytope-mathlib'
+          def run(*args, **kwargs):
+              subprocess.run(args, check=True, **kwargs)
+          run('git', 'init', str(work))
+          run('git', '-C', str(work), 'remote', 'add', 'origin', pin['url'])
+          run('git', '-C', str(work), 'fetch', '--depth=1', 'origin', pin['rev'])
+          run('git', '-C', str(work), 'checkout', '--detach', 'FETCH_HEAD')
+          assert (work / 'lean-toolchain').read_text().strip() == (repo / 'lean-toolchain').read_text().strip()
+          run('lake', 'exe', 'cache', 'get', cwd=work)
+          targets = ['InfoGeometry.Routing.AttentionPolytope',
+                     'InfoGeometry.Routing.AttentionPolytopeSoftmax']
+          seen, order = set(), []
+          def visit(module):
+              if module in seen:
+                  return
+              seen.add(module)
+              relative = pathlib.Path(*module.split('.')).with_suffix('.lean')
+              source = repo / 'lean' / relative
+              if not source.is_file():
+                  raise RuntimeError(f'Missing repository owner: {module}')
+              for dep in re.findall(r'^\s*(?:public\s+)?import\s+([\w.]+)', source.read_text(), re.M):
+                  if dep.startswith(('Mathlib', 'Lean', 'Std', 'Init', 'Batteries')):
+                      continue
+                  visit(dep)
+              order.append((module, relative, source))
+          for target in targets:
+              visit(target)
+          print('Owner closure:', [module for module, _, _ in order], flush=True)
+          for module, relative, source in order:
+              destination = work / relative
+              destination.parent.mkdir(parents=True, exist_ok=True)
+              shutil.copyfile(source, destination)
+              output = work / '.lake/build/lib/lean' / relative.with_suffix('.olean')
+              output.parent.mkdir(parents=True, exist_ok=True)
+              print('CHECK', module, flush=True)
+              run('lake', 'env', 'lean', '-o', str(output), str(relative), cwd=work)
+          declarations = ['reconstruct', 'convexHull_deterministic_eq',
+                          'deterministic_convex_rigidity', 'token_readout_decomposition',
+                          'matrix_readout_decomposition', 'nonzero_causal_route',
+                          'routeWeight_softmax_eq', 'softmax_token_readout']
+          audit = work / 'AttentionPolytopeAudit.lean'
+          audit.write_text('import InfoGeometry.Routing.AttentionPolytopeSoftmax\n' +
+              '\n'.join('#print axioms InfoGeometry.Routing.AttentionPolytope.' + d for d in declarations) + '\n')
+          result = subprocess.run(['lake', 'env', 'lean', audit.name], cwd=work,
+                                  check=True, capture_output=True, text=True)
+          print(result.stdout)
+          print(result.stderr)
+          if 'sorryAx' in result.stdout + result.stderr:
+              raise RuntimeError('Axiom audit found sorryAx')
+          PY
+      - name: Exact rational runtime regression tests
+        run: python3 -m unittest discover -s tests -p test_attention_polytope.py -v

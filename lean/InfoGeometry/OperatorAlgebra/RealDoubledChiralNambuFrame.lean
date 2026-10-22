@@ -9,6 +9,7 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.RealDoubledChiralKreinComplements
 import InfoGeometry.Canonical.SuperchargeCARCCRBridge
 import InfoGeometry.Canonical.TomitaKreinNilpotentAtom
+import InfoGeometry.Krein.MajoranaSheetConnectors
 
 /-!
 # Nambu-style frame on the doubled real chiral carrier
@@ -24,6 +25,7 @@ noncomputable section
 namespace InfoGeometry.OperatorAlgebra.RealDoubledChiralNambuFrame
 
 open InfoGeometry.Krein
+open InfoGeometry.Krein.SplitQuadraticSheets
 open InfoGeometry.OperatorAlgebra.RealDoubledChiralKrein
 open InfoGeometry.OperatorAlgebra.RealDoubledChiralKreinComplements
 open InfoGeometry.Canonical.BogoliubovFockSuper
@@ -255,6 +257,32 @@ theorem nambuAnnihilation_comp_nambuCreation_eq_spectralMinusProj :
   rw [← concreteCARAnnihilation_eq_nambuProjectorMinus_comp_nambuSheetFlip (E := E),
     ← concreteCARCreation_eq_nambuProjectorPlus_comp_nambuSheetFlip (E := E)]
   exact concrete_annihilation_comp_creation_eq_spectralMinusProj (E := E)
+
+theorem nambuCreation_kernel_iff_plusSheet (u : DoubledSpace E) :
+    ((nambuProjectorPlus (E := E)).comp (nambuSheetFlip (E := E))) u = 0 ↔
+      u ∈ plusSheet (E := E) := by
+  rw [← concreteCARCreation_eq_nambuProjectorPlus_comp_nambuSheetFlip (E := E)]
+  exact InfoGeometry.Krein.MajoranaSheetConnectors.creation_kernel_iff_plusSheet u
+
+theorem nambuAnnihilation_kernel_iff_minusSheet (u : DoubledSpace E) :
+    ((nambuProjectorMinus (E := E)).comp (nambuSheetFlip (E := E))) u = 0 ↔
+      u ∈ minusSheet (E := E) := by
+  rw [← concreteCARAnnihilation_eq_nambuProjectorMinus_comp_nambuSheetFlip (E := E)]
+  exact InfoGeometry.Krein.MajoranaSheetConnectors.annihilation_kernel_iff_minusSheet u
+
+theorem nambuCreation_range_iff_plusSheet (u : DoubledSpace E) :
+    (∃ v : DoubledSpace E,
+      ((nambuProjectorPlus (E := E)).comp (nambuSheetFlip (E := E))) v = u) ↔
+      u ∈ plusSheet (E := E) := by
+  rw [← concreteCARCreation_eq_nambuProjectorPlus_comp_nambuSheetFlip (E := E)]
+  exact InfoGeometry.Krein.MajoranaSheetConnectors.creation_range_iff_plusSheet u
+
+theorem nambuAnnihilation_range_iff_minusSheet (u : DoubledSpace E) :
+    (∃ v : DoubledSpace E,
+      ((nambuProjectorMinus (E := E)).comp (nambuSheetFlip (E := E))) v = u) ↔
+      u ∈ minusSheet (E := E) := by
+  rw [← concreteCARAnnihilation_eq_nambuProjectorMinus_comp_nambuSheetFlip (E := E)]
+  exact InfoGeometry.Krein.MajoranaSheetConnectors.annihilation_range_iff_minusSheet u
 
 end CanonicalCAR
 

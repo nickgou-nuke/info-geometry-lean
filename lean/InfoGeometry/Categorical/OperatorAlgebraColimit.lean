@@ -32,23 +32,29 @@ import Mathlib.Algebra.Category.Ring.FilteredColimits
 import Mathlib.Algebra.Category.Ring.Limits
 
 /-!
-# Infinite-Dimensional Operator Algebra Colimit
+# Algebraic Operator Colimit Comparison
 
-This file defines the infinite-dimensional observable algebra (Von Neumann algebra of the
-Rindler wedge) as the categorical direct colimit of finite-dimensional matrix algebras.
+This file defines an algebraic observable carrier as the categorical direct colimit
+in `RingCat` of a diagram of finite-stage algebras.
 
 We define a functor `F : J ⥤ RingCat` (where `J` is the filtered poset of finite sub-regions)
-and instantiate the infinite limit as `colimit F`. We connect this to the Tomita-Takesaki
-geometric reflection, ensuring the commutant maps across the colimit.
+and instantiate the carrier as `colimit F`. When a natural isomorphism to a
+second diagram is supplied, Mathlib transports it across the colimit and exposes
+the resulting stage-compatibility equations.
+
+This file does not construct a von Neumann algebra, a commutant, or an analytic
+Tomita--Takesaki modular flow.
 
 ## Audit Protocol Map
 
-- **BUCKET 1: CLOSED FINITE THEOREMS**:
-  - `tomita_takesaki_colimit`: The commutant isomorphism extends naturally to the colimit.
-- **BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES**:
-  - None.
+- **BUCKET 1: CLOSED CATEGORICAL THEOREMS**:
+  - `tomita_takesaki_colimit_ι_hom` and `tomita_takesaki_colimit_ι_inv`:
+    the canonical colimit comparison satisfies the exact stage triangles.
+- **BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT DATA**:
+  - `tomita_takesaki_colimit` is conditional on the supplied natural isomorphism
+    `tomita_takesaki : F ≅ F_commutant`.
 - **BUCKET 3: OPEN CLOSURE DEBT**:
-  - None.
+  - Construction of the operator-algebraic commutant and analytic modular theory.
 -/
 
 namespace InfoGeometry.Categorical.OperatorAlgebraColimit

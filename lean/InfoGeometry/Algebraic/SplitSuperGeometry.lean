@@ -1,4 +1,10 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+/-
 InfoGeometry/Algebraic/SplitSuperGeometry.lean
 
 Abstract parity / grade-involution layer for split Clifford geometry.
@@ -11,6 +17,7 @@ No complex imports.
 
 import Mathlib.LinearAlgebra.CliffordAlgebra.Conjugation
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.OperatorAlgebra.CliffordCAR
 import Mathlib.LinearAlgebra.Trace
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic.Positivity
@@ -92,6 +99,16 @@ def supertrace
     (T : Module.End ℝ A) : ℝ :=
   LinearMap.trace ℝ A (P.toLinearMap.comp T)
 
+/-- The parity-induced supertrace is cyclic for the parity operator and an
+    arbitrary endomorphism. -/
+theorem supertrace_eq_trace_comp_parity
+    (P : ParityInvolution A) (T : Module.End ℝ A) :
+    P.supertrace T = LinearMap.trace ℝ A (T.comp P.toLinearMap) := by
+  unfold supertrace
+  change LinearMap.trace ℝ A (P.toLinearMap * T) =
+    LinearMap.trace ℝ A (T * P.toLinearMap)
+  exact LinearMap.trace_mul_comm ℝ _ _
+
 @[simp]
 theorem supertrace_zero
     (P : ParityInvolution A) :
@@ -116,6 +133,27 @@ carrier as an algebra automorphism.
 -/
 def cliffordParity (n : ℕ) : Cl_nn n ≃ₐ[ℝ] Cl_nn n :=
   CliffordAlgebra.involuteEquiv (Q := splitQuadraticForm n)
+
+/-- The positive and negative split Clifford generators obey the canonical
+    mixed anticommutator relation. -/
+theorem splitClifford_pos_neg_anticommutator {n : ℕ} (hn : 0 < n) :
+    let i : Fin n := ⟨0, hn⟩
+    let p := InfoGeometry.OperatorAlgebra.CliffordCAR.posG n i
+    let q := InfoGeometry.OperatorAlgebra.CliffordCAR.negG n i
+    p * q + q * p = 0 := by
+  dsimp
+  exact InfoGeometry.OperatorAlgebra.CliffordCAR.pos_neg_anticomm n ⟨0, hn⟩ ⟨0, hn⟩
+
+local notation "pUnit" =>
+  InfoGeometry.OperatorAlgebra.CliffordCAR.posG 1 ⟨0, by decide⟩
+local notation "qUnit" =>
+  InfoGeometry.OperatorAlgebra.CliffordCAR.negG 1 ⟨0, by decide⟩
+
+/-- A concrete split-Clifford anticommutator witness for the noncommutative
+    carrier used by this owner. -/
+theorem splitClifford_unit_anticommutator :
+    pUnit * qUnit + qUnit * pUnit = 0 := by
+  exact InfoGeometry.OperatorAlgebra.CliffordCAR.pos_neg_anticomm 1 0 0
 
 @[simp]
 theorem cliffordParity_ι

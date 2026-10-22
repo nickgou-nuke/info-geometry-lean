@@ -6,6 +6,7 @@ Authors: InfoGeometry Engine Contributors
 
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.OperatorAlgebra.FiniteMatrixNoncommutativeWitness
 import InfoGeometry.Canonical.PauliHestenesSpinMomentum
 import InfoGeometry.Physics.MDPASJMSouriau
 import InfoGeometry.Meta.Architecture
@@ -177,6 +178,15 @@ theorem null_iff_det_pauliMatrix_eq_zero
   · intro hdet
     rw [det_pauliMatrix] at hdet
     exact_mod_cast hdet
+
+/-- Multiplication by the adjugate recovers the Minkowski interval as a scalar
+matrix. -/
+@[rep_depth operator]
+theorem pauliMatrix_mul_adjugate_eq_interval
+    (v : Minkowski4) :
+    pauliMatrix v * (pauliMatrix v).adjugate =
+      ((v.q : ℝ) : ℂ) • (1 : PauliMat) := by
+  rw [Matrix.mul_adjugate, det_pauliMatrix]
 
 /-- Energy-momentum mass shell in Pauli determinant form. -/
 @[rep_depth operator]

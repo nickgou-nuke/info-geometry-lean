@@ -58,8 +58,26 @@ an approximate analogy is a small residual only under a quantified defect bound.
 
 ## Verification
 
-Source is a candidate until the scoped workflow succeeds. The workflow builds
-the exact repository source closure against the pinned Lean and Mathlib in an
-isolated temporary checkout, sequentially under a build lock, then inspects
-all new theorem axiom footprints. This is not a whole-repository or Routing.All
-build. No root dependency pin is changed and no build cache is deleted.
+Passed source commit: `f2a1dbcf6e6f3bef01b1f7451dc3142410b69a49`.
+Successful workflow: https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/39849908339
+Job: `120072977044`. Completed 2026-10-22.
+Lean 4.34.1; Mathlib revision `d13f23b723b8a846827a245b89c10fc7d3f11612`.
+
+Both new modules and their six existing repository dependencies compiled from
+exact source files. All 47 new lemmas/theorems (21 kernel, 26 fiber) were
+inspected with `#print axioms`; each reported only
+`[propext, Classical.choice, Quot.sound]`. No new `sorry`, `admit`, custom
+axioms, `unsafe`, or `native_decide` occur in the Lean sources.
+
+Warnings are nonfatal: Mathlib's set-based `stdSimplex` is deprecated in this
+pin in favor of the differently typed `Convexity.StdSimplex`; some proofs have
+unnecessary sequence-focus style warnings. Existing dependencies retain their
+previous deprecation/unused-section warnings. Checkout cleanup also reports
+the pre-existing missing submodule URL for `sandbox/Grassmann.jl`.
+
+This is a scoped source-closure check, not a whole-repository or Routing.All
+build. The workflow uses an isolated temporary checkout of the exact pinned
+Mathlib, sequential compilation under a build lock, and an explicit allowed
+axiom-footprint check. Root dependency pins and existing owners are unchanged;
+no build cache was deleted. The documentation-only follow-up does not change
+any verified Lean source.

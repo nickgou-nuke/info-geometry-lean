@@ -65,6 +65,22 @@ theorem hurwitz_conj_mul_self (x : HurwitzSpace) :
     hurwitz_mul (hurwitz_conj x) x = (hurwitz_norm x, 0) := by
   ext <;> dsimp [hurwitz_mul, hurwitz_conj, hurwitz_norm] <;> ring
 
+@[simp] theorem hurwitz_conj_involutive (x : HurwitzSpace) :
+    hurwitz_conj (hurwitz_conj x) = x := by
+  ext <;> dsimp [hurwitz_conj] <;> ring
+
+@[simp] theorem hurwitz_mul_one (x : HurwitzSpace) :
+    hurwitz_mul x hurwitz_one = x := by
+  ext <;> dsimp [hurwitz_mul, hurwitz_one]
+  · ring
+  · ring
+
+@[simp] theorem hurwitz_one_mul (x : HurwitzSpace) :
+    hurwitz_mul hurwitz_one x = x := by
+  ext <;> dsimp [hurwitz_mul, hurwitz_one]
+  · ring
+  · ring
+
 /--
 HONEST THEOREM DEBT:
 The exact Fenchel coordinate equality.

@@ -128,6 +128,12 @@ lemma det_eq_norm (X : RealPauliOp) : det X = InfoGeometry.Clifford.norm (toSpli
   simp [InfoGeometry.Clifford.norm]
   ring
 
+/-! The induced operator product preserves the determinant multiplicatively. -/
+theorem det_RealPauliOp_mul (A B : RealPauliOp) :
+    det (RealPauliOp_mul A B) = det A * det B := by
+  rw [det_eq_norm, det_eq_norm A, det_eq_norm B]
+  simp [RealPauliOp_mul, InfoGeometry.Clifford.norm_mul]
+
 /-- DEBT 2: Prove that if X^2 = 0 (Nilpotent Operator Flux), then det(X) = 0 (Locks precisely to the Celestial Sphere lightcone boundary). -/
 theorem nilpotent_is_lightlike (X : RealPauliOp) :
   RealPauliOp_mul X X = ⟨0, 0, 0, 0⟩ → det X = 0 := by

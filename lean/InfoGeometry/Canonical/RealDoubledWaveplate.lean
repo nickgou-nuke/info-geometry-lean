@@ -137,6 +137,21 @@ theorem phaseFlow_conj_spectral_epsilon (θ : ℝ) :
     <;> rw [← htrig]
     <;> module
 
+theorem phaseFlow_conj_spectral_epsilon_reverse (θ : ℝ) :
+    phaseFlow (E := E) θ * spectral_epsilon (E := E) * phaseFlow (E := E) (-θ) =
+      Real.cos (2 * θ) • spectral_epsilon (E := E)
+        + Real.sin (2 * θ) • modular_j (E := E) := by
+  have h := phaseFlow_conj_spectral_epsilon (E := E) (-θ)
+  have harg : 2 * (-θ) = -(2 * θ) := by ring
+  rw [harg, Real.cos_neg, Real.sin_neg] at h
+  simp only [neg_neg] at h
+  rw [sub_eq_add_neg] at h
+  have hneg : -((-Real.sin (2 * θ)) • modular_j (E := E)) =
+      Real.sin (2 * θ) • modular_j (E := E) := by
+    module
+  rw [hneg] at h
+  simpa [neg_neg, sub_eq_add_neg, add_comm, add_left_comm, add_assoc] using h
+
 theorem phaseFlow_transportGamma_car
     {M : RealMajoranaDatum (S := H₂)} (θ : ℝ) (u v : H₂) :
     anticommutator (M.gamma (phaseFlow (E := E) θ u))

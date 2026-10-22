@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.PauliHestenesSpinMomentum
@@ -160,6 +166,17 @@ theorem det_pauliMatrix_eq_zero_of_null
     Matrix.det (pauliMatrix v) = 0 := by
   rw [det_pauliMatrix, hv]
   simp
+
+/-- The Pauli determinant vanishes exactly on the Minkowski null cone. -/
+@[rep_depth operator]
+theorem null_iff_det_pauliMatrix_eq_zero
+    (v : Minkowski4) :
+    v.IsNull ↔ Matrix.det (pauliMatrix v) = 0 := by
+  constructor
+  · exact det_pauliMatrix_eq_zero_of_null
+  · intro hdet
+    rw [det_pauliMatrix] at hdet
+    exact_mod_cast hdet
 
 /-- Energy-momentum mass shell in Pauli determinant form. -/
 @[rep_depth operator]

@@ -124,6 +124,23 @@ theorem pg_glide_iterate_y
       rw [ih]
       rw [Function.iterate_succ_apply']
 
+/-- The inverse translation satisfies the corresponding iterated glide law. -/
+theorem pg_glide_iterate_y_inverse
+    (pg : WallpaperGroupPG) (n : ℕ) (p : Lattice2D) :
+    pg.G ((pg.T_y.symm : Lattice2D ≃ Lattice2D)^[n] p) =
+      (pg.T_y^[n]) (pg.G p) := by
+  have hinv (x : Lattice2D) : pg.G (pg.T_y.symm x) = pg.T_y (pg.G x) := by
+    have h := pg.h_commutation (pg.T_y.symm x)
+    have h' := congrArg pg.T_y h
+    simpa using h'.symm
+  induction n with
+  | zero => simp
+  | succ n ih =>
+      rw [Function.iterate_succ_apply']
+      rw [hinv]
+      rw [ih]
+      rw [Function.iterate_succ_apply']
+
 end InfoGeometry.Topology.Wallpaper
 
 end noncomputable section

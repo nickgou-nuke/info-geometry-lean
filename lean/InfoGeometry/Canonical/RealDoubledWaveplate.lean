@@ -109,6 +109,34 @@ theorem phaseFlow_minus_projector_transport (θ : ℝ) :
   rw [phaseFlow_eq_KRotation (E := E)]
   exact spectralMinusProj_comp_KRotation (E := E) θ
 
+/-!
+The phase flow rotates the grading itself.  This is the conjugation law for
+the active convention `R(-θ) ε R(θ)`; it is stronger than the one-sided
+projector readbacks above and fixes the sign of the transported off-diagonal
+axis.
+-/
+theorem phaseFlow_conj_spectral_epsilon (θ : ℝ) :
+    phaseFlow (E := E) (-θ) * spectral_epsilon (E := E) * phaseFlow (E := E) θ =
+      Real.cos (2 * θ) • spectral_epsilon (E := E)
+        - Real.sin (2 * θ) • modular_j (E := E) := by
+  rw [phaseFlow_eq_KRotation (E := E), phaseFlow_eq_KRotation (E := E)]
+  rw [KRotation_eq_cos_add_sin_K (E := E) (-θ),
+    KRotation_eq_cos_add_sin_K (E := E) θ]
+  apply ContinuousLinearMap.ext
+  intro u
+  simp only [ContinuousLinearMap.mul_apply, ContinuousLinearMap.add_apply,
+    ContinuousLinearMap.sub_apply, ContinuousLinearMap.smul_apply,
+    ContinuousLinearMap.one_apply, ContinuousLinearMap.neg_apply,
+    spectral_epsilon_apply, clockAxis_apply, modular_j_apply]
+  have htrig : Real.cos θ ^ 2 + Real.sin θ ^ 2 = 1 :=
+    Real.cos_sq_add_sin_sq θ
+  apply DoubledSpace.ext <;>
+    simp [Real.cos_neg, Real.sin_neg, Real.cos_two_mul, Real.sin_two_mul]
+    <;> simp only [smul_smul]
+    <;> ring_nf
+    <;> rw [← htrig]
+    <;> module
+
 theorem phaseFlow_transportGamma_car
     {M : RealMajoranaDatum (S := H₂)} (θ : ℝ) (u v : H₂) :
     anticommutator (M.gamma (phaseFlow (E := E) θ u))

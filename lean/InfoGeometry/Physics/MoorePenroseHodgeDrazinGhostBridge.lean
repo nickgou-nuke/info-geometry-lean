@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Algebra.Star.Basic
 import Mathlib.Tactic
@@ -45,6 +51,16 @@ theorem operator_ghost_commutator
     _ = A * A_plus - A_plus * A - A * A_D + A_D * A := by abel
     _ = A * A_plus - A_plus * A - A * A_D + A * A_D := by rw [h_comm]
     _ = A * A_plus - A_plus * A := by abel
+
+/-- Under the Drazin commutation law, vanishing of the ghost commutator is
+    equivalent to commutation of the Moore–Penrose candidate itself. -/
+theorem ghost_commutator_eq_zero_iff
+    (A A_plus A_D : R)
+    (h_drazin : IsDrazinIndexOne A A_D) :
+    A * (defect_ghost A_plus A_D) - (defect_ghost A_plus A_D) * A = 0 ↔
+      A * A_plus = A_plus * A := by
+  rw [operator_ghost_commutator A A_plus A_D h_drazin]
+  exact sub_eq_zero
 
 end Pseudoinverses
 

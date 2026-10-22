@@ -94,4 +94,16 @@ theorem q_commutator_anticommutator_relation (q X Y : Carrier)
   rw [h]
   noncomm_ring
 
+/-- At `q = 1`, the exchange relation has zero commutator. -/
+theorem q_one_commutator_zero (X Y : Carrier)
+    (h : X * Y = (1 : Carrier) * (Y * X)) :
+    X * Y - Y * X = 0 := by
+  simpa using q_commutator_readout (1 : Carrier) X Y h
+
+/-- At `q = -1`, the exchange relation has zero anticommutator. -/
+theorem q_neg_one_anticommutator_zero (X Y : Carrier)
+    (h : X * Y = (-1 : Carrier) * (Y * X)) :
+    X * Y + Y * X = 0 := by
+  simpa using q_anticommutator_readout (-1 : Carrier) X Y h
+
 end InfoGeometry.Algebra.QHeisenberg

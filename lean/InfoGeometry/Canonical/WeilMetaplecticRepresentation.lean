@@ -165,4 +165,13 @@ theorem displacementWord_periodic_right
     rw [pow_add, hZ, mul_one]
   rw [hphase, hpower]
 
+/-- The two coordinate-periodicity laws compose to a simultaneous period. -/
+theorem displacementWord_periodic_both
+    (ω : R) (X Z : Matrix n n R) (inv2 N u v : ℕ)
+    (hω : ω ^ N = 1) (hX : X ^ N = 1) (hZ : Z ^ N = 1) :
+    displacementWord ω X Z inv2 (u + N) (v + N) =
+      displacementWord ω X Z inv2 u v := by
+  rw [displacementWord_periodic_left ω X Z inv2 N u (v + N) hω hX]
+  rw [displacementWord_periodic_right ω X Z inv2 N u v hω hZ]
+
 end InfoGeometry.Canonical.WeilMetaplecticRepresentation

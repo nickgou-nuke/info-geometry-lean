@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorCuntzBasis
@@ -35,9 +41,11 @@ checked by the kernel.]
 * `gnsPreInner_zero_left`
 * `gnsPreInner_zero_right`
 * `gnsCylinderWeight_nonneg`
+* `gnsCylinderWeight_pos`
 * `gnsCylinderWeight_cons`
 * `gnsPreInner_symm`
 * `gnsPreInner_self_nonneg`
+* `gnsPreInner_self_eq_zero_iff`
 * `gnsPreInner_basis_self`
 * `gnsPreInner_basis_ne`
 * `gnsPreInner_basis_cons_self`
@@ -56,7 +64,8 @@ verified premises.]
 [Exact theorem statements that remain unproved. No wrappers, sockets, fields,
 witnesses, certificates, or renamed placeholders.]
 
-* Construct the GNS null quotient for `gnsPreInner`.
+* The finite null quotient is trivial by `gnsPreInner_self_eq_zero_iff`; the
+  completed Hilbert-space construction remains open.
 * Complete that quotient as a Hilbert space.
 * Prove the explicit unitary identification with the concrete Hilbert/Cantor
   boundary carrier.
@@ -84,6 +93,13 @@ theorem gnsCylinderWeight_nonneg (w : BinaryWord) :
     0 ≤ gnsCylinderWeight w := by
   unfold gnsCylinderWeight
   exact pow_nonneg (by norm_num) w.length
+
+/-- The finite-cylinder weight is strictly positive. -/
+@[rep_depth operator]
+theorem gnsCylinderWeight_pos (w : BinaryWord) :
+    0 < gnsCylinderWeight w := by
+  unfold gnsCylinderWeight
+  positivity
 
 /-- Prefixing either binary branch halves the finite-cylinder weight. -/
 @[rep_depth operator]
@@ -128,6 +144,35 @@ theorem gnsPreInner_self_nonneg (x : CylinderVector) :
   refine Finset.sum_nonneg ?_
   intro w _
   exact mul_nonneg (mul_self_nonneg (x w)) (gnsCylinderWeight_nonneg w)
+
+/-- The finite-cylinder pre-inner product has trivial null space. -/
+@[rep_depth operator]
+theorem gnsPreInner_self_eq_zero_iff (x : CylinderVector) :
+    gnsPreInner x x = 0 ↔ x = 0 := by
+  constructor
+  · intro h
+    apply Finsupp.ext
+    intro w
+    by_cases hw : w ∈ x.support
+    · have hsum : ∑ v ∈ x.support,
+          x v * x v * gnsCylinderWeight v = 0 := by
+        simpa [gnsPreInner] using h
+      have hterm : x w * x w * gnsCylinderWeight w = 0 := by
+        have hnonneg : ∀ v ∈ x.support,
+            0 ≤ x v * x v * gnsCylinderWeight v := by
+          intro v hv
+          exact mul_nonneg (mul_self_nonneg _) (gnsCylinderWeight_pos v).le
+        exact (Finset.sum_eq_zero_iff_of_nonneg hnonneg).1 hsum w hw
+      have hxx : x w * x w = 0 := by
+        rcases mul_eq_zero.mp hterm with hxx | hwgt
+        · exact hxx
+        · exact False.elim ((ne_of_gt (gnsCylinderWeight_pos w)) hwgt)
+      exact mul_self_eq_zero.mp hxx
+    · by_contra hne
+      exact hw ((Finsupp.mem_support_iff).2 hne)
+  · intro hx
+    subst x
+    exact gnsPreInner_zero_left 0
 
 /-- A basis cylinder has squared norm equal to its KMS cylinder weight. -/
 @[simp, rep_depth operator]

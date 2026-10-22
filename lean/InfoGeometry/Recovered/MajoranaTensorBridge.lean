@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -30,6 +36,21 @@ def gamma1_maj : MajoranaMatrix :=
       1,  0,  0,  0;
       0,  1,  0,  0]
 
+/-- The first two Majorana generators anticommute. -/
+theorem gamma0_gamma1_anticommutator_zero :
+    gamma0_maj * gamma1_maj + gamma1_maj * gamma0_maj = 0 := by
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    simp [gamma0_maj, gamma1_maj, Matrix.mul_apply, Fin.sum_univ_four]
+
+/-- The displayed Majorana generators are genuinely noncommutative. -/
+theorem gamma0_mul_gamma1_ne_gamma1_mul_gamma0 :
+    (gamma0_maj * gamma1_maj : Matrix (Fin 4) (Fin 4) ℝ) ≠
+      gamma1_maj * gamma0_maj := by
+  intro h
+  have h' := congrArg (fun M => M 0 2) h
+  simp [gamma0_maj, gamma1_maj, Matrix.mul_apply, Fin.sum_univ_four] at h'
+  norm_num at h'
+
 /-- `γ²` in a real Majorana-style representation. -/
 def gamma2_maj : MajoranaMatrix :=
   !![ 0,  0,  0,  1;
@@ -44,12 +65,23 @@ def gamma3_maj : MajoranaMatrix :=
      -1,  0,  0,  0;
       0,  1,  0,  0]
 
-/-- Signature-square obligations for the displayed matrices. -/
-def majoranaSignatureSquaresStatement : Prop :=
+/-- The displayed Majorana matrices have signature `(2,2)`. -/
+theorem majoranaSignatureSquares :
   gamma0_maj * gamma0_maj = 1 ∧
   gamma1_maj * gamma1_maj = 1 ∧
   gamma2_maj * gamma2_maj = -1 ∧
-  gamma3_maj * gamma3_maj = -1
+  gamma3_maj * gamma3_maj = -1 := by
+  constructor
+  · ext i j <;> fin_cases i <;> fin_cases j <;>
+      simp [gamma0_maj, Matrix.mul_apply, Fin.sum_univ_four]
+  constructor
+  · ext i j <;> fin_cases i <;> fin_cases j <;>
+      simp [gamma1_maj, Matrix.mul_apply, Fin.sum_univ_four]
+  constructor
+  · ext i j <;> fin_cases i <;> fin_cases j <;>
+      simp [gamma2_maj, Matrix.mul_apply, Fin.sum_univ_four]
+  · ext i j <;> fin_cases i <;> fin_cases j <;>
+      simp [gamma3_maj, Matrix.mul_apply, Fin.sum_univ_four]
 
 /-- The mixed commutator `Σᵘᵛ = [γᵘ, γᵛ]`. -/
 noncomputable def realLorentzGenerator (gamma_u gamma_v : MajoranaMatrix) : MajoranaMatrix :=
@@ -74,8 +106,11 @@ theorem majorana_lorentz_sandwich (S V S_inv : MajoranaMatrix)
 noncomputable def gamma5_maj : MajoranaMatrix :=
   gamma0_maj * gamma1_maj * gamma2_maj * gamma3_maj
 
-/-- Statement shape for the grading identity. -/
-def gamma5_maj_sq_statement : Prop := gamma5_maj * gamma5_maj = 1
+/-- The candidate chiral volume element is an involution. -/
+theorem gamma5_maj_sq : gamma5_maj * gamma5_maj = 1 := by
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    simp [gamma5_maj, gamma0_maj, gamma1_maj, gamma2_maj, gamma3_maj,
+      Matrix.mul_apply, Fin.sum_univ_four] <;> ring
 
 /-- Candidate chiral projectors. -/
 noncomputable def chiralProjectorL : MajoranaMatrix := (1 / 2 : ℝ) • (1 - gamma5_maj)
@@ -84,11 +119,26 @@ noncomputable def chiralProjectorR : MajoranaMatrix := (1 / 2 : ℝ) • (1 + ga
 /-- Chiral supertrace expression. -/
 noncomputable def chiralSupertrace (A : MajoranaMatrix) : ℝ := Matrix.trace (gamma5_maj * A)
 
-/-- Statement shape for the basic chiral trace identities. -/
-def chiralTraceStatement : Prop :=
+/-- The chiral grading has zero trace. -/
+theorem gamma5_maj_trace_zero : Matrix.trace gamma5_maj = 0 := by
+  simp [gamma5_maj, gamma0_maj, gamma1_maj, gamma2_maj, gamma3_maj,
+    Matrix.trace, Matrix.mul_apply, Fin.sum_univ_four]
+
+/-- The basic chiral trace identities. -/
+theorem chiralTraceIdentities :
   chiralSupertrace 1 = 0 ∧
   Matrix.trace chiralProjectorL = 2 ∧
-  Matrix.trace chiralProjectorR = 2
+  Matrix.trace chiralProjectorR = 2 := by
+  unfold chiralSupertrace chiralProjectorL chiralProjectorR
+  constructor
+  · simpa [Matrix.mul_one] using gamma5_maj_trace_zero
+  constructor
+  · rw [Matrix.trace_smul, Matrix.trace_sub]
+    simp [gamma5_maj_trace_zero]
+    norm_num
+  · rw [Matrix.trace_smul, Matrix.trace_add]
+    simp [gamma5_maj_trace_zero]
+    norm_num
 
 /-- Candidate nilpotent generator. -/
 noncomputable def cuntzGeneratorPlus : MajoranaMatrix := (1 / 2 : ℝ) • (gamma0_maj + gamma2_maj)
@@ -96,10 +146,21 @@ noncomputable def cuntzGeneratorPlus : MajoranaMatrix := (1 / 2 : ℝ) • (gamm
 /-- Candidate parity-conjugate nilpotent generator. -/
 noncomputable def cuntzGeneratorMinus : MajoranaMatrix := (1 / 2 : ℝ) • (gamma0_maj - gamma2_maj)
 
-/-- Statement shape for the nilpotent/anticommutator identities. -/
-def cuntzGeneratorStatement : Prop :=
+/-- The two null generators are nilpotent and form a complementary pair. -/
+theorem cuntzGeneratorIdentities :
   cuntzGeneratorPlus * cuntzGeneratorPlus = 0 ∧
   cuntzGeneratorMinus * cuntzGeneratorMinus = 0 ∧
-  cuntzGeneratorPlus * cuntzGeneratorMinus + cuntzGeneratorMinus * cuntzGeneratorPlus = 1
+  cuntzGeneratorPlus * cuntzGeneratorMinus + cuntzGeneratorMinus * cuntzGeneratorPlus = 1 := by
+  constructor
+  · ext i j <;> fin_cases i <;> fin_cases j <;>
+      simp [cuntzGeneratorPlus, gamma0_maj, gamma2_maj, Matrix.mul_apply,
+        Fin.sum_univ_four] <;> ring
+  constructor
+  · ext i j <;> fin_cases i <;> fin_cases j <;>
+      simp [cuntzGeneratorMinus, gamma0_maj, gamma2_maj, Matrix.mul_apply,
+        Fin.sum_univ_four] <;> ring
+  · ext i j <;> fin_cases i <;> fin_cases j <;>
+      simp [cuntzGeneratorPlus, cuntzGeneratorMinus, gamma0_maj, gamma2_maj,
+        Matrix.mul_apply, Fin.sum_univ_four] <;> ring
 
 end InfoGeometry.MajoranaTensorBridge

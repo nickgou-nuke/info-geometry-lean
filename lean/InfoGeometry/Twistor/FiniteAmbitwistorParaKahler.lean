@@ -266,26 +266,32 @@ theorem traceFour_ambitwistorRankOne (Z W : AmbitwistorVector) :
       exact False.elim (hi (Finset.mem_univ i))
   simp_rw [h]
 
-theorem ambitwistorRankOne_comp (Z W : AmbitwistorVector) :
-    (ambitwistorRankOne Z W).comp (ambitwistorRankOne Z W) =
-      (∑ i : Fin 4, W i * Z i) • ambitwistorRankOne Z W := by
+theorem ambitwistorRankOne_comp_general
+    (Z W U V : AmbitwistorVector) :
+    (ambitwistorRankOne Z W).comp (ambitwistorRankOne U V) =
+      (∑ i : Fin 4, W i * U i) • ambitwistorRankOne Z V := by
   apply LinearMap.ext
   intro y
   funext i
   dsimp [ambitwistorRankOne]
   have hsum :
-      (∑ j : Fin 4, W j * ((∑ k : Fin 4, W k * y k) * Z j)) =
-        (∑ k : Fin 4, W k * y k) * (∑ j : Fin 4, W j * Z j) := by
+      (∑ j : Fin 4, W j * ((∑ k : Fin 4, V k * y k) * U j)) =
+        (∑ k : Fin 4, V k * y k) * (∑ j : Fin 4, W j * U j) := by
     calc
-      (∑ j : Fin 4, W j * ((∑ k : Fin 4, W k * y k) * Z j)) =
-          ∑ j : Fin 4, (∑ k : Fin 4, W k * y k) * (W j * Z j) := by
+      (∑ j : Fin 4, W j * ((∑ k : Fin 4, V k * y k) * U j)) =
+          ∑ j : Fin 4, (∑ k : Fin 4, V k * y k) * (W j * U j) := by
             apply Finset.sum_congr rfl
             intro j hj
             ring
-      _ = (∑ k : Fin 4, W k * y k) * (∑ j : Fin 4, W j * Z j) := by
+      _ = (∑ k : Fin 4, V k * y k) * (∑ j : Fin 4, W j * U j) := by
             rw [Finset.mul_sum]
   rw [hsum]
   simp [smul_eq_mul, mul_assoc, mul_comm, mul_left_comm]
+
+theorem ambitwistorRankOne_comp (Z W : AmbitwistorVector) :
+    (ambitwistorRankOne Z W).comp (ambitwistorRankOne Z W) =
+      (∑ i : Fin 4, W i * Z i) • ambitwistorRankOne Z W := by
+  simpa using ambitwistorRankOne_comp_general Z W Z W
 
 theorem isAmbitwistor_rankOne_nilpotent (Z W : AmbitwistorVector)
     (h : ∑ i : Fin 4, W i * Z i = 0) :

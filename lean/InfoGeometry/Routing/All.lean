@@ -17,3 +17,4 @@ import InfoGeometry.Routing.PlanarRotation
 import InfoGeometry.Routing.TypedProofRealization
 import InfoGeometry.Routing.AttentionPolytopeSoftmax
 import InfoGeometry.Routing.AttentionValueCompression
+import InfoGeometry.Routing.AttentionAnalogyFiber

@@ -78,6 +78,14 @@ theorem nambuSheetFlip_swaps_projectors' :
       (nambuProjectorPlus (E := E)).comp (nambuSheetFlip (E := E)) :=
   etaChiral_comp_right_projector (E := E)
 
+/-- Conjugating by the sheet flip transports the positive chiral projector to
+the negative one. -/
+theorem nambuSheetFlip_conjugates_projectorPlus :
+    (nambuSheetFlip (E := E)).comp
+        ((nambuProjectorPlus (E := E)).comp (nambuSheetFlip (E := E))) =
+      nambuProjectorMinus (E := E) :=
+  etaChiral_comp_leftChiralProjector_comp_etaChiral (E := E)
+
 theorem nambuProjectors_complementary :
     nambuProjectorPlus (E := E) + nambuProjectorMinus (E := E) =
       ContinuousLinearMap.id ℝ (DoubledSpace E) := by

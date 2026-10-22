@@ -94,6 +94,13 @@ theorem one_mul_carrier [CommRing R] (x : Carrier R) :
     (1 : Carrier R) * x = x := by
   ext <;> simp
 
+instance [CommRing R] : Monoid (Carrier R) where
+  mul := (· * ·)
+  one := 1
+  mul_assoc := mul_assoc_carrier
+  one_mul := one_mul_carrier
+  mul_one := mul_one_carrier
+
 /-- The split generator squares to `1`. -/
 theorem eps_sq [CommRing R] :
     eps (R := R) * eps (R := R) = (1 : Carrier R) := by

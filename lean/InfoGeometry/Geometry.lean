@@ -7,3 +7,4 @@ Authors: InfoGeometry Engine Contributors
 import InfoGeometry.Geometry.AmplituhedronZetaEquivalence
 import InfoGeometry.Geometry.SplitSignatureCrossPairing
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Canonical.PauliParavectorAdjugateBridge

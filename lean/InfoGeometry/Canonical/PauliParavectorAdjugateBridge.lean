@@ -19,6 +19,27 @@ namespace InfoGeometry.Canonical.PauliParavectorAdjugateBridge
 
 open InfoGeometry.Geometry.PauliParavectorBridge
 
+open scoped Matrix
+
+/-! The explicit paravector conjugate in the Pauli basis. -/
+
+def paravectorConjugateMatrix (v : Minkowski4) : PauliMat :=
+  !![
+    ((v.t - v.z : ℝ) : ℂ), (-v.x + Complex.I * v.y);
+    (-v.x - Complex.I * v.y), ((v.t + v.z : ℝ) : ℂ)
+  ]
+
+theorem adjugate_pauliMatrix_eq_paravectorConjugateMatrix
+    (v : Minkowski4) :
+    Matrix.adjugate (pauliMatrix v) = paravectorConjugateMatrix v := by
+  rw [Matrix.adjugate_fin_two]
+  simp [pauliMatrix, paravectorConjugateMatrix,
+    toPauliParavector,
+    InfoGeometry.Canonical.PauliHestenesSpinMomentum.PauliParavector.pauliMatrix]
+  constructor
+  · simp only [sub_eq_add_neg, add_comm]
+  · simp only [sub_eq_add_neg, add_comm]
+
 theorem pauliMatrix_mul_adjugate_eq_q_smul_one (v : Minkowski4) :
     pauliMatrix v * Matrix.adjugate (pauliMatrix v) =
       ((v.q : ℝ) : ℂ) • (1 : PauliMat) := by

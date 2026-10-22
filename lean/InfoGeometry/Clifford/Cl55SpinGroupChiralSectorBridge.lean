@@ -173,6 +173,28 @@ def spinGroupActionMinus (g : Spin55) :
       Matrix.mulVec (cl55SpinorAlgEquiv (g : Cl55)) v
     exact spinGroup_matrix_preserves_chiralMinus_vector g (v : SpinorSpace 5) v.2)
 
+theorem spinGroupActionPlus_mul (g h : Spin55) :
+    spinGroupActionPlus (g * h) =
+      (spinGroupActionPlus g).comp (spinGroupActionPlus h) := by
+  apply LinearMap.ext
+  intro v
+  apply Subtype.ext
+  change spinGroupAction (g * h) (v : SpinorSpace 5) =
+    spinGroupAction g (spinGroupAction h (v : SpinorSpace 5))
+  rw [spinGroupAction_mul]
+  rfl
+
+theorem spinGroupActionMinus_mul (g h : Spin55) :
+    spinGroupActionMinus (g * h) =
+      (spinGroupActionMinus g).comp (spinGroupActionMinus h) := by
+  apply LinearMap.ext
+  intro v
+  apply Subtype.ext
+  change spinGroupAction (g * h) (v : SpinorSpace 5) =
+    spinGroupAction g (spinGroupAction h (v : SpinorSpace 5))
+  rw [spinGroupAction_mul]
+  rfl
+
 @[simp] theorem spinGroupActionPlus_apply (g : Spin55)
     (v : chiralPlusSector) :
     (spinGroupActionPlus g v : SpinorSpace 5) =

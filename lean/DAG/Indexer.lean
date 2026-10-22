@@ -696,18 +696,31 @@ def processConstantStreaming (env : Environment) (sp : SearchPath) (name : Name)
     dagShapeHash := shapeFingerprint.shapeHash
   }
 
--- Also stream edges for each constant
-def streamConstantEdges (env : Environment) (name : Name) (nameStr : String) (ci : ConstantInfo) : MetaM Unit := do
-  let typeDeps := (collectConsts ci.type).toList
-  for d in typeDeps do
+-- Also stream edges for each constant.
+-- Edges are kept under the same endpoint rule as the file-mode canonical
+-- `edges.jsonl` (`filterEdgesAndClassifyLeakage`): the destination must be a
+-- declaration this run emits, i.e. present in the environment, inside the
+-- namespace filters, and accepted by `shouldIndexDeclString`. The source is
+-- always an emitted declaration. Returns the number of dropped edges.
+def streamConstantEdges (env : Environment) (nsFilters : Option (List String))
+    (name : Name) (nameStr : String) (ci : ConstantInfo) : MetaM Nat := do
+  let isIndexed (d : Name) : Bool :=
+    env.contains d && inNamespaceFilters nsFilters d && shouldIndexDeclString d.toString
+  let mut dropped := 0
+  for d in (collectConsts ci.type).toList do
     if d != name then
-      streamWriteJsonl ({ src := nameStr, dst := d.toString, kind := "type" } : StreamEdge)
-
+      if isIndexed d then
+        streamWriteJsonl ({ src := nameStr, dst := d.toString, kind := "type" } : StreamEdge)
+      else
+        dropped := dropped + 1
   if let some v := ci.value? (allowOpaque := true) then
-    let valDeps := (collectConsts v).toList
-    for d in valDeps do
+    for d in (collectConsts v).toList do
       if d != name then
-        streamWriteJsonl ({ src := nameStr, dst := d.toString, kind := "value" } : StreamEdge)
+        if isIndexed d then
+          streamWriteJsonl ({ src := nameStr, dst := d.toString, kind := "value" } : StreamEdge)
+        else
+          dropped := dropped + 1
+  return dropped
 
 def runStreamingIndexer (nsPrefix : String) (importRoot : String) (env : Environment) : MetaM Unit := do
   let srcSearchPath ← liftM Lean.getSrcSearchPath
@@ -722,13 +735,15 @@ def runStreamingIndexer (nsPrefix : String) (importRoot : String) (env : Environ
   let consts := consts.qsort (fun a b => a.nameStr < b.nameStr)
 
   -- Process each constant and stream output immediately
+  let mut dropped := 0
   for entry in consts do
     let declNode ← processConstantStreaming env srcSearchPath entry.name entry.nameStr entry.ci
     streamWriteJsonl declNode
     -- Also stream edges for this constant
-    streamConstantEdges env entry.name entry.nameStr entry.ci
+    dropped := dropped + (← streamConstantEdges env nsFilters entry.name entry.nameStr entry.ci)
 
   IO.println "" -- flush
+  IO.eprintln s!"[Indexer stream] emitted {consts.size} decls; dropped {dropped} edge(s) whose target is outside the indexed declaration set ({importRoot})"
 
 def indexerMain (args : List String) : IO UInt32 := do
   let importStart ← IO.monoMsNow

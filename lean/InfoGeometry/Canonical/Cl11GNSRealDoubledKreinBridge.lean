@@ -457,6 +457,19 @@ theorem realDoubledRightAction_readout
       realMatrixRightAction_readout, rightActionLinear_apply]
     rw [imagPartMatrix_mul]
 
+/-! The finite standard-form Tomita map exchanges left multiplication with the
+right commutant action after realification. -/
+theorem realDoubledTomita_left_to_right
+    (A X : FiniteHestenesHilbertSchmidtStandardForm.HS2) :
+    realDoubledReadout
+        (matrixTomita (leftActionLinear A (matrixTomita X))) =
+      realDoubledRightAction (matrixTomita A) (realDoubledReadout X) := by
+  rw [realDoubledRightAction_readout]
+  exact congrArg realDoubledReadout (by
+    simpa [leftActionLinear_apply, rightActionLinear_apply,
+      matrixLeftAction, matrixRightAction] using
+      (matrixTomita_left_to_right A X))
+
 /-- The doubled real action of the standard-form left/right pair commutes,
 because it is conjugate to the commuting Hilbert--Schmidt regular actions. -/
 theorem realDoubledLeftRightAction_commute

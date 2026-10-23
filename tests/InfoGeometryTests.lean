@@ -8,6 +8,7 @@ Authors: InfoGeometry Engine Contributors
 
 import InfoGeometry
 import InfoGeometry.Core.SuperGrassmannianSusy
+import InfoGeometry.Core.PeirceTangent
 import InfoGeometry.Core.SuperGrassmannianSusyExamples
 import InfoGeometry.Core.SupercolorMatrixExamples
 import InfoGeometry.Core.SupercolorMultiplication

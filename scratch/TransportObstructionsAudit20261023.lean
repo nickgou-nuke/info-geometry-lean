@@ -3,6 +3,7 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
+import InfoGeometry.Algebra.ChiralCARTransport
 import InfoGeometry.Algebra.InvariantTransport
 import InfoGeometry.Algebra.ChiralRealHyperbolicRotor
 
@@ -14,3 +15,9 @@ import InfoGeometry.Algebra.ChiralRealHyperbolicRotor
 #print axioms InfoGeometry.OperatorAlgebra.hyperbolicRotor_conjugate_of_anticommute
 #print axioms InfoGeometry.OperatorAlgebra.hyperbolicRotor_conjugate_star_defect
 #print axioms InfoGeometry.OperatorAlgebra.hyperbolicRotor_conjugate_selfAdjoint_iff
+
+#print axioms InfoGeometry.Algebra.ChiralCARTransport.quadratic_commutator
+#print axioms InfoGeometry.Algebra.ChiralCARTransport.cross_current_commutes_left
+#print axioms InfoGeometry.Algebra.ChiralCARTransport.pairing_current_commutator_annihilator
+#print axioms InfoGeometry.Algebra.ChiralCARTransport.pairing_current_commutator_creator
+#print axioms InfoGeometry.Algebra.ChiralCARTransport.pairing_current_star

@@ -177,4 +177,61 @@ theorem linear_mix_CAR_iff
           u * t + v * s = 1)
   rw [hcoeff]
 
+/-- The action of a quadratic operator is determined by two anticommutators. -/
+theorem quadratic_commutator (a b x : A) :
+    (a * b) * x - x * (a * b) =
+      a * (b * x + x * b) - (a * x + x * a) * b := by
+  noncomm_ring
+
+/-- The number-preserving cross-current cannot generate particle--hole
+mixing of its first square-zero factor. -/
+theorem cross_current_commutes_left (p q : A)
+    (hp : p * p = 0) (hpq : p * q + q * p = 0) :
+    (p * q - q * p) * p - p * (p * q - q * p) = 0 := by
+  have hqp : q * p + p * q = 0 := by simpa only [add_comm] using hpq
+  calc
+    _ = ((p * q) * p - p * (p * q)) -
+        ((q * p) * p - p * (q * p)) := by noncomm_ring
+    _ = 0 := by
+      rw [quadratic_commutator, quadratic_commutator, hp, hqp]
+      simp
+
+/-- Pair annihilation minus pair creation sends the first annihilator to
+its partner creator. Only the relations used by this action are assumed. -/
+theorem pairing_current_commutator_annihilator
+    (p P q Q : A) (hp : p * p = 0)
+    (hqp : q * p + p * q = 0) (hQp : Q * p + p * Q = 0)
+    (hPp : P * p + p * P = 1) :
+    (q * p - P * Q) * p - p * (q * p - P * Q) = Q := by
+  calc
+    _ = ((q * p) * p - p * (q * p)) -
+        ((P * Q) * p - p * (P * Q)) := by noncomm_ring
+    _ = Q := by
+      rw [quadratic_commutator, quadratic_commutator, hp, hqp, hQp, hPp]
+      simp
+
+/-- The same pairing current sends the partner creator to minus the first
+annihilator, giving the infinitesimal circular mixing plane. -/
+theorem pairing_current_commutator_creator
+    (p P q Q : A) (hQ : Q * Q = 0)
+    (hpQ : p * Q + Q * p = 0) (hPQ : P * Q + Q * P = 0)
+    (hqQ : q * Q + Q * q = 1) :
+    (q * p - P * Q) * Q - Q * (q * p - P * Q) = -p := by
+  calc
+    _ = ((q * p) * Q - Q * (q * p)) -
+        ((P * Q) * Q - Q * (P * Q)) := by noncomm_ring
+    _ = -p := by
+      rw [quadratic_commutator, quadratic_commutator, hQ, hpQ, hPQ, hqQ]
+      simp
+
+/-- Explicit star-duality makes the circular pairing current skew-adjoint;
+CAR relations alone do not supply this star statement. -/
+theorem pairing_current_star [StarRing A] (p P q Q : A)
+    (hP : P = star p) (hQ : Q = star q) :
+    star (q * p - P * Q) = -(q * p - P * Q) := by
+  subst P
+  subst Q
+  simp only [star_sub, star_mul, star_star]
+  abel
+
 end InfoGeometry.Algebra.ChiralCARTransport

@@ -155,4 +155,20 @@ theorem superInvolution_anticommute_normalizedDirac
     _ = 0 := by
       rw [hγ', hleft', hright', add_zero, zero_add]
 
+/-- The normalized supercharge is a partial tripotent: its square is the
+active support and its cube is itself. -/
+theorem normalizedDirac_cube
+    {a m : R} (h : IsMoorePenroseInverse a m) (ha : a * a = 0) :
+    normalizedDirac a m * normalizedDirac a m * normalizedDirac a m =
+      normalizedDirac a m := by
+  have hsq := (partial_matrix_unit_identities h ha).2.2
+  have hact := activeSupport_identities h ha
+  rw [hsq]
+  calc
+    activeSupport a m * normalizedDirac a m =
+        activeSupport a m * a + activeSupport a m * m := by
+          simp [normalizedDirac, mul_add]
+    _ = a + m := by rw [hact.2.1, hact.2.2.2.1]
+    _ = normalizedDirac a m := by rfl
+
 end InfoGeometry.Core.DiracSuperalgebra

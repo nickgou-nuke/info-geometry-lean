@@ -19,7 +19,7 @@ product of finite coordinate spaces, giving actual normed-space instances.
 -/
 noncomputable section
 namespace InfoGeometry.Routing.BlockCausalSinkhorn
-open scoped BigOperators
+open scoped BigOperators Matrix.Norms.Elementwise
 open InfoGeometry.Routing.CausalPrefixPooling
 
 variable {K : Type*} [Fintype K]
@@ -120,15 +120,19 @@ theorem pooledFeature_local (x y : C → ChunkData L K D) (t : C)
   ext k d
   apply prefix_pool_congr
   · intro s hs
-    rw [h hs]
+    exact congrArg (fun z : ChunkData L K D => z.1 k) (h hs)
   · intro s hs
-    rw [h hs]
+    exact congrArg (fun z : ChunkData L K D => z.2.1 a k d) (h hs)
 
 theorem logScore_local (x y : C → ChunkData L K D) (t : C)
     (h : Set.EqOn x y (Set.Iic t)) (tau : ℝ) (prior : Matrix K K ℝ) :
     logScore x t tau prior = logScore y t tau prior := by
   have hx : x t = y t := h (le_refl t)
-  simp only [logScore, pooledFeature_local x y t h 0, hx]
+  have hk := pooledFeature_local x y t h 0
+  ext k l
+  change (∑ d, pooledFeature x t 0 k d * (x t).2.1 2 l d) / tau + prior k l =
+    (∑ d, pooledFeature y t 0 k d * (y t).2.1 2 l d) / tau + prior k l
+  rw [hk, hx]
 
 /-- Exact equality under arbitrary future-chunk changes. Neither matrix
 invertibility nor Sinkhorn convergence is needed for this dependency claim. -/

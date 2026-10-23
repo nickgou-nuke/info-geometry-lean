@@ -43,4 +43,6 @@ open InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse
 #print axioms InfoGeometry.Singular.MoorePenrose.chiralSupport_star_transport
 #print axioms InfoGeometry.Singular.MoorePenrose.normalizedDirac_star_transport
 #print axioms InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse.star_reverse
+#print axioms InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse.star_same_order
 #print axioms InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse.squareZero_chiralHodge_star_transport
+#print axioms InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse.squareZero_chiralHodge_same_order_star_transport

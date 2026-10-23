@@ -139,6 +139,21 @@ theorem star_reverse (h : IsMoorePenroseInverse a m) :
       _ = star (m * a) := h.ba_adj_eq.symm
       _ = star a * star m := by rw [star_mul]
 
+/-- Moore--Penrose axioms also transport componentwise under the involution. -/
+theorem star_same_order (h : IsMoorePenroseInverse a m) :
+    IsMoorePenroseInverse (star a) (star m) := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · simpa only [star_mul, star_star, mul_assoc] using congrArg star h.aba_eq_a
+  · simpa only [star_mul, star_star, mul_assoc] using congrArg star h.bab_eq_b
+  · calc
+      star (star a * star m) = m * a := by simp only [star_mul, star_star]
+      _ = star (m * a) := h.ba_adj_eq.symm
+      _ = star a * star m := by rw [star_mul]
+  · calc
+      star (star m * star a) = a * m := by simp only [star_mul, star_star]
+      _ = star (a * m) := h.ab_adj_eq.symm
+      _ = star m * star a := by rw [star_mul]
+
 /-- The exact support is idempotent. -/
 theorem exactSupport_idem (h : IsMoorePenroseInverse a m) :
     exactSupport a m * exactSupport a m = exactSupport a m := by
@@ -429,6 +444,16 @@ theorem squareZero_chiralHodge_star_transport
   have h_star_m : star m * star m = 0 := by
     simpa only [star_mul, star_zero] using congrArg star hma
   exact squareZero_chiralHodge_decomposition h_reverse h_star_m
+
+/-- The complete square-zero Hodge package is also invariant under applying the
+involution componentwise to the same ordered pair. -/
+theorem squareZero_chiralHodge_same_order_star_transport
+    (h : IsMoorePenroseInverse a m) (ha : a * a = 0) :
+    SquareZeroChiralHodge (star a) (star m) := by
+  have h_same := h.star_same_order
+  have h_star_a : star a * star a = 0 := by
+    simpa only [star_mul, star_zero] using congrArg star ha
+  exact squareZero_chiralHodge_decomposition h_same h_star_a
 
 end IsMoorePenroseInverse
 

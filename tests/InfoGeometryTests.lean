@@ -276,7 +276,9 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Singular.MoorePenrose.chiralSupport_star_transport
 #check InfoGeometry.Singular.MoorePenrose.normalizedDirac_star_transport
 #check InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse.star_reverse
+#check InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse.star_same_order
 #check InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse.squareZero_chiralHodge_star_transport
+#check InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse.squareZero_chiralHodge_same_order_star_transport
 #check InfoGeometry.Canonical.DrazinNilpotentShell.interShellPeirceCorner_eq_zero_of_le
 #check InfoGeometry.Canonical.DrazinNilpotentShell.full_operator_triangular_peirce_reconstruction
 #check InfoGeometry.Canonical.DrazinNilpotentShell.interShell_chiralHodge_decomposition

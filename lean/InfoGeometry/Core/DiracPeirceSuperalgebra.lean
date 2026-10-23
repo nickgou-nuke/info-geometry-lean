@@ -54,6 +54,104 @@ def oddPeircePart (a m x : R) : R :=
   exactSupport a m * x * coexactSupport a m +
     coexactSupport a m * x * exactSupport a m
 
+/- The even Peirce decomposition is an idempotent projection. -/
+theorem evenPeircePart_idem (h : IsMoorePenroseInverse a m)
+    (ha : a * a = 0) (x : R) :
+    evenPeircePart a m (evenPeircePart a m x) =
+      evenPeircePart a m x := by
+  unfold evenPeircePart
+  simp only [mul_add, add_mul, mul_assoc]
+  rw [h.exactSupport_idem, h.exactSupport_mul_coexactSupport ha,
+    h.exactSupport_mul_harmonicSupport ha,
+    InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse.coexactSupport_mul_exactSupport ha,
+    h.coexactSupport_idem,
+    h.coexactSupport_mul_harmonicSupport ha,
+    h.harmonicSupport_mul_exactSupport ha,
+    h.harmonicSupport_mul_coexactSupport ha,
+    h.harmonicSupport_idem ha]
+  simp only [zero_mul, mul_zero]
+  have h_ex : exactSupport a m * (exactSupport a m * (x * exactSupport a m)) =
+      exactSupport a m * x * exactSupport a m := by
+    rw [← mul_assoc, h.exactSupport_idem]
+    simp only [mul_assoc]
+  have h_co : coexactSupport a m * (coexactSupport a m * (x * coexactSupport a m)) =
+      coexactSupport a m * x * coexactSupport a m := by
+    rw [← mul_assoc, h.coexactSupport_idem]
+    simp only [mul_assoc]
+  have h_harm : harmonicSupport a m * (harmonicSupport a m * (x * harmonicSupport a m)) =
+      harmonicSupport a m * x * harmonicSupport a m := by
+    rw [← mul_assoc, h.harmonicSupport_idem ha]
+    simp only [mul_assoc]
+  rw [h_ex, h_co, h_harm]
+  simp only [mul_assoc, zero_add, add_zero]
+
+/- The odd Peirce decomposition is also an idempotent projection. -/
+theorem oddPeircePart_idem (h : IsMoorePenroseInverse a m)
+    (ha : a * a = 0) (x : R) :
+    oddPeircePart a m (oddPeircePart a m x) =
+      oddPeircePart a m x := by
+  unfold oddPeircePart
+  simp only [mul_add, add_mul, mul_assoc]
+  rw [h.exactSupport_idem, h.exactSupport_mul_coexactSupport ha,
+    InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse.coexactSupport_mul_exactSupport ha,
+    h.coexactSupport_idem]
+  simp only [zero_mul, mul_zero]
+  have h_ex : exactSupport a m * (exactSupport a m * (x * coexactSupport a m)) =
+      exactSupport a m * x * coexactSupport a m := by
+    rw [← mul_assoc, h.exactSupport_idem]
+    simp only [mul_assoc]
+  have h_co : coexactSupport a m * (coexactSupport a m * (x * exactSupport a m)) =
+      coexactSupport a m * x * exactSupport a m := by
+    rw [← mul_assoc, h.coexactSupport_idem]
+    simp only [mul_assoc]
+  rw [h_ex, h_co]
+  simp only [mul_assoc, zero_add, add_zero]
+
+/- The even and odd Peirce projections have disjoint ranges. -/
+theorem evenPeircePart_oddPeircePart (h : IsMoorePenroseInverse a m)
+    (ha : a * a = 0) (x : R) :
+    evenPeircePart a m (oddPeircePart a m x) = 0 := by
+  unfold evenPeircePart oddPeircePart
+  simp only [mul_add, add_mul, ← mul_assoc]
+  simp only [h.exactSupport_idem, h.coexactSupport_idem,
+    h.exactSupport_mul_coexactSupport ha,
+    InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse.coexactSupport_mul_exactSupport ha,
+    h.exactSupport_mul_harmonicSupport ha,
+    h.coexactSupport_mul_harmonicSupport ha,
+    h.harmonicSupport_mul_exactSupport ha,
+    h.harmonicSupport_mul_coexactSupport ha, zero_mul, mul_zero,
+    add_zero]
+  have h₁ : exactSupport a m * x * coexactSupport a m * exactSupport a m = 0 := by
+    rw [mul_assoc (exactSupport a m * x) (coexactSupport a m),
+      InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse.coexactSupport_mul_exactSupport ha,
+      mul_zero]
+  have h₂ : coexactSupport a m * x * exactSupport a m * coexactSupport a m = 0 := by
+    rw [mul_assoc (coexactSupport a m * x) (exactSupport a m),
+      h.exactSupport_mul_coexactSupport ha, mul_zero]
+  rw [h₁, h₂]
+  simp
+
+/- The odd and even Peirce projections have disjoint ranges in the reverse order. -/
+theorem oddPeircePart_evenPeircePart (h : IsMoorePenroseInverse a m)
+    (ha : a * a = 0) (x : R) :
+    oddPeircePart a m (evenPeircePart a m x) = 0 := by
+  unfold oddPeircePart evenPeircePart
+  simp only [mul_add, add_mul, ← mul_assoc]
+  simp only [h.exactSupport_idem, h.coexactSupport_idem,
+    h.exactSupport_mul_coexactSupport ha,
+    h.exactSupport_mul_harmonicSupport ha,
+    InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse.coexactSupport_mul_exactSupport ha,
+    h.coexactSupport_mul_harmonicSupport ha, zero_mul, mul_zero, add_zero]
+  have h₁ : exactSupport a m * x * exactSupport a m * coexactSupport a m = 0 := by
+    rw [mul_assoc (exactSupport a m * x) (exactSupport a m),
+      h.exactSupport_mul_coexactSupport ha, mul_zero]
+  have h₂ : coexactSupport a m * x * coexactSupport a m * exactSupport a m = 0 := by
+    rw [mul_assoc (coexactSupport a m * x) (coexactSupport a m),
+      InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse.coexactSupport_mul_exactSupport ha,
+      mul_zero]
+  rw [h₁, h₂]
+  simp
+
 /-- The odd anticommutator `D_Q(X) = Q X + X Q` with the normalized
 supercharge `Q = a + m`.  This is the odd-parity branch of the
 parity-alternating superderivation; it is not a derivation on its own. -/

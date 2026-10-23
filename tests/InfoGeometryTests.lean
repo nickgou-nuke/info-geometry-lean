@@ -287,6 +287,10 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Core.DiracPeirceSuperalgebra.diracAnticommutator_coexactSupport
 #check InfoGeometry.Core.DiracPeirceSuperalgebra.diracAnticommutator_harmonicSupport
 #check InfoGeometry.Core.DiracPeirceSuperalgebra.diracAnticommutator_activeSupport
+#check InfoGeometry.Core.DiracPeirceSuperalgebra.evenPeircePart_idem
+#check InfoGeometry.Core.DiracPeirceSuperalgebra.oddPeircePart_idem
+#check InfoGeometry.Core.DiracPeirceSuperalgebra.evenPeircePart_oddPeircePart
+#check InfoGeometry.Core.DiracPeirceSuperalgebra.oddPeircePart_evenPeircePart
 #check InfoGeometry.Core.DiracPeirceSuperalgebra.superInvolution_conjugates_activeSupport
 #check InfoGeometry.Core.DiracPeirceSuperalgebra.globalMajoranaReflection_conjugates_activeSupport
 #check InfoGeometry.Core.DiracSuperalgebra.superInvolution_conjugates_majoranaPlus

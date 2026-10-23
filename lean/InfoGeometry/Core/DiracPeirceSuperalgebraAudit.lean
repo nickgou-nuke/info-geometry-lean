@@ -7,6 +7,10 @@ import InfoGeometry.Core.DiracPeirceSuperalgebra
 
 #print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.evenPeircePart_chiralSupport_commute
 #print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.oddPeircePart_chiralSupport_anticommute
+#print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.evenPeircePart_idem
+#print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.oddPeircePart_idem
+#print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.evenPeircePart_oddPeircePart
+#print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.oddPeircePart_evenPeircePart
 #print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.activeSupport_commute_evenPeircePart
 #print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.activeSupport_commute_oddPeircePart
 #print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.activeSupport_commute_superInvolution

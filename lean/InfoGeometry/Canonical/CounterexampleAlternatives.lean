@@ -37,6 +37,11 @@ theorem positive_normalization_sum_not_additive
     positivity
   linarith
 
+theorem common_scaling_division_invariant
+    {K : Type*} [Field K] (c w total : K) (hc : c ≠ 0) :
+    (c * w) / (c * total) = w / total := by
+  rw [mul_div_mul_left w total hc]
+
 theorem star_symmetric_sum_of_self_adjoint
     [Ring A] [StarRing A] (x y : A)
     (hx : star x = x) (hy : star y = y) :

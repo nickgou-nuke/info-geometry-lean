@@ -21,6 +21,13 @@ stationarity `∑ i, π i * P i j = π j`, positive `π` for nonnegativity and
 nonzero `π` for algebraic identities. No normalization of `π` is necessary.
 No new hypothesis structure or renamed construction is introduced.
 
+The energy extension uses the native `FiniteResamplingGap.dirichletEnergy`:
+the weighted flux average preserves every symmetric edge readout, and therefore
+preserves the Dirichlet energy for every observable. This is the precise
+compatibility with quadratic dissipation, not a claim that the directed
+dynamics or its antisymmetric current is unchanged. The identity only needs
+nonzero weights; stationarity and stochasticity are not needed for this part.
+
 Search scope: recursive Lean searches for detailed balance, reversibilization,
 weighted adjoints and `weightedSelfPart`; direct inspection of the above owners
 and `Probability/FiniteResamplingGap`. The latter already provides a concrete
@@ -29,8 +36,8 @@ These searches establish the local integration context, not repository-wide
 absence of other formulations.
 
 Verification: the locked build of
-`InfoGeometry.Probability.CausalDetailedBalanceObstructionAudit` passed (8930
-jobs), including the new audit module. All eight new theorems report only
+`InfoGeometry.Probability.CausalDetailedBalanceObstructionAudit` passed (8934
+jobs), including the energy extension. All ten new theorems report only
 `propext`, `Classical.choice`, and `Quot.sound`. The new module has no warnings;
 existing dependency warnings remain. OpenGauss static screening reports zero
 traps and the semantic-vacuity scan reports zero findings. These automated

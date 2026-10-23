@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Probability.FiniteMarkovReversibilization
+import InfoGeometry.Probability.FiniteMarkovReversibleEnergy
 
 #print axioms InfoGeometry.Physics.weightedAdjoint_nonneg
 #print axioms InfoGeometry.Physics.weightedAdjoint_row_sum
@@ -13,3 +14,5 @@ import InfoGeometry.Probability.FiniteMarkovReversibilization
 #print axioms InfoGeometry.Physics.weightedSelfPart_eq_zero_iff
 #print axioms InfoGeometry.Physics.weightedSelfPart_detailedBalance
 #print axioms InfoGeometry.Physics.weightedSelfPart_stationary
+#print axioms InfoGeometry.Physics.weightedSelfPart_symmetric_readout
+#print axioms InfoGeometry.Physics.weightedSelfPart_dirichletEnergy

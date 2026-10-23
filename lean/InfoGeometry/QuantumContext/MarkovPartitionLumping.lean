@@ -14,8 +14,9 @@ For a finite map `G : X → Y`, its incidence matrix sends macrostate observable
 to the corresponding microstate observables. The equation `P * C = C * Q` is
 equivalent to the block-sum criterion for strong lumpability. When `Q` is
 strictly positive, this intertwining forces `G` to be surjective. The
-pushforward of a stationary row through `C` supplies the stationary data
-required by the existing rectangular group-inverse transport theorem.
+pushforward of a stationary row through `C` supplies the coarse stationary
+distribution. Group-inverse transport itself follows directly from incidence
+intertwining and the full group-inverse laws.
 -/
 
 noncomputable section
@@ -212,17 +213,8 @@ theorem groupInverse_intertwines_of_partitionLumping
     (Gsharp : Matrix X X ℝ) (hG : IsGroupInverse (1 - P) Gsharp)
     (Qsharp : Matrix Y Y ℝ) (hQsharp : IsGroupInverse (1 - Q) Qsharp) :
     Gsharp * partitionIncidence G = partitionIncidence G * Qsharp := by
-  let μ := pushforwardStationaryRow G π
-  have hμsum : ∑ j : Y, μ j = 1 := by
-    dsimp [μ]
-    rw [pushforwardStationaryRow_sum, hπsum]
-  have hμstat : ∀ j, ∑ i : Y, μ i * Q i j = μ j := by
-    exact pushforwardStationaryRow_stationary G P Q π hπstat hintertwines
-  exact groupInverse_intertwines_of_stationary_compatible
-    P Q (partitionIncidence G) π μ hP hQ hPpos hQpos hπsum hμsum hπstat hμstat
-    (partitionIncidence_row_sum G)
-    (by intro j; rfl)
-    hintertwines Gsharp hG Qsharp hQsharp
+  exact InfoGeometry.QuantumContext.IntertwinerAlgebra.laplacian_groupInverse_intertwines
+    P Q (partitionIncidence G) Gsharp Qsharp hG hQsharp hintertwines
 
 end InfoGeometry.QuantumContext.MarkovPartitionLumping
 

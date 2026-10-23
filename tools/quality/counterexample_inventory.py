@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Inventory counterexample/obstruction declarations in Lean owners.
+"""Inventory counterexample/obstruction declarations in repository sources.
 
-This is deliberately lexical navigation, not a proof checker. All physical
-folders are searched except Git metadata; skipped symlinks and read failures
-are reported. Name/syntax matches and same-file positive-name candidates must
-be reviewed against actual Lean owners and do not certify a repair.
+This is deliberately lexical navigation, not a proof checker. Repository
+source folders are searched while build/dependency, external-reference, and
+Git metadata trees are reported as skipped. Name/syntax matches and same-file
+positive-name candidates must be reviewed against actual Lean owners and do
+not certify a repair.
 """
 
 from __future__ import annotations
@@ -109,7 +110,7 @@ def surface(path: Path) -> str:
 
 
 def inventory(root: Path) -> dict[str, object]:
-    """Walk every physical folder except Git metadata; report every omission.
+    """Walk repository source folders and report every skipped tree.
 
     Candidate detection remains lexical, not a proof or completeness claim.
     Symlinks are not followed, preventing cycles and traversal outside root.

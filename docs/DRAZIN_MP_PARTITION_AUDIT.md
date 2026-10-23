@@ -469,8 +469,9 @@ repaired snapshot passed these independent checks.
 The 2026-10-23 supercolor intake conflates two different corner geometries.
 For `d_i` in `p A s_i` and `B_i` in `s_i A p`, orthogonal source
 idempotents annihilate `d_i B_j`, not `B_i d_j`. A shared normalized target
-can produce matrix units `B_i d_j`; fully disjoint pairs instead have central
-sector supports and no off-diagonal color products. Neither counting charges
+can produce matrix units `B_i d_j`; fully disjoint pairs instead have sector
+supports central in their generated algebra (not necessarily the ambient ring)
+and no off-diagonal color products. Neither counting charges
 nor a conjunction of identities establishes a Lie-superalgebra isomorphism.
 
 The first source delta is `Core/PeirceTangent.lean`: over an arbitrary
@@ -486,6 +487,15 @@ claimed. The source-confirmed existing Grassmannian owner
 `Canonical/SuperGrassmannianManifold` defines algebraic linear idempotents;
 its name is not evidence for those stronger claims. The finite contracts are
 kernel-checked in `Core.PeirceTangent` and `Core.SuperGrassmannianSusy`.
+
+Independent QA Singer accepted `Core.PeirceTangent` with limited scope:
+locked target build passed (3189 jobs), direct Lean check passed, and all
+five declaration axiom checks used only `propext` / `Quot.sound`.
+The checked source SHA-256 was
+`c4ed8bfb44ccf77fef2bdf1073fc89d86b2a3ab86e7847fe1874c5fccbe853a5`.
+Independent A-A Sagan found no mathematical error in those five statements.
+The off-diagonal expansion theorem is forward-only; its converse and a
+self-adjoint tangent theorem are not claimed by this module.
 
 ### Earlier inverse-sector audit
 

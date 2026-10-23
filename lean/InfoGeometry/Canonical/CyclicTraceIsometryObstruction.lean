@@ -38,4 +38,22 @@ theorem no_normalized_cyclic_additive_trace
   have hzero := cyclic_additive_trace_vanishes_on_unit x₀ y₀ x₁ y₁ τ hcyc h₀ h₁ hsum
   exact zero_ne_one (hzero.symm.trans hnorm)
 
+/-- A proper one-sided isometry cannot satisfy the CAR relation in a
+nontrivial ring: the two equations force its range idempotent to vanish and
+then force the unit to vanish. -/
+theorem no_car_isometry_in_nontrivial_ring
+    [Nontrivial A] (x xstar : A)
+    (hiso : xstar * x = 1)
+    (hcar : xstar * x + x * xstar = 1) : False := by
+  have hrange : x * xstar = 0 := by
+    rw [hiso] at hcar
+    have h : (1 : A) + x * xstar = 1 + 0 := by simpa using hcar
+    exact add_left_cancel h
+  have hone : (1 : A) = 0 := by
+    calc
+      (1 : A) = (xstar * x) * (xstar * x) := by rw [hiso]; simp
+      _ = xstar * (x * xstar) * x := by simp only [mul_assoc]
+      _ = 0 := by rw [hrange, mul_zero, zero_mul]
+  exact one_ne_zero hone
+
 end InfoGeometry.Canonical.CyclicTraceIsometryObstruction

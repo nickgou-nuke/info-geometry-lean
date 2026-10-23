@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
@@ -17,19 +22,23 @@ import InfoGeometry.Algebra.Zorn.G2TwoPCSubgroupClosure
 import InfoGeometry.Algebra.Zorn.G2TwoSylowSubgroup
 
 /-!
-# Master Explicit Bruhat Classification & Coordinate Rigidity for G₂(2)
+# Conditional Bruhat classification assembly and coordinate rigidity for G₂(2)
 
-This module provides the unified master theorems for:
-1. Precise $X.y_1$ coordinate rigidity on `basis8 7 = down2` using the non-circular
-   `basis8 3 = up1` probe ($up1 \cdot down2 = 0$ while $up1 \cdot (down1 + down2) = e_+ \neq 0$).
-2. Unconditional fullPeel rigidity: $\forall g \in \mathrm{nativeFlagStabilizer}, \mathrm{fullPeel}(g) = 1$.
-3. Native stabilizer order $|\mathrm{Stab}_G(F_0)| = |U| = 64$ and ambient order $|G_2(2)| = 12096$.
-4. Intrinsic flag bijection $G / U \simeq \mathrm{IntrinsicFlag}$ with cardinality 189.
-5. Explicit Bruhat classification equivalence:
-   `Fin 189 ≃ SplitOctF2Aut ⧸ unipotentSubgroup`
-   yielding the concrete Bruhat decomposition $G_2(2) = \bigsqcup_{w \in W(G_2)} B w B$.
+This module proves the algebraic basis probes and within-cell residual
+injectivity, then assembles classification consequences under explicit inputs:
 
-All proofs are complete in native Lean 4 with 0 sorrys and 0 custom axioms.
+* Stabilizer order 64 and ambient order 12096 require all eight residual
+  basis readbacks for every element of the native flag stabilizer.
+* The equivalence `Fin 189 ≃ CarrierQuotient` requires residual alignment
+  and the ambient order.
+* Concrete Bruhat coverage requires injectivity of the quotient
+  representative map and the ambient order.
+
+These declarations do not supply those inputs unconditionally. In particular,
+a one-sided PC residual is not asserted to be a Weyl representative, and a
+finite list of formal cell weights is not an ambient cardinality proof.
+The existing PC reconstruction and double-coset transport retain the residual
+factor on the native automorphism carrier.
 -/
 
 namespace InfoGeometry.Algebra.Zorn.G2BruhatClassificationMaster
@@ -93,7 +102,7 @@ theorem basis8_seven_y1_is_false_of_rigidity (X : SplitOctF2)
 
 /-! ## 2. Master Stabilizer and Group Order Theorems -/
 
-/-- Stabilizer is exactly the 64-element unipotent radical U. -/
+/-- Full residual basis readbacks imply that the native flag stabilizer has order 64. -/
 theorem native_stabilizer_order_eq_64
     (hreadback : ∀ g : SplitOctF2Aut,
       g ∈ nativeFlagStabilizer →
@@ -105,7 +114,7 @@ theorem native_stabilizer_order_eq_64
   rw [h_eq]
   exact G2TwoPCSubgroupClosure.unipotentSubgroup_card
 
-/-- Ambient automorphism group G₂(2) has order exactly 12096. -/
+/-- Full residual basis readbacks imply ambient order 12096. -/
 theorem ambient_group_order_eq_12096
     (hreadback : ∀ g : SplitOctF2Aut,
       g ∈ nativeFlagStabilizer →
@@ -122,7 +131,7 @@ theorem residual_injectivity_all_cells :
       gapResidualPair k i = gapResidualPair k j → i = j :=
   gapResidualPair_injective_on_cell
 
-/-- The canonical quotient equivalence Fin 189 ≃ G / U from residual alignment. -/
+/-- Residual alignment and ambient order give the quotient equivalence Fin 189 ≃ G / U. -/
 noncomputable def explicitQuotientRepresentativeEquiv
     (halign : ∀ (i j : Fin 189),
       quotientRepresentative i = quotientRepresentative j →
@@ -133,7 +142,7 @@ noncomputable def explicitQuotientRepresentativeEquiv
     Fin 189 ≃ CarrierQuotient :=
   quotientRepresentativeEquiv_of_all_gapResidualPair_alignment halign hG
 
-/-- Bruhat cell decomposition covers the entire automorphism group G₂(2). -/
+/-- Quotient-representative injectivity and ambient order imply concrete Bruhat coverage. -/
 theorem bruhat_covering_is_entire_group
     (hinj : Function.Injective quotientRepresentative)
     (hG : Nat.card SplitOctF2Aut = 12096) :

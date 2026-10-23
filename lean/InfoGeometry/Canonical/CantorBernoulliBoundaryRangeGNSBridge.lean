@@ -93,6 +93,46 @@ theorem boundaryRangeTrace_stage (n : ℕ) (A : Stage n) :
   rw [show boundaryRangeElement n A = boundaryRangeEquiv n A by rfl]
   simp
 
+/-! The same finite boundary image is also available as the genuine range of
+    the finite `StarAlgHom`.  The older `BoundaryRange` is retained for the
+    linear trace API; this equivalence supplies the missing multiplicative and
+    star carrier without changing that API. -/
+
+abbrev BoundaryStarRange (n : ℕ) := (boundaryRep n).range
+
+def boundaryRangeToStarRange (n : ℕ) :
+    BoundaryRange n ≃ₗ[ℂ] BoundaryStarRange n where
+  toFun x :=
+    ⟨x.1, by
+      rcases x.2 with ⟨A, hA⟩
+      exact ⟨A, hA⟩⟩
+  invFun x :=
+    ⟨x.1, by
+      rcases x.2 with ⟨A, hA⟩
+      exact ⟨A, hA⟩⟩
+  left_inv x := rfl
+  right_inv x := rfl
+  map_add' x y := rfl
+  map_smul' c x := rfl
+
+@[simp] theorem boundaryRangeToStarRange_coe
+    (n : ℕ) (x : BoundaryRange n) :
+    (boundaryRangeToStarRange n x : BoundaryOperator) = x :=
+  rfl
+
+def boundaryStarRangeTrace (n : ℕ) :
+    BoundaryStarRange n →ₗ[ℂ] ℂ :=
+  (boundaryRangeTrace n).comp
+    (boundaryRangeToStarRange n).symm.toLinearMap
+
+theorem boundaryStarRangeTrace_stage (n : ℕ) (A : Stage n) :
+    boundaryStarRangeTrace n
+        ⟨boundaryRep n A, ⟨A, rfl⟩⟩ =
+      bitWordMatrixTraceFunctional n A := by
+  rw [boundaryStarRangeTrace]
+  change boundaryRangeTrace n (boundaryRangeElement n A) = _
+  exact boundaryRangeTrace_stage n A
+
 /-! The pulled-back trace on the actual boundary range is compatible with the
 native full-matrix `StarAlgHom` successor.  This statement is about arbitrary
 matrix stages: no diagonalization, normality, or eigenbasis is used. -/

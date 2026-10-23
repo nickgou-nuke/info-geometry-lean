@@ -13,6 +13,12 @@ import InfoGeometry.Canonical.CantorBernoulliBoundaryRangeGNSBridge
   InfoGeometry.Canonical.CantorBernoulliBoundaryRangeGNSBridge.boundaryRangeTrace_gaugeGNS_readout
 
 #print axioms
+  InfoGeometry.Canonical.CantorBernoulliBoundaryRangeGNSBridge.boundaryRangeToStarRange
+
+#print axioms
+  InfoGeometry.Canonical.CantorBernoulliBoundaryRangeGNSBridge.boundaryStarRangeTrace_stage
+
+#print axioms
   InfoGeometry.Canonical.CantorBernoulliBoundaryRangeGNSBridge.boundaryRangeTrace_star_mul_self_re_eq
 
 #print axioms

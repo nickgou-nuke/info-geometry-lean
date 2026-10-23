@@ -1,10 +1,13 @@
 """Exact arithmetic tests; these do not replace Lean kernel checking."""
 import itertools
+import io
+import json
 import unittest
+from unittest.mock import patch
 from fractions import Fraction as F
 from tools.attention_polytope import (
     RoutingTerm, decompose, normalize_rows, rational_matrix, readout,
-    reconstruct, route_readout, verify_certificate,
+    reconstruct, route_readout, verify_certificate, expected_causal_core_rank, main,
 )
 
 
@@ -42,6 +45,31 @@ class AttentionPolytopeTests(unittest.TestCase):
             self.check_matrix(matrix)
             for term in decompose(matrix):
                 self.assertTrue(all(j <= i for i, j in enumerate(term.route)))
+
+    def test_causal_core_rank_matches_sparse_route_coupling(self):
+        for n in range(1, 5):
+            row_grids = [simplex_grid(i + 1, 3) for i in range(n)]
+            for rows in itertools.product(*row_grids):
+                matrix = [tuple(row) + (F(0),) * (n - len(row)) for row in rows]
+                expected = sum((t.weight * sum(j == i for i, j in enumerate(t.route))
+                                for t in decompose(matrix)), F(0))
+                self.assertEqual(expected_causal_core_rank(matrix), expected)
+
+    def test_causal_core_only_does_not_enumerate_routes(self):
+        with patch("sys.argv", ["attention_polytope", "input.json", "--causal-core-only"]), \
+                patch("pathlib.Path.read_text", return_value='{"attention": [[1, 0], ["1/3", "2/3"]]}'), \
+                patch("tools.attention_polytope.decompose", side_effect=AssertionError("must not run")), \
+                patch("sys.stdout", new_callable=io.StringIO) as output:
+            main()
+        result = json.loads(output.getvalue())
+        self.assertEqual(result["expected_causal_core_rank"], "5/3")
+        self.assertEqual(result["expected_causal_core_fraction"], "5/6")
+        self.assertFalse(result["route_decomposition_performed"])
+
+    def test_causal_core_rejects_wrong_carrier_or_mask(self):
+        for matrix in ([[1, 0, 0], [0, 1, 0]], [[0, 1], [1, 0]], [[2, 0], [0, 1]], []):
+            with self.subTest(matrix=matrix), self.assertRaises(ValueError):
+                expected_causal_core_rank(matrix)
 
     def test_general_mask(self):
         matrix = [[F(1, 2), 0, F(1, 2)], [0, 1, 0], [F(1, 3), 0, F(2, 3)]]

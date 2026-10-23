@@ -82,6 +82,24 @@ def reconstruct(terms: Sequence[RoutingTerm], rows: int, columns: int) -> Ration
     return tuple(tuple(row) for row in result)
 
 
+def expected_causal_core_rank(matrix: Sequence[Sequence[Scalar]]) -> Fraction:
+    """Expected recurrent core dimension for any exact causal route coupling.
+
+    This is trace(P), not the Drazin rank of P itself. The mathematical identity
+    is specified by Routing.CausalCoreTrace.causal_mixture_core_trace.
+    No routes, powers, pseudoinverses, or spectra are computed. Dense validation
+    costs O(n^2) entry checks; reduction costs O(n) additions (not a constant
+    bit-cost claim for Fraction arithmetic).
+    """
+    matrix = _attention(matrix)
+    size = len(matrix)
+    if len(matrix[0]) != size:
+        raise ValueError("Causal core diagnostics require square attention.")
+    if any(matrix[i][j] != 0 for i in range(size) for j in range(i + 1, size)):
+        raise ValueError("Causal core diagnostics require a lower-triangular mask.")
+    return sum((matrix[i][i] for i in range(size)), Fraction(0))
+
+
 def verify_certificate(matrix: Sequence[Sequence[Scalar]],
                        terms: Sequence[RoutingTerm]) -> bool:
     """Check mass, support, and reconstruction using exact rational arithmetic.
@@ -163,11 +181,23 @@ def main() -> None:
     parser.add_argument("input", type=Path, help="JSON attention matrix and optional values")
     parser.add_argument("--normalize-rows", action="store_true",
                         help="Explicitly normalize the input before decomposition")
+    parser.add_argument("--causal-core-only", action="store_true",
+                        help="Report expected causal core rank without decomposing routes")
     args = parser.parse_args()
     try:
         payload = json.loads(args.input.read_text(encoding="utf-8"), parse_float=Fraction)
         original = rational_matrix(payload["attention"])
         attention = normalize_rows(original) if args.normalize_rows else _attention(original)
+        if args.causal_core_only:
+            rank = expected_causal_core_rank(attention)
+            print(json.dumps({
+                "input_changed": attention != original,
+                "rows": len(attention), "columns": len(attention[0]),
+                "expected_causal_core_rank": str(rank),
+                "expected_causal_core_fraction": str(rank / len(attention)),
+                "route_decomposition_performed": False,
+            }, indent=2))
+            return
         terms = decompose(attention)
         result = {
             "input_changed": attention != original,

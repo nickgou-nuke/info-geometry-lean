@@ -29,8 +29,13 @@ jobs:
     steps:
       - uses: actions/checkout@v5
         with:
-          persist-credentials: false
+          persist-credentials: true
           submodules: false
+      - name: Remove checkout credential without traversing unrelated submodules
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config --local --unset-all http.https://github.com/.extraheader || test "$?" = 5
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'

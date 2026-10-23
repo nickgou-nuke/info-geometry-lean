@@ -54,6 +54,37 @@ theorem IsMoorePenroseInverse.transport {a b : R}
 
 variable [StarRing S]
 
+/-- Similarity preserves self-adjointness of a particular element exactly
+when it commutes with the Gram element of the coordinate change. No
+idempotence, positivity, or global star-preservation is required. -/
+theorem similarity_selfAdjoint_iff_gram_commute {p g h : R}
+    (hp : star p = p) (hleft : h * g = 1) (hright : g * h = 1) :
+    star (g * p * h) = g * p * h ↔ p * (star g * g) = (star g * g) * p := by
+  have hsgsh : star g * star h = 1 := by rw [← star_mul, hleft, star_one]
+  have hshsg : star h * star g = 1 := by rw [← star_mul, hright, star_one]
+  constructor
+  · intro hs
+    calc
+      p * (star g * g) = star g * (star h * p * star g) * g := by
+        simp only [← mul_assoc, hsgsh, one_mul]
+      _ = star g * star (g * p * h) * g := by
+        simp only [star_mul, hp, mul_assoc]
+      _ = star g * (g * p * h) * g := by rw [hs]
+      _ = (star g * g) * p := by
+        calc
+          _ = (star g * g) * p * (h * g) := by simp only [mul_assoc]
+          _ = _ := by rw [hleft, mul_one]
+  · intro hc
+    calc
+      star (g * p * h) = star h * p * star g := by
+        simp only [star_mul, hp, mul_assoc]
+      _ = star h * (p * (star g * g)) * h := by
+        calc
+          _ = star h * p * star g * (g * h) := by rw [hright, mul_one]
+          _ = _ := by simp only [mul_assoc]
+      _ = star h * ((star g * g) * p) * h := by rw [hc]
+      _ = g * p * h := by simp only [← mul_assoc, hshsg, one_mul]
+
 /-- Exact fixed-involution transport criterion for a particular Penrose pair.
 Global preservation of star is unnecessary: the two transported support
 idempotents are the only self-adjointness conditions needed. -/
@@ -70,6 +101,31 @@ theorem IsMoorePenroseInverse.map_iff {a b : R}
     · simpa only [map_mul] using congrArg f h.bab_eq_b
     · simpa only [map_mul] using hab
     · simpa only [map_mul] using hba
+
+/-- Exact Moore–Penrose covariance criterion for arbitrary invertible
+similarity: both source support projections must commute with `star g * g`.
+This includes non-unitary similarities whenever these two commutations hold. -/
+theorem IsMoorePenroseInverse.similarity_iff {a b g h : R}
+    (hab : IsMoorePenroseInverse a b) (hleft : h * g = 1) (hright : g * h = 1) :
+    IsMoorePenroseInverse (g * a * h) (g * b * h) ↔
+      (a * b) * (star g * g) = (star g * g) * (a * b) ∧
+      (b * a) * (star g * g) = (star g * g) * (b * a) := by
+  let f : R →+* R :=
+    { toFun := fun x => g * x * h
+      map_one' := by simpa using hright
+      map_zero' := by simp
+      map_add' := by intro x y; simp only [mul_add, add_mul]
+      map_mul' := by
+        intro x y
+        calc
+          g * (x * y) * h = g * x * (h * g) * y * h := by
+            rw [hleft, mul_one]; simp only [mul_assoc]
+          _ = (g * x * h) * (g * y * h) := by simp only [mul_assoc] }
+  change IsMoorePenroseInverse (f a) (f b) ↔ _
+  rw [hab.map_iff f]
+  exact and_congr
+    (similarity_selfAdjoint_iff_gram_commute hab.ab_adj_eq hleft hright)
+    (similarity_selfAdjoint_iff_gram_commute hab.ba_adj_eq hleft hright)
 
 /-- Given an actual target inverse, covariance is equivalent to local
 self-adjointness of the two transported support idempotents. The map need

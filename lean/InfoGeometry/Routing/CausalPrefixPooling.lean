@@ -161,14 +161,14 @@ theorem future_derivative_and_pullback
   have hd : HasFDerivAt (fun v => f (Function.update x s v))
       (0 : E →L[ℝ] F) (x s) := by
     rw [heq]
-    exact hasFDerivAt_const (𝕜 := ℝ) (x s) (f x)
+    exact hasFDerivAt_const (𝕜 := ℝ) (f x) (x s)
   refine ⟨hd, ?_, by simp⟩
   have heq_scalar : (fun v => ell (f (Function.update x s v))) =
       fun _ : E => ell (f x) := by
     funext v
     exact congrArg ell (congrFun heq v)
   rw [heq_scalar]
-  exact hasFDerivAt_const (𝕜 := ℝ) (x s) (ell (f x))
+  exact hasFDerivAt_const (𝕜 := ℝ) (ell (f x)) (x s)
 
 end Order
 end InfoGeometry.Routing.CausalPrefixPooling

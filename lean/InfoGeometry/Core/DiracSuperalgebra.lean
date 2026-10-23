@@ -471,6 +471,76 @@ theorem majoranaMinus_mul_chiralSupport_eq_neg_majoranaPlus
       simp
       abel
 
+/- The global chiral involution fixes the harmonic complement. -/
+theorem superInvolution_conjugates_harmonicSupport
+    {a m : R} (h : IsMoorePenroseInverse a m) (ha : a * a = 0) :
+    superInvolution a m * harmonicSupport a m * superInvolution a m =
+      harmonicSupport a m := by
+  have hch : chiralSupport a m * harmonicSupport a m = 0 := by
+    unfold chiralSupport
+    rw [sub_mul, h.exactSupport_mul_harmonicSupport ha,
+      h.coexactSupport_mul_harmonicSupport ha, sub_zero]
+  have hhc : harmonicSupport a m * chiralSupport a m = 0 := by
+    unfold chiralSupport
+    rw [mul_sub, h.harmonicSupport_mul_exactSupport ha,
+      h.harmonicSupport_mul_coexactSupport ha, sub_zero]
+  have hp := h.harmonicSupport_idem ha
+  unfold superInvolution
+  calc
+    (chiralSupport a m + harmonicSupport a m) * harmonicSupport a m *
+        (chiralSupport a m + harmonicSupport a m) =
+      chiralSupport a m * harmonicSupport a m * chiralSupport a m +
+        chiralSupport a m * harmonicSupport a m * harmonicSupport a m +
+        harmonicSupport a m * harmonicSupport a m * chiralSupport a m +
+        harmonicSupport a m * harmonicSupport a m * harmonicSupport a m := by
+          noncomm_ring
+    _ = harmonicSupport a m := by
+      have h₁ : chiralSupport a m * harmonicSupport a m *
+          chiralSupport a m = 0 := by
+        rw [hch, zero_mul]
+      have h₂ : chiralSupport a m * harmonicSupport a m *
+          harmonicSupport a m = 0 := by
+        rw [hch, zero_mul]
+      have h₃ : harmonicSupport a m * harmonicSupport a m *
+          chiralSupport a m = 0 := by
+        rw [hp, hhc]
+      rw [h₁, h₂, h₃, hp, hp]
+      simp
+
+/- The global Majorana reflection also fixes the harmonic complement. -/
+theorem globalMajoranaReflection_conjugates_harmonicSupport
+    {a m : R} (h : IsMoorePenroseInverse a m) (ha : a * a = 0) :
+    globalMajoranaReflection a m * harmonicSupport a m *
+        globalMajoranaReflection a m = harmonicSupport a m := by
+  have hqh : majoranaPlus a m * harmonicSupport a m = 0 := by
+    simpa [majoranaPlus, normalizedDirac] using
+      h.normalizedDirac_mul_harmonicSupport ha
+  have hhq : harmonicSupport a m * majoranaPlus a m = 0 := by
+    simpa [majoranaPlus, normalizedDirac] using
+      h.harmonicSupport_mul_normalizedDirac ha
+  have hp := h.harmonicSupport_idem ha
+  unfold globalMajoranaReflection
+  calc
+    (majoranaPlus a m + harmonicSupport a m) * harmonicSupport a m *
+        (majoranaPlus a m + harmonicSupport a m) =
+      majoranaPlus a m * harmonicSupport a m * majoranaPlus a m +
+        majoranaPlus a m * harmonicSupport a m * harmonicSupport a m +
+        harmonicSupport a m * harmonicSupport a m * majoranaPlus a m +
+        harmonicSupport a m * harmonicSupport a m * harmonicSupport a m := by
+          noncomm_ring
+    _ = harmonicSupport a m := by
+      have h₁ : majoranaPlus a m * harmonicSupport a m *
+          majoranaPlus a m = 0 := by
+        rw [hqh, zero_mul]
+      have h₂ : majoranaPlus a m * harmonicSupport a m *
+          harmonicSupport a m = 0 := by
+        rw [hqh, zero_mul]
+      have h₃ : harmonicSupport a m * harmonicSupport a m *
+          majoranaPlus a m = 0 := by
+        rw [hp, hhq]
+      rw [h₁, h₂, h₃, hp, hp]
+      simp
+
 theorem majoranaPlus_mul_majoranaMinus_eq_neg_chiralSupport
     {a m : R} (h : IsMoorePenroseInverse a m) (ha : a * a = 0) :
     majoranaPlus a m * majoranaMinus a m = -(chiralSupport a m) := by

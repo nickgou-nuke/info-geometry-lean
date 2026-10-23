@@ -23,6 +23,7 @@ import InfoGeometry.Core.DiracSuperalgebra
 #print axioms InfoGeometry.Core.DiracSuperalgebra.activeSupport_identities
 #print axioms InfoGeometry.Core.DiracSuperalgebra.superInvolution_sq
 #print axioms InfoGeometry.Core.DiracSuperalgebra.superInvolution_conjugates_chiralSupport
+#print axioms InfoGeometry.Core.DiracSuperalgebra.superInvolution_conjugates_harmonicSupport
 #print axioms InfoGeometry.Core.DiracSuperalgebra.superInvolution_anticommute_normalizedDirac
 #print axioms InfoGeometry.Core.DiracSuperalgebra.superInvolution_conjugates_majoranaPlus
 #print axioms InfoGeometry.Core.DiracSuperalgebra.superInvolution_conjugates_majoranaMinus
@@ -39,6 +40,7 @@ import InfoGeometry.Core.DiracSuperalgebra
 #print axioms InfoGeometry.Core.DiracSuperalgebra.globalMajoranaReflection_conjugates_chiralSupport
 #print axioms InfoGeometry.Core.DiracSuperalgebra.globalMajoranaReflection_conjugates_majoranaMinus
 #print axioms InfoGeometry.Core.DiracSuperalgebra.globalMajoranaReflection_conjugates_majoranaPlus
+#print axioms InfoGeometry.Core.DiracSuperalgebra.globalMajoranaReflection_conjugates_harmonicSupport
 #print axioms InfoGeometry.Core.DiracSuperalgebra.majorana_quartet_identities
 #print axioms InfoGeometry.Core.DiracSuperalgebra.cayleyMinus_mul_cayleyPlus
 #print axioms InfoGeometry.Core.DiracSuperalgebra.cayleyPlus_mul_cayleyMinus

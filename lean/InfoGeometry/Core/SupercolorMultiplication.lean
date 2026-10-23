@@ -284,6 +284,99 @@ theorem totalCentralCharge_lieBracket_generated
   · intro l m
     exact totalCentralCharge_lieBracket_colorBoson_of_orthogonal hE l m
 
+/-- Unified extended-SUSY contract: distinct colors anticommute, each sector
+charge is central on the primitive and Majorana generators, and the total
+charge is central on the generated color algebra while the two total
+Majorana charges square to opposite central charges. -/
+theorem extended_susy_central_charge_master
+    [Fintype ι] [DecidableEq ι]
+    (hE : IsOrthogonalExtendedSusy d b) :
+    (∀ {i j : ι}, i ≠ j →
+      jordanProd (majoranaPlus (d i) (b i)) (majoranaPlus (d j) (b j)) = 0 ∧
+      jordanProd (majoranaMinus (d i) (b i)) (majoranaMinus (d j) (b j)) = 0 ∧
+      jordanProd (majoranaPlus (d i) (b i)) (majoranaMinus (d j) (b j)) = 0 ∧
+      jordanProd (majoranaMinus (d i) (b i)) (majoranaPlus (d j) (b j)) = 0) ∧
+    (∀ i j : ι,
+      lieBracket (sectorCentralCharge (d i) (b i)) (d j) = 0 ∧
+      lieBracket (sectorCentralCharge (d i) (b i)) (b j) = 0 ∧
+      lieBracket (sectorCentralCharge (d i) (b i))
+        (majoranaPlus (d j) (b j)) = 0 ∧
+      lieBracket (sectorCentralCharge (d i) (b i))
+        (majoranaMinus (d j) (b j)) = 0) ∧
+    (∀ j : ι,
+      lieBracket (totalCentralCharge d b) (d j) = 0 ∧
+      lieBracket (totalCentralCharge d b) (b j) = 0 ∧
+      lieBracket (totalCentralCharge d b)
+        (majoranaPlus (d j) (b j)) = 0 ∧
+      lieBracket (totalCentralCharge d b)
+        (majoranaMinus (d j) (b j)) = 0) ∧
+    (∀ l m : ι,
+      lieBracket (totalCentralCharge d b) (colorBoson d b l m) = 0) ∧
+    (totalMajoranaPlus d b * totalMajoranaPlus d b = totalCentralCharge d b ∧
+      totalMajoranaMinus d b * totalMajoranaMinus d b = -totalCentralCharge d b ∧
+      jordanProd (totalMajoranaPlus d b) (totalMajoranaMinus d b) = 0) := by
+  have h_cross : ∀ {i j : ι}, i ≠ j →
+      jordanProd (majoranaPlus (d i) (b i)) (majoranaPlus (d j) (b j)) = 0 ∧
+      jordanProd (majoranaMinus (d i) (b i)) (majoranaMinus (d j) (b j)) = 0 ∧
+      jordanProd (majoranaPlus (d i) (b i)) (majoranaMinus (d j) (b j)) = 0 ∧
+      jordanProd (majoranaMinus (d i) (b i)) (majoranaPlus (d j) (b j)) = 0 := by
+    intro i j hij
+    have h_mixed := majoranaPlus_majoranaMinus_anticommute_of_orthogonal hE hij
+    have h_pp : jordanProd (majoranaPlus (d i) (b i))
+        (majoranaPlus (d j) (b j)) = 0 := by
+      unfold jordanProd majoranaPlus
+      calc
+        (d i + b i) * (d j + b j) + (d j + b j) * (d i + b i) =
+            d i * d j + d i * b j + b i * d j + b i * b j +
+              (d j * d i + d j * b i + b j * d i + b j * b i) := by
+                noncomm_ring
+        _ = 0 := by
+          rw [hE.toIsSupercolorSystem.d_mul_d i j,
+            hE.d_mul_b_ne hij, hE.toIsSupercolorSystem.b_mul_d_ne hij,
+            hE.toIsSupercolorSystem.b_mul_b i j,
+            hE.toIsSupercolorSystem.d_mul_d j i,
+            hE.d_mul_b_ne hij.symm,
+            hE.toIsSupercolorSystem.b_mul_d_ne hij.symm,
+            hE.toIsSupercolorSystem.b_mul_b j i]
+          abel
+    have h_mm : jordanProd (majoranaMinus (d i) (b i))
+        (majoranaMinus (d j) (b j)) = 0 := by
+      unfold jordanProd majoranaMinus
+      calc
+        (d i - b i) * (d j - b j) + (d j - b j) * (d i - b i) =
+            d i * d j - d i * b j - b i * d j + b i * b j +
+              (d j * d i - d j * b i - b j * d i + b j * b i) := by
+                noncomm_ring
+        _ = 0 := by
+          rw [hE.toIsSupercolorSystem.d_mul_d i j,
+            hE.d_mul_b_ne hij, hE.toIsSupercolorSystem.b_mul_d_ne hij,
+            hE.toIsSupercolorSystem.b_mul_b i j,
+            hE.toIsSupercolorSystem.d_mul_d j i,
+            hE.d_mul_b_ne hij.symm,
+            hE.toIsSupercolorSystem.b_mul_d_ne hij.symm,
+            hE.toIsSupercolorSystem.b_mul_b j i]
+          abel
+    exact ⟨h_pp, h_mm, h_mixed.1, h_mixed.2⟩
+  have h_sector : ∀ i j : ι,
+      lieBracket (sectorCentralCharge (d i) (b i)) (d j) = 0 ∧
+      lieBracket (sectorCentralCharge (d i) (b i)) (b j) = 0 ∧
+      lieBracket (sectorCentralCharge (d i) (b i))
+        (majoranaPlus (d j) (b j)) = 0 ∧
+      lieBracket (sectorCentralCharge (d i) (b i))
+        (majoranaMinus (d j) (b j)) = 0 := by
+    intro i j
+    have h_primitive := (extended_susy_centrality hE).1 i j
+    exact ⟨h_primitive.1, h_primitive.2,
+      sectorCentralCharge_lieBracket_majoranaPlus_of_orthogonal hE i j,
+      sectorCentralCharge_lieBracket_majoranaMinus_of_orthogonal hE i j⟩
+  have h_total := totalCentralCharge_lieBracket_generated hE
+  have h_squares := extended_susy_total_charges hE
+  refine ⟨h_cross, h_sector, ?_, ?_, h_squares⟩
+  · intro j
+    exact ⟨(h_total.1 j).1, (h_total.1 j).2.1,
+      (h_total.1 j).2.2.1, (h_total.1 j).2.2.2⟩
+  · exact h_total.2
+
 /-- Adjoint duality is an explicit hypothesis, not a consequence of MP. -/
 theorem star_majoranaPlus_of_dual (hdual : ∀ i, b i = star (d i)) (i : ι) :
     star (majoranaPlus (d i) (b i)) = majoranaPlus (d i) (b i) := by

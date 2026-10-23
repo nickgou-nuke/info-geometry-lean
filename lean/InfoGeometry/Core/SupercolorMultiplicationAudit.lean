@@ -19,6 +19,7 @@ import InfoGeometry.Core.SupercolorMatrixExamples
 #print axioms InfoGeometry.Core.SuperGrassmannianSusy.sectorCentralCharge_lieBracket_majoranaMinus_of_orthogonal
 #print axioms InfoGeometry.Core.SuperGrassmannianSusy.majoranaPlus_majoranaMinus_anticommute_of_orthogonal
 #print axioms InfoGeometry.Core.SuperGrassmannianSusy.totalCentralCharge_lieBracket_generated
+#print axioms InfoGeometry.Core.SuperGrassmannianSusy.extended_susy_central_charge_master
 #print axioms InfoGeometry.Core.SupercolorMatrixExamples.backward_eq_star_forward
 #print axioms InfoGeometry.Core.SupercolorMatrixExamples.matrix_supercolor
 #print axioms InfoGeometry.Core.SupercolorMatrixExamples.colorBoson_eq_single

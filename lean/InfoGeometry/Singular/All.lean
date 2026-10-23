@@ -15,6 +15,7 @@ import InfoGeometry.Singular.SquareZeroMoorePenrose
 import InfoGeometry.Singular.SquareZeroMoorePenroseAudit
 import InfoGeometry.Singular.MoorePenroseChiralDefects
 import InfoGeometry.Singular.MoorePenroseChiralDefectsAudit
+import InfoGeometry.Singular.MoorePenroseCanonicalBridge
 import InfoGeometry.Singular.SquareZeroChiralHodge
 import InfoGeometry.Singular.DrazinReflexiveDefect
 import InfoGeometry.Singular.DrazinReflexiveDefectAudit

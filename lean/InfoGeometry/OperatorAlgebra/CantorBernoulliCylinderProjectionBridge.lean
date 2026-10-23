@@ -29,6 +29,7 @@ open Complex
 open MeasureTheory
 open scoped BigOperators Topology ENNReal Classical
 open InfoGeometry.Canonical.CuntzCantorBoundaryShift
+open InfoGeometry.Canonical.UHFInductiveColimitBoundary
 open InfoGeometry.Canonical.CantorBernoulliL2OperatorTransport
 open InfoGeometry.Canonical.UHFInductiveColimitBoundaryTopology
 open InfoGeometry.OperatorAlgebra.CantorBernoulliCuntzCStarRealization
@@ -49,6 +50,61 @@ def wordBranchSet : List Bool → Set Boundary
 
 @[simp] theorem wordBranchSet_cons (b : Bool) (w : List Bool) :
     wordBranchSet (b :: w) = prependBit b '' (wordBranchSet w) := rfl
+
+theorem wordBranchSet_ofFn_mem_iff (n : ℕ) (u : BitWord n) (x : Boundary) :
+    x ∈ wordBranchSet (List.ofFn u) ↔ boundaryPrefix n x = u := by
+  induction n generalizing x with
+  | zero =>
+      constructor
+      · intro _
+        funext i
+        exact Fin.elim0 i
+      · intro _
+        simp [wordBranchSet]
+  | succ n ih =>
+      let b : Bool := u 0
+      let w : BitWord n := fun i => u i.succ
+      have hu : u = prependWord n b w := by
+        funext i
+        cases i using Fin.cases with
+        | zero => rfl
+        | succ j => rfl
+      have hlist : List.ofFn u = b :: List.ofFn w := by
+        rw [hu]
+        simp [prependWord, List.ofFn_succ]
+      rw [hlist]
+      constructor
+      · intro hx
+        rcases hx with ⟨y, hy, hxy⟩
+        have htail : tail x ∈ wordBranchSet (List.ofFn w) := by
+          have htail_eq : tail x = y := by
+            have h := congrArg tail hxy
+            simpa [tail_prependBit] using h.symm
+          rw [htail_eq]
+          exact hy
+        have hprefix : boundaryPrefix n (tail x) = w :=
+          (ih (x := tail x) (u := w)).mp htail
+        rw [hu]
+        funext i
+        cases i using Fin.cases with
+        | zero =>
+            have hhead := congrArg (fun z : Boundary => z 0) hxy
+            simpa [prependBit, boundaryPrefix, prependWord] using hhead.symm
+        | succ j =>
+            simpa [prependWord, boundaryPrefix, tail, w] using congrFun hprefix j
+      · intro hprefix
+        rw [hu] at hprefix
+        have hhead : x 0 = b := by
+          have hzero := congrFun hprefix ⟨0, Nat.succ_pos n⟩
+          simpa [boundaryPrefix, prependWord] using hzero
+        have htail : boundaryPrefix n (tail x) = w := by
+          funext j
+          have hj := congrFun hprefix ⟨j.1 + 1, Nat.succ_lt_succ j.2⟩
+          simpa [prependWord, boundaryPrefix, tail, w] using hj
+        have hmem : tail x ∈ wordBranchSet (List.ofFn w) :=
+          (ih (x := tail x) (u := w)).mpr htail
+        refine ⟨tail x, hmem, ?_⟩
+        exact prependBit_tail_of_head hhead
 
 theorem wordBranchSet_singleton (b : Bool) :
     wordBranchSet [b] = prependBitBranch b := by

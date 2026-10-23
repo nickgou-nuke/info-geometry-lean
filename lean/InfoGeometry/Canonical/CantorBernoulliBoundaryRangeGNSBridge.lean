@@ -7,6 +7,7 @@ Authors: InfoGeometry Engine Contributors
 import InfoGeometry.Canonical.CuntzBoundaryMatrixStageBridge
 import InfoGeometry.Canonical.ConcreteCompatibleCuntzFaithfulness
 import InfoGeometry.Canonical.CantorBernoulliComplexStarFiniteStageGNSBridge
+import InfoGeometry.Canonical.CantorBernoulliComplexStarBinaryGaugeFiniteCore
 import InfoGeometry.OperatorAlgebra.CantorBernoulliFiniteMatrixFaithfulness
 import InfoGeometry.OperatorAlgebra.CantorBernoulliFiniteMatrixUnitBridge
 import InfoGeometry.OperatorAlgebra.CantorBernoulliFiniteMatrixStageTransportBridge
@@ -14,6 +15,7 @@ import InfoGeometry.OperatorAlgebra.CantorBernoulliBitWordStarInductiveSystemBri
 import InfoGeometry.Canonical.CantorBernoulliDiagTraceBridge
 import InfoGeometry.Canonical.CantorBernoulliFiniteDiagonalTraceEnergy
 import InfoGeometry.Canonical.CantorBernoulliFiniteDiagonalHilbertSchmidt
+import InfoGeometry.Canonical.CantorBernoulliFiniteDiagL2Embedding
 
 /-!
 # Finite boundary range and native GNS trace
@@ -35,6 +37,7 @@ open CStarStateColimit.Native
 open CStarStateColimit.Native.FilteredGNS
 open CStarStateColimit.Native.FilteredGNSGlobalStageRepresentation
 open InfoGeometry.Canonical.CantorBernoulliComplexStarFiniteStageGNSBridge
+open InfoGeometry.Canonical.CantorBernoulliComplexStarBinaryGaugeFiniteCore
 open InfoGeometry.OperatorAlgebra.CantorBernoulliComplexStarFiniteStageBridge
 open InfoGeometry.Canonical.CantorBernoulliGaugeFilteredGNSColimitBridge
 open InfoGeometry.Canonical.CuntzBoundaryMatrixStageBridge
@@ -49,7 +52,15 @@ open InfoGeometry.Canonical.CantorKMSState
 open InfoGeometry.Canonical.CantorBernoulliDiagTraceBridge
 open InfoGeometry.Canonical.CantorBernoulliFiniteDiagonalTraceEnergy
 open InfoGeometry.Canonical.CantorBernoulliFiniteDiagonalHilbertSchmidt
+open InfoGeometry.Canonical.CantorBernoulliFiniteDiagL2Embedding
+open InfoGeometry.OperatorAlgebra.CantorBernoulliKMSStateBridge
+open InfoGeometry.OperatorAlgebra.CantorBernoulliCuntzOperatorTreeBridge
+open InfoGeometry.OperatorAlgebra.CantorBernoulliCylinderMultiplicationBridge
+open InfoGeometry.OperatorAlgebra.CantorBernoulliCylinderProjectionBridge
+open InfoGeometry.Canonical.CantorProjectiveLimit.PrefixProjectiveLimit
+open InfoGeometry.Canonical.CantorProjectiveBernoulliMeasure
 open scoped ComplexOrder InnerProductSpace
+open MeasureTheory
 
 abbrev Stage (n : ℕ) := BitWordMatrixStage n
 
@@ -145,5 +156,135 @@ theorem boundaryRangeTrace_gaugeGNS_readout (n : ℕ) (A : Stage n) :
               (bitWordStageStarAlgEquiv n A))
             gaugeGNSColimitVacuum⟫_ℂ :=
       (gaugeGNSColimitVacuum_complexStarFiniteStage_expectation n A).symm
+
+/-! The boundary-range trace transports the already proved finite equal-depth
+KMS boundary identity.  The statement remains at an arbitrary finite matrix
+stage; it is not an analytic KMS theorem for the infinite Cuntz completion. -/
+
+theorem boundaryRangeTrace_finiteCore_kms_boundary
+    (z : ℂ) (n : ℕ) (A B : Stage n) :
+    boundaryRangeTrace n
+        (boundaryRangeElement n (A * finiteCoreFlow n z B)) =
+      boundaryRangeTrace n (boundaryRangeElement n (B * A)) := by
+  rw [boundaryRangeTrace_stage, boundaryRangeTrace_stage]
+  simpa [finiteCoreState] using finiteCore_kms_boundary z n A B
+
+/-! The concrete boundary representation sends a finite diagonal matrix to the
+finite sum of the corresponding word-indicator vectors on the vacuum.  The
+remaining identification of that sum with the existing cylinder embedding is
+deliberately a separate finite-partition theorem. -/
+
+theorem boundaryRep_diagonal_vacuum_wordIndicator (n : ℕ) (f : DiagAlg n) :
+    (boundaryRep n (Matrix.diagonal f)) vacuumL2 =
+      ∑ u : BitWord n, f u •
+        wordIndicatorLp (List.ofFn u) vacuumL2 := by
+  rw [boundaryRep_diagonal]
+  change
+    (∑ u : BitWord n, f u •
+      operatorCylinderProjection (List.ofFn u)) vacuumL2 =
+      ∑ u : BitWord n, f u •
+        wordIndicatorLp (List.ofFn u) vacuumL2
+  have hsum :
+      (∑ u : BitWord n, f u •
+        operatorCylinderProjection (List.ofFn u)) vacuumL2 =
+        ∑ u : BitWord n, f u •
+          (operatorCylinderProjection (List.ofFn u) vacuumL2) := by
+    rw [ContinuousLinearMap.sum_apply]
+    simp only [ContinuousLinearMap.smul_apply]
+  rw [hsum]
+  apply Finset.sum_congr rfl
+  intro u hu
+  rw [operatorCylinderProjection_apply_eq_wordIndicator]
+
+theorem boundaryRep_diagonal_vacuum_eq_diagonalCylinderL2
+    (n : ℕ) (f : DiagAlg n) :
+    (boundaryRep n (Matrix.diagonal f)) vacuumL2 =
+      diagonalCylinderL2 n f := by
+  classical
+  rw [boundaryRep_diagonal_vacuum_wordIndicator]
+  apply Lp.ext
+  have hsum :
+      ((∑ u : BitWord n, f u •
+          wordIndicatorLp (List.ofFn u) vacuumL2 : L2Boundary) :
+          Boundary → ℂ) =ᵐ[μC]
+        (fun x => ∑ u : BitWord n,
+          ((f u • wordIndicatorLp (List.ofFn u) vacuumL2 : L2Boundary) :
+            Boundary → ℂ) x) := by
+    simpa using
+      (Lp.coeFn_fun_finsetSum (μ := μC)
+        (s := (Finset.univ : Finset (BitWord n)))
+        (f := fun u : BitWord n =>
+          f u • wordIndicatorLp (List.ofFn u) vacuumL2))
+  have hword (u : BitWord n) :
+      ((wordIndicatorLp (List.ofFn u) vacuumL2 : L2Boundary) :
+          Boundary → ℂ) =ᵐ[μC]
+        wordIndicatorFunction (List.ofFn u) vacuumL2 :=
+    (wordIndicatorFunction_memLp (List.ofFn u) vacuumL2).coeFn_toLp
+  have hsmul (u : BitWord n) :
+      ((f u • wordIndicatorLp (List.ofFn u) vacuumL2 : L2Boundary) :
+          Boundary → ℂ) =ᵐ[μC]
+        f u • ((wordIndicatorLp (List.ofFn u) vacuumL2 : L2Boundary) :
+          Boundary → ℂ) :=
+    Lp.coeFn_smul (f u) (wordIndicatorLp (List.ofFn u) vacuumL2)
+  have hword_all : ∀ᶠ x in ae μC, ∀ u ∈ (Finset.univ : Finset (BitWord n)),
+      ((wordIndicatorLp (List.ofFn u) vacuumL2 : L2Boundary) :
+          Boundary → ℂ) x = wordIndicatorFunction (List.ofFn u) vacuumL2 x := by
+    rw [Finset.eventually_all]
+    intro u hu
+    exact hword u
+  have hsmul_all : ∀ᶠ x in ae μC, ∀ u ∈ (Finset.univ : Finset (BitWord n)),
+      ((f u • wordIndicatorLp (List.ofFn u) vacuumL2 : L2Boundary) :
+          Boundary → ℂ) x =
+        (f u • ((wordIndicatorLp (List.ofFn u) vacuumL2 : L2Boundary) :
+          Boundary → ℂ)) x := by
+    rw [Finset.eventually_all]
+    intro u hu
+    exact hsmul u
+  have hvac := vacuumL2_coeFn
+  have hdiag := diagonalCylinderL2_coeFn n f
+  filter_upwards [hsum, hword_all, hsmul_all, hvac, hdiag]
+    with x hsumx hwordx hsmulx hvacx hdiagx
+  rw [hsumx, hdiagx]
+  calc
+    (∑ u : BitWord n,
+        ((f u • wordIndicatorLp (List.ofFn u) vacuumL2 : L2Boundary) :
+          Boundary → ℂ) x) =
+        ∑ u : BitWord n, f u *
+          (wordBranchSet (List.ofFn u)).indicator (fun _ => (1 : ℂ)) x := by
+      apply Finset.sum_congr rfl
+      intro u hu
+      rw [hsmulx u hu, Pi.smul_apply, hwordx u hu]
+      by_cases hmem : x ∈ wordBranchSet (List.ofFn u)
+      · rw [wordIndicatorFunction, Set.indicator_of_mem hmem]
+        rw [hvacx]
+        rw [Set.indicator_of_mem hmem]
+        simp
+      · simp [wordIndicatorFunction, Set.indicator_apply, hmem]
+    _ = f (boundaryPrefix n x) := by
+      calc
+        (∑ u : BitWord n, f u *
+            (wordBranchSet (List.ofFn u)).indicator (fun _ => (1 : ℂ)) x) =
+            f (boundaryPrefix n x) *
+              (wordBranchSet (List.ofFn (boundaryPrefix n x))).indicator
+                (fun _ => (1 : ℂ)) x := by
+          refine Finset.sum_eq_single (a := boundaryPrefix n x)
+            (s := (Finset.univ : Finset (BitWord n)))
+            (f := fun u : BitWord n => f u *
+              (wordBranchSet (List.ofFn u)).indicator (fun _ => (1 : ℂ)) x) ?_ ?_
+          · intro u hu hne
+            have hnot : x ∉ wordBranchSet (List.ofFn u) := by
+              intro hmem
+              apply hne
+              exact ((wordBranchSet_ofFn_mem_iff n u x).mp hmem).symm
+            rw [Set.indicator_apply, if_neg hnot]
+            simp
+          · intro hnotmem
+            simp at hnotmem
+        _ = f (boundaryPrefix n x) := by
+          have hmem : x ∈ wordBranchSet
+              (List.ofFn (boundaryPrefix n x)) :=
+            (wordBranchSet_ofFn_mem_iff n (boundaryPrefix n x) x).mpr rfl
+          rw [Set.indicator_of_mem hmem]
+          simp
 
 end InfoGeometry.Canonical.CantorBernoulliBoundaryRangeGNSBridge

@@ -3220,6 +3220,10 @@ import InfoGeometry.Canonical.DoubledFibonacciCondensationBridge
 import InfoGeometry.Canonical.DoubledOperatorMatrixGradingBridge
 import InfoGeometry.Canonical.DoubledOperatorMatrixInterop
 import InfoGeometry.Canonical.Drazin
+import InfoGeometry.Canonical.DrazinRegularization
+import InfoGeometry.Canonical.DrazinRegularizationAudit
+import InfoGeometry.Canonical.DrazinNilpotentShell
+import InfoGeometry.Canonical.DrazinNilpotentShellResolution
 import InfoGeometry.Canonical.DrazinAdjoint
 import InfoGeometry.Canonical.DrazinAnomalousProjector
 import InfoGeometry.Canonical.DrazinAnomaly
@@ -10665,6 +10669,10 @@ import InfoGeometry.Singular.DrazinGreen
 import InfoGeometry.Singular.KreinNaturalFlow
 import InfoGeometry.Singular.MetricAlgebraicProjectionDefect
 import InfoGeometry.Singular.MoorePenrose
+import InfoGeometry.Singular.MoorePenroseSectors
+import InfoGeometry.Singular.MoorePenroseSectorsAudit
+import InfoGeometry.Singular.NilpotentShellFiltration
+import InfoGeometry.Singular.NilpotentShellFiltrationAudit
 import InfoGeometry.Singular.MoorePenrose.ClosedRange
 import InfoGeometry.Singular.MoorePenrose.tests
 import InfoGeometry.Singular.MoorePenroseAdjoint
@@ -12281,6 +12289,7 @@ import InfoGeometry.Canonical.CantorBernoulliFiniteDiagL2Embedding
 import InfoGeometry.Canonical.CantorBernoulliFiniteDiagL2EmbeddingAudit
 import InfoGeometry.Canonical.CantorBernoulliFiniteDiagonalGNSBridge
 import InfoGeometry.Canonical.CantorBernoulliBoundaryRangeGNSBridge
+import InfoGeometry.Canonical.CantorBernoulliBoundaryRangeGNSBridgeAudit
 import InfoGeometry.Canonical.CantorBernoulliFiniteDiagonalGNSBridgeAudit
 import InfoGeometry.Canonical.CantorBernoulliFiniteDiagonalHilbertSchmidt
 import InfoGeometry.Canonical.CantorBernoulliFiniteDiagonalHilbertSchmidtAudit
@@ -12326,6 +12335,7 @@ import InfoGeometry.Canonical.D4StarColimitFlowTopCatInverseWave67
 import InfoGeometry.Canonical.DifferentialAdjointChainRule
 import InfoGeometry.Canonical.DiracKahlerAlgebra
 import InfoGeometry.Canonical.DrazinCommutant
+import InfoGeometry.Canonical.InverseKernelSectorAnomalies
 import InfoGeometry.Canonical.DrazinPairingAdjunction
 import InfoGeometry.Canonical.DrazinPairingAdjunctionTests
 import InfoGeometry.Canonical.F4ActionPivotFamilyReadback
@@ -13213,7 +13223,6 @@ import InfoGeometry.Sandbox.PR169.DetectorTransportKernel
 import InfoGeometry.Sandbox.PR169.DetectorVolumeResponse
 import InfoGeometry.Sandbox.UncertaintyAnomalySwarm.HeisenbergAnomaly
 import InfoGeometry.Sandbox.UncertaintyAnomalySwarm.TwistorNonIncidence
-import InfoGeometry.Sandbox.scratch_colim_test
 import InfoGeometry.ScalarStatisticalIdentities
 import InfoGeometry.ScalarStatisticalIdentitiesDependencies
 import InfoGeometry.ScalarStatisticalIdentitiesTests

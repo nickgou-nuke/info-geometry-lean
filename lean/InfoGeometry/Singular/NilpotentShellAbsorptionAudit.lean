@@ -1,0 +1,20 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Singular.NilpotentShellAbsorption
+
+#print axioms InfoGeometry.Singular.NilpotentShellFiltration.rangeProj_mul_pow
+#print axioms InfoGeometry.Singular.NilpotentShellFiltration.shellProj_mul_pow_eq_zero
+#print axioms InfoGeometry.Singular.NilpotentShellFiltration.shellProj_recover
+#print axioms InfoGeometry.Singular.NilpotentShellFiltration.shellProj_right_absorption_iff
+#print axioms InfoGeometry.Singular.NilpotentShellFiltration.transpose_power_family
+#print axioms InfoGeometry.Singular.NilpotentShellFiltration.corangeShell_eq_transpose_range
+#print axioms InfoGeometry.Singular.NilpotentShellFiltration.corangeShell_symm
+#print axioms InfoGeometry.Singular.NilpotentShellFiltration.corangeShell_idem
+#print axioms InfoGeometry.Singular.NilpotentShellFiltration.corangeShell_orthogonal
+#print axioms InfoGeometry.Singular.NilpotentShellFiltration.corangeShell_partition
+#print axioms InfoGeometry.Singular.NilpotentShellFiltration.pow_mul_corangeShell_eq_zero
+#print axioms InfoGeometry.Singular.NilpotentShellFiltration.corangeShell_recover
+#print axioms InfoGeometry.Singular.NilpotentShellFiltration.corangeShell_left_absorption_iff

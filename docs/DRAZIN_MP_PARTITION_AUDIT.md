@@ -45,17 +45,65 @@ The backward-shift interpretation requires an orthonormal (possibly weighted)
 shift model. General directed acyclic matrices need not have this geometry.
 
 The projections onto im(N^m) minus those onto im(N^(m+1)) describe the
-decreasing **range filtration**, not exact time to absorption. Exact death
-layers use the increasing kernels ker(N^(m+1)) minus ker(N^m). On the ambient
-space, the range-shell sum is I when N is nilpotent, not the oblique F.
-One must specify the restricted carrier V_N and its induced inner product.
+decreasing **range filtration**. They also give exact death time m+1 for
+nonzero **row states supported in Q_m, under right action**: Q_m N^(m+1)=0 and
+(Q_m N^m) M_m=Q_m. The earlier unqualified rejection of this interpretation
+was too strong. For column action use the dual co-range shells
+M_m N^m − M_(m+1) N^(m+1), equivalently the orthogonal differences of
+ker(N^(m+1)) and ker(N^m). Each power has its own MP inverse; no reverse-order
+law is used. The ambient range-shell sum is I, not the generally oblique F.
 
-Multiplying a three-sector sum by F gives an algebraic sum E+Fpq+FB+Fnull=1.
+Under pq=qp, multiplying the three-sector sum by F gives E+Fpq+FB+Fnull=1.
+Without that hypothesis the right side is 1+F[p,q].
 It does not automatically give idempotent or orthogonal summands. Commutation
 with F suffices for idempotence; self-adjointness of F is additionally needed
 for orthogonality. An alternative is to form the MP decomposition intrinsically
 on V_N and transport it through the algebraic direct sum, obtaining oblique
 ambient projections. Ambient N† cannot silently replace the restricted inverse.
+
+The power-shell family has extra structure absent from arbitrary MP sectors:
+F P_m=P_m for m>0. Consequently the dressed ranges F P_m F are nested
+algebraic idempotents even when F is oblique. Their differences
+S_m=F Q_m F=Q_m F sum to F and annihilate one another and E on both sides.
+Here “orthogonal” means zero products, not self-adjointness. For row action,
+S_m A^(m+1)=0 with recovery at m. For a state with a regular component,
+“entry into the core” means extinction of its transient component; the two
+invariant subspaces do not transfer nonzero states between one another.
+Individual shells can be zero. The core is invariant, not pointwise fixed.
+The native owner `Canonical/DrazinNilpotentShellResolution` proves these claims,
+including the recovery formula (S_m A^m) M_m F=S_m.
+
+## Anomalies, triple products, and graph carriers
+
+The inverse-kernel owner distinguishes S=AD, R=AM, and T=MA. Its left chiral
+anomaly is [S,T], its right anomaly [S,R], and the Einstein anomaly [R,S].
+Thus Einstein is minus the **right**, not generally the left, anomaly.
+These are support-projector commutators, not automatically the raw [D,M].
+The new bridge retains the exact sector defect 1+[S,T] and the corresponding
+Einstein sign. With the owner's normalized Jordan product,
+assoc(S,Y,T)=(1/4)[Y,[S,T]]. Ordinary operator multiplication stays associative.
+
+`Canonical/JordanWignerCantorRepresentation` owns the global real Cantor
+algebra equivalence and its triple/superbracket transport.
+`Clifford/ParaKahler55PositiveGrassmannianCantorBridge` owns cylinder triple
+concatenation and graded triple identities. These must not be replaced by a
+claim that ordinary matrix multiplication is nonassociative. The projected
+associator in `Canonical/ProjectedNonassociativeBianchi` instead measures
+readout/inclusion leakage. An algebra equivalence alone does not establish
+star preservation and therefore cannot silently transport MP inverses.
+
+`Canonical/CuntzInverseSectorPartition` uses the actual two-isometry carrier:
+q+ q− and q− q+ are disjoint excitation supports. The boundary square is
+their sum; its complement is the Toeplitz vacuum defect. This defect may be
+zero even without assuming completeness; no nonzero vacuum is claimed.
+Chiral parity can be nonzero while the MP/Drazin anomaly is zero.
+The triple commutator obeys the derivation rule on these actual arrows.
+
+`Streaming/GraphDifferentialPenrose` uses the vertex/edge cochain carrier of
+`BipartiteGraphDirac`, not scalar proxies. The graph differential is square
+zero and has zero Drazin inverse. Its codifferential is an adjoint, not in
+general a pseudoinverse: the first Penrose identity holds exactly when
+B Bᵀ B=B. This normalization condition is retained explicitly.
 
 Nonzero constant scalar rescaling preserves the support products and scales
 inverse witnesses inversely. This is global scalar homogeneity; no local Weyl
@@ -99,5 +147,33 @@ these adjacent statements have been newly formalized.
 
 ## Verification record
 
-Implementation and independent audit/QA results are recorded below after the
-locked checks. No full-repository acceptance is inferred from narrow builds.
+The implementation is collected by `Canonical/InverseSectorAudit.lean`.
+It includes `Canonical/DrazinNilpotentShellResolution` for the oblique resolution,
+`Singular/NilpotentShellAbsorption` for both action conventions, native
+inverse-kernel/Cuntz/graph bridges, and finite matrix counterexamples.
+The finite examples use direct exact Lean arithmetic; no numerical CAS
+result is substituted for a proof.
+
+On 2026-10-23 the parent ran locked targeted builds of these modules and the
+aggregate audit. Independent A-A Darwin then returned code PASS and, after
+the recorded scope corrections, documentation PASS. Independent QA-A Singer
+returned **ACCEPTED_WITH_LIMITED_SCOPE**, reporting:
+
+- `python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock
+  InfoGeometry.Canonical.InverseSectorAudit`: PASS (3296 jobs).
+- Fourteen sequential scoped `lake env lean` checks under the shared lock:
+  PASS; source hashes unchanged during verification.
+- Fifty-nine printed axiom reports: only subsets of `propext`,
+  `Classical.choice`, and `Quot.sound`.
+- Scoped header, placeholder/unsafe, no-hypothesis, and whitespace checks:
+  PASS. The semantic-vacuity gate passed with two reviewed advisory warnings.
+- OpenGauss screening: thirteen of fourteen files clean. The finite examples
+  still trigger T16 witness recognition despite the kernel-checked
+  `chain3_inverse_noncommuting` and `skewChain_inverse_noncommuting` theorems.
+  The checker was not bypassed or modified.
+
+Residual verification scope: that static-recognition discrepancy and the
+parent's unfinished full-stage gate. Other sessions are editing unrelated
+owners and the shared index; no full-repository or stable-global-index
+acceptance is claimed. Existing dependency warnings are not attributed to
+these new theorem proofs. No cache cleaning or dependency update was used.

@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Canonical.CantorProjectiveLimitReadoutTopCat
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorProjectiveLimitTopCat
@@ -55,5 +61,13 @@ theorem projectiveFinitePrefixReadout_cantor_compatibility
       (List.ofFn (π n (cantorProjectiveLimitTopCatIso.hom x))) = _
   have h := cantorProjectiveLimit_projection_readout n x
   exact congrArg (fun w => finitePrefixReadout (List.ofFn w)) h
+
+/-! The finite-cylinder carrier and the projective-limit observable are the
+same readout after the canonical reconstruction of a Cantor stream. -/
+
+theorem cylinder_toCantor_eq_projective_projection
+    (n : ℕ) (f : DiagAlg n) (p : PrefixProjectiveLimit) :
+    cylinder n f (toCantor p) = f (π n p) := by
+  rw [cylinder_apply, boundaryPrefix_toCantor_eq_word, π_apply]
 
 end InfoGeometry.Canonical.CantorProjectiveLimitFiniteReadoutTopCat

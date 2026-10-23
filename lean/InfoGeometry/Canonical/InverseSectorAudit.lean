@@ -1,0 +1,49 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Canonical.DrazinRegularizationAudit
+import InfoGeometry.Canonical.DrazinNilpotentShellResolution
+import InfoGeometry.Canonical.InverseKernelSectorAnomalies
+import InfoGeometry.Canonical.CuntzInverseSectorPartition
+import InfoGeometry.Singular.MoorePenroseSectorsAudit
+import InfoGeometry.Singular.MoorePenroseSectorExamples
+import InfoGeometry.Singular.NilpotentShellAbsorptionAudit
+import InfoGeometry.Streaming.GraphDifferentialPenrose
+
+/-! Kernel dependency audit for the inverse-sector implementation, not an acceptance certificate. -/
+
+#print axioms InfoGeometry.Canonical.DrazinNilpotentShell.drazinRangeProj_mul_of_le
+#print axioms InfoGeometry.Canonical.DrazinNilpotentShell.drazinShellProj_idem
+#print axioms InfoGeometry.Canonical.DrazinNilpotentShell.drazinShellProj_orthogonal
+#print axioms InfoGeometry.Canonical.DrazinNilpotentShell.sum_drazinShellProj_eq_complementaryProjection
+#print axioms InfoGeometry.Canonical.DrazinNilpotentShell.projection_add_sum_drazinShellProj
+#print axioms InfoGeometry.Canonical.DrazinNilpotentShell.projection_drazinShellProj_orthogonal
+#print axioms InfoGeometry.Canonical.DrazinNilpotentShell.drazinShellProj_mul_pow_succ_eq_zero
+#print axioms InfoGeometry.Canonical.DrazinNilpotentShell.drazinShellProj_not_absorbed_at_m
+
+#print axioms InfoGeometry.Singular.ProjectionSectors.boundary_idempotence_defect
+#print axioms InfoGeometry.Singular.ProjectionSectors.compression_idempotence_defect
+#print axioms InfoGeometry.Singular.ProjectionSectors.three_sector_orthogonal
+#print axioms InfoGeometry.Canonical.CertifiedInverseKernel.spectral_metric_sector_sum
+#print axioms InfoGeometry.Canonical.CertifiedInverseKernel.spectral_range_sector_sum
+#print axioms InfoGeometry.Canonical.CertifiedInverseKernel.spectral_metric_interior_idempotence_defect
+#print axioms InfoGeometry.Canonical.CertifiedInverseKernel.spectral_commutator_mp_boundary_square
+#print axioms InfoGeometry.Canonical.CertifiedInverseKernel.spectral_metric_jordan_associator
+#print axioms InfoGeometry.Canonical.CertifiedInverseKernel.range_spectral_jordan_associator
+#print axioms InfoGeometry.Canonical.MoorePenroseDrazinChiralDefect.chiral_boundary_square
+#print axioms InfoGeometry.Canonical.MoorePenroseDrazinChiralDefect.chiral_null_sector
+#print axioms InfoGeometry.Canonical.MoorePenroseDrazinChiralDefect.chiral_pair_drazin_anomaly_zero
+#print axioms InfoGeometry.Canonical.MoorePenroseDrazinChiralDefect.complete_chiralParity_ne_zero
+#print axioms InfoGeometry.Canonical.MoorePenroseDrazinChiralDefect.chiral_triple_commutator
+#print axioms InfoGeometry.Singular.MoorePenroseSectorExamples.chain3_penrose
+#print axioms InfoGeometry.Singular.MoorePenroseSectorExamples.chain3_supports
+#print axioms InfoGeometry.Singular.MoorePenroseSectorExamples.chain3_inverse_noncommuting
+#print axioms InfoGeometry.Singular.MoorePenroseSectorExamples.skewChain_inverse_noncommuting
+#print axioms InfoGeometry.Singular.MoorePenroseSectorExamples.skewChain_nilpotent
+#print axioms InfoGeometry.Singular.MoorePenroseSectorExamples.skewChain_penrose
+#print axioms InfoGeometry.Singular.MoorePenroseSectorExamples.skewChain_boundary_square
+#print axioms InfoGeometry.Singular.MoorePenroseSectorExamples.skewChain_boundary_not_idempotent
+#print axioms InfoGeometry.Streaming.BipartiteGraphDirac.differential_drazin_zero
+#print axioms InfoGeometry.Streaming.BipartiteGraphDirac.differential_codifferential_penrose_iff

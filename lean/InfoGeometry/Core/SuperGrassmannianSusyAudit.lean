@@ -22,6 +22,7 @@ import InfoGeometry.Core.SupercolorMultiplication
 #print axioms InfoGeometry.Core.SuperGrassmannianSusy.colorBoson
 #print axioms InfoGeometry.Core.SuperGrassmannianSusy.tangent_of_square_zero_pair
 #print axioms InfoGeometry.Core.SuperGrassmannianSusy.superGrassmannian_tangent_characterization
+#print axioms InfoGeometry.Core.SuperGrassmannianSusy.superGrassmannian_tangent_both_projections
 #print axioms InfoGeometry.Core.SuperGrassmannianSusy.color_pair_relations
 #print axioms InfoGeometry.Core.SuperGrassmannianSusy.extended_susy_centrality
 #print axioms InfoGeometry.Core.SuperGrassmannianSusy.extended_susy_total_charges

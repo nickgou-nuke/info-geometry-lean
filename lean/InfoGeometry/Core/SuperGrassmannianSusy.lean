@@ -202,6 +202,54 @@ theorem superGrassmannian_tangent_characterization {d b : R}
       _ = x - x := by rw [hx, hy]
       _ = 0 := sub_self x
 
+/-! The public certificate below exposes both Peirce tangent sectors.  The
+previous characterization keeps the `P₋` hypotheses explicit because they are
+useful for deriving the grading anticommutator; this companion theorem packages
+the full tangent membership of the four primitive/Majorana generators. -/
+
+theorem superGrassmannian_tangent_both_projections {d b : R}
+    (hd : d * d = 0) (h : IsMoorePenroseInverse d b) :
+    (IsGrassmannianTangent (d * b) d ∧
+     IsGrassmannianTangent (d * b) b ∧
+     IsGrassmannianTangent (d * b) (majoranaPlus d b) ∧
+     IsGrassmannianTangent (d * b) (majoranaMinus d b)) ∧
+    (IsGrassmannianTangent (b * d) d ∧
+     IsGrassmannianTangent (b * d) b ∧
+     IsGrassmannianTangent (b * d) (majoranaPlus d b) ∧
+     IsGrassmannianTangent (b * d) (majoranaMinus d b)) := by
+  rcases tangent_of_square_zero_pair hd h with ⟨hpd, hpb, hmd, hmb⟩
+  unfold IsGrassmannianTangent jordanProd at hpd hpb hmd hmb
+  have hqplus : IsGrassmannianTangent (d * b) (majoranaPlus d b) := by
+    unfold IsGrassmannianTangent majoranaPlus jordanProd
+    calc
+      (d * b) * (d + b) + (d + b) * (d * b) =
+          ((d * b) * d + d * (d * b)) +
+            ((d * b) * b + b * (d * b)) := by noncomm_ring
+      _ = d + b := by rw [hpd, hpb]
+  have hqminus : IsGrassmannianTangent (d * b) (majoranaMinus d b) := by
+    unfold IsGrassmannianTangent majoranaMinus jordanProd
+    calc
+      (d * b) * (d - b) + (d - b) * (d * b) =
+          ((d * b) * d + d * (d * b)) -
+            ((d * b) * b + b * (d * b)) := by noncomm_ring
+      _ = d - b := by rw [hpd, hpb]
+  have hmqplus : IsGrassmannianTangent (b * d) (majoranaPlus d b) := by
+    unfold IsGrassmannianTangent majoranaPlus jordanProd
+    calc
+      (b * d) * (d + b) + (d + b) * (b * d) =
+          ((b * d) * d + d * (b * d)) +
+            ((b * d) * b + b * (b * d)) := by noncomm_ring
+      _ = d + b := by rw [hmd, hmb]
+  have hmqminus : IsGrassmannianTangent (b * d) (majoranaMinus d b) := by
+    unfold IsGrassmannianTangent majoranaMinus jordanProd
+    calc
+      (b * d) * (d - b) + (d - b) * (b * d) =
+          ((b * d) * d + d * (b * d)) -
+            ((b * d) * b + b * (b * d)) := by noncomm_ring
+      _ = d - b := by rw [hmd, hmb]
+  exact ⟨⟨hpd, hpb, hqplus, hqminus⟩,
+    ⟨hmd, hmb, hmqplus, hmqminus⟩⟩
+
 theorem color_pair_relations {ι : Type*} {d b : ι → R}
     (hS : IsSupercolorSystem d b) (i j : ι) :
     majoranaPlus (d i) (b i) * majoranaPlus (d i) (b i) =

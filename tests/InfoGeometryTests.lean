@@ -277,6 +277,7 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Core.SuperGrassmannianSusy.sectorCentralCharge_lieBracket_majoranaPlus_of_orthogonal
 #check InfoGeometry.Core.SuperGrassmannianSusy.sectorCentralCharge_lieBracket_majoranaMinus_of_orthogonal
 #check InfoGeometry.Core.SuperGrassmannianSusy.totalCentralCharge_lieBracket_generated
+#check InfoGeometry.Core.SuperGrassmannianSusy.superGrassmannian_tangent_both_projections
 #check InfoGeometry.Canonical.MajoranaCoefficientAction.linearCombination_injective
 #check InfoGeometry.Canonical.MajoranaCoefficientAction.quadratic_monomial_commutator
 #check InfoGeometry.Core.SuperGrassmannianSusy.colorBoson_lieBracket_of_common_source

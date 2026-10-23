@@ -81,8 +81,10 @@
         "feat/drazin-shell-cascade",
         "feat/peirce-square-zero-mp"
       ],
-      "status": "overlap_audited_pending_owner_alignment",
-      "note": "Do not replace DrazinRegularization, DrazinShellCascade, MoorePenroseSectors: existing namespaces and consumers would regress."
+      "status": "additive_owner_alignment_in_progress",
+      "note": "Do not replace DrazinRegularization, DrazinShellCascade, MoorePenroseSectors: existing namespaces and consumers would regress. JordanAssociatorRing and scaled MP counterexamples committed in 04caccfb4. Native ObliqueShellCounterexample ports actual branch matrices through existing PowerMPFamily, drazinShellProj, interShellPeirceCorner and MP conversion owners.",
+      "oblique_verification": "Popper final source-semantic PASS. Parent locked ObliqueShellCounterexampleAudit build PASS3197, all six audited declarations use only propext, Classical.choice, Quot.sound; no local warnings. Strict screen zero traps after explicit noncommutativity witness. Log /tmp/oblique-shell-audit-build.log. Independent QA pending; not yet accepted or committed.",
+      "remaining": ["independent oblique QA", "remaining branch declaration correspondence", "aggregate and harness integration"]
     },
     {
       "branches": [
@@ -98,8 +100,10 @@
       "branches": [
         "feature/thermal-clifford-parakahler-bridge-20261020"
       ],
-      "status": "overlap_audited_pending_additions",
-      "note": "Preserve operator Kubo-Mori mobility; entrywise branch API already has distinct main owner."
+      "status": "entrywise_additions_independently_accepted_integration_pending",
+      "note": "Preserve operator Kubo-Mori mobility; entrywise branch API already has distinct main owner.",
+      "entrywise_contract": "Add a focused BKMEntrywiseDissipation bridge: bkmDissipativeSystem uses native MetriplecticDissipativeSystem with arbitrary finite complex matrices rho,H,gradF and EntrywiseBKMOnsagerMobility.bkmOnsager energies. Prove native freeEnergyRate nonpositive given the explicit unitary trace contribution equals zero, and specialize H=0. Reuse bkmOnsager_positive and MetriplecticDissipation.freeEnergy_rate_nonpos. No density normalization, trajectory existence, or identification with FaithfulDensityOperator mobility is asserted. Remote boost compatibility packets merely bundle already proved independent results and will not be promoted as new mathematical bridges.",
+      "verification": "Parent locked BKMEntrywiseDissipationAudit build PASS3192; both rate inequalities depend only on propext, Classical.choice, Quot.sound. Popper A-A PASS. Kepler independent locked incremental QA PASS3192, stable SHA256 owner38e0be67861fb8cb28375d4a1aec51abebd037c035dd43ee2ef25a0e62ea8133 audit494b539833138684fa82b70066b7b71ae8824699d9a4707945daaa523df94bec, no target-local warnings, strict static-vacuity zero findings. Logs /tmp/bkm-entrywise-dissipation-qa-a-independent.log and /tmp/bkm-entrywise-dissipation-qa-a-static.json. Aggregate/harness integration remains pending."
     },
     {
       "branches": [

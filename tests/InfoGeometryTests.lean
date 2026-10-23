@@ -117,6 +117,7 @@ import InfoGeometry.QuantumContext.ArakiPetzEntropyMonotonicity
 import InfoGeometry.QuantumContext.PetzMatrixStageLimit
 import InfoGeometry.Canonical.FiniteDimensionalSeparation
 import InfoGeometry.Canonical.CyclicTraceIsometryObstruction
+import InfoGeometry.Canonical.GenericObliqueIdempotentAnomaly
 
 -- Simple sanity check that key theorems and definitions compile
 #check InfoGeometry.Canonical.FiniteDimensionalSeparation.no_linearEquiv_to_infinite_dimensional
@@ -125,6 +126,8 @@ import InfoGeometry.Canonical.CyclicTraceIsometryObstruction
 #check InfoGeometry.Canonical.CyclicTraceIsometryObstruction.cyclic_additive_trace_vanishes_on_unit
 #check InfoGeometry.Canonical.CyclicTraceIsometryObstruction.no_normalized_cyclic_additive_trace
 #check InfoGeometry.Canonical.CyclicTraceIsometryObstruction.no_car_isometry_in_nontrivial_ring
+#check InfoGeometry.Canonical.GenericObliqueIdempotentAnomaly.oblique_idempotent
+#check InfoGeometry.Canonical.GenericObliqueIdempotentAnomaly.oblique_commutator_nonzero
 
 #check InfoGeometry.Canonical.KleinDeckFiveGradeAction.deckOrientationSign_eq_determinant
 #check InfoGeometry.Canonical.KleinDeckFiveGradeAction.deckGradeAction_mul

@@ -104,6 +104,48 @@ theorem tangent_iff_exists_commutator {p x : R} (hp : p * p = p) :
   · rintro ⟨a, rfl⟩
     exact commutator_tangent hp a
 
+/-- The canonical off-diagonal generator of a tangent direction is unique.
+The commutator with `p` is an involution on tangent directions, even when
+doubling is not injective. No choice of a complement or division is needed. -/
+theorem tangent_iff_existsUnique_tangent_generator {p x : R} (hp : p * p = p) :
+    p * x + x * p = x ↔
+      ∃! a : R, (p * a + a * p = a) ∧ a * p - p * a = x := by
+  constructor
+  · intro hx
+    refine ⟨x * p - p * x,
+      ⟨commutator_tangent hp x, tangent_eq_double_commutator hp hx⟩, ?_⟩
+    intro a ha
+    calc
+      a = (a * p - p * a) * p - p * (a * p - p * a) :=
+        (tangent_eq_double_commutator hp ha.1).symm
+      _ = x * p - p * x := by rw [ha.2]
+  · rintro ⟨a, ha, _⟩
+    rw [← ha.2]
+    exact commutator_tangent hp a
+
+/-- All other infinitesimal generators differ from the canonical one by an
+element commuting with `p`. This identifies the stabilizer freedom exactly. -/
+theorem tangent_generator_iff_difference_commutes {p x : R}
+    (hp : p * p = p) (hx : p * x + x * p = x) (a : R) :
+    a * p - p * a = x ↔
+      (a - (x * p - p * x)) * p = p * (a - (x * p - p * x)) := by
+  have hcanonical := tangent_eq_double_commutator hp hx
+  have hdefect :
+      (a - (x * p - p * x)) * p - p * (a - (x * p - p * x)) =
+        (a * p - p * a) - x := by
+    calc
+      (a - (x * p - p * x)) * p - p * (a - (x * p - p * x)) =
+          (a * p - p * a) -
+            ((x * p - p * x) * p - p * (x * p - p * x)) := by noncomm_ring
+      _ = (a * p - p * a) - x := by rw [hcanonical]
+  constructor
+  · intro ha
+    apply sub_eq_zero.mp
+    rw [hdefect, ha, sub_self]
+  · intro ha
+    apply sub_eq_zero.mp
+    rw [← hdefect, ha, sub_self]
+
 open InfoGeometry.Singular.MoorePenrose
 open InfoGeometry.Core.DiracSuperalgebra
 

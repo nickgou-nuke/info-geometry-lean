@@ -26,3 +26,6 @@ import InfoGeometry.Canonical.CantorBernoulliBoundaryRangeGNSBridge
 
 #print axioms
   InfoGeometry.Canonical.CantorBernoulliBoundaryRangeGNSBridge.boundaryRep_diagonal_vacuum_eq_diagonalCylinderL2
+
+#print axioms
+  InfoGeometry.Canonical.CantorBernoulliBoundaryRangeGNSBridge.boundaryRep_diagonal_vacuum_inner_eq_projectiveIntegral

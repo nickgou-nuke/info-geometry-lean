@@ -287,4 +287,24 @@ theorem boundaryRep_diagonal_vacuum_eq_diagonalCylinderL2
           rw [Set.indicator_of_mem hmem]
           simp
 
+/-! The concrete boundary vector functional and the native projective-limit
+diagonal readout agree on the full finite diagonal stage.  The operator source
+is still the finite noncommutative matrix stage; only its diagonal observable
+is being evaluated here. -/
+
+theorem boundaryRep_diagonal_vacuum_inner_eq_projectiveIntegral
+    (n : ℕ) (f : DiagAlg n) :
+    inner ℂ vacuumL2
+        ((boundaryRep n (Matrix.diagonal f)) vacuumL2) =
+      ∫ q, f (π n q) ∂projectiveLimitMeasure := by
+  have hone : diagonalCylinderL2 n (1 : DiagAlg n) = vacuumL2 := by
+    apply Lp.ext
+    filter_upwards [diagonalCylinderL2_coeFn n (1 : DiagAlg n),
+      vacuumL2_coeFn] with x hx hvac
+    rw [hx, hvac]
+    simp [InfoGeometry.Canonical.UHFInductiveColimitBoundary.cylinder]
+  rw [boundaryRep_diagonal_vacuum_eq_diagonalCylinderL2 n f, ← hone,
+    diagonalCylinderL2_inner]
+  simpa using (projectiveLimitMeasure_integral_prefix_eq_DiagTrace n f).symm
+
 end InfoGeometry.Canonical.CantorBernoulliBoundaryRangeGNSBridge

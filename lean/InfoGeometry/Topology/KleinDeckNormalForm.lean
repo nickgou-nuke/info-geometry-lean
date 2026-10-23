@@ -78,6 +78,11 @@ noncomputable def glide (p : Plane) : Plane := (p.1 + (1 / 2 : ℝ), -p.2)
 
 def horizontalTranslation (p : Plane) : Plane := (p.1 + 1, p.2)
 
+/-! The inverse affine map is kept on the same plane carrier.  This is the
+    inverse of the half-translation glide, not the inverse of the discrete
+    deck generator `b` (whose vertical normalization is different). -/
+noncomputable def glideInv (p : Plane) : Plane := (p.1 - (1 / 2 : ℝ), -p.2)
+
 @[simp] theorem glide_twice (p : Plane) : glide (glide p) = horizontalTranslation p := by
   rcases p with ⟨x, y⟩
   simp only [glide, horizontalTranslation, Prod.fst, Prod.snd, neg_neg]
@@ -87,5 +92,23 @@ def horizontalTranslation (p : Plane) : Plane := (p.1 + 1, p.2)
 @[simp] theorem glide_orientation_shadow (p : Plane) :
     (glide p).1 = p.1 + (1 / 2 : ℝ) ∧ (glide p).2 = -p.2 := by
   simp [glide]
+
+@[simp] theorem glideInv_glide (p : Plane) : glideInv (glide p) = p := by
+  rcases p with ⟨x, y⟩
+  simp only [glide, glideInv, Prod.fst, Prod.snd, neg_neg]
+  congr 1 <;> ring
+
+@[simp] theorem glide_glideInv (p : Plane) : glide (glideInv p) = p := by
+  rcases p with ⟨x, y⟩
+  simp only [glide, glideInv, Prod.fst, Prod.snd, neg_neg]
+  congr 1 <;> ring
+
+theorem glide_bijective : Function.Bijective glide := by
+  refine ⟨?_, ?_⟩
+  · intro p q h
+    apply_fun glideInv at h
+    simpa using h
+  · intro q
+    exact ⟨glideInv q, glide_glideInv q⟩
 
 end InfoGeometry.Topology.KleinDeckNormalForm

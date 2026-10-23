@@ -719,4 +719,66 @@ theorem superInvolution_conjugates_normalizedDirac
     _ = -normalizedDirac a m := by
       rw [superInvolution_sq h ha, mul_one]
 
+/- The global chiral involution preserves the active support. -/
+theorem superInvolution_conjugates_activeSupport
+    (h : IsMoorePenroseInverse a m) (ha : a * a = 0) :
+    superInvolution a m * activeSupport a m * superInvolution a m =
+      activeSupport a m := by
+  have hch' : chiralSupport a m * chiralSupport a m =
+      activeSupport a m := by
+    simpa [activeSupport] using h.chiralSupport_sq_support ha
+  have hchH := chiralSupport_mul_harmonicSupport h ha
+  have hHactive := harmonicSupport_mul_activeSupport h ha
+  unfold superInvolution
+  calc
+    (chiralSupport a m + harmonicSupport a m) * activeSupport a m *
+        (chiralSupport a m + harmonicSupport a m) =
+      chiralSupport a m * activeSupport a m * chiralSupport a m +
+        chiralSupport a m * activeSupport a m * harmonicSupport a m +
+        harmonicSupport a m * activeSupport a m * chiralSupport a m +
+        harmonicSupport a m * activeSupport a m * harmonicSupport a m := by
+          noncomm_ring
+    _ = activeSupport a m := by
+      have h₁ : chiralSupport a m * activeSupport a m =
+          chiralSupport a m := chiralSupport_mul_activeSupport h ha
+      simp only [h₁, hch', hchH, hHactive, zero_mul, add_zero]
+
+/- The symmetric Majorana reflection preserves the active support. -/
+theorem globalMajoranaReflection_conjugates_activeSupport
+    (h : IsMoorePenroseInverse a m) (ha : a * a = 0) :
+    globalMajoranaReflection a m * activeSupport a m *
+        globalMajoranaReflection a m = activeSupport a m := by
+  have hq := h.normalizedDirac_sq_support ha
+  have hqH := h.normalizedDirac_mul_harmonicSupport ha
+  have hQactive := normalizedDirac_mul_activeSupport h ha
+  have hHactive := harmonicSupport_mul_activeSupport h ha
+  have hactiveH := activeSupport_mul_harmonicSupport h ha
+  unfold globalMajoranaReflection
+  calc
+    (majoranaPlus a m + harmonicSupport a m) * activeSupport a m *
+        (majoranaPlus a m + harmonicSupport a m) =
+      majoranaPlus a m * activeSupport a m * majoranaPlus a m +
+        majoranaPlus a m * activeSupport a m * harmonicSupport a m +
+        harmonicSupport a m * activeSupport a m * majoranaPlus a m +
+        harmonicSupport a m * activeSupport a m * harmonicSupport a m := by
+          noncomm_ring
+    _ = activeSupport a m := by
+      have h₁ : majoranaPlus a m * activeSupport a m *
+          majoranaPlus a m = activeSupport a m := by
+        rw [show majoranaPlus a m = normalizedDirac a m by rfl,
+          hQactive]
+        simpa [activeSupport] using hq
+      have h₂ : majoranaPlus a m * activeSupport a m *
+          harmonicSupport a m = 0 := by
+        rw [show majoranaPlus a m = normalizedDirac a m by rfl,
+          hQactive, hqH]
+      have h₃ : harmonicSupport a m * activeSupport a m *
+          majoranaPlus a m = 0 := by
+        rw [hHactive, zero_mul]
+      have h₄ : harmonicSupport a m * activeSupport a m *
+          harmonicSupport a m = 0 := by
+        rw [hHactive, zero_mul]
+      rw [h₁, h₂, h₃, h₄]
+      simp only [add_zero]
+
 end InfoGeometry.Core.DiracPeirceSuperalgebra

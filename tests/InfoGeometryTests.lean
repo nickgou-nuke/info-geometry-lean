@@ -284,6 +284,8 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Core.SuperGrassmannianSusy.totalCentralCharge_lieBracket_generated
 #check InfoGeometry.Core.SuperGrassmannianSusy.superGrassmannian_tangent_both_projections
 #check InfoGeometry.Core.DiracPeirceSuperalgebra.superInvolution_conjugates_normalizedDirac
+#check InfoGeometry.Core.DiracPeirceSuperalgebra.superInvolution_conjugates_activeSupport
+#check InfoGeometry.Core.DiracPeirceSuperalgebra.globalMajoranaReflection_conjugates_activeSupport
 #check InfoGeometry.Core.DiracSuperalgebra.superInvolution_conjugates_majoranaPlus
 #check InfoGeometry.Core.DiracSuperalgebra.superInvolution_conjugates_chiralSupport
 #check InfoGeometry.Core.DiracSuperalgebra.superInvolution_conjugates_harmonicSupport

@@ -199,10 +199,9 @@
         "Canonical.CartanDrazinMPExamples"
       ],
       "remaining": [
-        "native counterexamples and branch consequence correspondence",
         "aggregate integration and full consolidated snapshot review"
       ],
-      "note": "Fetched 2026-10-23; four branch commits ahead of local main at inventory. No branch files promoted yet; preserve concurrent owner edits.",
+      "note": "Selective native adaptation of branch6a2dd2123; existing carriers retained instead of parallel branch predicates and alternate CI checker.",
       "review": "James source review: reuse Algebra.PeirceDeWittChiralSplit; do not import parallel parity carrier or alternate copied-closure CI checker. Native parity closure candidate now under kernel checking. Preserve dirty seven-stage draft from other session. Supplied inverse witnesses, injective doubling for sign converses, no unconditional MP existence or MP grading tripotence.",
       "parity_verification": {
         "status": "independently_accepted_limited_scope",
@@ -225,6 +224,17 @@
           "lean/InfoGeometry/Canonical/DrazinPeirceParityAudit.lean": "e11691d6374ea1023a6475b142184fa29d0f20719371eb3113213f92f69b5d29"
         },
         "scope": "Native a,d,FittingN parity; arbitrary-m odd projection defects and recovery; metric-first projectionDefect sign bridge with explicit native Singular MP/Drazin witnesses. No inverse existence theorem."
+      },
+      "boundary_verification": {
+        "status": "independently_accepted",
+        "semantic_review": "Ampere A-A PASS",
+        "kernel_qa": "Popper lockedPASS8972;13exactheads standard3;strict2filegate zero traps;stablehashes;zero scopedwarnings. Dependency warnings remain.",
+        "evidence": "/tmp/parity-boundary-independent-qa-y3_8lng9",
+        "sha256": {
+          "lean/InfoGeometry/Canonical/PeirceParityBoundaryExamples.lean": "482b7ebfe0278990f6703599a01d90431648f53fbf670e31bee6b9bb03903532",
+          "lean/InfoGeometry/Canonical/PeirceParityBoundaryExamplesAudit.lean": "86e0d6dac40a420fd87d021ad9a39dc1f2bd0d4145411e9fab4da8f3cf462050"
+        },
+        "scope": "Native characteristic-two sign-fixedness versus even parity; actual MP support difference not tripotent; odd shear sum squares to identity."
       }
     }
   ],

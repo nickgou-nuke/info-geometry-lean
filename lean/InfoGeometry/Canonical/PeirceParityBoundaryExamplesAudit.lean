@@ -1,0 +1,20 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Canonical.PeirceParityBoundaryExamples
+
+#print axioms InfoGeometry.Canonical.PeirceParityBoundaryExamples.boundary_projection_idempotent
+#print axioms InfoGeometry.Canonical.PeirceParityBoundaryExamples.boundary_grading_eq_one
+#print axioms InfoGeometry.Canonical.PeirceParityBoundaryExamples.boundary_direction_sign_fixed
+#print axioms InfoGeometry.Canonical.PeirceParityBoundaryExamples.boundary_direction_oddPart_ne_zero
+#print axioms InfoGeometry.Canonical.PeirceParityBoundaryExamples.boundary_direction_not_even
+#print axioms InfoGeometry.Canonical.PeirceParityBoundaryExamples.sign_fixed_does_not_force_even
+#print axioms InfoGeometry.Canonical.PeirceParityBoundaryExamples.support_difference_cube_entry00
+#print axioms InfoGeometry.Canonical.PeirceParityBoundaryExamples.support_difference_not_tripotent
+#print axioms InfoGeometry.Canonical.PeirceParityBoundaryExamples.shear_support_idempotent
+#print axioms InfoGeometry.Canonical.PeirceParityBoundaryExamples.shear_is_odd
+#print axioms InfoGeometry.Canonical.PeirceParityBoundaryExamples.star_shear_is_odd
+#print axioms InfoGeometry.Canonical.PeirceParityBoundaryExamples.shear_sum_is_odd
+#print axioms InfoGeometry.Canonical.PeirceParityBoundaryExamples.odd_shear_sum_square_one

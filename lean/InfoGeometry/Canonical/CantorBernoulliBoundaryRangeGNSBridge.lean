@@ -31,6 +31,7 @@ state with the gauge state; those states are different on off-diagonal words.
 noncomputable section
 
 set_option maxHeartbeats 1000000
+set_option synthInstance.maxHeartbeats 400000
 
 namespace InfoGeometry.Canonical.CantorBernoulliBoundaryRangeGNSBridge
 
@@ -167,19 +168,6 @@ def boundaryStageToGNSClosure (n : ℕ) :
     gaugeStage gaugeSystem gaugeStateFamily n
     (CStarMatrix.ofMatrixStarAlgEquiv (bitWordStageStarAlgEquiv n A))
 
-/-! The boundary-range trace and the native GNS vacuum therefore agree after
-passing through the concrete closure map.  This is the finite readout square;
-it does not assert equality of the spatial boundary and GNS Hilbert spaces. -/
-theorem boundaryStarRangeTrace_gnsClosure_readout (n : ℕ) (A : Stage n) :
-    boundaryStarRangeTrace n
-        ⟨boundaryRep n A, ⟨A, rfl⟩⟩ =
-      ⟪gaugeGNSColimitVacuum,
-        (boundaryStageToGNSClosure n A :
-          gaugeGNSHilbertColimit →L[ℂ] gaugeGNSHilbertColimit)
-          gaugeGNSColimitVacuum⟫_ℂ := by
-  rw [boundaryStarRangeTrace_stage, boundaryStageToGNSClosure_coe]
-  exact boundaryRangeTrace_gaugeGNS_readout n A
-
 /-! The pulled-back trace on the actual boundary range is compatible with the
 native full-matrix `StarAlgHom` successor.  This statement is about arbitrary
 matrix stages: no diagonalization, normality, or eigenbasis is used. -/
@@ -243,6 +231,19 @@ theorem boundaryRangeTrace_gaugeGNS_readout (n : ℕ) (A : Stage n) :
               (bitWordStageStarAlgEquiv n A))
             gaugeGNSColimitVacuum⟫_ℂ :=
       (gaugeGNSColimitVacuum_complexStarFiniteStage_expectation n A).symm
+
+/-! The boundary-range trace and the native GNS vacuum therefore agree after
+    passing through the concrete closure map.  This is the finite readout square;
+    it does not assert equality of the spatial boundary and GNS Hilbert spaces. -/
+theorem boundaryStarRangeTrace_gnsClosure_readout (n : ℕ) (A : Stage n) :
+    boundaryStarRangeTrace n
+        ⟨boundaryRep n A, ⟨A, rfl⟩⟩ =
+      ⟪gaugeGNSColimitVacuum,
+        (boundaryStageToGNSClosure n A :
+          gaugeGNSHilbertColimit →L[ℂ] gaugeGNSHilbertColimit)
+          gaugeGNSColimitVacuum⟫_ℂ := by
+  rw [boundaryStarRangeTrace_stage, boundaryStageToGNSClosure_coe]
+  exact boundaryRangeTrace_gaugeGNS_readout n A
 
 /-! The pulled-back trace has the full noncommutative Hilbert--Schmidt energy
 on the actual represented boundary range.  No diagonal restriction or

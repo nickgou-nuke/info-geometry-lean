@@ -57,6 +57,24 @@ theorem reflection_anticommutator (p x : R) :
   rw [two_nsmul]
   noncomm_ring
 
+/-- Over a ring where doubling is injective, anticommutation with the
+reflection `2 * p - 1` is equivalent to the first-order Grassmannian
+tangent equation.  The injectivity hypothesis is necessary: in
+characteristic two the reflection identity only sees twice the tangent
+defect. -/
+theorem tangent_iff_reflection_anticommutes_of_two_smul_injective
+    {p x : R} (h_two : Function.Injective (fun y : R => (2 : ℕ) • y)) :
+    p * x + x * p = x ↔
+      (2 * p - 1) * x + x * (2 * p - 1) = 0 := by
+  constructor
+  · intro hx
+    rw [reflection_anticommutator, hx, sub_self, smul_zero]
+  · intro h_reflection
+    rw [reflection_anticommutator] at h_reflection
+    apply sub_eq_zero.mp
+    apply h_two
+    simpa using h_reflection
+
 open InfoGeometry.Singular.MoorePenrose
 open InfoGeometry.Core.DiracSuperalgebra
 

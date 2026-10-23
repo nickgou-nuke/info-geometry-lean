@@ -12,12 +12,28 @@ import re
 import shutil
 import subprocess
 
+if __package__ in (None, ""):
+    from reviewed_audit_source import (audit_source, validate_targets, validate_roles,
+                                       check_command_sources, may_reuse_cache, parse_audit_output)
+else:
+    from .reviewed_audit_source import (audit_source, validate_targets, validate_roles,
+                                        check_command_sources, may_reuse_cache, parse_audit_output)
 
-def run(cmd, cwd, env=None):
+
+def run(cmd, cwd, env=None, pass_fds=()):
     result = subprocess.run(cmd, cwd=cwd, env=env, text=True,
-                            stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                            stdout=subprocess.PIPE, stderr=subprocess.STDOUT, pass_fds=pass_fds)
     if result.returncode:
         raise RuntimeError(f"{cmd!r}\n{result.stdout}")
+    return result.stdout
+
+
+def run_logged(cmd, cwd, log, env=None, pass_fds=()):
+    result = subprocess.run(cmd, cwd=cwd, env=env, text=True,
+                            stdout=subprocess.PIPE, stderr=subprocess.STDOUT, pass_fds=pass_fds)
+    log.write_text(result.stdout)
+    if result.returncode:
+        raise RuntimeError(f"{cmd!r} exited {result.returncode}; see {log}")
     return result.stdout
 
 
@@ -53,35 +69,6 @@ def closure(repo, targets):
     return ordered, dependencies, native
 
 
-def audit_source(targets):
-    imports = '\n'.join('import ' + m for m in targets)
-    module_names = ', '.join('`' + m for m in targets)
-    return imports + '\nimport Lean.Util.CollectAxioms\nimport Lean.Elab.Command\n\nopen Lean Elab Command\n\n' + f'''run_cmd do
-  let env ← getEnv
-  let targets : Array Name := #[{module_names}]
-  let allowed : Array Name := #[`propext, `Classical.choice, `Quot.sound]
-  let mut count := 0
-  let mut collected : Lean.CollectAxioms.State := {{}}
-  for (name, info) in env.constants do
-    let some idx := env.getModuleIdxFor? name | continue
-    let owner := env.header.moduleNames[idx.toNat]!
-    if !targets.contains owner then continue
-    if info.isUnsafe || info.isPartial then
-      throwError "Unsafe or partial declaration in reviewed module: {{name}}"
-    -- Retain the native collector's visited set across declarations. Every
-    -- reachable constant is checked once, including types and private proofs.
-    let (_, next) := ((Lean.CollectAxioms.collect name).run env).run collected
-    collected := next
-    for ax in collected.axioms do
-      unless allowed.contains ax do
-        throwError "Disallowed axiom {{ax}} in {{name}}"
-    count := count + 1
-    logInfo m!"AUDIT_DECL: {{owner}}: {{name}}"
-  if count == 0 then throwError "No declarations audited"
-  logInfo m!"AUDIT_AXIOMS: {{collected.axioms}}"
-  logInfo m!"AUDIT_COUNT: {{count}}"
-'''
-
 
 def main():
     parser = argparse.ArgumentParser(__doc__)
@@ -92,13 +79,15 @@ def main():
     repo = Path(__file__).resolve().parents[2]
     mathlib, output = args.mathlib_root.resolve(), args.output.resolve()
     cache = args.cache_dir.resolve() if args.cache_dir else None
-    output.mkdir(parents=True, exist_ok=True)
     specification = json.loads((repo / 'tools/quality/reviewed_prs_20260921.json').read_text())
-    targets = specification['targets']
+    targets = validate_targets(specification['targets'])
+    command_only = validate_roles(targets)
+    output.mkdir(parents=True, exist_ok=False)
     report = {'status': 'pending', 'modules': [], 'targets': targets,
               'revision': run(['git', 'rev-parse', 'HEAD'], repo).strip(),
               'scope': 'Reviewed source modules, complete repository import closure, combined import and axiom audit; excludes exhaustive aggregators'}
     try:
+        check_command_sources(repo / 'lean', targets, command_only)
         manifest = json.loads((repo / 'lake-manifest.json').read_text())
         pinned = next(p['rev'] for p in manifest['packages'] if p['name'] == 'mathlib')
         toolchain = (repo / 'lean-toolchain').read_text()
@@ -126,17 +115,18 @@ def main():
             shutil.copy2(repo / 'lean' / rel, source / rel)
         with open('/tmp/info-geometry-build.lock', 'a') as lock:
             fcntl.flock(lock, fcntl.LOCK_EX)
-            active = run(['ps', '-eo', 'comm='], repo).splitlines()
+            pass_fds = (lock.fileno(),)
+            active = run(['ps', '-eo', 'comm='], repo, pass_fds=pass_fds).splitlines()
             if any(n.strip() in {'lean', 'lake', 'leanc'} for n in active):
                 raise RuntimeError('Another Lean/Lake build is active')
             print(f'Fetching pinned cache for {len(native)} Mathlib roots', flush=True)
-            print(run(['lake', 'exe', 'cache', 'get', *sorted(native)], mathlib), flush=True)
+            print(run(['lake', 'exe', 'cache', 'get', *sorted(native)], mathlib, pass_fds=pass_fds), flush=True)
             env = os.environ.copy()
-            base_path = run(['lake', 'env', 'printenv', 'LEAN_PATH'], mathlib).strip()
+            base_path = run(['lake', 'env', 'printenv', 'LEAN_PATH'], mathlib, pass_fds=pass_fds).strip()
             paths = [str((mathlib / p).resolve()) if not Path(p).is_absolute() else p
                      for p in base_path.split(os.pathsep) if p]
             env['LEAN_PATH'] = os.pathsep.join([str(lib), *paths])
-            print(run(['lean', '--version'], source, env), flush=True)
+            print(run(['lean', '--version'], source, env, pass_fds=pass_fds), flush=True)
             failed = set()
             for module in ordered:
                 blocked = [d for d in dependencies[module] if d in failed]
@@ -150,7 +140,7 @@ def main():
                 destination.parent.mkdir(parents=True, exist_ok=True)
                 cached = cache / fingerprints[module] if cache else None
                 metadata = cached / 'metadata.json' if cached else None
-                if metadata and metadata.is_file():
+                if metadata and metadata.is_file() and may_reuse_cache(module, targets, command_only):
                     record = json.loads(metadata.read_text())
                     files = record.get('files', {})
                     valid = (record.get('module') == module and
@@ -169,11 +159,14 @@ def main():
                 result = subprocess.run(['lean', '-o', str(destination),
                                          str((source / rel).with_suffix('.lean'))],
                                         cwd=source, env=env, text=True,
-                                        stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                                        stdout=subprocess.PIPE, stderr=subprocess.STDOUT, pass_fds=pass_fds)
                 (output / (module + '.log')).write_text(result.stdout)
                 report['modules'].append({'module': module,
                     'status': 'failed' if result.returncode else 'passed',
-                    'warnings': result.stdout.count('warning:')})
+                    'warnings': result.stdout.count('warning:'),
+                    'cached': False, 'exit_code': result.returncode,
+                    'log': str(output / (module + '.log')),
+                    'role': 'command_only' if module in command_only else 'owner'})
                 if result.returncode:
                     failed.add(module)
                 elif cached:
@@ -193,18 +186,23 @@ def main():
             # Import the entire union, then enumerate the actual compiled environment.
             # This includes private/generated declarations and instances; no source regex.
             audit = source / 'ReviewedPRsAudit.lean'
-            audit.write_text(audit_source(targets))
-            axioms = run(['lean', str(audit)], source, env)
-            (output / 'axioms.log').write_text(axioms)
-            count = re.findall(r'AUDIT_COUNT: (\d+)', axioms)
-            if len(count) != 1 or int(count[0]) <= 0:
-                raise RuntimeError('Missing completed native declaration audit')
+            check_command_sources(source, targets, command_only)
+            audit.write_text(audit_source(targets, command_only))
+            axioms = run_logged(['lean', str(audit)], source, output / 'axioms.log', env, pass_fds=pass_fds)
+            counts = parse_audit_output(axioms, targets, command_only)
+            for module in command_only:
+                records = [entry for entry in report['modules'] if entry['module'] == module]
+                if len(records) != 1 or records[0].get('cached') is not False or records[0].get('exit_code') != 0:
+                    raise RuntimeError(f'Missing fresh command execution: {module}')
             # The existing explicit proof probe is also checked from its exact source.
             probe = source / 'PolarizedShearSpinAudit.lean'
             shutil.copy2(repo / 'proofs/PolarizedShearSpinAudit.lean', probe)
-            (output / 'polarized-probe.log').write_text(run(['lean', str(probe)], source, env))
-            report.update(status='passed', audited_declarations=int(count[0]))
-            print(f'Passed {len(ordered)} modules; audited {count[0]} declarations', flush=True)
+            run_logged(['lean', str(probe)], source, output / 'polarized-probe.log', env, pass_fds=pass_fds)
+            check_command_sources(repo / 'lean', targets, command_only)
+            check_command_sources(source, targets, command_only)
+            report.update(status='passed', audited_declarations=sum(counts.values()), module_counts=counts,
+                          command_only_modules=list(command_only))
+            print(f'Passed {len(ordered)} modules; audited {sum(counts.values())} declarations', flush=True)
     except Exception as error:
         report.update(status='failed', error=str(error))
         raise

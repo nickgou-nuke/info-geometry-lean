@@ -7,6 +7,8 @@ on:
       - 'lean/**'
       - 'proofs/PolarizedShearSpinAudit.lean'
       - 'tools/quality/check_reviewed_prs.py'
+      - 'tools/quality/reviewed_audit_source.py'
+      - 'tests/test_reviewed_audit_source.py'
       - 'tools/quality/reviewed_prs_20260921.json'
       - '.github/workflows/reviewed-pr-integration.yml'
       - '.gitmodules'
@@ -19,6 +21,8 @@ on:
       - 'lean/**'
       - 'proofs/PolarizedShearSpinAudit.lean'
       - 'tools/quality/check_reviewed_prs.py'
+      - 'tools/quality/reviewed_audit_source.py'
+      - 'tests/test_reviewed_audit_source.py'
       - 'tools/quality/reviewed_prs_20260921.json'
       - '.github/workflows/reviewed-pr-integration.yml'
       - '.gitmodules'
@@ -47,6 +51,7 @@ jobs:
             lean/InfoGeometry
             lean/DAG
             tools/quality
+            tests
             tools/infra
             proofs
       - uses: actions/checkout@v4
@@ -86,6 +91,8 @@ jobs:
           key: reviewed-native-lean4341-d13f23b7-v1-${{ github.sha }}
           restore-keys: |
             reviewed-native-lean4341-d13f23b7-v1-
+      - name: Check audit generator contracts
+        run: python3 project/tests/test_reviewed_audit_source.py
       - name: Compile reviewed union and audit every declaration
         run: |
           python3 project/tools/quality/check_reviewed_prs.py \

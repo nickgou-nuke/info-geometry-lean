@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.BoundaryRepresentationKernel
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BoundaryFibonacciHorizonIntertwiner
@@ -6,9 +11,10 @@ import InfoGeometry.Canonical.BoundaryFibonacciHorizonIntertwiner
 # Quotient factorization for boundary-to-target intertwiners
 
 The direct boundary/Fibonacci intertwiner is known to vanish.  This file
-records the honest next interface: a map may first descend through an
-invariant source submodule and only then intertwine the target action.  No
-particular invariant submodule is chosen here.
+records conditional descent through an invariant source submodule.
+Quotienting alone does not evade the zero-Hom obstruction: an intertwiner
+from such a quotient pulls back along its surjective quotient map.
+No particular invariant submodule or nonzero intertwiner is constructed here.
 -/
 
 noncomputable section
@@ -103,9 +109,9 @@ theorem quotientFactor_intertwines
   simp only [LinearMap.comp_apply, quotientAction_mk, quotientFactor_mk]
   exact congrArg (fun f => f v) hintertwine
 
-/-- The concrete two-generator contract for an indirect boundary-to-Fibonacci
-realization.  The hypotheses are precisely the missing invariant-submodule
-and descended-intertwiner data; this theorem does not choose them. -/
+/-- Conditional two-generator factorization for the boundary/Fibonacci actions.
+The intertwining hypotheses already force the original map, and hence its
+quotient factor, to vanish. This is not a nonzero indirect realization. -/
 theorem boundaryFibonacci_quotient_factor_intertwines
     (S : Submodule ℂ BoundaryBraidState)
     (Φ : BoundaryBraidState →ₗ[ℂ] HorizonSpace)

@@ -1,6 +1,11 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.BoundaryBraidRepresentation
 import InfoGeometry.Algebra.FiniteSpinAlgebra
-import InfoGeometry.Canonical.BoundaryFibonacciIntertwinerObstruction
+import InfoGeometry.Canonical.BoundaryFibonacciSylvesterResolution
 import InfoGeometry.Physics.Algebra.FibonacciHorizonBraidBridge
 
 /-!
@@ -10,8 +15,10 @@ The repository has two honest `B₃` actions: the eight-dimensional Jones--
 Temperley--Lieb boundary action and the two-dimensional Fibonacci action on the
 tripotent horizon carrier.  This file records their actual intertwiner space.
 
-No nonzero intertwiner is assumed here.  The kernel below is the finite linear
-system whose nontriviality is the remaining representation-theoretic question.
+The kernel below is the finite linear system for simultaneous intertwiners.
+The theorem `boundaryFibonacciIntertwinerSpace_eq_bot` proves that it is zero.
+The imported Sylvester resolution instead solves prescribed first-generator
+defects and characterizes compatibility of the two matrix defects.
 In particular, this owner does not identify the two carriers merely because
 both satisfy the Artin relation.
 -/

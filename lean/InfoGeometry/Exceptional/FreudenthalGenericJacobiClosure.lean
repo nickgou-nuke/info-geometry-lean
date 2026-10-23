@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Exceptional.GenericGradedJacobiClosure
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Exceptional.FreudenthalExtremeActionData
@@ -16,7 +21,9 @@ This module connects the generic graded Jacobi decomposition to the 5-graded Fre
 4. Homogeneous cell reduction:
    The global 5-graded Jacobi identity reduces to the $6^3 = 216$ atomic lane cells.
 
-All proofs are complete with 0 sorries and 0 axioms.
+The decomposition is algebraic and does not assert global Jacobi for the legacy
+bracket. The constructive Lie algebra on this carrier is installed in
+`FreudenthalSymplecticContactLieAlgebra`.
 -/
 
 noncomputable section
@@ -54,11 +61,5 @@ theorem sum_lanePart (x : FiveGradedCarrier D) :
     dsimp [lanePart, FiveGradedCarrier.instAdd] <;>
     simp
 
-/-- Bundled bracket data equipped with the 6-lane homogeneous Jacobi relations. -/
-structure FiveGradedHomogeneousJacobiData where
-  bracket : FiveGradedCarrier D → FiveGradedCarrier D → FiveGradedCarrier D
-  alternating : ∀ x : FiveGradedCarrier D, bracket x x = 0
-  cell_jacobi : ∀ (i j k : JacobiLane) (x y z : FiveGradedCarrier D),
-    fiveJacobiator D (lanePart D i x) (lanePart D j y) (lanePart D k z) = 0
 
 end InfoGeometry.Exceptional.Freudenthal

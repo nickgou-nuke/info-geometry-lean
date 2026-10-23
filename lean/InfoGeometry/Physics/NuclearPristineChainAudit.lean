@@ -1,55 +1,53 @@
-import InfoGeometry.Exceptional.FreudenthalGlobalJacobiFrontier
-import InfoGeometry.Algebra.FiniteSpinAlgebra
-import InfoGeometry.Physics.NuclearFiveGradeBdGSolovievClosure
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Exceptional.FreudenthalSymplecticContactLieAlgebra
+import InfoGeometry.Physics.NuclearFiveGradeGeneratorRepresentation
+import InfoGeometry.Physics.NuclearCARPhononCommonCarrier
 
 /-!
-# Pristine finite-chain boundary
+# Constructive contact and finite nuclear operator audit
 
-This file composes the two verified sides of the nuclear formalization:
+The contact bracket on the existing five-graded carrier has native Mathlib Lie
+instances, obtained from its faithful representation. Jacobi does not require
+homogeneous-cell hypotheses for the legacy bracket.
 
-* the generic Freudenthal carrier, whose global Jacobi theorem is conditional
-  on its explicit homogeneous-cell data; and
-* the concrete finite CAR--CCR/BdG/Soloviev operator model.
-
-The statement intentionally does not identify these carriers.  Such an
-identification requires a separately proved grade-preserving intertwiner.
+The finite nuclear operator facts are audited separately. These checks do not
+identify the two carriers or supply a grade-preserving intertwiner between them.
+See `docs/FREUDENTHAL_CONTACT_CONSUMER_REALIGNMENT.md` for the source contract.
 -/
 
-noncomputable section
+#print axioms InfoGeometry.Exceptional.Freudenthal.symplecticContactLieRing
+#print axioms InfoGeometry.Exceptional.Freudenthal.symplecticContactLieAlgebra
+#print axioms InfoGeometry.Exceptional.Freudenthal.symplecticContactRepresentationLieHom
+#print axioms InfoGeometry.Exceptional.Freudenthal.symplecticContactRepresentationLieHom_injective
+#print axioms InfoGeometry.Physics.NuclearFiveGradeGeneratorRepresentation.represent_hasGrade
+#print axioms InfoGeometry.Physics.NuclearFiveGradeGeneratorRepresentation.represented_commutator_hasGrade
+#print axioms InfoGeometry.Physics.NuclearBdGSolovievCompression.bdgBlock_sq
+#print axioms InfoGeometry.Physics.NuclearBdGSolovievCompression.solovievBlock_eq_center_add_bdg
+#print axioms InfoGeometry.Physics.NuclearCARPhononCommonCarrier.compressedOscillatorHamiltonian_eq_soloviev
 
 namespace InfoGeometry.Physics.NuclearPristineChainAudit
 
 open InfoGeometry.Exceptional.Freudenthal
-open InfoGeometry.Physics.NuclearTwoModeCARFiveGrade
-open InfoGeometry.Physics.NuclearFiveGradeGeneratorRepresentation
-open InfoGeometry.Physics.NuclearBdGSolovievCompression
-open InfoGeometry.Physics.NuclearCARPhononCommonCarrier
-open InfoGeometry.Physics.NuclearFiveGradeBdGSolovievClosure
 
 variable {J : Type*} [AddCommGroup J] [Module ℝ J]
 variable (D : CubicJordanDatum J)
 
-/-- The current formal boundary: generic global Jacobi and concrete finite
-operator closure coexist, while the missing carrier comparison remains an
-explicit hypothesis-free frontier rather than a claimed theorem. -/
-theorem pristine_chain_boundary_packet
-    (data : FiveGradedHomogeneousJacobiData D)
-    (Eqp ω V ξ Δ E : ℂ) :
-    (∀ x y z : FiveGradedCarrier D, fiveJacobiator D x y z = 0) ∧
-      (∀ g : Generator, HasGrade (degree g) (represent g)) ∧
-      (∀ g h : Generator,
-        HasGrade (degree g + degree h)
-          (commutator (represent g) (represent h))) ∧
-      (bdgBlock ξ Δ * bdgBlock ξ Δ =
-        (ξ ^ 2 + Δ ^ 2) • (1 : Mat2)) ∧
-      (solovievBlock Eqp ω V =
-        (Eqp + ω / 2) • (1 : Mat2) + bdgBlock (ω / 2) V) ∧
-      (∀ φ : EvenSector,
-        compressedOscillatorHamiltonian Eqp ω V φ =
-          Matrix.mulVec (solovievBlock Eqp ω V) φ) := by
-  refine ⟨fun x y z => global_fiveGraded_jacobi_of_data D data x y z,
-    represent_hasGrade, represented_commutator_hasGrade,
-    bdgBlock_sq ξ Δ, solovievBlock_eq_center_add_bdg Eqp ω V,
-    compressedOscillatorHamiltonian_eq_soloviev Eqp ω V⟩
+-- Global Jacobi for the corrected bracket, on its actual carrier.
+example (u v w : FiveGradedCarrier D) :
+    symplecticContactBracket D u (symplecticContactBracket D v w) +
+      symplecticContactBracket D v (symplecticContactBracket D w u) +
+      symplecticContactBracket D w (symplecticContactBracket D u v) = 0 :=
+  lie_jacobi u v w
+
+-- The extreme/charge configuration that fails for the legacy bracket now closes.
+example :
+    ⁅genEminus D 1, ⁅injChargeMinus D (alphaCharge (J := J)), genEplus D 1⁆⁆ +
+      ⁅injChargeMinus D (alphaCharge (J := J)), ⁅genEplus D 1, genEminus D 1⁆⁆ +
+      ⁅genEplus D 1, ⁅genEminus D 1, injChargeMinus D (alphaCharge (J := J))⁆⁆ = 0 :=
+  lie_jacobi _ _ _
 
 end InfoGeometry.Physics.NuclearPristineChainAudit

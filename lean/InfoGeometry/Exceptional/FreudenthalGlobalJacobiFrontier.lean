@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Exceptional.FreudenthalGenericJacobiClosure
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Exceptional.FreudenthalFiveGradedBracketScalarBilinearity
@@ -9,9 +14,12 @@ import InfoGeometry.Exceptional.FreudenthalExtremeJacobiCells
 /-!
 # Bilinear carrier for the global Jacobi frontier
 
-This is the exact reduction frontier for the Freudenthal carrier.  The
-homogeneous cells remain hypotheses: this file does not manufacture the
-missing cells or install a Lie-algebra instance prematurely.
+This file retains the multilinear reduction for the legacy bracket. Its global
+homogeneous-cell premise is not a realizable completion task: the explicit
+`legacy_fiveGradedBracket_not_jacobi` witness is in
+`FreudenthalLegacyFiveGradedJacobiCounterexample`. The constructive replacement
+on the same carrier is `symplecticContactBracket`, with native Lie instances in
+`FreudenthalSymplecticContactLieAlgebra`. No global legacy Jacobi law is claimed.
 -/
 
 noncomputable section
@@ -456,16 +464,6 @@ theorem global_fiveGraded_jacobi_of_homogeneous
   intro i j k u v w
   rw [leibnizDefect_bracket_eq_jacobiator]
   exact h_cells i j k u v w
-
-/-- The same globalization packaged for the repository's proof-carrying
-homogeneous-data interface.  Constructing this datum remains exactly the
-unresolved homogeneous-cell frontier. -/
-theorem global_fiveGraded_jacobi_of_data
-    (data : FiveGradedHomogeneousJacobiData D)
-    (x y z : FiveGradedCarrier D) : fiveJacobiator D x y z = 0 := by
-  apply global_fiveGraded_jacobi_of_homogeneous D
-  intro i j k u v w
-  simpa only [lanePartLinear_apply] using data.cell_jacobi i j k u v w
 
 /-- A first concrete projected homogeneous cell, transported from the
 existing extreme/charge owner theorem. -/

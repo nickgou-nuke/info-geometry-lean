@@ -116,6 +116,37 @@ theorem interShell_normalizedDirac_star (hD : IsDrazinInverse a d k)
   unfold normalizedDirac
   rw [star_add, hD_star]
 
+private theorem star_jordanMul [StarModule ℝ R] (x y : R) :
+    star (jordanMul x y) = jordanMul (star x) (star y) := by
+  unfold jordanMul
+  simp only [star_smul, star_add, star_mul]
+  congr 1
+  abel
+
+/-- The normalized local Jordan associator transports to the reversed shell
+corner under the involution.  The reverse order introduced by `star_mul` is
+absorbed by commutativity of the Jordan product. -/
+theorem interShell_jordan_associator_star (hD : IsDrazinInverse a d k)
+    {M : ℕ → R} (hM : PowerMPFamily (fittingNilpotentPart a d) M)
+    (h_symm : star (projection a d) = projection a d)
+    (ha_star : star a = a) (m r : ℕ) (B : R) [StarModule ℝ R] :
+    star (jordanMul
+      (jordanMul (interShellPeirceCorner a d M m r)
+        (interShellPeirceCorner a d M m r)) B -
+      jordanMul (interShellPeirceCorner a d M m r)
+        (jordanMul (interShellPeirceCorner a d M m r) B)) =
+      jordanMul
+        (jordanMul (interShellPeirceCorner a d M r m)
+          (interShellPeirceCorner a d M r m)) (star B) -
+      jordanMul (interShellPeirceCorner a d M r m)
+        (jordanMul (interShellPeirceCorner a d M r m) (star B)) := by
+  let D := interShellPeirceCorner a d M m r
+  let D' := interShellPeirceCorner a d M r m
+  have hD_star : star D = D' := by
+    exact interShellPeirceCorner_star hD hM h_symm ha_star m r
+  rw [star_sub, star_jordanMul, star_jordanMul, star_jordanMul,
+    star_jordanMul, hD_star]
+
 /-- The chiral grading annihilates the normalized local operator under the
 normalized special Jordan product. -/
 theorem interShell_jordan_anticommute (hD : IsDrazinInverse a d k)

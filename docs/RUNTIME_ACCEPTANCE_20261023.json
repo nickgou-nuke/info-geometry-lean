@@ -1,0 +1,163 @@
+{
+  "date": "2026-10-23",
+  "scope": "Native runtime acceptance harness implementation; not a full CI acceptance certificate",
+  "status": "component_checks_passed_full_acceptance_not_achieved",
+  "source_review": "James A-A PASS including inventory and separate version stdout handling",
+  "independent_qa": {
+    "scope": "Independent component development validation only; not CLI or CI acceptance",
+    "result": "failed",
+    "regressions": 7,
+    "python": "3.12.13 | packaged by conda-forge | (main, Mar  5 2026, 16:39:32) [GCC 14.3.0]",
+    "torch": "2.11.0+cu130",
+    "yaml": "parsed with PyYAML 6.0.3",
+    "runtime_suites": [
+      {
+        "suite": "attention_polytope",
+        "collected": 14,
+        "ran": 14,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0
+      },
+      {
+        "suite": "certified_caratheodory",
+        "collected": 12,
+        "ran": 12,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0
+      },
+      {
+        "suite": "functional_route_fibers",
+        "collected": 6,
+        "ran": 6,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0
+      },
+      {
+        "suite": "route_certificate",
+        "collected": 8,
+        "ran": 8,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0
+      },
+      {
+        "suite": "route_diagnostics_torch",
+        "collected": 5,
+        "ran": 5,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0
+      },
+      {
+        "suite": "shape_sinkhorn_detector",
+        "collected": 15,
+        "ran": 15,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0
+      },
+      {
+        "suite": "causal_bipartite_sinkhorn",
+        "collected": 17,
+        "ran": 17,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0
+      }
+    ],
+    "lean": "4.34.1",
+    "combined_certificate_audits": [
+      {
+        "fixture": 0,
+        "combined_audit": "rejected",
+        "reason": "Generated Lean diagnostic"
+      },
+      {
+        "fixture": 1,
+        "combined_audit": "rejected",
+        "reason": "Generated Lean diagnostic"
+      },
+      {
+        "fixture": 2,
+        "combined_audit": "rejected",
+        "reason": "Generated Lean diagnostic"
+      },
+      {
+        "fixture": 3,
+        "combined_audit": "rejected",
+        "reason": "Generated Lean diagnostic"
+      },
+      {
+        "fixture": 4,
+        "combined_audit": "rejected",
+        "reason": "Generated Lean diagnostic"
+      },
+      {
+        "fixture": 5,
+        "combined_audit": "rejected",
+        "reason": "Generated Lean diagnostic"
+      },
+      {
+        "fixture": 6,
+        "combined_audit": "rejected",
+        "reason": "Generated Lean diagnostic"
+      },
+      {
+        "fixture": 7,
+        "combined_audit": "rejected",
+        "reason": "Generated Lean diagnostic"
+      }
+    ],
+    "source_hashes_stable": false,
+    "changed_sources": [
+      "lean/InfoGeometry/Core/NilpotentToCartanDrazinMPPoset.lean"
+    ],
+    "generated_certificates": 8,
+    "theorem_audits": 24,
+    "forged_depth_rejected_at": "local_certificate",
+    "forged_error_lines": [
+      26,
+      35
+    ],
+    "error": "source hash changed during QA"
+  },
+  "evidence_directory": "/tmp/runtime-independent-frozen-5zbfm9_f",
+  "implementation_sha256": {
+    "tools/infra/check_runtime_acceptance.py": "dac38044c8b5c5de3c56736c59fa6510f3caf9d582c92d33189ec5b6427c86e8",
+    "tests/test_runtime_acceptance.py": "84bceae6ea7cd8522ab8ec4dad786c9f7747081b1fb8000ce8907741ff2bc179",
+    ".github/workflows/ci.yml": "2970093eb730698b159056953ea424f0569f6582febaf537242919a366798f2c"
+  },
+  "release_debt": [
+    "Native path preflight rejects untracked Atlas and dirty GIFT path dependency; full CLI records failure without bypass.",
+    "LeanCopilot/LeanArchitect warnings cause combined certificate audit rejection; retained rather than suppressed.",
+    "One concurrent unrelated Lean file changed during independent QA; whole-source stability gate failed.",
+    "Local Torch2.11.0 tested; CI Torch2.10.0 installation and GitHub Actions execution not verified here."
+  ],
+  "completed_behavior": [
+    "shared-lock serialized checks",
+    "seven runtime suites reject empty/failed/skipped tests",
+    "eight generated finite route certificates including quoted namespace.end",
+    "exact24 axiom footprints and standard-axiom allowlist",
+    "forged depth rejected within local_certificate",
+    "fresh output directory and failure status/log preservation",
+    "actual pinned Lean stdout banner parsing; all stderr retained",
+    "whole-native-source before/after inventory comparison"
+  ]
+}

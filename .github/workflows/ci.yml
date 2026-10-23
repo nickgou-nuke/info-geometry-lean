@@ -179,6 +179,25 @@ jobs:
       - name: Baseline build
         run: python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock --all-default-targets
 
+      - name: Provision CPU runtime acceptance environment
+        run: |
+          python3 -m venv .venv-runtime-ci
+          .venv-runtime-ci/bin/python -m pip install 'torch==2.10.0' --index-url https://download.pytorch.org/whl/cpu
+
+      - name: Native runtime and generated route acceptance
+        run: >-
+          .venv-runtime-ci/bin/python tools/infra/check_runtime_acceptance.py
+          --out .artifacts/runtime-acceptance-${{ github.run_id }}-${{ github.run_attempt }}
+
+      - name: Preserve native runtime acceptance evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: runtime-acceptance-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .artifacts/runtime-acceptance-${{ github.run_id }}-${{ github.run_attempt }}/
+          include-hidden-files: true
+          if-no-files-found: warn
+
       - name: Post-build quality gate
         run: bash scripts/quality/post_build_gate.sh --full
 

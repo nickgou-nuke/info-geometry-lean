@@ -29,6 +29,7 @@ import InfoGeometry.Routing.CaratheodoryPivotContracts
 import InfoGeometry.Routing.ShapeSinkhornBipartite
 import InfoGeometry.Modular.PSL2ZAction
 import InfoGeometry.Physics.BostConnesThermalTime
+import InfoGeometry.Canonical.CounterexampleAlternatives
 import InfoGeometry.Canonical.CasiniBekensteinBound
 import InfoGeometry.Canonical.KleinDeckFiveGradeAction
 import InfoGeometry.Canonical.OperatorialFierzDerivationBridge
@@ -379,3 +380,8 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Modular.PSL2Z.mobiusAction_im_formula
 #check InfoGeometry.Modular.PSL2Z.mobiusAction_maps_upperHalfPlane
 #check InfoGeometry.Physics.BostConnesThermalTime.modularFlowCl11_preserves_transverseEuclidean_form
+#check InfoGeometry.Canonical.CounterexampleAlternatives.peirce_corner_square_zero
+#check InfoGeometry.Canonical.CounterexampleAlternatives.ring_hom_preserves_associator
+#check InfoGeometry.Canonical.CounterexampleAlternatives.cycle_sum_zero_of_potential
+#check InfoGeometry.Canonical.CounterexampleAlternatives.mp_range_idempotent
+#check InfoGeometry.Canonical.CounterexampleAlternatives.jordan_plus_lie_recovers_mul

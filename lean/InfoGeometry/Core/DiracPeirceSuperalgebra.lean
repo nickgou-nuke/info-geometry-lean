@@ -152,6 +152,40 @@ theorem oddPeircePart_evenPeircePart (h : IsMoorePenroseInverse a m)
   rw [h₁, h₂]
   simp
 
+/- On the active corner, the even and odd Peirce projections are complete. -/
+theorem evenPeircePart_add_oddPeircePart_of_activeSupport
+    (h : IsMoorePenroseInverse a m) (ha : a * a = 0) {x : R}
+    (hx : activeSupport a m * x * activeSupport a m = x) :
+    evenPeircePart a m x + oddPeircePart a m x = x := by
+  have h_harm : harmonicSupport a m * x * harmonicSupport a m = 0 := by
+    calc
+      harmonicSupport a m * x * harmonicSupport a m =
+          harmonicSupport a m *
+            (activeSupport a m * x * activeSupport a m) *
+            harmonicSupport a m := by rw [hx]
+      _ = (harmonicSupport a m * activeSupport a m) * x *
+            (activeSupport a m * harmonicSupport a m) := by
+          noncomm_ring
+      _ = 0 := by
+        have hleft : harmonicSupport a m * activeSupport a m = 0 := by
+          unfold activeSupport
+          rw [mul_add, h.harmonicSupport_mul_exactSupport ha,
+            h.harmonicSupport_mul_coexactSupport ha, add_zero]
+        have hright : activeSupport a m * harmonicSupport a m = 0 := by
+          unfold activeSupport
+          rw [add_mul, h.exactSupport_mul_harmonicSupport ha,
+            h.coexactSupport_mul_harmonicSupport ha, add_zero]
+        rw [hleft, hright]
+        simp
+  calc
+    evenPeircePart a m x + oddPeircePart a m x =
+        activeSupport a m * x * activeSupport a m +
+          harmonicSupport a m * x * harmonicSupport a m := by
+            unfold evenPeircePart oddPeircePart activeSupport
+            noncomm_ring
+    _ = activeSupport a m * x * activeSupport a m := by rw [h_harm, add_zero]
+    _ = x := hx
+
 /-- The odd anticommutator `D_Q(X) = Q X + X Q` with the normalized
 supercharge `Q = a + m`.  This is the odd-parity branch of the
 parity-alternating superderivation; it is not a derivation on its own. -/

@@ -11,6 +11,7 @@ import InfoGeometry.Core.DiracPeirceSuperalgebra
 #print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.oddPeircePart_idem
 #print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.evenPeircePart_oddPeircePart
 #print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.oddPeircePart_evenPeircePart
+#print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.evenPeircePart_add_oddPeircePart_of_activeSupport
 #print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.activeSupport_commute_evenPeircePart
 #print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.activeSupport_commute_oddPeircePart
 #print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.activeSupport_commute_superInvolution

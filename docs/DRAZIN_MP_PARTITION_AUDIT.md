@@ -537,6 +537,19 @@ super-Jacobi closure, or physical extended-SUSY classification is claimed.
 The examples exercise matching and mismatched products, nonvanishing, and
 star symmetry; `tests/InfoGeometryTests.lean` contains declaration checks.
 
+Independent A-A Sagan passed the mathematical source review. Independent
+QA Singer accepted the three scoped color modules with limited scope:
+locked `Core.SupercolorMultiplicationAudit` build passed (3192 jobs), all
+three direct Lean checks passed, and ten axiom reports contained only
+standard foundational axioms. A shared-lock direct check of
+`tests/InfoGeometryTests.lean` also passed (exit 0). The accepted multiplication
+source hash is `9bdbe57f86a0a535c0e4cb3034b16fb1ead08dd5ca7de0938b28d07bdd13b550`;
+the accepted test hash is
+`179b5339bd1fab0b473e34080e057f65f56ad2b40c1f44276a1cffe765558bec`.
+The examples and audit source hashes remained stable during QA. Existing
+unused-section-variable and dependency notices were not treated as a
+warning-clean repository result. Unrelated dirty submodules were untouched.
+
 ### Earlier inverse-sector audit
 
 The implementation is collected by `Canonical/InverseSectorAudit.lean`.

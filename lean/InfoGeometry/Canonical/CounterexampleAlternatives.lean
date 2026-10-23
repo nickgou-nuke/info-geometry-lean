@@ -24,6 +24,19 @@ theorem nonzero_nonnegative_not_le_zero
   intro h
   exact hne (le_antisymm h hx)
 
+theorem positive_normalization_sum_not_additive
+    {K : Type*} [Field K] [LinearOrder K] [IsStrictOrderedRing K]
+    {x y a b : K} (hx : 0 < x) (hy : 0 < y) (ha : 0 < a) (hb : 0 < b) :
+    (x + y) / (a + b) ≠ x / a + y / b := by
+  intro h
+  have hab : a + b ≠ 0 := ne_of_gt (add_pos ha hb)
+  have ha0 : a ≠ 0 := ne_of_gt ha
+  have hb0 : b ≠ 0 := ne_of_gt hb
+  field_simp [hab, ha0, hb0] at h
+  have hpos : 0 < x * b ^ 2 + y * a ^ 2 := by
+    positivity
+  linarith
+
 theorem star_symmetric_sum_of_self_adjoint
     [Ring A] [StarRing A] (x y : A)
     (hx : star x = x) (hy : star y = y) :

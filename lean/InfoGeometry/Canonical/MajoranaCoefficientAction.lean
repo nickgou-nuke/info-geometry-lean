@@ -118,4 +118,36 @@ theorem quadraticElement_commutator_generator (h : IsMajoranaBasis N gamma)
   congr 1
   ring
 
+/-- Intertwining of the quadratic commutator and the coefficient matrix action. -/
+theorem quadraticElement_commutator_linearCombination (h : IsMajoranaBasis N gamma)
+    (K : Matrix (Fin (2 * N)) (Fin (2 * N)) ℝ)
+    (hK : ∀ i j, K i j = -K j i) (v : Fin (2 * N) → ℝ) :
+    quadraticElement gamma K * Fintype.linearCombination ℝ gamma v -
+        Fintype.linearCombination ℝ gamma v * quadraticElement gamma K =
+      Fintype.linearCombination ℝ gamma (K.mulVec v) := by
+  calc
+    _ = ∑ j, v j • (quadraticElement gamma K * gamma j -
+        gamma j * quadraticElement gamma K) := by
+      simp only [Fintype.linearCombination_apply, Finset.mul_sum, Finset.sum_mul,
+        ← Finset.sum_sub_distrib, mul_smul_comm, smul_mul_assoc, smul_sub]
+    _ = ∑ j, ∑ i, (v j * K i j) • gamma i := by
+      simp only [quadraticElement_commutator_generator h K hK,
+        Finset.smul_sum, smul_smul]
+    _ = _ := by
+      rw [Finset.sum_comm]
+      simp only [Fintype.linearCombination_apply, Matrix.mulVec, dotProduct,
+        Finset.sum_smul, mul_comm]
+
+/-- Zero commutator on the Majorana span is exactly the coefficient kernel;
+this is not a statement about the state-space kernel of the quadratic element. -/
+theorem quadraticElement_commutator_eq_zero_iff [Nontrivial A]
+    (h : IsMajoranaBasis N gamma)
+    (K : Matrix (Fin (2 * N)) (Fin (2 * N)) ℝ)
+    (hK : ∀ i j, K i j = -K j i) (v : Fin (2 * N) → ℝ) :
+    quadraticElement gamma K * Fintype.linearCombination ℝ gamma v -
+        Fintype.linearCombination ℝ gamma v * quadraticElement gamma K = 0 ↔
+      K.mulVec v = 0 := by
+  rw [quadraticElement_commutator_linearCombination h K hK]
+  exact (linearCombination_injective h).eq_iff' (map_zero _)
+
 end InfoGeometry.Canonical.MajoranaCoefficientAction

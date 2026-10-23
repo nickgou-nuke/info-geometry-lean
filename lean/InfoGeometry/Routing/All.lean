@@ -20,3 +20,6 @@ import InfoGeometry.Routing.DeterministicDrazinBridge
 import InfoGeometry.Routing.CausalRouteDynamics
 import InfoGeometry.Routing.CausalCoreTrace
 import InfoGeometry.Routing.AttentionReadoutCompression
+import InfoGeometry.Routing.AttentionValueCompression
+import InfoGeometry.Routing.AttentionAnalogyFiber
+import InfoGeometry.Routing.AttentionInteriorFiber

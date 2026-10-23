@@ -8,6 +8,7 @@ import InfoGeometry.Canonical.DrazinShellCascade
 import InfoGeometry.Core.PeirceDecomposition
 import InfoGeometry.Singular.SquareZeroChiralHodge
 import InfoGeometry.Singular.MoorePenroseCanonicalBridge
+import InfoGeometry.Singular.MoorePenroseCornerSupport
 
 /-!
 # Inter-shell Peirce blocks and their chiral Hodge--Dirac structure
@@ -29,6 +30,9 @@ tripotent, and the normalized operator anticommutes with it.
 The local supports are absorbed by the shell projectors:
 `S_m * P₊ = P₊` and `P₋ * S_r = P₋`.  This is the shell-local form of the
 strictly triangular Peirce filtration.
+The inverse itself obeys `star S_r * B * star S_m = B`. The adjoints are
+essential for oblique shells; the unstarred reverse-corner formula does not
+follow from shell idempotence and mutual annihilation.
 
 All statements are over an arbitrary star ring.  No commutativity,
 diagonalizability, symmetry of `E_N`, finite dimensionality, or nonzeroness of
@@ -117,6 +121,24 @@ theorem interShellPeirceCorner_shell_localization (hD : IsDrazinInverse a d k)
         (q := drazinShellProj a d M r)
         (x := a)
         (drazinShellProj_idem hD hM r)
+
+/-- The Moore–Penrose inverse is supported in the reverse corner of the
+adjoint shells. This remains valid for oblique Drazin shells and for equal
+shell indices; no self-adjointness or nonzero-block assumption is needed. -/
+theorem interShell_inverse_adjoint_shell_localization
+    (hD : IsDrazinInverse a d k)
+    {M : ℕ → R} (hM : PowerMPFamily (fittingNilpotentPart a d) M)
+    (m r : ℕ) {B : R}
+    (hB : InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse
+      (interShellPeirceCorner a d M m r) B) :
+    star (drazinShellProj a d M r) * B = B ∧
+    B * star (drazinShellProj a d M m) = B ∧
+    star (drazinShellProj a d M r) * B *
+      star (drazinShellProj a d M m) = B := by
+  obtain ⟨hleft, hright⟩ := interShellPeirceCorner_shell_localization hD hM m r
+  exact ⟨hB.toSingular.star_left_absorption hright,
+    hB.toSingular.star_right_absorption hleft,
+    hB.toSingular.adjoint_reverse_corner hleft hright⟩
 
 /-- The exact support of an inter-shell block is left-supported on `S_m`. -/
 theorem drazinShellProj_mul_interShellExactSupport

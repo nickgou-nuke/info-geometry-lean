@@ -133,6 +133,17 @@ theorem square_zero_endomorphism_has_strict_kernel
     ext x
     exact hAll x
 
+theorem idempotent_endomorphism_split
+    {R M : Type*} [Ring R] [AddCommGroup M] [Module R M]
+    (P : Module.End R M) (hP : P * P = P) (x : M) :
+    P (P x) = P x ∧ P (x - P x) = 0 ∧ x = P x + (x - P x) := by
+  have hP_apply : P (P x) = P x := by
+    have hx := congrArg (fun T : Module.End R M => T x) hP
+    simpa [Module.End.mul_apply] using hx
+  refine ⟨hP_apply, ?_, ?_⟩
+  · rw [map_sub, hP_apply, sub_self]
+  · abel
+
 theorem finite_matrix_ccr_impossible
     {K : Type*} [Field K] [CharZero K]
     {n : Type*} [Fintype n] [DecidableEq n] [Nonempty n]

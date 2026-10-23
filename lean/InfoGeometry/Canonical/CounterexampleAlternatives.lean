@@ -40,6 +40,17 @@ theorem mp_range_idempotent
     (x * m) * (x * m) = (x * m * x) * m := by simp only [mul_assoc]
     _ = x * m := by rw [hxm]
 
+theorem finite_matrix_ccr_impossible
+    {K : Type*} [Field K] [CharZero K]
+    {n : Type*} [Fintype n] [DecidableEq n] [Nonempty n]
+    (a b : Matrix n n K) : a * b - b * a ≠ (1 : Matrix n n K) := by
+  intro h
+  have ht := congrArg Matrix.trace h
+  rw [Matrix.trace_sub, Matrix.trace_mul_comm, sub_self, Matrix.trace_one] at ht
+  have hcard : (Fintype.card n : K) ≠ 0 := by
+    exact_mod_cast (Nat.ne_of_gt (Fintype.card_pos : 0 < Fintype.card n))
+  exact hcard ht.symm
+
 theorem jordan_plus_lie_recovers_mul
     [Ring A] (x y : A) :
     (x * y + y * x + (x * y - y * x)) = 2 • (x * y) := by

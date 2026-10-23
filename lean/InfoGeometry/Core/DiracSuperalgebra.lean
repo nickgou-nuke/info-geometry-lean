@@ -247,6 +247,95 @@ theorem superInvolution_conjugates_majoranaPlus
       rw [superInvolution_sq h ha, mul_one]
     _ = -majoranaPlus a m := by rfl
 
+/- The chiral involution flips the skew Majorana charge as well. -/
+theorem superInvolution_conjugates_majoranaMinus
+    {a m : R} (h : IsMoorePenroseInverse a m) (ha : a * a = 0) :
+    superInvolution a m * majoranaMinus a m * superInvolution a m =
+      -majoranaMinus a m := by
+  have h_core : chiralSupport a m * majoranaMinus a m *
+      chiralSupport a m = -majoranaMinus a m := by
+    have h_left : chiralSupport a m * majoranaMinus a m =
+        majoranaPlus a m := by
+      unfold majoranaMinus majoranaPlus
+      rw [mul_sub, h.chiralSupport_mul_eq_self ha,
+        h.chiralSupport_mul_inverse_eq_neg ha]
+      simp
+    have h_right : majoranaPlus a m * chiralSupport a m =
+        -majoranaMinus a m := by
+      unfold majoranaPlus majoranaMinus
+      rw [add_mul, h.mul_chiralSupport_eq_neg ha,
+        h.inverse_mul_chiralSupport_eq_self ha]
+      abel
+    rw [h_left, h_right]
+  have h_minus_harm : majoranaMinus a m * harmonicSupport a m = 0 := by
+    have ha_harm : a * harmonicSupport a m = 0 := by
+      unfold harmonicSupport exactSupport coexactSupport
+      calc
+        a * (1 - a * m - m * a) = a - a * a * m - a * m * a := by
+          noncomm_ring
+        _ = 0 := by
+          rw [ha, h.aba_eq_a]
+          simp
+    have hm_harm : m * harmonicSupport a m = 0 := by
+      unfold harmonicSupport exactSupport coexactSupport
+      calc
+        m * (1 - a * m - m * a) = m - m * a * m - m * m * a := by
+          noncomm_ring
+        _ = 0 := by
+          rw [h.bab_eq_b, h.inverse_sq_eq_zero ha]
+          simp
+    unfold majoranaMinus
+    rw [sub_mul, ha_harm, hm_harm, sub_zero]
+  have h_harm_minus : harmonicSupport a m * majoranaMinus a m = 0 := by
+    have harm_a : harmonicSupport a m * a = 0 := by
+      unfold harmonicSupport exactSupport coexactSupport
+      calc
+        (1 - a * m - m * a) * a = a - a * m * a - m * a * a := by
+          noncomm_ring
+        _ = 0 := by
+          rw [h.aba_eq_a, mul_assoc m a a, ha, mul_zero]
+          simp
+    have harm_m : harmonicSupport a m * m = 0 := by
+      unfold harmonicSupport exactSupport coexactSupport
+      calc
+        (1 - a * m - m * a) * m = m - a * m * m - m * a * m := by
+          noncomm_ring
+        _ = 0 := by
+          rw [mul_assoc a m m, h.inverse_sq_eq_zero ha, mul_zero,
+            h.bab_eq_b]
+          simp
+    unfold majoranaMinus
+    rw [mul_sub, harm_a, harm_m, sub_zero]
+  have h_chiral_harm : chiralSupport a m * harmonicSupport a m = 0 := by
+    unfold chiralSupport
+    rw [sub_mul, h.exactSupport_mul_harmonicSupport ha,
+      h.coexactSupport_mul_harmonicSupport ha, sub_zero]
+  have h_harm_chiral : harmonicSupport a m * chiralSupport a m = 0 := by
+    unfold chiralSupport
+    rw [mul_sub, h.harmonicSupport_mul_exactSupport ha,
+      h.harmonicSupport_mul_coexactSupport ha, sub_zero]
+  unfold superInvolution
+  calc
+    (chiralSupport a m + harmonicSupport a m) * majoranaMinus a m *
+        (chiralSupport a m + harmonicSupport a m) =
+      chiralSupport a m * majoranaMinus a m * chiralSupport a m +
+        chiralSupport a m * majoranaMinus a m * harmonicSupport a m +
+        harmonicSupport a m * majoranaMinus a m * chiralSupport a m +
+        harmonicSupport a m * majoranaMinus a m * harmonicSupport a m := by
+          noncomm_ring
+    _ = -majoranaMinus a m := by
+      have h₁ : chiralSupport a m * majoranaMinus a m *
+          harmonicSupport a m = 0 := by
+        rw [mul_assoc, h_minus_harm, mul_zero]
+      have h₂ : harmonicSupport a m * majoranaMinus a m *
+          chiralSupport a m = 0 := by
+        rw [h_harm_minus, zero_mul]
+      have h₃ : harmonicSupport a m * majoranaMinus a m *
+          harmonicSupport a m = 0 := by
+        rw [h_harm_minus, zero_mul]
+      rw [h_core, h₁, h₂, h₃]
+      simp
+
 /-- The normalized supercharge is a partial tripotent: its square is the
 active support and its cube is itself. -/
 theorem normalizedDirac_cube

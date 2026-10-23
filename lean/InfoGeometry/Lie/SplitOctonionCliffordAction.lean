@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Lie.SplitOctonionImaginaryAction
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
@@ -127,6 +132,36 @@ theorem imaginaryLeftMul_sq (X : Imaginary) :
   change leftCliffordQuadratic X • zMul (1 : CanonicalZorn) Z =
     leftCliffordQuadratic X • Z
   rw [one_zMul]
+
+/-- Evaluation at the unit recovers the imaginary vector. -/
+@[simp] theorem imaginaryLeftMul_apply_one (X : Imaginary) :
+    imaginaryLeftMul X 1 = X.1 := zMul_one X.1
+
+/-- Left multiplication faithfully encodes vectors, despite failing to preserve
+split-octonion multiplication. -/
+theorem imaginaryLeftMul_injective : Function.Injective imaginaryLeftMul := by
+  intro X Y h
+  apply Subtype.ext
+  simpa only [imaginaryLeftMul_apply_one] using
+    congrArg (fun f : Module.End ℝ CanonicalZorn => f 1) h
+
+/-- The operator square-zero locus is exactly the determinant-null locus. -/
+theorem imaginaryLeftMul_sq_eq_zero_iff_mem_null (X : Imaginary) :
+    imaginaryLeftMul X * imaginaryLeftMul X = 0 ↔ X ∈ NormLevel 0 := by
+  rw [mem_null_iff_square_zero]
+  constructor
+  · intro h
+    have h1 := congrArg (fun f : Module.End ℝ CanonicalZorn => f 1) h
+    change zMul X.1 (zMul X.1 1) = 0 at h1
+    simpa only [zMul_one] using h1
+  · intro h
+    apply LinearMap.ext
+    intro Z
+    change X.1 * (X.1 * Z) = 0
+    rw [imaginary_leftMul_self_apply]
+    change zMul (zMul X.1 X.1) Z = 0
+    rw [h]
+    exact InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.zero_mul Z
 
 /-- Native Mathlib Clifford representation on the eight-dimensional
 split-octonion carrier. This is an operator representation, not an embedding of

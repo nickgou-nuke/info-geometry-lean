@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Lie.SplitOctonionImaginaryAction
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionCliffordAction
@@ -12,8 +17,9 @@ This module formalizes the exact mathematical statement that the left-multiplica
 Clifford representation does NOT preserve the split-octonion product.
 
 **Theorem (Nonmultiplicativity):**
-There exist imaginary split octonions `X, Y` such that
-`imaginaryLeftMul X * imaginaryLeftMul Y ≠ imaginaryLeftMul (X * Y)`.
+There exist imaginary split octonions `X, Y` whose product is also imaginary,
+for which composition of left multiplication differs from left multiplication
+by that product.
 
 Equivalently, the map `X ↦ L_X` is not an algebra homomorphism from the
 nonassociative split-octonion algebra to the associative endomorphism algebra.
@@ -71,9 +77,9 @@ theorem associator_obstruction :
   have h_sub : ex_associator = 0 := sub_eq_zero.mpr h_eq
   exact ex_associator_ne_zero h_sub
 
-/-- Concrete counterexample using the idempotent basis:
-Let e₊ = (1,0,0,0), e₋ = (0,1,0,0), u₁ = (0,0,1,0) in the Zorn model.
-Then L_{e₊} L_{e₋} ≠ L_{e₊*e₋} when evaluated on ex_Z.1. -/
+/-- The imaginary-coordinate witnesses `ex_X` and `ex_Y` have an imaginary
+product, but their left operators fail multiplicativity when evaluated at
+`ex_Z.1`. These witnesses are not the diagonal Peirce idempotents. -/
 theorem explicit_counterexample :
     ∃ (X Y : Imaginary) (h : realZornTrace (X.1 * Y.1) = 0),
       (imaginaryLeftMul X * imaginaryLeftMul Y) ex_Z.1 ≠

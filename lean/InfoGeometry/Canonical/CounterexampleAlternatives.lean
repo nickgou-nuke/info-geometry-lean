@@ -24,6 +24,23 @@ theorem star_symmetric_sum_of_self_adjoint
     star (x + y) = x + y := by
   rw [star_add, hx, hy]
 
+theorem complement_idempotent_of_idempotent
+    [Ring A] (e : A) (he : e * e = e) :
+    (1 - e) * (1 - e) = 1 - e ∧ e * (1 - e) = 0 ∧ (1 - e) * e = 0 := by
+  constructor
+  · calc
+      (1 - e) * (1 - e) = 1 - e - e + e * e := by noncomm_ring
+      _ = 1 - e := by rw [he]; abel
+  · constructor
+    · rw [mul_sub, mul_one, he, sub_self]
+    · rw [sub_mul, one_mul, he, sub_self]
+
+theorem star_sandwich_of_self_adjoint
+    [Ring A] [StarRing A] (e x : A) (he : star e = e) :
+    star (e * x * e) = e * star x * e := by
+  rw [star_mul, star_mul, he]
+  simp only [mul_assoc]
+
 theorem peirce_corner_square_zero
     [Semiring A] (p q x : A) (hqp : q * p = 0) :
     (p * x * q) * (p * x * q) = 0 := by

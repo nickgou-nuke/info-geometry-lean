@@ -24,6 +24,8 @@ Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
 import InfoGeometry.Library
+import InfoGeometry.Routing.All
+import InfoGeometry.Core.MajoranaSupportSwap
 import InfoGeometry.Generated
 import InfoGeometry.Singular
 import InfoGeometry.Algebra.GellMannBasis

@@ -1271,6 +1271,16 @@ import InfoGeometry.Canonical.CPTCstarStateLimit
 import InfoGeometry.Canonical.DPDWedgeCompatibility
 import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Canonical.DrazinShellCascade
+import InfoGeometry.Canonical.DrazinShellExtinction
+import InfoGeometry.Canonical.DrazinShellMatrixAction
+import InfoGeometry.Canonical.DrazinMoorePenrosePartition
+import InfoGeometry.Canonical.DrazinShellConsequenceExamples
+import InfoGeometry.Canonical.DrazinPeirceParity
+import InfoGeometry.Canonical.FiniteSteinInverse
+import InfoGeometry.Canonical.GramianInverseContracts
+import InfoGeometry.Canonical.CARMajoranaOwnerAdapters
+import InfoGeometry.Canonical.KreinMajoranaKernelCriterion
+import InfoGeometry.Canonical.PeirceParityBoundaryExamples
 import InfoGeometry.Canonical.DrazinShellCascadeAudit
 import InfoGeometry.Canonical.DrazinInterShellHodge
 import InfoGeometry.Canonical.ObliqueShellCounterexample

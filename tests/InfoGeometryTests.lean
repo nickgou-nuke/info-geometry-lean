@@ -20,6 +20,7 @@ import InfoGeometry.Singular.MoorePenroseTransport
 import InfoGeometry.Core.SuperGrassmannianSusyExamples
 import InfoGeometry.Core.SupercolorMatrixExamples
 import InfoGeometry.Core.SupercolorMultiplication
+import InfoGeometry.Core.SupercolorClosureTests
 import InfoGeometry.Canonical.DrazinInterShellHodge
 import InfoGeometry.Canonical.MajoranaCoefficientAction
 import InfoGeometry.Canonical.CARMajoranaOwnerAdapters

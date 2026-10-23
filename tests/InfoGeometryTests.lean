@@ -401,6 +401,7 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Canonical.CounterexampleAlternatives.ring_hom_preserves_idempotent
 #check InfoGeometry.Canonical.CounterexampleAlternatives.ring_hom_preserves_orthogonal_pair
 #check InfoGeometry.Canonical.CounterexampleAlternatives.ring_hom_preserves_peirce_corner
+#check InfoGeometry.Canonical.CounterexampleAlternatives.ring_hom_supported_element_zero
 #check InfoGeometry.Canonical.CounterexampleAlternatives.cycle_sum_zero_of_potential
 #check InfoGeometry.Canonical.CounterexampleAlternatives.mp_range_idempotent
 #check InfoGeometry.Canonical.CounterexampleAlternatives.idempotent_additive_readout_not_multiplicative

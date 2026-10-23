@@ -149,6 +149,15 @@ theorem ring_hom_preserves_peirce_corner
     f (p * x * q) = f p * f x * f q := by
   simp only [map_mul]
 
+theorem ring_hom_supported_element_zero
+    [Semiring A] [Semiring B] (f : A →+* B) (s x : A)
+    (hsx : s * x = x) (hs : f s = 0) :
+    f x = 0 := by
+  calc
+    f x = f (s * x) := by rw [hsx]
+    _ = f s * f x := f.map_mul s x
+    _ = 0 := by rw [hs, zero_mul]
+
 theorem cycle_sum_zero_of_potential
     [AddCommGroup A] (u v w : A) :
     ((v - u) + (w - v) + (u - w)) = 0 := by

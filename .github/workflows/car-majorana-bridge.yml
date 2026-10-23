@@ -1,0 +1,41 @@
+name: CAR Majorana Pfaffian bridge (pinned, scoped)
+on:
+  push:
+    branches: [feat/car-majorana-pfaffian-bridge]
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Canonical/MajoranaLinearKernel.lean'
+      - 'lean/InfoGeometry/Canonical/CARMajoranaFiniteBridge.lean'
+      - 'lean/InfoGeometry/Canonical/KreinMajoranaKernelCriterion.lean'
+      - 'tools/infra/check_car_majorana_bridge.py'
+      - '.github/workflows/car-majorana-bridge.yml'
+permissions:
+  contents: read
+concurrency:
+  group: car-majorana-bridge-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: false
+jobs:
+  scoped-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          show-progress: false
+      - name: Remove read-only checkout credential without traversing submodules
+        run: git config --local --unset-all http.https://github.com/.extraheader || true
+      - name: Install exact pinned Lean toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < lean-toolchain)"
+      - name: Compile unchanged dependency closure and audit all additions
+        run: python3 tools/infra/check_car_majorana_bridge.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: CARMajoranaPfaffianBridge
+          path: ${{ runner.temp }}/car-majorana-deliverable
+          include-hidden-files: true

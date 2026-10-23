@@ -30,9 +30,35 @@ The new owner imports the existing construction; it introduces no new
 structure or assumed witness. No manifold, Lie thermodynamic system, BKM
 inner-product instance, or automatic identification of the two forms is
 claimed. Specific operator/BKM instantiation remains a separate compatibility
-task. For arbitrary `G`, the sum form need not be positive; this implementation
-does not prove a positivity equivalence. Existing `FiniteParaKahler` duality and isotropic-eigenspace results are
-reused conceptually and not duplicated.
+task. For arbitrary `G`, the sum form need not be positive. Existing
+`FiniteParaKahler` duality and isotropic-eigenspace results are reused
+conceptually and not duplicated.
+
+## Positivity extension contract
+
+`DiracKreinPositivity` proves preservation and reflection of Mathlib's
+`BilinForm.IsNonneg` by the sum construction, its diagonal zero-set formula
+under nonnegativity, and strict diagonal positivity equivalence. It also
+computes the neutral form on the second-sheet inclusion and exhibits positive
+and negative values whenever the original form is strictly positive and the
+carrier is nontrivial. These are explicit evaluations of the same forms;
+strict positivity of the neutral form is not asserted. No symmetry assumption
+is needed for these diagonal statements. The proofs include the
+zero-dimensional case in the equivalences and require nontriviality only for
+the existence of opposite-sign witnesses.
+
+The three sum-form theorems do not require completeness. The extension's
+locked audit build passed (4193 jobs), with five standard-foundational-axiom
+reports, zero strict-screening traps and a passing diff check. The log is
+`/tmp/dirac-krein-positivity-build.log`; 168 dependency/package warning lines
+were replayed, with none in the two new files. Independent A-A Poincare passed
+the final three files. Independent QA-A Popper returned
+`ACCEPTED_WITH_LIMITED_SCOPE`: its original locked build exited zero (4193
+jobs), all five axiom reports used only `propext`, `Classical.choice` and
+`Quot.sound`, and strict screening and requested-path diff checks passed.
+The independent log is `/tmp/dirac-krein-positivity-qa.log`. This establishes
+the stated form identities and positivity transfer, not a BKM instantiation
+or whole-repository closure.
 
 ## Verification
 

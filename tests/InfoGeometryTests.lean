@@ -388,3 +388,6 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Canonical.CounterexampleAlternatives.mp_range_idempotent
 #check InfoGeometry.Canonical.CounterexampleAlternatives.finite_matrix_ccr_impossible
 #check InfoGeometry.Canonical.CounterexampleAlternatives.jordan_plus_lie_recovers_mul
+#check InfoGeometry.Streaming.TwoBoundaryDyadCompression.boundaryDyad_matrix_apply
+#check InfoGeometry.Streaming.TwoBoundaryDyadCompression.boundaryDyad_matrix_of_same_ray
+#check InfoGeometry.Streaming.TwoBoundaryDyadCompression.boundaryDyad_self_adjoint_of_same_ray

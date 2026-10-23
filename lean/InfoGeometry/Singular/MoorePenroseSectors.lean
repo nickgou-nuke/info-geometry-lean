@@ -39,15 +39,20 @@ theorem partition (p q : R) :
 
 lemma part_mul {p : R} (hp : p * p = p) (i j : Bool) :
     part p i * part p j = if i = j then part p i else 0 := by
-  cases i <;> cases j <;> simp [part, mul_sub, sub_mul, hp] <;> noncomm_ring [hp]
+  cases i <;> cases j <;> simp [part, mul_sub, sub_mul, hp]
 
 lemma part_commute {p q : R} (h : Commute p q) (i j : Bool) :
     Commute (part p i) (part q j) := by
   cases i <;> cases j
   · exact h
-  · exact h.one_sub_right
-  · exact h.one_sub_left
-  · exact h.one_sub_left.one_sub_right
+  · change p * (1 - q) = (1 - q) * p
+    rw [mul_sub, sub_mul, mul_one, one_mul, h.eq]
+  · change (1 - p) * q = q * (1 - p)
+    rw [mul_sub, sub_mul, mul_one, one_mul, h.eq]
+  · change (1 - p) * (1 - q) = (1 - q) * (1 - p)
+    simp only [mul_sub, sub_mul, mul_one, one_mul]
+    rw [h.eq]
+    abel
 
 /-- Full multiplication table, not just the sum-to-one identity. -/
 theorem sector_mul {p q : R} (hp : p * p = p) (hq : q * q = q)
@@ -107,8 +112,8 @@ theorem boundary_isStarProjection {p q : R}
   rw [← (boundary_eq_square_iff hp.isIdempotentElem hq.isIdempotentElem).mpr h]
   exact (sector_isStarProjection hp hq h (false, true)).add
     (sector_isStarProjection hp hq h (true, false))
-    (by simpa using sector_mul hp.isIdempotentElem hq.isIdempotentElem h
-      (false, true) (true, false))
+    (by simpa using (sector_mul hp.isIdempotentElem hq.isIdempotentElem h
+      (false, true) (true, false)))
 
 /-- The actual Penrose laws supply native star projections. -/
 theorem support_isStarProjection {x m : R} (hm : IsMoorePenroseInverse x m) :
@@ -137,7 +142,7 @@ theorem mp_sector_projections {x m : R} (hm : IsMoorePenroseInverse x m)
   obtain ⟨hp, hq⟩ := support_isStarProjection hm
   refine ⟨sector_isStarProjection hp hq hc, ?_⟩
   intro i j hij
-  rw [sector_mul hp.isIdempotentElem hq.isIdempotentElem hc, if_neg hij]
+  rw [sector_mul hp.isIdempotentElem hq.isIdempotentElem hc, ite_eq_right hij]
 
 end Star
 
@@ -149,10 +154,8 @@ theorem refinement_partition (e p q : R) :
   noncomm_ring
 
 lemma commute_sector {e p q : R} (hp : Commute e p) (hq : Commute e q)
-    (i : Bool × Bool) : Commute e (sector p q i) := by
-  have hp' : Commute e (part p i.1) := by cases i.1 <;> first | exact hp | exact hp.one_sub_right
-  have hq' : Commute e (part q i.2) := by cases i.2 <;> first | exact hq | exact hq.one_sub_right
-  exact hp'.mul_right hq'
+    (i : Bool × Bool) : Commute e (sector p q i) :=
+  (part_commute hp false i.1).mul_right (part_commute hq false i.2)
 
 /-- A sufficient compatibility condition for an orthogonal ambient refinement. -/
 theorem refinement_isStarProjection [StarRing R] {e p q : R}

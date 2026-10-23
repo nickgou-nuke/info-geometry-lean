@@ -44,6 +44,31 @@ theorem matrixUnit_generator_transport (n : ℕ) (i j : BitWord n) :
     boundaryRep n (Matrix.single i j 1) = correspondingCuntzWord n i j := by
   exact bitWordMatrixStarRepresentation_apply_single n i j
 
+/-! The finite boundary representation is a genuinely noncommutative matrix
+readout.  In particular, its definition is controlled by every matrix unit,
+not only by the diagonal cylinder projections. -/
+
+theorem boundaryRep_matrix_unit_expansion
+    (n : ℕ) (A : Stage n) :
+    boundaryRep n A =
+      ∑ u : BitWord n, ∑ v : BitWord n,
+        A u v • correspondingCuntzWord n u v := by
+  rw [Matrix.matrix_eq_sum_single A]
+  simp only [map_sum, map_smul]
+  apply Finset.sum_congr rfl
+  intro u hu
+  apply Finset.sum_congr rfl
+  intro v hv
+  have hA :
+      (∑ i, ∑ j, Matrix.single i j (A i j)) u v = A u v := by
+    exact congrArg (fun M => M u v) (Matrix.matrix_eq_sum_single A).symm
+  rw [hA]
+  rw [show Matrix.single u v (A u v) =
+      A u v • Matrix.single u v (1 : ℂ) by
+        ext i j
+        simp [Matrix.single]]
+  rw [map_smul, matrixUnit_generator_transport]
+
 /-- The finite matrix representation sends every diagonal matrix to the
 corresponding finite linear combination of Cuntz cylinder projections. -/
 theorem boundaryRep_diagonal (n : ℕ) (f : BitWord n → ℂ) :

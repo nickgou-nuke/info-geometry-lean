@@ -264,4 +264,201 @@ theorem phaseFlow_transportGamma_isMajoranaCAR
   intro u v
   exact phaseFlow_transportGamma_car (E := E) (M := M) θ u v
 
+/-!
+## Full operator covariance on the endomorphism algebra (plan milestone A4)
+
+The transport `A ↦ phaseFlow (-θ) * A * phaseFlow θ` is defined on the whole
+endomorphism algebra: `A` and `B` are arbitrary, need not be diagonalizable,
+and need not interact with the phase axis.  None of the transport laws below
+carries such an assumption, so no chiral corner of the operator algebra is
+erased and the diagonal/commutative specializations used elsewhere are
+ordinary specializations, not additional hypotheses.
+-/
+
+/-- Pointwise cancellation `φ(θ) ∘ φ(-θ) = id`. -/
+theorem phaseFlow_right_inverse_apply (θ : ℝ) (w : H₂) :
+    phaseFlow (E := E) θ (phaseFlow (E := E) (-θ) w) = w := by
+  have h := congrArg (fun T : EndH => T w)
+    (phaseFlow_right_inverse (E := E) θ)
+  simpa [ContinuousLinearMap.mul_apply] using h
+
+/-- Pointwise cancellation `φ(-θ) ∘ φ(θ) = id`. -/
+theorem phaseFlow_left_inverse_apply (θ : ℝ) (w : H₂) :
+    phaseFlow (E := E) (-θ) (phaseFlow (E := E) θ w) = w := by
+  have h := congrArg (fun T : EndH => T w)
+    (phaseFlow_left_inverse (E := E) θ)
+  simpa [ContinuousLinearMap.mul_apply] using h
+
+/-- The phase conjugation, defined on the entire endomorphism algebra. -/
+noncomputable def phaseConjugation (θ : ℝ) (A : EndH) : EndH :=
+  phaseFlow (E := E) (-θ) * A * phaseFlow (E := E) θ
+
+/-- Multiplication transport: hull covariance holds for arbitrary `A`, `B`. -/
+theorem phaseConjugation_mul (θ : ℝ) (A B : EndH) :
+    phaseConjugation (E := E) θ (A * B) =
+      phaseConjugation (E := E) θ A * phaseConjugation (E := E) θ B := by
+  apply ContinuousLinearMap.ext
+  intro u
+  dsimp only [phaseConjugation]
+  simp only [ContinuousLinearMap.mul_apply]
+  rw [phaseFlow_right_inverse_apply (E := E) θ]
+
+/-- Additivity transport for arbitrary endomorphisms. -/
+theorem phaseConjugation_add (θ : ℝ) (A B : EndH) :
+    phaseConjugation (E := E) θ (A + B) =
+      phaseConjugation (E := E) θ A + phaseConjugation (E := E) θ B := by
+  apply ContinuousLinearMap.ext
+  intro u
+  dsimp only [phaseConjugation]
+  simp only [ContinuousLinearMap.mul_apply, ContinuousLinearMap.add_apply,
+    ContinuousLinearMap.map_add]
+
+/-- Scalar transport for arbitrary endomorphisms. -/
+theorem phaseConjugation_smul (θ : ℝ) (c : ℝ) (A : EndH) :
+    phaseConjugation (E := E) θ (c • A) = c • phaseConjugation (E := E) θ A := by
+  apply ContinuousLinearMap.ext
+  intro u
+  dsimp only [phaseConjugation]
+  simp only [ContinuousLinearMap.mul_apply, ContinuousLinearMap.smul_apply,
+    ContinuousLinearMap.map_smul]
+
+/-- Negation transport. -/
+theorem phaseConjugation_neg (θ : ℝ) (A : EndH) :
+    phaseConjugation (E := E) θ (-A) = -(phaseConjugation (E := E) θ A) := by
+  rw [← neg_one_smul ℝ A, phaseConjugation_smul]
+  exact neg_one_smul ℝ (phaseConjugation (E := E) θ A)
+
+/-- Identity transport. -/
+theorem phaseConjugation_id (θ : ℝ) :
+    phaseConjugation (E := E) θ (ContinuousLinearMap.id ℝ H₂) =
+      ContinuousLinearMap.id ℝ H₂ := by
+  apply ContinuousLinearMap.ext
+  intro u
+  dsimp only [phaseConjugation]
+  simp only [ContinuousLinearMap.mul_apply, ContinuousLinearMap.id_apply]
+  exact phaseFlow_left_inverse_apply (E := E) θ u
+
+/-- Hilbert-adjoint transport: the conjugation is a `*`-preserving map. -/
+theorem phaseConjugation_adjoint (θ : ℝ) (A : EndH) :
+    ContinuousLinearMap.adjoint (phaseConjugation (E := E) θ A) =
+      phaseConjugation (E := E) θ (ContinuousLinearMap.adjoint A) := by
+  dsimp only [phaseConjugation]
+  have hmul : ∀ f g : EndH, ContinuousLinearMap.adjoint (f * g)
+      = ContinuousLinearMap.adjoint g * ContinuousLinearMap.adjoint f := by
+    intro f g
+    rw [ContinuousLinearMap.mul_def, ContinuousLinearMap.adjoint_comp,
+      ← ContinuousLinearMap.mul_def]
+  rw [hmul, hmul, phaseFlow_adjoint (E := E) θ, phaseFlow_adjoint (E := E) (-θ),
+    mul_assoc]
+  simp only [neg_neg]
+
+/-- Full bilateral expectation covariance for arbitrary endomorphisms. -/
+theorem phaseFlow_expectation_conjugate (θ : ℝ) (A : EndH) (u v : H₂) :
+      ⟪u, phaseConjugation (E := E) θ A v⟫_ℝ
+    = ⟪phaseFlow (E := E) θ u, A (phaseFlow (E := E) θ v)⟫_ℝ := by
+  dsimp only [phaseConjugation]
+  rw [ContinuousLinearMap.mul_apply, ContinuousLinearMap.mul_apply]
+  rw [← ContinuousLinearMap.adjoint_inner_left
+    (A := phaseFlow (E := E) (-θ))]
+  rw [phaseFlow_adjoint (E := E) (-θ)]
+  have hθ : - -θ = θ := neg_neg θ
+  rw [hθ]
+
+/-- General-`θ` transport of the modular swap `J` under the phase conjugation. -/
+theorem phaseFlow_conj_modular_j (θ : ℝ) :
+    phaseFlow (E := E) (-θ) * modular_j (E := E) * phaseFlow (E := E) θ =
+      Real.cos (2 * θ) • modular_j (E := E)
+        + Real.sin (2 * θ) • spectral_epsilon (E := E) := by
+  rw [phaseFlow_eq_KRotation (E := E), phaseFlow_eq_KRotation (E := E)]
+  rw [KRotation_eq_cos_add_sin_K (E := E) (-θ),
+    KRotation_eq_cos_add_sin_K (E := E) θ]
+  apply ContinuousLinearMap.ext
+  intro u
+  simp only [ContinuousLinearMap.mul_apply, ContinuousLinearMap.add_apply,
+    ContinuousLinearMap.sub_apply, ContinuousLinearMap.smul_apply,
+    ContinuousLinearMap.one_apply, ContinuousLinearMap.neg_apply,
+    spectral_epsilon_apply, clockAxis_apply, modular_j_apply]
+  have htrig : Real.cos θ ^ 2 + Real.sin θ ^ 2 = 1 :=
+    Real.cos_sq_add_sin_sq θ
+  apply DoubledSpace.ext <;>
+    simp [Real.cos_neg, Real.sin_neg, Real.cos_two_mul, Real.sin_two_mul] <;>
+    simp only [smul_smul] <;> ring_nf <;> rw [← htrig] <;> module
+
+/-- At 45° the phase conjugation sends the modular swap to the grading. -/
+theorem phaseFlow_conj_modular_j_pi_div_four :
+    phaseFlow (E := E) (-(Real.pi / 4)) * modular_j (E := E) *
+        phaseFlow (E := E) (Real.pi / 4) =
+      spectral_epsilon (E := E) := by
+  rw [phaseFlow_conj_modular_j]
+  have harg : 2 * (Real.pi / 4) = Real.pi / 2 := by ring
+  rw [harg, Real.cos_pi_div_two, Real.sin_pi_div_two]
+  simp
+  module
+
+/-- General-`θ` exact covariance of the phase axis `HestenesI` itself. -/
+theorem phaseFlow_conj_HestenesI (θ : ℝ) :
+    phaseFlow (E := E) (-θ) * HestenesI (E := E) * phaseFlow (E := E) θ =
+      HestenesI (E := E) := by
+  have hcomm :
+      (clockAxis (E := E)).comp (phaseFlow (E := E) θ) =
+        (phaseFlow (E := E) θ).comp (clockAxis (E := E)) := by
+    exact phaseFlow_operator_intertwines_of_phaseLinear
+      (E := E) (clockAxis (E := E)) (by simp [IsPhaseLinear]) θ
+  have hcomm_mul :
+      clockAxis (E := E) * phaseFlow (E := E) θ =
+        phaseFlow (E := E) θ * clockAxis (E := E) := by
+    simpa [ContinuousLinearMap.mul_def] using hcomm
+  rw [phaseAxis_eq_clockAxis (E := E)]
+  calc
+    phaseFlow (E := E) (-θ) * clockAxis (E := E) * phaseFlow (E := E) θ =
+        phaseFlow (E := E) (-θ) *
+          (phaseFlow (E := E) θ * clockAxis (E := E)) := by
+            rw [mul_assoc, hcomm_mul]
+    _ = (phaseFlow (E := E) (-θ) * phaseFlow (E := E) θ) *
+        clockAxis (E := E) := by exact (mul_assoc _ _ _).symm
+    _ = clockAxis (E := E) := by rw [phaseFlow_left_inverse]; simp
+
+/-- At 45° the conjugated positive `ε`-projector lands on the `J`-grade
+    projector: the sectors are exchanged, not preserved. -/
+theorem phaseConjugation_spectralPlusProj_pi_div_four :
+    phaseConjugation (E := E) (Real.pi / 4) (spectralPlusProj (E := E)) =
+      gradeMinusProj (E := E) := by
+  rw [show spectralPlusProj (E := E) = (⅟ (2 : ℝ)) •
+      (ContinuousLinearMap.id ℝ H₂ + spectral_epsilon (E := E)) from rfl,
+    phaseConjugation_smul, phaseConjugation_add, phaseConjugation_id]
+  dsimp only [phaseConjugation]
+  rw [phaseFlow_conj_spectral_epsilon_pi_div_four]
+  simp [gradeMinusProj, sub_eq_add_neg]
+
+/-- At 45° the conjugated negative `ε`-projector lands on the opposite
+    `J`-grade projector. -/
+theorem phaseConjugation_spectralMinusProj_pi_div_four :
+    phaseConjugation (E := E) (Real.pi / 4) (spectralMinusProj (E := E)) =
+      gradePlusProj (E := E) := by
+  rw [show spectralMinusProj (E := E) = (⅟ (2 : ℝ)) •
+      (ContinuousLinearMap.id ℝ H₂ - spectral_epsilon (E := E)) by
+        rfl,
+    phaseConjugation_smul]
+  rw [sub_eq_add_neg, phaseConjugation_add, phaseConjugation_id,
+    phaseConjugation_neg]
+  dsimp only [phaseConjugation]
+  rw [phaseFlow_conj_spectral_epsilon_pi_div_four]
+  simp [gradePlusProj, neg_neg]
+
+/-- At 45° the phase axis is a fixed point of its own conjugation. -/
+theorem phaseConjugation_HestenesI_pi_div_four :
+    phaseConjugation (E := E) (Real.pi / 4) (HestenesI (E := E)) =
+      HestenesI (E := E) := by
+  rw [show HestenesI (E := E) = modular_j (E := E) * spectral_epsilon (E := E)
+    from rfl]
+  rw [phaseConjugation_mul (E := E) (Real.pi / 4)]
+  dsimp only [phaseConjugation]
+  rw [phaseFlow_conj_modular_j_pi_div_four,
+      phaseFlow_conj_spectral_epsilon_pi_div_four]
+  apply ContinuousLinearMap.ext
+  intro u
+  apply DoubledSpace.ext <;>
+    simp [HestenesI, ContinuousLinearMap.mul_apply,
+      ContinuousLinearMap.neg_apply, modular_j_apply, spectral_epsilon_apply]
+
 end InfoGeometry.Canonical.RealDoubledWaveplate

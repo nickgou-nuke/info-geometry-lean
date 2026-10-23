@@ -192,8 +192,11 @@ theorem cstarStageToBitWordStage_map_stageMorphism
         (cstarStageToBitWordStage i A) := by
   induction hij with
   | refl =>
-      simp [cstarStageToBitWordStage,
-        GenuineMatrixStageMorphism.stageMorphism]
+      have hmap : gaugeSystem.map (le_refl i) A = A := by
+        exact congrArg (fun f => f A) (gaugeSystem.map_id i)
+      rw [hmap]
+      rw [GenuineMatrixStageMorphism.stageMorphism_id]
+      rfl
   | @step j hij ih =>
       have hmap :
           gaugeSystem.map (Nat.le.step hij) A =
@@ -220,6 +223,31 @@ theorem boundaryRep_cstarTransition_succ
           (gaugeSystem.map (Nat.le.step (le_refl n)) A)) := by
   rw [cstarStageToBitWordStage_succ_dyadic]
   exact boundaryRep_bond_compatible n (cstarStageToBitWordStage n A)
+
+/-! The boundary representation also commutes with every native finite-stage
+C⋆ transition.  This is an arbitrary-matrix statement: no diagonalization,
+normality, or eigenvector choice enters the proof. -/
+
+theorem boundaryRep_cstarTransition_map_stageMorphism
+    {i j : ℕ} (hij : i ≤ j) (A : CStarMatrixStage i) :
+    boundaryRep i (cstarStageToBitWordStage i A) =
+      boundaryRep j
+        (cstarStageToBitWordStage j (gaugeSystem.map hij A)) := by
+  rw [cstarStageToBitWordStage_map_stageMorphism hij A]
+  induction hij with
+  | refl =>
+      rw [GenuineMatrixStageMorphism.stageMorphism_id]
+      rfl
+  | @step j hij ih =>
+      rw [GenuineMatrixStageMorphism.stageMorphism_step hij]
+      change boundaryRep i (cstarStageToBitWordStage i A) =
+        boundaryRep (j + 1)
+          (ComplexMatrixStage.bondFun j
+            (GenuineMatrixStageMorphism.stageMorphism i j hij
+              (cstarStageToBitWordStage i A)))
+      rw [ih]
+      rw [GenuineMatrixStageMorphism.bondFun_eq_dyadicMatrixEmbedding]
+      exact boundaryRep_bond_compatible j _
 
 /-- The matrix diagonal as a complex-linear map into the existing diagonal
 stage. -/
@@ -258,6 +286,28 @@ theorem cstarDiagonalCylinderLinearMap_succ
   rw [diagonalPart_bond_compatible]
   exact diagonalCylinderL2_compatible_succ n (diagonalPart n
     (cstarStageToBitWordStage n A))
+
+/-! The native diagonal/projective readout is coherent across every finite
+C⋆ transition, not only across one successor step. -/
+
+theorem cstarDiagonalCylinderLinearMap_map
+    {i j : ℕ} (hij : i ≤ j) (A : CStarMatrixStage i) :
+    cstarDiagonalCylinderLinearMap j (gaugeSystem.map hij A) =
+      cstarDiagonalCylinderLinearMap i A := by
+  induction hij with
+  | refl =>
+      have hmap : gaugeSystem.map (le_refl i) A = A := by
+        exact congrArg (fun f => f A) (gaugeSystem.map_id i)
+      rw [hmap]
+  | @step j hij ih =>
+      have hmap :
+          gaugeSystem.map (Nat.le.step hij) A =
+            gaugeSystem.map (Nat.le_succ j) (gaugeSystem.map hij A) := by
+        have hcomp := congrArg (fun f => f A)
+          (gaugeSystem.map_comp hij (Nat.le_succ j))
+        simpa using hcomp.symm
+      rw [hmap, cstarDiagonalCylinderLinearMap_succ]
+      exact ih
 
 /-- The algebraic diagonal map on the pre-GNS carrier of the finite gauge
 trace state. -/

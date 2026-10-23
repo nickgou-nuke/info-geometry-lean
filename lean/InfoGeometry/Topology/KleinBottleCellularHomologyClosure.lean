@@ -11,7 +11,7 @@ import InfoGeometry.Topology.KleinBottleCellularEuler
 
 This file computes the two cohomology ranks of the explicitly defined finite
 periodic cellular complex.  It does not identify that finite model with a
-Topological quotient; it closes the algebraic homology calculation owned by
+topological quotient; it closes the algebraic homology calculation owned by
 `KleinBottleCellularEuler`.
 -/
 
@@ -20,62 +20,53 @@ noncomputable section
 namespace InfoGeometry.Topology.KleinBottleCellularEuler
 
 open InfoGeometry.OperatorAlgebra.FiniteParityComplex
+open InfoGeometry.Topology.KleinBottleCWChain
 
-private def edgeCycle : EvenCells := fun i => if i = 1 then 2 else 0
-
-private theorem edgeCycle_ne_zero : edgeCycle ≠ 0 := by
-  intro h
-  have h' := congrFun h 1
-  simp [edgeCycle] at h'
-
-private theorem oddToEven_range_eq_span :
-    LinearMap.range oddToEven = ℝ ∙ edgeCycle := by
-  apply le_antisymm
-  · rintro y ⟨x, rfl⟩
-    apply Submodule.mem_span_singleton.mpr
-    refine ⟨x 0, ?_⟩
-    funext i
-    fin_cases i <;> simp [oddToEven, edgeCycle] <;> ring
-  · rw [Submodule.span_singleton_le_iff_mem]
-    refine ⟨(fun i => if i = 0 then 1 else 0), ?_⟩
-    funext i
-    fin_cases i <;> simp [oddToEven, edgeCycle]
+private theorem oddToEven_zero : oddToEven = 0 := by
+  apply LinearMap.ext
+  intro x
+  change (KleinBottleCWChain.boundary₁ x, (0 : C2)) = 0
+  simp [KleinBottleCWChain.boundary₁]
 
 private theorem oddToEven_range_finrank :
-    Module.finrank ℝ (LinearMap.range oddToEven) = 1 := by
-  rw [oddToEven_range_eq_span]
-  exact finrank_span_singleton edgeCycle_ne_zero
+    Module.finrank ℝ (LinearMap.range oddToEven) = 0 := by
+  rw [oddToEven_zero, LinearMap.range_zero]
+  simp
 
 private theorem oddToEven_kernel_finrank :
-    Module.finrank ℝ (LinearMap.ker oddToEven) = 1 := by
-  have h := LinearMap.finrank_range_add_finrank_ker oddToEven
-  rw [oddToEven_range_finrank, Module.finrank_fin_fun] at h
+    Module.finrank ℝ (LinearMap.ker oddToEven) = 2 := by
+  rw [oddToEven_zero, LinearMap.ker_zero]
+  simp [C1]
+
+private theorem evenToOdd_range_finrank :
+    Module.finrank ℝ (LinearMap.range evenToOdd) = 1 := by
+  rw [evenToOdd_range_eq_polygonBoundary₂]
+  exact boundary₂_range_finrank
+
+private theorem evenToOdd_kernel_finrank :
+    Module.finrank ℝ (LinearMap.ker evenToOdd) = 1 := by
+  have h := LinearMap.finrank_range_add_finrank_ker evenToOdd
+  rw [evenToOdd_range_finrank] at h
+  have hEven : Module.finrank ℝ EvenCells = 2 := by
+    simp [EvenCells, C0, C2]
   omega
 
 theorem positiveCohomology_finrank :
-    Module.finrank ℝ cellularComplex.PositiveCohomology = 1 := by
-  have h := cellularComplex.positiveCohomology_finrank_add_range
-  have hker : Module.finrank ℝ (LinearMap.ker evenToOdd) = 2 := by
-    rw [show evenToOdd = 0 by rfl, LinearMap.ker_zero]
-    simpa [EvenCells] using (Module.finrank_fin_fun ℝ (n := 2))
-  change Module.finrank ℝ cellularComplex.PositiveCohomology +
+    Module.finrank ℝ polygonParityComplex.PositiveCohomology = 1 := by
+  have h := polygonParityComplex.positiveCohomology_finrank_add_range
+  change Module.finrank ℝ polygonParityComplex.PositiveCohomology +
       Module.finrank ℝ (LinearMap.range oddToEven) =
       Module.finrank ℝ (LinearMap.ker evenToOdd) at h
-  rw [hker, oddToEven_range_finrank] at h
+  rw [oddToEven_range_finrank, evenToOdd_kernel_finrank] at h
   omega
 
 theorem negativeCohomology_finrank :
-    Module.finrank ℝ cellularComplex.NegativeCohomology = 1 := by
-  have h := cellularComplex.negativeCohomology_finrank_add_range
-  have hker : Module.finrank ℝ (LinearMap.ker oddToEven) = 1 :=
-    oddToEven_kernel_finrank
-  have hzero : Module.finrank ℝ (LinearMap.range evenToOdd) = 0 := by
-    rw [show evenToOdd = 0 by rfl, LinearMap.range_zero]
-    simp
-  change Module.finrank ℝ cellularComplex.NegativeCohomology +
+    Module.finrank ℝ polygonParityComplex.NegativeCohomology = 1 := by
+  have h := polygonParityComplex.negativeCohomology_finrank_add_range
+  change Module.finrank ℝ polygonParityComplex.NegativeCohomology +
       Module.finrank ℝ (LinearMap.range evenToOdd) =
       Module.finrank ℝ (LinearMap.ker oddToEven) at h
-  rw [hker, hzero] at h
+  rw [evenToOdd_range_finrank, oddToEven_kernel_finrank] at h
   omega
 
 end InfoGeometry.Topology.KleinBottleCellularEuler

@@ -208,7 +208,6 @@ theorem dressedShell_recovery (hD : IsDrazinInverse a d k)
     _ = dressedShell a d g m := by
       rw [dressedShell_eq_sub, sub_mul, dressedRange_mul_max hD hg,
         dressedRange_mul_max hD hg, max_self, max_eq_left (Nat.le_succ m)]
-      exact (dressedShell_eq_sub a d g m).symm
 
 theorem dressedShell_survives_iff (hD : IsDrazinInverse a d k)
     (hg : ∀ m, IsMoorePenroseInverse (N ^ m) (g m)) (m : ℕ) (x : R) :

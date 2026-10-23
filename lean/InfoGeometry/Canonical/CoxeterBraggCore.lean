@@ -1,6 +1,7 @@
 /-
 Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
 -/
 import Mathlib
 
@@ -8,7 +9,7 @@ open Matrix
 
 namespace InfoGeometry.Canonical.CoxeterBraggCore
 
-variable {A : Type*} [Ring A] [StarRing A]
+variable {A : Type*} [Ring A]
 
 def projectedShadow (P X : A) : A := P * X * P
 
@@ -58,12 +59,22 @@ theorem projected_square_defect {P X : A} (hP : P * P = P) :
     _ = (P * X * (1 - P)) * ((1 - P) * X * P) := by
       simp only [mul_assoc]
 
-/-- In a `StarRing`, self-adjoint cut and operator make the defect self-adjoint.
+section Star
+variable [StarRing A]
+
+/-- Taking adjoints reverses the transfer and adjoints both inputs.
+No idempotence or self-adjointness is required. -/
+theorem star_transferParPerp (P X : A) :
+    star (transferParPerp P X) = transferPerpPar (star P) (star X) := by
+  simp only [transferParPerp, transferPerpPar, star_mul, star_sub, star_one,
+    mul_assoc]
+
+/-- In a `StarRing`, self-adjoint cut and operator make the transfer product self-adjoint.
 
 No order or positivity is assumed here: “positive semidefinite” needs an
 additional ordered `*`-algebra hypothesis. -/
 theorem star_bragg_factor {P X : A}
-    (hP : P * P = P) (hPstar : star P = P) (hXstar : star X = X) :
+    (hPstar : star P = P) (hXstar : star X = X) :
     transferPerpPar P X = star (transferParPerp P X) ∧
     star (braggStructureFactor P X) = braggStructureFactor P X := by
   have hperpstar : star (1 - P) = 1 - P := by
@@ -76,11 +87,19 @@ theorem star_bragg_factor {P X : A}
   · unfold braggStructureFactor
     rw [hdual, star_mul, star_star]
 
+end Star
+
 /-! A concrete noncommutative witness: the transfer factor need not vanish. -/
 
 def fin2Cut : Matrix (Fin 2) (Fin 2) ℤ := !![1, 0; 0, 0]
 
 def fin2Swap : Matrix (Fin 2) (Fin 2) ℤ := !![0, 1; 1, 0]
+
+/-- The cut and swap form a noncommuting operator pair. -/
+theorem fin2_cut_swap_noncommute : fin2Cut * fin2Swap ≠ fin2Swap * fin2Cut := by
+  intro h
+  have he := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℤ => M 0 1) h
+  norm_num [fin2Cut, fin2Swap, Matrix.mul_apply, Fin.sum_univ_two] at he
 
 theorem fin2_cut_idempotent : fin2Cut * fin2Cut = fin2Cut := by
   ext i j

@@ -393,6 +393,7 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Canonical.CounterexampleAlternatives.ring_hom_preserves_associator
 #check InfoGeometry.Canonical.CounterexampleAlternatives.cycle_sum_zero_of_potential
 #check InfoGeometry.Canonical.CounterexampleAlternatives.mp_range_idempotent
+#check InfoGeometry.Canonical.CounterexampleAlternatives.matrix_commutator_trace_zero
 #check InfoGeometry.Canonical.CounterexampleAlternatives.finite_matrix_ccr_impossible
 #check InfoGeometry.Canonical.CounterexampleAlternatives.jordan_plus_lie_recovers_mul
 #check InfoGeometry.Streaming.TwoBoundaryDyadCompression.boundaryDyad_matrix_apply

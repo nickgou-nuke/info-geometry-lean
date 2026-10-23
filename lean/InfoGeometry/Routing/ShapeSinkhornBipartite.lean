@@ -117,7 +117,8 @@ theorem gramian_doublyStochastic (B : Matrix K K ℝ)
   exact ⟨(doublyStochastic ℝ K).mul_mem hB ht,
     (doublyStochastic ℝ K).mul_mem ht hB⟩
 
-/-- The eigenvalue -1 parity mode prevents ordinary bipartite power convergence. -/
+/-- The bipartite lift negates the parity vector. Nonzeroness of this vector
+requires a nonempty index type; no convergence claim is made here. -/
 theorem parity_eigenvector (B : Matrix K K ℝ)
     (hB : B ∈ doublyStochastic ℝ K) :
     (bipartite B).mulVec (Sum.elim (fun _ => (1 : ℝ)) (fun _ => -1)) =

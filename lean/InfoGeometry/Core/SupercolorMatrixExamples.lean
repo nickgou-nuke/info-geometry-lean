@@ -138,6 +138,15 @@ theorem orthogonal_sector_projection_ne_zero (i : ι) :
   have hentry := congrArg (fun M => M (i, true) (i, true)) hz
   simp [Matrix.single] at hentry
 
+/-- Each disjoint two-coordinate sector is noncommutative, even though
+products between different sectors vanish. -/
+theorem orthogonal_pair_not_commute (i : ι) :
+    orthogonalForward i * orthogonalBackward i ≠
+      orthogonalBackward i * orthogonalForward i := by
+  intro h
+  have hentry := congrArg (fun M => M (i, true) (i, true)) h
+  simp [orthogonalForward, orthogonalBackward] at hentry
+
 theorem orthogonal_totalCentralCharge_commutes_with_generators
     (i : ι) :
     lieBracket

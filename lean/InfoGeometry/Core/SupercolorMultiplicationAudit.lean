@@ -7,6 +7,7 @@ Authors: InfoGeometry Engine Contributors
 import InfoGeometry.Core.SupercolorMatrixExamples
 
 #print axioms InfoGeometry.Core.SuperGrassmannianSusy.colorBoson_mul_middle
+#print axioms InfoGeometry.Core.SuperGrassmannianSusy.coexact_absorption_iff_equal
 #print axioms InfoGeometry.Core.SuperGrassmannianSusy.colorBoson_mul_of_common_source
 #print axioms InfoGeometry.Core.SuperGrassmannianSusy.colorBoson_lieBracket_of_common_source
 #print axioms InfoGeometry.Core.SuperGrassmannianSusy.star_majoranaPlus_of_dual
@@ -25,3 +26,7 @@ import InfoGeometry.Core.SupercolorMatrixExamples
 #print axioms InfoGeometry.Core.SupercolorMatrixExamples.colorBoson_eq_single
 #print axioms InfoGeometry.Core.SupercolorMatrixExamples.colorBoson_ne_zero
 #print axioms InfoGeometry.Core.SupercolorMatrixExamples.colorBoson_mul
+#print axioms InfoGeometry.Core.SupercolorMatrixExamples.orthogonal_pair_not_commute
+#print axioms InfoGeometry.Core.SupercolorMatrixExamples.orthogonal_matrix_supercolor
+#print axioms InfoGeometry.Core.SupercolorMatrixExamples.fin2_orthogonal_extended_susy_certificate
+#print axioms InfoGeometry.Core.SupercolorMatrixExamples.fin4_orthogonal_extended_susy_certificate

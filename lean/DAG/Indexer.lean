@@ -73,6 +73,7 @@ structure DeclNode where
   relFile : String
   /-- Full declaration and selection ranges (`DAG.Schema.sourceRange`). -/
   range : DAG.Schema.SourceRange
+  generated : Bool
   /-- L1 nameless digest of the type (`lean-expr-debruijn-v4`). -/
   typeDigest : DAG.TermDigest.TermDigest
   /-- L1 nameless digest of the value, when the constant has one. -/
@@ -307,7 +308,9 @@ def processConstant (env : Environment) (sp : SearchPath) (name : Name) (nameStr
         dagShapeHash := shapeFingerprint.shapeHash
         key := DAG.Schema.declKey name
         relFile := DAG.Schema.relativeTo root fileStr
-        range := range
+        range := range,
+        generated := (range.line = 0)
+        generated := (range.line = 0)
         typeDigest := typeDigest
         valueDigest := valueDigest
       }

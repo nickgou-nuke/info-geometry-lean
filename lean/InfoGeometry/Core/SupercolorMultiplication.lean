@@ -26,6 +26,22 @@ theorem colorBoson_mul_middle (i j l m : ι) :
     colorBoson d b i j * colorBoson d b l m = d i * (b j * d l) * b m := by
   simp only [colorBoson, mul_assoc]
 
+/-- Mutual absorption by the co-range projections is exactly their equality.
+This characterizes a common source, not a Lie-superalgebra representation. -/
+theorem coexact_absorption_iff_equal
+    (hS : IsSupercolorSystem d b) :
+    (∀ i j, d i * (b j * d j) = d i) ↔
+      (∀ i j, b i * d i = b j * d j) := by
+  constructor
+  · intro h i j
+    have hmul (a c : ι) : (b a * d a) * (b c * d c) = b a * d a := by
+      rw [mul_assoc, h a c]
+    have hstar := congrArg star (hmul i j)
+    rw [star_mul, (hS.mp i).2.2.2, (hS.mp j).2.2.2] at hstar
+    exact hstar.symm.trans (hmul j i)
+  · intro h i j
+    rw [← h i j, ← mul_assoc, (hS.mp i).aba_eq_a]
+
 /-- Common co-range projections supply the missing matching-middle law. -/
 theorem colorBoson_mul_of_common_source [DecidableEq ι]
     (hS : IsSupercolorSystem d b) {q : R}

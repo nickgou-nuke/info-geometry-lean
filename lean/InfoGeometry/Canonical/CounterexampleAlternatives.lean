@@ -207,6 +207,14 @@ theorem injective_multiplicative_map_forces_associative
     _ = f (x * (y * z)) := by
       rw [hmul, hmul]
 
+theorem no_injective_multiplicative_map_of_nonassociative
+    {C D : Type*} [Mul C] [Semigroup D]
+    (hassoc : ∃ x y z : C, (x * y) * z ≠ x * (y * z)) :
+    ¬ ∃ f : C → D, (∀ x y, f (x * y) = f x * f y) ∧ Function.Injective f := by
+  rintro ⟨f, hmul, hinj⟩
+  rcases hassoc with ⟨x, y, z, hxyz⟩
+  exact hxyz (injective_multiplicative_map_forces_associative f hmul hinj x y z)
+
 theorem cyclic_additive_readout_vanishes_of_split_identity
     {C K ι : Type*} [Monoid C] [AddCommMonoid C] [AddCommMonoid K]
     [Fintype ι] (τ : C →+ K) (s t : ι → C)

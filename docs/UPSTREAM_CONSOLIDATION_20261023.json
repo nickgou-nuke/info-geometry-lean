@@ -189,12 +189,23 @@
         "Canonical.CartanDrazinMPExamples"
       ],
       "remaining": [
-        "compare actual declarations against native Peirce/Drazin/MP owners and concurrent NilpotentToCartanDrazinMPPoset work",
-        "independent semantic review and targeted kernel/axiom acceptance",
-        "review branch workflow and checker without replacing native root CI"
+        "native Drazin parity and anomaly bridge",
+        "native counterexamples and branch consequence correspondence",
+        "aggregate integration and full consolidated snapshot review"
       ],
       "note": "Fetched 2026-10-23; four branch commits ahead of local main at inventory. No branch files promoted yet; preserve concurrent owner edits.",
-      "review": "James source review: reuse Algebra.PeirceDeWittChiralSplit; do not import parallel parity carrier or alternate copied-closure CI checker. Native parity closure candidate now under kernel checking. Preserve dirty seven-stage draft from other session. Supplied inverse witnesses, injective doubling for sign converses, no unconditional MP existence or MP grading tripotence."
+      "review": "James source review: reuse Algebra.PeirceDeWittChiralSplit; do not import parallel parity carrier or alternate copied-closure CI checker. Native parity closure candidate now under kernel checking. Preserve dirty seven-stage draft from other session. Supplied inverse witnesses, injective doubling for sign converses, no unconditional MP existence or MP grading tripotence.",
+      "parity_verification": {
+        "status": "independently_accepted_limited_scope",
+        "semantic_review": "James A-A PASS",
+        "kernel_qa": "Popper lockedPASS8933;20exactauditheads,19propext and1propext+Quot.sound; strict2filegate zero traps; stablehashes and no scopedwarnings",
+        "evidence": "/tmp/peirce-parity-independent-qa-z898rbj9",
+        "sha256": {
+          "lean/InfoGeometry/Algebra/PeirceParityClosure.lean": "3c1c560bad882808d0f58d4eccf5f4e6f928ad340007ecded9b7817ce1f8cc4f",
+          "lean/InfoGeometry/Algebra/PeirceParityClosureAudit.lean": "43e4a4e624a079f126e38405199e30dbbe5f2143ec75b9823b8cf9aea67ebda4"
+        },
+        "scope": "Native even/odd additive projections, uniqueness, product formulas, conjugation RingEquiv and commutator recovery. Sign converses require injective doubling; no new parity carrier."
+      }
     }
   ],
   "runtime_ci_review": "Implementation committed334968d26; James A-A PASS. Independent Popper7helper+77domain tests passed,8generatedcertificates compiled with24standard-onlystdoutaxioms and forgeddepth rejected inlocal_certificate. Combineddiagnostic audits rejectdirtydependencywarnings; fullsource snapshot changedoneunrelatedconcurrentowner. FullCLI rejectsAtlas/GIFTprovenance. Component evidence only, NOT fullCIacceptance. See docs/RUNTIME_ACCEPTANCE_20261023.json."

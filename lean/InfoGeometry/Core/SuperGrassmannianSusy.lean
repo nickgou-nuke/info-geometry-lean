@@ -19,13 +19,42 @@ namespace InfoGeometry.Core.SuperGrassmannianSusy
 
 open InfoGeometry.Singular.MoorePenrose
 
-variable {R : Type*} [Ring R] [StarRing R]
+variable {R : Type*} [Ring R]
 
 def jordanProd (x y : R) : R := x * y + y * x
 
 def lieBracket (x y : R) : R := x * y - y * x
 
 def IsGrassmannianTangent (p x : R) : Prop := jordanProd p x = x
+
+/-- Reflection form of the Grassmannian tangent equation.  The reverse
+direction requires injectivity of doubling; without it, reflection
+anticommutation only proves that twice the tangent defect vanishes. -/
+theorem grassmannian_tangent_iff_reflection_anticommutes_of_two_smul_injective
+    {p x : R} (h_two : Function.Injective (fun y : R => (2 : ℕ) • y)) :
+    IsGrassmannianTangent p x ↔
+      (2 * p - 1) * x + x * (2 * p - 1) = 0 := by
+  unfold IsGrassmannianTangent jordanProd
+  constructor
+  · intro hx
+    calc
+      (2 * p - 1) * x + x * (2 * p - 1) =
+          2 • (p * x + x * p - x) := by
+            rw [two_nsmul]
+            noncomm_ring
+      _ = 0 := by rw [hx, sub_self, smul_zero]
+  · intro h_reflection
+    have h_defect : 2 • (p * x + x * p - x) = 0 := by
+      calc
+        2 • (p * x + x * p - x) =
+            (2 * p - 1) * x + x * (2 * p - 1) := by
+              rw [two_nsmul]
+              noncomm_ring
+        _ = 0 := h_reflection
+    have h_zero : p * x + x * p - x = 0 := by
+      apply h_two
+      simpa using h_defect
+    exact sub_eq_zero.mp h_zero
 
 def majoranaPlus (d b : R) : R := d + b
 
@@ -41,6 +70,8 @@ def totalMajoranaPlus {ι : Type*} [Fintype ι] (d b : ι → R) : R :=
 
 def totalMajoranaMinus {ι : Type*} [Fintype ι] (d b : ι → R) : R :=
   ∑ i, majoranaMinus (d i) (b i)
+
+variable [StarRing R]
 
 structure IsSupercolorSystem {ι : Type*} (d b : ι → R) : Prop where
   mp : ∀ i, IsMoorePenroseInverse (d i) (b i)

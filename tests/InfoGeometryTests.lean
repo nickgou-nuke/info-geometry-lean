@@ -236,6 +236,7 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.SuperGrassmannian.MoebiusReflection.compile_moebius_matrix_reflection
 
 #check InfoGeometry.Core.SuperGrassmannianSusy.superGrassmannian_tangent_characterization
+#check InfoGeometry.Core.SuperGrassmannianSusy.grassmannian_tangent_iff_reflection_anticommutes_of_two_smul_injective
 #check InfoGeometry.Core.SuperGrassmannianSusy.colorBoson_mul_eq_zero_of_middle_ne
 #check InfoGeometry.Core.SuperGrassmannianSusy.colorBoson_mul_left_absorb
 #check InfoGeometry.Core.SuperGrassmannianSusy.colorBoson_mul_right_absorb

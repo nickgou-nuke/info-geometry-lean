@@ -11,6 +11,7 @@ import InfoGeometry.Core.SupercolorMultiplication
 #print axioms InfoGeometry.Core.SuperGrassmannianSusy.jordanProd
 #print axioms InfoGeometry.Core.SuperGrassmannianSusy.lieBracket
 #print axioms InfoGeometry.Core.SuperGrassmannianSusy.IsGrassmannianTangent
+#print axioms InfoGeometry.Core.SuperGrassmannianSusy.grassmannian_tangent_iff_reflection_anticommutes_of_two_smul_injective
 #print axioms InfoGeometry.Core.SuperGrassmannianSusy.majoranaPlus
 #print axioms InfoGeometry.Core.SuperGrassmannianSusy.majoranaMinus
 #print axioms InfoGeometry.Core.SuperGrassmannianSusy.sectorCentralCharge

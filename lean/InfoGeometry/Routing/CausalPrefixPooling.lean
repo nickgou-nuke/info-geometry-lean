@@ -77,7 +77,7 @@ theorem pool_congr (S : Finset C) {m n X Y : C → ℝ}
   intro s _
   by_cases hs : s ∈ S
   · rw [weight_congr S hm s, hX hs]
-  · rw [weight_of_not_mem S m hs, weight_of_not_mem S n hs]
+  · rw [weight_of_not_mem S m hs, weight_of_not_mem S n hs, zero_mul, zero_mul]
 
 /-- Algebra behind streaming union of two nonempty weighted pools. -/
 theorem merge_barycenters (a b u v : ℝ) (ha : a ≠ 0) (hb : b ≠ 0) :
@@ -96,10 +96,11 @@ theorem hierarchical_pool {L : Type*} [Fintype L]
     (∑ s ∈ S, ((∑ i, w s i) / (∑ r ∈ S, ∑ i, w r i)) *
       (∑ i, (w s i / (∑ j, w s j)) * X s i)) =
       (∑ s ∈ S, ∑ i, w s i * X s i) / (∑ s ∈ S, ∑ i, w s i) := by
-  rw [Finset.sum_div]
+  conv_rhs => rw [Finset.sum_div]
   apply Finset.sum_congr rfl
   intro s hs
-  rw [Finset.mul_sum, Finset.sum_div]
+  rw [Finset.mul_sum]
+  conv_rhs => rw [Finset.sum_div]
   apply Finset.sum_congr rfl
   intro i _
   field_simp [hmass s hs, htotal]
@@ -110,19 +111,19 @@ variable [LinearOrder C]
 
 /-- Inclusive prefix. Strictly-past prefixes use `Finset.univ.filter (· < t)`
 and may be empty; the finite-set statements above handle that case. -/
-def prefix (t : C) : Finset C := Finset.univ.filter (fun s => s ≤ t)
+def prefixSet (t : C) : Finset C := Finset.univ.filter (fun s => s ≤ t)
 
-theorem prefix_nonempty (t : C) : (prefix t).Nonempty := by
-  exact ⟨t, by simp [prefix]⟩
+theorem prefix_nonempty (t : C) : (prefixSet t).Nonempty := by
+  exact ⟨t, by simp [prefixSet]⟩
 
 theorem prefix_weight_future (m : C → ℝ) {t s : C} (h : t < s) :
-    weight (prefix t) m s = 0 := by
+    weight (prefixSet t) m s = 0 := by
   apply weight_of_not_mem
-  simp [prefix, not_le.mpr h]
+  simp [prefixSet, not_le.mpr h]
 
 theorem prefix_pool_congr {m n X Y : C → ℝ} (t : C)
     (hm : Set.EqOn m n (Set.Iic t)) (hX : Set.EqOn X Y (Set.Iic t)) :
-    pool (prefix t) m X = pool (prefix t) n Y := by
+    pool (prefixSet t) m X = pool (prefixSet t) n Y := by
   apply pool_congr
   · intro s hs
     exact hm (Finset.mem_filter.mp hs).2
@@ -160,9 +161,14 @@ theorem future_derivative_and_pullback
   have hd : HasFDerivAt (fun v => f (Function.update x s v))
       (0 : E →L[ℝ] F) (x s) := by
     rw [heq]
-    exact hasFDerivAt_const (x s) (f x)
+    exact hasFDerivAt_const (𝕜 := ℝ) (x s) (f x)
   refine ⟨hd, ?_, by simp⟩
-  simpa using ell.hasFDerivAt.comp (x s) hd
+  have heq_scalar : (fun v => ell (f (Function.update x s v))) =
+      fun _ : E => ell (f x) := by
+    funext v
+    exact congrArg ell (congrFun heq v)
+  rw [heq_scalar]
+  exact hasFDerivAt_const (𝕜 := ℝ) (x s) (ell (f x))
 
 end Order
 end InfoGeometry.Routing.CausalPrefixPooling

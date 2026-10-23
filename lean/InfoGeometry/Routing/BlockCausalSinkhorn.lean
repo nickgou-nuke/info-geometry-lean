@@ -101,7 +101,7 @@ variable {C L D : Type*} [Fintype C] [LinearOrder C]
 variable [Fintype L] [Fintype D]
 
 def pooledFeature (x : C → ChunkData L K D) (t : C) (a : Fin 4) : Matrix K D ℝ :=
-  fun k d => pool (prefix t) (fun s => (x s).1 k) (fun s => (x s).2.1 a k d)
+  fun k d => pool (prefixSet t) (fun s => (x s).1 k) (fun s => (x s).2.1 a k d)
 
 def logScore (x : C → ChunkData L K D) (t : C)
     (tau : ℝ) (prior : Matrix K K ℝ) : Matrix K K ℝ :=

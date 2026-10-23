@@ -3224,6 +3224,7 @@ import InfoGeometry.Canonical.DrazinRegularization
 import InfoGeometry.Canonical.DrazinRegularizationAudit
 import InfoGeometry.Canonical.DrazinNilpotentShell
 import InfoGeometry.Canonical.DrazinNilpotentShellResolution
+import InfoGeometry.Canonical.DrazinInterShellHodge
 import InfoGeometry.Canonical.DrazinAdjoint
 import InfoGeometry.Canonical.DrazinAnomalousProjector
 import InfoGeometry.Canonical.DrazinAnomaly

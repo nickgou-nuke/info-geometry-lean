@@ -11,6 +11,7 @@ import InfoGeometry.Core.SuperGrassmannianSusy
 import InfoGeometry.Core.SuperGrassmannianSusyExamples
 import InfoGeometry.Core.SupercolorMatrixExamples
 import InfoGeometry.Core.SupercolorMultiplication
+import InfoGeometry.Canonical.DrazinInterShellHodge
 import InfoGeometry.Canonical.MajoranaCoefficientAction
 import InfoGeometry.Modular.PSL2ZAction
 import InfoGeometry.Canonical.CasiniBekensteinBound
@@ -258,6 +259,10 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Core.SuperGrassmannianSusy.sectorCentralCharge_lieBracket_colorBoson_of_orthogonal
 #check InfoGeometry.Core.SuperGrassmannianSusy.totalCentralCharge_lieBracket_colorBoson_of_orthogonal
 #check InfoGeometry.Core.SuperGrassmannianSusy.totalCentralCharge_lieBracket_generated
+#check InfoGeometry.Canonical.DrazinNilpotentShell.interShellPeirceCorner_sq_eq_zero
+#check InfoGeometry.Canonical.DrazinNilpotentShell.interShellPeirceCorner_eq_zero_of_le
+#check InfoGeometry.Canonical.DrazinNilpotentShell.full_operator_triangular_peirce_reconstruction
+#check InfoGeometry.Canonical.DrazinNilpotentShell.interShell_chiralHodge_decomposition
 #check InfoGeometry.Core.SuperGrassmannianSusy.star_majoranaPlus_of_dual
 #check InfoGeometry.Core.SuperGrassmannianSusy.star_majoranaMinus_of_dual
 #check InfoGeometry.Core.SupercolorMatrixExamples.matrix_supercolor

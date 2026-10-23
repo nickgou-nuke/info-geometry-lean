@@ -80,6 +80,25 @@ theorem fiveJacobiator_extreme_plus_minus_charge_plus_eq_zero_iff
     · subst y
       apply FiveGradedCarrier.ext <;> simp [injChargePlus]
 
+/-- Every linear map preserving the legacy bracket into a genuine Lie
+ring with a real module structure annihilates its positive-charge sector. This is a structural
+obstruction to faithful representation, not a finite-coordinate example. -/
+theorem bracket_preserving_map_annihilates_positive_charge
+    {L : Type*} [LieRing L] [Module ℝ L]
+    (f : FiveGradedCarrier D →ₗ[ℝ] L)
+    (hf : ∀ u v, f (fiveGradedBracket D u v) = ⁅f u, f v⁆)
+    (y : FreudenthalCharge J) : f (injChargePlus D y) = 0 := by
+  have hj : f (fiveJacobiator D (genEplus D 1) (genEminus D 1)
+      (injChargePlus D y)) = 0 := by
+    simp only [fiveJacobiator, map_add, hf]
+    exact lie_jacobi _ _ _
+  rw [fiveJacobiator_extreme_plus_minus_charge_plus] at hj
+  have hscale : injChargePlus D ((-2 * 1 * 1 : ℝ) • y) =
+      (-2 : ℝ) • injChargePlus D y := by
+    apply FiveGradedCarrier.ext <;> simp [injChargePlus]
+  rw [hscale, map_smul] at hj
+  exact (smul_eq_zero.mp hj).resolve_left (by norm_num)
+
 /-! ## 1. Cyclic Symmetries of the Jacobiator -/
 
 theorem fiveJacobiator_cyclic_left (u v w : FiveGradedCarrier D) :

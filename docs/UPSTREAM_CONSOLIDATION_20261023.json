@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "remote": "upstream",
+  "target": "main",
+  "status": "in_progress",
+  "fetched_at": "2026-10-23",
+  "policy": {
+    "preserve_dirty_submodules": true,
+    "preserve_existing_owner_APIs": true,
+    "no_dependency_pin_changes": true,
+    "verification": "serialized locked targeted builds; full integration pending"
+  },
+  "batches": [
+    {
+      "branches": [
+        "feat/attention-value-geometry",
+        "feat/attention-analogy-fibers",
+        "feat/attention-identifiability"
+      ],
+      "source_commit": "c8960e2893dd8f0477e090ba3b6fb14269f40b74",
+      "modules": [
+        "lean/InfoGeometry/Projective/AttentionValueCoordinates.lean",
+        "lean/InfoGeometry/Projective/AttentionAnalogyKernel.lean",
+        "lean/InfoGeometry/Projective/AttentionIdentifiability.lean",
+        "lean/InfoGeometry/Routing/AttentionValueCompression.lean",
+        "lean/InfoGeometry/Routing/AttentionAnalogyFiber.lean",
+        "lean/InfoGeometry/Routing/AttentionInteriorFiber.lean"
+      ],
+      "status": "imported_targeted_build_passed_with_warnings",
+      "integration": "Routing.All imports added",
+      "remaining": [
+        "independent audit",
+        "branch docs and CI review"
+      ]
+    },
+    {
+      "branches": [
+        "feat/pruning-gramian-shape-sinkhorn",
+        "feat/causal-bipartite-sinkhorn"
+      ],
+      "source_commit": "55fac9ffc20509124192529060d158178126801d",
+      "modules": [
+        "Canonical.FiniteSteinInverse",
+        "Canonical.GramianInverseContracts",
+        "Probability.BipartiteLogCoupling",
+        "Routing.CaratheodoryPivotContracts",
+        "Routing.ShapeSinkhornBipartite"
+      ],
+      "status": "imported_targeted_build_passed_with_warnings",
+      "remaining": [
+        "independent runtime acceptance passed: 63 tests, zero skips; CI integration pending",
+        "aggregate imports",
+        "independent audit"
+      ]
+    },
+    {
+      "branches": [
+        "feat/block-causal-sinkhorn-contract",
+        "feat/causal-bipartite-sinkhorn"
+      ],
+      "status": "six_modules_and_two_compatibility_bridges_build_passed_with_warnings",
+      "note": "Both branch APIs preserved. SinkhornBranchCompatibility proves equality of log partition, potentials, core and gains. SinkhornPipelineCompatibility proves pooling and normalized output equality under explicit exponentiation of token logits; locked build passed 8936 jobs and semantic audit passed. Raw outputs are not equated.",
+      "remaining": ["aggregate build", "CI import-closure adaptation"],
+      "pipeline_qa": "Independent locked build and axiom audit PASS; final normalized compatibility owner has no warnings and only standard foundational axioms. Shared test harness passed but changed during checking, so no stable final test snapshot is certified.",
+      "runtime_qa": "Independent QA: 63 tests passed, zero skips."
+    },
+    {
+      "branches": [
+        "feat/car-majorana-pfaffian-bridge"
+      ],
+      "status": "owner_aligned_concrete_bridge_independent_qa_passed",
+      "note": "Generalized native MajoranaCoefficientAction to arbitrary finite indices, preserving the original IsMajoranaBasis specialization. Added MajoranaPfaffianKernelCriterion and imported KreinMajoranaKernelCriterion. Adapted remote concrete bridge into CARMajoranaMatrices, CARMajoranaFiniteBridge and CARMajoranaOwnerAdapters using native Fintype.linearCombination and quadraticElement. Same-carrier two-site chain equality, nonzero endpoint conservation, and Pfaffian criterion compiled (9161 jobs); semantic audit passed.",
+      "remaining": ["stable shared test-harness snapshot", "integration checkpoint"],
+      "independent_qa": "Ampere: locked CARMajoranaBridgeAudit plus SinkhornPipelineCompatibility build PASS9174; all17 CAR/Krein footprints standard3, no scoped-owner warnings; ten owner/import hashes stable. Direct InfoGeometryTests check exit0 but test-file hash changed. Logs /tmp/qa-a-car-recheck-n6j6scvm.",
+      "scope": "Finite Majorana-span commutator kernel. Not a state-space energy kernel, arbitrary-chain Pfaffian classification, or infinite limit. General finite-chain endpoint commutation retains explicit coefficient commutation."
+    },
+    {
+      "branches": [
+        "feat/drazin-mp-sector-partitions",
+        "feat/drazin-shell-resolution",
+        "feat/drazin-shell-cascade",
+        "feat/peirce-square-zero-mp"
+      ],
+      "status": "overlap_audited_pending_owner_alignment",
+      "note": "Do not replace DrazinRegularization, DrazinShellCascade, MoorePenroseSectors: existing namespaces and consumers would regress."
+    },
+    {
+      "branches": [
+        "feat/functional-route-fiber-diagnostics",
+        "feat/functional-route-certificates"
+      ],
+      "status": "three_lean_modules_imported_targeted_build_passed_with_warnings",
+      "remaining": ["aggregate build", "CI review"],
+      "independent_qa": "Ampere reran all 63 runtime tests: PASS, zero skips. Generated namespace.end Lean fixture elaborated with standard foundational axioms.",
+      "runtime": "Tools and tests imported; keyword namespace components quoted and emitted Lean header added; optional torch test collection handled. Combined 63 runtime tests passed in existing Sage/PyTorch environment."
+    },
+    {
+      "branches": [
+        "feature/thermal-clifford-parakahler-bridge-20261020"
+      ],
+      "status": "overlap_audited_pending_additions",
+      "note": "Preserve operator Kubo-Mori mobility; entrywise branch API already has distinct main owner."
+    },
+    {
+      "branches": [
+        "fix/main-verification-bootstrap-20261023"
+      ],
+      "status": "bootstrap_helper_and_workflows_independent_qa_passed",
+      "note": "Exact pinned-version verification replaces stale 4.28.1 checks. Imported helper/regressions and reviewed integration bootstrap/cache-key fixes. Regression workflow covers main and toolchain/manifest paths; removed misleading submodule traversal check. Source A-A passed. No dependency pins or submodule metadata/content changed.",
+      "preflight": "Read-only local report: Atlas is an untracked path dependency; GIFT is at the recorded revision but dirty; tracked InfoGeometryCore passes. Fresh CI still needs reproducible path-package sources.",
+      "independent_qa": "James: all17 isolated bootstrap regressions PASS under BuildLock; all3 workflows parsed with existing PyYAML; nine monitored files hash-stable; toolchain/manifest/lakefile/gitmodules unchanged. Parsing is not a GitHub Actions run.",
+      "remaining": ["path-package reproducibility resolution", "branch gitmodules/doc additions review", "reviewed target-list expansion review"]
+    },
+    {
+      "branches": [
+        "feat/attention-polytope-decomposition",
+        "feat/mass-spec-multienergy-identifiability"
+      ],
+      "status": "ancestor_of_local_main_at_inventory"
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "source_branch": "upstream/feat/car-majorana-pfaffian-bridge",
+  "source_commit": "eaa2efff0f476d7da62ed3df49b0df63df957391",
+  "disposition": "scoped_owner_acceptance",
+  "generator": "parent coordinator; James sandbox candidate",
+  "semantic_auditor": "Popper 01a16995-f320-79e1-b9dc-4dac5fd3aa58",
+  "independent_qa": "Ampere 01a169b2-b93b-7082-b64c-715881598590",
+  "contract": "Native Fintype.linearCombination, quarter-normalized quadratic action, explicit two-site CAR family, native finite-chain sum, nonzero conserved endpoint operators, and the same skew matrix's Pfaffian kernel criterion.",
+  "checks": {
+    "locked_build": "CARMajoranaBridgeAudit and SinkhornPipelineCompatibility exit0 9174jobs",
+    "axioms": "17 CAR/Krein declarations use only propext, Classical.choice, Quot.sound; normalized pipeline footprint also standard",
+    "owner_warnings": 0,
+    "static_screen": "PASS zero traps",
+    "test_harness": "exit0, but changed across verification; not a stable final test snapshot",
+    "source_hashes": {
+      "lean/InfoGeometry/Canonical/MajoranaCoefficientAction.lean": "6fbf91b910c84b11f75d43200a2c5e0e89298aa1f561c5cd747ed2a853c0727d",
+      "lean/InfoGeometry/Canonical/MajoranaPfaffianKernelCriterion.lean": "f9f50f3201cc28d84dfb44f304169db57ac5430cbb10a9667b8d760f36aab57d",
+      "lean/InfoGeometry/Canonical/KreinMajoranaKernelCriterion.lean": "13e37b1379bbdbfcb0f149229387c1a75e0acb0ea13923ac9bb382195954b1b2",
+      "lean/InfoGeometry/Canonical/MajoranaPfaffianKernelAudit.lean": "e196bffe1028b6184f215b6b9a01e363c50062f9660a2c2da54ab80b0b1ab5a4",
+      "lean/InfoGeometry/Canonical/CARMajoranaMatrices.lean": "94d947133b6470ca8553ebec7cd01d5a040b1e3692ed0928b4b69cb5f2e8f00d",
+      "lean/InfoGeometry/Canonical/CARMajoranaFiniteBridge.lean": "5aa22ae154665fc881ef2108de365bb66677e9403b49fb006b8253cea080df85",
+      "lean/InfoGeometry/Canonical/CARMajoranaOwnerAdapters.lean": "74796861073d403419896355de39f57c5728e07ac07a917c127766cbf5be4226",
+      "lean/InfoGeometry/Canonical/CARMajoranaBridgeAudit.lean": "32cbd771c4fb92f0c2dd38604017817bad5ded0b8b9c2eb6a9d648809fbd0883",
+      "lean/InfoGeometry/Routing/SinkhornPipelineCompatibility.lean": "03f9bcaf863b3f5ab9d47dfe363b2bc652b620a58c9fb587c92beb218bbc6a4f",
+      "lean/InfoGeometry/Routing/All.lean": "dd8c02d02f87a670fad27ff070aa9c53fee0bc8b36e8f5598ae323955d4caf18"
+    }
+  },
+  "limitations": [
+    "Not a state-space zero eigenvector theorem or phase classification.",
+    "Krein matrix extraction keeps explicit hModel.",
+    "Generic Pfaffian criterion requires a square-law witness; concrete four-mode instance supplies it.",
+    "No repository-wide build or release certification. Other upstream branches still pending."
+  ]
+}

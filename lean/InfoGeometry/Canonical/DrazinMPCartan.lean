@@ -62,8 +62,13 @@ theorem spectral_data_even {a d : R} {k : ℕ} (hD : IsDrazinInverse a d k) :
   have hd := projection_comm hD
   have hn : projection a d * fittingNilpotentPart a d =
       fittingNilpotentPart a d * projection a d := by
-    dsimp [fittingNilpotentPart, complementaryProjection]
-    noncomm_ring [ha, hp]
+    change projection a d * (a * complementaryProjection a d) =
+      (a * complementaryProjection a d) * projection a d
+    calc
+      _ = (projection a d * a) * complementaryProjection a d := by rw [mul_assoc]
+      _ = (a * projection a d) * complementaryProjection a d := by rw [ha]
+      _ = 0 := by rw [mul_assoc, projection_mul_complementaryProjection hD, mul_zero]
+      _ = _ := by rw [mul_assoc, complementaryProjection_mul_projection hD, mul_zero]
   exact ⟨even_eq_self_of_commute hp ha, (odd_zero_iff_commute hp a).2 ha,
     even_eq_self_of_commute hp hd, (odd_zero_iff_commute hp d).2 hd,
     even_eq_self_of_commute hp rfl, (odd_zero_iff_commute hp _).2 hn⟩
@@ -112,10 +117,16 @@ theorem squareZero_mp_to_reflection {d b : R}
   have hb := hMP.inverse_sq_eq_zero hd
   refine ⟨hp, hq, hb, reflection_sq hp.isIdempotentElem.eq,
     reflection_star hMP.ab_adj_eq, ?_, ?_⟩
-  · simp only [oddPart, component10, component01, complementIdempotent]
-    noncomm_ring [hd, hMP.aba_eq_a]
-  · simp only [oddPart, component10, component01, complementIdempotent]
-    noncomm_ring [hb, hMP.bab_eq_b]
+  · have hpd : (d * b) * d = d := hMP.aba_eq_a
+    have hdp : d * (d * b) = 0 := by rw [← mul_assoc, hd, zero_mul]
+    simp only [oddPart, component10, component01, complementIdempotent,
+      mul_sub, sub_mul, mul_one, one_mul, hpd, hdp, sub_self, sub_zero,
+      zero_mul, add_zero]
+  · have hpb : (d * b) * b = 0 := by rw [mul_assoc, hb, mul_zero]
+    have hbp : b * (d * b) = b := by simpa only [mul_assoc] using hMP.bab_eq_b
+    simp only [oddPart, component10, component01, complementIdempotent,
+      mul_sub, sub_mul, mul_one, one_mul, hpb, hbp, sub_self, sub_zero,
+      zero_mul, zero_add]
 
 /-- The support difference is self-adjoint even when it is not a grading. -/
 theorem mp_difference_star {a m : R} (hMP : IsMoorePenroseInverse a m) :

@@ -55,11 +55,20 @@ theorem oddPart_sub (p x y : R) :
 theorem reflection_sq {p : R} (hp : p * p = p) :
     reflection p * reflection p = 1 := by
   simp only [reflection, two_nsmul]
-  noncomm_ring [hp]
+  noncomm_ring [hp, idempotent_mul_nested p hp]
 
 theorem reflection_star [StarRing R] {p : R} (hp : star p = p) :
     star (reflection p) = reflection p := by
   simp only [reflection, two_nsmul, star_sub, star_add, star_one, hp]
+
+/-- The difference of two annihilating idempotents is a supported tripotent. -/
+theorem orthogonal_difference_powers {p q : R} (hp : p * p = p) (hq : q * q = q)
+    (hpq : p * q = 0) (hqp : q * p = 0) :
+    (p - q) * (p - q) = p + q ∧ (p - q) * (p - q) * (p - q) = p - q := by
+  have hs : (p - q) * (p - q) = p + q := by noncomm_ring [hp, hq, hpq, hqp]
+  refine ⟨hs, ?_⟩
+  rw [hs]
+  noncomm_ring [hp, hq, hpq, hqp]
 
 /-- Conjugation by the reflection is an actual ring equivalence. -/
 def reflectionConj (p : R) (hp : p * p = p) : R ≃+* R where
@@ -113,10 +122,10 @@ theorem projection_laws {p : R} (hp : p * p = p) (x : R) :
   simp only [evenPart, oddPart, component11, component00, component10, component01,
     complementIdempotent]
   constructor
-  · noncomm_ring [hp]
+  · noncomm_ring [hp, idempotent_mul_nested p hp]
   constructor
-  · noncomm_ring [hp]
-  constructor <;> noncomm_ring [hp]
+  · noncomm_ring [hp, idempotent_mul_nested p hp]
+  constructor <;> noncomm_ring [hp, idempotent_mul_nested p hp]
 
 /-- Unique diagonal/off-diagonal decomposition, including in characteristic two. -/
 theorem decomposition_unique {p e o x : R} (hp : p * p = p)
@@ -137,14 +146,14 @@ theorem multiplication_rules {p : R} (hp : p * p = p) (x y : R) :
     oddPart p (x * y) = evenPart p x * oddPart p y + oddPart p x * evenPart p y := by
   simp only [evenPart, oddPart, component11, component00, component10, component01,
     complementIdempotent]
-  constructor <;> noncomm_ring [hp]
+  constructor <;> noncomm_ring [hp, idempotent_mul_nested p hp]
 
 theorem reflection_parities {p : R} (hp : p * p = p) (x : R) :
     reflection p * evenPart p x = evenPart p x * reflection p ∧
     reflection p * oddPart p x + oddPart p x * reflection p = 0 := by
   simp only [reflection, two_nsmul, evenPart, oddPart, component11, component00,
     component10, component01, complementIdempotent]
-  constructor <;> noncomm_ring [hp]
+  constructor <;> noncomm_ring [hp, idempotent_mul_nested p hp]
 
 theorem conjugation_on_parts {p : R} (hp : p * p = p) (x : R) :
     reflection p * evenPart p x * reflection p = evenPart p x ∧
@@ -157,12 +166,12 @@ theorem odd_eq_reflection_commutator {p : R} (hp : p * p = p) (x : R) :
     oddPart p x = reflection p * (p * x - x * p) := by
   simp only [oddPart, component10, component01, complementIdempotent,
     reflection, two_nsmul]
-  noncomm_ring [hp]
+  noncomm_ring [hp, idempotent_mul_nested p hp]
 
 theorem odd_eq_double_commutator {p : R} (hp : p * p = p) (x : R) :
     oddPart p x = p * (p * x - x * p) - (p * x - x * p) * p := by
   simp only [oddPart, component10, component01, complementIdempotent]
-  noncomm_ring [hp]
+  noncomm_ring [hp, idempotent_mul_nested p hp]
 
 theorem reflection_mul_odd {p : R} (hp : p * p = p) (x : R) :
     reflection p * oddPart p x = p * x - x * p := by
@@ -189,7 +198,7 @@ theorem commutator_is_odd {p : R} (hp : p * p = p) (x : R) :
     reflection p * (p * x - x * p) + (p * x - x * p) * reflection p = 0 := by
   simp only [oddPart, component10, component01, complementIdempotent,
     reflection, two_nsmul]
-  constructor <;> noncomm_ring [hp]
+  constructor <;> noncomm_ring [hp, idempotent_mul_nested p hp]
 
 theorem corners_square_zero {p : R} (hp : p * p = p) (x : R) :
     component10 p x * component10 p x = 0 ∧

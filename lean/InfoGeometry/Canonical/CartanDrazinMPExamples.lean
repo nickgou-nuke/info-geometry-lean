@@ -29,7 +29,7 @@ open InfoGeometry.Singular.MetricAlgebraicProjectionDefect
 def oblique : Matrix (Fin 2) (Fin 2) ℝ := !![1, 1; 0, 0]
 
 /-- Its actual Moore--Penrose inverse, not its Drazin inverse. -/
-def obliqueMP : Matrix (Fin 2) (Fin 2) ℝ := !![1 / 2, 0; 1 / 2, 0]
+noncomputable def obliqueMP : Matrix (Fin 2) (Fin 2) ℝ := !![1 / 2, 0; 1 / 2, 0]
 
 theorem oblique_idempotent : oblique * oblique = oblique := by
   ext i j

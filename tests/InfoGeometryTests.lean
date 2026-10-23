@@ -34,6 +34,7 @@ import InfoGeometry.Physics.BostConnesThermalTime
 import InfoGeometry.Canonical.CounterexampleAlternatives
 import InfoGeometry.Canonical.FiniteDimensionalCCRObstruction
 import InfoGeometry.Canonical.WittPureSpinorVacuum
+import InfoGeometry.Canonical.MoorePenroseDrazinObstruction
 import InfoGeometry.Canonical.KreinKramersAlternatives
 import InfoGeometry.Canonical.DrazinCartanAlternatives
 import InfoGeometry.Canonical.CasiniBekensteinBound
@@ -459,6 +460,8 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Canonical.CounterexampleAlternatives.inner_inverse_iff_kantor_defect_zero
 #check InfoGeometry.Canonical.FiniteDimensionalCCRObstruction.no_scalar_commutator_one
 #check InfoGeometry.Canonical.FiniteDimensionalCCRObstruction.no_nonzero_scalar_commutator
+#check InfoGeometry.Canonical.MoorePenroseDrazinObstruction.square_zero_eq_zero_of_drazin_index_one
+#check InfoGeometry.Canonical.MoorePenroseDrazinObstruction.square_zero_moore_penrose_not_drazin_index_one
 #check InfoGeometry.Canonical.PureSpinor.vacuum_is_not_pure
 #check InfoGeometry.Canonical.PureSpinor.vacuum_annihilator_eq_bot
 #check InfoGeometry.Streaming.TwoBoundaryDyadCompression.boundaryDyad_matrix_apply

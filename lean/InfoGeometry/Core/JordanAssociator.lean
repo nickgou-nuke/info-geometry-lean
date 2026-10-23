@@ -24,6 +24,14 @@ variable {A : Type*} [Ring A] [Algebra ℝ A]
 def commutator (x y : A) : A :=
   x * y - y * x
 
+/-- The symmetric Kantor triple product in the associative envelope. -/
+def kantorTriple (x y z : A) : A :=
+  x * y * z + z * y * x
+
+/-- The inner-regularity (Kantor) defect of a candidate inverse. -/
+def kantorDefect (x y : A) : A :=
+  x - x * y * x
+
 /-- The special-Jordan associator is one quarter of `[y,[x,z]]`. -/
 theorem jordan_associator_eq_double_commutator (x y z : A) :
     jordanMul (jordanMul x y) z - jordanMul x (jordanMul y z) =
@@ -42,6 +50,19 @@ theorem jordan_associator_eq_expanded_double_commutator (x y z : A) :
         (y * (x * z - z * x) - (x * z - z * x) * y) := by
   simpa [commutator] using
     jordan_associator_eq_double_commutator (x := x) (y := y) (z := z)
+
+/-- The symmetric triple product is a Jordan product minus a commutator term.
+
+This is the normalized-envelope counterpart of the usual Kantor/Jordan--Lie
+expansion; no commutativity hypothesis is used. -/
+theorem kantorTriple_eq_jordan_commutator (x y z : A) :
+    kantorTriple x y z =
+      2 • jordanMul (x * y) z + z * commutator y x := by
+  simp only [kantorTriple, jordanMul, commutator,
+    Algebra.smul_mul_assoc, Algebra.mul_smul_comm,
+    smul_add, smul_sub, smul_smul,
+    mul_add, add_mul, mul_sub, sub_mul, mul_assoc]
+  module
 
 /-- Commuting outer arguments make the special-Jordan associator vanish. -/
 theorem jordan_associator_eq_zero_of_commute

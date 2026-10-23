@@ -199,6 +199,22 @@ theorem oblique_idempotent_counterexample :
   · rw [hAA, mul_sub, mul_one, hAA, sub_self]
   · rw [hAA, mul_sub, mul_one, hAA, sub_self, Matrix.transpose_zero, mul_zero]
   · rw [hAA, mul_sub, mul_one, hAA, sub_self, mul_zero]
+/-- The shear used in the commuting-Gramians counterexample below. -/
+noncomputable def gramianShear : Matrix (Fin 2) (Fin 2) ℝ := !![0, 1; 0, 0]
+
+/-- Its transpose, on the same real matrix carrier. -/
+noncomputable def gramianShearTranspose : Matrix (Fin 2) (Fin 2) ℝ :=
+  gramianShear.transpose
+
+/-- The existing shear and its transpose do not commute. This witnesses the
+noncommutative matrix carrier used by the Gramian contracts. -/
+theorem shear_transpose_noncommute :
+    gramianShear * gramianShearTranspose ≠ gramianShearTranspose * gramianShear := by
+  intro h
+  have he := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℝ => M 0 0) h
+  norm_num [gramianShear, gramianShearTranspose, Matrix.mul_apply, Matrix.vecMul, dotProduct,
+    Matrix.transpose_apply, Fin.sum_univ_two] at he
+
 /-- Commutation of the two Gramians is weaker than normality of A. -/
 theorem commuting_gramians_not_normal :
     let A : Matrix (Fin 2) (Fin 2) ℝ := !![0, 1; 0, 0]
@@ -210,9 +226,7 @@ theorem commuting_gramians_not_normal :
   · ext i j
     fin_cases i <;> fin_cases j <;>
       norm_num [Matrix.mul_apply, Matrix.vecMul, dotProduct, Matrix.transpose_apply, Fin.sum_univ_two]
-  · intro h
-    have he := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℝ => M 0 0) h
-    norm_num [Matrix.mul_apply, Matrix.vecMul, dotProduct, Matrix.transpose_apply, Fin.sum_univ_two] at he
+  · exact shear_transpose_noncommute
 
 end RealMatrices
 end InfoGeometry.Canonical.GramianInverseContracts

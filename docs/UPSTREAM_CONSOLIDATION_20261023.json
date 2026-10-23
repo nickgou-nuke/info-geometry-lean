@@ -94,12 +94,41 @@
         "Routing.CaratheodoryPivotContracts",
         "Routing.ShapeSinkhornBipartite"
       ],
-      "status": "imported_targeted_build_passed_with_warnings",
+      "status": "independently_accepted_limited_scope_with_warnings",
       "remaining": [
-        "independent final kernel/axiom acceptance",
-        "native serialized runtime CI integration"
+        "native serialized runtime CI integration",
+        "separate warning cleanup and full consolidated release gates"
       ],
-      "semantic_review": "Popper PASS5owners with stable hashes: Stein boundary/nilpotence, native Gramian inverse predicates, bipartite log effects, constructive finite pivot compression, and conditional reduced Sinkhorn equations remain distinct claims. No iteration convergence or runtime universal correctness asserted."
+      "semantic_review": "Popper PASS5owners with stable hashes: Stein boundary/nilpotence, native Gramian inverse predicates, bipartite log effects, constructive finite pivot compression, and conditional reduced Sinkhorn equations remain distinct claims. No iteration convergence or runtime universal correctness asserted.",
+      "kernel_qa": {
+        "reviewer": "Ampere",
+        "evidence": "/tmp/qa-a-pruning-final-oda9p4iy/result.json",
+        "status": "ACCEPTED_WITH_LIMITED_SCOPE_AND_RECORDED_WARNINGS",
+        "build_exit": 0,
+        "build_jobs": 8931,
+        "audit_exit": 0,
+        "axiom_heads": 61,
+        "standard3": 53,
+        "propext_only": 8,
+        "strict_five_owner_gate_exit": 0,
+        "lexical_vacuity_gate_exit": 1,
+        "lexical_warnings": 5,
+        "gramian_owner_linter_warnings": 2,
+        "audit_module_warnings": 0,
+        "stable_six_hashes": true,
+        "hashes": {
+          "lean/InfoGeometry/Canonical/FiniteSteinInverse.lean": "d40605747ed403d8006386d8075689048321815ddbcd90caa135881b3f449515",
+          "lean/InfoGeometry/Canonical/GramianInverseContracts.lean": "ecbf97eb67ddaaf0d3c7db8eb41c08cefcbf9a73bb466742a861fbaaef6ea7c2",
+          "lean/InfoGeometry/Probability/BipartiteLogCoupling.lean": "e93b49b586905c0fcd41b3fcf59d98d647b903c1a8ed3255303c3d98ca74707f",
+          "lean/InfoGeometry/Routing/CaratheodoryPivotContracts.lean": "11aa7b25c2a76ba8cb33011346e4331b41ecee72c0efe7536dd8907b3a78108a",
+          "lean/InfoGeometry/Routing/ShapeSinkhornBipartite.lean": "b161bd4f3cc98b8d2bc5125a86ed3b2798e17a5a11a9d7496e024013a42e0650",
+          "lean/InfoGeometry/Canonical/GramianInverseContractsAudit.lean": "211543022c328443e6a73948282da4af4671df8a3f060d89a1f7d05ba95a2199"
+        },
+        "build_command": "python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock InfoGeometry.Canonical.GramianInverseContractsAudit",
+        "axiom_command": "python3 /tmp/qa-a-pruning-final-oda9p4iy/run_audit.py",
+        "axiom_inner_command": "lake env lean /tmp/qa-a-pruning-final-oda9p4iy/Audit.lean",
+        "prior_evidence": "/tmp/qa-a-pruning-five-5vebtq4m"
+      }
     },
     {
       "branches": [

@@ -1,0 +1,21 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Canonical.GramianInverseContracts
+
+#print axioms InfoGeometry.Canonical.GramianInverseContracts.projector_cross_zero_iff
+#print axioms InfoGeometry.Canonical.GramianInverseContracts.adjoint_projector_cross_zero_iff
+#print axioms InfoGeometry.Canonical.GramianInverseContracts.gram_sum
+#print axioms InfoGeometry.Canonical.GramianInverseContracts.orthogonal_split_cross_zero
+#print axioms InfoGeometry.Canonical.GramianInverseContracts.cmp_outer
+#print axioms InfoGeometry.Canonical.GramianInverseContracts.cmp_recovers_core
+#print axioms InfoGeometry.Canonical.GramianInverseContracts.cmp_support_idempotents
+#print axioms InfoGeometry.Canonical.GramianInverseContracts.star_real_matrix
+#print axioms InfoGeometry.Canonical.GramianInverseContracts.matrix_zero_of_gram_zero
+#print axioms InfoGeometry.Canonical.GramianInverseContracts.mp_from_left_gramian
+#print axioms InfoGeometry.Canonical.GramianInverseContracts.mp_from_left_gramian_drazin_one
+#print axioms InfoGeometry.Canonical.GramianInverseContracts.oblique_idempotent_counterexample
+#print axioms InfoGeometry.Canonical.GramianInverseContracts.shear_transpose_noncommute
+#print axioms InfoGeometry.Canonical.GramianInverseContracts.commuting_gramians_not_normal

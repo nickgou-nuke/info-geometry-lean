@@ -403,6 +403,7 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Canonical.CounterexampleAlternatives.ring_hom_preserves_peirce_corner
 #check InfoGeometry.Canonical.CounterexampleAlternatives.cycle_sum_zero_of_potential
 #check InfoGeometry.Canonical.CounterexampleAlternatives.mp_range_idempotent
+#check InfoGeometry.Canonical.CounterexampleAlternatives.idempotent_additive_readout_not_multiplicative
 #check InfoGeometry.Canonical.CounterexampleAlternatives.matrix_commutator_trace_zero
 #check InfoGeometry.Canonical.CounterexampleAlternatives.square_zero_endomorphism_has_strict_kernel
 #check InfoGeometry.Canonical.CounterexampleAlternatives.idempotent_endomorphism_split

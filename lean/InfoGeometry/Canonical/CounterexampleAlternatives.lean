@@ -161,6 +161,23 @@ theorem mp_range_idempotent
     (x * m) * (x * m) = (x * m * x) * m := by simp only [mul_assoc]
     _ = x * m := by rw [hxm]
 
+theorem idempotent_additive_readout_not_multiplicative
+    {C K : Type*} [Semiring C] [Ring K] [NoZeroDivisors K]
+    (φ : C →+ K) (e : C) (he : e * e = e)
+    (hzero : φ e ≠ 0) (hone : φ e ≠ 1) :
+    φ (e * e) ≠ φ e * φ e := by
+  intro h
+  have hfixed : φ e = φ e * φ e := by
+    simpa [he] using h
+  have hfactor : φ e * (1 - φ e) = 0 := by
+    calc
+      φ e * (1 - φ e) = φ e - φ e * φ e := by noncomm_ring
+      _ = 0 := sub_eq_zero.mpr hfixed
+  rcases mul_eq_zero.mp hfactor with hzero' | hone'
+  · exact hzero hzero'
+  · apply hone
+    exact (sub_eq_zero.mp hone').symm
+
 theorem matrix_commutator_trace_zero
     {K : Type*} [CommRing K]
     {n : Type*} [Fintype n] [DecidableEq n]

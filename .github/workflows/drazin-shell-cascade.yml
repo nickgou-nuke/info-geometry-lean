@@ -18,8 +18,9 @@ jobs:
     steps:
       - uses: actions/checkout@v5
         with:
-          persist-credentials: false
           show-progress: false
+      - name: Remove read-only checkout credential without traversing submodules
+        run: git config --local --unset-all http.https://github.com/.extraheader || true
       - name: Install exact pinned Lean toolchain
         shell: bash
         run: |

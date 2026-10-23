@@ -189,6 +189,65 @@ theorem sectorCentralCharge_lieBracket_majoranaMinus_of_orthogonal
           lieBracket (sectorCentralCharge (d i) (b i)) (b j) by rfl,
         h.1, h.2, sub_zero]
 
+/-- Distinct orthogonal colors have vanishing mixed Majorana
+anticommutators.  This is the individual-generator form of the mixed term
+used in the total extended-charge calculation. -/
+theorem majoranaPlus_majoranaMinus_anticommute_of_orthogonal
+    [DecidableEq ι] (hE : IsOrthogonalExtendedSusy d b)
+    {i j : ι} (hij : i ≠ j) :
+    jordanProd (majoranaPlus (d i) (b i)) (majoranaMinus (d j) (b j)) = 0 ∧
+    jordanProd (majoranaMinus (d i) (b i)) (majoranaPlus (d j) (b j)) = 0 := by
+  have hS := hE.toIsSupercolorSystem
+  have h_ij : (majoranaPlus (d i) (b i)) *
+      (majoranaMinus (d j) (b j)) = 0 := by
+    unfold majoranaPlus majoranaMinus
+    calc
+      (d i + b i) * (d j - b j) =
+          d i * d j - d i * b j + b i * d j - b i * b j := by
+            noncomm_ring
+      _ = 0 := by
+        rw [hS.d_mul_d i j, hE.d_mul_b_ne hij,
+          hS.b_mul_d_ne hij, hS.b_mul_b i j]
+        abel
+  have h_ji : (majoranaMinus (d j) (b j)) *
+      (majoranaPlus (d i) (b i)) = 0 := by
+    unfold majoranaMinus majoranaPlus
+    calc
+      (d j - b j) * (d i + b i) =
+          d j * d i + d j * b i - b j * d i - b j * b i := by
+            noncomm_ring
+      _ = 0 := by
+        rw [hS.d_mul_d j i, hE.d_mul_b_ne hij.symm,
+          hS.b_mul_d_ne hij.symm, hS.b_mul_b j i]
+        abel
+  have h_rev_ij : (majoranaMinus (d i) (b i)) *
+      (majoranaPlus (d j) (b j)) = 0 := by
+    unfold majoranaMinus majoranaPlus
+    calc
+      (d i - b i) * (d j + b j) =
+          d i * d j + d i * b j - b i * d j - b i * b j := by
+            noncomm_ring
+      _ = 0 := by
+        rw [hS.d_mul_d i j, hE.d_mul_b_ne hij,
+          hS.b_mul_d_ne hij, hS.b_mul_b i j]
+        abel
+  have h_rev_ji : (majoranaPlus (d j) (b j)) *
+      (majoranaMinus (d i) (b i)) = 0 := by
+    unfold majoranaPlus majoranaMinus
+    calc
+      (d j + b j) * (d i - b i) =
+          d j * d i - d j * b i + b j * d i - b j * b i := by
+            noncomm_ring
+      _ = 0 := by
+        rw [hS.d_mul_d j i, hE.d_mul_b_ne hij.symm,
+          hS.b_mul_d_ne hij.symm, hS.b_mul_b j i]
+        abel
+  constructor
+  · unfold jordanProd
+    rw [h_ij, h_ji, add_zero]
+  · unfold jordanProd
+    rw [h_rev_ij, h_rev_ji, add_zero]
+
 /-- The total sector charge is central on the generated finite-color algebra. -/
 theorem totalCentralCharge_lieBracket_generated
     [Fintype ι] [DecidableEq ι]

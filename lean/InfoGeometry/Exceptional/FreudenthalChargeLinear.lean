@@ -348,6 +348,36 @@ theorem symplecticRankTwo_repeated_mixed_iff
   · intro h
     rw [h, neg_zero, zero_smul, zero_add]
 
+/-- On any set of charges, universal mixed-triple symmetry is equivalent to
+pairwise vanishing of the symplectic form. No subspace closure is needed. -/
+theorem symplecticRankTwo_mixed_on_iff_pairing_zero
+    (D : CubicJordanDatum J) (s : Set (FreudenthalCharge J)) :
+    (∀ x ∈ s, ∀ z ∈ s, ∀ y ∈ s,
+      symplecticRankTwo D z y x = symplecticRankTwo D x y z) ↔
+    (∀ x ∈ s, ∀ z ∈ s, FreudenthalCharge.symplecticForm D x z = 0) := by
+  constructor
+  · intro h x hx z hz
+    exact (symplecticRankTwo_repeated_mixed_iff D x z).mp (h x hx z hz x hx)
+  · intro h x hx z hz y hy
+    simp only [symplecticRankTwo_apply, h y hy x hx, h z hz x hx,
+      h y hy z hz, h x hx z hz, zero_smul]
+
+/-- Imposing universal mixed-triple symmetry on a set annihilates the
+rank-two triple there. Thus this restriction does not yield a nonzero mixed
+triple operation, even when the set is a nonzero isotropic subspace. -/
+theorem symplecticRankTwo_mixed_on_iff_triple_zero
+    (D : CubicJordanDatum J) (s : Set (FreudenthalCharge J)) :
+    (∀ x ∈ s, ∀ z ∈ s, ∀ y ∈ s,
+      symplecticRankTwo D z y x = symplecticRankTwo D x y z) ↔
+    (∀ x ∈ s, ∀ y ∈ s, ∀ z ∈ s, symplecticRankTwo D x y z = 0) := by
+  constructor
+  · intro h x hx y hy z hz
+    have hpair := (symplecticRankTwo_mixed_on_iff_pairing_zero D s).mp h
+    simp only [symplecticRankTwo_apply, hpair y hy z hz, hpair x hx z hz,
+      zero_smul, add_zero]
+  · intro h x hx z hz y hy
+    rw [h z hz y hy x hx, h x hx y hy z hz]
+
 theorem symplecticRankTwo_preserves
     (D : CubicJordanDatum J) (X Y Z W : FreudenthalCharge J) :
     FreudenthalCharge.symplecticForm D (symplecticRankTwo D X Y Z) W

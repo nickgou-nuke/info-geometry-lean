@@ -14,9 +14,26 @@ import re
 from pathlib import Path
 
 
-PATTERN = re.compile(
-    r"^\s*(theorem|lemma)\s+([A-Za-z0-9_']*(?:counterexample|obstruction|"
-    r"does_not|need_not|not_|not[A-Z]|nonmultip|not_exact|not_injective))"
+DECLARATION = re.compile(r"^\s*(theorem|lemma)\s+([A-Za-z0-9_']+)")
+NEGATIVE_MARKERS = (
+    "counterexample",
+    "obstruction",
+    "does_not",
+    "need_not",
+    "not_",
+    "nonmultip",
+    "not_exact",
+    "not_injective",
+)
+POSITIVE_MARKERS = (
+    "iff",
+    "preserv",
+    "reconstruct",
+    "idempotent",
+    "invariant",
+    "exact",
+    "recovery",
+    "sum_zero",
 )
 
 
@@ -34,16 +51,27 @@ def category(name: str) -> str:
 def inventory(root: Path) -> list[dict[str, object]]:
     rows: list[dict[str, object]] = []
     for path in sorted((root / "lean" / "InfoGeometry").rglob("*.lean")):
-        for line_number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
-            match = PATTERN.match(line)
-            if match:
+        lines = path.read_text(encoding="utf-8").splitlines()
+        declarations = [
+            (line_number, match.group(1), match.group(2))
+            for line_number, line in enumerate(lines, 1)
+            if (match := DECLARATION.match(line))
+        ]
+        positive_companions = sorted(
+            name for _, _, name in declarations
+            if any(marker in name.lower() for marker in POSITIVE_MARKERS)
+        )
+        for line_number, kind, name in declarations:
+            lowered = name.lower()
+            if any(marker in lowered for marker in NEGATIVE_MARKERS):
                 rows.append(
                     {
                         "file": str(path.relative_to(root)),
                         "line": line_number,
-                        "kind": match.group(1),
-                        "name": match.group(2),
-                        "category": category(match.group(2)),
+                        "kind": kind,
+                        "name": name,
+                        "category": category(name),
+                        "positive_companions": positive_companions,
                     }
                 )
     return rows
@@ -59,6 +87,8 @@ def main() -> None:
         print(json.dumps(rows, indent=2, sort_keys=True))
         return
     print(f"counterexample-style declarations: {len(rows)}")
+    covered = sum(bool(row["positive_companions"]) for row in rows)
+    print(f"owners with positive companion candidates: {covered}")
     by_category: dict[str, int] = {}
     for row in rows:
         key = str(row["category"])

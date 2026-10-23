@@ -189,7 +189,6 @@
         "Canonical.CartanDrazinMPExamples"
       ],
       "remaining": [
-        "native Drazin parity and anomaly bridge",
         "native counterexamples and branch consequence correspondence",
         "aggregate integration and full consolidated snapshot review"
       ],
@@ -205,6 +204,17 @@
           "lean/InfoGeometry/Algebra/PeirceParityClosureAudit.lean": "43e4a4e624a079f126e38405199e30dbbe5f2143ec75b9823b8cf9aea67ebda4"
         },
         "scope": "Native even/odd additive projections, uniqueness, product formulas, conjugation RingEquiv and commutator recovery. Sign converses require injective doubling; no new parity carrier."
+      },
+      "drazin_parity_verification": {
+        "status": "independently_accepted",
+        "semantic_review": "James A-A PASS",
+        "kernel_qa": "Popper PASS8940,16exactheads allpropext,strict2filegate zero traps,stablehashes,no scopedwarnings",
+        "evidence": "/tmp/drazin-peirce-independent-qa-sfxfl4b0",
+        "sha256": {
+          "lean/InfoGeometry/Canonical/DrazinPeirceParity.lean": "545df1b1af5818b0f78e4acee1ec0483913cfae7932bfb547a0bf8378ba3408f",
+          "lean/InfoGeometry/Canonical/DrazinPeirceParityAudit.lean": "e11691d6374ea1023a6475b142184fa29d0f20719371eb3113213f92f69b5d29"
+        },
+        "scope": "Native a,d,FittingN parity; arbitrary-m odd projection defects and recovery; metric-first projectionDefect sign bridge with explicit native Singular MP/Drazin witnesses. No inverse existence theorem."
       }
     }
   ],

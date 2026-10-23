@@ -12,11 +12,15 @@
   },
   "batches": [
     {
-      "branches": ["feat/supercolor-source-closure"],
+      "branches": [
+        "feat/supercolor-source-closure"
+      ],
       "source_commit": "41284b6c0",
-      "status": "owner_comparison_complete_selective_port_in_progress",
-      "note": "New head discovered on refreshed upstream fetch. James read actual main/branch owners: reuse native coexact_absorption_iff_equal, orthogonal_pair_not_commute, support star lemmas and bracket/Jacobi owners. Port source endpoint/action/closure lemmas, orthogonal/common-source incompatibility, MP-only total-charge star, and faithful nonunital color matrix embedding. Exclude duplicate conjunction certificates; sl(k|1) requires an explicit graded supertrace-zero representation. Sandbox source-action candidate assigned to Kepler. CI/checker review remains pending.",
-      "embedding_contract": "Extend Matrix ι ι R by zero at the none row/column in Matrix (Option ι) (Option ι) R. Reuse native NonUnitalRingHom, prove injectivity, product/commutator and star preservation; show image(1) differs from ambient1 for Nontrivial R; identify Matrix.single units with SupercolorMatrixExamples.colorBoson_eq_single. No unital hom, Lie-superalgebra representation, or common-source centrality claim."
+      "status": "selective_lean_port_independently_accepted_integrated",
+      "note": "Selective integration of branch source actions and faithful nonunital color embedding; reused native coexact absorption, common-source closure, matrix examples and star APIs. Omitted duplicate conjunction certificates. Independent source review and QA passed; existing root CI covers all default Lean targets.",
+      "embedding_contract": "Extend Matrix \u03b9 \u03b9 R by zero at the none row/column in Matrix (Option \u03b9) (Option \u03b9) R. Reuse native NonUnitalRingHom, prove injectivity, product/commutator and star preservation; show image(1) differs from ambient1 for Nontrivial R; identify Matrix.single units with SupercolorMatrixExamples.colorBoson_eq_single. No unital hom, Lie-superalgebra representation, or common-source centrality claim.",
+      "verification": "Ampere final aggregate QA PASS13971, all7 hashes stable,15 standard-only axiom footprints (7 standard3,4 propext,4 none), zero scoped warnings. Final concrete test proof made explicit; independent narrow retry PASS3196, strict5-file vacuity zero findings,7 hashes stable with only test changed from aggregate snapshot. Evidence /tmp/qa-a-supercolor-final-b9kaafrg and /tmp/qa-a-supercolor-testfix-bf8kezbl. Native owners and Fin2/Fin4 models retained. sl(k|1) classification not asserted.",
+      "ci_disposition": "Use existing .github/workflows/ci.yml all-default-targets locked root build, which covers the new InfoGeometry modules and focused test imported by InfoGeometryTests. Do not copy duplicate branch checker/workflow: independent review found incomplete actual-executable validation, reusable output/search-path contamination, narrow triggers and insufficient per-owner audit-completion evidence. No pins changed; known root path-dependency provenance issues remain separate."
     },
     {
       "branches": [
@@ -67,7 +71,10 @@
       ],
       "status": "six_modules_and_two_compatibility_bridges_build_passed_with_warnings",
       "note": "Both branch APIs preserved. SinkhornBranchCompatibility proves equality of log partition, potentials, core and gains. SinkhornPipelineCompatibility proves pooling and normalized output equality under explicit exponentiation of token logits; locked build passed 8936 jobs and semantic audit passed. Raw outputs are not equated.",
-      "remaining": ["aggregate build", "CI import-closure adaptation"],
+      "remaining": [
+        "aggregate build",
+        "CI import-closure adaptation"
+      ],
       "pipeline_qa": "Independent locked build and axiom audit PASS; final normalized compatibility owner has no warnings and only standard foundational axioms. Shared test harness passed but changed during checking, so no stable final test snapshot is certified.",
       "runtime_qa": "Independent QA: 63 tests passed, zero skips."
     },
@@ -77,7 +84,10 @@
       ],
       "status": "owner_aligned_concrete_bridge_independent_qa_passed",
       "note": "Generalized native MajoranaCoefficientAction to arbitrary finite indices, preserving the original IsMajoranaBasis specialization. Added MajoranaPfaffianKernelCriterion and imported KreinMajoranaKernelCriterion. Adapted remote concrete bridge into CARMajoranaMatrices, CARMajoranaFiniteBridge and CARMajoranaOwnerAdapters using native Fintype.linearCombination and quadraticElement. Same-carrier two-site chain equality, nonzero endpoint conservation, and Pfaffian criterion compiled (9161 jobs); semantic audit passed.",
-      "remaining": ["stable shared test-harness snapshot", "integration checkpoint"],
+      "remaining": [
+        "stable shared test-harness snapshot",
+        "integration checkpoint"
+      ],
       "independent_qa": "Ampere: locked CARMajoranaBridgeAudit plus SinkhornPipelineCompatibility build PASS9174; all17 CAR/Krein footprints standard3, no scoped-owner warnings; ten owner/import hashes stable. Direct InfoGeometryTests check exit0 but test-file hash changed. Logs /tmp/qa-a-car-recheck-n6j6scvm.",
       "scope": "Finite Majorana-span commutator kernel. Not a state-space energy kernel, arbitrary-chain Pfaffian classification, or infinite limit. General finite-chain endpoint commutation retains explicit coefficient commutation."
     },
@@ -91,7 +101,13 @@
       "status": "additive_owner_alignment_in_progress",
       "note": "Do not replace DrazinRegularization, DrazinShellCascade, MoorePenroseSectors: existing namespaces and consumers would regress. JordanAssociatorRing and scaled MP counterexamples committed in 04caccfb4. Native ObliqueShellCounterexample ports actual branch matrices through existing PowerMPFamily, drazinShellProj, interShellPeirceCorner and MP conversion owners.",
       "oblique_verification": "Popper final source-semantic PASS. Parent repaired an intervening Jordan dependency proof and reran InfoGeometryTests plus ObliqueAudit: PASS13966, including aggregate imports and check coverage. Ampere independent retry PASS3197: six standard3 axiom footprints, no owner warnings, unchanged source hashes, prior zero-finding vacuity/static checks remain applicable. Evidence /tmp/qa-a-oblique-retry-kkpbzhjw and /tmp/consolidation-integration-tests.log. Accepted limited scope: actual native shells and inverse-not-reverse-corner counterexample, no minimal-index claim.",
-      "remaining": ["remaining branch declaration correspondence", "full consolidated snapshot review"]
+      "remaining": [
+        "Exact extinction and leading-step faithfulness candidate checking",
+        "Ordered DMP interface final QA",
+        "matrix-action and example consequence correspondence",
+        "full consolidated snapshot review"
+      ],
+      "declaration_review": "James read-only comparison: most branch partition/shell claims already native. Selectively adapt exact extinction, leading-step faithfulness and ordered DMP outer-inverse interface; preserve canonical PowerMPFamily and oblique counterexample definitions. Do not import duplicate shell hierarchy."
     },
     {
       "branches": [
@@ -99,7 +115,10 @@
         "feat/functional-route-certificates"
       ],
       "status": "three_lean_modules_imported_targeted_build_passed_with_warnings",
-      "remaining": ["aggregate build", "CI review"],
+      "remaining": [
+        "aggregate build",
+        "CI review"
+      ],
       "independent_qa": "Ampere reran all 63 runtime tests: PASS, zero skips. Generated namespace.end Lean fixture elaborated with standard foundational axioms.",
       "runtime": "Tools and tests imported; keyword namespace components quoted and emitted Lean header added; optional torch test collection handled. Combined 63 runtime tests passed in existing Sage/PyTorch environment."
     },
@@ -120,7 +139,11 @@
       "note": "Exact pinned-version verification replaces stale 4.28.1 checks. Imported helper/regressions and reviewed integration bootstrap/cache-key fixes. Regression workflow covers main and toolchain/manifest paths; removed misleading submodule traversal check. Source A-A passed. No dependency pins or submodule metadata/content changed.",
       "preflight": "Read-only local report: Atlas is an untracked path dependency; GIFT is at the recorded revision but dirty; tracked InfoGeometryCore passes. Fresh CI still needs reproducible path-package sources.",
       "independent_qa": "James: all17 isolated bootstrap regressions PASS under BuildLock; all3 workflows parsed with existing PyYAML; nine monitored files hash-stable; toolchain/manifest/lakefile/gitmodules unchanged. Parsing is not a GitHub Actions run.",
-      "remaining": ["path-package reproducibility resolution", "branch gitmodules/doc additions review", "reviewed target-list expansion review"]
+      "remaining": [
+        "path-package reproducibility resolution",
+        "branch gitmodules/doc additions review",
+        "reviewed target-list expansion review"
+      ]
     },
     {
       "branches": [

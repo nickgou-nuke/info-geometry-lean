@@ -267,6 +267,46 @@ theorem modularFlowCl11_e12Basis (t : ThermalTime) :
     InfoGeometry.Clifford.Cl11CoordinateAlgebra.e2Basis,
     InfoGeometry.Clifford.Cl11CoordinateAlgebra.e12Basis]
 
+/-! ## Explicit finite-angle readbacks -/
+
+/-- A quarter-turn exchanges the transverse basis generators. -/
+theorem modularFlowCl11_e2Basis_pi_div_four :
+    modularFlowCl11 (Real.pi / 4)
+        InfoGeometry.Clifford.Cl11CoordinateAlgebra.e2Basis =
+      InfoGeometry.Clifford.Cl11CoordinateAlgebra.e12Basis := by
+  have hangle : 2 * (Real.pi / 4) = Real.pi / 2 := by ring
+  unfold modularFlowCl11 InfoGeometry.Clifford.Cl11CoordinateAlgebra.e2Basis
+    InfoGeometry.Clifford.Cl11CoordinateAlgebra.e12Basis
+  ext <;> norm_num [hangle]
+
+/-- A half-turn negates both transverse basis generators. -/
+theorem modularFlowCl11_e2Basis_pi_div_two :
+    modularFlowCl11 (Real.pi / 2)
+        InfoGeometry.Clifford.Cl11CoordinateAlgebra.e2Basis =
+      -InfoGeometry.Clifford.Cl11CoordinateAlgebra.e2Basis := by
+  have hangle : 2 * (Real.pi / 2) = Real.pi := by ring
+  simp [modularFlowCl11, InfoGeometry.Clifford.Cl11CoordinateAlgebra.e2Basis,
+    hangle]
+  change (⟨0, 0, -1, 0⟩ : Cl11) =
+    InfoGeometry.Clifford.Cl11CoordinateAlgebra.neg
+      InfoGeometry.Clifford.Cl11CoordinateAlgebra.e2Basis
+  ext <;> norm_num [InfoGeometry.Clifford.Cl11CoordinateAlgebra.neg,
+    InfoGeometry.Clifford.Cl11CoordinateAlgebra.e2Basis]
+
+/-- A half-turn negates the bivector generator as well. -/
+theorem modularFlowCl11_e12Basis_pi_div_two :
+    modularFlowCl11 (Real.pi / 2)
+        InfoGeometry.Clifford.Cl11CoordinateAlgebra.e12Basis =
+      -InfoGeometry.Clifford.Cl11CoordinateAlgebra.e12Basis := by
+  have hangle : 2 * (Real.pi / 2) = Real.pi := by ring
+  simp [modularFlowCl11, InfoGeometry.Clifford.Cl11CoordinateAlgebra.e12Basis,
+    hangle]
+  change (⟨0, 0, 0, -1⟩ : Cl11) =
+    InfoGeometry.Clifford.Cl11CoordinateAlgebra.neg
+      InfoGeometry.Clifford.Cl11CoordinateAlgebra.e12Basis
+  ext <;> norm_num [InfoGeometry.Clifford.Cl11CoordinateAlgebra.neg,
+    InfoGeometry.Clifford.Cl11CoordinateAlgebra.e12Basis]
+
 /-- The finite Cl(1,1) modular flow has period `π`, because its transverse
     rotation uses the angle `2 * t`. -/
 theorem modularFlowCl11_period_pi (t : ThermalTime) (q : Cl11) :

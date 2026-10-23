@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Lake
 open Lake DSL System
 
@@ -913,6 +919,7 @@ lean_lib InfoGeometryTestSuite where
     `BekensteinHawkingDyadicEntropyTests,
     `ComplexAnalyticBridgeTests,
     `DvorakSystemTest,
+    `ExprFingerprintHashTests,
     `InfoGeometryTests,
     `OperatorZornTwinCyclotomicAxiomAudit,
     `PO55ConformalClosureTests,
@@ -925,6 +932,7 @@ lean_lib InfoGeometryTestSuite where
     `QutritProjectiveGeometryOwnerBridgeTests,
     `benchmarks.TrialityNonVacuity,
     `lean.InfoGeometry.Lint.PauliTest,
+    `TermDigestTests,
     `sandbox_hestenes
   ]
 

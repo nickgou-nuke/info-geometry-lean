@@ -217,6 +217,22 @@ theorem fullPeircePart_decomposition
           noncomm_ring
     _ = x := by rw [h_active_harmonic, one_mul, mul_one]
 
+/- The Peirce projections are equivariant for the involution. -/
+theorem evenPeircePart_star
+    (h : IsMoorePenroseInverse a m) (x : R) :
+    star (evenPeircePart a m x) = evenPeircePart a m (star x) := by
+  simp only [evenPeircePart, exactSupport, coexactSupport, harmonicSupport,
+    star_add, star_sub, star_one, star_mul, star_star,
+    h.ab_adj_eq, h.ba_adj_eq]
+  noncomm_ring
+
+theorem oddPeircePart_star
+    (h : IsMoorePenroseInverse a m) (x : R) :
+    star (oddPeircePart a m x) = oddPeircePart a m (star x) := by
+  simp only [oddPeircePart, exactSupport, coexactSupport,
+    star_add, star_mul, star_star, h.ab_adj_eq, h.ba_adj_eq]
+  noncomm_ring
+
 /-- The odd anticommutator `D_Q(X) = Q X + X Q` with the normalized
 supercharge `Q = a + m`.  This is the odd-parity branch of the
 parity-alternating superderivation; it is not a derivation on its own. -/

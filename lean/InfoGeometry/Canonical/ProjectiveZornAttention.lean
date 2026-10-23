@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.LLM.AttentionFrameCorrections
 import InfoGeometry.LLM.AttentionOccupationRefinement
+import InfoGeometry.LLM.AttentionFrameWhitening
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.GibbsReferenceGauge
 import InfoGeometry.Projective.PositiveOperatorExpectation
@@ -19,6 +20,9 @@ or nonlinear factorization of expectations is introduced by this aggregate.
 The finite occupation overlap is resolved by the existing commuting-involution
 joint spectrum: four disjoint sectors reconstruct both original occupations
 as marginals, without identifying those occupations with direct-product heads.
+The original three nonorthogonal keys admit a symmetric frame whitening;
+the resulting positive effects resolve the identity and give normalized Born
+readouts for every positive trace-one matrix, without asserting a softmax identity.
 See `docs/PROJECTIVE_ZORN_ATTENTION_RECONSTRUCTION.md` for exact scope.
 -/
 

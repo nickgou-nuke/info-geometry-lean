@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Projective.GibbsRayGeometry
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -7,6 +12,9 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 Finite product projections, tensor-factor occupation projections, and
 nonorthogonal key readouts have different laws. These counterexamples audit
 those laws; they do not replace the operator-Zorn field carrier.
+Constructive resolutions are proved in `AttentionOccupationRefinement`
+(joint sectors and occupation marginals) and `AttentionFrameWhitening`
+(three positive effects summing to the identity on the same matrix carrier).
 -/
 
 noncomputable section

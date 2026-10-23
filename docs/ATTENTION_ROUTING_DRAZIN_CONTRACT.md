@@ -91,3 +91,19 @@ modification, interactive explorer, or full-model semantic classification is
 claimed by this contract. The causal stabilization uses a sufficient `n`-step
 bound; minimal Drazin-index and dense Moore–Penrose materialization remain
 separate work.
+
+### Independent routing acceptance (2026-10-23)
+
+`[accepted_limited_scope]`: A-A Darwin passed the three routing owners,
+runtime diagnostic, and corrected documentation. Independent QA-A Singer ran
+the locked `InfoGeometry.Routing.CausalDrazinAudit` build (8939 jobs), four
+sequential direct Lean checks under the shared lock, and all 14 Python tests.
+All passed. The eight audit declarations use only `propext`,
+`Classical.choice`, and `Quot.sound`; semantic-vacuity, placeholder/unsafe,
+header, and scoped whitespace checks passed. Code/test hashes stayed stable
+throughout QA. Direct checks reported no local Lean warnings; replayed
+dependency warnings and existing dependency-local changes remain.
+
+This acceptance covers the three routing owners, their axiom audit, and the
+runtime diagnostic/tests. It does not accept concurrent Cantor/GNS or
+`DrazinShellCascade` edits, the entire shared index, or the full repository.

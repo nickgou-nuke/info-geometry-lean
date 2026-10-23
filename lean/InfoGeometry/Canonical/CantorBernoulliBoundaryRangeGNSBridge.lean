@@ -16,6 +16,7 @@ import InfoGeometry.Canonical.CantorBernoulliDiagTraceBridge
 import InfoGeometry.Canonical.CantorBernoulliFiniteDiagonalTraceEnergy
 import InfoGeometry.Canonical.CantorBernoulliFiniteDiagonalHilbertSchmidt
 import InfoGeometry.Canonical.CantorBernoulliFiniteDiagL2Embedding
+import InfoGeometry.Canonical.FilteredGNSBoundarySpine
 
 /-!
 # Finite boundary range and native GNS trace
@@ -36,11 +37,15 @@ namespace InfoGeometry.Canonical.CantorBernoulliBoundaryRangeGNSBridge
 open CStarStateColimit.Native
 open CStarStateColimit.Native.FilteredGNS
 open CStarStateColimit.Native.FilteredGNSGlobalStageRepresentation
+open CStarStateColimit.Native.FilteredGNSBoundarySpine
+open CStarStateColimit.Native.FilteredGNSRepresentedCStarClosure
 open InfoGeometry.Canonical.CantorBernoulliComplexStarFiniteStageGNSBridge
 open InfoGeometry.Canonical.CantorBernoulliComplexStarBinaryGaugeFiniteCore
+open InfoGeometry.Canonical.CantorBernoulliCStarMatrixTraceState
 open InfoGeometry.OperatorAlgebra.CantorBernoulliComplexStarFiniteStageBridge
 open InfoGeometry.Canonical.CantorBernoulliGaugeFilteredGNSColimitBridge
 open InfoGeometry.Canonical.CuntzBoundaryMatrixStageBridge
+open InfoGeometry.Canonical.CuntzMatrixTowerInstantiation
 open InfoGeometry.Canonical.ConcreteCompatibleCuntzFaithfulness
 open InfoGeometry.OperatorAlgebra.CantorBernoulliFiniteMatrixFaithfulness
 open InfoGeometry.OperatorAlgebra.CantorBernoulliFiniteMatrixRepresentationBridge
@@ -132,6 +137,48 @@ theorem boundaryStarRangeTrace_stage (n : ℕ) (A : Stage n) :
   rw [boundaryStarRangeTrace]
   change boundaryRangeTrace n (boundaryRangeElement n A) = _
   exact boundaryRangeTrace_stage n A
+
+/-! The same finite matrix source has a canonical representation in the
+native represented GNS C-star closure.  This is a map of the actual matrix
+stage, not an identification of the boundary `L²` carrier with the GNS
+Hilbert colimit. -/
+
+def boundaryStageToGNSClosure (n : ℕ) :
+    Stage n →⋆ₐ[ℂ]
+      representedCStarClosure gaugeStage gaugeSystem gaugeStateFamily :=
+  (finiteToRepresentedClosure gaugeStage gaugeSystem gaugeStateFamily n).comp
+    ((CStarMatrix.ofMatrixStarAlgEquiv :
+      MatrixStage n ≃⋆ₐ[ℂ] CStarMatrixStage n).toStarAlgHom.comp
+      (bitWordStageStarAlgEquiv n).toStarAlgHom)
+
+@[simp] theorem boundaryStageToGNSClosure_coe (n : ℕ) (A : Stage n) :
+    ((boundaryStageToGNSClosure n A :
+        representedCStarClosure gaugeStage gaugeSystem gaugeStateFamily) :
+      gaugeGNSHilbertColimit →L[ℂ] gaugeGNSHilbertColimit) =
+      globalStageRepresentationStarAlgHom
+        gaugeStage gaugeSystem gaugeStateFamily n
+        (CStarMatrix.ofMatrixStarAlgEquiv
+          (bitWordStageStarAlgEquiv n A)) := by
+  change ((finiteToRepresentedClosure gaugeStage gaugeSystem gaugeStateFamily n
+      (CStarMatrix.ofMatrixStarAlgEquiv (bitWordStageStarAlgEquiv n A)) :
+        representedCStarClosure gaugeStage gaugeSystem gaugeStateFamily) :
+      gaugeGNSHilbertColimit →L[ℂ] gaugeGNSHilbertColimit) = _
+  exact finiteToRepresentedClosure_coe
+    gaugeStage gaugeSystem gaugeStateFamily n
+    (CStarMatrix.ofMatrixStarAlgEquiv (bitWordStageStarAlgEquiv n A))
+
+/-! The boundary-range trace and the native GNS vacuum therefore agree after
+passing through the concrete closure map.  This is the finite readout square;
+it does not assert equality of the spatial boundary and GNS Hilbert spaces. -/
+theorem boundaryStarRangeTrace_gnsClosure_readout (n : ℕ) (A : Stage n) :
+    boundaryStarRangeTrace n
+        ⟨boundaryRep n A, ⟨A, rfl⟩⟩ =
+      ⟪gaugeGNSColimitVacuum,
+        (boundaryStageToGNSClosure n A :
+          gaugeGNSHilbertColimit →L[ℂ] gaugeGNSHilbertColimit)
+          gaugeGNSColimitVacuum⟫_ℂ := by
+  rw [boundaryStarRangeTrace_stage, boundaryStageToGNSClosure_coe]
+  exact boundaryRangeTrace_gaugeGNS_readout n A
 
 /-! The pulled-back trace on the actual boundary range is compatible with the
 native full-matrix `StarAlgHom` successor.  This statement is about arbitrary

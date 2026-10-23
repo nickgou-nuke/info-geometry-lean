@@ -108,7 +108,7 @@ theorem quadratic_comm_generator {g : ι → A}
         apply Finset.sum_congr rfl
         intro j _
         rw [hw k j, neg_smul]
-      _ = -(∑ j, w j k • g j) := Finset.sum_neg_distrib
+      _ = -(∑ j, w j k • g j) := by rw [Finset.sum_neg_distrib]
   calc
     _ = (1 / 4 : ℝ) • ∑ i, ∑ j, w i j •
         ((g i * g j) * g k - g k * (g i * g j)) := by

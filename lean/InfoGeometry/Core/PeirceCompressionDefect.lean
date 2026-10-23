@@ -85,6 +85,33 @@ theorem compression_adjoint_square_eq_iff_transfer_zero
   · intro hz
     rw [hz, star_zero, mul_zero]
 
+/-- For self-adjoint inputs and projections, one vanishing transfer corner
+already forces the opposite corner to vanish, hence commutation. -/
+theorem selfAdjoint_transfer_zero_iff_commute (p x : A) (hp : p * p = p)
+    (hps : star p = p) (hxs : star x = x) :
+    (1 - p) * x * p = 0 ↔ p * x = x * p := by
+  constructor
+  · intro hz
+    have hxp : x * p = p * x * p := by
+      rw [sub_mul, one_mul, sub_mul] at hz
+      exact sub_eq_zero.mp hz
+    have hpx : p * x = p * x * p := by
+      simpa only [star_mul, hps, hxs, mul_assoc] using congrArg star hxp
+    exact hpx.trans hxp.symm
+  · intro hc
+    rw [mul_assoc, ← hc, ← mul_assoc, sub_mul, one_mul, hp, sub_self, zero_mul]
+
+/-- In a proper star ring, self-adjoint square compression is multiplicative
+exactly on inputs commuting with the projection. This is a single-input
+criterion, not a claim that compression preserves arbitrary products. -/
+theorem compression_square_eq_iff_commute
+    (hproper : ∀ z : A, star z * z = 0 → z = 0)
+    (p x : A) (hp : p * p = p) (hps : star p = p) (hxs : star x = x) :
+    p * (x * x) * p = (p * x * p) * (p * x * p) ↔ p * x = x * p := by
+  have h := compression_adjoint_square_eq_iff_transfer_zero hproper p x hp hps
+  rw [hxs] at h
+  exact h.trans (selfAdjoint_transfer_zero_iff_commute p x hp hps hxs)
+
 /-- The adjoint reverses the two inputs of the polarized defect. -/
 theorem compression_adjoint_mul_defect_star (p x y : A) (hp : p * p = p)
     (hps : star p = p) :

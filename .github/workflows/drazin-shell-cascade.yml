@@ -1,0 +1,114 @@
+name: Drazin shell cascade (pinned, scoped)
+on:
+  push:
+    branches: [feat/drazin-shell-cascade]
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Canonical/DrazinShellCascade.lean'
+      - '.github/workflows/drazin-shell-cascade.yml'
+permissions:
+  contents: read
+concurrency:
+  group: drazin-shell-cascade-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: false
+jobs:
+  scoped-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+          show-progress: false
+      - name: Install exact pinned Lean toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < lean-toolchain)"
+      - name: Compile unchanged dependency closure and audit additions
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import fcntl, hashlib, json, os, pathlib, re, shutil, subprocess
+          repo = pathlib.Path.cwd()
+          lock = open('/tmp/info-geometry-build.lock', 'a')
+          fcntl.flock(lock, fcntl.LOCK_EX)
+          active = subprocess.check_output(['ps', '-eo', 'pid,comm'], text=True)
+          if any(s.split()[-1] in {'lean','lake','pytest'} for s in active.splitlines() if s.split()):
+              raise RuntimeError('Another build or test process is active')
+          pin = next(p for p in json.loads((repo/'lake-manifest.json').read_text())['packages'] if p['name']=='mathlib')
+          work = pathlib.Path(os.environ['RUNNER_TEMP'])/'cascade-mathlib'
+          out = pathlib.Path(os.environ['RUNNER_TEMP'])/'cascade-deliverable'
+          out.mkdir()
+          log = []
+          def run(*args, cwd=repo, capture=False):
+              r = subprocess.run(args, cwd=cwd, capture_output=True, text=True)
+              text = r.stdout+r.stderr
+              if capture or r.returncode:
+                  log.append(text)
+                  (out/'compile.txt').write_text('\n'.join(log))
+                  print(text, flush=True)
+              r.check_returncode()
+              return text
+          targets = ['InfoGeometry.Canonical.DrazinShellCascade']
+          run('git','init',str(work))
+          run('git','-C',str(work),'remote','add','origin',pin['url'])
+          run('git','-C',str(work),'fetch','--depth=1','origin',pin['rev'])
+          run('git','-C',str(work),'checkout','--detach','FETCH_HEAD')
+          assert (work/'lean-toolchain').read_text().strip()==(repo/'lean-toolchain').read_text().strip()
+          run('lake','exe','cache','get',cwd=work)
+          seen, order = set(), []
+          def visit(module):
+              if module in seen: return
+              seen.add(module)
+              rel = pathlib.Path(*module.split('.')).with_suffix('.lean')
+              src = repo/'lean'/rel
+              if not src.is_file(): raise RuntimeError(f'Missing owner {module}')
+              for dep in re.findall(r'^\s*(?:public\s+)?import\s+([\w.]+)',src.read_text(),re.M):
+                  if not dep.startswith(('Mathlib','Lean','Std','Init','Batteries')): visit(dep)
+              order.append((module,rel,src))
+          for t in targets: visit(t)
+          heads, hashes = [], {}
+          for module,rel,src in order:
+              text=src.read_text()
+              if module in targets:
+                  if re.search(r'\b(sorry|admit|axiom|native_decide|unsafe)\b',text):
+                      raise RuntimeError('Forbidden proof construct')
+                  heads.extend(module+'.'+name for name in re.findall(r'^(?:@\[[^\]]*\]\s*)?(?:theorem|lemma|def)\s+(\w+)',text,re.M))
+                  dst=out/'lean'/rel
+                  dst.parent.mkdir(parents=True,exist_ok=True)
+                  shutil.copyfile(src,dst)
+                  hashes[str(rel)]=hashlib.sha256(src.read_bytes()).hexdigest()
+              dst=work/rel
+              dst.parent.mkdir(parents=True,exist_ok=True)
+              shutil.copyfile(src,dst)
+              obj=work/'.lake/build/lib/lean'/rel.with_suffix('.olean')
+              obj.parent.mkdir(parents=True,exist_ok=True)
+              print('CHECK',module,flush=True)
+              run('lake','env','lean','-o',str(obj),str(rel),cwd=work,capture=True)
+          audit='\n'.join(['import '+t for t in targets]+['#print axioms '+h for h in heads])+'\n'
+          (work/'AdditionAudit.lean').write_text(audit)
+          (out/'AdditionAudit.lean').write_text(audit)
+          text=run('lake','env','lean','AdditionAudit.lean',cwd=work,capture=True)
+          footprints=re.findall(r'depends on axioms:\s*\[([^\]]*)\]',text,re.S)
+          empty=re.findall(r'does not depend on any axioms',text)
+          assert len(footprints)+len(empty)==len(heads)
+          for f in footprints:
+              assert {s.strip() for s in f.split(',') if s.strip()} <= {'propext','Classical.choice','Quot.sound'}
+          (out/'audit.txt').write_text(text)
+          (out/'status.json').write_text(json.dumps({'result':'success',
+              'source_commit':run('git','rev-parse','HEAD').strip(),
+              'mathlib_commit':pin['rev'],'toolchain':(repo/'lean-toolchain').read_text().strip(),
+              'declarations':heads,'compiled_modules':[m for m,_,_ in order],
+              'sha256':hashes,'workflow_run':os.environ['GITHUB_RUN_ID'],
+              'scope':'additions and full source import closure; not full repository'},indent=2))
+          print('AUDITED_DECLARATIONS',len(heads),flush=True)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: DrazinShellCascadeAddition
+          path: ${{ runner.temp }}/cascade-deliverable

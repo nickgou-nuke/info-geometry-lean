@@ -83,14 +83,12 @@ theorem cmp_outer {a d m : R} {k : ℕ}
   unfold cmp
   calc
     (m * a) * d * (a * m) * a * ((m * a) * d * (a * m)) =
-        m * a * d * (a * m * a) * m * a * d * a * m := by simp only [mul_assoc]
-    _ = m * a * d * (a * m * a) * d * a * m := by
-      rw [hm.aba_eq_a]
-      simp only [mul_assoc]
-    _ = m * a * (d * a * d) * a * m := by
-      rw [hm.aba_eq_a]
-      simp only [mul_assoc]
-    _ = (m * a) * d * (a * m) := by rw [hd.idempotent]; simp only [mul_assoc]
+        (m * a) * d * ((a * m * a) * m * a) * d * (a * m) := by
+          simp only [mul_assoc]
+    _ = (m * a) * d * a * d * (a * m) := by
+      rw [hm.aba_eq_a, hm.aba_eq_a]
+    _ = (m * a) * (d * a * d) * (a * m) := by simp only [mul_assoc]
+    _ = (m * a) * d * (a * m) := by rw [hd.idempotent]
 
 /-- Stronger and simpler inner formula: the result is exactly the Drazin core. -/
 theorem cmp_recovers_core {a d m : R} {k : ℕ}
@@ -178,7 +176,7 @@ theorem mp_from_left_gramian_drazin_one {A H : Matrix ι ι ℝ}
     (A * A.transpose) * H * (A * A.transpose) =
         ((A * A.transpose) * (A * A.transpose)) * H := by
       rw [mul_assoc, ← h.comm, ← mul_assoc]
-    _ = A * A.transpose := by simpa only [pow_two, pow_one] using h.power
+    _ = A * A.transpose := by simpa [pow_succ] using h.power
 
 /-- Vanishing operator cross-Gramians do not characterize projector orthogonality. -/
 theorem oblique_idempotent_counterexample :
@@ -210,10 +208,10 @@ theorem commuting_gramians_not_normal :
   constructor
   · ext i j
     fin_cases i <;> fin_cases j <;>
-      norm_num [Matrix.mul_apply, Matrix.transpose_apply, Fin.sum_univ_two]
+      norm_num [Matrix.mul_apply, Matrix.vecMul, dotProduct, Matrix.transpose_apply, Fin.sum_univ_two]
   · intro h
     have he := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℝ => M 0 0) h
-    norm_num [Matrix.mul_apply, Matrix.transpose_apply, Fin.sum_univ_two] at he
+    norm_num [Matrix.mul_apply, Matrix.vecMul, dotProduct, Matrix.transpose_apply, Fin.sum_univ_two] at he
 
 end RealMatrices
 end InfoGeometry.Canonical.GramianInverseContracts

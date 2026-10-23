@@ -15,3 +15,4 @@ open InfoGeometry.Canonical.DrazinNilpotentShell
 #print axioms interShell_chiralSupport_star
 #print axioms interShell_normalizedDirac_star
 #print axioms interShell_jordan_associator_star
+#print axioms interShell_jordan_anticommute_star

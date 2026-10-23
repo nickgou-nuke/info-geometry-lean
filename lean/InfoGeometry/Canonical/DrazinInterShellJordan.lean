@@ -168,4 +168,36 @@ theorem interShell_jordan_anticommute (hD : IsDrazinInverse a d k)
   rw [hanti]
   simp
 
+/-- The normalized local Jordan anticommutation relation transports to the
+reversed shell corner under the involution. -/
+theorem interShell_jordan_anticommute_star (hD : IsDrazinInverse a d k)
+    {M : ℕ → R} (hM : PowerMPFamily (fittingNilpotentPart a d) M)
+    (h_symm : star (projection a d) = projection a d)
+    (ha_star : star a = a) (m r : ℕ) (hne : m ≠ r) (B : R)
+    (hB : InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse
+      (interShellPeirceCorner a d M m r) B) [StarModule ℝ R] :
+    star (jordanMul
+      (chiralSupport (interShellPeirceCorner a d M m r) B)
+      (normalizedDirac (interShellPeirceCorner a d M m r) B)) = 0 := by
+  let D := interShellPeirceCorner a d M m r
+  let D' := interShellPeirceCorner a d M r m
+  have hD_star : star D = D' := by
+    exact interShellPeirceCorner_star hD hM h_symm ha_star m r
+  have hB_star :
+      InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse D' (star B) := by
+    simpa [D, D', hD_star] using (hB.toSingular.star_same_order).toCanonical
+  rw [star_jordanMul,
+    interShell_chiralSupport_star hD hM h_symm ha_star m r B,
+    interShell_normalizedDirac_star hD hM h_symm ha_star m r B]
+  have hanti : jordanMul (chiralSupport D' (star B))
+      (normalizedDirac D' (star B)) = 0 := by
+    exact interShell_jordan_anticommute hD hM hne.symm hB_star
+  rw [show jordanMul (-chiralSupport D' (star B))
+      (normalizedDirac D' (star B)) =
+      -jordanMul (chiralSupport D' (star B))
+        (normalizedDirac D' (star B)) by
+        unfold jordanMul
+        simp only [neg_mul, mul_neg, ← neg_add, smul_neg]]
+  rw [hanti, neg_zero]
+
 end InfoGeometry.Canonical.DrazinNilpotentShell

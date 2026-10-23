@@ -271,6 +271,7 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Canonical.DrazinNilpotentShell.interShell_chiralSupport_star
 #check InfoGeometry.Canonical.DrazinNilpotentShell.interShell_normalizedDirac_star
 #check InfoGeometry.Canonical.DrazinNilpotentShell.interShell_jordan_associator_star
+#check InfoGeometry.Canonical.DrazinNilpotentShell.interShell_jordan_anticommute_star
 #check InfoGeometry.Singular.MoorePenrose.exactSupport_star_transport
 #check InfoGeometry.Singular.MoorePenrose.coexactSupport_star_transport
 #check InfoGeometry.Singular.MoorePenrose.harmonicSupport_star_transport

@@ -8,6 +8,8 @@ import InfoGeometry.Singular.MoorePenroseChiralDefects
 open InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse
 
 #print axioms support_overlap_eq_zero_iff
+#print axioms support_associators_zero_iff
+#print axioms InfoGeometry.Core.JordanAssociator.idempotent_all_associators_zero_iff
 #print axioms chirality_mul_forward
 #print axioms forward_mul_chirality
 #print axioms chirality_mul_inverse

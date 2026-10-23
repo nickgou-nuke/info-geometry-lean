@@ -38,6 +38,21 @@ theorem support_overlap_eq_zero_iff (h : IsMoorePenroseInverse a m) :
       _ = 0 := by rw [hrev, mul_zero, zero_mul]
   · exact h.range_mul_domain_eq_zero
 
+/-- Projector Jordan associators detect support commutation, not square-zero.
+This criterion uses the unnormalized symmetric product and holds in every
+characteristic. -/
+theorem support_associators_zero_iff (h : IsMoorePenroseInverse a m) :
+    (∀ z : R,
+      (((a * m) * z + z * (a * m)) * (m * a) +
+        (m * a) * ((a * m) * z + z * (a * m))) -
+      ((a * m) * (z * (m * a) + (m * a) * z) +
+        (z * (m * a) + (m * a) * z) * (a * m)) = 0) ↔
+      (a * m) * (m * a) = (m * a) * (a * m) := by
+  apply InfoGeometry.Core.JordanAssociator.idempotent_all_associators_zero_iff
+  calc
+    (a * m) * (a * m) = (a * m * a) * m := by simp only [mul_assoc]
+    _ = a * m := by rw [h.aba_eq_a]
+
 /-- The forward arrow has positive left support chirality. -/
 theorem chirality_mul_forward (h : IsMoorePenroseInverse a m) (ha : a * a = 0) :
     (a * m - m * a) * a = a := by

@@ -60,11 +60,27 @@ theorem idempotent_double_commutator_zero_iff {p q : R} (hp : p * p = p) :
               (p * (p * q - q * p) - (p * q - q * p) * p) * p := by
                 have hl (x : R) : p * (p * x) = p * x := by
                   rw [← mul_assoc, hp]
-                simp only [mul_sub, sub_mul, mul_assoc, hl, hp]
-                noncomm_ring
+                noncomm_ring [hp]
+                simp only [hl]
+                abel
         _ = 0 := by rw [hz, mul_zero, zero_mul, sub_self]
     exact sub_eq_zero.mp hc
   · intro hc
+    rw [hc, sub_self, mul_zero, zero_mul, sub_self]
+
+/-- With one idempotent endpoint, vanishing of every middle-input
+unnormalized Jordan associator is equivalent to commutation of the endpoints.
+The other endpoint need not be idempotent. -/
+theorem idempotent_all_associators_zero_iff {p q : R} (hp : p * p = p) :
+    (∀ z : R,
+      ((p * z + z * p) * q + q * (p * z + z * p)) -
+        (p * (z * q + q * z) + (z * q + q * z) * p) = 0) ↔
+      p * q = q * p := by
+  simp only [symm_associator_eq_double_commutator]
+  constructor
+  · intro hz
+    exact (idempotent_double_commutator_zero_iff hp).mp (hz p)
+  · intro hc z
     rw [hc, sub_self, mul_zero, zero_mul, sub_self]
 
 end InfoGeometry.Core.JordanAssociator

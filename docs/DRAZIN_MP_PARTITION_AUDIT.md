@@ -546,6 +546,21 @@ standard foundational axioms. A shared-lock direct check of
 source hash is `9bdbe57f86a0a535c0e4cb3034b16fb1ead08dd5ca7de0938b28d07bdd13b550`;
 the accepted test hash is
 `179b5339bd1fab0b473e34080e057f65f56ad2b40c1f44276a1cffe765558bec`.
+
+### Follow-up: finite centrality extension
+
+A later revision adds the pointwise endpoint-action and summed centrality
+statements for the finite orthogonal extended system. The pointwise theorem
+shows that a single sector charge is not central on every color boson; the
+summed total charge does commute with every color boson. These statements are
+conditional on `IsOrthogonalExtendedSusy`, are limited to the generated
+finite-color algebra, and do not assert a general ambient-ring centrality,
+`sl(k|1)` Jacobi closure, or a representation. The dedicated
+`Core.SupercolorMultiplicationAudit` now contains fourteen axiom reports; all
+reports contain only `propext`, `Quot.sound`, and `Classical.choice`. The
+current multiplication source hash is
+`386fa021c1b498d7362d0118be1d91e5e649c06e3d4071e55de7e75a482dfd97`;
+the accepted hash above records the earlier pre-centrality revision.
 The examples and audit source hashes remained stable during QA. Existing
 unused-section-variable and dependency notices were not treated as a
 warning-clean repository result. Unrelated dirty submodules were untouched.

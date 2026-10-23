@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Algebra.ChiralZornCARAndSchurBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -105,5 +110,38 @@ theorem OneModeCAR.map_iff (U : A ≃+* B) (C : OneModeCAR A) (D : OneModeCAR B)
     have h' := congrArg (OneModeCAR.map U) h
     rw [OneModeCAR.map_map_symm] at h'
     exact h'
+
+section LinearMixing
+
+variable {R : Type*} [CommRing R] [Algebra R A]
+
+/-- Linear mixing of square-zero operators is controlled by their
+anticommutator, without any commutativity assumption on the operators. -/
+theorem linear_mix_square (u v : R) (p q : A)
+    (hp : p * p = 0) (hq : q * q = 0) :
+    (u • p + v • q) * (u • p + v • q) =
+      (u * v) • (p * q + q * p) := by
+  simp only [add_mul, mul_add, smul_mul_smul, hp, hq, smul_zero,
+    zero_add, add_zero, smul_add]
+  rw [mul_comm v u, add_comm]
+
+/-- A normalized CAR pair gives the exact square of every linear mixture.
+In particular a balanced mixture is not another square-zero CAR generator. -/
+theorem linear_mix_square_of_CAR (u v : R) (p q : A)
+    (hp : p * p = 0) (hq : q * q = 0) (hCAR : p * q + q * p = 1) :
+    (u • p + v • q) * (u • p + v • q) = (u * v) • (1 : A) := by
+  rw [linear_mix_square u v p q hp hq, hCAR]
+
+end LinearMixing
+
+/-- Over a field, a one-mode CAR mixture is square-zero precisely on one
+of its two coefficient axes. The ambient algebra remains noncommutative. -/
+theorem linear_mix_square_zero_iff
+    {K : Type*} [Field K] [Algebra K A] [Nontrivial A]
+    (u v : K) (p q : A)
+    (hp : p * p = 0) (hq : q * q = 0) (hCAR : p * q + q * p = 1) :
+    (u • p + v • q) * (u • p + v • q) = 0 ↔ u = 0 ∨ v = 0 := by
+  rw [linear_mix_square_of_CAR u v p q hp hq hCAR]
+  simp only [smul_eq_zero, one_ne_zero, or_false, mul_eq_zero]
 
 end InfoGeometry.Algebra.ChiralCARTransport

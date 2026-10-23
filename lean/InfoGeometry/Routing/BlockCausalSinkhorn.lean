@@ -141,18 +141,22 @@ theorem blockCausalSinkhorn_zero_future_dependence
         Matrix K K ℝ)
     rw [hK_pool, h_xt]
   refine ⟨h_logS, by rw [h_logS], by rw [h_logS], by rw [h_logS], ?_⟩
-  change
-    (fun j l => (x₁ t).V_tok j l *
-      sinkhornDetGain T (blockCausalLogScore x₁ τ Θ₀ t) l : Matrix L K ℝ) *
-      Ψ (sinkhornMatrix T (blockCausalLogScore x₁ τ Θ₀ t))
-        (causalPrefixPool (causalPrefixWeights (fun s => (x₁ s).m_shape))
-          (fun s => (x₁ s).V_shape) t) (x₁ t).V_det =
-    (fun j l => (x₂ t).V_tok j l *
-      sinkhornDetGain T (blockCausalLogScore x₂ τ Θ₀ t) l : Matrix L K ℝ) *
-      Ψ (sinkhornMatrix T (blockCausalLogScore x₂ τ Θ₀ t))
-        (causalPrefixPool (causalPrefixWeights (fun s => (x₂ s).m_shape))
-          (fun s => (x₂ s).V_shape) t) (x₂ t).V_det
-  rw [hV_pool, h_logS, h_xt]
+  let W₁ : Matrix L K ℝ := fun j l => (x₁ t).V_tok j l *
+    sinkhornDetGain T (blockCausalLogScore x₁ τ Θ₀ t) l
+  let W₂ : Matrix L K ℝ := fun j l => (x₂ t).V_tok j l *
+    sinkhornDetGain T (blockCausalLogScore x₂ τ Θ₀ t) l
+  have hW : W₁ = W₂ := by
+    ext j l
+    change (x₁ t).V_tok j l * sinkhornDetGain T (blockCausalLogScore x₁ τ Θ₀ t) l =
+      (x₂ t).V_tok j l * sinkhornDetGain T (blockCausalLogScore x₂ τ Θ₀ t) l
+    rw [h_logS, h_xt]
+  change W₁ * Ψ (sinkhornMatrix T (blockCausalLogScore x₁ τ Θ₀ t))
+    (causalPrefixPool (causalPrefixWeights (fun s => (x₁ s).m_shape))
+      (fun s => (x₁ s).V_shape) t) (x₁ t).V_det =
+    W₂ * Ψ (sinkhornMatrix T (blockCausalLogScore x₂ τ Θ₀ t))
+      (causalPrefixPool (causalPrefixWeights (fun s => (x₂ s).m_shape))
+        (fun s => (x₂ s).V_shape) t) (x₂ t).V_det
+  rw [hW, hV_pool, h_logS, h_xt]
 
 /-- **Future Single-Chunk Perturbation Corollary (`blockCausalSinkhorn_update_future_eq`):**
     Replacing the input at any future chunk `s₀ > t` with an arbitrary `v : ChunkInput L K D`
@@ -267,27 +271,33 @@ theorem normalizedChunkOutput_isBlockCausal
         detectorMass T τ Θ₀ x₂ t j
   rw [h.2.2.2.2, hmass]
 
-/-- Direct specialization to the actual normalized chunk pipeline on raw
-normed inputs. This closes the gap between the generic derivative result and
-summary structure, for fixed parameters and any fixed local solver. -/
+/-- Direct specialization on raw normed chunks and native finite coordinate
+functions. Matrix evaluation explicitly identifies the output coordinates;
+no unspecified or ad hoc matrix norm is introduced. -/
 theorem encoded_normalized_future_derivative
     {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     (encode : C → E → ChunkInput L K D)
     (Ψ : Matrix K K ℝ → Matrix K D ℝ → Matrix K D ℝ → Matrix K D ℝ)
     (T : ℕ) (τ : ℝ) (Θ₀ : Matrix K K ℝ)
     (x : C → E) {t s₀ : C} (hts₀ : t < s₀)
-    (ℓ : (Matrix L D ℝ) →L[ℝ] ℝ) :
+    (ℓ : (L → D → ℝ) →L[ℝ] ℝ) :
     HasFDerivAt
-      (fun v : E => normalizedChunkOutput Ψ T τ Θ₀
-        (fun s => encode s ((Function.update x s₀ v) s)) t)
-      (0 : E →L[ℝ] Matrix L D ℝ) (x s₀) ∧
+      (fun v : E => fun j d => normalizedChunkOutput Ψ T τ Θ₀
+        (fun s => encode s ((Function.update x s₀ v) s)) t j d)
+      (0 : E →L[ℝ] (L → D → ℝ)) (x s₀) ∧
     HasFDerivAt
-      (fun v : E => ℓ (normalizedChunkOutput Ψ T τ Θ₀
-        (fun s => encode s ((Function.update x s₀ v) s)) t))
+      (fun v : E => ℓ (fun j d => normalizedChunkOutput Ψ T τ Θ₀
+        (fun s => encode s ((Function.update x s₀ v) s)) t j d))
       (0 : E →L[ℝ] ℝ) (x s₀) ∧
-    ℓ.comp (0 : E →L[ℝ] Matrix L D ℝ) = 0 := by
-  exact blockCausal_future_hasFDerivAt_zero_and_pullback_zero
-    ((normalizedChunkOutput_isBlockCausal (C := C) Ψ T τ Θ₀).encode encode) x hts₀ ℓ
+    ℓ.comp (0 : E →L[ℝ] (L → D → ℝ)) = 0 := by
+  have hc : IsBlockCausalOperator (C := C)
+      (fun (y : C → E) t => fun j d =>
+        normalizedChunkOutput Ψ T τ Θ₀ (fun s => encode s (y s)) t j d) := by
+    intro t y₁ y₂ hpast
+    have heq := ((normalizedChunkOutput_isBlockCausal (C := C) Ψ T τ Θ₀).encode
+      encode) t y₁ y₂ hpast
+    exact congrArg (fun M : Matrix L D ℝ => fun j d => M j d) heq
+  exact blockCausal_future_hasFDerivAt_zero_and_pullback_zero hc x hts₀ ℓ
 
 end
 end InfoGeometry.Routing.BlockCausalSinkhorn

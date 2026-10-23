@@ -81,6 +81,16 @@ theorem nonzero_idempotent_not_square_zero
   rw [he]
   exact hne
 
+theorem proper_idempotent_not_unit
+    [MonoidWithZero A] [Nontrivial A] {e : A}
+    (he : e * e = e) (hproper : e ≠ 1) :
+    ¬ IsUnit e := by
+  intro hue
+  rcases hue with ⟨u, rfl⟩
+  apply hproper
+  have hleft := congrArg (fun z : A => (↑u⁻¹ : A) * z) he
+  simpa [mul_assoc] using hleft
+
 theorem orthogonal_idempotent_sum_idempotent
     [Ring A] (e f : A) (he : e * e = e) (hf : f * f = f)
     (hef : e * f = 0) (hfe : f * e = 0) :

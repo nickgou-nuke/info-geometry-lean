@@ -11,6 +11,7 @@ from pathlib import Path
 import re
 import shutil
 import subprocess
+import sys
 
 if __package__ in (None, ""):
     from reviewed_audit_source import (audit_source, validate_targets, validate_roles,
@@ -72,11 +73,26 @@ def closure(repo, targets):
 
 def main():
     parser = argparse.ArgumentParser(__doc__)
-    parser.add_argument('--mathlib-root', type=Path, required=True)
+    parser.add_argument('--mode', choices=('copied', 'native'), default='copied')
+    parser.add_argument('--mathlib-root', type=Path)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--cache-dir', type=Path)
+    parser.add_argument('--wait-for-build-lock', action='store_true')
+    parser.add_argument('--clean-release', action='store_true')
     args = parser.parse_args()
     repo = Path(__file__).resolve().parents[2]
+    if args.mode == 'native':
+        if args.mathlib_root is not None or args.cache_dir is not None:
+            parser.error('native mode uses repository dependencies and caches')
+        sys.path.insert(0, str(repo))
+        from tools.quality.reviewed_native import run_native
+        run_native(repo, args.output, wait=args.wait_for_build_lock,
+                   clean_release=args.clean_release)
+        return
+    if args.mathlib_root is None:
+        parser.error('--mathlib-root is required in copied mode')
+    if args.clean_release or args.wait_for_build_lock:
+        parser.error('--clean-release and --wait-for-build-lock require native mode')
     mathlib, output = args.mathlib_root.resolve(), args.output.resolve()
     cache = args.cache_dir.resolve() if args.cache_dir else None
     specification = json.loads((repo / 'tools/quality/reviewed_prs_20260921.json').read_text())

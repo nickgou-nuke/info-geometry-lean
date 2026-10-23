@@ -8,6 +8,15 @@ on:
       - 'proofs/PolarizedShearSpinAudit.lean'
       - 'tools/quality/check_reviewed_prs.py'
       - 'tools/quality/reviewed_audit_source.py'
+      - 'tools/quality/reviewed_native.py'
+      - 'tools/build_lock.py'
+      - 'tools/infra/check_runtime_acceptance.py'
+      - 'tools/infra/pantograph_environment.py'
+      - 'tools/infra/build.py'
+      - 'tools/pathing.py'
+      - 'external_refs/**'
+      - 'InfoGeometryCore/**'
+      - 'lakefile.lean'
       - 'tests/test_reviewed_audit_source.py'
       - 'tools/quality/reviewed_prs_20260921.json'
       - '.github/workflows/reviewed-pr-integration.yml'
@@ -22,6 +31,15 @@ on:
       - 'proofs/PolarizedShearSpinAudit.lean'
       - 'tools/quality/check_reviewed_prs.py'
       - 'tools/quality/reviewed_audit_source.py'
+      - 'tools/quality/reviewed_native.py'
+      - 'tools/build_lock.py'
+      - 'tools/infra/check_runtime_acceptance.py'
+      - 'tools/infra/pantograph_environment.py'
+      - 'tools/infra/build.py'
+      - 'tools/pathing.py'
+      - 'external_refs/**'
+      - 'InfoGeometryCore/**'
+      - 'lakefile.lean'
       - 'tests/test_reviewed_audit_source.py'
       - 'tools/quality/reviewed_prs_20260921.json'
       - '.github/workflows/reviewed-pr-integration.yml'
@@ -47,28 +65,14 @@ jobs:
         with:
           path: project
           persist-credentials: false
-          sparse-checkout: |
-            lean/InfoGeometry
-            lean/DAG
-            tools/quality
-            tests
-            tools/infra
-            proofs
-      - uses: actions/checkout@v4
-        with:
-          repository: leanprover-community/mathlib4
-          ref: d13f23b723b8a846827a245b89c10fc7d3f11612
-          path: pinned-mathlib
-          persist-credentials: false
+          submodules: recursive
       - uses: actions/cache/restore@v4
         id: cache
         with:
           path: |
             ~/.elan
-            pinned-mathlib/.lake
-          key: reviewed-prs-lean4341-mathlib-d13f23b7-v1
-          restore-keys: |
-            cuntz-clifford-lean4341-mathlib-d13f23b7-v1
+            project/.lake
+          key: reviewed-native65-${{ runner.os }}-${{ hashFiles('project/lean-toolchain', 'project/lake-manifest.json', 'project/lakefile.lean') }}
       - name: Install pinned Lean
         shell: bash
         run: |
@@ -78,44 +82,49 @@ jobs:
           fi
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
-      - name: Verify pinned Lean version
+      - name: Check audit generator contracts
+        run: python3 project/tests/test_reviewed_audit_source.py
+      - name: Check native path dependencies
+        working-directory: project
+        run: python3 tools/infra/ci_bootstrap.py paths --root .
+      - name: Initialize pinned native dependencies
+        working-directory: project
         shell: bash
         run: |
           set -euo pipefail
-          cd pinned-mathlib
-          lean --version | python3 ../project/tools/infra/ci_bootstrap.py version --root ../project
-      - uses: actions/cache/restore@v4
-        id: native-cache
-        with:
-          path: reviewed-native-cache
-          key: reviewed-native-lean4341-d13f23b7-v1-${{ github.sha }}
-          restore-keys: |
-            reviewed-native-lean4341-d13f23b7-v1-
-      - name: Check audit generator contracts
-        run: python3 project/tests/test_reviewed_audit_source.py
+          python3 - <<'PYBOOT'
+          from pathlib import Path
+          import subprocess
+          from tools.build_lock import BuildLock, DEFAULT_BUILD_LOCK_PATH
+          from tools.infra.check_runtime_acceptance import idle
+          from tools.infra.ci_bootstrap import verify_version
+          with BuildLock(DEFAULT_BUILD_LOCK_PATH, 'reviewed-native-bootstrap', block=True) as lock:
+              idle()
+              banner = subprocess.check_output(['lake', 'env', 'lean', '--version'],
+                  text=True, pass_fds=(lock.fileno(),))
+              verify_version(Path('lean-toolchain').read_text(), banner)
+              subprocess.run(['lake', 'exe', 'cache', 'get'], check=True,
+                  pass_fds=(lock.fileno(),))
+          PYBOOT
+          git diff --exit-code -- lake-manifest.json lean-toolchain lakefile.lean
       - name: Compile reviewed union and audit every declaration
+        working-directory: project
         run: |
-          python3 project/tools/quality/check_reviewed_prs.py \
-            --mathlib-root pinned-mathlib \
-            --output "$RUNNER_TEMP/reviewed-pr-check" \
-            --cache-dir reviewed-native-cache
+          python3 tools/quality/check_reviewed_prs.py \
+            --mode native --clean-release --wait-for-build-lock \
+            --output scratch/native_reviewed_runs/ci-${{ github.run_id }}-${{ github.run_attempt }}
       - uses: actions/cache/save@v4
-        if: always() && steps.native-cache.outputs.cache-hit != 'true'
-        with:
-          path: reviewed-native-cache
-          key: reviewed-native-lean4341-d13f23b7-v1-${{ github.sha }}
-      - uses: actions/cache/save@v4
-        if: always() && steps.cache.outputs.cache-hit != 'true'
+        if: success() && steps.cache.outputs.cache-hit != 'true'
         with:
           path: |
             ~/.elan
-            pinned-mathlib/.lake
-          key: reviewed-prs-lean4341-mathlib-d13f23b7-v1
+            project/.lake
+          key: reviewed-native65-${{ runner.os }}-${{ hashFiles('project/lean-toolchain', 'project/lake-manifest.json', 'project/lakefile.lean') }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: reviewed-pr-kernel-report
           path: |
-            ${{ runner.temp }}/reviewed-pr-check/report.json
-            ${{ runner.temp }}/reviewed-pr-check/*.log
+            project/scratch/native_reviewed_runs/*/report.json
+            project/scratch/native_reviewed_runs/*/*.log
           if-no-files-found: warn

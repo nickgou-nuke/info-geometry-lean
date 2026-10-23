@@ -65,6 +65,15 @@
     "InfoGeometry.Krein.TransitionWeakValueAudit",
     "InfoGeometry.Krein.TransitionWeakValueExamples",
     "InfoGeometry.Modular.KreinPotentialTrace",
-    "InfoGeometry.Meta.FiniteTemperleyLiebTrace"
+    "InfoGeometry.Meta.FiniteTemperleyLiebTrace",
+    "InfoGeometry.Canonical.DrazinShellCascade",
+    "InfoGeometry.Canonical.DrazinInterShellHodge",
+    "InfoGeometry.Core.DiracPeirceSuperalgebra",
+    "InfoGeometry.Core.SupercolorMultiplication",
+    "InfoGeometry.Routing.AttentionReadoutCompression",
+    "InfoGeometry.MassSpectrometry.MolecularIdentifiabilityBridge",
+    "InfoGeometry.Algebra.CuntzTensorQuotientPositivityObstruction",
+    "InfoGeometry.Canonical.MajoranaCoefficientAction",
+    "InfoGeometry.Canonical.MajoranaPfaffian4"
   ]
 }

@@ -136,6 +136,9 @@ theorem totalCentralCharge_lieBracket_colorBoson_of_orthogonal
   rw [Finset.sum_mul, Finset.mul_sum, ← Finset.sum_sub_distrib]
   simp only [sectorCentralCharge_mul_colorBoson_of_orthogonal hE,
     colorBoson_mul_sectorCentralCharge_of_orthogonal hE]
+  rw [Finset.sum_sub_distrib]
+  rw [Finset.sum_ite_eq' Finset.univ l (fun _ => colorBoson d b l m)]
+  rw [Finset.sum_ite_eq Finset.univ m (fun _ => colorBoson d b l m)]
   simp
 
 /-- Adjoint duality is an explicit hypothesis, not a consequence of MP. -/

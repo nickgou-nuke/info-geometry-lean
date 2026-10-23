@@ -12,6 +12,7 @@ import InfoGeometry.Core.SuperGrassmannianSusyExamples
 import InfoGeometry.Core.SupercolorMatrixExamples
 import InfoGeometry.Core.SupercolorMultiplication
 import InfoGeometry.Canonical.MajoranaCoefficientAction
+import InfoGeometry.Modular.PSL2ZAction
 import InfoGeometry.Canonical.CasiniBekensteinBound
 import InfoGeometry.Canonical.KleinDeckFiveGradeAction
 import InfoGeometry.Canonical.OperatorialFierzDerivationBridge
@@ -285,3 +286,5 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Canonical.SatoGNSPreHilbertSubfactorBridge.matrix_stage_limit_noncommutative
 #check InfoGeometry.Canonical.ManifoldHomology.localDegreeSign_eq_one_or_neg_one
 #check InfoGeometry.Canonical.ManifoldHomology.localDegreeSign_ne_zero
+#check InfoGeometry.Modular.PSL2Z.mobiusAction
+#check InfoGeometry.Modular.PSL2Z.mobius_denominator_ne_zero

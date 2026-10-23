@@ -8665,6 +8665,7 @@ import InfoGeometry.Modular.NoncommutativeModularRadonSurprisalBridge
 import InfoGeometry.Modular.NoncommutativeRadonNikodymDLog
 import InfoGeometry.Modular.OperatorKMSThermodynamicIdentity
 import InfoGeometry.Modular.PSL2Z
+import InfoGeometry.Modular.PSL2ZAction
 import InfoGeometry.Modular.PfaffianBlockLogBarrierBridge
 import InfoGeometry.Modular.PositiveStatePullback
 import InfoGeometry.Modular.QuantumDataProcessingInequality

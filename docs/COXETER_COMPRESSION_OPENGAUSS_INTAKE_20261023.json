@@ -14,27 +14,35 @@
     {
       "claim": "P*(X*Y)*P - (P*X*P)*(P*Y*P) = P*X*(1-P)*Y*P",
       "hypotheses": "Ring A; P*P=P; arbitrary X,Y",
-      "classification": "locally_provable_candidate",
+      "classification": "kernel_checked_independently_accepted_algebraic_identity",
       "scope": "Compression multiplicativity defect; square specialization Y=X does not require X to be idempotent.",
       "existing_special_case": "InfoGeometry.Singular.ProjectionSectors.compression_idempotence_defect"
     },
     {
       "claim": "Square defect equals T*star T and is self-adjoint",
       "hypotheses": "StarRing A; P*P=P; star P=P; star X=X; T=P*X*(1-P)",
-      "classification": "locally_provable_candidate",
+      "classification": "kernel_checked_independently_accepted_algebraic_identity",
       "excluded": "Positivity requires compatible order; zero star-square implying zero requires additional assumptions."
     },
     {
       "claim": "Finite complement resolution yields a sum of shell transfer products",
       "hypotheses": "Finite idempotents S summing to 1-P; orthogonality is unnecessary for the sum identity; self-adjoint shells additionally required for individual star-square forms",
-      "classification": "locally_provable_candidate",
-      "owners": ["InfoGeometry.Core.FinitePeirceMatrix.blocks_mul", "InfoGeometry.Core.PeirceDecomposition.peirceCorner_sq_eq_zero", "InfoGeometry.Canonical.DrazinNilpotentShellResolution"],
+      "classification": "kernel_checked_independently_accepted_algebraic_identity",
+      "owners": [
+        "InfoGeometry.Core.FinitePeirceMatrix.blocks_mul",
+        "InfoGeometry.Core.PeirceDecomposition.peirceCorner_sq_eq_zero",
+        "InfoGeometry.Canonical.DrazinNilpotentShellResolution"
+      ],
       "excluded": "Summands need not be projections, mutually orthogonal, spectral peaks, or diffraction intensities. Dressed Drazin shells can be oblique."
     },
     {
       "claim": "Completed square-zero MP support swap W=(d+B)+(1-dB-Bd)",
       "classification": "reuse_existing_owner_with_small_corollaries",
-      "owners": ["InfoGeometry.Core.DiracSuperalgebra.globalMajoranaReflection", "InfoGeometry.Core.DiracSuperalgebra.globalMajoranaReflection_sq", "InfoGeometry.Core.DiracSuperalgebra.majorana_star_symmetry"],
+      "owners": [
+        "InfoGeometry.Core.DiracSuperalgebra.globalMajoranaReflection",
+        "InfoGeometry.Core.DiracSuperalgebra.globalMajoranaReflection_sq",
+        "InfoGeometry.Core.DiracSuperalgebra.majorana_star_symmetry"
+      ],
       "delta": "Direct individual support-swap lemmas and named self-adjointness under B=star d; avoid division by two.",
       "excluded": "MP axioms alone do not imply B=star d; a swap is not yet a Coxeter-group representation."
     }
@@ -51,6 +59,10 @@
   "qa_artifacts": "/tmp/qa-a-peirce-jg8o8zma",
   "accepted_sha256": {
     "lean/InfoGeometry/Core/PeirceCompressionDefect.lean": "e604500e7dff2bc17737ee62bf75fa72d4849a38b9dde2a19bc263dcd98d3a0c",
-    "lean/InfoGeometry/Core/PeirceCompressionDefectAudit.lean": "f99a733958f59741caeabe02a7c5885081ebfdb647232cc9615393f2fba82b21"
-  }
+    "lean/InfoGeometry/Core/PeirceCompressionDefectAudit.lean": "f99a733958f59741caeabe02a7c5885081ebfdb647232cc9615393f2fba82b21",
+    "lean/InfoGeometry/Core/MajoranaSupportSwap.lean": "eb9ad74ee70c5497091c2aa76c758436bf54545584e16dc16688171c37048738",
+    "lean/InfoGeometry/Core/MajoranaSupportSwapAudit.lean": "7779d0f3e2defd46030fdf6f0d267da7cd97cee2b25de95ea4ab4a4d0141c992"
+  },
+  "support_swap_candidate": "Independently accepted with limited algebraic scope: native globalMajoranaReflection, four arrow/support conjugation lemmas, and self-adjointness under explicit B=star d. Popper semantic PASS; Ampere locked three-audit build PASS3201, standard-only axioms, stable hashes, strict seven-file source screening zero findings. The unrelated shell helper warning is handled in a separate narrow retry. No new root-pair carrier or Coxeter-group claim.",
+  "support_swap_qa_artifacts": "/tmp/qa-a-support-shell-final-_km9pkk_"
 }

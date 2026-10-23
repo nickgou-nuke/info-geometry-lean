@@ -24,6 +24,11 @@ import InfoGeometry.Core.SuperGrassmannianSusy
 import InfoGeometry.Core.SuperGrassmannianSusyExamples
 import InfoGeometry.Core.SupercolorMatrixExamples
 import InfoGeometry.Core.SupercolorMultiplication
+import InfoGeometry.Core.SupercolorSourceClosure
+import InfoGeometry.Core.SupercolorSourceClosureAudit
+import InfoGeometry.Core.SupercolorMatrixUnitBridge
+import InfoGeometry.Core.SupercolorMatrixUnitBridgeAudit
+import InfoGeometry.Core.SupercolorClosureTests
 import InfoGeometry.Core.DiracPeirceSuperalgebra
 import InfoGeometry.Core.DiracPeirceSuperalgebraAudit
 import InfoGeometry.Core.Jordan

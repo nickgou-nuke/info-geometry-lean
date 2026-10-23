@@ -37,13 +37,43 @@
         "lean/InfoGeometry/Routing/AttentionAnalogyFiber.lean",
         "lean/InfoGeometry/Routing/AttentionInteriorFiber.lean"
       ],
-      "status": "imported_targeted_build_passed_with_warnings",
+      "status": "independently_accepted_targeted_scope",
       "integration": "Routing.All imports added",
       "remaining": [
-        "independent final kernel/axiom acceptance",
-        "scope documentation checkpoint"
+        "full consolidated snapshot and release gates"
       ],
-      "semantic_review": "Popper source-semantic PASS on all6owners, matching c8960e2893dd8f0477e090ba3b6fb14269f40b74. Corrected coupling_readout comment to independence rather than precise sole information loss; no affine-independence assumption is implicit."
+      "semantic_review": "Popper source-semantic PASS on all6owners, matching c8960e2893dd8f0477e090ba3b6fb14269f40b74. Corrected coupling_readout comment to independence rather than precise sole information loss; no affine-independence assumption is implicit.",
+      "kernel_qa": {
+        "reviewer": "James",
+        "result": "passed",
+        "evidence": "/tmp/attention-six-independent-qa-20261023a",
+        "lean_version": "4.34.1",
+        "build_returncode": 0,
+        "audit_returncode": 0,
+        "module_counts": {
+          "InfoGeometry.Projective.AttentionValueCoordinates": 30,
+          "InfoGeometry.Projective.AttentionAnalogyKernel": 39,
+          "InfoGeometry.Projective.AttentionIdentifiability": 17,
+          "InfoGeometry.Routing.AttentionValueCompression": 7,
+          "InfoGeometry.Routing.AttentionAnalogyFiber": 50,
+          "InfoGeometry.Routing.AttentionInteriorFiber": 28
+        },
+        "total_declarations": 171,
+        "source_hashes_stable": true,
+        "pins_stable": true,
+        "sha256": {
+          "lean/InfoGeometry/Projective/AttentionValueCoordinates.lean": "9468d7b62a887b3d47cb3f8699e373aed46f7fd3173c7e3b6cb586c1e1e1e8dc",
+          "lean/InfoGeometry/Projective/AttentionAnalogyKernel.lean": "b8eac0c399767c975829a21db7a0f618d6779c9cfa99eb1f5cb61ba74dfdc1c4",
+          "lean/InfoGeometry/Projective/AttentionIdentifiability.lean": "62b8a01b499af1c6e408101be5e8b57e70680d7e27df8ced881926bd805ed570",
+          "lean/InfoGeometry/Routing/AttentionValueCompression.lean": "4ca3403d8959db17fd1d60e3be245b1bb4fa184853404a478fa1abdd1cf65254",
+          "lean/InfoGeometry/Routing/AttentionAnalogyFiber.lean": "6bdc64d8e2c070835dce4384ed124e8340e60968fc9e7f064de6a6d259ea15c0",
+          "lean/InfoGeometry/Routing/AttentionInteriorFiber.lean": "7cfc86b5bf962cbd735befa234b983091dc9b6d00787a0f31350a899dc11a569",
+          "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+          "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+          "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da"
+        },
+        "scope": "All declarations owned by the six selected modules, including private/generated declarations; unsafe/partial rejected and only propext, Classical.choice, Quot.sound allowed. Dependency warnings remain. Not whole-repository or clean-dependency release acceptance."
+      }
     },
     {
       "branches": [

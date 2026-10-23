@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Algebra.Zorn.G2IntrinsicBaseFiberBounds
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2IntrinsicLineFiberTransport
@@ -35,8 +40,10 @@ def admissiblePairs : Finset (Finset
     InfoGeometry.Algebra.Zorn.G2ImaginaryOctImBridge.OctImIsotropicPoint) :=
   (zornZeroNeighborSet nativeBaseIsotropicPoint).powerset.filter admissiblePair
 
+set_option maxRecDepth 100000 in
+set_option maxHeartbeats 4000000 in
 theorem admissiblePairs_card : admissiblePairs.card = 3 := by
-  native_decide
+  decide
 
 theorem intrinsicLine_erase_mem_admissiblePairs
     (L : IntrinsicLine nativeBaseIsotropicPoint) :

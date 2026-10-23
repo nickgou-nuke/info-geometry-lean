@@ -141,6 +141,54 @@ theorem totalCentralCharge_lieBracket_colorBoson_of_orthogonal
   rw [Finset.sum_ite_eq Finset.univ m (fun _ => colorBoson d b l m)]
   simp
 
+theorem sectorCentralCharge_lieBracket_majoranaPlus_of_orthogonal
+    [Fintype ι] [DecidableEq ι] (hE : IsOrthogonalExtendedSusy d b)
+    (i j : ι) :
+    lieBracket (sectorCentralCharge (d i) (b i))
+        (majoranaPlus (d j) (b j)) = 0 := by
+  have h := (extended_susy_centrality hE).1 i j
+  unfold lieBracket majoranaPlus
+  calc
+    sectorCentralCharge (d i) (b i) * (d j + b j) -
+        (d j + b j) * sectorCentralCharge (d i) (b i) =
+      (sectorCentralCharge (d i) (b i) * d j -
+          d j * sectorCentralCharge (d i) (b i)) +
+        (sectorCentralCharge (d i) (b i) * b j -
+          b j * sectorCentralCharge (d i) (b i)) := by
+            noncomm_ring
+    _ = 0 := by
+      rw [show sectorCentralCharge (d i) (b i) * d j -
+          d j * sectorCentralCharge (d i) (b i) =
+          lieBracket (sectorCentralCharge (d i) (b i)) (d j) by rfl,
+        show sectorCentralCharge (d i) (b i) * b j -
+          b j * sectorCentralCharge (d i) (b i) =
+          lieBracket (sectorCentralCharge (d i) (b i)) (b j) by rfl,
+        h.1, h.2, add_zero]
+
+theorem sectorCentralCharge_lieBracket_majoranaMinus_of_orthogonal
+    [Fintype ι] [DecidableEq ι] (hE : IsOrthogonalExtendedSusy d b)
+    (i j : ι) :
+    lieBracket (sectorCentralCharge (d i) (b i))
+        (majoranaMinus (d j) (b j)) = 0 := by
+  have h := (extended_susy_centrality hE).1 i j
+  unfold lieBracket majoranaMinus
+  calc
+    sectorCentralCharge (d i) (b i) * (d j - b j) -
+        (d j - b j) * sectorCentralCharge (d i) (b i) =
+      (sectorCentralCharge (d i) (b i) * d j -
+          d j * sectorCentralCharge (d i) (b i)) -
+        (sectorCentralCharge (d i) (b i) * b j -
+          b j * sectorCentralCharge (d i) (b i)) := by
+            noncomm_ring
+    _ = 0 := by
+      rw [show sectorCentralCharge (d i) (b i) * d j -
+          d j * sectorCentralCharge (d i) (b i) =
+          lieBracket (sectorCentralCharge (d i) (b i)) (d j) by rfl,
+        show sectorCentralCharge (d i) (b i) * b j -
+          b j * sectorCentralCharge (d i) (b i) =
+          lieBracket (sectorCentralCharge (d i) (b i)) (b j) by rfl,
+        h.1, h.2, sub_zero]
+
 /-- The total sector charge is central on the generated finite-color algebra. -/
 theorem totalCentralCharge_lieBracket_generated
     [Fintype ι] [DecidableEq ι]

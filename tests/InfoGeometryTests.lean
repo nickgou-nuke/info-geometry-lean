@@ -268,6 +268,10 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Core.SupercolorMatrixExamples.matrix_supercolor
 #check InfoGeometry.Core.SupercolorMatrixExamples.colorBoson_mul
 #check InfoGeometry.Core.SupercolorMatrixExamples.colorBoson_ne_zero
+#check InfoGeometry.Core.SupercolorMatrixExamples.orthogonal_matrix_supercolor
+#check InfoGeometry.Core.SupercolorMatrixExamples.orthogonal_colorBoson_eq_diagonal
+#check InfoGeometry.Core.SupercolorMatrixExamples.orthogonal_sector_projection_ne_zero
+#check InfoGeometry.Core.SupercolorMatrixExamples.orthogonal_totalCentralCharge_commutes_with_generators
 #check InfoGeometry.Canonical.MajoranaCoefficientAction.linearCombination_injective
 #check InfoGeometry.Canonical.MajoranaCoefficientAction.quadratic_monomial_commutator
 #check InfoGeometry.Core.SuperGrassmannianSusy.colorBoson_lieBracket_of_common_source

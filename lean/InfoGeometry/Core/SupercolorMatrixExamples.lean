@@ -73,8 +73,93 @@ theorem colorBoson_mul (i j l m : ι) :
   intro a
   simp [forward, backward]
 
+/-!
+## Disjoint-support orthogonal sectors
+
+The common-source example above witnesses the `gl(ι)` color products, but it
+does not satisfy the stronger orthogonality law `d i * b j = 0` for distinct
+colors.  The following pair uses two coordinates for each color, so every
+sector has its own source and target.  It is a concrete nonzero inhabitant of
+`IsOrthogonalExtendedSusy`.
+-/
+
+/-- Forward arrow in the disjoint two-coordinate sector of color `i`. -/
+def orthogonalForward (i : ι) : Matrix (ι × Bool) (ι × Bool) ℝ :=
+  Matrix.single (i, true) (i, false) 1
+
+/-- Backward arrow in the disjoint two-coordinate sector of color `i`. -/
+def orthogonalBackward (i : ι) : Matrix (ι × Bool) (ι × Bool) ℝ :=
+  Matrix.single (i, false) (i, true) 1
+
+omit [Fintype ι] in
+theorem orthogonalBackward_eq_star_forward (i : ι) :
+    orthogonalBackward i = star (orthogonalForward i) := by
+  change _ = (orthogonalForward i).conjTranspose
+  simp [orthogonalForward, orthogonalBackward]
+
+theorem orthogonal_matrix_supercolor :
+    IsOrthogonalExtendedSusy (orthogonalForward (ι := ι))
+      orthogonalBackward where
+  mp i := by
+    refine ⟨?_, ?_, ?_, ?_⟩
+    · simp [orthogonalForward, orthogonalBackward]
+    · simp [orthogonalForward, orthogonalBackward]
+    · change ((orthogonalForward i * orthogonalBackward i).conjTranspose) = _
+      simp [orthogonalForward, orthogonalBackward]
+    · change ((orthogonalBackward i * orthogonalForward i).conjTranspose) = _
+      simp [orthogonalForward, orthogonalBackward]
+  d_mul_d i j := by
+    exact Matrix.single_mul_single_of_ne 1 _ _ _ (by simp) 1
+  b_mul_b i j := by
+    exact Matrix.single_mul_single_of_ne 1 _ _ _ (by simp) 1
+  b_mul_d_ne := by
+    intro i j hij
+    exact Matrix.single_mul_single_of_ne 1 _ _ _ (by simpa using hij) 1
+  d_mul_b_ne := by
+    intro i j hij
+    exact Matrix.single_mul_single_of_ne 1 _ _ _ (by simpa using hij) 1
+
+theorem orthogonal_colorBoson_eq_diagonal (i j : ι) :
+    colorBoson orthogonalForward orthogonalBackward i j =
+      if i = j then Matrix.single (i, true) (i, true) 1 else 0 := by
+  by_cases hij : i = j
+  · subst j
+    simp [colorBoson, orthogonalForward, orthogonalBackward]
+  · have hmiddle : (i, false) ≠ (j, false) := by simpa using hij
+    unfold colorBoson orthogonalForward orthogonalBackward
+    rw [Matrix.single_mul_single_of_ne 1 (i, true) (i, false) (j, false)
+      hmiddle 1]
+    simp [hij]
+
+theorem orthogonal_sector_projection_ne_zero (i : ι) :
+    colorBoson orthogonalForward orthogonalBackward i i ≠ 0 := by
+  rw [orthogonal_colorBoson_eq_diagonal i i]
+  intro hz
+  have hentry := congrArg (fun M => M (i, true) (i, true)) hz
+  simp [Matrix.single] at hentry
+
+theorem orthogonal_totalCentralCharge_commutes_with_generators
+    (i : ι) :
+    lieBracket
+        (totalCentralCharge orthogonalForward orthogonalBackward)
+        (orthogonalForward i) = 0 ∧
+    lieBracket
+        (totalCentralCharge orthogonalForward orthogonalBackward)
+        (orthogonalBackward i) = 0 := by
+  have h := (totalCentralCharge_lieBracket_generated
+    (orthogonal_matrix_supercolor (ι := ι))).1 i
+  exact ⟨h.1, h.2.1⟩
+
 example : IsSupercolorSystem (forward (ι := Fin 2)) backward := matrix_supercolor
 example : IsSupercolorSystem (forward (ι := Fin 4)) backward := matrix_supercolor
+
+example : IsOrthogonalExtendedSusy
+    (orthogonalForward (ι := Fin 2)) orthogonalBackward :=
+  orthogonal_matrix_supercolor
+
+example : IsOrthogonalExtendedSusy
+    (orthogonalForward (ι := Fin 4)) orthogonalBackward :=
+  orthogonal_matrix_supercolor
 
 example : colorBoson (forward (ι := Fin 2)) backward 0 1 *
     colorBoson forward backward 1 0 = colorBoson forward backward 0 0 := by

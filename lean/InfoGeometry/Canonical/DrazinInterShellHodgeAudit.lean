@@ -16,3 +16,4 @@ open InfoGeometry.Canonical.DrazinNilpotentShell
 #print axioms drazin_core_and_double_sum_shell_cascade
 #print axioms full_operator_triangular_peirce_reconstruction
 #print axioms interShell_chiralHodge_decomposition
+#print axioms interShell_chiralHodge_decomposition_star

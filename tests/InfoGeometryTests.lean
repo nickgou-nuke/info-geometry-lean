@@ -282,6 +282,7 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Canonical.DrazinNilpotentShell.interShellPeirceCorner_eq_zero_of_le
 #check InfoGeometry.Canonical.DrazinNilpotentShell.full_operator_triangular_peirce_reconstruction
 #check InfoGeometry.Canonical.DrazinNilpotentShell.interShell_chiralHodge_decomposition
+#check InfoGeometry.Canonical.DrazinNilpotentShell.interShell_chiralHodge_decomposition_star
 #check InfoGeometry.Core.SuperGrassmannianSusy.star_majoranaPlus_of_dual
 #check InfoGeometry.Core.SuperGrassmannianSusy.star_majoranaMinus_of_dual
 #check InfoGeometry.Core.SupercolorMatrixExamples.matrix_supercolor

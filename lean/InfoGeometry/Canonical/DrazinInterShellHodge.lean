@@ -209,6 +209,30 @@ theorem interShell_chiralHodge_decomposition (hD : IsDrazinInverse a d k)
   · exact InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse.squareZero_chiralHodge_decomposition
       hB' hd_sq
 
+/-- In the self-adjoint Drazin setting, the complete local Hodge package
+transports to the reversed shell corner with inverse `star B`. -/
+theorem interShell_chiralHodge_decomposition_star
+    (hD : IsDrazinInverse a d k)
+    {M : ℕ → R} (hM : PowerMPFamily (fittingNilpotentPart a d) M)
+    (h_symm : star (projection a d) = projection a d)
+    (ha_star : star a = a) (m r : ℕ) (hne : m ≠ r) (B : R)
+    (hB : InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse
+      (interShellPeirceCorner a d M m r) B) :
+    SquareZeroChiralHodge (interShellPeirceCorner a d M r m) (star B) := by
+  let D := interShellPeirceCorner a d M m r
+  have hD_sq : D * D = 0 := by
+    exact interShellPeirceCorner_sq_eq_zero hD hM hne
+  have hstarD_sq : star D * star D = 0 := by
+    simpa only [star_mul, star_zero] using congrArg star hD_sq
+  have hB_singular : InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse D B :=
+    hB.toSingular
+  have hB_star := hB_singular.star_same_order
+  have hcorner_star : star D = interShellPeirceCorner a d M r m := by
+    exact interShellPeirceCorner_star hD hM h_symm ha_star m r
+  simpa [D, hcorner_star] using
+    (InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse.squareZero_chiralHodge_decomposition
+      hB_star hstarD_sq)
+
 end Drazin
 
 end InfoGeometry.Canonical.DrazinNilpotentShell

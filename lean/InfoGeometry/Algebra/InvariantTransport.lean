@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -208,5 +213,41 @@ theorem complementary_projectors_transport
   constructor
   · simpa using congrArg φ hqp
   · simpa using congrArg φ hsum
+
+/-- Commuting operators with invertible product can anticommute only in
+characteristic two. The ambient ring need not be commutative. -/
+theorem anticommutator_eq_zero_iff_of_commute_of_isUnit
+    {x y : A} (hxy : Commute x y) (hu : IsUnit (x * y)) :
+    anticommutator x y = 0 ↔ (2 : A) = 0 := by
+  have h : anticommutator x y = (2 : A) * (x * y) := by
+    unfold anticommutator
+    rw [hxy.eq, two_mul]
+  rw [h]
+  constructor
+  · intro hz
+    apply hu.mul_right_cancel
+    simpa only [zero_mul] using hz
+  · intro hz
+    rw [hz, zero_mul]
+
+/-- A common algebra transport cannot turn commuting invertible local
+operators into anticommuting generators, except in a target with `2 = 0`.
+This distinguishes Jordan--Wigner string dressing from conjugation. -/
+theorem map_anticommutator_eq_zero_iff_of_commute_of_isUnit
+    (φ : A →+* B) {x y : A} (hxy : Commute x y)
+    (hu : IsUnit (x * y)) :
+    anticommutator (φ x) (φ y) = 0 ↔ (2 : B) = 0 := by
+  apply anticommutator_eq_zero_iff_of_commute_of_isUnit (hxy.map φ)
+  simpa only [map_mul] using hu.map φ
+
+/-- In characteristic different from two, no unital ring homomorphism
+simultaneously sends such a pair to an anticommuting pair. -/
+theorem map_anticommutator_ne_zero_of_commute_of_isUnit
+    [NeZero (2 : B)] (φ : A →+* B) {x y : A}
+    (hxy : Commute x y) (hu : IsUnit (x * y)) :
+    anticommutator (φ x) (φ y) ≠ 0 := by
+  intro h
+  exact NeZero.ne 2
+    ((map_anticommutator_eq_zero_iff_of_commute_of_isUnit φ hxy hu).mp h)
 
 end InfoGeometry.Algebra.InvariantTransport

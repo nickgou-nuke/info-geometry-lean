@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -83,5 +88,57 @@ theorem hyperbolicRotor_conjugate_mul
     hyperbolicRotor D c s * X * reverseHyperbolicRotor D c s =
       (c • (1 : A) + s • D) * X * (c • (1 : A) - s • D) := by
   rfl
+
+/-- Exact sandwich action on an operator anticommuting with the involution.
+No normalization of the coefficients is required for this polynomial identity. -/
+theorem hyperbolicRotor_conjugate_of_anticommute
+    (D X : A) (c s : ℝ) (hD : D * D = 1)
+    (hanti : D * X + X * D = 0) :
+    hyperbolicRotor D c s * X * reverseHyperbolicRotor D c s =
+      (c * c + s * s) • X + (2 * c * s) • (D * X) := by
+  have hXD : X * D = -(D * X) := eq_neg_of_add_eq_zero_right hanti
+  have hDXD : D * X * D = -X := by
+    rw [mul_assoc, hXD, mul_neg, ← mul_assoc, hD, one_mul]
+  calc
+    _ = (c * c) • X - (c * s) • (X * D) +
+        (s * c) • (D * X) - (s * s) • (D * X * D) := by
+      simp only [hyperbolicRotor, reverseHyperbolicRotor, add_mul, mul_sub,
+        smul_mul_assoc, mul_smul_comm, one_mul, mul_one]
+      module
+    _ = _ := by rw [hXD, hDXD]; module
+
+/-- With the original real star operation, a boost along a self-adjoint
+involution generally fails to preserve self-adjointness of odd operators.
+This is the exact defect, not an assertion that the boost is unitary. -/
+theorem hyperbolicRotor_conjugate_star_defect
+    [StarRing A] [StarModule ℝ A]
+    (D X : A) (c s : ℝ) (hD : D * D = 1)
+    (hanti : D * X + X * D = 0) (hDs : star D = D) (hXs : star X = X) :
+    star (hyperbolicRotor D c s * X * reverseHyperbolicRotor D c s) -
+      hyperbolicRotor D c s * X * reverseHyperbolicRotor D c s =
+        -(4 * c * s) • (D * X) := by
+  rw [hyperbolicRotor_conjugate_of_anticommute D X c s hD hanti]
+  simp only [star_add, star_smul, star_mul, star_trivial, hDs, hXs]
+  rw [eq_neg_of_add_eq_zero_right hanti]
+  module
+
+/-- Exact exceptional cases for fixed-star preservation on an odd operator.
+The statement applies to the full noncommutative algebra. -/
+theorem hyperbolicRotor_conjugate_selfAdjoint_iff
+    [StarRing A] [StarModule ℝ A]
+    (D X : A) (c s : ℝ) (hD : D * D = 1)
+    (hanti : D * X + X * D = 0) (hDs : star D = D) (hXs : star X = X) :
+    star (hyperbolicRotor D c s * X * reverseHyperbolicRotor D c s) =
+      hyperbolicRotor D c s * X * reverseHyperbolicRotor D c s ↔
+        c = 0 ∨ s = 0 ∨ X = 0 := by
+  have hDX : D * X = 0 ↔ X = 0 := by
+    constructor
+    · intro h
+      have hh := congrArg (D * ·) h
+      simpa only [← mul_assoc, hD, one_mul, mul_zero] using hh
+    · intro h
+      rw [h, mul_zero]
+  rw [← sub_eq_zero, hyperbolicRotor_conjugate_star_defect D X c s hD hanti hDs hXs]
+  simp [smul_eq_zero, hDX, mul_eq_zero, or_assoc]
 
 end InfoGeometry.OperatorAlgebra

@@ -46,6 +46,7 @@ def colorEmbeddingHom : Matrix ι ι R →ₙ+* Matrix (Option ι) (Option ι) R
     cases i <;> cases j <;>
       simp [colorEmbedding, Matrix.mul_apply, Fintype.sum_option]
 
+omit [DecidableEq ι] in
 theorem colorEmbedding_injective :
     Function.Injective (colorEmbeddingHom (ι := ι) (R := R)) := by
   intro M N h
@@ -64,10 +65,12 @@ theorem colorEmbedding_one_ne_one [Nontrivial R] :
   intro h
   have hentry := congrArg
     (fun P : Matrix (Option ι) (Option ι) R => P none none) h
-  simpa [colorEmbeddingHom, colorEmbedding] using hentry
+  change (0 : R) = 1 at hentry
+  exact zero_ne_one hentry
 
 variable [StarRing R]
 
+omit [DecidableEq ι] in
 theorem colorEmbedding_star (M : Matrix ι ι R) :
     colorEmbeddingHom (star M) = star (colorEmbeddingHom M) := by
   change colorEmbedding M.conjTranspose = (colorEmbedding M).conjTranspose
@@ -96,7 +99,7 @@ theorem orthogonal_pair_noncommutes (i : ι) :
   intro h
   have hentry := congrArg
     (fun M : Matrix (ι × Bool) (ι × Bool) ℝ => M (i, true) (i, true)) h
-  simp [orthogonalForward, orthogonalBackward, Matrix.single] at hentry
+  simp [orthogonalForward, orthogonalBackward] at hentry
 
 /-- The disjoint realization supplies the star assertions requested in the
 note without duplicating any of its existing operators or MP predicates. -/

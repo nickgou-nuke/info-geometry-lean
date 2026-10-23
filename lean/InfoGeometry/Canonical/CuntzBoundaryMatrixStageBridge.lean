@@ -6,6 +6,7 @@ Authors: InfoGeometry Engine Contributors
 
 import InfoGeometry.OperatorAlgebra.CantorBernoulliFiniteMatrixRepresentationRefinementBridge
 import InfoGeometry.OperatorAlgebra.CantorBernoulliSpatialCylinderStateBridge
+import InfoGeometry.OperatorAlgebra.CantorBernoulliSpatialNonSeparatingBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
@@ -28,6 +29,11 @@ open InfoGeometry.OperatorAlgebra.CantorBernoulliFiniteMatrixStarRepresentationB
 open InfoGeometry.OperatorAlgebra.CantorBernoulliFiniteMatrixRepresentationRefinementBridge
 open InfoGeometry.OperatorAlgebra.CantorBernoulliSpatialCylinderStateBridge
 open InfoGeometry.OperatorAlgebra.CantorBernoulliSpatialNativeStateBridge
+open InfoGeometry.OperatorAlgebra.CantorBernoulliSpatialNonSeparatingBridge
+open InfoGeometry.OperatorAlgebra.CantorBernoulliKMSStateBridge
+open InfoGeometry.OperatorAlgebra.CantorBernoulliCuntzCStarRealization
+open InfoGeometry.Canonical.CantorBernoulliL2OperatorTransport
+open InfoGeometry.OperatorAlgebra.CantorBernoulliCylinderMultiplicationBridge
 
 abbrev Stage (n : ℕ) := BitWordMatrixStage n
 
@@ -106,6 +112,106 @@ theorem spatialState_boundaryRep_diagonal_eq_matrixTrace
       simp [bitWordMatrixGaugeReadout, Matrix.diagonal]
     _ = bitWordMatrixTraceFunctional n (Matrix.diagonal f) :=
       bitWordMatrixGaugeReadout_eq_trace n (Matrix.diagonal f)
+
+/-! The spatial boundary vector state is not the normalized matrix trace on the
+full finite matrix carrier.  This is the canonical matrix-stage form of the
+off-diagonal separation theorem; it prevents extending the diagonal theorem
+above to arbitrary matrices. -/
+
+theorem spatialState_boundaryRep_offDiagonal_ne_matrixTrace :
+    spatialState.functional
+        (boundaryRep 1
+          (Matrix.single (fun _ : Fin 1 => false) (fun _ : Fin 1 => true) 1)) ≠
+      bitWordMatrixTraceFunctional 1
+        (Matrix.single (fun _ : Fin 1 => false) (fun _ : Fin 1 => true) 1) := by
+  rw [matrixUnit_generator_transport]
+  change cantorVacuumState (vLeft * star vRight) ≠ _
+  have hne : (fun _ : Fin 1 => false) ≠ (fun _ : Fin 1 => true) := by
+    intro h
+    have h0 := congrFun h ⟨0, by omega⟩
+    cases h0
+  rw [spatialState_offDiagonal_generator,
+    bitWordMatrixTraceFunctional_single]
+  simp [hne]
+
+/-! The spatial vacuum readout of a matrix unit is not the gauge matrix-unit
+    coefficient.  This is proved on arbitrary words of one common length. -/
+
+lemma prependBitLp_vacuum_eq (b : Bool) :
+    prependBitLp b vacuumL2 = vacuumL2 := by
+  apply MeasureTheory.Lp.ext
+  dsimp [prependBitLp, prependBitFunction]
+  have hpre := (prependBitFunction_memLp b vacuumL2).coeFn_toLp
+  have hvac := vacuumL2_coeFn
+  have hcomp := vacuumL2_comp_prependBit b
+  filter_upwards [hpre, hvac, hcomp] with x hprex hvacx hcompx
+  rw [hprex]
+  change (vacuumL2 : Boundary → ℂ) (CuntzCantorBoundaryShift.prependBit b x) =
+    (vacuumL2 : Boundary → ℂ) x
+  rw [hcompx, hvacx]
+
+lemma operatorWordDag_vacuum (w : List Bool) :
+    operatorWordDag w vacuumL2 =
+      (prependBitLpNormFactor : ℂ) ^ w.length • vacuumL2 := by
+  induction w with
+  | nil => simp [operatorWordDag]
+  | cons b w ih =>
+      cases b with
+      | false =>
+          change operatorWordDag w ((star vLeft) vacuumL2) = _
+          rw [show (star vLeft) vacuumL2 =
+            (prependBitLpNormFactor : ℂ) • prependBitLp false vacuumL2 by
+              exact normalizedPrependBitLpAdjoint_apply false vacuumL2]
+          rw [prependBitLp_vacuum_eq, map_smul, ih]
+          simp [pow_succ, smul_smul, mul_comm]
+      | true =>
+          change operatorWordDag w ((star vRight) vacuumL2) = _
+          rw [show (star vRight) vacuumL2 =
+            (prependBitLpNormFactor : ℂ) • prependBitLp true vacuumL2 by
+              exact normalizedPrependBitLpAdjoint_apply true vacuumL2]
+          rw [prependBitLp_vacuum_eq, map_smul, ih]
+          simp [pow_succ, smul_smul, mul_comm]
+
+theorem spatialState_correspondingCuntzWord_eq
+    (n : ℕ) (i j : BitWord n) :
+    spatialState.functional (correspondingCuntzWord n i j) =
+      (1 / 2 : ℂ) ^ n := by
+  change cantorVacuumState (operatorMatrixUnit (List.ofFn i) (List.ofFn j)) = _
+  unfold cantorVacuumState operatorMatrixUnit
+  change inner ℂ vacuumL2
+    (operatorWord (List.ofFn i)
+      (operatorWordDag (List.ofFn j) vacuumL2)) = _
+  rw [← ContinuousLinearMap.adjoint_inner_left (operatorWord (List.ofFn i))]
+  rw [← ContinuousLinearMap.star_eq_adjoint,
+    ← operatorWordDag_eq_star (List.ofFn i),
+    operatorWordDag_vacuum, operatorWordDag_vacuum]
+  rw [inner_smul_left, inner_smul_right, vacuumL2_inner_self]
+  have hlen : (List.ofFn i).length = n := by simp
+  have hlen' : (List.ofFn j).length = n := by simp
+  rw [hlen, hlen']
+  simp only [Complex.conj_ofReal, map_pow, mul_one]
+  rw [← mul_pow, ← pow_two]
+  rw [show (prependBitLpNormFactor : ℂ) ^ 2 = (1 / 2 : ℂ) by
+    rw [← Complex.ofReal_pow, prependBitLpNormFactor_sq]
+    norm_num]
+
+theorem spatialState_boundaryRep_eq_uniformMatrixCoefficientSum
+    (n : ℕ) (A : Stage n) :
+    spatialState.functional (boundaryRep n A) =
+      (1 / 2 : ℂ) ^ n * ∑ u : BitWord n, ∑ v : BitWord n, A u v := by
+  rw [boundaryRep_matrix_unit_expansion]
+  simp only [map_sum, map_smul]
+  simp_rw [spatialState_correspondingCuntzWord_eq, smul_eq_mul]
+  calc
+    (∑ u : BitWord n, ∑ v : BitWord n, A u v * (1 / 2 : ℂ) ^ n) =
+        ∑ u : BitWord n, (∑ v : BitWord n, A u v) * (1 / 2 : ℂ) ^ n := by
+      apply Finset.sum_congr rfl
+      intro u hu
+      rw [Finset.sum_mul]
+    _ = (∑ u : BitWord n, ∑ v : BitWord n, A u v) * (1 / 2 : ℂ) ^ n := by
+      rw [Finset.sum_mul]
+    _ = (1 / 2 : ℂ) ^ n * ∑ u : BitWord n, ∑ v : BitWord n, A u v := by
+      ring
 
 theorem boundaryRep_bond_compatible (n : ℕ) (A : Stage n) :
     boundaryRep n A = boundaryRep (n + 1) (dyadicMatrixEmbedding n A) := by

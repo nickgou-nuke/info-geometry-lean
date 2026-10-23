@@ -1,5 +1,57 @@
 # Attention routes: geometric and spectral scope
 
+## Active implementation contract: support-preserving compression
+
+Follow-up authorization: “proceed”. Carrier: a probability row `p : Fin m → ℝ`
+and fixed values `V : Fin m → Fin d → ℝ`. Target:
+`Routing.AttentionReadoutCompression.exists_sparse_key_readout` returns
+`r ≤ d+1`, an embedding of `Fin r` into original keys, positive original mass
+at every selected key, positive replacement weights of total mass one, and
+exact equality of the weighted value sum. Retained values are affinely
+independent. This consumes Mathlib's `eq_pos_convex_span_of_mem_convexHull`
+and affine-dimension bound; no duplicate Carathéodory geometry is introduced.
+The matrix consumer `exists_sparse_attention_readout` constructs a row-stochastic
+`Q` with at most `d+1` nonzeros per row, preserves every original zero, and
+proves `Q * V = A * V`. Query supports need not agree.
+
+Runtime implementation: `tools/attention_polytope.py::compress_readout` and
+`--compress-readout` use exact rational homogeneous-nullspace pivoting, introducing
+no keys outside each row's initial support and preserving its fixed readout,
+with explicit verification.
+Termination comes from strict support reduction at every pivot. The Lean
+existence theorem is not an extraction/correctness proof of the Python code.
+No universal key eviction, logits/spectra preservation, numerical tolerance,
+gradient behavior, or GPU performance is claimed. Parent's locked compression
+audit build passed (8932 jobs), printing only the three standard foundational
+axioms. OpenGauss screening and semantic-vacuity checks passed with zero
+findings. Independent A-A passed the row/matrix semantics. Runtime integration
+is complete. Independent QA reran the locked build and two sequential direct
+Lean checks, confirmed the three axiom footprints and zero local warnings,
+and passed all 27 attention tests under the shared lock. Code/test hashes stayed
+unchanged during QA. Runtime/CLI A-A passed; its two nonblocking refinements
+added direct flag assertions and clarified normalization flag semantics.
+The final test-only refinement passed an independent shared-lock rerun of all
+27 tests. Disposition: `[accepted_limited_scope]` for the Lean compression
+theorems and the separately tested exact-rational runtime/CLI. The runtime supports
+positive feature dimension; Lean also supports `d = 0`. Verification of the
+Python program inside Lean remains outside this contract.
+
+Scoped verification commands:
+
+```text
+python3 -B tools/infra/run_locked_lake_build.py --wait-for-build-lock InfoGeometry.Routing.AttentionReadoutCompressionAudit
+lake env lean lean/InfoGeometry/Routing/AttentionReadoutCompression.lean
+lake env lean lean/InfoGeometry/Routing/AttentionReadoutCompressionAudit.lean
+python3 -B -m unittest discover -s tests -p 'test_attention*.py' -v
+```
+
+Direct checks and tests were sequential under `BuildLock`. Acceptance does not
+extend to `Routing.All`, concurrent Cantor/GNS work, or a full-repository build.
+Audited Lean owner SHA-256:
+`10d120e588fe32101c256598c434a726947b4a309eaf97e7b183cc4199fb8f12`.
+Tested runtime SHA-256:
+`6d2ba9a15ecde869f9ebcea100e68e7ee20b3eca33384cd3b23778d900e3c691`.
+
 ## Intake audit: proposed eight-module / PyTorch master table
 
 Source: the follow-up conversation headed “Master Summary Table: Lean 4
@@ -101,9 +153,10 @@ as aliases to make the intake table appear implemented.
 
 Prioritize general native consumers, not additional small matrix witnesses:
 
-1. A support-preserving attention compression theorem returning actual key
-   indices/weights and a matching executable pruning/error contract, reusing
-   Mathlib Carathéodory rather than duplicating its geometry.
+1. The active implementation above now supplies the support-preserving
+   existence theorem and exact-rational pruning API. Remaining beyond this
+   implementation: floating-point error/gradient contracts or extracted code,
+   not another proof of Mathlib's Carathéodory geometry.
 2. Complete integration and acceptance of the claimed strict shell cascade and
    faithful leading-step interface on the existing generic dressed-shell
    carrier, followed by an explicit comparison with functional-graph depth

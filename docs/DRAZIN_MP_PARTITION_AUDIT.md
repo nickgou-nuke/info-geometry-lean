@@ -44,6 +44,35 @@ satisfy it; arbitrary similarities do not preserve the Moore–Penrose inverse.
 The backward-shift interpretation requires an orthonormal (possibly weighted)
 shift model. General directed acyclic matrices need not have this geometry.
 
+The square-zero case is stronger: X²=0 forces qp=M X² M=0, and taking
+adjoints gives pq=0. The general owner
+`Singular/SquareZeroMoorePenrose` derives this from the native Penrose
+predicate, also deriving M²=0. Then H=1−XM−MX is a star projection and
+H x=x iff Xx=Mx=0 for the left regular module. Its chirality formula is
+(XM−MX)²=XM+MX=1−H, not automatically the identity. This includes a
+harmonic complement rather than imposing the full CAR relation.
+
+The normalized algebraic operator J=X+M satisfies J²=XM+MX and J³=J,
+so it is its own Drazin inverse with witness exponent one. It must not be
+renamed the metric Hodge–Dirac operator X+X*: the latter requires the
+actual adjoint, whereas M=X* is an additional normalization condition.
+For metric Hodge/Green and harmonic-kernel statements use
+`Dynamics/ChiralHodgeMoorePenroseBridge`; the algebraic generalized Green
+construction remains in `Canonical/HodgeGreenProjectorConstruction`.
+`Singular/MoorePenroseChiralDefects` also proves pq=0 iff X²=0, without
+assuming that the supports commute, and the four signed chirality actions.
+The normalized Jordan self-associator is −X/2, not −2X. Thus a nonzero
+associator can occur even for square-zero X; it does not by itself detect
+failure of square-zero. Targeted builds and independent QA of the integrated
+additions passed with the limited scope recorded below.
+
+Witt isotropy also requires its own carrier and neutral bilinear form:
+`Canonical/ParaComplexNeutralForm` derives isotropic Peirce eigenspaces
+from anti-compatibility. This is not implied by singular determinant,
+nilpotency, or a kernel equation alone. A nonzero idempotent cannot also be
+nilpotent. The existing general Peirce multiplication rules, rather than a
+new matrix fixture, supply the off-diagonal square-zero-arrow interpretation.
+
 The projections onto im(N^m) minus those onto im(N^(m+1)) describe the
 decreasing **range filtration**. They also give exact death time m+1 for
 nonzero **row states supported in Q_m, under right action**: Q_m N^(m+1)=0 and
@@ -73,7 +102,67 @@ Individual shells can be zero. The core is invariant, not pointwise fixed.
 The native owner `Canonical/DrazinNilpotentShellResolution` proves these claims,
 including the recovery formula (S_m A^m) M_m F=S_m.
 
+### Inter-shell corners: corrected intake contract
+
+The subsequent `InterShellChiralHodgeAudit` / `NoncommutativeShellFiltrationAlgebra`
+intake is conditional algebra, not evidence of compilation. In particular,
+the supplied generic snippet contains a `sorry` and an inconsistent real-valued
+MP family; adding a differently named corrected theorem does not remove that
+earlier declaration. No duplicate inverse predicates or monolithic packet are
+imported from the intake. Over an arbitrary coefficient ring, MP families and
+the individual corner inverses are hypotheses, not automatic existence claims.
+
+`Canonical/DrazinShellCascade` supplies the generic star-ring identities
+S_m A S_r=0 for m≤r and
+A=E_C A E_C+Σ_(m<k) S_m A (Σ_(r<m) S_r).
+Distributing the inner finite sum gives the proposed double-sum reconstruction.
+For m≠r, (S_m A S_r)²=0 follows from S_r S_m=0 and associativity;
+the existing square-zero MP theory therefore applies to each such corner.
+Different corners can compose nontrivially: local square-zero does not force
+the sum of the corners to have square zero. This intake check does not add a
+new theorem asserting a nonzero or faithful adjacent-shell transition.
+
+The idempotents E_C,E_N commute with A, not generally with the entire ambient
+algebra. E_N R_m E_N is a corner compression, not conjugation by an invertible
+map. The equality E_N N^m=N^m requires m>0; at m=0 its left side is E_N.
+For row action a corner S_m A S_r goes from m to r; for column action it goes
+from r to m. Source/sink terminology must specify which convention is used.
+
+With d=S_m A S_r and B its MP inverse, S_m(dB)=dB and (Bd)S_r=Bd
+are valid one-sided absorption laws. Oblique S_m,S_r do not justify reversing
+these products or placing B in the opposite oblique corner. For real matrices
+the latter absorption localizes the column range of Bd to im(S_rᵀ), not
+automatically im(S_r). The local harmonic projector 1−dB−Bd acts on the
+whole ambient space; it is not a projection solely within the two named
+shells. The same Witt, metric-adjoint, and supported-grading limitations
+established above remain in force.
+
 ## Anomalies, triple products, and graph carriers
+
+The symmetric associative triple T(X,Y,Z)=XYZ+ZYX has diagonal
+T(X,Y,X)=2XYX. The latest intake's proposed identity
+T(X,Y,Z)=(XY)∘Z−[X,ZY], for the unnormalized Jordan product, is false:
+its right side minus its left side is [Z,X]Y. The unconditional correction
+is T(X,Y,Z)=(XY)∘Z−Z[X,Y]. With the repository's half-normalized Jordan
+product, replace the first term by 2((XY)∘Z).
+
+The sandwich defect A−AYA is an inner-inverse defect, not the standard
+Kantor operator K(X,Y)Z=T(X,Z,Y)−T(Y,Z,X). For the symmetric associative
+triple that Kantor operator vanishes by outer symmetry. In
+`Singular/DrazinReflexiveDefect`, Drazin commutation identifies A−ADA
+with the existing nilpotent part. Its vanishing is equivalent to the same
+candidate D satisfying the index-one equations; this does not assert that
+the supplied exponent k was minimal. The division-free triple balance is
+T(A,D,A)+2N=2A. These distinctions preserve, rather than rename, the
+repository's separate Kantor and Cantor constructions.
+
+For arbitrary MP supports, define Δ=p+q and Γ=p−q. The universal overlap is
+Δ−Γ²=pq+qp. Ordered overlap vanishes iff A²=0 in a star ring. Equating
+vanishing symmetric overlap with square-zero additionally requires care
+about 2-torsion: over characteristic two, A=M=1 refutes that equivalence.
+No arbitrary-ring version of that stronger equivalence is asserted here.
+Likewise the dependency diagram is not a formal strict causal poset without
+a specified carrier, relation, and order laws.
 
 The inverse-kernel owner distinguishes S=AD, R=AM, and T=MA. Its left chiral
 anomaly is [S,T], its right anomaly [S,R], and the Einstein anomaly [R,S].
@@ -146,6 +235,55 @@ The prose above states the necessary corrections; it is not a claim that all
 these adjacent statements have been newly formalized.
 
 ## Verification record
+
+### Inter-shell intake review (2026-10-23)
+
+No duplicate Lean implementation was added. Independent A-A accepted the
+corrected inter-shell contract. Independent QA-A returned
+**ACCEPTED_WITH_LIMITED_SCOPE** for the existing owner proofs:
+locked `Canonical.DrazinShellCascade` build passed (3182 jobs); sequential
+locked direct checks of Cascade, Core PeirceDecomposition, SquareZeroMoorePenrose,
+and MoorePenroseChiralDefects all passed. The triangular-vanishing and
+core-plus-cascade reconstruction theorems use only `propext`, `Classical.choice`,
+and `Quot.sound`. All four source hashes remained stable; Cascade SHA-256 was
+`9b66395ee426cb9d41b97a45affbc6c9060ebf57bec79e9f92bd6b42ee5ff16b`.
+Placeholder and scoped whitespace checks passed. Three unused-StarRing
+warnings in Cascade remain; a static unused-hypothesis flag is discharged
+semantically because `omega` consumes `hmr`, and two vacuity advisories concern
+genuine annihilation identities. This is not certification of the pasted code
+or of nonzero shells, minimal index, Witt geometry, or metric self-adjointness.
+
+### Square-zero, chiral, and reflexive-defect extension (2026-10-23)
+
+Independent A-A Darwin accepted the corrected owner scope and the revised
+square-zero/anomaly/triple documentation. Independent QA-A Singer returned
+**ACCEPTED_WITH_LIMITED_SCOPE** for the current integrated sources:
+
+- Shared-locked `Singular.All` and the three extension Audits: PASS,
+  3335 jobs, exit zero.
+- Six sequential direct Lean checks under `BuildLock` (three owners and
+  their three Audits): PASS.
+- All 27 audited declarations use only subsets of `propext`,
+  `Classical.choice`, and `Quot.sound`; `residue_eq_nilpotent` uses none.
+- Additional locked axiom check of
+  `Core.JordanAssociator.kantorTriple_eq_jordan_commutator`: PASS, standard
+  foundational axioms only.
+- OpenGauss and stripped-source placeholder checks: zero findings across
+  eight scoped files. Scoped whitespace check: PASS. Semantic-vacuity check:
+  zero errors; the one `harmonic_mul_eq_zero` advisory was independently
+  adjudicated as genuine conditional annihilation, not vacuity.
+- Source hashes stayed stable during checking despite an unrelated HEAD
+  advance. Owner SHA-256 prefixes: SquareZero `f00a4254e0928c0d`,
+  ChiralDefects `7c9b66cda476a042`, ReflexiveDefect `00675d5473480bfe`;
+  Core JordanAssociator `af8e5883cd2ab912`.
+
+Existing dependency warnings and Core unused-simp warnings remain. This
+acceptance does not cover the entire pasted packet, a minimal Drazin index,
+physical identifications, or stability of the global worktree. Earlier QA
+rejection during concurrent source editing was superseded only after the
+repaired snapshot passed these independent checks.
+
+### Earlier inverse-sector audit
 
 The implementation is collected by `Canonical/InverseSectorAudit.lean`.
 It includes `Canonical/DrazinNilpotentShellResolution` for the oblique resolution,

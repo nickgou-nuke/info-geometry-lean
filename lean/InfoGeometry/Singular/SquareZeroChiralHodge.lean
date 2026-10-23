@@ -48,6 +48,44 @@ def chiralSupport (a m : R) : R := exactSupport a m - coexactSupport a m
 /-- The normalized square-zero operator `𝒟 = a + m`. -/
 def normalizedDirac (a m : R) : R := a + m
 
+/-- The complete algebraic chiral Hodge--Dirac package for a square-zero
+Moore--Penrose pair.  The predicate is stated as a named proposition so that
+shell and graph owners can consume the package without restating its long
+conjunction. -/
+def SquareZeroChiralHodge (a m : R) : Prop :=
+  (exactSupport a m + coexactSupport a m + harmonicSupport a m = 1) ∧
+  (exactSupport a m * exactSupport a m = exactSupport a m ∧
+    coexactSupport a m * coexactSupport a m = coexactSupport a m ∧
+    harmonicSupport a m * harmonicSupport a m = harmonicSupport a m) ∧
+  (exactSupport a m * coexactSupport a m = 0 ∧
+    coexactSupport a m * exactSupport a m = 0 ∧
+    exactSupport a m * harmonicSupport a m = 0 ∧
+    harmonicSupport a m * exactSupport a m = 0 ∧
+    coexactSupport a m * harmonicSupport a m = 0 ∧
+    harmonicSupport a m * coexactSupport a m = 0) ∧
+  (normalizedDirac a m * normalizedDirac a m =
+    exactSupport a m + coexactSupport a m) ∧
+  (chiralSupport a m * chiralSupport a m =
+    exactSupport a m + coexactSupport a m ∧
+    chiralSupport a m * chiralSupport a m * chiralSupport a m =
+      chiralSupport a m) ∧
+  (chiralSupport a m * exactSupport a m = exactSupport a m ∧
+    exactSupport a m * chiralSupport a m = exactSupport a m ∧
+    chiralSupport a m * coexactSupport a m = -coexactSupport a m ∧
+    coexactSupport a m * chiralSupport a m = -coexactSupport a m) ∧
+  (chiralSupport a m * a = a ∧
+    a * chiralSupport a m = -a ∧
+    chiralSupport a m * m = -m ∧
+    m * chiralSupport a m = m) ∧
+  (chiralSupport a m * normalizedDirac a m +
+    normalizedDirac a m * chiralSupport a m = 0) ∧
+  (a * harmonicSupport a m = 0 ∧
+    harmonicSupport a m * a = 0 ∧
+    m * harmonicSupport a m = 0 ∧
+    harmonicSupport a m * m = 0 ∧
+    normalizedDirac a m * harmonicSupport a m = 0 ∧
+    harmonicSupport a m * normalizedDirac a m = 0)
+
 namespace IsMoorePenroseInverse
 
 variable {a m : R}

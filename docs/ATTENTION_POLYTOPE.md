@@ -108,6 +108,53 @@ The Lean theorem certifies core-projector trace; the rank interpretation uses
 the mathematical rank–trace identification, not a separate formalized rank
 theorem in this bridge.
 
+## Exact support-preserving readout compression
+
+```bash
+python3 tools/attention_polytope.py input.json --compress-readout
+```
+
+This mode requires both `attention` and `values` tables. It returns
+`compressed_attention`, the retained indices in `compressed_row_supports`,
+their sizes, and the exactly preserved `readout`. It never calls the route
+decomposition. `--compress-readout` and `--causal-core-only` are mutually
+exclusive. The API is `compress_readout(attention, values)`.
+
+For each row, the algorithm forms homogeneous value columns `(1,V_j)` only
+for currently positive keys. Exact rational row reduction finds a nonzero
+null direction `δ`. Taking `t = min_{δ_j>0} p_j/δ_j` and replacing `p` by
+`p − tδ` preserves mass and readout, keeps weights nonnegative, and removes
+at least one active key. It repeats until the columns are independent.
+The output therefore has at most `d+1` positive entries per query, introduces
+no keys outside that query's original support, and can be smaller for
+affinely degenerate values. The original attention matrix usually changes.
+
+`input_normalization_changed` reports whether explicitly requested normalization
+actually changed entries (it is false if already normalized);
+`compression_changed` compares compressed and normalized attention;
+`input_changed` compares the final compressed matrix with the raw input.
+Without `--normalize-rows`, non-unit row sums are rejected. With normalization,
+the equality guarantee concerns the normalized matrix's readout, not the raw
+unnormalized input. Fractions and JSON decimals are exact; API Python floats
+retain their exact binary values, not a tolerance-based interpretation.
+
+The native Lean owner `Routing.AttentionReadoutCompression` proves:
+
+- `exists_sparse_key_readout`: actual distinct original key indices, positive
+  original/replacement weights, total mass one, equal readout, affine
+  independence, and the `d+1` bound;
+- `exists_sparse_attention_readout`: a row-stochastic matrix `Q`, preserving
+  all original zeros, with the per-row support bound and `Q V = A V`.
+
+The runtime follows the nullspace-pivot construction and checks its invariants;
+it is **not extracted from Lean**, and the existence proof does not verify
+the Python implementation. The runtime requires nonempty tables and positive
+value dimension, while the Lean theorems also handle empty finite carriers.
+Rational bit growth and repeated elimination can be expensive: no GPU speedup
+or practical floating-point training claim is made. A different query may
+need a different support, so this is not universal KV eviction or a guarantee
+about logits, spectra, or gradients.
+
 ## Original polytope verification evidence
 
 Lean source commit: `e612115829e5c2faffa47fd42a5fc5577c50285b`.

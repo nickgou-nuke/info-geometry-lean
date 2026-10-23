@@ -1,18 +1,23 @@
 /-
 Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
 -/
 
 import InfoGeometry.Canonical.CuntzBoundaryMatrixStageBridge
-import InfoGeometry.Canonical.CantorBernoulliFiniteDiagonalGNSBridge
 
-/-! Kernel audit for the full finite noncommutative boundary expansion. -/
-
-#print axioms
-  InfoGeometry.Canonical.CuntzBoundaryMatrixStageBridge.boundaryRep_matrix_unit_expansion
-
-#print axioms
-  InfoGeometry.Canonical.CuntzBoundaryMatrixStageBridge.boundaryRep_bond_compatible
-
-#print axioms
-  InfoGeometry.Canonical.CuntzBoundaryMatrixStageBridge.boundaryRep_matrixUnit_bond_compatible
+#print axioms InfoGeometry.Canonical.CuntzBoundaryMatrixStageBridge.Stage
+#print axioms InfoGeometry.Canonical.CuntzBoundaryMatrixStageBridge.BoundaryOperator
+#print axioms InfoGeometry.Canonical.CuntzBoundaryMatrixStageBridge.boundaryRep
+#print axioms InfoGeometry.Canonical.CuntzBoundaryMatrixStageBridge.correspondingCuntzWord
+#print axioms InfoGeometry.Canonical.CuntzBoundaryMatrixStageBridge.matrixUnit_generator_transport
+#print axioms InfoGeometry.Canonical.CuntzBoundaryMatrixStageBridge.boundaryRep_matrix_unit_expansion
+#print axioms InfoGeometry.Canonical.CuntzBoundaryMatrixStageBridge.boundaryRep_diagonal
+#print axioms InfoGeometry.Canonical.CuntzBoundaryMatrixStageBridge.spatialState_boundaryRep_diagonal_eq_matrixTrace
+#print axioms InfoGeometry.Canonical.CuntzBoundaryMatrixStageBridge.spatialState_boundaryRep_offDiagonal_ne_matrixTrace
+#print axioms InfoGeometry.Canonical.CuntzBoundaryMatrixStageBridge.prependBitLp_vacuum_eq
+#print axioms InfoGeometry.Canonical.CuntzBoundaryMatrixStageBridge.operatorWordDag_vacuum
+#print axioms InfoGeometry.Canonical.CuntzBoundaryMatrixStageBridge.spatialState_correspondingCuntzWord_eq
+#print axioms InfoGeometry.Canonical.CuntzBoundaryMatrixStageBridge.spatialState_boundaryRep_eq_uniformMatrixCoefficientSum
+#print axioms InfoGeometry.Canonical.CuntzBoundaryMatrixStageBridge.boundaryRep_bond_compatible
+#print axioms InfoGeometry.Canonical.CuntzBoundaryMatrixStageBridge.boundaryRep_matrixUnit_bond_compatible

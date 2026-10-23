@@ -26,6 +26,7 @@ open InfoGeometry.Canonical.CantorBernoulliFiniteDiagonalHilbertSchmidt
 open InfoGeometry.Canonical.CantorBernoulliGaugeFilteredGNSColimitBridge
 open InfoGeometry.OperatorAlgebra.CantorBernoulliFiniteMatrixStageTransportBridge
 open InfoGeometry.OperatorAlgebra.CantorBernoulliFiniteMatrixUnitBridge
+open InfoGeometry.OperatorAlgebra.CantorBernoulliGaugeStateBridge
 open InfoGeometry.Canonical.CantorProjectiveLimit.PrefixProjectiveLimit
 open InfoGeometry.Canonical.CantorProjectiveBernoulliMeasure
 open MeasureTheory
@@ -60,6 +61,15 @@ theorem limitTrace_stage_eq_gaugeGNS_readout
           gaugeGNSColimitVacuum⟫_ℂ := by
   rw [limitTrace_stage_eq_boundaryRangeTrace]
   exact boundaryRangeTrace_gaugeGNS_readout n A
+
+theorem limitTrace_stage_matrixUnit_eq_canonicalGaugeState
+    (n : ℕ) (u v : BitWord n) :
+    limitTrace
+        (canonicalStageHom n (Matrix.single u v (1 : ℂ))) =
+      canonicalGaugeState (List.ofFn u) (List.ofFn v) := by
+  rw [limitTrace_stage_eq_boundaryRangeTrace,
+    boundaryRangeTrace_stage,
+    bitWordMatrixTraceFunctional_single_eq_gaugeState]
 
 theorem limitTrace_stage_eq_projectiveDiagonalReadout
     (n : ℕ) (A : ComplexMatrixStage.Stage n) :

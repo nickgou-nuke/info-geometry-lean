@@ -1,0 +1,114 @@
+name: Attention identifiability (pinned, scoped)
+
+on:
+  push:
+    branches: [feat/attention-identifiability]
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Projective/AttentionIdentifiability.lean'
+      - 'lean/InfoGeometry/Routing/AttentionInteriorFiber.lean'
+      - '.github/workflows/attention-identifiability.yml'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: attention-identifiability-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  scoped-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          show-progress: false
+          persist-credentials: false
+      - name: Install exact repository Lean toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < lean-toolchain)"
+      - name: Compile pinned source closure and audit every new theorem
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import fcntl, json, os, pathlib, re, shutil, subprocess
+          repo = pathlib.Path.cwd()
+          lock = open('/tmp/info-geometry-build.lock', 'a')
+          fcntl.flock(lock, fcntl.LOCK_EX)
+          active = subprocess.check_output(['ps', '-eo', 'pid,comm'], text=True)
+          if any(line.split()[-1] in {'lean', 'lake', 'pytest'} for line in active.splitlines() if line.split()):
+              raise RuntimeError('Another compiler or test process is active')
+          manifest = json.loads((repo / 'lake-manifest.json').read_text())
+          pin = next(p for p in manifest['packages'] if p['name'] == 'mathlib')
+          print('MATHLIB_PIN', pin['rev'], flush=True)
+          work = pathlib.Path(os.environ['RUNNER_TEMP']) / 'attention-identifiability-mathlib'
+          def run(*args, verbose=False, **kwargs):
+              result = subprocess.run(args, capture_output=True, text=True, **kwargs)
+              if verbose or result.returncode:
+                  print(result.stdout, flush=True)
+                  print(result.stderr, flush=True)
+              result.check_returncode()
+              return result
+          run('git', 'init', str(work))
+          run('git', '-C', str(work), 'remote', 'add', 'origin', pin['url'])
+          run('git', '-C', str(work), 'fetch', '--depth=1', 'origin', pin['rev'])
+          run('git', '-C', str(work), 'checkout', '--detach', 'FETCH_HEAD')
+          assert (work / 'lean-toolchain').read_text().strip() == (repo / 'lean-toolchain').read_text().strip()
+          run('lake', 'exe', 'cache', 'get', cwd=work)
+          targets = ['InfoGeometry.Projective.AttentionIdentifiability',
+                     'InfoGeometry.Routing.AttentionInteriorFiber']
+          seen, order = set(), []
+          def visit(module):
+              if module in seen:
+                  return
+              seen.add(module)
+              relative = pathlib.Path(*module.split('.')).with_suffix('.lean')
+              source = repo / 'lean' / relative
+              if not source.is_file():
+                  raise RuntimeError(f'Missing repository owner: {module}')
+              for dep in re.findall(r'^\s*(?:public\s+)?import\s+([\w.]+)', source.read_text(), re.M):
+                  if dep.startswith(('Mathlib', 'Lean', 'Std', 'Init', 'Batteries')):
+                      continue
+                  visit(dep)
+              order.append((module, relative, source))
+          for target in targets:
+              visit(target)
+          audit_lines = ['import InfoGeometry.Routing.AttentionInteriorFiber']
+          print('OWNER_CLOSURE', [m for m, _, _ in order], flush=True)
+          for module, relative, source in order:
+              text = source.read_text()
+              if module in targets:
+                  if re.search(r'\b(sorry|admit|axiom|native_decide|unsafe)\b', text):
+                      raise RuntimeError('Forbidden proof construct in new source')
+                  heads = re.findall(r'^(?:@\[[^\]]*\]\s*)?(?:theorem|lemma)\s+(\w+)', text, re.M)
+                  audit_lines += ['#print axioms ' + module + '.' + h for h in heads]
+              destination = work / relative
+              destination.parent.mkdir(parents=True, exist_ok=True)
+              shutil.copyfile(source, destination)
+              output = work / '.lake/build/lib/lean' / relative.with_suffix('.olean')
+              output.parent.mkdir(parents=True, exist_ok=True)
+              print('CHECK', module, flush=True)
+              run('lake', 'env', 'lean', '-o', str(output), str(relative), cwd=work, verbose=True)
+          audit = work / 'AttentionIdentifiabilityAudit.lean'
+          audit.write_text('\n'.join(audit_lines) + '\n')
+          result = run('lake', 'env', 'lean', audit.name, cwd=work, verbose=True)
+          text = result.stdout + result.stderr
+          allowed = {'propext', 'Classical.choice', 'Quot.sound'}
+          footprints = re.findall(r'depends on axioms:\s*\[([^\]]*)\]', text, re.S)
+          no_axioms = re.findall(r'does not depend on any axioms', text)
+          if len(footprints) + len(no_axioms) != len(audit_lines) - 1:
+              raise RuntimeError('Missing axiom footprint in audit output')
+          for footprint in footprints:
+              used = {x.strip() for x in footprint.split(',') if x.strip()}
+              if not used <= allowed:
+                  raise RuntimeError(f'Unexpected axiom footprint: {used}')
+          print('AUDITED_DECLARATIONS', len(audit_lines) - 1)
+          PY

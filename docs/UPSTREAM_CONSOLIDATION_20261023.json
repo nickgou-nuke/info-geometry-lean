@@ -72,7 +72,13 @@
           "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
           "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da"
         },
-        "scope": "All declarations owned by the six selected modules, including private/generated declarations; unsafe/partial rejected and only propext, Classical.choice, Quot.sound allowed. Dependency warnings remain. Not whole-repository or clean-dependency release acceptance."
+        "scope": "All declarations owned by the six selected modules, including private/generated declarations; unsafe/partial rejected and only propext, Classical.choice, Quot.sound allowed. Dependency warnings remain. Not whole-repository or clean-dependency release acceptance.",
+        "warnings": {
+          "target": 25,
+          "dependency": 18,
+          "dirty_checkout": 2,
+          "disposition": "Retained; targeted kernel acceptance is not warning-free or clean-dependency release certification."
+        }
       }
     },
     {

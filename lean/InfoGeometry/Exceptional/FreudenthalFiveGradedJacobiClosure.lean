@@ -55,6 +55,31 @@ theorem fiveJacobiator_extreme_plus_minus_charge_plus
     simp [fiveJacobiator, fiveGradedBracket, genEplus, genEminus, injChargePlus]
   module
 
+/-- Exact vanishing criterion for the legacy extreme-charge Jacobi component.
+A nonzero charge and two nonzero extreme coefficients always give a defect. -/
+theorem fiveJacobiator_extreme_plus_minus_charge_plus_eq_zero_iff
+    (a b : ℝ) (y : FreudenthalCharge J) :
+    fiveJacobiator D (genEplus D a) (genEminus D b) (injChargePlus D y) = 0 ↔
+      a = 0 ∨ b = 0 ∨ y = 0 := by
+  rw [fiveJacobiator_extreme_plus_minus_charge_plus]
+  constructor
+  · intro h
+    have hy : (-2 * a * b) • y = 0 :=
+      congrArg (fun u : FiveGradedCarrier D => u.plus1) h
+    rcases smul_eq_zero.mp hy with hc | hy
+    · rcases mul_eq_zero.mp hc with ha | hb
+      · have ha' : a = 0 := (mul_eq_zero.mp ha).resolve_left (by norm_num)
+        exact Or.inl ha'
+      · exact Or.inr (Or.inl hb)
+    · exact Or.inr (Or.inr hy)
+  · rintro (ha | hb | hy)
+    · subst a
+      apply FiveGradedCarrier.ext <;> simp [injChargePlus]
+    · subst b
+      apply FiveGradedCarrier.ext <;> simp [injChargePlus]
+    · subst y
+      apply FiveGradedCarrier.ext <;> simp [injChargePlus]
+
 /-! ## 1. Cyclic Symmetries of the Jacobiator -/
 
 theorem fiveJacobiator_cyclic_left (u v w : FiveGradedCarrier D) :

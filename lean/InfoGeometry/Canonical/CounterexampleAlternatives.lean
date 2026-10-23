@@ -40,6 +40,14 @@ theorem mismatched_peirce_product_zero
       simp only [mul_assoc]
     _ = 0 := by rw [hqr, mul_zero, zero_mul, zero_mul]
 
+theorem finite_peirce_reconstruction
+    [Semiring A] {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (p : ι → A) (hcomplete : ∑ i, p i = 1) (x : A) :
+    (∑ i, ∑ j, p i * x * p j) = x := by
+  simp_rw [← Finset.mul_sum]
+  simp_rw [← Finset.sum_mul]
+  rw [hcomplete, one_mul, mul_one]
+
 theorem ring_hom_preserves_associator
     [Ring A] [Ring B]
     (f : A →+* B) (x y z : A) :

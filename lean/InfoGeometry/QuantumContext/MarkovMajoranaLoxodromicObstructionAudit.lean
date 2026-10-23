@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 
 import InfoGeometry.QuantumContext.MarkovMajoranaLoxodromicObstruction
+import InfoGeometry.QuantumContext.MarkovMajoranaCliffordResolutionAudit
 
 #print axioms InfoGeometry.QuantumContext.MarkovMajoranaLoxodromicObstruction.uniformTransition_apply
 #print axioms InfoGeometry.QuantumContext.MarkovMajoranaLoxodromicObstruction.uniformLaplacian_idempotent

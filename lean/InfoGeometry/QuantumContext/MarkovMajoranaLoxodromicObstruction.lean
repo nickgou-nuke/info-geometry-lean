@@ -17,7 +17,12 @@ algebra. For uniform two-state logits, the Markov Laplacian has a concrete
 group inverse. Its range involution anticommutes with the repository's
 Majorana difference, so these two axes do not automatically commute.
 
-This proves a finite matrix obstruction only. It does not identify tokens
+The positive resolution is in `MarkovMajoranaCliffordResolution`: these same
+axes define a surjective representation of the native split Clifford algebra,
+with an explicit reconstruction of every matrix. Noncommutation is thus a
+boundary against the commuting-axis formulation, not the final construction.
+
+This file proves a finite matrix obstruction only. It does not identify tokens
 with physical particles, establish a sink potential, or prove any disk,
 continuum, stability, or density-wave claim.
 -/

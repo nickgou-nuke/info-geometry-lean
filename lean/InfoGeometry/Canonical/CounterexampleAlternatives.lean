@@ -217,6 +217,26 @@ theorem square_zero_endomorphism_has_strict_kernel
     ext x
     exact hAll x
 
+theorem square_zero_endomorphism_range_le_kernel
+    {R M : Type*} [Ring R] [AddCommGroup M] [Module R M]
+    (N : Module.End R M) (hN : N * N = 0) :
+    LinearMap.range N ≤ LinearMap.ker N := by
+  rintro y ⟨x, rfl⟩
+  change N (N x) = 0
+  rw [show N (N x) = (N * N) x by rfl, hN, LinearMap.zero_apply]
+
+theorem nonzero_square_zero_endomorphism_not_injective
+    {R M : Type*} [Ring R] [AddCommGroup M] [Module R M]
+    (N : Module.End R M) (hN : N * N = 0) (hN0 : N ≠ 0) :
+    ¬ Function.Injective N := by
+  intro hInjective
+  apply hN0
+  ext x
+  apply hInjective
+  change N (N x) = N 0
+  rw [show N (N x) = (N * N) x by rfl, hN, LinearMap.zero_apply]
+  simp
+
 theorem idempotent_endomorphism_split
     {R M : Type*} [Ring R] [AddCommGroup M] [Module R M]
     (P : Module.End R M) (hP : P * P = P) (x : M) :

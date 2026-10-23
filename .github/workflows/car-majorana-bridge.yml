@@ -1,4 +1,4 @@
-name: CAR Majorana Pfaffian bridge (pinned, scoped)
+name: CAR finite core (owner integration separate)
 on:
   push:
     branches: [feat/car-majorana-pfaffian-bridge]
@@ -6,16 +6,23 @@ on:
     paths:
       - 'lean/InfoGeometry/Canonical/MajoranaLinearKernel.lean'
       - 'lean/InfoGeometry/Canonical/CARMajoranaFiniteBridge.lean'
+      - 'lean/InfoGeometry/Canonical/CARMajoranaOwnerAdapters.lean'
       - 'lean/InfoGeometry/Canonical/KreinMajoranaKernelCriterion.lean'
-      - 'tools/infra/check_car_majorana_bridge.py'
+      - 'tools/infra/check_car*.py'
       - '.github/workflows/car-majorana-bridge.yml'
+  workflow_dispatch:
+    inputs:
+      check_owner_adapters:
+        type: boolean
+        default: false
+        description: Also attempt the dependency-blocked full-owner integration
 permissions:
   contents: read
 concurrency:
   group: car-majorana-bridge-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: false
 jobs:
-  scoped-check:
+  finite-core:
     runs-on: ubuntu-latest
     timeout-minutes: 40
     steps:
@@ -31,11 +38,31 @@ jobs:
           curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < lean-toolchain)"
-      - name: Compile unchanged dependency closure and audit all additions
-        run: python3 tools/infra/check_car_majorana_bridge.py
+      - name: Check finite core only
+        run: python3 tools/infra/check_car_finite_core.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: CARMajoranaPfaffianBridge
+          name: CARMajoranaFiniteCore
+          path: ${{ runner.temp }}/car-majorana-deliverable
+          include-hidden-files: true
+  owner-integration:
+    if: github.event_name == 'workflow_dispatch' && inputs.check_owner_adapters
+    needs: finite-core
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v5
+      - run: git config --local --unset-all http.https://github.com/.extraheader || true
+      - name: Install exact pinned Lean toolchain
+        run: |
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < lean-toolchain)"
+      - run: python3 tools/infra/check_car_finite_core.py --owners
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: CARMajoranaOwnerIntegration
           path: ${{ runner.temp }}/car-majorana-deliverable
           include-hidden-files: true

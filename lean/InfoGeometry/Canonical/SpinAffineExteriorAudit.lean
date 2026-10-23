@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Physics.SpinPhaseRealization
 import InfoGeometry.Quantum.QuaternionSpinTimeReversal
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SpinAffineExteriorPristineChain
@@ -145,3 +151,9 @@ Source scans and independent symbolic regressions are not a substitute.
 #print axioms InfoGeometry.Quantum.QuaternionSpinTimeReversal.cartan_timeReverse_odd
 #print axioms InfoGeometry.Quantum.QuaternionSpinTimeReversal.spin_half_quadratic_squeeze_zero
 
+
+#print axioms InfoGeometry.Physics.SpinAffineCasimirRigidity.phaseMatrix
+#print axioms InfoGeometry.Physics.SpinAffineCasimirRigidity.phaseMatrix_mem_unitary
+#print axioms InfoGeometry.Physics.SpinAffineCasimirRigidity.phaseMatrix_conjugate_plus
+#print axioms InfoGeometry.Physics.SpinAffineCasimirRigidity.phaseMatrix_conjugate_minus
+#print axioms InfoGeometry.Physics.SpinAffineCasimirRigidity.phaseMatrix_conjugate_cartan

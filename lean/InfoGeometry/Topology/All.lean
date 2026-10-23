@@ -135,6 +135,8 @@ import InfoGeometry.Topology.Pin55ContinuityLemmas
 import InfoGeometry.Topology.AffinePin55TopologicalGroup
 import InfoGeometry.Topology.ChiralCuntzApollonianBridge
 import InfoGeometry.Topology.ChiralCuntzApollonianBridgeAudit
+import InfoGeometry.Topology.DirectedPathOperatorTransport
+import InfoGeometry.Topology.DirectedPathOperatorTransportAudit
 
 /-!
 # Closed finite-trace closure ledger (topology layer)

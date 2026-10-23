@@ -112,6 +112,37 @@ theorem boundaryDyad_self_adjoint_of_same_ray [DecidableEq ι]
   simp only [Matrix.conjTranspose_apply,
     boundaryDyad_matrix_of_same_ray p c hc, star_div₀, star_mul, star_star, hnorm]
 
+/-- A regular dyad is Hermitian exactly when both boundary directions lie
+on the same complex ray. -/
+theorem boundaryDyad_self_adjoint_iff_same_ray [DecidableEq ι]
+    (p : RegularBoundaryPair ι) :
+    Matrix.conjTranspose (coordinateMatrix (boundaryDyad p)) =
+      coordinateMatrix (boundaryDyad p) ↔ ∃ c : ℂ, p.post = c • p.pre := by
+  constructor
+  · intro hs
+    classical
+    have hv : p.pre ≠ 0 := by
+      intro hz
+      exact p.overlap_ne (by simp [hz])
+    obtain ⟨i, hi⟩ : ∃ i, p.pre i ≠ 0 := by
+      by_contra hn
+      push Not at hn
+      exact hv (funext hn)
+    have hsi : star (p.pre i) ≠ 0 := by simpa using hi
+    have ho := p.overlap_ne
+    have hso : star (overlap p) ≠ 0 := by simp
+    refine ⟨star (p.post i) * star (overlap p) /
+      (overlap p * star (p.pre i)), ?_⟩
+    funext j
+    have he := congrArg star (congrArg (fun M : Matrix ι ι ℂ => M i j) hs)
+    simp only [Matrix.conjTranspose_apply, boundaryDyad_matrix_apply,
+      star_star, star_div₀, star_mul] at he
+    simp only [Pi.smul_apply, smul_eq_mul]
+    field_simp [ho, hso, hsi] at he ⊢
+    linear_combination -he
+  · rintro ⟨c, hc⟩
+    exact boundaryDyad_self_adjoint_of_same_ray p c hc
+
 theorem obliquePair_matrix : coordinateMatrix (boundaryDyad obliquePair) =
     !![1, 1; 0, 0] := by
   ext i j

@@ -13,6 +13,10 @@ import InfoGeometry.Singular.NormalAnomaly
 import InfoGeometry.Singular.SchurDrazinMoorePenrose
 import InfoGeometry.Singular.SquareZeroMoorePenrose
 import InfoGeometry.Singular.SquareZeroMoorePenroseAudit
+import InfoGeometry.Singular.MoorePenroseChiralDefects
+import InfoGeometry.Singular.MoorePenroseChiralDefectsAudit
+import InfoGeometry.Singular.DrazinReflexiveDefect
+import InfoGeometry.Singular.DrazinReflexiveDefectAudit
 
 namespace InfoGeometry
 

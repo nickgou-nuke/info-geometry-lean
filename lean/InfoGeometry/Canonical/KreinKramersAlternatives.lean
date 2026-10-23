@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 
 /-!
@@ -65,6 +70,40 @@ theorem kramers_pair_orthogonal {t : A} (hT : IsKramersOperator t) (x : A) :
   have hstar : star t = -t := kramers_skew_adjoint hT
   rw [hstar]
   noncomm_ring
+
+/-- The failure of quadratic sign reversal is the sandwich of the
+anticommutator defect. Only ordinary isometry is required; neither a
+quaternionic square nor any condition on the form operator is used. -/
+theorem quadratic_sign_flip_defect {t : A} (ht : star t * t = 1) (j x : A) :
+    kreinQuadraticForm j (t * x) + kreinQuadraticForm j x =
+      star x * (star t * jordanProd j t) * x := by
+  unfold kreinQuadraticForm jordanProd
+  rw [star_mul]
+  calc
+    star x * star t * j * (t * x) + star x * j * x =
+        star x * (star t * j * t + j) * x := by noncomm_ring
+    _ = star x * (star t * j * t + (star t * t) * j) * x := by
+      rw [ht, one_mul]
+    _ = star x * (star t * (j * t + t * j)) * x := by noncomm_ring
+
+/-- Under a two-sided unitary, reversal of the operator-valued quadratic
+form on every ring element is exactly anticommutation with its form operator.
+There is no nonzero-signature or positivity conclusion. -/
+theorem quadratic_sign_flip_iff_anticommute_of_unitary {t : A}
+    (hleft : star t * t = 1) (hright : t * star t = 1) (j : A) :
+    (∀ x : A, kreinQuadraticForm j (t * x) = -kreinQuadraticForm j x) ↔
+      jordanProd j t = 0 := by
+  constructor
+  · intro h
+    have hz : kreinQuadraticForm j (t * 1) + kreinQuadraticForm j 1 = 0 := by
+      rw [h 1, neg_add_cancel]
+    rw [quadratic_sign_flip_defect hleft] at hz
+    simp only [star_one, one_mul, mul_one] at hz
+    have hc := congrArg (fun y => t * y) hz
+    simpa only [← mul_assoc, hright, one_mul, mul_zero] using hc
+  · intro h x
+    apply eq_neg_of_add_eq_zero_left
+    rw [quadratic_sign_flip_defect hleft, h, mul_zero, mul_zero, zero_mul]
 
 theorem kramers_krein_signature_flip {t : A} (hT : IsKramersOperator t)
     (j x : A) (hanti : jordanProd j t = 0) :

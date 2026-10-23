@@ -1,0 +1,62 @@
+name: Block-causal Sinkhorn (scoped)
+on:
+  push:
+    branches: [feat/block-causal-sinkhorn-contract]
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Routing/CausalPrefixPooling.lean'
+      - 'lean/InfoGeometry/Routing/FiniteLogSinkhorn.lean'
+      - 'lean/InfoGeometry/Routing/PrefixCausalDifferential.lean'
+      - 'lean/InfoGeometry/Routing/BlockCausalSinkhorn.lean'
+      - 'tools/quality/check_block_causal_sinkhorn.py'
+      - '.github/workflows/block-causal-sinkhorn.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: block-causal-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: false
+jobs:
+  kernel-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Fetch exact public source without initializing external submodules
+        env:
+          SOURCE_SHA: ${{ github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init project
+          git -C project remote add origin https://github.com/nickgou-nuke/info-geometry-lean.git
+          git -C project fetch --depth=1 origin "$SOURCE_SHA"
+          git -C project checkout --detach FETCH_HEAD
+          python3 - <<'PY'
+          import json, pathlib, subprocess
+          root = pathlib.Path('project')
+          manifest = json.loads((root / 'lake-manifest.json').read_text())
+          pin = next(p for p in manifest['packages'] if p['name'] == 'mathlib')
+          subprocess.run(['git', 'init', 'pinned-mathlib'], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'remote', 'add', 'origin', pin['url']], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'fetch', '--depth=1', 'origin', pin['rev']], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'checkout', '--detach', 'FETCH_HEAD'], check=True)
+          PY
+      - name: Install exact toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
+      - name: Compile source closure and audit complete new declaration environment
+        run: python3 project/tools/quality/check_block_causal_sinkhorn.py --mathlib-root pinned-mathlib --output "${{ runner.temp }}/block-causal-check"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: block-causal-verification
+          path: |
+            ${{ runner.temp }}/block-causal-check/status.json
+            ${{ runner.temp }}/block-causal-check/*.log
+            ${{ runner.temp }}/block-causal-check/lean-version.txt
+            ${{ runner.temp }}/block-causal-check/src
+          if-no-files-found: error

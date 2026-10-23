@@ -45,7 +45,9 @@ jobs:
       - name: Verify published CI container Lean toolchain (optional)
         if: needs.ci_container_preflight.outputs.available == 'true'
         run: |
-          docker run --rm "${{ needs.ci_container_preflight.outputs.reference }}" lean --version | grep -E '^Lean \(version 4\.28\.1'
+          set -euo pipefail
+          docker run --rm "${{ needs.ci_container_preflight.outputs.reference }}" lean --version |
+            python3 tools/infra/ci_bootstrap.py version
       - name: Fetch base ref for verification pilot
         if: github.event_name == 'pull_request'
         run: |
@@ -79,12 +81,18 @@ jobs:
       - name: Verify installed Lean version
         run: |
           set -euo pipefail
-          actual="$(lean --version | head -n 1)"
-          echo "[ci] ${actual}"
-          if ! printf '%s\n' "${actual}" | grep -Eq '^Lean \(version 4\.28\.1'; then
-            echo "::error title=Lean version mismatch::expected Lean v4.34.1"
-            exit 1
-          fi
+          lean --version | python3 tools/infra/ci_bootstrap.py version
+
+      - name: Validate local Lake package checkouts
+        run: python3 tools/infra/ci_bootstrap.py paths --report .artifacts/ci/path-dependencies.json
+
+      - name: Preserve path dependency preflight
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-path-dependencies-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .artifacts/ci/path-dependencies.json
+          if-no-files-found: warn
 
       - name: Enable sandbox wrappers (CI)
         run: |

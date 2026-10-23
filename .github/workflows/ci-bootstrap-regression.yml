@@ -1,0 +1,42 @@
+name: CI bootstrap regressions
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.gitmodules'
+      - '.github/workflows/ci.yml'
+      - '.github/workflows/ci-bootstrap-regression.yml'
+      - '.github/workflows/reviewed-pr-integration.yml'
+      - 'tools/infra/ci_bootstrap.py'
+      - 'tests/test_ci_bootstrap.py'
+  push:
+    branches: [fix/main-verification-bootstrap-20261023]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ci-bootstrap-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: false
+jobs:
+  bootstrap-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+          submodules: false
+      - name: Check bootstrap logic without invoking Lake
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p .artifacts/ci/bootstrap
+          ps -eo pid,comm,args
+          python3 -m unittest discover -s tests -p test_ci_bootstrap.py -v 2>&1 | tee .artifacts/ci/bootstrap/tests.log
+      - name: Confirm repaired Git submodule traversal
+        run: git submodule foreach --recursive ':'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ci-bootstrap-tests
+          path: .artifacts/ci/bootstrap

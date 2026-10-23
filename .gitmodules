@@ -105,3 +105,8 @@
 	path = external_refs/AbstractSimplicialComplex
 	url = https://github.com/smorel394/AbstractSimplicialComplex.git
 	branch = master
+
+[submodule "sandbox/Grassmann.jl"]
+	path = sandbox/Grassmann.jl
+	url = https://github.com/chakravala/Grassmann.jl.git
+	ignore = dirty

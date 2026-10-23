@@ -9,6 +9,8 @@ on:
       - 'tools/quality/check_reviewed_prs.py'
       - 'tools/quality/reviewed_prs_20260921.json'
       - '.github/workflows/reviewed-pr-integration.yml'
+      - '.gitmodules'
+      - 'tools/infra/ci_bootstrap.py'
       - 'lean-toolchain'
       - 'lake-manifest.json'
   pull_request:
@@ -19,6 +21,8 @@ on:
       - 'tools/quality/check_reviewed_prs.py'
       - 'tools/quality/reviewed_prs_20260921.json'
       - '.github/workflows/reviewed-pr-integration.yml'
+      - '.gitmodules'
+      - 'tools/infra/ci_bootstrap.py'
       - 'lean-toolchain'
       - 'lake-manifest.json'
   workflow_dispatch:
@@ -43,6 +47,7 @@ jobs:
             lean/InfoGeometry
             lean/DAG
             tools/quality
+            tools/infra
             proofs
       - uses: actions/checkout@v4
         with:
@@ -56,9 +61,9 @@ jobs:
           path: |
             ~/.elan
             pinned-mathlib/.lake
-          key: reviewed-prs-lean4341-mathlib-1f9fffd5-v1
+          key: reviewed-prs-lean4341-mathlib-d13f23b7-v1
           restore-keys: |
-            cuntz-clifford-lean4341-mathlib-1f9fffd5-v1
+            cuntz-clifford-lean4341-mathlib-d13f23b7-v1
       - name: Install pinned Lean
         shell: bash
         run: |
@@ -67,13 +72,20 @@ jobs:
             sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
           fi
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
+      - name: Verify pinned Lean version
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd pinned-mathlib
+          lean --version | python3 ../project/tools/infra/ci_bootstrap.py version --root ../project
       - uses: actions/cache/restore@v4
         id: native-cache
         with:
           path: reviewed-native-cache
-          key: reviewed-native-lean4341-1f9fffd5-v1-${{ github.sha }}
+          key: reviewed-native-lean4341-d13f23b7-v1-${{ github.sha }}
           restore-keys: |
-            reviewed-native-lean4341-1f9fffd5-v1-
+            reviewed-native-lean4341-d13f23b7-v1-
       - name: Compile reviewed union and audit every declaration
         run: |
           python3 project/tools/quality/check_reviewed_prs.py \
@@ -84,14 +96,14 @@ jobs:
         if: always() && steps.native-cache.outputs.cache-hit != 'true'
         with:
           path: reviewed-native-cache
-          key: reviewed-native-lean4341-1f9fffd5-v1-${{ github.sha }}
+          key: reviewed-native-lean4341-d13f23b7-v1-${{ github.sha }}
       - uses: actions/cache/save@v4
         if: always() && steps.cache.outputs.cache-hit != 'true'
         with:
           path: |
             ~/.elan
             pinned-mathlib/.lake
-          key: reviewed-prs-lean4341-mathlib-1f9fffd5-v1
+          key: reviewed-prs-lean4341-mathlib-d13f23b7-v1
       - uses: actions/upload-artifact@v4
         if: always()
         with:

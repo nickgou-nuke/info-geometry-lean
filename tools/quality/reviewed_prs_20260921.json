@@ -65,6 +65,20 @@
     "InfoGeometry.Krein.TransitionWeakValueAudit",
     "InfoGeometry.Krein.TransitionWeakValueExamples",
     "InfoGeometry.Modular.KreinPotentialTrace",
-    "InfoGeometry.Meta.FiniteTemperleyLiebTrace"
-  ]
+    "InfoGeometry.Meta.FiniteTemperleyLiebTrace",
+    "InfoGeometry.Canonical.DrazinShellCascade",
+    "InfoGeometry.Canonical.DrazinInterShellHodge",
+    "InfoGeometry.Core.DiracPeirceSuperalgebra",
+    "InfoGeometry.Core.SupercolorMultiplication",
+    "InfoGeometry.Routing.AttentionReadoutCompression",
+    "InfoGeometry.MassSpectrometry.MolecularIdentifiabilityBridge",
+    "InfoGeometry.Algebra.CuntzTensorQuotientPositivityObstruction",
+    "InfoGeometry.Canonical.MajoranaCoefficientAction",
+    "InfoGeometry.Canonical.MajoranaPfaffian4"
+  ],
+  "integration_review_20261023": {
+    "source_commit": "ecccb38da69539e1ced7172f6d44cb1da0d97291",
+    "added_targets": 9,
+    "status": "Selected for fresh source compilation and native axiom audit; selection is not verification"
+  }
 }

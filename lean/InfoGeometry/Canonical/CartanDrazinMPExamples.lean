@@ -87,14 +87,15 @@ theorem odd_sum_squares_to_one :
     oddPart diagonalSeed swapSeed = swapSeed ∧ swapSeed * swapSeed = 1 := by
   constructor <;> ext i j <;> fin_cases i <;> fin_cases j <;>
     norm_num [oddPart, component10, component01, complementIdempotent,
-      diagonalSeed, swapSeed, Matrix.mul_apply, Fin.sum_univ_two, Matrix.one_apply]
+      diagonalSeed, swapSeed, Matrix.mul_apply, Matrix.vecMul, dotProduct,
+      Fin.sum_univ_two, Matrix.one_apply]
 
 theorem concrete_corner_mp :
     IsMoorePenroseInverse (component10 diagonalSeed swapSeed)
       (component01 diagonalSeed swapSeed) := by
   refine ⟨?_, ?_, ?_, ?_⟩ <;> ext i j <;> fin_cases i <;> fin_cases j <;>
     norm_num [component10, component01, complementIdempotent, diagonalSeed, swapSeed,
-      Matrix.mul_apply, Fin.sum_univ_two, Matrix.one_apply,
+      Matrix.mul_apply, Matrix.vecMul, dotProduct, Fin.sum_univ_two, Matrix.one_apply,
       Matrix.star_eq_conjTranspose, Matrix.conjTranspose_apply]
 
 /-- Execute the return from a directed corner to a new star projection/reflection. -/

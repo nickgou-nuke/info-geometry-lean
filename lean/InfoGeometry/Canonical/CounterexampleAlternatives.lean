@@ -91,6 +91,19 @@ theorem proper_idempotent_not_unit
   have hleft := congrArg (fun z : A => (↑u⁻¹ : A) * z) he
   simpa [mul_assoc] using hleft
 
+theorem nonzero_square_zero_not_unit
+    [MonoidWithZero A] [Nontrivial A] {x : A}
+    (hx : x * x = 0) (hx0 : x ≠ 0) :
+    ¬ IsUnit x := by
+  intro hunit
+  rcases hunit with ⟨u, hu⟩
+  have hleft : (↑u⁻¹ : A) * (x * x) = (↑u⁻¹ : A) * 0 := by
+    rw [hx]
+  have hcancel : x = 0 := by
+    rw [← hu] at hleft
+    simpa [mul_assoc] using hleft
+  exact hx0 hcancel
+
 theorem orthogonal_idempotent_sum_idempotent
     [Ring A] (e f : A) (he : e * e = e) (hf : f * f = f)
     (hef : e * f = 0) (hfe : f * e = 0) :

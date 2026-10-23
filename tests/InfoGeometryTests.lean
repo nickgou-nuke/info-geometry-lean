@@ -396,6 +396,7 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Canonical.CounterexampleAlternatives.complement_idempotent_of_idempotent
 #check InfoGeometry.Canonical.CounterexampleAlternatives.nonzero_idempotent_not_square_zero
 #check InfoGeometry.Canonical.CounterexampleAlternatives.proper_idempotent_not_unit
+#check InfoGeometry.Canonical.CounterexampleAlternatives.nonzero_square_zero_not_unit
 #check InfoGeometry.Canonical.CounterexampleAlternatives.orthogonal_idempotent_sum_idempotent
 #check InfoGeometry.Canonical.CounterexampleAlternatives.orthogonal_idempotents_have_zero_jordan_product
 #check InfoGeometry.Canonical.CounterexampleAlternatives.star_sandwich_of_self_adjoint

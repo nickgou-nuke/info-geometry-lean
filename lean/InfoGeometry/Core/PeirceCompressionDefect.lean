@@ -57,6 +57,28 @@ theorem compression_defect_sum {I : Type*} [Fintype I]
 section Star
 variable [StarRing A]
 
+/-- Polarized compression defect: arbitrary inputs give the mixed star product
+of their complementary transfer corners. No self-adjointness of either input
+or positivity structure on the ring is required. -/
+theorem compression_adjoint_mul_defect (p x y : A) (hp : p * p = p)
+    (hps : star p = p) :
+    p * (star x * y) * p - (p * star x * p) * (p * y * p) =
+      star ((1 - p) * x * p) * ((1 - p) * y * p) := by
+  rw [compression_mul_defect p (star x) y hp]
+  have hc : (1 - p) * (1 - p) = 1 - p := by noncomm_ring [hp]
+  simp only [star_mul, star_sub, star_one, hps]
+  calc
+    _ = p * star x * ((1 - p) * (1 - p)) * y * p := by rw [hc]
+    _ = _ := by simp only [mul_assoc]
+
+/-- The adjoint reverses the two inputs of the polarized defect. -/
+theorem compression_adjoint_mul_defect_star (p x y : A) (hp : p * p = p)
+    (hps : star p = p) :
+    star (p * (star x * y) * p - (p * star x * p) * (p * y * p)) =
+      p * (star y * x) * p - (p * star y * p) * (p * x * p) := by
+  rw [compression_adjoint_mul_defect p x y hp hps,
+    compression_adjoint_mul_defect p y x hp hps, star_mul, star_star]
+
 /-- Self-adjoint compression and input give a literal star-square factorization. -/
 theorem compression_square_defect_star (p x : A) (hp : p * p = p)
     (hps : star p = p) (hxs : star x = x) :

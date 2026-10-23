@@ -54,6 +54,95 @@ structure IsOrthogonalExtendedSusy {ι : Type*} (d b : ι → R) : Prop
 
 def colorBoson {ι : Type*} (d b : ι → R) (i j : ι) : R := d i * b j
 
+/-! Distinct middle colors vanish under cross-annihilation. The MP identities
+also give the two diagonal absorption laws below. General matching-middle
+products require additional hypotheses; the common-source version is proved
+in `Core.SupercolorMultiplication`. -/
+
+theorem colorBoson_mul_eq_zero_of_middle_ne
+    {ι : Type*} {d b : ι → R} (hS : IsSupercolorSystem d b)
+    {i j k l : ι} (hjk : j ≠ k) :
+    colorBoson d b i j * colorBoson d b k l = 0 := by
+  unfold colorBoson
+  calc
+    d i * b j * (d k * b l) = d i * (b j * d k) * b l := by
+      noncomm_ring
+    _ = 0 := by rw [hS.b_mul_d_ne hjk, mul_zero, zero_mul]
+
+theorem colorBoson_mul_left_absorb
+    {ι : Type*} {d b : ι → R} (hS : IsSupercolorSystem d b)
+    (i j : ι) :
+    colorBoson d b i i * colorBoson d b i j = colorBoson d b i j := by
+  unfold colorBoson
+  calc
+    (d i * b i) * (d i * b j) = (d i * b i * d i) * b j := by
+      simp only [mul_assoc]
+    _ = d i * b j := by rw [hS.mp i |>.aba_eq_a]
+
+theorem colorBoson_mul_right_absorb
+    {ι : Type*} {d b : ι → R} (hS : IsSupercolorSystem d b)
+    (i j : ι) :
+    colorBoson d b i j * colorBoson d b j j = colorBoson d b i j := by
+  unfold colorBoson
+  calc
+    (d i * b j) * (d j * b j) = d i * (b j * d j * b j) := by
+      simp only [mul_assoc]
+    _ = d i * b j := by rw [hS.mp j |>.bab_eq_b]
+
+theorem star_colorBoson_of_dual
+    {ι : Type*} {d b : ι → R} (hdual : ∀ i, b i = star (d i))
+    (i j : ι) :
+    star (colorBoson d b i j) = colorBoson d b j i := by
+  unfold colorBoson
+  rw [star_mul, hdual j, hdual i, star_star]
+
+theorem star_sectorCentralCharge_of_dual
+    {ι : Type*} {d b : ι → R} (hdual : ∀ i, b i = star (d i))
+    (i : ι) :
+    star (sectorCentralCharge (d i) (b i)) = sectorCentralCharge (d i) (b i) := by
+  unfold sectorCentralCharge jordanProd
+  simp only [star_add, star_mul, hdual i, star_star]
+
+theorem star_totalMajoranaPlus_of_dual
+    {ι : Type*} [Fintype ι] {d b : ι → R}
+    (hdual : ∀ i, b i = star (d i)) :
+    star (totalMajoranaPlus d b) = totalMajoranaPlus d b := by
+  unfold totalMajoranaPlus majoranaPlus
+  rw [star_sum]
+  apply Finset.sum_congr rfl
+  intro i hi
+  rw [star_add, hdual i, star_star]
+  abel
+
+theorem star_totalMajoranaMinus_of_dual
+    {ι : Type*} [Fintype ι] {d b : ι → R}
+    (hdual : ∀ i, b i = star (d i)) :
+    star (totalMajoranaMinus d b) = -totalMajoranaMinus d b := by
+  unfold totalMajoranaMinus majoranaMinus
+  rw [star_sum]
+  rw [← Finset.sum_neg_distrib]
+  apply Finset.sum_congr rfl
+  intro i hi
+  rw [star_sub, hdual i, star_star]
+  abel
+
+theorem star_totalCentralCharge_of_dual
+    {ι : Type*} [Fintype ι] {d b : ι → R}
+    (hdual : ∀ i, b i = star (d i)) :
+    star (totalCentralCharge d b) = totalCentralCharge d b := by
+  unfold totalCentralCharge sectorCentralCharge jordanProd
+  rw [star_sum]
+  apply Finset.sum_congr rfl
+  intro i hi
+  simp only [star_add, star_mul, hdual i, star_star]
+
+/-!
+The finite-color API intentionally stops at conditional Peirce relations.  In
+particular, `IsSupercolorSystem` is not presented as an `sl(k|1)`
+representation: closure under a chosen Lie-superbracket, the Jacobi law, and
+the representation map are separate hypotheses to be formalized when needed.
+-/
+
 lemma tangent_of_square_zero_pair {d b : R}
     (hd : d * d = 0) (h : IsMoorePenroseInverse d b) :
     IsGrassmannianTangent (d * b) d ∧
@@ -162,6 +251,7 @@ theorem color_pair_relations {ι : Type*} {d b : ι → R}
         _ = d i * b j + d j * b i := by
           rw [hdij, hji_d, hbij, hji_b, hdbij, hdbji]
           abel
+
     · unfold jordanProd majoranaMinus colorBoson
       calc
         (d i - b i) * (d j - b j) + (d j - b j) * (d i - b i) =
@@ -193,7 +283,7 @@ theorem extended_susy_centrality {ι : Type*} [Fintype ι]
               d i * b i * d i + b i * d i * d i - d i * d i * b i - d i * b i * d i := by noncomm_ring
           _ = 0 := by
             rw [hi.aba_eq_a, mul_assoc (b i) (d i) (d i), hdd]
-            simp only [mul_zero, zero_mul, sub_zero, zero_sub]
+            simp only [mul_zero, zero_mul, sub_zero]
             abel
       · unfold lieBracket sectorCentralCharge jordanProd
         calc
@@ -201,7 +291,7 @@ theorem extended_susy_centrality {ι : Type*} [Fintype ι]
               d i * b i * b i + b i * d i * b i - b i * d i * b i - b i * b i * d i := by noncomm_ring
           _ = 0 := by
             rw [hi.bab_eq_b, mul_assoc (d i) (b i) (b i), hbb]
-            simp only [mul_zero, zero_mul, sub_zero, zero_sub]
+            simp only [mul_zero, zero_mul, sub_zero]
             abel
     · have h := hE.toIsSupercolorSystem
       constructor <;> unfold lieBracket sectorCentralCharge jordanProd

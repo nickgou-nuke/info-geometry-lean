@@ -356,6 +356,23 @@ theorem mem_fiveGradeRange_implies_adjoint_eigen
   | posOne => simpa [fiveGradeValue] using gradePosOne_adjoint_weight he y
   | posTwo => simpa [fiveGradeValue] using gradePosTwo_adjoint_weight he y
 
+/-!
+The range description can also be stated intrinsically: because each grouped
+projector is idempotent, its range is exactly its fixed-point submodule.  This
+is the projector-side converse that is independent of any eigenvalue
+separation argument.
+-/
+theorem mem_fiveGradeRange_iff_projector_fixed
+    {e : R} (he : e * e * e = e) (k : FiveGrade) {x : R} :
+    x ∈ fiveGradeRange e k ↔ fiveGradeProjector e k x = x := by
+  constructor
+  · rintro ⟨y, hy⟩
+    rw [← hy]
+    have h := fiveGradeProjector_idempotent he k
+    exact congrArg (fun f : Module.End ℝ R => f y) h
+  · intro hx
+    exact ⟨x, hx⟩
+
 end
 
 end InfoGeometry.Physics.Algebra

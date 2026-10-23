@@ -18,6 +18,9 @@ import InfoGeometry.Core.DiracSuperalgebra
 import InfoGeometry.Core.DiracSuperalgebraAudit
 import InfoGeometry.Core.PeirceTangent
 import InfoGeometry.Core.SuperGrassmannianSusy
+import InfoGeometry.Core.SuperGrassmannianSusyExamples
+import InfoGeometry.Core.SupercolorMatrixExamples
+import InfoGeometry.Core.SupercolorMultiplication
 import InfoGeometry.Core.DiracPeirceSuperalgebra
 import InfoGeometry.Core.DiracPeirceSuperalgebraAudit
 import InfoGeometry.Core.Jordan

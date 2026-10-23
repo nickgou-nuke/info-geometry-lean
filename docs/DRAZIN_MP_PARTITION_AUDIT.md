@@ -497,6 +497,46 @@ Independent A-A Sagan found no mathematical error in those five statements.
 The off-diagonal expansion theorem is forward-only; its converse and a
 self-adjoint tangent theorem are not claimed by this module.
 
+### Finite Majorana coefficient-action contract (in progress)
+
+The requested chain/Pfaffian bridge must use the same coefficient matrix,
+not a conjunction of unrelated bulk and boundary results. The inspected
+`Canonical.MajoranaChiralPfaffianBridge.car_majorana_chain_pfaffian_bridge`
+explicitly keeps those components separate. The next owner extension uses
+`Canonical.KitaevChainMajoranaZeroModes.IsMajoranaBasis N gamma`, namely
+`gamma i * gamma j + gamma j * gamma i = if i = j then 2 else 0`.
+The carrier is a nontrivial associative real algebra. The coefficient map
+is Mathlib's existing `Fintype.linearCombination ℝ gamma`, not a new
+Majorana-field structure. Anticommuting with `gamma k` must recover
+`(2 * v k) • 1`, proving this map injective. For a real skew matrix K,
+the quadratic element `(1/4) • sum i,j, K i j • (gamma i * gamma j)`
+must act on that map by the ordinary commutator as `K.mulVec`.
+This establishes the finite operator/coefficient-kernel identification;
+specializing the actual chain matrix and transporting its signed Pfaffian
+criterion remain separate obligations. No bulk-phase/boundary equivalence,
+many-body Hamiltonian kernel, or continuum result is asserted. The summed
+quadratic-action theorem is still open; the current source only supplies
+coefficient recovery, injectivity, the monomial commutator, and the definition.
+
+### Concrete color multiplication and adjoint tests
+
+The user requested non-vacuous finite examples and a truthful Core closure
+API. `Core.SupercolorMatrixExamples` uses real matrix units on `Option ι`:
+`d_i = e_(some i),none` and `b_i = e_none,(some i)`. Thus `Fin 2` is a
+three-dimensional matrix carrier and `Fin 4` a five-dimensional carrier.
+The common co-range is `e_none,none`, and every color product is the nonzero
+matrix unit `e_(some i),(some j)`. These are not disjoint-support systems.
+
+`Core.SupercolorMultiplication.colorBoson_mul_of_common_source` proves
+`E_ij E_lm = if j=l then E_im else 0` under the explicit common-co-range
+hypothesis `∀ i, b_i d_i=q`; the companion commutator theorem proves the
+corresponding two-term closure formula. The base MP absorption laws alone
+do not imply the matching-middle formula. Adjoint statements require the
+explicit `b_i = star d_i` hypothesis. No `sl(k|1)` representation,
+super-Jacobi closure, or physical extended-SUSY classification is claimed.
+The examples exercise matching and mismatched products, nonvanishing, and
+star symmetry; `tests/InfoGeometryTests.lean` contains declaration checks.
+
 ### Earlier inverse-sector audit
 
 The implementation is collected by `Canonical/InverseSectorAudit.lean`.

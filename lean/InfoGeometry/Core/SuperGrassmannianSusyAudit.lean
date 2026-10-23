@@ -5,6 +5,8 @@ Authors: InfoGeometry Engine Contributors
 -/
 
 import InfoGeometry.Core.SuperGrassmannianSusy
+import InfoGeometry.Core.SuperGrassmannianSusyExamples
+import InfoGeometry.Core.SupercolorMultiplication
 
 #print axioms InfoGeometry.Core.SuperGrassmannianSusy.jordanProd
 #print axioms InfoGeometry.Core.SuperGrassmannianSusy.lieBracket
@@ -25,3 +27,23 @@ import InfoGeometry.Core.SuperGrassmannianSusy
 #print axioms InfoGeometry.Core.SuperGrassmannianSusy.extended_susy_total_charges
 #print axioms InfoGeometry.Core.SuperGrassmannianSusy.n4_extended_susy
 #print axioms InfoGeometry.Core.SuperGrassmannianSusy.n8_extended_susy
+#check InfoGeometry.Core.SuperGrassmannianSusy.fin2ZeroSupercolor
+#check InfoGeometry.Core.SuperGrassmannianSusy.fin4ZeroSupercolor
+#check InfoGeometry.Core.SuperGrassmannianSusy.fin2_zero_extended_susy_certificate
+#check InfoGeometry.Core.SuperGrassmannianSusy.fin4_zero_extended_susy_certificate
+#print axioms InfoGeometry.Core.SuperGrassmannianSusy.colorBoson_mul_eq_zero_of_middle_ne
+#print axioms InfoGeometry.Core.SuperGrassmannianSusy.colorBoson_mul_left_absorb
+#print axioms InfoGeometry.Core.SuperGrassmannianSusy.colorBoson_mul_right_absorb
+#print axioms InfoGeometry.Core.SuperGrassmannianSusy.star_colorBoson_of_dual
+#print axioms InfoGeometry.Core.SuperGrassmannianSusy.star_sectorCentralCharge_of_dual
+#print axioms InfoGeometry.Core.SuperGrassmannianSusy.star_totalMajoranaPlus_of_dual
+#print axioms InfoGeometry.Core.SuperGrassmannianSusy.star_totalMajoranaMinus_of_dual
+#print axioms InfoGeometry.Core.SuperGrassmannianSusy.star_totalCentralCharge_of_dual
+#check InfoGeometry.Core.SuperGrassmannianSusy.zeroOrthogonalExtendedSusy
+#check InfoGeometry.Core.SuperGrassmannianSusy.fin2_zero_total_charges
+#check InfoGeometry.Core.SuperGrassmannianSusy.fin4_zero_total_charges
+#print axioms InfoGeometry.Core.SuperGrassmannianSusy.colorBoson_mul_middle
+#print axioms InfoGeometry.Core.SuperGrassmannianSusy.colorBoson_mul_of_common_source
+#print axioms InfoGeometry.Core.SuperGrassmannianSusy.colorBoson_lieBracket_of_common_source
+#print axioms InfoGeometry.Core.SuperGrassmannianSusy.star_majoranaPlus_of_dual
+#print axioms InfoGeometry.Core.SuperGrassmannianSusy.star_majoranaMinus_of_dual

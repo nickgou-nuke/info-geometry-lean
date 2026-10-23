@@ -43,6 +43,11 @@ theorem star_symmetric_sum_of_self_adjoint
     star (x + y) = x + y := by
   rw [star_add, hx, hy]
 
+theorem self_adjoint_unitary_is_involution
+    [Ring A] [StarRing A] (u : A)
+    (hstar : star u = u) (hunit : star u * u = 1) : u * u = 1 := by
+  simpa [hstar] using hunit
+
 theorem complement_idempotent_of_idempotent
     [Ring A] (e : A) (he : e * e = e) :
     (1 - e) * (1 - e) = 1 - e ∧ e * (1 - e) = 0 ∧ (1 - e) * e = 0 := by

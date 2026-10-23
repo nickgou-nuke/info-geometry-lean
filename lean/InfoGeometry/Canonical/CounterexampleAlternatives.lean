@@ -13,6 +13,17 @@ namespace InfoGeometry.Canonical.CounterexampleAlternatives
 
 variable {A B : Type*}
 
+theorem positive_entry_ne_zero_entry
+    [Preorder A] [Zero A] (P Q : A) (hP : 0 < P) (hQ : Q = 0) : P ≠ Q := by
+  intro h
+  exact (ne_of_gt hP) (hQ ▸ h)
+
+theorem star_symmetric_sum_of_self_adjoint
+    [Ring A] [StarRing A] (x y : A)
+    (hx : star x = x) (hy : star y = y) :
+    star (x + y) = x + y := by
+  rw [star_add, hx, hy]
+
 theorem peirce_corner_square_zero
     [Semiring A] (p q x : A) (hqp : q * p = 0) :
     (p * x * q) * (p * x * q) = 0 := by

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Exceptional.Freudenthal
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Module.TransferInstance
@@ -314,6 +319,34 @@ theorem symplecticRankTwo_jacobi_pattern
     FreudenthalCharge.symplectic_form_skew D y x,
     FreudenthalCharge.symplectic_form_skew D z y]
   module
+
+/-- The repeated-input mixed-triple identity holds exactly on symplectically
+orthogonal pairs. It is not a universal symmetry of the rank-two operator. -/
+theorem symplecticRankTwo_repeated_mixed_iff
+    (D : CubicJordanDatum J) (x z : FreudenthalCharge J) :
+    symplecticRankTwo D z x x = symplecticRankTwo D x x z ↔
+      FreudenthalCharge.symplecticForm D x z = 0 := by
+  rw [symplecticRankTwo_apply, symplecticRankTwo_apply,
+    FreudenthalCharge.symplectic_form_alternating, zero_smul, zero_add,
+    FreudenthalCharge.symplectic_form_skew D x z]
+  constructor
+  · intro h
+    have hz : (3 * FreudenthalCharge.symplecticForm D x z) • x = 0 := by
+      calc
+        _ = (FreudenthalCharge.symplecticForm D x z • x +
+          FreudenthalCharge.symplecticForm D x z • x) -
+          (-FreudenthalCharge.symplecticForm D x z) • x := by module
+        _ = 0 := sub_eq_zero.mpr h.symm
+    rcases smul_eq_zero.mp hz with hc | hx
+    · rcases mul_eq_zero.mp hc with hthree | hform
+      · norm_num at hthree
+      · exact hform
+    · subst x
+      rw [FreudenthalCharge.symplectic_form_skew D z 0]
+      simp only [show FreudenthalCharge.symplecticForm D z 0 = 0 from
+        (symplecticFormLinear D z).map_zero, neg_zero]
+  · intro h
+    rw [h, neg_zero, zero_smul, zero_add]
 
 theorem symplecticRankTwo_preserves
     (D : CubicJordanDatum J) (X Y Z W : FreudenthalCharge J) :

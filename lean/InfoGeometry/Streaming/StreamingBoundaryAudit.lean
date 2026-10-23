@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Streaming.StreamingBoundaryPristineChain
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -68,6 +74,11 @@ before execution. Only propext, Classical.choice, and Quot.sound are permitted.
 #print axioms InfoGeometry.Streaming.GaugeCovariantRouting.pureFrameLinks_flat
 #print axioms InfoGeometry.Streaming.GaugeCovariantRouting.routed_parallel_section
 #print axioms InfoGeometry.Streaming.GaugeCovariantRouting.twoPointAverage
+#print axioms InfoGeometry.Streaming.GaugeCovariantRouting.flat_links_eq_reference_frames
+#print axioms InfoGeometry.Streaming.GaugeCovariantRouting.twoPointAverage_eq_self_iff
+#print axioms InfoGeometry.Streaming.GaugeCovariantRouting.twoPointAverage_eq_zero_iff
+#print axioms InfoGeometry.Streaming.GaugeCovariantRouting.twoPointAverage_reconstruction
+#print axioms InfoGeometry.Streaming.GaugeCovariantRouting.twoPointAverage_idempotent
 #print axioms InfoGeometry.Streaming.GaugeCovariantRouting.twoPointAverage_not_injective
 #print axioms InfoGeometry.Streaming.PairingGapSeparation.PairMatrix
 #print axioms InfoGeometry.Streaming.PairingGapSeparation.pairingBlock

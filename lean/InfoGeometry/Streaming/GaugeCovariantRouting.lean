@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Streaming.PositiveBoundaryConditioning
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -54,6 +60,19 @@ theorem pureFrameLinks_flat (g : ι → V ≃ₗ[ℝ] V) (i j k : ι) (v : V) :
     pathDefect (pureFrameLinks g) i j k v = 0 := by
   simp [pathDefect, pureFrameLinks]
 
+omit [Fintype ι] in
+/-- On the complete node relation, a flat family is reconstructed from
+transport out of any reference node. This is discrete trivialization, not
+an assertion about a connection on an arbitrary graph or manifold. -/
+theorem flat_links_eq_reference_frames (U : Links ι V) (base : ι)
+    (hflat : ∀ i j k v, pathDefect U i j k v = 0) :
+    U = pureFrameLinks (fun i => U i base) := by
+  funext i j
+  apply LinearEquiv.ext
+  intro v
+  have h := sub_eq_zero.mp (hflat i j base ((U j base).symm v))
+  simpa [pureFrameLinks, pathDefect] using h
+
 /-- Pure-frame transport sends a parallel section to the same section after normalized routing. -/
 theorem routed_parallel_section (K : Matrix ι ι ℝ) (hK : ∀ i, ∑ j, K i j = 1)
     (g : ι → V ≃ₗ[ℝ] V) (v : V) :
@@ -64,6 +83,42 @@ theorem routed_parallel_section (K : Matrix ι ι ℝ) (hK : ∀ i, ∑ j, K i j
 
 /-- A normalized averaging operator can be singular; it is not automatically parallel transport. -/
 def twoPointAverage (x : Fin 2 → ℝ) : Fin 2 → ℝ := fun _ => (x 0 + x 1) / 2
+
+/-- Averaging retains exactly the constant component. -/
+theorem twoPointAverage_eq_self_iff (x : Fin 2 → ℝ) :
+    twoPointAverage x = x ↔ x 0 = x 1 := by
+  constructor
+  · intro h
+    have h0 := congrFun h 0
+    have h1 := congrFun h 1
+    exact h0.symm.trans h1
+  · intro h
+    funext i
+    fin_cases i <;> simp [twoPointAverage, h]
+
+/-- Its kernel is exactly the antisymmetric component. -/
+theorem twoPointAverage_eq_zero_iff (x : Fin 2 → ℝ) :
+    twoPointAverage x = 0 ↔ x 0 + x 1 = 0 := by
+  constructor
+  · intro h
+    have h0 := congrFun h 0
+    simpa [twoPointAverage] using h0
+  · intro h
+    funext i
+    simp [twoPointAverage, h]
+
+/-- Mean and contrast together reconstruct the original values. Averaging
+alone discards the contrast; it does not define invertible transport. -/
+theorem twoPointAverage_reconstruction (x : Fin 2 → ℝ) :
+    x = twoPointAverage x + ![(x 0 - x 1) / 2, -(x 0 - x 1) / 2] := by
+  funext i
+  fin_cases i <;> simp [twoPointAverage] <;> ring
+
+/-- The average is a retraction onto the constant-valued subspace. -/
+theorem twoPointAverage_idempotent (x : Fin 2 → ℝ) :
+    twoPointAverage (twoPointAverage x) = twoPointAverage x := by
+  apply (twoPointAverage_eq_self_iff _).mpr
+  rfl
 
 theorem twoPointAverage_not_injective : ¬ Function.Injective twoPointAverage := by
   intro h

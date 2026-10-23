@@ -54,17 +54,48 @@ theorem IsMoorePenroseInverse.transport {a b : R}
 
 variable [StarRing S]
 
+/-- Exact fixed-involution transport criterion for a particular Penrose pair.
+Global preservation of star is unnecessary: the two transported support
+idempotents are the only self-adjointness conditions needed. -/
+theorem IsMoorePenroseInverse.map_iff {a b : R}
+    (h : IsMoorePenroseInverse a b) (f : R →+* S) :
+    IsMoorePenroseInverse (f a) (f b) ↔
+      star (f (a * b)) = f (a * b) ∧ star (f (b * a)) = f (b * a) := by
+  constructor
+  · intro hm
+    simpa only [map_mul] using And.intro hm.ab_adj_eq hm.ba_adj_eq
+  · rintro ⟨hab, hba⟩
+    refine ⟨?_, ?_, ?_, ?_⟩
+    · simpa only [map_mul] using congrArg f h.aba_eq_a
+    · simpa only [map_mul] using congrArg f h.bab_eq_b
+    · simpa only [map_mul] using hab
+    · simpa only [map_mul] using hba
+
+/-- Given an actual target inverse, covariance is equivalent to local
+self-adjointness of the two transported support idempotents. The map need
+not be injective, surjective, or star-preserving. -/
+theorem IsMoorePenroseInverse.target_eq_map_iff {a b : R} {c : S}
+    (h : IsMoorePenroseInverse a b) (f : R →+* S)
+    (hc : IsMoorePenroseInverse (f a) c) :
+    c = f b ↔
+      star (f (a * b)) = f (a * b) ∧ star (f (b * a)) = f (b * a) := by
+  constructor
+  · intro heq
+    subst c
+    exact (h.map_iff f).mp hc
+  · intro hs
+    exact MoorePenrose_unique hc ((h.map_iff f).mpr hs)
+
 /-- Fixed-involution covariance follows from preservation of star, rather
 than from assuming the desired projector transport as witness data. -/
 theorem IsMoorePenroseInverse.map {a b : R}
     (h : IsMoorePenroseInverse a b) (f : R →+* S)
     (hf : ∀ x : R, f (star x) = star (f x)) :
     IsMoorePenroseInverse (f a) (f b) := by
-  refine ⟨?_, ?_, ?_, ?_⟩
-  · simpa only [map_mul] using congrArg f h.aba_eq_a
-  · simpa only [map_mul] using congrArg f h.bab_eq_b
-  · rw [← map_mul, ← hf, h.ab_adj_eq]
-  · rw [← map_mul, ← hf, h.ba_adj_eq]
+  apply (h.map_iff f).mpr
+  constructor
+  · rw [← hf, h.ab_adj_eq]
+  · rw [← hf, h.ba_adj_eq]
 
 /-- Uniqueness identifies any target Moore--Penrose inverse with the
 transported source inverse under a star-preserving equivalence. -/

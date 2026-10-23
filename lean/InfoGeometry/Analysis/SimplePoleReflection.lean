@@ -1,4 +1,10 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Analysis.BipolarSimplePoleResidues
+import InfoGeometry.Analysis.SimplePoleRegularPart
 
 /-!
 # Simple-pole reflection, differential pullback, and non-removability
@@ -10,6 +16,12 @@ function is to be called meromorphic. No nonexistent global `residue` API is use
 For coefficients, `f (-z)` has residue `-r` at `-a`; the pullback of the
 one-form `f(z) dz` is `-f(-z) dz` and has residue `r`. The map `z ↦ -z` is
 holomorphic and preserves real orientation. Neither equality removes a pole.
+
+`SimplePoleRegularPart` supplies the constructive counterpart: analytic
+numerators admit explicit analytic regular parts, extension is equivalent to
+vanishing of the local principal coefficient, and balanced numerators at one
+common point yield an analytic sum. It also regularizes both bipolar poles
+by subtracting their respective principal parts.
 -/
 
 noncomputable section

@@ -71,6 +71,20 @@ theorem compression_adjoint_mul_defect (p x y : A) (hp : p * p = p)
     _ = p * star x * ((1 - p) * (1 - p)) * y * p := by rw [hc]
     _ = _ := by simp only [mul_assoc]
 
+/-- For a proper involution, equality in the compressed star-square identity
+is exactly the absence of transfer from the compressed corner to its complement.
+Properness is essential; a general star ring need not detect zero by star-squares. -/
+theorem compression_adjoint_square_eq_iff_transfer_zero
+    (hproper : ∀ z : A, star z * z = 0 → z = 0)
+    (p x : A) (hp : p * p = p) (hps : star p = p) :
+    p * (star x * x) * p = (p * star x * p) * (p * x * p) ↔
+      (1 - p) * x * p = 0 := by
+  rw [← sub_eq_zero, compression_adjoint_mul_defect p x x hp hps]
+  constructor
+  · exact hproper _
+  · intro hz
+    rw [hz, star_zero, mul_zero]
+
 /-- The adjoint reverses the two inputs of the polarized defect. -/
 theorem compression_adjoint_mul_defect_star (p x y : A) (hp : p * p = p)
     (hps : star p = p) :

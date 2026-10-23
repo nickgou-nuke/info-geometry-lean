@@ -32,13 +32,12 @@ theorem exp_sub_logsumexp [Nonempty K] (f : K → ℝ) (k : K) :
   simp only [FiniteSoftmax.weight, div_one]
 
 /-- Alternating row and column log potentials. -/
-def sinkhornPotentials (logS : Matrix K K ℝ) : ℕ → (K → ℝ) × (K → ℝ)
-  | 0 => (0, 0)
-  | n + 1 =>
-      let uv := sinkhornPotentials logS n
+def sinkhornPotentials (logS : Matrix K K ℝ) : ℕ → (K → ℝ) × (K → ℝ) :=
+  Nat.rec (motive := fun _ => (K → ℝ) × (K → ℝ)) (0, 0)
+    (fun _ uv =>
       let u' := fun k => -logsumexp (fun l => logS k l + uv.2 l)
       let v' := fun l => -logsumexp (fun k => logS k l + u' k)
-      (u', v')
+      (u', v'))
 
 /-- Balanced potential gauge. Meaningful nonempty-channel use is explicit. -/
 def sinkhornGaugeShift (uv : (K → ℝ) × (K → ℝ)) : ℝ :=

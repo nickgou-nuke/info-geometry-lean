@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import SelfReference.Core
 
 /-!
@@ -13,6 +19,21 @@ structure InternalPersistent (A : Agent) extends Persistent A where
   /-- read and write laws -/
   read_write : ∀ s m, read (write s m) = m
   write_read : ∀ s, write s (read s) = s
+
+/-- The complete state provides lawful internal memory. This construction
+does not assert that memory survives arbitrary transitions. -/
+def Agent.stateMemory (A : Agent) : InternalPersistent A where
+  Memory := A.State
+  read := id
+  write _ m := m
+  read_write _ _ := rfl
+  write_read _ := rfl
+
+/-- Reading after writing distinguishes any two written memory values. -/
+theorem InternalPersistent.write_injective {A : Agent}
+    (P : InternalPersistent A) (s : A.State) :
+    Function.Injective (P.write s) :=
+  Function.LeftInverse.injective (P.read_write s)
 
 /-- Persistence through an external immutable trace/log. -/
 structure TracePersistent (A : Agent) where

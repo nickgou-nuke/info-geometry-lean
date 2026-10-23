@@ -1,17 +1,23 @@
-import SelfReference.Core
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import SelfReference.Memory
 
 /-!
 # SelfReference.Counterexamples
 
-Minimal examples separating closed-loop, reflective, and persistent capabilities.
+Concrete witnesses for the current agent interfaces. These examples do not
+separate capabilities: the interfaces permit full-state reflection and memory
+for every agent. Operational introspection and persistence across transitions
+require additional specifications, not absence claims about these witnesses.
 -/
 
 namespace SelfReference.Counterexamples
 
-/-- 1. Closed-loop but not reflective.
-    A simple incrementer that feeds back its output.
-    It has no internal representation of its state.
--/
+/-- An incrementer whose output can be fed back as input. -/
 def incrementer : Agent where
   State := Nat
   Input := Nat
@@ -22,10 +28,7 @@ def incrementer : Agent where
 def incrementerLoop : ClosedLoop incrementer where
   feed o := o
 
-/-- 2. Reflective but not persistent.
-    It can 'see' its state but cannot write to any memory that survives a step
-    beyond the state transition itself.
--/
+/-- The one-state transition system. Both reflection and memory are available. -/
 def mirror : Agent where
   State := Unit
   Input := Unit
@@ -37,9 +40,7 @@ def mirrorReflective : Reflective mirror where
   Rep := Unit
   reifyState _ := ()
 
-/-- 3. Persistent but not self-modifying.
-    A read-write memory that only changes when given an external input.
--/
+/-- A memory cell: `none` preserves state and `some n` overwrites it. -/
 def memoryCell : Agent where
   State := Nat
   Input := Option Nat
@@ -54,5 +55,20 @@ def memoryCellPersistent : Persistent memoryCell where
   Memory := Nat
   read s := s
   write _ m := m
+
+/-- The incrementer has faithful reflection under the actual interface. -/
+example : Nonempty (FaithfulReflective incrementer) :=
+  ⟨incrementer.stateReflection⟩
+
+/-- Even the one-state system has lawful read/write memory. -/
+example : Nonempty (InternalPersistent mirror) := ⟨mirror.stateMemory⟩
+
+/-- No-input memory-cell updates preserve the stored value. -/
+theorem memoryCell_idle (s : Nat) :
+    (memoryCell.transitionRewrite none).rewrite s = s := rfl
+
+/-- An explicit input overwrites the stored value. -/
+theorem memoryCell_write (s n : Nat) :
+    (memoryCell.transitionRewrite (some n)).rewrite s = n := rfl
 
 end SelfReference.Counterexamples

@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.CategoryTheory.Category.Basic
 import Mathlib.CategoryTheory.Functor.Basic
 
@@ -39,6 +45,25 @@ structure FaithfulReflective.{u} (A : Agent.{u}) extends Reflective A where
 /-- The system can induce an admissible update on its own state. -/
 structure SelfModifying.{u} (A : Agent.{u}) where
   rewrite : A.State → A.State
+
+/-- State itself is a faithful representation for every transition system.
+This witnesses the present interface, not operational introspection. -/
+def Agent.stateReflection.{u} (A : Agent.{u}) : FaithfulReflective A where
+  Rep := A.State
+  reifyState := id
+  interpretState := id
+  sound _ := rfl
+
+/-- Any faithful reification retains all distinctions between states. -/
+theorem FaithfulReflective.reifyState_injective.{u}
+    {A : Agent.{u}} (R : FaithfulReflective A) :
+    Function.Injective R.reifyState :=
+  Function.LeftInverse.injective R.sound
+
+/-- A fixed input induces a state update from the actual transition rule.
+The interface imposes no nontriviality or endogenous-policy requirement. -/
+def Agent.transitionRewrite.{u} (A : Agent.{u}) (i : A.Input) : SelfModifying A where
+  rewrite s := (A.step s i).1
 
 /-- One closed-loop step on extended state. -/
 def loopStep.{u} (A : Agent.{u}) (L : ClosedLoop A) :

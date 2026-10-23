@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Algebra.Ring.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Set.Basic
@@ -370,6 +376,38 @@ theorem peirce00_absorb_right
     x * complementIdempotent f = x := by
   rcases hx with ⟨a, rfl⟩
   simp [mul_assoc, complementIdempotent_sq f hf]
+
+/-! ## Elementwise Peirce corners -/
+
+/-- The `(p, q)`-Peirce corner `p * x * q`. -/
+def peirceCorner (p q x : A) : A :=
+  p * x * q
+
+/-- A Peirce corner is square-zero when the right and left projectors are
+orthogonal in the order `q * p = 0`. -/
+theorem peirceCorner_sq_eq_zero {p q x : A} (h : q * p = 0) :
+    peirceCorner p q x * peirceCorner p q x = 0 := by
+  unfold peirceCorner
+  calc
+    (p * x * q) * (p * x * q) = p * x * (q * p) * x * q := by
+      noncomm_ring
+    _ = 0 := by rw [h, mul_zero, zero_mul, zero_mul]
+
+/-- A Peirce corner is left-absorbed by its left idempotent. -/
+theorem peirceCorner_absorb_left {p q x : A} (hp : p * p = p) :
+    p * peirceCorner p q x = peirceCorner p q x := by
+  unfold peirceCorner
+  calc
+    p * (p * x * q) = (p * p) * x * q := by noncomm_ring
+    _ = p * x * q := by rw [hp]
+
+/-- A Peirce corner is right-absorbed by its right idempotent. -/
+theorem peirceCorner_absorb_right {p q x : A} (hq : q * q = q) :
+    peirceCorner p q x * q = peirceCorner p q x := by
+  unfold peirceCorner
+  calc
+    (p * x * q) * q = p * x * (q * q) := by noncomm_ring
+    _ = p * x * q := by rw [hq]
 
 end AssociativePeirce
 

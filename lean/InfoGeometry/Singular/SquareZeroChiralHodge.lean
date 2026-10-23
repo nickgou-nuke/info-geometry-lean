@@ -112,13 +112,25 @@ theorem exactSupport_mul_coexactSupport (h : IsMoorePenroseInverse a m)
     exactSupport a m * coexactSupport a m = 0 := by
   simpa [exactSupport, coexactSupport] using h.range_mul_domain_eq_zero ha
 
-/-- Moore--Penrose symmetry gives the reverse annihilation law. -/
-theorem coexactSupport_mul_exactSupport (h : IsMoorePenroseInverse a m)
-    (ha : a * a = 0) :
+omit [StarRing R] in
+/-- The reverse order annihilation law only needs `a * a = 0`. -/
+theorem coexactSupport_mul_exactSupport (ha : a * a = 0) :
     coexactSupport a m * exactSupport a m = 0 := by
   simpa [exactSupport, coexactSupport] using
     (domain_mul_range_eq_zero (m := m) ha)
 
+/-- The dual square-zero pair has mutually annihilating supports and a
+square-zero Moore--Penrose inverse. -/
+theorem dual_square_zero_orthogonality (h : IsMoorePenroseInverse a m)
+    (ha : a * a = 0) :
+    coexactSupport a m * exactSupport a m = 0 ∧
+    exactSupport a m * coexactSupport a m = 0 ∧
+    m * m = 0 :=
+  ⟨coexactSupport_mul_exactSupport ha,
+    exactSupport_mul_coexactSupport h ha,
+    h.inverse_sq_eq_zero ha⟩
+
+omit [StarRing R] in
 /-- The two supports and the harmonic complement form a partition of unity. -/
 theorem exactSupport_add_coexactSupport_add_harmonicSupport :
     exactSupport a m + coexactSupport a m + harmonicSupport a m = 1 := by
@@ -137,7 +149,7 @@ theorem harmonicSupport_mul_exactSupport (h : IsMoorePenroseInverse a m)
     harmonicSupport a m * exactSupport a m = 0 := by
   unfold harmonicSupport
   rw [sub_mul, sub_mul, one_mul, exactSupport_idem h,
-    coexactSupport_mul_exactSupport h ha]
+    coexactSupport_mul_exactSupport ha]
   abel
 
 /-- The harmonic complement annihilates the coexact support on the left. -/
@@ -163,7 +175,7 @@ theorem coexactSupport_mul_harmonicSupport (h : IsMoorePenroseInverse a m)
     (ha : a * a = 0) :
     coexactSupport a m * harmonicSupport a m = 0 := by
   unfold harmonicSupport
-  rw [mul_sub, mul_sub, mul_one, coexactSupport_mul_exactSupport h ha,
+  rw [mul_sub, mul_sub, mul_one, coexactSupport_mul_exactSupport ha,
     coexactSupport_idem h]
   abel
 
@@ -212,7 +224,7 @@ theorem chiralSupport_sq_support (h : IsMoorePenroseInverse a m)
       exactSupport a m + coexactSupport a m := by
   unfold chiralSupport
   rw [sub_mul, mul_sub, mul_sub, exactSupport_idem h, coexactSupport_idem h,
-    exactSupport_mul_coexactSupport h ha, coexactSupport_mul_exactSupport h ha]
+    exactSupport_mul_coexactSupport h ha, coexactSupport_mul_exactSupport ha]
   abel
 
 /-- The chiral support acts as `+1` on the exact support. -/
@@ -220,7 +232,7 @@ theorem chiralSupport_mul_exactSupport (h : IsMoorePenroseInverse a m)
     (ha : a * a = 0) :
     chiralSupport a m * exactSupport a m = exactSupport a m := by
   unfold chiralSupport
-  rw [sub_mul, exactSupport_idem h, coexactSupport_mul_exactSupport h ha,
+  rw [sub_mul, exactSupport_idem h, coexactSupport_mul_exactSupport ha,
     sub_zero]
 
 /-- The chiral support acts as `-1` on the coexact support. -/
@@ -267,7 +279,7 @@ theorem coexactSupport_mul_chiralSupport (h : IsMoorePenroseInverse a m)
     (ha : a * a = 0) :
     coexactSupport a m * chiralSupport a m = -coexactSupport a m := by
   unfold chiralSupport
-  rw [mul_sub, coexactSupport_mul_exactSupport h ha, coexactSupport_idem h,
+  rw [mul_sub, coexactSupport_mul_exactSupport ha, coexactSupport_idem h,
     zero_sub]
 
 /-- The chiral support acts as `+1` on the forward arrow. -/
@@ -335,7 +347,7 @@ theorem squareZero_chiralHodge_decomposition
   refine ⟨exactSupport_add_coexactSupport_add_harmonicSupport,
     ⟨exactSupport_idem h, coexactSupport_idem h, harmonicSupport_idem h ha⟩,
     ⟨exactSupport_mul_coexactSupport h ha,
-      coexactSupport_mul_exactSupport h ha,
+      coexactSupport_mul_exactSupport ha,
       exactSupport_mul_harmonicSupport h ha,
       harmonicSupport_mul_exactSupport h ha,
       coexactSupport_mul_harmonicSupport h ha,

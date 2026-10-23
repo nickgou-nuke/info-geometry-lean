@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 
 import InfoGeometry.Canonical.DrazinShellCascade
+import InfoGeometry.Core.PeirceDecomposition
 import InfoGeometry.Singular.SquareZeroChiralHodge
 import InfoGeometry.Singular.MoorePenroseCanonicalBridge
 
@@ -41,6 +42,7 @@ namespace InfoGeometry.Canonical.DrazinNilpotentShell
 open InfoGeometry.Canonical.Drazin
 open InfoGeometry.Canonical.Drazin.IsDrazinInverse
 open InfoGeometry.Canonical.MoorePenrose
+open InfoGeometry.Core.PeirceDecomposition
 open InfoGeometry.Singular.MoorePenrose
   (exactSupport coexactSupport SquareZeroChiralHodge)
 
@@ -59,17 +61,12 @@ theorem interShellPeirceCorner_sq_eq_zero (hD : IsDrazinInverse a d k)
     {M : ℕ → R} (hM : PowerMPFamily (fittingNilpotentPart a d) M)
     {m r : ℕ} (hne : m ≠ r) :
     interShellPeirceCorner a d M m r * interShellPeirceCorner a d M m r = 0 := by
-  unfold interShellPeirceCorner
-  calc
-    (drazinShellProj a d M m * a * drazinShellProj a d M r) *
-        (drazinShellProj a d M m * a * drazinShellProj a d M r)
-        = drazinShellProj a d M m * a *
-            (drazinShellProj a d M r * drazinShellProj a d M m) *
-            a * drazinShellProj a d M r := by
-          noncomm_ring
-    _ = 0 := by
-          rw [drazinShellProj_orthogonal hD hM hne.symm]
-          simp
+  simpa [interShellPeirceCorner, peirceCorner] using
+    peirceCorner_sq_eq_zero
+      (p := drazinShellProj a d M m)
+      (q := drazinShellProj a d M r)
+      (x := a)
+      (drazinShellProj_orthogonal hD hM hne.symm)
 
 /-- The strictly triangular direction: `d_{m,r} = 0` for `m ≤ r`. -/
 theorem interShellPeirceCorner_eq_zero_of_le (hD : IsDrazinInverse a d k)
@@ -88,24 +85,18 @@ theorem interShellPeirceCorner_shell_localization (hD : IsDrazinInverse a d k)
     interShellPeirceCorner a d M m r * drazinShellProj a d M r =
       interShellPeirceCorner a d M m r := by
   constructor
-  · unfold interShellPeirceCorner
-    calc
-      drazinShellProj a d M m *
-          (drazinShellProj a d M m * a * drazinShellProj a d M r)
-          = (drazinShellProj a d M m * drazinShellProj a d M m) *
-              a * drazinShellProj a d M r := by
-            noncomm_ring
-      _ = drazinShellProj a d M m * a * drazinShellProj a d M r := by
-            rw [drazinShellProj_idem hD hM m]
-  · unfold interShellPeirceCorner
-    calc
-      (drazinShellProj a d M m * a * drazinShellProj a d M r) *
-          drazinShellProj a d M r
-          = drazinShellProj a d M m * a *
-              (drazinShellProj a d M r * drazinShellProj a d M r) := by
-            noncomm_ring
-      _ = drazinShellProj a d M m * a * drazinShellProj a d M r := by
-            rw [drazinShellProj_idem hD hM r]
+  · simpa [interShellPeirceCorner, peirceCorner] using
+      peirceCorner_absorb_left
+        (p := drazinShellProj a d M m)
+        (q := drazinShellProj a d M r)
+        (x := a)
+        (drazinShellProj_idem hD hM m)
+  · simpa [interShellPeirceCorner, peirceCorner] using
+      peirceCorner_absorb_right
+        (p := drazinShellProj a d M m)
+        (q := drazinShellProj a d M r)
+        (x := a)
+        (drazinShellProj_idem hD hM r)
 
 /-- The exact support of an inter-shell block is left-supported on `S_m`. -/
 theorem drazinShellProj_mul_interShellExactSupport
@@ -150,6 +141,17 @@ theorem drazin_core_and_double_sum_shell_cascade (hD : IsDrazinInverse a d k)
       intro m _
       rw [Finset.mul_sum]
       rfl
+
+/-- The full triangular Peirce reconstruction, under the descriptive name used
+in the canonical matrix formulation.  The core block is `E_C * a * E_C` and the
+remaining terms are precisely the strictly lower-triangular inter-shell blocks. -/
+theorem full_operator_triangular_peirce_reconstruction
+    (hD : IsDrazinInverse a d k)
+    {M : ℕ → R} (hM : PowerMPFamily (fittingNilpotentPart a d) M) :
+    a = projection a d * a * projection a d +
+        ∑ m ∈ Finset.range k, ∑ r ∈ Finset.range m,
+          interShellPeirceCorner a d M m r :=
+  drazin_core_and_double_sum_shell_cascade hD hM
 
 /-- **Local inter-shell chiral Hodge--Dirac theorem.**
 For a Drazin pair and an inter-shell block `d_{m,r}` with `m ≠ r`, any

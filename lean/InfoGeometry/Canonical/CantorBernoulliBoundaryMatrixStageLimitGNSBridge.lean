@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Canonical.CantorBernoulliBoundaryMatrixStageLimitBridge
 import InfoGeometry.Canonical.CantorBernoulliBoundaryRangeGNSBridge
 
@@ -24,6 +30,7 @@ open InfoGeometry.Canonical.UHFInductiveColimitBoundary
 open CStarStateColimit.Native.FilteredGNSGlobalStageRepresentation
 open InfoGeometry.Canonical.CantorBernoulliFiniteDiagonalHilbertSchmidt
 open InfoGeometry.Canonical.CantorBernoulliGaugeFilteredGNSColimitBridge
+open InfoGeometry.Canonical.CantorBernoulliComplexStarBinaryGaugeFiniteCore
 open InfoGeometry.OperatorAlgebra.CantorBernoulliFiniteMatrixStageTransportBridge
 open InfoGeometry.OperatorAlgebra.CantorBernoulliFiniteMatrixUnitBridge
 open InfoGeometry.OperatorAlgebra.CantorBernoulliGaugeStateBridge
@@ -77,6 +84,20 @@ theorem limitTrace_stage_eq_projectiveDiagonalReadout
       ∫ q, diagonalPart n A (π n q) ∂projectiveLimitMeasure := by
   rw [limitTrace_stage_eq_boundaryRangeTrace]
   exact boundaryRangeTrace_projectiveDiagonalReadout n A
+
+/-! The canonical matrix-stage limit trace also transports the already proved
+finite-core boundary equation.  This is still a finite-stage identity: it
+does not promote the generic KMS descent interface to a completed Cuntz KMS
+state or to an analytic modular flow. -/
+
+theorem limitTrace_stage_finiteCore_kms_boundary
+    (z : ℂ) (n : ℕ) (A B : ComplexMatrixStage.Stage n) :
+    limitTrace
+        (canonicalStageHom n (A * finiteCoreFlow n z B)) =
+      limitTrace (canonicalStageHom n (B * A)) := by
+  rw [limitTrace_stage_eq_boundaryRangeTrace,
+    limitTrace_stage_eq_boundaryRangeTrace]
+  exact boundaryRangeTrace_finiteCore_kms_boundary z n A B
 
 end
 

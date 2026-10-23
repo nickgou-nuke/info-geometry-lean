@@ -11,6 +11,7 @@ open InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse
 #print axioms coexactSupport_idem
 #print axioms exactSupport_mul_coexactSupport
 #print axioms coexactSupport_mul_exactSupport
+#print axioms dual_square_zero_orthogonality
 #print axioms exactSupport_add_coexactSupport_add_harmonicSupport
 #print axioms harmonicSupport_idem
 #print axioms harmonicSupport_mul_exactSupport

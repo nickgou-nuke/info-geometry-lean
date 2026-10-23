@@ -1,5 +1,11 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Streaming.WeakValueBoundary
 import InfoGeometry.Canonical.WeakValuePoleCriterion
+import InfoGeometry.Canonical.WeakValueDerivativePole
 import Mathlib.Topology.Algebra.Order.Field
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 
@@ -45,7 +51,9 @@ theorem pauliReal_tendsto_atTop : Tendsto pauliReal (𝓝[>] (0 : ℝ)) atTop :=
   rw [show pauliReal = (fun r : ℝ => r⁻¹) from funext pauliReal_eq]
   exact tendsto_inv_nhdsGT_zero
 
-/-- A readout pole alone does not force a spatial derivative pole. -/
+/-- A readout pole alone does not force a spatial derivative pole.
+For a positive same-parameter criterion with continuous first derivatives,
+see `WeakValueDerivativePole.eventually_abs_derivative_lower_bound`. -/
 theorem real_pole_with_zero_spatial_derivative :
     ∃ u : ℝ → ℝ → ℝ,
       Tendsto (fun t => u t 0) (𝓝[>] (0 : ℝ)) atTop ∧

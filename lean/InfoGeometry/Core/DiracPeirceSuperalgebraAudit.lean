@@ -15,3 +15,4 @@ import InfoGeometry.Core.DiracPeirceSuperalgebra
 #print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.diracAnticommutator_normalizedDirac
 #print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.diracAnticommutator_sq_exactSupport
 #print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.activeSupport_commutator_exactSupport
+#print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.superInvolution_conjugates_normalizedDirac

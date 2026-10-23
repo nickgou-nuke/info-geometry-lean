@@ -693,4 +693,30 @@ theorem activeSupport_commutator_exactSupport
     h.exactSupport_mul_coexactSupport ha]
   abel
 
+/-! ## Conjugation form of the global parity law -/
+
+/-- Conjugation by the global parity involution flips the odd supercharge.
+
+This is the multiplicative form of
+`superInvolution * normalizedDirac + normalizedDirac * superInvolution = 0`,
+using the already-proved involution square. -/
+theorem superInvolution_conjugates_normalizedDirac
+    (h : IsMoorePenroseInverse a m) (ha : a * a = 0) :
+    superInvolution a m * normalizedDirac a m * superInvolution a m =
+      -normalizedDirac a m := by
+  have h_anti := superInvolution_anticommute_normalizedDirac h ha
+  have h_left : superInvolution a m * normalizedDirac a m =
+      -(normalizedDirac a m * superInvolution a m) := by
+    rw [add_eq_zero_iff_eq_neg] at h_anti
+    exact h_anti
+  calc
+    superInvolution a m * normalizedDirac a m * superInvolution a m =
+        (-(normalizedDirac a m * superInvolution a m)) *
+          superInvolution a m := by rw [h_left]
+    _ = -(normalizedDirac a m *
+        (superInvolution a m * superInvolution a m)) := by
+          noncomm_ring
+    _ = -normalizedDirac a m := by
+      rw [superInvolution_sq h ha, mul_one]
+
 end InfoGeometry.Core.DiracPeirceSuperalgebra

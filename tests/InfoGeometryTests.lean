@@ -8,6 +8,7 @@ Authors: InfoGeometry Engine Contributors
 
 import InfoGeometry
 import InfoGeometry.Core.SuperGrassmannianSusy
+import InfoGeometry.Core.DiracPeirceSuperalgebra
 import InfoGeometry.Core.PeirceTangent
 import InfoGeometry.Core.SuperGrassmannianSusyExamples
 import InfoGeometry.Core.SupercolorMatrixExamples
@@ -282,6 +283,7 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Core.SuperGrassmannianSusy.majoranaPlus_majoranaMinus_anticommute_of_orthogonal
 #check InfoGeometry.Core.SuperGrassmannianSusy.totalCentralCharge_lieBracket_generated
 #check InfoGeometry.Core.SuperGrassmannianSusy.superGrassmannian_tangent_both_projections
+#check InfoGeometry.Core.DiracPeirceSuperalgebra.superInvolution_conjugates_normalizedDirac
 #check InfoGeometry.Core.PeirceTangent.tangent_iff_reflection_anticommutes_of_two_smul_injective
 #check InfoGeometry.Canonical.MajoranaCoefficientAction.linearCombination_injective
 #check InfoGeometry.Canonical.MajoranaCoefficientAction.quadratic_monomial_commutator

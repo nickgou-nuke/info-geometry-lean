@@ -30,4 +30,34 @@ theorem symmetric_overlap_zero_iff (hp : p * p = p) :
   · rintro ⟨hc, hz⟩
     simpa only [← hc] using hz
 
+/-- An inner inverse suffices: symmetric overlap vanishes exactly when the
+support idempotents commute and the square has additive order dividing two.
+Neither an involution nor an outer-inverse axiom is required. -/
+theorem inner_inverse_symmetric_overlap_zero_iff {a m : R} (h : a * m * a = a) :
+    (a * m) * (m * a) + (m * a) * (a * m) = 0 ↔
+      (a * m) * (m * a) = (m * a) * (a * m) ∧
+      a * a + a * a = 0 := by
+  have hp : (a * m) * (a * m) = a * m := by
+    calc
+      (a * m) * (a * m) = (a * m * a) * m := by simp only [mul_assoc]
+      _ = a * m := by rw [h]
+  have recover : a * ((m * a) * (a * m)) * a = a * a := by
+    calc
+      a * ((m * a) * (a * m)) * a = (a * m * a) * (a * m * a) := by
+        simp only [mul_assoc]
+      _ = a * a := by rw [h]
+  constructor
+  · intro hz
+    obtain ⟨hc, ht⟩ :=
+      (symmetric_overlap_zero_iff hp).mp hz
+    refine ⟨hc, ?_⟩
+    rw [hc] at ht
+    have hs := congrArg (fun x => a * x * a) ht
+    simpa only [mul_add, add_mul, recover, mul_zero, zero_mul] using hs
+  · rintro ⟨hc, ht⟩
+    have hs := congrArg (fun x => m * x * m) ht
+    have hz : (m * a) * (a * m) + (m * a) * (a * m) = 0 := by
+      simpa only [mul_add, add_mul, mul_assoc, mul_zero, zero_mul] using hs
+    simpa only [hc] using hz
+
 end InfoGeometry.Core.IdempotentSymmetricOverlap

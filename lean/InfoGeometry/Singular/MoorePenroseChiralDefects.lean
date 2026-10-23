@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Singular.SquareZeroMoorePenrose
 import InfoGeometry.Core.JordanAssociator
+import InfoGeometry.Core.IdempotentSymmetricOverlap
 
 /-!
 # Square-zero criterion and normalized chiral associators
@@ -23,6 +24,16 @@ No Witt bilinear form or Kantor triple-system structure is inferred here.
 namespace InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse
 
 variable {R : Type*} [Ring R] [StarRing R] {a m : R}
+
+/-- Exact characteristic-free replacement for the claim that symmetric support
+overlap detects square-zero: it detects commuting supports and two-torsion in
+the square. The operators themselves need not commute. -/
+theorem symmetric_support_overlap_zero_iff (h : IsMoorePenroseInverse a m) :
+    (a * m) * (m * a) + (m * a) * (a * m) = 0 ↔
+      (a * m) * (m * a) = (m * a) * (a * m) ∧
+      a * a + a * a = 0 := by
+  exact InfoGeometry.Core.IdempotentSymmetricOverlap.inner_inverse_symmetric_overlap_zero_iff
+    h.aba_eq_a
 
 /-- Vanishing ordered support overlap characterizes square-zero, even when the
 supports do not commute a priori. -/

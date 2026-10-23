@@ -55,6 +55,7 @@ set_option maxHeartbeats 2000000 in
 theorem twoSiteMajorana_car (a b : Fin 4) :
     twoSiteMajorana a * twoSiteMajorana b + twoSiteMajorana b * twoSiteMajorana a =
       if a = b then 2 else 0 := by
+  rw [show (2 : ChainOp) = 1 + 1 by norm_num]
   ext i j
   rcases i with ⟨i₁, i₂⟩
   rcases j with ⟨j₁, j₂⟩

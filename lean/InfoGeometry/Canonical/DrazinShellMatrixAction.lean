@@ -7,6 +7,8 @@ import Mathlib.LinearAlgebra.Matrix.Notation
 
 /-! # Explicit row/column actions and a nontrivial oblique example -/
 
+noncomputable section
+
 namespace InfoGeometry.Canonical.DrazinShellMatrixAction
 
 open Matrix
@@ -144,7 +146,7 @@ theorem oblique_shell_zero :
   ext i j
   fin_cases i <;> fin_cases j <;>
     norm_num [complementaryProjection, projection, obliqueA, obliqueD, obliqueN,
-      obliqueM, Matrix.mul_apply, Fin.sum_univ_succ]
+      obliqueM, Matrix.mul_apply, Matrix.one_apply, Fin.sum_univ_succ]
 
 theorem oblique_shell_one :
     dressedShell obliqueA obliqueD obliquePowers 1 =
@@ -154,7 +156,7 @@ theorem oblique_shell_one :
   ext i j
   fin_cases i <;> fin_cases j <;>
     norm_num [complementaryProjection, projection, obliqueA, obliqueD, obliqueN,
-      obliqueM, pow_succ, Matrix.mul_apply, Fin.sum_univ_succ]
+      obliqueM, pow_succ, Matrix.mul_apply, Matrix.one_apply, Fin.sum_univ_succ]
 
 theorem oblique_shell_zero_not_selfAdjoint :
     ¬ IsSelfAdjoint (dressedShell obliqueA obliqueD obliquePowers 0) := by

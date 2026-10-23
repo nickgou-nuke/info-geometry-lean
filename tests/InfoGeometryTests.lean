@@ -16,6 +16,7 @@ import InfoGeometry.Core.SupercolorMultiplication
 import InfoGeometry.Canonical.DrazinInterShellHodge
 import InfoGeometry.Canonical.MajoranaCoefficientAction
 import InfoGeometry.Modular.PSL2ZAction
+import InfoGeometry.Physics.BostConnesThermalTime
 import InfoGeometry.Canonical.CasiniBekensteinBound
 import InfoGeometry.Canonical.KleinDeckFiveGradeAction
 import InfoGeometry.Canonical.OperatorialFierzDerivationBridge
@@ -356,3 +357,4 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Modular.PSL2Z.mobius_denominator_ne_zero
 #check InfoGeometry.Modular.PSL2Z.mobiusAction_im_formula
 #check InfoGeometry.Modular.PSL2Z.mobiusAction_maps_upperHalfPlane
+#check InfoGeometry.Physics.BostConnesThermalTime.modularFlowCl11_preserves_transverseEuclidean_form

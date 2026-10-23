@@ -229,6 +229,18 @@ theorem modularFlowCl11_transverse_norm_sq (t : ThermalTime) (q : Cl11) :
     Real.sin_sq_add_cos_sq (2 * t)
   nlinarith
 
+/-- The circular finite flow preserves the full quadratic form obtained by
+    adjoining the fixed scalar and `e₁` coordinates to the transverse
+    Euclidean form.  This is distinct from the split `Cl(1,1)` norm. -/
+theorem modularFlowCl11_preserves_transverseEuclidean_form
+    (t : ThermalTime) (q : Cl11) :
+    (modularFlowCl11 t q).s ^ 2 - (modularFlowCl11 t q).e1 ^ 2 +
+        (modularFlowCl11 t q).e2 ^ 2 + (modularFlowCl11 t q).e12 ^ 2 =
+      q.s ^ 2 - q.e1 ^ 2 + q.e2 ^ 2 + q.e12 ^ 2 := by
+  have htrans := modularFlowCl11_transverse_norm_sq t q
+  simp only [modularFlowCl11] at htrans ⊢
+  nlinarith
+
 /-- The finite flow acts on the transverse Clifford generator by the displayed
     rotation in the canonical coordinate basis. -/
 theorem modularFlowCl11_e2Basis (t : ThermalTime) :

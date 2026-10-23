@@ -5,6 +5,7 @@ import InfoGeometry.Core.DerivativesSmoke
 import InfoGeometry.Core.Entropy
 import InfoGeometry.Core.GrandCanonical
 import InfoGeometry.Core.Involution
+import InfoGeometry.Core.JordanAssociator
 import InfoGeometry.Core.Jordan
 import InfoGeometry.Core.ProjectiveSimplex
 import InfoGeometry.Core.SymmetricLie

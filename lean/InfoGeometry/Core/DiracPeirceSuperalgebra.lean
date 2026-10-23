@@ -186,6 +186,37 @@ theorem evenPeircePart_add_oddPeircePart_of_activeSupport
     _ = activeSupport a m * x * activeSupport a m := by rw [h_harm, add_zero]
     _ = x := hx
 
+/- The active Peirce components always reconstruct the active corner. -/
+theorem evenPeircePart_add_oddPeircePart_eq_activeSupport_sandwich
+    (h : IsMoorePenroseInverse a m) (ha : a * a = 0) (x : R) :
+    evenPeircePart a m x + oddPeircePart a m x =
+      activeSupport a m * x * activeSupport a m +
+        harmonicSupport a m * x * harmonicSupport a m := by
+  unfold evenPeircePart oddPeircePart activeSupport
+  noncomm_ring
+
+/- The active/harmonic split gives the complete four-block Peirce
+decomposition, with the active diagonal and active off-diagonal blocks
+packaged by the two projections above. -/
+theorem fullPeircePart_decomposition
+    (h : IsMoorePenroseInverse a m) (ha : a * a = 0) (x : R) :
+    evenPeircePart a m x + oddPeircePart a m x +
+        activeSupport a m * x * harmonicSupport a m +
+        harmonicSupport a m * x * activeSupport a m = x := by
+  have h_active_harmonic : activeSupport a m + harmonicSupport a m = 1 := by
+    unfold activeSupport harmonicSupport
+    abel
+  rw [evenPeircePart_add_oddPeircePart_eq_activeSupport_sandwich h ha]
+  calc
+    activeSupport a m * x * activeSupport a m +
+        harmonicSupport a m * x * harmonicSupport a m +
+        activeSupport a m * x * harmonicSupport a m +
+        harmonicSupport a m * x * activeSupport a m =
+      (activeSupport a m + harmonicSupport a m) * x *
+        (activeSupport a m + harmonicSupport a m) := by
+          noncomm_ring
+    _ = x := by rw [h_active_harmonic, one_mul, mul_one]
+
 /-- The odd anticommutator `D_Q(X) = Q X + X Q` with the normalized
 supercharge `Q = a + m`.  This is the odd-parity branch of the
 parity-alternating superderivation; it is not a derivation on its own. -/

@@ -391,3 +391,4 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Streaming.TwoBoundaryDyadCompression.boundaryDyad_matrix_apply
 #check InfoGeometry.Streaming.TwoBoundaryDyadCompression.boundaryDyad_matrix_of_same_ray
 #check InfoGeometry.Streaming.TwoBoundaryDyadCompression.boundaryDyad_self_adjoint_of_same_ray
+#check InfoGeometry.Streaming.TwoBoundaryDyadCompression.boundaryDyad_self_adjoint_iff_same_ray

@@ -257,6 +257,7 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Core.SuperGrassmannianSusy.colorBoson_mul_sectorCentralCharge_of_orthogonal
 #check InfoGeometry.Core.SuperGrassmannianSusy.sectorCentralCharge_lieBracket_colorBoson_of_orthogonal
 #check InfoGeometry.Core.SuperGrassmannianSusy.totalCentralCharge_lieBracket_colorBoson_of_orthogonal
+#check InfoGeometry.Core.SuperGrassmannianSusy.totalCentralCharge_lieBracket_generated
 #check InfoGeometry.Core.SuperGrassmannianSusy.star_majoranaPlus_of_dual
 #check InfoGeometry.Core.SuperGrassmannianSusy.star_majoranaMinus_of_dual
 #check InfoGeometry.Core.SupercolorMatrixExamples.matrix_supercolor

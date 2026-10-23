@@ -141,6 +141,42 @@ theorem totalCentralCharge_lieBracket_colorBoson_of_orthogonal
   rw [Finset.sum_ite_eq Finset.univ m (fun _ => colorBoson d b l m)]
   simp
 
+/-- The total sector charge is central on the generated finite-color algebra. -/
+theorem totalCentralCharge_lieBracket_generated
+    [Fintype ι] [DecidableEq ι]
+    (hE : IsOrthogonalExtendedSusy d b) :
+    (∀ j, lieBracket (totalCentralCharge d b) (d j) = 0 ∧
+      lieBracket (totalCentralCharge d b) (b j) = 0 ∧
+      lieBracket (totalCentralCharge d b) (majoranaPlus (d j) (b j)) = 0 ∧
+      lieBracket (totalCentralCharge d b) (majoranaMinus (d j) (b j)) = 0) ∧
+    (∀ l m, lieBracket (totalCentralCharge d b) (colorBoson d b l m) = 0) := by
+  have h_chiral := (extended_susy_centrality hE).2
+  constructor
+  · intro j
+    have hd := (h_chiral j).1
+    have hb := (h_chiral j).2
+    have hd' : totalCentralCharge d b * d j - d j * totalCentralCharge d b = 0 := by
+      simpa [lieBracket] using hd
+    have hb' : totalCentralCharge d b * b j - b j * totalCentralCharge d b = 0 := by
+      simpa [lieBracket] using hb
+    refine ⟨hd, hb, ?_, ?_⟩
+    · unfold lieBracket majoranaPlus
+      calc
+        totalCentralCharge d b * (d j + b j) - (d j + b j) * totalCentralCharge d b =
+            (totalCentralCharge d b * d j - d j * totalCentralCharge d b) +
+              (totalCentralCharge d b * b j - b j * totalCentralCharge d b) := by
+                noncomm_ring
+        _ = 0 := by rw [hd', hb', add_zero]
+    · unfold lieBracket majoranaMinus
+      calc
+        totalCentralCharge d b * (d j - b j) - (d j - b j) * totalCentralCharge d b =
+            (totalCentralCharge d b * d j - d j * totalCentralCharge d b) -
+              (totalCentralCharge d b * b j - b j * totalCentralCharge d b) := by
+                noncomm_ring
+        _ = 0 := by rw [hd', hb', sub_zero]
+  · intro l m
+    exact totalCentralCharge_lieBracket_colorBoson_of_orthogonal hE l m
+
 /-- Adjoint duality is an explicit hypothesis, not a consequence of MP. -/
 theorem star_majoranaPlus_of_dual (hdual : ∀ i, b i = star (d i)) (i : ι) :
     star (majoranaPlus (d i) (b i)) = majoranaPlus (d i) (b i) := by

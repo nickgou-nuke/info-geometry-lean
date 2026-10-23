@@ -270,6 +270,11 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Canonical.DrazinNilpotentShell.interShell_harmonicSupport_star
 #check InfoGeometry.Canonical.DrazinNilpotentShell.interShell_chiralSupport_star
 #check InfoGeometry.Canonical.DrazinNilpotentShell.interShell_normalizedDirac_star
+#check InfoGeometry.Singular.MoorePenrose.exactSupport_star_transport
+#check InfoGeometry.Singular.MoorePenrose.coexactSupport_star_transport
+#check InfoGeometry.Singular.MoorePenrose.harmonicSupport_star_transport
+#check InfoGeometry.Singular.MoorePenrose.chiralSupport_star_transport
+#check InfoGeometry.Singular.MoorePenrose.normalizedDirac_star_transport
 #check InfoGeometry.Canonical.DrazinNilpotentShell.interShellPeirceCorner_eq_zero_of_le
 #check InfoGeometry.Canonical.DrazinNilpotentShell.full_operator_triangular_peirce_reconstruction
 #check InfoGeometry.Canonical.DrazinNilpotentShell.interShell_chiralHodge_decomposition

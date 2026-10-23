@@ -86,6 +86,40 @@ def SquareZeroChiralHodge (a m : R) : Prop :=
     normalizedDirac a m * harmonicSupport a m = 0 ∧
     harmonicSupport a m * normalizedDirac a m = 0)
 
+/-! The involution transports the local Hodge operators to the reversed
+pair `(star m, star a)`.  These identities are purely formal and do not
+require a Moore--Penrose or square-zero hypothesis. -/
+
+theorem exactSupport_star_transport (a m : R) :
+    star (exactSupport a m) = exactSupport (star m) (star a) := by
+  unfold exactSupport
+  rw [star_mul]
+
+theorem coexactSupport_star_transport (a m : R) :
+    star (coexactSupport a m) = coexactSupport (star m) (star a) := by
+  unfold coexactSupport
+  rw [star_mul]
+
+theorem harmonicSupport_star_transport (a m : R) :
+    star (harmonicSupport a m) = harmonicSupport (star m) (star a) := by
+  rw [harmonicSupport, star_sub, star_sub, star_one,
+    exactSupport_star_transport, coexactSupport_star_transport]
+  unfold harmonicSupport exactSupport coexactSupport
+  noncomm_ring
+
+theorem chiralSupport_star_transport (a m : R) :
+    star (chiralSupport a m) = chiralSupport (star m) (star a) := by
+  rw [chiralSupport, star_sub,
+    exactSupport_star_transport, coexactSupport_star_transport]
+  unfold chiralSupport exactSupport coexactSupport
+  noncomm_ring
+
+theorem normalizedDirac_star_transport (a m : R) :
+    star (normalizedDirac a m) = normalizedDirac (star m) (star a) := by
+  unfold normalizedDirac
+  rw [star_add]
+  abel
+
 namespace IsMoorePenroseInverse
 
 variable {a m : R}

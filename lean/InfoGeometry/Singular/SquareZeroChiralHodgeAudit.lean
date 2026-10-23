@@ -37,3 +37,8 @@ open InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse
 #print axioms normalizedDirac_mul_harmonicSupport
 #print axioms harmonicSupport_mul_normalizedDirac
 #print axioms squareZero_chiralHodge_decomposition
+#print axioms InfoGeometry.Singular.MoorePenrose.exactSupport_star_transport
+#print axioms InfoGeometry.Singular.MoorePenrose.coexactSupport_star_transport
+#print axioms InfoGeometry.Singular.MoorePenrose.harmonicSupport_star_transport
+#print axioms InfoGeometry.Singular.MoorePenrose.chiralSupport_star_transport
+#print axioms InfoGeometry.Singular.MoorePenrose.normalizedDirac_star_transport

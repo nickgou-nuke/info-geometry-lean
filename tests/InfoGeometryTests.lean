@@ -402,6 +402,8 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Canonical.CounterexampleAlternatives.idempotent_endomorphism_split
 #check InfoGeometry.Canonical.CounterexampleAlternatives.finite_matrix_ccr_impossible
 #check InfoGeometry.Canonical.CounterexampleAlternatives.jordan_plus_lie_recovers_mul
+#check InfoGeometry.Canonical.CounterexampleAlternatives.lie_bracket_eq_zero_iff_commute
+#check InfoGeometry.Canonical.CounterexampleAlternatives.lie_bracket_ne_zero_iff_not_commute
 #check InfoGeometry.Streaming.TwoBoundaryDyadCompression.boundaryDyad_matrix_apply
 #check InfoGeometry.Streaming.TwoBoundaryDyadCompression.boundaryDyad_matrix_of_same_ray
 #check InfoGeometry.Streaming.TwoBoundaryDyadCompression.boundaryDyad_self_adjoint_of_same_ray

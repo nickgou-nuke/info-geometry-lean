@@ -184,4 +184,19 @@ theorem jordan_plus_lie_recovers_mul
     (x * y + y * x + (x * y - y * x)) = 2 • (x * y) := by
   module
 
+theorem lie_bracket_eq_zero_iff_commute
+    [Ring A] (x y : A) : x * y - y * x = 0 ↔ x * y = y * x := by
+  constructor
+  · exact sub_eq_zero.mp
+  · intro h
+    rw [h, sub_self]
+
+theorem lie_bracket_ne_zero_iff_not_commute
+    [Ring A] (x y : A) : x * y - y * x ≠ 0 ↔ x * y ≠ y * x := by
+  constructor
+  · intro h hcomm
+    exact h (sub_eq_zero.mpr hcomm)
+  · intro h hzero
+    exact h (sub_eq_zero.mp hzero)
+
 end InfoGeometry.Canonical.CounterexampleAlternatives

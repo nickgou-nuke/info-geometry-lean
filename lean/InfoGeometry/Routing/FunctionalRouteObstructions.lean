@@ -12,6 +12,7 @@ ambient transpose, and support commutation. No inverse predicate is replaced. -/
 namespace InfoGeometry.Routing.FunctionalRouteObstructions
 open Matrix
 open InfoGeometry.Canonical.Drazin
+open InfoGeometry.Canonical.Drazin.IsDrazinInverse
 open InfoGeometry.Singular.MoorePenrose
 noncomputable section
 

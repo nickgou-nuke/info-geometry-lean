@@ -288,3 +288,5 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Canonical.ManifoldHomology.localDegreeSign_ne_zero
 #check InfoGeometry.Modular.PSL2Z.mobiusAction
 #check InfoGeometry.Modular.PSL2Z.mobius_denominator_ne_zero
+#check InfoGeometry.Modular.PSL2Z.mobiusAction_im_formula
+#check InfoGeometry.Modular.PSL2Z.mobiusAction_maps_upperHalfPlane

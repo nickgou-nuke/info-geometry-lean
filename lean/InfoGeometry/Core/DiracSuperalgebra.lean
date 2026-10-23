@@ -192,6 +192,44 @@ theorem superInvolution_sq
   unfold harmonicSupport
   abel
 
+/- The global chiral involution preserves the active grading. -/
+theorem superInvolution_conjugates_chiralSupport
+    {a m : R} (h : IsMoorePenroseInverse a m) (ha : a * a = 0) :
+    superInvolution a m * chiralSupport a m * superInvolution a m =
+      chiralSupport a m := by
+  have h_core : chiralSupport a m * chiralSupport a m *
+      chiralSupport a m = chiralSupport a m := by
+    exact h.chiralSupport_cube ha
+  have h_chiral_harm : chiralSupport a m * harmonicSupport a m = 0 := by
+    unfold chiralSupport
+    rw [sub_mul, h.exactSupport_mul_harmonicSupport ha,
+      h.coexactSupport_mul_harmonicSupport ha, sub_zero]
+  have h_harm_chiral : harmonicSupport a m * chiralSupport a m = 0 := by
+    unfold chiralSupport
+    rw [mul_sub, h.harmonicSupport_mul_exactSupport ha,
+      h.harmonicSupport_mul_coexactSupport ha, sub_zero]
+  unfold superInvolution
+  calc
+    (chiralSupport a m + harmonicSupport a m) * chiralSupport a m *
+        (chiralSupport a m + harmonicSupport a m) =
+      chiralSupport a m * chiralSupport a m * chiralSupport a m +
+        chiralSupport a m * chiralSupport a m * harmonicSupport a m +
+        harmonicSupport a m * chiralSupport a m * chiralSupport a m +
+        harmonicSupport a m * chiralSupport a m * harmonicSupport a m := by
+          noncomm_ring
+    _ = chiralSupport a m := by
+      have h₁ : chiralSupport a m * chiralSupport a m *
+          harmonicSupport a m = 0 := by
+        rw [mul_assoc, h_chiral_harm, mul_zero]
+      have h₂ : harmonicSupport a m * chiralSupport a m *
+          chiralSupport a m = 0 := by
+        rw [h_harm_chiral, zero_mul]
+      have h₃ : harmonicSupport a m * chiralSupport a m *
+          harmonicSupport a m = 0 := by
+        rw [h_harm_chiral, zero_mul]
+      rw [h_core, h₁, h₂, h₃]
+      simp
+
 /-- The global involution anticommutes with the normalized supercharge. -/
 theorem superInvolution_anticommute_normalizedDirac
     {a m : R} (h : IsMoorePenroseInverse a m) (ha : a * a = 0) :

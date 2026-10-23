@@ -285,6 +285,7 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Core.SuperGrassmannianSusy.superGrassmannian_tangent_both_projections
 #check InfoGeometry.Core.DiracPeirceSuperalgebra.superInvolution_conjugates_normalizedDirac
 #check InfoGeometry.Core.DiracSuperalgebra.superInvolution_conjugates_majoranaPlus
+#check InfoGeometry.Core.DiracSuperalgebra.superInvolution_conjugates_chiralSupport
 #check InfoGeometry.Core.DiracSuperalgebra.superInvolution_conjugates_majoranaMinus
 #check InfoGeometry.Core.DiracSuperalgebra.globalMajoranaReflection_conjugates_chiralSupport
 #check InfoGeometry.Core.DiracSuperalgebra.globalMajoranaReflection_conjugates_majoranaMinus

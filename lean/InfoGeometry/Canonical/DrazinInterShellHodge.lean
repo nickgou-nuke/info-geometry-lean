@@ -56,6 +56,26 @@ variable {a d : R} {k : ℕ}
 def interShellPeirceCorner (a d : R) (M : ℕ → R) (m r : ℕ) : R :=
   drazinShellProj a d M m * a * drazinShellProj a d M r
 
+/-- In the self-adjoint Drazin setting, involution reverses the source and
+target shells of an inter-shell Peirce corner. -/
+theorem interShellPeirceCorner_star
+    (hD : IsDrazinInverse a d k)
+    {M : ℕ → R} (hM : PowerMPFamily (fittingNilpotentPart a d) M)
+    (h_symm : star (projection a d) = projection a d)
+    (ha_star : star a = a) (m r : ℕ) :
+    star (interShellPeirceCorner a d M m r) =
+      interShellPeirceCorner a d M r m := by
+  have h_complementary_symm :
+      star (complementaryProjection a d) = complementaryProjection a d := by
+    unfold complementaryProjection
+    rw [star_sub, star_one, h_symm]
+  unfold interShellPeirceCorner
+  rw [star_mul, star_mul,
+    drazinShellProj_selfAdjoint hD hM h_complementary_symm r,
+    ha_star,
+    drazinShellProj_selfAdjoint hD hM h_complementary_symm m]
+  noncomm_ring
+
 /-- The inter-shell block is square-zero for every pair of distinct shells. -/
 theorem interShellPeirceCorner_sq_eq_zero (hD : IsDrazinInverse a d k)
     {M : ℕ → R} (hM : PowerMPFamily (fittingNilpotentPart a d) M)

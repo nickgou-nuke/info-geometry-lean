@@ -8,6 +8,7 @@ import InfoGeometry.Canonical.DrazinInterShellHodge
 open InfoGeometry.Canonical.DrazinNilpotentShell
 
 #print axioms interShellPeirceCorner_sq_eq_zero
+#print axioms interShellPeirceCorner_star
 #print axioms interShellPeirceCorner_eq_zero_of_le
 #print axioms interShellPeirceCorner_shell_localization
 #print axioms drazinShellProj_mul_interShellExactSupport

@@ -83,4 +83,79 @@ theorem idempotent_all_associators_zero_iff {p q : R} (hp : p * p = p) :
   · intro hc z
     rw [hc, sub_self, mul_zero, zero_mul, sub_self]
 
+/-- Inner commutators differentiate the unnormalized Jordan product. -/
+theorem commutator_symm_leibniz (l x y : R) :
+    l * (x * y + y * x) - (x * y + y * x) * l =
+      (l * x - x * l) * y + y * (l * x - x * l) +
+        (x * (l * y - y * l) + (l * y - y * l) * x) := by
+  noncomm_ring
+
+/-- Composing two inner commutators gives their usual Lie bracket. -/
+theorem commutator_operator_commutator (s t x : R) :
+    (s * (t * x - x * t) - (t * x - x * t) * s) -
+      (t * (s * x - x * s) - (s * x - x * s) * t) =
+        (s * t - t * s) * x - x * (s * t - t * s) := by
+  noncomm_ring
+
+/-- The commutator of an inner derivation with Jordan multiplication. -/
+theorem commutator_symm_operator (l t x : R) :
+    (l * (t * x + x * t) - (t * x + x * t) * l) -
+      (t * (l * x - x * l) + (l * x - x * l) * t) =
+        (l * t - t * l) * x + x * (l * t - t * l) := by
+  noncomm_ring
+
+/-- The order is `[s,t]`, not `[t,s]`. This is an associative-envelope
+identity, not an identification of an exceptional Lie algebra. -/
+theorem symm_operator_commutator (s t x : R) :
+    (s * (t * x + x * t) + (t * x + x * t) * s) -
+      (t * (s * x + x * s) + (s * x + x * s) * t) =
+        (s * t - t * s) * x - x * (s * t - t * s) := by
+  noncomm_ring
+
+section Trace
+
+variable {B : Type*} [AddCommGroup B] (τ : R →+ B)
+    (hτ : ∀ x y : R, τ (x * y) = τ (y * x))
+
+include hτ
+
+/-- Cyclic additive maps annihilate inner commutators. -/
+theorem trace_commutator (l x : R) : τ (l * x - x * l) = 0 := by
+  rw [map_sub, hτ, sub_self]
+
+/-- Infinitesimal invariance of the quadratic Jordan trace form. -/
+theorem trace_symm_variation (l x y : R) :
+    τ ((l * x - x * l) * y + y * (l * x - x * l) +
+      (x * (l * y - y * l) + (l * y - y * l) * x)) = 0 := by
+  rw [← commutator_symm_leibniz]
+  exact trace_commutator τ hτ l _
+
+/-- Infinitesimal invariance of the cubic Jordan trace expression.
+This expression is not asserted to be a polarized determinant. -/
+theorem trace_cubic_symm_variation (l x y z : R) :
+    τ (((l * x - x * l) * y + y * (l * x - x * l)) * z +
+      z * ((l * x - x * l) * y + y * (l * x - x * l)) +
+      ((x * (l * y - y * l) + (l * y - y * l) * x) * z +
+      z * (x * (l * y - y * l) + (l * y - y * l) * x)) +
+      ((x * y + y * x) * (l * z - z * l) +
+      (l * z - z * l) * (x * y + y * x))) = 0 := by
+  have h : ((l * x - x * l) * y + y * (l * x - x * l)) * z +
+      z * ((l * x - x * l) * y + y * (l * x - x * l)) +
+      ((x * (l * y - y * l) + (l * y - y * l) * x) * z +
+      z * (x * (l * y - y * l) + (l * y - y * l) * x)) +
+      ((x * y + y * x) * (l * z - z * l) +
+      (l * z - z * l) * (x * y + y * x)) =
+      l * ((x * y + y * x) * z + z * (x * y + y * x)) -
+      ((x * y + y * x) * z + z * (x * y + y * x)) * l := by
+    noncomm_ring
+  rw [h]
+  exact trace_commutator τ hτ l _
+
+/-- Exact linear trace variation under Jordan multiplication; no nonvanishing
+claim is valid without further data. -/
+theorem trace_symm (t x : R) : τ (t * x + x * t) = 2 • τ (t * x) := by
+  rw [map_add, hτ x t, two_nsmul]
+
+end Trace
+
 end InfoGeometry.Core.JordanAssociator

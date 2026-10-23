@@ -157,6 +157,39 @@ theorem boundaryRangeTrace_gaugeGNS_readout (n : ℕ) (A : Stage n) :
             gaugeGNSColimitVacuum⟫_ℂ :=
       (gaugeGNSColimitVacuum_complexStarFiniteStage_expectation n A).symm
 
+/-! The pulled-back trace has the full noncommutative Hilbert--Schmidt energy
+on the actual represented boundary range.  No diagonal restriction or
+simultaneous diagonalization is used. -/
+
+theorem boundaryRangeTrace_star_mul_self_re_eq
+    (n : ℕ) (A : Stage n) :
+    (boundaryRangeTrace n
+        (boundaryRangeElement n (star A * A))).re =
+      (1 / (Fintype.card (BitWord n) : ℝ)) *
+        (∑ u : BitWord n, ∑ v : BitWord n,
+          Complex.normSq (A v u)) := by
+  rw [boundaryRangeTrace_stage]
+  exact bitWordMatrixTraceFunctional_star_mul_self_re_eq n A
+
+/-! The same noncommutative energy is seen directly in the native filtered-GNS
+    vacuum.  This composes the concrete boundary-range trace with the actual
+    finite-stage GNS representation; no diagonal or normality hypothesis is
+    introduced. -/
+
+theorem boundaryRangeTrace_gaugeGNS_star_mul_self_re_eq
+    (n : ℕ) (A : Stage n) :
+    (⟪gaugeGNSColimitVacuum,
+        globalStageRepresentationStarAlgHom
+          gaugeStage gaugeSystem gaugeStateFamily n
+          (CStarMatrix.ofMatrixStarAlgEquiv
+            (bitWordStageStarAlgEquiv n (star A * A)))
+          gaugeGNSColimitVacuum⟫_ℂ).re =
+      (1 / (Fintype.card (BitWord n) : ℝ)) *
+        (∑ u : BitWord n, ∑ v : BitWord n,
+          Complex.normSq (A v u)) := by
+  rw [← boundaryRangeTrace_gaugeGNS_readout n (star A * A)]
+  exact boundaryRangeTrace_star_mul_self_re_eq n A
+
 /-! The boundary-range trace transports the already proved finite equal-depth
 KMS boundary identity.  The statement remains at an arbitrary finite matrix
 stage; it is not an analytic KMS theorem for the infinite Cuntz completion. -/

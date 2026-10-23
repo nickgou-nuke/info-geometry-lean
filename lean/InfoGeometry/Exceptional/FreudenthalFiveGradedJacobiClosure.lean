@@ -106,6 +106,27 @@ theorem bracket_preserving_map_annihilates_negative_charge
   rw [← extreme_minus2_action_plus1 D y, hf,
     bracket_preserving_map_annihilates_positive_charge D f hf y, lie_zero]
 
+/-- The positive Heisenberg bracket is also killed in every genuine Lie-ring
+image. The coefficient is the actual symplectic pairing of arbitrary charges. -/
+theorem bracket_preserving_map_annihilates_positive_heisenberg
+    {L : Type*} [LieRing L]
+    (f : FiveGradedCarrier D →+ L)
+    (hf : ∀ u v, f (fiveGradedBracket D u v) = ⁅f u, f v⁆)
+    (x y : FreudenthalCharge J) :
+    f (genEplus D (2 * FreudenthalCharge.symplecticForm D x y)) = 0 := by
+  rw [← bracket_plus1_plus1 D x y, hf,
+    bracket_preserving_map_annihilates_positive_charge D f hf x, zero_lie]
+
+/-- The negative Heisenberg bracket has the same universal obstruction. -/
+theorem bracket_preserving_map_annihilates_negative_heisenberg
+    {L : Type*} [LieRing L]
+    (f : FiveGradedCarrier D →+ L)
+    (hf : ∀ u v, f (fiveGradedBracket D u v) = ⁅f u, f v⁆)
+    (x y : FreudenthalCharge J) :
+    f (genEminus D (2 * FreudenthalCharge.symplecticForm D x y)) = 0 := by
+  rw [← bracket_minus1_minus1 D x y, hf,
+    bracket_preserving_map_annihilates_negative_charge D f hf x, zero_lie]
+
 /-! ## 1. Cyclic Symmetries of the Jacobiator -/
 
 theorem fiveJacobiator_cyclic_left (u v w : FiveGradedCarrier D) :

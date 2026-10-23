@@ -50,6 +50,7 @@ def twoSiteMajorana : Fin 4 → ChainOp :=
   ![majorana1 ⊗ₖ (1 : M2C), majorana2 ⊗ₖ (1 : M2C),
     parityMatrix ⊗ₖ majorana1, parityMatrix ⊗ₖ majorana2]
 
+set_option maxHeartbeats 2000000 in
 /-- Full cross-site CAR, not merely the single-site square identities. -/
 theorem twoSiteMajorana_car (a b : Fin 4) :
     twoSiteMajorana a * twoSiteMajorana b + twoSiteMajorana b * twoSiteMajorana a =
@@ -110,7 +111,7 @@ theorem sweetSpot_endpoint_kernel (t : ℝ) :
     (sweetSpotKernel t).omega.mulVec (Pi.single (3 : Fin 4) 1) = 0 := by
   constructor <;> funext i <;> fin_cases i <;>
     simp [sweetSpotKernel, matchingKernel, skewMatrix4,
-      Matrix.mulVec, dotProduct, Fin.sum_univ_succ, Pi.single_apply]
+      Matrix.mulVec, dotProduct, Pi.single_apply]
 
 theorem sweetSpot_pfaffian_zero (t : ℝ) : (sweetSpotKernel t).pfaffian = 0 := by
   simp [sweetSpotKernel, matchingKernel, pfaffian4]
@@ -125,7 +126,7 @@ theorem sweetSpot_quadratic_eq_chain (t : ℝ) :
   have hanti : twoSiteMajorana 2 * twoSiteMajorana 1 =
       -(twoSiteMajorana 1 * twoSiteMajorana 2) := by
     have h := twoSiteMajorana_car (2 : Fin 4) (1 : Fin 4)
-    simp only [Fin.isValue, show (2 : Fin 4) ≠ 1 by decide, if_false] at h
+    simp only [Fin.isValue, show (2 : Fin 4) ≠ 1 by decide, ite_false] at h
     exact eq_neg_of_add_eq_zero_left h
   simp [quadratic, sweetSpotKernel, matchingKernel, skewMatrix4,
     Fin.sum_univ_succ, twoSiteGenerator, hanti]

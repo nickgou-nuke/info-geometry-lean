@@ -63,11 +63,25 @@ theorem sweetSpot_boundary_commutes {A : Type*} [Ring A]
   · have hne : q ≠ (⟨2 * j.val + 1, by omega⟩ : Fin (2 * N)) := by
       intro he
       have hv := congrArg Fin.val he
+      change q.val = 2 * j.val + 1 at hv
+      have hj := j.isLt
+      have hN : 1 ≤ N := by omega
+      have hj' : j.val + 1 < N := by omega
+      have hlt : 2 * (j.val + 1) < 2 * N :=
+        Nat.mul_lt_mul_of_pos_left hj' (by omega)
+      have hlt' : 2 * j.val + 2 < 2 * N := by simpa [Nat.mul_add] using hlt
       rcases hq with hq | hq <;> omega
     simpa [hne] using hg q ⟨2 * j.val + 1, by omega⟩
   · have hne : q ≠ (⟨2 * j.val + 2, by omega⟩ : Fin (2 * N)) := by
       intro he
       have hv := congrArg Fin.val he
+      change q.val = 2 * j.val + 2 at hv
+      have hj := j.isLt
+      have hN : 1 ≤ N := by omega
+      have hj' : j.val + 1 < N := by omega
+      have hlt : 2 * (j.val + 1) < 2 * N :=
+        Nat.mul_lt_mul_of_pos_left hj' (by omega)
+      have hlt' : 2 * j.val + 2 < 2 * N := by simpa [Nat.mul_add] using hlt
       rcases hq with hq | hq <;> omega
     simpa [hne] using hg q ⟨2 * j.val + 2, by omega⟩
 

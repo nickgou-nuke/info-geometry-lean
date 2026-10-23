@@ -180,6 +180,21 @@ theorem thermalPolarization_eq_affine (q : 𝕜) :
     kp.thermalPolarization (-1 : 𝕜) = kp.P_minus := by
   simp [thermalPolarization]
 
+/-- Exact non-idempotence defect of the thermal polarization.  The defect is
+scalar because the underlying involution satisfies `J² = 1`. -/
+theorem thermalPolarization_sq_sub_self (q : 𝕜) :
+    (kp.thermalPolarization q).comp (kp.thermalPolarization q) -
+        kp.thermalPolarization q =
+      (((q * q - 1) / 4 : 𝕜) • (1 : E →L[𝕜] E)) := by
+  rw [kp.thermalPolarization_eq_affine q]
+  ext x
+  have hJ := congrArg (fun T : E →L[𝕜] E => T x) kp.J_sq
+  simp only [sub_apply, ContinuousLinearMap.comp_apply, add_apply, smul_apply,
+    one_apply_eq_self] at hJ ⊢
+  simp only [map_add, map_smul]
+  rw [hJ]
+  module
+
 @[simp]
 theorem adjoint_Phi (T : E →L[𝕜] E) :
     adjoint (kp.Phi T) = kp.P_plus.comp ((adjoint T).comp kp.P_plus) := by

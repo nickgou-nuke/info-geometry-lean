@@ -394,6 +394,7 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Canonical.CounterexampleAlternatives.cycle_sum_zero_of_potential
 #check InfoGeometry.Canonical.CounterexampleAlternatives.mp_range_idempotent
 #check InfoGeometry.Canonical.CounterexampleAlternatives.matrix_commutator_trace_zero
+#check InfoGeometry.Canonical.CounterexampleAlternatives.square_zero_endomorphism_has_strict_kernel
 #check InfoGeometry.Canonical.CounterexampleAlternatives.finite_matrix_ccr_impossible
 #check InfoGeometry.Canonical.CounterexampleAlternatives.jordan_plus_lie_recovers_mul
 #check InfoGeometry.Streaming.TwoBoundaryDyadCompression.boundaryDyad_matrix_apply

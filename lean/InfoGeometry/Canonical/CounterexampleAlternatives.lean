@@ -110,6 +110,29 @@ theorem matrix_commutator_trace_zero
     Matrix.trace (a * b - b * a) = 0 := by
   rw [Matrix.trace_sub, Matrix.trace_mul_comm, sub_self]
 
+theorem square_zero_endomorphism_has_strict_kernel
+    {R M : Type*} [Ring R] [AddCommGroup M] [Module R M]
+    (N : Module.End R M) (hN : N * N = 0) (hN0 : N ≠ 0) :
+    LinearMap.ker N ≤ LinearMap.ker (N * N) ∧
+      LinearMap.ker N ≠ LinearMap.ker (N * N) := by
+  constructor
+  · intro x hx
+    change N (N x) = 0
+    rw [show N x = 0 from hx, map_zero]
+  · intro hEq
+    have hAll : ∀ x, N x = 0 := by
+      intro x
+      have hx : x ∈ LinearMap.ker (N * N) := by
+        rw [hN]
+        simp
+      have hx' : x ∈ LinearMap.ker N := by
+        rw [hEq]
+        exact hx
+      exact hx'
+    apply hN0
+    ext x
+    exact hAll x
+
 theorem finite_matrix_ccr_impossible
     {K : Type*} [Field K] [CharZero K]
     {n : Type*} [Fintype n] [DecidableEq n] [Nonempty n]

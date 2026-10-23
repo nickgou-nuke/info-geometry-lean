@@ -215,7 +215,7 @@ theorem coupling_mem_simplex_iff (a b t : ℝ) :
     intro j
     fin_cases j <;> simp [coupling] <;> linarith
 
-/-- The readout discards precisely the coupling parameter in this family. -/
+/-- The readout is independent of the coupling parameter in this family. -/
 theorem coupling_readout (V : Fin 4 → D → ℝ) (hV : IsParallelogram V)
     (a b t : ℝ) :
     (∑ j, coupling a b t j • V j) = V 0 + a • (V 1 - V 0) + b • (V 2 - V 0) := by

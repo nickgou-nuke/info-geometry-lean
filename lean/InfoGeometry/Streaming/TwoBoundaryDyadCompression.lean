@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Streaming.FiniteTwoBoundaryWeakFunctional
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.LinearAlgebra.RegularDyadCompression
@@ -70,6 +76,41 @@ def obliquePair : RegularBoundaryPair (Fin 2) where
 
 def coordinateMatrix [DecidableEq ι] (A : Operator ι) : Matrix ι ι ℂ :=
   fun i j => A (Pi.single j 1) i
+
+/-- The matrix of the normalized dyad, with the post-selection conjugated. -/
+theorem boundaryDyad_matrix_apply [DecidableEq ι]
+    (p : RegularBoundaryPair ι) (i j : ι) :
+    coordinateMatrix (boundaryDyad p) i j =
+      p.pre i * star (p.post j) / overlap p := by
+  simp [coordinateMatrix, boundaryDyad_apply, pairing, Pi.single_apply,
+    mul_div_assoc, mul_comm]
+
+/-- On a common ray the normalization removes the post-selection scale.
+This is the normalized self-outer-product matrix, not an arbitrary oblique
+dyad. Regularity already excludes a zero scale. -/
+theorem boundaryDyad_matrix_of_same_ray [DecidableEq ι]
+    (p : RegularBoundaryPair ι) (c : ℂ) (hc : p.post = c • p.pre) (i j : ι) :
+    coordinateMatrix (boundaryDyad p) i j =
+      p.pre i * star (p.pre j) / pairing p.pre p.pre := by
+  have hnonzero : star c * pairing p.pre p.pre ≠ 0 := by
+    simpa [hc, pairing_smul_left] using p.overlap_ne
+  have hstar : star c ≠ 0 := (mul_ne_zero_iff.mp hnonzero).1
+  have hnorm : pairing p.pre p.pre ≠ 0 := (mul_ne_zero_iff.mp hnonzero).2
+  rw [boundaryDyad_matrix_apply, overlap, hc, pairing_smul_left]
+  simp only [Pi.smul_apply, smul_eq_mul, star_mul]
+  field_simp
+
+/-- A regular same-ray boundary dyad is Hermitian. Together with
+`boundaryDyad_idempotent`, this is the orthogonal-projection case. -/
+theorem boundaryDyad_self_adjoint_of_same_ray [DecidableEq ι]
+    (p : RegularBoundaryPair ι) (c : ℂ) (hc : p.post = c • p.pre) :
+    Matrix.conjTranspose (coordinateMatrix (boundaryDyad p)) =
+      coordinateMatrix (boundaryDyad p) := by
+  have hnorm : star (pairing p.pre p.pre) = pairing p.pre p.pre := by
+    simp [pairing, star_sum, star_mul, mul_comm]
+  ext i j
+  simp only [Matrix.conjTranspose_apply,
+    boundaryDyad_matrix_of_same_ray p c hc, star_div₀, star_mul, star_star, hnorm]
 
 theorem obliquePair_matrix : coordinateMatrix (boundaryDyad obliquePair) =
     !![1, 1; 0, 0] := by

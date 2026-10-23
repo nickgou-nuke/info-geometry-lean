@@ -9,3 +9,5 @@ open InfoGeometry.Canonical.DrazinNilpotentShell
 
 #print axioms interShell_jordan_associator
 #print axioms interShell_jordan_anticommute
+#print axioms interShell_exactSupport_star
+#print axioms interShell_coexactSupport_star

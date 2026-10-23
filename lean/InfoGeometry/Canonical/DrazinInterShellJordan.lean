@@ -54,6 +54,32 @@ theorem interShell_jordan_associator (hD : IsDrazinInverse a d k)
   exact InfoGeometry.Core.JordanAssociator.jordan_associator_square_zero_inner_inverse
     (interShellPeirceCorner_sq_eq_zero hD hM hne) hB.aba_eq_a
 
+/-- The involution also exchanges the local exact and coexact supports when
+it reverses the shell corner. -/
+theorem interShell_exactSupport_star (hD : IsDrazinInverse a d k)
+    {M : ℕ → R} (hM : PowerMPFamily (fittingNilpotentPart a d) M)
+    (h_symm : star (projection a d) = projection a d)
+    (ha_star : star a = a) (m r : ℕ) (B : R) :
+    star (exactSupport (interShellPeirceCorner a d M m r) B) =
+      coexactSupport (interShellPeirceCorner a d M r m) (star B) := by
+  have hD_star : star (interShellPeirceCorner a d M m r) =
+      interShellPeirceCorner a d M r m :=
+    interShellPeirceCorner_star hD hM h_symm ha_star m r
+  unfold exactSupport coexactSupport
+  rw [star_mul, hD_star]
+
+theorem interShell_coexactSupport_star (hD : IsDrazinInverse a d k)
+    {M : ℕ → R} (hM : PowerMPFamily (fittingNilpotentPart a d) M)
+    (h_symm : star (projection a d) = projection a d)
+    (ha_star : star a = a) (m r : ℕ) (B : R) :
+    star (coexactSupport (interShellPeirceCorner a d M m r) B) =
+      exactSupport (interShellPeirceCorner a d M r m) (star B) := by
+  have hD_star : star (interShellPeirceCorner a d M m r) =
+      interShellPeirceCorner a d M r m :=
+    interShellPeirceCorner_star hD hM h_symm ha_star m r
+  unfold exactSupport coexactSupport
+  rw [star_mul, hD_star]
+
 /-- The chiral grading annihilates the normalized local operator under the
 normalized special Jordan product. -/
 theorem interShell_jordan_anticommute (hD : IsDrazinInverse a d k)

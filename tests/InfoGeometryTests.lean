@@ -265,6 +265,8 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Core.SuperGrassmannianSusy.extended_susy_central_charge_master
 #check InfoGeometry.Canonical.DrazinNilpotentShell.interShellPeirceCorner_sq_eq_zero
 #check InfoGeometry.Canonical.DrazinNilpotentShell.interShellPeirceCorner_star
+#check InfoGeometry.Canonical.DrazinNilpotentShell.interShell_exactSupport_star
+#check InfoGeometry.Canonical.DrazinNilpotentShell.interShell_coexactSupport_star
 #check InfoGeometry.Canonical.DrazinNilpotentShell.interShellPeirceCorner_eq_zero_of_le
 #check InfoGeometry.Canonical.DrazinNilpotentShell.full_operator_triangular_peirce_reconstruction
 #check InfoGeometry.Canonical.DrazinNilpotentShell.interShell_chiralHodge_decomposition

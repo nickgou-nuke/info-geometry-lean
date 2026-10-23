@@ -29,6 +29,27 @@ theorem norm_compression_adjoint_square_defect (p x : A)
   rw [compression_adjoint_mul_defect p x x hp hps,
     CStarRing.norm_star_mul_self, pow_two]
 
+/-- A mixed compression defect is bounded by the two transfer norms;
+neither input is assumed self-adjoint. -/
+theorem norm_compression_adjoint_mul_defect_le (p x y : A)
+    (hp : p * p = p) (hps : star p = p) :
+    ‖p * (star x * y) * p - (p * star x * p) * (p * y * p)‖ ≤
+      ‖(1 - p) * x * p‖ * ‖(1 - p) * y * p‖ := by
+  rw [compression_adjoint_mul_defect p x y hp hps]
+  simpa only [norm_star] using
+    norm_mul_le (star ((1 - p) * x * p)) ((1 - p) * y * p)
+
+/-- Cauchy--Schwarz for compression defects in an arbitrary C-star ring. -/
+theorem norm_compression_adjoint_mul_defect_sq_le (p x y : A)
+    (hp : p * p = p) (hps : star p = p) :
+    ‖p * (star x * y) * p - (p * star x * p) * (p * y * p)‖ ^ 2 ≤
+      ‖p * (star x * x) * p - (p * star x * p) * (p * x * p)‖ *
+      ‖p * (star y * y) * p - (p * star y * p) * (p * y * p)‖ := by
+  rw [norm_compression_adjoint_square_defect p x hp hps,
+    norm_compression_adjoint_square_defect p y hp hps]
+  simpa only [mul_pow] using pow_le_pow_left₀ (norm_nonneg _)
+    (norm_compression_adjoint_mul_defect_le p x y hp hps) 2
+
 /-- Native C-star properness supplies the exact zero-transfer criterion. -/
 theorem compression_adjoint_square_eq_iff (p x : A)
     (hp : p * p = p) (hps : star p = p) :

@@ -41,9 +41,12 @@ its zeroth ambient power is one. Existing positive-power nilpotency belongs
 to `Canonical.DrazinCoreFlow` and is not redeclared here.
 
 For supports p=XM and q=MX, the four summands always sum to one, but their
-projection multiplication law requires pq=qp. In fact
+projection multiplication law requires pq=qp. The attachment explicitly
+supplies commutation for its Jordan-Lie theorem. This implementation retains
+that assumption and strengthens the boundary identity to an equivalence:
 
     [p(1-q)+(1-p)q] - (p-q)^2 = qp-pq.
+    p(1-q)+(1-p)q = (p-q)^2 iff pq=qp.
 
 The MP commutator XM-MX is self-adjoint. Zero trace alone is not a discrete
 Stokes theorem. Constant scalar homogeneity is not local Weyl geometry.
@@ -54,16 +57,57 @@ ambient nilpotent carrier. An oblique Drazin complement cannot silently be
 substituted for that identity; restriction of the carrier is separate.
 Powers of MP inverses are not assumed to be MP inverses of powers.
 
-The orthogonal refinement needs a self-adjoint coarse projector commuting
-with both fine supports. An arbitrary Drazin projector need not meet this
-condition. This change does not identify the zero spectral sector of I-P
-with all transient Markov modes or change any attention backward pass.
+A self-adjoint coarse projector commuting with both fine supports is a
+sufficient compatibility hypothesis for the native star-projection refinement
+proved here. An arbitrary Drazin projector need not meet this condition.
+This change does not identify the zero spectral sector of I-P with all
+transient Markov modes or change any attention backward pass.
 
-## Verification boundary
+## Actual verification
 
-Sources are candidates until the scoped pinned workflow succeeds. It checks
-full unchanged owner dependencies, the new modules and the small umbrella,
-and inspects the actual axiom dependencies of each new declaration. Exact
-source commit and results are to be recorded after a successful run.
-No full-repository acceptance is implied. The workflow does not delete caches,
-change dependency pins, or repair unrelated owner files.
+Verified Lean source commit: `c247857313d4e8e005c79d98ab5ce7caa50284d2`.
+Successful scoped workflow:
+https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/39884496772
+Job: `120189379622`. The later documentation commit does not change Lean source.
+
+Lean: `leanprover/lean4:v4.34.1`.
+Mathlib: `d13f23b723b8a846827a245b89c10fc7d3f11612` (unchanged repository pin).
+
+All six new Lean modules compiled, including the production umbrella and
+matrix examples. Their six existing repository dependencies were compiled
+from full unchanged owner sources: FiniteSpinAlgebra, DAG.Basic,
+Meta.Architecture, Singular.MoorePenrose, Singular.Drazin, Canonical.Drazin.
+
+There are 60 new proved declarations (47 theorems and 13 lemmas), plus
+11 definitions. All 71 were checked with `#print axioms`. Every footprint is
+a subset of `[propext, Classical.choice, Quot.sound]`; some are empty or
+smaller. The workflow checks audit count completeness and the allowed set.
+The new sources contain no `sorry`, `admit`, custom axioms, `unsafe`, or
+`native_decide`. Compilation is the evidence, not the input draft's assertion.
+
+Workflow artifact: `DrazinMoorePenrosePartitions`, ID `12472286861`, contains
+the exact new sources, compile output, full axiom audit and machine-readable
+status. Its downloaded ZIP SHA-256 was independently checked against GitHub:
+`3defa138fed33889257c2efd649ecca6f1641afc519b47120fa7eae8ff234162`.
+
+Nonfatal warnings remain for unused simp arguments and section assumptions,
+plus pre-existing dependency deprecations and sandbox/Grassmann.jl cleanup.
+The separate unchanged repository gates are not all green: the same checked
+commit has two failed workflow runs, including Sorry Gate run 39884496767.
+Their failures are not diagnosed or repaired here. This is not a full-repository
+acceptance check, and no claim that all repository CI passed is made.
+
+No dependency pins were changed, no existing owner source was rewritten, and
+no build caches were deleted. The build is sequential under the shared lock.
+
+Use in a full checkout:
+
+```lean
+import InfoGeometry.Canonical.DrazinMoorePenrosePartitionAll
+```
+
+```bash
+python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock \
+  InfoGeometry.Canonical.DrazinMoorePenrosePartitionAll \
+  InfoGeometry.Canonical.InversePartitionExamples
+```

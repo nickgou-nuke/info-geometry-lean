@@ -103,7 +103,7 @@
       "note": "Do not replace DrazinRegularization, DrazinShellCascade, MoorePenroseSectors: existing namespaces and consumers would regress. JordanAssociatorRing and scaled MP counterexamples committed in 04caccfb4. Native ObliqueShellCounterexample ports actual branch matrices through existing PowerMPFamily, drazinShellProj, interShellPeirceCorner and MP conversion owners.",
       "oblique_verification": "Popper final source-semantic PASS. Parent repaired an intervening Jordan dependency proof and reran InfoGeometryTests plus ObliqueAudit: PASS13966, including aggregate imports and check coverage. Ampere independent retry PASS3197: six standard3 axiom footprints, no owner warnings, unchanged source hashes, prior zero-finding vacuity/static checks remain applicable. Evidence /tmp/qa-a-oblique-retry-kkpbzhjw and /tmp/consolidation-integration-tests.log. Accepted limited scope: actual native shells and inverse-not-reverse-corner counterexample, no minimal-index claim.",
       "remaining": [
-        "matrix-action and example consequence correspondence",
+        "native example consequence correspondence",
         "aggregate integration and full consolidated snapshot review"
       ],
       "declaration_review": "James read-only comparison: most branch partition/shell claims already native. Selectively adapt exact extinction, leading-step faithfulness and ordered DMP outer-inverse interface; preserve canonical PowerMPFamily and oblique counterexample definitions. Do not import duplicate shell hierarchy.",
@@ -120,6 +120,18 @@
           "lean/InfoGeometry/Canonical/DrazinShellExtinction.lean": "f32915368ad475e3e8793d18fcdf103580ab89ba6b5b318770b768b4c70bcc7d",
           "lean/InfoGeometry/Canonical/DrazinShellExtinctionAudit.lean": "03c48df02556773e0c764ffe6c617ed7a605d0f1bd999ba7a8becaf42f03ca43"
         }
+      },
+      "matrix_action_verification": {
+        "status": "independently_accepted",
+        "semantic_review": "James final3fileA-A PASS",
+        "kernel_qa": "Popper PASS3186,10standard-onlyaxiomheads, strict3filegate zero findings, stable3hashes, no scopedwarnings",
+        "evidence": "/tmp/matrix-action-independent-qa-20261023",
+        "sha256": {
+          "lean/InfoGeometry/Core/MatrixActionRecovery.lean": "17310a608b6cadc0dc827d76d19f3a211e7e81fdbca44f5153c36cf5638982e4",
+          "lean/InfoGeometry/Canonical/DrazinShellMatrixAction.lean": "c64126999a958ec571ad81a3f9d97c62c8f62f8b4b3e3882e250f1b4cab3a98b",
+          "lean/InfoGeometry/Canonical/DrazinShellMatrixActionAudit.lean": "952bdfec138dcaa6e5248b9a29155ff9cb818ef7f66d435e121dc9c9d9e39741"
+        },
+        "scope": "Generic semiring row/column annihilation and recovery, native range/dressed shell rows, native real corange columns; no new shell nonzeroness or minimal-index assertion."
       }
     },
     {
@@ -170,7 +182,7 @@
         "feat/cartan-drazin-mp-cycle"
       ],
       "source_commit": "6a2dd2123",
-      "status": "newly_fetched_source_review_pending",
+      "status": "selective_native_parity_adaptation_in_progress",
       "modules": [
         "Core.IdempotentCartan",
         "Canonical.DrazinMPCartan",
@@ -181,8 +193,9 @@
         "independent semantic review and targeted kernel/axiom acceptance",
         "review branch workflow and checker without replacing native root CI"
       ],
-      "note": "Fetched 2026-10-23; four branch commits ahead of local main at inventory. No branch files promoted yet; preserve concurrent owner edits."
+      "note": "Fetched 2026-10-23; four branch commits ahead of local main at inventory. No branch files promoted yet; preserve concurrent owner edits.",
+      "review": "James source review: reuse Algebra.PeirceDeWittChiralSplit; do not import parallel parity carrier or alternate copied-closure CI checker. Native parity closure candidate now under kernel checking. Preserve dirty seven-stage draft from other session. Supplied inverse witnesses, injective doubling for sign converses, no unconditional MP existence or MP grading tripotence."
     }
   ],
-  "runtime_ci_review": "James source-semantic PASS on promoted native runtime acceptance helper, CI integration and final Git inventory regression. Seven domain suites (77 tests) and eight generated certificate checks planned; initial parent run of six helper regressions plus77 domain tests passed. New seventh helper regression and independent eight-certificate QA pending. Full native CLI correctly reaches and rejects Atlas/GIFT path provenance preflight; this is not CI acceptance. No preflight bypass added. Actual independent run exposed version-output conflation: Lake dependency warnings preceded the Lean banner. Runner now logs stdout/stderr separately and parses only version stdout, while certificate audit still checks combined diagnostics. Final A-A and source-frozen independent QA pending."
+  "runtime_ci_review": "Implementation committed334968d26; James A-A PASS. Independent Popper7helper+77domain tests passed,8generatedcertificates compiled with24standard-onlystdoutaxioms and forgeddepth rejected inlocal_certificate. Combineddiagnostic audits rejectdirtydependencywarnings; fullsource snapshot changedoneunrelatedconcurrentowner. FullCLI rejectsAtlas/GIFTprovenance. Component evidence only, NOT fullCIacceptance. See docs/RUNTIME_ACCEPTANCE_20261023.json."
 }

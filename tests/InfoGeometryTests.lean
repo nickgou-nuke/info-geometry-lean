@@ -22,6 +22,8 @@ import InfoGeometry.Core.SupercolorMatrixExamples
 import InfoGeometry.Core.SupercolorMultiplication
 import InfoGeometry.Canonical.DrazinInterShellHodge
 import InfoGeometry.Canonical.MajoranaCoefficientAction
+import InfoGeometry.Canonical.CARMajoranaOwnerAdapters
+import InfoGeometry.Canonical.KreinMajoranaKernelCriterion
 import InfoGeometry.Canonical.FiniteSteinInverse
 import InfoGeometry.Canonical.GramianInverseContracts
 import InfoGeometry.Probability.BipartiteLogCoupling
@@ -30,6 +32,7 @@ import InfoGeometry.Routing.ShapeSinkhornBipartite
 import InfoGeometry.Modular.PSL2ZAction
 import InfoGeometry.Physics.BostConnesThermalTime
 import InfoGeometry.Canonical.CounterexampleAlternatives
+import InfoGeometry.Canonical.FiniteDimensionalCCRObstruction
 import InfoGeometry.Canonical.KreinKramersAlternatives
 import InfoGeometry.Canonical.DrazinCartanAlternatives
 import InfoGeometry.Canonical.CasiniBekensteinBound
@@ -369,6 +372,10 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Canonical.MajoranaCoefficientAction.quadratic_monomial_commutator
 #check InfoGeometry.Canonical.MajoranaCoefficientAction.quadraticElement_commutator_expansion
 #check InfoGeometry.Canonical.MajoranaCoefficientAction.quadraticElement_commutator_generator
+#check InfoGeometry.Canonical.MajoranaPfaffianKernelCriterion.pfaffian_zero_iff_conserved_majorana
+#check InfoGeometry.Canonical.CARMajoranaFiniteBridge.car_to_chain_to_pfaffian
+#check InfoGeometry.Canonical.CARMajoranaOwnerAdapters.sweetSpot_boundary_commutes
+#check InfoGeometry.Canonical.KreinMajoranaKernelCriterion.polarized_nonzero_kernel_iff_pfaffian_zero
 #check InfoGeometry.Core.SuperGrassmannianSusy.colorBoson_lieBracket_of_common_source
 #check InfoGeometry.QuantumContext.PetzMonotonicity.compile_petz_data_processing_monotonicity
 #check InfoGeometry.QuantumContext.MoebiusPetzCPT.compile_moebius_petz_cpt_equivariance
@@ -449,6 +456,8 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Canonical.CounterexampleAlternatives.lie_bracket_eq_zero_iff_commute
 #check InfoGeometry.Canonical.CounterexampleAlternatives.lie_bracket_ne_zero_iff_not_commute
 #check InfoGeometry.Canonical.CounterexampleAlternatives.inner_inverse_iff_kantor_defect_zero
+#check InfoGeometry.Canonical.FiniteDimensionalCCRObstruction.no_scalar_commutator_one
+#check InfoGeometry.Canonical.FiniteDimensionalCCRObstruction.no_nonzero_scalar_commutator
 #check InfoGeometry.Streaming.TwoBoundaryDyadCompression.boundaryDyad_matrix_apply
 #check InfoGeometry.Streaming.TwoBoundaryDyadCompression.boundaryDyad_matrix_of_same_ray
 #check InfoGeometry.Streaming.TwoBoundaryDyadCompression.boundaryDyad_self_adjoint_of_same_ray

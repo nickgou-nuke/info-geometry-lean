@@ -23,3 +23,8 @@ import InfoGeometry.Routing.AttentionReadoutCompression
 import InfoGeometry.Routing.AttentionValueCompression
 import InfoGeometry.Routing.AttentionAnalogyFiber
 import InfoGeometry.Routing.AttentionInteriorFiber
+import InfoGeometry.Routing.CaratheodoryPivotContracts
+import InfoGeometry.Routing.ShapeSinkhornBipartite
+import InfoGeometry.Routing.FunctionalRouteCertificate
+import InfoGeometry.Routing.FunctionalRouteObstructions
+import InfoGeometry.Routing.SinkhornPipelineCompatibility

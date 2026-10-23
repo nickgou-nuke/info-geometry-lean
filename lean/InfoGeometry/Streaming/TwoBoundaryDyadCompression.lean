@@ -110,7 +110,7 @@ theorem boundaryDyad_self_adjoint_of_same_ray [DecidableEq ι]
     simp [pairing, star_sum, star_mul, mul_comm]
   ext i j
   simp only [Matrix.conjTranspose_apply,
-    boundaryDyad_matrix_of_same_ray p c hc, star_div₀, star_mul, star_star, hnorm]
+    boundaryDyad_matrix_of_same_ray p c hc, star_div₀, star_mul, star_star, hnorm, mul_comm]
 
 /-- A regular dyad is Hermitian exactly when both boundary directions lie
 on the same complex ray. -/

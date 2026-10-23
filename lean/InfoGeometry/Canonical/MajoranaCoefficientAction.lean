@@ -23,11 +23,12 @@ open InfoGeometry.Canonical.KitaevChainMajoranaZeroModes
 open scoped BigOperators
 
 variable {A : Type*} [Ring A] [Algebra ℝ A]
-variable {N : ℕ} {gamma : Fin (2 * N) → A}
+variable {ι : Type*} [Fintype ι] [DecidableEq ι] {gamma : ι → A}
 
 /-- Anticommutation extracts an individual coefficient of a Majorana sum. -/
-theorem linearCombination_anticommutator (h : IsMajoranaBasis N gamma)
-    (v : Fin (2 * N) → ℝ) (k : Fin (2 * N)) :
+theorem linearCombination_anticommutator
+    (h : ∀ i j, gamma i * gamma j + gamma j * gamma i = if i = j then 2 else 0)
+    (v : ι → ℝ) (k : ι) :
     Fintype.linearCombination ℝ gamma v * gamma k +
       gamma k * Fintype.linearCombination ℝ gamma v = (2 * v k) • (1 : A) := by
   calc
@@ -48,7 +49,8 @@ theorem linearCombination_anticommutator (h : IsMajoranaBasis N gamma)
 
 /-- Normalized CAR prevent a nonzero coefficient vector from representing
 the zero operator. Nontriviality of the algebra is essential. -/
-theorem linearCombination_injective [Nontrivial A] (h : IsMajoranaBasis N gamma) :
+theorem linearCombination_injective [Nontrivial A]
+    (h : ∀ i j, gamma i * gamma j + gamma j * gamma i = if i = j then 2 else 0) :
     Function.Injective (Fintype.linearCombination ℝ gamma) := by
   intro v w hvw
   funext k
@@ -59,9 +61,11 @@ theorem linearCombination_injective [Nontrivial A] (h : IsMajoranaBasis N gamma)
     simpa only [Algebra.algebraMap_eq_smul_one] using heq
   linarith
 
+omit [Fintype ι] in
 /-- The quadratic monomial acts by the two corresponding CAR contractions. -/
-theorem quadratic_monomial_commutator (h : IsMajoranaBasis N gamma)
-    (i j k : Fin (2 * N)) :
+theorem quadratic_monomial_commutator
+    (h : ∀ i j, gamma i * gamma j + gamma j * gamma i = if i = j then 2 else 0)
+    (i j k : ι) :
     (gamma i * gamma j) * gamma k - gamma k * (gamma i * gamma j) =
       (if j = k then (2 : ℝ) • gamma i else 0) -
         (if i = k then (2 : ℝ) • gamma j else 0) := by
@@ -74,14 +78,15 @@ theorem quadratic_monomial_commutator (h : IsMajoranaBasis N gamma)
 
 /-- Quadratic element with the normalization for the action `K.mulVec`.
 No factor of `i` is included; this is the real algebraic commutator action. -/
-def quadraticElement (gamma : Fin (2 * N) → A)
-    (K : Matrix (Fin (2 * N)) (Fin (2 * N)) ℝ) : A :=
+def quadraticElement (gamma : ι → A)
+    (K : Matrix ι ι ℝ) : A :=
   (1 / 4 : ℝ) • ∑ i, ∑ j, K i j • (gamma i * gamma j)
 
 /-- Expand the quadratic action into its two CAR contractions. This identity
 does not yet require skew symmetry of the coefficient matrix. -/
-theorem quadraticElement_commutator_expansion (h : IsMajoranaBasis N gamma)
-    (K : Matrix (Fin (2 * N)) (Fin (2 * N)) ℝ) (k : Fin (2 * N)) :
+theorem quadraticElement_commutator_expansion
+    (h : ∀ i j, gamma i * gamma j + gamma j * gamma i = if i = j then 2 else 0)
+    (K : Matrix ι ι ℝ) (k : ι) :
     quadraticElement gamma K * gamma k - gamma k * quadraticElement gamma K =
       (1 / 4 : ℝ) • ∑ i, ∑ j, K i j •
         ((if j = k then (2 : ℝ) • gamma i else 0) -
@@ -98,9 +103,10 @@ theorem quadraticElement_commutator_expansion (h : IsMajoranaBasis N gamma)
 
 /-- A skew coefficient matrix acts on each generator by its corresponding
 column, with the quarter normalization in `quadraticElement`. -/
-theorem quadraticElement_commutator_generator (h : IsMajoranaBasis N gamma)
-    (K : Matrix (Fin (2 * N)) (Fin (2 * N)) ℝ)
-    (hK : ∀ i j, K i j = -K j i) (k : Fin (2 * N)) :
+theorem quadraticElement_commutator_generator
+    (h : ∀ i j, gamma i * gamma j + gamma j * gamma i = if i = j then 2 else 0)
+    (K : Matrix ι ι ℝ)
+    (hK : ∀ i j, K i j = -K j i) (k : ι) :
     quadraticElement gamma K * gamma k - gamma k * quadraticElement gamma K =
       ∑ i, K i k • gamma i := by
   rw [quadraticElement_commutator_expansion h]
@@ -119,9 +125,10 @@ theorem quadraticElement_commutator_generator (h : IsMajoranaBasis N gamma)
   ring
 
 /-- Intertwining of the quadratic commutator and the coefficient matrix action. -/
-theorem quadraticElement_commutator_linearCombination (h : IsMajoranaBasis N gamma)
-    (K : Matrix (Fin (2 * N)) (Fin (2 * N)) ℝ)
-    (hK : ∀ i j, K i j = -K j i) (v : Fin (2 * N) → ℝ) :
+theorem quadraticElement_commutator_linearCombination
+    (h : ∀ i j, gamma i * gamma j + gamma j * gamma i = if i = j then 2 else 0)
+    (K : Matrix ι ι ℝ)
+    (hK : ∀ i j, K i j = -K j i) (v : ι → ℝ) :
     quadraticElement gamma K * Fintype.linearCombination ℝ gamma v -
         Fintype.linearCombination ℝ gamma v * quadraticElement gamma K =
       Fintype.linearCombination ℝ gamma (K.mulVec v) := by
@@ -141,9 +148,9 @@ theorem quadraticElement_commutator_linearCombination (h : IsMajoranaBasis N gam
 /-- Zero commutator on the Majorana span is exactly the coefficient kernel;
 this is not a statement about the state-space kernel of the quadratic element. -/
 theorem quadraticElement_commutator_eq_zero_iff [Nontrivial A]
-    (h : IsMajoranaBasis N gamma)
-    (K : Matrix (Fin (2 * N)) (Fin (2 * N)) ℝ)
-    (hK : ∀ i j, K i j = -K j i) (v : Fin (2 * N) → ℝ) :
+    (h : ∀ i j, gamma i * gamma j + gamma j * gamma i = if i = j then 2 else 0)
+    (K : Matrix ι ι ℝ)
+    (hK : ∀ i j, K i j = -K j i) (v : ι → ℝ) :
     quadraticElement gamma K * Fintype.linearCombination ℝ gamma v -
         Fintype.linearCombination ℝ gamma v * quadraticElement gamma K = 0 ↔
       K.mulVec v = 0 := by

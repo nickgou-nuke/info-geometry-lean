@@ -127,6 +127,26 @@ theorem bracket_preserving_map_annihilates_negative_heisenberg
   rw [← bracket_minus1_minus1 D x y, hf,
     bracket_preserving_map_annihilates_negative_charge D f hf x, zero_lie]
 
+/-- A Lie-ring image must identify the mixed symplectic operator with the
+negative scaling term. Neither zero-grade summand can be discarded when
+interpreting the mixed bracket. -/
+theorem bracket_preserving_map_mixed_zero_relation
+    {L : Type*} [LieRing L]
+    (f : FiveGradedCarrier D →+ L)
+    (hf : ∀ u v, f (fiveGradedBracket D u v) = ⁅f u, f v⁆)
+    (x y : FreudenthalCharge J) :
+    f (injSympZero D (mixedSymplecticBracket D x y)) =
+      -f (genHscale D (FreudenthalCharge.symplecticForm D x y)) := by
+  have hsplit : fiveGradedBracket D (injChargeMinus D x) (injChargePlus D y) =
+      injSympZero D (mixedSymplecticBracket D x y) +
+        genHscale D (FreudenthalCharge.symplecticForm D x y) := by
+    rw [bracket_minus1_plus1]
+    apply FiveGradedCarrier.ext <;> simp [injSympZero, genHscale]
+  have hz : f (fiveGradedBracket D (injChargeMinus D x) (injChargePlus D y)) = 0 := by
+    rw [hf, bracket_preserving_map_annihilates_negative_charge D f hf x, zero_lie]
+  rw [hsplit, map_add] at hz
+  exact eq_neg_of_add_eq_zero_left hz
+
 /-! ## 1. Cyclic Symmetries of the Jacobiator -/
 
 theorem fiveJacobiator_cyclic_left (u v w : FiveGradedCarrier D) :

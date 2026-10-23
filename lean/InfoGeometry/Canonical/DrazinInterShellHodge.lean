@@ -1,0 +1,192 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.Canonical.DrazinShellCascade
+import InfoGeometry.Singular.SquareZeroChiralHodge
+import InfoGeometry.Singular.MoorePenroseCanonicalBridge
+
+/-!
+# Inter-shell Peirce blocks and their chiral Hodge--Dirac structure
+
+Given a Drazin inverse `d` of index `k` for `a`, the dressed shell projectors
+`S m = E_N * Q_m * E_N` form a mutually orthogonal idempotent family summing to
+`E_N`.  The inter-shell Peirce block
+
+`d_{m,r} = S_m * a * S_r`
+
+is strictly lower triangular: it vanishes for `m ≤ r`.  For every distinct pair
+`m ≠ r` it is square-zero, because `S_r * S_m = 0`.  If `B` is a Moore--Penrose
+inverse of `d_{m,r}`, then the local pair `(d_{m,r}, B)` carries the full
+square-zero chiral Hodge--Dirac package of
+`InfoGeometry.Singular.SquareZeroChiralHodge`: the two supports are orthogonal
+idempotents, the harmonic complement is their kernel, the chiral grading is a
+tripotent, and the normalized operator anticommutes with it.
+
+The local supports are absorbed by the shell projectors:
+`S_m * P₊ = P₊` and `P₋ * S_r = P₋`.  This is the shell-local form of the
+strictly triangular Peirce filtration.
+
+All statements are over an arbitrary star ring.  No commutativity,
+diagonalizability, symmetry of `E_N`, finite dimensionality, or nonzeroness of
+a shell is assumed.  The Drazin index is a witness, not a minimality claim.
+The normalized local operator `d_{m,r} + B` is not identified with a metric
+Hodge--Dirac operator unless `B = star d_{m,r}` is supplied separately.
+-/
+
+namespace InfoGeometry.Canonical.DrazinNilpotentShell
+
+open InfoGeometry.Canonical.Drazin
+open InfoGeometry.Canonical.Drazin.IsDrazinInverse
+open InfoGeometry.Canonical.MoorePenrose
+open InfoGeometry.Singular.MoorePenrose
+  (exactSupport coexactSupport SquareZeroChiralHodge)
+
+variable {R : Type*} [Ring R] [StarRing R]
+
+section Drazin
+
+variable {a d : R} {k : ℕ}
+
+/-- The inter-shell Peirce block `d_{m,r} = S_m * a * S_r`. -/
+def interShellPeirceCorner (a d : R) (M : ℕ → R) (m r : ℕ) : R :=
+  drazinShellProj a d M m * a * drazinShellProj a d M r
+
+/-- The inter-shell block is square-zero for every pair of distinct shells. -/
+theorem interShellPeirceCorner_sq_eq_zero (hD : IsDrazinInverse a d k)
+    {M : ℕ → R} (hM : PowerMPFamily (fittingNilpotentPart a d) M)
+    {m r : ℕ} (hne : m ≠ r) :
+    interShellPeirceCorner a d M m r * interShellPeirceCorner a d M m r = 0 := by
+  unfold interShellPeirceCorner
+  calc
+    (drazinShellProj a d M m * a * drazinShellProj a d M r) *
+        (drazinShellProj a d M m * a * drazinShellProj a d M r)
+        = drazinShellProj a d M m * a *
+            (drazinShellProj a d M r * drazinShellProj a d M m) *
+            a * drazinShellProj a d M r := by
+          noncomm_ring
+    _ = 0 := by
+          rw [drazinShellProj_orthogonal hD hM hne.symm]
+          simp
+
+/-- The strictly triangular direction: `d_{m,r} = 0` for `m ≤ r`. -/
+theorem interShellPeirceCorner_eq_zero_of_le (hD : IsDrazinInverse a d k)
+    {M : ℕ → R} (hM : PowerMPFamily (fittingNilpotentPart a d) M)
+    {m r : ℕ} (hmr : m ≤ r) :
+    interShellPeirceCorner a d M m r = 0 :=
+  drazinShellProj_mul_a_mul_drazinShellProj_eq_zero_of_le hD hM hmr
+
+/-- The inter-shell block is left-absorbed by `S_m` and right-absorbed by
+`S_r`. -/
+theorem interShellPeirceCorner_shell_localization (hD : IsDrazinInverse a d k)
+    {M : ℕ → R} (hM : PowerMPFamily (fittingNilpotentPart a d) M)
+    (m r : ℕ) :
+    drazinShellProj a d M m * interShellPeirceCorner a d M m r =
+      interShellPeirceCorner a d M m r ∧
+    interShellPeirceCorner a d M m r * drazinShellProj a d M r =
+      interShellPeirceCorner a d M m r := by
+  constructor
+  · unfold interShellPeirceCorner
+    calc
+      drazinShellProj a d M m *
+          (drazinShellProj a d M m * a * drazinShellProj a d M r)
+          = (drazinShellProj a d M m * drazinShellProj a d M m) *
+              a * drazinShellProj a d M r := by
+            noncomm_ring
+      _ = drazinShellProj a d M m * a * drazinShellProj a d M r := by
+            rw [drazinShellProj_idem hD hM m]
+  · unfold interShellPeirceCorner
+    calc
+      (drazinShellProj a d M m * a * drazinShellProj a d M r) *
+          drazinShellProj a d M r
+          = drazinShellProj a d M m * a *
+              (drazinShellProj a d M r * drazinShellProj a d M r) := by
+            noncomm_ring
+      _ = drazinShellProj a d M m * a * drazinShellProj a d M r := by
+            rw [drazinShellProj_idem hD hM r]
+
+/-- The exact support of an inter-shell block is left-supported on `S_m`. -/
+theorem drazinShellProj_mul_interShellExactSupport
+    (hD : IsDrazinInverse a d k)
+    {M : ℕ → R} (hM : PowerMPFamily (fittingNilpotentPart a d) M)
+    (m r : ℕ) (B : R) :
+    drazinShellProj a d M m *
+        exactSupport (interShellPeirceCorner a d M m r) B =
+      exactSupport (interShellPeirceCorner a d M m r) B := by
+  rw [exactSupport, ← mul_assoc,
+    (interShellPeirceCorner_shell_localization hD hM m r).1]
+
+/-- The coexact support of an inter-shell block is right-supported on `S_r`. -/
+theorem interShellCoexactSupport_mul_drazinShellProj
+    (hD : IsDrazinInverse a d k)
+    {M : ℕ → R} (hM : PowerMPFamily (fittingNilpotentPart a d) M)
+    (m r : ℕ) (B : R) :
+    coexactSupport (interShellPeirceCorner a d M m r) B *
+        drazinShellProj a d M r =
+      coexactSupport (interShellPeirceCorner a d M m r) B := by
+  rw [coexactSupport, mul_assoc,
+    (interShellPeirceCorner_shell_localization hD hM m r).2]
+
+/-- **Double-sum shell reconstruction.**  The core term and the strictly lower
+triangular inter-shell blocks reconstruct the full operator. -/
+theorem drazin_core_and_double_sum_shell_cascade (hD : IsDrazinInverse a d k)
+    {M : ℕ → R} (hM : PowerMPFamily (fittingNilpotentPart a d) M) :
+    a = projection a d * a * projection a d +
+        ∑ m ∈ Finset.range k, ∑ r ∈ Finset.range m,
+          interShellPeirceCorner a d M m r := by
+  calc
+    a = projection a d * a * projection a d +
+        ∑ m ∈ Finset.range k,
+          drazinShellProj a d M m * a *
+            (∑ r ∈ Finset.range m, drazinShellProj a d M r) :=
+      drazin_core_and_shell_cascade hD hM
+    _ = projection a d * a * projection a d +
+        ∑ m ∈ Finset.range k, ∑ r ∈ Finset.range m,
+          interShellPeirceCorner a d M m r := by
+      congr 1
+      apply Finset.sum_congr rfl
+      intro m _
+      rw [Finset.mul_sum]
+      rfl
+
+/-- **Local inter-shell chiral Hodge--Dirac theorem.**
+For a Drazin pair and an inter-shell block `d_{m,r}` with `m ≠ r`, any
+Moore--Penrose inverse `B` of `d_{m,r}` yields:
+1. `d_{m,r}` and `B` are square-zero;
+2. `d_{m,r} = 0` for `m ≤ r`;
+3. `S_m` absorbs the exact support and `S_r` absorbs the coexact support;
+4. the full square-zero chiral Hodge--Dirac package holds for `(d_{m,r}, B)`.
+
+The last item includes the orthogonal idempotent partition of unity, the
+harmonic kernel, the tripotent chiral grading, and the anticommutation with the
+normalized local operator. -/
+theorem interShell_chiralHodge_decomposition (hD : IsDrazinInverse a d k)
+    {M : ℕ → R} (hM : PowerMPFamily (fittingNilpotentPart a d) M)
+    {m r : ℕ} (hne : m ≠ r) {B : R}
+    (hB : InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse
+      (interShellPeirceCorner a d M m r) B) :
+    let D := interShellPeirceCorner a d M m r
+    (D * D = 0 ∧ B * B = 0) ∧
+    (m ≤ r → D = 0) ∧
+    (drazinShellProj a d M m * exactSupport D B = exactSupport D B ∧
+      coexactSupport D B * drazinShellProj a d M r = coexactSupport D B) ∧
+    SquareZeroChiralHodge D B := by
+  intro D
+  have hd_sq : D * D = 0 :=
+    interShellPeirceCorner_sq_eq_zero hD hM hne
+  have hB' : InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse D B :=
+    hB.toSingular
+  have hB_sq : B * B = 0 := hB'.inverse_sq_eq_zero hd_sq
+  refine ⟨⟨hd_sq, hB_sq⟩, ?_, ?_, ?_⟩
+  · intro hmr
+    exact interShellPeirceCorner_eq_zero_of_le hD hM hmr
+  · exact ⟨drazinShellProj_mul_interShellExactSupport hD hM m r B,
+      interShellCoexactSupport_mul_drazinShellProj hD hM m r B⟩
+  · exact InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse.squareZero_chiralHodge_decomposition
+      hB' hd_sq
+
+end Drazin
+
+end InfoGeometry.Canonical.DrazinNilpotentShell

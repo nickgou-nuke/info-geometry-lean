@@ -16,6 +16,7 @@ import InfoGeometry.Core.DiracPeirceSuperalgebra
 #print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.fullPeircePart_decomposition
 #print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.evenPeircePart_star
 #print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.oddPeircePart_star
+#print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.fullPeircePart_decomposition_star
 #print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.activeSupport_commute_evenPeircePart
 #print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.activeSupport_commute_oddPeircePart
 #print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.activeSupport_commute_superInvolution

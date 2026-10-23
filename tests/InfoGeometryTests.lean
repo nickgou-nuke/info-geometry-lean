@@ -296,6 +296,7 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Core.DiracPeirceSuperalgebra.fullPeircePart_decomposition
 #check InfoGeometry.Core.DiracPeirceSuperalgebra.evenPeircePart_star
 #check InfoGeometry.Core.DiracPeirceSuperalgebra.oddPeircePart_star
+#check InfoGeometry.Core.DiracPeirceSuperalgebra.fullPeircePart_decomposition_star
 #check InfoGeometry.Core.DiracPeirceSuperalgebra.superInvolution_conjugates_activeSupport
 #check InfoGeometry.Core.DiracPeirceSuperalgebra.globalMajoranaReflection_conjugates_activeSupport
 #check InfoGeometry.Core.DiracSuperalgebra.superInvolution_conjugates_majoranaPlus

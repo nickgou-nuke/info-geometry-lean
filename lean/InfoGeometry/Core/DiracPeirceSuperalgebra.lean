@@ -233,6 +233,26 @@ theorem oddPeircePart_star
     star_add, star_mul, star_star, h.ab_adj_eq, h.ba_adj_eq]
   noncomm_ring
 
+/- The complete four-block Peirce reconstruction is equivariant for the
+involution; the two mixed active/harmonic blocks are exchanged. -/
+theorem fullPeircePart_decomposition_star
+    (h : IsMoorePenroseInverse a m) (x : R) :
+    star (evenPeircePart a m x + oddPeircePart a m x +
+      activeSupport a m * x * harmonicSupport a m +
+      harmonicSupport a m * x * activeSupport a m) =
+      evenPeircePart a m (star x) + oddPeircePart a m (star x) +
+        activeSupport a m * star x * harmonicSupport a m +
+        harmonicSupport a m * star x * activeSupport a m := by
+  have h_active : star (activeSupport a m) = activeSupport a m := by
+    unfold activeSupport exactSupport coexactSupport
+    rw [star_add, h.ab_adj_eq, h.ba_adj_eq]
+  have h_harmonic : star (harmonicSupport a m) = harmonicSupport a m := by
+    unfold harmonicSupport exactSupport coexactSupport
+    rw [star_sub, star_sub, star_one, h.ab_adj_eq, h.ba_adj_eq]
+  simp only [star_add, evenPeircePart_star h, oddPeircePart_star h,
+    star_mul, h_active, h_harmonic]
+  noncomm_ring
+
 /-- The odd anticommutator `D_Q(X) = Q X + X Q` with the normalized
 supercharge `Q = a + m`.  This is the odd-parity branch of the
 parity-alternating superderivation; it is not a derivation on its own. -/

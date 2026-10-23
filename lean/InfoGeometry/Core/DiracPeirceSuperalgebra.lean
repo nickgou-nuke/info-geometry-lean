@@ -672,6 +672,37 @@ theorem diracAnticommutator_exactSupport (h : IsMoorePenroseInverse a m)
     add_comm]
   rfl
 
+/- The same odd anticommutator value holds on the coexact support. -/
+theorem diracAnticommutator_coexactSupport (h : IsMoorePenroseInverse a m)
+    (ha : a * a = 0) :
+    diracAnticommutator a m (coexactSupport a m) = normalizedDirac a m := by
+  unfold diracAnticommutator
+  rw [normalizedDirac_mul_coexactSupport h ha,
+    coexactSupport_mul_normalizedDirac h ha]
+  rfl
+
+/- The harmonic complement is invisible to the odd anticommutator. -/
+theorem diracAnticommutator_harmonicSupport (h : IsMoorePenroseInverse a m)
+    (ha : a * a = 0) :
+    diracAnticommutator a m (harmonicSupport a m) = 0 := by
+  unfold diracAnticommutator
+  rw [h.normalizedDirac_mul_harmonicSupport ha,
+    h.harmonicSupport_mul_normalizedDirac ha, add_zero]
+
+/- On the active support, the odd anticommutator doubles the supercharge. -/
+theorem diracAnticommutator_activeSupport (h : IsMoorePenroseInverse a m)
+    (ha : a * a = 0) :
+    diracAnticommutator a m (activeSupport a m) =
+      2 • normalizedDirac a m := by
+  unfold activeSupport
+  unfold diracAnticommutator
+  rw [mul_add, add_mul, normalizedDirac_mul_exactSupport h ha,
+    normalizedDirac_mul_coexactSupport h ha,
+    exactSupport_mul_normalizedDirac h ha,
+    coexactSupport_mul_normalizedDirac h ha]
+  simp only [normalizedDirac, two_nsmul]
+  abel
+
 /-- Repeating the *odd* anticommutator without flipping parity gives `2 Delta`
 on the exact support.  This is the correction term that distinguishes the
 parity-alternating superderivation from a fixed-bracket derivation. -/

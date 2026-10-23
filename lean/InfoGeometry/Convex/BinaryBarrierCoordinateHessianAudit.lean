@@ -1,4 +1,10 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Convex.BinaryBarrierCoordinateHessian
+import InfoGeometry.Convex.BinaryBarrierChartCurvature
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 #print axioms InfoGeometry.Convex.BinaryBarrierCoordinateHessian.interval_barrier_log_cosh
@@ -11,3 +17,5 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 #print axioms InfoGeometry.Convex.BinaryBarrierCoordinateHessian.barrier_chart_hessian_le_pullback
 #print axioms InfoGeometry.Convex.BinaryBarrierCoordinateHessian.barrier_chart_third_derivative
 #print axioms InfoGeometry.Convex.BinaryBarrierCoordinateHessian.transformed_barrier_self_concordance_counterexample
+#print axioms InfoGeometry.Convex.BinaryBarrierCoordinateHessian.barrier_chart_third_abs_lt_twice_second
+#print axioms InfoGeometry.Convex.BinaryBarrierCoordinateHessian.barrier_chart_standard_bound_iff

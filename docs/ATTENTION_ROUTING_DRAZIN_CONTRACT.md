@@ -18,6 +18,9 @@ applies to the typed declarations, not to the stronger intake narrative.
    finite bound, not an assertion that the bound is the minimal index.
 3. Consume the existing nonzero-causal-route theorem so the result applies to
    every nonzero route in a masked attention matrix's product-coupling expansion.
+4. Eliminate route enumeration for expected causal core trace: prove it equals
+   `trace(P)` for **any** exact causal coupling. Expose this as the exact-rational
+   `expected_causal_core_rank` diagnostic and `--causal-core-only` CLI mode.
 
 These are general operator results, not selected numeric examples. Existing
 convex reconstruction and shell calculus are not duplicated. The causal and
@@ -42,12 +45,31 @@ permutation interfaces connect to them through the same matrix carrier.
   construction.
 - Route-mixture statistics require an explicit coupling. The existing
   `routeWeight` supplies the independent row coupling; alternative convex
-  decompositions need not give equal expected core rank or depth. Neither
-  statistic is established here as semantic reasoning depth.
+  decompositions need not give equal general recurrent-core rank or depth.
+  Causal core trace is an important proved exception: every recurrent point
+  is fixed, and linearity makes its expectation `trace(P)` for every exact
+  causal coupling. This is not the Drazin rank of the mixed matrix `P`.
+  Neither statistic is established here as semantic reasoning depth.
+- The Lean diagnostic proves core-projector **trace** equality; it does not
+  separately formalize the rank–trace identification. The runtime name
+  `expected_causal_core_rank` uses that mathematical interpretation, not an
+  additional kernel-certified rank theorem. Runtime inputs require `n ≥ 1`;
+  Lean's matrix results also allow the empty carrier.
 - Linear-time graph traversal does not imply linear-time materialization of
   dense MP shell matrices. For rectangular attention, a removed-key fraction
   uses the key count, not the query count. A weight perturbation, rather than
   each removed key, lies in the homogeneous readout kernel.
+
+## Preserved anomaly and graph context
+
+The [Drazin/MP partition audit](DRAZIN_MP_PARTITION_AUDIT.md#anomalies-triple-products-and-graph-carriers)
+records the existing Cantor triple-product, Jordan associator, chiral/Einstein
+anomaly, and graph-differential owners. This routing bridge does not replace
+those carriers or erase their noncommutativity. In particular, support-projector
+commutators are not identified with the raw inverse commutator `[D,M]`, and
+ordinary associative matrix multiplication is not a nonassociative product.
+The new scalar trace diagnostic does not reconstruct those operator-valued
+obstructions or assign their charges to individual tokens.
 
 ## Verification
 

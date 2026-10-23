@@ -12,4 +12,6 @@ import InfoGeometry.Routing.CausalCoreTrace
 #print axioms InfoGeometry.Routing.AttentionPolytope.deterministic_doublyStochastic_iff_complement_zero
 #print axioms InfoGeometry.Routing.AttentionPolytope.causal_deterministic_drazin
 #print axioms InfoGeometry.Routing.AttentionPolytope.causal_deterministic_core
+#print axioms InfoGeometry.Routing.AttentionPolytope.causal_deterministic_core_trace
+#print axioms InfoGeometry.Routing.AttentionPolytope.causal_mixture_core_trace
 #print axioms InfoGeometry.Routing.AttentionPolytope.attention_expected_causal_core_trace

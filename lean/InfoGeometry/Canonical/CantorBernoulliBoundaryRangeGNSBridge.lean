@@ -211,6 +211,57 @@ theorem boundaryRangeTrace_star_mul_self_re_eq
   rw [boundaryRangeTrace_stage]
   exact bitWordMatrixTraceFunctional_star_mul_self_re_eq n A
 
+/-! The pulled-back trace is nonnegative on genuine noncommutative squares in
+    the represented boundary range.  The carrier is the range of the finite
+    `StarAlgHom`; no diagonal or normality hypothesis occurs. -/
+theorem boundaryStarRangeTrace_star_mul_self_re_nonneg
+    (n : ℕ) (A : Stage n) :
+    0 ≤ (boundaryStarRangeTrace n
+      ⟨boundaryRep n (star A * A), ⟨star A * A, rfl⟩⟩).re := by
+  rw [boundaryStarRangeTrace_stage]
+  rw [bitWordMatrixTraceFunctional_star_mul_self_re_eq]
+  apply mul_nonneg
+  · positivity
+  · exact Finset.sum_nonneg (fun _ _ =>
+      Finset.sum_nonneg (fun _ _ => Complex.normSq_nonneg _))
+
+/-! Faithfulness of the finite boundary-range quadratic form.  This is the
+    finite noncommutative source-level closure needed before any completion;
+    it is not a claim about the spatial infinite boundary state. -/
+theorem boundaryStarRangeTrace_star_mul_self_eq_zero_iff
+    (n : ℕ) (A : Stage n) :
+    (boundaryStarRangeTrace n
+      ⟨boundaryRep n (star A * A), ⟨star A * A, rfl⟩⟩).re = 0 ↔ A = 0 := by
+  rw [boundaryStarRangeTrace_stage,
+    bitWordMatrixTraceFunctional_star_mul_self_re_eq]
+  constructor
+  · intro hzero
+    have hsum :
+        ∑ u : BitWord n, ∑ v : BitWord n, Complex.normSq (A v u) = 0 := by
+      have hcoeff : 0 < (1 / (Fintype.card (BitWord n) : ℝ)) := by
+        positivity
+      nlinarith
+    ext u v
+    have hcol :
+        ∑ x : BitWord n, Complex.normSq (A x v) = 0 := by
+      have hnonneg : ∀ j : BitWord n, j ∈ (Finset.univ : Finset (BitWord n)) →
+          0 ≤ ∑ x : BitWord n, Complex.normSq (A x j) := by
+        intro j _
+        exact Finset.sum_nonneg (fun _ _ => Complex.normSq_nonneg _)
+      exact (Finset.sum_eq_zero_iff_of_nonneg hnonneg).mp hsum v
+        (Finset.mem_univ v)
+    have hentry : Complex.normSq (A u v) = 0 := by
+      have hnonneg : ∀ x : BitWord n, x ∈ (Finset.univ : Finset (BitWord n)) →
+          0 ≤ Complex.normSq (A x v) := by
+        intro x _
+        exact Complex.normSq_nonneg _
+      exact (Finset.sum_eq_zero_iff_of_nonneg hnonneg).mp hcol u
+        (Finset.mem_univ u)
+    exact Complex.normSq_eq_zero.mp hentry
+  · intro hA
+    subst A
+    simp
+
 /-! The same noncommutative energy is seen directly in the native filtered-GNS
     vacuum.  This composes the concrete boundary-range trace with the actual
     finite-stage GNS representation; no diagonal or normality hypothesis is

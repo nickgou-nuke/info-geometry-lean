@@ -36,7 +36,7 @@ theorem causal_deterministic_trace_pow (f : Fin n → Fin n) (hf : ∀ i, f i �
   change (if i = f^[r] i then (1 : ℝ) else 0) = if i = f i then 1 else 0
   have hi : i = f^[r] i ↔ i = f i := by
     simpa only [eq_comm] using iterate_fixed_iff f hf hr i
-  simpa only [hi]
+  simp only [hi]
 
 /-- Core trace is independent of the supplied valid Drazin witness and its exponent. -/
 theorem causal_deterministic_core_trace (f : Fin n → Fin n) (hf : ∀ i, f i ≤ i)

@@ -80,7 +80,35 @@ be strings; decimal literals are parsed exactly. Normalization is rejected
 unless separately requested with `--normalize-rows`, which reports whether
 the matrix changed. The exact runtime requires nonempty rectangular inputs.
 
-## Verification evidence
+## Causal core diagnostic without route enumeration
+
+For square causal attention, every deterministic route has only fixed-point
+cycles. `Routing.CausalRouteDynamics` proves stabilization and constructs a
+Drazin inverse from the stabilized power. `Routing.CausalCoreTrace` then proves
+that **every exact causal routing mixture** has expected core trace `trace(P)`.
+The product coupling and the runtime sparse coupling therefore agree on this
+statistic, even though their individual routes can differ.
+
+```bash
+python3 tools/attention_polytope.py input.json --causal-core-only
+```
+
+This returns `expected_causal_core_rank`, its normalized fraction `trace(P)/n`,
+and `route_decomposition_performed: false` for `n ≥ 1`. It validates nonnegative unit row
+sums, square shape, and the lower-triangular mask. Dense input validation costs
+O(n²) entry checks; the diagonal reduction costs O(n) additions, excluding
+variable rational bit costs. No powers, SVD, MP shells, or routes are computed.
+
+This is expected rank of the **route** core, not Drazin rank of the mixed matrix,
+token-depth assignment, or semantic reasoning depth. Oblique shell operators
+are not diagonal token labels. See [the scope contract](ATTENTION_ROUTING_DRAZIN_CONTRACT.md)
+for the general deterministic Drazin/Birkhoff equivalence and remaining limits.
+The Python implementation is tested separately, not extracted from Lean.
+The Lean theorem certifies core-projector trace; the rank interpretation uses
+the mathematical rank–trace identification, not a separate formalized rank
+theorem in this bridge.
+
+## Original polytope verification evidence
 
 Lean source commit: `e612115829e5c2faffa47fd42a5fc5577c50285b`.
 Successful scoped workflow: https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/39825545753

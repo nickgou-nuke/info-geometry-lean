@@ -23,6 +23,7 @@ import InfoGeometry.Core.DiracSuperalgebra
 #print axioms InfoGeometry.Core.DiracSuperalgebra.activeSupport_identities
 #print axioms InfoGeometry.Core.DiracSuperalgebra.superInvolution_sq
 #print axioms InfoGeometry.Core.DiracSuperalgebra.superInvolution_anticommute_normalizedDirac
+#print axioms InfoGeometry.Core.DiracSuperalgebra.superInvolution_conjugates_majoranaPlus
 #print axioms InfoGeometry.Core.DiracSuperalgebra.normalizedDirac_cube
 #print axioms InfoGeometry.Core.DiracSuperalgebra.majoranaPlus_sq
 #print axioms InfoGeometry.Core.DiracSuperalgebra.majoranaMinus_sq

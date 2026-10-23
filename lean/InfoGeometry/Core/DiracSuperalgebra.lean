@@ -222,6 +222,31 @@ theorem superInvolution_anticommute_normalizedDirac
     _ = 0 := by
       rw [hγ', hleft', hright', add_zero, zero_add]
 
+/-- Conjugation by the global chiral involution flips the symmetric Majorana
+supercharge.  This is the multiplicative form of the anticommutation law,
+using the involution square. -/
+theorem superInvolution_conjugates_majoranaPlus
+    {a m : R} (h : IsMoorePenroseInverse a m) (ha : a * a = 0) :
+    superInvolution a m * majoranaPlus a m * superInvolution a m =
+      -majoranaPlus a m := by
+  have h_anti := superInvolution_anticommute_normalizedDirac h ha
+  have h_left : superInvolution a m * normalizedDirac a m =
+      -(normalizedDirac a m * superInvolution a m) := by
+    rw [add_eq_zero_iff_eq_neg] at h_anti
+    exact h_anti
+  calc
+    superInvolution a m * majoranaPlus a m * superInvolution a m =
+        superInvolution a m * normalizedDirac a m * superInvolution a m := by
+          rfl
+    _ = (-(normalizedDirac a m * superInvolution a m)) *
+          superInvolution a m := by rw [h_left]
+    _ = -(normalizedDirac a m *
+        (superInvolution a m * superInvolution a m)) := by
+          noncomm_ring
+    _ = -normalizedDirac a m := by
+      rw [superInvolution_sq h ha, mul_one]
+    _ = -majoranaPlus a m := by rfl
+
 /-- The normalized supercharge is a partial tripotent: its square is the
 active support and its cube is itself. -/
 theorem normalizedDirac_cube

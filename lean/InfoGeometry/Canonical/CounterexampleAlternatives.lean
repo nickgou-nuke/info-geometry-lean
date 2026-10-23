@@ -42,6 +42,17 @@ theorem common_scaling_division_invariant
     (c * w) / (c * total) = w / total := by
   rw [mul_div_mul_left w total hc]
 
+theorem nonnegative_finite_sum_eq_zero_iff
+    {K : Type*} [Ring K] [LinearOrder K] [IsStrictOrderedRing K]
+    {ι : Type*} [Fintype ι] (f : ι → K) (hf : ∀ i, 0 ≤ f i) :
+    (∑ i, f i = 0) ↔ ∀ i, f i = 0 := by
+  constructor
+  · intro h i
+    have hz : f = 0 := (Fintype.sum_eq_zero_iff_of_nonneg hf).mp h
+    exact congrFun hz i
+  · intro h
+    simp [h]
+
 theorem star_symmetric_sum_of_self_adjoint
     [Ring A] [StarRing A] (x y : A)
     (hx : star x = x) (hy : star y = y) :

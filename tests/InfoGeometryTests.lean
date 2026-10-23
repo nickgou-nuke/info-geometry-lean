@@ -300,6 +300,7 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Canonical.DrazinNilpotentShell.interShell_chiralHodge_decomposition
 #check InfoGeometry.Canonical.DrazinNilpotentShell.interShell_chiralHodge_decomposition_star
 #check InfoGeometry.Core.SuperGrassmannianSusy.star_majoranaPlus_of_dual
+#check InfoGeometry.Core.SuperGrassmannianSusy.coexact_absorption_iff_equal
 #check InfoGeometry.Core.SuperGrassmannianSusy.star_majoranaMinus_of_dual
 #check InfoGeometry.Core.SupercolorMatrixExamples.matrix_supercolor
 #check InfoGeometry.Core.SupercolorMatrixExamples.colorBoson_mul
@@ -307,6 +308,7 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Core.SupercolorMatrixExamples.orthogonal_matrix_supercolor
 #check InfoGeometry.Core.SupercolorMatrixExamples.orthogonal_colorBoson_eq_diagonal
 #check InfoGeometry.Core.SupercolorMatrixExamples.orthogonal_sector_projection_ne_zero
+#check InfoGeometry.Core.SupercolorMatrixExamples.orthogonal_pair_not_commute
 #check InfoGeometry.Core.SupercolorMatrixExamples.orthogonal_totalCentralCharge_commutes_with_generators
 #check InfoGeometry.Core.SupercolorMatrixExamples.fin2_orthogonal_extended_susy_certificate
 #check InfoGeometry.Core.SupercolorMatrixExamples.fin4_orthogonal_extended_susy_certificate
@@ -387,6 +389,7 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Canonical.CounterexampleAlternatives.nonzero_nonnegative_not_le_zero
 #check InfoGeometry.Canonical.CounterexampleAlternatives.positive_normalization_sum_not_additive
 #check InfoGeometry.Canonical.CounterexampleAlternatives.common_scaling_division_invariant
+#check InfoGeometry.Canonical.CounterexampleAlternatives.nonnegative_finite_sum_eq_zero_iff
 #check InfoGeometry.Canonical.CounterexampleAlternatives.star_symmetric_sum_of_self_adjoint
 #check InfoGeometry.Canonical.CounterexampleAlternatives.self_adjoint_unitary_is_involution
 #check InfoGeometry.Canonical.CounterexampleAlternatives.complement_idempotent_of_idempotent

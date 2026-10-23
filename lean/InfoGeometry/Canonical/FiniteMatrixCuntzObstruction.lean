@@ -1,4 +1,11 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Canonical.Cuntz2Isometries
+import InfoGeometry.Canonical.FiniteCantorBranchAmplification
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Tactic
@@ -11,6 +18,11 @@ it cannot itself be a stagewise `Cuntz2Isometries` tower: two isometries with
 orthogonal ranges would force `2 * dim = dim`.  This theorem records that
 trace obstruction explicitly, preventing an invalid concrete Cuntz
 instantiation at finite matrix stages.
+
+The constructive finite replacement is the existing rectangular branch system.
+`FiniteCantorCuntzBranches.amplify` refines arbitrary endomorphisms between
+successive word stages, preserves identity and composition, is injective,
+and intertwines the diagonal bonding map on vectors.
 -/
 
 namespace InfoGeometry.Canonical.FiniteMatrixCuntzObstruction

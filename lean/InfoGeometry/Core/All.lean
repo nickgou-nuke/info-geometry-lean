@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Core.Derivatives
@@ -8,6 +14,8 @@ import InfoGeometry.Core.Involution
 import InfoGeometry.Core.JordanAssociator
 import InfoGeometry.Core.JordanSquareZero
 import InfoGeometry.Core.JordanSquareZeroAudit
+import InfoGeometry.Core.DiracSuperalgebra
+import InfoGeometry.Core.DiracSuperalgebraAudit
 import InfoGeometry.Core.Jordan
 import InfoGeometry.Core.ProjectiveSimplex
 import InfoGeometry.Core.SymmetricLie

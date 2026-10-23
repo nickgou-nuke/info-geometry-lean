@@ -1269,6 +1269,7 @@ import InfoGeometry.Canonical.CPTCstarStateLimit
 import InfoGeometry.Canonical.DPDWedgeCompatibility
 import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Canonical.DrazinShellCascade
+import InfoGeometry.Canonical.DrazinShellCascadeAudit
 import InfoGeometry.Canonical.DrazinInterShellHodge
 import InfoGeometry.Canonical.DrazinInterShellHodgeAudit
 import InfoGeometry.Canonical.DrazinInterShellJordan

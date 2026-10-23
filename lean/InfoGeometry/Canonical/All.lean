@@ -1268,6 +1268,7 @@ import InfoGeometry.Canonical.CPTRealCl11Emergence
 import InfoGeometry.Canonical.CPTCstarStateLimit
 import InfoGeometry.Canonical.DPDWedgeCompatibility
 import InfoGeometry.Canonical.Drazin
+import InfoGeometry.Canonical.DrazinShellCascade
 import InfoGeometry.Canonical.DrazinChiralLightconeBoundary
 import InfoGeometry.Canonical.DrazinCl55LightconeAlignment
 import InfoGeometry.Singular.Drazin

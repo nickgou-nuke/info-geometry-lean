@@ -129,7 +129,7 @@ theorem odd_pair_closure [DecidableEq ι] (hS : IsSupercolorSystem d b)
   · subst j
     simp only [jordanProd, colorBoson, ite_true, hq i]
   · simp only [jordanProd, colorBoson, h, ite_false,
-      hS.b_mul_d_ne h.symm, add_zero]
+      hS.b_mul_d_ne (Ne.symm h), add_zero]
 
 /-- A disjoint-support system cannot also have nonzero common-source arrows. -/
 theorem orthogonal_absorption_forces_zero

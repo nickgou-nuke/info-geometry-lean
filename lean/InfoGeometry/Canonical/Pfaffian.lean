@@ -6,7 +6,9 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 - pfaffian_2x2: Pf([[0,a],[-a,0]]) = a
 - pfaffian_sq_eq_det_2x2: Pf(M)² = det(M) for 2×2 skew-symmetric M
 - det_skew_2x2: det([[0,a],[-a,0]]) = a²
-#### BUCKET 3: Higher-dimensional Pfaffian — open debt
+#### BUCKET 2: The 4×4 Pfaffian is closed in `PfaffianFour.lean`
+- `pfaffian4_sq_eq_det` proves the canonical 4×4 skew identity over every commutative ring.
+#### BUCKET 3: General higher-dimensional Pfaffian — open debt
 -/
 
 namespace InfoGeometry.Canonical.Pfaffian

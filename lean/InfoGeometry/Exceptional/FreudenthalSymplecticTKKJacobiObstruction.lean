@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Exceptional.FreudenthalSymplecticTKKTotalBracket
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -6,7 +11,8 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 The existing symplectic socket supplies the zero-grade action and bracket
 laws, but not the extra triple identity needed for the full TKK Jacobi law.
-This file records the exact remaining condition on the `(-1,+1,-1)` lane.
+This file computes the `(-1,+1,-1)` defect and characterizes its universal
+vanishing on a set by pairwise symplectic orthogonality.
 -/
 
 noncomputable section
@@ -28,6 +34,31 @@ theorem tkk_mixed_jacobi_plus1_component
         (mixedSymplecticBracket D x y : Module.End ℝ (FreudenthalCharge J)) z := by
   simp [tkkTotalBracket, injMinus1, injPlus1]
   module
+
+/-- The mixed Jacobi component vanishes for every triple in a set exactly
+when the set is pairwise symplectically orthogonal. This characterizes the
+actual total-bracket obstruction without assuming the desired triple law. -/
+theorem tkk_mixed_jacobi_on_iff_pairing_zero
+    (s : Set (FreudenthalCharge J)) :
+    (∀ x ∈ s, ∀ z ∈ s, ∀ y ∈ s,
+      (tkkTotalBracket D (injMinus1 D x)
+        (tkkTotalBracket D (injPlus1 D y) (injMinus1 D z))).minus1 +
+      (tkkTotalBracket D (injPlus1 D y)
+        (tkkTotalBracket D (injMinus1 D z) (injMinus1 D x))).minus1 +
+      (tkkTotalBracket D (injMinus1 D z)
+        (tkkTotalBracket D (injMinus1 D x) (injPlus1 D y))).minus1 = 0) ↔
+    (∀ x ∈ s, ∀ z ∈ s, FreudenthalCharge.symplecticForm D x z = 0) := by
+  constructor
+  · intro h x hx z hz
+    have hrepeated := h x hx z hz x hx
+    rw [tkk_mixed_jacobi_plus1_component, sub_eq_zero] at hrepeated
+    simp only [mixedSymplecticBracket_val] at hrepeated
+    exact (symplecticRankTwo_repeated_mixed_iff D x z).mp hrepeated
+  · intro h x hx z hz y hy
+    rw [tkk_mixed_jacobi_plus1_component]
+    simp only [mixedSymplecticBracket_val, symplecticRankTwo_apply,
+      h y hy x hx, h z hz x hx, h y hy z hz, h x hx z hz,
+      zero_smul, add_zero, sub_self]
 
 theorem tkk_mixed_jacobi_minus1_of_triple_identity
     (x z : FreudenthalCharge J) (y : FreudenthalCharge J)

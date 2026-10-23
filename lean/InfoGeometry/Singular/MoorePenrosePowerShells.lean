@@ -42,13 +42,13 @@ theorem rangeSupport_nested {i j : ℕ} (hij : i ≤ j) :
 theorem coRangeSupport_nested {i j : ℕ} (hij : i ≤ j) :
     (g j * a ^ j) * (g i * a ^ i) = g j * a ^ j := by
   obtain ⟨t, rfl⟩ := Nat.exists_eq_add_of_le hij
+  have hpow : a ^ (i + t) = a ^ t * a ^ i := by rw [Nat.add_comm i t, pow_add]
   calc
     (g (i + t) * a ^ (i + t)) * (g i * a ^ i) =
         g (i + t) * a ^ t * (a ^ i * g i * a ^ i) := by
-          rw [show i + t = t + i from Nat.add_comm i t, pow_add]
-          simp only [mul_assoc]
+          rw [hpow]; simp only [mul_assoc]
     _ = g (i + t) * a ^ (i + t) := by
-      rw [(hg i).aba_eq_a, mul_assoc, ← pow_add, Nat.add_comm t i]
+      rw [(hg i).aba_eq_a, mul_assoc, ← hpow]
 
 theorem rangeShell_isStarProjection (n : ℕ) : IsStarProjection (rangeShell a g n) :=
   (support_isStarProjection (hg (n + 1))).1.sub_of_mul_eq_right
@@ -94,14 +94,16 @@ lemma telescope (f : ℕ → R) (k : ℕ) :
 theorem rangeShell_sum {k : ℕ} (hk : a ^ k = 0) :
     (∑ i ∈ Finset.range k, rangeShell a g i) = 1 := by
   have hzero : g 0 = 1 := by simpa using (hg 0).aba_eq_a
-  rw [rangeShell, telescope]
+  unfold rangeShell
+  rw [telescope]
   simp [hzero, hk]
 
 /-- Kernel-growth shells also sum to one, but need not equal range shells. -/
 theorem deathShell_sum {k : ℕ} (hk : a ^ k = 0) :
     (∑ i ∈ Finset.range k, deathShell a g i) = 1 := by
   have hzero : g 0 = 1 := by simpa using (hg 0).aba_eq_a
-  rw [deathShell, telescope]
+  unfold deathShell
+  rw [telescope]
   simp [hzero, hk]
 
 end InfoGeometry.Singular.MoorePenrosePowerShells

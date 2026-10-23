@@ -110,10 +110,11 @@ theorem boundary_isStarProjection {p q : R}
     (hp : IsStarProjection p) (hq : IsStarProjection q) (h : Commute p q) :
     IsStarProjection ((p - q) ^ 2) := by
   rw [← (boundary_eq_square_iff hp.isIdempotentElem hq.isIdempotentElem).mpr h]
+  have hz : (p * (1 - q)) * ((1 - p) * q) = 0 := by
+    simpa [sector, part] using
+      (sector_mul hp.isIdempotentElem hq.isIdempotentElem h (false, true) (true, false))
   exact (sector_isStarProjection hp hq h (false, true)).add
-    (sector_isStarProjection hp hq h (true, false))
-    (by simpa using (sector_mul hp.isIdempotentElem hq.isIdempotentElem h
-      (false, true) (true, false)))
+    (sector_isStarProjection hp hq h (true, false)) hz
 
 /-- The actual Penrose laws supply native star projections. -/
 theorem support_isStarProjection {x m : R} (hm : IsMoorePenroseInverse x m) :

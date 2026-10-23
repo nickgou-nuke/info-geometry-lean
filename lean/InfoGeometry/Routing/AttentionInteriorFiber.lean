@@ -158,7 +158,7 @@ theorem vectorSpan_probabilityFiber_eq_ker (V : J → D → ℝ)
   have hs : (ε / 2) • δ ∈ vectorSpan ℝ (probabilityFiber V p) := by
     simpa only [vsub_eq_sub, add_sub_cancel_left] using vsub_mem_vectorSpan ℝ hq hpp
   have hi := (vectorSpan ℝ (probabilityFiber V p)).smul_mem (ε / 2)⁻¹ hs
-  simpa [smul_smul, ne_of_gt ht] using hi
+  simpa only [smul_smul, inv_mul_cancel₀ (ne_of_gt ht), one_smul] using hi
 
 section Dimension
 variable [Fintype D]

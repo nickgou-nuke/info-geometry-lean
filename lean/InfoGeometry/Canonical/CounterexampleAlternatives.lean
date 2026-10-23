@@ -35,6 +35,25 @@ theorem complement_idempotent_of_idempotent
     · rw [mul_sub, mul_one, he, sub_self]
     · rw [sub_mul, one_mul, he, sub_self]
 
+theorem nonzero_idempotent_not_square_zero
+    [MonoidWithZero A] (e : A) (he : e * e = e) (hne : e ≠ 0) :
+    e * e ≠ 0 := by
+  rw [he]
+  exact hne
+
+theorem orthogonal_idempotent_sum_idempotent
+    [Ring A] (e f : A) (he : e * e = e) (hf : f * f = f)
+    (hef : e * f = 0) (hfe : f * e = 0) :
+    (e + f) * (e + f) = e + f := by
+  calc
+    (e + f) * (e + f) = e * e + e * f + (f * e + f * f) := by noncomm_ring
+    _ = e + f := by rw [he, hef, hfe, hf]; abel
+
+theorem orthogonal_idempotents_have_zero_jordan_product
+    [Ring A] (e f : A) (hef : e * f = 0) (hfe : f * e = 0) :
+    e * f + f * e = 0 := by
+  rw [hef, hfe, add_zero]
+
 theorem star_sandwich_of_self_adjoint
     [Ring A] [StarRing A] (e x : A) (he : star e = e) :
     star (e * x * e) = e * star x * e := by

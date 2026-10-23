@@ -17,7 +17,11 @@ Let `LP` and `LQ` be square matrices over a (possibly noncommutative) ring, let 
 and `LQ_sharp` be group inverses of them in the sense of the canonical
 `InfoGeometry.Canonical.HartwigSouriauFrameDrazin.IsGroupInverse` interface
 applied to the square matrix ring, and let `C` be a rectangular intertwiner.
-Two intertwining equations suffice:
+For full group inverses, `groupInverse_intertwines` derives inverse transport
+from `LP * C = C * LQ` alone. The regular projectors then intertwine by
+`groupInverse_rangeProjector_intertwines`.
+
+For the weaker absorption-and-commutation interface, two equations suffice:
 
 * `LP * C = C * LQ`, so the kernels intertwine, and
 * `LP * LP_sharp * C = C * (LQ * LQ_sharp)`, so the regular idempotents
@@ -34,6 +38,9 @@ multiplication together with four of the group inverse equations:
 `LQ * LQ_sharp = LQ_sharp * LQ`. The reflexive law `LP * LP_sharp * LP = LP`
 is available in the `IsGroupInverse` entry point but is not consumed by the
 proof.
+
+The stronger `groupInverse_intertwines` uses both reflexive laws to derive
+support compatibility, eliminating the independent range-projector premise.
 
 `regularized_groupInverse_intertwines` additionally uses left and right
 distributivity of matrix addition over multiplication, because its conclusion is
@@ -150,6 +157,53 @@ theorem groupInverse_intertwines_of_laws
     _ = (C * (LQ_sharp * LQ)) * LQ_sharp := by rw [hQ_comm]
     _ = C * ((LQ_sharp * LQ) * LQ_sharp) := by simp only [Matrix.mul_assoc]
     _ = C * LQ_sharp := by rw [hQ_abs]
+
+/-- Full group inverses are natural under rectangular intertwiners. Reflexivity
+derives the support compatibility that the weaker outer-inverse theorem needs
+as an additional hypothesis. -/
+theorem groupInverse_intertwines
+    (P P' : Matrix ι ι R) (Q Q' : Matrix κ κ R) (C : Matrix ι κ R)
+    (hP : IsGroupInverse P P') (hQ : IsGroupInverse Q Q')
+    (hC : P * C = C * Q) : P' * C = C * Q' := by
+  have hp : P' * P' * P = P' := by
+    rw [mul_assoc, ← hP.2.2, ← mul_assoc, hP.2.1]
+  have hq : Q * Q * Q' = Q := by
+    rw [mul_assoc, hQ.2.2, ← mul_assoc, hQ.1]
+  have hq' : Q * Q' * Q' = Q' := groupInverse_mul_mul hQ
+  calc
+    P' * C = (P' * P' * P) * C := by rw [hp]
+    _ = (P' * P') * (C * Q) := by rw [Matrix.mul_assoc, hC]
+    _ = (P' * P') * (C * (Q * Q * Q')) := by rw [hq]
+    _ = (P' * P' * P) * C * Q * Q' := by
+      simp only [Matrix.mul_assoc, hC]
+    _ = P' * C * Q * Q' := by rw [hp]
+    _ = (P * P') * C * Q' := by
+      rw [Matrix.mul_assoc P' C Q, ← hC, ← Matrix.mul_assoc P' P C, ← hP.2.2]
+    _ = (P * P') * C * (Q * Q' * Q') := by rw [hq']
+    _ = (P * P' * P) * C * Q' * Q' := by
+      simp only [Matrix.mul_assoc, hC]
+    _ = C * (Q * Q' * Q') := by rw [hP.1, hC]; simp only [Matrix.mul_assoc]
+    _ = C * Q' := by rw [hq']
+
+/-- Regular support transport follows from the full inverse laws and the
+operator intertwiner; it does not need to be supplied independently. -/
+theorem groupInverse_rangeProjector_intertwines
+    (P P' : Matrix ι ι R) (Q Q' : Matrix κ κ R) (C : Matrix ι κ R)
+    (hP : IsGroupInverse P P') (hQ : IsGroupInverse Q Q')
+    (hC : P * C = C * Q) : P * P' * C = C * (Q * Q') := by
+  rw [Matrix.mul_assoc, groupInverse_intertwines P P' Q Q' C hP hQ hC,
+    ← Matrix.mul_assoc, hC, Matrix.mul_assoc]
+
+/-- For Laplacians `1-P` and `1-Q`, intertwining of the transition operators
+already transports any given group inverses. Positivity, stochasticity, and
+stationary-row compatibility are unnecessary for this algebraic conclusion. -/
+theorem laplacian_groupInverse_intertwines
+    (P : Matrix ι ι R) (Q : Matrix κ κ R) (C : Matrix ι κ R)
+    (G : Matrix ι ι R) (H : Matrix κ κ R)
+    (hG : IsGroupInverse (1 - P) G) (hH : IsGroupInverse (1 - Q) H)
+    (hC : P * C = C * Q) : G * C = C * H := by
+  apply groupInverse_intertwines (1 - P) G (1 - Q) H C hG hH
+  simp only [Matrix.sub_mul, Matrix.mul_sub, Matrix.one_mul, Matrix.mul_one, hC]
 
 /-- THE ALGEBRAIC CORE (`LP_sharp * C = C * LQ_sharp`), at the canonical
 `IsGroupInverse` interface.

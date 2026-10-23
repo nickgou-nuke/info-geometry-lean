@@ -34,7 +34,7 @@ open InfoGeometry.Canonical.Drazin
 open InfoGeometry.Canonical.Drazin.IsDrazinInverse
 open InfoGeometry.Canonical.MoorePenrose
 open InfoGeometry.Singular.MoorePenrose
-  (exactSupport coexactSupport chiralSupport normalizedDirac)
+  (exactSupport coexactSupport harmonicSupport chiralSupport normalizedDirac)
 open InfoGeometry.Core.JordanPeirceDecomposition (jordanMul)
 
 variable {R : Type*} [Ring R] [StarRing R] [Algebra ℝ R]
@@ -79,6 +79,42 @@ theorem interShell_coexactSupport_star (hD : IsDrazinInverse a d k)
     interShellPeirceCorner_star hD hM h_symm ha_star m r
   unfold exactSupport coexactSupport
   rw [star_mul, hD_star]
+
+theorem interShell_harmonicSupport_star (hD : IsDrazinInverse a d k)
+    {M : ℕ → R} (hM : PowerMPFamily (fittingNilpotentPart a d) M)
+    (h_symm : star (projection a d) = projection a d)
+    (ha_star : star a = a) (m r : ℕ) (B : R) :
+    star (harmonicSupport (interShellPeirceCorner a d M m r) B) =
+      harmonicSupport (interShellPeirceCorner a d M r m) (star B) := by
+  rw [harmonicSupport, star_sub, star_sub, star_one,
+    interShell_coexactSupport_star hD hM h_symm ha_star m r B,
+    interShell_exactSupport_star hD hM h_symm ha_star m r B]
+  unfold harmonicSupport
+  noncomm_ring
+
+theorem interShell_chiralSupport_star (hD : IsDrazinInverse a d k)
+    {M : ℕ → R} (hM : PowerMPFamily (fittingNilpotentPart a d) M)
+    (h_symm : star (projection a d) = projection a d)
+    (ha_star : star a = a) (m r : ℕ) (B : R) :
+    star (chiralSupport (interShellPeirceCorner a d M m r) B) =
+      -chiralSupport (interShellPeirceCorner a d M r m) (star B) := by
+  rw [chiralSupport, star_sub,
+    interShell_exactSupport_star hD hM h_symm ha_star m r B,
+    interShell_coexactSupport_star hD hM h_symm ha_star m r B]
+  unfold chiralSupport
+  abel
+
+theorem interShell_normalizedDirac_star (hD : IsDrazinInverse a d k)
+    {M : ℕ → R} (hM : PowerMPFamily (fittingNilpotentPart a d) M)
+    (h_symm : star (projection a d) = projection a d)
+    (ha_star : star a = a) (m r : ℕ) (B : R) :
+    star (normalizedDirac (interShellPeirceCorner a d M m r) B) =
+      normalizedDirac (interShellPeirceCorner a d M r m) (star B) := by
+  have hD_star : star (interShellPeirceCorner a d M m r) =
+      interShellPeirceCorner a d M r m :=
+    interShellPeirceCorner_star hD hM h_symm ha_star m r
+  unfold normalizedDirac
+  rw [star_add, hD_star]
 
 /-- The chiral grading annihilates the normalized local operator under the
 normalized special Jordan product. -/

@@ -267,6 +267,9 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Canonical.DrazinNilpotentShell.interShellPeirceCorner_star
 #check InfoGeometry.Canonical.DrazinNilpotentShell.interShell_exactSupport_star
 #check InfoGeometry.Canonical.DrazinNilpotentShell.interShell_coexactSupport_star
+#check InfoGeometry.Canonical.DrazinNilpotentShell.interShell_harmonicSupport_star
+#check InfoGeometry.Canonical.DrazinNilpotentShell.interShell_chiralSupport_star
+#check InfoGeometry.Canonical.DrazinNilpotentShell.interShell_normalizedDirac_star
 #check InfoGeometry.Canonical.DrazinNilpotentShell.interShellPeirceCorner_eq_zero_of_le
 #check InfoGeometry.Canonical.DrazinNilpotentShell.full_operator_triangular_peirce_reconstruction
 #check InfoGeometry.Canonical.DrazinNilpotentShell.interShell_chiralHodge_decomposition

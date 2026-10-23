@@ -2,7 +2,8 @@
 """Compile exact causal-attention sources against the repository-pinned Mathlib.
 
 This is a scoped source-closure check, not a root-package build. Existing import
-resolution and native declaration auditing are reused without weakening them.
+resolution is reused; auditing uses Lean 4.34.1 public collectAxioms and the
+same native declaration enumeration and foundational-axiom allowlist.
 """
 from __future__ import annotations
 import argparse
@@ -16,7 +17,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
-from tools.quality.check_reviewed_prs import audit_source, closure
+from tools.quality.check_reviewed_prs import closure
 
 TARGETS = [
     'InfoGeometry.Routing.CausalPrefixPooling',
@@ -24,6 +25,42 @@ TARGETS = [
     'InfoGeometry.Routing.PrefixCausalDifferential',
     'InfoGeometry.Routing.BlockCausalSinkhorn',
 ]
+
+
+def audit_source(targets):
+    """Use the public pinned-Lean collector, never its private implementation."""
+    imports = '\n'.join('import ' + module for module in targets)
+    names = ', '.join('`' + module for module in targets)
+    return imports + '''
+import Lean.Util.CollectAxioms
+import Lean.Elab.Command
+
+open Lean Elab Command
+
+run_cmd do
+  let env ← getEnv
+  let targets : Array Name := #[TARGET_NAMES]
+  let allowed : Array Name := #[`propext, `Classical.choice, `Quot.sound]
+  let mut count : Nat := 0
+  let mut allAxioms : Array Name := #[]
+  for (name, info) in env.constants do
+    let some idx := env.getModuleIdxFor? name | continue
+    let owner := env.header.moduleNames[idx.toNat]!
+    if !targets.contains owner then continue
+    if info.isUnsafe || info.isPartial then
+      throwError "Unsafe or partial declaration in reviewed module: {name}"
+    let axioms ← Lean.collectAxioms name
+    for ax in axioms do
+      unless allowed.contains ax do
+        throwError "Disallowed axiom {ax} in {name}"
+      unless allAxioms.contains ax do
+        allAxioms := allAxioms.push ax
+    count := count + 1
+    logInfo m!"AUDIT_DECL: {owner}: {name}: {axioms}"
+  if count == 0 then throwError "No declarations audited"
+  logInfo m!"AUDIT_AXIOMS: {allAxioms}"
+  logInfo m!"AUDIT_COUNT: {count}"
+'''.replace('TARGET_NAMES', names)
 
 
 def run(args, cwd, env=None):

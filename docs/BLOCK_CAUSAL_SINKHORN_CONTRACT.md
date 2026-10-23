@@ -60,9 +60,12 @@ set imply positive mass. A nonzero mass suffices for sum-one normalization.
 ## Verification
 
 The scoped workflow compiles unchanged full repository dependencies and the
-four new modules against the exact Mathlib and Lean pins. It reuses the native
-combined-environment axiom audit from `check_reviewed_prs.py`, including private
-and generated declarations, and fails on nonstandard axioms, unsafe or partial
-declarations. It does not invoke the root Lake package, strip unresolved
+four new modules against the exact Mathlib and Lean pins. It reuses the source
+closure resolver from `check_reviewed_prs.py`, retains its native combined-
+environment enumeration and foundational-axiom allowlist, and invokes the
+public `Lean.collectAxioms` API in Lean 4.34.1. The older audit helper accesses
+collector internals that are no longer exported; the new runner does not rely
+on them. The audit rejects nonstandard transitive axioms, unsafe or partial
+declarations, including generated declarations visible in the imported environment. It does not invoke the root Lake package, strip unresolved
 imports, modify dependencies, or delete caches. Its saved report, not this
 text, is the verification evidence. No training loop is changed.

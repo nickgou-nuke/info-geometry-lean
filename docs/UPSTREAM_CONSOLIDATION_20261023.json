@@ -103,7 +103,6 @@
       "note": "Do not replace DrazinRegularization, DrazinShellCascade, MoorePenroseSectors: existing namespaces and consumers would regress. JordanAssociatorRing and scaled MP counterexamples committed in 04caccfb4. Native ObliqueShellCounterexample ports actual branch matrices through existing PowerMPFamily, drazinShellProj, interShellPeirceCorner and MP conversion owners.",
       "oblique_verification": "Popper final source-semantic PASS. Parent repaired an intervening Jordan dependency proof and reran InfoGeometryTests plus ObliqueAudit: PASS13966, including aggregate imports and check coverage. Ampere independent retry PASS3197: six standard3 axiom footprints, no owner warnings, unchanged source hashes, prior zero-finding vacuity/static checks remain applicable. Evidence /tmp/qa-a-oblique-retry-kkpbzhjw and /tmp/consolidation-integration-tests.log. Accepted limited scope: actual native shells and inverse-not-reverse-corner counterexample, no minimal-index claim.",
       "remaining": [
-        "native example consequence correspondence",
         "aggregate integration and full consolidated snapshot review"
       ],
       "declaration_review": "James read-only comparison: most branch partition/shell claims already native. Selectively adapt exact extinction, leading-step faithfulness and ordered DMP outer-inverse interface; preserve canonical PowerMPFamily and oblique counterexample definitions. Do not import duplicate shell hierarchy.",
@@ -132,6 +131,17 @@
           "lean/InfoGeometry/Canonical/DrazinShellMatrixActionAudit.lean": "952bdfec138dcaa6e5248b9a29155ff9cb818ef7f66d435e121dc9c9d9e39741"
         },
         "scope": "Generic semiring row/column annihilation and recovery, native range/dressed shell rows, native real corange columns; no new shell nonzeroness or minimal-index assertion."
+      },
+      "example_verification": {
+        "status": "independently_accepted",
+        "semantic_review": "Kepler A-A PASS",
+        "kernel_qa": "Popper PASS3200,7standard-only heads, strict2filegate zero traps, stablehashes, no scopedwarnings",
+        "evidence": "/tmp/shell-consequence-independent-qa-nyc67l0d",
+        "sha256": {
+          "lean/InfoGeometry/Canonical/DrazinShellConsequenceExamples.lean": "208d82efca7daa1da3dfc745ade6c58bdffbf8888ce4e942ba13abecd78b48d9",
+          "lean/InfoGeometry/Canonical/DrazinShellConsequenceExamplesAudit.lean": "67631e6a60ced8cfc8dee297e3bf4b874eb009e158c75248b7f6edd6f9cf6353"
+        },
+        "scope": "Existing native oblique zerothshell nonselfadjoint and one-sided extinction; native skewChain support noncommutation. Remote skewChain differs by transpose/reindexing, so no blind example import."
       }
     },
     {

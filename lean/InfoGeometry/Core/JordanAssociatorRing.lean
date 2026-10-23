@@ -47,4 +47,24 @@ theorem symm_associator_square_zero_inner_inverse {d b : R}
       noncomm_ring
     _ = -(2 • d) := by rw [hd, hinner]; simp [two_mul]
 
+/-- For an idempotent, vanishing of the double commutator already detects
+commutation. No characteristic restriction is required. -/
+theorem idempotent_double_commutator_zero_iff {p q : R} (hp : p * p = p) :
+    p * (p * q - q * p) - (p * q - q * p) * p = 0 ↔ p * q = q * p := by
+  constructor
+  · intro hz
+    have hc : p * q - q * p = 0 := by
+      calc
+        p * q - q * p =
+            p * (p * (p * q - q * p) - (p * q - q * p) * p) -
+              (p * (p * q - q * p) - (p * q - q * p) * p) * p := by
+                have hl (x : R) : p * (p * x) = p * x := by
+                  rw [← mul_assoc, hp]
+                simp only [mul_sub, sub_mul, mul_assoc, hl, hp]
+                noncomm_ring
+        _ = 0 := by rw [hz, mul_zero, zero_mul, sub_self]
+    exact sub_eq_zero.mp hc
+  · intro hc
+    rw [hc, sub_self, mul_zero, zero_mul, sub_self]
+
 end InfoGeometry.Core.JordanAssociator

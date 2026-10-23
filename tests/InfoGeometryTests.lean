@@ -115,8 +115,13 @@ import InfoGeometry.QuantumContext.PetzDataProcessingMonotonicity
 import InfoGeometry.QuantumContext.MoebiusPetzCPTEquivariance
 import InfoGeometry.QuantumContext.ArakiPetzEntropyMonotonicity
 import InfoGeometry.QuantumContext.PetzMatrixStageLimit
+import InfoGeometry.Canonical.FiniteDimensionalSeparation
 
 -- Simple sanity check that key theorems and definitions compile
+#check InfoGeometry.Canonical.FiniteDimensionalSeparation.no_linearEquiv_to_infinite_dimensional
+#check InfoGeometry.Canonical.FiniteDimensionalSeparation.finiteDimensional_of_linearEquiv
+#check InfoGeometry.Canonical.FiniteDimensionalSeparation.no_equiv_with_linear_shadow
+
 #check InfoGeometry.Canonical.KleinDeckFiveGradeAction.deckOrientationSign_eq_determinant
 #check InfoGeometry.Canonical.KleinDeckFiveGradeAction.deckGradeAction_mul
 #check InfoGeometry.Canonical.KleinDeckFiveGradeAction.deckGradeActionHom

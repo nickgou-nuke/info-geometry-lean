@@ -64,12 +64,44 @@ theorem kramers_skew_adjoint {t : A} (hT : IsKramersOperator t) :
     _ = -(star t * t * t) := by noncomm_ring
     _ = -t := by rw [hT.isometry, one_mul]
 
+/-- The symmetrized pairing is the sandwich of the adjoint-symmetry defect.
+This is an operator-valued identity in an arbitrary involutive ring. -/
+theorem symmetrized_pairing_eq_adjoint_defect (t x : A) :
+    star x * (t * x) + star (t * x) * x =
+      star x * (t + star t) * x := by
+  rw [star_mul]
+  noncomm_ring
+
+/-- Vanishing of every symmetrized pairing characterizes skew-adjointness.
+It does not assert that either individual pairing vanishes. No isometry,
+quaternionic square, scalar field, or characteristic assumption is required. -/
+theorem symmetrized_pairing_zero_iff_skew_adjoint (t : A) :
+    (∀ x : A, star x * (t * x) + star (t * x) * x = 0) ↔
+      star t = -t := by
+  constructor
+  · intro h
+    have hunit := h 1
+    rw [symmetrized_pairing_eq_adjoint_defect] at hunit
+    simp only [star_one, one_mul, mul_one] at hunit
+    exact eq_neg_of_add_eq_zero_right hunit
+  · intro h x
+    rw [symmetrized_pairing_eq_adjoint_defect, h, add_neg_cancel, mul_zero, zero_mul]
+
+/-- Universal vanishing of the individual operator-valued pairing forces the
+operator itself to vanish. This separates it from symmetrized cancellation. -/
+theorem individual_pairing_zero_iff (t : A) :
+    (∀ x : A, star x * (t * x) = 0) ↔ t = 0 := by
+  constructor
+  · intro h
+    simpa only [star_one, mul_one, one_mul] using h 1
+  · intro h x
+    rw [h, zero_mul, mul_zero]
+
+/-- Kramers assumptions imply vanishing of the symmetrized pairing;
+ordinary orthogonality is not asserted by this identity. -/
 theorem kramers_pair_orthogonal {t : A} (hT : IsKramersOperator t) (x : A) :
     star x * (t * x) + star (t * x) * x = 0 := by
-  rw [star_mul]
-  have hstar : star t = -t := kramers_skew_adjoint hT
-  rw [hstar]
-  noncomm_ring
+  exact (symmetrized_pairing_zero_iff_skew_adjoint t).mpr (kramers_skew_adjoint hT) x
 
 /-- The failure of quadratic sign reversal is the sandwich of the
 anticommutator defect. Only ordinary isometry is required; neither a

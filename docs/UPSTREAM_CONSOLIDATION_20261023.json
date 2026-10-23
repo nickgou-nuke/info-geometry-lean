@@ -176,9 +176,17 @@
       "independent_qa": "James: all17 isolated bootstrap regressions PASS under BuildLock; all3 workflows parsed with existing PyYAML; nine monitored files hash-stable; toolchain/manifest/lakefile/gitmodules unchanged. Parsing is not a GitHub Actions run.",
       "remaining": [
         "path-package reproducibility resolution",
-        "branch gitmodules/doc additions review",
-        "reviewed target-list expansion review"
-      ]
+        "reviewed target-list expansion and Architect dependency support",
+        "adapt stale branch documentation to current tracked InfoGeometryCore sources"
+      ],
+      "metadata_verification": {
+        "status": "independently_accepted",
+        "semantic_review": "Kepler exactstanza recommendation; no ignore=dirty",
+        "qa": "Popper Git config parse and HEAD/index/upstreamgitlink comparison PASS",
+        "evidence": "/tmp/grassmann-metadata-qa-9dx1awel/receipt.json",
+        "gitlink": "4f79a7fdb2d569bf6c13751fad3c078b6c135283",
+        "scope": "Restore missing GrassmannURL only; no initialization or dependency pin changes."
+      }
     },
     {
       "branches": [
@@ -238,5 +246,30 @@
       }
     }
   ],
-  "runtime_ci_review": "Implementation committed334968d26; James A-A PASS. Independent Popper7helper+77domain tests passed,8generatedcertificates compiled with24standard-onlystdoutaxioms and forgeddepth rejected inlocal_certificate. Combineddiagnostic audits rejectdirtydependencywarnings; fullsource snapshot changedoneunrelatedconcurrentowner. FullCLI rejectsAtlas/GIFTprovenance. Component evidence only, NOT fullCIacceptance. See docs/RUNTIME_ACCEPTANCE_20261023.json."
+  "runtime_ci_review": "Implementation committed334968d26; James A-A PASS. Independent Popper7helper+77domain tests passed,8generatedcertificates compiled with24standard-onlystdoutaxioms and forgeddepth rejected inlocal_certificate. Combineddiagnostic audits rejectdirtydependencywarnings; fullsource snapshot changedoneunrelatedconcurrentowner. FullCLI rejectsAtlas/GIFTprovenance. Component evidence only, NOT fullCIacceptance. See docs/RUNTIME_ACCEPTANCE_20261023.json.",
+  "native_aggregate_verification": {
+    "status": "scoped_import_acceptance_full_library_failed",
+    "semantic_review": "Kepler A-A PASS16additiveimportedges plusrequiredAlgebraheader",
+    "kernel_qa": "Popper four explicit module olean targets plusInfoGeometryTests PASS14174; stable5hashes; no scopedwarnings",
+    "evidence": "/tmp/aggregate-final-five-independent-qa-0vpeud1_",
+    "sha256": {
+      "lean/InfoGeometry.lean": "66e6c68513cb8ffe164ff2f110bdc25adc73b20c5333c772868a4044ecb37270",
+      "lean/InfoGeometry/Core/All.lean": "5746437cebc3b0530d8e1d6350086a5c0db34d43a21e05504ced8344247003fe",
+      "lean/InfoGeometry/Algebra/All.lean": "cf56f14a65047aceb157ab9d8238c51b2606a5c18364584d60f59d0046134331",
+      "lean/InfoGeometry/Canonical/All.lean": "e223c18a18b7fc565806291add218f4777db4518f0a3d679727568b36662e6e4",
+      "tests/InfoGeometryTests.lean": "22aeaae0b41e08a97f3132d99f84bffa0748a82a662a59b962c7f522f034a415"
+    },
+    "full_library": {
+      "result": "FAIL",
+      "failed_target": "InfoGeometry.Core.NilpotentToCartanDrazinMPPoset",
+      "error_diagnostics": 22,
+      "evidence": "/tmp/aggregate-full-independent-qa-ptfhc7_5/failure-diagnostics.json",
+      "scope": "Concurrent uncommitted draft remains untouched; aggregate acceptance does not certify whole repository."
+    },
+    "remaining": [
+      "commit snapshot reconciliation with concurrent OperatorPenroseUnification changes",
+      "full-library and release gates"
+    ],
+    "commit_gate": "Initial commit rejected Algebra.Allmissingheader (nowfixed) and root/Canonical closure snapshot mismatch causedbyconcurrentOperatorPenroseUnification edits. No gatebypass."
+  }
 }

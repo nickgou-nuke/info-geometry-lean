@@ -5,6 +5,7 @@ Uses Fraction arithmetic and never silently renormalizes or rounds the matrix.
 The full product-weight expansion is a proof device, not the runtime algorithm.
 
 CLI: python tools/attention_polytope.py input.json
+     python tools/attention_polytope.py input.json --compress-readout
 Input: {"attention": [["1/2", "1/2"], ["1/4", "3/4"]],
         "values": [[1, 0], [0, 1]]}
 Decimal JSON literals are parsed exactly as decimal fractions. Python float
@@ -176,18 +177,151 @@ def route_readout(terms: Sequence[RoutingTerm],
                            Fraction(0)) for k in range(len(values[0]))) for i in range(rows))
 
 
+def _affine_null_direction(values: RationalMatrix,
+                           active: Sequence[int]) -> tuple[Fraction, ...] | None:
+    """RREF of active columns [1; V_j]; first free column gives a null vector.
+
+    Coordinates of the returned vector correspond to active, not all keys.
+    None means the active values are affinely independent. No floats, rank
+    tolerances, pseudoinverses, or route enumeration are used.
+    """
+    width = len(active)
+    rows = [[Fraction(1) for _ in active]]
+    rows.extend([[values[j][r] for j in active] for r in range(len(values[0]))])
+    pivots: list[int] = []
+    for column in range(width):
+        pivot_row = next((r for r in range(len(pivots), len(rows))
+                          if rows[r][column]), None)
+        if pivot_row is None:
+            continue
+        target = len(pivots)
+        rows[target], rows[pivot_row] = rows[pivot_row], rows[target]
+        divisor = rows[target][column]
+        rows[target] = [x / divisor for x in rows[target]]
+        for r in range(len(rows)):
+            if r != target and rows[r][column]:
+                factor = rows[r][column]
+                rows[r] = [x - factor * y for x, y in zip(rows[r], rows[target])]
+        pivots.append(column)
+        if len(pivots) == len(rows):
+            break
+    if len(pivots) == width:
+        return None
+    free = next(j for j in range(width) if j not in pivots)
+    delta = [Fraction(0) for _ in active]
+    delta[free] = Fraction(1)
+    for r, pivot in enumerate(pivots):
+        delta[pivot] = -rows[r][free]
+    return tuple(delta)
+
+
+def compress_readout(matrix: Sequence[Sequence[Scalar]],
+                     values: Sequence[Sequence[Scalar]]) -> RationalMatrix:
+    """Exact support-preserving Caratheodory compression of each attention row.
+
+    Preserves A V, unit row mass, and every forbidden edge. The attention
+    matrix itself may change. Stops at affine independence (not merely at
+    d+1 active keys); consequently every output row has at most d+1 nonzeros.
+    Each step removes at least one active key, hence there are at most s-1
+    steps for a row initially supported on s keys. Repeated RREF and rational
+    bit growth can be expensive; this is not a constant-bit-cost claim.
+
+    As in rational_matrix, values must be a nonempty rectangular table with
+    positive feature width. Input rows are never implicitly normalized.
+    """
+    attention, value_table = _attention(matrix), rational_matrix(values)
+    if len(value_table) != len(attention[0]):
+        raise ValueError("The value table must have one row per key.")
+    expected = readout(attention, value_table)
+    result = []
+    for original in attention:
+        p = list(original)
+        active = [j for j, weight in enumerate(p) if weight > 0]
+        while True:
+            delta = _affine_null_direction(value_table, active)
+            if delta is None:
+                break
+            positive = [q for q, change in enumerate(delta) if change > 0]
+            if not positive or sum(delta, Fraction(0)) != 0:
+                raise ArithmeticError("Invalid homogeneous null direction.")
+            if any(sum((delta[q] * value_table[j][r]
+                        for q, j in enumerate(active)), Fraction(0)) != 0
+                   for r in range(len(value_table[0]))):
+                raise ArithmeticError("Null direction changed a value coordinate.")
+            step = min(p[active[q]] / delta[q] for q in positive)
+            for q, j in enumerate(active):
+                p[j] -= step * delta[q]
+            remaining = [j for j in active if p[j] > 0]
+            if step <= 0 or any(x < 0 for x in p) or len(remaining) >= len(active):
+                raise ArithmeticError("Compression failed strict support decrease.")
+            active = remaining
+        if sum(p, Fraction(0)) != 1 or any(x < 0 for x in p):
+            raise ArithmeticError("Compression changed row normalization.")
+        if any(p[j] != 0 and original[j] == 0 for j in range(len(p))):
+            raise ArithmeticError("Compression introduced a forbidden edge.")
+        if len(active) > len(value_table[0]) + 1:
+            raise ArithmeticError("Compression exceeded the affine support bound.")
+        result.append(tuple(p))
+    compressed = tuple(result)
+    if readout(compressed, value_table) != expected:
+        raise ArithmeticError("Compression changed the exact readout.")
+    return compressed
+
+
+def add_readout_mode_arguments(parser: argparse.ArgumentParser) -> None:
+    """Select one output mode; neither diagnostic mode enumerates routes."""
+    modes = parser.add_mutually_exclusive_group()
+    modes.add_argument("--causal-core-only", action="store_true",
+                       help="Report expected causal core rank without decomposing routes")
+    modes.add_argument("--compress-readout", action="store_true",
+                       help="Compress row supports preserving exact readout; requires values")
+
+
+def compression_cli_result(args: argparse.Namespace, payload: dict,
+                           original: RationalMatrix,
+                           attention: RationalMatrix) -> dict | None:
+    """Early-return report hook after the owner's optional explicit normalization."""
+    if not args.compress_readout:
+        return None
+    if "values" not in payload:
+        raise ValueError("--compress-readout requires a values table.")
+    values = rational_matrix(payload["values"])
+    compressed = compress_readout(attention, values)
+    before = [[j for j, x in enumerate(row) if x > 0] for row in attention]
+    after = [[j for j, x in enumerate(row) if x > 0] for row in compressed]
+    return {
+        "rows": len(attention), "columns": len(attention[0]),
+        "value_dimension": len(values[0]),
+        "input_changed": compressed != original,
+        "input_normalization_changed": attention != original,
+        "compression_changed": compressed != attention,
+        "compressed_attention": [[str(x) for x in row] for row in compressed],
+        "input_row_supports": before,
+        "compressed_row_supports": after,
+        "compressed_row_support_sizes": [len(s) for s in after],
+        "per_row_support_bound": len(values[0]) + 1,
+        "readout": [[str(x) for x in row] for row in readout(compressed, values)],
+        "exact_readout_match": True,
+        "support_contained_in_input": True,
+        "route_decomposition_performed": False,
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("input", type=Path, help="JSON attention matrix and optional values")
     parser.add_argument("--normalize-rows", action="store_true",
                         help="Explicitly normalize the input before decomposition")
-    parser.add_argument("--causal-core-only", action="store_true",
-                        help="Report expected causal core rank without decomposing routes")
+    add_readout_mode_arguments(parser)
     args = parser.parse_args()
     try:
         payload = json.loads(args.input.read_text(encoding="utf-8"), parse_float=Fraction)
         original = rational_matrix(payload["attention"])
         attention = normalize_rows(original) if args.normalize_rows else _attention(original)
+        report = compression_cli_result(args, payload, original, attention)
+        if report is not None:
+            print(json.dumps(report, indent=2))
+            return
         if args.causal_core_only:
             rank = expected_causal_core_rank(attention)
             print(json.dumps({

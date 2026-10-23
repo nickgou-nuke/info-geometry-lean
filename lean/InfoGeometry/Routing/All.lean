@@ -19,3 +19,4 @@ import InfoGeometry.Routing.AttentionPolytopeSoftmax
 import InfoGeometry.Routing.DeterministicDrazinBridge
 import InfoGeometry.Routing.CausalRouteDynamics
 import InfoGeometry.Routing.CausalCoreTrace
+import InfoGeometry.Routing.AttentionReadoutCompression

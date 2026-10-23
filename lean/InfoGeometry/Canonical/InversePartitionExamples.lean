@@ -37,20 +37,22 @@ theorem shift3_mp : IsMoorePenroseInverse shift3 shift3.transpose := by
   refine ⟨?_, ?_, ?_, ?_⟩
   · ext i j
     fin_cases i <;> fin_cases j <;>
-      norm_num [shift3, Matrix.mul_apply, Matrix.transpose_apply, Fin.sum_univ_succ]
+      norm_num [shift3, Matrix.mul_apply, Matrix.vecMul, dotProduct,
+        Matrix.transpose_apply, Fin.sum_univ_succ]
   · ext i j
     fin_cases i <;> fin_cases j <;>
-      norm_num [shift3, Matrix.mul_apply, Matrix.transpose_apply, Fin.sum_univ_succ]
+      norm_num [shift3, Matrix.mul_apply, Matrix.vecMul, dotProduct,
+        Matrix.transpose_apply, Fin.sum_univ_succ]
   · change (shift3 * shift3.transpose).conjTranspose = _
     ext i j
     fin_cases i <;> fin_cases j <;>
       norm_num [shift3, Matrix.conjTranspose_apply, Matrix.mul_apply,
-        Matrix.transpose_apply, Fin.sum_univ_succ]
+        Matrix.vecMul, dotProduct, Matrix.transpose_apply, Fin.sum_univ_succ]
   · change (shift3.transpose * shift3).conjTranspose = _
     ext i j
     fin_cases i <;> fin_cases j <;>
       norm_num [shift3, Matrix.conjTranspose_apply, Matrix.mul_apply,
-        Matrix.transpose_apply, Fin.sum_univ_succ]
+        Matrix.vecMul, dotProduct, Matrix.transpose_apply, Fin.sum_univ_succ]
 
 /-- Full matrix equality, including all off-diagonal entries. -/
 theorem shift3_boundary_charge :
@@ -58,7 +60,8 @@ theorem shift3_boundary_charge :
       Matrix.diagonal ![1, 0, -1] := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    norm_num [shift3, Matrix.mul_apply, Matrix.transpose_apply, Fin.sum_univ_succ]
+    norm_num [shift3, Matrix.mul_apply, Matrix.vecMul, dotProduct,
+      Matrix.transpose_apply, Fin.sum_univ_succ]
 
 theorem shift3_boundary_square :
     (shift3 * shift3.transpose - shift3.transpose * shift3) ^ 2 =
@@ -73,7 +76,8 @@ theorem shift3_interior :
       Matrix.diagonal ![0, 1, 0] := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    norm_num [sector, part, shift3, Matrix.mul_apply, Matrix.transpose_apply, Fin.sum_univ_succ]
+    norm_num [sector, part, shift3, Matrix.mul_apply, Matrix.vecMul, dotProduct,
+      Matrix.transpose_apply, Fin.sum_univ_succ]
 
 /-- A nilpotent directed acyclic operator whose support projectors do NOT commute. -/
 def skewChain : Matrix (Fin 4) (Fin 4) ℝ :=

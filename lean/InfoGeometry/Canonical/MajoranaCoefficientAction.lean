@@ -78,4 +78,44 @@ def quadraticElement (gamma : Fin (2 * N) → A)
     (K : Matrix (Fin (2 * N)) (Fin (2 * N)) ℝ) : A :=
   (1 / 4 : ℝ) • ∑ i, ∑ j, K i j • (gamma i * gamma j)
 
+/-- Expand the quadratic action into its two CAR contractions. This identity
+does not yet require skew symmetry of the coefficient matrix. -/
+theorem quadraticElement_commutator_expansion (h : IsMajoranaBasis N gamma)
+    (K : Matrix (Fin (2 * N)) (Fin (2 * N)) ℝ) (k : Fin (2 * N)) :
+    quadraticElement gamma K * gamma k - gamma k * quadraticElement gamma K =
+      (1 / 4 : ℝ) • ∑ i, ∑ j, K i j •
+        ((if j = k then (2 : ℝ) • gamma i else 0) -
+          (if i = k then (2 : ℝ) • gamma j else 0)) := by
+  unfold quadraticElement
+  rw [smul_mul_assoc, mul_smul_comm, ← smul_sub]
+  congr 1
+  simp only [Finset.sum_mul, Finset.mul_sum, ← Finset.sum_sub_distrib]
+  apply Finset.sum_congr rfl
+  intro i _
+  apply Finset.sum_congr rfl
+  intro j _
+  rw [smul_mul_assoc, mul_smul_comm, ← smul_sub, quadratic_monomial_commutator h]
+
+/-- A skew coefficient matrix acts on each generator by its corresponding
+column, with the quarter normalization in `quadraticElement`. -/
+theorem quadraticElement_commutator_generator (h : IsMajoranaBasis N gamma)
+    (K : Matrix (Fin (2 * N)) (Fin (2 * N)) ℝ)
+    (hK : ∀ i j, K i j = -K j i) (k : Fin (2 * N)) :
+    quadraticElement gamma K * gamma k - gamma k * quadraticElement gamma K =
+      ∑ i, K i k • gamma i := by
+  rw [quadraticElement_commutator_expansion h]
+  simp only [smul_sub, Finset.sum_sub_distrib]
+  rw [Finset.sum_comm (f := fun i j => K i j •
+    (if i = k then (2 : ℝ) • gamma j else 0))]
+  simp only [smul_ite, smul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
+  simp_rw [hK k]
+  simp only [smul_smul]
+  rw [Finset.smul_sum, Finset.smul_sum, ← Finset.sum_sub_distrib]
+  apply Finset.sum_congr rfl
+  intro i _
+  rw [smul_smul, smul_smul]
+  rw [← sub_smul]
+  congr 1
+  ring
+
 end InfoGeometry.Canonical.MajoranaCoefficientAction

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Exceptional.FreudenthalFiveGradedLieClosure
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Exceptional.FreudenthalFiveGradedCarrierAddGroup
@@ -6,10 +11,12 @@ import InfoGeometry.Exceptional.FreudenthalFiveGradedBracketScalarBilinearity
 import InfoGeometry.Exceptional.FreudenthalFiveGradedBracketLinearMaps
 
 /-!
-# Five-Graded Freudenthal-TKK Lie Homogeneous Jacobi Closure
+# Homogeneous Jacobi identities and defects of the legacy five-graded bracket
 
-This module establishes the core homogeneous Jacobi identities for the 5-graded Lie bracket
-on `FiveGradedCarrier D`.
+This module proves selected homogeneous Jacobi identities for the legacy
+operation `fiveGradedBracket` on `FiveGradedCarrier D`. The extreme-charge
+component has an explicit defect; these selected identities do not make the
+legacy operation a Lie bracket.
 
 ## Mathematical Structure:
 1. `fiveJacobiator D u v w`: the trilinear Jacobiator
@@ -21,7 +28,7 @@ on `FiveGradedCarrier D`.
    - $(+1, +1, -1)$ lane: `jacobi_chargePlus_chargePlus_chargeMinus`
    - $(0, 0, 0)$ lane: `jacobi_zero_zero_zero`
 
-All proofs are complete with 0 sorries and 0 axioms.
+The statements below distinguish vanishing components from nonzero defects.
 -/
 
 noncomputable section
@@ -36,6 +43,17 @@ def fiveJacobiator (u v w : FiveGradedCarrier D) : FiveGradedCarrier D :=
   fiveGradedBracket D u (fiveGradedBracket D v w) +
   fiveGradedBracket D v (fiveGradedBracket D w u) +
   fiveGradedBracket D w (fiveGradedBracket D u v)
+
+/-- The legacy extreme-plus/extreme-minus/positive-charge Jacobi defect for
+arbitrary extreme coefficients. This formula prevents promotion of the
+selected homogeneous vanishing laws to a full Jacobi identity. -/
+theorem fiveJacobiator_extreme_plus_minus_charge_plus
+    (a b : ℝ) (y : FreudenthalCharge J) :
+    fiveJacobiator D (genEplus D a) (genEminus D b) (injChargePlus D y) =
+      injChargePlus D ((-2 * a * b) • y) := by
+  apply FiveGradedCarrier.ext <;>
+    simp [fiveJacobiator, fiveGradedBracket, genEplus, genEminus, injChargePlus]
+  module
 
 /-! ## 1. Cyclic Symmetries of the Jacobiator -/
 
@@ -185,7 +203,7 @@ theorem zeroGrade_symplectic_form_transfer
           ((T : Module.End ℝ (FreudenthalCharge J)) X) Y =
       -FreudenthalCharge.symplecticForm D X
           ((T : Module.End ℝ (FreudenthalCharge J)) Y) := by
-  linarith [zeroGrade_symplectic_form_skew D T X Y]
+  exact eq_neg_of_add_eq_zero_left (zeroGrade_symplectic_form_skew D T X Y)
 
 theorem fiveGradedBracket_sympZero_chargeMinus
     (T : SymplecticTKKZero D) (x : FreudenthalCharge J) :

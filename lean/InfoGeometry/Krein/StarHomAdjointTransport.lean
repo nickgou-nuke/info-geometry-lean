@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Krein.TwoSheetKreinIdealBridge
 import InfoGeometry.Krein.KreinSpace
 import Mathlib.Algebra.Star.StarAlgHom
@@ -8,6 +13,40 @@ namespace InfoGeometry.Krein.StarHomAdjointTransport
 section Algebraic
 
 variable {Carrier : Type*} [Ring Carrier] [StarRing Carrier]
+
+/-- A square-minus-one isometry is skew-adjoint. This is an algebraic
+quaternionic structure, not an assertion of complex anti-linearity. -/
+theorem star_eq_neg_of_isometry_square_neg_one {T : Carrier}
+    (hiso : star T * T = 1) (hsq : T * T = -1) : star T = -T := by
+  have h := congrArg (fun a : Carrier => a * T) hiso
+  rw [mul_assoc, hsq, mul_neg, mul_one, one_mul] at h
+  exact neg_eq_iff_eq_neg.mp h
+
+/-- Skew-adjointness cancels the symmetrized pairing. Individual terms
+need not vanish in an arbitrary star ring. -/
+theorem skew_pairing_sum_zero {T : Carrier} (hT : star T = -T) (X : Carrier) :
+    star X * (T * X) + star (T * X) * X = 0 := by
+  rw [star_mul, hT]
+  simp [mul_assoc]
+
+/-- Anticommuting isometries reverse the metric. No square-minus-one or
+self-adjointness hypothesis is needed for this algebraic transport law. -/
+theorem metric_transport_eq_neg {T J : Carrier} (hiso : star T * T = 1)
+    (hanti : J * T = -(T * J)) : star T * J * T = -J := by
+  rw [mul_assoc, hanti, mul_neg, ← mul_assoc, hiso, one_mul]
+
+/-- The whole metric pairing reverses sign, including mixed arguments.
+For self-adjoint `J`, setting `Y = X` gives the Krein quadratic-form law;
+strict opposite signs additionally require a nonzero ordered scalar readout. -/
+theorem metric_pairing_transport_eq_neg {T J : Carrier}
+    (hiso : star T * T = 1) (hanti : J * T = -(T * J)) (X Y : Carrier) :
+    star (T * X) * J * (T * Y) = -(star X * J * Y) := by
+  rw [star_mul]
+  calc
+    star X * star T * J * (T * Y) = star X * (star T * J * T) * Y := by
+      simp only [mul_assoc]
+    _ = -(star X * J * Y) := by
+      rw [metric_transport_eq_neg hiso hanti, mul_neg, neg_mul]
 
 theorem conjugate_star_mul (metric : Carrier) (hmetric : metric * metric = 1)
     (first second : Carrier) :

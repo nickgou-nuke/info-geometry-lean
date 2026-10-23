@@ -158,6 +158,20 @@ theorem ring_hom_supported_element_zero
     _ = f s * f x := f.map_mul s x
     _ = 0 := by rw [hs, zero_mul]
 
+theorem injective_multiplicative_map_forces_associative
+    {C D : Type*} [Mul C] [Semigroup D]
+    (f : C → D) (hmul : ∀ x y, f (x * y) = f x * f y)
+    (hinj : Function.Injective f) :
+    ∀ x y z : C, (x * y) * z = x * (y * z) := by
+  intro x y z
+  apply hinj
+  calc
+    f ((x * y) * z) = (f x * f y) * f z := by
+      rw [hmul, hmul]
+    _ = f x * (f y * f z) := mul_assoc _ _ _
+    _ = f (x * (y * z)) := by
+      rw [hmul, hmul]
+
 theorem cycle_sum_zero_of_potential
     [AddCommGroup A] (u v w : A) :
     ((v - u) + (w - v) + (u - w)) = 0 := by

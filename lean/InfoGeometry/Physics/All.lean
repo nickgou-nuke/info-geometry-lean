@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Physics.Cl11ChiralCARBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.BoundaryMajoranaDefectBridge
@@ -59,6 +65,7 @@ import InfoGeometry.Physics.Universe1000333SpinTorsionScale
 import InfoGeometry.Physics.SouriauMassieuPlanckFunctional
 import InfoGeometry.Physics.MDPASJMSouriauDigest
 import InfoGeometry.Physics.MDPASJMGlobalQuantization
+import InfoGeometry.Physics.TriangleCochainDecomposition
 import InfoGeometry.Physics.MDPASJMSouriauPaperDigest
 import InfoGeometry.Physics.MDPASJMSouriauGlobalObstruction
 import InfoGeometry.Physics.MDPASJMSouriauExternalAudit

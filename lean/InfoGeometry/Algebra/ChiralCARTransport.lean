@@ -132,6 +132,17 @@ theorem linear_mix_square_of_CAR (u v : R) (p q : A)
     (u • p + v • q) * (u • p + v • q) = (u * v) • (1 : A) := by
   rw [linear_mix_square u v p q hp hq, hCAR]
 
+/-- The mixed CAR relation transforms by the polarized coefficient form. -/
+theorem linear_mix_anticommutator (u v s t : R) (p q : A)
+    (hp : p * p = 0) (hq : q * q = 0) :
+    (u • p + v • q) * (s • p + t • q) +
+      (s • p + t • q) * (u • p + v • q) =
+      (u * t + v * s) • (p * q + q * p) := by
+  simp only [add_mul, mul_add, smul_mul_smul, hp, hq, smul_zero,
+    zero_add, add_zero, smul_add, add_smul]
+  rw [mul_comm s v, mul_comm t u]
+  abel
+
 end LinearMixing
 
 /-- Over a field, a one-mode CAR mixture is square-zero precisely on one
@@ -143,5 +154,27 @@ theorem linear_mix_square_zero_iff
     (u • p + v • q) * (u • p + v • q) = 0 ↔ u = 0 ∨ v = 0 := by
   rw [linear_mix_square_of_CAR u v p q hp hq hCAR]
   simp only [smul_eq_zero, one_ne_zero, or_false, mul_eq_zero]
+
+/-- Exact preservation criterion for both square-zero relations and the
+normalized anticommutator. This is a statement in the full operator algebra,
+not a claim that an arbitrary coefficient rotation preserves CAR. -/
+theorem linear_mix_CAR_iff
+    {K : Type*} [Field K] [Algebra K A] [Nontrivial A]
+    (u v s t : K) (p q : A)
+    (hp : p * p = 0) (hq : q * q = 0) (hCAR : p * q + q * p = 1) :
+    ((u • p + v • q) * (u • p + v • q) = 0 ∧
+      (s • p + t • q) * (s • p + t • q) = 0 ∧
+      (u • p + v • q) * (s • p + t • q) +
+        (s • p + t • q) * (u • p + v • q) = 1) ↔
+      (u = 0 ∨ v = 0) ∧ (s = 0 ∨ t = 0) ∧ u * t + v * s = 1 := by
+  rw [linear_mix_square_zero_iff u v p q hp hq hCAR,
+    linear_mix_square_zero_iff s t p q hp hq hCAR,
+    linear_mix_anticommutator u v s t p q hp hq, hCAR]
+  have hcoeff : (u * t + v * s) • (1 : A) = 1 ↔ u * t + v * s = 1 := by
+    simpa only [one_smul] using
+      (smul_left_inj (R := K) (one_ne_zero : (1 : A) ≠ 0) :
+        (u * t + v * s) • (1 : A) = (1 : K) • (1 : A) ↔
+          u * t + v * s = 1)
+  rw [hcoeff]
 
 end InfoGeometry.Algebra.ChiralCARTransport

@@ -116,6 +116,18 @@ theorem mismatched_peirce_product_zero
       simp only [mul_assoc]
     _ = 0 := by rw [hqr, mul_zero, zero_mul, zero_mul]
 
+theorem peirce_corner_absorption
+    [Semigroup A] (p q x : A) (hp : p * p = p) (hq : q * q = q) :
+    p * (p * x * q) = p * x * q ∧
+      (p * x * q) * q = p * x * q := by
+  constructor
+  · calc
+      p * (p * x * q) = (p * p) * x * q := by simp only [mul_assoc]
+      _ = p * x * q := by rw [hp]
+  · calc
+      (p * x * q) * q = p * x * (q * q) := by simp only [mul_assoc]
+      _ = p * x * q := by rw [hq]
+
 theorem finite_peirce_reconstruction
     [Semiring A] {ι : Type*} [Fintype ι] [DecidableEq ι]
     (p : ι → A) (hcomplete : ∑ i, p i = 1) (x : A) :

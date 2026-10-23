@@ -384,6 +384,7 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Physics.BostConnesThermalTime.modularFlowCl11_preserves_transverseEuclidean_form
 #check InfoGeometry.Canonical.CounterexampleAlternatives.peirce_corner_square_zero
 #check InfoGeometry.Canonical.CounterexampleAlternatives.mismatched_peirce_product_zero
+#check InfoGeometry.Canonical.CounterexampleAlternatives.peirce_corner_absorption
 #check InfoGeometry.Canonical.CounterexampleAlternatives.finite_peirce_reconstruction
 #check InfoGeometry.Canonical.CounterexampleAlternatives.positive_entry_ne_zero_entry
 #check InfoGeometry.Canonical.CounterexampleAlternatives.nonzero_nonnegative_not_le_zero

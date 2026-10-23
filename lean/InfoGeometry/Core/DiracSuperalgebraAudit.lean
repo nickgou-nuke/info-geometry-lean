@@ -34,6 +34,7 @@ import InfoGeometry.Core.DiracSuperalgebra
 #print axioms InfoGeometry.Core.DiracSuperalgebra.majoranaMinus_mul_chiralSupport_eq_neg_majoranaPlus
 #print axioms InfoGeometry.Core.DiracSuperalgebra.majoranaPlus_mul_majoranaMinus_eq_neg_chiralSupport
 #print axioms InfoGeometry.Core.DiracSuperalgebra.globalMajoranaReflection_sq
+#print axioms InfoGeometry.Core.DiracSuperalgebra.globalMajoranaReflection_conjugates_chiralSupport
 #print axioms InfoGeometry.Core.DiracSuperalgebra.majorana_quartet_identities
 #print axioms InfoGeometry.Core.DiracSuperalgebra.cayleyMinus_mul_cayleyPlus
 #print axioms InfoGeometry.Core.DiracSuperalgebra.cayleyPlus_mul_cayleyMinus

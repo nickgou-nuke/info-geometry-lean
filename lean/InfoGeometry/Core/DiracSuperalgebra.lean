@@ -378,6 +378,63 @@ theorem globalMajoranaReflection_sq
       unfold harmonicSupport activeSupport exactSupport coexactSupport
       abel
 
+/-- The global Majorana reflection flips the active chiral grading by
+conjugation.  Its harmonic component is invisible to the grading. -/
+theorem globalMajoranaReflection_conjugates_chiralSupport
+    {a m : R} (h : IsMoorePenroseInverse a m) (ha : a * a = 0) :
+    globalMajoranaReflection a m * chiralSupport a m *
+        globalMajoranaReflection a m = -chiralSupport a m := by
+  have h_plus_chiral : majoranaPlus a m * chiralSupport a m =
+      -(majoranaMinus a m) := by
+    unfold majoranaPlus majoranaMinus chiralSupport exactSupport coexactSupport
+    calc
+      (a + m) * (a * m - m * a) =
+          a * a * m - a * m * a + m * a * m - m * m * a := by
+            noncomm_ring
+      _ = -(a - m) := by
+        rw [ha, h.inverse_sq_eq_zero ha, h.aba_eq_a, h.bab_eq_b]
+        simp
+        abel
+  have h_core : majoranaPlus a m * chiralSupport a m *
+      majoranaPlus a m = -chiralSupport a m := by
+    rw [h_plus_chiral, neg_mul,
+      majoranaMinus_mul_majoranaPlus_eq_chiralSupport h ha]
+  have h_plus_harm : majoranaPlus a m * harmonicSupport a m = 0 := by
+    simpa [majoranaPlus, normalizedDirac] using
+      h.normalizedDirac_mul_harmonicSupport ha
+  have h_harm_plus : harmonicSupport a m * majoranaPlus a m = 0 := by
+    simpa [majoranaPlus, normalizedDirac] using
+      h.harmonicSupport_mul_normalizedDirac ha
+  have h_chiral_harm : chiralSupport a m * harmonicSupport a m = 0 := by
+    unfold chiralSupport
+    rw [sub_mul, h.exactSupport_mul_harmonicSupport ha,
+      h.coexactSupport_mul_harmonicSupport ha, sub_zero]
+  have h_harm_chiral : harmonicSupport a m * chiralSupport a m = 0 := by
+    unfold chiralSupport
+    rw [mul_sub, h.harmonicSupport_mul_exactSupport ha,
+      h.harmonicSupport_mul_coexactSupport ha, sub_zero]
+  unfold globalMajoranaReflection
+  calc
+    (majoranaPlus a m + harmonicSupport a m) * chiralSupport a m *
+        (majoranaPlus a m + harmonicSupport a m) =
+      majoranaPlus a m * chiralSupport a m * majoranaPlus a m +
+        majoranaPlus a m * chiralSupport a m * harmonicSupport a m +
+        harmonicSupport a m * chiralSupport a m * majoranaPlus a m +
+        harmonicSupport a m * chiralSupport a m * harmonicSupport a m := by
+          noncomm_ring
+    _ = -chiralSupport a m := by
+      have h₁ : majoranaPlus a m * chiralSupport a m *
+          harmonicSupport a m = 0 := by
+        rw [mul_assoc, h_chiral_harm, mul_zero]
+      have h₂ : harmonicSupport a m * chiralSupport a m *
+          majoranaPlus a m = 0 := by
+        rw [h_harm_chiral, zero_mul]
+      have h₃ : harmonicSupport a m * chiralSupport a m *
+          harmonicSupport a m = 0 := by
+        rw [h_harm_chiral, zero_mul]
+      rw [h_core, h₁, h₂, h₃]
+      simp
+
 /-- Complete split-signature quartet package.  The identities are polynomial
 identities in the ring; no division by `2` or invertibility of Cayley factors
 is used. -/

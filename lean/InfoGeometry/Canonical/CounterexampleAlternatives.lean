@@ -205,7 +205,8 @@ theorem jordan_plus_lie_recovers_mul
 theorem lie_bracket_eq_zero_iff_commute
     [Ring A] (x y : A) : x * y - y * x = 0 ↔ x * y = y * x := by
   constructor
-  · exact sub_eq_zero.mp
+  · intro h
+    exact sub_eq_zero.mp h
   · intro h
     rw [h, sub_self]
 
@@ -216,5 +217,15 @@ theorem lie_bracket_ne_zero_iff_not_commute
     exact h (sub_eq_zero.mpr hcomm)
   · intro h hzero
     exact h (sub_eq_zero.mp hzero)
+
+theorem inner_inverse_iff_kantor_defect_zero
+    [Ring A] (x y : A) :
+    x * y * x = x ↔ x - x * y * x = 0 := by
+  constructor
+  · intro h
+    rw [h, sub_self]
+  · intro h
+    have h' : x = x * y * x := eq_of_sub_eq_zero h
+    exact h'.symm
 
 end InfoGeometry.Canonical.CounterexampleAlternatives

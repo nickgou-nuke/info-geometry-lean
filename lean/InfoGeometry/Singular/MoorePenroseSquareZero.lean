@@ -90,7 +90,8 @@ theorem null_annihilates (h : IsMoorePenroseInverse a b) (ha : a * a = 0) :
   have hb := inverse_square_zero h ha
   have hab := h.aba_eq_a
   have hba := h.bab_eq_b
-  refine ⟨?_, ?_, ?_, ?_⟩ <;> noncomm_ring [ha, hb, hab, hba]
+  refine ⟨?_, ?_, ?_, ?_⟩ <;> noncomm_ring [ha, hb, hab, hba] <;>
+    simp [← mul_assoc, ha, hb, hab, hba]
 
 /-- The reciprocal sum squares to the active support. -/
 theorem sum_square (h : IsMoorePenroseInverse a b) (ha : a * a = 0) :
@@ -120,7 +121,8 @@ theorem grading_actions (h : IsMoorePenroseInverse a b) (ha : a * a = 0) :
   have hb := inverse_square_zero h ha
   have hab := h.aba_eq_a
   have hba := h.bab_eq_b
-  refine ⟨?_, ?_, ?_, ?_⟩ <;> noncomm_ring [ha, hb, hab, hba]
+  refine ⟨?_, ?_, ?_, ?_⟩ <;> noncomm_ring [ha, hb, hab, hba] <;>
+    simp [← mul_assoc, ha, hb, hab, hba]
 
 /-- Anticommutation of the grading and reciprocal sum. -/
 theorem grading_anticommutes_sum (h : IsMoorePenroseInverse a b)
@@ -143,9 +145,10 @@ theorem sum_cube (h : IsMoorePenroseInverse a b) (ha : a * a = 0) :
 theorem repeated_associator (h : IsMoorePenroseInverse a b) (ha : a * a = 0) :
     ((a * a + a * a) * b + b * (a * a + a * a)) -
       (a * (a * b + b * a) + (a * b + b * a) * a) = -(2 • a) := by
-  rw [two_smul]
-  have hab := h.aba_eq_a
-  noncomm_ring [ha, hab]
+  rw [symm_associator_eq_double_commutator]
+  obtain ⟨hl, hr, _, _⟩ := grading_actions h ha
+  rw [hr, hl, two_smul]
+  abel
 
 /-- Higher-order overlap is an exact identity, without assuming square-zero. -/
 theorem general_overlap_defect (h : IsMoorePenroseInverse a b) :

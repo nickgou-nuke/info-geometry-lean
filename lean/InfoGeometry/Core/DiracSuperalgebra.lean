@@ -435,6 +435,90 @@ theorem globalMajoranaReflection_conjugates_chiralSupport
       rw [h_core, h₁, h₂, h₃]
       simp
 
+/- The same reflection flips the chiral-dual Majorana generator. -/
+theorem globalMajoranaReflection_conjugates_majoranaMinus
+    {a m : R} (h : IsMoorePenroseInverse a m) (ha : a * a = 0) :
+    globalMajoranaReflection a m * majoranaMinus a m *
+        globalMajoranaReflection a m = -majoranaMinus a m := by
+  have h_core : majoranaPlus a m * majoranaMinus a m *
+      majoranaPlus a m = -majoranaMinus a m := by
+    rw [majoranaPlus_mul_majoranaMinus_eq_neg_chiralSupport h ha,
+      neg_mul, chiralSupport_mul_majoranaPlus_eq_majoranaMinus h ha]
+  have h_chiral_harm : chiralSupport a m * harmonicSupport a m = 0 := by
+    unfold chiralSupport
+    rw [sub_mul, h.exactSupport_mul_harmonicSupport ha,
+      h.coexactSupport_mul_harmonicSupport ha, sub_zero]
+  have h_harm_chiral : harmonicSupport a m * chiralSupport a m = 0 := by
+    unfold chiralSupport
+    rw [mul_sub, h.harmonicSupport_mul_exactSupport ha,
+      h.harmonicSupport_mul_coexactSupport ha, sub_zero]
+  have h_plus_harm : majoranaPlus a m * harmonicSupport a m = 0 := by
+    simpa [majoranaPlus, normalizedDirac] using
+      h.normalizedDirac_mul_harmonicSupport ha
+  have h_harm_plus : harmonicSupport a m * majoranaPlus a m = 0 := by
+    simpa [majoranaPlus, normalizedDirac] using
+      h.harmonicSupport_mul_normalizedDirac ha
+  have ha_harm : a * harmonicSupport a m = 0 := by
+    unfold harmonicSupport exactSupport coexactSupport
+    calc
+      a * (1 - a * m - m * a) = a - a * a * m - a * m * a := by
+        noncomm_ring
+      _ = 0 := by
+        rw [ha, h.aba_eq_a]
+        simp
+  have hm_harm : m * harmonicSupport a m = 0 := by
+    unfold harmonicSupport exactSupport coexactSupport
+    calc
+      m * (1 - a * m - m * a) = m - m * a * m - m * m * a := by
+        noncomm_ring
+      _ = 0 := by
+        rw [h.bab_eq_b, h.inverse_sq_eq_zero ha]
+        simp
+  have harm_a : harmonicSupport a m * a = 0 := by
+    unfold harmonicSupport exactSupport coexactSupport
+    calc
+      (1 - a * m - m * a) * a = a - a * m * a - m * a * a := by
+        noncomm_ring
+      _ = 0 := by
+        rw [h.aba_eq_a, mul_assoc m a a, ha, mul_zero]
+        simp
+  have harm_m : harmonicSupport a m * m = 0 := by
+    unfold harmonicSupport exactSupport coexactSupport
+    calc
+      (1 - a * m - m * a) * m = m - a * m * m - m * a * m := by
+        noncomm_ring
+      _ = 0 := by
+        rw [mul_assoc a m m, h.inverse_sq_eq_zero ha, mul_zero,
+          h.bab_eq_b]
+        simp
+  have h_minus_harm : majoranaMinus a m * harmonicSupport a m = 0 := by
+    unfold majoranaMinus
+    rw [sub_mul, ha_harm, hm_harm, sub_zero]
+  have h_harm_minus : harmonicSupport a m * majoranaMinus a m = 0 := by
+    unfold majoranaMinus
+    rw [mul_sub, harm_a, harm_m, sub_zero]
+  unfold globalMajoranaReflection
+  calc
+    (majoranaPlus a m + harmonicSupport a m) * majoranaMinus a m *
+        (majoranaPlus a m + harmonicSupport a m) =
+      majoranaPlus a m * majoranaMinus a m * majoranaPlus a m +
+        majoranaPlus a m * majoranaMinus a m * harmonicSupport a m +
+        harmonicSupport a m * majoranaMinus a m * majoranaPlus a m +
+        harmonicSupport a m * majoranaMinus a m * harmonicSupport a m := by
+          noncomm_ring
+    _ = -majoranaMinus a m := by
+      have h₁ : majoranaPlus a m * majoranaMinus a m *
+          harmonicSupport a m = 0 := by
+        rw [mul_assoc, h_minus_harm, mul_zero]
+      have h₂ : harmonicSupport a m * majoranaMinus a m *
+          majoranaPlus a m = 0 := by
+        rw [h_harm_minus, zero_mul]
+      have h₃ : harmonicSupport a m * majoranaMinus a m *
+          harmonicSupport a m = 0 := by
+        rw [h_harm_minus, zero_mul]
+      rw [h_core, h₁, h₂, h₃]
+      simp
+
 /-- Complete split-signature quartet package.  The identities are polynomial
 identities in the ring; no division by `2` or invertibility of Cayley factors
 is used. -/

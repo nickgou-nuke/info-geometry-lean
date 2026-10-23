@@ -286,6 +286,7 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Core.DiracPeirceSuperalgebra.superInvolution_conjugates_normalizedDirac
 #check InfoGeometry.Core.DiracSuperalgebra.superInvolution_conjugates_majoranaPlus
 #check InfoGeometry.Core.DiracSuperalgebra.globalMajoranaReflection_conjugates_chiralSupport
+#check InfoGeometry.Core.DiracSuperalgebra.globalMajoranaReflection_conjugates_majoranaMinus
 #check InfoGeometry.Core.PeirceTangent.tangent_iff_reflection_anticommutes_of_two_smul_injective
 #check InfoGeometry.Canonical.MajoranaCoefficientAction.linearCombination_injective
 #check InfoGeometry.Canonical.MajoranaCoefficientAction.quadratic_monomial_commutator

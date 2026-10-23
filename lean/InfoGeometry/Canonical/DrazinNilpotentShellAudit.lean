@@ -55,6 +55,7 @@ open InfoGeometry.Canonical.DrazinNilpotentShell
 #print axioms drazinShellProj_eq_right_mul
 #print axioms rangeProj_mul_complementaryProjection_of_one_le
 #print axioms drazinShellProj_eq_left_mul_of_symm
+#print axioms drazinShellProj_selfAdjoint
 #print axioms drazinShellProj_idem
 #print axioms drazinShellProj_orthogonal
 #print axioms projection_drazinShellProj_orthogonal

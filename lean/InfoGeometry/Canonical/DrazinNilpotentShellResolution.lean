@@ -299,6 +299,30 @@ theorem drazinShellProj_eq_left_mul_of_symm (h : IsDrazinInverse a d k)
         rangeProj_mul_complementaryProjection_of_one_le h hM h_symm hm1,
         rangeProj_mul_complementaryProjection_of_one_le h hM h_symm hm2]
 
+/-! ### Self-adjoint dressed shells -/
+
+/-- If the complementary Drazin projection is self-adjoint, every dressed
+shell projector is self-adjoint.  The proof uses the right-product form for
+the involution and the left-product form for the final normalization. -/
+theorem drazinShellProj_selfAdjoint (h : IsDrazinInverse a d k)
+    {M : ℕ → R} (hM : PowerMPFamily (fittingNilpotentPart a d) M)
+    (h_symm : star (complementaryProjection a d) = complementaryProjection a d)
+    (m : ℕ) :
+    star (drazinShellProj a d M m) = drazinShellProj a d M m := by
+  calc
+    star (drazinShellProj a d M m) =
+        star (shellProj (fittingNilpotentPart a d) M m *
+          complementaryProjection a d) := by
+            rw [drazinShellProj_eq_right_mul h hM m]
+    _ = star (complementaryProjection a d) *
+          star (shellProj (fittingNilpotentPart a d) M m) := by
+            rw [star_mul]
+    _ = complementaryProjection a d *
+          shellProj (fittingNilpotentPart a d) M m := by
+            rw [h_symm, shellProj_symm hM m]
+    _ = drazinShellProj a d M m :=
+      (drazinShellProj_eq_left_mul_of_symm h hM h_symm m).symm
+
 /-! ### Idempotence, orthogonality, and partition of unity -/
 
 theorem drazinShellProj_idem (h : IsDrazinInverse a d k) {M : ℕ → R}

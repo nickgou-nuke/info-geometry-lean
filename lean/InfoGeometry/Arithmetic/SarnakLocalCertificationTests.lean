@@ -1,4 +1,9 @@
-import InfoGeometry.Arithmetic.SarnakLocalCertification
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Arithmetic.ReflectionZeroCount
 
 namespace InfoGeometry.Arithmetic.SarnakLocalCertificationTests
 
@@ -63,6 +68,33 @@ example (region : CertifiedRegion counterexample_f) :
   intro member
   have forced := region.zero_on_critical_line member (by simp [counterexample_f])
   norm_num at forced
+
+/-- This symmetric set has both off-line points and an on-line point. -/
+example : ({(0 : ℂ), 1 / 2, 1} : Finset ℂ).card =
+    (({(0 : ℂ), 1 / 2, 1} : Finset ℂ).filter fun z => z.re = 1 / 2).card +
+      2 * (({(0 : ℂ), 1 / 2, 1} : Finset ℂ).filter fun z => z.re < 1 / 2).card := by
+  classical
+  apply reflection_card_decomposition
+  intro z hz
+  simp only [Finset.mem_insert, Finset.mem_singleton] at hz
+  rcases hz with rfl | rfl | rfl <;> norm_num [critical_reflection]
+
+/-- Finite zero counting applies to the already constructed symmetric function. -/
+example : ∃ z ∈ ({(1 / 2 : ℂ)} : Finset ℂ),
+    linearWitness z = 0 ∧ z.re = 1 / 2 := by
+  classical
+  apply exists_zero_on_line_of_odd_count
+  · intro z hz
+    simp only [Finset.mem_singleton] at hz ⊢
+    subst z
+    norm_num [critical_reflection]
+  · simp [linearWitness, Finset.filter_singleton]
+
+#print axioms reflection_card_left_eq_right
+#print axioms reflection_card_decomposition
+#print axioms reflection_exists_on_line_of_odd_card
+#print axioms zero_filter_reflection_closed
+#print axioms exists_zero_on_line_of_odd_count
 
 #print axioms reflection_precedes_certification
 #print axioms counting_precedes_certification

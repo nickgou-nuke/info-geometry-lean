@@ -78,6 +78,8 @@ import InfoGeometry.Canonical.QuaternionTwistorSphereReal
 import InfoGeometry.Canonical.H3ZornPeirceZeroJordanTripleRestrictionBridge
 import InfoGeometry.Canonical.SelfConcordantLyapunovDAGBridge
 import InfoGeometry.Canonical.MobiusKleinStatisticalZornPacket
+import InfoGeometry.Canonical.PfaffianFour
+import InfoGeometry.Canonical.PfaffianFourAudit
 import InfoGeometry.Canonical.AffinePin55Cover
 import InfoGeometry.Canonical.H3ZornCarrierEquivalenceBridge
 import InfoGeometry.Canonical.KleinAffinePin55RealizationBridge
@@ -2333,6 +2335,3 @@ modules in `lean/InfoGeometry/Canonical/`.
 -/
 
 end InfoGeometry
-
-import InfoGeometry.Canonical.PfaffianFour
-import InfoGeometry.Canonical.PfaffianFourAudit

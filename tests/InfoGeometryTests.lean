@@ -384,6 +384,7 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Canonical.CounterexampleAlternatives.mismatched_peirce_product_zero
 #check InfoGeometry.Canonical.CounterexampleAlternatives.finite_peirce_reconstruction
 #check InfoGeometry.Canonical.CounterexampleAlternatives.positive_entry_ne_zero_entry
+#check InfoGeometry.Canonical.CounterexampleAlternatives.nonzero_nonnegative_not_le_zero
 #check InfoGeometry.Canonical.CounterexampleAlternatives.star_symmetric_sum_of_self_adjoint
 #check InfoGeometry.Canonical.CounterexampleAlternatives.complement_idempotent_of_idempotent
 #check InfoGeometry.Canonical.CounterexampleAlternatives.nonzero_idempotent_not_square_zero

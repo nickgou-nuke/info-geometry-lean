@@ -18,6 +18,12 @@ theorem positive_entry_ne_zero_entry
   intro h
   exact (ne_of_gt hP) (hQ ▸ h)
 
+theorem nonzero_nonnegative_not_le_zero
+    [PartialOrder A] [Zero A] (x : A) (hx : 0 ≤ x) (hne : x ≠ 0) :
+    ¬ x ≤ 0 := by
+  intro h
+  exact hne (le_antisymm h hx)
+
 theorem star_symmetric_sum_of_self_adjoint
     [Ring A] [StarRing A] (x y : A)
     (hx : star x = x) (hy : star y = y) :

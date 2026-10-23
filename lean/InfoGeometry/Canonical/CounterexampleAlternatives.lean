@@ -194,6 +194,23 @@ theorem injective_multiplicative_map_forces_associative
     _ = f (x * (y * z)) := by
       rw [hmul, hmul]
 
+theorem cyclic_additive_readout_vanishes_of_split_identity
+    {C K ι : Type*} [Monoid C] [AddCommMonoid C] [AddCommMonoid K]
+    [Fintype ι] (τ : C →+ K) (s t : ι → C)
+    (hpartition : (∑ i, s i * t i) = 1)
+    (hzero : ∀ i, t i * s i = 0)
+    (hcyclic : ∀ x y, τ (x * y) = τ (y * x)) :
+    τ 1 = 0 := by
+  calc
+    τ 1 = τ (∑ i, s i * t i) := by rw [hpartition]
+    _ = ∑ i, τ (s i * t i) := by
+      exact map_sum τ (fun i => s i * t i) Finset.univ
+    _ = ∑ i, τ (t i * s i) := by
+      apply Finset.sum_congr rfl
+      intro i hi
+      exact hcyclic _ _
+    _ = 0 := by simp [hzero]
+
 theorem cycle_sum_zero_of_potential
     [AddCommGroup A] (u v w : A) :
     ((v - u) + (w - v) + (u - w)) = 0 := by

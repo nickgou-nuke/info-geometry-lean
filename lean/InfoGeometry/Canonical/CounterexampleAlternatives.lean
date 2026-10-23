@@ -91,6 +91,24 @@ theorem ring_hom_preserves_associator
       (f x * f y) * f z - f x * (f y * f z) := by
   simp only [map_sub, map_mul]
 
+theorem ring_hom_preserves_idempotent
+    [Semiring A] [Semiring B] (f : A →+* B) (e : A)
+    (he : e * e = e) : f e * f e = f e := by
+  rw [← f.map_mul, he]
+
+theorem ring_hom_preserves_orthogonal_pair
+    [Semiring A] [Semiring B] (f : A →+* B) (e g : A)
+    (heg : e * g = 0) (hge : g * e = 0) :
+    f e * f g = 0 ∧ f g * f e = 0 := by
+  constructor
+  · rw [← f.map_mul, heg, map_zero]
+  · rw [← f.map_mul, hge, map_zero]
+
+theorem ring_hom_preserves_peirce_corner
+    [Semiring A] [Semiring B] (f : A →+* B) (p q x : A) :
+    f (p * x * q) = f p * f x * f q := by
+  simp only [map_mul]
+
 theorem cycle_sum_zero_of_potential
     [AddCommGroup A] (u v w : A) :
     ((v - u) + (w - v) + (u - w)) = 0 := by

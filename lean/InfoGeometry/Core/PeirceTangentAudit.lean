@@ -6,6 +6,8 @@ Authors: InfoGeometry Engine Contributors
 
 import InfoGeometry.Core.PeirceTangent
 
+#print axioms InfoGeometry.Core.PeirceTangent.reflection_anticommutes_iff_diagonal_corners_two_torsion
+
 #print axioms InfoGeometry.Core.PeirceTangent.commutator_tangent
 #print axioms InfoGeometry.Core.PeirceTangent.tangent_eq_double_commutator
 #print axioms InfoGeometry.Core.PeirceTangent.tangent_iff_exists_commutator

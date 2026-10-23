@@ -75,6 +75,18 @@ theorem tangent_iff_reflection_anticommutes_of_two_smul_injective
     apply h_two
     simpa using h_reflection
 
+/-- Exact reflection criterion in every characteristic: both diagonal Peirce
+corners are killed by doubling. Off-diagonal corners are unrestricted.
+This identifies the extra solutions without a torsion-freeness premise. -/
+theorem reflection_anticommutes_iff_diagonal_corners_two_torsion
+    {p x : R} (hp : p * p = p) :
+    (2 * p - 1) * x + x * (2 * p - 1) = 0 ↔
+      2 • (p * x * p) = 0 ∧ 2 • ((1 - p) * x * (1 - p)) = 0 := by
+  have hdef : (2 * p - 1) * x + x * (2 * p - 1) =
+      p * (x + x) + (x + x) * p - (x + x) := by noncomm_ring
+  rw [hdef, sub_eq_zero, tangent_iff_diagonal_corners_zero hp]
+  simp only [mul_add, add_mul, two_nsmul]
+
 /-- Infinitesimal conjugation preserves the idempotent equation in any ring. -/
 theorem commutator_tangent {p : R} (hp : p * p = p) (a : R) :
     p * (a * p - p * a) + (a * p - p * a) * p = a * p - p * a := by

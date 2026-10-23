@@ -5,6 +5,8 @@ Authors: InfoGeometry Engine Contributors
 -/
 
 import InfoGeometry.Core.SuperGrassmannianSusy
+import Mathlib.LinearAlgebra.Matrix.Notation
+import Mathlib.Data.ZMod.Basic
 
 /-!
 # Characteristic-two boundary for reflection/tangent equivalence
@@ -19,6 +21,40 @@ case rather than an informal characteristic warning.
 namespace InfoGeometry.Core.PeirceTangent
 
 open InfoGeometry.Core.SuperGrassmannianSusy
+
+def matrixBoundaryProjection : Matrix (Fin 2) (Fin 2) (ZMod 2) := !![1, 0; 0, 0]
+def matrixBoundaryDirection : Matrix (Fin 2) (Fin 2) (ZMod 2) := !![1, 1; 0, 0]
+
+/-- A genuine noncommuting matrix boundary case, with an idempotent endpoint.
+Reflection anticommutation does not eliminate its nonzero diagonal corner. -/
+theorem matrix_reflection_anticommutation_not_tangent :
+    matrixBoundaryProjection * matrixBoundaryProjection = matrixBoundaryProjection ∧
+      matrixBoundaryProjection * matrixBoundaryDirection ≠
+        matrixBoundaryDirection * matrixBoundaryProjection ∧
+      ¬ IsGrassmannianTangent matrixBoundaryProjection matrixBoundaryDirection ∧
+      (2 * matrixBoundaryProjection - 1) * matrixBoundaryDirection +
+        matrixBoundaryDirection * (2 * matrixBoundaryProjection - 1) = 0 := by
+  let p := matrixBoundaryProjection
+  have hpp : p * p = p := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      norm_num [p, matrixBoundaryProjection, Matrix.mul_apply, Fin.sum_univ_succ]
+  refine ⟨hpp, ?_, ?_, ?_⟩
+  · intro h
+    have he := congrArg (fun C : Matrix (Fin 2) (Fin 2) (ZMod 2) => C 0 1) h
+    norm_num [matrixBoundaryProjection, matrixBoundaryDirection, Matrix.mul_apply,
+      Fin.sum_univ_succ] at he
+  · intro h
+    have he := congrArg (fun C : Matrix (Fin 2) (Fin 2) (ZMod 2) => C 0 0) h
+    norm_num [IsGrassmannianTangent, jordanProd, matrixBoundaryProjection,
+      matrixBoundaryDirection, Matrix.mul_apply, Fin.sum_univ_succ] at he
+    contradiction
+  · ext i j
+    fin_cases i <;> fin_cases j <;>
+      norm_num [matrixBoundaryProjection, matrixBoundaryDirection, Matrix.mul_apply,
+      Fin.sum_univ_succ] <;> decide
+
+#print axioms matrix_reflection_anticommutation_not_tangent
 
 /-- Doubling is not injective in characteristic two. -/
 theorem zmodTwo_doubling_not_injective :

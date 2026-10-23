@@ -16,6 +16,8 @@ import InfoGeometry.Core.JordanSquareZero
 import InfoGeometry.Core.JordanSquareZeroAudit
 import InfoGeometry.Core.DiracSuperalgebra
 import InfoGeometry.Core.DiracSuperalgebraAudit
+import InfoGeometry.Core.DiracPeirceSuperalgebra
+import InfoGeometry.Core.DiracPeirceSuperalgebraAudit
 import InfoGeometry.Core.Jordan
 import InfoGeometry.Core.ProjectiveSimplex
 import InfoGeometry.Core.SymmetricLie

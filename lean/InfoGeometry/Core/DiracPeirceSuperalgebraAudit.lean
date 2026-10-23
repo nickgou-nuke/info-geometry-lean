@@ -1,0 +1,11 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Core.DiracPeirceSuperalgebra
+
+#print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.evenPeircePart_chiralSupport_commute
+#print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.oddPeircePart_chiralSupport_anticommute
+#print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.diracAnticommutator_normalizedDirac
+#print axioms InfoGeometry.Core.DiracPeirceSuperalgebra.activeSupport_commutator_exactSupport

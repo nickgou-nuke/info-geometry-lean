@@ -150,6 +150,30 @@ theorem orthogonal_totalCentralCharge_commutes_with_generators
     (orthogonal_matrix_supercolor (ι := ι))).1 i
   exact ⟨h.1, h.2.1⟩
 
+theorem fin2_orthogonal_extended_susy_certificate :
+    totalMajoranaPlus (orthogonalForward (ι := Fin 2)) orthogonalBackward *
+        totalMajoranaPlus (orthogonalForward (ι := Fin 2)) orthogonalBackward =
+      totalCentralCharge (orthogonalForward (ι := Fin 2)) orthogonalBackward ∧
+    totalMajoranaMinus (orthogonalForward (ι := Fin 2)) orthogonalBackward *
+        totalMajoranaMinus (orthogonalForward (ι := Fin 2)) orthogonalBackward =
+      -totalCentralCharge (orthogonalForward (ι := Fin 2)) orthogonalBackward ∧
+    jordanProd
+        (totalMajoranaPlus (orthogonalForward (ι := Fin 2)) orthogonalBackward)
+        (totalMajoranaMinus (orthogonalForward (ι := Fin 2)) orthogonalBackward) = 0 :=
+  extended_susy_total_charges orthogonal_matrix_supercolor
+
+theorem fin4_orthogonal_extended_susy_certificate :
+    totalMajoranaPlus (orthogonalForward (ι := Fin 4)) orthogonalBackward *
+        totalMajoranaPlus (orthogonalForward (ι := Fin 4)) orthogonalBackward =
+      totalCentralCharge (orthogonalForward (ι := Fin 4)) orthogonalBackward ∧
+    totalMajoranaMinus (orthogonalForward (ι := Fin 4)) orthogonalBackward *
+        totalMajoranaMinus (orthogonalForward (ι := Fin 4)) orthogonalBackward =
+      -totalCentralCharge (orthogonalForward (ι := Fin 4)) orthogonalBackward ∧
+    jordanProd
+        (totalMajoranaPlus (orthogonalForward (ι := Fin 4)) orthogonalBackward)
+        (totalMajoranaMinus (orthogonalForward (ι := Fin 4)) orthogonalBackward) = 0 :=
+  extended_susy_total_charges orthogonal_matrix_supercolor
+
 example : IsSupercolorSystem (forward (ι := Fin 2)) backward := matrix_supercolor
 example : IsSupercolorSystem (forward (ι := Fin 4)) backward := matrix_supercolor
 

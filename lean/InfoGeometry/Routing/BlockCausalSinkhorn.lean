@@ -131,11 +131,9 @@ theorem blockCausalSinkhorn_zero_future_dependence
   have h_xt : x₁ t = x₂ t := h_past t (le_refl t)
   have h_logS : blockCausalLogScore x₁ τ Θ₀ t = blockCausalLogScore x₂ τ Θ₀ t := by
     unfold blockCausalLogScore
-    dsimp only
     rw [hK_pool, h_xt]
   refine ⟨h_logS, by rw [h_logS], by rw [h_logS], by rw [h_logS], ?_⟩
   unfold blockCausalSinkhornChunkOutput
-  dsimp only
   rw [hV_pool, h_logS, h_xt]
 
 /-- **Future Single-Chunk Perturbation Corollary (`blockCausalSinkhorn_update_future_eq`):**
@@ -215,7 +213,6 @@ theorem normalizedChunkOutput_eq_responsibility_readout
           (causalPrefixPool (causalPrefixWeights (fun s => (x s).m_shape))
             (fun s => (x s).V_shape) t) (x t).V_det l d := by
   unfold normalizedChunkOutput blockCausalSinkhornChunkOutput
-  dsimp only
   rw [Matrix.mul_apply, Finset.sum_div]
   apply Finset.sum_congr rfl
   intro l _

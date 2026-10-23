@@ -80,8 +80,10 @@ theorem sinkhornMatrix_succ_eq_softmax [Nonempty K]
 theorem sinkhorn_trifactor (T : ℕ) (logS : Matrix K K ℝ) (k l : K) :
     sinkhornShapeGain T logS k * sinkhornMatrix T logS k l *
       sinkhornDetGain T logS l = Real.exp (logS k l) := by
-  unfold sinkhornShapeGain sinkhornMatrix sinkhornDetGain
-  dsimp only
+  let uv := sinkhornPotentials logS T
+  change Real.exp (-uv.1 k + sinkhornGaugeShift uv) *
+    Real.exp (logS k l + uv.1 k + uv.2 l) *
+    Real.exp (-uv.2 l - sinkhornGaugeShift uv) = Real.exp (logS k l)
   rw [← Real.exp_add, ← Real.exp_add]
   congr 1
   ring

@@ -8,6 +8,7 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Singular.DrazinAdjoint
 import InfoGeometry.Singular.DrazinGreen
 import InfoGeometry.Singular.MoorePenroseAdjoint
+import InfoGeometry.Singular.MoorePenroseTransport
 import InfoGeometry.Singular.NaturalGradient
 import InfoGeometry.Singular.NormalAnomaly
 import InfoGeometry.Singular.SchurDrazinMoorePenrose

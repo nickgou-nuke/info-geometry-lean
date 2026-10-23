@@ -1,4 +1,11 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Canonical.OperatorProjectorMismatch
+import InfoGeometry.Singular.MoorePenroseTransport
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.NoncommRing
 
@@ -19,6 +26,19 @@ open OperatorProjectorMismatch
 open OperatorProjectorMismatch.ProjectorPair
 
 variable {R : Type*} [Ring R]
+
+/-- Range and co-range covariance derived from the Penrose equations and
+star-compatible coordinates. The target inverse is identified by uniqueness;
+neither projector transport equation is an assumption. -/
+theorem penrose_projectors_covariant
+    {S : Type*} [Ring S] [StarRing R] [StarRing S]
+    {a b : R} {c : S} (e : R ≃+* S)
+    (he : ∀ x : R, e (star x) = star (e x))
+    (h : InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse a b)
+    (hc : InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse (e a) c) :
+    e a * c = e (a * b) ∧ c * e a = e (b * a) := by
+  rw [h.target_eq_map e he hc]
+  exact ⟨(e.map_mul a b).symm, (e.map_mul b a).symm⟩
 
 /-- Similarity transport data between two projector pairs.
 

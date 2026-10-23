@@ -68,10 +68,38 @@ The supplied file's claim of successful compilation is not taken as evidence.
 
 ## Verification
 
-The new sources remain candidates until the scoped pinned workflow succeeds.
-It compiles the exact transitive repository owner sources sequentially under
-a build lock against the unchanged Lean and Mathlib pins, then audits every
-new theorem. This is not a full-repository or Routing.All build.
+Verified source commit: `0350ab7050cbdb82984fcfddfda7116c3489b6cb`.
+Successful scoped workflow:
+https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/39879626170
+Job `120173596734`, completed on 2026-10-23.
+
+Both new modules compiled with Lean 4.34.1 and exact Mathlib revision
+`d13f23b723b8a846827a245b89c10fc7d3f11612`. All eight existing repository
+modules in the transitive import closure were compiled from unchanged owner
+sources before their dependents. The audit checked all 29 new theorem
+footprints (13 in AttentionIdentifiability and 16 in AttentionInteriorFiber).
+Every footprint is `[propext, Classical.choice, Quot.sound]`.
+The new sources contain no `sorry`, `admit`, custom axioms, `unsafe`, or
+`native_decide`. The subsequent documentation commit does not change Lean.
+
+This is scoped verification, not a full-repository or Routing.All build.
+The separate unchanged `post-build-gate.yml` workflow reports failure on the
+same source commit (run 39879624740); it was not diagnosed or repaired here.
+No claim is made that all repository CI checks are green.
+
+Nonfatal warnings in the new sources: an unused `not_imp` simp argument,
+an unused Fintype D section assumption on rank-nullity, and a letI style
+warning. Existing dependencies retain their prior deprecation/style warnings.
+Checkout cleanup reports the existing missing submodule URL for
+`sandbox/Grassmann.jl`. The first attempt stopped before Lean because checkout
+performed that cleanup early; the workflow now removes its local read-only
+credential without traversing submodules. The second attempt exposed one
+scalar cancellation proof error, corrected in the verified source commit.
+
+The scoped workflow uses an isolated temporary checkout of the exact Mathlib
+pin, compiles sequentially under a build lock, and checks the complete new
+axiom-output count and allowed axiom set. No root dependency pin is changed,
+no cache is deleted, and no training code is modified.
 
 Canonical check in a checkout containing the stacked dependencies:
 

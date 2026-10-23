@@ -1,10 +1,15 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
 # Algebraic Bogoliubov transport of CAR relations
 
-The coefficients are complex scalars acting on an arbitrary associative
+The coefficients lie in a commutative ring acting centrally on an associative
 operator ring.  The result records preservation of the CAR identities; it
 does not assert a state, a Hilbert-space representation, or an analytic
 exponential.
@@ -14,15 +19,16 @@ namespace InfoGeometry.OperatorAlgebra
 
 section
 
-variable {A : Type*} [Ring A] [Algebra ℂ A]
+variable {R : Type*} [CommRing R]
+variable {A : Type*} [Ring A] [Algebra R A]
 
 def thermalAnticommutator (x y : A) : A := x * y + y * x
 
-def thermalAnnihilator (a d : A) (u v : ℂ) : A := u • a + v • d
+def thermalAnnihilator (a d : A) (u v : R) : A := u • a + v • d
 
-def thermalCreator (c b : A) (u v : ℂ) : A := u • c + v • b
+def thermalCreator (c b : A) (u v : R) : A := u • c + v • b
 
-omit [Algebra ℂ A] in
+omit [Algebra R A] in
 theorem thermalAnticommutator_map
     {B : Type*} [Ring B]
     (φ : A →+* B) (x y : A) :
@@ -31,26 +37,26 @@ theorem thermalAnticommutator_map
   simp [thermalAnticommutator]
 
 theorem thermalAnnihilator_map
-    {B : Type*} [Ring B] [Algebra ℂ B]
-    (φ : A →ₐ[ℂ] B) (a d : A) (u v : ℂ) :
+    {B : Type*} [Ring B] [Algebra R B]
+    (φ : A →ₐ[R] B) (a d : A) (u v : R) :
     φ (thermalAnnihilator a d u v) =
       thermalAnnihilator (φ a) (φ d) u v := by
   simp [thermalAnnihilator]
 
 theorem thermalCreator_map
-    {B : Type*} [Ring B] [Algebra ℂ B]
-    (φ : A →ₐ[ℂ] B) (c b : A) (u v : ℂ) :
+    {B : Type*} [Ring B] [Algebra R B]
+    (φ : A →ₐ[R] B) (c b : A) (u v : R) :
     φ (thermalCreator c b u v) =
       thermalCreator (φ c) (φ b) u v := by
   simp [thermalCreator]
 
-omit [Algebra ℂ A] in
+omit [Algebra R A] in
 lemma thermalAnticommutator_symm (x y : A) :
     thermalAnticommutator x y = thermalAnticommutator y x := by
   dsimp [thermalAnticommutator]
   exact add_comm _ _
 
-lemma thermalAnticommutator_expand (x₁ x₂ y₁ y₂ : A) (c₁ c₂ d₁ d₂ : ℂ) :
+lemma thermalAnticommutator_expand (x₁ x₂ y₁ y₂ : A) (c₁ c₂ d₁ d₂ : R) :
     thermalAnticommutator (c₁ • x₁ + c₂ • x₂) (d₁ • y₁ + d₂ • y₂) =
       (c₁ * d₁) • thermalAnticommutator x₁ y₁ +
         (c₁ * d₂) • thermalAnticommutator x₁ y₂ +
@@ -63,7 +69,7 @@ lemma thermalAnticommutator_expand (x₁ x₂ y₁ y₂ : A) (c₁ c₂ d₁ d�
   abel
 
 theorem thermal_bogoliubov_nilpotent_ann
-    (a d : A) (u v : ℂ)
+    (a d : A) (u v : R)
     (haa : thermalAnticommutator a a = 0)
     (hdd : thermalAnticommutator d d = 0)
     (had : thermalAnticommutator a d = 0) :
@@ -77,7 +83,7 @@ theorem thermal_bogoliubov_nilpotent_ann
   simp
 
 theorem thermal_bogoliubov_nilpotent_cre
-    (c b : A) (u v : ℂ)
+    (c b : A) (u v : R)
     (hcc : thermalAnticommutator c c = 0)
     (hbb : thermalAnticommutator b b = 0)
     (hcb : thermalAnticommutator c b = 0) :
@@ -91,7 +97,7 @@ theorem thermal_bogoliubov_nilpotent_cre
   simp
 
 theorem thermal_bogoliubov_car_preserved
-    (a c b d : A) (u v : ℂ)
+    (a c b d : A) (u v : R)
     (huv : u ^ 2 + v ^ 2 = 1)
     (hac : thermalAnticommutator a c = 1)
     (hbd : thermalAnticommutator b d = 1)
@@ -111,8 +117,8 @@ theorem thermal_bogoliubov_car_preserved
     huv, one_smul]
 
 theorem AlgHom.map_thermal_bogoliubov_car_preserved
-    {B : Type*} [Ring B] [Algebra ℂ B]
-    (φ : A →ₐ[ℂ] B) (a c b d : A) (u v : ℂ)
+    {B : Type*} [Ring B] [Algebra R B]
+    (φ : A →ₐ[R] B) (a c b d : A) (u v : R)
     (huv : u ^ 2 + v ^ 2 = 1)
     (hac : thermalAnticommutator a c = 1)
     (hbd : thermalAnticommutator b d = 1)
@@ -149,30 +155,30 @@ theorem AlgHom.map_thermal_bogoliubov_car_preserved
 
 /-! ## Operator-valued Bogoliubov coefficients
 
-The coefficients below are elements of the ambient operator ring.  They are
-central only relative to the CAR generators; the ambient ring remains
-noncommutative.
+The coefficients below are elements of the ambient operator ring. The
+expansion and preservation theorems assume they commute with every ambient
+element; the ambient ring itself remains noncommutative.
 -/
 
 def operatorThermalAnnihilator (a d u v : A) : A := u * a + v * d
 
 def operatorThermalCreator (c b u v : A) : A := u * c + v * b
 
-omit [Algebra ℂ A] in
+omit [Algebra R A] in
 theorem RingHom.map_operatorThermalAnnihilator
     {B : Type*} [Ring B] (φ : A →+* B) (a d u v : A) :
     φ (operatorThermalAnnihilator a d u v) =
       operatorThermalAnnihilator (φ a) (φ d) (φ u) (φ v) := by
   simp [operatorThermalAnnihilator]
 
-omit [Algebra ℂ A] in
+omit [Algebra R A] in
 theorem RingHom.map_operatorThermalCreator
     {B : Type*} [Ring B] (φ : A →+* B) (c b u v : A) :
     φ (operatorThermalCreator c b u v) =
       operatorThermalCreator (φ c) (φ b) (φ u) (φ v) := by
   simp [operatorThermalCreator]
 
-omit [Algebra ℂ A] in
+omit [Algebra R A] in
 lemma operatorThermalAnticommutator_expand
     (x₁ x₂ y₁ y₂ u v : A)
     (hu : ∀ z : A, z * u = u * z)
@@ -212,7 +218,7 @@ lemma operatorThermalAnticommutator_expand
     huu y₁ x₁, hvu y₂ x₁, huv y₁ x₂, hvv y₂ x₂]
   noncomm_ring
 
-omit [Algebra ℂ A] in
+omit [Algebra R A] in
 theorem operator_thermal_bogoliubov_car_preserved
     (a c b d u v : A)
     (hu : ∀ z : A, z * u = u * z)

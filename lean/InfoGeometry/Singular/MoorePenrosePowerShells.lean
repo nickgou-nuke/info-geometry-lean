@@ -29,6 +29,7 @@ def rangeShell (n : ℕ) : R := a ^ n * g n - a ^ (n + 1) * g (n + 1)
 def deathShell (n : ℕ) : R := g n * a ^ n - g (n + 1) * a ^ (n + 1)
 
 variable (hg : ∀ n, IsMoorePenroseInverse (a ^ n) (g n))
+include hg
 
 theorem rangeSupport_nested {i j : ℕ} (hij : i ≤ j) :
     (a ^ i * g i) * (a ^ j * g j) = a ^ j * g j := by
@@ -78,12 +79,14 @@ theorem deathShell_orthogonal {i j : ℕ} (hij : i < j) :
     coRangeSupport_nested a g hg (by omega : i + 1 ≤ j + 1)]
   abel
 
+omit hg in
 /-- The kernel-difference interpretation is distinct from range differences. -/
 theorem deathShell_eq_kernel_difference (n : ℕ) :
     deathShell a g n = (1 - g (n + 1) * a ^ (n + 1)) - (1 - g n * a ^ n) := by
   unfold deathShell
   abel
 
+omit hg in
 lemma telescope (f : ℕ → R) (k : ℕ) :
     (∑ i ∈ Finset.range k, (f i - f (i + 1))) = f 0 - f k := by
   induction k with

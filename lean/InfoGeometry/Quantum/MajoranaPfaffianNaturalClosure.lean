@@ -207,5 +207,12 @@ theorem twoMajoranaPfaffian_eq_zero_iff (m : ℝ) :
     twoMajoranaPfaffian m = 0 ↔ m = 0 := by
   rfl
 
+/-- The Pfaffian detects the nontrivial kernel of the skew Majorana block. -/
+theorem twoMajoranaPfaffian_kernel_criterion (m : ℝ) :
+    (∃ v : Fin 2 → ℝ, v ≠ 0 ∧ twoMajoranaCoupling m *ᵥ v = 0) ↔
+      twoMajoranaPfaffian m = 0 := by
+  rw [Matrix.exists_mulVec_eq_zero_iff,
+    det_twoMajoranaCoupling_eq_zero_iff]
+
 end MajoranaPfaffianNaturalClosure
 end InfoGeometry

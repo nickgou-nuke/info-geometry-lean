@@ -135,4 +135,25 @@ def narainToSplit {n : ℕ} (v : NarainCharge n) : SplitModule n :=
     | Sum.inl j => ((v.1 j + v.2 j : ℤ) : ℝ)
     | Sum.inr j => ((v.1 j - v.2 j : ℤ) : ℝ)
 
+/-- The unnormalized Narain embedding intertwines the integral charge form
+with the diagonal split form, up to the expected factor of two. -/
+theorem splitQuadraticForm_narainToSplit
+    {n : ℕ} (v : NarainCharge n) :
+    splitQuadraticForm n (narainToSplit v) =
+      (2 : ℝ) * (narainQuadratic n v : ℝ) := by
+  classical
+  rw [splitQuadraticForm_apply]
+  simp only [splitWeight, narainToSplit]
+  simp only [Int.cast_add, Int.cast_sub]
+  rw [Fintype.sum_sum_type]
+  simp only [narainQuadratic, Int.cast_mul, Int.cast_ofNat]
+  simp only [Int.cast_sum]
+  simp only [neg_one_mul]
+  rw [← Finset.sum_add_distrib]
+  simp only [Finset.mul_sum]
+  apply Finset.sum_congr rfl
+  intro i hi
+  push_cast
+  ring
+
 end InfoGeometry.Algebraic.SplitSignature

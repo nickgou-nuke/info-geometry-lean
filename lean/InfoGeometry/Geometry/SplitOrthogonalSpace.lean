@@ -40,4 +40,37 @@ structure SplitOrthogonalBoundary (n : ℕ) where
 
 attribute [instance] SplitOrthogonalBoundary.instTopologicalSpace
 
+/-! A concrete finite stage model.  The Cartan carrier is the diagonal split
+module, while the boundary carrier is its isotropic-vector subtype.  These
+are finite algebraic carriers; no quotient or analytic symmetric-space
+identification is asserted. -/
+
+def standardSplitOrthogonalCartanSpace (n : ℕ) : SplitOrthogonalCartanSpace n where
+  carrier := SplitModule n
+  instTopologicalSpace := inferInstance
+
+def standardSplitOrthogonalBoundary (n : ℕ) : SplitOrthogonalBoundary n where
+  carrier := {v : SplitModule n // splitQuadraticForm n v = 0}
+  instTopologicalSpace := inferInstance
+
+@[simp] theorem standardSplitOrthogonalCartanSpace_carrier (n : ℕ) :
+    (standardSplitOrthogonalCartanSpace n).carrier = SplitModule n :=
+  rfl
+
+@[simp] theorem standardSplitOrthogonalBoundary_isotropic
+    {n : ℕ} (v : (standardSplitOrthogonalBoundary n).carrier) :
+    splitQuadraticForm n v.1 = 0 :=
+  v.2
+
+theorem standardSplitOrthogonalCartanSpace_nonempty (n : ℕ) :
+    Nonempty (standardSplitOrthogonalCartanSpace n).carrier :=
+  by
+    change Nonempty (SplitModule n)
+    exact ⟨0⟩
+
+theorem standardSplitOrthogonalBoundary_nonempty (n : ℕ) :
+    Nonempty (standardSplitOrthogonalBoundary n).carrier := by
+  change Nonempty {v : SplitModule n // splitQuadraticForm n v = 0}
+  exact ⟨⟨0, by simp [splitQuadraticForm]⟩⟩
+
 end InfoGeometry.Geometry.Cartan

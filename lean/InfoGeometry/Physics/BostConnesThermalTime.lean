@@ -429,6 +429,19 @@ theorem bostConnesDirichletTerm_of_ne_zero
       Real.exp (-beta * Real.log (n : ℝ)) := by
   simp [bostConnesDirichletTerm, hn]
 
+/-- Every nonzero finite Dirichlet term is strictly positive. -/
+theorem bostConnesDirichletTerm_pos
+    (beta : ℝ) {n : ℕ} (hn : 0 < n) :
+    0 < bostConnesDirichletTerm beta n := by
+  rw [bostConnesDirichletTerm_of_ne_zero beta (Nat.ne_of_gt hn)]
+  exact Real.exp_pos _
+
+/-- The first finite Dirichlet term is the normalized unit contribution. -/
+@[simp] theorem bostConnesDirichletTerm_one (beta : ℝ) :
+    bostConnesDirichletTerm beta 1 = 1 := by
+  rw [bostConnesDirichletTerm_of_ne_zero beta (by norm_num)]
+  norm_num
+
 /--
 Explicit data for a symmetry group acting on a supplied state space.
 The finite bridge does not construct the Bost-Connes idele-class action; any

@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.SupergradedBracket
@@ -38,6 +44,24 @@ theorem oddSuperSquare_eq_innerDerivation
     {A : Type*} [Ring A] (Q X : A) (p : Bool) :
     oddSuperAnticommutator Q Q X p = innerDerivation (Q * Q + Q * Q) X := by
   exact oddSuperAnticommutator_eq_innerDerivation Q Q X p
+
+/-- The undoubled composition flips parity between applications. Unlike the
+superderivation anticommutator, this identity needs no factor of two. Boolean
+labels specify the formula; homogeneous membership is a separate obligation. -/
+theorem oddSuperDerivation_comp_self
+    {A : Type*} [Ring A] (Q X : A) (p : Bool) :
+    oddSuperDerivation Q (oddSuperDerivation Q X p) (!p) =
+      innerDerivation (Q * Q) X := by
+  cases p <;> simp [oddSuperDerivation, innerDerivation] <;> noncomm_ring
+
+/-- The square vanishes exactly on elements commuting with the charge square,
+not necessarily on the entire ambient ring. -/
+theorem oddSuperDerivation_comp_self_eq_zero_iff
+    {A : Type*} [Ring A] (Q X : A) (p : Bool) :
+    oddSuperDerivation Q (oddSuperDerivation Q X p) (!p) = 0 ↔
+      Commute (Q * Q) X := by
+  rw [oddSuperDerivation_comp_self]
+  exact sub_eq_zero
 
 theorem oddSuperAnticommutator_eq_innerDerivation_superBracket
     {A : Type*} [Ring A] (Qplus Qminus X : A) (p : Bool) :

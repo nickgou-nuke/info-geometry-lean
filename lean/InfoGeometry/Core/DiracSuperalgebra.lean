@@ -26,6 +26,73 @@ def activeSupport (a m : R) : R := exactSupport a m + coexactSupport a m
 harmonic complement. -/
 def superInvolution (a m : R) : R := chiralSupport a m + harmonicSupport a m
 
+/-! The split-signature Majorana combinations.  These are algebraic
+combinations; self-adjointness requires the additional duality hypothesis
+`m = star a` and is intentionally kept separate. -/
+
+def majoranaPlus (a m : R) : R := a + m
+
+def majoranaMinus (a m : R) : R := a - m
+
+/-! The global reflection extending the symmetric Majorana charge by `+1` on
+the harmonic complement. -/
+def globalMajoranaReflection (a m : R) : R :=
+  majoranaPlus a m + harmonicSupport a m
+
+/-! Cayley--Möbius factors for the skew split-signature generator. -/
+
+def cayleyPlus (a m : R) : R := 1 + majoranaMinus a m
+
+def cayleyMinus (a m : R) : R := 1 - majoranaMinus a m
+
+/-! Star symmetry of the support and Majorana layer.  The support identities
+are unconditional consequences of the Moore--Penrose self-adjoint projection
+axioms; the individual Majorana charges additionally require the duality
+`m = star a`. -/
+
+theorem activeSupport_star
+    {a m : R} (h : IsMoorePenroseInverse a m) :
+    star (activeSupport a m) = activeSupport a m := by
+  unfold activeSupport exactSupport coexactSupport
+  rw [star_add, h.ab_adj_eq, h.ba_adj_eq]
+
+theorem chiralSupport_star
+    {a m : R} (h : IsMoorePenroseInverse a m) :
+    star (chiralSupport a m) = chiralSupport a m := by
+  unfold chiralSupport exactSupport coexactSupport
+  rw [star_sub, h.ab_adj_eq, h.ba_adj_eq]
+
+theorem harmonicSupport_star
+    {a m : R} (h : IsMoorePenroseInverse a m) :
+    star (harmonicSupport a m) = harmonicSupport a m := by
+  unfold harmonicSupport exactSupport coexactSupport
+  rw [star_sub, star_sub, star_one, h.ab_adj_eq, h.ba_adj_eq]
+
+theorem superInvolution_star
+    {a m : R} (h : IsMoorePenroseInverse a m) :
+    star (superInvolution a m) = superInvolution a m := by
+  unfold superInvolution
+  rw [star_add, chiralSupport_star h, harmonicSupport_star h]
+
+theorem majorana_star_symmetry
+    {a m : R} (hdual : m = star a) :
+    star (majoranaPlus a m) = majoranaPlus a m ∧
+    star (majoranaMinus a m) = -majoranaMinus a m := by
+  have hm : star m = a := by rw [hdual, star_star]
+  constructor
+  · unfold majoranaPlus
+    rw [star_add, hm, ← hdual, add_comm]
+  · unfold majoranaMinus
+    rw [star_sub, hm, ← hdual]
+    abel
+
+theorem cayleyPlus_star_eq_cayleyMinus
+    {a m : R} (hdual : m = star a) :
+    star (cayleyPlus a m) = cayleyMinus a m := by
+  rcases majorana_star_symmetry hdual with ⟨_, hminus⟩
+  unfold cayleyPlus cayleyMinus
+  rw [star_add, star_one, hminus, sub_eq_add_neg]
+
 /-- Partial matrix-unit identities and the normalized supercharge square. -/
 theorem partial_matrix_unit_identities
     {a m : R} (h : IsMoorePenroseInverse a m) (ha : a * a = 0) :
@@ -170,5 +237,262 @@ theorem normalizedDirac_cube
           simp [normalizedDirac, mul_add]
     _ = a + m := by rw [hact.2.1, hact.2.2.2.1]
     _ = normalizedDirac a m := by rfl
+
+/-- The symmetric split-signature combination has the active support as its
+square. -/
+theorem majoranaPlus_sq
+    {a m : R} (h : IsMoorePenroseInverse a m) (ha : a * a = 0) :
+    majoranaPlus a m * majoranaPlus a m = activeSupport a m := by
+  simpa [majoranaPlus, activeSupport, normalizedDirac, exactSupport,
+    coexactSupport, pow_two] using
+    h.normalizedDirac_sq ha
+
+/-- The skew split-signature combination has the negative active support as
+its square. -/
+theorem majoranaMinus_sq
+    {a m : R} (h : IsMoorePenroseInverse a m) (ha : a * a = 0) :
+    majoranaMinus a m * majoranaMinus a m = -(activeSupport a m) := by
+  have hm : m * m = 0 := h.inverse_sq_eq_zero ha
+  unfold majoranaMinus activeSupport exactSupport coexactSupport
+  calc
+    (a - m) * (a - m) = a * a - (a * m + m * a) + m * m := by
+      noncomm_ring
+    _ = -(a * m + m * a) := by rw [ha, hm]; abel
+
+/-- The chiral support rotates the symmetric combination into the skew one. -/
+theorem chiralSupport_mul_majoranaPlus_eq_majoranaMinus
+    {a m : R} (h : IsMoorePenroseInverse a m) (ha : a * a = 0) :
+    chiralSupport a m * majoranaPlus a m = majoranaMinus a m := by
+  unfold majoranaPlus majoranaMinus
+  rw [mul_add, h.chiralSupport_mul_eq_self ha,
+    h.chiralSupport_mul_inverse_eq_neg ha]
+  simp [sub_eq_add_neg]
+
+/-- The two split-signature combinations anticommute. -/
+theorem majoranaPlus_majoranaMinus_anticommute
+    {a m : R} (h : IsMoorePenroseInverse a m) (ha : a * a = 0) :
+    majoranaPlus a m * majoranaMinus a m +
+      majoranaMinus a m * majoranaPlus a m = 0 := by
+  have hm : m * m = 0 := h.inverse_sq_eq_zero ha
+  unfold majoranaPlus majoranaMinus
+  calc
+    (a + m) * (a - m) + (a - m) * (a + m) =
+        (a * a - m * m) + (a * a - m * m) := by noncomm_ring
+    _ = 0 := by rw [ha, hm]; simp
+
+/-- The split-signature product is the chiral support. -/
+theorem majoranaMinus_mul_majoranaPlus_eq_chiralSupport
+    {a m : R} (h : IsMoorePenroseInverse a m) (ha : a * a = 0) :
+    majoranaMinus a m * majoranaPlus a m = chiralSupport a m := by
+  have hm : m * m = 0 := h.inverse_sq_eq_zero ha
+  unfold majoranaMinus majoranaPlus chiralSupport exactSupport coexactSupport
+  calc
+    (a - m) * (a + m) = a * a + (a * m - m * a) - m * m := by
+      noncomm_ring
+    _ = a * m - m * a := by rw [ha, hm]; simp
+
+/-- The chiral support rotates the skew combination back to the symmetric one. -/
+theorem chiralSupport_mul_majoranaMinus_eq_majoranaPlus
+    {a m : R} (h : IsMoorePenroseInverse a m) (ha : a * a = 0) :
+    chiralSupport a m * majoranaMinus a m = majoranaPlus a m := by
+  unfold majoranaMinus majoranaPlus chiralSupport exactSupport coexactSupport
+  calc
+    (a * m - m * a) * (a - m) =
+        a * m * a - a * m * m - m * a * a + m * a * m := by
+      noncomm_ring
+    _ = a + m := by
+      rw [mul_assoc a m m, h.inverse_sq_eq_zero ha,
+        mul_assoc m a a, ha, h.aba_eq_a, h.bab_eq_b]
+      simp
+
+/-- The skew combination is right-rotated by the chiral support with a minus sign. -/
+theorem majoranaMinus_mul_chiralSupport_eq_neg_majoranaPlus
+    {a m : R} (h : IsMoorePenroseInverse a m) (ha : a * a = 0) :
+    majoranaMinus a m * chiralSupport a m = -(majoranaPlus a m) := by
+  unfold majoranaMinus majoranaPlus chiralSupport exactSupport coexactSupport
+  calc
+    (a - m) * (a * m - m * a) =
+        a * a * m - a * m * a - m * a * m + m * m * a := by
+      noncomm_ring
+    _ = -(a + m) := by
+      rw [ha, h.inverse_sq_eq_zero ha, h.aba_eq_a, h.bab_eq_b]
+      simp
+      abel
+
+theorem majoranaPlus_mul_majoranaMinus_eq_neg_chiralSupport
+    {a m : R} (h : IsMoorePenroseInverse a m) (ha : a * a = 0) :
+    majoranaPlus a m * majoranaMinus a m = -(chiralSupport a m) := by
+  have hanti := majoranaPlus_majoranaMinus_anticommute h ha
+  have hprod := majoranaMinus_mul_majoranaPlus_eq_chiralSupport h ha
+  rw [add_eq_zero_iff_eq_neg] at hanti
+  calc
+    majoranaPlus a m * majoranaMinus a m =
+        -(majoranaMinus a m * majoranaPlus a m) := hanti
+    _ = -(chiralSupport a m) := by rw [hprod]
+
+/-- The symmetric Majorana reflection is a global involution. -/
+theorem globalMajoranaReflection_sq
+    {a m : R} (h : IsMoorePenroseInverse a m) (ha : a * a = 0) :
+    globalMajoranaReflection a m * globalMajoranaReflection a m = 1 := by
+  have hq := majoranaPlus_sq h ha
+  have hp := h.harmonicSupport_idem ha
+  have hqh : majoranaPlus a m * harmonicSupport a m = 0 := by
+    simpa [majoranaPlus, normalizedDirac] using h.normalizedDirac_mul_harmonicSupport ha
+  have hhq : harmonicSupport a m * majoranaPlus a m = 0 := by
+    simpa [majoranaPlus, normalizedDirac] using h.harmonicSupport_mul_normalizedDirac ha
+  unfold globalMajoranaReflection
+  calc
+    (majoranaPlus a m + harmonicSupport a m) *
+        (majoranaPlus a m + harmonicSupport a m) =
+      majoranaPlus a m * majoranaPlus a m +
+        majoranaPlus a m * harmonicSupport a m +
+        harmonicSupport a m * majoranaPlus a m +
+        harmonicSupport a m * harmonicSupport a m := by noncomm_ring
+    _ = 1 := by
+      rw [hq, hqh, hhq, hp]
+      unfold harmonicSupport activeSupport exactSupport coexactSupport
+      abel
+
+/-- Complete split-signature quartet package.  The identities are polynomial
+identities in the ring; no division by `2` or invertibility of Cayley factors
+is used. -/
+theorem majorana_quartet_identities
+    {a m : R} (h : IsMoorePenroseInverse a m) (ha : a * a = 0) :
+    (majoranaPlus a m * majoranaPlus a m = activeSupport a m ∧
+     majoranaMinus a m * majoranaMinus a m = -(activeSupport a m) ∧
+     chiralSupport a m * chiralSupport a m = activeSupport a m) ∧
+    (majoranaPlus a m * majoranaMinus a m +
+       majoranaMinus a m * majoranaPlus a m = 0 ∧
+     chiralSupport a m * majoranaPlus a m = majoranaMinus a m ∧
+     majoranaPlus a m * chiralSupport a m = -(majoranaMinus a m) ∧
+     chiralSupport a m * majoranaMinus a m = majoranaPlus a m ∧
+     majoranaMinus a m * chiralSupport a m = -(majoranaPlus a m)) ∧
+    (majoranaMinus a m * majoranaPlus a m = chiralSupport a m ∧
+     majoranaPlus a m * majoranaMinus a m = -(chiralSupport a m)) := by
+  refine ⟨⟨majoranaPlus_sq h ha, majoranaMinus_sq h ha,
+    h.chiralSupport_sq_support ha⟩, ?_, ?_⟩
+  · exact ⟨majoranaPlus_majoranaMinus_anticommute h ha,
+      chiralSupport_mul_majoranaPlus_eq_majoranaMinus h ha,
+      by
+        unfold majoranaPlus majoranaMinus chiralSupport exactSupport coexactSupport
+        calc
+          (a + m) * (a * m - m * a) =
+              a * a * m - a * m * a + m * a * m - m * m * a := by
+                noncomm_ring
+          _ = -(a - m) := by
+            rw [ha, h.inverse_sq_eq_zero ha, h.aba_eq_a, h.bab_eq_b]
+            simp
+            abel,
+      chiralSupport_mul_majoranaMinus_eq_majoranaPlus h ha,
+      majoranaMinus_mul_chiralSupport_eq_neg_majoranaPlus h ha⟩
+  · exact ⟨majoranaMinus_mul_majoranaPlus_eq_chiralSupport h ha,
+      majoranaPlus_mul_majoranaMinus_eq_neg_chiralSupport h ha⟩
+
+/-- The two Cayley factors have the same central active norm. -/
+theorem cayleyMinus_mul_cayleyPlus
+    {a m : R} (h : IsMoorePenroseInverse a m) (ha : a * a = 0) :
+    cayleyMinus a m * cayleyPlus a m = 1 + activeSupport a m := by
+  rw [cayleyMinus, cayleyPlus]
+  calc
+    (1 - majoranaMinus a m) * (1 + majoranaMinus a m) =
+        1 - majoranaMinus a m * majoranaMinus a m := by noncomm_ring
+    _ = 1 + activeSupport a m := by rw [majoranaMinus_sq h ha, sub_neg_eq_add]
+
+/-- The Cayley factors commute and have the same product in the reverse order. -/
+theorem cayleyPlus_mul_cayleyMinus
+    {a m : R} (h : IsMoorePenroseInverse a m) (ha : a * a = 0) :
+    cayleyPlus a m * cayleyMinus a m = 1 + activeSupport a m := by
+  rw [cayleyPlus, cayleyMinus]
+  calc
+    (1 + majoranaMinus a m) * (1 - majoranaMinus a m) =
+        1 - majoranaMinus a m * majoranaMinus a m := by noncomm_ring
+    _ = 1 + activeSupport a m := by rw [majoranaMinus_sq h ha, sub_neg_eq_add]
+
+/-- The inverse chiral conjugations rotate the grading into the symmetric generator. -/
+theorem cayley_chiral_rotation
+    {a m : R} (h : IsMoorePenroseInverse a m) (ha : a * a = 0) :
+    cayleyMinus a m * chiralSupport a m * cayleyPlus a m =
+        2 • majoranaPlus a m ∧
+    cayleyPlus a m * chiralSupport a m * cayleyMinus a m =
+        -(2 • majoranaPlus a m) := by
+  have hq2g : majoranaMinus a m * chiralSupport a m =
+      -(majoranaPlus a m) := by
+    exact majoranaMinus_mul_chiralSupport_eq_neg_majoranaPlus h ha
+  have hgq2 : chiralSupport a m * majoranaMinus a m =
+      majoranaPlus a m := by
+    exact chiralSupport_mul_majoranaMinus_eq_majoranaPlus h ha
+  have hq2q1q2 : majoranaMinus a m * majoranaPlus a m *
+      majoranaMinus a m = majoranaPlus a m := by
+    rw [majoranaMinus_mul_majoranaPlus_eq_chiralSupport h ha, hgq2]
+  have hq2gq2 : majoranaMinus a m * chiralSupport a m *
+      majoranaMinus a m = chiralSupport a m := by
+    rw [hq2g, neg_mul,
+      majoranaPlus_mul_majoranaMinus_eq_neg_chiralSupport h ha, neg_neg]
+  constructor
+  · unfold cayleyMinus cayleyPlus
+    calc
+      (1 - majoranaMinus a m) * chiralSupport a m *
+          (1 + majoranaMinus a m) =
+          chiralSupport a m - majoranaMinus a m * chiralSupport a m +
+            chiralSupport a m * majoranaMinus a m -
+              majoranaMinus a m * chiralSupport a m * majoranaMinus a m := by
+                noncomm_ring
+      _ = majoranaPlus a m + majoranaPlus a m := by
+        rw [hq2gq2, hq2g, hgq2]
+        abel
+      _ = 2 • majoranaPlus a m := (two_nsmul _).symm
+  · unfold cayleyPlus cayleyMinus
+    calc
+      (1 + majoranaMinus a m) * chiralSupport a m *
+          (1 - majoranaMinus a m) =
+          chiralSupport a m + majoranaMinus a m * chiralSupport a m -
+            chiralSupport a m * majoranaMinus a m -
+              majoranaMinus a m * chiralSupport a m * majoranaMinus a m := by
+                noncomm_ring
+      _ = -(majoranaPlus a m + majoranaPlus a m) := by
+        rw [hq2gq2, hq2g, hgq2]
+        abel
+      _ = -(2 • majoranaPlus a m) := by rw [two_nsmul]
+
+/-- The same Cayley factors rotate the symmetric generator into the grading. -/
+theorem cayley_majorana_rotation
+    {a m : R} (h : IsMoorePenroseInverse a m) (ha : a * a = 0) :
+    cayleyPlus a m * majoranaPlus a m * cayleyMinus a m =
+        2 • chiralSupport a m ∧
+    cayleyMinus a m * majoranaPlus a m * cayleyPlus a m =
+        -(2 • chiralSupport a m) := by
+  have hq2q1q2 : majoranaMinus a m * majoranaPlus a m *
+      majoranaMinus a m = majoranaPlus a m := by
+    rw [majoranaMinus_mul_majoranaPlus_eq_chiralSupport h ha,
+      chiralSupport_mul_majoranaMinus_eq_majoranaPlus h ha]
+  constructor
+  · unfold cayleyPlus cayleyMinus
+    calc
+      (1 + majoranaMinus a m) * majoranaPlus a m *
+          (1 - majoranaMinus a m) =
+          majoranaPlus a m + majoranaMinus a m * majoranaPlus a m -
+            majoranaPlus a m * majoranaMinus a m -
+              majoranaMinus a m * majoranaPlus a m * majoranaMinus a m := by
+                noncomm_ring
+      _ = chiralSupport a m + chiralSupport a m := by
+        rw [hq2q1q2,
+          majoranaMinus_mul_majoranaPlus_eq_chiralSupport h ha,
+          majoranaPlus_mul_majoranaMinus_eq_neg_chiralSupport h ha]
+        abel
+      _ = 2 • chiralSupport a m := (two_nsmul _).symm
+  · unfold cayleyMinus cayleyPlus
+    calc
+      (1 - majoranaMinus a m) * majoranaPlus a m *
+          (1 + majoranaMinus a m) =
+          majoranaPlus a m - majoranaMinus a m * majoranaPlus a m +
+            majoranaPlus a m * majoranaMinus a m -
+              majoranaMinus a m * majoranaPlus a m * majoranaMinus a m := by
+                noncomm_ring
+      _ = -(chiralSupport a m + chiralSupport a m) := by
+        rw [hq2q1q2,
+          majoranaMinus_mul_majoranaPlus_eq_chiralSupport h ha,
+          majoranaPlus_mul_majoranaMinus_eq_neg_chiralSupport h ha]
+        abel
+      _ = -(2 • chiralSupport a m) := by rw [two_nsmul]
 
 end InfoGeometry.Core.DiracSuperalgebra

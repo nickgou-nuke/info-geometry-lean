@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.KitaevBdGPfaffianBridge
@@ -26,8 +32,9 @@ variable {R : Type*} [Ring R]
 def IsMajoranaBasis (N : ℕ) (gamma : Fin (2 * N) → R) : Prop :=
   ∀ a b : Fin (2 * N), gamma a * gamma b + gamma b * gamma a = if a = b then 2 else 0
 
-/-- Kitaev chain Hamiltonian in the topological sweet-spot phase (μ = 0, t = Δ):
-    H = i t ∑_{j=1}^{N-1} γ_{2j} γ_{2j+1}. -/
+/-- Finite sweet-spot bond sum. The ring element `t` is the entire
+coefficient: any complex phase factor must be supplied as part of `t`.
+No self-adjointness or centrality is built into this definition. -/
 def kitaevSweetSpotHamiltonian (N : ℕ) (t : R) (gamma : Fin (2 * N) → R) : R :=
   ∑ j : Fin (N - 1), t * (gamma ⟨2 * j.val + 1, by omega⟩ * gamma ⟨2 * j.val + 2, by omega⟩)
 
@@ -44,6 +51,34 @@ theorem left_boundary_majorana_zero_mode (gamma0 gamma1 gamma2 : R)
     _ = (- (gamma1 * gamma0)) * gamma2 - gamma1 * (- (gamma0 * gamma2)) := by rw [h01_eq, h02_eq]
     _ = - (gamma1 * (gamma0 * gamma2)) + gamma1 * (gamma0 * gamma2) := by simp only [neg_mul, mul_neg, sub_neg_eq_add, mul_assoc]
     _ = 0 := neg_add_cancel _
+
+/-- The left endpoint commutes with the entire finite sweet-spot Hamiltonian.
+The coefficient must commute with that endpoint; it is not assumed central
+by the arbitrary-ring definition of the Hamiltonian. This is a commutator
+zero mode, not a kernel vector of the many-body Hamiltonian. -/
+theorem left_boundary_commutes_sweetSpotHamiltonian
+    {N : ℕ} (hN : 0 < N) (t : R) (gamma : Fin (2 * N) → R)
+    (hgamma : IsMajoranaBasis N gamma)
+    (ht : Commute (gamma ⟨0, by omega⟩) t) :
+    Commute (gamma ⟨0, by omega⟩) (kitaevSweetSpotHamiltonian N t gamma) := by
+  unfold kitaevSweetSpotHamiltonian
+  apply Commute.sum_right
+  intro j _
+  apply ht.mul_right
+  apply sub_eq_zero.mp
+  apply left_boundary_majorana_zero_mode
+  · have hne : (⟨0, by omega⟩ : Fin (2 * N)) ≠
+        ⟨2 * j.val + 1, by omega⟩ := by
+      intro heq
+      have hv : (0 : ℕ) = 2 * j.val + 1 := congrArg Fin.val heq
+      omega
+    simpa [hne] using hgamma ⟨0, by omega⟩ ⟨2 * j.val + 1, by omega⟩
+  · have hne : (⟨0, by omega⟩ : Fin (2 * N)) ≠
+        ⟨2 * j.val + 2, by omega⟩ := by
+      intro heq
+      have hv : (0 : ℕ) = 2 * j.val + 2 := congrArg Fin.val heq
+      omega
+    simpa [hne] using hgamma ⟨0, by omega⟩ ⟨2 * j.val + 2, by omega⟩
 
 /-- **Theorem**: Topological Pfaffian Invariant Sign Classification for Topological Phase. -/
 theorem pfaffian_topological_phase_sign (t_val : ℝ) (ht : 0 < t_val) :

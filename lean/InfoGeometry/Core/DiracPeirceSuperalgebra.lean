@@ -18,7 +18,7 @@ Here we add:
 
 * the odd supercharge intertwines the two supports, `Q P₊ = P₋ Q` and
   `Q P₋ = P₊ Q`;
-* `Q Delta = Delta Q = Q` and `Q^3 = Q`;
+* `Q Delta = Delta Q = Q` (so the imported cube identity gives `Q^3 = Q`);
 * the even and odd active Peirce projections, together with the forward
   parity implications `E₀(X) = X -> [Gamma, X] = 0` and
   `E₁(X) = X -> {Gamma, X} = 0`;
@@ -89,12 +89,14 @@ theorem self_mul_coexactSupport (h : IsMoorePenroseInverse a m) :
   unfold coexactSupport
   rw [← mul_assoc, h.aba_eq_a]
 
+omit [StarRing R] in
 /-- The forward arrow annihilates the exact support. -/
 theorem self_mul_exactSupport (ha : a * a = 0) :
     a * exactSupport a m = 0 := by
   unfold exactSupport
   rw [← mul_assoc, ha, zero_mul]
 
+omit [StarRing R] in
 /-- The coexact support annihilates the forward arrow. -/
 theorem coexactSupport_mul_self (ha : a * a = 0) :
     coexactSupport a m * a = 0 := by
@@ -246,6 +248,30 @@ theorem activeSupport_commute_chiralSupport
   rw [activeSupport_mul_chiralSupport h ha,
     chiralSupport_mul_activeSupport h ha]
 
+/-- The active support times the global involution is the chiral grading. -/
+theorem activeSupport_mul_superInvolution
+    (h : IsMoorePenroseInverse a m) (ha : a * a = 0) :
+    activeSupport a m * superInvolution a m = chiralSupport a m := by
+  unfold superInvolution
+  rw [mul_add, activeSupport_mul_chiralSupport h ha,
+    activeSupport_mul_harmonicSupport h ha, add_zero]
+
+/-- The global involution times the active support is the chiral grading. -/
+theorem superInvolution_mul_activeSupport
+    (h : IsMoorePenroseInverse a m) (ha : a * a = 0) :
+    superInvolution a m * activeSupport a m = chiralSupport a m := by
+  unfold superInvolution
+  rw [add_mul, chiralSupport_mul_activeSupport h ha,
+    harmonicSupport_mul_activeSupport h ha, add_zero]
+
+/-- The active support commutes with the global involution. -/
+theorem activeSupport_commute_superInvolution
+    (h : IsMoorePenroseInverse a m) (ha : a * a = 0) :
+    activeSupport a m * superInvolution a m =
+      superInvolution a m * activeSupport a m := by
+  rw [activeSupport_mul_superInvolution h ha,
+    superInvolution_mul_activeSupport h ha]
+
 /-! ## The global involution on the Peirce supports -/
 
 /-- The global involution acts as `+1` on the exact support. -/
@@ -296,9 +322,9 @@ theorem harmonicSupport_mul_superInvolution (h : IsMoorePenroseInverse a m)
   rw [mul_add, harmonicSupport_mul_chiralSupport h ha,
     h.harmonicSupport_idem ha, zero_add]
 
+omit [StarRing R] in
 /-- The global involution is the reflection in the coexact support. -/
-theorem superInvolution_eq_one_sub_two_smul_coexactSupport
-    (h : IsMoorePenroseInverse a m) (ha : a * a = 0) :
+theorem superInvolution_eq_one_sub_two_smul_coexactSupport :
     superInvolution a m = 1 - 2 • coexactSupport a m := by
   unfold superInvolution chiralSupport harmonicSupport
   rw [two_nsmul]
@@ -308,7 +334,6 @@ theorem superInvolution_eq_one_sub_two_smul_coexactSupport
 theorem superInvolution_star (h : IsMoorePenroseInverse a m)
     (ha : a * a = 0) :
     star (superInvolution a m) = superInvolution a m := by
-  obtain ⟨hp, hq⟩ := InfoGeometry.Singular.ProjectionSectors.mp_supports h
   have hH := h.harmonic_isStarProjection ha
   unfold superInvolution chiralSupport harmonicSupport exactSupport coexactSupport
   rw [star_add, star_sub, h.ab_adj_eq, h.ba_adj_eq,
@@ -391,6 +416,196 @@ theorem chiralSupport_anticommute_of_oddPeircePart_eq_self
   have h0 := oddPeircePart_chiralSupport_anticommute h ha x
   rwa [hx] at h0
 
+/-- The active support commutes with the even active Peirce part.  This is the
+centrality of `Delta = Q^2` on the even part of the active Peirce algebra. -/
+theorem activeSupport_commute_evenPeircePart
+    (h : IsMoorePenroseInverse a m) (ha : a * a = 0) (x : R) :
+    activeSupport a m * evenPeircePart a m x =
+      evenPeircePart a m x * activeSupport a m := by
+  have hz : coexactSupport a m * exactSupport a m = 0 :=
+    InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse.coexactSupport_mul_exactSupport ha
+  have hpp : (exactSupport a m + coexactSupport a m) *
+      (exactSupport a m * x * exactSupport a m) =
+        exactSupport a m * x * exactSupport a m := by
+    calc
+      (exactSupport a m + coexactSupport a m) *
+          (exactSupport a m * x * exactSupport a m) =
+        (exactSupport a m * exactSupport a m) * x * exactSupport a m +
+          (coexactSupport a m * exactSupport a m) * x * exactSupport a m := by
+            noncomm_ring
+      _ = exactSupport a m * x * exactSupport a m := by
+        rw [h.exactSupport_idem, hz]
+        noncomm_ring
+  have hqq : (exactSupport a m + coexactSupport a m) *
+      (coexactSupport a m * x * coexactSupport a m) =
+        coexactSupport a m * x * coexactSupport a m := by
+    calc
+      (exactSupport a m + coexactSupport a m) *
+          (coexactSupport a m * x * coexactSupport a m) =
+        (exactSupport a m * coexactSupport a m) * x * coexactSupport a m +
+          (coexactSupport a m * coexactSupport a m) * x * coexactSupport a m := by
+            noncomm_ring
+      _ = coexactSupport a m * x * coexactSupport a m := by
+        rw [h.exactSupport_mul_coexactSupport ha, h.coexactSupport_idem]
+        noncomm_ring
+  have hrr : (exactSupport a m + coexactSupport a m) *
+      (harmonicSupport a m * x * harmonicSupport a m) = 0 := by
+    calc
+      (exactSupport a m + coexactSupport a m) *
+          (harmonicSupport a m * x * harmonicSupport a m) =
+        (exactSupport a m * harmonicSupport a m) * x * harmonicSupport a m +
+          (coexactSupport a m * harmonicSupport a m) * x * harmonicSupport a m := by
+            noncomm_ring
+      _ = 0 := by
+        rw [h.exactSupport_mul_harmonicSupport ha,
+          h.coexactSupport_mul_harmonicSupport ha]
+        noncomm_ring
+  have hpp' : (exactSupport a m * x * exactSupport a m) *
+      (exactSupport a m + coexactSupport a m) =
+        exactSupport a m * x * exactSupport a m := by
+    calc
+      (exactSupport a m * x * exactSupport a m) *
+          (exactSupport a m + coexactSupport a m) =
+        exactSupport a m * x * (exactSupport a m * exactSupport a m) +
+          exactSupport a m * x * (exactSupport a m * coexactSupport a m) := by
+            noncomm_ring
+      _ = exactSupport a m * x * exactSupport a m := by
+        rw [h.exactSupport_idem, h.exactSupport_mul_coexactSupport ha]
+        noncomm_ring
+  have hqq' : (coexactSupport a m * x * coexactSupport a m) *
+      (exactSupport a m + coexactSupport a m) =
+        coexactSupport a m * x * coexactSupport a m := by
+    calc
+      (coexactSupport a m * x * coexactSupport a m) *
+          (exactSupport a m + coexactSupport a m) =
+        coexactSupport a m * x * (coexactSupport a m * exactSupport a m) +
+          coexactSupport a m * x * (coexactSupport a m * coexactSupport a m) := by
+            noncomm_ring
+      _ = coexactSupport a m * x * coexactSupport a m := by
+        rw [hz, h.coexactSupport_idem]
+        noncomm_ring
+  have hrr' : (harmonicSupport a m * x * harmonicSupport a m) *
+      (exactSupport a m + coexactSupport a m) = 0 := by
+    calc
+      (harmonicSupport a m * x * harmonicSupport a m) *
+          (exactSupport a m + coexactSupport a m) =
+        harmonicSupport a m * x * (harmonicSupport a m * exactSupport a m) +
+          harmonicSupport a m * x * (harmonicSupport a m * coexactSupport a m) := by
+            noncomm_ring
+      _ = 0 := by
+        rw [h.harmonicSupport_mul_exactSupport ha,
+          h.harmonicSupport_mul_coexactSupport ha]
+        noncomm_ring
+  unfold evenPeircePart activeSupport
+  calc
+    (exactSupport a m + coexactSupport a m) *
+        (exactSupport a m * x * exactSupport a m +
+          coexactSupport a m * x * coexactSupport a m +
+          harmonicSupport a m * x * harmonicSupport a m) =
+      (exactSupport a m + coexactSupport a m) *
+          (exactSupport a m * x * exactSupport a m) +
+        (exactSupport a m + coexactSupport a m) *
+          (coexactSupport a m * x * coexactSupport a m) +
+        (exactSupport a m + coexactSupport a m) *
+          (harmonicSupport a m * x * harmonicSupport a m) := by
+            noncomm_ring
+    _ = exactSupport a m * x * exactSupport a m +
+        coexactSupport a m * x * coexactSupport a m := by
+          rw [hpp, hqq, hrr]
+          abel
+    _ = (exactSupport a m * x * exactSupport a m) *
+          (exactSupport a m + coexactSupport a m) +
+        (coexactSupport a m * x * coexactSupport a m) *
+          (exactSupport a m + coexactSupport a m) +
+        (harmonicSupport a m * x * harmonicSupport a m) *
+          (exactSupport a m + coexactSupport a m) := by
+          rw [hpp', hqq', hrr']
+          abel
+    _ = (exactSupport a m * x * exactSupport a m +
+          coexactSupport a m * x * coexactSupport a m +
+          harmonicSupport a m * x * harmonicSupport a m) *
+        (exactSupport a m + coexactSupport a m) := by
+          noncomm_ring
+
+/-- The active support commutes with the odd active Peirce part.  This is the
+centrality of `Delta = Q^2` on the odd part of the active Peirce algebra. -/
+theorem activeSupport_commute_oddPeircePart
+    (h : IsMoorePenroseInverse a m) (ha : a * a = 0) (x : R) :
+    activeSupport a m * oddPeircePart a m x =
+      oddPeircePart a m x * activeSupport a m := by
+  have hz : coexactSupport a m * exactSupport a m = 0 :=
+    InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse.coexactSupport_mul_exactSupport ha
+  have h1 : (exactSupport a m + coexactSupport a m) *
+      (exactSupport a m * x * coexactSupport a m) =
+        exactSupport a m * x * coexactSupport a m := by
+    calc
+      (exactSupport a m + coexactSupport a m) *
+          (exactSupport a m * x * coexactSupport a m) =
+        (exactSupport a m * exactSupport a m) * x * coexactSupport a m +
+          (coexactSupport a m * exactSupport a m) * x * coexactSupport a m := by
+            noncomm_ring
+      _ = exactSupport a m * x * coexactSupport a m := by
+        rw [h.exactSupport_idem, hz]
+        noncomm_ring
+  have h2 : (exactSupport a m + coexactSupport a m) *
+      (coexactSupport a m * x * exactSupport a m) =
+        coexactSupport a m * x * exactSupport a m := by
+    calc
+      (exactSupport a m + coexactSupport a m) *
+          (coexactSupport a m * x * exactSupport a m) =
+        (exactSupport a m * coexactSupport a m) * x * exactSupport a m +
+          (coexactSupport a m * coexactSupport a m) * x * exactSupport a m := by
+            noncomm_ring
+      _ = coexactSupport a m * x * exactSupport a m := by
+        rw [h.exactSupport_mul_coexactSupport ha, h.coexactSupport_idem]
+        noncomm_ring
+  have h1' : (exactSupport a m * x * coexactSupport a m) *
+      (exactSupport a m + coexactSupport a m) =
+        exactSupport a m * x * coexactSupport a m := by
+    calc
+      (exactSupport a m * x * coexactSupport a m) *
+          (exactSupport a m + coexactSupport a m) =
+        exactSupport a m * x * (coexactSupport a m * exactSupport a m) +
+          exactSupport a m * x * (coexactSupport a m * coexactSupport a m) := by
+            noncomm_ring
+      _ = exactSupport a m * x * coexactSupport a m := by
+        rw [hz, h.coexactSupport_idem]
+        noncomm_ring
+  have h2' : (coexactSupport a m * x * exactSupport a m) *
+      (exactSupport a m + coexactSupport a m) =
+        coexactSupport a m * x * exactSupport a m := by
+    calc
+      (coexactSupport a m * x * exactSupport a m) *
+          (exactSupport a m + coexactSupport a m) =
+        coexactSupport a m * x * (exactSupport a m * exactSupport a m) +
+          coexactSupport a m * x * (exactSupport a m * coexactSupport a m) := by
+            noncomm_ring
+      _ = coexactSupport a m * x * exactSupport a m := by
+        rw [h.exactSupport_idem, h.exactSupport_mul_coexactSupport ha]
+        noncomm_ring
+  unfold oddPeircePart activeSupport
+  calc
+    (exactSupport a m + coexactSupport a m) *
+        (exactSupport a m * x * coexactSupport a m +
+          coexactSupport a m * x * exactSupport a m) =
+      (exactSupport a m + coexactSupport a m) *
+          (exactSupport a m * x * coexactSupport a m) +
+        (exactSupport a m + coexactSupport a m) *
+          (coexactSupport a m * x * exactSupport a m) := by
+            noncomm_ring
+    _ = exactSupport a m * x * coexactSupport a m +
+        coexactSupport a m * x * exactSupport a m := by
+          rw [h1, h2]
+    _ = (exactSupport a m * x * coexactSupport a m) *
+          (exactSupport a m + coexactSupport a m) +
+        (coexactSupport a m * x * exactSupport a m) *
+          (exactSupport a m + coexactSupport a m) := by
+          rw [h1', h2']
+    _ = (exactSupport a m * x * coexactSupport a m +
+          coexactSupport a m * x * exactSupport a m) *
+        (exactSupport a m + coexactSupport a m) := by
+          noncomm_ring
+
 /-- The supercharge has no even active component. -/
 theorem evenPeircePart_normalizedDirac (h : IsMoorePenroseInverse a m)
     (ha : a * a = 0) :
@@ -423,9 +638,9 @@ theorem oddPeircePart_normalizedDirac (h : IsMoorePenroseInverse a m)
 
 /-! ## The odd anticommutator and its correction term -/
 
+omit [StarRing R] in
 /-- The odd anticommutator sends the forward arrow to the active support. -/
-theorem diracAnticommutator_self (h : IsMoorePenroseInverse a m)
-    (ha : a * a = 0) :
+theorem diracAnticommutator_forward (ha : a * a = 0) :
     diracAnticommutator a m a = activeSupport a m := by
   unfold diracAnticommutator activeSupport normalizedDirac exactSupport
     coexactSupport

@@ -126,6 +126,8 @@ import InfoGeometry.Canonical.VirasoroProjectColimitBridge
 import InfoGeometry.Canonical.OctonionCondensate
 import InfoGeometry.Canonical.CliffordOctonionG2Automorphism
 import InfoGeometry.Canonical.KitaevChainTopologicalPhasePfaffian
+import InfoGeometry.Canonical.MajoranaChiralPfaffianBridge
+import InfoGeometry.Canonical.MajoranaChiralPfaffianBridgeAudit
 import InfoGeometry.Canonical.MajoranaPfaffian4
 import InfoGeometry.Canonical.KitaevToricCodeStarPlaquetteAlgebra
 import InfoGeometry.Canonical.SouriauBostConnesTransition

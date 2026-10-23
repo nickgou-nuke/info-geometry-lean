@@ -164,6 +164,33 @@ No arbitrary-ring version of that stronger equivalence is asserted here.
 Likewise the dependency diagram is not a formal strict causal poset without
 a specified carrier, relation, and order laws.
 
+### Subsequent star-ring “loop closure” intake
+
+The proposed local conclusion is valid conditional algebra: if e₂e₁=0,
+d=e₁Xe₂, and B is an MP inverse of d, then d²=B²=0. Writing p=dB,
+q=Bd, the existing square-zero owner gives pq=qp=0. Hence both the
+symmetric overlap pq+qp and [p,q] vanish; the Jordan associator
+assoc(p,Z,q) vanishes for every Z. This is distinct from assoc(d,d,B),
+which need not vanish. The latter equals −2d for the unnormalized product
+and −d/2 for the repository's normalized product.
+
+The global assertion that N²≠0 forces both obstructions to be nonzero is
+false. For the real shift J₃, the existing `MoorePenroseSectorExamples`
+owner proves the supports p=diag(1,1,0) and q=diag(0,1,1). Thus
+pq+qp=diag(0,2,0)≠0 while [p,q]=0 and assoc(p,Z,q)=0 for every Z,
+despite J₃²≠0. In characteristic two the same shift and transpose satisfy
+the Penrose equations but even pq+qp=0. Thus the symmetric-overlap
+nonvanishing assertion cannot be lifted to arbitrary star rings unchanged.
+
+The supplied `NoncommutativeStarRingPeirceKantor` module and LaTeX table also
+repeat the false triple identity corrected above and call d+B self-adjoint
+without an additional hypothesis. Their blanket verification claim is rejected.
+The maintained square-zero, Drazin-residue, and shell-cascade owners already
+use generic rings/star rings; introducing duplicate inverse predicates does
+not generalize them. MP and Drazin inverse existence remains conditional,
+including on operator-algebra carriers. A cycle in a conceptual workflow is
+not a cycle in a strict partial order or a theorem-dependency DAG.
+
 The inverse-kernel owner distinguishes S=AD, R=AM, and T=MA. Its left chiral
 anomaly is [S,T], its right anomaly [S,R], and the Einstein anomaly [R,S].
 Thus Einstein is minus the **right**, not generally the left, anomaly.
@@ -235,6 +262,160 @@ The prose above states the necessary corrections; it is not a claim that all
 these adjacent statements have been newly formalized.
 
 ## Verification record
+
+### Split-Clifford / Cayley intake corrections (2026-10-23)
+
+The user's revised polynomial products have the correct normalization:
+with `Q1=d+B`, `Q2=d-B`, `Gamma=dB-Bd`, one has
+`Q2*Q1=Gamma` and `Q1*Q2=-Gamma`, not twice these values.
+These identities do not identify MP inversion with adjunction: for example,
+over real matrices `d=2 E12` has MP inverse `B=(1/2) E21`, not `star d`.
+The support projections and Gamma are self-adjoint by the MP laws; the
+claimed adjoint properties of Q1 and Q2 require the separate partial-isometry
+condition `B=star d`.
+
+The factors `Cplus=1+Q2` and `Cminus=1-Q2` obey
+`Cminus*Cplus=Cplus*Cminus=1+Delta`. Thus the displayed products with
+opposite factors are sandwiches, not conjugations by inverse elements.
+In a unital real algebra the genuine inverse and Cayley transform are
+
+```
+(1-Q2)^(-1) = h + (1/2) (Delta+Q2)
+U = (1+Q2)(1-Q2)^(-1) = h+Q2
+U^(-1) = h-Q2,   U^2 = h-Delta,   U^4 = 1.
+```
+
+Here `h=1-Delta`. The order divides four, not necessarily exactly four.
+Unitarity of U requires `B=star d`. A general star ring does not supply the
+required division by two. Nor does `Y^3=Y` ensure that `1-Y` is invertible:
+`Y=1` already refutes that assertion in a nonzero ring. Extending Q1 or
+Gamma by h is therefore not automatically their Cayley transform.
+The real Clifford-algebra identification needs a real algebra carrier and
+faithful nonzero active representation, not merely `[Ring A] [StarRing A]`.
+These are algebraic intake corrections, not certification of either pasted
+Lean packet; no duplicate inverse or master-bundle module is introduced.
+
+### CAR to finite-chain intake contract (2026-10-23)
+
+The user identifies SuperchargeCARCCRBridge, MajoranaPfaffianNaturalClosure,
+KitaevChainMajoranaZeroModes, ProjectivePfaffianDeterminantCounts, and
+KreinMajoranaZeroModeBlock as ingredients for an end-to-end bridge.
+Source inspection distinguishes the concrete real doubled CAR carrier, the
+complex 2-by-2 Majorana pair, and the arbitrary-ring chain family. These are
+not identified by naming. The chain owner defines the entire finite sum but
+its existing boundary lemma only treats one bilinear bond. The first narrow
+implementation target is commutation of the left endpoint with that defined
+sum, assuming `IsMajoranaBasis`, positive length, and commutation of the
+coefficient with the endpoint. This is an operator commutator zero mode,
+not a vector in the kernel of the many-body Hamiltonian.
+
+The cited PfaffianKernel contains `pf_sq_eq_det` as input data, and the
+Krein bridge takes an arbitrary `toMatrix` plus an explicit model equality.
+Neither supplies the missing concrete chain coefficient matrix map. A
+nonzero kernel vector and a derived Pfaffian criterion for that same matrix
+remain separate obligations; no bundled end-to-end theorem is claimed here.
+
+The finite-sum lemma `left_boundary_commutes_sweetSpotHamiltonian` is now
+independently accepted with this limited scope. After making the endpoint
+index contradictions explicitly Nat-valued, the locked target build passed
+(4083 jobs), as did the direct Lean and axiom checks. Its dependencies are
+only `propext`, `Classical.choice`, and `Quot.sound`. Source SHA-256 stayed
+`5b20fc2d2178e56f954d277c13d0d4d26371d0cfbf0da1bc30654256e8ed6f46`;
+the staged source matched the worktree. Whitespace passed, with three
+advisory scanner warnings and no blocking findings. Independent A-A accepted
+the source and the explicit-index repair. No full bridge certification follows.
+
+### Undoubled superderivation implementation contract (2026-10-23)
+
+Target owner: `Canonical.ChiralSuperderivationColimit`; existing imports and
+Boolean parity convention are retained. For any associative ring, charge `Q`,
+element `X`, and Boolean parity `p`, prove that applying `oddSuperDerivation`
+twice with the second parity `!p` equals `innerDerivation (Q*Q) X`.
+Then characterize its vanishing exactly by `Commute (Q*Q) X`.
+This closes the undoubled-composition gap in this owner without dividing by
+two, adding an inverse predicate, or imposing scalar/characteristic assumptions.
+The existing doubled anticommutator theorem remains unchanged. The new
+statements do not construct a graded carrier, prove global centrality, or
+classify a generated algebra. Independent A-A accepted both declarations.
+Independent QA passed the locked target build (8927 jobs), direct Lean check,
+static/proxy/whitespace checks, and explicit axiom inspection: both new
+declarations use only `propext`. Owner hash was stable at
+`5c13ec15b6735afc8203c3bc9078a36fdbda81d1e54bb965b164642b689c239b`.
+One pre-existing transport-identity vacuity advisory remains; this is bounded
+acceptance of the two new declarations, not a clean full-repository release.
+
+### Superalgebra intake: corrected carrier and parity contract (2026-10-23)
+
+Provenance: the user-supplied `NoncommutativeDiracSuperalgebra` packet claims
+that its five Peirce corners decompose the full matrix algebra and that its
+odd superderivation is globally square-zero. Independent researcher,
+refuter, and A-A review reject those scope claims (`countermodel_found`).
+The pasted module is not certified by the checks below.
+
+For a square-zero MP pair write `p=dB`, `q=Bd`, `h=1-p-q`,
+`Delta=p+q`, and `Q=d+B`. The five supplied corners span the centralizer
+of `Delta`, namely `Delta A Delta + h A h`, not all of `A`. The omitted
+corners are `p A h`, `h A p`, `q A h`, and `h A q`.
+The correct full Peirce grading uses `e=p+h=1-q`:
+
+- even: `e A e + q A q`;
+- odd: `e A q + q A e`.
+
+These are direct additive corner decompositions over any ring. The
+self-adjoint involution `J=e-q` implements the automorphism `X -> J X J`;
+`J` itself is an element, not an automorphism. Identifying these corner
+spaces with the complete sign eigenspaces requires cancellation of additive
+2-torsion (invertibility of 2 suffices). In characteristic two `J=1`, so
+sign tests cannot recover the still-valid corner grading. The supported
+tripotent `Gamma=p-q` is not a replacement: `h A h` both commutes and
+anticommutes with it.
+
+On homogeneous inputs the odd superderivation is a commutator on even
+elements and an anticommutator on odd elements, with parity flipped after
+each application. Its undoubled square is `[Q^2,X]=[Delta,X]`, not zero
+on the whole ambient algebra. Equivalently, with `alpha(X)=J X J`, use
+`delta(X)=Q X-alpha(X) Q`. Square-zero holds on the centralizer of
+`Delta`. Applying the anticommutator twice without the parity change is
+a different operation.
+
+An exact refutation is `d=E12`, `B=E21` in real 3-by-3 matrices, with
+`h=E33` and `X=E13`. Both supplied five-corner projection parts of `X`
+vanish, yet `X` is nonzero and is even for `J=diag(1,-1,1)`.
+Moreover `[Delta,X]=X`, and the correct superderivation sends
+`E13 -> E23 -> E13`. Thus centrality and square-zero fail globally.
+
+For a commutative scalar ring `R` and a unital associative `R`-algebra `A`,
+the scalar-generated algebra receives the natural surjection
+`Mat_2(R) x R -> R<d,B>`, sending coefficients to `p,d,B,q,h`.
+An isomorphism requires faithful scalar action on the active and harmonic
+factors, respectively (injectivity of `r -> r p` and `r -> r h`). Over a
+field, nonzero `d` and nonzero `h` suffice; zero supports remove factors.
+The full active corner is a different object, with coefficient corner
+`p A p`, not automatically the scalar ring. Ordinary generated-algebra
+claims must also be distinguished from star-closure: `B` need not be
+`star d`, and `Q` need not be self-adjoint.
+
+Reuse is through `Algebra.PeirceDeWittChiralSplit` (parameter `e=1-q`),
+`Core.PeirceDecomposition`, and
+`Canonical.ChiralSuperderivationColimit`. No duplicate inverse predicates,
+bundled master module, or toy replacement was introduced. The latter
+owner's `oddSuperSquare_eq_innerDerivation` is specifically a **doubled**
+superderivation anticommutator, giving `[Q*Q+Q*Q,X]`; it is not an
+undoubled-square theorem or a construction of a graded carrier.
+
+Independent QA returned `accepted_limited_scope`: shared-locked builds of
+PeirceDeWittChiralSplit and ChiralSuperderivationColimit passed (8929 jobs),
+as did sequential locked direct checks. Axiom inspection of
+`peirce_even_odd_decomposition`, `grading_sq`,
+`grading_conjugates_oddPart`,
+`oddSuperAnticommutator_eq_innerDerivation`, and
+`oddSuperSquare_eq_innerDerivation` reported only `propext`.
+Scoped whitespace checks passed and both source hashes stayed stable:
+`aa86e5e1f53423d8bfbb90dadba2c1a38fad4c82fc433db92b9743aa2cbf470a`
+and `d471f8f1a15ea61ff0deeb3b228e63579cc05f41f81cd9d2adf7c4131095f8f9`.
+Dependency dirty-tree notices remain. This does not certify the submitted
+code, the unconditional matrix-algebra classification, or a global
+square-zero differential.
 
 ### Inter-shell intake review (2026-10-23)
 

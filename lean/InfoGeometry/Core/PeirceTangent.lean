@@ -75,10 +75,56 @@ theorem tangent_iff_reflection_anticommutes_of_two_smul_injective
     apply h_two
     simpa using h_reflection
 
+/-- Infinitesimal conjugation preserves the idempotent equation in any ring. -/
+theorem commutator_tangent {p : R} (hp : p * p = p) (a : R) :
+    p * (a * p - p * a) + (a * p - p * a) * p = a * p - p * a := by
+  calc
+    p * (a * p - p * a) + (a * p - p * a) * p =
+        a * (p * p) - (p * p) * a := by noncomm_ring
+    _ = a * p - p * a := by rw [hp]
+
+/-- Every algebraic tangent direction has the canonical generator `[x,p]`.
+This reconstruction uses no division and remains valid in characteristic two. -/
+theorem tangent_eq_double_commutator {p x : R} (hp : p * p = p)
+    (hx : p * x + x * p = x) :
+    (x * p - p * x) * p - p * (x * p - p * x) = x := by
+  have hpxp := ((tangent_iff_diagonal_corners_zero hp).mp hx).1
+  calc
+    (x * p - p * x) * p - p * (x * p - p * x) =
+        x * (p * p) + (p * p) * x - (p * x * p + p * x * p) := by
+          noncomm_ring
+    _ = x := by rw [hp, hpxp, add_zero, sub_zero, add_comm, hx]
+
+/-- Tangency is exactly membership in the image of infinitesimal conjugation. -/
+theorem tangent_iff_exists_commutator {p x : R} (hp : p * p = p) :
+    p * x + x * p = x ↔ ∃ a : R, a * p - p * a = x := by
+  constructor
+  · intro hx
+    exact ⟨x * p - p * x, tangent_eq_double_commutator hp hx⟩
+  · rintro ⟨a, rfl⟩
+    exact commutator_tangent hp a
+
 open InfoGeometry.Singular.MoorePenrose
 open InfoGeometry.Core.DiracSuperalgebra
 
 variable [StarRing R]
+
+/-- Self-adjoint tangent directions at a self-adjoint projection are precisely
+commutators with skew-adjoint generators. This is the algebraic first-order
+unitary-conjugation statement, without asserting an analytic flow exists. -/
+theorem selfAdjoint_tangent_iff_exists_skewAdjoint_generator
+    {p x : R} (hp : p * p = p) (hps : star p = p) :
+    (p * x + x * p = x ∧ star x = x) ↔
+      ∃ a : R, star a = -a ∧ a * p - p * a = x := by
+  constructor
+  · rintro ⟨hx, hxs⟩
+    refine ⟨x * p - p * x, ?_, tangent_eq_double_commutator hp hx⟩
+    rw [star_sub, star_mul, star_mul, hps, hxs]
+    abel
+  · rintro ⟨a, has, rfl⟩
+    refine ⟨commutator_tangent hp a, ?_⟩
+    rw [star_sub, star_mul, star_mul, hps, has]
+    noncomm_ring
 
 /-- Every linear combination of the two MP arrows with signs `+` is an
 algebraic tangent direction at the exact support. No adjoint duality is used. -/

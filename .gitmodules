@@ -98,3 +98,6 @@
 	url = https://github.com/math-inc/OpenGauss.git
 	ignore = dirty
 
+[submodule "external_refs/ProjectiveSpace_lean4"]
+	path = external_refs/ProjectiveSpace_lean4
+	url = https://github.com/smorel394/ProjectiveSpace_lean4.git

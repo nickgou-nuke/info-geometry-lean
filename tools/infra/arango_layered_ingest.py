@@ -14,7 +14,6 @@ from __future__ import annotations
 
 import argparse
 import base64
-import hashlib
 import json
 import os
 from dataclasses import dataclass
@@ -23,6 +22,13 @@ from typing import Any, Iterable
 from urllib.error import HTTPError
 from urllib.parse import quote
 from urllib.request import Request, urlopen
+
+import sys as _sys
+
+_SRC = Path(__file__).resolve().parents[2] / "src"
+if str(_SRC) not in _sys.path:
+    _sys.path.insert(0, str(_SRC))
+from igf.graph.decl_schema import decl_key as _shared_decl_key  # noqa: E402
 
 from tools.infra.arango_env import (
     arango_database,
@@ -123,8 +129,7 @@ def dag_decl_key(name: Any) -> str:
     Arango `_key` material.  Keep the original name in the document and use a
     bounded content hash for graph IDs.
     """
-    raw = str(name)
-    return "d_" + hashlib.sha256(raw.encode("utf-8")).hexdigest()[:40]
+    return _shared_decl_key(str(name))
 
 
 def rewrite_endpoint(endpoint: Any, *, raw_collection: str | None, overlay_collection: str | None, row: dict[str, Any], endpoint_type: str | None = None) -> Any:

@@ -18,6 +18,8 @@ import DAG.Basic
 import DAG.Hydrate
 import DAG.StructuralExport
 import DAG.ExprFingerprint
+import DAG.Schema
+import DAG.TermDigest
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.Vacuity
 
@@ -65,24 +67,20 @@ structure DeclNode where
   canonicalValueHash : Option UInt64
   /-- Explicitly coarse template hash; never an identity key. -/
   dagShapeHash : UInt64
+  /-- L0 key `d_` ++ sha256(name)[:40] (`DAG.Schema.declKey`). -/
+  key : String
+  /-- Repository-relative source path (equals `file` when outside the repository). -/
+  relFile : String
+  /-- Full declaration and selection ranges (`DAG.Schema.sourceRange`). -/
+  range : DAG.Schema.SourceRange
+  /-- L1 nameless digest of the type (`lean-expr-debruijn-v4`). -/
+  typeDigest : DAG.TermDigest.TermDigest
+  /-- L1 nameless digest of the value, when the constant has one. -/
+  valueDigest : Option DAG.TermDigest.TermDigest
 deriving ToJson
 
-structure StreamDecl where
-  name   : String
-  kind   : String
-  module : String
-  file   : String
-  line   : Nat
-  column : Nat
-  doc    : String
-  attrs  : Array String
-  typeFingerprint  : ExprFingerprint
-  valueFingerprint : Option ExprFingerprint
-  shapeHash        : ExprFingerprint
-  canonicalTypeHash : UInt64
-  canonicalValueHash : Option UInt64
-  dagShapeHash : UInt64
-deriving ToJson
+/-- Stream and file mode emit the same declaration record. -/
+abbrev StreamDecl := DeclNode
 
 structure StreamEdge where
   src  : String
@@ -183,15 +181,7 @@ def parseImports (s : String) : Array Import :=
   vals.toArray
 
 def getKindString (ci : ConstantInfo) : String :=
-  match ci with
-  | .thmInfo _    => "theorem"
-  | .axiomInfo _  => "axiom"
-  | .defnInfo _   => "def"
-  | .opaqueInfo _ => "opaque"
-  | .inductInfo _ => "inductive"
-  | .quotInfo _   => "quotient"
-  | .ctorInfo _   => "constructor"
-  | .recInfo _    => "recursor"
+  DAG.Schema.kindString ci
 
 def getModuleName (env : Environment) (n : Name) : Name :=
   match env.getModuleIdxFor? n with
@@ -255,19 +245,13 @@ def addEdge (src dst kind : String) : IndexerM Unit := do
       }
 
 private def shouldIndexDeclString (s : String) : Bool :=
-  !(s.contains "._" || s.endsWith "match_" || s.endsWith "proof_" || s.endsWith "injEq")
+  DAG.Schema.shouldIndexDeclString s
 
 private def parseNamespaceFilters (s : String) : Option (List String) :=
-  let parts :=
-    (s.splitOn ",").map (fun part => part.trimAscii.toString) |>.filter (fun x => x != "" && x != "*")
-  if parts.isEmpty then none else some parts
+  DAG.Schema.parseNamespaceFilters s
 
 private def inNamespaceFilters (nsFilters : Option (List String)) (n : Name) : Bool :=
-  match nsFilters with
-  | none => true
-  | some filters =>
-      let s := toString n
-      filters.any (fun p => s = p || s.startsWith (p ++ "."))
+  DAG.Schema.inNamespaceFilters nsFilters n
 
 private def moduleToLeanFileCached (sp : SearchPath) (mod : Name) : IndexerM String := do
   let st ← get
@@ -282,10 +266,9 @@ def processConstant (env : Environment) (sp : SearchPath) (name : Name) (nameStr
   let modName := getModuleName env name
   let fileStr ← moduleToLeanFileCached sp modName
 
-  let (line, col) ←
-    match (← findDeclarationRanges? name) with
-    | some dr => pure (dr.range.pos.line, dr.range.pos.column)
-    | none    => pure (0, 0)
+  let range ← DAG.Schema.sourceRange name
+  let line := range.line
+  let col := range.column
 
   let docStr ← match ← Lean.findDocString? env name with
                | some d => pure d
@@ -298,6 +281,9 @@ def processConstant (env : Environment) (sp : SearchPath) (name : Name) (nameStr
       attrs := attrs.push "capstone"
     attrs
 
+  let root := (← IO.currentDir).toString
+  let typeDigest := DAG.TermDigest.compute ci.type
+  let valueDigest := (ci.value? (allowOpaque := true)).map DAG.TermDigest.compute
   let typeFingerprint := DAG.computeFingerprint ci.type
   let valueFingerprint := (ci.value? (allowOpaque := true)).map DAG.computeFingerprint
   let shapeFingerprint := shapeFingerprint ci.type
@@ -319,19 +305,20 @@ def processConstant (env : Environment) (sp : SearchPath) (name : Name) (nameStr
         canonicalTypeHash := typeFingerprint.shapeHash
         canonicalValueHash := valueFingerprint.map ExprFingerprint.shapeHash
         dagShapeHash := shapeFingerprint.shapeHash
+        key := DAG.Schema.declKey name
+        relFile := DAG.Schema.relativeTo root fileStr
+        range := range
+        typeDigest := typeDigest
+        valueDigest := valueDigest
       }
     }
 
-  let typeDeps := (collectConsts ci.type).toList
-  for d in typeDeps do
-    if d != name then
-      addEdge nameStr d.toString "type"
-
-  if let some v := ci.value? (allowOpaque := true) then
-    let valDeps := (collectConsts v).toList
-    for d in valDeps do
-      if d != name then
-        addEdge nameStr d.toString "value"
+  -- Raw L3 edges use the shared `DAG.Basic` rule (constants plus projection
+  -- heads, self-loops kept). `filterEdgesAndClassifyLeakage` then restricts
+  -- them to emitted declarations, exactly as `DAG.Schema.isIndexed` does in
+  -- stream mode.
+  for (d, k) in edgesFromConstantInfo ci do
+    addEdge nameStr d.toString (DAG.Schema.edgeKindString k)
 
   try
     if let some (cat, dom, codom) := ← recognizeMorphism ci.type then
@@ -659,10 +646,9 @@ def processConstantStreaming (env : Environment) (sp : SearchPath) (name : Name)
   let modName := getModuleName env name
   let fileStr ← moduleToLeanFile sp modName
 
-  let (line, col) ←
-    match (← findDeclarationRanges? name) with
-    | some dr => pure (dr.range.pos.line, dr.range.pos.column)
-    | none    => pure (0, 0)
+  let range ← DAG.Schema.sourceRange name
+  let line := range.line
+  let col := range.column
 
   let docStr ← match ← Lean.findDocString? env name with
                | some d => pure d
@@ -675,6 +661,9 @@ def processConstantStreaming (env : Environment) (sp : SearchPath) (name : Name)
       attrs := attrs.push "capstone"
     attrs
 
+  let root := (← IO.currentDir).toString
+  let typeDigest := DAG.TermDigest.compute ci.type
+  let valueDigest := (ci.value? (allowOpaque := true)).map DAG.TermDigest.compute
   let typeFingerprint := DAG.computeFingerprint ci.type
   let valueFingerprint := (ci.value? (allowOpaque := true)).map DAG.computeFingerprint
   let shapeFingerprint := shapeFingerprint ci.type
@@ -694,33 +683,24 @@ def processConstantStreaming (env : Environment) (sp : SearchPath) (name : Name)
     canonicalTypeHash := typeFingerprint.shapeHash
     canonicalValueHash := valueFingerprint.map ExprFingerprint.shapeHash
     dagShapeHash := shapeFingerprint.shapeHash
+    key := DAG.Schema.declKey name
+    relFile := DAG.Schema.relativeTo root fileStr
+    range := range
+    typeDigest := typeDigest
+    valueDigest := valueDigest
   }
 
--- Also stream edges for each constant.
--- Edges are kept under the same endpoint rule as the file-mode canonical
--- `edges.jsonl` (`filterEdgesAndClassifyLeakage`): the destination must be a
--- declaration this run emits, i.e. present in the environment, inside the
--- namespace filters, and accepted by `shouldIndexDeclString`. The source is
--- always an emitted declaration. Returns the number of dropped edges.
+-- Also stream edges for each constant: the shared `DAG.Basic` rule
+-- (`edgesFromConstantInfo`) restricted to declarations this run emits
+-- (`DAG.Schema.isIndexed`), identical to file-mode `edges.jsonl`.
+-- Returns the number of dropped edges.
 def streamConstantEdges (env : Environment) (nsFilters : Option (List String))
-    (name : Name) (nameStr : String) (ci : ConstantInfo) : MetaM Nat := do
-  let isIndexed (d : Name) : Bool :=
-    env.contains d && inNamespaceFilters nsFilters d && shouldIndexDeclString d.toString
-  let mut dropped := 0
-  for d in (collectConsts ci.type).toList do
-    if d != name then
-      if isIndexed d then
-        streamWriteJsonl ({ src := nameStr, dst := d.toString, kind := "type" } : StreamEdge)
-      else
-        dropped := dropped + 1
-  if let some v := ci.value? (allowOpaque := true) then
-    for d in (collectConsts v).toList do
-      if d != name then
-        if isIndexed d then
-          streamWriteJsonl ({ src := nameStr, dst := d.toString, kind := "value" } : StreamEdge)
-        else
-          dropped := dropped + 1
-  return dropped
+    (nameStr : String) (ci : ConstantInfo) : MetaM Nat := do
+  let all := edgesFromConstantInfo ci
+  let kept := all.filter fun (d, _) => DAG.Schema.isIndexed env nsFilters d
+  for (d, k) in kept do
+    streamWriteJsonl ({ src := nameStr, dst := d.toString, kind := DAG.Schema.edgeKindString k } : StreamEdge)
+  return all.size - kept.size
 
 def runStreamingIndexer (nsPrefix : String) (importRoot : String) (env : Environment) : MetaM Unit := do
   let srcSearchPath ← liftM Lean.getSrcSearchPath
@@ -740,7 +720,7 @@ def runStreamingIndexer (nsPrefix : String) (importRoot : String) (env : Environ
     let declNode ← processConstantStreaming env srcSearchPath entry.name entry.nameStr entry.ci
     streamWriteJsonl declNode
     -- Also stream edges for this constant
-    dropped := dropped + (← streamConstantEdges env nsFilters entry.name entry.nameStr entry.ci)
+    dropped := dropped + (← streamConstantEdges env nsFilters entry.nameStr entry.ci)
 
   IO.println "" -- flush
   IO.eprintln s!"[Indexer stream] emitted {consts.size} decls; dropped {dropped} edge(s) whose target is outside the indexed declaration set ({importRoot})"

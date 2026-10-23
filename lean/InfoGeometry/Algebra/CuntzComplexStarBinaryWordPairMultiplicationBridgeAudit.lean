@@ -1,0 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.Algebra.CuntzComplexStarBinaryWordPairMultiplicationBridge
+
+#print axioms InfoGeometry.Algebra.CuntzComplexStarBinaryWordPairMultiplicationBridge.complexStarWord_append
+#print axioms InfoGeometry.Algebra.CuntzComplexStarBinaryWordPairMultiplicationBridge.complexStarWord_star_append
+#print axioms InfoGeometry.Algebra.CuntzComplexStarBinaryWordPairMultiplicationBridge.complexStarWordPair
+#print axioms InfoGeometry.Algebra.CuntzComplexStarBinaryWordPairMultiplicationBridge.complexStarWordPair_mul_prefix_cases

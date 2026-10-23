@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 import subprocess
 import sys
@@ -10,6 +9,9 @@ from pathlib import Path
 
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+_SRC = Path(__file__).resolve().parents[2] / "src"
+if str(_SRC) not in sys.path:
+    sys.path.insert(0, str(_SRC))
     from tools.infra.artifacts import (
         normalize_repo_output,
         should_skip_decl_refresh,
@@ -36,6 +38,7 @@ if __package__ in (None, ""):
         arango_password,
         load_repo_arango_env,
     )
+    from igf.graph.decl_schema import decl_key, edge_key
 else:
     from tools.infra.artifacts import (
         normalize_repo_output,
@@ -63,6 +66,7 @@ else:
         arango_password,
         load_repo_arango_env,
     )
+    from igf.graph.decl_schema import decl_key, edge_key
 
 
 def stream_to_arango(
@@ -140,11 +144,12 @@ def stream_to_arango(
             if ("_from" in doc and "_to" in doc) or ("src" in doc and "dst" in doc):
                 # Convert streaming format (src/dst/kind) to ArangoDB format (_from/_to)
                 if "src" in doc and "dst" in doc:
-                    src_key = "d_" + hashlib.sha256(doc["src"].encode()).hexdigest()[:40]
-                    dst_key = "d_" + hashlib.sha256(doc["dst"].encode()).hexdigest()[:40]
-                    doc["_from"] = f"{decl_collection}/{src_key}"
-                    doc["_to"] = f"{decl_collection}/{dst_key}"
+                    # Shared schema keys (igf.graph.decl_schema == DAG.Schema in Lean);
+                    # deterministic edge keys make re-imports idempotent.
                     doc["kind"] = doc.get("kind", "type")
+                    doc["_from"] = f"{decl_collection}/{decl_key(doc['src'])}"
+                    doc["_to"] = f"{decl_collection}/{decl_key(doc['dst'])}"
+                    doc.setdefault("_key", edge_key(doc["src"], doc["kind"], doc["dst"]))
                 edge_batch.append(doc)
                 if len(edge_batch) >= batch_size:
                     # Endpoint declarations may occur later in the alphabetical
@@ -155,8 +160,10 @@ def stream_to_arango(
                     edge_batch = []
             else:
                 # Ensure _key exists
-                if "_key" not in doc and "name" in doc:
-                    doc["_key"] = "d_" + hashlib.sha256(doc["name"].encode()).hexdigest()[:40]
+                if "name" in doc:
+                    # The Lean indexer now emits `key` (DAG.Schema.declKey); fall back
+                    # to the identical Python formula for older producers.
+                    doc["_key"] = doc.get("key") or decl_key(doc["name"])
                 decl_batch.append(doc)
                 if len(decl_batch) >= batch_size:
                     import_batch(decl_collection, decl_batch)

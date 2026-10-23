@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.CuntzConditionalExpectation
@@ -174,6 +179,46 @@ theorem cylinderProjection_children_sum (w : List (Fin n)) :
     _ = cuntzWordShift w * 1 * cuntzWordShiftDag w := by
           rw [cuntz_ranges_sum_one n]
     _ = cylinderProjection w := by simp [cylinderProjection]
+
+/-! The same prefix partition holds for arbitrary word pairs, not only
+    diagonal cylinder projections.  This is the matrix-unit refinement used
+    when the finite UHF core is read from the full noncommutative Cuntz
+    carrier. -/
+
+theorem cuntzWordPair_children_sum (u v : List (Fin n)) :
+    (∑ i : Fin n,
+      cuntzWordShift (u ++ [i]) * cuntzWordShiftDag (v ++ [i])) =
+      cuntzWordShift u * cuntzWordShiftDag v := by
+  have h_append_shift : ∀ i,
+      cuntzWordShift (u ++ [i]) = cuntzWordShift u * cuntzS n i := by
+    intro i
+    rw [cuntzWordShift_append]
+    simp [cuntzWordShift]
+  have h_append_dag : ∀ i,
+      cuntzWordShiftDag (v ++ [i]) = cuntzSdag n i * cuntzWordShiftDag v := by
+    intro i
+    rw [cuntzWordShiftDag_append]
+    simp [cuntzWordShiftDag]
+  calc
+    (∑ i : Fin n,
+        cuntzWordShift (u ++ [i]) * cuntzWordShiftDag (v ++ [i]))
+        = ∑ i : Fin n,
+            (cuntzWordShift u * cuntzS n i) *
+              (cuntzSdag n i * cuntzWordShiftDag v) := by
+          apply Finset.sum_congr rfl
+          intro i _
+          rw [h_append_shift i, h_append_dag i]
+    _ = ∑ i : Fin n,
+          cuntzWordShift u * (cuntzS n i * cuntzSdag n i) *
+            cuntzWordShiftDag v := by
+          simp_rw [mul_assoc]
+    _ = cuntzWordShift u *
+          (∑ i : Fin n, cuntzS n i * cuntzSdag n i) *
+            cuntzWordShiftDag v := by
+          rw [Finset.mul_sum, Finset.sum_mul]
+    _ = cuntzWordShift u * 1 * cuntzWordShiftDag v := by
+          rw [cuntz_ranges_sum_one n]
+    _ = cuntzWordShift u * cuntzWordShiftDag v := by simp
 
 theorem expectation_cylinderProjection_fixed_length_one (i : Fin n) :
     expectation n (cylinderProjection [i]) = cylinderProjection [i] := by

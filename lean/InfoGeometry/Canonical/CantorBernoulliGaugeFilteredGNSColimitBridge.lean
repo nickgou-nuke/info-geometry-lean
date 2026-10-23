@@ -246,6 +246,26 @@ theorem gaugeGNSColimitVacuum_stage_expectation
       exact gns_state_expectation_recovery
         (gaugeStateFamily.state n).functional A
 
+/-! The colimit vacuum readout is compatible with every native finite-stage
+transition on the full noncommutative matrix carrier.  This is the GNS/state
+square; it is independent of the spatial boundary vector state and does not
+restrict `A` to a diagonal or assume diagonalizability. -/
+
+theorem gaugeGNSColimitVacuum_stage_transition_expectation
+    {m n : ℕ} (hmn : m ≤ n) (A : CStarMatrixStage m) :
+    ⟪gaugeGNSColimitVacuum,
+      globalStageRepresentationStarAlgHom
+        gaugeStage gaugeSystem gaugeStateFamily n
+        (gaugeSystem.map hmn A)
+        gaugeGNSColimitVacuum⟫_ℂ =
+      ⟪gaugeGNSColimitVacuum,
+        globalStageRepresentationStarAlgHom
+          gaugeStage gaugeSystem gaugeStateFamily m A
+          gaugeGNSColimitVacuum⟫_ℂ := by
+  rw [gaugeGNSColimitVacuum_stage_expectation,
+    gaugeGNSColimitVacuum_stage_expectation]
+  exact cstarMatrixTraceState_transition_general hmn A
+
 /-- The finite-stage GNS vacuum recovers the native normalized matrix trace for
 every observable, not only for the binary matrix-unit generators. -/
 theorem gaugeGNSStage_matrix_expectation

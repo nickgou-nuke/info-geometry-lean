@@ -32,6 +32,7 @@ open InfoGeometry.Canonical.CantorProjectiveLimit
 open InfoGeometry.Canonical.CantorProjectiveLimit.PrefixProjectiveLimit
 open InfoGeometry.Canonical.CantorProjectiveBernoulliMeasure
 open InfoGeometry.OperatorAlgebra.CantorBernoulliCuntzStarRepresentationBridge
+open InfoGeometry.OperatorAlgebra.CantorBernoulliCuntzOperatorTreeBridge
 open InfoGeometry.OperatorAlgebra.CantorBernoulliFiniteMatrixUnitBridge
 open InfoGeometry.OperatorAlgebra.CantorBernoulliCylinderProjectionBridge
 open InfoGeometry.OperatorAlgebra.CantorBernoulliSpatialNativeStateBridge
@@ -80,6 +81,31 @@ theorem cantorBernoulliComplexStarLift_word (w : List Bool) :
         InfoGeometry.OperatorAlgebra.CantorBernoulliCuntzStarRepresentationBridge.cantorBernoulliComplexStarLift_Sℂ,
         ih]
       rfl
+
+/-! The corrected quotient also reads arbitrary word-pair matrix units, not
+    only diagonal cylinder projections.  The finite `BitWord` specialization
+    is the off-diagonal companion
+    to the diagonal bridge below and reuses the existing `complexStarWord`
+    owner rather than introducing a second word representation. -/
+
+theorem complexStarQuotient_word_pair_eq_boundaryMatrixUnit
+    (u v : List Bool) :
+    cantorBernoulliComplexStarLift
+        (complexStarWord u * star (complexStarWord v)) =
+      operatorMatrixUnit u v := by
+  rw [map_mul, cantorBernoulliComplexStarLift_word, map_star,
+    cantorBernoulliComplexStarLift_word]
+  rw [← operatorWordDag_eq_star]
+  rfl
+
+theorem complexStarQuotient_bitWordMatrixUnit_eq_boundaryMatrixUnit
+    (n : ℕ) (u v : Fin n → Bool) :
+    cantorBernoulliComplexStarLift
+        (complexStarWord (List.ofFn u) *
+          star (complexStarWord (List.ofFn v))) =
+      bitWordUnit n u v := by
+  rw [complexStarQuotient_word_pair_eq_boundaryMatrixUnit]
+  rfl
 
 /-- The corrected complexified-real quotient's diagonal word projection has
 the Bernoulli mass of the corresponding projective-limit prefix fiber after

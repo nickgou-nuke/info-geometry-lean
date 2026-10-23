@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.CuntzModularAutomorphism
@@ -98,6 +103,13 @@ theorem sigma_cuntzWordShiftDag (w : List (Fin n)) :
   | cons i w ih =>
       simp [cuntzWordShiftDag, map_mul, sigma_cuntzSdag, ih, wordPhaseInv,
         smul_smul]
+
+theorem sigma_cuntzWordPair (u v : List (Fin n)) :
+    sigma n primes t (cuntzWordShift u * cuntzWordShiftDag v) =
+      (wordPhase primes t u * wordPhaseInv primes t v) •
+        (cuntzWordShift u * cuntzWordShiftDag v) := by
+  rw [map_mul, sigma_cuntzWordShift, sigma_cuntzWordShiftDag,
+    smul_mul_smul]
 
 theorem sigma_cuntzWordShift_append (w₁ w₂ : List (Fin n)) :
     sigma n primes t (cuntzWordShift (w₁ ++ w₂)) =

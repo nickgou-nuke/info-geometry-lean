@@ -208,6 +208,8 @@ external_refs/*
 !external_refs/FrogBird/
 !external_refs/FrogBird/*.json
 !external_refs/FrogBird/*.md
+!external_refs/ProjectiveSpace_lean4
+!external_refs/ProjectiveSpace_lean4/
 leantrail_v13_honest_sorry_dropins/
 leantrail_v14_critic_lane/
 .DEEPSEEK_API_KEY

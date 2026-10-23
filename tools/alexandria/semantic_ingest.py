@@ -5,9 +5,27 @@ import argparse
 import hashlib
 import json
 import re
+import sys
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Iterable
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
+for _p in (REPO_ROOT, REPO_ROOT / "src"):
+    if str(_p) not in sys.path:
+        sys.path.insert(0, str(_p))
+
+from tools.alexandria.schema import content_hash, infer_source_kind  # noqa: E402
+from tools.alexandria.structural_chunking import (  # noqa: E402
+    chunk_section_lines,
+    chunk_source_text,
+    classify_markdown_chunk as classify_chunk,
+    split_sections,
+    tokenize,
+)
+
+DEFAULT_SUFFIXES = (".md", ".txt")
+SUPPORTED_SUFFIXES = (".md", ".markdown", ".txt", ".rst", ".lean", ".tex", ".py", ".jsonl")
+SKIP_DIR_NAMES = {".git", ".lake", "build", "node_modules", "__pycache__", ".venv", "venv", "dist"}
 
 HEADER_RE = re.compile(r"^(#{1,6})\s+(.*\S)\s*$")
 IDENTIFIER_RE = re.compile(r"`([^`]+)`|\b([A-Z][A-Za-z0-9_.]+(?:\.[A-Z][A-Za-z0-9_.]+)*)\b|\b([a-z][A-Za-z0-9_]+(?:_[A-Za-z0-9_]+)+)\b")
@@ -108,57 +126,9 @@ def detect_domain(path: Path) -> str:
     return "default"
 
 
-def tokenize(text: str) -> list[str]:
-    return sorted({tok.lower() for tok in re.findall(r"[A-Za-z][A-Za-z0-9_]{2,}", text)})
-
-
-def classify_chunk(title: str, text: str) -> str:
-    blob = f"{title}\n{text}".lower()
-    if any(word in blob for word in ["theorem", "lemma", "proposition", "corollary"]):
-        return "theorem"
-    if "proof" in blob:
-        return "proof"
-    if any(word in blob for word in ["hypothesis", "assume", "suppose", "given"]):
-        return "hypothesis"
-    if "definition" in blob:
-        return "definition"
-    if "remark" in blob:
-        return "remark"
-    return "chunk"
-
-
-def split_sections(text: str) -> list[tuple[int, str, list[str]]]:
-    sections: list[tuple[int, str, list[str]]] = []
-    current_title = "Front Matter"
-    current_level = 1
-    current_lines: list[str] = []
-    for line in text.splitlines():
-        match = HEADER_RE.match(line)
-        if match:
-            if current_lines or not sections:
-                sections.append((current_level, current_title, current_lines))
-            current_level = len(match.group(1))
-            current_title = match.group(2).strip()
-            current_lines = []
-        else:
-            current_lines.append(line)
-    sections.append((current_level, current_title, current_lines))
-    return [section for section in sections if section[2] or section[1]]
-
-
-def chunk_section_lines(lines: Iterable[str]) -> list[str]:
-    blocks: list[str] = []
-    current: list[str] = []
-    for line in lines:
-        if not line.strip():
-            if current:
-                blocks.append("\n".join(current).strip())
-                current = []
-            continue
-        current.append(line)
-    if current:
-        blocks.append("\n".join(current).strip())
-    return [block for block in blocks if block]
+# tokenize / classify_chunk / split_sections / chunk_section_lines were
+# line-for-line copies of tools.alexandria.structural_chunking; they are now
+# imported from that owner module (see the imports above).
 
 
 def corpus_stoplist(domain: str) -> set[str]:
@@ -329,7 +299,13 @@ def extract_relations(chunk: Chunk, entities: list[Entity]) -> list[Relation]:
 
 
 def digest_document(path: Path) -> tuple[dict, list[Section], list[Chunk], list[Entity], list[dict], list[Relation]]:
-    text = path.read_text(encoding="utf-8")
+    """Chunk one file via ``structural_chunking.chunk_source_text``.
+
+    Markdown/text keys and texts are identical to the historical in-module
+    chunker; ``.lean``/``.tex``/``.py``/``.jsonl`` get structural chunks.
+    Chunk provenance carries ``lineStart``/``lineEnd`` where available.
+    """
+    text = path.read_text(encoding="utf-8", errors="replace")
     document_key = stable_key("doc", path.as_posix())
     domain = detect_domain(path)
     document = {
@@ -338,52 +314,53 @@ def digest_document(path: Path) -> tuple[dict, list[Section], list[Chunk], list[
         "title": path.stem,
         "sourceType": path.suffix.lower().lstrip(".") or "text",
         "domain": domain,
+        "contentHash": content_hash(text),
+        "sourceKind": infer_source_kind(path),
     }
-    sections: list[Section] = []
+    result = chunk_source_text(path, text, document, path.resolve(), domain)
+    sections = [
+        Section(key=s.key, documentKey=s.documentKey, title=s.title, level=s.level, ordinal=s.ordinal)
+        for s in result.sections
+    ]
     chunks: list[Chunk] = []
     entities: list[Entity] = []
-    adjacent_edges: list[dict] = []
     relations: list[Relation] = []
-    chunk_ordinal = 0
-    prev_chunk_key: str | None = None
-    for section_ordinal, (level, title, lines) in enumerate(split_sections(text), start=1):
-        section = Section(
-            key=stable_key("section", document_key, section_ordinal, title),
-            documentKey=document_key,
-            title=title,
-            level=level,
-            ordinal=section_ordinal,
+    for sc in result.chunks:
+        provenance = dict(sc.provenance)
+        provenance["ordinal"] = sc.ordinal
+        chunk = Chunk(
+            key=sc.key,
+            documentKey=sc.documentKey,
+            sectionKey=sc.sectionKey,
+            ordinal=sc.ordinal,
+            chunkKind=sc.chunkKind,
+            title=sc.title,
+            text=sc.text,
+            tokens=sc.tokens,
+            provenance=provenance,
         )
-        sections.append(section)
-        for block_index, block in enumerate(chunk_section_lines(lines), start=1):
-            chunk_ordinal += 1
-            chunk = Chunk(
-                key=stable_key("chunk", section.key, block_index, block[:80]),
-                documentKey=document_key,
-                sectionKey=section.key,
-                ordinal=chunk_ordinal,
-                chunkKind=classify_chunk(title, block),
-                title=title,
-                text=block,
-                tokens=tokenize(block),
-                provenance={"path": path.as_posix(), "section": title, "ordinal": chunk_ordinal, "domain": domain},
-            )
-            chunks.append(chunk)
-            chunk_entities = extract_entities(chunk, domain=domain)
-            entities.extend(chunk_entities)
-            relations.extend(extract_relations(chunk, chunk_entities))
-            if prev_chunk_key is not None:
-                adjacent_edges.append(
-                    {
-                        "_key": stable_key("adj", prev_chunk_key, chunk.key),
-                        "fromChunkKey": prev_chunk_key,
-                        "toChunkKey": chunk.key,
-                        "kind": "adjacent",
-                        "weight": 1.0,
-                    }
-                )
-            prev_chunk_key = chunk.key
-    return document, sections, chunks, entities, adjacent_edges, relations
+        chunks.append(chunk)
+        chunk_entities = extract_entities(chunk, domain=domain)
+        entities.extend(chunk_entities)
+        relations.extend(extract_relations(chunk, chunk_entities))
+    return document, sections, chunks, entities, list(result.adjacent_edges), relations
+
+
+def iter_input_files(raw_inputs: list[str], suffixes: set[str], max_bytes: int) -> list[Path]:
+    """Expand inputs; directories are walked skipping VCS/build/cache dirs."""
+    out: list[Path] = []
+    for raw in raw_inputs:
+        root = Path(raw)
+        if not root.is_dir():
+            out.append(root)
+            continue
+        for path in sorted(root.rglob("*")):
+            rel_parts = path.relative_to(root).parts[:-1]
+            if any(part in SKIP_DIR_NAMES or part.startswith(".") for part in rel_parts):
+                continue
+            if path.is_file() and path.suffix.lower() in suffixes and path.stat().st_size <= max_bytes:
+                out.append(path)
+    return out
 
 
 # [lossless-compact] write_jsonl folded into igf.common.json_io.write_jsonl
@@ -394,15 +371,17 @@ def main() -> int:
     ap = argparse.ArgumentParser(description="Digest markdown/text into Alexandria semantic chunks")
     ap.add_argument("--input", action="append", required=True, help="input file or directory")
     ap.add_argument("--output", required=True, help="output directory for JSONL artifacts")
+    ap.add_argument(
+        "--suffix",
+        action="append",
+        choices=SUPPORTED_SUFFIXES,
+        help=f"file suffix to include when walking directories (repeatable; default: {' '.join(DEFAULT_SUFFIXES)})",
+    )
+    ap.add_argument("--max-file-mb", type=float, default=16.0, help="skip larger files when walking directories")
     args = ap.parse_args()
 
-    inputs: list[Path] = []
-    for raw in args.input:
-        path = Path(raw)
-        if path.is_dir():
-            inputs.extend(sorted(p for p in path.rglob("*") if p.is_file() and p.suffix.lower() in {".md", ".txt"}))
-        else:
-            inputs.append(path)
+    suffixes = set(args.suffix or DEFAULT_SUFFIXES)
+    inputs = iter_input_files(args.input, suffixes, int(args.max_file_mb * 1024 * 1024))
 
     documents: list[dict] = []
     sections: list[dict] = []

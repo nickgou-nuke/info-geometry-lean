@@ -181,6 +181,35 @@ theorem cstarStageToBitWordStage_succ_dyadic
   exact GenuineMatrixStageMorphism.bondFun_eq_dyadicMatrixEmbedding n
     (cstarStageToBitWordStage n A)
 
+/-! The one-step C⋆/BitWord square iterates along the native filtered
+transition system.  The target map is the existing genuine matrix-stage
+morphism; no second successor system is introduced. -/
+
+theorem cstarStageToBitWordStage_map_stageMorphism
+    {i j : ℕ} (hij : i ≤ j) (A : CStarMatrixStage i) :
+    cstarStageToBitWordStage j (gaugeSystem.map hij A) =
+      GenuineMatrixStageMorphism.stageMorphism i j hij
+        (cstarStageToBitWordStage i A) := by
+  induction hij with
+  | refl =>
+      simp [cstarStageToBitWordStage,
+        GenuineMatrixStageMorphism.stageMorphism]
+  | @step j hij ih =>
+      have hmap :
+          gaugeSystem.map (Nat.le.step hij) A =
+            gaugeSystem.map (Nat.le_succ j) (gaugeSystem.map hij A) := by
+        have hcomp := congrArg (fun f => f A)
+          (gaugeSystem.map_comp hij (Nat.le_succ j))
+        simpa using hcomp.symm
+      rw [hmap, cstarStageToBitWordStage_succ]
+      rw [GenuineMatrixStageMorphism.stageMorphism_step hij]
+      change ComplexMatrixStage.bondFun j
+          (cstarStageToBitWordStage j (gaugeSystem.map hij A)) =
+        ComplexMatrixStage.bondFun j
+          (GenuineMatrixStageMorphism.stageMorphism i j hij
+            (cstarStageToBitWordStage i A))
+      rw [ih]
+
 /-- The finite boundary representation is compatible with the native C⋆
 transition after transporting its source to the BitWord carrier. -/
 theorem boundaryRep_cstarTransition_succ

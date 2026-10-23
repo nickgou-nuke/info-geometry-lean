@@ -33,6 +33,7 @@ import InfoGeometry.Modular.PSL2ZAction
 import InfoGeometry.Physics.BostConnesThermalTime
 import InfoGeometry.Canonical.CounterexampleAlternatives
 import InfoGeometry.Canonical.FiniteDimensionalCCRObstruction
+import InfoGeometry.Canonical.WittPureSpinorVacuum
 import InfoGeometry.Canonical.KreinKramersAlternatives
 import InfoGeometry.Canonical.DrazinCartanAlternatives
 import InfoGeometry.Canonical.CasiniBekensteinBound
@@ -458,6 +459,8 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Canonical.CounterexampleAlternatives.inner_inverse_iff_kantor_defect_zero
 #check InfoGeometry.Canonical.FiniteDimensionalCCRObstruction.no_scalar_commutator_one
 #check InfoGeometry.Canonical.FiniteDimensionalCCRObstruction.no_nonzero_scalar_commutator
+#check InfoGeometry.Canonical.PureSpinor.vacuum_is_not_pure
+#check InfoGeometry.Canonical.PureSpinor.vacuum_annihilator_eq_bot
 #check InfoGeometry.Streaming.TwoBoundaryDyadCompression.boundaryDyad_matrix_apply
 #check InfoGeometry.Streaming.TwoBoundaryDyadCompression.boundaryDyad_matrix_of_same_ray
 #check InfoGeometry.Streaming.TwoBoundaryDyadCompression.boundaryDyad_self_adjoint_of_same_ray

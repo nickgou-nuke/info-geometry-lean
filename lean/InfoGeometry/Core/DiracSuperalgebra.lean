@@ -519,6 +519,42 @@ theorem globalMajoranaReflection_conjugates_majoranaMinus
       rw [h_core, h₁, h₂, h₃]
       simp
 
+/- The reflection fixes the symmetric charge from which it is built. -/
+theorem globalMajoranaReflection_conjugates_majoranaPlus
+    {a m : R} (h : IsMoorePenroseInverse a m) (ha : a * a = 0) :
+    globalMajoranaReflection a m * majoranaPlus a m *
+        globalMajoranaReflection a m = majoranaPlus a m := by
+  have h_core : majoranaPlus a m * majoranaPlus a m *
+      majoranaPlus a m = majoranaPlus a m := by
+    simpa [majoranaPlus, normalizedDirac] using normalizedDirac_cube h ha
+  have h_plus_harm : majoranaPlus a m * harmonicSupport a m = 0 := by
+    simpa [majoranaPlus, normalizedDirac] using
+      h.normalizedDirac_mul_harmonicSupport ha
+  have h_harm_plus : harmonicSupport a m * majoranaPlus a m = 0 := by
+    simpa [majoranaPlus, normalizedDirac] using
+      h.harmonicSupport_mul_normalizedDirac ha
+  unfold globalMajoranaReflection
+  calc
+    (majoranaPlus a m + harmonicSupport a m) * majoranaPlus a m *
+        (majoranaPlus a m + harmonicSupport a m) =
+      majoranaPlus a m * majoranaPlus a m * majoranaPlus a m +
+        majoranaPlus a m * majoranaPlus a m * harmonicSupport a m +
+        harmonicSupport a m * majoranaPlus a m * majoranaPlus a m +
+        harmonicSupport a m * majoranaPlus a m * harmonicSupport a m := by
+          noncomm_ring
+    _ = majoranaPlus a m := by
+      have h₁ : majoranaPlus a m * majoranaPlus a m *
+          harmonicSupport a m = 0 := by
+        rw [mul_assoc, h_plus_harm, mul_zero]
+      have h₂ : harmonicSupport a m * majoranaPlus a m *
+          majoranaPlus a m = 0 := by
+        rw [h_harm_plus, zero_mul]
+      have h₃ : harmonicSupport a m * majoranaPlus a m *
+          harmonicSupport a m = 0 := by
+        rw [h_harm_plus, zero_mul]
+      rw [h_core, h₁, h₂, h₃]
+      simp
+
 /-- Complete split-signature quartet package.  The identities are polynomial
 identities in the ring; no division by `2` or invertibility of Cayley factors
 is used. -/

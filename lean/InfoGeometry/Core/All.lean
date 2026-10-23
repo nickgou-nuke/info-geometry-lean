@@ -17,6 +17,7 @@ import InfoGeometry.Core.JordanSquareZeroAudit
 import InfoGeometry.Core.DiracSuperalgebra
 import InfoGeometry.Core.DiracSuperalgebraAudit
 import InfoGeometry.Core.PeirceTangent
+import InfoGeometry.Core.PeirceCompressionDefect
 import InfoGeometry.Core.PeirceTangentAudit
 import InfoGeometry.Core.PeirceTangentCounterexample
 import InfoGeometry.Core.SuperGrassmannianSusy

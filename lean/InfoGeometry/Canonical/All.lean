@@ -1273,6 +1273,8 @@ import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Canonical.DrazinShellCascade
 import InfoGeometry.Canonical.DrazinShellCascadeAudit
 import InfoGeometry.Canonical.DrazinInterShellHodge
+import InfoGeometry.Canonical.ObliqueShellCounterexample
+import InfoGeometry.Canonical.BKMEntrywiseDissipation
 import InfoGeometry.Canonical.DrazinInterShellHodgeAudit
 import InfoGeometry.Canonical.DrazinInterShellJordan
 import InfoGeometry.Canonical.CantorBernoulliBoundaryMatrixStageLimitBridge

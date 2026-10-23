@@ -36,6 +36,9 @@ import InfoGeometry.Canonical.FiniteDimensionalCCRObstruction
 import InfoGeometry.Canonical.WittPureSpinorVacuum
 import InfoGeometry.Canonical.MoorePenroseDrazinObstruction
 import InfoGeometry.Canonical.PeirceSquareZeroExamples
+import InfoGeometry.Canonical.ObliqueShellCounterexample
+import InfoGeometry.Canonical.BKMEntrywiseDissipation
+import InfoGeometry.Core.PeirceCompressionDefect
 import InfoGeometry.Canonical.CoxeterBraggCore
 import InfoGeometry.Canonical.KreinKramersAlternatives
 import InfoGeometry.Canonical.DrazinCartanAlternatives
@@ -466,6 +469,13 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Canonical.MoorePenroseDrazinObstruction.square_zero_moore_penrose_not_drazin_index_one
 #check InfoGeometry.Canonical.PeirceSquareZeroExamples.reciprocal_sum_not_selfAdjoint
 #check InfoGeometry.Canonical.PeirceSquareZeroExamples.proposed_triple_identity_false
+#check InfoGeometry.Canonical.ObliqueShellCounterexample.oblique_mp_family
+#check InfoGeometry.Canonical.ObliqueShellCounterexample.oblique_corner_mp
+#check InfoGeometry.Canonical.ObliqueShellCounterexample.oblique_inverse_not_reverse_corner
+#check InfoGeometry.Canonical.EntrywiseBKMOnsagerMobility.bkm_freeEnergy_rate_nonpos
+#check InfoGeometry.Canonical.EntrywiseBKMOnsagerMobility.bkm_pureDissipation_rate_nonpos
+#check InfoGeometry.Core.PeirceCompressionDefect.compression_mul_defect
+#check InfoGeometry.Core.PeirceCompressionDefect.compression_defect_sum
 #check InfoGeometry.Canonical.CoxeterBraggCore.projected_square_defect
 #check InfoGeometry.Canonical.CoxeterBraggCore.star_bragg_factor
 #check InfoGeometry.Canonical.CoxeterBraggCore.fin2_bragg_factor_nonzero

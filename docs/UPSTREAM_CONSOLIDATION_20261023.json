@@ -12,6 +12,13 @@
   },
   "batches": [
     {
+      "branches": ["feat/supercolor-source-closure"],
+      "source_commit": "41284b6c0",
+      "status": "owner_comparison_complete_selective_port_in_progress",
+      "note": "New head discovered on refreshed upstream fetch. James read actual main/branch owners: reuse native coexact_absorption_iff_equal, orthogonal_pair_not_commute, support star lemmas and bracket/Jacobi owners. Port source endpoint/action/closure lemmas, orthogonal/common-source incompatibility, MP-only total-charge star, and faithful nonunital color matrix embedding. Exclude duplicate conjunction certificates; sl(k|1) requires an explicit graded supertrace-zero representation. Sandbox source-action candidate assigned to Kepler. CI/checker review remains pending.",
+      "embedding_contract": "Extend Matrix ι ι R by zero at the none row/column in Matrix (Option ι) (Option ι) R. Reuse native NonUnitalRingHom, prove injectivity, product/commutator and star preservation; show image(1) differs from ambient1 for Nontrivial R; identify Matrix.single units with SupercolorMatrixExamples.colorBoson_eq_single. No unital hom, Lie-superalgebra representation, or common-source centrality claim."
+    },
+    {
       "branches": [
         "feat/attention-value-geometry",
         "feat/attention-analogy-fibers",
@@ -83,8 +90,8 @@
       ],
       "status": "additive_owner_alignment_in_progress",
       "note": "Do not replace DrazinRegularization, DrazinShellCascade, MoorePenroseSectors: existing namespaces and consumers would regress. JordanAssociatorRing and scaled MP counterexamples committed in 04caccfb4. Native ObliqueShellCounterexample ports actual branch matrices through existing PowerMPFamily, drazinShellProj, interShellPeirceCorner and MP conversion owners.",
-      "oblique_verification": "Popper final source-semantic PASS. Parent locked ObliqueShellCounterexampleAudit build PASS3197, all six audited declarations use only propext, Classical.choice, Quot.sound; no local warnings. Strict screen zero traps after explicit noncommutativity witness. Log /tmp/oblique-shell-audit-build.log. Independent QA pending; not yet accepted or committed.",
-      "remaining": ["independent oblique QA", "remaining branch declaration correspondence", "aggregate and harness integration"]
+      "oblique_verification": "Popper final source-semantic PASS. Parent repaired an intervening Jordan dependency proof and reran InfoGeometryTests plus ObliqueAudit: PASS13966, including aggregate imports and check coverage. Ampere independent retry PASS3197: six standard3 axiom footprints, no owner warnings, unchanged source hashes, prior zero-finding vacuity/static checks remain applicable. Evidence /tmp/qa-a-oblique-retry-kkpbzhjw and /tmp/consolidation-integration-tests.log. Accepted limited scope: actual native shells and inverse-not-reverse-corner counterexample, no minimal-index claim.",
+      "remaining": ["remaining branch declaration correspondence", "full consolidated snapshot review"]
     },
     {
       "branches": [

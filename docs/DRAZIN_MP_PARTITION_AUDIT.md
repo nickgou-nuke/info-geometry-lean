@@ -464,6 +464,29 @@ physical identifications, or stability of the global worktree. Earlier QA
 rejection during concurrent source editing was superseded only after the
 repaired snapshot passed these independent checks.
 
+### Idempotent tangent intake: theorem contract
+
+The 2026-10-23 supercolor intake conflates two different corner geometries.
+For `d_i` in `p A s_i` and `B_i` in `s_i A p`, orthogonal source
+idempotents annihilate `d_i B_j`, not `B_i d_j`. A shared normalized target
+can produce matrix units `B_i d_j`; fully disjoint pairs instead have central
+sector supports and no off-diagonal color products. Neither counting charges
+nor a conjunction of identities establishes a Lie-superalgebra isomorphism.
+
+The first source delta is `Core/PeirceTangent.lean`: over an arbitrary
+associative ring, for `p*p=p`, prove `p*x+x*p=x` equivalent to vanishing
+diagonal Peirce corners, and recover its off-diagonal expansion. Derive the
+reflection anticommutator with its explicit factor of two. Connect the
+equation to `Singular.MoorePenrose.exactSupport` using the existing
+`Core.DiracSuperalgebra.partial_matrix_unit_identities`, whose hypotheses
+are `IsMoorePenroseInverse a m` and `a*a=0`. Do not duplicate the MP predicate.
+No manifold, self-adjoint tangent-space identification, characteristic-free
+reflection converse, SUSY classification, or shared-target centrality is
+claimed. The source-confirmed existing Grassmannian owner
+`Canonical/SuperGrassmannianManifold` defines algebraic linear idempotents;
+its name is not evidence for those stronger claims. The finite contracts are
+kernel-checked in `Core.PeirceTangent` and `Core.SuperGrassmannianSusy`.
+
 ### Earlier inverse-sector audit
 
 The implementation is collected by `Canonical/InverseSectorAudit.lean`.

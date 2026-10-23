@@ -130,10 +130,28 @@ theorem blockCausalSinkhorn_zero_future_dependence
     causalPrefixPool_congr_of_le hΩ₁_causal hΩ₂_causal hΩ_eq hV_eq
   have h_xt : x₁ t = x₂ t := h_past t (le_refl t)
   have h_logS : blockCausalLogScore x₁ τ Θ₀ t = blockCausalLogScore x₂ τ Θ₀ t := by
-    unfold blockCausalLogScore
+    change
+      (fun k l => (∑ d,
+        causalPrefixPool (causalPrefixWeights (fun s => (x₁ s).m_shape))
+          (fun s => (x₁ s).K_chunk) t k d * (x₁ t).Q_lat l d) / τ + Θ₀ k l :
+        Matrix K K ℝ) =
+      (fun k l => (∑ d,
+        causalPrefixPool (causalPrefixWeights (fun s => (x₂ s).m_shape))
+          (fun s => (x₂ s).K_chunk) t k d * (x₂ t).Q_lat l d) / τ + Θ₀ k l :
+        Matrix K K ℝ)
     rw [hK_pool, h_xt]
   refine ⟨h_logS, by rw [h_logS], by rw [h_logS], by rw [h_logS], ?_⟩
-  unfold blockCausalSinkhornChunkOutput
+  change
+    (fun j l => (x₁ t).V_tok j l *
+      sinkhornDetGain T (blockCausalLogScore x₁ τ Θ₀ t) l : Matrix L K ℝ) *
+      Ψ (sinkhornMatrix T (blockCausalLogScore x₁ τ Θ₀ t))
+        (causalPrefixPool (causalPrefixWeights (fun s => (x₁ s).m_shape))
+          (fun s => (x₁ s).V_shape) t) (x₁ t).V_det =
+    (fun j l => (x₂ t).V_tok j l *
+      sinkhornDetGain T (blockCausalLogScore x₂ τ Θ₀ t) l : Matrix L K ℝ) *
+      Ψ (sinkhornMatrix T (blockCausalLogScore x₂ τ Θ₀ t))
+        (causalPrefixPool (causalPrefixWeights (fun s => (x₂ s).m_shape))
+          (fun s => (x₂ s).V_shape) t) (x₂ t).V_det
   rw [hV_pool, h_logS, h_xt]
 
 /-- **Future Single-Chunk Perturbation Corollary (`blockCausalSinkhorn_update_future_eq`):**
@@ -159,7 +177,8 @@ theorem blockCausalSinkhorn_update_future_eq
 theorem blockCausalSinkhornChunkOutput_isBlockCausal
     (Ψ : Matrix K K ℝ → Matrix K D ℝ → Matrix K D ℝ → Matrix K D ℝ)
     (T : ℕ) (τ : ℝ) (Θ₀ : Matrix K K ℝ) :
-    IsBlockCausalOperator (fun x t => blockCausalSinkhornChunkOutput Ψ T τ Θ₀ x t) :=
+    IsBlockCausalOperator (C := C)
+      (fun (x : C → ChunkInput L K D) t => blockCausalSinkhornChunkOutput Ψ T τ Θ₀ x t) :=
   fun t x₁ x₂ h_past =>
     (blockCausalSinkhorn_zero_future_dependence Ψ T τ Θ₀ x₁ x₂ t h_past).2.2.2.2
 
@@ -212,8 +231,15 @@ theorem normalizedChunkOutput_eq_responsibility_readout
         Ψ (sinkhornMatrix T (blockCausalLogScore x τ Θ₀ t))
           (causalPrefixPool (causalPrefixWeights (fun s => (x s).m_shape))
             (fun s => (x s).V_shape) t) (x t).V_det l d := by
-  unfold normalizedChunkOutput blockCausalSinkhornChunkOutput
-  rw [Matrix.mul_apply, Finset.sum_div]
+  let weights : K → ℝ := fun l => (x t).V_tok j l *
+    sinkhornDetGain T (blockCausalLogScore x τ Θ₀ t) l
+  let signal : K → ℝ := fun l =>
+    Ψ (sinkhornMatrix T (blockCausalLogScore x τ Θ₀ t))
+      (causalPrefixPool (causalPrefixWeights (fun s => (x s).m_shape))
+        (fun s => (x s).V_shape) t) (x t).V_det l d
+  change (∑ l, weights l * signal l) / detectorMass T τ Θ₀ x t j =
+    ∑ l, (weights l / detectorMass T τ Θ₀ x t j) * signal l
+  rw [Finset.sum_div]
   apply Finset.sum_congr rfl
   intro l _
   ring
@@ -222,16 +248,28 @@ theorem normalizedChunkOutput_eq_responsibility_readout
 theorem normalizedChunkOutput_isBlockCausal
     (Ψ : Matrix K K ℝ → Matrix K D ℝ → Matrix K D ℝ → Matrix K D ℝ)
     (T : ℕ) (τ : ℝ) (Θ₀ : Matrix K K ℝ) :
-    IsBlockCausalOperator (fun x t => normalizedChunkOutput Ψ T τ Θ₀ x t) := by
+    IsBlockCausalOperator (C := C)
+      (fun (x : C → ChunkInput L K D) t => normalizedChunkOutput Ψ T τ Θ₀ x t) := by
   intro t x₁ x₂ hpast
   have h := blockCausalSinkhorn_zero_future_dependence Ψ T τ Θ₀ x₁ x₂ t hpast
   have ht := hpast t le_rfl
+  have hmass : detectorMass T τ Θ₀ x₁ t = detectorMass T τ Θ₀ x₂ t := by
+    funext j
+    change (∑ l, (x₁ t).V_tok j l *
+      sinkhornDetGain T (blockCausalLogScore x₁ τ Θ₀ t) l) =
+        ∑ l, (x₂ t).V_tok j l *
+          sinkhornDetGain T (blockCausalLogScore x₂ τ Θ₀ t) l
+    rw [h.1, ht]
   ext j d
-  simp only [normalizedChunkOutput, h.2.2.2.2, detectorMass, h.1, ht]
+  change blockCausalSinkhornChunkOutput Ψ T τ Θ₀ x₁ t j d /
+    detectorMass T τ Θ₀ x₁ t j =
+      blockCausalSinkhornChunkOutput Ψ T τ Θ₀ x₂ t j d /
+        detectorMass T τ Θ₀ x₂ t j
+  rw [h.2.2.2.2, hmass]
 
 /-- Direct specialization to the actual normalized chunk pipeline on raw
 normed inputs. This closes the gap between the generic derivative result and
-the summary structure, for fixed parameters and any fixed local solver. -/
+summary structure, for fixed parameters and any fixed local solver. -/
 theorem encoded_normalized_future_derivative
     {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     (encode : C → E → ChunkInput L K D)
@@ -249,7 +287,7 @@ theorem encoded_normalized_future_derivative
       (0 : E →L[ℝ] ℝ) (x s₀) ∧
     ℓ.comp (0 : E →L[ℝ] Matrix L D ℝ) = 0 := by
   exact blockCausal_future_hasFDerivAt_zero_and_pullback_zero
-    ((normalizedChunkOutput_isBlockCausal Ψ T τ Θ₀).encode encode) x hts₀ ℓ
+    ((normalizedChunkOutput_isBlockCausal (C := C) Ψ T τ Θ₀).encode encode) x hts₀ ℓ
 
 end
 end InfoGeometry.Routing.BlockCausalSinkhorn

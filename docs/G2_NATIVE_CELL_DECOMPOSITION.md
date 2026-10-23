@@ -30,4 +30,7 @@ passed. QA build evidence: `/tmp/g2-native-cell-decomposition-qa.log`.
 
 This acceptance establishes native unique cell membership, the dependent-sum
 equivalence, and generation. It does not establish the two-cell BN2 transition
-or repair the separate eight-versus-thirty-two residual coordinate mismatch.
+or identify the eight-element inversion coordinates with the thirty-two-element
+residual subgroup. The latter already has a constructive replacement in
+`G2BruhatResidualEquiv.correctedSimpleResidualCoordinateEquiv`, using five
+Boolean coordinates, with an explicit coordinate-readback theorem.

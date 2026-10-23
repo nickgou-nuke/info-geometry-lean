@@ -40,9 +40,10 @@
       "status": "imported_targeted_build_passed_with_warnings",
       "integration": "Routing.All imports added",
       "remaining": [
-        "independent audit",
-        "branch docs and CI review"
-      ]
+        "independent final kernel/axiom acceptance",
+        "scope documentation checkpoint"
+      ],
+      "semantic_review": "Popper source-semantic PASS on all6owners, matching c8960e2893dd8f0477e090ba3b6fb14269f40b74. Corrected coupling_readout comment to independence rather than precise sole information loss; no affine-independence assumption is implicit."
     },
     {
       "branches": [
@@ -59,10 +60,10 @@
       ],
       "status": "imported_targeted_build_passed_with_warnings",
       "remaining": [
-        "independent runtime acceptance passed: 63 tests, zero skips; CI integration pending",
-        "aggregate imports",
-        "independent audit"
-      ]
+        "independent final kernel/axiom acceptance",
+        "native serialized runtime CI integration"
+      ],
+      "semantic_review": "Popper PASS5owners with stable hashes: Stein boundary/nilpotence, native Gramian inverse predicates, bipartite log effects, constructive finite pivot compression, and conditional reduced Sinkhorn equations remain distinct claims. No iteration convergence or runtime universal correctness asserted."
     },
     {
       "branches": [
@@ -102,12 +103,24 @@
       "note": "Do not replace DrazinRegularization, DrazinShellCascade, MoorePenroseSectors: existing namespaces and consumers would regress. JordanAssociatorRing and scaled MP counterexamples committed in 04caccfb4. Native ObliqueShellCounterexample ports actual branch matrices through existing PowerMPFamily, drazinShellProj, interShellPeirceCorner and MP conversion owners.",
       "oblique_verification": "Popper final source-semantic PASS. Parent repaired an intervening Jordan dependency proof and reran InfoGeometryTests plus ObliqueAudit: PASS13966, including aggregate imports and check coverage. Ampere independent retry PASS3197: six standard3 axiom footprints, no owner warnings, unchanged source hashes, prior zero-finding vacuity/static checks remain applicable. Evidence /tmp/qa-a-oblique-retry-kkpbzhjw and /tmp/consolidation-integration-tests.log. Accepted limited scope: actual native shells and inverse-not-reverse-corner counterexample, no minimal-index claim.",
       "remaining": [
-        "Exact extinction and leading-step faithfulness candidate checking",
-        "Ordered DMP interface final QA",
         "matrix-action and example consequence correspondence",
-        "full consolidated snapshot review"
+        "aggregate integration and full consolidated snapshot review"
       ],
-      "declaration_review": "James read-only comparison: most branch partition/shell claims already native. Selectively adapt exact extinction, leading-step faithfulness and ordered DMP outer-inverse interface; preserve canonical PowerMPFamily and oblique counterexample definitions. Do not import duplicate shell hierarchy."
+      "declaration_review": "James read-only comparison: most branch partition/shell claims already native. Selectively adapt exact extinction, leading-step faithfulness and ordered DMP outer-inverse interface; preserve canonical PowerMPFamily and oblique counterexample definitions. Do not import duplicate shell hierarchy.",
+      "shell_and_dmp_verification": {
+        "status": "independently_accepted_limited_scope",
+        "evidence": "/tmp/qa-a-shell-final-retry-wrkqefh3",
+        "result": "Ampere final locked DrazinShellExtinctionAudit PASS3184;12 standard-only axiom footprints; no scoped warnings; strict7filegate zero findings;7stablehashes, other6 equal prior three-audit PASS3201. Popper semantic PASS.",
+        "sha256": {
+          "lean/InfoGeometry/Core/MajoranaSupportSwap.lean": "eb9ad74ee70c5497091c2aa76c758436bf54545584e16dc16688171c37048738",
+          "lean/InfoGeometry/Core/MajoranaSupportSwapAudit.lean": "7779d0f3e2defd46030fdf6f0d267da7cd97cee2b25de95ea4ab4a4d0141c992",
+          "lean/InfoGeometry/Core/RightPowerExtinction.lean": "455a70e46e28c4d126c89bfee1da2bbb106ffebe8a0371581c824e9c4c608487",
+          "lean/InfoGeometry/Canonical/DrazinMoorePenrosePartition.lean": "09a3b883a934d97eccf35a9065e5952e91642fc272d625a3f9aac47b7873caf6",
+          "lean/InfoGeometry/Canonical/DrazinMoorePenrosePartitionAudit.lean": "d0db252e8cefad2dbd7505bfee3b83a930c6fdc8ddc117ff0abeddfaafb36144",
+          "lean/InfoGeometry/Canonical/DrazinShellExtinction.lean": "f32915368ad475e3e8793d18fcdf103580ab89ba6b5b318770b768b4c70bcc7d",
+          "lean/InfoGeometry/Canonical/DrazinShellExtinctionAudit.lean": "03c48df02556773e0c764ffe6c617ed7a605d0f1bd999ba7a8becaf42f03ca43"
+        }
+      }
     },
     {
       "branches": [
@@ -151,6 +164,25 @@
         "feat/mass-spec-multienergy-identifiability"
       ],
       "status": "ancestor_of_local_main_at_inventory"
+    },
+    {
+      "branches": [
+        "feat/cartan-drazin-mp-cycle"
+      ],
+      "source_commit": "6a2dd2123",
+      "status": "newly_fetched_source_review_pending",
+      "modules": [
+        "Core.IdempotentCartan",
+        "Canonical.DrazinMPCartan",
+        "Canonical.CartanDrazinMPExamples"
+      ],
+      "remaining": [
+        "compare actual declarations against native Peirce/Drazin/MP owners and concurrent NilpotentToCartanDrazinMPPoset work",
+        "independent semantic review and targeted kernel/axiom acceptance",
+        "review branch workflow and checker without replacing native root CI"
+      ],
+      "note": "Fetched 2026-10-23; four branch commits ahead of local main at inventory. No branch files promoted yet; preserve concurrent owner edits."
     }
-  ]
+  ],
+  "runtime_ci_review": "James source-semantic PASS on promoted native runtime acceptance helper, CI integration and final Git inventory regression. Seven domain suites (77 tests) and eight generated certificate checks planned; initial parent run of six helper regressions plus77 domain tests passed. New seventh helper regression and independent eight-certificate QA pending. Full native CLI correctly reaches and rejects Atlas/GIFT path provenance preflight; this is not CI acceptance. No preflight bypass added. Actual independent run exposed version-output conflation: Lake dependency warnings preceded the Lean banner. Runner now logs stdout/stderr separately and parses only version stdout, while certificate audit still checks combined diagnostics. Final A-A and source-frozen independent QA pending."
 }

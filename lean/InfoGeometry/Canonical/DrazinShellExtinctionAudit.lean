@@ -1,0 +1,19 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Canonical.DrazinShellExtinction
+
+#print axioms InfoGeometry.Core.RightPowerExtinction.right_extinction_iff
+#print axioms InfoGeometry.Canonical.DrazinShellExtinction.drazinShellProj_exact_extinction
+#print axioms InfoGeometry.Canonical.DrazinShellExtinction.drazinShellProj_partial_sum
+#print axioms InfoGeometry.Canonical.DrazinShellExtinction.supported_mul_drazinRangeProj
+#print axioms InfoGeometry.Canonical.DrazinShellExtinction.drazinShellProj_right_complement
+#print axioms InfoGeometry.Canonical.DrazinShellExtinction.drazinShellProj_step_right_complement
+#print axioms InfoGeometry.Canonical.DrazinShellExtinction.drazinShellProj_step_range_zero
+#print axioms InfoGeometry.Canonical.DrazinShellExtinction.drazinShellProj_step_eq_lower
+#print axioms InfoGeometry.Canonical.DrazinShellExtinction.drazinShellProj_mul_pow_eq_zero
+#print axioms InfoGeometry.Canonical.DrazinShellExtinction.lower_shell_sum_mul_pow_eq_zero
+#print axioms InfoGeometry.Canonical.DrazinShellExtinction.drazinShellProj_leading_step_power
+#print axioms InfoGeometry.Canonical.DrazinShellExtinction.drazinShellProj_leading_step_faithful

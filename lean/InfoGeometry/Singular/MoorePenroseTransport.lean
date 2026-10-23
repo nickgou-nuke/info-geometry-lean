@@ -127,6 +127,31 @@ theorem IsMoorePenroseInverse.similarity_iff {a b g h : R}
     (similarity_selfAdjoint_iff_gram_commute hab.ab_adj_eq hleft hright)
     (similarity_selfAdjoint_iff_gram_commute hab.ba_adj_eq hleft hright)
 
+/-- Equality of an actual target inverse with the transported source inverse
+is characterized by the two Gram commutation equations. -/
+theorem IsMoorePenroseInverse.target_eq_similarity_iff {a b c g h : R}
+    (hab : IsMoorePenroseInverse a b) (hc : IsMoorePenroseInverse (g * a * h) c)
+    (hleft : h * g = 1) (hright : g * h = 1) :
+    c = g * b * h ↔
+      (a * b) * (star g * g) = (star g * g) * (a * b) ∧
+      (b * a) * (star g * g) = (star g * g) * (b * a) := by
+  constructor
+  · intro heq
+    rw [heq] at hc
+    exact (hab.similarity_iff hleft hright).mp hc
+  · intro hcomm
+    exact MoorePenrose_unique hc ((hab.similarity_iff hleft hright).mpr hcomm)
+
+/-- Fixed-involution similarity fails exactly when at least one support
+projection fails to commute with the Gram element. -/
+theorem IsMoorePenroseInverse.target_ne_similarity_iff {a b c g h : R}
+    (hab : IsMoorePenroseInverse a b) (hc : IsMoorePenroseInverse (g * a * h) c)
+    (hleft : h * g = 1) (hright : g * h = 1) :
+    c ≠ g * b * h ↔
+      (a * b) * (star g * g) ≠ (star g * g) * (a * b) ∨
+      (b * a) * (star g * g) ≠ (star g * g) * (b * a) := by
+  rw [ne_eq, hab.target_eq_similarity_iff hc hleft hright, not_and_or]
+
 /-- Given an actual target inverse, covariance is equivalent to local
 self-adjointness of the two transported support idempotents. The map need
 not be injective, surjective, or star-preserving. -/

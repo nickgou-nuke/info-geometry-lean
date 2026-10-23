@@ -21,6 +21,7 @@ variable {R : Type*} [Ring R] [StarRing R]
 variable {ι : Type*} {d b : ι → R}
 
 /-- Exact product before any common-source simplification. -/
+omit [StarRing R] in
 theorem colorBoson_mul_middle (i j l m : ι) :
     colorBoson d b i j * colorBoson d b l m = d i * (b j * d l) * b m := by
   simp only [colorBoson, mul_assoc]

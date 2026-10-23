@@ -211,6 +211,18 @@ theorem cyclic_additive_readout_vanishes_of_split_identity
       exact hcyclic _ _
     _ = 0 := by simp [hzero]
 
+theorem no_normalized_cyclic_additive_readout_of_split_identity
+    {C K ι : Type*} [Monoid C] [AddCommMonoid C] [Ring K] [Nontrivial K]
+    [Fintype ι] (s t : ι → C)
+    (hpartition : (∑ i, s i * t i) = 1)
+    (hzero : ∀ i, t i * s i = 0) :
+    ¬ ∃ τ : C →+ K, τ 1 = 1 ∧ ∀ x y, τ (x * y) = τ (y * x) := by
+  rintro ⟨τ, hnorm, hcyclic⟩
+  have hvanish := cyclic_additive_readout_vanishes_of_split_identity τ s t
+    hpartition hzero hcyclic
+  rw [hnorm] at hvanish
+  exact one_ne_zero hvanish
+
 theorem cycle_sum_zero_of_potential
     [AddCommGroup A] (u v w : A) :
     ((v - u) + (w - v) + (u - w)) = 0 := by

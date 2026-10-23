@@ -338,6 +338,24 @@ def tripotentFiveGradeLinearEquiv
         (v.2 : R)) :=
   rfl
 
+/-!
+The grouped range carries the expected adjoint eigenvalue.  This is the
+forward half of the usual spectral characterization; the converse requires
+an additional separation argument for the five eigenvalues and is therefore
+kept as a separate theorem rather than hidden in the range definition.
+-/
+theorem mem_fiveGradeRange_implies_adjoint_eigen
+    {e : R} (he : e * e * e = e) (k : FiveGrade) {x : R}
+    (hx : x ∈ fiveGradeRange e k) :
+    e * x - x * e = (fiveGradeValue k : ℝ) • x := by
+  rcases hx with ⟨y, rfl⟩
+  cases k with
+  | negTwo => simpa [fiveGradeValue] using gradeNegTwo_adjoint_weight he y
+  | negOne => simpa [fiveGradeValue] using gradeNegOne_adjoint_weight he y
+  | zero => simpa [fiveGradeValue] using gradeZero_adjoint_weight he y
+  | posOne => simpa [fiveGradeValue] using gradePosOne_adjoint_weight he y
+  | posTwo => simpa [fiveGradeValue] using gradePosTwo_adjoint_weight he y
+
 end
 
 end InfoGeometry.Physics.Algebra

@@ -7,3 +7,4 @@ import InfoGeometry.Canonical.DrazinInterShellHodge
 
 -- The corrected support law uses the native Drazin shells and MP predicate.
 #print axioms InfoGeometry.Canonical.DrazinNilpotentShell.interShell_inverse_adjoint_shell_localization
+#print axioms InfoGeometry.Canonical.DrazinNilpotentShell.interShell_inverse_reverse_corner_iff

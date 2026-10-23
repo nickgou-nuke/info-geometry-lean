@@ -63,4 +63,29 @@ theorem left_absorption_iff (h : IsMoorePenroseInverse a b) :
     ⟨h.bab_eq_b, h.aba_eq_a, h.ba_adj_eq, h.ab_adj_eq⟩
   simpa only [star_star] using hrev.star_left_absorption hb
 
+/-- Exact criterion for the unstarred reverse-corner rule. Self-adjointness
+of the cuts is sufficient but is not required: their adjoints need only
+absorb the original operator on the indicated sides. -/
+theorem reverse_corner_iff (h : IsMoorePenroseInverse a b)
+    (hp : p * p = p) (hq : q * q = q) :
+    q * b * p = b ↔ star p * a = a ∧ a * star q = a := by
+  have hleft : star p * a = a ↔ b * p = b := by
+    simpa only [star_star] using (h.left_absorption_iff (p := star p))
+  have hright : a * star q = a ↔ q * b = b := by
+    simpa only [star_star] using (h.right_absorption_iff (q := star q))
+  rw [hleft, hright]
+  constructor
+  · intro hc
+    constructor
+    · calc
+        b * p = (q * b * p) * p := by rw [hc]
+        _ = q * b * (p * p) := mul_assoc _ _ _
+        _ = b := by rw [hp, hc]
+    · calc
+        q * b = q * (q * b * p) := by rw [hc]
+        _ = (q * q) * b * p := by simp only [mul_assoc]
+        _ = b := by rw [hq, hc]
+  · rintro ⟨hbp, hqb⟩
+    rw [hqb, hbp]
+
 end InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse

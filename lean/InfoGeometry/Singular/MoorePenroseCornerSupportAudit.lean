@@ -8,3 +8,4 @@ import InfoGeometry.Singular.MoorePenroseCornerSupport
 #print axioms InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse.adjoint_reverse_corner
 #print axioms InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse.right_absorption_iff
 #print axioms InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse.left_absorption_iff
+#print axioms InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse.reverse_corner_iff

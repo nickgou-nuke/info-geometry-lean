@@ -140,6 +140,23 @@ theorem interShell_inverse_adjoint_shell_localization
     hB.toSingular.star_right_absorption hleft,
     hB.toSingular.adjoint_reverse_corner hleft hright⟩
 
+/-- Exact criterion for recovering the unstarred reverse shell corner.
+Oblique shells are permitted; the obstruction is precisely failure of
+adjoint-shell absorption of the forward block. -/
+theorem interShell_inverse_reverse_corner_iff
+    (hD : IsDrazinInverse a d k)
+    {M : ℕ → R} (hM : PowerMPFamily (fittingNilpotentPart a d) M)
+    (m r : ℕ) {B : R}
+    (hB : InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse
+      (interShellPeirceCorner a d M m r) B) :
+    drazinShellProj a d M r * B * drazinShellProj a d M m = B ↔
+      star (drazinShellProj a d M m) * interShellPeirceCorner a d M m r =
+        interShellPeirceCorner a d M m r ∧
+      interShellPeirceCorner a d M m r * star (drazinShellProj a d M r) =
+        interShellPeirceCorner a d M m r :=
+  hB.toSingular.reverse_corner_iff
+    (drazinShellProj_idem hD hM m) (drazinShellProj_idem hD hM r)
+
 /-- The exact support of an inter-shell block is left-supported on `S_m`. -/
 theorem drazinShellProj_mul_interShellExactSupport
     (hD : IsDrazinInverse a d k)

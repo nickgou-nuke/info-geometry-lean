@@ -252,6 +252,10 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Core.SuperGrassmannianSusy.colorBoson_mul_middle
 #check InfoGeometry.Core.SuperGrassmannianSusy.colorBoson_mul_of_common_source
 #check InfoGeometry.Core.SuperGrassmannianSusy.colorBoson_lieBracket_of_common_source
+#check InfoGeometry.Core.SuperGrassmannianSusy.sectorCentralCharge_mul_colorBoson_of_orthogonal
+#check InfoGeometry.Core.SuperGrassmannianSusy.colorBoson_mul_sectorCentralCharge_of_orthogonal
+#check InfoGeometry.Core.SuperGrassmannianSusy.sectorCentralCharge_lieBracket_colorBoson_of_orthogonal
+#check InfoGeometry.Core.SuperGrassmannianSusy.totalCentralCharge_lieBracket_colorBoson_of_orthogonal
 #check InfoGeometry.Core.SuperGrassmannianSusy.star_majoranaPlus_of_dual
 #check InfoGeometry.Core.SuperGrassmannianSusy.star_majoranaMinus_of_dual
 #check InfoGeometry.Core.SupercolorMatrixExamples.matrix_supercolor
@@ -279,3 +283,5 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Canonical.SatoGNSPreHilbertSubfactorBridge.gns_adjoint_left
 #check InfoGeometry.Canonical.SatoGNSPreHilbertSubfactorBridge.subfactor_stage_dimension_ratio
 #check InfoGeometry.Canonical.SatoGNSPreHilbertSubfactorBridge.matrix_stage_limit_noncommutative
+#check InfoGeometry.Canonical.ManifoldHomology.localDegreeSign_eq_one_or_neg_one
+#check InfoGeometry.Canonical.ManifoldHomology.localDegreeSign_ne_zero

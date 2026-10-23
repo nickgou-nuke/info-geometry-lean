@@ -36,6 +36,27 @@ This uses the linear operator's determinant.
 noncomputable def localDegreeSign (f : M → M) (x : M) : ℤ :=
   if 0 < LinearMap.det (fderiv ℝ f x).toLinearMap then 1 else -1
 
+/-!
+The sign carrier is deliberately integer-valued.  Exposing its two-valued
+normal form keeps downstream degree arguments algebraic and does not add any
+regularity or finiteness assumptions beyond the definition above.
+-/
+
+theorem localDegreeSign_eq_one_or_neg_one (f : M → M) (x : M) :
+    localDegreeSign f x = 1 ∨ localDegreeSign f x = -1 := by
+  unfold localDegreeSign
+  by_cases h : 0 < LinearMap.det (fderiv ℝ f x).toLinearMap
+  · left
+    simp [h]
+  · right
+    simp [h]
+
+theorem localDegreeSign_ne_zero (f : M → M) (x : M) :
+    localDegreeSign f x ≠ 0 := by
+  rcases localDegreeSign_eq_one_or_neg_one f x with h | h
+  · simpa [h]
+  · simpa [h]
+
 /--
 The mapping degree of `f` at a regular value `y` is the sum of local degree signs
 over the (finite) fiber `f⁻¹' {y}`.

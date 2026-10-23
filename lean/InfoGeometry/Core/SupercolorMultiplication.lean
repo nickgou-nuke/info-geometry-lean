@@ -20,6 +20,7 @@ namespace InfoGeometry.Core.SuperGrassmannianSusy
 variable {R : Type*} [Ring R] [StarRing R]
 variable {ι : Type*} {d b : ι → R}
 
+omit [StarRing R] in
 /-- Exact product before any common-source simplification. -/
 theorem colorBoson_mul_middle (i j l m : ι) :
     colorBoson d b i j * colorBoson d b l m = d i * (b j * d l) * b m := by
@@ -50,6 +51,92 @@ theorem colorBoson_lieBracket_of_common_source [DecidableEq ι]
         (if m = i then colorBoson d b l j else 0) := by
   unfold lieBracket
   rw [colorBoson_mul_of_common_source hS hq, colorBoson_mul_of_common_source hS hq]
+
+/-! The sector charge is not generally central on the individual matrix
+units: it records the source/target endpoint action.  The endpoint terms
+cancel after summing over all colors, which is the centrality statement used
+by the extended finite-color system. -/
+
+theorem sectorCentralCharge_mul_colorBoson_of_orthogonal
+    [DecidableEq ι] (hE : IsOrthogonalExtendedSusy d b)
+    (i l m : ι) :
+    sectorCentralCharge (d i) (b i) * colorBoson d b l m =
+      if i = l then colorBoson d b l m else 0 := by
+  by_cases hil : i = l
+  · subst l
+    simp only [↓reduceIte]
+    unfold sectorCentralCharge jordanProd colorBoson
+    calc
+      (d i * b i + b i * d i) * (d i * b m) =
+          (d i * b i * d i) * b m + (b i * d i * d i) * b m := by
+            noncomm_ring
+      _ = d i * b m + 0 := by
+            rw [(hE.mp i).aba_eq_a]
+            congr 1
+            calc
+              (b i * d i * d i) * b m = b i * (d i * d i) * b m := by
+                simp only [mul_assoc]
+              _ = 0 := by
+                rw [hE.toIsSupercolorSystem.d_mul_d i i]
+                simp
+      _ = d i * b m := add_zero _
+  · simp only [hil, ↓reduceIte]
+    unfold sectorCentralCharge jordanProd colorBoson
+    calc
+      (d i * b i + b i * d i) * (d l * b m) =
+          d i * (b i * d l) * b m + b i * (d i * d l) * b m := by
+            noncomm_ring
+      _ = 0 := by
+            rw [hE.toIsSupercolorSystem.b_mul_d_ne hil,
+              hE.toIsSupercolorSystem.d_mul_d i l]
+            simp
+
+theorem colorBoson_mul_sectorCentralCharge_of_orthogonal
+    [DecidableEq ι] (hE : IsOrthogonalExtendedSusy d b)
+    (i l m : ι) :
+    colorBoson d b l m * sectorCentralCharge (d i) (b i) =
+      if m = i then colorBoson d b l m else 0 := by
+  by_cases hmi : m = i
+  · subst m
+    simp only [↓reduceIte]
+    unfold sectorCentralCharge jordanProd colorBoson
+    calc
+      (d l * b i) * (d i * b i + b i * d i) =
+          d l * (b i * d i * b i) + d l * (b i * b i) * d i := by
+            noncomm_ring
+      _ = d l * b i := by
+            rw [(hE.mp i).bab_eq_b, hE.toIsSupercolorSystem.b_mul_b i i]
+            simp
+  · simp only [hmi, ↓reduceIte]
+    unfold sectorCentralCharge jordanProd colorBoson
+    calc
+      (d l * b m) * (d i * b i + b i * d i) =
+          d l * (b m * d i) * b i + d l * (b m * b i) * d i := by
+            noncomm_ring
+      _ = 0 := by
+            rw [hE.toIsSupercolorSystem.b_mul_d_ne hmi,
+              hE.toIsSupercolorSystem.b_mul_b m i]
+            simp
+
+theorem sectorCentralCharge_lieBracket_colorBoson_of_orthogonal
+    [DecidableEq ι] (hE : IsOrthogonalExtendedSusy d b)
+    (i l m : ι) :
+    lieBracket (sectorCentralCharge (d i) (b i)) (colorBoson d b l m) =
+      (if i = l then colorBoson d b l m else 0) -
+        (if m = i then colorBoson d b l m else 0) := by
+  unfold lieBracket
+  rw [sectorCentralCharge_mul_colorBoson_of_orthogonal hE,
+    colorBoson_mul_sectorCentralCharge_of_orthogonal hE]
+
+theorem totalCentralCharge_lieBracket_colorBoson_of_orthogonal
+    [Fintype ι] [DecidableEq ι]
+    (hE : IsOrthogonalExtendedSusy d b) (l m : ι) :
+    lieBracket (totalCentralCharge d b) (colorBoson d b l m) = 0 := by
+  unfold totalCentralCharge lieBracket
+  rw [Finset.sum_mul, Finset.mul_sum, ← Finset.sum_sub_distrib]
+  simp only [sectorCentralCharge_mul_colorBoson_of_orthogonal hE,
+    colorBoson_mul_sectorCentralCharge_of_orthogonal hE]
+  simp
 
 /-- Adjoint duality is an explicit hypothesis, not a consequence of MP. -/
 theorem star_majoranaPlus_of_dual (hdual : ∀ i, b i = star (d i)) (i : ι) :

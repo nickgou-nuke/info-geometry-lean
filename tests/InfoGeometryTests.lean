@@ -381,6 +381,7 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Modular.PSL2Z.mobiusAction_maps_upperHalfPlane
 #check InfoGeometry.Physics.BostConnesThermalTime.modularFlowCl11_preserves_transverseEuclidean_form
 #check InfoGeometry.Canonical.CounterexampleAlternatives.peirce_corner_square_zero
+#check InfoGeometry.Canonical.CounterexampleAlternatives.mismatched_peirce_product_zero
 #check InfoGeometry.Canonical.CounterexampleAlternatives.positive_entry_ne_zero_entry
 #check InfoGeometry.Canonical.CounterexampleAlternatives.star_symmetric_sum_of_self_adjoint
 #check InfoGeometry.Canonical.CounterexampleAlternatives.ring_hom_preserves_associator

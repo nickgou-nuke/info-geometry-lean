@@ -32,6 +32,14 @@ theorem peirce_corner_square_zero
       simp only [mul_assoc]
     _ = 0 := by rw [hqp, mul_zero, zero_mul, zero_mul]
 
+theorem mismatched_peirce_product_zero
+    [Semiring A] (p q r s x y : A) (hqr : q * r = 0) :
+    (p * x * q) * (r * y * s) = 0 := by
+  calc
+    (p * x * q) * (r * y * s) = p * x * (q * r) * y * s := by
+      simp only [mul_assoc]
+    _ = 0 := by rw [hqr, mul_zero, zero_mul, zero_mul]
+
 theorem ring_hom_preserves_associator
     [Ring A] [Ring B]
     (f : A →+* B) (x y z : A) :

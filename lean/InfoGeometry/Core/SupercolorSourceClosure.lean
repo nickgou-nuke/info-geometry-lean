@@ -23,6 +23,7 @@ section StarRing
 variable {R : Type*} [Ring R] [StarRing R]
 variable {ι : Type*} {d b : ι → R}
 
+omit [StarRing R] in
 /-- A single absorption equation suffices for this matching-middle product. -/
 theorem colorBoson_mul_of_absorption (i j m : ι)
     (h : d i * (b j * d j) = d i) :
@@ -70,10 +71,9 @@ theorem total_charge_star_of_mp [Fintype ι]
   rw [star_sum]
   exact Finset.sum_congr rfl (fun i _ => sector_charge_star_of_mp (h i))
 
-variable (hS : IsSupercolorSystem d b) {q : R} (hq : ∀ i, b i * d i = q)
-
 /-- Source endpoint relations, retaining multiplication order. -/
-theorem source_endpoint_actions (i : ι) :
+theorem source_endpoint_actions (hS : IsSupercolorSystem d b)
+    {q : R} (hq : ∀ i, b i * d i = q) (i : ι) :
     d i * q = d i ∧ q * d i = 0 ∧ q * b i = b i ∧ b i * q = 0 := by
   rw [← hq i]
   refine ⟨?_, ?_, ?_, ?_⟩
@@ -82,32 +82,35 @@ theorem source_endpoint_actions (i : ι) :
   · exact (hS.mp i).bab_eq_b
   · rw [← mul_assoc, hS.b_mul_b i i, zero_mul]
 
-theorem colorBoson_mul_forward [DecidableEq ι] (i j l : ι) :
+theorem colorBoson_mul_forward [DecidableEq ι] (hS : IsSupercolorSystem d b)
+    {q : R} (hq : ∀ i, b i * d i = q) (i j l : ι) :
     colorBoson d b i j * d l = if j = l then d i else 0 := by
   by_cases h : j = l
   · subst l
-    simpa only [colorBoson, mul_assoc, hq j, if_true] using
+    simpa only [colorBoson, mul_assoc, hq j, ite_true] using
       (source_endpoint_actions hS hq i).1
-  · simp only [h, if_false, colorBoson, mul_assoc, hS.b_mul_d_ne h, mul_zero]
+  · simp only [h, ite_false, colorBoson, mul_assoc, hS.b_mul_d_ne h, mul_zero]
 
-theorem forward_mul_colorBoson (i j l : ι) :
+theorem forward_mul_colorBoson (hS : IsSupercolorSystem d b) (i j l : ι) :
     d l * colorBoson d b i j = 0 := by
   simp only [colorBoson, ← mul_assoc, hS.d_mul_d l i, zero_mul]
 
-theorem backward_mul_colorBoson [DecidableEq ι] (i j l : ι) :
+theorem backward_mul_colorBoson [DecidableEq ι] (hS : IsSupercolorSystem d b)
+    {q : R} (hq : ∀ i, b i * d i = q) (i j l : ι) :
     b l * colorBoson d b i j = if l = i then b j else 0 := by
   by_cases h : l = i
   · subst l
-    simpa only [colorBoson, ← mul_assoc, hq i, if_true] using
+    simpa only [colorBoson, ← mul_assoc, hq i, ite_true] using
       (source_endpoint_actions hS hq j).2.2.1
-  · simp only [h, if_false, colorBoson, ← mul_assoc, hS.b_mul_d_ne h, zero_mul]
+  · simp only [h, ite_false, colorBoson, ← mul_assoc, hS.b_mul_d_ne h, zero_mul]
 
-theorem colorBoson_mul_backward (i j l : ι) :
+theorem colorBoson_mul_backward (hS : IsSupercolorSystem d b) (i j l : ι) :
     colorBoson d b i j * b l = 0 := by
   simp only [colorBoson, mul_assoc, hS.b_mul_b j l, mul_zero]
 
 /-- The two odd module actions of the common-source color algebra. -/
-theorem colorBoson_odd_actions [DecidableEq ι] (i j l : ι) :
+theorem colorBoson_odd_actions [DecidableEq ι] (hS : IsSupercolorSystem d b)
+    {q : R} (hq : ∀ i, b i * d i = q) (i j l : ι) :
     lieBracket (colorBoson d b i j) (d l) = (if j = l then d i else 0) ∧
     lieBracket (colorBoson d b i j) (b l) = -(if l = i then b j else 0) := by
   constructor
@@ -118,13 +121,14 @@ theorem colorBoson_odd_actions [DecidableEq ι] (i j l : ι) :
 
 /-- Odd--odd closure contains the reference-coordinate projection as well as
 color matrix units; omitting that term loses the actual supermatrix relation. -/
-theorem odd_pair_closure [DecidableEq ι] (i j : ι) :
+theorem odd_pair_closure [DecidableEq ι] (hS : IsSupercolorSystem d b)
+    {q : R} (hq : ∀ i, b i * d i = q) (i j : ι) :
     jordanProd (d i) (b j) =
       colorBoson d b i j + (if i = j then q else 0) := by
   by_cases h : i = j
   · subst j
-    simp only [jordanProd, colorBoson, if_true, hq i]
-  · simp only [jordanProd, colorBoson, h, if_false,
+    simp only [jordanProd, colorBoson, ite_true, hq i]
+  · simp only [jordanProd, colorBoson, h, ite_false,
       hS.b_mul_d_ne h.symm, add_zero]
 
 /-- A disjoint-support system cannot also have nonzero common-source arrows. -/

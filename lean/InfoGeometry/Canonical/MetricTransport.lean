@@ -40,6 +40,38 @@ theorem penrose_projectors_covariant
   rw [h.target_eq_map e he hc]
   exact ⟨(e.map_mul a b).symm, (e.map_mul b a).symm⟩
 
+/-- Fixed-metric covariance of both actual Penrose projectors is equivalent
+to commutation of the source supports with the Gram element. No transport
+record or assumed projector covariance is used. -/
+theorem penrose_projectors_similarity_iff [StarRing R]
+    {a b c g gInv : R}
+    (hab : InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse a b)
+    (hc : InfoGeometry.Singular.MoorePenrose.IsMoorePenroseInverse (g * a * gInv) c)
+    (hleft : gInv * g = 1) (hright : g * gInv = 1) :
+    ((g * a * gInv) * c = g * (a * b) * gInv ∧
+      c * (g * a * gInv) = g * (b * a) * gInv) ↔
+    ((a * b) * (star g * g) = (star g * g) * (a * b) ∧
+      (b * a) * (star g * g) = (star g * g) * (b * a)) := by
+  constructor
+  · rintro ⟨hL, hR⟩
+    constructor
+    · apply (InfoGeometry.Singular.MoorePenrose.similarity_selfAdjoint_iff_gram_commute
+        hab.ab_adj_eq hleft hright).mp
+      rw [← hL]
+      exact hc.ab_adj_eq
+    · apply (InfoGeometry.Singular.MoorePenrose.similarity_selfAdjoint_iff_gram_commute
+        hab.ba_adj_eq hleft hright).mp
+      rw [← hR]
+      exact hc.ba_adj_eq
+  · intro hcomm
+    rw [(hab.target_eq_similarity_iff hc hleft hright).mpr hcomm]
+    have hmul (x y : R) : (g * x * gInv) * (g * y * gInv) =
+        g * (x * y) * gInv := by
+      calc
+        _ = g * x * (gInv * g) * y * gInv := by simp only [mul_assoc]
+        _ = _ := by rw [hleft, mul_one]; simp only [mul_assoc]
+    exact ⟨hmul a b, hmul b a⟩
+
 /-- Similarity transport data between two projector pairs.
 
 The checked projector equations below are the Lean authority available in this

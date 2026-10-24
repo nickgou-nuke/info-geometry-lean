@@ -51,3 +51,19 @@ Recent completed replacements have separate source-backed records:
 `REFLECTION_ZERO_COUNT_REALIGNMENT.md`, `BINARY_CHART_CURVATURE_REALIGNMENT.md`,
 and `CAUSAL_BALANCE_REALIGNMENT.md`. These are local results, not evidence that
 the remaining candidate rows have been classified or discharged.
+
+Further source-backed local replacements (2026-10-24):
+
+- `CUNTZ_POSITIVE_GNS_CONTRACT.md`: the positive functional on the corrected
+  conjugate-star carrier yields a GNS state, a native complex radical pairing,
+  and compatible quotient actions. This does not provide positivity for the
+  legacy scalar-fixing complex involution.
+- `ZORN_OPERATOR_DEFECT_CONTRACT.md`: left multiplication has an exact
+  associator defect, replacing the false general multiplicativity claim.
+- `ZORN_TERNARY_DERIVATION_REALIGNMENT.md`: the existing standard-derivation
+  bracket satisfies the ternary derivation identity. The raw associator's
+  Filippov obstruction remains valid; no total alternation is claimed for
+  the corrected operation.
+
+These records reuse inspected owners and have scoped kernel and independent
+verification evidence. They do not classify the other inventory rows.

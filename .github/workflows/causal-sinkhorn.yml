@@ -1,0 +1,56 @@
+name: Causal Sinkhorn locality and runtime
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Routing/CausalPrefixPooling.lean'
+      - 'lean/InfoGeometry/Routing/BlockCausalSinkhorn.lean'
+      - 'tools/causal_bipartite_sinkhorn.py'
+      - 'tools/infra/check_causal_sinkhorn.py'
+      - 'tests/test_causal_bipartite_sinkhorn.py'
+      - '.github/workflows/causal-sinkhorn.yml'
+permissions:
+  contents: read
+concurrency:
+  group: causal-sinkhorn-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: false
+jobs:
+  locality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: true
+          submodules: false
+      - name: Remove checkout credential without recursive submodule traversal
+        run: git config --local --unset-all http.https://github.com/.extraheader || test "$?" = 5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Runtime regression checks
+        env:
+          OMP_NUM_THREADS: '1'
+          MKL_NUM_THREADS: '1'
+        run: |
+          set -euo pipefail
+          python -m pip install 'torch==2.10.0' --index-url https://download.pytorch.org/whl/cpu
+          mkdir -p verification
+          python -m unittest discover -s tests -p test_causal_bipartite_sinkhorn.py -v 2>&1 | tee verification/causal_runtime_tests.txt
+      - name: Install repository-pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < lean-toolchain)"
+      - name: Compile exact sources and audit all new declarations
+        run: python tools/infra/check_causal_sinkhorn.py
+      - name: Preserve evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: CausalSinkhornEvidence
+          path: |
+            ${{ runner.temp }}/causal-sinkhorn-evidence/
+            verification/causal_runtime_tests.txt

@@ -32,7 +32,9 @@ theorem shear_pow (x : A) (hx : x * x = 0) (n : ℕ) :
   | zero => simp
   | succ n ih =>
     rw [pow_succ, ih, succ_nsmul]
-    noncomm_ring [hx]
+    have hz : (n • x) * x = 0 := by
+      rw [nsmul_eq_mul, mul_assoc, hx, mul_zero]
+    noncomm_ring [hz]
 
 /-- The ordered double product. -/
 def doubleShear (d b : A) : A := (1 + d) * (1 - b)

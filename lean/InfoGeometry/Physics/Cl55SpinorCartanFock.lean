@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Lie.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Dual.Defs
@@ -296,6 +301,9 @@ structure KreinFundamentalSymmetry where
   eta_sq : eta * eta = 1
   hilbertization_symm : (eta * J)ᵀ = eta * J
 
+instance : Inhabited KreinFundamentalSymmetry :=
+  ⟨⟨1, mul_one 1, 1, mul_one 1, by simp⟩⟩
+
 /-! ## 4. Spinor Bilinear Pairing & Isotropic Subspaces -/
 
 /-- The carrier 32-spinor space $S = \mathbb{R}^{32}$. -/
@@ -306,6 +314,9 @@ structure SpinorBilinearForm where
   form : Spinor32 → Spinor32 → ℝ
   chiral_ortho_plus : ∀ u v : Spinor32, form (PPlus.mulVec u) (PPlus.mulVec v) = 0
   chiral_ortho_minus : ∀ u v : Spinor32, form (PMinus.mulVec u) (PMinus.mulVec v) = 0
+
+instance : Inhabited SpinorBilinearForm :=
+  ⟨⟨fun _ _ => 0, fun _ _ => rfl, fun _ _ => rfl⟩⟩
 
 namespace SpinorBilinearForm
 
@@ -388,6 +399,380 @@ theorem dihedralCartanReadout_annihilation (u : Fin 5 → ℝ) (b : Fin 5) :
     rw [H_annihilation x b, if_neg hxb, smul_zero]
   · intro hb
     exact (hb (Finset.mem_univ b)).elim
+
+/-! ## 6. Five-Graded Isospin, Pairing Quasispin, and 4-Projector Decomposition in $\mathrm{Cl}(5,5)$ -/
+
+/-- Occupied projector $N_a = e_a f_a$ of Witt mode $a \in \mathrm{Fin}\;5$. -/
+def modeOccupied (a : Fin 5) : MatStage 5 := e a * f a
+
+/-- Vacant projector $1 - N_a = f_a e_a$ of Witt mode $a \in \mathrm{Fin}\;5$. -/
+def modeVacant (a : Fin 5) : MatStage 5 := f a * e a
+
+/-- Occupied and vacant projectors of mode $a$ sum to the $32 \times 32$ identity. -/
+theorem modeOccupied_add_modeVacant (a : Fin 5) :
+    modeOccupied a + modeVacant a = 1 := by
+  simpa [modeOccupied, modeVacant] using ef_car a a
+
+/-- Occupied projector $N_a = e_a f_a$ is idempotent. -/
+theorem modeOccupied_idem (a : Fin 5) :
+    modeOccupied a * modeOccupied a = modeOccupied a := by
+  dsimp [modeOccupied]
+  have hcar : f a * e a = 1 - e a * f a :=
+    eq_sub_of_add_eq' (modeOccupied_add_modeVacant a)
+  calc
+    (e a * f a) * (e a * f a) = e a * (f a * e a) * f a := by noncomm_ring
+    _ = e a * (1 - e a * f a) * f a := by rw [hcar]
+    _ = e a * f a - (e a * e a) * (f a * f a) := by noncomm_ring
+    _ = e a * f a := by rw [e_sq a, zero_mul, sub_zero]
+
+/-- Vacant projector $f_a e_a$ is idempotent. -/
+theorem modeVacant_idem (a : Fin 5) :
+    modeVacant a * modeVacant a = modeVacant a := by
+  dsimp [modeVacant]
+  have hcar : e a * f a = 1 - f a * e a :=
+    eq_sub_of_add_eq (modeOccupied_add_modeVacant a)
+  calc
+    (f a * e a) * (f a * e a) = f a * (e a * f a) * e a := by noncomm_ring
+    _ = f a * (1 - f a * e a) * e a := by rw [hcar]
+    _ = f a * e a - (f a * f a) * (e a * e a) := by noncomm_ring
+    _ = f a * e a := by rw [f_sq a, zero_mul, sub_zero]
+
+/-- Occupied and vacant projectors of mode $a$ are mutually orthogonal. -/
+theorem modeOccupied_mul_modeVacant (a : Fin 5) :
+    modeOccupied a * modeVacant a = 0 := by
+  dsimp [modeOccupied, modeVacant]
+  calc
+    (e a * f a) * (f a * e a) = e a * (f a * f a) * e a := by noncomm_ring
+    _ = 0 := by rw [f_sq a, mul_zero, zero_mul]
+
+/-- Vacant and occupied projectors of mode $a$ are mutually orthogonal. -/
+theorem modeVacant_mul_modeOccupied (a : Fin 5) :
+    modeVacant a * modeOccupied a = 0 := by
+  dsimp [modeOccupied, modeVacant]
+  calc
+    (f a * e a) * (e a * f a) = f a * (e a * e a) * f a := by noncomm_ring
+    _ = 0 := by rw [e_sq a, mul_zero, zero_mul]
+
+/-- Grade-0 isospin raising generator $\tau_+(p,n) = E(p,n)$ in $\mathrm{Cl}(5,5)$. -/
+def isospinPlus (p n : Fin 5) : MatStage 5 := E p n
+
+/-- Grade-0 isospin lowering generator $\tau_-(p,n) = E(n,p)$ in $\mathrm{Cl}(5,5)$. -/
+def isospinMinus (p n : Fin 5) : MatStage 5 := E n p
+
+/-- Grade-0 isospin Cartan generator $\tau_3(p,n) = H_p - H_n = E(p,p) - E(n,n)$ in $\mathrm{Cl}(5,5)$. -/
+def isospinCartan (p n : Fin 5) : MatStage 5 := H p - H n
+
+/-- Grade-$+2$ pairing quasispin raising generator $K_+(p,n) = e_p e_n$ in $\mathrm{Cl}(5,5)$. -/
+def pairingPlus (p n : Fin 5) : MatStage 5 := e p * e n
+
+/-- Grade-$-2$ pairing quasispin lowering generator $K_-(p,n) = f_n f_p$ in $\mathrm{Cl}(5,5)$. -/
+def pairingMinus (p n : Fin 5) : MatStage 5 := f n * f p
+
+/-- Grade-0 pairing quasispin Cartan generator $2 K_0(p,n) = H_p + H_n = E(p,p) + E(n,n)$ in $\mathrm{Cl}(5,5)$. -/
+def pairingCartan (p n : Fin 5) : MatStage 5 := H p + H n
+
+/-- Positive-isospin single-nucleon sector projector $\Pi_+(p,n) = N_p (1 - N_n)$. -/
+def isoProjPlus (p n : Fin 5) : MatStage 5 := modeOccupied p * modeVacant n
+
+/-- Negative-isospin single-nucleon sector projector $\Pi_-(p,n) = (1 - N_p) N_n$. -/
+def isoProjMinus (p n : Fin 5) : MatStage 5 := modeVacant p * modeOccupied n
+
+/-- Doubly-occupied pairing sector projector $\Pi_{\mathrm{pair}}^+(p,n) = N_p N_n$. -/
+def pairProjPlus (p n : Fin 5) : MatStage 5 := modeOccupied p * modeOccupied n
+
+/-- Doubly-vacant pairing sector projector $\Pi_{\mathrm{pair}}^-(p,n) = (1 - N_p)(1 - N_n)$. -/
+def pairProjMinus (p n : Fin 5) : MatStage 5 := modeVacant p * modeVacant n
+
+/-- The four two-mode sector projectors $\Pi_+ + \Pi_- + \Pi_{\mathrm{pair}}^+ + \Pi_{\mathrm{pair}}^-$
+resolve the $32 \times 32$ identity in $\mathrm{Cl}(5,5)$. -/
+theorem four_projector_sum (p n : Fin 5) :
+    isoProjPlus p n + isoProjMinus p n + pairProjPlus p n + pairProjMinus p n = 1 := by
+  dsimp [isoProjPlus, isoProjMinus, pairProjPlus, pairProjMinus]
+  calc
+    modeOccupied p * modeVacant n + modeVacant p * modeOccupied n +
+        modeOccupied p * modeOccupied n + modeVacant p * modeVacant n =
+      (modeOccupied p + modeVacant p) * (modeOccupied n + modeVacant n) := by
+      noncomm_ring
+    _ = 1 * 1 := by rw [modeOccupied_add_modeVacant p, modeOccupied_add_modeVacant n]
+    _ = 1 := mul_one 1
+
+/-- The grade-0 isospin Cartan generator equals the occupation difference $N_p - N_n$. -/
+theorem isospinCartan_eq_modeOccupied_sub (p n : Fin 5) :
+    isospinCartan p n = modeOccupied p - modeOccupied n := by
+  dsimp [isospinCartan, H, E, modeOccupied, e, f]
+  simp only [ite_true]
+  abel
+
+/-- Every mode occupation projector equals $H_a + \frac{1}{2} I$. -/
+theorem modeOccupied_eq_H_add_half (a : Fin 5) :
+    modeOccupied a = H a + (1 / 2 : ℝ) • (1 : MatStage 5) := by
+  dsimp [modeOccupied, H, E, e, f]
+  simp only [ite_true, sub_add_cancel]
+
+/-- Every mode vacancy projector equals $\frac{1}{2} I - H_a$. -/
+theorem modeVacant_eq_half_sub_H (a : Fin 5) :
+    modeVacant a = (1 / 2 : ℝ) • (1 : MatStage 5) - H a := by
+  have hsum := modeOccupied_add_modeVacant a
+  have hvac : modeVacant a = 1 - modeOccupied a := eq_sub_of_add_eq' hsum
+  rw [hvac, modeOccupied_eq_H_add_half]
+  match_scalars <;> norm_num
+
+/-- Twice the Cartan generator $H_a$ is the difference of the occupied and vacant projectors. -/
+theorem two_smul_H_eq_modeOccupied_sub_modeVacant (a : Fin 5) :
+    (2 : ℝ) • H a = modeOccupied a - modeVacant a := by
+  rw [modeOccupied_eq_H_add_half, modeVacant_eq_half_sub_H]
+  match_scalars <;> norm_num
+
+/-- Every normalized mode Cartan involution $(2 H_a)$ squares to the $32 \times 32$ identity. -/
+theorem two_smul_H_sq (a : Fin 5) :
+    ((2 : ℝ) • H a) * ((2 : ℝ) • H a) = 1 := by
+  rw [two_smul_H_eq_modeOccupied_sub_modeVacant]
+  calc
+    (modeOccupied a - modeVacant a) * (modeOccupied a - modeVacant a) =
+      modeOccupied a * modeOccupied a - modeOccupied a * modeVacant a -
+      modeVacant a * modeOccupied a + modeVacant a * modeVacant a := by
+      noncomm_ring
+    _ = modeOccupied a + modeVacant a := by
+      rw [modeOccupied_idem, modeVacant_idem,
+          modeOccupied_mul_modeVacant, modeVacant_mul_modeOccupied]
+      abel
+    _ = 1 := modeOccupied_add_modeVacant a
+
+/-- Mode occupation projectors commute for all $p, n \in \mathrm{Fin}\;5$. -/
+theorem modeOccupied_comm (p n : Fin 5) :
+    modeOccupied p * modeOccupied n = modeOccupied n * modeOccupied p := by
+  have hcomm : H p * H n = H n * H p := sub_eq_zero.mp (H_comm p n)
+  rw [modeOccupied_eq_H_add_half p, modeOccupied_eq_H_add_half n]
+  simp only [add_mul, mul_add, smul_mul_assoc, mul_smul_comm, one_mul, mul_one, smul_add, hcomm]
+  abel
+
+/-- Spectral decomposition of the grade-0 isospin Cartan generator into $\Pi_+ - \Pi_-$. -/
+theorem isospinCartan_eq_isoProj_sub (p n : Fin 5) :
+    isospinCartan p n = isoProjPlus p n - isoProjMinus p n := by
+  dsimp [isoProjPlus, isoProjMinus]
+  have hvp : modeVacant p = 1 - modeOccupied p :=
+    eq_sub_of_add_eq' (modeOccupied_add_modeVacant p)
+  have hvn : modeVacant n = 1 - modeOccupied n :=
+    eq_sub_of_add_eq' (modeOccupied_add_modeVacant n)
+  rw [hvp, hvn, isospinCartan_eq_modeOccupied_sub]
+  noncomm_ring
+
+/-- Spectral decomposition of the pairing Cartan generator $2 K_0 = H_p + H_n$ into $\Pi_{\mathrm{pair}}^+ - \Pi_{\mathrm{pair}}^-$. -/
+theorem pairingCartan_eq_pairProj_sub (p n : Fin 5) :
+    pairingCartan p n = pairProjPlus p n - pairProjMinus p n := by
+  dsimp [pairingCartan, pairProjPlus, pairProjMinus]
+  have hvp : modeVacant p = 1 - modeOccupied p :=
+    eq_sub_of_add_eq' (modeOccupied_add_modeVacant p)
+  have hvn : modeVacant n = 1 - modeOccupied n :=
+    eq_sub_of_add_eq' (modeOccupied_add_modeVacant n)
+  have hHp : H p = modeOccupied p - (1 / 2 : ℝ) • (1 : MatStage 5) :=
+    eq_sub_of_add_eq (modeOccupied_eq_H_add_half p).symm
+  have hHn : H n = modeOccupied n - (1 / 2 : ℝ) • (1 : MatStage 5) :=
+    eq_sub_of_add_eq (modeOccupied_eq_H_add_half n).symm
+  rw [hvp, hvn, hHp, hHn]
+  calc
+    modeOccupied p - (1 / 2 : ℝ) • (1 : MatStage 5) +
+        (modeOccupied n - (1 / 2 : ℝ) • (1 : MatStage 5)) =
+      modeOccupied p + modeOccupied n -
+        ((1 / 2 : ℝ) + (1 / 2 : ℝ)) • (1 : MatStage 5) := by
+      rw [add_smul]
+      abel
+    _ = modeOccupied p + modeOccupied n - 1 := by norm_num
+    _ = modeOccupied p * modeOccupied n -
+        (1 - modeOccupied p) * (1 - modeOccupied n) := by
+      noncomm_ring
+
+/-- Exact projector eigenvalue equations for the grade-0 isospin Cartan generator $\tau_3$:
+$\tau_3 \Pi_+ = +\Pi_+$, $\tau_3 \Pi_- = -\Pi_-$, $\tau_3 \Pi_{\mathrm{pair}}^+ = 0$, $\tau_3 \Pi_{\mathrm{pair}}^- = 0$. -/
+theorem isospinCartan_projector_eigenvalues (p n : Fin 5) :
+    isospinCartan p n * isoProjPlus p n = isoProjPlus p n ∧
+    isospinCartan p n * isoProjMinus p n = -isoProjMinus p n ∧
+    isospinCartan p n * pairProjPlus p n = 0 ∧
+    isospinCartan p n * pairProjMinus p n = 0 := by
+  rw [isospinCartan_eq_modeOccupied_sub]
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · dsimp [isoProjPlus]
+    calc
+      (modeOccupied p - modeOccupied n) * (modeOccupied p * modeVacant n) =
+        (modeOccupied p * modeOccupied p) * modeVacant n -
+        (modeOccupied n * modeOccupied p) * modeVacant n := by noncomm_ring
+      _ = modeOccupied p * modeVacant n -
+        modeOccupied p * (modeOccupied n * modeVacant n) := by
+        rw [modeOccupied_idem p, modeOccupied_comm n p, mul_assoc]
+      _ = modeOccupied p * modeVacant n := by
+        rw [modeOccupied_mul_modeVacant n, mul_zero, sub_zero]
+  · dsimp [isoProjMinus]
+    calc
+      (modeOccupied p - modeOccupied n) * (modeVacant p * modeOccupied n) =
+        (modeOccupied p * modeVacant p) * modeOccupied n -
+        modeOccupied n * (modeVacant p * modeOccupied n) := by noncomm_ring
+      _ = -(modeOccupied n * (modeVacant p * modeOccupied n)) := by
+        rw [modeOccupied_mul_modeVacant p, zero_mul, zero_sub]
+      _ = -(modeVacant p * (modeOccupied n * modeOccupied n)) := by
+        have hvp : modeVacant p = 1 - modeOccupied p :=
+          eq_sub_of_add_eq' (modeOccupied_add_modeVacant p)
+        rw [hvp]
+        calc
+          -(modeOccupied n * ((1 - modeOccupied p) * modeOccupied n)) =
+            -(modeOccupied n * modeOccupied n -
+              (modeOccupied n * modeOccupied p) * modeOccupied n) := by noncomm_ring
+          _ = -(modeOccupied n * modeOccupied n -
+              (modeOccupied p * modeOccupied n) * modeOccupied n) := by
+            rw [modeOccupied_comm n p]
+          _ = -((1 - modeOccupied p) * (modeOccupied n * modeOccupied n)) := by
+            noncomm_ring
+      _ = -(modeVacant p * modeOccupied n) := by rw [modeOccupied_idem n]
+  · dsimp [pairProjPlus]
+    calc
+      (modeOccupied p - modeOccupied n) * (modeOccupied p * modeOccupied n) =
+        (modeOccupied p * modeOccupied p) * modeOccupied n -
+        (modeOccupied n * modeOccupied p) * modeOccupied n := by noncomm_ring
+      _ = modeOccupied p * modeOccupied n -
+        modeOccupied p * (modeOccupied n * modeOccupied n) := by
+        rw [modeOccupied_idem p, modeOccupied_comm n p, mul_assoc]
+      _ = 0 := by rw [modeOccupied_idem n, sub_self]
+  · dsimp [pairProjMinus]
+    have hvp : modeVacant p = 1 - modeOccupied p :=
+      eq_sub_of_add_eq' (modeOccupied_add_modeVacant p)
+    have hvn : modeVacant n = 1 - modeOccupied n :=
+      eq_sub_of_add_eq' (modeOccupied_add_modeVacant n)
+    calc
+      (modeOccupied p - modeOccupied n) * (modeVacant p * modeVacant n) =
+        (modeOccupied p * modeVacant p) * modeVacant n -
+        modeOccupied n * (modeVacant p * modeVacant n) := by noncomm_ring
+      _ = -(modeOccupied n * ((1 - modeOccupied p) * modeVacant n)) := by
+        rw [modeOccupied_mul_modeVacant p, zero_mul, zero_sub, hvp]
+      _ = -((modeOccupied n - modeOccupied n * modeOccupied p) * modeVacant n) := by
+        noncomm_ring
+      _ = -((modeOccupied n - modeOccupied p * modeOccupied n) * modeVacant n) := by
+        rw [modeOccupied_comm n p]
+      _ = -((1 - modeOccupied p) * (modeOccupied n * modeVacant n)) := by
+        noncomm_ring
+      _ = 0 := by rw [modeOccupied_mul_modeVacant n, mul_zero, neg_zero]
+
+/-- Exact quadratic Casimir partition $\tau_3^2 + (2 K_0)^2 = I_{32}$ in $\mathrm{Cl}(5,5)$. -/
+theorem isospinCartan_sq_add_pairingCartan_sq (p n : Fin 5) :
+    isospinCartan p n * isospinCartan p n +
+      pairingCartan p n * pairingCartan p n = 1 := by
+  dsimp [isospinCartan, pairingCartan]
+  have hcomm : H p * H n = H n * H p := sub_eq_zero.mp (H_comm p n)
+  have hHp : ((2 : ℝ) • H p) * ((2 : ℝ) • H p) = 1 := two_smul_H_sq p
+  have hHn : ((2 : ℝ) • H n) * ((2 : ℝ) • H n) = 1 := two_smul_H_sq n
+  have hexp :
+      (H p - H n) * (H p - H n) + (H p + H n) * (H p + H n) =
+        (1 / 2 : ℝ) • (((2 : ℝ) • H p) * ((2 : ℝ) • H p) +
+          ((2 : ℝ) • H n) * ((2 : ℝ) • H n)) := by
+    simp only [smul_mul_smul]
+    calc
+      (H p - H n) * (H p - H n) + (H p + H n) * (H p + H n) =
+        (H p * H p + H p * H p) + (H n * H n + H n * H n) +
+        (H p * H n - H n * H p) - (H p * H n - H n * H p) := by noncomm_ring
+      _ = (2 : ℝ) • (H p * H p) + (2 : ℝ) • (H n * H n) := by
+        rw [hcomm, sub_self, two_smul, two_smul]
+        abel
+      _ = (1 / 2 : ℝ) • (((2 : ℝ) * (2 : ℝ)) • (H p * H p) +
+          ((2 : ℝ) * (2 : ℝ)) • (H n * H n)) := by
+        rw [smul_add, smul_smul, smul_smul]
+        norm_num
+  rw [hexp, hHp, hHn, ← two_smul ℝ (1 : MatStage 5), smul_smul]
+  norm_num
+
+/-- Five-grading classification: isospin generators have grade $0$ under `numberOperator`,
+while pairing raising/lowering generators have grades $+2$ and $-2$. -/
+theorem five_graded_isospin_and_pairing_grades (p n : Fin 5) :
+    bracket numberOperator (isospinPlus p n) = 0 ∧
+    bracket numberOperator (isospinMinus p n) = 0 ∧
+    bracket numberOperator (isospinCartan p n) = 0 ∧
+    bracket numberOperator (pairingCartan p n) = 0 ∧
+    bracket numberOperator (pairingPlus p n) = (2 : ℝ) • pairingPlus p n ∧
+    bracket numberOperator (pairingMinus p n) = (-2 : ℝ) • pairingMinus p n := by
+  refine ⟨numberOperator_E p n, numberOperator_E n p, ?_, ?_,
+          numberOperator_creation_quadratic p n,
+          numberOperator_annihilation_quadratic n p⟩
+  · dsimp [isospinCartan, H]
+    rw [sub_eq_add_neg, bracket_add_right, numberOperator_E]
+    have hneg : bracket numberOperator (-E n n) = 0 := by
+      rw [show -E n n = (-1 : ℝ) • E n n by simp, bracket_smul_right,
+          numberOperator_E, smul_zero]
+    rw [hneg, add_zero]
+  · dsimp [pairingCartan, H]
+    rw [bracket_add_right, numberOperator_E, numberOperator_E, add_zero]
+
+/-- Grade-0 isospin $\mathfrak{sl}_2$ bracket $[\tau_+, \tau_-] = \tau_3$ holds unconditionally for all $p, n$. -/
+theorem isospin_plus_minus_bracket (p n : Fin 5) :
+    bracket (isospinPlus p n) (isospinMinus p n) = isospinCartan p n := by
+  dsimp [isospinPlus, isospinMinus, isospinCartan, H]
+  rw [E_bracket]
+  simp
+
+/-- Grade-0 isospin $\mathfrak{sl}_2$ bracket $[\tau_3, \tau_+] = 2 \tau_+$ for $p \neq n$. -/
+theorem isospin_cartan_plus_bracket {p n : Fin 5} (hpn : p ≠ n) :
+    bracket (isospinCartan p n) (isospinPlus p n) = (2 : ℝ) • isospinPlus p n := by
+  dsimp [isospinCartan, isospinPlus, H]
+  have hsub : bracket (E p p - E n n) (E p n) =
+      bracket (E p p) (E p n) - bracket (E n n) (E p n) := by
+    unfold bracket
+    noncomm_ring
+  rw [hsub, E_bracket, E_bracket]
+  simp [hpn, Ne.symm hpn, two_smul]
+
+/-- Grade-0 isospin $\mathfrak{sl}_2$ bracket $[\tau_3, \tau_-] = -2 \tau_-$ for $p \neq n$. -/
+theorem isospin_cartan_minus_bracket {p n : Fin 5} (hpn : p ≠ n) :
+    bracket (isospinCartan p n) (isospinMinus p n) = -(2 : ℝ) • isospinMinus p n := by
+  dsimp [isospinCartan, isospinMinus, H]
+  have hsub : bracket (E p p - E n n) (E n p) =
+      bracket (E p p) (E n p) - bracket (E n n) (E n p) := by
+    unfold bracket
+    noncomm_ring
+  rw [hsub, E_bracket, E_bracket]
+  simp [hpn, Ne.symm hpn, two_smul]
+  abel
+
+/-- Grade-$\pm 2$ pairing quasispin $\mathfrak{sl}_2$ bracket $[K_+, K_-] = 2 K_0$ for $p \neq n$. -/
+theorem pairing_plus_minus_bracket {p n : Fin 5} (hpn : p ≠ n) :
+    bracket (pairingPlus p n) (pairingMinus p n) = pairingCartan p n := by
+  dsimp [pairingPlus, pairingMinus, pairingCartan, H, e, f]
+  rw [creation_quadratic_bracket_annihilation_quadratic]
+  simp [hpn, Ne.symm hpn]
+
+/-- Mutual commutation of the isospin and pairing Cartan generators with the opposite $\mathfrak{sl}_2$ ladders. -/
+theorem isospin_and_pairing_mutual_commutation {p n : Fin 5} (hpn : p ≠ n) :
+    bracket (isospinCartan p n) (pairingCartan p n) = 0 ∧
+    bracket (isospinCartan p n) (pairingPlus p n) = 0 ∧
+    bracket (isospinCartan p n) (pairingMinus p n) = 0 ∧
+    bracket (pairingCartan p n) (isospinPlus p n) = 0 ∧
+    bracket (pairingCartan p n) (isospinMinus p n) = 0 := by
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · dsimp [isospinCartan, pairingCartan]
+    have hexp : bracket (H p - H n) (H p + H n) =
+        bracket (H p) (H p) + bracket (H p) (H n) -
+        bracket (H n) (H p) - bracket (H n) (H n) := by
+      unfold bracket
+      noncomm_ring
+    rw [hexp, H_comm, H_comm, H_comm, H_comm]
+    simp
+  · dsimp [isospinCartan, pairingPlus, H, e]
+    have hsub : bracket (E p p - E n n) (creation p * creation n) =
+        bracket (E p p) (creation p * creation n) -
+        bracket (E n n) (creation p * creation n) := by
+      unfold bracket
+      noncomm_ring
+    rw [hsub, diagonal_positiveTwo_weight, diagonal_positiveTwo_weight]
+    simp [positiveTwoWeight, hpn, Ne.symm hpn]
+  · dsimp [isospinCartan, pairingMinus, H, f]
+    have hsub : bracket (E p p - E n n) (annihilation n * annihilation p) =
+        bracket (E p p) (annihilation n * annihilation p) -
+        bracket (E n n) (annihilation n * annihilation p) := by
+      unfold bracket
+      noncomm_ring
+    rw [hsub, diagonal_negativeTwo_weight, diagonal_negativeTwo_weight]
+    simp [negativeTwoWeight, hpn, Ne.symm hpn]
+  · dsimp [pairingCartan, isospinPlus, H]
+    rw [bracket_add_left, E_bracket, E_bracket]
+    simp [hpn, Ne.symm hpn]
+  · dsimp [pairingCartan, isospinMinus, H]
+    rw [bracket_add_left, E_bracket, E_bracket]
+    simp [hpn, Ne.symm hpn]
 
 /-! ## 6. The Grand Cl(5,5) Spinor Cartan-Fock Synthesis -/
 

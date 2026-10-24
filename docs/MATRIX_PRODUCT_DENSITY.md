@@ -54,3 +54,22 @@ first-level normalized complex coefficient carrier from a positive state and
 from the full word-diagonal algebra. No existing definition or theorem changed.
 The new positive colimit functional is the constructive replacement for the
 unsupported state interpretation. Full Cuntz KMS remains open.
+
+Word-readout contract: transport the recursive density index through the
+existing `CliffordBitWordEquivalence.bitWordFinPowTwoEquiv`. Its successor
+law appends the final bit, matching `stageIndexEquiv`. Prove that the density
+weight is `2^n` times `FiniteWordPathWeights.wordWeight` of the corresponding
+binary word. Then evaluate the existing full-colimit functional on word-indexed
+matrix units: diagonal entries give that path weight; off-diagonal entries
+give zero. The density identity needs no positivity or normalization; the
+colimit functional requires `q 0 + q 1 = 1`. This is a finite-observable
+readout of the native colimit functional, not a substitute scalar carrier.
+Parent final audit passed: session 75814, exit 0, 9356 jobs,
+`/tmp/matrix-product-word-audit.log`. Both declarations use exactly
+`propext`, `Classical.choice`, and `Quot.sound`. Independent semantic review
+passed, including the explicit real-to-complex cast of `wordWeight`.
+Distinct QA passed: session 6033, exit 0, 9356 jobs,
+`/tmp/matrix-product-word-qa.log`; zero own-source warnings, zero strict-screen
+traps, and scoped diff/forbidden-proof checks passed. Existing dependencies
+still report warnings. The global staged-source scan is a separate check
+over the shared index and is not covered by this scoped acceptance.

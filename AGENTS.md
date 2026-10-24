@@ -184,3 +184,4 @@ their generated artifacts, lock files, and intermediate outputs.
 
 ## Strict Build Cache Protection Mandate
 **CRITICAL**: You MUST never execute cache-destructive commands (e.g., `lake clean`, `rm -rf .lake/build`, `rm -rf .lake/packages`, `rm -rf .lake`) under any circumstances. Nuking the build cache deletes precompiled dependency oleans and breaks the environment, forcing long and unnecessary compilation loops. If you need to clean up build warnings, use targeted compiler commands or rebuild specific files. Never use global clean commands.
+- **No Linked Worktrees or Symlinked `.lake`**: You MUST NEVER create a `git worktree` and symlink `.lake` or `.lake/packages` to the main repository. Lake treats symlinked package roots across worktrees as a package URL reconfiguration and deletes/re-clones `.lake/packages/mathlib`. `tools/infra/build.py`, `tools/infra/run_locked_lean.py`, and `.githooks/pre-push` enforce this as a hard error.

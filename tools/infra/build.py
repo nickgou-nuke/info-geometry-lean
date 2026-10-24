@@ -114,15 +114,56 @@ def _interrupt_child_and_wait(proc: subprocess.Popen[bytes]) -> None:
             continue
 
 
+def _validate_lake_workspace_integrity(root: Path) -> str | None:
+    """Reject linked worktrees or symlinked .lake directories that cause Lake
+    to treat shared packages as URL changes and wipe .lake/packages/mathlib."""
+    lake_dir = root / ".lake"
+    git_entry = root / ".git"
+    if lake_dir.is_symlink():
+        return (
+            f"refusing to run Lake with symlinked .lake ({lake_dir} -> {lake_dir.resolve()}); "
+            "symlinked .lake across worktrees causes Lake to delete and re-clone mathlib"
+        )
+    if git_entry.is_file():
+        return (
+            f"refusing to run Lake inside a linked git worktree ({root}); "
+            "run builds only from the primary repository checkout"
+        )
+    packages_dir = lake_dir / "packages"
+    if packages_dir.is_symlink():
+        return f"refusing to run Lake with symlinked .lake/packages ({packages_dir})"
+    return None
+
+
+def _ensure_mathlib_cache_hydrated(root: Path) -> None:
+    """If .lake/packages/mathlib was freshly cloned without .olean files, hydrate
+    from the local ~/.cache/mathlib archive via `lake exe cache get` before building."""
+    mathlib_dir = root / ".lake" / "packages" / "mathlib"
+    if not mathlib_dir.exists():
+        return
+    mathlib_lib = mathlib_dir / ".lake" / "build" / "lib" / "lean" / "Mathlib"
+    if mathlib_lib.exists() and any(mathlib_lib.rglob("*.olean")):
+        return
+    print(
+        "[locked-lake-build] .lake/packages/mathlib has no compiled .olean cache; "
+        "hydrating via `lake exe cache get`...",
+        flush=True,
+    )
+    subprocess.run(["lake", "exe", "cache", "get"], cwd=root, check=False)
+
+
 def run_locked_lake_build(
     targets: Sequence[str], *, wait_for_lock: bool = False, wfail: bool = False
 ) -> int:
     """Run the causal build transaction: validate -> lock -> execute -> release.
 
-    Cache hydration is intentionally a separate explicit operation. Child
-    stdout/stderr are inherited so diagnostics are visible as Lake emits them.
+    Child stdout/stderr are inherited so diagnostics are visible as Lake emits them.
     """
     root = repo_root()
+    integrity_error = _validate_lake_workspace_integrity(root)
+    if integrity_error is not None:
+        print(f"[locked-lake-build] {integrity_error}", file=sys.stderr, flush=True)
+        return 2
     targets = tuple(str(target) for target in targets)
     if any(not target or "\x00" in target for target in targets):
         print("[locked-lake-build] invalid empty/NUL target argument", file=sys.stderr, flush=True)
@@ -153,6 +194,7 @@ def run_locked_lake_build(
         return 130
 
     print(f"[locked-lake-build] acquired {lock.lock_path}", flush=True)
+    _ensure_mathlib_cache_hydrated(root)
     cmd = lake_build_command(targets, wfail=wfail)
     status = 126
     proc: subprocess.Popen[bytes] | None = None

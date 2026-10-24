@@ -4,6 +4,11 @@ set -euo pipefail
 repo_root="$(git rev-parse --show-toplevel)"
 cd "$repo_root"
 
+if [[ -L "$repo_root/.lake" || -L "$repo_root/.lake/packages" || -f "$repo_root/.git" ]]; then
+    echo "[pre-push] refusing to run in a linked git worktree or with a symlinked .lake directory" >&2
+    exit 1
+fi
+
 zero_oid() {
     [[ "$1" =~ ^0+$ ]]
 }

@@ -17,6 +17,7 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from tools.build_lock import BuildLockBusyError, acquire_build_lock
+from tools.infra.build import _validate_lake_workspace_integrity
 from tools.pathing import repo_root
 
 
@@ -30,6 +31,10 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     root = repo_root()
+    integrity_error = _validate_lake_workspace_integrity(root)
+    if integrity_error is not None:
+        print(f"[locked-lean] {integrity_error}", file=sys.stderr)
+        return 2
     source = Path(args.file)
     if source.is_absolute():
         try:

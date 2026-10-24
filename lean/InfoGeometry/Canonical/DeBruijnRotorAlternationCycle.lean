@@ -82,7 +82,7 @@ theorem double_commutator_law (h : IsDualSeedPair d b) :
     _ = -(2 • (wheelGenerator d b * transitionVelocity d b -
       transitionVelocity d b * wheelGenerator d b)) := by
       simp only [two_nsmul]; noncomm_ring
-    _ = _ := by rw [second_derivative_restoring]; simp only [smul_smul]; rfl
+    _ = _ := by rw [second_derivative_restoring]; simp only [smul_smul]
 
 /-- Unlike a frequency argument, this equivalence does not cancel two or four. -/
 theorem no_turning_iff_seeds_vanish (h : IsDualSeedPair d b) :

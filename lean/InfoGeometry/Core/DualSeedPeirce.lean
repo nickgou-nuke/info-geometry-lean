@@ -37,64 +37,66 @@ abbrev wheelGenerator (d b : A) : A := majoranaMinus d b
 
 namespace IsDualSeedPair
 
-variable {d b : A} (h : IsDualSeedPair d b)
+variable {d b : A}
 
 /-- Swapping the two seeds reverses the poles. -/
-theorem symm : IsDualSeedPair b d := ⟨h.b_sq, h.d_sq, h.outer, h.inner⟩
+theorem symm (h : IsDualSeedPair d b) : IsDualSeedPair b d := ⟨h.b_sq, h.d_sq, h.outer, h.inner⟩
 
-theorem pp : polePlus d b * polePlus d b = polePlus d b := by
+theorem pp (h : IsDualSeedPair d b) : polePlus d b * polePlus d b = polePlus d b := by
   change (d * b) * (d * b) = d * b
   rw [← mul_assoc, h.inner]
 
-theorem qq : poleMinus d b * poleMinus d b = poleMinus d b := h.symm.pp
+theorem qq (h : IsDualSeedPair d b) : poleMinus d b * poleMinus d b = poleMinus d b := h.symm.pp
 
-theorem pq : polePlus d b * poleMinus d b = 0 := by
+theorem pq (h : IsDualSeedPair d b) : polePlus d b * poleMinus d b = 0 := by
   change (d * b) * (b * d) = 0
   calc
     (d * b) * (b * d) = d * (b * b) * d := by simp only [mul_assoc]
     _ = 0 := by rw [h.b_sq, mul_zero, zero_mul]
 
-theorem qp : poleMinus d b * polePlus d b = 0 := h.symm.pq
+theorem qp (h : IsDualSeedPair d b) : poleMinus d b * polePlus d b = 0 := h.symm.pq
 
-theorem pd : polePlus d b * d = d := h.inner
+theorem pd (h : IsDualSeedPair d b) : polePlus d b * d = d := h.inner
 
-theorem dq : d * poleMinus d b = d := by
+theorem dq (h : IsDualSeedPair d b) : d * poleMinus d b = d := by
   change d * (b * d) = d
   rw [← mul_assoc, h.inner]
 
-theorem dp : d * polePlus d b = 0 := by
+theorem dp (h : IsDualSeedPair d b) : d * polePlus d b = 0 := by
   change d * (d * b) = 0
   rw [← mul_assoc, h.d_sq, zero_mul]
 
-theorem qd : poleMinus d b * d = 0 := by
+theorem qd (h : IsDualSeedPair d b) : poleMinus d b * d = 0 := by
   change b * d * d = 0
   rw [mul_assoc, h.d_sq, mul_zero]
 
-theorem qb : poleMinus d b * b = b := h.symm.pd
+theorem qb (h : IsDualSeedPair d b) : poleMinus d b * b = b := h.symm.pd
 
-theorem bp : b * polePlus d b = b := h.symm.dq
+theorem bp (h : IsDualSeedPair d b) : b * polePlus d b = b := h.symm.dq
 
-theorem bq : b * poleMinus d b = 0 := h.symm.dp
+theorem bq (h : IsDualSeedPair d b) : b * poleMinus d b = 0 := h.symm.dp
 
-theorem pb : polePlus d b * b = 0 := h.symm.qd
+theorem pb (h : IsDualSeedPair d b) : polePlus d b * b = 0 := h.symm.qd
 
 /-- Clifford squares on the active identity; these are not norm assertions. -/
-theorem clifford_squares :
+theorem clifford_squares (h : IsDualSeedPair d b) :
     wheelGenerator d b * wheelGenerator d b = -carrierSupport d b ∧
     transitionVelocity d b * transitionVelocity d b = carrierSupport d b ∧
     phasePolarization d b * phasePolarization d b = carrierSupport d b := by
   refine ⟨?_, ?_, ?_⟩
   · change (d - b) * (d - b) = -(d * b + b * d)
-    noncomm_ring [h.d_sq, h.b_sq]
+    simp only [sub_mul, mul_sub, add_mul, mul_add, h.d_sq, h.b_sq]
+    abel
   · change (d + b) * (d + b) = d * b + b * d
-    noncomm_ring [h.d_sq, h.b_sq]
+    simp only [sub_mul, mul_sub, add_mul, mul_add, h.d_sq, h.b_sq]
+    abel
   · change (polePlus d b - poleMinus d b) *
         (polePlus d b - poleMinus d b) = polePlus d b + poleMinus d b
     rw [sub_mul, mul_sub, mul_sub, h.pp, h.pq, h.qp, h.qq]
     abel
 
 /-- The mixed Clifford anticommutator vanishes without dividing by two. -/
-theorem polarization_velocity :
+theorem polarization_velocity (h : IsDualSeedPair d b) :
     phasePolarization d b * transitionVelocity d b +
       transitionVelocity d b * phasePolarization d b = 0 := by
   change (polePlus d b - poleMinus d b) * (d + b) +
@@ -104,7 +106,7 @@ theorem polarization_velocity :
   abel
 
 /-- No-turning criterion, valid also in characteristic two. -/
-theorem velocity_eq_zero_iff : transitionVelocity d b = 0 ↔ d = 0 ∧ b = 0 := by
+theorem velocity_eq_zero_iff (h : IsDualSeedPair d b) : transitionVelocity d b = 0 ↔ d = 0 ∧ b = 0 := by
   constructor
   · intro hz
     have hp := congrArg (fun x : A => polePlus d b * x) hz

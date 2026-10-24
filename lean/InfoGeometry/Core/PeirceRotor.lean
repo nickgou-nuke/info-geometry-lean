@@ -26,21 +26,20 @@ variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
 def peirceBlock (d b : A) (a x y z : R) : A :=
   a • polePlus d b + x • d + y • b + z • poleMinus d b
 
-variable {d b : A} (h : IsDualSeedPair d b)
+variable {d b : A}
 
 /-- Multiplication of supported operators, derived from the seed equations. -/
-theorem peirceBlock_mul (a x y z e f g k : R) :
+theorem peirceBlock_mul (h : IsDualSeedPair d b) (a x y z e f g k : R) :
     peirceBlock d b a x y z * peirceBlock d b e f g k =
       peirceBlock d b (a * e + x * g) (a * f + x * k)
         (y * e + z * g) (y * f + z * k) := by
   unfold peirceBlock
   simp only [add_mul, mul_add, smul_mul_smul, h.pp, h.pq, h.qp, h.qq,
     h.pd, h.pb, h.dp, h.dq, h.qd, h.qb, h.bp, h.bq, h.d_sq, h.b_sq, smul_zero]
-  change _ = _
   module
 
 /-- The complementary idempotent annihilates every supported block. -/
-theorem harmonic_block (a x y z : R) :
+theorem harmonic_block (h : IsDualSeedPair d b) (a x y z : R) :
     zeroModeSupport d b * peirceBlock d b a x y z = 0 ∧
     peirceBlock d b a x y z * zeroModeSupport d b = 0 := by
   change (1 - polePlus d b - poleMinus d b) * peirceBlock d b a x y z = 0 ∧
@@ -50,17 +49,18 @@ theorem harmonic_block (a x y z : R) :
       one_mul, mul_one, h.pp, h.pq, h.qp, h.qq, h.pd, h.pb, h.dp, h.dq,
       h.qd, h.qb, h.bp, h.bq, smul_zero] <;> module
 
-theorem harmonic_idempotent :
+theorem harmonic_idempotent (h : IsDualSeedPair d b) :
     zeroModeSupport d b * zeroModeSupport d b = zeroModeSupport d b := by
   change (1 - polePlus d b - poleMinus d b) *
     (1 - polePlus d b - poleMinus d b) = 1 - polePlus d b - poleMinus d b
-  noncomm_ring [h.pp, h.pq, h.qp, h.qq]
+  simp only [sub_mul, mul_sub, one_mul, mul_one, h.pp, h.pq, h.qp, h.qq]
+  abel
 
 /-- Adjoin the identity on the harmonic complement. This is not an additive map. -/
 def completedBlock (d b : A) (a x y z : R) : A :=
   zeroModeSupport d b + peirceBlock d b a x y z
 
-theorem completedBlock_mul (a x y z e f g k : R) :
+theorem completedBlock_mul (h : IsDualSeedPair d b) (a x y z e f g k : R) :
     completedBlock d b a x y z * completedBlock d b e f g k =
       completedBlock d b (a * e + x * g) (a * f + x * k)
         (y * e + z * g) (y * f + z * k) := by
@@ -80,7 +80,7 @@ theorem phaseRotor_formula (c s : R) :
   module
 
 /-- The multiplication law holds before imposing a unit-circle constraint. -/
-theorem phaseRotor_mul (c s e f : R) :
+theorem phaseRotor_mul (h : IsDualSeedPair d b) (c s e f : R) :
     phaseRotor c s d b * phaseRotor e f d b =
       phaseRotor (c * e - s * f) (c * f + s * e) d b := by
   unfold phaseRotor
@@ -95,7 +95,7 @@ theorem phaseRotor_one_zero : phaseRotor (1 : R) 0 d b = 1 := by
   abel
 
 /-- Both inverse equations use only the scalar circle equation. -/
-theorem phaseRotor_inverse {c s : R} (hcs : c * c + s * s = 1) :
+theorem phaseRotor_inverse (h : IsDualSeedPair d b) {c s : R} (hcs : c * c + s * s = 1) :
     phaseRotor c s d b * phaseRotor c (-s) d b = 1 ∧
     phaseRotor c (-s) d b * phaseRotor c s d b = 1 := by
   have h₁ : c * c - s * (-s) = 1 := by simpa using hcs
@@ -107,7 +107,7 @@ theorem phaseRotor_inverse {c s : R} (hcs : c * c + s * s = 1) :
     exact phaseRotor_one_zero
 
 /-- A native ambient unit; no inverse is left as an unproved field. -/
-def phaseRotorUnit {c s : R} (hcs : c * c + s * s = 1) : Aˣ where
+def phaseRotorUnit (h : IsDualSeedPair d b) {c s : R} (hcs : c * c + s * s = 1) : Aˣ where
   val := phaseRotor c s d b
   inv := phaseRotor c (-s) d b
   val_inv := (phaseRotor_inverse h hcs).1
@@ -134,7 +134,7 @@ theorem movingPoleMinus_formula (c s : R) :
   module
 
 /-- Conjugation computes the stated moving positive pole exactly. -/
-theorem phaseRotor_conjugates_plus (c s : R) :
+theorem phaseRotor_conjugates_plus (h : IsDualSeedPair d b) (c s : R) :
     phaseRotor c s d b * polePlus d b * phaseRotor c (-s) d b =
       movingPolePlus c s d b := by
   have hp : polePlus d b = peirceBlock d b (1 : R) 0 0 0 := by simp [peirceBlock]
@@ -146,7 +146,7 @@ theorem phaseRotor_conjugates_plus (c s : R) :
   congr 1 <;> ring
 
 /-- Swapping the source pole gives the other moving idempotent. -/
-theorem phaseRotor_conjugates_minus (c s : R) :
+theorem phaseRotor_conjugates_minus (h : IsDualSeedPair d b) (c s : R) :
     phaseRotor c s d b * poleMinus d b * phaseRotor c (-s) d b =
       movingPoleMinus c s d b := by
   have hq : poleMinus d b = peirceBlock d b (0 : R) 0 0 1 := by simp [peirceBlock]
@@ -158,7 +158,7 @@ theorem phaseRotor_conjugates_minus (c s : R) :
   congr 1 <;> ring
 
 /-- Both idempotences and both annihilation orders follow from the same conjugation. -/
-theorem moving_projector_relations {c s : R} (hcs : c * c + s * s = 1) :
+theorem moving_projector_relations (h : IsDualSeedPair d b) {c s : R} (hcs : c * c + s * s = 1) :
     IsIdempotentElem (movingPolePlus c s d b) ∧
     IsIdempotentElem (movingPoleMinus c s d b) ∧
     movingPolePlus c s d b * movingPoleMinus c s d b = 0 ∧
@@ -187,6 +187,6 @@ theorem moving_poles_sum {c s : R} (hcs : c * c + s * s = 1) :
   rw [movingPolePlus_formula, movingPoleMinus_formula]
   calc
     _ = (c * c + s * s) • (polePlus d b + poleMinus d b) := by module
-    _ = carrierSupport d b := by rw [hcs, one_smul]; rfl
+    _ = carrierSupport d b := by simpa only [hcs, one_smul]
 
 end InfoGeometry.Core.PeirceRotor

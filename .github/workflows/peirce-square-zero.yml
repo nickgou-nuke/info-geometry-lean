@@ -1,0 +1,42 @@
+name: Peirce square-zero MP (pinned, scoped)
+on:
+  push:
+    branches: [feat/peirce-square-zero-mp]
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Algebra/PeirceRegularityIdentities.lean'
+      - 'lean/InfoGeometry/Singular/MoorePenroseSquareZero.lean'
+      - 'lean/InfoGeometry/Canonical/DrazinShellPeirce.lean'
+      - 'lean/InfoGeometry/Canonical/PeirceSquareZeroExamples.lean'
+      - 'tools/infra/check_peirce_square_zero_addition.py'
+      - '.github/workflows/peirce-square-zero.yml'
+permissions:
+  contents: read
+concurrency:
+  group: peirce-square-zero-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: false
+jobs:
+  scoped-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          show-progress: false
+      - name: Remove read-only checkout credential without traversing submodules
+        run: git config --local --unset-all http.https://github.com/.extraheader || true
+      - name: Install exact pinned Lean toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < lean-toolchain)"
+      - name: Compile unchanged dependency closure and audit all additions
+        run: python3 tools/infra/check_peirce_square_zero_addition.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: PeirceSquareZeroAddition
+          path: ${{ runner.temp }}/peirce-square-zero-deliverable
+          include-hidden-files: true

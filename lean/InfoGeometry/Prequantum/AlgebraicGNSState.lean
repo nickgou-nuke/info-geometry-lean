@@ -177,6 +177,13 @@ theorem state_null_product_zero (F : RealAlgebraicState A) (x y : A)
     rwa [h_rewrite] at h_pos
   exact linear_nonneg_imp_zero (F.eval (star y * x)) (F.eval (star x * x)) h_linear
 
+/-- Positivity makes the algebraic GNS null set a left ideal. -/
+theorem mul_mem_gnsNullSet (F : RealAlgebraicState A) (a : A) {x : A}
+    (hx : x ∈ F.gnsNullSet) : a * x ∈ F.gnsNullSet := by
+  have h := F.state_null_product_zero (star a * (a * x)) x hx
+  change F.eval (star (a * x) * (a * x)) = 0
+  simpa only [star_mul, mul_assoc] using h
+
 /-- The algebraic GNS null set contains zero. -/
 theorem zero_mem_gnsNullSet (F : RealAlgebraicState A) :
     (0 : A) ∈ F.gnsNullSet := by

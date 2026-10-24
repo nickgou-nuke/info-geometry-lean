@@ -1291,4 +1291,123 @@ theorem zornSpacetimeFrame_nambu_anomaly_tomita_invariant
       hv, hv, hv, hw, hw, hw,
       _root_.add_comm (zornNambuDet X.w Y.w Z.w) (zornNambuDet X.v Y.v Z.v)]
 
+/-!
+## 9. Chiral Maxwell / Gravitoelectromagnetic `(1 ⊕ 3)` Four-Potential & Stress–Energy Algebra
+-/
+
+/-- **Zorn `(1 ⊕ 3)` Four-Potential Embedding (`zornFourPotential`)**:
+    Embeds a scalar potential `φ : R` (singlet `1`) and a 3-vector potential `A : ZornVec3 R`
+    (triplet `3`) into the traceless involutive subspace `{ X | tr X = 0 ∧ J_Tomita X = -σ_swap X }`:
+    `zornFourPotential φ A = ⟨φ, A, -A, -φ⟩`. -/
+def zornFourPotential (φ : R) (A : ZornVec3 R) : ZornVectorMatrix R :=
+  ⟨φ, A, fun i => -A i, -φ⟩
+
+/-- **Chiral Riemann–Silberstein / GEM Field Strength (`zornFieldStrength`)**:
+    Embeds a polar 3-field `E : ZornVec3 R` (electric / gravitoelectric) and an axial 3-field
+    `B : ZornVec3 R` (magnetic / gravitomagnetic) into the 6D spacetime frame:
+    `zornFieldStrength E B = ⟨0, E - B, E + B, 0⟩`. -/
+def zornFieldStrength (E B : ZornVec3 R) : ZornVectorMatrix R :=
+  ⟨0, fun i => E i - B i, fun i => E i + B i, 0⟩
+
+/-- **Four-Potential Product Decomposition into Minkowski Singlet + Chiral Field Strength**:
+    For any two `(1 ⊕ 3)` four-potentials `D = zornFourPotential d₀ d` and
+    `A = zornFourPotential φ a`:
+    1. The even singlet part `ω_Zorn(D * A)` is the Minkowski / Lorenz scalar contraction
+       `⟨d₀ φ - d ⋅ a, 0, 0, d₀ φ - d ⋅ a⟩`.
+    2. The odd 6D frame part `e_Zorn(D * A)` is the exact chiral field strength
+       `zornFieldStrength E B` with `E = d₀ a - φ d` and `B = d × a`! -/
+theorem zornFourPotential_mul_decomposition
+    (d₀ φ : R) (d a : ZornVec3 R) :
+    let D := zornFourPotential d₀ d
+    let A := zornFourPotential φ a
+    let E : ZornVec3 R := fun i => d₀ * a i - φ * d i
+    let B : ZornVec3 R := ZornVec3.cross d a
+    zornSpinConnectionPart (D * A) =
+      ⟨d₀ * φ - ZornVec3.dot d a, fun _ => 0, fun _ => 0, d₀ * φ - ZornVec3.dot d a⟩ ∧
+    zornSpacetimeFramePart (D * A) = zornFieldStrength E B := by
+  intro D A E B
+  refine ⟨?_, ?_⟩
+  · ext
+    · simp [D, A, zornFourPotential, zornSpinConnectionPart, diagonalPart,
+            InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot, Fin.sum_univ_three]
+      ring
+    · rename_i i
+      fin_cases i <;> simp [zornSpinConnectionPart, diagonalPart]
+    · rename_i i
+      fin_cases i <;> simp [zornSpinConnectionPart, diagonalPart]
+    · simp [D, A, zornFourPotential, zornSpinConnectionPart, diagonalPart,
+            InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot, Fin.sum_univ_three]
+      ring
+  · ext
+    · rfl
+    · rename_i i
+      fin_cases i <;>
+        (simp [D, A, E, B, zornFourPotential, zornFieldStrength, zornSpacetimeFramePart,
+               offDiagonalPart, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]; ring)
+    · rename_i i
+      fin_cases i <;>
+        (simp [D, A, E, B, zornFourPotential, zornFieldStrength, zornSpacetimeFramePart,
+               offDiagonalPart, InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.cross]; ring)
+    · rfl
+
+/-- **Tomita Magnetic Parity Reversal & Poynting Stress–Energy Product (`zornFieldStrength_tomita_stress_energy`)**:
+    For any chiral field strength `F = zornFieldStrength E B`:
+    1. Tomita conjugation reverses the axial magnetic / gravitomagnetic field:
+       `zornTomitaConj (zornFieldStrength E B) = zornFieldStrength E (-B)`.
+    2. The Zorn norm of `F` is the first Lorentz/Poincaré Lagrangian invariant
+       `norm F = B ⋅ B - E ⋅ E`.
+    3. The Tamm–Dancoff self-interaction `F * zornTomitaConj F` simultaneously packages:
+       - the energy density `E ⋅ E + B ⋅ B` along `1`,
+       - the chiral Pontryagin pseudoscalar `-2 (E ⋅ B)` along `zornGamma`, and
+       - the Poynting momentum flux `2 (E × B)` in both triplet channels! -/
+theorem zornFieldStrength_tomita_stress_energy
+    (E B : ZornVec3 R) :
+    let F := zornFieldStrength E B
+    zornTomitaConj F = zornFieldStrength E (fun i => -B i) ∧
+    norm F = ZornVec3.dot B B - ZornVec3.dot E E ∧
+    F * zornTomitaConj F =
+      ⟨ZornVec3.dot E E + ZornVec3.dot B B - (2 : R) * ZornVec3.dot E B,
+       fun i => (2 : R) * ZornVec3.cross E B i,
+       fun i => (2 : R) * ZornVec3.cross E B i,
+       ZornVec3.dot E E + ZornVec3.dot B B + (2 : R) * ZornVec3.dot E B⟩ := by
+  intro F
+  refine ⟨?_, ?_, ?_⟩
+  · ext
+    · rfl
+    · rename_i i
+      fin_cases i <;> simp [F, zornTomitaConj, zornFieldStrength]
+    · rename_i i
+      fin_cases i <;> (simp [F, zornTomitaConj, zornFieldStrength]; ring)
+    · rfl
+  · simp [F, norm, zornFieldStrength, ZornVec3.dot, Fin.sum_univ_three]
+    ring
+  · ext
+    · simp [F, zornTomitaConj, zornFieldStrength, InfoGeometry.Algebra.zvm_mul_def,
+            mul, ZornVec3.dot, Fin.sum_univ_three]
+      ring
+    · rename_i i
+      fin_cases i <;>
+        (simp [F, zornTomitaConj, zornFieldStrength, InfoGeometry.Algebra.zvm_mul_def,
+               mul, ZornVec3.cross]; ring)
+    · rename_i i
+      fin_cases i <;>
+        (simp [F, zornTomitaConj, zornFieldStrength, InfoGeometry.Algebra.zvm_mul_def,
+               mul, ZornVec3.cross]; ring)
+    · simp [F, zornTomitaConj, zornFieldStrength, InfoGeometry.Algebra.zvm_mul_def,
+            mul, ZornVec3.dot, Fin.sum_univ_three]
+      ring
+
+/-- **Relativistic Maxwell / GEM Stress–Energy Identity (`zorn_maxwell_gem_stress_energy_identity`)**:
+    In `ZornVectorMatrix R`, the squared energy density `(E ⋅ E + B ⋅ B)²` minus `4` times the
+    squared Poynting flux `(E × B) ⋅ (E × B)` equals the sum of the squares of the two
+    Poincaré/Lorentz Casimir invariants `(E ⋅ E - B ⋅ B)² + 4 (E ⋅ B)²`! -/
+theorem zorn_maxwell_gem_stress_energy_identity
+    (E B : ZornVec3 R) :
+    (ZornVec3.dot E E + ZornVec3.dot B B) ^ 2 -
+      (4 : R) * ZornVec3.dot (ZornVec3.cross E B) (ZornVec3.cross E B) =
+    (ZornVec3.dot E E - ZornVec3.dot B B) ^ 2 +
+      (4 : R) * (ZornVec3.dot E B) ^ 2 := by
+  simp [ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+  ring
+
 end InfoGeometry.Algebra.ZornVectorMatrix

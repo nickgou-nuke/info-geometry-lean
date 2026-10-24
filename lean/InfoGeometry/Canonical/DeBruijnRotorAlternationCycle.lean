@@ -82,7 +82,7 @@ theorem double_commutator_law (h : IsDualSeedPair d b) :
     _ = -(2 • (wheelGenerator d b * transitionVelocity d b -
       transitionVelocity d b * wheelGenerator d b)) := by
       simp only [two_nsmul]; noncomm_ring
-    _ = _ := by rw [second_derivative_restoring]; simp only [smul_smul]
+    _ = _ := by rw [second_derivative_restoring]; abel
 
 /-- Unlike a frequency argument, this equivalence does not cancel two or four. -/
 theorem no_turning_iff_seeds_vanish (h : IsDualSeedPair d b) :
@@ -154,9 +154,9 @@ theorem commutator_square (h : IsDualSeedPair d b) (c s : R) :
 theorem transition_sandwich (h : IsDualSeedPair d b) (c s : R) :
     polePlus d b * movingPolePlus c s d b * polePlus d b = (c * c) • polePlus d b := by
   rw [movingPolePlus_formula]
-  simp only [transitionVelocity, majoranaPlus, mul_sub, sub_mul, mul_add, add_mul,
-    mul_smul_comm, smul_mul_assoc, h.pp, h.pq, h.qp, h.pd, h.pb, h.dp, h.bp,
-    mul_zero, zero_mul, sub_zero, zero_add, add_zero, smul_zero]
+  simp only [transitionVelocity, majoranaPlus, mul_sub, sub_mul, mul_add,
+    mul_smul_comm, smul_mul_assoc, h.pp, h.pq, h.pd, h.pb, h.dp,
+    sub_zero, add_zero, smul_zero]
 
 /-- The three algebraic identities requested in the source, on one carrier. -/
 theorem poincare_fubini_study_metric_master (h : IsDualSeedPair d b) {c s : R}

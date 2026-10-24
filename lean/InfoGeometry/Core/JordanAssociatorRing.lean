@@ -16,6 +16,22 @@ namespace InfoGeometry.Core.JordanAssociator
 
 variable {R : Type*} [Ring R]
 
+/-- Division-free recovery of the quadratic sandwich from symmetrized products. -/
+theorem symm_quadratic_sandwich (x y : R) :
+    ((x * y + y * x) * x + x * (x * y + y * x)) -
+      ((x * x) * y + y * (x * x)) = 2 • (x * y * x) := by
+  simp only [two_nsmul]
+  noncomm_ring
+
+/-- The three Jordan terms recover the symmetrized associative triple. -/
+theorem symm_jordan_triple (x y z : R) :
+    ((x * y + y * x) * z + z * (x * y + y * x)) +
+      (x * (y * z + z * y) + (y * z + z * y) * x) -
+      ((x * z + z * x) * y + y * (x * z + z * x)) =
+        2 • (x * y * z + z * y * x) := by
+  simp only [two_nsmul]
+  noncomm_ring
+
 /-- The unnormalized symmetrized-product associator is a double commutator. -/
 theorem symm_associator_eq_double_commutator (x y z : R) :
     ((x * y + y * x) * z + z * (x * y + y * x)) -

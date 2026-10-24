@@ -142,7 +142,7 @@ theorem two_state_velocity_sandwich_rev {d B : A} (h : IsDualSeedPair d B) (c s 
   have hvel_B : transitionVelocity d B * B = polePlus d B := by
     unfold transitionVelocity polePlus; rw [add_mul, h.B_sq, add_zero]
   rw [mul_assoc, velocity_mul_polePlus h]
-  unfold ellipticPolePlus
+  unfold ellipticPolePlus poleMinus
   rw [sub_mul, add_mul, smul_mul_assoc, smul_mul_assoc, smul_mul_assoc,
       polePlus_mul_B h, h.BdB, hvel_B, smul_zero, zero_add]
 
@@ -206,11 +206,10 @@ lemma bargmann_overlap_loop {d B : A} (h : IsDualSeedPair d B) (c s : R) :
     (polePlus d B * ellipticPolePlus c s d B) *
     (ellipticPolePlus c s d B * polePlus d B) =
       ((c * c) * (c * c + s * s)) • polePlus d B := by
-  rw [polePlus_mul_ellipticPolePlus h c s, ellipticPolePlus_mul_polePlus h c s,
-      sub_mul, mul_sub, mul_sub, smul_mul_smul, smul_mul_smul,
-      smul_mul_smul, smul_mul_smul,
-      polePlus_idem h, polePlus_mul_B h, d_mul_polePlus h,
-      smul_zero, sub_zero, sub_zero]
+  rw [polePlus_mul_ellipticPolePlus h c s, ellipticPolePlus_mul_polePlus h c s]
+  simp only [sub_mul, mul_sub, smul_mul_smul, polePlus_idem h,
+    polePlus_mul_B h, d_mul_polePlus h, smul_zero, sub_zero, zero_sub,
+    sub_neg_eq_add]
   change ((c * c) * (c * c)) • polePlus d B + ((c * s) * (c * s)) • polePlus d B =
     ((c * c) * (c * c + s * s)) • polePlus d B
   rw [← add_smul]
@@ -221,11 +220,10 @@ lemma bargmann_velocity_loop {d B : A} (h : IsDualSeedPair d B) (c s : R) :
     (polePlus d B * transitionVelocity d B * ellipticPolePlus c s d B) *
     (ellipticPolePlus c s d B * transitionVelocity d B * polePlus d B) =
       ((s * s) * (c * c + s * s)) • polePlus d B := by
-  rw [two_state_velocity_sandwich h c s, two_state_velocity_sandwich_rev h c s,
-      sub_mul, mul_sub, mul_sub, smul_mul_smul, smul_mul_smul,
-      smul_mul_smul, smul_mul_smul,
-      d_mul_polePlus h, polePlus_mul_B h, polePlus_idem h,
-      smul_zero, sub_zero, sub_zero]
+  rw [two_state_velocity_sandwich h c s, two_state_velocity_sandwich_rev h c s]
+  simp only [sub_mul, mul_sub, smul_mul_smul, polePlus_idem h,
+    polePlus_mul_B h, d_mul_polePlus h, smul_zero, sub_zero, zero_sub,
+    sub_neg_eq_add]
   change ((s * s) * (s * s)) • polePlus d B + ((c * s) * (c * s)) • polePlus d B =
     ((s * s) * (c * c + s * s)) • polePlus d B
   rw [← add_smul]
@@ -239,18 +237,18 @@ theorem bargmann_pancharatnam_loop_and_anomaly_master {d B : A}
     let W_id_rev := ellipticPolePlus c s d B * polePlus d B
     let W_vel := polePlus d B * transitionVelocity d B * ellipticPolePlus c s d B
     let W_vel_rev := ellipticPolePlus c s d B * transitionVelocity d B * polePlus d B
-    (polePlus d B * ellipticPolePlus 0 1 d B = 0 ∧
-     polePlus d B * transitionVelocity d B * ellipticPolePlus 0 1 d B = d) ∧
+    (polePlus d B * ellipticPolePlus (0 : R) (1 : R) d B = 0 ∧
+     polePlus d B * transitionVelocity d B * ellipticPolePlus (0 : R) (1 : R) d B = d) ∧
     (W_id * W_id_rev = (c * c) • polePlus d B ∧
      W_vel * W_vel_rev = (s * s) • polePlus d B ∧
      W_id * W_id_rev + W_vel * W_vel_rev = polePlus d B) := by
   intro W_id W_id_rev W_vel W_vel_rev
-  have h_orth_id : polePlus d B * ellipticPolePlus 0 1 d B = 0 := by
-    rw [polePlus_mul_ellipticPolePlus h 0 1]
-    simp only [mul_zero, zero_smul, sub_zero]
-  have h_orth_vel : polePlus d B * transitionVelocity d B * ellipticPolePlus 0 1 d B = d := by
-    rw [two_state_velocity_sandwich h 0 1]
-    simp only [mul_one, one_smul, zero_mul, zero_smul, sub_zero]
+  have h_orth_id : polePlus d B * ellipticPolePlus (0 : R) (1 : R) d B = 0 := by
+    rw [polePlus_mul_ellipticPolePlus h (0 : R) (1 : R)]
+    simp
+  have h_orth_vel : polePlus d B * transitionVelocity d B * ellipticPolePlus (0 : R) (1 : R) d B = d := by
+    rw [two_state_velocity_sandwich h (0 : R) (1 : R)]
+    simp
   have h_loop_id : W_id * W_id_rev = (c * c) • polePlus d B := by
     unfold W_id W_id_rev; rw [bargmann_overlap_loop h c s, h_cs, mul_one]
   have h_loop_vel : W_vel * W_vel_rev = (s * s) • polePlus d B := by

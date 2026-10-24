@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 -- SPDX-FileCopyrightText: 2024–2026 The InfoGeometry Authors
 -- SPDX-License-Identifier: MIT
 
@@ -191,10 +196,10 @@ theorem counterclockwiseProjector_as_Peirce_combo :
 /-! ## 5. Conjugation by the quarter-wave plate, in the correct orientation
 
 The draft stated its four conjugation theorems as `U A Uᴴ = ...`. For the quarter-wave
-plate that orientation sends σ₃ to `-σ₃`; the verified orientation is `Uᴴ A U`. The
+plate that orientation sends σ₃ to `-σ₂`; the verified orientation is `Uᴴ A U`. The
 statements below use the orientation that is actually true.
 
-`Uqwpᴴ σ₃ Uqwp = σ₂`, `Uqwpᴴ Pleft Uqwp = Π_ccw` and `Uqwpᴴ Pright Uqwp = Π_cw` are
+`Uqwpᴴ σ₃ Uqwp = σ₂`, `Uqwpᴴ Pleft Uqwp = Π_cw` and `Uqwpᴴ Pright Uqwp = Π_ccw` are
 proved in `PeirceCircularQwpBridge` and imported. -/
 
 /-- `Uqwp Uqwpᴴ = 1`, the reverse of the imported `Uqwpᴴ Uqwp = 1`. -/
@@ -290,13 +295,42 @@ theorem peirceCircular_chirality_relation :
   calc Uqwpᴴ * (sigma3 : Mat2C) * Uqwp = sigma2 := Uqwp_conj_sigma3
     _ = clockwiseChirality.chi := (circularChirality_is_sigma2).symm
 
+/-- The operator change of basis and the inverse state rotation intertwine.
+This fixes the orientation on arbitrary operators, not only on projectors. -/
+theorem qwp_operator_state_intertwining (A : Mat2C) (v : Fin 2 → ℂ) :
+    (Uqwpᴴ * A * Uqwp) *ᵥ (Uqwpᴴ *ᵥ v) = Uqwpᴴ *ᵥ (A *ᵥ v) := by
+  simp only [Matrix.mulVec_mulVec]
+  have h : (Uqwpᴴ * A * Uqwp) * Uqwpᴴ = Uqwpᴴ * A := by
+    rw [mul_assoc, mul_assoc, Uqwp_mul_conjTranspose, mul_one]
+  rw [h]
+
+/-- In the repository convention, applying the plate itself to a horizontal
+state gives counterclockwise polarization. Projector conjugation uses the
+inverse state rotation and therefore has the opposite orientation. -/
+theorem qwpHorizontalJones_eq_counterclockwise :
+    qwpHorizontalJones = s2 • counterclockwiseVector := by
+  rw [Uqwp_horizontalJones_apply]
+  funext i
+  fin_cases i <;>
+    simp [counterclockwiseVector, leftChiralVector, rightChiralVector] <;> ring
+
+/-- Applying the inverse plate to the horizontal state gives the clockwise
+vector, consistently with `Pleft_to_clockwise`. -/
+theorem qwp_adjoint_horizontal_eq_clockwise :
+    Uqwpᴴ *ᵥ horizontalJones = s2 • clockwiseVector := by
+  funext i
+  fin_cases i <;>
+    simp [Uqwp, horizontalJones, clockwiseVector, leftChiralVector,
+      rightChiralVector, Matrix.mulVec, Matrix.conjTranspose_apply,
+      Matrix.vecHead, conj_s2, Complex.conj_I] <;> ring
+
 /-! ## 7. Summary
 
 | Abstract layer        | Matrix (Mat₂(ℂ)) | Peirce corner (σ₃) | Circular corner (σ₂)     |
 |-----------------------|------------------|--------------------|--------------------------|
 | Involution χ          | σ₃ = Eplus       | Pleft - Pright     | σ₂ = -i·EminusC          |
-| +1 spectral projector | Pleft = diag(1,0)| diagonal (+,+)     | Π_ccw = ½(I + σ₂)        |
-| -1 spectral projector | Pright=diag(0,1) | diagonal (-,-)     | Π_cw  = ½(I - σ₂)        |
+| +1 spectral projector | Pleft = diag(1,0)| diagonal (+,+)     | Π_cw  = ½(I + σ₂)        |
+| -1 spectral projector | Pright=diag(0,1) | diagonal (-,-)     | Π_ccw = ½(I - σ₂)        |
 | Elliptic generator    | EminusC          | off-diagonal       | chirality generator      |
 | Basis change          | Uqwp             | `Uᴴ · · · U`       | `U · · · Uᴴ`             |
 | Identity              | I                | Pleft + Pright     | Π_ccw + Π_cw             |

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 
 /-!
@@ -42,6 +47,36 @@ theorem sharp_involutive (J : A) (hs : star J = J) (hJ : J * J = 1) :
     _ = X := by rw [hJ]; simp
 
 def IsIsometry (J U : A) : Prop := star U * J * U = J
+
+/-- The form-preservation defect splits into the commutation defect and the
+ordinary isometry defect. No invertibility or symmetry assumptions are needed. -/
+theorem isometry_defect_decomposition (J U : A) :
+    star U * J * U - J =
+      star U * (J * U - U * J) + (star U * U - 1) * J := by
+  noncomm_ring
+
+/-- For an ordinary isometry, preserving `J` means exactly that its
+commutation defect is annihilated by its adjoint. This remains valid for
+non-surjective isometries. -/
+theorem isIsometry_iff_adjoint_mul_commutator_zero (J U : A)
+    (hU : star U * U = 1) :
+    IsIsometry J U ↔ star U * (J * U - U * J) = 0 := by
+  unfold IsIsometry
+  rw [← sub_eq_zero, isometry_defect_decomposition, hU, sub_self, zero_mul, add_zero]
+
+/-- For a two-sided unitary, form preservation is exactly commutation with
+the form operator. The operator `J` need not be self-adjoint or involutive. -/
+theorem isIsometry_iff_commute_of_unitary (J U : A)
+    (hleft : star U * U = 1) (hright : U * star U = 1) :
+    IsIsometry J U ↔ Commute J U := by
+  rw [isIsometry_iff_adjoint_mul_commutator_zero J U hleft]
+  constructor
+  · intro h
+    have hh := congrArg (fun x => U * x) h
+    rw [← mul_assoc, hright, one_mul, mul_zero] at hh
+    exact sub_eq_zero.mp hh
+  · intro h
+    rw [h.eq, sub_self, mul_zero]
 
 theorem isIsometry_iff_sharp_mul (J U : A) (hJ : J * J = 1) :
     IsIsometry J U ↔ sharp J U * U = 1 := by
@@ -89,6 +124,12 @@ open Matrix
 
 def signature : Matrix (Fin 2) (Fin 2) ℚ := !![1, 0; 0, -1]
 def boost : Matrix (Fin 2) (Fin 2) ℚ := !![5 / 4, 3 / 4; 3 / 4, 5 / 4]
+
+/-- The indefinite boost does not commute with its preserved form operator. -/
+theorem signature_boost_noncommute : signature * boost ≠ boost * signature := by
+  intro h
+  have h01 := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℚ => M 0 1) h
+  norm_num [signature, boost, Matrix.mul_apply, Fin.sum_univ_two] at h01
 
 theorem boost_preserves_signature : boost.transpose * signature * boost = signature := by
   ext i j

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Lie.CanonicalZornG2AppendixDGenerators
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionStandardDerivation
@@ -260,10 +265,6 @@ theorem appendixDXn0_zero_eq_parameterAction_calibrated (v : Vector) :
     cases yz with
     | mk y z =>
       apply InfoGeometry.Algebra.ZornMatrix.ext
-      all_goals try simp only [appendixDCalibratedVectorToPaper_source_a,
-        appendixDCalibratedVectorToPaper_source_b,
-        appendixDCalibratedVectorToPaper_source_v,
-        appendixDCalibratedVectorToPaper_source_w]
       · simp [appendixDCalibratedVectorToPaper_apply, appendixDOrientationCalibration,
           vectorToPaper, appendixDCalibratedVectorToPaper_a, appendixDCalibratedVectorToPaper_b,
           appendixDCalibratedVectorToPaper_v, appendixDCalibratedVectorToPaper_w,
@@ -1080,7 +1081,7 @@ noncomputable def appendixDX0nTraceZero (n : Fin 3) :
 theorem appendixDXnnTraceZero_diagonal_relation :
     appendixDXnnTraceZero 0 + appendixDXnnTraceZero 1 +
         appendixDXnnTraceZero 2 = 0 := by
-  simp only [appendixDXnnTraceZero]
+  unfold appendixDXnnTraceZero
   rw [← transportSourceOperator_add, ← transportSourceOperator_add]
   change transportSourceOperator
     (appendixDXnn 0 + appendixDXnn 1 + appendixDXnn 2) = 0

@@ -1321,6 +1321,186 @@ theorem pin_minus_conjugates_isospin_to_pairing {p n : Fin 5} (hpn : p ≠ n) :
       _ = -(modeOccupied p + modeOccupied n - 1) := by abel
   exact ⟨h_tau_p, h_tau_m, h_tau_3⟩
 
+/-- **Spin-Connection Sum & Difference Laws (`isospin_pairing_cartan_sum_sub`)**:
+    1. $\tau_3(p,n) + 2 K_0(p,n) = 2 H_p = \Gamma_p^- \Gamma_p^+$ (Proton spin-connection grading).
+    2. $2 K_0(p,n) - \tau_3(p,n) = 2 H_n = \Gamma_n^- \Gamma_n^+$ (Neutron spin-connection grading). -/
+theorem isospin_pairing_cartan_sum_sub (p n : Fin 5) :
+    isospinCartan p n + pairingCartan p n = (2 : ℝ) • H p ∧
+    isospinCartan p n + pairingCartan p n = gammaMinus p * gammaPlus p ∧
+    pairingCartan p n - isospinCartan p n = (2 : ℝ) • H n ∧
+    pairingCartan p n - isospinCartan p n = gammaMinus n * gammaPlus n := by
+  have h1 : isospinCartan p n + pairingCartan p n = (2 : ℝ) • H p := by
+    dsimp [isospinCartan, pairingCartan]
+    rw [two_smul]
+    abel
+  have h2 : pairingCartan p n - isospinCartan p n = (2 : ℝ) • H n := by
+    dsimp [isospinCartan, pairingCartan]
+    rw [two_smul]
+    abel
+  exact ⟨h1, h1.trans (gammaMinus_mul_gammaPlus_eq_two_H p).1.symm,
+         h2, h2.trans (gammaMinus_mul_gammaPlus_eq_two_H n).1.symm⟩
+
+/-- **Spin-Connection Carrier Parity Theorem (`two_H_mul_two_H_eq_carrier_parity`)**:
+    For any modes $p, n \in \mathrm{Fin}\;5$, the product of their spin-connection gradings
+    $(2 H_p)(2 H_n) = (\Gamma_p^- \Gamma_p^+)(\Gamma_n^- \Gamma_n^+)$ is identically the
+    fermion-number carrier parity involution $\Delta_{\mathrm{pair}}(p,n) - \Delta_{\mathrm{iso}}(p,n)$! -/
+theorem two_H_mul_two_H_eq_carrier_parity (p n : Fin 5) :
+    ((2 : ℝ) • H p) * ((2 : ℝ) • H n) =
+      pairingCarrier p n - isospinCarrier p n ∧
+    (gammaMinus p * gammaPlus p) * (gammaMinus n * gammaPlus n) =
+      pairingCarrier p n - isospinCarrier p n := by
+  have h : ((2 : ℝ) • H p) * ((2 : ℝ) • H n) =
+      pairingCarrier p n - isospinCarrier p n := by
+    rw [two_smul_H_eq_modeOccupied_sub_modeVacant p,
+        two_smul_H_eq_modeOccupied_sub_modeVacant n]
+    dsimp [pairingCarrier, isospinCarrier, pairProjPlus, pairProjMinus,
+           isoProjPlus, isoProjMinus]
+    noncomm_ring
+  refine ⟨h, ?_⟩
+  rw [(gammaMinus_mul_gammaPlus_eq_two_H p).1,
+      (gammaMinus_mul_gammaPlus_eq_two_H n).1]
+  exact h
+
+/-- Combined $\mathrm{SO}(4)_{pn}$ Dirac reflection $Q_{\mathrm{tot}}(p,n) = (\tau_+ + \tau_-) + (K_+ + K_-)$. -/
+def totalLadderVelocity (p n : Fin 5) : MatStage 5 :=
+  (isospinPlus p n + isospinMinus p n) + (pairingPlus p n + pairingMinus p n)
+
+/-- Combined $\mathrm{SO}(4)_{pn}$ Kähler complex structure $J_{\mathrm{tot}}(p,n) = (\tau_+ - \tau_-) + (K_+ - K_-)$. -/
+def totalLadderWheel (p n : Fin 5) : MatStage 5 :=
+  (isospinPlus p n - isospinMinus p n) + (pairingPlus p n - pairingMinus p n)
+
+/-- Reverse associative cross-sector annihilation: $K_\pm \tau_\pm = 0$. -/
+theorem pairing_mul_isospin_eq_zero {p n : Fin 5} (hpn : p ≠ n) :
+    pairingPlus p n * isospinPlus p n = 0 ∧
+    pairingPlus p n * isospinMinus p n = 0 ∧
+    pairingMinus p n * isospinPlus p n = 0 ∧
+    pairingMinus p n * isospinMinus p n = 0 := by
+  rw [isospinPlus_eq_e_mul_f hpn, isospinMinus_eq_e_mul_f hpn]
+  dsimp [pairingPlus, pairingMinus]
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · have hswap : e n * e p = -(e p * e n) := e_mul_e_swap n p
+    calc
+      (e p * e n) * (e p * f n) = e p * (e n * e p) * f n := by noncomm_ring
+      _ = -(e p * e p) * e n * f n := by rw [hswap]; noncomm_ring
+      _ = 0 := by rw [e_sq p, neg_zero, zero_mul, zero_mul]
+  · calc
+      (e p * e n) * (e n * f p) = e p * (e n * e n) * f p := by noncomm_ring
+      _ = 0 := by rw [e_sq n, mul_zero, zero_mul]
+  · have hswap1 : f n * f p = -(f p * f n) := f_mul_f_swap n p
+    have hswap2 : f n * e p = -(e p * f n) := f_mul_e_swap_ne hpn
+    calc
+      (f n * f p) * (e p * f n) = -(f p * (f n * e p) * f n) := by rw [hswap1]; noncomm_ring
+      _ = f p * e p * (f n * f n) := by rw [hswap2]; noncomm_ring
+      _ = 0 := by rw [f_sq n, mul_zero]
+  · have hswap_fp_en : f p * e n = -(e n * f p) := f_mul_e_swap_ne (Ne.symm hpn)
+    calc
+      (f n * f p) * (e n * f p) = f n * (f p * e n) * f p := by noncomm_ring
+      _ = -f n * e n * (f p * f p) := by rw [hswap_fp_en]; noncomm_ring
+      _ = 0 := by rw [f_sq p, mul_zero]
+
+/-- Square-zero nilpotence of the four isospin and pairing ladder seeds ($\tau_\pm^2 = 0, K_\pm^2 = 0$). -/
+theorem isospin_and_pairing_ladder_sq {p n : Fin 5} (hpn : p ≠ n) :
+    isospinPlus p n * isospinPlus p n = 0 ∧
+    isospinMinus p n * isospinMinus p n = 0 ∧
+    pairingPlus p n * pairingPlus p n = 0 ∧
+    pairingMinus p n * pairingMinus p n = 0 := by
+  rw [isospinPlus_eq_e_mul_f hpn, isospinMinus_eq_e_mul_f hpn]
+  dsimp [pairingPlus, pairingMinus]
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · have hswap : f n * e p = -(e p * f n) := f_mul_e_swap_ne hpn
+    calc
+      (e p * f n) * (e p * f n) = e p * (f n * e p) * f n := by noncomm_ring
+      _ = -(e p * e p) * f n * f n := by rw [hswap]; noncomm_ring
+      _ = 0 := by rw [e_sq p, neg_zero, zero_mul, zero_mul]
+  · have hswap : f p * e n = -(e n * f p) := f_mul_e_swap_ne (Ne.symm hpn)
+    calc
+      (e n * f p) * (e n * f p) = e n * (f p * e n) * f p := by noncomm_ring
+      _ = -(e n * e n) * f p * f p := by rw [hswap]; noncomm_ring
+      _ = 0 := by rw [e_sq n, neg_zero, zero_mul, zero_mul]
+  · have hswap : e n * e p = -(e p * e n) := e_mul_e_swap n p
+    calc
+      (e p * e n) * (e p * e n) = e p * (e n * e p) * e n := by noncomm_ring
+      _ = -(e p * e p) * e n * e n := by rw [hswap]; noncomm_ring
+      _ = 0 := by rw [e_sq p, neg_zero, zero_mul, zero_mul]
+  · have hswap : f p * f n = -(f n * f p) := f_mul_f_swap p n
+    calc
+      (f n * f p) * (f n * f p) = f n * (f p * f n) * f p := by noncomm_ring
+      _ = -(f n * f n) * f p * f p := by rw [hswap]; noncomm_ring
+      _ = 0 := by rw [f_sq n, neg_zero, zero_mul, zero_mul]
+
+/-- **Global $\mathrm{SO}(4)_{pn}$ Dirac & Kähler Spin-Connection Factorization (`global_so4_dirac_and_complex_structure`)**:
+    For any $p \neq n$, $Q_{\mathrm{tot}}^2 = I_{32}$, $J_{\mathrm{tot}}^2 = -I_{32}$, and
+    $J_{\mathrm{tot}} Q_{\mathrm{tot}} = \tau_3 + 2 K_0 = 2 H_p$! -/
+theorem global_so4_dirac_and_complex_structure {p n : Fin 5} (hpn : p ≠ n) :
+    totalLadderVelocity p n * totalLadderVelocity p n = 1 ∧
+    totalLadderWheel p n * totalLadderWheel p n = -1 ∧
+    totalLadderWheel p n * totalLadderVelocity p n = (2 : ℝ) • H p := by
+  rcases isospin_mul_pairing_eq_zero hpn with ⟨h_ip_pp, h_ip_pm, h_im_pp, h_im_pm⟩
+  rcases pairing_mul_isospin_eq_zero hpn with ⟨h_pp_ip, h_pp_im, h_pm_ip, h_pm_im⟩
+  rcases isospin_and_pairing_ladder_sq hpn with ⟨h_ip_sq, h_im_sq, h_pp_sq, h_pm_sq⟩
+  have h_ip_im := isospinPlus_mul_isospinMinus hpn
+  have h_im_ip := isospinMinus_mul_isospinPlus hpn
+  have h_pp_pm := pairingPlus_mul_pairingMinus hpn
+  have h_pm_pp := pairingMinus_mul_pairingPlus hpn
+  refine ⟨?_, ?_, ?_⟩
+  · dsimp [totalLadderVelocity]
+    calc
+      ((isospinPlus p n + isospinMinus p n) + (pairingPlus p n + pairingMinus p n)) *
+        ((isospinPlus p n + isospinMinus p n) + (pairingPlus p n + pairingMinus p n)) =
+        isospinPlus p n * isospinPlus p n + isospinPlus p n * isospinMinus p n +
+        isospinMinus p n * isospinPlus p n + isospinMinus p n * isospinMinus p n +
+        pairingPlus p n * pairingPlus p n + pairingPlus p n * pairingMinus p n +
+        pairingMinus p n * pairingPlus p n + pairingMinus p n * pairingMinus p n +
+        (isospinPlus p n * pairingPlus p n + isospinPlus p n * pairingMinus p n +
+         isospinMinus p n * pairingPlus p n + isospinMinus p n * pairingMinus p n +
+         pairingPlus p n * isospinPlus p n + pairingPlus p n * isospinMinus p n +
+         pairingMinus p n * isospinPlus p n + pairingMinus p n * isospinMinus p n) := by
+        noncomm_ring
+      _ = isoProjPlus p n + isoProjMinus p n + pairProjPlus p n + pairProjMinus p n := by
+        rw [h_ip_sq, h_im_sq, h_pp_sq, h_pm_sq, h_ip_im, h_im_ip, h_pp_pm, h_pm_pp,
+            h_ip_pp, h_ip_pm, h_im_pp, h_im_pm, h_pp_ip, h_pp_im, h_pm_ip, h_pm_im]
+        abel
+      _ = 1 := four_projector_sum p n
+  · dsimp [totalLadderWheel]
+    calc
+      ((isospinPlus p n - isospinMinus p n) + (pairingPlus p n - pairingMinus p n)) *
+        ((isospinPlus p n - isospinMinus p n) + (pairingPlus p n - pairingMinus p n)) =
+        isospinPlus p n * isospinPlus p n - isospinPlus p n * isospinMinus p n -
+        isospinMinus p n * isospinPlus p n + isospinMinus p n * isospinMinus p n +
+        pairingPlus p n * pairingPlus p n - pairingPlus p n * pairingMinus p n -
+        pairingMinus p n * pairingPlus p n + pairingMinus p n * pairingMinus p n +
+        (isospinPlus p n * pairingPlus p n - isospinPlus p n * pairingMinus p n -
+         isospinMinus p n * pairingPlus p n + isospinMinus p n * pairingMinus p n +
+         pairingPlus p n * isospinPlus p n - pairingPlus p n * isospinMinus p n -
+         pairingMinus p n * isospinPlus p n + pairingMinus p n * isospinMinus p n) := by
+        noncomm_ring
+      _ = -(isoProjPlus p n + isoProjMinus p n + pairProjPlus p n + pairProjMinus p n) := by
+        rw [h_ip_sq, h_im_sq, h_pp_sq, h_pm_sq, h_ip_im, h_im_ip, h_pp_pm, h_pm_pp,
+            h_ip_pp, h_ip_pm, h_im_pp, h_im_pm, h_pp_ip, h_pp_im, h_pm_ip, h_pm_im]
+        abel
+      _ = -1 := by rw [four_projector_sum p n]
+  · dsimp [totalLadderWheel, totalLadderVelocity]
+    calc
+      ((isospinPlus p n - isospinMinus p n) + (pairingPlus p n - pairingMinus p n)) *
+        ((isospinPlus p n + isospinMinus p n) + (pairingPlus p n + pairingMinus p n)) =
+        isospinPlus p n * isospinPlus p n + isospinPlus p n * isospinMinus p n -
+        isospinMinus p n * isospinPlus p n - isospinMinus p n * isospinMinus p n +
+        pairingPlus p n * pairingPlus p n + pairingPlus p n * pairingMinus p n -
+        pairingMinus p n * pairingPlus p n - pairingMinus p n * pairingMinus p n +
+        (isospinPlus p n * pairingPlus p n + isospinPlus p n * pairingMinus p n -
+         isospinMinus p n * pairingPlus p n - isospinMinus p n * pairingMinus p n +
+         pairingPlus p n * isospinPlus p n + pairingPlus p n * isospinMinus p n -
+         pairingMinus p n * isospinPlus p n - pairingMinus p n * isospinMinus p n) := by
+        noncomm_ring
+      _ = (isoProjPlus p n - isoProjMinus p n) + (pairProjPlus p n - pairProjMinus p n) := by
+        rw [h_ip_sq, h_im_sq, h_pp_sq, h_pm_sq, h_ip_im, h_im_ip, h_pp_pm, h_pm_pp,
+            h_ip_pp, h_ip_pm, h_im_pp, h_im_pm, h_pp_ip, h_pp_im, h_pm_ip, h_pm_im]
+        abel
+      _ = isospinCartan p n + pairingCartan p n := by
+        rw [← isospinCartan_eq_isoProj_sub p n,
+            ← pairingCartan_eq_pairProj_sub p n]
+      _ = (2 : ℝ) • H p := (isospin_pairing_cartan_sum_sub p n).1
+
 /-! ## 6. The Grand Cl(5,5) Spinor Cartan-Fock Synthesis -/
 
 /-

@@ -178,6 +178,19 @@ def run_sympy_verification() -> dict:
     assert Gamma_minus_n * tau_minus * (-Gamma_minus_n) == K_minus
     assert Gamma_minus_n * tau_3 * Gamma_minus_n == -two_K_0
 
+    # 8b. Verify Spin-Connection Carrier Parity (2 H_p)(2 H_n) = Delta_pair - Delta_iso
+    #     and Global SO(4)_{pn} Dirac & Kahler Factorization:
+    two_Hp = 2 * N[p] - I32
+    two_Hn = 2 * N[n] - I32
+    assert tau_3 + two_K_0 == two_Hp
+    assert two_K_0 - tau_3 == two_Hn
+    assert two_Hp * two_Hn == Delta_pair - Delta_iso
+    Q_tot = (tau_plus + tau_minus) + (K_plus + K_minus)
+    J_tot = (tau_plus - tau_minus) + (K_plus - K_minus)
+    assert Q_tot * Q_tot == I32
+    assert J_tot * J_tot == -I32
+    assert J_tot * Q_tot == two_Hp
+
     # 9. Verify Erlangen 2.0 Cartan-Peirce Emergence & Gauge Invariance on SplitQuaternion:
     x00, x01, x10, x11, y00, y01, y10, y11, u = sp.symbols(
         "x00 x01 x10 x11 y00 y01 y10 y11 u"
@@ -245,6 +258,27 @@ def run_sympy_verification() -> dict:
         color_embed(0, seed_d),
         zvm_mul(color_embed(1, seed_d), color_embed(2, seed_d)),
     ) == color_embed(0, P_plus)
+
+    # 11. Verify Zorn 6D Frame Anticommutator Metric & Cross-Channel Color Torsion Trichotomy:
+    def zvm_add(m1, m2):
+        return (m1[0] + m2[0], m1[1] + m2[1], m1[2] + m2[2], m1[3] + m2[3])
+
+    def zvm_sub(m1, m2):
+        return (m1[0] - m2[0], m1[1] - m2[1], m1[2] - m2[2], m1[3] - m2[3])
+
+    def zvm_frame(m):
+        return (0, m[1], m[2], 0)
+
+    e_X0 = zvm_frame(color_embed(0, X))
+    e_Y1 = zvm_frame(color_embed(1, Y))
+    comm_01 = zvm_sub(zvm_mul(e_X0, e_Y1), zvm_mul(e_Y1, e_X0))
+    expected_torsion = color_embed(
+        2, sp.Matrix([[0, -2 * x10 * y10], [2 * x01 * y01, 0]])
+    )
+    assert sp.simplify(comm_01[0] - expected_torsion[0]) == 0
+    assert sp.simplify(comm_01[1] - expected_torsion[1]) == sp.zeros(3, 1)
+    assert sp.simplify(comm_01[2] - expected_torsion[2]) == sp.zeros(3, 1)
+    assert sp.simplify(comm_01[3] - expected_torsion[3]) == 0
 
     return {
         "engine": "SymPy",

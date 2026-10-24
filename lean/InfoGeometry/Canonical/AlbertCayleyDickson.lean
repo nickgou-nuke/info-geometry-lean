@@ -208,6 +208,57 @@ theorem two_sided_conj_embed_assoc {γ : F} (s : A) (y : AlbertStep F A γ) :
   · simp [mul, mul_assoc]
   · simp [mul, star_star, mul_assoc]
 
+/-- Even base connection projection `(p, q) ↦ (p, 0)` on `AlbertStep F A γ`. -/
+def basePart {γ : F} (x : AlbertStep F A γ) : AlbertStep F A γ :=
+  ⟨x.p, 0⟩
+
+/-- Odd lateral Cayley–Dickson frame projection `(p, q) ↦ (0, q)` on `AlbertStep F A γ`. -/
+def lateralPart {γ : F} (x : AlbertStep F A γ) : AlbertStep F A γ :=
+  ⟨0, x.q⟩
+
+/-- Cayley–Dickson `ℤ₂` doubling grading involution `(p, q) ↦ (p, -q)` on `AlbertStep F A γ`. -/
+def doublingGamma {γ : F} (x : AlbertStep F A γ) : AlbertStep F A γ :=
+  ⟨x.p, -x.q⟩
+
+/-- **Erlangen 2.0 on `AlbertStep F A γ`: Base Connection `⊕` Lateral Frame Decomposition**. -/
+theorem doubling_connection_frame_split {γ : F} (x : AlbertStep F A γ) :
+    basePart x + lateralPart x = x ∧
+    doublingGamma (basePart x) = basePart x ∧
+    doublingGamma (lateralPart x) = ⟨0, -x.q⟩ ∧
+    doublingGamma (doublingGamma x) = x := by
+  refine ⟨?_, ?_, ?_, ?_⟩ <;>
+  · ext <;> simp [basePart, lateralPart, doublingGamma]
+
+/-- **Emergent Base Metric & Curvature from Lateral Cayley–Dickson Frames**:
+    For any `x, y : AlbertStep F A γ`, both the symmetric Jordan anticommutator and the
+    Lie commutator of their odd lateral frame parts `lateralPart x` and `lateralPart y`
+    have zero lateral component and land purely in the even base algebra! -/
+theorem lateralPart_anticommutator_and_commutator_in_base
+    {γ : F} (x y : AlbertStep F A γ) :
+    mul (lateralPart x) (lateralPart y) + mul (lateralPart y) (lateralPart x) =
+      ⟨γ • (star y.q * x.q + star x.q * y.q), 0⟩ ∧
+    mul (lateralPart x) (lateralPart y) - mul (lateralPart y) (lateralPart x) =
+      ⟨γ • (star y.q * x.q - star x.q * y.q), 0⟩ := by
+  refine ⟨?_, ?_⟩
+  · ext
+    · simp [lateralPart, mul, smul_add]
+    · simp [lateralPart, mul]
+  · ext
+    · simp [lateralPart, mul, smul_sub]
+    · simp [lateralPart, mul]
+
+/-- **Triple Lateral Associator Torsion Lands Purely in the Odd Lateral Sector**:
+    For any `x, y, z : AlbertStep F A γ`, the associator of three lateral frames
+    has zero base component and lands purely in the odd lateral sector! -/
+theorem lateralPart_associator_in_lateral
+    {γ : F} (x y z : AlbertStep F A γ) :
+    mul (mul (lateralPart x) (lateralPart y)) (lateralPart z) -
+    mul (lateralPart x) (mul (lateralPart y) (lateralPart z)) =
+      ⟨0, z.q * (γ • (star y.q * x.q)) - x.q * star (γ • (star z.q * y.q))⟩ := by
+  ext
+  · simp [lateralPart, mul]
+  · simp [lateralPart, mul]
+
 /-- The canonical split-complex-like element `(1, 1)` in the `γ = 1` step. -/
 def splitPlus : AlbertStep F A (1 : F) :=
   ⟨1, 1⟩

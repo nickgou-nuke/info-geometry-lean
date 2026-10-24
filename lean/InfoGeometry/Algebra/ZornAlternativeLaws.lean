@@ -753,4 +753,176 @@ theorem zornSpacetimeFrame_commutator_curvature_and_color_torsion
             add, neg, mul, smul, ZornVec3.dot_comm]
       try ring
 
+/-- **Cartan Covariant Derivative `[ω_Zorn(X), e_Zorn(Y)]` Lands Purely in the 6D Frame**:
+    For any `X, Y : ZornVectorMatrix R`, the commutator of the 2D singlet spin connection
+    `zornSpinConnectionPart X` with the 6D frame `zornSpacetimeFramePart Y` has zero diagonal
+    part and lands purely in the 6D colored frame! -/
+theorem zornSpinConnection_spacetimeFrame_commutator_in_frame
+    (X Y : ZornVectorMatrix R) :
+    zornSpinConnectionPart
+      (zornSpinConnectionPart X * zornSpacetimeFramePart Y -
+       zornSpacetimeFramePart Y * zornSpinConnectionPart X) = zero ∧
+    zornSpacetimeFramePart
+      (zornSpinConnectionPart X * zornSpacetimeFramePart Y -
+       zornSpacetimeFramePart Y * zornSpinConnectionPart X) =
+      zornSpinConnectionPart X * zornSpacetimeFramePart Y -
+      zornSpacetimeFramePart Y * zornSpinConnectionPart X := by
+  refine ⟨?_, ?_⟩ <;>
+  · rw [_root_.sub_eq_add_neg]
+    ext
+    · simp [zornSpinConnectionPart, zornSpacetimeFramePart, diagonalPart, offDiagonalPart,
+            zero, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_mul_def, add, neg, mul]
+    · rename_i i
+      fin_cases i <;>
+        (simp [zornSpinConnectionPart, zornSpacetimeFramePart, diagonalPart, offDiagonalPart,
+               zero, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               InfoGeometry.Algebra.zvm_mul_def, add, neg, mul, ZornVec3.cross]; try ring)
+    · rename_i i
+      fin_cases i <;>
+        (simp [zornSpinConnectionPart, zornSpacetimeFramePart, diagonalPart, offDiagonalPart,
+               zero, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               InfoGeometry.Algebra.zvm_mul_def, add, neg, mul, ZornVec3.cross]; try ring)
+    · simp [zornSpinConnectionPart, zornSpacetimeFramePart, diagonalPart, offDiagonalPart,
+            zero, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_mul_def, add, neg, mul]
+
+/-- Diagonal hyperbolic gauge boost element `⟨u, 0, 0, u⁻¹⟩` in `ZornVectorMatrix R`. -/
+def zornHyperbolicKernel (lam mu : R) : ZornVectorMatrix R :=
+  ⟨lam, fun _ => 0, fun _ => 0, mu⟩
+
+/-- Two-sided hyperbolic gauge boost `K(lamL, muL) * X * K(lamR, muR)` on `ZornVectorMatrix R`. -/
+noncomputable def zornTwoSidedHyperbolicLaplace (lamL muL lamR muR : R) (X : ZornVectorMatrix R) :
+    ZornVectorMatrix R :=
+  (zornHyperbolicKernel lamL muL * X) * zornHyperbolicKernel lamR muR
+
+/-- **Local Hyperbolic Gauge Boost Invariance of the 6D Emergent Metric, Curvature, and Norm (`u : Rˣ`)**:
+    Under the antisymmetric two-sided hyperbolic gauge boost `L_{u, u⁻¹, u⁻¹, u}` (`u : Rˣ`),
+    the 6D emergent split-metric `zornEmergentMetric`, the Riemann–Cartan singlet curvature
+    `zornEmergentCurvature`, and the Zorn quadratic norm `norm` are all strictly invariant! -/
+theorem zornEmergentMetric_and_curvature_gauge_invariant
+    (u : Rˣ) (X Y : ZornVectorMatrix R) :
+    zornEmergentMetric
+      (zornTwoSidedHyperbolicLaplace (u : R) (↑u⁻¹ : R) (↑u⁻¹ : R) (u : R) X)
+      (zornTwoSidedHyperbolicLaplace (u : R) (↑u⁻¹ : R) (↑u⁻¹ : R) (u : R) Y) =
+      zornEmergentMetric X Y ∧
+    zornEmergentCurvature
+      (zornTwoSidedHyperbolicLaplace (u : R) (↑u⁻¹ : R) (↑u⁻¹ : R) (u : R) X)
+      (zornTwoSidedHyperbolicLaplace (u : R) (↑u⁻¹ : R) (↑u⁻¹ : R) (u : R) Y) =
+      zornEmergentCurvature X Y ∧
+    norm (zornTwoSidedHyperbolicLaplace (u : R) (↑u⁻¹ : R) (↑u⁻¹ : R) (u : R) X) =
+      norm X := by
+  have hu : (u : R) * (↑u⁻¹ : R) = 1 := Units.mul_inv u
+  refine ⟨?_, ?_, ?_⟩
+  · simp [zornEmergentMetric, zornTwoSidedHyperbolicLaplace, zornHyperbolicKernel,
+          InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot, ZornVec3.cross,
+          Fin.sum_univ_three]
+    calc
+      ((u : R) * ((u : R) * X.v 0) * ((↑u⁻¹ : R) * ((↑u⁻¹ : R) * Y.w 0)) +
+       (u : R) * ((u : R) * X.v 1) * ((↑u⁻¹ : R) * ((↑u⁻¹ : R) * Y.w 1)) +
+       (u : R) * ((u : R) * X.v 2) * ((↑u⁻¹ : R) * ((↑u⁻¹ : R) * Y.w 2))) +
+      ((↑u⁻¹ : R) * ((↑u⁻¹ : R) * X.w 0) * ((u : R) * ((u : R) * Y.v 0)) +
+       (↑u⁻¹ : R) * ((↑u⁻¹ : R) * X.w 1) * ((u : R) * ((u : R) * Y.v 1)) +
+       (↑u⁻¹ : R) * ((↑u⁻¹ : R) * X.w 2) * ((u : R) * ((u : R) * Y.v 2))) =
+      ((u : R) * (↑u⁻¹ : R)) * ((u : R) * (↑u⁻¹ : R)) *
+        (X.v 0 * Y.w 0 + X.v 1 * Y.w 1 + X.v 2 * Y.w 2 +
+         (X.w 0 * Y.v 0 + X.w 1 * Y.v 1 + X.w 2 * Y.v 2)) := by ring
+      _ = (X.v 0 * Y.w 0 + X.v 1 * Y.w 1 + X.v 2 * Y.w 2) +
+          (X.w 0 * Y.v 0 + X.w 1 * Y.v 1 + X.w 2 * Y.v 2) := by
+        simp [hu]
+  · simp [zornEmergentCurvature, zornTwoSidedHyperbolicLaplace, zornHyperbolicKernel,
+          InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot, ZornVec3.cross,
+          Fin.sum_univ_three]
+    calc
+      ((u : R) * ((u : R) * X.v 0) * ((↑u⁻¹ : R) * ((↑u⁻¹ : R) * Y.w 0)) +
+       (u : R) * ((u : R) * X.v 1) * ((↑u⁻¹ : R) * ((↑u⁻¹ : R) * Y.w 1)) +
+       (u : R) * ((u : R) * X.v 2) * ((↑u⁻¹ : R) * ((↑u⁻¹ : R) * Y.w 2))) -
+      ((↑u⁻¹ : R) * ((↑u⁻¹ : R) * X.w 0) * ((u : R) * ((u : R) * Y.v 0)) +
+       (↑u⁻¹ : R) * ((↑u⁻¹ : R) * X.w 1) * ((u : R) * ((u : R) * Y.v 1)) +
+       (↑u⁻¹ : R) * ((↑u⁻¹ : R) * X.w 2) * ((u : R) * ((u : R) * Y.v 2))) =
+      ((u : R) * (↑u⁻¹ : R)) * ((u : R) * (↑u⁻¹ : R)) *
+        ((X.v 0 * Y.w 0 + X.v 1 * Y.w 1 + X.v 2 * Y.w 2) -
+         (X.w 0 * Y.v 0 + X.w 1 * Y.v 1 + X.w 2 * Y.v 2)) := by ring
+      _ = (X.v 0 * Y.w 0 + X.v 1 * Y.w 1 + X.v 2 * Y.w 2) -
+          (X.w 0 * Y.v 0 + X.w 1 * Y.v 1 + X.w 2 * Y.v 2) := by
+        simp [hu]
+  · simp [norm, zornTwoSidedHyperbolicLaplace, zornHyperbolicKernel,
+          InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot, ZornVec3.cross,
+          Fin.sum_univ_three]
+    calc
+      (u : R) * X.a * (↑u⁻¹ : R) * ((↑u⁻¹ : R) * X.b * (u : R)) -
+      ((u : R) * ((u : R) * X.v 0) * ((↑u⁻¹ : R) * ((↑u⁻¹ : R) * X.w 0)) +
+       (u : R) * ((u : R) * X.v 1) * ((↑u⁻¹ : R) * ((↑u⁻¹ : R) * X.w 1)) +
+       (u : R) * ((u : R) * X.v 2) * ((↑u⁻¹ : R) * ((↑u⁻¹ : R) * X.w 2))) =
+      ((u : R) * (↑u⁻¹ : R)) * ((u : R) * (↑u⁻¹ : R)) *
+        (X.a * X.b - (X.v 0 * X.w 0 + X.v 1 * X.w 1 + X.v 2 * X.w 2)) := by ring
+      _ = X.a * X.b - (X.v 0 * X.w 0 + X.v 1 * X.w 1 + X.v 2 * X.w 2) := by
+        simp [hu]
+
+/-- **Same-Channel Torsion Vanishing (`zornColorCrossTorsion_same_channel_zero`)**:
+    Within any single color channel `ι_k` (`k ∈ {0, 1, 2}`), the octonionic color torsion
+    vanishes identically, so `[e(ι_k(M)), e(ι_k(N))]` is pure Riemann spin curvature! -/
+theorem zornColorCrossTorsion_same_channel_zero (M N : Matrix (Fin 2) (Fin 2) R) :
+    zornColorCrossTorsion (colorChannelEmbed0 M) (colorChannelEmbed0 N) = zero ∧
+    zornColorCrossTorsion (colorChannelEmbed1 M) (colorChannelEmbed1 N) = zero ∧
+    zornColorCrossTorsion (colorChannelEmbed2 M) (colorChannelEmbed2 N) = zero := by
+  refine ⟨?_, ?_, ?_⟩ <;>
+  · ext
+    · rfl
+    · rename_i i
+      fin_cases i <;>
+        simp [zornColorCrossTorsion, colorChannelEmbed0, colorChannelEmbed1,
+              colorChannelEmbed2, colorChannelEmbed, zero, ZornVec3.cross,
+              ZornVec3.basis]
+    · rename_i i
+      fin_cases i <;>
+        simp [zornColorCrossTorsion, colorChannelEmbed0, colorChannelEmbed1,
+              colorChannelEmbed2, colorChannelEmbed, zero, ZornVec3.cross,
+              ZornVec3.basis]
+    · rfl
+
+/-- **Cross-Channel Pure Color Torsion (`zornCrossChannel_pure_color_torsion`)**:
+    Across distinct color channels (`ι₀(M)` and `ι₁(N)`), both the emergent metric and
+    singlet curvature vanish (`g = 0, R = 0`), and the frame commutator is purely
+    octonionic color torsion in the third channel `ι₂`! -/
+theorem zornCrossChannel_pure_color_torsion (M N : Matrix (Fin 2) (Fin 2) R) :
+    zornEmergentMetric (colorChannelEmbed0 M) (colorChannelEmbed1 N) = 0 ∧
+    zornEmergentCurvature (colorChannelEmbed0 M) (colorChannelEmbed1 N) = 0 ∧
+    zornSpacetimeFramePart (colorChannelEmbed0 M) *
+      zornSpacetimeFramePart (colorChannelEmbed1 N) -
+    zornSpacetimeFramePart (colorChannelEmbed1 N) *
+      zornSpacetimeFramePart (colorChannelEmbed0 M) =
+      colorChannelEmbed2 !![0, (-2 : R) * (M 1 0 * N 1 0); (2 : R) * (M 0 1 * N 0 1), 0] := by
+  refine ⟨?_, ?_, ?_⟩
+  · simp [zornEmergentMetric, colorChannelEmbed0, colorChannelEmbed1, colorChannelEmbed,
+          ZornVec3.dot, ZornVec3.basis]
+  · simp [zornEmergentCurvature, colorChannelEmbed0, colorChannelEmbed1, colorChannelEmbed,
+          ZornVec3.dot, ZornVec3.basis]
+  · rw [_root_.sub_eq_add_neg]
+    ext
+    · simp [zornSpacetimeFramePart, offDiagonalPart, colorChannelEmbed0, colorChannelEmbed1,
+            colorChannelEmbed2, colorChannelEmbed, InfoGeometry.Algebra.zvm_add_def,
+            InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_mul_def,
+            add, neg, mul, ZornVec3.dot, ZornVec3.basis]
+      <;> ring
+    · rename_i i
+      fin_cases i <;>
+        simp [zornSpacetimeFramePart, offDiagonalPart, colorChannelEmbed0, colorChannelEmbed1,
+              colorChannelEmbed2, colorChannelEmbed, InfoGeometry.Algebra.zvm_add_def,
+              InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_mul_def,
+              add, neg, mul, ZornVec3.cross, ZornVec3.basis]
+      <;> ring
+    · rename_i i
+      fin_cases i <;>
+        simp [zornSpacetimeFramePart, offDiagonalPart, colorChannelEmbed0, colorChannelEmbed1,
+              colorChannelEmbed2, colorChannelEmbed, InfoGeometry.Algebra.zvm_add_def,
+              InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_mul_def,
+              add, neg, mul, ZornVec3.cross, ZornVec3.basis]
+      <;> ring
+    · simp [zornSpacetimeFramePart, offDiagonalPart, colorChannelEmbed0, colorChannelEmbed1,
+            colorChannelEmbed2, colorChannelEmbed, InfoGeometry.Algebra.zvm_add_def,
+            InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_mul_def,
+            add, neg, mul, ZornVec3.dot, ZornVec3.basis]
+      <;> ring
+
 end InfoGeometry.Algebra.ZornVectorMatrix

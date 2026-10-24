@@ -16,6 +16,17 @@ namespace InfoGeometry.Algebra.ZornVectorMatrix
 
 variable {R : Type*} [CommRing R]
 
+/-- Leibniz forces the sign linking the first idempotent to the lower corner. -/
+theorem Derivation.lower_corner_a (D : Derivation (R := R)) (v : ZornVec3 R) :
+    (D (offDiagonal 0 v)).a = -ZornVec3.dot (D E11).v v := by
+  have hzero : mul E11 (offDiagonal 0 v) = ZornVectorMatrix.zero := by
+    ext i <;> simp [mul, E11, offDiagonal, ZornVectorMatrix.zero, ZornVec3.dot, ZornVec3.cross]
+  have h := congrArg ZornVectorMatrix.a (D.map_mul E11 (offDiagonal 0 v))
+  rw [hzero, D.map_zero] at h
+  simp [mul, ZornVectorMatrix.add, ZornVectorMatrix.zero, E11, offDiagonal, ZornVec3.dot] at h
+  change 0 = ZornVec3.dot (D E11).v v + (D (offDiagonal 0 v)).a at h
+  linear_combination -h
+
 /-- The six-parameter off-diagonal action in the owner's sign convention. -/
 def offDiagonalAction (p q : ZornVec3 R) (X : ZornVectorMatrix R) :
     ZornVectorMatrix R :=
@@ -73,5 +84,49 @@ theorem offDiagonalDerivation_upper_bracket (p r : ZornVec3 R) :
 @[simp] theorem trace_offDiagonalAction (p q : ZornVec3 R)
     (X : ZornVectorMatrix R) : trace (offDiagonalAction p q X) = 0 := by
   simp [trace, offDiagonalAction]
+
+/-- The second off-diagonal bracket has the opposite sign. -/
+theorem offDiagonalAction_lower_bracket (q s : ZornVec3 R)
+    (X : ZornVectorMatrix R) :
+    sub (offDiagonalAction 0 q (offDiagonalAction 0 s X))
+      (offDiagonalAction 0 s (offDiagonalAction 0 q X)) =
+      offDiagonalAction (-(2 • ZornVec3.cross q s)) 0 X := by
+  ext i
+  all_goals try fin_cases i
+  all_goals simp [offDiagonalAction, sub, add, neg, ZornVec3.dot,
+    ZornVec3.cross, Fin.sum_univ_three, two_smul]
+  all_goals ring
+
+theorem offDiagonalDerivation_lower_bracket (q s : ZornVec3 R) :
+    Derivation.bracket (offDiagonalDerivation 0 q) (offDiagonalDerivation 0 s) =
+      offDiagonalDerivation (-(2 • ZornVec3.cross q s)) 0 := by
+  apply Derivation.ext
+  intro X
+  exact offDiagonalAction_lower_bracket q s X
+
+/-- Evaluation at the first Peirce idempotent recovers both parameters.
+No characteristic or division hypothesis is needed. -/
+theorem offDiagonalDerivation_injective :
+    Function.Injective (fun pq : ZornVec3 R × ZornVec3 R =>
+      offDiagonalDerivation pq.1 pq.2) := by
+  intro pq rs h
+  have he := congrArg (fun D : Derivation (R := R) => D E11) h
+  apply Prod.ext
+  · have hv := congrArg ZornVectorMatrix.v he
+    funext i
+    have hi := congrFun hv i
+    simpa [offDiagonalDerivation, offDiagonalAction, E11, ZornVec3.cross] using hi
+  · have hw := congrArg ZornVectorMatrix.w he
+    simpa [offDiagonalDerivation, offDiagonalAction, E11, ZornVec3.cross] using hw
+
+/-- Exact quadratic expansion: the linear norm variation vanishes.
+This does not assert that the Euler step `X + t D X` preserves the norm. -/
+theorem norm_add_smul_offDiagonalAction (p q : ZornVec3 R)
+    (t : R) (X : ZornVectorMatrix R) :
+    norm (add X (smul t (offDiagonalAction p q X))) =
+      norm X + t ^ 2 * norm (offDiagonalAction p q X) := by
+  simp [norm, add, smul, offDiagonalAction, ZornVec3.dot,
+    ZornVec3.cross, Fin.sum_univ_three]
+  ring
 
 end InfoGeometry.Algebra.ZornVectorMatrix

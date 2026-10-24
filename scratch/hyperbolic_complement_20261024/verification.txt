@@ -1,0 +1,8 @@
+17 exact declarations across PeirceHyperbolicComplement and PeirceMatrixUnitCompletion.
+Parent complement build5293 exit0 /tmp/hyperbolic-complement-build.log. Final completion build80048 exit0 /tmp/peirce-matrix-unit-final-build.log 8965jobs, no ownerwarnings.
+A-A /root/zorn_semantic_audit semantic PASS both final mathematical contracts.
+QA-A /root/zorn_acceptance ACCEPTED all17, independent locked audit2364 exit0 /tmp/hyperbolic-complement-qa.log. Standard axioms only, no errors/sorryAx.
+Strict screener0, per-file refactor[], scopedstageddiffclean.
+Complement SHA3403d3817a944dc9589b3b74dfb19ee7bf7c03b4ca39e6b60dcf64f464c7564a
+Completion SHAec1b8d6ef9b58fd67725db1fcde5d845dc7347f99eca8f0bd376b3bf06c67c1f
+Actual active-support complement; normalized ambient Units with actual inverse and conjugation. completedMatrix is multiplicative/unital, not claimed additive. No positive metric or spacetimeclassification.

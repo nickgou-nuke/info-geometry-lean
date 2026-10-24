@@ -1,0 +1,6 @@
+Owner ZornNullSupportAdjoint.lean SHA256 ca1d68d2f093c521be7fdd03b8d66f8672e8f4b0befc2de1adae6ccf782cab49
+Parent final locked build51758 terminalexit0 8964jobs /tmp/zorn-null-adjoint-final-build.log
+Independent final typed-source A-A semantic PASS. Initial unannotated function-product elaboration rejected; corrected explicit Module.End types establish composition.
+QA ACCEPTED fourtheorems; independent locked audit16987 terminalexit0 /tmp/zorn-null-adjoint-qa.log
+Each declaration axioms propext, Classical.choice, Quot.sound only. Strictscreen0traps, whitespace0, markersnone.
+Scope split-polar adjoints of actual Zorn endomorphism products, selfadjoint sum, distinct and nonselfadjoint individual normalized-null product. No positive-Hilbert or MP identification.

@@ -1,0 +1,6 @@
+Owner lean/InfoGeometry/Canonical/KitaevInteriorKrein.lean
+SHA256 9503fc43c34659790b6592484703edac7d9e10554f59c4435d989359d9d36581
+Final parent locked build26046 exit0 4093jobs: /tmp/kitaev-interior-krein-clean-build.log. No new ownerwarnings; imported dependencies retain warnings. Initial build84540 failed diagonal ite simplification; repaired. Intermediate68638 exit0 with unusedsimp warning; removed before final.
+A-A /root/zorn_semantic_audit exact semantic PASS.
+QA-A /root/zorn_acceptance independent locked Audit.lean55499 exit0 /tmp/kitaev-interior-krein-qa.log. Five declarations each use only {propext, Classical.choice, Quot.sound}; noerrors/sorryAx. Strictscreen0, scopedcachedwhitespace0, markersnone. ACCEPTED. Lane released.
+Staged source and records. No commit/push, no whole-repository validation claim. Broad goal ongoing.

@@ -1,0 +1,10 @@
+Actual Dirac Peirce corner over full real finite matrices. Given existing
+KasparovKreinData K, idempotent P fixed by its Dirac adjoint, and arbitrary
+finite basis b of range(component10Linear P), take the native BilinForm.toMatrix
+of diracCornerTracePairing. Its entries are exactly trace(b_i * #b_j).
+Existing IsPerfPair.nondegenerate plus BilinForm.nondegenerate_iff_det_ne_zero
+proves Gram determinant nonzero. Feed this Gram matrix into EXISTING
+MajoranaKreinPfaffianCarrier.offDiagonalPairing; its skewness and nonzero
+determinant follow from existing carrier theorems. No positive-definiteness,
+equality of symmetric metric and skew form, signed Pfaffian formula, or
+geometric/analytic structure is asserted. No new carrier or law structure.

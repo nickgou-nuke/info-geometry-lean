@@ -1,0 +1,1 @@
+Connect actual conserved boundary commutator C(u,v) to native rotor S(c,s) and transported Krein metric. Prove S commutes C (no circle); circle gives S C T=C; transported metric trace of C*C#new=-4uv star(uv) through covariance. No claim rotor unitary for original metric. Existing native operators and metrics reused.

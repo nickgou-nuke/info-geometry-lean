@@ -1,0 +1,7 @@
+Faithfulness of the existing native boundaryMatrixHom from full Mat2 complex.
+Use matrix-ring simplicity and nontrivial target, not coefficient surrogates.
+Intertwine its represented adjoint with the constructed endpoint metric using
+explicit self-adjoint endpoint assumptions and existing negative Dirac signs.
+Reflect metric self-adjointness and square-zero equations by injectivity.
+No phase classification, full commutant equality, or positivity claim.
+Sandbox only; no builds; parent coordinates verification and promotion.

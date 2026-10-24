@@ -1,0 +1,117 @@
+{
+  "authority": "exact CAS evidence, not kernel certification or paper authentication",
+  "basis": [
+    "ePlus",
+    "eMinus",
+    "up0",
+    "up1",
+    "up2",
+    "down0",
+    "down1",
+    "down2"
+  ],
+  "checks": {
+    "cross_product_trace_identity": "PASS",
+    "existing_multiplication_checks": "PASS",
+    "existing_off_diagonal_owner": {
+      "basis_generators": 6,
+      "bracket_q_coefficient_in_owner_normalization": 2,
+      "full_lower_brackets": 9,
+      "full_upper_brackets": 9,
+      "leibniz_norm_skew": "PASS",
+      "parameter_injectivity_rank": 6,
+      "quadratic_norm_expansion": "PASS",
+      "relation_to_corrected_prompt_scalar_terms_convention": "negative of corrected operator",
+      "source_parsed_sign_alignment": "PASS"
+    },
+    "imaginary_left_clifford": {
+      "operator_pairs": 49,
+      "signature_positive_negative": [
+        4,
+        3
+      ]
+    },
+    "independent_Sage_QQ_ranks": {
+      "derivation_constraints": 50,
+      "native_generators": 14,
+      "peirce_evaluation": 6,
+      "sage_version": "10.9",
+      "skew_triality_constraints": 164,
+      "triality_constraints": 162
+    },
+    "local_triality": {
+      "commutator_pairs": 900,
+      "diagonal_equations_equal_derivation_equations": "PASS",
+      "linear_triple_dimension_over_QQ": 30,
+      "norm_skew_triple_dimension_over_QQ": 28
+    },
+    "native_derivations": {
+      "basis_product_checks": 896,
+      "constraint_rank": 50,
+      "norm_skew_trace_unit": "PASS",
+      "peirce_stabilizer_dimension": 8,
+      "rank": 14,
+      "rational_real_action_source_agreement": "PASS",
+      "stabilizer_is_sl3_block_action_over_QQ": "PASS"
+    },
+    "polarized_alternativity": {
+      "left_operator_pairs": 64,
+      "right_operator_pairs": 64
+    },
+    "prompt_formula_counterexamples": {
+      "D_E11_times_V0": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "Leibniz_RHS": [
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "corrected_off_diagonal_generators_6": "PASS",
+      "corrected_p_p_bracket_q_coefficient": -2,
+      "norm_skew_residual": -2,
+      "proposed_RHS_on_H_lower_V2": 2,
+      "proposed_commutator_on_H_lower_V2": -4
+    },
+    "stored_CAS_tables": {
+      "aligned_CAS_matrices": 14,
+      "circular_matrices": 14,
+      "frame_inverse_and_signed_basis_alignment": "PASS",
+      "full_operator_brackets": 196,
+      "nonzero_structure_constants": 120
+    }
+  },
+  "object": "existing_split_octonion_derivation_clifford_triality_audit",
+  "operator_convention": "column images; AB=A after B",
+  "ring": "QQ; expanded polynomial identities have integer coefficients",
+  "source_sha256": {
+    "lean/InfoGeometry/Algebra/AlternativeDerivations.lean": "d3fe82b8e7579fd0fc6e291e66fe9c9766f5e84cebaf8334cee43ed5c4d51d1a",
+    "lean/InfoGeometry/Algebra/Zorn/OffDiagonalDerivation.lean": "46ebc6a122a3c7e882a31607e21a073947b0c8dcdaf0d1ac2fb8a082545887de",
+    "lean/InfoGeometry/Algebra/ZornVectorMatrix.lean": "d3835a3df1d3f4bdbec5827a5cf23a9395e366cef35352c4ca6f3db13c7def62",
+    "lean/InfoGeometry/Exceptional/CompositionTriality.lean": "22dc48a3472502699e40628eb153c68514609bc1813d44c34c3ce812005c6b36",
+    "lean/InfoGeometry/Exceptional/CompositionTrialityAlternativeBridge.lean": "8c3368d7a6cec0c3656efd657c5f2193bc7c3fdc637dcb837e2b20ef00a41729",
+    "lean/InfoGeometry/Lie/CanonicalZornDerivationDimension.lean": "3f642bfa5254aae3b91140d0caca9f7982d48038f38e1935fa90235d3fe2862c",
+    "lean/InfoGeometry/Lie/CanonicalZornG2BasisAlignment.lean": "613997f0bcbfc8e9cd61e61a6a3fcd9e04c769fb16b63c1f2ee28400ce44f9cb",
+    "lean/InfoGeometry/Lie/CanonicalZornG2CASData.lean": "84701dab2ced832e1aabfd40ee12bcaac7694466aad0348cb36de362171fe076",
+    "lean/InfoGeometry/Lie/CanonicalZornG2CASReplay.lean": "f10a9eac350afba678feb4d9f20bd93ce1f858eac9c60ec48398e41d82f6d550",
+    "lean/InfoGeometry/Lie/CanonicalZornG2NativeMatrixExport.lean": "a13d16795b7a1aa1d0aca5b8b24460d3336bdaa08cd4580e1b1ab757a63bc327",
+    "lean/InfoGeometry/Lie/CanonicalZornPeirceSL3Bridge.lean": "de6f82ecf39113bc1a13a6f530d662b34e29269cd32e6cb8328c477f82f48f46",
+    "lean/InfoGeometry/Lie/SplitOctonionCliffordAction.lean": "09b1da1216cd3cf95288b62c016cfce46eb85eefeac0ee72bcef89ce5f0ea382",
+    "scratch/cas/gunaydin_gursey_existing_owners.py": "4e2937f1495eeee4dfa586354303b51a7b88e68131d00ce5181e26ccd835eba9",
+    "tools/sympy/split_octonion_derivation_classification.py": "172069bdb0afe011231c17e78a7a9e0e03509c15dc436656153174ab57c71b4b",
+    "tools/sympy/split_octonion_multiplication.py": "eb5e6e99eb22e8cd2fb182f505254a557558bca6abf07f64b2760290bcf84492"
+  },
+  "sympy_version": "1.14.0"
+}

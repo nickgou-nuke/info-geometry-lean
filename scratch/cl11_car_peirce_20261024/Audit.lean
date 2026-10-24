@@ -1,0 +1,7 @@
+import InfoGeometry.Canonical.Cl11CARPeirceReadback
+open InfoGeometry.Topology.FractalCantorFock.RealCARPair
+open InfoGeometry.Canonical.Cl11CARPeirceReadback
+#print axioms annihilation_reflexive
+#print axioms creation_reflexive
+#print axioms last_site_weighted_boundary
+#print axioms algebraic_hyperbolic_idempotent

@@ -1,0 +1,22 @@
+Primary-source check 2026-10-24 (web fallback after local browser CDP refused connection).
+https://arxiv.org/abs/1607.06662
+Impact of nonlinear effective interactions on GFT quantum gravity condensates;
+authors Pithis, Sakellariadou, Tomov, not Oriti. Studies effective nonlinear
+GFT condensate equations; does not identify this repository's CAR colimit.
+https://arxiv.org/abs/2412.18889
+Experimental particle production in time-dependent spacetimes: a one-dimensional
+scattering problem; two-dimensional BEC analogue with tunable interactions.
+https://arxiv.org/abs/2603.11160
+The TRGB-SBF Project IV: JWST TRGB color calibration; unrelated to BEC claim.
+https://arxiv.org/abs/1710.05800
+A rapidly expanding Bose-Einstein condensate: an expanding universe in the lab;
+published PRX8,021021(2018), not a 2026 result.
+https://arxiv.org/abs/1406.3572
+Analog quantum simulation of gravitational waves in a Bose-Einstein condensate;
+Bravo, Sabin, Fuentes; analogue proposal, not proof physical spacetime is BEC.
+https://arxiv.org/abs/gr-qc/0012094
+Chapline,Hohlfeld,Laughlin,Santiago propose horizon as vacuum phase transition.
+No reviewed source proves physical origin of repo Drazin/MP choices, literal
+GFT implementation, first-world claim, or immunity of interpretation to error.
+Finite CAR embeddings and typed colimits require an explicit proved map to
+GFT geometric degrees of freedom/dynamics before such identification.

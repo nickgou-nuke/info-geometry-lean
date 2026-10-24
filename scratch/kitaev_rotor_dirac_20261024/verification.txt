@@ -1,0 +1,9 @@
+KitaevRotorDirac: five declarations independently accepted.
+Final parent lockedbuild64922 exit0, 9191 jobs, /tmp/kitaev-rotor-dirac-final-build.log.
+No new owner warnings; dependency warnings remain.
+A-A semanticPASS final5, wording corrected to movingPlus operator before circle normalization.
+QA-A zorn_acceptance independent locked audit6145 exit0, exactly5 standard axiom reports (propext, Classical.choice, Quot.sound subsets), /tmp/kitaev-rotor-dirac-qa.log.
+Strictscreen0 traps; scopedwhitespace0; bannedmarkersnone.
+SHA256 6ee2cc7ba5891d78d9c9e74554f23fe900c9c2a9ead07f28fde7d29d5627f113.
+Scope constructed Krein adjoint transport, exact fixedness criterion and concrete normalized idempotent failing unchanged-metric selfadjointness. No metric-unitarity/analytic claim.
+No whole repository gate or goal completion asserted.

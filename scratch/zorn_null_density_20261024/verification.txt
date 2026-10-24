@@ -1,0 +1,8 @@
+Owner: lean/InfoGeometry/Canonical/ZornNullPairDensity.lean
+SHA256: 3efa50c2ad0ea96647e0ffcd4ac5f543d217521ff70ffd2b9870b428f82fc395
+Parent locked build: terminal exit 0, 8971 jobs; /tmp/zorn-null-density-final-build.log
+Independent semantic review: PASS (zorn_semantic_audit).
+Independent QA: ACCEPTED (zorn_acceptance), locked audit terminal exit 0; /tmp/zorn-null-density-qa.log
+All four declarations: transitive axioms exactly propext, Classical.choice, Quot.sound.
+Strict screener: 0 traps. Scoped staged whitespace check: exit 0.
+Scope: actual Zorn endomorphism trace, trace of weighted null-pair support, both weighted trace identities. No positivity, normalized state, analytic KMS, or full-support CAR assertion.

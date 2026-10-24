@@ -1,0 +1,9 @@
+Owner SHA256 f8dc318e6e0187f4e37e276e513248259561029031d19429b6a4bf2c0562ef28
+Parent locked build50117 exit0,9304jobs /tmp/kitaev-null-solder-build.log
+Independent A-A zorn_semantic_audit exactsource PASS.
+Independent QA-A zorn_acceptance ACCEPTED; audit93506 exit0.
+QA log /tmp/kitaev-null-solder-qa.log
+Four declarations standard propext,Classical.choice,Quot.sound only.
+Strict0/refactor[]/stagedwhitespaceclean. Owner no warnings; dependency warnings remain.
+Closed native nonzero square-zero constructed-Dirac-selfadjoint operator witness;
+no ordinary Hilbert-selfadjointness or positive-metric claim.

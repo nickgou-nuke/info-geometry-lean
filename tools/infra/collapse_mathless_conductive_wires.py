@@ -17,7 +17,12 @@ from typing import Any
 
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
 
+from igf.graph.decl_schema import (
+    STRUCTURAL_FINGERPRINT_VERSION,
+    TERM_DIGEST_VERSION,
+)
 from tools.infra.arango_dag_algorithms import run_aql
 from tools.infra.arango_env import (
     arango_database,
@@ -43,46 +48,51 @@ def scan_and_collapse_conductive_wires(target: ArangoTarget) -> dict[str, Any]:
     print("🔍 Scanning ArangoDB graph for mathless intermediate nodes and overlapping conductive wires...")
 
     # 1. Identify Mathless Intermediate Nodes (In-degree > 0, Out-degree > 0, low AST node count)
-    mathless_query = """
+    mathless_query = f"""
     FOR d IN decls
-      FILTER d.valueFingerprint != null
-         AND d.valueFingerprint.algorithmVersion == "lean-expr-structural-v3"
-         AND d.valueFingerprint.nodeCount != null
-         AND d.valueFingerprint.nodeCount < 10
+      FILTER (d.valueDigest != null
+              AND d.valueDigest.algorithmVersion == "{TERM_DIGEST_VERSION}"
+              AND d.valueDigest.nodeCount != null
+              AND d.valueDigest.nodeCount < 10)
+          OR (d.valueFingerprint != null
+              AND d.valueFingerprint.algorithmVersion == "{STRUCTURAL_FINGERPRINT_VERSION}"
+              AND d.valueFingerprint.nodeCount != null
+              AND d.valueFingerprint.nodeCount < 10)
       LET in_edges = (FOR e IN edges FILTER e._to == d._id RETURN e._from)
       LET out_edges = (FOR e IN edges FILTER e._from == d._id RETURN e._to)
       FILTER LENGTH(in_edges) > 0 AND LENGTH(out_edges) > 0
       LIMIT 100
-      RETURN {
+      RETURN {{
         id: d._id,
         name: d.name,
         kind: d.kind,
         module: d.module,
-        astNodeCount: d.valueFingerprint.nodeCount,
-        canonicalValueHash: d.canonicalValueHash,
+        astNodeCount: (d.valueDigest.nodeCount || d.valueFingerprint.nodeCount),
+        canonicalValueHash: (d.valueDigest.digest || d.canonicalValueHash),
         callers: in_edges,
         targets: out_edges
-      }
+      }}
     """
     mathless_nodes = run_aql(target, mathless_query)
 
     print(f"⚡ Found {len(mathless_nodes)} mathless intermediate nodes sitting in conductive wires.")
 
     # 2. Group Conductive Paths by Shape-Hash Signatures to find overlapping wires
-    overlapping_wires_query = """
+    overlapping_wires_query = f"""
     FOR d IN decls
-      FILTER d.valueFingerprint != null
-      FILTER d.valueFingerprint.algorithmVersion == "lean-expr-structural-v3"
-      FILTER d.canonicalValueHash != null
-      COLLECT hash = d.canonicalValueHash INTO members
+      FILTER (d.valueDigest != null AND d.valueDigest.algorithmVersion == "{TERM_DIGEST_VERSION}")
+          OR (d.valueFingerprint != null AND d.valueFingerprint.algorithmVersion == "{STRUCTURAL_FINGERPRINT_VERSION}")
+      LET valHash = (d.valueDigest.digest || d.canonicalValueHash)
+      FILTER valHash != null
+      COLLECT hash = valHash INTO members
       FILTER LENGTH(members) > 1
       SORT LENGTH(members) DESC
       LIMIT 20
-      RETURN {
+      RETURN {{
         canonicalValueHash: hash,
         wireCount: LENGTH(members),
         overlappingNodes: members[*].d.name
-      }
+      }}
     """
     overlapping_wires = run_aql(target, overlapping_wires_query)
 

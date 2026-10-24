@@ -1,0 +1,6 @@
+import InfoGeometry.Canonical.KitaevHyperbolicTrace
+open InfoGeometry.Canonical.KitaevHyperbolicTrace
+#print axioms hyperbolic_trace
+#print axioms displacement_square_trace
+#print axioms displacement_dirac_trace
+#print axioms rational_boost_displacement_trace

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Lie.CanonicalZornCartanAdjointRootDecomposition
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionEllClosedFlowCircularBasis
@@ -91,6 +96,40 @@ def rationalCoordinates (X : RationalVZ) : Fin 8 → ℚ
 def rationalCircularFrameMatrix : Matrix (Fin 8) (Fin 8) ℚ :=
   fun i j => rationalCoordinates (rationalCircularFrame j) i
 
+/-- Upper off-diagonal matrix unit in `M₈(ℚ)`. -/
+def mat8Unit01Q : Matrix (Fin 8) (Fin 8) ℚ :=
+  fun i j => if i = 0 ∧ j = 1 then 1 else 0
+
+/-- Lower off-diagonal matrix unit in `M₈(ℚ)`. -/
+def mat8Unit10Q : Matrix (Fin 8) (Fin 8) ℚ :=
+  fun i j => if i = 1 ∧ j = 0 then 1 else 0
+
+/-- Noncommutativity witness for `M₈(ℚ)`. -/
+theorem mat8_units_noncommute_rat :
+    mat8Unit01Q * mat8Unit10Q ≠ mat8Unit10Q * mat8Unit01Q := by
+  intro h
+  have h00 := congrArg (fun M : Matrix (Fin 8) (Fin 8) ℚ => M 0 0) h
+  have h10 : (1 : ℚ) = 0 := by
+    simpa [mat8Unit01Q, mat8Unit10Q, Matrix.mul_apply, Fin.sum_univ_eight] using h00
+  exact one_ne_zero h10
+
+/-- Upper off-diagonal matrix unit in `M₈(ℝ)`. -/
+def mat8Unit01R : Matrix (Fin 8) (Fin 8) ℝ :=
+  fun i j => if i = 0 ∧ j = 1 then 1 else 0
+
+/-- Lower off-diagonal matrix unit in `M₈(ℝ)`. -/
+def mat8Unit10R : Matrix (Fin 8) (Fin 8) ℝ :=
+  fun i j => if i = 1 ∧ j = 0 then 1 else 0
+
+/-- Noncommutativity witness for `M₈(ℝ)`. -/
+theorem mat8_units_noncommute_real :
+    mat8Unit01R * mat8Unit10R ≠ mat8Unit10R * mat8Unit01R := by
+  intro h
+  have h00 := congrArg (fun M : Matrix (Fin 8) (Fin 8) ℝ => M 0 0) h
+  have h10 : (1 : ℝ) = 0 := by
+    simpa [mat8Unit01R, mat8Unit10R, Matrix.mul_apply, Fin.sum_univ_eight] using h00
+  exact one_ne_zero h10
+
 def rationalStandardVector (j : Fin 8) : RationalVZ :=
   match j with
   | 0 => rationalFrameVector 1 0 zeroVec3 zeroVec3
@@ -167,7 +206,7 @@ theorem rootDerivationRationalTable_matrix (k : Fin 14) :
     rootDerivationRationalTable k = rationalCircularOperatorMatrix k := by
   fin_cases k <;>
     rw [rationalCircularOperatorMatrix, rationalCircularFrameMatrix_inv] <;>
-    native_decide
+    decide +kernel
 
 theorem rootDerivationRationalTable_entry (k : Fin 14) (i j : Fin 8) :
     rootDerivationRationalTable k i j = rationalCircularOperatorMatrix k i j := by

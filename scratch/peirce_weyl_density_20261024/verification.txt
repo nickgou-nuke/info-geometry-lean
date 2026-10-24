@@ -1,0 +1,8 @@
+Parent final locked build28410 terminal exit0,8973jobs: /tmp/zorn-null-weyl-density-final-build.log
+Independent A-A final semantic PASS after explicit include hs fix.
+Independent QA audit34405 terminal exit0: /tmp/peirce-weyl-density-qa.log
+Three generic axioms: propext, Quot.sound. Native specialization: propext, Classical.choice, Quot.sound. All generic signatures explicitly retain hs.
+Strict screener0traps; scoped staged diffcheck0; markersnone.
+PeirceWeylDensityTransport SHA256 1fc77f530f44066a29e9683e73a4467a4b6d9423f5d147dcdeff0f56cb056102
+ZornNullWeylDensity SHA256 732a11dbe2f7861f528e9ba6ced46354b47d35e3175653315cd7ea6ea81ecc23
+Proves weight exchange and weighted trace covariance through ambient Weyl units, including proper-support native Zorn pair. No carrier identification with Kitaev, positivity, or analytic KMS asserted.

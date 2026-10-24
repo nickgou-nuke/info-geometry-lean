@@ -1,0 +1,48 @@
+{
+  "scope": "FiniteSeedGibbsColimit native owner only; algebraic scope, no completed Cstar or analytic KMS acceptance",
+  "semantic_auditor": "Popper",
+  "kernel_qa": "Ampere",
+  "proof_author": "Kepler",
+  "disposition": "ACCEPTED_WITH_LIMITED_SCOPE",
+  "result": {
+    "build": {
+      "command": [
+        "lake",
+        "build",
+        "+InfoGeometry.Canonical.FiniteSeedGibbsColimit:olean"
+      ],
+      "exit": 0
+    },
+    "axioms": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/Canonical/FiniteSeedGibbsColimit.olean"
+      ],
+      "exit": 0
+    },
+    "strict": {
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/Canonical/FiniteSeedGibbsColimit.lean",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    "stable_candidate_contract_import_and_pins": true
+  },
+  "hashes": {
+    "lean/InfoGeometry/Canonical/FiniteSeedGibbsColimit.lean": "86732370417d6a88cea16df724edef78b9ad3dfe7b6da6550019a29ae3c6c1d8",
+    "lean/InfoGeometry/Canonical/AlgebraicKMSStateColimitReadback.lean": "bbf044109f7e50eff2b9ea2c3f5f71433596277ef0c05d9d599c57e59378fb36",
+    "lean/InfoGeometry/Canonical/GibbsParityTower.lean": "82710f026059f3649f98fc0698266767110842c0f7a54c71c4cb0f23fa6db0e1",
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b"
+  },
+  "axiom_log": "warning: LeanCopilot: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanCopilot' has local changes\nwarning: LeanArchitect: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanArchitect' has local changes\nChecking .lake/build/lib/lean/InfoGeometry/Canonical/FiniteSeedGibbsColimit.olean\n  \u2713 all 5 declarations clean\n\n\u2713 All modules passed.\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/Canonical/FiniteSeedGibbsColimit.olean:PASS\n"
+}

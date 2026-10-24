@@ -1,0 +1,7 @@
+import InfoGeometry.Canonical.ZornNullRotorTrace
+import InfoGeometry.Canonical.KitaevRotorChordalTrace
+#print axioms InfoGeometry.Canonical.ZornNullRotorTrace.nullRotor_trace
+#print axioms InfoGeometry.Canonical.ZornNullRotorTrace.nullRotor_displacement_trace
+#print axioms InfoGeometry.Canonical.ZornNullRotorTrace.nullRotor_sandwich_trace
+#print axioms InfoGeometry.Canonical.KitaevRotorChordalTrace.twoSite_moving_trace
+#print axioms InfoGeometry.Canonical.KitaevRotorChordalTrace.twoSite_displacement_trace

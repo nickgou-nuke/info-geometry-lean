@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Lie.CanonicalZornG2NativeMatrixExport
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.CanonicalZornG2CASData
@@ -92,9 +97,10 @@ def alignedCASBasisMatrix (i : Fin 14) : Matrix (Fin 8) (Fin 8) ℚ :=
       InfoGeometry.Lie.CanonicalZornG2NativeMatrixExport.rootDerivationRationalTable j *
       InfoGeometry.Lie.CanonicalZornG2NativeMatrixExport.explicitInverseMatrix)
 
+set_option maxHeartbeats 10000000 in
 theorem casBasisMatrix_eq_aligned (i : Fin 14) :
     InfoGeometry.Lie.CanonicalZornG2CASData.casBasisMatrix i =
       alignedCASBasisMatrix i := by
-  fin_cases i <;> native_decide
+  fin_cases i <;> decide +kernel
 
 end InfoGeometry.Lie.CanonicalZornG2BasisAlignment

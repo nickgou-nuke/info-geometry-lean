@@ -1,0 +1,6 @@
+import InfoGeometry.Canonical.KitaevNullSolderWitness
+open InfoGeometry.Canonical.KitaevNullSolderWitness
+#print axioms solder_ne_zero
+#print axioms fixed_nonzero_solder
+#print axioms constant_spinor_fixed
+#print axioms constant_spinor_solder_witness

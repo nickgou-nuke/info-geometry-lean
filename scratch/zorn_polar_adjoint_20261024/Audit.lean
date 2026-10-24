@@ -1,0 +1,6 @@
+import InfoGeometry.Canonical.ZornPolarAdjoint
+#print axioms InfoGeometry.Canonical.ZornPolarAdjoint.polar_left_adjoint
+#print axioms InfoGeometry.Canonical.ZornPolarAdjoint.polar_right_adjoint
+#print axioms InfoGeometry.Canonical.ZornPolarAdjoint.conjugate_mul
+#print axioms InfoGeometry.Canonical.ZornPolarAdjoint.hilbertized_left_adjoint
+#print axioms InfoGeometry.Canonical.ZornPolarAdjoint.hilbertized_right_adjoint

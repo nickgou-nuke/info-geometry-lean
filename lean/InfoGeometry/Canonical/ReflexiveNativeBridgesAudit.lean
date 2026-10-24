@@ -1,0 +1,36 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Canonical.ReflexiveParabolicUnits
+import InfoGeometry.Canonical.ReflexiveMatrixCorner
+import InfoGeometry.Canonical.ReflexiveMatrixDirac
+import InfoGeometry.Canonical.ZornReflexiveMatrixRepresentation
+import InfoGeometry.Canonical.ReflexiveWeightedTrace
+
+/-! Kernel axiom audit of the native reflexive-pair bridges.
+This checks declarations, not geometric interpretations or independent acceptance. -/
+
+#print axioms InfoGeometry.Canonical.ReflexiveNilpotentFlows.parabolicUnitsHom
+#print axioms InfoGeometry.Canonical.ReflexiveNilpotentFlows.parabolicUnitsHom_eq_one_iff
+#print axioms InfoGeometry.Canonical.ReflexiveNilpotentFlows.weylUnit_conjugates_parabolic
+#print axioms InfoGeometry.Canonical.ReflexiveNilpotentFlows.parabolic_triple_eq_weylUnit
+#print axioms InfoGeometry.Canonical.ReflexiveNilpotentFlows.pairMatrixUnit
+#print axioms InfoGeometry.Canonical.ReflexiveNilpotentFlows.reflexive_pair_noncommute
+#print axioms InfoGeometry.Canonical.ReflexiveNilpotentFlows.pairMatrixUnit_mul
+#print axioms InfoGeometry.Canonical.ReflexiveNilpotentFlows.pairMatrixLinear
+#print axioms InfoGeometry.Canonical.ReflexiveNilpotentFlows.pairMatrixLinear_apply
+#print axioms InfoGeometry.Canonical.ReflexiveNilpotentFlows.pairMatrixLinear_mul
+#print axioms InfoGeometry.Canonical.ReflexiveNilpotentFlows.pairMatrixLinear_one
+#print axioms InfoGeometry.Canonical.ReflexiveNilpotentFlows.pairMatrixLinear_mem_corner
+#print axioms InfoGeometry.Canonical.ReflexiveNilpotentFlows.pairMatrixCornerHom
+#print axioms InfoGeometry.Canonical.ReflexiveNilpotentFlows.pairMatrixAlgHom
+#print axioms InfoGeometry.Canonical.ReflexiveNilpotentFlows.pairDiracMetric
+#print axioms InfoGeometry.Canonical.ReflexiveNilpotentFlows.pairMatrixLinear_dirac
+#print axioms InfoGeometry.Canonical.ReflexiveNilpotentFlows.zornColorMatrixHom
+#print axioms InfoGeometry.Canonical.ReflexiveNilpotentFlows.zornColorMatrixHom_apply
+#print axioms InfoGeometry.Canonical.ReflexiveNilpotentFlows.pairMatrixLinear_weight
+#print axioms InfoGeometry.Canonical.ReflexiveNilpotentFlows.cyclic_weighted_balance
+#print axioms InfoGeometry.Canonical.ReflexiveNilpotentFlows.cyclic_support_balance_d
+#print axioms InfoGeometry.Canonical.ReflexiveNilpotentFlows.cyclic_support_balance_B

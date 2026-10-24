@@ -6,6 +6,10 @@ from arango import ArangoClient
 sys.path.insert(0, os.path.abspath('.'))
 sys.path.insert(0, os.path.abspath('./src'))
 
+from igf.graph.decl_schema import (
+    STRUCTURAL_FINGERPRINT_VERSION,
+    TERM_DIGEST_VERSION,
+)
 from tools.infra.arango_env import (
     load_repo_arango_env,
     arango_endpoint,
@@ -24,27 +28,26 @@ def main():
 
     # 2. Define the targeted AQL query. Matching finite hashes produce review
     # candidates only; they are not proof-equivalence classes.
-    q = '''
+    q = f'''
     FOR d IN decls
-      FILTER d.valueFingerprint != null
-      FILTER d.valueFingerprint.algorithmVersion == "lean-expr-structural-v3"
+      FILTER (d.valueDigest != null AND d.valueDigest.algorithmVersion == "{TERM_DIGEST_VERSION}")
+          OR (d.valueFingerprint != null AND d.valueFingerprint.algorithmVersion == "{STRUCTURAL_FINGERPRINT_VERSION}")
       LET name_lower = LOWER(d.name)
       FILTER name_lower LIKE "%sorry%"
           OR name_lower LIKE "%_true%"
           OR name_lower LIKE "%trivial%"
-      COLLECT hash = d.canonicalValueHash INTO targets
+      COLLECT hash = (d.valueDigest.digest || d.canonicalValueHash) INTO targets
       FILTER hash != null
-      RETURN {
+      RETURN {{
         canonicalValueHash: hash,
         targetDeclarations: targets[*].d.name,
         matchingDeclarations: (
           FOR peer IN decls
-            FILTER peer.valueFingerprint != null
-            FILTER peer.valueFingerprint.algorithmVersion == "lean-expr-structural-v3"
-            FILTER peer.canonicalValueHash == hash
+            FILTER (peer.valueDigest != null AND peer.valueDigest.algorithmVersion == "{TERM_DIGEST_VERSION}" AND peer.valueDigest.digest == hash)
+                OR (peer.valueFingerprint != null AND peer.valueFingerprint.algorithmVersion == "{STRUCTURAL_FINGERPRINT_VERSION}" AND peer.canonicalValueHash == hash)
             RETURN peer.name
         )
-      }
+      }}
     '''
 
     results = list(db.aql.execute(q))

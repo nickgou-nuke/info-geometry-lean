@@ -1,0 +1,6 @@
+Reuse actual KasparovKreinData, native unit twoSiteBoost, and existing
+SpinorialCore.Krein pairing/metricDual. Connect operator sharpU=Uinverse
+to starU eta U=eta, then scalar state-vector pairing invariance and
+contragredient metric covector evaluation on inverse-transformed state.
+Parameters complex star-fixed, u*u-v*v=1; actual constructed endpoint metric.
+No ordinary Hilbert unitarity, bosonic CCR dynamics or cosmology claim.

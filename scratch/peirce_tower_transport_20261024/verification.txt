@@ -1,0 +1,6 @@
+PeirceAlgebraTransport:4 theorems; Cl11PeirceOrbitColimit:3 theorems.
+Parent locked build10925 exit0,8985jobs /tmp/peirce-tower-transport-build.log; no newownerwarnings, dependencywarnings present.
+Independent QA locked audit60232 exit0 /tmp/peirce-tower-transport-qa.log; standardaxiom subsets only, noerrors/sorryAx. Final independent A-A PASS. QA ACCEPTED; strictscreen0 refactor[] both whitespace0 markersnone.
+SHA256 PeirceAlgebraTransport 4b384bf2a52f4af61eb7dac31032c5b2e3e6a70e4d55d37f3033f32be615be69
+SHA256 Cl11PeirceOrbitColimit 75d86b5acf9c34907fec5b2a4054d288f02894274e14cd7f532bfd82480386ad
+Actual algebra hom naturality, native JW successor rotor and elliptic/hyperbolic orbit expression compatibility with algebraic colimit. No new limit carrier; no analytic completion/KMS existence/spectral assertion. Full persistent goal remains open.

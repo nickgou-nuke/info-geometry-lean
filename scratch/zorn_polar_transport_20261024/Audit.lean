@@ -1,0 +1,6 @@
+import InfoGeometry.Canonical.ZornPolarFormTransport
+#print axioms InfoGeometry.Canonical.ZornPolarFormTransport.transportedPolar
+#print axioms InfoGeometry.Canonical.ZornPolarFormTransport.transported_pairing
+#print axioms InfoGeometry.Canonical.ZornPolarFormTransport.transported_ketBra
+#print axioms InfoGeometry.Canonical.ZornPolarFormTransport.transported_adjoint
+#print axioms InfoGeometry.Canonical.ZornPolarFormTransport.nullRotor_transported_pairing

@@ -1,0 +1,54 @@
+{
+  "scope": "Continuous positive-time unitary conjugation of the actual finite-seed represented Cstar closure and invariance of its constructed Gibbs vacuum State, for every Hermitian finite seed and real beta.",
+  "proof_author": "James",
+  "semantic_auditor": "Popper",
+  "kernel_qa": "Ampere",
+  "disposition": "ACCEPTED_WITH_LIMITED_SCOPE",
+  "result": {
+    "build": {
+      "command": [
+        "lake",
+        "build",
+        "+InfoGeometry.Canonical.FiniteSeedRepresentedRealTime:olean"
+      ],
+      "exit": 0
+    },
+    "axioms": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/Canonical/FiniteSeedRepresentedRealTime.olean"
+      ],
+      "exit": 0
+    },
+    "strict": {
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/Canonical/FiniteSeedRepresentedRealTime.lean",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    "stable_candidate_contract_import_and_pins": true
+  },
+  "hashes": {
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lean/InfoGeometry/Canonical/FiniteSeedRepresentedKMS.lean": "a464813d8111a734e7c8e5729af69492d7db63051cd15fef530aaa45edb33ec6",
+    "lean/InfoGeometry/Canonical/FiniteMatrixGibbsParity.lean": "00680b45bec9b7fce6dbf221fa6acf8dfdaaa3033194e960f889efb50806ba80",
+    "lean/InfoGeometry/Canonical/FilteredGNSBoundedGeneratorUnitaryFlow.lean": "076d3351170168673fc22f70120cccc19a6e9ace4d16e3caa266cce6b798d489",
+    "lean/InfoGeometry/Canonical/FiniteSeedRepresentedRealTime.lean": "de19e22b0619c2d9a743dac42355971c4223c27bffeb41033b7ff1135862232e"
+  },
+  "axiom_log": "warning: LeanCopilot: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanCopilot' has local changes\nwarning: LeanArchitect: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanArchitect' has local changes\nChecking .lake/build/lib/lean/InfoGeometry/Canonical/FiniteSeedRepresentedRealTime.olean\n  \u2713 all 79 declarations clean\n\n\u2713 All modules passed.\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/Canonical/FiniteSeedRepresentedRealTime.olean:PASS\n",
+  "exclusions": [
+    "Does not prove analytic strip KMS or identify a Tomita modular group",
+    "Does not yet prove motion of a noncentral observable",
+    "Does not construct a growing interacting Hamiltonian or Dirac family"
+  ]
+}

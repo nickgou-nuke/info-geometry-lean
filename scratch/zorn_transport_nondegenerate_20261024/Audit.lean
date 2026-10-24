@@ -1,0 +1,4 @@
+import InfoGeometry.Canonical.ZornTransportNondegenerate
+#print axioms InfoGeometry.Canonical.ZornTransportNondegenerate.transportedPolar_symm
+#print axioms InfoGeometry.Canonical.ZornTransportNondegenerate.transportedPolar_nondegenerate
+#print axioms InfoGeometry.Canonical.ZornTransportNondegenerate.transportedPolar_adjoint_unique

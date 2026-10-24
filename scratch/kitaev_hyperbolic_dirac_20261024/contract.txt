@@ -1,0 +1,1 @@
+Native two-site boost = existing hyperbolicUnit on actual chain boundaryCAR. Prove forward and inverse represented matrix identities; under star-fixed parameters the constructed fixed Krein-Dirac adjoint equals actual inverse. Also existing hyperbolicPlus is fixed by same adjoint for star-fixed parameters. Normalization required for Units; no ordinary Hilbert-unitarity claim.

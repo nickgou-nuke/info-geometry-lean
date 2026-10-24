@@ -1,0 +1,9 @@
+Generic trace of the existing reflexive-pair matrix representation.
+Scoped search of Canonical/Core found no existing pairMatrixLinear trace formula.
+Use R commutative ring, A noncommutative associative R-algebra, native R-linear
+functional tau with explicit cyclic multiplication law. For square-zero reflexive
+pair d,B prove tau(d)=tau(B)=0, then tau(F(M))=tau(dB)*Matrix.trace M and
+tau(F(M)*F(N))=tau(dB)*Matrix.trace(M*N), reusing pairMatrixLinear_mul.
+Full support implies 2*tau(dB)=tau(1). No nondegeneracy, positivity or division.
+New sandbox only. Parent owns verification and live promotion; no child builds.
+Concrete consumer: native Matrix.traceLinearMap on ChainOp gives trace1=4, hence tracedB=2; every native boundaryMatrixHom image has trace twice source matrixtrace. Dirac product trace uses exact split-metric conjugation, keeping indefinite sesquilinear pairing distinct from ordinary-star pairing.

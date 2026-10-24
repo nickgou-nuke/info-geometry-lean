@@ -10,6 +10,7 @@ import InfoGeometry.Krein.FundamentalSymmetryProjectors
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Krein.DoubledRootLemmas
 import InfoGeometry.Krein.DoubledAdjoint
+import InfoGeometry.Krein.HestenesWeylGenerator
 import InfoGeometry.Krein.HilbertBridge
 import InfoGeometry.Krein.RealDoubledHilbertBridge
 import InfoGeometry.Krein.RealDoubledOperatorAdjointTransport

@@ -1,0 +1,6 @@
+import InfoGeometry.Canonical.KitaevHyperbolicDirac
+#print axioms InfoGeometry.Canonical.KitaevHyperbolicDirac.twoSiteBoost
+#print axioms InfoGeometry.Canonical.KitaevHyperbolicDirac.twoSiteBoost_matrix
+#print axioms InfoGeometry.Canonical.KitaevHyperbolicDirac.twoSiteBoost_inverse_matrix
+#print axioms InfoGeometry.Canonical.KitaevHyperbolicDirac.twoSiteBoost_dirac_inverse
+#print axioms InfoGeometry.Canonical.KitaevHyperbolicDirac.hyperbolicPlus_dirac_fixed

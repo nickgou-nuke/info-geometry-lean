@@ -1,0 +1,5 @@
+import InfoGeometry.Canonical.KitaevNullSupportRange
+open InfoGeometry.Canonical.KitaevNullSupportRange
+#print axioms active_action_mem_span
+#print axioms active_fixed_iff_mem_span
+#print axioms active_range_eq_span

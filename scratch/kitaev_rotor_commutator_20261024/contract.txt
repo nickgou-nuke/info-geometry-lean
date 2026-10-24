@@ -1,0 +1,1 @@
+Native boundary commutator C=[dB,movingPlus(c,s)] on actual two-site ChainOp. Prove matrix representation F[[0,-cs],[cs,0]], Hamiltonian conservation via existing F, and Dirac trace pairing -4*(cs)*star(cs). Thus normalized real c=3/5,s=4/5 yields negative -576/625. This uses constructed Krein adjoint, not ordinary positive Hilbert adjoint. No topological invariant claimed.

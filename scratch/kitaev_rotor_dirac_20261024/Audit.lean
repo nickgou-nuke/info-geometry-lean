@@ -1,0 +1,6 @@
+import InfoGeometry.Canonical.KitaevRotorDirac
+#print axioms InfoGeometry.Canonical.KitaevRotorDirac.boundary_rotor_dirac
+#print axioms InfoGeometry.Canonical.KitaevRotorDirac.boundary_movingPlus_dirac
+#print axioms InfoGeometry.Canonical.KitaevRotorDirac.boundary_movingPlus_dirac_fixed_iff
+#print axioms InfoGeometry.Canonical.KitaevRotorDirac.twoSite_rotated_idempotent
+#print axioms InfoGeometry.Canonical.KitaevRotorDirac.twoSite_rotated_not_dirac_fixed

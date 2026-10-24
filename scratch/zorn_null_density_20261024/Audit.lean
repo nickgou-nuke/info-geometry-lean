@@ -1,0 +1,5 @@
+import InfoGeometry.Canonical.ZornNullPairDensity
+#print axioms InfoGeometry.Canonical.ZornNullPairDensity.zornEndTrace
+#print axioms InfoGeometry.Canonical.ZornNullPairDensity.nullPair_weight_trace
+#print axioms InfoGeometry.Canonical.ZornNullPairDensity.nullPair_weighted_trace_d
+#print axioms InfoGeometry.Canonical.ZornNullPairDensity.nullPair_weighted_trace_B

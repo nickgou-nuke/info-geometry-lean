@@ -1,0 +1,27 @@
+{
+  "scope": "Owner API repair: expose actual represented matrix stage operator readback generically before dependent finite seed specialization; explicitly type existing seedStageHom and prove its readback using generic lemma.",
+  "base_owner": "lean/InfoGeometry/Canonical/FiniteSeedRepresentedRealTime.lean",
+  "base_sha256": "de19e22b0619c2d9a743dac42355971c4223c27bffeb41033b7ff1135862232e",
+  "candidate": "scratch/FiniteSeedRepresentedRealTimeReadback20261024v2.lean",
+  "candidate_sha256": "014ca93cf11297ad2e6ca4dbb5f0d79e11d1f83cece0f811ce9cc3777bd6a452",
+  "reason": "Frozen diagnostic probe times out isDefEq during first readback simp at line44 with 1M baseline heartbeats; injectivity not tested.",
+  "native_sources": [
+    "FilteredGNSRepresentedCStarClosure.algebraicColimitToRepresentedClosure_coe",
+    "FilteredGNSAlgebraicColimitRepresentation.algebraicColimitGNSRepresentation_of",
+    "FilteredGNSMatrixRealTime.representedMatrixStageMap"
+  ],
+  "preserves": [
+    "existing seed state and map value",
+    "existing dependent Hilbert completion and represented Cstar closure",
+    "all prior theorem statements",
+    "baseline heartbeat settings"
+  ],
+  "excludes": [
+    "No injectivity or nontrivial motion claim yet",
+    "No transparency overrides",
+    "No alternative state or carrier",
+    "No build acceptance until QA"
+  ],
+  "diagnostic": "/tmp/qa-a-seed-readback-owner-n8uzz11w/compile.log",
+  "revision": "Use actual closure subtype val directly instead of rebuilding a dependent CLM coercion target; omit unused Nonempty in generic lemma. Enable diagnostics only for native theorem; no budget changes."
+}

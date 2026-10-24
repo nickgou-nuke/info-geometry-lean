@@ -1,0 +1,5 @@
+import InfoGeometry.Canonical.ZornKetBraRegularAction
+#print axioms InfoGeometry.Canonical.ZornKetBraRegularAction.operator_mul_ketBra
+#print axioms InfoGeometry.Canonical.ZornKetBraRegularAction.ketBra_mul_of_adjoint
+#print axioms InfoGeometry.Canonical.ZornKetBraRegularAction.leftRegular_ketBra_commutator
+#print axioms InfoGeometry.Canonical.ZornKetBraRegularAction.rightRegular_ketBra_commutator

@@ -1,0 +1,6 @@
+import InfoGeometry.Canonical.KitaevRotorCommutator
+#print axioms InfoGeometry.Canonical.KitaevRotorCommutator.boundaryCommutator
+#print axioms InfoGeometry.Canonical.KitaevRotorCommutator.boundaryCommutator_matrix
+#print axioms InfoGeometry.Canonical.KitaevRotorCommutator.boundaryCommutator_commutes
+#print axioms InfoGeometry.Canonical.KitaevRotorCommutator.boundaryCommutator_dirac_trace
+#print axioms InfoGeometry.Canonical.KitaevRotorCommutator.circular_commutator_dirac_trace_negative

@@ -1,0 +1,5 @@
+Owner KitaevHyperbolicTrace.lean: 4 native theorems.
+SHA256 8787dd3ffd0d8b955cbfde7c901c2e11cad46d428451fff52cf6c0378f98b28c
+Parent final locked build47481 exit0,9208jobs /tmp/kitaev-hyperbolic-trace-final-build.log; no ownerwarnings, existing dependencywarnings.
+Independent QA audit94459 exit0 /tmp/kitaev-hyperbolic-trace-qa.log: all4 standardaxioms propext Classical.choice Quot.sound. Final A-A semanticPASS. Strictscreen0 whitespace0 markersnone. Parent opengauss_cli.py refactor OWNER --json returned [].
+Native two-site Dirac displacement trace=-4v² under normalization and starfixedparams; rational5/3,4/3 witness=-64/9. No analytic KMS/positiveHilbert norm claim.

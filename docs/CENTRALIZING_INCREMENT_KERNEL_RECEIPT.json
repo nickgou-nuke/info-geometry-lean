@@ -1,0 +1,88 @@
+{
+  "scope": "Arbitrary unital ring-hom commutator compatibility iff centralizing increment, with a concrete nonzero ZZ boundary increment obstruction for native matrix A tensor identity transitions.",
+  "proof_author": "Kepler; parent owner split",
+  "semantic_auditor": "Popper",
+  "kernel_qa": "Ampere",
+  "disposition": "ACCEPTED_WITH_LIMITED_SCOPE",
+  "result": {
+    "build_CentralizingIncrement": {
+      "command": [
+        "lake",
+        "build",
+        "+InfoGeometry.Algebra.CentralizingIncrement:olean"
+      ],
+      "exit": 0
+    },
+    "build_CuntzBoundaryCouplingObstruction": {
+      "command": [
+        "lake",
+        "build",
+        "+InfoGeometry.Canonical.CuntzBoundaryCouplingObstruction:olean"
+      ],
+      "exit": 0
+    },
+    "axioms_CentralizingIncrement": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/Algebra/CentralizingIncrement.olean"
+      ],
+      "exit": 0
+    },
+    "strict_CentralizingIncrement": {
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/Algebra/CentralizingIncrement.lean",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    "axioms_CuntzBoundaryCouplingObstruction": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/Canonical/CuntzBoundaryCouplingObstruction.olean"
+      ],
+      "exit": 0
+    },
+    "strict_CuntzBoundaryCouplingObstruction": {
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/Canonical/CuntzBoundaryCouplingObstruction.lean",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    "stable_candidate_contract_import_and_pins": true
+  },
+  "hashes": {
+    ".lake/packages/mathlib/Mathlib/Tactic/LinearCombination.lean": "a59009a15dc914d2774e01cfb1afcbf6490e9e1015587f2ab89c22a2778f2e6d",
+    ".lake/packages/mathlib/Mathlib/Tactic/NoncommRing.lean": "56993a0ec93af72ce3bbbfb2437c219b2700623f6ae5eb50dbac3df0731a09a1",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lean/InfoGeometry/Algebra/CentralizingIncrement.lean": "20c9669a107b7534de1feb3d9217cc84a7a0e8bd93db5ca943e3c8ddf2fabb7a",
+    "lean/InfoGeometry/Canonical/CuntzBoundaryCouplingObstruction.lean": "e3fbb3a91856cfbb98a38d5b9efe4189c292c5e5940192de9789e6cfe38b80e5",
+    "lean/InfoGeometry/Canonical/CuntzMatrixTraceTower.lean": "19f8ae14e35797de9232165babbd09c90650db641ff80714a3c54641e24adabb",
+    "lean/InfoGeometry/Physics/KleinBottleSewingExact.lean": "c335dfc0dfcca135829ec6eef30ac92257c0cbe7771cb1d71059772bb634f932"
+  },
+  "axiom_logs": {
+    "axioms_CentralizingIncrement.log": "warning: LeanCopilot: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanCopilot' has local changes\nwarning: LeanArchitect: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanArchitect' has local changes\nChecking .lake/build/lib/lean/InfoGeometry/Algebra/CentralizingIncrement.olean\n  \u2713 all 3 declarations clean\n\n\u2713 All modules passed.\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/Algebra/CentralizingIncrement.olean:PASS\n",
+    "axioms_CuntzBoundaryCouplingObstruction.log": "warning: LeanCopilot: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanCopilot' has local changes\nwarning: LeanArchitect: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanArchitect' has local changes\nChecking .lake/build/lib/lean/InfoGeometry/Canonical/CuntzBoundaryCouplingObstruction.olean\n  \u2713 all 13 declarations clean\n\n\u2713 All modules passed.\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/Canonical/CuntzBoundaryCouplingObstruction.olean:PASS\n"
+  },
+  "exclusions": [
+    "No universal coupling impossibility theorem",
+    "No obstruction claimed for vacuum-Fock embeddings or asymptotic compatibility",
+    "No completed interacting family constructed"
+  ]
+}

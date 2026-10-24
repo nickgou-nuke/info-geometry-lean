@@ -1,0 +1,12 @@
+Native two-site chain coefficient kernel K=(sweetSpotKernel t).omega with
+K12=2t and K21=−2t; native BdG H=kitaevSweetSpot4 t. Use complex S columns
+[i*left,(1,0,1,0),−i*(0,1,0,−1),right]. Explicit inverse proves invertibility.
+Exact normalization H*S=i•(S*K.map(ofReal)). Real coefficient vectors map
+into the charge-conjugation fixed real form particleHole4*star(v)=v.
+Derive coefficient-kernel iff mapped BdG-kernel for every t (including0),
+and compose existing sweetSpot_chain_commutator_eq_zero_iff to connect the
+actual conserved Majorana operator with this actual BdG spinor kernel.
+No bulk-boundary phase equality or real skew/symmetric similarity asserted.
+The matrix is not normalized unitary: S†S=SS†=2I. No unitary theorem claimed.
+Actual Dirac boundary projector compatibility retains precisely coordinates
+0 and3 of any complex coefficient vector, not only a real kernel vector.

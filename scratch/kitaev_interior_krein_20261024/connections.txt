@@ -1,0 +1,5 @@
+Current source-grounded branch distinction:
+1. Native chainCoefficientMatrix -> interiorIndex compression -> offDiagonalPairing((2t)I) -> neutralKreinMetric-relative operator = -(2t) polarizationGrading.
+2. Native endpoint Majoranas -> CAR boundary d,B -> boundaryMatrixHom -> transported Dirac trace pairing.
+Both use established finite matrix/Krein infrastructure. They are not the same carrier: branch1 real coefficient labels; branch2 complex many-body endomorphisms with represented boundary subalgebra. This file supplies only branch1's explicit map through existing neutralKreinMetric multiplication.
+Previous evidence: chain_interior_det_ne_zero for t nonzero and full-chain oriented Pfaffian zero from endpoint row. These facts do not make the full chain pairing nondegenerate. The new square identity also holds at zero coupling and empty interior; concrete N2,t1 nonzero witness supplies a nontrivial instance.

@@ -1,0 +1,7 @@
+All10 declarations accepted by independent A-A and QA.
+Parent builds86764,73292,52936 terminalexit0; logs /tmp/zorn-majorana-adjoint-build.log, /tmp/peirce-rotor-chordal-build.log, /tmp/five-stream-rotor-chordal-build.log.
+Independent audit89367 terminalexit0 /tmp/zorn-majorana-chordal-qa.log. Native4 standard3axioms; other6 propext/Quot.sound. Strictscreen0, whitespace0, markersnone.
+ZornNullMajoranaAdjoint baa9fd0496f4ab7f1f2a0c4394827713fc4bcc73babb240836c47ca4c3607929
+PeirceRotorChordal b34caf3c1c24b84eacfe37f9bbae52ab0afb40d6eeabb8c039f3616e9c418bce
+FiveStreamRotorChordal 59131da8de623eb04380e7bbdf1fb384004cdefc88cca35c5cf7e15bb8bd931d
+Scope: splitpolar null-ketbra adjoints and square; generic compression and circle displacement identity; exact specialization to existing five-stream rotor. No metric/unitarity/analytic claim. Full objective still active.

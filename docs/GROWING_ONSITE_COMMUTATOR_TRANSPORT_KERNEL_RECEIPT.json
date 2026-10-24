@@ -1,0 +1,51 @@
+{
+  "scope": "All-index native finite onsite commutator compatibility derived by Nat.le induction from successor transport.",
+  "proof_author": "Parent",
+  "semantic_auditor": "Popper",
+  "kernel_qa": "Ampere",
+  "disposition": "ACCEPTED_WITH_LIMITED_SCOPE",
+  "result": {
+    "build": {
+      "command": [
+        "lake",
+        "build",
+        "+InfoGeometry.Canonical.GrowingOnsiteCommutatorTransport:olean"
+      ],
+      "exit": 0
+    },
+    "axioms": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/Canonical/GrowingOnsiteCommutatorTransport.olean"
+      ],
+      "exit": 0
+    },
+    "strict": {
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/Canonical/GrowingOnsiteCommutatorTransport.lean",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    "stable_candidate_contract_import_and_pins": true
+  },
+  "hashes": {
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lean/InfoGeometry/Canonical/GrowingOnsiteMatrixHamiltonian.lean": "e6342c213c00d6ea23aa498b4f9869878a3f2c6f2ea68cf9a2d9ab7c83ecbd28",
+    "lean/InfoGeometry/Canonical/GrowingOnsiteCommutatorTransport.lean": "2757f7cdf3149c1d427567b8f2296e487d4a4e091a3666c4a4040a49dd36b64d"
+  },
+  "axiom_log": "warning: LeanCopilot: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanCopilot' has local changes\nwarning: LeanArchitect: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanArchitect' has local changes\nChecking .lake/build/lib/lean/InfoGeometry/Canonical/GrowingOnsiteCommutatorTransport.olean\n  \u2713 all 2 declarations clean\n\n\u2713 All modules passed.\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/Canonical/GrowingOnsiteCommutatorTransport.olean:PASS\n",
+  "exclusions": [
+    "No completed GNS family constructed in this owner",
+    "No uniform norm or intersite coupling theorem"
+  ]
+}

@@ -1,0 +1,5 @@
+Carrier: native two-site ChainOp = Matrix (Fin 2 × Fin 2) ℂ, with boundaryMatrixHom F from Matrix (Fin 2) (Fin 2) ℂ.
+Define the pairing of S F(M) T with transported adjoint ξ' (S F(N) T)† η', using twoSiteRotor and rotorMetric/Inverse from KitaevRotorMetricTransport.
+For c*c+s*s=1, prove exact normalization 2 trace(M J N† J), left and right separation on source matrices, and persistent negative value -2 for upperUnit. Reuse rotor_dirac_trace_covariance, boundaryMatrixHom_dirac_trace, boundary_dirac_trace_left/right_separates, boundary_dirac_trace_negative.
+Source-confirmed local gap: these native transported metric and represented boundary nondegeneracy owners are not yet connected by a consumer theorem. rg search of rotor/transported separation and trace declarations found covariance owner but no such consumer. No repo-wide novelty asserted.
+No positivity, analytic continuity, whole commutant classification, or full ambient nondegeneracy claimed. Circle required; complex parameters allowed. Previous goal turn progress: metric transport owner compiled and accepted. This turn extends its nondegenerate indefinite pairing consumer.

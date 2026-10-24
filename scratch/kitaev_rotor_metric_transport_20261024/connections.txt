@@ -1,0 +1,8 @@
+Native connection chain, source-defined maps:
+KitaevBoundaryDiracPair: actual endpoints -> algebraic CAR pair -> actual Weyl unit.
+KitaevBoundaryAlgebra/Faithful: full M2(C) represented injectively in a nontrivial native target; image conserved by native chain.
+KitaevRotorMatrix: exact rotor and movingPlus are images of explicit source M2 matrices.
+KitaevRotorDirac: constructed fixed metric transforms movingPlus(c,s) to movingPlus(conj(c),-conj(s)); normalized concrete idempotent can fail fixedness.
+KitaevRotorMetricTransport: transport both metric and inverse, restoring movingPlus selfadjointness and full matrix trace pairing covariance.
+This separates conservation, idempotence, fixed-metric adjunction and transported-metric adjunction instead of identifying them by terminology.
+The full-chain Pfaffian/interior compression branch is separate: KitaevPfaffianBoundary proves full coefficient Pfaffian zero; KitaevInteriorPairing identifies interior doubled skew carrier. No equality with the Dirac Gram pairing is asserted.

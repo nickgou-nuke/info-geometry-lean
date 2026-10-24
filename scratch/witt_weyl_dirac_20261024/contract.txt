@@ -1,0 +1,18 @@
+Contract: the actual Witt annihilator/creator on NeutralKreinMajoranaFrame.Matrix2 n
+have full CAR support and difference majoranaForm n. The existing reflexive-pair
+Weyl word is therefore exactly majoranaForm n, and its inverse is its negative.
+The actual triple-unipotent factorization identifies the same full matrix.
+The neutral metric adjoint fixes this Weyl word; right Dirac solder action
+therefore uses that same word, not ordinary transpose.
+
+Reuse: SuperMetriplectic/WittDiracSolder half-sum/half-sub readouts;
+SuperMetriplectic/WittCyclotomicBridge wittAnnihilator_inner_inverse;
+MajoranaSouriauMetriplecticLoxodromic witt_car_anticomm and square-zero;
+Canonical/ReflexiveNilpotentFlows weyl, weylInv, weyl_factorization;
+Quantum/NeutralKreinDiracSolder majoranaForm_metric_adjoint and solder law.
+
+No new carrier, no metric-unitarity claim, no principal-bundle, topology,
+cotangent classification, or exceptional-group identification. Arbitrary n,
+full noncommutative matrices and arbitrary doubled real spinors.
+
+Final scope revision: generic ReflexiveNilpotentFlows failed its own build; no dependency on it is retained. Four declarations on the actual Witt pair prove the difference equals Omega, triple-unipotent word equals Omega by polynomial expansion and CAR, and its metric-adjoint and right-solder laws. No inverse theorem or general flow classification is claimed.

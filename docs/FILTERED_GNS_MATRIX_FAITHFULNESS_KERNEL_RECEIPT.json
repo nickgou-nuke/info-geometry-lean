@@ -1,0 +1,56 @@
+{
+  "scope": "Injectivity of actual simple-stage and algebraic-colimit GNS representations, specialized to the native growing complex matrix tower for every compatible normalized state family.",
+  "proof_author": "Kepler",
+  "semantic_auditor": "Popper",
+  "kernel_qa": "Ampere",
+  "disposition": "ACCEPTED_WITH_LIMITED_SCOPE",
+  "result": {
+    "build": {
+      "command": [
+        "lake",
+        "build",
+        "+InfoGeometry.Canonical.FilteredGNSMatrixFaithfulness:olean"
+      ],
+      "exit": 0
+    },
+    "axioms": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/Canonical/FilteredGNSMatrixFaithfulness.olean"
+      ],
+      "exit": 0
+    },
+    "strict": {
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/Canonical/FilteredGNSMatrixFaithfulness.lean",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    "stable_candidate_contract_import_and_pins": true
+  },
+  "hashes": {
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lean/InfoGeometry/Canonical/FilteredGNSFaithfulAlgebraicQuotient.lean": "666bb42c6845d4dd86acde84556f4a4861468a3e2db0054dcf39e36168157a96",
+    "lean/InfoGeometry/Canonical/FilteredGNSHilbertNontrivial.lean": "d90b35420c4e77f1c1b70d087d73f211eb0c82f9645df43861983a51e87f8e3d",
+    "lean/InfoGeometry/Canonical/CantorBernoulliCStarMatrixTraceState.lean": "5ff1a505d1d9e0f0d88fff34dec5f77a2a939e634d6589cf10ccdba298bdaee8",
+    ".lake/packages/mathlib/Mathlib/RingTheory/SimpleRing/Matrix.lean": "13c6e13ac908a7ca43b4650ee15eff4307ed899636f041ae3d4f193329e45d34",
+    ".lake/packages/mathlib/Mathlib/RingTheory/SimpleRing/Congr.lean": "762d4efec1ee6a79a6c86c42986c8ac0f53471a532b94ae1f0d16f599c3f5f2f",
+    "lean/InfoGeometry/Canonical/FilteredGNSMatrixFaithfulness.lean": "3c4671269246b2e46b263d5f629eac0e900f823e778e9e807043b79d68f3c48b"
+  },
+  "axiom_log": "warning: LeanCopilot: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanCopilot' has local changes\nwarning: LeanArchitect: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanArchitect' has local changes\nChecking .lake/build/lib/lean/InfoGeometry/Canonical/FilteredGNSMatrixFaithfulness.olean\n  \u2713 all 6 declarations clean\n\n\u2713 All modules passed.\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/Canonical/FilteredGNSMatrixFaithfulness.olean:PASS\n",
+  "exclusions": [
+    "Does not assert that the state functional is faithful",
+    "Does not assert surjectivity onto the completed represented closure",
+    "Does not construct a growing interacting Dirac family or prove analytic KMS"
+  ]
+}

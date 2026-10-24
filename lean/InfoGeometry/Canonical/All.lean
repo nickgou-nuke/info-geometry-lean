@@ -2331,6 +2331,17 @@ import InfoGeometry.Canonical.WeakValueKreinGeometry
 import InfoGeometry.Canonical.WeakValuePoleBounds
 import InfoGeometry.Canonical.WeakValuePoleCriterion
 import InfoGeometry.Canonical.WeakValuePoleExamples
+import InfoGeometry.Canonical.GrassmannianBundleCyclotomicOrientability
+import InfoGeometry.Canonical.ReflexiveNilpotentFlows
+import InfoGeometry.Canonical.ReflexiveKleinKernelRegression
+import InfoGeometry.Canonical.PeirceWeightedTrace
+import InfoGeometry.Canonical.IdempotentOrbitContracts
+import InfoGeometry.Canonical.IntegralCyclotomicTransvection
+import InfoGeometry.Canonical.IntegralCyclotomicGroup
+import InfoGeometry.Canonical.RootsOfZeroUnityMoebiusModularG22
+import InfoGeometry.Canonical.UnifiedGeometryOperatorSignificance
+import InfoGeometry.Canonical.Cl11FiveStreamColimitTransport
+import InfoGeometry.Canonical.ReflexiveParityRegression
 
 namespace InfoGeometry
 

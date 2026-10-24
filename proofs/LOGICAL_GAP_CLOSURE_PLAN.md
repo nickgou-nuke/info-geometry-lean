@@ -1,5 +1,19 @@
 # Logical Gap Closure Plan
 
+
+> Source reconciliation (2026-10-24): the finite weighted functional,
+> positivity, normalization, unit modular automorphism and algebraic KMS
+> boundary identity below are already implemented in
+> `lean/InfoGeometry/Canonical/FiniteMatrixGibbsFunctional.lean`. The exact
+> centralizer/fixed-point cancellation boundaries are now kernel-checked in
+> `FiniteMatrixGibbsCentralizer.lean`. Selected odd-observable cancellation
+> for the actual Gibbs density is kernel-checked in `FiniteMatrixGibbsParity.lean`.
+> Do not rebuild those constructions or assume global Gibbs traciality.
+> `DeltaRegularizedKMSContext` quantifies defect vanishing over all A and B;
+> it is stronger than a condition on a selected tested sector. The remaining
+> entries below are historical obligations, not evidence of either absence
+> or closure. See `OPEN_GAPS.md` for the bounded owner reconciliation.
+
 This file is the working roadmap for turning the current architecture from
 compiled conditional scaffolding into lemma-by-lemma proven combinations of
 known mathematical ingredients.

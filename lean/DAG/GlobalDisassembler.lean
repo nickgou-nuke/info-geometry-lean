@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Lean
 import Lean.Data.Json
 import DAG.Basic
@@ -139,5 +144,6 @@ end DAG.GlobalDisassembler
 def globalDisassemblerMain (_args : List String) : IO UInt32 := do
   Lean.initSearchPath (← Lean.findSysroot)
   let env ← Lean.importModules #[{ module := `Init : Import }] {}
-  DAG.GlobalDisassembler.processEnvironment env "nodes.jsonl" "edges.jsonl" "decls.jsonl" "decl_edges.jsonl"
+  DAG.GlobalDisassembler.processEnvironment env
+    "disasm_nodes.jsonl" "disasm_edges.jsonl" "disasm_decls.jsonl" "disasm_decl_edges.jsonl"
   return 0

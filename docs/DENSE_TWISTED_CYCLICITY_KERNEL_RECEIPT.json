@@ -1,0 +1,51 @@
+{
+  "scope": "Continuous twisted cyclicity extends from a dense ring image in both variables. Algebraic boundary identity remains a premise of this generic lemma.",
+  "proof_author": "Kepler",
+  "semantic_auditor": "Popper",
+  "kernel_qa": "Ampere",
+  "disposition": "ACCEPTED_WITH_LIMITED_SCOPE",
+  "result": {
+    "build": {
+      "command": [
+        "lake",
+        "build",
+        "+InfoGeometry.OperatorAlgebra.DenseTwistedCyclicity:olean"
+      ],
+      "exit": 0
+    },
+    "axioms": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/OperatorAlgebra/DenseTwistedCyclicity.olean"
+      ],
+      "exit": 0
+    },
+    "strict": {
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/OperatorAlgebra/DenseTwistedCyclicity.lean",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    "stable_candidate_contract_import_and_pins": true
+  },
+  "hashes": {
+    "lean/InfoGeometry/OperatorAlgebra/DenseTwistedCyclicity.lean": "102ea158a20680f29108f324835e7698f46eafe153751bf48d5fd21d12e7c403",
+    ".lake/packages/mathlib/Mathlib.lean": "61d699d8ace6240934a751f1b1951339090d6e380b505041632227dd7eb73a29",
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b"
+  },
+  "axiom_log": "warning: LeanCopilot: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanCopilot' has local changes\nwarning: LeanArchitect: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanArchitect' has local changes\nChecking .lake/build/lib/lean/InfoGeometry/OperatorAlgebra/DenseTwistedCyclicity.olean\n  \u2713 all 1 declarations clean\n\n\u2713 All modules passed.\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/OperatorAlgebra/DenseTwistedCyclicity.olean:PASS\n",
+  "exclusions": [
+    "No analytic KMS theorem",
+    "Concrete Gibbs consumer still requires separate verification"
+  ]
+}

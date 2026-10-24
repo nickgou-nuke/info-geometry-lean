@@ -1,0 +1,7 @@
+import InfoGeometry.Canonical.KitaevRotorTracePairing
+#print axioms InfoGeometry.Canonical.KitaevRotorTracePairing.rotorTracePairing
+#print axioms InfoGeometry.Canonical.KitaevRotorTracePairing.rotorTracePairing_eq
+#print axioms InfoGeometry.Canonical.KitaevRotorTracePairing.rotorTracePairing_normalization
+#print axioms InfoGeometry.Canonical.KitaevRotorTracePairing.rotorTracePairing_left_separates
+#print axioms InfoGeometry.Canonical.KitaevRotorTracePairing.rotorTracePairing_right_separates
+#print axioms InfoGeometry.Canonical.KitaevRotorTracePairing.rotorTracePairing_negative

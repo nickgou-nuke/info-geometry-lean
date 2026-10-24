@@ -1,0 +1,7 @@
+Native boundary algebra identifies diag(b,a) with the existing supportWeight
+a b d B (weight order is reversed because matrix unit00=dB, unit11=Bd).
+This represented weight commutes with the actual native chain. Reuse existing
+division-free weighted_trace_boundary for arbitrary NCG.TracialFunctional.
+On the actual two-site full matrix carrier, trace(weight*F M)=2*(b*M00+a*M11)
+using existing boundaryMatrixHom_trace and map_mul. No new density carrier,
+positivity or analytic KMS claim. Sandbox only; no child builds/live edits.

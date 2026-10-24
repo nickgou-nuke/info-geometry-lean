@@ -1,0 +1,10 @@
+DiracNullPeirce SHA256 84651e8749ba974fa06465fcfa34406809b89b627829e97d6929a5bd257477aa
+KitaevNullPartner SHA256 a26b82928b67fcd4c44486245deed7f497f1e8fd28b6ce6d3839fae708579749
+Parent generic final build66329 exit0 /tmp/dirac-null-peirce-final-build.log
+Parent native final build37715 exit0 /tmp/kitaev-null-partner-final-build.log9306jobs.
+Independent A-A zorn_semantic_audit finalexactsourcePASS bothowners.
+Independent QA-A zorn_acceptance ACCEPTED14 declarations; audit79005 exit0.
+Log /tmp/dirac-null-peirce-qa.log
+All standard propext,Classical.choice,Quot.sound only; strict0,refactor[],whitespaceclean.
+Actual normalized native null pair constructed; generic operator laws feed ambient
+Weyl unit. No Moore-Penrose or fullsupport claim, no Zorn carrier identification.

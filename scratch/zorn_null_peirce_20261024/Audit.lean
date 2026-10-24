@@ -1,0 +1,8 @@
+import InfoGeometry.Canonical.ZornNullPeirceWeyl
+#print axioms InfoGeometry.Canonical.ZornNullPeirceWeyl.nullPair_reflexive
+#print axioms InfoGeometry.Canonical.ZornNullPeirceWeyl.nullPair_support
+#print axioms InfoGeometry.Canonical.ZornNullPeirceWeyl.nullPair_support_trace
+#print axioms InfoGeometry.Canonical.ZornNullPeirceWeyl.nullPair_support_ne_one
+#print axioms InfoGeometry.Canonical.ZornNullPeirceWeyl.nullPairWeylUnit
+#print axioms InfoGeometry.Canonical.ZornNullPeirceWeyl.nullPair_weyl_fourth
+#print axioms InfoGeometry.Canonical.ZornNullPeirceWeyl.diagonal_null_pair_normalized

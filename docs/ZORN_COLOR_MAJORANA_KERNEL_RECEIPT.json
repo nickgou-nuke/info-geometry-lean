@@ -1,0 +1,95 @@
+{
+  "scope": "Native Zorn signed CAR, parity, Majorana and color bilinear owners; not repository-wide certification",
+  "independent_semantic_auditor": "Popper",
+  "independent_kernel_qa": "Ampere",
+  "runs": [
+    {
+      "receipt_directory": "/tmp/qa-a-zorn-eight-live-to277pf1",
+      "result": {
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "+InfoGeometry.Algebra.ZornSignedCAR:olean",
+            "+InfoGeometry.Algebra.ZornColorBilinears:olean",
+            "+InfoGeometry.Algebra.ZornLeftParity:olean",
+            "+InfoGeometry.Algebra.ZornLeftMajorana:olean",
+            "+InfoGeometry.Algebra.ZornMajoranaRotations:olean",
+            "+InfoGeometry.Algebra.ZornMajoranaColorAudit:olean",
+            "+InfoGeometry.Algebra.ZornLeftGrading:olean",
+            "+InfoGeometry.OperatorAlgebra.QuadraticNoncommutativeIdentity:olean"
+          ],
+          "exit": 0
+        },
+        "axioms": {
+          "command": [
+            "lake",
+            "env",
+            "lean",
+            "--run",
+            "tools/infra/axiom_check.lean",
+            ".lake/build/lib/lean/InfoGeometry/Algebra/ZornSignedCAR.olean",
+            ".lake/build/lib/lean/InfoGeometry/Algebra/ZornColorBilinears.olean",
+            ".lake/build/lib/lean/InfoGeometry/Algebra/ZornLeftParity.olean",
+            ".lake/build/lib/lean/InfoGeometry/Algebra/ZornLeftMajorana.olean",
+            ".lake/build/lib/lean/InfoGeometry/Algebra/ZornMajoranaRotations.olean",
+            ".lake/build/lib/lean/InfoGeometry/Algebra/ZornMajoranaColorAudit.olean",
+            ".lake/build/lib/lean/InfoGeometry/Algebra/ZornLeftGrading.olean",
+            ".lake/build/lib/lean/InfoGeometry/OperatorAlgebra/QuadraticNoncommutativeIdentity.olean"
+          ],
+          "exit": 0
+        },
+        "stable_candidate_contract_import_and_pins": true
+      },
+      "source_hashes": {
+        "lean/InfoGeometry/Algebra/ZornSignedCAR.lean": "cf9014070e20f82191303fe1da00e016183da91174f9d6ce4a192590c4866c02",
+        "lean/InfoGeometry/Algebra/ZornColorBilinears.lean": "480ccc240cf37aa3e25eb678d7c7f202415334bce2b4980136a9711acb09a9a4",
+        "lean/InfoGeometry/Algebra/ZornLeftParity.lean": "fa26b733a9b190ac54d13a3ddefeed35549587557ee838da3e1caff4052b4d46",
+        "lean/InfoGeometry/Algebra/ZornLeftMajorana.lean": "24823091c8046a54c8babc7d14547c4f20504c3ea0e888407da62378019d131f",
+        "lean/InfoGeometry/Algebra/ZornMajoranaRotations.lean": "0cf33290d8c63648fb88fda91be2a142d8d33251cdcb311227775932c733f477",
+        "lean/InfoGeometry/Algebra/ZornMajoranaColorAudit.lean": "e899dddc183f876716febcdbf3d3bf7ec8932a1f546d4fee3af0f05db97d96f6",
+        "lean/InfoGeometry/Algebra/ZornLeftGrading.lean": "1da8ed287e208fb45e9b8891cb9713ea4c1b813f3ce81f1022501be9efd469fb",
+        "lean/InfoGeometry/OperatorAlgebra/QuadraticNoncommutativeIdentity.lean": "05029e256f47543e4e7b7cc0eac12859fc1854c3c793c4b4a89e4eeb0ad8428a",
+        "tools/infra/axiom_check.lean": "74722e6b1f4dce678b5e6687cf60f94487c397a053964b9e8a6c5280cc63c788",
+        "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+        "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+        "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b"
+      },
+      "axiom_log": "warning: LeanCopilot: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanCopilot' has local changes\nwarning: LeanArchitect: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanArchitect' has local changes\nChecking .lake/build/lib/lean/InfoGeometry/Algebra/ZornSignedCAR.olean\n  \u2713 all 11 declarations clean\nChecking .lake/build/lib/lean/InfoGeometry/Algebra/ZornColorBilinears.olean\n  \u2713 all 9 declarations clean\nChecking .lake/build/lib/lean/InfoGeometry/Algebra/ZornLeftParity.olean\n  \u2713 all 6 declarations clean\nChecking .lake/build/lib/lean/InfoGeometry/Algebra/ZornLeftMajorana.olean\n  \u2713 all 28 declarations clean\nChecking .lake/build/lib/lean/InfoGeometry/Algebra/ZornMajoranaRotations.olean\n  \u2713 all 8 declarations clean\nChecking .lake/build/lib/lean/InfoGeometry/Algebra/ZornMajoranaColorAudit.olean\n  \u2713 all 0 declarations clean\nChecking .lake/build/lib/lean/InfoGeometry/Algebra/ZornLeftGrading.olean\n  \u2713 all 8 declarations clean\nChecking .lake/build/lib/lean/InfoGeometry/OperatorAlgebra/QuadraticNoncommutativeIdentity.olean\n  \u2713 all 30 declarations clean\n\n\u2713 All modules passed.\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/Algebra/ZornSignedCAR.olean:PASS\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/Algebra/ZornColorBilinears.olean:PASS\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/Algebra/ZornLeftParity.olean:PASS\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/Algebra/ZornLeftMajorana.olean:PASS\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/Algebra/ZornMajoranaRotations.olean:PASS\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/Algebra/ZornMajoranaColorAudit.olean:PASS\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/Algebra/ZornLeftGrading.olean:PASS\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/OperatorAlgebra/QuadraticNoncommutativeIdentity.olean:PASS\n"
+    },
+    {
+      "receipt_directory": "/tmp/qa-a-zorn-right-projection-n4zw210z",
+      "result": {
+        "build": {
+          "command": [
+            "lake",
+            "build",
+            "+InfoGeometry.Algebra.ZornRightProjectionObstruction:olean"
+          ],
+          "exit": 0
+        },
+        "axioms": {
+          "command": [
+            "lake",
+            "env",
+            "lean",
+            "--run",
+            "tools/infra/axiom_check.lean",
+            ".lake/build/lib/lean/InfoGeometry/Algebra/ZornRightProjectionObstruction.olean"
+          ],
+          "exit": 0
+        },
+        "stable_candidate_contract_import_and_pins": true
+      },
+      "source_hashes": {
+        "lean/InfoGeometry/Algebra/ZornRightProjectionObstruction.lean": "f5a96b21b38c03b139786cd5c715bd40be1b60e939dd82197bbd1f9e62ea43e6",
+        "lean/InfoGeometry/Algebra/ZornLeftGrading.lean": "1da8ed287e208fb45e9b8891cb9713ea4c1b813f3ce81f1022501be9efd469fb",
+        "tools/infra/axiom_check.lean": "74722e6b1f4dce678b5e6687cf60f94487c397a053964b9e8a6c5280cc63c788",
+        "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+        "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+        "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b"
+      },
+      "axiom_log": "warning: LeanCopilot: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanCopilot' has local changes\nwarning: LeanArchitect: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanArchitect' has local changes\nChecking .lake/build/lib/lean/InfoGeometry/Algebra/ZornRightProjectionObstruction.olean\n  \u2713 all 2 declarations clean\n\n\u2713 All modules passed.\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/Algebra/ZornRightProjectionObstruction.olean:PASS\n"
+    }
+  ]
+}

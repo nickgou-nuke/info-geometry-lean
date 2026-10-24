@@ -1,0 +1,4 @@
+import InfoGeometry.Canonical.ZornAdjointTraceTransport
+#print axioms InfoGeometry.Canonical.ZornAdjointTraceTransport.conjugated_product_trace
+#print axioms InfoGeometry.Canonical.ZornAdjointTraceTransport.transported_adjoint_trace
+#print axioms InfoGeometry.Canonical.ZornAdjointTraceTransport.nullRotor_adjoint_trace

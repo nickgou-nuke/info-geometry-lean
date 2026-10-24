@@ -1,0 +1,5 @@
+import InfoGeometry.Canonical.ZornNullSupportAdjoint
+#print axioms InfoGeometry.Canonical.ZornNullSupportAdjoint.nullProducts_adjoint
+#print axioms InfoGeometry.Canonical.ZornNullSupportAdjoint.nullSupport_self_adjoint
+#print axioms InfoGeometry.Canonical.ZornNullSupportAdjoint.nullProducts_ne
+#print axioms InfoGeometry.Canonical.ZornNullSupportAdjoint.nullProduct_not_self_adjoint

@@ -1,0 +1,12 @@
+import InfoGeometry.Canonical.ZornNullMajoranaAdjoint
+import InfoGeometry.Canonical.FiveStreamRotorChordal
+#print axioms InfoGeometry.Canonical.ZornNullMajoranaAdjoint.nullSum_self_adjoint
+#print axioms InfoGeometry.Canonical.ZornNullMajoranaAdjoint.nullDifference_self_adjoint
+#print axioms InfoGeometry.Canonical.ZornNullMajoranaAdjoint.nullCommutator_skew_adjoint
+#print axioms InfoGeometry.Canonical.ZornNullMajoranaAdjoint.nullDifference_sq
+#print axioms InfoGeometry.Canonical.PeirceRotorChordal.plus_mul_movingPlus
+#print axioms InfoGeometry.Canonical.PeirceRotorChordal.movingPlus_mul_plus
+#print axioms InfoGeometry.Canonical.PeirceRotorChordal.plus_movingPlus_sandwich
+#print axioms InfoGeometry.Canonical.PeirceRotorChordal.movingPlus_displacement_square
+#print axioms InfoGeometry.Canonical.FiveStreamRotorChordal.movingPolePlus_displacement_square
+#print axioms InfoGeometry.Canonical.FiveStreamRotorChordal.movingPolePlus_sandwich

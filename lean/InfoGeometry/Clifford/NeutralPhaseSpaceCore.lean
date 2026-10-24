@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Analysis.Normed.Module.Dual
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
@@ -113,7 +118,7 @@ noncomputable def neutralOmega :
   rcases Y with ⟨y, η⟩
   simp [neutralOmega, neutralParaInvolution,
     canonicalNeutralBilin_apply]
-  ring
+  abel
 
 @[rep_depth operator] theorem neutralOmega_skew
     (X Y : PhaseSpaceCarrier E) :
@@ -154,6 +159,25 @@ theorem canonicalNeutralBilin_nondegenerate :
       have hx := hY (x, 0)
       simpa [canonicalNeutralBilin_apply, hy] using hx
     simp [hy, hη]
+
+/-- The evaluation skew form is genuinely nondegenerate, not merely skew. -/
+theorem neutralOmega_nondegenerate :
+    (neutralOmega (E := E)).Nondegenerate := by
+  refine ⟨?_, ?_⟩
+  · intro X hX
+    apply canonicalNeutralBilin_nondegenerate.1 X
+    intro Y
+    have h := hX (neutralParaInvolution Y)
+    simp only [neutralOmega_apply, neutralParaInvolution_apply,
+      LinearMap.neg_apply] at h
+    rw [canonicalNeutralBilin_apply]
+    linarith
+  · intro Y hY
+    apply canonicalNeutralBilin_nondegenerate.2 Y
+    intro X
+    have h := hY (neutralParaInvolution X)
+    simpa [canonicalNeutralBilin_apply, neutralOmega_apply, sub_eq_add_neg,
+      add_comm] using h
 
 end Nondegenerate
 

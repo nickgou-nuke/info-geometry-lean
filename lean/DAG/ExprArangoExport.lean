@@ -1,6 +1,14 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Lean
 import Lean.Data.Json
 import DAG.Basic
+import DAG.Schema
+import DAG.Sha256
+import DAG.TermDigest
 
 open Lean
 
@@ -17,6 +25,8 @@ structure NodeRow where
   exprTag : String
   info : String
   doc : String
+  termDigest : String := ""
+  termKey : String := ""
   deBruijnIdx? : Option Nat := none
   deBruijnHash : String := ""
   alphaLocalHash : String := ""
@@ -54,8 +64,8 @@ deriving Repr, ToJson
 
 structure ExportState where
   declKeyMap : Std.HashMap Name String := {}
-  nextExprNodeId : Nat := 0
-  nextEdgeId : Nat := 0
+  emittedTerms : Std.HashSet String := {}
+  emittedEdges : Std.HashSet String := {}
   nodeCount : Nat := 0
   edgeCount : Nat := 0
   brokenBVarCount : Nat := 0
@@ -67,7 +77,7 @@ deriving Inhabited
 
 abbrev ExportM := StateT ExportState IO
 
-private def schemaVersion : Nat := 1
+private def schemaVersion : Nat := 2
 
 private def dottedName (s : String) : Name :=
   (s.splitOn ".").foldl (init := Name.anonymous) fun acc part =>
@@ -77,29 +87,14 @@ private def parseImports (s : String) : Array Import :=
   let mods := (s.splitOn ",").filter (fun x => x != "")
   mods.foldl (init := #[]) fun acc m => acc.push { module := dottedName m }
 
-private def normalizePrefix? (s : String) : Option String :=
-  if s = "" || s = "*" then none else some s
-
-private def inNamespace (nsPrefix? : Option String) (n : Name) : Bool :=
-  match nsPrefix? with
-  | none => true
-  | some p =>
-      let s := toString n
-      s = p || s.startsWith (p ++ ".")
+private def inNamespace (nsFilters : Option (List String)) (n : Name) : Bool :=
+  DAG.Schema.inNamespaceFilters nsFilters n
 
 private def generatedLike (n : Name) : Bool :=
-  let s := toString n
-  s.contains "._" || s.endsWith "match_" || s.endsWith "proof_" || s.endsWith "injEq"
+  !DAG.Schema.shouldIndexDeclString (toString n)
 
-private def kindString : ConstantInfo → String
-  | .thmInfo _ => "theorem"
-  | .axiomInfo _ => "axiom"
-  | .defnInfo _ => "def"
-  | .opaqueInfo _ => "opaque"
-  | .inductInfo _ => "inductive"
-  | .quotInfo _ => "quot"
-  | .ctorInfo _ => "ctor"
-  | .recInfo _ => "rec"
+private def kindString : ConstantInfo → String :=
+  DAG.Schema.kindString
 
 private def moduleNameFor (env : Environment) (declName : Name) : String :=
   match env.getModuleIdxFor? declName with
@@ -119,13 +114,20 @@ private def getDocString (env : Environment) (n : Name) : IO String := do
   | none => pure ""
 
 private def declKeyOf (n : Name) : String :=
-  s!"d_{(hash (toString n)).toNat}"
+  DAG.Schema.declKey n
+
+private def termKeyOf (digestHex : String) : String :=
+  "t_" ++ (digestHex.take 40).toString
+
+private def edgeKeyOf (fromKey toKey kind role decl sectionTag : String) (deBruijnIdx? : Option Nat) : String :=
+  let idxStr := match deBruijnIdx? with | some i => toString i | none => ""
+  "e_" ++ (DAG.Sha256.hexDigestString s!"{fromKey}|{toKey}|{kind}|{role}|{decl}|{sectionTag}|{idxStr}").take 40
 
 private def shapeHashOf (e : Expr) : Nat :=
   (hash (toString e)).toNat
 
 private def stableHashString (s : String) : String :=
-  s!"h_{(hash s).toNat}"
+  "h_" ++ (DAG.Sha256.hexDigestString s).take 40
 
 private def deBruijnNodeHash (decl sectionTag path : String) (idx : Nat) : String :=
   stableHashString s!"debruijn-node|{decl}|{sectionTag}|{path}|{idx}"
@@ -168,21 +170,17 @@ private def exprInfoOf : Expr → String
   | .proj s i _ => s!"{s}.{i}"
   | _ => ""
 
-private def freshExprNodeKey : ExportM String := do
-  let st ← get
-  let key := s!"x_{st.nextExprNodeId}"
-  set { st with nextExprNodeId := st.nextExprNodeId + 1 }
-  pure key
-
-private def freshEdgeKey : ExportM String := do
-  let st ← get
-  let key := s!"e_{st.nextEdgeId}"
-  set { st with nextEdgeId := st.nextEdgeId + 1 }
-  pure key
-
 private def addNode (hNodes : IO.FS.Handle) (row : NodeRow) : ExportM Unit := do
-  hNodes.putStrLn (toJson row).compress
-  modify fun st => { st with nodeCount := st.nodeCount + 1 }
+  let st ← get
+  if st.emittedTerms.contains row._key then
+    pure ()
+  else
+    hNodes.putStrLn (toJson row).compress
+    modify fun st => {
+      st with
+      nodeCount := st.nodeCount + 1
+      emittedTerms := st.emittedTerms.insert row._key
+    }
 
 private def addEdge
     (hEdges : IO.FS.Handle)
@@ -191,22 +189,30 @@ private def addEdge
     (incidenceHash : String := "")
     (quality : String := "ok")
     (notes : String := "") : ExportM Unit := do
-  let ek ← freshEdgeKey
-  let row : EdgeRow := {
-    _key := ek
-    _from := s!"ig_nodes/{fromKey}"
-    _to := s!"ig_nodes/{toKey}"
-    kind := kind
-    role := role
-    decl := decl
-    sectionTag := sectionTag
-    deBruijnIdx? := deBruijnIdx?
-    incidenceHash := incidenceHash
-    quality := quality
-    notes := notes
-  }
-  hEdges.putStrLn (toJson row).compress
-  modify fun st => { st with edgeCount := st.edgeCount + 1 }
+  let ek := edgeKeyOf fromKey toKey kind role decl sectionTag deBruijnIdx?
+  let st ← get
+  if st.emittedEdges.contains ek then
+    pure ()
+  else
+    let row : EdgeRow := {
+      _key := ek
+      _from := s!"ig_nodes/{fromKey}"
+      _to := s!"ig_nodes/{toKey}"
+      kind := kind
+      role := role
+      decl := decl
+      sectionTag := sectionTag
+      deBruijnIdx? := deBruijnIdx?
+      incidenceHash := incidenceHash
+      quality := quality
+      notes := notes
+    }
+    hEdges.putStrLn (toJson row).compress
+    modify fun st => {
+      st with
+      edgeCount := st.edgeCount + 1
+      emittedEdges := st.emittedEdges.insert ek
+    }
 
 private def bumpBrokenBVar : ExportM Unit :=
   modify fun st => { st with brokenBVarCount := st.brokenBVarCount + 1 }
@@ -267,13 +273,15 @@ private def ensureDeclNode (hNodes : IO.FS.Handle) (env : Environment) (name : N
 def visitExpr
     (hNodes hEdges : IO.FS.Handle)
     (env : Environment)
+    (memo : Std.HashMap ExprStructEq ByteArray)
     (declName : Name)
     (sectionTag : String)
     (path : String)
     (binders : Array String)
     (includeExternalDecls : Bool)
     (e : Expr) : ExportM String := do
-  let key ← freshExprNodeKey
+  let digestHex := DAG.Sha256.toHex (memo.getD ⟨e⟩ ByteArray.empty)
+  let key := termKeyOf digestHex
   let base : NodeRow := {
     _key := key
     graphKind := "expr"
@@ -285,6 +293,9 @@ def visitExpr
     exprTag := exprTagOf e
     info := exprInfoOf e
     doc := ""
+    termDigest := digestHex
+    termKey := key
+    alphaLocalHash := digestHex
     shapeHash := shapeHashOf e
     quality := "ok"
   }
@@ -324,47 +335,44 @@ def visitExpr
       pure key
   | .app fn arg =>
       addNode hNodes base
-      let fnKey ← visitExpr hNodes hEdges env declName sectionTag (path ++ ".fn") binders includeExternalDecls fn
-      let argKey ← visitExpr hNodes hEdges env declName sectionTag (path ++ ".arg") binders includeExternalDecls arg
+      let fnKey ← visitExpr hNodes hEdges env memo declName sectionTag (path ++ ".fn") binders includeExternalDecls fn
+      let argKey ← visitExpr hNodes hEdges env memo declName sectionTag (path ++ ".arg") binders includeExternalDecls arg
       addEdge hEdges key fnKey "ast" "fn" (toString declName) sectionTag
       addEdge hEdges key argKey "ast" "arg" (toString declName) sectionTag
       pure key
   | .lam _ ty body _ =>
       addNode hNodes base
-      let tyKey ← visitExpr hNodes hEdges env declName sectionTag (path ++ ".type") binders includeExternalDecls ty
+      let tyKey ← visitExpr hNodes hEdges env memo declName sectionTag (path ++ ".type") binders includeExternalDecls ty
       addEdge hEdges key tyKey "ast" "type" (toString declName) sectionTag
-      let bodyKey ← visitExpr hNodes hEdges env declName sectionTag (path ++ ".body") (binders.push key) includeExternalDecls body
+      let bodyKey ← visitExpr hNodes hEdges env memo declName sectionTag (path ++ ".body") (binders.push key) includeExternalDecls body
       addEdge hEdges key bodyKey "ast" "body" (toString declName) sectionTag
       pure key
   | .forallE _ ty body _ =>
       addNode hNodes base
-      let tyKey ← visitExpr hNodes hEdges env declName sectionTag (path ++ ".type") binders includeExternalDecls ty
+      let tyKey ← visitExpr hNodes hEdges env memo declName sectionTag (path ++ ".type") binders includeExternalDecls ty
       addEdge hEdges key tyKey "ast" "type" (toString declName) sectionTag
-      let bodyKey ← visitExpr hNodes hEdges env declName sectionTag (path ++ ".body") (binders.push key) includeExternalDecls body
+      let bodyKey ← visitExpr hNodes hEdges env memo declName sectionTag (path ++ ".body") (binders.push key) includeExternalDecls body
       addEdge hEdges key bodyKey "ast" "body" (toString declName) sectionTag
       pure key
   | .letE _ ty val body _ =>
       addNode hNodes base
-      let tyKey ← visitExpr hNodes hEdges env declName sectionTag (path ++ ".type") binders includeExternalDecls ty
-      let valKey ← visitExpr hNodes hEdges env declName sectionTag (path ++ ".value") binders includeExternalDecls val
+      let tyKey ← visitExpr hNodes hEdges env memo declName sectionTag (path ++ ".type") binders includeExternalDecls ty
+      let valKey ← visitExpr hNodes hEdges env memo declName sectionTag (path ++ ".value") binders includeExternalDecls val
       addEdge hEdges key tyKey "ast" "type" (toString declName) sectionTag
       addEdge hEdges key valKey "ast" "value" (toString declName) sectionTag
-      let bodyKey ← visitExpr hNodes hEdges env declName sectionTag (path ++ ".body") (binders.push key) includeExternalDecls body
+      let bodyKey ← visitExpr hNodes hEdges env memo declName sectionTag (path ++ ".body") (binders.push key) includeExternalDecls body
       addEdge hEdges key bodyKey "ast" "body" (toString declName) sectionTag
       pure key
   | .lit _ =>
       addNode hNodes base
       pure key
-  | .mdata _ body =>
-      addNode hNodes base
-      let bodyKey ← visitExpr hNodes hEdges env declName sectionTag (path ++ ".expr") binders includeExternalDecls body
-      addEdge hEdges key bodyKey "ast" "expr" (toString declName) sectionTag
-      pure key
   | .proj _ _ body =>
       addNode hNodes base
-      let bodyKey ← visitExpr hNodes hEdges env declName sectionTag (path ++ ".expr") binders includeExternalDecls body
+      let bodyKey ← visitExpr hNodes hEdges env memo declName sectionTag (path ++ ".expr") binders includeExternalDecls body
       addEdge hEdges key bodyKey "ast" "expr" (toString declName) sectionTag
       pure key
+  | .mdata _ body =>
+      visitExpr hNodes hEdges env memo declName sectionTag (path ++ ".expr") binders includeExternalDecls body
 
 partial def drainWorklist
     (hNodes hEdges : IO.FS.Handle)
@@ -383,13 +391,15 @@ partial def drainWorklist
         | none =>
             drainWorklist hNodes hEdges env includeExternalDecls
         | some ci =>
-            let typeRoot ← visitExpr hNodes hEdges env name "type" "type" #[] includeExternalDecls ci.type
+            let (typeMemo, _, _, _) := DAG.TermDigest.digestTable ci.type
+            let typeRoot ← visitExpr hNodes hEdges env typeMemo name "type" "type" #[] includeExternalDecls ci.type
             addEdge hEdges declKey typeRoot "decl_root" "type_root" (toString name) "type"
-            match ci.value? with
+            match ci.value? (allowOpaque := true) with
             | none =>
                 drainWorklist hNodes hEdges env includeExternalDecls
             | some val =>
-                let valRoot ← visitExpr hNodes hEdges env name "value" "value" #[] includeExternalDecls val
+                let (valMemo, _, _, _) := DAG.TermDigest.digestTable val
+                let valRoot ← visitExpr hNodes hEdges env valMemo name "value" "value" #[] includeExternalDecls val
                 addEdge hEdges declKey valRoot "decl_root" "value_root" (toString name) "value"
                 drainWorklist hNodes hEdges env includeExternalDecls
 
@@ -415,12 +425,12 @@ private def parseBoolDefault (s : String) (default : Bool) : Bool :=
 
 private def collectDeclTargets
     (env : Environment)
-    (nsPrefix? : Option String)
+    (nsFilters : Option (List String))
     (maxDecls : Nat)
     (includeGeneratedDecls : Bool) : Array Name :=
   let names :=
     env.constants.toList.foldl (init := #[]) fun acc (name, ci) =>
-      if !inNamespace nsPrefix? name then
+      if !inNamespace nsFilters name then
         acc
       else if !includeGeneratedDecls && generatedLike name then
         acc
@@ -440,8 +450,8 @@ private def runExport
     (includeGeneratedDecls : Bool) : IO UInt32 := do
   let imports := parseImports importModsStr
   let env ← importModules imports {} 0
-  let nsPrefix? := normalizePrefix? nsPrefix
-  let targets := collectDeclTargets env nsPrefix? maxDecls includeGeneratedDecls
+  let nsFilters := DAG.Schema.parseNamespaceFilters nsPrefix
+  let targets := collectDeclTargets env nsFilters maxDecls includeGeneratedDecls
 
   IO.println s!"[ExprArangoExport] imported modules={importModsStr}"
   IO.println s!"[ExprArangoExport] selected declarations={targets.size}"

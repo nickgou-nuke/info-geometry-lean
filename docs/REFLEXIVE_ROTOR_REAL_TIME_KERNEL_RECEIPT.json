@@ -1,0 +1,57 @@
+{
+  "scope": "Actual sine/cosine native rotor continuity and first/second derivatives of its conjugation path in a normed real algebra, with negative initial plus-projector velocity and support-offset projector oscillator.",
+  "proof_author": "James",
+  "semantic_auditor": "Popper",
+  "kernel_qa": "Ampere",
+  "disposition": "ACCEPTED_WITH_LIMITED_SCOPE",
+  "result": {
+    "build": {
+      "command": [
+        "lake",
+        "build",
+        "+InfoGeometry.Canonical.ReflexiveRotorRealTime:olean"
+      ],
+      "exit": 0
+    },
+    "axioms": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/Canonical/ReflexiveRotorRealTime.olean"
+      ],
+      "exit": 0
+    },
+    "strict": {
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/Canonical/ReflexiveRotorRealTime.lean",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    "stable_candidate_contract_import_and_pins": true
+  },
+  "hashes": {
+    "lean/InfoGeometry/Canonical/ReflexiveRotorRealTime.lean": "4d02458fbc4ef7a5e5c0963101dbdbcbbee1dbf882ec1c1219652315fb3db885",
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lean/InfoGeometry/Canonical/ReflexiveRotorMotion.lean": "eafd2b3770d28189a67b35118e144db25aa98a3404bce9aa3611dbdb6608b3ec",
+    "lean/InfoGeometry/Canonical/ModularFlowGeneratorDerivative.lean": "bcf0eb14b4481cf65ecbc7960a0d3ce680c54c70baaab6788d866a9aaa405f98",
+    "lean/InfoGeometry/Algebra/UnipotentReflexivePairFactorization.lean": "be7ca80dab5cc1637aa401258429cd1daa80b2fa05e2227ec73c03f2a3248509",
+    ".lake/packages/mathlib/Mathlib/Analysis/SpecialFunctions/Trigonometric/Deriv.lean": "c44a764cdb0db89c4c0fcfcc385bb904d2f4081ae5bd018785b84dbeb8d7744f",
+    ".lake/packages/mathlib/Mathlib/Analysis/Calculus/Deriv/Comp.lean": "4ed965b4b0a3a62724cade9cb1b89b00c2201195a575dc9ab2a2f32a42869bc3"
+  },
+  "axiom_log": "warning: LeanCopilot: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanCopilot' has local changes\nwarning: LeanArchitect: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanArchitect' has local changes\nChecking .lake/build/lib/lean/InfoGeometry/Canonical/ReflexiveRotorRealTime.olean\n  \u2713 all 29 declarations clean\n\n\u2713 All modules passed.\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/Canonical/ReflexiveRotorRealTime.olean:PASS\n",
+  "exclusions": [
+    "No exponential identification or ODE uniqueness",
+    "No self-adjoint projection assertion",
+    "No formal de Bruijn calculus",
+    "No analytic KMS assertion"
+  ]
+}

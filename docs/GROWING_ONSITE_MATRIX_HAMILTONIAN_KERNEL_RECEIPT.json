@@ -1,0 +1,53 @@
+{
+  "scope": "Native finite onsite Hamiltonian recursion on MatrixStage, Hermiticity, successor commutator compatibility, and nonzero fresh-factor action for nonzero weight.",
+  "proof_author": "James",
+  "semantic_auditor": "Popper",
+  "kernel_qa": "Ampere",
+  "disposition": "ACCEPTED_WITH_LIMITED_SCOPE",
+  "result": {
+    "build": {
+      "command": [
+        "lake",
+        "build",
+        "+InfoGeometry.Canonical.GrowingOnsiteMatrixHamiltonian:olean"
+      ],
+      "exit": 0
+    },
+    "axioms": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/Canonical/GrowingOnsiteMatrixHamiltonian.olean"
+      ],
+      "exit": 0
+    },
+    "strict": {
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/Canonical/GrowingOnsiteMatrixHamiltonian.lean",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    "stable_candidate_contract_import_and_pins": true
+  },
+  "hashes": {
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lean/InfoGeometry/Canonical/CuntzMatrixTraceTower.lean": "19f8ae14e35797de9232165babbd09c90650db641ff80714a3c54641e24adabb",
+    "lean/InfoGeometry/Canonical/FiniteMatrixGibbsParity.lean": "00680b45bec9b7fce6dbf221fa6acf8dfdaaa3033194e960f889efb50806ba80",
+    "lean/InfoGeometry/Canonical/GrowingOnsiteMatrixHamiltonian.lean": "e6342c213c00d6ea23aa498b4f9869878a3f2c6f2ea68cf9a2d9ab7c83ecbd28"
+  },
+  "axiom_log": "warning: LeanCopilot: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanCopilot' has local changes\nwarning: LeanArchitect: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanArchitect' has local changes\nChecking .lake/build/lib/lean/InfoGeometry/Canonical/GrowingOnsiteMatrixHamiltonian.olean\n  \u2713 all 39 declarations clean\n\n\u2713 All modules passed.\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/Canonical/GrowingOnsiteMatrixHamiltonian.olean:PASS\n",
+  "exclusions": [
+    "No uniform all-stage norm bound in this owner",
+    "No completed compatible commutator family in this owner",
+    "No intersite coupling or analytic KMS theorem"
+  ]
+}

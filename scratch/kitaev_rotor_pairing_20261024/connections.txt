@@ -1,0 +1,8 @@
+Source dependency chain (read from live owners, not a semantic inference from names):
+KitaevBoundaryDiracPair: native endpoint Majoranas -> square-zero boundary CAR pair.
+KitaevBoundaryAlgebra: that pair -> native unital matrix algebra hom F.
+KitaevBoundaryTraceNormalization: concrete two-site multiplicity yields trace(F M #F N)=2trace(M J N† J).
+KitaevBoundaryTraceNondegenerate: source Dirac involution and matrix trace separation establish both-slot separation.
+KitaevRotorMetricTransport: actual rotor S with inverse T transports eta to T†eta T and inverse to S eta S†, preserving full-matrix Dirac trace.
+KitaevRotorTracePairing: composition of these existing maps gives both-slot separation and persistent negative value for the conjugated native image.
+This connects rotor, boundary matrix algebra, Dirac metric, and trace pairing without substituting ordinary adjoints or asserting a Pfaffian identity. The skew coefficient/Pfaffian strand remains a distinct carrier until a specific compatibility map is proved.

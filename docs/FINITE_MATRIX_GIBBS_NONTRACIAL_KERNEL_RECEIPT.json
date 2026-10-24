@@ -1,0 +1,50 @@
+{
+  "scope": "Native CFC diagonal Gibbs density and explicit tilt matrix-unit nontraciality for beta*h nonzero; finite scope",
+  "proof_author": "Kepler",
+  "semantic_auditor": "Popper",
+  "kernel_qa": "Ampere",
+  "disposition": "ACCEPTED_WITH_LIMITED_SCOPE",
+  "result": {
+    "build": {
+      "command": [
+        "lake",
+        "build",
+        "+InfoGeometry.Canonical.FiniteMatrixGibbsNontracial:olean"
+      ],
+      "exit": 0
+    },
+    "axioms": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/Canonical/FiniteMatrixGibbsNontracial.olean"
+      ],
+      "exit": 0
+    },
+    "strict": {
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/Canonical/FiniteMatrixGibbsNontracial.lean",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    "stable_candidate_contract_import_and_pins": true
+  },
+  "hashes": {
+    "lean/InfoGeometry/Canonical/FiniteMatrixGibbsNontracial.lean": "7db5a31d777ca76851b50570134adce63e5882cb9bf4f83021399341514cc906",
+    "lean/InfoGeometry/Canonical/FiniteMatrixGibbsParity.lean": "00680b45bec9b7fce6dbf221fa6acf8dfdaaa3033194e960f889efb50806ba80",
+    ".lake/packages/mathlib/Mathlib/Analysis/CStarAlgebra/ContinuousFunctionalCalculus/Pi.lean": "0f7f045d7dc25461fbd356aab76e5db8e19b16035129f69e67b31933f14c577d",
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    ".lake/packages/mathlib/Mathlib/Analysis/CStarAlgebra/ContinuousFunctionalCalculus/Basic.lean": "4c1a63f553ecdae789eedb62a7d4a629b6530fd398c04c5cd18e40972562147f",
+    ".lake/packages/mathlib/Mathlib/Analysis/CStarAlgebra/ContinuousFunctionalCalculus/Instances.lean": "3f67b4ed5dbc93ff6225493d906cf5c5a58e65fc497879de7ad680a24663e592"
+  },
+  "axiom_log": "warning: LeanCopilot: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanCopilot' has local changes\nwarning: LeanArchitect: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanArchitect' has local changes\nChecking .lake/build/lib/lean/InfoGeometry/Canonical/FiniteMatrixGibbsNontracial.olean\n  \u2713 all 6 declarations clean\n\n\u2713 All modules passed.\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/Canonical/FiniteMatrixGibbsNontracial.olean:PASS\n"
+}

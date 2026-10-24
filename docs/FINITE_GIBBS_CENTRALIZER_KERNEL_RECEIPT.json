@@ -1,0 +1,47 @@
+{
+  "scope": "FiniteMatrixGibbsCentralizer native owner only; not aggregate or repository-wide acceptance",
+  "semantic_auditor": "Popper",
+  "kernel_qa": "Ampere",
+  "disposition": "ACCEPTED_WITH_LIMITED_SCOPE",
+  "result": {
+    "build": {
+      "command": [
+        "lake",
+        "build",
+        "+InfoGeometry.Canonical.FiniteMatrixGibbsCentralizer:olean"
+      ],
+      "exit": 0
+    },
+    "axioms": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/Canonical/FiniteMatrixGibbsCentralizer.olean"
+      ],
+      "exit": 0
+    },
+    "strict": {
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/Canonical/FiniteMatrixGibbsCentralizer.lean",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    "stable_candidate_contract_import_and_pins": true
+  },
+  "hashes": {
+    "lean/InfoGeometry/Canonical/FiniteMatrixGibbsCentralizer.lean": "f9cd930055ace9ff1a1d9ed25b0bbec785e9f5badd4241641a3277be5def2302",
+    "lean/InfoGeometry/Canonical/FiniteMatrixGibbsFunctional.lean": "49abd537aa7af6fcaa2dfb9e71dbaca6296fb323c82f58a60d760cd94322b12d",
+    "lean/InfoGeometry/OperatorAlgebra/TracialCARDensity.lean": "6734a0e8dfeca118bfded0a477c4bc85873bee401db8ab1e3a70c3b31124af16",
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b"
+  },
+  "axiom_log": "warning: LeanCopilot: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanCopilot' has local changes\nwarning: LeanArchitect: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanArchitect' has local changes\nChecking .lake/build/lib/lean/InfoGeometry/Canonical/FiniteMatrixGibbsCentralizer.olean\n  \u2713 all 4 declarations clean\n\n\u2713 All modules passed.\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/Canonical/FiniteMatrixGibbsCentralizer.olean:PASS\n"
+}

@@ -1,0 +1,10 @@
+Actual arbitrary-N chain interior restriction, not a replacement matrix.
+Use KitaevChainCoefficients.chainCoefficientMatrix, native bondLeft/bondRight,
+and KitaevChainKernel coordinate action. Map Sum(Fin(N-1))(Fin(N-1)) to
+Fin(2*N), left labels to odd bondLeft and right labels to even bondRight.
+Prove injectivity, row readouts, and exact native submatrix equality with
+MajoranaKreinPfaffianCarrier.offDiagonalPairing ((2*t) smul identity).
+Nonzero t gives nonzero interior determinant via the existing offdiagonal
+determinant criterion. No full-chain nonsingularity or Dirac-Gram identification;
+the full chain has endpoints, this is its literal interior compression.
+No signed Pfaffian/phase claim; no builds/live edits by child.

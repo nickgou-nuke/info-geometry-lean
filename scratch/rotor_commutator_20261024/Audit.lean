@@ -1,0 +1,8 @@
+import InfoGeometry.Canonical.FiveStreamRotorChordal
+import InfoGeometry.Canonical.ZornAdjointTraceTransport
+#print axioms InfoGeometry.Canonical.PeirceRotorChordal.plus_movingPlus_commutator
+#print axioms InfoGeometry.Canonical.PeirceRotorChordal.plus_movingPlus_commutator_square
+#print axioms InfoGeometry.Canonical.FiveStreamRotorChordal.movingPolePlus_commutator_square
+#print axioms InfoGeometry.Canonical.ZornAdjointTraceTransport.conjugated_product_trace
+#print axioms InfoGeometry.Canonical.ZornAdjointTraceTransport.transported_adjoint_trace
+#print axioms InfoGeometry.Canonical.ZornAdjointTraceTransport.nullRotor_adjoint_trace

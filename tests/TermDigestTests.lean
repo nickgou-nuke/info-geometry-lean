@@ -64,6 +64,32 @@ private def openTerm : Expr := .app (.fvar ⟨`h⟩) (.bvar 0)
 #guard (DAG.TermDigest.compute openTerm).openTerm
 #guard d (.app (.fvar ⟨`h⟩) (.bvar 0)) == d (.app (.fvar ⟨`other⟩) (.bvar 0))
 
+/- Locally nameless disassembly over a `LocalContext` (`computeInLctx`):
+   1. Two contexts with different `_uniq` FVarIds and userNames produce identical closed de Bruijn digests.
+   2. Using the 1st vs 2nd hypothesis in the same context produces distinct digests. -/
+private def lctx1 : LocalContext :=
+  (LocalContext.empty.mkLocalDecl ⟨`uniq_10⟩ `x prop).mkLocalDecl ⟨`uniq_11⟩ `y prop
+private def lctx2 : LocalContext :=
+  (LocalContext.empty.mkLocalDecl ⟨`uniq_99⟩ `a prop).mkLocalDecl ⟨`uniq_100⟩ `b prop
+
+#guard (DAG.TermDigest.computeInLctx lctx1 (.app (.fvar ⟨`uniq_10⟩) (.fvar ⟨`uniq_11⟩))).digest ==
+       (DAG.TermDigest.computeInLctx lctx2 (.app (.fvar ⟨`uniq_99⟩) (.fvar ⟨`uniq_100⟩))).digest
+#guard !(DAG.TermDigest.computeInLctx lctx1 (.app (.fvar ⟨`uniq_10⟩) (.fvar ⟨`uniq_11⟩))).openTerm
+#guard (DAG.TermDigest.computeInLctx lctx1 (.app (.fvar ⟨`uniq_10⟩) (.fvar ⟨`uniq_11⟩))).digest !=
+       (DAG.TermDigest.computeInLctx lctx1 (.app (.fvar ⟨`uniq_10⟩) (.fvar ⟨`uniq_10⟩))).digest
+
+/- Context-relative de Bruijn disassembly (`digestWithLctx`):
+   1. Two contexts with different `_uniq` FVarIds and userNames produce identical subterm digests
+      without wrapping the entire `LocalContext` telescope around the expression.
+   2. Mapped `fvar`s are closed (`openTerm == false`), whereas unmapped `fvar`s remain `openTerm == true`.
+   3. Using the 1st vs 2nd hypothesis in the same context produces distinct digests. -/
+#guard (DAG.TermDigest.digestWithLctx lctx1 (.app (.fvar ⟨`uniq_10⟩) (.fvar ⟨`uniq_11⟩))).digest ==
+       (DAG.TermDigest.digestWithLctx lctx2 (.app (.fvar ⟨`uniq_99⟩) (.fvar ⟨`uniq_100⟩))).digest
+#guard !(DAG.TermDigest.digestWithLctx lctx1 (.app (.fvar ⟨`uniq_10⟩) (.fvar ⟨`uniq_11⟩))).openTerm
+#guard (DAG.TermDigest.digestWithLctx lctx1 (.app (.fvar ⟨`uniq_10⟩) (.fvar ⟨`unmapped_fvar⟩))).openTerm
+#guard (DAG.TermDigest.digestWithLctx lctx1 (.app (.fvar ⟨`uniq_10⟩) (.fvar ⟨`uniq_11⟩))).digest !=
+       (DAG.TermDigest.digestWithLctx lctx1 (.app (.fvar ⟨`uniq_10⟩) (.fvar ⟨`uniq_10⟩))).digest
+
 /- L0 / L3 keys agree with the Python importer (`igf.graph.decl_schema`) and live Arango rows. -/
 #guard DAG.Schema.declKey `InfoGeometry.AQFT.Pin55Pullback.bladeMatrixEquiv ==
   "d_f7bec2f5913b1e7a496a4a2aced3f82318f04198"

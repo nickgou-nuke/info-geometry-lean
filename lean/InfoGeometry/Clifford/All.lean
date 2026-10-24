@@ -31,6 +31,8 @@ import InfoGeometry.Clifford.CliffordTowerFunctor
 import InfoGeometry.Clifford.QuadraticPolarBridge
 import InfoGeometry.Clifford.PolarizedMinkowski55
 import InfoGeometry.Clifford.PolarizedBoundaryInvolutions
+import InfoGeometry.Clifford.Cl55MetriplecticReduction
+import InfoGeometry.Clifford.Cl55ParaKahlerPinTransport
 import InfoGeometry.Clifford.Pin55KramersContactMultigrading
 import InfoGeometry.Clifford.Pin55KramersKleinAll
 import InfoGeometry.Clifford.Cl55CreationWordGradeObstruction

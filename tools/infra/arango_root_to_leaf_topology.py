@@ -17,7 +17,12 @@ from typing import Any
 
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
 
+from igf.graph.decl_schema import (
+    STRUCTURAL_FINGERPRINT_VERSION,
+    TERM_DIGEST_VERSION,
+)
 from tools.infra.arango_dag_algorithms import run_aql
 from tools.infra.arango_env import (
     arango_database,
@@ -120,19 +125,19 @@ def compute_root_leaf_topology(target: ArangoTarget, sample_limit: int = 100) ->
         })
 
     # Find frequent value-hash candidate groups (not equivalence classes).
-    wires_query = """
+    wires_query = f"""
     FOR d IN decls
-      FILTER d.valueFingerprint != null
-      FILTER d.valueFingerprint.algorithmVersion == "lean-expr-structural-v3"
-      COLLECT hash = d.canonicalValueHash INTO members
+      FILTER (d.valueDigest != null AND d.valueDigest.algorithmVersion == "{TERM_DIGEST_VERSION}")
+          OR (d.valueFingerprint != null AND d.valueFingerprint.algorithmVersion == "{STRUCTURAL_FINGERPRINT_VERSION}")
+      COLLECT hash = (d.valueDigest.digest || d.canonicalValueHash) INTO members
       FILTER hash != null AND LENGTH(members) > 1
       SORT LENGTH(members) DESC
       LIMIT 20
-      RETURN {
+      RETURN {{
         canonicalValueHash: hash,
         count: LENGTH(members),
         declarations: members[*].d.name
-      }
+      }}
     """
     conductive_wires = run_aql(target, wires_query)
 

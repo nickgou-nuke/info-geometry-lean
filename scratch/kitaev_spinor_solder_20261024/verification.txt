@@ -1,0 +1,9 @@
+Owner SHA256 bfdc7005549ff423f53e0f0bef1f686a80ce23d95430a7f72760672a25a8716c
+Parent final locked build42263 exit0,9303jobs /tmp/kitaev-spinor-solder-final2-build.log
+No owner warnings (dependency warnings not a repo-wide clean claim).
+Independent A-A zorn_semantic_audit final PASS.
+Independent QA-A zorn_acceptance ACCEPTED; audit40491 exit0.
+Log /tmp/kitaev-spinor-solder-qa.log
+All four only propext,Classical.choice,Quot.sound; strict0/refactor[]/whitespaceclean.
+Scope existing metric solder action, native boost conjugation/trace preservation,
+reflection-fixed spinor solder square-zero. Rank at most one, no nonzero assertion.

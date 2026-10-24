@@ -1,0 +1,66 @@
+{
+  "scope": "Native metric-equipped algebraic FockInfinity bounded coordinate actions only; no completed operators, CAR extension, or aggregate acceptance.",
+  "owner": "lean/InfoGeometry/Clifford/RealFockBoundedCoordinateAction.lean",
+  "evidence_directory": "/tmp/qa-a-fock-bounded-live-tf61dufo",
+  "commands_and_results": {
+    "build": {
+      "command": [
+        "lake",
+        "build",
+        "+InfoGeometry.Clifford.RealFockBoundedCoordinateAction:olean"
+      ],
+      "exit": 0
+    },
+    "axioms": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/Clifford/RealFockBoundedCoordinateAction.olean"
+      ],
+      "exit": 0
+    },
+    "strict": {
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/Clifford/RealFockBoundedCoordinateAction.lean",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    "stable_candidate_contract_import_and_pins": true
+  },
+  "before_sha256": {
+    "lean/InfoGeometry/Clifford/RealFockBoundedCoordinateAction.lean": "26cdb903411b5305e4f3c22cd008ff3e878204e94c318feb7f510ab78c7c4649",
+    "scratch/RealFockBoundedCoordinateAction20261024v2.md": "ec4996bb1ad2ed72a0ec9c8095dcd98e735c8acef98bc1177a50dee141e6093a",
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lean/InfoGeometry/Clifford/RealFockCoordinateTransport.lean": "18781a8ba402a7c42f4a8b863afd2ac01e7930dcc21a04d880eb6c77607cba41",
+    "lean/InfoGeometry/Clifford/RealFockHilbertCompletion.lean": "b73c773bc821a450a44e961a1345a8b5a8712e59e5b9df8b66384ebd0343e17a",
+    "lean/InfoGeometry/Clifford/ClNNFockDirectLimitRepresentationLinearityWave16.lean": "977dad16c0a9987f54dcbb56b357c76b4fa0d85c21a9c21453a16c2e52fbcf5d"
+  },
+  "after_sha256": {
+    "lean/InfoGeometry/Clifford/RealFockBoundedCoordinateAction.lean": "26cdb903411b5305e4f3c22cd008ff3e878204e94c318feb7f510ab78c7c4649",
+    "scratch/RealFockBoundedCoordinateAction20261024v2.md": "ec4996bb1ad2ed72a0ec9c8095dcd98e735c8acef98bc1177a50dee141e6093a",
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lean/InfoGeometry/Clifford/RealFockCoordinateTransport.lean": "18781a8ba402a7c42f4a8b863afd2ac01e7930dcc21a04d880eb6c77607cba41",
+    "lean/InfoGeometry/Clifford/RealFockHilbertCompletion.lean": "b73c773bc821a450a44e961a1345a8b5a8712e59e5b9df8b66384ebd0343e17a",
+    "lean/InfoGeometry/Clifford/ClNNFockDirectLimitRepresentationLinearityWave16.lean": "977dad16c0a9987f54dcbb56b357c76b4fa0d85c21a9c21453a16c2e52fbcf5d"
+  },
+  "actual_declaration_count": 23,
+  "owner_warnings": [],
+  "dependency_warnings": "Existing upstream/package warnings retained in logs.",
+  "semantic_review": "Kepler independent sandbox v2 AA PASS; Popper native comment-only delta AA PASS.",
+  "log_sha256": {
+    "strict.log": "747443d22b8ccffb07c44835fa4a015e33c702c22548bbc3cecde756a8b81eb7",
+    "axioms.log": "61123db383424daa39071cbf7d30946c9eec7ec2d8cd44e3936c0c17ca86896e",
+    "build.log": "1ed73e7caacf1688e92e996c75b171a35622fe1699e6dcec8b99fe203d7ba505"
+  }
+}

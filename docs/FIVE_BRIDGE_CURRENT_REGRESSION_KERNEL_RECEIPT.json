@@ -1,0 +1,149 @@
+{
+  "scope": "Narrow regression of five native bridges against current rotor dependencies; no full-repository claim",
+  "run_directory": "/tmp/qa-a-five-bridge-current-1c019j90",
+  "results": {
+    "build": {
+      "command": [
+        "lake",
+        "build",
+        "+InfoGeometry.Canonical.RotorColimitTransport:olean",
+        "+InfoGeometry.Canonical.RotorWeightOrbitBridge:olean",
+        "+InfoGeometry.Clifford.FiniteFockCLMReflexivePair:olean",
+        "+InfoGeometry.Clifford.FiniteFockRotorShear:olean",
+        "+InfoGeometry.Clifford.FiniteFockModularScaling:olean"
+      ],
+      "exit": 0
+    },
+    "axioms_RotorColimitTransport": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/Canonical/RotorColimitTransport.olean"
+      ],
+      "exit": 0
+    },
+    "strict_RotorColimitTransport": {
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/Canonical/RotorColimitTransport.lean",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    "axioms_RotorWeightOrbitBridge": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/Canonical/RotorWeightOrbitBridge.olean"
+      ],
+      "exit": 0
+    },
+    "strict_RotorWeightOrbitBridge": {
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/Canonical/RotorWeightOrbitBridge.lean",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    "axioms_FiniteFockCLMReflexivePair": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/Clifford/FiniteFockCLMReflexivePair.olean"
+      ],
+      "exit": 0
+    },
+    "strict_FiniteFockCLMReflexivePair": {
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/Clifford/FiniteFockCLMReflexivePair.lean",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    "axioms_FiniteFockRotorShear": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/Clifford/FiniteFockRotorShear.olean"
+      ],
+      "exit": 0
+    },
+    "strict_FiniteFockRotorShear": {
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/Clifford/FiniteFockRotorShear.lean",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    "axioms_FiniteFockModularScaling": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/Clifford/FiniteFockModularScaling.olean"
+      ],
+      "exit": 0
+    },
+    "strict_FiniteFockModularScaling": {
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/Clifford/FiniteFockModularScaling.lean",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    "stable_candidate_contract_import_and_pins": true
+  },
+  "hashes": {
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lean/InfoGeometry/Canonical/CuntzMatrixAlgebraicTraceFunctional.lean": "6364d061396c64a956b16500354dc67e4e6de992e9859a1460dd31cdba4f406c",
+    "lean/InfoGeometry/Canonical/DeBruijnRotorAlternationCycle.lean": "535ad1e694277b5c62fbe04f079048500a93690ae3d67172ad073b271dc608c8",
+    "lean/InfoGeometry/Canonical/ModularParabolicCyclotomicSynthesis.lean": "f8225e845698b06c358ba2a3f10697d10a19519a1fe9e9e3d789d68b919aefb8",
+    "lean/InfoGeometry/Canonical/PeirceWeightedTrace.lean": "cb93daf90aaccc5dbb5744c3a8a10b2815c5041c26f445ebeabc58f15f8a6bf7",
+    "lean/InfoGeometry/Canonical/ReflexiveRotorRealTime.lean": "4d02458fbc4ef7a5e5c0963101dbdbcbbee1dbf882ec1c1219652315fb3db885",
+    "lean/InfoGeometry/Canonical/RootsOfZeroUnityMoebiusModularG22.lean": "554c868250b44ece9a2d289d469db4528006cfe73bf94e5b89f0919b08fd8af3",
+    "lean/InfoGeometry/Canonical/RotorColimitTransport.lean": "dfa23144422088958b8b35b19d3adfacbb9051cac0180803cc631f21cc554308",
+    "lean/InfoGeometry/Canonical/RotorWeightOrbitBridge.lean": "1d5264489d10418e02df8850f7cd43667fb53ff131219d07e0527f7c4117ab6d",
+    "lean/InfoGeometry/Canonical/UnifiedGeometryOperatorSignificance.lean": "28029a0823281fb0d080df49b1204cf119f23795eb8c6d6e311fd929235b7803",
+    "lean/InfoGeometry/Clifford/FiniteFockCLMReflexivePair.lean": "f9b1142a7a24640d499b15449561c133480d23a5b402700b8a37f79aa8502cff",
+    "lean/InfoGeometry/Clifford/FiniteFockModularScaling.lean": "9c60574e3deb4c3db7e674891200ab0410c561644938ea67899fd98f7a8b8afc",
+    "lean/InfoGeometry/Clifford/FiniteFockRotorShear.lean": "bb0ddd68306bbce1dcce2f7afd4b5c6b89204ab252b0863c2035764d797d90eb",
+    "lean/InfoGeometry/Clifford/FiniteRealFockNormBounds.lean": "4a5382ad9dc1f7667f3703babafa498a8099969564e12005562d1631bf806570"
+  },
+  "logs": {
+    "axioms_FiniteFockModularScaling.log": "warning: LeanCopilot: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanCopilot' has local changes\nwarning: LeanArchitect: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanArchitect' has local changes\nChecking .lake/build/lib/lean/InfoGeometry/Clifford/FiniteFockModularScaling.olean\n  \u2713 all 15 declarations clean\n\n\u2713 All modules passed.\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/Clifford/FiniteFockModularScaling.olean:PASS\n",
+    "axioms_FiniteFockCLMReflexivePair.log": "warning: LeanCopilot: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanCopilot' has local changes\nwarning: LeanArchitect: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanArchitect' has local changes\nChecking .lake/build/lib/lean/InfoGeometry/Clifford/FiniteFockCLMReflexivePair.olean\n  \u2713 all 7 declarations clean\n\n\u2713 All modules passed.\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/Clifford/FiniteFockCLMReflexivePair.olean:PASS\n",
+    "axioms_FiniteFockRotorShear.log": "warning: LeanCopilot: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanCopilot' has local changes\nwarning: LeanArchitect: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanArchitect' has local changes\nChecking .lake/build/lib/lean/InfoGeometry/Clifford/FiniteFockRotorShear.olean\n  \u2713 all 21 declarations clean\n\n\u2713 All modules passed.\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/Clifford/FiniteFockRotorShear.olean:PASS\n",
+    "axioms_RotorColimitTransport.log": "warning: LeanCopilot: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanCopilot' has local changes\nwarning: LeanArchitect: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanArchitect' has local changes\nChecking .lake/build/lib/lean/InfoGeometry/Canonical/RotorColimitTransport.olean\n  \u2713 all 20 declarations clean\n\n\u2713 All modules passed.\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/Canonical/RotorColimitTransport.olean:PASS\n",
+    "axioms_RotorWeightOrbitBridge.log": "warning: LeanCopilot: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanCopilot' has local changes\nwarning: LeanArchitect: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanArchitect' has local changes\nChecking .lake/build/lib/lean/InfoGeometry/Canonical/RotorWeightOrbitBridge.olean\n  \u2713 all 10 declarations clean\n\n\u2713 All modules passed.\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/Canonical/RotorWeightOrbitBridge.olean:PASS\n"
+  }
+}

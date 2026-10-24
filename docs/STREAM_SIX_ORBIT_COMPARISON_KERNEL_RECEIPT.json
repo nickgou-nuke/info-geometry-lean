@@ -1,0 +1,77 @@
+{
+  "disposition": "ACCEPTED_WITH_LIMITED_SCOPE",
+  "owner": "lean/InfoGeometry/Canonical/StreamSixOrbitComparison.lean",
+  "session_id": 5658,
+  "evidence_directory": "/tmp/qa-a-stream-six-live-ey098qc6",
+  "commands_and_results": {
+    "build": {
+      "command": [
+        "lake",
+        "build",
+        "+InfoGeometry.Canonical.StreamSixOrbitComparison:olean"
+      ],
+      "exit": 0
+    },
+    "axioms": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/Canonical/StreamSixOrbitComparison.olean"
+      ],
+      "exit": 0
+    },
+    "strict": {
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/Canonical/StreamSixOrbitComparison.lean",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    "stable_candidate_contract_import_and_pins": true
+  },
+  "before_sha256": {
+    "lean/InfoGeometry/Canonical/StreamSixOrbitComparison.lean": "68d2ee3e15a8cb27284c7e21f9a11fbde1b9ce6047a38a812bbacf494f2ae367",
+    "scratch/StreamSixOrbitComparison20261024.md": "73a40d9c11d36ff81f61fa2e5f4bb8c9730c0defb99127df0b0fb0df5c566c7f",
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lean/InfoGeometry/Canonical/ComplementHyperbolicOrbit.lean": "8e42e1a0443b4c9c767dc19866ff0fda26ebe516e3ec108edf656e4aa50aaf14",
+    "lean/InfoGeometry/Canonical/RotorPeirceWeightCompression.lean": "f675d69cfef64da4bf3b9f70c928e0b78c8db4fc63387c9b850b42f4448b14ec",
+    "lean/InfoGeometry/Canonical/HyperbolicEllipticKmsDecoherence.lean": "4dcc29604012ced040829e3474719dcfb1833aca7f2ef1e77a27c410d2082b81"
+  },
+  "after_sha256": {
+    "lean/InfoGeometry/Canonical/StreamSixOrbitComparison.lean": "68d2ee3e15a8cb27284c7e21f9a11fbde1b9ce6047a38a812bbacf494f2ae367",
+    "scratch/StreamSixOrbitComparison20261024.md": "73a40d9c11d36ff81f61fa2e5f4bb8c9730c0defb99127df0b0fb0df5c566c7f",
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lean/InfoGeometry/Canonical/ComplementHyperbolicOrbit.lean": "8e42e1a0443b4c9c767dc19866ff0fda26ebe516e3ec108edf656e4aa50aaf14",
+    "lean/InfoGeometry/Canonical/RotorPeirceWeightCompression.lean": "f675d69cfef64da4bf3b9f70c928e0b78c8db4fc63387c9b850b42f4448b14ec",
+    "lean/InfoGeometry/Canonical/HyperbolicEllipticKmsDecoherence.lean": "4dcc29604012ced040829e3474719dcfb1833aca7f2ef1e77a27c410d2082b81"
+  },
+  "actual_declaration_count": 6,
+  "axiom_audit": "all actual declarations passed repository allowlist",
+  "strict": {
+    "violations": {},
+    "quarantined_packets": []
+  },
+  "owner_warnings": [],
+  "dependency_warnings": "Existing upstream/package warnings retained in logs.",
+  "build_summary": [
+    "Build completed successfully (9290 jobs)."
+  ],
+  "scope": "Exact native StreamSixOrbitComparison only; no aggregate acceptance.",
+  "no_source_edits": true,
+  "lock_released": true,
+  "log_sha256": {
+    "build.log": "098070af689541db574cb303655b31324b5b18f7f771aaca30a6885540cb9e6b",
+    "axioms.log": "7baa4d93d6e78d625c0f9260536eeec4aacc8e24dc817be43cf5fa1b36d84ae0",
+    "strict.log": "747443d22b8ccffb07c44835fa4a015e33c702c22548bbc3cecde756a8b81eb7"
+  }
+}

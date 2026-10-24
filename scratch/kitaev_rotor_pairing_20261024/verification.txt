@@ -1,0 +1,7 @@
+Owner: lean/InfoGeometry/Canonical/KitaevRotorTracePairing.lean
+SHA256: 74bac0cceb874c82fe93bc32232b991333b0e2dbd11f779b96ae4820bb5b54f8
+Parent locked target build: session9381 terminal exit0, 9205jobs. Log /tmp/kitaev-rotor-pairing-build.log. New owner no warnings; imported dependencies retain warnings.
+A-A: /root/zorn_semantic_audit semantic PASS exact 1def+5theorems.
+QA-A: /root/zorn_acceptance independent locked Audit.lean session80204 exit0, /tmp/kitaev-rotor-pairing-qa.log. Six exact axiom sets {propext, Classical.choice, Quot.sound}; no sorryAx. QA ACCEPTED. Compiler lane released.
+Strict OpenGauss screener: 0 traps. Scoped staged whitespace: clean. Banned markers: none.
+Local sources and task evidence staged; no commit, push, PR merge or repository-wide green claim. Broad unification goal remains active.

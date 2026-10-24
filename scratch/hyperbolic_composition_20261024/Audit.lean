@@ -1,0 +1,6 @@
+import InfoGeometry.Canonical.PeirceHyperbolicComposition
+#print axioms InfoGeometry.Canonical.PeirceHyperbolicComposition.completedUnitHom
+#print axioms InfoGeometry.Canonical.PeirceHyperbolicComposition.hyperbolic_norm_comp
+#print axioms InfoGeometry.Canonical.PeirceHyperbolicComposition.hyperbolicUnit_mul
+#print axioms InfoGeometry.Canonical.PeirceHyperbolicComposition.hyperbolicUnit_inv
+#print axioms InfoGeometry.Canonical.PeirceHyperbolicComposition.hyperbolic_orbit_composition

@@ -1,0 +1,52 @@
+{
+  "scope": "Bounded right multiplication on Mathlib native PreGNS and GNS completion for any tracial positive complex functional on a nonunital Cstar algebra; no normalization or faithfulness assumed.",
+  "proof_author": "James",
+  "semantic_auditor": "Popper",
+  "kernel_qa": "Ampere",
+  "disposition": "ACCEPTED_WITH_LIMITED_SCOPE",
+  "result": {
+    "build": {
+      "command": [
+        "lake",
+        "build",
+        "+InfoGeometry.OperatorAlgebra.TracialGNSRightMultiplication:olean"
+      ],
+      "exit": 0
+    },
+    "axioms": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/OperatorAlgebra/TracialGNSRightMultiplication.olean"
+      ],
+      "exit": 0
+    },
+    "strict": {
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/OperatorAlgebra/TracialGNSRightMultiplication.lean",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    "stable_candidate_contract_import_and_pins": true
+  },
+  "hashes": {
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    ".lake/packages/mathlib/Mathlib/Analysis/CStarAlgebra/GelfandNaimarkSegal.lean": "a298fa666e618f0fffcfa28f5608f7b42870ed47ebe99e49b3b765b66837c9c3",
+    "lean/InfoGeometry/OperatorAlgebra/TracialGNSRightMultiplication.lean": "df672b36e0835f8560ee9e3be4e509fa50082358f7469896d9d3facb7a87e474"
+  },
+  "axiom_log": "warning: LeanCopilot: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanCopilot' has local changes\nwarning: LeanArchitect: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanArchitect' has local changes\nChecking .lake/build/lib/lean/InfoGeometry/OperatorAlgebra/TracialGNSRightMultiplication.olean\n  \u2713 all 21 declarations clean\n\n\u2713 All modules passed.\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/OperatorAlgebra/TracialGNSRightMultiplication.olean:PASS\n",
+  "exclusions": [
+    "No adjoint or opposite-composition laws proved here",
+    "No growing compatible operator family constructed here",
+    "No interacting Dirac or analytic KMS conclusion"
+  ]
+}

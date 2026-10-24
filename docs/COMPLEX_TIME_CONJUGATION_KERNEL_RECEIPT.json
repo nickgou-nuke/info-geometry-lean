@@ -1,0 +1,69 @@
+{
+  "disposition": "ACCEPTED_WITH_LIMITED_SCOPE",
+  "scope": "Entire complex-time conjugation for bounded elements of an existing complex CStarAlgebra, additive action and real/imaginary readbacks. No scalar state boundary, strip bound or concrete represented KMS acceptance.",
+  "owner": "lean/InfoGeometry/OperatorAlgebra/ComplexTimeConjugation.lean",
+  "evidence_directory": "/tmp/qa-a-complex-time-live-0jqy7obu",
+  "session_id": 3409,
+  "commands_and_results": {
+    "build": {
+      "command": [
+        "lake",
+        "build",
+        "+InfoGeometry.OperatorAlgebra.ComplexTimeConjugation:olean"
+      ],
+      "exit": 0
+    },
+    "axioms": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/OperatorAlgebra/ComplexTimeConjugation.olean"
+      ],
+      "exit": 0
+    },
+    "strict": {
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/OperatorAlgebra/ComplexTimeConjugation.lean",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    "stable_candidate_contract_import_and_pins": true
+  },
+  "before_sha256": {
+    "lean/InfoGeometry/OperatorAlgebra/ComplexTimeConjugation.lean": "5ac781530aed13fdd016a60550f87740838adb7552888ac907cf9b806f8140b9",
+    "scratch/ComplexTimeConjugation20261024v2.md": "be4795b03ffc885b21a05d98bfd9aed05ce5d428a49aaa08dd729c1abace3216",
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lean/InfoGeometry/Canonical/FiniteExponentialMotion.lean": "93f2c6b5af7f729693d1aac9eb574d4109c270042993167906525982426a4541",
+    ".lake/packages/mathlib/Mathlib/Analysis/Analytic/Constructions.lean": "b4ebe935f31d1c4110a0889146b48909c63e30a9e2de771e9065fa472d7d1be6",
+    ".lake/packages/mathlib/Mathlib/Analysis/Analytic/Composition.lean": "46d7fe5169cb434fdf1662c01a4e71a5f0a95b27dfd6ad6766216f0e104ca33e"
+  },
+  "after_sha256": {
+    "lean/InfoGeometry/OperatorAlgebra/ComplexTimeConjugation.lean": "5ac781530aed13fdd016a60550f87740838adb7552888ac907cf9b806f8140b9",
+    "scratch/ComplexTimeConjugation20261024v2.md": "be4795b03ffc885b21a05d98bfd9aed05ce5d428a49aaa08dd729c1abace3216",
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lean/InfoGeometry/Canonical/FiniteExponentialMotion.lean": "93f2c6b5af7f729693d1aac9eb574d4109c270042993167906525982426a4541",
+    ".lake/packages/mathlib/Mathlib/Analysis/Analytic/Constructions.lean": "b4ebe935f31d1c4110a0889146b48909c63e30a9e2de771e9065fa472d7d1be6",
+    ".lake/packages/mathlib/Mathlib/Analysis/Analytic/Composition.lean": "46d7fe5169cb434fdf1662c01a4e71a5f0a95b27dfd6ad6766216f0e104ca33e"
+  },
+  "actual_declaration_count": 10,
+  "owner_warnings": [],
+  "dependency_warnings": "Existing package warnings retained in logs.",
+  "semantic_review": "James independent v2 and native comment-only delta AA PASS.",
+  "independent_acceptance": "Ampere native QA ACCEPTED_WITH_LIMITED_SCOPE.",
+  "log_sha256": {
+    "build.log": "e39a1230181fcef2ad9e34585a7f1bc350f328a356c198ffcd6b12db64a64420",
+    "axioms.log": "7b61ae81b99b1d055d108213ab7ae7b1c9c901cdcfeb9a60616494952d502199",
+    "strict.log": "747443d22b8ccffb07c44835fa4a015e33c702c22548bbc3cecde756a8b81eb7"
+  }
+}

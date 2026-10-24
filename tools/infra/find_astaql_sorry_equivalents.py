@@ -8,6 +8,10 @@ from arango import ArangoClient
 sys.path.insert(0, os.path.abspath('.'))
 sys.path.insert(0, os.path.abspath('./src'))
 
+from igf.graph.decl_schema import (
+    STRUCTURAL_FINGERPRINT_VERSION,
+    TERM_DIGEST_VERSION,
+)
 from tools.infra.arango_env import (
     load_repo_arango_env,
     arango_endpoint,
@@ -82,25 +86,36 @@ def main():
             continue
         
         doc = res[0]
+        val_digest = doc.get("valueDigest")
         val_fp = doc.get("valueFingerprint")
-        if not val_fp:
+        if val_digest and val_digest.get("algorithmVersion") == TERM_DIGEST_VERSION:
+            shape_hash = val_digest.get("digest")
+            use_v4 = True
+        elif val_fp and val_fp.get("algorithmVersion") == STRUCTURAL_FINGERPRINT_VERSION:
+            shape_hash = doc.get("canonicalValueHash")
+            use_v4 = False
+        else:
             continue
-        
-        if val_fp.get("algorithmVersion") != "lean-expr-structural-v3":
-            continue
-        shape_hash = doc.get("canonicalValueHash")
         if shape_hash is None or shape_hash in audited_hashes:
             continue
-        
+
         audited_hashes.add(shape_hash)
-        
+
         # Find every declaration sharing the same versioned candidate hash.
-        q_equiv = '''
-        FOR d IN decls
-          FILTER d.valueFingerprint.algorithmVersion == "lean-expr-structural-v3"
-          FILTER d.canonicalValueHash == @hash
-          RETURN {name: d.name, module: d.module}
-        '''
+        if use_v4:
+            q_equiv = f'''
+            FOR d IN decls
+              FILTER d.valueDigest.algorithmVersion == "{TERM_DIGEST_VERSION}"
+              FILTER d.valueDigest.digest == @hash
+              RETURN {{name: d.name, module: d.module}}
+            '''
+        else:
+            q_equiv = f'''
+            FOR d IN decls
+              FILTER d.valueFingerprint.algorithmVersion == "{STRUCTURAL_FINGERPRINT_VERSION}"
+              FILTER d.canonicalValueHash == @hash
+              RETURN {{name: d.name, module: d.module}}
+            '''
         matches = list(db.aql.execute(q_equiv, bind_vars={"hash": shape_hash}))
         
         report_lines.append(f"### Source declaration: `{decl_name}`\n")

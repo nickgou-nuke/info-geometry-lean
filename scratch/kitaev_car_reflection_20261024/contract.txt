@@ -1,0 +1,10 @@
+Native Kitaev / CAR / Dirac-pairing bridge.
+Reuse KitaevBoundaryDiracPair endpoint annihilation and creation, existing
+RealCARPair interface and CARReflectionSector module obstruction.
+Prove Q=d+B equals leftEndpoint L; L-fixed vectors in dB sector vanish.
+Reuse endpointMetric eta=iLR; derive L eta L=-eta from endpoint Clifford laws.
+Derive star(Lx) eta Ly=-star(x) eta y assuming star L=L.
+Concrete twoSiteOperators discharges this star hypothesis and uses actual
+twoSiteKreinData.eta. No ordinary positive-norm preservation, Pin bundle,
+CP violation or baryogenesis is asserted. Generic pairing identity alone
+does not assert eta Hermitian; concrete metric has existing proved laws.

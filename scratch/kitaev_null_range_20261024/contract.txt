@@ -1,0 +1,6 @@
+Native ChainOp acts on (Fin 2 x Fin 2) -> Complex.
+Reuse KitaevNullSupport.active_action and active_fixes_null_pair.
+Prove its image lies in span(seed,partner), fixed points iff span membership,
+and equality of the image set with that submodule's carrier.
+Existing normalization is discharged by KitaevNullPartner, not assumed anew.
+No dimension, positive orthogonality, continuum or physical assertion.

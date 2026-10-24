@@ -1,6 +1,14 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Lean
 import Std.Data.HashSet
 import Std.Data.TreeMap.Basic
+import DAG.Schema
+import DAG.Sha256
+import DAG.TermDigest
 
 open Lean
 open Lean.Parser
@@ -53,6 +61,7 @@ structure DeclLinkRow where
   linkKey : String
   nodeKey : String
   declName : String
+  declKey : String
 deriving ToJson
 
 structure EnvRefRow where
@@ -115,9 +124,12 @@ structure MctxDeclRow where
   localInstanceCount : Nat
   typeText : String
   typeHash : Nat
+  typeDigest : String
+  closedTypeDigest : String
   assigned : Bool
   assignmentText? : Option String
   assignmentHash? : Option Nat
+  assignmentDigest? : Option String
   delayedAssigned : Bool
   delayedPendingMVar? : Option String
   delayedFVarCount? : Option Nat
@@ -142,8 +154,10 @@ structure LctxDeclRow where
   auxFullName? : Option String
   typeText : String
   typeHash : Nat
+  typeDigest : String
   valueText? : Option String
   valueHash? : Option Nat
+  valueDigest? : Option String
 deriving ToJson
 
 structure LctxRefRow where
@@ -185,6 +199,8 @@ structure GoalStateRow where
   mvarId : String
   role : String
   index : Nat
+  goalDigest? : Option String
+  closedGoalDigest? : Option String
 deriving ToJson
 
 structure FVarLineageRow where
@@ -315,14 +331,30 @@ def isLogicalKind (kind : String) : Bool :=
   kind == "tactic" || kind == "command"
 
 def exprProjection (e : Expr) : String :=
-  "expr_hash=" ++ toString (hash e)
+  "t_" ++ ((DAG.TermDigest.compute e).digest.take 40).toString
 
-def constNamesOfExpr (_e : Expr) : Array String :=
-  #[] -- Full Expr traversal belongs to the dedicated Expr DAG exporter, not this scaffold.
+def exprProjectionWithLctx (lctx : LocalContext) (e : Expr) : String :=
+  "t_" ++ ((DAG.TermDigest.digestWithLctx lctx e).digest.take 40).toString
+
+def exprProjectionInLctx (lctx : LocalContext) (e : Expr) : String :=
+  "t_" ++ ((DAG.TermDigest.computeInLctx lctx e).digest.take 40).toString
+
+def constNamesOfExpr (e : Expr) : Array String :=
+  (DAG.collectExprConsts e).toArray.map Name.toString
 
 def optionExprText (e? : Option Expr) : String :=
   match e? with
   | some e => exprProjection e
+  | none => ""
+
+def optionExprTextWithLctx (lctx : LocalContext) (e? : Option Expr) : String :=
+  match e? with
+  | some e => exprProjectionWithLctx lctx e
+  | none => ""
+
+def optionExprTextInLctx (lctx : LocalContext) (e? : Option Expr) : String :=
+  match e? with
+  | some e => exprProjectionInLctx lctx e
   | none => ""
 
 def constNamesOfOptionExpr (e? : Option Expr) : Array String :=
@@ -367,12 +399,16 @@ def emitGoalStates
     (fileName : String)
     (nodeKey : String)
     (role : String)
+    (mctx : MetavarContext)
     (goals : List MVarId) : ExportM Unit := do
   let mut rows := #[]
   let goalsArr := goals.toArray
   for i in [:goalsArr.size] do
     let mvarId := goalsArr[i]!
     let stateKey := mkKey "itgs" #[nodeKey, role, toString i]
+    let decl? := mctx.decls.find? mvarId
+    let goalDigest? := decl?.map fun decl => (DAG.TermDigest.digestWithLctx decl.lctx decl.type).digest
+    let closedGoalDigest? := decl?.map fun decl => (DAG.TermDigest.computeInLctx decl.lctx decl.type).digest
     rows := rows.push
       { schema := schema
         rootKey := rootKey
@@ -382,7 +418,9 @@ def emitGoalStates
         stateKey := stateKey
         mvarId := mvarIdText mvarId
         role := role
-        index := i }
+        index := i
+        goalDigest? := goalDigest?
+        closedGoalDigest? := closedGoalDigest? }
   modify fun s => { s with goalStates := pushAll s.goalStates rows }
 
 def emitFVarLineage
@@ -525,11 +563,14 @@ def mctxDeclRows
   let mut rows := #[]
   for (mvarId, decl) in mctx.decls.toList do
     let assignment? := mctx.eAssignment.find? mvarId
-    let assignmentText? := assignment?.map exprProjection
+    let assignmentDigest? := assignment?.map fun e => (DAG.TermDigest.digestWithLctx decl.lctx e).digest
+    let assignmentText? := assignment?.map (exprProjectionWithLctx decl.lctx)
     let delayed? := mctx.dAssignment.find? mvarId
     let delayedPending? := delayed?.map fun delayed => mvarIdText delayed.mvarIdPending
     let delayedFVarCount? := delayed?.map fun delayed => delayed.fvars.size
-    let typeText := exprProjection decl.type
+    let typeDigest := (DAG.TermDigest.digestWithLctx decl.lctx decl.type).digest
+    let closedTypeDigest := (DAG.TermDigest.computeInLctx decl.lctx decl.type).digest
+    let typeText := exprProjectionWithLctx decl.lctx decl.type
     rows := rows.push
       { schema := schema
         rootKey := rootKey
@@ -549,9 +590,12 @@ def mctxDeclRows
         localInstanceCount := decl.localInstances.size
         typeText := typeText
         typeHash := stableHash typeText
+        typeDigest := typeDigest
+        closedTypeDigest := closedTypeDigest
         assigned := assignment?.isSome
         assignmentText? := assignmentText?
         assignmentHash? := assignmentText?.map stableHash
+        assignmentDigest? := assignmentDigest?
         delayedAssigned := delayed?.isSome
         delayedPendingMVar? := delayedPending?
         delayedFVarCount? := delayedFVarCount? }
@@ -624,12 +668,14 @@ def lctxDeclRows
     (lctx : LocalContext) : Array LctxDeclRow := Id.run do
   let mut rows := #[]
   for decl in lctx do
-    let typeText := exprProjection decl.type
+    let typeDigest := (DAG.TermDigest.digestWithLctx lctx decl.type).digest
+    let typeText := exprProjectionWithLctx lctx decl.type
     let value? : Option Expr :=
       match decl with
       | .cdecl .. => none
       | .ldecl (value := value) .. => some value
-    let valueText? := value?.map exprProjection
+    let valueDigest? := value?.map fun v => (DAG.TermDigest.digestWithLctx lctx v).digest
+    let valueText? := value?.map (exprProjectionWithLctx lctx)
     let nondep? : Option Bool :=
       match decl with
       | .cdecl .. => none
@@ -658,8 +704,10 @@ def lctxDeclRows
         auxFullName? := auxFullName?
         typeText := typeText
         typeHash := stableHash typeText
+        typeDigest := typeDigest
         valueText? := valueText?
-        valueHash? := valueText?.map stableHash }
+        valueHash? := valueText?.map stableHash
+        valueDigest? := valueDigest? }
   return rows
 
 def lctxSignature (lctx : LocalContext) : String := Id.run do
@@ -841,9 +889,9 @@ def completionPayload
       let fields :=
         #[ ("completionKind", "dot")
          , ("syntax", syntaxText termInfo.stx)
-         , ("expr", toString termInfo.expr)
-         , ("termExpectedType", optionExprText termInfo.expectedType?)
-         , ("expectedType", optionExprText expectedType?)
+         , ("expr", exprProjectionWithLctx termInfo.lctx termInfo.expr)
+         , ("termExpectedType", optionExprTextWithLctx termInfo.lctx termInfo.expectedType?)
+         , ("expectedType", optionExprTextWithLctx termInfo.lctx expectedType?)
          , ("elaborator", termInfo.elaborator.toString)
          , ("lctx_size", toString termInfo.lctx.decls.size) ]
       (fields,
@@ -855,7 +903,7 @@ def completionPayload
          , ("syntax", syntaxText stx)
          , ("id", id.toString)
          , ("danglingDot", toString danglingDot)
-         , ("expectedType", optionExprText expectedType?)
+         , ("expectedType", optionExprTextWithLctx lctx expectedType?)
          , ("lctx_size", toString lctx.decls.size) ]
       (fields, constNamesOfOptionExpr expectedType?,
         #[syntaxLeakage "completion_id_syntax_object", lctxLeakage "completion_id_lctx", exprGraphLeakage "completion_id_expected_type_expr_graph"])
@@ -864,7 +912,7 @@ def completionPayload
         #[ ("completionKind", "dotId")
          , ("syntax", syntaxText stx)
          , ("id", id.toString)
-         , ("expectedType", optionExprText expectedType?)
+         , ("expectedType", optionExprTextWithLctx lctx expectedType?)
          , ("lctx_size", toString lctx.decls.size) ]
       (fields, constNamesOfOptionExpr expectedType?,
         #[syntaxLeakage "completion_dot_id_syntax_object", lctxLeakage "completion_dot_id_lctx", exprGraphLeakage "completion_dot_id_expected_type_expr_graph"])
@@ -972,8 +1020,10 @@ def infoKindAndPayload
   match info with
   | .ofTermInfo ti =>
       let fields :=
-        #[ ("expr", exprProjection ti.expr)
-         , ("expectedType", optionExprText ti.expectedType?)
+        #[ ("expr", exprProjectionWithLctx ti.lctx ti.expr)
+         , ("closedExpr", exprProjectionInLctx ti.lctx ti.expr)
+         , ("expectedType", optionExprTextWithLctx ti.lctx ti.expectedType?)
+         , ("closedExpectedType", optionExprTextInLctx ti.lctx ti.expectedType?)
          , ("elaborator", ti.elaborator.toString)
          , ("syntax", syntaxText ti.stx)
          , ("isBinder", toString ti.isBinder)
@@ -982,7 +1032,8 @@ def infoKindAndPayload
       ("term", some (payloadText fields), fields, termInfoLeakage "term", constNamesOfExpr ti.expr ++ constNamesOfOptionExpr ti.expectedType?)
   | .ofPartialTermInfo ti =>
       let fields :=
-        #[ ("expectedType", optionExprText ti.expectedType?)
+        #[ ("expectedType", optionExprTextWithLctx ti.lctx ti.expectedType?)
+         , ("closedExpectedType", optionExprTextInLctx ti.lctx ti.expectedType?)
          , ("elaborator", ti.elaborator.toString)
          , ("syntax", syntaxText ti.stx)
          , ("lctx_size", toString ti.lctx.decls.size) ]
@@ -1025,7 +1076,8 @@ def infoKindAndPayload
       let fields :=
         #[ ("projName", fi.projName.toString)
          , ("fieldName", fi.fieldName.toString)
-         , ("value", exprProjection fi.val)
+         , ("value", exprProjectionWithLctx fi.lctx fi.val)
+         , ("closedValue", exprProjectionInLctx fi.lctx fi.val)
          , ("syntax", syntaxText fi.stx)
          , ("lctx_size", toString fi.lctx.decls.size) ]
       ("field", some (payloadText fields), fields,
@@ -1053,8 +1105,10 @@ def infoKindAndPayload
       ("field_redecl", some (payloadText fields), fields, #[syntaxLeakage "field_redecl_syntax_object"], #[])
   | .ofDelabTermInfo ti =>
       let fields :=
-        #[ ("expr", exprProjection ti.expr)
-         , ("expectedType", optionExprText ti.expectedType?)
+        #[ ("expr", exprProjectionWithLctx ti.lctx ti.expr)
+         , ("closedExpr", exprProjectionInLctx ti.lctx ti.expr)
+         , ("expectedType", optionExprTextWithLctx ti.lctx ti.expectedType?)
+         , ("closedExpectedType", optionExprTextInLctx ti.lctx ti.expectedType?)
          , ("elaborator", ti.elaborator.toString)
          , ("syntax", syntaxText ti.stx)
          , ("location", reprStr ti.location?)
@@ -1205,8 +1259,8 @@ partial def walk
       
       -- Stage 3: Emit goal states for tactics
       if let .ofTacticInfo ti := info then
-        emitGoalStates rootKey moduleName fileName nodeKey "before" ti.goalsBefore
-        emitGoalStates rootKey moduleName fileName nodeKey "after" ti.goalsAfter
+        emitGoalStates rootKey moduleName fileName nodeKey "before" ti.mctxBefore ti.goalsBefore
+        emitGoalStates rootKey moduleName fileName nodeKey "after" ti.mctxAfter ti.goalsAfter
         
         -- Stage 4: FVar lineage
         emitFVarLineage rootKey moduleName fileName nodeKey ti
@@ -1220,7 +1274,8 @@ partial def walk
             file := fileName
             linkKey := mkKey "itdl" #[rootKey, toString preorder, toString i, sanitize decl]
             nodeKey := nodeKey
-            declName := decl }
+            declName := decl
+            declKey := "d_" ++ (DAG.Sha256.hexDigestString decl).take 40 }
         modify fun s => { s with declLinks := s.declLinks.push linkRow }
         
         -- Stage 4: Tactic arguments from children (simplified)

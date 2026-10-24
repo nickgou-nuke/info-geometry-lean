@@ -1,0 +1,12 @@
+KitaevCARReflection: adapter plus five theorems.
+SHA256 1bf3c2ef9ff832b9656cd4642845470087dbb2b364bba52c90ab3eb2d532ce4f
+Parent final locked build9978 exit0: /tmp/kitaev-car-reflection-final2-build.log
+Independent A-A zorn_semantic_audit final PASS.
+Independent QA-A zorn_acceptance ACCEPTED.
+QA locked audit94517 exit0: /tmp/kitaev-car-reflection-final-qa.log
+All six declarations only propext, Classical.choice, Quot.sound.
+Strict screen0 traps; refactor[]; staged whitespace clean.
+Initial static T4 false positive resolved by explicit using hq, unchanged statements.
+Scope: actual endpoint CAR reflection, module fixed-sector obstruction and
+algebra/operator-valued Dirac pairing reversal, including constructed two-site metric.
+No scalar spinor norm, Pin bundle or CP classification asserted.

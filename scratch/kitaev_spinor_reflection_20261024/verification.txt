@@ -1,0 +1,10 @@
+Owner SHA256 55d19356a34f775162b0a39839c2ae441512b9fe5fbb52d8b4eed7c4c0a8e325
+Parent final locked build85678 exit0 /tmp/kitaev-spinor-reflection-final-build.log
+Independent A-A zorn_semantic_audit finalsourcePASS.
+Independent QA-A zorn_acceptance ACCEPTED; audit27788 exit0.
+QA log /tmp/kitaev-spinor-reflection-qa.log
+All four declarations only propext, Classical.choice, Quot.sound.
+Strict screen0 traps; refactor[]; stagedwhitespaceclean.
+Initial imported pairing collision repaired by fully qualified existing Krein.pairing.
+Scope actual scalar Krein pairing reversal and fixed-spinor nullity, not zero-vector,
+positive-norm, GFT, BEC spacetime, or Pin-bundle claims.

@@ -1,0 +1,8 @@
+KitaevRotorMetricTransport accepted final11 declarations (3 definitions,8 theorems).
+Parent locked build98655 exit0 9200jobs /tmp/kitaev-rotor-metric-final-build.log; no ownerwarnings, dependencywarningsremain.
+A-A exactfinal11 semanticPASS, nofindings.
+QA-A zorn_acceptance independent locked audit99875 exit0 exact11 standard axiom blocks; /tmp/kitaev-rotor-metric-qa.log.
+Strictscreen0, cachedwhitespace0, bannedmarkersnone.
+SHA256 2cffa32ce0c5d9ee38e076f8003f510a6e4eb2160c9a5ec0725e7625f3a8dd96.
+Scope actual twoSiteRotor, Hermitian transported metric and separate inverse, inverse laws, movingPlus transported adjoint fixedness, arbitrary ChainOp tracepairing covariance, native spinor Dirac row and solder transport. Circle c*c+s*s=1 where invertibility required; no realparameter restriction, positivity or metricinvolution.
+No whole repository or whole goal completion claim; staged, not committed.

@@ -25,9 +25,17 @@ TOP_ANY_DECL_RE = re.compile(
 NAMESPACE_RE = re.compile(r"^\s*namespace\s+([A-Za-z_][A-Za-z0-9_'.]*)\b")
 END_NAMESPACE_RE = re.compile(r"^\s*end(?:\s+([A-Za-z_][A-Za-z0-9_'.]*))?\s*$")
 DEBT_BURIAL_COMMENT_RE = re.compile(
-    r"\b(DEBT|OPEN CLOSURE DEBT|missing proof|not a proof|removed|no Lean declaration|owner-side proof)\b",
+    r"\b(DEBT|OPEN CLOSURE DEBT|missing proof|not a proof|removed|no Lean declaration|owner-side proof|not needed here|previous [^\n]*\binterface|contradictory [^\n]*\binterface)\b",
     re.IGNORECASE,
 )
+
+
+def _strip_strings_backticks_and_line_comment(line: str) -> str:
+    """Remove string literals, backtick-quoted Lean names, and trailing `--` comments."""
+    no_strings = re.sub(r'"(?:\\.|[^"\\])*"', '""', line)
+    no_comment = re.sub(r"--.*$", "", no_strings)
+    no_trace = re.sub(r"\btrace\[[^\]]*\]", "", no_comment)
+    return re.sub(r"`+[A-Za-z_][A-Za-z0-9_'.]*", "", no_trace)
 END_RE = re.compile(
     r"^\s*(def|theorem|lemma|abbrev|structure|class|inductive|namespace|section|end|variable|open|import)\b"
 )
@@ -306,18 +314,34 @@ def main() -> int:
     proxy_alias_cache: dict[str, set[str]] = {}
     added_field_cache: dict[str, set[str]] = {}
 
+    block_comment_depths: dict[str, int] = {}
     for path, line_no, line in added_lines:
         loc = f"{path}:{line_no}" if line_no is not None else path
         stripped = line.strip()
-        if stripped.startswith(("--", "/-", "*")):
-            if DEBT_BURIAL_COMMENT_RE.search(stripped):
-                debt_comment_files.add(path)
+        depth = block_comment_depths.get(path, 0)
+        opens = stripped.count("/-")
+        closes = stripped.count("-/")
+        in_comment = (
+            depth > 0
+            or stripped.startswith(("--", "/-", "*"))
+            or "--" in stripped
+            or opens > 0
+            or closes > 0
+        )
+        depth = max(0, depth + opens - closes)
+        block_comment_depths[path] = depth
+        if in_comment and DEBT_BURIAL_COMMENT_RE.search(stripped):
+            debt_comment_files.add(path)
+        if depth > 0 or stripped.startswith(("--", "/-", "*")):
             continue
-        if "`" in stripped or '"' in stripped:
+        code_only = re.sub(
+            r"/-.*?-/", "", _strip_strings_backticks_and_line_comment(stripped)
+        ).strip()
+        if not code_only:
             continue
-        if re.search(r"^\s*(axiom|postulate)\b|\b(admit|sorry)\b", stripped):
+        if re.search(r"^\s*(axiom|postulate)\b|\b(admit|sorry)\b", code_only):
             failures.append(f"{loc}: added forbidden placeholder `{stripped}`")
-        if re.match(r"(?:structure|class)\s+", stripped):
+        if re.match(r"(?:structure|class)\s+", code_only):
             failures.append(f"{loc}: added new carrier declaration `{stripped}`")
         fm = FIELD_RE.match(line)
         if fm and not stripped.startswith("have "):

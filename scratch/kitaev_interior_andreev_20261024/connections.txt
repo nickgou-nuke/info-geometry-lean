@@ -1,0 +1,7 @@
+Read source connections:
+KitaevInteriorPairing.chain_interior_eq_offDiagonalPairing -> literal coefficient compression C.
+GeneralFermionicAndreevCarrier.andreevRotation -> existing rotation RA with reversed offdiagonal sign.
+New chain_interior_eq_andreev: C=-(2t) RA, explicit equality on same Sum(Fin(N-1)) carrier.
+Existing andreevRotation_preserves_norm plus new reusable vectorNormSq_smul -> native quadratic scaling.
+KitaevInteriorKrein.chain_interior_sq + existing offDiagonalPairing_skew -> native transpose product.
+No extra structures or duplicate matrix definitions. This exposes a code-level connection between established owners, not a physical scattering theorem.

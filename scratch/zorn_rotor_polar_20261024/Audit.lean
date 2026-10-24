@@ -1,0 +1,4 @@
+import InfoGeometry.Canonical.ZornNullRotorPolar
+#print axioms InfoGeometry.Canonical.ZornNullRotorPolar.nullRotor_self_adjoint
+#print axioms InfoGeometry.Canonical.ZornNullRotorPolar.nullRotor_pairing_transport
+#print axioms InfoGeometry.Canonical.ZornNullRotorPolar.nullRotor_quarter_pairing

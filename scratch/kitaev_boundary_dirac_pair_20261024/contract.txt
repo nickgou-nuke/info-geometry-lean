@@ -1,0 +1,9 @@
+Native boundary Dirac pair from Quantum.KitaevChain.MajoranaCliffordOperators.
+For Ring A, Algebra complex A, N positive, use the actual boundaryDiracFermion
+with algebraMap(1/2) and algebraMap(+i), respectively algebraMap(-i).
+Identify these expressions with existing GogberashviliNilpotentCARBridge
+GPlus/GMinus at left endpoint and i times right endpoint. Reuse their square
+and CAR lemmas, then negative_car_reflexive by a sign adapter. Prove support1
+and existing Weyl unit value=i times right endpoint. No adjoint, positivity,
+Moore-Penrose, state-space kernel or phase claim; conservation deferred.
+Only new sandbox files; parent performs promotion and serialized verification.

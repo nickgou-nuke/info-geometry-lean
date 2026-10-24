@@ -1,0 +1,5 @@
+import InfoGeometry.Canonical.KitaevSpinorReflection
+#print axioms InfoGeometry.Canonical.SpinorialCore.Krein.pairing_pullback
+#print axioms InfoGeometry.Canonical.SpinorialCore.Krein.pairing_antiisometry
+#print axioms InfoGeometry.Canonical.KitaevSpinorReflection.twoSite_scalar_pairing_reversal
+#print axioms InfoGeometry.Canonical.KitaevSpinorReflection.fixed_spinor_is_null

@@ -1,0 +1,19 @@
+# UnifiedGeometryOperatorSignificance: bounded intake AA
+
+Disposition: REQUEST_CHANGES to the stated synthesis. Retain the native algebraic results with their exact assumptions. No builds or tests; no historical, classification, or geometric promotion.
+
+- Jordan sign: Core/JordanAssociatorRing.symm_associator_eq_double_commutator, instantiated x=T,y=X,z=S, proves assoc(T,X,S)=[X,[T,S]], for the unnormalized product ab+ba in an associative Ring. The proposed [[T,S],X] is its negative, not the general identity. Normalizing the product changes scalar factors and requires the relevant division assumptions. The same owner has symm_jordan_triple and proposed_triple_formula_defect; reuse them.
+- Cyclotomic correction: Mathlib Polynomial.cyclotomic_two states Φ₂(t)=t+1. For the support corner with identity Δ this is t+Δ; Γ²−Δ=0 is the involution polynomial, not Φ₂(Γ)=0. Current GrassmannianBundleCyclotomicOrientability explicitly records this distinction. Its support-relative Φ₃/Φ₄/Φ₆ equations do not imply primitive orders in arbitrary characteristic.
+- Exact gl(3|1) obstruction: Algebra/ZornColorGL31Obstruction.not_faithful_gl31_with_CAR_odd assumes CommRing R, Nontrivial R, an R-linear F from native SuperMatrix 3 1 R to native Op R, that F sends every homogeneous odd element into the specified raw CAR oddPart, and preservation of all homogeneous superbrackets. It concludes F is not injective. It does not exclude every gl(3|1) representation or different odd-image choices. The obstruction is central raw-CAR odd brackets versus the explicit noncentral gl(3|1) odd bracket.
+- Exact Clifford obstruction: Lie/SplitOctonionCliffordNoninjective.splitOctonionLeftCliffordRepresentation_not_injective concerns the native real leftCliffordQuadratic representation on CanonicalZorn. Its full Clifford algebra has dimension 128 and its endomorphism target dimension 64. This refutes faithfulness of that full representation, not injectivity of imaginary generators, existence of representations, or a faithful representation on a larger module. Do not silently replace the native quadratic form by an unspecified signature labelled Cl7 or Cl(3,4).
+- Raw octonion multiplication remains nonassociative; Lie/SplitOctonionNonmultiplicativity.nonmultiplicativity_obstruction prevents treating left multiplication as a product-preserving embedding. Canonical/GunaydinGurseyTripleProducts fixes parenthesized triples in the native signed basis; no associative superalgebra or G₂ classification follows from those equations alone.
+
+Handoff: compare any future exact candidate to these heads, retain explicit carriers and bracket conventions, and require source AA plus serialized kernel QA. The accepted actual GNS flow/representation work continues independently; do not broaden its scope to justify this synthesis. This bounded search makes no repository-wide absence claim.
+
+## Source hashes at this audit
+- `lean/InfoGeometry/Core/JordanAssociatorRing.lean`: `10e0b1f9b942ab7cbb56f2fdf602cbeb56db9cd15eeec53e03bac6e2912c66c3`
+- `lean/InfoGeometry/Algebra/ZornColorGL31Obstruction.lean`: `1ff76078bfb2300d589f5e0cdf1804de98ab49dc7407f3488454ae34523e3ed1`
+- `lean/InfoGeometry/Lie/SplitOctonionCliffordNoninjective.lean`: `c7362ab57a21a2ec6d74f3d6fb4707abe1441c4ffdb79b1d7b85e1bef23bb355`
+- `lean/InfoGeometry/Lie/SplitOctonionNonmultiplicativity.lean`: `7e34a6c2bfeb06c08d9384e3efc134bbc217195f65dee54c5ec0ddc98de76ee9`
+- `lean/InfoGeometry/Canonical/GunaydinGurseyTripleProducts.lean`: `5e8c00e1553471a759121b1b19a9b43317262377c2f6622ec8baf700c14fc4b5`
+- `lean/InfoGeometry/Canonical/GrassmannianBundleCyclotomicOrientability.lean`: `10abc3f06624a877b86001a341d97138d63e74a559ed2c00b3ccb5ab3938be95`

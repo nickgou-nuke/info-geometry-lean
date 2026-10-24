@@ -1,0 +1,66 @@
+{
+  "scope": "Generic finite Hermitian Gibbs density mapped into a genuine CStarAlgebra: CFC and exponential identities, including mapped unit inverse. No concrete represented-seed specialization or analytic KMS acceptance.",
+  "owner": "lean/InfoGeometry/Canonical/FiniteMappedGibbsDensityExponential.lean",
+  "evidence_directory": "/tmp/qa-a-mapped-density-live-wbwtvgeh",
+  "commands_and_results": {
+    "build": {
+      "command": [
+        "lake",
+        "build",
+        "+InfoGeometry.Canonical.FiniteMappedGibbsDensityExponential:olean"
+      ],
+      "exit": 0
+    },
+    "axioms": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/Canonical/FiniteMappedGibbsDensityExponential.olean"
+      ],
+      "exit": 0
+    },
+    "strict": {
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/Canonical/FiniteMappedGibbsDensityExponential.lean",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    "stable_candidate_contract_import_and_pins": true
+  },
+  "before_sha256": {
+    "lean/InfoGeometry/Canonical/FiniteMappedGibbsDensityExponential.lean": "18b5a21f2720764ae9332e3a1e369cd3d0ebc0f66e075da0cd7f640762e39587",
+    "scratch/FiniteSeedRepresentedDensityExponential20261024v4.md": "f875976800c63a408c91bb5ba30ad4edb3b0bd83fbcb040d99bb07191e143547",
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lean/InfoGeometry/Canonical/FiniteSeedRepresentedRealTime.lean": "de19e22b0619c2d9a743dac42355971c4223c27bffeb41033b7ff1135862232e",
+    ".lake/packages/mathlib/Mathlib/Analysis/SpecialFunctions/ContinuousFunctionalCalculus/ExpLog/Basic.lean": "51d86aaf148ec088959d61941b8cecec7ce5ac19fad64991c62f2552fd3ff0a9",
+    ".lake/packages/mathlib/Mathlib/Analysis/CStarAlgebra/ContinuousFunctionalCalculus/Unique.lean": "20952feca147892d0bd419e5a7c30db0b75f005269157ba40beb764c1669af87"
+  },
+  "after_sha256": {
+    "lean/InfoGeometry/Canonical/FiniteMappedGibbsDensityExponential.lean": "18b5a21f2720764ae9332e3a1e369cd3d0ebc0f66e075da0cd7f640762e39587",
+    "scratch/FiniteSeedRepresentedDensityExponential20261024v4.md": "f875976800c63a408c91bb5ba30ad4edb3b0bd83fbcb040d99bb07191e143547",
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lean/InfoGeometry/Canonical/FiniteSeedRepresentedRealTime.lean": "de19e22b0619c2d9a743dac42355971c4223c27bffeb41033b7ff1135862232e",
+    ".lake/packages/mathlib/Mathlib/Analysis/SpecialFunctions/ContinuousFunctionalCalculus/ExpLog/Basic.lean": "51d86aaf148ec088959d61941b8cecec7ce5ac19fad64991c62f2552fd3ff0a9",
+    ".lake/packages/mathlib/Mathlib/Analysis/CStarAlgebra/ContinuousFunctionalCalculus/Unique.lean": "20952feca147892d0bd419e5a7c30db0b75f005269157ba40beb764c1669af87"
+  },
+  "actual_declaration_count": 6,
+  "owner_warnings": [],
+  "dependency_warnings": "Existing upstream/package warnings retained in logs.",
+  "semantic_review": "James independent generic helper and native comment-only delta AA PASS.",
+  "log_sha256": {
+    "strict.log": "747443d22b8ccffb07c44835fa4a015e33c702c22548bbc3cecde756a8b81eb7",
+    "axioms.log": "49332d8c78ab67316085dfc33370e3e0289c5c813377eb0f7edc7fd0ecb4f155",
+    "build.log": "4536d5dde80ae53046882e1351106f423bce65722937f2c048d7aa406bf41e09"
+  }
+}

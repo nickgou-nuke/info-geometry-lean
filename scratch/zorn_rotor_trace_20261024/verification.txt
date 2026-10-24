@@ -1,0 +1,6 @@
+Final exact-source independent semantic review and QA ACCEPTED five trace theorems.
+Parent locked builds16407/2757 terminalexit0; /tmp/zorn-rotor-trace-build.log and /tmp/kitaev-rotor-chordal-trace-build.log. No new owner warnings.
+Independent audit59981 terminalexit0 /tmp/zorn-kitaev-rotor-trace-qa.log. All5 standard axioms propext Classical.choice Quot.sound only. Strictscreen0, whitespace0, markersnone.
+ZornNullRotorTrace SHA256 591906084956b384c0f576a4058112a36c94642390edce6bf13ec0842292a4e1
+KitaevRotorChordalTrace SHA256 fc972b81dbf62f0100fc7451845e59b25b179c7f1e8e4e758093793b02b1f59e
+Native support multiplicities2 and4 are proved on respective carriers; no identification between carriers, metric positivity or adjointnorm claimed.

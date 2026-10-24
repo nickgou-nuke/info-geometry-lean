@@ -1,0 +1,45 @@
+{
+  "scope": "Exact displacement norm on the actual finite real Fock carrier, not a global Fubini-Study metric classification",
+  "run_directory": "/tmp/qa-a-fock-chordal-live-56i3dr8s",
+  "results": {
+    "build": {
+      "command": [
+        "lake",
+        "build",
+        "+InfoGeometry.Clifford.FiniteFockChordalNorm:olean"
+      ],
+      "exit": 0
+    },
+    "axioms": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/Clifford/FiniteFockChordalNorm.olean"
+      ],
+      "exit": 0
+    },
+    "strict": {
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/Clifford/FiniteFockChordalNorm.lean",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    "stable_candidate_contract_import_and_pins": true
+  },
+  "hashes": {
+    "lean/InfoGeometry/Clifford/FiniteFockChordalNorm.lean": "c82be144e19053254e4ff61063929970723fedea58f717395b68111e0a938c0f",
+    "scratch/FiniteFockChordalNorm20261024v2.md": "a8fdb142c4febf6a66cc6b0135d840c01344ca174c1d023d60a3bd54d5b32f96",
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lean/InfoGeometry/Clifford/FiniteFockCLMReflexivePair.lean": "f9b1142a7a24640d499b15449561c133480d23a5b402700b8a37f79aa8502cff"
+  },
+  "axioms": "warning: LeanCopilot: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanCopilot' has local changes\nwarning: LeanArchitect: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanArchitect' has local changes\nChecking .lake/build/lib/lean/InfoGeometry/Clifford/FiniteFockChordalNorm.olean\n  \u2713 all 15 declarations clean\n\n\u2713 All modules passed.\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/Clifford/FiniteFockChordalNorm.olean:PASS\n"
+}

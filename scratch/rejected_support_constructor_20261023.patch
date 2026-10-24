@@ -1,0 +1,22 @@
+diff --git a/lean/InfoGeometry/Canonical/OperatorPenroseUnification.lean b/lean/InfoGeometry/Canonical/OperatorPenroseUnification.lean
+index eeb8f82e7..586184c60 100644
+--- a/lean/InfoGeometry/Canonical/OperatorPenroseUnification.lean
++++ b/lean/InfoGeometry/Canonical/OperatorPenroseUnification.lean
+@@ -103,6 +103,17 @@ def TwistedFiniteDimensionalWitness
+     (S : UnifiedCompactificationSystem) : Prop :=
+   ∃ s : S.operatorLane.State, S.operatorLane.support s
+ 
++/-- Theorem-backed constructor for Junction 3: any state with support in the
++operator lane witnesses the finite-dimensional requirement without a bare
++`hFinite` assumption. -/
++@[rep_depth krein]
++theorem twistedFiniteDimensionalWitness_of_state_support
++    (S : UnifiedCompactificationSystem)
++    (s : S.operatorLane.State)
++    (hs : S.operatorLane.support s) :
++    TwistedFiniteDimensionalWitness S := by
++  exact ⟨s, hs⟩
++
+ /-- Junction 4: tightened Weyl-anomaly response matrix contract. -/
+ @[rep_depth krein]
+ def TightenedWeylAnomalyResponse

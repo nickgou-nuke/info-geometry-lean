@@ -1,0 +1,54 @@
+{
+  "scope": "Nonzero fresh-tail action survives the actual trace-GNS Hilbert completion at every stage. Geometric weights define the same completed onsite operator with norm at most two.",
+  "proof_author": "James",
+  "semantic_auditor": "Popper",
+  "kernel_qa": "Ampere",
+  "disposition": "ACCEPTED_WITH_LIMITED_SCOPE",
+  "result": {
+    "build": {
+      "command": [
+        "lake",
+        "build",
+        "+InfoGeometry.Canonical.GrowingOnsiteTraceGNSFreshTail:olean"
+      ],
+      "exit": 0
+    },
+    "axioms": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/Canonical/GrowingOnsiteTraceGNSFreshTail.olean"
+      ],
+      "exit": 0
+    },
+    "strict": {
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/Canonical/GrowingOnsiteTraceGNSFreshTail.lean",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    "stable_candidate_contract_import_and_pins": true
+  },
+  "hashes": {
+    "lean/InfoGeometry/Canonical/GrowingOnsiteTraceGNSFreshTail.lean": "7b52548612e8b9b9ef15ed988f77b824742da51d0c7bfe5d76c5505cf14fb7cc",
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lean/InfoGeometry/Canonical/GrowingOnsiteTraceGNSFamily.lean": "68a74c61d0e95d3fd0ecdbfdbce0a167ea5558336fcd794c5167c5abea729426",
+    "lean/InfoGeometry/Canonical/FilteredCompatibleOperatorNorm.lean": "617146dc3fe89839bd11ea98aed0f4bb4c141191dc118923e67ac75e45248ae8",
+    ".lake/packages/mathlib/Mathlib/Analysis/SpecificLimits/Normed.lean": "281b0bb77fdc58f9c98d50cc626303bf30d7302c48d3ae8522d071ad07d40480"
+  },
+  "axiom_log": "warning: LeanCopilot: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanCopilot' has local changes\nwarning: LeanArchitect: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanArchitect' has local changes\nChecking .lake/build/lib/lean/InfoGeometry/Canonical/GrowingOnsiteTraceGNSFreshTail.olean\n  \u2713 all 26 declarations clean\n\n\u2713 All modules passed.\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/Canonical/GrowingOnsiteTraceGNSFreshTail.olean:PASS\n",
+  "exclusions": [
+    "No intersite coupling or unboundedness theorem",
+    "No independence assertion about fresh images",
+    "No analytic KMS theorem"
+  ]
+}

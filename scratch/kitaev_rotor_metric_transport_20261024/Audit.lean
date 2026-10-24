@@ -1,0 +1,12 @@
+import InfoGeometry.Canonical.KitaevRotorMetricTransport
+#print axioms InfoGeometry.Canonical.KitaevRotorMetricTransport.twoSiteRotor
+#print axioms InfoGeometry.Canonical.KitaevRotorMetricTransport.rotorMetric
+#print axioms InfoGeometry.Canonical.KitaevRotorMetricTransport.rotorMetricInverse
+#print axioms InfoGeometry.Canonical.KitaevRotorMetricTransport.twoSiteRotor_inverse
+#print axioms InfoGeometry.Canonical.KitaevRotorMetricTransport.rotorMetric_hermitian
+#print axioms InfoGeometry.Canonical.KitaevRotorMetricTransport.rotorMetric_mul_inverse
+#print axioms InfoGeometry.Canonical.KitaevRotorMetricTransport.rotorMetric_inverse_mul
+#print axioms InfoGeometry.Canonical.KitaevRotorMetricTransport.movingPlus_transported_dirac_fixed
+#print axioms InfoGeometry.Canonical.KitaevRotorMetricTransport.rotor_dirac_trace_covariance
+#print axioms InfoGeometry.Canonical.KitaevRotorMetricTransport.rotor_diracRow_transport
+#print axioms InfoGeometry.Canonical.KitaevRotorMetricTransport.rotor_solder_transport

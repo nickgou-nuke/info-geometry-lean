@@ -1,0 +1,13 @@
+Carrier: arbitrary Ring A with Algebra Complex A, native MajoranaCliffordOperators N A and N>0.
+Reuse: Canonical.KitaevBoundaryAlgebra.boundaryMatrixHom and boundaryMatrixHom_commutes;
+Canonical.PeirceRotorAction.movingPlus_expansion; native boundary pair square-zero,
+reflexive and full-support laws. No duplicate pair or rotor definition.
+Claims: actual rotor equals represented matrix [[c,s],[-s,c]]; actual movingPlus
+equals represented matrix [[c*c,-c*s],[-c*s,s*s]]; movingPlus commutes with
+the native sweetSpotHamiltonian for every complex coupling.
+No circle equation is required for these polynomial identities. Idempotence and
+invertible conjugation need the existing circle hypothesis. No star-unitarity,
+metric-fixedness, continuity, or full-commutant classification is asserted.
+Read-only scope search: PeirceRotorAction owns generic expansions/idempotence;
+KitaevBoundaryAlgebra owns full-image conservation. This file supplies their
+explicit native boundary representation bridge. Parent owns compilation.

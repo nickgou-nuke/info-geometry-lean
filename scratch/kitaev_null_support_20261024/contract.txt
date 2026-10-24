@@ -1,0 +1,5 @@
+Actual KitaevNullPartner seed/partner, constructed eta and existing support.
+Prove cross-solder expansion, scalar metricDual action, idempotence, trace2,
+nonidentity in actual4-dimensional space and fixedness of both nullspinors.
+No fullsupportCAR or positive orthogonal projector assertion. Proper support
+explains need for ambient Weyl complement; no analytic or physical claim.

@@ -1,0 +1,9 @@
+Nondegeneracy of the actual represented boundary Mat2 complex Dirac trace pairing.
+Reuse KitaevBoundaryTraceNormalization.boundaryMatrixHom_dirac_trace, factor2,
+the actual twoSiteKreinData and actual boundaryMatrixHom. Establish source split
+metric adjoint involution; use native Matrix.ext_iff_trace_mul_right and its
+surjectivity to reflect vanishing against every represented matrix to zero.
+Whole represented algebra, not the entire ambient commutant. Pairing is
+sesquilinear and indefinite; no positivity claim (existing diagonal value=-2).
+Scoped source search found no named pairDiracMetric square/involution lemmas.
+No builds/live edits; sandbox only and parent handles promotion/checking.

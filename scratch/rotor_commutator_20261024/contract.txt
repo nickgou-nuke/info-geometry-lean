@@ -1,0 +1,1 @@
+Extend existing PeirceRotorChordal compression API: [dB,M(c,s)]=-cs(d-B); square=-(cs)^2 support. No circle, positivity, metric, or adjoint-unitarity assertion. Specialize same carrier in FiveStreamRotorChordal. Reuse existing definitions; do not replace DeBruijn owner. A-A zorn_semantic_audit semantic PASS.

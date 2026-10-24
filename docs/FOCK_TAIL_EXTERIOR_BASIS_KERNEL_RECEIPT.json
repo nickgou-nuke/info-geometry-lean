@@ -1,0 +1,54 @@
+{
+  "scope": "Ordered exterior basis transport along the native real Fock zero-head insertion, indexed by Fin.succEmb.",
+  "proof_author": "Kepler; parent enumeration repair",
+  "semantic_auditor": "Popper",
+  "kernel_qa": "Ampere",
+  "disposition": "ACCEPTED_WITH_LIMITED_SCOPE",
+  "result": {
+    "build": {
+      "command": [
+        "lake",
+        "build",
+        "+InfoGeometry.Clifford.FockTailExteriorBasis:olean"
+      ],
+      "exit": 0
+    },
+    "axioms": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/Clifford/FockTailExteriorBasis.olean"
+      ],
+      "exit": 0
+    },
+    "strict": {
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/Clifford/FockTailExteriorBasis.lean",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    "stable_candidate_contract_import_and_pins": true
+  },
+  "hashes": {
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lean/InfoGeometry/Clifford/ClNNNeutralChevalleyBridge.lean": "653fb886394abb16ec9bc290d12ab0e8525f4ecbe2b7f9c4cf9dc14748575f28",
+    ".lake/packages/mathlib/Mathlib/LinearAlgebra/ExteriorAlgebra/Basis.lean": "3ea4a54ee767d2f1814d8b90accb092fa9ec4a1fd88519664221a22cfd80fa82",
+    ".lake/packages/mathlib/Mathlib/Order/Fin/Basic.lean": "048735aef17ef89d37cd55ed9dd2b1168848377379c45c4a2a49c2336ff5109b",
+    "lean/InfoGeometry/Clifford/FockTailExteriorBasis.lean": "ca0fb47c7a1afa68f9089e3e2c11df7f7776495fdc71f79281a84f1f9c188282"
+  },
+  "axiom_log": "warning: LeanCopilot: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanCopilot' has local changes\nwarning: LeanArchitect: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanArchitect' has local changes\nChecking .lake/build/lib/lean/InfoGeometry/Clifford/FockTailExteriorBasis.olean\n  \u2713 all 4 declarations clean\n\n\u2713 All modules passed.\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/Clifford/FockTailExteriorBasis.olean:PASS\n",
+  "exclusions": [
+    "No Hilbert metric or Hilbert isometry established",
+    "No creation/contraction adjointness or uniform norm bound",
+    "No completed coupled Dirac family"
+  ]
+}

@@ -1,0 +1,10 @@
+Connect existing complex sesquilinear Dirac solder and Krein.pairing to
+ReflexiveNilpotentFlows (same owner used by Zorn null pair).
+Explicit hypotheses pairing(x,x)=pairing(y,y)=0 and both crosspairings=1.
+Derive reflexive squarezero laws, actual ambient Weylunit, fourthpower1,
+generator exchange and supporttrace2. No Hermitian J assumed in generic
+statements; both crossnormalizations retained. No MP/star or fullsupport claim.
+Native consumer KitaevNullPartner constructs seed=allones, partner=eta*seed/4.
+Both nullities and both cross-normalizations are proved using existing metric
+laws and positive coefficient square4; native reflexive pair and ambient unit
+then require no externally supplied spinor pairing hypotheses.

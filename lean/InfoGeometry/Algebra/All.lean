@@ -10,6 +10,10 @@ import InfoGeometry.Algebra.SuperGrassmannianClifford
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.WeylDenominatorPrimeCutoff
 import InfoGeometry.Algebra.ZornVectorMatrix
+import InfoGeometry.Algebra.ZornColorGL31Obstruction
+import InfoGeometry.Algebra.ZornMajoranaRotations
+import InfoGeometry.Algebra.ZornRightProjectionObstruction
+import InfoGeometry.Algebra.ZornAssociatorFilippovObstruction
 import InfoGeometry.Algebra.Zorn.PeirceCARContraction
 import InfoGeometry.Algebra.Zorn.Basic
 import InfoGeometry.Algebra.Zorn.NullCone

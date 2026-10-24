@@ -1,0 +1,4 @@
+import InfoGeometry.Canonical.CARReflectionSector
+#print axioms InfoGeometry.Topology.FractalCantorFock.RealCARPair.reflection_sector_compression
+#print axioms InfoGeometry.Topology.FractalCantorFock.RealCARPair.reflection_fixed_sector_eq_zero
+#print axioms InfoGeometry.Canonical.CARReflectionSector.colimit_fixed_sector_eq_zero

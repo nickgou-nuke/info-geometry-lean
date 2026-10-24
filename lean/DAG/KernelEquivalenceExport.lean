@@ -1,5 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Lean
 import Lean.Data.Json
+import DAG.Schema
+import DAG.Sha256
 
 open Lean Meta
 
@@ -20,6 +27,8 @@ deriving Repr
 structure CertificateRow where
   sourceDecl : String
   targetDecl : String
+  sourceKey : String
+  targetKey : String
   mode : String
   sourceFound : Bool
   targetFound : Bool
@@ -48,29 +57,14 @@ private def parseImports (s : String) : Array Import :=
   let mods := (s.splitOn ",").filter (fun x => x != "")
   mods.foldl (init := #[]) fun acc m => acc.push { module := dottedName m }
 
-private def kindString : ConstantInfo → String
-  | .thmInfo _ => "theorem"
-  | .axiomInfo _ => "axiom"
-  | .defnInfo _ => "def"
-  | .opaqueInfo _ => "opaque"
-  | .inductInfo _ => "inductive"
-  | .quotInfo _ => "quot"
-  | .ctorInfo _ => "ctor"
-  | .recInfo _ => "recursor"
+private def kindString : ConstantInfo → String :=
+  DAG.Schema.kindString
 
 private def constantValue? (ci : ConstantInfo) : Option Expr :=
-  match ci with
-  | .thmInfo info => some info.value
-  | .defnInfo info => some info.value
-  | .axiomInfo _ => none
-  | .opaqueInfo _ => none
-  | .inductInfo _ => none
-  | .quotInfo _ => none
-  | .ctorInfo _ => none
-  | .recInfo _ => none
+  ci.value? (allowOpaque := true)
 
 private def stableHashString (s : String) : String :=
-  s!"lean-kernel-hash:{(hash s).toNat}"
+  s!"lean-kernel-hash:{DAG.Sha256.hexDigestString s}"
 
 private def certificateHash
     (source target mode : String)
@@ -110,11 +104,14 @@ private def checkPair (mode : String) (source target : Name) : MetaM Certificate
   let env ← getEnv
   let sourceDecl := toString source
   let targetDecl := toString target
+  let sourceKey := DAG.Schema.declKey source
+  let targetKey := DAG.Schema.declKey target
   match env.find? source, env.find? target with
   | none, none =>
       let h := certificateHash sourceDecl targetDecl mode false false false
       pure {
-        sourceDecl := sourceDecl, targetDecl := targetDecl, mode := mode
+        sourceDecl := sourceDecl, targetDecl := targetDecl
+        sourceKey := sourceKey, targetKey := targetKey, mode := mode
         sourceFound := false, targetFound := false
         sourceKind := "missing", targetKind := "missing", sameKind := false
         kernelTypeDefEq := false, kernelValueDefEq := false
@@ -130,7 +127,8 @@ private def checkPair (mode : String) (source target : Name) : MetaM Certificate
   | none, some targetCi =>
       let h := certificateHash sourceDecl targetDecl mode false false false
       pure {
-        sourceDecl := sourceDecl, targetDecl := targetDecl, mode := mode
+        sourceDecl := sourceDecl, targetDecl := targetDecl
+        sourceKey := sourceKey, targetKey := targetKey, mode := mode
         sourceFound := false, targetFound := true
         sourceKind := "missing", targetKind := kindString targetCi, sameKind := false
         kernelTypeDefEq := false, kernelValueDefEq := false
@@ -146,7 +144,8 @@ private def checkPair (mode : String) (source target : Name) : MetaM Certificate
   | some sourceCi, none =>
       let h := certificateHash sourceDecl targetDecl mode false false false
       pure {
-        sourceDecl := sourceDecl, targetDecl := targetDecl, mode := mode
+        sourceDecl := sourceDecl, targetDecl := targetDecl
+        sourceKey := sourceKey, targetKey := targetKey, mode := mode
         sourceFound := true, targetFound := false
         sourceKind := kindString sourceCi, targetKind := "missing", sameKind := false
         kernelTypeDefEq := false, kernelValueDefEq := false
@@ -174,7 +173,8 @@ private def checkPair (mode : String) (source target : Name) : MetaM Certificate
         safeForAutoRewriteByMode mode typeDefEq valueDefEq sourceHasValue targetHasValue
       let h := certificateHash sourceDecl targetDecl mode typeDefEq valueDefEq leanVerified
       pure {
-        sourceDecl := sourceDecl, targetDecl := targetDecl, mode := mode
+        sourceDecl := sourceDecl, targetDecl := targetDecl
+        sourceKey := sourceKey, targetKey := targetKey, mode := mode
         sourceFound := true, targetFound := true
         sourceKind := kindString sourceCi, targetKind := kindString targetCi
         sameKind := kindString sourceCi == kindString targetCi

@@ -1,0 +1,1 @@
+Reuse completedUnit as native MonoidHom from GL2(R) units to ambient units; no faithfulness assumption. Prove hyperbolic parameter composition preserves norm u²-v²1, actual unit multiplication law, and inverse parameter sign. Same noncommutative carrier and proper active support. No analytic rapidity or classification claims.

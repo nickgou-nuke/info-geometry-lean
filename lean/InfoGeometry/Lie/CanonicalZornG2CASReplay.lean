@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Lie.CanonicalZornG2BasisAlignment
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -48,8 +53,9 @@ def casBracket (i j : Fin 14) : Matrix (Fin 8) (Fin 8) ℚ :=
 def casBracketExpansion (i j : Fin 14) : Matrix (Fin 8) (Fin 8) ℚ :=
   ∑ k : Fin 14, casStructureConstant i j k • casBasisMatrix k
 
+set_option maxHeartbeats 10000000 in
 theorem casBracket_eq_structure_constants (i j : Fin 14) :
     casBracket i j = casBracketExpansion i j := by
-  fin_cases i <;> fin_cases j <;> native_decide
+  fin_cases i <;> fin_cases j <;> decide +kernel
 
 end InfoGeometry.Lie.CanonicalZornG2CASReplay

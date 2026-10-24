@@ -1,0 +1,5 @@
+import InfoGeometry.Canonical.ZornPolarOperatorAdjoint
+#print axioms InfoGeometry.Canonical.ZornPolarOperatorAdjoint.polarForm_nondegenerate
+#print axioms InfoGeometry.Canonical.ZornPolarOperatorAdjoint.leftRegular_adjoint
+#print axioms InfoGeometry.Canonical.ZornPolarOperatorAdjoint.rightRegular_adjoint
+#print axioms InfoGeometry.Canonical.ZornPolarOperatorAdjoint.polar_adjoint_unique

@@ -1,0 +1,4 @@
+import InfoGeometry.Canonical.KitaevCommutatorTransport
+#print axioms InfoGeometry.Canonical.KitaevCommutatorTransport.rotor_commutes_boundaryCommutator
+#print axioms InfoGeometry.Canonical.KitaevCommutatorTransport.rotor_conjugates_boundaryCommutator
+#print axioms InfoGeometry.Canonical.KitaevCommutatorTransport.transported_boundaryCommutator_trace

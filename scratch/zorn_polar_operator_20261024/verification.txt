@@ -1,0 +1,4 @@
+Final owner SHA256 0dee8a5dab459968307b4e7aba861ce731e05ab94af459da0252a6d627ea3dcb.
+4theorems. Parent lockedbuild45544 terminalexit0 3102jobs /tmp/zorn-polar-operator-final-build.log no ownerwarnings. Initial74899 failed due ext recursing into product carrier, fixed by explicit LinearMap.ext.
+A-A zorn_semantic_audit exactfinal semanticPASS. QA-A zorn_acceptance independent lockedAudit42410 exit0 /tmp/zorn-polar-operator-qa.log. All4 exactstandard3 axioms; noerrors/sorryAx. Strict0,whitespace0,markersnone. ACCEPTED, lane released.
+Staged source/evidence; no commit or push. Broad unification goal remains active.

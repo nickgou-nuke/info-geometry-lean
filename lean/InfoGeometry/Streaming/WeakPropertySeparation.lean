@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Streaming.FiniteTwoBoundaryWeakFunctional
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -163,8 +168,8 @@ def cheshireWitness : WeakPropertySeparation (Fin 4) where
     norm_num
 
 /-- The weak functional is not multiplicative: the property has weak value
-`2`, although its square has weak value zero.  Thus it is not a positive state
-or an algebra character. -/
+`2`, although its square has weak value zero. Thus it is not an algebra
+character. Nonmultiplicativity alone does not imply failure of positivity. -/
 theorem corridorSpinZ_square_weakValue :
     weakValue boundaryPair (corridorSpinZ * corridorSpinZ) = 0 := by
   rw [corridorSpinZ_sq, corridorProjector_weakValue]

@@ -39,3 +39,10 @@ def test_open_terms_flagged_and_ids_erased() -> None:
     a = term_digest(("app", ("fvar",), ("bvar", 0)))
     assert a.open_term
     assert a.digest == "d25df22c974adbeab5281386b58b18b8a921b5afab7fbb020ea9692d81204eee"
+
+
+def test_lctx_slotted_fvars_distinguish_hypotheses_and_close_term() -> None:
+    d01 = term_digest(("app", ("fvar", 0), ("fvar", 1)))
+    d00 = term_digest(("app", ("fvar", 0), ("fvar", 0)))
+    assert not d01.open_term
+    assert d01.digest != d00.digest

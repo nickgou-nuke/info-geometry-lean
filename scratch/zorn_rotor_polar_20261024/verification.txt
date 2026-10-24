@@ -1,0 +1,4 @@
+Owner ZornNullRotorPolar.lean SHA2569087f22f22d495c3b600e9cd268e3cd3fa28c33d3398700f4ffce329f25a516e
+Parent repaired locked build58877 terminalexit0 8966jobs /tmp/zorn-rotor-polar-repaired-build.log.
+Independent final A-A semanticPASS and QA ACCEPTED3. Locked audit64291 terminalexit0 /tmp/zorn-rotor-polar-qa.log, all3 standardaxioms propext Classical.choice Quot.sound only. Strictscreen0 whitespace0 markersnone.
+Scope rotor selfadjoint splitpolar; B(RU,RV)=B(U,R²V); quarter pairing on normalized nullpair=-1. No global anti-isometry or inverse=adjoint assertion.

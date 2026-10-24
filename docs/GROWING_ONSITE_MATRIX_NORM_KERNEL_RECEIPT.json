@@ -1,0 +1,54 @@
+{
+  "scope": "Native CStarMatrix norm bounds for the actual growing onsite Hamiltonian: tail norm one, contractive transition, finite absolute-weight sum and absolute-tsum uniform bound.",
+  "proof_author": "James",
+  "semantic_auditor": "Popper",
+  "kernel_qa": "Ampere",
+  "disposition": "ACCEPTED_WITH_LIMITED_SCOPE",
+  "result": {
+    "build": {
+      "command": [
+        "lake",
+        "build",
+        "+InfoGeometry.Canonical.GrowingOnsiteMatrixNorm:olean"
+      ],
+      "exit": 0
+    },
+    "axioms": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/Canonical/GrowingOnsiteMatrixNorm.olean"
+      ],
+      "exit": 0
+    },
+    "strict": {
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/Canonical/GrowingOnsiteMatrixNorm.lean",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    "stable_candidate_contract_import_and_pins": true
+  },
+  "hashes": {
+    "lean/InfoGeometry/Canonical/GrowingOnsiteMatrixNorm.lean": "59175742f947e2d95daf2c6f8a9727a405bf04728f4f605677330d52645aaea6",
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lean/InfoGeometry/Canonical/GrowingOnsiteMatrixHamiltonian.lean": "e6342c213c00d6ea23aa498b4f9869878a3f2c6f2ea68cf9a2d9ab7c83ecbd28",
+    "lean/InfoGeometry/Canonical/CantorBernoulliCStarMatrixTraceState.lean": "5ff1a505d1d9e0f0d88fff34dec5f77a2a939e634d6589cf10ccdba298bdaee8",
+    ".lake/packages/mathlib/Mathlib/Analysis/CStarAlgebra/Spectrum.lean": "2ce06bcdcb0b12bf12f117c4761e10dd1ecb0fa35d2b939dfe0bf9c2ac6bd078",
+    ".lake/packages/mathlib/Mathlib/Topology/Algebra/InfiniteSum/Order.lean": "768bb6250a7ee69052aa1c034aa8285f32ca8cb65d58058f24ae4f567ac27378"
+  },
+  "axiom_log": "warning: LeanCopilot: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanCopilot' has local changes\nwarning: LeanArchitect: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanArchitect' has local changes\nChecking .lake/build/lib/lean/InfoGeometry/Canonical/GrowingOnsiteMatrixNorm.olean\n  \u2713 all 12 declarations clean\n\n\u2713 All modules passed.\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/Canonical/GrowingOnsiteMatrixNorm.olean:PASS\n",
+  "exclusions": [
+    "No completed compatible family in this owner",
+    "No intersite coupling or unbounded Dirac theorem"
+  ]
+}

@@ -97,12 +97,19 @@ private def tagLit : UInt8 := 0x0A
 private def tagProj : UInt8 := 0x0C
 
 /-- Canonical node bytes given already-computed child digests.
+If `fvarSlot?` is provided, any `fvar id` mapped to `some slot` is encoded with
+`(tagFVar, 0x01, slot)` and does NOT mark the node as an unresolved open variable;
+unmapped `fvar`s use `(tagFVar, 0x00)` and mark the node as open.
 Returns the bytes and whether this node itself is open. -/
-def nodeBytes (e : Expr) (child : Expr → ByteArray) : ByteArray × Bool :=
+def nodeBytes (e : Expr) (child : Expr → ByteArray)
+    (fvarSlot? : FVarId → Option Nat := fun _ => none) : ByteArray × Bool :=
   let b0 := (ByteArray.emptyWithCapacity 80).push versionByte
   match e with
   | .bvar i => (pushNat (b0.push tagBVar) i, false)
-  | .fvar _ => (b0.push tagFVar, true)
+  | .fvar id =>
+      match fvarSlot? id with
+      | some slot => (pushNat ((b0.push tagFVar).push 1) slot, false)
+      | none => (b0.push tagFVar, true)
   | .mvar _ => (b0.push tagMVar, true)
   | .sort u => encodeLevel u (b0.push tagSort)
   | .const n us =>
@@ -122,7 +129,8 @@ def nodeBytes (e : Expr) (child : Expr → ByteArray) : ByteArray × Bool :=
 /-- Digest every unique subterm of `e` (iterative, sharing-aware).
 Returns the memo table (`ExprStructEq` ↦ 32-byte digest), the root digest,
 the node count and the open flag. -/
-def digestTable (e : Expr) : Std.HashMap ExprStructEq ByteArray × ByteArray × Nat × Bool := Id.run do
+def digestTable (e : Expr) (fvarSlot? : FVarId → Option Nat := fun _ => none) :
+    Std.HashMap ExprStructEq ByteArray × ByteArray × Nat × Bool := Id.run do
   let mut memo : Std.HashMap ExprStructEq ByteArray := {}
   let mut stack : List (Expr × Bool) := [(e, false)]
   let mut nodes := 0
@@ -148,7 +156,7 @@ def digestTable (e : Expr) : Std.HashMap ExprStructEq ByteArray × ByteArray × 
     | .mdata _ body =>
         memo := memo.insert key (child body)
     | _ =>
-        let (bytes, o) := nodeBytes curr child
+        let (bytes, o) := nodeBytes curr child fvarSlot?
         isOpen := isOpen || o
         nodes := nodes + 1
         memo := memo.insert key (DAG.Sha256.digest bytes)
@@ -159,5 +167,36 @@ def digestTable (e : Expr) : Std.HashMap ExprStructEq ByteArray × ByteArray × 
 def compute (e : Expr) : TermDigest :=
   let (_, root, nodes, isOpen) := digestTable e
   { digest := DAG.Sha256.toHex root, nodeCount := nodes, openTerm := isOpen }
+
+/-- Map each non-implementation-detail `FVarId` in `lctx` to its 0-based de Bruijn
+level (declaration slot index `0, 1, ...` in telescope order). -/
+def lctxSlotMap (lctx : LocalContext) : Std.HashMap FVarId Nat := Id.run do
+  let mut slots : Std.HashMap FVarId Nat := {}
+  let mut idx := 0
+  for decl in lctx do
+    if !decl.isImplementationDetail then
+      slots := slots.insert decl.fvarId idx
+      idx := idx + 1
+  return slots
+
+/-- Context-relative de Bruijn disassembly (`digestWithLctx`):
+Each `fvar` bound in `lctx` is replaced by its canonical 0-based de Bruijn level
+in `lctx` (without wrapping the whole `LocalContext` telescope around `e`), so
+subterms in `InfoTree` get a `_uniq`-counter-free SHA-256 digest while distinguishing
+which local hypothesis is referenced. -/
+def digestWithLctx (lctx : LocalContext) (e : Expr) : TermDigest :=
+  let slots := lctxSlotMap lctx
+  let (_, root, nodes, isOpen) := digestTable e (fun id => slots.get? id)
+  { digest := DAG.Sha256.toHex root, nodeCount := nodes, openTerm := isOpen }
+
+/-- Close an open expression over a `LocalContext` telescope using `LocalContext.mkForall`
+over all non-implementation-detail `FVarId`s in declaration order, then compute its
+`TermDigest`. This turns locally-bound `fvar`s into canonical de Bruijn `bvar`s
+together with their types/values, making `InfoTree` terms and goals alpha- and
+`_uniq`-counter invariant while still distinguishing distinct local hypotheses. -/
+def computeInLctx (lctx : LocalContext) (e : Expr) : TermDigest :=
+  let fvars : Array Expr := lctx.foldl (init := #[]) fun acc decl =>
+    if decl.isImplementationDetail then acc else acc.push (.fvar decl.fvarId)
+  compute (lctx.mkForall fvars e)
 
 end DAG.TermDigest

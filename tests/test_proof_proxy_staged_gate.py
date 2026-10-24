@@ -356,3 +356,33 @@ theorem build_invariant : CarrierInvariant where
   beta := beta_owner
 """
     assert aggregate_prop_constructors(source) == [("CarrierInvariant", "theorem build_invariant : CarrierInvariant where")]
+
+
+def test_precommit_gate_detects_multiline_block_comment_debt_burial_and_quote_bypass(
+    tmp_path, monkeypatch, capsys
+):
+    git = _init_hook_repo(tmp_path, monkeypatch)
+    owner = tmp_path / "Owner.lean"
+    owner.write_text(
+        REQUIRED_LEAN_COPYRIGHT_HEADER
+        + "theorem old_owner : True := trivial\n"
+        + "theorem kept_owner : True := trivial\n"
+    )
+    git("add", "Owner.lean")
+    git("commit", "-qm", "baseline")
+
+    owner.write_text(
+        REQUIRED_LEAN_COPYRIGHT_HEADER
+        + "/-!\n"
+        + "The previous contradictory rank-five pairing interface is not needed here.\n"
+        + "-/\n"
+        + "theorem kept_owner : True := by\n"
+        + '  sorry -- "quoted comment cannot bypass sorry scan"\n'
+    )
+    git("add", "Owner.lean")
+    monkeypatch.chdir(tmp_path)
+
+    assert main(["Owner.lean"]) == 1
+    err = capsys.readouterr().err
+    assert "staged deletion of Lean declarations with natural-language debt comments" in err
+    assert "staged forbidden placeholder" in err

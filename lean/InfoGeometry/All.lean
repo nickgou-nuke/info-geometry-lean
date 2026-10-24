@@ -64,6 +64,8 @@ import InfoGeometry.Algebra.ChakravalaGAAudit
 import InfoGeometry.Algebra.HodgeGeometricCalculus
 import InfoGeometry.Algebra.HodgeGeometricCalculusAudit
 import InfoGeometry.Canonical.SuperGrassmannianManifold
+import InfoGeometry.SuperGrassmannian.GraphOverlapRegression
+import InfoGeometry.SuperGrassmannian.ZornGraphDirections
 import InfoGeometry.Canonical.SuperGrassmannianManifoldAudit
 import InfoGeometry.Canonical.HolographicColimitContinuum
 import InfoGeometry.Canonical.HolographicColimitContinuumAudit
@@ -326,6 +328,7 @@ import InfoGeometry.QuantumContext.RotaryAttentionSpiralDynamics
 import InfoGeometry.Section12Formalized
 import InfoGeometry.Singular
 import InfoGeometry.SuperMetriplectic.MajoranaSouriauMetriplecticLoxodromic
+import InfoGeometry.SuperMetriplectic.WittKleinRepresentation
 import InfoGeometry.Thermo.MetalMirror
 import InfoGeometry.Thermo.SusceptibilityOnsagerStress
 import InfoGeometry.Twistor.SplitSignatureConformalChart
@@ -488,3 +491,7 @@ import InfoGeometry.Topology.WittenJonesChernSimonsKnots
 import InfoGeometry.Topology.WittenJonesChernSimonsKnotsAudit
 import InfoGeometry.Topology.WittenJonesTemperleyLiebTransport
 import InfoGeometry.Topology.WittenJonesTemperleyLiebTransportAudit
+import InfoGeometry.Superalgebra.CattoGurseyOctonionicHadronicSuperalgebra
+import InfoGeometry.Algebra.ZornColorGL31Obstruction
+import InfoGeometry.Algebra.ZornMajoranaRotations
+import InfoGeometry.Algebra.ZornRightProjectionObstruction

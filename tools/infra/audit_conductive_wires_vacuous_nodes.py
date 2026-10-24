@@ -17,7 +17,12 @@ from typing import Any
 
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
 
+from igf.graph.decl_schema import (
+    STRUCTURAL_FINGERPRINT_VERSION,
+    TERM_DIGEST_VERSION,
+)
 from tools.infra.arango_dag_algorithms import run_aql
 from tools.infra.arango_env import (
     arango_database,
@@ -43,10 +48,10 @@ def audit_astaql_conductive_wires(target: ArangoTarget) -> dict[str, Any]:
     print("🔍 Auditing ArangoDB graph using ASTAQLHASH shape-hash and proof-vacuity rules...")
 
     # AQL Query based on query_astaql_sorry_equivalents.py & forwarding alias classification
-    query = """
+    query = f"""
     FOR d IN decls
-      FILTER d.valueFingerprint != null
-      FILTER d.valueFingerprint.algorithmVersion == "lean-expr-structural-v3"
+      FILTER (d.valueDigest != null AND d.valueDigest.algorithmVersion == "{TERM_DIGEST_VERSION}")
+          OR (d.valueFingerprint != null AND d.valueFingerprint.algorithmVersion == "{STRUCTURAL_FINGERPRINT_VERSION}")
       LET name_lower = LOWER(d.name)
       LET is_vacuous_placeholder = (
         name_lower LIKE "%sorry%" OR
@@ -66,17 +71,17 @@ def audit_astaql_conductive_wires(target: ArangoTarget) -> dict[str, Any]:
       )
       FILTER is_vacuous_placeholder AND LENGTH(callers) > 0 AND LENGTH(targets) > 0
       SORT LENGTH(callers) DESC
-      RETURN {
+      RETURN {{
         id: d._id,
         name: d.name,
         kind: d.kind,
         module: d.module,
-        canonicalValueHash: d.canonicalValueHash,
+        canonicalValueHash: (d.valueDigest.digest || d.canonicalValueHash),
         callerCount: LENGTH(callers),
         targetCount: LENGTH(targets),
         callers: callers,
         targets: targets
-      }
+      }}
     """
     results = run_aql(target, query)
 

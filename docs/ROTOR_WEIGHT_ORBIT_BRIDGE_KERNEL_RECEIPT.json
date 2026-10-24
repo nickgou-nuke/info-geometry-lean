@@ -1,0 +1,57 @@
+{
+  "scope": "Stream5 moving projector in the existing Stream1 unit orbit; native support-weight conjugation and Stream3 joint weighted trace covariance; actual normed-real-algebra rotor-path derivative.",
+  "proof_author": "James",
+  "semantic_auditor": "Popper",
+  "kernel_qa": "Ampere",
+  "disposition": "ACCEPTED_WITH_LIMITED_SCOPE",
+  "result": {
+    "build": {
+      "command": [
+        "lake",
+        "build",
+        "+InfoGeometry.Canonical.RotorWeightOrbitBridge:olean"
+      ],
+      "exit": 0
+    },
+    "axioms": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/Canonical/RotorWeightOrbitBridge.olean"
+      ],
+      "exit": 0
+    },
+    "strict": {
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/Canonical/RotorWeightOrbitBridge.lean",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    "stable_candidate_contract_import_and_pins": true
+  },
+  "hashes": {
+    "lean/InfoGeometry/Canonical/RotorWeightOrbitBridge.lean": "1d5264489d10418e02df8850f7cd43667fb53ff131219d07e0527f7c4117ab6d",
+    "scratch/RotorWeightOrbitBridge20261024v2.md": "a3772087d195540db4bed2ba9804bee5d091fe8fb699f2437fac7a07dedae10f",
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lean/InfoGeometry/Canonical/DeBruijnRotorAlternationCycle.lean": "cb4512c763d796ca201863f77fcb5e084d256839a8f2a8c5230ea2c679c76df5",
+    "lean/InfoGeometry/Canonical/UnifiedGeometryOperatorSignificance.lean": "28029a0823281fb0d080df49b1204cf119f23795eb8c6d6e311fd929235b7803",
+    "lean/InfoGeometry/Canonical/PeirceWeightedTrace.lean": "cb93daf90aaccc5dbb5744c3a8a10b2815c5041c26f445ebeabc58f15f8a6bf7",
+    "lean/InfoGeometry/Canonical/ReflexiveRotorRealTime.lean": "4d02458fbc4ef7a5e5c0963101dbdbcbbee1dbf882ec1c1219652315fb3db885"
+  },
+  "axiom_log": "warning: LeanCopilot: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanCopilot' has local changes\nwarning: LeanArchitect: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanArchitect' has local changes\nChecking .lake/build/lib/lean/InfoGeometry/Canonical/RotorWeightOrbitBridge.olean\n  \u2713 all 10 declarations clean\n\n\u2713 All modules passed.\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/Canonical/RotorWeightOrbitBridge.olean:PASS\n",
+  "exclusions": [
+    "No fixed-density invariance claim",
+    "No analytic KMS state",
+    "Unit orbit is not all idempotents",
+    "No new carrier or formal de Bruijn syntax"
+  ]
+}

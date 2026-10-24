@@ -1,0 +1,4 @@
+Cl11RotorWeightValue.lean5theorems.
+SHA25658307cbaceb77f8e97e0872c085722bc2fe80b5319c26106b64e22abe2ccd163
+Parent lockedfinal89762exit0 9268jobs /tmp/cl11-rotor-weight-value-final-build.log noownerwarnings, dependencywarnings present. Independent final A-A5 PASS received; QA20264exit0 /tmp/cl11-rotor-weight-value-qa.log standard3axioms all5 strictscreen0 refactor[] whitespaceclean markersnone. Final A-A receipt sent to QA to close pending receipt.
+Native finiteLastCAR normalized pole trace1/2, fullpairmatrix halftrace, weightmatrix/rotormatrix and weightedrotortrace(bc²+as²)/2. Arbitrary realparameters, not automatically normalizedstate. Paperintake separate nonkernel sourceaudit. Goal active.

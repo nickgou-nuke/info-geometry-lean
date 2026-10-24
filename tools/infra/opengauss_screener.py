@@ -117,14 +117,28 @@ def check_hypothesis_packaging(lines: list[str]) -> list[TrapViolation]:
         if assignment is None:
             continue
         proof = declaration[assignment + 2:].strip()
-        proof_match = re.fullmatch(
-            r"(?:(?:by\s+)?exact\s+)?([\w'.]+)\s*(?:\n\s*end(?:\s+[\w.]+)?\s*)*",
-            proof,
-            re.DOTALL,
-        )
-        if proof_match is None:
+        cleaned_proof = re.sub(r"(?:\n\s*end(?:\s+[\w.]+)?\s*)+\Z", "", proof).strip()
+        closing_ident: str | None = None
+        implicit_closing_tactic: str | None = None
+        for pattern in (
+            r"(?:(?:by\s+)?(?:exact|apply|refine)\s+)?(?:\(\s*)?(?:id\s+)?([\w'.]+)(?:\s*\))?",
+            r"by\s+simpa\b[^\n]*?\busing\s+([\w'.]+)",
+            r"by\s+simp(?:\s+only)?\s*\[[^\]]*(?<![\w'])([\w'.]+)(?![\w'])[^\]]*\]",
+        ):
+            m = re.fullmatch(pattern, cleaned_proof, re.DOTALL)
+            if m is not None:
+                closing_ident = m.group(1)
+                break
+        if closing_ident is None:
+            implicit_match = re.fullmatch(
+                r"by\s+(assumption|tauto|trivial|rwa(?:\s*\[[^\]]*\])?(?:\s+at\s+\*)?)",
+                cleaned_proof,
+                re.DOTALL,
+            )
+            if implicit_match is not None:
+                implicit_closing_tactic = implicit_match.group(1)
+        if closing_ident is None and implicit_closing_tactic is None:
             continue
-        closing_ident = proof_match.group(1)
         # Read all explicit binder groups with balanced delimiters, including
         # implicit and instance binders. Their types may themselves be nested.
         binders: list[tuple[str, str]] = []
@@ -142,15 +156,20 @@ def check_hypothesis_packaging(lines: list[str]) -> list[TrapViolation]:
                 names, binder_type = colon
                 binders.extend((name, binder_type) for name in re.findall(r"[\w']+", names))
             pos = next_pos
+        norm_conclusion = re.sub(r"\s+", " ", conclusion).strip()
         for b_name, b_type in binders:
-            if b_name == closing_ident and re.sub(r"\s+", " ", b_type).strip() == re.sub(r"\s+", " ", conclusion).strip():
+            norm_b_type = re.sub(r"\s+", " ", b_type).strip()
+            if norm_b_type != norm_conclusion:
+                continue
+            if closing_ident == b_name or implicit_closing_tactic is not None:
                 line_number = source.count("\n", 0, start.start()) + 1
+                returned_repr = closing_ident if closing_ident is not None else implicit_closing_tactic
                 violations.append(TrapViolation(
                     trap_id="T6",
                     trap_name="Hypothesis Packaging",
                     line_number=line_number,
                     matched_text=declaration.strip()[:100],
-                    message=f"Theorem '{start.group(1)}' assumes hypothesis '{b_name} : {b_type}' and returns '{closing_ident}' as proof.",
+                    message=f"Theorem '{start.group(1)}' assumes hypothesis '{b_name} : {b_type}' and returns '{returned_repr}' as proof.",
                     severity="ERROR",
                 ))
     return violations
@@ -173,7 +192,6 @@ def check_unused_hypothesis_binders(source: str) -> list[TrapViolation]:
         binders_text, conclusion = parsed
         assignment = _top_level_assignment_index(declaration)
         proof = declaration[assignment + 2:] if assignment is not None else ""
-        used_text = conclusion + " " + proof
         pos = 0
         parsed_binders: list[tuple[str, str]] = []
         while pos < len(binders_text):
@@ -260,8 +278,6 @@ def check_unused_hypothesis_binders(source: str) -> list[TrapViolation]:
                 subst_consumed.add(candidates[0])
 
         for name, binder_type in parsed_binders:
-            if not name.startswith("h") or name in {"have", "has", "hypothesis"}:
-                continue
             if binder_type.lstrip().startswith("∀") and _is_reflexive_equality_type(binder_type):
                 line_number = source.count("\n", 0, start.start()) + 1
                 violations.append(TrapViolation(
@@ -276,21 +292,36 @@ def check_unused_hypothesis_binders(source: str) -> list[TrapViolation]:
                     severity="ERROR",
                 ))
                 continue
-            # Lean identifiers may end in apostrophes (`h'`, `h₂'`). Since an
-            # apostrophe is not a Python regex word character, `\b` after a
-            # primed name is placed at the wrong position and reports a used
-            # binder as vacuous. Match Lean's identifier characters on both
-            # sides instead.
-            ident_pattern = rf"(?<![\w']){re.escape(name)}(?![\w'])"
+            is_underscore_hyp = name.startswith("_h")
+            is_regular_hyp = name.startswith("h") and name not in {"have", "has", "hypothesis"}
+            if not (is_underscore_hyp or is_regular_hyp):
+                continue
+            escaped_name = re.escape(name)
+            ident_pattern = rf"(?<![\w']){escaped_name}(?![\w'])"
+            noop_patterns = (
+                rf"\b(?:let|have)\s+_\s*(?::[^:=\n]+)?\s*:=\s*{escaped_name}(?![\w'])",
+                rf"\b(?:let|have)\s+{escaped_name}\s*(?::[^:=\n]+)?\s*:=\s*{escaped_name}(?![\w'])",
+                rf"\bclear\s+(?:[A-Za-z_][A-Za-z0-9_']*\s+)*{escaped_name}(?![\w'])",
+            )
+            had_noop_discard = any(re.search(pat, proof) for pat in noop_patterns)
+            sanitized_proof = proof
+            for pat in noop_patterns:
+                sanitized_proof = re.sub(pat, "", sanitized_proof)
+            used_text = conclusion + " " + sanitized_proof
             if name not in subst_consumed and not re.search(ident_pattern, used_text):
                 line_number = source.count("\n", 0, start.start()) + 1
+                is_evasion = is_underscore_hyp or had_noop_discard
                 violations.append(TrapViolation(
                     trap_id="T4",
                     trap_name="Vacuous Binders & Degenerate Conditions",
                     line_number=line_number,
                     matched_text=f"({name} : {binder_type})"[:100],
-                    message=f"Vacuous binder: Theorem '{start.group(1)}' has an unused hypothesis binder '{name} : {binder_type}'.",
-                    severity="WARNING",
+                    message=(
+                        f"Vacuous binder: Theorem '{start.group(1)}' has an unused hypothesis binder "
+                        f"'{name} : {binder_type}'"
+                        + (" (silenced via underscore prefix or no-op discard)." if is_evasion else ".")
+                    ),
+                    severity="ERROR" if is_evasion else "WARNING",
                 ))
     return violations
 
@@ -1693,7 +1724,7 @@ def check_tactic_misuse_on_operators(lines: list[str]) -> list[TrapViolation]:
             )
 
         declaration_start = re.match(
-            r"(?:(?:private|protected|noncomputable|unsafe|partial)\s+)*(?:theorem|lemma|def|abbrev|example|instance)\b",
+            r"(?:@\[[^\]]*\]\s*)*(?:(?:private|protected|noncomputable|unsafe|partial)\s+)*(?:theorem|lemma|def|abbrev|example|instance)\b",
             line_clean,
         )
         if declaration_start:
@@ -1703,7 +1734,7 @@ def check_tactic_misuse_on_operators(lines: list[str]) -> list[TrapViolation]:
             # Collect declaration header until ':='
             while j < n and _top_level_assignment_index(" ".join(decl_lines)) is None:
                 next_l = lines[j].split("--")[0].strip()
-                if (re.match(r"(?:(?:private|protected|noncomputable|unsafe|partial)\s+)*(?:theorem|lemma|def|abbrev|example|instance|structure|class)\b", next_l) or
+                if (re.match(r"(?:@\[[^\]]*\]\s*)*(?:(?:private|protected|noncomputable|unsafe|partial)\s+)*(?:theorem|lemma|def|abbrev|example|instance|structure|class)\b", next_l) or
                     next_l.startswith("end ") or next_l.startswith("namespace ")):
                     break
                 if next_l:
@@ -1828,7 +1859,7 @@ def check_tactic_misuse_on_operators(lines: list[str]) -> list[TrapViolation]:
                 proof_j = j
                 while proof_j < n:
                     p_line = lines[proof_j].split("--")[0].strip()
-                    if (re.match(r"(?:(?:private|protected|noncomputable|unsafe|partial)\s+)*(?:theorem|lemma|def|abbrev|example|instance|structure|class)\b", p_line) or
+                    if (re.match(r"(?:@\[[^\]]*\]\s*)*(?:(?:private|protected|noncomputable|unsafe|partial)\s+)*(?:theorem|lemma|def|abbrev|example|instance|structure|class)\b", p_line) or
                         p_line.startswith("class ") or p_line.startswith("instance ") or
                         p_line.startswith("end ") or p_line.startswith("namespace ") or
                         p_line.startswith("section ") or p_line.startswith("open ")):

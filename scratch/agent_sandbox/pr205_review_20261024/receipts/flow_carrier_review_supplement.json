@@ -1,0 +1,175 @@
+{
+  "schema": "pr205.source_receipt_review.supplement.v1",
+  "reviewer": "flow_carrier_review",
+  "task": 17,
+  "date": "2026-10-24",
+  "disposition": "Public CI success substantiated. No current-source false-success blocker identified by static review. Artifact contents and generated declaration count remain unavailable. One concrete future trigger-coverage defect; other findings are scoped hardening opportunities.",
+  "output_collision": {
+    "requested_report": "scratch/agent_sandbox/pr205_review_20261024/receipts/report.md",
+    "existing_author": "acceptance_receipt_review",
+    "action": "Found the requested report already present and staged before writing. Read its first 40 lines to establish authorship; did not overwrite, edit, or claim it. This is a new optional JSON supplement only.",
+    "coordination": "Task 17 appears to have been assigned to overlapping reviewers. This supplement records independently collected evidence rather than replacing the existing report."
+  },
+  "execution_boundary": {
+    "performed": ["Read complete exact-head checker, workflow, contract, closure helper, and all five new Lean source modules", "Read-only textual import/declaration enumeration and Git blob hashing", "Unauthenticated public GitHub metadata/raw-source GET requests", "Read installed pinned Lean 4.34.1 public axiom collector source", "Stage this new JSON after index.lock clears"],
+    "not_performed": ["Compiler invocation", "Build", "Test", "Gate execution", "Checker or closure-helper execution", "Existing-file modification", "Branch switch", "Merge", "Commit", "Remote comment", "Credential lookup or authentication"]
+  },
+  "provenance": {
+    "snapshot": "/tmp/pr205-review-ea08baa",
+    "pr_metadata": "/tmp/pr205-api.json",
+    "files_metadata": "/tmp/pr205-files.json",
+    "run_metadata": "/tmp/pr205-ci-run.json",
+    "head": "ea08baa1649c9eeaf45638d6e7edef2f971ad1be",
+    "base": "21189e55133ed207043f2f05e37aa52d1fc8a9f5",
+    "merge": "01c872dd32ebd50cc8f72f09e32067df2de40caf",
+    "public_merge_parents": ["21189e55133ed207043f2f05e37aa52d1fc8a9f5", "ea08baa1649c9eeaf45638d6e7edef2f971ad1be"],
+    "pr": {"number": 205, "state": "open", "merged": false, "changed_files": 8, "additions": 847, "deletions": 0},
+    "all_eight_snapshot_git_blobs_match_files_metadata": true,
+    "all_eight_public_merge_changed_file_blobs_match_snapshot": true,
+    "full_tree_comparison": "Not independently performed by this reviewer; eight changed-file blobs and the infrastructure files below were independently compared.",
+    "helper_exact_head_raw_matches_snapshot": true,
+    "helper_merge_raw_matches_snapshot": true,
+    "helper_sha256": "7bb54f7cb08fcb933b5619e57d12e0f267ec937abcebd4302c453fd3a54f2ab8",
+    "manifest_merge_raw_matches_snapshot": true,
+    "manifest_sha256": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "toolchain_merge_raw_matches_snapshot": true,
+    "toolchain_sha256": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "toolchain": "leanprover/lean4:v4.34.1",
+    "mathlib_pin": "d13f23b723b8a846827a245b89c10fc7d3f11612"
+  },
+  "ci_metadata": {
+    "run_id": 40077004618,
+    "run_attempt": 1,
+    "run_name": "Peirce Weyl trace (scoped)",
+    "event": "pull_request",
+    "run_head_sha": "ea08baa1649c9eeaf45638d6e7edef2f971ad1be",
+    "run_status": "completed",
+    "run_conclusion": "success",
+    "job_id": 120822411313,
+    "job_name": "kernel-check",
+    "job_status": "completed",
+    "job_conclusion": "success",
+    "job_started_at": "2026-10-24T08:10:35Z",
+    "job_completed_at": "2026-10-24T08:13:56Z",
+    "compile_audit_step": "success",
+    "artifact_upload_step": "success",
+    "artifact_id": 12552794453,
+    "artifact_name": "peirce-weyl-verification",
+    "artifact_size_in_bytes": 67786,
+    "artifact_expired": false,
+    "artifact_created_at": "2026-10-24T08:13:54Z",
+    "artifact_expires_at": "2027-01-22T08:10:32Z",
+    "artifact_public_digest": "sha256:cfc8807ad8f68275194e7eb490e5d75cc99d5a17b85d015929a48ead1741923a",
+    "artifact_workflow_run_head_sha": "ea08baa1649c9eeaf45638d6e7edef2f971ad1be",
+    "artifact_download_http_status": 401,
+    "job_log_download_http_status": 403,
+    "artifact_content_inspected": false,
+    "limitation": "API success and an archive digest establish run/upload metadata, not independently inspected status.json, audit.log, declaration names/count, compiler version output, source hashes inside the artifact, or warnings. No sandbox attachments were available."
+  },
+  "textual_counts": {
+    "method": "Read full five Lean modules and count anchored source commands ^theorem, ^def, ^#check. No Lean or checker execution.",
+    "PeirceWeylUnits": {"theorems": 12, "defs": 5, "checks": 0},
+    "PeirceDensityIntertwining": {"theorems": 6, "defs": 2, "checks": 0},
+    "JordanMultiplicationClosure": {"theorems": 4, "defs": 1, "checks": 0},
+    "PeirceWeylSynthesis": {"theorems": 1, "defs": 0, "checks": 0},
+    "PeirceWeylExamples": {"theorems": 8, "defs": 4, "checks": 6},
+    "total": {"theorems": 31, "defs": 12, "checks": 6},
+    "claimed_generated_plus_named_declarations": 73,
+    "claimed_generated_count_verified": false,
+    "note": "43 named source declarations are confirmed. Six #check commands are elaboration probes, not six additional proved declarations. Generated declaration enumeration requires the actual Lean audit output; 73 cannot be established or refuted from these text counts.",
+    "expected_source_closure_size": 21,
+    "closure_size_basis": "The leader's source-closure.json lists 21 repository modules; static inspection of their imports is compatible with the closure parser. This is not a retrieved CI modules receipt."
+  },
+  "coverage_and_fail_closed_assessment": [
+    {
+      "location": "tools/quality/check_peirce_weyl.py:31-64,132-139",
+      "assessment": "Audit imports all five selected targets together, enumerates their imported environment constants by module ownership, rejects unsafe/partial target declarations, and calls the public Lean.collectAxioms for each. The exact allowlist is propext, Classical.choice, Quot.sound. This is materially stronger than a theorem-name regex or a few #print axioms commands. It also checks target definitions and visible generated declarations, not only the 31 named theorems."
+    },
+    {
+      "location": "Installed leanprover--lean4---v4.34.1/src/lean/Lean/Util/CollectAxioms.lean:30-74,119-155",
+      "assessment": "The public collector is explicitly designed for imported declarations: exported axiom metadata is precomputed with private bodies available, then queried by imports. Consequently importing targets does not inherently lose their transitive proof axiom dependencies. Its implementation collects from checked kernel declarations and types/values or cached imported axiom summaries. This is dependency auditing, not an independent replay of every imported proof body. The reviewer only read this source."
+    },
+    {
+      "location": "tools/quality/check_peirce_weyl.py:47-56; docs/PEIRCE_WEYL_TRACE_CONTRACT.md:87-92",
+      "assessment": "Strict unsafe/partial declaration screening is restricted to the five target modules. Transitive axioms of those declarations are checked even when dependencies originate elsewhere. This does not audit every unrelated declaration in all 21 repository dependency modules or all of Mathlib. Also, enumerating imported env.constants should not be generalized into a guarantee to enumerate every unexported declaration of arbitrary future Lean module-system files; the present five sources use legacy imports and have no private declarations. The stated scoped contract is reasonable for this concrete change."
+    },
+    {
+      "location": "tools/quality/check_peirce_weyl.py:67-72,85-94,107-144",
+      "assessment": "Ordinary failures are fail-closed: Mathlib/toolchain mismatch, source/import resolution exception, active compiler detection, cache command failure, Lean compilation failure, audit error/disallowed axiom, and absent completion marker all raise, set failed where inside the try, and propagate nonzero exit. Workflow set -euo pipefail has no continue-on-error. The generated Lean audit itself throws on zero total count. Missing per-module/count receipt safeguards below do not invalidate these positive checks."
+    },
+    {
+      "location": "tools/quality/check_reviewed_prs.py:24-53; check_peirce_weyl.py:20,94",
+      "assessment": "Only the closure function is imported and called. Its DFS detects cycles/missing local files, resolves repository imports first, permits Mathlib/Lean/Std/Init dependencies, and rejects other unresolved imports. Its separate legacy Lean audit_source implementation refers to private collector internals but is not called by this new checker; that unused code is not a current PR205 audit bug."
+    },
+    {
+      "location": "tools/quality/check_peirce_weyl.py:85-118; .github/workflows/peirce-weyl.yml:23-57",
+      "assessment": "Workflow fetches github.sha without initializing external submodules and fetches the exact manifest Mathlib revision. Checker compares Mathlib HEAD and toolchain strings, copies each repository closure source byte-for-byte, records source SHA-256 values and checkout HEAD, compiles into a first-priority private lib path, and logs lean --version. No imports are stripped. The build lock and process check are respected by the inspected code. This is explicitly not a full root Lake build."
+    },
+    {
+      "location": ".github/workflows/peirce-weyl.yml:26; check_peirce_weyl.py:88",
+      "assessment": "For pull_request, github.sha is the synthetic merge checkout, whereas Actions metadata head_sha identifies the PR head. Those values need not be equal. Public merge parents match the supplied base/head, and all eight changed blobs match. A status.json revision equal to 01c872dd... would be expected, not evidence of wrong source. The artifact status itself was unavailable."
+    }
+  ],
+  "findings": [
+    {
+      "id": "F1",
+      "classification": "Concrete future CI trigger-coverage defect; not a blocker for the already triggered current PR run",
+      "location": ".github/workflows/peirce-weyl.yml:3-12",
+      "detail": "Path filters omit tools/quality/check_reviewed_prs.py, lean-toolchain, lake-manifest.json, and the existing repository modules in the target import closure. Changes exclusively to these inputs do not automatically rerun the scoped check. The contract document is also omitted, though prose-only changes have lower verification impact. workflow_dispatch is a manual remedy, not automatic regression coverage.",
+      "action": "Trigger on the helper, pins/toolchain, and relevant dependency source paths (or a broader lean/**/*.lean pattern), with an explicit policy for contract-only changes. The current PR adds targets/checker/workflow themselves, so its observed run was not skipped."
+    },
+    {
+      "id": "F2",
+      "classification": "Coverage/count hardening; no current omission demonstrated",
+      "location": "tools/quality/check_peirce_weyl.py:43-63,136-138",
+      "detail": "Only a global positive count is enforced inside Lean; no nonempty per-module count or expected declaration inventory is checked. Python checks only whether AUDIT_COUNT: appears, does not parse an unambiguous positive integer, and does not put count or declaration inventories into status.json. Emptying one target could still leave a passing audit of the others. Current sources demonstrably have named declarations in all five modules.",
+      "action": "Emit structured per-module declaration counts/names and parsed aggregate count; require every intended nonempty target to appear. Bind an expected inventory to the source snapshot if deletion regression protection is desired. Do not hardcode 73 as a timeless invariant. Keep Lean's own fail-on-zero and nonzero exit handling."
+    },
+    {
+      "id": "F3",
+      "classification": "Warning-policy gap; blocks a zero-warning claim, not ordinary scoped compilation success",
+      "location": "tools/quality/check_peirce_weyl.py:123-131,134-138",
+      "detail": "Compiler logs are preserved/printed but only return codes are tested. There is no warnings-as-errors flag and no warning count in status.json. A warning-bearing compilation can pass. Disallowed target axioms, including sorryAx when reachable, are independently rejected by the axiom audit, so warning permissiveness is not permission for target proof holes.",
+      "action": "Declare whether warnings are fatal. If zero-warning acceptance is intended, enforce it or emit and assess a structured warning list, with target/dependency scope explicit. Without logs, do not claim this run was warning-free."
+    },
+    {
+      "id": "F4",
+      "classification": "Local replay/source-binding hardening; fresh CI mitigates it",
+      "location": "tools/quality/check_peirce_weyl.py:85-106,113-118",
+      "detail": "Recorded HEAD and pinned Mathlib HEAD do not prove either working tree is clean, that copied sources equal committed blobs, or that an arbitrary local PATH's lean executable is the intended binary. Source hashes bind the bytes actually copied, which is useful, but are not compared to HEAD. Actual version output is recorded, not validated. Checker/helper/workflow hashes and root manifest digest are not explicit status fields. The hosted workflow starts fresh checkouts and installs elan/toolchain, substantially reducing these local hazards.",
+      "action": "For stronger replay receipts, record expected source revision versus actual checkout, dirty state or commit-blob hashes, checker/helper/workflow/manifest digests, and validate the selected toolchain. Preserve existing source_sha256 recording. Avoid calling the current receipt an authenticated exact-HEAD attestation in a dirty local checkout."
+    },
+    {
+      "id": "F5",
+      "classification": "Future parser/output-directory hardening; no current unsupported import observed",
+      "location": "tools/quality/check_reviewed_prs.py:35-46; check_peirce_weyl.py:95-117",
+      "detail": "Closure discovery is lexical and only recognizes column-zero import lines, not the full Lean header/module syntax. Current 21 snapshot modules use supported conventional import lines. Future public/private or otherwise reformatted imports could be missed. Missing imports generally then fail Lean compilation in a fresh output, but a reused output directory could contain stale oleans. Output lib/src are reused without an emptiness/fingerprint check.",
+      "action": "Reject unsupported import-header forms or use authoritative import parsing, and require a fresh/isolated output directory or validated artifact identity. Do not delete shared build caches. This is not evidence that the current source closure was incomplete."
+    },
+    {
+      "id": "F6",
+      "classification": "Receipt/supply-chain hardening, not a demonstrated mathematical or CI blocker",
+      "location": ".github/workflows/peirce-weyl.yml:47-50,58-66",
+      "detail": "Elan bootstrap follows a mutable master script and upload-artifact follows a major tag; immutable action/bootstrap pins would tighten reproducibility. Artifact upload runs always, including on failure, so artifact presence alone is not success. No explicit if-no-files-found:error setting is provided. The public API independently confirms both successful compilation/audit and a real artifact for this run.",
+      "action": "Optionally pin external workflow code immutably and require receipt files to exist. Consumers must check the run/job conclusion and failed/passed status receipt, not infer success merely from an uploaded archive."
+    }
+  ],
+  "acceptance_limits": [
+    "No retrieved audit.log or status.json: the 73-declaration claim, actual per-module counts, actual axiom union, warnings, and executed compiler version are unconfirmed here.",
+    "No parent replay performed by this worker; independent exact-source closure compilation remains the parent's task.",
+    "No semantic theorem-interpretation approval is conferred by the CI receipt; the contract's finite algebraic and conditional MP/trace scope must be reviewed separately.",
+    "No claim of all-green repository CI, full root package build, independent checking of every imported theorem proof, or entire dependency closure axiom purity.",
+    "The existing acceptance_receipt_review report is a separate author's output and was preserved unchanged."
+  ],
+  "public_endpoints_used": [
+    "https://api.github.com/repos/nickgou-nuke/info-geometry-lean/actions/runs/40077004618/jobs",
+    "https://api.github.com/repos/nickgou-nuke/info-geometry-lean/actions/runs/40077004618/artifacts",
+    "https://api.github.com/repos/nickgou-nuke/info-geometry-lean/commits/01c872dd32ebd50cc8f72f09e32067df2de40caf",
+    "https://api.github.com/repos/nickgou-nuke/info-geometry-lean/actions/artifacts/12552794453/zip",
+    "https://api.github.com/repos/nickgou-nuke/info-geometry-lean/actions/jobs/120822411313/logs",
+    "https://raw.githubusercontent.com/nickgou-nuke/info-geometry-lean/ea08baa1649c9eeaf45638d6e7edef2f971ad1be/tools/quality/check_reviewed_prs.py",
+    "https://raw.githubusercontent.com/nickgou-nuke/info-geometry-lean/01c872dd32ebd50cc8f72f09e32067df2de40caf/tools/quality/check_reviewed_prs.py",
+    "https://raw.githubusercontent.com/nickgou-nuke/info-geometry-lean/01c872dd32ebd50cc8f72f09e32067df2de40caf/lake-manifest.json",
+    "https://raw.githubusercontent.com/nickgou-nuke/info-geometry-lean/01c872dd32ebd50cc8f72f09e32067df2de40caf/lean-toolchain"
+  ]
+}

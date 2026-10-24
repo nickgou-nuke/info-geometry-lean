@@ -1,0 +1,107 @@
+{
+  "scope": "Bounded audit of GrassmannianBundleCyclotomicOrientability and its claimed interpretations; existing externally edited owner preserved",
+  "disposition": "KERNEL_PASS_FOR_ALGEBRA_REQUEST_CHANGES_FOR_INTERPRETATION",
+  "semantic_auditor": "Popper",
+  "kernel_qa": "Ampere",
+  "owner_sha256": "457355865fe5d1cfca972ce906ec2a1918e748a740fdea7e0dac9fceb6efc532",
+  "import_observed": "lean/InfoGeometry/Canonical/All.lean:2334; aggregate not verified",
+  "actual_declarations_checked": 58,
+  "corrections": [
+    {
+      "claim": "G/K is all idempotents and the theorem constructs a principal bundle",
+      "correction": "The displayed statements establish idempotency, right invariance and an associative equivariance identity. Units reach the orbit of the fixed idempotent. No quotient equivalence or principal-bundle structure is constructed in this owner. A one-sided inverse is not a unit hypothesis in an arbitrary ring."
+    },
+    {
+      "claim": "Gamma squared equals Delta is Phi_2(Gamma)=0",
+      "correction": "Phi_2(X)=X+1. Relative to support Delta the proved polynomial is X^2-Delta. The supplied integer matrix Gamma=diag(1,-1) has Gamma+Delta=diag(2,0), not zero.",
+      "mathlib_reference": "Mathlib/RingTheory/Polynomial/Cyclotomic/Basic.lean:cyclotomic_two"
+    },
+    {
+      "claim": "The operators are primitive roots of the indicated orders over every ring",
+      "correction": "The equations and power identities are proved, not exact orders. Zero pairs and positive characteristics are allowed."
+    },
+    {
+      "claim": "ad_P has cubic minimal polynomial",
+      "correction": "X^3-X is an annihilating polynomial. It need not be minimal, for example if P is central."
+    },
+    {
+      "claim": "Peirce components establish cotangent duality, Ehresmann curvature, and sl coadjoint geometry",
+      "correction": "The owner proves ring decomposition, diagonal commutator and cyclic pairing identities. It constructs no nondegenerate pairing, connection, cotangent identification, or sl carrier."
+    },
+    {
+      "claim": "The pair is a partial isometry and support reversal establishes Spin/Pin or Mobius orientability",
+      "correction": "No star structure or adjoint relation is assumed. The displayed inverse-pair laws and support-corner sandwich identities do not establish geometric orientability or Spin/Pin membership."
+    }
+  ],
+  "valid_scope": [
+    "Peirce decomposition and square-zero corners",
+    "Cyclic trace cancellation and adjoint tripotency",
+    "Support-relative Phi_3/Phi_4/Phi_6 polynomial and power identities",
+    "Support swapping and sign reversal",
+    "Explicit noncommuting integer matrix specializations"
+  ],
+  "result": {
+    "build": {
+      "command": [
+        "lake",
+        "build",
+        "+InfoGeometry.Canonical.GrassmannianBundleCyclotomicOrientability:olean"
+      ],
+      "exit": 0
+    },
+    "axioms": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/Canonical/GrassmannianBundleCyclotomicOrientability.olean"
+      ],
+      "exit": 0
+    },
+    "strict": {
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/Canonical/GrassmannianBundleCyclotomicOrientability.lean",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    "stable_candidate_contract_import_and_pins": true
+  },
+  "hashes": {
+    "lean/InfoGeometry/Canonical/GrassmannianBundleCyclotomicOrientability.lean": "457355865fe5d1cfca972ce906ec2a1918e748a740fdea7e0dac9fceb6efc532",
+    ".lake/packages/mathlib/Mathlib.lean": "61d699d8ace6240934a751f1b1951339090d6e380b505041632227dd7eb73a29",
+    "lean/InfoGeometry/Canonical/All.lean": "71fa0d90fd0e900f78d2b00c904b589f0456e274337ee51f9b6d99ebf039e1cc",
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b"
+  },
+  "axiom_log": "warning: LeanCopilot: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanCopilot' has local changes\nwarning: LeanArchitect: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanArchitect' has local changes\nChecking .lake/build/lib/lean/InfoGeometry/Canonical/GrassmannianBundleCyclotomicOrientability.olean\n  \u2713 all 58 declarations clean\n\n\u2713 All modules passed.\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/Canonical/GrassmannianBundleCyclotomicOrientability.olean:PASS\n",
+  "snapshot_status": "Historical verified snapshot; later external source changes require separate verification. This receipt is not a certificate for later bytes.",
+  "later_source_review": {
+    "sha256": "06d1dd736b7580657ab6586e89c240eb3a3ce35fd187fc131a4cefa60603487e",
+    "auditor": "Popper",
+    "algebra_disposition": "SOURCE_REVIEW_PASS_KERNEL_PENDING",
+    "observed_changes": [
+      "Header narrows geometric and cyclotomic claims",
+      "Native Peirce decomposition reuse",
+      "Unit orbit kernel-setoid quotient equivalence to its range and exact fiber characterization",
+      "Normal projection characterization",
+      "Active support and ambient reflection extension"
+    ],
+    "remaining_comment_issues": [
+      "Local principal-bundle and invertible-pair descriptions for weaker one-sided hypotheses",
+      "Residual Phi_2 and Spin/Pin terminology in some local comments"
+    ]
+  },
+  "latest_observation": {
+    "sha256": "bb07ab568fa302868dbcfa3e8437b39b9c88810f695433fbbc3209e2fc6fc67e",
+    "status": "EXTERNALLY_EDITED_NOT_COVERED_BY_THIS_KERNEL_RECEIPT",
+    "user_report": "User reports locked task-890 / 8924-job successful build and standard-axiom check; report not bound here to latest source hash.",
+    "coordination": "No further compiler launched while user owns build lane."
+  }
+}

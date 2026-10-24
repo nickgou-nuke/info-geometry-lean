@@ -1,0 +1,11 @@
+Owner SHA256 058e74b99946bb64cb1e9625766ac4ee2a868db3d52d6eec3f3801ca5e3b8aa5
+Parent final locked build87455 exit0 /tmp/kitaev-spinor-boost-final3-build.log
+Independent A-A zorn_semantic_audit final PASS.
+Independent QA-A zorn_acceptance ACCEPTED, audit50184 exit0.
+Log /tmp/kitaev-spinor-boost-qa.log
+Generic unit theorem: propext only; native three: propext,Classical.choice,Quot.sound.
+Strict screen0; refactor[]; stagedwhitespaceclean.
+Scope indefinite scalar Dirac isometry and inverse metric-covector covariance.
+Local HEAD at final check d716c2504a4cf21015982248a0860644904239ec.
+User-reported remote73006b1342e449348fa626995ad96c6a2b48a9e6 not a local object;
+remote merge/PR/branch state not independently verified in this batch.

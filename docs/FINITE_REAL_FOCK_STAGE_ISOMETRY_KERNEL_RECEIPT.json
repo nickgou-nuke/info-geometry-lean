@@ -1,0 +1,54 @@
+{
+  "scope": "Every native iterated Fock-stage inclusion preserves the positive real inner product and norm; bundled linear isometries retain native identity and composition coherence.",
+  "proof_author": "James",
+  "semantic_auditor": "Popper",
+  "kernel_qa": "Ampere",
+  "disposition": "ACCEPTED_WITH_LIMITED_SCOPE",
+  "result": {
+    "build": {
+      "command": [
+        "lake",
+        "build",
+        "+InfoGeometry.Clifford.FiniteRealFockStageIsometry:olean"
+      ],
+      "exit": 0
+    },
+    "axioms": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/Clifford/FiniteRealFockStageIsometry.olean"
+      ],
+      "exit": 0
+    },
+    "strict": {
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/Clifford/FiniteRealFockStageIsometry.lean",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    "stable_candidate_contract_import_and_pins": true
+  },
+  "hashes": {
+    "lean/InfoGeometry/Clifford/FiniteRealFockStageIsometry.lean": "05c1dde31a9a9990c5d44f1c517d9e1dc398bcb31d25706b8f1544e553ed8987",
+    "scratch/FiniteRealFockStageIsometry20261024v2.md": "4ed34a941ea0a0e5c09a3bf2e97e13aa6af122b4687dbe8ee952c69246dc61df",
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lean/InfoGeometry/Clifford/FiniteRealFockMetric.lean": "091e410542c1a6a101ad5d8212225347dd47a2f769e0443798220017afad4ed3",
+    "lean/InfoGeometry/Clifford/ClNNFockDirectLimitRepresentation.lean": "9bd29fe2983f1e6bc3ac39671eb3941d19e79f6047aa3c9b2b0f8a5d43302ae6"
+  },
+  "axiom_log": "warning: LeanCopilot: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanCopilot' has local changes\nwarning: LeanArchitect: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanArchitect' has local changes\nChecking .lake/build/lib/lean/InfoGeometry/Clifford/FiniteRealFockStageIsometry.olean\n  \u2713 all 6 declarations clean\n\n\u2713 All modules passed.\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/Clifford/FiniteRealFockStageIsometry.olean:PASS\n",
+  "exclusions": [
+    "No completed Fock Hilbert carrier yet",
+    "No scalar generalization of the complex completion API",
+    "No completed creation/contraction operators"
+  ]
+}

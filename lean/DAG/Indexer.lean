@@ -306,12 +306,11 @@ def processConstant (env : Environment) (sp : SearchPath) (name : Name) (nameStr
         canonicalTypeHash := typeFingerprint.shapeHash
         canonicalValueHash := valueFingerprint.map ExprFingerprint.shapeHash
         dagShapeHash := shapeFingerprint.shapeHash
-        key := DAG.Schema.declKey name
-        relFile := DAG.Schema.relativeTo root fileStr
+        key := DAG.Schema.declKey name,
+        relFile := DAG.Schema.relativeTo root fileStr,
         range := range,
-        generated := (range.line = 0)
-        generated := (range.line = 0)
-        typeDigest := typeDigest
+        generated := (range.line = 0),
+        typeDigest := typeDigest,
         valueDigest := valueDigest
       }
     }
@@ -688,7 +687,8 @@ def processConstantStreaming (env : Environment) (sp : SearchPath) (name : Name)
     dagShapeHash := shapeFingerprint.shapeHash
     key := DAG.Schema.declKey name
     relFile := DAG.Schema.relativeTo root fileStr
-    range := range
+    range := range,
+    generated := (range.line = 0),
     typeDigest := typeDigest
     valueDigest := valueDigest
   }

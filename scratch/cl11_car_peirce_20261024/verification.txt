@@ -1,0 +1,6 @@
+RealCARPeirceBridge2theorems and Cl11CARPeirceReadback2theorems.
+Parent lockedbuild84020exit0 9266jobs /tmp/cl11-car-peirce-build.log; no newownerwarnings, existing dependencywarnings.
+Independent QA locked95748exit0 /tmp/cl11-car-peirce-qa.log after sharedlockwait. Generic axioms propext only, native standard3. Exactfinal A-A PASS; QA ACCEPTED; strictscreen0 refactor[] both whitespaceclean markersnone.
+SHA256719881d5b8a81def6a245c73b05ebba6d2c327d6ed076d5f2841015bbe68f8d2 RealCARPeirceBridge
+SHA256b785bcd79a0269c40ffd7382c810023b8a80113fec0ce10c49f021bc810fb7e1 Cl11CARPeirceReadback
+Native finiteLastCARPair weighted boundary and algebraicCARPair hyperbolic idempotence. Pairlaws discharged from existing constructed CAR pairs; only normalization remains for hyperbolic idempotence. No analyticKMS claim. Goal active.

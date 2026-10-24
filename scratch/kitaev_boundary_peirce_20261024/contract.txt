@@ -1,0 +1,9 @@
+Actual native boundary pair Peirce projection p=d*B.
+Reuse KitaevBoundaryDiracPair, ConstructedMetric and DiracConservation owners.
+Identify p with existing DMinus(endpointMetric), hence eta=1-2 smul p with
+the exact minus sign. Prove p idempotent via native pair reflexivity, and
+conserved via both native conserved boundary operators. With explicit ordinary
+self-adjoint endpoints, the existing constructed metric has p#=p, proved from
+negative pair exchange and reversal of Dirac-adjoint multiplication.
+No new carrier, positivity, phase claim or ordinary/Dirac adjoint identification.
+No builds by child; parent performs serialized checking and promotion.

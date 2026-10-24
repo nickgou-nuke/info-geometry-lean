@@ -1,0 +1,4 @@
+Owner SHA256 fb6df82f647b1b7444c8511bee1ace147e3179ab422348d5a443039f083fecd7.
+4theorems. Parent lockedbuild4839 terminalexit0 4095jobs, /tmp/kitaev-interior-andreev-final-build.log. No ownerwarnings; importeddependencies retain warnings. First2832 also passed before reusable helper extraction.
+A-A zorn_semantic_audit exactfinalPASS all4, finalreceipt received before QA terminal. QA zorn_acceptance audit60796 exit0 after sharedlockwait, /tmp/kitaev-interior-andreev-qa.log. Each declaration exactstandard3 axioms; noerrors/sorryAx; strict0,whitespace0,markersnone. QA PASS with condition exactA-A receipt: condition satisfied and communicated, no subsequent sourcechanges. Lane released.
+Staged source/evidence; no commit/push. Broad unification goal remains active.

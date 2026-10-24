@@ -1,0 +1,66 @@
+{
+  "disposition": "ACCEPTED_WITH_LIMITED_SCOPE",
+  "scope": "Actual completed creation/contraction CLMs, finite-stage readbacks and norm bounds; no completed CAR or adjoint or aggregate acceptance.",
+  "owner": "lean/InfoGeometry/Clifford/RealFockCompletedCoordinateAction.lean",
+  "evidence_directory": "/tmp/qa-a-fock-completed-live-2lpdrdjw",
+  "session_id": 27427,
+  "commands_and_results": {
+    "build": {
+      "command": [
+        "lake",
+        "build",
+        "+InfoGeometry.Clifford.RealFockCompletedCoordinateAction:olean"
+      ],
+      "exit": 0
+    },
+    "axioms": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/Clifford/RealFockCompletedCoordinateAction.olean"
+      ],
+      "exit": 0
+    },
+    "strict": {
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/Clifford/RealFockCompletedCoordinateAction.lean",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    "stable_candidate_contract_import_and_pins": true
+  },
+  "before_sha256": {
+    "lean/InfoGeometry/Clifford/RealFockCompletedCoordinateAction.lean": "42d27f591ccae1fdbc1a27bd8b859173c9312115bee91b553db0ec6597ff0014",
+    "scratch/RealFockCompletedCoordinateAction20261024v2.md": "d9eab20383935cdf470f9e746c947770d3332ae07ddaa74399fd474aa77930fd",
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lean/InfoGeometry/Clifford/RealFockBoundedCoordinateAction.lean": "26cdb903411b5305e4f3c22cd008ff3e878204e94c318feb7f510ab78c7c4649",
+    ".lake/packages/mathlib/Mathlib/Topology/Algebra/LinearMapCompletion.lean": "74160ce4e1e6ee13a2d09eda0684d0fe40e30d92bcdcc7aec6627b6c34c96179"
+  },
+  "after_sha256": {
+    "lean/InfoGeometry/Clifford/RealFockCompletedCoordinateAction.lean": "42d27f591ccae1fdbc1a27bd8b859173c9312115bee91b553db0ec6597ff0014",
+    "scratch/RealFockCompletedCoordinateAction20261024v2.md": "d9eab20383935cdf470f9e746c947770d3332ae07ddaa74399fd474aa77930fd",
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lean/InfoGeometry/Clifford/RealFockBoundedCoordinateAction.lean": "26cdb903411b5305e4f3c22cd008ff3e878204e94c318feb7f510ab78c7c4649",
+    ".lake/packages/mathlib/Mathlib/Topology/Algebra/LinearMapCompletion.lean": "74160ce4e1e6ee13a2d09eda0684d0fe40e30d92bcdcc7aec6627b6c34c96179"
+  },
+  "actual_declaration_count": 16,
+  "owner_warnings": [],
+  "dependency_warnings": "Existing upstream/package warnings retained in logs.",
+  "semantic_review": "Kepler independent v2 and native delta AA PASS.",
+  "log_sha256": {
+    "strict.log": "747443d22b8ccffb07c44835fa4a015e33c702c22548bbc3cecde756a8b81eb7",
+    "axioms.log": "a7f29dc33f6e26aa784067d1f9b5c67fb68437498ace4fc4368823371c480246",
+    "build.log": "b729ac122895bcceec31e3900677dc07c67335bec9347afc84e9c7d977cbed42"
+  }
+}

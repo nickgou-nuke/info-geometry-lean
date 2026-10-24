@@ -20,8 +20,10 @@ where the familiar conclusion stops being available.
 
 **The honest boundary.** The derivable conclusion is `2 * g x x = 0`, *not* `g x x = 0`. Over a
 ring with $2$-torsion these differ: in $\mathbb{Z}/6$ one has $2 \neq 0$ yet $2\cdot 3 = 0$.
-Recovering `g x x = 0` needs both `NoZeroDivisors` and `2 ≠ 0`
-(`sheet_self_zero_of_two_ne`), which hold automatically on a field. That is why the real
+A sufficient condition for `g x x = 0` is `NoZeroDivisors` together with
+`2 ≠ 0` (`sheet_self_zero_of_two_ne`), as in a field of characteristic other
+than two. The exact uniform condition is absence of two-torsion; see
+`FixedPairingTorsionBoundary`. That is why the real
 para-Kähler carrier is clean and why the general statement is not stronger than it is here.
 
 Note the conclusion is about the *fixed* eigenspace. For the para-Kähler form
@@ -37,8 +39,7 @@ namespace InfoGeometry.Canonical.NullEigenspace
 anti-isometry* of a bilinear form, then on the subspace it fixes pointwise every self-pairing
 satisfies `2 g(x,x) = 0` — and hence `g(x,x) = 0` whenever `2` is invertible.
 
-This is the algebraic core of "the primal and covector sheets must be Lagrangian null
-sheets": the anti-isometry `g(Kx,Ky) = -g(x,y)` and the involution `K² = id` together force
+This is the algebraic core of the conditional isotropy claim for fixed directions: the anti-isometry `g(Kx,Ky) = -g(x,y)` and the involution `K² = id` together force
 `g(x,x) = g(Kx,Kx) = -g(x,x)`.
 
 The output is deliberately `2 * g x x = 0` and not `g x x = 0`, because the inference from the
@@ -67,7 +68,9 @@ theorem sheet_self_zero_of_two_ne {F ι : Type*} [CommRing F] [NoZeroDivisors F]
   exact (mul_eq_zero.mp h).resolve_left h2
 
 /-- **Cross terms vanish too**, under symmetry: for two fixed directions `g(x,y) = -g(y,x)`,
-so `2 g(x,y) = 0`. This is what makes the sheets *Lagrangian* rather than merely null. -/
+so `2 g(x,y) = 0`. After cancellation this gives isotropy; maximal isotropy
+requires separate hypotheses. Symmetry is retained for compatibility here,
+but the localized theorem in `FixedPairingTorsionBoundary` does not need it. -/
 theorem sheet_cross_double_zero {F ι : Type*} [CommRing F]
     (g : ι → ι → F) (K : ι → ι)
     (hsymm : ∀ x y, g x y = g y x)

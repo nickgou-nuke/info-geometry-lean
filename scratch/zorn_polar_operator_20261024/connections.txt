@@ -1,0 +1,4 @@
+Existing ZornVectorMatrixExplicit carrier is definitionally shared by ZornRealRegularMultiplicationSpectralBridge.Carrier. Its leftRegular/rightRegular are reused without rebuilding lifts.
+ZornPolarizationMetricBridge.polarForm is the native Mathlib bilinear form, and fundamental supplies the test vector proving both separation directions through hilbertized_zero_iff.
+ZornPolarAdjoint evaluation identities become Mathlib IsAdjointPair for the native endomorphisms. The new uniqueness lemma applies to arbitrary endomorphism candidates only when both satisfy adjunction; it does not assert existence for arbitrary T.
+This closes operator packaging for the split-polar adjoints while preserving the separate positive Hilbertized form and octonion conjugation operations.

@@ -1,0 +1,55 @@
+{
+  "scope": "Finite-stage nontraciality propagates to the actual native represented closure vacuum state; includes arbitrary finite Gibbs seeds.",
+  "proof_author": "James",
+  "semantic_auditor": "Popper",
+  "kernel_qa": "Ampere",
+  "disposition": "ACCEPTED_WITH_LIMITED_SCOPE",
+  "result": {
+    "build": {
+      "command": [
+        "lake",
+        "build",
+        "+InfoGeometry.Canonical.FilteredGNSNontracialReadback:olean"
+      ],
+      "exit": 0
+    },
+    "axioms": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/Canonical/FilteredGNSNontracialReadback.olean"
+      ],
+      "exit": 0
+    },
+    "strict": {
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/Canonical/FilteredGNSNontracialReadback.lean",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    "stable_candidate_contract_import_and_pins": true
+  },
+  "hashes": {
+    "lean/InfoGeometry/Canonical/FilteredGNSNontracialReadback.lean": "618c2c73c5a0108ff2be3534babfa0c8def0dd0e177c4c3c0025f0bdc7531b85",
+    "lean/InfoGeometry/OperatorAlgebra/NoncommutativeRenyi.lean": "c303136e85ec9141cba45e9830cbb81cdd66f654ae7662220154f3701a87d651",
+    "lean/InfoGeometry/Canonical/FilteredGNSVacuumState.lean": "75af88e1e789cb55267c2bd82fec0ec568f3651afaa526c703c4ac8f514a0383",
+    "lean/InfoGeometry/Canonical/FiniteSeedGibbsCStarStates.lean": "c549798097822a7823a50d3451efa82d05271e85f819733e49a2406ffccd58e2",
+    "lean/InfoGeometry/Canonical/AlgebraicKMSStateColimitReadback.lean": "bbf044109f7e50eff2b9ea2c3f5f71433596277ef0c05d9d599c57e59378fb36",
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b"
+  },
+  "axiom_log": "warning: LeanCopilot: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanCopilot' has local changes\nwarning: LeanArchitect: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanArchitect' has local changes\nChecking .lake/build/lib/lean/InfoGeometry/Canonical/FilteredGNSNontracialReadback.olean\n  \u2713 all 29 declarations clean\n\n\u2713 All modules passed.\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/Canonical/FilteredGNSNontracialReadback.olean:PASS\n",
+  "exclusions": [
+    "No faithfulness assertion",
+    "No identification of raw colimit with represented closure",
+    "No analytic KMS boundary or interacting dynamics theorem"
+  ]
+}

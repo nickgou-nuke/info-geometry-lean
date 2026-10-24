@@ -1,0 +1,16 @@
+Use existing Physics.KasparovKreinData and its diracAdjoint, involution,
+and product-reversal law. Over any associative Ring with StarRing the
+adjoint carries the complement to the complement and exchanges actual
+component10/component01 at the adjointed projector. No idempotence needed
+for these polynomial transport identities.
+For full finite matrices over a commutative StarRing, a Dirac-self-adjoint
+P and a supported X, trace(X * adjoint(component10 P Y)) vanishing for
+every full matrix Y forces X=0. Likewise for component01. These use native
+Core.PeirceMatrixTracePairing opposite-corner separation and adjoint
+involution. No positivity, proper-star, field, rank, or geometry assumptions.
+
+NativeCandidate: the actual neutral frame on Matrix2 n ℝ gives existing
+KasparovKreinData. Actual Witt support a*b is idempotent and Dirac-self-adjoint
+by the signed partner laws and adjoint product reversal. Specialize the promoted
+trace separation theorem to this support and arbitrary full matrices X,Y.
+No new carrier, metric, or ordinary-adjoint substitution.

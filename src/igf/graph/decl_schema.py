@@ -120,6 +120,8 @@ def term_digest(term: Term) -> TermDigest:
         is_open = False
         if kind == "bvar":
             body = head + bytes([TAGS["bvar"]]) + _nat(t[1])
+        elif kind == "fvar" and len(t) == 2 and isinstance(t[1], int):
+            body, is_open = head + bytes([TAGS["fvar"], 0x01]) + _nat(t[1]), False
         elif kind in ("fvar", "mvar"):
             body, is_open = head + bytes([TAGS[kind]]), True
         elif kind == "sort":

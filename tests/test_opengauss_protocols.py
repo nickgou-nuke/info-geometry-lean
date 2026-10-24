@@ -1652,3 +1652,48 @@ def test_qms_source_gate_rejects_kernel_placeholder_proof_terms():
         code = f"theorem fake : True := ({term} : True)"
         violations = check_authored_axioms_and_holes(code)
         assert [v.trap_id for v in violations] == ["QMS_HOLE"]
+
+
+def test_t4_rejects_underscore_silenced_and_noop_discarded_hypothesis_binders():
+    for snippet in (
+        "theorem silenced_underscore (_hM : P) (x : Nat) : x = x := by rfl",
+        "theorem discarded_let (hM : P) (x : Nat) : x = x := by\n  let _ := hM\n  rfl",
+        "theorem discarded_have (hM : P) (x : Nat) : x = x := by\n  have _ : P := hM\n  rfl",
+        "theorem discarded_self (hM : P) (x : Nat) : x = x := by\n  have hM := hM\n  rfl",
+        "theorem discarded_clear (hM : P) (x : Nat) : x = x := by\n  clear hM\n  rfl",
+    ):
+        t4 = [
+            v for v in screen_lean_content(snippet)
+            if v.trap_id == "T4" and "unused hypothesis binder" in v.message
+        ]
+        assert len(t4) == 1, snippet
+        assert t4[0].severity == "ERROR", snippet
+
+
+def test_t4_rejects_non_h_named_reflexive_quantified_binder():
+    code = """
+    theorem non_h_reflexive_binder {X : Type} (f : X → Nat)
+        (refl_cond : ∀ x, f x = f x) : True := by
+      trivial
+    """
+    t4 = [v for v in screen_lean_content(code) if v.trap_id == "T4"]
+    assert len(t4) == 1
+    assert t4[0].severity == "ERROR"
+    assert "reflexive" in t4[0].message
+
+
+def test_t6_detects_tactic_packaged_identical_hypothesis():
+    for proof_body in (
+        "by apply h",
+        "by refine h",
+        "by simpa using h",
+        "by simp [h]",
+        "by assumption",
+        "by rwa [add_zero]",
+        "(h)",
+        "id h",
+    ):
+        code = f"theorem packaged (P : Prop) (h : P) : P := {proof_body}\n"
+        t6 = [v for v in screen_lean_content(code) if v.trap_id == "T6"]
+        assert len(t6) == 1, proof_body
+        assert t6[0].severity == "ERROR"

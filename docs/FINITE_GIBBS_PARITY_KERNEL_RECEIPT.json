@@ -1,0 +1,49 @@
+{
+  "scope": "FiniteMatrixGibbsParity native owner only; no aggregate, analytic KMS, or continuum acceptance",
+  "semantic_auditor": "Popper",
+  "kernel_qa": "Ampere",
+  "proof_author": "James; parent promotion header only",
+  "disposition": "ACCEPTED_WITH_LIMITED_SCOPE",
+  "result": {
+    "build": {
+      "command": [
+        "lake",
+        "build",
+        "+InfoGeometry.Canonical.FiniteMatrixGibbsParity:olean"
+      ],
+      "exit": 0
+    },
+    "axioms": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/Canonical/FiniteMatrixGibbsParity.olean"
+      ],
+      "exit": 0
+    },
+    "strict": {
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/Canonical/FiniteMatrixGibbsParity.lean",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    "stable_candidate_contract_import_and_pins": true
+  },
+  "hashes": {
+    "lean/InfoGeometry/Canonical/FiniteMatrixGibbsParity.lean": "00680b45bec9b7fce6dbf221fa6acf8dfdaaa3033194e960f889efb50806ba80",
+    "lean/InfoGeometry/Canonical/FiniteMatrixGibbsFunctional.lean": "49abd537aa7af6fcaa2dfb9e71dbaca6296fb323c82f58a60d760cd94322b12d",
+    "lean/InfoGeometry/Physics/KleinBottleSewingExact.lean": "c335dfc0dfcca135829ec6eef30ac92257c0cbe7771cb1d71059772bb634f932",
+    ".lake/packages/mathlib/Mathlib/Analysis/CStarAlgebra/ContinuousFunctionalCalculus/Commute.lean": "af7b85224810678188adef788349359680bf740f5aae726156656a967b3ea6aa",
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b"
+  },
+  "axiom_log": "warning: LeanCopilot: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanCopilot' has local changes\nwarning: LeanArchitect: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanArchitect' has local changes\nChecking .lake/build/lib/lean/InfoGeometry/Canonical/FiniteMatrixGibbsParity.olean\n  \u2713 all 6 declarations clean\n\n\u2713 All modules passed.\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/Canonical/FiniteMatrixGibbsParity.olean:PASS\n"
+}

@@ -1,0 +1,5 @@
+Reuse SpinorialCore.Krein.pairing and metricDual on actual Fin2xFin2 complex vectors.
+Generic matrix pullback and anti-isometry law, then instantiate actual
+KitaevConcreteBoundary.twoSiteKreinData and leftEndpoint.
+Fixed vectors are metric-null. They are not thereby zero (indefinite metric).
+No ordinary-Hilbert norm, Pin, GFT or emergent-spacetime theorem is inferred.

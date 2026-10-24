@@ -1,0 +1,7 @@
+Full kernel of the actual sparse Fin(2*N) chain coefficient matrix.
+Import Canonical.KitaevChainCoefficients; reuse bondLeft, bondRight and
+chainCoefficientMatrix without a duplicate carrier or surrogate matrix.
+Prove its coordinate action at every bond and zero action at both endpoints.
+For t nonzero, kernel iff both coordinates of every interior bond vanish.
+For N positive this is equivalent to every strictly interior coordinate vanishing.
+No state-space Hamiltonian-kernel or Pfaffian phase claim. No builds by child.

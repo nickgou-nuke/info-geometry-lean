@@ -1,0 +1,10 @@
+Three new owners, 14 audited declarations (2 definitions, 12 theorems).
+Parent locked builds terminal0: /tmp/stream-six-accepted-build.log (9216 jobs); final hyperbolic witness-import/rename build55957 /tmp/stream-six-witness-build.log (8963 jobs).
+KitaevCommutatorTransport earlier build repaired explicit map_mul homomorphism; final no warnings. PeirceRotorAction concurrent movingMinus_eq_swapped compiler failure was repaired, then concurrent owner changed to equivalent explicit simp; final dependency compiled. No dependency pins/cache altered.
+A-A /root/zorn_semantic_audit final semantic PASS, including correction from arbitrary-parameter conjugation to supported boost sandwich.
+QA-A /root/zorn_acceptance ACCEPTED all14; independent locked audit22024 exit0 /tmp/stream-six-qa.log. Standard axiom subsets only. No errors/sorryAx.
+Strict screening0, refactor[] each, scoped staged whitespace clean.
+SHA KitaevCommutatorTransport 89bd1312f316c439d495e01a5ce469c61c9f83861e3aa5edef118f04c30b7e8b
+SHA PeirceHyperbolicOrbit 723ef9581d3c146bbc66818a538b35de7c156090e4abafb3a11ef2d3a663004c
+SHA PeirceRotorDiagonalWeight 9bb383cdeafa5c068b752bef6ec82cbb06852ec1a8debc8038779057ff776c15
+Boundaries: actual active-corner homomorphism, no fullsupport assumption, positivity, spacetime metric, normalized thermal state or analyticKMS claim. Complementary hyperbolic orbit and ambient boost-unit packaging remain outside this batch.

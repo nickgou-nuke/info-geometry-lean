@@ -1,0 +1,16 @@
+Ground-truth contract: arbitrary finite sweet-spot coefficient bridge.
+Reuse Canonical.MajoranaCoefficientAction.quadraticElement and its faithful
+linearCombination commutator/kernel theorem; reuse the actual noncommutative
+KitaevChainMajoranaZeroModes.kitaevSweetSpotHamiltonian bond sum.
+For N arbitrary and real t, construct K_N on Fin(2*N) by summing directed
+Matrix.single bonds (2j+1,2j+2) with coefficients +2t and -2t.
+Prove skew symmetry, exact quarter-normalized quadraticElement equality to
+the existing chain with coefficient t smul 1, and its conserved-span/kernel iff.
+Ring A and Algebra real A suffice for normalization; Nontrivial A is required
+only for the faithful conserved-span iff. CAR is the existing IsMajoranaBasis.
+No state-space zero-mode identification, general Pfaffian sign, bulk-boundary
+topological classification, continuum limit, or endpoint completeness claimed.
+Search covered native chain, CARMajoranaFiniteBridge, CARMajoranaOwnerAdapters,
+MajoranaCoefficientAction, Quantum.KitaevChain, FiniteMajoranaPerfectMatching,
+and ProjectivePfaffianDeterminantCounts. Both-endpoint commutation already exists.
+Sandbox only. Parent owns compilation, independent review, and live promotion.

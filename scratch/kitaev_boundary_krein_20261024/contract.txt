@@ -1,0 +1,8 @@
+Conditional native boundary Dirac-pair metric compatibility.
+Use existing KitaevBoundaryDiracPair operators and Physics.KasparovKreinData
+diracAdjoint, with Ring A, StarRing A, Algebra complex A, StarModule complex A.
+Negative endpoint Dirac signs imply d#=-B and B#=-d. Positive endpoint signs
+imply d#=B and B#=d. Reuse ReflexiveMatrixDirac.pairMatrixLinear_dirac for the
+actual native pair and the existing split source metric. These metric hypotheses
+are explicit, not asserted for the concrete chain, and # is not ordinary star.
+No positivity, Moore-Penrose, or metric-unitarity claim. Sandbox only, no builds.

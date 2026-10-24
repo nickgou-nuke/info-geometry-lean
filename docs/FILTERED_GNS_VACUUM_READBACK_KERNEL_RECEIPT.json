@@ -1,0 +1,49 @@
+{
+  "scope": "Generic filtered GNS vacuum normalization, stage readback and continuous functional on represented closure; no analytic KMS claim",
+  "proof_author": "James",
+  "semantic_auditor": "Popper",
+  "kernel_qa": "Ampere",
+  "disposition": "ACCEPTED_WITH_LIMITED_SCOPE",
+  "result": {
+    "build": {
+      "command": [
+        "lake",
+        "build",
+        "+InfoGeometry.Canonical.FilteredGNSVacuumReadback:olean"
+      ],
+      "exit": 0
+    },
+    "axioms": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/Canonical/FilteredGNSVacuumReadback.olean"
+      ],
+      "exit": 0
+    },
+    "strict": {
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/Canonical/FilteredGNSVacuumReadback.lean",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    "stable_candidate_contract_import_and_pins": true
+  },
+  "hashes": {
+    "lean/InfoGeometry/Canonical/FilteredGNSVacuumReadback.lean": "b1ce1a6b633eba24de277b90e13a8c010d5321599f754f549eaad8337f321d1b",
+    "lean/InfoGeometry/Canonical/FilteredGNSRepresentedCStarClosure.lean": "c37c36415bffda27c186dee09d6ac00af2224cd5c2db6adda07c574d2ded12f9",
+    "lean/InfoGeometry/OperatorAlgebra/PositiveLinearMapGNSVacuum.lean": "8dbc5d5e6a889ecf9d1d5b3c62005d3303408bc7e456c41232876c0fcf749ca9",
+    ".lake/packages/mathlib/Mathlib/Analysis/InnerProductSpace/Positive.lean": "7c451eca316c4a4b315258bba9090585fffae97589b48a12c3f9df28859eedbb",
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b"
+  },
+  "axiom_log": "warning: LeanCopilot: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanCopilot' has local changes\nwarning: LeanArchitect: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanArchitect' has local changes\nChecking .lake/build/lib/lean/InfoGeometry/Canonical/FilteredGNSVacuumReadback.olean\n  \u2713 all 36 declarations clean\n\n\u2713 All modules passed.\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/Canonical/FilteredGNSVacuumReadback.olean:PASS\n"
+}

@@ -1,0 +1,9 @@
+Owner: lean/InfoGeometry/Canonical/KitaevRotorCommutator.lean
+SHA256 1c9c64e0f6c8126f01dbfb2820ebd40ea311979ab10af88b49e95d65d512513a
+One definition, four theorems. Native ChainOp=Matrix(Fin2×Fin2)(Fin2×Fin2)ℂ, constructed Krein adjoint.
+Initial compile failed on ambiguous ChainOp. Repaired with existing CARMajoranaFiniteBridge namespace import/open; no theorem weakening.
+Final locked build60657 terminal exit0, 9199jobs, /tmp/kitaev-rotor-commutator-final-build.log; no new owner warnings (dependency warnings present).
+A-A /root/zorn_semantic_audit final semantic PASS including carrier repair.
+QA-A /root/zorn_acceptance independent locked audit78653 exit0, /tmp/kitaev-rotor-commutator-qa.log; all5 declarations only propext, Classical.choice, Quot.sound. Source/scope PASS.
+Strict screener zero traps; refactor []; scoped staged diffcheck clean.
+No positive-norm or topological classification claim. General commutator formulas require no circle condition. Concrete real 3/5,4/5 yields Dirac trace -576/625.

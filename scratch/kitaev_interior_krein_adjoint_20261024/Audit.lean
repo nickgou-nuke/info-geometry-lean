@@ -1,0 +1,8 @@
+import InfoGeometry.Canonical.KitaevInteriorKrein
+#print axioms InfoGeometry.Canonical.KitaevInteriorKrein.interiorRelative
+#print axioms InfoGeometry.Canonical.KitaevInteriorKrein.interiorRelative_eq_grading
+#print axioms InfoGeometry.Canonical.KitaevInteriorKrein.interiorRelative_sq
+#print axioms InfoGeometry.Canonical.KitaevInteriorKrein.interiorRelative_exchange
+#print axioms InfoGeometry.Canonical.KitaevInteriorKrein.twoSite_interiorRelative_ne_zero
+#print axioms InfoGeometry.Canonical.KitaevInteriorKrein.chain_interior_sq
+#print axioms InfoGeometry.Canonical.KitaevInteriorKrein.chain_interior_krein_fixed

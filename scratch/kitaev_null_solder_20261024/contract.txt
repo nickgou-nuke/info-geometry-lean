@@ -1,0 +1,6 @@
+Connect existing Dirac solder nullity to genuine nonzero operators.
+Generic involutive complex matrix J: nonzero x,y imply solder J x y nonzero.
+Native endpoint-fixed nonzero spinor gives nonzero squarezero Dirac-selfadjoint
+solder. Discharge vector assumptions concretely with allones on Fin2xFin2,
+using actual twoSiteOperators leftendpoint and actual twoSiteKreinData.
+No ordinary positive Hilbert selfadjointness, exact rank or physical claims.

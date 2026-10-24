@@ -1,0 +1,53 @@
+{
+  "scope": "Native tracial GNS opposite right composition, left/right commutation, right adjoints, and actual commutator L_H-R_H, self-adjoint for self-adjoint H with norm at most 2 norm H.",
+  "proof_author": "James",
+  "semantic_auditor": "Popper",
+  "kernel_qa": "Ampere",
+  "disposition": "ACCEPTED_WITH_LIMITED_SCOPE",
+  "result": {
+    "build": {
+      "command": [
+        "lake",
+        "build",
+        "+InfoGeometry.OperatorAlgebra.TracialGNSCommutator:olean"
+      ],
+      "exit": 0
+    },
+    "axioms": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/OperatorAlgebra/TracialGNSCommutator.olean"
+      ],
+      "exit": 0
+    },
+    "strict": {
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/OperatorAlgebra/TracialGNSCommutator.lean",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    "stable_candidate_contract_import_and_pins": true
+  },
+  "hashes": {
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lean/InfoGeometry/OperatorAlgebra/TracialGNSRightMultiplication.lean": "df672b36e0835f8560ee9e3be4e509fa50082358f7469896d9d3facb7a87e474",
+    ".lake/packages/mathlib/Mathlib/Analysis/CStarAlgebra/Spectrum.lean": "2ce06bcdcb0b12bf12f117c4761e10dd1ecb0fa35d2b939dfe0bf9c2ac6bd078",
+    "lean/InfoGeometry/OperatorAlgebra/TracialGNSCommutator.lean": "b1b2ce1db36ed84ff65b2d1d08b5af21ea42cbf2af2d16ac6659722bca600851"
+  },
+  "axiom_log": "warning: LeanCopilot: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanCopilot' has local changes\nwarning: LeanArchitect: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanArchitect' has local changes\nChecking .lake/build/lib/lean/InfoGeometry/OperatorAlgebra/TracialGNSCommutator.olean\n  \u2713 all 20 declarations clean\n\n\u2713 All modules passed.\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/OperatorAlgebra/TracialGNSCommutator.olean:PASS\n",
+  "exclusions": [
+    "No growing compatible operator family constructed",
+    "No uniform summability bound across stages constructed",
+    "No coupled interacting Dirac or analytic KMS theorem"
+  ]
+}

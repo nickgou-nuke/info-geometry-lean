@@ -1,0 +1,55 @@
+{
+  "scope": "Native algebra-map transport of Stream5 rotors and Stream3 weights through existing Cuntz matrix algebraic colimit injections, with actual trace readback and transition compatibility.",
+  "proof_author": "Parent Codex",
+  "semantic_auditor": "Popper",
+  "kernel_qa": "Ampere",
+  "disposition": "ACCEPTED_WITH_LIMITED_SCOPE",
+  "result": {
+    "build": {
+      "command": [
+        "lake",
+        "build",
+        "+InfoGeometry.Canonical.RotorColimitTransport:olean"
+      ],
+      "exit": 0
+    },
+    "axioms": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/Canonical/RotorColimitTransport.olean"
+      ],
+      "exit": 0
+    },
+    "strict": {
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/Canonical/RotorColimitTransport.lean",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    "stable_candidate_contract_import_and_pins": true
+  },
+  "hashes": {
+    "lean/InfoGeometry/Canonical/RotorColimitTransport.lean": "dfa23144422088958b8b35b19d3adfacbb9051cac0180803cc631f21cc554308",
+    "scratch/RotorColimitTransport20261024.md": "cfb67e0bbfd0206369471bdbdbc47ef95bf7842bc2a189784ddd5232901d683c",
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lean/InfoGeometry/Canonical/DeBruijnRotorAlternationCycle.lean": "cb4512c763d796ca201863f77fcb5e084d256839a8f2a8c5230ea2c679c76df5",
+    "lean/InfoGeometry/Canonical/UnifiedGeometryOperatorSignificance.lean": "28029a0823281fb0d080df49b1204cf119f23795eb8c6d6e311fd929235b7803",
+    "lean/InfoGeometry/Canonical/CuntzMatrixAlgebraicTraceFunctional.lean": "6364d061396c64a956b16500354dc67e4e6de992e9859a1460dd31cdba4f406c"
+  },
+  "axiom_log": "warning: LeanCopilot: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanCopilot' has local changes\nwarning: LeanArchitect: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanArchitect' has local changes\nChecking .lake/build/lib/lean/InfoGeometry/Canonical/RotorColimitTransport.olean\n  \u2713 all 21 declarations clean\n\n\u2713 All modules passed.\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/Canonical/RotorColimitTransport.olean:PASS\n",
+  "exclusions": [
+    "No completed C*-algebra or analytic KMS claim",
+    "No new colimit carrier or injectivity assumption",
+    "No topology transported by an algebraic map"
+  ]
+}

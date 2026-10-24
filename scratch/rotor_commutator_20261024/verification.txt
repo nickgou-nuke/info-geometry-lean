@@ -1,0 +1,10 @@
+Six theorem additions accepted: three rotor commutator results and three Zorn transported adjoint trace results.
+Parent locked builds: /tmp/rotor-commutator-build.log exit 0 (9306 jobs); /tmp/zorn-adjoint-trace-transport-final-build.log exit 0 (8977 jobs).
+A-A: /root/zorn_semantic_audit semantic PASS exact six final declarations.
+QA-A: /root/zorn_acceptance ACCEPTED; independent locked Audit.lean session 98585 terminal exit 0, /tmp/rotor-commutator-qa.log.
+Axioms: rotor three [propext, Quot.sound]; Zorn three [propext, Classical.choice, Quot.sound].
+Strict screener zero traps all three owner files; per-file refactor [] all three; scoped staged diff check clean.
+No circle hypothesis needed for commutator formulas. No positivity, metric, or adjoint unitarity inferred. Zorn trace uses actual transported split-polar form.
+SHA256 ZornAdjointTraceTransport cc6c3f117ea16af64007c62c9bbc717f3b6f6449981f6eb743fcf86da5dfcf0e
+SHA256 PeirceRotorChordal 0263dd0bf868973da5c50ee433ec737f7be5c40da4fcad44b22ca032529033f0
+SHA256 FiveStreamRotorChordal 9db4d22738a03c0256c257ed9be463f06fff502010a647e6b46dc7ab4e3d5560

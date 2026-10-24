@@ -1,0 +1,10 @@
+Transport full-matrix Dirac trace pairing by existing metric_adjoint_change_basis
+under T*S=1. Transport both existing Peirce components under mutually inverse
+S,T, including their complementary factors. Transport the equation ξ*Pᴴ*η=P
+to the actual changed metric η'=TᴴηT and inverse candidate ξ'=SξSᴴ.
+Core Peirce components and CliffordWeyl DiracMetricCovariance remain owners;
+DiracPeircePerfectPairing supplies contextual real perfect-pairing interface.
+The polynomial covariance statements hold over arbitrary CommRing+StarRing.
+No transformed-metric involutivity, positivity, or geometric identification.
+If ηξ=ξη=1, existing transported_metric_inverse/left_inverse certify the
+transported inverse; covariance itself requires no additional metric laws.

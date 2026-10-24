@@ -1,0 +1,6 @@
+import InfoGeometry.Canonical.Cl11PeirceWeightTrace
+open InfoGeometry.Canonical.Cl11PeirceWeightTrace
+#print axioms stageTracialFunctional
+#print axioms weighted_readback
+#print axioms weighted_successor
+#print axioms weighted_boundary_readback

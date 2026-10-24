@@ -1,0 +1,8 @@
+Existing ConcreteKitaevBdGMatrix.kitaevSweetSpot4 t on Fin4→ℂ, with t≠0:
+kernel vectors exactly v0•majoranaZeroModeLeft + v1•majoranaZeroModeRight.
+Use actual particleHole4 metric and SpinorBilinearSoldering.solder to form
+P0=−(1/2) solder(left,left)+(1/2) solder(right,right).
+Prove full 4x4 projector, neutral metric selfadjunction, and fixed vectors
+exactly the existing Hamiltonian kernel. No bulk Pfaffian identification,
+no general-N claim, no new carrier, no positive-inner-product substitution.
+Candidate only; parent owns serialized compilation and promotion.

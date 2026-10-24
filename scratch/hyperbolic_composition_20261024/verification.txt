@@ -1,0 +1,7 @@
+Owner PeirceHyperbolicComposition.lean, one native MonoidHom definition and four theorems.
+SHA256 55d97a5f509928f81b679e589fe892b0ff78c4d1cc5bde6cf3e29fbcec821120
+Final locked build33132 exit0 /tmp/hyperbolic-composition-final-build.log 8966jobs noownerwarnings.
+A-A /root/zorn_semantic_audit semanticPASS all5 final declarations.
+QA-A /root/zorn_acceptance ACCEPTED: locked audit38632 exit0 /tmp/hyperbolic-composition-qa.log. Scalar norm_comp propext/Quot.sound; remaining4 propext/Classical.choice/Quot.sound only. No errors/sorryAx.
+Strictscreen0,refactor[],scoped stageddiffclean.
+Actual native grouprepresentation, normalized unitmul/inverse, projectionorbitcomposition. No faithfulness, positivity, analytical rapidity or classification claims.

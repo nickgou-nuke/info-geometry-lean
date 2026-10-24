@@ -1,0 +1,8 @@
+KitaevHyperbolicDirac.lean: native unit definition + four theorems.
+SHA25603a63a3a13814182e4e498d8505d42efd57942926dc91868be9fc4281c9b7cdd
+Parent final locked build14679 exit0 /tmp/kitaev-hyperbolic-dirac-final-kernel.log, 9201jobs no ownerwarnings.
+Initial compiler repairs exposed concrete metric, identical matrix representation, and starRingEnd scalar equalities; no theorem assumptions changed.
+A-A /root/zorn_semantic_audit exactfinal semanticPASS.
+QA-A /root/zorn_acceptance ACCEPTED all5; independent locked audit47301 exit0 /tmp/kitaev-hyperbolic-dirac-qa.log. All5 axioms [propext,Classical.choice,Quot.sound].
+Strictscreen0/refactor[]/scoped stageddiffclean.
+Actual two-site ChainOp and fixed constructed metric. Normalized starfixed boosts have Dirac adjoint=actualinverse. Polynomial hyperbolicPlus #fixed for starfixedparams; idempotence still separately normalized. No ordinary Hilbertunitarity asserted.

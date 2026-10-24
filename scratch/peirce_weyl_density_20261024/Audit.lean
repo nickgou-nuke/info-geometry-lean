@@ -1,0 +1,8 @@
+import InfoGeometry.Canonical.ZornNullWeylDensity
+#print axioms InfoGeometry.Canonical.PeirceWeylDensityTransport.weyl_conjugates_weight
+#check InfoGeometry.Canonical.PeirceWeylDensityTransport.weyl_conjugates_weight
+#print axioms InfoGeometry.Canonical.PeirceWeylDensityTransport.weyl_weight_pullback
+#check InfoGeometry.Canonical.PeirceWeylDensityTransport.weyl_weight_pullback
+#print axioms InfoGeometry.Canonical.PeirceWeylDensityTransport.weyl_weight_joint_covariance
+#check InfoGeometry.Canonical.PeirceWeylDensityTransport.weyl_weight_joint_covariance
+#print axioms InfoGeometry.Canonical.ZornNullWeylDensity.nullPair_weyl_weight_covariance

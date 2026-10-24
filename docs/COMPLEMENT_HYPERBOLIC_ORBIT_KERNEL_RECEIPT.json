@@ -1,0 +1,78 @@
+{
+  "disposition": "ACCEPTED_WITH_LIMITED_SCOPE",
+  "intended_repository_path": "docs/COMPLEMENT_HYPERBOLIC_ORBIT_KERNEL_RECEIPT.json",
+  "owner": "lean/InfoGeometry/Canonical/ComplementHyperbolicOrbit.lean",
+  "session_id": 28339,
+  "evidence_directory": "/tmp/qa-a-hyperbolic-live-amv40z9r",
+  "commands_and_results": {
+    "build": {
+      "command": [
+        "lake",
+        "build",
+        "+InfoGeometry.Canonical.ComplementHyperbolicOrbit:olean"
+      ],
+      "exit": 0
+    },
+    "axioms": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/Canonical/ComplementHyperbolicOrbit.olean"
+      ],
+      "exit": 0
+    },
+    "strict": {
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/Canonical/ComplementHyperbolicOrbit.lean",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    "stable_candidate_contract_import_and_pins": true
+  },
+  "before_sha256": {
+    "lean/InfoGeometry/Canonical/ComplementHyperbolicOrbit.lean": "8e42e1a0443b4c9c767dc19866ff0fda26ebe516e3ec108edf656e4aa50aaf14",
+    "scratch/ComplementHyperbolicOrbit20261024v3.md": "b10079a8f7f4b2c28d427878fbe40cfce5c7b61e25402d17a89f0f00d2c3fd3a",
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lean/InfoGeometry/Canonical/DeBruijnRotorAlternationCycle.lean": "535ad1e694277b5c62fbe04f079048500a93690ae3d67172ad073b271dc608c8",
+    "lean/InfoGeometry/Canonical/ReflexiveNilpotentFlows.lean": "40c319d2ee5297e756a25d597118a49f7f65c95bdf8ca9bf4b0d5d064825310a",
+    "lean/InfoGeometry/Canonical/UnifiedGeometryOperatorSignificance.lean": "28029a0823281fb0d080df49b1204cf119f23795eb8c6d6e311fd929235b7803"
+  },
+  "after_sha256": {
+    "lean/InfoGeometry/Canonical/ComplementHyperbolicOrbit.lean": "8e42e1a0443b4c9c767dc19866ff0fda26ebe516e3ec108edf656e4aa50aaf14",
+    "scratch/ComplementHyperbolicOrbit20261024v3.md": "b10079a8f7f4b2c28d427878fbe40cfce5c7b61e25402d17a89f0f00d2c3fd3a",
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lean/InfoGeometry/Canonical/DeBruijnRotorAlternationCycle.lean": "535ad1e694277b5c62fbe04f079048500a93690ae3d67172ad073b271dc608c8",
+    "lean/InfoGeometry/Canonical/ReflexiveNilpotentFlows.lean": "40c319d2ee5297e756a25d597118a49f7f65c95bdf8ca9bf4b0d5d064825310a",
+    "lean/InfoGeometry/Canonical/UnifiedGeometryOperatorSignificance.lean": "28029a0823281fb0d080df49b1204cf119f23795eb8c6d6e311fd929235b7803"
+  },
+  "actual_declaration_count": 38,
+  "axiom_audit": "all actual declarations passed repository allowlist",
+  "strict": {
+    "violations": {},
+    "quarantined_packets": []
+  },
+  "owner_warnings": [],
+  "dependency_warnings": "Existing upstream/package warnings retained in build.log; LeanCopilot and LeanArchitect local-change notices in axiom log.",
+  "build_summary": [
+    "Build completed successfully (9283 jobs)."
+  ],
+  "scope": "Exact native ComplementHyperbolicOrbit owner; no aggregate or global geometric acceptance.",
+  "no_source_edits": true,
+  "lock_released": true,
+  "log_sha256": {
+    "build.log": "34b2d73303f6f862f83cb81e24aee70258e9e55794a1c10c7a4a9f9c6444df41",
+    "axioms.log": "a6bd6768e6a52c905e0190a63967c27e301222b6a75488c2c2e3d7e45841c5f9",
+    "strict.log": "747443d22b8ccffb07c44835fa4a015e33c702c22548bbc3cecde756a8b81eb7"
+  }
+}

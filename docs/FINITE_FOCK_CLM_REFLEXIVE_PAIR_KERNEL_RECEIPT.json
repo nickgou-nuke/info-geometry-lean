@@ -1,0 +1,56 @@
+{
+  "scope": "Actual coordinate creation and contraction continuous linear maps satisfy square-zero, positive CAR and derived reflexivity, supplying the existing Stream4 and Stream5 pair interfaces.",
+  "proof_author": "Kepler",
+  "semantic_auditor": "Popper",
+  "kernel_qa": "Ampere",
+  "disposition": "ACCEPTED_WITH_LIMITED_SCOPE",
+  "result": {
+    "build": {
+      "command": [
+        "lake",
+        "build",
+        "+InfoGeometry.Clifford.FiniteFockCLMReflexivePair:olean"
+      ],
+      "exit": 0
+    },
+    "axioms": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/Clifford/FiniteFockCLMReflexivePair.olean"
+      ],
+      "exit": 0
+    },
+    "strict": {
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/Clifford/FiniteFockCLMReflexivePair.lean",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    "stable_candidate_contract_import_and_pins": true
+  },
+  "hashes": {
+    "lean/InfoGeometry/Clifford/FiniteFockCLMReflexivePair.lean": "f9b1142a7a24640d499b15449561c133480d23a5b402700b8a37f79aa8502cff",
+    "scratch/FiniteFockRotorShearImplementation20261024.md": "f46534502db820b65952cbc5642a3775af18ac1176e07425e1f55cff35888a5a",
+    "scratch/FiniteFockFiveStreamRealization20261024.md": "28f90d55c46db8ffc05d1397f9c21e06804e924c312a4e1a37232dd29c6f62de",
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lean/InfoGeometry/Clifford/FiniteRealFockNormBounds.lean": "4a5382ad9dc1f7667f3703babafa498a8099969564e12005562d1631bf806570",
+    "lean/InfoGeometry/Canonical/DeBruijnRotorAlternationCycle.lean": "cb4512c763d796ca201863f77fcb5e084d256839a8f2a8c5230ea2c679c76df5",
+    "lean/InfoGeometry/Canonical/ModularParabolicCyclotomicSynthesis.lean": "f8225e845698b06c358ba2a3f10697d10a19519a1fe9e9e3d789d68b919aefb8"
+  },
+  "axiom_log": "warning: LeanCopilot: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanCopilot' has local changes\nwarning: LeanArchitect: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanArchitect' has local changes\nChecking .lake/build/lib/lean/InfoGeometry/Clifford/FiniteFockCLMReflexivePair.olean\n  \u2713 all 7 declarations clean\n\n\u2713 All modules passed.\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/Clifford/FiniteFockCLMReflexivePair.olean:PASS\n",
+  "exclusions": [
+    "No assumed CAR or reflexivity fields",
+    "No completed infinite Fock space",
+    "Coordinate vacancy is not the full multimode vacuum"
+  ]
+}

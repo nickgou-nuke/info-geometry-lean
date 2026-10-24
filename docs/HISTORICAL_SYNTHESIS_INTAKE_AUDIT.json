@@ -1,0 +1,186 @@
+{
+  "scope": "Mathematical intake audit of user HistoricalSynthesisRevivalMaster proposal; no historical-priority assessment",
+  "disposition": "DO_NOT_PROMOTE_GRAND_THEOREM_AS_STATED",
+  "independent_source_auditors": [
+    "James",
+    "Popper"
+  ],
+  "independent_kernel_qa": "Ampere",
+  "claims": [
+    {
+      "claim": "Jordan associator T,X,S equals [[T,S],X]",
+      "classification": "REFUTED_AS_UNIVERSAL_IDENTITY",
+      "correction": "For x circle y = xy+yx, associator(T,X,S) = [X,[T,S]] = [[S,T],X].",
+      "owner": "lean/InfoGeometry/Core/JordanAssociatorRing.lean",
+      "declarations": [
+        "symm_associator_eq_double_commutator",
+        "symm_operator_commutator",
+        "symm_operator_reversed_bracket_iff"
+      ]
+    },
+    {
+      "claim": "Commutation of X,D establishes nilpotency of X-XDX",
+      "classification": "INSUFFICIENT_HYPOTHESES",
+      "correction": "Commutation permits the factorization. The native nilpotency theorem assumes all IsDrazinInverse laws, including DXD=D and the power law.",
+      "owner": "lean/InfoGeometry/Canonical/Drazin.lean",
+      "declarations": [
+        "IsDrazinInverse",
+        "IsDrazinInverse.fittingNilpotentPart_pow_succ_eq_zero"
+      ]
+    },
+    {
+      "claim": "The raw six CAR odd operators yield faithful gl(3|1) closure",
+      "classification": "REFUTED_FOR_SPECIFIED_ODD_IMAGE",
+      "correction": "No injective linear homogeneous-bracket-preserving map can send the entire gl(3|1) odd component into the native CAR oddPart. Other odd images are not excluded.",
+      "owner": "lean/InfoGeometry/Algebra/ZornColorGL31Obstruction.lean",
+      "declarations": [
+        "not_faithful_gl31_with_CAR_odd"
+      ]
+    },
+    {
+      "claim": "The full seven-generator Clifford algebra embeds through the native left action",
+      "classification": "REFUTED_FOR_NATIVE_ACTION",
+      "correction": "The real source has dimension128 and its endomorphism target dimension64; the native full action is not injective. This does not contradict the generator map or a quotient representation.",
+      "owner": "lean/InfoGeometry/Lie/SplitOctonionCliffordNoninjective.lean",
+      "declarations": [
+        "leftClifford_finrank",
+        "canonicalZornEnd_finrank",
+        "splitOctonionLeftCliffordRepresentation_not_injective"
+      ]
+    },
+    {
+      "claim": "The octonion associator is a Nambu/Filippov bracket",
+      "classification": "REFUTED_IF_FILIPPOV_IDENTITY_IS_INTENDED",
+      "correction": "The real native associator fails the ternary fundamental identity, with explicit defect 4 U2. Alternation and the left-multiplication defect identity do not imply that identity.",
+      "owner": "lean/InfoGeometry/Algebra/ZornAssociatorFilippovObstruction.lean",
+      "declarations": [
+        "associatorFilippovDefect_UUUVV",
+        "associator_not_filippov_real"
+      ]
+    }
+  ],
+  "unestablished": [
+    "Historical claims that programs were lost, stalled, or never noticed these bridges",
+    "Identification of general associative Jordan-envelope identities with exceptional F4/E6 Lie algebras",
+    "Analytic KMS completion or interacting thermodynamic-limit dynamics"
+  ],
+  "result": {
+    "build": {
+      "command": [
+        "lake",
+        "build",
+        "+InfoGeometry.Core.JordanAssociatorRing:olean",
+        "+InfoGeometry.Canonical.Drazin:olean",
+        "+InfoGeometry.Algebra.ZornColorGL31Obstruction:olean",
+        "+InfoGeometry.Lie.SplitOctonionCliffordNoninjective:olean",
+        "+InfoGeometry.Algebra.ZornAssociatorFilippovObstruction:olean"
+      ],
+      "exit": 0
+    },
+    "axioms-JordanAssociatorRing": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/Core/JordanAssociatorRing.olean"
+      ],
+      "exit": 0
+    },
+    "axioms-Drazin": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/Canonical/Drazin.olean"
+      ],
+      "exit": 0
+    },
+    "axioms-ZornColorGL31Obstruction": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/Algebra/ZornColorGL31Obstruction.olean"
+      ],
+      "exit": 0
+    },
+    "axioms-SplitOctonionCliffordNoninjective": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/Lie/SplitOctonionCliffordNoninjective.olean"
+      ],
+      "exit": 0
+    },
+    "axioms-ZornAssociatorFilippovObstruction": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/Algebra/ZornAssociatorFilippovObstruction.olean"
+      ],
+      "exit": 0
+    },
+    "strict": {
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/Core/JordanAssociatorRing.lean",
+        "lean/InfoGeometry/Canonical/Drazin.lean",
+        "lean/InfoGeometry/Algebra/ZornColorGL31Obstruction.lean",
+        "lean/InfoGeometry/Lie/SplitOctonionCliffordNoninjective.lean",
+        "lean/InfoGeometry/Algebra/ZornAssociatorFilippovObstruction.lean",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    "stable_candidate_contract_import_and_pins": true
+  },
+  "tested_hashes": {
+    "lean/InfoGeometry/Core/JordanAssociatorRing.lean": "10e0b1f9b942ab7cbb56f2fdf602cbeb56db9cd15eeec53e03bac6e2912c66c3",
+    "lean/InfoGeometry/Canonical/Drazin.lean": "e991b7d1c6b5fe8c1577c9949ed27d7e2c7f6395c721b3c54eabd1d5c42e0e27",
+    "lean/InfoGeometry/Algebra/ZornColorGL31Obstruction.lean": "1ff76078bfb2300d589f5e0cdf1804de98ab49dc7407f3488454ae34523e3ed1",
+    "lean/InfoGeometry/Lie/SplitOctonionCliffordNoninjective.lean": "c7362ab57a21a2ec6d74f3d6fb4707abe1441c4ffdb79b1d7b85e1bef23bb355",
+    "lean/InfoGeometry/Algebra/ZornAssociatorFilippovObstruction.lean": "1d4d61c8016dcc225fb7ea9d2b489b6195060fdaa254a326f9bd3a2b25aa9eaa",
+    ".lake/packages/mathlib/Mathlib/Tactic/NoncommRing.lean": "56993a0ec93af72ce3bbbfb2437c219b2700623f6ae5eb50dbac3df0731a09a1",
+    ".lake/packages/mathlib/Mathlib/Algebra/Ring/Basic.lean": "5ff332ec2eadf105ea5db5449f96c241510b0e59bc9c5ef1a7467dc860f01025",
+    "lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean": "5e253fd5adfe3b75df510d8319f7cc05f9cedf609edd8958279e895768b10e26",
+    ".lake/packages/mathlib/Mathlib/Algebra/Star/Basic.lean": "4ce946e9ba0306d69fdafda4b218702fc69f9bd0abca2e35eb194ee0a2f387f0",
+    ".lake/packages/mathlib/Mathlib/Algebra/Star/StarProjection.lean": "f1406eb0fc216915197d6ce231e01f90b0ba0a9282594a924bf01f1ee5c03db1",
+    ".lake/packages/mathlib/Mathlib/Analysis/Normed/Operator/Basic.lean": "548a0efc514e14f51df886f708e6693436c91692a73cfb814024c41ae7725138",
+    ".lake/packages/mathlib/Mathlib/Basic/Real/Basic.lean": "b10f715c299e6c3f468e916cad97620e921dc432e31269217954d94191fc7829",
+    ".lake/packages/mathlib/Mathlib/Tactic/Ring.lean": "d3ef5c49ebbd1108ce3f935e5ad95485e143abf02f28c027dba4bb6f3be8196e",
+    "lean/InfoGeometry/Meta/Architecture.lean": "2048d1a137c9ab86deca4414c6cb26120ee0fbe014dcae7a5f0724e1a12a794f",
+    "lean/InfoGeometry/Singular/Drazin.lean": "4275265884df968d70d064f497215be602c63b40c0b90d506b2268961f1fbe7a",
+    "lean/InfoGeometry/Algebra/ZornColorOddDerived.lean": "e3b5c0be389354812e8e7e39647e0df57f246d33b13eba0ed5905bf8436dc915",
+    "lean/InfoGeometry/Lie/SplitOctonionCliffordAction.lean": "09b1da1216cd3cf95288b62c016cfce46eb85eefeac0ee72bcef89ce5f0ea382",
+    "lean/InfoGeometry/Lie/SplitOctonionAnnihilatorDimension.lean": "bdd36bbda30f9093a1091a418ebfaf11ff5013a8cafd84114b8180bf1db3ad83",
+    ".lake/packages/mathlib/Mathlib/LinearAlgebra/CliffordAlgebra/Contraction.lean": "476101d4516532302fba9a1152b6cf2c63a042e99920b6ddbad8e4919e773b7b",
+    ".lake/packages/mathlib/Mathlib/LinearAlgebra/ExteriorAlgebra/Basis.lean": "3ea4a54ee767d2f1814d8b90accb092fa9ec4a1fd88519664221a22cfd80fa82",
+    ".lake/packages/mathlib/Mathlib/LinearAlgebra/FreeModule/Finite/Matrix.lean": "894fa9f9c8f7d7afb933d5e8c6e71951b2d5e2d501682d88429887628d2b69a5",
+    "lean/InfoGeometry/Algebra/ZornPeirceMixedAssociator.lean": "1aea6f2b0c0dd5566b6fbd2ef6fe9b1409b470b0fcb4f439e8591e9da71217ea",
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b"
+  },
+  "axiom_logs": {
+    "axioms-Drazin.log": "warning: LeanCopilot: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanCopilot' has local changes\nwarning: LeanArchitect: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanArchitect' has local changes\nChecking .lake/build/lib/lean/InfoGeometry/Canonical/Drazin.olean\n  \u2713 all 207 declarations clean\n\n\u2713 All modules passed.\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/Canonical/Drazin.olean:PASS\n",
+    "axioms-JordanAssociatorRing.log": "warning: LeanCopilot: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanCopilot' has local changes\nwarning: LeanArchitect: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanArchitect' has local changes\nChecking .lake/build/lib/lean/InfoGeometry/Core/JordanAssociatorRing.olean\n  \u2713 all 30 declarations clean\n\n\u2713 All modules passed.\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/Core/JordanAssociatorRing.olean:PASS\n",
+    "axioms-SplitOctonionCliffordNoninjective.log": "warning: LeanCopilot: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanCopilot' has local changes\nwarning: LeanArchitect: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanArchitect' has local changes\nChecking .lake/build/lib/lean/InfoGeometry/Lie/SplitOctonionCliffordNoninjective.olean\n  \u2713 all 3 declarations clean\n\n\u2713 All modules passed.\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/Lie/SplitOctonionCliffordNoninjective.olean:PASS\n",
+    "axioms-ZornAssociatorFilippovObstruction.log": "warning: LeanCopilot: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanCopilot' has local changes\nwarning: LeanArchitect: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanArchitect' has local changes\nChecking .lake/build/lib/lean/InfoGeometry/Algebra/ZornAssociatorFilippovObstruction.olean\n  \u2713 all 6 declarations clean\n\n\u2713 All modules passed.\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/Algebra/ZornAssociatorFilippovObstruction.olean:PASS\n",
+    "axioms-ZornColorGL31Obstruction.log": "warning: LeanCopilot: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanCopilot' has local changes\nwarning: LeanArchitect: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanArchitect' has local changes\nChecking .lake/build/lib/lean/InfoGeometry/Algebra/ZornColorGL31Obstruction.olean\n  \u2713 all 2 declarations clean\n\n\u2713 All modules passed.\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/Algebra/ZornColorGL31Obstruction.olean:PASS\n"
+  },
+  "counts_note": "248 existing declarations checked; none claimed newly authored by this intake audit."
+}

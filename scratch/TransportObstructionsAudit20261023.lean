@@ -3,6 +3,7 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
+import InfoGeometry.CliffordWeyl.PeirceToCircularBridge
 import InfoGeometry.Algebra.ChiralCARTransport
 import InfoGeometry.Algebra.InvariantTransport
 import InfoGeometry.Algebra.ChiralRealHyperbolicRotor
@@ -21,3 +22,9 @@ import InfoGeometry.Algebra.ChiralRealHyperbolicRotor
 #print axioms InfoGeometry.Algebra.ChiralCARTransport.pairing_current_commutator_annihilator
 #print axioms InfoGeometry.Algebra.ChiralCARTransport.pairing_current_commutator_creator
 #print axioms InfoGeometry.Algebra.ChiralCARTransport.pairing_current_star
+
+#print axioms InfoGeometry.CliffordWeyl.PeirceToCircularBridge.qwp_operator_state_intertwining
+
+#print axioms InfoGeometry.CliffordWeyl.PeirceToCircularBridge.qwpHorizontalJones_eq_counterclockwise
+
+#print axioms InfoGeometry.CliffordWeyl.PeirceToCircularBridge.qwp_adjoint_horizontal_eq_clockwise

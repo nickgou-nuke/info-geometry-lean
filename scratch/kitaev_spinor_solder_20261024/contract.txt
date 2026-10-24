@@ -1,0 +1,7 @@
+Reuse existing CliffordWeyl.SpinorBilinearSoldering.solder/diracRow and
+SpinorialCore.Krein.metricDual/pairing. Prove actual matrix action equals
+metric covector value times ket; native boost conjugates solder and preserves
+trace. Actual reflection-fixed spinor produces square-zero solder by the
+existing quadratic/Fierz law and proved scalar metric nullity.
+No claim that this solder is nonzero or has exact rank one for all x.
+No ordinary bra substitution, geometric-spacetime, Pin or CP inference.

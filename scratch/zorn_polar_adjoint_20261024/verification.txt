@@ -1,0 +1,4 @@
+Owner lean/InfoGeometry/Canonical/ZornPolarAdjoint.lean SHA256 a860da6a4dbb84b96a039c5cea426f064884fd6fe20e56431dbfcd5100fb960d.
+5theorems. Final parent lockedbuild48459 exit0 3100jobs /tmp/zorn-polar-adjoint-final-build.log; no ownerwarnings. First7198 compiled initial3 with ambiguous namespacewarning, fixed.
+A-A zorn_semantic_audit exactfinalPASS5. QA-A zorn_acceptance independent lockedAudit40465 exit0 /tmp/zorn-polar-adjoint-qa.log; each exactstandard3 axioms, noerrors/sorryAx, strict0,whitespace0,markersnone. ACCEPTED. Lane released.
+Staged source and evidence. These are bilinear evaluation identities on the full native ZornCoord carrier, not a packaged adjoint operation or a physical Dirac identification. Broader unification goal remains active.

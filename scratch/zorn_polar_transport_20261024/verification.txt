@@ -1,0 +1,4 @@
+ZornPolarFormTransport.lean SHA256 c6aedf2e71523e6e18fe2a371ef3885a40d6d88182e693b8d1e834cc86529e0c
+Parent lockedbuild18931 terminalexit0 8967jobs /tmp/zorn-polar-transport-build.log.
+Independent exactsource A-A semanticPASS and QA ACCEPTED5declarations. Audit36002 terminalexit0 /tmp/zorn-polar-transport-qa.log; all5 propext Classical.choice Quot.sound only. Strictscreen0 whitespace0 markersnone.
+Native BilinForm pullback, pairing/ketbra/adjointcovariance under TS1, circle nullrotor pairing specialization. No fixedformunitarity or arbitraryT nondegeneracy.

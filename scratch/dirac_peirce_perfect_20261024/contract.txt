@@ -1,0 +1,10 @@
+Full finite real matrices, existing KasparovKreinData K, arbitrary P with
+P*P=P and K.diracAdjoint P=P. Use native ranges of component10Linear and
+component01Linear from Core.PeirceMatrixPerfectPairing. Restrict existing
+Dirac adjunction to a REAL linear equivalence between the opposite corners;
+involution supplies the inverse. Pull back the existing perfect trace pairing
+along this equivalence in the second argument using LinearMap.compl₁₂ and
+mathlib IsPerfPair.compl₁₂. The resulting actual pairing evaluates to
+trace(X * K.diracAdjoint Y), and toPerfPair gives the corner/dual equivalence.
+No positivity, proper-star or coordinate restriction; real coefficients are
+intentional because general complex Dirac adjunction is conjugate-linear.

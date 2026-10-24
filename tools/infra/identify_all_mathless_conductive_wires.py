@@ -16,7 +16,12 @@ from typing import Any
 
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
 
+from igf.graph.decl_schema import (
+    STRUCTURAL_FINGERPRINT_VERSION,
+    TERM_DIGEST_VERSION,
+)
 from tools.infra.arango_dag_algorithms import run_aql
 from tools.infra.arango_env import (
     arango_database,
@@ -42,36 +47,40 @@ def identify_all_mathless_conductive_wires(target: ArangoTarget) -> dict[str, An
     print("🔍 Scanning ArangoDB graph for all conductive wires containing mathless nodes...")
 
     # Query all mathless intermediate declarations (AST node count < 10 with both callers and targets)
-    mathless_wire_query = """
+    mathless_wire_query = f"""
     FOR d IN decls
-      FILTER d.valueFingerprint != null
-         AND d.valueFingerprint.algorithmVersion == "lean-expr-structural-v3"
-         AND d.valueFingerprint.nodeCount != null
-         AND d.valueFingerprint.nodeCount < 10
+      FILTER (d.valueDigest != null
+              AND d.valueDigest.algorithmVersion == "{TERM_DIGEST_VERSION}"
+              AND d.valueDigest.nodeCount != null
+              AND d.valueDigest.nodeCount < 10)
+          OR (d.valueFingerprint != null
+              AND d.valueFingerprint.algorithmVersion == "{STRUCTURAL_FINGERPRINT_VERSION}"
+              AND d.valueFingerprint.nodeCount != null
+              AND d.valueFingerprint.nodeCount < 10)
       LET callers = (
         FOR e IN edges
           FILTER e._to == d._id
-          RETURN {id: e._from, name: DOCUMENT(e._from).name}
+          RETURN {{id: e._from, name: DOCUMENT(e._from).name}}
       )
       LET targets = (
         FOR e IN edges
           FILTER e._from == d._id
-          RETURN {id: e._to, name: DOCUMENT(e._to).name}
+          RETURN {{id: e._to, name: DOCUMENT(e._to).name}}
       )
       FILTER LENGTH(callers) > 0 AND LENGTH(targets) > 0
       SORT LENGTH(callers) + LENGTH(targets) DESC
-      RETURN {
+      RETURN {{
         id: d._id,
         name: d.name,
         kind: d.kind,
         module: d.module,
-        astNodeCount: d.valueFingerprint.nodeCount,
-        canonicalValueHash: d.canonicalValueHash,
+        astNodeCount: (d.valueDigest.nodeCount || d.valueFingerprint.nodeCount),
+        canonicalValueHash: (d.valueDigest.digest || d.canonicalValueHash),
         callerCount: LENGTH(callers),
         targetCount: LENGTH(targets),
         callers: callers[*].name,
         targets: targets[*].name
-      }
+      }}
     """
     mathless_wires = run_aql(target, mathless_wire_query)
 

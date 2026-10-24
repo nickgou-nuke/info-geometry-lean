@@ -1,0 +1,8 @@
+import InfoGeometry.Canonical.KitaevCARReflection
+open InfoGeometry.Canonical.KitaevCARReflection
+#print axioms boundaryCARPair
+#print axioms reflection_eq_leftEndpoint
+#print axioms endpoint_fixed_sector_eq_zero
+#print axioms endpoint_reverses_metric
+#print axioms endpoint_reverses_dirac_pairing
+#print axioms twoSite_reflection_pairing

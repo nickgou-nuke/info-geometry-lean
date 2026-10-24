@@ -1,0 +1,9 @@
+Algebraic extraction of the proposed Klein-bottle chiral-mode obstruction.
+Owner: lean/InfoGeometry/Canonical/CARReflectionSector.lean
+Reuses RealCARPair, its nilpotence/reflexivity, and the constructed
+Cl11CARFockColimitBridge.algebraicCARPair (no new pair predicate).
+Delta: p Q p = 0 implies a Q-fixed vector in the p sector is zero,
+for an actual A-module. Native consumer is the algebraic colimit regular module.
+No inference of equal norms, a Pin bundle, CP violation, or baryogenesis.
+No assertion that the paper's spatial gamma is the positive-square Q.
+The proposed identification requires matching Clifford signatures and Dirac adjoints.

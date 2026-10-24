@@ -1,0 +1,69 @@
+{
+  "disposition": "KERNEL_VERIFIED_NATIVE",
+  "scope": "Actual real Fock completed creation/contraction square-zero, same-mode CAR and mutual Hilbert adjoints. Cross-mode CAR and aggregate repository acceptance remain outside this receipt.",
+  "owner": "lean/InfoGeometry/Clifford/RealFockCompletedSameModeCAR.lean",
+  "evidence_directory": "/tmp/qa-a-same-mode-live-5cg4crwj",
+  "commands_and_results": {
+    "build": {
+      "command": [
+        "lake",
+        "build",
+        "+InfoGeometry.Clifford.RealFockCompletedSameModeCAR:olean"
+      ],
+      "exit": 0
+    },
+    "axioms": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/Clifford/RealFockCompletedSameModeCAR.olean"
+      ],
+      "exit": 0
+    },
+    "strict": {
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/Clifford/RealFockCompletedSameModeCAR.lean",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    "stable_candidate_contract_import_and_pins": true
+  },
+  "before_sha256": {
+    "lean/InfoGeometry/Clifford/RealFockCompletedSameModeCAR.lean": "23250a402fda59621b1e821b3402d7c7fa2c39b69e65d372761aa1f3f8593a35",
+    "scratch/RealFockCompletedSameModeCAR20261024v2.md": "56700073ba5429076c0bd8c69f16b5f3eae2f45bf8e319c52932cfbfbab4f70c",
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lean/InfoGeometry/Clifford/RealFockCompletedCoordinateAction.lean": "42d27f591ccae1fdbc1a27bd8b859173c9312115bee91b553db0ec6597ff0014",
+    "lean/InfoGeometry/Clifford/FiniteFockCLMReflexivePair.lean": "f9b1142a7a24640d499b15449561c133480d23a5b402700b8a37f79aa8502cff",
+    "lean/InfoGeometry/Clifford/FiniteRealFockAdjoint.lean": "f83ccc4ca27cfd634bb8d0122f033e13b29ea30729a3cca546b85e6890233b2c",
+    ".lake/packages/mathlib/Mathlib/Analysis/InnerProductSpace/Adjoint.lean": "3bc8a1ebb741e2a363159953caecf067d44e621ee959dca8b9559223297d43fe"
+  },
+  "after_sha256": {
+    "lean/InfoGeometry/Clifford/RealFockCompletedSameModeCAR.lean": "23250a402fda59621b1e821b3402d7c7fa2c39b69e65d372761aa1f3f8593a35",
+    "scratch/RealFockCompletedSameModeCAR20261024v2.md": "56700073ba5429076c0bd8c69f16b5f3eae2f45bf8e319c52932cfbfbab4f70c",
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lean/InfoGeometry/Clifford/RealFockCompletedCoordinateAction.lean": "42d27f591ccae1fdbc1a27bd8b859173c9312115bee91b553db0ec6597ff0014",
+    "lean/InfoGeometry/Clifford/FiniteFockCLMReflexivePair.lean": "f9b1142a7a24640d499b15449561c133480d23a5b402700b8a37f79aa8502cff",
+    "lean/InfoGeometry/Clifford/FiniteRealFockAdjoint.lean": "f83ccc4ca27cfd634bb8d0122f033e13b29ea30729a3cca546b85e6890233b2c",
+    ".lake/packages/mathlib/Mathlib/Analysis/InnerProductSpace/Adjoint.lean": "3bc8a1ebb741e2a363159953caecf067d44e621ee959dca8b9559223297d43fe"
+  },
+  "actual_declaration_count": 13,
+  "owner_warnings": [],
+  "dependency_warnings": "Existing package warnings retained in logs.",
+  "semantic_review": "Popper independent v2 and native comment-only delta AA PASS.",
+  "log_sha256": {
+    "build.log": "4f353722f4bffa6fbd6a3dd77b613c60d8402855e93f220bdcca32feb57830e0",
+    "axioms.log": "6e8c9536a8cac53f7c513206aea68b381a0d36fbcfadd5c472bd80292dfc5d1b",
+    "strict.log": "747443d22b8ccffb07c44835fa4a015e33c702c22548bbc3cecde756a8b81eb7"
+  }
+}

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 import Mathlib.LinearAlgebra.QuadraticForm.Basic
 import InfoGeometry.Clifford.Clifford55
@@ -26,7 +31,8 @@ theorem paraKahlerK_sq : paraKahlerK.comp paraKahlerK = (LinearMap.id : V55 â†’â
   intro v
   apply Prod.ext <;> simp [paraKahlerK]
 
-theorem paraKahlerK_preserves_Q55 (v : V55) :
+/-- The para-complex swap is an anti-isometry, not an orthogonal reflection. -/
+theorem paraKahlerK_anti_isometry (v : V55) :
     Q55 (paraKahlerK v) = - Q55 v := by
   simp [Q55_apply, paraKahlerK, fst55_apply, snd55_apply]
 

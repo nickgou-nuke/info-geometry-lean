@@ -1,0 +1,4 @@
+Final owner SHA256 6fef6d493a1943e683a7df3bfd909af22584fcb1bbc7292548ce049eed0b66c1.
+Added2theorems to prior5declarations. Parent lockedbuild67917 exit0 4093jobs, /tmp/kitaev-interior-adjoint-clean-build.log, no ownerwarnings. Initial59510 unknown namespaced smul lemma repaired;26446 passed with unusedsimp warning removed.
+A-A /root/zorn_semantic_audit semantic PASS new2. QA-A /root/zorn_acceptance independent locked audit44460 exit0 after waiting behind unrelated audit; /tmp/kitaev-interior-adjoint-qa.log. All7 declarations each only {propext,Classical.choice,Quot.sound}; noerrors/sorryAx. Strictscreen0, scopedwhitespace0, markersnone. ACCEPTED; lane released.
+Source and evidence staged, no commit/push. Prior verification records refer to earlier source hashes; this record supersedes final-source certification for this owner. Broad goal remains active.

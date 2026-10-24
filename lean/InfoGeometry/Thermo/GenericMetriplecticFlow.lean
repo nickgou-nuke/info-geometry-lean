@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -75,6 +80,22 @@ theorem entropy_rate_nonneg :
     0 ≤ S.dS S.flow := by
   rw [S.entropy_rate_eq_dissipative]
   exact S.M_nonneg S.dS
+
+/-- A nondegenerate reversible operator permits only a zero entropy covector. -/
+theorem entropy_covector_eq_zero_of_injective (hL : Function.Injective S.L) :
+    S.dS = 0 :=
+  hL (S.L_entropy_casimir.trans (map_zero S.L).symm)
+
+/-- Thus a full symplectic inverse cannot produce entropy in a GENERIC system. -/
+theorem entropy_rate_zero_of_injective (hL : Function.Injective S.L) :
+    S.dS S.flow = 0 := by
+  rw [S.entropy_covector_eq_zero_of_injective hL]
+  rfl
+
+/-- Strictly invertible dissipation likewise forces a zero energy covector. -/
+theorem energy_covector_eq_zero_of_injective (hM : Function.Injective S.M) :
+    S.dH = 0 :=
+  hM (S.M_hamiltonian_casimir.trans (map_zero S.M).symm)
 
 variable {W : Type*} [AddCommGroup W] [Module ℝ W]
 

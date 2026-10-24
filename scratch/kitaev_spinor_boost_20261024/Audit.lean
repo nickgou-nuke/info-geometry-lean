@@ -1,0 +1,5 @@
+import InfoGeometry.Canonical.KitaevSpinorBoost
+#print axioms InfoGeometry.Physics.KasparovKreinData.unit_isometry_of_dirac_inverse
+#print axioms InfoGeometry.Canonical.KitaevSpinorBoost.boost_isometry
+#print axioms InfoGeometry.Canonical.KitaevSpinorBoost.boost_preserves_pairing
+#print axioms InfoGeometry.Canonical.KitaevSpinorBoost.boost_metricDual_inverse

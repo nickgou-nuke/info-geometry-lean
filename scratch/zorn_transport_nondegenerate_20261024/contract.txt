@@ -1,0 +1,1 @@
+Use existing transportedPolar on native ZornCoord, original polarForm_nondegenerate. Symmetry holds for arbitrary T. Under explicitly two-sided S,T inverses, transported form is nondegenerate and adjoint uniqueness follows. No claim nondegenerate for arbitraryT, no positive metric. Concrete circle rotor has both inverse relations already in ReflexiveNilpotentFlows.

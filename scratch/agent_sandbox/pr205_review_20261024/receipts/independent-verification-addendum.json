@@ -1,0 +1,95 @@
+{
+  "task": 17,
+  "reviewer": "acceptance_receipt_review",
+  "date": "2026-10-24",
+  "purpose": "Append-only receipt reconciliation after the parent's independent exact-source verification. Existing report.md is retained unchanged.",
+  "head": "ea08baa1649c9eeaf45638d6e7edef2f971ad1be",
+  "base": "21189e55133ed207043f2f05e37aa52d1fc8a9f5",
+  "updated_disposition": "Independent source-bound parent receipts now substantiate 73 strict-replayed declarations across all five new owners. GitHub CI artifact contents and archive digest remain independently unverified because download access was blocked. These are separate evidence lanes.",
+  "evidence_read_in_full": [
+    {
+      "path": "/tmp/pr205-independent-verification/status.json",
+      "sha256": "7e2fb997675ae9cd9d6c7937ff4cea3eeb908a888e21f9160f58f271d4aedd8d"
+    },
+    {
+      "path": "/tmp/pr205-independent-verification/strict-replay.log",
+      "sha256": "f808a73efeb8c2d26f85e756a9bb23e644a49f1ff6dd65d2edfad5e6b37ca1eb"
+    },
+    {
+      "path": "/tmp/pr205-independent-verification-run2.log",
+      "sha256": "f636af89934f2a37bc2180ba4ce81c7787329bb5909c9efdc97864102dbdf450"
+    },
+    {
+      "path": "/tmp/pr205-review-ea08baa/source-closure.json",
+      "sha256": "5b44fbfe11aae6310a711e08e5b4a420e1f9156c1e32a1f56657fa41bfe057bd"
+    }
+  ],
+  "independent_verification": {
+    "executor": "team-lead/parent, not this reviewer",
+    "status": "passed",
+    "compiled_repository_modules": 21,
+    "new_modules": 5,
+    "existing_dependencies": 16,
+    "all_compile_returncodes": 0,
+    "manifest_reports_all_existing_dependencies_unchanged_from_base": true,
+    "reviewer_rehashed_manifest_sources": {
+      "root": "/tmp/pr205-review-ea08baa/lean",
+      "checked_files": 21,
+      "missing_files": [],
+      "hash_mismatches": []
+    },
+    "new_owner_hashes_match_original_pr_review": true,
+    "lean_version": "Lean (version 4.34.1, aarch64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+    "mathlib_pin_from_manifest": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+    "strict_replay_passed": true,
+    "replayed_declarations": 73,
+    "per_module_replay_counts": {
+      "InfoGeometry.Canonical.PeirceWeylExamples": 12,
+      "InfoGeometry.Canonical.PeirceWeylSynthesis": 1,
+      "InfoGeometry.Core.JordanMultiplicationClosure": 12,
+      "InfoGeometry.Core.PeirceDensityIntertwining": 9,
+      "InfoGeometry.Core.PeirceWeylUnits": 39
+    },
+    "axiom_policy": ["propext", "Classical.choice", "Quot.sound"],
+    "scope": "Compilation of five new owners plus sixteen repository dependencies; strict all-declaration replay for the five new owners, not all declarations of the entire dependency closure or a root package build.",
+    "new_owner_warning_count": 0,
+    "inherited_dependency_warning_count": 23,
+    "inherited_warning_breakdown": {
+      "InfoGeometry.Singular.MoorePenrose": 14,
+      "InfoGeometry.Core.JordanPeirceDecomposition": 2,
+      "InfoGeometry.Core.JordanAssociator": 7
+    },
+    "reported_source_drift": [],
+    "patch_applied": false,
+    "parent_reported_run_recovery": "An initial environment-acquisition attempt from the Mathlib subdirectory caused nested dependency bootstrap/path diagnostics pollution and was discarded. Accepted run2 used the established root environment with stdout separated. Parent reports no cache deletion or dependency-pin changes. This reviewer did not rerun or independently diagnose the discarded attempt."
+  },
+  "ci_artifact_lane": {
+    "run": 40077004618,
+    "job": 120822411313,
+    "public_api_run_and_job_conclusion": "success",
+    "artifact_id": 12552794453,
+    "artifact_name": "peirce-weyl-verification",
+    "public_api_advertised_digest": "sha256:cfc8807ad8f68275194e7eb490e5d75cc99d5a17b85d015929a48ead1741923a",
+    "artifact_exists_and_unexpired_in_observed_api": true,
+    "archive_download_http_status": 401,
+    "job_log_download_http_status": 403,
+    "artifact_archive_downloaded": false,
+    "artifact_archive_digest_independently_computed": false,
+    "artifact_contents_inspected": false,
+    "qualification": "The digest is metadata advertised by GitHub, not a locally computed match. Parent local verification does not establish byte identity with the inaccessible GitHub artifact. CI warning counts and CI internal AUDIT_COUNT remain unread even though the independent local replay establishes the same claimed total 73."
+  },
+  "effect_on_original_report": {
+    "resolved_for_independent_local_evidence": [
+      "The previously unconfirmed 73-declaration total now has a full five-module strict-replay receipt with per-module counts summing to 73.",
+      "Zero warnings is substantiated for the five new owners in the parent's local run, but not for the whole closure: 23 inherited warnings are recorded.",
+      "The supplied closure manifest covers 21 repository files; all current snapshot files match its recorded SHA-256 hashes."
+    ],
+    "unchanged": [
+      "The actual GitHub artifact archive digest and contents remain unavailable to this reviewer.",
+      "The workflow path-trigger gap remains a real future CI coverage issue, not a failure of this verified head.",
+      "Aggregate-only CI count enforcement, warning policy, lexical import parsing, and fresh-output/tool attestation remain hardening findings, not demonstrated proof failures.",
+      "The textual inventory remains 31 theorem heads, 12 definition heads, and six non-declaration #check commands."
+    ]
+  },
+  "reviewer_actions": "Read existing receipt/source files, hash them, and create this new sandbox JSON only. No builds, compilers, tests, gates, source edits, commits, branch operations, merges, or remote comments."
+}

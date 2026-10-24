@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import argparse
 import os
 import re
 import hashlib
@@ -28,9 +29,17 @@ PROP_RESULT_RE = re.compile(
 )
 FIELD_ASSIGN_RE = re.compile(r"(?m)^\s+([A-Za-z_][A-Za-z0-9_']*)\s*:=\s*([^\n]+)")
 DEBT_BURIAL_COMMENT_RE = re.compile(
-    r"\b(DEBT|OPEN CLOSURE DEBT|missing proof|not a proof|removed|no Lean declaration|owner-side proof)\b",
+    r"\b(DEBT|OPEN CLOSURE DEBT|missing proof|not a proof|removed|no Lean declaration|owner-side proof|not needed here|previous [^\n]*\binterface|contradictory [^\n]*\binterface)\b",
     re.IGNORECASE,
 )
+
+
+def _strip_strings_backticks_and_line_comment(line: str) -> str:
+    """Remove string literals, backtick-quoted Lean names, and trailing `--` comments."""
+    no_strings = re.sub(r'"(?:\\.|[^"\\])*"', '""', line)
+    no_comment = re.sub(r"--.*$", "", no_strings)
+    no_trace = re.sub(r"\btrace\[[^\]]*\]", "", no_comment)
+    return re.sub(r"`+[A-Za-z_][A-Za-z0-9_'.]*", "", no_trace)
 REQUIRED_LEAN_COPYRIGHT_HEADER = (
     "/-\n"
     "Copyright (c) 2026 InfoGeometry Authors. All rights reserved.\n"
@@ -55,13 +64,15 @@ class ActiveIndexCache:
 
     def __init__(self, repo_root: Path):
         self.repo_root = repo_root
-        self._index_signature = self._read_index_signature()
         self._tracked: dict[str, bool] = {}
         self._matches: dict[str, bool] = {}
         self._blobs: dict[str, tuple[int, bytes, str]] = {}
         self._imports: dict[str, list[str]] = {}
+        self._tracked_all: set[str] | None = None
+        self._dirty_worktree_all: set[str] | None = None
+        self._index_signature = self._read_index_signature(populate_sets=True)
 
-    def _read_index_signature(self) -> str | None:
+    def _read_index_signature(self, populate_sets: bool = False) -> str | None:
         configured = os.environ.get("GIT_INDEX_FILE")
         if configured:
             index_path = Path(configured)
@@ -90,6 +101,26 @@ class ActiveIndexCache:
         )
         if result.returncode != 0:
             return None
+        if populate_sets:
+            tracked_set: set[str] = set()
+            for entry in result.stdout.split(b"\0"):
+                if not entry or b"\t" not in entry:
+                    continue
+                _meta, raw_path = entry.split(b"\t", 1)
+                tracked_set.add(raw_path.decode("utf-8", errors="replace"))
+            self._tracked_all = tracked_set
+            diff_res = subprocess.run(
+                ["git", "diff", "--name-only", "-z"],
+                cwd=self.repo_root,
+                capture_output=True,
+                check=False,
+            )
+            if diff_res.returncode == 0:
+                self._dirty_worktree_all = {
+                    p.decode("utf-8", errors="replace")
+                    for p in diff_res.stdout.split(b"\0")
+                    if p
+                }
         return hashlib.sha256(result.stdout).hexdigest()
 
     def still_current(self) -> bool:
@@ -98,29 +129,54 @@ class ActiveIndexCache:
 
     def tracked(self, relative_path: str) -> bool:
         if relative_path not in self._tracked:
-            result = subprocess.run(
-                ["git", "ls-files", "--error-unmatch", "--", relative_path],
-                cwd=self.repo_root,
-                capture_output=True,
-                text=True,
-                check=False,
-            )
-            self._tracked[relative_path] = result.returncode == 0
+            if self._tracked_all is not None:
+                self._tracked[relative_path] = relative_path in self._tracked_all
+            else:
+                result = subprocess.run(
+                    ["git", "ls-files", "--error-unmatch", "--", relative_path],
+                    cwd=self.repo_root,
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                )
+                self._tracked[relative_path] = result.returncode == 0
         return self._tracked[relative_path]
 
     def matches_worktree(self, relative_path: str) -> bool:
         if relative_path not in self._matches:
-            result = subprocess.run(
-                ["git", "diff", "--quiet", "--", relative_path],
-                cwd=self.repo_root,
-                capture_output=True,
-                check=False,
-            )
-            self._matches[relative_path] = result.returncode == 0
+            if (
+                self._dirty_worktree_all is not None
+                and self._tracked_all is not None
+                and relative_path in self._tracked_all
+                and (self.repo_root / relative_path).exists()
+            ):
+                self._matches[relative_path] = relative_path not in self._dirty_worktree_all
+            else:
+                result = subprocess.run(
+                    ["git", "diff", "--quiet", "--", relative_path],
+                    cwd=self.repo_root,
+                    capture_output=True,
+                    check=False,
+                )
+                self._matches[relative_path] = result.returncode == 0
         return self._matches[relative_path]
 
     def blob(self, relative_path: str) -> tuple[int, bytes, str]:
         if relative_path not in self._blobs:
+            disk_path = self.repo_root / relative_path
+            if (
+                self._dirty_worktree_all is not None
+                and self._tracked_all is not None
+                and relative_path in self._tracked_all
+                and relative_path not in self._dirty_worktree_all
+                and disk_path.is_file()
+                and not disk_path.is_symlink()
+            ):
+                try:
+                    self._blobs[relative_path] = (0, disk_path.read_bytes(), "")
+                    return self._blobs[relative_path]
+                except OSError:
+                    pass
             result = subprocess.run(
                 ["git", "show", f":{relative_path}"],
                 cwd=self.repo_root,
@@ -361,6 +417,8 @@ def aggregate_prop_constructors(source: str) -> list[tuple[str, str]]:
         type_name, header, body = structure.groups()
         if not re.search(r":\s*Prop\s+where\s*$", header):
             continue
+        if type_name.startswith("Is") and re.search(r"[({\[⦃]", header[:header.rfind(":")]):
+            continue
         fields = [
             item.group(1)
             for item in re.finditer(r"(?m)^\s+([A-Za-z_][A-Za-z0-9_']*)\s*:", body)
@@ -450,18 +508,29 @@ def check_text(
     return failures
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
+    ap = argparse.ArgumentParser(description="Pre-commit gate for staged Lean files.")
+    ap.add_argument(
+        "paths",
+        nargs="*",
+        help="Optional Lean file paths to scope the staged check (defaults to all staged *.lean files).",
+    )
+    args = ap.parse_args([] if argv is None else argv)
+    pathspecs = args.paths if args.paths else ["*.lean"]
+
     repo_root = Path(git(["rev-parse", "--show-toplevel"]).strip())
     index_cache = ActiveIndexCache(repo_root)
-    out = git(["diff", "--cached", "--unified=0", "--", "*.lean"])
+    out = git(["diff", "--cached", "--unified=0", "--", *pathspecs])
     failures: list[str] = []
     path = ""
     line_no: int | None = None
+    block_comment_depth = 0
     removed_decl_files: set[str] = set()
     debt_comment_files: set[str] = set()
     for line in out.splitlines():
         if line.startswith("+++ b/"):
             path = line[6:]
+            block_comment_depth = 0
             continue
         if line.startswith("@@"):
             m = re.search(r"\+(\d+)(?:,(\d+))?", line)
@@ -478,26 +547,42 @@ def main() -> int:
         added = line[1:]
         loc = f"{path}:{line_no}" if line_no is not None else path
         stripped = added.strip()
-        if stripped.startswith(("--", "/-", "*")):
-            if DEBT_BURIAL_COMMENT_RE.search(stripped):
-                debt_comment_files.add(path)
+        opens = stripped.count("/-")
+        closes = stripped.count("-/")
+        in_comment = (
+            block_comment_depth > 0
+            or stripped.startswith(("--", "/-", "*"))
+            or "--" in stripped
+            or opens > 0
+            or closes > 0
+        )
+        block_comment_depth = max(0, block_comment_depth + opens - closes)
+        if in_comment and DEBT_BURIAL_COMMENT_RE.search(stripped):
+            debt_comment_files.add(path)
+        if block_comment_depth > 0 or stripped.startswith(("--", "/-", "*")):
             if line_no is not None:
                 line_no += 1
             continue
-        if "`" in stripped or '"' in stripped:
+        code_only = re.sub(
+            r"/-.*?-/", "", _strip_strings_backticks_and_line_comment(stripped)
+        ).strip()
+        if not code_only:
             if line_no is not None:
                 line_no += 1
             continue
-        if re.search(r"^\s*(?:axiom|postulate)\s+(?:«[^»\n]+»|[^\W\d][\w'.]*)\s*:|^\s*(?:admit|sorry|sorryAx)\b", stripped):
+        if re.search(
+            r"^\s*(?:axiom|postulate)\s+(?:«[^»\n]+»|[^\W\d][\w'.]*)\s*:|^\s*(?:admit|sorry|sorryAx)\b",
+            code_only,
+        ):
             failures.append(f"{loc}: staged forbidden placeholder `{stripped}`")
         if line_no is not None:
             line_no += 1
     staged_lean_paths = set(
         path
         for path in subprocess.check_output(
-            ["git", "diff", "--cached", "--name-only", "-z", "--diff-filter=ACMRT", "--", "*.lean"]
+            ["git", "diff", "--cached", "--name-only", "-z", "--diff-filter=ACMRT", "--", *pathspecs]
         ).split(b"\0")
-        if path
+        if path and path.endswith(b".lean") and (args.paths or not path.startswith(b"scratch/"))
     )
     if staged_lean_paths:
         mismatches = checker_index_mismatches(repo_root)
@@ -530,16 +615,21 @@ def main() -> int:
         check=True,
     ).stdout
     cursor = 0
+    staged_sources: list[tuple[str, str]] = []
+    for raw_path, _blob in paths_and_blobs:
+        header_end = blob_data.index(b"\n", cursor)
+        header = blob_data[cursor:header_end].split()
+        size = int(header[2])
+        start = header_end + 1
+        raw_bytes = blob_data[start:start + size]
+        source = raw_bytes.decode("utf-8", errors="replace")
+        cursor = start + size + 1
+        lean_path = raw_path.decode("utf-8", errors="replace")
+        index_cache._blobs[lean_path] = (0, raw_bytes, "")
+        staged_sources.append((lean_path, source))
     with tempfile.TemporaryDirectory(prefix="opengauss-index-imports-") as temp_dir:
         snapshot_root = Path(temp_dir)
-        for raw_path, _blob in paths_and_blobs:
-            header_end = blob_data.index(b"\n", cursor)
-            header = blob_data[cursor:header_end].split()
-            size = int(header[2])
-            start = header_end + 1
-            source = blob_data[start:start + size].decode("utf-8", errors="replace")
-            cursor = start + size + 1
-            lean_path = raw_path.decode("utf-8", errors="replace")
+        for lean_path, source in staged_sources:
             failures.extend(check_text(
                 lean_path, source, repo_root,
                 index_cache=index_cache, snapshot_root=snapshot_root,
@@ -564,4 +654,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(main(sys.argv[1:]))

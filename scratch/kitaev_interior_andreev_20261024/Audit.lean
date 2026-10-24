@@ -1,0 +1,5 @@
+import InfoGeometry.Canonical.KitaevInteriorAndreev
+#print axioms InfoGeometry.Canonical.KitaevInteriorAndreev.chain_interior_eq_andreev
+#print axioms InfoGeometry.Canonical.KitaevInteriorAndreev.vectorNormSq_smul
+#print axioms InfoGeometry.Canonical.KitaevInteriorAndreev.chain_interior_normSq
+#print axioms InfoGeometry.Canonical.KitaevInteriorAndreev.chain_interior_transpose_mul

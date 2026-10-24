@@ -1,0 +1,4 @@
+ZornTransportNondegenerate.lean SHA25678c75ffeb3a13b1c0e7c6d6a731f6331f315a5f86d7a6786b3b67268f4adb0d6
+Parent final lockedbuild61902 terminalexit0 8968jobs /tmp/zorn-transport-nondegenerate-final-build.log
+Independent exact-final A-A PASS and QA ACCEPTED3. Audit7131 terminalexit0 /tmp/zorn-transport-nondegenerate-qa.log all3 standardaxioms propext Classical.choice Quot.sound only. Strictscreen0 whitespace0 markersnone.
+Scope symmetry arbitraryT; nondegeneracy and adjointuniqueness with two-sided inverse, no positivity. Updated user chordal owners inspected and left unchanged.

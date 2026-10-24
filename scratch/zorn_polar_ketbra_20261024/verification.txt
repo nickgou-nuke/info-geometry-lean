@@ -1,0 +1,4 @@
+Final owner SHA256 9c492ad1d0987d054eb41555d0bf138e9123762040570afaeb81628aaba3c144.
+1definition+7theorems. Parent lockedbuild99453 exit0 3103jobs /tmp/zorn-polar-ketbra-final-build.log no ownerwarnings. First56656 also passed before explicit witnessaddition.
+A-A zorn_semantic_audit exactfinalPASS all8, rankwordingminorfix applied. QA-A zorn_acceptance independent lockedAudit11693 exit0 /tmp/zorn-polar-ketbra-qa.log; each exactstandard3 axioms, noerrors/sorryAx, strict0,scopedwhitespace0,markersnone. ACCEPTED; lane released.
+Source/evidence staged no commit/push. Broad goal active. Explicit nonzero square-zero operator uses split-polar bra; not nonassociative Zorn multiplication or positive adjoint.

@@ -1,0 +1,106 @@
+{
+  "scope": "Two named native owners only; no completed Fock operators, represented-motion consumer, analytic KMS, or aggregate acceptance.",
+  "evidence_directory": "/tmp/qa-a-coordinate-exponential-live-3xqdhs1c",
+  "commands_and_results": {
+    "build_RealFockCoordinateTransport": {
+      "command": [
+        "lake",
+        "build",
+        "+InfoGeometry.Clifford.RealFockCoordinateTransport:olean"
+      ],
+      "exit": 0
+    },
+    "axioms_RealFockCoordinateTransport": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/Clifford/RealFockCoordinateTransport.olean"
+      ],
+      "exit": 0
+    },
+    "strict_RealFockCoordinateTransport": {
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/Clifford/RealFockCoordinateTransport.lean",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    "build_FiniteExponentialMotion": {
+      "command": [
+        "lake",
+        "build",
+        "+InfoGeometry.Canonical.FiniteExponentialMotion:olean"
+      ],
+      "exit": 0
+    },
+    "axioms_FiniteExponentialMotion": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/Canonical/FiniteExponentialMotion.olean"
+      ],
+      "exit": 0
+    },
+    "strict_FiniteExponentialMotion": {
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/Canonical/FiniteExponentialMotion.lean",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    "stable_candidate_contract_import_and_pins": true
+  },
+  "before_sha256": {
+    ".lake/packages/mathlib/Mathlib/Topology/Algebra/Module/FiniteDimension.lean": "aae1cf2eb90fc1b11375074ec2bb8eccc904e3221d1ee4bfa65b806d971d9367",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lean/InfoGeometry/Canonical/FiniteExponentialMotion.lean": "93f2c6b5af7f729693d1aac9eb574d4109c270042993167906525982426a4541",
+    "lean/InfoGeometry/Canonical/FiniteSeedRepresentedRealTime.lean": "de19e22b0619c2d9a743dac42355971c4223c27bffeb41033b7ff1135862232e",
+    "lean/InfoGeometry/Canonical/ModularFlowExponentialGenerator.lean": "f603fd412894ae06ca05acec14df33bac756b4dac8f6c5f1b9dfb0aa94a2a145",
+    "lean/InfoGeometry/Clifford/ClNNFockDirectLimitRepresentation.lean": "9bd29fe2983f1e6bc3ac39671eb3941d19e79f6047aa3c9b2b0f8a5d43302ae6",
+    "lean/InfoGeometry/Clifford/FiniteRealFockNormBounds.lean": "4a5382ad9dc1f7667f3703babafa498a8099969564e12005562d1631bf806570",
+    "lean/InfoGeometry/Clifford/FockTailExteriorBasis.lean": "ca0fb47c7a1afa68f9089e3e2c11df7f7776495fdc71f79281a84f1f9c188282",
+    "lean/InfoGeometry/Clifford/RealFockCoordinateTransport.lean": "18781a8ba402a7c42f4a8b863afd2ac01e7930dcc21a04d880eb6c77607cba41"
+  },
+  "after_sha256": {
+    ".lake/packages/mathlib/Mathlib/Topology/Algebra/Module/FiniteDimension.lean": "aae1cf2eb90fc1b11375074ec2bb8eccc904e3221d1ee4bfa65b806d971d9367",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lean/InfoGeometry/Canonical/FiniteExponentialMotion.lean": "93f2c6b5af7f729693d1aac9eb574d4109c270042993167906525982426a4541",
+    "lean/InfoGeometry/Canonical/FiniteSeedRepresentedRealTime.lean": "de19e22b0619c2d9a743dac42355971c4223c27bffeb41033b7ff1135862232e",
+    "lean/InfoGeometry/Canonical/ModularFlowExponentialGenerator.lean": "f603fd412894ae06ca05acec14df33bac756b4dac8f6c5f1b9dfb0aa94a2a145",
+    "lean/InfoGeometry/Clifford/ClNNFockDirectLimitRepresentation.lean": "9bd29fe2983f1e6bc3ac39671eb3941d19e79f6047aa3c9b2b0f8a5d43302ae6",
+    "lean/InfoGeometry/Clifford/FiniteRealFockNormBounds.lean": "4a5382ad9dc1f7667f3703babafa498a8099969564e12005562d1631bf806570",
+    "lean/InfoGeometry/Clifford/FockTailExteriorBasis.lean": "ca0fb47c7a1afa68f9089e3e2c11df7f7776495fdc71f79281a84f1f9c188282",
+    "lean/InfoGeometry/Clifford/RealFockCoordinateTransport.lean": "18781a8ba402a7c42f4a8b863afd2ac01e7930dcc21a04d880eb6c77607cba41"
+  },
+  "actual_declaration_counts": {
+    "InfoGeometry.Clifford.RealFockCoordinateTransport": 23,
+    "InfoGeometry.Canonical.FiniteExponentialMotion": 10
+  },
+  "owner_warnings": [],
+  "dependency_warnings": "Existing upstream/package warnings retained in build logs.",
+  "semantic_review": "Popper independent native-delta PASS; original coordinate source Kepler PASS; original finite helper Popper PASS.",
+  "log_sha256": {
+    "strict_RealFockCoordinateTransport.log": "747443d22b8ccffb07c44835fa4a015e33c702c22548bbc3cecde756a8b81eb7",
+    "axioms_FiniteExponentialMotion.log": "7c3b4c707a4c0c1051296bebd10578a905c424b8528ecaf0b179f97dd03007c0",
+    "build_FiniteExponentialMotion.log": "652fa13013977ca6eaf335b48d2f3ef07fb19025f2e136aea287b650e8da056e",
+    "build_RealFockCoordinateTransport.log": "556d60faeceaaa33cd2ee9a84102830f0285d58bf0fce41ea70c787e4375e618",
+    "axioms_RealFockCoordinateTransport.log": "b2c21e5cd33bdaf566a3ed3eb1e9a080624d43a4ec6f918acb423e06ca26956b",
+    "strict_FiniteExponentialMotion.log": "747443d22b8ccffb07c44835fa4a015e33c702c22548bbc3cecde756a8b81eb7"
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "scope": "Native completed tracial GNS commutator bonding derived from algebraic transport by dense representative readback and continuity, with centralizing-increment sufficient condition.",
+  "proof_author": "James",
+  "semantic_auditor": "Popper",
+  "kernel_qa": "Ampere",
+  "disposition": "ACCEPTED_WITH_LIMITED_SCOPE",
+  "result": {
+    "build": {
+      "command": [
+        "lake",
+        "build",
+        "+InfoGeometry.Canonical.FilteredTracialGNSCommutatorTransport:olean"
+      ],
+      "exit": 0
+    },
+    "axioms": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/Canonical/FilteredTracialGNSCommutatorTransport.olean"
+      ],
+      "exit": 0
+    },
+    "strict": {
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/Canonical/FilteredTracialGNSCommutatorTransport.lean",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    "stable_candidate_contract_import_and_pins": true
+  },
+  "hashes": {
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lean/InfoGeometry/Canonical/FilteredGNSRepresentation.lean": "f03031102f02a50406b36a7fee3a36335eeb280f9873382a05039d6e0dc9c73d",
+    "lean/InfoGeometry/OperatorAlgebra/TracialGNSCommutator.lean": "b1b2ce1db36ed84ff65b2d1d08b5af21ea42cbf2af2d16ac6659722bca600851",
+    "lean/InfoGeometry/Canonical/FilteredTracialGNSCommutatorTransport.lean": "97fe898ebfb898355e6db63565dd7a0a0ad39ee8dca761e4b538a2eb155eee86"
+  },
+  "axiom_log": "warning: LeanCopilot: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanCopilot' has local changes\nwarning: LeanArchitect: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanArchitect' has local changes\nChecking .lake/build/lib/lean/InfoGeometry/Canonical/FilteredTracialGNSCommutatorTransport.olean\n  \u2713 all 7 declarations clean\n\n\u2713 All modules passed.\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/Canonical/FilteredTracialGNSCommutatorTransport.olean:PASS\n",
+  "exclusions": [
+    "Generic helper takes algebraic compatibility; concrete application must prove it",
+    "No assembled onsite compatible family in this owner",
+    "No completed coupled Dirac or analytic KMS theorem"
+  ]
+}

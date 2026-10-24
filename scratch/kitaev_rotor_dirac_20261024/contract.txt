@@ -1,0 +1,6 @@
+Native rotor Dirac compatibility on actual noncommutative boundary carrier.
+Owners KitaevRotorMatrix matrix formulas, KitaevBoundaryFaithful injective full M2 hom and constructed metric adjoint transport J M† J, J=diag(1,-1).
+Ring A, complex algebra with compatible star; positive length native Majorana family; actual endpoint star-selfadjointness supplied. No assumed signs for constructed metric.
+Missing bridge in searched Canonical rotor/Dirac APIs: rotor#(c,s)=rotor(star c,star s); movingPlus#(c,s)=movingPlus(star c,-star s). For star-fixed c,s and Nontrivial A, movingPlus #fixed iff c*s=0.
+Circle equation concerns idempotence separately; fixed-metric selfadjointness is not automatic under elliptic conjugation. No positive-Hilbert adjoint replacement, analytic flow or full commutant claim.
+Concrete non-vacuity: actual twoSiteOperators and twoSiteKreinData, c=3/5,s=4/5, gives idempotence (circle normalized) and failure of fixed-metric selfadjointness. This distinguishes two notions on the same full operator carrier.

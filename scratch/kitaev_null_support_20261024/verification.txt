@@ -1,0 +1,14 @@
+Owner: lean/InfoGeometry/Canonical/KitaevNullSupport.lean
+SHA256: b96da51475e44164d258b86117ee234e69308ed3ef215a060ee83cc5086bb8c8
+Parent locked build: session 55098, exit 0, 9307 jobs.
+Build log: /tmp/kitaev-null-support-build.log
+Independent A-A: zorn_semantic_audit PASS (source and interpretation).
+Independent QA: zorn_acceptance ACCEPTED, audit session 39792 exit 0.
+Audit log: /tmp/kitaev-null-support-qa.log
+Audited declarations: 7 (one definition, six theorems).
+Transitive axiom union: propext, Classical.choice, Quot.sound.
+Strict screen: 0 findings. Refactor: []. Staged whitespace: clean.
+No owner warnings observed; dependency warnings remain outside this scope.
+Proved: actual Kitaev normalized null-pair support expansion, Dirac-bra action,
+idempotence, trace 2, nonidentity in M4(C), and fixedness of both null spinors.
+No exact-rank, positivity, full-support CAR, or physical interpretation asserted.

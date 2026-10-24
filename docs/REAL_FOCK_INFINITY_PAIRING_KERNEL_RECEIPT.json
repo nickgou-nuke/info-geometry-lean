@@ -1,0 +1,73 @@
+{
+  "disposition": "ACCEPTED_WITH_LIMITED_SCOPE",
+  "owner": "lean/InfoGeometry/Clifford/RealFockInfinityPairing.lean",
+  "session_id": 4952,
+  "evidence_directory": "/tmp/qa-a-fock-infinity-pairing-live-cbwhjj8y",
+  "commands_and_results": {
+    "build": {
+      "command": [
+        "lake",
+        "build",
+        "+InfoGeometry.Clifford.RealFockInfinityPairing:olean"
+      ],
+      "exit": 0
+    },
+    "axioms": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/Clifford/RealFockInfinityPairing.olean"
+      ],
+      "exit": 0
+    },
+    "strict": {
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/Clifford/RealFockInfinityPairing.lean",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    "stable_candidate_contract_import_and_pins": true
+  },
+  "before_sha256": {
+    "lean/InfoGeometry/Clifford/RealFockInfinityPairing.lean": "9c83a8f82e0fe0e004519a6317700bc4c69a5ddaf7a77f6a6637381f7d0b8d8b",
+    "scratch/RealFockInfinityPairing20261024v2.md": "4213732a788d03c01f6a306795790fe6229c3d1625a4771042cf46f1450b14a0",
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lean/InfoGeometry/Clifford/FiniteRealFockStageIsometry.lean": "05c1dde31a9a9990c5d44f1c517d9e1dc398bcb31d25706b8f1544e553ed8987"
+  },
+  "after_sha256": {
+    "lean/InfoGeometry/Clifford/RealFockInfinityPairing.lean": "9c83a8f82e0fe0e004519a6317700bc4c69a5ddaf7a77f6a6637381f7d0b8d8b",
+    "scratch/RealFockInfinityPairing20261024v2.md": "4213732a788d03c01f6a306795790fe6229c3d1625a4771042cf46f1450b14a0",
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lean/InfoGeometry/Clifford/FiniteRealFockStageIsometry.lean": "05c1dde31a9a9990c5d44f1c517d9e1dc398bcb31d25706b8f1544e553ed8987"
+  },
+  "actual_declaration_count": 25,
+  "axiom_audit": "all actual declarations passed repository allowlist",
+  "strict": {
+    "violations": {},
+    "quarantined_packets": []
+  },
+  "owner_warnings": [],
+  "dependency_warnings": "Existing upstream/package warnings retained in logs.",
+  "build_summary": [
+    "Build completed successfully (3571 jobs)."
+  ],
+  "scope": "Exact native RealFockInfinityPairing owner on existing FockInfinity via native colimit lift; no aggregate acceptance.",
+  "no_source_edits": true,
+  "lock_released": true,
+  "log_sha256": {
+    "build.log": "28e9c06ea85348fd63f87138e12d0041d70a5e19d514bcba8b9f2e91e1f2d82d",
+    "axioms.log": "d1cf4478cf4fef51b0aaeeb033ace5429f9de5ba41f3e510ec8679d9d44120ae",
+    "strict.log": "747443d22b8ccffb07c44835fa4a015e33c702c22548bbc3cecde756a8b81eb7"
+  }
+}

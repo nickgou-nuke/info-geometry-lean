@@ -1,0 +1,10 @@
+Native group-level bridge for Canonical/ReflexiveNilpotentFlows.
+Assumptions: Ring A, CommRing R, Algebra R A, d*d=0, B*B=0,
+d*B*d=d, B*d*B=B. No full-support assumption.
+For scalar unit λ:Rˣ package diagonal (λ:R) (↑λ⁻¹) d B as Aˣ,
+using diagonal_inverse in both orders. Prove these units form a native
+MonoidHom Rˣ →* Aˣ through diagonal_mul. Existing weylUnit conjugates
+this homomorphism's value to its group inverse via weyl_diagonal.
+The complement sector is fixed by both operators. This is the genuine
+inversion relation in Units A, not a sign-change or an identification of
+a manifold, topological group, or geometric quotient. No new law structure.

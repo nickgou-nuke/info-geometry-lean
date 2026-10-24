@@ -1,0 +1,91 @@
+{
+  "scope": "Actual finite Fock realization of Stream5 moving idempotents, Stream4 shear/quarter-turn operators and Stream2 support-weight scaling, using native coordinate creation and contraction CLMs.",
+  "proof_author": "Kepler",
+  "semantic_auditor": "Popper",
+  "kernel_qa": "Ampere",
+  "disposition": "ACCEPTED_WITH_LIMITED_SCOPE",
+  "result": {
+    "build_FiniteFockRotorShear": {
+      "command": [
+        "lake",
+        "build",
+        "+InfoGeometry.Clifford.FiniteFockRotorShear:olean"
+      ],
+      "exit": 0
+    },
+    "build_FiniteFockModularScaling": {
+      "command": [
+        "lake",
+        "build",
+        "+InfoGeometry.Clifford.FiniteFockModularScaling:olean"
+      ],
+      "exit": 0
+    },
+    "axioms_FiniteFockRotorShear": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/Clifford/FiniteFockRotorShear.olean"
+      ],
+      "exit": 0
+    },
+    "strict_FiniteFockRotorShear": {
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/Clifford/FiniteFockRotorShear.lean",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    "axioms_FiniteFockModularScaling": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/Clifford/FiniteFockModularScaling.olean"
+      ],
+      "exit": 0
+    },
+    "strict_FiniteFockModularScaling": {
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/Clifford/FiniteFockModularScaling.lean",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    "stable_candidate_contract_import_and_pins": true
+  },
+  "hashes": {
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lean/InfoGeometry/Canonical/PeirceWeightedTrace.lean": "cb93daf90aaccc5dbb5744c3a8a10b2815c5041c26f445ebeabc58f15f8a6bf7",
+    "lean/InfoGeometry/Canonical/ReflexiveRotorRealTime.lean": "4d02458fbc4ef7a5e5c0963101dbdbcbbee1dbf882ec1c1219652315fb3db885",
+    "lean/InfoGeometry/Canonical/RootsOfZeroUnityMoebiusModularG22.lean": "554c868250b44ece9a2d289d469db4528006cfe73bf94e5b89f0919b08fd8af3",
+    "lean/InfoGeometry/Clifford/FiniteFockCLMReflexivePair.lean": "f9b1142a7a24640d499b15449561c133480d23a5b402700b8a37f79aa8502cff",
+    "lean/InfoGeometry/Clifford/FiniteFockModularScaling.lean": "9c60574e3deb4c3db7e674891200ab0410c561644938ea67899fd98f7a8b8afc",
+    "lean/InfoGeometry/Clifford/FiniteFockRotorShear.lean": "bb0ddd68306bbce1dcce2f7afd4b5c6b89204ab252b0863c2035764d797d90eb",
+    "scratch/FiniteFockModularScaling20261024.md": "0fda7c85fcc94b112a7bac9e36f992b529bcefeee91fea4d85adff740a6472ab",
+    "scratch/FiniteFockRotorShearImplementation20261024.md": "f46534502db820b65952cbc5642a3775af18ac1176e07425e1f55cff35888a5a"
+  },
+  "axiom_logs": {
+    "FiniteFockRotorShear": "warning: LeanCopilot: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanCopilot' has local changes\nwarning: LeanArchitect: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanArchitect' has local changes\nChecking .lake/build/lib/lean/InfoGeometry/Clifford/FiniteFockRotorShear.olean\n  \u2713 all 21 declarations clean\n\n\u2713 All modules passed.\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/Clifford/FiniteFockRotorShear.olean:PASS\n",
+    "FiniteFockModularScaling": "warning: LeanCopilot: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanCopilot' has local changes\nwarning: LeanArchitect: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanArchitect' has local changes\nChecking .lake/build/lib/lean/InfoGeometry/Clifford/FiniteFockModularScaling.olean\n  \u2713 all 15 declarations clean\n\n\u2713 All modules passed.\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/Clifford/FiniteFockModularScaling.olean:PASS\n"
+  },
+  "exclusions": [
+    "No new spinor carrier or flow",
+    "No shear orthogonality or exact order claim",
+    "Scaling sandwiches do not assert inverse conjugation for arbitrary coefficients",
+    "No analytic KMS state or completed infinite Fock construction"
+  ]
+}

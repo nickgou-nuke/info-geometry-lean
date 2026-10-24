@@ -1,0 +1,48 @@
+{
+  "scope": "Arbitrary finite Gibbs seed to native compatible Cstar stage states; no analytic KMS claim",
+  "proof_author": "Kepler",
+  "semantic_auditor": "Popper",
+  "kernel_qa": "Ampere",
+  "disposition": "ACCEPTED_WITH_LIMITED_SCOPE",
+  "result": {
+    "build": {
+      "command": [
+        "lake",
+        "build",
+        "+InfoGeometry.Canonical.FiniteSeedGibbsCStarStates:olean"
+      ],
+      "exit": 0
+    },
+    "axioms": {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "--run",
+        "tools/infra/axiom_check.lean",
+        ".lake/build/lib/lean/InfoGeometry/Canonical/FiniteSeedGibbsCStarStates.olean"
+      ],
+      "exit": 0
+    },
+    "strict": {
+      "command": [
+        "python3",
+        "tools/infra/opengauss_screener.py",
+        "lean/InfoGeometry/Canonical/FiniteSeedGibbsCStarStates.lean",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    "stable_candidate_contract_import_and_pins": true
+  },
+  "hashes": {
+    "lean/InfoGeometry/Canonical/FiniteSeedGibbsCStarStates.lean": "c549798097822a7823a50d3451efa82d05271e85f819733e49a2406ffccd58e2",
+    "lean/InfoGeometry/Canonical/FiniteSeedGibbsColimit.lean": "86732370417d6a88cea16df724edef78b9ad3dfe7b6da6550019a29ae3c6c1d8",
+    "lean/InfoGeometry/Canonical/CantorBernoulliCStarMatrixTraceState.lean": "5ff1a505d1d9e0f0d88fff34dec5f77a2a939e634d6589cf10ccdba298bdaee8",
+    "lakefile.lean": "fd75b81703e018aaabf1763f8ae2cb438c14fa7aa6a160134033616e0e2763ff",
+    "lake-manifest.json": "26d251175b18b53609698c563701d4c08ad323506d5c3087f914dd14965546da",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b"
+  },
+  "axiom_log": "warning: LeanCopilot: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanCopilot' has local changes\nwarning: LeanArchitect: repository '/home/goutev/repos/info-geometry-lean/.lake/packages/LeanArchitect' has local changes\nChecking .lake/build/lib/lean/InfoGeometry/Canonical/FiniteSeedGibbsCStarStates.olean\n  \u2713 all 21 declarations clean\n\n\u2713 All modules passed.\nMODULE_RESULT:.lake/build/lib/lean/InfoGeometry/Canonical/FiniteSeedGibbsCStarStates.olean:PASS\n"
+}

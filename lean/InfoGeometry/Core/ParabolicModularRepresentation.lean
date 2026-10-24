@@ -92,4 +92,25 @@ theorem shared_sign_commutes (hd : d * d = 0) (hb : b * b = 0)
   · rw [(unit_relations hd hb hdb hbd).2]
     exact (Commute.refl _).pow_left 3
 
+/-- The common sign commutes with every element in the represented group. -/
+theorem sign_commutes_with_representation (hd : d * d = 0) (hb : b * b = 0)
+    (hdb : d * b * d = d) (hbd : b * d * b = b) (g : ModularRelationsGroup) :
+    Commute (tripleUnit hd hb ^ 2) (representation hd hb hdb hbd g) := by
+  let C : Subgroup Aˣ :=
+    { carrier := {x | Commute (tripleUnit hd hb ^ 2) x}
+      one_mem' := Commute.one_right _
+      mul_mem' := fun hx hy => hx.mul_right hy
+      inv_mem' := fun hx => hx.inv_right }
+  have hgen : ∀ i : Bool,
+      (PresentedGroup.of i : ModularRelationsGroup) ∈
+        C.comap (representation hd hb hdb hbd) := by
+    intro i
+    change Commute (tripleUnit hd hb ^ 2)
+      (representation hd hb hdb hbd (PresentedGroup.of i))
+    cases i
+    · simpa [representation] using (shared_sign_commutes hd hb hdb hbd).1
+    · simpa [representation] using (shared_sign_commutes hd hb hdb hbd).2
+  exact PresentedGroup.generated_by modularRelations
+    (C.comap (representation hd hb hdb hbd)) hgen g
+
 end InfoGeometry.Core.ParabolicModularRepresentation

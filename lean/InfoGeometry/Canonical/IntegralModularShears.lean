@@ -75,7 +75,7 @@ theorem integral_generators : Subgroup.closure ({S, U} : Set (SL(2, ℤ))) = ⊤
     have hh := H.mul_mem (H.inv_mem hu) hs
     simpa [U, T, mul_assoc] using hh
   have hle : Subgroup.closure ({ModularGroup.S, ModularGroup.T} : Set (SL(2, ℤ))) ≤ H := by
-    apply Subgroup.closure_le.mpr
+    apply (Subgroup.closure_le _).mpr
     intro g hg
     rcases hg with rfl | hg
     · exact hstd
@@ -93,7 +93,7 @@ theorem integralRepresentation_surjective : Function.Surjective integralRepresen
   apply MonoidHom.range_eq_top.mp
   apply top_unique
   rw [← integral_generators]
-  apply Subgroup.closure_le.mpr
+  apply (Subgroup.closure_le _).mpr
   intro g hg
   rcases hg with rfl | hg
   · exact ⟨PresentedGroup.of false, by simp [integralRepresentation]⟩
@@ -119,7 +119,7 @@ theorem matrix_trace_boundary (u v : ℤ) (Y : Matrix (Fin 2) (Fin 2) ℤ) :
 /-- Actual unit-conjugacy invariance, distinct from the weighted boundary identities. -/
 theorem trace_unit_conjugation (g : (Matrix (Fin 2) (Fin 2) ℤ)ˣ)
     (X : Matrix (Fin 2) (Fin 2) ℤ) :
-    Matrix.trace ((g : Matrix (Fin 2) (Fin 2) ℤ) * X * ↑g⁻¹) = Matrix.trace X := by
+    Matrix.trace ((g : Matrix (Fin 2) (Fin 2) ℤ) * X * (↑(g⁻¹) : Matrix (Fin 2) (Fin 2) ℤ)) = Matrix.trace X := by
   rw [Matrix.trace_mul_comm, ← mul_assoc, g.inv_val, one_mul]
 
 /-- The universal power law does not force a primitive root: the zero pair collapses it. -/
@@ -133,8 +133,8 @@ theorem proper_support_defect :
 
 /-- The common sign is central relative to generated shears, not in the ambient algebra. -/
 theorem sign_not_ambient_central :
-    supportSign d₃ b₃ * Matrix.stdBasisMatrix 0 2 1 ≠
-      Matrix.stdBasisMatrix 0 2 1 * supportSign d₃ b₃ := by decide
+    supportSign d₃ b₃ * (!![0, 0, 1; 0, 0, 0; 0, 0, 0] : Matrix (Fin 3) (Fin 3) ℤ) ≠
+      (!![0, 0, 1; 0, 0, 0; 0, 0, 0] : Matrix (Fin 3) (Fin 3) ℤ) * supportSign d₃ b₃ := by decide
 
 #check @InfoGeometry.Core.ParabolicModularRepresentation.representation
 #check @InfoGeometry.Canonical.PeirceModularBridge.tripleUnit_eq_weylUnit

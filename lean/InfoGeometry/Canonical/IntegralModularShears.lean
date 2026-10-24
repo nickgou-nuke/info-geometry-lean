@@ -120,7 +120,7 @@ theorem matrix_trace_boundary (u v : ℤ) (Y : Matrix (Fin 2) (Fin 2) ℤ) :
 theorem trace_unit_conjugation (g : (Matrix (Fin 2) (Fin 2) ℤ)ˣ)
     (X : Matrix (Fin 2) (Fin 2) ℤ) :
     Matrix.trace ((g : Matrix (Fin 2) (Fin 2) ℤ) * X * (↑(g⁻¹) : Matrix (Fin 2) (Fin 2) ℤ)) = Matrix.trace X := by
-  rw [Matrix.trace_mul_comm, ← mul_assoc, g.inv_val, one_mul]
+  rw [Matrix.trace_mul_comm, ← mul_assoc, Units.inv_mul, one_mul]
 
 /-- The universal power law does not force a primitive root: the zero pair collapses it. -/
 theorem zero_pair_collapse :

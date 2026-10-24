@@ -67,3 +67,9 @@ Further source-backed local replacements (2026-10-24):
 
 These records reuse inspected owners and have scoped kernel and independent
 verification evidence. They do not classify the other inventory rows.
+
+`FINITE_CUNTZ_REFINEMENT_REALIGNMENT.md` further records the finite-stage
+replacement: existing rectangular branches determine a unique amplification
+of each operator. The exact two-branch intertwining characterization is
+kernel checked and independently reviewed; it does not assert finite square
+Cuntz isometries or infer a continuum representation from finite dimensions.

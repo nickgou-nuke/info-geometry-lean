@@ -36,6 +36,7 @@ def weylInverse (d b : A) : A := harmonicSupport d b - majoranaMinus d b
 
 variable {d b : A}
 
+omit [StarRing A] in
 /-- The unipotent triple is already forced by square-zero and inner regularity. -/
 theorem unipotent_triple (hd : d * d = 0) (hinner : d * b * d = d) :
     (1 + d) * (1 - b) * (1 + d) = weylElement d b := by

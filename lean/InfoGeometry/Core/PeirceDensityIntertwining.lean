@@ -60,6 +60,7 @@ theorem squared_density_intertwining
       (u * u) • (b * density d b (u * u) (v * v)) :=
   density_intertwining h hd (u * u) (v * v)
 
+omit [StarRing A] in
 /-- Pass an algebraic cross-intertwining law through an actually tracial map. -/
 theorem weighted_trace_of_intertwining
     (τ : A →ₗ[R] R) (hτ : ∀ x y : A, τ (x * y) = τ (y * x))

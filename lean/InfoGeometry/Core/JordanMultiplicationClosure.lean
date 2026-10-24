@@ -23,11 +23,12 @@ variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
 def jordanLeft (s : A) : Module.End R A where
   toFun x := s * x + x * s
   map_add' x y := by simp only [mul_add, add_mul]; abel
-  map_smul' r x := by simp only [mul_smul_comm, smul_mul_assoc, smul_add]
+  map_smul' r x := by simp only [mul_smul_comm, smul_mul_assoc, smul_add, RingHom.id_apply]
 
 /-- The commutator order is `[s,t]`, not `[t,s]`. -/
 theorem commutator_apply (s t x : A) :
-    (jordanLeft (R := R) s * jordanLeft t - jordanLeft t * jordanLeft s) x =
+    (jordanLeft (R := R) s * jordanLeft (R := R) t -
+      jordanLeft (R := R) t * jordanLeft (R := R) s : Module.End R A) x =
       (s * t - t * s) * x - x * (s * t - t * s) := by
   change s * (t * x + x * t) + (t * x + x * t) * s -
     (t * (s * x + x * s) + (s * x + x * s) * t) = _
@@ -43,9 +44,12 @@ theorem associator_orientation (s t x : A) :
 
 /-- The resulting linear operator obeys the associative Leibniz identity. -/
 theorem commutator_leibniz (s t x y : A) :
-    (jordanLeft (R := R) s * jordanLeft t - jordanLeft t * jordanLeft s) (x * y) =
-      ((jordanLeft (R := R) s * jordanLeft t - jordanLeft t * jordanLeft s) x) * y +
-      x * ((jordanLeft (R := R) s * jordanLeft t - jordanLeft t * jordanLeft s) y) := by
+    (jordanLeft (R := R) s * jordanLeft (R := R) t -
+      jordanLeft (R := R) t * jordanLeft (R := R) s : Module.End R A) (x * y) =
+      ((jordanLeft (R := R) s * jordanLeft (R := R) t -
+      jordanLeft (R := R) t * jordanLeft (R := R) s : Module.End R A) x) * y +
+      x * ((jordanLeft (R := R) s * jordanLeft (R := R) t -
+      jordanLeft (R := R) t * jordanLeft (R := R) s : Module.End R A) y) := by
   simp only [commutator_apply]
   noncomm_ring
 

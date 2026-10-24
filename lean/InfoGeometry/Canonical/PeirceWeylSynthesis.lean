@@ -40,7 +40,8 @@ theorem peirce_weyl_trace_synthesis {d b : A}
     (weylUnit h hd : A) * d * ↑((weylUnit h hd)⁻¹) = -b ∧
     (u * u) * weightedTrace τ (density d b (u * u) (v * v)) (d * x) =
       (v * v) * weightedTrace τ (density d b (u * u) (v * v)) (x * d) ∧
-    (jordanLeft (R := R) s * jordanLeft t - jordanLeft t * jordanLeft s) x =
+    (jordanLeft (R := R) s * jordanLeft (R := R) t -
+      jordanLeft (R := R) t * jordanLeft (R := R) s : Module.End R A) x =
       (s * t - t * s) * x - x * (s * t - t * s) := by
   exact ⟨h.squareZero_chiralHodge_decomposition hd, harmonicSupport_star h,
     thirdRoot_polynomial h hd, thirdRoot_cube h hd, (sixthRoot_laws h hd).2.2,

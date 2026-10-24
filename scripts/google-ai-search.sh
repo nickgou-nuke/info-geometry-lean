@@ -65,17 +65,17 @@ echo ""
 
 case "$MODE" in
     drunken-professor|drunk-professor)
-        PROMPT="The following stream is a hazy, superimposed physics/mathematics brainstorm with half-recalled identities ('drunken professor' stream):
+        PROMPT="The drunken professor confabulated hazy, raw, mix-up entangled ideas:
 
 \"\"\"
 $QUERY
 \"\"\"
 
-Reconstruct the pristine mathematical architecture the author intended:
-1. De-conflate superimposed physical regimes and isolate the exact algebraic carriers (e.g., associative *-ring / 2x2 split-quaternion matrix, Cayley-Dickson doubling pair, alternative Zorn vector-matrix, or differential form / Casimir invariant).
-2. Identify the exact canonical literature references, authors, theorem names, and explicit equations that govern each carrier.
-3. Formulate the resulting definitions, lemmas, and theorems in canonical Lean 4 / Mathlib 4 style for existing owner modules—using constructive zero-hypothesis proofs (e.g., Units Fˣ instead of assumed reciprocity hypotheses, concrete Peirce projectors instead of wrapper structures, and zero witnesses/certificates/sorry).
-4. If an analytic or continuum limit is mentioned, isolate the exact finite algebraic identity or inductive colimit step that is 100% provable constructively."
+Extract the stream of pure mathematical consciousness from these random thoughts:
+1. Ignore the physics prose and translate the physics concepts into their exact mathematical equivalents.
+2. Extract the archetypes in the raw stream and order them properly in a causal poset (algebraic carrier -> noncommutative generators/projectors -> bimodule/sandwich flows -> trace/norm invariants).
+3. Do NOT use scalar, diagonal, or commuting toys: stay strictly within noncommutative matrix/operator algebra and geometry (or non-associative Cayley-Dickson / Zorn vector-matrix algebra).
+4. Regenerate a stream of canonical math in native Mathlib in Lean 4 with genuine lemmas and theorems with full constructive proofs only (zero wrappers, zero witnesses, zero assumed projector hypotheses), citing the exact primary mathematical literature."
         ;;
     socratic)
         PROMPT="Perform a rigorous Socratic mathematical audit of the following claim or query:

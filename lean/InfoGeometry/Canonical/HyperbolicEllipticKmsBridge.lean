@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Core.HyperbolicPeirceRotor
-import InfoGeometry.Canonical.DeBruijnRotorAlternationCycle
 
 /-!
 # Hyperbolic--elliptic chordal duality, KMS diagonal decoherence, and bipartite sandwiches
@@ -23,7 +22,6 @@ namespace InfoGeometry.Canonical.HyperbolicEllipticKmsBridge
 open InfoGeometry.Core.DualSeedPeirce
 open InfoGeometry.Core.PeirceRotor
 open InfoGeometry.Core.HyperbolicPeirceRotor
-open InfoGeometry.Canonical.DeBruijnRotorAlternationCycle
 open InfoGeometry.Singular.MoorePenrose
 open InfoGeometry.Core.DiracSuperalgebra
 
@@ -103,6 +101,50 @@ section Scalars
 
 variable {R : Type*} [CommRing R] [Algebra R A]
 
+/-- Elliptic chordal direction `s • Gamma + c • Q_1`. -/
+def ellipticChordalDirection (c s : R) (d b : A) : A :=
+  s • phasePolarization d b + c • transitionVelocity d b
+
+theorem ellipticChordalDirection_sq (h : IsDualSeedPair d b) (c s : R) :
+    ellipticChordalDirection c s d b * ellipticChordalDirection c s d b =
+      (c * c + s * s) • carrierSupport d b := by
+  unfold ellipticChordalDirection
+  calc
+    _ = (s * s) • (phasePolarization d b * phasePolarization d b) +
+        (c * c) • (transitionVelocity d b * transitionVelocity d b) +
+        (s * c) • (phasePolarization d b * transitionVelocity d b +
+          transitionVelocity d b * phasePolarization d b) := by
+      simp only [add_mul, mul_add, smul_mul_smul]
+      module
+    _ = _ := by
+      rw [h.clifford_squares.2.2, h.clifford_squares.2.1, h.polarization_velocity]
+      module
+
+theorem movingPolePlus_sub_polePlus {c s : R} (hcs : c * c + s * s = 1) :
+    movingPolePlus c s d b - polePlus d b = -s • ellipticChordalDirection c s d b := by
+  rw [movingPolePlus_formula]
+  calc
+    _ = (c * c + s * s - 1) • polePlus d b - s • ellipticChordalDirection c s d b := by
+      unfold ellipticChordalDirection phasePolarization chiralSupport
+      module
+    _ = _ := by rw [hcs, sub_self, zero_smul, zero_sub, neg_smul]
+
+/-- Elliptic chordal square `+(s * s) • carrierSupport d b` on `c^2 + s^2 = 1`. -/
+theorem elliptic_chordal_square (h : IsDualSeedPair d b) {c s : R}
+    (hcs : c * c + s * s = 1) :
+    (movingPolePlus c s d b - polePlus d b) *
+      (movingPolePlus c s d b - polePlus d b) = (s * s) • carrierSupport d b := by
+  rw [movingPolePlus_sub_polePlus hcs, smul_mul_smul, ellipticChordalDirection_sq h, hcs,
+    one_smul, neg_mul_neg]
+
+/-- Elliptic transition sandwich: `P_+ * P_+(c, s) * P_+ = (c * c) • P_+`. -/
+theorem elliptic_transition_sandwich (h : IsDualSeedPair d b) (c s : R) :
+    polePlus d b * movingPolePlus c s d b * polePlus d b = (c * c) • polePlus d b := by
+  rw [movingPolePlus_formula]
+  simp only [transitionVelocity, majoranaPlus, mul_sub, sub_mul, mul_add,
+    mul_smul_comm, smul_mul_assoc, h.pp, h.pq, h.pd, h.pb, h.dp,
+    sub_zero, add_zero, smul_zero]
+
 /-- Hyperbolic chordal direction `v • Gamma - u • J`. -/
 def hyperbolicChordalDirection (u v : R) (d b : A) : A :=
   v • phasePolarization d b - u • wheelGenerator d b
@@ -153,7 +195,7 @@ theorem hyperbolic_transition_sandwich (h : IsDualSeedPair d b) (u v : R) :
 
 /-- Division-free two-state transition sandwich (Aharonov pre/post-selected amplitude)
 of the transition velocity `Q_1 = d + b` between `polePlus` and `movingPolePlus c s`:
-`P_+ * Q_1 * P_+(c, s) = (s * s) • d - (c * s) • P_+`. -/
+`P_+ * Q_1 * P_+(c, s) = (s * s) • d - (c * s) • polePlus d b`. -/
 theorem two_state_velocity_sandwich (h : IsDualSeedPair d b) (c s : R) :
     polePlus d b * transitionVelocity d b * movingPolePlus c s d b =
       (s * s) • d - (c * s) • polePlus d b := by
@@ -178,7 +220,7 @@ coherence `-c s • Q_1` and yields `kmsModularWeight s c d b`. -/
 theorem diagonalDecoherence_movingPolePlus_eq_kms (h : IsDualSeedPair d b) (c s : R) :
     diagonalDecoherence d b (movingPolePlus c s d b) = kmsModularWeight s c d b := by
   unfold diagonalDecoherence kmsModularWeight
-  rw [transition_sandwich h c s, movingPolePlus_formula]
+  rw [elliptic_transition_sandwich h c s, movingPolePlus_formula]
   simp only [transitionVelocity, majoranaPlus, mul_sub, sub_mul, mul_add,
     mul_smul_comm, smul_mul_assoc, h.qp, h.qq, h.qd, h.qb, h.bq,
     sub_zero, zero_add, smul_zero]
@@ -196,7 +238,7 @@ theorem elliptic_hyperbolic_kms_master_synthesis (h : IsDualSeedPair d b)
     diagonalDecoherence d b (movingPolePlus c s d b) = kmsModularWeight s c d b :=
   ⟨(moving_projector_relations h hcs).1,
    (hyperbolic_projector_relations h huv).1,
-   chordal_square h hcs,
+   elliptic_chordal_square h hcs,
    hyperbolic_chordal_square h huv,
    diagonalDecoherence_movingPolePlus_eq_kms h c s⟩
 

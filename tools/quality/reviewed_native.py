@@ -89,10 +89,12 @@ EXPECTED_TARGETS = (
     'InfoGeometry.Canonical.MajoranaPfaffian4',
 )
 
-def source_files(directory: Path) -> dict:
+def source_files(directory: Path, excluded_directories: frozenset[str] = frozenset()) -> dict:
     """Actual source bytes, including ignored files; exclude generated cache dirs.
 
-    This is source stability evidence, not a proof of all inputs read by Lake.
+    Explicit relative-directory exclusions can omit independent editor
+    worktrees. Ordinary ignored sources remain included. This is stability
+    evidence, not a proof of all Lake inputs.
     Symlink files bind link text and resolved bytes; symlink dirs fail explicitly.
     """
     result = {}
@@ -104,6 +106,8 @@ def source_files(directory: Path) -> dict:
         parent = Path(parent)
         for name in list(dirs):
             if name in {'.git', '.lake', '__pycache__'}:
+                dirs.remove(name)
+            elif (parent / name).relative_to(directory).as_posix() in excluded_directories:
                 dirs.remove(name)
             else:
                 require(not (parent / name).is_symlink(), f'Unbound source directory symlink: {parent / name}')
@@ -174,7 +178,9 @@ def snapshot(root: Path) -> dict:
         packages.append({'name': name, 'entry': item, 'checkout': str(checkout),
                          'package': str(package), 'identity': identity,
                          'sources': source_files(checkout)})
-    sources = {p: source_files(root / p) for p in ('lean', 'tools', 'proofs')}
+    sources = {p: source_files(root / p,
+                frozenset({'.kilo/worktrees'}) if p == 'lean' else frozenset())
+               for p in ('lean', 'tools', 'proofs')}
     configs = {p: sha256_file(root / p) for p in
                ('lean-toolchain', 'lakefile.lean', 'lake-manifest.json', '.gitmodules')}
     root_status = git(root, 'status', '--porcelain', '--untracked-files=all')

@@ -30,12 +30,14 @@ noncomputable def sandwich (k : ZornVectorMatrix R) :
 
 /-- The obstruction to commuting distinct left/right multiplication maps. -/
 theorem left_right_defect (u v x : ZornVectorMatrix R) :
-    ((R_map (R := R) v).comp (L_map (R := R) u) - (L_map (R := R) u).comp (R_map (R := R) v)) x =
+    ((R_map (R := R) v).comp (L_map (R := R) u) -
+      (L_map (R := R) u).comp (R_map (R := R) v)) x =
       _root_.associator u x v := rfl
 
 /-- Flexibility is exactly commutation of the same-element left/right maps. -/
 theorem same_kernel_commute (k : ZornVectorMatrix R) :
-    (R_map (R := R) k).comp (L_map (R := R) k) = (L_map (R := R) k).comp (R_map (R := R) k) := by
+    (R_map (R := R) k).comp (L_map (R := R) k) =
+      (L_map (R := R) k).comp (R_map (R := R) k) := by
   apply LinearMap.ext
   intro x
   change (k * x) * k = k * (x * k)
@@ -45,7 +47,8 @@ theorem same_kernel_commute (k : ZornVectorMatrix R) :
 
 /-- Middle Moufang as an identity of actual linear endomorphisms. -/
 theorem middle_moufang_operator (k y : ZornVectorMatrix R) :
-    (R_map (R := R) (y * k)).comp (L_map (R := R) k) = (sandwich k).comp (R_map (R := R) y) := by
+    (R_map (R := R) (y * k)).comp (L_map (R := R) k) =
+      (sandwich k).comp (R_map (R := R) y) := by
   apply LinearMap.ext
   intro x
   change (k * x) * (y * k) = (k * (x * y)) * k
@@ -66,14 +69,17 @@ theorem finite_sum_transport {ι : Type*} (s : Finset ι) (k : ZornVectorMatrix 
 
 /-- Distinct kernels need not commute: a native nonzero associator is the witness. -/
 theorem distinct_kernels_do_not_commute [Nontrivial R] :
-    (R_map (R := R) (ZornVectorMatrix.U (R := R) 2)).comp (L_map (R := R) (ZornVectorMatrix.U (R := R) 0)) ≠
-      (L_map (R := R) (ZornVectorMatrix.U (R := R) 0)).comp (R_map (R := R) (ZornVectorMatrix.U (R := R) 2)) := by
+    (R_map (R := R) (ZornVectorMatrix.U (R := R) 2)).comp
+        (L_map (R := R) (ZornVectorMatrix.U (R := R) 0)) ≠
+      (L_map (R := R) (ZornVectorMatrix.U (R := R) 0)).comp
+        (R_map (R := R) (ZornVectorMatrix.U (R := R) 2)) := by
   intro heq
   have h := congrArg (fun f : ZornVectorMatrix R →ₗ[R] ZornVectorMatrix R =>
     f (ZornVectorMatrix.U (R := R) 1)) heq
   apply ZornVectorMatrix.associator_U_zero_U_one_U_two_ne_zero (R := R)
-  change ((ZornVectorMatrix.U 0 * ZornVectorMatrix.U 1) * ZornVectorMatrix.U 2 -
-    ZornVectorMatrix.U 0 * (ZornVectorMatrix.U 1 * ZornVectorMatrix.U 2)) = 0
+  change ((ZornVectorMatrix.U (R := R) 0 * ZornVectorMatrix.U (R := R) 1) *
+      ZornVectorMatrix.U (R := R) 2 - ZornVectorMatrix.U (R := R) 0 *
+        (ZornVectorMatrix.U (R := R) 1 * ZornVectorMatrix.U (R := R) 2)) = 0
   exact sub_eq_zero.mpr h
 
 end InfoGeometry.Algebra.ZornBilateralAction

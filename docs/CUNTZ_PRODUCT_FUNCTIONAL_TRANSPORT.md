@@ -11,7 +11,9 @@ Prove normalization, star preservation, and its exact restriction to the
 colimit embedding. Positivity on embedded star-squares follows from the
 existing positive product functional. The separate homogeneous-component
 argument below proves positivity on arbitrary quotient star-squares;
-it is not inferred from the linear retraction alone. KMS remains open.
+it is not inferred from the linear retraction alone. The uniform functional's
+full algebraic KMS identity is now proved in `CuntzComplexStarAlgebraicKMS`;
+see `CUNTZ_QUOTIENT_ALGEBRAIC_KMS_CONTRACT.md` for its verification and scope.
 
 Owners: `CuntzComplexStarColimitCoreRange.range_quotientAlgHom`,
 `CuntzComplexStarColimitEmbedding.quotientHom_injective`,

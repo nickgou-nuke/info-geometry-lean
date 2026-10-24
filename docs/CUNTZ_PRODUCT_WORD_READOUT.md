@@ -28,5 +28,5 @@ was applied after the rerun. Logs: `/tmp/cuntz-word-readout-audit.log` and
 
 Readout and uniqueness do not require nonnegative weights. Positivity of the
 previously constructed functional requires the separate `∀ i, 0 ≤ q i`
-hypothesis. Full algebraic KMS remains the next obligation; see
+hypothesis. Full algebraic KMS is now proved in a separate owner; see
 `CUNTZ_QUOTIENT_ALGEBRAIC_KMS_CONTRACT.md`.

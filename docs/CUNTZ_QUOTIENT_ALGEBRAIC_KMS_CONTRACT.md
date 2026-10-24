@@ -1,6 +1,6 @@
 # Algebraic KMS closure on the corrected binary quotient
 
-Status: proof work pending. This is a theorem contract, not acceptance evidence.
+Status: full algebraic identity kernel-checked; independent QA accepted.
 
 The carrier is `ComplexStarCuntzAlg Bool` from `ComplexStarCuntzRedesign`.
 Use the existing `quotientProductFunctional` with both letter weights equal to
@@ -60,5 +60,29 @@ printed theorem dependencies are exactly `propext`, `Classical.choice`, and
 Independent QA reran the target successfully (9421 jobs, exit zero;
 `/tmp/cuntz-generator-qa.log`) and accepted the generator scope. There were
 zero own-source warnings, 732 dependency-source warnings, and two package
-notices. Multiplicative/span closure for arbitrary first argument is still
-to be implemented; the full target is not yet proved.
+notices. This generator step supplies the input for the closure below.
+
+## Full algebraic closure (2026-10-24)
+
+`CuntzComplexStarAlgebraicKMS.uniform_algebraic_KMS` (declaration namespace
+`InfoGeometry.OperatorAlgebra.CuntzComplexStarProductFunctional`) directly
+proves the existing `InfoGeometry.Modular.KMSState.IsAlgebraicKMS1` predicate
+for the uniform quotient functional and `carrierFlow Complex.I`.
+No cyclicity assumption is added. A reusable multiplication lemma propagates
+generator cyclicity through words and adjoint words; the existing quotient
+word-pair spanning theorem extends it to all first arguments.
+
+The locked audit target
+`InfoGeometry.OperatorAlgebra.CuntzComplexStarAlgebraicKMSAudit` passed
+(9425 jobs, exit zero; `/tmp/cuntz-full-kms-audit.log`). The union of the
+seven axiom reports is exactly `propext`, `Classical.choice`, and `Quot.sound`.
+The generic multiplication lemma uses only `propext` and `Quot.sound`;
+the other six reports contain all three.
+The two new modules have zero compiler warnings. Strict screening found
+zero traps; independent semantic review passed. Independent QA accepted the
+same target: session 47823, exit zero, 9425 jobs, `/tmp/cuntz-full-kms-qa.log`.
+
+The existing algebraic predicate expresses cyclicity only. Normalization and
+positivity are supplied separately by the prior product-functional theorems.
+This closes the full algebraic target above, while analytic strip regularity
+and completion remain outside this theorem.

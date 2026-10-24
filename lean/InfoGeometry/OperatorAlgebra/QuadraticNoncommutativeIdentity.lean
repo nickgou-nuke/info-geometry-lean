@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -110,6 +115,64 @@ theorem quadratic_commutator_expansion (a b c d : A) :
         - c * quadraticAnticommutator a d * b := by
   dsimp [quadraticCommutator, quadraticAnticommutator]
   noncomm_ring
+
+/-- Negative CAR contractions give the matrix Lie bracket for the signed
+bilinears. This is a Lie bracket identity, not a matrix-unit product law or
+an identification with a general linear Lie superalgebra. -/
+theorem negative_car_bilinear_commutator {ι : Type*} [DecidableEq ι]
+    (d b : ι → A)
+    (hdd : ∀ i j, quadraticAnticommutator (d i) (d j) = 0)
+    (hbb : ∀ i j, quadraticAnticommutator (b i) (b j) = 0)
+    (hdb : ∀ i j, quadraticAnticommutator (d i) (b j) =
+      if i = j then -1 else 0) (i j l m : ι) :
+    quadraticCommutator (-(d i * b j)) (-(d l * b m)) =
+      (if j = l then -(d i * b m) else 0) -
+        (if m = i then -(d l * b j) else 0) := by
+  have hbd : quadraticAnticommutator (b j) (d l) =
+      if j = l then -1 else 0 := by
+    simpa only [quadraticAnticommutator, add_comm, eq_comm] using hdb l j
+  have hn (x y : A) : quadraticCommutator (-x) (-y) = quadraticCommutator x y := by
+    simp [quadraticCommutator]
+  rw [hn, quadratic_commutator_expansion, hbd, hbb, hdd, hdb]
+  by_cases hjl : j = l <;> by_cases him : i = m <;>
+    simp [hjl, him, eq_comm]
+
+/-- Signed CAR bilinears act on the forward family at the matching right index. -/
+theorem negative_car_bilinear_action_forward {ι : Type*} [DecidableEq ι]
+    (d b : ι → A)
+    (hdd : ∀ i j, quadraticAnticommutator (d i) (d j) = 0)
+    (hdb : ∀ i j, quadraticAnticommutator (d i) (b j) =
+      if i = j then -1 else 0) (i j k : ι) :
+    quadraticCommutator (-(d i * b j)) (d k) =
+      if j = k then d i else 0 := by
+  have hbd : quadraticAnticommutator (b j) (d k) =
+      if j = k then -1 else 0 := by
+    simpa only [quadraticAnticommutator, add_comm, eq_comm] using hdb k j
+  calc
+    _ = -(d i * quadraticAnticommutator (b j) (d k)) +
+        quadraticAnticommutator (d i) (d k) * b j := by
+      dsimp [quadraticCommutator, quadraticAnticommutator]
+      noncomm_ring
+    _ = _ := by
+      rw [hbd, hdd]
+      by_cases hjk : j = k <;> simp [hjk]
+
+/-- Signed CAR bilinears act contragrediently on the backward family. -/
+theorem negative_car_bilinear_action_backward {ι : Type*} [DecidableEq ι]
+    (d b : ι → A)
+    (hbb : ∀ i j, quadraticAnticommutator (b i) (b j) = 0)
+    (hdb : ∀ i j, quadraticAnticommutator (d i) (b j) =
+      if i = j then -1 else 0) (i j k : ι) :
+    quadraticCommutator (-(d i * b j)) (b k) =
+      if i = k then -(b j) else 0 := by
+  calc
+    _ = -(d i * quadraticAnticommutator (b j) (b k)) +
+        quadraticAnticommutator (d i) (b k) * b j := by
+      dsimp [quadraticCommutator, quadraticAnticommutator]
+      noncomm_ring
+    _ = _ := by
+      rw [hbb, hdb]
+      by_cases hik : i = k <;> simp [hik]
 
 theorem commutator_sub_central (x y c : A) (hc : ∀ z : A, c * z = z * c) :
     x * y - y * x = (x - c) * (y - c) - (y - c) * (x - c) := by

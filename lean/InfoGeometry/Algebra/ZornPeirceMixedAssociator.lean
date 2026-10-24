@@ -135,4 +135,45 @@ theorem trace_elliptic_triple (u v w : ZornVec3 R) :
   simp [trace, mul, offDiagonal, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
   ring
 
+/-- Genuine product derivations preserve the associator by a three-slot Leibniz law.
+This does not assert that fixing two associator arguments gives a derivation. -/
+theorem derivation_map_associator (D : Derivation (R := R))
+    (X Y Z : ZornVectorMatrix R) :
+    D (associator X Y Z) =
+      add (add (associator (D X) Y Z) (associator X (D Y) Z))
+        (associator X Y (D Z)) := by
+  simp only [associator, D.map_sub, D.map_mul, add_mul, mul_add]
+  ext i <;> simp [sub, add, neg] <;> ring
+
+set_option maxHeartbeats 2000000 in
+/-- Exact defect of the Filippov identity on trace-zero Zorn elements.
+The two fixed arguments are `E11 - E22` and `U 0`; the three variable
+arguments are `E11 - E22`, `U 1`, and `V 0`. -/
+theorem associator_filippov_defect :
+    let H : ZornVectorMatrix R := diagonal 1 (-1)
+    sub (associator H (U 0) (associator H (U 1) (V 0)))
+      (add (add (associator (associator H (U 0) H) (U 1) (V 0))
+        (associator H (associator H (U 0) (U 1)) (V 0)))
+        (associator H (U 1) (associator H (U 0) (V 0)))) =
+      smul (-4 : R) (U 1) := by
+  dsimp
+  ext i <;> (try fin_cases i) <;>
+    norm_num [associator, sub, add, neg, mul, diagonal, U, V, smul,
+      ZornVec3.basis, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+
+/-- If four is nonzero, the Zorn associator is not a Filippov three-bracket. -/
+theorem associator_not_filippov [NeZero (4 : R)] :
+    ¬ ∀ A B X Y Z : ZornVectorMatrix R,
+      associator A B (associator X Y Z) =
+        add (add (associator (associator A B X) Y Z)
+          (associator X (associator A B Y) Z))
+          (associator X Y (associator A B Z)) := by
+  intro h
+  have hd := associator_filippov_defect (R := R)
+  dsimp only at hd
+  rw [h] at hd
+  have hc := congrArg (fun W : ZornVectorMatrix R => W.v 1) hd
+  apply NeZero.ne (4 : R)
+  simpa [sub, add, neg, smul, U, ZornVec3.basis, eq_comm] using hc
+
 end InfoGeometry.Algebra.ZornVectorMatrix

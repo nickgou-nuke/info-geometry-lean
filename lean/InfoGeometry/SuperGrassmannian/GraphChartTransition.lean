@@ -111,4 +111,62 @@ theorem exists_map_graph_iff (T : Module.End R (M × N))
     change bottom x = bottom (u.symm (u x))
     rw [u.symm_apply_apply]
 
+/-- Swapping the two summands turns a graph into the graph of `g` exactly when
+`f` and `g` are two-sided inverses. The summands need not be isomorphic in advance. -/
+theorem swap_map_graph_eq_iff (f : M →ₗ[R] N) (g : N →ₗ[R] M) :
+    f.graph.map (LinearEquiv.prodComm R M N).toLinearMap = g.graph ↔
+      Function.LeftInverse g f ∧ Function.RightInverse g f := by
+  constructor
+  · intro h
+    constructor
+    · intro x
+      have hx : (f x, x) ∈ f.graph.map (LinearEquiv.prodComm R M N).toLinearMap :=
+        ⟨(x, f x), rfl, rfl⟩
+      rw [h] at hx
+      exact hx.symm
+    · intro y
+      have hy : (y, g y) ∈ f.graph.map (LinearEquiv.prodComm R M N).toLinearMap := by
+        rw [h]; rfl
+      obtain ⟨z, hz, he⟩ := hy
+      have h1 : z.2 = y := congrArg Prod.fst he
+      have h2 : z.1 = g y := congrArg Prod.snd he
+      change z.2 = f z.1 at hz
+      rw [h1, h2] at hz
+      exact hz.symm
+  · rintro ⟨hl, hr⟩
+    ext z
+    constructor
+    · rintro ⟨w, hw, rfl⟩
+      change w.1 = g w.2
+      change w.2 = f w.1 at hw
+      rw [hw, hl]
+    · intro hz
+      refine ⟨(z.2, z.1), ?_, rfl⟩
+      change z.1 = f z.2
+      change z.2 = g z.1 at hz
+      rw [hz, hr]
+
+/-- A coordinate swap remains in a graph chart exactly on the invertible locus. -/
+theorem exists_swap_map_graph_iff (f : M →ₗ[R] N) :
+    (∃ g : N →ₗ[R] M,
+      f.graph.map (LinearEquiv.prodComm R M N).toLinearMap = g.graph) ↔
+      Function.Bijective f := by
+  constructor
+  · rintro ⟨g, hg⟩
+    obtain ⟨hl, hr⟩ := (swap_map_graph_eq_iff f g).mp hg
+    exact ⟨hl.injective, hr.surjective⟩
+  · intro hf
+    let e := LinearEquiv.ofBijective f hf
+    exact ⟨e.symm.toLinearMap, (swap_map_graph_eq_iff _ _).mpr
+      ⟨e.symm_apply_apply, e.apply_symm_apply⟩⟩
+
+/-- A nonzero kernel is an obstruction to staying in the graph chart even
+under the invertible ambient coordinate swap. -/
+theorem swap_map_graph_ne_of_kernel (f : M →ₗ[R] N) {x : M}
+    (hx : x ≠ 0) (hfx : f x = 0) (g : N →ₗ[R] M) :
+    f.graph.map (LinearEquiv.prodComm R M N).toLinearMap ≠ g.graph := by
+  intro h
+  have hi := ((exists_swap_map_graph_iff f).mp ⟨g, h⟩).1
+  exact hx (hi (hfx.trans f.map_zero.symm))
+
 end InfoGeometry.SuperGrassmannian.GraphChartTransition

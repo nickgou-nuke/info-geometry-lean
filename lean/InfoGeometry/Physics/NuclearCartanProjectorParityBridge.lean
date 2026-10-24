@@ -585,4 +585,71 @@ theorem nuclear_cartan_relation_shape_packet
     wigner_isospin_sl2_packet,
     canonical_sl2_cartan_packet⟩
 
+/-!
+## Constructive Isospin Ladder Seeds, Moving Projectors, & Two-State Weak Syzygy
+-/
+
+/-- Isospin-raising nilpotent seed `τ_+ = !![0, 1; 0, 0]` (neutron → proton transition). -/
+def isospinRaisingSeed : Matrix (Fin 2) (Fin 2) ℂ := !![0, 1; 0, 0]
+
+/-- Isospin-lowering nilpotent seed `τ_- = !![0, 0; 1, 0]` (proton → neutron transition). -/
+def isospinLoweringSeed : Matrix (Fin 2) (Fin 2) ℂ := !![0, 0; 1, 0]
+
+/-- Symmetric isospin flip velocity `τ₁ = τ_+ + τ_- = !![0, 1; 1, 0]`. -/
+def isospinFlipVelocity : Matrix (Fin 2) (Fin 2) ℂ :=
+  isospinRaisingSeed + isospinLoweringSeed
+
+/-- Moving positive-isospin projector `movingIsospinPositive c s`. -/
+def movingIsospinPositive (c s : ℂ) : Matrix (Fin 2) (Fin 2) ℂ :=
+  (c * c) • isospinPositiveProjector + (s * s) • isospinNegativeProjector -
+  (c * s) • isospinFlipVelocity
+
+/-- Complementary moving negative-isospin projector `movingIsospinNegative c s`. -/
+def movingIsospinNegative (c s : ℂ) : Matrix (Fin 2) (Fin 2) ℂ :=
+  (s * s) • isospinPositiveProjector + (c * c) • isospinNegativeProjector +
+  (c * s) • isospinFlipVelocity
+
+/-- **Zero-Hypothesis Isospin Ladder Seed & Projector Identities**. -/
+theorem isospin_ladder_seed_identities :
+    isospinRaisingSeed * isospinRaisingSeed = 0 ∧
+    isospinLoweringSeed * isospinLoweringSeed = 0 ∧
+    isospinRaisingSeed * isospinLoweringSeed = isospinPositiveProjector ∧
+    isospinLoweringSeed * isospinRaisingSeed = isospinNegativeProjector := by
+  refine ⟨?_, ?_, ?_, ?_⟩ <;>
+  · ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [isospinRaisingSeed, isospinLoweringSeed,
+            isospinPositiveProjector, isospinNegativeProjector]
+
+/-- **Zero-Hypothesis Projective Idempotence & Orthogonality of Moving Isospin Projectors**. -/
+theorem movingIsospinPositive_projective_idem_and_orth (c s : ℂ) :
+    movingIsospinPositive c s * movingIsospinPositive c s =
+      (c * c + s * s) • movingIsospinPositive c s ∧
+    movingIsospinPositive c s * movingIsospinNegative c s = 0 ∧
+    (movingIsospinPositive c s - (c * c + s * s) • isospinPositiveProjector) *
+      (movingIsospinPositive c s - (c * c + s * s) • isospinPositiveProjector) =
+      (s * s * (c * c + s * s)) • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  refine ⟨?_, ?_, ?_⟩ <;>
+  · ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [movingIsospinPositive, movingIsospinNegative,
+            isospinPositiveProjector, isospinNegativeProjector,
+            isospinFlipVelocity, isospinRaisingSeed, isospinLoweringSeed] <;>
+      ring
+
+/-- **Zero-Hypothesis Two-State Isospin Weak-Value Syzygy**. -/
+theorem isospin_two_state_weak_sandwich_syzygy (c s : ℂ) :
+    isospinPositiveProjector * movingIsospinPositive c s =
+      (c * c) • isospinPositiveProjector - (c * s) • isospinRaisingSeed ∧
+    isospinPositiveProjector * isospinFlipVelocity * movingIsospinPositive c s =
+      (s * s) • isospinRaisingSeed - (c * s) • isospinPositiveProjector ∧
+    s • (isospinPositiveProjector * movingIsospinPositive c s) +
+      c • (isospinPositiveProjector * isospinFlipVelocity * movingIsospinPositive c s) = 0 := by
+  refine ⟨?_, ?_, ?_⟩ <;>
+  · ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [movingIsospinPositive, isospinPositiveProjector, isospinNegativeProjector,
+            isospinFlipVelocity, isospinRaisingSeed, isospinLoweringSeed] <;>
+      ring
+
 end InfoGeometry.Physics.NuclearCartanProjectorParityBridge

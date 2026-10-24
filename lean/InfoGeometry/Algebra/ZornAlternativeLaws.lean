@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Algebra.ZornDerivationBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 
 /-!
 # Structural alternative laws for Zorn split octonions
@@ -484,5 +485,148 @@ theorem twoSidedSandwich_conj (K : ZornVectorMatrix R) :
   have hk := kirmse_left (conj K) K
   rw [conj_conj, norm_conj] at hk
   exact hk
+
+/-!
+## Constructive Three-Color `SplitQuaternion` Embeddings into `ZornVectorMatrix R`
+-/
+
+/-- Color-channel embedding `ι_k : Matrix (Fin 2) (Fin 2) R → ZornVectorMatrix R` along axis `k : Fin 3`. -/
+def colorChannelEmbed (k : Fin 3) (M : Matrix (Fin 2) (Fin 2) R) : ZornVectorMatrix R :=
+  ⟨M 0 0, fun i => M 0 1 * ZornVec3.basis k i, fun i => M 1 0 * ZornVec3.basis k i, M 1 1⟩
+
+/-- First color-channel embedding `ι₀ : Matrix (Fin 2) (Fin 2) R → ZornVectorMatrix R`. -/
+abbrev colorChannelEmbed0 (M : Matrix (Fin 2) (Fin 2) R) : ZornVectorMatrix R :=
+  colorChannelEmbed 0 M
+
+/-- Second color-channel embedding `ι₁ : Matrix (Fin 2) (Fin 2) R → ZornVectorMatrix R`. -/
+abbrev colorChannelEmbed1 (M : Matrix (Fin 2) (Fin 2) R) : ZornVectorMatrix R :=
+  colorChannelEmbed 1 M
+
+/-- Third color-channel embedding `ι₂ : Matrix (Fin 2) (Fin 2) R → ZornVectorMatrix R`. -/
+abbrev colorChannelEmbed2 (M : Matrix (Fin 2) (Fin 2) R) : ZornVectorMatrix R :=
+  colorChannelEmbed 2 M
+
+/-- Upper nilpotent seed `matSeedD = !![0, 1; 0, 0]`. -/
+def matSeedD : Matrix (Fin 2) (Fin 2) R := !![0, 1; 0, 0]
+
+/-- Lower nilpotent seed `matSeedB = !![0, 0; 1, 0]`. -/
+def matSeedB : Matrix (Fin 2) (Fin 2) R := !![0, 0; 1, 0]
+
+/-- Positive Peirce pole `matPeircePlus = !![1, 0; 0, 0]`. -/
+def matPeircePlus : Matrix (Fin 2) (Fin 2) R := !![1, 0; 0, 0]
+
+/-- Negative Peirce pole `matPeirceMinus = !![0, 0; 0, 1]`. -/
+def matPeirceMinus : Matrix (Fin 2) (Fin 2) R := !![0, 0; 0, 1]
+
+/-- Noncommutative commutator of `matSeedD` and `matSeedB` is `matPeircePlus - matPeirceMinus`. -/
+theorem matSeedD_comm_matSeedB :
+    (matSeedD : Matrix (Fin 2) (Fin 2) R) * matSeedB - matSeedB * matSeedD =
+      matPeircePlus - matPeirceMinus := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [matSeedD, matSeedB, matPeircePlus, matPeirceMinus]
+
+/-- Explicit noncommutativity of `matPeircePlus` and `matSeedD` over any nontrivial ring. -/
+theorem matPeircePlus_mul_matSeedD_ne [Nontrivial R] :
+    (matPeircePlus : Matrix (Fin 2) (Fin 2) R) * matSeedD ≠ matSeedD * matPeircePlus := by
+  intro h
+  have h01 := congr_fun (congr_fun h 0) 1
+  simp [matPeircePlus, matSeedD] at h01
+
+/-- **Single-Channel Multiplicative Homomorphism (`colorChannelEmbed_mul`)**:
+    Within each individual color channel `k ∈ {0, 1, 2}`, embedding `2 × 2` matrices into
+    `ZornVectorMatrix R` is an exact multiplicative homomorphism:
+    `ι_k(M * N) = ι_k(M) * ι_k(N)`. -/
+theorem colorChannelEmbed_mul (M N : Matrix (Fin 2) (Fin 2) R) :
+    colorChannelEmbed0 (M * N) = colorChannelEmbed0 M * colorChannelEmbed0 N ∧
+    colorChannelEmbed1 (M * N) = colorChannelEmbed1 M * colorChannelEmbed1 N ∧
+    colorChannelEmbed2 (M * N) = colorChannelEmbed2 M * colorChannelEmbed2 N := by
+  refine ⟨?_, ?_, ?_⟩ <;>
+  · ext
+    · simp [colorChannelEmbed0, colorChannelEmbed1, colorChannelEmbed2, colorChannelEmbed,
+            InfoGeometry.Algebra.zvm_mul_def, mul, Matrix.mul_apply, Fin.sum_univ_two,
+            ZornVec3.dot, ZornVec3.basis]
+    · rename_i i
+      (fin_cases i <;>
+        simp [colorChannelEmbed0, colorChannelEmbed1, colorChannelEmbed2, colorChannelEmbed,
+              InfoGeometry.Algebra.zvm_mul_def, mul, Matrix.mul_apply, Fin.sum_univ_two,
+              ZornVec3.cross, ZornVec3.basis]); ring
+    · rename_i i
+      (fin_cases i <;>
+        simp [colorChannelEmbed0, colorChannelEmbed1, colorChannelEmbed2, colorChannelEmbed,
+              InfoGeometry.Algebra.zvm_mul_def, mul, Matrix.mul_apply, Fin.sum_univ_two,
+              ZornVec3.cross, ZornVec3.basis]); ring
+    · simp [colorChannelEmbed0, colorChannelEmbed1, colorChannelEmbed2, colorChannelEmbed,
+            InfoGeometry.Algebra.zvm_mul_def, mul, Matrix.mul_apply, Fin.sum_univ_two,
+            ZornVec3.dot, ZornVec3.basis]
+
+/-- **Single-Channel Norm–Determinant Identity (`norm_colorChannelEmbed_eq_det`)**:
+    On each color channel `k ∈ {0, 1, 2}`, Cartan's signature-(4,4) Zorn norm restricts
+    to the exact `2 × 2` matrix determinant `M 0 0 * M 1 1 - M 0 1 * M 1 0`. -/
+theorem norm_colorChannelEmbed_eq_det (M : Matrix (Fin 2) (Fin 2) R) :
+    norm (colorChannelEmbed0 M) = Matrix.det M ∧
+    norm (colorChannelEmbed1 M) = Matrix.det M ∧
+    norm (colorChannelEmbed2 M) = Matrix.det M := by
+  refine ⟨?_, ?_, ?_⟩ <;>
+  · simp [norm, colorChannelEmbed0, colorChannelEmbed1, colorChannelEmbed2, colorChannelEmbed,
+          ZornVec3.dot, ZornVec3.basis, Matrix.det_fin_two]
+
+/-- **Cross-Channel Diquark Seed Fusion (`cross_channel_seed_fusion`)**:
+    Whereas `matSeedD * matSeedD = 0` within any single color channel, multiplying
+    `matSeedD` across two distinct color channels (`ι₀` and `ι₁`) fuses them into
+    the dual lower seed `matSeedB` in the third color channel `ι₂`! -/
+theorem cross_channel_seed_fusion :
+    colorChannelEmbed0 (matSeedD : Matrix (Fin 2) (Fin 2) R) *
+      colorChannelEmbed1 matSeedD = colorChannelEmbed2 matSeedB ∧
+    colorChannelEmbed0 (matSeedB : Matrix (Fin 2) (Fin 2) R) *
+      colorChannelEmbed1 matSeedB = -colorChannelEmbed2 matSeedD := by
+  refine ⟨?_, ?_⟩ <;>
+  · ext
+    · simp [colorChannelEmbed0, colorChannelEmbed1, colorChannelEmbed2, colorChannelEmbed,
+            matSeedD, matSeedB, InfoGeometry.Algebra.zvm_mul_def,
+            InfoGeometry.Algebra.zvm_neg_def, mul, neg, ZornVec3.dot, ZornVec3.basis]
+    · rename_i i
+      fin_cases i <;>
+        simp [colorChannelEmbed0, colorChannelEmbed1, colorChannelEmbed2, colorChannelEmbed,
+              matSeedD, matSeedB, InfoGeometry.Algebra.zvm_mul_def,
+              InfoGeometry.Algebra.zvm_neg_def, mul, neg, ZornVec3.cross, ZornVec3.basis]
+    · rename_i i
+      fin_cases i <;>
+        simp [colorChannelEmbed0, colorChannelEmbed1, colorChannelEmbed2, colorChannelEmbed,
+              matSeedD, matSeedB, InfoGeometry.Algebra.zvm_mul_def,
+              InfoGeometry.Algebra.zvm_neg_def, mul, neg, ZornVec3.cross, ZornVec3.basis]
+    · simp [colorChannelEmbed0, colorChannelEmbed1, colorChannelEmbed2, colorChannelEmbed,
+            matSeedD, matSeedB, InfoGeometry.Algebra.zvm_mul_def,
+            InfoGeometry.Algebra.zvm_neg_def, mul, neg, ZornVec3.dot, ZornVec3.basis]
+
+/-- **Three-Channel Baryon Associator Split (`three_channel_baryon_associator_poles`)**:
+    Multiplying the upper nilpotent seed `matSeedD` across all three color channels `(0, 1, 2)`
+    yields the negative Peirce pole `ι₂(matPeirceMinus) = ⟨0, 0, 0, 1⟩` in left-associated order
+    and the positive Peirce pole `ι₀(matPeircePlus) = ⟨1, 0, 0, 0⟩` in right-associated order! -/
+theorem three_channel_baryon_associator_poles :
+    (colorChannelEmbed0 (matSeedD : Matrix (Fin 2) (Fin 2) R) *
+      colorChannelEmbed1 matSeedD) * colorChannelEmbed2 matSeedD =
+      colorChannelEmbed2 matPeirceMinus ∧
+    colorChannelEmbed0 (matSeedD : Matrix (Fin 2) (Fin 2) R) *
+      (colorChannelEmbed1 matSeedD * colorChannelEmbed2 matSeedD) =
+      colorChannelEmbed0 matPeircePlus := by
+  refine ⟨?_, ?_⟩ <;>
+  · ext
+    · simp [colorChannelEmbed0, colorChannelEmbed1, colorChannelEmbed2, colorChannelEmbed,
+            matSeedD, matPeircePlus, matPeirceMinus, InfoGeometry.Algebra.zvm_mul_def,
+            mul, ZornVec3.dot, ZornVec3.cross, ZornVec3.basis]
+    · rename_i i
+      fin_cases i <;>
+        simp [colorChannelEmbed0, colorChannelEmbed1, colorChannelEmbed2, colorChannelEmbed,
+              matSeedD, matPeircePlus, matPeirceMinus, InfoGeometry.Algebra.zvm_mul_def,
+              mul, ZornVec3.dot, ZornVec3.cross, ZornVec3.basis]
+    · rename_i i
+      fin_cases i <;>
+        simp [colorChannelEmbed0, colorChannelEmbed1, colorChannelEmbed2, colorChannelEmbed,
+              matSeedD, matPeircePlus, matPeirceMinus, InfoGeometry.Algebra.zvm_mul_def,
+              mul, ZornVec3.dot, ZornVec3.cross, ZornVec3.basis]
+    · simp [colorChannelEmbed0, colorChannelEmbed1, colorChannelEmbed2, colorChannelEmbed,
+            matSeedD, matPeircePlus, matPeirceMinus, InfoGeometry.Algebra.zvm_mul_def,
+            mul, ZornVec3.dot, ZornVec3.cross, ZornVec3.basis]
 
 end InfoGeometry.Algebra.ZornVectorMatrix

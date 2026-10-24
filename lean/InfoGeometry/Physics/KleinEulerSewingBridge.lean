@@ -6,6 +6,7 @@ Authors: InfoGeometry Engine Contributors
 import InfoGeometry.Physics.KleinBottleDefects
 import InfoGeometry.Canonical.KleinBottleSewing
 import InfoGeometry.Canonical.KleinSewingDefect
+import InfoGeometry.Physics.KleinBottleCosmology
 
 /-! # Klein Euler Defect–Sewing Bridge
 
@@ -23,6 +24,7 @@ namespace InfoGeometry.Physics.KleinEulerSewingBridge
 
 open InfoGeometry.Physics
 open InfoGeometry.Canonical.KleinSewingDefect
+open InfoGeometry.Physics.KleinBottleCosmology
 
 /-- The Euler defect balance: pentagons equal heptagons. -/
 theorem euler_defect_balance (V E F F5 F6 F7 : ℕ)
@@ -37,13 +39,13 @@ theorem euler_defect_balance (V E F F5 F6 F7 : ℕ)
     paralleling the Euler defect balance (F5 = F7). -/
 theorem sewn_chiral_balance (s : BoundaryState) (h : isSewn s) :
     chiralIndex s = 0 :=
-  InfoGeometry.Physics.KleinBottleCosmology.sewn_boundary_chiral_index_vanishes s h
+  sewn_boundary_chiral_index_vanishes s h
 
 /-- The defect trace vanishes on sewn states, paralleling the
     Euler defect balance. -/
 theorem sewn_defect_zero (s : BoundaryState) (h : isSewn s) :
     Matrix.trace (tilt * (switch * s.rho * switch - s.rho)) = 0 := by
-  have hci : chiralIndex s = 0 := InfoGeometry.Physics.KleinBottleCosmology.sewn_boundary_chiral_index_vanishes s h
+  have hci : chiralIndex s = 0 := sewn_boundary_chiral_index_vanishes s h
   exact boundary_defect_trace_zero_iff s |>.mpr hci
 
 /-- Synthesis: both topological (Euler) and algebraic (sewing) constraints

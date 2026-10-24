@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Projective.MobiusDual
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.KuzminCuntzPath
@@ -16,6 +22,7 @@ import InfoGeometry.Projective.Dynamics
 import InfoGeometry.Projective.FaithfulKL
 import InfoGeometry.Projective.KasparovKreinDIIIBridge
 import InfoGeometry.Projective.HorizonInformationScrambling
+import InfoGeometry.Projective.FibonacciMZMBraidingBridge
 import InfoGeometry.Projective.TwistorAmplituhedronConfigurationBridge
 import InfoGeometry.Projective.QDeformedTwistorAmplituhedronBridge
 import InfoGeometry.Projective.QuantumGrassmannian

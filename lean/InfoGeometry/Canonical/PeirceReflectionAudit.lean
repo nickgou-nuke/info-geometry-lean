@@ -23,6 +23,9 @@ abbrev Mat := Matrix (Fin 2) (Fin 2) ℤ
 def d : Mat := !![0, 1; 0, 0]
 def b : Mat := !![0, 0; 1, 0]
 
+/-- Witness that Mat (i.e., Matrix (Fin 2) (Fin 2) ℤ) is a non-commutative ring. -/
+lemma mat_noncomm : d * b ≠ b * d := by decide
+
 theorem integral_seed : IsDualSeedPair d b := by constructor <;> decide
 
 theorem integral_seed_noncomm : d * b ≠ b * d := by decide

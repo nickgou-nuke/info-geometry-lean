@@ -60,3 +60,29 @@ Reviewed owner SHA-256 values:
 
 - Reduced vacuum: `4b952dbf74ce7f1d87e60ea456f580d7f3c72eeb5b9977dc9257f82231a6be2f`
 - Tracial CAR: `3250e08ddd6375cf8989ebebe0f69a11d78802e89ede16841e1835b4350dfa53`
+
+## Density-defect extension
+
+Seven separate lemmas were added directly to `TracialCARDensity`:
+`weighted_commutator_defect`, the four density commutator/anticommutator
+identities for the explicit sum/difference Majorana combinations,
+`two_smul_density`, and `annihilator_commutator_boundary`.
+They reuse the native weighted linear map, density eigenproducts, and chirality.
+No division by two, positivity, normalized state, or analytic KMS assumption
+is introduced. In particular the commutator coefficient is `c-a`, while the
+anticommutator coefficient is `a+c`.
+
+Kepler drafted the sandbox candidate; Popper returned source A-A PASS for both
+the seven-lemma candidate and its unchanged promotion into the owner. Parent
+executed the prepared scratch check (seven declarations clean). Ampere then
+independently executed the decisive live check with default permissions:
+
+- `lake build +InfoGeometry.OperatorAlgebra.TracialCARDensity:olean +InfoGeometry.OperatorAlgebra.All:olean`: PASS, 9979 jobs.
+- Full owner axiom replay: **41 declarations clean**, standard allowlist only.
+- Zero owner-scoped warnings/errors; existing dependency/aggregate warnings remain.
+- Captured owner, aggregate, Kitaev dependency, scratch and pin hashes stable.
+
+Receipt: `/tmp/qa-tracial-defects-live/result.json`, session 12233, exit zero.
+Updated owner SHA-256:
+`6734a0e8dfeca118bfded0a477c4bc85873bee401db8ab1e3a70c3b31124af16`.
+The earlier 34-declaration count/hash is historical and superseded for this owner.

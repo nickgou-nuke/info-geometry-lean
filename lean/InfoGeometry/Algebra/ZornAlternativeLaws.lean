@@ -1288,8 +1288,11 @@ theorem zornSpacetimeFrame_nambu_anomaly_tomita_invariant
   have hw (W : ZornVectorMatrix R) : (zornTomitaConj W).w = W.v := rfl
   rw [zornSpacetimeFrame_associator_spinConnectionPart_eq_neg_nambu,
       zornSpacetimeFrame_associator_spinConnectionPart_eq_neg_nambu,
-      hv, hv, hv, hw, hw, hw,
-      _root_.add_comm (zornNambuDet X.w Y.w Z.w) (zornNambuDet X.v Y.v Z.v)]
+      hv, hv, hv, hw, hw, hw]
+  have h_comm : zornNambuDet X.w Y.w Z.w + zornNambuDet X.v Y.v Z.v =
+      zornNambuDet X.v Y.v Z.v + zornNambuDet X.w Y.w Z.w := by
+    ring
+  rw [h_comm]
 
 /-!
 ## 9. Chiral Maxwell / Gravitoelectromagnetic `(1 ⊕ 3)` Four-Potential & Stress–Energy Algebra
@@ -1485,5 +1488,153 @@ theorem zorn_maxwell_gem_stress_identity (E B : ZornVec3 R) :
     (ZornVec3.dot E E - ZornVec3.dot B B) ^ 2 := by
   simp [ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
   ring
+
+/-!
+## 10. Non-Abelian Gluon Self-Interaction & Vectorlike vs. Chiral Bianchi Anomaly
+-/
+
+/-- **Chiral Color Gauge Potential (`zornChiralPotential φ A`)**:
+    A purely left-handed color gauge potential `⟨φ, A, 0, -φ⟩` supported in the upper quark triplet. -/
+def zornChiralPotential (φ : R) (A : ZornVec3 R) : ZornVectorMatrix R :=
+  ⟨φ, A, fun _ => 0, -φ⟩
+
+/-- **1. Non-Abelian Gluon Self-Interaction Commutator (`[A₁, A₂]`)**:
+    For any two 4-potentials `P₁ = zornFourPotential φ₁ A₁` and `P₂ = zornFourPotential φ₂ A₂`:
+    - Their symmetric anticommutator `{P₁, P₂}` is the Minkowski 4-dot singlet
+      `⟨2 G, 0, 0, 2 G⟩` where `G = zornLorenzScalar φ₁ A₁ φ₂ A₂`.
+    - Their antisymmetric commutator `[P₁, P₂]` is `2` times the non-Abelian self-interaction
+      field strength `zornFieldStrength (φ₁ • A₂ - φ₂ • A₁) (A₁ × A₂)`! -/
+theorem zornFourPotential_commutator_gluon_self_interaction
+    (φ₁ : R) (A₁ : ZornVec3 R) (φ₂ : R) (A₂ : ZornVec3 R) :
+    let P₁ := zornFourPotential φ₁ A₁
+    let P₂ := zornFourPotential φ₂ A₂
+    let G := zornLorenzScalar φ₁ A₁ φ₂ A₂
+    P₁ * P₂ + P₂ * P₁ = ⟨(2 : R) * G, fun _ => 0, fun _ => 0, (2 : R) * G⟩ ∧
+    zornComm P₁ P₂ =
+      (2 : R) • zornFieldStrength (zornElectricField φ₁ A₁ φ₂ A₂) (zornMagneticField A₁ A₂) := by
+  intro P₁ P₂ G
+  refine ⟨?_, ?_⟩
+  · ext
+    · simp [P₁, P₂, G, zornFourPotential, zornLorenzScalar,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_mul_def,
+            add, mul, ZornVec3.dot, Fin.sum_univ_three]
+      ring
+    · rename_i i
+      fin_cases i <;>
+        (simp [P₁, P₂, zornFourPotential, InfoGeometry.Algebra.zvm_add_def,
+               InfoGeometry.Algebra.zvm_mul_def, add, mul, ZornVec3.cross]; ring)
+    · rename_i i
+      fin_cases i <;>
+        (simp [P₁, P₂, zornFourPotential, InfoGeometry.Algebra.zvm_add_def,
+               InfoGeometry.Algebra.zvm_mul_def, add, mul, ZornVec3.cross]; ring)
+    · simp [P₁, P₂, G, zornFourPotential, zornLorenzScalar,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_mul_def,
+            add, mul, ZornVec3.dot, Fin.sum_univ_three]
+      ring
+  · unfold zornComm
+    simp only [_root_.sub_eq_add_neg]
+    ext
+    · simp [P₁, P₂, zornFourPotential, zornFieldStrength,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+            add, neg, mul, smul, ZornVec3.dot, Fin.sum_univ_three]
+      ring
+    · rename_i i
+      fin_cases i <;>
+        (simp [P₁, P₂, zornFourPotential, zornFieldStrength, zornElectricField,
+               zornMagneticField, InfoGeometry.Algebra.zvm_add_def,
+               InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_mul_def,
+               InfoGeometry.Algebra.zvm_smul_def, add, neg, mul, smul, ZornVec3.cross]; ring)
+    · rename_i i
+      fin_cases i <;>
+        (simp [P₁, P₂, zornFourPotential, zornFieldStrength, zornElectricField,
+               zornMagneticField, InfoGeometry.Algebra.zvm_add_def,
+               InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_mul_def,
+               InfoGeometry.Algebra.zvm_smul_def, add, neg, mul, smul, ZornVec3.cross]; ring)
+    · simp [P₁, P₂, zornFourPotential, zornFieldStrength,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+            add, neg, mul, smul, ZornVec3.dot, Fin.sum_univ_three]
+      ring
+
+/-- **2. Vectorlike Bianchi Identity vs. Chiral Color Nambu Anomaly**:
+    1. For any three vectorlike 4-potentials `P_i = zornFourPotential φ_i A_i` (`w = -v`),
+       the quark and antiquark Nambu 3-volumes cancel (`det A + det (-A) = 0`), so the
+       singlet Bianchi Jacobiator and Associator anomalies vanish identically (`= 0`)!
+    2. For any three chiral color potentials `C_i = zornChiralPotential φ_i A_i` (`w = 0`),
+       the singlet Bianchi Jacobiator anomaly is `(6 * zornNambuDet A₁ A₂ A₃) • zornGamma`! -/
+theorem zornFourPotential_vectorlike_bianchi_vs_chiral_nambu_anomaly
+    (φ₁ : R) (A₁ : ZornVec3 R) (φ₂ : R) (A₂ : ZornVec3 R) (φ₃ : R) (A₃ : ZornVec3 R) :
+    let P₁ := zornFourPotential φ₁ A₁
+    let P₂ := zornFourPotential φ₂ A₂
+    let P₃ := zornFourPotential φ₃ A₃
+    let C₁ := zornChiralPotential φ₁ A₁
+    let C₂ := zornChiralPotential φ₂ A₂
+    let C₃ := zornChiralPotential φ₃ A₃
+    zornSpinConnectionPart (zornJacobiator P₁ P₂ P₃) = 0 ∧
+    zornSpinConnectionPart (zornAssociator P₁ P₂ P₃) = 0 ∧
+    zornSpinConnectionPart (zornJacobiator C₁ C₂ C₃) =
+      ((6 : R) * zornNambuDet A₁ A₂ A₃) • zornGamma := by
+  intro P₁ P₂ P₃ C₁ C₂ C₃
+  refine ⟨?_, ?_, ?_⟩
+  · unfold zornJacobiator zornComm
+    simp only [_root_.sub_eq_add_neg]
+    ext
+    · simp [P₁, P₂, P₃, zornFourPotential, zornSpinConnectionPart, diagonalPart,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def,
+            add, neg, mul, zero, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+      ring
+    · rename_i i
+      fin_cases i <;> simp [zornSpinConnectionPart, diagonalPart,
+                            InfoGeometry.Algebra.zvm_zero_def, zero]
+    · rename_i i
+      fin_cases i <;> simp [zornSpinConnectionPart, diagonalPart,
+                            InfoGeometry.Algebra.zvm_zero_def, zero]
+    · simp [P₁, P₂, P₃, zornFourPotential, zornSpinConnectionPart, diagonalPart,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def,
+            add, neg, mul, zero, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+      ring
+  · unfold zornAssociator
+    simp only [_root_.sub_eq_add_neg]
+    ext
+    · simp [P₁, P₂, P₃, zornFourPotential, zornSpinConnectionPart, diagonalPart,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def,
+            add, neg, mul, zero, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+      ring
+    · rename_i i
+      fin_cases i <;> simp [zornSpinConnectionPart, diagonalPart,
+                            InfoGeometry.Algebra.zvm_zero_def, zero]
+    · rename_i i
+      fin_cases i <;> simp [zornSpinConnectionPart, diagonalPart,
+                            InfoGeometry.Algebra.zvm_zero_def, zero]
+    · simp [P₁, P₂, P₃, zornFourPotential, zornSpinConnectionPart, diagonalPart,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def,
+            add, neg, mul, zero, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+      ring
+  · unfold zornJacobiator zornComm
+    simp only [_root_.sub_eq_add_neg]
+    ext
+    · simp [C₁, C₂, C₃, zornChiralPotential, zornSpinConnectionPart, diagonalPart,
+            zornGamma, zornNambuDet, InfoGeometry.Algebra.zvm_add_def,
+            InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_mul_def,
+            InfoGeometry.Algebra.zvm_smul_def, add, neg, mul, smul,
+            ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+      ring
+    · rename_i i
+      fin_cases i <;> simp [zornSpinConnectionPart, diagonalPart, zornGamma,
+                            InfoGeometry.Algebra.zvm_smul_def, smul]
+    · rename_i i
+      fin_cases i <;> simp [zornSpinConnectionPart, diagonalPart, zornGamma,
+                            InfoGeometry.Algebra.zvm_smul_def, smul]
+    · simp [C₁, C₂, C₃, zornChiralPotential, zornSpinConnectionPart, diagonalPart,
+            zornGamma, zornNambuDet, InfoGeometry.Algebra.zvm_add_def,
+            InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_mul_def,
+            InfoGeometry.Algebra.zvm_smul_def, add, neg, mul, smul,
+            ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+      ring
 
 end InfoGeometry.Algebra.ZornVectorMatrix

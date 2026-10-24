@@ -1667,6 +1667,111 @@ theorem chiralHalfSpinorMinus16_four_multiplet_decomposition :
   dsimp [chiralHalfSpinorMinus16, colorPositiveCompanyProj, colorNegativeCompanyProj]
   noncomm_ring
 
+/-- Helper expressing `modeVacant a = 1 - modeOccupied a`. -/
+theorem modeVacant_eq_one_sub_modeOccupied (a : Fin 5) :
+    modeVacant a = 1 - modeOccupied a :=
+  eq_sub_of_add_eq' (modeOccupied_add_modeVacant a)
+
+/-- First Cartan color-octet gluon generator `T₃^{color} = N₀ - N₁` (Gell-Mann `λ₃`). -/
+def colorGluonT3 : MatStage 5 := modeOccupied 0 - modeOccupied 1
+
+/-- Scaled second Cartan color-octet gluon generator `3Y^{color} = N₀ + N₁ - 2 • N₂` (Gell-Mann `√3 λ₈`). -/
+def colorGluon3Y : MatStage 5 := modeOccupied 0 + modeOccupied 1 - (2 : ℕ) • modeOccupied 2
+
+/-- Color-Singlet total quark number `N_{color} = N₀ + N₁ + N₂`. -/
+def colorSingletNumber : MatStage 5 := modeOccupied 0 + modeOccupied 1 + modeOccupied 2
+
+/-- **`3 ⊗ 3̄ = 1 ⊕ 8` Diagonal Decomposition of the 3 Color Occupation Idempotents**:
+    With zero hypotheses, `6 • N₀`, `6 • N₁`, and `3 • N₂` decompose into the Color-Singlet
+    number `N_{color}` plus the two Cartan Color-Octet gluons `T₃^{color}` and `3Y^{color}`! -/
+theorem color_occupation_singlet_octet_decomposition :
+    (2 : ℕ) • colorSingletNumber + colorGluon3Y +
+      (3 : ℕ) • colorGluonT3 = (6 : ℕ) • modeOccupied 0 ∧
+    (2 : ℕ) • colorSingletNumber + colorGluon3Y -
+      (3 : ℕ) • colorGluonT3 = (6 : ℕ) • modeOccupied 1 ∧
+    colorSingletNumber - colorGluon3Y = (3 : ℕ) • modeOccupied 2 := by
+  refine ⟨?_, ?_, ?_⟩ <;>
+  · dsimp [colorSingletNumber, colorGluon3Y, colorGluonT3]
+    noncomm_ring
+
+/-- **Universal Cubic Cancellation in the Colored Sector Sum (`Π_{quark} + Π_{diquark}`)**:
+    With zero hypotheses, the cubic terms `±3 N₀ N₁ N₂` cancel between `Π_{quark}` and
+    `Π_{diquark}`, reducing their sum to a pure quadratic polynomial in `N₀, N₁, N₂`! -/
+theorem colorQuark_add_diquark_quadratic_reduction :
+    colorQuarkTripletProj + colorDiquarkAntitripletProj =
+      modeOccupied 0 + modeOccupied 1 + modeOccupied 2 -
+      modeOccupied 0 * modeOccupied 1 -
+      modeOccupied 0 * modeOccupied 2 -
+      modeOccupied 1 * modeOccupied 2 := by
+  dsimp [colorQuarkTripletProj, colorDiquarkAntitripletProj]
+  rw [modeVacant_eq_one_sub_modeOccupied 0,
+      modeVacant_eq_one_sub_modeOccupied 1,
+      modeVacant_eq_one_sub_modeOccupied 2]
+  noncomm_ring
+
+/-- **Exact Gell-Mann Gluon Cartan Casimir Identity (`3 (T₃^{color})² + (3Y^{color})² = 4 (Π_3 + Π_{3̄})`)**:
+    In `Cl(5,5)` (`MatStage 5`), the quadratic Cartan color-octet Casimir operator evaluates
+    purely to `4` times the colored triplet + antitriplet projector `Π_{quark} + Π_{diquark}`,
+    with ZERO weight on the baryon and vacuum color singlets! -/
+theorem colorGluon_cartan_casimir_eq_four_colored_sectors :
+    (3 : ℕ) • (colorGluonT3 * colorGluonT3) + colorGluon3Y * colorGluon3Y =
+      (4 : ℕ) • (colorQuarkTripletProj + colorDiquarkAntitripletProj) := by
+  rw [colorQuark_add_diquark_quadratic_reduction]
+  dsimp [colorGluonT3, colorGluon3Y]
+  calc
+    (3 : ℕ) • ((modeOccupied 0 - modeOccupied 1) * (modeOccupied 0 - modeOccupied 1)) +
+      (modeOccupied 0 + modeOccupied 1 - (2 : ℕ) • modeOccupied 2) *
+      (modeOccupied 0 + modeOccupied 1 - (2 : ℕ) • modeOccupied 2) =
+      (4 : ℕ) • (modeOccupied 0 * modeOccupied 0 +
+                 modeOccupied 1 * modeOccupied 1 +
+                 modeOccupied 2 * modeOccupied 2) -
+      (2 : ℕ) • ((modeOccupied 0 * modeOccupied 1 + modeOccupied 1 * modeOccupied 0) +
+                 (modeOccupied 0 * modeOccupied 2 + modeOccupied 2 * modeOccupied 0) +
+                 (modeOccupied 1 * modeOccupied 2 + modeOccupied 2 * modeOccupied 1)) := by
+      noncomm_ring
+    _ = (4 : ℕ) • (modeOccupied 0 + modeOccupied 1 + modeOccupied 2 -
+          modeOccupied 0 * modeOccupied 1 -
+          modeOccupied 0 * modeOccupied 2 -
+          modeOccupied 1 * modeOccupied 2) := by
+      rw [modeOccupied_idem 0, modeOccupied_idem 1, modeOccupied_idem 2,
+          modeOccupied_comm 1 0, modeOccupied_comm 2 0, modeOccupied_comm 2 1]
+      noncomm_ring
+
+/-- **Color Confinement & Singlet Neutrality (`colorGluon_cartan_singlet_neutrality`)**:
+    Both Gell-Mann Cartan gluon charges `T₃^{color}` and `3Y^{color}` annihilate the 3-quark
+    Baryon Singlet `Π_{baryon}` (`1₃`)! -/
+theorem colorGluon_cartan_singlet_neutrality :
+    colorGluonT3 * colorBaryonSingletProj = 0 ∧
+    colorGluon3Y * colorBaryonSingletProj = 0 := by
+  have h01 : (modeOccupied 0 - modeOccupied 1) * colorBaryonSingletProj = 0 := by
+    dsimp [colorBaryonSingletProj]
+    calc
+      (modeOccupied 0 - modeOccupied 1) * (modeOccupied 0 * modeOccupied 1 * modeOccupied 2) =
+        (modeOccupied 0 * modeOccupied 0) * modeOccupied 1 * modeOccupied 2 -
+        (modeOccupied 1 * modeOccupied 0) * modeOccupied 1 * modeOccupied 2 := by noncomm_ring
+      _ = modeOccupied 0 * modeOccupied 1 * modeOccupied 2 -
+        modeOccupied 0 * (modeOccupied 1 * modeOccupied 1) * modeOccupied 2 := by
+        rw [modeOccupied_idem 0, modeOccupied_comm 1 0]; noncomm_ring
+      _ = 0 := by rw [modeOccupied_idem 1, sub_self]
+  have h12 : (modeOccupied 1 - modeOccupied 2) * colorBaryonSingletProj = 0 := by
+    dsimp [colorBaryonSingletProj]
+    calc
+      (modeOccupied 1 - modeOccupied 2) * (modeOccupied 0 * modeOccupied 1 * modeOccupied 2) =
+        (modeOccupied 1 * modeOccupied 0) * modeOccupied 1 * modeOccupied 2 -
+        ((modeOccupied 2 * modeOccupied 0) * modeOccupied 1) * modeOccupied 2 := by noncomm_ring
+      _ = modeOccupied 0 * (modeOccupied 1 * modeOccupied 1) * modeOccupied 2 -
+        (modeOccupied 0 * (modeOccupied 2 * modeOccupied 1)) * modeOccupied 2 := by
+        rw [modeOccupied_comm 1 0, modeOccupied_comm 2 0]; noncomm_ring
+      _ = modeOccupied 0 * modeOccupied 1 * modeOccupied 2 -
+        modeOccupied 0 * modeOccupied 1 * (modeOccupied 2 * modeOccupied 2) := by
+        rw [modeOccupied_idem 1, modeOccupied_comm 2 1]; noncomm_ring
+      _ = 0 := by rw [modeOccupied_idem 2, sub_self]
+  refine ⟨h01, ?_⟩
+  have h3Y : colorGluon3Y =
+      (modeOccupied 0 - modeOccupied 1) + (2 : ℕ) • (modeOccupied 1 - modeOccupied 2) := by
+    dsimp [colorGluon3Y]; noncomm_ring
+  rw [h3Y, add_mul, smul_mul_assoc, h01, h12, smul_zero, add_zero]
+
 /-! ## 6. The Grand Cl(5,5) Spinor Cartan-Fock Synthesis -/
 
 /-

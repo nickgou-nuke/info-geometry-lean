@@ -212,6 +212,17 @@ def run_sympy_verification() -> dict:
     )
     assert int(Pi_16_plus.trace()) == 16
     assert int(Pi_16_minus.trace()) == 16
+    T3_color = N[0] - N[1]
+    three_Y_color = N[0] + N[1] - 2 * N[2]
+    N_color = N[0] + N[1] + N[2]
+    assert 2 * N_color + three_Y_color + 3 * T3_color == 6 * N[0]
+    assert 2 * N_color + three_Y_color - 3 * T3_color == 6 * N[1]
+    assert N_color - three_Y_color == 3 * N[2]
+    assert 3 * (T3_color * T3_color) + (three_Y_color * three_Y_color) == 4 * (Pi_quark + Pi_diquark)
+    assert T3_color * Pi_baryon == Z32
+    assert three_Y_color * Pi_baryon == Z32
+    assert T3_color * Pi_vac == Z32
+    assert three_Y_color * Pi_vac == Z32
 
     # 9. Verify Erlangen 2.0 Cartan-Peirce Emergence & Gauge Invariance on SplitQuaternion:
     x00, x01, x10, x11, y00, y01, y10, y11, u = sp.symbols(
@@ -421,6 +432,40 @@ def run_sympy_verification() -> dict:
         )
         == 0
     )
+
+    # 18. Verify Non-Abelian Gluon Self-Interaction & Vectorlike vs. Chiral Bianchi Anomaly:
+    DA_comm = zvm_comm(D_pot, A_pot)
+    assert sp.simplify(DA_comm[0]) == 0
+    assert sp.simplify(DA_comm[3]) == 0
+    assert sp.simplify(DA_comm[1] - 2 * (E_vec - B_vec)) == sp.zeros(3, 1)
+    assert sp.simplify(DA_comm[2] - 2 * (E_vec + B_vec)) == sp.zeros(3, 1)
+
+    phi3, bx, by, bz = sp.symbols("phi3 bx by bz")
+    b_vec = sp.Matrix([bx, by, bz])
+    B_pot = (phi3, b_vec, -b_vec, -phi3)
+    jac_vec = zvm_add(
+        zvm_add(
+            zvm_comm(D_pot, zvm_comm(A_pot, B_pot)),
+            zvm_comm(A_pot, zvm_comm(B_pot, D_pot)),
+        ),
+        zvm_comm(B_pot, zvm_comm(D_pot, A_pot)),
+    )
+    assert sp.simplify(jac_vec[0]) == 0
+    assert sp.simplify(jac_vec[3]) == 0
+
+    C1 = (d0, d_vec, sp.zeros(3, 1), -d0)
+    C2 = (phi, a_vec, sp.zeros(3, 1), -phi)
+    C3 = (phi3, b_vec, sp.zeros(3, 1), -phi3)
+    jac_chiral = zvm_add(
+        zvm_add(
+            zvm_comm(C1, zvm_comm(C2, C3)),
+            zvm_comm(C2, zvm_comm(C3, C1)),
+        ),
+        zvm_comm(C3, zvm_comm(C1, C2)),
+    )
+    det_dab = d_vec.dot(a_vec.cross(b_vec))
+    assert sp.simplify(jac_chiral[0] - 6 * det_dab) == 0
+    assert sp.simplify(jac_chiral[3] - (-6 * det_dab)) == 0
 
     return {
         "engine": "SymPy",

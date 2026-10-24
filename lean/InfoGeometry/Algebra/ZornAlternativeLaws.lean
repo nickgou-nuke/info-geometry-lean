@@ -1637,4 +1637,113 @@ theorem zornFourPotential_vectorlike_bianchi_vs_chiral_nambu_anomaly
             ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
       ring
 
+/-!
+## 11. Machian Relational Inertia, Sciama–Lense–Thirring Induction, & Collinear Volume Vanishing
+-/
+
+/-- **1. Machian Collinear Degeneracy of Lense–Thirring Curl & 3-Current Associator Volume**:
+    Proves the unconditional Zorn bridge for the Machian relational volume law
+    (`docs/Observational_Gauge_Theory_Synthesis.md` §VIII–IX):
+    1. Collinear 3-currents `j` and `c • j` have vanishing 2-body gravitomagnetic curl (`= 0`).
+    2. Collinear 3-currents `j` and `c • j` have vanishing 3-body Nambu scalar triple product
+       `zornNambuDet ω j (c • j) = 0` for any collective rotation vector `ω`.
+    3. For any 6D frame elements `e(Z)` and `e(X)` and collinear partner `c • e(X)`, both the
+       singlet Zorn Associator volume and singlet Zorn Jacobiator volume vanish identically! -/
+theorem zorn_machian_collinear_curl_and_nambu_vanishing
+    (c : R) (ω j : ZornVec3 R) (Z X : ZornVectorMatrix R) :
+    zornMagneticField j (fun i => c * j i) = (fun _ => 0) ∧
+    zornNambuDet ω j (fun i => c * j i) = 0 ∧
+    zornSpinConnectionPart
+      (zornAssociator (zornSpacetimeFramePart Z)
+                      (zornSpacetimeFramePart X)
+                      (c • zornSpacetimeFramePart X)) = 0 ∧
+    zornSpinConnectionPart
+      (zornJacobiator (zornSpacetimeFramePart Z)
+                      (zornSpacetimeFramePart X)
+                      (c • zornSpacetimeFramePart X)) = 0 := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · funext i
+    fin_cases i <;> (simp [zornMagneticField, ZornVec3.cross]; ring)
+  · simp [zornNambuDet, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+    ring
+  · have h_scale : c • zornSpacetimeFramePart X = zornSpacetimeFramePart (c • X) := by
+      ext
+      · simp [zornSpacetimeFramePart, offDiagonalPart, InfoGeometry.Algebra.zvm_smul_def, smul]
+      · rename_i i; fin_cases i <;> rfl
+      · rename_i i; fin_cases i <;> rfl
+      · simp [zornSpacetimeFramePart, offDiagonalPart, InfoGeometry.Algebra.zvm_smul_def, smul]
+    rw [h_scale, zornSpacetimeFrame_associator_spinConnectionPart_eq_neg_nambu]
+    have h_det_zero :
+        zornNambuDet Z.v X.v (c • X).v + zornNambuDet Z.w X.w (c • X).w = 0 := by
+      simp [zornNambuDet, InfoGeometry.Algebra.zvm_smul_def, smul,
+            ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+      ring
+    rw [h_det_zero, neg_zero]
+    ext <;> simp [zornGamma, InfoGeometry.Algebra.zvm_zero_def, zero]
+  · have h_scale : c • zornSpacetimeFramePart X = zornSpacetimeFramePart (c • X) := by
+      ext
+      · simp [zornSpacetimeFramePart, offDiagonalPart, InfoGeometry.Algebra.zvm_smul_def, smul]
+      · rename_i i; fin_cases i <;> rfl
+      · rename_i i; fin_cases i <;> rfl
+      · simp [zornSpacetimeFramePart, offDiagonalPart, InfoGeometry.Algebra.zvm_smul_def, smul]
+    rw [h_scale, zornSpacetimeFrame_jacobiator_spinConnectionPart_eq_nambu]
+    have h_det_zero :
+        zornNambuDet Z.v X.v (c • X).v + zornNambuDet Z.w X.w (c • X).w = 0 := by
+      simp [zornNambuDet, InfoGeometry.Algebra.zvm_smul_def, smul,
+            ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+      ring
+    rw [h_det_zero]
+    ext <;> simp [zornGamma, InfoGeometry.Algebra.zvm_zero_def, zero]
+
+/-- **2. Sciama Relational Inertial Induction Law (`zorn_machian_sciama_relative_induction_law`)**:
+    1. **Co-Moving Vanishing**: Any two proportional 4-potentials `P = zornFourPotential φ v` and
+       `c • P = zornFourPotential (c * φ) (c • v)` have zero relative commutator (`[P, c • P] = 0`)
+       and zero relative gravitoelectric and gravitomagnetic fields.
+    2. **Sciama Linear Induction**: Against a cosmic scalar background potential
+       `P_bg = zornFourPotential Φ_bg 0` (`A_bg = 0`), a test 4-gradient `D = zornFourPotential d₀ a`
+       experiences the exact inertial gravitoelectric field `-Φ_bg • a` with zero magnetic curl:
+       `e_Zorn(D * P_bg) = zornFieldStrength (fun i => -Φ_bg * a i) 0`! -/
+theorem zorn_machian_sciama_relative_induction_law
+    (c d₀ φ Φ_bg : R) (v a : ZornVec3 R) :
+    let P := zornFourPotential φ v
+    let P_scaled := zornFourPotential (c * φ) (fun i => c * v i)
+    let D := zornFourPotential d₀ a
+    let P_bg := zornFourPotential Φ_bg (fun _ => 0)
+    zornComm P P_scaled = 0 ∧
+    zornSpacetimeFramePart (D * P_bg) =
+      zornFieldStrength (fun i => -Φ_bg * a i) (fun _ => 0) := by
+  intro P P_scaled D P_bg
+  refine ⟨?_, ?_⟩
+  · unfold zornComm
+    simp only [_root_.sub_eq_add_neg]
+    ext
+    · simp [P, P_scaled, zornFourPotential, InfoGeometry.Algebra.zvm_add_def,
+            InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_mul_def,
+            InfoGeometry.Algebra.zvm_zero_def, add, neg, mul, zero,
+            ZornVec3.dot, Fin.sum_univ_three]
+      ring
+    · rename_i i
+      fin_cases i <;>
+        (simp [P, P_scaled, zornFourPotential, InfoGeometry.Algebra.zvm_add_def,
+               InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_mul_def,
+               InfoGeometry.Algebra.zvm_zero_def, add, neg, mul, zero, ZornVec3.cross]; ring)
+    · rename_i i
+      fin_cases i <;>
+        (simp [P, P_scaled, zornFourPotential, InfoGeometry.Algebra.zvm_add_def,
+               InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_mul_def,
+               InfoGeometry.Algebra.zvm_zero_def, add, neg, mul, zero, ZornVec3.cross]; ring)
+    · simp [P, P_scaled, zornFourPotential, InfoGeometry.Algebra.zvm_add_def,
+            InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_mul_def,
+            InfoGeometry.Algebra.zvm_zero_def, add, neg, mul, zero,
+            ZornVec3.dot, Fin.sum_univ_three]
+      ring
+  · rw [(zornFourPotential_mul_decomposition d₀ Φ_bg a (fun _ => 0)).2]
+    ext
+    · rfl
+    · rename_i i
+      fin_cases i <;> simp [zornFieldStrength, ZornVec3.cross]
+    · rename_i i
+      fin_cases i <;> simp [zornFieldStrength, ZornVec3.cross]
+    · rfl
+
 end InfoGeometry.Algebra.ZornVectorMatrix

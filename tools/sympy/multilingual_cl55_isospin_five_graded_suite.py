@@ -481,6 +481,21 @@ def run_sympy_verification() -> dict:
     assert sp.simplify(jac_chiral[0] - 6 * det_dab) == 0
     assert sp.simplify(jac_chiral[3] - (-6 * det_dab)) == 0
 
+    # 19. Verify Machian Collinear Degeneracy & Sciama Relational Inertial Induction:
+    c_scale, Phi_bg = sp.symbols("c_scale Phi_bg")
+    assert sp.simplify(a_vec.cross(c_scale * a_vec)) == sp.zeros(3, 1)
+    assert sp.simplify(d_vec.dot(a_vec.cross(c_scale * a_vec))) == 0
+    A_scaled = (c_scale * phi, c_scale * a_vec, -c_scale * a_vec, -c_scale * phi)
+    comm_comoving = zvm_comm(A_pot, A_scaled)
+    assert sp.simplify(comm_comoving[0]) == 0
+    assert sp.simplify(comm_comoving[1]) == sp.zeros(3, 1)
+    assert sp.simplify(comm_comoving[2]) == sp.zeros(3, 1)
+    assert sp.simplify(comm_comoving[3]) == 0
+    P_bg = (Phi_bg, sp.zeros(3, 1), sp.zeros(3, 1), -Phi_bg)
+    sciama_prod = zvm_frame(zvm_mul(D_pot, P_bg))
+    assert sp.simplify(sciama_prod[1] - (-Phi_bg * d_vec)) == sp.zeros(3, 1)
+    assert sp.simplify(sciama_prod[2] - (-Phi_bg * d_vec)) == sp.zeros(3, 1)
+
     return {
         "engine": "SymPy",
         "status": "PASSED",

@@ -343,6 +343,204 @@ theorem trace_peirce_gram_decomposition (χ : SplitQuaternion F) :
       trace_peircePlus_sandwich, trace_peirceMinus_sandwich,
       ← Matrix.trace_add, ← add_mul, peircePlus_add_peirceMinus, one_mul]
 
+/-- Upper-right off-diagonal Peirce seed `E_{01}` in `SplitQuaternion F`. -/
+def peirceSeedD : SplitQuaternion F :=
+  !![0, 1; 0, 0]
+
+/-- Lower-left off-diagonal Peirce seed `E_{10}` in `SplitQuaternion F`. -/
+def peirceSeedB : SplitQuaternion F :=
+  !![0, 0; 1, 0]
+
+@[simp] theorem peirceSeedD_mul_peirceSeedB :
+    (peirceSeedD : SplitQuaternion F) * peirceSeedB = peircePlus := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [peirceSeedD, peirceSeedB, peircePlus]
+
+@[simp] theorem peirceSeedB_mul_peirceSeedD :
+    (peirceSeedB : SplitQuaternion F) * peirceSeedD = peirceMinus := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [peirceSeedD, peirceSeedB, peirceMinus]
+
+@[simp] theorem peirceSeedD_mul_self :
+    (peirceSeedD : SplitQuaternion F) * peirceSeedD = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [peirceSeedD]
+
+@[simp] theorem peirceSeedB_mul_self :
+    (peirceSeedB : SplitQuaternion F) * peirceSeedB = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [peirceSeedB]
+
+@[simp] theorem peircePlus_mul_peirceSeedD :
+    (peircePlus : SplitQuaternion F) * peirceSeedD = peirceSeedD := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [peircePlus, peirceSeedD]
+
+@[simp] theorem peirceSeedD_mul_peirceMinus :
+    (peirceSeedD : SplitQuaternion F) * peirceMinus = peirceSeedD := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [peirceMinus, peirceSeedD]
+
+@[simp] theorem peirceMinus_mul_peirceSeedD :
+    (peirceMinus : SplitQuaternion F) * peirceSeedD = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [peirceMinus, peirceSeedD]
+
+@[simp] theorem peirceSeedD_mul_peircePlus :
+    (peirceSeedD : SplitQuaternion F) * peircePlus = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [peircePlus, peirceSeedD]
+
+@[simp] theorem peirceMinus_mul_peirceSeedB :
+    (peirceMinus : SplitQuaternion F) * peirceSeedB = peirceSeedB := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [peirceMinus, peirceSeedB]
+
+@[simp] theorem peirceSeedB_mul_peircePlus :
+    (peirceSeedB : SplitQuaternion F) * peircePlus = peirceSeedB := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [peircePlus, peirceSeedB]
+
+@[simp] theorem peircePlus_mul_peirceSeedB :
+    (peircePlus : SplitQuaternion F) * peirceSeedB = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [peircePlus, peirceSeedB]
+
+@[simp] theorem peirceSeedB_mul_peirceMinus :
+    (peirceSeedB : SplitQuaternion F) * peirceMinus = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [peirceMinus, peirceSeedB]
+
+/-- Diagonal hyperbolic Peirce kernel `λ P_+ + μ P_-` in `SplitQuaternion F`. -/
+def hyperbolicKernel (lam mu : F) : SplitQuaternion F :=
+  lam • peircePlus + mu • peirceMinus
+
+/-- Two-sided hyperbolic Laplace sandwich `K(λ_L, μ_L) * X * K(λ_R, μ_R)` in `SplitQuaternion F`. -/
+def twoSidedHyperbolicLaplace (lamL muL lamR muR : F) (X : SplitQuaternion F) :
+    SplitQuaternion F :=
+  hyperbolicKernel lamL muL * X * hyperbolicKernel lamR muR
+
+@[simp] theorem hyperbolicKernel_one :
+    (hyperbolicKernel (1 : F) (1 : F) : SplitQuaternion F) = 1 := by
+  simp [hyperbolicKernel, peircePlus_add_peirceMinus]
+
+theorem hyperbolicKernel_mul (lam₁ mu₁ lam₂ mu₂ : F) :
+    (hyperbolicKernel lam₁ mu₁ : SplitQuaternion F) * hyperbolicKernel lam₂ mu₂ =
+      hyperbolicKernel (lam₁ * lam₂) (mu₁ * mu₂) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [hyperbolicKernel, peircePlus, peirceMinus]
+
+theorem twoSidedHyperbolicLaplace_comp
+    (lamL₁ muL₁ lamR₁ muR₁ lamL₂ muL₂ lamR₂ muR₂ : F) (X : SplitQuaternion F) :
+    twoSidedHyperbolicLaplace lamL₁ muL₁ lamR₁ muR₁
+        (twoSidedHyperbolicLaplace lamL₂ muL₂ lamR₂ muR₂ X) =
+      twoSidedHyperbolicLaplace (lamL₁ * lamL₂) (muL₁ * muL₂)
+        (lamR₂ * lamR₁) (muR₂ * muR₁) X := by
+  dsimp [twoSidedHyperbolicLaplace]
+  calc
+    hyperbolicKernel lamL₁ muL₁ *
+        (hyperbolicKernel lamL₂ muL₂ * X * hyperbolicKernel lamR₂ muR₂) *
+        hyperbolicKernel lamR₁ muR₁ =
+      (hyperbolicKernel lamL₁ muL₁ * hyperbolicKernel lamL₂ muL₂) * X *
+        (hyperbolicKernel lamR₂ muR₂ * hyperbolicKernel lamR₁ muR₁) := by
+      simp only [mul_assoc]
+    _ = hyperbolicKernel (lamL₁ * lamL₂) (muL₁ * muL₂) * X *
+        hyperbolicKernel (lamR₂ * lamR₁) (muR₂ * muR₁) := by
+      rw [hyperbolicKernel_mul, hyperbolicKernel_mul]
+
+@[simp] theorem twoSidedHyperbolicLaplace_peircePlus (lamL muL lamR muR : F) :
+    twoSidedHyperbolicLaplace lamL muL lamR muR (peircePlus : SplitQuaternion F) =
+      (lamL * lamR) • peircePlus := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [twoSidedHyperbolicLaplace, hyperbolicKernel, peircePlus, peirceMinus]
+
+@[simp] theorem twoSidedHyperbolicLaplace_peirceMinus (lamL muL lamR muR : F) :
+    twoSidedHyperbolicLaplace lamL muL lamR muR (peirceMinus : SplitQuaternion F) =
+      (muL * muR) • peirceMinus := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [twoSidedHyperbolicLaplace, hyperbolicKernel, peircePlus, peirceMinus]
+
+@[simp] theorem twoSidedHyperbolicLaplace_peirceSeedD (lamL muL lamR muR : F) :
+    twoSidedHyperbolicLaplace lamL muL lamR muR (peirceSeedD : SplitQuaternion F) =
+      (lamL * muR) • peirceSeedD := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [twoSidedHyperbolicLaplace, hyperbolicKernel, peircePlus, peirceMinus, peirceSeedD]
+
+@[simp] theorem twoSidedHyperbolicLaplace_peirceSeedB (lamL muL lamR muR : F) :
+    twoSidedHyperbolicLaplace lamL muL lamR muR (peirceSeedB : SplitQuaternion F) =
+      (muL * lamR) • peirceSeedB := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [twoSidedHyperbolicLaplace, hyperbolicKernel, peircePlus, peirceMinus, peirceSeedB]
+
+theorem peirce_four_sector_decomposition (X : SplitQuaternion F) :
+    X = peircePlus * X * peircePlus + peirceMinus * X * peirceMinus +
+        peircePlus * X * peirceMinus + peirceMinus * X * peircePlus := by
+  calc
+    X = 1 * X * 1 := by rw [one_mul, mul_one]
+    _ = (peircePlus + peirceMinus) * X * (peircePlus + peirceMinus) := by
+      rw [peircePlus_add_peirceMinus]
+    _ = peircePlus * X * peircePlus + peirceMinus * X * peirceMinus +
+          peircePlus * X * peirceMinus + peirceMinus * X * peircePlus := by
+      simp only [add_mul, mul_add]
+      abel
+
+theorem twoSidedHyperbolicLaplace_sector_decomposition
+    (lamL muL lamR muR : F) (X : SplitQuaternion F) :
+    twoSidedHyperbolicLaplace lamL muL lamR muR X =
+      (lamL * lamR) • (peircePlus * X * peircePlus) +
+      (muL * muR) • (peirceMinus * X * peirceMinus) +
+      (lamL * muR) • (peircePlus * X * peirceMinus) +
+      (muL * lamR) • (peirceMinus * X * peircePlus) := by
+  dsimp [twoSidedHyperbolicLaplace, hyperbolicKernel]
+  simp only [add_mul, mul_add]
+  simp only [smul_mul_assoc]
+  simp only [mul_smul_comm, smul_smul]
+  abel
+
+theorem symmetric_twoSidedHyperbolicLaplace_wheel_invariance (u : Fˣ) :
+    twoSidedHyperbolicLaplace (u : F) (↑u⁻¹ : F) (u : F) (↑u⁻¹ : F)
+        (peirceSeedD : SplitQuaternion F) = peirceSeedD ∧
+      twoSidedHyperbolicLaplace (u : F) (↑u⁻¹ : F) (u : F) (↑u⁻¹ : F)
+        (peirceSeedB : SplitQuaternion F) = peirceSeedB ∧
+      twoSidedHyperbolicLaplace (u : F) (↑u⁻¹ : F) (u : F) (↑u⁻¹ : F)
+        (peircePlus : SplitQuaternion F) = ((u : F) * u) • peircePlus ∧
+      twoSidedHyperbolicLaplace (u : F) (↑u⁻¹ : F) (u : F) (↑u⁻¹ : F)
+        (peirceMinus : SplitQuaternion F) = ((↑u⁻¹ : F) * ↑u⁻¹) • peirceMinus := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · rw [twoSidedHyperbolicLaplace_peirceSeedD, Units.mul_inv, one_smul]
+  · rw [twoSidedHyperbolicLaplace_peirceSeedB, Units.inv_mul, one_smul]
+  · exact twoSidedHyperbolicLaplace_peircePlus (u : F) (↑u⁻¹ : F) (u : F) (↑u⁻¹ : F)
+  · exact twoSidedHyperbolicLaplace_peirceMinus (u : F) (↑u⁻¹ : F) (u : F) (↑u⁻¹ : F)
+
+theorem antisymmetric_twoSidedHyperbolicLaplace_diagonal_invariance (u : Fˣ) :
+    twoSidedHyperbolicLaplace (u : F) (↑u⁻¹ : F) (↑u⁻¹ : F) (u : F)
+        (peircePlus : SplitQuaternion F) = peircePlus ∧
+      twoSidedHyperbolicLaplace (u : F) (↑u⁻¹ : F) (↑u⁻¹ : F) (u : F)
+        (peirceMinus : SplitQuaternion F) = peirceMinus ∧
+      twoSidedHyperbolicLaplace (u : F) (↑u⁻¹ : F) (↑u⁻¹ : F) (u : F)
+        (peirceSeedD : SplitQuaternion F) = ((u : F) * u) • peirceSeedD ∧
+      twoSidedHyperbolicLaplace (u : F) (↑u⁻¹ : F) (↑u⁻¹ : F) (u : F)
+        (peirceSeedB : SplitQuaternion F) = ((↑u⁻¹ : F) * ↑u⁻¹) • peirceSeedB := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · rw [twoSidedHyperbolicLaplace_peircePlus, Units.mul_inv, one_smul]
+  · rw [twoSidedHyperbolicLaplace_peirceMinus, Units.inv_mul, one_smul]
+  · exact twoSidedHyperbolicLaplace_peirceSeedD (u : F) (↑u⁻¹ : F) (↑u⁻¹ : F) (u : F)
+  · exact twoSidedHyperbolicLaplace_peirceSeedB (u : F) (↑u⁻¹ : F) (↑u⁻¹ : F) (u : F)
+
+theorem trace_antisymmetric_twoSidedHyperbolicLaplace (u : Fˣ) (X : SplitQuaternion F) :
+    Matrix.trace
+        (twoSidedHyperbolicLaplace (u : F) (↑u⁻¹ : F) (↑u⁻¹ : F) (u : F) X) =
+      Matrix.trace X := by
+  dsimp [twoSidedHyperbolicLaplace]
+  rw [Matrix.trace_mul_comm (hyperbolicKernel (u : F) (↑u⁻¹ : F) * X)
+        (hyperbolicKernel (↑u⁻¹ : F) (u : F)),
+      ← mul_assoc, hyperbolicKernel_mul, Units.inv_mul, Units.mul_inv,
+      hyperbolicKernel_one, one_mul]
+
 end SplitQuaternion
 
 end InfoGeometry.Canonical.AlbertCayleyDickson

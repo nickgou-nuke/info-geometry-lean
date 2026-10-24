@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Algebra.ZornDerivationBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -118,7 +123,7 @@ private lemma bundledAssociator_right_product (X Y Z : ZornVectorMatrix R) :
     change -bundledAssociator (X * X) Y Z -
       -bundledAssociator X Y (X * Z) + 0 -
       X * (-(bundledAssociator X Y Z)) - 0 = 0 at h2
-    simp only [_root_.mul_neg, neg_neg] at h2
+    simp only [_root_.mul_neg] at h2
     abel_nf at h2 ⊢
     exact h2
   have hfirst :
@@ -364,10 +369,9 @@ theorem adjoint_component_composition
         rw [smul_smul, mul_comm q p]
   simp only [InfoGeometry.Algebra.zvm_mul_def] at hprod' hY' hZ' ⊢
   rw [hprod', hYp, hZq, hcross]
-  simp only [ZornVectorMatrix.sub_eq_add_neg, sub_smul, smul_sub,
-    smul_add, smul_neg, smul_smul]
+  simp only [ZornVectorMatrix.sub_eq_add_neg, sub_smul]
   ext <;>
-    simp [_root_.sub_eq_add_neg, ZornVectorMatrix.sub_eq_add_neg,
+    simp [_root_.sub_eq_add_neg,
       ZornVectorMatrix.add, ZornVectorMatrix.neg,
       ZornVectorMatrix.smul] <;>
     ring
@@ -411,5 +415,74 @@ theorem trace_mul_conj_comm (X Y : ZornVectorMatrix R) :
     trace (mul X (conj Y)) = trace (conj (mul X (conj Y))) :=
       (trace_conj _).symm
     _ = trace (mul Y (conj X)) := by rw [conj_mul, conj_conj]
+
+/-- Two-sided sandwich operator `(K * X) * K` on `ZornVectorMatrix R`. -/
+noncomputable def twoSidedSandwich (K X : ZornVectorMatrix R) : ZornVectorMatrix R :=
+  mul (mul K X) K
+
+/-- Flexible law `(K * X) * K = K * (X * K)` on `ZornVectorMatrix R`. -/
+theorem flexible_law (K X : ZornVectorMatrix R) :
+    mul (mul K X) K = mul K (mul X K) := by
+  change (K * X) * K = K * (X * K)
+  exact sub_eq_zero.mp (bundledAssociator_flexible K X)
+
+/-- Left and right parenthesizations of `twoSidedSandwich K X` coincide by flexibility. -/
+theorem twoSidedSandwich_eq_right (K X : ZornVectorMatrix R) :
+    twoSidedSandwich K X = mul K (mul X K) :=
+  flexible_law K X
+
+/--
+Moufang two-sided convolution law: the product of one-sided translates `(K * X) * (Y * K)`
+equals the two-sided sandwich `twoSidedSandwich K (X * Y)`.
+-/
+theorem twoSidedSandwich_mul_convolution (K X Y : ZornVectorMatrix R) :
+    mul (mul K X) (mul Y K) = twoSidedSandwich K (mul X Y) := by
+  dsimp [twoSidedSandwich]
+  rw [middle_moufang K X Y, ← flexible_law K (mul X Y)]
+
+/--
+Product of two-sided sandwiches with the same kernel `K` reduces to a single two-sided
+sandwich of the inner braided product `(X * K) * (K * Y)`.
+-/
+theorem twoSidedSandwich_mul_twoSidedSandwich (K X Y : ZornVectorMatrix R) :
+    mul (twoSidedSandwich K X) (twoSidedSandwich K Y) =
+      twoSidedSandwich K (mul (mul X K) (mul K Y)) := by
+  calc
+    mul (twoSidedSandwich K X) (twoSidedSandwich K Y) =
+        mul (mul K (mul X K)) (mul (mul K Y) K) := by
+      rw [twoSidedSandwich_eq_right K X]
+      rfl
+    _ = twoSidedSandwich K (mul (mul X K) (mul K Y)) :=
+      twoSidedSandwich_mul_convolution K (mul X K) (mul K Y)
+
+/-- Left Moufang expansion of `twoSidedSandwich K X * Y`. -/
+theorem left_moufang_twoSidedSandwich (K X Y : ZornVectorMatrix R) :
+    mul (twoSidedSandwich K X) Y = mul K (mul X (mul K Y)) :=
+  (left_moufang X Y K).symm
+
+/-- Right Moufang expansion of `Y * twoSidedSandwich K X`. -/
+theorem right_moufang_twoSidedSandwich (K X Y : ZornVectorMatrix R) :
+    mul Y (twoSidedSandwich K X) = mul (mul (mul Y K) X) K := by
+  rw [twoSidedSandwich_eq_right K X, ← right_moufang K Y X]
+
+/-- Conjugation commutes with `twoSidedSandwich`. -/
+theorem conj_twoSidedSandwich (K X : ZornVectorMatrix R) :
+    conj (twoSidedSandwich K X) = twoSidedSandwich (conj K) (conj X) := by
+  dsimp [twoSidedSandwich]
+  rw [conj_mul, conj_mul, ← flexible_law (conj K) (conj X)]
+
+/-- Multiplicativity of the quadratic norm on `twoSidedSandwich K X`. -/
+theorem norm_twoSidedSandwich (K X : ZornVectorMatrix R) :
+    norm (twoSidedSandwich K X) = norm K * norm X * norm K := by
+  dsimp [twoSidedSandwich]
+  rw [norm_mul, norm_mul]
+
+/-- Two-sided sandwich of `conj K` by `K` scales `K` by `norm K`. -/
+theorem twoSidedSandwich_conj (K : ZornVectorMatrix R) :
+    twoSidedSandwich K (conj K) = smul (norm K) K := by
+  rw [twoSidedSandwich_eq_right]
+  have hk := kirmse_left (conj K) K
+  rw [conj_conj, norm_conj] at hk
+  exact hk
 
 end InfoGeometry.Algebra.ZornVectorMatrix

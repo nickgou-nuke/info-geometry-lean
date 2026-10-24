@@ -85,10 +85,10 @@ theorem clifford_squares (h : IsDualSeedPair d b) :
     phasePolarization d b * phasePolarization d b = carrierSupport d b := by
   refine ⟨?_, ?_, ?_⟩
   · change (d - b) * (d - b) = -(d * b + b * d)
-    simp only [sub_mul, mul_sub, h.d_sq, h.b_sq]
+    rw [sub_mul, mul_sub, mul_sub, h.d_sq, h.b_sq]
     abel
   · change (d + b) * (d + b) = d * b + b * d
-    simp only [add_mul, mul_add, h.d_sq, h.b_sq]
+    rw [add_mul, mul_add, mul_add, h.d_sq, h.b_sq]
     abel
   · change (polePlus d b - poleMinus d b) *
         (polePlus d b - poleMinus d b) = polePlus d b + poleMinus d b
@@ -106,7 +106,8 @@ theorem polarization_velocity (h : IsDualSeedPair d b) :
   abel
 
 /-- No-turning criterion, valid also in characteristic two. -/
-theorem velocity_eq_zero_iff (h : IsDualSeedPair d b) : transitionVelocity d b = 0 ↔ d = 0 ∧ b = 0 := by
+theorem velocity_eq_zero_iff (h : IsDualSeedPair d b) :
+    transitionVelocity d b = 0 ↔ d = 0 ∧ b = 0 := by
   constructor
   · intro hz
     have hp := congrArg (fun x : A => polePlus d b * x) hz

@@ -34,9 +34,11 @@ theorem peirceBlock_mul (h : IsDualSeedPair d b) (a x y z e f g k : R) :
       peirceBlock d b (a * e + x * g) (a * f + x * k)
         (y * e + z * g) (y * f + z * k) := by
   unfold peirceBlock
+  have hdb : d * b = polePlus d b := rfl
+  have hbd : b * d = poleMinus d b := rfl
   simp only [add_mul, mul_add, smul_mul_smul, h.pp, h.pq, h.qp, h.qq,
-    h.pd, h.pb, h.dp, h.dq, h.qd, h.qb, h.bp, h.bq, h.d_sq, h.b_sq, smul_zero]
-  unfold polePlus poleMinus exactSupport coexactSupport
+    h.pd, h.pb, h.dp, h.dq, h.qd, h.qb, h.bp, h.bq, h.d_sq, h.b_sq, hdb, hbd, smul_zero]
+  change _ = _
   module
 
 /-- The complementary idempotent annihilates every supported block. -/
@@ -188,8 +190,6 @@ theorem moving_poles_sum {c s : R} (hcs : c * c + s * s = 1) :
   rw [movingPolePlus_formula, movingPoleMinus_formula]
   calc
     _ = (c * c + s * s) • (polePlus d b + poleMinus d b) := by module
-    _ = carrierSupport d b := by
-      simpa only [hcs, one_smul] using
-        (rfl : polePlus d b + poleMinus d b = carrierSupport d b)
+    _ = carrierSupport d b := by rw [hcs, one_smul]; rfl
 
 end InfoGeometry.Core.PeirceRotor

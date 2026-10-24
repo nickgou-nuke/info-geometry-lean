@@ -234,4 +234,27 @@ theorem pairing_current_star [StarRing A] (p P q Q : A)
   simp only [star_sub, star_mul, star_star]
   abel
 
+/-- Exact defect of a circular eigenoperator. The coefficient `r` is a
+square root of minus one; the operators need not commute. -/
+theorem circular_commutator_defect
+    {R : Type*} [CommRing R] [Algebra R A]
+    (r : R) (hr : r * r = -1) (G x y : A) :
+    G * (x + r • y) - (x + r • y) * G - (-r) • (x + r • y) =
+      (G * x - x * G - y) + r • (G * y - y * G + x) := by
+  simp only [mul_add, add_mul, mul_smul_comm, smul_mul_assoc,
+    smul_add, smul_sub, smul_smul, neg_mul, hr, neg_neg, one_smul, neg_smul]
+  abel
+
+/-- A circular commutator plane diagonalizes over any central scalar ring
+containing a square root of minus one. Replacing `r` by `-r` gives the opposite
+weight. This is an operator identity, with no assertion of linear independence. -/
+theorem circular_commutator_eigenoperator
+    {R : Type*} [CommRing R] [Algebra R A]
+    (r : R) (hr : r * r = -1) (G x y : A)
+    (hx : G * x - x * G = y) (hy : G * y - y * G = -x) :
+    G * (x + r • y) - (x + r • y) * G = (-r) • (x + r • y) := by
+  apply sub_eq_zero.mp
+  rw [circular_commutator_defect r hr, hx, hy]
+  simp
+
 end InfoGeometry.Algebra.ChiralCARTransport

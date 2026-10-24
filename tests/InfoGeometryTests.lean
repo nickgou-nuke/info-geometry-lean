@@ -480,7 +480,7 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Canonical.CoxeterBraggCore.projected_square_defect
 #check InfoGeometry.Canonical.CoxeterBraggCore.star_bragg_factor
 #check InfoGeometry.Canonical.CoxeterBraggCore.fin2_bragg_factor_nonzero
-#check InfoGeometry.Canonical.PureSpinor.vacuum_is_not_pure
+#check InfoGeometry.Canonical.PureSpinor.vacuum_creation_rank_ne
 #check InfoGeometry.Canonical.PureSpinor.vacuum_annihilator_eq_bot
 #check InfoGeometry.Streaming.TwoBoundaryDyadCompression.boundaryDyad_matrix_apply
 #check InfoGeometry.Streaming.TwoBoundaryDyadCompression.boundaryDyad_matrix_of_same_ray

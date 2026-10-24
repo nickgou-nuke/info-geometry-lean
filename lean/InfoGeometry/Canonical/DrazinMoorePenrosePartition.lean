@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Canonical.DrazinRegularization
+import InfoGeometry.Singular.MoorePenroseSectors
+import Mathlib.LinearAlgebra.Matrix.Trace
 
 /-!
 # Drazin and Moore-Penrose partition interface
@@ -22,6 +24,7 @@ namespace InfoGeometry.Canonical.DrazinMoorePenrosePartition
 
 open InfoGeometry.Canonical.Drazin
 open InfoGeometry.Singular.MoorePenrose
+open InfoGeometry.Singular.MoorePenroseSectors
 
 variable {R : Type*} [Ring R] {a d m : R} {k : ℕ}
 
@@ -57,8 +60,24 @@ theorem dualDmp_outer_inverse [StarRing R] (hd : IsDrazinInverse a d k)
     _ = m * a * (d * a * d) := by rw [hm.aba_eq_a]; simp only [mul_assoc]
     _ = m * a * d := by rw [hd.idempotent]
 
+/-- Zero trace is the cyclic trace identity, with no chain complex assumed. -/
+theorem trace_commutator {ι : Type*} [Fintype ι]
+    (x y : Matrix ι ι ℝ) : Matrix.trace (x * y - y * x) = 0 := by
+  rw [Matrix.trace_sub, Matrix.trace_mul_comm, sub_self]
+
 section Scaling
 variable [Algebra ℝ R]
+
+theorem mp_smul [StarRing R] (hm : IsMoorePenroseInverse a m) {c : ℝ} (hc : c ≠ 0) :
+    IsMoorePenroseInverse (c • a) (c⁻¹ • m) :=
+  hm.rescale hc
+
+/-- All four support-sector operators are scale-invariant even before
+commutation is supplied to make them projections. -/
+theorem sector_scale_invariance (a m : R) {c : ℝ} (hc : c ≠ 0) (i : Bool × Bool) :
+    sector ((c • a) * (c⁻¹ • m)) ((c⁻¹ • m) * (c • a)) i =
+      sector (a * m) (m * a) i := by
+  simp [smul_smul, hc]
 
 /-- Reciprocal scaling gives degree minus one; no inverse witness is needed. -/
 theorem dmp_smul (a d m : R) {c : ℝ} (hc : c ≠ 0) :

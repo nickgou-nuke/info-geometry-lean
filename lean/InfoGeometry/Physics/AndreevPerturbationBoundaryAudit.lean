@@ -10,7 +10,7 @@ open InfoGeometry.Physics.GeneralFermionicAndreevCarrier
 
 example (x : Fin 2 ⊕ Fin 2 → ℤ) :
     andreevRotation.mulVec (x + (fun _ => 1)) ≠ andreevRotation.mulVec x := by
-  rw [andreevRotation_perturbation_eq_iff]
+  rw [Ne, andreevRotation_perturbation_eq_iff]
   intro h
   have he := congrFun h (Sum.inl 0)
   norm_num at he

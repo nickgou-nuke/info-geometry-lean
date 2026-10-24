@@ -57,12 +57,15 @@ theorem page4_split_octonion_multiplication_table :
     (∀ i : Fin 3, u i * uStar i = -u0 ∧ uStar i * u i = -u0Star) ∧
     (∀ i j : Fin 3, i ≠ j → u i * uStar j = (0 : SplitOctonion) ∧ uStar i * u j = (0 : SplitOctonion)) := by
   refine ⟨?_, ?_, ?_, ?_, ?_⟩
-  · exact ⟨InfoGeometry.Canonical.GunaydinGursey.uStarZero_sq,
+  · refine ⟨InfoGeometry.Canonical.GunaydinGursey.uStarZero_sq,
       InfoGeometry.Canonical.GunaydinGursey.uZero_sq,
       InfoGeometry.Canonical.GunaydinGursey.uStarZero_mul_uZero,
-      InfoGeometry.Canonical.GunaydinGursey.uZero_mul_uStarZero,
-      by simpa only [u0, u0Star, add_comm] using
-        (InfoGeometry.Canonical.GunaydinGursey.singlet_sum (R := ℤ))⟩
+      InfoGeometry.Canonical.GunaydinGursey.uZero_mul_uStarZero, ?_⟩
+    change InfoGeometry.Canonical.GunaydinGursey.uStarZero +
+        InfoGeometry.Canonical.GunaydinGursey.uZero =
+      (ZornVectorMatrix.one : ZornVectorMatrix ℤ)
+    rw [add_comm]
+    exact InfoGeometry.Canonical.GunaydinGursey.singlet_sum (R := ℤ)
   · intro i
     obtain ⟨h₁, h₂, h₃, h₄⟩ :=
       InfoGeometry.Canonical.GunaydinGursey.antitriplet_absorption (R := ℤ) i
@@ -81,21 +84,37 @@ theorem page4_split_octonion_multiplication_table :
        ZornVectorMatrix.V 0 * ZornVectorMatrix.V 1 = -ZornVectorMatrix.U 2 ∧
        ZornVectorMatrix.V 1 * ZornVectorMatrix.V 2 = -ZornVectorMatrix.U 0 ∧
        ZornVectorMatrix.V 2 * ZornVectorMatrix.V 0 = -ZornVectorMatrix.U 1)
-    simp only [neg_mul_neg, zvm_mul_def, zvm_neg_def,
+    simp only [zvm_mul_def, zvm_neg_def, ZornVectorMatrix.neg_mul, ZornVectorMatrix.mul_neg,
       ZornVectorMatrix.U_zero_mul_U_one, ZornVectorMatrix.U_one_mul_U_zero,
       ZornVectorMatrix.U_one_mul_U_two, ZornVectorMatrix.U_two_mul_U_one,
       ZornVectorMatrix.U_two_mul_U_zero, ZornVectorMatrix.U_zero_mul_U_two,
       ZornVectorMatrix.V_zero_mul_V_one, ZornVectorMatrix.V_one_mul_V_two,
-      ZornVectorMatrix.V_two_mul_V_zero, and_self]
+      ZornVectorMatrix.V_two_mul_V_zero]
+    simp only [← zvm_neg_def, _root_.neg_neg, and_self]
   · intro i
     have h := InfoGeometry.Canonical.GunaydinGursey.mixed_table (R := ℤ) i i
-    exact ⟨by simpa only [if_pos rfl] using h.2,
-      by simpa only [if_pos rfl] using h.1⟩
+    refine ⟨?_, ?_⟩
+    · change ZornVectorMatrix.mul (InfoGeometry.Canonical.GunaydinGursey.uStar i)
+          (InfoGeometry.Canonical.GunaydinGursey.u i) =
+        -InfoGeometry.Canonical.GunaydinGursey.uStarZero
+      simpa only [ite_true] using h.2
+    · change ZornVectorMatrix.mul (InfoGeometry.Canonical.GunaydinGursey.u i)
+          (InfoGeometry.Canonical.GunaydinGursey.uStar i) =
+        -InfoGeometry.Canonical.GunaydinGursey.uZero
+      simpa only [ite_true] using h.1
   · intro i j hij
-    exact ⟨by simpa only [if_neg (Ne.symm hij)] using
-      (InfoGeometry.Canonical.GunaydinGursey.mixed_table (R := ℤ) j i).2,
-      by simpa only [if_neg hij] using
-      (InfoGeometry.Canonical.GunaydinGursey.mixed_table (R := ℤ) i j).1⟩
+    refine ⟨?_, ?_⟩
+    · change ZornVectorMatrix.mul (InfoGeometry.Canonical.GunaydinGursey.uStar i)
+          (InfoGeometry.Canonical.GunaydinGursey.u j) =
+        (0 : ZornVectorMatrix ℤ)
+      have hji : j ≠ i := Ne.symm hij
+      simpa only [hji, ite_false] using
+        (InfoGeometry.Canonical.GunaydinGursey.mixed_table (R := ℤ) j i).2
+    · change ZornVectorMatrix.mul (InfoGeometry.Canonical.GunaydinGursey.u i)
+          (InfoGeometry.Canonical.GunaydinGursey.uStar j) =
+        (0 : ZornVectorMatrix ℤ)
+      simpa only [hij, ite_false] using
+        (InfoGeometry.Canonical.GunaydinGursey.mixed_table (R := ℤ) i j).1
 
 end
 end SplitOctonion

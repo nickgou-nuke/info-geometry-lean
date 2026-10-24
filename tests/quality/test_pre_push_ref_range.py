@@ -379,6 +379,114 @@ class PrePushRefRangeTests(unittest.TestCase):
                 capture.read_text(encoding="utf-8"),
             )
 
+    def test_proofs_source_routes_to_proofs_target(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            subprocess.run(["git", "init", "-q", "-b", "main", str(root)], check=True)
+            self.git_in(root, "config", "user.name", "OpenGauss Hook Test")
+            self.git_in(root, "config", "user.email", "hook-test@example.invalid")
+
+            gate = root / "scripts" / "quality" / "post_build_gate.sh"
+            proof = root / "proofs" / "BogoliubovFrameTransport.lean"
+            gate.parent.mkdir(parents=True)
+            proof.parent.mkdir(parents=True)
+            gate.write_text(
+                (REPO_ROOT / "scripts" / "quality" / "post_build_gate.sh").read_text(
+                    encoding="utf-8"
+                ),
+                encoding="utf-8",
+            )
+            proof.write_text("-- base proof\n", encoding="utf-8")
+            self.git_in(root, "add", "-A")
+            self.git_in(root, "commit", "-qm", "base proof")
+            base = self.git_in(root, "rev-parse", "HEAD")
+            proof.write_text("-- changed proof\n", encoding="utf-8")
+            self.git_in(root, "commit", "-qam", "change proof")
+
+            bin_dir = root / "stub-bin"
+            bin_dir.mkdir()
+            python_stub = bin_dir / "python3"
+            python_stub.write_text(
+                "#!/usr/bin/env bash\n"
+                "set -euo pipefail\n"
+                "printf '%s\\n' \"$*\" >> \"$CAPTURE_FILE\"\n",
+                encoding="utf-8",
+            )
+            python_stub.chmod(0o755)
+            capture = root / "commands.txt"
+            env = os.environ.copy()
+            env["PATH"] = f"{bin_dir}{os.pathsep}{env['PATH']}"
+            env["CAPTURE_FILE"] = str(capture)
+            result = subprocess.run(
+                ["bash", str(gate), "--incremental", f"--base={base}"],
+                cwd=root,
+                env=env,
+                text=True,
+                capture_output=True,
+            )
+
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertIn("Modified proofs Lean files", result.stdout)
+            self.assertNotIn("outside the package targets", result.stderr)
+            self.assertIn(
+                "tools/infra/run_locked_lake_build.py --wait-for-build-lock proofs.BogoliubovFrameTransport",
+                capture.read_text(encoding="utf-8"),
+            )
+
+    def test_deleted_proofs_source_runs_proofs_umbrella(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            subprocess.run(["git", "init", "-q", "-b", "main", str(root)], check=True)
+            self.git_in(root, "config", "user.name", "OpenGauss Hook Test")
+            self.git_in(root, "config", "user.email", "hook-test@example.invalid")
+
+            gate = root / "scripts" / "quality" / "post_build_gate.sh"
+            proof = root / "proofs" / "BogoliubovFrameTransport.lean"
+            gate.parent.mkdir(parents=True)
+            proof.parent.mkdir(parents=True)
+            gate.write_text(
+                (REPO_ROOT / "scripts" / "quality" / "post_build_gate.sh").read_text(
+                    encoding="utf-8"
+                ),
+                encoding="utf-8",
+            )
+            proof.write_text("-- base proof\n", encoding="utf-8")
+            self.git_in(root, "add", "-A")
+            self.git_in(root, "commit", "-qm", "base proof")
+            base = self.git_in(root, "rev-parse", "HEAD")
+            proof.unlink()
+            self.git_in(root, "add", "-u")
+            self.git_in(root, "commit", "-qm", "delete proof")
+
+            bin_dir = root / "stub-bin"
+            bin_dir.mkdir()
+            python_stub = bin_dir / "python3"
+            python_stub.write_text(
+                "#!/usr/bin/env bash\n"
+                "set -euo pipefail\n"
+                "printf '%s\\n' \"$*\" >> \"$CAPTURE_FILE\"\n",
+                encoding="utf-8",
+            )
+            python_stub.chmod(0o755)
+            capture = root / "commands.txt"
+            env = os.environ.copy()
+            env["PATH"] = f"{bin_dir}{os.pathsep}{env['PATH']}"
+            env["CAPTURE_FILE"] = str(capture)
+            result = subprocess.run(
+                ["bash", str(gate), "--incremental", f"--base={base}"],
+                cwd=root,
+                env=env,
+                text=True,
+                capture_output=True,
+            )
+
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertIn("Deleted proofs Lean files", result.stdout)
+            self.assertIn(
+                "tools/infra/run_locked_lake_build.py --wait-for-build-lock proofs\n",
+                capture.read_text(encoding="utf-8"),
+            )
+
     def test_nested_project_configuration_fails_closed(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)

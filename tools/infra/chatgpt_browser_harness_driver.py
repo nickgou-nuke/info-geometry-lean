@@ -65,13 +65,14 @@ def _reset_chatgpt_sentinel() -> None:
 def browser_send_state() -> dict:
     return evaluate(
         """(() => {
-          const buttonText = b => (b.getAttribute('aria-label') || '') + ' ' + (b.innerText || '');
+          const stopBtn = document.querySelector('[data-testid="stop-button"], button#composer-submit-button[data-testid="stop-button"]');
+          const buttonText = b => (b.getAttribute('aria-label') || '') + ' ' + (b.innerText || '') + ' ' + (b.getAttribute('data-testid') || '');
           const buttons = Array.from(document.querySelectorAll('button'));
-          const streaming = buttons.some(b => /Stop answering|Stop generating|Stop|Cancel|streaming/i.test(buttonText(b)));
-          const fields = Array.from(document.querySelectorAll('textarea[aria-label*="Chat"], textarea, div[contenteditable="true"][role="textbox"], div[contenteditable="true"]'));
+          const streaming = !!stopBtn || buttons.some(b => /Stop answering|Stop generating|stop-button|Stop|Cancel|streaming/i.test(buttonText(b)));
+          const fields = Array.from(document.querySelectorAll('#prompt-textarea, textarea[aria-label*="Chat"], textarea, div[contenteditable="true"][role="textbox"], div[contenteditable="true"]'));
           const composerLengths = fields.map(el => {
             const text = el.tagName === 'TEXTAREA' ? el.value : (el.innerText || el.textContent || '');
-            return text.length;
+            return text.trim().length;
           });
           return { streaming, composerLengths };
         })()"""
@@ -127,21 +128,30 @@ def set_prompt_exact(text: str) -> dict:
     assert_composer_empty()
     expr = """(() => {
       const prompt = %s;
+      const box = document.querySelector('#prompt-textarea, div[contenteditable="true"][role="textbox"], div[contenteditable="true"]');
       const ta = document.querySelector('textarea[aria-label*="Chat"], textarea');
-      const box = document.querySelector('div[contenteditable="true"][role="textbox"], div[contenteditable="true"]');
       const fire = (el) => {
         el.dispatchEvent(new InputEvent('input', {bubbles:true, inputType:'insertText', data: prompt}));
         el.dispatchEvent(new Event('change', {bubbles:true}));
       };
-      if (box) { box.focus(); box.textContent = prompt; fire(box); }
-      if (ta) {
+      if (box) {
+        box.focus();
+        document.execCommand('selectAll', false);
+        document.execCommand('delete', false);
+        const inserted = document.execCommand('insertText', false, prompt);
+        if (!inserted || !(box.innerText || box.textContent || '').trim()) {
+          box.textContent = prompt;
+        }
+        fire(box);
+      } else if (ta) {
         const setter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set;
         setter.call(ta, prompt);
         ta.focus();
         fire(ta);
       }
-      const current = box ? box.innerText : (ta ? ta.value : '');
-      return { ok: current === prompt };
+      const current = box ? (box.innerText || box.textContent || '') : (ta ? ta.value : '');
+      const normalize = s => s.replace(/\\r\\n/g, '\\n').trim();
+      return { ok: normalize(current) === normalize(prompt), length: current.length };
     })()""" % json.dumps(text)
     result = evaluate(expr)
     if not result.get("ok"):
@@ -157,6 +167,11 @@ def click_send() -> None:
     while time.time() < deadline:
         assert_not_streaming()
         result = evaluate("""(() => {
+          const direct = document.querySelector('button#composer-submit-button[data-testid="send-button"], button[data-testid="send-button"]');
+          if (direct && !direct.disabled) {
+            direct.click();
+            return {clicked:true, via:'data-testid-send-button'};
+          }
           const candidates = Array.from(document.querySelectorAll('button'));
           const send = candidates.find(b =>
             !b.disabled && (/Send prompt/i.test(b.getAttribute('aria-label') || '') ||
@@ -165,7 +180,7 @@ def click_send() -> None:
             send.click();
             return {clicked:true, via:'button'};
           }
-          const fields = Array.from(document.querySelectorAll('textarea[aria-label*="Chat"], textarea, div[contenteditable="true"][role="textbox"], div[contenteditable="true"]'));
+          const fields = Array.from(document.querySelectorAll('#prompt-textarea, textarea[aria-label*="Chat"], textarea, div[contenteditable="true"][role="textbox"], div[contenteditable="true"]'));
           const composerLengths = fields.map(el => {
             const text = el.tagName === 'TEXTAREA' ? el.value : (el.innerText || el.textContent || '');
             return text.length;
@@ -183,7 +198,16 @@ def click_send() -> None:
 def streaming() -> bool:
     return bool(
         evaluate(
-            """Array.from(document.querySelectorAll('button')).some(b => /Stop|Cancel|streaming/i.test((b.getAttribute('aria-label') || '') + ' ' + (b.innerText || '')))"""
+            """(() => {
+              if (document.querySelector('[data-testid="stop-button"], button#composer-submit-button[data-testid="stop-button"], [class*="result-streaming"]')) {
+                return true;
+              }
+              return Array.from(document.querySelectorAll('button')).some(
+                b => /Stop answering|Stop generating|stop-button|Stop|Cancel|streaming/i.test(
+                  (b.getAttribute('aria-label') || '') + ' ' + (b.innerText || '') + ' ' + (b.getAttribute('data-testid') || '')
+                )
+              );
+            })()"""
         )
     )
 
@@ -191,11 +215,25 @@ def streaming() -> bool:
 def assistant_messages() -> list[dict]:
     raw = evaluate(
         """(() => {
-          let elements = Array.from(document.querySelectorAll('[data-message-author-role="assistant"]'));
-          if (elements.length === 0) {
-            elements = Array.from(document.querySelectorAll('div[class*="assistantMessage"]'));
+          const selectors = [
+            '[data-message-author-role="assistant"]',
+            'div[class*="assistantMessage"]',
+            '[class*="agent-turn"]',
+            'article[data-testid*="conversation-turn"] [data-message-author-role="assistant"]'
+          ];
+          let elements = [];
+          for (const sel of selectors) {
+            const found = Array.from(document.querySelectorAll(sel));
+            if (found.length > 0) {
+              elements = found;
+              break;
+            }
           }
-          return JSON.stringify(elements.map((e, i) => ({ index: i, text: e.innerText || '' })));
+          if (elements.length > 0) {
+            const last = elements[elements.length - 1];
+            try { last.scrollIntoView({ block: 'end', inline: 'nearest' }); } catch (_) {}
+          }
+          return JSON.stringify(elements.map((e, i) => ({ index: i, text: (e.innerText || e.textContent || '') })));
         })()"""
     )
     return json.loads(raw or "[]")
@@ -204,23 +242,34 @@ def assistant_messages() -> list[dict]:
 def wait_for_final_message(
     timeout_seconds: int = DEFAULT_TIMEOUT_SECONDS,
     poll_seconds: float = DEFAULT_POLL_SECONDS,
+    min_message_count: int = 1,
 ) -> list[dict]:
     print("Waiting for response...")
     deadline = time.time() + timeout_seconds
     last_messages: list[dict] = []
+    stable_ticks = 0
+    prev_text = ""
     while time.time() < deadline:
         last_messages = assistant_messages()
         is_streaming = streaming()
-        if last_messages:
+        if len(last_messages) >= min_message_count:
             last_msg = last_messages[-1].get("text", "").strip()
-            if not is_streaming and last_msg:
-                print("Response received.")
-                return last_messages
-            print(f"Still waiting... (msg length: {len(last_msg)})")
+            if not is_streaming and last_msg and last_msg != "...":
+                if last_msg == prev_text:
+                    stable_ticks += 1
+                else:
+                    prev_text = last_msg
+                    stable_ticks = 1
+                if stable_ticks >= 2:
+                    print("Response received.")
+                    return last_messages
+            else:
+                stable_ticks = 0
+            print(f"Still waiting... (msg length: {len(last_msg)}, streaming={is_streaming})")
         else:
-            print("No messages yet...")
+            print(f"Waiting for assistant turn >= {min_message_count} (current: {len(last_messages)})...")
         time.sleep(poll_seconds)
-    if last_messages and not streaming() and last_messages[-1].get("text", "").strip():
+    if len(last_messages) >= min_message_count and not streaming() and last_messages[-1].get("text", "").strip():
         print("Final response captured at the timeout boundary.")
         return last_messages
     if last_messages:
@@ -245,9 +294,14 @@ def run_audit(
         if not _prompt_field_ready():
             raise RuntimeError("BROWSER_UNAVAILABLE: prompt field missing after tab open")
         assert_not_streaming()
+        before_count = len(assistant_messages())
         set_prompt_exact(prompt_text)
         click_send()
-        messages = wait_for_final_message(timeout_seconds=timeout, poll_seconds=poll_seconds)
+        messages = wait_for_final_message(
+            timeout_seconds=timeout,
+            poll_seconds=poll_seconds,
+            min_message_count=before_count + 1,
+        )
         return messages[-1]["text"] if messages else "timeout"
 
 

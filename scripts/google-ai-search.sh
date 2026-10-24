@@ -1,14 +1,56 @@
 #!/usr/bin/env bash
-# Google AI Mode search — browser-harness-only lane.
-# Usage: ./scripts/google-ai-search.sh "query string"
-#   Does not use aiClaw. It attaches to the browser-harness/Chromium CDP lane
+# Google AI Mode search — browser-harness-only lane (token-free OAuth/browser session).
+# Usage:
+#   ./scripts/google-ai-search.sh [--drunken-professor|-d | --socratic|-s | --mathlib|-m | --raw|-r] "query or stream"
+#   Does not use aiClaw. Attaches to the browser-harness v0.1.13+ Chromium CDP lane
 #   and records observations into the agent message ledger.
 
 set -euo pipefail
 
-QUERY="$*"
+MODE="${GOOGLE_AI_PROMPT_MODE:-default}"
+ARGS=()
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -d|--drunken-professor|--drunk-professor)
+            MODE="drunken-professor"
+            shift
+            ;;
+        -s|--socratic)
+            MODE="socratic"
+            shift
+            ;;
+        -m|--mathlib)
+            MODE="mathlib"
+            shift
+            ;;
+        -r|--raw)
+            MODE="raw"
+            shift
+            ;;
+        --mode)
+            MODE="${2:-default}"
+            shift 2
+            ;;
+        -h|--help)
+            echo "Usage: $0 [--drunken-professor|-d | --socratic|-s | --mathlib|-m | --raw|-r] <query>"
+            echo "Modes:"
+            echo "  default            Standard Google AI Mode search + synthesis"
+            echo "  drunken-professor  De-conflate hazy/superimposed physics streams into exact math carriers + Lean 4 owner theorems"
+            echo "  socratic           Adversarial Socratic audit of mathematical claims, counterexamples, and exact hypotheses"
+            echo "  mathlib            Locate exact Lean 4 / Mathlib 4 declarations, imports, and algebraic carriers"
+            echo "  raw                Send the query verbatim without wrapper instructions"
+            exit 0
+            ;;
+        *)
+            ARGS+=("$1")
+            shift
+            ;;
+    esac
+done
+
+QUERY="${ARGS[*]:-}"
 if [ -z "$QUERY" ]; then
-    echo "Usage: $0 <search query>"
+    echo "Usage: $0 [--drunken-professor|-d | --socratic|-s | --mathlib|-m | --raw|-r] <search query>"
     echo "  Searches Google AI Mode via browser-harness"
     exit 1
 fi
@@ -16,13 +58,50 @@ fi
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 
-echo "🔍 Google AI Mode Search"
+echo "🔍 Google AI Mode Search (mode: $MODE)"
 echo "═══════════════════════════"
 echo "Query: $QUERY"
 echo ""
 
-PROMPT="Search Google for: $QUERY. Summarize the top results."
+case "$MODE" in
+    drunken-professor|drunk-professor)
+        PROMPT="The following stream is a hazy, superimposed physics/mathematics brainstorm with half-recalled identities ('drunken professor' stream):
+
+\"\"\"
+$QUERY
+\"\"\"
+
+Reconstruct the pristine mathematical architecture the author intended:
+1. De-conflate superimposed physical regimes and isolate the exact algebraic carriers (e.g., associative *-ring / 2x2 split-quaternion matrix, Cayley-Dickson doubling pair, alternative Zorn vector-matrix, or differential form / Casimir invariant).
+2. Identify the exact canonical literature references, authors, theorem names, and explicit equations that govern each carrier.
+3. Formulate the resulting definitions, lemmas, and theorems in canonical Lean 4 / Mathlib 4 style for existing owner modules—using constructive zero-hypothesis proofs (e.g., Units Fˣ instead of assumed reciprocity hypotheses, concrete Peirce projectors instead of wrapper structures, and zero witnesses/certificates/sorry).
+4. If an analytic or continuum limit is mentioned, isolate the exact finite algebraic identity or inductive colimit step that is 100% provable constructively."
+        ;;
+    socratic)
+        PROMPT="Perform a rigorous Socratic mathematical audit of the following claim or query:
+
+\"\"\"
+$QUERY
+\"\"\"
+
+1. Separate what is an exact algebraic identity from what requires extra hypotheses (associativity, commutativity, invertibility, characteristic != 2, star-ring involution).
+2. Give explicit minimal counterexamples to any over-generalized claim.
+3. State the exact theorem and carrier where the statement holds without wrappers or vacuous assumptions, plus the relevant canonical references."
+        ;;
+    mathlib)
+        PROMPT="Search Google and Mathlib 4 documentation for: $QUERY.
+Identify the exact Lean 4 / Mathlib 4 module imports, typeclasses, declaration names, and constructive proof patterns."
+        ;;
+    raw)
+        PROMPT="$QUERY"
+        ;;
+    *)
+        PROMPT="Search Google for: $QUERY. Summarize the top mathematical and primary-literature results with exact equations and citations."
+        ;;
+esac
+
 TIMEOUT="${GOOGLE_AI_TIMEOUT_SECONDS:-${GOOGLE_AI_SEARCH_TIMEOUT:-150}}"
+export BH_NO_TAB_MARKER="${BH_NO_TAB_MARKER:-1}"
 
 if [ -z "${BU_CDP_WS:-}" ]; then
     detected_ws="$(python3 -c "import json, urllib.request; print(json.load(urllib.request.urlopen('http://127.0.0.1:9222/json/version', timeout=2)).get('webSocketDebuggerUrl',''))" 2>/dev/null || true)"

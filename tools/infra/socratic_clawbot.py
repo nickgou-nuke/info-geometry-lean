@@ -266,6 +266,7 @@ def run_browser_harness(prompt: str, timeout: int = CHATGPT_TIMEOUT_SECONDS) -> 
         env = os.environ.copy()
         env["CHATGPT_PROMPT_FILE"] = prompt_file
         env["BU_CDP_WS"] = os.environ.get("BU_CDP_WS", "")
+        env["BH_NO_TAB_MARKER"] = os.environ.get("BH_NO_TAB_MARKER", "1")
         env["CHATGPT_URL"] = CHATGPT_URL
         env["CHATGPT_RESULT_JSON"] = str(result_path)
         env["CHATGPT_TIMEOUT_SECONDS"] = str(timeout)

@@ -34,27 +34,50 @@ else:
 
 before_text = js("return (document.body.innerText || '')")
 
-# Find textarea and insert prompt
+# Find textarea / contenteditable / combobox and insert prompt via native setter or execCommand
 safe = json.dumps(prompt)  # JSON-escape the prompt
-js(f"""
-  var el = document.querySelector('textarea');
-  if (!el) el = document.querySelector('input[type="text"]');
-  if (!el) el = document.querySelector('[role="combobox"]');
-  if (el) {{
-    el.focus();
-    el.value = {safe};
-    el.dispatchEvent(new Event('input', {{bubbles: true}}));
-    el.dispatchEvent(new Event('change', {{bubbles: true}}));
+inserted = js(f"""(() => {{
+  const text = {safe};
+  const el = document.querySelector('textarea')
+    || document.querySelector('div[contenteditable="true"][role="textbox"]')
+    || document.querySelector('div[contenteditable="true"]')
+    || document.querySelector('input[type="text"]')
+    || document.querySelector('[role="combobox"]');
+  if (!el) return {{ ok: false, reason: 'no-input-element' }};
+  el.focus();
+  if (el.tagName === 'TEXTAREA' || el.tagName === 'INPUT') {{
+    const proto = el.tagName === 'TEXTAREA'
+      ? window.HTMLTextAreaElement.prototype
+      : window.HTMLInputElement.prototype;
+    const desc = Object.getOwnPropertyDescriptor(proto, 'value');
+    if (desc && desc.set) {{
+      desc.set.call(el, text);
+    }} else {{
+      el.value = text;
+    }}
+  }} else {{
+    document.execCommand('selectAll', false);
+    document.execCommand('delete', false);
+    document.execCommand('insertText', false, text);
   }}
-""")
+  el.dispatchEvent(new InputEvent('input', {{ bubbles: true, inputType: 'insertText', data: text }}));
+  el.dispatchEvent(new Event('change', {{ bubbles: true }}));
+  return {{ ok: true, tag: el.tagName }};
+}})()""")
+if not isinstance(inserted, dict) or not inserted.get("ok"):
+    raise RuntimeError(f"Google AI Mode input field not found: {inserted}")
 time.sleep(0.5)
 
-# Click send
+# Click send (or submit form if button uses Search/Submit/Send aria-label)
 sent = js("""
-  var buttons = Array.from(document.querySelectorAll('button'));
+  var buttons = Array.from(document.querySelectorAll('button, [role="button"]'));
   var btn = buttons.find(function(b) {
-    return /Send|Submit/i.test(b.getAttribute('aria-label') || '') && !b.disabled;
+    var label = (b.getAttribute('aria-label') || '') + ' ' + (b.getAttribute('title') || '') + ' ' + (b.innerText || '');
+    return /Send|Submit|Ask|Search AI/i.test(label) && !b.disabled && b.offsetParent !== null;
   });
+  if (!btn) {
+    btn = document.querySelector('button[type="submit"]:not([disabled])');
+  }
   if (!btn) return 'no-enabled-send-button';
   btn.click();
   return 'sent';

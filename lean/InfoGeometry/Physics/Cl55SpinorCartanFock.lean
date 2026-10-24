@@ -1501,6 +1501,40 @@ theorem global_so4_dirac_and_complex_structure {p n : Fin 5} (hpn : p ≠ n) :
             ← pairingCartan_eq_pairProj_sub p n]
       _ = (2 : ℝ) • H p := (isospin_pairing_cartan_sum_sub p n).1
 
+/-- 3-color chiral grading operator $\Gamma_{\mathrm{color}} = (2 H_0)(2 H_1)(2 H_2)$. -/
+def colorChiralVolume : MatStage 5 :=
+  ((2 : ℝ) • H 0) * ((2 : ℝ) • H 1) * ((2 : ℝ) • H 2)
+
+/-- Top 10D chiral spin-connection volume operator $\Gamma_{\mathrm{Cl}(5,5)} = \prod_{a=0}^4 (2 H_a)$. -/
+def chiralVolume10D : MatStage 5 :=
+  ((2 : ℝ) • H 0) * ((2 : ℝ) • H 1) * ((2 : ℝ) • H 2) *
+  ((2 : ℝ) • H 3) * ((2 : ℝ) • H 4)
+
+/-- **$3 + 2$ Color–Isospin Factorization of the 10D Chiral Volume Element (`chiralVolume10D_factorization`)**:
+    Splitting the 5 Witt modes into 3 color modes $\{0, 1, 2\}$ and 2 nucleon modes $\{3, 4\}$,
+    the top 10D chiral volume element $\Gamma_{\mathrm{Cl}(5,5)}$ factorizes into the 3-color chiral
+    grading $\Gamma_{\mathrm{color}}$ times the nucleon pairing-vs-isospin carrier parity
+    $\Delta_{\mathrm{pair}}(3,4) - \Delta_{\mathrm{iso}}(3,4)$! -/
+theorem chiralVolume10D_factorization :
+    chiralVolume10D =
+      colorChiralVolume * (pairingCarrier 3 4 - isospinCarrier 3 4) ∧
+    (gammaMinus 0 * gammaPlus 0) * (gammaMinus 1 * gammaPlus 1) *
+      (gammaMinus 2 * gammaPlus 2) * (gammaMinus 3 * gammaPlus 3) *
+      (gammaMinus 4 * gammaPlus 4) =
+      colorChiralVolume * (pairingCarrier 3 4 - isospinCarrier 3 4) := by
+  have h1 : chiralVolume10D =
+      colorChiralVolume * (pairingCarrier 3 4 - isospinCarrier 3 4) := by
+    dsimp [chiralVolume10D, colorChiralVolume]
+    rw [mul_assoc ((((2 : ℝ) • H 0) * ((2 : ℝ) • H 1)) * ((2 : ℝ) • H 2)),
+        (two_H_mul_two_H_eq_carrier_parity 3 4).1]
+  refine ⟨h1, ?_⟩
+  rw [(gammaMinus_mul_gammaPlus_eq_two_H 0).1,
+      (gammaMinus_mul_gammaPlus_eq_two_H 1).1,
+      (gammaMinus_mul_gammaPlus_eq_two_H 2).1,
+      (gammaMinus_mul_gammaPlus_eq_two_H 3).1,
+      (gammaMinus_mul_gammaPlus_eq_two_H 4).1]
+  exact h1
+
 /-! ## 6. The Grand Cl(5,5) Spinor Cartan-Fock Synthesis -/
 
 /-

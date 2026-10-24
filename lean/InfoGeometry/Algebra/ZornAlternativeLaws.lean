@@ -904,25 +904,69 @@ theorem zornCrossChannel_pure_color_torsion (M N : Matrix (Fin 2) (Fin 2) R) :
             colorChannelEmbed2, colorChannelEmbed, InfoGeometry.Algebra.zvm_add_def,
             InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_mul_def,
             add, neg, mul, ZornVec3.dot, ZornVec3.basis]
-      <;> ring
     · rename_i i
       fin_cases i <;>
-        simp [zornSpacetimeFramePart, offDiagonalPart, colorChannelEmbed0, colorChannelEmbed1,
-              colorChannelEmbed2, colorChannelEmbed, InfoGeometry.Algebra.zvm_add_def,
-              InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_mul_def,
-              add, neg, mul, ZornVec3.cross, ZornVec3.basis]
-      <;> ring
+        (simp [zornSpacetimeFramePart, offDiagonalPart, colorChannelEmbed0, colorChannelEmbed1,
+               colorChannelEmbed2, colorChannelEmbed, InfoGeometry.Algebra.zvm_add_def,
+               InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_mul_def,
+               add, neg, mul, ZornVec3.cross, ZornVec3.basis]; try ring)
     · rename_i i
       fin_cases i <;>
-        simp [zornSpacetimeFramePart, offDiagonalPart, colorChannelEmbed0, colorChannelEmbed1,
-              colorChannelEmbed2, colorChannelEmbed, InfoGeometry.Algebra.zvm_add_def,
-              InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_mul_def,
-              add, neg, mul, ZornVec3.cross, ZornVec3.basis]
-      <;> ring
+        (simp [zornSpacetimeFramePart, offDiagonalPart, colorChannelEmbed0, colorChannelEmbed1,
+               colorChannelEmbed2, colorChannelEmbed, InfoGeometry.Algebra.zvm_add_def,
+               InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_mul_def,
+               add, neg, mul, ZornVec3.cross, ZornVec3.basis]; try ring)
     · simp [zornSpacetimeFramePart, offDiagonalPart, colorChannelEmbed0, colorChannelEmbed1,
             colorChannelEmbed2, colorChannelEmbed, InfoGeometry.Algebra.zvm_add_def,
             InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_mul_def,
             add, neg, mul, ZornVec3.dot, ZornVec3.basis]
-      <;> ring
+
+/-- Classical 3D Nambu volume determinant `zornNambuDet u v w = u ⋅ (v × w)`. -/
+def zornNambuDet (u v w : ZornVec3 R) : R :=
+  ZornVec3.dot u (ZornVec3.cross v w)
+
+/-- Antisymmetric commutator `[X, Y] = X * Y - Y * X` on `ZornVectorMatrix R`. -/
+noncomputable def zornComm (X Y : ZornVectorMatrix R) : ZornVectorMatrix R :=
+  X * Y - Y * X
+
+/-- Cyclic Lie Jacobiator `J(X, Y, Z) = [X, [Y, Z]] + [Y, [Z, X]] + [Z, [X, Y]]`. -/
+noncomputable def zornJacobiator (X Y Z : ZornVectorMatrix R) : ZornVectorMatrix R :=
+  zornComm X (zornComm Y Z) + zornComm Y (zornComm Z X) + zornComm Z (zornComm X Y)
+
+/-- **The Nambu–Bianchi Frame Jacobiator Theorem (`zornSpacetimeFrame_jacobiator_spinConnectionPart_eq_nambu`)**:
+    For any three 6D frame elements `e(X), e(Y), e(Z)`, the even singlet spin-connection
+    projection of their cyclic Lie Jacobiator is `6` times the sum of the quark and
+    antiquark Nambu 3-Bracket volumes along `zornGamma`:
+    `ω_Zorn(J(e(X), e(Y), e(Z))) = ((6 : R) * (zornNambuDet X.v Y.v Z.v + zornNambuDet X.w Y.w Z.w)) • zornGamma`! -/
+theorem zornSpacetimeFrame_jacobiator_spinConnectionPart_eq_nambu
+    (X Y Z : ZornVectorMatrix R) :
+    zornSpinConnectionPart
+      (zornJacobiator (zornSpacetimeFramePart X)
+                      (zornSpacetimeFramePart Y)
+                      (zornSpacetimeFramePart Z)) =
+      ((6 : R) * (zornNambuDet X.v Y.v Z.v + zornNambuDet X.w Y.w Z.w)) • zornGamma := by
+  unfold zornJacobiator zornComm
+  simp only [_root_.sub_eq_add_neg]
+  ext
+  · simp [zornSpinConnectionPart, zornSpacetimeFramePart, diagonalPart, offDiagonalPart,
+          zornGamma, zornNambuDet, InfoGeometry.Algebra.zvm_add_def,
+          InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_mul_def,
+          InfoGeometry.Algebra.zvm_smul_def, add, neg, mul, smul,
+          ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+    ring
+  · rename_i i
+    fin_cases i <;>
+      simp [zornSpinConnectionPart, diagonalPart, zornGamma,
+            InfoGeometry.Algebra.zvm_smul_def, smul]
+  · rename_i i
+    fin_cases i <;>
+      simp [zornSpinConnectionPart, diagonalPart, zornGamma,
+            InfoGeometry.Algebra.zvm_smul_def, smul]
+  · simp [zornSpinConnectionPart, zornSpacetimeFramePart, diagonalPart, offDiagonalPart,
+          zornGamma, zornNambuDet, InfoGeometry.Algebra.zvm_add_def,
+          InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_mul_def,
+          InfoGeometry.Algebra.zvm_smul_def, add, neg, mul, smul,
+          ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+    ring
 
 end InfoGeometry.Algebra.ZornVectorMatrix

@@ -190,6 +190,9 @@ def run_sympy_verification() -> dict:
     assert Q_tot * Q_tot == I32
     assert J_tot * J_tot == -I32
     assert J_tot * Q_tot == two_Hp
+    Gamma_color = (2 * H[0]) * (2 * H[1]) * (2 * H[2])
+    Gamma_10D = (2 * H[0]) * (2 * H[1]) * (2 * H[2]) * (2 * H[3]) * (2 * H[4])
+    assert Gamma_10D == Gamma_color * (Delta_pair - Delta_iso)
 
     # 9. Verify Erlangen 2.0 Cartan-Peirce Emergence & Gauge Invariance on SplitQuaternion:
     x00, x01, x10, x11, y00, y01, y10, y11, u = sp.symbols(
@@ -279,6 +282,25 @@ def run_sympy_verification() -> dict:
     assert sp.simplify(comm_01[1] - expected_torsion[1]) == sp.zeros(3, 1)
     assert sp.simplify(comm_01[2] - expected_torsion[2]) == sp.zeros(3, 1)
     assert sp.simplify(comm_01[3] - expected_torsion[3]) == 0
+
+    # 12. Verify the Nambu-Bianchi Frame Jacobiator Law on 3 Colored Frame Elements:
+    z01, z10 = sp.symbols("z01 z10")
+    Z_mat = sp.Matrix([[0, z01], [z10, 0]])
+    e_Z2 = zvm_frame(color_embed(2, Z_mat))
+
+    def zvm_comm(m1, m2):
+        return zvm_sub(zvm_mul(m1, m2), zvm_mul(m2, m1))
+
+    jac_012 = zvm_add(
+        zvm_add(
+            zvm_comm(e_X0, zvm_comm(e_Y1, e_Z2)),
+            zvm_comm(e_Y1, zvm_comm(e_Z2, e_X0)),
+        ),
+        zvm_comm(e_Z2, zvm_comm(e_X0, e_Y1)),
+    )
+    nambu_sum = x01 * y01 * z01 + x10 * y10 * z10
+    assert sp.simplify(jac_012[0] - 6 * nambu_sum) == 0
+    assert sp.simplify(jac_012[3] - (-6 * nambu_sum)) == 0
 
     return {
         "engine": "SymPy",

@@ -358,6 +358,15 @@ def run_sympy_verification() -> dict:
     assert sp.simplify(lhs_swap[2] - rhs_swap[2]) == sp.zeros(3, 1)
     assert sp.simplify(lhs_swap[3] - rhs_swap[3]) == 0
 
+    # 16. Verify Universal Malcev-Zorn S_3 Identity J(X,Y,Z) == -6 * [X,Y,Z] & Associator-Nambu:
+    assoc_012 = zvm_sub(zvm_mul(zvm_mul(e_X0, e_Y1), e_Z2), zvm_mul(e_X0, zvm_mul(e_Y1, e_Z2)))
+    assert sp.simplify(jac_012[0] - (-6 * assoc_012[0])) == 0
+    assert sp.simplify(jac_012[1] - (-6 * assoc_012[1])) == sp.zeros(3, 1)
+    assert sp.simplify(jac_012[2] - (-6 * assoc_012[2])) == sp.zeros(3, 1)
+    assert sp.simplify(jac_012[3] - (-6 * assoc_012[3])) == 0
+    assert sp.simplify(assoc_012[0] - (-nambu_sum)) == 0
+    assert sp.simplify(assoc_012[3] - nambu_sum) == 0
+
     return {
         "engine": "SymPy",
         "status": "PASSED",

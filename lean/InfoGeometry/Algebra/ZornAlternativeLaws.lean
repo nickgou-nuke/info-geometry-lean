@@ -925,6 +925,10 @@ theorem zornCrossChannel_pure_color_torsion (M N : Matrix (Fin 2) (Fin 2) R) :
 def zornNambuDet (u v w : ZornVec3 R) : R :=
   ZornVec3.dot u (ZornVec3.cross v w)
 
+/-- Non-associative Zorn associator `[X, Y, Z] = (X * Y) * Z - X * (Y * Z)`. -/
+noncomputable def zornAssociator (X Y Z : ZornVectorMatrix R) : ZornVectorMatrix R :=
+  (X * Y) * Z - X * (Y * Z)
+
 /-- Antisymmetric commutator `[X, Y] = X * Y - Y * X` on `ZornVectorMatrix R`. -/
 noncomputable def zornComm (X Y : ZornVectorMatrix R) : ZornVectorMatrix R :=
   X * Y - Y * X
@@ -932,6 +936,89 @@ noncomputable def zornComm (X Y : ZornVectorMatrix R) : ZornVectorMatrix R :=
 /-- Cyclic Lie Jacobiator `J(X, Y, Z) = [X, [Y, Z]] + [Y, [Z, X]] + [Z, [X, Y]]`. -/
 noncomputable def zornJacobiator (X Y Z : ZornVectorMatrix R) : ZornVectorMatrix R :=
   zornComm X (zornComm Y Z) + zornComm Y (zornComm Z X) + zornComm Z (zornComm X Y)
+
+/-- **Universal Malcev–Zorn `S₃` Identity (`zornJacobiator_eq_neg_six_smul_zornAssociator`)**:
+    Explains why the combinatorial factor `6 = |S₃|` appears in the Nambu–Bianchi law: for ANY
+    three elements `X, Y, Z : ZornVectorMatrix R` (with zero hypotheses!), the cyclic Lie
+    Jacobiator is identically `-6` times the non-associative associator! -/
+theorem zornJacobiator_eq_neg_six_smul_zornAssociator
+    (X Y Z : ZornVectorMatrix R) :
+    zornJacobiator X Y Z = (-6 : R) • zornAssociator X Y Z := by
+  have h_expand :
+      zornJacobiator X Y Z =
+        -bundledAssociator X Y Z - bundledAssociator Y Z X - bundledAssociator Z X Y +
+        bundledAssociator X Z Y + bundledAssociator Y X Z + bundledAssociator Z Y X := by
+    simp only [zornJacobiator, zornComm, bundledAssociator, _root_.associator_apply,
+      _root_.mul_sub, _root_.sub_mul]
+    abel
+  have h_yzx : bundledAssociator Y Z X = bundledAssociator X Y Z :=
+    bundledAssociator_cycle X Y Z
+  have h_zxy : bundledAssociator Z X Y = bundledAssociator X Y Z :=
+    (bundledAssociator_cycle Y Z X).trans h_yzx
+  have h_xzy : bundledAssociator X Z Y = -bundledAssociator X Y Z := by
+    rw [bundledAssociator_swap23 X Y Z, neg_neg]
+  have h_yxz : bundledAssociator Y X Z = -bundledAssociator X Y Z := by
+    rw [bundledAssociator_swap12 X Y Z, neg_neg]
+  have h_zyx : bundledAssociator Z Y X = -bundledAssociator X Y Z :=
+    (bundledAssociator_cycle Z Y X).symm.trans h_yxz
+  have h_sum :
+      zornJacobiator X Y Z =
+        -(bundledAssociator X Y Z + bundledAssociator X Y Z + bundledAssociator X Y Z +
+          bundledAssociator X Y Z + bundledAssociator X Y Z + bundledAssociator X Y Z) := by
+    rw [h_expand, h_yzx, h_zxy, h_xzy, h_yxz, h_zyx]
+    abel
+  rw [h_sum]
+  change -(zornAssociator X Y Z + zornAssociator X Y Z + zornAssociator X Y Z +
+           zornAssociator X Y Z + zornAssociator X Y Z + zornAssociator X Y Z) =
+         (-6 : R) • zornAssociator X Y Z
+  ext
+  · simp [InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+          InfoGeometry.Algebra.zvm_smul_def, add, neg, smul]; ring
+  · rename_i i
+    fin_cases i <;>
+      (simp [InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+             InfoGeometry.Algebra.zvm_smul_def, add, neg, smul]; ring)
+  · rename_i i
+    fin_cases i <;>
+      (simp [InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+             InfoGeometry.Algebra.zvm_smul_def, add, neg, smul]; ring)
+  · simp [InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+          InfoGeometry.Algebra.zvm_smul_def, add, neg, smul]; ring
+
+/-- **Unit-Coefficient Associator–Nambu Theorem (`zornSpacetimeFrame_associator_spinConnectionPart_eq_neg_nambu`)**:
+    For any three 6D frame elements `e(X), e(Y), e(Z)`, the singlet spin-connection projection
+    of their non-associative associator `[e(X), e(Y), e(Z)]` has unit coefficient `-1` times
+    the sum of the quark and antiquark Nambu 3-Bracket volumes along `zornGamma`! -/
+theorem zornSpacetimeFrame_associator_spinConnectionPart_eq_neg_nambu
+    (X Y Z : ZornVectorMatrix R) :
+    zornSpinConnectionPart
+      (zornAssociator (zornSpacetimeFramePart X)
+                      (zornSpacetimeFramePart Y)
+                      (zornSpacetimeFramePart Z)) =
+      (-(zornNambuDet X.v Y.v Z.v + zornNambuDet X.w Y.w Z.w)) • zornGamma := by
+  unfold zornAssociator
+  simp only [_root_.sub_eq_add_neg]
+  ext
+  · simp [zornSpinConnectionPart, zornSpacetimeFramePart, diagonalPart, offDiagonalPart,
+          zornGamma, zornNambuDet, InfoGeometry.Algebra.zvm_add_def,
+          InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_mul_def,
+          InfoGeometry.Algebra.zvm_smul_def, add, neg, mul, smul,
+          ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+    ring
+  · rename_i i
+    fin_cases i <;>
+      simp [zornSpinConnectionPart, diagonalPart, zornGamma,
+            InfoGeometry.Algebra.zvm_smul_def, smul]
+  · rename_i i
+    fin_cases i <;>
+      simp [zornSpinConnectionPart, diagonalPart, zornGamma,
+            InfoGeometry.Algebra.zvm_smul_def, smul]
+  · simp [zornSpinConnectionPart, zornSpacetimeFramePart, diagonalPart, offDiagonalPart,
+          zornGamma, zornNambuDet, InfoGeometry.Algebra.zvm_add_def,
+          InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_mul_def,
+          InfoGeometry.Algebra.zvm_smul_def, add, neg, mul, smul,
+          ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+    ring
 
 /-- **The Nambu–Bianchi Frame Jacobiator Theorem (`zornSpacetimeFrame_jacobiator_spinConnectionPart_eq_nambu`)**:
     For any three 6D frame elements `e(X), e(Y), e(Z)`, the even singlet spin-connection

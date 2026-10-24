@@ -28,13 +28,13 @@ def bilateral (u v : A) : A →ₗ[R] A := (R_map v).comp (L_map u)
 
 /-- The right factors compose in the opposite order. -/
 theorem bilateral_comp (u v a b : A) :
-    (bilateral (R := R) u v).comp (bilateral a b) = bilateral (u * a) (b * v) := by
+    (bilateral (R := R) u v).comp (bilateral (R := R) a b) = bilateral (R := R) (u * a) (b * v) := by
   ext x
   simp only [LinearMap.comp_apply, bilateral_apply, mul_assoc]
 
 /-- Units on the two sides give a linear equivalence, without a metric. -/
 def bilateralEquiv (u v : Aˣ) : A ≃ₗ[R] A where
-  toLinearMap := bilateral (u : A) (v : A)
+  toLinearMap := bilateral (R := R) (u : A) (v : A)
   invFun := bilateral (R := R) (↑(u⁻¹)) (↑(v⁻¹))
   left_inv x := by simp [bilateral_apply, mul_assoc]
   right_inv x := by simp [bilateral_apply, mul_assoc]
@@ -48,7 +48,7 @@ def diagonal (d b : A) (lam mu : R) : A := peirceBlock d b lam 0 0 mu
 
 /-- Expansion is valid for every ambient signal; it does not assert active support. -/
 theorem four_corner_expansion (d b x : A) (l m r s : R) :
-    bilateral (diagonal d b l m) (diagonal d b r s) x =
+    bilateral (R := R) (diagonal d b l m) (diagonal d b r s) x =
       (l * r) • (polePlus d b * x * polePlus d b) +
       (l * s) • (polePlus d b * x * poleMinus d b) +
       (m * r) • (poleMinus d b * x * polePlus d b) +
@@ -72,7 +72,7 @@ theorem weights_separable (l m r s : R) :
 /-- A reusable corner eigen-scaling contract on an arbitrary algebra. -/
 theorem corner_scaling (u v p q x : A) (l r : R)
     (hl : u * p = l • p) (hr : q * v = r • q) :
-    bilateral u v (p * x * q) = (l * r) • (p * x * q) := by
+    bilateral (R := R) u v (p * x * q) = (l * r) • (p * x * q) := by
   calc
     _ = (u * p) * x * (q * v) := by simp only [bilateral_apply, mul_assoc]
     _ = _ := by rw [hl, hr]; simp only [smul_mul_assoc, mul_smul_comm, smul_smul]
@@ -81,7 +81,7 @@ variable {d b : A}
 
 /-- Full supported-block action, rather than four unrelated generator calculations. -/
 theorem diagonal_block_action (h : IsDualSeedPair d b) (l m r s a x y z : R) :
-    bilateral (diagonal d b l m) (diagonal d b r s) (peirceBlock d b a x y z) =
+    bilateral (R := R) (diagonal d b l m) (diagonal d b r s) (peirceBlock d b a x y z) =
       peirceBlock d b ((l * r) * a) ((l * s) * x) ((m * r) * y) ((m * s) * z) := by
   simp only [bilateral_apply, diagonal, peirceBlock_mul h]
   congr 1 <;> ring
@@ -89,9 +89,9 @@ theorem diagonal_block_action (h : IsDualSeedPair d b) (l m r s a x y z : R) :
 /-- The two regimes in the intake are distinct specializations of one operator. -/
 theorem symmetric_adjoint_selectivity (h : IsDualSeedPair d b)
     {l m : R} (hlm : l * m = 1) (a x y z : R) :
-    bilateral (diagonal d b l m) (diagonal d b l m) (peirceBlock d b a x y z) =
+    bilateral (R := R) (diagonal d b l m) (diagonal d b l m) (peirceBlock d b a x y z) =
       peirceBlock d b ((l * l) * a) x y ((m * m) * z) ∧
-    bilateral (diagonal d b l m) (diagonal d b m l) (peirceBlock d b a x y z) =
+    bilateral (R := R) (diagonal d b l m) (diagonal d b m l) (peirceBlock d b a x y z) =
       peirceBlock d b a ((l * l) * x) ((m * m) * y) z := by
   have hml : m * l = 1 := by simpa [mul_comm] using hlm
   constructor <;> rw [diagonal_block_action h] <;> simp only [hlm, hml, one_mul]

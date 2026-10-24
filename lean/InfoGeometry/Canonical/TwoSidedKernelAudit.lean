@@ -24,7 +24,7 @@ theorem integral_seed : IsDualSeedPair dZ bZ := by constructor <;> decide
 
 /-- A noncommuting signal exhibits all four different corner multipliers. -/
 theorem integral_four_corner_action :
-    bilateral (diagonal dZ bZ (2 : ℤ) 3) (diagonal dZ bZ (5 : ℤ) 7)
+    bilateral (R := ℤ) (diagonal dZ bZ (2 : ℤ) 3) (diagonal dZ bZ (5 : ℤ) 7)
       !![2, 3; 5, 7] = !![20, 42; 75, 147] := by
   ext i j
   fin_cases i <;> fin_cases j <;>
@@ -44,7 +44,7 @@ theorem proper_support_not_identity :
     let d : Matrix (Fin 3) (Fin 3) ℤ := !![0, 1, 0; 0, 0, 0; 0, 0, 0]
     let b : Matrix (Fin 3) (Fin 3) ℤ := !![0, 0, 0; 1, 0, 0; 0, 0, 0]
     let x : Matrix (Fin 3) (Fin 3) ℤ := !![0, 0, 0; 0, 0, 0; 0, 0, 1]
-    bilateral (diagonal d b (1 : ℤ) 1) (diagonal d b (1 : ℤ) 1) x = 0 ∧ x ≠ 0 := by
+    bilateral (R := ℤ) (diagonal d b (1 : ℤ) 1) (diagonal d b (1 : ℤ) 1) x = 0 ∧ x ≠ 0 := by
   dsimp
   constructor
   · ext i j
@@ -58,7 +58,7 @@ theorem symmetric_sandwich_not_multiplicative :
     let d : Matrix (Fin 2) (Fin 2) ℚ := !![0, 1; 0, 0]
     let b : Matrix (Fin 2) (Fin 2) ℚ := !![0, 0; 1, 0]
     let D := diagonal d b (2 : ℚ) (1 / 2)
-    bilateral D D (d * b) ≠ bilateral D D d * bilateral D D b := by
+    bilateral (R := ℚ) D D (d * b) ≠ bilateral (R := ℚ) D D d * bilateral (R := ℚ) D D b := by
   dsimp
   intro h
   have h00 := congrFun (congrFun h 0) 0

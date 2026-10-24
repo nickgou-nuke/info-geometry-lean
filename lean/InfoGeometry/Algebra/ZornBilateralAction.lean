@@ -23,19 +23,19 @@ variable {R : Type*} [CommRing R]
 /-- The explicitly left-parenthesized sandwich on the native split octonions. -/
 noncomputable def sandwich (k : ZornVectorMatrix R) :
     ZornVectorMatrix R →ₗ[R] ZornVectorMatrix R :=
-  (R_map k).comp (L_map k)
+  (R_map (R := R) k).comp (L_map (R := R) k)
 
 @[simp] theorem sandwich_apply (k x : ZornVectorMatrix R) :
     sandwich k x = (k * x) * k := rfl
 
 /-- The obstruction to commuting distinct left/right multiplication maps. -/
 theorem left_right_defect (u v x : ZornVectorMatrix R) :
-    ((R_map v).comp (L_map u) - (L_map u).comp (R_map v)) x =
+    ((R_map (R := R) v).comp (L_map (R := R) u) - (L_map (R := R) u).comp (R_map (R := R) v)) x =
       _root_.associator u x v := rfl
 
 /-- Flexibility is exactly commutation of the same-element left/right maps. -/
 theorem same_kernel_commute (k : ZornVectorMatrix R) :
-    (R_map (R := R) k).comp (L_map k) = (L_map k).comp (R_map k) := by
+    (R_map (R := R) k).comp (L_map (R := R) k) = (L_map (R := R) k).comp (R_map (R := R) k) := by
   ext x
   change (k * x) * k = k * (x * k)
   have h := ZornVectorMatrix.associator_flexible k x
@@ -44,7 +44,7 @@ theorem same_kernel_commute (k : ZornVectorMatrix R) :
 
 /-- Middle Moufang as an identity of actual linear endomorphisms. -/
 theorem middle_moufang_operator (k y : ZornVectorMatrix R) :
-    (R_map (R := R) (y * k)).comp (L_map k) = (sandwich k).comp (R_map y) := by
+    (R_map (R := R) (y * k)).comp (L_map (R := R) k) = (sandwich k).comp (R_map (R := R) y) := by
   ext x
   change (k * x) * (y * k) = (k * (x * y)) * k
   calc
@@ -64,8 +64,8 @@ theorem finite_sum_transport {ι : Type*} (s : Finset ι) (k : ZornVectorMatrix 
 
 /-- Distinct kernels need not commute: a native nonzero associator is the witness. -/
 theorem distinct_kernels_do_not_commute [Nontrivial R] :
-    (R_map (R := R) (ZornVectorMatrix.U 2)).comp (L_map (ZornVectorMatrix.U 0)) ≠
-      (L_map (ZornVectorMatrix.U 0)).comp (R_map (ZornVectorMatrix.U 2)) := by
+    (R_map (R := R) (ZornVectorMatrix.U 2)).comp (L_map (R := R) (ZornVectorMatrix.U 0)) ≠
+      (L_map (R := R) (ZornVectorMatrix.U 0)).comp (R_map (R := R) (ZornVectorMatrix.U 2)) := by
   intro heq
   have h := congrArg (fun f : ZornVectorMatrix R →ₗ[R] ZornVectorMatrix R =>
     f (ZornVectorMatrix.U 1)) heq

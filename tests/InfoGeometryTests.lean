@@ -486,3 +486,8 @@ example (v : InfoGeometry.Krein.DoubledSpace ℝ) :
 #check InfoGeometry.Streaming.TwoBoundaryDyadCompression.boundaryDyad_matrix_of_same_ray
 #check InfoGeometry.Streaming.TwoBoundaryDyadCompression.boundaryDyad_self_adjoint_of_same_ray
 #check InfoGeometry.Streaming.TwoBoundaryDyadCompression.boundaryDyad_self_adjoint_iff_same_ray
+#check InfoGeometry.Core.PeirceReflectionContracts.grading_products
+#check InfoGeometry.Core.PeirceReflectionContracts.pure_equivariant_field_zero
+#check InfoGeometry.Core.PeirceParityWeights.combination_fixed_iff
+#check InfoGeometry.Core.PeirceParityWeights.invariant_weight_trace_zero
+#check InfoGeometry.Canonical.PeirceReflectionAudit.equivariance_not_pointwise_mixing

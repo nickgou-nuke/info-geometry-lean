@@ -495,3 +495,6 @@ import InfoGeometry.Superalgebra.CattoGurseyOctonionicHadronicSuperalgebra
 import InfoGeometry.Algebra.ZornColorGL31Obstruction
 import InfoGeometry.Algebra.ZornMajoranaRotations
 import InfoGeometry.Algebra.ZornRightProjectionObstruction
+import InfoGeometry.Core.PeirceReflectionContracts
+import InfoGeometry.Core.PeirceParityWeights
+import InfoGeometry.Canonical.PeirceReflectionAudit

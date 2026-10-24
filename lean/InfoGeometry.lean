@@ -317,6 +317,9 @@ import InfoGeometry.Projective.HadjiivanovRankTwoBraidFrame
 import InfoGeometry.Projective.HadjiivanovRankTwoBraidFrameAudit
 import InfoGeometry.Synthesis.AmplituhedronBeyondHorizonsGrandSynthesis
 import InfoGeometry.Synthesis.AmplituhedronBeyondHorizonsGrandSynthesisAudit
+import InfoGeometry.Core.PeirceReflectionContracts
+import InfoGeometry.Core.PeirceParityWeights
+import InfoGeometry.Canonical.PeirceReflectionAudit
 
 /-!
 # InfoGeometry

@@ -629,4 +629,128 @@ theorem three_channel_baryon_associator_poles :
             matSeedD, matPeircePlus, matPeirceMinus, InfoGeometry.Algebra.zvm_mul_def,
             mul, ZornVec3.dot, ZornVec3.cross, ZornVec3.basis]
 
+/-!
+## 6. Erlangen 2.0 on `ZornVectorMatrix R`: Emergent 6D Metric, Spin Curvature, & Color Torsion
+-/
+
+/-- Zorn Cartan grading involution `zornGamma = ⟨1, 0, 0, -1⟩` (`zornGamma² = one`). -/
+def zornGamma : ZornVectorMatrix R :=
+  ⟨1, fun _ => 0, fun _ => 0, -1⟩
+
+/-- Even 2D singlet spin-connection projection `ω_Zorn(X) = diagonalPart X = ⟨X.a, 0, 0, X.b⟩`. -/
+abbrev zornSpinConnectionPart (X : ZornVectorMatrix R) : ZornVectorMatrix R :=
+  diagonalPart X
+
+/-- Odd 6D colored frame projection `e_Zorn(X) = offDiagonalPart X = ⟨0, X.v, X.w, 0⟩`. -/
+abbrev zornSpacetimeFramePart (X : ZornVectorMatrix R) : ZornVectorMatrix R :=
+  offDiagonalPart X
+
+/-- Emergent 6D split-metric bilinear `g_Zorn(X, Y) = X.v ⋅ Y.w + X.w ⋅ Y.v`. -/
+def zornEmergentMetric (X Y : ZornVectorMatrix R) : R :=
+  ZornVec3.dot X.v Y.w + ZornVec3.dot X.w Y.v
+
+/-- Emergent Riemann–Cartan singlet curvature scalar `R_Zorn(X, Y) = X.v ⋅ Y.w - X.w ⋅ Y.v`. -/
+def zornEmergentCurvature (X Y : ZornVectorMatrix R) : R :=
+  ZornVec3.dot X.v Y.w - ZornVec3.dot X.w Y.v
+
+/-- Octonionic color cross-product torsion `T_color(X, Y) = ⟨0, -2(X.w × Y.w), 2(X.v × Y.v), 0⟩`. -/
+def zornColorCrossTorsion (X Y : ZornVectorMatrix R) : ZornVectorMatrix R :=
+  ⟨0, fun i => (-2 : R) * ZornVec3.cross X.w Y.w i,
+      fun i => (2 : R) * ZornVec3.cross X.v Y.v i, 0⟩
+
+/-- **Cartan Decomposition of `ZornVectorMatrix R` into Singlet Spin Connection `⊕` 6D Frame**. -/
+theorem zorn_cartan_connection_frame_split (X : ZornVectorMatrix R) :
+    zornSpinConnectionPart X + zornSpacetimeFramePart X = X ∧
+    (zornGamma * zornSpinConnectionPart X) * zornGamma = zornSpinConnectionPart X ∧
+    (zornGamma * zornSpacetimeFramePart X) * zornGamma = -zornSpacetimeFramePart X := by
+  refine ⟨diagonalPart_add_offDiagonalPart X, ?_, ?_⟩ <;>
+  · ext
+    · simp [zornSpinConnectionPart, zornSpacetimeFramePart, diagonalPart, offDiagonalPart,
+            zornGamma, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_neg_def,
+            mul, neg]
+    · rename_i i
+      fin_cases i <;>
+        simp [zornSpinConnectionPart, zornSpacetimeFramePart, diagonalPart, offDiagonalPart,
+              zornGamma, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_neg_def,
+              mul, neg, ZornVec3.cross]
+    · rename_i i
+      fin_cases i <;>
+        simp [zornSpinConnectionPart, zornSpacetimeFramePart, diagonalPart, offDiagonalPart,
+              zornGamma, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_neg_def,
+              mul, neg, ZornVec3.cross]
+    · simp [zornSpinConnectionPart, zornSpacetimeFramePart, diagonalPart, offDiagonalPart,
+            zornGamma, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_neg_def,
+            mul, neg]
+
+/-- **Emergent 6D Split-Metric Theorem (`zornSpacetimeFrame_anticommutator_eq_metric`)**:
+    In the Jordan anticommutator `{e_Zorn(X), e_Zorn(Y)}` of any two 6D frame elements,
+    the non-associative cross products `X.v × Y.v` and `X.w × Y.w` cancel identically,
+    leaving a pure scalar multiple of the identity `one`! -/
+theorem zornSpacetimeFrame_anticommutator_eq_metric (X Y : ZornVectorMatrix R) :
+    zornSpacetimeFramePart X * zornSpacetimeFramePart Y +
+    zornSpacetimeFramePart Y * zornSpacetimeFramePart X =
+      zornEmergentMetric X Y • (one : ZornVectorMatrix R) := by
+  ext
+  · simp [zornSpacetimeFramePart, offDiagonalPart, zornEmergentMetric, one,
+          InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_mul_def,
+          InfoGeometry.Algebra.zvm_smul_def, add, mul, smul, ZornVec3.dot_comm]
+  · rename_i i
+    fin_cases i <;>
+      (simp [zornSpacetimeFramePart, offDiagonalPart, zornEmergentMetric, one,
+             InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_mul_def,
+             InfoGeometry.Algebra.zvm_smul_def, add, mul, smul, ZornVec3.cross]; ring)
+  · rename_i i
+    fin_cases i <;>
+      (simp [zornSpacetimeFramePart, offDiagonalPart, zornEmergentMetric, one,
+             InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_mul_def,
+             InfoGeometry.Algebra.zvm_smul_def, add, mul, smul, ZornVec3.cross]; ring)
+  · simp [zornSpacetimeFramePart, offDiagonalPart, zornEmergentMetric, one,
+          InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_mul_def,
+          InfoGeometry.Algebra.zvm_smul_def, add, mul, smul, ZornVec3.dot_comm]
+    ring
+
+/-- **Frame Commutator Splits into Singlet Riemann Curvature `⊕` Octonionic Color Torsion**. -/
+theorem zornSpacetimeFrame_commutator_curvature_and_color_torsion
+    (X Y : ZornVectorMatrix R) :
+    zornSpinConnectionPart
+      (zornSpacetimeFramePart X * zornSpacetimeFramePart Y -
+       zornSpacetimeFramePart Y * zornSpacetimeFramePart X) =
+      zornEmergentCurvature X Y • zornGamma ∧
+    zornSpacetimeFramePart
+      (zornSpacetimeFramePart X * zornSpacetimeFramePart Y -
+       zornSpacetimeFramePart Y * zornSpacetimeFramePart X) =
+      zornColorCrossTorsion X Y ∧
+    zornSpacetimeFramePart X * zornSpacetimeFramePart Y -
+    zornSpacetimeFramePart Y * zornSpacetimeFramePart X =
+      zornEmergentCurvature X Y • zornGamma + zornColorCrossTorsion X Y := by
+  refine ⟨?_, ?_, ?_⟩ <;>
+  · rw [_root_.sub_eq_add_neg]
+    ext
+    · simp [zornSpinConnectionPart, zornSpacetimeFramePart, diagonalPart, offDiagonalPart,
+            zornEmergentCurvature, zornColorCrossTorsion, zornGamma,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+            add, neg, mul, smul, ZornVec3.dot_comm]
+      try ring
+    · rename_i i
+      fin_cases i <;>
+        (simp [zornSpinConnectionPart, zornSpacetimeFramePart, diagonalPart, offDiagonalPart,
+               zornEmergentCurvature, zornColorCrossTorsion, zornGamma,
+               InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+               add, neg, mul, smul, ZornVec3.cross]; try ring)
+    · rename_i i
+      fin_cases i <;>
+        (simp [zornSpinConnectionPart, zornSpacetimeFramePart, diagonalPart, offDiagonalPart,
+               zornEmergentCurvature, zornColorCrossTorsion, zornGamma,
+               InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+               add, neg, mul, smul, ZornVec3.cross]; try ring)
+    · simp [zornSpinConnectionPart, zornSpacetimeFramePart, diagonalPart, offDiagonalPart,
+            zornEmergentCurvature, zornColorCrossTorsion, zornGamma,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+            add, neg, mul, smul, ZornVec3.dot_comm]
+      try ring
+
 end InfoGeometry.Algebra.ZornVectorMatrix

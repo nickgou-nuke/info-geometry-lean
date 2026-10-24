@@ -302,6 +302,31 @@ def run_sympy_verification() -> dict:
     assert sp.simplify(jac_012[0] - 6 * nambu_sum) == 0
     assert sp.simplify(jac_012[3] - (-6 * nambu_sum)) == 0
 
+    # 13. Verify Tamm-Dancoff Singlet-Triplet Binet-Cauchy-Zorn Norm Conservation & Nambu Extraction:
+    def zvm_norm(m):
+        return m[0] * m[3] - m[1].dot(m[2])
+
+    def zvm_singlet(m):
+        return (m[0], sp.zeros(3, 1), sp.zeros(3, 1), m[3])
+
+    prod_01 = zvm_mul(e_X0, e_Y1)
+    assert sp.simplify(
+        (zvm_norm(zvm_singlet(prod_01)) + zvm_norm(zvm_frame(prod_01)))
+        - zvm_norm(e_X0) * zvm_norm(e_Y1)
+    ) == 0
+    td_nambu = zvm_singlet(zvm_mul(zvm_frame(prod_01), e_Z2))
+    assert sp.simplify(td_nambu[0] - (-x10 * y10 * z10)) == 0
+    assert sp.simplify(td_nambu[3] - (x01 * y01 * z01)) == 0
+
+    # 14. Verify SplitQuaternion 1 (+) 3 Tamm-Dancoff & Three-Triplet Nambu Singlet Closure:
+    T_X = 2 * X - X.trace() * I2
+    T_Y = 2 * Y - Y.trace() * I2
+    T_Z = 2 * Z_mat - Z_mat.trace() * I2
+    C_XY = T_X * T_Y - T_Y * T_X
+    assert sp.simplify((T_X * T_Y + T_Y * T_X) - (T_X * T_Y).trace() * I2) == sp.zeros(2, 2)
+    assert sp.simplify(C_XY.trace()) == 0
+    assert sp.simplify((C_XY * T_Z + T_Z * C_XY) - (C_XY * T_Z).trace() * I2) == sp.zeros(2, 2)
+
     return {
         "engine": "SymPy",
         "status": "PASSED",

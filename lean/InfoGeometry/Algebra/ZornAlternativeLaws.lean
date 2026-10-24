@@ -969,4 +969,69 @@ theorem zornSpacetimeFrame_jacobiator_spinConnectionPart_eq_nambu
           ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
     ring
 
+/-!
+## 7. Tamm–Dancoff Singlet–Triplet Companionship & Nambu 3-Bracket Extraction
+-/
+
+/-- **Two-Body Tamm–Dancoff Product Decomposition into Singlet Dot + Triplet Cross**:
+    The product of any two 6D triplet frame states `e(X)` and `e(Y)` has Singlet part
+    `⟨X.v ⋅ Y.w, 0, 0, X.w ⋅ Y.v⟩` and Triplet part `⟨0, -(X.w × Y.w), X.v × Y.v, 0⟩`. -/
+theorem zorn_tamm_dancoff_two_body_singlet_triplet_parts (X Y : ZornVectorMatrix R) :
+    zornSpinConnectionPart (zornSpacetimeFramePart X * zornSpacetimeFramePart Y) =
+      ⟨ZornVec3.dot X.v Y.w, fun _ => 0, fun _ => 0, ZornVec3.dot X.w Y.v⟩ ∧
+    zornSpacetimeFramePart (zornSpacetimeFramePart X * zornSpacetimeFramePart Y) =
+      ⟨0, fun i => -ZornVec3.cross X.w Y.w i, fun i => ZornVec3.cross X.v Y.v i, 0⟩ := by
+  refine ⟨?_, ?_⟩ <;>
+  · ext
+    · simp [zornSpinConnectionPart, zornSpacetimeFramePart, diagonalPart, offDiagonalPart,
+            InfoGeometry.Algebra.zvm_mul_def, mul]
+    · rename_i i
+      fin_cases i <;>
+        simp [zornSpinConnectionPart, zornSpacetimeFramePart, diagonalPart, offDiagonalPart,
+              InfoGeometry.Algebra.zvm_mul_def, mul]
+    · rename_i i
+      fin_cases i <;>
+        simp [zornSpinConnectionPart, zornSpacetimeFramePart, diagonalPart, offDiagonalPart,
+              InfoGeometry.Algebra.zvm_mul_def, mul]
+    · simp [zornSpinConnectionPart, zornSpacetimeFramePart, diagonalPart, offDiagonalPart,
+            InfoGeometry.Algebra.zvm_mul_def, mul]
+
+/-- **Binet–Cauchy–Zorn Singlet–Triplet Norm Conservation (`zorn_tamm_dancoff_singlet_triplet_norm_conservation`)**:
+    For any two 6D triplet states `e(X)` and `e(Y)`, the sum of the norm of the Singlet channel
+    `ω_Zorn(e(X) * e(Y))` and the norm of the Triplet channel `e_Zorn(e(X) * e(Y))` equals the
+    product of the incoming triplet norms! -/
+theorem zorn_tamm_dancoff_singlet_triplet_norm_conservation (X Y : ZornVectorMatrix R) :
+    norm (zornSpinConnectionPart (zornSpacetimeFramePart X * zornSpacetimeFramePart Y)) +
+    norm (zornSpacetimeFramePart (zornSpacetimeFramePart X * zornSpacetimeFramePart Y)) =
+      norm (zornSpacetimeFramePart X) * norm (zornSpacetimeFramePart Y) := by
+  simp [norm, zornSpinConnectionPart, zornSpacetimeFramePart, diagonalPart, offDiagonalPart,
+        InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot, ZornVec3.cross,
+        Fin.sum_univ_three]
+  ring
+
+/-- **Tamm–Dancoff Triplet-to-Nambu Singlet Extraction (`zorn_tamm_dancoff_triplet_to_nambu_singlet`)**:
+    Multiplying the intermediate Tamm–Dancoff diquark triplet `e_Zorn(e(X) * e(Y))` by a third
+    triplet `e(Z)` and projecting onto the Singlet sector `ω_Zorn` extracts the exact Nambu
+    3-Determinant pair `⟨-zornNambuDet X.w Y.w Z.w, 0, 0, zornNambuDet X.v Y.v Z.v⟩`! -/
+theorem zorn_tamm_dancoff_triplet_to_nambu_singlet (X Y Z : ZornVectorMatrix R) :
+    zornSpinConnectionPart
+      (zornSpacetimeFramePart (zornSpacetimeFramePart X * zornSpacetimeFramePart Y) *
+       zornSpacetimeFramePart Z) =
+      ⟨-zornNambuDet X.w Y.w Z.w, fun _ => 0, fun _ => 0, zornNambuDet X.v Y.v Z.v⟩ := by
+  ext
+  · simp [zornSpinConnectionPart, zornSpacetimeFramePart, diagonalPart, offDiagonalPart,
+          zornNambuDet, InfoGeometry.Algebra.zvm_mul_def, mul,
+          ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+    ring
+  · rename_i i
+    fin_cases i <;>
+      simp [zornSpinConnectionPart, diagonalPart]
+  · rename_i i
+    fin_cases i <;>
+      simp [zornSpinConnectionPart, diagonalPart]
+  · simp [zornSpinConnectionPart, zornSpacetimeFramePart, diagonalPart, offDiagonalPart,
+          zornNambuDet, InfoGeometry.Algebra.zvm_mul_def, mul,
+          ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+    ring
+
 end InfoGeometry.Algebra.ZornVectorMatrix

@@ -923,6 +923,62 @@ theorem emergentMetric_and_curvature_gauge_invariant
   rw [h1, h2]
   exact ⟨rfl, rfl⟩
 
+/-! ### Tamm–Dancoff `1 ⊕ 3` Singlet–Triplet Split & Three-Triplet Nambu Closure on `SplitQuaternion F` -/
+
+/-- **Division-Free Singlet Part (`singletPart X ∈ 1`)**:
+    `singletPart X = trace(X) • 1`. -/
+def singletPart (X : SplitQuaternion F) : SplitQuaternion F :=
+  Matrix.trace X • (1 : SplitQuaternion F)
+
+/-- **Division-Free Traceless Triplet Part (`tripletPart X ∈ 3 = 𝔰𝔩₂(F)`)**:
+    `tripletPart X = (2 : F) • X - trace(X) • 1`. -/
+def tripletPart (X : SplitQuaternion F) : SplitQuaternion F :=
+  (2 : F) • X - Matrix.trace X • (1 : SplitQuaternion F)
+
+/-- **Division-Free Tamm–Dancoff `1 ⊕ 3` Decomposition (`singlet_add_triplet_eq_two_smul`)**:
+    Every `2 × 2` operator `X` decomposes as `2 • X = singletPart X + tripletPart X` with
+    `trace (tripletPart X) = 0`. -/
+theorem singlet_add_triplet_eq_two_smul (X : SplitQuaternion F) :
+    singletPart X + tripletPart X = (2 : F) • X ∧
+    Matrix.trace (tripletPart X) = 0 := by
+  refine ⟨?_, ?_⟩
+  · unfold singletPart tripletPart; abel
+  · simp [tripletPart, Matrix.trace, Matrix.diag, Fin.sum_univ_two]
+
+/-- **Triplet × Triplet Jordan Anticommutator Lands Purely in the 1D Singlet Sector**:
+    For any `X, Y : SplitQuaternion F`, `{tripletPart X, tripletPart Y}` is a pure scalar
+    multiple of `1` equal to `trace(tripletPart X * tripletPart Y) • 1`! -/
+theorem tripletPart_anticommutator_in_singlet (X Y : SplitQuaternion F) :
+    tripletPart X * tripletPart Y + tripletPart Y * tripletPart X =
+      Matrix.trace (tripletPart X * tripletPart Y) • (1 : SplitQuaternion F) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+  · simp [tripletPart, Matrix.trace, Matrix.diag,
+          Matrix.mul_apply, Fin.sum_univ_two, Matrix.one_apply]
+    ring
+
+/-- **Triplet × Triplet Lie Commutator Lands Purely in the 3D Triplet Sector (`trace = 0`)**. -/
+theorem tripletPart_commutator_trace_zero (X Y : SplitQuaternion F) :
+    Matrix.trace (tripletPart X * tripletPart Y - tripletPart Y * tripletPart X) = 0 := by
+  simp [tripletPart, Matrix.trace, Matrix.diag,
+        Matrix.mul_apply, Fin.sum_univ_two]
+  ring
+
+/-- **Three-Triplet Nambu Bracket Lands Purely in the 1D Singlet Sector**:
+    For any three operators `X, Y, Z : SplitQuaternion F`, pairing the commutator
+    `[tripletPart X, tripletPart Y]` with `tripletPart Z` via the Jordan anticommutator
+    lands purely in the 1D Singlet sector `trace([T₁, T₂] * T₃) • 1`! -/
+theorem three_triplet_nambu_bracket_in_singlet (X Y Z : SplitQuaternion F) :
+    (tripletPart X * tripletPart Y - tripletPart Y * tripletPart X) * tripletPart Z +
+    tripletPart Z * (tripletPart X * tripletPart Y - tripletPart Y * tripletPart X) =
+      Matrix.trace ((tripletPart X * tripletPart Y - tripletPart Y * tripletPart X) *
+                    tripletPart Z) • (1 : SplitQuaternion F) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+  · simp [tripletPart, Matrix.trace, Matrix.diag,
+          Matrix.mul_apply, Fin.sum_univ_two, Matrix.one_apply]
+    ring
+
 section TrivialStarPositivityAndConservation
 
 variable [TrivialStar F]

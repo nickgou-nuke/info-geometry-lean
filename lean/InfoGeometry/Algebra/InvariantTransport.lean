@@ -80,6 +80,32 @@ theorem commutator_transport
     commutator (φ x) (φ y) = φ (commutator x y) := by
   simp [commutator]
 
+/-- A multiplicative transport reverses a particular product exactly when it
+kills that pair's commutator. This distinguishes a nonfaithful quotient from
+an actual order-reversing map. -/
+theorem reversed_product_iff_commutator_mem_ker
+    (φ : A →+* B) (x y : A) :
+    φ (x * y) = φ y * φ x ↔ commutator x y ∈ RingHom.ker φ := by
+  change φ (x * y) = φ y * φ x ↔ φ (x * y - y * x) = 0
+  rw [map_sub, map_mul φ y x, sub_eq_zero]
+
+/-- A faithful multiplicative transport cannot reverse a noncommuting pair.
+In particular an inner ring automorphism is not an anti-automorphism on a
+noncommutative ring. -/
+theorem reversed_product_iff_commute_of_injective
+    (φ : A →+* B) (hφ : Function.Injective φ) (x y : A) :
+    φ (x * y) = φ y * φ x ↔ Commute x y := by
+  rw [← map_mul φ y x, hφ.eq_iff]
+  rfl
+
+/-- Global order reversal by a faithful ring homomorphism forces every pair
+in its source to commute; surjectivity is unnecessary. -/
+theorem all_reversed_products_iff_of_injective
+    (φ : A →+* B) (hφ : Function.Injective φ) :
+    (∀ x y : A, φ (x * y) = φ y * φ x) ↔
+      ∀ x y : A, Commute x y := by
+  simp only [reversed_product_iff_commute_of_injective φ hφ]
+
 /--
 Anticommutator transport.
 

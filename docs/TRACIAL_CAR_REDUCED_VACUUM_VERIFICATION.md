@@ -131,3 +131,40 @@ terminal exit zero. Final owner SHA-256:
 
 This is scoped acceptance. Concurrent unrelated work and the whole-repository
 release gate remain outside this receipt.
+
+## Completed complex GNS covariance
+
+`OperatorAlgebra/CompletedGNSCovariance.lean` constructs a linear isometric
+equivalence between mathlib's completed GNS spaces for positive functionals
+`ψ = φ ∘ e`, where `e` is a star-algebra equivalence. It proves both inverse
+laws, representative equations, preservation of the native cyclic vacuum,
+and representation intertwining on every completed vector. It also proves
+agreement with `Canonical/FilteredGNSRepresentation.gnsMap` on normalized
+native states. Existing normalized transport is reused and compared, not
+replaced. No normalization or faithfulness is assumed for the new equivalence.
+
+This is covariance between two GNS spaces. It does not assert a same-state
+implementation without invariance, that arbitrary invertible conjugations
+preserve positivity, or an analytic KMS theorem. No new Hilbert-space carrier
+or structure assuming the desired conclusions is introduced.
+
+Kepler authored the initial sandbox proposal; the parent repaired elaboration
+and promoted v5. Popper independently accepted the final candidate and exact
+live promotion. Ampere independently compiled v5 and audited all 41 generated
+declarations under the shared lock, with stable source and pin hashes:
+`/tmp/qa-a-completed-gns-v5-23x2jsze/result.json`, exit zero.
+Final independent live-owner and aggregate verification passed under the shared
+lock: 9981 build jobs, all 41 owner declarations clean, zero scoped warnings or
+errors, and stable captured owner, aggregate, import and pin hashes. Existing
+upstream/package warnings remain. Receipt:
+`/tmp/qa-a-completed-gns-live-m0hox_d0/result.json`, session 93942, terminal exit
+zero with lock released. Owner SHA-256:
+`2f7c4c0560fdf31fd4ae0336ecd6beb50d3d06c758b38d8b01f134097fc9f21c`.
+This remains scoped acceptance, not a whole-repository release receipt.
+
+The aggregate commit also includes the existing three `InvariantTransport`
+lemmas characterizing reversed products by commutator-kernel membership and,
+for injective ring homomorphisms, commutativity. Independent QA built the
+owner and audited all 24 declarations clean, with stable captured hashes:
+`/tmp/qa-a-invariant-transport-8d9l31kt/result.json`, exit zero. This resolves
+the active-index import mismatch without bypassing the commit gate.

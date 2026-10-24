@@ -13,8 +13,9 @@ draft is excluded: its `uStar 0 = 0` contradicts its claimed mixed contraction.
 A snapshot is preserved at
 `scratch/rejected_CattoGurseyOctonionicStandalone_c9182c5800c72d85.lean.txt`;
 another session recreated the live draft, which remains unaccepted.
-The counts and hashes below describe the historical snapshot. Fresh QA of the
-three corrected owners and aggregate is pending.
+The first verification section below describes the historical snapshot.
+The final independent replay section records the subsequent owner and aggregate
+checks. The corrected owners were committed in `60febba82`.
 
 
 ## Ground-truth contract and corrections
@@ -179,7 +180,7 @@ seven-source/pin hashes and no scoped warnings. Existing imported warnings remai
 Receipt: `/tmp/qa-a-catto-retry2-j1uswpr6/result.json`. Aggregate compilation is not an all-imported-declaration
 axiom audit or clean-release certification.
 
-Current selected source hashes:
+Selected source hashes for that replay (before the subsequent header update):
 
 ```text
 dbaedda7dd9de84e39a68b9fde31379881b74c80f643b9353d381dc505cf72b3  lean/InfoGeometry/Canonical/CattoGurseySplitBasis.lean
@@ -190,6 +191,22 @@ cc902922dd30965ef0ddfa2ed68f501ecdefa1ab6bbc03faeed89c81604ce8c9  lean/InfoGeome
 7f6fcf1befcfab57bb3a4ffe11f0855fb4248302e178171e4c2c8044406f16ac  lean/InfoGeometry/Core/All.lean
 fbe04fa6993ead97420c2393e0fe11716accfe5f3a34dad5691a0762c2e11fa1  lean/InfoGeometry/All.lean
 ```
+
+The later required-header update to `CattoGurseyBlockGrading.lean` was checked
+independently in `/tmp/qa-a-pairing-promoted-lsctdd8_/result.json`: all twelve
+declarations passed the axiom audit, with zero scoped warnings. Its resulting
+SHA-256 is `8b0549bf2306d5b00d7e92fe2f252ea43dcec99cae348e269480025e5cc09a9b`.
+This supersedes that file's hash above; it changes no theorem statement.
+
+The separate Standalone draft is still being edited by another session.
+A guarded attempt to archive its audited `1b12cef694d6213e...` revision refused
+to move it when the current hash differed. No source was removed. Subsequent
+read-only review of `ee534d89c20f55bf...` found changes to proof attempts only;
+the contradictory definitions and theorem statements remained. Unlike an
+umbrella import, the default library glob includes this live file. It therefore
+remains an unresolved default-build obligation until its writer releases it
+for reconciliation. Neither the algebraic checker script nor the corrected
+native owners certify this draft.
 
 ## Original-paper reference supplied on 2026-10-24
 

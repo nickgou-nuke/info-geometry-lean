@@ -48,22 +48,22 @@ def twoSidedHyperbolicLaplace (lamL muL lamR muR : R) (d B X : A) : A :=
 lemma hyperbolicKernel_mul_d {d B : A} (h : IsDualSeedPair d B) (lam mu : R) :
     hyperbolicKernel lam mu d B * d = lam • d := by
   unfold hyperbolicKernel
-  rw [add_mul, smul_mul_assoc, smul_mul_assoc, h.pd, h.qd, smul_zero, add_zero]
+  rw [add_mul, smul_mul_assoc, smul_mul_assoc, IsDualSeedPair.pd h, IsDualSeedPair.qd h, smul_zero, add_zero]
 
 lemma d_mul_hyperbolicKernel {d B : A} (h : IsDualSeedPair d B) (lam mu : R) :
     d * hyperbolicKernel lam mu d B = mu • d := by
   unfold hyperbolicKernel
-  rw [mul_add, mul_smul_comm, mul_smul_comm, h.dp, h.dq, smul_zero, zero_add]
+  rw [mul_add, mul_smul_comm, mul_smul_comm, IsDualSeedPair.dp h, IsDualSeedPair.dq h, smul_zero, zero_add]
 
 lemma hyperbolicKernel_mul_B {d B : A} (h : IsDualSeedPair d B) (lam mu : R) :
     hyperbolicKernel lam mu d B * B = mu • B := by
   unfold hyperbolicKernel
-  rw [add_mul, smul_mul_assoc, smul_mul_assoc, h.pb, h.qb, smul_zero, zero_add]
+  rw [add_mul, smul_mul_assoc, smul_mul_assoc, IsDualSeedPair.pb h, IsDualSeedPair.qb h, smul_zero, zero_add]
 
 lemma B_mul_hyperbolicKernel {d B : A} (h : IsDualSeedPair d B) (lam mu : R) :
     B * hyperbolicKernel lam mu d B = lam • B := by
   unfold hyperbolicKernel
-  rw [mul_add, mul_smul_comm, mul_smul_comm, h.bp, h.bq, smul_zero, add_zero]
+  rw [mul_add, mul_smul_comm, mul_smul_comm, IsDualSeedPair.bp h, IsDualSeedPair.bq h, smul_zero, add_zero]
 
 abbrev hyperbolicKernel_mul_b {d B : A} (h : IsDualSeedPair d B) (lam mu : R) :=
   hyperbolicKernel_mul_B h lam mu
@@ -74,22 +74,22 @@ abbrev b_mul_hyperbolicKernel {d B : A} (h : IsDualSeedPair d B) (lam mu : R) :=
 lemma hyperbolicKernel_mul_polePlus {d B : A} (h : IsDualSeedPair d B) (lam mu : R) :
     hyperbolicKernel lam mu d B * polePlus d B = lam • polePlus d B := by
   unfold hyperbolicKernel
-  rw [add_mul, smul_mul_assoc, smul_mul_assoc, h.pp, h.qp, smul_zero, add_zero]
+  rw [add_mul, smul_mul_assoc, smul_mul_assoc, IsDualSeedPair.pp h, IsDualSeedPair.qp h, smul_zero, add_zero]
 
 lemma polePlus_mul_hyperbolicKernel {d B : A} (h : IsDualSeedPair d B) (lam mu : R) :
     polePlus d B * hyperbolicKernel lam mu d B = lam • polePlus d B := by
   unfold hyperbolicKernel
-  rw [mul_add, mul_smul_comm, mul_smul_comm, h.pp, h.pq, smul_zero, add_zero]
+  rw [mul_add, mul_smul_comm, mul_smul_comm, IsDualSeedPair.pp h, IsDualSeedPair.pq h, smul_zero, add_zero]
 
 lemma hyperbolicKernel_mul_poleMinus {d B : A} (h : IsDualSeedPair d B) (lam mu : R) :
     hyperbolicKernel lam mu d B * poleMinus d B = mu • poleMinus d B := by
   unfold hyperbolicKernel
-  rw [add_mul, smul_mul_assoc, smul_mul_assoc, h.pq, h.qq, smul_zero, zero_add]
+  rw [add_mul, smul_mul_assoc, smul_mul_assoc, IsDualSeedPair.pq h, IsDualSeedPair.qq h, smul_zero, zero_add]
 
 lemma poleMinus_mul_hyperbolicKernel {d B : A} (h : IsDualSeedPair d B) (lam mu : R) :
     poleMinus d B * hyperbolicKernel lam mu d B = mu • poleMinus d B := by
   unfold hyperbolicKernel
-  rw [mul_add, mul_smul_comm, mul_smul_comm, h.qp, h.qq, smul_zero, zero_add]
+  rw [mul_add, mul_smul_comm, mul_smul_comm, IsDualSeedPair.qp h, IsDualSeedPair.qq h, smul_zero, zero_add]
 
 /-!
 ## 3. Node 1: Symmetric vs. Antisymmetric Two-Sided Laplace Selectivity
@@ -111,16 +111,16 @@ theorem twoSidedHyperbolicLaplace_sector_scaling {d B : A}
   refine ⟨?_, ?_, ?_, ?_⟩
   · unfold twoSidedHyperbolicLaplace
     rw [hyperbolicKernel_mul_polePlus h, smul_mul_assoc,
-        polePlus_mul_hyperbolicKernel h, smul_smul]
+        polePlus_mul_hyperbolicKernel h, ← smul_smul]
   · unfold twoSidedHyperbolicLaplace
     rw [hyperbolicKernel_mul_poleMinus h, smul_mul_assoc,
-        poleMinus_mul_hyperbolicKernel h, smul_smul]
+        poleMinus_mul_hyperbolicKernel h, ← smul_smul]
   · unfold twoSidedHyperbolicLaplace
     rw [hyperbolicKernel_mul_d h, smul_mul_assoc,
-        d_mul_hyperbolicKernel h, smul_smul]
+        d_mul_hyperbolicKernel h, ← smul_smul]
   · unfold twoSidedHyperbolicLaplace
     rw [hyperbolicKernel_mul_B h, smul_mul_assoc,
-        B_mul_hyperbolicKernel h, smul_smul]
+        B_mul_hyperbolicKernel h, ← smul_smul]
 
 /-!
 ## 4. Node 2: Symmetric vs. Antisymmetric Selectivity (`λ * μ = 1`)

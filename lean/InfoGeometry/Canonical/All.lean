@@ -2342,6 +2342,7 @@ import InfoGeometry.Canonical.RootsOfZeroUnityMoebiusModularG22
 import InfoGeometry.Canonical.UnifiedGeometryOperatorSignificance
 import InfoGeometry.Canonical.Cl11FiveStreamColimitTransport
 import InfoGeometry.Canonical.ReflexiveParityRegression
+import InfoGeometry.Canonical.TwoSidedCayleyDicksonLaplaceKernel
 
 namespace InfoGeometry
 

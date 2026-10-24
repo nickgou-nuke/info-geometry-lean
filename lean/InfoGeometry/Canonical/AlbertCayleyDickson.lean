@@ -711,6 +711,93 @@ theorem twoSidedLaplace_four_sector_scaling (lamL muL lamR muR : F) :
    twoSidedHyperbolicLaplace_peirceSeedD lamL muL lamR muR,
    twoSidedHyperbolicLaplace_peirceSeedB lamL muL lamR muR⟩
 
+/-- Zero-hypothesis intertwining of `(peircePlus, peirceMinus, wheelJ)` by `bruhatS`. -/
+theorem bruhatS_left_intertwines_peirce_and_wheelJ :
+    (peirceMinus : SplitQuaternion F) * bruhatS = bruhatS * peircePlus ∧
+    (peircePlus : SplitQuaternion F) * bruhatS = bruhatS * peirceMinus ∧
+    (wheelJ : SplitQuaternion F) * bruhatS = bruhatS * wheelJ := by
+  refine ⟨?_, ?_, ?_⟩ <;>
+  · dsimp [bruhatS]
+    rw [← peircePlus_add_peirceMinus]
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [peircePlus, peirceMinus, wheelJ, peirceSeedD, peirceSeedB]
+
+section TrivialStarPositivityAndConservation
+
+variable [TrivialStar F]
+
+/-- Under a trivial scalar star involution, `wheelJ = seedD - seedB` is skew-adjoint. -/
+@[simp] theorem star_wheelJ :
+    star (wheelJ : SplitQuaternion F) = -wheelJ := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [wheelJ, peirceSeedD, peirceSeedB]
+
+/-- Zero-hypothesis exact `2 × 2` matrix Gram conservation under left multiplication by `wheelJ`. -/
+theorem wheelJ_gram_deriv_zero (χ : SplitQuaternion F) :
+    star (wheelJ * χ) * χ + star χ * (wheelJ * χ) = 0 := by
+  rw [star_mul, star_wheelJ]
+  simp only [mul_neg, neg_mul, mul_assoc, neg_add_cancel]
+
+/-- Zero-hypothesis right-isospin sectorwise matrix Gram conservation under left `wheelJ` evolution. -/
+theorem wheelJ_peirce_sector_gram_deriv_zero (χ : SplitQuaternion F) :
+    star ((wheelJ * χ) * peircePlus) * (χ * peircePlus) +
+      star (χ * peircePlus) * ((wheelJ * χ) * peircePlus) = 0 ∧
+    star ((wheelJ * χ) * peirceMinus) * (χ * peirceMinus) +
+      star (χ * peirceMinus) * ((wheelJ * χ) * peirceMinus) = 0 := by
+  rw [mul_assoc wheelJ χ peircePlus, mul_assoc wheelJ χ peirceMinus]
+  exact ⟨wheelJ_gram_deriv_zero (χ * peircePlus),
+         wheelJ_gram_deriv_zero (χ * peirceMinus)⟩
+
+/-- Zero-hypothesis sum-of-squares expansion of the Hilbert–Schmidt Gram trace on `SplitQuaternion F`. -/
+theorem trace_star_mul_self_eq_sum_sq (χ : SplitQuaternion F) :
+    Matrix.trace (star χ * χ) =
+      χ 0 0 * χ 0 0 + χ 0 1 * χ 0 1 + χ 1 0 * χ 1 0 + χ 1 1 * χ 1 1 := by
+  simp [Matrix.trace, Fin.sum_univ_two, Matrix.mul_apply]
+  ring
+
+/-- Zero-hypothesis sum-of-squares expansion of the positive right-isospin sector Gram trace. -/
+theorem trace_star_mul_self_peircePlus_eq_sum_sq (χ : SplitQuaternion F) :
+    Matrix.trace (star (χ * peircePlus) * (χ * peircePlus)) =
+      χ 0 0 * χ 0 0 + χ 1 0 * χ 1 0 := by
+  simp [Matrix.trace, Fin.sum_univ_two, Matrix.mul_apply, peircePlus]
+
+/-- Zero-hypothesis sum-of-squares expansion of the negative right-isospin sector Gram trace. -/
+theorem trace_star_mul_self_peirceMinus_eq_sum_sq (χ : SplitQuaternion F) :
+    Matrix.trace (star (χ * peirceMinus) * (χ * peirceMinus)) =
+      χ 0 1 * χ 0 1 + χ 1 1 * χ 1 1 := by
+  simp [Matrix.trace, Fin.sum_univ_two, Matrix.mul_apply, peirceMinus]
+
+end TrivialStarPositivityAndConservation
+
+section OrderedGramPositivity
+
+variable {R : Type*} [CommRing R] [LinearOrder R] [IsStrictOrderedRing R]
+  [StarRing R] [TrivialStar R]
+
+/-- Zero-hypothesis nonnegativity of the positive right-isospin sector Gram trace. -/
+theorem trace_star_mul_self_peircePlus_nonneg (χ : SplitQuaternion R) :
+    0 ≤ Matrix.trace (star (χ * peircePlus) * (χ * peircePlus)) := by
+  rw [trace_star_mul_self_peircePlus_eq_sum_sq]
+  exact add_nonneg (mul_self_nonneg (χ 0 0)) (mul_self_nonneg (χ 1 0))
+
+/-- Zero-hypothesis nonnegativity of the negative right-isospin sector Gram trace. -/
+theorem trace_star_mul_self_peirceMinus_nonneg (χ : SplitQuaternion R) :
+    0 ≤ Matrix.trace (star (χ * peirceMinus) * (χ * peirceMinus)) := by
+  rw [trace_star_mul_self_peirceMinus_eq_sum_sq]
+  exact add_nonneg (mul_self_nonneg (χ 0 1)) (mul_self_nonneg (χ 1 1))
+
+/-- Zero-hypothesis nonnegativity of the full Hilbert–Schmidt Gram trace on `SplitQuaternion R`. -/
+theorem trace_star_mul_self_nonneg (χ : SplitQuaternion R) :
+    0 ≤ Matrix.trace (star χ * χ) := by
+  rw [trace_peirce_gram_decomposition]
+  exact add_nonneg
+    (trace_star_mul_self_peircePlus_nonneg χ)
+    (trace_star_mul_self_peirceMinus_nonneg χ)
+
+end OrderedGramPositivity
+
 end SplitQuaternion
 
 end InfoGeometry.Canonical.AlbertCayleyDickson

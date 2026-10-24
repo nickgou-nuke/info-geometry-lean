@@ -11,8 +11,8 @@ open InfoGeometry.Canonical.TwoSidedCayleyDicksonLaplaceKernel
 
 #print axioms hyperbolicKernel_mul_d
 #print axioms d_mul_hyperbolicKernel
-#print axioms hyperbolicKernel_mul_b
-#print axioms b_mul_hyperbolicKernel
+#print axioms hyperbolicKernel_mul_B
+#print axioms B_mul_hyperbolicKernel
 #print axioms hyperbolicKernel_mul_polePlus
 #print axioms polePlus_mul_hyperbolicKernel
 #print axioms hyperbolicKernel_mul_poleMinus

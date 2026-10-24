@@ -198,7 +198,7 @@ theorem bitWordUnit_level_gauge_sum_one (n : ℕ) :
 def extendBitWord (n : ℕ) (w : BitWord n) (b : Bool) : BitWord (n + 1) :=
   (bitWordEquiv n).symm (w, b)
 
-private theorem list_ofFn_extendBitWord (n : ℕ) (w : BitWord n) (b : Bool) :
+theorem list_ofFn_extendBitWord (n : ℕ) (w : BitWord n) (b : Bool) :
     List.ofFn (extendBitWord n w b) = List.ofFn w ++ [b] := by
   have hb : [b] = List.ofFn (fun _ : Fin 1 => b) := by simp
   rw [hb, ← List.ofFn_fin_append w (fun _ : Fin 1 => b)]

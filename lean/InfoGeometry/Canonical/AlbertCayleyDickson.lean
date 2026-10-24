@@ -1,7 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Ring.Associator
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.ConjTranspose
+import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Tactic
 
 /-!
@@ -85,6 +91,78 @@ def mul {γ : F} (x y : AlbertStep F A γ) : AlbertStep F A γ :=
 def norm {γ : F} (x : AlbertStep F A γ) : A :=
   x.p * star x.p - (γ • (x.q * star x.q))
 
+@[simp] theorem mul_conj_p {γ : F} (x : AlbertStep F A γ) :
+    (mul x (conj x)).p = x.p * star x.p - (γ • (star x.q * x.q)) := by
+  simp [mul, conj, sub_eq_add_neg]
+
+@[simp] theorem mul_conj_q {γ : F} (x : AlbertStep F A γ) :
+    (mul x (conj x)).q = 0 := by
+  simp [mul, conj]
+
+@[simp] theorem conj_mul_p {γ : F} (x : AlbertStep F A γ) :
+    (mul (conj x) x).p = star x.p * x.p - (γ • (star x.q * x.q)) := by
+  simp [mul, conj, sub_eq_add_neg]
+
+@[simp] theorem conj_mul_q {γ : F} (x : AlbertStep F A γ) :
+    (mul (conj x) x).q = 0 := by
+  simp [mul, conj]
+
+theorem mul_conj_sub_conj_mul_p {γ : F} (x : AlbertStep F A γ) :
+    (mul x (conj x)).p - (mul (conj x) x).p =
+      x.p * star x.p - star x.p * x.p := by
+  rw [mul_conj_p, conj_mul_p]
+  abel
+
+theorem mul_eq_zero_iff {γ : F} (x y : AlbertStep F A γ) :
+    mul x y = 0 ↔
+      x.p * y.p + (γ • (star y.q * x.q)) = 0 ∧
+      y.q * x.p + x.q * star y.p = 0 := by
+  constructor
+  · intro h
+    exact ⟨congrArg AlbertStep.p h, congrArg AlbertStep.q h⟩
+  · rintro ⟨hp, hq⟩
+    ext
+    · exact hp
+    · exact hq
+
+@[simp] theorem mul_left_embed {γ : F} (s : A) (y : AlbertStep F A γ) :
+    mul (γ := γ) ⟨s, 0⟩ y = ⟨s * y.p, y.q * s⟩ := by
+  ext <;> simp [mul]
+
+@[simp] theorem mul_right_embed {γ : F} (y : AlbertStep F A γ) (t : A) :
+    mul (γ := γ) y ⟨t, 0⟩ = ⟨y.p * t, y.q * star t⟩ := by
+  ext <;> simp [mul]
+
+theorem mul_left_embed_eq_iff {γ : F} (s a p q : A) :
+    mul (γ := γ) ⟨s, 0⟩ ⟨p, q⟩ = ⟨s * p, q * a⟩ ↔ q * s = q * a := by
+  rw [mul_left_embed]
+  constructor
+  · intro h
+    exact congrArg AlbertStep.q h
+  · intro hq
+    ext
+    · rfl
+    · exact hq
+
+theorem associator_conj_embed_p {γ : F} (p : A) (y : AlbertStep F A γ) :
+    (mul (γ := γ) (mul (γ := γ) ⟨star p, 0⟩ ⟨p, 0⟩) y).p =
+      (mul (γ := γ) ⟨star p, 0⟩ (mul (γ := γ) ⟨p, 0⟩ y)).p := by
+  simp [mul_left_embed, mul_assoc]
+
+theorem associator_conj_embed_q {γ : F} (p : A) (y : AlbertStep F A γ) :
+    (mul (γ := γ) (mul (γ := γ) ⟨star p, 0⟩ ⟨p, 0⟩) y).q -
+      (mul (γ := γ) ⟨star p, 0⟩ (mul (γ := γ) ⟨p, 0⟩ y)).q =
+      y.q * (star p * p - p * star p) := by
+  simp only [mul_left_embed, zero_mul]
+  rw [mul_sub, mul_assoc]
+
+theorem bimodule_embed_associator_q {γ : F} (s t : A) (y : AlbertStep F A γ) :
+    (mul (γ := γ) (mul (γ := γ) ⟨s, 0⟩ y) ⟨t, 0⟩).q -
+      (mul (γ := γ) ⟨s, 0⟩ (mul (γ := γ) y ⟨t, 0⟩)).q =
+      y.q * (s * star t - star t * s) := by
+  simp only [mul_left_embed, mul_right_embed]
+  rw [mul_sub, mul_assoc, mul_assoc]
+
 /-- The canonical split-complex-like element `(1, 1)` in the `γ = 1` step. -/
 def splitPlus : AlbertStep F A (1 : F) :=
   ⟨1, 1⟩
@@ -128,7 +206,7 @@ theorem splitPlus_ne_zero :
   intro h
   have hp : (1 : A) = 0 := by
     have h' := congrArg AlbertStep.p h
-    simpa [splitPlus] using h'
+    simp [splitPlus] at h'
   exact one_ne_zero hp
 
 theorem splitMinus_ne_zero :
@@ -136,7 +214,7 @@ theorem splitMinus_ne_zero :
   intro h
   have hp : (1 : A) = 0 := by
     have h' := congrArg AlbertStep.p h
-    simpa [splitMinus] using h'
+    simp [splitMinus] at h'
   exact one_ne_zero hp
 
 /--
@@ -172,5 +250,99 @@ doubling multiplication from `AlbertStep`.
 -/
 abbrev SplitOctonion (F : Type*) [CommRing F] [StarRing F] :=
   AlbertStep F (SplitQuaternion F) (1 : F)
+
+namespace SplitQuaternion
+
+variable {F : Type*} [CommRing F] [StarRing F]
+
+/-- Positive diagonal Peirce projector `E_{00}` in `SplitQuaternion F`. -/
+def peircePlus : SplitQuaternion F :=
+  !![1, 0; 0, 0]
+
+/-- Negative diagonal Peirce projector `E_{11}` in `SplitQuaternion F`. -/
+def peirceMinus : SplitQuaternion F :=
+  !![0, 0; 0, 1]
+
+@[simp] theorem peircePlus_idem :
+    (peircePlus : SplitQuaternion F) * peircePlus = peircePlus := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [peircePlus]
+
+@[simp] theorem peirceMinus_idem :
+    (peirceMinus : SplitQuaternion F) * peirceMinus = peirceMinus := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [peirceMinus]
+
+@[simp] theorem peircePlus_add_peirceMinus :
+    (peircePlus : SplitQuaternion F) + peirceMinus = 1 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [peircePlus, peirceMinus]
+
+@[simp] theorem peircePlus_mul_peirceMinus :
+    (peircePlus : SplitQuaternion F) * peirceMinus = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [peircePlus, peirceMinus]
+
+@[simp] theorem peirceMinus_mul_peircePlus :
+    (peirceMinus : SplitQuaternion F) * peircePlus = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [peircePlus, peirceMinus]
+
+@[simp] theorem star_peircePlus :
+    star (peircePlus : SplitQuaternion F) = peircePlus := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [peircePlus]
+
+@[simp] theorem star_peirceMinus :
+    star (peirceMinus : SplitQuaternion F) = peirceMinus := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [peirceMinus]
+
+theorem left_mul_right_peirce_comm (S χ : SplitQuaternion F) :
+    (S * χ) * peircePlus = S * (χ * peircePlus) ∧
+    (S * χ) * peirceMinus = S * (χ * peirceMinus) :=
+  ⟨mul_assoc S χ peircePlus, mul_assoc S χ peirceMinus⟩
+
+theorem mixed_peirce_gram_corner (χ : SplitQuaternion F) :
+    star (χ * peircePlus) * (χ * peirceMinus) =
+      peircePlus * (star χ * χ) * peirceMinus := by
+  rw [star_mul, star_peircePlus]
+  simp only [mul_assoc]
+
+theorem trace_mixed_peirce_gram_zero (χ : SplitQuaternion F) :
+    Matrix.trace (star (χ * peircePlus) * (χ * peirceMinus)) = 0 := by
+  rw [mixed_peirce_gram_corner,
+      Matrix.trace_mul_comm (peircePlus * (star χ * χ)) peirceMinus,
+      ← mul_assoc, peirceMinus_mul_peircePlus, zero_mul, Matrix.trace_zero]
+
+theorem diagonal_peirce_gram_decomposition (χ : SplitQuaternion F) :
+    peircePlus * (star χ * χ) * peircePlus +
+      peirceMinus * (star χ * χ) * peirceMinus =
+      star (χ * peircePlus) * (χ * peircePlus) +
+      star (χ * peirceMinus) * (χ * peirceMinus) := by
+  rw [star_mul, star_mul, star_peircePlus, star_peirceMinus]
+  simp only [mul_assoc]
+
+theorem trace_peircePlus_sandwich (X : SplitQuaternion F) :
+    Matrix.trace (peircePlus * X * peircePlus) =
+      Matrix.trace (peircePlus * X) := by
+  rw [Matrix.trace_mul_comm (peircePlus * X) peircePlus,
+      ← mul_assoc, peircePlus_idem]
+
+theorem trace_peirceMinus_sandwich (X : SplitQuaternion F) :
+    Matrix.trace (peirceMinus * X * peirceMinus) =
+      Matrix.trace (peirceMinus * X) := by
+  rw [Matrix.trace_mul_comm (peirceMinus * X) peirceMinus,
+      ← mul_assoc, peirceMinus_idem]
+
+theorem trace_peirce_gram_decomposition (χ : SplitQuaternion F) :
+    Matrix.trace (star χ * χ) =
+      Matrix.trace (star (χ * peircePlus) * (χ * peircePlus)) +
+      Matrix.trace (star (χ * peirceMinus) * (χ * peirceMinus)) := by
+  rw [← Matrix.trace_add, ← diagonal_peirce_gram_decomposition, Matrix.trace_add,
+      trace_peircePlus_sandwich, trace_peirceMinus_sandwich,
+      ← Matrix.trace_add, ← add_mul, peircePlus_add_peirceMinus, one_mul]
+
+end SplitQuaternion
 
 end InfoGeometry.Canonical.AlbertCayleyDickson

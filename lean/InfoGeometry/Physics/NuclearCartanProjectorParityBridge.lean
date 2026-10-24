@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.NuclearQuasiparticleCARBridge
@@ -152,6 +157,7 @@ theorem comm_centeredOccupationCartan_a (i : ι) :
       rw [comm_numberOp_a_same]
       abel
 
+omit [Algebra ℝ A] in
 /-- Creation/annihilation commutator closes on the centered occupation Cartan element. -/
 theorem comm_adag_a_eq_centeredOccupationCartan (i : ι) :
     comm (car.adag i) (car.a i) = car.centeredOccupationCartan i := by
@@ -171,6 +177,7 @@ theorem vacancyProjector_idempotent (i : ι) :
           car.numberOp i * car.numberOp i := by noncomm_ring
     _ = 1 - car.numberOp i := by rw [hN]; noncomm_ring
 
+omit [Algebra ℝ A] in
 /-- Occupied and vacant projectors resolve the identity. -/
 theorem occupation_vacancy_sum (i : ι) :
     car.numberOp i + car.vacancyProjector i = 1 := by
@@ -405,6 +412,78 @@ theorem isospinProjector_orthogonal :
     ext i j <;> fin_cases i <;> fin_cases j <;>
       simp [isospinPositiveProjector, isospinNegativeProjector]
 
+@[simp] theorem star_isospinPositiveProjector :
+    star isospinPositiveProjector = isospinPositiveProjector := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [isospinPositiveProjector]
+
+@[simp] theorem star_isospinNegativeProjector :
+    star isospinNegativeProjector = isospinNegativeProjector := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [isospinNegativeProjector]
+
+/-- Mixed-isospin operator state `E_{00} + E_{01}` in `Matrix (Fin 2) (Fin 2) ℂ`. -/
+def isospinMixedState : Matrix (Fin 2) (Fin 2) ℂ :=
+  !![1, 1; 0, 0]
+
+/-- Mixed-isospin state does not commute with the positive isospin projector. -/
+theorem isospinMixedState_mul_positiveProjector_noncomm :
+    isospinMixedState * isospinPositiveProjector ≠
+      isospinPositiveProjector * isospinMixedState := by
+  intro h_eq
+  have h01 := congr_fun (congr_fun h_eq 0) 1
+  norm_num [isospinMixedState, isospinPositiveProjector, Matrix.mul_apply, Fin.sum_univ_two] at h01
+
+/-- Left spin action commutes with right Peirce isospin projection by matrix associativity. -/
+theorem left_spin_right_isospin_comm (S χ : Matrix (Fin 2) (Fin 2) ℂ) :
+    (S * χ) * isospinPositiveProjector = S * (χ * isospinPositiveProjector) ∧
+      (S * χ) * isospinNegativeProjector = S * (χ * isospinNegativeProjector) :=
+  ⟨mul_assoc S χ isospinPositiveProjector, mul_assoc S χ isospinNegativeProjector⟩
+
+/-- Cross-isospin Gram bilinear localizes to the off-diagonal Peirce corner. -/
+theorem mixed_isospin_gram_corner (χ : Matrix (Fin 2) (Fin 2) ℂ) :
+    star (χ * isospinPositiveProjector) * (χ * isospinNegativeProjector) =
+      isospinPositiveProjector * (star χ * χ) * isospinNegativeProjector := by
+  rw [star_mul, star_isospinPositiveProjector]
+  simp only [mul_assoc]
+
+/-- Cross-isospin Gram bilinear has identically vanishing trace. -/
+theorem trace_mixed_isospin_gram_zero (χ : Matrix (Fin 2) (Fin 2) ℂ) :
+    Matrix.trace (star (χ * isospinPositiveProjector) * (χ * isospinNegativeProjector)) = 0 := by
+  rw [mixed_isospin_gram_corner,
+      Matrix.trace_mul_comm (isospinPositiveProjector * (star χ * χ)) isospinNegativeProjector,
+      ← mul_assoc, isospinProjector_orthogonal.2, zero_mul, Matrix.trace_zero]
+
+/-- Diagonal Peirce projection of the Gram operator decomposes into positive and negative isospin densities. -/
+theorem diagonal_isospin_gram_decomposition (χ : Matrix (Fin 2) (Fin 2) ℂ) :
+    isospinPositiveProjector * (star χ * χ) * isospinPositiveProjector +
+      isospinNegativeProjector * (star χ * χ) * isospinNegativeProjector =
+      star (χ * isospinPositiveProjector) * (χ * isospinPositiveProjector) +
+      star (χ * isospinNegativeProjector) * (χ * isospinNegativeProjector) := by
+  rw [star_mul, star_mul, star_isospinPositiveProjector, star_isospinNegativeProjector]
+  simp only [mul_assoc]
+
+theorem trace_isospinPositiveProjector_sandwich (X : Matrix (Fin 2) (Fin 2) ℂ) :
+    Matrix.trace (isospinPositiveProjector * X * isospinPositiveProjector) =
+      Matrix.trace (isospinPositiveProjector * X) := by
+  rw [Matrix.trace_mul_comm (isospinPositiveProjector * X) isospinPositiveProjector,
+      ← mul_assoc, isospinPositiveProjector_idempotent]
+
+theorem trace_isospinNegativeProjector_sandwich (X : Matrix (Fin 2) (Fin 2) ℂ) :
+    Matrix.trace (isospinNegativeProjector * X * isospinNegativeProjector) =
+      Matrix.trace (isospinNegativeProjector * X) := by
+  rw [Matrix.trace_mul_comm (isospinNegativeProjector * X) isospinNegativeProjector,
+      ← mul_assoc, isospinNegativeProjector_idempotent]
+
+/-- Trace of the full Gram operator equals the sum of the positive and negative isospin traces. -/
+theorem trace_isospin_gram_decomposition (χ : Matrix (Fin 2) (Fin 2) ℂ) :
+    Matrix.trace (star χ * χ) =
+      Matrix.trace (star (χ * isospinPositiveProjector) * (χ * isospinPositiveProjector)) +
+      Matrix.trace (star (χ * isospinNegativeProjector) * (χ * isospinNegativeProjector)) := by
+  rw [← Matrix.trace_add, ← diagonal_isospin_gram_decomposition, Matrix.trace_add,
+      trace_isospinPositiveProjector_sandwich, trace_isospinNegativeProjector_sandwich,
+      ← Matrix.trace_add, ← add_mul, isospinProjector_sum, one_mul]
+
 /-- The Cartan involution is the difference of the two isospin projectors. -/
 theorem isospinCartan_projector_difference :
     isospinCartan = isospinPositiveProjector - isospinNegativeProjector := by
@@ -426,7 +505,7 @@ theorem isospinCartan_comm_plus :
       InfoGeometry.Physics.NuclearWignerSupermultiplet.isospinPlus,
       InfoGeometry.Physics.NuclearWignerSupermultiplet.pauli1,
       InfoGeometry.Physics.NuclearWignerSupermultiplet.pauli2,
-      InfoGeometry.Physics.NuclearWignerSupermultiplet.pauli3] <;> ring
+      InfoGeometry.Physics.NuclearWignerSupermultiplet.pauli3]
 
 /-- Wigner `T₋` has Cartan weight `-2` for the normalized Cartan `2T₃`. -/
 theorem isospinCartan_comm_minus :
@@ -439,13 +518,23 @@ theorem isospinCartan_comm_minus :
       InfoGeometry.Physics.NuclearWignerSupermultiplet.isospinMinus,
       InfoGeometry.Physics.NuclearWignerSupermultiplet.pauli1,
       InfoGeometry.Physics.NuclearWignerSupermultiplet.pauli2,
-      InfoGeometry.Physics.NuclearWignerSupermultiplet.pauli3] <;> ring
+      InfoGeometry.Physics.NuclearWignerSupermultiplet.pauli3]
 
 /-- The Wigner raising/lowering commutator closes on the normalized Cartan. -/
 theorem isospin_plus_minus_comm_eq_cartan :
     isospinPlus * isospinMinus - isospinMinus * isospinPlus =
       isospinCartan := by
   rw [isospin_comm_plus_minus, isospinCartan]
+
+/-- Raising and lowering Wigner isospin operators do not commute. -/
+theorem isospin_plus_minus_noncomm :
+    isospinPlus * isospinMinus ≠ isospinMinus * isospinPlus := by
+  intro h_eq
+  have h_sub : isospinPlus * isospinMinus - isospinMinus * isospinPlus = 0 :=
+    sub_eq_zero.mpr h_eq
+  rw [isospin_plus_minus_comm_eq_cartan, isospinCartan_eq_pauli3] at h_sub
+  have h00 := congr_fun (congr_fun h_sub 0) 0
+  norm_num [InfoGeometry.Physics.NuclearWignerSupermultiplet.pauli3] at h00
 
 /-- Wigner-isospin `sl₂` packet in the same normalization as the CAR Cartan packet. -/
 theorem wigner_isospin_sl2_packet :

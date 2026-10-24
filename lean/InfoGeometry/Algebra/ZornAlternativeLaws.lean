@@ -1899,4 +1899,236 @@ theorem zornFieldStrength_tomita_stress_and_frame_dragging
           add, neg, mul, smul, ZornVec3.dot, Fin.sum_univ_three]
     ring
 
+/-- **Nucleus vs. Periphery Charge Associator & Tomita–GEM Frame-Dragging Conversion**:
+    - Inside the associative nucleus (`h_+ = h_- = h`), `[X, Y, H(h, h)] = 0` for all `X, Y`.
+    - In the periphery (`h_+ ≠ h_-`), contracting `[e(X), e(Y), H(h_+, h_-)]` with `e(Z)`
+      sources the Nambu 3-Bracket volume `(h_+ - h_-) • ⟨det w, 0, 0, det v⟩`.
+    - On `(F, zornTomitaConj F)`, the charge associator `[F, zornTomitaConj F, H(h_+, h_-)]`
+      converts the local charge splitting `h_+ - h_-` directly into the macroscopic GEM
+      frame-dragging vector `(2 * (h_+ - h_-)) • ⟨0, -(E × B), E × B, 0⟩`! -/
+theorem zornAssociator_nucleus_vs_periphery_nambu_and_frame_dragging
+    (h hPlus hMinus : R) (X Y Z : ZornVectorMatrix R) (E B : ZornVec3 R) :
+    let E₁ := zornSpacetimeFramePart X
+    let E₂ := zornSpacetimeFramePart Y
+    let E₃ := zornSpacetimeFramePart Z
+    let F := zornFieldStrength E B
+    zornAssociator X Y (zornDiagonalCharge h h) = 0 ∧
+    zornSpinConnectionPart
+      (zornAssociator E₁ E₂ (zornDiagonalCharge hPlus hMinus) * E₃) =
+      (hPlus - hMinus) •
+        (⟨zornNambuDet X.w Y.w Z.w, fun _ => 0, fun _ => 0,
+          zornNambuDet X.v Y.v Z.v⟩ : ZornVectorMatrix R) ∧
+    zornAssociator F (zornTomitaConj F) (zornDiagonalCharge hPlus hMinus) =
+      ((2 : R) * (hPlus - hMinus)) •
+        (⟨0, fun i => -ZornVec3.cross E B i, ZornVec3.cross E B, 0⟩ : ZornVectorMatrix R) :=
+  ⟨(zornAssociator_nucleus_zero_vs_periphery_torsion X Y h hPlus hMinus).1,
+   zornAssociator_charge_mul_frame_eq_nambu X Y Z hPlus hMinus,
+   (zornFieldStrength_tomita_stress_and_frame_dragging E B hPlus hMinus).2⟩
+
+/-- **Sciama–Lense–Thirring Orthogonality, Nucleus Stress-Energy, & Transverse Frame Dragging**:
+    For a spatial gradient `D₀ = zornFourPotential 0 a` in a rotating cosmic background
+    `P_{bg} = zornFourPotential Φ_{bg} J_{bg}`, let `E_g = -Φ_{bg} • a` and `B_g = a × J_{bg}`:
+    - `E_g` and `B_g` are strictly orthogonal (`E_g ⋅ B_g = 0`).
+    - The singlet stress-energy `ω_Zorn(F * zornTomitaConj F)` has zero chiral anomaly and
+      lands purely in the scalar associative nucleus `(Φ_{bg}²(a⋅a) + |a×J_{bg}|²) • one`!
+    - The frame-dragging flux `E_g × B_g` is the Helmholtz transverse projection
+      `Φ_{bg} • ((a ⋅ a) • J_{bg} - (a ⋅ J_{bg}) • a)`, satisfying `a ⋅ (E_g × B_g) = 0`! -/
+theorem zorn_sciama_lense_thirring_transverse_frame_dragging
+    (Φ_bg : R) (a J_bg : ZornVec3 R) :
+    let E_g := zornElectricField 0 a Φ_bg J_bg
+    let B_g := zornMagneticField a J_bg
+    let F := zornFieldStrength E_g B_g
+    ZornVec3.dot E_g B_g = 0 ∧
+    zornSpinConnectionPart (F * zornTomitaConj F) =
+      (Φ_bg * Φ_bg * ZornVec3.dot a a + ZornVec3.dot B_g B_g) • (one : ZornVectorMatrix R) ∧
+    ZornVec3.cross E_g B_g =
+      (fun i => Φ_bg * (ZornVec3.dot a a * J_bg i - ZornVec3.dot a J_bg * a i)) ∧
+    ZornVec3.dot a (ZornVec3.cross E_g B_g) = 0 := by
+  intro E_g B_g F
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · simp [E_g, B_g, zornElectricField, zornMagneticField, ZornVec3.dot, ZornVec3.cross,
+          Fin.sum_univ_three]
+    ring
+  · rw [(zornFieldStrength_tomita_stress_energy_poynting E_g B_g).2.1]
+    ext
+    · simp [E_g, B_g, zornElectricField, zornMagneticField, one,
+            InfoGeometry.Algebra.zvm_smul_def, smul, ZornVec3.dot, ZornVec3.cross,
+            Fin.sum_univ_three]
+      ring
+    · simp [one, InfoGeometry.Algebra.zvm_smul_def, smul]
+    · simp [one, InfoGeometry.Algebra.zvm_smul_def, smul]
+    · simp [E_g, B_g, zornElectricField, zornMagneticField, one,
+            InfoGeometry.Algebra.zvm_smul_def, smul, ZornVec3.dot, ZornVec3.cross,
+            Fin.sum_univ_three]
+      ring
+  · funext i
+    fin_cases i <;>
+      (simp [E_g, B_g, zornElectricField, zornMagneticField, ZornVec3.dot, ZornVec3.cross,
+             Fin.sum_univ_three]; ring)
+  · simp [E_g, B_g, zornElectricField, zornMagneticField, ZornVec3.dot, ZornVec3.cross,
+          Fin.sum_univ_three]
+    ring
+
+/-!
+## 13. Machian Relational Inertia, Scalar Readout Bridge (§IX), & Coplanar Nambu Degeneracy
+-/
+
+/-- **Positive-Pole Scalar Readout (`zornPoleReadout X = X.a`)**:
+    Explicit scalar readout map from `ZornVectorMatrix R` to `R` closing §IX of
+    `docs/Observational_Gauge_Theory_Synthesis.md`. -/
+def zornPoleReadout (X : ZornVectorMatrix R) : R := X.a
+
+/-- **Krein / Chiral Supertrace Readout (`zornSupertrace X = X.a - X.b`)**:
+    Matches the chiral supertrace `str(Γ X)` of `MachianPauliRealization.lean` and
+    `ModularPhaseSeparation.lean`. -/
+def zornSupertrace (X : ZornVectorMatrix R) : R := X.a - X.b
+
+/-- **Pure Chiral Current Embedding (`zornChiralCurrent j = ⟨0, j, 0, 0⟩`)**. -/
+def zornChiralCurrent (j : ZornVec3 R) : ZornVectorMatrix R :=
+  ⟨0, j, fun _ => 0, 0⟩
+
+/-- **1. Explicit Zorn-to-Scalar Readout of the Associator & Supertrace–Curvature Bridge**:
+    Closes the §IX formal synthesis gap with zero hypotheses:
+    - `zornSupertrace (zornComm X Y) = 2 * zornEmergentCurvature X Y`,
+    - `zornPoleReadout (zornAssociator (e X) (e Y) (e Z)) = -(det v + det w)`,
+    - `zornSupertrace (zornAssociator (e X) (e Y) (e Z)) = -2 * (det v + det w)`,
+    - `zornPoleReadout (zornAssociator ⟨0, ω, 0, 0⟩ ⟨0, j_π, 0, 0⟩ ⟨0, j_ν, 0, 0⟩) = -(ω ⋅ (j_π × j_ν))`! -/
+theorem zorn_scalar_readout_associator_and_supertrace_curvature
+    (X Y Z : ZornVectorMatrix R) (ω j_pi j_nu : ZornVec3 R) :
+    zornSupertrace (zornComm X Y) = (2 : R) * zornEmergentCurvature X Y ∧
+    zornPoleReadout
+      (zornAssociator (zornSpacetimeFramePart X)
+                      (zornSpacetimeFramePart Y)
+                      (zornSpacetimeFramePart Z)) =
+      -(zornNambuDet X.v Y.v Z.v + zornNambuDet X.w Y.w Z.w) ∧
+    zornSupertrace
+      (zornAssociator (zornSpacetimeFramePart X)
+                      (zornSpacetimeFramePart Y)
+                      (zornSpacetimeFramePart Z)) =
+      (-2 : R) * (zornNambuDet X.v Y.v Z.v + zornNambuDet X.w Y.w Z.w) ∧
+    zornPoleReadout
+      (zornAssociator (zornChiralCurrent ω)
+                      (zornChiralCurrent j_pi)
+                      (zornChiralCurrent j_nu)) =
+      -zornNambuDet ω j_pi j_nu := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · unfold zornComm
+    simp only [_root_.sub_eq_add_neg]
+    simp [zornSupertrace, zornEmergentCurvature,
+          InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+          InfoGeometry.Algebra.zvm_mul_def, add, neg, mul,
+          ZornVec3.dot, Fin.sum_univ_three]
+    ring
+  · unfold zornAssociator
+    simp only [_root_.sub_eq_add_neg]
+    simp [zornPoleReadout, zornSpacetimeFramePart, offDiagonalPart, zornNambuDet,
+          InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+          InfoGeometry.Algebra.zvm_mul_def, add, neg, mul,
+          ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+    ring
+  · unfold zornAssociator
+    simp only [_root_.sub_eq_add_neg]
+    simp [zornSupertrace, zornSpacetimeFramePart, offDiagonalPart, zornNambuDet,
+          InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+          InfoGeometry.Algebra.zvm_mul_def, add, neg, mul,
+          ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+    ring
+  · unfold zornAssociator
+    simp only [_root_.sub_eq_add_neg]
+    simp [zornPoleReadout, zornChiralCurrent, zornNambuDet,
+          InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+          InfoGeometry.Algebra.zvm_mul_def, add, neg, mul,
+          ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+
+/-- **2. Two-Body Machian Collinear Degeneracy (Sciama & Lense–Thirring Vanishing)**:
+    Proportional 4-potentials `(c * φ, c • A)` have vanishing relative gravitoelectric
+    induction `E = 0`, vanishing gravitomagnetic curl `B = 0`, vanishing frame product
+    `e_Zorn(P * (c • P)) = 0`, and vanishing spinning anomaly supertrace! -/
+theorem zorn_machian_two_body_collinear_degeneracy
+    (c φ : R) (A : ZornVec3 R) (X : ZornVectorMatrix R) :
+    let P := zornFourPotential φ A
+    zornElectricField φ A (c * φ) (fun i => c * A i) = (fun _ => 0) ∧
+    zornMagneticField A (fun i => c * A i) = (fun _ => 0) ∧
+    zornSpacetimeFramePart (P * (c • P)) = 0 ∧
+    zornSupertrace (zornComm X (c • X)) = 0 := by
+  intro P
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · funext i
+    simp [zornElectricField]; ring
+  · funext i
+    fin_cases i <;> (simp [zornMagneticField, ZornVec3.cross]; ring)
+  · ext
+    · rfl
+    · rename_i i
+      fin_cases i <;>
+        (simp [P, zornFourPotential, zornSpacetimeFramePart, offDiagonalPart,
+               InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+               InfoGeometry.Algebra.zvm_zero_def, mul, smul, zero, ZornVec3.cross]; ring)
+    · rename_i i
+      fin_cases i <;>
+        (simp [P, zornFourPotential, zornSpacetimeFramePart, offDiagonalPart,
+               InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+               InfoGeometry.Algebra.zvm_zero_def, mul, smul, zero, ZornVec3.cross]; ring)
+    · rfl
+  · rw [(zorn_scalar_readout_associator_and_supertrace_curvature X (c • X) X A A A).1]
+    simp [zornEmergentCurvature, InfoGeometry.Algebra.zvm_smul_def, smul,
+          ZornVec3.dot, Fin.sum_univ_three]
+    ring
+
+/-- **3. Three-Body Machian Coplanar & Collinear Nambu Degeneracy**:
+    Whenever the third 6D current lies in the plane of the first two (`Z = c₁ • X + c₂ • Y`,
+    including collinear currents `c₁ = 0`), the Nambu 3-volumes, the singlet frame associator,
+    the singlet frame Jacobiator, and the full chiral-current associator all vanish identically! -/
+theorem zorn_machian_three_body_coplanar_degeneracy
+    (c₁ c₂ : R) (X Y : ZornVectorMatrix R) (ω j_pi : ZornVec3 R) :
+    let E₁ := zornSpacetimeFramePart X
+    let E₂ := zornSpacetimeFramePart Y
+    let E₃ := zornSpacetimeFramePart (c₁ • X + c₂ • Y)
+    zornNambuDet X.v Y.v (fun i => c₁ * X.v i + c₂ * Y.v i) = 0 ∧
+    zornSpinConnectionPart (zornAssociator E₁ E₂ E₃) = 0 ∧
+    zornSpinConnectionPart (zornJacobiator E₁ E₂ E₃) = 0 ∧
+    zornAssociator (zornChiralCurrent ω)
+                   (zornChiralCurrent j_pi)
+                   (zornChiralCurrent (fun i => c₁ * ω i + c₂ * j_pi i)) = 0 := by
+  intro E₁ E₂ E₃
+  have h_det_zero :
+      zornNambuDet X.v Y.v (c₁ • X + c₂ • Y).v +
+      zornNambuDet X.w Y.w (c₁ • X + c₂ • Y).w = 0 := by
+    simp [zornNambuDet, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_smul_def,
+          add, smul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+    ring
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · simp [zornNambuDet, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; ring
+  · rw [show E₁ = zornSpacetimeFramePart X from rfl,
+        show E₂ = zornSpacetimeFramePart Y from rfl,
+        show E₃ = zornSpacetimeFramePart (c₁ • X + c₂ • Y) from rfl,
+        zornSpacetimeFrame_associator_spinConnectionPart_eq_neg_nambu, h_det_zero, neg_zero]
+    ext <;> simp [zornGamma, InfoGeometry.Algebra.zvm_zero_def, zero]
+  · rw [show E₁ = zornSpacetimeFramePart X from rfl,
+        show E₂ = zornSpacetimeFramePart Y from rfl,
+        show E₃ = zornSpacetimeFramePart (c₁ • X + c₂ • Y) from rfl,
+        zornSpacetimeFrame_jacobiator_spinConnectionPart_eq_nambu, h_det_zero]
+    ext <;> simp [zornGamma, InfoGeometry.Algebra.zvm_zero_def, zero]
+  · unfold zornAssociator
+    simp only [_root_.sub_eq_add_neg]
+    ext
+    · simp [zornChiralCurrent, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def,
+            add, neg, mul, zero, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+      ring
+    · rename_i i
+      fin_cases i <;>
+        simp [zornChiralCurrent, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+              InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def,
+              add, neg, mul, zero, ZornVec3.cross]
+    · rename_i i
+      fin_cases i <;>
+        simp [zornChiralCurrent, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+              InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def,
+              add, neg, mul, zero, ZornVec3.cross]
+    · simp [zornChiralCurrent, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def,
+            add, neg, mul, zero, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+      ring
+
 end InfoGeometry.Algebra.ZornVectorMatrix

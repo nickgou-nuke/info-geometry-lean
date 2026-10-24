@@ -532,6 +532,51 @@ def run_sympy_verification() -> dict:
     assert sp.simplify(assoc_frame_drag[2] - (2 * (h_plus - h_minus) * ExB)) == sp.zeros(3, 1)
     assert sp.simplify(assoc_frame_drag[3]) == 0
 
+    # 21. Sciama-Lense-Thirring Transverse Frame Dragging, Scalar Readouts (§IX),
+    #     Supertrace-Curvature Bridge, & Coplanar Nambu Degeneracy
+    # (`zorn_sciama_lense_thirring_transverse_frame_dragging`,
+    #  `zorn_scalar_readout_associator_and_supertrace_curvature`,
+    #  `zorn_machian_two_body_collinear_degeneracy`,
+    #  `zorn_machian_three_body_coplanar_degeneracy`)
+    E_g = -Phi_bg * a_vec
+    B_g = a_vec.cross(b_vec)
+    assert sp.simplify(E_g.dot(B_g)) == 0
+    F_slt = (0, E_g - B_g, E_g + B_g, 0)
+    T_slt = zvm_singlet(zvm_mul(F_slt, zvm_tomita(F_slt)))
+    assert sp.simplify(T_slt[0] - (Phi_bg**2 * a_vec.dot(a_vec) + B_g.dot(B_g))) == 0
+    assert sp.simplify(T_slt[3] - (Phi_bg**2 * a_vec.dot(a_vec) + B_g.dot(B_g))) == 0
+    helmholtz_flux = E_g.cross(B_g)
+    assert (
+        sp.simplify(
+            helmholtz_flux - Phi_bg * (a_vec.dot(a_vec) * b_vec - a_vec.dot(b_vec) * a_vec)
+        )
+        == sp.zeros(3, 1)
+    )
+    assert sp.simplify(a_vec.dot(helmholtz_flux)) == 0
+
+    def zvm_str(m):
+        return m[0] - m[3]
+
+    def zvm_curv(m1, m2):
+        return m1[1].dot(m2[2]) - m1[2].dot(m2[1])
+
+    assert sp.simplify(zvm_str(zvm_comm(D_pot, A_pot)) - 2 * zvm_curv(D_pot, A_pot)) == 0
+    assoc_eXYZ = zvm_assoc(eX, eY, eZ)
+    nambu_eXYZ = xv.dot(yv.cross(zv)) + xw.dot(yw.cross(zw))
+    assert sp.simplify(assoc_eXYZ[0] - (-nambu_eXYZ)) == 0
+    assert sp.simplify(zvm_str(assoc_eXYZ) - (-2 * nambu_eXYZ)) == 0
+    chiral_1 = (0, d_vec, sp.zeros(3, 1), 0)
+    chiral_2 = (0, a_vec, sp.zeros(3, 1), 0)
+    chiral_3 = (0, b_vec, sp.zeros(3, 1), 0)
+    assert sp.simplify(zvm_assoc(chiral_1, chiral_2, chiral_3)[0] - (-d_vec.dot(a_vec.cross(b_vec)))) == 0
+    c1_sym, c2_sym = sp.symbols("c1 c2", commutative=True)
+    chiral_coplanar = (0, c1_sym * d_vec + c2_sym * a_vec, sp.zeros(3, 1), 0)
+    assoc_coplanar = zvm_assoc(chiral_1, chiral_2, chiral_coplanar)
+    assert sp.simplify(assoc_coplanar[0]) == 0
+    assert sp.simplify(assoc_coplanar[1]) == sp.zeros(3, 1)
+    assert sp.simplify(assoc_coplanar[2]) == sp.zeros(3, 1)
+    assert sp.simplify(assoc_coplanar[3]) == 0
+
     return {
         "engine": "SymPy",
         "status": "PASSED",

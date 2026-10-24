@@ -26,7 +26,9 @@ theorem hasDerivAt_bilateral {left signal right : ℝ → A} {a b v : A} {t : �
     HasDerivAt (fun u => left u * signal u * right u)
       (a * (left t * signal t * right t) + left t * v * right t +
         (left t * signal t * right t) * b) t := by
-  convert (hl.mul hx).mul hr using 1 <;> noncomm_ring
+  convert (hl.mul hx).mul hr using 1
+  simp only [Pi.mul_apply]
+  noncomm_ring
 
 /-- Opposite generator signs give a commutator for a fixed signal. -/
 theorem hasDerivAt_commutator {left right : ℝ → A} {a x : A} {t : ℝ}
@@ -34,7 +36,8 @@ theorem hasDerivAt_commutator {left right : ℝ → A} {a x : A} {t : ℝ}
     (hr : HasDerivAt right (right t * (-a)) t) :
     HasDerivAt (fun u => left u * x * right u)
       (a * (left t * x * right t) - (left t * x * right t) * a) t := by
-  convert hasDerivAt_bilateral hl (hasDerivAt_const t x) hr using 1 <;> noncomm_ring
+  convert hasDerivAt_bilateral hl (hasDerivAt_const t x) hr using 1
+  noncomm_ring
 
 /-- Equal generator signs give an anticommutator for a fixed signal. -/
 theorem hasDerivAt_anticommutator {left right : ℝ → A} {a x : A} {t : ℝ}
@@ -42,6 +45,7 @@ theorem hasDerivAt_anticommutator {left right : ℝ → A} {a x : A} {t : ℝ}
     (hr : HasDerivAt right (right t * a) t) :
     HasDerivAt (fun u => left u * x * right u)
       (a * (left t * x * right t) + (left t * x * right t) * a) t := by
-  convert hasDerivAt_bilateral hl (hasDerivAt_const t x) hr using 1 <;> noncomm_ring
+  convert hasDerivAt_bilateral hl (hasDerivAt_const t x) hr using 1
+  noncomm_ring
 
 end InfoGeometry.Analysis.BilateralGeneratorDerivative

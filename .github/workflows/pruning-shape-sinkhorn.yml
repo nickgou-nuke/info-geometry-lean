@@ -1,0 +1,71 @@
+name: Pruning, Gramians and shape-Sinkhorn contracts
+on:
+  workflow_dispatch:
+  push:
+    branches: [feat/pruning-gramian-shape-sinkhorn]
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Routing/CaratheodoryPivotContracts.lean'
+      - 'lean/InfoGeometry/Routing/ShapeSinkhornBipartite.lean'
+      - 'lean/InfoGeometry/Canonical/GramianInverseContracts.lean'
+      - 'lean/InfoGeometry/Canonical/FiniteSteinInverse.lean'
+      - 'lean/InfoGeometry/Probability/BipartiteLogCoupling.lean'
+      - 'tools/shape_sinkhorn_detector.py'
+      - 'tools/certified_caratheodory.py'
+      - 'tools/exact_contract_regressions.py'
+      - 'tools/infra/check_pruning_gramian_coupling.py'
+      - 'tests/test_shape_sinkhorn_detector.py'
+      - 'tests/test_certified_caratheodory.py'
+      - '.github/workflows/pruning-shape-sinkhorn.yml'
+permissions:
+  contents: read
+concurrency:
+  group: pruning-shape-sinkhorn-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: false
+jobs:
+  scoped-contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: true
+          submodules: false
+      - name: Remove checkout credential without traversing unrelated submodules
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config --local --unset-all http.https://github.com/.extraheader || test "$?" = 5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install tested CPU runtime
+        run: python -m pip install 'torch==2.10.0' --index-url https://download.pytorch.org/whl/cpu
+      - name: Runtime checks (not Lean proofs)
+        env:
+          OMP_NUM_THREADS: '1'
+          MKL_NUM_THREADS: '1'
+        run: |
+          set -euo pipefail
+          mkdir -p verification
+          python -m unittest discover -s tests -p test_certified_caratheodory.py -v 2>&1 | tee verification/pruning_tests.txt
+          python -m unittest discover -s tests -p test_shape_sinkhorn_detector.py -v 2>&1 | tee verification/shape_tests.txt
+          python tools/exact_contract_regressions.py
+      - name: Install repository-pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < lean-toolchain)"
+      - name: Exact source-closure compilation and axiom audit
+        run: python tools/infra/check_pruning_gramian_coupling.py
+      - name: Preserve check evidence even on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: PruningShapeSinkhornChecks
+          path: |
+            ${{ runner.temp }}/pruning-gramian-coupling-deliverable/
+            verification/pruning_tests.txt
+            verification/shape_tests.txt
+            verification/exact_contract_regressions.json

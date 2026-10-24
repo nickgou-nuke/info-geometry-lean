@@ -261,9 +261,6 @@ theorem bargmann_pancharatnam_loop_and_anomaly_master {d B : A}
 def matD : Matrix (Fin 2) (Fin 2) ℤ := !![0, 1; 0, 0]
 def matB : Matrix (Fin 2) (Fin 2) ℤ := !![0, 0; 1, 0]
 
-/-- Explicit noncommutativity witness for `matD` and `matB` in `M₂(ℤ)`. -/
-lemma mat2Z_seed_noncomm : matD * matB ≠ matB * matD := by decide
-
 /-- Constructive `IsDualSeedPair` model witness on `M₂(ℤ)`. -/
 lemma mat2Z_isDualSeedPair : IsDualSeedPair matD matB where
   d_sq := by decide

@@ -30,7 +30,6 @@ open InfoGeometry.Canonical.TwoStateWeakSandwichBargmannLoop
 #print axioms bargmann_overlap_loop
 #print axioms bargmann_velocity_loop
 #print axioms bargmann_pancharatnam_loop_and_anomaly_master
-#print axioms mat2Z_seed_noncomm
 #print axioms mat2Z_isDualSeedPair
 #print axioms mat2Z_two_state_weak_sandwich_witness
 

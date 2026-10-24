@@ -61,3 +61,77 @@ pinned package provenance. Component audit-generator success does not imply
 full-union, full-library, runtime, or clean-dependency acceptance. Aggregate
 changes and foreign drafts still need their own source-stable verification.
 No new push or completion of consolidation is asserted by this inventory.
+
+## Revalidation: 2026-10-24, local `9676676663a6211d10277708fa531976019d6d87`
+
+A fresh `git fetch upstream` and `git ls-remote --heads upstream` succeeded.
+The live set is still exactly main plus the nineteen topic heads listed above;
+all twenty hashes are unchanged. Recomputing branch-only Lean paths against
+this local commit gives the same absent-path lists/counts. This is an inventory
+result, not a claim that every branch theorem has been consolidated.
+
+The absent `Canonical/MajoranaLinearKernel.lean` was read at branch
+`eaa2efff0f476d7da62ed3df49b0df63df957391`. Its coefficient carrier and
+quadratic normalization agree with the current native implementation:
+
+| Branch construction/result | Current owner or primitive |
+| --- | --- |
+| `field`, `field_zero`, `field_single` | Mathlib `Fintype.linearCombination`, its linear-map zero law and `linearCombination_apply_single` |
+| coefficient extraction and injectivity | `MajoranaCoefficientAction.linearCombination_anticommutator`, `linearCombination_injective` |
+| bilinear contraction | `MajoranaCoefficientAction.quadratic_monomial_commutator` |
+| normalized quadratic operator and its generator/span actions | `quadraticElement`, `quadraticElement_commutator_generator`, `quadraticElement_commutator_linearCombination` |
+| zero commutator iff coefficient kernel | `MajoranaCoefficientAction.quadraticElement_commutator_eq_zero_iff` |
+| Pfaffian kernel and conserved nonzero Majorana | both theorems in `MajoranaPfaffianKernelCriterion` |
+| finite-chain endpoint consequence | `CARMajoranaOwnerAdapters.sweetSpot_boundary_commutes` |
+
+The branch's general finite-bilinear sum statement is more general in its
+indexing than the named chain endpoint theorem. Its constituent proof is
+available from `KitaevChainMajoranaZeroModes.left_boundary_majorana_zero_mode`,
+`Commute.mul_right`, and `Commute.sum_right`; a named general-sum owner theorem
+has not been established by this bounded comparison. This distinction prevents
+an exact-name or special-case coverage claim from substituting for consolidation.
+No stale branch carrier or forwarding module was copied into main.
+
+### Cartan and square-zero Peirce declaration review
+
+An independent read-only review compared the fetched Cartan head `6a2dd21237e9`
+and Peirce head `5e4435976cc4` against `9676676663a6`. It did not establish a
+missing mathematical consequence in those two reviewed areas:
+
+- `Algebra/PeirceParityClosure.lean` supplies parity projection laws,
+  decomposition uniqueness, product laws, conjugation equivalence, and sign
+  converses retaining injective doubling.
+- `Core/PeirceGrading.lean` supplies actual complementary submodules,
+  reflection, odd reconstruction, and square-zero directed corners.
+- `Core/NilpotentToCartanDrazinMPPoset.lean` supplies support idempotence under
+  the weaker inner-inverse condition and orthogonal-difference powers.
+- `Canonical/DrazinPeirceParity.lean` supplies operator/inverse/nilpotent parity
+  and anomaly recovery, including the negative left-defect sign.
+- `Singular/SquareZeroMoorePenrose.lean`, `MoorePenroseChiralDefects.lean`, and
+  `Core/JordanAssociatorRing.lean` cover inverse square-zero, harmonic support,
+  overlap criteria, common squares, and the unnormalized associator.
+- Native shell-resolution/extinction/action owners and the oblique-shell and
+  characteristic-two regression owners preserve the relevant boundary cases.
+
+This is source comparison, not a new kernel acceptance run or proof that every
+inherited shell API spelling is present. In particular, real-matrix column
+wrappers must not be advertised as arbitrary-star-ring column APIs. The
+exact/coexact/harmonic split must not be confused with the two-block split at
+`p,1-p`; general harmonic cross terms remain necessary. No existence of a
+Moore–Penrose inverse follows from the conditional support theorems.
+
+### General finite-bilinear consequence closed
+
+The historical missing-name qualification above is now resolved by the native
+`KitaevChainMajoranaZeroModes.boundary_commutes_finite_bilinear_sum`. It works
+in any ring over an arbitrary finite set, with varying coefficients commuting
+only with the boundary element. Local anticommutation with each bond factor
+suffices. Taking the full finite index set, constant coefficient, and the
+branch CAR/index-inequality premises recovers the branch consequence.
+
+Independent source A-A passed. Independent QA built the owner, audited its
+axioms, and rebuilt `OperatorAlgebra.All`, all with exit zero and stable
+captured sources/pins. Receipt:
+`/tmp/qa-a-kitaev-boundary-qprmk6aj/result.json`.
+Owner SHA-256: `c66ec2bad14ef2a6ade7fc4710e7b401731245f108f8c171fe1d472795ac4468`.
+This closes this branch consequence, not the remaining repository-wide gates.

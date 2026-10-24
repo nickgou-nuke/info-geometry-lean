@@ -52,6 +52,21 @@ theorem left_boundary_majorana_zero_mode (gamma0 gamma1 gamma2 : R)
     _ = - (gamma1 * (gamma0 * gamma2)) + gamma1 * (gamma0 * gamma2) := by simp only [neg_mul, mul_neg, sub_neg_eq_add, mul_assoc]
     _ = 0 := neg_add_cancel _
 
+/-- A boundary anticommuting with both factors of every bond commutes with
+its finite bond sum. Coefficients may vary and need only commute with the
+boundary itself; no scalar or global centrality hypothesis is required. -/
+theorem boundary_commutes_finite_bilinear_sum {ι : Type*}
+    (s : Finset ι) (q : R) (a b t : ι → R)
+    (ha : ∀ i ∈ s, q * a i + a i * q = 0)
+    (hb : ∀ i ∈ s, q * b i + b i * q = 0)
+    (ht : ∀ i ∈ s, Commute q (t i)) :
+    Commute q (∑ i ∈ s, t i * (a i * b i)) := by
+  apply Commute.sum_right
+  intro i hi
+  apply (ht i hi).mul_right
+  exact sub_eq_zero.mp (left_boundary_majorana_zero_mode q (a i) (b i)
+    (ha i hi) (hb i hi))
+
 /-- The left endpoint commutes with the entire finite sweet-spot Hamiltonian.
 The coefficient must commute with that endpoint; it is not assumed central
 by the arbitrary-ring definition of the Hamiltonian. This is a commutator

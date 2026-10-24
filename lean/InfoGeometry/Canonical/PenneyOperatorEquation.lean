@@ -85,24 +85,18 @@ theorem coupled_second_order {p q m χ φ : A}
     left conjugation. This is algebraic covariance, not Lorentz covariance. -/
 theorem coupled_conjugation {p q m χ φ s t : A}
     (h : Coupled p q m χ φ)
-    (hst : s * t = 1)
     (hts : t * s = 1) :
     Coupled (s * p * t) (s * q * t) (s * m * t)
       (s * χ * t) (s * φ * t) := by
+  have hconj (a b : A) :
+      (s * a * t) * (s * b * t) = s * (a * b) * t := by
+    calc
+      (s * a * t) * (s * b * t) = s * (a * (t * s) * b) * t := by
+        simp only [mul_assoc]
+      _ = s * (a * b) * t := by rw [hts, mul_one]
   rcases h with ⟨h₁, h₂⟩
-  constructor
-  · calc
-      (s * p * t) * (s * χ * t) = s * (p * χ) * t := by
-        simp only [← mul_assoc, mul_assoc s p, mul_assoc p t s, hts, mul_one, mul_assoc]
-      _ = s * (m * φ) * t := by rw [h₁]
-      _ = (s * m * t) * (s * φ * t) := by
-        simp only [← mul_assoc, mul_assoc s m, mul_assoc m t s, hts, mul_one, mul_assoc]
-  · calc
-      (s * q * t) * (s * φ * t) = s * (q * φ) * t := by
-        simp only [← mul_assoc, mul_assoc s q, mul_assoc q t s, hts, mul_one, mul_assoc]
-      _ = s * (m * χ) * t := by rw [h₂]
-      _ = (s * m * t) * (s * χ * t) := by
-        simp only [← mul_assoc, mul_assoc s m, mul_assoc m t s, hts, mul_one, mul_assoc]
+  exact ⟨by rw [hconj, hconj, h₁],
+         by rw [hconj, hconj, h₂]⟩
 
 /-- A shifted pair of noncommuting kinetic operators retains both cross
     terms and their ordering. -/

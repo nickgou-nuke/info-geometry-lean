@@ -203,6 +203,15 @@ def run_sympy_verification() -> dict:
     assert Pi_baryon + Pi_quark + Pi_diquark + Pi_vac == I32
     assert Gamma_color == Pi_pos_company - Pi_neg_company
     assert Gamma_10D == (Pi_pos_company - Pi_neg_company) * (Delta_pair - Delta_iso)
+    Pi_16_plus = Pi_pos_company * Delta_pair + Pi_neg_company * Delta_iso
+    Pi_16_minus = Pi_pos_company * Delta_iso + Pi_neg_company * Delta_pair
+    assert Pi_16_plus + Pi_16_minus == I32
+    assert Gamma_10D == Pi_16_plus - Pi_16_minus
+    assert Pi_16_minus == (
+        Pi_baryon * Delta_iso + Pi_quark * Delta_iso + Pi_vac * Delta_pair + Pi_diquark * Delta_pair
+    )
+    assert int(Pi_16_plus.trace()) == 16
+    assert int(Pi_16_minus.trace()) == 16
 
     # 9. Verify Erlangen 2.0 Cartan-Peirce Emergence & Gauge Invariance on SplitQuaternion:
     x00, x01, x10, x11, y00, y01, y10, y11, u = sp.symbols(
@@ -358,7 +367,8 @@ def run_sympy_verification() -> dict:
     assert sp.simplify(lhs_swap[2] - rhs_swap[2]) == sp.zeros(3, 1)
     assert sp.simplify(lhs_swap[3] - rhs_swap[3]) == 0
 
-    # 16. Verify Universal Malcev-Zorn S_3 Identity J(X,Y,Z) == -6 * [X,Y,Z] & Associator-Nambu:
+    # 16. Verify Universal Malcev-Zorn S_3 Identity J(X,Y,Z) == -6 * [X,Y,Z], Associator-Nambu,
+    #     and Tomita +1 Ternary Homomorphism:
     assoc_012 = zvm_sub(zvm_mul(zvm_mul(e_X0, e_Y1), e_Z2), zvm_mul(e_X0, zvm_mul(e_Y1, e_Z2)))
     assert sp.simplify(jac_012[0] - (-6 * assoc_012[0])) == 0
     assert sp.simplify(jac_012[1] - (-6 * assoc_012[1])) == sp.zeros(3, 1)
@@ -366,6 +376,13 @@ def run_sympy_verification() -> dict:
     assert sp.simplify(jac_012[3] - (-6 * assoc_012[3])) == 0
     assert sp.simplify(assoc_012[0] - (-nambu_sum)) == 0
     assert sp.simplify(assoc_012[3] - nambu_sum) == 0
+    t_X0, t_Y1, t_Z2 = zvm_tomita(e_X0), zvm_tomita(e_Y1), zvm_tomita(e_Z2)
+    t_assoc = zvm_tomita(assoc_012)
+    assoc_t = zvm_sub(zvm_mul(zvm_mul(t_X0, t_Y1), t_Z2), zvm_mul(t_X0, zvm_mul(t_Y1, t_Z2)))
+    assert sp.simplify(t_assoc[0] - assoc_t[0]) == 0
+    assert sp.simplify(t_assoc[1] - assoc_t[1]) == sp.zeros(3, 1)
+    assert sp.simplify(t_assoc[2] - assoc_t[2]) == sp.zeros(3, 1)
+    assert sp.simplify(t_assoc[3] - assoc_t[3]) == 0
 
     return {
         "engine": "SymPy",

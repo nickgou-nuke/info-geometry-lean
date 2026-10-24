@@ -1230,4 +1230,65 @@ theorem symmetric_modular_sandwich_preserves_frame_and_nambu
   rw [h_v X, h_v Y, h_v Z]
   exact ⟨h_frame X, rfl⟩
 
+/-- **Tomita Conjugation Is a `+1` Ternary Homomorphism of the Associator & Jacobiator**:
+    Even though `zornTomitaConj` reverses binary products (`J(X * Y) = J(Y) * J(X)`),
+    double-sign cancellation under `S₃` makes `zornTomitaConj` an exact `+1` homomorphism
+    of both `zornAssociator` and `zornJacobiator`! -/
+theorem zornTomitaConj_associator_and_jacobiator_hom
+    (X Y Z : ZornVectorMatrix R) :
+    zornTomitaConj (zornAssociator X Y Z) =
+      zornAssociator (zornTomitaConj X) (zornTomitaConj Y) (zornTomitaConj Z) ∧
+    zornTomitaConj (zornJacobiator X Y Z) =
+      zornJacobiator (zornTomitaConj X) (zornTomitaConj Y) (zornTomitaConj Z) := by
+  have h_sub (A B : ZornVectorMatrix R) :
+      zornTomitaConj (A - B) = zornTomitaConj A - zornTomitaConj B := by
+    simp only [_root_.sub_eq_add_neg]; rfl
+  have h_mul (A B : ZornVectorMatrix R) :
+      zornTomitaConj (A * B) = zornTomitaConj B * zornTomitaConj A :=
+    (zornModularSwap_and_tomitaConj_laws A B).2.2.2.2.1
+  have h_smul (c : R) (A : ZornVectorMatrix R) :
+      zornTomitaConj (c • A) = c • zornTomitaConj A := rfl
+  have h_assoc :
+      zornTomitaConj (zornAssociator X Y Z) =
+        zornAssociator (zornTomitaConj X) (zornTomitaConj Y) (zornTomitaConj Z) := by
+    let X' := zornTomitaConj X
+    let Y' := zornTomitaConj Y
+    let Z' := zornTomitaConj Z
+    have h1 : zornTomitaConj (zornAssociator X Y Z) = -bundledAssociator Z' Y' X' := by
+      unfold zornAssociator
+      rw [h_sub, h_mul, h_mul, h_mul, h_mul]
+      simp only [X', Y', Z', bundledAssociator, _root_.associator_apply]
+      abel
+    have h2 : bundledAssociator Z' Y' X' = -bundledAssociator X' Y' Z' := by
+      have h_yxz : bundledAssociator Y' X' Z' = -bundledAssociator X' Y' Z' := by
+        rw [bundledAssociator_swap12 X' Y' Z', neg_neg]
+      exact (bundledAssociator_cycle Z' Y' X').symm.trans h_yxz
+    rw [h1, h2, neg_neg]
+    rfl
+  refine ⟨h_assoc, ?_⟩
+  rw [zornJacobiator_eq_neg_six_smul_zornAssociator X Y Z,
+      zornJacobiator_eq_neg_six_smul_zornAssociator
+        (zornTomitaConj X) (zornTomitaConj Y) (zornTomitaConj Z),
+      h_smul, h_assoc]
+
+/-- **Tomita Self-Duality of the Nambu–Bianchi Frame Curvature Anomaly**:
+    Replacing `(X, Y, Z)` by their Tomita conjugates `(J X, J Y, J Z)` leaves the singlet
+    spin-connection projection of the frame associator strictly invariant! -/
+theorem zornSpacetimeFrame_nambu_anomaly_tomita_invariant
+    (X Y Z : ZornVectorMatrix R) :
+    zornSpinConnectionPart
+      (zornAssociator (zornSpacetimeFramePart (zornTomitaConj X))
+                      (zornSpacetimeFramePart (zornTomitaConj Y))
+                      (zornSpacetimeFramePart (zornTomitaConj Z))) =
+    zornSpinConnectionPart
+      (zornAssociator (zornSpacetimeFramePart X)
+                      (zornSpacetimeFramePart Y)
+                      (zornSpacetimeFramePart Z)) := by
+  have hv (W : ZornVectorMatrix R) : (zornTomitaConj W).v = W.w := rfl
+  have hw (W : ZornVectorMatrix R) : (zornTomitaConj W).w = W.v := rfl
+  rw [zornSpacetimeFrame_associator_spinConnectionPart_eq_neg_nambu,
+      zornSpacetimeFrame_associator_spinConnectionPart_eq_neg_nambu,
+      hv, hv, hv, hw, hw, hw,
+      _root_.add_comm (zornNambuDet X.w Y.w Z.w) (zornNambuDet X.v Y.v Z.v)]
+
 end InfoGeometry.Algebra.ZornVectorMatrix

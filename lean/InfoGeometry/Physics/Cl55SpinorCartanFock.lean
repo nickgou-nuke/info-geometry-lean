@@ -1618,6 +1618,55 @@ theorem colorChiralVolume_eq_positiveCompany_sub_negativeCompany :
   refine ⟨h_col, ?_⟩
   rw [chiralVolume10D_factorization.1, h_col]
 
+/-- **Positive-Chirality 16-State Half-Spinor Projector (`Π₁₆⁺`)**:
+    Combines the `(1₃ ⊕ 3)` color company on the even pairing carrier `Δ_{pair}(3,4)` with the
+    `(1₀ ⊕ 3̄)` color company on the odd isospin carrier `Δ_{iso}(3,4)`. -/
+def chiralHalfSpinorPlus16 : MatStage 5 :=
+  colorPositiveCompanyProj * pairingCarrier 3 4 +
+  colorNegativeCompanyProj * isospinCarrier 3 4
+
+/-- **Negative-Chirality 16-State Half-Spinor Projector (`Π₁₆⁻`)**:
+    Combines the `(1₃ ⊕ 3)` color company on the odd isospin carrier `Δ_{iso}(3,4)` (`2 + 6 = 8` states)
+    with the `(1₀ ⊕ 3̄)` color company on the even pairing carrier `Δ_{pair}(3,4)` (`2 + 6 = 8` states). -/
+def chiralHalfSpinorMinus16 : MatStage 5 :=
+  colorPositiveCompanyProj * isospinCarrier 3 4 +
+  colorNegativeCompanyProj * pairingCarrier 3 4
+
+/-- **`16 + 16 = 32` Partition of Unity & 10D Chiral Volume Difference (`Π₁₆⁺ - Π₁₆⁻`)**:
+    With zero hypotheses, `Π₁₆⁺ + Π₁₆⁻ = 1`, and the 10D chiral volume element
+    `chiralVolume10D = Γ_{color} * (Δ_{pair}(3,4) - Δ_{iso}(3,4))` is identically `Π₁₆⁺ - Π₁₆⁻`! -/
+theorem chiralHalfSpinor16_sum_and_chiralVolume_diff :
+    chiralHalfSpinorPlus16 + chiralHalfSpinorMinus16 = 1 ∧
+    chiralVolume10D = chiralHalfSpinorPlus16 - chiralHalfSpinorMinus16 := by
+  refine ⟨?_, ?_⟩
+  · calc
+      chiralHalfSpinorPlus16 + chiralHalfSpinorMinus16 =
+        (colorPositiveCompanyProj + colorNegativeCompanyProj) *
+        (isospinCarrier 3 4 + pairingCarrier 3 4) := by
+        dsimp [chiralHalfSpinorPlus16, chiralHalfSpinorMinus16]
+        noncomm_ring
+      _ = 1 * 1 := by
+        rw [color_singlet_triplet_four_sector_sum.2, isospinCarrier_add_pairingCarrier 3 4]
+      _ = 1 := by simp
+  · rw [colorChiralVolume_eq_positiveCompany_sub_negativeCompany.2]
+    dsimp [chiralHalfSpinorPlus16, chiralHalfSpinorMinus16]
+    noncomm_ring
+
+/-- **The `2 + 6 + 2 + 6 = 16` Four-Multiplet Fermion Generation Decomposition of `Π₁₆⁻`**:
+    Decomposes the 16-state chiral half-spinor `Π₁₆⁻` into:
+    - `(1₃, 2_{iso})`: `colorBaryonSingletProj * isospinCarrier 3 4` (2 states),
+    - `(3, 2_{iso})`:  `colorQuarkTripletProj * isospinCarrier 3 4` (6 states),
+    - `(1₀, 1 ⊕ 1)`:   `colorVacuumSingletProj * pairingCarrier 3 4` (2 states),
+    - `(3̄, 1 ⊕ 1)`:   `colorDiquarkAntitripletProj * pairingCarrier 3 4` (6 states)! -/
+theorem chiralHalfSpinorMinus16_four_multiplet_decomposition :
+    chiralHalfSpinorMinus16 =
+      colorBaryonSingletProj * isospinCarrier 3 4 +
+      colorQuarkTripletProj * isospinCarrier 3 4 +
+      colorVacuumSingletProj * pairingCarrier 3 4 +
+      colorDiquarkAntitripletProj * pairingCarrier 3 4 := by
+  dsimp [chiralHalfSpinorMinus16, colorPositiveCompanyProj, colorNegativeCompanyProj]
+  noncomm_ring
+
 /-! ## 6. The Grand Cl(5,5) Spinor Cartan-Fock Synthesis -/
 
 /-

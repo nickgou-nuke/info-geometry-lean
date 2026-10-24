@@ -257,4 +257,82 @@ theorem circular_commutator_eigenoperator
   rw [circular_commutator_defect r hr, hx, hy]
   simp
 
+/-- The coefficients of a normalized CAR pair are recovered by taking
+anticommutators with its two generators. -/
+theorem linear_mix_eq_zero_iff
+    {K : Type*} [Field K] [Algebra K A] [Nontrivial A]
+    (u v : K) (p q : A)
+    (hp : p * p = 0) (hq : q * q = 0) (hCAR : p * q + q * p = 1) :
+    u • p + v • q = 0 ↔ u = 0 ∧ v = 0 := by
+  constructor
+  · intro h
+    have hu := linear_mix_anticommutator u v 0 1 p q hp hq
+    have hv := linear_mix_anticommutator u v 1 0 p q hp hq
+    rw [h, hCAR] at hu hv
+    have hu0 : u • (1 : A) = 0 := by simpa using hu.symm
+    have hv0 : v • (1 : A) = 0 := by simpa using hv.symm
+    exact ⟨(smul_eq_zero.mp hu0).resolve_right one_ne_zero,
+      (smul_eq_zero.mp hv0).resolve_right one_ne_zero⟩
+  · rintro ⟨rfl, rfl⟩
+    simp
+
+/-- A normalized square-zero CAR pair is linearly independent over its
+scalar field, without a finite-dimensional or matrix-coordinate assumption. -/
+theorem CAR_pair_linearIndependent
+    {K : Type*} [Field K] [Algebra K A] [Nontrivial A]
+    (p q : A) (hp : p * p = 0) (hq : q * q = 0)
+    (hCAR : p * q + q * p = 1) :
+    LinearIndependent K ![p, q] := by
+  rw [Fintype.linearIndependent_iff]
+  intro g hg i
+  have h := (linear_mix_eq_zero_iff (g 0) (g 1) p q hp hq hCAR).mp
+    (by simpa [Fin.sum_univ_two] using hg)
+  fin_cases i
+  · exact h.1
+  · exact h.2
+
+/-- The split Clifford combinations of a CAR pair are independent when two
+is nonzero. Without that scalar condition they coincide. -/
+theorem CAR_split_pair_linearIndependent
+    {K : Type*} [Field K] [Algebra K A] [Nontrivial A]
+    (h2 : (2 : K) ≠ 0) (p q : A) (hp : p * p = 0) (hq : q * q = 0)
+    (hCAR : p * q + q * p = 1) :
+    LinearIndependent K ![p + q, p - q] := by
+  rw [Fintype.linearIndependent_iff]
+  intro g hg i
+  have hz : (g 0 + g 1) • p + (g 0 - g 1) • q = 0 := by
+    have hg' : g 0 • (p + q) + g 1 • (p - q) = 0 := by
+      simpa [Fin.sum_univ_two] using hg
+    rw [smul_add, smul_sub] at hg'
+    simpa only [add_smul, sub_smul] using (show
+      g 0 • p + g 1 • p + (g 0 • q - g 1 • q) = 0 by
+        calc _ = g 0 • p + g 0 • q + (g 1 • p - g 1 • q) := by abel
+             _ = 0 := hg')
+  obtain ⟨hu, hv⟩ := (linear_mix_eq_zero_iff _ _ p q hp hq hCAR).mp hz
+  have h0 : (2 : K) * g 0 = 0 := by linear_combination hu + hv
+  have h1 : (2 : K) * g 1 = 0 := by linear_combination hu - hv
+  fin_cases i
+  · exact (mul_eq_zero.mp h0).resolve_left h2
+  · exact (mul_eq_zero.mp h1).resolve_left h2
+
+/-- Exact scalar obstruction to the split Clifford pair being a basis of
+its two-generator span: characteristic two collapses the two combinations. -/
+theorem CAR_split_pair_linearIndependent_iff
+    {K : Type*} [Field K] [Algebra K A] [Nontrivial A]
+    (p q : A) (hp : p * p = 0) (hq : q * q = 0)
+    (hCAR : p * q + q * p = 1) :
+    LinearIndependent K ![p + q, p - q] ↔ (2 : K) ≠ 0 := by
+  constructor
+  · intro h h2
+    have hqq : q + q = 0 := by
+      have h := congrArg (fun c : K => c • q) h2
+      simpa only [two_smul K q, zero_smul] using h
+    have heq : p + q = p - q := by
+      calc p + q = (p - q) + (q + q) := by abel
+           _ = p - q := by rw [hqq, add_zero]
+    have h01 : (0 : Fin 2) = 1 := h.injective (by simpa using heq)
+    exact Fin.zero_ne_one h01
+  · intro h2
+    exact CAR_split_pair_linearIndependent h2 p q hp hq hCAR
+
 end InfoGeometry.Algebra.ChiralCARTransport

@@ -6,3 +6,11 @@ Authors: InfoGeometry Engine Contributors
 import InfoGeometry.Algebra.ChiralCARTransport
 #print axioms InfoGeometry.Algebra.ChiralCARTransport.circular_commutator_defect
 #print axioms InfoGeometry.Algebra.ChiralCARTransport.circular_commutator_eigenoperator
+
+#print axioms InfoGeometry.Algebra.ChiralCARTransport.linear_mix_eq_zero_iff
+
+#print axioms InfoGeometry.Algebra.ChiralCARTransport.CAR_pair_linearIndependent
+
+#print axioms InfoGeometry.Algebra.ChiralCARTransport.CAR_split_pair_linearIndependent
+
+#print axioms InfoGeometry.Algebra.ChiralCARTransport.CAR_split_pair_linearIndependent_iff

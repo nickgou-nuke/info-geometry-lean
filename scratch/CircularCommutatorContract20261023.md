@@ -12,3 +12,11 @@ in SplitOctonionChiralOperatorSupergrading use different carriers. This edit
 adds the general circular defect and its zero-defect consequence to the CAR
 owner, without redefining any brackets or representations. Context preflight,
 related-symbol source searches and those owners were inspected before editing.
+
+## CAR independence extension
+Source search found concrete creation/annihilation independence in
+Canonical/Cl55WittLieRouting using anticommutator coefficient extraction.
+The general owner now uses the same algebraic mechanism for a single pair
+in any nontrivial field algebra. Native Fintype.linearIndependent_iff supplies
+the independence API. Split combinations require 2 nonzero; no statement
+identifies their span with the whole ambient operator algebra.

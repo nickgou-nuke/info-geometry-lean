@@ -6,7 +6,7 @@ Authors: InfoGeometry Engine Contributors
 import InfoGeometry.Core.PeirceReflectionContracts
 import Mathlib.Algebra.Algebra.Basic
 import Mathlib.Algebra.Module.LinearMap.Basic
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.Tactic.Linarith
 
 /-!
@@ -91,7 +91,7 @@ theorem grading_weight (h : IsDualSeedPair d b) (x y : R) :
   change (polePlus d b - poleMinus d b) *
     (x • polePlus d b + y • poleMinus d b) = _
   simp only [mul_add, sub_mul, mul_smul_comm, h.pp, h.pq, h.qp, h.qq,
-    smul_zero, sub_zero, zero_sub, add_neg_eq_sub]
+    sub_zero, zero_sub, smul_neg, sub_eq_add_neg]
 
 /-- Traciality derives equal support traces; it is not a separate supplied equality. -/
 theorem trace_weights (h : IsDualSeedPair d b)

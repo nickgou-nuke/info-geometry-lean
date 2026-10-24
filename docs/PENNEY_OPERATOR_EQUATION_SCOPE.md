@@ -29,3 +29,10 @@
 ## Verification boundary
 
 This branch was edited through GitHub Contents API. This environment has no `lean` or `lake` executable; **none** of the new proofs is asserted kernel-verified. No changes were made to `lake-manifest.json`, `lean-toolchain`, external dependencies, or `All.lean`. Remain draft until narrow compilation, axiom/vacuity audit, and required repository integration gates pass.
+
+## Next-stage finite covariance and positivity (2026-10-24)
+
+- `Canonical/PenneyLeftCovariance.lean`: `LeftIntertwines` specifies exact operator covariance with three intertwining laws; `coupled_left_intertwines` transports both coupled field equations. `right_sector_transport` proves the right-idempotent sectors do not mix under that left action. This is **not** a constructed `Spin(1,3)`/`SL₂(ℂ)` action.
+- `Canonical/PenneyPositiveDensity.lean`: squared-entry real matrix readout and its sum-of-squares positivity, a norm analogue of Penney's traced bilinear density. `temporalDensity_hasDerivAt_zero` is a genuine differentiable conservation theorem for a supplied two-amplitude antisymmetric evolution. This is **not** a four-current divergence conservation theorem; there are no spatial partial derivatives or electromagnetic PDE assumptions.
+
+The next genuine missing targets are a native, representation-correct Lorentz action with transformed momentum and mass; a nontrivial indefinite `Spin(1,3)` bilinear invariant coupled to that action; and Penney's spatial current with `∂ₜρ + ∑ᵢ∂ᵢjᵢ=0`. Do not identify the squared-entry trace with the physical current without a separately proved equality.

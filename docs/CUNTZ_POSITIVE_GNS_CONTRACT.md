@@ -52,3 +52,19 @@ strict-screen traps. The carrier equivalence is an `Equiv`; only the quotient
 action is packaged as complex-linear. Hilbert completion remains an obligation. The
 similarly named `Cosmology/CausalPosetArchetypes.lean` repeats the radical
 declaration names; reconcile imports before composing these surfaces.
+
+`CuntzComplexStarGNSRepresentation` now packages the same left action as a
+native complex `AlgHom` into `Module.End` of this radical quotient. It proves
+the pairing identity `B(π(a)z,w) = B(z,π(star a)w)`, exact algebraic cyclicity
+of the vacuum `[1]`, and `B([1],π(a)[1]) = φ(a)`. These identities do not require
+nonnegative weights; positivity and positive-definiteness remain the earlier
+theorems with `hpos`. The adjoint statement is relative to the actual descended
+pairing, not a new star instance on arbitrary linear endomorphisms.
+
+Parent representation audit session 76468 exited zero with 9424 jobs,
+`/tmp/cuntz-complex-gns-representation-audit.log`. Five axiom reports contain
+exactly the standard three, and neither new module emits warnings.
+Independent semantic review passed. Independent representation QA session
+11621 exited zero with 9424 jobs, log
+`/tmp/cuntz-complex-gns-representation-qa.log`: five standard-three axiom
+reports, zero own-source warnings, and zero strict-screen traps.

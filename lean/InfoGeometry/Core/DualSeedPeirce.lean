@@ -85,10 +85,10 @@ theorem clifford_squares (h : IsDualSeedPair d b) :
     phasePolarization d b * phasePolarization d b = carrierSupport d b := by
   refine ⟨?_, ?_, ?_⟩
   · change (d - b) * (d - b) = -(d * b + b * d)
-    simp only [sub_mul, mul_sub, add_mul, mul_add, h.d_sq, h.b_sq]
+    simp only [sub_mul, mul_sub, h.d_sq, h.b_sq]
     abel
   · change (d + b) * (d + b) = d * b + b * d
-    simp only [sub_mul, mul_sub, add_mul, mul_add, h.d_sq, h.b_sq]
+    simp only [add_mul, mul_add, h.d_sq, h.b_sq]
     abel
   · change (polePlus d b - poleMinus d b) *
         (polePlus d b - poleMinus d b) = polePlus d b + poleMinus d b

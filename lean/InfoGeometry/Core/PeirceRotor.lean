@@ -36,6 +36,7 @@ theorem peirceBlock_mul (h : IsDualSeedPair d b) (a x y z e f g k : R) :
   unfold peirceBlock
   simp only [add_mul, mul_add, smul_mul_smul, h.pp, h.pq, h.qp, h.qq,
     h.pd, h.pb, h.dp, h.dq, h.qd, h.qb, h.bp, h.bq, h.d_sq, h.b_sq, smul_zero]
+  unfold polePlus poleMinus exactSupport coexactSupport
   module
 
 /-- The complementary idempotent annihilates every supported block. -/
@@ -90,7 +91,7 @@ theorem phaseRotor_mul (h : IsDualSeedPair d b) (c s e f : R) :
 /-- The identity rotor is the ambient identity, including on proper support. -/
 theorem phaseRotor_one_zero : phaseRotor (1 : R) 0 d b = 1 := by
   simp only [phaseRotor, completedBlock, peirceBlock, neg_zero, one_smul,
-    zero_smul, add_zero, zero_add]
+    zero_smul, add_zero]
   change (1 - polePlus d b - poleMinus d b) + (polePlus d b + poleMinus d b) = 1
   abel
 
@@ -187,6 +188,8 @@ theorem moving_poles_sum {c s : R} (hcs : c * c + s * s = 1) :
   rw [movingPolePlus_formula, movingPoleMinus_formula]
   calc
     _ = (c * c + s * s) • (polePlus d b + poleMinus d b) := by module
-    _ = carrierSupport d b := by simpa only [hcs, one_smul]
+    _ = carrierSupport d b := by
+      simpa only [hcs, one_smul] using
+        (rfl : polePlus d b + poleMinus d b = carrierSupport d b)
 
 end InfoGeometry.Core.PeirceRotor

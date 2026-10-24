@@ -62,6 +62,24 @@ instance {γ : F} : Zero (AlbertStep F A γ) where
 instance {γ : F} : One (AlbertStep F A γ) where
   one := oneElem (F := F) (A := A) (γ := γ)
 
+instance {γ : F} : Add (AlbertStep F A γ) where
+  add x y := ⟨x.p + y.p, x.q + y.q⟩
+
+instance {γ : F} : Sub (AlbertStep F A γ) where
+  sub x y := ⟨x.p - y.p, x.q - y.q⟩
+
+@[simp] theorem add_p {γ : F} (x y : AlbertStep F A γ) :
+    (x + y).p = x.p + y.p := rfl
+
+@[simp] theorem add_q {γ : F} (x y : AlbertStep F A γ) :
+    (x + y).q = x.q + y.q := rfl
+
+@[simp] theorem sub_p {γ : F} (x y : AlbertStep F A γ) :
+    (x - y).p = x.p - y.p := rfl
+
+@[simp] theorem sub_q {γ : F} (x y : AlbertStep F A γ) :
+    (x - y).q = x.q - y.q := rfl
+
 @[simp] theorem zero_p {γ : F} :
     (0 : AlbertStep F A γ).p = 0 := rfl
 
@@ -162,6 +180,33 @@ theorem bimodule_embed_associator_q {γ : F} (s t : A) (y : AlbertStep F A γ) :
       y.q * (s * star t - star t * s) := by
   simp only [mul_left_embed, mul_right_embed]
   rw [mul_sub, mul_assoc, mul_assoc]
+
+@[simp] theorem mul_lateral_self {γ : F} (q : A) :
+    mul (γ := γ) (⟨0, q⟩ : AlbertStep F A γ) ⟨0, q⟩ = ⟨γ • (star q * q), 0⟩ := by
+  ext <;> simp [mul]
+
+theorem mul_embed_lateral_sub {γ : F} (s q : A) :
+    mul (γ := γ) (⟨s, 0⟩ : AlbertStep F A γ) ⟨0, q⟩ -
+      mul (γ := γ) (⟨0, q⟩ : AlbertStep F A γ) ⟨s, 0⟩ =
+      ⟨0, q * (s - star s)⟩ := by
+  ext
+  · simp [mul]
+  · simp [mul, mul_sub]
+
+theorem mul_embed_lateral_add {γ : F} (s q : A) :
+    mul (γ := γ) (⟨s, 0⟩ : AlbertStep F A γ) ⟨0, q⟩ +
+      mul (γ := γ) (⟨0, q⟩ : AlbertStep F A γ) ⟨s, 0⟩ =
+      ⟨0, q * (s + star s)⟩ := by
+  ext
+  · simp [mul]
+  · simp [mul, mul_add]
+
+theorem two_sided_conj_embed_assoc {γ : F} (s : A) (y : AlbertStep F A γ) :
+    mul (γ := γ) (mul (γ := γ) (⟨s, 0⟩ : AlbertStep F A γ) y) ⟨star s, 0⟩ =
+      mul (γ := γ) (⟨s, 0⟩ : AlbertStep F A γ) (mul (γ := γ) y ⟨star s, 0⟩) := by
+  ext
+  · simp [mul, mul_assoc]
+  · simp [mul, star_star, mul_assoc]
 
 /-- The canonical split-complex-like element `(1, 1)` in the `γ = 1` step. -/
 def splitPlus : AlbertStep F A (1 : F) :=
@@ -540,6 +585,131 @@ theorem trace_antisymmetric_twoSidedHyperbolicLaplace (u : Fˣ) (X : SplitQuater
         (hyperbolicKernel (↑u⁻¹ : F) (u : F)),
       ← mul_assoc, hyperbolicKernel_mul, Units.inv_mul, Units.mul_inv,
       hyperbolicKernel_one, one_mul]
+
+/-- Alias `seedD` for the constructive upper-right nilpotent seed `peirceSeedD`. -/
+abbrev seedD : SplitQuaternion F := peirceSeedD
+
+/-- Alias `seedB` for the constructive lower-left nilpotent seed `peirceSeedB`. -/
+abbrev seedB : SplitQuaternion F := peirceSeedB
+
+/-- Constructive transition velocity `velocityQ = seedD + seedB = !![0, 1; 1, 0]`. -/
+def velocityQ : SplitQuaternion F := peirceSeedD + peirceSeedB
+
+/-- Constructive wheel generator `wheelJ = seedD - seedB = !![0, 1; -1, 0]`. -/
+def wheelJ : SplitQuaternion F := peirceSeedD - peirceSeedB
+
+/-- Constructive phase polarization `polarizationGamma = peircePlus - peirceMinus = !![1, 0; 0, -1]`. -/
+def polarizationGamma : SplitQuaternion F := peircePlus - peirceMinus
+
+/-- Constructive Tits–Bruhat quartic generator `bruhatS = (1 + seedD) * (1 - seedB) * (1 + seedD)`. -/
+def bruhatS : SplitQuaternion F := (1 + peirceSeedD) * (1 - peirceSeedB) * (1 + peirceSeedD)
+
+/-- Constructive double-shear hexality generator `hexalityU = (1 + seedD) * (1 - seedB)`. -/
+def hexalityU : SplitQuaternion F := (1 + peirceSeedD) * (1 - peirceSeedB)
+
+/-- Constructive homogenized moving pole projector `movingPolePlus c s`. -/
+def movingPolePlus (c s : F) : SplitQuaternion F :=
+  (c * c) • peircePlus + (s * s) • peirceMinus - (c * s) • velocityQ
+
+/-- Constructive complementary homogenized moving pole projector `movingPoleMinus c s`. -/
+def movingPoleMinus (c s : F) : SplitQuaternion F :=
+  (s * s) • peircePlus + (c * c) • peirceMinus + (c * s) • velocityQ
+
+/-- Alias `twoSidedLaplace` for `twoSidedHyperbolicLaplace`. -/
+abbrev twoSidedLaplace (lamL muL lamR muR : F) (X : SplitQuaternion F) : SplitQuaternion F :=
+  twoSidedHyperbolicLaplace lamL muL lamR muR X
+
+/-- Zero-hypothesis nilpotent seed and Peirce corner multiplication table. -/
+theorem seed_peirce_identities :
+    (seedD : SplitQuaternion F) * seedD = 0 ∧
+    (seedB : SplitQuaternion F) * seedB = 0 ∧
+    (seedD : SplitQuaternion F) * seedB = peircePlus ∧
+    (seedB : SplitQuaternion F) * seedD = peirceMinus :=
+  ⟨peirceSeedD_mul_self, peirceSeedB_mul_self,
+   peirceSeedD_mul_peirceSeedB, peirceSeedB_mul_peirceSeedD⟩
+
+/-- Zero-hypothesis parabolic-to-cyclotomic `SL₂` center and order relations. -/
+theorem bruhatS_and_hexalityU_modular_relations :
+    (bruhatS : SplitQuaternion F) * bruhatS = -1 ∧
+    (hexalityU : SplitQuaternion F) ^ 3 = -1 ∧
+    (bruhatS : SplitQuaternion F) * bruhatS = (hexalityU : SplitQuaternion F) ^ 3 ∧
+    (bruhatS : SplitQuaternion F) ^ 4 = 1 ∧
+    (hexalityU : SplitQuaternion F) ^ 6 = 1 := by
+  have hS2 : (bruhatS : SplitQuaternion F) * bruhatS = -1 := by
+    dsimp [bruhatS]
+    rw [← peircePlus_add_peirceMinus]
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [peircePlus, peirceMinus, peirceSeedD, peirceSeedB]
+  have hU3 : (hexalityU : SplitQuaternion F) ^ 3 = -1 := by
+    rw [pow_three]
+    dsimp [hexalityU]
+    rw [← peircePlus_add_peirceMinus]
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [peircePlus, peirceMinus, peirceSeedD, peirceSeedB]
+  have hS4 : (bruhatS : SplitQuaternion F) ^ 4 = 1 := by
+    calc (bruhatS : SplitQuaternion F) ^ 4
+      _ = (bruhatS * bruhatS) * (bruhatS * bruhatS) := by
+          simp [pow_succ, mul_assoc]
+      _ = (-1) * (-1) := by rw [hS2]
+      _ = 1 := by simp
+  have hU6 : (hexalityU : SplitQuaternion F) ^ 6 = 1 := by
+    calc (hexalityU : SplitQuaternion F) ^ 6
+      _ = (hexalityU ^ 3) * (hexalityU ^ 3) := by
+          simp [pow_succ, mul_assoc]
+      _ = (-1) * (-1) := by rw [hU3]
+      _ = 1 := by simp
+  exact ⟨hS2, hU3, by rw [hS2, hU3], hS4, hU6⟩
+
+/-- Zero-hypothesis projective idempotence and orthogonality of `movingPolePlus c s`. -/
+theorem movingPolePlus_projective_idem_and_orth (c s : F) :
+    movingPolePlus c s * movingPolePlus c s = (c * c + s * s) • movingPolePlus c s ∧
+    movingPolePlus c s * movingPoleMinus c s = 0 ∧
+    movingPolePlus c s + movingPoleMinus c s = (c * c + s * s) • (1 : SplitQuaternion F) := by
+  refine ⟨?_, ?_, ?_⟩ <;>
+  · ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [movingPolePlus, movingPoleMinus, peircePlus, peirceMinus, velocityQ,
+            peirceSeedD, peirceSeedB] <;>
+      ring
+
+/-- Zero-hypothesis homogenized Fubini–Study chordal metric and Mostow fidelity. -/
+theorem movingPolePlus_homogenized_fubini_study_metric (c s : F) :
+    (movingPolePlus c s - (c * c + s * s) • peircePlus) *
+      (movingPolePlus c s - (c * c + s * s) • peircePlus) =
+      (s * s * (c * c + s * s)) • (1 : SplitQuaternion F) ∧
+    peircePlus * movingPolePlus c s * peircePlus = (c * c) • (peircePlus : SplitQuaternion F) := by
+  refine ⟨?_, ?_⟩ <;>
+  · ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [movingPolePlus, peircePlus, peirceMinus, velocityQ, peirceSeedD, peirceSeedB] <;>
+      ring
+
+/-- Zero-hypothesis two-state weak-value sandwiches and linear syzygy. -/
+theorem two_state_weak_sandwich_and_syzygy (c s : F) :
+    peircePlus * movingPolePlus c s =
+      (c * c) • peircePlus - (c * s) • (peirceSeedD : SplitQuaternion F) ∧
+    peircePlus * velocityQ * movingPolePlus c s =
+      (s * s) • (peirceSeedD : SplitQuaternion F) - (c * s) • peircePlus ∧
+    s • (peircePlus * movingPolePlus c s) +
+      c • (peircePlus * velocityQ * movingPolePlus c s) = 0 := by
+  refine ⟨?_, ?_, ?_⟩ <;>
+  · ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [movingPolePlus, peircePlus, peirceMinus, velocityQ, peirceSeedD, peirceSeedB] <;>
+      ring
+
+/-- Zero-hypothesis two-sided hyperbolic Laplace 4-sector eigen-scaling. -/
+theorem twoSidedLaplace_four_sector_scaling (lamL muL lamR muR : F) :
+    twoSidedLaplace lamL muL lamR muR peircePlus = (lamL * lamR) • peircePlus ∧
+    twoSidedLaplace lamL muL lamR muR peirceMinus = (muL * muR) • peirceMinus ∧
+    twoSidedLaplace lamL muL lamR muR seedD = (lamL * muR) • seedD ∧
+    twoSidedLaplace lamL muL lamR muR seedB = (muL * lamR) • seedB :=
+  ⟨twoSidedHyperbolicLaplace_peircePlus lamL muL lamR muR,
+   twoSidedHyperbolicLaplace_peirceMinus lamL muL lamR muR,
+   twoSidedHyperbolicLaplace_peirceSeedD lamL muL lamR muR,
+   twoSidedHyperbolicLaplace_peirceSeedB lamL muL lamR muR⟩
 
 end SplitQuaternion
 

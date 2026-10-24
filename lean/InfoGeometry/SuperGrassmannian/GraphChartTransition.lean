@@ -74,4 +74,41 @@ theorem block_map_graph (a : Module.End R M) (b : N →ₗ[R] M)
     change a (u.symm x) + b (f (u.symm x)) = x
     rw [htop, u.apply_symm_apply]
 
+/-- For an injective ambient operator, being a graph forces the first-coordinate
+operator to be bijective. Surjectivity alone is insufficient for an inverse. -/
+theorem map_graph_eq_iff_of_injective (T : Module.End R (M × N))
+    (hT : Function.Injective T) (f g : M →ₗ[R] N) :
+    f.graph.map T = g.graph ↔
+      (∀ x, (T (x, f x)).2 = g (T (x, f x)).1) ∧
+      Function.Bijective (fun x => (T (x, f x)).1) := by
+  rw [map_graph_eq_iff]
+  constructor
+  · rintro ⟨hc, hs⟩
+    refine ⟨hc, ⟨?_, hs⟩⟩
+    intro x y hxy
+    have he : T (x, f x) = T (y, f y) :=
+      Prod.ext hxy ((hc x).trans ((congrArg g hxy).trans (hc y).symm))
+    exact congrArg Prod.fst (hT he)
+  · rintro ⟨hc, hi, hs⟩
+    exact ⟨hc, hs⟩
+
+/-- Exact domain of a graph coordinate under an injective ambient operator.
+This replaces an assumed denominator inverse with a necessary and sufficient
+condition, with no finite-dimensional or commutative-scalar restriction. -/
+theorem exists_map_graph_iff (T : Module.End R (M × N))
+    (hT : Function.Injective T) (f : M →ₗ[R] N) :
+    (∃ g : M →ₗ[R] N, f.graph.map T = g.graph) ↔
+      Function.Bijective (fun x => (T (x, f x)).1) := by
+  constructor
+  · rintro ⟨g, hg⟩
+    exact ((map_graph_eq_iff_of_injective T hT f g).mp hg).2
+  · intro h
+    let top := (LinearMap.fst R M N).comp (T.comp (LinearMap.id.prod f))
+    let bottom := (LinearMap.snd R M N).comp (T.comp (LinearMap.id.prod f))
+    let u : M ≃ₗ[R] M := LinearEquiv.ofBijective top h
+    refine ⟨bottom.comp u.symm.toLinearMap, (map_graph_eq_iff T _ _).mpr ⟨?_, h.2⟩⟩
+    intro x
+    change bottom x = bottom (u.symm (u x))
+    rw [u.symm_apply_apply]
+
 end InfoGeometry.SuperGrassmannian.GraphChartTransition

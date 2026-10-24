@@ -7,3 +7,5 @@ import InfoGeometry.SuperGrassmannian.GraphChartTransition
 
 #print axioms InfoGeometry.SuperGrassmannian.GraphChartTransition.map_graph_eq_iff
 #print axioms InfoGeometry.SuperGrassmannian.GraphChartTransition.block_map_graph
+#print axioms InfoGeometry.SuperGrassmannian.GraphChartTransition.map_graph_eq_iff_of_injective
+#print axioms InfoGeometry.SuperGrassmannian.GraphChartTransition.exists_map_graph_iff

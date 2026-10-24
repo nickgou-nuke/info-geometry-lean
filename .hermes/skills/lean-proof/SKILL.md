@@ -190,6 +190,53 @@ expand it when needed for semantic accuracy, and correct it when it misstates
 the formal object. Delete prose only when it is stale, false, duplicative, or
 not carrying a representation bridge.
 
+## Repository-Specific Pitfalls (info-geometry-lean)
+
+### Carrier Equivalence Bridge Pattern
+
+When two modules define the same algebraic carrier differently (e.g., matrix
+literal `!![...]` vs function match), prove definitional equality first:
+
+```lean
+theorem tilt_eq_tilt2 : tilt = tilt2 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [tilt, tilt2]
+```
+
+Then transfer theorems via `rw [← tilt_eq_tilt2, ← switch_eq_switch2]`.
+This avoids duplicating proof logic across carriers.
+
+### No-Namespace Import Trap
+
+Some owner files (e.g., `Canonical/KleinBottleSewing.lean`) declare NO
+namespace — all definitions are at top level. `open InfoGeometry.Canonical.KleinBottleSewing`
+will fail with "unknown namespace". Import the file but do NOT open it;
+use the definitions directly (they're in the global namespace).
+
+### `rw` vs `simpa` for Squared Lemmas
+
+`rw [tilt_sq]` fails when the goal is `tilt * tilt = 1` but `tilt_sq` is
+`tilt ^ 2 = 1`, because `rw` does not unfold `^ 2` to `*`. Use:
+
+```lean
+simpa [sq] using tilt_sq
+```
+
+### Forward References
+
+Theorems defined later in the same file cannot be referenced earlier.
+Reorder definitions so dependencies come first.
+
+### `ring` Does Not Work on Matrices
+
+`ring` and `ring_nf` fail on matrix expressions. Use `simp` with specific
+lemmas (`tilt_sq`, `switch_sq`, `tilt_switch_anticomm`) instead.
+
+### `Matrix.trace` vs `Matrix.traceAddMonoidHom`
+
+These are not definitionally equal for `rw`. Either use `convert ... using 2`
+or avoid the mismatch by reusing existing theorems that already use `Matrix.trace`.
+
 ## Dependent Type Rewriting Issues
 
 **When you encounter "motive is not type correct" or similar errors during rewriting:**

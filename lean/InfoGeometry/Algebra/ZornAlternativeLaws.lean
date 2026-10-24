@@ -1410,4 +1410,80 @@ theorem zorn_maxwell_gem_stress_energy_identity
   simp [ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
   ring
 
+/-- **Electric / Gravito-Electric 3-Vector Field (`zornElectricField d₀ d φ A`)**:
+    `E = d₀ • A - φ • d`. -/
+def zornElectricField (d₀ : R) (d : ZornVec3 R) (φ : R) (A : ZornVec3 R) : ZornVec3 R :=
+  fun i => d₀ * A i - φ * d i
+
+/-- **Magnetic / Gravito-Magnetic 3-Vector Field (`zornMagneticField d A`)**:
+    `B = d × A`. -/
+def zornMagneticField (d A : ZornVec3 R) : ZornVec3 R :=
+  ZornVec3.cross d A
+
+/-- **Minkowski / Lorenz Gauge Scalar (`zornLorenzScalar d₀ d φ A`)**:
+    `G = d₀ * φ - d ⋅ A`. -/
+def zornLorenzScalar (d₀ : R) (d : ZornVec3 R) (φ : R) (A : ZornVec3 R) : R :=
+  d₀ * φ - ZornVec3.dot d A
+
+/-- **Four-Potential Product Splits into Lorenz Gauge Singlet, Field Strength, & Pure-Gauge Vanishing**:
+    Multiplying `D = zornFourPotential d₀ d` and `P = zornFourPotential φ A` yields:
+    - Singlet part `ω_Zorn(D * P) = ⟨G, 0, 0, G⟩` where `G = zornLorenzScalar d₀ d φ A`,
+    - Triplet part `e_Zorn(D * P) = zornFieldStrength E B`,
+    - Pure gauge vanishing: `e_Zorn(D * D) = 0`! -/
+theorem zornFourPotential_mul_lorenz_and_fieldStrength
+    (d₀ : R) (d : ZornVec3 R) (φ : R) (A : ZornVec3 R) :
+    let D := zornFourPotential d₀ d
+    let P := zornFourPotential φ A
+    let E := zornElectricField d₀ d φ A
+    let B := zornMagneticField d A
+    let G := zornLorenzScalar d₀ d φ A
+    zornSpinConnectionPart (D * P) = ⟨G, fun _ => 0, fun _ => 0, G⟩ ∧
+    zornSpacetimeFramePart (D * P) = zornFieldStrength E B ∧
+    zornSpacetimeFramePart (D * D) = 0 := by
+  intro D P E B G
+  refine ⟨(zornFourPotential_mul_decomposition d₀ φ d A).1,
+          (zornFourPotential_mul_decomposition d₀ φ d A).2, ?_⟩
+  ext
+  · rfl
+  · rename_i i
+    fin_cases i <;>
+      (simp [D, zornFourPotential, zornSpacetimeFramePart, offDiagonalPart,
+             InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def,
+             mul, zero, ZornVec3.cross]; ring)
+  · rename_i i
+    fin_cases i <;>
+      (simp [D, zornFourPotential, zornSpacetimeFramePart, offDiagonalPart,
+             InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_zero_def,
+             mul, zero, ZornVec3.cross]; ring)
+  · rfl
+
+/-- **Tomita Stress-Energy-Poynting Decomposition of `F * zornTomitaConj F`**:
+    Separates `F * zornTomitaConj F` into its even Singlet part (Energy density `±` Pontryagin
+    helicity) and its odd 6D Frame Triplet part (Poynting / GEM Frame-Dragging flux `2 (E × B)`)! -/
+theorem zornFieldStrength_tomita_stress_energy_poynting (E B : ZornVec3 R) :
+    let F := zornFieldStrength E B
+    norm F = ZornVec3.dot B B - ZornVec3.dot E E ∧
+    zornSpinConnectionPart (F * zornTomitaConj F) =
+      ⟨ZornVec3.dot E E + ZornVec3.dot B B - (2 : R) * ZornVec3.dot E B,
+       fun _ => 0, fun _ => 0,
+       ZornVec3.dot E E + ZornVec3.dot B B + (2 : R) * ZornVec3.dot E B⟩ ∧
+    zornSpacetimeFramePart (F * zornTomitaConj F) =
+      ⟨0, fun i => (2 : R) * ZornVec3.cross E B i,
+       fun i => (2 : R) * ZornVec3.cross E B i, 0⟩ := by
+  intro F
+  have h := zornFieldStrength_tomita_stress_energy E B
+  refine ⟨h.2.1, ?_, ?_⟩
+  · rw [h.2.2]; rfl
+  · rw [h.2.2]; rfl
+
+/-- **Universal Maxwell / GEM Stress-Energy-Poynting Identity (`zorn_maxwell_gem_stress_identity`)**:
+    `(E⋅E + B⋅B)² - 4(E⋅B)² - 4(E × B)⋅(E × B) = (E⋅E - B⋅B)²`! -/
+theorem zorn_maxwell_gem_stress_identity (E B : ZornVec3 R) :
+    (ZornVec3.dot E E + ZornVec3.dot B B) ^ 2 -
+      (4 : R) * (ZornVec3.dot E B) ^ 2 -
+      (4 : R) * ZornVec3.dot (ZornVec3.cross E B) (ZornVec3.cross E B) =
+    (ZornVec3.dot E E - ZornVec3.dot B B) ^ 2 := by
+  simp [ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+  ring
+
 end InfoGeometry.Algebra.ZornVectorMatrix

@@ -384,6 +384,44 @@ def run_sympy_verification() -> dict:
     assert sp.simplify(t_assoc[2] - assoc_t[2]) == sp.zeros(3, 1)
     assert sp.simplify(t_assoc[3] - assoc_t[3]) == 0
 
+    # 17. Verify Chiral Maxwell / GEM (1 (+) 3) Four-Potential & Tomita Stress-Energy-Poynting Laws:
+    d0, dx, dy, dz, phi, ax, ay, az = sp.symbols("d0 dx dy dz phi ax ay az")
+    d_vec = sp.Matrix([dx, dy, dz])
+    a_vec = sp.Matrix([ax, ay, az])
+    D_pot = (d0, d_vec, -d_vec, -d0)
+    A_pot = (phi, a_vec, -a_vec, -phi)
+    DA_prod = zvm_mul(D_pot, A_pot)
+    DD_prod = zvm_mul(D_pot, D_pot)
+    E_vec = d0 * a_vec - phi * d_vec
+    B_vec = d_vec.cross(a_vec)
+    G_lorenz = d0 * phi - d_vec.dot(a_vec)
+    assert sp.simplify(DA_prod[0] - G_lorenz) == 0
+    assert sp.simplify(DA_prod[3] - G_lorenz) == 0
+    assert sp.simplify(DA_prod[1] - (E_vec - B_vec)) == sp.zeros(3, 1)
+    assert sp.simplify(DA_prod[2] - (E_vec + B_vec)) == sp.zeros(3, 1)
+    assert sp.simplify(DD_prod[1]) == sp.zeros(3, 1)
+    assert sp.simplify(DD_prod[2]) == sp.zeros(3, 1)
+
+    F_gem = (0, E_vec - B_vec, E_vec + B_vec, 0)
+    assert sp.simplify(zvm_norm(F_gem) - (B_vec.dot(B_vec) - E_vec.dot(E_vec))) == 0
+    T_gem = zvm_mul(F_gem, zvm_tomita(F_gem))
+    E2_plus_B2 = E_vec.dot(E_vec) + B_vec.dot(B_vec)
+    EdotB = E_vec.dot(B_vec)
+    ExB = E_vec.cross(B_vec)
+    assert sp.simplify(T_gem[0] - (E2_plus_B2 - 2 * EdotB)) == 0
+    assert sp.simplify(T_gem[3] - (E2_plus_B2 + 2 * EdotB)) == 0
+    assert sp.simplify(T_gem[1] - 2 * ExB) == sp.zeros(3, 1)
+    assert sp.simplify(T_gem[2] - 2 * ExB) == sp.zeros(3, 1)
+    assert (
+        sp.simplify(
+            E2_plus_B2**2
+            - 4 * EdotB**2
+            - 4 * ExB.dot(ExB)
+            - (E_vec.dot(E_vec) - B_vec.dot(B_vec)) ** 2
+        )
+        == 0
+    )
+
     return {
         "engine": "SymPy",
         "status": "PASSED",

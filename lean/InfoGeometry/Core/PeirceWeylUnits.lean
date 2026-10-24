@@ -42,7 +42,7 @@ theorem unipotent_triple (hd : d * d = 0) (hinner : d * b * d = d) :
   unfold weylElement harmonicSupport exactSupport coexactSupport majoranaMinus
   calc
     (1 + d) * (1 - b) * (1 + d) =
-        1 - d * b - b * d + d - b + d * d + (d - d * b * d) - b * (d * d) := by
+        1 - d * b - b * d + d - b + d * d + (d - d * b * d) := by
       noncomm_ring
     _ = 1 - d * b - b * d + (d - b) := by rw [hd, hinner]; simp; abel
 
@@ -122,7 +122,7 @@ theorem weyl_conjugation (h : IsMoorePenroseInverse d b) (hd : d * d = 0) :
       h.harmonicSupport_mul_coexactSupport hd, hdq, hbq, sub_zero, zero_add]
   have bw : b * weylInverse d b = -coexactSupport d b := by
     simp only [weylInverse, majoranaMinus, mul_sub,
-      h.inverse_mul_harmonicSupport_eq_zero hd, h.inverse_sq_eq_zero hd, sub_zero]
+      h.inverse_mul_harmonicSupport_eq_zero hd, h.inverse_sq_eq_zero hd, sub_zero, zero_sub]
     rfl
   have dw : d * weylInverse d b = exactSupport d b := by
     simp only [weylInverse, majoranaMinus, mul_sub,
@@ -193,15 +193,18 @@ theorem sixthRoot_laws (h : IsMoorePenroseInverse d b) (hd : d * d = 0) :
     sixthRoot d b ^ 6 = activeSupport d b := by
   have hc := thirdRoot_cube h hd
   have he := (activeSupport_identities h hd).1
-  refine ⟨?_, ?_, ?_⟩
+  have hcube : sixthRoot d b ^ 3 = -activeSupport d b := by
+    calc
+      sixthRoot d b ^ 3 = -(thirdRoot d b ^ 3) := by
+        unfold sixthRoot
+        noncomm_ring
+      _ = -activeSupport d b := congrArg Neg.neg hc
+  refine ⟨?_, hcube, ?_⟩
   · simpa [sixthRoot] using thirdRoot_polynomial h hd
-  · simpa [sixthRoot] using congrArg Neg.neg hc
   · calc
       sixthRoot d b ^ 6 = (sixthRoot d b ^ 3) * (sixthRoot d b ^ 3) := by
         rw [← pow_add]
       _ = (-activeSupport d b) * (-activeSupport d b) := by
-        have hcube : sixthRoot d b ^ 3 = -activeSupport d b := by
-          simpa [sixthRoot] using congrArg Neg.neg hc
         rw [hcube]
       _ = activeSupport d b := by simpa using he
 

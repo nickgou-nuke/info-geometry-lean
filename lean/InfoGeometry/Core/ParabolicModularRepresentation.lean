@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Core.ParabolicShearRelations
+import Mathlib.Algebra.Group.Commute.Basic
 import Mathlib.GroupTheory.PresentedGroup
 
 /-!
@@ -99,8 +100,8 @@ theorem sign_commutes_with_representation (hd : d * d = 0) (hb : b * b = 0)
   let C : Subgroup Aˣ :=
     { carrier := {x | Commute (tripleUnit hd hb ^ 2) x}
       one_mem' := Commute.one_right _
-      mul_mem' := fun hx hy => hx.mul_right hy
-      inv_mem' := fun hx => hx.inv_right }
+      mul_mem' := fun hx hy => Commute.mul_right hx hy
+      inv_mem' := fun hx => Commute.inv_right hx }
   have hgen : ∀ i : Bool,
       (PresentedGroup.of i : ModularRelationsGroup) ∈
         C.comap (representation hd hb hdb hbd) := by
@@ -108,8 +109,8 @@ theorem sign_commutes_with_representation (hd : d * d = 0) (hb : b * b = 0)
     change Commute (tripleUnit hd hb ^ 2)
       (representation hd hb hdb hbd (PresentedGroup.of i))
     cases i
-    · simpa [representation] using (shared_sign_commutes hd hb hdb hbd).1
-    · simpa [representation] using (shared_sign_commutes hd hb hdb hbd).2
+    · simp [representation, (shared_sign_commutes hd hb hdb hbd).1]
+    · simp [representation, (shared_sign_commutes hd hb hdb hbd).2]
   exact PresentedGroup.generated_by modularRelations
     (C.comap (representation hd hb hdb hbd)) hgen g
 

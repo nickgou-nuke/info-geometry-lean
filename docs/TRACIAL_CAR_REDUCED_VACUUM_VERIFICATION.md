@@ -41,3 +41,22 @@ interpretation, or positivity preservation by arbitrary nonunitary similarities.
   captured source/import/pin hashes.
 
 No unrelated submodule edits or dependency pin changes are part of this work.
+
+## Independent final review
+
+Popper independently reviewed the final delta and returned source A-A PASS.
+The v2-to-v4 changes comprise proof normalization, explicit complex-order scope,
+and lint cleanup; v4-to-owner changes only promotion documentation.
+No hypotheses or conclusions were weakened.
+
+Ampere independently reran both live owner targets and the operator-algebra
+aggregate, then audited all 28 reduced-vacuum and 34 tracial declarations.
+Receipt: `/tmp/qa-a-reduced-live-final-qwij16ml/result.json`, all commands exit
+zero and captured sources/pins stable. This completed run preceded the later
+finite-bilinear addition to `KitaevChainMajoranaZeroModes`; it does not certify
+that later aggregate state.
+
+Reviewed owner SHA-256 values:
+
+- Reduced vacuum: `4b952dbf74ce7f1d87e60ea456f580d7f3c72eeb5b9977dc9257f82231a6be2f`
+- Tracial CAR: `3250e08ddd6375cf8989ebebe0f69a11d78802e89ede16841e1835b4350dfa53`

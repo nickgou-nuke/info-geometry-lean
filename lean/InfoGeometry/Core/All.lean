@@ -15,8 +15,14 @@ import InfoGeometry.Core.JordanAssociator
 import InfoGeometry.Core.JordanSquareZero
 import InfoGeometry.Core.JordanSquareZeroAudit
 import InfoGeometry.Core.DiracSuperalgebra
+import InfoGeometry.Core.BosonFermionRegression
+import InfoGeometry.Core.MajoranaSupportSwap
+import InfoGeometry.Core.MatrixActionRecovery
+import InfoGeometry.Core.RightPowerExtinction
 import InfoGeometry.Core.DiracSuperalgebraAudit
 import InfoGeometry.Core.PeirceTangent
+import InfoGeometry.Core.NilpotentToCartanDrazinMPPoset
+import InfoGeometry.Core.NilpotentCartanRegression
 import InfoGeometry.Core.PeirceCompressionDefect
 import InfoGeometry.Core.PeirceTangentAudit
 import InfoGeometry.Core.PeirceTangentCounterexample

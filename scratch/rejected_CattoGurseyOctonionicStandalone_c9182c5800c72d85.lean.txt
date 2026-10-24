@@ -1,0 +1,330 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import Mathlib
+
+namespace CattoGurseyOctonionicStandalone
+
+/-!
+## 1. 3D Color Vector Space `Vec3 ℤ` & Zorn Split-Octonion Algebra `SplitOctonion ℤ`
+-/
+
+@[ext]
+structure Vec3 where
+  x : ℤ
+  y : ℤ
+  z : ℤ
+
+namespace Vec3
+
+instance : Zero Vec3 := ⟨⟨0, 0, 0⟩⟩
+instance : Add Vec3 := ⟨fun u v => ⟨u.x + v.x, u.y + v.y, u.z + v.z⟩⟩
+instance : Sub Vec3 := ⟨fun u v => ⟨u.x - v.x, u.y - v.y, u.z - v.z⟩⟩
+instance : Neg Vec3 := ⟨fun u => ⟨-u.x, -u.y, -u.z⟩⟩
+
+@[simp] lemma zero_x : (0 : Vec3).x = 0 := rfl
+@[simp] lemma zero_y : (0 : Vec3).y = 0 := rfl
+@[simp] lemma zero_z : (0 : Vec3).z = 0 := rfl
+
+@[simp] lemma add_x (u v : Vec3) : (u + v).x = u.x + v.x := rfl
+@[simp] lemma add_y (u v : Vec3) : (u + v).y = u.y + v.y := rfl
+@[simp] lemma add_z (u v : Vec3) : (u + v).z = u.z + v.z := rfl
+
+@[simp] lemma sub_x (u v : Vec3) : (u - v).x = u.x - v.x := rfl
+@[simp] lemma sub_y (u v : Vec3) : (u - v).y = u.y - v.y := rfl
+@[simp] lemma sub_z (u v : Vec3) : (u - v).z = u.z - v.z := rfl
+
+@[simp] lemma neg_x (u : Vec3) : (-u).x = -u.x := rfl
+@[simp] lemma neg_y (u : Vec3) : (-u).y = -u.y := rfl
+@[simp] lemma neg_z (u : Vec3) : (-u).z = -u.z := rfl
+
+def dot (u v : Vec3) : ℤ := u.x * v.x + u.y * v.y + u.z * v.z
+
+def cross (u v : Vec3) : Vec3 :=
+  ⟨u.y * v.z - u.z * v.y,
+   u.z * v.x - u.x * v.z,
+   u.x * v.y - u.y * v.x⟩
+
+def e (i : Fin 3) : Vec3 :=
+  match i with
+  | 0 => ⟨1, 0, 0⟩
+  | 1 => ⟨0, 1, 0⟩
+  | 2 => ⟨0, 0, 1⟩
+
+end Vec3
+
+/-- Zorn's Split-Octonion algebra `SplitOctonion ℤ`. -/
+@[ext]
+structure SplitOctonion where
+  a : ℤ
+  v : Vec3
+  w : Vec3
+  b : ℤ
+
+namespace SplitOctonion
+
+instance : Zero SplitOctonion := ⟨⟨0, 0, 0, 0⟩⟩
+instance : One SplitOctonion := ⟨⟨1, 0, 0, 1⟩⟩
+instance : Add SplitOctonion :=
+  ⟨fun X Y => ⟨X.a + Y.a, X.v + Y.v, X.w + Y.w, X.b + Y.b⟩⟩
+instance : Sub SplitOctonion :=
+  ⟨fun X Y => ⟨X.a - Y.a, X.v - Y.v, X.w - Y.w, X.b - Y.b⟩⟩
+instance : Neg SplitOctonion :=
+  ⟨fun X => ⟨-X.a, -X.v, -X.w, -X.b⟩⟩
+
+instance : Mul SplitOctonion :=
+  ⟨fun X Y =>
+    { a := X.a * Y.a + Vec3.dot X.v Y.w
+      v := ⟨X.a * Y.v.x + Y.b * X.v.x - (Vec3.cross X.w Y.w).x,
+           X.a * Y.v.y + Y.b * X.v.y - (Vec3.cross X.w Y.w).y,
+           X.a * Y.v.z + Y.b * X.v.z - (Vec3.cross X.w Y.w).z⟩
+      w := ⟨Y.a * X.w.x + X.b * Y.w.x + (Vec3.cross X.v Y.v).x,
+           Y.a * X.w.y + X.b * Y.w.y + (Vec3.cross X.v Y.v).y,
+           Y.a * X.w.z + X.b * Y.w.z + (Vec3.cross X.v Y.v).z⟩
+      b := Vec3.dot X.w Y.v + X.b * Y.b }⟩
+
+/-- Symmetrized anticommutator `{X, Y} = X Y + Y X`. -/
+def anticomm (X Y : SplitOctonion) : SplitOctonion := X * Y + Y * X
+
+/-- Antisymmetric commutator `[X, Y] = X Y - Y X`. -/
+def comm (X Y : SplitOctonion) : SplitOctonion := X * Y - Y * X
+
+/-- Non-associative associator `[X, Y, Z] = (X Y) Z - X (Y Z)`. -/
+def associator (X Y Z : SplitOctonion) : SplitOctonion :=
+  (X * Y) * Z - X * (Y * Z)
+
+/-- Cyclic Jacobiator `J(X, Y, Z) = [X, [Y, Z]] + [Y, [Z, X]] + [Z, [X, Y]]`. -/
+def jacobiator (X Y Z : SplitOctonion) : SplitOctonion :=
+  comm X (comm Y Z) + comm Y (comm Z X) + comm Z (comm X Y)
+
+/-!
+## 2. Archetype 1: Exact Realization of Equations (8)–(13) & Page 4 Multiplication Table
+-/
+
+/-- Singlet idempotent `u_0 = (1 + i e_7)/2 = [[1, 0], [0, 0]]` (Eq. 8). -/
+def u0 : SplitOctonion := ⟨1, 0, 0, 0⟩
+
+/-- Singlet conjugate idempotent `u_0^* = (1 - i e_7)/2 = [[0, 0], [0, 1]]` (Eq. 8). -/
+def u0Star : SplitOctonion := ⟨0, 0, 0, 1⟩
+
+/-- The `SU(3)_c`-invariant Cartan grading element `i e_7 = u_0 - u_0^* = [[1, 0], [0, -1]]`. -/
+def ie7 : SplitOctonion := ⟨1, 0, 0, -1⟩
+
+/-- Color triplet quark split-octonion units `u_j` (`j ∈ Fin 3`, Eq. 9). -/
+def u (j : Fin 3) : SplitOctonion :=
+  match j with
+  | 0 => ⟨0, ⟨1, 0, 0⟩, 0, 0⟩
+  | 1 => ⟨0, ⟨0, 1, 0⟩, 0, 0⟩
+  | 2 => ⟨0, ⟨0, 0, 1⟩, 0, 0⟩
+
+/-- Color anti-triplet antiquark split-octonion units `u_j^*` (`j ∈ Fin 3`, Eq. 9). -/
+def uStar (j : Fin 3) : SplitOctonion :=
+  match j with
+  | 0 => ⟨0, 0, ⟨0, 0, 0⟩, 0⟩
+  | 1 => ⟨0, 0, ⟨0, -1, 0⟩, 0⟩
+  | 2 => ⟨0, 0, ⟨0, 0, -1⟩, 0⟩
+
+theorem page4_split_octonion_multiplication_table :
+    (u0 * u0 = (u0 : SplitOctonion) ∧
+     u0Star * u0Star = (u0Star : SplitOctonion) ∧
+     u0 * u0Star = (0 : SplitOctonion) ∧
+     u0Star * u0 = (0 : SplitOctonion) ∧
+     u0 + u0Star = (1 : SplitOctonion)) ∧
+    (∀ j : Fin 3,
+      u0 * u j = u j ∧ u j * u0Star = u j ∧
+      u0Star * u j = (0 : SplitOctonion) ∧ u j * u0 = (0 : SplitOctonion) ∧
+      u0Star * uStar j = uStar j ∧ uStar j * u0 = uStar j ∧
+      u0 * uStar j = (0 : SplitOctonion) ∧ uStar j * u0Star = (0 : SplitOctonion)) ∧
+    (u 0 * u 1 = (uStar 2 : SplitOctonion) ∧ u 1 * u 0 = -uStar 2 ∧
+     u 1 * u 2 = (uStar 0 : SplitOctonion) ∧ u 2 * u 1 = -uStar 0 ∧
+     u 2 * u 0 = (uStar 1 : SplitOctonion) ∧ u 0 * u 2 = -uStar 1 ∧
+     uStar 0 * uStar 1 = (u 2 : SplitOctonion) ∧
+     uStar 1 * uStar 2 = (u 0 : SplitOctonion) ∧
+     uStar 2 * uStar 0 = (u 1 : SplitOctonion)) ∧
+    (∀ i : Fin 3, u i * uStar i = -u0 ∧ uStar i * u i = -u0Star) ∧
+    (∀ i j : Fin 3, i ≠ j → u i * uStar j = (0 : SplitOctonion) ∧ uStar i * u j = (0 : SplitOctonion)) := by
+  have h_u0_sq : u0 * u0 = u0 := by
+    dsimp [u0, SplitOctonion, Vec3.dot, Vec3.cross]
+    ext <;> norm_num
+  
+  have h_u0Star_sq : u0Star * u0Star = u0Star := by
+    dsimp [u0Star, SplitOctonion, Vec3.dot, Vec3.cross]
+    ext <;> norm_num
+  
+  have h_u0_u0Star_zero : u0 * u0Star = (0 : SplitOctonion) := by
+    dsimp [u0, u0Star, SplitOctonion, Vec3.dot, Vec3.cross]
+    ext <;> norm_num
+  
+  have h_u0Star_u0_zero : u0Star * u0 = (0 : SplitOctonion) := by
+    dsimp [u0Star, u0, SplitOctonion, Vec3.dot, Vec3.cross]
+    ext <;> norm_num
+  
+  have h_u0_plus_u0Star : u0 + u0Star = (1 : SplitOctonion) := by
+    dsimp [u0, u0Star, SplitOctonion]
+    ext <;> norm_num
+  
+  have h_u0_times_u : ∀ j : Fin 3, u0 * u j = u j := by
+    intro j
+    dsimp [u0, SplitOctonion, Vec3.dot, Vec3.cross]
+    cases j <;> ext <;> norm_num
+  
+  have h_u_times_u0Star : ∀ j : Fin 3, u j * u0Star = u j := by
+    intro j
+    dsimp [u0Star, SplitOctonion, Vec3.dot, Vec3.cross]
+    cases j <;> ext <;> norm_num
+  
+  have h_u0Star_times_u_zero : ∀ j : Fin 3, u0Star * u j = (0 : SplitOctonion) := by
+    intro j
+    dsimp [u0Star, SplitOctonion, Vec3.dot, Vec3.cross]
+    cases j <;> ext <;> norm_num
+  
+  have h_u_times_u0_zero : ∀ j : Fin 3, u j * u0 = (0 : SplitOctonion) := by
+    intro j
+    dsimp [u0, SplitOctonion, Vec3.dot, Vec3.cross]
+    cases j <;> ext <;> norm_num
+  
+  have h_u0Star_times_uStar : ∀ j : Fin 3, u0Star * uStar j = uStar j := by
+    intro j
+    dsimp [u0Star, SplitOctonion, Vec3.dot, Vec3.cross]
+    cases j <;> ext <;> norm_num
+  
+  have h_uStar_times_u0 : ∀ j : Fin 3, uStar j * u0 = uStar j := by
+    intro j
+    dsimp [u0, SplitOctonion, Vec3.dot, Vec3.cross]
+    cases j <;> ext <;> norm_num
+  
+  have h_u0_times_uStar_zero : ∀ j : Fin 3, u0 * uStar j = (0 : SplitOctonion) := by
+    intro j
+    dsimp [u0, SplitOctonion, Vec3.dot, Vec3.cross]
+    cases j <;> ext <;> norm_num
+  
+  have h_uStar_times_u0Star_zero : ∀ j : Fin 3, uStar j * u0Star = (0 : SplitOctonion) := by
+    intro j
+    dsimp [u0Star, SplitOctonion, Vec3.dot, Vec3.cross]
+    cases j <;> ext <;> norm_num
+  
+  have h_u0_u1_uStar2 : u 0 * u 1 = uStar 2 := by
+    dsimp [u, SplitOctonion, Vec3.dot, Vec3.cross]
+    ext <;> norm_num
+  
+  have h_u1_u0_neg_uStar2 : u 1 * u 0 = -uStar 2 := by
+    dsimp [u, uStar, SplitOctonion, Vec3.dot, Vec3.cross]
+    ext <;> norm_num
+  
+  have h_u1_u2_uStar0 : u 1 * u 2 = uStar 0 := by
+    dsimp [u, SplitOctonion, Vec3.dot, Vec3.cross]
+    ext <;> norm_num
+  
+  have h_u2_u1_neg_uStar0 : u 2 * u 1 = -uStar 0 := by
+    dsimp [u, uStar, SplitOctonion, Vec3.dot, Vec3.cross]
+    ext <;> norm_num
+  
+  have h_u2_u0_uStar1 : u 2 * u 0 = uStar 1 := by
+    dsimp [u, SplitOctonion, Vec3.dot, Vec3.cross]
+    ext <;> norm_num
+  
+  have h_u0_u2_neg_uStar1 : u 0 * u 2 = -uStar 1 := by
+    dsimp [u, uStar, SplitOctonion, Vec3.dot, Vec3.cross]
+    ext <;> norm_num
+  
+  have h_uStar0_uStar1_u2 : uStar 0 * uStar 1 = u 2 := by
+    dsimp [u, uStar, SplitOctonion, Vec3.dot, Vec3.cross]
+    ext <;> norm_num
+  
+  have h_uStar1_uStar2_u0 : uStar 1 * uStar 2 = u 0 := by
+    dsimp [u, uStar, SplitOctonion, Vec3.dot, Vec3.cross]
+    ext <;> norm_num
+  
+  have h_uStar2_uStar0_u1 : uStar 2 * uStar 0 = u 1 := by
+    dsimp [u, uStar, SplitOctonion, Vec3.dot, Vec3.cross]
+    ext <;> norm_num
+  
+  have h_u_uStar_same : ∀ i : Fin 3, u i * uStar i = -u0 := by
+    intro i
+    dsimp [u, uStar, u0, SplitOctonion, Vec3.dot, Vec3.cross]
+    cases i <;> ext <;> norm_num
+  
+  have h_uStar_u_same : ∀ i : Fin 3, uStar i * u i = -u0Star := by
+    intro i
+    dsimp [uStar, u, u0Star, SplitOctonion, Vec3.dot, Vec3.cross]
+    cases i <;> ext <;> norm_num
+  
+  have h_u_uStar_diff : ∀ i j : Fin 3, i ≠ j → u i * uStar j = (0 : SplitOctonion) := by
+    intro i j hij
+    dsimp [u, uStar, SplitOctonion, Vec3.dot, Vec3.cross]
+    cases i <;> cases j <;>
+      (try { contradiction }) <;>
+      (try { ext <;> norm_num })
+  
+  have h_uStar_u_diff : ∀ i j : Fin 3, i ≠ j → uStar i * u j = (0 : SplitOctonion) := by
+    intro i j hij
+    dsimp [uStar, u, SplitOctonion, Vec3.dot, Vec3.cross]
+    cases i <;> cases j <;>
+      (try { contradiction }) <;>
+      (try { ext <;> norm_num })
+  
+  constructor
+  · -- Part 1: u0*u0=u0 ∧ u0Star*u0Star=u0Star ∧ u0*u0Star=0 ∧ u0Star*u0=0 ∧ u0+u0Star=1
+    constructor
+    exact h_u0_sq
+    constructor
+    exact h_u0Star_sq
+    constructor
+    exact h_u0_u0Star_zero
+    constructor
+    exact h_u0Star_u0_zero
+    exact h_u0_plus_u0Star
+  · constructor
+    · -- Part 2: ∀ j part (8 conjuncts)
+      intro j
+      constructor
+      exact h_u0_times_u j
+      constructor
+      exact h_u_times_u0Star j
+      constructor
+      exact h_u0Star_times_u_zero j
+      constructor
+      exact h_u_times_u0_zero j
+      constructor
+      exact h_u0Star_times_uStar j
+      constructor
+      exact h_uStar_times_u0 j
+      constructor
+      exact h_u0_times_uStar_zero j
+      exact h_uStar_times_u0Star_zero j
+    · constructor
+      · -- Part 3: specific u_i * u_j equalities (9 conjuncts)
+        constructor
+        exact h_u0_u1_uStar2
+        constructor
+        exact h_u1_u0_neg_uStar2
+        constructor
+        exact h_u1_u2_uStar0
+        constructor
+        exact h_u2_u1_neg_uStar0
+        constructor
+        exact h_u2_u0_uStar1
+        constructor
+        exact h_u0_u2_neg_uStar1
+        constructor
+        exact h_uStar0_uStar1_u2
+        constructor
+        exact h_uStar1_uStar2_u0
+        exact h_uStar2_uStar0_u1
+      · constructor
+        · -- Part 4: ∀ i part (2 conjuncts)
+          intro i
+          constructor
+          exact h_u_uStar_same i
+          exact h_uStar_u_same i
+        · -- Part 5: ∀ i j, i≠j part (2 conjuncts)
+          intro i j hij
+          constructor
+          exact h_u_uStar_diff i j hij
+          exact h_uStar_u_diff i j hij
+
+end SplitOctonion
+end CattoGurseyOctonionicStandalone

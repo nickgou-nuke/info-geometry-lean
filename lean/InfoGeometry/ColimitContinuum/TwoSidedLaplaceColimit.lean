@@ -12,49 +12,51 @@ import InfoGeometry.Core.DualSeedPeirce
 
 namespace InfoGeometry.ColimitContinuum.TwoSidedLaplaceColimit
 
-open InfoGeometry.Canonical
+open InfoGeometry.Canonical.TwoSidedCayleyDicksonLaplaceKernel
 open InfoGeometry.Core.DualSeedPeirce
 open InfoGeometry.Core.DualSeedPeirce.IsDualSeedPair
 
-variable {A_n A_{n+1} : Type*} [Ring A_n] [Ring A_{n+1}] [Algebra ℝ A_n] [Algebra ℝ A_{n+1}]
+variable {A B : Type*} [Ring A] [Ring B] [Algebra ℝ A] [Algebra ℝ B]
 
 /-- Bonding maps commute with the two-sided hyperbolic Laplace kernel
     when they preserve the algebra structure. -/
 theorem laplace_colimit_bonding_commutes
-    {ι_n : A_n → A_{n+1}} (hι : ∀ (x y : A_n), ι_n (x * y) = ι_n x * ι_n y)
-    (hι_add : ∀ (x y : A_n), ι_n (x + y) = ι_n x + ι_n y)
-    (hι_smul : ∀ (r : ℝ) (x : A_n), ι_n (r • x) = r • ι_n x)
-    {d_n B_n : A_n} {d_{n+1} B_{n+1} : A_{n+1}}
-    (h_n : IsDualSeedPair d_n B_n) (h_{n+1} : IsDualSeedPair d_{n+1} B_{n+1})
-    (h_compat_d : ι_n d_n = d_{n+1}) (h_compat_B : ι_n B_n = B_{n+1})
-    {λ_L μ_L λ_R μ_R : ℝ} {X : A_n} :
-    ι_n (twoSidedHyperbolicLaplace λ_L μ_L λ_R μ_R d_n B_n X) =
-      twoSidedHyperbolicLaplace λ_L μ_L λ_R μ_R d_{n+1} B_{n+1} (ι_n X) := by
-  simp [twoSidedHyperbolicLaplace, hyperbolicKernel]
-  -- polePlus d B = d * B (exactSupport)
-  have hp : ι_n (polePlus d_n B_n) = polePlus d_{n+1} B_{n+1} := by
-    show ι_n (d_n * B_n) = d_{n+1} * B_{n+1}
-    rw [hι d_n B_n, h_compat_d, h_compat_B]
-  have hq : ι_n (poleMinus d_n B_n) = poleMinus d_{n+1} B_{n+1} := by
-    show ι_n (B_n * d_n) = B_{n+1} * d_{n+1}
-    rw [hι B_n d_n, h_compat_B, h_compat_d]
-  rw [hι_add (λ_L • polePlus d_n B_n) (μ_L • poleMinus d_n B_n)]
-  rw [hι_smul λ_L (polePlus d_n B_n), hι_smul μ_L (poleMinus d_n B_n)]
-  rw [hp, hq]
-  -- Now handle the right side and the middle X
-  have h_mul : ι_n (hyperbolicKernel λ_L μ_L d_n B_n * X * hyperbolicKernel λ_R μ_R d_n B_n) =
-      (λ_L • polePlus d_{n+1} B_{n+1} + μ_L • poleMinus d_{n+1} B_{n+1}) *
-      ι_n X *
-      (λ_R • polePlus d_{n+1} B_{n+1} + μ_R • poleMinus d_{n+1} B_{n+1}) := by
-    rw [hι (hyperbolicKernel λ_L μ_L d_n B_n * X) (hyperbolicKernel λ_R μ_R d_n B_n)]
-    rw [hι (hyperbolicKernel λ_L μ_L d_n B_n) X]
-    rw [hι_add (λ_L • polePlus d_n B_n) (μ_L • poleMinus d_n B_n)]
-    rw [hι_smul λ_L (polePlus d_n B_n), hι_smul μ_L (poleMinus d_n B_n)]
-    rw [hp, hq]
-    rw [hι_add (λ_R • polePlus d_n B_n) (μ_R • poleMinus d_n B_n)]
-    rw [hι_smul λ_R (polePlus d_n B_n), hι_smul μ_R (poleMinus d_n B_n)]
-    rw [hp, hq]
-    rfl
-  exact h_mul
+    {ι_n : A → B} (hι : ∀ (x y : A), ι_n (x * y) = ι_n x * ι_n y)
+    (hι_add : ∀ (x y : A), ι_n (x + y) = ι_n x + ι_n y)
+    (hι_smul : ∀ (r : ℝ) (x : A), ι_n (r • x) = r • ι_n x)
+    {dA BA : A} {dB BB : B}
+    (_ : IsDualSeedPair dA BA) (_ : IsDualSeedPair dB BB)
+    (h_compat_d : ι_n dA = dB) (h_compat_B : ι_n BA = BB)
+    {lamL muL lamR muR : ℝ} {X : A} :
+    ι_n (twoSidedHyperbolicLaplace lamL muL lamR muR dA BA X) =
+      twoSidedHyperbolicLaplace lamL muL lamR muR dB BB (ι_n X) := by
+  have hp : ι_n (polePlus dA BA) = polePlus dB BB := by
+    show ι_n (dA * BA) = dB * BB
+    rw [hι dA BA, h_compat_d, h_compat_B]
+  have hq : ι_n (poleMinus dA BA) = poleMinus dB BB := by
+    show ι_n (BA * dA) = BB * dB
+    rw [hι BA dA, h_compat_B, h_compat_d]
+  have h₁ : ι_n ((lamL • polePlus dA BA + muL • poleMinus dA BA) * X * (lamR • polePlus dA BA + muR • poleMinus dA BA)) =
+      (lamL • polePlus dB BB + muL • poleMinus dB BB) * ι_n X * (lamR • polePlus dB BB + muR • poleMinus dB BB) := by
+    calc
+      ι_n ((lamL • polePlus dA BA + muL • poleMinus dA BA) * X * (lamR • polePlus dA BA + muR • poleMinus dA BA))
+        = ι_n ((lamL • polePlus dA BA + muL • poleMinus dA BA) * X) * ι_n (lamR • polePlus dA BA + muR • poleMinus dA BA) := by
+          rw [hι]
+        _ = (ι_n (lamL • polePlus dA BA + muL • poleMinus dA BA) * ι_n X) * ι_n (lamR • polePlus dA BA + muR • poleMinus dA BA) := by
+          rw [hι]
+        _ = (ι_n (lamL • polePlus dA BA) + ι_n (muL • poleMinus dA BA)) * ι_n X * (ι_n (lamR • polePlus dA BA) + ι_n (muR • poleMinus dA BA)) := by
+          rw [hι_add, hι_add]
+        _ = (lamL • ι_n (polePlus dA BA) + muL • ι_n (poleMinus dA BA)) * ι_n X * (lamR • ι_n (polePlus dA BA) + muR • ι_n (poleMinus dA BA)) := by
+          rw [hι_smul, hι_smul, hι_smul, hι_smul]
+        _ = (lamL • polePlus dB BB + muL • poleMinus dB BB) * ι_n X * (lamR • polePlus dB BB + muR • poleMinus dB BB) := by
+          simp [hp, hq]
+  calc
+    ι_n (twoSidedHyperbolicLaplace lamL muL lamR muR dA BA X)
+      = ι_n ((lamL • polePlus dA BA + muL • poleMinus dA BA) * X * (lamR • polePlus dA BA + muR • poleMinus dA BA)) := by
+        simp [twoSidedHyperbolicLaplace, hyperbolicKernel]
+      _ = (lamL • polePlus dB BB + muL • poleMinus dB BB) * ι_n X * (lamR • polePlus dB BB + muR • poleMinus dB BB) := by
+        rw [h₁]
+      _ = twoSidedHyperbolicLaplace lamL muL lamR muR dB BB (ι_n X) := by
+        simp [twoSidedHyperbolicLaplace, hyperbolicKernel]
 
 end InfoGeometry.ColimitContinuum.TwoSidedLaplaceColimit

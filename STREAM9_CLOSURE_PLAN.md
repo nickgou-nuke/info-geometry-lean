@@ -411,11 +411,11 @@ Each gap is complete when:
 |-----|-------|--------|-----------|--------------|
 | 1 | Dual Seed Pair → Cl(1,1) Atom | `closed` | `DualSeedPeirceCl11AtomBridge.lean` | None |
 | 2 | Native Zorn Middle Moufang | `closed` | `NativeZornMiddleMoufang.lean` | Gap 1 (recommended) |
-| 3 | Two-Sided Laplace = KMS / Modular Flow | `open` | `TwoSidedLaplaceModularFlowBridge.lean` | Gap 1 |
-| 4 | Tensor Tower Colimit of Kernels | `open` | `TwoSidedLaplaceColimit.lean` | Gap 3 |
-| 5 | Dual Seed Pair → Freudenthal Cubic Jordan | `open` | `DualSeedPairFreudenthalEmbedding.lean` | Gap 1 |
-| 6 | Cuntz Boundary ↔ Dual Seed Pair | `open` | `CuntzDualSeedPairBridge.lean` | Gap 1 (recommended) |
-| 7 | Split Cl(4,4) Triality ↔ Moufang | `open` | `SplitCl44OctonionMoufangBridge.lean` | Gap 2 |
+| 3 | Two-Sided Laplace = KMS / Modular Flow | `closed` | `TwoSidedLaplaceModularFlowBridge.lean` | Gap 1 |
+| 4 | Tensor Tower Colimit of Kernels | `closed` | `TwoSidedLaplaceColimit.lean` | Gap 3 |
+| 5 | Dual Seed Pair → Freudenthal Cubic Jordan | `in_progress (obstruction documented)` | `DualSeedPairFreudenthalEmbedding.lean` | Gap 1 |
+| 6 | Cuntz Boundary ↔ Dual Seed Pair | `closed` | `CuntzDualSeedPairBridge.lean` | Gap 1 (recommended) |
+| 7 | Split Cl(4,4) Triality ↔ Moufang | `closed` | `SplitCl44OctonionMoufangBridge.lean` | Gap 2 |
 
 **Stream 9 base module:** `TwoSidedCayleyDicksonLaplaceKernel.lean` — **`closed`** (kernel-checked, committed).
 

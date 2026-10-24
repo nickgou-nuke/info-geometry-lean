@@ -14,7 +14,6 @@ namespace InfoGeometry.Canonical.HyperbolicEllipticKmsBridgeAudit
 
 open Matrix InfoGeometry.Core.DualSeedPeirce InfoGeometry.Core.PeirceRotor
 open InfoGeometry.Core.HyperbolicPeirceRotor
-open InfoGeometry.Canonical.DeBruijnRotorAlternationCycle
 open InfoGeometry.Canonical.HyperbolicEllipticKmsBridge
 open InfoGeometry.Singular.MoorePenrose
 open InfoGeometry.Core.DiracSuperalgebra

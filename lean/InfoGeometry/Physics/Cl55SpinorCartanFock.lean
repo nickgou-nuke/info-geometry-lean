@@ -774,6 +774,387 @@ theorem isospin_and_pairing_mutual_commutation {p n : Fin 5} (hpn : p ≠ n) :
     rw [bracket_add_left, E_bracket, E_bracket]
     simp [hpn, Ne.symm hpn]
 
+/-! ## 7. Bi-Peirce Ladder Factorizations, Casimir Partition, and $\mathrm{Pin}_+(5,5)$ Majorana Duality -/
+
+/-- Odd-fermion active isospin carrier $\Delta_{\mathrm{iso}}(p,n) = \Pi_+(p,n) + \Pi_-(p,n)$. -/
+def isospinCarrier (p n : Fin 5) : MatStage 5 :=
+  isoProjPlus p n + isoProjMinus p n
+
+/-- Even-fermion active pairing carrier $\Delta_{\mathrm{pair}}(p,n) = \Pi_{\mathrm{pair}}^+(p,n) + \Pi_{\mathrm{pair}}^-(p,n)$. -/
+def pairingCarrier (p n : Fin 5) : MatStage 5 :=
+  pairProjPlus p n + pairProjMinus p n
+
+/-- Full quadratic Casimir of $\mathfrak{sl}_2^{\mathrm{iso}}$:
+$C_2^{\mathrm{iso}} = \tau_3^2 + 2(\tau_+ \tau_- + \tau_- \tau_+)$. -/
+def isospinCasimir (p n : Fin 5) : MatStage 5 :=
+  isospinCartan p n * isospinCartan p n +
+    (2 : ℝ) • (isospinPlus p n * isospinMinus p n + isospinMinus p n * isospinPlus p n)
+
+/-- Full quadratic Casimir of $\mathfrak{sl}_2^{\mathrm{pair}}$:
+$C_2^{\mathrm{pair}} = (2 K_0)^2 + 2(K_+ K_- + K_- K_+)$. -/
+def pairingCasimir (p n : Fin 5) : MatStage 5 :=
+  pairingCartan p n * pairingCartan p n +
+    (2 : ℝ) • (pairingPlus p n * pairingMinus p n + pairingMinus p n * pairingPlus p n)
+
+/-- Single-mode $\mathrm{Pin}_+(5,5)$ Majorana reflection $\Gamma_n = e_n + f_n$. -/
+abbrev majoranaPinReflection (n : Fin 5) : MatStage 5 := gammaPlus n
+
+/-- Creation operators anticommute in multiplicative form $e_a e_b = - e_b e_a$. -/
+theorem e_mul_e_swap (a b : Fin 5) : e a * e b = -(e b * e a) :=
+  eq_neg_of_add_eq_zero_left (e_anticomm a b)
+
+/-- Annihilation operators anticommute in multiplicative form $f_a f_b = - f_b f_a$. -/
+theorem f_mul_f_swap (a b : Fin 5) : f a * f b = -(f b * f a) :=
+  eq_neg_of_add_eq_zero_left (f_anticomm a b)
+
+/-- Distinct creation and annihilation operators anticommute: $e_a f_b = - f_b e_a$ for $a \neq b$. -/
+theorem e_mul_f_swap_ne {a b : Fin 5} (hab : a ≠ b) : e a * f b = -(f b * e a) := by
+  have h := ef_car a b
+  simp [hab] at h
+  exact eq_neg_of_add_eq_zero_left h
+
+/-- Distinct annihilation and creation operators anticommute: $f_b e_a = - e_a f_b$ for $a \neq b$. -/
+theorem f_mul_e_swap_ne {a b : Fin 5} (hab : a ≠ b) : f b * e a = -(e a * f b) := by
+  have h := ef_car a b
+  simp [hab] at h
+  exact eq_neg_of_add_eq_zero_right h
+
+/-- Occupation projector $N_n$ commutes with $f_p$ for $p \neq n$. -/
+theorem modeOccupied_comm_f_ne {p n : Fin 5} (hpn : p ≠ n) :
+    modeOccupied n * f p = f p * modeOccupied n := by
+  dsimp [modeOccupied]
+  have h1 : f n * f p = -(f p * f n) := f_mul_f_swap n p
+  have h2 : e n * f p = -(f p * e n) := e_mul_f_swap_ne (Ne.symm hpn)
+  calc
+    (e n * f n) * f p = e n * (f n * f p) := by noncomm_ring
+    _ = -(e n * f p) * f n := by rw [h1]; noncomm_ring
+    _ = f p * (e n * f n) := by rw [h2]; noncomm_ring
+
+/-- Vacancy projector $1 - N_n$ commutes with $f_p$ for $p \neq n$. -/
+theorem modeVacant_comm_f_ne {p n : Fin 5} (hpn : p ≠ n) :
+    modeVacant n * f p = f p * modeVacant n := by
+  have hvac : modeVacant n = 1 - modeOccupied n :=
+    eq_sub_of_add_eq' (modeOccupied_add_modeVacant n)
+  rw [hvac]
+  calc
+    (1 - modeOccupied n) * f p = f p - modeOccupied n * f p := by noncomm_ring
+    _ = f p - f p * modeOccupied n := by rw [modeOccupied_comm_f_ne hpn]
+    _ = f p * (1 - modeOccupied n) := by noncomm_ring
+
+/-- Occupation projector $N_p$ commutes with $e_n$ for $p \neq n$. -/
+theorem modeOccupied_comm_e_ne {p n : Fin 5} (hpn : p ≠ n) :
+    modeOccupied p * e n = e n * modeOccupied p := by
+  dsimp [modeOccupied]
+  have h1 : f p * e n = -(e n * f p) := f_mul_e_swap_ne (Ne.symm hpn)
+  have h2 : e p * e n = -(e n * e p) := e_mul_e_swap p n
+  calc
+    (e p * f p) * e n = e p * (f p * e n) := by noncomm_ring
+    _ = -(e p * e n) * f p := by rw [h1]; noncomm_ring
+    _ = e n * (e p * f p) := by rw [h2]; noncomm_ring
+
+/-- Vacancy projector $1 - N_p$ commutes with $e_n$ for $p \neq n$. -/
+theorem modeVacant_comm_e_ne {p n : Fin 5} (hpn : p ≠ n) :
+    modeVacant p * e n = e n * modeVacant p := by
+  have hvac : modeVacant p = 1 - modeOccupied p :=
+    eq_sub_of_add_eq' (modeOccupied_add_modeVacant p)
+  rw [hvac]
+  calc
+    (1 - modeOccupied p) * e n = e n - modeOccupied p * e n := by noncomm_ring
+    _ = e n - e n * modeOccupied p := by rw [modeOccupied_comm_e_ne hpn]
+    _ = e n * (1 - modeOccupied p) := by noncomm_ring
+
+/-- For distinct modes $p \neq n$, $\tau_+(p,n) = e_p f_n$. -/
+theorem isospinPlus_eq_e_mul_f {p n : Fin 5} (hpn : p ≠ n) :
+    isospinPlus p n = e p * f n := by
+  dsimp [isospinPlus, E, e, f]
+  simp [hpn]
+
+/-- For distinct modes $p \neq n$, $\tau_-(p,n) = e_n f_p$. -/
+theorem isospinMinus_eq_e_mul_f {p n : Fin 5} (hpn : p ≠ n) :
+    isospinMinus p n = e n * f p := by
+  dsimp [isospinMinus, E, e, f]
+  simp [Ne.symm hpn]
+
+/-- **Isospin Ladder Factorization ($\tau_+ \tau_- = \Pi_+$)**:
+For distinct modes $p \neq n$, $\tau_+(p,n) \tau_-(p,n) = \Pi_+(p,n) = N_p (1 - N_n)$. -/
+theorem isospinPlus_mul_isospinMinus {p n : Fin 5} (hpn : p ≠ n) :
+    isospinPlus p n * isospinMinus p n = isoProjPlus p n := by
+  rw [isospinPlus_eq_e_mul_f hpn, isospinMinus_eq_e_mul_f hpn]
+  dsimp [isoProjPlus, modeOccupied]
+  calc
+    (e p * f n) * (e n * f p) = e p * ((f n * e n) * f p) := by noncomm_ring
+    _ = e p * (modeVacant n * f p) := rfl
+    _ = e p * (f p * modeVacant n) := by rw [modeVacant_comm_f_ne hpn]
+    _ = (e p * f p) * modeVacant n := by noncomm_ring
+
+/-- **Reverse Isospin Ladder Factorization ($\tau_- \tau_+ = \Pi_-$)**:
+For distinct modes $p \neq n$, $\tau_-(p,n) \tau_+(p,n) = \Pi_-(p,n) = (1 - N_p) N_n$. -/
+theorem isospinMinus_mul_isospinPlus {p n : Fin 5} (hpn : p ≠ n) :
+    isospinMinus p n * isospinPlus p n = isoProjMinus p n := by
+  rw [isospinPlus_eq_e_mul_f hpn, isospinMinus_eq_e_mul_f hpn]
+  dsimp [isoProjMinus, modeOccupied]
+  calc
+    (e n * f p) * (e p * f n) = (e n * (f p * e p)) * f n := by noncomm_ring
+    _ = (e n * modeVacant p) * f n := rfl
+    _ = (modeVacant p * e n) * f n := by rw [← modeVacant_comm_e_ne hpn]
+    _ = modeVacant p * (e n * f n) := by noncomm_ring
+
+/-- **Pairing Ladder Factorization ($K_+ K_- = \Pi_{\mathrm{pair}}^+$)**:
+For distinct modes $p \neq n$, $K_+(p,n) K_-(p,n) = \Pi_{\mathrm{pair}}^+(p,n) = N_p N_n$. -/
+theorem pairingPlus_mul_pairingMinus {p n : Fin 5} (hpn : p ≠ n) :
+    pairingPlus p n * pairingMinus p n = pairProjPlus p n := by
+  dsimp [pairingPlus, pairingMinus, pairProjPlus, modeOccupied]
+  calc
+    (e p * e n) * (f n * f p) = e p * ((e n * f n) * f p) := by noncomm_ring
+    _ = e p * (modeOccupied n * f p) := rfl
+    _ = e p * (f p * modeOccupied n) := by rw [modeOccupied_comm_f_ne hpn]
+    _ = (e p * f p) * modeOccupied n := by noncomm_ring
+
+/-- **Reverse Pairing Ladder Factorization ($K_- K_+ = \Pi_{\mathrm{pair}}^-$)**:
+For distinct modes $p \neq n$, $K_-(p,n) K_+(p,n) = \Pi_{\mathrm{pair}}^-(p,n) = (1 - N_p)(1 - N_n)$. -/
+theorem pairingMinus_mul_pairingPlus {p n : Fin 5} (hpn : p ≠ n) :
+    pairingMinus p n * pairingPlus p n = pairProjMinus p n := by
+  dsimp [pairingPlus, pairingMinus, pairProjMinus, modeVacant]
+  calc
+    (f n * f p) * (e p * e n) = (f n * (f p * e p)) * e n := by noncomm_ring
+    _ = (f n * modeVacant p) * e n := rfl
+    _ = (modeVacant p * f n) * e n := by rw [← modeVacant_comm_f_ne (Ne.symm hpn)]
+    _ = modeVacant p * (f n * e n) := by noncomm_ring
+
+/-- **Associative Cross-Sector Annihilation (`isospin_mul_pairing_eq_zero`)**:
+Every associative product of an isospin ladder seed ($\tau_\pm$) with a pairing ladder seed ($K_\pm$)
+vanishes identically! -/
+theorem isospin_mul_pairing_eq_zero {p n : Fin 5} (hpn : p ≠ n) :
+    isospinPlus p n * pairingPlus p n = 0 ∧
+    isospinPlus p n * pairingMinus p n = 0 ∧
+    isospinMinus p n * pairingPlus p n = 0 ∧
+    isospinMinus p n * pairingMinus p n = 0 := by
+  rw [isospinPlus_eq_e_mul_f hpn, isospinMinus_eq_e_mul_f hpn]
+  dsimp [pairingPlus, pairingMinus]
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · have hswap : f n * e p = -(e p * f n) := f_mul_e_swap_ne hpn
+    calc
+      (e p * f n) * (e p * e n) = e p * (f n * e p) * e n := by noncomm_ring
+      _ = -(e p * e p) * f n * e n := by rw [hswap]; noncomm_ring
+      _ = 0 := by rw [e_sq p, neg_zero, zero_mul, zero_mul]
+  · calc
+      (e p * f n) * (f n * f p) = e p * (f n * f n) * f p := by noncomm_ring
+      _ = 0 := by rw [f_sq n, mul_zero, zero_mul]
+  · have hswap1 : e p * e n = -(e n * e p) := e_mul_e_swap p n
+    have hswap2 : f p * e n = -(e n * f p) := f_mul_e_swap_ne (Ne.symm hpn)
+    calc
+      (e n * f p) * (e p * e n) = -(e n * (f p * e n) * e p) := by rw [hswap1]; noncomm_ring
+      _ = (e n * e n) * f p * e p := by rw [hswap2]; noncomm_ring
+      _ = 0 := by rw [e_sq n, zero_mul, zero_mul]
+  · have hswap : f n * f p = -(f p * f n) := f_mul_f_swap n p
+    calc
+      (e n * f p) * (f n * f p) = -(e n * (f p * f p) * f n) := by rw [hswap]; noncomm_ring
+      _ = 0 := by rw [f_sq p, mul_zero, zero_mul, neg_zero]
+
+/-- Isospin and pairing active carriers resolve the $32 \times 32$ identity:
+$\Delta_{\mathrm{iso}} + \Delta_{\mathrm{pair}} = I_{32}$. -/
+theorem isospinCarrier_add_pairingCarrier (p n : Fin 5) :
+    isospinCarrier p n + pairingCarrier p n = 1 := by
+  dsimp [isospinCarrier, pairingCarrier]
+  calc
+    (isoProjPlus p n + isoProjMinus p n) + (pairProjPlus p n + pairProjMinus p n) =
+      isoProjPlus p n + isoProjMinus p n + pairProjPlus p n + pairProjMinus p n := by abel
+    _ = 1 := four_projector_sum p n
+
+/-- The square of the isospin Cartan generator equals the active isospin carrier:
+$\tau_3(p,n)^2 = \Delta_{\mathrm{iso}}(p,n)$. -/
+theorem isospinCartan_sq_eq_isospinCarrier (p n : Fin 5) :
+    isospinCartan p n * isospinCartan p n = isospinCarrier p n := by
+  rw [isospinCartan_eq_modeOccupied_sub]
+  dsimp [isospinCarrier, isoProjPlus, isoProjMinus]
+  have hvp : modeVacant p = 1 - modeOccupied p :=
+    eq_sub_of_add_eq' (modeOccupied_add_modeVacant p)
+  have hvn : modeVacant n = 1 - modeOccupied n :=
+    eq_sub_of_add_eq' (modeOccupied_add_modeVacant n)
+  rw [hvp, hvn]
+  calc
+    (modeOccupied p - modeOccupied n) * (modeOccupied p - modeOccupied n) =
+      modeOccupied p * modeOccupied p - modeOccupied p * modeOccupied n -
+      modeOccupied n * modeOccupied p + modeOccupied n * modeOccupied n := by noncomm_ring
+    _ = modeOccupied p - modeOccupied p * modeOccupied n -
+      modeOccupied p * modeOccupied n + modeOccupied n := by
+      rw [modeOccupied_idem p, modeOccupied_idem n, modeOccupied_comm n p]
+    _ = modeOccupied p * (1 - modeOccupied n) + (1 - modeOccupied p) * modeOccupied n := by
+      noncomm_ring
+
+/-- The square of the pairing Cartan generator equals the active pairing carrier:
+$(2 K_0(p,n))^2 = \Delta_{\mathrm{pair}}(p,n)$. -/
+theorem pairingCartan_sq_eq_pairingCarrier (p n : Fin 5) :
+    pairingCartan p n * pairingCartan p n = pairingCarrier p n := by
+  have hsum_sq := isospinCartan_sq_add_pairingCartan_sq p n
+  have hsum_car := isospinCarrier_add_pairingCarrier p n
+  rw [isospinCartan_sq_eq_isospinCarrier] at hsum_sq
+  calc
+    pairingCartan p n * pairingCartan p n =
+      1 - isospinCarrier p n := eq_sub_of_add_eq' hsum_sq
+    _ = pairingCarrier p n := (eq_sub_of_add_eq' hsum_car).symm
+
+/-- **Full $\mathfrak{sl}_2$ Casimir Partition of $3 \cdot I_{32}$ (`casimir_partition_of_three_one`)**:
+For distinct modes $p \neq n$:
+1. $C_2^{\mathrm{iso}}(p,n) = 3 \Delta_{\mathrm{iso}}(p,n)$,
+2. $C_2^{\mathrm{pair}}(p,n) = 3 \Delta_{\mathrm{pair}}(p,n)$,
+3. $C_2^{\mathrm{iso}}(p,n) + C_2^{\mathrm{pair}}(p,n) = 3 \cdot I_{32}$. -/
+theorem casimir_partition_of_three_one {p n : Fin 5} (hpn : p ≠ n) :
+    isospinCasimir p n = (3 : ℝ) • isospinCarrier p n ∧
+    pairingCasimir p n = (3 : ℝ) • pairingCarrier p n ∧
+    isospinCasimir p n + pairingCasimir p n = (3 : ℝ) • (1 : MatStage 5) := by
+  have hc_iso : isospinCasimir p n = (3 : ℝ) • isospinCarrier p n := by
+    dsimp [isospinCasimir]
+    rw [isospinCartan_sq_eq_isospinCarrier p n,
+        isospinPlus_mul_isospinMinus hpn, isospinMinus_mul_isospinPlus hpn]
+    change isospinCarrier p n + (2 : ℝ) • isospinCarrier p n = (3 : ℝ) • isospinCarrier p n
+    (match_scalars; norm_num)
+  have hc_pair : pairingCasimir p n = (3 : ℝ) • pairingCarrier p n := by
+    dsimp [pairingCasimir]
+    rw [pairingCartan_sq_eq_pairingCarrier p n,
+        pairingPlus_mul_pairingMinus hpn, pairingMinus_mul_pairingPlus hpn]
+    change pairingCarrier p n + (2 : ℝ) • pairingCarrier p n = (3 : ℝ) • pairingCarrier p n
+    (match_scalars; norm_num)
+  have htot : isospinCasimir p n + pairingCasimir p n = (3 : ℝ) • (1 : MatStage 5) := by
+    rw [hc_iso, hc_pair, ← smul_add, isospinCarrier_add_pairingCarrier p n]
+  exact ⟨hc_iso, hc_pair, htot⟩
+
+/-- Conjugating $e_n$ by the $\mathrm{Pin}_+(5,5)$ reflection $\Gamma_n = e_n + f_n$ produces $f_n$:
+$\Gamma_n e_n \Gamma_n = f_n$. -/
+theorem gammaPlus_conj_e_same (n : Fin 5) :
+    gammaPlus n * e n * gammaPlus n = f n := by
+  have hcar : e n * f n + f n * e n = 1 := by simpa using ef_car n n
+  have hfnen : f n * e n * f n = f n := by
+    calc
+      (f n * e n) * f n = (1 - e n * f n) * f n := by rw [eq_sub_of_add_eq' hcar]
+      _ = f n - e n * (f n * f n) := by noncomm_ring
+      _ = f n := by rw [f_sq n, mul_zero, sub_zero]
+  dsimp [gammaPlus]
+  calc
+    (e n + f n) * e n * (e n + f n) =
+      (e n * e n) * e n + (e n * e n) * f n + f n * (e n * e n) + (f n * e n * f n) := by
+      noncomm_ring
+    _ = f n := by rw [e_sq n, hfnen]; simp
+
+/-- Conjugating $f_n$ by the $\mathrm{Pin}_+(5,5)$ reflection $\Gamma_n = e_n + f_n$ produces $e_n$:
+$\Gamma_n f_n \Gamma_n = e_n$. -/
+theorem gammaPlus_conj_f_same (n : Fin 5) :
+    gammaPlus n * f n * gammaPlus n = e n := by
+  have hcar : e n * f n + f n * e n = 1 := by simpa using ef_car n n
+  have henfn : e n * f n * e n = e n := by
+    calc
+      (e n * f n) * e n = (1 - f n * e n) * e n := by rw [eq_sub_of_add_eq hcar]
+      _ = e n - f n * (e n * e n) := by noncomm_ring
+      _ = e n := by rw [e_sq n, mul_zero, sub_zero]
+  dsimp [gammaPlus]
+  calc
+    (e n + f n) * f n * (e n + f n) =
+      (e n * f n * e n) + e n * (f n * f n) + (f n * f n) * e n + (f n * f n) * f n := by
+      noncomm_ring
+    _ = e n := by rw [f_sq n, henfn]; simp
+
+/-- For $p \neq n$, the creation operator $e_p$ anticommutes with $\Gamma_n = e_n + f_n$. -/
+theorem gammaPlus_anticomm_e_ne {p n : Fin 5} (hpn : p ≠ n) :
+    e p * gammaPlus n = -(gammaPlus n * e p) := by
+  dsimp [gammaPlus]
+  have h1 : e p * e n = -(e n * e p) := e_mul_e_swap p n
+  have h2 : e p * f n = -(f n * e p) := e_mul_f_swap_ne hpn
+  calc
+    e p * (e n + f n) = e p * e n + e p * f n := mul_add _ _ _
+    _ = -(e n * e p) + -(f n * e p) := by rw [h1, h2]
+    _ = -((e n + f n) * e p) := by noncomm_ring
+
+/-- For $p \neq n$, the annihilation operator $f_p$ anticommutes with $\Gamma_n = e_n + f_n$. -/
+theorem gammaPlus_anticomm_f_ne {p n : Fin 5} (hpn : p ≠ n) :
+    gammaPlus n * f p = -(f p * gammaPlus n) := by
+  dsimp [gammaPlus]
+  have h1 : e n * f p = -(f p * e n) := e_mul_f_swap_ne (Ne.symm hpn)
+  have h2 : f n * f p = -(f p * f n) := f_mul_f_swap n p
+  calc
+    (e n + f n) * f p = e n * f p + f n * f p := add_mul _ _ _
+    _ = -(f p * e n) + -(f p * f n) := by rw [h1, h2]
+    _ = -(f p * (e n + f n)) := by noncomm_ring
+
+/-- **$\mathrm{Pin}_+(5,5)$ Majorana Particle–Hole Duality (`pin_majorana_conjugates_isospin_to_pairing`)**:
+Conjugating by the neutron $\mathrm{Pin}_+(5,5)$ Majorana reflection $\Gamma_n = e_n + f_n$ ($\Gamma_n^2 = I_{32}$)
+maps the Grade-$0$ Isospin algebra $(\tau_+, \tau_-, \tau_3)$ directly onto the Grade-$\pm 2$
+Pairing Quasispin algebra $(-K_+, -K_-, 2 K_0)$:
+1. $\Gamma_n \tau_+(p,n) \Gamma_n = -K_+(p,n)$,
+2. $\Gamma_n \tau_-(p,n) \Gamma_n = -K_-(p,n)$,
+3. $\Gamma_n \tau_3(p,n) \Gamma_n = 2 K_0(p,n)$. -/
+theorem pin_majorana_conjugates_isospin_to_pairing {p n : Fin 5} (hpn : p ≠ n) :
+    gammaPlus n * isospinPlus p n * gammaPlus n = -pairingPlus p n ∧
+    gammaPlus n * isospinMinus p n * gammaPlus n = -pairingMinus p n ∧
+    gammaPlus n * isospinCartan p n * gammaPlus n = pairingCartan p n := by
+  have hGsq : gammaPlus n * gammaPlus n = 1 := gammaPlus_sq n
+  have hGen : gammaPlus n * e n * gammaPlus n = f n := gammaPlus_conj_e_same n
+  have hGfn : gammaPlus n * f n * gammaPlus n = e n := gammaPlus_conj_f_same n
+  have hAntiEp : e p * gammaPlus n = -(gammaPlus n * e p) := gammaPlus_anticomm_e_ne hpn
+  have hAntiFp : gammaPlus n * f p = -(f p * gammaPlus n) := gammaPlus_anticomm_f_ne hpn
+  have h_tau_p : gammaPlus n * isospinPlus p n * gammaPlus n = -pairingPlus p n := by
+    rw [isospinPlus_eq_e_mul_f hpn]
+    dsimp [pairingPlus]
+    calc
+      gammaPlus n * (e p * f n) * gammaPlus n =
+        gammaPlus n * (e p * 1) * f n * gammaPlus n := by noncomm_ring
+      _ = gammaPlus n * (e p * (gammaPlus n * gammaPlus n)) * f n * gammaPlus n := by rw [hGsq]
+      _ = (gammaPlus n * (e p * gammaPlus n)) * (gammaPlus n * f n * gammaPlus n) := by noncomm_ring
+      _ = -(gammaPlus n * gammaPlus n) * e p * e n := by rw [hAntiEp, hGfn]; noncomm_ring
+      _ = -(e p * e n) := by rw [hGsq]; noncomm_ring
+  have h_tau_m : gammaPlus n * isospinMinus p n * gammaPlus n = -pairingMinus p n := by
+    rw [isospinMinus_eq_e_mul_f hpn]
+    dsimp [pairingMinus]
+    calc
+      gammaPlus n * (e n * f p) * gammaPlus n =
+        gammaPlus n * e n * (1 * f p) * gammaPlus n := by noncomm_ring
+      _ = gammaPlus n * e n * ((gammaPlus n * gammaPlus n) * f p) * gammaPlus n := by rw [hGsq]
+      _ = (gammaPlus n * e n * gammaPlus n) * ((gammaPlus n * f p) * gammaPlus n) := by noncomm_ring
+      _ = -f n * f p * (gammaPlus n * gammaPlus n) := by rw [hGen, hAntiFp]; noncomm_ring
+      _ = -(f n * f p) := by rw [hGsq]; noncomm_ring
+  have h_G_Np : gammaPlus n * modeOccupied p * gammaPlus n = modeOccupied p := by
+    dsimp [modeOccupied]
+    calc
+      gammaPlus n * (e p * f p) * gammaPlus n =
+        gammaPlus n * (e p * 1 * f p) * gammaPlus n := by noncomm_ring
+      _ = gammaPlus n * (e p * (gammaPlus n * gammaPlus n) * f p) * gammaPlus n := by rw [hGsq]
+      _ = (gammaPlus n * (e p * gammaPlus n)) * ((gammaPlus n * f p) * gammaPlus n) := by noncomm_ring
+      _ = (gammaPlus n * gammaPlus n) * e p * f p * (gammaPlus n * gammaPlus n) := by
+        rw [hAntiEp, hAntiFp]; noncomm_ring
+      _ = e p * f p := by rw [hGsq, one_mul, mul_one]
+  have h_G_Nn : gammaPlus n * modeOccupied n * gammaPlus n = 1 - modeOccupied n := by
+    have hcar : e n * f n + f n * e n = 1 := by simpa using ef_car n n
+    dsimp [modeOccupied]
+    calc
+      gammaPlus n * (e n * f n) * gammaPlus n =
+        gammaPlus n * (e n * 1 * f n) * gammaPlus n := by noncomm_ring
+      _ = gammaPlus n * (e n * (gammaPlus n * gammaPlus n) * f n) * gammaPlus n := by rw [hGsq]
+      _ = (gammaPlus n * e n * gammaPlus n) * (gammaPlus n * f n * gammaPlus n) := by noncomm_ring
+      _ = f n * e n := by rw [hGen, hGfn]
+      _ = 1 - e n * f n := eq_sub_of_add_eq' hcar
+  have h_pair_cartan : pairingCartan p n = modeOccupied p + modeOccupied n - 1 := by
+    dsimp [pairingCartan]
+    have hHp : H p = modeOccupied p - (1 / 2 : ℝ) • (1 : MatStage 5) :=
+      eq_sub_of_add_eq (modeOccupied_eq_H_add_half p).symm
+    have hHn : H n = modeOccupied n - (1 / 2 : ℝ) • (1 : MatStage 5) :=
+      eq_sub_of_add_eq (modeOccupied_eq_H_add_half n).symm
+    rw [hHp, hHn]
+    calc
+      modeOccupied p - (1 / 2 : ℝ) • (1 : MatStage 5) +
+          (modeOccupied n - (1 / 2 : ℝ) • (1 : MatStage 5)) =
+        modeOccupied p + modeOccupied n -
+          ((1 / 2 : ℝ) + (1 / 2 : ℝ)) • (1 : MatStage 5) := by
+        rw [add_smul]; abel
+      _ = modeOccupied p + modeOccupied n - 1 := by norm_num
+  have h_tau_3 : gammaPlus n * isospinCartan p n * gammaPlus n = pairingCartan p n := by
+    rw [isospinCartan_eq_modeOccupied_sub, h_pair_cartan]
+    calc
+      gammaPlus n * (modeOccupied p - modeOccupied n) * gammaPlus n =
+        gammaPlus n * modeOccupied p * gammaPlus n -
+        gammaPlus n * modeOccupied n * gammaPlus n := by noncomm_ring
+      _ = modeOccupied p - (1 - modeOccupied n) := by rw [h_G_Np, h_G_Nn]
+      _ = modeOccupied p + modeOccupied n - 1 := by abel
+  exact ⟨h_tau_p, h_tau_m, h_tau_3⟩
+
 /-! ## 6. The Grand Cl(5,5) Spinor Cartan-Fock Synthesis -/
 
 /-

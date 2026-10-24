@@ -130,16 +130,50 @@ def run_sympy_verification() -> dict:
     assert two_K_0 * Pi_plus == Z32
     assert two_K_0 * Pi_minus == Z32
 
-    # 6. Verify Peirce Ladder Factorizations:
+    # 6. Verify Peirce Ladder Factorizations & Reflexive Identities:
     assert tau_plus * tau_minus == Pi_plus
     assert tau_minus * tau_plus == Pi_minus
+    assert tau_plus * tau_minus * tau_plus == tau_plus
+    assert tau_minus * tau_plus * tau_minus == tau_minus
     assert K_plus * K_minus == Pi_pair_plus
     assert K_minus * K_plus == Pi_pair_minus
+    assert K_plus * K_minus * K_plus == K_plus
+    assert K_minus * K_plus * K_minus == K_minus
+
+    # 7. Verify Associative Cross-Sector Annihilation & Full Quadratic Casimir Partition:
+    Delta_iso = Pi_plus + Pi_minus
+    Delta_pair = Pi_pair_plus + Pi_pair_minus
+    assert Delta_iso + Delta_pair == I32
+    assert Delta_iso * Delta_pair == Z32
+    assert Delta_pair * Delta_iso == Z32
+    for X in (tau_plus, tau_minus, tau_3):
+        for Y in (K_plus, K_minus, two_K_0):
+            assert X * Y == Z32
+            assert Y * X == Z32
+
+    C2_iso = tau_3 * tau_3 + 2 * (tau_plus * tau_minus + tau_minus * tau_plus)
+    C2_pair = two_K_0 * two_K_0 + 2 * (K_plus * K_minus + K_minus * K_plus)
+    assert C2_iso == 3 * Delta_iso
+    assert C2_pair == 3 * Delta_pair
+    assert C2_iso + C2_pair == 3 * I32
+
+    # 8. Verify Pin_+(5,5) Majorana Particle-Hole Duality (Gamma_n = e_n + f_n):
+    Gamma_n = e[n] + f[n]
+    assert Gamma_n * Gamma_n == I32
+    assert Gamma_n * tau_plus * Gamma_n == -K_plus
+    assert Gamma_n * tau_minus * Gamma_n == -K_minus
+    assert Gamma_n * tau_3 * Gamma_n == two_K_0
+    assert Gamma_n * Pi_plus * Gamma_n == Pi_pair_plus
+    assert Gamma_n * Pi_minus * Gamma_n == Pi_pair_minus
+    assert Gamma_n * Delta_iso * Gamma_n == Delta_pair
 
     return {
         "engine": "SymPy",
         "status": "PASSED",
         "carrier": "M_32(Q) = Cl(5,5) (MatStage 5)",
+        "bi_peirce_cross_annihilation": True,
+        "casimir_partition": "C2_iso + C2_pair == 3 * I32",
+        "pin_majorana_duality": "Gamma_n * (tau_+, tau_-, tau_3) * Gamma_n == (-K_+, -K_-, 2K_0)",
         "traces": {
             "tr(Pi_plus)": int(Pi_plus.trace()),
             "tr(Pi_minus)": int(Pi_minus.trace()),

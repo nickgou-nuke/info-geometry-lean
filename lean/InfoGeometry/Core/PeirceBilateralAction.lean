@@ -54,7 +54,7 @@ theorem four_corner_expansion (d b x : A) (l m r s : R) :
       (m * r) • (poleMinus d b * x * polePlus d b) +
       (m * s) • (poleMinus d b * x * poleMinus d b) := by
   simp only [bilateral_apply, diagonal_formula, add_mul, mul_add,
-    smul_mul_assoc, mul_smul_comm, smul_smul]
+    smul_mul_assoc, mul_smul_comm]
   module
 
 /-- The four corners reconstruct the active compression, not an arbitrary signal. -/
@@ -75,7 +75,10 @@ theorem corner_scaling (u v p q x : A) (l r : R)
     bilateral (R := R) u v (p * x * q) = (l * r) • (p * x * q) := by
   calc
     _ = (u * p) * x * (q * v) := by simp only [bilateral_apply, mul_assoc]
-    _ = _ := by rw [hl, hr]; simp only [smul_mul_assoc, mul_smul_comm, smul_smul]
+    _ = _ := by
+      rw [hl, hr]
+      simp only [smul_mul_assoc, mul_smul_comm, smul_smul]
+      rw [mul_comm r l]
 
 variable {d b : A}
 

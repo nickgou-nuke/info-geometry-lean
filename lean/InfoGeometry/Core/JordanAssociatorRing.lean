@@ -112,6 +112,25 @@ theorem symm_operator_commutator (s t x : R) :
         (s * t - t * s) * x - x * (s * t - t * s) := by
   noncomm_ring
 
+/-- Exact obstruction to reversing the inner bracket in the Jordan-operator
+commutator formula. The erroneous sign is invisible precisely when twice the
+coefficient commutator commutes with the input, including characteristic two. -/
+theorem symm_operator_reversed_bracket_iff (s t x : R) :
+    ((s * (t * x + x * t) + (t * x + x * t) * s) -
+      (t * (s * x + x * s) + (s * x + x * s) * t) =
+        (t * s - s * t) * x - x * (t * s - s * t)) ↔
+      Commute (2 • (s * t - t * s)) x := by
+  rw [symm_operator_commutator]
+  change _ = _ ↔ (2 • (s * t - t * s)) * x = x * (2 • (s * t - t * s))
+  rw [← sub_eq_zero]
+  have hdef :
+      ((s * t - t * s) * x - x * (s * t - t * s)) -
+        ((t * s - s * t) * x - x * (t * s - s * t)) =
+      (2 • (s * t - t * s)) * x - x * (2 • (s * t - t * s)) := by
+    simp only [two_nsmul]
+    noncomm_ring
+  rw [hdef, sub_eq_zero]
+
 section Trace
 
 variable {B : Type*} [AddCommGroup B] (τ : R →+ B)

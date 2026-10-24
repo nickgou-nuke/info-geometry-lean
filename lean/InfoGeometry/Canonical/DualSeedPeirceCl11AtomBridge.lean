@@ -37,7 +37,7 @@ theorem carrier_support_idem {d B : A} (h : IsDualSeedPair d B) :
   change (polePlus d B + poleMinus d B) * (polePlus d B + poleMinus d B) =
     polePlus d B + poleMinus d B
   rw [add_mul, mul_add, mul_add, pp h, pq h, qp h, qq h]
-  <;> abel
+  abel
 
 theorem phase_wheel_anticommute {d B : A} (h : IsDualSeedPair d B) :
     phasePolarization d B * wheelGenerator d B +
@@ -45,7 +45,7 @@ theorem phase_wheel_anticommute {d B : A} (h : IsDualSeedPair d B) :
   change (polePlus d B - poleMinus d B) * (d - B) + (d - B) * (polePlus d B - poleMinus d B) = 0
   rw [sub_mul, mul_sub, mul_sub, pd h, pb h, qd h, qb h]
   rw [sub_mul, mul_sub, mul_sub, dp h, dq h, bp h, bq h]
-  <;> abel
+  abel
 
 theorem dual_seed_pair_unit_carrier_induces_cl11_atom
     {d B : A} (h : IsDualSeedPair d B) (hΔ : carrierSupport d B = 1) :
@@ -86,13 +86,10 @@ theorem dual_seed_pair_cl11_over_reals {d B : ℝ} (h : IsDualSeedPair d B) (hΔ
       exact h_b_sq_zero
     exact h₁
   have h_cs_zero : carrierSupport d B = 0 := by
-    have h₁ : carrierSupport d B = activeSupport d B := by
-      rfl
-    rw [h₁]
-    unfold activeSupport
+    change d * B + B * d = 0
     subst h_d_zero
     subst h_b_zero
-    rfl
+    ring
   exfalso
   exact hΔ_ne_zero h_cs_zero
 

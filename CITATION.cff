@@ -1,19 +1,17 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it using the metadata from this file."
-title: "Spacetime as an Executable Motive: A Verified Lean 4 Formalization of Holographic Supergravity from the Arithmetic Vacuum"
-version: "1.23.0-CUC-Bridge"
+title: "InfoGeometry: A Lean 4 Formalization of Noncommutative Information Geometry, Peirce-Weyl Operator Algebras, and Inductive Colimits"
+version: "1.24.0"
 type: software
 license: Apache-2.0
-date-released: 2026-06-18
+date-released: 2026-10-24
 repository-code: "https://github.com/nickgou-nuke/info-geometry-lean"
 url: "https://github.com/nickgou-nuke/info-geometry-lean"
 abstract: >
-  Lean 4 formalization project for information geometry unifying Condensed Matter, Noncommutative Geometry,
-  and Quantum Gravity. Features the ultimate theoretical capstone: formal verification of the Minkowski 
-  causal cone as a Class DIII Topological Superconductor, with Andreev boundary scattering and 
-  Hayden-Preskill fast scrambling preserved by Fibonacci anyon / MZM microstates. The structural closure 
-  is governed by the Kasparov Intersection Product on a Doubled Krein space, absorbing the chiral 
-  anomaly into the non-orientable Klein Bottle topology.
+  Lean 4 (v4.34.1 / Mathlib) formalization of noncommutative information geometry, division-free
+  Peirce-Weyl units, Drazin and Moore-Penrose spectral splittings, Jordan-Lie operator multiplication
+  closure, weighted KMS trace identities, Grassmannian Ehresmann gauge connections, and categorical
+  UHF inductive colimits over involutive rings.
 authors:
   - family-names: Goutev
     given-names: Nikolay
@@ -23,39 +21,25 @@ authors:
     affiliation: "Institute for Nuclear Research and Nuclear Energy (INRNE-BAS), Bulgarian Academy of Sciences"
 keywords:
   - lean4
+  - mathlib4
   - theorem-proving
   - formal-verification
   - information-geometry
-  - projective-geometry
+  - noncommutative-geometry
   - operator-algebras
+  - jordan-algebra
+  - peirce-decomposition
+  - weyl-group
+  - moore-penrose-inverse
+  - drazin-inverse
+  - grassmannian
+  - category-theory
+  - inductive-colimits
   - von-neumann-algebras
   - modular-theory
   - spectral-operator-theory
   - tomita-takesaki
-  - connes-cocycle
-  - radon-nikodym
+  - kms-states
   - krein-space
   - clifford-algebra
-  - phase-space-geometry
-  - transport-theory
-  - bogoliubov-transport
-  - drazin-inverse
-  - anomaly-operators
-  - einstein-source-bridges
   - quantum-geometric-tensor
-  - thermodynamic-inference
-  - kms-states
-  - sinkhorn
-  - llm-thermodynamics
-  - representation-depth-architecture
-  - dependency-graph-analysis
-  - vacuity-audit
-  - black-book-methodology
-  - jung-pauli-methodology
-  - pauli-auditor-protocol
-  - reproducible-research
-  - altland-zirnbauer-diii
-  - andreev-reflection
-  - kasparov-krein-product
-  - hayden-preskill-scrambling
-  - klein-bottle-anomaly

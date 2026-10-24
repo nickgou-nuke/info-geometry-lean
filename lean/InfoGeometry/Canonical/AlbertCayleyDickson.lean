@@ -723,6 +723,155 @@ theorem bruhatS_left_intertwines_peirce_and_wheelJ :
     fin_cases i <;> fin_cases j <;>
       simp [peircePlus, peirceMinus, wheelJ, peirceSeedD, peirceSeedB]
 
+/-! ### Erlangen 2.0: `Pin_+` / `Pin_-` Factorization, Spin Connection `ω`, and Emergent Spacetime Frame `e` -/
+
+/-- **Even Spin-Connection Component (`spinConnectionPart X ∈ 𝔥`)**:
+Diagonal Peirce projection `ω(X) = P_+ X P_+ + P_- X P_-`. -/
+def spinConnectionPart (X : SplitQuaternion F) : SplitQuaternion F :=
+  peircePlus * X * peircePlus + peirceMinus * X * peirceMinus
+
+/-- **Odd Emergent Spacetime Frame / Solder Form (`spacetimeFramePart X ∈ 𝔭`)**:
+Off-diagonal nilpotent Peirce projection `e(X) = P_+ X P_- + P_- X P_+`. -/
+def spacetimeFramePart (X : SplitQuaternion F) : SplitQuaternion F :=
+  peircePlus * X * peirceMinus + peirceMinus * X * peircePlus
+
+/-- **Emergent Spacetime Metric Bilinear (`emergentMetric X Y : F`)**:
+Induced by the Jordan anticommutator `{e(X), e(Y)} = emergentMetric X Y • 1`. -/
+def emergentMetric (X Y : SplitQuaternion F) : F :=
+  X 0 1 * Y 1 0 + X 1 0 * Y 0 1
+
+/-- **Emergent Riemann–Cartan Spin Curvature Scalar (`emergentCurvature X Y : F`)**:
+Induced by the Lie commutator `[e(X), e(Y)] = emergentCurvature X Y • polarizationGamma`. -/
+def emergentCurvature (X Y : SplitQuaternion F) : F :=
+  X 0 1 * Y 1 0 - X 1 0 * Y 0 1
+
+/-- Explicit `2 × 2` matrix eta-expansion for `SplitQuaternion F`. -/
+theorem eq_eta (X : SplitQuaternion F) :
+    X = !![X 0 0, X 0 1; X 1 0, X 1 1] := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> rfl
+
+/-- Explicit `2 × 2` matrix formula for `spinConnectionPart X`. -/
+@[simp] theorem spinConnectionPart_eq (X : SplitQuaternion F) :
+    spinConnectionPart X = !![X 0 0, 0; 0, X 1 1] := by
+  unfold spinConnectionPart
+  conv_lhs => rw [eq_eta X]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [peircePlus, peirceMinus]
+
+/-- Explicit `2 × 2` matrix formula for `spacetimeFramePart X`. -/
+@[simp] theorem spacetimeFramePart_eq (X : SplitQuaternion F) :
+    spacetimeFramePart X = !![0, X 0 1; X 1 0, 0] := by
+  unfold spacetimeFramePart
+  conv_lhs => rw [eq_eta X]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [peircePlus, peirceMinus]
+
+/-- **Node 0: `Pin_-` × `Pin_+` Factorizes the Cartan Spin-Connection Generator `polarizationGamma`**. -/
+theorem pinMinus_mul_pinPlus_eq_polarizationGamma :
+    (wheelJ : SplitQuaternion F) * velocityQ = polarizationGamma ∧
+    (velocityQ : SplitQuaternion F) * wheelJ = -polarizationGamma ∧
+    (velocityQ : SplitQuaternion F) * velocityQ = 1 ∧
+    (wheelJ : SplitQuaternion F) * wheelJ = -1 := by
+  refine ⟨?_, ?_, ?_, ?_⟩ <;>
+  · ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [wheelJ, velocityQ, polarizationGamma, peircePlus, peirceMinus,
+            peirceSeedD, peirceSeedB]
+
+/-- **Node 1: Cartan Decomposition `X = ω(X) + e(X)` & Parity Grading under `polarizationGamma`**. -/
+theorem cartan_spinConnection_spacetimeFrame_split (X : SplitQuaternion F) :
+    spinConnectionPart X + spacetimeFramePart X = X ∧
+    polarizationGamma * spinConnectionPart X * polarizationGamma = spinConnectionPart X ∧
+    polarizationGamma * spacetimeFramePart X * polarizationGamma = -spacetimeFramePart X := by
+  refine ⟨?_, ?_, ?_⟩ <;>
+  · ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [polarizationGamma, peircePlus, peirceMinus]
+
+/-- **Node 2a: Emergent Spacetime Metric from the Jordan Anticommutator of Frame Vectors**:
+For any `X, Y : SplitQuaternion F`, the symmetric product `{e(X), e(Y)}` of their odd
+spacetime frame parts is a pure scalar multiple of the identity matrix `1`! -/
+theorem spacetimeFrame_anticommutator_eq_emergentMetric_smul_one
+    (X Y : SplitQuaternion F) :
+    spacetimeFramePart X * spacetimeFramePart Y +
+    spacetimeFramePart Y * spacetimeFramePart X =
+      emergentMetric X Y • (1 : SplitQuaternion F) := by
+  rw [ ← peircePlus_add_peirceMinus]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [emergentMetric, peircePlus, peirceMinus] <;>
+    ring
+
+/-- **Node 2b: Emergent Riemann–Cartan Spin Curvature from the Lie Commutator of Frame Vectors**:
+For any `X, Y : SplitQuaternion F`, the commutator `[e(X), e(Y)]` of their odd spacetime
+frame parts lands purely in the even spin-connection algebra along `polarizationGamma`! -/
+theorem spacetimeFrame_commutator_eq_emergentCurvature_smul_gamma
+    (X Y : SplitQuaternion F) :
+    spacetimeFramePart X * spacetimeFramePart Y -
+    spacetimeFramePart Y * spacetimeFramePart X =
+      emergentCurvature X Y • (polarizationGamma : SplitQuaternion F) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [emergentCurvature, polarizationGamma, peircePlus, peirceMinus] <;>
+    ring
+
+/-- **Node 3a: Cartan Torsion / Covariant Derivative `[ω(X), e(Y)]` Lands Purely in `𝔭`**. -/
+theorem spinConnection_spacetimeFrame_commutator_in_frame
+    (X Y : SplitQuaternion F) :
+    spinConnectionPart
+      (spinConnectionPart X * spacetimeFramePart Y -
+       spacetimeFramePart Y * spinConnectionPart X) = 0 ∧
+    spacetimeFramePart
+      (spinConnectionPart X * spacetimeFramePart Y -
+       spacetimeFramePart Y * spinConnectionPart X) =
+      spinConnectionPart X * spacetimeFramePart Y -
+      spacetimeFramePart Y * spinConnectionPart X := by
+  refine ⟨?_, ?_⟩ <;>
+  · ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp
+
+/-- **Node 3b: Local Lorentz / Modular Gauge Invariance of Emergent Metric & Curvature (`u : Fˣ`)**:
+Under the antisymmetric two-sided hyperbolic gauge boost `L_{u, u⁻¹, u⁻¹, u}` (`u : Fˣ`),
+both `emergentMetric X Y` and `emergentCurvature X Y` are strictly invariant! -/
+theorem emergentMetric_and_curvature_gauge_invariant
+    (u : Fˣ) (X Y : SplitQuaternion F) :
+    emergentMetric
+      (twoSidedHyperbolicLaplace (u : F) (↑u⁻¹ : F) (↑u⁻¹ : F) (u : F) X)
+      (twoSidedHyperbolicLaplace (u : F) (↑u⁻¹ : F) (↑u⁻¹ : F) (u : F) Y) =
+      emergentMetric X Y ∧
+    emergentCurvature
+      (twoSidedHyperbolicLaplace (u : F) (↑u⁻¹ : F) (↑u⁻¹ : F) (u : F) X)
+      (twoSidedHyperbolicLaplace (u : F) (↑u⁻¹ : F) (↑u⁻¹ : F) (u : F) Y) =
+      emergentCurvature X Y := by
+  have h_lap (Z : SplitQuaternion F) :
+      twoSidedHyperbolicLaplace (u : F) (↑u⁻¹ : F) (↑u⁻¹ : F) (u : F) Z =
+        !![(u : F) * Z 0 0 * (↑u⁻¹ : F), (u : F) * Z 0 1 * (u : F);
+           (↑u⁻¹ : F) * Z 1 0 * (↑u⁻¹ : F), (↑u⁻¹ : F) * Z 1 1 * (u : F)] := by
+    unfold twoSidedHyperbolicLaplace hyperbolicKernel
+    conv_lhs => rw [eq_eta Z]
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [peircePlus, peirceMinus]
+  rw [h_lap X, h_lap Y]
+  unfold emergentMetric emergentCurvature
+  dsimp
+  have h1 : (u : F) * X 0 1 * (u : F) * ((↑u⁻¹ : F) * Y 1 0 * (↑u⁻¹ : F)) =
+      X 0 1 * Y 1 0 := by
+    calc (u : F) * X 0 1 * (u : F) * ((↑u⁻¹ : F) * Y 1 0 * (↑u⁻¹ : F))
+      _ = ((u : F) * (↑u⁻¹ : F)) * ((u : F) * (↑u⁻¹ : F)) * (X 0 1 * Y 1 0) := by ring
+      _ = X 0 1 * Y 1 0 := by simp
+  have h2 : (↑u⁻¹ : F) * X 1 0 * (↑u⁻¹ : F) * ((u : F) * Y 0 1 * (u : F)) =
+      X 1 0 * Y 0 1 := by
+    calc (↑u⁻¹ : F) * X 1 0 * (↑u⁻¹ : F) * ((u : F) * Y 0 1 * (u : F))
+      _ = ((↑u⁻¹ : F) * (u : F)) * ((↑u⁻¹ : F) * (u : F)) * (X 1 0 * Y 0 1) := by ring
+      _ = X 1 0 * Y 0 1 := by simp
+  rw [h1, h2]
+  exact ⟨rfl, rfl⟩
+
 section TrivialStarPositivityAndConservation
 
 variable [TrivialStar F]

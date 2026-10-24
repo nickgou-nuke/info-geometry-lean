@@ -1155,6 +1155,172 @@ theorem pin_majorana_conjugates_isospin_to_pairing {p n : Fin 5} (hpn : p ≠ n)
       _ = modeOccupied p + modeOccupied n - 1 := by abel
   exact ⟨h_tau_p, h_tau_m, h_tau_3⟩
 
+/-- **$\mathrm{Pin}_-(5,5) \times \mathrm{Pin}_+(5,5)$ Spin-Connection Factorization (`gammaMinus_mul_gammaPlus_eq_two_H`)**:
+At each Witt mode $a \in \mathrm{Fin}\;5$, multiplying the $\mathrm{Pin}_-$ generator $\Gamma_a^- = e_a - f_a$
+and the $\mathrm{Pin}_+$ generator $\Gamma_a^+ = e_a + f_a$ produces the local Cartan spin-connection
+grading generator $\pm 2 H_a = \pm (N_a - (1 - N_a))$:
+1. $\Gamma_a^- \Gamma_a^+ = 2 H_a$,
+2. $\Gamma_a^+ \Gamma_a^- = -2 H_a$. -/
+theorem gammaMinus_mul_gammaPlus_eq_two_H (a : Fin 5) :
+    gammaMinus a * gammaPlus a = (2 : ℝ) • H a ∧
+    gammaPlus a * gammaMinus a = -((2 : ℝ) • H a) := by
+  rw [two_smul_H_eq_modeOccupied_sub_modeVacant]
+  dsimp [gammaMinus, gammaPlus, modeOccupied, modeVacant]
+  refine ⟨?_, ?_⟩
+  · calc
+      (e a - f a) * (e a + f a) =
+        e a * e a + (e a * f a - f a * e a) - f a * f a := by noncomm_ring
+      _ = e a * f a - f a * e a := by rw [e_sq a, f_sq a]; abel
+  · calc
+      (e a + f a) * (e a - f a) =
+        e a * e a - (e a * f a - f a * e a) - f a * f a := by noncomm_ring
+      _ = -(e a * f a - f a * e a) := by rw [e_sq a, f_sq a]; abel
+
+/-- Sandwiching $e_n$ by the $\mathrm{Pin}_-(5,5)$ generator $\Gamma_n^- = e_n - f_n$ produces $f_n$:
+$\Gamma_n^- e_n \Gamma_n^- = f_n$. -/
+theorem gammaMinus_conj_e_same (n : Fin 5) :
+    gammaMinus n * e n * gammaMinus n = f n := by
+  have hcar : e n * f n + f n * e n = 1 := by simpa using ef_car n n
+  have hfnen : f n * e n * f n = f n := by
+    calc
+      (f n * e n) * f n = (1 - e n * f n) * f n := by rw [eq_sub_of_add_eq' hcar]
+      _ = f n - e n * (f n * f n) := by noncomm_ring
+      _ = f n := by rw [f_sq n, mul_zero, sub_zero]
+  dsimp [gammaMinus]
+  calc
+    (e n - f n) * e n * (e n - f n) =
+      (e n * e n) * e n - (e n * e n) * f n - f n * (e n * e n) + (f n * e n * f n) := by
+      noncomm_ring
+    _ = f n := by rw [e_sq n, hfnen]; simp
+
+/-- Sandwiching $f_n$ by the $\mathrm{Pin}_-(5,5)$ generator $\Gamma_n^- = e_n - f_n$ produces $e_n$:
+$\Gamma_n^- f_n \Gamma_n^- = e_n$. -/
+theorem gammaMinus_conj_f_same (n : Fin 5) :
+    gammaMinus n * f n * gammaMinus n = e n := by
+  have hcar : e n * f n + f n * e n = 1 := by simpa using ef_car n n
+  have henfn : e n * f n * e n = e n := by
+    calc
+      (e n * f n) * e n = (1 - f n * e n) * e n := by rw [eq_sub_of_add_eq hcar]
+      _ = e n - f n * (e n * e n) := by noncomm_ring
+      _ = e n := by rw [e_sq n, mul_zero, sub_zero]
+  dsimp [gammaMinus]
+  calc
+    (e n - f n) * f n * (e n - f n) =
+      (e n * f n * e n) - e n * (f n * f n) - (f n * f n) * e n + (f n * f n) * f n := by
+      noncomm_ring
+    _ = e n := by rw [f_sq n, henfn]; simp
+
+/-- For $p \neq n$, the creation operator $e_p$ anticommutes with $\Gamma_n^- = e_n - f_n$. -/
+theorem gammaMinus_anticomm_e_ne {p n : Fin 5} (hpn : p ≠ n) :
+    e p * gammaMinus n = -(gammaMinus n * e p) := by
+  dsimp [gammaMinus]
+  have h1 : e p * e n = -(e n * e p) := e_mul_e_swap p n
+  have h2 : e p * f n = -(f n * e p) := e_mul_f_swap_ne hpn
+  calc
+    e p * (e n - f n) = e p * e n - e p * f n := mul_sub _ _ _
+    _ = -(e n * e p) - -(f n * e p) := by rw [h1, h2]
+    _ = -((e n - f n) * e p) := by noncomm_ring
+
+/-- For $p \neq n$, the annihilation operator $f_p$ anticommutes with $\Gamma_n^- = e_n - f_n$. -/
+theorem gammaMinus_anticomm_f_ne {p n : Fin 5} (hpn : p ≠ n) :
+    gammaMinus n * f p = -(f p * gammaMinus n) := by
+  dsimp [gammaMinus]
+  have h1 : e n * f p = -(f p * e n) := e_mul_f_swap_ne (Ne.symm hpn)
+  have h2 : f n * f p = -(f p * f n) := f_mul_f_swap n p
+  calc
+    (e n - f n) * f p = e n * f p - f n * f p := sub_mul _ _ _
+    _ = -(f p * e n) - -(f p * f n) := by rw [h1, h2]
+    _ = -(f p * (e n - f n)) := by noncomm_ring
+
+/-- **$\mathrm{Pin}_-(5,5)$ Skew-Majorana Particle–Hole Duality (`pin_minus_conjugates_isospin_to_pairing`)**:
+Because $(\Gamma_n^-)^2 = -I_{32}$ (so $(\Gamma_n^-)^{-1} = -\Gamma_n^-$), sandwiching by the
+skew-Majorana $\mathrm{Pin}_-(5,5)$ generator $\Gamma_n^- = e_n - f_n$ satisfies:
+1. $\Gamma_n^- \tau_+(p,n) (-\Gamma_n^-) = +K_+(p,n)$,
+2. $\Gamma_n^- \tau_-(p,n) (-\Gamma_n^-) = +K_-(p,n)$,
+3. $\Gamma_n^- \tau_3(p,n) \Gamma_n^- = -2 K_0(p,n)$. -/
+theorem pin_minus_conjugates_isospin_to_pairing {p n : Fin 5} (hpn : p ≠ n) :
+    gammaMinus n * isospinPlus p n * (-gammaMinus n) = pairingPlus p n ∧
+    gammaMinus n * isospinMinus p n * (-gammaMinus n) = pairingMinus p n ∧
+    gammaMinus n * isospinCartan p n * gammaMinus n = -pairingCartan p n := by
+  have hGsq : gammaMinus n * gammaMinus n = -1 := gammaMinus_sq n
+  have hGen : gammaMinus n * e n * gammaMinus n = f n := gammaMinus_conj_e_same n
+  have hGfn : gammaMinus n * f n * gammaMinus n = e n := gammaMinus_conj_f_same n
+  have hAntiEp : e p * gammaMinus n = -(gammaMinus n * e p) := gammaMinus_anticomm_e_ne hpn
+  have hAntiFp : gammaMinus n * f p = -(f p * gammaMinus n) := gammaMinus_anticomm_f_ne hpn
+  have h_tau_p : gammaMinus n * isospinPlus p n * (-gammaMinus n) = pairingPlus p n := by
+    rw [isospinPlus_eq_e_mul_f hpn]
+    dsimp [pairingPlus]
+    calc
+      gammaMinus n * (e p * f n) * (-gammaMinus n) =
+        gammaMinus n * (e p * (-1)) * f n * gammaMinus n := by noncomm_ring
+      _ = gammaMinus n * (e p * (gammaMinus n * gammaMinus n)) * f n * gammaMinus n := by
+        rw [hGsq]
+      _ = (gammaMinus n * (e p * gammaMinus n)) * (gammaMinus n * f n * gammaMinus n) := by
+        noncomm_ring
+      _ = -(gammaMinus n * gammaMinus n) * e p * e n := by
+        rw [hAntiEp, hGfn]; noncomm_ring
+      _ = e p * e n := by rw [hGsq]; noncomm_ring
+  have h_tau_m : gammaMinus n * isospinMinus p n * (-gammaMinus n) = pairingMinus p n := by
+    rw [isospinMinus_eq_e_mul_f hpn]
+    dsimp [pairingMinus]
+    calc
+      gammaMinus n * (e n * f p) * (-gammaMinus n) =
+        gammaMinus n * e n * ((-1) * f p) * gammaMinus n := by noncomm_ring
+      _ = gammaMinus n * e n * ((gammaMinus n * gammaMinus n) * f p) * gammaMinus n := by
+        rw [hGsq]
+      _ = (gammaMinus n * e n * gammaMinus n) * ((gammaMinus n * f p) * gammaMinus n) := by
+        noncomm_ring
+      _ = -f n * f p * (gammaMinus n * gammaMinus n) := by
+        rw [hGen, hAntiFp]; noncomm_ring
+      _ = f n * f p := by rw [hGsq]; noncomm_ring
+  have h_G_Np : gammaMinus n * modeOccupied p * gammaMinus n = -modeOccupied p := by
+    dsimp [modeOccupied]
+    calc
+      gammaMinus n * (e p * f p) * gammaMinus n =
+        -(gammaMinus n * (e p * (-1) * f p) * gammaMinus n) := by noncomm_ring
+      _ = -(gammaMinus n * (e p * (gammaMinus n * gammaMinus n) * f p) * gammaMinus n) := by
+        rw [hGsq]
+      _ = -((gammaMinus n * (e p * gammaMinus n)) * ((gammaMinus n * f p) * gammaMinus n)) := by
+        noncomm_ring
+      _ = -((gammaMinus n * gammaMinus n) * e p * f p * (gammaMinus n * gammaMinus n)) := by
+        rw [hAntiEp, hAntiFp]; noncomm_ring
+      _ = -(e p * f p) := by rw [hGsq]; noncomm_ring
+  have h_G_Nn : gammaMinus n * modeOccupied n * gammaMinus n = -(1 - modeOccupied n) := by
+    have hcar : e n * f n + f n * e n = 1 := by simpa using ef_car n n
+    dsimp [modeOccupied]
+    calc
+      gammaMinus n * (e n * f n) * gammaMinus n =
+        -(gammaMinus n * (e n * (-1) * f n) * gammaMinus n) := by noncomm_ring
+      _ = -(gammaMinus n * (e n * (gammaMinus n * gammaMinus n) * f n) * gammaMinus n) := by
+        rw [hGsq]
+      _ = -((gammaMinus n * e n * gammaMinus n) * (gammaMinus n * f n * gammaMinus n)) := by
+        noncomm_ring
+      _ = -(f n * e n) := by rw [hGen, hGfn]
+      _ = -(1 - e n * f n) := by rw [eq_sub_of_add_eq' hcar]
+  have h_pair_cartan : pairingCartan p n = modeOccupied p + modeOccupied n - 1 := by
+    dsimp [pairingCartan]
+    have hHp : H p = modeOccupied p - (1 / 2 : ℝ) • (1 : MatStage 5) :=
+      eq_sub_of_add_eq (modeOccupied_eq_H_add_half p).symm
+    have hHn : H n = modeOccupied n - (1 / 2 : ℝ) • (1 : MatStage 5) :=
+      eq_sub_of_add_eq (modeOccupied_eq_H_add_half n).symm
+    rw [hHp, hHn]
+    calc
+      modeOccupied p - (1 / 2 : ℝ) • (1 : MatStage 5) +
+          (modeOccupied n - (1 / 2 : ℝ) • (1 : MatStage 5)) =
+        modeOccupied p + modeOccupied n -
+          ((1 / 2 : ℝ) + (1 / 2 : ℝ)) • (1 : MatStage 5) := by
+        rw [add_smul]; abel
+      _ = modeOccupied p + modeOccupied n - 1 := by norm_num
+  have h_tau_3 : gammaMinus n * isospinCartan p n * gammaMinus n = -pairingCartan p n := by
+    rw [isospinCartan_eq_modeOccupied_sub, h_pair_cartan]
+    calc
+      gammaMinus n * (modeOccupied p - modeOccupied n) * gammaMinus n =
+        gammaMinus n * modeOccupied p * gammaMinus n -
+        gammaMinus n * modeOccupied n * gammaMinus n := by noncomm_ring
+      _ = -modeOccupied p - -(1 - modeOccupied n) := by rw [h_G_Np, h_G_Nn]
+      _ = -(modeOccupied p + modeOccupied n - 1) := by abel
+  exact ⟨h_tau_p, h_tau_m, h_tau_3⟩
+
 /-! ## 6. The Grand Cl(5,5) Spinor Cartan-Fock Synthesis -/
 
 /-

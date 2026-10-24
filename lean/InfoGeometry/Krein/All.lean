@@ -15,6 +15,7 @@ import InfoGeometry.Krein.HilbertBridge
 import InfoGeometry.Krein.RealDoubledHilbertBridge
 import InfoGeometry.Krein.RealDoubledOperatorAdjointTransport
 import InfoGeometry.Krein.RealDoubledCl11AdjointConsequences
+import InfoGeometry.Krein.RealDoubledCompactTransport
 import InfoGeometry.Krein.RealDoubledGradingTransport
 import InfoGeometry.Krein.Metric
 import InfoGeometry.Krein.SplitQuadratic

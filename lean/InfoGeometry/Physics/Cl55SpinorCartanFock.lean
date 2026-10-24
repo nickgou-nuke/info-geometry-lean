@@ -1535,6 +1535,89 @@ theorem chiralVolume10D_factorization :
       (gammaMinus_mul_gammaPlus_eq_two_H 4).1]
   exact h1
 
+/-- 3-Quark Nambu Baryon Singlet projector $\Pi_{\mathrm{baryon}} = N_0 N_1 N_2$ ($\mathbf{1}_3$). -/
+def colorBaryonSingletProj : MatStage 5 :=
+  modeOccupied 0 * modeOccupied 1 * modeOccupied 2
+
+/-- 0-Quark Vacuum Singlet projector $\Pi_{\mathrm{vac}} = (1 - N_0)(1 - N_1)(1 - N_2)$ ($\mathbf{1}_0$). -/
+def colorVacuumSingletProj : MatStage 5 :=
+  modeVacant 0 * modeVacant 1 * modeVacant 2
+
+/-- 1-Quark Color Triplet projector $\Pi_{\mathrm{quark}} = N_0 V_1 V_2 + V_0 N_1 V_2 + V_0 V_1 N_2$ ($\mathbf{3}$). -/
+def colorQuarkTripletProj : MatStage 5 :=
+  modeOccupied 0 * modeVacant 1 * modeVacant 2 +
+  modeVacant 0 * modeOccupied 1 * modeVacant 2 +
+  modeVacant 0 * modeVacant 1 * modeOccupied 2
+
+/-- 2-Quark Diquark Antitriplet projector $\Pi_{\mathrm{diquark}} = V_0 N_1 N_2 + N_0 V_1 N_2 + N_0 N_1 V_2$ ($\bar{\mathbf{3}}$). -/
+def colorDiquarkAntitripletProj : MatStage 5 :=
+  modeVacant 0 * modeOccupied 1 * modeOccupied 2 +
+  modeOccupied 0 * modeVacant 1 * modeOccupied 2 +
+  modeOccupied 0 * modeOccupied 1 * modeVacant 2
+
+/-- Positive-parity $(\mathbf{1}_3 \oplus \mathbf{3})$ Baryon–Quark Singlet–Triplet Company $\Pi_{\mathrm{baryon}} + \Pi_{\mathrm{quark}}$. -/
+def colorPositiveCompanyProj : MatStage 5 :=
+  colorBaryonSingletProj + colorQuarkTripletProj
+
+/-- Negative-parity $(\mathbf{1}_0 \oplus \bar{\mathbf{3}})$ Vacuum–Diquark Singlet–Antitriplet Company $\Pi_{\mathrm{vac}} + \Pi_{\mathrm{diquark}}$. -/
+def colorNegativeCompanyProj : MatStage 5 :=
+  colorVacuumSingletProj + colorDiquarkAntitripletProj
+
+/-- **Complete 3-Color Four-Sector Partition of Unity ($\mathbf{1}_3 \oplus \mathbf{3} \oplus \bar{\mathbf{3}} \oplus \mathbf{1}_0 = I_{32}$)**:
+    The Baryon Singlet, Quark Triplet, Diquark Antitriplet, and Vacuum Singlet projectors
+    resolve the $32 \times 32$ identity matrix $I_{32}$! -/
+theorem color_singlet_triplet_four_sector_sum :
+    colorBaryonSingletProj + colorQuarkTripletProj +
+      colorDiquarkAntitripletProj + colorVacuumSingletProj = 1 ∧
+    colorPositiveCompanyProj + colorNegativeCompanyProj = 1 := by
+  have h_sum : colorBaryonSingletProj + colorQuarkTripletProj +
+      colorDiquarkAntitripletProj + colorVacuumSingletProj = 1 := by
+    dsimp [colorBaryonSingletProj, colorQuarkTripletProj,
+           colorDiquarkAntitripletProj, colorVacuumSingletProj]
+    calc
+      modeOccupied 0 * modeOccupied 1 * modeOccupied 2 +
+        (modeOccupied 0 * modeVacant 1 * modeVacant 2 +
+         modeVacant 0 * modeOccupied 1 * modeVacant 2 +
+         modeVacant 0 * modeVacant 1 * modeOccupied 2) +
+        (modeVacant 0 * modeOccupied 1 * modeOccupied 2 +
+         modeOccupied 0 * modeVacant 1 * modeOccupied 2 +
+         modeOccupied 0 * modeOccupied 1 * modeVacant 2) +
+        modeVacant 0 * modeVacant 1 * modeVacant 2 =
+        (modeOccupied 0 + modeVacant 0) *
+        (modeOccupied 1 + modeVacant 1) *
+        (modeOccupied 2 + modeVacant 2) := by noncomm_ring
+      _ = 1 * 1 * 1 := by
+        rw [modeOccupied_add_modeVacant 0,
+            modeOccupied_add_modeVacant 1,
+            modeOccupied_add_modeVacant 2]
+      _ = 1 := by simp
+  have h_comp : colorPositiveCompanyProj + colorNegativeCompanyProj = 1 := by
+    dsimp [colorPositiveCompanyProj, colorNegativeCompanyProj]
+    rw [← h_sum]
+    abel
+  exact ⟨h_sum, h_comp⟩
+
+/-- **Why Singlets and Triplets Come in Company (`colorChiralVolume_eq_positiveCompany_sub_negativeCompany`)**:
+    The 3-color chiral volume element $\Gamma_{\mathrm{color}} = (2 H_0)(2 H_1)(2 H_2)$ is
+    identically the difference between the $(\mathbf{1}_3 \oplus \mathbf{3})$ Baryon–Quark Company
+    and the $(\mathbf{1}_0 \oplus \bar{\mathbf{3}})$ Vacuum–Diquark Company, and factorizes
+    $\Gamma_{\mathrm{Cl}(5,5)}$ into $(\Pi_{\mathrm{pos}} - \Pi_{\mathrm{neg}})(\Delta_{\mathrm{pair}} - \Delta_{\mathrm{iso}})$! -/
+theorem colorChiralVolume_eq_positiveCompany_sub_negativeCompany :
+    colorChiralVolume = colorPositiveCompanyProj - colorNegativeCompanyProj ∧
+    chiralVolume10D =
+      (colorPositiveCompanyProj - colorNegativeCompanyProj) *
+        (pairingCarrier 3 4 - isospinCarrier 3 4) := by
+  have h_col : colorChiralVolume = colorPositiveCompanyProj - colorNegativeCompanyProj := by
+    dsimp [colorChiralVolume, colorPositiveCompanyProj, colorNegativeCompanyProj,
+           colorBaryonSingletProj, colorQuarkTripletProj,
+           colorVacuumSingletProj, colorDiquarkAntitripletProj]
+    rw [two_smul_H_eq_modeOccupied_sub_modeVacant 0,
+        two_smul_H_eq_modeOccupied_sub_modeVacant 1,
+        two_smul_H_eq_modeOccupied_sub_modeVacant 2]
+    noncomm_ring
+  refine ⟨h_col, ?_⟩
+  rw [chiralVolume10D_factorization.1, h_col]
+
 /-! ## 6. The Grand Cl(5,5) Spinor Cartan-Fock Synthesis -/
 
 /-

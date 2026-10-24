@@ -193,6 +193,16 @@ def run_sympy_verification() -> dict:
     Gamma_color = (2 * H[0]) * (2 * H[1]) * (2 * H[2])
     Gamma_10D = (2 * H[0]) * (2 * H[1]) * (2 * H[2]) * (2 * H[3]) * (2 * H[4])
     assert Gamma_10D == Gamma_color * (Delta_pair - Delta_iso)
+    V = [I32 - N[a] for a in range(3)]
+    Pi_baryon = N[0] * N[1] * N[2]
+    Pi_vac = V[0] * V[1] * V[2]
+    Pi_quark = N[0] * V[1] * V[2] + V[0] * N[1] * V[2] + V[0] * V[1] * N[2]
+    Pi_diquark = V[0] * N[1] * N[2] + N[0] * V[1] * N[2] + N[0] * N[1] * V[2]
+    Pi_pos_company = Pi_baryon + Pi_quark
+    Pi_neg_company = Pi_vac + Pi_diquark
+    assert Pi_baryon + Pi_quark + Pi_diquark + Pi_vac == I32
+    assert Gamma_color == Pi_pos_company - Pi_neg_company
+    assert Gamma_10D == (Pi_pos_company - Pi_neg_company) * (Delta_pair - Delta_iso)
 
     # 9. Verify Erlangen 2.0 Cartan-Peirce Emergence & Gauge Invariance on SplitQuaternion:
     x00, x01, x10, x11, y00, y01, y10, y11, u = sp.symbols(

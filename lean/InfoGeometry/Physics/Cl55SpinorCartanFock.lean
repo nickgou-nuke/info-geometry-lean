@@ -1772,6 +1772,65 @@ theorem colorGluon_cartan_singlet_neutrality :
     dsimp [colorGluon3Y]; noncomm_ring
   rw [h3Y, add_mul, smul_mul_assoc, h01, h12, smul_zero, add_zero]
 
+/-- **Universal Zero-Hypothesis Spectral Decomposition of Color Quark Number (`N₀ + N₁ + N₂`)**:
+    With zero hypotheses, the total color quark number `colorSingletNumber = N₀ + N₁ + N₂`
+    decomposes into `1 • Π_{quark} + 2 • Π_{diquark} + 3 • Π_{baryon}`! -/
+theorem colorSingletNumber_spectral_decomposition :
+    colorSingletNumber =
+      colorQuarkTripletProj +
+      (2 : ℕ) • colorDiquarkAntitripletProj +
+      (3 : ℕ) • colorBaryonSingletProj := by
+  dsimp [colorSingletNumber, colorQuarkTripletProj,
+         colorDiquarkAntitripletProj, colorBaryonSingletProj]
+  rw [modeVacant_eq_one_sub_modeOccupied 0,
+      modeVacant_eq_one_sub_modeOccupied 1,
+      modeVacant_eq_one_sub_modeOccupied 2]
+  noncomm_ring
+
+/-- **Division-Free Gell-Mann–Nishijima Electric Charge Operator (`sixElectricCharge = 6 Q_{EM}`)**:
+    `sixElectricCharge = (N₀ + N₁ + N₂) + 3 • (Π_+(3,4) - Π_-(3,4))`
+    (corresponding to `Q_{EM} = N_{color}/6 + τ₃(3,4)/2`). -/
+def sixElectricCharge : MatStage 5 :=
+  colorSingletNumber + (3 : ℤ) • (isoProjPlus 3 4 - isoProjMinus 3 4)
+
+/-- **Gell-Mann–Nishijima Fractional-to-Integer Spectral Charge Decomposition (`sixElectricCharge_spectral_decomposition`)**:
+    With zero hypotheses, `sixElectricCharge = 6 Q_{EM}` expands into the exact multiplet
+    charge weights:
+    - `+4` (`+2/3`) on Up Quark `Π_{quark} * Π_+(3,4)`,
+    - `-2` (`-1/3`) on Down Quark `Π_{quark} * Π_-(3,4)`,
+    - `+2` (`+1/3`) on Isoscalar Diquark `Π_{diquark} * Δ_{pair}(3,4)`,
+    - `+6` (`+1`)   on Proton Baryon `Π_{baryon} * Π_+(3,4)`,
+    - ` 0` (` 0`)   on Neutron Baryon `Π_{baryon} * Π_-(3,4)` and Vacuum `Π_{vac} * Δ_{pair}(3,4)`! -/
+theorem sixElectricCharge_spectral_decomposition :
+    sixElectricCharge =
+      (4 : ℤ) • (colorQuarkTripletProj * isoProjPlus 3 4) +
+      (-2 : ℤ) • (colorQuarkTripletProj * isoProjMinus 3 4) +
+      (1 : ℤ) • (colorQuarkTripletProj * pairingCarrier 3 4) +
+      (5 : ℤ) • (colorDiquarkAntitripletProj * isoProjPlus 3 4) +
+      (-1 : ℤ) • (colorDiquarkAntitripletProj * isoProjMinus 3 4) +
+      (2 : ℤ) • (colorDiquarkAntitripletProj * pairingCarrier 3 4) +
+      (6 : ℤ) • (colorBaryonSingletProj * isoProjPlus 3 4) +
+      (3 : ℤ) • (colorBaryonSingletProj * pairingCarrier 3 4) +
+      (3 : ℤ) • (colorVacuumSingletProj * isoProjPlus 3 4) +
+      (-3 : ℤ) • (colorVacuumSingletProj * isoProjMinus 3 4) := by
+  have h_iso : isoProjPlus 3 4 + isoProjMinus 3 4 + pairingCarrier 3 4 = 1 :=
+    isospinCarrier_add_pairingCarrier 3 4
+  have h_col : colorBaryonSingletProj + colorQuarkTripletProj +
+      colorDiquarkAntitripletProj + colorVacuumSingletProj = 1 :=
+    color_singlet_triplet_four_sector_sum.1
+  calc
+    sixElectricCharge =
+      (colorQuarkTripletProj +
+       (2 : ℕ) • colorDiquarkAntitripletProj +
+       (3 : ℕ) • colorBaryonSingletProj) *
+      (isoProjPlus 3 4 + isoProjMinus 3 4 + pairingCarrier 3 4) +
+      (colorBaryonSingletProj + colorQuarkTripletProj +
+       colorDiquarkAntitripletProj + colorVacuumSingletProj) *
+      ((3 : ℤ) • (isoProjPlus 3 4 - isoProjMinus 3 4)) := by
+      rw [h_iso, h_col, ← colorSingletNumber_spectral_decomposition]
+      dsimp [sixElectricCharge]; simp
+    _ = _ := by noncomm_ring
+
 /-! ## 6. The Grand Cl(5,5) Spinor Cartan-Fock Synthesis -/
 
 /-

@@ -223,6 +223,20 @@ def run_sympy_verification() -> dict:
     assert three_Y_color * Pi_baryon == Z32
     assert T3_color * Pi_vac == Z32
     assert three_Y_color * Pi_vac == Z32
+    assert N_color == Pi_quark + 2 * Pi_diquark + 3 * Pi_baryon
+    six_Q_EM = N_color + 3 * (Pi_plus - Pi_minus)
+    assert six_Q_EM == (
+        4 * (Pi_quark * Pi_plus)
+        - 2 * (Pi_quark * Pi_minus)
+        + 1 * (Pi_quark * Delta_pair)
+        + 5 * (Pi_diquark * Pi_plus)
+        - 1 * (Pi_diquark * Pi_minus)
+        + 2 * (Pi_diquark * Delta_pair)
+        + 6 * (Pi_baryon * Pi_plus)
+        + 3 * (Pi_baryon * Delta_pair)
+        + 3 * (Pi_vac * Pi_plus)
+        - 3 * (Pi_vac * Pi_minus)
+    )
 
     # 9. Verify Erlangen 2.0 Cartan-Peirce Emergence & Gauge Invariance on SplitQuaternion:
     x00, x01, x10, x11, y00, y01, y10, y11, u = sp.symbols(

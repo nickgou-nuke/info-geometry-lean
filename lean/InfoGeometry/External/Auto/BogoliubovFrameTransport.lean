@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Auto.KANTraceSectorization
@@ -23,7 +28,7 @@ def transportBy (U V : M2C) (S : M2C) : M2C :=
   U * S * V
 
 /-- Basic multiplication compatibility of transported generators. -/
-lemma transport_mul (U V : M2C) (_hUV : U * V = (1 : M2C))
+lemma transport_mul (U V : M2C)
     (hVU : V * U = (1 : M2C))
     (A B : M2C) :
     transportBy U V A * transportBy U V B = U * (A * B) * V := by
@@ -36,12 +41,12 @@ lemma transport_mul (U V : M2C) (_hUV : U * V = (1 : M2C))
     _ = U * A * (B * V) := by simp [mul_assoc]
     _ = U * (A * B) * V := by simp [mul_assoc]
 
-/-- Trace is invariant under this transported pair (`hUV`,`hVU`), i.e. under conjugation by inverse pair. -/
-lemma trace_transport_mul (U V : M2C) (_hUV : U * V = (1 : M2C))
+/-- Trace is invariant under the transported pair when `V` is a right inverse of `U`. -/
+lemma trace_transport_mul (U V : M2C)
     (hVU : V * U = (1 : M2C))
     (A B : M2C) :
     Matrix.trace (transportBy U V A * transportBy U V B) = Matrix.trace (A * B) := by
-  rw [transport_mul U V _hUV hVU]
+  rw [transport_mul U V hVU]
   calc
     Matrix.trace (U * (A * B) * V)
         = Matrix.trace (V * (U * (A * B))) := by
@@ -51,31 +56,29 @@ lemma trace_transport_mul (U V : M2C) (_hUV : U * V = (1 : M2C))
     _ = Matrix.trace (A * B) := by simp [one_mul]
 
 /-- Co-frame coefficients from trace projection (soldering definition). -/
-def solderingCoeff (U V : M2C) (_hUV : U * V = (1 : M2C))
-    (_hVU : V * U = (1 : M2C)) (μ a : Fin 3) : ℂ :=
+def solderingCoeff (U V : M2C) (μ a : Fin 3) : ℂ :=
   (1 / 2 : ℂ) * Matrix.trace (transportBy U V (pauliBasis μ) * pauliBasis a)
 
 /-- Anticommutator-projected induced metric via transported Pauli frame. -/
-def inducedMetric (U V : M2C) (_hUV : U * V = (1 : M2C))
-    (_hVU : V * U = (1 : M2C)) (μ ν : Fin 3) : ℂ :=
+def inducedMetric (U V : M2C) (μ ν : Fin 3) : ℂ :=
   (1 / 2 : ℂ) * Matrix.trace
     (transportBy U V (pauliBasis μ) * transportBy U V (pauliBasis ν)
       + transportBy U V (pauliBasis ν) * transportBy U V (pauliBasis μ))
 
 /-- Trace of transported anticommutator is the flat reference anticommutator trace. -/
-lemma induced_metric_invariance (U V : M2C) (_hUV : U * V = (1 : M2C))
+lemma induced_metric_invariance (U V : M2C)
     (hVU : V * U = (1 : M2C)) (μ ν : Fin 3) :
-    inducedMetric U V _hUV hVU μ ν =
+    inducedMetric U V μ ν =
       (1 / 2 : ℂ) * Matrix.trace
         (pauliBasis μ * pauliBasis ν + pauliBasis ν * pauliBasis μ) := by
   have h1 : Matrix.trace (U * pauliBasis μ * V * (U * pauliBasis ν * V)) =
       Matrix.trace (pauliBasis μ * pauliBasis ν) := by
     simpa [transportBy, mul_assoc] using
-      (trace_transport_mul U V _hUV hVU (pauliBasis μ) (pauliBasis ν))
+      (trace_transport_mul U V hVU (pauliBasis μ) (pauliBasis ν))
   have h2 : Matrix.trace (U * pauliBasis ν * V * (U * pauliBasis μ * V)) =
       Matrix.trace (pauliBasis ν * pauliBasis μ) := by
     simpa [transportBy, mul_assoc] using
-      (trace_transport_mul U V _hUV hVU (pauliBasis ν) (pauliBasis μ))
+      (trace_transport_mul U V hVU (pauliBasis ν) (pauliBasis μ))
   unfold inducedMetric
   simp [transportBy, Matrix.trace_add, mul_add, h1, h2]
 
@@ -151,15 +154,12 @@ lemma KANTransport_inverse_pair (θ : ℝ) (β : ℝ) (z : ℂ) :
 
 /-- KAN transport inherits the same finite anticommutator metric as the flat Pauli frame. -/
 theorem KAN_inducedMetric_formula (θ β : ℝ) (z : ℂ) (μ ν : Fin 3) :
-    inducedMetric (KANTransport θ β z) (KANTransport_inv θ β z)
-      (by exact (KANTransport_inverse_pair θ β z).1)
-      (by exact (KANTransport_inverse_pair θ β z).2)
-      μ ν
+    inducedMetric (KANTransport θ β z) (KANTransport_inv θ β z) μ ν
       =
     (1 / 2 : ℂ) * Matrix.trace
       (pauliBasis μ * pauliBasis ν + pauliBasis ν * pauliBasis μ) := by
   apply induced_metric_invariance
     (KANTransport θ β z) (KANTransport_inv θ β z)
-    (KANTransport_inverse_pair θ β z).1 (KANTransport_inverse_pair θ β z).2
+    (KANTransport_inverse_pair θ β z).2
 
 end InfoGeometry.GrandUnification.BogoliubovFrameTransport

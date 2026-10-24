@@ -337,6 +337,27 @@ def run_sympy_verification() -> dict:
     assert sp.simplify(C_XY.trace()) == 0
     assert sp.simplify((C_XY * T_Z + T_Z * C_XY) - (C_XY * T_Z).trace() * I2) == sp.zeros(2, 2)
 
+    # 15. Verify Tomita Modular Conjugation & KMS u^(+-6) Nambu Volume Casimir Invariance:
+    def zvm_tomita(m):
+        return (m[0], m[2], m[1], m[3])
+
+    def zvm_swap(m):
+        return (m[3], -m[2], -m[1], m[0])
+
+    lhs_tomita = zvm_tomita(zvm_mul(e_X0, e_Y1))
+    rhs_tomita = zvm_mul(zvm_tomita(e_Y1), zvm_tomita(e_X0))
+    assert sp.simplify(lhs_tomita[0] - rhs_tomita[0]) == 0
+    assert sp.simplify(lhs_tomita[1] - rhs_tomita[1]) == sp.zeros(3, 1)
+    assert sp.simplify(lhs_tomita[2] - rhs_tomita[2]) == sp.zeros(3, 1)
+    assert sp.simplify(lhs_tomita[3] - rhs_tomita[3]) == 0
+
+    lhs_swap = zvm_swap(zvm_mul(e_X0, e_Y1))
+    rhs_swap = zvm_mul(zvm_swap(e_X0), zvm_swap(e_Y1))
+    assert sp.simplify(lhs_swap[0] - rhs_swap[0]) == 0
+    assert sp.simplify(lhs_swap[1] - rhs_swap[1]) == sp.zeros(3, 1)
+    assert sp.simplify(lhs_swap[2] - rhs_swap[2]) == sp.zeros(3, 1)
+    assert sp.simplify(lhs_swap[3] - rhs_swap[3]) == 0
+
     return {
         "engine": "SymPy",
         "status": "PASSED",

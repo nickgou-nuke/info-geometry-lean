@@ -213,24 +213,39 @@ namespace — all definitions are at top level. `open InfoGeometry.Canonical.Kle
 will fail with "unknown namespace". Import the file but do NOT open it;
 use the definitions directly (they're in the global namespace).
 
-### `rw` vs `simpa` for Squared Lemmas
+### `λ` Is a Lambda Keyword, Not an Identifier
 
-`rw [tilt_sq]` fails when the goal is `tilt * tilt = 1` but `tilt_sq` is
+The Greek letter `λ` is parsed as lambda abstraction in Lean 4. Using it as a variable or parameter name (e.g., `{λ μ : ℝ}` or `twoSidedHyperbolicLaplace λ μ ...`) causes "unexpected token 'λ'" parse errors. Use `lam`, `mu`, `ell`, etc. instead. Same caution applies to other Greek letters that double as keywords/operators (`Σ` in some contexts); prefer ASCII names in signatures.
+
+### `rw` vs `simpa` for Squared Lemmas
 `tilt ^ 2 = 1`, because `rw` does not unfold `^ 2` to `*`. Use:
 
 ```lean
 simpa [sq] using tilt_sq
 ```
 
-### Forward References
+### Namespace-Qualified Lemma Access
+
+Lemmas like `clifford_squares`, `polarization_velocity`, `pp`, `pq`, `qp`,
+`qq`, `pd`, `pb`, `qd`, `qb`, `dp`, `dq`, `bp`, `bq` are methods of
+`IsDualSeedPair`, not bare identifiers. Access them as `IsDualSeedPair.X h`
+or open the namespace with `open InfoGeometry.Core.DualSeedPeirce.IsDualSeedPair`.
 
 Theorems defined later in the same file cannot be referenced earlier.
 Reorder definitions so dependencies come first.
 
-### `ring` Does Not Work on Matrices
+### `ring` Does Not Work on Matrices or Non-Commutative Rings
 
-`ring` and `ring_nf` fail on matrix expressions. Use `simp` with specific
-lemmas (`tilt_sq`, `switch_sq`, `tilt_switch_anticomm`) instead.
+`ring`, `ring_nf`, and `abel` fail on non-commutative rings (any `Ring A`
+without `CommRing A`) and on matrix expressions. Use `rw` with explicit
+distributivity lemmas (`add_mul`, `mul_add`, `sub_mul`, `mul_sub`) and
+`abel` only when the ring is commutative. When `simp` does not unfold a
+`def` (only `abbrev`s unfold automatically), use `change` or `unfold`
+to expose the underlying expression first.
+
+### Anticommutation Role Swap Type Mismatch
+
+When a Cl(1,1) atom construction swaps which factor is `c` (square +1) and which is `d'` (square −1), the anticommutation lemma `h` may prove `a * b + b * a = 0` while the goal expects `b * a + a * b = 0`. The terms are equal by commutativity of addition, but Lean does not unify them automatically. Fix with `rw [add_comm]` before `exact h`, rather than rewriting the lemma.
 
 ### `Matrix.trace` vs `Matrix.traceAddMonoidHom`
 

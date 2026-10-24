@@ -1034,4 +1034,113 @@ theorem zorn_tamm_dancoff_triplet_to_nambu_singlet (X Y Z : ZornVectorMatrix R) 
           ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
     ring
 
+/-!
+## 8. Tomita–Takesaki Modular Conjugations & KMS Transport of Nambu 3-Bracket Volumes
+-/
+
+/-- **Zorn Chiral-Swap Automorphism (`zornModularSwap`)**:
+    `σ_swap ⟨a, v, w, b⟩ = ⟨b, -w, -v, a⟩` swaps the singlet poles `a ↔ b` and maps `(v, w) ↦ (-w, -v)`. -/
+def zornModularSwap (X : ZornVectorMatrix R) : ZornVectorMatrix R :=
+  ⟨X.b, fun i => -X.w i, fun i => -X.v i, X.a⟩
+
+/-- **Tomita Modular Anti-Automorphism (`zornTomitaConj`)**:
+    `J_Tomita ⟨a, v, w, b⟩ = ⟨a, w, v, b⟩` fixes the diagonal singlet poles `(a, b)` and swaps
+    the quark and antiquark color triplets `v ↔ w`. -/
+def zornTomitaConj (X : ZornVectorMatrix R) : ZornVectorMatrix R :=
+  ⟨X.a, X.w, X.v, X.b⟩
+
+/-- **Automorphism & Anti-Automorphism Laws of `zornModularSwap` and `zornTomitaConj`**:
+    `zornModularSwap` is an exact multiplicative automorphism flipping `zornGamma`, while
+    `zornTomitaConj` is an exact multiplicative anti-automorphism fixing `zornGamma`! -/
+theorem zornModularSwap_and_tomitaConj_laws (X Y : ZornVectorMatrix R) :
+    zornModularSwap (zornModularSwap X) = X ∧
+    zornModularSwap (X * Y) = zornModularSwap X * zornModularSwap Y ∧
+    zornModularSwap (zornGamma : ZornVectorMatrix R) = -zornGamma ∧
+    zornTomitaConj (zornTomitaConj X) = X ∧
+    zornTomitaConj (X * Y) = zornTomitaConj Y * zornTomitaConj X ∧
+    zornTomitaConj (zornGamma : ZornVectorMatrix R) = zornGamma := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+  · ext
+    · simp [zornModularSwap, zornTomitaConj, zornGamma,
+            InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_neg_def,
+            mul, neg, ZornVec3.dot, Fin.sum_univ_three]
+      try ring
+    · rename_i i
+      fin_cases i <;>
+        (simp [zornModularSwap, zornTomitaConj, zornGamma,
+               InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_neg_def,
+               mul, neg, ZornVec3.cross]; try ring)
+    · rename_i i
+      fin_cases i <;>
+        (simp [zornModularSwap, zornTomitaConj, zornGamma,
+               InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_neg_def,
+               mul, neg, ZornVec3.cross]; try ring)
+    · simp [zornModularSwap, zornTomitaConj, zornGamma,
+            InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_neg_def,
+            mul, neg, ZornVec3.dot, Fin.sum_univ_three]
+      try ring
+
+/-- **KMS Modular Scaling of Nambu 3-Bracket Volumes & Baryon–Antibaryon Invariance (`u : Rˣ`)**:
+    Under the antisymmetric KMS modular flow `Δ_u = zornTwoSidedHyperbolicLaplace u u⁻¹ u⁻¹ u`:
+    - The quark Nambu 3-volume `zornNambuDet X'.v Y'.v Z'.v` scales by `u ^ 6`.
+    - The antiquark Nambu 3-volume `zornNambuDet X'.w Y'.w Z'.w` scales by `(↑u⁻¹) ^ 6`.
+    - The Baryon–Antibaryon Nambu Casimir product `zornNambuDet v * zornNambuDet w` is
+      **strictly KMS-invariant**! -/
+theorem zornNambuDet_kms_modular_transport
+    (u : Rˣ) (X Y Z : ZornVectorMatrix R) :
+    let X' := zornTwoSidedHyperbolicLaplace (u : R) (↑u⁻¹ : R) (↑u⁻¹ : R) (u : R) X
+    let Y' := zornTwoSidedHyperbolicLaplace (u : R) (↑u⁻¹ : R) (↑u⁻¹ : R) (u : R) Y
+    let Z' := zornTwoSidedHyperbolicLaplace (u : R) (↑u⁻¹ : R) (↑u⁻¹ : R) (u : R) Z
+    zornNambuDet X'.v Y'.v Z'.v = ((u : R) ^ 6) * zornNambuDet X.v Y.v Z.v ∧
+    zornNambuDet X'.w Y'.w Z'.w = ((↑u⁻¹ : R) ^ 6) * zornNambuDet X.w Y.w Z.w ∧
+    zornNambuDet X'.v Y'.v Z'.v * zornNambuDet X'.w Y'.w Z'.w =
+      zornNambuDet X.v Y.v Z.v * zornNambuDet X.w Y.w Z.w := by
+  intro X' Y' Z'
+  have hv : zornNambuDet X'.v Y'.v Z'.v = ((u : R) ^ 6) * zornNambuDet X.v Y.v Z.v := by
+    simp [X', Y', Z', zornTwoSidedHyperbolicLaplace, zornHyperbolicKernel,
+          zornNambuDet, InfoGeometry.Algebra.zvm_mul_def, mul,
+          ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+    ring
+  have hw : zornNambuDet X'.w Y'.w Z'.w = ((↑u⁻¹ : R) ^ 6) * zornNambuDet X.w Y.w Z.w := by
+    simp [X', Y', Z', zornTwoSidedHyperbolicLaplace, zornHyperbolicKernel,
+          zornNambuDet, InfoGeometry.Algebra.zvm_mul_def, mul,
+          ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+    ring
+  have h_inv : zornNambuDet X'.v Y'.v Z'.v * zornNambuDet X'.w Y'.w Z'.w =
+      zornNambuDet X.v Y.v Z.v * zornNambuDet X.w Y.w Z.w := by
+    rw [hv, hw]
+    calc ((u : R) ^ 6 * zornNambuDet X.v Y.v Z.v) *
+         ((↑u⁻¹ : R) ^ 6 * zornNambuDet X.w Y.w Z.w)
+      _ = ((u : R) * (↑u⁻¹ : R)) ^ 6 *
+          (zornNambuDet X.v Y.v Z.v * zornNambuDet X.w Y.w Z.w) := by ring
+      _ = zornNambuDet X.v Y.v Z.v * zornNambuDet X.w Y.w Z.w := by
+          simp
+  exact ⟨hv, hw, h_inv⟩
+
+/-- **Symmetric Modular Sandwich Preserves the 6D Frame & Nambu Volumes Without Decay (`u : Rˣ`)**. -/
+theorem symmetric_modular_sandwich_preserves_frame_and_nambu
+    (u : Rˣ) (X Y Z : ZornVectorMatrix R) :
+    let K := zornHyperbolicKernel (u : R) (↑u⁻¹ : R)
+    zornSpacetimeFramePart (twoSidedSandwich K X) = zornSpacetimeFramePart X ∧
+    zornNambuDet (twoSidedSandwich K X).v (twoSidedSandwich K Y).v (twoSidedSandwich K Z).v =
+      zornNambuDet X.v Y.v Z.v := by
+  intro K
+  have h_frame (W : ZornVectorMatrix R) :
+      zornSpacetimeFramePart (twoSidedSandwich K W) = zornSpacetimeFramePart W := by
+    ext
+    · rfl
+    · rename_i i
+      fin_cases i <;>
+        simp [K, twoSidedSandwich, zornHyperbolicKernel, zornSpacetimeFramePart,
+              offDiagonalPart, mul, ZornVec3.cross]
+    · rename_i i
+      fin_cases i <;>
+        simp [K, twoSidedSandwich, zornHyperbolicKernel, zornSpacetimeFramePart,
+              offDiagonalPart, mul, ZornVec3.cross]
+    · rfl
+  have h_v (W : ZornVectorMatrix R) : (twoSidedSandwich K W).v = W.v := by
+    simpa [zornSpacetimeFramePart, offDiagonalPart] using congrArg ZornVectorMatrix.v (h_frame W)
+  rw [h_v X, h_v Y, h_v Z]
+  exact ⟨h_frame X, rfl⟩
+
 end InfoGeometry.Algebra.ZornVectorMatrix

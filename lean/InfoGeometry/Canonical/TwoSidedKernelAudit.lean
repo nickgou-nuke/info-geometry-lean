@@ -14,7 +14,7 @@ namespace InfoGeometry.Canonical.TwoSidedKernelAudit
 
 open Matrix InfoGeometry.Core.PeirceBilateralAction
 open InfoGeometry.Core.DualSeedPeirce InfoGeometry.Core.PeirceRotor
-open InfoGeometry.Core.DiracSuperalgebra
+open InfoGeometry.Singular.MoorePenrose
 
 /-- Integral matrix units instantiate, rather than replace, the abstract carrier. -/
 def dZ : Matrix (Fin 2) (Fin 2) ℤ := !![0, 1; 0, 0]
@@ -25,11 +25,7 @@ theorem integral_seed : IsDualSeedPair dZ bZ := by constructor <;> decide
 /-- A noncommuting signal exhibits all four different corner multipliers. -/
 theorem integral_four_corner_action :
     bilateral (R := ℤ) (diagonal dZ bZ (2 : ℤ) 3) (diagonal dZ bZ (5 : ℤ) 7)
-      !![2, 3; 5, 7] = !![20, 42; 75, 147] := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    norm_num [bilateral_apply, diagonal_formula, polePlus, poleMinus, exactSupport,
-      coexactSupport, dZ, bZ, Matrix.mul_apply, Fin.sum_univ_two]
+      !![2, 3; 5, 7] = !![20, 42; 75, 147] := by decide
 
 /-- Identity on diagonal corners and zero on both off-diagonal corners is not separable. -/
 theorem four_weights_not_independent :
@@ -44,14 +40,7 @@ theorem proper_support_not_identity :
     let d : Matrix (Fin 3) (Fin 3) ℤ := !![0, 1, 0; 0, 0, 0; 0, 0, 0]
     let b : Matrix (Fin 3) (Fin 3) ℤ := !![0, 0, 0; 1, 0, 0; 0, 0, 0]
     let x : Matrix (Fin 3) (Fin 3) ℤ := !![0, 0, 0; 0, 0, 0; 0, 0, 1]
-    bilateral (R := ℤ) (diagonal d b (1 : ℤ) 1) (diagonal d b (1 : ℤ) 1) x = 0 ∧ x ≠ 0 := by
-  dsimp
-  constructor
-  · ext i j
-    fin_cases i <;> fin_cases j <;>
-      norm_num [bilateral_apply, diagonal_formula, polePlus, poleMinus, exactSupport,
-        coexactSupport, Matrix.mul_apply, Fin.sum_univ_three]
-  · decide
+    bilateral (R := ℤ) (diagonal d b (1 : ℤ) 1) (diagonal d b (1 : ℤ) 1) x = 0 ∧ x ≠ 0 := by decide
 
 /-- Symmetric sandwiching by an invertible diagonal need not preserve products. -/
 theorem symmetric_sandwich_not_multiplicative :
@@ -63,7 +52,7 @@ theorem symmetric_sandwich_not_multiplicative :
   intro h
   have h00 := congrFun (congrFun h 0) 0
   norm_num [bilateral_apply, diagonal_formula, polePlus, poleMinus, exactSupport,
-    coexactSupport, Matrix.mul_apply, Fin.sum_univ_two] at h00
+    coexactSupport, Matrix.smul_apply, Matrix.mul_apply, Fin.sum_univ_two] at h00
 
 /-- The source's extra reassociation is not the middle Moufang identity. -/
 theorem invalid_reassociation :

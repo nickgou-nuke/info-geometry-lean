@@ -1,0 +1,16 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.SuperGrassmannian.ProjectorGraphChart
+#print axioms InfoGeometry.SuperGrassmannian.ProjectorGraphChart.graphProjector_apply
+#print axioms InfoGeometry.SuperGrassmannian.ProjectorGraphChart.graphProjector_mul
+#print axioms InfoGeometry.SuperGrassmannian.ProjectorGraphChart.graphProjector_idempotent
+#print axioms InfoGeometry.SuperGrassmannian.ProjectorGraphChart.range_graphProjector
+#print axioms InfoGeometry.SuperGrassmannian.ProjectorGraphChart.ker_graphProjector
+#print axioms InfoGeometry.SuperGrassmannian.ProjectorGraphChart.graphProjector_injective
+#print axioms InfoGeometry.SuperGrassmannian.ProjectorGraphChart.graphProjector_commute_iff
+#print axioms InfoGeometry.SuperGrassmannian.ProjectorGraphChart.range_complement_graphProjector
+#print axioms InfoGeometry.SuperGrassmannian.ProjectorGraphChart.complement_graphProjector_eq_iff
+#print axioms InfoGeometry.SuperGrassmannian.ProjectorGraphChart.graphProjector_commute_prodMap_iff

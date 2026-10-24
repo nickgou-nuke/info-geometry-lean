@@ -33,10 +33,25 @@ def validate_targets(targets: object) -> list[str]:
 
 
 # Exact source-reviewed roles, never inferred from an Audit suffix. Values are
-# immutable tuples of selected declaration owners printed by these commands.
-COMMAND_ONLY_OWNERS = MappingProxyType({'InfoGeometry.Algebra.CuntzClifford22Audit': ('InfoGeometry.Algebra.CuntzClifford22', 'InfoGeometry.Algebra.CuntzClockObstructions'), 'InfoGeometry.Krein.TransitionWeakValueAudit': ('InfoGeometry.Krein.TransitionWeakValue', 'InfoGeometry.Canonical.WeakValuePoleBounds', 'InfoGeometry.Krein.TransitionWeakValueExamples')})
+# immutable tuples of selected declaration owners used by these commands/examples.
+COMMAND_ONLY_OWNERS = MappingProxyType({
+    'InfoGeometry.Algebra.CuntzClifford22Audit': (
+        'InfoGeometry.Algebra.CuntzClifford22', 'InfoGeometry.Algebra.CuntzClockObstructions'),
+    'InfoGeometry.Krein.TransitionWeakValueAudit': (
+        'InfoGeometry.Krein.TransitionWeakValue', 'InfoGeometry.Canonical.WeakValuePoleBounds',
+        'InfoGeometry.Krein.TransitionWeakValueExamples'),
+    'InfoGeometry.Canonical.WeakValueReconstructionChecks': (
+        'InfoGeometry.Canonical.WeakValueEnstrophy',
+        'InfoGeometry.Canonical.KreinSeamEvolution',
+        'InfoGeometry.Canonical.WeakValueCylinderTransport',
+        'InfoGeometry.Canonical.WeakValueForcedShear'),
+})
 # Freeze the inspected command sources: edits require explicit role re-review.
-COMMAND_SOURCE_SHA256 = MappingProxyType({'InfoGeometry.Algebra.CuntzClifford22Audit': '8556be391ef1a69dd5376a1e452be29b5287e3fb1c63778b6c9d3a083d00f289', 'InfoGeometry.Krein.TransitionWeakValueAudit': '8316ce42dfbc8233756b763963c765393ecfca0feeb6000f69f30697b5da1c6c'})
+COMMAND_SOURCE_SHA256 = MappingProxyType({
+    'InfoGeometry.Algebra.CuntzClifford22Audit': '8556be391ef1a69dd5376a1e452be29b5287e3fb1c63778b6c9d3a083d00f289',
+    'InfoGeometry.Krein.TransitionWeakValueAudit': '8316ce42dfbc8233756b763963c765393ecfca0feeb6000f69f30697b5da1c6c',
+    'InfoGeometry.Canonical.WeakValueReconstructionChecks': '9c75a0d33d16fd484bbc89ea37d7b622713f8972f67127e02793334953f04617',
+})
 
 
 def validate_roles(targets: object, command_only: object = None) -> tuple[str, ...]:

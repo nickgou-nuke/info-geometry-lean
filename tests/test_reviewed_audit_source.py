@@ -121,7 +121,7 @@ class CommandRoleFixtures(unittest.TestCase):
     def test_exact_roles_and_owners_retained(self):
         self.assertEqual(validate_roles(self.targets), tuple(self.roles))
         self.assertEqual(validate_roles(self.targets, self.roles), tuple(self.roles))
-        for owner in self.targets[2:]:
+        for owner in self.targets[len(self.roles):]:
             self.assertTrue(may_reuse_cache(owner, self.targets))
         for module in self.roles:
             self.assertFalse(may_reuse_cache(module, self.targets))
@@ -129,7 +129,7 @@ class CommandRoleFixtures(unittest.TestCase):
 
     def test_bad_role_mappings_rejected(self):
         cases = [[], [self.roles[0]], self.roles + [self.roles[0]],
-                 self.roles + ["Unknown.Audit"], self.roles + [self.targets[2]],
+                 self.roles + ["Unknown.Audit"], self.roles + [self.targets[len(self.roles)]],
                  "bad", {self.roles[0]: "command-only"}]
         for roles in cases:
             with self.subTest(roles=roles), self.assertRaises(ValueError):
@@ -138,7 +138,7 @@ class CommandRoleFixtures(unittest.TestCase):
             validate_roles(["Other.Owner"], self.roles)
 
     def test_missing_required_owner_rejected(self):
-        for owner in self.targets[2:]:
+        for owner in self.targets[len(self.roles):]:
             with self.subTest(owner=owner), self.assertRaisesRegex(ValueError, "selected owner"):
                 audit_source([m for m in self.targets if m != owner])
 
@@ -146,6 +146,16 @@ class CommandRoleFixtures(unittest.TestCase):
         generated = audit_source(["Other.Audit"])
         self.assertIn("let commandOnly : Array Name := #[]", generated)
         self.assertIn('No declarations audited in reviewed module', generated)
+
+    def test_reconstruction_examples_require_fresh_source_and_all_four_owners(self):
+        module = 'InfoGeometry.Canonical.WeakValueReconstructionChecks'
+        self.assertEqual(COMMAND_ONLY_OWNERS[module], (
+            'InfoGeometry.Canonical.WeakValueEnstrophy',
+            'InfoGeometry.Canonical.KreinSeamEvolution',
+            'InfoGeometry.Canonical.WeakValueCylinderTransport',
+            'InfoGeometry.Canonical.WeakValueForcedShear'))
+        self.assertFalse(may_reuse_cache(module, self.targets))
+        self.assertEqual(len(self.roles), 3)
 
     def test_zero_owned_and_presence_checks_without_skipping_declarations(self):
         generated = audit_source(self.targets)

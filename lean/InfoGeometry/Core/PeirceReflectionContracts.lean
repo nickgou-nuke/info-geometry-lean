@@ -32,7 +32,7 @@ theorem grading_products (h : IsDualSeedPair d b) :
     (d - b) * (polePlus d b - poleMinus d b) = -(d + b)
   simp only [sub_mul, mul_sub, add_mul, mul_add,
     h.pd, h.pb, h.qd, h.qb, h.dp, h.bp, h.dq, h.bq]
-  constructor <;> try constructor <;> abel
+  refine ⟨?_, ?_, ?_⟩ <;> abel
 
 /-- Conjugation on the active corner exchanges its two idempotents. -/
 theorem reflection_exchange (h : IsDualSeedPair d b) :
@@ -107,7 +107,7 @@ theorem pure_left_reflection_projection (h : IsDualSeedPair d b) {v : M}
     polePlus d b • (transitionVelocity d b • v) = 0 := by
   have hc : polePlus d b * transitionVelocity d b * polePlus d b = 0 := by
     change polePlus d b * (d + b) * polePlus d b = 0
-    simp only [mul_add, add_mul, h.pd, h.pb, h.dp, zero_mul, add_zero]
+    simp only [mul_add, h.pd, h.pb, h.dp, add_zero]
   calc
     _ = (polePlus d b * transitionVelocity d b * polePlus d b) • v := by
       simp only [mul_smul, hv]

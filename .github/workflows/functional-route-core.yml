@@ -1,0 +1,120 @@
+name: Functional route core (pinned, scoped)
+on:
+  push:
+    branches: [feat/functional-route-fiber-diagnostics]
+    paths:
+      - 'lean/InfoGeometry/Routing/FunctionalRoute*.lean'
+      - '.github/workflows/functional-route-core.yml'
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Routing/FunctionalRoute*.lean'
+      - '.github/workflows/functional-route-core.yml'
+permissions:
+  contents: read
+concurrency:
+  group: functional-route-core-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: false
+jobs:
+  scoped-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          show-progress: false
+      - name: Remove checkout credential without recursive submodule traversal
+        run: git config --local --unset-all http.https://github.com/.extraheader || true
+      - name: Install exact repository Lean toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < lean-toolchain)"
+      - name: Compile full owner closure and audit new declarations
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import fcntl, json, os, pathlib, re, shutil, subprocess
+          repo=pathlib.Path.cwd()
+          lock=open('/tmp/info-geometry-build.lock','a')
+          fcntl.flock(lock,fcntl.LOCK_EX)
+          ps=subprocess.check_output(['ps','-eo','pid,comm'],text=True)
+          if any(l.split()[-1] in {'lean','lake','pytest'} for l in ps.splitlines() if l.split()):
+              raise RuntimeError('Another compiler or test process is active')
+          pin=next(p for p in json.loads((repo/'lake-manifest.json').read_text())['packages'] if p['name']=='mathlib')
+          work=pathlib.Path(os.environ['RUNNER_TEMP'])/'functional-route-mathlib'
+          package=pathlib.Path(os.environ['RUNNER_TEMP'])/'functional-route-deliverable'
+          package.mkdir()
+          logs=[]
+          def run(*args,cwd=repo,verbose=False):
+              r=subprocess.run(args,cwd=cwd,capture_output=True,text=True)
+              if verbose or r.returncode:
+                  text=r.stdout+r.stderr
+                  logs.append(text)
+                  (package/'compile.txt').write_text('\n'.join(logs))
+                  print(text,flush=True)
+              r.check_returncode()
+              return r.stdout
+          print('MATHLIB_PIN',pin['rev'],flush=True)
+          run('git','init',str(work))
+          run('git','-C',str(work),'remote','add','origin',pin['url'])
+          run('git','-C',str(work),'fetch','--depth=1','origin',pin['rev'])
+          run('git','-C',str(work),'checkout','--detach','FETCH_HEAD')
+          assert (work/'lean-toolchain').read_text().strip()==(repo/'lean-toolchain').read_text().strip()
+          run('lake','exe','cache','get',cwd=work)
+          targets=['InfoGeometry.Routing.FunctionalRouteCore','InfoGeometry.Routing.FunctionalRouteObstructions']
+          seen,order=set(),[]
+          def visit(module):
+              if module in seen: return
+              seen.add(module)
+              rel=pathlib.Path(*module.split('.')).with_suffix('.lean')
+              src=repo/'lean'/rel
+              if not src.is_file(): raise RuntimeError(f'Missing owner {module}')
+              for dep in re.findall(r'^\s*(?:public\s+)?import\s+([\w.]+)',src.read_text(),re.M):
+                  if not dep.startswith(('Mathlib','Lean','Std','Init','Batteries')): visit(dep)
+              order.append((module,rel,src))
+          for target in targets: visit(target)
+          print('OWNER_CLOSURE',[m for m,_,_ in order],flush=True)
+          heads=[]
+          for module,rel,src in order:
+              text=src.read_text()
+              if module in targets:
+                  if re.search(r'\b(sorry|admit|axiom|native_decide|unsafe)\b',text):
+                      raise RuntimeError('Forbidden proof construct')
+                  names=re.findall(r'^(?:@\[[^\]]*\]\s*)?(?:theorem|lemma|def)\s+(\w+)',text,re.M)
+                  heads.extend(module+'.'+name for name in names)
+                  dst=package/'lean'/rel
+                  dst.parent.mkdir(parents=True,exist_ok=True)
+                  shutil.copyfile(src,dst)
+              dst=work/rel
+              dst.parent.mkdir(parents=True,exist_ok=True)
+              shutil.copyfile(src,dst)
+              output=work/'.lake/build/lib/lean'/rel.with_suffix('.olean')
+              output.parent.mkdir(parents=True,exist_ok=True)
+              print('CHECK',module,flush=True)
+              run('lake','env','lean','-o',str(output),str(rel),cwd=work,verbose=True)
+          audit='\n'.join(['import '+t for t in targets]+['#print axioms '+n for n in heads])+'\n'
+          (work/'FunctionalRouteAudit.lean').write_text(audit)
+          (package/'FunctionalRouteAudit.lean').write_text(audit)
+          text=run('lake','env','lean','FunctionalRouteAudit.lean',cwd=work,verbose=True)
+          footprints=re.findall(r'depends on axioms:\s*\[([^\]]*)\]',text,re.S)
+          empty=re.findall('does not depend on any axioms',text)
+          assert len(footprints)+len(empty)==len(heads),'Missing declaration audit'
+          for footprint in footprints:
+              assert {x.strip() for x in footprint.split(',') if x.strip()} <= {'propext','Classical.choice','Quot.sound'},footprint
+          (package/'audit.txt').write_text(text)
+          status={'source_commit':run('git','rev-parse','HEAD').strip(),'mathlib_commit':pin['rev'],
+              'lean_toolchain':(repo/'lean-toolchain').read_text().strip(),'audited_declarations':heads,
+              'compiled_modules':[m for m,_,_ in order],'workflow_run':os.environ['GITHUB_RUN_ID'],
+              'scope':'new modules and unchanged source import closure, not full repository','result':'success'}
+          (package/'status.json').write_text(json.dumps(status,indent=2))
+          print('AUDITED_DECLARATIONS',len(heads),flush=True)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: FunctionalRouteCore
+          path: ${{ runner.temp }}/functional-route-deliverable
+          if-no-files-found: warn

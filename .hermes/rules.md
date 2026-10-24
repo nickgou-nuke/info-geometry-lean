@@ -5,6 +5,13 @@ description: "MANDATORY pre-reasoning discipline for info-geometry-lean. Before 
 
 # Deep Search Context First — Mandatory Pre-Reasoning Discipline
 
+> ⚠️ **CRITICAL BUILD CACHE & WORKTREE PROTECTION MANDATE**
+> 1. **NEVER create a `git worktree` and symlink `.lake` or `.lake/packages` to the main repository.** Lake treats a symlinked package root across worktrees as a package URL change and **deletes and re-clones `.lake/packages/mathlib`**, wiping all 8,530 compiled Mathlib `.olean` files.
+> 2. **NEVER run `lake clean`, `rm -rf .lake`, `rm -rf .lake/build`, or `rm -rf .lake/packages`.**
+> 3. **NEVER run bare `lake build` or `lake env lean` directly or concurrently.** Always use the repository's locked wrappers:
+>    - `python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock <Target>`
+>    - `python3 tools/infra/run_locked_lean.py --wait-for-build-lock <file.lean>`
+
 ## The Rule
 
 Before answering, editing, or writing ANYTHING in info-geometry-lean, you MUST deep-search. Never reason from memory or prior session summaries. Docstrings are stale. Code is truth.

@@ -1746,4 +1746,157 @@ theorem zorn_machian_sciama_relative_induction_law
       fin_cases i <;> simp [zornFieldStrength, ZornVec3.cross]
     · rfl
 
+/-! ## 12. Nucleus-vs-Periphery Nambu Anomaly & Tomita–GEM Frame-Dragging Associator -/
+
+/-- General diagonal singlet charge operator `H(h_+, h_-) = ⟨h_+, 0, 0, h_-⟩` in `ZornVectorMatrix R`.
+    When `h_+ = h_- = h`, `H(h, h)` lies in the associative nucleus `N(O_s)` (`h • 1`).
+    When `h_+ ≠ h_-`, `H(h_+, h_-)` acquires a chiral component `(h_+ - h_-) / 2 • Γ_Zorn`
+    that drives the non-associative periphery torsion and Nambu 3-bracket anomaly. -/
+def zornDiagonalCharge (hPlus hMinus : R) : ZornVectorMatrix R :=
+  ⟨hPlus, fun _ => 0, fun _ => 0, hMinus⟩
+
+/-- **Associative Nucleus vs. Non-Associative Periphery Dichotomy**:
+    1. **Inside the Associative Nucleus (`h_+ = h_- = h`)**:
+       A vectorlike scalar charge `zornDiagonalCharge h h` associates strictly with *every* pair
+       of elements `X, Y ∈ ZornVectorMatrix R`:
+       `[X, Y, H(h, h)] = 0`.
+    2. **In the Non-Associative Periphery (`h_+ ≠ h_-`)**:
+       On any pair of odd-grade spacetime frames `E₁ = zornSpacetimeFramePart X` and
+       `E₂ = zornSpacetimeFramePart Y`, the ternary associator with `H(h_+, h_-)` is purely
+       proportional to the chiral charge asymmetry `h_+ - h_-` times the cross-product torsion:
+       `[E₁, E₂, H(h_+, h_-)] = (h_+ - h_-) • ⟨0, X.w × Y.w, X.v × Y.v, 0⟩`. -/
+theorem zornAssociator_nucleus_zero_vs_periphery_torsion
+    (X Y : ZornVectorMatrix R) (h hPlus hMinus : R) :
+    zornAssociator X Y (zornDiagonalCharge h h) = 0 ∧
+    zornAssociator (zornSpacetimeFramePart X) (zornSpacetimeFramePart Y)
+      (zornDiagonalCharge hPlus hMinus) =
+      (hPlus - hMinus) •
+        (⟨0, ZornVec3.cross X.w Y.w, ZornVec3.cross X.v Y.v, 0⟩ : ZornVectorMatrix R) := by
+  constructor
+  · unfold zornAssociator
+    simp only [_root_.sub_eq_add_neg]
+    ext
+    · simp [zornDiagonalCharge, InfoGeometry.Algebra.zvm_add_def,
+            InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_mul_def,
+            InfoGeometry.Algebra.zvm_zero_def, add, neg, mul, zero,
+            ZornVec3.dot, Fin.sum_univ_three]
+      ring
+    · rename_i i
+      fin_cases i <;>
+        (simp [zornDiagonalCharge, InfoGeometry.Algebra.zvm_add_def,
+               InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_mul_def,
+               InfoGeometry.Algebra.zvm_zero_def, add, neg, mul, zero,
+               ZornVec3.cross]; ring)
+    · rename_i i
+      fin_cases i <;>
+        (simp [zornDiagonalCharge, InfoGeometry.Algebra.zvm_add_def,
+               InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_mul_def,
+               InfoGeometry.Algebra.zvm_zero_def, add, neg, mul, zero,
+               ZornVec3.cross]; ring)
+    · simp [zornDiagonalCharge, InfoGeometry.Algebra.zvm_add_def,
+            InfoGeometry.Algebra.zvm_neg_def, InfoGeometry.Algebra.zvm_mul_def,
+            InfoGeometry.Algebra.zvm_zero_def, add, neg, mul, zero,
+            ZornVec3.dot, Fin.sum_univ_three]
+      ring
+  · unfold zornAssociator
+    simp only [_root_.sub_eq_add_neg]
+    ext
+    · simp [zornSpacetimeFramePart, offDiagonalPart, zornDiagonalCharge,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+            add, neg, mul, smul, ZornVec3.dot, Fin.sum_univ_three]
+      ring
+    · rename_i i
+      fin_cases i <;>
+        (simp [zornSpacetimeFramePart, offDiagonalPart, zornDiagonalCharge,
+               InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+               add, neg, mul, smul, ZornVec3.cross]; ring)
+    · rename_i i
+      fin_cases i <;>
+        (simp [zornSpacetimeFramePart, offDiagonalPart, zornDiagonalCharge,
+               InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+               add, neg, mul, smul, ZornVec3.cross]; ring)
+    · simp [zornSpacetimeFramePart, offDiagonalPart, zornDiagonalCharge,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+            add, neg, mul, smul, ZornVec3.dot, Fin.sum_univ_three]
+      ring
+
+/-- **Periphery Charge Associator Contracting with a Third Frame Generates the Nambu 3-Bracket**:
+    Multiplying the periphery associator `[E₁, E₂, H(h_+, h_-)]` by a third spacetime frame
+    `E₃ = zornSpacetimeFramePart Z` and projecting onto the diagonal spin-connection nucleus
+    yields the chiral Nambu 3-bracket determinants `(h_+ - h_-) * det(w₁, w₂, w₃)` and
+    `(h_+ - h_-) * det(v₁, v₂, v₃)`. -/
+theorem zornAssociator_charge_mul_frame_eq_nambu
+    (X Y Z : ZornVectorMatrix R) (hPlus hMinus : R) :
+    zornSpinConnectionPart
+      (zornAssociator (zornSpacetimeFramePart X) (zornSpacetimeFramePart Y)
+        (zornDiagonalCharge hPlus hMinus) * zornSpacetimeFramePart Z) =
+      (hPlus - hMinus) •
+        (⟨zornNambuDet X.w Y.w Z.w, fun _ => 0, fun _ => 0,
+          zornNambuDet X.v Y.v Z.v⟩ : ZornVectorMatrix R) := by
+  rw [(zornAssociator_nucleus_zero_vs_periphery_torsion X Y 0 hPlus hMinus).2]
+  ext
+  · simp [zornSpinConnectionPart, diagonalPart, zornSpacetimeFramePart, offDiagonalPart,
+          zornNambuDet, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+          mul, smul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+    ring
+  · simp [zornSpinConnectionPart, diagonalPart, InfoGeometry.Algebra.zvm_smul_def, smul]
+  · simp [zornSpinConnectionPart, diagonalPart, InfoGeometry.Algebra.zvm_smul_def, smul]
+  · simp [zornSpinConnectionPart, diagonalPart, zornSpacetimeFramePart, offDiagonalPart,
+          zornNambuDet, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+          mul, smul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+    ring
+
+/-- **Unified Tomita–Maxwell–GEM Stress-Energy and Non-Associative Frame-Dragging Law**:
+    For any field strength `F = zornFieldStrength E B = ⟨0, E + B, -E + B, 0⟩` and any diagonal
+    charge operator `H(h_+, h_-) = zornDiagonalCharge hPlus hMinus`:
+    1. **Binary Tomita Stress-Energy Product (`F * J_Tomita(F)`)**:
+       Carries the symmetric energy density `E⋅E + B⋅B`, chiral Pontryagin helicity `∓ 2(E⋅B)`,
+       and vectorlike Poynting / GEM momentum flux `+2(E × B)` on both off-diagonal triplets.
+    2. **Ternary Non-Associative Tomita–GEM Frame-Dragging Associator (`[F, J_Tomita(F), H(h_+, h_-)]`)**:
+       Vanishes identically in the associative nucleus (`h_+ = h_-`), and in the chiral periphery
+       isolates the pure axial Poynting / Lense–Thirring frame-dragging cross product `E × B`
+       with opposite signs on the two chiral sectors:
+       `[F, J_Tomita(F), H(h_+, h_-)] = (2 * (h_+ - h_-)) • ⟨0, -(E × B), E × B, 0⟩`. -/
+theorem zornFieldStrength_tomita_stress_and_frame_dragging
+    (E B : ZornVec3 R) (hPlus hMinus : R) :
+    let F := zornFieldStrength E B
+    F * zornTomitaConj F =
+      ⟨ZornVec3.dot E E + ZornVec3.dot B B - 2 * ZornVec3.dot E B,
+       fun i => 2 * ZornVec3.cross E B i,
+       fun i => 2 * ZornVec3.cross E B i,
+       ZornVec3.dot E E + ZornVec3.dot B B + 2 * ZornVec3.dot E B⟩ ∧
+    zornAssociator F (zornTomitaConj F) (zornDiagonalCharge hPlus hMinus) =
+      ((2 : R) * (hPlus - hMinus)) •
+        (⟨0, fun i => -ZornVec3.cross E B i, ZornVec3.cross E B, 0⟩ : ZornVectorMatrix R) := by
+  refine ⟨(zornFieldStrength_tomita_stress_energy E B).2.2, ?_⟩
+  unfold zornAssociator
+  simp only [_root_.sub_eq_add_neg]
+  ext
+  · simp [zornFieldStrength, zornTomitaConj, zornDiagonalCharge,
+          InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+          InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+          add, neg, mul, smul, ZornVec3.dot, Fin.sum_univ_three]
+    ring
+  · rename_i i
+    fin_cases i <;>
+      (simp [zornFieldStrength, zornTomitaConj, zornDiagonalCharge,
+             InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+             InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+             add, neg, mul, smul, ZornVec3.cross]; ring)
+  · rename_i i
+    fin_cases i <;>
+      (simp [zornFieldStrength, zornTomitaConj, zornDiagonalCharge,
+             InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+             InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+             add, neg, mul, smul, ZornVec3.cross]; ring)
+  · simp [zornFieldStrength, zornTomitaConj, zornDiagonalCharge,
+          InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+          InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_smul_def,
+          add, neg, mul, smul, ZornVec3.dot, Fin.sum_univ_three]
+    ring
+
 end InfoGeometry.Algebra.ZornVectorMatrix

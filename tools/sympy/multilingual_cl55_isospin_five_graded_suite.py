@@ -496,6 +496,42 @@ def run_sympy_verification() -> dict:
     assert sp.simplify(sciama_prod[1] - (-Phi_bg * d_vec)) == sp.zeros(3, 1)
     assert sp.simplify(sciama_prod[2] - (-Phi_bg * d_vec)) == sp.zeros(3, 1)
 
+    # 20. Nucleus-vs-Periphery Nambu Anomaly & Tomita-GEM Frame-Dragging Associator
+    # (`zornAssociator_nucleus_zero_vs_periphery_torsion`,
+    #  `zornAssociator_charge_mul_frame_eq_nambu`,
+    #  `zornFieldStrength_tomita_stress_and_frame_dragging`)
+    def zvm_assoc(m1, m2, m3):
+        return zvm_sub(zvm_mul(zvm_mul(m1, m2), m3), zvm_mul(m1, zvm_mul(m2, m3)))
+
+    h_sym, h_plus, h_minus = sp.symbols("h h_plus h_minus", commutative=True)
+    H_nuc = (h_sym, sp.zeros(3, 1), sp.zeros(3, 1), h_sym)
+    H_per = (h_plus, sp.zeros(3, 1), sp.zeros(3, 1), h_minus)
+    assoc_nuc = zvm_assoc(D_pot, A_pot, H_nuc)
+    assert sp.simplify(assoc_nuc[0]) == 0
+    assert sp.simplify(assoc_nuc[1]) == sp.zeros(3, 1)
+    assert sp.simplify(assoc_nuc[2]) == sp.zeros(3, 1)
+    assert sp.simplify(assoc_nuc[3]) == 0
+    xv, xw = d_vec, a_vec
+    yv, yw = a_vec, b_vec
+    zv, zw = b_vec, E_vec
+    eX = (0, xv, xw, 0)
+    eY = (0, yv, yw, 0)
+    eZ = (0, zv, zw, 0)
+    assoc_per = zvm_assoc(eX, eY, H_per)
+    assert sp.simplify(assoc_per[0]) == 0
+    assert sp.simplify(assoc_per[1] - (h_plus - h_minus) * xw.cross(yw)) == sp.zeros(3, 1)
+    assert sp.simplify(assoc_per[2] - (h_plus - h_minus) * xv.cross(yv)) == sp.zeros(3, 1)
+    assert sp.simplify(assoc_per[3]) == 0
+    nambu_per = zvm_singlet(zvm_mul(assoc_per, eZ))
+    assert sp.simplify(nambu_per[0] - (h_plus - h_minus) * xw.dot(yw.cross(zw))) == 0
+    assert sp.simplify(nambu_per[3] - (h_plus - h_minus) * xv.dot(yv.cross(zv))) == 0
+    F_eb = (0, E_vec + B_vec, -E_vec + B_vec, 0)
+    assoc_frame_drag = zvm_assoc(F_eb, zvm_tomita(F_eb), H_per)
+    assert sp.simplify(assoc_frame_drag[0]) == 0
+    assert sp.simplify(assoc_frame_drag[1] - (-2 * (h_plus - h_minus) * ExB)) == sp.zeros(3, 1)
+    assert sp.simplify(assoc_frame_drag[2] - (2 * (h_plus - h_minus) * ExB)) == sp.zeros(3, 1)
+    assert sp.simplify(assoc_frame_drag[3]) == 0
+
     return {
         "engine": "SymPy",
         "status": "PASSED",

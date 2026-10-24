@@ -86,3 +86,48 @@ Receipt: `/tmp/qa-tracial-defects-live/result.json`, session 12233, exit zero.
 Updated owner SHA-256:
 `6734a0e8dfeca118bfded0a477c4bc85873bee401db8ab1e3a70c3b31124af16`.
 The earlier 34-declaration count/hash is historical and superseded for this owner.
+
+## Algebraic vacuum covariance and observable expectations
+
+The next owner extension adds three separate lemmas:
+
+- `GNSAction.RepresentationState.act_vacuum_eq_zero_iff_null` characterizes
+  annihilation of the cyclic vacuum by membership in the native state null set.
+- `pullback_act_vacuum_eq_zero_iff` transports that condition along the existing
+  star-preserving real algebra equivalence and state pullback. This uses the
+  existing algebraic quotient, with zero written as its explicit quotient class.
+- `FinitePairingReducedVacuum.firstFactor_expectation` evaluates any complex
+  first-factor observable `X` on the actual rotated vacuum as
+  `c² * X 0 0 + s² * X 1 1`. It reuses the ordinary partial-trace trace duality
+  and native reduced-vacuum theorem; normalization is not required.
+
+The matrix-only annihilator theorem and specialized zero wrapper were removed
+from `AttentionGNSBridge`. Both attention consumers now use the generic owner
+lemma and explicit quotient zero. Its audit declaration references were updated accordingly.
+No replacement state, quotient, or representation carrier was introduced.
+These results do not construct covariance of completed complex GNS Hilbert
+spaces or prove an analytic KMS boundary condition.
+
+Kepler authored the GNS sandbox candidate; James authored the expectation
+candidate. Popper independently returned source A-A PASS for both candidates
+and all four promoted files. Ampere independently checked the candidates and
+then reran the final live checks under the shared build lock:
+
+- Four-file owner/audit build: PASS, 9380 jobs.
+- `InfoGeometry.OperatorAlgebra.All:olean`: PASS, 9979 jobs.
+- All-declaration axiom replay: 87 clean (GNSAction 33, ReducedVacuum 29,
+  AttentionGNSBridge 25); the audit file adds no declarations.
+- Nine audit axiom prints contain only standard foundational axioms.
+- Zero scoped warnings/errors; upstream/package warnings remain.
+- Captured owner, aggregate and dependency-pin hashes stayed stable.
+
+Receipt: `/tmp/qa-a-gns-expectation-live-m00bzbs5/result.json`, session 69854,
+terminal exit zero. Final owner SHA-256:
+
+- GNSAction: `0ab08d9d741a26faaf0a99c2857f2541d2da5344e7dacda402d7995b96b99ee8`
+- ReducedVacuum: `d77242d49b4baf25f8417c27c4fc3546feb4be692ef9a0493dffb14754069b79`
+- AttentionGNSBridge: `cda35dfef7017ba60f276520b0c6702b27e4645e519f5149555827b2fd74660b`
+- AttentionGNSBridgeAudit: `4b60e88c305ff668b32abdbced98124436ed0b047dccc9c8c3ee05a7c52fedde`
+
+This is scoped acceptance. Concurrent unrelated work and the whole-repository
+release gate remain outside this receipt.

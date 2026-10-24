@@ -123,6 +123,35 @@ theorem gnsQuotientEquiv_vacuum
   change Quotient.mk _ (e 1) = Quotient.mk _ 1
   rw [map_one]
 
+/-- An element annihilates the cyclic vacuum precisely when it is GNS-null. -/
+theorem act_vacuum_eq_zero_iff_null (S : RepresentationState A) (a : A) :
+    S.act a S.vacuum = Quotient.mk (AbstractGNSState.gnsSetoid S.state) 0 ↔
+      a ∈ S.state.gnsNullSet := by
+  rw [S.act_vacuum]
+  constructor
+  · intro h
+    have hrel := Quotient.exact h
+    change a - 0 ∈ S.state.gnsNullSet at hrel
+    simpa only [sub_zero] using hrel
+  · intro h
+    apply Quotient.sound
+    change a - 0 ∈ S.state.gnsNullSet
+    simpa only [sub_zero] using h
+
+/-- Pullback by a star-preserving algebra equivalence transports the vacuum
+annihilator to the original state's vacuum annihilator under `e`. -/
+theorem pullback_act_vacuum_eq_zero_iff (S : RepresentationState A)
+    (e : A ≃ₐ[ℝ] A) (he : ∀ x, e (star x) = star (e x)) (a : A) :
+    (S.pullback e he).act a (S.pullback e he).vacuum =
+        Quotient.mk (AbstractGNSState.gnsSetoid (S.pullback e he).state) 0 ↔
+      S.act (e a) S.vacuum =
+        Quotient.mk (AbstractGNSState.gnsSetoid S.state) 0 := by
+  rw [act_vacuum_eq_zero_iff_null, act_vacuum_eq_zero_iff_null]
+  change a ∈ (RealAlgebraicState.statePullback S.state.state e he).gnsNullSet ↔
+    e a ∈ S.state.state.gnsNullSet
+  simpa only [RealAlgebraicState.gnsEquiv, map_zero, sub_zero] using
+    (RealAlgebraicState.statePullback_gnsEquiv_iff S.state.state e he a 0)
+
 end RepresentationState
 
 end InfoGeometry.Prequantum.GNSAction

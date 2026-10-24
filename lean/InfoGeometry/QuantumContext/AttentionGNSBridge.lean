@@ -162,37 +162,13 @@ def prunedAction (pw : PrunedWeights ι) (A : Matrix ι ι ℝ) :
 def prunedVacuum (pw : PrunedWeights ι) : prunedGNSQuotient pw :=
   (prunedRepresentationState pw).vacuum
 
-/-- The zero class in the existing set quotient (which has no inherited
-additive structure on this quotient type). -/
-def gnsZero (S : RepresentationState (Matrix ι ι ℝ)) :
-    AbstractGNSState.gnsQuotient S.state :=
-  Quotient.mk (AbstractGNSState.gnsSetoid S.state) (0 : Matrix ι ι ℝ)
-
-/-- In the existing quotient action, an operator annihilates the vacuum exactly
-when it belongs to the state-defined GNS null set. -/
-theorem vacuum_annihilator_iff_null
-    (S : RepresentationState (Matrix ι ι ℝ)) (A : Matrix ι ι ℝ) :
-    S.act A S.vacuum = gnsZero S ↔ A ∈ S.state.gnsNullSet := by
-  rw [S.act_vacuum]
-  constructor
-  · intro h
-    have hrel := Quotient.exact h
-    change S.state.state.gnsEquiv A 0 at hrel
-    change A - 0 ∈ S.state.state.gnsNullSet at hrel
-    change A ∈ S.state.state.gnsNullSet
-    simpa [sub_zero] using hrel
-  · intro h
-    have hrel : S.state.state.gnsEquiv A 0 := by
-      change A - 0 ∈ S.state.state.gnsNullSet
-      simpa [RealAlgebraicState.gnsEquiv, sub_zero] using h
-    exact Quotient.sound hrel
-
 /-- Eviction makes the quotient vacuum non-separating: the existing nonzero
 projection witness lies in the state null set and hence annihilates the
 vacuum in the actual GNS quotient action. -/
 theorem pruned_action_vacuum_not_separating (pw : PrunedWeights ι) :
     ∃ E : Matrix ι ι ℝ, E ≠ 0 ∧
-      prunedAction pw E (prunedVacuum pw) = gnsZero (prunedRepresentationState pw) := by
+      prunedAction pw E (prunedVacuum pw) =
+        Quotient.mk (AbstractGNSState.gnsSetoid (prunedRepresentationState pw).state) 0 := by
   obtain ⟨E, hE0, hE_null⟩ := pruned_cache_has_nontrivial_null_ideal pw
   have hstar : star E = E.transpose := by
     ext i j
@@ -207,7 +183,7 @@ theorem pruned_action_vacuum_not_separating (pw : PrunedWeights ι) :
     simpa [hstar] using hgns
   have hnull : E ∈ (prunedRepresentationState pw).state.gnsNullSet := hstate
   refine ⟨E, hE0, ?_⟩
-  exact (vacuum_annihilator_iff_null (prunedRepresentationState pw) E).2 hnull
+  exact (RepresentationState.act_vacuum_eq_zero_iff_null (prunedRepresentationState pw) E).2 hnull
 
 /-- The existing GNS vacuum is cyclic for every `RepresentationState`: each
 quotient class is represented by the action of some algebra element. -/
@@ -247,8 +223,9 @@ theorem attention_action_vacuum_separating [Nonempty ι]
     (logits : ι → ℝ) (β : ℝ) (A : Matrix ι ι ℝ) :
     (attentionRepresentationState logits β).act A
         (attentionRepresentationState logits β).vacuum =
-      gnsZero (attentionRepresentationState logits β) ↔ A = 0 := by
-  rw [vacuum_annihilator_iff_null]
+      Quotient.mk
+        (AbstractGNSState.gnsSetoid (attentionRepresentationState logits β).state) 0 ↔ A = 0 := by
+  rw [RepresentationState.act_vacuum_eq_zero_iff_null]
   constructor
   · intro hnull
     have hquad : (attentionRepresentationState logits β).state.state.eval

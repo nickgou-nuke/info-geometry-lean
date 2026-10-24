@@ -188,6 +188,18 @@ theorem reducedVacuum_purity_lt_one_iff (c s : ℝ) (hcs : c ^ 2 + s ^ 2 = 1) :
     have hp : 0 < (c * s) ^ 2 := sq_pos_of_ne_zero h
     linarith
 
+/-- Read an arbitrary first-factor observable through the native ordinary
+partial trace; its off-diagonal entries have zero expectation. -/
+theorem firstFactor_expectation (c s : ℝ) (X : M2C) :
+    Matrix.trace ((X ⊗ₖ (1 : M2C)) *
+      (rotor b₁ B₁ b₂ B₂ c s * vacuum *
+        (rotor b₁ B₁ b₂ B₂ c s).conjTranspose)) =
+      (c : ℂ) ^ 2 * X 0 0 + (s : ℂ) ^ 2 * X 1 1 := by
+  rw [← InfoGeometry.QuantumContext.MatrixStagePartialTrace.trace_mul_partialTraceSecondOp, reducedVacuum]
+  simp [Matrix.trace, Matrix.diag, Matrix.mul_apply, Fin.sum_univ_two,
+    a, A, annihilationR, creationR, RCLike.real_smul_eq_coe_mul]
+  ring
+
 end InfoGeometry.OperatorAlgebra.FinitePairingReducedVacuum
 
 end

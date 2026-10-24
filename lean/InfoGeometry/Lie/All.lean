@@ -8,6 +8,7 @@ import InfoGeometry.Lie.KantorTKKFiveGrading
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.SplitOctonionAnnihilatorDimension
 import InfoGeometry.Lie.SplitOctonionCliffordAction
+import InfoGeometry.Lie.SplitOctonionCliffordNoninjective
 import InfoGeometry.Lie.SplitOctonionNonmultiplicativity
 import InfoGeometry.Lie.SplitOctonionStandardDerivation
 import InfoGeometry.Lie.CanonicalZornDerivation

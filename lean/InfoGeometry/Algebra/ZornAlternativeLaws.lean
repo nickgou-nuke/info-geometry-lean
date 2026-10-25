@@ -5852,4 +5852,136 @@ theorem directed_colimit_tower_retractions_and_functoriality
   · ext <;> simp [retractMatToCartan, retractZornToMat, embedMatToZorn, embedCartanToMat]
   · simp [norm, embedMatToZorn, embedCartanToMat, cartanNorm, ZornVec3.dot]
 
+/-!
+## 54. 5-Graded Kantor-Koecher-Tits Contact Structure, Associative Heisenberg Nilradicals, & Erlangen Homogeneous Flag States
+-/
+
+/-- **Grade $-2$ ($\mathcal{G}_{-2}$)**: Longitudinal dual contact ray $E_{-2}(\eta) = \langle 0, [\eta, 0, 0], 0, 0 \rangle$. -/
+def zornGradeMinus2 (η : R) : ZornVectorMatrix R := ⟨0, ![η, 0, 0], 0, 0⟩
+
+/-- **Grade $-1$ ($\mathcal{G}_{-1}$)**: Transverse backward plane $E_{-1}(y, z) = \langle 0, 0, [0, y, z], 0 \rangle$. -/
+def zornGradeMinus1 (y z : R) : ZornVectorMatrix R := ⟨0, 0, ![0, y, z], 0⟩
+
+/-- **Grade $0$ ($\mathcal{G}_0$)**: Cartan/modular diagonal $D(\rho_+, \rho_-) = \langle \rho_+, 0, 0, \rho_- \rangle$. -/
+def zornGradeZero (ρ_plus ρ_minus : R) : ZornVectorMatrix R := ⟨ρ_plus, 0, 0, ρ_minus⟩
+
+/-- **Grade $+1$ ($\mathcal{G}_{+1}$)**: Transverse forward plane $E_{+1}(y, z) = \langle 0, [0, y, z], 0, 0 \rangle$. -/
+def zornGradePlus1 (y z : R) : ZornVectorMatrix R := ⟨0, ![0, y, z], 0, 0⟩
+
+/-- **Grade $+2$ ($\mathcal{G}_{+2}$)**: Longitudinal primal contact ray $E_{+2}(\xi) = \langle 0, 0, [\xi, 0, 0], 0 \rangle$. -/
+def zornGradePlus2 (ξ : R) : ZornVectorMatrix R := ⟨0, 0, ![ξ, 0, 0], 0⟩
+
+/-- Positive Heisenberg nilradical element $N_+(y, z, \xi) = E_{+1}(y, z) + E_{+2}(\xi) \in \mathcal{G}_{+1} \oplus \mathcal{G}_{+2}$. -/
+def zornHeisenbergNilPlus (y z ξ : R) : ZornVectorMatrix R := ⟨0, ![0, y, z], ![ξ, 0, 0], 0⟩
+
+/-- Positive Heisenberg group element $H_+(y, z, \xi) = 1 + N_+(y, z, \xi) \in \exp(\mathcal{G}_{+1} \oplus \mathcal{G}_{+2})$. -/
+def zornHeisenbergGroupPlus (y z ξ : R) : ZornVectorMatrix R := ⟨1, ![0, y, z], ![ξ, 0, 0], 1⟩
+
+/-- Erlangen homogeneous flag state projector $\Pi_{\mathrm{hom}}(v) = \langle 1, -v, 0, 0 \rangle$. -/
+def zornHomogeneousFlagState (v : ZornVec3 R) : ZornVectorMatrix R := ⟨1, -v, 0, 0⟩
+
+/-- Helper lemma: product of two elements in the 5-graded positive Heisenberg nilradical $\mathcal{N}_+ = \mathcal{G}_{+1} \oplus \mathcal{G}_{+2}$. -/
+theorem zornHeisenbergNilPlus_mul (y₁ z₁ ξ₁ y₂ z₂ ξ₂ : R) :
+    zornHeisenbergNilPlus y₁ z₁ ξ₁ * zornHeisenbergNilPlus y₂ z₂ ξ₂ =
+      zornGradePlus2 (y₁ * z₂ - z₁ * y₂) := by
+  ext
+  · simp [zornHeisenbergNilPlus, zornGradePlus2, mul, ZornVec3.dot, Fin.sum_univ_three]
+  · rename_i i; fin_cases i <;>
+      simp [zornHeisenbergNilPlus, zornGradePlus2, mul, ZornVec3.cross]
+  · rename_i i; fin_cases i <;>
+      (simp [zornHeisenbergNilPlus, zornGradePlus2, mul, ZornVec3.cross]; try ring)
+  · simp [zornHeisenbergNilPlus, zornGradePlus2, mul, ZornVec3.dot, Fin.sum_univ_three]
+
+/-- Helper lemma: product of two elements in the 5-graded positive Heisenberg group $\exp(\mathcal{N}_+)$. -/
+theorem zornHeisenbergGroupPlus_mul (y₁ z₁ ξ₁ y₂ z₂ ξ₂ : R) :
+    zornHeisenbergGroupPlus y₁ z₁ ξ₁ * zornHeisenbergGroupPlus y₂ z₂ ξ₂ =
+      zornHeisenbergGroupPlus (y₁ + y₂) (z₁ + z₂) (ξ₁ + ξ₂ + (y₁ * z₂ - z₁ * y₂)) := by
+  ext
+  · simp [zornHeisenbergGroupPlus, mul, ZornVec3.dot, Fin.sum_univ_three]
+  · rename_i i; fin_cases i <;>
+      (simp [zornHeisenbergGroupPlus, mul, ZornVec3.cross]; try ring)
+  · rename_i i; fin_cases i <;>
+      (simp [zornHeisenbergGroupPlus, mul, ZornVec3.cross]; try ring)
+  · simp [zornHeisenbergGroupPlus, mul, ZornVec3.dot, Fin.sum_univ_three]
+
+/-- **54. 5-Graded Kantor-Koecher-Tits Contact Structure, Associative Heisenberg Group, & Erlangen Flag States in $\mathrm{Zorn}(R)$**:
+    Over any commutative ring $R$:
+    1. Step-2 Heisenberg-Contact Grading ($\mathcal{G}_{+1} * \mathcal{G}_{+1} \subseteq \mathcal{G}_{+2}$, $\mathcal{G}_{-1} * \mathcal{G}_{-1} \subseteq \mathcal{G}_{-2}$) & Termination ($\mathcal{G}_{+1} * \mathcal{G}_{+2} = 0$):
+       $E_{+1}(y_1, z_1) * E_{+1}(y_2, z_2) = E_{+2}(y_1 z_2 - z_1 y_2)$,
+       $E_{-1}(y_1, z_1) * E_{-1}(y_2, z_2) = E_{-2}(-(y_1 z_2 - z_1 y_2))$, and
+       $E_{+1}(y, z) * E_{+2}(\xi) = 0$.
+    2. Associative Heisenberg Group Law & Inversion on $\exp(\mathcal{G}_{+1} \oplus \mathcal{G}_{+2})$:
+       $H_+(y_1, z_1, \xi_1) * H_+(y_2, z_2, \xi_2) = H_+(y_1 + y_2, z_1 + z_2, \xi_1 + \xi_2 + (y_1 z_2 - z_1 y_2))$,
+       $\mathrm{bundledAssociator}\;H_1\;H_2\;H_3 = 0$, and $H_1 * H_+(-y_1, -z_1, -\xi_1) = 1$.
+    3. Opposite-Grade Contact Lowering ($\mathcal{G}_{+1} \times \mathcal{G}_{-2} \to \mathcal{G}_{-1}$):
+       $E_{+1}(y, z) * E_{-2}(\eta) = E_{-1}(z \eta, -y \eta)$.
+    4. Erlangen Homogeneous Flag State Orbit & Idempotence:
+       $(\langle 1, v, 0, 1 \rangle * \langle 1, 0, 0, 0 \rangle) * \langle 1, -v, 0, 1 \rangle = \Pi_{\mathrm{hom}}(v)$ and
+       $\Pi_{\mathrm{hom}}(v) * \Pi_{\mathrm{hom}}(v) = \Pi_{\mathrm{hom}}(v)$. -/
+theorem zorn_five_graded_kantor_koecher_and_erlangen_flag_states
+    (y z y₁ z₁ ξ₁ y₂ z₂ ξ₂ y₃ z₃ ξ₃ ξ η : R) (v : ZornVec3 R) :
+    let H₁ := zornHeisenbergGroupPlus y₁ z₁ ξ₁
+    let H₂ := zornHeisenbergGroupPlus y₂ z₂ ξ₂
+    let H₃ := zornHeisenbergGroupPlus y₃ z₃ ξ₃
+    zornGradePlus1 y₁ z₁ * zornGradePlus1 y₂ z₂ = zornGradePlus2 (y₁ * z₂ - z₁ * y₂) ∧
+    zornGradeMinus1 y₁ z₁ * zornGradeMinus1 y₂ z₂ = zornGradeMinus2 (-(y₁ * z₂ - z₁ * y₂)) ∧
+    zornGradePlus1 y z * zornGradePlus2 ξ = 0 ∧
+    H₁ * H₂ = zornHeisenbergGroupPlus (y₁ + y₂) (z₁ + z₂) (ξ₁ + ξ₂ + (y₁ * z₂ - z₁ * y₂)) ∧
+    bundledAssociator H₁ H₂ H₃ = 0 ∧
+    H₁ * zornHeisenbergGroupPlus (-y₁) (-z₁) (-ξ₁) = zornGradeZero 1 1 ∧
+    zornGradePlus1 y z * zornGradeMinus2 η = zornGradeMinus1 (z * η) (-y * η) ∧
+    ((⟨1, v, 0, 1⟩ : ZornVectorMatrix R) * ⟨1, 0, 0, 0⟩) * ⟨1, -v, 0, 1⟩ =
+      zornHomogeneousFlagState v ∧
+    zornHomogeneousFlagState v * zornHomogeneousFlagState v = zornHomogeneousFlagState v := by
+  intro H₁ H₂ H₃
+  have hAssocH : (H₁ * H₂) * H₃ = H₁ * (H₂ * H₃) := by
+    change (zornHeisenbergGroupPlus y₁ z₁ ξ₁ * zornHeisenbergGroupPlus y₂ z₂ ξ₂) * zornHeisenbergGroupPlus y₃ z₃ ξ₃ =
+      zornHeisenbergGroupPlus y₁ z₁ ξ₁ * (zornHeisenbergGroupPlus y₂ z₂ ξ₂ * zornHeisenbergGroupPlus y₃ z₃ ξ₃)
+    rw [zornHeisenbergGroupPlus_mul, zornHeisenbergGroupPlus_mul,
+        zornHeisenbergGroupPlus_mul, zornHeisenbergGroupPlus_mul]
+    ext
+    · rfl
+    · rename_i i; fin_cases i <;> (simp [zornHeisenbergGroupPlus]; try ring)
+    · rename_i i; fin_cases i <;> (simp [zornHeisenbergGroupPlus]; try ring)
+    · rfl
+  refine ⟨?_, ?_, ?_, zornHeisenbergGroupPlus_mul y₁ z₁ ξ₁ y₂ z₂ ξ₂,
+          sub_eq_zero.mpr hAssocH, ?_, ?_, ?_, ?_⟩
+  · ext
+    · simp [zornGradePlus1, zornGradePlus2, mul, ZornVec3.dot]
+    · rename_i i; fin_cases i <;> simp [zornGradePlus1, zornGradePlus2, mul, ZornVec3.cross]
+    · rename_i i; fin_cases i <;> (simp [zornGradePlus1, zornGradePlus2, mul, ZornVec3.cross]; try ring)
+    · simp [zornGradePlus1, zornGradePlus2, mul, ZornVec3.dot]
+  · ext
+    · simp [zornGradeMinus1, zornGradeMinus2, mul, ZornVec3.dot]
+    · rename_i i; fin_cases i <;> (simp [zornGradeMinus1, zornGradeMinus2, mul, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;> simp [zornGradeMinus1, zornGradeMinus2, mul, ZornVec3.cross]
+    · simp [zornGradeMinus1, zornGradeMinus2, mul, ZornVec3.dot]
+  · ext
+    · simp [zornGradePlus1, zornGradePlus2, mul, ZornVec3.dot, Fin.sum_univ_three]
+    · rename_i i; fin_cases i <;> simp [zornGradePlus1, zornGradePlus2, mul, ZornVec3.cross]
+    · rename_i i; fin_cases i <;> simp [zornGradePlus1, zornGradePlus2, mul, ZornVec3.cross]
+    · simp [zornGradePlus1, zornGradePlus2, mul, ZornVec3.dot]
+  · change zornHeisenbergGroupPlus y₁ z₁ ξ₁ * zornHeisenbergGroupPlus (-y₁) (-z₁) (-ξ₁) = zornGradeZero 1 1
+    rw [zornHeisenbergGroupPlus_mul]
+    ext
+    · rfl
+    · rename_i i; fin_cases i <;> (simp [zornHeisenbergGroupPlus, zornGradeZero]; try ring)
+    · rename_i i; fin_cases i <;> (simp [zornHeisenbergGroupPlus, zornGradeZero]; try ring)
+    · rfl
+  · ext
+    · simp [zornGradePlus1, zornGradeMinus2, zornGradeMinus1, mul, ZornVec3.dot]
+    · rename_i i; fin_cases i <;> simp [zornGradePlus1, zornGradeMinus2, zornGradeMinus1, mul, ZornVec3.cross]
+    · rename_i i; fin_cases i <;> (simp [zornGradePlus1, zornGradeMinus2, zornGradeMinus1, mul, ZornVec3.cross]; try ring)
+    · simp [zornGradePlus1, zornGradeMinus2, zornGradeMinus1, mul, ZornVec3.dot]
+  · ext
+    · simp [zornHomogeneousFlagState, mul, ZornVec3.dot]
+    · rename_i i; fin_cases i <;> (simp [zornHomogeneousFlagState, mul, ZornVec3.dot, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;> (simp [zornHomogeneousFlagState, mul, ZornVec3.dot, ZornVec3.cross]; try ring)
+    · simp [zornHomogeneousFlagState, mul, ZornVec3.dot, ZornVec3.cross]
+  · ext
+    · simp [zornHomogeneousFlagState, mul, ZornVec3.dot]
+    · rename_i i; fin_cases i <;> (simp [zornHomogeneousFlagState, mul, ZornVec3.dot, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;> (simp [zornHomogeneousFlagState, mul, ZornVec3.dot, ZornVec3.cross]; try ring)
+    · simp [zornHomogeneousFlagState, mul, ZornVec3.dot]
+
 end InfoGeometry.Algebra.ZornVectorMatrix

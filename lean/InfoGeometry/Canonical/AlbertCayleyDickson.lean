@@ -5455,6 +5455,187 @@ theorem gunaydin_gursey_color_bridge_supertrace_cancellation_and_bogoliubov
     simp [u_boost, w_boost, opLightconeRayMinus, opLightconeRayPlus,
           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross, mul_assoc]
 
+/-!
+## 29. Archetypes LXVII & LXVIII: Rolf Dahm's Projective Line Geometry, Plücker–Klein 6-Vector Bijection, Maxwell–Poynting Line Complex, Dihedral $D_4$ / $\mathrm{PG}(3,2)$ Collinear Triples, Lie Triple Systems, & Lounesto Spinor Ideals
+-/
+
+/-- **Dahm's First Electromagnetic / Line-Complex Invariant (`opMaxwellInvariantI1 E B`)**:
+    $I_1(\mathbf{E}, \mathbf{B}) = \mathbf{B} \cdot \mathbf{B} - \mathbf{E} \cdot \mathbf{E} \in A$
+    (R. Dahm, JPCS 3152 (2025) 012008, §2.2). -/
+def opMaxwellInvariantI1 (E B : OpVec3 A) : A :=
+  OpVec3.dot B B - OpVec3.dot E E
+
+/-- **Dahm's Second Electromagnetic / Pfaffian Plücker–Klein Quadric Invariant (`opPluckerKleinQuadric p_rad p_trans`)**:
+    $I_2(\mathbf{p}_{\mathrm{rad}}, \mathbf{p}_{\mathrm{trans}}) = p_{01} p_{23} + p_{02} p_{31} + p_{03} p_{12} = \mathbf{p}_{\mathrm{rad}} \cdot \mathbf{p}_{\mathrm{trans}} \in A$
+    (R. Dahm, JPCS 3152 (2025) 012008, §2.2–2.3, Eq. (1)). -/
+def opPluckerKleinQuadric (p_rad p_trans : OpVec3 A) : A :=
+  OpVec3.dot p_rad p_trans
+
+/-- **Dahm's Poynting Axis 3-Vector of a Special Line Complex (`opPoyntingAxis E B`)**:
+    $\mathbf{S}(\mathbf{E}, \mathbf{B}) = \mathbf{E} \times_{\mathrm{skew}} \mathbf{B} \in \mathrm{OpVec3}\;A$
+    (R. Dahm, JPCS 3152 (2025) 012008, §2.2). -/
+def opPoyntingAxis (E B : OpVec3 A) : OpVec3 A :=
+  OpVec3.skewCross E B
+
+/-- **Dahm's Senary Klein-to-Plücker Radial 3-Vector Map (`opKleinToPluckerRad x_even x_odd`)**:
+    $(p_{01}, p_{02}, p_{03}) = (x_1 + x_2, x_3 + x_4, x_5 + x_6)$
+    (R. Dahm, JPCS 3152 (2025) 012008, §2.3, Eq. (1)). -/
+def opKleinToPluckerRad (x_even x_odd : OpVec3 A) : OpVec3 A :=
+  x_even + x_odd
+
+/-- **Dahm's Senary Klein-to-Plücker Transverse 3-Vector Map (`opKleinToPluckerTrans x_even x_odd`)**:
+    $(p_{23}, p_{31}, p_{12}) = (x_1 - x_2, x_3 - x_4, x_5 - x_6)$
+    (R. Dahm, JPCS 3152 (2025) 012008, §2.3, Eq. (1)). -/
+def opKleinToPluckerTrans (x_even x_odd : OpVec3 A) : OpVec3 A :=
+  x_even - x_odd
+
+/-- **Dahm's Dual Line Conjugation (`opLineDualConj X`)**:
+    Exchanges point-line Plücker coordinates $\mathbf{p}_{\mathrm{rad}} = (p_{01}, p_{02}, p_{03})$
+    with dual plane-pencil coordinates $\mathbf{p}_{\mathrm{trans}} = (p_{23}, p_{31}, p_{12})$
+    (R. Dahm, JPCS 3152 (2025) 012008, §4: $p_{\alpha\beta} \leftrightarrow p_{\alpha+3,\beta+3}$). -/
+def opLineDualConj (X : OpZornMatrix A) : OpZornMatrix A :=
+  ⟨X.b, X.w, X.v, X.a⟩
+
+/-- **Dahm's Dihedral Identity Generator $r_0 = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}$ (`opDahmR0`)**:
+    (R. Dahm, JPCS 3152 (2025) 012008, §2.4). -/
+def opDahmR0 : OpZornMatrix A :=
+  ⟨1, 0, 0, 1⟩
+
+/-- **Dahm's Complex Structure / Order-4 Dihedral Rotation $r_1 = Q_{02}$ (`opDahmR1`)**:
+    Satisfies $r_1^2 = -r_0 = -1$ in `OpZornMatrix A`
+    (R. Dahm, JPCS 3152 (2025) 012008, §2.3–2.4). -/
+def opDahmR1 : OpZornMatrix A :=
+  ⟨0, ⟨-1, 0, 0⟩, ⟨-1, 0, 0⟩, 0⟩
+
+/-- **Dahm's Diagonal Dihedral Reflection $s_0 = \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix}$ (`opDahmS0`)**:
+    Satisfies $s_0^2 = r_0 = 1$ in `OpZornMatrix A`
+    (R. Dahm, JPCS 3152 (2025) 012008, §2.4). -/
+def opDahmS0 : OpZornMatrix A :=
+  ⟨1, 0, 0, -1⟩
+
+/-- **Dahm's Anti-Diagonal Dihedral Reflection $s_1 = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}$ (`opDahmS1`)**:
+    Satisfies $s_1^2 = r_0 = 1$ in `OpZornMatrix A`
+    (R. Dahm, JPCS 3152 (2025) 012008, §2.4). -/
+def opDahmS1 : OpZornMatrix A :=
+  ⟨0, ⟨-1, 0, 0⟩, ⟨1, 0, 0⟩, 0⟩
+
+/-- **Dahm's Lie Triple System (LTS) Product (`opLieTripleProduct X Y Z`)**:
+    $\mathcal{T}_{\mathrm{LTS}}(X, Y, Z) = [X, [Y, Z]]$ in `OpZornMatrix A`
+    (R. Dahm, JPCS 3152 (2025) 012008, §3). -/
+def opLieTripleProduct (X Y Z : OpZornMatrix A) : OpZornMatrix A :=
+  opCommutator X (opCommutator Y Z)
+
+/-- **Lounesto–Dahm Left Spinorial Column Carrier (`opLounestoSpinorLeft ψ₁ ψ₂`)**:
+    Embeds a 2-component spinor column $(\psi_1, \psi_2)$ into the left Peirce–Lounesto ideal
+    $(\mathrm{OpZornMatrix}\;A) * e_+$
+    (R. Dahm, JPCS 3152 (2025) 012008, §3, citing Lounesto Ch. 10.2). -/
+def opLounestoSpinorLeft (ψ₁ ψ₂ : A) : OpZornMatrix A :=
+  ⟨ψ₁, 0, ⟨ψ₂, 0, 0⟩, 0⟩
+
+/-- **Theorem 86 (Archetype LXVII — Dahm's Plücker–Klein 6-Vector Bijection, Maxwell–Poynting Line-Complex Invariants, & Wave–Particle Dual Line Conjugation)**:
+    Over *any* noncommutative operator ring $A$, for ALL 3-vectors $\mathbf{E}, \mathbf{B}, \mathbf{x}_{\mathrm{even}}, \mathbf{x}_{\mathrm{odd}} \in \mathrm{OpVec3}\;A$
+    and any $X \in \mathrm{OpZornMatrix}\;A$:
+    1. Senary Klein-to-Plücker Bijection & Characteristic-Free Inverse Reconstruction (Dahm §2.3, Eq. (1)):
+       $$\mathbf{p}_{\mathrm{rad}}(\mathbf{x}_{\mathrm{even}}, \mathbf{x}_{\mathrm{odd}}) + \mathbf{p}_{\mathrm{trans}}(\mathbf{x}_{\mathrm{even}}, \mathbf{x}_{\mathrm{odd}}) = \mathbf{x}_{\mathrm{even}} + \mathbf{x}_{\mathrm{even}},$$
+       $$\mathbf{p}_{\mathrm{rad}}(\mathbf{x}_{\mathrm{even}}, \mathbf{x}_{\mathrm{odd}}) - \mathbf{p}_{\mathrm{trans}}(\mathbf{x}_{\mathrm{even}}, \mathbf{x}_{\mathrm{odd}}) = \mathbf{x}_{\mathrm{odd}} + \mathbf{x}_{\mathrm{odd}}.$$
+    2. Noncommutative Plücker–Klein Quadric Expansion in Klein Coordinates (Dahm §2.3, Eq. (1)):
+       $$\mathbf{p}_{\mathrm{rad}}(\mathbf{x}_{\mathrm{even}}, \mathbf{x}_{\mathrm{odd}}) \cdot \mathbf{p}_{\mathrm{trans}}(\mathbf{x}_{\mathrm{even}}, \mathbf{x}_{\mathrm{odd}}) +
+         \mathbf{p}_{\mathrm{trans}}(\mathbf{x}_{\mathrm{even}}, \mathbf{x}_{\mathrm{odd}}) \cdot \mathbf{p}_{\mathrm{rad}}(\mathbf{x}_{\mathrm{even}}, \mathbf{x}_{\mathrm{odd}}) =
+         (\mathbf{x}_{\mathrm{even}} \cdot \mathbf{x}_{\mathrm{even}} - \mathbf{x}_{\mathrm{odd}} \cdot \mathbf{x}_{\mathrm{odd}}) +
+         (\mathbf{x}_{\mathrm{even}} \cdot \mathbf{x}_{\mathrm{even}} - \mathbf{x}_{\mathrm{odd}} \cdot \mathbf{x}_{\mathrm{odd}}).$$
+    3. Zorn Off-Diagonal Line-Complex Anticommutator Encodes Both Plücker–Klein Quadric Pairings $I_2(\mathbf{E}, \mathbf{B})$ and $I_2(\mathbf{B}, \mathbf{E})$:
+       $$-\bigl(L_+(\mathbf{E}) * L_-(\mathbf{B}) + L_-(\mathbf{B}) * L_+(\mathbf{E})\bigr) =
+         \begin{pmatrix} I_2(\mathbf{E}, \mathbf{B}) & 0 \\ 0 & I_2(\mathbf{B}, \mathbf{E}) \end{pmatrix}.$$
+    4. Self-Dual Null Line Complex ($\mathbf{E} = \mathbf{B}$) Vanishing of $I_1$ and Dual Line Conjugation Involution ($\mathcal{C}_{\mathrm{line}}^2 = \mathrm{id}$):
+       $$I_1(\mathbf{E}, \mathbf{E}) = 0, \qquad \mathrm{opLineDualConj}(\mathrm{opLineDualConj}\;X) = X, \qquad
+         \mathrm{opZornTrace}(\mathrm{opLineDualConj}\;X) = X.b + X.a.$$ -/
+theorem dahm_plucker_klein_quadric_and_maxwell_poynting_invariants
+    (E B x_even x_odd : OpVec3 A) (X : OpZornMatrix A) :
+    opKleinToPluckerRad x_even x_odd + opKleinToPluckerTrans x_even x_odd =
+      x_even + x_even ∧
+    opKleinToPluckerRad x_even x_odd - opKleinToPluckerTrans x_even x_odd =
+      x_odd + x_odd ∧
+    opPluckerKleinQuadric (opKleinToPluckerRad x_even x_odd) (opKleinToPluckerTrans x_even x_odd) +
+      opPluckerKleinQuadric (opKleinToPluckerTrans x_even x_odd) (opKleinToPluckerRad x_even x_odd) =
+      (OpVec3.dot x_even x_even - OpVec3.dot x_odd x_odd) +
+        (OpVec3.dot x_even x_even - OpVec3.dot x_odd x_odd) ∧
+    -(opLightconeRayPlus E * opLightconeRayMinus B + opLightconeRayMinus B * opLightconeRayPlus E) =
+      opGradeZero (opPluckerKleinQuadric E B) (opPluckerKleinQuadric B E) ∧
+    opMaxwellInvariantI1 E E = 0 ∧
+    opLineDualConj (opLineDualConj X) = X ∧
+    opZornTrace (opLineDualConj X) = X.b + X.a := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · ext <;> (simp [opKleinToPluckerRad, opKleinToPluckerTrans]; try abel)
+  · ext <;> (simp [opKleinToPluckerRad, opKleinToPluckerTrans]; try abel)
+  · simp [opPluckerKleinQuadric, opKleinToPluckerRad, opKleinToPluckerTrans, OpVec3.dot]
+    noncomm_ring
+  · ext <;>
+    simp [opLightconeRayPlus, opLightconeRayMinus, opCartanDiag,
+          opPluckerKleinQuadric, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross]
+  · simp [opMaxwellInvariantI1]
+  · ext <;> rfl
+  · rfl
+
+/-- **Theorem 87 (Archetype LXVIII — Dahm's Dihedral $D_4$ Gauge Relations, $\mathrm{PG}(3,2)$ Collinear Operator Triple Identity, Lie Triple System Closure, & Lounesto Spinorial Ideals)**:
+    Over *any* noncommutative operator ring $A$, for all $\psi_1, \psi_2, u_1, w_1, u_2, w_2, u_3, w_3 \in A$:
+    1. Dihedral $D_4$ & $D_2 \cong \mathbb{Z}_2 \times \mathbb{Z}_2$ Relations in `OpZornMatrix A` (Dahm §2.4):
+       $$r_1^2 = -r_0, \qquad s_0^2 = r_0, \qquad s_1^2 = r_0, \qquad
+         s_0 * r_1 = s_1, \qquad r_1 * s_0 = -s_1, \qquad s_0 * s_1 = r_1, \qquad s_1 * s_0 = -r_1.$$
+    2. Fano 3-Space $\mathrm{PG}(3,2)$ Collinear Operator Triple Law (Dahm §3, Fig. 1: *"operator triples along the lines of $\mathrm{PG}(3,2)$ multiply to $\sim 1$"*):
+       $$(s_1 * s_0) * r_1 = r_0 = 1 \qquad \text{and} \qquad (s_0 * s_1) * r_1 = -r_0 = -1.$$
+    3. Longitudinal Lie Triple System (LTS) Jacobi Identity & Coset Closure (Dahm §3):
+       For any longitudinal coset elements $C_k = E_{+2}(u_k) + E_{-2}(w_k)$ ($k = 1, 2, 3$),
+       $$\mathcal{T}_{\mathrm{LTS}}(C_1, C_2, C_3) + \mathcal{T}_{\mathrm{LTS}}(C_2, C_3, C_1) + \mathcal{T}_{\mathrm{LTS}}(C_3, C_1, C_2) = 0,$$
+       and their Lie triple product $\mathcal{T}_{\mathrm{LTS}}(C_1, C_2, C_3)$ has strictly zero diagonal
+       ($\mathcal{T}_{\mathrm{LTS}}(C_1, C_2, C_3).a = 0$ and $\mathcal{T}_{\mathrm{LTS}}(C_1, C_2, C_3).b = 0$).
+    4. Lounesto–Dahm Primitive Idempotent Reconstruction & Left Spinor Ideal Absorption (Dahm §3, Lounesto Ch. 10.2):
+       $$r_0 + s_0 = e_+ + e_+, \qquad r_0 - s_0 = e_- + e_-,$$
+       $$\Psi(\psi_1, \psi_2) * e_+ = \Psi(\psi_1, \psi_2), \qquad \Psi(\psi_1, \psi_2) * e_- = 0.$$ -/
+theorem dahm_dihedral_d4_pg32_line_triple_and_lounesto_spinor_ideals
+    (ψ₁ ψ₂ u₁ w₁ u₂ w₂ u₃ w₃ : A) :
+    let C₁ := opGradePlus2 u₁ + opGradeMinus2 w₁
+    let C₂ := opGradePlus2 u₂ + opGradeMinus2 w₂
+    let C₃ := opGradePlus2 u₃ + opGradeMinus2 w₃
+    (opDahmR1 : OpZornMatrix A) * opDahmR1 = -opDahmR0 ∧
+    (opDahmS0 : OpZornMatrix A) * opDahmS0 = opDahmR0 ∧
+    (opDahmS1 : OpZornMatrix A) * opDahmS1 = opDahmR0 ∧
+    (opDahmS0 : OpZornMatrix A) * opDahmR1 = opDahmS1 ∧
+    (opDahmR1 : OpZornMatrix A) * opDahmS0 = -opDahmS1 ∧
+    (opDahmS0 : OpZornMatrix A) * opDahmS1 = opDahmR1 ∧
+    (opDahmS1 : OpZornMatrix A) * opDahmS0 = -opDahmR1 ∧
+    ((opDahmS1 : OpZornMatrix A) * opDahmS0) * opDahmR1 = opDahmR0 ∧
+    ((opDahmS0 : OpZornMatrix A) * opDahmS1) * opDahmR1 = -opDahmR0 ∧
+    opLieTripleProduct C₁ C₂ C₃ + opLieTripleProduct C₂ C₃ C₁ + opLieTripleProduct C₃ C₁ C₂ = 0 ∧
+    (opLieTripleProduct C₁ C₂ C₃).a = 0 ∧
+    (opLieTripleProduct C₁ C₂ C₃).b = 0 ∧
+    (opDahmR0 : OpZornMatrix A) + opDahmS0 = opPeircePlus + opPeircePlus ∧
+    (opDahmR0 : OpZornMatrix A) - opDahmS0 = opPeirceMinus + opPeirceMinus ∧
+    opLounestoSpinorLeft ψ₁ ψ₂ * opPeircePlus = opLounestoSpinorLeft ψ₁ ψ₂ ∧
+    opLounestoSpinorLeft ψ₁ ψ₂ * opPeirceMinus = 0 := by
+  intro C₁ C₂ C₃
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · ext <;> simp [opDahmR1, opDahmR0, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross]
+  · ext <;> simp [opDahmS0, opDahmR0, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross]
+  · ext <;> simp [opDahmS1, opDahmR0, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross]
+  · ext <;> simp [opDahmS0, opDahmR1, opDahmS1, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross]
+  · ext <;> simp [opDahmR1, opDahmS0, opDahmS1, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross]
+  · ext <;> simp [opDahmS0, opDahmS1, opDahmR1, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross]
+  · ext <;> simp [opDahmS1, opDahmS0, opDahmR1, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross]
+  · ext <;> simp [opDahmS1, opDahmS0, opDahmR1, opDahmR0, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross]
+  · ext <;> simp [opDahmS0, opDahmS1, opDahmR1, opDahmR0, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross]
+  · ext <;>
+    (simp [C₁, C₂, C₃, opLieTripleProduct, opCommutator, opGradePlus2, opGradeMinus2,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · simp [C₁, C₂, C₃, opLieTripleProduct, opCommutator, opGradePlus2, opGradeMinus2,
+          OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross]
+  · simp [C₁, C₂, C₃, opLieTripleProduct, opCommutator, opGradePlus2, opGradeMinus2,
+          OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross]
+  · ext <;> (simp [opDahmR0, opDahmS0, opPeircePlus]; try abel)
+  · ext <;> (simp [opDahmR0, opDahmS0, opPeirceMinus]; try abel)
+  · ext <;> simp [opLounestoSpinorLeft, opPeircePlus, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross]
+  · ext <;> simp [opLounestoSpinorLeft, opPeirceMinus, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross]
+
 end PorterNoncommutativeRiccatiAndLoxodromes
 
 end SplitQuaternion

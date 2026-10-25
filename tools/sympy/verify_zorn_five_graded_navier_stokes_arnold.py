@@ -532,6 +532,43 @@ def main() -> int:
     assert sp.expand(lepton_tr - quark_tr) == 0
     print("[PASS] Archetypes LXV-LXVI: Euler 5-Grading Derivation, KKT Degree-5 Polynomial, & (2|3) Supertrace Cancellation")
 
+    # ------------------------------------------------------------------
+    # 14. Archetypes LXVII & LXVIII: Rolf Dahm (JPCS 3152 (2025) 012008)
+    #     Plücker-Klein 6-Vector Bijection, Maxwell-Poynting Invariants,
+    #     Dihedral D_4 / PG(3,2) Collinear Operator Triples, & Lounesto Ideals
+    # ------------------------------------------------------------------
+    p_rad_kl = u_vec + w_vec
+    p_trans_kl = u_vec - w_vec
+    assert p_rad_kl + p_trans_kl == u_vec + u_vec
+    assert p_rad_kl - p_trans_kl == w_vec + w_vec
+    assert sp.expand(
+        (dot(p_rad_kl, p_trans_kl) + dot(p_trans_kl, p_rad_kl))
+        - 2 * (dot(u_vec, u_vec) - dot(w_vec, w_vec))
+    ) == 0
+    assert (z_zero() - (lightcone_plus(u_vec) * lightcone_minus(w_vec) + lightcone_minus(w_vec) * lightcone_plus(u_vec))) == grade_zero(
+        dot(u_vec, w_vec), dot(w_vec, u_vec)
+    )
+
+    # Dahm Dihedral D_4 & PG(3,2) collinear operator triple identity (s1 * s0) * r1 = r0 = 1:
+    dahm_r0 = grade_zero(sp.Integer(1), sp.Integer(1))
+    dahm_r1 = OpZornMatrix(sp.Integer(0), OpVec3(-sp.Integer(1), sp.Integer(0), sp.Integer(0)), OpVec3(-sp.Integer(1), sp.Integer(0), sp.Integer(0)), sp.Integer(0))
+    dahm_s0 = grade_zero(sp.Integer(1), -sp.Integer(1))
+    dahm_s1 = OpZornMatrix(sp.Integer(0), OpVec3(-sp.Integer(1), sp.Integer(0), sp.Integer(0)), OpVec3(sp.Integer(1), sp.Integer(0), sp.Integer(0)), sp.Integer(0))
+    assert dahm_r1 * dahm_r1 == z_zero() - dahm_r0
+    assert dahm_s0 * dahm_s0 == dahm_r0
+    assert dahm_s1 * dahm_s1 == dahm_r0
+    assert dahm_s0 * dahm_r1 == dahm_s1
+    assert dahm_r1 * dahm_s0 == z_zero() - dahm_s1
+    assert dahm_s0 * dahm_s1 == dahm_r1
+    assert dahm_s1 * dahm_s0 == z_zero() - dahm_r1
+    assert (dahm_s1 * dahm_s0) * dahm_r1 == dahm_r0
+    assert (dahm_s0 * dahm_s1) * dahm_r1 == z_zero() - dahm_r0
+    # Lounesto spinorial left ideal absorption:
+    psi_L = OpZornMatrix(dp, OpVec3(sp.Integer(0), sp.Integer(0), sp.Integer(0)), OpVec3(dm, sp.Integer(0), sp.Integer(0)), sp.Integer(0))
+    assert psi_L * e11 == psi_L
+    assert psi_L * e22 == z_zero()
+    print("[PASS] Archetypes LXVII-LXVIII: Dahm Plücker-Klein Bijection, Dihedral D_4 / PG(3,2) Collinear Triples, & Lounesto Spinorial Ideals")
+
     print("======================================================================")
     print("ALL CHECKS PASSED")
     print("======================================================================")

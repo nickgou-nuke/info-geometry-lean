@@ -732,6 +732,56 @@ theorem operator_super_grassmannian_kkt_and_supercolor_master_bridge
   ⟨eulerFiveGrading_eigen_derivation_and_kkt_polynomial X y z ξ η ρ_plus ρ_minus y₁ z₁ ξ₁ y₂ z₂ ξ₂,
    gunaydin_gursey_color_bridge_supertrace_cancellation_and_bogoliubov u w u₁ w₁ u₂ w₂ lam⟩
 
+/-- **Theorem 20 (Master Rolf Dahm Projective Line Geometry, Plücker–Klein 6-Vector Bijection, Dihedral $D_4$ / $\mathrm{PG}(3,2)$ Collinear Operator Triples, Lie Triple Systems, & Lounesto Spinorial Ideals Synthesis — Archetypes LXVII & LXVIII)**:
+    Over *any* noncommutative operator ring $A$ (`[Ring A]`):
+    1. Plücker–Klein 6-Vector Bijection & Maxwell–Poynting Line-Complex Invariants (Dahm JPCS 3152 (2025) 012008, §2.2–2.3, §4):
+       - Characteristic-free Klein reconstruction $\mathbf{p}_{\mathrm{rad}} + \mathbf{p}_{\mathrm{trans}} = 2 \mathbf{x}_{\mathrm{even}}$ and $\mathbf{p}_{\mathrm{rad}} - \mathbf{p}_{\mathrm{trans}} = 2 \mathbf{x}_{\mathrm{odd}}$,
+       - Plücker–Klein quadric expansion $\mathbf{p}_{\mathrm{rad}} \cdot \mathbf{p}_{\mathrm{trans}} + \mathbf{p}_{\mathrm{trans}} \cdot \mathbf{p}_{\mathrm{rad}} = 2(\mathbf{x}_{\mathrm{even}} \cdot \mathbf{x}_{\mathrm{even}} - \mathbf{x}_{\mathrm{odd}} \cdot \mathbf{x}_{\mathrm{odd}})$,
+       - Zorn line-complex anticommutator $-(L_+(\mathbf{E}) * L_-(\mathbf{B}) + L_-(\mathbf{B}) * L_+(\mathbf{E})) = \mathrm{opGradeZero}\;(I_2(\mathbf{E}, \mathbf{B}))\;(I_2(\mathbf{B}, \mathbf{E}))$,
+       - Self-dual null complex $I_1(\mathbf{E}, \mathbf{E}) = 0$ and dual line conjugation involution $\mathrm{opLineDualConj}(\mathrm{opLineDualConj}\;X) = X$.
+    2. Dihedral $D_4$ Gauge Relations, $\mathrm{PG}(3,2)$ Collinear Operator Triples, Lie Triple Systems, & Lounesto Ideals (Dahm §2.4, §3):
+       - $r_1^2 = -r_0$, $s_0^2 = r_0$, $s_1^2 = r_0$, $s_0 r_1 = s_1 = -r_1 s_0$, $s_0 s_1 = -r_1 = -s_1 s_0$,
+       - $\mathrm{PG}(3,2)$ collinear triple identity $(s_0 * s_1) * r_1 = r_0 = 1$ and $r_1 * (s_1 * s_0) = -r_0 = -1$,
+       - Universal LTS Jacobi constraint $\mathcal{T}_{\mathrm{LTS}}(X, Y, Z) + \mathcal{T}_{\mathrm{LTS}}(Y, Z, X) + \mathcal{T}_{\mathrm{LTS}}(Z, X, Y) = 0$ and longitudinal coset LTS closure ($\mathcal{T}_{\mathrm{LTS}}(C_1, C_2, C_3).a = 0, \mathcal{T}_{\mathrm{LTS}}(C_1, C_2, C_3).b = 0$),
+       - Lounesto spinorial idempotent absorption $\Psi(\psi_1, \psi_2) * e_+ = \Psi(\psi_1, \psi_2)$ and $\Psi(\psi_1, \psi_2) * e_- = 0$. -/
+theorem operator_dahm_projective_line_geometry_pg32_and_sl2h_master_bridge
+    (E B x_even x_odd : OpVec3 A) (X : OpZornMatrix A)
+    (ψ₁ ψ₂ u₁ w₁ u₂ w₂ u₃ w₃ : A) :
+    let C₁ := opGradePlus2 u₁ + opGradeMinus2 w₁
+    let C₂ := opGradePlus2 u₂ + opGradeMinus2 w₂
+    let C₃ := opGradePlus2 u₃ + opGradeMinus2 w₃
+    (opKleinToPluckerRad x_even x_odd + opKleinToPluckerTrans x_even x_odd =
+       x_even + x_even ∧
+     opKleinToPluckerRad x_even x_odd - opKleinToPluckerTrans x_even x_odd =
+       x_odd + x_odd ∧
+     opPluckerKleinQuadric (opKleinToPluckerRad x_even x_odd) (opKleinToPluckerTrans x_even x_odd) +
+       opPluckerKleinQuadric (opKleinToPluckerTrans x_even x_odd) (opKleinToPluckerRad x_even x_odd) =
+       (OpVec3.dot x_even x_even - OpVec3.dot x_odd x_odd) +
+         (OpVec3.dot x_even x_even - OpVec3.dot x_odd x_odd) ∧
+     -(opLightconeRayPlus E * opLightconeRayMinus B + opLightconeRayMinus B * opLightconeRayPlus E) =
+       opGradeZero (opPluckerKleinQuadric E B) (opPluckerKleinQuadric B E) ∧
+     opMaxwellInvariantI1 E E = 0 ∧
+     opLineDualConj (opLineDualConj X) = X ∧
+     opZornTrace (opLineDualConj X) = X.b + X.a) ∧
+    ((opDahmR1 : OpZornMatrix A) * opDahmR1 = -opDahmR0 ∧
+     (opDahmS0 : OpZornMatrix A) * opDahmS0 = opDahmR0 ∧
+     (opDahmS1 : OpZornMatrix A) * opDahmS1 = opDahmR0 ∧
+     (opDahmS0 : OpZornMatrix A) * opDahmR1 = opDahmS1 ∧
+     (opDahmR1 : OpZornMatrix A) * opDahmS0 = -opDahmS1 ∧
+     (opDahmS0 : OpZornMatrix A) * opDahmS1 = opDahmR1 ∧
+     (opDahmS1 : OpZornMatrix A) * opDahmS0 = -opDahmR1 ∧
+     ((opDahmS1 : OpZornMatrix A) * opDahmS0) * opDahmR1 = opDahmR0 ∧
+     ((opDahmS0 : OpZornMatrix A) * opDahmS1) * opDahmR1 = -opDahmR0 ∧
+     opLieTripleProduct C₁ C₂ C₃ + opLieTripleProduct C₂ C₃ C₁ + opLieTripleProduct C₃ C₁ C₂ = 0 ∧
+     (opLieTripleProduct C₁ C₂ C₃).a = 0 ∧
+     (opLieTripleProduct C₁ C₂ C₃).b = 0 ∧
+     (opDahmR0 : OpZornMatrix A) + opDahmS0 = opPeircePlus + opPeircePlus ∧
+     (opDahmR0 : OpZornMatrix A) - opDahmS0 = opPeirceMinus + opPeirceMinus ∧
+     opLounestoSpinorLeft ψ₁ ψ₂ * opPeircePlus = opLounestoSpinorLeft ψ₁ ψ₂ ∧
+     opLounestoSpinorLeft ψ₁ ψ₂ * opPeirceMinus = 0) :=
+  ⟨dahm_plucker_klein_quadric_and_maxwell_poynting_invariants E B x_even x_odd X,
+   dahm_dihedral_d4_pg32_line_triple_and_lounesto_spinor_ideals ψ₁ ψ₂ u₁ w₁ u₂ w₂ u₃ w₃⟩
+
 end OperatorParaKahlerAmariMaurerCartanBridge
 
 end InfoGeometry.Canonical.ArnoldParaKahlerBCFW

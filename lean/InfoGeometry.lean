@@ -320,6 +320,9 @@ import InfoGeometry.Synthesis.AmplituhedronBeyondHorizonsGrandSynthesisAudit
 import InfoGeometry.Core.PeirceReflectionContracts
 import InfoGeometry.Core.PeirceParityWeights
 import InfoGeometry.Canonical.PeirceReflectionAudit
+import InfoGeometry.Canonical.AlbertCayleyDickson
+import InfoGeometry.Canonical.ArnoldParaKahlerBCFW
+import InfoGeometry.Algebra.ZornAlternativeLaws
 
 /-!
 # InfoGeometry

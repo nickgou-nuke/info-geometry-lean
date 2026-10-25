@@ -135,8 +135,10 @@ def dag_decl_key(name: Any) -> str:
 def rewrite_endpoint(endpoint: Any, *, raw_collection: str | None, overlay_collection: str | None, row: dict[str, Any], endpoint_type: str | None = None) -> Any:
     if not isinstance(endpoint, str):
         return endpoint
-    if raw_collection and endpoint.startswith("ig_nodes/"):
+    if raw_collection and (endpoint.startswith("ig_nodes/") or endpoint.startswith("raw_info_nodes/")):
         raw_key = endpoint.split("/", 1)[1]
+        if raw_key.startswith(("raw_", "d_")):
+            return f"{raw_collection}/{raw_key}"
         decl_name = None
         if endpoint_type == "from":
             decl_name = row.get("src")
@@ -152,8 +154,46 @@ def rewrite_endpoint(endpoint: Any, *, raw_collection: str | None, overlay_colle
     return endpoint
 
 
-# [lossless-compact] iter_jsonl folded into igf.common.json_io.iter_jsonl
-from igf.common.json_io import iter_jsonl
+# [lossless-compact] base JSONL reader from igf.common.json_io.iter_jsonl
+from igf.common.json_io import iter_jsonl as _base_iter_jsonl
+
+
+def iter_jsonl(path: Path, spec: CollectionSpec | None = None) -> Iterable[dict[str, Any]]:
+    for row in _base_iter_jsonl(path):
+        if spec is None:
+            yield row
+            continue
+        if not spec.edge and "_key" not in row:
+            key = row.get("key")
+            name = row.get("name")
+            if key:
+                row["_key"] = str(key)
+            elif name:
+                row["_key"] = dag_decl_key(name)
+        elif spec.edge and ("_from" not in row or "_to" not in row):
+            src = row.get("src")
+            dst = row.get("dst")
+            vertex_collection = spec.vertex_collection or "ig_nodes"
+            if src and dst:
+                row["_from"] = f"{vertex_collection}/{dag_decl_key(src)}"
+                row["_to"] = f"{vertex_collection}/{dag_decl_key(dst)}"
+
+        if spec.edge:
+            row["_from"] = rewrite_endpoint(
+                row.get("_from"),
+                raw_collection=spec.vertex_collection,
+                overlay_collection=spec.overlay_collection,
+                row=row,
+                endpoint_type="from",
+            )
+            row["_to"] = rewrite_endpoint(
+                row.get("_to"),
+                raw_collection=spec.vertex_collection,
+                overlay_collection=spec.overlay_collection,
+                row=row,
+                endpoint_type="to",
+            )
+        yield row
 
 
 def import_batch(target: ArangoTarget, collection: str, rows: list[dict[str, Any]]) -> dict[str, int]:
@@ -253,11 +293,21 @@ def main() -> int:
         password=str(args.password),
     )
     input_dir = args.input_dir.resolve()
+    raw_nodes_file = (
+        input_dir / "decls.jsonl"
+        if (input_dir / "decls.jsonl").exists()
+        else input_dir / "ig_nodes.jsonl"
+    )
+    raw_edges_file = (
+        input_dir / "edges.jsonl"
+        if (input_dir / "edges.jsonl").exists()
+        else input_dir / "ig_edges.jsonl"
+    )
     specs = [
-        CollectionSpec(str(args.raw_nodes_collection), input_dir / "decls.jsonl", False),
+        CollectionSpec(str(args.raw_nodes_collection), raw_nodes_file, False),
         CollectionSpec(
             str(args.raw_edges_collection),
-            input_dir / "edges.jsonl",
+            raw_edges_file,
             True,
             vertex_collection=str(args.raw_nodes_collection),
         ),

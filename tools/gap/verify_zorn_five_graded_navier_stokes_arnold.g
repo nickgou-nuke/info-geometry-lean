@@ -233,6 +233,19 @@ if ZornAdd(ZornSub(E5_A, ZornScale(5*one, E3_A)), ZornScale(4*one, E1_A)) <> Zor
 fi;
 Print("[PASS] GAP: Archetypes LXV-LXVI (Euler 5-Grading Nilradical Derivation & KKT Degree-5 Minimal Polynomial)\n");
 
+# 8. Verify Archetypes LXVII & LXVIII: Rolf Dahm Dihedral D_4 & PG(3,2) Collinear Operator Triple (s0 * s1) * r1 = r0
+DahmR0 := [ one, [zero, zero, zero], [zero, zero, zero], one ];
+DahmR1 := [ zero, [-one, zero, zero], [-one, zero, zero], zero ];
+DahmS0 := [ one, [zero, zero, zero], [zero, zero, zero], -one ];
+DahmS1 := [ zero, [one, zero, zero], [-one, zero, zero], zero ];
+if ZornMul(DahmR1, DahmR1) <> ZornScale(-one, DahmR0) or ZornMul(DahmS0, DahmS0) <> DahmR0 or ZornMul(DahmS1, DahmS1) <> DahmR0 then
+    Error("FAIL: Archetype LXVIII Dahm D_4 generator squares failed");
+fi;
+if ZornMul(ZornMul(DahmS0, DahmS1), DahmR1) <> DahmR0 then
+    Error("FAIL: Archetype LXVIII Dahm PG(3,2) collinear triple product (s0*s1)*r1 = r0 failed");
+fi;
+Print("[PASS] GAP: Archetypes LXVII-LXVIII (Dahm Dihedral D_4 & PG(3,2) Collinear Operator Triple s0*s1*r1 = r0)\n");
+
 Print("======================================================================\n");
 Print("ALL CHECKS PASSED\n");
 Print("======================================================================\n");

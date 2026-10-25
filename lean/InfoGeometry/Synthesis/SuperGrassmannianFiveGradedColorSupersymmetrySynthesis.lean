@@ -6,6 +6,8 @@ Authors: InfoGeometry Engine Contributors
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
+import InfoGeometry.Canonical.ArnoldParaKahlerBCFW
+import InfoGeometry.Algebra.ZornAlternativeLaws
 import InfoGeometry.Synthesis.ParaKahlerSouriauMassieuMajoranaSynthesis
 import InfoGeometry.Synthesis.RealPeirceG2ColorActionBridge
 import InfoGeometry.Synthesis.WavefrontKMSKleinDualityBridge
@@ -399,6 +401,178 @@ theorem superSouriauMassieu_uv_cancellation_and_moment_readout
     exact h_eq (Function.update s_bos j t)
   rw [h_fun]
   exact hasDerivAt_souriauMassieuPotential_coord s_bos j
+
+/-!
+## Section 4: Canonical Spine Carrier Equivalences & Operation Intertwining (`OpZornMatrix R ≃ GunaydinGurseyMultiplet R ≃ (Fin 8 → R)` and `ZornVectorMatrix R ≃ ZornSplitOctonion R`)
+
+This section explicitly links the noncommutative operator-algebraic spine
+(`AlbertCayleyDickson.SplitQuaternion.OpZornMatrix R`, `ArnoldParaKahlerBCFW`, and
+`InfoGeometry.Algebra.ZornVectorMatrix R`) with the `Fin 8` / `Fin 3` matrix synthesis carriers
+(`ZornSplitOctonion R`, `GunaydinGurseyMultiplet R`, `quarkAntiquarkOuter`, and `superTrace23`).
+-/
+
+/-- Canonical 3-vector carrier equivalence between `OpVec3 R` and `Fin 3 → R`. -/
+def opVec3Fin3Equiv (R : Type*) :
+    InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.OpVec3 R ≃ (Fin 3 → R) where
+  toFun u := ![u.x, u.y, u.z]
+  invFun f := ⟨f 0, f 1, f 2⟩
+  left_inv u := by cases u; rfl
+  right_inv f := by ext i; fin_cases i <;> rfl
+
+/-- Canonical 8D split-octonion carrier equivalence between `ZornVectorMatrix R`
+(`InfoGeometry.Algebra.ZornAlternativeLaws`) and `ZornSplitOctonion R`
+(`InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge`). -/
+def zornVectorMatrixSplitOctonionEquiv (R : Type*) :
+    InfoGeometry.Algebra.ZornVectorMatrix R ≃ ZornSplitOctonion R where
+  toFun X := ⟨X.a, X.v, X.w, X.b⟩
+  invFun z := ⟨z.a, z.u, z.v, z.b⟩
+  left_inv X := by cases X; rfl
+  right_inv z := by cases z; rfl
+
+/-- **`zornVectorMatrixSplitOctonionEquiv` Multiplicative, Norm, & 5-Graded KKT Bridge**:
+1. `zornVectorMatrixSplitOctonionEquiv` is an exact algebra and quadratic-norm isomorphism between
+   `ZornVectorMatrix R` (`ZornVectorMatrix.mul`, `ZornVectorMatrix.norm`) and `ZornSplitOctonion R`
+   (`zornMul`, `zornNorm`).
+2. Every element $X \in \mathrm{ZornVectorMatrix}\;R$ satisfies the degree-5 Kantor–Koecher–Tits
+   characteristic identity $\mathcal{E}_5^5(X) - 5\,\mathcal{E}_5^3(X) + 4\,\mathcal{E}_5(X) = 0$
+   (`InfoGeometry.Algebra.ZornVectorMatrix.zorn_euler_five_grading_kkt_and_supercolor_cancellation`). -/
+theorem zornVectorMatrixSplitOctonionEquiv_mul_norm_and_kkt
+    {R : Type*} [CommRing R] (X Y : InfoGeometry.Algebra.ZornVectorMatrix R) :
+    zornVectorMatrixSplitOctonionEquiv R (InfoGeometry.Algebra.ZornVectorMatrix.mul X Y) =
+      zornMul (zornVectorMatrixSplitOctonionEquiv R X) (zornVectorMatrixSplitOctonionEquiv R Y) ∧
+    zornNorm (zornVectorMatrixSplitOctonionEquiv R X) =
+      InfoGeometry.Algebra.ZornVectorMatrix.norm X ∧
+    (let E1 := InfoGeometry.Algebra.ZornVectorMatrix.zornEulerFiveGrading X
+     let E2 := InfoGeometry.Algebra.ZornVectorMatrix.zornEulerFiveGrading E1
+     let E3 := InfoGeometry.Algebra.ZornVectorMatrix.zornEulerFiveGrading E2
+     let E4 := InfoGeometry.Algebra.ZornVectorMatrix.zornEulerFiveGrading E3
+     let E5 := InfoGeometry.Algebra.ZornVectorMatrix.zornEulerFiveGrading E4
+     E5 + -(E3 + E3 + E3 + E3 + E3) + (E1 + E1 + E1 + E1) = 0) := by
+  refine ⟨?_, ?_,
+    (InfoGeometry.Algebra.ZornVectorMatrix.zorn_euler_five_grading_kkt_and_supercolor_cancellation
+      X 0 0 0 0 0 0 X.v Y.w).2.1⟩
+  · ext k
+    · dsimp [zornVectorMatrixSplitOctonionEquiv, InfoGeometry.Algebra.ZornVectorMatrix.mul,
+        zornMul, InfoGeometry.Algebra.ZornVec3.dot, vec3Dot]
+      simp only [Fin.sum_univ_three]
+    · fin_cases k <;>
+        simp [zornVectorMatrixSplitOctonionEquiv, InfoGeometry.Algebra.ZornVectorMatrix.mul,
+          zornMul, InfoGeometry.Algebra.ZornVec3.cross, vec3Cross]
+    · fin_cases k <;>
+        simp [zornVectorMatrixSplitOctonionEquiv, InfoGeometry.Algebra.ZornVectorMatrix.mul,
+          zornMul, InfoGeometry.Algebra.ZornVec3.cross, vec3Cross]
+    · dsimp [zornVectorMatrixSplitOctonionEquiv, InfoGeometry.Algebra.ZornVectorMatrix.mul,
+        zornMul, InfoGeometry.Algebra.ZornVec3.dot, vec3Dot]
+      simp only [Fin.sum_univ_three]
+      ring
+  · dsimp [zornVectorMatrixSplitOctonionEquiv, zornNorm,
+      InfoGeometry.Algebra.ZornVectorMatrix.norm, InfoGeometry.Algebra.ZornVec3.dot, vec3Dot]
+    simp only [Fin.sum_univ_three]
+
+/-- Canonical 8D carrier equivalence between the noncommutative operator-algebraic Zorn matrix
+`OpZornMatrix R` (`AlbertCayleyDickson.lean`) and the Günaydin–Gürsey lepton–quark multiplet
+`GunaydinGurseyMultiplet R = (Fin 2 → R) × (Fin 3 → R) × (Fin 3 → R)` (`Cl55SuperGrassmannianKKTSynthesis.lean`). -/
+def opZornGunaydinGurseyEquiv (R : Type*) :
+    InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.OpZornMatrix R ≃
+      GunaydinGurseyMultiplet R where
+  toFun X := (![X.a, X.b], opVec3Fin3Equiv R X.v, opVec3Fin3Equiv R X.w)
+  invFun M := ⟨M.1 0, (opVec3Fin3Equiv R).symm M.2.1, (opVec3Fin3Equiv R).symm M.2.2, M.1 1⟩
+  left_inv X := by
+    rcases X with ⟨a, ⟨vx, vy, vz⟩, ⟨wx, wy, wz⟩, b⟩
+    rfl
+  right_inv M := by
+    rcases M with ⟨ℓ, q, qbar⟩
+    refine Prod.ext ?_ (Prod.ext ?_ ?_)
+    · ext i; fin_cases i <;> rfl
+    · ext i; fin_cases i <;> rfl
+    · ext i; fin_cases i <;> rfl
+
+/-- Canonical 8D equivalence between `OpZornMatrix R` and the 8-component $\mathrm{Cl}(4,4)$
+semi-spinor carrier `Fin 8 → R`. -/
+def opZornFin8SemiSpinorEquiv (R : Type*) [CommRing R] :
+    InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.OpZornMatrix R ≃ (Fin 8 → R) :=
+  (opZornGunaydinGurseyEquiv R).trans (gunaydinGurseyEquiv R).toEquiv.symm
+
+/-- **Canonical Spine Intertwining Theorem (`OpZornMatrix` ↔ `SuperGrassmannianFiveGradedColorSupersymmetrySynthesis`)**:
+1. **Color Outer-Product Intertwining**: Under `opVec3Fin3Equiv ℝ`, the `OpZornMatrix` color
+   outer-product entries `opColorOuterMat u v` coincide entrywise with `quarkAntiquarkOuter`:
+   `quarkAntiquarkOuter (opVec3Fin3Equiv ℝ u) (opVec3Fin3Equiv ℝ v) 0 0 = opColorOuterMat u v 0 0`,
+   `quarkAntiquarkOuter (opVec3Fin3Equiv ℝ u) (opVec3Fin3Equiv ℝ v) 1 1 = opColorOuterMat u v 1 1`,
+   `quarkAntiquarkOuter (opVec3Fin3Equiv ℝ u) (opVec3Fin3Equiv ℝ v) 2 2 = opColorOuterMat u v 2 2`.
+2. **Dilatation Trace & Quark Trace Intertwining**: Both `OpVec3.dot u v` and
+   `opQuarkTrace (opColorOuterMat u v)` equal `quarkAntiquarkDilatationTrace (opVec3Fin3Equiv ℝ u) (opVec3Fin3Equiv ℝ v)`.
+3. **$(2|3)$ Lepton–Quark Supertrace Intertwining & UV Cancellation**:
+   `superTrace23 (Matrix.of ![![OpVec3.dot u v, 0], ![0, 0]]) (quarkAntiquarkOuter (opVec3Fin3Equiv ℝ u) (opVec3Fin3Equiv ℝ v)) = opSuperTrace23 (opGradeZero (OpVec3.dot u v) 0) (opColorOuterMat u v) = 0`.
+4. **Euler 5-Grading KKT Polynomial on `OpZornMatrix ℝ`**:
+   Every `X : OpZornMatrix ℝ` satisfies $\mathcal{E}_5^5(X) - 5\,\mathcal{E}_5^3(X) + 4\,\mathcal{E}_5(X) = 0$
+   (`ArnoldParaKahlerBCFW.operator_super_grassmannian_kkt_and_supercolor_master_bridge`). -/
+theorem opZorn_supergrassmannian_color_and_supertrace_intertwining
+    (u v : InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.OpVec3 ℝ)
+    (X : InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.OpZornMatrix ℝ) :
+    quarkAntiquarkOuter (opVec3Fin3Equiv ℝ u) (opVec3Fin3Equiv ℝ v) 0 0 =
+      InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opColorOuterMat u v 0 0 ∧
+    quarkAntiquarkOuter (opVec3Fin3Equiv ℝ u) (opVec3Fin3Equiv ℝ v) 1 1 =
+      InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opColorOuterMat u v 1 1 ∧
+    quarkAntiquarkOuter (opVec3Fin3Equiv ℝ u) (opVec3Fin3Equiv ℝ v) 2 2 =
+      InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opColorOuterMat u v 2 2 ∧
+    InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.OpVec3.dot u v =
+      quarkAntiquarkDilatationTrace (opVec3Fin3Equiv ℝ u) (opVec3Fin3Equiv ℝ v) ∧
+    InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opQuarkTrace
+        (InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opColorOuterMat u v) =
+      quarkAntiquarkDilatationTrace (opVec3Fin3Equiv ℝ u) (opVec3Fin3Equiv ℝ v) ∧
+    superTrace23
+        (Matrix.of ![![InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.OpVec3.dot u v, 0], ![0, 0]])
+        (quarkAntiquarkOuter (opVec3Fin3Equiv ℝ u) (opVec3Fin3Equiv ℝ v)) =
+      InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opSuperTrace23
+        (InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opGradeZero
+          (InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.OpVec3.dot u v) 0)
+        (InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opColorOuterMat u v) ∧
+    superTrace23
+        (Matrix.of ![![InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.OpVec3.dot u v, 0], ![0, 0]])
+        (quarkAntiquarkOuter (opVec3Fin3Equiv ℝ u) (opVec3Fin3Equiv ℝ v)) = 0 ∧
+    (let E1 := InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opEulerFiveGrading X
+     let E2 := InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opEulerFiveGrading E1
+     let E3 := InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opEulerFiveGrading E2
+     let E4 := InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opEulerFiveGrading E3
+     let E5 := InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opEulerFiveGrading E4
+     E5 - (E3 + E3 + E3 + E3 + E3) + (E1 + E1 + E1 + E1) = 0) ∧
+    ((InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opDahmS1 :
+        InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.OpZornMatrix ℝ) *
+      InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opDahmS0) *
+      InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opDahmR1 =
+      InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opDahmR0 := by
+  refine ⟨rfl, rfl, rfl, ?_, ?_, ?_, ?_,
+    (InfoGeometry.Canonical.ArnoldParaKahlerBCFW.operator_super_grassmannian_kkt_and_supercolor_master_bridge
+      X 0 0 0 0 0 0 0 0 0 0 0 0 u v u v u v 1).1.2.2.2.2.2.2.2,
+    (InfoGeometry.Canonical.ArnoldParaKahlerBCFW.operator_dahm_projective_line_geometry_pg32_and_sl2h_master_bridge
+      u v u v X 0 0 0 0 0 0 0 0).2.2.2.2.2.2.2.2.1⟩
+  · rcases u with ⟨ux, uy, uz⟩
+    rcases v with ⟨vx, vy, vz⟩
+    simp [opVec3Fin3Equiv,
+      InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.OpVec3.dot,
+      quarkAntiquarkDilatationTrace, vec3Dot]
+  · rcases u with ⟨ux, uy, uz⟩
+    rcases v with ⟨vx, vy, vz⟩
+    simp [opVec3Fin3Equiv,
+      InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opQuarkTrace,
+      InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opColorOuterMat,
+      quarkAntiquarkDilatationTrace, vec3Dot]
+  · rcases u with ⟨ux, uy, uz⟩
+    rcases v with ⟨vx, vy, vz⟩
+    simp [superTrace23, Matrix.trace, Matrix.diag, opVec3Fin3Equiv, quarkAntiquarkOuter,
+      InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.OpVec3.dot,
+      InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opSuperTrace23,
+      InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opZornTrace,
+      InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opGradeZero,
+      InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opCartanDiag,
+      InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opQuarkTrace,
+      InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opColorOuterMat,
+      Fin.sum_univ_two, Fin.sum_univ_three]
+  · rcases u with ⟨ux, uy, uz⟩
+    rcases v with ⟨vx, vy, vz⟩
+    simp [superTrace23, Matrix.trace, Matrix.diag, opVec3Fin3Equiv, quarkAntiquarkOuter,
+      InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.OpVec3.dot,
+      Fin.sum_univ_two, Fin.sum_univ_three]
 
 end
 

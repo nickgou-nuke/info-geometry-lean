@@ -6828,4 +6828,100 @@ theorem zorn_euler_five_grading_kkt_and_supercolor_cancellation
     · simp [L_uw, Q_u, Q_w, zornGradeZero, mul, ZornVec3.dot, Fin.sum_univ_three]
   · simp [L_uw, Q_u, Q_w, mul, ZornVec3.dot, Fin.sum_univ_three]
 
+/-! ## Section 66: Rolf Dahm's Projective Line Geometry, Plücker–Klein 6-Vector Bijection, Simple Line Quadric Vanishing, Maxwell–Poynting Lagrange Identity, & Dihedral $D_4$ / $\mathrm{PG}(3,2)$ Collinear Operator Triples on `ZornVectorMatrix R` (Archetypes LXVII & LXVIII) -/
+
+/-- Radial Plücker 3-vector $(p_{01}, p_{02}, p_{03})$ of the projective line spanned by $x, y \in \mathrm{Fin}\;4 \to R$ (R. Dahm, JPCS 3152 (2025) 012008, §2.3). -/
+def zornPluckerRad (x y : Fin 4 → R) : ZornVec3 R :=
+  ![x 0 * y 1 - y 0 * x 1, x 0 * y 2 - y 0 * x 2, x 0 * y 3 - y 0 * x 3]
+
+/-- Transverse / dual Plücker 3-vector $(p_{23}, p_{31}, p_{12})$ of the projective line spanned by $x, y \in \mathrm{Fin}\;4 \to R$ (R. Dahm, JPCS 3152 (2025) 012008, §2.3). -/
+def zornPluckerTrans (x y : Fin 4 → R) : ZornVec3 R :=
+  ![x 2 * y 3 - y 2 * x 3, x 3 * y 1 - y 3 * x 1, x 1 * y 2 - y 1 * x 2]
+
+/-- Dahm's dihedral identity generator $r_0$ in `ZornVectorMatrix R`. -/
+def zornDahmR0 : ZornVectorMatrix R :=
+  ⟨1, 0, 0, 1⟩
+
+/-- Dahm's order-4 complex structure / rotation generator $r_1 = Q_{02}$ in `ZornVectorMatrix R`. -/
+def zornDahmR1 : ZornVectorMatrix R :=
+  ⟨0, ![1, 0, 0], ![-1, 0, 0], 0⟩
+
+/-- Dahm's diagonal reflection generator $s_0$ in `ZornVectorMatrix R`. -/
+def zornDahmS0 : ZornVectorMatrix R :=
+  ⟨1, 0, 0, -1⟩
+
+/-- Dahm's anti-diagonal reflection generator $s_1$ in `ZornVectorMatrix R`. -/
+def zornDahmS1 : ZornVectorMatrix R :=
+  ⟨0, ![1, 0, 0], ![1, 0, 0], 0⟩
+
+/-- **Rolf Dahm's Projective Line Geometry, Plücker–Klein Quadric Vanishing ($p_{01} p_{23} + p_{02} p_{31} + p_{03} p_{12} = 0$), Maxwell–Poynting Orthogonality & Lagrange Identity, and Dihedral $D_4$ / $\mathrm{PG}(3,2)$ Collinear Operator Triples on `ZornVectorMatrix R` (Archetypes LXVII & LXVIII)**:
+    Over any commutative ring $R$ (`[CommRing R]`), for all homogeneous points $x, y : \mathrm{Fin}\;4 \to R$
+    and all 3-vectors $E, B, x_{\mathrm{even}}, x_{\mathrm{odd}} : \mathrm{ZornVec3}\;R$:
+    1. Exact Plücker–Klein Quadric Vanishing ($M_4^2 \subset \mathbb{P}^5$) for Every Projective Line in $\mathbb{P}^3$ (Dahm §2.3–2.4):
+       $$\mathbf{p}_{\mathrm{rad}}(x, y) \cdot \mathbf{p}_{\mathrm{trans}}(x, y) = p_{01} p_{23} + p_{02} p_{31} + p_{03} p_{12} = 0,$$
+       and the embedded Zorn line-complex element $L(x, y) = \langle 0, \mathbf{p}_{\mathrm{rad}}(x, y), \mathbf{p}_{\mathrm{trans}}(x, y), 0 \rangle$ is strictly isotropic (`norm L(x, y) = 0`).
+    2. Senary Klein-to-Plücker Bijection to the Split $\mathrm{SO}(3,3)$ Quadric (Dahm §2.3, Eq. (1)):
+       $$(\mathbf{x}_{\mathrm{even}} + \mathbf{x}_{\mathrm{odd}}) \cdot (\mathbf{x}_{\mathrm{even}} - \mathbf{x}_{\mathrm{odd}}) =
+         \mathbf{x}_{\mathrm{even}} \cdot \mathbf{x}_{\mathrm{even}} - \mathbf{x}_{\mathrm{odd}} \cdot \mathbf{x}_{\mathrm{odd}}.$$
+    3. Maxwell–Poynting Axis Orthogonality & Lagrange Identity for Line Complexes (Dahm §2.2):
+       $$\mathbf{E} \cdot (\mathbf{E} \times \mathbf{B}) = 0, \qquad \mathbf{B} \cdot (\mathbf{E} \times \mathbf{B}) = 0,$$
+       $$(\mathbf{E} \times \mathbf{B}) \cdot (\mathbf{E} \times \mathbf{B}) + (\mathbf{E} \cdot \mathbf{B})^2 = (\mathbf{E} \cdot \mathbf{E})(\mathbf{B} \cdot \mathbf{B}).$$
+    4. Dihedral $D_4$ Gauge Relations & $\mathrm{PG}(3,2)$ Collinear Operator Triple Product $(s_0 * s_1) * r_1 = -r_0 = -1$ (Dahm §2.4, §3, Fig. 1):
+       $$r_1 * r_1 = -r_0, \qquad s_0 * s_0 = r_0, \qquad s_1 * s_1 = r_0, \qquad
+         s_0 * r_1 = s_1, \qquad (s_0 * s_1) * r_1 = -r_0.$$ -/
+theorem zorn_dahm_plucker_klein_bijection_and_maxwell_lagrange_synthesis
+    (x y : Fin 4 → R) (E B x_even x_odd : ZornVec3 R) :
+    let p_rad := zornPluckerRad x y
+    let p_trans := zornPluckerTrans x y
+    let L_line : ZornVectorMatrix R := ⟨0, p_rad, p_trans, 0⟩
+    ZornVec3.dot p_rad p_trans = 0 ∧
+    norm L_line = 0 ∧
+    ZornVec3.dot (x_even + x_odd) (x_even - x_odd) =
+      ZornVec3.dot x_even x_even - ZornVec3.dot x_odd x_odd ∧
+    ZornVec3.dot E (ZornVec3.cross E B) = 0 ∧
+    ZornVec3.dot B (ZornVec3.cross E B) = 0 ∧
+    ZornVec3.dot (ZornVec3.cross E B) (ZornVec3.cross E B) +
+      ZornVec3.dot E B * ZornVec3.dot E B =
+      ZornVec3.dot E E * ZornVec3.dot B B ∧
+    (zornDahmR1 : ZornVectorMatrix R) * zornDahmR1 = -zornDahmR0 ∧
+    (zornDahmS0 : ZornVectorMatrix R) * zornDahmS0 = zornDahmR0 ∧
+    (zornDahmS1 : ZornVectorMatrix R) * zornDahmS1 = zornDahmR0 ∧
+    (zornDahmS0 : ZornVectorMatrix R) * zornDahmR1 = zornDahmS1 ∧
+    ((zornDahmS0 : ZornVectorMatrix R) * zornDahmS1) * zornDahmR1 = -zornDahmR0 := by
+  intro p_rad p_trans L_line
+  refine ⟨?_, ?_, ?_, ZornVec3.dot_cross_self_left E B, ZornVec3.dot_cross_self_right E B, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · simp [p_rad, p_trans, zornPluckerRad, zornPluckerTrans, ZornVec3.dot, Fin.sum_univ_three]
+    ring
+  · simp [L_line, norm, p_rad, p_trans, zornPluckerRad, zornPluckerTrans, ZornVec3.dot, Fin.sum_univ_three]
+    ring
+  · simp [ZornVec3.dot, Fin.sum_univ_three]
+    ring
+  · rw [ZornVec3.dot_cross_self E B]
+    ring
+  · ext
+    · simp [zornDahmR1, zornDahmR0, InfoGeometry.Algebra.zvm_neg_def, neg, mul, ZornVec3.dot, Fin.sum_univ_three]
+    · rename_i i; fin_cases i <;> simp [zornDahmR1, zornDahmR0, InfoGeometry.Algebra.zvm_neg_def, neg, mul, ZornVec3.cross]
+    · rename_i i; fin_cases i <;> simp [zornDahmR1, zornDahmR0, InfoGeometry.Algebra.zvm_neg_def, neg, mul, ZornVec3.cross]
+    · simp [zornDahmR1, zornDahmR0, InfoGeometry.Algebra.zvm_neg_def, neg, mul, ZornVec3.dot, Fin.sum_univ_three]
+  · ext
+    · simp [zornDahmS0, zornDahmR0, mul, ZornVec3.dot]
+    · rename_i i; fin_cases i <;> simp [zornDahmS0, zornDahmR0, mul, ZornVec3.cross]
+    · rename_i i; fin_cases i <;> simp [zornDahmS0, zornDahmR0, mul, ZornVec3.cross]
+    · simp [zornDahmS0, zornDahmR0, mul, ZornVec3.dot]
+  · ext
+    · simp [zornDahmS1, zornDahmR0, mul, ZornVec3.dot, Fin.sum_univ_three]
+    · rename_i i; fin_cases i <;> simp [zornDahmS1, zornDahmR0, mul, ZornVec3.cross]
+    · rename_i i; fin_cases i <;> simp [zornDahmS1, zornDahmR0, mul, ZornVec3.cross]
+    · simp [zornDahmS1, zornDahmR0, mul, ZornVec3.dot, Fin.sum_univ_three]
+  · ext
+    · simp [zornDahmS0, zornDahmR1, zornDahmS1, mul, ZornVec3.dot]
+    · rename_i i; fin_cases i <;> simp [zornDahmS0, zornDahmR1, zornDahmS1, mul, ZornVec3.cross]
+    · rename_i i; fin_cases i <;> simp [zornDahmS0, zornDahmR1, zornDahmS1, mul, ZornVec3.cross]
+    · simp [zornDahmS0, zornDahmR1, zornDahmS1, mul, ZornVec3.dot]
+  · ext
+    · simp [zornDahmS0, zornDahmS1, zornDahmR1, zornDahmR0, InfoGeometry.Algebra.zvm_neg_def, neg, mul, ZornVec3.dot, Fin.sum_univ_three]
+    · rename_i i; fin_cases i <;> simp [zornDahmS0, zornDahmS1, zornDahmR1, zornDahmR0, InfoGeometry.Algebra.zvm_neg_def, neg, mul, ZornVec3.dot, ZornVec3.cross]
+    · rename_i i; fin_cases i <;> simp [zornDahmS0, zornDahmS1, zornDahmR1, zornDahmR0, InfoGeometry.Algebra.zvm_neg_def, neg, mul, ZornVec3.dot, ZornVec3.cross]
+    · simp [zornDahmS0, zornDahmS1, zornDahmR1, zornDahmR0, InfoGeometry.Algebra.zvm_neg_def, neg, mul, ZornVec3.dot, Fin.sum_univ_three]
+
 end InfoGeometry.Algebra.ZornVectorMatrix

@@ -155,6 +155,17 @@ E5A = zornEuler5(E4A)
 assert(zornAdd(zornSub(E5A, zornAdd(zornAdd(zornAdd(zornAdd(E3A, E3A), E3A), E3A), E3A)), zornAdd(zornAdd(zornAdd(E1A, E1A), E1A), E1A)) == zornZero)
 print("[PASS] Macaulay2: Archetypes LXV-LXVI (Euler 5-Grading Nilradical Derivation & KKT Degree-5 Minimal Polynomial)")
 
+-- 2f. Archetypes LXVII & LXVIII: Rolf Dahm Dihedral D_4 & PG(3,2) Collinear Operator Triple (s1 * s0) * r1 = r0
+dahmR0 = {1_R, {0_R, 0_R, 0_R}, {0_R, 0_R, 0_R}, 1_R}
+dahmR1 = {0_R, {-1_R, 0_R, 0_R}, {-1_R, 0_R, 0_R}, 0_R}
+dahmS0 = {1_R, {0_R, 0_R, 0_R}, {0_R, 0_R, 0_R}, -1_R}
+dahmS1 = {0_R, {-1_R, 0_R, 0_R}, {1_R, 0_R, 0_R}, 0_R}
+assert(zornMul(dahmS0, dahmS0) == dahmR0)
+assert(zornMul(dahmS1, dahmS1) == dahmR0)
+assert(zornMul(dahmS0, dahmR1) == dahmS1)
+assert(zornMul(zornMul(dahmS1, dahmS0), dahmR1) == dahmR0)
+print("[PASS] Macaulay2: Archetypes LXVII-LXVIII (Dahm Dihedral D_4 & PG(3,2) Collinear Operator Triple s1*s0*r1 = r0)")
+
 -- 3. Dmodules Weyl Algebra Analysis of the 5-Graded Contact & Helicity Operators
 W = QQ[y1, z1, y2, z2, dy1, dz1, dy2, dz2, WeylAlgebra => {y1 => dy1, z1 => dz1, y2 => dy2, z2 => dz2}]
 omegaPerp = y1*z2 - z1*y2

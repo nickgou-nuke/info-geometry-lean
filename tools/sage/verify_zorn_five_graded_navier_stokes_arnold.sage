@@ -222,6 +222,17 @@ A_sq = c_zjordan(A_jvnw, A_jvnw)
 assert c_zjordan(c_zjordan(A_sq, B_jvnw), A_jvnw) == c_zjordan(A_sq, c_zjordan(B_jvnw, A_jvnw))
 print("[PASS] PolynomialRing: 1934 JvNW Fundamental Jordan Axiom (III) ((A o A) o B) o A = (A o A) o (B o A)")
 
+# Archetypes LXVII & LXVIII: Rolf Dahm (JPCS 3152 (2025) 012008) Plücker-Klein Quadric & Dihedral D_4 / PG(3,2) Triples
+dahm_r0 = (R(1), (R(0), R(0), R(0)), (R(0), R(0), R(0)), R(1))
+dahm_r1 = (R(0), (-R(1), R(0), R(0)), (-R(1), R(0), R(0)), R(0))
+dahm_s0 = (R(1), (R(0), R(0), R(0)), (R(0), R(0), R(0)), -R(1))
+dahm_s1 = (R(0), (-R(1), R(0), R(0)), (R(1), R(0), R(0)), R(0))
+assert c_zmul(dahm_s0, dahm_s0) == dahm_r0
+assert c_zmul(dahm_s1, dahm_s1) == dahm_r0
+assert c_zmul(dahm_s0, dahm_r1) == dahm_s1
+assert c_zmul(c_zmul(dahm_s1, dahm_s0), dahm_r1) == dahm_r0
+print("[PASS] PolynomialRing: Archetypes LXVII-LXVIII (Dahm Dihedral D_4 & PG(3,2) Collinear Operator Triple s1*s0*r1 = r0)")
+
 print("======================================================================")
 print("ALL CHECKS PASSED")
 print("======================================================================")

@@ -38,6 +38,12 @@ open InfoGeometry.Synthesis.SuperGrassmannianFiveGradedColorSupersymmetrySynthes
 #check @super_berezinian_gauge_invariance
 #check @superSouriauMassieuPotential
 #check @superSouriauMassieu_uv_cancellation_and_moment_readout
+#check @opVec3Fin3Equiv
+#check @zornVectorMatrixSplitOctonionEquiv
+#check @zornVectorMatrixSplitOctonionEquiv_mul_norm_and_kkt
+#check @opZornGunaydinGurseyEquiv
+#check @opZornFin8SemiSpinorEquiv
+#check @opZorn_supergrassmannian_color_and_supertrace_intertwining
 
 #print axioms z2z2_color_supersymmetry_sign_laws
 #print axioms quarkAntiquarkTracelessSL3_trace_zero
@@ -46,5 +52,7 @@ open InfoGeometry.Synthesis.SuperGrassmannianFiveGradedColorSupersymmetrySynthes
 #print axioms oddSupercolorFull_sq_closes_on_even_bosonic_socle
 #print axioms super_berezinian_gauge_invariance
 #print axioms superSouriauMassieu_uv_cancellation_and_moment_readout
+#print axioms zornVectorMatrixSplitOctonionEquiv_mul_norm_and_kkt
+#print axioms opZorn_supergrassmannian_color_and_supertrace_intertwining
 
 end InfoGeometry.Synthesis.SuperGrassmannianFiveGradedColorSupersymmetrySynthesisAudit

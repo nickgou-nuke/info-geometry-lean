@@ -5594,4 +5594,262 @@ theorem peirceOffDiagOperator_chiral_anticomm_and_scalar_square
     exact h42.2.2
   exact ⟨h_conj_p, h_conj_m, h_four_assoc, h_res, h_tr_O, h_anticomm, h_comm_D, h_O_sq_ch, h_O_sq_det⟩
 
+/-!
+### Multi-Step Projector Chain Idempotence, Drazin–Moore–Penrose Spectral Splittings, Jordan–Lie–Malcev Decomposition, & Directed Colimit Retractions
+-/
+
+/-- **50. Universal Multi-Step Projector Chain Idempotence (`multiStep_projector_chain_idempotence`)**:
+    Because $N(A * B) = N(A) * N(B)$ and $N(\Pi_1) = 0$, for ANY operator $Z \in \mathrm{Zorn}(R)$
+    (including arbitrary $k$-step multi-projector products $Z = \Pi_2 * (\Pi_3 * \dots * \Pi_k)$),
+    both the left-projected operator $W_L = \Pi_1 * Z$ and the right-projected operator
+    $W_R = Z * \Pi_1$ are isotropic ($N(W_L) = N(W_R) = 0$) and satisfy exact scaled
+    idempotence across all 8 dimensions of $\mathrm{Zorn}(R)$:
+    `W_L * W_L = trace W_L • W_L` and `W_R * W_R = trace W_R • W_R`! -/
+theorem multiStep_projector_chain_idempotence
+    (r₁ r₂ c₁ s₁ : R) (v₁ w₁ : ZornVec3 R) (Z : ZornVectorMatrix R) :
+    let P₁ := tiltedPeircePlus r₁ r₂ c₁ s₁ v₁ w₁
+    let W_L := P₁ * Z
+    let W_R := Z * P₁
+    norm W_L = 0 ∧
+    norm W_R = 0 ∧
+    W_L * W_L = trace W_L • W_L ∧
+    W_R * W_R = trace W_R • W_R := by
+  intro P₁ W_L W_R
+  have hP : norm P₁ = 0 :=
+    (tiltedPeirce_norm_central_sum_and_associators r₁ r₂ c₁ s₁ v₁ w₁ 0).1
+  have h_nL : norm W_L = 0 := by
+    change norm (mul P₁ Z) = 0
+    rw [norm_mul, hP, MulZeroClass.zero_mul]
+  have h_nR : norm W_R = 0 := by
+    change norm (mul Z P₁) = 0
+    rw [norm_mul, hP, MulZeroClass.mul_zero]
+  refine ⟨h_nL, h_nR, ?_, ?_⟩
+  · apply sub_eq_zero.mp
+    have hch := (zorn_involution_cayley_hamilton_and_antiautomorphism W_L 0).2.2.2.1
+    rw [h_nL, _root_.zero_smul, _root_.add_zero] at hch
+    exact hch
+  · apply sub_eq_zero.mp
+    have hch := (zorn_involution_cayley_hamilton_and_antiautomorphism W_R 0).2.2.2.1
+    rw [h_nR, _root_.zero_smul, _root_.add_zero] at hch
+    exact hch
+
+/-- Upper-triangular singular rank-1 operator `upperPeirceCore lam v = ⟨lam, v, 0, 0⟩`. -/
+def upperPeirceCore (lam : R) (v : ZornVec3 R) : ZornVectorMatrix R :=
+  ⟨lam, v, 0, 0⟩
+
+/-- Pure upper off-diagonal Peirce root `peirceRootPlus v = ⟨0, v, 0, 0⟩`. -/
+def peirceRootPlus (v : ZornVec3 R) : ZornVectorMatrix R :=
+  ⟨0, v, 0, 0⟩
+
+/-- Pure lower off-diagonal Peirce root `peirceRootMinus w = ⟨0, 0, w, 0⟩`. -/
+def peirceRootMinus (w : ZornVec3 R) : ZornVectorMatrix R :=
+  ⟨0, 0, w, 0⟩
+
+/-- **51. Moore–Penrose Partial Isometry Triple Equations & Group/Drazin Inverse of `upperPeirceCore`**:
+    For all $r_1, r_2, c, s \in R$, $v, w \in R^3$, and unit $u \in R^\times$:
+    1. **Zero Moore–Penrose Associator**: `zornAssociator (peirceRootPlus v) (peirceRootMinus w) (peirceRootPlus v) = 0`.
+    2. **Moore–Penrose Triple Equations**:
+       `(peirceRootPlus v * peirceRootMinus w) * peirceRootPlus v = (v ⋅ w) • peirceRootPlus v` and
+       `(peirceRootMinus w * peirceRootPlus v) * peirceRootMinus w = (v ⋅ w) • peirceRootMinus w`.
+    3. **Projective Group/Drazin Reflexivity of $\Pi_+$**:
+       `(Π_+ * Π_+) * Π_+ = N_vw² • Π_+` and `Π_+ * conj Π_+ = 0`.
+    4. **Exact Group/Drazin Inverse of $C(u, v) = \begin{pmatrix} u & v \\ 0 & 0 \end{pmatrix}$ ($u \in R^\times$)**:
+       With $C^\#(u, v) = C(u^{-1}, (u^{-1})^2 \bullet v)$,
+       `C * C_drazin = C_drazin * C`, `(C * C_drazin) * C = C`, and `(C_drazin * C) * C_drazin = C_drazin`! -/
+theorem zorn_drazin_moore_penrose_spectral_splitting
+    (r₁ r₂ c s : R) (v w : ZornVec3 R) (u : Rˣ) :
+    let E₁₂ := peirceRootPlus v
+    let E₂₁ := peirceRootMinus w
+    let P_plus := tiltedPeircePlus r₁ r₂ c s v w
+    let N_vw := c * c - r₁ * r₂ * (s * s) * ZornVec3.dot v w
+    let C := upperPeirceCore (u : R) v
+    let C_drazin := upperPeirceCore (↑u⁻¹ : R) (((↑u⁻¹ : R) * (↑u⁻¹ : R)) • v)
+    zornAssociator E₁₂ E₂₁ E₁₂ = 0 ∧
+    (E₁₂ * E₂₁) * E₁₂ = (ZornVec3.dot v w) • E₁₂ ∧
+    (E₂₁ * E₁₂) * E₂₁ = (ZornVec3.dot v w) • E₂₁ ∧
+    (P_plus * P_plus) * P_plus = (N_vw * N_vw) • P_plus ∧
+    P_plus * conj P_plus = 0 ∧
+    C * C_drazin = C_drazin * C ∧
+    (C * C_drazin) * C = C ∧
+    (C_drazin * C) * C_drazin = C_drazin := by
+  intro E₁₂ E₂₁ P_plus N_vw C C_drazin
+  have h33 := tiltedPeirce_orth_idem_chordal_and_syzygy r₁ r₂ c s v w
+  have h49 := peirceOffDiagOperator_chiral_anticomm_and_scalar_square r₁ r₂ c s 0 0 0 0 v w 0 0 0
+  have hu_r : (u : R) * (↑u⁻¹ : R) = 1 := Units.mul_inv u
+  have h_core_mul : ∀ (a₁ a₂ s₁ s₂ : R),
+      upperPeirceCore a₁ (s₁ • v) * upperPeirceCore a₂ (s₂ • v) =
+        upperPeirceCore (a₁ * a₂) ((a₁ * s₂) • v) := by
+    intro a₁ a₂ s₁ s₂
+    ext
+    · simp [upperPeirceCore, mul, ZornVec3.dot]
+    · rename_i i; fin_cases i <;>
+        (simp [upperPeirceCore, mul, ZornVec3.cross]; ring)
+    · rename_i i; fin_cases i <;>
+        (simp [upperPeirceCore, mul, ZornVec3.cross]; ring)
+    · simp [upperPeirceCore, mul, ZornVec3.dot]
+  have hC_eq : C = upperPeirceCore (u : R) ((1 : R) • v) := by
+    dsimp [C]; rw [_root_.one_smul]
+  have h_cd : C * C_drazin = upperPeirceCore 1 ((↑u⁻¹ : R) • v) := by
+    change C * upperPeirceCore (↑u⁻¹ : R) (((↑u⁻¹ : R) * (↑u⁻¹ : R)) • v) = _
+    rw [hC_eq, h_core_mul, hu_r, ← _root_.mul_assoc, hu_r, _root_.one_mul]
+  have h_dc : C_drazin * C = upperPeirceCore 1 ((↑u⁻¹ : R) • v) := by
+    change upperPeirceCore (↑u⁻¹ : R) (((↑u⁻¹ : R) * (↑u⁻¹ : R)) • v) * C = _
+    rw [hC_eq, h_core_mul, Units.inv_mul, _root_.mul_one]
+  refine ⟨bundledAssociator_flexible E₁₂ E₂₁, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · ext
+    · simp [E₁₂, E₂₁, peirceRootPlus, peirceRootMinus, mul, smul, ZornVec3.dot]
+    · rename_i i; fin_cases i <;>
+        simp [E₁₂, E₂₁, peirceRootPlus, peirceRootMinus, mul, smul,
+              ZornVec3.dot, Fin.sum_univ_three]
+    · rename_i i; fin_cases i <;>
+        simp [E₁₂, E₂₁, peirceRootPlus, peirceRootMinus, mul, smul, ZornVec3.cross]
+    · simp [E₁₂, E₂₁, peirceRootPlus, peirceRootMinus, mul, smul,
+            ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+  · ext
+    · simp [E₁₂, E₂₁, peirceRootPlus, peirceRootMinus, mul, smul,
+            ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+    · rename_i i; fin_cases i <;>
+        simp [E₁₂, E₂₁, peirceRootPlus, peirceRootMinus, mul, smul, ZornVec3.cross]
+    · rename_i i; fin_cases i <;>
+        (simp [E₁₂, E₂₁, peirceRootPlus, peirceRootMinus, mul, smul,
+               ZornVec3.dot, Fin.sum_univ_three]; ring)
+    · simp [E₁₂, E₂₁, peirceRootPlus, peirceRootMinus, mul, smul, ZornVec3.dot]
+  · rw [h33.2.1, zvm_smul_mul, h33.2.1, smul_smul]
+  · rw [h49.1, h33.1]
+  · rw [h_cd, h_dc]
+  · rw [h_cd, hC_eq, h_core_mul, _root_.one_mul, _root_.one_mul]
+  · change (C_drazin * C) * upperPeirceCore (↑u⁻¹ : R) (((↑u⁻¹ : R) * (↑u⁻¹ : R)) • v) =
+      upperPeirceCore (↑u⁻¹ : R) (((↑u⁻¹ : R) * (↑u⁻¹ : R)) • v)
+    rw [h_dc, h_core_mul, _root_.one_mul, _root_.one_mul]
+
+/-- Symmetric Jordan product (anticommutator) `zornJordanMul X Y = X * Y + Y * X`. -/
+noncomputable def zornJordanMul (X Y : ZornVectorMatrix R) : ZornVectorMatrix R :=
+  X * Y + Y * X
+
+/-- **52. Universal Jordan–Lie–Malcev Splitting & Jacobiator–Associator Bridge**:
+    For ANY $X, Y, Z \in \mathrm{Zorn}(R)$:
+    1. **Exact Jordan–Lie Reconstruction**: `(2 : R) • (X * Y) = zornJordanMul X Y + zornComm X Y`.
+    2. **Cayley Involution Selection Rule**:
+       `conj (zornJordanMul X Y) = zornJordanMul (conj X) (conj Y)` and
+       `conj (zornComm X Y) = -zornComm (conj X) (conj Y)`.
+    3. **Tracelessness of Commutator**: `trace (zornComm X Y) = 0`.
+    4. **Universal Malcev Jacobiator Law**:
+       `zornJacobiator X Y Z = (-6 : R) • zornAssociator X Y Z`! -/
+theorem zorn_jordan_lie_malcev_operator_splitting (X Y Z : ZornVectorMatrix R) :
+    (2 : R) • (X * Y) = zornJordanMul X Y + zornComm X Y ∧
+    conj (zornJordanMul X Y) = zornJordanMul (conj X) (conj Y) ∧
+    conj (zornComm X Y) = -zornComm (conj X) (conj Y) ∧
+    trace (zornComm X Y) = 0 ∧
+    zornJacobiator X Y Z = (-6 : R) • zornAssociator X Y Z := by
+  refine ⟨?_, ?_, ?_, ?_, zornJacobiator_eq_neg_six_smul_zornAssociator X Y Z⟩
+  · unfold zornJordanMul zornComm
+    rw [two_smul]
+    abel
+  · ext
+    · simp [zornJordanMul, conj, InfoGeometry.Algebra.zvm_add_def, add, mul,
+            ZornVec3.dot, Fin.sum_univ_three]; ring
+    · rename_i i; fin_cases i <;>
+        (simp [zornJordanMul, conj, InfoGeometry.Algebra.zvm_add_def, add, mul,
+               ZornVec3.cross]; ring)
+    · rename_i i; fin_cases i <;>
+        (simp [zornJordanMul, conj, InfoGeometry.Algebra.zvm_add_def, add, mul,
+               ZornVec3.cross]; ring)
+    · simp [zornJordanMul, conj, InfoGeometry.Algebra.zvm_add_def, add, mul,
+            ZornVec3.dot, Fin.sum_univ_three]; ring
+  · ext
+    · simp [zornComm, _root_.sub_eq_add_neg, conj,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            add, neg, mul, ZornVec3.dot, Fin.sum_univ_three]; ring
+    · rename_i i; fin_cases i <;>
+        (simp [zornComm, _root_.sub_eq_add_neg, conj,
+               InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               add, neg, mul, ZornVec3.cross]; ring)
+    · rename_i i; fin_cases i <;>
+        (simp [zornComm, _root_.sub_eq_add_neg, conj,
+               InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               add, neg, mul, ZornVec3.cross]; ring)
+    · simp [zornComm, _root_.sub_eq_add_neg, conj,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            add, neg, mul, ZornVec3.dot, Fin.sum_univ_three]; ring
+  · simp [zornComm, _root_.sub_eq_add_neg, trace,
+          InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+          add, neg, mul, ZornVec3.dot, Fin.sum_univ_three]
+    ring
+
+/-- Stage 0 of the Peirce doubling tower: the 2D split Cartan torus algebra $R \times R$. -/
+@[ext]
+structure CartanTorus (R : Type*) where
+  lam : R
+  mu : R
+  deriving DecidableEq
+
+instance : Zero (CartanTorus R) := ⟨⟨0, 0⟩⟩
+instance : One (CartanTorus R) := ⟨⟨1, 1⟩⟩
+instance : Inhabited (CartanTorus R) := ⟨0⟩
+instance : Mul (CartanTorus R) := ⟨fun d₁ d₂ => ⟨d₁.lam * d₂.lam, d₁.mu * d₂.mu⟩⟩
+
+@[simp]
+lemma cartan_mul_lam (d₁ d₂ : CartanTorus R) : (d₁ * d₂).lam = d₁.lam * d₂.lam := rfl
+
+@[simp]
+lemma cartan_mul_mu (d₁ d₂ : CartanTorus R) : (d₁ * d₂).mu = d₁.mu * d₂.mu := rfl
+
+/-- Quadratic norm `d.lam * d.mu` on `CartanTorus R`. -/
+def cartanNorm (d : CartanTorus R) : R := d.lam * d.mu
+
+/-- Stage $0 \to 1$ embedding $\Psi_1 : \mathrm{Cartan}(R) \hookrightarrow M_2(R)$. -/
+def embedCartanToMat (d : CartanTorus R) : Matrix (Fin 2) (Fin 2) R :=
+  !![d.lam, 0; 0, d.mu]
+
+/-- Stage $1 \to 0$ retraction $\rho_1 : M_2(R) \twoheadrightarrow \mathrm{Cartan}(R)$. -/
+def retractMatToCartan (X : Matrix (Fin 2) (Fin 2) R) : CartanTorus R :=
+  ⟨X 0 0, X 1 1⟩
+
+/-- Stage $1 \to 2$ embedding $\Psi_2 : M_2(R) \hookrightarrow \mathrm{Zorn}(R)$ along `basis 0`. -/
+def embedMatToZorn (X : Matrix (Fin 2) (Fin 2) R) : ZornVectorMatrix R :=
+  ⟨X 0 0, (X 0 1) • ZornVec3.basis 0, (X 1 0) • ZornVec3.basis 0, X 1 1⟩
+
+/-- Stage $2 \to 1$ retraction $\rho_2 : \mathrm{Zorn}(R) \twoheadrightarrow M_2(R)$ along `basis 0`. -/
+def retractZornToMat (Z : ZornVectorMatrix R) : Matrix (Fin 2) (Fin 2) R :=
+  !![Z.a, Z.v 0; Z.w 0, Z.b]
+
+/-- **53. Directed Inductive System Functoriality & Split Retractions**:
+    Across the 3-stage Peirce doubling tower $\mathrm{Cartan}(R) \xrightarrow{\Psi_1} M_2(R) \xrightarrow{\Psi_2} \mathrm{Zorn}(R)$:
+    1. Stage $0 \to 1$ Multiplicativity & Retraction:
+       `embedCartanToMat (d₁ * d₂) = embedCartanToMat d₁ * embedCartanToMat d₂` and
+       `retractMatToCartan (embedCartanToMat d₁) = d₁`.
+    2. Stage $1 \to 2$ Multiplicativity & Retraction:
+       `embedMatToZorn (X * Y) = embedMatToZorn X * embedMatToZorn Y` and
+       `retractZornToMat (embedMatToZorn X) = X`.
+    3. Composite $0 \to 2$ Directed Retraction & Norm Coherence:
+       `retractMatToCartan (retractZornToMat (embedMatToZorn (embedCartanToMat d₁))) = d₁` and
+       `norm (embedMatToZorn (embedCartanToMat d₁)) = cartanNorm d₁`! -/
+theorem directed_colimit_tower_retractions_and_functoriality
+    (d₁ d₂ : CartanTorus R) (X Y : Matrix (Fin 2) (Fin 2) R) :
+    embedCartanToMat (d₁ * d₂) = embedCartanToMat d₁ * embedCartanToMat d₂ ∧
+    retractMatToCartan (embedCartanToMat d₁) = d₁ ∧
+    embedMatToZorn (X * Y) = embedMatToZorn X * embedMatToZorn Y ∧
+    retractZornToMat (embedMatToZorn X) = X ∧
+    retractMatToCartan (retractZornToMat (embedMatToZorn (embedCartanToMat d₁))) = d₁ ∧
+    norm (embedMatToZorn (embedCartanToMat d₁)) = cartanNorm d₁ := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · ext i j; fin_cases i <;> fin_cases j <;>
+      simp [embedCartanToMat, Matrix.mul_apply, Fin.sum_univ_two]
+  · ext <;> rfl
+  · ext
+    · simp [embedMatToZorn, mul, ZornVec3.basis, ZornVec3.dot,
+            Matrix.mul_apply, Fin.sum_univ_two]
+    · rename_i i; fin_cases i <;>
+        (simp [embedMatToZorn, mul, ZornVec3.basis, ZornVec3.cross,
+               Matrix.mul_apply, Fin.sum_univ_two]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [embedMatToZorn, mul, ZornVec3.basis, ZornVec3.cross,
+               Matrix.mul_apply, Fin.sum_univ_two]; try ring)
+    · simp [embedMatToZorn, mul, ZornVec3.basis, ZornVec3.dot,
+            Matrix.mul_apply, Fin.sum_univ_two]
+  · ext i j; fin_cases i <;> fin_cases j <;>
+      simp [retractZornToMat, embedMatToZorn, ZornVec3.basis]
+  · ext <;> simp [retractMatToCartan, retractZornToMat, embedMatToZorn, embedCartanToMat]
+  · simp [norm, embedMatToZorn, embedCartanToMat, cartanNorm, ZornVec3.dot]
+
 end InfoGeometry.Algebra.ZornVectorMatrix

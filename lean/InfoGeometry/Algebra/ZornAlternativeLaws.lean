@@ -4599,4 +4599,200 @@ theorem zorn_universal_moufang_identities (X Y Z : ZornVectorMatrix R) :
     (X * Y) * (Z * X) = X * ((Y * Z) * X) :=
   ⟨left_moufang Y Z X, right_moufang X Z Y, middle_moufang X Y Z⟩
 
+/-!
+### Two-Sided Projective Peirce Decomposition, Rank-1 Diagonal Corner Reduction, & Frobenius–Schur Norm Factorization
+-/
+
+/-- Upper Peirce corner linear functional `τ_+(X)` satisfying `(Π_+ * X) * Π_+ = τ_+(X) • Π_+`. -/
+def zornPeirceCornerTracePlus (r₁ r₂ c s : R) (v w : ZornVec3 R) (X : ZornVectorMatrix R) : R :=
+  c * c * X.a - r₁ * c * s * ZornVec3.dot v X.w + r₂ * c * s * ZornVec3.dot X.v w -
+    r₁ * r₂ * (s * s) * ZornVec3.dot v w * X.b
+
+/-- Lower Peirce corner linear functional `τ_-(X)` satisfying `(Π_- * X) * Π_- = τ_-(X) • Π_-`. -/
+def zornPeirceCornerTraceMinus (r₁ r₂ c s : R) (v w : ZornVec3 R) (X : ZornVectorMatrix R) : R :=
+  -(r₁ * r₂ * (s * s) * ZornVec3.dot v w) * X.a + r₁ * c * s * ZornVec3.dot v X.w -
+    r₂ * c * s * ZornVec3.dot X.v w + c * c * X.b
+
+/-- **38. Isotropic Norm, Central Resolution of Identity, & Artin Peirce Module Associativity**:
+    For ANY $r_1, r_2, c, s \in R$, $v, w \in R^3$, and arbitrary $X \in \mathrm{Zorn}(R)$, let
+    $\Pi_\pm = \mathrm{tiltedPeirce\pm}\;r_1\;r_2\;c\;s\;v\;w$ and $N_{vw} = c^2 - r_1 r_2 s^2 (v \cdot w)$:
+    - **Singular Isotropic Norm**: `norm Π_+ = 0` and `norm Π_- = 0`.
+    - **Central Resolution of Identity**: `Π_+ + Π_- = N_vw • 1`.
+    - **Vanishing Peirce Module Associators**:
+      `zornAssociator Π_+ Π_- X = 0`, `zornAssociator Π_+ X Π_- = 0`, and `zornAssociator Π_+ Π_+ X = 0`. -/
+theorem tiltedPeirce_norm_central_sum_and_associators
+    (r₁ r₂ c s : R) (v w : ZornVec3 R) (X : ZornVectorMatrix R) :
+    let P_plus := tiltedPeircePlus r₁ r₂ c s v w
+    let P_minus := tiltedPeirceMinus r₁ r₂ c s v w
+    let N_vw := c * c - r₁ * r₂ * (s * s) * ZornVec3.dot v w
+    norm P_plus = 0 ∧
+    norm P_minus = 0 ∧
+    P_plus + P_minus = N_vw • (one : ZornVectorMatrix R) ∧
+    zornAssociator P_plus P_minus X = 0 ∧
+    zornAssociator P_plus X P_minus = 0 ∧
+    zornAssociator P_plus P_plus X = 0 := by
+  intro P_plus P_minus N_vw
+  have h_sum : P_plus + P_minus = N_vw • (one : ZornVectorMatrix R) := by
+    ext
+    · simp [P_plus, P_minus, N_vw, one, tiltedPeircePlus, tiltedPeirceMinus,
+            InfoGeometry.Algebra.zvm_add_def, add]; ring
+    · rename_i i; fin_cases i <;>
+        simp [P_plus, P_minus, one, tiltedPeircePlus, tiltedPeirceMinus,
+              InfoGeometry.Algebra.zvm_add_def, add]
+    · rename_i i; fin_cases i <;>
+        simp [P_plus, P_minus, one, tiltedPeircePlus, tiltedPeirceMinus,
+              InfoGeometry.Algebra.zvm_add_def, add]
+    · simp [P_plus, P_minus, N_vw, one, tiltedPeircePlus, tiltedPeirceMinus,
+            InfoGeometry.Algebra.zvm_add_def, add]; ring
+  have h_minus : P_minus = N_vw • (one : ZornVectorMatrix R) + (-1 : R) • P_plus := by
+    rw [← h_sum]
+    ext
+    · simp [InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def, add, neg]
+    · rename_i i; fin_cases i <;>
+        simp [InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def, add, neg]
+    · rename_i i; fin_cases i <;>
+        simp [InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def, add, neg]
+    · simp [InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def, add, neg]
+  refine ⟨?_, ?_, h_sum, ?_, ?_, ?_⟩
+  · simp [P_plus, tiltedPeircePlus, norm, ZornVec3.dot, Fin.sum_univ_three]; ring
+  · simp [P_minus, tiltedPeirceMinus, norm, ZornVec3.dot, Fin.sum_univ_three]; ring
+  · change bundledAssociator P_plus P_minus X = 0
+    rw [h_minus, bundledAssociator_add_mid, bundledAssociator_smul_mid,
+        bundledAssociator_smul_mid, bundledAssociator_one_mid,
+        bundledAssociator_left_alt, _root_.smul_zero, _root_.smul_zero, _root_.add_zero]
+  · change bundledAssociator P_plus X P_minus = 0
+    rw [h_minus, bundledAssociator_add_right, bundledAssociator_smul_right,
+        bundledAssociator_smul_right, bundledAssociator_one_right,
+        bundledAssociator_flexible, _root_.smul_zero, _root_.smul_zero, _root_.add_zero]
+  · exact bundledAssociator_left_alt P_plus X
+
+/-- **39. Left/Right Peirce Eigen-Action, Rank-1 Diagonal Corner Reduction, & Universal 4-Block Decomposition**:
+    For ANY $r_1, r_2, c, s \in R$, $v, w \in R^3$, and arbitrary $X \in \mathrm{Zorn}(R)$:
+    - **Left & Right Peirce Module Orthogonality & Idempotence**:
+      `Π_+ * (Π_- * X) = 0`, `Π_+ * (Π_+ * X) = N_vw • (Π_+ * X)`,
+      `(X * Π_+) * Π_- = 0`, and `(X * Π_+) * Π_+ = N_vw • (X * Π_+)`.
+    - **Rank-1 Diagonal Peirce Corner Reduction & Trace Conservation**:
+      `(Π_+ * X) * Π_+ = τ_+(X) • Π_+`, `(Π_- * X) * Π_- = τ_-(X) • Π_-`,
+      and `τ_+(X) + τ_-(X) = N_vw * trace X`.
+    - **Universal 4-Block Projective Peirce Decomposition**:
+      `(Π_+ * X) * Π_+ + (Π_+ * X) * Π_- + (Π_- * X) * Π_+ + (Π_- * X) * Π_- = (N_vw * N_vw) • X`! -/
+theorem tiltedPeirce_module_action_corner_reduction_and_four_block_decomposition
+    (r₁ r₂ c s : R) (v w : ZornVec3 R) (X : ZornVectorMatrix R) :
+    let P_plus := tiltedPeircePlus r₁ r₂ c s v w
+    let P_minus := tiltedPeirceMinus r₁ r₂ c s v w
+    let N_vw := c * c - r₁ * r₂ * (s * s) * ZornVec3.dot v w
+    let τ_plus := zornPeirceCornerTracePlus r₁ r₂ c s v w X
+    let τ_minus := zornPeirceCornerTraceMinus r₁ r₂ c s v w X
+    P_plus * (P_minus * X) = 0 ∧
+    P_plus * (P_plus * X) = N_vw • (P_plus * X) ∧
+    (X * P_plus) * P_minus = 0 ∧
+    (X * P_plus) * P_plus = N_vw • (X * P_plus) ∧
+    (P_plus * X) * P_plus = τ_plus • P_plus ∧
+    (P_minus * X) * P_minus = τ_minus • P_minus ∧
+    τ_plus + τ_minus = N_vw * trace X ∧
+    (P_plus * X) * P_plus + (P_plus * X) * P_minus +
+      (P_minus * X) * P_plus + (P_minus * X) * P_minus =
+      (N_vw * N_vw) • X := by
+  intro P_plus P_minus N_vw τ_plus τ_minus
+  have h33 := tiltedPeirce_orth_idem_chordal_and_syzygy r₁ r₂ c s v w
+  have h38 := tiltedPeirce_norm_central_sum_and_associators r₁ r₂ c s v w X
+  have h_orth : P_plus * P_minus = 0 := h33.1
+  have h_idem : P_plus * P_plus = N_vw • P_plus := h33.2.1
+  have h_sum : P_plus + P_minus = N_vw • (one : ZornVectorMatrix R) := h38.2.2.1
+  have h_assoc_pm_x : (P_plus * P_minus) * X = P_plus * (P_minus * X) :=
+    sub_eq_zero.mp h38.2.2.2.1
+  have h_assoc_pp_x : (P_plus * P_plus) * X = P_plus * (P_plus * X) :=
+    sub_eq_zero.mp h38.2.2.2.2.2
+  have h_assoc_x_pp : (X * P_plus) * P_plus = X * (P_plus * P_plus) :=
+    sub_eq_zero.mp (bundledAssociator_right_alt X P_plus)
+  have h_minus : P_minus = N_vw • (one : ZornVectorMatrix R) + (-1 : R) • P_plus := by
+    rw [← h_sum]
+    ext
+    · simp [InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def, add, neg]
+    · rename_i i; fin_cases i <;>
+        simp [InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def, add, neg]
+    · rename_i i; fin_cases i <;>
+        simp [InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def, add, neg]
+    · simp [InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def, add, neg]
+  have h_assoc_x_pm : (X * P_plus) * P_minus = X * (P_plus * P_minus) := by
+    apply sub_eq_zero.mp
+    change bundledAssociator X P_plus P_minus = 0
+    rw [h_minus, bundledAssociator_add_right, bundledAssociator_smul_right,
+        bundledAssociator_smul_right, bundledAssociator_one_right,
+        bundledAssociator_right_alt, _root_.smul_zero, _root_.smul_zero, _root_.add_zero]
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · rw [← h_assoc_pm_x, h_orth]
+    exact zero_mul X
+  · rw [← h_assoc_pp_x, h_idem]
+    exact smul_mul N_vw P_plus X
+  · rw [h_assoc_x_pm, h_orth]
+    exact mul_zero X
+  · rw [h_assoc_x_pp, h_idem]
+    exact mul_smul N_vw X P_plus
+  · ext
+    · simp [P_plus, τ_plus, tiltedPeircePlus, zornPeirceCornerTracePlus,
+            mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; ring
+    · rename_i i; fin_cases i <;>
+        (simp [P_plus, τ_plus, tiltedPeircePlus, zornPeirceCornerTracePlus,
+               mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; ring)
+    · rename_i i; fin_cases i <;>
+        (simp [P_plus, τ_plus, tiltedPeircePlus, zornPeirceCornerTracePlus,
+               mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; ring)
+    · simp [P_plus, τ_plus, tiltedPeircePlus, zornPeirceCornerTracePlus,
+            mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; ring
+  · ext
+    · simp [P_minus, τ_minus, tiltedPeirceMinus, zornPeirceCornerTraceMinus,
+            mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; ring
+    · rename_i i; fin_cases i <;>
+        (simp [P_minus, τ_minus, tiltedPeirceMinus, zornPeirceCornerTraceMinus,
+               mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; ring)
+    · rename_i i; fin_cases i <;>
+        (simp [P_minus, τ_minus, tiltedPeirceMinus, zornPeirceCornerTraceMinus,
+               mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; ring)
+    · simp [P_minus, τ_minus, tiltedPeirceMinus, zornPeirceCornerTraceMinus,
+            mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; ring
+  · simp [τ_plus, τ_minus, N_vw, zornPeirceCornerTracePlus, zornPeirceCornerTraceMinus, trace]
+    ring
+  · calc (P_plus * X) * P_plus + (P_plus * X) * P_minus +
+           (P_minus * X) * P_plus + (P_minus * X) * P_minus
+      _ = (P_plus * X) * (P_plus + P_minus) + (P_minus * X) * (P_plus + P_minus) := by
+          rw [← _root_.mul_add, _root_.add_assoc, ← _root_.mul_add]
+      _ = ((P_plus + P_minus) * X) * (P_plus + P_minus) := by
+          rw [← _root_.add_mul, ← _root_.add_mul]
+      _ = ((N_vw • (one : ZornVectorMatrix R)) * X) * (N_vw • (one : ZornVectorMatrix R)) := by
+          rw [h_sum]
+      _ = (N_vw * N_vw) • X := by
+          change mul (mul (smul N_vw one) X) (smul N_vw one) = smul (N_vw * N_vw) X
+          rw [ZornVectorMatrix.smul_mul, ZornVectorMatrix.one_mul,
+              ZornVectorMatrix.mul_smul, ZornVectorMatrix.mul_one]
+          change N_vw • (N_vw • X) = (N_vw * N_vw) • X
+          rw [smul_smul]
+
+/-- **40. Non-Associative Gauss–Bruhat Schur Complement Reconstruction & Frobenius–Schur Norm Factorization**:
+    For ALL $w, v \in R^3$, $\lambda, \mu, b \in R$, and any unit $u \in R^\times$:
+    - **Vanishing Bruhat Associator**: `zornAssociator (zornParabolicMinus w) (zornHyperbolicKernel lam mu) (zornParabolicPlus v) = 0`.
+    - **Explicit Bruhat Coordinates**: `zornTrifactorFlow w lam mu v = ⟨lam, lam • v, lam • w, mu + lam * (w ⋅ v)⟩`.
+    - **Unipotent Norm Invariance**: `norm (zornTrifactorFlow w lam mu v) = lam * mu`.
+    - **Universal Schur Complement Reconstruction**:
+      `zornTrifactorFlow (u⁻¹ • w) u (b - u⁻¹ * (w ⋅ v)) (u⁻¹ • v) = ⟨u, v, w, b⟩`.
+    - **Frobenius–Schur Determinant/Norm Factorization**:
+      `norm ⟨u, v, w, b⟩ = u * (b - u⁻¹ * (w ⋅ v))`! -/
+theorem zornTrifactorFlow_frobenius_schur_norm_factorization
+    (w v : ZornVec3 R) (lam mu b : R) (u : Rˣ) :
+    zornAssociator (zornParabolicMinus w) (zornHyperbolicKernel lam mu) (zornParabolicPlus v) = 0 ∧
+    zornTrifactorFlow w lam mu v =
+      ⟨lam, fun i => lam * v i, fun i => lam * w i, mu + lam * ZornVec3.dot w v⟩ ∧
+    norm (zornTrifactorFlow w lam mu v) = lam * mu ∧
+    zornTrifactorFlow (fun i => (↑u⁻¹ : R) * w i) (u : R)
+      (b - (↑u⁻¹ : R) * ZornVec3.dot w v) (fun i => (↑u⁻¹ : R) * v i) =
+      ⟨(u : R), v, w, b⟩ ∧
+    norm ⟨(u : R), v, w, b⟩ = (u : R) * (b - (↑u⁻¹ : R) * ZornVec3.dot w v) := by
+  have h5 := zornTrifactorFlow_assoc_casimir_and_reconstruction w v lam mu b u
+  refine ⟨h5.1, h5.2.1, h5.2.2.1, h5.2.2.2, ?_⟩
+  have h_norm :=
+    (zornTrifactorFlow_assoc_casimir_and_reconstruction
+      (fun i => (↑u⁻¹ : R) * w i) (fun i => (↑u⁻¹ : R) * v i)
+      (u : R) (b - (↑u⁻¹ : R) * ZornVec3.dot w v) b u).2.2.1
+  rw [← h5.2.2.2, h_norm]
+
 end InfoGeometry.Algebra.ZornVectorMatrix

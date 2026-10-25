@@ -1623,7 +1623,7 @@ theorem cliffordWeyl_noncomm_involutions_and_intertwining :
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
   (ext i j; fin_cases i <;> fin_cases j <;>
    simp [polarizationGamma, velocityQ, wheelJ, peircePlus, peirceMinus,
-         peirceSeedD, peirceSeedB, Matrix.mul_apply, Fin.sum_univ_two, Matrix.one_apply])
+         peirceSeedD, peirceSeedB, Matrix.mul_apply, Fin.sum_univ_two])
 
 end PorterNoncommutativeRiccatiAndLoxodromes
 

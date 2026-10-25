@@ -5783,10 +5783,10 @@ structure CartanTorus (R : Type*) where
   mu : R
   deriving DecidableEq
 
-instance : Zero (CartanTorus R) := ⟨⟨0, 0⟩⟩
-instance : One (CartanTorus R) := ⟨⟨1, 1⟩⟩
-instance : Inhabited (CartanTorus R) := ⟨0⟩
-instance : Mul (CartanTorus R) := ⟨fun d₁ d₂ => ⟨d₁.lam * d₂.lam, d₁.mu * d₂.mu⟩⟩
+instance instZeroCartanTorus : Zero (CartanTorus R) := ⟨⟨0, 0⟩⟩
+instance instOneCartanTorus : One (CartanTorus R) := ⟨⟨1, 1⟩⟩
+instance instInhabitedCartanTorus : Inhabited (CartanTorus R) := ⟨0⟩
+instance instMulCartanTorus : Mul (CartanTorus R) := ⟨fun d₁ d₂ => ⟨d₁.lam * d₂.lam, d₁.mu * d₂.mu⟩⟩
 
 @[simp]
 lemma cartan_mul_lam (d₁ d₂ : CartanTorus R) : (d₁ * d₂).lam = d₁.lam * d₂.lam := rfl

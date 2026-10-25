@@ -56,16 +56,16 @@ def zeroElem {γ : F} : AlbertStep F A γ :=
 def oneElem {γ : F} : AlbertStep F A γ :=
   ⟨1, 0⟩
 
-instance {γ : F} : Zero (AlbertStep F A γ) where
+instance instZeroAlbertStep {γ : F} : Zero (AlbertStep F A γ) where
   zero := zeroElem (F := F) (A := A) (γ := γ)
 
-instance {γ : F} : One (AlbertStep F A γ) where
+instance instOneAlbertStep {γ : F} : One (AlbertStep F A γ) where
   one := oneElem (F := F) (A := A) (γ := γ)
 
-instance {γ : F} : Add (AlbertStep F A γ) where
+instance instAddAlbertStep {γ : F} : Add (AlbertStep F A γ) where
   add x y := ⟨x.p + y.p, x.q + y.q⟩
 
-instance {γ : F} : Sub (AlbertStep F A γ) where
+instance instSubAlbertStep {γ : F} : Sub (AlbertStep F A γ) where
   sub x y := ⟨x.p - y.p, x.q - y.q⟩
 
 @[simp] theorem add_p {γ : F} (x y : AlbertStep F A γ) :
@@ -2052,11 +2052,11 @@ structure OpVec3 (A : Type*) where
 
 namespace OpVec3
 
-instance : Zero (OpVec3 A) := ⟨⟨0, 0, 0⟩⟩
-instance : Inhabited (OpVec3 A) := ⟨0⟩
-instance : Add (OpVec3 A) := ⟨fun u v => ⟨u.x + v.x, u.y + v.y, u.z + v.z⟩⟩
-instance : Sub (OpVec3 A) := ⟨fun u v => ⟨u.x - v.x, u.y - v.y, u.z - v.z⟩⟩
-instance : Neg (OpVec3 A) := ⟨fun u => ⟨-u.x, -u.y, -u.z⟩⟩
+instance instZeroOpVec3 : Zero (OpVec3 A) := ⟨⟨0, 0, 0⟩⟩
+instance instInhabitedOpVec3 : Inhabited (OpVec3 A) := ⟨0⟩
+instance instAddOpVec3 : Add (OpVec3 A) := ⟨fun u v => ⟨u.x + v.x, u.y + v.y, u.z + v.z⟩⟩
+instance instSubOpVec3 : Sub (OpVec3 A) := ⟨fun u v => ⟨u.x - v.x, u.y - v.y, u.z - v.z⟩⟩
+instance instNegOpVec3 : Neg (OpVec3 A) := ⟨fun u => ⟨-u.x, -u.y, -u.z⟩⟩
 
 /-- Left and right operator action of $A$ on $A^3$. -/
 def leftScale (c : A) (u : OpVec3 A) : OpVec3 A := ⟨c * u.x, c * u.y, c * u.z⟩
@@ -2122,18 +2122,18 @@ structure OpZornMatrix (A : Type*) where
   b : A
   deriving DecidableEq
 
-instance : Zero (OpZornMatrix A) := ⟨⟨0, 0, 0, 0⟩⟩
-instance : One (OpZornMatrix A) := ⟨⟨1, 0, 0, 1⟩⟩
-instance : Inhabited (OpZornMatrix A) := ⟨0⟩
-instance : Add (OpZornMatrix A) :=
+instance instZeroOpZornMatrix : Zero (OpZornMatrix A) := ⟨⟨0, 0, 0, 0⟩⟩
+instance instOneOpZornMatrix : One (OpZornMatrix A) := ⟨⟨1, 0, 0, 1⟩⟩
+instance instInhabitedOpZornMatrix : Inhabited (OpZornMatrix A) := ⟨0⟩
+instance instAddOpZornMatrix : Add (OpZornMatrix A) :=
   ⟨fun X Y => ⟨X.a + Y.a, X.v + Y.v, X.w + Y.w, X.b + Y.b⟩⟩
-instance : Sub (OpZornMatrix A) :=
+instance instSubOpZornMatrix : Sub (OpZornMatrix A) :=
   ⟨fun X Y => ⟨X.a - Y.a, X.v - Y.v, X.w - Y.w, X.b - Y.b⟩⟩
-instance : Neg (OpZornMatrix A) :=
+instance instNegOpZornMatrix : Neg (OpZornMatrix A) :=
   ⟨fun X => ⟨-X.a, -X.v, -X.w, -X.b⟩⟩
 
 /-- Noncommutative bimodule Zorn multiplication over `[Ring A]`. -/
-instance : Mul (OpZornMatrix A) :=
+instance instMulOpZornMatrix : Mul (OpZornMatrix A) :=
   ⟨fun X Y =>
     { a := X.a * Y.a - OpVec3.dot X.v Y.w
       v := OpVec3.leftScale X.a Y.v + OpVec3.rightScale X.v Y.b - OpVec3.skewCross X.w Y.w
@@ -5800,12 +5800,12 @@ structure OpSedenion (A : Type*) where
   y : OpZornMatrix A
   deriving DecidableEq
 
-instance : Zero (OpSedenion A) := ⟨⟨0, 0⟩⟩
-instance : One (OpSedenion A) := ⟨⟨1, 0⟩⟩
-instance : Inhabited (OpSedenion A) := ⟨0⟩
-instance : Add (OpSedenion A) := ⟨fun S₁ S₂ => ⟨S₁.x + S₂.x, S₁.y + S₂.y⟩⟩
-instance : Sub (OpSedenion A) := ⟨fun S₁ S₂ => ⟨S₁.x - S₂.x, S₁.y - S₂.y⟩⟩
-instance : Neg (OpSedenion A) := ⟨fun S => ⟨-S.x, -S.y⟩⟩
+instance instZeroOpSedenion : Zero (OpSedenion A) := ⟨⟨0, 0⟩⟩
+instance instOneOpSedenion : One (OpSedenion A) := ⟨⟨1, 0⟩⟩
+instance instInhabitedOpSedenion : Inhabited (OpSedenion A) := ⟨0⟩
+instance instAddOpSedenion : Add (OpSedenion A) := ⟨fun S₁ S₂ => ⟨S₁.x + S₂.x, S₁.y + S₂.y⟩⟩
+instance instSubOpSedenion : Sub (OpSedenion A) := ⟨fun S₁ S₂ => ⟨S₁.x - S₂.x, S₁.y - S₂.y⟩⟩
+instance instNegOpSedenion : Neg (OpSedenion A) := ⟨fun S => ⟨-S.x, -S.y⟩⟩
 
 namespace OpSedenion
 
@@ -5828,7 +5828,7 @@ def opSedenionConj (S : OpSedenion A) : OpSedenion A :=
 
 /-- Saniga–Holweck–Pracna Eq. (2) (Page 1193): Cayley–Dickson multiplication
     $(x, y)(X, Y) = (x X - Y y^*,\; x^* Y + X y)$. -/
-instance : Mul (OpSedenion A) :=
+instance instMulOpSedenion : Mul (OpSedenion A) :=
   ⟨fun S₁ S₂ =>
     { x := S₁.x * S₂.x - S₂.y * opCayleyConj S₁.y
       y := opCayleyConj S₁.x * S₂.y + S₂.x * S₁.y }⟩
@@ -5894,18 +5894,18 @@ structure SuperGrassmannMatrix (p q : ℕ) (A : Type*) where
   w : Matrix (Fin q) (Fin p) A
   b : Matrix (Fin q) (Fin q) A
 
-instance {p q : ℕ} : Zero (SuperGrassmannMatrix p q A) := ⟨⟨0, 0, 0, 0⟩⟩
-instance {p q : ℕ} : One (SuperGrassmannMatrix p q A) := ⟨⟨1, 0, 0, 1⟩⟩
-instance {p q : ℕ} : Inhabited (SuperGrassmannMatrix p q A) := ⟨0⟩
-instance {p q : ℕ} : Add (SuperGrassmannMatrix p q A) :=
+instance instZeroSuperGrassmannMatrix {p q : ℕ} : Zero (SuperGrassmannMatrix p q A) := ⟨⟨0, 0, 0, 0⟩⟩
+instance instOneSuperGrassmannMatrix {p q : ℕ} : One (SuperGrassmannMatrix p q A) := ⟨⟨1, 0, 0, 1⟩⟩
+instance instInhabitedSuperGrassmannMatrix {p q : ℕ} : Inhabited (SuperGrassmannMatrix p q A) := ⟨0⟩
+instance instAddSuperGrassmannMatrix {p q : ℕ} : Add (SuperGrassmannMatrix p q A) :=
   ⟨fun X Y => ⟨X.a + Y.a, X.v + Y.v, X.w + Y.w, X.b + Y.b⟩⟩
-instance {p q : ℕ} : Sub (SuperGrassmannMatrix p q A) :=
+instance instSubSuperGrassmannMatrix {p q : ℕ} : Sub (SuperGrassmannMatrix p q A) :=
   ⟨fun X Y => ⟨X.a - Y.a, X.v - Y.v, X.w - Y.w, X.b - Y.b⟩⟩
-instance {p q : ℕ} : Neg (SuperGrassmannMatrix p q A) :=
+instance instNegSuperGrassmannMatrix {p q : ℕ} : Neg (SuperGrassmannMatrix p q A) :=
   ⟨fun X => ⟨-X.a, -X.v, -X.w, -X.b⟩⟩
 
 /-- Block matrix multiplication on `SuperGrassmannMatrix p q A`. -/
-instance {p q : ℕ} : Mul (SuperGrassmannMatrix p q A) :=
+instance instMulSuperGrassmannMatrix {p q : ℕ} : Mul (SuperGrassmannMatrix p q A) :=
   ⟨fun X Y =>
     { a := X.a * Y.a + X.v * Y.w
       v := X.a * Y.v + X.v * Y.b
@@ -6309,7 +6309,7 @@ theorem opZorn_jacobson_triple_closure_weyl_and_chiral_freudenthal
 /-- Register `NonUnitalNonAssocRing` on `OpZornMatrix A` so
     `Matrix (Fin 3) (Fin 3) (OpZornMatrix A)` inherits matrix addition, subtraction,
     negation, `Matrix.mul`, and matrix distributivity (`add_mul`, `mul_add`) automatically. -/
-instance : NonUnitalNonAssocRing (OpZornMatrix A) where
+instance instNonUnitalNonAssocRingOpZornMatrix : NonUnitalNonAssocRing (OpZornMatrix A) where
   add_assoc X Y Z := by ext <;> simp [add_assoc]
   zero_add X := by ext <;> simp
   add_zero X := by ext <;> simp

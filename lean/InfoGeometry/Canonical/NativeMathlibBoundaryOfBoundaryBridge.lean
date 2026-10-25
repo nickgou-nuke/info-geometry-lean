@@ -25,7 +25,7 @@ def zeroBoundarySystem (V : Type*) [AddCommGroup V] : BoundarySystem V where
   d_sq := fun _ => rfl
   vacuum_annihilated := rfl
 
-instance (V : Type*) [AddCommGroup V] : Inhabited (BoundarySystem V) :=
+instance instInhabitedBoundarySystem (V : Type*) [AddCommGroup V] : Inhabited (BoundarySystem V) :=
   ⟨zeroBoundarySystem V⟩
 
 namespace BoundarySystem

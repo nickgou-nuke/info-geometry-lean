@@ -46,7 +46,7 @@ def zeroChainThreeStage (C2 C1 C0 : Type*) [AddCommGroup C2] [AddCommGroup C1] [
   d1 := 0
   boundary_of_boundary := fun _ => rfl
 
-instance (C2 C1 C0 : Type*) [AddCommGroup C2] [AddCommGroup C1] [AddCommGroup C0] :
+instance instInhabitedChainThreeStage (C2 C1 C0 : Type*) [AddCommGroup C2] [AddCommGroup C1] [AddCommGroup C0] :
     Inhabited (ChainThreeStage C2 C1 C0) :=
   ⟨zeroChainThreeStage C2 C1 C0⟩
 
@@ -93,7 +93,7 @@ def canonicalInitialVacuumObject (V : Type*) [Inhabited V] : InitialVacuumObject
   vacuumState := default
   uniqueGenerativePath := fun _ => ⟨0, rfl, fun _ h => h⟩
 
-instance (V : Type*) [Inhabited V] : Inhabited (InitialVacuumObject V) :=
+instance instInhabitedInitialVacuumObject (V : Type*) [Inhabited V] : Inhabited (InitialVacuumObject V) :=
   ⟨canonicalInitialVacuumObject V⟩
 
 /-- Additive neutral 0 and Multiplicative neutral 1 duality. -/
@@ -106,7 +106,7 @@ def canonicalNeutralDuality : NeutralDuality where
   zero_add := zero_add
   one_mul := one_mul
 
-instance : Inhabited NeutralDuality := ⟨canonicalNeutralDuality⟩
+instance instInhabitedNeutralDuality : Inhabited NeutralDuality := ⟨canonicalNeutralDuality⟩
 
 /-- **Theorem (Duality of Zero and One)**: 0 is the additive root of translations; 1 is the multiplicative unit of scale. -/
 theorem zero_one_neutral_duality :

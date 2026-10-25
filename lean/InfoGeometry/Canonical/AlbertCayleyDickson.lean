@@ -2323,9 +2323,19 @@ theorem opKasparovZornJ_self_associator_and_fedosov_intertwining
 def opBruhatTrifactor (w : OpVec3 A) (lam mu : A) (v : OpVec3 A) : OpZornMatrix A :=
   (opUnipotentLower w * opCartanDiag lam mu) * opUnipotentUpper v
 
-/-- Reverse-order Banachiewicz–Bruhat inverse trifactor $(U_+(-v) * D(\lambda^{-1}, \mu^{-1})) * U_-(-w) \in \mathrm{OpZornMatrix}\;A$. -/
-def opBruhatTrifactorInv (w : OpVec3 A) (invLam invMu : A) (v : OpVec3 A) : OpZornMatrix A :=
+/-- **Reversed Operator Bruhat Inverse Flow (`opBruhatTrifactorInv v invLam invMu w`)**:
+    $(U_+(-v) * D(\tilde{\lambda}, \tilde{\mu})) * U_-(-w) \in \mathrm{OpZornMatrix}\;A$. -/
+def opBruhatTrifactorInv (v : OpVec3 A) (invLam invMu : A) (w : OpVec3 A) : OpZornMatrix A :=
   (opUnipotentUpper (-v) * opCartanDiag invLam invMu) * opUnipotentLower (-w)
+
+/-- Right-associated unit cancellation helpers for noncommutative operator rings `[Ring A]`. -/
+@[simp] lemma unit_mul_inv_cancel_left (u : Aˣ) (x : A) :
+    (u : A) * ((↑u⁻¹ : A) * x) = x := by
+  rw [← mul_assoc, Units.mul_inv, one_mul]
+
+@[simp] lemma unit_inv_mul_cancel_left (u : Aˣ) (x : A) :
+    (↑u⁻¹ : A) * ((u : A) * x) = x := by
+  rw [← mul_assoc, Units.inv_mul, one_mul]
 
 /-- **31. Noncommutative Parabolic Inversion, Bruhat Coordinates, & Schur Reconstruction (Archetype XXVII)**:
     Over ANY noncommutative operator ring $A$, for all $w, v \in A^3$, $\lambda, \mu, b \in A$,
@@ -2359,9 +2369,9 @@ theorem opBruhatTrifactor_coords_and_operator_schur_reconstruction
            OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
      try noncomm_ring)
   have h_v : OpVec3.leftScale (u : A) (OpVec3.leftScale (↑u⁻¹ : A) v) = v := by
-    ext <;> simp [OpVec3.leftScale, ← mul_assoc, Units.mul_inv]
+    ext <;> simp
   have h_w : OpVec3.rightScale (OpVec3.rightScale w (↑u⁻¹ : A)) (u : A) = w := by
-    ext <;> simp [OpVec3.rightScale, mul_assoc, Units.inv_mul]
+    ext <;> simp [mul_assoc]
   refine ⟨?_, ?_, h_coords w lam mu v, ?_⟩
   · ext <;>
     (simp [opUnipotentUpper, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
@@ -2371,65 +2381,278 @@ theorem opBruhatTrifactor_coords_and_operator_schur_reconstruction
      try noncomm_ring)
   · rw [h_coords, h_v, h_w, add_sub_cancel_right]
 
-/-- **32. Reverse-Order Banachiewicz–Bruhat Coordinates & Exact Two-Sided Inversion (Archetype XXVIII)**:
-    Over ANY noncommutative operator ring $A$, for all $w, v \in A^3$, $\tilde{\lambda}, \tilde{\mu}, p, q \in A$,
-    and any invertible operators $u, \Delta \in A^\times$ (`u Δ : Aˣ`):
-    1. Explicit Reverse-Order Inverse Trifactor Coordinates:
-       $\mathrm{opBruhatTrifactorInv}\;w\;\tilde{\lambda}\;\tilde{\mu}\;v =
-        \langle \tilde{\lambda} - (v \cdot_R \tilde{\mu}) \cdot w,\; -v \cdot_R \tilde{\mu},\; -\tilde{\mu} \cdot_L w,\; \tilde{\mu} \rangle$.
-    2. Exact Two-Sided Cartan Diagonal Inversion in $\mathrm{OpZornMatrix}\;A$:
-       $D(u, \Delta) * D(u^{-1}, \Delta^{-1}) = 1$ and $D(u^{-1}, \Delta^{-1}) * D(u, \Delta) = 1$.
-    3. Exact Single-Channel Two-Sided Banachiewicz–Bruhat Inversion in $\mathrm{OpZornMatrix}\;A$:
-       For $w_1 = e_1(p)$ and $v_1 = e_1(q)$,
-       $\mathrm{opBruhatTrifactor}\;w_1\;u\;\Delta\;v_1 * \mathrm{opBruhatTrifactorInv}\;w_1\;u^{-1}\;\Delta^{-1}\;v_1 = 1$ and
-       $\mathrm{opBruhatTrifactorInv}\;w_1\;u^{-1}\;\Delta^{-1}\;v_1 * \mathrm{opBruhatTrifactor}\;w_1\;u\;\Delta\;v_1 = 1$. -/
-theorem opBruhatTrifactorInv_coords_and_cartan_inversion
-    (w v : OpVec3 A) (invLam invMu p q : A) (u Δ : Aˣ) :
-    let w₁ := opBasisE1 p
-    let v₁ := opBasisE1 q
-    opBruhatTrifactorInv w invLam invMu v =
+/-- **32. Reversed Operator Bruhat Zero Associator & Explicit Coordinates (Archetype XXVIII.1)**:
+    Over ANY noncommutative ring $A$, for all $v, w \in A^3$ and $\tilde{\lambda}, \tilde{\mu} \in A$:
+    1. Vanishing Reversed Bruhat Associator:
+       $[U_+(-v), D(\tilde{\lambda}, \tilde{\mu}), U_-(-w)] = 0$.
+    2. Explicit Noncommutative Coordinates:
+       $\mathrm{opBruhatTrifactorInv}\;v\;\tilde{\lambda}\;\tilde{\mu}\;w =
+        \langle \tilde{\lambda} - (v \cdot_R \tilde{\mu}) \cdot w,\; -(v \cdot_R \tilde{\mu}),\; -(\tilde{\mu} \cdot_L w),\; \tilde{\mu} \rangle$. -/
+theorem opBruhatTrifactorInv_assoc_and_coords
+    (v w : OpVec3 A) (invLam invMu : A) :
+    opAssociator (opUnipotentUpper (-v)) (opCartanDiag invLam invMu) (opUnipotentLower (-w)) = 0 ∧
+    opBruhatTrifactorInv v invLam invMu w =
       ⟨invLam - OpVec3.dot (OpVec3.rightScale v invMu) w,
        -OpVec3.rightScale v invMu,
        -OpVec3.leftScale invMu w,
-       invMu⟩ ∧
-    opCartanDiag (u : A) (Δ : A) * opCartanDiag (↑u⁻¹ : A) (↑Δ⁻¹ : A) = 1 ∧
-    opCartanDiag (↑u⁻¹ : A) (↑Δ⁻¹ : A) * opCartanDiag (u : A) (Δ : A) = 1 ∧
-    opBruhatTrifactor w₁ (u : A) (Δ : A) v₁ *
-      opBruhatTrifactorInv w₁ (↑u⁻¹ : A) (↑Δ⁻¹ : A) v₁ = 1 ∧
-    opBruhatTrifactorInv w₁ (↑u⁻¹ : A) (↑Δ⁻¹ : A) v₁ *
-      opBruhatTrifactor w₁ (u : A) (Δ : A) v₁ = 1 := by
-  intro w₁ v₁
-  have hu_r : (u : A) * (↑u⁻¹ : A) = 1 := Units.mul_inv u
-  have hu_l : (↑u⁻¹ : A) * (u : A) = 1 := Units.inv_mul u
-  have hD_r : (Δ : A) * (↑Δ⁻¹ : A) = 1 := Units.mul_inv Δ
-  have hD_l : (↑Δ⁻¹ : A) * (Δ : A) = 1 := Units.inv_mul Δ
-  have hu_l_assoc : ∀ x : A, (↑u⁻¹ : A) * ((u : A) * x) = x := fun x => by
-    rw [← mul_assoc, hu_l, one_mul]
-  have hD_r_assoc : ∀ x : A, (Δ : A) * ((↑Δ⁻¹ : A) * x) = x := fun x => by
-    rw [← mul_assoc, hD_r, one_mul]
-  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+       invMu⟩ := by
+  refine ⟨?_, ?_⟩ <;>
+  (ext <;>
+   (simp [opAssociator, opBruhatTrifactorInv, opUnipotentUpper, opCartanDiag, opUnipotentLower,
+          OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+    try noncomm_ring))
+
+@[simp] lemma opBruhatTrifactor_a (w : OpVec3 A) (lam mu : A) (v : OpVec3 A) :
+    (opBruhatTrifactor w lam mu v).a = lam := by
+  rw [(opBruhatTrifactor_coords_and_operator_schur_reconstruction w v lam mu 0 1).2.2.1]
+
+@[simp] lemma opBruhatTrifactor_v (w : OpVec3 A) (lam mu : A) (v : OpVec3 A) :
+    (opBruhatTrifactor w lam mu v).v = OpVec3.leftScale lam v := by
+  rw [(opBruhatTrifactor_coords_and_operator_schur_reconstruction w v lam mu 0 1).2.2.1]
+
+@[simp] lemma opBruhatTrifactor_w (w : OpVec3 A) (lam mu : A) (v : OpVec3 A) :
+    (opBruhatTrifactor w lam mu v).w = OpVec3.rightScale w lam := by
+  rw [(opBruhatTrifactor_coords_and_operator_schur_reconstruction w v lam mu 0 1).2.2.1]
+
+@[simp] lemma opBruhatTrifactor_b (w : OpVec3 A) (lam mu : A) (v : OpVec3 A) :
+    (opBruhatTrifactor w lam mu v).b = mu - OpVec3.dot (OpVec3.rightScale w lam) v := by
+  rw [(opBruhatTrifactor_coords_and_operator_schur_reconstruction w v lam mu 0 1).2.2.1]
+
+@[simp] lemma opBruhatTrifactorInv_a (v : OpVec3 A) (invLam invMu : A) (w : OpVec3 A) :
+    (opBruhatTrifactorInv v invLam invMu w).a = invLam - OpVec3.dot (OpVec3.rightScale v invMu) w := by
+  rw [(opBruhatTrifactorInv_assoc_and_coords v w invLam invMu).2]
+
+@[simp] lemma opBruhatTrifactorInv_v (v : OpVec3 A) (invLam invMu : A) (w : OpVec3 A) :
+    (opBruhatTrifactorInv v invLam invMu w).v = -OpVec3.rightScale v invMu := by
+  rw [(opBruhatTrifactorInv_assoc_and_coords v w invLam invMu).2]
+
+@[simp] lemma opBruhatTrifactorInv_w (v : OpVec3 A) (invLam invMu : A) (w : OpVec3 A) :
+    (opBruhatTrifactorInv v invLam invMu w).w = -OpVec3.leftScale invMu w := by
+  rw [(opBruhatTrifactorInv_assoc_and_coords v w invLam invMu).2]
+
+@[simp] lemma opBruhatTrifactorInv_b (v : OpVec3 A) (invLam invMu : A) (w : OpVec3 A) :
+    (opBruhatTrifactorInv v invLam invMu w).b = invMu := by
+  rw [(opBruhatTrifactorInv_assoc_and_coords v w invLam invMu).2]
+
+/-- **33. Universal 8D Right- & Left-Product Diagonal Identities & Klein Bottle Skew-Cross Holonomy (Archetypes XXVIII.2 & XXIX)**:
+    Over ANY noncommutative ring $A$, for ALL 3-vectors $v, w \in A^3$ and invertible operators
+    $u, m \in A^\times$ (`u m : Aˣ`), let $T = \mathrm{opBruhatTrifactor}\;w\;u\;m\;v$ and
+    $T_{\mathrm{inv}} = \mathrm{opBruhatTrifactorInv}\;v\;u^{-1}\;m^{-1}\;w$:
+    1. Right-Product Diagonal Inversion: $(T * T_{\mathrm{inv}}).a = 1$ and $(T * T_{\mathrm{inv}}).b = 1$.
+    2. Right-Product Upper-Right Klein Bottle Holonomy:
+       $(T * T_{\mathrm{inv}}).v = (w \cdot_R u) \times_{\mathrm{skew}} (m^{-1} \cdot_L w)$.
+    3. Left-Product Diagonal Inversion: $(T_{\mathrm{inv}} * T).a = 1$ and $(T_{\mathrm{inv}} * T).b = 1$.
+    4. Left-Product Lower-Left Klein Bottle Holonomy:
+       $(T_{\mathrm{inv}} * T).w = -(v \cdot_R m^{-1}) \times_{\mathrm{skew}} (u \cdot_L v)$. -/
+theorem opBruhatTrifactor_klein_bottle_holonomy
+    (v w : OpVec3 A) (u m : Aˣ) :
+    let T := opBruhatTrifactor w (u : A) (m : A) v
+    let T_inv := opBruhatTrifactorInv v (↑u⁻¹ : A) (↑m⁻¹ : A) w
+    (T * T_inv).a = 1 ∧
+    (T * T_inv).b = 1 ∧
+    (T * T_inv).v =
+      OpVec3.skewCross (OpVec3.rightScale w (u : A)) (OpVec3.leftScale (↑m⁻¹ : A) w) ∧
+    (T_inv * T).a = 1 ∧
+    (T_inv * T).b = 1 ∧
+    (T_inv * T).w =
+      -OpVec3.skewCross (OpVec3.rightScale v (↑m⁻¹ : A)) (OpVec3.leftScale (u : A) v) := by
+  intro T T_inv
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · simp [T, T_inv, OpVec3.dot]
+    simp only [sub_eq_add_neg, mul_add, mul_neg, mul_assoc, Units.mul_inv]
+    abel
+  · simp [T, T_inv, OpVec3.dot]
+    simp only [sub_eq_add_neg, add_mul, neg_mul, mul_assoc, Units.mul_inv]
+    abel
   · ext <;>
-    (simp [opBruhatTrifactorInv, opUnipotentUpper, opCartanDiag, opUnipotentLower,
-           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+    (simp [T, T_inv, OpVec3.skewCross, OpVec3.naiveCross];
+     simp only [sub_eq_add_neg, mul_assoc];
+     abel)
+  · simp [T, T_inv, OpVec3.dot]
+    simp only [sub_eq_add_neg, add_mul, neg_mul, mul_assoc, Units.inv_mul]
+    abel
+  · simp [T, T_inv, OpVec3.dot]
+    simp only [sub_eq_add_neg, mul_add, mul_neg, mul_assoc, Units.inv_mul]
+    abel
+  · ext <;>
+    (simp [T, T_inv, OpVec3.skewCross, OpVec3.naiveCross];
+     simp only [sub_eq_add_neg, mul_assoc];
+     abel)
+
+/-- **34. Exact Two-Sided Inversion on Parabolic, Cartan, & Single-Channel Subgroups (Archetype XXVIII.3)**:
+    Over ANY noncommutative ring $A$, for all $v, w \in A^3$, $\alpha, \beta \in A$, and $u, m \in A^\times$:
+    1. Upper Parabolic Two-Sided Inverse:
+       $\mathrm{opBruhatTrifactor}\;0\;1\;1\;v * \mathrm{opBruhatTrifactorInv}\;v\;1\;1\;0 = 1$ and
+       $\mathrm{opBruhatTrifactorInv}\;v\;1\;1\;0 * \mathrm{opBruhatTrifactor}\;0\;1\;1\;v = 1$.
+    2. Lower Parabolic Two-Sided Inverse:
+       $\mathrm{opBruhatTrifactor}\;w\;1\;1\;0 * \mathrm{opBruhatTrifactorInv}\;0\;1\;1\;w = 1$ and
+       $\mathrm{opBruhatTrifactorInv}\;0\;1\;1\;w * \mathrm{opBruhatTrifactor}\;w\;1\;1\;0 = 1$.
+    3. Noncommutative Cartan Two-Sided Inverse:
+       $\mathrm{opBruhatTrifactor}\;0\;u\;m\;0 * \mathrm{opBruhatTrifactorInv}\;0\;u^{-1}\;m^{-1}\;0 = 1$.
+    4. Single-Channel Operator Slice Two-Sided Inverse:
+       For $v_1 = \mathrm{opBasisE1}\;\alpha$ and $w_1 = \mathrm{opBasisE1}\;\beta$,
+       $\mathrm{opBruhatTrifactor}\;w_1\;u\;m\;v_1 * \mathrm{opBruhatTrifactorInv}\;v_1\;u^{-1}\;m^{-1}\;w_1 = 1$ and
+       $\mathrm{opBruhatTrifactorInv}\;v_1\;u^{-1}\;m^{-1}\;w_1 * \mathrm{opBruhatTrifactor}\;w_1\;u\;m\;v_1 = 1$. -/
+theorem opBruhatTrifactor_parabolic_cartan_and_single_channel_inverse
+    (v w : OpVec3 A) (α β : A) (u m : Aˣ) :
+    let v₁ := opBasisE1 α
+    let w₁ := opBasisE1 β
+    opBruhatTrifactor 0 1 1 v * opBruhatTrifactorInv v 1 1 0 = 1 ∧
+    opBruhatTrifactorInv v 1 1 0 * opBruhatTrifactor 0 1 1 v = 1 ∧
+    opBruhatTrifactor w 1 1 0 * opBruhatTrifactorInv 0 1 1 w = 1 ∧
+    opBruhatTrifactorInv 0 1 1 w * opBruhatTrifactor w 1 1 0 = 1 ∧
+    opBruhatTrifactor 0 (u : A) (m : A) 0 *
+      opBruhatTrifactorInv 0 (↑u⁻¹ : A) (↑m⁻¹ : A) 0 = 1 ∧
+    opBruhatTrifactor w₁ (u : A) (m : A) v₁ *
+      opBruhatTrifactorInv v₁ (↑u⁻¹ : A) (↑m⁻¹ : A) w₁ = 1 ∧
+    opBruhatTrifactorInv v₁ (↑u⁻¹ : A) (↑m⁻¹ : A) w₁ *
+      opBruhatTrifactor w₁ (u : A) (m : A) v₁ = 1 := by
+  intro v₁ w₁
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · ext <;> (simp [OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross]; try abel)
+  · ext <;> (simp [OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross]; try abel)
+  · ext <;> (simp [OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross]; try abel)
+  · ext <;> (simp [OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross]; try abel)
+  · ext <;> simp [OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross]
+  · ext <;>
+    (simp [v₁, w₁, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try (simp only [sub_eq_add_neg, add_mul, mul_add, neg_mul, mul_neg, mul_assoc,
+                     unit_mul_inv_cancel_left, Units.mul_inv, mul_one, neg_add_rev, neg_neg];
+          abel))
+  · ext <;>
+    (simp [v₁, w₁, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try (simp only [sub_eq_add_neg, add_mul, mul_add, neg_mul, mul_neg, mul_assoc,
+                     unit_inv_mul_cancel_left, Units.inv_mul, mul_one, neg_add_rev, neg_neg];
+          abel))
+
+/-- **8D Weyl-Swapped Star Involution (`opZornWeylStar X`) on `OpZornMatrix A`**:
+    Swaps the diagonal Peirce corners $a \leftrightarrow b$ while applying `opVec3Star` to $v, w$:
+    $\langle a, v, w, b \rangle^\sharp = \langle b^\star, v^\star, w^\star, a^\star \rangle$. -/
+def opZornWeylStar [StarRing A] (X : OpZornMatrix A) : OpZornMatrix A :=
+  ⟨star X.b, opVec3Star X.v, opVec3Star X.w, star X.a⟩
+
+@[simp] lemma opZornWeylStar_a [StarRing A] (X : OpZornMatrix A) :
+    (opZornWeylStar X).a = star X.b := rfl
+@[simp] lemma opZornWeylStar_v [StarRing A] (X : OpZornMatrix A) :
+    (opZornWeylStar X).v = opVec3Star X.v := rfl
+@[simp] lemma opZornWeylStar_w [StarRing A] (X : OpZornMatrix A) :
+    (opZornWeylStar X).w = opVec3Star X.w := rfl
+@[simp] lemma opZornWeylStar_b [StarRing A] (X : OpZornMatrix A) :
+    (opZornWeylStar X).b = star X.a := rfl
+
+/-- **35. Exact Krein Self-Duality & Weyl-Star Intertwining Between Forward & Reversed Operator Bruhat Flows (Archetype XXIX.1)**:
+    Over ANY noncommutative $*$-ring $A$ (`[Ring A] [StarRing A]`), for all $w, v \in A^3$ and $\lambda, \mu \in A$:
+    1. Krein Self-Duality of Forward & Reversed Bruhat Flows:
+       $(\mathrm{opBruhatTrifactor}\;w\;\lambda\;\mu\;v)^\flat =
+        \mathrm{opBruhatTrifactor}\;(v^\star)\;\lambda^\star\;\mu^\star\;(w^\star)$ and
+       $(\mathrm{opBruhatTrifactorInv}\;v\;\lambda\;\mu\;w)^\flat =
+        \mathrm{opBruhatTrifactorInv}\;(w^\star)\;\lambda^\star\;\mu^\star\;(v^\star)$.
+    2. Exact Weyl-Star Orientation-Flip Intertwining Between `opBruhatTrifactor` and `opBruhatTrifactorInv`:
+       $(\mathrm{opBruhatTrifactor}\;w\;\lambda\;\mu\;v)^\sharp =
+        \mathrm{opBruhatTrifactorInv}\;(-v^\star)\;\mu^\star\;\lambda^\star\;(-w^\star)$. -/
+theorem opBruhatTrifactor_kreinAdjoint_duality [StarRing A]
+    (w v : OpVec3 A) (lam mu : A) :
+    opZornKreinAdjoint (opBruhatTrifactor w lam mu v) =
+      opBruhatTrifactor (opVec3Star v) (star lam) (star mu) (opVec3Star w) ∧
+    opZornKreinAdjoint (opBruhatTrifactorInv v lam mu w) =
+      opBruhatTrifactorInv (opVec3Star w) (star lam) (star mu) (opVec3Star v) ∧
+    opZornWeylStar (opBruhatTrifactor w lam mu v) =
+      opBruhatTrifactorInv (-opVec3Star v) (star mu) (star lam) (-opVec3Star w) := by
+  refine ⟨?_, ?_, ?_⟩ <;>
+  (ext <;>
+   (simp [OpVec3.dot, star_add, star_sub, star_mul, star_neg];
+    try noncomm_ring))
+
+/-- The Klein bottle skew-cross holonomy 3-vector $\kappa_R(w, u, m^{-1}) = (w \cdot_R u) \times_{\mathrm{skew}} (m^{-1} \cdot_L w)$. -/
+def kleinHolonomyVecR (w : OpVec3 A) (u m_inv : A) : OpVec3 A :=
+  OpVec3.skewCross (OpVec3.rightScale w u) (OpVec3.leftScale m_inv w)
+
+/-- The dual Klein bottle skew-cross holonomy 3-vector $\kappa_L(v, u, m^{-1}) = (v \cdot_R m^{-1}) \times_{\mathrm{skew}} (u \cdot_L v)$. -/
+def kleinHolonomyVecL (v : OpVec3 A) (u m_inv : A) : OpVec3 A :=
+  OpVec3.skewCross (OpVec3.rightScale v m_inv) (OpVec3.leftScale u v)
+
+/-- Helper: Any state $H \in \mathrm{OpZornMatrix}\;A$ with unit diagonal Peirce corners ($H.a = 1, H.b = 1$)
+    has a purely odd defect $H - 1$ that anticommutes with $\Gamma$. -/
+lemma opZornGamma_anticomm_sub_one_of_diag_eq_one (H : OpZornMatrix A)
+    (ha : H.a = 1) (hb : H.b = 1) :
+    opZornGamma * (H - 1) + (H - 1) * opZornGamma = 0 := by
+  ext <;>
+  (simp [opZornGamma, ha, hb, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+   try abel)
+
+/-- **36. Odd Kasparov Grading of the Universal 8D Bruhat Holonomy Defect (Archetype XXX.1)**:
+    Over ANY noncommutative ring $A$, for ALL 3-vectors $v, w \in A^3$ and invertible operators
+    $u, m \in A^\times$ (`u m : Aˣ`), let $\Omega_R = T * T_{\mathrm{inv}} - 1$ and
+    $\Omega_L = T_{\mathrm{inv}} * T - 1$:
+    1. Right Holonomy Defect is Purely Odd (Off-Diagonal):
+       $\Gamma * \Omega_R + \Omega_R * \Gamma = 0$.
+    2. Left Holonomy Defect is Purely Odd (Off-Diagonal):
+       $\Gamma * \Omega_L + \Omega_L * \Gamma = 0$. -/
+theorem opBruhat_holonomy_defect_odd_grading
+    (v w : OpVec3 A) (u m : Aˣ) :
+    let T := opBruhatTrifactor w (u : A) (m : A) v
+    let T_inv := opBruhatTrifactorInv v (↑u⁻¹ : A) (↑m⁻¹ : A) w
+    let Ω_R := T * T_inv - 1
+    let Ω_L := T_inv * T - 1
+    opZornGamma * Ω_R + Ω_R * opZornGamma = 0 ∧
+    opZornGamma * Ω_L + Ω_L * opZornGamma = 0 := by
+  intro T T_inv Ω_R Ω_L
+  have h := opBruhatTrifactor_klein_bottle_holonomy v w u m
+  exact ⟨opZornGamma_anticomm_sub_one_of_diag_eq_one (T * T_inv) h.1 h.2.1,
+         opZornGamma_anticomm_sub_one_of_diag_eq_one (T_inv * T) h.2.2.2.1 h.2.2.2.2.1⟩
+
+/-- **37. Parabolic Channel Teleportation & Exact Holonomy-Corrected 8D Borel Inversion (Archetype XXX.2)**:
+    Over ANY noncommutative operator ring $A$, for ALL 3-vectors $v, w \in A^3$ and units $u, m \in A^\times$:
+    1. Lower-to-Upper Parabolic Holonomy Teleportation ($v = 0$):
+       $\mathrm{opBruhatTrifactor}\;w\;u\;m\;0 * \mathrm{opBruhatTrifactorInv}\;0\;u^{-1}\;m^{-1}\;w =
+        U_+(\kappa_R(w, u, m^{-1}))$.
+    2. Upper-to-Lower Parabolic Holonomy Teleportation ($w = 0$):
+       $\mathrm{opBruhatTrifactorInv}\;v\;u^{-1}\;m^{-1}\;0 * \mathrm{opBruhatTrifactor}\;0\;u\;m\;v =
+        U_-(-\kappa_L(v, u, m^{-1}))$.
+    3. Exact Holonomy-Corrected 8D Lower-Borel Inverse:
+       $(\mathrm{opBruhatTrifactor}\;w\;u\;m\;0 * \mathrm{opBruhatTrifactorInv}\;0\;u^{-1}\;m^{-1}\;w) *
+        U_+(-\kappa_R(w, u, m^{-1})) = 1$.
+    4. Exact Holonomy-Corrected 8D Upper-Borel Inverse:
+       $U_-(\kappa_L(v, u, m^{-1})) *
+        (\mathrm{opBruhatTrifactorInv}\;v\;u^{-1}\;m^{-1}\;0 * \mathrm{opBruhatTrifactor}\;0\;u\;m\;v) = 1$. -/
+theorem opBruhat_parabolic_teleportation_and_holonomy_corrected_inverse
+    (v w : OpVec3 A) (u m : Aˣ) :
+    let κ_R := kleinHolonomyVecR w (u : A) (↑m⁻¹ : A)
+    let κ_L := kleinHolonomyVecL v (u : A) (↑m⁻¹ : A)
+    opBruhatTrifactor w (u : A) (m : A) 0 *
+      opBruhatTrifactorInv 0 (↑u⁻¹ : A) (↑m⁻¹ : A) w =
+      opUnipotentUpper κ_R ∧
+    opBruhatTrifactorInv v (↑u⁻¹ : A) (↑m⁻¹ : A) 0 *
+      opBruhatTrifactor 0 (u : A) (m : A) v =
+      opUnipotentLower (-κ_L) ∧
+    (opBruhatTrifactor w (u : A) (m : A) 0 *
+      opBruhatTrifactorInv 0 (↑u⁻¹ : A) (↑m⁻¹ : A) w) *
+      opUnipotentUpper (-κ_R) = 1 ∧
+    opUnipotentLower κ_L *
+      (opBruhatTrifactorInv v (↑u⁻¹ : A) (↑m⁻¹ : A) 0 *
+      opBruhatTrifactor 0 (u : A) (m : A) v) = 1 := by
+  intro κ_R κ_L
+  have h_tele_R : opBruhatTrifactor w (u : A) (m : A) 0 *
+      opBruhatTrifactorInv 0 (↑u⁻¹ : A) (↑m⁻¹ : A) w = opUnipotentUpper κ_R := by
+    ext <;>
+    (simp [κ_R, kleinHolonomyVecR, opUnipotentUpper, OpVec3.dot,
+           OpVec3.skewCross, OpVec3.naiveCross];
+     try abel)
+  have h_tele_L : opBruhatTrifactorInv v (↑u⁻¹ : A) (↑m⁻¹ : A) 0 *
+      opBruhatTrifactor 0 (u : A) (m : A) v = opUnipotentLower (-κ_L) := by
+    ext <;>
+    (simp [κ_L, kleinHolonomyVecL, opUnipotentLower, OpVec3.dot,
+           OpVec3.skewCross, OpVec3.naiveCross];
+     try abel)
+  refine ⟨h_tele_R, h_tele_L, ?_, ?_⟩
+  · rw [h_tele_R]
+    ext <;>
+    (simp [opUnipotentUpper, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
      try noncomm_ring)
-  · ext <;>
-    simp [opCartanDiag, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross]
-  · ext <;>
-    simp [opCartanDiag, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross]
-  · ext <;>
-    (simp [w₁, v₁, opBruhatTrifactor, opBruhatTrifactorInv,
-           opUnipotentUpper, opCartanDiag, opUnipotentLower,
-           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
-     try (simp only [sub_eq_add_neg, mul_add, add_mul, mul_neg, neg_mul, neg_add_rev, neg_neg,
-                     mul_assoc, hu_r, hD_r, hD_r_assoc, mul_one];
-          abel))
-  · ext <;>
-    (simp [w₁, v₁, opBruhatTrifactor, opBruhatTrifactorInv,
-           opUnipotentUpper, opCartanDiag, opUnipotentLower,
-           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
-     try (simp only [sub_eq_add_neg, mul_add, add_mul, mul_neg, neg_mul, neg_add_rev, neg_neg,
-                     mul_assoc, hu_l, hD_l, hu_l_assoc, mul_one];
-          abel))
+  · rw [h_tele_L]
+    ext <;>
+    (simp [opUnipotentLower, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
 
 end PorterNoncommutativeRiccatiAndLoxodromes
 

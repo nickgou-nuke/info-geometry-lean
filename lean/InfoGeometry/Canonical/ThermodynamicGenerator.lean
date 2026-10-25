@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.RelationalInformationDynamics
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RelativeModularPotential
@@ -34,8 +39,6 @@ open InfoGeometry.Canonical.RelationalInformationCore
 open InfoGeometry.Canonical.RicciMongeAmpere
 open InfoGeometry.Krein
 
-section Core
-
 variable {E : Type 0}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
@@ -47,6 +50,8 @@ noncomputable local instance : NormedAlgebra ℝ EndH := inferInstance
 noncomputable local instance : NormedSpace ℝ EndH := inferInstance
 local instance : IsTopologicalRing EndH := inferInstance
 local instance : CompleteSpace EndH := inferInstance
+
+section Core
 
 /-- Souriau temperature vector: the existing state-relative modular generator. -/
 @[rep_depth transport]
@@ -477,18 +482,6 @@ end Core
 
 section GrandCanonical
 
-variable {E : Type 0}
-variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-
-local notation "H₂" => DoubledSpace E
-local notation "EndH" => H₂ →L[ℝ] H₂
-
-noncomputable local instance : NormedRing EndH := inferInstance
-noncomputable local instance : NormedAlgebra ℝ EndH := inferInstance
-noncomputable local instance : NormedSpace ℝ EndH := inferInstance
-local instance : IsTopologicalRing EndH := inferInstance
-local instance : CompleteSpace EndH := inferInstance
-
 /-- Grand-canonical deformation of a doubled-space operator seed. -/
 @[rep_depth krein]
 noncomputable def operatorialGrandCanonicalGenerator
@@ -690,18 +683,6 @@ theorem stateRelativeGrandCanonicalMassieuPotential_normalizedInfinitesimalLaw_o
 end GrandCanonical
 
 section Anomaly
-
-variable {E : Type 0}
-variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-
-local notation "H₂" => DoubledSpace E
-local notation "EndH" => H₂ →L[ℝ] H₂
-
-noncomputable local instance : NormedRing EndH := inferInstance
-noncomputable local instance : NormedAlgebra ℝ EndH := inferInstance
-noncomputable local instance : NormedSpace ℝ EndH := inferInstance
-local instance : IsTopologicalRing EndH := inferInstance
-local instance : CompleteSpace EndH := inferInstance
 
 /-- Massieu potential of the lifted chiral anomaly operator. -/
 @[rep_depth krein]

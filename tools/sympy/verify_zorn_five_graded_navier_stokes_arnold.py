@@ -631,6 +631,346 @@ def main() -> int:
     )
     print("[PASS] Archetypes LXXIII-LXXIV: Universal (p|q) Super-Grassmannian & Pasch 4-Simplex 2-Boundary Closure")
 
+    # 18. Archetypes LXXV, LXXVI, LXXVII, & LXXVIII:
+    #     Catto-Gürcan-Khalfan-Kurt (2018) Affine E_9 / Hyperbolic E_10 Kac-Moody Roots,
+    #     Jacobson Jordan Triple Weyl Reflection, 27D Split-Octonion Albert-Conway-Sloane
+    #     Freudenthal Adjoint & Cubic Determinant Law, & Operator Zorn Jacobson Triple
+    def z_trace_op(X: OpZornMatrix) -> sp.Expr:
+        return sp.expand(X.a + X.b)
+
+    def kac_pair(X: OpZornMatrix, Y: OpZornMatrix) -> sp.Expr:
+        return z_trace_op(X * z_conj(Y))
+
+    def op_jt(X: OpZornMatrix, Y: OpZornMatrix, Z: OpZornMatrix) -> OpZornMatrix:
+        return op_anti(op_anti(X, Y), Z) + op_anti(X, op_anti(Y, Z)) - op_anti(op_anti(X, Z), Y)
+
+    R_9 = e11 - e22
+    R_aff_1 = OpZornMatrix(dp, u_vec, w_vec, sp.Integer(0))
+    R_aff_2 = OpZornMatrix(dm, v3_vec, v4_vec, sp.Integer(0))
+    R_aff_3 = OpZornMatrix(sp.Integer(1), u_vec, v3_vec, sp.Integer(0))
+    assert kac_pair(e11, e11) == 0
+    assert kac_pair(e22, e22) == 0
+    assert kac_pair(e11, e22) == 1
+    assert kac_pair(R_9, R_9) == -2
+    assert kac_pair(R_9, J_em) == 0
+    assert kac_pair(R_9, OpZornMatrix(sp.Integer(1), u_vec, w_vec, sp.Integer(0))) == -1
+    assert sp.expand(op_jt(R_aff_1, z_conj(R_aff_2), R_aff_3).b) == 0
+
+    # Archetype LXXVIII: Noncommutative Operator Zorn Jacobson Triple Closure, Weyl Reflection, & Chiral Freudenthal Cubic
+    J_1 = OpZornMatrix(sp.Integer(0), u_vec, w_vec, sp.Integer(0))
+    J_2 = OpZornMatrix(sp.Integer(0), v3_vec, v4_vec, sp.Integer(0))
+    J_3 = OpZornMatrix(sp.Integer(0), u_vec - v3_vec, w_vec - v4_vec, sp.Integer(0))
+    JT_123 = op_jt(J_1, J_2, J_3)
+    assert sp.expand(JT_123.a) == 0
+    assert sp.expand(JT_123.b) == 0
+    refl_w = left_scale(dot(w_vec, v3_vec), w_vec) + right_scale(w_vec, dot(v3_vec, w_vec))
+    assert op_jt(lightcone_minus(w_vec), lightcone_plus(v3_vec), lightcone_minus(w_vec)) == lightcone_minus(-refl_w - refl_w)
+    Q_ch = lightcone_plus(u_vec)
+    Xi1_ch = lightcone_plus(v3_vec)
+    Xi2_ch = lightcone_plus(w_vec)
+    assert Q_ch * Xi2_ch == lightcone_minus(skew_cross(u_vec, w_vec))
+    assert (Q_ch * Xi2_ch) * Xi1_ch == grade_zero(sp.Integer(0), -dot(skew_cross(u_vec, w_vec), v3_vec))
+
+    # Archetype LXXVII: 27D Split-Octonion Albert-Conway-Sloane Algebra AlbertZornMatrix3 (Commutative Symbols)
+    ca1, ca2, ca3, cb1, cb2, cb3, xp, xm, vs = sp.symbols("ca1 ca2 ca3 cb1 cb2 cb3 xp xm vs", commutative=True)
+    cv1 = ( sp.Symbol("cv1x", commutative=True), sp.Symbol("cv1y", commutative=True), sp.Symbol("cv1z", commutative=True) )
+    cw1 = ( sp.Symbol("cw1x", commutative=True), sp.Symbol("cw1y", commutative=True), sp.Symbol("cw1z", commutative=True) )
+    cv2 = ( sp.Symbol("cv2x", commutative=True), sp.Symbol("cv2y", commutative=True), sp.Symbol("cv2z", commutative=True) )
+    cw2 = ( sp.Symbol("cw2x", commutative=True), sp.Symbol("cw2y", commutative=True), sp.Symbol("cw2z", commutative=True) )
+    cv3 = ( sp.Symbol("cv3x", commutative=True), sp.Symbol("cv3y", commutative=True), sp.Symbol("cv3z", commutative=True) )
+    cw3 = ( sp.Symbol("cw3x", commutative=True), sp.Symbol("cw3y", commutative=True), sp.Symbol("cw3z", commutative=True) )
+
+    def cz_dot(u, v):
+        return u[0]*v[0] + u[1]*v[1] + u[2]*v[2]
+
+    def cz_cross(u, v):
+        return (u[1]*v[2] - u[2]*v[1], u[2]*v[0] - u[0]*v[2], u[0]*v[1] - u[1]*v[0])
+
+    def cz_add(X, Y):
+        return (X[0]+Y[0], tuple(X[1][i]+Y[1][i] for i in range(3)), tuple(X[2][i]+Y[2][i] for i in range(3)), X[3]+Y[3])
+
+    def cz_sub(X, Y):
+        return (X[0]-Y[0], tuple(X[1][i]-Y[1][i] for i in range(3)), tuple(X[2][i]-Y[2][i] for i in range(3)), X[3]-Y[3])
+
+    def cz_scale(c, X):
+        return (c*X[0], tuple(c*X[1][i] for i in range(3)), tuple(c*X[2][i] for i in range(3)), c*X[3])
+
+    def cz_conj(X):
+        return (X[3], tuple(-X[1][i] for i in range(3)), tuple(-X[2][i] for i in range(3)), X[0])
+
+    def cz_mul(X, Y):
+        a = X[0]*Y[0] + cz_dot(X[1], Y[2])
+        v = tuple(X[0]*Y[1][i] + Y[3]*X[1][i] + cz_cross(X[2], Y[2])[i] for i in range(3))
+        w = tuple(Y[0]*X[2][i] + X[3]*Y[2][i] - cz_cross(X[1], Y[1])[i] for i in range(3))
+        b = cz_dot(X[2], Y[1]) + X[3]*Y[3]
+        return (a, v, w, b)
+
+    def cz_trace(X):
+        return X[0] + X[3]
+
+    def cz_norm(X):
+        return X[0]*X[3] - cz_dot(X[1], X[2])
+
+    def cz_inner(X, Y):
+        return cz_trace(cz_mul(X, cz_conj(Y)))
+
+    Q_z = (ca1, cv1, cw1, cb1)
+    Xi1_z = (ca2, cv2, cw2, cb2)
+    Xi2_z = (ca3, cv3, cw3, cb3)
+
+    # Check associator invariance of cubic Freudenthal trace:
+    assert sp.expand(cz_trace(cz_mul(cz_mul(Q_z, Xi2_z), cz_conj(Xi1_z))) - cz_trace(cz_mul(Q_z, cz_mul(Xi2_z, cz_conj(Xi1_z))))) == 0
+
+    # Compute 27D Freudenthal Sharp Adjoint M^# and Cubic Determinant Det_27(M):
+    sh_xp = xm * vs - cz_norm(Xi2_z)
+    sh_xm = xp * vs - cz_norm(Xi1_z)
+    sh_v = xp * xm - cz_norm(Q_z)
+    sh_Q = cz_sub(cz_mul(Xi1_z, cz_conj(Xi2_z)), cz_scale(vs, Q_z))
+    sh_Xi1 = cz_sub(cz_mul(Q_z, Xi2_z), cz_scale(xm, Xi1_z))
+    sh_Xi2 = cz_sub(cz_mul(cz_conj(Q_z), Xi1_z), cz_scale(xp, Xi2_z))
+    det27 = xp*xm*vs - xp*cz_norm(Xi2_z) - xm*cz_norm(Xi1_z) - vs*cz_norm(Q_z) + cz_trace(cz_mul(cz_mul(Q_z, Xi2_z), cz_conj(Xi1_z)))
+
+    ac_xp = 2*xp*sh_xp + cz_inner(Q_z, sh_Q) + cz_inner(Xi1_z, sh_Xi1)
+    ac_xm = 2*xm*sh_xm + cz_inner(cz_conj(Q_z), cz_conj(sh_Q)) + cz_inner(Xi2_z, sh_Xi2)
+    ac_v = 2*vs*sh_v + cz_inner(Xi1_z, sh_Xi1) + cz_inner(Xi2_z, sh_Xi2)
+    ac_Q = cz_add(cz_add(cz_scale(xp + xm, sh_Q), cz_scale(sh_xp + sh_xm, Q_z)), cz_add(cz_mul(Xi1_z, cz_conj(sh_Xi2)), cz_mul(sh_Xi1, cz_conj(Xi2_z))))
+    ac_Xi1 = cz_add(cz_add(cz_scale(xp + vs, sh_Xi1), cz_scale(sh_xp + sh_v, Xi1_z)), cz_add(cz_mul(Q_z, sh_Xi2), cz_mul(sh_Q, Xi2_z)))
+    ac_Xi2 = cz_add(cz_add(cz_scale(xm + vs, sh_Xi2), cz_scale(sh_xm + sh_v, Xi2_z)), cz_add(cz_mul(cz_conj(Q_z), sh_Xi1), cz_mul(cz_conj(sh_Q), Xi1_z)))
+
+    assert sp.expand(ac_xp - 2*det27) == 0
+    assert sp.expand(ac_xm - 2*det27) == 0
+    assert sp.expand(ac_v - 2*det27) == 0
+    for Z_off in (ac_Q, ac_Xi1, ac_Xi2):
+        assert sp.expand(Z_off[0]) == 0
+        assert sp.expand(Z_off[3]) == 0
+        for i in range(3):
+            assert sp.expand(Z_off[1][i]) == 0
+            assert sp.expand(Z_off[2][i]) == 0
+    print("[PASS] Archetypes LXXV-LXXVIII: Catto E_9/E_10 Roots, 27D Split-Octonion Albert-Freudenthal Adjoint & Determinant Law, & Operator Jacobson Triple")
+
+    # 19. Archetypes LXXIX & LXXX: Z_3-Triality Operator Determinant Splitting,
+    #     Leibniz Nucleus, & 72-Channel 3x3 Operator Zorn Nilradical Freudenthal Inversion
+    Delta0 = dot(u_vec, skew_cross(w_vec, v3_vec))
+    Delta1 = dot(w_vec, skew_cross(v3_vec, u_vec))
+    Delta2 = dot(v3_vec, skew_cross(u_vec, w_vec))
+    Delta0_st = dot(skew_cross(u_vec, w_vec), v3_vec)
+    Delta1_st = dot(skew_cross(w_vec, v3_vec), u_vec)
+    Delta2_st = dot(skew_cross(v3_vec, u_vec), w_vec)
+    assert op_assoc(Q_ch, Xi2_ch, Xi1_ch) == grade_zero(Delta0, -Delta0_st)
+    assert op_assoc(Xi2_ch, Xi1_ch, Q_ch) == grade_zero(Delta1, -Delta1_st)
+    assert op_assoc(Xi1_ch, Q_ch, Xi2_ch) == grade_zero(Delta2, -Delta2_st)
+    S_tri = op_assoc(Q_ch, Xi2_ch, Xi1_ch) + op_assoc(Xi2_ch, Xi1_ch, Q_ch) + op_assoc(Xi1_ch, Q_ch, Xi2_ch)
+    assert S_tri == grade_zero(Delta0 + Delta1 + Delta2, -(Delta0_st + Delta1_st + Delta2_st))
+    assert op_comm(S_tri, Lp * Lm) == op_comm(S_tri, Lp) * Lm + Lp * op_comm(S_tri, Lm)
+    assert sp.expand(op_comm(S_tri, X_full * J_2).a - (op_comm(S_tri, X_full) * J_2 + X_full * op_comm(S_tri, J_2)).a) == 0
+    assert sp.expand(op_comm(S_tri, X_full * J_2).b - (op_comm(S_tri, X_full) * J_2 + X_full * op_comm(S_tri, J_2)).b) == 0
+
+    # 72-Channel 3x3 Matrix over 5-Graded Operator Zorn Nilradical N_+ = G_{+1} + G_{+2}:
+    def m3_zero():
+        return [[z_zero() for _ in range(3)] for _ in range(3)]
+
+    def m3_one():
+        return [[grade_zero(sp.Integer(1), sp.Integer(1)) if i == j else z_zero() for j in range(3)] for i in range(3)]
+
+    def m3_add(A_m, B_m):
+        return [[A_m[i][j] + B_m[i][j] for j in range(3)] for i in range(3)]
+
+    def m3_sub(A_m, B_m):
+        return [[A_m[i][j] - B_m[i][j] for j in range(3)] for i in range(3)]
+
+    def m3_mul(A_m, B_m):
+        out = m3_zero()
+        for i in range(3):
+            for j in range(3):
+                acc = z_zero()
+                for k in range(3):
+                    acc = acc + (A_m[i][k] * B_m[k][j])
+                out[i][j] = acc
+        return out
+
+    M1_nil = [
+        [heisenberg_nil_plus(y1, z1, xi1), heisenberg_nil_plus(y2, z2, xi2), heisenberg_nil_plus(y3, z3, xi3)],
+        [heisenberg_nil_plus(y2, z3, xi1), heisenberg_nil_plus(y3, z1, xi2), heisenberg_nil_plus(y1, z2, xi3)],
+        [heisenberg_nil_plus(y3, z2, xi3), heisenberg_nil_plus(y1, z3, xi1), heisenberg_nil_plus(y2, z1, xi2)],
+    ]
+    M2_nil = [
+        [heisenberg_nil_plus(z1, y1, xi2), heisenberg_nil_plus(z2, y2, xi3), heisenberg_nil_plus(z3, y3, xi1)],
+        [heisenberg_nil_plus(z3, y2, xi1), heisenberg_nil_plus(z1, y3, xi2), heisenberg_nil_plus(z2, y1, xi3)],
+        [heisenberg_nil_plus(z2, y3, xi3), heisenberg_nil_plus(z3, y1, xi1), heisenberg_nil_plus(z1, y2, xi2)],
+    ]
+    M3_nil = [
+        [heisenberg_nil_plus(y1 + y2, z1, xi1), heisenberg_nil_plus(y2 + y3, z2, xi2), heisenberg_nil_plus(y3 + y1, z3, xi3)],
+        [heisenberg_nil_plus(y2, z2 + z3, xi2), heisenberg_nil_plus(y3, z3 + z1, xi3), heisenberg_nil_plus(y1, z1 + z2, xi1)],
+        [heisenberg_nil_plus(y3, z1, xi1 + xi2), heisenberg_nil_plus(y1, z2, xi2 + xi3), heisenberg_nil_plus(y2, z3, xi3 + xi1)],
+    ]
+    assert m3_mul(m3_mul(M1_nil, M2_nil), M3_nil) == m3_zero()
+    assert m3_mul(M1_nil, m3_mul(M2_nil, M3_nil)) == m3_zero()
+    I3_z = m3_one()
+    U1_m = m3_add(I3_z, M1_nil)
+    U1_inv_m = m3_add(m3_sub(I3_z, M1_nil), m3_mul(M1_nil, M1_nil))
+    assert m3_mul(U1_m, U1_inv_m) == I3_z
+    assert m3_mul(U1_inv_m, U1_m) == I3_z
+    print("[PASS] Archetypes LXXIX-LXXX: Z_3-Triality Operator Determinant Split & 72-Channel 3x3 Operator Zorn Nilradical Freudenthal Inversion")
+
+    # ------------------------------------------------------------------
+    # 19. Archetypes LXXXI, LXXXII, & LXXXIII: Steen H. Hansen (21 Oct 2026)
+    #     Cl(4,2) Conformal Doublet Tower, Two-Branch Mixed Levi Commutator,
+    #     S_2 = 0 Unique d=4 Lorentzian Selection, Dirac-Majorana Dichotomy,
+    #     and Zorn Conformal-Triality Marriage
+    # ------------------------------------------------------------------
+    def m2_add(A_m, B_m):
+        return tuple(tuple(sp.expand(A_m[i][j] + B_m[i][j]) for j in range(2)) for i in range(2))
+
+    def m2_sub(A_m, B_m):
+        return tuple(tuple(sp.expand(A_m[i][j] - B_m[i][j]) for j in range(2)) for i in range(2))
+
+    def m2_mul(A_m, B_m):
+        return tuple(
+            tuple(sp.expand(A_m[i][0] * B_m[0][j] + A_m[i][1] * B_m[1][j]) for j in range(2))
+            for i in range(2)
+        )
+
+    # Archetype LXXXI: Noncommutative M_2(A) Doublet Tower & Two-Branch Levi Commutator
+    D_han = ((sp.Integer(1), sp.Integer(0)), (sp.Integer(0), sp.Integer(-1)))
+    I2_han = ((sp.Integer(1), sp.Integer(0)), (sp.Integer(0), sp.Integer(1)))
+    TwoPiP = m2_add(I2_han, D_han)
+    TwoPiM = m2_sub(I2_han, D_han)
+    Tp_x = ((sp.Integer(0), y1), (sp.Integer(0), sp.Integer(0)))
+    Tp_y = ((sp.Integer(0), z1), (sp.Integer(0), sp.Integer(0)))
+    Tm_x = ((sp.Integer(0), sp.Integer(0)), (y1, sp.Integer(0)))
+    Tm_y = ((sp.Integer(0), sp.Integer(0)), (z1, sp.Integer(0)))
+    Zero2 = ((sp.Integer(0), sp.Integer(0)), (sp.Integer(0), sp.Integer(0)))
+    assert m2_sub(m2_mul(D_han, Tp_x), m2_mul(Tp_x, D_han)) == m2_add(Tp_x, Tp_x)
+    assert m2_sub(m2_mul(D_han, Tm_y), m2_mul(Tm_y, D_han)) == m2_sub(Zero2, m2_add(Tm_y, Tm_y))
+    assert m2_add(m2_mul(D_han, Tp_x), m2_mul(Tp_x, D_han)) == Zero2
+    assert m2_add(m2_mul(D_han, Tm_y), m2_mul(Tm_y, D_han)) == Zero2
+    assert m2_mul(Tp_x, Tp_y) == Zero2
+    assert m2_mul(Tm_x, Tm_y) == Zero2
+    assert m2_mul(Tp_x, Tm_y) == ((sp.expand(y1 * z1), sp.Integer(0)), (sp.Integer(0), sp.Integer(0)))
+    assert m2_mul(Tm_y, Tp_x) == ((sp.Integer(0), sp.Integer(0)), (sp.Integer(0), sp.expand(z1 * y1)))
+    comm_han = m2_sub(m2_mul(Tp_x, Tm_y), m2_mul(Tm_y, Tp_x))
+    blade_br = ((sp.expand(y1 * z1 - z1 * y1), sp.Integer(0)), (sp.Integer(0), sp.expand(y1 * z1 - z1 * y1)))
+    dil_br = m2_mul(((sp.expand(y1 * z1 + z1 * y1), sp.Integer(0)), (sp.Integer(0), sp.expand(y1 * z1 + z1 * y1))), D_han)
+    assert m2_add(comm_han, comm_han) == m2_add(blade_br, dil_br)
+    # Archetype LXXXII: Elementary Symmetric Polynomials S_k(1,1,1,-1), Even/Odd Rule, & d=4 Selection
+    eta_lor = (1, 1, 1, -1)
+    S0_h = 1
+    S1_h = sum(eta_lor)
+    S2_h = sum(eta_lor[i] * eta_lor[j] for i in range(4) for j in range(i + 1, 4))
+    S3_h = sum(eta_lor[i] * eta_lor[j] * eta_lor[k] for i in range(4) for j in range(i + 1, 4) for k in range(j + 1, 4))
+    S4_h = eta_lor[0] * eta_lor[1] * eta_lor[2] * eta_lor[3]
+    assert (S0_h, S1_h, S2_h, S3_h, S4_h) == (1, 2, 0, -2, -1)
+    w_h = [(-1) ** (k * (k + 1) // 2 + 1) * 2 * Sk for k, Sk in enumerate((S0_h, S1_h, S2_h, S3_h, S4_h))]
+    assert tuple(w_h) == (-2, 4, 0, 4, 2)
+    assert w_h[1] + w_h[3] == 8 and w_h[0] + w_h[2] + w_h[4] == 0 and sum(w_h) == 8
+    d_sym, m_sym = sp.symbols("d_sym m_sym", commutative=True)
+    assert sp.expand(((d_sym - 1) - 1) ** 2 - ((d_sym - 1) + 1) - (d_sym - 1) * (d_sym - 4)) == 0
+    assert sp.expand(((m_sym**2 + m_sym) - (m_sym**2 - m_sym)) ** 2 - 2 * ((m_sym**2 + m_sym) + (m_sym**2 - m_sym))) == 0
+    # Archetype LXXXIII: Top-Rung Dirac-Majorana Dichotomy & Zorn Conformal-Triality Marriage
+    I_Maj = m2_add(Tp_x, Tm_y)
+    I_Dir = m2_sub(Tp_x, Tm_y)
+    assert m2_mul(I_Maj, I_Maj) == ((sp.expand(y1 * z1), sp.Integer(0)), (sp.Integer(0), sp.expand(z1 * y1)))
+    assert m2_mul(I_Dir, I_Dir) == ((sp.expand(-y1 * z1), sp.Integer(0)), (sp.Integer(0), sp.expand(-z1 * y1)))
+    assert m2_mul(I_Maj, TwoPiP) == m2_mul(TwoPiM, I_Maj)
+    assert m2_mul(I_Dir, TwoPiP) == m2_mul(TwoPiM, I_Dir)
+    assert m2_add(m2_mul(I_Maj, I_Dir), m2_mul(I_Dir, I_Maj)) == Zero2
+    assert m2_mul(I_Dir, I_Maj) == ((sp.expand(y1 * z1), sp.Integer(0)), (sp.Integer(0), sp.expand(-z1 * y1)))
+    D_zorn = OpZornMatrix(sp.Integer(1), v_zero(), v_zero(), sp.Integer(-1))
+    Tp_z1 = lightcone_plus(u_vec)
+    Tp_z2 = lightcone_plus(w_vec)
+    Tm_z1 = lightcone_minus(w_vec)
+    assert D_zorn * Tp_z1 - Tp_z1 * D_zorn == Tp_z1 + Tp_z1
+    assert D_zorn * Tp_z1 + Tp_z1 * D_zorn == z_zero()
+    assert Tp_z1 * Tp_z1 == z_zero() and Tm_z1 * Tm_z1 == z_zero()
+    assert Tp_z1 * Tp_z2 - Tp_z2 * Tp_z1 == lightcone_minus(skew_cross(u_vec, w_vec) + skew_cross(u_vec, w_vec))
+    print("[PASS] Archetypes LXXXI-LXXXIII: Hansen (2026) Cl(4,2) Doublet Tower, S_2=0 d=4 Selection, Dirac-Majorana Dichotomy, & Zorn Conformal-Triality Marriage")
+
+    # ------------------------------------------------------------------
+    # 20. Archetypes LXXXIV & LXXXV: Zero Chiral Volume, Krein Space Null Kernel,
+    #     Parabolic Conformal Boundary Sheaf, & Universal Majorana Horizon Zero Modes
+    # ------------------------------------------------------------------
+    vt1 = OpVec3(sp.Integer(0), y1, z1)
+    vt2 = OpVec3(sp.Integer(0), y2, z2)
+    vt3 = OpVec3(sp.Integer(0), y3, z3)
+    assert sp.expand(dot(vt1, skew_cross(vt2, vt3))) == 0
+    assert sp.expand(dot(skew_cross(vt1, vt2), vt3)) == 0
+    Ep1_yz = grade_plus1(y1, z1)
+    Em1_yz = OpZornMatrix(sp.Integer(0), v_zero(), OpVec3(sp.Integer(0), y1, z1), sp.Integer(0))
+    Ep2_xi = grade_plus2(xi1)
+    Em2_xi = grade_minus2(xi1)
+    assert Ep1_yz * Ep2_xi == z_zero() and Ep2_xi * Ep1_yz == z_zero()
+    assert Em1_yz * Em2_xi == z_zero() and Em2_xi * Em1_yz == z_zero()
+    assert Em1_yz * Ep2_xi == grade_plus1(-(z1 * xi1 + xi1 * z1), y1 * xi1 + xi1 * y1)
+    Pi_b1 = contact_flow_idem(xi1, y1, z1)
+    Pi_b2 = contact_flow_idem(xi2, y2, z2)
+    Pi_b1_perp = z_one() - Pi_b1
+    Z_Maj = grade_plus2(xi3)
+    assert Pi_b1 * Pi_b1 == Pi_b1
+    assert Pi_b1 * Pi_b1_perp == z_zero() and Pi_b1_perp * Pi_b1 == z_zero()
+    assert Ep1_yz * Z_Maj == z_zero() and Z_Maj * Ep1_yz == z_zero()
+    assert Pi_b1 * Z_Maj == z_zero() and Z_Maj * Pi_b1 == Z_Maj
+    assert Pi_b1_perp * Z_Maj == Z_Maj and Z_Maj * Pi_b1_perp == z_zero()
+    print("[PASS] Archetypes LXXXIV-LXXXV: Zero Chiral Volume, Krein Null Kernel, Parabolic Boundary Sheaf, & Majorana Horizon Zero Modes")
+
+    # ------------------------------------------------------------------
+    # 21. Archetypes LXXXVI & LXXXVII: Chevalley-Lounesto-Shirokov Spinor Ideals
+    #     & Relativistic Dirac-Krein Ket-Bra Duality
+    # ------------------------------------------------------------------
+    e11_z = grade_zero(sp.Integer(1), sp.Integer(0))
+    e22_z = grade_zero(sp.Integer(0), sp.Integer(1))
+    ket_gen = OpZornMatrix(y1, v_zero(), w_vec, sp.Integer(0))
+    bra_gen = OpZornMatrix(z1, u_vec, v_zero(), sp.Integer(0))
+    assert ket_gen * e11_z == ket_gen and ket_gen * e22_z == z_zero()
+    assert e11_z * bra_gen == bra_gen and e22_z * bra_gen == z_zero()
+    assert bra_gen * ket_gen == grade_zero(z1 * y1 - dot(u_vec, w_vec), sp.Integer(0))
+    assert ket_gen * bra_gen == OpZornMatrix(y1 * z1, left_scale(y1, u_vec), right_scale(w_vec, z1), -dot(w_vec, u_vec))
+    psi_c1 = OpZornMatrix(y1, v_zero(), OpVec3(xi1, sp.Integer(0), sp.Integer(0)), sp.Integer(0))
+    phi_c2_bar = OpZornMatrix(y2, OpVec3(xi2, sp.Integer(0), sp.Integer(0)), v_zero(), sp.Integer(0))
+    psi_c3 = OpZornMatrix(y3, v_zero(), OpVec3(xi3, sp.Integer(0), sp.Integer(0)), sp.Integer(0))
+    inner_23 = y2 * y3 - xi2 * xi3
+    assert (psi_c1 * phi_c2_bar) * psi_c3 == psi_c1 * (phi_c2_bar * psi_c3)
+    assert (psi_c1 * phi_c2_bar) * psi_c3 == OpZornMatrix(y1 * inner_23, v_zero(), OpVec3(xi1 * inner_23, sp.Integer(0), sp.Integer(0)), sp.Integer(0))
+    print("[PASS] Archetypes LXXXVI-LXXXVII: Chevalley-Lounesto-Shirokov Spinor Ideals & Relativistic Dirac-Krein Ket-Bra Duality")
+
+    # ------------------------------------------------------------------
+    # 22. Archetypes LXXXVIII & LXXXIX: Trifactor-Loxodromic Local Compass,
+    #     Doubled 4-Vector Operator Potentials, Dilaton Scaling, & 8D Zorn-Riccati Möbius Operator
+    # ------------------------------------------------------------------
+    X_obs = OpZornMatrix(y1, u_vec, w_vec, z1)
+    X_conj = OpZornMatrix(z1, -u_vec, -w_vec, y1)
+    A_plus = e11_z * X_obs
+    A_minus = e22_z * X_obs
+    assert A_plus == OpZornMatrix(y1, u_vec, v_zero(), sp.Integer(0))
+    assert A_minus == OpZornMatrix(sp.Integer(0), v_zero(), w_vec, z1)
+    assert A_plus + A_minus == X_obs
+    assert A_plus * (X_conj * e11_z) == grade_zero(y1 * z1 + dot(u_vec, w_vec), sp.Integer(0))
+    assert A_plus * A_minus == OpZornMatrix(-dot(u_vec, w_vec), right_scale(u_vec, z1), v_zero(), sp.Integer(0))
+    assert A_minus * A_plus == OpZornMatrix(sp.Integer(0), v_zero(), right_scale(w_vec, y1), -dot(w_vec, u_vec))
+    D_dil1 = grade_zero(xi1, xi2)
+    D_dil2 = grade_zero(y2, z2)
+    assert op_assoc(D_dil1, X_obs, D_dil2) == z_zero()
+    # Compass needles & Trifactor-Loxodromic bridge
+    P_row_u = OpZornMatrix(sp.Integer(1), u_vec, v_zero(), sp.Integer(0))
+    P_col_w = OpZornMatrix(sp.Integer(1), v_zero(), w_vec, sp.Integer(0))
+    assert P_row_u * P_row_u == P_row_u and P_col_w * P_col_w == P_col_w
+    U_up_u = OpZornMatrix(sp.Integer(1), u_vec, v_zero(), sp.Integer(1))
+    U_lo_w = OpZornMatrix(sp.Integer(1), v_zero(), w_vec, sp.Integer(1))
+    T_bruhat = (U_lo_w * grade_zero(xi1, xi2)) * U_up_u
+    assert T_bruhat == (P_col_w * grade_zero(xi1, sp.Integer(0))) * P_row_u + grade_zero(sp.Integer(0), xi2)
+    assert T_bruhat + grade_zero(sp.Integer(0), dot(right_scale(w_vec, xi1), u_vec)) == OpZornMatrix(xi1, left_scale(xi1, u_vec), right_scale(w_vec, xi1), xi2)
+    # 8D Noncommutative Zorn-Riccati Möbius Operator & Trifactor Schur Residual
+    def zorn_riccati(X_m: OpZornMatrix, q_v: OpVec3) -> OpVec3:
+        return right_scale(q_v, dot(X_m.w, q_v)) + right_scale(q_v, X_m.b) + left_scale(X_m.a, q_v) - X_m.v
+    U_up_neg_u = OpZornMatrix(sp.Integer(1), -u_vec, v_zero(), sp.Integer(1))
+    mov_frame = (U_up_neg_u * X_obs) * U_up_u
+    assert mov_frame.v == left_scale(X_obs.a + dot(u_vec, X_obs.w), u_vec) - right_scale(u_vec, X_obs.b) + X_obs.v
+    assert zorn_riccati(grade_zero(xi1, -xi2), u_vec) == left_scale(xi1, u_vec) - right_scale(u_vec, xi2)
+    T_unit_rho = (U_lo_w * grade_zero(sp.Integer(1), xi2)) * U_up_u
+    T_unit_zero = (U_lo_w * grade_zero(sp.Integer(1), sp.Integer(0))) * U_up_u
+    assert zorn_riccati(T_unit_rho, u_vec) == right_scale(u_vec, xi2)
+    assert zorn_riccati(T_unit_zero, u_vec) == v_zero()
+    print("[PASS] Archetypes LXXXVIII-LXXXIX: Trifactor-Loxodromic Compass, Doubled 4-Vector Potentials, Dilaton Scaling, & 8D Zorn-Riccati Möbius Operator")
+
     print("======================================================================")
     print("ALL CHECKS PASSED")
     print("======================================================================")

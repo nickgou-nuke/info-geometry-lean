@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
@@ -28,7 +33,7 @@ theorem d_sq_zero
     d * d = 0 := hd2
 
 /--
-If `δ` is square-zero, restate it as a theorem-level fact.
+If `δ` is square-zero, restate it as a theorem-level fact via `d_sq_zero`.
 -/
 @[rep_depth thermo]
 theorem delta_sq_zero
@@ -36,7 +41,8 @@ theorem delta_sq_zero
     [Ring R] [AddCommGroup V] [Module R V]
     (δ : Module.End R V)
     (hδ2 : δ * δ = 0) :
-    δ * δ = 0 := hδ2
+    δ * δ = 0 :=
+  d_sq_zero δ hδ2
 
 /--
 Laplacian definition in operator form:

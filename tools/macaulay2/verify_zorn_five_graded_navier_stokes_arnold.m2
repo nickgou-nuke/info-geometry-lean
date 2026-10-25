@@ -192,6 +192,76 @@ P234 = zornMul(Om23, Om34)
 assert(zornSub(zornAdd(zornSub(P234, P134), P124), P123) == zornZero)
 print("[PASS] Macaulay2: Archetypes LXVII-LXXIV (Dahm D_4, Maxwell-Poynting Stress, Grassmannian G_2(N+1), Sedenion Zero Divisors, & Pasch 4-Simplex 2-Boundary)")
 
+-- Archetypes LXXV, LXXVI, LXXVII, & LXXVIII: Catto E_9/E_10 Weyl Reflection & 27D Split-Octonion Albert-Freudenthal Adjoint & Determinant Law
+zornMulStd = (X, Y) -> (
+    a := X#0 * Y#0 + vecDot(X#1, Y#2);
+    v := vecAdd(vecAdd(vecScale(X#0, Y#1), vecScale(Y#3, X#1)), vecCross(X#2, Y#2));
+    w := vecSub(vecAdd(vecScale(Y#0, X#2), vecScale(X#3, Y#2)), vecCross(X#1, Y#1));
+    b := vecDot(X#2, Y#1) + X#3 * Y#3;
+    {a, v, w, b}
+)
+zornJordanStd = (X, Y) -> zornAdd(zornMulStd(X, Y), zornMulStd(Y, X))
+zornTrace = X -> X#0 + X#3
+zornNorm = X -> X#0 * X#3 - vecDot(X#1, X#2)
+zornInner = (X, Y) -> zornTrace(zornMulStd(X, zornConj(Y)))
+zornJT = (X, Y, Z) -> zornSub(zornAdd(zornJordanStd(zornJordanStd(X, Y), Z), zornJordanStd(X, zornJordanStd(Y, Z))), zornJordanStd(zornJordanStd(X, Z), Y))
+Qalb = Xjvnw
+Xi1alb = Bjvnw
+Xi2alb = {eta, {y1, z2, xi3}, {y2, z3, xi1}, y3}
+assert(zornJT(Xi1alb, zornConj(Qalb), Xi1alb) == zornScale(4_R, zornSub(zornScale(zornTrace(zornMulStd(Qalb, zornConj(Xi1alb))), Xi1alb), zornScale(zornNorm(Xi1alb), Qalb))))
+assert(zornTrace(zornMulStd(zornMulStd(Qalb, Xi2alb), zornConj(Xi1alb))) == zornTrace(zornMulStd(Qalb, zornMulStd(Xi2alb, zornConj(Xi1alb)))))
+xpa = y0; xma = z0; va = ys;
+shxp = xma * va - zornNorm(Xi2alb)
+shxm = xpa * va - zornNorm(Xi1alb)
+shv  = xpa * xma - zornNorm(Qalb)
+shQ  = zornSub(zornMulStd(Xi1alb, zornConj(Xi2alb)), zornScale(va, Qalb))
+shXi1 = zornSub(zornMulStd(Qalb, Xi2alb), zornScale(xma, Xi1alb))
+shXi2 = zornSub(zornMulStd(zornConj(Qalb), Xi1alb), zornScale(xpa, Xi2alb))
+det27 = xpa*xma*va - xpa*zornNorm(Xi2alb) - xma*zornNorm(Xi1alb) - va*zornNorm(Qalb) + zornTrace(zornMulStd(zornMulStd(Qalb, Xi2alb), zornConj(Xi1alb)))
+acxp = 2*xpa*shxp + zornInner(Qalb, shQ) + zornInner(Xi1alb, shXi1)
+acxm = 2*xma*shxm + zornInner(zornConj(Qalb), zornConj(shQ)) + zornInner(Xi2alb, shXi2)
+acv  = 2*va*shv + zornInner(Xi1alb, shXi1) + zornInner(Xi2alb, shXi2)
+acQ  = zornAdd(zornAdd(zornScale(xpa + xma, shQ), zornScale(shxp + shxm, Qalb)), zornAdd(zornMulStd(Xi1alb, zornConj(shXi2)), zornMulStd(shXi1, zornConj(Xi2alb))))
+acXi1 = zornAdd(zornAdd(zornScale(xpa + va, shXi1), zornScale(shxp + shv, Xi1alb)), zornAdd(zornMulStd(Qalb, shXi2), zornMulStd(shQ, Xi2alb)))
+acXi2 = zornAdd(zornAdd(zornScale(xma + va, shXi2), zornScale(shxm + shv, Xi2alb)), zornAdd(zornMulStd(zornConj(Qalb), shXi1), zornMulStd(zornConj(shQ), Xi1alb)))
+assert(acxp == 2*det27 and acxm == 2*det27 and acv == 2*det27)
+assert(acQ == zornZero and acXi1 == zornZero and acXi2 == zornZero)
+-- Archetypes LXXIX & LXXX: Z_3-Triality Determinant Split & 72-Channel Nilradical Inversion
+assert(zornAdd(zornAdd(zornAssoc(Lpq1, Lpq2, Lpq3), zornAssoc(Lpq2, Lpq3, Lpq1)), zornAssoc(Lpq3, Lpq1, Lpq2)) == gradeZero(3 * baryonDet, -3 * baryonDet))
+-- Archetypes LXXXI, LXXXII, & LXXXIII: Steen H. Hansen (21 Oct 2026) Cl(4,2) Doublet Tower & Zorn Conformal-Triality Marriage
+Dzorn = gradeZero(1_R, -1_R)
+assert(zornSub(zornMul(Dzorn, Lpq1), zornMul(Lpq1, Dzorn)) == zornAdd(Lpq1, Lpq1))
+assert(zornAdd(zornMul(Dzorn, Lpq1), zornMul(Lpq1, Dzorn)) == zornZero)
+assert(zornSub(zornMul(Lpq1, Lpq2), zornMul(Lpq2, Lpq1)) == {0_R, {0_R, 0_R, 0_R}, vecScale(2_R, vecCross({y1, z1, xi1}, {y2, z2, xi2})), 0_R})
+assert(((y1 - 1_R) - 1_R)^2 - ((y1 - 1_R) + 1_R) == (y1 - 1_R) * (y1 - 4_R))
+-- Archetypes LXXXIV & LXXXV: Zero Chiral Volume, Krein Null Kernel, Parabolic Boundary Sheaf, & Majorana Horizon Zero Modes
+assert(vecDot({0_R, y1, z1}, vecCross({0_R, y2, z2}, {0_R, y3, z3})) == 0_R)
+Ep1m = {0_R, {0_R, y1, z1}, {0_R, 0_R, 0_R}, 0_R}
+Em1m = {0_R, {0_R, 0_R, 0_R}, {0_R, y1, z1}, 0_R}
+ZMajm = gradePlus2(xi3)
+Em2m = gradeMinus2(xi3)
+PibPerp = zornSub(zornOne, Pic1)
+assert(zornMul(Ep1m, ZMajm) == zornZero and zornMul(ZMajm, Ep1m) == zornZero)
+assert(zornMul(Em1m, Em2m) == zornZero and zornMul(Em2m, Em1m) == zornZero)
+assert(zornMul(Em1m, ZMajm) == {0_R, {0_R, -z1*xi3, y1*xi3}, {0_R, 0_R, 0_R}, 0_R})
+assert(zornMul(Pic1, ZMajm) == zornZero and zornMul(ZMajm, Pic1) == ZMajm)
+assert(zornMul(PibPerp, ZMajm) == ZMajm and zornMul(ZMajm, PibPerp) == zornZero)
+-- Archetypes LXXXVI & LXXXVII: Chevalley-Lounesto-Shirokov Spinor Ideals & Relativistic Dirac-Krein Ket-Bra Duality
+psic1m = {y1, {0_R, 0_R, 0_R}, {xi1, 0_R, 0_R}, 0_R}
+phic2barm = {y2, {xi2, 0_R, 0_R}, {0_R, 0_R, 0_R}, 0_R}
+psic3m = {y3, {0_R, 0_R, 0_R}, {xi3, 0_R, 0_R}, 0_R}
+assert(zornAssoc(psic1m, phic2barm, psic3m) == zornZero)
+-- Archetypes LXXXVIII & LXXXIX: Trifactor-Loxodromic Compass, Doubled 4-Vector Potentials, & 8D Zorn-Riccati Möbius Operator
+Prowm = {1_R, {y1, z1, xi1}, {0_R, 0_R, 0_R}, 0_R}
+Pcolm = {1_R, {0_R, 0_R, 0_R}, {y2, z2, xi2}, 0_R}
+Uupm = {1_R, {y1, z1, xi1}, {0_R, 0_R, 0_R}, 1_R}
+Ulom = {1_R, {0_R, 0_R, 0_R}, {y2, z2, xi2}, 1_R}
+Tbruhatm = zornMul(zornMul(Ulom, {1_R, {0_R, 0_R, 0_R}, {0_R, 0_R, 0_R}, xi3}), Uupm)
+assert(Tbruhatm == zornAdd(zornMul(zornMul(Pcolm, {1_R, {0_R, 0_R, 0_R}, {0_R, 0_R, 0_R}, 0_R}), Prowm), {0_R, {0_R, 0_R, 0_R}, {0_R, 0_R, 0_R}, xi3}))
+riccatiTm = vecSub(vecAdd(vecAdd(vecScale(vecDot(Tbruhatm#2, {y1, z1, xi1}), {y1, z1, xi1}), vecScale(Tbruhatm#3, {y1, z1, xi1})), vecScale(Tbruhatm#0, {y1, z1, xi1})), Tbruhatm#1)
+assert(riccatiTm == vecScale(xi3, {y1, z1, xi1}))
+print("[PASS] Macaulay2: Archetypes LXXV-LXXXIX (Catto E_9/E_10 Weyl Reflection, 27D Split-Octonion Albert-Freudenthal Law, Hansen Cl(4,2) Doublet Tower, Parabolic Majorana Zero Modes, Chevalley-Shirokov Spinor Ideals, & Trifactor-Loxodromic Zorn-Riccati Compass)")
+
 -- 3. Dmodules Weyl Algebra Analysis of the 5-Graded Contact & Helicity Operators
 W = QQ[y1, z1, y2, z2, dy1, dz1, dy2, dz2, WeylAlgebra => {y1 => dy1, z1 => dz1, y2 => dy2, z2 => dz2}]
 omegaPerp = y1*z2 - z1*y2

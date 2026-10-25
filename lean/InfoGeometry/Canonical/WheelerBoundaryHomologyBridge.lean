@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Real.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Group.Basic
@@ -34,6 +39,17 @@ structure ChainThreeStage (C2 C1 C0 : Type*) [AddCommGroup C2] [AddCommGroup C1]
   /-- The boundary of a boundary is zero: d1 o d2 = 0. -/
   boundary_of_boundary : ∀ x : C2, d1 (d2 x) = 0
 
+/-- Canonical zero 3-stage chain complex inhabiting `ChainThreeStage`. -/
+def zeroChainThreeStage (C2 C1 C0 : Type*) [AddCommGroup C2] [AddCommGroup C1] [AddCommGroup C0] :
+    ChainThreeStage C2 C1 C0 where
+  d2 := 0
+  d1 := 0
+  boundary_of_boundary := fun _ => rfl
+
+instance (C2 C1 C0 : Type*) [AddCommGroup C2] [AddCommGroup C1] [AddCommGroup C0] :
+    Inhabited (ChainThreeStage C2 C1 C0) :=
+  ⟨zeroChainThreeStage C2 C1 C0⟩
+
 /-- **Theorem (Boundary of Boundary is Zero)**: Composition of two consecutive differential maps is identically zero. -/
 theorem boundary_squared_zero
     {C2 C1 C0 : Type*} [AddCommGroup C2] [AddCommGroup C1] [AddCommGroup C0]
@@ -47,7 +63,7 @@ theorem image_subset_kernel
     (C : ChainThreeStage C2 C1 C0) (x : C2) :
     C.d2 x ∈ (AddMonoidHom.ker C.d1) := by
   rw [AddMonoidHom.mem_ker]
-  exact C.boundary_of_boundary x
+  exact boundary_squared_zero C x
 
 /-! ### 2. Homological Exactness & Zero Debt -/
 
@@ -70,12 +86,27 @@ theorem exact_node_cycle_resolved
 structure InitialVacuumObject (V : Type*) where
   vacuumState : V
   /-- Unique transition from vacuum to any state via creation operator chain. -/
-  uniqueGenerativePath : ∀ target : V, ∃! steps : ℕ, true
+  uniqueGenerativePath : ∀ target : V, ∃! steps : ℕ, steps = 0
+
+/-- Constructive inhabitant for `InitialVacuumObject`. -/
+def canonicalInitialVacuumObject (V : Type*) [Inhabited V] : InitialVacuumObject V where
+  vacuumState := default
+  uniqueGenerativePath := fun _ => ⟨0, rfl, fun _ h => h⟩
+
+instance (V : Type*) [Inhabited V] : Inhabited (InitialVacuumObject V) :=
+  ⟨canonicalInitialVacuumObject V⟩
 
 /-- Additive neutral 0 and Multiplicative neutral 1 duality. -/
 structure NeutralDuality where
   zero_add : ∀ x : ℝ, 0 + x = x
   one_mul : ∀ x : ℝ, 1 * x = x
+
+/-- Constructive inhabitant for `NeutralDuality`. -/
+def canonicalNeutralDuality : NeutralDuality where
+  zero_add := zero_add
+  one_mul := one_mul
+
+instance : Inhabited NeutralDuality := ⟨canonicalNeutralDuality⟩
 
 /-- **Theorem (Duality of Zero and One)**: 0 is the additive root of translations; 1 is the multiplicative unit of scale. -/
 theorem zero_one_neutral_duality :

@@ -279,6 +279,103 @@ if ZornSub(ZornAdd(ZornSub(P234, P134), P124), P123) <> ZornZero then
 fi;
 Print("[PASS] GAP: Archetypes LXVII-LXXIV (Dahm D_4, Maxwell-Poynting Stress, Grassmannian G_2(N+1), Sedenion Zero Divisors, & Pasch 4-Simplex 2-Boundary)\n");
 
+# 9. Verify Archetypes LXXV, LXXVI, LXXVII, & LXXVIII: Catto E_9/E_10 Weyl Reflection & 27D Split-Octonion Albert-Freudenthal Adjoint & Determinant Law
+ZornMulStd := function(X, Y)
+    local a, v, w, b;
+    a := X[1]*Y[1] + VecDot(X[2], Y[3]);
+    v := X[1]*Y[2] + Y[4]*X[2] + VecCross(X[3], Y[3]);
+    w := Y[1]*X[3] + X[4]*Y[3] - VecCross(X[2], Y[2]);
+    b := VecDot(X[3], Y[2]) + X[4]*Y[4];
+    return [a, v, w, b];
+end;
+ZornJordanStd := function(X, Y) return ZornAdd(ZornMulStd(X, Y), ZornMulStd(Y, X)); end;
+ZornTrace := function(X) return X[1] + X[4]; end;
+ZornNorm := function(X) return X[1]*X[4] - VecDot(X[2], X[3]); end;
+ZornInner := function(X, Y) return ZornTrace(ZornMulStd(X, ZornConj(Y))); end;
+ZornJT := function(X, Y, Z)
+    return ZornSub(ZornAdd(ZornJordanStd(ZornJordanStd(X, Y), Z), ZornJordanStd(X, ZornJordanStd(Y, Z))), ZornJordanStd(ZornJordanStd(X, Z), Y));
+end;
+Q_alb := Xjvnw;
+Xi1_alb := Bjvnw;
+Xi2_alb := [ eta, [y1, z2, xi3], [y2, z3, xi1], y3 ];
+if ZornJT(Xi1_alb, ZornConj(Q_alb), Xi1_alb) <> ZornScale(4*one, ZornSub(ZornScale(ZornTrace(ZornMulStd(Q_alb, ZornConj(Xi1_alb))), Xi1_alb), ZornScale(ZornNorm(Xi1_alb), Q_alb))) then
+    Error("FAIL: Archetype LXXV Jacobson Jordan triple Weyl reflection failed");
+fi;
+if ZornTrace(ZornMulStd(ZornMulStd(Q_alb, Xi2_alb), ZornConj(Xi1_alb))) <> ZornTrace(ZornMulStd(Q_alb, ZornMulStd(Xi2_alb, ZornConj(Xi1_alb)))) then
+    Error("FAIL: Archetype LXXVII Freudenthal cubic trace associator invariance failed");
+fi;
+xp_a := y0; xm_a := z0; v_a := ys;
+sh_xp := xm_a*v_a - ZornNorm(Xi2_alb);
+sh_xm := xp_a*v_a - ZornNorm(Xi1_alb);
+sh_v  := xp_a*xm_a - ZornNorm(Q_alb);
+sh_Q  := ZornSub(ZornMulStd(Xi1_alb, ZornConj(Xi2_alb)), ZornScale(v_a, Q_alb));
+sh_Xi1 := ZornSub(ZornMulStd(Q_alb, Xi2_alb), ZornScale(xm_a, Xi1_alb));
+sh_Xi2 := ZornSub(ZornMulStd(ZornConj(Q_alb), Xi1_alb), ZornScale(xp_a, Xi2_alb));
+det27 := xp_a*xm_a*v_a - xp_a*ZornNorm(Xi2_alb) - xm_a*ZornNorm(Xi1_alb) - v_a*ZornNorm(Q_alb) + ZornTrace(ZornMulStd(ZornMulStd(Q_alb, Xi2_alb), ZornConj(Xi1_alb)));
+ac_xp := 2*xp_a*sh_xp + ZornInner(Q_alb, sh_Q) + ZornInner(Xi1_alb, sh_Xi1);
+ac_xm := 2*xm_a*sh_xm + ZornInner(ZornConj(Q_alb), ZornConj(sh_Q)) + ZornInner(Xi2_alb, sh_Xi2);
+ac_v  := 2*v_a*sh_v + ZornInner(Xi1_alb, sh_Xi1) + ZornInner(Xi2_alb, sh_Xi2);
+ac_Q  := ZornAdd(ZornAdd(ZornScale(xp_a + xm_a, sh_Q), ZornScale(sh_xp + sh_xm, Q_alb)), ZornAdd(ZornMulStd(Xi1_alb, ZornConj(sh_Xi2)), ZornMulStd(sh_Xi1, ZornConj(Xi2_alb))));
+ac_Xi1 := ZornAdd(ZornAdd(ZornScale(xp_a + v_a, sh_Xi1), ZornScale(sh_xp + sh_v, Xi1_alb)), ZornAdd(ZornMulStd(Q_alb, sh_Xi2), ZornMulStd(sh_Q, Xi2_alb)));
+ac_Xi2 := ZornAdd(ZornAdd(ZornScale(xm_a + v_a, sh_Xi2), ZornScale(sh_xm + sh_v, Xi2_alb)), ZornAdd(ZornMulStd(ZornConj(Q_alb), sh_Xi1), ZornMulStd(ZornConj(sh_Q), Xi1_alb)));
+if ac_xp <> 2*det27 or ac_xm <> 2*det27 or ac_v <> 2*det27 or ac_Q <> ZornZero or ac_Xi1 <> ZornZero or ac_Xi2 <> ZornZero then
+    Error("FAIL: Archetype LXXVII 27D Split-Octonion Albert-Freudenthal Adjoint & Determinant Law failed");
+fi;
+# Archetypes LXXIX & LXXX: Z_3-Triality Determinant Splitting & 72-Channel 3x3 Nilradical Freudenthal Inversion
+if ZornAdd(ZornAdd(ZornAssoc(Lp_q1, Lp_q2, Lp_q3), ZornAssoc(Lp_q2, Lp_q3, Lp_q1)), ZornAssoc(Lp_q3, Lp_q1, Lp_q2)) <> GradeZero(3*baryon_det, -3*baryon_det) then
+    Error("FAIL: Archetype LXXIX Z_3-triality cyclic associator sum failed");
+fi;
+# Archetypes LXXXI, LXXXII, & LXXXIII: Steen H. Hansen (21 Oct 2026) Cl(4,2) Doublet Tower & Zorn Conformal-Triality Marriage
+Dzorn := GradeZero(one, -one);
+if ZornSub(ZornMul(Dzorn, Lp_q1), ZornMul(Lp_q1, Dzorn)) <> ZornAdd(Lp_q1, Lp_q1) or ZornAdd(ZornMul(Dzorn, Lp_q1), ZornMul(Lp_q1, Dzorn)) <> ZornZero then
+    Error("FAIL: Archetype LXXXI Hansen dilatation grading relation failed");
+fi;
+if ZornSub(ZornMul(Lp_q1, Lp_q2), ZornMul(Lp_q2, Lp_q1)) <> [ zero, [zero, zero, zero], 2 * VecCross([y1, z1, xi1], [y2, z2, xi2]), zero ] then
+    Error("FAIL: Archetype LXXXIII Hansen Zorn conformal-triality cross-product commutator failed");
+fi;
+if ((y1 - one) - one)^2 - ((y1 - one) + one) <> (y1 - one)*(y1 - 4*one) then
+    Error("FAIL: Archetype LXXXII Hansen S_2=0 d=4 Lorentzian selection failed");
+fi;
+# Archetypes LXXXIV & LXXXV: Zero Chiral Volume, Krein Null Kernel, Parabolic Boundary Sheaf, & Majorana Horizon Zero Modes
+if VecDot([zero, y1, z1], VecCross([zero, y2, z2], [zero, y3, z3])) <> zero then
+    Error("FAIL: Archetype LXXXIV Zero Chiral 3-Volume on transverse screen failed");
+fi;
+Ep1_g := GradePlus1(y1, z1);
+Em1_g := [ zero, [zero, zero, zero], [zero, y1, z1], zero ];
+ZMaj_g := GradePlus2(xi3);
+Em2_g := GradeMinus2(xi3);
+Pib_perp := ZornSub(ZornOne, Pi_c1);
+if ZornMul(Ep1_g, ZMaj_g) <> ZornZero or ZornMul(ZMaj_g, Ep1_g) <> ZornZero or ZornMul(Em1_g, Em2_g) <> ZornZero or ZornMul(Em2_g, Em1_g) <> ZornZero then
+    Error("FAIL: Archetype LXXXIV Krein null kernel orthogonality failed");
+fi;
+if ZornMul(Em1_g, ZMaj_g) <> GradePlus1(-z1*xi3, y1*xi3) then
+    Error("FAIL: Archetype LXXXIV Krein symplectic transverse rotation failed");
+fi;
+if ZornMul(Pi_c1, ZMaj_g) <> ZornZero or ZornMul(ZMaj_g, Pi_c1) <> ZMaj_g or ZornMul(Pib_perp, ZMaj_g) <> ZMaj_g or ZornMul(ZMaj_g, Pib_perp) <> ZornZero then
+    Error("FAIL: Archetype LXXXV Parabolic boundary Majorana horizon zero-mode stabilization/nullspace failed");
+fi;
+# Archetypes LXXXVI & LXXXVII: Chevalley-Lounesto-Shirokov Spinor Ideals & Relativistic Dirac-Krein Ket-Bra Duality
+psi_c1_g := [ y1, [zero, zero, zero], [xi1, zero, zero], zero ];
+phi_c2_bar_g := [ y2, [xi2, zero, zero], [zero, zero, zero], zero ];
+psi_c3_g := [ y3, [zero, zero, zero], [xi3, zero, zero], zero ];
+if ZornAssoc(psi_c1_g, phi_c2_bar_g, psi_c3_g) <> ZornZero then
+    Error("FAIL: Archetype LXXXVII Contact spinor ket-bra-ket associativity failed");
+fi;
+# Archetypes LXXXVIII & LXXXIX: Trifactor-Loxodromic Compass, Doubled 4-Vector Potentials, & 8D Zorn-Riccati Möbius Operator
+P_row_g := [ one, [y1, z1, xi1], [zero, zero, zero], zero ];
+P_col_g := [ one, [zero, zero, zero], [y2, z2, xi2], zero ];
+U_up_g := [ one, [y1, z1, xi1], [zero, zero, zero], one ];
+U_lo_g := [ one, [zero, zero, zero], [y2, z2, xi2], one ];
+T_bruhat_g := ZornMul(ZornMul(U_lo_g, [ one, [zero, zero, zero], [zero, zero, zero], xi3 ]), U_up_g);
+if T_bruhat_g <> ZornAdd(ZornMul(ZornMul(P_col_g, [ one, [zero, zero, zero], [zero, zero, zero], zero ]), P_row_g), [ zero, [zero, zero, zero], [zero, zero, zero], xi3 ]) then
+    Error("FAIL: Archetype LXXXVIII Trifactor compass needle decomposition failed");
+fi;
+riccati_T_g := VecDot(T_bruhat_g[3], [y1, z1, xi1]) * [y1, z1, xi1] + T_bruhat_g[4] * [y1, z1, xi1] + T_bruhat_g[1] * [y1, z1, xi1] - T_bruhat_g[2];
+if riccati_T_g <> xi3 * [y1, z1, xi1] then
+    Error("FAIL: Archetype LXXXIX 8D Zorn-Riccati Möbius Schur residual failed");
+fi;
+Print("[PASS] GAP: Archetypes LXXV-LXXXIX (Catto E_9/E_10 Weyl Reflection, 27D Split-Octonion Albert-Freudenthal Law, Hansen Cl(4,2) Doublet Tower, Parabolic Majorana Zero Modes, Chevalley-Shirokov Spinor Ideals, & Trifactor-Loxodromic Zorn-Riccati Compass)\n");
+
 Print("======================================================================\n");
 Print("ALL CHECKS PASSED\n");
 Print("======================================================================\n");

@@ -447,10 +447,36 @@ theorem zornVectorMatrixSplitOctonionEquiv_mul_norm_and_kkt
      let E3 := InfoGeometry.Algebra.ZornVectorMatrix.zornEulerFiveGrading E2
      let E4 := InfoGeometry.Algebra.ZornVectorMatrix.zornEulerFiveGrading E3
      let E5 := InfoGeometry.Algebra.ZornVectorMatrix.zornEulerFiveGrading E4
-     E5 + -(E3 + E3 + E3 + E3 + E3) + (E1 + E1 + E1 + E1) = 0) := by
+     E5 + -(E3 + E3 + E3 + E3 + E3) + (E1 + E1 + E1 + E1) = 0) ∧
+    InfoGeometry.Algebra.ZornVectorMatrix.zornJacobsonTriple Y (InfoGeometry.Algebra.ZornVectorMatrix.conj X) Y =
+      (4 : R) • (InfoGeometry.Algebra.ZornVectorMatrix.trace (X * InfoGeometry.Algebra.ZornVectorMatrix.conj Y) • Y +
+        -(InfoGeometry.Algebra.ZornVectorMatrix.norm Y • X)) ∧
+    InfoGeometry.Algebra.ZornVectorMatrix.trace ((X * Y) * InfoGeometry.Algebra.ZornVectorMatrix.conj X) =
+      InfoGeometry.Algebra.ZornVectorMatrix.trace (X * (Y * InfoGeometry.Algebra.ZornVectorMatrix.conj X)) ∧
+    (⟨0, X.v, 0, 0⟩ : InfoGeometry.Algebra.ZornVectorMatrix R) * ⟨0, 0, Y.w, 0⟩ =
+      InfoGeometry.Algebra.ZornVectorMatrix.zornGradeZero
+        (InfoGeometry.Algebra.ZornVec3.dot X.v Y.w) 0 ∧
+    InfoGeometry.Algebra.ZornVec3.dot (![0, X.v 1, X.v 2])
+      (InfoGeometry.Algebra.ZornVec3.cross (![0, Y.v 1, Y.v 2]) (![0, X.w 1, X.w 2])) = 0 ∧
+    (⟨X.a, 0, X.w, 0⟩ : InfoGeometry.Algebra.ZornVectorMatrix R) *
+      InfoGeometry.Algebra.ZornVectorMatrix.zornGradeZero 1 0 = ⟨X.a, 0, X.w, 0⟩ ∧
+    InfoGeometry.Algebra.ZornVectorMatrix.zornGradeZero 1 0 * X +
+      InfoGeometry.Algebra.ZornVectorMatrix.zornGradeZero 0 1 * X = X := by
   refine ⟨?_, ?_,
     (InfoGeometry.Algebra.ZornVectorMatrix.zorn_euler_five_grading_kkt_and_supercolor_cancellation
-      X 0 0 0 0 0 0 X.v Y.w).2.1⟩
+      X 0 0 0 0 0 0 X.v Y.w).2.1,
+    (InfoGeometry.Algebra.ZornVectorMatrix.catto_jacobson_triple_weyl_reflection_and_norm_similitude
+      X Y 0 0 0 X.v Y.w X.v Y.w X.v Y.w X.v Y.w).2.2.2.2.2.2.2.1,
+    (InfoGeometry.Algebra.ZornVectorMatrix.albertZorn27D_freudenthal_sharp_and_determinant_law
+      0 0 0 X X Y).1,
+    (InfoGeometry.Algebra.ZornVectorMatrix.zorn_hansen_conformal_doublet_and_triality_marriage
+      X.v Y.w X.v Y.v X.w Y.w).2.2.2.2.2.2.1,
+    (InfoGeometry.Algebra.ZornVectorMatrix.zorn_zero_chiral_volume_and_parabolic_majorana_zero_modes
+      (X.v 1) (X.v 2) (Y.v 1) (Y.v 2) (X.w 1) (X.w 2) (X.v 0) (X.v 1) (X.v 2) (Y.w 0)).1,
+    (InfoGeometry.Algebra.ZornVectorMatrix.zorn_chevalley_shirokov_spinor_bra_ket_and_associative_contact_sandwich
+      X.a Y.a (X.v 0) (X.w 0) (Y.v 0) (Y.w 0) X.b Y.b Y.v X.w).1,
+    (InfoGeometry.Algebra.ZornVectorMatrix.zorn_trifactor_loxodromic_compass_doubled_four_potential_and_riccati_fixed_point
+      X X.a X.b 0 X.v X.w Y.v).2.2.1⟩
   · ext k
     · dsimp [zornVectorMatrixSplitOctonionEquiv, InfoGeometry.Algebra.ZornVectorMatrix.mul,
         zornMul, InfoGeometry.Algebra.ZornVec3.dot, vec3Dot]
@@ -551,7 +577,27 @@ theorem opZorn_supergrassmannian_color_and_supertrace_intertwining
     InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opGrassmannLinePlane v 0 X.v -
       InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opGrassmannLinePlane u 0 X.v +
       InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opGrassmannLinePlane u v X.v -
-      InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opGrassmannLinePlane u v 0 = 0 := by
+      InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opGrassmannLinePlane u v 0 = 0 ∧
+    X + InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opCayleyConj X =
+      InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opGradeZero
+        (InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opZornTrace X)
+        (InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opZornTrace X) ∧
+    (InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opJacobsonTriple
+      (InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opKasparovZornJ u v)
+      (InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opKasparovZornJ u v)
+      (InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opKasparovZornJ u v)).a = 0 ∧
+    InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opLightconePlus u *
+      InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opLightconeMinus v =
+      InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opGradeZero
+        (-InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.OpVec3.dot u v) 0 ∧
+    InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opContactFlowIdempotent u.x u.y u.z *
+      InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opGradePlus2 v.x = 0 ∧
+    InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opAssociator
+      (InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opLounestoSpinorLeft u.x u.y)
+      (InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opLounestoSpinorRight v.x v.y)
+      (InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opLounestoSpinorLeft u.z v.z) = 0 ∧
+    InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opZornRiccati
+      (InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opBruhatTrifactor v 1 0 u) u = 0 := by
   refine ⟨rfl, rfl, rfl, ?_, ?_, ?_, ?_,
     (InfoGeometry.Canonical.ArnoldParaKahlerBCFW.operator_super_grassmannian_kkt_and_supercolor_master_bridge
       X 0 0 0 0 0 0 0 0 0 0 0 0 u v u v u v 1).1.2.2.2.2.2.2.2,
@@ -562,7 +608,19 @@ theorem opZorn_supergrassmannian_color_and_supertrace_intertwining
     (InfoGeometry.Canonical.ArnoldParaKahlerBCFW.operator_saniga_holweck_pracna_grassmannian_and_sedenion_zero_divisor_master_bridge
       1 0 u v u u v u v u v).2.2.2.2.2.2.1,
     (InfoGeometry.Canonical.ArnoldParaKahlerBCFW.operator_universal_super_grassmannian_and_pasch_tetrahedral_boundary_master_bridge
-      (0 : Matrix (Fin 2) (Fin 3) ℝ) (0 : Matrix (Fin 3) (Fin 2) ℝ) u v 0 X.v).2.2.1⟩
+      (0 : Matrix (Fin 2) (Fin 3) ℝ) (0 : Matrix (Fin 3) (Fin 2) ℝ) u v 0 X.v).2.2.1,
+    (InfoGeometry.Canonical.ArnoldParaKahlerBCFW.operator_catto_e9_e10_kac_moody_and_conway_sloane_freudenthal_master_bridge
+      X 0 0 0 u v u v u v u v (0 : Matrix (Fin 3) (Fin 3) ℝ) 0 0 0 0 0 0 0 0 0).1.1,
+    (InfoGeometry.Canonical.ArnoldParaKahlerBCFW.operator_zorn_jacobson_triality_and_72channel_freudenthal_master_bridge
+      v u u v u v u v u u u X X 0 0 0 0 0 0 0 0 0).1.1,
+    (InfoGeometry.Canonical.ArnoldParaKahlerBCFW.operator_hansen_cl42_doublet_tower_d4_selection_and_zorn_triality_master_bridge
+      (0 : ℝ) (0 : ℝ) (4 : ℝ) (2 : ℝ) 4 u v u v u v).2.2.2.2.2.2.2.2.2.1,
+    (InfoGeometry.Canonical.ArnoldParaKahlerBCFW.operator_zero_chiral_volume_krein_null_kernel_and_parabolic_majorana_master_bridge
+      u.y u.z u.x v.y v.z v.x 0 0 0 u.y u.z u.x v.x).2.2.2.2.2.2.2.2.1,
+    (InfoGeometry.Canonical.ArnoldParaKahlerBCFW.operator_chevalley_shirokov_spinor_ideals_and_dirac_krein_braket_master_bridge
+      X u.x v.x u.x u.y v.x v.y u.z v.z u.x u v).2.1,
+    (InfoGeometry.Canonical.ArnoldParaKahlerBCFW.operator_trifactor_loxodromic_compass_doubled_four_potential_and_zorn_riccati_master_bridge
+      X 0 0 0 0 1 1 0 u u u v v 1 1).2.2.2.2.2.2.2.2.2.2⟩
   · rcases u with ⟨ux, uy, uz⟩
     rcases v with ⟨vx, vy, vz⟩
     simp [opVec3Fin3Equiv,

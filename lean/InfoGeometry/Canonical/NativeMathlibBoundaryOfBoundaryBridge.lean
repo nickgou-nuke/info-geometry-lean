@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.NoncommRing
@@ -12,6 +17,16 @@ structure BoundarySystem (V : Type*) [AddCommGroup V] where
   vacuum : V
   d_sq : ∀ x : V, d (d x) = 0
   vacuum_annihilated : d vacuum = 0
+
+/-- Canonical zero boundary system inhabiting `BoundarySystem V`. -/
+def zeroBoundarySystem (V : Type*) [AddCommGroup V] : BoundarySystem V where
+  d := 0
+  vacuum := 0
+  d_sq := fun _ => rfl
+  vacuum_annihilated := rfl
+
+instance (V : Type*) [AddCommGroup V] : Inhabited (BoundarySystem V) :=
+  ⟨zeroBoundarySystem V⟩
 
 namespace BoundarySystem
 
@@ -29,8 +44,9 @@ theorem vacuum_is_annihilated :
 
 /-- **Theorem**: Boundary Image is in Kernel (im d ⊆ ker d). -/
 theorem image_in_kernel (x : V) :
-    bs.d (bs.d x) = 0 :=
-  bs.d_sq x
+    bs.d x ∈ bs.d.ker := by
+  rw [AddMonoidHom.mem_ker]
+  exact bs.boundary_of_boundary_zero x
 
 end BoundarySystem
 

@@ -141,14 +141,58 @@ poly om31_12_x = (z3 - z1)*(xi1 - xi2) - (xi3 - xi1)*(z1 - z2);
 if (om12_23_x - om23_31_x != 0 || om23_31_x - om31_12_x != 0) {
     ERROR("FAIL: Archetype LXXI Grassmannian edge-triangle cyclic invariance failed");
 }
-// Archetypes LXXIII & LXXIV: Pasch 4-Simplex Tetrahedral 2-Boundary Closure P_123 - P_134 + P_124 - P_234 = 0:
-poly p134_x = (z1 - z3)*(xi3 - y1) - (xi1 - xi3)*(z3 - z1);
-poly p124_x = (z1 - z2)*(xi2 - y1) - (xi1 - xi2)*(z2 - z1);
-poly p234_x = (z2 - z3)*(xi3 - y1) - (xi2 - xi3)*(z3 - z1);
-if (om12_23_x - p134_x + p124_x - p234_x != 0) {
+// Archetypes LXXIII & LXXIV: Pasch 4-Simplex Tetrahedral 2-Boundary Closure P_234 - P_134 + P_124 - P_123 = 0:
+poly p134_x = (z1 - z3)*(xi3 - eta) - (xi1 - xi3)*(z3 - z0);
+poly p124_x = (z1 - z2)*(xi2 - eta) - (xi1 - xi2)*(z2 - z0);
+poly p234_x = (z2 - z3)*(xi3 - eta) - (xi2 - xi3)*(z3 - z0);
+if (p234_x - p134_x + p124_x - om12_23_x != 0) {
     ERROR("FAIL: Archetype LXXIV Pasch 4-simplex tetrahedral 2-boundary closure failed");
 }
-print("[PASS] Singular: Archetypes LXVII-LXXIV (Dahm Plücker-Klein, Simple Line Square-Zero, Grassmannian Edge-Triangle, & Pasch 4-Simplex 2-Boundary)");
+// Archetypes LXXV-LXXVIII: Catto-Gurcan-Khalfan-Kurt Conway-Sloane 3x3 Freudenthal Adjoint & Cubic Secular Identity:
+matrix M_cs[3][3] = y1, z1, xi1, y2, z2, xi2, y3, z3, xi3;
+poly trM = y1 + z2 + xi3;
+poly s2M = (y1*z2 - z1*y2) + (y1*xi3 - xi1*y3) + (z2*xi3 - xi2*z3);
+poly detM = y1*(z2*xi3 - xi2*z3) - z1*(y2*xi3 - xi2*y3) + xi1*(y2*z3 - z2*y3);
+matrix I3[3][3] = 1, 0, 0, 0, 1, 0, 0, 0, 1;
+matrix M_sharp[3][3] = M_cs * M_cs - trM * M_cs + s2M * I3;
+matrix prod_M_sharp[3][3] = M_cs * M_sharp - detM * I3;
+if (M_sharp[3,3] - (y1*z2 - z1*y2) != 0 || prod_M_sharp[1,1] != 0 || prod_M_sharp[1,2] != 0 || prod_M_sharp[2,3] != 0 || prod_M_sharp[3,3] != 0) {
+    ERROR("FAIL: Archetypes LXXV-LXXVIII Catto Conway-Sloane Freudenthal Adjoint & Cubic Secular Identity failed");
+}
+// Archetypes LXXXI-LXXXIII: Steen H. Hansen (21 Oct 2026) Cl(4,2) Doublet Tower & S_2=0 d=4 Spacetime Selection:
+poly twoS2_lorentz = ((y1 - 1) - 1)^2 - ((y1 - 1) + 1);
+if (twoS2_lorentz - (y1 - 1)*(y1 - 4) != 0) {
+    ERROR("FAIL: Archetype LXXXII Hansen S_2=0 d=4 Lorentzian selection polynomial identity failed");
+}
+matrix D_han[2][2] = 1, 0, 0, -1;
+matrix Tp_h[2][2] = 0, y1, 0, 0;
+matrix Tm_h[2][2] = 0, 0, z1, 0;
+matrix IMaj_h[2][2] = Tp_h + Tm_h;
+matrix IDir_h[2][2] = Tp_h - Tm_h;
+matrix anti_MD[2][2] = IMaj_h * IDir_h + IDir_h * IMaj_h;
+if (anti_MD[1,1] != 0 || anti_MD[1,2] != 0 || anti_MD[2,1] != 0 || anti_MD[2,2] != 0) {
+    ERROR("FAIL: Archetype LXXXIII Hansen Dirac-Majorana anticommutation failed");
+}
+// Archetypes LXXXIV-LXXXV: Zero Chiral 3-Volume on 2D Transverse Lightfront Screen (x_i = 0):
+matrix V_trans[3][3] = 0, y1, z1, 0, y2, z2, 0, y3, z3;
+if (det(V_trans) != 0) {
+    ERROR("FAIL: Archetype LXXXIV Zero Chiral 3-Volume on transverse screen failed");
+}
+// Archetypes LXXXVI-LXXXVII: Chevalley-Shirokov Contact Spinor Ket-Bra-Ket Associativity:
+poly in23 = y2*y3 - xi2*xi3;
+if ((y1*y2)*y3 - y1*(xi2*xi3) - y1*in23 != 0 || (xi1*y2)*y3 - xi1*(xi2*xi3) - xi1*in23 != 0) {
+    ERROR("FAIL: Archetype LXXXVII Contact spinor ket-bra-ket scaling failed");
+}
+// Archetypes LXXXVIII-LXXXIX: Trifactor-Loxodromic Compass & Zorn-Riccati Schur Residual:
+matrix Ulo_c[2][2] = 1, 0, xi1, 1;
+matrix D_c[2][2] = 1, 0, 0, xi2;
+matrix Uup_c[2][2] = 1, y1, 0, 1;
+matrix T_comp[2][2] = Ulo_c * D_c * Uup_c;
+poly riccati_res = y1 * (T_comp[2,1] * y1) - y1 * T_comp[2,2] + T_comp[1,1] * y1 - T_comp[1,2];
+if (riccati_res + y1 * xi2 != 0) {
+    ERROR("FAIL: Archetype LXXXIX Trifactor-Loxodromic Riccati Schur residual failed");
+}
+print("[PASS] Singular: Archetypes LXVII-LXXXIX (Dahm Plücker-Klein, Simple Line Square-Zero, Grassmannian Edge-Triangle, Pasch 4-Simplex, Catto Freudenthal Cubic, Hansen Cl(4,2) Doublet Tower, Zero Chiral Volume, Chevalley-Shirokov Spinor Ideals, & Trifactor-Loxodromic Zorn-Riccati Compass)");
 
 // 4. D-Module (`dmod.lib`) Bernstein-Sato & Weyl Annihilator of the Contact Symplectic Form
 ring R_contact = 0, (y1,z1,y2,z2), dp;

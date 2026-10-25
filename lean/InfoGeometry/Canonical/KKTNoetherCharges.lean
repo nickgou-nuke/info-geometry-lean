@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.DrazinSupercharge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SuperchargeCentralChargeClosure
@@ -34,12 +39,6 @@ variable {H : Type*}
 variable [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
 
 local notation "EndH" => H →L[ℝ] H
-
-noncomputable local instance : NormedRing EndH := inferInstance
-noncomputable local instance : NormedAlgebra ℝ EndH := inferInstance
-local instance : IsTopologicalRing EndH := inferInstance
-local instance : SMulCommClass ℝ EndH EndH := inferInstance
-local instance : IsScalarTower ℝ EndH EndH := inferInstance
 
 omit [CompleteSpace H] in
 /-- Bridge between commutator vanishing and commutation. -/
@@ -112,12 +111,6 @@ variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 local notation "EndH" => E →L[ℝ] E
 
-noncomputable local instance : NormedRing EndH := inferInstance
-noncomputable local instance : NormedAlgebra ℝ EndH := inferInstance
-local instance : IsTopologicalRing EndH := inferInstance
-local instance : SMulCommClass ℝ EndH EndH := inferInstance
-local instance : IsScalarTower ℝ EndH EndH := inferInstance
-
 /--
 Projected Drazin specialization of the Noether split law.
 -/
@@ -177,13 +170,8 @@ variable [KreinSpace (DoubledSpace E)] [KreinGradedModule (DoubledSpace E)]
 local notation "H₂" => DoubledSpace E
 local notation "EndH" => H₂ →L[ℝ] H₂
 
-noncomputable local instance : NormedRing EndH := inferInstance
-noncomputable local instance : NormedAlgebra ℝ EndH := inferInstance
 noncomputable local instance : NormedAlgebra ℚ EndH :=
   NormedAlgebra.restrictScalars ℚ ℝ EndH
-local instance : IsTopologicalRing EndH := inferInstance
-local instance : SMulCommClass ℝ EndH EndH := inferInstance
-local instance : IsScalarTower ℝ EndH EndH := inferInstance
 
 /--
 Root/CPT specialization:

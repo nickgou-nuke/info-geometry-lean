@@ -2792,6 +2792,148 @@ theorem opChiralProj_idempotence_orthogonality_and_cross_excitation
           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
     try noncomm_ring))
 
+/-!
+### Archetypes XXXII & XXXIII: Emergence of the Metric & Spin Connection from Twin Chiral Lightcones, Polarized Time Evolution, & Covariant Spin-Connection Gauge Shift
+-/
+
+namespace OpVec3
+
+/-- Polarized bimodule covariant differential $\nabla_{\tau_+, \tau_-}(v) = \tau_+ \cdot_L v - v \cdot_R \tau_-$. -/
+def bimoduleDiff (τ_plus τ_minus : A) (v : OpVec3 A) : OpVec3 A :=
+  leftScale τ_plus v - rightScale v τ_minus
+
+@[simp] lemma bimoduleDiff_x (τ₁ τ₂ : A) (v : OpVec3 A) :
+    (bimoduleDiff τ₁ τ₂ v).x = τ₁ * v.x - v.x * τ₂ := rfl
+@[simp] lemma bimoduleDiff_y (τ₁ τ₂ : A) (v : OpVec3 A) :
+    (bimoduleDiff τ₁ τ₂ v).y = τ₁ * v.y - v.y * τ₂ := rfl
+@[simp] lemma bimoduleDiff_z (τ₁ τ₂ : A) (v : OpVec3 A) :
+    (bimoduleDiff τ₁ τ₂ v).z = τ₁ * v.z - v.z * τ₂ := rfl
+
+end OpVec3
+
+/-- Forward ($e_{11}$) and backward ($e_{22}$) primitive Peirce idempotents in $\mathrm{OpZornMatrix}\;A$. -/
+def opPeircePlus : OpZornMatrix A := ⟨1, 0, 0, 0⟩
+def opPeirceMinus : OpZornMatrix A := ⟨0, 0, 0, 1⟩
+
+/-- Forward and backward chiral lightcone generators $L_+(v) = \langle 0, v, 0, 0 \rangle$ and $L_-(w) = \langle 0, 0, w, 0 \rangle$. -/
+abbrev opLightconePlus (v : OpVec3 A) : OpZornMatrix A := opLightconeRayPlus v
+abbrev opLightconeMinus (w : OpVec3 A) : OpZornMatrix A := opLightconeRayMinus w
+
+/-- Combined twin-lightcone Dirac/Kasparov operator $J(v, w) = L_+(v) + L_-(w) = \langle 0, v, w, 0 \rangle$. -/
+abbrev opTwinLightconeJ (v w : OpVec3 A) : OpZornMatrix A := opKasparovZornJ v w
+
+/-- Polarized diagonal time/modular operator $D(\tau_+, \tau_-) = \langle \tau_+, 0, 0, \tau_- \rangle$. -/
+abbrev opTimeDiag (τ_plus τ_minus : A) : OpZornMatrix A := opCartanDiag τ_plus τ_minus
+
+/-- Forward and backward chiral lightcone gauge transformations $U_+(v) = 1 + L_+(v)$, $U_-(w) = 1 + L_-(w)$. -/
+abbrev opGaugePlus (v : OpVec3 A) : OpZornMatrix A := opUnipotentUpper v
+abbrev opGaugeMinus (w : OpVec3 A) : OpZornMatrix A := opUnipotentLower w
+
+/-- **42. Forward/Backward Peirce Polarization, Nilpotence, & Eigen-Grading (Archetype XXXII.1)**:
+    Over ANY noncommutative operator ring $A$, for all $v, w, v_1, v_2, v_3 \in A^3$:
+    1. Peirce Chiral Polarization:
+       $(e_{11} * J(v, w)) * e_{22} = L_+(v)$ and $(e_{22} * J(v, w)) * e_{11} = L_-(w)$.
+    2. Square-Zero Chiral Nilpotence:
+       $L_+(v) * L_+(v) = 0$ and $L_-(w) * L_-(w) = 0$.
+    3. Chiral Eigen-Grading under $\Gamma$:
+       $\Gamma * L_+(v) = L_+(v)$ and $L_+(v) * \Gamma = -L_+(v)$.
+    4. Split Operator Nambu 3-Cocycle:
+       $\mathrm{opAssociator}\;(L_+(v_1))\;(L_+(v_2))\;(L_+(v_3)) =
+        \langle \det_L(v_1, v_2, v_3), 0, 0, -\det_R(v_1, v_2, v_3) \rangle$. -/
+theorem twinLightcone_polarization_nilpotence_and_nambu_split
+    (v w v₁ v₂ v₃ : OpVec3 A) :
+    (opPeircePlus * opTwinLightconeJ v w) * opPeirceMinus = opLightconePlus v ∧
+    (opPeirceMinus * opTwinLightconeJ v w) * opPeircePlus = opLightconeMinus w ∧
+    opLightconePlus v * opLightconePlus v = 0 ∧
+    opLightconeMinus w * opLightconeMinus w = 0 ∧
+    opZornGamma * opLightconePlus v = opLightconePlus v ∧
+    opLightconePlus v * opZornGamma = -opLightconePlus v ∧
+    opAssociator (opLightconePlus v₁) (opLightconePlus v₂) (opLightconePlus v₃) =
+      ⟨OpVec3.opDetLeft v₁ v₂ v₃, 0, 0, -OpVec3.opDetRight v₁ v₂ v₃⟩ := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+  (ext <;>
+   (simp [opPeircePlus, opPeirceMinus, opZornGamma, opTwinLightconeJ, opKasparovZornJ,
+          opLightconePlus, opLightconeMinus, opLightconeRayPlus, opLightconeRayMinus,
+          opAssociator, OpVec3.opDetLeft, OpVec3.opDetRight,
+          OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+    try noncomm_ring))
+
+/-- **43. Emergence of the Split Metric as Anticommutator & Spin Connection as Commutator (Archetype XXXII.2)**:
+    Over ANY noncommutative operator ring $A$, for all $v, w, v_1, v_2, w_1, w_2 \in A^3$:
+    1. Forward-Backward One-Way Contractions:
+       $L_+(v) * L_-(w) = \langle -(v \cdot w), 0, 0, 0 \rangle$ and
+       $L_-(w) * L_+(v) = \langle 0, 0, 0, -(w \cdot v) \rangle$.
+    2. Emergent Split Metric = Jordan Anticommutator of Twin Lightcones:
+       $L_+(v) * L_-(w) + L_-(w) * L_+(v) = \langle -(v \cdot w), 0, 0, -(w \cdot v) \rangle = J(v, w) * J(v, w)$.
+    3. Emergent Chiral Boost Connection = Commutator of Twin Lightcones:
+       $L_+(v) * L_-(w) - L_-(w) * L_+(v) = \langle -(v \cdot w), 0, 0, w \cdot v \rangle$.
+    4. Emergent Spatial Spin-Torsion = Same-Chirality Lightcone Product:
+       $L_+(v_1) * L_+(v_2) = L_-(v_1 \times_{\mathrm{skew}} v_2)$ and
+       $L_-(w_1) * L_-(w_2) = L_+(-(w_1 \times_{\mathrm{skew}} w_2))$. -/
+theorem metric_and_spin_connection_emergence_from_twin_lightcones
+    (v w v₁ v₂ w₁ w₂ : OpVec3 A) :
+    let L_p := opLightconePlus v
+    let L_m := opLightconeMinus w
+    let J := opTwinLightconeJ v w
+    L_p * L_m = ⟨-OpVec3.dot v w, 0, 0, 0⟩ ∧
+    L_m * L_p = ⟨0, 0, 0, -OpVec3.dot w v⟩ ∧
+    L_p * L_m + L_m * L_p = ⟨-OpVec3.dot v w, 0, 0, -OpVec3.dot w v⟩ ∧
+    L_p * L_m + L_m * L_p = J * J ∧
+    L_p * L_m - L_m * L_p = ⟨-OpVec3.dot v w, 0, 0, OpVec3.dot w v⟩ ∧
+    opLightconePlus v₁ * opLightconePlus v₂ =
+      opLightconeMinus (OpVec3.skewCross v₁ v₂) ∧
+    opLightconeMinus w₁ * opLightconeMinus w₂ =
+      opLightconePlus (-OpVec3.skewCross w₁ w₂) := by
+  intro L_p L_m J
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+  (ext <;>
+   (simp [L_p, L_m, J, opLightconePlus, opLightconeMinus, opLightconeRayPlus, opLightconeRayMinus,
+          opKasparovZornJ, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+    try noncomm_ring))
+
+/-- **44. Polarized Lax-Heisenberg Time Derivative & Covariant Spin-Connection Gauge Shift (Archetype XXXIII)**:
+    Over ANY noncommutative operator ring $A$, for any forward/backward time operators
+    $\tau_+, \tau_- \in A$ and lightcone 3-vectors $v, w \in A^3$, let $D_\tau = D(\tau_+, \tau_-)$:
+    1. Polarized Heisenberg-Dirac Time Derivative on Twin Lightcones:
+       $D_\tau * J(v, w) - J(v, w) * D_\tau =
+        \langle 0,\; \tau_+ \cdot_L v - v \cdot_R \tau_-,\; \tau_- \cdot_L w - w \cdot_R \tau_+,\; 0 \rangle$.
+    2. Chiral Gauge Associators Isolate Opposite-Chirality Quadratic Spin-Torsion:
+       $[U_+(v), D_\tau, U_+(-v)] = -L_-\bigl((v \cdot_R \tau_-) \times_{\mathrm{skew}} v + (\tau_+ \cdot_L v) \times_{\mathrm{skew}} v\bigr)$ and
+       $[U_-(w), D_\tau, U_-(-w)] = L_+\bigl((w \cdot_R \tau_+) \times_{\mathrm{skew}} w + (\tau_- \cdot_L w) \times_{\mathrm{skew}} w\bigr)$.
+    3. Exact Forward Lightcone Gauge Shift of Polarized Time (Covariant Derivative + Backward Spin-Torsion):
+       $(U_+(v) * D_\tau) * U_+(-v) = D_\tau - L_+(\tau_+ \cdot_L v - v \cdot_R \tau_-) - L_-\bigl((v \cdot_R \tau_-) \times_{\mathrm{skew}} v\bigr)$.
+    4. Exact Backward Lightcone Gauge Shift of Polarized Time (Covariant Derivative + Forward Spin-Torsion):
+       $(U_-(w) * D_\tau) * U_-(-w) = D_\tau - L_-(\tau_- \cdot_L w - w \cdot_R \tau_+) + L_+\bigl((w \cdot_R \tau_+) \times_{\mathrm{skew}} w\bigr)$. -/
+theorem polarizedTime_heisenberg_derivative_and_covariant_gauge_shift
+    (τ_plus τ_minus : A) (v w : OpVec3 A) :
+    let D_τ := opTimeDiag τ_plus τ_minus
+    let J := opTwinLightconeJ v w
+    D_τ * J - J * D_τ =
+      ⟨0,
+       OpVec3.bimoduleDiff τ_plus τ_minus v,
+       OpVec3.bimoduleDiff τ_minus τ_plus w,
+       0⟩ ∧
+    opAssociator (opGaugePlus v) D_τ (opGaugePlus (-v)) =
+      -opLightconeMinus (OpVec3.skewCross (OpVec3.rightScale v τ_minus) v +
+                         OpVec3.skewCross (OpVec3.leftScale τ_plus v) v) ∧
+    opAssociator (opGaugeMinus w) D_τ (opGaugeMinus (-w)) =
+      opLightconePlus (OpVec3.skewCross (OpVec3.rightScale w τ_plus) w +
+                       OpVec3.skewCross (OpVec3.leftScale τ_minus w) w) ∧
+    (opGaugePlus v * D_τ) * opGaugePlus (-v) =
+      D_τ - opLightconePlus (OpVec3.bimoduleDiff τ_plus τ_minus v)
+          - opLightconeMinus (OpVec3.skewCross (OpVec3.rightScale v τ_minus) v) ∧
+    (opGaugeMinus w * D_τ) * opGaugeMinus (-w) =
+      D_τ - opLightconeMinus (OpVec3.bimoduleDiff τ_minus τ_plus w)
+          + opLightconePlus (OpVec3.skewCross (OpVec3.rightScale w τ_plus) w) := by
+  intro D_τ J
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;>
+  (ext <;>
+   (simp [D_τ, J, opCartanDiag, opKasparovZornJ,
+          opGaugePlus, opGaugeMinus, opUnipotentUpper, opUnipotentLower,
+          opLightconePlus, opLightconeMinus, opLightconeRayPlus, opLightconeRayMinus,
+          opAssociator, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+    try noncomm_ring))
+
 end PorterNoncommutativeRiccatiAndLoxodromes
 
 end SplitQuaternion

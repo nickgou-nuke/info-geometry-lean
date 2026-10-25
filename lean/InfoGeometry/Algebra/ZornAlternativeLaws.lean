@@ -6342,10 +6342,10 @@ theorem zorn_unified_three_arnold_kan_braid_and_beltrami
     · rename_i i; fin_cases i <;> (simp [zornHeisenbergGroupPlus, zornContactSubgroupPlus, ω₁₂]; try ring)
     · rfl
   · ext
-    · simp [Lu_p, mul, ZornVec3.dot, Fin.sum_univ_three]
+    · simp [Lu_p, mul, ZornVec3.dot]
     · rename_i i; fin_cases i <;> simp [Lu_p, mul, ZornVec3.cross]
     · rename_i i; fin_cases i <;> (simp [Lu_p, mul, ZornVec3.cross]; try ring)
-    · simp [Lu_p, mul, ZornVec3.dot, Fin.sum_univ_three]
+    · simp [Lu_p, mul, ZornVec3.dot]
   · ext
     · simp [Lu_p, Lu_m, zornGradeZero, InfoGeometry.Algebra.zvm_add_def,
             add, mul, ZornVec3.dot, Fin.sum_univ_three]
@@ -6357,5 +6357,46 @@ theorem zorn_unified_three_arnold_kan_braid_and_beltrami
               add, mul, ZornVec3.cross]
     · simp [Lu_p, Lu_m, zornGradeZero, InfoGeometry.Algebra.zvm_add_def,
             add, mul, ZornVec3.dot, Fin.sum_univ_three]
+
+/-! ## Section 59: Universal 3D Zorn Lamb-Velocity & Lamb-Vorticity Nilpotence (Archetype LIV.4) -/
+
+/-- **Universal 3D Zorn Lamb-Velocity & Lamb-Vorticity Nilpotence (Archetype LIV.4)**:
+    Over any commutative ring $R$ (`[CommRing R]`), for *arbitrary* full 3D velocity and vorticity
+    vectors $u, \omega \in \mathrm{ZornVec3}\;R$, let $U = \langle 0, u, 0, 0 \rangle$ and
+    $\Omega = \langle 0, \omega, 0, 0 \rangle$ so that $\Omega * U = \langle 0, 0, 2(\omega \times u), 0 \rangle$:
+    1. Exact 3D Lamb-Velocity Work Vanishing ($u \cdot (\omega \times u) = 0$):
+       $$U * (\Omega * U) = 0 \qquad \text{and} \qquad (\Omega * U) * U = 0.$$
+    2. Exact 3D Lamb-Vorticity Self-Advection Vanishing ($\omega \cdot (\omega \times u) = 0$):
+       $$\Omega * (\Omega * U) = 0 \qquad \text{and} \qquad (\Omega * U) * \Omega = 0.$$ -/
+theorem zorn_threeDim_lamb_velocity_and_vorticity_annihilation
+    (u ω : ZornVec3 R) :
+    let U : ZornVectorMatrix R := ⟨0, u, 0, 0⟩
+    let Ω : ZornVectorMatrix R := ⟨0, ω, 0, 0⟩
+    U * (Ω * U) = 0 ∧
+    (Ω * U) * U = 0 ∧
+    Ω * (Ω * U) = 0 ∧
+    (Ω * U) * Ω = 0 := by
+  intro U Ω
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · ext
+    · simp [U, Ω, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; ring
+    · rename_i i; fin_cases i <;> simp [U, Ω, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+    · rename_i i; fin_cases i <;> simp [U, Ω, mul, ZornVec3.cross]
+    · simp [U, Ω, mul, ZornVec3.dot]
+  · ext
+    · simp [U, Ω, mul, ZornVec3.dot]
+    · rename_i i; fin_cases i <;> simp [U, Ω, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+    · rename_i i; fin_cases i <;> simp [U, Ω, mul, ZornVec3.cross]
+    · simp [U, Ω, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; ring
+  · ext
+    · simp [U, Ω, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; ring
+    · rename_i i; fin_cases i <;> simp [U, Ω, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+    · rename_i i; fin_cases i <;> simp [U, Ω, mul, ZornVec3.cross]
+    · simp [U, Ω, mul, ZornVec3.dot]
+  · ext
+    · simp [U, Ω, mul, ZornVec3.dot]
+    · rename_i i; fin_cases i <;> simp [U, Ω, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
+    · rename_i i; fin_cases i <;> simp [U, Ω, mul, ZornVec3.cross]
+    · simp [U, Ω, mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; ring
 
 end InfoGeometry.Algebra.ZornVectorMatrix

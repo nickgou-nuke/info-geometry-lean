@@ -4453,6 +4453,97 @@ theorem arnold_network_three_layer_kan_braid_loop_and_readouts
            opGradeZero, opCartanDiag, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
      try noncomm_ring)
 
+/-! ### Archetypes LIII & LIV: Operator Navier–Stokes Viscous Leibniz Law & 5-Graded Vorticity Depletion -/
+
+/-- **Theorem 69 (Archetype LIII — Operator Navier–Stokes Viscous Enstrophy/Helicity Balance & Lamb Work)**:
+    For any Grade $0$ viscous/Laplacian operator $D_{\mathrm{visc}} = \mathrm{opGradeZero}\;\Delta_+\;\Delta_-$
+    and any operator velocity $u \in \mathrm{OpVec3}\;A$ and vorticity $\omega \in \mathrm{OpVec3}\;A$
+    with $U = L_+(u)$, $\Omega_+ = L_+(\omega)$, and $\Omega_- = L_-(\omega)$:
+    1. Opposite-Chirality Viscous Leibniz Product Rule:
+       $$\mathrm{opCommutator}\;D_{\mathrm{visc}}\;(\Omega_+ * \Omega_-) =
+         (\mathrm{opCommutator}\;D_{\mathrm{visc}}\;\Omega_+) * \Omega_- +
+         \Omega_+ * (\mathrm{opCommutator}\;D_{\mathrm{visc}}\;\Omega_-).$$
+    2. Viscous Enstrophy / Helicity Anticommutator Balance:
+       $$\mathrm{opAnticommutator}\;(\mathrm{opCommutator}\;D_{\mathrm{visc}}\;\Omega_+)\;\Omega_- +
+         \mathrm{opAnticommutator}\;\Omega_+\;(\mathrm{opCommutator}\;D_{\mathrm{visc}}\;\Omega_-) =
+         \mathrm{opCommutator}\;D_{\mathrm{visc}}\;(\mathrm{opAnticommutator}\;\Omega_+\;\Omega_-).$$
+    3. 3D Operator Lamb-Velocity Work Projection into the Associative Nucleus $\mathcal{G}_0$:
+       $$U * (\Omega_+ * U) = \mathrm{opGradeZero}\;(-\mathrm{OpVec3.dot}\;u\;(\mathrm{opLambVector}\;\omega\;u))\;0,$$
+       $$(\Omega_+ * U) * U = \mathrm{opGradeZero}\;0\;(-\mathrm{OpVec3.dot}\;(\mathrm{opLambVector}\;\omega\;u)\;u).$$ -/
+theorem operator_navier_stokes_viscous_leibniz_and_lamb_work
+    (Δ_p Δ_m : A) (u ω : OpVec3 A) :
+    let D_visc := opGradeZero Δ_p Δ_m
+    let U := opLightconeRayPlus u
+    let Ω_p := opLightconeRayPlus ω
+    let Ω_m := opLightconeRayMinus ω
+    let L_vec := opLambVector ω u
+    opCommutator D_visc (Ω_p * Ω_m) =
+      opCommutator D_visc Ω_p * Ω_m + Ω_p * opCommutator D_visc Ω_m ∧
+    opAnticommutator (opCommutator D_visc Ω_p) Ω_m +
+      opAnticommutator Ω_p (opCommutator D_visc Ω_m) =
+      opCommutator D_visc (opAnticommutator Ω_p Ω_m) ∧
+    U * (Ω_p * U) = opGradeZero (-OpVec3.dot u L_vec) 0 ∧
+    (Ω_p * U) * U = opGradeZero 0 (-OpVec3.dot L_vec u) := by
+  intro D_visc U Ω_p Ω_m L_vec
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · ext <;>
+    (simp [D_visc, Ω_p, Ω_m, opCommutator, opCartanDiag,
+           opLightconeRayPlus, opLightconeRayMinus,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · ext <;>
+    (simp [D_visc, Ω_p, Ω_m, opAnticommutator, opCommutator, opCartanDiag,
+           opLightconeRayPlus, opLightconeRayMinus,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · ext <;>
+    (simp [U, Ω_p, L_vec, opLambVector, opGradeZero, opCartanDiag,
+           opLightconeRayPlus, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · ext <;>
+    (simp [U, Ω_p, L_vec, opLambVector, opGradeZero, opCartanDiag,
+           opLightconeRayPlus, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+
+/-- **Theorem 70 (Archetype LIV — 5-Graded Noncommutative Lamb Orthogonality & Vorticity Depletion)**:
+    For any transverse Grade $+1$ velocity $U_\perp = \mathrm{opGradePlus1}\;u_y\;u_z$ and
+    transverse Grade $+1$ vorticity $\Omega_\perp = \mathrm{opGradePlus1}\;\omega_y\;\omega_z$
+    over *any* noncommutative operator ring $A$:
+    1. Exact Grade $+2$ Contact-Central Lamb Vector:
+       $$\Omega_\perp * U_\perp = \mathrm{opGradePlus2}\;(\mathrm{opContactSymplecticForm}\;\omega_y\;\omega_z\;u_y\;u_z).$$
+    2. Exact Noncommutative Lamb-Velocity Work Vanishing ($U_\perp * (\Omega_\perp * U_\perp) = 0$):
+       $$U_\perp * (\Omega_\perp * U_\perp) = 0 \qquad \text{and} \qquad (\Omega_\perp * U_\perp) * U_\perp = 0.$$
+    3. Exact Noncommutative Lamb-Vorticity Self-Advection Depletion ($\Omega_\perp * (\Omega_\perp * U_\perp) = 0$):
+       $$\Omega_\perp * (\Omega_\perp * U_\perp) = 0 \qquad \text{and} \qquad (\Omega_\perp * U_\perp) * \Omega_\perp = 0.$$ -/
+theorem fiveGraded_operator_lamb_orthogonality_and_vorticity_depletion
+    (u_y u_z ω_y ω_z : A) :
+    let U_perp := opGradePlus1 u_y u_z
+    let Ω_perp := opGradePlus1 ω_y ω_z
+    let ω_symp := opContactSymplecticForm ω_y ω_z u_y u_z
+    Ω_perp * U_perp = opGradePlus2 ω_symp ∧
+    U_perp * (Ω_perp * U_perp) = 0 ∧
+    (Ω_perp * U_perp) * U_perp = 0 ∧
+    Ω_perp * (Ω_perp * U_perp) = 0 ∧
+    (Ω_perp * U_perp) * Ω_perp = 0 := by
+  intro U_perp Ω_perp ω_symp
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · ext <;>
+    (simp [U_perp, Ω_perp, ω_symp, opGradePlus1, opGradePlus2, opContactSymplecticForm,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · ext <;>
+    (simp [U_perp, Ω_perp, opGradePlus1, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · ext <;>
+    (simp [U_perp, Ω_perp, opGradePlus1, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · ext <;>
+    (simp [U_perp, Ω_perp, opGradePlus1, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · ext <;>
+    (simp [U_perp, Ω_perp, opGradePlus1, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+
 end PorterNoncommutativeRiccatiAndLoxodromes
 
 end SplitQuaternion

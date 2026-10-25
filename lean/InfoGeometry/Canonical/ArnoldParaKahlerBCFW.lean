@@ -403,6 +403,42 @@ theorem operator_unified_three_arnold_triad_master_bridge
          ⟨hHydro.1, hHydro.2.1, hHydro.2.2.1, hHydro.2.2.2.2.1⟩,
          hNet⟩
 
+/-- **Theorem 13 (Master Operator Navier–Stokes Viscous Leibniz & 5-Graded Vorticity Depletion Bridge — Archetypes LIII & LIV)**:
+    Over *any* noncommutative operator ring $A$ (`[Ring A]`):
+    1. Viscous Enstrophy/Helicity Leibniz Law & 3D Lamb-Velocity Work Projection:
+       - $[D_{\mathrm{visc}}, \Omega_+ * \Omega_-] = [D_{\mathrm{visc}}, \Omega_+] * \Omega_- + \Omega_+ * [D_{\mathrm{visc}}, \Omega_-]$,
+       - $\{[D_{\mathrm{visc}}, \Omega_+], \Omega_-\} + \{\Omega_+, [D_{\mathrm{visc}}, \Omega_-]\} = [D_{\mathrm{visc}}, \{\Omega_+, \Omega_-\}]$,
+       - $U * (\Omega_+ * U) = \mathrm{opGradeZero}\;(-\mathrm{OpVec3.dot}\;u\;(\mathrm{opLambVector}\;\omega\;u))\;0$,
+       - $(\Omega_+ * U) * U = \mathrm{opGradeZero}\;0\;(-\mathrm{OpVec3.dot}\;(\mathrm{opLambVector}\;\omega\;u)\;u)$.
+    2. 5-Graded Noncommutative Lamb Orthogonality & Vorticity Depletion:
+       - $\Omega_\perp * U_\perp = E_{+2}(\omega_\perp(\omega_y, \omega_z; u_y, u_z))$,
+       - $U_\perp * (\Omega_\perp * U_\perp) = 0$ and $(\Omega_\perp * U_\perp) * U_\perp = 0$,
+       - $\Omega_\perp * (\Omega_\perp * U_\perp) = 0$ and $(\Omega_\perp * U_\perp) * \Omega_\perp = 0$. -/
+theorem operator_navier_stokes_lamb_depletion_master_bridge
+    (Δ_p Δ_m u_y u_z ω_y ω_z : A) (u ω : OpVec3 A) :
+    let D_visc := opGradeZero Δ_p Δ_m
+    let U := opLightconeRayPlus u
+    let Ω_p := opLightconeRayPlus ω
+    let Ω_m := opLightconeRayMinus ω
+    let L_vec := opLambVector ω u
+    let U_perp := opGradePlus1 u_y u_z
+    let Ω_perp := opGradePlus1 ω_y ω_z
+    let ω_symp := opContactSymplecticForm ω_y ω_z u_y u_z
+    (opCommutator D_visc (Ω_p * Ω_m) =
+       opCommutator D_visc Ω_p * Ω_m + Ω_p * opCommutator D_visc Ω_m ∧
+     opAnticommutator (opCommutator D_visc Ω_p) Ω_m +
+       opAnticommutator Ω_p (opCommutator D_visc Ω_m) =
+       opCommutator D_visc (opAnticommutator Ω_p Ω_m) ∧
+     U * (Ω_p * U) = opGradeZero (-OpVec3.dot u L_vec) 0 ∧
+     (Ω_p * U) * U = opGradeZero 0 (-OpVec3.dot L_vec u)) ∧
+    (Ω_perp * U_perp = opGradePlus2 ω_symp ∧
+     U_perp * (Ω_perp * U_perp) = 0 ∧
+     (Ω_perp * U_perp) * U_perp = 0 ∧
+     Ω_perp * (Ω_perp * U_perp) = 0 ∧
+     (Ω_perp * U_perp) * Ω_perp = 0) :=
+  ⟨operator_navier_stokes_viscous_leibniz_and_lamb_work Δ_p Δ_m u ω,
+   fiveGraded_operator_lamb_orthogonality_and_vorticity_depletion u_y u_z ω_y ω_z⟩
+
 end OperatorParaKahlerAmariMaurerCartanBridge
 
 end InfoGeometry.Canonical.ArnoldParaKahlerBCFW

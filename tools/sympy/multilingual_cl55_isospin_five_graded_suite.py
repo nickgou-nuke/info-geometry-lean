@@ -764,6 +764,62 @@ def run_sympy_verification() -> dict:
     assert sp.expand(MU_schur[1, 0] - x10_nc) == 0
     assert sp.expand(MU_schur[1, 1] - (x11_nc - x10_nc * c_inv_nc * x11_nc)) == 0
 
+    # 26. LogCFT Jordan Cell, Multiplicative-to-Additive Monodromy, Temperley-Lieb (delta=0),
+    #     Emil Artin's Braid Group B_3, & Universal Majorana Clifford Braiding
+    # (`logCft_jordan_cell_and_monodromy_homomorphism`,
+    #  `temperley_lieb_and_artin_braid_group_relations`,
+    #  `majorana_clifford_braid_universal_identity` in `AlbertCayleyDickson.lean`)
+    h_cft, u1_cft, u2_cft, tau1_cft, tau2_cft, x_cft = sp.symbols(
+        "h_cft u1_cft u2_cft tau1_cft tau2_cft x_cft"
+    )
+    seed_d_mat = sp.Matrix([[0, 1], [0, 0]])
+    seed_B_mat = sp.Matrix([[0, 0], [1, 0]])
+    P_plus_mat = sp.Matrix([[1, 0], [0, 0]])
+    I2_mat = sp.eye(2)
+    L0_cft = h_cft * I2_mat + x_cft * seed_d_mat
+    assert (L0_cft - h_cft * I2_mat) ** 2 == sp.zeros(2, 2)
+    assert P_plus_mat * L0_cft - L0_cft * P_plus_mat == x_cft * seed_d_mat
+
+    def log_cft_monodromy(u, tau, x):
+        return u * I2_mat + (u * tau * x) * seed_d_mat
+
+    assert sp.simplify(
+        log_cft_monodromy(u1_cft, tau1_cft, x_cft)
+        * log_cft_monodromy(u2_cft, tau2_cft, x_cft)
+        - log_cft_monodromy(u1_cft * u2_cft, tau1_cft + tau2_cft, x_cft)
+    ) == sp.zeros(2, 2)
+    assert seed_d_mat * seed_B_mat * seed_d_mat == seed_d_mat
+    assert seed_B_mat * seed_d_mat * seed_B_mat == seed_B_mat
+    sigma1_braid = I2_mat + seed_d_mat
+    sigma2_braid = I2_mat - seed_B_mat
+    bruhat_S_mat = sp.Matrix([[0, 1], [-1, 0]])
+    assert sigma1_braid * sigma2_braid * sigma1_braid == sigma2_braid * sigma1_braid * sigma2_braid
+    assert sigma1_braid * sigma2_braid * sigma1_braid == bruhat_S_mat
+    assert (sigma1_braid * sigma2_braid * sigma1_braid) ** 2 == -I2_mat
+    assert (sigma1_braid * sigma2_braid) ** 3 == -I2_mat
+    J1_nc, J2_nc = sp.symbols("J1_nc J2_nc", commutative=False)
+    assert sp.expand(
+        (1 + J1_nc) * (1 + J2_nc) * (1 + J1_nc)
+        - 2 * (J1_nc + J2_nc)
+        - (
+            (J1_nc * J1_nc + 1)
+            + (J1_nc * J2_nc + J2_nc * J1_nc)
+            + J1_nc * (J1_nc * J2_nc + J2_nc * J1_nc)
+            - (J1_nc * J1_nc + 1) * J2_nc
+        )
+    ) == 0
+    assert sp.expand(
+        (1 + J1_nc) * (1 + J2_nc) * (1 + J1_nc)
+        - (1 + J2_nc) * (1 + J1_nc) * (1 + J2_nc)
+        - (
+            (J1_nc * J1_nc + 1)
+            - (J2_nc * J2_nc + 1)
+            + (J1_nc * J2_nc + J2_nc * J1_nc) * (J1_nc - J2_nc)
+            - J2_nc * (J1_nc * J1_nc + 1)
+            + J1_nc * (J2_nc * J2_nc + 1)
+        )
+    ) == 0
+
     return {
         "engine": "SymPy",
         "status": "PASSED",

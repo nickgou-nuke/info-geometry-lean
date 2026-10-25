@@ -247,10 +247,34 @@ to expose the underlying expression first.
 
 When a Cl(1,1) atom construction swaps which factor is `c` (square +1) and which is `d'` (square −1), the anticommutation lemma `h` may prove `a * b + b * a = 0` while the goal expects `b * a + a * b = 0`. The terms are equal by commutativity of addition, but Lean does not unify them automatically. Fix with `rw [add_comm]` before `exact h`, rather than rewriting the lemma.
 
+### `ZornVectorMatrix.zero` Does Not Reduce in `ext_h3` Goals
+
+When `ext_h3` splits an `H3Zorn` equality into 6 fields, the ZornVectorMatrix
+components (fields `a`, `b`, `c`) may show an expanded constructor form
+`{ a := 0, v := fun i => 0, w := fun i => 0, b := 0 }` instead of
+`ZornVectorMatrix.zero`. `simp` with `ZornVectorMatrix.conj_zero`,
+`ZornVectorMatrix.norm_zero`, etc. reduces the expression but leaves this
+expanded form unmatched. Add `ZornVectorMatrix.zero` to the `simp` list so Lean
+unfolds `zero` to its constructor form, making both sides syntactically equal:
+
+```lean
+simp [adjointQuad, cuntzToAlbert_e1, ZornVectorMatrix.conj_zero,
+  ZornVectorMatrix.zero_mul, ..., ZornVectorMatrix.zero]
+```
+
 ### `Matrix.trace` vs `Matrix.traceAddMonoidHom`
 
 These are not definitionally equal for `rw`. Either use `convert ... using 2`
 or avoid the mismatch by reusing existing theorems that already use `Matrix.trace`.
+
+`H3Zorn R` defines `Add` and `SMul R` as anonymous instances (`noncomputable
+instance : Add (H3Zorn R) where ...`). Consequently, `simp [cuntzToAlbert_e1]`
+unfolds the definition but does **not** compute `e1 + e1` or `2 • e1` —
+`norm_num` cannot reduce these because the operations are on `H3Zorn`, not on
+`ℝ`. To prove equalities like `e1 + e1 = 2 • e1`, use `ext_h3` and handle
+scalar components with `norm_num` and vector components with
+`simp [ZornVectorMatrix.zero, ZornVectorMatrix.add, ZornVectorMatrix.smul]`.
+Do not rely on `rfl` or `decide` for these equalities.
 
 ## Dependent Type Rewriting Issues
 

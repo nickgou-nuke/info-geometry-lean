@@ -145,6 +145,90 @@ theorem operator_paraKahler_amari_maurerCartan_master_bridge
          ⟨hMC.1, hMC.2.1⟩,
          ⟨hComm.1, hFlow.2.2.1⟩⟩
 
+/-- **Theorem 7 (Nucleus Leibniz Derivations, BKM Modular Metric, Erlangen Flag States, Killing Lie Algebra, & Noether Supercharge Master Bridge)**:
+    Over ANY noncommutative operator ring $A$ (`[Ring A]`):
+    1. Exact Leibniz Product Rule for Nucleus Modular Derivations on Opposite-Chirality Lightcone Rays:
+       $\delta_{\rho_+, \rho_-}(L_+(v) * L_-(w)) = \delta_{\rho_+, \rho_-}(L_+(v)) * L_-(w) + L_+(v) * \delta_{\rho_+, \rho_-}(L_-(w))$.
+    2. BKM Modular Metric & KMS Leibniz Conservation:
+       $G_{\mathrm{BKM}}(\rho; v, w) + G_{\mathrm{BKM}}^{\mathrm{dual}}(\rho; v, w) = \delta_{\rho_+, \rho_-}(g(v, w))$.
+    3. Erlangen Homogeneous Flag State Idempotence & Symmetry Group Action:
+       $\Pi_{\mathrm{hom}}(v) * \Pi_{\mathrm{hom}}(v) = \Pi_{\mathrm{hom}}(v)$ and
+       $e_{11} * \bigl((U_+(v_1) * \Pi_{\mathrm{hom}}(v_2)) * U_+(-v_1)\bigr) = \Pi_{\mathrm{hom}}(v_1 + v_2)$.
+    4. Killing Lie Algebra Homomorphism & Noether Supercharge Conservation:
+       $[\delta_{D_1}, \delta_{D_2}](X) = \delta_{[D_1, D_2]}(X)$ and
+       $[H_{\mathrm{mod}}(v, w), J(v, w)] = [J(v, w), J(v, w), J(v, w)]$. -/
+theorem operator_bkm_erlangen_killing_noether_master_bridge
+    (ρ_plus ρ_minus σ_plus σ_minus u q : A)
+    (v w v₁ v₂ : OpVec3 A) (X Y : OpZornMatrix A) :
+    let D₁ := opCartanDiag ρ_plus ρ_minus
+    let D₂ := opCartanDiag σ_plus σ_minus
+    let Lp := opLightconeRayPlus v
+    let Lm := opLightconeRayMinus w
+    let H_mod := emergentModularHamiltonian v w
+    let J := opKasparovZornJ v w
+    opModularDeriv ρ_plus ρ_minus (Lp * Lm) =
+      opModularDeriv ρ_plus ρ_minus Lp * Lm + Lp * opModularDeriv ρ_plus ρ_minus Lm ∧
+    opBKMMetric ρ_plus ρ_minus v w + opBKMMetricDual ρ_plus ρ_minus v w =
+      opModularDeriv ρ_plus ρ_minus (opParaKahlerMetric v w) ∧
+    (homogeneousFlagState v * homogeneousFlagState v = homogeneousFlagState v ∧
+     opPeircePlus * ((opUnipotentUpper v₁ * homogeneousFlagState v₂) * opUnipotentUpper (-v₁)) =
+       homogeneousFlagState (v₁ + v₂)) ∧
+    opCommutator D₁ (opCommutator D₂ X) - opCommutator D₂ (opCommutator D₁ X) =
+      opCommutator (opCommutator D₁ D₂) X ∧
+    (opCommutator H_mod (Lp * Lm) = opCommutator H_mod Lp * Lm + Lp * opCommutator H_mod Lm ∧
+     opCommutator H_mod J = opAssociator J J J) := by
+  have hLeib := opModularDeriv_nucleus_and_exact_leibniz_rule (opCartanDiag ρ_plus ρ_minus) X Y v w ρ_plus ρ_minus
+  have hBKM := opBKMMetric_coords_and_kms_leibniz_conservation ρ_plus ρ_minus v w X Y
+  have hFlag := homogeneousFlagState_orbit_idempotence_and_group_action v v₁ v₂
+  have hKill := killing_nucleus_derivation_lie_homomorphism ρ_plus ρ_minus σ_plus σ_minus X
+  have hNoether := noetherSupercharges_emergent_modular_hamiltonian_and_conservation v w u q
+  exact ⟨hLeib.2.2.2.2.1,
+         hBKM.2.1,
+         ⟨hFlag.2.2.1, hFlag.2.2.2.2⟩,
+         hKill.2,
+         ⟨hNoether.2.2.2.1, hNoether.2.2.2.2.1⟩⟩
+
+/-- **Theorem 8 (5-Graded Kantor-Koecher-Tits Contact Structure & Associative Heisenberg Nilradicals Master Bridge)**:
+    Over ANY noncommutative operator ring $A$ (`[Ring A]`):
+    1. Step-2 Heisenberg-Contact Grading & Exact Termination at Grade $\pm 2$:
+       $E_{+1}(y_1, z_1) * E_{+1}(y_2, z_2) = E_{+2}(\omega_\perp(y_1, z_1; y_2, z_2))$ and
+       $E_{+1}(y, z) * E_{+2}(\xi) = 0$.
+    2. Associativity of the 5-Graded Positive Nilradical $\mathcal{N}_+ = \mathcal{G}_{+1} \oplus \mathcal{G}_{+2}$:
+       $\mathrm{opAssociator}\;N_1\;N_2\;N_3 = 0$.
+    3. Associative Heisenberg Group Law & Exact Two-Sided Group Inversion on $\exp(\mathcal{N}_+)$:
+       $H_+(y_1, z_1, \xi_1) * H_+(y_2, z_2, \xi_2) = H_+(y_1 + y_2, z_1 + z_2, \xi_1 + \xi_2 + \omega_\perp(y_1, z_1; y_2, z_2))$,
+       $\mathrm{opAssociator}\;H_1\;H_2\;H_3 = 0$, and $H_1 * H_+(-y_1, -z_1, -\xi_1) = 1$.
+    4. Opposite-Grade Contact Couplings into $\mathcal{G}_0$ & Contact Adjoint Lowering $\mathcal{G}_{+1} \times \mathcal{G}_{-2} \to \mathcal{G}_{-1}$:
+       $E_{-2}(\eta) * E_{+2}(\xi) = \mathrm{opGradeZero}\;(-\eta \xi)\;0$ and
+       $E_{+1}(y, z) * E_{-2}(\eta) = E_{-1}(z \eta + \eta z, -(y \eta + \eta y))$. -/
+theorem operator_five_graded_kantor_koecher_contact_master_bridge
+    (y z y₁ z₁ ξ₁ y₂ z₂ ξ₂ y₃ z₃ ξ₃ ξ η : A) :
+    let N₁ := opHeisenbergNilPlus y₁ z₁ ξ₁
+    let N₂ := opHeisenbergNilPlus y₂ z₂ ξ₂
+    let N₃ := opHeisenbergNilPlus y₃ z₃ ξ₃
+    let H₁ := opHeisenbergGroupPlus y₁ z₁ ξ₁
+    let H₂ := opHeisenbergGroupPlus y₂ z₂ ξ₂
+    let H₃ := opHeisenbergGroupPlus y₃ z₃ ξ₃
+    (opGradePlus1 y₁ z₁ * opGradePlus1 y₂ z₂ =
+       opGradePlus2 (opContactSymplecticForm y₁ z₁ y₂ z₂) ∧
+     opGradePlus1 y z * opGradePlus2 ξ = 0) ∧
+    opAssociator N₁ N₂ N₃ = 0 ∧
+    (H₁ * H₂ =
+       opHeisenbergGroupPlus (y₁ + y₂) (z₁ + z₂)
+         (ξ₁ + ξ₂ + opContactSymplecticForm y₁ z₁ y₂ z₂) ∧
+     opAssociator H₁ H₂ H₃ = 0 ∧
+     H₁ * opHeisenbergGroupPlus (-y₁) (-z₁) (-ξ₁) = 1) ∧
+    (opGradeMinus2 η * opGradePlus2 ξ = opGradeZero (-η * ξ) 0 ∧
+     opGradePlus1 y z * opGradeMinus2 η =
+       opGradeMinus1 (z * η + η * z) (-(y * η + η * y))) := by
+  have hStep := fiveGraded_step_two_heisenberg_and_termination y z y₁ z₁ y₂ z₂ ξ ξ₁ ξ₂ η η η
+  have hHeis := heisenbergNilPlus_associativity_and_group_law y₁ z₁ ξ₁ y₂ z₂ ξ₂ y₃ z₃ ξ₃
+  have hOpp := fiveGraded_opposite_grade_couplings y z y₁ z₁ y₂ z₂ ξ η
+  exact ⟨⟨hStep.1, hStep.2.2.1⟩,
+         hHeis.2.2.2.1,
+         ⟨hHeis.2.2.2.2.1, hHeis.2.2.2.2.2.1, hHeis.2.2.2.2.2.2⟩,
+         ⟨hOpp.1, hOpp.2.2.2⟩⟩
+
 end OperatorParaKahlerAmariMaurerCartanBridge
 
 end InfoGeometry.Canonical.ArnoldParaKahlerBCFW

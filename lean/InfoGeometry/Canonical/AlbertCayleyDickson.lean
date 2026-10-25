@@ -3331,6 +3331,537 @@ theorem opMaurerCartan_cube_and_self_associator_emergent_flow
     (simp [opLightconeRayMinus, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
      try noncomm_ring)
 
+/-!
+## 16. Archetypes XXXVIII–XLI: Nucleus Leibniz Derivations, Bogoliubov-Kubo-Mori (BKM) Modular Metric, Erlangen Homogeneous Flag States, Killing Lie Algebras, & Noether Supercharges
+-/
+
+/-- Modular KMS derivation $\delta_{\rho_+, \rho_-}(X) = [D(\rho_+, \rho_-), X]$ in $\mathrm{OpZornMatrix}\;A$. -/
+def opModularDeriv (ρ_plus ρ_minus : A) (X : OpZornMatrix A) : OpZornMatrix A :=
+  opCommutator (opCartanDiag ρ_plus ρ_minus) X
+
+/-- Bogoliubov-Kubo-Mori (BKM) modular metric pairing
+    $G_{\mathrm{BKM}}(\rho; v, w) = \{\delta_\rho(L_+(v)), L_-(w)\}$. -/
+def opBKMMetric (ρ_plus ρ_minus : A) (v w : OpVec3 A) : OpZornMatrix A :=
+  opAnticommutator (opModularDeriv ρ_plus ρ_minus (opLightconeRayPlus v)) (opLightconeRayMinus w)
+
+/-- Dual BKM modular metric pairing $G_{\mathrm{BKM}}^{\mathrm{dual}}(\rho; v, w) = \{L_+(v), \delta_\rho(L_-(w))\}$. -/
+def opBKMMetricDual (ρ_plus ρ_minus : A) (v w : OpVec3 A) : OpZornMatrix A :=
+  opAnticommutator (opLightconeRayPlus v) (opModularDeriv ρ_plus ρ_minus (opLightconeRayMinus w))
+
+/-- Homogeneous flag state projector $\Pi_{\mathrm{hom}}(v) = (U_+(v) * e_{11}) * U_+(-v)$ in $\mathrm{OpZornMatrix}\;A$. -/
+def homogeneousFlagState (v : OpVec3 A) : OpZornMatrix A :=
+  (opUnipotentUpper v * opPeircePlus) * opUnipotentUpper (-v)
+
+/-- Forward and backward Noether supercharges $Q_+(v) = L_+(v)$ and $Q_-(w) = L_-(w)$. -/
+abbrev noetherSuperchargePlus (v : OpVec3 A) : OpZornMatrix A := opLightconeRayPlus v
+abbrev noetherSuperchargeMinus (w : OpVec3 A) : OpZornMatrix A := opLightconeRayMinus w
+
+/-- Emergent Modular Hamiltonian $H_{\mathrm{mod}}(v, w) = \{Q_+(v), Q_-(w)\} = g(v, w)$. -/
+def emergentModularHamiltonian (v w : OpVec3 A) : OpZornMatrix A :=
+  opAnticommutator (noetherSuperchargePlus v) (noetherSuperchargeMinus w)
+
+/-- Explicit action of $\delta_{\rho_+, \rho_-}$ on the forward lightcone ideal $\mathcal{L}_+(A^3)$. -/
+theorem opModularDeriv_lightconeRayPlus (ρ_plus ρ_minus : A) (v : OpVec3 A) :
+    opModularDeriv ρ_plus ρ_minus (opLightconeRayPlus v) =
+      opLightconeRayPlus (OpVec3.bimoduleDiff ρ_plus ρ_minus v) := by
+  ext <;>
+  (simp [opModularDeriv, opCartanDiag, opLightconeRayPlus, opCommutator,
+         OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+   try noncomm_ring)
+
+/-- Explicit action of $\delta_{\rho_+, \rho_-}$ on the backward lightcone ideal $\mathcal{L}_-(A^3)$. -/
+theorem opModularDeriv_lightconeRayMinus (ρ_plus ρ_minus : A) (w : OpVec3 A) :
+    opModularDeriv ρ_plus ρ_minus (opLightconeRayMinus w) =
+      opLightconeRayMinus (OpVec3.bimoduleDiff ρ_minus ρ_plus w) := by
+  ext <;>
+  (simp [opModularDeriv, opCartanDiag, opLightconeRayMinus, opCommutator,
+         OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+   try noncomm_ring)
+
+/-- Explicit homogeneous coordinates of the flag state projector $\Pi_{\mathrm{hom}}(v) = \langle 1, -v, 0, 0 \rangle$. -/
+theorem homogeneousFlagState_coords (v : OpVec3 A) :
+    homogeneousFlagState v = ⟨1, -v, 0, 0⟩ := by
+  ext <;>
+  simp [homogeneousFlagState, opUnipotentUpper, opPeircePlus,
+        OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross]
+
+/-- **52. Universal Non-Associative Leibniz Defect & Exact Opposite-Chirality / Diagonal Modular Derivation Law (Archetype XXXVIII)**:
+    Over ANY noncommutative operator ring $A$, for ALL $K, X, Y \in \mathrm{OpZornMatrix}\;A$,
+    any vectors $v, w \in A^3$, and any modular operators $\rho_+, \rho_- \in A$:
+    1. Universal Non-Associative Leibniz Defect Identity:
+       $$([K, X] * Y + X * [K, Y]) - [K, X * Y] = [K, X, Y] - [X, K, Y] + [X, Y, K].$$
+    2. Exact Left, Middle, and Right Nucleus Associativity of $D(\rho_+, \rho_-)$ on Opposite-Chirality Lightcone Rays:
+       $$[D(\rho_+, \rho_-), L_+(v), L_-(w)] = 0, \qquad
+         [L_+(v), D(\rho_+, \rho_-), L_-(w)] = 0, \qquad
+         [L_+(v), L_-(w), D(\rho_+, \rho_-)] = 0.$$
+    3. Exact 8D Leibniz Product Rule for $\delta_{\rho_+, \rho_-}$ on Primal-Dual Lightcone Products:
+       $$\delta_{\rho_+, \rho_-}(L_+(v) * L_-(w)) =
+         \delta_{\rho_+, \rho_-}(L_+(v)) * L_-(w) + L_+(v) * \delta_{\rho_+, \rho_-}(L_-(w)),$$
+       $$\delta_{\rho_+, \rho_-}(L_-(w) * L_+(v)) =
+         \delta_{\rho_+, \rho_-}(L_-(w)) * L_+(v) + L_-(w) * \delta_{\rho_+, \rho_-}(L_+(v)).$$
+    4. Universal Diagonal (`.a` and `.b`) Leibniz Product Rule for ALL $X, Y \in \mathrm{OpZornMatrix}\;A$:
+       $$\bigl(\delta_{\rho_+, \rho_-}(X * Y)\bigr).a =
+         \bigl(\delta_{\rho_+, \rho_-}(X) * Y + X * \delta_{\rho_+, \rho_-}(Y)\bigr).a,$$
+       $$\bigl(\delta_{\rho_+, \rho_-}(X * Y)\bigr).b =
+         \bigl(\delta_{\rho_+, \rho_-}(X) * Y + X * \delta_{\rho_+, \rho_-}(Y)\bigr).b.$$ -/
+theorem opModularDeriv_nucleus_and_exact_leibniz_rule
+    (K X Y : OpZornMatrix A) (v w : OpVec3 A) (ρ_plus ρ_minus : A) :
+    let D_ρ := opCartanDiag ρ_plus ρ_minus
+    let Lp := opLightconeRayPlus v
+    let Lm := opLightconeRayMinus w
+    (opCommutator K X * Y + X * opCommutator K Y) - opCommutator K (X * Y) =
+      opAssociator K X Y - opAssociator X K Y + opAssociator X Y K ∧
+    opAssociator D_ρ Lp Lm = 0 ∧
+    opAssociator Lp D_ρ Lm = 0 ∧
+    opAssociator Lp Lm D_ρ = 0 ∧
+    opModularDeriv ρ_plus ρ_minus (Lp * Lm) =
+      opModularDeriv ρ_plus ρ_minus Lp * Lm + Lp * opModularDeriv ρ_plus ρ_minus Lm ∧
+    opModularDeriv ρ_plus ρ_minus (Lm * Lp) =
+      opModularDeriv ρ_plus ρ_minus Lm * Lp + Lm * opModularDeriv ρ_plus ρ_minus Lp ∧
+    (opModularDeriv ρ_plus ρ_minus (X * Y)).a =
+      (opModularDeriv ρ_plus ρ_minus X * Y + X * opModularDeriv ρ_plus ρ_minus Y).a ∧
+    (opModularDeriv ρ_plus ρ_minus (X * Y)).b =
+      (opModularDeriv ρ_plus ρ_minus X * Y + X * opModularDeriv ρ_plus ρ_minus Y).b := by
+  intro D_ρ Lp Lm
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · simp only [opCommutator, opAssociator, opZorn_sub_mul, opZorn_mul_sub]
+    ext <;>
+    (simp only [OpZornMatrix.add_a, OpZornMatrix.add_v, OpZornMatrix.add_w, OpZornMatrix.add_b,
+                OpZornMatrix.sub_a, OpZornMatrix.sub_v, OpZornMatrix.sub_w, OpZornMatrix.sub_b,
+                OpVec3.add_x, OpVec3.add_y, OpVec3.add_z,
+                OpVec3.sub_x, OpVec3.sub_y, OpVec3.sub_z];
+     abel)
+  · ext <;>
+    (simp [D_ρ, Lp, Lm, opCartanDiag, opLightconeRayPlus, opLightconeRayMinus,
+           opAssociator, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · ext <;>
+    (simp [D_ρ, Lp, Lm, opCartanDiag, opLightconeRayPlus, opLightconeRayMinus,
+           opAssociator, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · ext <;>
+    (simp [D_ρ, Lp, Lm, opCartanDiag, opLightconeRayPlus, opLightconeRayMinus,
+           opAssociator, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · change opModularDeriv ρ_plus ρ_minus (opLightconeRayPlus v * opLightconeRayMinus w) =
+      opModularDeriv ρ_plus ρ_minus (opLightconeRayPlus v) * opLightconeRayMinus w +
+        opLightconeRayPlus v * opModularDeriv ρ_plus ρ_minus (opLightconeRayMinus w)
+    rw [opModularDeriv_lightconeRayPlus, opModularDeriv_lightconeRayMinus]
+    ext <;>
+    (simp [opModularDeriv, opCartanDiag, opLightconeRayPlus, opLightconeRayMinus,
+           opCommutator, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · change opModularDeriv ρ_plus ρ_minus (opLightconeRayMinus w * opLightconeRayPlus v) =
+      opModularDeriv ρ_plus ρ_minus (opLightconeRayMinus w) * opLightconeRayPlus v +
+        opLightconeRayMinus w * opModularDeriv ρ_plus ρ_minus (opLightconeRayPlus v)
+    rw [opModularDeriv_lightconeRayPlus, opModularDeriv_lightconeRayMinus]
+    ext <;>
+    (simp [opModularDeriv, opCartanDiag, opLightconeRayPlus, opLightconeRayMinus,
+           opCommutator, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · simp [opModularDeriv, opCartanDiag, opCommutator, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross]
+    noncomm_ring
+  · simp [opModularDeriv, opCartanDiag, opCommutator, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross]
+    noncomm_ring
+
+/-- **53. Explicit BKM Modular Metric, KMS Leibniz Conservation, & Symplectic Duality (Archetype XXXIX)**:
+    Over ANY noncommutative operator ring $A$, for all $\rho_+, \rho_- \in A$, $v, w \in A^3$, and $X, Y \in \mathrm{OpZornMatrix}\;A$:
+    1. Explicit BKM Modular Metric Coordinates:
+       $$G_{\mathrm{BKM}}(\rho; v, w) =
+         \Bigl\langle -\bigl(\nabla_{\rho_+, \rho_-}(v) \cdot w\bigr),\;\; 0,\;\; 0,\;\;
+                      -\bigl(w \cdot \nabla_{\rho_+, \rho_-}(v)\bigr) \Bigr\rangle.$$
+    2. KMS Integration-by-Parts / Leibniz Conservation for the Para-Kähler Metric $g(v, w)$:
+       $$G_{\mathrm{BKM}}(\rho; v, w) + G_{\mathrm{BKM}}^{\mathrm{dual}}(\rho; v, w) =
+         \delta_{\rho_+, \rho_-}(g(v, w)) =
+         \Bigl\langle -\bigl(\rho_+ (v \cdot w) - (v \cdot w) \rho_+\bigr),\;\; 0,\;\; 0,\;\;
+                      -\bigl(\rho_- (w \cdot v) - (w \cdot v) \rho_-\bigr) \Bigr\rangle.$$
+    3. KMS Leibniz Conservation for the Para-Kähler Symplectic 2-Form $\omega(v, w)$:
+       $$[\delta_{\rho}(L_+(v)), L_-(w)] + [L_+(v), \delta_{\rho}(L_-(w))] =
+         \delta_{\rho_+, \rho_-}(\omega(v, w)) =
+         \Bigl\langle -\bigl(\rho_+ (v \cdot w) - (v \cdot w) \rho_+\bigr),\;\; 0,\;\; 0,\;\;
+                      +\bigl(\rho_- (w \cdot v) - (w \cdot v) \rho_-\bigr) \Bigr\rangle.$$
+    4. Universal KMS Trace Adjoint Duality:
+       $$\mathrm{opZornTrace}\bigl(\delta_\rho(X) * Y + X * \delta_\rho(Y)\bigr) =
+         \bigl(\rho_+ (X * Y)_a - (X * Y)_a \rho_+\bigr) + \bigl(\rho_- (X * Y)_b - (X * Y)_b \rho_-\bigr).$$ -/
+theorem opBKMMetric_coords_and_kms_leibniz_conservation
+    (ρ_plus ρ_minus : A) (v w : OpVec3 A) (X Y : OpZornMatrix A) :
+    let dv := OpVec3.bimoduleDiff ρ_plus ρ_minus v
+    let g := opParaKahlerMetric v w
+    let ω := opParaKahlerSymplectic v w
+    opBKMMetric ρ_plus ρ_minus v w =
+      ⟨-OpVec3.dot dv w, 0, 0, -OpVec3.dot w dv⟩ ∧
+    opBKMMetric ρ_plus ρ_minus v w + opBKMMetricDual ρ_plus ρ_minus v w =
+      opModularDeriv ρ_plus ρ_minus g ∧
+    opModularDeriv ρ_plus ρ_minus g =
+      ⟨-(ρ_plus * OpVec3.dot v w - OpVec3.dot v w * ρ_plus),
+       0,
+       0,
+       -(ρ_minus * OpVec3.dot w v - OpVec3.dot w v * ρ_minus)⟩ ∧
+    opCommutator (opModularDeriv ρ_plus ρ_minus (opLightconeRayPlus v)) (opLightconeRayMinus w) +
+      opCommutator (opLightconeRayPlus v) (opModularDeriv ρ_plus ρ_minus (opLightconeRayMinus w)) =
+      opModularDeriv ρ_plus ρ_minus ω ∧
+    opModularDeriv ρ_plus ρ_minus ω =
+      ⟨-(ρ_plus * OpVec3.dot v w - OpVec3.dot v w * ρ_plus),
+       0,
+       0,
+       ρ_minus * OpVec3.dot w v - OpVec3.dot w v * ρ_minus⟩ ∧
+    opZornTrace (opModularDeriv ρ_plus ρ_minus X * Y + X * opModularDeriv ρ_plus ρ_minus Y) =
+      (ρ_plus * (X * Y).a - (X * Y).a * ρ_plus) +
+        (ρ_minus * (X * Y).b - (X * Y).b * ρ_minus) := by
+  intro dv g ω
+  have hg : g = ⟨-OpVec3.dot v w, 0, 0, -OpVec3.dot w v⟩ :=
+    (opParaKahler_triplet_compatibility_and_anomaly_residue v w).1
+  have hω : ω = ⟨-OpVec3.dot v w, 0, 0, OpVec3.dot w v⟩ :=
+    (opParaKahler_triplet_compatibility_and_anomaly_residue v w).2.1
+  have hBKM1 : opBKMMetric ρ_plus ρ_minus v w = ⟨-OpVec3.dot dv w, 0, 0, -OpVec3.dot w dv⟩ := by
+    unfold opBKMMetric
+    rw [opModularDeriv_lightconeRayPlus]
+    exact (opParaKahler_triplet_compatibility_and_anomaly_residue dv w).1
+  have hBKM2 : opBKMMetricDual ρ_plus ρ_minus v w =
+      ⟨-OpVec3.dot v (OpVec3.bimoduleDiff ρ_minus ρ_plus w), 0, 0,
+       -OpVec3.dot (OpVec3.bimoduleDiff ρ_minus ρ_plus w) v⟩ := by
+    unfold opBKMMetricDual
+    rw [opModularDeriv_lightconeRayMinus]
+    exact (opParaKahler_triplet_compatibility_and_anomaly_residue v (OpVec3.bimoduleDiff ρ_minus ρ_plus w)).1
+  have hDg : opModularDeriv ρ_plus ρ_minus g =
+      ⟨-(ρ_plus * OpVec3.dot v w - OpVec3.dot v w * ρ_plus),
+       0,
+       0,
+       -(ρ_minus * OpVec3.dot w v - OpVec3.dot w v * ρ_minus)⟩ := by
+    rw [hg]
+    ext <;>
+    (simp [opModularDeriv, opCartanDiag, opCommutator, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  have hDω : opModularDeriv ρ_plus ρ_minus ω =
+      ⟨-(ρ_plus * OpVec3.dot v w - OpVec3.dot v w * ρ_plus),
+       0,
+       0,
+       ρ_minus * OpVec3.dot w v - OpVec3.dot w v * ρ_minus⟩ := by
+    rw [hω]
+    ext <;>
+    (simp [opModularDeriv, opCartanDiag, opCommutator, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  refine ⟨hBKM1, ?_, hDg, ?_, hDω, ?_⟩
+  · rw [hBKM1, hBKM2, hDg]
+    ext <;>
+    (simp [dv, OpVec3.dot];
+     try noncomm_ring)
+  · rw [opModularDeriv_lightconeRayPlus, opModularDeriv_lightconeRayMinus, hDω]
+    have hω1 := (opParaKahler_triplet_compatibility_and_anomaly_residue dv w).2.1
+    have hω2 := (opParaKahler_triplet_compatibility_and_anomaly_residue v (OpVec3.bimoduleDiff ρ_minus ρ_plus w)).2.1
+    unfold opParaKahlerSymplectic at hω1 hω2
+    rw [hω1, hω2]
+    ext <;>
+    (simp [dv, OpVec3.dot];
+     try noncomm_ring)
+  · simp only [opZornTrace, OpZornMatrix.add_a, OpZornMatrix.add_b]
+    have hLeib := opModularDeriv_nucleus_and_exact_leibniz_rule 0 X Y v w ρ_plus ρ_minus
+    have ha : (opModularDeriv ρ_plus ρ_minus X * Y).a + (X * opModularDeriv ρ_plus ρ_minus Y).a =
+              (opModularDeriv ρ_plus ρ_minus (X * Y)).a := hLeib.2.2.2.2.2.2.1.symm
+    have hb : (opModularDeriv ρ_plus ρ_minus X * Y).b + (X * opModularDeriv ρ_plus ρ_minus Y).b =
+              (opModularDeriv ρ_plus ρ_minus (X * Y)).b := hLeib.2.2.2.2.2.2.2.symm
+    rw [ha, hb]
+    simp [opModularDeriv, opCartanDiag, opCommutator, OpVec3.dot]
+
+/-- **54. Homogeneous Flag State Orbit, Exact Idempotence, & Symmetry Group Law (Archetype XL.1)**:
+    Over ANY noncommutative operator ring $A$, for all $v, v_1, v_2 \in A^3$:
+    1. Vanishing Exponential Orbit Associator:
+       $[U_+(v), e_{11}, U_+(-v)] = 0$.
+    2. Explicit Homogeneous Coordinates:
+       $\Pi_{\mathrm{hom}}(v) = \langle 1, -v, 0, 0 \rangle$.
+    3. Exact Projective Idempotence:
+       $\Pi_{\mathrm{hom}}(v) * \Pi_{\mathrm{hom}}(v) = \Pi_{\mathrm{hom}}(v)$.
+    4. Exact Conjugation Law with Double Torsion & Scalar Defect, and Transitive Flag Projection:
+       $$(U_+(v_1) * \Pi_{\mathrm{hom}}(v_2)) * U_+(-v_1) =
+         \Pi_{\mathrm{hom}}(v_1 + v_2) -
+         \Bigl\langle 0,\; 0,\; \tau_{12} + \tau_{12},\; \tau_{12} \cdot v_1 \Bigr\rangle,$$
+       $$e_{11} * \bigl((U_+(v_1) * \Pi_{\mathrm{hom}}(v_2)) * U_+(-v_1)\bigr) =
+         \Pi_{\mathrm{hom}}(v_1 + v_2),$$
+       where $\tau_{12} = v_1 \times_{\mathrm{skew}} v_2$. -/
+theorem homogeneousFlagState_orbit_idempotence_and_group_action
+    (v v₁ v₂ : OpVec3 A) :
+    let τ₁₂ := OpVec3.skewCross v₁ v₂
+    opAssociator (opUnipotentUpper v) opPeircePlus (opUnipotentUpper (-v)) = 0 ∧
+    homogeneousFlagState v = ⟨1, -v, 0, 0⟩ ∧
+    homogeneousFlagState v * homogeneousFlagState v = homogeneousFlagState v ∧
+    (opUnipotentUpper v₁ * homogeneousFlagState v₂) * opUnipotentUpper (-v₁) =
+      homogeneousFlagState (v₁ + v₂) - ⟨0, 0, τ₁₂ + τ₁₂, OpVec3.dot τ₁₂ v₁⟩ ∧
+    opPeircePlus * ((opUnipotentUpper v₁ * homogeneousFlagState v₂) * opUnipotentUpper (-v₁)) =
+      homogeneousFlagState (v₁ + v₂) := by
+  intro τ₁₂
+  refine ⟨?_, homogeneousFlagState_coords v, ?_, ?_, ?_⟩
+  · ext <;>
+    (simp [opUnipotentUpper, opPeircePlus, opAssociator,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try abel)
+  · rw [homogeneousFlagState_coords]
+    ext <;>
+    simp [OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross]
+  · rw [homogeneousFlagState_coords, homogeneousFlagState_coords]
+    ext <;>
+    (simp [τ₁₂, opUnipotentUpper, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring
+     try abel)
+  · rw [homogeneousFlagState_coords, homogeneousFlagState_coords]
+    ext <;>
+    (simp [opPeircePlus, opUnipotentUpper, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try abel)
+
+/-- **55. Killing Lie Algebra Representation of Nucleus Derivations on $\mathrm{OpZornMatrix}\;A$ (Archetype XL.2)**:
+    Over ANY noncommutative operator ring $A$, for any two modular generators
+    $D_1 = D(\rho_+, \rho_-)$ and $D_2 = D(\sigma_+, \sigma_-)$ and ANY $X \in \mathrm{OpZornMatrix}\;A$:
+    1. Closure of Nucleus Commutator:
+       $[D_1, D_2] = D(\rho_+ \sigma_+ - \sigma_+ \rho_+,\; \rho_- \sigma_- - \sigma_- \rho_-)$.
+    2. Exact Killing Lie Bracket Homomorphism on 8D Non-Associative $\mathrm{OpZornMatrix}\;A$:
+       $\delta_{D_1}(\delta_{D_2}(X)) - \delta_{D_2}(\delta_{D_1}(X)) = \delta_{[D_1, D_2]}(X)$. -/
+theorem killing_nucleus_derivation_lie_homomorphism
+    (ρ_plus ρ_minus σ_plus σ_minus : A) (X : OpZornMatrix A) :
+    let D₁ := opCartanDiag ρ_plus ρ_minus
+    let D₂ := opCartanDiag σ_plus σ_minus
+    opCommutator D₁ D₂ =
+      opCartanDiag (ρ_plus * σ_plus - σ_plus * ρ_plus)
+                   (ρ_minus * σ_minus - σ_minus * ρ_minus) ∧
+    opCommutator D₁ (opCommutator D₂ X) - opCommutator D₂ (opCommutator D₁ X) =
+      opCommutator (opCommutator D₁ D₂) X := by
+  intro D₁ D₂
+  refine ⟨?_, ?_⟩ <;>
+  (ext <;>
+   (simp [D₁, D₂, opCartanDiag, opCommutator, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+    try noncomm_ring))
+
+/-- **56. Noether Supercharge Anticommutator, Emergent Modular Leibniz Flow, & Conservation (Archetype XLI)**:
+    Over ANY noncommutative operator ring $A$, for all $v, w \in A^3$ and $u, q \in A$:
+    1. Nilpotence of Supercharges & Emergence of Modular Hamiltonian:
+       $Q_+(v)^2 = 0$, $Q_-(w)^2 = 0$, and
+       $H_{\mathrm{mod}}(v, w) = \{Q_+(v), Q_-(w)\} = \langle -(v \cdot w), 0, 0, -(w \cdot v) \rangle$.
+    2. Exact Noether-Leibniz Derivation Law of the Emergent Modular Hamiltonian on Opposite-Chirality Supercharges:
+       $[H_{\mathrm{mod}}(v, w), Q_+(v) * Q_-(w)] = [H_{\mathrm{mod}}(v, w), Q_+(v)] * Q_-(w) + Q_+(v) * [H_{\mathrm{mod}}(v, w), Q_-(w)]$.
+    3. Noether Anomaly = Self-Associator of $J(v, w) = Q_+(v) + Q_-(w)$:
+       $[H_{\mathrm{mod}}(v, w), J(v, w)] = [J(v, w), J(v, w), J(v, w)]$ and
+       $[H_{\mathrm{mod}}(v, w), Q_+(v)] = Q_+(v \cdot_R (w \cdot v) - (v \cdot w) \cdot_L v)$.
+    4. Exact Conservation of Noether Supercharges on Single-Channel Operator Slices:
+       For $v_1 = \langle u, 0, 0 \rangle$ and $w_1 = \langle q, 0, 0 \rangle$,
+       $[H_{\mathrm{mod}}(v_1, w_1), Q_+(v_1)] = 0$ and
+       $[H_{\mathrm{mod}}(v_1, w_1), Q_-(w_1)] = 0$. -/
+theorem noetherSupercharges_emergent_modular_hamiltonian_and_conservation
+    (v w : OpVec3 A) (u q : A) :
+    let Q_p := noetherSuperchargePlus v
+    let Q_m := noetherSuperchargeMinus w
+    let J := opKasparovZornJ v w
+    let H_mod := emergentModularHamiltonian v w
+    let v₁ := opBasisE1 u
+    let w₁ := opBasisE1 q
+    let H₁ := emergentModularHamiltonian v₁ w₁
+    Q_p * Q_p = 0 ∧
+    Q_m * Q_m = 0 ∧
+    H_mod = opCartanDiag (-OpVec3.dot v w) (-OpVec3.dot w v) ∧
+    opCommutator H_mod (Q_p * Q_m) =
+      opCommutator H_mod Q_p * Q_m + Q_p * opCommutator H_mod Q_m ∧
+    opCommutator H_mod J = opAssociator J J J ∧
+    opCommutator H_mod Q_p =
+      noetherSuperchargePlus
+        (OpVec3.rightScale v (OpVec3.dot w v) - OpVec3.leftScale (OpVec3.dot v w) v) ∧
+    opCommutator H₁ (noetherSuperchargePlus v₁) = 0 ∧
+    opCommutator H₁ (noetherSuperchargeMinus w₁) = 0 := by
+  intro Q_p Q_m J H_mod v₁ w₁ H₁
+  have hH : H_mod = opCartanDiag (-OpVec3.dot v w) (-OpVec3.dot w v) := by
+    ext <;>
+    (simp [H_mod, emergentModularHamiltonian, opCartanDiag, opAnticommutator,
+           opLightconeRayPlus, opLightconeRayMinus, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  refine ⟨?_, ?_, hH, ?_, ?_, ?_, ?_, ?_⟩
+  · ext <;>
+    (simp [Q_p, opLightconeRayPlus, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · ext <;>
+    (simp [Q_m, opLightconeRayMinus, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · rw [hH]
+    exact (opModularDeriv_nucleus_and_exact_leibniz_rule H_mod Q_p Q_m v w (-OpVec3.dot v w) (-OpVec3.dot w v)).2.2.2.2.1
+  · rw [hH]
+    ext <;>
+    (simp [J, opKasparovZornJ, opCartanDiag, opCommutator, opAssociator,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · rw [hH]
+    ext <;>
+    (simp [Q_p, opLightconeRayPlus, opCartanDiag, opCommutator,
+           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · ext <;>
+    (simp [H₁, v₁, w₁, emergentModularHamiltonian, opBasisE1, opAnticommutator, opCommutator,
+           opLightconeRayPlus, opLightconeRayMinus, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+  · ext <;>
+    (simp [H₁, v₁, w₁, emergentModularHamiltonian, opBasisE1, opAnticommutator, opCommutator,
+           opLightconeRayPlus, opLightconeRayMinus, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+     try noncomm_ring)
+
+/-!
+## 17. Archetypes XLII & XLIII: The 5-Graded Kantor-Koecher-Tits Contact Structure & Associative Heisenberg Nilradicals in $\mathrm{Zorn}(A)$
+-/
+
+/-- **Grade $-2$ ($\mathcal{G}_{-2}$)**: Longitudinal dual contact ray $E_{-2}(\eta) = \langle 0, \langle \eta, 0, 0 \rangle, 0, 0 \rangle$. -/
+def opGradeMinus2 (η : A) : OpZornMatrix A := ⟨0, ⟨η, 0, 0⟩, 0, 0⟩
+
+/-- **Grade $-1$ ($\mathcal{G}_{-1}$)**: Transverse backward plane $E_{-1}(y, z) = \langle 0, 0, \langle 0, y, z \rangle, 0 \rangle$. -/
+def opGradeMinus1 (y z : A) : OpZornMatrix A := ⟨0, 0, ⟨0, y, z⟩, 0⟩
+
+/-- **Grade $0$ ($\mathcal{G}_0$)**: Associative nucleus Cartan/modular diagonal $D(\rho_+, \rho_-) = \langle \rho_+, 0, 0, \rho_- \rangle$. -/
+abbrev opGradeZero (ρ_plus ρ_minus : A) : OpZornMatrix A := opCartanDiag ρ_plus ρ_minus
+
+/-- **Grade $+1$ ($\mathcal{G}_{+1}$)**: Transverse forward plane $E_{+1}(y, z) = \langle 0, \langle 0, y, z \rangle, 0, 0 \rangle$. -/
+def opGradePlus1 (y z : A) : OpZornMatrix A := ⟨0, ⟨0, y, z⟩, 0, 0⟩
+
+/-- **Grade $+2$ ($\mathcal{G}_{+2}$)**: Longitudinal primal contact ray $E_{+2}(\xi) = \langle 0, 0, \langle \xi, 0, 0 \rangle, 0 \rangle$. -/
+def opGradePlus2 (ξ : A) : OpZornMatrix A := ⟨0, 0, ⟨ξ, 0, 0⟩, 0⟩
+
+/-- Skew-symmetrized transverse symplectic contact form $\omega_\perp(y_1, z_1; y_2, z_2) \in A$. -/
+def opContactSymplecticForm (y₁ z₁ y₂ z₂ : A) : A :=
+  (y₁ * z₂ - z₁ * y₂) - (y₂ * z₁ - z₂ * y₁)
+
+/-- General element $N_+(y, z, \xi) = E_{+1}(y, z) + E_{+2}(\xi)$ of the positive Heisenberg nilradical $\mathcal{N}_+ = \mathcal{G}_{+1} \oplus \mathcal{G}_{+2}$. -/
+def opHeisenbergNilPlus (y z ξ : A) : OpZornMatrix A :=
+  ⟨0, ⟨0, y, z⟩, ⟨ξ, 0, 0⟩, 0⟩
+
+/-- Exponential element $H_+(y, z, \xi) = 1 + N_+(y, z, \xi)$ in the positive Heisenberg group $\exp(\mathcal{N}_+)$. -/
+def opHeisenbergGroupPlus (y z ξ : A) : OpZornMatrix A :=
+  ⟨1, ⟨0, y, z⟩, ⟨ξ, 0, 0⟩, 1⟩
+
+/-- Helper lemma: product of two elements in the 5-graded positive Heisenberg nilradical $\mathcal{N}_+ = \mathcal{G}_{+1} \oplus \mathcal{G}_{+2}$. -/
+theorem opHeisenbergNilPlus_mul (y₁ z₁ ξ₁ y₂ z₂ ξ₂ : A) :
+    opHeisenbergNilPlus y₁ z₁ ξ₁ * opHeisenbergNilPlus y₂ z₂ ξ₂ =
+      opGradePlus2 (opContactSymplecticForm y₁ z₁ y₂ z₂) := by
+  ext <;>
+  (simp [opHeisenbergNilPlus, opGradePlus2, opContactSymplecticForm,
+         OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+   try noncomm_ring)
+
+/-- Helper lemma: product of two elements in the 5-graded positive Heisenberg group $\exp(\mathcal{N}_+)$. -/
+theorem opHeisenbergGroupPlus_mul (y₁ z₁ ξ₁ y₂ z₂ ξ₂ : A) :
+    opHeisenbergGroupPlus y₁ z₁ ξ₁ * opHeisenbergGroupPlus y₂ z₂ ξ₂ =
+      opHeisenbergGroupPlus (y₁ + y₂) (z₁ + z₂)
+        (ξ₁ + ξ₂ + opContactSymplecticForm y₁ z₁ y₂ z₂) := by
+  ext <;>
+  (simp [opHeisenbergGroupPlus, opContactSymplecticForm,
+         OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+   try noncomm_ring
+   try abel)
+
+/-- **57. Exact 5-Graded Step-2 Multiplication & Nilpotent Termination at Grade $\pm 2$ (Archetype XLII.1)**:
+    Over ANY noncommutative operator ring $A$, for all $y, z, y_1, z_1, y_2, z_2, \xi, \xi_1, \xi_2, \eta, \eta_1, \eta_2 \in A$:
+    1. Grade $+1 \times$ Grade $+1 \to$ Grade $+2$:
+       $E_{+1}(y_1, z_1) * E_{+1}(y_2, z_2) = E_{+2}(\omega_\perp(y_1, z_1; y_2, z_2))$.
+    2. Grade $-1 \times$ Grade $-1 \to$ Grade $-2$:
+       $E_{-1}(y_1, z_1) * E_{-1}(y_2, z_2) = E_{-2}(-\omega_\perp(y_1, z_1; y_2, z_2))$.
+    3. Exact Positive Termination ($\mathcal{G}_{+1} * \mathcal{G}_{+2} = 0$, $\mathcal{G}_{+2} * \mathcal{G}_{+1} = 0$, $\mathcal{G}_{+2} * \mathcal{G}_{+2} = 0$):
+       $E_{+1}(y, z) * E_{+2}(\xi) = 0$, $E_{+2}(\xi) * E_{+1}(y, z) = 0$, and $E_{+2}(\xi_1) * E_{+2}(\xi_2) = 0$.
+    4. Exact Negative Termination ($\mathcal{G}_{-1} * \mathcal{G}_{-2} = 0$, $\mathcal{G}_{-2} * \mathcal{G}_{-1} = 0$, $\mathcal{G}_{-2} * \mathcal{G}_{-2} = 0$):
+       $E_{-1}(y, z) * E_{-2}(\eta) = 0$, $E_{-2}(\eta) * E_{-1}(y, z) = 0$, and $E_{-2}(\eta_1) * E_{-2}(\eta_2) = 0$. -/
+theorem fiveGraded_step_two_heisenberg_and_termination
+    (y z y₁ z₁ y₂ z₂ ξ ξ₁ ξ₂ η η₁ η₂ : A) :
+    opGradePlus1 y₁ z₁ * opGradePlus1 y₂ z₂ =
+      opGradePlus2 (opContactSymplecticForm y₁ z₁ y₂ z₂) ∧
+    opGradeMinus1 y₁ z₁ * opGradeMinus1 y₂ z₂ =
+      opGradeMinus2 (-opContactSymplecticForm y₁ z₁ y₂ z₂) ∧
+    opGradePlus1 y z * opGradePlus2 ξ = 0 ∧
+    opGradePlus2 ξ * opGradePlus1 y z = 0 ∧
+    opGradePlus2 ξ₁ * opGradePlus2 ξ₂ = 0 ∧
+    opGradeMinus1 y z * opGradeMinus2 η = 0 ∧
+    opGradeMinus2 η * opGradeMinus1 y z = 0 ∧
+    opGradeMinus2 η₁ * opGradeMinus2 η₂ = 0 := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+  (ext <;>
+   (simp [opGradePlus1, opGradePlus2, opGradeMinus1, opGradeMinus2, opContactSymplecticForm,
+          OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+    try noncomm_ring))
+
+/-- **58. Exact Associativity of the 5-Graded Nilradical $\mathcal{N}_+$ & Heisenberg Group Law (Archetype XLII.2)**:
+    Over ANY noncommutative operator ring $A$, for all $y_i, z_i, \xi_i \in A$:
+    1. 2-Step Nilradical Product:
+       $N_+(y_1, z_1, \xi_1) * N_+(y_2, z_2, \xi_2) = E_{+2}(\omega_\perp(y_1, z_1; y_2, z_2))$.
+    2. Vanishing Triple Products & Vanishing 3-Associator on $\mathcal{N}_+$:
+       $(N_1 * N_2) * N_3 = 0$, $N_1 * (N_2 * N_3) = 0$, and $\mathrm{opAssociator}\;N_1\;N_2\;N_3 = 0$.
+    3. Exact Associative Heisenberg Group Law on $\exp(\mathcal{N}_+)$:
+       $H_+(y_1, z_1, \xi_1) * H_+(y_2, z_2, \xi_2) =
+        H_+(y_1 + y_2,\; z_1 + z_2,\; \xi_1 + \xi_2 + \omega_\perp(y_1, z_1; y_2, z_2))$.
+    4. Vanishing Group 3-Associator & Exact Two-Sided Group Inversion:
+       $\mathrm{opAssociator}\;H_1\;H_2\;H_3 = 0$ and
+       $H_+(y_1, z_1, \xi_1) * H_+(-y_1, -z_1, -\xi_1) = 1$. -/
+theorem heisenbergNilPlus_associativity_and_group_law
+    (y₁ z₁ ξ₁ y₂ z₂ ξ₂ y₃ z₃ ξ₃ : A) :
+    let N₁ := opHeisenbergNilPlus y₁ z₁ ξ₁
+    let N₂ := opHeisenbergNilPlus y₂ z₂ ξ₂
+    let N₃ := opHeisenbergNilPlus y₃ z₃ ξ₃
+    let H₁ := opHeisenbergGroupPlus y₁ z₁ ξ₁
+    let H₂ := opHeisenbergGroupPlus y₂ z₂ ξ₂
+    let H₃ := opHeisenbergGroupPlus y₃ z₃ ξ₃
+    N₁ * N₂ = opGradePlus2 (opContactSymplecticForm y₁ z₁ y₂ z₂) ∧
+    (N₁ * N₂) * N₃ = 0 ∧
+    N₁ * (N₂ * N₃) = 0 ∧
+    opAssociator N₁ N₂ N₃ = 0 ∧
+    H₁ * H₂ =
+      opHeisenbergGroupPlus (y₁ + y₂) (z₁ + z₂)
+        (ξ₁ + ξ₂ + opContactSymplecticForm y₁ z₁ y₂ z₂) ∧
+    opAssociator H₁ H₂ H₃ = 0 ∧
+    H₁ * opHeisenbergGroupPlus (-y₁) (-z₁) (-ξ₁) = 1 := by
+  intro N₁ N₂ N₃ H₁ H₂ H₃
+  have hL : (N₁ * N₂) * N₃ = 0 := by
+    change (opHeisenbergNilPlus y₁ z₁ ξ₁ * opHeisenbergNilPlus y₂ z₂ ξ₂) * N₃ = 0
+    rw [opHeisenbergNilPlus_mul]
+    ext <;>
+    simp [N₃, opGradePlus2, opHeisenbergNilPlus, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross]
+  have hR : N₁ * (N₂ * N₃) = 0 := by
+    change N₁ * (opHeisenbergNilPlus y₂ z₂ ξ₂ * opHeisenbergNilPlus y₃ z₃ ξ₃) = 0
+    rw [opHeisenbergNilPlus_mul]
+    ext <;>
+    simp [N₁, opGradePlus2, opHeisenbergNilPlus, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross]
+  have hAssocN : opAssociator N₁ N₂ N₃ = 0 := by
+    unfold opAssociator
+    rw [hL, hR]
+    ext <;> simp
+  refine ⟨opHeisenbergNilPlus_mul y₁ z₁ ξ₁ y₂ z₂ ξ₂,
+          hL, hR, hAssocN,
+          opHeisenbergGroupPlus_mul y₁ z₁ ξ₁ y₂ z₂ ξ₂,
+          ?_, ?_⟩
+  · change (opHeisenbergGroupPlus y₁ z₁ ξ₁ * opHeisenbergGroupPlus y₂ z₂ ξ₂) * opHeisenbergGroupPlus y₃ z₃ ξ₃ -
+      opHeisenbergGroupPlus y₁ z₁ ξ₁ * (opHeisenbergGroupPlus y₂ z₂ ξ₂ * opHeisenbergGroupPlus y₃ z₃ ξ₃) = 0
+    rw [opHeisenbergGroupPlus_mul, opHeisenbergGroupPlus_mul,
+        opHeisenbergGroupPlus_mul, opHeisenbergGroupPlus_mul]
+    ext <;>
+    (simp [opHeisenbergGroupPlus, opContactSymplecticForm];
+     try noncomm_ring
+     try abel)
+  · change opHeisenbergGroupPlus y₁ z₁ ξ₁ * opHeisenbergGroupPlus (-y₁) (-z₁) (-ξ₁) = 1
+    rw [opHeisenbergGroupPlus_mul]
+    ext <;>
+    (simp [opHeisenbergGroupPlus, opContactSymplecticForm];
+     try noncomm_ring)
+
+/-- **59. Opposite-Grade Contact Couplings into $\mathcal{G}_0$ & Adjoint Lowering $\mathcal{G}_{+1} \times \mathcal{G}_{-2} \to \mathcal{G}_{-1}$ (Archetype XLIII)**:
+    Over ANY noncommutative operator ring $A$, for all $y, z, y_1, z_1, y_2, z_2, \xi, \eta \in A$:
+    1. Grade $-2 \times$ Grade $+2 \to$ Grade $0$:
+       $E_{-2}(\eta) * E_{+2}(\xi) = \langle -\eta \xi, 0, 0, 0 \rangle$ and
+       $E_{+2}(\xi) * E_{-2}(\eta) = \langle 0, 0, 0, -\xi \eta \rangle$.
+    2. Grade $+1 \times$ Grade $-1$ Symmetric Anticommutator $\to$ Grade $0$:
+       $E_{+1}(y_1, z_1) * E_{-1}(y_2, z_2) + E_{-1}(y_2, z_2) * E_{+1}(y_1, z_1) =
+        \mathrm{opGradeZero}\;(-(y_1 y_2 + z_1 z_2))\;(-(y_2 y_1 + z_2 z_1))$.
+    3. Grade $+1 \times$ Grade $-2 \to$ Grade $-1$ (Contact Lowering Action):
+       $E_{+1}(y, z) * E_{-2}(\eta) = E_{-1}(z \eta + \eta z,\; -(y \eta + \eta y))$. -/
+theorem fiveGraded_opposite_grade_couplings
+    (y z y₁ z₁ y₂ z₂ ξ η : A) :
+    opGradeMinus2 η * opGradePlus2 ξ = opGradeZero (-η * ξ) 0 ∧
+    opGradePlus2 ξ * opGradeMinus2 η = opGradeZero 0 (-ξ * η) ∧
+    opGradePlus1 y₁ z₁ * opGradeMinus1 y₂ z₂ + opGradeMinus1 y₂ z₂ * opGradePlus1 y₁ z₁ =
+      opGradeZero (-(y₁ * y₂ + z₁ * z₂)) (-(y₂ * y₁ + z₂ * z₁)) ∧
+    opGradePlus1 y z * opGradeMinus2 η =
+      opGradeMinus1 (z * η + η * z) (-(y * η + η * y)) := by
+  refine ⟨?_, ?_, ?_, ?_⟩ <;>
+  (ext <;>
+   (simp [opGradeMinus2, opGradePlus2, opGradeMinus1, opGradePlus1, opGradeZero, opCartanDiag,
+          OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+    try noncomm_ring))
+
 end PorterNoncommutativeRiccatiAndLoxodromes
 
 end SplitQuaternion

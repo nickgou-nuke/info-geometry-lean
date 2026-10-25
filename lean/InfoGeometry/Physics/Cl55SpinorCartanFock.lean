@@ -1831,6 +1831,179 @@ theorem sixElectricCharge_spectral_decomposition :
       dsimp [sixElectricCharge]; simp
     _ = _ := by noncomm_ring
 
+/-! ## 14. Maximal Cartan Subalgebra `𝔥₅`, Proton/Neutron/Lepton Projectors, `B - L` Charge, and Weak Decay Geodesic -/
+
+/-- **Universal Orthogonal Cartan Casimir Identity (`so55_five_cartan_casimir_identity`)**:
+    In ANY associative ring `A` (with zero hypotheses!), the weighted sum of squares of the
+    3 Color Cartan combinations `(Z₀ - Z₁, Z₀ + Z₁ - 2 • Z₂, Z₀ + Z₁ + Z₂)` and the 2 Weak/Pairing
+    Cartan combinations `(Z_p - Z_n, Z_p + Z_n)` eliminates all noncommutative cross-terms:
+    - `3 • (Z₀ - Z₁)² + (Z₀ + Z₁ - 2 • Z₂)² + 2 • (Z₀ + Z₁ + Z₂)² = 6 • (Z₀² + Z₁² + Z₂²)`,
+    - `(Z_p - Z_n)² + (Z_p + Z_n)² = 2 • (Z_p² + Z_n²)`! -/
+theorem so55_five_cartan_casimir_identity {A : Type*} [Ring A] (Z₀ Z₁ Z₂ Z_p Z_n : A) :
+    (3 : ℕ) • ((Z₀ - Z₁) * (Z₀ - Z₁)) +
+      (Z₀ + Z₁ - (2 : ℕ) • Z₂) * (Z₀ + Z₁ - (2 : ℕ) • Z₂) +
+      (2 : ℕ) • ((Z₀ + Z₁ + Z₂) * (Z₀ + Z₁ + Z₂)) =
+      (6 : ℕ) • (Z₀ * Z₀ + Z₁ * Z₁ + Z₂ * Z₂) ∧
+    (Z_p - Z_n) * (Z_p - Z_n) + (Z_p + Z_n) * (Z_p + Z_n) =
+      (2 : ℕ) • (Z_p * Z_p + Z_n * Z_n) := by
+  refine ⟨?_, ?_⟩ <;> noncomm_ring
+
+/-- **Proton Baryon Projector (`Π_{proton} = Π_{baryon} * Π_+(3,4)`)**:
+    3-quark color singlet `N₀ N₁ N₂` with occupied proton mode `N₃` and neutron hole `1 - N₄`. -/
+def protonProjector : MatStage 5 :=
+  colorBaryonSingletProj * isoProjPlus 3 4
+
+/-- Alias `protonBaryonProj` for `protonProjector`. -/
+abbrev protonBaryonProj : MatStage 5 := protonProjector
+
+/-- **Neutron Baryon Projector (`Π_{neutron} = Π_{baryon} * Π_-(3,4)`)**:
+    3-quark color singlet `N₀ N₁ N₂` with proton hole `1 - N₃` and occupied neutron mode `N₄`. -/
+def neutronProjector : MatStage 5 :=
+  colorBaryonSingletProj * isoProjMinus 3 4
+
+/-- Alias `neutronBaryonProj` for `neutronProjector`. -/
+abbrev neutronBaryonProj : MatStage 5 := neutronProjector
+
+/-- **Neutrino Lepton Projector (`Π_{neutrino} = Π_{vac} * Π_+(3,4)`)**:
+    3 color holes `(1 - N₀)(1 - N₁)(1 - N₂)` with isospin-up projector `Π_+(3,4)`. -/
+def neutrinoProjector : MatStage 5 :=
+  colorVacuumSingletProj * isoProjPlus 3 4
+
+/-- **Electron Lepton Projector (`Π_{electron} = Π_{vac} * Π_-(3,4)`)**:
+    3 color holes `(1 - N₀)(1 - N₁)(1 - N₂)` with isospin-down projector `Π_-(3,4)`. -/
+def electronProjector : MatStage 5 :=
+  colorVacuumSingletProj * isoProjMinus 3 4
+
+/-- **Active Nucleon Doublet Face (`nucleonDoubletFace = Π_{proton} + Π_{neutron}`)**. -/
+def nucleonDoubletFace : MatStage 5 :=
+  protonProjector + neutronProjector
+
+/-- **Moving Nucleon Decay State (`movingNucleonDecayState c s`)**:
+    Positive Grassmannian / Amplituhedron trajectory connecting the pure Neutron vertex `(0, 1)`
+    to the pure Proton vertex `(1, 0)` along the weak transition `Π_{baryon} * (τ_+ + τ_-)`. -/
+def movingNucleonDecayState (c s : ℝ) : MatStage 5 :=
+  (c * c) • protonProjector +
+  (s * s) • neutronProjector -
+  (c * s) • (colorBaryonSingletProj * (isospinPlus 3 4 + isospinMinus 3 4))
+
+/-- **True `B - L` Gell-Mann–Nishijima Electric Charge Operator (`sixChargeBL = 6 Q_{EM}`)**:
+    `sixChargeBL = (N_{color} - 3 • Π_{vac}) + 3 • (Π_+(3,4) - Π_-(3,4))`
+    (assigning `3(B - L) = N_{color} - 3 • Π_{vac}`). -/
+def sixChargeBL : MatStage 5 :=
+  (colorSingletNumber - (3 : ℤ) • colorVacuumSingletProj) +
+  (3 : ℤ) • (isoProjPlus 3 4 - isoProjMinus 3 4)
+
+/-- **1. Maximal Cartan Subalgebra `𝔥₅` Inversion Theorem (`maximal_cartan_five_quantum_number_inversion`)**:
+    The 5 physical commuting quantum-number operators `(T₃^{color}, 3Y^{color}, N_{color}, τ₃, 2K₀)`
+    reconstruct all 5 individual mode occupation operators `(6 • N₀, 6 • N₁, 3 • N₂, 2 • N₃, 2 • N₄)`! -/
+theorem maximal_cartan_five_quantum_number_inversion :
+    (2 : ℕ) • colorSingletNumber + colorGluon3Y +
+      (3 : ℕ) • colorGluonT3 = (6 : ℕ) • modeOccupied 0 ∧
+    (2 : ℕ) • colorSingletNumber + colorGluon3Y -
+      (3 : ℕ) • colorGluonT3 = (6 : ℕ) • modeOccupied 1 ∧
+    colorSingletNumber - colorGluon3Y = (3 : ℕ) • modeOccupied 2 ∧
+    (pairProjPlus 3 4 - pairProjMinus 3 4) + 1 +
+      (isoProjPlus 3 4 - isoProjMinus 3 4) = (2 : ℕ) • modeOccupied 3 ∧
+    (pairProjPlus 3 4 - pairProjMinus 3 4) + 1 -
+      (isoProjPlus 3 4 - isoProjMinus 3 4) = (2 : ℕ) • modeOccupied 4 := by
+  have hcol := color_occupation_singlet_octet_decomposition
+  refine ⟨hcol.1, hcol.2.1, hcol.2.2, ?_, ?_⟩ <;>
+  · dsimp [pairProjPlus, pairProjMinus, isoProjPlus, isoProjMinus]
+    rw [modeVacant_eq_one_sub_modeOccupied 3, modeVacant_eq_one_sub_modeOccupied 4]
+    noncomm_ring
+
+/-- **2. Universal `B - L` Gell-Mann–Nishijima Spectral Charge Decomposition (`sixChargeBL_standard_model_spectral_decomposition`)**:
+    With zero hypotheses, `sixChargeBL = 6 Q_{EM}` expands into all Standard Model electric charges:
+    - `+4` (`+2/3`) on Up Quark `Π_{quark} * Π_+(3,4)`,
+    - `-2` (`-1/3`) on Down Quark `Π_{quark} * Π_-(3,4)`,
+    - `+2` (`+1/3`) on Isoscalar Diquark `Π_{diquark} * Δ_{pair}(3,4)`,
+    - `+6` (`+1`)   on Proton `protonProjector`,
+    - ` 0` (` 0`)   on Neutron `neutronProjector` and Neutrino `neutrinoProjector`,
+    - `-6` (`-1`)   on Electron `electronProjector`! -/
+theorem sixChargeBL_standard_model_spectral_decomposition :
+    sixChargeBL =
+      (4 : ℤ) • (colorQuarkTripletProj * isoProjPlus 3 4) +
+      (-2 : ℤ) • (colorQuarkTripletProj * isoProjMinus 3 4) +
+      (1 : ℤ) • (colorQuarkTripletProj * pairingCarrier 3 4) +
+      (5 : ℤ) • (colorDiquarkAntitripletProj * isoProjPlus 3 4) +
+      (-1 : ℤ) • (colorDiquarkAntitripletProj * isoProjMinus 3 4) +
+      (2 : ℤ) • (colorDiquarkAntitripletProj * pairingCarrier 3 4) +
+      (6 : ℤ) • protonProjector +
+      (3 : ℤ) • (colorBaryonSingletProj * pairingCarrier 3 4) +
+      (-6 : ℤ) • electronProjector +
+      (-3 : ℤ) • (colorVacuumSingletProj * pairingCarrier 3 4) := by
+  have h_iso : isoProjPlus 3 4 + isoProjMinus 3 4 + pairingCarrier 3 4 = 1 :=
+    isospinCarrier_add_pairingCarrier 3 4
+  have h_em := sixElectricCharge_spectral_decomposition
+  have h_bl : sixChargeBL =
+      sixElectricCharge -
+      (3 : ℤ) • (colorVacuumSingletProj *
+        (isoProjPlus 3 4 + isoProjMinus 3 4 + pairingCarrier 3 4)) := by
+    rw [h_iso, mul_one]
+    dsimp [sixChargeBL, sixElectricCharge]
+    abel
+  rw [h_bl, h_em]
+  dsimp [protonProjector, electronProjector]
+  noncomm_ring
+
+/-- **3. Chiral–Isospin Alignment (`Γ_{color} * (Π_+ - Π_-)`) Separating Proton from Neutron**:
+    The product of the 3-color chiral volume `Π_{pos}^{color} - Π_{neg}^{color}` and the
+    weak isospin polarization `Π_+(3,4) - Π_-(3,4)` assigns `+1` (aligned) to the Proton and Electron,
+    and `-1` (frustrated/unstable) to the Neutron and Neutrino! -/
+theorem chiral_isospin_alignment_proton_vs_neutron :
+    (colorPositiveCompanyProj - colorNegativeCompanyProj) *
+      (isoProjPlus 3 4 - isoProjMinus 3 4) =
+      (protonProjector +
+       electronProjector +
+       colorQuarkTripletProj * isoProjPlus 3 4 +
+       colorDiquarkAntitripletProj * isoProjMinus 3 4) -
+      (neutronProjector +
+       neutrinoProjector +
+       colorQuarkTripletProj * isoProjMinus 3 4 +
+       colorDiquarkAntitripletProj * isoProjPlus 3 4) := by
+  dsimp [colorPositiveCompanyProj, colorNegativeCompanyProj,
+         protonProjector, neutronProjector, neutrinoProjector, electronProjector]
+  noncomm_ring
+
+/-- **4. Quark–Diquark Internal Factorization & Nucleon Doublet Decay Endpoints (`proton_neutron_particle_hole_and_decay_endpoints`)**:
+    - The 3-quark baryon core `N₀ N₁ N₂` factors into a single quark `N₀` times a 2-quark
+      diquark `N₁ N₂`: `colorBaryonSingletProj = modeOccupied 0 * (modeOccupied 1 * modeOccupied 2)`.
+    - `nucleonDoubletFace = colorBaryonSingletProj * isospinCarrier 3 4`.
+    - At `(c = 0, s = 1)`, `movingNucleonDecayState 0 1 = neutronProjector` (initial Neutron vertex);
+      at `(c = 1, s = 0)`, `movingNucleonDecayState 1 0 = protonProjector` (final Proton vertex)! -/
+theorem proton_neutron_particle_hole_and_decay_endpoints :
+    colorBaryonSingletProj = modeOccupied 0 * (modeOccupied 1 * modeOccupied 2) ∧
+    nucleonDoubletFace = colorBaryonSingletProj * isospinCarrier 3 4 ∧
+    movingNucleonDecayState 0 1 = neutronProjector ∧
+    movingNucleonDecayState 1 0 = protonProjector := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · unfold colorBaryonSingletProj; rw [mul_assoc]
+  · unfold nucleonDoubletFace protonProjector neutronProjector isospinCarrier
+    rw [mul_add]
+  · unfold movingNucleonDecayState
+    simp only [mul_zero, zero_smul, mul_one, one_smul, zero_add, sub_zero]
+  · unfold movingNucleonDecayState
+    simp only [mul_one, one_smul, mul_zero, zero_smul, add_zero, sub_zero]
+
+/-- **5. Universal Neutron–Proton Mass-Splitting Driving Commutator (`neutron_proton_mass_gap_commutator`)**:
+    For any mass parameters `m_p, m_n : R` and any weak transition `W_eff = P_p * W * P_n`,
+    the commutator `[m_p • P_p + m_n • P_n, W_eff]` isolates the mass gap `(m_p - m_n)` plus the
+    idempotence/orthogonality defect terms `(P_p² - P_p)`, `(P_n² - P_n)`, and `P_p * P_n`! -/
+theorem neutron_proton_mass_gap_commutator
+    {R : Type*} [CommRing R] {A : Type*} [Ring A] [Algebra R A]
+    (m_p m_n : R) (P_p P_n W : A) :
+    let H_m := m_p • P_p + m_n • P_n
+    let W_eff := P_p * W * P_n
+    H_m * W_eff - W_eff * H_m =
+      (m_p - m_n) • (P_p * (P_p * (W * P_n))) +
+      m_n • (P_p * (P_p * (W * P_n)) - P_p * (W * (P_n * P_n))) +
+      m_n • (P_n * (P_p * (W * P_n))) -
+      m_p • (P_p * (W * (P_n * P_p))) := by
+  intro H_m W_eff
+  dsimp [H_m, W_eff]
+  simp only [add_mul, mul_add, smul_mul_assoc, mul_smul_comm, mul_assoc]
+  module
+
 /-! ## 6. The Grand Cl(5,5) Spinor Cartan-Fock Synthesis -/
 
 /-

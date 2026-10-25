@@ -237,6 +237,46 @@ def run_sympy_verification() -> dict:
         + 3 * (Pi_vac * Pi_plus)
         - 3 * (Pi_vac * Pi_minus)
     )
+    Z_cartan = [2 * N[a] - I32 for a in range(5)]
+    assert (
+        3 * (Z_cartan[0] - Z_cartan[1]) ** 2
+        + (Z_cartan[0] + Z_cartan[1] - 2 * Z_cartan[2]) ** 2
+        + 2 * (Z_cartan[0] + Z_cartan[1] + Z_cartan[2]) ** 2
+        == 6 * (Z_cartan[0] ** 2 + Z_cartan[1] ** 2 + Z_cartan[2] ** 2)
+    )
+    assert (Z_cartan[3] - Z_cartan[4]) ** 2 + (Z_cartan[3] + Z_cartan[4]) ** 2 == 2 * (
+        Z_cartan[3] ** 2 + Z_cartan[4] ** 2
+    )
+    assert (Pi_pair_plus - Pi_pair_minus) + I32 + (Pi_plus - Pi_minus) == 2 * N[p]
+    assert (Pi_pair_plus - Pi_pair_minus) + I32 - (Pi_plus - Pi_minus) == 2 * N[n]
+    Pi_proton = Pi_baryon * Pi_plus
+    Pi_neutron = Pi_baryon * Pi_minus
+    Pi_neutrino = Pi_vac * Pi_plus
+    Pi_electron = Pi_vac * Pi_minus
+    six_charge_BL = (N_color - 3 * Pi_vac) + 3 * (Pi_plus - Pi_minus)
+    assert six_charge_BL == (
+        4 * (Pi_quark * Pi_plus)
+        - 2 * (Pi_quark * Pi_minus)
+        + 1 * (Pi_quark * Delta_pair)
+        + 5 * (Pi_diquark * Pi_plus)
+        - 1 * (Pi_diquark * Pi_minus)
+        + 2 * (Pi_diquark * Delta_pair)
+        + 6 * Pi_proton
+        + 3 * (Pi_baryon * Delta_pair)
+        - 6 * Pi_electron
+        - 3 * (Pi_vac * Delta_pair)
+    )
+    assert (Pi_pos_company - Pi_neg_company) * (Pi_plus - Pi_minus) == (
+        Pi_proton + Pi_electron + Pi_quark * Pi_plus + Pi_diquark * Pi_minus
+    ) - (
+        Pi_neutron + Pi_neutrino + Pi_quark * Pi_minus + Pi_diquark * Pi_plus
+    )
+    assert Pi_proton + Pi_neutron == Pi_baryon * Delta_iso
+    W_plus = Pi_baryon * tau_plus
+    assert W_plus * Pi_neutron * tau_minus == Pi_proton
+    m_p_sym, m_n_sym = sp.symbols("m_p m_n", commutative=True)
+    H_mass = m_p_sym * Pi_proton + m_n_sym * Pi_neutron
+    assert H_mass * W_plus - W_plus * H_mass == (m_p_sym - m_n_sym) * W_plus
 
     # 9. Verify Erlangen 2.0 Cartan-Peirce Emergence & Gauge Invariance on SplitQuaternion:
     x00, x01, x10, x11, y00, y01, y10, y11, u = sp.symbols(

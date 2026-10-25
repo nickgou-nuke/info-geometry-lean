@@ -7084,4 +7084,78 @@ theorem saniga_holweck_pracna_grassmannian_edge_triangle_and_sedenion_zero_divis
     · simp [x, y, X, Y, conj, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
             add, neg, mul, ZornVec3.dot, Fin.sum_univ_three]
 
+/-! ## Section 69: Universal Pasch 4-Simplex Tetrahedral Boundary Closure ($\partial_2 \circ \partial_1 = 0$) & Combinatorial Para-Kähler Metric Polarization on `ZornVectorMatrix R` (Archetypes LXXIII & LXXIV) -/
+
+/-- Dual combinatorial Grassmannian edge operator $\Omega_{ij}^- = \langle 0, 0, v_i - v_j, 0 \rangle$ in `ZornVectorMatrix R`. -/
+def zornGrassmannEdgeMinus (v_i v_j : ZornVec3 R) : ZornVectorMatrix R :=
+  ⟨0, 0, v_i - v_j, 0⟩
+
+/-- Plücker 2-plane line operator $\mathcal{P}_{ijk} = \Omega_{ij}^+ * \Omega_{jk}^+$ in `ZornVectorMatrix R`. -/
+noncomputable def zornGrassmannLinePlane (v_i v_j v_k : ZornVec3 R) : ZornVectorMatrix R :=
+  zornGrassmannEdge v_i v_j * zornGrassmannEdge v_j v_k
+
+/-- Edge self-metric $g_{ij} = \Omega_{ij}^+ * \Omega_{ij}^- + \Omega_{ij}^- * \Omega_{ij}^+$ in `ZornVectorMatrix R`. -/
+noncomputable def zornGrassmannEdgeMetric (v_i v_j : ZornVec3 R) : ZornVectorMatrix R :=
+  zornGrassmannEdge v_i v_j * zornGrassmannEdgeMinus v_i v_j +
+    zornGrassmannEdgeMinus v_i v_j * zornGrassmannEdge v_i v_j
+
+/-- **Universal Pasch 4-Simplex Boundary Closure ($\partial_2 \circ \partial_1 = 0$) & Combinatorial Para-Kähler Metric Polarization on `ZornVectorMatrix R` (Archetypes LXXIII & LXXIV)**:
+    Over any commutative ring $R$ (`[CommRing R]`), for all vertex 3-vectors $v_i, v_j, v_k, v_l : \mathrm{ZornVec3}\;R$:
+    1. 1-Boundary Closure on Every Line $\{i, j, k\}$ of $G_2(N+1)$:
+       $$\Omega_{ij}^+ + \Omega_{jk}^+ + -\Omega_{ik}^+ = 0.$$
+    2. 2-Boundary Closure Around Every Pasch 4-Simplex $\{i, j, k, l\}$ ($\partial_2 \circ \partial_1 = 0$):
+       $$( \mathcal{P}_{ijk} + -\mathcal{P}_{ikl} ) + ( \mathcal{P}_{ijl} + -\mathcal{P}_{jkl} ) = 0.$$
+    3. Combinatorial Para-Kähler Metric Polarization Law on Every Line $\{i, j, k\}$:
+       $$(g_{ik} + -g_{ij}) + -g_{jk} =
+         (\Omega_{ij}^+ * \Omega_{jk}^- + \Omega_{jk}^- * \Omega_{ij}^+) +
+         (\Omega_{jk}^+ * \Omega_{ij}^- + \Omega_{ij}^- * \Omega_{jk}^+).$$ -/
+theorem zorn_pasch_tetrahedral_boundary_and_combinatorial_metric_polarization
+    (v_i v_j v_k v_l : ZornVec3 R) :
+    let Ω_ij_p := zornGrassmannEdge v_i v_j
+    let Ω_jk_p := zornGrassmannEdge v_j v_k
+    let Ω_ik_p := zornGrassmannEdge v_i v_k
+    let Ω_ij_m := zornGrassmannEdgeMinus v_i v_j
+    let Ω_jk_m := zornGrassmannEdgeMinus v_j v_k
+    let P_ijk := zornGrassmannLinePlane v_i v_j v_k
+    let P_ikl := zornGrassmannLinePlane v_i v_k v_l
+    let P_ijl := zornGrassmannLinePlane v_i v_j v_l
+    let P_jkl := zornGrassmannLinePlane v_j v_k v_l
+    (Ω_ij_p + Ω_jk_p) + -Ω_ik_p = 0 ∧
+    (P_jkl + -P_ikl) + (P_ijl + -P_ijk) = 0 ∧
+    (zornGrassmannEdgeMetric v_i v_k + -zornGrassmannEdgeMetric v_i v_j) + -zornGrassmannEdgeMetric v_j v_k =
+      (Ω_ij_p * Ω_jk_m + Ω_jk_m * Ω_ij_p) + (Ω_jk_p * Ω_ij_m + Ω_ij_m * Ω_jk_p) := by
+  intro Ω_ij_p Ω_jk_p Ω_ik_p Ω_ij_m Ω_jk_m P_ijk P_ikl P_ijl P_jkl
+  refine ⟨?_, ?_, ?_⟩
+  · ext
+    · simp [Ω_ij_p, Ω_jk_p, Ω_ik_p, zornGrassmannEdge, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def, add, neg]
+    · rename_i i; fin_cases i <;>
+        (simp [Ω_ij_p, Ω_jk_p, Ω_ik_p, zornGrassmannEdge, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def, add, neg]; try ring)
+    · rename_i i; fin_cases i <;>
+        simp [Ω_ij_p, Ω_jk_p, Ω_ik_p, zornGrassmannEdge, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def, add, neg]
+    · simp [Ω_ij_p, Ω_jk_p, Ω_ik_p, zornGrassmannEdge, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def, add, neg]
+  · ext
+    · simp [P_ijk, P_ikl, P_ijl, P_jkl, zornGrassmannLinePlane, zornGrassmannEdge,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def, add, neg, mul, ZornVec3.dot]
+    · rename_i i; fin_cases i <;>
+        simp [P_ijk, P_ikl, P_ijl, P_jkl, zornGrassmannLinePlane, zornGrassmannEdge,
+              InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def, add, neg, mul, ZornVec3.cross]
+    · rename_i i; fin_cases i <;>
+        (simp [P_ijk, P_ikl, P_ijl, P_jkl, zornGrassmannLinePlane, zornGrassmannEdge,
+               InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def, add, neg, mul, ZornVec3.cross]; try ring)
+    · simp [P_ijk, P_ikl, P_ijl, P_jkl, zornGrassmannLinePlane, zornGrassmannEdge,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def, add, neg, mul, ZornVec3.dot]
+  · ext
+    · simp [Ω_ij_p, Ω_jk_p, Ω_ij_m, Ω_jk_m, zornGrassmannEdgeMetric, zornGrassmannEdge, zornGrassmannEdgeMinus,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def, add, neg, mul, ZornVec3.dot, Fin.sum_univ_three]
+      ring
+    · rename_i i; fin_cases i <;>
+        (simp [Ω_ij_p, Ω_jk_p, Ω_ij_m, Ω_jk_m, zornGrassmannEdgeMetric, zornGrassmannEdge, zornGrassmannEdgeMinus,
+               InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def, add, neg, mul, ZornVec3.cross]; try ring)
+    · rename_i i; fin_cases i <;>
+        (simp [Ω_ij_p, Ω_jk_p, Ω_ij_m, Ω_jk_m, zornGrassmannEdgeMetric, zornGrassmannEdge, zornGrassmannEdgeMinus,
+               InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def, add, neg, mul, ZornVec3.cross]; try ring)
+    · simp [Ω_ij_p, Ω_jk_p, Ω_ij_m, Ω_jk_m, zornGrassmannEdgeMetric, zornGrassmannEdge, zornGrassmannEdgeMinus,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def, add, neg, mul, ZornVec3.dot, Fin.sum_univ_three]
+      ring
+
 end InfoGeometry.Algebra.ZornVectorMatrix

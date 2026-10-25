@@ -141,7 +141,14 @@ poly om31_12_x = (z3 - z1)*(xi1 - xi2) - (xi3 - xi1)*(z1 - z2);
 if (om12_23_x - om23_31_x != 0 || om23_31_x - om31_12_x != 0) {
     ERROR("FAIL: Archetype LXXI Grassmannian edge-triangle cyclic invariance failed");
 }
-print("[PASS] Singular: Archetypes LXVII-LXXII (Dahm Plücker-Klein, Simple Line Square-Zero, & Saniga Grassmannian Edge-Triangle)");
+// Archetypes LXXIII & LXXIV: Pasch 4-Simplex Tetrahedral 2-Boundary Closure P_123 - P_134 + P_124 - P_234 = 0:
+poly p134_x = (z1 - z3)*(xi3 - y1) - (xi1 - xi3)*(z3 - z1);
+poly p124_x = (z1 - z2)*(xi2 - y1) - (xi1 - xi2)*(z2 - z1);
+poly p234_x = (z2 - z3)*(xi3 - y1) - (xi2 - xi3)*(z3 - z1);
+if (om12_23_x - p134_x + p124_x - p234_x != 0) {
+    ERROR("FAIL: Archetype LXXIV Pasch 4-simplex tetrahedral 2-boundary closure failed");
+}
+print("[PASS] Singular: Archetypes LXVII-LXXIV (Dahm Plücker-Klein, Simple Line Square-Zero, Grassmannian Edge-Triangle, & Pasch 4-Simplex 2-Boundary)");
 
 // 4. D-Module (`dmod.lib`) Bernstein-Sato & Weyl Annihilator of the Contact Symplectic Form
 ring R_contact = 0, (y1,z1,y2,z2), dp;

@@ -257,7 +257,16 @@ S_p_c = ((R(0), (ux, uy, uz), (R(0), R(0), R(0)), R(0)), (R(0), (R(0), R(0), R(0
 S_m_c = ((R(0), (R(0), R(0), R(0)), (wx, wy, wz), R(0)), (R(0), (-ux, -uy, -uz), (R(0), R(0), R(0)), R(0)))
 assert c_sed_mul(S_p_c, S_m_c) == (c_zero, c_zero)
 assert c_sed_mul(S_m_c, S_p_c) == (c_zero, c_zero)
-print("[PASS] PolynomialRing: Archetypes LXXI-LXXII (Saniga-Holweck-Pracna Grassmannian G_2(N+1) & Sedenion Zero Divisors)")
+# Archetypes LXXIII & LXXIV: Pasch 4-Simplex Tetrahedral 2-Boundary Closure P_123 - P_134 + P_124 - P_234 = 0
+Om_34_c = (R(0), (dp, dm, ux), (R(0), R(0), R(0)), R(0))
+Om_13_c = c_zadd(Om_12_c, Om_23_c)
+Om_24_c = c_zadd(Om_23_c, Om_34_c)
+P_123_c = c_zmul(Om_12_c, Om_23_c)
+P_134_c = c_zmul(Om_13_c, Om_34_c)
+P_124_c = c_zmul(Om_12_c, Om_24_c)
+P_234_c = c_zmul(Om_23_c, Om_34_c)
+assert c_zadd(P_234_c, P_124_c) == c_zadd(P_134_c, P_123_c)
+print("[PASS] PolynomialRing: Archetypes LXXI-LXXIV (Saniga-Holweck-Pracna Grassmannian G_2(N+1), Sedenion Zero Divisors, & Pasch 4-Simplex 2-Boundary Closure)")
 
 print("======================================================================")
 print("ALL CHECKS PASSED")

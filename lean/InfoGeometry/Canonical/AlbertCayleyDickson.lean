@@ -5878,6 +5878,196 @@ theorem operator_sedenion_cayley_dickson_and_universal_zero_divisors
           OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
     try noncomm_ring))
 
+/-!
+## 32. Archetypes LXXIII & LXXIV: Universal $(p|q)$ Block Para-Kähler Super-Grassmannians $\mathrm{SuperGr}(p, q; A)$ & the Plücker–Veldkamp Pasch 4-Simplex Boundary Functor
+-/
+
+/-- **The $(p|q)$ Block Supermatrix Algebra (`SuperGrassmannMatrix p q A`)**:
+    - $a \in M_{p \times p}(A)$ (Even Bosonic / Leptonic Block),
+    - $v \in M_{p \times q}(A)$ (Odd Primal Tangent Block $\mathcal{V}_+$),
+    - $w \in M_{q \times p}(A)$ (Odd Dual Cotangent Block $\mathcal{V}_-$),
+    - $b \in M_{q \times q}(A)$ (Even Fermionic / Color Block). -/
+@[ext]
+structure SuperGrassmannMatrix (p q : ℕ) (A : Type*) where
+  a : Matrix (Fin p) (Fin p) A
+  v : Matrix (Fin p) (Fin q) A
+  w : Matrix (Fin q) (Fin p) A
+  b : Matrix (Fin q) (Fin q) A
+
+instance {p q : ℕ} : Zero (SuperGrassmannMatrix p q A) := ⟨⟨0, 0, 0, 0⟩⟩
+instance {p q : ℕ} : One (SuperGrassmannMatrix p q A) := ⟨⟨1, 0, 0, 1⟩⟩
+instance {p q : ℕ} : Inhabited (SuperGrassmannMatrix p q A) := ⟨0⟩
+instance {p q : ℕ} : Add (SuperGrassmannMatrix p q A) :=
+  ⟨fun X Y => ⟨X.a + Y.a, X.v + Y.v, X.w + Y.w, X.b + Y.b⟩⟩
+instance {p q : ℕ} : Sub (SuperGrassmannMatrix p q A) :=
+  ⟨fun X Y => ⟨X.a - Y.a, X.v - Y.v, X.w - Y.w, X.b - Y.b⟩⟩
+instance {p q : ℕ} : Neg (SuperGrassmannMatrix p q A) :=
+  ⟨fun X => ⟨-X.a, -X.v, -X.w, -X.b⟩⟩
+
+/-- Block matrix multiplication on `SuperGrassmannMatrix p q A`. -/
+instance {p q : ℕ} : Mul (SuperGrassmannMatrix p q A) :=
+  ⟨fun X Y =>
+    { a := X.a * Y.a + X.v * Y.w
+      v := X.a * Y.v + X.v * Y.b
+      w := X.w * Y.a + X.b * Y.w
+      b := X.w * Y.v + X.b * Y.b }⟩
+
+namespace SuperGrassmannMatrix
+
+variable {p q : ℕ}
+
+@[simp] lemma zero_a : (0 : SuperGrassmannMatrix p q A).a = 0 := rfl
+@[simp] lemma zero_v : (0 : SuperGrassmannMatrix p q A).v = 0 := rfl
+@[simp] lemma zero_w : (0 : SuperGrassmannMatrix p q A).w = 0 := rfl
+@[simp] lemma zero_b : (0 : SuperGrassmannMatrix p q A).b = 0 := rfl
+@[simp] lemma one_a : (1 : SuperGrassmannMatrix p q A).a = 1 := rfl
+@[simp] lemma one_v : (1 : SuperGrassmannMatrix p q A).v = 0 := rfl
+@[simp] lemma one_w : (1 : SuperGrassmannMatrix p q A).w = 0 := rfl
+@[simp] lemma one_b : (1 : SuperGrassmannMatrix p q A).b = 1 := rfl
+@[simp] lemma add_a (X Y : SuperGrassmannMatrix p q A) : (X + Y).a = X.a + Y.a := rfl
+@[simp] lemma add_v (X Y : SuperGrassmannMatrix p q A) : (X + Y).v = X.v + Y.v := rfl
+@[simp] lemma add_w (X Y : SuperGrassmannMatrix p q A) : (X + Y).w = X.w + Y.w := rfl
+@[simp] lemma add_b (X Y : SuperGrassmannMatrix p q A) : (X + Y).b = X.b + Y.b := rfl
+@[simp] lemma sub_a (X Y : SuperGrassmannMatrix p q A) : (X - Y).a = X.a - Y.a := rfl
+@[simp] lemma sub_v (X Y : SuperGrassmannMatrix p q A) : (X - Y).v = X.v - Y.v := rfl
+@[simp] lemma sub_w (X Y : SuperGrassmannMatrix p q A) : (X - Y).w = X.w - Y.w := rfl
+@[simp] lemma sub_b (X Y : SuperGrassmannMatrix p q A) : (X - Y).b = X.b - Y.b := rfl
+@[simp] lemma neg_a (X : SuperGrassmannMatrix p q A) : (-X).a = -X.a := rfl
+@[simp] lemma neg_v (X : SuperGrassmannMatrix p q A) : (-X).v = -X.v := rfl
+@[simp] lemma neg_w (X : SuperGrassmannMatrix p q A) : (-X).w = -X.w := rfl
+@[simp] lemma neg_b (X : SuperGrassmannMatrix p q A) : (-X).b = -X.b := rfl
+@[simp] lemma mul_a (X Y : SuperGrassmannMatrix p q A) : (X * Y).a = X.a * Y.a + X.v * Y.w := rfl
+@[simp] lemma mul_v (X Y : SuperGrassmannMatrix p q A) : (X * Y).v = X.a * Y.v + X.v * Y.b := rfl
+@[simp] lemma mul_w (X Y : SuperGrassmannMatrix p q A) : (X * Y).w = X.w * Y.a + X.b * Y.w := rfl
+@[simp] lemma mul_b (X Y : SuperGrassmannMatrix p q A) : (X * Y).b = X.w * Y.v + X.b * Y.b := rfl
+
+end SuperGrassmannMatrix
+
+/-- Upper primitive Peirce super-idempotent $E_{11} = \langle I_p, 0, 0, 0 \rangle$. -/
+def superPeircePlus {p q : ℕ} : SuperGrassmannMatrix p q A := ⟨1, 0, 0, 0⟩
+
+/-- Para-complex super-grading involution $\Gamma_{p|q} = \langle I_p, 0, 0, -I_q \rangle$. -/
+def superGamma {p q : ℕ} : SuperGrassmannMatrix p q A := ⟨1, 0, 0, -1⟩
+
+/-- Odd primal tangent embedding $L_+(v) = \langle 0, v, 0, 0 \rangle$. -/
+def superTangentPlus {p q : ℕ} (v : Matrix (Fin p) (Fin q) A) : SuperGrassmannMatrix p q A :=
+  ⟨0, v, 0, 0⟩
+
+/-- Odd dual cotangent embedding $L_-(w) = \langle 0, 0, w, 0 \rangle$. -/
+def superTangentMinus {p q : ℕ} (w : Matrix (Fin q) (Fin p) A) : SuperGrassmannMatrix p q A :=
+  ⟨0, 0, w, 0⟩
+
+/-- Upper and lower unipotent exponential charts $U_+(v) = 1 + L_+(v)$ and $U_-(w) = 1 + L_-(w)$. -/
+def superUnipotentPlus {p q : ℕ} (v : Matrix (Fin p) (Fin q) A) : SuperGrassmannMatrix p q A :=
+  ⟨1, v, 0, 1⟩
+
+def superUnipotentMinus {p q : ℕ} (w : Matrix (Fin q) (Fin p) A) : SuperGrassmannMatrix p q A :=
+  ⟨1, 0, w, 1⟩
+
+/-- Left and right chiral wavefunction factors $\Psi_L(w) = U_-(w) * E_{11}$ and $\Psi_R(v) = E_{11} * U_+(v)$. -/
+def superWaveLeft {p q : ℕ} (w : Matrix (Fin q) (Fin p) A) : SuperGrassmannMatrix p q A :=
+  superUnipotentMinus w * superPeircePlus
+
+def superWaveRight {p q : ℕ} (v : Matrix (Fin p) (Fin q) A) : SuperGrassmannMatrix p q A :=
+  superPeircePlus * superUnipotentPlus v
+
+/-- Para-Kähler metric $g_{p|q}(v, w) = L_+(v) * L_-(w) + L_-(w) * L_+(v)$. -/
+def superParaKahlerMetric {p q : ℕ} (v : Matrix (Fin p) (Fin q) A) (w : Matrix (Fin q) (Fin p) A) :
+    SuperGrassmannMatrix p q A :=
+  superTangentPlus v * superTangentMinus w + superTangentMinus w * superTangentPlus v
+
+/-- Para-Kähler symplectic 2-form $\omega_{p|q}(v, w) = L_+(v) * L_-(w) - L_-(w) * L_+(v)$. -/
+def superParaKahlerSymplectic {p q : ℕ} (v : Matrix (Fin p) (Fin q) A) (w : Matrix (Fin q) (Fin p) A) :
+    SuperGrassmannMatrix p q A :=
+  superTangentPlus v * superTangentMinus w - superTangentMinus w * superTangentPlus v
+
+/-- **Theorem 92 (Archetype LXXIII — Universal $(p|q)$ Para-Kähler Super-Grassmannian & Chiral Wavefunction Trifactorization)**:
+    Over *any* noncommutative ring $A$ and for ALL dimensions $p, q \in \mathbb{N}$,
+    $v \in M_{p \times q}(A)$, and $w \in M_{q \times p}(A)$:
+    1. Square-Zero Nilpotence of Tangent & Cotangent Bundles:
+       $L_+(v) * L_+(v) = 0$ and $L_-(w) * L_-(w) = 0$.
+    2. Universal $(p|q)$ Para-Kähler Compatibility ($\Gamma_{p|q} g = \omega$ and $\Gamma_{p|q} \omega = g$):
+       $g_{p|q}(v, w) = \langle v * w, 0, 0, w * v \rangle$,
+       $\omega_{p|q}(v, w) = \langle v * w, 0, 0, -(w * v) \rangle$,
+       $\Gamma_{p|q} * g_{p|q}(v, w) = \omega_{p|q}(v, w)$, and
+       $\Gamma_{p|q} * \omega_{p|q}(v, w) = g_{p|q}(v, w)$.
+    3. Exact Idempotence of Chiral Wavefunction Factors:
+       $\Psi_L(w) * \Psi_L(w) = \Psi_L(w)$ and $\Psi_R(v) * \Psi_R(v) = \Psi_R(v)$.
+    4. Inner Contraction (Metric Kernel) & Outer Contraction (Super-Grassmannian Projector):
+       $\Psi_R(v) * \Psi_L(w) = \langle 1 + v * w, 0, 0, 0 \rangle$ and
+       $\Psi_L(w) * \Psi_R(v) = \langle 1, v, w, w * v \rangle$. -/
+theorem superGrassmannian_paraKahler_and_trifactor_projector
+    {p q : ℕ} (v : Matrix (Fin p) (Fin q) A) (w : Matrix (Fin q) (Fin p) A) :
+    let g := superParaKahlerMetric v w
+    let ω := superParaKahlerSymplectic v w
+    let Γ := (superGamma : SuperGrassmannMatrix p q A)
+    let Ψ_L := superWaveLeft w
+    let Ψ_R := superWaveRight v
+    superTangentPlus v * superTangentPlus v = 0 ∧
+    superTangentMinus w * superTangentMinus w = 0 ∧
+    g = ⟨v * w, 0, 0, w * v⟩ ∧
+    ω = ⟨v * w, 0, 0, -(w * v)⟩ ∧
+    Γ * g = ω ∧
+    Γ * ω = g ∧
+    Ψ_L * Ψ_L = Ψ_L ∧
+    Ψ_R * Ψ_R = Ψ_R ∧
+    Ψ_R * Ψ_L = ⟨1 + v * w, 0, 0, 0⟩ ∧
+    Ψ_L * Ψ_R = ⟨1, v, w, w * v⟩ := by
+  intro g ω Γ Ψ_L Ψ_R
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+  (ext <;>
+   simp [g, ω, Γ, Ψ_L, Ψ_R, superParaKahlerMetric, superParaKahlerSymplectic,
+         superGamma, superWaveLeft, superWaveRight, superUnipotentPlus, superUnipotentMinus,
+         superPeircePlus, superTangentPlus, superTangentMinus])
+
+/-- Dual edge operator $\Omega_{ij}^- = L_-(v_i - v_j)$ representing a dual point $\{i, j\}$ of $G_2(N+1)$. -/
+def opGrassmannEdgeMinus (v_i v_j : OpVec3 A) : OpZornMatrix A :=
+  opLightconeMinus (v_i - v_j)
+
+/-- Plücker 2-plane operator $\mathcal{P}_{ijk} = \Omega_{ij}^+ * \Omega_{jk}^+$ representing a line
+    $\{\{i, j\}, \{j, k\}, \{i, k\}\}$ of the combinatorial Grassmannian $G_2(N+1)$. -/
+def opGrassmannLinePlane (v_i v_j v_k : OpVec3 A) : OpZornMatrix A :=
+  opGrassmannEdge v_i v_j * opGrassmannEdge v_j v_k
+
+/-- Edge self-metric $g_{ij} = \{\Omega_{ij}^+, \Omega_{ij}^-\} \in \mathcal{G}_0$. -/
+def opGrassmannEdgeMetric (v_i v_j : OpVec3 A) : OpZornMatrix A :=
+  opAnticommutator (opGrassmannEdge v_i v_j) (opGrassmannEdgeMinus v_i v_j)
+
+/-- **Theorem 93 (Archetype LXXIV — Universal Pasch 4-Simplex Boundary Closure $\partial_2 = 0$ & Combinatorial Para-Kähler Metric Polarization Law)**:
+    Over *any* noncommutative operator ring $A$, for ALL vertex 3-vectors $v_i, v_j, v_k, v_l \in \mathrm{OpVec3}\;A$:
+    1. 1-Boundary Closure on Every Line $\{i, j, k\}$ of $G_2(N+1)$:
+       $$\Omega_{ij}^+ + \Omega_{jk}^+ - \Omega_{ik}^+ = 0.$$
+    2. 2-Boundary Closure Around Every Pasch 4-Simplex $\{i, j, k, l\} \in \binom{V}{4}$ ($\partial_2 \circ \partial_1 = 0$):
+       The alternating sum of the four Plücker line operators of any Pasch subconfiguration
+       $\{i, j, k, l\}$ vanishes identically across all 8 channels of `OpZornMatrix A`:
+       $$\mathcal{P}_{jkl} - \mathcal{P}_{ikl} + \mathcal{P}_{ijl} - \mathcal{P}_{ijk} = 0.$$
+    3. Combinatorial Para-Kähler Metric Polarization Law on Every Line $\{i, j, k\}$ of $G_2(N+1)$:
+       $$g_{ik} - g_{ij} - g_{jk} =
+         \bigl\{\Omega_{ij}^+,\; \Omega_{jk}^-\bigr\} + \bigl\{\Omega_{jk}^+,\; \Omega_{ij}^-\bigr\}.$$ -/
+theorem combinatorialGrassmannian_pasch_tetrahedral_boundary_and_metric_law
+    (v_i v_j v_k v_l : OpVec3 A) :
+    let Ω_ij_p := opGrassmannEdge v_i v_j
+    let Ω_jk_p := opGrassmannEdge v_j v_k
+    let Ω_ik_p := opGrassmannEdge v_i v_k
+    let Ω_ij_m := opGrassmannEdgeMinus v_i v_j
+    let Ω_jk_m := opGrassmannEdgeMinus v_j v_k
+    let P_ijk := opGrassmannLinePlane v_i v_j v_k
+    let P_ikl := opGrassmannLinePlane v_i v_k v_l
+    let P_ijl := opGrassmannLinePlane v_i v_j v_l
+    let P_jkl := opGrassmannLinePlane v_j v_k v_l
+    Ω_ij_p + Ω_jk_p - Ω_ik_p = 0 ∧
+    P_jkl - P_ikl + P_ijl - P_ijk = 0 ∧
+    opGrassmannEdgeMetric v_i v_k - opGrassmannEdgeMetric v_i v_j - opGrassmannEdgeMetric v_j v_k =
+      opAnticommutator Ω_ij_p Ω_jk_m + opAnticommutator Ω_jk_p Ω_ij_m := by
+  intro Ω_ij_p Ω_jk_p Ω_ik_p Ω_ij_m Ω_jk_m P_ijk P_ikl P_ijl P_jkl
+  refine ⟨?_, ?_, ?_⟩ <;>
+  (ext <;>
+   (simp [Ω_ij_p, Ω_jk_p, Ω_ik_p, Ω_ij_m, Ω_jk_m, P_ijk, P_ikl, P_ijl, P_jkl,
+          opGrassmannEdge, opGrassmannEdgeMinus, opGrassmannLinePlane, opGrassmannEdgeMetric,
+          opLightconePlus, opLightconeMinus, opLightconeRayPlus, opLightconeRayMinus,
+          opAnticommutator, OpVec3.dot, OpVec3.skewCross, OpVec3.naiveCross];
+    try noncomm_ring))
+
 end PorterNoncommutativeRiccatiAndLoxodromes
 
 end SplitQuaternion

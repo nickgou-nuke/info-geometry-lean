@@ -181,7 +181,16 @@ assert(zornMul(Om23, Om31) == zornMul(Om31, Om12))
 SedX = zornSub(zornMul(Lpv, Lmw), zornMul(zornScale(-1_R, Lpv), zornConj(Lmw)))
 SedY = zornAdd(zornMul(zornConj(Lpv), zornScale(-1_R, Lpv)), zornMul(Lmw, Lmw))
 assert(SedX == zornZero and SedY == zornZero)
-print("[PASS] Macaulay2: Archetypes LXVII-LXXII (Dahm Dihedral D_4, Maxwell-Poynting Stress, Grassmannian G_2(N+1), & Sedenion Zero Divisors)")
+-- Archetypes LXXIII & LXXIV: Pasch 4-Simplex Tetrahedral 2-Boundary Closure P_123 - P_134 + P_124 - P_234 = 0
+Om34 = {0_R, {y3 - y0, z3 - z0, xi3 - eta}, {0_R, 0_R, 0_R}, 0_R}
+Om13 = zornAdd(Om12, Om23)
+Om24 = zornAdd(Om23, Om34)
+P123 = zornMul(Om12, Om23)
+P134 = zornMul(Om13, Om34)
+P124 = zornMul(Om12, Om24)
+P234 = zornMul(Om23, Om34)
+assert(zornSub(zornAdd(zornSub(P234, P134), P124), P123) == zornZero)
+print("[PASS] Macaulay2: Archetypes LXVII-LXXIV (Dahm D_4, Maxwell-Poynting Stress, Grassmannian G_2(N+1), Sedenion Zero Divisors, & Pasch 4-Simplex 2-Boundary)")
 
 -- 3. Dmodules Weyl Algebra Analysis of the 5-Graded Contact & Helicity Operators
 W = QQ[y1, z1, y2, z2, dy1, dz1, dy2, dz2, WeylAlgebra => {y1 => dy1, z1 => dz1, y2 => dy2, z2 => dz2}]

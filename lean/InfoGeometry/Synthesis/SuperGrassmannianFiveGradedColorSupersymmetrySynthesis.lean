@@ -547,7 +547,11 @@ theorem opZorn_supergrassmannian_color_and_supertrace_intertwining
       -InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.OpVec3.dot u u +
         InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.OpVec3.dot v v ∧
     InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opSedenionZeroDivPlus u v *
-      InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opSedenionZeroDivMinus u v = 0 := by
+      InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opSedenionZeroDivMinus u v = 0 ∧
+    InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opGrassmannLinePlane v 0 X.v -
+      InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opGrassmannLinePlane u 0 X.v +
+      InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opGrassmannLinePlane u v X.v -
+      InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.opGrassmannLinePlane u v 0 = 0 := by
   refine ⟨rfl, rfl, rfl, ?_, ?_, ?_, ?_,
     (InfoGeometry.Canonical.ArnoldParaKahlerBCFW.operator_super_grassmannian_kkt_and_supercolor_master_bridge
       X 0 0 0 0 0 0 0 0 0 0 0 0 u v u v u v 1).1.2.2.2.2.2.2.2,
@@ -556,7 +560,9 @@ theorem opZorn_supergrassmannian_color_and_supertrace_intertwining
     (InfoGeometry.Canonical.ArnoldParaKahlerBCFW.operator_dahm_maxwell_poynting_hodge_dual_stress_master_bridge
       u v).2.2.1,
     (InfoGeometry.Canonical.ArnoldParaKahlerBCFW.operator_saniga_holweck_pracna_grassmannian_and_sedenion_zero_divisor_master_bridge
-      1 0 u v u u v u v u v).2.2.2.2.2.2.1⟩
+      1 0 u v u u v u v u v).2.2.2.2.2.2.1,
+    (InfoGeometry.Canonical.ArnoldParaKahlerBCFW.operator_universal_super_grassmannian_and_pasch_tetrahedral_boundary_master_bridge
+      (0 : Matrix (Fin 2) (Fin 3) ℝ) (0 : Matrix (Fin 3) (Fin 2) ℝ) u v 0 X.v).2.2.1⟩
   · rcases u with ⟨ux, uy, uz⟩
     rcases v with ⟨vx, vy, vz⟩
     simp [opVec3Fin3Equiv,

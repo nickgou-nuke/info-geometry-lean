@@ -266,7 +266,18 @@ SedY := ZornAdd(ZornMul(ZornConj(Lp_v), ZornScale(-one, Lp_v)), ZornMul(Lm_w, Lm
 if SedX <> ZornZero or SedY <> ZornZero then
     Error("FAIL: Archetype LXXII Sedenion two-sided zero divisor failed");
 fi;
-Print("[PASS] GAP: Archetypes LXVII-LXXII (Dahm Dihedral D_4, Maxwell-Poynting Stress, Grassmannian G_2(N+1), & Sedenion Zero Divisors)\n");
+# Archetypes LXXIII & LXXIV: Pasch 4-Simplex Tetrahedral 2-Boundary Closure P_123 - P_134 + P_124 - P_234 = 0
+Om34 := [ zero, [y3 - y0, z3 - z0, xi3 - eta], [zero, zero, zero], zero ];
+Om13 := ZornAdd(Om12, Om23);
+Om24 := ZornAdd(Om23, Om34);
+P123 := ZornMul(Om12, Om23);
+P134 := ZornMul(Om13, Om34);
+P124 := ZornMul(Om12, Om24);
+P234 := ZornMul(Om23, Om34);
+if ZornSub(ZornAdd(ZornSub(P234, P134), P124), P123) <> ZornZero then
+    Error("FAIL: Archetype LXXIV Pasch 4-simplex tetrahedral 2-boundary closure failed");
+fi;
+Print("[PASS] GAP: Archetypes LXVII-LXXIV (Dahm D_4, Maxwell-Poynting Stress, Grassmannian G_2(N+1), Sedenion Zero Divisors, & Pasch 4-Simplex 2-Boundary)\n");
 
 Print("======================================================================\n");
 Print("ALL CHECKS PASSED\n");

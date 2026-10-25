@@ -614,6 +614,23 @@ def main() -> int:
     assert sed_mul(S_minus_zd, S_plus_zd) == (z_zero(), z_zero())
     print("[PASS] Archetypes LXXI-LXXII: Saniga-Holweck-Pracna Grassmannian G_2(N+1) Edge-Triangle Invariance & Operator Sedenion Zero Divisors")
 
+    # 17. Archetypes LXXIII & LXXIV: Pasch 4-Simplex Tetrahedral 2-Boundary Closure
+    #     P_ijk - P_ikl + P_ijl - P_jkl = 0 & Combinatorial Para-Kahler Metric Polarization
+    v4_vec = OpVec3(qx, qy, qz)
+    P_123 = lightcone_plus(u_vec - w_vec) * lightcone_plus(w_vec - v3_vec)
+    P_134 = lightcone_plus(u_vec - v3_vec) * lightcone_plus(v3_vec - v4_vec)
+    P_124 = lightcone_plus(u_vec - w_vec) * lightcone_plus(w_vec - v4_vec)
+    P_234 = lightcone_plus(w_vec - v3_vec) * lightcone_plus(v3_vec - v4_vec)
+    assert P_234 - P_134 + P_124 - P_123 == z_zero()
+    g_13 = op_anti(lightcone_plus(u_vec - v3_vec), lightcone_minus(u_vec - v3_vec))
+    g_12 = op_anti(lightcone_plus(u_vec - w_vec), lightcone_minus(u_vec - w_vec))
+    g_23 = op_anti(lightcone_plus(w_vec - v3_vec), lightcone_minus(w_vec - v3_vec))
+    assert g_13 - g_12 - g_23 == (
+        op_anti(lightcone_plus(u_vec - w_vec), lightcone_minus(w_vec - v3_vec))
+        + op_anti(lightcone_plus(w_vec - v3_vec), lightcone_minus(u_vec - w_vec))
+    )
+    print("[PASS] Archetypes LXXIII-LXXIV: Universal (p|q) Super-Grassmannian & Pasch 4-Simplex 2-Boundary Closure")
+
     print("======================================================================")
     print("ALL CHECKS PASSED")
     print("======================================================================")

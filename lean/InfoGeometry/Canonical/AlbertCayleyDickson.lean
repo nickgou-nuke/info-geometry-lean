@@ -1625,6 +1625,109 @@ theorem cliffordWeyl_noncomm_involutions_and_intertwining :
    simp [polarizationGamma, velocityQ, wheelJ, peircePlus, peirceMinus,
          peirceSeedD, peirceSeedB, Matrix.mul_apply, Fin.sum_univ_two])
 
+/-- Local Majorana mode $\gamma_A = \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix} \in M_2(A)$ ($\gamma_A^2 = I_2$). -/
+def majoranaA : Matrix (Fin 2) (Fin 2) A := !![1, 0; 0, -1]
+
+/-- Local skew Majorana mode $\gamma_B = \begin{pmatrix} 0 & 1 \\ -1 & 0 \end{pmatrix} \in M_2(A)$ ($\gamma_B^2 = -I_2$). -/
+def majoranaB : Matrix (Fin 2) (Fin 2) A := !![0, 1; -1, 0]
+
+/-- Sweet-spot ($t = \Delta$) Kitaev inter-cell right-shift nilpotent
+    $K_+ = e_{12} = \begin{pmatrix} 0 & 1 \\ 0 & 0 \end{pmatrix} \in M_2(A)$. -/
+def kitaevShiftPlus : Matrix (Fin 2) (Fin 2) A := !![0, 1; 0, 0]
+
+/-- Sweet-spot ($t = \Delta$) Kitaev inter-cell left-shift nilpotent
+    $K_- = e_{21} = \begin{pmatrix} 0 & 0 \\ 1 & 0 \end{pmatrix} \in M_2(A)$. -/
+def kitaevShiftMinus : Matrix (Fin 2) (Fin 2) A := !![0, 0; 1, 0]
+
+/-- Left boundary Majorana zero-mode projector $P_L = K_+ K_- = e_{11} \in M_2(A)$. -/
+def kitaevEdgeLeft : Matrix (Fin 2) (Fin 2) A := !![1, 0; 0, 0]
+
+/-- Right boundary Majorana zero-mode projector $P_R = K_- K_+ = e_{22} \in M_2(A)$. -/
+def kitaevEdgeRight : Matrix (Fin 2) (Fin 2) A := !![0, 0; 0, 1]
+
+/-- 2-site noncommutative Kitaev inter-site dimer bond in $M_2(M_2(A))$, coupling the
+    right mode ($e_{22}$) of Site 1 to the left mode ($e_{11}$) of Site 2 via the inter-cell
+    nilpotents $K_- = e_{21}$ and $K_+ = e_{12}$. -/
+def kitaevChainBondDim : Matrix (Fin 2) (Fin 2) (Matrix (Fin 2) (Fin 2) A) :=
+  !![kitaevEdgeRight, kitaevShiftMinus;
+     kitaevShiftPlus, kitaevEdgeLeft]
+
+/-- Leftmost dangling boundary zero-mode projector on Site 1 of the 2-site chain. -/
+def kitaevChainLeftZeroMode : Matrix (Fin 2) (Fin 2) (Matrix (Fin 2) (Fin 2) A) :=
+  !![kitaevEdgeLeft, 0;
+     0, 0]
+
+/-- Rightmost dangling boundary zero-mode projector on Site 2 of the 2-site chain. -/
+def kitaevChainRightZeroMode : Matrix (Fin 2) (Fin 2) (Matrix (Fin 2) (Fin 2) A) :=
+  !![0, 0;
+     0, kitaevEdgeRight]
+
+/-- **20. Local Majorana Clifford Algebra, Sweet-Spot Nilpotents, & 2-Site Kitaev Zero Modes**:
+    Over ANY noncommutative ring $A$:
+    1. Local Majorana Clifford Relations:
+       $\gamma_A^2 = I_2$, $\gamma_B^2 = -I_2$, and $\gamma_A \gamma_B + \gamma_B \gamma_A = 0$.
+    2. Sweet-Spot Nilpotent Factorization:
+       $K_+^2 = 0$, $K_-^2 = 0$, and $K_+ K_- + K_- K_+ = I_2$.
+    3. Exact Annihilation of Dangling Boundary Zero Modes by the Inter-Site Kitaev Bond:
+       $H_{\mathrm{bond}} Z_L = 0$, $Z_L H_{\mathrm{bond}} = 0$,
+       $H_{\mathrm{bond}} Z_R = 0$, and $Z_R H_{\mathrm{bond}} = 0$.
+    4. Mutual Orthogonality & Idempotence of Boundary Zero Modes:
+       $Z_L^2 = Z_L$, $Z_R^2 = Z_R$, and $Z_L Z_R = 0$. -/
+theorem kitaevMajoranaChain_clifford_and_boundary_zero_modes :
+    (majoranaA : Matrix (Fin 2) (Fin 2) A) * majoranaA = 1 ∧
+    (majoranaB : Matrix (Fin 2) (Fin 2) A) * majoranaB = -1 ∧
+    (majoranaA : Matrix (Fin 2) (Fin 2) A) * majoranaB + majoranaB * majoranaA = 0 ∧
+    (kitaevShiftPlus : Matrix (Fin 2) (Fin 2) A) * kitaevShiftPlus = 0 ∧
+    (kitaevShiftMinus : Matrix (Fin 2) (Fin 2) A) * kitaevShiftMinus = 0 ∧
+    (kitaevShiftPlus : Matrix (Fin 2) (Fin 2) A) * kitaevShiftMinus +
+      kitaevShiftMinus * kitaevShiftPlus = 1 ∧
+    (kitaevChainBondDim : Matrix (Fin 2) (Fin 2) (Matrix (Fin 2) (Fin 2) A)) *
+      kitaevChainLeftZeroMode = 0 ∧
+    kitaevChainLeftZeroMode *
+      (kitaevChainBondDim : Matrix (Fin 2) (Fin 2) (Matrix (Fin 2) (Fin 2) A)) = 0 ∧
+    (kitaevChainBondDim : Matrix (Fin 2) (Fin 2) (Matrix (Fin 2) (Fin 2) A)) *
+      kitaevChainRightZeroMode = 0 ∧
+    kitaevChainRightZeroMode *
+      (kitaevChainBondDim : Matrix (Fin 2) (Fin 2) (Matrix (Fin 2) (Fin 2) A)) = 0 ∧
+    (kitaevChainLeftZeroMode : Matrix (Fin 2) (Fin 2) (Matrix (Fin 2) (Fin 2) A)) *
+      kitaevChainLeftZeroMode = kitaevChainLeftZeroMode ∧
+    (kitaevChainRightZeroMode : Matrix (Fin 2) (Fin 2) (Matrix (Fin 2) (Fin 2) A)) *
+      kitaevChainRightZeroMode = kitaevChainRightZeroMode ∧
+    (kitaevChainLeftZeroMode : Matrix (Fin 2) (Fin 2) (Matrix (Fin 2) (Fin 2) A)) *
+      kitaevChainRightZeroMode = 0 := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · ext i j; fin_cases i <;> fin_cases j <;>
+      simp [majoranaA, Matrix.mul_apply, Fin.sum_univ_two]
+  · ext i j; fin_cases i <;> fin_cases j <;>
+      simp [majoranaB, Matrix.mul_apply, Fin.sum_univ_two]
+  · ext i j; fin_cases i <;> fin_cases j <;>
+      simp [majoranaA, majoranaB]
+  · ext i j; fin_cases i <;> fin_cases j <;>
+      simp [kitaevShiftPlus, Matrix.mul_apply, Fin.sum_univ_two]
+  · ext i j; fin_cases i <;> fin_cases j <;>
+      simp [kitaevShiftMinus, Matrix.mul_apply, Fin.sum_univ_two]
+  · ext i j; fin_cases i <;> fin_cases j <;>
+      simp [kitaevShiftPlus, kitaevShiftMinus]
+  · ext i j k l; fin_cases i <;> fin_cases j <;> fin_cases k <;> fin_cases l <;>
+      simp [kitaevChainBondDim, kitaevChainLeftZeroMode, kitaevEdgeRight, kitaevEdgeLeft,
+            kitaevShiftPlus, kitaevShiftMinus, Matrix.mul_apply, Fin.sum_univ_two]
+  · ext i j k l; fin_cases i <;> fin_cases j <;> fin_cases k <;> fin_cases l <;>
+      simp [kitaevChainBondDim, kitaevChainLeftZeroMode, kitaevEdgeRight, kitaevEdgeLeft,
+            kitaevShiftPlus, kitaevShiftMinus, Matrix.mul_apply, Fin.sum_univ_two]
+  · ext i j k l; fin_cases i <;> fin_cases j <;> fin_cases k <;> fin_cases l <;>
+      simp [kitaevChainBondDim, kitaevChainRightZeroMode, kitaevEdgeRight, kitaevEdgeLeft,
+            kitaevShiftPlus, kitaevShiftMinus, Matrix.mul_apply, Fin.sum_univ_two]
+  · ext i j k l; fin_cases i <;> fin_cases j <;> fin_cases k <;> fin_cases l <;>
+      simp [kitaevChainBondDim, kitaevChainRightZeroMode, kitaevEdgeRight, kitaevEdgeLeft,
+            kitaevShiftPlus, kitaevShiftMinus, Matrix.mul_apply, Fin.sum_univ_two]
+  · ext i j k l; fin_cases i <;> fin_cases j <;> fin_cases k <;> fin_cases l <;>
+      simp [kitaevChainLeftZeroMode, kitaevEdgeLeft, Matrix.mul_apply, Fin.sum_univ_two]
+  · ext i j k l; fin_cases i <;> fin_cases j <;> fin_cases k <;> fin_cases l <;>
+      simp [kitaevChainRightZeroMode, kitaevEdgeRight, Matrix.mul_apply, Fin.sum_univ_two]
+  · ext i j k l; fin_cases i <;> fin_cases j <;> fin_cases k <;> fin_cases l <;>
+      simp [kitaevChainLeftZeroMode, kitaevChainRightZeroMode,
+            Matrix.mul_apply, Fin.sum_univ_two]
+
 end PorterNoncommutativeRiccatiAndLoxodromes
 
 end SplitQuaternion

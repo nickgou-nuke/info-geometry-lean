@@ -5219,4 +5219,379 @@ theorem twoArchetype_transition_idempotence_and_commutator_clifford
     rw [neg_smul]
     exact eq_neg_of_add_eq_zero_left hch
 
+/-!
+### Non-Associative Core-Nilpotent Drazin Splitting, Moore–Penrose Generalized Inverse, & Rank-1 Trifactor Law
+-/
+
+/-- Upper Peirce core-nilpotent operator `T(X) = X_{++} + X_{+-} = (Π_+ * X) * Π_+ + (Π_+ * X) * Π_-`. -/
+noncomputable def peirceCoreNilpotentOp (r₁ r₂ c s : R) (v w : ZornVec3 R) (X : ZornVectorMatrix R) :
+    ZornVectorMatrix R :=
+  peirceBlockPP r₁ r₂ c s v w X + peirceBlockPM r₁ r₂ c s v w X
+
+/-- **46. Non-Associative Core-Nilpotent Jordan Splitting & Polynomial Drazin Generalized Inverse**:
+    For ANY $r_1, r_2, c, s \in R$, $v, w \in R^3$, and arbitrary $X \in \mathrm{Zorn}(R)$, let
+    $C = X_{++} = \tau_+(X) \bullet \Pi_+$ be the core part, $N = X_{+-} = (\Pi_+ * X) * \Pi_-$ be
+    the nilpotent part, and $T = C + N$ be the upper Peirce operator, with spectral multiplier
+    $\lambda = \tau_+(X) * N_{vw}$:
+    - **Core-Nilpotent Semidirect Relations**:
+      `N * N = 0`, `C * N = lam • N`, and `N * C = 0`.
+    - **Singular Norm of `T`**: `norm T = 0`.
+    - **Projective Core Idempotence**: `T * T = lam • T`.
+    - **Polynomial Drazin Generalized Inverse Equations (with $T^D = T$)**:
+      `(T * T) * T = (lam * lam) • T` and `T * (T * T) = (lam * lam) • T`! -/
+theorem peirceCoreNilpotent_drazin_splitting
+    (r₁ r₂ c s : R) (v w : ZornVec3 R) (X : ZornVectorMatrix R) :
+    let N_vw := c * c - r₁ * r₂ * (s * s) * ZornVec3.dot v w
+    let τ_plus := zornPeirceCornerTracePlus r₁ r₂ c s v w X
+    let lam := τ_plus * N_vw
+    let C := peirceBlockPP r₁ r₂ c s v w X
+    let N := peirceBlockPM r₁ r₂ c s v w X
+    let T := peirceCoreNilpotentOp r₁ r₂ c s v w X
+    N * N = 0 ∧
+    C * N = lam • N ∧
+    N * C = 0 ∧
+    norm T = 0 ∧
+    T * T = lam • T ∧
+    (T * T) * T = (lam * lam) • T ∧
+    T * (T * T) = (lam * lam) • T := by
+  intro N_vw τ_plus lam C N T
+  let P_plus := tiltedPeircePlus r₁ r₂ c s v w
+  let P_minus := tiltedPeirceMinus r₁ r₂ c s v w
+  have h33 := tiltedPeirce_orth_idem_chordal_and_syzygy r₁ r₂ c s v w
+  have h38 := tiltedPeirce_norm_central_sum_and_associators r₁ r₂ c s v w X
+  have h39 := tiltedPeirce_module_action_corner_reduction_and_four_block_decomposition r₁ r₂ c s v w X
+  have h41 := peirceBlock_offDiag_nilpotence_and_absorption r₁ r₂ c s v w X
+  have h_idem : P_plus * P_plus = N_vw • P_plus := h33.2.1
+  have h_sum : P_plus + P_minus = N_vw • (one : ZornVectorMatrix R) := h38.2.2.1
+  have h_C : C = τ_plus • P_plus := h39.2.2.2.2.1
+  have h_N_sq : N * N = 0 := h41.2.2.2.2.1
+  have h_P_N : P_plus * N = N_vw • N := h41.2.2.2.2.2.2.1
+  have h_N_P : N * P_plus = 0 := h41.2.2.2.2.2.2.2.2.2
+  have h_C_N : C * N = lam • N := by
+    rw [h_C, zvm_smul_mul, h_P_N, smul_smul]
+  have h_N_C : N * C = 0 := by
+    rw [h_C, zvm_mul_smul, h_N_P, _root_.smul_zero]
+  have h_C_sq : C * C = lam • C := by
+    rw [h_C, zvm_smul_mul, zvm_mul_smul, h_idem, smul_smul, smul_smul, smul_smul]
+    exact congrArg (· • P_plus) (by dsimp [lam]; ring)
+  have h_T_eq : T = N_vw • (P_plus * X) := by
+    calc T
+      _ = (P_plus * X) * P_plus + (P_plus * X) * P_minus := rfl
+      _ = (P_plus * X) * (P_plus + P_minus) := by rw [← _root_.mul_add]
+      _ = N_vw • (P_plus * X) := by rw [h_sum, zvm_mul_smul, zvm_mul_one]
+  have h_norm_T : norm T = 0 := by
+    rw [h_T_eq]
+    change norm (smul N_vw (mul P_plus X)) = 0
+    rw [norm_smul, norm_mul, h38.1, MulZeroClass.zero_mul, MulZeroClass.mul_zero]
+  have h_T_sq : T * T = lam • T := by
+    change (C + N) * (C + N) = lam • (C + N)
+    rw [_root_.add_mul, _root_.mul_add, _root_.mul_add,
+        h_C_sq, h_C_N, h_N_C, h_N_sq, _root_.add_zero, _root_.add_zero, ← _root_.smul_add]
+  have h_T_cube_left : (T * T) * T = (lam * lam) • T := by
+    rw [h_T_sq, zvm_smul_mul, h_T_sq, smul_smul]
+  have h_T_cube_right : T * (T * T) = (lam * lam) • T := by
+    rw [h_T_sq, zvm_mul_smul, h_T_sq, smul_smul]
+  exact ⟨h_N_sq, h_C_N, h_N_C, h_norm_T, h_T_sq, h_T_cube_left, h_T_cube_right⟩
+
+/-- Dual-vector transpose involution `X^* = ⟨X.a, X.w, X.v, X.b⟩` on `ZornVectorMatrix R`. -/
+def zornTranspose (X : ZornVectorMatrix R) : ZornVectorMatrix R :=
+  ⟨X.a, X.w, X.v, X.b⟩
+
+/-- Frobenius–Gram scalar `μ_MP(Π_+) = trace (Π_+ * Π_+^*)` governing the Moore–Penrose
+    generalized inverse of `tiltedPeircePlus r₁ r₂ c s v w`. -/
+def moorePenroseGramScalar (r₁ r₂ c s : R) (v w : ZornVec3 R) : R :=
+  (c * c) * (c * c) +
+    (r₁ * c * s) * (r₁ * c * s) * ZornVec3.dot v v +
+    (r₂ * c * s) * (r₂ * c * s) * ZornVec3.dot w w +
+    (r₁ * r₂ * (s * s) * ZornVec3.dot v w) * (r₁ * r₂ * (s * s) * ZornVec3.dot v w)
+
+/-- Rank-1 Gauss–Bruhat trifactor representation `(U_-(u) * Π_+) * U_+(p)` of a tilted Peirce operator. -/
+noncomputable def rankOneTrifactor
+    (u : ZornVec3 R) (r₁ r₂ c s : R) (v w p : ZornVec3 R) : ZornVectorMatrix R :=
+  (zornParabolicMinus u * tiltedPeircePlus r₁ r₂ c s v w) * zornParabolicPlus p
+
+/-- **47. All Four Non-Associative Moore–Penrose Generalized Inverse Equations for $\Pi_+$**:
+    For ANY $r_1, r_2, c, s \in R$ and $v, w \in R^3$, let $P = \Pi_+(r_1, r_2, c, s, v, w)$,
+    $P^* = \mathrm{zornTranspose}\;P$, and $\mu_{\mathrm{MP}} = \mathrm{moorePenroseGramScalar}\;r_1\;r_2\;c\;s\;v\;w$:
+    1. **First Moore–Penrose Equation (Left & Right Associative)**:
+       `(P * P^*) * P = μ_MP • P` and `P * (P^* * P) = μ_MP • P`.
+    2. **Second Moore–Penrose Equation (Left & Right Associative)**:
+       `(P^* * P) * P^* = μ_MP • P^*` and `P^* * (P * P^*) = μ_MP • P^*`.
+    3. **Third Moore–Penrose Equation (Hermitian Symmetry of `P * P^*`)**:
+       `zornTranspose (P * P^*) = P * P^*`.
+    4. **Fourth Moore–Penrose Equation (Hermitian Symmetry of `P^* * P`)**:
+       `zornTranspose (P^* * P) = P^* * P`. -/
+theorem tiltedPeirce_moore_penrose_equations
+    (r₁ r₂ c s : R) (v w : ZornVec3 R) :
+    let P := tiltedPeircePlus r₁ r₂ c s v w
+    let P_star := zornTranspose P
+    let μ_MP := moorePenroseGramScalar r₁ r₂ c s v w
+    (P * P_star) * P = μ_MP • P ∧
+    P * (P_star * P) = μ_MP • P ∧
+    (P_star * P) * P_star = μ_MP • P_star ∧
+    P_star * (P * P_star) = μ_MP • P_star ∧
+    zornTranspose (P * P_star) = P * P_star ∧
+    zornTranspose (P_star * P) = P_star * P := by
+  intro P P_star μ_MP
+  have h_star : P_star = tiltedPeircePlus (-r₂) (-r₁) c s w v := by
+    ext
+    · rfl
+    · rename_i i; fin_cases i <;> simp [P_star, P, zornTranspose, tiltedPeircePlus]
+    · rename_i i; fin_cases i <;> simp [P_star, P, zornTranspose, tiltedPeircePlus]
+    · simp [P_star, P, zornTranspose, tiltedPeircePlus, ZornVec3.dot, Fin.sum_univ_three]; ring
+  have h_fid : bargmannFidelity r₁ r₂ c s v w (-r₂) (-r₁) c s w v = μ_MP := by
+    simp [μ_MP, bargmannFidelity, moorePenroseGramScalar, ZornVec3.dot, Fin.sum_univ_three]
+    ring
+  have h43 := twoArchetype_bargmann_sandwich_and_fidelity r₁ r₂ c s (-r₂) (-r₁) c s v w w v
+  have h_mp1_left : (P * P_star) * P = μ_MP • P := by
+    have h := h43.2.2.2.1
+    rw [← h_star, h_fid] at h
+    exact h
+  have h_mp1_right : P * (P_star * P) = μ_MP • P :=
+    (sub_eq_zero.mp (bundledAssociator_flexible P P_star)).symm.trans h_mp1_left
+  have h_mp2_left : (P_star * P) * P_star = μ_MP • P_star := by
+    have h := h43.2.2.2.2.1
+    rw [← h_star, h_fid] at h
+    exact h
+  have h_mp2_right : P_star * (P * P_star) = μ_MP • P_star :=
+    (sub_eq_zero.mp (bundledAssociator_flexible P_star P)).symm.trans h_mp2_left
+  refine ⟨h_mp1_left, h_mp1_right, h_mp2_left, h_mp2_right, ?_, ?_⟩
+  · ext
+    · rfl
+    · rename_i i; fin_cases i <;>
+        (simp [P, P_star, zornTranspose, tiltedPeircePlus, mul, ZornVec3.cross]; ring)
+    · rename_i i; fin_cases i <;>
+        (simp [P, P_star, zornTranspose, tiltedPeircePlus, mul, ZornVec3.cross]; ring)
+    · rfl
+  · ext
+    · rfl
+    · rename_i i; fin_cases i <;>
+        (simp [P, P_star, zornTranspose, tiltedPeircePlus, mul, ZornVec3.cross]; ring)
+    · rename_i i; fin_cases i <;>
+        (simp [P, P_star, zornTranspose, tiltedPeircePlus, mul, ZornVec3.cross]; ring)
+    · rfl
+
+/-- **48. Gauss–Bruhat Rank-1 Trifactor Associator Formula, Aligned Associativity, & Singular Norm**:
+    For ANY $u, p, v, w \in R^3$, $r_1, r_2, c, s \in R$, and arbitrary $X \in \mathrm{Zorn}(R)$:
+    - **Universal Parabolic Trifactor Associator Formula**:
+       `zornAssociator (U_-(u)) X (U_+(p)) = ⟨0, u × (X.v × p), -(u × X.w) × p, 0⟩`.
+    - **Vanishing Aligned Gauss–Bruhat Trifactor Associator ($u = w, p = v$)**:
+       `zornAssociator (U_-(w)) (Π_+(r₁, r₂, c, s, v, w)) (U_+(v)) = 0`.
+    - **Universal Singular Norm Conservation**:
+       `norm (rankOneTrifactor u r₁ r₂ c s v w p) = 0`! -/
+theorem rankOneTrifactor_assoc_and_singular_norm
+    (u p v w : ZornVec3 R) (r₁ r₂ c s : R) (X : ZornVectorMatrix R) :
+    let P := tiltedPeircePlus r₁ r₂ c s v w
+    zornAssociator (zornParabolicMinus u) X (zornParabolicPlus p) =
+      ⟨0, ZornVec3.cross u (ZornVec3.cross X.v p),
+       fun i => -ZornVec3.cross (ZornVec3.cross u X.w) p i, 0⟩ ∧
+    zornAssociator (zornParabolicMinus w) P (zornParabolicPlus v) = 0 ∧
+    norm (rankOneTrifactor u r₁ r₂ c s v w p) = 0 := by
+  intro P
+  have h_assoc : ∀ (u' p' : ZornVec3 R) (Y : ZornVectorMatrix R),
+      zornAssociator (zornParabolicMinus u') Y (zornParabolicPlus p') =
+        ⟨0, ZornVec3.cross u' (ZornVec3.cross Y.v p'),
+         fun i => -ZornVec3.cross (ZornVec3.cross u' Y.w) p' i, 0⟩ := by
+    intro u' p' Y
+    unfold zornAssociator
+    simp only [_root_.sub_eq_add_neg]
+    ext
+    · simp [zornParabolicMinus, zornParabolicPlus, zornExpLowerNil, zornExpUpperNil,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_mul_def,
+            add, neg, mul, ZornVec3.dot, Fin.sum_univ_three]
+    · rename_i i; fin_cases i <;>
+        (simp [zornParabolicMinus, zornParabolicPlus, zornExpLowerNil, zornExpUpperNil,
+               InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               InfoGeometry.Algebra.zvm_mul_def,
+               add, neg, mul, ZornVec3.cross]; ring)
+    · rename_i i; fin_cases i <;>
+        (simp [zornParabolicMinus, zornParabolicPlus, zornExpLowerNil, zornExpUpperNil,
+               InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+               InfoGeometry.Algebra.zvm_mul_def,
+               add, neg, mul, ZornVec3.cross]; ring)
+    · simp [zornParabolicMinus, zornParabolicPlus, zornExpLowerNil, zornExpUpperNil,
+            InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def,
+            InfoGeometry.Algebra.zvm_mul_def,
+            add, neg, mul, ZornVec3.dot, Fin.sum_univ_three]
+      ring
+  refine ⟨h_assoc u p X, ?_, ?_⟩
+  · rw [h_assoc w v P]
+    ext
+    · rfl
+    · rename_i i; fin_cases i <;>
+        (simp [P, tiltedPeircePlus, ZornVec3.cross]; ring)
+    · rename_i i; fin_cases i <;>
+        (simp [P, tiltedPeircePlus, ZornVec3.cross]; ring)
+    · rfl
+  · change norm (mul (mul (zornParabolicMinus u) P) (zornParabolicPlus p)) = 0
+    rw [norm_mul, norm_mul,
+        (tiltedPeirce_norm_central_sum_and_associators r₁ r₂ c s v w 0).1,
+        MulZeroClass.mul_zero, MulZeroClass.zero_mul]
+
+/-- Tilted Peirce grading polarization operator `Γ_Π = Π_+ - Π_-`. -/
+noncomputable def tiltedPeirceGamma (r₁ r₂ c s : R) (v w : ZornVec3 R) : ZornVectorMatrix R :=
+  tiltedPeircePlus r₁ r₂ c s v w - tiltedPeirceMinus r₁ r₂ c s v w
+
+/-- Diagonal Peirce spectral operator `D_Π(X) = τ_+(X) • Π_+ + τ_-(X) • Π_-`. -/
+noncomputable def peirceDiagonalOperator (r₁ r₂ c s : R) (v w : ZornVec3 R) (X : ZornVectorMatrix R) :
+    ZornVectorMatrix R :=
+  zornPeirceCornerTracePlus r₁ r₂ c s v w X • tiltedPeircePlus r₁ r₂ c s v w +
+    zornPeirceCornerTraceMinus r₁ r₂ c s v w X • tiltedPeirceMinus r₁ r₂ c s v w
+
+/-- Off-diagonal Peirce transition operator `O_Π(X) = X_{+-} + X_{-+} = (Π_+ * X) * Π_- + (Π_- * X) * Π_+`. -/
+noncomputable def peirceOffDiagOperator (r₁ r₂ c s : R) (v w : ZornVec3 R) (X : ZornVectorMatrix R) :
+    ZornVectorMatrix R :=
+  peirceBlockPM r₁ r₂ c s v w X + peirceBlockMP r₁ r₂ c s v w X
+
+/-- **49. Conjugate Peirce Duality, Four-Factor Transition Associativity, & Chiral Off-Diagonal Square**:
+    For ANY $r_1, r_2, c, s, r_1', r_2', c_2, s_2 \in R$, $v, w, v_2, w_2 \in R^3$, and arbitrary
+    $X \in \mathrm{Zorn}(R)$, let $\Pi_+ = \Pi_+(r_1, r_2, c, s, v, w)$, $\Pi_- = \Pi_-(r_1, r_2, c, s, v, w)$,
+    $\Pi_2 = \Pi_+(r_1', r_2', c_2, s_2, v_2, w_2)$, $\Gamma_\Pi = \Pi_+ - \Pi_-$,
+    $D_\Pi(X) = \mathrm{peirceDiagonalOperator}\;r_1\;r_2\;c\;s\;v\;w\;X$, and
+    $O_\Pi(X) = \mathrm{peirceOffDiagOperator}\;r_1\;r_2\;c\;s\;v\;w\;X$:
+    1. **Cayley–Dickson Conjugate Duality of the Tilted Peirce Projectors**:
+       `conj Π_+ = Π_-` and `conj Π_- = Π_+`.
+    2. **Universal Four-Factor Transition Associativity**:
+       `((Π_+ * Π_2) * Π_+) * Π_2 = (Π_+ * Π_2) * (Π_+ * Π_2)`.
+    3. **Diagonal + Off-Diagonal Resolution of the State**:
+       `D_Π(X) + O_Π(X) = (N_vw * N_vw) • X`.
+    4. **Tracelessness of the Off-Diagonal Peirce Operator**:
+       `trace (O_Π(X)) = 0`.
+    5. **Exact Chiral Anticommutation with `Γ_Π` & Commutation of `D_Π(X)` with `Γ_Π`**:
+       `Γ_Π * O_Π(X) + O_Π(X) * Γ_Π = 0` and `Γ_Π * D_Π(X) = D_Π(X) * Γ_Π`.
+    6. **Universal Scalar Square of the Off-Diagonal Peirce Operator**:
+       `O_Π(X) * O_Π(X) = (-norm (O_Π(X))) • 1` and
+       `O_Π(X) * O_Π(X) = (N_vw * N_vw * (τ_+(X) * τ_-(X) - N_vw * N_vw * norm X)) • 1`! -/
+theorem peirceOffDiagOperator_chiral_anticomm_and_scalar_square
+    (r₁ r₂ c s r₁' r₂' c₂ s₂ : R) (v w v₂ w₂ : ZornVec3 R) (X : ZornVectorMatrix R) :
+    let P_plus := tiltedPeircePlus r₁ r₂ c s v w
+    let P_minus := tiltedPeirceMinus r₁ r₂ c s v w
+    let P₂ := tiltedPeircePlus r₁' r₂' c₂ s₂ v₂ w₂
+    let N_vw := c * c - r₁ * r₂ * (s * s) * ZornVec3.dot v w
+    let τ_plus := zornPeirceCornerTracePlus r₁ r₂ c s v w X
+    let τ_minus := zornPeirceCornerTraceMinus r₁ r₂ c s v w X
+    let Γ_Pi := tiltedPeirceGamma r₁ r₂ c s v w
+    let D_X := peirceDiagonalOperator r₁ r₂ c s v w X
+    let O_X := peirceOffDiagOperator r₁ r₂ c s v w X
+    conj P_plus = P_minus ∧
+    conj P_minus = P_plus ∧
+    ((P_plus * P₂) * P_plus) * P₂ = (P_plus * P₂) * (P_plus * P₂) ∧
+    D_X + O_X = (N_vw * N_vw) • X ∧
+    trace O_X = 0 ∧
+    Γ_Pi * O_X + O_X * Γ_Pi = 0 ∧
+    Γ_Pi * D_X = D_X * Γ_Pi ∧
+    O_X * O_X = (-norm O_X) • (one : ZornVectorMatrix R) ∧
+    O_X * O_X = (N_vw * N_vw * (τ_plus * τ_minus - N_vw * N_vw * norm X)) • (one : ZornVectorMatrix R) := by
+  intro P_plus P_minus P₂ N_vw τ_plus τ_minus Γ_Pi D_X O_X
+  let X_pp := peirceBlockPP r₁ r₂ c s v w X
+  let X_pm := peirceBlockPM r₁ r₂ c s v w X
+  let X_mp := peirceBlockMP r₁ r₂ c s v w X
+  let X_mm := peirceBlockMM r₁ r₂ c s v w X
+  have h33 := tiltedPeirce_orth_idem_chordal_and_syzygy r₁ r₂ c s v w
+  have h38 := tiltedPeirce_norm_central_sum_and_associators r₁ r₂ c s v w X
+  have h39 := tiltedPeirce_module_action_corner_reduction_and_four_block_decomposition r₁ r₂ c s v w X
+  have h41 := peirceBlock_offDiag_nilpotence_and_absorption r₁ r₂ c s v w X
+  have h42 := peirceBlock_offDiag_coupling_and_determinant_law r₁ r₂ c s v w X
+  have h43 := twoArchetype_bargmann_sandwich_and_fidelity r₁ r₂ c s r₁' r₂' c₂ s₂ v w v₂ w₂
+  have h45 := twoArchetype_transition_idempotence_and_commutator_clifford r₁ r₂ c s r₁' r₂' c₂ s₂ v w v₂ w₂
+  have h_conj_p : conj P_plus = P_minus := by
+    ext
+    · simp [P_plus, P_minus, tiltedPeircePlus, tiltedPeirceMinus, conj, ZornVec3.dot, Fin.sum_univ_three]
+    · rename_i i; fin_cases i <;> simp [P_plus, P_minus, tiltedPeircePlus, tiltedPeirceMinus, conj]
+    · rename_i i; fin_cases i <;> simp [P_plus, P_minus, tiltedPeircePlus, tiltedPeirceMinus, conj]
+    · simp [P_plus, P_minus, tiltedPeircePlus, tiltedPeirceMinus, conj, ZornVec3.dot, Fin.sum_univ_three]
+  have h_conj_m : conj P_minus = P_plus := by
+    ext
+    · simp [P_plus, P_minus, tiltedPeircePlus, tiltedPeirceMinus, conj, ZornVec3.dot, Fin.sum_univ_three]
+    · rename_i i; fin_cases i <;> simp [P_plus, P_minus, tiltedPeircePlus, tiltedPeirceMinus, conj]
+    · rename_i i; fin_cases i <;> simp [P_plus, P_minus, tiltedPeircePlus, tiltedPeirceMinus, conj]
+    · simp [P_plus, P_minus, tiltedPeircePlus, tiltedPeirceMinus, conj, ZornVec3.dot, Fin.sum_univ_three]
+  have h_four_assoc : ((P_plus * P₂) * P_plus) * P₂ = (P_plus * P₂) * (P_plus * P₂) := by
+    rw [h43.2.2.2.1, zvm_smul_mul, ← h45.1]
+  have h_res : D_X + O_X = (N_vw * N_vw) • X := by
+    have h_pp : X_pp = τ_plus • P_plus := h39.2.2.2.2.1
+    have h_mm : X_mm = τ_minus • P_minus := h39.2.2.2.2.2.1
+    have h_4b : X_pp + X_pm + X_mp + X_mm = (N_vw * N_vw) • X := h39.2.2.2.2.2.2.2
+    calc D_X + O_X
+      _ = (τ_plus • P_plus + τ_minus • P_minus) + (X_pm + X_mp) := rfl
+      _ = (X_pp + X_mm) + (X_pm + X_mp) := by rw [← h_pp, ← h_mm]
+      _ = X_pp + X_pm + X_mp + X_mm := by abel
+      _ = (N_vw * N_vw) • X := h_4b
+  have h_tr_O : trace O_X = 0 := by
+    change trace (add X_pm X_mp) = 0
+    rw [trace_add, h41.1, h41.2.1, _root_.add_zero]
+  have h_sum : P_plus + P_minus = N_vw • (one : ZornVectorMatrix R) := h38.2.2.1
+  have h_idem_p : P_plus * P_plus = N_vw • P_plus := h33.2.1
+  have h_orth_pm : P_plus * P_minus = 0 := h33.1
+  have h_orth_mp : P_minus * P_plus = 0 := by
+    have h1 : P_plus * P_plus + P_minus * P_plus = N_vw • P_plus := by
+      calc P_plus * P_plus + P_minus * P_plus
+        _ = (P_plus + P_minus) * P_plus := by rw [← _root_.add_mul]
+        _ = N_vw • P_plus := by rw [h_sum, zvm_smul_mul, zvm_one_mul]
+    rw [h_idem_p] at h1
+    calc P_minus * P_plus
+      _ = (N_vw • P_plus + P_minus * P_plus) - N_vw • P_plus := (add_sub_cancel_left _ _).symm
+      _ = N_vw • P_plus - N_vw • P_plus := by rw [h1]
+      _ = 0 := _root_.sub_self _
+  have h_mp_expr : X_mp = N_vw • (X * P_plus) - τ_plus • P_plus := by
+    apply eq_sub_of_add_eq'
+    have h_cp : (P_plus * X) * P_plus = τ_plus • P_plus := h39.2.2.2.2.1
+    calc τ_plus • P_plus + X_mp
+      _ = (P_plus * X) * P_plus + (P_minus * X) * P_plus := by rw [← h_cp]; rfl
+      _ = ((P_plus + P_minus) * X) * P_plus := by rw [← _root_.add_mul, ← _root_.add_mul]
+      _ = N_vw • (X * P_plus) := by rw [h_sum, zvm_smul_mul, zvm_one_mul, zvm_smul_mul]
+  have h_mp_right_p : X_mp * P_plus = N_vw • X_mp := by
+    rw [h_mp_expr, _root_.sub_mul, zvm_smul_mul, zvm_smul_mul,
+        h39.2.2.2.1, h_idem_p, smul_sub, smul_comm τ_plus N_vw P_plus]
+  have h_mp_left_p : P_plus * X_mp = 0 := by
+    have h_flex : P_plus * (X * P_plus) = (P_plus * X) * P_plus :=
+      (sub_eq_zero.mp (bundledAssociator_flexible P_plus X)).symm
+    rw [h_mp_expr, _root_.mul_sub, zvm_mul_smul, zvm_mul_smul,
+        h_flex, h39.2.2.2.2.1, h_idem_p, smul_smul, smul_smul, mul_comm τ_plus N_vw, _root_.sub_self]
+  have h_mp_right_m : X_mp * P_minus = 0 := by
+    have h1 : X_mp * P_plus + X_mp * P_minus = N_vw • X_mp := by
+      calc X_mp * P_plus + X_mp * P_minus
+        _ = X_mp * (P_plus + P_minus) := by rw [← _root_.mul_add]
+        _ = N_vw • X_mp := by rw [h_sum, zvm_mul_smul, zvm_mul_one]
+    rw [h_mp_right_p] at h1
+    calc X_mp * P_minus
+      _ = (N_vw • X_mp + X_mp * P_minus) - N_vw • X_mp := (add_sub_cancel_left _ _).symm
+      _ = N_vw • X_mp - N_vw • X_mp := by rw [h1]
+      _ = 0 := _root_.sub_self _
+  have h_mp_left_m : P_minus * X_mp = N_vw • X_mp := by
+    calc P_minus * X_mp
+      _ = 0 + P_minus * X_mp := (_root_.zero_add _).symm
+      _ = P_plus * X_mp + P_minus * X_mp := by rw [h_mp_left_p]
+      _ = (P_plus + P_minus) * X_mp := by rw [← _root_.add_mul]
+      _ = N_vw • X_mp := by rw [h_sum, zvm_smul_mul, zvm_one_mul]
+  have h_anticomm : Γ_Pi * O_X + O_X * Γ_Pi = 0 := by
+    change (P_plus - P_minus) * (X_pm + X_mp) + (X_pm + X_mp) * (P_plus - P_minus) = 0
+    rw [_root_.mul_add, _root_.sub_mul, _root_.sub_mul,
+        _root_.add_mul, _root_.mul_sub, _root_.mul_sub,
+        h41.2.2.2.2.2.2.1, h41.2.2.2.2.2.2.2.1, h41.2.2.2.2.2.2.2.2.1, h41.2.2.2.2.2.2.2.2.2,
+        h_mp_left_p, h_mp_left_m, h_mp_right_p, h_mp_right_m]
+    abel
+  have h_comm_D : Γ_Pi * D_X = D_X * Γ_Pi := by
+    change (P_plus - P_minus) * (τ_plus • P_plus + τ_minus • P_minus) =
+           (τ_plus • P_plus + τ_minus • P_minus) * (P_plus - P_minus)
+    rw [_root_.mul_add, _root_.sub_mul, _root_.sub_mul,
+        _root_.add_mul, _root_.mul_sub, _root_.mul_sub,
+        zvm_mul_smul, zvm_mul_smul, zvm_mul_smul, zvm_mul_smul,
+        zvm_smul_mul, zvm_smul_mul, zvm_smul_mul, zvm_smul_mul,
+        h_orth_pm, h_orth_mp, _root_.smul_zero, _root_.smul_zero]
+  have h_O_sq_ch : O_X * O_X = (-norm O_X) • (one : ZornVectorMatrix R) := by
+    have hch := (zorn_involution_cayley_hamilton_and_antiautomorphism O_X 0).2.2.2.1
+    rw [h_tr_O, _root_.zero_smul, _root_.sub_zero] at hch
+    rw [neg_smul]
+    exact eq_neg_of_add_eq_zero_left hch
+  have h_O_sq_det :
+      O_X * O_X = (N_vw * N_vw * (τ_plus * τ_minus - N_vw * N_vw * norm X)) • (one : ZornVectorMatrix R) := by
+    change (X_pm + X_mp) * (X_pm + X_mp) =
+      (N_vw * N_vw * (τ_plus * τ_minus - N_vw * N_vw * norm X)) • (one : ZornVectorMatrix R)
+    rw [_root_.add_mul, _root_.mul_add, _root_.mul_add,
+        h41.2.2.2.2.1, h41.2.2.2.2.2.1, _root_.zero_add, _root_.add_zero]
+    exact h42.2.2
+  exact ⟨h_conj_p, h_conj_m, h_four_assoc, h_res, h_tr_O, h_anticomm, h_comm_D, h_O_sq_ch, h_O_sq_det⟩
+
 end InfoGeometry.Algebra.ZornVectorMatrix
